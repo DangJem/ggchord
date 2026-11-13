@@ -261,8 +261,10 @@
     "R/viewer.R": "f482af4be44c1892b2bc14616014eb237a4de4a16e341bc87e2293e6ef917960",
     "R/zzz.R": "74c43333d322fb8ef8e5c5a4364b9f6fcb3717695cda1c7c169d834dceddab12",
     "tools/audit-source-snapshot.R": "4470517ec5577acef2ee132d9c757167df76f53962a51d9a427e31a9d940d420",
-    "tools/long-term-audit/observe-feature-contours.R": "cfbd7e5fcdada4cf03e1230fe1a249b2de51c7f6fa8583168d45cb0854a3f35d"
+    "tools/long-term-audit/observe-feature-contours.R": "9606f58a1690d455afea02ee0fdbe5a10510cbdf118263a905154a9579aef57d"
   },
+  "source_records": {},
+  "source_sequence_lengths": {},
   "cases": {
     "preset": {
       "production": {
@@ -295,6 +297,7 @@
           "accepted": false
         }
       },
+      "retained_png": {},
       "production_skipped": [
         {
           "polygon_id": "layer-0002/602",
@@ -562,6 +565,7 @@
           "accepted": false
         }
       },
+      "retained_png": {},
       "production_skipped": [
         {
           "polygon_id": "layer-0002/101",
@@ -991,6 +995,7 @@
           "accepted": false
         }
       },
+      "retained_png": {},
       "production_skipped": [
         {
           "polygon_id": "layer-0002/603",

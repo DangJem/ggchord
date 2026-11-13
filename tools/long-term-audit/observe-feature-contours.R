@@ -1,12 +1,26 @@
 # Tools-only observation: production diagnostics/layout remain unchanged.
 source('tools/audit-source-snapshot.R')
+point_mode <- '--points' %in% commandArgs(trailingOnly = TRUE)
+point_source <- if (point_mode) system.file('extdata', 'gridss.vcf',
+  package = 'StructuralVariantAnnotation') else character()
+if (point_mode && !nzchar(point_source)) stop('The existing optional point source is unavailable')
 audit_session <- audit_source_snapshot(additional =
-  'tools/long-term-audit/observe-feature-contours.R')
+  c('tools/long-term-audit/observe-feature-contours.R', point_source))
 pkgload::load_all(quiet = TRUE)
 audit_assert_source_snapshot(audit_session)
 data(plasmid_example_pUC19)
 sequence <- plasmid_example_pUC19
 features <- find_common_features(sequence)
+if (point_mode) {
+  imported <- read_vcf(point_source, structural = TRUE)
+  features <- imported$features$variant
+  stopifnot(nrow(features) > 0L, all(features$start == features$end))
+  # Display IDs verbatim; no variant or biological interpretation is performed.
+  features$anno <- features$feature_id
+  sequence <- imported$report$records[[1L]]$sequence_info
+  sequence <- sequence[sequence$accver %in% features$accver, c('accver', 'length')]
+  stopifnot(all(is.finite(sequence$length)), all(sequence$length > 0))
+}
 # Inspect the same detector without its capped-line exclusion, in an isolated
 # function. Closed transparent contours are conservative envelopes, not ink.
 detector <- ggchord_label_feature_quality
@@ -16,17 +30,21 @@ stopifnot(length(at) == 1L, grepl('if \\("feature_shape"', lines[at - 1L]))
 body(detector) <- parse(text = paste(lines[-c(at - 1L, at)], collapse = '\n'))[[1L]]
 
 observe <- function(shape) {
-  position <- position_feature_stack(spacing = .085, base_position = position_plasmid())
-  feature_layer <- if (shape == 'preset') geom_feature_plasmid(position = position) else
+  position <- if (point_mode) position_identity() else
+    position_feature_stack(spacing = .085, base_position = position_plasmid())
+  feature_layer <- if (point_mode) geom_feature(position = position) else if (shape == 'preset') geom_feature_plasmid(position = position) else
     geom_feature(shape = shape, position = position)
   plot <- ggchord(sequence[c('accver', 'length')], feature_data = features) +
     geom_seq(seq_style = 'double') + feature_layer +
     geom_feature_label_repel(position = position, external = TRUE, label_fit = 'shrink',
-      label_min_size = 2.5) + coord_circular() + theme_ggchord_plasmid()
+      label_min_size = 2.5)
+  plot <- if (point_mode) plot + coord_collinear() + theme_ggchord() else
+    plot + coord_circular() + theme_ggchord_plasmid()
   original <- plot$ggchord$data
-  file <- tempfile(fileext = '.png')
+  file <- if (point_mode) 'tools/long-term-audit/v0.27.0-variant-point-contours.png' else
+    tempfile(fileext = '.png')
   ggchord_diagnostic_device(file, 'png', 10, 8, 110)
-  on.exit({grDevices::dev.off(); unlink(file)})
+  on.exit({grDevices::dev.off(); if (!point_mode) unlink(file)})
   table <- ggplot2::ggplotGrob(plot)
   grid::grid.newpage(); grid::grid.draw(table)
   layout <- attr(table, 'ggchord_render_layout')
@@ -79,21 +97,26 @@ observe <- function(shape) {
   }
   stopifnot(identical(original, plot$ggchord$data), identical(context$status, 'measured'))
   list(production = quality$summary, measurement = quality$measurement,
+    retained_png = if (point_mode) file else NULL,
     production_skipped = quality$feature_parts_unchecked,
     extended_polygon_count = length(unique(extended$polygons$polygon_id)),
     extended_contacts = extended$contacts, remaining_skipped = extended$skipped,
     observed_paths = ggchord_rbind_fill(paths) %||% data.frame(),
     path_centreline_contacts = unique(ggchord_rbind_fill(contacts) %||% data.frame()))
 }
-cases <- setNames(lapply(c('preset', 'capped_line', 'lollipop'), observe),
-  c('preset', 'capped_line', 'lollipop'))
+shapes <- if (point_mode) 'point_records' else c('preset', 'capped_line', 'lollipop')
+cases <- setNames(lapply(shapes, observe), shapes)
 audit_assert_source_snapshot(audit_session)
 jsonlite::write_json(list(status = 'observation completed; no production override',
-  scope = 'Unchanged pUC19 annotations, three explicitly selected display geometries, 10x8 inch PNG',
+  scope = if (point_mode) 'Existing optional package gridss.vcf point records and original header lengths; Collinear 10x8 inch PNG; IDs displayed verbatim; no clinical interpretation' else
+    'Unchanged pUC19 annotations, three explicitly selected display geometries, 10x8 inch PNG',
   runtime_sha256 = as.list(audit_session$engine), input_sha256 = as.list(audit_session$inputs),
+  source_records = if (point_mode) features[c('accver', 'start', 'end', 'feature_id')] else NULL,
+  source_sequence_lengths = if (point_mode) sequence else NULL,
   cases = cases, not_checked = c('stroke thickness, dash gaps, caps and joins',
     'visibility/occlusion, glyph outlines, arbitrary custom grobs',
     'path contact source association and release device/platform matrix')),
-  'tools/long-term-audit/v0.27.0-feature-contour-observations.json',
+  if (point_mode) 'tools/long-term-audit/v0.27.0-variant-point-contour-observations.json' else
+    'tools/long-term-audit/v0.27.0-feature-contour-observations.json',
   pretty = TRUE, auto_unbox = TRUE, na = 'null')
 cat('Feature contour observations completed; no production change\n')
