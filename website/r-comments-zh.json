@@ -56,5 +56,6 @@
   "Shared controls sit just beyond the intervening backbones, rather than far away.": "共享控制点放在中间骨架稍外侧。",
   "Recover biological strands from the source annotation field.": "从原始注释字段恢复真实链。",
   "Synthetic intervals illustrate the mirrored layout.": "使用合成区间说明镜像布局。",
-  "Synthetic observations illustrate counting, not biological measurements.": "使用合成观测说明计数，不代表生物学测量。"
+  "Synthetic observations illustrate counting, not biological measurements.": "使用合成观测说明计数，不代表生物学测量。",
+  "A shared display label preserves all seven biological operator records.": "共享显示标签保留全部七条生物学 operator 记录。"
 }

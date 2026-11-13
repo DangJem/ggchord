@@ -1,0 +1,24 @@
+{
+  "status": "failed; not a completed local site",
+  "base_commit": "e81a357",
+  "return_codes": {
+    "en": 0,
+    "zh": 1
+  },
+  "reason": "Han reference rendering rejected missing example-comment translation: A shared display label preserves all seven biological operator records.",
+  "scope": "Before the user-requested axis drawing-order correction",
+  "logs": {
+    "main": {
+      "file": "tools/long-term-audit/v0.27.0-pre-axis-site-main-failure.log",
+      "sha256": "21e4a1c154596b90c6a329d1b501352e7e4d5e07bbc16044bd8e492d7a933119"
+    },
+    "en": {
+      "file": "tools/long-term-audit/v0.27.0-pre-axis-site-en-failure.log",
+      "sha256": "bd4cf3c2a771c4d6485ab699dce12de7b37d46d481f088f6243c581a93a2211b"
+    },
+    "zh": {
+      "file": "tools/long-term-audit/v0.27.0-pre-axis-site-zh-failure.log",
+      "sha256": "bb0e87aba3cf7f7e7cc4cb5c77822aeac53ee99e533745bc39964d8439f6e7c8"
+    }
+  }
+}

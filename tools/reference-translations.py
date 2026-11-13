@@ -101,6 +101,11 @@ def main():
             for i,token in enumerate(e['tokens']):value=value.replace('⟦'+str(i)+'⟧',token)
             replacements.append((e['start'],e['end'],value));count+=1
         if set(translations)-{e['key'] for e in entries}:missing.append(path.stem+': orphan translations')
+        if args.check and '\\examples{' in text:
+            try:
+                localize_r_comments(text.split('\\examples{', 1)[1], 'zh')
+            except ValueError as error:
+                missing.append(path.stem+': '+str(error))
         if args.output:
             for b,c,value in reversed(replacements):text=text[:b]+value+text[c:]
             if '\\examples{' in text:

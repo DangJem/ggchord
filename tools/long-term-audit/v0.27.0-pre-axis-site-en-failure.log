@@ -1,0 +1,1031 @@
+── Initialising site ───────────────────────────────────────────────────────────
+Copying <pkgdown>/BS5/assets/katex-auto.js to katex-auto.js
+Copying <pkgdown>/BS5/assets/lightswitch.js to lightswitch.js
+Copying <pkgdown>/BS5/assets/link.svg to link.svg
+Copying <pkgdown>/BS5/assets/pkgdown.js to pkgdown.js
+Updating deps/bootstrap-5.3.8/bootstrap.bundle.min.js
+Updating deps/bootstrap-5.3.8/bootstrap.bundle.min.js.map
+Updating deps/bootstrap-5.3.8/bootstrap.min.css
+Updating deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js
+Updating deps/clipboard.js-2.0.11/clipboard.min.js
+Updating deps/font-awesome-6.5.2/css/all.css
+Updating deps/font-awesome-6.5.2/css/all.min.css
+Updating deps/font-awesome-6.5.2/css/v4-shims.css
+Updating deps/font-awesome-6.5.2/css/v4-shims.min.css
+Updating deps/font-awesome-6.5.2/webfonts/fa-brands-400.ttf
+Updating deps/font-awesome-6.5.2/webfonts/fa-brands-400.woff2
+Updating deps/font-awesome-6.5.2/webfonts/fa-regular-400.ttf
+Updating deps/font-awesome-6.5.2/webfonts/fa-regular-400.woff2
+Updating deps/font-awesome-6.5.2/webfonts/fa-solid-900.ttf
+Updating deps/font-awesome-6.5.2/webfonts/fa-solid-900.woff2
+Updating deps/font-awesome-6.5.2/webfonts/fa-v4compatibility.ttf
+Updating deps/font-awesome-6.5.2/webfonts/fa-v4compatibility.woff2
+Updating deps/headroom-0.11.0/headroom.min.js
+Updating deps/headroom-0.11.0/jQuery.headroom.min.js
+Updating deps/jquery-3.6.0/jquery-3.6.0.js
+Updating deps/jquery-3.6.0/jquery-3.6.0.min.js
+Updating deps/jquery-3.6.0/jquery-3.6.0.min.map
+Updating deps/search-1.0.0/autocomplete.jquery.min.js
+Updating deps/search-1.0.0/fuse.min.js
+Updating deps/search-1.0.0/mark.min.js
+Copying logo.svg
+── Building home ───────────────────────────────────────────────────────────────
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Writing `authors.html`
+Reading AGENTS.md
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Writing `AGENTS.html`
+Reading MIGRATION-Hans.md
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Writing `MIGRATION-Hans.html`
+Reading MIGRATION.md
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Writing `MIGRATION.html`
+Reading README-Hans.md
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Writing `README-Hans.html`
+Missing images in 'README-Hans.md': 'reference/figures/logo.png',
+'reference/figures/showcasechord.png',
+'reference/figures/showcasecollinear.png', and
+'reference/figures/showcaseplasmid.png'
+ℹ pkgdown can only use images in 'man/figures' and 'vignettes'
+Reading LICENSE.md
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Writing `LICENSE.html`
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Writing `LICENSE-text.html`
+Reading README.md
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Writing `index.html`
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Writing `404.html`
+── Building function reference ─────────────────────────────────────────────────
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Writing `reference/index.html`
+Copying man/figures/alignanchor.png to reference/figures/alignanchor.png
+Copying man/figures/alignauto.png to reference/figures/alignauto.png
+Copying man/figures/aligncenter.png to reference/figures/aligncenter.png
+Copying man/figures/alignleft.png to reference/figures/alignleft.png
+Copying man/figures/alignright.png to reference/figures/alignright.png
+Copying man/figures/catalogblue.png to reference/figures/catalogblue.png
+Copying man/figures/catalogcambia.png to reference/figures/catalogcambia.png
+Copying man/figures/catalogcas.png to reference/figures/catalogcas.png
+Copying man/figures/catalogdonr.png to reference/figures/catalogdonr.png
+Copying man/figures/catalogduet.png to reference/figures/catalogduet.png
+Copying man/figures/catalogearley.png to reference/figures/catalogearley.png
+Copying man/figures/catalogpbr.png to reference/figures/catalogpbr.png
+Copying man/figures/catalogpcdna.png to reference/figures/catalogpcdna.png
+Copying man/figures/catalogpet.png to reference/figures/catalogpet.png
+Copying man/figures/catalogpsb.png to reference/figures/catalogpsb.png
+Copying man/figures/catalogpuc.png to reference/figures/catalogpuc.png
+Copying man/figures/catalogtre.png to reference/figures/catalogtre.png
+Copying man/figures/catalogtripz.png to reference/figures/catalogtripz.png
+Copying man/figures/chord.png to reference/figures/chord.png
+Copying man/figures/circular.png to reference/figures/circular.png
+Copying man/figures/collinear.png to reference/figures/collinear.png
+Copying man/figures/compareautofit.png to reference/figures/compareautofit.png
+Copying man/figures/comparebandwidth.png to
+reference/figures/comparebandwidth.png
+Copying man/figures/compareboneband.png to
+reference/figures/compareboneband.png
+Copying man/figures/comparebonedouble.png to
+reference/figures/comparebonedouble.png
+Copying man/figures/comparebonegap.png to reference/figures/comparebonegap.png
+Copying man/figures/comparebonesingle.png to
+reference/figures/comparebonesingle.png
+Copying man/figures/comparebranchfraction.png to
+reference/figures/comparebranchfraction.png
+Copying man/figures/comparebranchnone.png to
+reference/figures/comparebranchnone.png
+Copying man/figures/comparebranchquery.png to
+reference/figures/comparebranchquery.png
+Copying man/figures/comparebundle.png to reference/figures/comparebundle.png
+Copying man/figures/comparecalloutfit.png to
+reference/figures/comparecalloutfit.png
+Copying man/figures/comparecenter.png to reference/figures/comparecenter.png
+Copying man/figures/comparecenternolength.png to
+reference/figures/comparecenternolength.png
+Copying man/figures/comparecenterstyle.png to
+reference/figures/comparecenterstyle.png
+Copying man/figures/comparecirclecounter.png to
+reference/figures/comparecirclecounter.png
+Copying man/figures/comparecirclegap.png to
+reference/figures/comparecirclegap.png
+Copying man/figures/comparedensityeight.png to
+reference/figures/comparedensityeight.png
+Copying man/figures/comparedensityfour.png to
+reference/figures/comparedensityfour.png
+Copying man/figures/compareellipsisfit.png to
+reference/figures/compareellipsisfit.png
+Copying man/figures/compareexternaloff.png to
+reference/figures/compareexternaloff.png
+Copying man/figures/comparefeaturearrow.png to
+reference/figures/comparefeaturearrow.png
+Copying man/figures/comparefeatureblock.png to
+reference/figures/comparefeatureblock.png
+Copying man/figures/comparefeaturefit.png to
+reference/figures/comparefeaturefit.png
+Copying man/figures/comparefeaturepreset.png to
+reference/figures/comparefeaturepreset.png
+Copying man/figures/comparefixedfeature.png to
+reference/figures/comparefixedfeature.png
+Copying man/figures/comparefixedhorizontal.png to
+reference/figures/comparefixedhorizontal.png
+Copying man/figures/comparefixedinside.png to
+reference/figures/comparefixedinside.png
+Copying man/figures/comparefixedrotate.png to
+reference/figures/comparefixedrotate.png
+Copying man/figures/comparegeneflush.png to
+reference/figures/comparegeneflush.png
+Copying man/figures/comparegeneshouldered.png to
+reference/figures/comparegeneshouldered.png
+Copying man/figures/comparegenetriangle.png to
+reference/figures/comparegenetriangle.png
+Copying man/figures/comparelinkcurve.png to
+reference/figures/comparelinkcurve.png
+Copying man/figures/comparelinkstraight.png to
+reference/figures/comparelinkstraight.png
+Copying man/figures/comparepositionidentity.png to
+reference/figures/comparepositionidentity.png
+Copying man/figures/comparepositionstack.png to
+reference/figures/comparepositionstack.png
+Copying man/figures/compareprimerbetween.png to
+reference/figures/compareprimerbetween.png
+Copying man/figures/compareprimerinside.png to
+reference/figures/compareprimerinside.png
+Copying man/figures/compareprimerlabel.png to
+reference/figures/compareprimerlabel.png
+Copying man/figures/compareprimerlabelinside.png to
+reference/figures/compareprimerlabelinside.png
+Copying man/figures/compareprimernolocation.png to
+reference/figures/compareprimernolocation.png
+Copying man/figures/compareprimeroffset.png to
+reference/figures/compareprimeroffset.png
+Copying man/figures/compareprimeroutside.png to
+reference/figures/compareprimeroutside.png
+Copying man/figures/compareprimerwidth.png to
+reference/figures/compareprimerwidth.png
+Copying man/figures/compareradialfit.png to
+reference/figures/compareradialfit.png
+Copying man/figures/compareregioninside.png to
+reference/figures/compareregioninside.png
+Copying man/figures/compareregionoffset.png to
+reference/figures/compareregionoffset.png
+Copying man/figures/compareregionoutside.png to
+reference/figures/compareregionoutside.png
+Copying man/figures/compareregionwidth.png to
+reference/figures/compareregionwidth.png
+Copying man/figures/comparerestrictionelbow.png to
+reference/figures/comparerestrictionelbow.png
+Copying man/figures/comparerestrictionenzyme.png to
+reference/figures/comparerestrictionenzyme.png
+Copying man/figures/comparerestrictioninside.png to
+reference/figures/comparerestrictioninside.png
+Copying man/figures/comparerestrictionorder.png to
+reference/figures/comparerestrictionorder.png
+Copying man/figures/comparerestrictionposition.png to
+reference/figures/comparerestrictionposition.png
+Copying man/figures/comparerestrictionradial.png to
+reference/figures/comparerestrictionradial.png
+Copying man/figures/comparerestrictionstraight.png to
+reference/figures/comparerestrictionstraight.png
+Copying man/figures/comparescalegradient.png to
+reference/figures/comparescalegradient.png
+Copying man/figures/comparescalelinkcontinuous.png to
+reference/figures/comparescalelinkcontinuous.png
+Copying man/figures/comparescalesteps.png to
+reference/figures/comparescalesteps.png
+Copying man/figures/compareseqlabelarc.png to
+reference/figures/compareseqlabelarc.png
+Copying man/figures/compareseqlabelhorizontal.png to
+reference/figures/compareseqlabelhorizontal.png
+Copying man/figures/compareseqlabelrotation.png to
+reference/figures/compareseqlabelrotation.png
+Copying man/figures/compareshortauto.png to
+reference/figures/compareshortauto.png
+Copying man/figures/compareshortblock.png to
+reference/figures/compareshortblock.png
+Copying man/figures/compareshortwedge.png to
+reference/figures/compareshortwedge.png
+Copying man/figures/compareshrinkfit.png to
+reference/figures/compareshrinkfit.png
+Copying man/figures/comparethemedark.png to
+reference/figures/comparethemedark.png
+Copying man/figures/comparethememinimal.png to
+reference/figures/comparethememinimal.png
+Copying man/figures/comparetrackorder.png to
+reference/figures/comparetrackorder.png
+Copying man/figures/comparetrackthin.png to
+reference/figures/comparetrackthin.png
+Copying man/figures/comparetracktwo.png to
+reference/figures/comparetracktwo.png
+Copying man/figures/comparewrapfit.png to reference/figures/comparewrapfit.png
+Copying man/figures/decorations.png to reference/figures/decorations.png
+Copying man/figures/density.png to reference/figures/density.png
+Copying man/figures/featurestack.png to reference/figures/featurestack.png
+Copying man/figures/first.png to reference/figures/first.png
+Copying man/figures/firstchord.png to reference/figures/firstchord.png
+Copying man/figures/firstcircle.png to reference/figures/firstcircle.png
+Copying man/figures/firstfeatures.png to reference/figures/firstfeatures.png
+Copying man/figures/firstlinear.png to reference/figures/firstlinear.png
+Copying man/figures/focus.png to reference/figures/focus.png
+Copying man/figures/foundationarrow.png to
+reference/figures/foundationarrow.png
+Copying man/figures/foundationcount.png to
+reference/figures/foundationcount.png
+Copying man/figures/foundationequal.png to
+reference/figures/foundationequal.png
+Copying man/figures/foundationsankey.png to
+reference/figures/foundationsankey.png
+Copying man/figures/foundationvertical.png to
+reference/figures/foundationvertical.png
+Copying man/figures/frontbackbone.png to reference/figures/frontbackbone.png
+Copying man/figures/frontcirclerotation.png to
+reference/figures/frontcirclerotation.png
+Copying man/figures/frontcirclestyle.png to
+reference/figures/frontcirclestyle.png
+Copying man/figures/frontcrosssame.png to reference/figures/frontcrosssame.png
+Copying man/figures/frontcrosswidth.png to
+reference/figures/frontcrosswidth.png
+Copying man/figures/frontcurvature.png to reference/figures/frontcurvature.png
+Copying man/figures/frontfeature.png to reference/figures/frontfeature.png
+Copying man/figures/frontgap.png to reference/figures/frontgap.png
+Copying man/figures/frontgenelabels.png to
+reference/figures/frontgenelabels.png
+Copying man/figures/frontlinearbase.png to
+reference/figures/frontlinearbase.png
+Copying man/figures/frontlinearcds.png to reference/figures/frontlinearcds.png
+Copying man/figures/frontlinearcross.png to
+reference/figures/frontlinearcross.png
+Copying man/figures/frontlineargap.png to reference/figures/frontlineargap.png
+Copying man/figures/frontlinearlink.png to
+reference/figures/frontlinearlink.png
+Copying man/figures/frontlinearscale.png to
+reference/figures/frontlinearscale.png
+Copying man/figures/frontmarkers.png to reference/figures/frontmarkers.png
+Copying man/figures/frontnoavoid.png to reference/figures/frontnoavoid.png
+Copying man/figures/frontorder.png to reference/figures/frontorder.png
+Copying man/figures/frontorientation.png to
+reference/figures/frontorientation.png
+Copying man/figures/frontradius.png to reference/figures/frontradius.png
+Copying man/figures/frontribbon.png to reference/figures/frontribbon.png
+Copying man/figures/frontrotation.png to reference/figures/frontrotation.png
+Copying man/figures/frontroute.png to reference/figures/frontroute.png
+Copying man/figures/frontseqlabels.png to reference/figures/frontseqlabels.png
+Copying man/figures/frontsmooth.png to reference/figures/frontsmooth.png
+Copying man/figures/fusionfour.png to reference/figures/fusionfour.png
+Copying man/figures/fusionview.png to reference/figures/fusionview.png
+Copying man/figures/homologs.png to reference/figures/homologs.png
+Copying man/figures/labelarc.png to reference/figures/labelarc.png
+Copying man/figures/labelauto.png to reference/figures/labelauto.png
+Copying man/figures/labelradial.png to reference/figures/labelradial.png
+Copying man/figures/labels.png to reference/figures/labels.png
+Copying man/figures/learngenes.png to reference/figures/learngenes.png
+Copying man/figures/learnlabels.png to reference/figures/learnlabels.png
+Copying man/figures/learnlinks.png to reference/figures/learnlinks.png
+Copying man/figures/learnseq.png to reference/figures/learnseq.png
+Copying man/figures/linearlabels.png to reference/figures/linearlabels.png
+Copying man/figures/linearlinks.png to reference/figures/linearlinks.png
+Copying man/figures/linearseq.png to reference/figures/linearseq.png
+Copying man/figures/logo.png to reference/figures/logo.png
+Copying man/figures/logo.svg to reference/figures/logo.svg
+Copying man/figures/manualgenelabels.png to
+reference/figures/manualgenelabels.png
+Copying man/figures/mappingexample.png to reference/figures/mappingexample.png
+Copying man/figures/mappingposition.png to
+reference/figures/mappingposition.png
+Copying man/figures/multitrack.png to reference/figures/multitrack.png
+Copying man/figures/nativeprotein.png to reference/figures/nativeprotein.png
+Copying man/figures/nativeproteinchord.png to
+reference/figures/nativeproteinchord.png
+Copying man/figures/paf.png to reference/figures/paf.png
+Copying man/figures/parameterexample.png to
+reference/figures/parameterexample.png
+Copying man/figures/parameterlabels.png to
+reference/figures/parameterlabels.png
+Copying man/figures/parameterstrand.png to
+reference/figures/parameterstrand.png
+Copying man/figures/parameteruniform.png to
+reference/figures/parameteruniform.png
+Copying man/figures/parametervector.png to
+reference/figures/parametervector.png
+Copying man/figures/parameterwidth.png to reference/figures/parameterwidth.png
+Copying man/figures/plasmid.png to reference/figures/plasmid.png
+Copying man/figures/plasmidbackbone.png to
+reference/figures/plasmidbackbone.png
+Copying man/figures/plasmidfeatures.png to
+reference/figures/plasmidfeatures.png
+Copying man/figures/plasmidtext.png to reference/figures/plasmidtext.png
+Copying man/figures/pointlinks.png to reference/figures/pointlinks.png
+Copying man/figures/practicechord.png to reference/figures/practicechord.png
+Copying man/figures/practicelinear.png to reference/figures/practicelinear.png
+Copying man/figures/practiceplasmid.png to
+reference/figures/practiceplasmid.png
+Copying man/figures/realchord.png to reference/figures/realchord.png
+Copying man/figures/reallinear.png to reference/figures/reallinear.png
+Copying man/figures/recognition.png to reference/figures/recognition.png
+Copying man/figures/segment.png to reference/figures/segment.png
+Copying man/figures/showcasechord.png to reference/figures/showcasechord.png
+Copying man/figures/showcasecollinear.png to
+reference/figures/showcasecollinear.png
+Copying man/figures/showcaseplasmid.png to
+reference/figures/showcaseplasmid.png
+Copying man/figures/styling.png to reference/figures/styling.png
+Copying man/figures/tracks.png to reference/figures/tracks.png
+Copying man/figures/tracktile.png to reference/figures/tracktile.png
+Copying man/figures/viewdotplot.png to reference/figures/viewdotplot.png
+Copying man/figures/viewradial.png to reference/figures/viewradial.png
+Reading man/adapt_ggchord.Rd
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Writing `reference/adapt_ggchord.html`
+Reading man/as.data.frame.ggchord_validation.Rd
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Writing `reference/as.data.frame.ggchord_validation.html`
+Reading man/as_ggchord_alignment.Rd
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Writing `reference/as_ggchord_alignment.html`
+Reading man/as_ggchord_feature.Rd
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Writing `reference/as_ggchord_feature.html`
+Reading man/as_ggchord_link.Rd
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Writing `reference/as_ggchord_link.html`
+Reading man/as_ggchord_seq.Rd
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Writing `reference/as_ggchord_seq.html`
+Reading man/build_ggchord_cds.Rd
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Writing `reference/build_ggchord_cds.html`
+Reading man/bundle_ggchord_ribbons.Rd
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Writing `reference/bundle_ggchord_ribbons.html`
+Reading man/clean_ggchord_data.Rd
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Writing `reference/clean_ggchord_data.html`
+Reading man/coord_chord.Rd
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Writing `reference/coord_chord.html`
+Reading man/coord_circular.Rd
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Writing `reference/coord_circular.html`
+Reading man/coord_collinear.Rd
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Writing `reference/coord_collinear.html`
+Reading man/coord_dotplot.Rd
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Writing `reference/coord_dotplot.html`
+Reading man/coord_radial_synteny.Rd
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Writing `reference/coord_radial_synteny.html`
+Reading man/coord_sankey.Rd
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Writing `reference/coord_sankey.html`
+Reading man/deduplicate_ggchord_ribbons.Rd
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Writing `reference/deduplicate_ggchord_ribbons.html`
+Reading man/diagnose_ggchord.Rd
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Writing `reference/diagnose_ggchord.html`
+Reading man/export_ggchord_fusion.Rd
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Writing `reference/export_ggchord_fusion.html`
+Reading man/export_ggchord_layout.Rd
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Writing `reference/export_ggchord_layout.html`
+Reading man/filter_ggchord_ribbons.Rd
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Writing `reference/filter_ggchord_ribbons.html`
+Reading man/filter_restriction_sites.Rd
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Writing `reference/filter_restriction_sites.html`
+Reading man/find_common_features.Rd
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Writing `reference/find_common_features.html`
+Reading man/find_ggchord_loci.Rd
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Writing `reference/find_ggchord_loci.html`
+Reading man/find_primer_bindings.Rd
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Writing `reference/find_primer_bindings.html`
+Reading man/find_restriction_sites.Rd
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Writing `reference/find_restriction_sites.html`
+Reading man/focus_ggchord_data.Rd
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Writing `reference/focus_ggchord_data.html`
+Reading man/focus_ggchord_track.Rd
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Writing `reference/focus_ggchord_track.html`
+Reading man/fusion_panel.Rd
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Writing `reference/fusion_panel.html`
+Reading man/fusion_ribbon.Rd
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Writing `reference/fusion_ribbon.html`
+Reading man/gene_data_example.Rd
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Writing `reference/gene_data_example.html`
+Reading man/geom_alignment_segment.Rd
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Writing `reference/geom_alignment_segment.html`
+Reading man/geom_feature.Rd
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Writing `reference/geom_feature.html`
+Reading man/geom_feature_label.Rd
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Writing `reference/geom_feature_label.html`
+Reading man/geom_feature_label_repel.Rd
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Writing `reference/geom_feature_label_repel.html`
+Reading man/geom_feature_plasmid.Rd
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Writing `reference/geom_feature_plasmid.html`
+Reading man/geom_gene.Rd
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Writing `reference/geom_gene.html`
+Reading man/geom_gene_label.Rd
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Writing `reference/geom_gene_label.html`
+Reading man/geom_gene_label_repel.Rd
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Writing `reference/geom_gene_label_repel.html`
+Reading man/geom_link_line.Rd
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Writing `reference/geom_link_line.html`
+Reading man/geom_link_ribbon.Rd
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Writing `reference/geom_link_ribbon.html`
+Reading man/geom_primer.Rd
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Writing `reference/geom_primer.html`
+Reading man/geom_primer_label_repel.Rd
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Writing `reference/geom_primer_label_repel.html`
+Reading man/geom_residue.Rd
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Writing `reference/geom_residue.html`
+Reading man/geom_restriction_site.Rd
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Writing `reference/geom_restriction_site.html`
+Reading man/geom_seq.Rd
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Writing `reference/geom_seq.html`
+Reading man/geom_seq_break.Rd
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Writing `reference/geom_seq_break.html`
+Reading man/geom_seq_center_label.Rd
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Writing `reference/geom_seq_center_label.html`
+Reading man/geom_seq_label.Rd
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Writing `reference/geom_seq_label.html`
+Reading man/geom_seq_region.Rd
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Writing `reference/geom_seq_region.html`
+Reading man/geom_seq_scale.Rd
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Writing `reference/geom_seq_scale.html`
+Reading man/geom_track.Rd
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Writing `reference/geom_track.html`
+Reading man/geom_track_tile.Rd
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Writing `reference/geom_track_tile.html`
+Reading man/get_chord_layout.Rd
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Writing `reference/get_chord_layout.html`
+Reading man/ggchord.Rd
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Writing `reference/ggchord.html`
+Reading man/ggchord_api_contract.Rd
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Writing `reference/ggchord_api_contract.html`
+Reading man/ggchord_data_contract.Rd
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Writing `reference/ggchord_data_contract.html`
+Reading man/ggchord_fusion.Rd
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Writing `reference/ggchord_fusion.html`
+Reading man/ggchord_layout_contract.Rd
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Writing `reference/ggchord_layout_contract.html`
+Reading man/ggplot2-helpers.Rd
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Writing `reference/ggplot2-helpers.html`
+Reading man/grid-helpers.Rd
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Writing `reference/grid-helpers.html`
+Reading man/guide_ggchord_legend.Rd
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Writing `reference/guide_ggchord_legend.html`
+Reading man/link_ggchord_clusters.Rd
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Writing `reference/link_ggchord_clusters.html`
+Reading man/magnify_ggchord.Rd
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Writing `reference/magnify_ggchord.html`
+Reading man/map_alignment_position.Rd
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Writing `reference/map_alignment_position.html`
+Reading man/map_ggchord_position.Rd
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Writing `reference/map_ggchord_position.html`
+Reading man/merge_ggchord_ribbons.Rd
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Writing `reference/merge_ggchord_ribbons.html`
+Reading man/optimize_ggchord_layout.Rd
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Writing `reference/optimize_ggchord_layout.html`
+Reading man/plasmid_example_pUC19.Rd
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Writing `reference/plasmid_example_pUC19.html`
+Reading man/plus-.ggchord.Rd
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Writing `reference/plus-.ggchord.html`
+Reading man/position_feature_stack.Rd
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Writing `reference/position_feature_stack.html`
+Reading man/position_plasmid.Rd
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Writing `reference/position_plasmid.html`
+Reading man/position_strand.Rd
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Writing `reference/position_strand.html`
+Reading man/position_track.Rd
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Writing `reference/position_track.html`
+Reading man/prepare_ggchord_data.Rd
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Writing `reference/prepare_ggchord_data.html`
+Reading man/primer_catalog.Rd
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Writing `reference/primer_catalog.html`
+Reading man/print.ggchord_clean.Rd
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Writing `reference/print.ggchord_clean.html`
+Reading man/project_ggchord_features.Rd
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Writing `reference/project_ggchord_features.html`
+Reading man/project_ggchord_links.Rd
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Writing `reference/project_ggchord_links.html`
+Reading man/protein_ribbon_data_example.Rd
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Writing `reference/protein_ribbon_data_example.html`
+Reading man/protein_seq_data_example.Rd
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Writing `reference/protein_seq_data_example.html`
+Reading man/read_aligned_fasta.Rd
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Writing `reference/read_aligned_fasta.html`
+Reading man/read_bed.Rd
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Writing `reference/read_bed.html`
+Reading man/read_bedgraph.Rd
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Writing `reference/read_bedgraph.html`
+Reading man/read_bedpe.Rd
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Writing `reference/read_bedpe.html`
+Reading man/read_bigwig.Rd
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Writing `reference/read_bigwig.html`
+Reading man/read_blast.Rd
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Writing `reference/read_blast.html`
+Reading man/read_chain.Rd
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Writing `reference/read_chain.html`
+Reading man/read_delta.Rd
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Writing `reference/read_delta.html`
+Reading man/read_fasta_lengths.Rd
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Writing `reference/read_fasta_lengths.html`
+Reading man/read_feature_relations.Rd
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Writing `reference/read_feature_relations.html`
+Reading man/read_genbank.Rd
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Writing `reference/read_genbank.html`
+Reading man/read_gff3.Rd
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Writing `reference/read_gff3.html`
+Reading man/read_maf.Rd
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Writing `reference/read_maf.html`
+Reading man/read_paf.Rd
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Writing `reference/read_paf.html`
+Reading man/read_signature_matches.Rd
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Writing `reference/read_signature_matches.html`
+Reading man/read_vcf.Rd
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Writing `reference/read_vcf.html`
+Reading man/register_ggchord_alignment.Rd
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Writing `reference/register_ggchord_alignment.html`
+Reading man/restriction_site_example.Rd
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Writing `reference/restriction_site_example.html`
+Reading man/ribbon_data_example.Rd
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Writing `reference/ribbon_data_example.html`
+Reading man/scale_feature_fill_plasmid.Rd
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Writing `reference/scale_feature_fill_plasmid.html`
+Reading man/scale_feature_shape_manual.Rd
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Writing `reference/scale_feature_shape_manual.html`
+Reading man/scale_gene_fill_manual.Rd
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Writing `reference/scale_gene_fill_manual.html`
+Reading man/scale_link.Rd
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Writing `reference/scale_link.html`
+Reading man/scale_ribbon_alpha_continuous.Rd
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Writing `reference/scale_ribbon_alpha_continuous.html`
+Reading man/scale_ribbon_fill_stepsn.Rd
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Writing `reference/scale_ribbon_fill_stepsn.html`
+Reading man/scale_seq_colour_manual.Rd
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Writing `reference/scale_seq_colour_manual.html`
+Reading man/scale_seq_position_continuous.Rd
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Writing `reference/scale_seq_position_continuous.html`
+Reading man/scale_seq_ring_manual.Rd
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Writing `reference/scale_seq_ring_manual.html`
+Reading man/scale_track_fill_gradientn.Rd
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Writing `reference/scale_track_fill_gradientn.html`
+Reading man/scale_track_value_continuous.Rd
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Writing `reference/scale_track_value_continuous.html`
+Reading man/segment_ggchord_data.Rd
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Writing `reference/segment_ggchord_data.html`
+Reading man/seq_data_example.Rd
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Writing `reference/seq_data_example.html`
+Reading man/single_gene_example.Rd
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Writing `reference/single_gene_example.html`
+Reading man/single_genome_example.Rd
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Writing `reference/single_genome_example.html`
+Reading man/stat_ribbon_bundle.Rd
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Writing `reference/stat_ribbon_bundle.html`
+Reading man/stat_ribbon_density.Rd
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Writing `reference/stat_ribbon_density.html`
+Reading man/theme_ggchord.Rd
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Writing `reference/theme_ggchord.html`
+Reading man/translate_ggchord_cds.Rd
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Writing `reference/translate_ggchord_cds.html`
+Reading man/validate_ggchord_data.Rd
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Writing `reference/validate_ggchord_data.html`
+Reading man/validate_ggchord_hierarchy.Rd
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Writing `reference/validate_ggchord_hierarchy.html`
+Reading man/view_ggchord.Rd
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Writing `reference/view_ggchord.html`
+Article: en index 
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Article: en installation 
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Article: en modes 
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Article: en chord-start 
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Article: en chord-data 
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Article: en chord-import 
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Article: en chord-build 
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Article: en chord-tuning 
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Article: en chord-geometry 
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Article: en chord-routing 
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Article: en chord-labels 
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Article: en ribbons 
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Article: en real-data 
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Article: en chord 
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Article: en collinear-start 
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Article: en collinear-data 
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Article: en collinear-build 
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Article: en collinear-routing 
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Article: en homology 
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Article: en views 
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Article: en collinear 
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Article: en plasmid-start 
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Article: en plasmid-data 
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Article: en plasmid-build 
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Article: en recognition 
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Article: en plasmid-catalog 
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Article: en plasmids 
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Article: en data 
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Article: en formats 
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Article: en alignments 
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Article: en projection 
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Article: en annotations 
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Article: en labels 
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Article: en tracks 
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Article: en styling 
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Article: en parameters 
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Article: en adjustments 
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Article: en output 
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Article: en gallery 
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Article: en faq 
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Article: en collinear-tuning 
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Article: en plasmid-tuning 
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Article: en about 
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Article: en protein-alignments 
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Article: en collinear-layout 
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Article: en task-index 
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Article: en compatibility 
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Article: en feature-geometry 
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Article: en chord-branches 
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Article: en circular-layers 
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Article: en circular-labels 
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Article: en primers 
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Article: en restriction-sites 
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Article: en scale-families 
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Article: en ribbon-statistics 
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Article: en parameter-atlas 
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Article: en workflow-tools 
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Article: en api-curriculum 
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Article: en foundation 
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Article: en view-expansion 
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+Article: en fusion 
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+pkgdown templates and reference rendered for en and zh. No examples or vignettes executed.
