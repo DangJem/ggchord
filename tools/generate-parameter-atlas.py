@@ -18,34 +18,13 @@ def family(name):
     return 'workflows'
 
 def kind(api,name,default,lang):
-    zh=lang=='zh'
-    # Same spelling does not imply the same parameter contract across APIs.
-    if api=='map_alignment_position' and name=='position':
-        return '正整数或 NA；原始位置或对齐列' if zh else 'Positive integers or NA; source positions or alignment columns'
-    if api=='map_ggchord_position' and name=='position':
-        return '数值位置；Radial 逆映射用 x/y 矩阵或数据框' if zh else 'Numeric positions; Radial inverse uses an x/y matrix or data frame'
-    if name in ['seq_data','ribbon_data','gene_data','feature_data']:
-        return '本函数支持的表格/对象；见右侧契约' if zh else 'API-specific table/supported object; see the contract'
-    if name=='data':
-        return ('图层数据表或 ggplot2 数据函数' if zh else 'Layer data frame or ggplot2 data function') if api.startswith('geom_') else ('本函数的数据输入；见右侧契约' if zh else 'API-specific data input; see the contract')
-    if name=='...':return '上游转发参数' if zh else 'Forwarded arguments'
-    if name=='sequence':return '序列对象/字符串/完整序列表，见说明' if zh else 'Sequence object/string/complete-sequence table; see description'
-    if name=='mapping':return 'aes 映射' if zh else 'aes mapping'
-    if name in ['file','files','python','ids']:return '字符路径、标识或向量；见约束' if zh else 'Character path/identifier/vector; see constraints'
-    if name in ['loci','segments','anchor']:return '显式窗口/锚点表或已记录的等价输入' if zh else 'Explicit window/anchor table or documented equivalent'
-    if default in ['TRUE','FALSE']:return '逻辑值' if zh else 'Logical'
-    if re.fullmatch(r'-?[\d.]+L?',default):return '数值/整数；范围见说明' if zh else 'Numeric/integer; range in description'
-    if default.startswith('c('):return '向量；候选/多选含义见说明' if zh else 'Vector; choices versus multiple selection below'
-    if default.startswith('"'):return '字符/枚举；取值见说明' if zh else 'Character/enum; choices below'
-    if 'unit(' in default:return 'grid 物理单位对象' if zh else 'grid physical-unit object'
-    if default.startswith('list('):return '命名列表' if zh else 'Named list'
-    if name in ['position','base_position']:return 'Position 对象或已记录的字符串' if zh else 'Position object or documented string'
-    if name in ['values','limits','breaks','minor_breaks','colours','colors','range']:return '向量/标度规则；按标度类型解释' if zh else 'Vector/scale rule; interpreted by scale type'
-    if name in ['width','offset','spacing','seq_radius','seq_curvature','seq_gap','seq_orientation','seq_order','label_rotation','label_radial_offset','label_circum_offset']:return '几何数值/向量/已记录格式' if zh else 'Geometry number/vector/documented formats'
-    if name.endswith('_style'):return '固定文字样式列表' if zh else 'Fixed text-style list'
-    if name=='guide' or default.startswith('ggplot2::guide'):return 'guide 对象或名称' if zh else 'Guide object or name'
-    if default=='NULL':return '可空 R 对象；具体类型/继承见说明' if zh else 'Nullable R object; type/inheritance below'
-    return 'R 对象；约束见说明' if zh else 'R object; constraints below'
+    # Types are never inferred from a formal default or a shared spelling.
+    # Uncurated entries defer to their exact canonical Rd argument contract.
+    metadata=json.loads((WEB/'parameter-overrides.json').read_text())
+    entry=metadata.get(api,{}).get(name)
+    if entry:return entry['type'][lang]
+    return ('类型、单位及允许格式见右侧本函数参数契约' if lang=='zh' else
+            'Type, units and accepted forms: see this API argument contract at right')
 
 def main():
     ap=argparse.ArgumentParser();ap.add_argument('--check',action='store_true');args=ap.parse_args()
@@ -84,7 +63,7 @@ def main():
                     default_text=default or ('无形式默认；是否必需见契约' if zh else 'No formal default; requiredness follows the contract')
                     cells=[f'`{parameter}`',f'`{default_text}`',kind(name,parameter,default,lang),description]
                     content+=['| '+' | '.join(c.replace('|','\\|').replace('\n',' ') for c in cells)+' |']
-                    if lang=='en':records.append(dict(api=name,parameter=parameter,default=default,type=kind(name,parameter,default,'en'),constraint=description,source=str(path.relative_to(ROOT)),requiredness='see API contract' if not default else 'has formal default'))
+                    if lang=='en':records.append(dict(api=name,parameter=parameter,default=default,type=kind(name,parameter,default,'en'),constraint=description,source=str(path.relative_to(ROOT)),requiredness='see API contract; not inferred from formals',type_source='explicit API override' if parameter in json.loads((WEB/'parameter-overrides.json').read_text()).get(name,{}) else 'canonical Rd argument contract',units='see canonical argument contract'))
                 content+=['\n</details>\n']
         content += ['\n## '+('上游重导出与对象' if zh else 'Upstream reexports and objects')+' {#upstream}\n',
                     ('这些入口保留上游 ggplot2/grid 语义；它们不是新增的 ggchord 图层。after_stat/after_scale 的阶段不同，不能由 identical 结果推断可互换。\n' if zh else 'These retain upstream ggplot2/grid semantics rather than defining new ggchord layers. After_stat and after_scale differ by stage even if identical compares their R objects equal.\n')]

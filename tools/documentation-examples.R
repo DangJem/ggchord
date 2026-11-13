@@ -388,7 +388,7 @@ p_native_chord <- ggchord(protein_seq_data_example, protein_ribbon_data_example)
 p_native_chord
 # ---- protein ----
 protein_source <- read_blast("examples/format-inputs/emales-mavirus-blastp.tsv", source_file = TRUE)
-emale_source <- read_gff3("examples/format-inputs/emales-BVI_023A.gff3", source_file = TRUE)
+emale_source <- read_gff3("examples/format-inputs/emales-BVI_023A.gff3", unstranded = "keep", source_file = TRUE)
 # The source declares complete Prodigal CDS and translation table 11.
 emale_coding <- emale_source |>
   filter(grepl("partial=00", attributes)) |>

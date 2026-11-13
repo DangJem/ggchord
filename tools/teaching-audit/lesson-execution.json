@@ -27,7 +27,7 @@
         "comparebundlesummary"
       ],
       "raw_blocks": 0,
-      "isolation": "fresh R process, separate documentation environment",
+      "isolation": "separate R environment; packages loaded as declared by lesson snippets",
       "exports": "raw save/preview arguments checked; actual PNG exports verified separately"
     },
     "real-data": {
@@ -156,7 +156,7 @@
         "foundationdata"
       ],
       "raw_blocks": 0,
-      "isolation": "fresh R process, separate documentation environment",
+      "isolation": "separate R environment; packages loaded as declared by lesson snippets",
       "exports": "raw save/preview arguments checked; actual PNG exports verified separately"
     },
     "alignments": {
@@ -267,8 +267,8 @@
         "protein",
         "proteinproject"
       ],
-      "raw_blocks": 0,
-      "isolation": "separate R environment; packages loaded as declared by lesson snippets",
+      "raw_blocks": 1,
+      "isolation": "fresh R process, separate documentation environment",
       "exports": "raw save/preview arguments checked; actual PNG exports verified separately"
     },
     "collinear-layout": {
@@ -388,19 +388,6 @@
       "isolation": "separate R environment; packages loaded as declared by lesson snippets",
       "exports": "raw save/preview arguments checked; actual PNG exports verified separately"
     },
-    "ribbon-statistics": {
-      "result": "success",
-      "chunks": [
-        "comparedensitydata",
-        "comparedensityfour",
-        "comparedensityeight",
-        "comparebundle",
-        "comparebundlesummary"
-      ],
-      "raw_blocks": 0,
-      "isolation": "separate R environment; packages loaded as declared by lesson snippets",
-      "exports": "raw save/preview arguments checked; actual PNG exports verified separately"
-    },
     "multi-sequence-start": {
       "result": "success",
       "chunks": [
@@ -506,7 +493,7 @@
         "pointlinks"
       ],
       "raw_blocks": 0,
-      "isolation": "fresh R process, separate documentation environment",
+      "isolation": "separate R environment; packages loaded as declared by lesson snippets",
       "exports": "raw save/preview arguments checked; actual PNG exports verified separately"
     },
     "multi-sequence-labels": {
@@ -646,17 +633,9 @@
     },
     "aligned-sequences": {
       "result": "success",
-      "chunks": [
-        "courseblockaq",
-        "setup",
-        "courseblockar",
-        "courseblockas",
-        "courseblockat",
-        "courseblockau",
-        "courseblockav"
-      ],
+      "chunks": ["courseblockaq", "setup", "courseblockar", "courseblockas", "courseblockat", "courseblockau", "courseblockav"],
       "raw_blocks": 0,
-      "isolation": "separate R environment; packages loaded as declared by lesson snippets",
+      "isolation": "fresh R process, separate documentation environment",
       "exports": "raw save/preview arguments checked; actual PNG exports verified separately"
     },
     "import-signals": {
@@ -797,7 +776,7 @@
       "exports": "raw save/preview arguments checked; actual PNG exports verified separately"
     }
   },
-  "shared_code_sha256": "060d00fa173bbd0c89bf970b8bb909611888219d11ad48d9d6d8798e1ad5bceb",
+  "shared_code_sha256": "abb8b3c3aa21ea2d21374a9da0a2b1d932066492a91a21a0d2572bc661b077a9",
   "engine_sha256": {
     "R/aaa-geom.R": "d5f96ca626a3ac478bb59b6deb363a0d5998be4f279a865242814fc319c9bad5",
     "R/adaptive-layout.R": "6ba31b38e144dca446780f838f2329d018a4314e36dd91dd985d66d622cd4849",
@@ -933,5 +912,5 @@
     "R/zzz.R": "f35f4655b8ebcd6d1f7eae29285e2a66d67265cb27fa1ec731aa2ccece90b860"
   },
   "scope": "Shared preparations and raw constructors in page order; preview/save calls do not write files. Installation commands are not executed. Actual PNG exports are recorded separately.",
-  "optional_genbank": "Current observed output is NULL: optional parser skipped; not counted as successful import."
+  "optional_genbank": "Conditional optional parser; NULL is a skip, not successful GenBank import"
 }

@@ -1,4 +1,16 @@
 {
+  "comparebundlesummary": {
+    "columns": [
+      "observed_rows",
+      "displayed_bundles"
+    ],
+    "rows": [
+      [
+        13,
+        11
+      ]
+    ]
+  },
   "realimport": {
     "console": "[1] table    category severity n       \n<0 rows> (or 0-length row.names)"
   },
@@ -107,6 +119,134 @@
         7,
         6,
         3
+      ]
+    ]
+  },
+  "frontseqtable": {
+    "columns": [
+      "accver",
+      "length"
+    ],
+    "rows": [
+      [
+        "MT108731.1",
+        "64323"
+      ],
+      [
+        "MT118296.1",
+        "32090"
+      ],
+      [
+        "OQ646790.1",
+        "57367"
+      ],
+      [
+        "OR222515.1",
+        "83080"
+      ]
+    ]
+  },
+  "frontlinktable": {
+    "columns": [
+      "qaccver",
+      "qstart",
+      "qend",
+      "saccver",
+      "sstart",
+      "send",
+      "pident"
+    ],
+    "rows": [
+      [
+        "MT108731.1",
+        "26298",
+        "51139",
+        "MT118296.1",
+        "7121",
+        "31959",
+        "98.612"
+      ],
+      [
+        "MT108731.1",
+        "21513",
+        "25922",
+        "MT118296.1",
+        "2365",
+        "6772",
+        "97.031"
+      ],
+      [
+        "MT108731.1",
+        "20376",
+        "20677",
+        "MT118296.1",
+        "403",
+        "704",
+        "96.689"
+      ],
+      [
+        "MT108731.1",
+        "45278",
+        "50839",
+        "OQ646790.1",
+        "27955",
+        "33476",
+        "78.429"
+      ],
+      [
+        "MT108731.1",
+        "12796",
+        "14536",
+        "OQ646790.1",
+        "722",
+        "2456",
+        "80.011"
+      ]
+    ]
+  },
+  "frontgenetable": {
+    "columns": [
+      "accver",
+      "start",
+      "end",
+      "strand",
+      "anno"
+    ],
+    "rows": [
+      [
+        "MT108731.1",
+        "13064",
+        "14554",
+        "+",
+        "hypothetical protein"
+      ],
+      [
+        "MT108731.1",
+        "22920",
+        "23705",
+        "+",
+        "hypothetical protein"
+      ],
+      [
+        "MT108731.1",
+        "23894",
+        "24814",
+        "+",
+        "hypothetical protein"
+      ],
+      [
+        "MT108731.1",
+        "27115",
+        "28053",
+        "+",
+        "hypothetical protein"
+      ],
+      [
+        "MT108731.1",
+        "48053",
+        "49111",
+        "+",
+        "hypothetical protein"
       ]
     ]
   },
@@ -470,18 +610,6 @@
       ]
     ]
   },
-  "comparebundlesummary": {
-    "columns": [
-      "observed_rows",
-      "displayed_bundles"
-    ],
-    "rows": [
-      [
-        13,
-        11
-      ]
-    ]
-  },
   "frontduetsummary": {
     "columns": [
       "features",
@@ -752,133 +880,5 @@
   },
   "comparediagnostics": {
     "console": "List of 2\n $ measurement:List of 17\n $ order      : chr [1:4] \"MT108731.1\" \"MT118296.1\" \"OQ646790.1\" ..."
-  },
-  "frontseqtable": {
-    "columns": [
-      "accver",
-      "length"
-    ],
-    "rows": [
-      [
-        "MT108731.1",
-        "64323"
-      ],
-      [
-        "MT118296.1",
-        "32090"
-      ],
-      [
-        "OQ646790.1",
-        "57367"
-      ],
-      [
-        "OR222515.1",
-        "83080"
-      ]
-    ]
-  },
-  "frontlinktable": {
-    "columns": [
-      "qaccver",
-      "qstart",
-      "qend",
-      "saccver",
-      "sstart",
-      "send",
-      "pident"
-    ],
-    "rows": [
-      [
-        "MT108731.1",
-        "26298",
-        "51139",
-        "MT118296.1",
-        "7121",
-        "31959",
-        "98.612"
-      ],
-      [
-        "MT108731.1",
-        "21513",
-        "25922",
-        "MT118296.1",
-        "2365",
-        "6772",
-        "97.031"
-      ],
-      [
-        "MT108731.1",
-        "20376",
-        "20677",
-        "MT118296.1",
-        "403",
-        "704",
-        "96.689"
-      ],
-      [
-        "MT108731.1",
-        "45278",
-        "50839",
-        "OQ646790.1",
-        "27955",
-        "33476",
-        "78.429"
-      ],
-      [
-        "MT108731.1",
-        "12796",
-        "14536",
-        "OQ646790.1",
-        "722",
-        "2456",
-        "80.011"
-      ]
-    ]
-  },
-  "frontgenetable": {
-    "columns": [
-      "accver",
-      "start",
-      "end",
-      "strand",
-      "anno"
-    ],
-    "rows": [
-      [
-        "MT108731.1",
-        "13064",
-        "14554",
-        "+",
-        "hypothetical protein"
-      ],
-      [
-        "MT108731.1",
-        "22920",
-        "23705",
-        "+",
-        "hypothetical protein"
-      ],
-      [
-        "MT108731.1",
-        "23894",
-        "24814",
-        "+",
-        "hypothetical protein"
-      ],
-      [
-        "MT108731.1",
-        "27115",
-        "28053",
-        "+",
-        "hypothetical protein"
-      ],
-      [
-        "MT108731.1",
-        "48053",
-        "49111",
-        "+",
-        "hypothetical protein"
-      ]
-    ]
   }
 }

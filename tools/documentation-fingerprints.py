@@ -15,8 +15,8 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 
 
-def fingerprints(runtime_hashes=None):
-    source = (ROOT / 'tools/documentation-examples.R').read_text()
+def fingerprints(runtime_hashes=None, recipe_source=None):
+    source = recipe_source if recipe_source is not None else (ROOT / 'tools/documentation-examples.R').read_text()
     markers = list(re.finditer(r'^# ---- ([a-z]+) ----\n', source, re.M))
     chunks = {m[1]: source[m.end():markers[i + 1].start()].removesuffix('\n')
               for i, m in enumerate(markers[:-1])}

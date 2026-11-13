@@ -32,7 +32,9 @@
 
 如果需要在核酸骨架上定位命中，则提供已知 CDS 映射，将 aa 区间投影到 bp。下面另用 BVI_023A_0009 的源蛋白命中演示，先选出具有完整 CDS 的记录，再转换 query 端。此小节读取[教程输入包](formats.html)中的原始文件。
 
-先运行 `library(dplyr)`。
+```r
+library(dplyr)
+```
 
 {{code:protein}}
 {{output:protein}}

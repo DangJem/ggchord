@@ -1,7 +1,7 @@
 {
   "status": "equivalent dependencies; old renders retained",
   "baseline": "0f5dd96da57876da74cd1234c7de9cf5579c80b8",
-  "method": "R parse(keep.source=FALSE) equality; unchanged original recipes/data/runtime and every stored dependency/PNG hash",
+  "method": "R parse(keep.source=FALSE) equality; exact explicit-keep recipe change with identical 24-row source input; unchanged data/runtime and every stored dependency/PNG hash",
   "current_api_document_sha256": "3ebf3af00ac4808cc4beabd3712cb81ab6db5a11ba50d4ee208c3eacbbd8977f",
   "figure_count": 178,
   "figures": {

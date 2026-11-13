@@ -1,0 +1,42 @@
+{
+  "map_alignment_position": {
+    "position": {
+      "type": {
+        "zh": "正整数或 NA；原始位置或对齐列",
+        "en": "Positive integers or NA; source positions or alignment columns"
+      }
+    }
+  },
+  "map_ggchord_position": {
+    "position": {
+      "type": {
+        "zh": "数值位置；Radial 逆映射用 x/y 矩阵或数据框",
+        "en": "Numeric positions; Radial inverse uses an x/y matrix or data frame"
+      }
+    }
+  },
+  "project_ggchord_features": {
+    "feature_data": {
+      "type": {
+        "zh": "data.frame；每个输入特征一行，分段存于 segments 列",
+        "en": "data.frame; one output per input feature, with pieces in segments"
+      }
+    }
+  },
+  "segment_ggchord_data": {
+    "windows": {
+      "type": {
+        "zh": "窗口数据框；字段与坐标约束见参数契约",
+        "en": "Window data frame; fields and coordinates follow the argument contract"
+      }
+    }
+  },
+  "geom_track_bar": {
+    "baseline": {
+      "type": {
+        "zh": "数值 0；计数柱拒绝非零基线",
+        "en": "Numeric 0; count bars reject nonzero baselines"
+      }
+    }
+  }
+}

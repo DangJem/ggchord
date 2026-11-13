@@ -317,7 +317,7 @@ library(dplyr)
 genome <- read_fasta_lengths(
   "examples/format-inputs/emales-BVI_023A.fna", keep_sequence = TRUE
 )
-coding <- read_gff3("examples/format-inputs/emales-BVI_023A.gff3") |>
+coding <- read_gff3("examples/format-inputs/emales-BVI_023A.gff3", unstranded = "keep") |>
   filter(feature_id == "BVI_023A_0009")
 cds <- build_ggchord_cds(coding, genetic_code = 11)
 observed <- translate_ggchord_cds(cds, genome, initiation = "start")

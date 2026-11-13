@@ -14,13 +14,13 @@ Start with the [learning overview](learn.html#tasks). Lessons compare important 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `rotation` | `0` | Numeric/integer; range in description | Global counterclockwise layout rotation in degrees, default 0, measured from the positive x axis. This rotates the complete layout; it does not change the biological strand or sequence orientation. |
-| `ratio` | `1` | Numeric/integer; range in description | Fixed y/x aspect ratio, default 1. |
-| `xlim` | `NULL` | Nullable R object; type/inheritance below | Optional user limits. Explicit limits take priority over automatically fitted limits. |
-| `ylim` | `NULL` | Nullable R object; type/inheritance below | Optional user limits. Explicit limits take priority over automatically fitted limits. |
-| `expand` | `FALSE` | Logical | Logical. Expand coordinate limits, default FALSE. Automatic fitting already includes a small safety margin; set TRUE to request the additional ggplot2 coordinate expansion. |
-| `clip` | `"off"` | Character/enum; choices below | Whether drawing is clipped to the panel, default "off". |
-| `fit` | `c("labels", "geometry", "manual")` | Vector; choices versus multiple selection below | Fitting strategy: "labels" includes measured label boxes, "geometry" fits geometric elements only, and "manual" requires explicit xlim and ylim. |
+| `rotation` | `0` | Type, units and accepted forms: see this API argument contract at right | Global counterclockwise layout rotation in degrees, default 0, measured from the positive x axis. This rotates the complete layout; it does not change the biological strand or sequence orientation. |
+| `ratio` | `1` | Type, units and accepted forms: see this API argument contract at right | Fixed y/x aspect ratio, default 1. |
+| `xlim` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional user limits. Explicit limits take priority over automatically fitted limits. |
+| `ylim` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional user limits. Explicit limits take priority over automatically fitted limits. |
+| `expand` | `FALSE` | Type, units and accepted forms: see this API argument contract at right | Logical. Expand coordinate limits, default FALSE. Automatic fitting already includes a small safety margin; set TRUE to request the additional ggplot2 coordinate expansion. |
+| `clip` | `"off"` | Type, units and accepted forms: see this API argument contract at right | Whether drawing is clipped to the panel, default "off". |
+| `fit` | `c("labels", "geometry", "manual")` | Type, units and accepted forms: see this API argument contract at right | Fitting strategy: "labels" includes measured label boxes, "geometry" fits geometric elements only, and "manual" requires explicit xlim and ylim. |
 
 </details>
 
@@ -33,15 +33,15 @@ Start with the [learning overview](learn.html#tasks). Lessons compare important 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `rotation` | `0` | Numeric/integer; range in description | Counterclockwise rotation in degrees from a 12-o'clock genomic origin. The default 0 keeps the origin at 12 o'clock; 90 places it at 9 o'clock, and -90 at 3 o'clock. |
-| `direction` | `c("clockwise", "counterclockwise")` | Vector; choices versus multiple selection below | Direction of increasing genomic coordinates. |
-| `gap` | `0` | Numeric/integer; range in description | Opening in degrees. Zero draws a closed circle. |
-| `ratio` | `1` | Numeric/integer; range in description | Fixed y/x aspect ratio, default 1. |
-| `xlim` | `NULL` | Nullable R object; type/inheritance below | Optional user limits. Explicit limits take priority over automatically fitted limits. |
-| `ylim` | `NULL` | Nullable R object; type/inheritance below | Optional user limits. Explicit limits take priority over automatically fitted limits. |
-| `expand` | `FALSE` | Logical | Logical. Expand coordinate limits, default FALSE. Automatic fitting already includes a small safety margin; set TRUE to request the additional ggplot2 coordinate expansion. |
-| `clip` | `"off"` | Character/enum; choices below | Whether drawing is clipped to the panel, default "off". |
-| `fit` | `c("labels", "geometry", "manual")` | Vector; choices versus multiple selection below | Fitting strategy: "labels" includes measured label boxes, "geometry" fits geometric elements only, and "manual" requires explicit xlim and ylim. |
+| `rotation` | `0` | Type, units and accepted forms: see this API argument contract at right | Counterclockwise rotation in degrees from a 12-o'clock genomic origin. The default 0 keeps the origin at 12 o'clock; 90 places it at 9 o'clock, and -90 at 3 o'clock. |
+| `direction` | `c("clockwise", "counterclockwise")` | Type, units and accepted forms: see this API argument contract at right | Direction of increasing genomic coordinates. |
+| `gap` | `0` | Type, units and accepted forms: see this API argument contract at right | Opening in degrees. Zero draws a closed circle. |
+| `ratio` | `1` | Type, units and accepted forms: see this API argument contract at right | Fixed y/x aspect ratio, default 1. |
+| `xlim` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional user limits. Explicit limits take priority over automatically fitted limits. |
+| `ylim` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional user limits. Explicit limits take priority over automatically fitted limits. |
+| `expand` | `FALSE` | Type, units and accepted forms: see this API argument contract at right | Logical. Expand coordinate limits, default FALSE. Automatic fitting already includes a small safety margin; set TRUE to request the additional ggplot2 coordinate expansion. |
+| `clip` | `"off"` | Type, units and accepted forms: see this API argument contract at right | Whether drawing is clipped to the panel, default "off". |
+| `fit` | `c("labels", "geometry", "manual")` | Type, units and accepted forms: see this API argument contract at right | Fitting strategy: "labels" includes measured label boxes, "geometry" fits geometric elements only, and "manual" requires explicit xlim and ylim. |
 
 </details>
 
@@ -54,19 +54,19 @@ Start with the [learning overview](learn.html#tasks). Lessons compare important 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `ratio` | `1` | Numeric/integer; range in description | Fixed y/x aspect ratio, default 1. |
-| `xlim` | `NULL` | Nullable R object; type/inheritance below | Optional user limits. Explicit limits take priority over automatically fitted limits. |
-| `ylim` | `NULL` | Nullable R object; type/inheritance below | Optional user limits. Explicit limits take priority over automatically fitted limits. |
-| `expand` | `FALSE` | Logical | Logical. Expand coordinate limits, default FALSE. Automatic fitting already includes a small safety margin; set TRUE to request the additional ggplot2 coordinate expansion. |
-| `clip` | `"off"` | Character/enum; choices below | Whether drawing is clipped to the panel, default "off". |
-| `fit` | `c("labels", "geometry", "manual")` | Vector; choices versus multiple selection below | Fitting strategy: "labels" includes measured label boxes, "geometry" fits geometric elements only, and "manual" requires explicit xlim and ylim. |
-| `align` | `c("left", "center", "right")` | Vector; choices versus multiple selection below | Display alignment: "left" (default), "center", or "right". Applied to the full sequence or the interval supplied by anchor. |
-| `anchor` | `NULL` | Explicit window/anchor table or documented equivalent | Optional anchor positions as a numeric vector named by accver, or a data frame with accver and either position or start/end. Every displayed sequence must have exactly one anchor. Missing and duplicate anchors are errors; multiple-copy targets must be selected explicitly before constructing the coordinate system. |
-| `orientation` | `c("manual", "auto")` | Vector; choices versus multiple selection below | "manual" (default) uses sequence directions supplied by geom_seq(). "auto" derives display directions from interval-link evidence and records support and unresolved cases. |
-| `min_support` | `0.1` | Numeric/integer; range in description | Minimum directional imbalance in [0, 1] for an automatic change. It is the absolute difference between forward and reverse support divided by their sum, default 0.1. A tie is always unresolved. |
-| `segments` | `NULL` | Explicit window/anchor table or documented equivalent | Optional data frame with unique window accver, row_id and orientation (1 or -1). Every displayed accession must be declared. Each window has its own local coordinates and reversible source metadata. |
-| `segment_gap` | `100` | Numeric/integer; range in description | Positive display gap in native sequence units when segments is supplied, default 100. It never implies genomic continuity. |
-| `seq_axis` | `c("horizontal", "vertical")` | Vector; choices versus multiple selection below | "horizontal" (default) or "vertical". Vertical mode projects sequence-local geometry onto upright columns and lays out text in its own readable orientation; it does not change source strands. |
+| `ratio` | `1` | Type, units and accepted forms: see this API argument contract at right | Fixed y/x aspect ratio, default 1. |
+| `xlim` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional user limits. Explicit limits take priority over automatically fitted limits. |
+| `ylim` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional user limits. Explicit limits take priority over automatically fitted limits. |
+| `expand` | `FALSE` | Type, units and accepted forms: see this API argument contract at right | Logical. Expand coordinate limits, default FALSE. Automatic fitting already includes a small safety margin; set TRUE to request the additional ggplot2 coordinate expansion. |
+| `clip` | `"off"` | Type, units and accepted forms: see this API argument contract at right | Whether drawing is clipped to the panel, default "off". |
+| `fit` | `c("labels", "geometry", "manual")` | Type, units and accepted forms: see this API argument contract at right | Fitting strategy: "labels" includes measured label boxes, "geometry" fits geometric elements only, and "manual" requires explicit xlim and ylim. |
+| `align` | `c("left", "center", "right")` | Type, units and accepted forms: see this API argument contract at right | Display alignment: "left" (default), "center", or "right". Applied to the full sequence or the interval supplied by anchor. |
+| `anchor` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional anchor positions as a numeric vector named by accver, or a data frame with accver and either position or start/end. Every displayed sequence must have exactly one anchor. Missing and duplicate anchors are errors; multiple-copy targets must be selected explicitly before constructing the coordinate system. |
+| `orientation` | `c("manual", "auto")` | Type, units and accepted forms: see this API argument contract at right | "manual" (default) uses sequence directions supplied by geom_seq(). "auto" derives display directions from interval-link evidence and records support and unresolved cases. |
+| `min_support` | `0.1` | Type, units and accepted forms: see this API argument contract at right | Minimum directional imbalance in [0, 1] for an automatic change. It is the absolute difference between forward and reverse support divided by their sum, default 0.1. A tie is always unresolved. |
+| `segments` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional data frame with unique window accver, row_id and orientation (1 or -1). Every displayed accession must be declared. Each window has its own local coordinates and reversible source metadata. |
+| `segment_gap` | `100` | Type, units and accepted forms: see this API argument contract at right | Positive display gap in native sequence units when segments is supplied, default 100. It never implies genomic continuity. |
+| `seq_axis` | `c("horizontal", "vertical")` | Type, units and accepted forms: see this API argument contract at right | "horizontal" (default) or "vertical". Vertical mode projects sequence-local geometry onto upright columns and lays out text in its own readable orientation; it does not change source strands. |
 
 </details>
 
@@ -79,16 +79,16 @@ Start with the [learning overview](learn.html#tasks). Lessons compare important 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `x_seqs` | `NULL` | Nullable R object; type/inheritance below | Optional unique accession vectors in axis order. Defaults to the query/subject accessions occurring in alignment layers, or all sequences when there are no alignments. Rows outside a selected axis set are omitted and recorded; self and repeated HSP rows are retained. |
-| `y_seqs` | `NULL` | Nullable R object; type/inheritance below | Optional unique accession vectors in axis order. Defaults to the query/subject accessions occurring in alignment layers, or all sequences when there are no alignments. Rows outside a selected axis set are omitted and recorded; self and repeated HSP rows are retained. |
-| `x_orientation` | `1` | Numeric/integer; range in description | Display direction: 1 or -1, either a scalar or a vector named by every selected accession. Input is unchanged. |
-| `y_orientation` | `1` | Numeric/integer; range in description | Display direction: 1 or -1, either a scalar or a vector named by every selected accession. Input is unchanged. |
-| `gap` | `NULL` | Nullable R object; type/inheritance below | Nonnegative spacing in native sequence units between axis segments. NULL uses five percent of the longest sequence. |
-| `ratio` | `1` | Numeric/integer; range in description | Ratio of physical y units to physical x units, default 1. |
-| `xlim` | `NULL` | Nullable R object; type/inheritance below | Optional global concatenated position limits. These zoom the panel without changing exported HSP endpoints. |
-| `ylim` | `NULL` | Nullable R object; type/inheritance below | Optional global concatenated position limits. These zoom the panel without changing exported HSP endpoints. |
-| `expand` | `FALSE` | Logical | Logical. Expand panel limits, default FALSE. |
-| `clip` | `"on"` | Character/enum; choices below | Panel clipping, "on" (default) or "off". |
+| `x_seqs` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional unique accession vectors in axis order. Defaults to the query/subject accessions occurring in alignment layers, or all sequences when there are no alignments. Rows outside a selected axis set are omitted and recorded; self and repeated HSP rows are retained. |
+| `y_seqs` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional unique accession vectors in axis order. Defaults to the query/subject accessions occurring in alignment layers, or all sequences when there are no alignments. Rows outside a selected axis set are omitted and recorded; self and repeated HSP rows are retained. |
+| `x_orientation` | `1` | Type, units and accepted forms: see this API argument contract at right | Display direction: 1 or -1, either a scalar or a vector named by every selected accession. Input is unchanged. |
+| `y_orientation` | `1` | Type, units and accepted forms: see this API argument contract at right | Display direction: 1 or -1, either a scalar or a vector named by every selected accession. Input is unchanged. |
+| `gap` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Nonnegative spacing in native sequence units between axis segments. NULL uses five percent of the longest sequence. |
+| `ratio` | `1` | Type, units and accepted forms: see this API argument contract at right | Ratio of physical y units to physical x units, default 1. |
+| `xlim` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional global concatenated position limits. These zoom the panel without changing exported HSP endpoints. |
+| `ylim` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional global concatenated position limits. These zoom the panel without changing exported HSP endpoints. |
+| `expand` | `FALSE` | Type, units and accepted forms: see this API argument contract at right | Logical. Expand panel limits, default FALSE. |
+| `clip` | `"on"` | Type, units and accepted forms: see this API argument contract at right | Panel clipping, "on" (default) or "off". |
 
 </details>
 
@@ -101,15 +101,15 @@ Start with the [learning overview](learn.html#tasks). Lessons compare important 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `start_angle` | `90` | Numeric/integer; range in description | Direction of the first outward spoke in degrees, counterclockwise from the positive x axis. Default 90 starts at noon. |
-| `clockwise` | `TRUE` | Logical | Logical, order subsequent spokes clockwise, default TRUE. |
-| `inner_radius` | `0.6` | Numeric/integer; range in description | Positive inner radius in layout units, default 0.6. The longest proportional spoke has length 2. The central hole is display spacing and does not remove any source positions. |
-| `ratio` | `1` | Numeric/integer; range in description | Fixed y/x aspect ratio, default 1. |
-| `xlim` | `NULL` | Nullable R object; type/inheritance below | Optional user limits. Explicit limits take priority over automatically fitted limits. |
-| `ylim` | `NULL` | Nullable R object; type/inheritance below | Optional user limits. Explicit limits take priority over automatically fitted limits. |
-| `expand` | `FALSE` | Logical | Logical. Expand coordinate limits, default FALSE. Automatic fitting already includes a small safety margin; set TRUE to request the additional ggplot2 coordinate expansion. |
-| `clip` | `"off"` | Character/enum; choices below | Whether drawing is clipped to the panel, default "off". |
-| `fit` | `c("labels", "geometry", "manual")` | Vector; choices versus multiple selection below | Fitting strategy: "labels" includes measured label boxes, "geometry" fits geometric elements only, and "manual" requires explicit xlim and ylim. |
+| `start_angle` | `90` | Type, units and accepted forms: see this API argument contract at right | Direction of the first outward spoke in degrees, counterclockwise from the positive x axis. Default 90 starts at noon. |
+| `clockwise` | `TRUE` | Type, units and accepted forms: see this API argument contract at right | Logical, order subsequent spokes clockwise, default TRUE. |
+| `inner_radius` | `0.6` | Type, units and accepted forms: see this API argument contract at right | Positive inner radius in layout units, default 0.6. The longest proportional spoke has length 2. The central hole is display spacing and does not remove any source positions. |
+| `ratio` | `1` | Type, units and accepted forms: see this API argument contract at right | Fixed y/x aspect ratio, default 1. |
+| `xlim` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional user limits. Explicit limits take priority over automatically fitted limits. |
+| `ylim` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional user limits. Explicit limits take priority over automatically fitted limits. |
+| `expand` | `FALSE` | Type, units and accepted forms: see this API argument contract at right | Logical. Expand coordinate limits, default FALSE. Automatic fitting already includes a small safety margin; set TRUE to request the additional ggplot2 coordinate expansion. |
+| `clip` | `"off"` | Type, units and accepted forms: see this API argument contract at right | Whether drawing is clipped to the panel, default "off". |
+| `fit` | `c("labels", "geometry", "manual")` | Type, units and accepted forms: see this API argument contract at right | Fitting strategy: "labels" includes measured label boxes, "geometry" fits geometric elements only, and "manual" requires explicit xlim and ylim. |
 
 </details>
 
@@ -122,14 +122,14 @@ Start with the [learning overview](learn.html#tasks). Lessons compare important 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `column_gap` | `3` | Numeric/integer; range in description | Positive separation of the two backbones in layout units. |
-| `self_links` | `FALSE` | Logical | Show relationships whose query and subject entity are equal. |
-| `ratio` | `1` | Numeric/integer; range in description | Fixed y/x aspect ratio, default 1. |
-| `xlim` | `NULL` | Nullable R object; type/inheritance below | Optional user limits. Explicit limits take priority over automatically fitted limits. |
-| `ylim` | `NULL` | Nullable R object; type/inheritance below | Optional user limits. Explicit limits take priority over automatically fitted limits. |
-| `expand` | `FALSE` | Logical | Logical. Expand coordinate limits, default FALSE. Automatic fitting already includes a small safety margin; set TRUE to request the additional ggplot2 coordinate expansion. |
-| `clip` | `"off"` | Character/enum; choices below | Whether drawing is clipped to the panel, default "off". |
-| `fit` | `c("labels", "geometry", "manual")` | Vector; choices versus multiple selection below | Fitting strategy: "labels" includes measured label boxes, "geometry" fits geometric elements only, and "manual" requires explicit xlim and ylim. |
+| `column_gap` | `3` | Type, units and accepted forms: see this API argument contract at right | Positive separation of the two backbones in layout units. |
+| `self_links` | `FALSE` | Type, units and accepted forms: see this API argument contract at right | Show relationships whose query and subject entity are equal. |
+| `ratio` | `1` | Type, units and accepted forms: see this API argument contract at right | Fixed y/x aspect ratio, default 1. |
+| `xlim` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional user limits. Explicit limits take priority over automatically fitted limits. |
+| `ylim` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional user limits. Explicit limits take priority over automatically fitted limits. |
+| `expand` | `FALSE` | Type, units and accepted forms: see this API argument contract at right | Logical. Expand coordinate limits, default FALSE. Automatic fitting already includes a small safety margin; set TRUE to request the additional ggplot2 coordinate expansion. |
+| `clip` | `"off"` | Type, units and accepted forms: see this API argument contract at right | Whether drawing is clipped to the panel, default "off". |
+| `fit` | `c("labels", "geometry", "manual")` | Type, units and accepted forms: see this API argument contract at right | Fitting strategy: "labels" includes measured label boxes, "geometry" fits geometric elements only, and "manual" requires explicit xlim and ylim. |
 
 </details>
 
@@ -145,17 +145,17 @@ Start with the [learning overview](learn.html#tasks). Lessons compare important 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `mapping` | `NULL` | aes mapping | Standard ggplot2 mapping and layer data. Data defaults to the constructor's ribbon_data. Geometry roles are qaccver, saccver, qstart, qend, sstart, and send. |
-| `data` | `NULL` | Layer data frame or ggplot2 data function | Standard ggplot2 mapping and layer data. Data defaults to the constructor's ribbon_data. Geometry roles are qaccver, saccver, qstart, qend, sstart, and send. |
-| `colour` | `"#59636D"` | Character/enum; choices below | Fixed styles. Mapped styles use link_colour, link_alpha, link_linewidth and link_linetype, with the corresponding scale_link functions. Explicit fixed styles win. |
-| `alpha` | `0.6` | Numeric/integer; range in description | Fixed styles. Mapped styles use link_colour, link_alpha, link_linewidth and link_linetype, with the corresponding scale_link functions. Explicit fixed styles win. |
-| `linewidth` | `0.4` | Numeric/integer; range in description | Fixed styles. Mapped styles use link_colour, link_alpha, link_linewidth and link_linetype, with the corresponding scale_link functions. Explicit fixed styles win. |
-| `linetype` | `1` | Numeric/integer; range in description | Fixed styles. Mapped styles use link_colour, link_alpha, link_linewidth and link_linetype, with the corresponding scale_link functions. Explicit fixed styles win. |
-| `position` | `"identity"` | Character/enum; choices below | Only "identity" is supported: data adjustment would change the alignment endpoints. |
-| `show.legend` | `NA` | R object; constraints below | Standard ggplot2 layer arguments. |
-| `inherit.aes` | `FALSE` | Logical | Standard ggplot2 layer arguments. |
-| `allow_repeated` | `FALSE` | Logical | Allow explicitly identified source_hsp_id records to be displayed more than once. All participating layers must opt in. Rows without declared IDs are never deduplicated by their values. |
-| `...` | `No formal default; requiredness follows the contract` | Forwarded arguments | Additional arguments passed to ggplot2's segment geometry. |
+| `mapping` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Standard ggplot2 mapping and layer data. Data defaults to the constructor's ribbon_data. Geometry roles are qaccver, saccver, qstart, qend, sstart, and send. |
+| `data` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Standard ggplot2 mapping and layer data. Data defaults to the constructor's ribbon_data. Geometry roles are qaccver, saccver, qstart, qend, sstart, and send. |
+| `colour` | `"#59636D"` | Type, units and accepted forms: see this API argument contract at right | Fixed styles. Mapped styles use link_colour, link_alpha, link_linewidth and link_linetype, with the corresponding scale_link functions. Explicit fixed styles win. |
+| `alpha` | `0.6` | Type, units and accepted forms: see this API argument contract at right | Fixed styles. Mapped styles use link_colour, link_alpha, link_linewidth and link_linetype, with the corresponding scale_link functions. Explicit fixed styles win. |
+| `linewidth` | `0.4` | Type, units and accepted forms: see this API argument contract at right | Fixed styles. Mapped styles use link_colour, link_alpha, link_linewidth and link_linetype, with the corresponding scale_link functions. Explicit fixed styles win. |
+| `linetype` | `1` | Type, units and accepted forms: see this API argument contract at right | Fixed styles. Mapped styles use link_colour, link_alpha, link_linewidth and link_linetype, with the corresponding scale_link functions. Explicit fixed styles win. |
+| `position` | `"identity"` | Type, units and accepted forms: see this API argument contract at right | Only "identity" is supported: data adjustment would change the alignment endpoints. |
+| `show.legend` | `NA` | Type, units and accepted forms: see this API argument contract at right | Standard ggplot2 layer arguments. |
+| `inherit.aes` | `FALSE` | Type, units and accepted forms: see this API argument contract at right | Standard ggplot2 layer arguments. |
+| `allow_repeated` | `FALSE` | Type, units and accepted forms: see this API argument contract at right | Allow explicitly identified source_hsp_id records to be displayed more than once. All participating layers must opt in. Rows without declared IDs are never deduplicated by their values. |
+| `...` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Additional arguments passed to ggplot2's segment geometry. |
 
 </details>
 
@@ -168,22 +168,22 @@ Start with the [learning overview](learn.html#tasks). Lessons compare important 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `mapping` | `NULL` | aes mapping | Optional aesthetic mapping. Role aesthetics such as accver, start, end and strand may rename input columns; ordinary visual mappings are evaluated after geometry is generated. |
-| `data` | `NULL` | Layer data frame or ggplot2 data function | data.frame with accver, start, end and strand; optional type, category and label. Factor start/end columns use their numeric labels, not their internal level codes. Coordinates must resolve to finite numbers. display_priority or logical prioritized_display. As an alternative to strand, directionality or direction may contain "forward", "reverse", "bidirectional", or "none". When omitted, uses the full constructor feature_data (or compatible gene_data). Other layers never remove records from this default input. |
-| `shape` | `"arrow"` | Character/enum; choices below | Fixed feature geometry. An explicitly supplied shape takes precedence over aes(feature_shape = ...): "arrow", "compact_arrow", "promoter_arrow", "primer_arrow", "marker", "block", "capped_line", "primer_arc", "chevron", or "lollipop". The default is "arrow". Use aes(feature_shape = type) together with scale_feature_shape_manual() to map categories to geometry. |
-| `width` | `NULL` | Geometry number/vector/documented formats | Optional numeric/vector/list controlling width in the shared feature geometry engine. In a circular feature-label composition, the base width responds to final label size within bounded limits. |
-| `arrow_head_length` | `0.04` | Numeric/integer; range in description | Arrow-head dimensions in the sequence-local frame, shared with geom_gene(). Values above one for arrow_head_width create a protruding block-arrow head. |
-| `arrow_head_width` | `1` | Numeric/integer; range in description | Arrow-head dimensions in the sequence-local frame, shared with geom_gene(). Values above one for arrow_head_width create a protruding block-arrow head. |
-| `arrow_head_style` | `c("shouldered", "flush", "triangle")` | Vector; choices versus multiple selection below | Arrowhead construction: "shouldered" keeps the requested protruding head, "flush" keeps it level with the body, and "triangle" draws a full triangular wedge. |
-| `short_feature` | `c("auto", "wedge", "block")` | Vector; choices versus multiple selection below | Fallback for arrows too short to hold their requested head: an automatically compressed directional glyph, a wedge, or a block. |
-| `segment_boundaries` | `TRUE` | Logical | Draw explicit internal marks carried by a segmented feature. Contiguous source-segment joins use dotted dividers; a non-solid segment-level line_style may override them, while a cleavage_arrows coordinate adds or merges a biological cut mark. These marks never create additional arrowheads. |
-| `boundary_colour` | `"#666666"` | Character/enum; choices below | Appearance of internal segment joins. |
-| `boundary_linewidth` | `0.25` | Numeric/integer; range in description | Appearance of internal segment joins. |
-| `boundary_linetype` | `"22"` | Character/enum; choices below | Appearance of internal segment joins. |
-| `position` | `"identity"` | Character/enum; choices below | Feature placement. Use "identity", "strand", "plasmid", position_strand(), position_plasmid(), or position_feature_stack(). |
-| `show.legend` | `TRUE` | Logical | Standard ggplot2 layer arguments. |
-| `inherit.aes` | `FALSE` | Logical | Standard ggplot2 layer arguments. |
-| `...` | `No formal default; requiredness follows the contract` | Forwarded arguments | Additional fixed polygon aesthetics. |
+| `mapping` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional aesthetic mapping. Role aesthetics such as accver, start, end and strand may rename input columns; ordinary visual mappings are evaluated after geometry is generated. |
+| `data` | `NULL` | Type, units and accepted forms: see this API argument contract at right | data.frame with accver, start, end and strand; optional type, category and label. Factor start/end columns use their numeric labels, not their internal level codes. Coordinates must resolve to finite numbers. display_priority or logical prioritized_display. As an alternative to strand, directionality or direction may contain "forward", "reverse", "bidirectional", or "none". When omitted, uses the full constructor feature_data (or compatible gene_data). Other layers never remove records from this default input. |
+| `shape` | `"arrow"` | Type, units and accepted forms: see this API argument contract at right | Fixed feature geometry. An explicitly supplied shape takes precedence over aes(feature_shape = ...): "arrow", "compact_arrow", "promoter_arrow", "primer_arrow", "marker", "block", "capped_line", "primer_arc", "chevron", or "lollipop". The default is "arrow". Use aes(feature_shape = type) together with scale_feature_shape_manual() to map categories to geometry. |
+| `width` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional numeric/vector/list controlling width in the shared feature geometry engine. In a circular feature-label composition, the base width responds to final label size within bounded limits. |
+| `arrow_head_length` | `0.04` | Type, units and accepted forms: see this API argument contract at right | Arrow-head dimensions in the sequence-local frame, shared with geom_gene(). Values above one for arrow_head_width create a protruding block-arrow head. |
+| `arrow_head_width` | `1` | Type, units and accepted forms: see this API argument contract at right | Arrow-head dimensions in the sequence-local frame, shared with geom_gene(). Values above one for arrow_head_width create a protruding block-arrow head. |
+| `arrow_head_style` | `c("shouldered", "flush", "triangle")` | Type, units and accepted forms: see this API argument contract at right | Arrowhead construction: "shouldered" keeps the requested protruding head, "flush" keeps it level with the body, and "triangle" draws a full triangular wedge. |
+| `short_feature` | `c("auto", "wedge", "block")` | Type, units and accepted forms: see this API argument contract at right | Fallback for arrows too short to hold their requested head: an automatically compressed directional glyph, a wedge, or a block. |
+| `segment_boundaries` | `TRUE` | Type, units and accepted forms: see this API argument contract at right | Draw explicit internal marks carried by a segmented feature. Contiguous source-segment joins use dotted dividers; a non-solid segment-level line_style may override them, while a cleavage_arrows coordinate adds or merges a biological cut mark. These marks never create additional arrowheads. |
+| `boundary_colour` | `"#666666"` | Type, units and accepted forms: see this API argument contract at right | Appearance of internal segment joins. |
+| `boundary_linewidth` | `0.25` | Type, units and accepted forms: see this API argument contract at right | Appearance of internal segment joins. |
+| `boundary_linetype` | `"22"` | Type, units and accepted forms: see this API argument contract at right | Appearance of internal segment joins. |
+| `position` | `"identity"` | Type, units and accepted forms: see this API argument contract at right | Feature placement. Use "identity", "strand", "plasmid", position_strand(), position_plasmid(), or position_feature_stack(). |
+| `show.legend` | `TRUE` | Type, units and accepted forms: see this API argument contract at right | Standard ggplot2 layer arguments. |
+| `inherit.aes` | `FALSE` | Type, units and accepted forms: see this API argument contract at right | Standard ggplot2 layer arguments. |
+| `...` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Additional fixed polygon aesthetics. |
 
 </details>
 
@@ -196,20 +196,20 @@ Start with the [learning overview](learn.html#tasks). Lessons compare important 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `mapping` | `NULL` | aes mapping | Standard layer inputs. Map feature text with label. |
-| `data` | `NULL` | Layer data frame or ggplot2 data function | Standard layer inputs. Map feature text with label. |
-| `label_orientation` | `c("feature", "horizontal", "radial", "tangent")` | Vector; choices versus multiple selection below | One of "feature", "horizontal", "radial", or "tangent". "feature" keeps both internal and adjacent labels tangent to the feature direction; compact labels move beside the feature. |
-| `label_side` | `c("outside", "inside", "auto")` | Vector; choices versus multiple selection below | One of "inside", "outside", or "auto". |
-| `label_overlap` | `c("hide", "nudge", "allow")` | Vector; choices versus multiple selection below | Fixed-label collision policy. |
-| `label_wrap` | `NULL` | Nullable R object; type/inheritance below | Optional character wrapping width. |
-| `label_rotation` | `NULL` | Geometry number/vector/documented formats | Optional numeric/vector/list. Label rotation angle, default 0 |
-| `label_radial_offset` | `0.04` | Numeric/integer; range in description | Optional numeric/vector/list. Radial offset of labels, default 0.04 |
-| `label_circum_offset` | `NULL` | Geometry number/vector/documented formats | Optional numeric/vector/list. Circumferential offset of labels, default 0 |
-| `label_circum_limit` | `NULL` | Nullable R object; type/inheritance below | Optional logical/vector/list. Whether to limit circumferential offset, default TRUE |
-| `position` | `"identity"` | Character/enum; choices below | Feature Position used for the label anchor. In coord_collinear(), an omitted Position shares the matching feature layer's lanes; an explicit Position changes only label anchors, leaving feature polygons in their own Position. If both inputs contain unique feature_id values, label inputs may be subsets or reordered; their accession, interval and strand must still agree. Without IDs, inheritance requires the same interval rows in order. Multiple matching geometry layers require an explicit label Position or unambiguous feature IDs. |
-| `show.legend` | `FALSE` | Logical | Standard ggplot2 layer arguments. |
-| `inherit.aes` | `FALSE` | Logical | Standard ggplot2 layer arguments. |
-| `...` | `No formal default; requiredness follows the contract` | Forwarded arguments | Additional text parameters. |
+| `mapping` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Standard layer inputs. Map feature text with label. |
+| `data` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Standard layer inputs. Map feature text with label. |
+| `label_orientation` | `c("feature", "horizontal", "radial", "tangent")` | Type, units and accepted forms: see this API argument contract at right | One of "feature", "horizontal", "radial", or "tangent". "feature" keeps both internal and adjacent labels tangent to the feature direction; compact labels move beside the feature. |
+| `label_side` | `c("outside", "inside", "auto")` | Type, units and accepted forms: see this API argument contract at right | One of "inside", "outside", or "auto". |
+| `label_overlap` | `c("hide", "nudge", "allow")` | Type, units and accepted forms: see this API argument contract at right | Fixed-label collision policy. |
+| `label_wrap` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional character wrapping width. |
+| `label_rotation` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional numeric/vector/list. Label rotation angle, default 0 |
+| `label_radial_offset` | `0.04` | Type, units and accepted forms: see this API argument contract at right | Optional numeric/vector/list. Radial offset of labels, default 0.04 |
+| `label_circum_offset` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional numeric/vector/list. Circumferential offset of labels, default 0 |
+| `label_circum_limit` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional logical/vector/list. Whether to limit circumferential offset, default TRUE |
+| `position` | `"identity"` | Type, units and accepted forms: see this API argument contract at right | Feature Position used for the label anchor. In coord_collinear(), an omitted Position shares the matching feature layer's lanes; an explicit Position changes only label anchors, leaving feature polygons in their own Position. If both inputs contain unique feature_id values, label inputs may be subsets or reordered; their accession, interval and strand must still agree. Without IDs, inheritance requires the same interval rows in order. Multiple matching geometry layers require an explicit label Position or unambiguous feature IDs. |
+| `show.legend` | `FALSE` | Type, units and accepted forms: see this API argument contract at right | Standard ggplot2 layer arguments. |
+| `inherit.aes` | `FALSE` | Type, units and accepted forms: see this API argument contract at right | Standard ggplot2 layer arguments. |
+| `...` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Additional text parameters. |
 
 </details>
 
@@ -222,26 +222,26 @@ Start with the [learning overview](learn.html#tasks). Lessons compare important 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `mapping` | `NULL` | aes mapping | Standard layer inputs. Map feature text with label. |
-| `data` | `NULL` | Layer data frame or ggplot2 data function | Standard layer inputs. Map feature text with label. |
-| `label_layout` | `c("feature", "radial", "auto", "callout")` | Vector; choices versus multiple selection below | One of "feature", "radial", "auto", or "callout". The default "feature" follows plasmid-map convention: text is tried inside first, then assigned to a fixed-radius internal track. All non-external text is laid out character by character along its selected track radius rather than rotated as one straight string. A light leader appears when tracks separate the feature and its label or a visible angular displacement could obscure ownership. Circular feature layouts retain direct leaders instead of multi-bend detours. Choose another mode for unrestricted external callouts. |
-| `label_wrap` | `NULL` | Nullable R object; type/inheritance below | Text fitting controls. label_fit = "shrink" explicitly uses internal-first placement without truncating the text. Text size is bounded by label_min_size; unresolved labels keep their requested font and use adjacent/external placement or hiding. Other fitting modes retain their existing behavior. |
-| `label_fit` | `c("wrap", "none", "ellipsis", "auto", "shrink")` | Vector; choices versus multiple selection below | Text fitting controls. label_fit = "shrink" explicitly uses internal-first placement without truncating the text. Text size is bounded by label_min_size; unresolved labels keep their requested font and use adjacent/external placement or hiding. Other fitting modes retain their existing behavior. |
-| `label_max_lines` | `2L` | Numeric/integer; range in description | Text fitting controls. label_fit = "shrink" explicitly uses internal-first placement without truncating the text. Text size is bounded by label_min_size; unresolved labels keep their requested font and use adjacent/external placement or hiding. Other fitting modes retain their existing behavior. |
-| `label_side` | `c("outside", "inside", "auto")` | Vector; choices versus multiple selection below | One of "inside", "outside", or "auto". |
-| `max_overlaps` | `Inf` | R object; constraints below | Maximum unresolved overlaps. |
-| `external` | `TRUE` | Logical | Whether the staged feature layout may place a label outside the circular backbone after inside and adjacent placement fail. When FALSE, unresolved labels are hidden instead of pushing inward forever. External labels are rendered as rounded callouts using a lightened form of the feature's resolved fill. When restriction-site labels coexist on a circular map, both retain their own layout semantics but register final boxes in one coordinate-owned exterior track region so they cannot occupy the same space. |
-| `position` | `"identity"` | Character/enum; choices below | Feature Position used for the label anchor. In coord_collinear(), an omitted Position shares the matching feature layer's lanes; an explicit Position changes only label anchors, leaving feature polygons in their own Position. If both inputs contain unique feature_id values, label inputs may be subsets or reordered; their accession, interval and strand must still agree. Without IDs, inheritance requires the same interval rows in order. Multiple matching geometry layers require an explicit label Position or unambiguous feature IDs. |
-| `show.legend` | `FALSE` | Logical | Standard ggplot2 layer arguments. |
-| `inherit.aes` | `FALSE` | Logical | Standard ggplot2 layer arguments. |
-| `label_min_size` | `1.5` | Numeric/integer; range in description | Minimum text size in millimetres for explicit shrink, default 1.5. Must not exceed the requested text size. Original text, requested/final sizes and fitting reason are exported with the label. |
-| `label_segment_overlap` | `"fade"` | Character/enum; choices below | Character, default "fade". How portions of a leader line covered by another label are drawn: "fade" keeps them at reduced opacity, "clip" removes them, and "show" leaves the complete leader visible. This does not affect text wrapping, ellipsis or label hiding. |
-| `label_segment_overlap_alpha` | `0.18` | Numeric/integer; range in description | Numeric in [0, 1], default 0.18. Relative opacity applied only to covered leader-line portions when label_segment_overlap = "fade". |
-| `label_segment_linetype` | `"auto"` | Character/enum; choices below | Character or numeric, default "auto". Leader-line linetype. "auto" draws solid lines, except for labels that were moved to the other side of their arc, which are drawn dashed. Any other valid ggplot2 linetype (e.g. "solid", "dashed", "dotted", or a numeric dash pattern) is used for all leader lines. |
-| `label_segment_layer` | `c("below", "above")` | Vector; choices versus multiple selection below | Draw leaders "below" all data layers (default), or "above" at this label layer's normal position. Text always stays at this layer's position. Filled features can cover leaders drawn below; transparent features retain their normal transparency. |
-| `label_repeat` | `c("individual", "bracket")` | Vector; choices versus multiple selection below | "individual" (default) keeps one label per feature. "bracket" shares a counted label and an arc bracket for consecutive, non-overlapping short features with the same name, type, direction and resolved fill in one circular feature band. Source rows and individual arrows remain separate. Only supported with label_layout = "feature". |
-| `label_segment_colour` | `"auto"` | Character/enum; choices below | "auto" uses muted grey for leaders from a feature inside the sequence circle to a label outside it. Other leaders retain the theme colour. Explicit colours override both. A custom feature-label segment theme overrides the automatic palette. label_segment_linetype = "auto" uses dashed lines for those inside-to-outside attachments. Labels that stay inside retain their established leader style. |
-| `...` | `No formal default; requiredness follows the contract` | Forwarded arguments | Additional text parameters. |
+| `mapping` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Standard layer inputs. Map feature text with label. |
+| `data` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Standard layer inputs. Map feature text with label. |
+| `label_layout` | `c("feature", "radial", "auto", "callout")` | Type, units and accepted forms: see this API argument contract at right | One of "feature", "radial", "auto", or "callout". The default "feature" follows plasmid-map convention: text is tried inside first, then assigned to a fixed-radius internal track. All non-external text is laid out character by character along its selected track radius rather than rotated as one straight string. A light leader appears when tracks separate the feature and its label or a visible angular displacement could obscure ownership. Circular feature layouts retain direct leaders instead of multi-bend detours. Choose another mode for unrestricted external callouts. |
+| `label_wrap` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Text fitting controls. label_fit = "shrink" explicitly uses internal-first placement without truncating the text. Text size is bounded by label_min_size; unresolved labels keep their requested font and use adjacent/external placement or hiding. Other fitting modes retain their existing behavior. |
+| `label_fit` | `c("wrap", "none", "ellipsis", "auto", "shrink")` | Type, units and accepted forms: see this API argument contract at right | Text fitting controls. label_fit = "shrink" explicitly uses internal-first placement without truncating the text. Text size is bounded by label_min_size; unresolved labels keep their requested font and use adjacent/external placement or hiding. Other fitting modes retain their existing behavior. |
+| `label_max_lines` | `2L` | Type, units and accepted forms: see this API argument contract at right | Text fitting controls. label_fit = "shrink" explicitly uses internal-first placement without truncating the text. Text size is bounded by label_min_size; unresolved labels keep their requested font and use adjacent/external placement or hiding. Other fitting modes retain their existing behavior. |
+| `label_side` | `c("outside", "inside", "auto")` | Type, units and accepted forms: see this API argument contract at right | One of "inside", "outside", or "auto". |
+| `max_overlaps` | `Inf` | Type, units and accepted forms: see this API argument contract at right | Maximum unresolved overlaps. |
+| `external` | `TRUE` | Type, units and accepted forms: see this API argument contract at right | Whether the staged feature layout may place a label outside the circular backbone after inside and adjacent placement fail. When FALSE, unresolved labels are hidden instead of pushing inward forever. External labels are rendered as rounded callouts using a lightened form of the feature's resolved fill. When restriction-site labels coexist on a circular map, both retain their own layout semantics but register final boxes in one coordinate-owned exterior track region so they cannot occupy the same space. |
+| `position` | `"identity"` | Type, units and accepted forms: see this API argument contract at right | Feature Position used for the label anchor. In coord_collinear(), an omitted Position shares the matching feature layer's lanes; an explicit Position changes only label anchors, leaving feature polygons in their own Position. If both inputs contain unique feature_id values, label inputs may be subsets or reordered; their accession, interval and strand must still agree. Without IDs, inheritance requires the same interval rows in order. Multiple matching geometry layers require an explicit label Position or unambiguous feature IDs. |
+| `show.legend` | `FALSE` | Type, units and accepted forms: see this API argument contract at right | Standard ggplot2 layer arguments. |
+| `inherit.aes` | `FALSE` | Type, units and accepted forms: see this API argument contract at right | Standard ggplot2 layer arguments. |
+| `label_min_size` | `1.5` | Type, units and accepted forms: see this API argument contract at right | Minimum text size in millimetres for explicit shrink, default 1.5. Must not exceed the requested text size. Original text, requested/final sizes and fitting reason are exported with the label. |
+| `label_segment_overlap` | `"fade"` | Type, units and accepted forms: see this API argument contract at right | Character, default "fade". How portions of a leader line covered by another label are drawn: "fade" keeps them at reduced opacity, "clip" removes them, and "show" leaves the complete leader visible. This does not affect text wrapping, ellipsis or label hiding. |
+| `label_segment_overlap_alpha` | `0.18` | Type, units and accepted forms: see this API argument contract at right | Numeric in [0, 1], default 0.18. Relative opacity applied only to covered leader-line portions when label_segment_overlap = "fade". |
+| `label_segment_linetype` | `"auto"` | Type, units and accepted forms: see this API argument contract at right | Character or numeric, default "auto". Leader-line linetype. "auto" draws solid lines, except for labels that were moved to the other side of their arc, which are drawn dashed. Any other valid ggplot2 linetype (e.g. "solid", "dashed", "dotted", or a numeric dash pattern) is used for all leader lines. |
+| `label_segment_layer` | `c("below", "above")` | Type, units and accepted forms: see this API argument contract at right | Draw leaders "below" all data layers (default), or "above" at this label layer's normal position. Text always stays at this layer's position. Filled features can cover leaders drawn below; transparent features retain their normal transparency. |
+| `label_repeat` | `c("individual", "bracket")` | Type, units and accepted forms: see this API argument contract at right | "individual" (default) keeps one label per feature. "bracket" shares a counted label and an arc bracket for consecutive, non-overlapping short features with the same name, type, direction and resolved fill in one circular feature band. Source rows and individual arrows remain separate. Only supported with label_layout = "feature". |
+| `label_segment_colour` | `"auto"` | Type, units and accepted forms: see this API argument contract at right | "auto" uses muted grey for leaders from a feature inside the sequence circle to a label outside it. Other leaders retain the theme colour. Explicit colours override both. A custom feature-label segment theme overrides the automatic palette. label_segment_linetype = "auto" uses dashed lines for those inside-to-outside attachments. Labels that stay inside retain their established leader style. |
+| `...` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Additional text parameters. |
 
 </details>
 
@@ -254,22 +254,22 @@ Start with the [learning overview](learn.html#tasks). Lessons compare important 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `mapping` | `NULL` | aes mapping | Optional aesthetic mapping. Role aesthetics such as accver, start, end and strand may rename input columns; ordinary visual mappings are evaluated after geometry is generated. |
-| `data` | `NULL` | Layer data frame or ggplot2 data function | data.frame with accver, start, end and strand; optional type, category and label. Factor start/end columns use their numeric labels, not their internal level codes. Coordinates must resolve to finite numbers. display_priority or logical prioritized_display. As an alternative to strand, directionality or direction may contain "forward", "reverse", "bidirectional", or "none". When omitted, uses the full constructor feature_data (or compatible gene_data). Other layers never remove records from this default input. |
-| `shape` | `"arrow"` | Character/enum; choices below | Fixed feature geometry. An explicitly supplied shape takes precedence over aes(feature_shape = ...): "arrow", "compact_arrow", "promoter_arrow", "primer_arrow", "marker", "block", "capped_line", "primer_arc", "chevron", or "lollipop". The default is "arrow". Use aes(feature_shape = type) together with scale_feature_shape_manual() to map categories to geometry. |
-| `width` | `0.058` | Numeric/integer; range in description | Track width; the default matches the compact feature bands used by desktop plasmid editors. |
-| `arrow_head_length` | `0.068` | Numeric/integer; range in description | Arrow-head dimensions in the sequence-local frame, shared with geom_gene(). Values above one for arrow_head_width create a protruding block-arrow head. |
-| `arrow_head_width` | `1.42` | Numeric/integer; range in description | Arrow-head dimensions in the sequence-local frame, shared with geom_gene(). Values above one for arrow_head_width create a protruding block-arrow head. |
-| `arrow_head_style` | `"shouldered"` | Character/enum; choices below | Arrowhead construction: "shouldered" keeps the requested protruding head, "flush" keeps it level with the body, and "triangle" draws a full triangular wedge. |
-| `short_feature` | `"auto"` | Character/enum; choices below | Fallback for arrows too short to hold their requested head: an automatically compressed directional glyph, a wedge, or a block. |
-| `segment_boundaries` | `TRUE` | Logical | Draw explicit internal marks carried by a segmented feature. Contiguous source-segment joins use dotted dividers; a non-solid segment-level line_style may override them, while a cleavage_arrows coordinate adds or merges a biological cut mark. These marks never create additional arrowheads. |
-| `boundary_colour` | `"#666666"` | Character/enum; choices below | Appearance of internal segment joins. |
-| `boundary_linewidth` | `0.25` | Numeric/integer; range in description | Appearance of internal segment joins. |
-| `boundary_linetype` | `"22"` | Character/enum; choices below | Appearance of internal segment joins. |
-| `position` | `NULL` | Position object or documented string | Feature position. NULL (the default) automatically stacks overlapping features on compact lanes inside the plasmid backbone. Reuse the same explicit position_feature_stack() object for a separate label layer so polygons and labels share their lanes. Optional numeric display_priority (larger first) or logical prioritized_display can override the default longest-first ordering for overlapping features. |
-| `show.legend` | `FALSE` | Logical | Standard ggplot2 layer arguments. |
-| `inherit.aes` | `FALSE` | Logical | Standard ggplot2 layer arguments. |
-| `...` | `No formal default; requiredness follows the contract` | Forwarded arguments | Additional fixed polygon aesthetics. |
+| `mapping` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional aesthetic mapping. Role aesthetics such as accver, start, end and strand may rename input columns; ordinary visual mappings are evaluated after geometry is generated. |
+| `data` | `NULL` | Type, units and accepted forms: see this API argument contract at right | data.frame with accver, start, end and strand; optional type, category and label. Factor start/end columns use their numeric labels, not their internal level codes. Coordinates must resolve to finite numbers. display_priority or logical prioritized_display. As an alternative to strand, directionality or direction may contain "forward", "reverse", "bidirectional", or "none". When omitted, uses the full constructor feature_data (or compatible gene_data). Other layers never remove records from this default input. |
+| `shape` | `"arrow"` | Type, units and accepted forms: see this API argument contract at right | Fixed feature geometry. An explicitly supplied shape takes precedence over aes(feature_shape = ...): "arrow", "compact_arrow", "promoter_arrow", "primer_arrow", "marker", "block", "capped_line", "primer_arc", "chevron", or "lollipop". The default is "arrow". Use aes(feature_shape = type) together with scale_feature_shape_manual() to map categories to geometry. |
+| `width` | `0.058` | Type, units and accepted forms: see this API argument contract at right | Track width; the default matches the compact feature bands used by desktop plasmid editors. |
+| `arrow_head_length` | `0.068` | Type, units and accepted forms: see this API argument contract at right | Arrow-head dimensions in the sequence-local frame, shared with geom_gene(). Values above one for arrow_head_width create a protruding block-arrow head. |
+| `arrow_head_width` | `1.42` | Type, units and accepted forms: see this API argument contract at right | Arrow-head dimensions in the sequence-local frame, shared with geom_gene(). Values above one for arrow_head_width create a protruding block-arrow head. |
+| `arrow_head_style` | `"shouldered"` | Type, units and accepted forms: see this API argument contract at right | Arrowhead construction: "shouldered" keeps the requested protruding head, "flush" keeps it level with the body, and "triangle" draws a full triangular wedge. |
+| `short_feature` | `"auto"` | Type, units and accepted forms: see this API argument contract at right | Fallback for arrows too short to hold their requested head: an automatically compressed directional glyph, a wedge, or a block. |
+| `segment_boundaries` | `TRUE` | Type, units and accepted forms: see this API argument contract at right | Draw explicit internal marks carried by a segmented feature. Contiguous source-segment joins use dotted dividers; a non-solid segment-level line_style may override them, while a cleavage_arrows coordinate adds or merges a biological cut mark. These marks never create additional arrowheads. |
+| `boundary_colour` | `"#666666"` | Type, units and accepted forms: see this API argument contract at right | Appearance of internal segment joins. |
+| `boundary_linewidth` | `0.25` | Type, units and accepted forms: see this API argument contract at right | Appearance of internal segment joins. |
+| `boundary_linetype` | `"22"` | Type, units and accepted forms: see this API argument contract at right | Appearance of internal segment joins. |
+| `position` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Feature position. NULL (the default) automatically stacks overlapping features on compact lanes inside the plasmid backbone. Reuse the same explicit position_feature_stack() object for a separate label layer so polygons and labels share their lanes. Optional numeric display_priority (larger first) or logical prioritized_display can override the default longest-first ordering for overlapping features. |
+| `show.legend` | `FALSE` | Type, units and accepted forms: see this API argument contract at right | Standard ggplot2 layer arguments. |
+| `inherit.aes` | `FALSE` | Type, units and accepted forms: see this API argument contract at right | Standard ggplot2 layer arguments. |
+| `...` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Additional fixed polygon aesthetics. |
 
 </details>
 
@@ -282,17 +282,17 @@ Start with the [learning overview](learn.html#tasks). Lessons compare important 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `mapping` | `NULL` | aes mapping | Default NULL (uses pre-computed data) |
-| `data` | `NULL` | Layer data frame or ggplot2 data function | Optional layer table or function, overriding constructor data. With unified feature_data, the default selects explicitly classified gene/CDS records; see ggchord(). Legacy gene_data retains all rows. |
-| `width` | `NULL` | Geometry number/vector/documented formats | Optional numeric/vector/list. Width of gene arrows, default 0.05 |
-| `arrow_head_length` | `0.04` | Numeric/integer; range in description | Shared arrow-head dimensions in the sequence-local frame. |
-| `arrow_head_width` | `1` | Numeric/integer; range in description | Shared arrow-head dimensions in the sequence-local frame. |
-| `arrow_head_style` | `c("shouldered", "flush", "triangle")` | Vector; choices versus multiple selection below | Arrowhead construction: shouldered, flush, or a full triangular wedge. |
-| `short_feature` | `c("auto", "wedge", "block")` | Vector; choices versus multiple selection below | Fallback for arrows too short to hold their requested head: automatic wedge/block selection, a wedge, or a block. |
-| `position` | `"identity"` | Character/enum; choices below | Feature placement. Use "identity", "strand", "plasmid", position_strand(), position_plasmid(), or position_feature_stack(). |
-| `show.legend` | `TRUE` | Logical | Standard ggplot2 layer arguments. |
-| `inherit.aes` | `FALSE` | Logical | Standard ggplot2 layer arguments. |
-| `...` | `No formal default; requiredness follows the contract` | Forwarded arguments | Additional arguments passed to geom_polygon() |
+| `mapping` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Default NULL (uses pre-computed data) |
+| `data` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional layer table or function, overriding constructor data. With unified feature_data, the default selects explicitly classified gene/CDS records; see ggchord(). Legacy gene_data retains all rows. |
+| `width` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional numeric/vector/list. Width of gene arrows, default 0.05 |
+| `arrow_head_length` | `0.04` | Type, units and accepted forms: see this API argument contract at right | Shared arrow-head dimensions in the sequence-local frame. |
+| `arrow_head_width` | `1` | Type, units and accepted forms: see this API argument contract at right | Shared arrow-head dimensions in the sequence-local frame. |
+| `arrow_head_style` | `c("shouldered", "flush", "triangle")` | Type, units and accepted forms: see this API argument contract at right | Arrowhead construction: shouldered, flush, or a full triangular wedge. |
+| `short_feature` | `c("auto", "wedge", "block")` | Type, units and accepted forms: see this API argument contract at right | Fallback for arrows too short to hold their requested head: automatic wedge/block selection, a wedge, or a block. |
+| `position` | `"identity"` | Type, units and accepted forms: see this API argument contract at right | Feature placement. Use "identity", "strand", "plasmid", position_strand(), position_plasmid(), or position_feature_stack(). |
+| `show.legend` | `TRUE` | Type, units and accepted forms: see this API argument contract at right | Standard ggplot2 layer arguments. |
+| `inherit.aes` | `FALSE` | Type, units and accepted forms: see this API argument contract at right | Standard ggplot2 layer arguments. |
+| `...` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Additional arguments passed to geom_polygon() |
 
 </details>
 
@@ -305,20 +305,20 @@ Start with the [learning overview](learn.html#tasks). Lessons compare important 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `mapping` | `NULL` | aes mapping | Default NULL (uses pre-computed data) |
-| `data` | `NULL` | Layer data frame or ggplot2 data function | Optional layer table or function. Default data follows the gene/CDS selection described in ggchord(). |
-| `label_orientation` | `"horizontal"` | Character/enum; choices below | Character, default "horizontal". Text orientation relative to each sequence path: "radial", "tangent", or "horizontal". |
-| `label_side` | `"outside"` | Character/enum; choices below | Character, default "outside". Place labels outside the chord, use the strand-based "auto" side, or force "inside" placement. |
-| `label_overlap` | `"hide"` | Character/enum; choices below | Character, default "hide". Fixed-label collision policy: omit later conflicting labels ("hide"), apply the small position adjustment ("nudge"), or keep all requested positions ("allow"). Input row order therefore provides a simple way to prioritize labels in "hide" mode. |
-| `label_rotation` | `NULL` | Geometry number/vector/documented formats | Optional numeric/vector/list. Label rotation angle, default 0 |
-| `label_radial_offset` | `0.04` | Numeric/integer; range in description | Optional numeric/vector/list. Radial offset of labels, default 0.04 |
-| `label_circum_offset` | `NULL` | Geometry number/vector/documented formats | Optional numeric/vector/list. Circumferential offset of labels, default 0 |
-| `label_circum_limit` | `NULL` | Nullable R object; type/inheritance below | Optional logical/vector/list. Whether to limit circumferential offset, default TRUE |
-| `label_wrap` | `NULL` | Nullable R object; type/inheritance below | Numeric or NULL, default NULL. When set, long gene annotations are wrapped at this many characters (e.g. 15), which makes the labels narrower and less prone to overlap. |
-| `position` | `"identity"` | Character/enum; choices below | Position adjustment. Supply the same position_feature_stack() used by a gene/feature layer when labels are drawn from separate data or without a geometry layer. In coord_collinear(), labels without an explicit Position share a matching geometry layer's lanes; explicit label Positions do not move the geometry layer. Unique feature_id columns allow label subsets and reordered labels when their accession, interval and strand agree with the geometry input. Multiple matching geometry layers require an explicit label Position or unambiguous feature IDs. |
-| `show.legend` | `FALSE` | Logical | Standard ggplot2 layer arguments. |
-| `inherit.aes` | `FALSE` | Logical | Standard ggplot2 layer arguments. |
-| `...` | `No formal default; requiredness follows the contract` | Forwarded arguments | Additional arguments passed to geom_text() |
+| `mapping` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Default NULL (uses pre-computed data) |
+| `data` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional layer table or function. Default data follows the gene/CDS selection described in ggchord(). |
+| `label_orientation` | `"horizontal"` | Type, units and accepted forms: see this API argument contract at right | Character, default "horizontal". Text orientation relative to each sequence path: "radial", "tangent", or "horizontal". |
+| `label_side` | `"outside"` | Type, units and accepted forms: see this API argument contract at right | Character, default "outside". Place labels outside the chord, use the strand-based "auto" side, or force "inside" placement. |
+| `label_overlap` | `"hide"` | Type, units and accepted forms: see this API argument contract at right | Character, default "hide". Fixed-label collision policy: omit later conflicting labels ("hide"), apply the small position adjustment ("nudge"), or keep all requested positions ("allow"). Input row order therefore provides a simple way to prioritize labels in "hide" mode. |
+| `label_rotation` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional numeric/vector/list. Label rotation angle, default 0 |
+| `label_radial_offset` | `0.04` | Type, units and accepted forms: see this API argument contract at right | Optional numeric/vector/list. Radial offset of labels, default 0.04 |
+| `label_circum_offset` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional numeric/vector/list. Circumferential offset of labels, default 0 |
+| `label_circum_limit` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional logical/vector/list. Whether to limit circumferential offset, default TRUE |
+| `label_wrap` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Numeric or NULL, default NULL. When set, long gene annotations are wrapped at this many characters (e.g. 15), which makes the labels narrower and less prone to overlap. |
+| `position` | `"identity"` | Type, units and accepted forms: see this API argument contract at right | Position adjustment. Supply the same position_feature_stack() used by a gene/feature layer when labels are drawn from separate data or without a geometry layer. In coord_collinear(), labels without an explicit Position share a matching geometry layer's lanes; explicit label Positions do not move the geometry layer. Unique feature_id columns allow label subsets and reordered labels when their accession, interval and strand agree with the geometry input. Multiple matching geometry layers require an explicit label Position or unambiguous feature IDs. |
+| `show.legend` | `FALSE` | Type, units and accepted forms: see this API argument contract at right | Standard ggplot2 layer arguments. |
+| `inherit.aes` | `FALSE` | Type, units and accepted forms: see this API argument contract at right | Standard ggplot2 layer arguments. |
+| `...` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Additional arguments passed to geom_text() |
 
 </details>
 
@@ -331,22 +331,22 @@ Start with the [learning overview](learn.html#tasks). Lessons compare important 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `mapping` | `NULL` | aes mapping | Default NULL (uses pre-computed data) |
-| `data` | `NULL` | Layer data frame or ggplot2 data function | Optional layer table or function. Default data follows the gene/CDS selection described in ggchord(). |
-| `label_layout` | `"radial"` | Character/enum; choices below | Character, default "radial". Label layout: "radial" arranges horizontal external labels along sequence-relative contours, with straight normal leaders or a short normal departure followed by a long connector when displaced; "auto" uses shared vertical columns on the left/right and radial placement elsewhere; "arc" rotates text along the sequence tangent. The former "aligned" mode has been removed; use "auto" for side columns. |
-| `label_wrap` | `NULL` | Nullable R object; type/inheritance below | Numeric or NULL, default NULL. When set, long gene annotations are wrapped at this many characters (e.g. 15), overriding label_fit. |
-| `label_fit` | `"wrap"` | Character/enum; choices below | Character, default "wrap". How labels whose initial boxes are crowded or unusually wide are fitted before deterministic layout: "wrap" preserves the complete annotation over multiple lines, "ellipsis" uses a single shortened line, "auto" wraps and adds an ellipsis only if text exceeds label_max_lines, and "none" disables adaptive fitting. Explicit "shrink" uses internal-first feature placement and reduces the complete text only as far as label_min_size. Labels that still cannot fit use the existing adjacent/external placement or hiding policy, at their requested size. This choice uses feature placement rather than the external layout selected by label_layout; other fitting modes are unchanged. |
-| `label_max_lines` | `2L` | Numeric/integer; range in description | Positive integer, default 2. Maximum number of lines used by adaptive "wrap" or "auto" fitting. |
-| `label_side` | `"outside"` | Character/enum; choices below | Character, default "outside". Which side of the arc the labels sit on. "auto" keeps the strand-based placement (same as before); "outside" moves labels that would be inside the chord (where they can overlap the ribbons) to the outside of their arc; "inside" does the opposite. Labels moved to the other side are connected with a dashed leader line (see label_segment_linetype). |
-| `max_overlaps` | `Inf` | R object; constraints below | Numeric, default Inf. Hide labels that still overlap more than this many other labels after repulsion (ggrepel-style decluttering). Use a finite value to clean up crowded plots. |
-| `label_segment_overlap` | `"fade"` | Character/enum; choices below | Character, default "fade". How portions of a leader line covered by another label are drawn: "fade" keeps them at reduced opacity, "clip" removes them, and "show" leaves the complete leader visible. This does not affect text wrapping, ellipsis or label hiding. |
-| `label_segment_overlap_alpha` | `0.18` | Numeric/integer; range in description | Numeric in [0, 1], default 0.18. Relative opacity applied only to covered leader-line portions when label_segment_overlap = "fade". |
-| `label_segment_linetype` | `"auto"` | Character/enum; choices below | Character or numeric, default "auto". Leader-line linetype. "auto" draws solid lines, except for labels that were moved to the other side of their arc, which are drawn dashed. Any other valid ggplot2 linetype (e.g. "solid", "dashed", "dotted", or a numeric dash pattern) is used for all leader lines. |
-| `position` | `"identity"` | Character/enum; choices below | Position adjustment. Supply the same position_feature_stack() used by a gene/feature layer when labels are drawn from separate data or without a geometry layer. |
-| `show.legend` | `FALSE` | Logical | Standard ggplot2 layer arguments. |
-| `inherit.aes` | `FALSE` | Logical | Standard ggplot2 layer arguments. |
-| `label_min_size` | `1.5` | Numeric/integer; range in description | Minimum text size in millimetres for explicit label_fit = "shrink", default 1.5. It must not exceed the requested text size. Source text, requested/final size and fitting reason are retained in exported label geometry. |
-| `...` | `No formal default; requiredness follows the contract` | Forwarded arguments | Additional text styles and drawing options. Automatic layouts own rotation, offsets, orientation and overlap policy; use geom_gene_label() for manual label_rotation, label_radial_offset, label_circum_offset, label_circum_limit, label_orientation or label_overlap. These manual controls are rejected here. |
+| `mapping` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Default NULL (uses pre-computed data) |
+| `data` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional layer table or function. Default data follows the gene/CDS selection described in ggchord(). |
+| `label_layout` | `"radial"` | Type, units and accepted forms: see this API argument contract at right | Character, default "radial". Label layout: "radial" arranges horizontal external labels along sequence-relative contours, with straight normal leaders or a short normal departure followed by a long connector when displaced; "auto" uses shared vertical columns on the left/right and radial placement elsewhere; "arc" rotates text along the sequence tangent. The former "aligned" mode has been removed; use "auto" for side columns. |
+| `label_wrap` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Numeric or NULL, default NULL. When set, long gene annotations are wrapped at this many characters (e.g. 15), overriding label_fit. |
+| `label_fit` | `"wrap"` | Type, units and accepted forms: see this API argument contract at right | Character, default "wrap". How labels whose initial boxes are crowded or unusually wide are fitted before deterministic layout: "wrap" preserves the complete annotation over multiple lines, "ellipsis" uses a single shortened line, "auto" wraps and adds an ellipsis only if text exceeds label_max_lines, and "none" disables adaptive fitting. Explicit "shrink" uses internal-first feature placement and reduces the complete text only as far as label_min_size. Labels that still cannot fit use the existing adjacent/external placement or hiding policy, at their requested size. This choice uses feature placement rather than the external layout selected by label_layout; other fitting modes are unchanged. |
+| `label_max_lines` | `2L` | Type, units and accepted forms: see this API argument contract at right | Positive integer, default 2. Maximum number of lines used by adaptive "wrap" or "auto" fitting. |
+| `label_side` | `"outside"` | Type, units and accepted forms: see this API argument contract at right | Character, default "outside". Which side of the arc the labels sit on. "auto" keeps the strand-based placement (same as before); "outside" moves labels that would be inside the chord (where they can overlap the ribbons) to the outside of their arc; "inside" does the opposite. Labels moved to the other side are connected with a dashed leader line (see label_segment_linetype). |
+| `max_overlaps` | `Inf` | Type, units and accepted forms: see this API argument contract at right | Numeric, default Inf. Hide labels that still overlap more than this many other labels after repulsion (ggrepel-style decluttering). Use a finite value to clean up crowded plots. |
+| `label_segment_overlap` | `"fade"` | Type, units and accepted forms: see this API argument contract at right | Character, default "fade". How portions of a leader line covered by another label are drawn: "fade" keeps them at reduced opacity, "clip" removes them, and "show" leaves the complete leader visible. This does not affect text wrapping, ellipsis or label hiding. |
+| `label_segment_overlap_alpha` | `0.18` | Type, units and accepted forms: see this API argument contract at right | Numeric in [0, 1], default 0.18. Relative opacity applied only to covered leader-line portions when label_segment_overlap = "fade". |
+| `label_segment_linetype` | `"auto"` | Type, units and accepted forms: see this API argument contract at right | Character or numeric, default "auto". Leader-line linetype. "auto" draws solid lines, except for labels that were moved to the other side of their arc, which are drawn dashed. Any other valid ggplot2 linetype (e.g. "solid", "dashed", "dotted", or a numeric dash pattern) is used for all leader lines. |
+| `position` | `"identity"` | Type, units and accepted forms: see this API argument contract at right | Position adjustment. Supply the same position_feature_stack() used by a gene/feature layer when labels are drawn from separate data or without a geometry layer. |
+| `show.legend` | `FALSE` | Type, units and accepted forms: see this API argument contract at right | Standard ggplot2 layer arguments. |
+| `inherit.aes` | `FALSE` | Type, units and accepted forms: see this API argument contract at right | Standard ggplot2 layer arguments. |
+| `label_min_size` | `1.5` | Type, units and accepted forms: see this API argument contract at right | Minimum text size in millimetres for explicit label_fit = "shrink", default 1.5. It must not exceed the requested text size. Source text, requested/final size and fitting reason are retained in exported label geometry. |
+| `...` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Additional text styles and drawing options. Automatic layouts own rotation, offsets, orientation and overlap policy; use geom_gene_label() for manual label_rotation, label_radial_offset, label_circum_offset, label_circum_limit, label_orientation or label_overlap. These manual controls are rejected here. |
 
 </details>
 
@@ -359,25 +359,25 @@ Start with the [learning overview](learn.html#tasks). Lessons compare important 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `mapping` | `NULL` | aes mapping | Standard ggplot2 mapping and layer data, including data functions. |
-| `data` | `NULL` | Layer data frame or ggplot2 data function | Standard ggplot2 mapping and layer data, including data functions. |
-| `link_type` | `c("curve", "straight")` | Vector; choices versus multiple selection below | Either "curve" (default) or "straight". |
-| `link_gap` | `NULL` | Nullable R object; type/inheritance below | Explicit endpoint spacing. With the default link_avoid = "none", NULL uses a fixed spacing of 0.035. Set link_avoid to "smooth" or "uniform" to opt in to entity-aware endpoint spacing. |
-| `link_ctrl_point` | `NULL` | Nullable R object; type/inheritance below | Bezier control points: two numbers, four numbers, or a list per input row. |
-| `link_avoid` | `c("none", "smooth", "uniform")` | Vector; choices versus multiple selection below | One of "none" (default), "smooth", or "uniform". Explicit gap takes precedence. |
-| `link_branch` | `c("none", "query", "subject")` | Vector; choices versus multiple selection below | Share equal query or subject endpoints: "none", "query", "subject". |
-| `link_branch_fraction` | `0.15` | Numeric/integer; range in description | Shared length relative to the shortest member, in (0, 0.5]. |
-| `arrow` | `NULL` | Nullable R object; type/inheritance below | A grid arrow specification, or NULL. |
-| `colour` | `"#59636D"` | Character/enum; choices below | Fixed styles; mappings use link_* aesthetics. An explicitly supplied fixed value takes precedence over the matching mapping. Omit the fixed argument to retain a mapped style, including an inherited mapping when inherit.aes = TRUE. |
-| `alpha` | `0.6` | Numeric/integer; range in description | Fixed styles; mappings use link_* aesthetics. An explicitly supplied fixed value takes precedence over the matching mapping. Omit the fixed argument to retain a mapped style, including an inherited mapping when inherit.aes = TRUE. |
-| `linewidth` | `0.4` | Numeric/integer; range in description | Fixed styles; mappings use link_* aesthetics. An explicitly supplied fixed value takes precedence over the matching mapping. Omit the fixed argument to retain a mapped style, including an inherited mapping when inherit.aes = TRUE. |
-| `linetype` | `1` | Numeric/integer; range in description | Fixed styles; mappings use link_* aesthetics. An explicitly supplied fixed value takes precedence over the matching mapping. Omit the fixed argument to retain a mapped style, including an inherited mapping when inherit.aes = TRUE. |
-| `position` | `"identity"` | Character/enum; choices below | Standard ggplot2 layer arguments. |
-| `show.legend` | `NA` | R object; constraints below | Standard ggplot2 layer arguments. |
-| `inherit.aes` | `FALSE` | Logical | Standard ggplot2 layer arguments. |
-| `between` | `NULL` | Nullable R object; type/inheritance below | Two display-instance names or declared-order indices. |
-| `allow_repeated` | `FALSE` | Logical | Allow repeated display of an explicitly declared source_hsp_id. |
-| `...` | `No formal default; requiredness follows the contract` | Forwarded arguments | Additional path parameters. |
+| `mapping` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Standard ggplot2 mapping and layer data, including data functions. |
+| `data` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Standard ggplot2 mapping and layer data, including data functions. |
+| `link_type` | `c("curve", "straight")` | Type, units and accepted forms: see this API argument contract at right | Either "curve" (default) or "straight". |
+| `link_gap` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Explicit endpoint spacing. With the default link_avoid = "none", NULL uses a fixed spacing of 0.035. Set link_avoid to "smooth" or "uniform" to opt in to entity-aware endpoint spacing. |
+| `link_ctrl_point` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Bezier control points: two numbers, four numbers, or a list per input row. |
+| `link_avoid` | `c("none", "smooth", "uniform")` | Type, units and accepted forms: see this API argument contract at right | One of "none" (default), "smooth", or "uniform". Explicit gap takes precedence. |
+| `link_branch` | `c("none", "query", "subject")` | Type, units and accepted forms: see this API argument contract at right | Share equal query or subject endpoints: "none", "query", "subject". |
+| `link_branch_fraction` | `0.15` | Type, units and accepted forms: see this API argument contract at right | Shared length relative to the shortest member, in (0, 0.5]. |
+| `arrow` | `NULL` | Type, units and accepted forms: see this API argument contract at right | A grid arrow specification, or NULL. |
+| `colour` | `"#59636D"` | Type, units and accepted forms: see this API argument contract at right | Fixed styles; mappings use link_* aesthetics. An explicitly supplied fixed value takes precedence over the matching mapping. Omit the fixed argument to retain a mapped style, including an inherited mapping when inherit.aes = TRUE. |
+| `alpha` | `0.6` | Type, units and accepted forms: see this API argument contract at right | Fixed styles; mappings use link_* aesthetics. An explicitly supplied fixed value takes precedence over the matching mapping. Omit the fixed argument to retain a mapped style, including an inherited mapping when inherit.aes = TRUE. |
+| `linewidth` | `0.4` | Type, units and accepted forms: see this API argument contract at right | Fixed styles; mappings use link_* aesthetics. An explicitly supplied fixed value takes precedence over the matching mapping. Omit the fixed argument to retain a mapped style, including an inherited mapping when inherit.aes = TRUE. |
+| `linetype` | `1` | Type, units and accepted forms: see this API argument contract at right | Fixed styles; mappings use link_* aesthetics. An explicitly supplied fixed value takes precedence over the matching mapping. Omit the fixed argument to retain a mapped style, including an inherited mapping when inherit.aes = TRUE. |
+| `position` | `"identity"` | Type, units and accepted forms: see this API argument contract at right | Standard ggplot2 layer arguments. |
+| `show.legend` | `NA` | Type, units and accepted forms: see this API argument contract at right | Standard ggplot2 layer arguments. |
+| `inherit.aes` | `FALSE` | Type, units and accepted forms: see this API argument contract at right | Standard ggplot2 layer arguments. |
+| `between` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Two display-instance names or declared-order indices. |
+| `allow_repeated` | `FALSE` | Type, units and accepted forms: see this API argument contract at right | Allow repeated display of an explicitly declared source_hsp_id. |
+| `...` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Additional path parameters. |
 
 </details>
 
@@ -390,29 +390,29 @@ Start with the [learning overview](learn.html#tasks). Lessons compare important 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `mapping` | `NULL` | aes mapping | Default NULL (uses pre-computed data) |
-| `data` | `NULL` | Layer data frame or ggplot2 data function | Default NULL (retrieved automatically from the layout) |
-| `link_ctrl_point` | `NULL` | Nullable R object; type/inheritance below | Optional vector/list of Bezier edge controls. Two numbers specify one shared control; four numbers specify controls for the two ribbon edges. A per-row list may contain pairs of coordinate vectors. NULL uses the origin c(0, 0) in chord layouts and derives controls from the sequence endpoints in collinear layouts. With shared branches, controls shape the far ends while the junction follows the shared trunk. |
-| `link_gap` | `NULL` | Nullable R object; type/inheritance below | Optional numeric/vector controlling spacing between sequences and ribbon endpoints. With the default link_avoid = "uniform", NULL uses one obstacle-aware clearance across each endpoint. Use "smooth" for clearance that changes only next to geom_gene() and geom_feature() polygons, or "none" for fixed spacing 0.035. Text and leader lines are ignored. Supplying a number disables the automatic rule and uses that exact spacing. Linear layouts reduce automatic baseline clearance to fit narrow channels; an explicit gap or feature clearance that cannot fit raises an error. |
-| `link_avoid` | `c("uniform", "none", "smooth")` | Vector; choices versus multiple selection below | One of "uniform" (default), "none", or "smooth". Smooth avoidance changes clearance locally; uniform avoidance uses one clearance across an endpoint. |
-| `link_branch` | `c("none", "query", "subject")` | Vector; choices versus multiple selection below | Share equal query or subject endpoints: "none", "query", "subject". |
-| `link_branch_fraction` | `0.15` | Numeric/integer; range in description | Shared length relative to the shortest member, in (0, 0.5]. |
-| `fill` | `NULL` | Nullable R object; type/inheritance below | Optional fixed ribbon fill. NULL uses the default Identity fill. |
-| `alpha` | `0.42` | Numeric/integer; range in description | Standard fixed ribbon styles. Explicit values take precedence over matching mappings; omitted defaults do not suppress user mappings. For example, omit alpha when mapping ribbon_alpha. |
-| `colour` | `"#59636D"` | Character/enum; choices below | Standard fixed ribbon styles. Explicit values take precedence over matching mappings; omitted defaults do not suppress user mappings. For example, omit alpha when mapping ribbon_alpha. |
-| `linewidth` | `0.08` | Numeric/integer; range in description | Standard fixed ribbon styles. Explicit values take precedence over matching mappings; omitted defaults do not suppress user mappings. For example, omit alpha when mapping ribbon_alpha. |
-| `linetype` | `NULL` | Nullable R object; type/inheritance below | Fixed outline line type. The default NULL uses solid outlines for adjacent displayed sequences and dashed outlines for non-adjacent sequences. Collinear outline widths use nonadjacent_linewidth. Chord adjacency includes the first/last pair. This follows the final display order, independently of alignment direction. Explicit fixed styles or aes(ribbon_linetype = ...) (also aes(linetype = ...)) replace the automatic styles. Use a matching scale for data mappings; automatic styles do not train a linetype scale. Global line-type mappings are used when inherit.aes = TRUE. |
-| `adjacent_only` | `NULL` | Nullable R object; type/inheritance below | Whether only neighbouring sequences are connected. NULL uses TRUE in coord_collinear() and FALSE in coord_chord(). Set FALSE to retain cross-track ribbons. Chord neighbours include the first/last sequence pair. |
-| `pairs` | `NULL` | Nullable R object; type/inheritance below | Optional data frame with qaccver and saccver selecting unordered comparison pairs. With adjacent_only = NULL, explicit pairs take precedence over the coordinate default. Omitted rows are reported by export_ggchord_layout(). |
-| `position` | `"identity"` | Character/enum; choices below | Standard ggplot2 layer arguments. |
-| `show.legend` | `TRUE` | Logical | Standard ggplot2 layer arguments. |
-| `inherit.aes` | `FALSE` | Logical | Standard ggplot2 layer arguments. |
-| `nonadjacent_linewidth` | `0.4` | Numeric/integer; range in description | Fixed outline width for non-adjacent displayed rows in coord_collinear(), default 0.4 mm. These ribbons use dashed outlines by default. Zero uses the layer's ordinary linewidth for every ribbon. This changes width independently of line type. An explicit aes(linewidth = ...) controls widths instead of this fixed default. |
-| `between` | `NULL` | Nullable R object; type/inheritance below | Two display-instance names or declared-order indices for a unique route. |
-| `allow_repeated` | `FALSE` | Logical | Explicitly allow a declared source_hsp_id in more than one displayed relation. |
-| `tip` | `c("none", "subject")` | Vector; choices versus multiple selection below | Full interval fronts (none, default), or an optional subject taper. The shoulder retains the translated target endpoint span at 88 percent of the channel. The tip is a decorative front-midpoint marker, not a single matched base or biological transfer direction. Degenerate fronts fall back to the full front with a warning. Source intervals are unchanged. |
-| `gradient` | `FALSE` | Logical | Logical. Opt into endpoint sequence-colour interpolation; default FALSE. Explicit fill, mapping and scales still take priority. |
-| `...` | `No formal default; requiredness follows the contract` | Forwarded arguments | Additional arguments passed to geom_polygon() |
+| `mapping` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Default NULL (uses pre-computed data) |
+| `data` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Default NULL (retrieved automatically from the layout) |
+| `link_ctrl_point` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional vector/list of Bezier edge controls. Two numbers specify one shared control; four numbers specify controls for the two ribbon edges. A per-row list may contain pairs of coordinate vectors. NULL uses the origin c(0, 0) in chord layouts and derives controls from the sequence endpoints in collinear layouts. With shared branches, controls shape the far ends while the junction follows the shared trunk. |
+| `link_gap` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional numeric/vector controlling spacing between sequences and ribbon endpoints. With the default link_avoid = "uniform", NULL uses one obstacle-aware clearance across each endpoint. Use "smooth" for clearance that changes only next to geom_gene() and geom_feature() polygons, or "none" for fixed spacing 0.035. Text and leader lines are ignored. Supplying a number disables the automatic rule and uses that exact spacing. Linear layouts reduce automatic baseline clearance to fit narrow channels; an explicit gap or feature clearance that cannot fit raises an error. |
+| `link_avoid` | `c("uniform", "none", "smooth")` | Type, units and accepted forms: see this API argument contract at right | One of "uniform" (default), "none", or "smooth". Smooth avoidance changes clearance locally; uniform avoidance uses one clearance across an endpoint. |
+| `link_branch` | `c("none", "query", "subject")` | Type, units and accepted forms: see this API argument contract at right | Share equal query or subject endpoints: "none", "query", "subject". |
+| `link_branch_fraction` | `0.15` | Type, units and accepted forms: see this API argument contract at right | Shared length relative to the shortest member, in (0, 0.5]. |
+| `fill` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional fixed ribbon fill. NULL uses the default Identity fill. |
+| `alpha` | `0.42` | Type, units and accepted forms: see this API argument contract at right | Standard fixed ribbon styles. Explicit values take precedence over matching mappings; omitted defaults do not suppress user mappings. For example, omit alpha when mapping ribbon_alpha. |
+| `colour` | `"#59636D"` | Type, units and accepted forms: see this API argument contract at right | Standard fixed ribbon styles. Explicit values take precedence over matching mappings; omitted defaults do not suppress user mappings. For example, omit alpha when mapping ribbon_alpha. |
+| `linewidth` | `0.08` | Type, units and accepted forms: see this API argument contract at right | Standard fixed ribbon styles. Explicit values take precedence over matching mappings; omitted defaults do not suppress user mappings. For example, omit alpha when mapping ribbon_alpha. |
+| `linetype` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Fixed outline line type. The default NULL uses solid outlines for adjacent displayed sequences and dashed outlines for non-adjacent sequences. Collinear outline widths use nonadjacent_linewidth. Chord adjacency includes the first/last pair. This follows the final display order, independently of alignment direction. Explicit fixed styles or aes(ribbon_linetype = ...) (also aes(linetype = ...)) replace the automatic styles. Use a matching scale for data mappings; automatic styles do not train a linetype scale. Global line-type mappings are used when inherit.aes = TRUE. |
+| `adjacent_only` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Whether only neighbouring sequences are connected. NULL uses TRUE in coord_collinear() and FALSE in coord_chord(). Set FALSE to retain cross-track ribbons. Chord neighbours include the first/last sequence pair. |
+| `pairs` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional data frame with qaccver and saccver selecting unordered comparison pairs. With adjacent_only = NULL, explicit pairs take precedence over the coordinate default. Omitted rows are reported by export_ggchord_layout(). |
+| `position` | `"identity"` | Type, units and accepted forms: see this API argument contract at right | Standard ggplot2 layer arguments. |
+| `show.legend` | `TRUE` | Type, units and accepted forms: see this API argument contract at right | Standard ggplot2 layer arguments. |
+| `inherit.aes` | `FALSE` | Type, units and accepted forms: see this API argument contract at right | Standard ggplot2 layer arguments. |
+| `nonadjacent_linewidth` | `0.4` | Type, units and accepted forms: see this API argument contract at right | Fixed outline width for non-adjacent displayed rows in coord_collinear(), default 0.4 mm. These ribbons use dashed outlines by default. Zero uses the layer's ordinary linewidth for every ribbon. This changes width independently of line type. An explicit aes(linewidth = ...) controls widths instead of this fixed default. |
+| `between` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Two display-instance names or declared-order indices for a unique route. |
+| `allow_repeated` | `FALSE` | Type, units and accepted forms: see this API argument contract at right | Explicitly allow a declared source_hsp_id in more than one displayed relation. |
+| `tip` | `c("none", "subject")` | Type, units and accepted forms: see this API argument contract at right | Full interval fronts (none, default), or an optional subject taper. The shoulder retains the translated target endpoint span at 88 percent of the channel. The tip is a decorative front-midpoint marker, not a single matched base or biological transfer direction. Degenerate fronts fall back to the full front with a warning. Source intervals are unchanged. |
+| `gradient` | `FALSE` | Type, units and accepted forms: see this API argument contract at right | Logical. Opt into endpoint sequence-colour interpolation; default FALSE. Explicit fill, mapping and scales still take priority. |
+| `...` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Additional arguments passed to geom_polygon() |
 
 </details>
 
@@ -425,16 +425,16 @@ Start with the [learning overview](learn.html#tasks). Lessons compare important 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `mapping` | `NULL` | aes mapping | Standard layer inputs. |
-| `data` | `NULL` | Layer data frame or ggplot2 data function | Standard layer inputs. |
-| `side` | `c("between", "outside", "inside")` | Vector; choices versus multiple selection below | Backbone lane used by the primer arc. "between" uses the backbone centre line; "outside" and "inside" use arc_offset. |
-| `arc_offset` | `0.045` | Numeric/integer; range in description | Distance from the backbone centre when side is "outside" or "inside". |
-| `arc_linewidth` | `0.026` | Numeric/integer; range in description | Radial width of the primer arc. |
-| `colour` | `"#A020F0"` | Character/enum; choices below | Primer arc colour. |
-| `position` | `NULL` | Position object or documented string | Standard layer arguments. |
-| `show.legend` | `FALSE` | Logical | Standard layer arguments. |
-| `inherit.aes` | `FALSE` | Logical | Standard layer arguments. |
-| `...` | `No formal default; requiredness follows the contract` | Forwarded arguments | Additional parameters passed to geom_feature(). |
+| `mapping` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Standard layer inputs. |
+| `data` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Standard layer inputs. |
+| `side` | `c("between", "outside", "inside")` | Type, units and accepted forms: see this API argument contract at right | Backbone lane used by the primer arc. "between" uses the backbone centre line; "outside" and "inside" use arc_offset. |
+| `arc_offset` | `0.045` | Type, units and accepted forms: see this API argument contract at right | Distance from the backbone centre when side is "outside" or "inside". |
+| `arc_linewidth` | `0.026` | Type, units and accepted forms: see this API argument contract at right | Radial width of the primer arc. |
+| `colour` | `"#A020F0"` | Type, units and accepted forms: see this API argument contract at right | Primer arc colour. |
+| `position` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Standard layer arguments. |
+| `show.legend` | `FALSE` | Type, units and accepted forms: see this API argument contract at right | Standard layer arguments. |
+| `inherit.aes` | `FALSE` | Type, units and accepted forms: see this API argument contract at right | Standard layer arguments. |
+| `...` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Additional parameters passed to geom_feature(). |
 
 </details>
 
@@ -447,16 +447,16 @@ Start with the [learning overview](learn.html#tasks). Lessons compare important 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `mapping` | `NULL` | aes mapping | Standard layer inputs. |
-| `data` | `NULL` | Layer data frame or ggplot2 data function | Standard layer inputs. |
-| `side` | `c("outside", "inside")` | Vector; choices versus multiple selection below | Side of the backbone on which the primer callout is arranged. "inside" retains the inner label layout, including when exterior restriction or feature labels share the map. The default is "outside". |
-| `show_location` | `TRUE` | Logical | Include the binding range in the label. |
-| `colour` | `"#A020F0"` | Character/enum; choices below | Primer arc colour. |
-| `max_overlaps` | `Inf` | R object; constraints below | Maximum unresolved overlaps. |
-| `position` | `NULL` | Position object or documented string | Standard layer arguments. |
-| `show.legend` | `FALSE` | Logical | Standard layer arguments. |
-| `inherit.aes` | `FALSE` | Logical | Standard layer arguments. |
-| `...` | `No formal default; requiredness follows the contract` | Forwarded arguments | Additional parameters passed to geom_feature(). |
+| `mapping` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Standard layer inputs. |
+| `data` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Standard layer inputs. |
+| `side` | `c("outside", "inside")` | Type, units and accepted forms: see this API argument contract at right | Side of the backbone on which the primer callout is arranged. "inside" retains the inner label layout, including when exterior restriction or feature labels share the map. The default is "outside". |
+| `show_location` | `TRUE` | Type, units and accepted forms: see this API argument contract at right | Include the binding range in the label. |
+| `colour` | `"#A020F0"` | Type, units and accepted forms: see this API argument contract at right | Primer arc colour. |
+| `max_overlaps` | `Inf` | Type, units and accepted forms: see this API argument contract at right | Maximum unresolved overlaps. |
+| `position` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Standard layer arguments. |
+| `show.legend` | `FALSE` | Type, units and accepted forms: see this API argument contract at right | Standard layer arguments. |
+| `inherit.aes` | `FALSE` | Type, units and accepted forms: see this API argument contract at right | Standard layer arguments. |
+| `...` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Additional parameters passed to geom_feature(). |
 
 </details>
 
@@ -469,13 +469,13 @@ Start with the [learning overview](learn.html#tasks). Lessons compare important 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `mapping` | `NULL` | aes mapping | Standard ggplot2 layer mapping and data. Required aesthetics are x, y and label. Ordinary colour, fill, alpha, size, family and fontface mappings/scales are supported. size is in mm. |
-| `data` | `NULL` | Layer data frame or ggplot2 data function | Standard ggplot2 layer mapping and data. Required aesthetics are x, y and label. Ordinary colour, fill, alpha, size, family and fontface mappings/scales are supported. size is in mm. |
-| `overflow` | `c("tile", "error")` | Vector; choices versus multiple selection below | "tile" (default) or "error" when letters do not fit. |
-| `position` | `"identity"` | Character/enum; choices below | Standard ggplot2 layer arguments. |
-| `show.legend` | `NA` | R object; constraints below | Standard ggplot2 layer arguments. |
-| `inherit.aes` | `TRUE` | Logical | Standard ggplot2 layer arguments. |
-| `...` | `No formal default; requiredness follows the contract` | Forwarded arguments | Fixed text/cell aesthetics and na.rm, passed to the layer. |
+| `mapping` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Standard ggplot2 layer mapping and data. Required aesthetics are x, y and label. Ordinary colour, fill, alpha, size, family and fontface mappings/scales are supported. size is in mm. |
+| `data` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Standard ggplot2 layer mapping and data. Required aesthetics are x, y and label. Ordinary colour, fill, alpha, size, family and fontface mappings/scales are supported. size is in mm. |
+| `overflow` | `c("tile", "error")` | Type, units and accepted forms: see this API argument contract at right | "tile" (default) or "error" when letters do not fit. |
+| `position` | `"identity"` | Type, units and accepted forms: see this API argument contract at right | Standard ggplot2 layer arguments. |
+| `show.legend` | `NA` | Type, units and accepted forms: see this API argument contract at right | Standard ggplot2 layer arguments. |
+| `inherit.aes` | `TRUE` | Type, units and accepted forms: see this API argument contract at right | Standard ggplot2 layer arguments. |
+| `...` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Fixed text/cell aesthetics and na.rm, passed to the layer. |
 
 </details>
 
@@ -488,25 +488,25 @@ Start with the [learning overview](learn.html#tasks). Lessons compare important 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `mapping` | `NULL` | aes mapping | Standard layer inputs. |
-| `data` | `NULL` | Layer data frame or ggplot2 data function | Standard layer inputs. |
-| `label` | `TRUE` | Logical | Draw labels. |
-| `label_style` | `c("enzyme_position", "enzyme", "position")` | Vector; choices versus multiple selection below | Label enzyme and position, enzyme only, or position only. |
-| `label_order` | `c("auto", "enzyme_position", "position_enzyme")` | Vector; choices versus multiple selection below | Automatic mirrored label order, enzyme first, or position first. |
-| `label_side` | `c("outside", "inside", "auto")` | Vector; choices versus multiple selection below | Draw labels outside, inside, or automatically. |
-| `leader` | `c("radial", "elbow", "straight")` | Vector; choices versus multiple selection below | Leader routing style. The default "radial" measures actual text boxes, separates site anchors from final radial label positions, and routes either a direct connector or an independent radial stub plus fan segment. All enzyme-facing text edges follow one close circular contour in genomic order. Dense lateral clusters use evenly spaced contour fans, while sparse clusters retain their natural angular positions. The former "trunk" alias was removed in v0.16.1; use "radial". "straight" connects the tick tip directly to the final label edge, without detours around the sequence or other leaders. "elbow" uses one bend, starting with a local-normal departure where possible. Label positions and grouping are shared by all routing styles. |
-| `min_label_gap` | `NULL` | Nullable R object; type/inheritance below | Minimum genomic fraction between label slots. NULL derives a compact device-aware default from the rendered labels. |
-| `tick_length` | `0.04` | Numeric/integer; range in description | Local-normal distances. |
-| `label_offset` | `0.18` | Numeric/integer; range in description | Local-normal distances. |
-| `colour` | `"#202020"` | Character/enum; choices below | Fixed appearance. With the default fontface = NULL, enzyme names are bold only when that enzyme cuts once in the supplied sequence; coordinates remain regular. An explicit fontface disables this automatic distinction. |
-| `linewidth` | `0.28` | Numeric/integer; range in description | Fixed appearance. With the default fontface = NULL, enzyme names are bold only when that enzyme cuts once in the supplied sequence; coordinates remain regular. An explicit fontface disables this automatic distinction. |
-| `label_size` | `3.2` | Numeric/integer; range in description | Fixed appearance. With the default fontface = NULL, enzyme names are bold only when that enzyme cuts once in the supplied sequence; coordinates remain regular. An explicit fontface disables this automatic distinction. |
-| `fontface` | `NULL` | Nullable R object; type/inheritance below | Fixed appearance. With the default fontface = NULL, enzyme names are bold only when that enzyme cuts once in the supplied sequence; coordinates remain regular. An explicit fontface disables this automatic distinction. |
-| `family` | `NULL` | Nullable R object; type/inheritance below | Fixed appearance. With the default fontface = NULL, enzyme names are bold only when that enzyme cuts once in the supplied sequence; coordinates remain regular. An explicit fontface disables this automatic distinction. |
-| `position` | `"identity"` | Character/enum; choices below | Standard layer arguments. |
-| `show.legend` | `FALSE` | Logical | Standard layer arguments. |
-| `inherit.aes` | `FALSE` | Logical | Standard layer arguments. |
-| `...` | `No formal default; requiredness follows the contract` | Forwarded arguments | Additional geom parameters. |
+| `mapping` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Standard layer inputs. |
+| `data` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Standard layer inputs. |
+| `label` | `TRUE` | Type, units and accepted forms: see this API argument contract at right | Draw labels. |
+| `label_style` | `c("enzyme_position", "enzyme", "position")` | Type, units and accepted forms: see this API argument contract at right | Label enzyme and position, enzyme only, or position only. |
+| `label_order` | `c("auto", "enzyme_position", "position_enzyme")` | Type, units and accepted forms: see this API argument contract at right | Automatic mirrored label order, enzyme first, or position first. |
+| `label_side` | `c("outside", "inside", "auto")` | Type, units and accepted forms: see this API argument contract at right | Draw labels outside, inside, or automatically. |
+| `leader` | `c("radial", "elbow", "straight")` | Type, units and accepted forms: see this API argument contract at right | Leader routing style. The default "radial" measures actual text boxes, separates site anchors from final radial label positions, and routes either a direct connector or an independent radial stub plus fan segment. All enzyme-facing text edges follow one close circular contour in genomic order. Dense lateral clusters use evenly spaced contour fans, while sparse clusters retain their natural angular positions. The former "trunk" alias was removed in v0.16.1; use "radial". "straight" connects the tick tip directly to the final label edge, without detours around the sequence or other leaders. "elbow" uses one bend, starting with a local-normal departure where possible. Label positions and grouping are shared by all routing styles. |
+| `min_label_gap` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Minimum genomic fraction between label slots. NULL derives a compact device-aware default from the rendered labels. |
+| `tick_length` | `0.04` | Type, units and accepted forms: see this API argument contract at right | Local-normal distances. |
+| `label_offset` | `0.18` | Type, units and accepted forms: see this API argument contract at right | Local-normal distances. |
+| `colour` | `"#202020"` | Type, units and accepted forms: see this API argument contract at right | Fixed appearance. With the default fontface = NULL, enzyme names are bold only when that enzyme cuts once in the supplied sequence; coordinates remain regular. An explicit fontface disables this automatic distinction. |
+| `linewidth` | `0.28` | Type, units and accepted forms: see this API argument contract at right | Fixed appearance. With the default fontface = NULL, enzyme names are bold only when that enzyme cuts once in the supplied sequence; coordinates remain regular. An explicit fontface disables this automatic distinction. |
+| `label_size` | `3.2` | Type, units and accepted forms: see this API argument contract at right | Fixed appearance. With the default fontface = NULL, enzyme names are bold only when that enzyme cuts once in the supplied sequence; coordinates remain regular. An explicit fontface disables this automatic distinction. |
+| `fontface` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Fixed appearance. With the default fontface = NULL, enzyme names are bold only when that enzyme cuts once in the supplied sequence; coordinates remain regular. An explicit fontface disables this automatic distinction. |
+| `family` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Fixed appearance. With the default fontface = NULL, enzyme names are bold only when that enzyme cuts once in the supplied sequence; coordinates remain regular. An explicit fontface disables this automatic distinction. |
+| `position` | `"identity"` | Type, units and accepted forms: see this API argument contract at right | Standard layer arguments. |
+| `show.legend` | `FALSE` | Type, units and accepted forms: see this API argument contract at right | Standard layer arguments. |
+| `inherit.aes` | `FALSE` | Type, units and accepted forms: see this API argument contract at right | Standard layer arguments. |
+| `...` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Additional geom parameters. |
 
 </details>
 
@@ -519,22 +519,22 @@ Start with the [learning overview](learn.html#tasks). Lessons compare important 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `mapping` | `NULL` | aes mapping | Default NULL (uses pre-computed data) |
-| `data` | `NULL` | Layer data frame or ggplot2 data function | Default NULL (retrieved automatically from the layout) |
-| `seq_order` | `NULL` | Geometry number/vector/documented formats | Source IDs in display order. Repeats create display instances; use names such as c(A_high='A', B='B', A_low='A') for stable instance IDs. Repeated-entity HSPs require a unique between route on each link layer. |
-| `seq_orientation` | `NULL` | Geometry number/vector/documented formats | Optional numeric (1 or -1). Sequence orientation, default 1 |
-| `seq_gap` | `NULL` | Geometry number/vector/documented formats | Optional numeric. Gap proportion between sequences, default 0.03 in chord coordinates. A named vector can set the gap after each sequence; omitted IDs use the coordinate default. In coord_collinear(), a positive distance between consecutive backbones as a proportion of the longest backbone's width, default 0.3. The final sequence's gap is unused in linear layouts. Segmented linear displays measure it against the longest display row; windows in one row must request the same gap, and only gaps between rows affect vertical placement. |
-| `seq_radius` | `NULL` | Geometry number/vector/documented formats | Optional numeric (> 0). Sequence arc radius, default 1.0 |
-| `seq_curvature` | `NULL` | Geometry number/vector/documented formats | Optional numeric. Signed arc bow (0=straight, 1=standard arc, negative=opposite bow), default 1.0. Finite positive and negative values are accepted without clipping; magnitudes above 1 amplify the bow. |
-| `seq_style` | `c("auto", "single", "double", "band")` | Vector; choices versus multiple selection below | Backbone geometry. "auto" uses a double backbone in coord_circular() and a single backbone in coord_chord(). |
-| `seq_backbone_gap` | `0.025` | Numeric/integer; range in description | Gap between double backbone lines. |
-| `seq_backbone_width` | `0.035` | Numeric/integer; range in description | Width of a band backbone. |
-| `linewidth` | `0.9` | Numeric/integer; range in description | Arc line width, default 0.9 |
-| `position` | `"identity"` | Character/enum; choices below | Standard ggplot2 layer arguments. |
-| `show.legend` | `TRUE` | Logical | Standard ggplot2 layer arguments. |
-| `inherit.aes` | `FALSE` | Logical | Standard ggplot2 layer arguments. |
-| `length_mode` | `c("proportional", "equal")` | Vector; choices versus multiple selection below | "proportional" (default) retains source-length ratios; "equal" gives each displayed sequence the same angular allocation or linear span without modifying source lengths. Shared absolute scale bars are unavailable in multi-sequence equal mode; local axes retain source units. |
-| `...` | `No formal default; requiredness follows the contract` | Forwarded arguments | Additional fixed path aesthetics. colour (or color) sets seq_colour. Explicit fixed values take precedence over matching mappings; omit fixed arguments to retain mapped styles. |
+| `mapping` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Default NULL (uses pre-computed data) |
+| `data` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Default NULL (retrieved automatically from the layout) |
+| `seq_order` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Source IDs in display order. Repeats create display instances; use names such as c(A_high='A', B='B', A_low='A') for stable instance IDs. Repeated-entity HSPs require a unique between route on each link layer. |
+| `seq_orientation` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional numeric (1 or -1). Sequence orientation, default 1 |
+| `seq_gap` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional numeric. Gap proportion between sequences, default 0.03 in chord coordinates. A named vector can set the gap after each sequence; omitted IDs use the coordinate default. In coord_collinear(), a positive distance between consecutive backbones as a proportion of the longest backbone's width, default 0.3. The final sequence's gap is unused in linear layouts. Segmented linear displays measure it against the longest display row; windows in one row must request the same gap, and only gaps between rows affect vertical placement. |
+| `seq_radius` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional numeric (> 0). Sequence arc radius, default 1.0 |
+| `seq_curvature` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional numeric. Signed arc bow (0=straight, 1=standard arc, negative=opposite bow), default 1.0. Finite positive and negative values are accepted without clipping; magnitudes above 1 amplify the bow. |
+| `seq_style` | `c("auto", "single", "double", "band")` | Type, units and accepted forms: see this API argument contract at right | Backbone geometry. "auto" uses a double backbone in coord_circular() and a single backbone in coord_chord(). |
+| `seq_backbone_gap` | `0.025` | Type, units and accepted forms: see this API argument contract at right | Gap between double backbone lines. |
+| `seq_backbone_width` | `0.035` | Type, units and accepted forms: see this API argument contract at right | Width of a band backbone. |
+| `linewidth` | `0.9` | Type, units and accepted forms: see this API argument contract at right | Arc line width, default 0.9 |
+| `position` | `"identity"` | Type, units and accepted forms: see this API argument contract at right | Standard ggplot2 layer arguments. |
+| `show.legend` | `TRUE` | Type, units and accepted forms: see this API argument contract at right | Standard ggplot2 layer arguments. |
+| `inherit.aes` | `FALSE` | Type, units and accepted forms: see this API argument contract at right | Standard ggplot2 layer arguments. |
+| `length_mode` | `c("proportional", "equal")` | Type, units and accepted forms: see this API argument contract at right | "proportional" (default) retains source-length ratios; "equal" gives each displayed sequence the same angular allocation or linear span without modifying source lengths. Shared absolute scale bars are unavailable in multi-sequence equal mode; local axes retain source units. |
+| `...` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Additional fixed path aesthetics. colour (or color) sets seq_colour. Explicit fixed values take precedence over matching mappings; omit fixed arguments to retain mapped styles. |
 
 </details>
 
@@ -547,16 +547,16 @@ Start with the [learning overview](learn.html#tasks). Lessons compare important 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `mapping` | `NULL` | aes mapping | Standard layer mapping and sequence data. By default, use the plot's sequence table. Truncation is read from .truncated_left/.truncated_right, with source interval and length metadata as fallback when available. |
-| `data` | `NULL` | Layer data frame or ggplot2 data function | Standard layer mapping and sequence data. By default, use the plot's sequence table. Truncation is read from .truncated_left/.truncated_right, with source interval and length metadata as fallback when available. |
-| `break_width` | `0.02` | Numeric/integer; range in description | Width and height of the complete break mark in linear layout units. These are layout distances, not millimetres. |
-| `break_height` | `0.04` | Numeric/integer; range in description | Width and height of the complete break mark in linear layout units. These are layout distances, not millimetres. |
-| `linewidth` | `0.4` | Numeric/integer; range in description | Fixed line appearance. Ordinary visual aesthetics can also be mapped and controlled by their ggplot2 scales. |
-| `colour` | `"#3D4348"` | Character/enum; choices below | Fixed line appearance. Ordinary visual aesthetics can also be mapped and controlled by their ggplot2 scales. |
-| `position` | `"identity"` | Character/enum; choices below | Standard ggplot2 layer arguments. |
-| `show.legend` | `FALSE` | Logical | Standard ggplot2 layer arguments. |
-| `inherit.aes` | `FALSE` | Logical | Standard ggplot2 layer arguments. |
-| `...` | `No formal default; requiredness follows the contract` | Forwarded arguments | Additional parameters passed to ggplot2::geom_path(). |
+| `mapping` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Standard layer mapping and sequence data. By default, use the plot's sequence table. Truncation is read from .truncated_left/.truncated_right, with source interval and length metadata as fallback when available. |
+| `data` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Standard layer mapping and sequence data. By default, use the plot's sequence table. Truncation is read from .truncated_left/.truncated_right, with source interval and length metadata as fallback when available. |
+| `break_width` | `0.02` | Type, units and accepted forms: see this API argument contract at right | Width and height of the complete break mark in linear layout units. These are layout distances, not millimetres. |
+| `break_height` | `0.04` | Type, units and accepted forms: see this API argument contract at right | Width and height of the complete break mark in linear layout units. These are layout distances, not millimetres. |
+| `linewidth` | `0.4` | Type, units and accepted forms: see this API argument contract at right | Fixed line appearance. Ordinary visual aesthetics can also be mapped and controlled by their ggplot2 scales. |
+| `colour` | `"#3D4348"` | Type, units and accepted forms: see this API argument contract at right | Fixed line appearance. Ordinary visual aesthetics can also be mapped and controlled by their ggplot2 scales. |
+| `position` | `"identity"` | Type, units and accepted forms: see this API argument contract at right | Standard ggplot2 layer arguments. |
+| `show.legend` | `FALSE` | Type, units and accepted forms: see this API argument contract at right | Standard ggplot2 layer arguments. |
+| `inherit.aes` | `FALSE` | Type, units and accepted forms: see this API argument contract at right | Standard ggplot2 layer arguments. |
+| `...` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Additional parameters passed to ggplot2::geom_path(). |
 
 </details>
 
@@ -569,16 +569,16 @@ Start with the [learning overview](learn.html#tasks). Lessons compare important 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `mapping` | `NULL` | aes mapping | Standard layer inputs. |
-| `data` | `NULL` | Layer data frame or ggplot2 data function | Standard layer inputs. |
-| `name` | `TRUE` | Logical | Show the sequence name. A character value overrides the name. |
-| `length` | `TRUE` | Logical | Show the formatted sequence length. |
-| `separator` | `"\n"` | Character/enum; choices below | Separator between name and length. |
-| `name_style` | `list()` | Named list | Named lists of fixed text-style overrides for the name and length grobs. Supported fields are colour, size, family, fontface, and lineheight. |
-| `length_style` | `list()` | Named list | Named lists of fixed text-style overrides for the name and length grobs. Supported fields are colour, size, family, fontface, and lineheight. |
-| `show.legend` | `FALSE` | Logical | Standard ggplot2 layer arguments. |
-| `inherit.aes` | `FALSE` | Logical | Standard ggplot2 layer arguments. |
-| `...` | `No formal default; requiredness follows the contract` | Forwarded arguments | Additional arguments passed to geom_text(). |
+| `mapping` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Standard layer inputs. |
+| `data` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Standard layer inputs. |
+| `name` | `TRUE` | Type, units and accepted forms: see this API argument contract at right | Show the sequence name. A character value overrides the name. |
+| `length` | `TRUE` | Type, units and accepted forms: see this API argument contract at right | Show the formatted sequence length. |
+| `separator` | `"\n"` | Type, units and accepted forms: see this API argument contract at right | Separator between name and length. |
+| `name_style` | `list()` | Type, units and accepted forms: see this API argument contract at right | Named lists of fixed text-style overrides for the name and length grobs. Supported fields are colour, size, family, fontface, and lineheight. |
+| `length_style` | `list()` | Type, units and accepted forms: see this API argument contract at right | Named lists of fixed text-style overrides for the name and length grobs. Supported fields are colour, size, family, fontface, and lineheight. |
+| `show.legend` | `FALSE` | Type, units and accepted forms: see this API argument contract at right | Standard ggplot2 layer arguments. |
+| `inherit.aes` | `FALSE` | Type, units and accepted forms: see this API argument contract at right | Standard ggplot2 layer arguments. |
+| `...` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Additional arguments passed to geom_text(). |
 
 </details>
 
@@ -591,19 +591,19 @@ Start with the [learning overview](learn.html#tasks). Lessons compare important 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `mapping` | `NULL` | aes mapping | Default NULL (uses pre-computed data) |
-| `data` | `NULL` | Layer data frame or ggplot2 data function | Default NULL (retrieved automatically from the layout) |
-| `seq_label_radius` | `1` | Numeric/integer; range in description | Optional numeric/vector. Radial position of the labels as a multiplier of the sequence arc radius: 1 is on the arc, > 1 places the label outside (away from the chord center) and < 1 places it inside, default 1 Explicit values are incompatible with coord_collinear(), which places sequence labels beside the left endpoint of each horizontal track. |
-| `seq_label_rotation` | `NULL` | Nullable R object; type/inheritance below | Optional numeric/vector. Additional label rotation (degrees) on top of the arc-aligned orientation, default NULL (0). Ignored when seq_label_orientation = "horizontal". |
-| `labels` | `NULL` | Nullable R object; type/inheritance below | Optional character vector. Override the label texts (defaults to the sequence labels from geom_seq() or the sequence IDs) |
-| `seq_label_orientation` | `c("arc", "horizontal")` | Vector; choices versus multiple selection below | Character, default "arc". Label text orientation: "arc" rotates the text along the sequence arc (and keeps it readable), "horizontal" draws every label horizontally, extending away from the chord center. |
-| `seq_label_hjust` | `NULL` | Nullable R object; type/inheritance below | Optional numeric/vector. Horizontal justification of the labels, default NULL. The default arc orientation uses -0.2 so the text sits just inside the sequence; with seq_label_orientation = "horizontal" the justification is chosen automatically so the text extends away from the chord center. |
-| `seq_label_vjust` | `NULL` | Nullable R object; type/inheritance below | Optional numeric/vector. Vertical justification of the labels, default NULL (0.5). |
-| `check_overlap` | `FALSE` | Logical | Logical, default FALSE. When TRUE, labels that would overlap a previously drawn label are skipped (ggplot2's geom_text() option). |
-| `position` | `"identity"` | Character/enum; choices below | Standard ggplot2 layer arguments. |
-| `show.legend` | `FALSE` | Logical | Standard ggplot2 layer arguments. |
-| `inherit.aes` | `FALSE` | Logical | Standard ggplot2 layer arguments. |
-| `...` | `No formal default; requiredness follows the contract` | Forwarded arguments | Additional arguments passed to geom_text() |
+| `mapping` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Default NULL (uses pre-computed data) |
+| `data` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Default NULL (retrieved automatically from the layout) |
+| `seq_label_radius` | `1` | Type, units and accepted forms: see this API argument contract at right | Optional numeric/vector. Radial position of the labels as a multiplier of the sequence arc radius: 1 is on the arc, > 1 places the label outside (away from the chord center) and < 1 places it inside, default 1 Explicit values are incompatible with coord_collinear(), which places sequence labels beside the left endpoint of each horizontal track. |
+| `seq_label_rotation` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional numeric/vector. Additional label rotation (degrees) on top of the arc-aligned orientation, default NULL (0). Ignored when seq_label_orientation = "horizontal". |
+| `labels` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional character vector. Override the label texts (defaults to the sequence labels from geom_seq() or the sequence IDs) |
+| `seq_label_orientation` | `c("arc", "horizontal")` | Type, units and accepted forms: see this API argument contract at right | Character, default "arc". Label text orientation: "arc" rotates the text along the sequence arc (and keeps it readable), "horizontal" draws every label horizontally, extending away from the chord center. |
+| `seq_label_hjust` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional numeric/vector. Horizontal justification of the labels, default NULL. The default arc orientation uses -0.2 so the text sits just inside the sequence; with seq_label_orientation = "horizontal" the justification is chosen automatically so the text extends away from the chord center. |
+| `seq_label_vjust` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional numeric/vector. Vertical justification of the labels, default NULL (0.5). |
+| `check_overlap` | `FALSE` | Type, units and accepted forms: see this API argument contract at right | Logical, default FALSE. When TRUE, labels that would overlap a previously drawn label are skipped (ggplot2's geom_text() option). |
+| `position` | `"identity"` | Type, units and accepted forms: see this API argument contract at right | Standard ggplot2 layer arguments. |
+| `show.legend` | `FALSE` | Type, units and accepted forms: see this API argument contract at right | Standard ggplot2 layer arguments. |
+| `inherit.aes` | `FALSE` | Type, units and accepted forms: see this API argument contract at right | Standard ggplot2 layer arguments. |
+| `...` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Additional arguments passed to geom_text() |
 
 </details>
 
@@ -616,18 +616,18 @@ Start with the [learning overview](learn.html#tasks). Lessons compare important 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `mapping` | `NULL` | aes mapping | Default NULL (uses pre-computed data) |
-| `data` | `NULL` | Layer data frame or ggplot2 data function | data.frame with at least accver, start, end; optional label, category and color. Factor start/end columns use their numeric labels, not level codes. |
-| `fill` | `"#F59E0B"` | Character/enum; choices below | Character. Default fill colour for regions, default "#F59E0B". |
-| `colour` | `"#B45309"` | Character/enum; choices below | Outline colour, default "#B45309". |
-| `alpha` | `0.25` | Numeric/integer; range in description | Numeric (0-1). Region alpha, default 0.25. |
-| `region_width` | `0.08` | Numeric/integer; range in description | Numeric. Band width in chord radius units, default 0.08. |
-| `region_offset` | `0` | Numeric/integer; range in description | Numeric. Radial offset from the sequence arc, default 0. |
-| `region_side` | `c("inside", "outside", "auto")` | Vector; choices versus multiple selection below | Character. "inside", "outside" or "auto"; "auto" places regions inside the chord when possible. |
-| `position` | `"identity"` | Character/enum; choices below | Standard ggplot2 layer arguments. |
-| `show.legend` | `FALSE` | Logical | Standard ggplot2 layer arguments. |
-| `inherit.aes` | `FALSE` | Logical | Standard ggplot2 layer arguments. |
-| `...` | `No formal default; requiredness follows the contract` | Forwarded arguments | Additional arguments passed to geom_polygon() |
+| `mapping` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Default NULL (uses pre-computed data) |
+| `data` | `NULL` | Type, units and accepted forms: see this API argument contract at right | data.frame with at least accver, start, end; optional label, category and color. Factor start/end columns use their numeric labels, not level codes. |
+| `fill` | `"#F59E0B"` | Type, units and accepted forms: see this API argument contract at right | Character. Default fill colour for regions, default "#F59E0B". |
+| `colour` | `"#B45309"` | Type, units and accepted forms: see this API argument contract at right | Outline colour, default "#B45309". |
+| `alpha` | `0.25` | Type, units and accepted forms: see this API argument contract at right | Numeric (0-1). Region alpha, default 0.25. |
+| `region_width` | `0.08` | Type, units and accepted forms: see this API argument contract at right | Numeric. Band width in chord radius units, default 0.08. |
+| `region_offset` | `0` | Type, units and accepted forms: see this API argument contract at right | Numeric. Radial offset from the sequence arc, default 0. |
+| `region_side` | `c("inside", "outside", "auto")` | Type, units and accepted forms: see this API argument contract at right | Character. "inside", "outside" or "auto"; "auto" places regions inside the chord when possible. |
+| `position` | `"identity"` | Type, units and accepted forms: see this API argument contract at right | Standard ggplot2 layer arguments. |
+| `show.legend` | `FALSE` | Type, units and accepted forms: see this API argument contract at right | Standard ggplot2 layer arguments. |
+| `inherit.aes` | `FALSE` | Type, units and accepted forms: see this API argument contract at right | Standard ggplot2 layer arguments. |
+| `...` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Additional arguments passed to geom_polygon() |
 
 </details>
 
@@ -640,21 +640,21 @@ Start with the [learning overview](learn.html#tasks). Lessons compare important 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `mapping` | `NULL` | aes mapping | Standard ggplot2 layer inputs. Optional scale_length maps one positive integer length per bar, in the sequence unit; label supplies its text. Multiple bars require explicit x and y layout positions in data (or their role mappings), to avoid accidental overprinting. |
-| `data` | `NULL` | Layer data frame or ggplot2 data function | Standard ggplot2 layer inputs. Optional scale_length maps one positive integer length per bar, in the sequence unit; label supplies its text. Multiple bars require explicit x and y layout positions in data (or their role mappings), to avoid accidental overprinting. |
-| `length` | `NULL` | Nullable R object; type/inheritance below | Optional fixed positive integer length in the sequence unit. Cannot be combined with a scale_length mapping. NULL uses input lengths or an automatic reference length. |
-| `label` | `NULL` | Nullable R object; type/inheritance below | Optional fixed character label, or a function receiving the chosen lengths. NULL uses input labels or formatted bp/aa text. |
-| `location` | `c("bottomleft", "bottomright", "topleft", "topright")` | Vector; choices versus multiple selection below | Corner of the sequence envelope used for automatic placement. |
-| `offset` | `grid::unit(c(0, 6), "mm")` | grid physical-unit object | Two non-negative distances, horizontal then vertical. Absolute grid units are supported; plain numeric values are layout-unit distances. The default is 0 mm horizontally and 6 mm vertically. |
-| `tick_height` | `grid::unit(1.5, "mm")` | grid physical-unit object | Non-negative absolute grid units or layout-unit numbers for the end ticks and space between the bar and caption. Physical conversion uses the current render context when available; device-free builds retain an explicitly estimated measurement status. |
-| `label_gap` | `grid::unit(1.5, "mm")` | grid physical-unit object | Non-negative absolute grid units or layout-unit numbers for the end ticks and space between the bar and caption. Physical conversion uses the current render context when available; device-free builds retain an explicitly estimated measurement status. |
-| `linewidth` | `0.4` | Numeric/integer; range in description | Fixed line colour/width and text size. Text size follows ordinary ggplot2 millimetres. These may also use normal mappings and scales when not supplied as fixed arguments. |
-| `colour` | `"#3D4348"` | Character/enum; choices below | Fixed line colour/width and text size. Text size follows ordinary ggplot2 millimetres. These may also use normal mappings and scales when not supplied as fixed arguments. |
-| `size` | `3` | Numeric/integer; range in description | Fixed line colour/width and text size. Text size follows ordinary ggplot2 millimetres. These may also use normal mappings and scales when not supplied as fixed arguments. |
-| `position` | `"identity"` | Character/enum; choices below | Standard ggplot2 layer arguments. |
-| `show.legend` | `FALSE` | Logical | Standard ggplot2 layer arguments. |
-| `inherit.aes` | `FALSE` | Logical | Standard ggplot2 layer arguments. |
-| `...` | `No formal default; requiredness follows the contract` | Forwarded arguments | Additional fixed aesthetics passed to ggplot2::layer(). |
+| `mapping` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Standard ggplot2 layer inputs. Optional scale_length maps one positive integer length per bar, in the sequence unit; label supplies its text. Multiple bars require explicit x and y layout positions in data (or their role mappings), to avoid accidental overprinting. |
+| `data` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Standard ggplot2 layer inputs. Optional scale_length maps one positive integer length per bar, in the sequence unit; label supplies its text. Multiple bars require explicit x and y layout positions in data (or their role mappings), to avoid accidental overprinting. |
+| `length` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional fixed positive integer length in the sequence unit. Cannot be combined with a scale_length mapping. NULL uses input lengths or an automatic reference length. |
+| `label` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional fixed character label, or a function receiving the chosen lengths. NULL uses input labels or formatted bp/aa text. |
+| `location` | `c("bottomleft", "bottomright", "topleft", "topright")` | Type, units and accepted forms: see this API argument contract at right | Corner of the sequence envelope used for automatic placement. |
+| `offset` | `grid::unit(c(0, 6), "mm")` | Type, units and accepted forms: see this API argument contract at right | Two non-negative distances, horizontal then vertical. Absolute grid units are supported; plain numeric values are layout-unit distances. The default is 0 mm horizontally and 6 mm vertically. |
+| `tick_height` | `grid::unit(1.5, "mm")` | Type, units and accepted forms: see this API argument contract at right | Non-negative absolute grid units or layout-unit numbers for the end ticks and space between the bar and caption. Physical conversion uses the current render context when available; device-free builds retain an explicitly estimated measurement status. |
+| `label_gap` | `grid::unit(1.5, "mm")` | Type, units and accepted forms: see this API argument contract at right | Non-negative absolute grid units or layout-unit numbers for the end ticks and space between the bar and caption. Physical conversion uses the current render context when available; device-free builds retain an explicitly estimated measurement status. |
+| `linewidth` | `0.4` | Type, units and accepted forms: see this API argument contract at right | Fixed line colour/width and text size. Text size follows ordinary ggplot2 millimetres. These may also use normal mappings and scales when not supplied as fixed arguments. |
+| `colour` | `"#3D4348"` | Type, units and accepted forms: see this API argument contract at right | Fixed line colour/width and text size. Text size follows ordinary ggplot2 millimetres. These may also use normal mappings and scales when not supplied as fixed arguments. |
+| `size` | `3` | Type, units and accepted forms: see this API argument contract at right | Fixed line colour/width and text size. Text size follows ordinary ggplot2 millimetres. These may also use normal mappings and scales when not supplied as fixed arguments. |
+| `position` | `"identity"` | Type, units and accepted forms: see this API argument contract at right | Standard ggplot2 layer arguments. |
+| `show.legend` | `FALSE` | Type, units and accepted forms: see this API argument contract at right | Standard ggplot2 layer arguments. |
+| `inherit.aes` | `FALSE` | Type, units and accepted forms: see this API argument contract at right | Standard ggplot2 layer arguments. |
+| `...` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Additional fixed aesthetics passed to ggplot2::layer(). |
 
 </details>
 
@@ -667,17 +667,17 @@ Start with the [learning overview](learn.html#tasks). Lessons compare important 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `mapping` | `NULL` | aes mapping | Standard layer input. Supply accver and source positions through x/pos, or interval start/end. Map y/track_value for identity values. |
-| `data` | `NULL` | Layer data frame or ggplot2 data function | Standard layer input. Supply accver and source positions through x/pos, or interval start/end. Map y/track_value for identity values. |
-| `geom` | `"point"` | Character/enum; choices below | Native geometry/statistic names. bar defaults to count; col and other geoms default to identity. |
-| `stat` | `NULL` | Nullable R object; type/inheritance below | Native geometry/statistic names. bar defaults to count; col and other geoms default to identity. |
-| `track` | `NULL` | Nullable R object; type/inheritance below | A physical position_track() declaration. |
-| `position` | `NULL` | Position object or documented string | Data position such as identity, stack, dodge. The legacy position=position_track(...) spelling still declares the physical band. |
-| `bounds` | `c("error", "clip")` | Vector; choices versus multiple selection below | Coordinate error/clip policy. |
-| `baseline` | `0` | Numeric/integer; range in description | Numeric identity-column baseline. Nonzero baselines require position='identity' so stacking does not change their meaning. |
-| `show.legend` | `NA` | R object; constraints below | Standard layer controls. |
-| `inherit.aes` | `FALSE` | Logical | Standard layer controls. |
-| `...` | `No formal default; requiredness follows the contract` | Forwarded arguments | Native geom/stat parameters and fixed styles. |
+| `mapping` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Standard layer input. Supply accver and source positions through x/pos, or interval start/end. Map y/track_value for identity values. |
+| `data` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Standard layer input. Supply accver and source positions through x/pos, or interval start/end. Map y/track_value for identity values. |
+| `geom` | `"point"` | Type, units and accepted forms: see this API argument contract at right | Native geometry/statistic names. bar defaults to count; col and other geoms default to identity. |
+| `stat` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Native geometry/statistic names. bar defaults to count; col and other geoms default to identity. |
+| `track` | `NULL` | Type, units and accepted forms: see this API argument contract at right | A physical position_track() declaration. |
+| `position` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Data position such as identity, stack, dodge. The legacy position=position_track(...) spelling still declares the physical band. |
+| `bounds` | `c("error", "clip")` | Type, units and accepted forms: see this API argument contract at right | Coordinate error/clip policy. |
+| `baseline` | `0` | Type, units and accepted forms: see this API argument contract at right | Numeric identity-column baseline. Nonzero baselines require position='identity' so stacking does not change their meaning. |
+| `show.legend` | `NA` | Type, units and accepted forms: see this API argument contract at right | Standard layer controls. |
+| `inherit.aes` | `FALSE` | Type, units and accepted forms: see this API argument contract at right | Standard layer controls. |
+| `...` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Native geom/stat parameters and fixed styles. |
 
 </details>
 
@@ -690,19 +690,19 @@ Start with the [learning overview](learn.html#tasks). Lessons compare important 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `mapping` | `NULL` | aes mapping | Standard layer input. Supply accver and source positions through x/pos, or interval start/end. Map y/track_value for identity values. |
-| `data` | `NULL` | Layer data frame or ggplot2 data function | Standard layer input. Supply accver and source positions through x/pos, or interval start/end. Map y/track_value for identity values. |
-| `position` | `NULL` | Position object or documented string | Data position such as identity, stack, dodge. The legacy position=position_track(...) spelling still declares the physical band. |
-| `baseline` | `0` | Numeric/integer; range in description | Count bars require baseline 0; every nonzero value is rejected. Use geom_track_col() for supplied values and nonzero baselines. |
-| `fill` | `"#86AFB9"` | Character/enum; choices below | Fixed styles for the count shortcut. |
-| `colour` | `NA` | R object; constraints below | Fixed styles for the count shortcut. |
-| `alpha` | `1` | Numeric/integer; range in description | Fixed styles for the count shortcut. |
-| `linewidth` | `0.25` | Numeric/integer; range in description | Fixed styles for the count shortcut. |
-| `linetype` | `1` | Numeric/integer; range in description | Fixed styles for the count shortcut. |
-| `bounds` | `c("error", "clip")` | Vector; choices versus multiple selection below | Coordinate error/clip policy. |
-| `show.legend` | `NA` | R object; constraints below | Standard layer controls. |
-| `inherit.aes` | `FALSE` | Logical | Standard layer controls. |
-| `...` | `No formal default; requiredness follows the contract` | Forwarded arguments | Native geom/stat parameters and fixed styles. |
+| `mapping` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Standard layer input. Supply accver and source positions through x/pos, or interval start/end. Map y/track_value for identity values. |
+| `data` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Standard layer input. Supply accver and source positions through x/pos, or interval start/end. Map y/track_value for identity values. |
+| `position` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Data position such as identity, stack, dodge. The legacy position=position_track(...) spelling still declares the physical band. |
+| `baseline` | `0` | Numeric 0; count bars reject nonzero baselines | Count bars require baseline 0; every nonzero value is rejected. Use geom_track_col() for supplied values and nonzero baselines. |
+| `fill` | `"#86AFB9"` | Type, units and accepted forms: see this API argument contract at right | Fixed styles for the count shortcut. |
+| `colour` | `NA` | Type, units and accepted forms: see this API argument contract at right | Fixed styles for the count shortcut. |
+| `alpha` | `1` | Type, units and accepted forms: see this API argument contract at right | Fixed styles for the count shortcut. |
+| `linewidth` | `0.25` | Type, units and accepted forms: see this API argument contract at right | Fixed styles for the count shortcut. |
+| `linetype` | `1` | Type, units and accepted forms: see this API argument contract at right | Fixed styles for the count shortcut. |
+| `bounds` | `c("error", "clip")` | Type, units and accepted forms: see this API argument contract at right | Coordinate error/clip policy. |
+| `show.legend` | `NA` | Type, units and accepted forms: see this API argument contract at right | Standard layer controls. |
+| `inherit.aes` | `FALSE` | Type, units and accepted forms: see this API argument contract at right | Standard layer controls. |
+| `...` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Native geom/stat parameters and fixed styles. |
 
 </details>
 
@@ -715,13 +715,13 @@ Start with the [learning overview](learn.html#tasks). Lessons compare important 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `mapping` | `NULL` | aes mapping | Standard layer input. Supply accver and source positions through x/pos, or interval start/end. Map y/track_value for identity values. |
-| `data` | `NULL` | Layer data frame or ggplot2 data function | Standard layer input. Supply accver and source positions through x/pos, or interval start/end. Map y/track_value for identity values. |
-| `position` | `NULL` | Position object or documented string | Data position such as identity, stack, dodge. The legacy position=position_track(...) spelling still declares the physical band. |
-| `track` | `NULL` | Nullable R object; type/inheritance below | A physical position_track() declaration. |
-| `...` | `No formal default; requiredness follows the contract` | Forwarded arguments | Native geom/stat parameters and fixed styles. |
-| `show.legend` | `NA` | R object; constraints below | Standard layer controls. |
-| `inherit.aes` | `FALSE` | Logical | Standard layer controls. |
+| `mapping` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Standard layer input. Supply accver and source positions through x/pos, or interval start/end. Map y/track_value for identity values. |
+| `data` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Standard layer input. Supply accver and source positions through x/pos, or interval start/end. Map y/track_value for identity values. |
+| `position` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Data position such as identity, stack, dodge. The legacy position=position_track(...) spelling still declares the physical band. |
+| `track` | `NULL` | Type, units and accepted forms: see this API argument contract at right | A physical position_track() declaration. |
+| `...` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Native geom/stat parameters and fixed styles. |
+| `show.legend` | `NA` | Type, units and accepted forms: see this API argument contract at right | Standard layer controls. |
+| `inherit.aes` | `FALSE` | Type, units and accepted forms: see this API argument contract at right | Standard layer controls. |
 
 </details>
 
@@ -734,18 +734,18 @@ Start with the [learning overview](learn.html#tasks). Lessons compare important 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `mapping` | `NULL` | aes mapping | Standard ggplot2 mapping and layer input. |
-| `data` | `NULL` | Layer data frame or ggplot2 data function | Standard ggplot2 mapping and layer input. |
-| `position` | `No formal default; requiredness follows the contract` | Position object or documented string | A position_track() declaration. Every layer requires one. |
-| `colour` | `"#387D88"` | Character/enum; choices below | Fixed styles; fill and colour mappings use the dedicated track roles and scoped scales. |
-| `alpha` | `1` | Numeric/integer; range in description | Fixed styles; fill and colour mappings use the dedicated track roles and scoped scales. |
-| `linewidth` | `0.4` | Numeric/integer; range in description | Fixed styles; fill and colour mappings use the dedicated track roles and scoped scales. |
-| `linetype` | `1` | Numeric/integer; range in description | Fixed styles; fill and colour mappings use the dedicated track roles and scoped scales. |
-| `closed` | `FALSE` | Logical | Explicitly close a complete circular line series. |
-| `bounds` | `c("error", "clip")` | Vector; choices versus multiple selection below | "error" (default) or "clip" for genomic coordinates. Clipping is reported and never changes source values. |
-| `show.legend` | `NA` | R object; constraints below | Standard layer arguments. |
-| `inherit.aes` | `FALSE` | Logical | Standard layer arguments. |
-| `...` | `No formal default; requiredness follows the contract` | Forwarded arguments | Extra geom parameters. |
+| `mapping` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Standard ggplot2 mapping and layer input. |
+| `data` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Standard ggplot2 mapping and layer input. |
+| `position` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | A position_track() declaration. Every layer requires one. |
+| `colour` | `"#387D88"` | Type, units and accepted forms: see this API argument contract at right | Fixed styles; fill and colour mappings use the dedicated track roles and scoped scales. |
+| `alpha` | `1` | Type, units and accepted forms: see this API argument contract at right | Fixed styles; fill and colour mappings use the dedicated track roles and scoped scales. |
+| `linewidth` | `0.4` | Type, units and accepted forms: see this API argument contract at right | Fixed styles; fill and colour mappings use the dedicated track roles and scoped scales. |
+| `linetype` | `1` | Type, units and accepted forms: see this API argument contract at right | Fixed styles; fill and colour mappings use the dedicated track roles and scoped scales. |
+| `closed` | `FALSE` | Type, units and accepted forms: see this API argument contract at right | Explicitly close a complete circular line series. |
+| `bounds` | `c("error", "clip")` | Type, units and accepted forms: see this API argument contract at right | "error" (default) or "clip" for genomic coordinates. Clipping is reported and never changes source values. |
+| `show.legend` | `NA` | Type, units and accepted forms: see this API argument contract at right | Standard layer arguments. |
+| `inherit.aes` | `FALSE` | Type, units and accepted forms: see this API argument contract at right | Standard layer arguments. |
+| `...` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Extra geom parameters. |
 
 </details>
 
@@ -758,18 +758,18 @@ Start with the [learning overview](learn.html#tasks). Lessons compare important 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `mapping` | `NULL` | aes mapping | Standard ggplot2 mapping and layer input. |
-| `data` | `NULL` | Layer data frame or ggplot2 data function | Standard ggplot2 mapping and layer input. |
-| `position` | `No formal default; requiredness follows the contract` | Position object or documented string | A position_track() declaration. Every layer requires one. |
-| `fill` | `"#86AFB9"` | Character/enum; choices below | Fixed styles; fill and colour mappings use the dedicated track roles and scoped scales. |
-| `colour` | `NA` | R object; constraints below | Fixed styles; fill and colour mappings use the dedicated track roles and scoped scales. |
-| `alpha` | `1` | Numeric/integer; range in description | Fixed styles; fill and colour mappings use the dedicated track roles and scoped scales. |
-| `linewidth` | `0.25` | Numeric/integer; range in description | Fixed styles; fill and colour mappings use the dedicated track roles and scoped scales. |
-| `linetype` | `1` | Numeric/integer; range in description | Fixed styles; fill and colour mappings use the dedicated track roles and scoped scales. |
-| `bounds` | `c("error", "clip")` | Vector; choices versus multiple selection below | "error" (default) or "clip" for genomic coordinates. Clipping is reported and never changes source values. |
-| `show.legend` | `NA` | R object; constraints below | Standard layer arguments. |
-| `inherit.aes` | `FALSE` | Logical | Standard layer arguments. |
-| `...` | `No formal default; requiredness follows the contract` | Forwarded arguments | Extra geom parameters. |
+| `mapping` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Standard ggplot2 mapping and layer input. |
+| `data` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Standard ggplot2 mapping and layer input. |
+| `position` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | A position_track() declaration. Every layer requires one. |
+| `fill` | `"#86AFB9"` | Type, units and accepted forms: see this API argument contract at right | Fixed styles; fill and colour mappings use the dedicated track roles and scoped scales. |
+| `colour` | `NA` | Type, units and accepted forms: see this API argument contract at right | Fixed styles; fill and colour mappings use the dedicated track roles and scoped scales. |
+| `alpha` | `1` | Type, units and accepted forms: see this API argument contract at right | Fixed styles; fill and colour mappings use the dedicated track roles and scoped scales. |
+| `linewidth` | `0.25` | Type, units and accepted forms: see this API argument contract at right | Fixed styles; fill and colour mappings use the dedicated track roles and scoped scales. |
+| `linetype` | `1` | Type, units and accepted forms: see this API argument contract at right | Fixed styles; fill and colour mappings use the dedicated track roles and scoped scales. |
+| `bounds` | `c("error", "clip")` | Type, units and accepted forms: see this API argument contract at right | "error" (default) or "clip" for genomic coordinates. Clipping is reported and never changes source values. |
+| `show.legend` | `NA` | Type, units and accepted forms: see this API argument contract at right | Standard layer arguments. |
+| `inherit.aes` | `FALSE` | Type, units and accepted forms: see this API argument contract at right | Standard layer arguments. |
+| `...` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Extra geom parameters. |
 
 </details>
 
@@ -785,9 +785,9 @@ Start with the [learning overview](learn.html#tasks). Lessons compare important 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `spacing` | `0.1` | Numeric/integer; range in description | Positive minimum radial distance between adjacent feature lanes. Circular plasmid layout enlarges the first transition into a main label corridor and reserves at least one label track between deeper overlapping feature lanes. |
-| `side` | `c("strand", "outside", "inside")` | Vector; choices versus multiple selection below | Legacy track-side selector retained for compatibility when base_position is NULL. Its historical names retain their existing geometry. |
-| `base_position` | `NULL` | Position object or documented string | Optional identity, strand, or plasmid Position applied before interval-overlap detection and lane allocation. |
+| `spacing` | `0.1` | Type, units and accepted forms: see this API argument contract at right | Positive minimum radial distance between adjacent feature lanes. Circular plasmid layout enlarges the first transition into a main label corridor and reserves at least one label track between deeper overlapping feature lanes. |
+| `side` | `c("strand", "outside", "inside")` | Type, units and accepted forms: see this API argument contract at right | Legacy track-side selector retained for compatibility when base_position is NULL. Its historical names retain their existing geometry. |
+| `base_position` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional identity, strand, or plasmid Position applied before interval-overlap detection and lane allocation. |
 
 </details>
 
@@ -800,7 +800,7 @@ Start with the [learning overview](learn.html#tasks). Lessons compare important 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `offset` | `-0.1` | Numeric/integer; range in description | Signed local-normal offset. Negative values place the shared band inside a circular sequence and positive values place it outside. |
+| `offset` | `-0.1` | Type, units and accepted forms: see this API argument contract at right | Signed local-normal offset. Negative values place the shared band inside a circular sequence and positive values place it outside. |
 
 </details>
 
@@ -813,7 +813,7 @@ Start with the [learning overview](learn.html#tasks). Lessons compare important 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `offset` | `0.1` | Numeric/integer; range in description | A finite scalar or a flexible per-sequence/per-strand specification. |
+| `offset` | `0.1` | Type, units and accepted forms: see this API argument contract at right | A finite scalar or a flexible per-sequence/per-strand specification. |
 
 </details>
 
@@ -826,11 +826,11 @@ Start with the [learning overview](learn.html#tasks). Lessons compare important 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `track` | `No formal default; requiredness follows the contract` | R object; constraints below | One stable nonempty character ID. |
-| `side` | `c("outside", "inside")` | Vector; choices versus multiple selection below | "outside" or "inside". |
-| `order` | `1` | Numeric/integer; range in description | Finite ordering priority, nearest band first. Ties use ID order. |
-| `width` | `grid::unit(4, "mm")` | grid physical-unit object | Positive band width and nonnegative preceding gap. Absolute grid units (mm, cm, inches or points) are resolved against the render context. Numeric values retain native layout units. Numeric per-sequence vectors/lists follow the usual sequence parameter formats. |
-| `gap` | `grid::unit(1, "mm")` | grid physical-unit object | Positive band width and nonnegative preceding gap. Absolute grid units (mm, cm, inches or points) are resolved against the render context. Numeric values retain native layout units. Numeric per-sequence vectors/lists follow the usual sequence parameter formats. |
+| `track` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | One stable nonempty character ID. |
+| `side` | `c("outside", "inside")` | Type, units and accepted forms: see this API argument contract at right | "outside" or "inside". |
+| `order` | `1` | Type, units and accepted forms: see this API argument contract at right | Finite ordering priority, nearest band first. Ties use ID order. |
+| `width` | `grid::unit(4, "mm")` | Type, units and accepted forms: see this API argument contract at right | Positive band width and nonnegative preceding gap. Absolute grid units (mm, cm, inches or points) are resolved against the render context. Numeric values retain native layout units. Numeric per-sequence vectors/lists follow the usual sequence parameter formats. |
+| `gap` | `grid::unit(1, "mm")` | Type, units and accepted forms: see this API argument contract at right | Positive band width and nonnegative preceding gap. Absolute grid units (mm, cm, inches or points) are resolved against the render context. Numeric values retain native layout units. Numeric per-sequence vectors/lists follow the usual sequence parameter formats. |
 
 </details>
 
@@ -846,16 +846,16 @@ Start with the [learning overview](learn.html#tasks). Lessons compare important 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `mapping` | `NULL` | aes mapping | Standard layer mapping and data arguments. |
-| `data` | `NULL` | API-specific data input; see the contract | Standard layer mapping and data arguments. |
-| `bins` | `80L` | Numeric/integer; range in description | Passed to bundle_ggchord_ribbons(). |
-| `min_bundle` | `2L` | Numeric/integer; range in description | Passed to bundle_ggchord_ribbons(). |
-| `weight` | `c("length", "count", "pident")` | Vector; choices versus multiple selection below | Passed to bundle_ggchord_ribbons(). |
-| `group_by` | `NULL` | Nullable R object; type/inheritance below | Passed to bundle_ggchord_ribbons(). |
-| `position` | `"identity"` | Character/enum; choices below | Standard ggplot2 layer arguments. |
-| `show.legend` | `TRUE` | Logical | Standard ggplot2 layer arguments. |
-| `inherit.aes` | `FALSE` | Logical | Standard ggplot2 layer arguments. |
-| `...` | `No formal default; requiredness follows the contract` | Forwarded arguments | Ribbon geometry and appearance arguments passed to geom_link_ribbon(). |
+| `mapping` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Standard layer mapping and data arguments. |
+| `data` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Standard layer mapping and data arguments. |
+| `bins` | `80L` | Type, units and accepted forms: see this API argument contract at right | Passed to bundle_ggchord_ribbons(). |
+| `min_bundle` | `2L` | Type, units and accepted forms: see this API argument contract at right | Passed to bundle_ggchord_ribbons(). |
+| `weight` | `c("length", "count", "pident")` | Type, units and accepted forms: see this API argument contract at right | Passed to bundle_ggchord_ribbons(). |
+| `group_by` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Passed to bundle_ggchord_ribbons(). |
+| `position` | `"identity"` | Type, units and accepted forms: see this API argument contract at right | Standard ggplot2 layer arguments. |
+| `show.legend` | `TRUE` | Type, units and accepted forms: see this API argument contract at right | Standard ggplot2 layer arguments. |
+| `inherit.aes` | `FALSE` | Type, units and accepted forms: see this API argument contract at right | Standard ggplot2 layer arguments. |
+| `...` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Ribbon geometry and appearance arguments passed to geom_link_ribbon(). |
 
 </details>
 
@@ -868,15 +868,15 @@ Start with the [learning overview](learn.html#tasks). Lessons compare important 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `mapping` | `NULL` | aes mapping | Standard layer mapping and data arguments. |
-| `data` | `NULL` | API-specific data input; see the contract | Standard layer mapping and data arguments. |
-| `bins` | `80L` | Numeric/integer; range in description | Positive integer number of normalized midpoint bins per sequence. |
-| `weight` | `c("length", "count", "pident")` | Vector; choices versus multiple selection below | Density weight: "length", "count", or "pident". |
-| `group_by` | `NULL` | Nullable R object; type/inheritance below | Optional columns that define independent density groups. |
-| `position` | `"identity"` | Character/enum; choices below | Standard ggplot2 layer arguments. |
-| `show.legend` | `TRUE` | Logical | Standard ggplot2 layer arguments. |
-| `inherit.aes` | `FALSE` | Logical | Standard ggplot2 layer arguments. |
-| `...` | `No formal default; requiredness follows the contract` | Forwarded arguments | Ribbon geometry and appearance arguments passed to geom_link_ribbon(). |
+| `mapping` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Standard layer mapping and data arguments. |
+| `data` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Standard layer mapping and data arguments. |
+| `bins` | `80L` | Type, units and accepted forms: see this API argument contract at right | Positive integer number of normalized midpoint bins per sequence. |
+| `weight` | `c("length", "count", "pident")` | Type, units and accepted forms: see this API argument contract at right | Density weight: "length", "count", or "pident". |
+| `group_by` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional columns that define independent density groups. |
+| `position` | `"identity"` | Type, units and accepted forms: see this API argument contract at right | Standard ggplot2 layer arguments. |
+| `show.legend` | `TRUE` | Type, units and accepted forms: see this API argument contract at right | Standard ggplot2 layer arguments. |
+| `inherit.aes` | `FALSE` | Type, units and accepted forms: see this API argument contract at right | Standard ggplot2 layer arguments. |
+| `...` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Ribbon geometry and appearance arguments passed to geom_link_ribbon(). |
 
 </details>
 
@@ -892,9 +892,9 @@ Start with the [learning overview](learn.html#tasks). Lessons compare important 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `...` | `No formal default; requiredness follows the contract` | Forwarded arguments | Arguments passed to ggplot2::scale_fill_manual(). |
-| `values` | `No formal default; requiredness follows the contract` | Vector/scale rule; interpreted by scale type | A set of fill values to map data values to. |
-| `limits` | `NULL` | Vector/scale rule; interpreted by scale type | Optional display order. Named feature values use their name order by default. |
+| `...` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Arguments passed to ggplot2::scale_fill_manual(). |
+| `values` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | A set of fill values to map data values to. |
+| `limits` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional display order. Named feature values use their name order by default. |
 
 </details>
 
@@ -907,8 +907,8 @@ Start with the [learning overview](learn.html#tasks). Lessons compare important 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `...` | `No formal default; requiredness follows the contract` | Forwarded arguments | Additional scale arguments. |
-| `limits` | `NULL` | Vector/scale rule; interpreted by scale type | Optional feature-type order. |
+| `...` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Additional scale arguments. |
+| `limits` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional feature-type order. |
 
 </details>
 
@@ -921,11 +921,11 @@ Start with the [learning overview](learn.html#tasks). Lessons compare important 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `...` | `No formal default; requiredness follows the contract` | Forwarded arguments | Arguments passed to ggplot2::discrete_scale(). |
-| `values` | `No formal default; requiredness follows the contract` | Vector/scale rule; interpreted by scale type | A named or unnamed character vector of feature geometry names. |
-| `name` | `"Feature"` | Character/enum; choices below | Scale and guide title, default "Feature". |
-| `limits` | `NULL` | Vector/scale rule; interpreted by scale type | Optional category order. Named values use their name order by default so shape and fill guides can merge cleanly. |
-| `guide` | `"none"` | Character/enum; choices below | Guide specification. The default is "none" because geom_feature() combines shape silhouettes into its fill legend when both aesthetics describe the same feature categories. Supply guide_ggchord_legend() for a separate shape guide. |
+| `...` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Arguments passed to ggplot2::discrete_scale(). |
+| `values` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | A named or unnamed character vector of feature geometry names. |
+| `name` | `"Feature"` | Type, units and accepted forms: see this API argument contract at right | Scale and guide title, default "Feature". |
+| `limits` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional category order. Named values use their name order by default so shape and fill guides can merge cleanly. |
+| `guide` | `"none"` | Type, units and accepted forms: see this API argument contract at right | Guide specification. The default is "none" because geom_feature() combines shape silhouettes into its fill legend when both aesthetics describe the same feature categories. Supply guide_ggchord_legend() for a separate shape guide. |
 
 </details>
 
@@ -938,9 +938,9 @@ Start with the [learning overview](learn.html#tasks). Lessons compare important 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `...` | `No formal default; requiredness follows the contract` | Forwarded arguments | Additional scale arguments. |
-| `limits` | `NULL` | Vector/scale rule; interpreted by scale type | Optional feature-type order. |
-| `guide` | `"none"` | Character/enum; choices below | Guide used by the shape preset. |
+| `...` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Additional scale arguments. |
+| `limits` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional feature-type order. |
+| `guide` | `"none"` | Type, units and accepted forms: see this API argument contract at right | Guide used by the shape preset. |
 
 </details>
 
@@ -953,8 +953,8 @@ Start with the [learning overview](learn.html#tasks). Lessons compare important 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `...` | `No formal default; requiredness follows the contract` | Forwarded arguments | Arguments passed to ggplot2::scale_fill_manual(). |
-| `values` | `No formal default; requiredness follows the contract` | Vector/scale rule; interpreted by scale type | A set of fill values to map data values to. |
+| `...` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Arguments passed to ggplot2::scale_fill_manual(). |
+| `values` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | A set of fill values to map data values to. |
 
 </details>
 
@@ -967,7 +967,7 @@ Start with the [learning overview](learn.html#tasks). Lessons compare important 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `...` | `No formal default; requiredness follows the contract` | Forwarded arguments | Arguments passed to the corresponding ggplot2 scale. |
+| `...` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Arguments passed to the corresponding ggplot2 scale. |
 
 </details>
 
@@ -980,8 +980,8 @@ Start with the [learning overview](learn.html#tasks). Lessons compare important 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `...` | `No formal default; requiredness follows the contract` | Forwarded arguments | Arguments passed to the corresponding ggplot2 scale. |
-| `values` | `No formal default; requiredness follows the contract` | Vector/scale rule; interpreted by scale type | Manual aesthetic values. |
+| `...` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Arguments passed to the corresponding ggplot2 scale. |
+| `values` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Manual aesthetic values. |
 
 </details>
 
@@ -994,7 +994,7 @@ Start with the [learning overview](learn.html#tasks). Lessons compare important 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `...` | `No formal default; requiredness follows the contract` | Forwarded arguments | Arguments passed to the corresponding ggplot2 scale. |
+| `...` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Arguments passed to the corresponding ggplot2 scale. |
 
 </details>
 
@@ -1007,8 +1007,8 @@ Start with the [learning overview](learn.html#tasks). Lessons compare important 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `...` | `No formal default; requiredness follows the contract` | Forwarded arguments | Arguments passed to the corresponding ggplot2 scale. |
-| `values` | `No formal default; requiredness follows the contract` | Vector/scale rule; interpreted by scale type | Manual aesthetic values. |
+| `...` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Arguments passed to the corresponding ggplot2 scale. |
+| `values` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Manual aesthetic values. |
 
 </details>
 
@@ -1021,7 +1021,7 @@ Start with the [learning overview](learn.html#tasks). Lessons compare important 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `...` | `No formal default; requiredness follows the contract` | Forwarded arguments | Arguments passed to the corresponding ggplot2 scale. |
+| `...` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Arguments passed to the corresponding ggplot2 scale. |
 
 </details>
 
@@ -1034,8 +1034,8 @@ Start with the [learning overview](learn.html#tasks). Lessons compare important 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `...` | `No formal default; requiredness follows the contract` | Forwarded arguments | Arguments passed to the corresponding ggplot2 scale. |
-| `values` | `No formal default; requiredness follows the contract` | Vector/scale rule; interpreted by scale type | Manual aesthetic values. |
+| `...` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Arguments passed to the corresponding ggplot2 scale. |
+| `values` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Manual aesthetic values. |
 
 </details>
 
@@ -1048,8 +1048,8 @@ Start with the [learning overview](learn.html#tasks). Lessons compare important 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `...` | `No formal default; requiredness follows the contract` | Forwarded arguments | Arguments passed to the corresponding ggplot2 scale. |
-| `values` | `No formal default; requiredness follows the contract` | Vector/scale rule; interpreted by scale type | Manual aesthetic values. |
+| `...` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Arguments passed to the corresponding ggplot2 scale. |
+| `values` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Manual aesthetic values. |
 
 </details>
 
@@ -1062,7 +1062,7 @@ Start with the [learning overview](learn.html#tasks). Lessons compare important 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `...` | `No formal default; requiredness follows the contract` | Forwarded arguments | Arguments passed to the corresponding ggplot2 scale. |
+| `...` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Arguments passed to the corresponding ggplot2 scale. |
 
 </details>
 
@@ -1075,8 +1075,8 @@ Start with the [learning overview](learn.html#tasks). Lessons compare important 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `...` | `No formal default; requiredness follows the contract` | Forwarded arguments | Arguments passed to the corresponding ggplot2 scale. |
-| `values` | `No formal default; requiredness follows the contract` | Vector/scale rule; interpreted by scale type | Manual aesthetic values. |
+| `...` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Arguments passed to the corresponding ggplot2 scale. |
+| `values` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Manual aesthetic values. |
 
 </details>
 
@@ -1089,8 +1089,8 @@ Start with the [learning overview](learn.html#tasks). Lessons compare important 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `...` | `No formal default; requiredness follows the contract` | Forwarded arguments | Arguments passed to ggplot2::scale_fill_manual(). |
-| `values` | `No formal default; requiredness follows the contract` | Vector/scale rule; interpreted by scale type | A set of fill values to map data values to. |
+| `...` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Arguments passed to ggplot2::scale_fill_manual(). |
+| `values` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | A set of fill values to map data values to. |
 
 </details>
 
@@ -1103,8 +1103,8 @@ Start with the [learning overview](learn.html#tasks). Lessons compare important 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `...` | `No formal default; requiredness follows the contract` | Forwarded arguments | Arguments passed to the corresponding ggplot2 scale. |
-| `range` | `NULL` | Vector/scale rule; interpreted by scale type | Output alpha range for a continuous scale. NULL uses the corresponding ggplot2 scale's default range. |
+| `...` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Arguments passed to the corresponding ggplot2 scale. |
+| `range` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Output alpha range for a continuous scale. NULL uses the corresponding ggplot2 scale's default range. |
 
 </details>
 
@@ -1117,8 +1117,8 @@ Start with the [learning overview](learn.html#tasks). Lessons compare important 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `...` | `No formal default; requiredness follows the contract` | Forwarded arguments | Arguments passed to the corresponding ggplot2 scale. |
-| `values` | `No formal default; requiredness follows the contract` | Vector/scale rule; interpreted by scale type | Manual aesthetic values. |
+| `...` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Arguments passed to the corresponding ggplot2 scale. |
+| `values` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Manual aesthetic values. |
 
 </details>
 
@@ -1131,8 +1131,8 @@ Start with the [learning overview](learn.html#tasks). Lessons compare important 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `...` | `No formal default; requiredness follows the contract` | Forwarded arguments | Arguments passed to the corresponding ggplot2 scale. |
-| `values` | `No formal default; requiredness follows the contract` | Vector/scale rule; interpreted by scale type | Manual aesthetic values. |
+| `...` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Arguments passed to the corresponding ggplot2 scale. |
+| `values` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Manual aesthetic values. |
 
 </details>
 
@@ -1145,8 +1145,8 @@ Start with the [learning overview](learn.html#tasks). Lessons compare important 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `...` | `No formal default; requiredness follows the contract` | Forwarded arguments | Arguments passed to the corresponding ggplot2 scale. |
-| `values` | `No formal default; requiredness follows the contract` | Vector/scale rule; interpreted by scale type | Manual aesthetic values. |
+| `...` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Arguments passed to the corresponding ggplot2 scale. |
+| `values` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Manual aesthetic values. |
 
 </details>
 
@@ -1159,11 +1159,11 @@ Start with the [learning overview](learn.html#tasks). Lessons compare important 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `...` | `No formal default; requiredness follows the contract` | Forwarded arguments | Arguments passed to the corresponding ggplot2 scale. |
-| `colours` | `No formal default; requiredness follows the contract` | Vector/scale rule; interpreted by scale type | Gradient colours. |
-| `values` | `NULL` | Vector/scale rule; interpreted by scale type | Manual values, or positions for gradient colours where supported by the corresponding ggplot2 scale. |
-| `colors` | `No formal default; requiredness follows the contract` | Vector/scale rule; interpreted by scale type | Gradient colours. |
-| `guide` | `ggplot2::guide_colourbar(available_aes = "ribbon_fill")` | Guide object or name | A guide object; defaults accept the ribbon_fill aesthetic. |
+| `...` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Arguments passed to the corresponding ggplot2 scale. |
+| `colours` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Gradient colours. |
+| `values` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Manual values, or positions for gradient colours where supported by the corresponding ggplot2 scale. |
+| `colors` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Gradient colours. |
+| `guide` | `ggplot2::guide_colourbar(available_aes = "ribbon_fill")` | Type, units and accepted forms: see this API argument contract at right | A guide object; defaults accept the ribbon_fill aesthetic. |
 
 </details>
 
@@ -1176,7 +1176,7 @@ Start with the [learning overview](learn.html#tasks). Lessons compare important 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `...` | `No formal default; requiredness follows the contract` | Forwarded arguments | Arguments passed to the corresponding ggplot2 scale. |
+| `...` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Arguments passed to the corresponding ggplot2 scale. |
 
 </details>
 
@@ -1189,8 +1189,8 @@ Start with the [learning overview](learn.html#tasks). Lessons compare important 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `...` | `No formal default; requiredness follows the contract` | Forwarded arguments | Arguments passed to the corresponding ggplot2 scale. |
-| `values` | `No formal default; requiredness follows the contract` | Vector/scale rule; interpreted by scale type | Manual values, or positions for gradient colours where supported by the corresponding ggplot2 scale. |
+| `...` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Arguments passed to the corresponding ggplot2 scale. |
+| `values` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Manual values, or positions for gradient colours where supported by the corresponding ggplot2 scale. |
 
 </details>
 
@@ -1203,11 +1203,11 @@ Start with the [learning overview](learn.html#tasks). Lessons compare important 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `...` | `No formal default; requiredness follows the contract` | Forwarded arguments | Arguments passed to the corresponding ggplot2 scale. |
-| `colours` | `No formal default; requiredness follows the contract` | Vector/scale rule; interpreted by scale type | Gradient colours. |
-| `values` | `NULL` | Vector/scale rule; interpreted by scale type | Manual values, or positions for gradient colours where supported by the corresponding ggplot2 scale. |
-| `colors` | `No formal default; requiredness follows the contract` | Vector/scale rule; interpreted by scale type | Gradient colours. |
-| `guide` | `ggplot2::guide_coloursteps(available_aes = "ribbon_fill")` | Guide object or name | A guide object; defaults accept the ribbon_fill aesthetic. |
+| `...` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Arguments passed to the corresponding ggplot2 scale. |
+| `colours` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Gradient colours. |
+| `values` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Manual values, or positions for gradient colours where supported by the corresponding ggplot2 scale. |
+| `colors` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Gradient colours. |
+| `guide` | `ggplot2::guide_coloursteps(available_aes = "ribbon_fill")` | Type, units and accepted forms: see this API argument contract at right | A guide object; defaults accept the ribbon_fill aesthetic. |
 
 </details>
 
@@ -1220,8 +1220,8 @@ Start with the [learning overview](learn.html#tasks). Lessons compare important 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `...` | `No formal default; requiredness follows the contract` | Forwarded arguments | Arguments passed to the corresponding ggplot2 scale. |
-| `values` | `No formal default; requiredness follows the contract` | Vector/scale rule; interpreted by scale type | Manual aesthetic values. |
+| `...` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Arguments passed to the corresponding ggplot2 scale. |
+| `values` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Manual aesthetic values. |
 
 </details>
 
@@ -1234,8 +1234,8 @@ Start with the [learning overview](learn.html#tasks). Lessons compare important 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `...` | `No formal default; requiredness follows the contract` | Forwarded arguments | Arguments passed to ggplot2::scale_colour_manual(). |
-| `values` | `No formal default; requiredness follows the contract` | Vector/scale rule; interpreted by scale type | A set of aesthetic values to map data values to. |
+| `...` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Arguments passed to ggplot2::scale_colour_manual(). |
+| `values` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | A set of aesthetic values to map data values to. |
 
 </details>
 
@@ -1248,8 +1248,8 @@ Start with the [learning overview](learn.html#tasks). Lessons compare important 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `...` | `No formal default; requiredness follows the contract` | Forwarded arguments | Arguments passed to ggplot2::scale_colour_manual(). |
-| `values` | `No formal default; requiredness follows the contract` | Vector/scale rule; interpreted by scale type | A set of aesthetic values to map data values to. |
+| `...` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Arguments passed to ggplot2::scale_colour_manual(). |
+| `values` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | A set of aesthetic values to map data values to. |
 
 </details>
 
@@ -1262,18 +1262,18 @@ Start with the [learning overview](learn.html#tasks). Lessons compare important 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `name` | `ggplot2::waiver()` | R object; constraints below | Scale name; position guides are disabled by default. |
-| `breaks` | `ggplot2::waiver()` | Vector/scale rule; interpreted by scale type | Standard continuous-scale controls. |
-| `minor_breaks` | `ggplot2::waiver()` | Vector/scale rule; interpreted by scale type | Standard continuous-scale controls. |
-| `labels` | `ggplot2::waiver()` | R object; constraints below | Standard continuous-scale controls. |
-| `limits` | `NULL` | Vector/scale rule; interpreted by scale type | Standard continuous-scale controls. |
-| `expand` | `ggplot2::waiver()` | R object; constraints below | Standard continuous-scale controls. |
-| `oob` | `scales::censor` | R object; constraints below | Standard continuous-scale controls. |
-| `transform` | `"identity"` | Character/enum; choices below | Standard continuous-scale controls. |
-| `n.breaks` | `6` | Numeric/integer; range in description | Standard continuous-scale controls. |
-| `coordinates` | `c("relative", "source")` | Vector; choices versus multiple selection below | In linear layouts, use relative locus coordinates or original source coordinates retained by focus_ggchord_data(). This affects axis breaks and labels, not the underlying genomic geometry. Breaks returned in transformed scale space are converted back to genomic positions in every coordinate mode. Explicit breaks = NULL and minor_breaks = NULL suppress the corresponding ticks. |
-| `sequences` | `NULL` | Nullable R object; type/inheritance below | Optional character vector selecting sequence axes by their displayed accver. NULL keeps all axes; character() hides every axis. Focused or segmented views use window IDs, not parent source accessions. Unknown or undisplayed identifiers produce an error. This controls axis lines, ticks and labels together without dropping sequence geometry. |
-| `...` | `No formal default; requiredness follows the contract` | Forwarded arguments | Additional arguments passed to ggplot2::continuous_scale(). |
+| `name` | `ggplot2::waiver()` | Type, units and accepted forms: see this API argument contract at right | Scale name; position guides are disabled by default. |
+| `breaks` | `ggplot2::waiver()` | Type, units and accepted forms: see this API argument contract at right | Standard continuous-scale controls. |
+| `minor_breaks` | `ggplot2::waiver()` | Type, units and accepted forms: see this API argument contract at right | Standard continuous-scale controls. |
+| `labels` | `ggplot2::waiver()` | Type, units and accepted forms: see this API argument contract at right | Standard continuous-scale controls. |
+| `limits` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Standard continuous-scale controls. |
+| `expand` | `ggplot2::waiver()` | Type, units and accepted forms: see this API argument contract at right | Standard continuous-scale controls. |
+| `oob` | `scales::censor` | Type, units and accepted forms: see this API argument contract at right | Standard continuous-scale controls. |
+| `transform` | `"identity"` | Type, units and accepted forms: see this API argument contract at right | Standard continuous-scale controls. |
+| `n.breaks` | `6` | Type, units and accepted forms: see this API argument contract at right | Standard continuous-scale controls. |
+| `coordinates` | `c("relative", "source")` | Type, units and accepted forms: see this API argument contract at right | In linear layouts, use relative locus coordinates or original source coordinates retained by focus_ggchord_data(). This affects axis breaks and labels, not the underlying genomic geometry. Breaks returned in transformed scale space are converted back to genomic positions in every coordinate mode. Explicit breaks = NULL and minor_breaks = NULL suppress the corresponding ticks. |
+| `sequences` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional character vector selecting sequence axes by their displayed accver. NULL keeps all axes; character() hides every axis. Focused or segmented views use window IDs, not parent source accessions. Unknown or undisplayed identifiers produce an error. This controls axis lines, ticks and labels together without dropping sequence geometry. |
+| `...` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Additional arguments passed to ggplot2::continuous_scale(). |
 
 </details>
 
@@ -1286,11 +1286,11 @@ Start with the [learning overview](learn.html#tasks). Lessons compare important 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `...` | `No formal default; requiredness follows the contract` | Forwarded arguments | Arguments passed to ggplot2::discrete_scale(). |
-| `values` | `No formal default; requiredness follows the contract` | Vector/scale rule; interpreted by scale type | A named or unnamed numeric vector of positive radii. |
-| `name` | `"Ring"` | Character/enum; choices below | Scale title. The guide is hidden by default because the scale controls geometry rather than a visible legend aesthetic. |
-| `limits` | `NULL` | Vector/scale rule; interpreted by scale type | Optional ring order. |
-| `guide` | `"none"` | Character/enum; choices below | Guide specification, default "none". |
+| `...` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Arguments passed to ggplot2::discrete_scale(). |
+| `values` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | A named or unnamed numeric vector of positive radii. |
+| `name` | `"Ring"` | Type, units and accepted forms: see this API argument contract at right | Scale title. The guide is hidden by default because the scale controls geometry rather than a visible legend aesthetic. |
+| `limits` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional ring order. |
+| `guide` | `"none"` | Type, units and accepted forms: see this API argument contract at right | Guide specification, default "none". |
 
 </details>
 
@@ -1303,10 +1303,10 @@ Start with the [learning overview](learn.html#tasks). Lessons compare important 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `track` | `No formal default; requiredness follows the contract` | R object; constraints below | Track ID. |
-| `...` | `No formal default; requiredness follows the contract` | Forwarded arguments | Standard ggplot2 scale arguments. |
-| `colours` | `No formal default; requiredness follows the contract` | Vector/scale rule; interpreted by scale type | Gradient colours. |
-| `guide` | `NULL` | Guide object or name | Optional standard guide for the fill/colour scale. |
+| `track` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Track ID. |
+| `...` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Standard ggplot2 scale arguments. |
+| `colours` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Gradient colours. |
+| `guide` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional standard guide for the fill/colour scale. |
 
 </details>
 
@@ -1319,9 +1319,9 @@ Start with the [learning overview](learn.html#tasks). Lessons compare important 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `track` | `No formal default; requiredness follows the contract` | R object; constraints below | Track ID. |
-| `...` | `No formal default; requiredness follows the contract` | Forwarded arguments | Standard ggplot2 scale arguments. |
-| `values` | `No formal default; requiredness follows the contract` | Vector/scale rule; interpreted by scale type | Manual category colours. |
+| `track` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Track ID. |
+| `...` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Standard ggplot2 scale arguments. |
+| `values` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Manual category colours. |
 
 </details>
 
@@ -1334,10 +1334,10 @@ Start with the [learning overview](learn.html#tasks). Lessons compare important 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `track` | `No formal default; requiredness follows the contract` | R object; constraints below | Track ID. |
-| `...` | `No formal default; requiredness follows the contract` | Forwarded arguments | Standard ggplot2 scale arguments. |
-| `colours` | `No formal default; requiredness follows the contract` | Vector/scale rule; interpreted by scale type | Gradient colours. |
-| `guide` | `NULL` | Guide object or name | Optional standard guide for the fill/colour scale. |
+| `track` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Track ID. |
+| `...` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Standard ggplot2 scale arguments. |
+| `colours` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Gradient colours. |
+| `guide` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional standard guide for the fill/colour scale. |
 
 </details>
 
@@ -1350,9 +1350,9 @@ Start with the [learning overview](learn.html#tasks). Lessons compare important 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `track` | `No formal default; requiredness follows the contract` | R object; constraints below | Track ID. |
-| `...` | `No formal default; requiredness follows the contract` | Forwarded arguments | Standard ggplot2 scale arguments. |
-| `values` | `No formal default; requiredness follows the contract` | Vector/scale rule; interpreted by scale type | Manual category colours. |
+| `track` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Track ID. |
+| `...` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Standard ggplot2 scale arguments. |
+| `values` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Manual category colours. |
 
 </details>
 
@@ -1365,16 +1365,16 @@ Start with the [learning overview](learn.html#tasks). Lessons compare important 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `track` | `No formal default; requiredness follows the contract` | R object; constraints below | Track ID from position_track(). |
-| `name` | `track` | R object; constraints below | Axis title, default the track ID. |
-| `limits` | `NULL` | Vector/scale rule; interpreted by scale type | Standard continuous-scale controls. |
-| `breaks` | `ggplot2::waiver()` | Vector/scale rule; interpreted by scale type | Standard continuous-scale controls. |
-| `labels` | `ggplot2::waiver()` | R object; constraints below | Standard continuous-scale controls. |
-| `transform` | `"identity"` | Character/enum; choices below | Standard continuous-scale controls. |
-| `oob` | `scales::censor` | R object; constraints below | Standard continuous-scale controls. |
-| `unit` | `NULL` | Nullable R object; type/inheritance below | Optional data-unit label retained in track exports. |
-| `guide` | `c("axis", "none")` | Vector; choices versus multiple selection below | "axis" or "none" for the numerical track axis, or a native ggplot2::guide_axis() with local theme (axis.line/text/title), angle and check.overlap. Other guide_axis options fail explicitly because this sequence-local numerical reference is not a Cartesian panel axis. Local guide styling overrides global ggchord.track.axis.* theme elements. |
-| `...` | `No formal default; requiredness follows the contract` | Forwarded arguments | Additional ggplot2 continuous-scale arguments. |
+| `track` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Track ID from position_track(). |
+| `name` | `track` | Type, units and accepted forms: see this API argument contract at right | Axis title, default the track ID. |
+| `limits` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Standard continuous-scale controls. |
+| `breaks` | `ggplot2::waiver()` | Type, units and accepted forms: see this API argument contract at right | Standard continuous-scale controls. |
+| `labels` | `ggplot2::waiver()` | Type, units and accepted forms: see this API argument contract at right | Standard continuous-scale controls. |
+| `transform` | `"identity"` | Type, units and accepted forms: see this API argument contract at right | Standard continuous-scale controls. |
+| `oob` | `scales::censor` | Type, units and accepted forms: see this API argument contract at right | Standard continuous-scale controls. |
+| `unit` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional data-unit label retained in track exports. |
+| `guide` | `c("axis", "none")` | Type, units and accepted forms: see this API argument contract at right | "axis" or "none" for the numerical track axis, or a native ggplot2::guide_axis() with local theme (axis.line/text/title), angle and check.overlap. Other guide_axis options fail explicitly because this sequence-local numerical reference is not a Cartesian panel axis. Local guide styling overrides global ggchord.track.axis.* theme elements. |
+| `...` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Additional ggplot2 continuous-scale arguments. |
 
 </details>
 
@@ -1390,21 +1390,21 @@ Start with the [learning overview](learn.html#tasks). Lessons compare important 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `title` | `ggplot2::waiver()` | R object; constraints below | Guide title. |
-| `theme` | `NULL` | Nullable R object; type/inheritance below | Optional guide-specific theme. |
-| `nbin` | `NULL` | Nullable R object; type/inheritance below | Number of colourbar bins. |
-| `display` | `"raster"` | Character/enum; choices below | Colourbar display method. |
-| `alpha` | `NA` | R object; constraints below | Colourbar alpha override. |
-| `draw.ulim` | `TRUE` | Logical | Whether to draw upper/lower limit ticks. |
-| `draw.llim` | `TRUE` | Logical | Whether to draw upper/lower limit ticks. |
-| `angle` | `NULL` | Nullable R object; type/inheritance below | Tick-label angle. |
-| `position` | `NULL` | Position object or documented string | Guide position and direction. |
-| `direction` | `NULL` | Nullable R object; type/inheritance below | Guide position and direction. |
-| `reverse` | `FALSE` | Logical | Whether to reverse the key order. |
-| `order` | `0` | Numeric/integer; range in description | Guide order. |
-| `available_aes` | `c("colour", "color", "fill", "ribbon_fill", "gene_fill", "feature_fill",      "region_fill")` | Vector; choices versus multiple selection below | Aesthetics accepted by the guide. |
-| `size_scale` | `1` | Numeric/integer; range in description | Positive multiplier for keys, spacing and typography. ggchord's automatically generated guides derive this from the active export device; direct calls default to 1. |
-| `...` | `No formal default; requiredness follows the contract` | Forwarded arguments | Additional arguments passed to the corresponding ggplot2 guide. |
+| `title` | `ggplot2::waiver()` | Type, units and accepted forms: see this API argument contract at right | Guide title. |
+| `theme` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional guide-specific theme. |
+| `nbin` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Number of colourbar bins. |
+| `display` | `"raster"` | Type, units and accepted forms: see this API argument contract at right | Colourbar display method. |
+| `alpha` | `NA` | Type, units and accepted forms: see this API argument contract at right | Colourbar alpha override. |
+| `draw.ulim` | `TRUE` | Type, units and accepted forms: see this API argument contract at right | Whether to draw upper/lower limit ticks. |
+| `draw.llim` | `TRUE` | Type, units and accepted forms: see this API argument contract at right | Whether to draw upper/lower limit ticks. |
+| `angle` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Tick-label angle. |
+| `position` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Guide position and direction. |
+| `direction` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Guide position and direction. |
+| `reverse` | `FALSE` | Type, units and accepted forms: see this API argument contract at right | Whether to reverse the key order. |
+| `order` | `0` | Type, units and accepted forms: see this API argument contract at right | Guide order. |
+| `available_aes` | `c("colour", "color", "fill", "ribbon_fill", "gene_fill", "feature_fill",      "region_fill")` | Type, units and accepted forms: see this API argument contract at right | Aesthetics accepted by the guide. |
+| `size_scale` | `1` | Type, units and accepted forms: see this API argument contract at right | Positive multiplier for keys, spacing and typography. ggchord's automatically generated guides derive this from the active export device; direct calls default to 1. |
+| `...` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Additional arguments passed to the corresponding ggplot2 guide. |
 
 </details>
 
@@ -1417,21 +1417,21 @@ Start with the [learning overview](learn.html#tasks). Lessons compare important 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `title` | `ggplot2::waiver()` | R object; constraints below | Guide title. |
-| `theme` | `NULL` | Nullable R object; type/inheritance below | Optional guide-specific theme. |
-| `nbin` | `NULL` | Nullable R object; type/inheritance below | Number of colourbar bins. |
-| `display` | `"raster"` | Character/enum; choices below | Colourbar display method. |
-| `alpha` | `NA` | R object; constraints below | Colourbar alpha override. |
-| `draw.ulim` | `TRUE` | Logical | Whether to draw upper/lower limit ticks. |
-| `draw.llim` | `TRUE` | Logical | Whether to draw upper/lower limit ticks. |
-| `angle` | `NULL` | Nullable R object; type/inheritance below | Tick-label angle. |
-| `position` | `NULL` | Position object or documented string | Guide position and direction. |
-| `direction` | `NULL` | Nullable R object; type/inheritance below | Guide position and direction. |
-| `reverse` | `FALSE` | Logical | Whether to reverse the key order. |
-| `order` | `0` | Numeric/integer; range in description | Guide order. |
-| `available_aes` | `c("colour", "color", "fill", "ribbon_fill", "gene_fill", "feature_fill",      "region_fill")` | Vector; choices versus multiple selection below | Aesthetics accepted by the guide. |
-| `size_scale` | `1` | Numeric/integer; range in description | Positive multiplier for keys, spacing and typography. ggchord's automatically generated guides derive this from the active export device; direct calls default to 1. |
-| `...` | `No formal default; requiredness follows the contract` | Forwarded arguments | Additional arguments passed to the corresponding ggplot2 guide. |
+| `title` | `ggplot2::waiver()` | Type, units and accepted forms: see this API argument contract at right | Guide title. |
+| `theme` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional guide-specific theme. |
+| `nbin` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Number of colourbar bins. |
+| `display` | `"raster"` | Type, units and accepted forms: see this API argument contract at right | Colourbar display method. |
+| `alpha` | `NA` | Type, units and accepted forms: see this API argument contract at right | Colourbar alpha override. |
+| `draw.ulim` | `TRUE` | Type, units and accepted forms: see this API argument contract at right | Whether to draw upper/lower limit ticks. |
+| `draw.llim` | `TRUE` | Type, units and accepted forms: see this API argument contract at right | Whether to draw upper/lower limit ticks. |
+| `angle` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Tick-label angle. |
+| `position` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Guide position and direction. |
+| `direction` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Guide position and direction. |
+| `reverse` | `FALSE` | Type, units and accepted forms: see this API argument contract at right | Whether to reverse the key order. |
+| `order` | `0` | Type, units and accepted forms: see this API argument contract at right | Guide order. |
+| `available_aes` | `c("colour", "color", "fill", "ribbon_fill", "gene_fill", "feature_fill",      "region_fill")` | Type, units and accepted forms: see this API argument contract at right | Aesthetics accepted by the guide. |
+| `size_scale` | `1` | Type, units and accepted forms: see this API argument contract at right | Positive multiplier for keys, spacing and typography. ggchord's automatically generated guides derive this from the active export device; direct calls default to 1. |
+| `...` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Additional arguments passed to the corresponding ggplot2 guide. |
 
 </details>
 
@@ -1444,17 +1444,17 @@ Start with the [learning overview](learn.html#tasks). Lessons compare important 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `title` | `ggplot2::waiver()` | R object; constraints below | Guide title. |
-| `theme` | `NULL` | Nullable R object; type/inheritance below | Optional guide-specific theme. |
-| `position` | `NULL` | Position object or documented string | Guide position and direction. |
-| `direction` | `NULL` | Nullable R object; type/inheritance below | Guide position and direction. |
-| `override.aes` | `list()` | Named list | A list of legend-key aesthetic overrides. |
-| `nrow` | `NULL` | Nullable R object; type/inheritance below | Legend key layout. |
-| `ncol` | `NULL` | Nullable R object; type/inheritance below | Legend key layout. |
-| `reverse` | `FALSE` | Logical | Whether to reverse the key order. |
-| `order` | `0` | Numeric/integer; range in description | Guide order. |
-| `size_scale` | `1` | Numeric/integer; range in description | Positive multiplier for keys, spacing and typography. ggchord's automatically generated guides derive this from the active export device; direct calls default to 1. |
-| `...` | `No formal default; requiredness follows the contract` | Forwarded arguments | Additional arguments passed to the corresponding ggplot2 guide. |
+| `title` | `ggplot2::waiver()` | Type, units and accepted forms: see this API argument contract at right | Guide title. |
+| `theme` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional guide-specific theme. |
+| `position` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Guide position and direction. |
+| `direction` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Guide position and direction. |
+| `override.aes` | `list()` | Type, units and accepted forms: see this API argument contract at right | A list of legend-key aesthetic overrides. |
+| `nrow` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Legend key layout. |
+| `ncol` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Legend key layout. |
+| `reverse` | `FALSE` | Type, units and accepted forms: see this API argument contract at right | Whether to reverse the key order. |
+| `order` | `0` | Type, units and accepted forms: see this API argument contract at right | Guide order. |
+| `size_scale` | `1` | Type, units and accepted forms: see this API argument contract at right | Positive multiplier for keys, spacing and typography. ggchord's automatically generated guides derive this from the active export device; direct calls default to 1. |
+| `...` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Additional arguments passed to the corresponding ggplot2 guide. |
 
 </details>
 
@@ -1470,115 +1470,115 @@ Start with the [learning overview](learn.html#tasks). Lessons compare important 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `axis` | `NULL` | Nullable R object; type/inheritance below | NULL to show automatic sequence axes, or ggplot2::element_blank() to hide the complete axis decoration. |
-| `axis.line` | `NULL` | Nullable R object; type/inheritance below | Axis line elements. |
-| `axis.ticks` | `NULL` | Nullable R object; type/inheritance below | Axis line elements. |
-| `axis.minor.ticks` | `NULL` | Nullable R object; type/inheritance below | Axis line elements. |
-| `axis.text` | `NULL` | Nullable R object; type/inheritance below | Axis text element. |
-| `axis.gap` | `NULL` | Nullable R object; type/inheritance below | Scalar grid::unit() objects controlling physical axis spacing. A negative axis.gap places the circular axis inside the backbone; a positive value places it outside. Zero attaches ticks to the inner backbone edge and is the circular default, including the plasmid preset. Circular major/minor tick lengths default to 1.5/0.7 mm, or 2.2/0.8 mm with the plasmid preset. Their default line widths are 0.45/0.3 mm, or 0.6/0.35 mm with that preset. Explicit length and line settings take priority. |
-| `axis.ticks.length` | `NULL` | Nullable R object; type/inheritance below | Scalar grid::unit() objects controlling physical axis spacing. A negative axis.gap places the circular axis inside the backbone; a positive value places it outside. Zero attaches ticks to the inner backbone edge and is the circular default, including the plasmid preset. Circular major/minor tick lengths default to 1.5/0.7 mm, or 2.2/0.8 mm with the plasmid preset. Their default line widths are 0.45/0.3 mm, or 0.6/0.35 mm with that preset. Explicit length and line settings take priority. |
-| `axis.minor.ticks.length` | `NULL` | Nullable R object; type/inheritance below | Scalar grid::unit() objects controlling physical axis spacing. A negative axis.gap places the circular axis inside the backbone; a positive value places it outside. Zero attaches ticks to the inner backbone edge and is the circular default, including the plasmid preset. Circular major/minor tick lengths default to 1.5/0.7 mm, or 2.2/0.8 mm with the plasmid preset. Their default line widths are 0.45/0.3 mm, or 0.6/0.35 mm with that preset. Explicit length and line settings take priority. |
-| `axis.text.offset` | `NULL` | Nullable R object; type/inheritance below | Scalar grid::unit() objects controlling physical axis spacing. A negative axis.gap places the circular axis inside the backbone; a positive value places it outside. Zero attaches ticks to the inner backbone edge and is the circular default, including the plasmid preset. Circular major/minor tick lengths default to 1.5/0.7 mm, or 2.2/0.8 mm with the plasmid preset. Their default line widths are 0.45/0.3 mm, or 0.6/0.35 mm with that preset. Explicit length and line settings take priority. |
-| `axis.text.orientation` | `NULL` | Nullable R object; type/inheritance below | One of "horizontal", "parallel", "perpendicular", or a finite numeric angle. In circular layouts, parallel labels follow the circle glyph by glyph. Horizontal and numeric orientations retain straight text. |
-| `axis.text.check.overlap` | `NULL` | Nullable R object; type/inheritance below | Whether overlapping axis labels are hidden. Defaults to TRUE. Automatically positioned circular parallel labels, including combined seam strings, can receive bounded inward or outward radial clearance around feature polygons and fixed annotation-leader roots. Internal and exterior annotation leaders route around the resolved axis text; mutable shoulders do not feed back into axis placement. Automatic strings stay in a near- backbone channel. Origin/end strings take priority and remain visible; an automatic endpoint may use either readable side of its tick, with a bounded tangential gap up to 4 mm, to clear fixed feature exit rays. Unresolved endpoint clearance is reported as endpoint_unresolved. Overlap checking may hide ordinary intermediate text while keeping its tick, with hidden_near_backbone in diagnostics. Explicit axis.text.offset values and explicit scale breaks stay fixed. |
-| `seq.label` | `NULL` | Nullable R object; type/inheritance below | Text elements for sequence, gene, feature, restriction-site and circular centre labels. |
-| `gene.label` | `NULL` | Nullable R object; type/inheritance below | Text elements for sequence, gene, feature, restriction-site and circular centre labels. |
-| `gene.label.segment` | `NULL` | Nullable R object; type/inheritance below | Line elements for gene, feature and restriction-site leader lines. |
-| `feature.label` | `NULL` | Nullable R object; type/inheritance below | Text elements for sequence, gene, feature, restriction-site and circular centre labels. |
-| `feature.label.segment` | `NULL` | Nullable R object; type/inheritance below | Line elements for gene, feature and restriction-site leader lines. |
-| `restriction.label` | `NULL` | Nullable R object; type/inheritance below | Text elements for sequence, gene, feature, restriction-site and circular centre labels. |
-| `restriction.label.segment` | `NULL` | Nullable R object; type/inheritance below | Line elements for gene, feature and restriction-site leader lines. |
-| `seq.center.label` | `NULL` | Nullable R object; type/inheritance below | Text elements for sequence, gene, feature, restriction-site and circular centre labels. |
-| `seq.center.name` | `NULL` | Nullable R object; type/inheritance below | Text elements for sequence, gene, feature, restriction-site and circular centre labels. |
-| `seq.center.length` | `NULL` | Nullable R object; type/inheritance below | Text elements for sequence, gene, feature, restriction-site and circular centre labels. |
-| `legend.seq` | `NULL` | Nullable R object; type/inheritance below | NULL to show and inherit common settings, or ggplot2::element_blank() to hide every guide for that role. |
-| `legend.seq.position` | `NULL` | Nullable R object; type/inheritance below | Per-role guide positions. |
-| `legend.seq.direction` | `NULL` | Nullable R object; type/inheritance below | Per-role directions. |
-| `legend.seq.background` | `NULL` | Nullable R object; type/inheritance below | Per-role backgrounds. |
-| `legend.seq.key` | `NULL` | Nullable R object; type/inheritance below | Per-role key elements. |
-| `legend.seq.key.size` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
-| `legend.seq.key.width` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
-| `legend.seq.key.height` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
-| `legend.seq.text` | `NULL` | Nullable R object; type/inheritance below | Per-role text elements. |
-| `legend.seq.text.position` | `NULL` | Nullable R object; type/inheritance below | Per-role text positions. |
-| `legend.seq.title` | `NULL` | Nullable R object; type/inheritance below | Per-role title elements. |
-| `legend.seq.title.position` | `NULL` | Nullable R object; type/inheritance below | Per-role title positions. |
-| `legend.seq.margin` | `NULL` | Nullable R object; type/inheritance below | Per-role margins. |
-| `legend.seq.spacing` | `NULL` | Nullable R object; type/inheritance below | Per-role spacing. |
-| `legend.link` | `NULL` | Nullable R object; type/inheritance below | Point-link guide appearance; follows the same role-specific rules. |
-| `legend.link.position` | `NULL` | Nullable R object; type/inheritance below | Point-link guide appearance; follows the same role-specific rules. |
-| `legend.link.direction` | `NULL` | Nullable R object; type/inheritance below | Point-link guide appearance; follows the same role-specific rules. |
-| `legend.link.background` | `NULL` | Nullable R object; type/inheritance below | Point-link guide appearance; follows the same role-specific rules. |
-| `legend.link.key` | `NULL` | Nullable R object; type/inheritance below | Point-link guide appearance; follows the same role-specific rules. |
-| `legend.link.key.size` | `NULL` | Nullable R object; type/inheritance below | Point-link guide appearance; follows the same role-specific rules. |
-| `legend.link.key.width` | `NULL` | Nullable R object; type/inheritance below | Point-link guide appearance; follows the same role-specific rules. |
-| `legend.link.key.height` | `NULL` | Nullable R object; type/inheritance below | Point-link guide appearance; follows the same role-specific rules. |
-| `legend.link.text` | `NULL` | Nullable R object; type/inheritance below | Point-link guide appearance; follows the same role-specific rules. |
-| `legend.link.text.position` | `NULL` | Nullable R object; type/inheritance below | Point-link guide appearance; follows the same role-specific rules. |
-| `legend.link.title` | `NULL` | Nullable R object; type/inheritance below | Point-link guide appearance; follows the same role-specific rules. |
-| `legend.link.title.position` | `NULL` | Nullable R object; type/inheritance below | Point-link guide appearance; follows the same role-specific rules. |
-| `legend.link.margin` | `NULL` | Nullable R object; type/inheritance below | Point-link guide appearance; follows the same role-specific rules. |
-| `legend.link.spacing` | `NULL` | Nullable R object; type/inheritance below | Point-link guide appearance; follows the same role-specific rules. |
-| `legend.ribbon` | `NULL` | Nullable R object; type/inheritance below | NULL to show and inherit common settings, or ggplot2::element_blank() to hide every guide for that role. |
-| `legend.ribbon.position` | `NULL` | Nullable R object; type/inheritance below | Per-role guide positions. |
-| `legend.ribbon.direction` | `NULL` | Nullable R object; type/inheritance below | Per-role directions. |
-| `legend.ribbon.background` | `NULL` | Nullable R object; type/inheritance below | Per-role backgrounds. |
-| `legend.ribbon.key` | `NULL` | Nullable R object; type/inheritance below | Per-role key elements. |
-| `legend.ribbon.key.size` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
-| `legend.ribbon.key.width` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
-| `legend.ribbon.key.height` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
-| `legend.ribbon.text` | `NULL` | Nullable R object; type/inheritance below | Per-role text elements. |
-| `legend.ribbon.text.position` | `NULL` | Nullable R object; type/inheritance below | Per-role text positions. |
-| `legend.ribbon.title` | `NULL` | Nullable R object; type/inheritance below | Per-role title elements. |
-| `legend.ribbon.title.position` | `NULL` | Nullable R object; type/inheritance below | Per-role title positions. |
-| `legend.ribbon.margin` | `NULL` | Nullable R object; type/inheritance below | Per-role margins. |
-| `legend.ribbon.spacing` | `NULL` | Nullable R object; type/inheritance below | Per-role spacing. |
-| `legend.ribbon.ticks` | `NULL` | Nullable R object; type/inheritance below | Ribbon colourbar lines. |
-| `legend.ribbon.ticks.length` | `NULL` | Nullable R object; type/inheritance below | Ribbon colourbar tick length. |
-| `legend.ribbon.axis.line` | `NULL` | Nullable R object; type/inheritance below | Ribbon colourbar lines. |
-| `legend.gene` | `NULL` | Nullable R object; type/inheritance below | NULL to show and inherit common settings, or ggplot2::element_blank() to hide every guide for that role. |
-| `legend.gene.position` | `NULL` | Nullable R object; type/inheritance below | Per-role guide positions. |
-| `legend.gene.direction` | `NULL` | Nullable R object; type/inheritance below | Per-role directions. |
-| `legend.gene.background` | `NULL` | Nullable R object; type/inheritance below | Per-role backgrounds. |
-| `legend.gene.key` | `NULL` | Nullable R object; type/inheritance below | Per-role key elements. |
-| `legend.gene.key.size` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
-| `legend.gene.key.width` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
-| `legend.gene.key.height` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
-| `legend.gene.text` | `NULL` | Nullable R object; type/inheritance below | Per-role text elements. |
-| `legend.gene.text.position` | `NULL` | Nullable R object; type/inheritance below | Per-role text positions. |
-| `legend.gene.title` | `NULL` | Nullable R object; type/inheritance below | Per-role title elements. |
-| `legend.gene.title.position` | `NULL` | Nullable R object; type/inheritance below | Per-role title positions. |
-| `legend.gene.margin` | `NULL` | Nullable R object; type/inheritance below | Per-role margins. |
-| `legend.gene.spacing` | `NULL` | Nullable R object; type/inheritance below | Per-role spacing. |
-| `legend.feature` | `NULL` | Nullable R object; type/inheritance below | NULL to show and inherit common settings, or ggplot2::element_blank() to hide every guide for that role. |
-| `legend.feature.position` | `NULL` | Nullable R object; type/inheritance below | Per-role guide positions. |
-| `legend.feature.direction` | `NULL` | Nullable R object; type/inheritance below | Per-role directions. |
-| `legend.feature.background` | `NULL` | Nullable R object; type/inheritance below | Per-role backgrounds. |
-| `legend.feature.key` | `NULL` | Nullable R object; type/inheritance below | Per-role key elements. |
-| `legend.feature.key.size` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
-| `legend.feature.key.width` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
-| `legend.feature.key.height` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
-| `legend.feature.text` | `NULL` | Nullable R object; type/inheritance below | Per-role text elements. |
-| `legend.feature.text.position` | `NULL` | Nullable R object; type/inheritance below | Per-role text positions. |
-| `legend.feature.title` | `NULL` | Nullable R object; type/inheritance below | Per-role title elements. |
-| `legend.feature.title.position` | `NULL` | Nullable R object; type/inheritance below | Per-role title positions. |
-| `legend.feature.margin` | `NULL` | Nullable R object; type/inheritance below | Per-role margins. |
-| `legend.feature.spacing` | `NULL` | Nullable R object; type/inheritance below | Per-role spacing. |
-| `legend.region` | `NULL` | Nullable R object; type/inheritance below | NULL to show and inherit common settings, or ggplot2::element_blank() to hide every guide for that role. |
-| `legend.region.position` | `NULL` | Nullable R object; type/inheritance below | Per-role guide positions. |
-| `legend.region.direction` | `NULL` | Nullable R object; type/inheritance below | Per-role directions. |
-| `legend.region.background` | `NULL` | Nullable R object; type/inheritance below | Per-role backgrounds. |
-| `legend.region.key` | `NULL` | Nullable R object; type/inheritance below | Per-role key elements. |
-| `legend.region.key.size` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
-| `legend.region.key.width` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
-| `legend.region.key.height` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
-| `legend.region.text` | `NULL` | Nullable R object; type/inheritance below | Per-role text elements. |
-| `legend.region.text.position` | `NULL` | Nullable R object; type/inheritance below | Per-role text positions. |
-| `legend.region.title` | `NULL` | Nullable R object; type/inheritance below | Per-role title elements. |
-| `legend.region.title.position` | `NULL` | Nullable R object; type/inheritance below | Per-role title positions. |
-| `legend.region.margin` | `NULL` | Nullable R object; type/inheritance below | Per-role margins. |
-| `legend.region.spacing` | `NULL` | Nullable R object; type/inheritance below | Per-role spacing. |
-| `...` | `No formal default; requiredness follows the contract` | Forwarded arguments | Standard ggplot2 theme arguments, including common text, plot and legend settings. Common legend settings also supply role inheritance. Removed underscore-style arguments produce a migration error. |
+| `axis` | `NULL` | Type, units and accepted forms: see this API argument contract at right | NULL to show automatic sequence axes, or ggplot2::element_blank() to hide the complete axis decoration. |
+| `axis.line` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Axis line elements. |
+| `axis.ticks` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Axis line elements. |
+| `axis.minor.ticks` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Axis line elements. |
+| `axis.text` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Axis text element. |
+| `axis.gap` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Scalar grid::unit() objects controlling physical axis spacing. A negative axis.gap places the circular axis inside the backbone; a positive value places it outside. Zero attaches ticks to the inner backbone edge and is the circular default, including the plasmid preset. Circular major/minor tick lengths default to 1.5/0.7 mm, or 2.2/0.8 mm with the plasmid preset. Their default line widths are 0.45/0.3 mm, or 0.6/0.35 mm with that preset. Explicit length and line settings take priority. |
+| `axis.ticks.length` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Scalar grid::unit() objects controlling physical axis spacing. A negative axis.gap places the circular axis inside the backbone; a positive value places it outside. Zero attaches ticks to the inner backbone edge and is the circular default, including the plasmid preset. Circular major/minor tick lengths default to 1.5/0.7 mm, or 2.2/0.8 mm with the plasmid preset. Their default line widths are 0.45/0.3 mm, or 0.6/0.35 mm with that preset. Explicit length and line settings take priority. |
+| `axis.minor.ticks.length` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Scalar grid::unit() objects controlling physical axis spacing. A negative axis.gap places the circular axis inside the backbone; a positive value places it outside. Zero attaches ticks to the inner backbone edge and is the circular default, including the plasmid preset. Circular major/minor tick lengths default to 1.5/0.7 mm, or 2.2/0.8 mm with the plasmid preset. Their default line widths are 0.45/0.3 mm, or 0.6/0.35 mm with that preset. Explicit length and line settings take priority. |
+| `axis.text.offset` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Scalar grid::unit() objects controlling physical axis spacing. A negative axis.gap places the circular axis inside the backbone; a positive value places it outside. Zero attaches ticks to the inner backbone edge and is the circular default, including the plasmid preset. Circular major/minor tick lengths default to 1.5/0.7 mm, or 2.2/0.8 mm with the plasmid preset. Their default line widths are 0.45/0.3 mm, or 0.6/0.35 mm with that preset. Explicit length and line settings take priority. |
+| `axis.text.orientation` | `NULL` | Type, units and accepted forms: see this API argument contract at right | One of "horizontal", "parallel", "perpendicular", or a finite numeric angle. In circular layouts, parallel labels follow the circle glyph by glyph. Horizontal and numeric orientations retain straight text. |
+| `axis.text.check.overlap` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Whether overlapping axis labels are hidden. Defaults to TRUE. Automatically positioned circular parallel labels, including combined seam strings, can receive bounded inward or outward radial clearance around feature polygons and fixed annotation-leader roots. Internal and exterior annotation leaders route around the resolved axis text; mutable shoulders do not feed back into axis placement. Automatic strings stay in a near- backbone channel. Origin/end strings take priority and remain visible; an automatic endpoint may use either readable side of its tick, with a bounded tangential gap up to 4 mm, to clear fixed feature exit rays. Unresolved endpoint clearance is reported as endpoint_unresolved. Overlap checking may hide ordinary intermediate text while keeping its tick, with hidden_near_backbone in diagnostics. Explicit axis.text.offset values and explicit scale breaks stay fixed. |
+| `seq.label` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Text elements for sequence, gene, feature, restriction-site and circular centre labels. |
+| `gene.label` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Text elements for sequence, gene, feature, restriction-site and circular centre labels. |
+| `gene.label.segment` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Line elements for gene, feature and restriction-site leader lines. |
+| `feature.label` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Text elements for sequence, gene, feature, restriction-site and circular centre labels. |
+| `feature.label.segment` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Line elements for gene, feature and restriction-site leader lines. |
+| `restriction.label` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Text elements for sequence, gene, feature, restriction-site and circular centre labels. |
+| `restriction.label.segment` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Line elements for gene, feature and restriction-site leader lines. |
+| `seq.center.label` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Text elements for sequence, gene, feature, restriction-site and circular centre labels. |
+| `seq.center.name` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Text elements for sequence, gene, feature, restriction-site and circular centre labels. |
+| `seq.center.length` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Text elements for sequence, gene, feature, restriction-site and circular centre labels. |
+| `legend.seq` | `NULL` | Type, units and accepted forms: see this API argument contract at right | NULL to show and inherit common settings, or ggplot2::element_blank() to hide every guide for that role. |
+| `legend.seq.position` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role guide positions. |
+| `legend.seq.direction` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role directions. |
+| `legend.seq.background` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role backgrounds. |
+| `legend.seq.key` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role key elements. |
+| `legend.seq.key.size` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
+| `legend.seq.key.width` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
+| `legend.seq.key.height` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
+| `legend.seq.text` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role text elements. |
+| `legend.seq.text.position` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role text positions. |
+| `legend.seq.title` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role title elements. |
+| `legend.seq.title.position` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role title positions. |
+| `legend.seq.margin` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role margins. |
+| `legend.seq.spacing` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role spacing. |
+| `legend.link` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Point-link guide appearance; follows the same role-specific rules. |
+| `legend.link.position` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Point-link guide appearance; follows the same role-specific rules. |
+| `legend.link.direction` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Point-link guide appearance; follows the same role-specific rules. |
+| `legend.link.background` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Point-link guide appearance; follows the same role-specific rules. |
+| `legend.link.key` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Point-link guide appearance; follows the same role-specific rules. |
+| `legend.link.key.size` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Point-link guide appearance; follows the same role-specific rules. |
+| `legend.link.key.width` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Point-link guide appearance; follows the same role-specific rules. |
+| `legend.link.key.height` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Point-link guide appearance; follows the same role-specific rules. |
+| `legend.link.text` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Point-link guide appearance; follows the same role-specific rules. |
+| `legend.link.text.position` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Point-link guide appearance; follows the same role-specific rules. |
+| `legend.link.title` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Point-link guide appearance; follows the same role-specific rules. |
+| `legend.link.title.position` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Point-link guide appearance; follows the same role-specific rules. |
+| `legend.link.margin` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Point-link guide appearance; follows the same role-specific rules. |
+| `legend.link.spacing` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Point-link guide appearance; follows the same role-specific rules. |
+| `legend.ribbon` | `NULL` | Type, units and accepted forms: see this API argument contract at right | NULL to show and inherit common settings, or ggplot2::element_blank() to hide every guide for that role. |
+| `legend.ribbon.position` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role guide positions. |
+| `legend.ribbon.direction` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role directions. |
+| `legend.ribbon.background` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role backgrounds. |
+| `legend.ribbon.key` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role key elements. |
+| `legend.ribbon.key.size` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
+| `legend.ribbon.key.width` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
+| `legend.ribbon.key.height` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
+| `legend.ribbon.text` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role text elements. |
+| `legend.ribbon.text.position` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role text positions. |
+| `legend.ribbon.title` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role title elements. |
+| `legend.ribbon.title.position` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role title positions. |
+| `legend.ribbon.margin` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role margins. |
+| `legend.ribbon.spacing` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role spacing. |
+| `legend.ribbon.ticks` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Ribbon colourbar lines. |
+| `legend.ribbon.ticks.length` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Ribbon colourbar tick length. |
+| `legend.ribbon.axis.line` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Ribbon colourbar lines. |
+| `legend.gene` | `NULL` | Type, units and accepted forms: see this API argument contract at right | NULL to show and inherit common settings, or ggplot2::element_blank() to hide every guide for that role. |
+| `legend.gene.position` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role guide positions. |
+| `legend.gene.direction` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role directions. |
+| `legend.gene.background` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role backgrounds. |
+| `legend.gene.key` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role key elements. |
+| `legend.gene.key.size` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
+| `legend.gene.key.width` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
+| `legend.gene.key.height` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
+| `legend.gene.text` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role text elements. |
+| `legend.gene.text.position` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role text positions. |
+| `legend.gene.title` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role title elements. |
+| `legend.gene.title.position` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role title positions. |
+| `legend.gene.margin` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role margins. |
+| `legend.gene.spacing` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role spacing. |
+| `legend.feature` | `NULL` | Type, units and accepted forms: see this API argument contract at right | NULL to show and inherit common settings, or ggplot2::element_blank() to hide every guide for that role. |
+| `legend.feature.position` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role guide positions. |
+| `legend.feature.direction` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role directions. |
+| `legend.feature.background` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role backgrounds. |
+| `legend.feature.key` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role key elements. |
+| `legend.feature.key.size` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
+| `legend.feature.key.width` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
+| `legend.feature.key.height` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
+| `legend.feature.text` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role text elements. |
+| `legend.feature.text.position` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role text positions. |
+| `legend.feature.title` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role title elements. |
+| `legend.feature.title.position` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role title positions. |
+| `legend.feature.margin` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role margins. |
+| `legend.feature.spacing` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role spacing. |
+| `legend.region` | `NULL` | Type, units and accepted forms: see this API argument contract at right | NULL to show and inherit common settings, or ggplot2::element_blank() to hide every guide for that role. |
+| `legend.region.position` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role guide positions. |
+| `legend.region.direction` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role directions. |
+| `legend.region.background` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role backgrounds. |
+| `legend.region.key` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role key elements. |
+| `legend.region.key.size` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
+| `legend.region.key.width` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
+| `legend.region.key.height` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
+| `legend.region.text` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role text elements. |
+| `legend.region.text.position` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role text positions. |
+| `legend.region.title` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role title elements. |
+| `legend.region.title.position` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role title positions. |
+| `legend.region.margin` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role margins. |
+| `legend.region.spacing` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role spacing. |
+| `...` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Standard ggplot2 theme arguments, including common text, plot and legend settings. Common legend settings also supply role inheritance. Removed underscore-style arguments produce a migration error. |
 
 </details>
 
@@ -1591,115 +1591,115 @@ Start with the [learning overview](learn.html#tasks). Lessons compare important 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `axis` | `NULL` | Nullable R object; type/inheritance below | NULL to show automatic sequence axes, or ggplot2::element_blank() to hide the complete axis decoration. |
-| `axis.line` | `NULL` | Nullable R object; type/inheritance below | Axis line elements. |
-| `axis.ticks` | `NULL` | Nullable R object; type/inheritance below | Axis line elements. |
-| `axis.minor.ticks` | `NULL` | Nullable R object; type/inheritance below | Axis line elements. |
-| `axis.text` | `NULL` | Nullable R object; type/inheritance below | Axis text element. |
-| `axis.gap` | `NULL` | Nullable R object; type/inheritance below | Scalar grid::unit() objects controlling physical axis spacing. A negative axis.gap places the circular axis inside the backbone; a positive value places it outside. Zero attaches ticks to the inner backbone edge and is the circular default, including the plasmid preset. Circular major/minor tick lengths default to 1.5/0.7 mm, or 2.2/0.8 mm with the plasmid preset. Their default line widths are 0.45/0.3 mm, or 0.6/0.35 mm with that preset. Explicit length and line settings take priority. |
-| `axis.ticks.length` | `NULL` | Nullable R object; type/inheritance below | Scalar grid::unit() objects controlling physical axis spacing. A negative axis.gap places the circular axis inside the backbone; a positive value places it outside. Zero attaches ticks to the inner backbone edge and is the circular default, including the plasmid preset. Circular major/minor tick lengths default to 1.5/0.7 mm, or 2.2/0.8 mm with the plasmid preset. Their default line widths are 0.45/0.3 mm, or 0.6/0.35 mm with that preset. Explicit length and line settings take priority. |
-| `axis.minor.ticks.length` | `NULL` | Nullable R object; type/inheritance below | Scalar grid::unit() objects controlling physical axis spacing. A negative axis.gap places the circular axis inside the backbone; a positive value places it outside. Zero attaches ticks to the inner backbone edge and is the circular default, including the plasmid preset. Circular major/minor tick lengths default to 1.5/0.7 mm, or 2.2/0.8 mm with the plasmid preset. Their default line widths are 0.45/0.3 mm, or 0.6/0.35 mm with that preset. Explicit length and line settings take priority. |
-| `axis.text.offset` | `NULL` | Nullable R object; type/inheritance below | Scalar grid::unit() objects controlling physical axis spacing. A negative axis.gap places the circular axis inside the backbone; a positive value places it outside. Zero attaches ticks to the inner backbone edge and is the circular default, including the plasmid preset. Circular major/minor tick lengths default to 1.5/0.7 mm, or 2.2/0.8 mm with the plasmid preset. Their default line widths are 0.45/0.3 mm, or 0.6/0.35 mm with that preset. Explicit length and line settings take priority. |
-| `axis.text.orientation` | `NULL` | Nullable R object; type/inheritance below | One of "horizontal", "parallel", "perpendicular", or a finite numeric angle. In circular layouts, parallel labels follow the circle glyph by glyph. Horizontal and numeric orientations retain straight text. |
-| `axis.text.check.overlap` | `NULL` | Nullable R object; type/inheritance below | Whether overlapping axis labels are hidden. Defaults to TRUE. Automatically positioned circular parallel labels, including combined seam strings, can receive bounded inward or outward radial clearance around feature polygons and fixed annotation-leader roots. Internal and exterior annotation leaders route around the resolved axis text; mutable shoulders do not feed back into axis placement. Automatic strings stay in a near- backbone channel. Origin/end strings take priority and remain visible; an automatic endpoint may use either readable side of its tick, with a bounded tangential gap up to 4 mm, to clear fixed feature exit rays. Unresolved endpoint clearance is reported as endpoint_unresolved. Overlap checking may hide ordinary intermediate text while keeping its tick, with hidden_near_backbone in diagnostics. Explicit axis.text.offset values and explicit scale breaks stay fixed. |
-| `seq.label` | `NULL` | Nullable R object; type/inheritance below | Text elements for sequence, gene, feature, restriction-site and circular centre labels. |
-| `gene.label` | `NULL` | Nullable R object; type/inheritance below | Text elements for sequence, gene, feature, restriction-site and circular centre labels. |
-| `gene.label.segment` | `NULL` | Nullable R object; type/inheritance below | Line elements for gene, feature and restriction-site leader lines. |
-| `feature.label` | `NULL` | Nullable R object; type/inheritance below | Text elements for sequence, gene, feature, restriction-site and circular centre labels. |
-| `feature.label.segment` | `NULL` | Nullable R object; type/inheritance below | Line elements for gene, feature and restriction-site leader lines. |
-| `restriction.label` | `NULL` | Nullable R object; type/inheritance below | Text elements for sequence, gene, feature, restriction-site and circular centre labels. |
-| `restriction.label.segment` | `NULL` | Nullable R object; type/inheritance below | Line elements for gene, feature and restriction-site leader lines. |
-| `seq.center.label` | `NULL` | Nullable R object; type/inheritance below | Text elements for sequence, gene, feature, restriction-site and circular centre labels. |
-| `seq.center.name` | `NULL` | Nullable R object; type/inheritance below | Text elements for sequence, gene, feature, restriction-site and circular centre labels. |
-| `seq.center.length` | `NULL` | Nullable R object; type/inheritance below | Text elements for sequence, gene, feature, restriction-site and circular centre labels. |
-| `legend.seq` | `NULL` | Nullable R object; type/inheritance below | NULL to show and inherit common settings, or ggplot2::element_blank() to hide every guide for that role. |
-| `legend.seq.position` | `NULL` | Nullable R object; type/inheritance below | Per-role guide positions. |
-| `legend.seq.direction` | `NULL` | Nullable R object; type/inheritance below | Per-role directions. |
-| `legend.seq.background` | `NULL` | Nullable R object; type/inheritance below | Per-role backgrounds. |
-| `legend.seq.key` | `NULL` | Nullable R object; type/inheritance below | Per-role key elements. |
-| `legend.seq.key.size` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
-| `legend.seq.key.width` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
-| `legend.seq.key.height` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
-| `legend.seq.text` | `NULL` | Nullable R object; type/inheritance below | Per-role text elements. |
-| `legend.seq.text.position` | `NULL` | Nullable R object; type/inheritance below | Per-role text positions. |
-| `legend.seq.title` | `NULL` | Nullable R object; type/inheritance below | Per-role title elements. |
-| `legend.seq.title.position` | `NULL` | Nullable R object; type/inheritance below | Per-role title positions. |
-| `legend.seq.margin` | `NULL` | Nullable R object; type/inheritance below | Per-role margins. |
-| `legend.seq.spacing` | `NULL` | Nullable R object; type/inheritance below | Per-role spacing. |
-| `legend.link` | `NULL` | Nullable R object; type/inheritance below | Point-link guide appearance; follows the same role-specific rules. |
-| `legend.link.position` | `NULL` | Nullable R object; type/inheritance below | Point-link guide appearance; follows the same role-specific rules. |
-| `legend.link.direction` | `NULL` | Nullable R object; type/inheritance below | Point-link guide appearance; follows the same role-specific rules. |
-| `legend.link.background` | `NULL` | Nullable R object; type/inheritance below | Point-link guide appearance; follows the same role-specific rules. |
-| `legend.link.key` | `NULL` | Nullable R object; type/inheritance below | Point-link guide appearance; follows the same role-specific rules. |
-| `legend.link.key.size` | `NULL` | Nullable R object; type/inheritance below | Point-link guide appearance; follows the same role-specific rules. |
-| `legend.link.key.width` | `NULL` | Nullable R object; type/inheritance below | Point-link guide appearance; follows the same role-specific rules. |
-| `legend.link.key.height` | `NULL` | Nullable R object; type/inheritance below | Point-link guide appearance; follows the same role-specific rules. |
-| `legend.link.text` | `NULL` | Nullable R object; type/inheritance below | Point-link guide appearance; follows the same role-specific rules. |
-| `legend.link.text.position` | `NULL` | Nullable R object; type/inheritance below | Point-link guide appearance; follows the same role-specific rules. |
-| `legend.link.title` | `NULL` | Nullable R object; type/inheritance below | Point-link guide appearance; follows the same role-specific rules. |
-| `legend.link.title.position` | `NULL` | Nullable R object; type/inheritance below | Point-link guide appearance; follows the same role-specific rules. |
-| `legend.link.margin` | `NULL` | Nullable R object; type/inheritance below | Point-link guide appearance; follows the same role-specific rules. |
-| `legend.link.spacing` | `NULL` | Nullable R object; type/inheritance below | Point-link guide appearance; follows the same role-specific rules. |
-| `legend.ribbon` | `NULL` | Nullable R object; type/inheritance below | NULL to show and inherit common settings, or ggplot2::element_blank() to hide every guide for that role. |
-| `legend.ribbon.position` | `NULL` | Nullable R object; type/inheritance below | Per-role guide positions. |
-| `legend.ribbon.direction` | `NULL` | Nullable R object; type/inheritance below | Per-role directions. |
-| `legend.ribbon.background` | `NULL` | Nullable R object; type/inheritance below | Per-role backgrounds. |
-| `legend.ribbon.key` | `NULL` | Nullable R object; type/inheritance below | Per-role key elements. |
-| `legend.ribbon.key.size` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
-| `legend.ribbon.key.width` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
-| `legend.ribbon.key.height` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
-| `legend.ribbon.text` | `NULL` | Nullable R object; type/inheritance below | Per-role text elements. |
-| `legend.ribbon.text.position` | `NULL` | Nullable R object; type/inheritance below | Per-role text positions. |
-| `legend.ribbon.title` | `NULL` | Nullable R object; type/inheritance below | Per-role title elements. |
-| `legend.ribbon.title.position` | `NULL` | Nullable R object; type/inheritance below | Per-role title positions. |
-| `legend.ribbon.margin` | `NULL` | Nullable R object; type/inheritance below | Per-role margins. |
-| `legend.ribbon.spacing` | `NULL` | Nullable R object; type/inheritance below | Per-role spacing. |
-| `legend.ribbon.ticks` | `NULL` | Nullable R object; type/inheritance below | Ribbon colourbar lines. |
-| `legend.ribbon.ticks.length` | `NULL` | Nullable R object; type/inheritance below | Ribbon colourbar tick length. |
-| `legend.ribbon.axis.line` | `NULL` | Nullable R object; type/inheritance below | Ribbon colourbar lines. |
-| `legend.gene` | `NULL` | Nullable R object; type/inheritance below | NULL to show and inherit common settings, or ggplot2::element_blank() to hide every guide for that role. |
-| `legend.gene.position` | `NULL` | Nullable R object; type/inheritance below | Per-role guide positions. |
-| `legend.gene.direction` | `NULL` | Nullable R object; type/inheritance below | Per-role directions. |
-| `legend.gene.background` | `NULL` | Nullable R object; type/inheritance below | Per-role backgrounds. |
-| `legend.gene.key` | `NULL` | Nullable R object; type/inheritance below | Per-role key elements. |
-| `legend.gene.key.size` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
-| `legend.gene.key.width` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
-| `legend.gene.key.height` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
-| `legend.gene.text` | `NULL` | Nullable R object; type/inheritance below | Per-role text elements. |
-| `legend.gene.text.position` | `NULL` | Nullable R object; type/inheritance below | Per-role text positions. |
-| `legend.gene.title` | `NULL` | Nullable R object; type/inheritance below | Per-role title elements. |
-| `legend.gene.title.position` | `NULL` | Nullable R object; type/inheritance below | Per-role title positions. |
-| `legend.gene.margin` | `NULL` | Nullable R object; type/inheritance below | Per-role margins. |
-| `legend.gene.spacing` | `NULL` | Nullable R object; type/inheritance below | Per-role spacing. |
-| `legend.feature` | `NULL` | Nullable R object; type/inheritance below | NULL to show and inherit common settings, or ggplot2::element_blank() to hide every guide for that role. |
-| `legend.feature.position` | `NULL` | Nullable R object; type/inheritance below | Per-role guide positions. |
-| `legend.feature.direction` | `NULL` | Nullable R object; type/inheritance below | Per-role directions. |
-| `legend.feature.background` | `NULL` | Nullable R object; type/inheritance below | Per-role backgrounds. |
-| `legend.feature.key` | `NULL` | Nullable R object; type/inheritance below | Per-role key elements. |
-| `legend.feature.key.size` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
-| `legend.feature.key.width` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
-| `legend.feature.key.height` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
-| `legend.feature.text` | `NULL` | Nullable R object; type/inheritance below | Per-role text elements. |
-| `legend.feature.text.position` | `NULL` | Nullable R object; type/inheritance below | Per-role text positions. |
-| `legend.feature.title` | `NULL` | Nullable R object; type/inheritance below | Per-role title elements. |
-| `legend.feature.title.position` | `NULL` | Nullable R object; type/inheritance below | Per-role title positions. |
-| `legend.feature.margin` | `NULL` | Nullable R object; type/inheritance below | Per-role margins. |
-| `legend.feature.spacing` | `NULL` | Nullable R object; type/inheritance below | Per-role spacing. |
-| `legend.region` | `NULL` | Nullable R object; type/inheritance below | NULL to show and inherit common settings, or ggplot2::element_blank() to hide every guide for that role. |
-| `legend.region.position` | `NULL` | Nullable R object; type/inheritance below | Per-role guide positions. |
-| `legend.region.direction` | `NULL` | Nullable R object; type/inheritance below | Per-role directions. |
-| `legend.region.background` | `NULL` | Nullable R object; type/inheritance below | Per-role backgrounds. |
-| `legend.region.key` | `NULL` | Nullable R object; type/inheritance below | Per-role key elements. |
-| `legend.region.key.size` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
-| `legend.region.key.width` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
-| `legend.region.key.height` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
-| `legend.region.text` | `NULL` | Nullable R object; type/inheritance below | Per-role text elements. |
-| `legend.region.text.position` | `NULL` | Nullable R object; type/inheritance below | Per-role text positions. |
-| `legend.region.title` | `NULL` | Nullable R object; type/inheritance below | Per-role title elements. |
-| `legend.region.title.position` | `NULL` | Nullable R object; type/inheritance below | Per-role title positions. |
-| `legend.region.margin` | `NULL` | Nullable R object; type/inheritance below | Per-role margins. |
-| `legend.region.spacing` | `NULL` | Nullable R object; type/inheritance below | Per-role spacing. |
-| `...` | `No formal default; requiredness follows the contract` | Forwarded arguments | Standard ggplot2 theme arguments, including common text, plot and legend settings. Common legend settings also supply role inheritance. Removed underscore-style arguments produce a migration error. |
+| `axis` | `NULL` | Type, units and accepted forms: see this API argument contract at right | NULL to show automatic sequence axes, or ggplot2::element_blank() to hide the complete axis decoration. |
+| `axis.line` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Axis line elements. |
+| `axis.ticks` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Axis line elements. |
+| `axis.minor.ticks` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Axis line elements. |
+| `axis.text` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Axis text element. |
+| `axis.gap` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Scalar grid::unit() objects controlling physical axis spacing. A negative axis.gap places the circular axis inside the backbone; a positive value places it outside. Zero attaches ticks to the inner backbone edge and is the circular default, including the plasmid preset. Circular major/minor tick lengths default to 1.5/0.7 mm, or 2.2/0.8 mm with the plasmid preset. Their default line widths are 0.45/0.3 mm, or 0.6/0.35 mm with that preset. Explicit length and line settings take priority. |
+| `axis.ticks.length` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Scalar grid::unit() objects controlling physical axis spacing. A negative axis.gap places the circular axis inside the backbone; a positive value places it outside. Zero attaches ticks to the inner backbone edge and is the circular default, including the plasmid preset. Circular major/minor tick lengths default to 1.5/0.7 mm, or 2.2/0.8 mm with the plasmid preset. Their default line widths are 0.45/0.3 mm, or 0.6/0.35 mm with that preset. Explicit length and line settings take priority. |
+| `axis.minor.ticks.length` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Scalar grid::unit() objects controlling physical axis spacing. A negative axis.gap places the circular axis inside the backbone; a positive value places it outside. Zero attaches ticks to the inner backbone edge and is the circular default, including the plasmid preset. Circular major/minor tick lengths default to 1.5/0.7 mm, or 2.2/0.8 mm with the plasmid preset. Their default line widths are 0.45/0.3 mm, or 0.6/0.35 mm with that preset. Explicit length and line settings take priority. |
+| `axis.text.offset` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Scalar grid::unit() objects controlling physical axis spacing. A negative axis.gap places the circular axis inside the backbone; a positive value places it outside. Zero attaches ticks to the inner backbone edge and is the circular default, including the plasmid preset. Circular major/minor tick lengths default to 1.5/0.7 mm, or 2.2/0.8 mm with the plasmid preset. Their default line widths are 0.45/0.3 mm, or 0.6/0.35 mm with that preset. Explicit length and line settings take priority. |
+| `axis.text.orientation` | `NULL` | Type, units and accepted forms: see this API argument contract at right | One of "horizontal", "parallel", "perpendicular", or a finite numeric angle. In circular layouts, parallel labels follow the circle glyph by glyph. Horizontal and numeric orientations retain straight text. |
+| `axis.text.check.overlap` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Whether overlapping axis labels are hidden. Defaults to TRUE. Automatically positioned circular parallel labels, including combined seam strings, can receive bounded inward or outward radial clearance around feature polygons and fixed annotation-leader roots. Internal and exterior annotation leaders route around the resolved axis text; mutable shoulders do not feed back into axis placement. Automatic strings stay in a near- backbone channel. Origin/end strings take priority and remain visible; an automatic endpoint may use either readable side of its tick, with a bounded tangential gap up to 4 mm, to clear fixed feature exit rays. Unresolved endpoint clearance is reported as endpoint_unresolved. Overlap checking may hide ordinary intermediate text while keeping its tick, with hidden_near_backbone in diagnostics. Explicit axis.text.offset values and explicit scale breaks stay fixed. |
+| `seq.label` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Text elements for sequence, gene, feature, restriction-site and circular centre labels. |
+| `gene.label` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Text elements for sequence, gene, feature, restriction-site and circular centre labels. |
+| `gene.label.segment` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Line elements for gene, feature and restriction-site leader lines. |
+| `feature.label` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Text elements for sequence, gene, feature, restriction-site and circular centre labels. |
+| `feature.label.segment` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Line elements for gene, feature and restriction-site leader lines. |
+| `restriction.label` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Text elements for sequence, gene, feature, restriction-site and circular centre labels. |
+| `restriction.label.segment` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Line elements for gene, feature and restriction-site leader lines. |
+| `seq.center.label` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Text elements for sequence, gene, feature, restriction-site and circular centre labels. |
+| `seq.center.name` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Text elements for sequence, gene, feature, restriction-site and circular centre labels. |
+| `seq.center.length` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Text elements for sequence, gene, feature, restriction-site and circular centre labels. |
+| `legend.seq` | `NULL` | Type, units and accepted forms: see this API argument contract at right | NULL to show and inherit common settings, or ggplot2::element_blank() to hide every guide for that role. |
+| `legend.seq.position` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role guide positions. |
+| `legend.seq.direction` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role directions. |
+| `legend.seq.background` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role backgrounds. |
+| `legend.seq.key` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role key elements. |
+| `legend.seq.key.size` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
+| `legend.seq.key.width` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
+| `legend.seq.key.height` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
+| `legend.seq.text` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role text elements. |
+| `legend.seq.text.position` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role text positions. |
+| `legend.seq.title` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role title elements. |
+| `legend.seq.title.position` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role title positions. |
+| `legend.seq.margin` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role margins. |
+| `legend.seq.spacing` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role spacing. |
+| `legend.link` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Point-link guide appearance; follows the same role-specific rules. |
+| `legend.link.position` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Point-link guide appearance; follows the same role-specific rules. |
+| `legend.link.direction` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Point-link guide appearance; follows the same role-specific rules. |
+| `legend.link.background` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Point-link guide appearance; follows the same role-specific rules. |
+| `legend.link.key` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Point-link guide appearance; follows the same role-specific rules. |
+| `legend.link.key.size` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Point-link guide appearance; follows the same role-specific rules. |
+| `legend.link.key.width` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Point-link guide appearance; follows the same role-specific rules. |
+| `legend.link.key.height` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Point-link guide appearance; follows the same role-specific rules. |
+| `legend.link.text` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Point-link guide appearance; follows the same role-specific rules. |
+| `legend.link.text.position` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Point-link guide appearance; follows the same role-specific rules. |
+| `legend.link.title` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Point-link guide appearance; follows the same role-specific rules. |
+| `legend.link.title.position` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Point-link guide appearance; follows the same role-specific rules. |
+| `legend.link.margin` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Point-link guide appearance; follows the same role-specific rules. |
+| `legend.link.spacing` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Point-link guide appearance; follows the same role-specific rules. |
+| `legend.ribbon` | `NULL` | Type, units and accepted forms: see this API argument contract at right | NULL to show and inherit common settings, or ggplot2::element_blank() to hide every guide for that role. |
+| `legend.ribbon.position` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role guide positions. |
+| `legend.ribbon.direction` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role directions. |
+| `legend.ribbon.background` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role backgrounds. |
+| `legend.ribbon.key` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role key elements. |
+| `legend.ribbon.key.size` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
+| `legend.ribbon.key.width` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
+| `legend.ribbon.key.height` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
+| `legend.ribbon.text` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role text elements. |
+| `legend.ribbon.text.position` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role text positions. |
+| `legend.ribbon.title` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role title elements. |
+| `legend.ribbon.title.position` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role title positions. |
+| `legend.ribbon.margin` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role margins. |
+| `legend.ribbon.spacing` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role spacing. |
+| `legend.ribbon.ticks` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Ribbon colourbar lines. |
+| `legend.ribbon.ticks.length` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Ribbon colourbar tick length. |
+| `legend.ribbon.axis.line` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Ribbon colourbar lines. |
+| `legend.gene` | `NULL` | Type, units and accepted forms: see this API argument contract at right | NULL to show and inherit common settings, or ggplot2::element_blank() to hide every guide for that role. |
+| `legend.gene.position` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role guide positions. |
+| `legend.gene.direction` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role directions. |
+| `legend.gene.background` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role backgrounds. |
+| `legend.gene.key` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role key elements. |
+| `legend.gene.key.size` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
+| `legend.gene.key.width` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
+| `legend.gene.key.height` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
+| `legend.gene.text` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role text elements. |
+| `legend.gene.text.position` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role text positions. |
+| `legend.gene.title` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role title elements. |
+| `legend.gene.title.position` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role title positions. |
+| `legend.gene.margin` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role margins. |
+| `legend.gene.spacing` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role spacing. |
+| `legend.feature` | `NULL` | Type, units and accepted forms: see this API argument contract at right | NULL to show and inherit common settings, or ggplot2::element_blank() to hide every guide for that role. |
+| `legend.feature.position` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role guide positions. |
+| `legend.feature.direction` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role directions. |
+| `legend.feature.background` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role backgrounds. |
+| `legend.feature.key` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role key elements. |
+| `legend.feature.key.size` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
+| `legend.feature.key.width` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
+| `legend.feature.key.height` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
+| `legend.feature.text` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role text elements. |
+| `legend.feature.text.position` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role text positions. |
+| `legend.feature.title` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role title elements. |
+| `legend.feature.title.position` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role title positions. |
+| `legend.feature.margin` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role margins. |
+| `legend.feature.spacing` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role spacing. |
+| `legend.region` | `NULL` | Type, units and accepted forms: see this API argument contract at right | NULL to show and inherit common settings, or ggplot2::element_blank() to hide every guide for that role. |
+| `legend.region.position` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role guide positions. |
+| `legend.region.direction` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role directions. |
+| `legend.region.background` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role backgrounds. |
+| `legend.region.key` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role key elements. |
+| `legend.region.key.size` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
+| `legend.region.key.width` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
+| `legend.region.key.height` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
+| `legend.region.text` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role text elements. |
+| `legend.region.text.position` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role text positions. |
+| `legend.region.title` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role title elements. |
+| `legend.region.title.position` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role title positions. |
+| `legend.region.margin` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role margins. |
+| `legend.region.spacing` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role spacing. |
+| `...` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Standard ggplot2 theme arguments, including common text, plot and legend settings. Common legend settings also supply role inheritance. Removed underscore-style arguments produce a migration error. |
 
 </details>
 
@@ -1712,115 +1712,115 @@ Start with the [learning overview](learn.html#tasks). Lessons compare important 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `axis` | `NULL` | Nullable R object; type/inheritance below | NULL to show automatic sequence axes, or ggplot2::element_blank() to hide the complete axis decoration. |
-| `axis.line` | `NULL` | Nullable R object; type/inheritance below | Axis line elements. |
-| `axis.ticks` | `NULL` | Nullable R object; type/inheritance below | Axis line elements. |
-| `axis.minor.ticks` | `NULL` | Nullable R object; type/inheritance below | Axis line elements. |
-| `axis.text` | `NULL` | Nullable R object; type/inheritance below | Axis text element. |
-| `axis.gap` | `NULL` | Nullable R object; type/inheritance below | Scalar grid::unit() objects controlling physical axis spacing. A negative axis.gap places the circular axis inside the backbone; a positive value places it outside. Zero attaches ticks to the inner backbone edge and is the circular default, including the plasmid preset. Circular major/minor tick lengths default to 1.5/0.7 mm, or 2.2/0.8 mm with the plasmid preset. Their default line widths are 0.45/0.3 mm, or 0.6/0.35 mm with that preset. Explicit length and line settings take priority. |
-| `axis.ticks.length` | `NULL` | Nullable R object; type/inheritance below | Scalar grid::unit() objects controlling physical axis spacing. A negative axis.gap places the circular axis inside the backbone; a positive value places it outside. Zero attaches ticks to the inner backbone edge and is the circular default, including the plasmid preset. Circular major/minor tick lengths default to 1.5/0.7 mm, or 2.2/0.8 mm with the plasmid preset. Their default line widths are 0.45/0.3 mm, or 0.6/0.35 mm with that preset. Explicit length and line settings take priority. |
-| `axis.minor.ticks.length` | `NULL` | Nullable R object; type/inheritance below | Scalar grid::unit() objects controlling physical axis spacing. A negative axis.gap places the circular axis inside the backbone; a positive value places it outside. Zero attaches ticks to the inner backbone edge and is the circular default, including the plasmid preset. Circular major/minor tick lengths default to 1.5/0.7 mm, or 2.2/0.8 mm with the plasmid preset. Their default line widths are 0.45/0.3 mm, or 0.6/0.35 mm with that preset. Explicit length and line settings take priority. |
-| `axis.text.offset` | `NULL` | Nullable R object; type/inheritance below | Scalar grid::unit() objects controlling physical axis spacing. A negative axis.gap places the circular axis inside the backbone; a positive value places it outside. Zero attaches ticks to the inner backbone edge and is the circular default, including the plasmid preset. Circular major/minor tick lengths default to 1.5/0.7 mm, or 2.2/0.8 mm with the plasmid preset. Their default line widths are 0.45/0.3 mm, or 0.6/0.35 mm with that preset. Explicit length and line settings take priority. |
-| `axis.text.orientation` | `NULL` | Nullable R object; type/inheritance below | One of "horizontal", "parallel", "perpendicular", or a finite numeric angle. In circular layouts, parallel labels follow the circle glyph by glyph. Horizontal and numeric orientations retain straight text. |
-| `axis.text.check.overlap` | `NULL` | Nullable R object; type/inheritance below | Whether overlapping axis labels are hidden. Defaults to TRUE. Automatically positioned circular parallel labels, including combined seam strings, can receive bounded inward or outward radial clearance around feature polygons and fixed annotation-leader roots. Internal and exterior annotation leaders route around the resolved axis text; mutable shoulders do not feed back into axis placement. Automatic strings stay in a near- backbone channel. Origin/end strings take priority and remain visible; an automatic endpoint may use either readable side of its tick, with a bounded tangential gap up to 4 mm, to clear fixed feature exit rays. Unresolved endpoint clearance is reported as endpoint_unresolved. Overlap checking may hide ordinary intermediate text while keeping its tick, with hidden_near_backbone in diagnostics. Explicit axis.text.offset values and explicit scale breaks stay fixed. |
-| `seq.label` | `NULL` | Nullable R object; type/inheritance below | Text elements for sequence, gene, feature, restriction-site and circular centre labels. |
-| `gene.label` | `NULL` | Nullable R object; type/inheritance below | Text elements for sequence, gene, feature, restriction-site and circular centre labels. |
-| `gene.label.segment` | `NULL` | Nullable R object; type/inheritance below | Line elements for gene, feature and restriction-site leader lines. |
-| `feature.label` | `NULL` | Nullable R object; type/inheritance below | Text elements for sequence, gene, feature, restriction-site and circular centre labels. |
-| `feature.label.segment` | `NULL` | Nullable R object; type/inheritance below | Line elements for gene, feature and restriction-site leader lines. |
-| `restriction.label` | `NULL` | Nullable R object; type/inheritance below | Text elements for sequence, gene, feature, restriction-site and circular centre labels. |
-| `restriction.label.segment` | `NULL` | Nullable R object; type/inheritance below | Line elements for gene, feature and restriction-site leader lines. |
-| `seq.center.label` | `NULL` | Nullable R object; type/inheritance below | Text elements for sequence, gene, feature, restriction-site and circular centre labels. |
-| `seq.center.name` | `NULL` | Nullable R object; type/inheritance below | Text elements for sequence, gene, feature, restriction-site and circular centre labels. |
-| `seq.center.length` | `NULL` | Nullable R object; type/inheritance below | Text elements for sequence, gene, feature, restriction-site and circular centre labels. |
-| `legend.seq` | `NULL` | Nullable R object; type/inheritance below | NULL to show and inherit common settings, or ggplot2::element_blank() to hide every guide for that role. |
-| `legend.seq.position` | `NULL` | Nullable R object; type/inheritance below | Per-role guide positions. |
-| `legend.seq.direction` | `NULL` | Nullable R object; type/inheritance below | Per-role directions. |
-| `legend.seq.background` | `NULL` | Nullable R object; type/inheritance below | Per-role backgrounds. |
-| `legend.seq.key` | `NULL` | Nullable R object; type/inheritance below | Per-role key elements. |
-| `legend.seq.key.size` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
-| `legend.seq.key.width` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
-| `legend.seq.key.height` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
-| `legend.seq.text` | `NULL` | Nullable R object; type/inheritance below | Per-role text elements. |
-| `legend.seq.text.position` | `NULL` | Nullable R object; type/inheritance below | Per-role text positions. |
-| `legend.seq.title` | `NULL` | Nullable R object; type/inheritance below | Per-role title elements. |
-| `legend.seq.title.position` | `NULL` | Nullable R object; type/inheritance below | Per-role title positions. |
-| `legend.seq.margin` | `NULL` | Nullable R object; type/inheritance below | Per-role margins. |
-| `legend.seq.spacing` | `NULL` | Nullable R object; type/inheritance below | Per-role spacing. |
-| `legend.link` | `NULL` | Nullable R object; type/inheritance below | Point-link guide appearance; follows the same role-specific rules. |
-| `legend.link.position` | `NULL` | Nullable R object; type/inheritance below | Point-link guide appearance; follows the same role-specific rules. |
-| `legend.link.direction` | `NULL` | Nullable R object; type/inheritance below | Point-link guide appearance; follows the same role-specific rules. |
-| `legend.link.background` | `NULL` | Nullable R object; type/inheritance below | Point-link guide appearance; follows the same role-specific rules. |
-| `legend.link.key` | `NULL` | Nullable R object; type/inheritance below | Point-link guide appearance; follows the same role-specific rules. |
-| `legend.link.key.size` | `NULL` | Nullable R object; type/inheritance below | Point-link guide appearance; follows the same role-specific rules. |
-| `legend.link.key.width` | `NULL` | Nullable R object; type/inheritance below | Point-link guide appearance; follows the same role-specific rules. |
-| `legend.link.key.height` | `NULL` | Nullable R object; type/inheritance below | Point-link guide appearance; follows the same role-specific rules. |
-| `legend.link.text` | `NULL` | Nullable R object; type/inheritance below | Point-link guide appearance; follows the same role-specific rules. |
-| `legend.link.text.position` | `NULL` | Nullable R object; type/inheritance below | Point-link guide appearance; follows the same role-specific rules. |
-| `legend.link.title` | `NULL` | Nullable R object; type/inheritance below | Point-link guide appearance; follows the same role-specific rules. |
-| `legend.link.title.position` | `NULL` | Nullable R object; type/inheritance below | Point-link guide appearance; follows the same role-specific rules. |
-| `legend.link.margin` | `NULL` | Nullable R object; type/inheritance below | Point-link guide appearance; follows the same role-specific rules. |
-| `legend.link.spacing` | `NULL` | Nullable R object; type/inheritance below | Point-link guide appearance; follows the same role-specific rules. |
-| `legend.ribbon` | `NULL` | Nullable R object; type/inheritance below | NULL to show and inherit common settings, or ggplot2::element_blank() to hide every guide for that role. |
-| `legend.ribbon.position` | `NULL` | Nullable R object; type/inheritance below | Per-role guide positions. |
-| `legend.ribbon.direction` | `NULL` | Nullable R object; type/inheritance below | Per-role directions. |
-| `legend.ribbon.background` | `NULL` | Nullable R object; type/inheritance below | Per-role backgrounds. |
-| `legend.ribbon.key` | `NULL` | Nullable R object; type/inheritance below | Per-role key elements. |
-| `legend.ribbon.key.size` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
-| `legend.ribbon.key.width` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
-| `legend.ribbon.key.height` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
-| `legend.ribbon.text` | `NULL` | Nullable R object; type/inheritance below | Per-role text elements. |
-| `legend.ribbon.text.position` | `NULL` | Nullable R object; type/inheritance below | Per-role text positions. |
-| `legend.ribbon.title` | `NULL` | Nullable R object; type/inheritance below | Per-role title elements. |
-| `legend.ribbon.title.position` | `NULL` | Nullable R object; type/inheritance below | Per-role title positions. |
-| `legend.ribbon.margin` | `NULL` | Nullable R object; type/inheritance below | Per-role margins. |
-| `legend.ribbon.spacing` | `NULL` | Nullable R object; type/inheritance below | Per-role spacing. |
-| `legend.ribbon.ticks` | `NULL` | Nullable R object; type/inheritance below | Ribbon colourbar lines. |
-| `legend.ribbon.ticks.length` | `NULL` | Nullable R object; type/inheritance below | Ribbon colourbar tick length. |
-| `legend.ribbon.axis.line` | `NULL` | Nullable R object; type/inheritance below | Ribbon colourbar lines. |
-| `legend.gene` | `NULL` | Nullable R object; type/inheritance below | NULL to show and inherit common settings, or ggplot2::element_blank() to hide every guide for that role. |
-| `legend.gene.position` | `NULL` | Nullable R object; type/inheritance below | Per-role guide positions. |
-| `legend.gene.direction` | `NULL` | Nullable R object; type/inheritance below | Per-role directions. |
-| `legend.gene.background` | `NULL` | Nullable R object; type/inheritance below | Per-role backgrounds. |
-| `legend.gene.key` | `NULL` | Nullable R object; type/inheritance below | Per-role key elements. |
-| `legend.gene.key.size` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
-| `legend.gene.key.width` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
-| `legend.gene.key.height` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
-| `legend.gene.text` | `NULL` | Nullable R object; type/inheritance below | Per-role text elements. |
-| `legend.gene.text.position` | `NULL` | Nullable R object; type/inheritance below | Per-role text positions. |
-| `legend.gene.title` | `NULL` | Nullable R object; type/inheritance below | Per-role title elements. |
-| `legend.gene.title.position` | `NULL` | Nullable R object; type/inheritance below | Per-role title positions. |
-| `legend.gene.margin` | `NULL` | Nullable R object; type/inheritance below | Per-role margins. |
-| `legend.gene.spacing` | `NULL` | Nullable R object; type/inheritance below | Per-role spacing. |
-| `legend.feature` | `NULL` | Nullable R object; type/inheritance below | NULL to show and inherit common settings, or ggplot2::element_blank() to hide every guide for that role. |
-| `legend.feature.position` | `NULL` | Nullable R object; type/inheritance below | Per-role guide positions. |
-| `legend.feature.direction` | `NULL` | Nullable R object; type/inheritance below | Per-role directions. |
-| `legend.feature.background` | `NULL` | Nullable R object; type/inheritance below | Per-role backgrounds. |
-| `legend.feature.key` | `NULL` | Nullable R object; type/inheritance below | Per-role key elements. |
-| `legend.feature.key.size` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
-| `legend.feature.key.width` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
-| `legend.feature.key.height` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
-| `legend.feature.text` | `NULL` | Nullable R object; type/inheritance below | Per-role text elements. |
-| `legend.feature.text.position` | `NULL` | Nullable R object; type/inheritance below | Per-role text positions. |
-| `legend.feature.title` | `NULL` | Nullable R object; type/inheritance below | Per-role title elements. |
-| `legend.feature.title.position` | `NULL` | Nullable R object; type/inheritance below | Per-role title positions. |
-| `legend.feature.margin` | `NULL` | Nullable R object; type/inheritance below | Per-role margins. |
-| `legend.feature.spacing` | `NULL` | Nullable R object; type/inheritance below | Per-role spacing. |
-| `legend.region` | `NULL` | Nullable R object; type/inheritance below | NULL to show and inherit common settings, or ggplot2::element_blank() to hide every guide for that role. |
-| `legend.region.position` | `NULL` | Nullable R object; type/inheritance below | Per-role guide positions. |
-| `legend.region.direction` | `NULL` | Nullable R object; type/inheritance below | Per-role directions. |
-| `legend.region.background` | `NULL` | Nullable R object; type/inheritance below | Per-role backgrounds. |
-| `legend.region.key` | `NULL` | Nullable R object; type/inheritance below | Per-role key elements. |
-| `legend.region.key.size` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
-| `legend.region.key.width` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
-| `legend.region.key.height` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
-| `legend.region.text` | `NULL` | Nullable R object; type/inheritance below | Per-role text elements. |
-| `legend.region.text.position` | `NULL` | Nullable R object; type/inheritance below | Per-role text positions. |
-| `legend.region.title` | `NULL` | Nullable R object; type/inheritance below | Per-role title elements. |
-| `legend.region.title.position` | `NULL` | Nullable R object; type/inheritance below | Per-role title positions. |
-| `legend.region.margin` | `NULL` | Nullable R object; type/inheritance below | Per-role margins. |
-| `legend.region.spacing` | `NULL` | Nullable R object; type/inheritance below | Per-role spacing. |
-| `...` | `No formal default; requiredness follows the contract` | Forwarded arguments | Standard ggplot2 theme arguments, including common text, plot and legend settings. Common legend settings also supply role inheritance. Removed underscore-style arguments produce a migration error. |
+| `axis` | `NULL` | Type, units and accepted forms: see this API argument contract at right | NULL to show automatic sequence axes, or ggplot2::element_blank() to hide the complete axis decoration. |
+| `axis.line` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Axis line elements. |
+| `axis.ticks` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Axis line elements. |
+| `axis.minor.ticks` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Axis line elements. |
+| `axis.text` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Axis text element. |
+| `axis.gap` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Scalar grid::unit() objects controlling physical axis spacing. A negative axis.gap places the circular axis inside the backbone; a positive value places it outside. Zero attaches ticks to the inner backbone edge and is the circular default, including the plasmid preset. Circular major/minor tick lengths default to 1.5/0.7 mm, or 2.2/0.8 mm with the plasmid preset. Their default line widths are 0.45/0.3 mm, or 0.6/0.35 mm with that preset. Explicit length and line settings take priority. |
+| `axis.ticks.length` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Scalar grid::unit() objects controlling physical axis spacing. A negative axis.gap places the circular axis inside the backbone; a positive value places it outside. Zero attaches ticks to the inner backbone edge and is the circular default, including the plasmid preset. Circular major/minor tick lengths default to 1.5/0.7 mm, or 2.2/0.8 mm with the plasmid preset. Their default line widths are 0.45/0.3 mm, or 0.6/0.35 mm with that preset. Explicit length and line settings take priority. |
+| `axis.minor.ticks.length` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Scalar grid::unit() objects controlling physical axis spacing. A negative axis.gap places the circular axis inside the backbone; a positive value places it outside. Zero attaches ticks to the inner backbone edge and is the circular default, including the plasmid preset. Circular major/minor tick lengths default to 1.5/0.7 mm, or 2.2/0.8 mm with the plasmid preset. Their default line widths are 0.45/0.3 mm, or 0.6/0.35 mm with that preset. Explicit length and line settings take priority. |
+| `axis.text.offset` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Scalar grid::unit() objects controlling physical axis spacing. A negative axis.gap places the circular axis inside the backbone; a positive value places it outside. Zero attaches ticks to the inner backbone edge and is the circular default, including the plasmid preset. Circular major/minor tick lengths default to 1.5/0.7 mm, or 2.2/0.8 mm with the plasmid preset. Their default line widths are 0.45/0.3 mm, or 0.6/0.35 mm with that preset. Explicit length and line settings take priority. |
+| `axis.text.orientation` | `NULL` | Type, units and accepted forms: see this API argument contract at right | One of "horizontal", "parallel", "perpendicular", or a finite numeric angle. In circular layouts, parallel labels follow the circle glyph by glyph. Horizontal and numeric orientations retain straight text. |
+| `axis.text.check.overlap` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Whether overlapping axis labels are hidden. Defaults to TRUE. Automatically positioned circular parallel labels, including combined seam strings, can receive bounded inward or outward radial clearance around feature polygons and fixed annotation-leader roots. Internal and exterior annotation leaders route around the resolved axis text; mutable shoulders do not feed back into axis placement. Automatic strings stay in a near- backbone channel. Origin/end strings take priority and remain visible; an automatic endpoint may use either readable side of its tick, with a bounded tangential gap up to 4 mm, to clear fixed feature exit rays. Unresolved endpoint clearance is reported as endpoint_unresolved. Overlap checking may hide ordinary intermediate text while keeping its tick, with hidden_near_backbone in diagnostics. Explicit axis.text.offset values and explicit scale breaks stay fixed. |
+| `seq.label` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Text elements for sequence, gene, feature, restriction-site and circular centre labels. |
+| `gene.label` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Text elements for sequence, gene, feature, restriction-site and circular centre labels. |
+| `gene.label.segment` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Line elements for gene, feature and restriction-site leader lines. |
+| `feature.label` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Text elements for sequence, gene, feature, restriction-site and circular centre labels. |
+| `feature.label.segment` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Line elements for gene, feature and restriction-site leader lines. |
+| `restriction.label` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Text elements for sequence, gene, feature, restriction-site and circular centre labels. |
+| `restriction.label.segment` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Line elements for gene, feature and restriction-site leader lines. |
+| `seq.center.label` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Text elements for sequence, gene, feature, restriction-site and circular centre labels. |
+| `seq.center.name` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Text elements for sequence, gene, feature, restriction-site and circular centre labels. |
+| `seq.center.length` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Text elements for sequence, gene, feature, restriction-site and circular centre labels. |
+| `legend.seq` | `NULL` | Type, units and accepted forms: see this API argument contract at right | NULL to show and inherit common settings, or ggplot2::element_blank() to hide every guide for that role. |
+| `legend.seq.position` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role guide positions. |
+| `legend.seq.direction` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role directions. |
+| `legend.seq.background` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role backgrounds. |
+| `legend.seq.key` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role key elements. |
+| `legend.seq.key.size` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
+| `legend.seq.key.width` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
+| `legend.seq.key.height` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
+| `legend.seq.text` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role text elements. |
+| `legend.seq.text.position` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role text positions. |
+| `legend.seq.title` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role title elements. |
+| `legend.seq.title.position` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role title positions. |
+| `legend.seq.margin` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role margins. |
+| `legend.seq.spacing` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role spacing. |
+| `legend.link` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Point-link guide appearance; follows the same role-specific rules. |
+| `legend.link.position` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Point-link guide appearance; follows the same role-specific rules. |
+| `legend.link.direction` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Point-link guide appearance; follows the same role-specific rules. |
+| `legend.link.background` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Point-link guide appearance; follows the same role-specific rules. |
+| `legend.link.key` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Point-link guide appearance; follows the same role-specific rules. |
+| `legend.link.key.size` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Point-link guide appearance; follows the same role-specific rules. |
+| `legend.link.key.width` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Point-link guide appearance; follows the same role-specific rules. |
+| `legend.link.key.height` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Point-link guide appearance; follows the same role-specific rules. |
+| `legend.link.text` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Point-link guide appearance; follows the same role-specific rules. |
+| `legend.link.text.position` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Point-link guide appearance; follows the same role-specific rules. |
+| `legend.link.title` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Point-link guide appearance; follows the same role-specific rules. |
+| `legend.link.title.position` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Point-link guide appearance; follows the same role-specific rules. |
+| `legend.link.margin` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Point-link guide appearance; follows the same role-specific rules. |
+| `legend.link.spacing` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Point-link guide appearance; follows the same role-specific rules. |
+| `legend.ribbon` | `NULL` | Type, units and accepted forms: see this API argument contract at right | NULL to show and inherit common settings, or ggplot2::element_blank() to hide every guide for that role. |
+| `legend.ribbon.position` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role guide positions. |
+| `legend.ribbon.direction` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role directions. |
+| `legend.ribbon.background` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role backgrounds. |
+| `legend.ribbon.key` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role key elements. |
+| `legend.ribbon.key.size` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
+| `legend.ribbon.key.width` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
+| `legend.ribbon.key.height` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
+| `legend.ribbon.text` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role text elements. |
+| `legend.ribbon.text.position` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role text positions. |
+| `legend.ribbon.title` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role title elements. |
+| `legend.ribbon.title.position` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role title positions. |
+| `legend.ribbon.margin` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role margins. |
+| `legend.ribbon.spacing` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role spacing. |
+| `legend.ribbon.ticks` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Ribbon colourbar lines. |
+| `legend.ribbon.ticks.length` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Ribbon colourbar tick length. |
+| `legend.ribbon.axis.line` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Ribbon colourbar lines. |
+| `legend.gene` | `NULL` | Type, units and accepted forms: see this API argument contract at right | NULL to show and inherit common settings, or ggplot2::element_blank() to hide every guide for that role. |
+| `legend.gene.position` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role guide positions. |
+| `legend.gene.direction` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role directions. |
+| `legend.gene.background` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role backgrounds. |
+| `legend.gene.key` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role key elements. |
+| `legend.gene.key.size` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
+| `legend.gene.key.width` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
+| `legend.gene.key.height` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
+| `legend.gene.text` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role text elements. |
+| `legend.gene.text.position` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role text positions. |
+| `legend.gene.title` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role title elements. |
+| `legend.gene.title.position` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role title positions. |
+| `legend.gene.margin` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role margins. |
+| `legend.gene.spacing` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role spacing. |
+| `legend.feature` | `NULL` | Type, units and accepted forms: see this API argument contract at right | NULL to show and inherit common settings, or ggplot2::element_blank() to hide every guide for that role. |
+| `legend.feature.position` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role guide positions. |
+| `legend.feature.direction` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role directions. |
+| `legend.feature.background` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role backgrounds. |
+| `legend.feature.key` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role key elements. |
+| `legend.feature.key.size` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
+| `legend.feature.key.width` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
+| `legend.feature.key.height` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
+| `legend.feature.text` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role text elements. |
+| `legend.feature.text.position` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role text positions. |
+| `legend.feature.title` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role title elements. |
+| `legend.feature.title.position` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role title positions. |
+| `legend.feature.margin` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role margins. |
+| `legend.feature.spacing` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role spacing. |
+| `legend.region` | `NULL` | Type, units and accepted forms: see this API argument contract at right | NULL to show and inherit common settings, or ggplot2::element_blank() to hide every guide for that role. |
+| `legend.region.position` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role guide positions. |
+| `legend.region.direction` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role directions. |
+| `legend.region.background` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role backgrounds. |
+| `legend.region.key` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role key elements. |
+| `legend.region.key.size` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
+| `legend.region.key.width` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
+| `legend.region.key.height` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
+| `legend.region.text` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role text elements. |
+| `legend.region.text.position` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role text positions. |
+| `legend.region.title` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role title elements. |
+| `legend.region.title.position` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role title positions. |
+| `legend.region.margin` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role margins. |
+| `legend.region.spacing` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role spacing. |
+| `...` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Standard ggplot2 theme arguments, including common text, plot and legend settings. Common legend settings also supply role inheritance. Removed underscore-style arguments produce a migration error. |
 
 </details>
 
@@ -1833,115 +1833,115 @@ Start with the [learning overview](learn.html#tasks). Lessons compare important 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `axis` | `NULL` | Nullable R object; type/inheritance below | NULL to show automatic sequence axes, or ggplot2::element_blank() to hide the complete axis decoration. |
-| `axis.line` | `NULL` | Nullable R object; type/inheritance below | Axis line elements. |
-| `axis.ticks` | `NULL` | Nullable R object; type/inheritance below | Axis line elements. |
-| `axis.minor.ticks` | `NULL` | Nullable R object; type/inheritance below | Axis line elements. |
-| `axis.text` | `NULL` | Nullable R object; type/inheritance below | Axis text element. |
-| `axis.gap` | `NULL` | Nullable R object; type/inheritance below | Scalar grid::unit() objects controlling physical axis spacing. A negative axis.gap places the circular axis inside the backbone; a positive value places it outside. Zero attaches ticks to the inner backbone edge and is the circular default, including the plasmid preset. Circular major/minor tick lengths default to 1.5/0.7 mm, or 2.2/0.8 mm with the plasmid preset. Their default line widths are 0.45/0.3 mm, or 0.6/0.35 mm with that preset. Explicit length and line settings take priority. |
-| `axis.ticks.length` | `NULL` | Nullable R object; type/inheritance below | Scalar grid::unit() objects controlling physical axis spacing. A negative axis.gap places the circular axis inside the backbone; a positive value places it outside. Zero attaches ticks to the inner backbone edge and is the circular default, including the plasmid preset. Circular major/minor tick lengths default to 1.5/0.7 mm, or 2.2/0.8 mm with the plasmid preset. Their default line widths are 0.45/0.3 mm, or 0.6/0.35 mm with that preset. Explicit length and line settings take priority. |
-| `axis.minor.ticks.length` | `NULL` | Nullable R object; type/inheritance below | Scalar grid::unit() objects controlling physical axis spacing. A negative axis.gap places the circular axis inside the backbone; a positive value places it outside. Zero attaches ticks to the inner backbone edge and is the circular default, including the plasmid preset. Circular major/minor tick lengths default to 1.5/0.7 mm, or 2.2/0.8 mm with the plasmid preset. Their default line widths are 0.45/0.3 mm, or 0.6/0.35 mm with that preset. Explicit length and line settings take priority. |
-| `axis.text.offset` | `NULL` | Nullable R object; type/inheritance below | Scalar grid::unit() objects controlling physical axis spacing. A negative axis.gap places the circular axis inside the backbone; a positive value places it outside. Zero attaches ticks to the inner backbone edge and is the circular default, including the plasmid preset. Circular major/minor tick lengths default to 1.5/0.7 mm, or 2.2/0.8 mm with the plasmid preset. Their default line widths are 0.45/0.3 mm, or 0.6/0.35 mm with that preset. Explicit length and line settings take priority. |
-| `axis.text.orientation` | `NULL` | Nullable R object; type/inheritance below | One of "horizontal", "parallel", "perpendicular", or a finite numeric angle. In circular layouts, parallel labels follow the circle glyph by glyph. Horizontal and numeric orientations retain straight text. |
-| `axis.text.check.overlap` | `NULL` | Nullable R object; type/inheritance below | Whether overlapping axis labels are hidden. Defaults to TRUE. Automatically positioned circular parallel labels, including combined seam strings, can receive bounded inward or outward radial clearance around feature polygons and fixed annotation-leader roots. Internal and exterior annotation leaders route around the resolved axis text; mutable shoulders do not feed back into axis placement. Automatic strings stay in a near- backbone channel. Origin/end strings take priority and remain visible; an automatic endpoint may use either readable side of its tick, with a bounded tangential gap up to 4 mm, to clear fixed feature exit rays. Unresolved endpoint clearance is reported as endpoint_unresolved. Overlap checking may hide ordinary intermediate text while keeping its tick, with hidden_near_backbone in diagnostics. Explicit axis.text.offset values and explicit scale breaks stay fixed. |
-| `seq.label` | `NULL` | Nullable R object; type/inheritance below | Text elements for sequence, gene, feature, restriction-site and circular centre labels. |
-| `gene.label` | `NULL` | Nullable R object; type/inheritance below | Text elements for sequence, gene, feature, restriction-site and circular centre labels. |
-| `gene.label.segment` | `NULL` | Nullable R object; type/inheritance below | Line elements for gene, feature and restriction-site leader lines. |
-| `feature.label` | `NULL` | Nullable R object; type/inheritance below | Text elements for sequence, gene, feature, restriction-site and circular centre labels. |
-| `feature.label.segment` | `NULL` | Nullable R object; type/inheritance below | Line elements for gene, feature and restriction-site leader lines. |
-| `restriction.label` | `NULL` | Nullable R object; type/inheritance below | Text elements for sequence, gene, feature, restriction-site and circular centre labels. |
-| `restriction.label.segment` | `NULL` | Nullable R object; type/inheritance below | Line elements for gene, feature and restriction-site leader lines. |
-| `seq.center.label` | `NULL` | Nullable R object; type/inheritance below | Text elements for sequence, gene, feature, restriction-site and circular centre labels. |
-| `seq.center.name` | `NULL` | Nullable R object; type/inheritance below | Text elements for sequence, gene, feature, restriction-site and circular centre labels. |
-| `seq.center.length` | `NULL` | Nullable R object; type/inheritance below | Text elements for sequence, gene, feature, restriction-site and circular centre labels. |
-| `legend.seq` | `NULL` | Nullable R object; type/inheritance below | NULL to show and inherit common settings, or ggplot2::element_blank() to hide every guide for that role. |
-| `legend.seq.position` | `NULL` | Nullable R object; type/inheritance below | Per-role guide positions. |
-| `legend.seq.direction` | `NULL` | Nullable R object; type/inheritance below | Per-role directions. |
-| `legend.seq.background` | `NULL` | Nullable R object; type/inheritance below | Per-role backgrounds. |
-| `legend.seq.key` | `NULL` | Nullable R object; type/inheritance below | Per-role key elements. |
-| `legend.seq.key.size` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
-| `legend.seq.key.width` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
-| `legend.seq.key.height` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
-| `legend.seq.text` | `NULL` | Nullable R object; type/inheritance below | Per-role text elements. |
-| `legend.seq.text.position` | `NULL` | Nullable R object; type/inheritance below | Per-role text positions. |
-| `legend.seq.title` | `NULL` | Nullable R object; type/inheritance below | Per-role title elements. |
-| `legend.seq.title.position` | `NULL` | Nullable R object; type/inheritance below | Per-role title positions. |
-| `legend.seq.margin` | `NULL` | Nullable R object; type/inheritance below | Per-role margins. |
-| `legend.seq.spacing` | `NULL` | Nullable R object; type/inheritance below | Per-role spacing. |
-| `legend.link` | `NULL` | Nullable R object; type/inheritance below | Point-link guide appearance; follows the same role-specific rules. |
-| `legend.link.position` | `NULL` | Nullable R object; type/inheritance below | Point-link guide appearance; follows the same role-specific rules. |
-| `legend.link.direction` | `NULL` | Nullable R object; type/inheritance below | Point-link guide appearance; follows the same role-specific rules. |
-| `legend.link.background` | `NULL` | Nullable R object; type/inheritance below | Point-link guide appearance; follows the same role-specific rules. |
-| `legend.link.key` | `NULL` | Nullable R object; type/inheritance below | Point-link guide appearance; follows the same role-specific rules. |
-| `legend.link.key.size` | `NULL` | Nullable R object; type/inheritance below | Point-link guide appearance; follows the same role-specific rules. |
-| `legend.link.key.width` | `NULL` | Nullable R object; type/inheritance below | Point-link guide appearance; follows the same role-specific rules. |
-| `legend.link.key.height` | `NULL` | Nullable R object; type/inheritance below | Point-link guide appearance; follows the same role-specific rules. |
-| `legend.link.text` | `NULL` | Nullable R object; type/inheritance below | Point-link guide appearance; follows the same role-specific rules. |
-| `legend.link.text.position` | `NULL` | Nullable R object; type/inheritance below | Point-link guide appearance; follows the same role-specific rules. |
-| `legend.link.title` | `NULL` | Nullable R object; type/inheritance below | Point-link guide appearance; follows the same role-specific rules. |
-| `legend.link.title.position` | `NULL` | Nullable R object; type/inheritance below | Point-link guide appearance; follows the same role-specific rules. |
-| `legend.link.margin` | `NULL` | Nullable R object; type/inheritance below | Point-link guide appearance; follows the same role-specific rules. |
-| `legend.link.spacing` | `NULL` | Nullable R object; type/inheritance below | Point-link guide appearance; follows the same role-specific rules. |
-| `legend.ribbon` | `NULL` | Nullable R object; type/inheritance below | NULL to show and inherit common settings, or ggplot2::element_blank() to hide every guide for that role. |
-| `legend.ribbon.position` | `NULL` | Nullable R object; type/inheritance below | Per-role guide positions. |
-| `legend.ribbon.direction` | `NULL` | Nullable R object; type/inheritance below | Per-role directions. |
-| `legend.ribbon.background` | `NULL` | Nullable R object; type/inheritance below | Per-role backgrounds. |
-| `legend.ribbon.key` | `NULL` | Nullable R object; type/inheritance below | Per-role key elements. |
-| `legend.ribbon.key.size` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
-| `legend.ribbon.key.width` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
-| `legend.ribbon.key.height` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
-| `legend.ribbon.text` | `NULL` | Nullable R object; type/inheritance below | Per-role text elements. |
-| `legend.ribbon.text.position` | `NULL` | Nullable R object; type/inheritance below | Per-role text positions. |
-| `legend.ribbon.title` | `NULL` | Nullable R object; type/inheritance below | Per-role title elements. |
-| `legend.ribbon.title.position` | `NULL` | Nullable R object; type/inheritance below | Per-role title positions. |
-| `legend.ribbon.margin` | `NULL` | Nullable R object; type/inheritance below | Per-role margins. |
-| `legend.ribbon.spacing` | `NULL` | Nullable R object; type/inheritance below | Per-role spacing. |
-| `legend.ribbon.ticks` | `NULL` | Nullable R object; type/inheritance below | Ribbon colourbar lines. |
-| `legend.ribbon.ticks.length` | `NULL` | Nullable R object; type/inheritance below | Ribbon colourbar tick length. |
-| `legend.ribbon.axis.line` | `NULL` | Nullable R object; type/inheritance below | Ribbon colourbar lines. |
-| `legend.gene` | `NULL` | Nullable R object; type/inheritance below | NULL to show and inherit common settings, or ggplot2::element_blank() to hide every guide for that role. |
-| `legend.gene.position` | `NULL` | Nullable R object; type/inheritance below | Per-role guide positions. |
-| `legend.gene.direction` | `NULL` | Nullable R object; type/inheritance below | Per-role directions. |
-| `legend.gene.background` | `NULL` | Nullable R object; type/inheritance below | Per-role backgrounds. |
-| `legend.gene.key` | `NULL` | Nullable R object; type/inheritance below | Per-role key elements. |
-| `legend.gene.key.size` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
-| `legend.gene.key.width` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
-| `legend.gene.key.height` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
-| `legend.gene.text` | `NULL` | Nullable R object; type/inheritance below | Per-role text elements. |
-| `legend.gene.text.position` | `NULL` | Nullable R object; type/inheritance below | Per-role text positions. |
-| `legend.gene.title` | `NULL` | Nullable R object; type/inheritance below | Per-role title elements. |
-| `legend.gene.title.position` | `NULL` | Nullable R object; type/inheritance below | Per-role title positions. |
-| `legend.gene.margin` | `NULL` | Nullable R object; type/inheritance below | Per-role margins. |
-| `legend.gene.spacing` | `NULL` | Nullable R object; type/inheritance below | Per-role spacing. |
-| `legend.feature` | `NULL` | Nullable R object; type/inheritance below | NULL to show and inherit common settings, or ggplot2::element_blank() to hide every guide for that role. |
-| `legend.feature.position` | `NULL` | Nullable R object; type/inheritance below | Per-role guide positions. |
-| `legend.feature.direction` | `NULL` | Nullable R object; type/inheritance below | Per-role directions. |
-| `legend.feature.background` | `NULL` | Nullable R object; type/inheritance below | Per-role backgrounds. |
-| `legend.feature.key` | `NULL` | Nullable R object; type/inheritance below | Per-role key elements. |
-| `legend.feature.key.size` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
-| `legend.feature.key.width` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
-| `legend.feature.key.height` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
-| `legend.feature.text` | `NULL` | Nullable R object; type/inheritance below | Per-role text elements. |
-| `legend.feature.text.position` | `NULL` | Nullable R object; type/inheritance below | Per-role text positions. |
-| `legend.feature.title` | `NULL` | Nullable R object; type/inheritance below | Per-role title elements. |
-| `legend.feature.title.position` | `NULL` | Nullable R object; type/inheritance below | Per-role title positions. |
-| `legend.feature.margin` | `NULL` | Nullable R object; type/inheritance below | Per-role margins. |
-| `legend.feature.spacing` | `NULL` | Nullable R object; type/inheritance below | Per-role spacing. |
-| `legend.region` | `NULL` | Nullable R object; type/inheritance below | NULL to show and inherit common settings, or ggplot2::element_blank() to hide every guide for that role. |
-| `legend.region.position` | `NULL` | Nullable R object; type/inheritance below | Per-role guide positions. |
-| `legend.region.direction` | `NULL` | Nullable R object; type/inheritance below | Per-role directions. |
-| `legend.region.background` | `NULL` | Nullable R object; type/inheritance below | Per-role backgrounds. |
-| `legend.region.key` | `NULL` | Nullable R object; type/inheritance below | Per-role key elements. |
-| `legend.region.key.size` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
-| `legend.region.key.width` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
-| `legend.region.key.height` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
-| `legend.region.text` | `NULL` | Nullable R object; type/inheritance below | Per-role text elements. |
-| `legend.region.text.position` | `NULL` | Nullable R object; type/inheritance below | Per-role text positions. |
-| `legend.region.title` | `NULL` | Nullable R object; type/inheritance below | Per-role title elements. |
-| `legend.region.title.position` | `NULL` | Nullable R object; type/inheritance below | Per-role title positions. |
-| `legend.region.margin` | `NULL` | Nullable R object; type/inheritance below | Per-role margins. |
-| `legend.region.spacing` | `NULL` | Nullable R object; type/inheritance below | Per-role spacing. |
-| `...` | `No formal default; requiredness follows the contract` | Forwarded arguments | Standard ggplot2 theme arguments, including common text, plot and legend settings. Common legend settings also supply role inheritance. Removed underscore-style arguments produce a migration error. |
+| `axis` | `NULL` | Type, units and accepted forms: see this API argument contract at right | NULL to show automatic sequence axes, or ggplot2::element_blank() to hide the complete axis decoration. |
+| `axis.line` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Axis line elements. |
+| `axis.ticks` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Axis line elements. |
+| `axis.minor.ticks` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Axis line elements. |
+| `axis.text` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Axis text element. |
+| `axis.gap` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Scalar grid::unit() objects controlling physical axis spacing. A negative axis.gap places the circular axis inside the backbone; a positive value places it outside. Zero attaches ticks to the inner backbone edge and is the circular default, including the plasmid preset. Circular major/minor tick lengths default to 1.5/0.7 mm, or 2.2/0.8 mm with the plasmid preset. Their default line widths are 0.45/0.3 mm, or 0.6/0.35 mm with that preset. Explicit length and line settings take priority. |
+| `axis.ticks.length` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Scalar grid::unit() objects controlling physical axis spacing. A negative axis.gap places the circular axis inside the backbone; a positive value places it outside. Zero attaches ticks to the inner backbone edge and is the circular default, including the plasmid preset. Circular major/minor tick lengths default to 1.5/0.7 mm, or 2.2/0.8 mm with the plasmid preset. Their default line widths are 0.45/0.3 mm, or 0.6/0.35 mm with that preset. Explicit length and line settings take priority. |
+| `axis.minor.ticks.length` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Scalar grid::unit() objects controlling physical axis spacing. A negative axis.gap places the circular axis inside the backbone; a positive value places it outside. Zero attaches ticks to the inner backbone edge and is the circular default, including the plasmid preset. Circular major/minor tick lengths default to 1.5/0.7 mm, or 2.2/0.8 mm with the plasmid preset. Their default line widths are 0.45/0.3 mm, or 0.6/0.35 mm with that preset. Explicit length and line settings take priority. |
+| `axis.text.offset` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Scalar grid::unit() objects controlling physical axis spacing. A negative axis.gap places the circular axis inside the backbone; a positive value places it outside. Zero attaches ticks to the inner backbone edge and is the circular default, including the plasmid preset. Circular major/minor tick lengths default to 1.5/0.7 mm, or 2.2/0.8 mm with the plasmid preset. Their default line widths are 0.45/0.3 mm, or 0.6/0.35 mm with that preset. Explicit length and line settings take priority. |
+| `axis.text.orientation` | `NULL` | Type, units and accepted forms: see this API argument contract at right | One of "horizontal", "parallel", "perpendicular", or a finite numeric angle. In circular layouts, parallel labels follow the circle glyph by glyph. Horizontal and numeric orientations retain straight text. |
+| `axis.text.check.overlap` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Whether overlapping axis labels are hidden. Defaults to TRUE. Automatically positioned circular parallel labels, including combined seam strings, can receive bounded inward or outward radial clearance around feature polygons and fixed annotation-leader roots. Internal and exterior annotation leaders route around the resolved axis text; mutable shoulders do not feed back into axis placement. Automatic strings stay in a near- backbone channel. Origin/end strings take priority and remain visible; an automatic endpoint may use either readable side of its tick, with a bounded tangential gap up to 4 mm, to clear fixed feature exit rays. Unresolved endpoint clearance is reported as endpoint_unresolved. Overlap checking may hide ordinary intermediate text while keeping its tick, with hidden_near_backbone in diagnostics. Explicit axis.text.offset values and explicit scale breaks stay fixed. |
+| `seq.label` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Text elements for sequence, gene, feature, restriction-site and circular centre labels. |
+| `gene.label` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Text elements for sequence, gene, feature, restriction-site and circular centre labels. |
+| `gene.label.segment` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Line elements for gene, feature and restriction-site leader lines. |
+| `feature.label` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Text elements for sequence, gene, feature, restriction-site and circular centre labels. |
+| `feature.label.segment` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Line elements for gene, feature and restriction-site leader lines. |
+| `restriction.label` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Text elements for sequence, gene, feature, restriction-site and circular centre labels. |
+| `restriction.label.segment` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Line elements for gene, feature and restriction-site leader lines. |
+| `seq.center.label` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Text elements for sequence, gene, feature, restriction-site and circular centre labels. |
+| `seq.center.name` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Text elements for sequence, gene, feature, restriction-site and circular centre labels. |
+| `seq.center.length` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Text elements for sequence, gene, feature, restriction-site and circular centre labels. |
+| `legend.seq` | `NULL` | Type, units and accepted forms: see this API argument contract at right | NULL to show and inherit common settings, or ggplot2::element_blank() to hide every guide for that role. |
+| `legend.seq.position` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role guide positions. |
+| `legend.seq.direction` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role directions. |
+| `legend.seq.background` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role backgrounds. |
+| `legend.seq.key` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role key elements. |
+| `legend.seq.key.size` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
+| `legend.seq.key.width` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
+| `legend.seq.key.height` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
+| `legend.seq.text` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role text elements. |
+| `legend.seq.text.position` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role text positions. |
+| `legend.seq.title` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role title elements. |
+| `legend.seq.title.position` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role title positions. |
+| `legend.seq.margin` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role margins. |
+| `legend.seq.spacing` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role spacing. |
+| `legend.link` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Point-link guide appearance; follows the same role-specific rules. |
+| `legend.link.position` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Point-link guide appearance; follows the same role-specific rules. |
+| `legend.link.direction` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Point-link guide appearance; follows the same role-specific rules. |
+| `legend.link.background` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Point-link guide appearance; follows the same role-specific rules. |
+| `legend.link.key` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Point-link guide appearance; follows the same role-specific rules. |
+| `legend.link.key.size` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Point-link guide appearance; follows the same role-specific rules. |
+| `legend.link.key.width` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Point-link guide appearance; follows the same role-specific rules. |
+| `legend.link.key.height` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Point-link guide appearance; follows the same role-specific rules. |
+| `legend.link.text` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Point-link guide appearance; follows the same role-specific rules. |
+| `legend.link.text.position` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Point-link guide appearance; follows the same role-specific rules. |
+| `legend.link.title` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Point-link guide appearance; follows the same role-specific rules. |
+| `legend.link.title.position` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Point-link guide appearance; follows the same role-specific rules. |
+| `legend.link.margin` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Point-link guide appearance; follows the same role-specific rules. |
+| `legend.link.spacing` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Point-link guide appearance; follows the same role-specific rules. |
+| `legend.ribbon` | `NULL` | Type, units and accepted forms: see this API argument contract at right | NULL to show and inherit common settings, or ggplot2::element_blank() to hide every guide for that role. |
+| `legend.ribbon.position` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role guide positions. |
+| `legend.ribbon.direction` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role directions. |
+| `legend.ribbon.background` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role backgrounds. |
+| `legend.ribbon.key` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role key elements. |
+| `legend.ribbon.key.size` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
+| `legend.ribbon.key.width` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
+| `legend.ribbon.key.height` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
+| `legend.ribbon.text` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role text elements. |
+| `legend.ribbon.text.position` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role text positions. |
+| `legend.ribbon.title` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role title elements. |
+| `legend.ribbon.title.position` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role title positions. |
+| `legend.ribbon.margin` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role margins. |
+| `legend.ribbon.spacing` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role spacing. |
+| `legend.ribbon.ticks` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Ribbon colourbar lines. |
+| `legend.ribbon.ticks.length` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Ribbon colourbar tick length. |
+| `legend.ribbon.axis.line` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Ribbon colourbar lines. |
+| `legend.gene` | `NULL` | Type, units and accepted forms: see this API argument contract at right | NULL to show and inherit common settings, or ggplot2::element_blank() to hide every guide for that role. |
+| `legend.gene.position` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role guide positions. |
+| `legend.gene.direction` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role directions. |
+| `legend.gene.background` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role backgrounds. |
+| `legend.gene.key` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role key elements. |
+| `legend.gene.key.size` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
+| `legend.gene.key.width` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
+| `legend.gene.key.height` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
+| `legend.gene.text` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role text elements. |
+| `legend.gene.text.position` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role text positions. |
+| `legend.gene.title` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role title elements. |
+| `legend.gene.title.position` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role title positions. |
+| `legend.gene.margin` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role margins. |
+| `legend.gene.spacing` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role spacing. |
+| `legend.feature` | `NULL` | Type, units and accepted forms: see this API argument contract at right | NULL to show and inherit common settings, or ggplot2::element_blank() to hide every guide for that role. |
+| `legend.feature.position` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role guide positions. |
+| `legend.feature.direction` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role directions. |
+| `legend.feature.background` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role backgrounds. |
+| `legend.feature.key` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role key elements. |
+| `legend.feature.key.size` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
+| `legend.feature.key.width` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
+| `legend.feature.key.height` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
+| `legend.feature.text` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role text elements. |
+| `legend.feature.text.position` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role text positions. |
+| `legend.feature.title` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role title elements. |
+| `legend.feature.title.position` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role title positions. |
+| `legend.feature.margin` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role margins. |
+| `legend.feature.spacing` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role spacing. |
+| `legend.region` | `NULL` | Type, units and accepted forms: see this API argument contract at right | NULL to show and inherit common settings, or ggplot2::element_blank() to hide every guide for that role. |
+| `legend.region.position` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role guide positions. |
+| `legend.region.direction` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role directions. |
+| `legend.region.background` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role backgrounds. |
+| `legend.region.key` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role key elements. |
+| `legend.region.key.size` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
+| `legend.region.key.width` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
+| `legend.region.key.height` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
+| `legend.region.text` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role text elements. |
+| `legend.region.text.position` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role text positions. |
+| `legend.region.title` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role title elements. |
+| `legend.region.title.position` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role title positions. |
+| `legend.region.margin` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role margins. |
+| `legend.region.spacing` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role spacing. |
+| `...` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Standard ggplot2 theme arguments, including common text, plot and legend settings. Common legend settings also supply role inheritance. Removed underscore-style arguments produce a migration error. |
 
 </details>
 
@@ -1954,115 +1954,115 @@ Start with the [learning overview](learn.html#tasks). Lessons compare important 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `axis` | `NULL` | Nullable R object; type/inheritance below | NULL to show automatic sequence axes, or ggplot2::element_blank() to hide the complete axis decoration. |
-| `axis.line` | `NULL` | Nullable R object; type/inheritance below | Axis line elements. |
-| `axis.ticks` | `NULL` | Nullable R object; type/inheritance below | Axis line elements. |
-| `axis.minor.ticks` | `NULL` | Nullable R object; type/inheritance below | Axis line elements. |
-| `axis.text` | `NULL` | Nullable R object; type/inheritance below | Axis text element. |
-| `axis.gap` | `NULL` | Nullable R object; type/inheritance below | Scalar grid::unit() objects controlling physical axis spacing. A negative axis.gap places the circular axis inside the backbone; a positive value places it outside. Zero attaches ticks to the inner backbone edge and is the circular default, including the plasmid preset. Circular major/minor tick lengths default to 1.5/0.7 mm, or 2.2/0.8 mm with the plasmid preset. Their default line widths are 0.45/0.3 mm, or 0.6/0.35 mm with that preset. Explicit length and line settings take priority. |
-| `axis.ticks.length` | `NULL` | Nullable R object; type/inheritance below | Scalar grid::unit() objects controlling physical axis spacing. A negative axis.gap places the circular axis inside the backbone; a positive value places it outside. Zero attaches ticks to the inner backbone edge and is the circular default, including the plasmid preset. Circular major/minor tick lengths default to 1.5/0.7 mm, or 2.2/0.8 mm with the plasmid preset. Their default line widths are 0.45/0.3 mm, or 0.6/0.35 mm with that preset. Explicit length and line settings take priority. |
-| `axis.minor.ticks.length` | `NULL` | Nullable R object; type/inheritance below | Scalar grid::unit() objects controlling physical axis spacing. A negative axis.gap places the circular axis inside the backbone; a positive value places it outside. Zero attaches ticks to the inner backbone edge and is the circular default, including the plasmid preset. Circular major/minor tick lengths default to 1.5/0.7 mm, or 2.2/0.8 mm with the plasmid preset. Their default line widths are 0.45/0.3 mm, or 0.6/0.35 mm with that preset. Explicit length and line settings take priority. |
-| `axis.text.offset` | `NULL` | Nullable R object; type/inheritance below | Scalar grid::unit() objects controlling physical axis spacing. A negative axis.gap places the circular axis inside the backbone; a positive value places it outside. Zero attaches ticks to the inner backbone edge and is the circular default, including the plasmid preset. Circular major/minor tick lengths default to 1.5/0.7 mm, or 2.2/0.8 mm with the plasmid preset. Their default line widths are 0.45/0.3 mm, or 0.6/0.35 mm with that preset. Explicit length and line settings take priority. |
-| `axis.text.orientation` | `NULL` | Nullable R object; type/inheritance below | One of "horizontal", "parallel", "perpendicular", or a finite numeric angle. In circular layouts, parallel labels follow the circle glyph by glyph. Horizontal and numeric orientations retain straight text. |
-| `axis.text.check.overlap` | `NULL` | Nullable R object; type/inheritance below | Whether overlapping axis labels are hidden. Defaults to TRUE. Automatically positioned circular parallel labels, including combined seam strings, can receive bounded inward or outward radial clearance around feature polygons and fixed annotation-leader roots. Internal and exterior annotation leaders route around the resolved axis text; mutable shoulders do not feed back into axis placement. Automatic strings stay in a near- backbone channel. Origin/end strings take priority and remain visible; an automatic endpoint may use either readable side of its tick, with a bounded tangential gap up to 4 mm, to clear fixed feature exit rays. Unresolved endpoint clearance is reported as endpoint_unresolved. Overlap checking may hide ordinary intermediate text while keeping its tick, with hidden_near_backbone in diagnostics. Explicit axis.text.offset values and explicit scale breaks stay fixed. |
-| `seq.label` | `NULL` | Nullable R object; type/inheritance below | Text elements for sequence, gene, feature, restriction-site and circular centre labels. |
-| `gene.label` | `NULL` | Nullable R object; type/inheritance below | Text elements for sequence, gene, feature, restriction-site and circular centre labels. |
-| `gene.label.segment` | `NULL` | Nullable R object; type/inheritance below | Line elements for gene, feature and restriction-site leader lines. |
-| `feature.label` | `NULL` | Nullable R object; type/inheritance below | Text elements for sequence, gene, feature, restriction-site and circular centre labels. |
-| `feature.label.segment` | `NULL` | Nullable R object; type/inheritance below | Line elements for gene, feature and restriction-site leader lines. |
-| `restriction.label` | `NULL` | Nullable R object; type/inheritance below | Text elements for sequence, gene, feature, restriction-site and circular centre labels. |
-| `restriction.label.segment` | `NULL` | Nullable R object; type/inheritance below | Line elements for gene, feature and restriction-site leader lines. |
-| `seq.center.label` | `NULL` | Nullable R object; type/inheritance below | Text elements for sequence, gene, feature, restriction-site and circular centre labels. |
-| `seq.center.name` | `NULL` | Nullable R object; type/inheritance below | Text elements for sequence, gene, feature, restriction-site and circular centre labels. |
-| `seq.center.length` | `NULL` | Nullable R object; type/inheritance below | Text elements for sequence, gene, feature, restriction-site and circular centre labels. |
-| `legend.seq` | `NULL` | Nullable R object; type/inheritance below | NULL to show and inherit common settings, or ggplot2::element_blank() to hide every guide for that role. |
-| `legend.seq.position` | `NULL` | Nullable R object; type/inheritance below | Per-role guide positions. |
-| `legend.seq.direction` | `NULL` | Nullable R object; type/inheritance below | Per-role directions. |
-| `legend.seq.background` | `NULL` | Nullable R object; type/inheritance below | Per-role backgrounds. |
-| `legend.seq.key` | `NULL` | Nullable R object; type/inheritance below | Per-role key elements. |
-| `legend.seq.key.size` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
-| `legend.seq.key.width` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
-| `legend.seq.key.height` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
-| `legend.seq.text` | `NULL` | Nullable R object; type/inheritance below | Per-role text elements. |
-| `legend.seq.text.position` | `NULL` | Nullable R object; type/inheritance below | Per-role text positions. |
-| `legend.seq.title` | `NULL` | Nullable R object; type/inheritance below | Per-role title elements. |
-| `legend.seq.title.position` | `NULL` | Nullable R object; type/inheritance below | Per-role title positions. |
-| `legend.seq.margin` | `NULL` | Nullable R object; type/inheritance below | Per-role margins. |
-| `legend.seq.spacing` | `NULL` | Nullable R object; type/inheritance below | Per-role spacing. |
-| `legend.link` | `NULL` | Nullable R object; type/inheritance below | Point-link guide appearance; follows the same role-specific rules. |
-| `legend.link.position` | `NULL` | Nullable R object; type/inheritance below | Point-link guide appearance; follows the same role-specific rules. |
-| `legend.link.direction` | `NULL` | Nullable R object; type/inheritance below | Point-link guide appearance; follows the same role-specific rules. |
-| `legend.link.background` | `NULL` | Nullable R object; type/inheritance below | Point-link guide appearance; follows the same role-specific rules. |
-| `legend.link.key` | `NULL` | Nullable R object; type/inheritance below | Point-link guide appearance; follows the same role-specific rules. |
-| `legend.link.key.size` | `NULL` | Nullable R object; type/inheritance below | Point-link guide appearance; follows the same role-specific rules. |
-| `legend.link.key.width` | `NULL` | Nullable R object; type/inheritance below | Point-link guide appearance; follows the same role-specific rules. |
-| `legend.link.key.height` | `NULL` | Nullable R object; type/inheritance below | Point-link guide appearance; follows the same role-specific rules. |
-| `legend.link.text` | `NULL` | Nullable R object; type/inheritance below | Point-link guide appearance; follows the same role-specific rules. |
-| `legend.link.text.position` | `NULL` | Nullable R object; type/inheritance below | Point-link guide appearance; follows the same role-specific rules. |
-| `legend.link.title` | `NULL` | Nullable R object; type/inheritance below | Point-link guide appearance; follows the same role-specific rules. |
-| `legend.link.title.position` | `NULL` | Nullable R object; type/inheritance below | Point-link guide appearance; follows the same role-specific rules. |
-| `legend.link.margin` | `NULL` | Nullable R object; type/inheritance below | Point-link guide appearance; follows the same role-specific rules. |
-| `legend.link.spacing` | `NULL` | Nullable R object; type/inheritance below | Point-link guide appearance; follows the same role-specific rules. |
-| `legend.ribbon` | `NULL` | Nullable R object; type/inheritance below | NULL to show and inherit common settings, or ggplot2::element_blank() to hide every guide for that role. |
-| `legend.ribbon.position` | `NULL` | Nullable R object; type/inheritance below | Per-role guide positions. |
-| `legend.ribbon.direction` | `NULL` | Nullable R object; type/inheritance below | Per-role directions. |
-| `legend.ribbon.background` | `NULL` | Nullable R object; type/inheritance below | Per-role backgrounds. |
-| `legend.ribbon.key` | `NULL` | Nullable R object; type/inheritance below | Per-role key elements. |
-| `legend.ribbon.key.size` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
-| `legend.ribbon.key.width` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
-| `legend.ribbon.key.height` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
-| `legend.ribbon.text` | `NULL` | Nullable R object; type/inheritance below | Per-role text elements. |
-| `legend.ribbon.text.position` | `NULL` | Nullable R object; type/inheritance below | Per-role text positions. |
-| `legend.ribbon.title` | `NULL` | Nullable R object; type/inheritance below | Per-role title elements. |
-| `legend.ribbon.title.position` | `NULL` | Nullable R object; type/inheritance below | Per-role title positions. |
-| `legend.ribbon.margin` | `NULL` | Nullable R object; type/inheritance below | Per-role margins. |
-| `legend.ribbon.spacing` | `NULL` | Nullable R object; type/inheritance below | Per-role spacing. |
-| `legend.ribbon.ticks` | `NULL` | Nullable R object; type/inheritance below | Ribbon colourbar lines. |
-| `legend.ribbon.ticks.length` | `NULL` | Nullable R object; type/inheritance below | Ribbon colourbar tick length. |
-| `legend.ribbon.axis.line` | `NULL` | Nullable R object; type/inheritance below | Ribbon colourbar lines. |
-| `legend.gene` | `NULL` | Nullable R object; type/inheritance below | NULL to show and inherit common settings, or ggplot2::element_blank() to hide every guide for that role. |
-| `legend.gene.position` | `NULL` | Nullable R object; type/inheritance below | Per-role guide positions. |
-| `legend.gene.direction` | `NULL` | Nullable R object; type/inheritance below | Per-role directions. |
-| `legend.gene.background` | `NULL` | Nullable R object; type/inheritance below | Per-role backgrounds. |
-| `legend.gene.key` | `NULL` | Nullable R object; type/inheritance below | Per-role key elements. |
-| `legend.gene.key.size` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
-| `legend.gene.key.width` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
-| `legend.gene.key.height` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
-| `legend.gene.text` | `NULL` | Nullable R object; type/inheritance below | Per-role text elements. |
-| `legend.gene.text.position` | `NULL` | Nullable R object; type/inheritance below | Per-role text positions. |
-| `legend.gene.title` | `NULL` | Nullable R object; type/inheritance below | Per-role title elements. |
-| `legend.gene.title.position` | `NULL` | Nullable R object; type/inheritance below | Per-role title positions. |
-| `legend.gene.margin` | `NULL` | Nullable R object; type/inheritance below | Per-role margins. |
-| `legend.gene.spacing` | `NULL` | Nullable R object; type/inheritance below | Per-role spacing. |
-| `legend.feature` | `NULL` | Nullable R object; type/inheritance below | NULL to show and inherit common settings, or ggplot2::element_blank() to hide every guide for that role. |
-| `legend.feature.position` | `NULL` | Nullable R object; type/inheritance below | Per-role guide positions. |
-| `legend.feature.direction` | `NULL` | Nullable R object; type/inheritance below | Per-role directions. |
-| `legend.feature.background` | `NULL` | Nullable R object; type/inheritance below | Per-role backgrounds. |
-| `legend.feature.key` | `NULL` | Nullable R object; type/inheritance below | Per-role key elements. |
-| `legend.feature.key.size` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
-| `legend.feature.key.width` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
-| `legend.feature.key.height` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
-| `legend.feature.text` | `NULL` | Nullable R object; type/inheritance below | Per-role text elements. |
-| `legend.feature.text.position` | `NULL` | Nullable R object; type/inheritance below | Per-role text positions. |
-| `legend.feature.title` | `NULL` | Nullable R object; type/inheritance below | Per-role title elements. |
-| `legend.feature.title.position` | `NULL` | Nullable R object; type/inheritance below | Per-role title positions. |
-| `legend.feature.margin` | `NULL` | Nullable R object; type/inheritance below | Per-role margins. |
-| `legend.feature.spacing` | `NULL` | Nullable R object; type/inheritance below | Per-role spacing. |
-| `legend.region` | `NULL` | Nullable R object; type/inheritance below | NULL to show and inherit common settings, or ggplot2::element_blank() to hide every guide for that role. |
-| `legend.region.position` | `NULL` | Nullable R object; type/inheritance below | Per-role guide positions. |
-| `legend.region.direction` | `NULL` | Nullable R object; type/inheritance below | Per-role directions. |
-| `legend.region.background` | `NULL` | Nullable R object; type/inheritance below | Per-role backgrounds. |
-| `legend.region.key` | `NULL` | Nullable R object; type/inheritance below | Per-role key elements. |
-| `legend.region.key.size` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
-| `legend.region.key.width` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
-| `legend.region.key.height` | `NULL` | Nullable R object; type/inheritance below | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
-| `legend.region.text` | `NULL` | Nullable R object; type/inheritance below | Per-role text elements. |
-| `legend.region.text.position` | `NULL` | Nullable R object; type/inheritance below | Per-role text positions. |
-| `legend.region.title` | `NULL` | Nullable R object; type/inheritance below | Per-role title elements. |
-| `legend.region.title.position` | `NULL` | Nullable R object; type/inheritance below | Per-role title positions. |
-| `legend.region.margin` | `NULL` | Nullable R object; type/inheritance below | Per-role margins. |
-| `legend.region.spacing` | `NULL` | Nullable R object; type/inheritance below | Per-role spacing. |
-| `...` | `No formal default; requiredness follows the contract` | Forwarded arguments | Standard ggplot2 theme arguments, including common text, plot and legend settings. Common legend settings also supply role inheritance. Removed underscore-style arguments produce a migration error. |
+| `axis` | `NULL` | Type, units and accepted forms: see this API argument contract at right | NULL to show automatic sequence axes, or ggplot2::element_blank() to hide the complete axis decoration. |
+| `axis.line` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Axis line elements. |
+| `axis.ticks` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Axis line elements. |
+| `axis.minor.ticks` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Axis line elements. |
+| `axis.text` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Axis text element. |
+| `axis.gap` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Scalar grid::unit() objects controlling physical axis spacing. A negative axis.gap places the circular axis inside the backbone; a positive value places it outside. Zero attaches ticks to the inner backbone edge and is the circular default, including the plasmid preset. Circular major/minor tick lengths default to 1.5/0.7 mm, or 2.2/0.8 mm with the plasmid preset. Their default line widths are 0.45/0.3 mm, or 0.6/0.35 mm with that preset. Explicit length and line settings take priority. |
+| `axis.ticks.length` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Scalar grid::unit() objects controlling physical axis spacing. A negative axis.gap places the circular axis inside the backbone; a positive value places it outside. Zero attaches ticks to the inner backbone edge and is the circular default, including the plasmid preset. Circular major/minor tick lengths default to 1.5/0.7 mm, or 2.2/0.8 mm with the plasmid preset. Their default line widths are 0.45/0.3 mm, or 0.6/0.35 mm with that preset. Explicit length and line settings take priority. |
+| `axis.minor.ticks.length` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Scalar grid::unit() objects controlling physical axis spacing. A negative axis.gap places the circular axis inside the backbone; a positive value places it outside. Zero attaches ticks to the inner backbone edge and is the circular default, including the plasmid preset. Circular major/minor tick lengths default to 1.5/0.7 mm, or 2.2/0.8 mm with the plasmid preset. Their default line widths are 0.45/0.3 mm, or 0.6/0.35 mm with that preset. Explicit length and line settings take priority. |
+| `axis.text.offset` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Scalar grid::unit() objects controlling physical axis spacing. A negative axis.gap places the circular axis inside the backbone; a positive value places it outside. Zero attaches ticks to the inner backbone edge and is the circular default, including the plasmid preset. Circular major/minor tick lengths default to 1.5/0.7 mm, or 2.2/0.8 mm with the plasmid preset. Their default line widths are 0.45/0.3 mm, or 0.6/0.35 mm with that preset. Explicit length and line settings take priority. |
+| `axis.text.orientation` | `NULL` | Type, units and accepted forms: see this API argument contract at right | One of "horizontal", "parallel", "perpendicular", or a finite numeric angle. In circular layouts, parallel labels follow the circle glyph by glyph. Horizontal and numeric orientations retain straight text. |
+| `axis.text.check.overlap` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Whether overlapping axis labels are hidden. Defaults to TRUE. Automatically positioned circular parallel labels, including combined seam strings, can receive bounded inward or outward radial clearance around feature polygons and fixed annotation-leader roots. Internal and exterior annotation leaders route around the resolved axis text; mutable shoulders do not feed back into axis placement. Automatic strings stay in a near- backbone channel. Origin/end strings take priority and remain visible; an automatic endpoint may use either readable side of its tick, with a bounded tangential gap up to 4 mm, to clear fixed feature exit rays. Unresolved endpoint clearance is reported as endpoint_unresolved. Overlap checking may hide ordinary intermediate text while keeping its tick, with hidden_near_backbone in diagnostics. Explicit axis.text.offset values and explicit scale breaks stay fixed. |
+| `seq.label` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Text elements for sequence, gene, feature, restriction-site and circular centre labels. |
+| `gene.label` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Text elements for sequence, gene, feature, restriction-site and circular centre labels. |
+| `gene.label.segment` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Line elements for gene, feature and restriction-site leader lines. |
+| `feature.label` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Text elements for sequence, gene, feature, restriction-site and circular centre labels. |
+| `feature.label.segment` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Line elements for gene, feature and restriction-site leader lines. |
+| `restriction.label` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Text elements for sequence, gene, feature, restriction-site and circular centre labels. |
+| `restriction.label.segment` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Line elements for gene, feature and restriction-site leader lines. |
+| `seq.center.label` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Text elements for sequence, gene, feature, restriction-site and circular centre labels. |
+| `seq.center.name` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Text elements for sequence, gene, feature, restriction-site and circular centre labels. |
+| `seq.center.length` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Text elements for sequence, gene, feature, restriction-site and circular centre labels. |
+| `legend.seq` | `NULL` | Type, units and accepted forms: see this API argument contract at right | NULL to show and inherit common settings, or ggplot2::element_blank() to hide every guide for that role. |
+| `legend.seq.position` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role guide positions. |
+| `legend.seq.direction` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role directions. |
+| `legend.seq.background` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role backgrounds. |
+| `legend.seq.key` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role key elements. |
+| `legend.seq.key.size` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
+| `legend.seq.key.width` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
+| `legend.seq.key.height` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
+| `legend.seq.text` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role text elements. |
+| `legend.seq.text.position` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role text positions. |
+| `legend.seq.title` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role title elements. |
+| `legend.seq.title.position` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role title positions. |
+| `legend.seq.margin` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role margins. |
+| `legend.seq.spacing` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role spacing. |
+| `legend.link` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Point-link guide appearance; follows the same role-specific rules. |
+| `legend.link.position` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Point-link guide appearance; follows the same role-specific rules. |
+| `legend.link.direction` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Point-link guide appearance; follows the same role-specific rules. |
+| `legend.link.background` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Point-link guide appearance; follows the same role-specific rules. |
+| `legend.link.key` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Point-link guide appearance; follows the same role-specific rules. |
+| `legend.link.key.size` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Point-link guide appearance; follows the same role-specific rules. |
+| `legend.link.key.width` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Point-link guide appearance; follows the same role-specific rules. |
+| `legend.link.key.height` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Point-link guide appearance; follows the same role-specific rules. |
+| `legend.link.text` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Point-link guide appearance; follows the same role-specific rules. |
+| `legend.link.text.position` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Point-link guide appearance; follows the same role-specific rules. |
+| `legend.link.title` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Point-link guide appearance; follows the same role-specific rules. |
+| `legend.link.title.position` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Point-link guide appearance; follows the same role-specific rules. |
+| `legend.link.margin` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Point-link guide appearance; follows the same role-specific rules. |
+| `legend.link.spacing` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Point-link guide appearance; follows the same role-specific rules. |
+| `legend.ribbon` | `NULL` | Type, units and accepted forms: see this API argument contract at right | NULL to show and inherit common settings, or ggplot2::element_blank() to hide every guide for that role. |
+| `legend.ribbon.position` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role guide positions. |
+| `legend.ribbon.direction` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role directions. |
+| `legend.ribbon.background` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role backgrounds. |
+| `legend.ribbon.key` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role key elements. |
+| `legend.ribbon.key.size` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
+| `legend.ribbon.key.width` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
+| `legend.ribbon.key.height` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
+| `legend.ribbon.text` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role text elements. |
+| `legend.ribbon.text.position` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role text positions. |
+| `legend.ribbon.title` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role title elements. |
+| `legend.ribbon.title.position` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role title positions. |
+| `legend.ribbon.margin` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role margins. |
+| `legend.ribbon.spacing` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role spacing. |
+| `legend.ribbon.ticks` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Ribbon colourbar lines. |
+| `legend.ribbon.ticks.length` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Ribbon colourbar tick length. |
+| `legend.ribbon.axis.line` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Ribbon colourbar lines. |
+| `legend.gene` | `NULL` | Type, units and accepted forms: see this API argument contract at right | NULL to show and inherit common settings, or ggplot2::element_blank() to hide every guide for that role. |
+| `legend.gene.position` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role guide positions. |
+| `legend.gene.direction` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role directions. |
+| `legend.gene.background` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role backgrounds. |
+| `legend.gene.key` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role key elements. |
+| `legend.gene.key.size` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
+| `legend.gene.key.width` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
+| `legend.gene.key.height` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
+| `legend.gene.text` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role text elements. |
+| `legend.gene.text.position` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role text positions. |
+| `legend.gene.title` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role title elements. |
+| `legend.gene.title.position` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role title positions. |
+| `legend.gene.margin` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role margins. |
+| `legend.gene.spacing` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role spacing. |
+| `legend.feature` | `NULL` | Type, units and accepted forms: see this API argument contract at right | NULL to show and inherit common settings, or ggplot2::element_blank() to hide every guide for that role. |
+| `legend.feature.position` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role guide positions. |
+| `legend.feature.direction` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role directions. |
+| `legend.feature.background` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role backgrounds. |
+| `legend.feature.key` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role key elements. |
+| `legend.feature.key.size` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
+| `legend.feature.key.width` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
+| `legend.feature.key.height` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
+| `legend.feature.text` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role text elements. |
+| `legend.feature.text.position` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role text positions. |
+| `legend.feature.title` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role title elements. |
+| `legend.feature.title.position` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role title positions. |
+| `legend.feature.margin` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role margins. |
+| `legend.feature.spacing` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role spacing. |
+| `legend.region` | `NULL` | Type, units and accepted forms: see this API argument contract at right | NULL to show and inherit common settings, or ggplot2::element_blank() to hide every guide for that role. |
+| `legend.region.position` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role guide positions. |
+| `legend.region.direction` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role directions. |
+| `legend.region.background` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role backgrounds. |
+| `legend.region.key` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role key elements. |
+| `legend.region.key.size` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
+| `legend.region.key.width` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
+| `legend.region.key.height` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role key dimensions. Automatic Identity rulers measure their boundary labels independently of generic legend swatch sizes. Set a Ribbon-specific dimension or an explicit guide for a manual ruler length. |
+| `legend.region.text` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role text elements. |
+| `legend.region.text.position` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role text positions. |
+| `legend.region.title` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role title elements. |
+| `legend.region.title.position` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role title positions. |
+| `legend.region.margin` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role margins. |
+| `legend.region.spacing` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Per-role spacing. |
+| `...` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Standard ggplot2 theme arguments, including common text, plot and legend settings. Common legend settings also supply role inheritance. Removed underscore-style arguments produce a migration error. |
 
 </details>
 
@@ -2078,10 +2078,10 @@ Start with the [learning overview](learn.html#tasks). Lessons compare important 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `mode` | `c("adaptive", "fixed", "scale")` | Vector; choices versus multiple selection below | One of adaptive, fixed, or scale. |
-| `reference_size` | `c(8, 6)` | Vector; choices versus multiple selection below | Positive width and height in inches. Scale modes use the fourth root of target/reference area, with a bounded text multiplier. |
-| `text_scale_range` | `c(0.85, 1.35)` | Vector; choices versus multiple selection below | Lower and upper positive text multipliers containing 1. Lines and default spacing use the square root of the text multiplier. |
-| `min_text_size` | `2.5` | Numeric/integer; range in description | Lower bound in mm for automatically reduced theme text. Defaults already smaller than this value are preserved rather than enlarged. Explicit text sizes and existing label-fit policies keep their own contracts. |
+| `mode` | `c("adaptive", "fixed", "scale")` | Type, units and accepted forms: see this API argument contract at right | One of adaptive, fixed, or scale. |
+| `reference_size` | `c(8, 6)` | Type, units and accepted forms: see this API argument contract at right | Positive width and height in inches. Scale modes use the fourth root of target/reference area, with a bounded text multiplier. |
+| `text_scale_range` | `c(0.85, 1.35)` | Type, units and accepted forms: see this API argument contract at right | Lower and upper positive text multipliers containing 1. Lines and default spacing use the square root of the text multiplier. |
+| `min_text_size` | `2.5` | Type, units and accepted forms: see this API argument contract at right | Lower bound in mm for automatically reduced theme text. Defaults already smaller than this value are preserved rather than enlarged. Explicit text sizes and existing label-fit policies keep their own contracts. |
 
 </details>
 
@@ -2094,10 +2094,10 @@ Start with the [learning overview](learn.html#tasks). Lessons compare important 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `sequences` | `No formal default; requiredness follows the contract` | R object; constraints below | Named character vector of aligned strings, or a data frame with unique accver and character sequence. All strings must have the same positive width and each record must contain a nongap symbol. |
-| `alphabet` | `No formal default; requiredness follows the contract` | R object; constraints below | Explicit "DNA", "RNA" or "AA". IUPAC nucleotide ambiguity codes and protein ambiguity/rare-residue codes are accepted; * is accepted only for AA. The alphabet is never guessed. |
-| `source_data` | `NULL` | Nullable R object; type/inheritance below | Optional data frame with one row per alignment accver, start (first nongap source coordinate) and strand ("+" or "-"). Optional source_accver declares a different source ID; optional character sequence supplies the full forward source for verification. Coordinates must remain positive exact integers. Input metadata is retained in the ggchord_conversion attribute. |
-| `circular` | `FALSE` | Logical | Explicit logical declaration that every source is circular, default FALSE. Requires source_data with full source_length or full sequence. Coordinates wrap at that length in the declared strand direction; nongap characters may cover at most one complete tour. Adds source_circular and source_length columns. A circular plot never activates this conversion. |
+| `sequences` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Named character vector of aligned strings, or a data frame with unique accver and character sequence. All strings must have the same positive width and each record must contain a nongap symbol. |
+| `alphabet` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Explicit "DNA", "RNA" or "AA". IUPAC nucleotide ambiguity codes and protein ambiguity/rare-residue codes are accepted; * is accepted only for AA. The alphabet is never guessed. |
+| `source_data` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional data frame with one row per alignment accver, start (first nongap source coordinate) and strand ("+" or "-"). Optional source_accver declares a different source ID; optional character sequence supplies the full forward source for verification. Coordinates must remain positive exact integers. Input metadata is retained in the ggchord_conversion attribute. |
+| `circular` | `FALSE` | Type, units and accepted forms: see this API argument contract at right | Explicit logical declaration that every source is circular, default FALSE. Requires source_data with full source_length or full sequence. Coordinates wrap at that length in the declared strand direction; nongap characters may cover at most one complete tour. Adds source_circular and source_length columns. A circular plot never activates this conversion. |
 
 </details>
 
@@ -2110,8 +2110,8 @@ Start with the [learning overview](learn.html#tasks). Lessons compare important 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `x` | `No formal default; requiredness follows the contract` | R object; constraints below | A data frame or GRanges object. |
-| `mapping` | `NULL` | aes mapping | Optional named character vector mapping output roles to source columns, as in as_ggchord_seq(). |
+| `x` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | A data frame or GRanges object. |
+| `mapping` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional named character vector mapping output roles to source columns, as in as_ggchord_seq(). |
 
 </details>
 
@@ -2124,8 +2124,8 @@ Start with the [learning overview](learn.html#tasks). Lessons compare important 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `x` | `No formal default; requiredness follows the contract` | R object; constraints below | A data frame or GInteractions object. |
-| `mapping` | `NULL` | aes mapping | Optional named character vector mapping canonical link roles to source columns, as in as_ggchord_seq(). |
+| `x` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | A data frame or GInteractions object. |
+| `mapping` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional named character vector mapping canonical link roles to source columns, as in as_ggchord_seq(). |
 
 </details>
 
@@ -2138,10 +2138,10 @@ Start with the [learning overview](learn.html#tasks). Lessons compare important 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `x` | `No formal default; requiredness follows the contract` | R object; constraints below | A data frame, GRanges, Seqinfo, GInteractions, or a Biostrings XStringSet/XString object. |
-| `mapping` | `NULL` | aes mapping | Optional named character vector output_role = "input_column" for data-frame inputs. For example c(accver = "chrom", length = "size"). |
-| `lengths` | `NULL` | Nullable R object; type/inheritance below | Optional named numeric vector of known sequence lengths. Fills unknown lengths and must agree with any known source lengths. |
-| `ids` | `NULL` | Character path/identifier/vector; see constraints | Optional character vector of explicit identifiers for unnamed XStringSet/XString inputs only. Existing source names must agree. |
+| `x` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | A data frame, GRanges, Seqinfo, GInteractions, or a Biostrings XStringSet/XString object. |
+| `mapping` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional named character vector output_role = "input_column" for data-frame inputs. For example c(accver = "chrom", length = "size"). |
+| `lengths` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional named numeric vector of known sequence lengths. Fills unknown lengths and must agree with any known source lengths. |
+| `ids` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional character vector of explicit identifiers for unnamed XStringSet/XString inputs only. Existing source names must agree. |
 
 </details>
 
@@ -2154,9 +2154,9 @@ Start with the [learning overview](learn.html#tasks). Lessons compare important 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `cds_data` | `No formal default; requiredness follows the contract` | R object; constraints below | Data frame with feature_id, accver, ordered one-based inclusive start/end, strand (+/-) and GFF3 phase (0–2, numeric or literal text as returned by read_gff3()). . remains unknown; unknown initial phase requires explicit codon_start for nested CDS. If type is present, select CDS rows explicitly before building a map. Alternatively supply one row per CDS with a segments list-column and explicit initial phase or codon_start (1–3). Nested genomic pieces retain explicit segment_order when supplied and are never replaced by the parent's outer envelope. |
-| `genetic_code` | `NULL` | Nullable R object; type/inheritance below | Optional positive integer code ID, scalar or named by CDS feature_id. Must agree with a supplied genetic_code column. Missing IDs remain unknown; they do not prevent coordinate-only projection. |
-| `partial` | `c("error", "trim")` | Vector; choices versus multiple selection below | "error" (default) or explicit "trim". |
+| `cds_data` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Data frame with feature_id, accver, ordered one-based inclusive start/end, strand (+/-) and GFF3 phase (0–2, numeric or literal text as returned by read_gff3()). . remains unknown; unknown initial phase requires explicit codon_start for nested CDS. If type is present, select CDS rows explicitly before building a map. Alternatively supply one row per CDS with a segments list-column and explicit initial phase or codon_start (1–3). Nested genomic pieces retain explicit segment_order when supplied and are never replaced by the parent's outer envelope. |
+| `genetic_code` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional positive integer code ID, scalar or named by CDS feature_id. Must agree with a supplied genetic_code column. Missing IDs remain unknown; they do not prevent coordinate-only projection. |
+| `partial` | `c("error", "trim")` | Type, units and accepted forms: see this API argument contract at right | "error" (default) or explicit "trim". |
 
 </details>
 
@@ -2169,12 +2169,12 @@ Start with the [learning overview](learn.html#tasks). Lessons compare important 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `ribbon_data` | `No formal default; requiredness follows the contract` | API-specific table/supported object; see the contract | Alignment data in ggchord ribbon format. |
-| `seq_data` | `No formal default; requiredness follows the contract` | API-specific table/supported object; see the contract | Sequence data containing accver and length. |
-| `bins` | `80L` | Numeric/integer; range in description | Positive integer number of normalized midpoint bins per sequence, default 80. |
-| `min_bundle` | `2L` | Numeric/integer; range in description | Minimum number of rows required for aggregation, default 2. Smaller groups remain as individual ribbons. |
-| `weight` | `c("length", "count", "pident")` | Vector; choices versus multiple selection below | Bundle weight: "length", "count", or "pident". Identity weight is aligned length multiplied by identity proportion. |
-| `group_by` | `NULL` | Nullable R object; type/inheritance below | Optional character columns that must agree before ribbons can be bundled. |
+| `ribbon_data` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Alignment data in ggchord ribbon format. |
+| `seq_data` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Sequence data containing accver and length. |
+| `bins` | `80L` | Type, units and accepted forms: see this API argument contract at right | Positive integer number of normalized midpoint bins per sequence, default 80. |
+| `min_bundle` | `2L` | Type, units and accepted forms: see this API argument contract at right | Minimum number of rows required for aggregation, default 2. Smaller groups remain as individual ribbons. |
+| `weight` | `c("length", "count", "pident")` | Type, units and accepted forms: see this API argument contract at right | Bundle weight: "length", "count", or "pident". Identity weight is aligned length multiplied by identity proportion. |
+| `group_by` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional character columns that must agree before ribbons can be bundled. |
 
 </details>
 
@@ -2187,16 +2187,16 @@ Start with the [learning overview](learn.html#tasks). Lessons compare important 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `seq_data` | `No formal default; requiredness follows the contract` | API-specific table/supported object; see the contract | data.frame/tibble, required. Must contain accver and length; used as the coordinate reference for clipping. Reference IDs must always be non-missing, non-empty and unique, regardless of unknown_id. |
-| `ribbon_data` | `NULL` | API-specific table/supported object; see the contract | data.frame/tibble or NULL, optional. Alignment results. Other input types are rejected rather than treated as absent. |
-| `gene_data` | `NULL` | API-specific table/supported object; see the contract | data.frame/tibble or NULL, optional. Gene annotation data. Other input types are rejected rather than treated as absent. |
-| `unknown_id` | `c("drop", "error", "keep")` | Vector; choices versus multiple selection below | Character, default "drop". Policy for rows whose sequence ID in ribbon_data or gene_data is missing, empty or unknown: "drop" removes them, "error" stops with a message, "keep" leaves them unchanged. A kept row without a reference sequence is reported, but its coordinates and annotations are not cleaned and it is not guaranteed to be drawable. IDs are never guessed or replaced. Other structural checks, including finite numeric coordinates and valid gene strands, still apply. |
-| `out_of_range` | `c("clip", "drop", "error", "keep")` | Vector; choices versus multiple selection below | Character, default "clip". Policy for coordinates outside [1, sequence length]: "clip" clamps them, "drop" removes the row, "error" stops, "keep" leaves them unchanged. Coordinates are one-based inclusive, so start == end is a valid single-base interval and is retained. With "clip", intervals wholly outside their sequence are removed and reported; partially overlapping intervals retain their intersection, even a single base. |
-| `reversed_interval` | `c("sort", "drop", "error", "keep")` | Vector; choices versus multiple selection below | Character, default "sort". Policy for intervals with start > end: "sort" swaps the endpoints so the feature draws stably (the original direction is recorded in the report), "drop" removes the row, "error" stops, "keep" leaves them unchanged. |
-| `invalid_pident` | `c("clip", "drop", "error", "keep")` | Vector; choices versus multiple selection below | Character, default "clip". Policy for pident outside [0, 100]: "clip" clamps them, "drop" removes the row, "error" stops, "keep" leaves them unchanged. |
-| `empty_annotation` | `c("keep", "drop", "replace")` | Vector; choices versus multiple selection below | Character, default "keep". Policy for missing/empty anno in gene data: "replace" fills them with replacement_annotation, "drop" removes the row, "keep" leaves them unchanged. |
-| `replacement_annotation` | `"unannotated"` | Character/enum; choices below | Character, default "unannotated". Replacement annotation used when empty_annotation = "replace". |
-| `feature_data` | `NULL` | API-specific table/supported object; see the contract | Unified annotation input; mutually exclusive with gene_data. |
+| `seq_data` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | data.frame/tibble, required. Must contain accver and length; used as the coordinate reference for clipping. Reference IDs must always be non-missing, non-empty and unique, regardless of unknown_id. |
+| `ribbon_data` | `NULL` | Type, units and accepted forms: see this API argument contract at right | data.frame/tibble or NULL, optional. Alignment results. Other input types are rejected rather than treated as absent. |
+| `gene_data` | `NULL` | Type, units and accepted forms: see this API argument contract at right | data.frame/tibble or NULL, optional. Gene annotation data. Other input types are rejected rather than treated as absent. |
+| `unknown_id` | `c("drop", "error", "keep")` | Type, units and accepted forms: see this API argument contract at right | Character, default "drop". Policy for rows whose sequence ID in ribbon_data or gene_data is missing, empty or unknown: "drop" removes them, "error" stops with a message, "keep" leaves them unchanged. A kept row without a reference sequence is reported, but its coordinates and annotations are not cleaned and it is not guaranteed to be drawable. IDs are never guessed or replaced. Other structural checks, including finite numeric coordinates and valid gene strands, still apply. |
+| `out_of_range` | `c("clip", "drop", "error", "keep")` | Type, units and accepted forms: see this API argument contract at right | Character, default "clip". Policy for coordinates outside [1, sequence length]: "clip" clamps them, "drop" removes the row, "error" stops, "keep" leaves them unchanged. Coordinates are one-based inclusive, so start == end is a valid single-base interval and is retained. With "clip", intervals wholly outside their sequence are removed and reported; partially overlapping intervals retain their intersection, even a single base. |
+| `reversed_interval` | `c("sort", "drop", "error", "keep")` | Type, units and accepted forms: see this API argument contract at right | Character, default "sort". Policy for intervals with start > end: "sort" swaps the endpoints so the feature draws stably (the original direction is recorded in the report), "drop" removes the row, "error" stops, "keep" leaves them unchanged. |
+| `invalid_pident` | `c("clip", "drop", "error", "keep")` | Type, units and accepted forms: see this API argument contract at right | Character, default "clip". Policy for pident outside [0, 100]: "clip" clamps them, "drop" removes the row, "error" stops, "keep" leaves them unchanged. |
+| `empty_annotation` | `c("keep", "drop", "replace")` | Type, units and accepted forms: see this API argument contract at right | Character, default "keep". Policy for missing/empty anno in gene data: "replace" fills them with replacement_annotation, "drop" removes the row, "keep" leaves them unchanged. |
+| `replacement_annotation` | `"unannotated"` | Type, units and accepted forms: see this API argument contract at right | Character, default "unannotated". Replacement annotation used when empty_annotation = "replace". |
+| `feature_data` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Unified annotation input; mutually exclusive with gene_data. |
 
 </details>
 
@@ -2209,11 +2209,11 @@ Start with the [learning overview](learn.html#tasks). Lessons compare important 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `ribbon_data` | `No formal default; requiredness follows the contract` | API-specific table/supported object; see the contract | data.frame in ribbon_data format. |
-| `tolerance` | `0` | Numeric/integer; range in description | Numeric, default 0. Maximum absolute difference (in bp) allowed on each of qstart/qend/sstart/send for two rows to count as coordinate duplicates (used with by = "coordinates"). |
-| `by` | `c("exact", "coordinates", "overlap")` | Vector; choices versus multiple selection below | Character, default "exact". "exact" removes rows with identical pair and coordinates; "coordinates" additionally treats rows within tolerance bp as duplicates; "overlap" treats blocks whose reciprocal overlap is at least min_reciprocal_overlap on both sequences as duplicates. Each interval must meet the threshold, not only the shorter one. Opposite relative endpoint directions are kept as distinct relationships by all methods. Single-base endpoints use supplied strand/direction evidence; otherwise their direction is unknown. |
-| `keep` | `c("best_pident", "longest", "first")` | Vector; choices versus multiple selection below | Character, default "best_pident". Which representative to keep: "best_pident" (highest pident), "longest" (longest length) or "first" (first occurrence in the input). |
-| `min_reciprocal_overlap` | `0.9` | Numeric/integer; range in description | Numeric (0-1), default 0.9. Reciprocal overlap threshold used with by = "overlap". |
+| `ribbon_data` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | data.frame in ribbon_data format. |
+| `tolerance` | `0` | Type, units and accepted forms: see this API argument contract at right | Numeric, default 0. Maximum absolute difference (in bp) allowed on each of qstart/qend/sstart/send for two rows to count as coordinate duplicates (used with by = "coordinates"). |
+| `by` | `c("exact", "coordinates", "overlap")` | Type, units and accepted forms: see this API argument contract at right | Character, default "exact". "exact" removes rows with identical pair and coordinates; "coordinates" additionally treats rows within tolerance bp as duplicates; "overlap" treats blocks whose reciprocal overlap is at least min_reciprocal_overlap on both sequences as duplicates. Each interval must meet the threshold, not only the shorter one. Opposite relative endpoint directions are kept as distinct relationships by all methods. Single-base endpoints use supplied strand/direction evidence; otherwise their direction is unknown. |
+| `keep` | `c("best_pident", "longest", "first")` | Type, units and accepted forms: see this API argument contract at right | Character, default "best_pident". Which representative to keep: "best_pident" (highest pident), "longest" (longest length) or "first" (first occurrence in the input). |
+| `min_reciprocal_overlap` | `0.9` | Type, units and accepted forms: see this API argument contract at right | Numeric (0-1), default 0.9. Reciprocal overlap threshold used with by = "overlap". |
 
 </details>
 
@@ -2226,15 +2226,15 @@ Start with the [learning overview](learn.html#tasks). Lessons compare important 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `plot` | `No formal default; requiredness follows the contract` | R object; constraints below | A ggchord plot. |
-| `width` | `7` | Numeric/integer; range in description | Positive target canvas dimensions. |
-| `height` | `5` | Numeric/integer; range in description | Positive target canvas dimensions. |
-| `units` | `c("in", "cm", "mm", "px")` | Vector; choices versus multiple selection below | Dimensions in "in", "cm", "mm", or "px". |
-| `device` | `c("png", "pdf", "svg")` | Vector; choices versus multiple selection below | Target device: "png", "pdf", or "svg". It must be available in the current R environment. Only this device is inspected. |
-| `dpi` | `144` | Numeric/integer; range in description | Raster resolution; also defines pixel dimensions. |
-| `min_size` | `2` | Numeric/integer; range in description | Advisory minimum text size and line width, both in millimetres. These do not modify the supplied style. |
-| `min_linewidth` | `0.2` | Numeric/integer; range in description | Advisory minimum text size and line width, both in millimetres. These do not modify the supplied style. |
-| `colour_vision` | `FALSE` | Logical | Request optional simulated colour-vision hints. |
+| `plot` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | A ggchord plot. |
+| `width` | `7` | Type, units and accepted forms: see this API argument contract at right | Positive target canvas dimensions. |
+| `height` | `5` | Type, units and accepted forms: see this API argument contract at right | Positive target canvas dimensions. |
+| `units` | `c("in", "cm", "mm", "px")` | Type, units and accepted forms: see this API argument contract at right | Dimensions in "in", "cm", "mm", or "px". |
+| `device` | `c("png", "pdf", "svg")` | Type, units and accepted forms: see this API argument contract at right | Target device: "png", "pdf", or "svg". It must be available in the current R environment. Only this device is inspected. |
+| `dpi` | `144` | Type, units and accepted forms: see this API argument contract at right | Raster resolution; also defines pixel dimensions. |
+| `min_size` | `2` | Type, units and accepted forms: see this API argument contract at right | Advisory minimum text size and line width, both in millimetres. These do not modify the supplied style. |
+| `min_linewidth` | `0.2` | Type, units and accepted forms: see this API argument contract at right | Advisory minimum text size and line width, both in millimetres. These do not modify the supplied style. |
+| `colour_vision` | `FALSE` | Type, units and accepted forms: see this API argument contract at right | Request optional simulated colour-vision hints. |
 
 </details>
 
@@ -2247,9 +2247,9 @@ Start with the [learning overview](learn.html#tasks). Lessons compare important 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `plot` | `No formal default; requiredness follows the contract` | R object; constraints below | A Fusion object. |
-| `width` | `10` | Numeric/integer; range in description | Positive canvas dimensions in inches. |
-| `height` | `8` | Numeric/integer; range in description | Positive canvas dimensions in inches. |
+| `plot` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | A Fusion object. |
+| `width` | `10` | Type, units and accepted forms: see this API argument contract at right | Positive canvas dimensions in inches. |
+| `height` | `8` | Type, units and accepted forms: see this API argument contract at right | Positive canvas dimensions in inches. |
 
 </details>
 
@@ -2262,9 +2262,9 @@ Start with the [learning overview](learn.html#tasks). Lessons compare important 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `plot` | `No formal default; requiredness follows the contract` | R object; constraints below | A ggchord plot. |
-| `include` | `c("seq", "ribbon", "gene", "feature", "labels", "axis", "track")` | Vector; choices versus multiple selection below | Character vector selecting any of "seq", "ribbon", "gene", "feature", "labels", "alignment", "link", "restriction", "track", and "axis". Point links and restriction sites require explicit selection. Dotplots default to alignment and axis; axis_layout contains reversible axis offsets, directions and source origins. Alignment exports retain all four endpoints, layer identity and source row; omissions appear in connection_report. |
-| `original_data` | `FALSE` | Logical | Logical. Include the resolved per-layer input tables under original_data, default FALSE. |
+| `plot` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | A ggchord plot. |
+| `include` | `c("seq", "ribbon", "gene", "feature", "labels", "axis", "track")` | Type, units and accepted forms: see this API argument contract at right | Character vector selecting any of "seq", "ribbon", "gene", "feature", "labels", "alignment", "link", "restriction", "track", and "axis". Point links and restriction sites require explicit selection. Dotplots default to alignment and axis; axis_layout contains reversible axis offsets, directions and source origins. Alignment exports retain all four endpoints, layer identity and source row; omissions appear in connection_report. |
+| `original_data` | `FALSE` | Type, units and accepted forms: see this API argument contract at right | Logical. Include the resolved per-layer input tables under original_data, default FALSE. |
 
 </details>
 
@@ -2277,18 +2277,18 @@ Start with the [learning overview](learn.html#tasks). Lessons compare important 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `ribbon_data` | `No formal default; requiredness follows the contract` | API-specific table/supported object; see the contract | data.frame with at least qaccver and saccver columns (normally the full ribbon_data format). |
-| `seq_ids` | `NULL` | Nullable R object; type/inheritance below | Optional character vector. Keep only rows where both the query and the subject are in seq_ids. |
-| `min_pident` | `NULL` | Nullable R object; type/inheritance below | Optional numeric. Lower/upper bounds on pident. |
-| `max_pident` | `NULL` | Nullable R object; type/inheritance below | Optional numeric. Lower/upper bounds on pident. |
-| `min_length` | `NULL` | Nullable R object; type/inheritance below | Optional numeric. Lower bound on length. |
-| `max_evalue` | `NULL` | Nullable R object; type/inheritance below | Optional numeric. Upper bound on evalue (requires an evalue column). |
-| `min_bitscore` | `NULL` | Nullable R object; type/inheritance below | Optional numeric. Lower bound on bitscore (requires a bitscore column). |
-| `min_query_coverage` | `NULL` | Nullable R object; type/inheritance below | Optional numeric (0-100). Lower bound on the query coverage. Uses the qcovs column when present; otherwise computed from qlen and the query interval (requires qlen). |
-| `min_subject_coverage` | `NULL` | Nullable R object; type/inheritance below | Optional numeric (0-100). Lower bound on the subject coverage, computed from slen and the subject interval (requires an slen column). |
-| `keep_pairs` | `NULL` | Nullable R object; type/inheritance below | Optional data.frame/list/matrix describing an undirected set of sequence pairs. A data.frame or matrix with the first two columns used as query/subject IDs, or a list of length-2 character vectors. A row is kept when its query/subject pair matches any pair in either direction. |
-| `drop_self_links` | `TRUE` | Logical | Logical, default TRUE. Remove rows where qaccver == saccver. |
-| `sort_by` | `NULL` | Nullable R object; type/inheritance below | Optional character vector of column names. Prefix a name with "-" or "desc:" for descending order (e.g. c("pident", "-evalue")). |
+| `ribbon_data` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | data.frame with at least qaccver and saccver columns (normally the full ribbon_data format). |
+| `seq_ids` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional character vector. Keep only rows where both the query and the subject are in seq_ids. |
+| `min_pident` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional numeric. Lower/upper bounds on pident. |
+| `max_pident` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional numeric. Lower/upper bounds on pident. |
+| `min_length` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional numeric. Lower bound on length. |
+| `max_evalue` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional numeric. Upper bound on evalue (requires an evalue column). |
+| `min_bitscore` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional numeric. Lower bound on bitscore (requires a bitscore column). |
+| `min_query_coverage` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional numeric (0-100). Lower bound on the query coverage. Uses the qcovs column when present; otherwise computed from qlen and the query interval (requires qlen). |
+| `min_subject_coverage` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional numeric (0-100). Lower bound on the subject coverage, computed from slen and the subject interval (requires an slen column). |
+| `keep_pairs` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional data.frame/list/matrix describing an undirected set of sequence pairs. A data.frame or matrix with the first two columns used as query/subject IDs, or a list of length-2 character vectors. A row is kept when its query/subject pair matches any pair in either direction. |
+| `drop_self_links` | `TRUE` | Type, units and accepted forms: see this API argument contract at right | Logical, default TRUE. Remove rows where qaccver == saccver. |
+| `sort_by` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional character vector of column names. Prefix a name with "-" or "desc:" for descending order (e.g. c("pident", "-evalue")). |
 
 </details>
 
@@ -2301,14 +2301,14 @@ Start with the [learning overview](learn.html#tasks). Lessons compare important 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `sites` | `No formal default; requiredness follows the contract` | R object; constraints below | Result from find_restriction_sites(). |
-| `set` | `c("all", "unique", "unique_dual", "six_plus", "unique_6plus",      "commercial", "reference")` | Vector; choices versus multiple selection below | Display preset. "reference" reuses the enzyme-set profile stored for an exactly recognized reference sequence. It errors when no such profile is available. A saved "None" profile returns no sites. |
-| `enzymes` | `NULL` | Nullable R object; type/inheritance below | Additional filters. |
-| `min_site_length` | `NULL` | Nullable R object; type/inheritance below | Additional filters. |
-| `cuts` | `NULL` | Nullable R object; type/inheritance below | Additional filters. |
-| `window` | `NULL` | Nullable R object; type/inheritance below | Additional filters. |
-| `commercial_only` | `FALSE` | Logical | Additional filters. |
-| `parent_set` | `c("all", "commercial_all", "commercial_nonredundant")` | Vector; choices versus multiple selection below | Enzyme catalogue subset. "commercial_nonredundant" keeps one stable commercial representative per equivalent recognition group and site, preferring the database's preferred enzyme when present. |
+| `sites` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Result from find_restriction_sites(). |
+| `set` | `c("all", "unique", "unique_dual", "six_plus", "unique_6plus",      "commercial", "reference")` | Type, units and accepted forms: see this API argument contract at right | Display preset. "reference" reuses the enzyme-set profile stored for an exactly recognized reference sequence. It errors when no such profile is available. A saved "None" profile returns no sites. |
+| `enzymes` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Additional filters. |
+| `min_site_length` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Additional filters. |
+| `cuts` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Additional filters. |
+| `window` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Additional filters. |
+| `commercial_only` | `FALSE` | Type, units and accepted forms: see this API argument contract at right | Additional filters. |
+| `parent_set` | `c("all", "commercial_all", "commercial_nonredundant")` | Type, units and accepted forms: see this API argument contract at right | Enzyme catalogue subset. "commercial_nonredundant" keeps one stable commercial representative per equivalent recognition group and site, preferring the database's preferred enzyme when present. |
 
 </details>
 
@@ -2321,15 +2321,15 @@ Start with the [learning overview](learn.html#tasks). Lessons compare important 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `sequence` | `No formal default; requiredness follows the contract` | Sequence object/string/complete-sequence table; see description | DNA text, a named character vector, or a data frame with accver and sequence. |
-| `database` | `NULL` | Nullable R object; type/inheritance below | Optional normalized database list or custom data frame. |
-| `types` | `NULL` | Nullable R object; type/inheritance below | Optional feature-type and feature-name/ID filters. |
-| `features` | `NULL` | Nullable R object; type/inheritance below | Optional feature-type and feature-name/ID filters. |
-| `circular` | `TRUE` | Logical | Search across the sequence origin. |
-| `mode` | `c("auto", "dna", "protein")` | Vector; choices versus multiple selection below | Matching mode. "auto" first uses curated annotations for an exactly known sequence, then follows each record's detection mode. Records marked exactProteinMatch use exact protein followed by near-exact DNA; other records use exact DNA. "protein" explicitly enables exact and approximate protein matching. |
-| `min_protein_identity` | `0.9` | Numeric/integer; range in description | Approximate protein thresholds, each one finite number in [0, 1]. |
-| `min_protein_coverage` | `0.8` | Numeric/integer; range in description | Approximate protein thresholds, each one finite number in [0, 1]. |
-| `resolve` | `c("best", "all")` | Vector; choices versus multiple selection below | Return deterministic best annotations or every candidate. |
+| `sequence` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | DNA text, a named character vector, or a data frame with accver and sequence. |
+| `database` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional normalized database list or custom data frame. |
+| `types` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional feature-type and feature-name/ID filters. |
+| `features` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional feature-type and feature-name/ID filters. |
+| `circular` | `TRUE` | Type, units and accepted forms: see this API argument contract at right | Search across the sequence origin. |
+| `mode` | `c("auto", "dna", "protein")` | Type, units and accepted forms: see this API argument contract at right | Matching mode. "auto" first uses curated annotations for an exactly known sequence, then follows each record's detection mode. Records marked exactProteinMatch use exact protein followed by near-exact DNA; other records use exact DNA. "protein" explicitly enables exact and approximate protein matching. |
+| `min_protein_identity` | `0.9` | Type, units and accepted forms: see this API argument contract at right | Approximate protein thresholds, each one finite number in [0, 1]. |
+| `min_protein_coverage` | `0.8` | Type, units and accepted forms: see this API argument contract at right | Approximate protein thresholds, each one finite number in [0, 1]. |
+| `resolve` | `c("best", "all")` | Type, units and accepted forms: see this API argument contract at right | Return deterministic best annotations or every candidate. |
 
 </details>
 
@@ -2342,11 +2342,11 @@ Start with the [learning overview](learn.html#tasks). Lessons compare important 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `seq_data` | `No formal default; requiredness follows the contract` | API-specific table/supported object; see the contract | Sequence table containing unique accver and positive integer length values. Optional genome and genome_id columns are retained in the returned windows. |
-| `feature_data` | `No formal default; requiredness follows the contract` | API-specific table/supported object; see the contract | Feature table containing feature_id, accver, start, end, and optionally strand. Missing strand means unknown. |
-| `targets` | `No formal default; requiredness follows the contract` | R object; constraints below | Non-empty character vector of distinct feature_id values. Selection is exact; no annotation text or accession versions are guessed. |
-| `upstream` | `0` | Numeric/integer; range in description | Single non-negative integer numbers of bases added before and after each target in its biological direction. |
-| `downstream` | `0` | Numeric/integer; range in description | Single non-negative integer numbers of bases added before and after each target in its biological direction. |
+| `seq_data` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Sequence table containing unique accver and positive integer length values. Optional genome and genome_id columns are retained in the returned windows. |
+| `feature_data` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Feature table containing feature_id, accver, start, end, and optionally strand. Missing strand means unknown. |
+| `targets` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Non-empty character vector of distinct feature_id values. Selection is exact; no annotation text or accession versions are guessed. |
+| `upstream` | `0` | Type, units and accepted forms: see this API argument contract at right | Single non-negative integer numbers of bases added before and after each target in its biological direction. |
+| `downstream` | `0` | Type, units and accepted forms: see this API argument contract at right | Single non-negative integer numbers of bases added before and after each target in its biological direction. |
 
 </details>
 
@@ -2359,13 +2359,13 @@ Start with the [learning overview](learn.html#tasks). Lessons compare important 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `sequence` | `No formal default; requiredness follows the contract` | Sequence object/string/complete-sequence table; see description | DNA text, a named character vector, or a data frame with accver and sequence. |
-| `primers` | `NULL` | Nullable R object; type/inheritance below | Optional custom primers with sequence and optional name and primer_id (one ID per distinct sequence), or a named character vector. |
-| `set` | `c("universal", "all", "reference")` | Vector; choices versus multiple selection below | Bundled catalogue subset. reference returns authoritative primer annotations from a recognized bundled reference plasmid. |
-| `match` | `c("exact", "three_prime")` | Vector; choices versus multiple selection below | Full exact matching or longest exact 3-prime annealing. |
-| `min_annealed_bases` | `15L` | Numeric/integer; range in description | One finite integer of at least 8, the minimum suffix length for three_prime matching. Fractional values are rejected. |
-| `circular` | `TRUE` | Logical | Allow matches to cross the sequence origin. |
-| `unique_only` | `FALSE` | Logical | Keep only primer sequences with one binding site per target. |
+| `sequence` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | DNA text, a named character vector, or a data frame with accver and sequence. |
+| `primers` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional custom primers with sequence and optional name and primer_id (one ID per distinct sequence), or a named character vector. |
+| `set` | `c("universal", "all", "reference")` | Type, units and accepted forms: see this API argument contract at right | Bundled catalogue subset. reference returns authoritative primer annotations from a recognized bundled reference plasmid. |
+| `match` | `c("exact", "three_prime")` | Type, units and accepted forms: see this API argument contract at right | Full exact matching or longest exact 3-prime annealing. |
+| `min_annealed_bases` | `15L` | Type, units and accepted forms: see this API argument contract at right | One finite integer of at least 8, the minimum suffix length for three_prime matching. Fractional values are rejected. |
+| `circular` | `TRUE` | Type, units and accepted forms: see this API argument contract at right | Allow matches to cross the sequence origin. |
+| `unique_only` | `FALSE` | Type, units and accepted forms: see this API argument contract at right | Keep only primer sequences with one binding site per target. |
 
 </details>
 
@@ -2378,12 +2378,12 @@ Start with the [learning overview](learn.html#tasks). Lessons compare important 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `sequence` | `No formal default; requiredness follows the contract` | Sequence object/string/complete-sequence table; see description | DNA text, a named character vector, or a data frame with accver and sequence. |
-| `enzymes` | `NULL` | Nullable R object; type/inheritance below | Optional enzyme names. A data frame is a compatibility spelling for patterns. |
-| `patterns` | `NULL` | Nullable R object; type/inheritance below | Optional custom definitions. |
-| `circular` | `TRUE` | Logical | Allow recognition and cleavage coordinates to wrap origin. |
-| `database` | `NULL` | Nullable R object; type/inheritance below | Optional parsed pattern database. |
-| `methylation` | `c("auto", "none", "dam_dcm")` | Vector; choices versus multiple selection below | Methylation context. "auto" uses the audited context for recognized reference plasmids and otherwise makes no blocked-site claim; "none" disables blocking; "dam_dcm" evaluates source-backed Dam/Dcm sensitivities against the supplied sequence. |
+| `sequence` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | DNA text, a named character vector, or a data frame with accver and sequence. |
+| `enzymes` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional enzyme names. A data frame is a compatibility spelling for patterns. |
+| `patterns` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional custom definitions. |
+| `circular` | `TRUE` | Type, units and accepted forms: see this API argument contract at right | Allow recognition and cleavage coordinates to wrap origin. |
+| `database` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional parsed pattern database. |
+| `methylation` | `c("auto", "none", "dam_dcm")` | Type, units and accepted forms: see this API argument contract at right | Methylation context. "auto" uses the audited context for recognized reference plasmids and otherwise makes no blocked-site claim; "none" disables blocking; "dam_dcm" evaluates source-backed Dam/Dcm sensitivities against the supplied sequence. |
 
 </details>
 
@@ -2396,13 +2396,13 @@ Start with the [learning overview](learn.html#tasks). Lessons compare important 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `seq_data` | `No formal default; requiredness follows the contract` | API-specific table/supported object; see the contract | Sequence table containing accver and length. |
-| `ribbon_data` | `NULL` | API-specific table/supported object; see the contract | Optional ggchord alignment table. |
-| `gene_data` | `NULL` | API-specific table/supported object; see the contract | Optional gene or feature table. |
-| `loci` | `No formal default; requiredness follows the contract` | Explicit window/anchor table or documented equivalent | Data frame containing accver, start, and end, and optionally locus_id. |
-| `expand` | `0` | Numeric/integer; range in description | Non-negative number of bases added on both sides, scalar or one value per locus. |
-| `boundary` | `c("trim", "drop")` | Vector; choices versus multiple selection below | Boundary policy. "trim" clips partially overlapping genes and alignments; "drop" keeps only rows fully contained in selected loci. |
-| `feature_data` | `NULL` | API-specific table/supported object; see the contract | Unified annotation input; mutually exclusive with gene_data. |
+| `seq_data` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Sequence table containing accver and length. |
+| `ribbon_data` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional ggchord alignment table. |
+| `gene_data` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional gene or feature table. |
+| `loci` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Data frame containing accver, start, and end, and optionally locus_id. |
+| `expand` | `0` | Type, units and accepted forms: see this API argument contract at right | Non-negative number of bases added on both sides, scalar or one value per locus. |
+| `boundary` | `c("trim", "drop")` | Type, units and accepted forms: see this API argument contract at right | Boundary policy. "trim" clips partially overlapping genes and alignments; "drop" keeps only rows fully contained in selected loci. |
+| `feature_data` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Unified annotation input; mutually exclusive with gene_data. |
 
 </details>
 
@@ -2415,11 +2415,11 @@ Start with the [learning overview](learn.html#tasks). Lessons compare important 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `data` | `No formal default; requiredness follows the contract` | API-specific data input; see the contract | Quantitative input table. Metadata and mapped values are retained. |
-| `seq_data` | `No formal default; requiredness follows the contract` | API-specific table/supported object; see the contract | Sequence reference table. |
-| `loci` | `No formal default; requiredness follows the contract` | Explicit window/anchor table or documented equivalent | Explicit accver, start, end and optional locus_id, as in focus_ggchord_data(). |
-| `type` | `c("point", "interval")` | Vector; choices versus multiple selection below | "point" requires pos; "interval" requires start/end. |
-| `boundary` | `c("trim", "drop")` | Vector; choices versus multiple selection below | "trim" (default) or "drop" for partly retained intervals. |
+| `data` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Quantitative input table. Metadata and mapped values are retained. |
+| `seq_data` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Sequence reference table. |
+| `loci` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Explicit accver, start, end and optional locus_id, as in focus_ggchord_data(). |
+| `type` | `c("point", "interval")` | Type, units and accepted forms: see this API argument contract at right | "point" requires pos; "interval" requires start/end. |
+| `boundary` | `c("trim", "drop")` | Type, units and accepted forms: see this API argument contract at right | "trim" (default) or "drop" for partly retained intervals. |
 
 </details>
 
@@ -2432,13 +2432,13 @@ Start with the [learning overview](learn.html#tasks). Lessons compare important 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `plot` | `No formal default; requiredness follows the contract` | R object; constraints below | An independent ggchord genomic plot, another Fusion, or a Cartesian detail from register_ggchord_alignment(). Dotplot, facets and unregistered external ggplots are not yet registered here. Character panels require explicit cross-panel fill; backbone-colour gradient is unavailable. |
-| `id` | `No formal default; requiredness follows the contract` | R object; constraints below | Unique nonempty panel name; "center" is reserved. |
-| `side` | `c("right", "top", "left", "bottom")` | Vector; choices versus multiple selection below | One of right, top, left, bottom, topright, topleft, bottomright or bottomleft (one panel per named side), or auto for a bounded clockwise perimeter layout with any number of distinct panels that fit the canvas. Auto preserves explicit sizes and all fixed allocations; unlocked default containers may adapt with a 15 mm floor. Placement does not rescale fonts or rotate the child Coord. If no placement is feasible, the build fails explicitly. |
-| `size` | `NULL` | Nullable R object; type/inheritance below | Optional fractional width and height. Out-of-frame allocations fail; overlap fails unless explicitly allowed by the composition. |
-| `box` | `NULL` | Nullable R object; type/inheritance below | Optional explicit rectangle (xmin, xmax, ymin, ymax), optionally named in any order. Numeric values are fractions of the content area after native outer plot decorations and Guides; absolute grid units retain their physical size within that same frame. Use instead of side/size/angle/distance. Out-of-frame boxes fail at build. |
-| `angle` | `NULL` | Nullable R object; type/inheritance below | Optional finite placement angle in degrees counterclockwise from the right, instead of side. Does not rotate the plot or its labels. |
-| `distance` | `NULL` | Nullable R object; type/inheritance below | Positive radial distance from the centre allocation, as a fraction of half the shorter physical allocation dimension; default .8. Angles describe physical canvas directions even on rectangular devices. The allocation must fit without implicit clamping. |
+| `plot` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | An independent ggchord genomic plot, another Fusion, or a Cartesian detail from register_ggchord_alignment(). Dotplot, facets and unregistered external ggplots are not yet registered here. Character panels require explicit cross-panel fill; backbone-colour gradient is unavailable. |
+| `id` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Unique nonempty panel name; "center" is reserved. |
+| `side` | `c("right", "top", "left", "bottom")` | Type, units and accepted forms: see this API argument contract at right | One of right, top, left, bottom, topright, topleft, bottomright or bottomleft (one panel per named side), or auto for a bounded clockwise perimeter layout with any number of distinct panels that fit the canvas. Auto preserves explicit sizes and all fixed allocations; unlocked default containers may adapt with a 15 mm floor. Placement does not rescale fonts or rotate the child Coord. If no placement is feasible, the build fails explicitly. |
+| `size` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional fractional width and height. Out-of-frame allocations fail; overlap fails unless explicitly allowed by the composition. |
+| `box` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional explicit rectangle (xmin, xmax, ymin, ymax), optionally named in any order. Numeric values are fractions of the content area after native outer plot decorations and Guides; absolute grid units retain their physical size within that same frame. Use instead of side/size/angle/distance. Out-of-frame boxes fail at build. |
+| `angle` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional finite placement angle in degrees counterclockwise from the right, instead of side. Does not rotate the plot or its labels. |
+| `distance` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Positive radial distance from the centre allocation, as a fraction of half the shorter physical allocation dimension; default .8. Angles describe physical canvas directions even on rectangular devices. The allocation must fit without implicit clamping. |
 
 </details>
 
@@ -2451,22 +2451,22 @@ Start with the [learning overview](learn.html#tasks). Lessons compare important 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `data` | `No formal default; requiredness follows the contract` | API-specific data input; see the contract | A relationship data frame, preserving original endpoints. |
-| `mapping` | `NULL` | aes mapping | Standard ggplot2 aesthetic mapping: fill, colour, alpha, linewidth and linetype. With pident and no explicit fill, Identity is mapped by default with 0/50/80/90/95/100 breaks. Composition uses ordinary scale_fill_* etc.; panel role scales remain local to each panel. |
-| `qpanel` | `NULL` | Nullable R object; type/inheritance below | Optional fixed panel IDs. Do not also supply their columns. |
-| `spanel` | `NULL` | Nullable R object; type/inheritance below | Optional fixed panel IDs. Do not also supply their columns. |
-| `gradient` | `FALSE` | Logical | Opt in to query-to-subject sequence-colour interpolation. Cannot be combined with an explicit fill or fill mapping. |
-| `tip` | `c("none", "subject")` | Vector; choices versus multiple selection below | "none" or a decorative "subject" tip. Source fronts remain exported in full even when the tip is drawn. |
-| `allow_repeated` | `FALSE` | Logical | Explicitly allow repeated source_hsp_id display. |
-| `curvature` | `0.3` | Numeric/integer; range in description | Control distance relative to endpoint separation, in [0,1]. |
-| `fill` | `NULL` | Nullable R object; type/inheritance below | Fixed styles; explicit values take priority over mappings. The default fill without pident is steelblue. |
-| `colour` | `NA` | R object; constraints below | Fixed styles; explicit values take priority over mappings. The default fill without pident is steelblue. |
-| `alpha` | `0.35` | Numeric/integer; range in description | Fixed styles; explicit values take priority over mappings. The default fill without pident is steelblue. |
-| `linewidth` | `0.25` | Numeric/integer; range in description | Fixed styles; explicit values take priority over mappings. The default fill without pident is steelblue. |
-| `linetype` | `1` | Numeric/integer; range in description | Fixed styles; explicit values take priority over mappings. The default fill without pident is steelblue. |
-| `show.legend` | `NA` | R object; constraints below | Standard ggplot2 legend selection: NA follows mappings; TRUE/FALSE or a named logical vector controls guide participation. |
-| `route` | `c("direct", "avoid", "bundle")` | Vector; choices versus multiple selection below | Default direct Bezier ribbons, or avoid for a measured obstacle route. Bundle requires an explicit route_group character column and shares a corridor for each group and ordered panel pair within the layer; every observation, source row, complete front and style remains independent. It does not aggregate evidence or imply biological flow. Avoid preserves complete interval fronts and uses a narrow polygonal corridor between them. Failure to find a clear route is explicit. |
-| `route_width` | `0.8` | Numeric/integer; range in description | Positive corridor width in mm for avoid/bundle (default .8). This is drawing width, not an alignment length or statistical weight. |
+| `data` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | A relationship data frame, preserving original endpoints. |
+| `mapping` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Standard ggplot2 aesthetic mapping: fill, colour, alpha, linewidth and linetype. With pident and no explicit fill, Identity is mapped by default with 0/50/80/90/95/100 breaks. Composition uses ordinary scale_fill_* etc.; panel role scales remain local to each panel. |
+| `qpanel` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional fixed panel IDs. Do not also supply their columns. |
+| `spanel` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional fixed panel IDs. Do not also supply their columns. |
+| `gradient` | `FALSE` | Type, units and accepted forms: see this API argument contract at right | Opt in to query-to-subject sequence-colour interpolation. Cannot be combined with an explicit fill or fill mapping. |
+| `tip` | `c("none", "subject")` | Type, units and accepted forms: see this API argument contract at right | "none" or a decorative "subject" tip. Source fronts remain exported in full even when the tip is drawn. |
+| `allow_repeated` | `FALSE` | Type, units and accepted forms: see this API argument contract at right | Explicitly allow repeated source_hsp_id display. |
+| `curvature` | `0.3` | Type, units and accepted forms: see this API argument contract at right | Control distance relative to endpoint separation, in [0,1]. |
+| `fill` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Fixed styles; explicit values take priority over mappings. The default fill without pident is steelblue. |
+| `colour` | `NA` | Type, units and accepted forms: see this API argument contract at right | Fixed styles; explicit values take priority over mappings. The default fill without pident is steelblue. |
+| `alpha` | `0.35` | Type, units and accepted forms: see this API argument contract at right | Fixed styles; explicit values take priority over mappings. The default fill without pident is steelblue. |
+| `linewidth` | `0.25` | Type, units and accepted forms: see this API argument contract at right | Fixed styles; explicit values take priority over mappings. The default fill without pident is steelblue. |
+| `linetype` | `1` | Type, units and accepted forms: see this API argument contract at right | Fixed styles; explicit values take priority over mappings. The default fill without pident is steelblue. |
+| `show.legend` | `NA` | Type, units and accepted forms: see this API argument contract at right | Standard ggplot2 legend selection: NA follows mappings; TRUE/FALSE or a named logical vector controls guide participation. |
+| `route` | `c("direct", "avoid", "bundle")` | Type, units and accepted forms: see this API argument contract at right | Default direct Bezier ribbons, or avoid for a measured obstacle route. Bundle requires an explicit route_group character column and shares a corridor for each group and ordered panel pair within the layer; every observation, source row, complete front and style remains independent. It does not aggregate evidence or imply biological flow. Avoid preserves complete interval fronts and uses a narrow polygonal corridor between them. Failure to find a clear route is explicit. |
+| `route_width` | `0.8` | Type, units and accepted forms: see this API argument contract at right | Positive corridor width in mm for avoid/bundle (default .8). This is drawing width, not an alignment length or statistical weight. |
 
 </details>
 
@@ -2479,8 +2479,8 @@ Start with the [learning overview](learn.html#tasks). Lessons compare important 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `plot` | `No formal default; requiredness follows the contract` | R object; constraints below | A ggchord plot. |
-| `build` | `TRUE` | Logical | Logical. Build the layout when it is not cached, default TRUE. |
+| `plot` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | A ggchord plot. |
+| `build` | `TRUE` | Type, units and accepted forms: see this API argument contract at right | Logical. Build the layout when it is not cached, default TRUE. |
 
 </details>
 
@@ -2493,13 +2493,13 @@ Start with the [learning overview](learn.html#tasks). Lessons compare important 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `seq_data` | `No formal default; requiredness follows the contract` | API-specific table/supported object; see the contract | data.frame/tibble with accver and length, or a GRanges, Seqinfo or GInteractions object with known full sequence lengths, or a named nucleotide or protein Biostrings XStringSet. Unnamed sequence objects must first use as_ggchord_seq() with explicit ids. Optional S4 inputs use as_ggchord_seq(). The sequence_unit column is "bp" (default when omitted) or "aa". All rows use the same unit. Protein lengths come from complete proteins. Native aa plots accept links and generic features; gene, primer and restriction layers require bp. Arbitrary character widths are not biological sequence lengths. |
-| `ribbon_data` | `NULL` | API-specific table/supported object; see the contract | Optional alignment table with qaccver, saccver, qstart, qend, sstart and send. length and pident are optional unless requested by a mapping, filter or statistic. A GInteractions object uses as_ggchord_link() without inventing identity or alignment length. |
-| `gene_data` | `NULL` | API-specific table/supported object; see the contract | Compatible legacy annotation input. The third positional argument retains its meaning. Use feature_data in new code; a non-NULL legacy input emits one message at construction, never during rendering. Untyped legacy tables retain their directional gene semantics. No removal version is scheduled. Do not supply both annotation inputs. |
-| `debug` | `FALSE` | Logical | Logical. Whether to output debug information, default FALSE |
-| `validate` | `c("warn", "error", "none")` | Vector; choices versus multiple selection below | Character, default "warn". How to run the structured input-data validation (see validate_ggchord_data): "warn" emits a single summary warning when the data has problems and caches the full report on the plot object (p$ggchord$validation); "error" stops on severe problems; "none" skips the diagnostic validation (the cheap structural checks that prevent crashes are still performed). |
-| `feature_data` | `NULL` | API-specific table/supported object; see the contract | Optional unified annotation table or GRanges. Requires accver, start, end; absent strand becomes unknown ("."). Generic feature layers use the full table. Default gene layers select gene/CDS from feature_class, type, or role (in that priority order), and require known strands. tRNA/rRNA remain generic features. Explicit layer data overrides the constructor input. Use disjoint subsets when combining gene and feature layers; each layer keeps its own data independently. |
-| `...` | `No formal default; requiredness follows the contract` | Forwarded arguments | Reserved for clear migration errors from removed constructor arguments. Use labs(), coord_chord() and theme() for presentation. |
+| `seq_data` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | data.frame/tibble with accver and length, or a GRanges, Seqinfo or GInteractions object with known full sequence lengths, or a named nucleotide or protein Biostrings XStringSet. Unnamed sequence objects must first use as_ggchord_seq() with explicit ids. Optional S4 inputs use as_ggchord_seq(). The sequence_unit column is "bp" (default when omitted) or "aa". All rows use the same unit. Protein lengths come from complete proteins. Native aa plots accept links and generic features; gene, primer and restriction layers require bp. Arbitrary character widths are not biological sequence lengths. |
+| `ribbon_data` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional alignment table with qaccver, saccver, qstart, qend, sstart and send. length and pident are optional unless requested by a mapping, filter or statistic. A GInteractions object uses as_ggchord_link() without inventing identity or alignment length. |
+| `gene_data` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Compatible legacy annotation input. The third positional argument retains its meaning. Use feature_data in new code; a non-NULL legacy input emits one message at construction, never during rendering. Untyped legacy tables retain their directional gene semantics. No removal version is scheduled. Do not supply both annotation inputs. |
+| `debug` | `FALSE` | Type, units and accepted forms: see this API argument contract at right | Logical. Whether to output debug information, default FALSE |
+| `validate` | `c("warn", "error", "none")` | Type, units and accepted forms: see this API argument contract at right | Character, default "warn". How to run the structured input-data validation (see validate_ggchord_data): "warn" emits a single summary warning when the data has problems and caches the full report on the plot object (p$ggchord$validation); "error" stops on severe problems; "none" skips the diagnostic validation (the cheap structural checks that prevent crashes are still performed). |
+| `feature_data` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional unified annotation table or GRanges. Requires accver, start, end; absent strand becomes unknown ("."). Generic feature layers use the full table. Default gene layers select gene/CDS from feature_class, type, or role (in that priority order), and require known strands. tRNA/rRNA remain generic features. Explicit layer data overrides the constructor input. Use disjoint subsets when combining gene and feature layers; each layer keeps its own data independently. |
+| `...` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Reserved for clear migration errors from removed constructor arguments. Use labs(), coord_chord() and theme() for presentation. |
 
 </details>
 
@@ -2512,11 +2512,11 @@ Start with the [learning overview](learn.html#tasks). Lessons compare important 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `center` | `No formal default; requiredness follows the contract` | R object; constraints below | A ggchord genomic plot (Circular, Chord, Collinear, Sankey or Radial), or another Fusion. Nested biological endpoints use full panel paths. |
-| `center_size` | `NULL` | Nullable R object; type/inheritance below | Optional width and height as fractions of the composition content area, excluding native outer plot decorations and cross-panel Guides. NULL allocates available space. |
-| `layout` | `c("fixed", "adaptive")` | Vector; choices versus multiple selection below | "fixed" uses fixed panel allocations; "adaptive" also adjusts the central allocation to the physical aspect ratio and jointly measures native cross-panel Guide candidates against panel allocations. Unlocked Guide positions/direction/rows may adapt; explicit native settings and absolute boxes stay fixed. Multiple outside Guide positions are allowed. Both rebuild labels and guides at actual panel sizes without shrinking explicit fonts. Impossible space constraints fail rather than dropping keys. |
-| `allow_overlap` | `FALSE` | Logical | Explicitly allow container overlap. Default FALSE fails on overlap. When TRUE, later panels paint over earlier panels. Connections use disjoint native grid clips to avoid accumulating translucent fills. Ordinary child margins do not break links; later containers still cover earlier content. This is deliberate placement, not global collision avoidance. |
-| `center_box` | `NULL` | Nullable R object; type/inheritance below | Optional centre allocation: xmin, xmax, ymin, ymax as four fractions of the composition content area excluding outer decorations and Guides, or four absolute grid units. Use instead of center_size. See fusion_panel(). |
+| `center` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | A ggchord genomic plot (Circular, Chord, Collinear, Sankey or Radial), or another Fusion. Nested biological endpoints use full panel paths. |
+| `center_size` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional width and height as fractions of the composition content area, excluding native outer plot decorations and cross-panel Guides. NULL allocates available space. |
+| `layout` | `c("fixed", "adaptive")` | Type, units and accepted forms: see this API argument contract at right | "fixed" uses fixed panel allocations; "adaptive" also adjusts the central allocation to the physical aspect ratio and jointly measures native cross-panel Guide candidates against panel allocations. Unlocked Guide positions/direction/rows may adapt; explicit native settings and absolute boxes stay fixed. Multiple outside Guide positions are allowed. Both rebuild labels and guides at actual panel sizes without shrinking explicit fonts. Impossible space constraints fail rather than dropping keys. |
+| `allow_overlap` | `FALSE` | Type, units and accepted forms: see this API argument contract at right | Explicitly allow container overlap. Default FALSE fails on overlap. When TRUE, later panels paint over earlier panels. Connections use disjoint native grid clips to avoid accumulating translucent fills. Ordinary child margins do not break links; later containers still cover earlier content. This is deliberate placement, not global collision avoidance. |
+| `center_box` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional centre allocation: xmin, xmax, ymin, ymax as four fractions of the composition content area excluding outer decorations and Guides, or four absolute grid units. Use instead of center_size. See fusion_panel(). |
 
 </details>
 
@@ -2529,12 +2529,12 @@ Start with the [learning overview](learn.html#tasks). Lessons compare important 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `feature_data` | `No formal default; requiredness follows the contract` | API-specific table/supported object; see the contract | Feature data frame with feature_id, accver, start, end, and optional strand, accepted by as_ggchord_feature(). |
-| `membership` | `No formal default; requiredness follows the contract` | R object; constraints below | Data frame with feature_id and cluster_id. A feature can belong to one cluster; extra columns are retained in the report. |
-| `pairs` | `No formal default; requiredness follows the contract` | R object; constraints below | Data frame with explicit qaccver and saccver comparisons. |
-| `paralogs` | `c("drop", "all")` | Vector; choices versus multiple selection below | How to handle multiple members per cluster and sequence: "drop" (default) or explicit "all". |
-| `segment_policy` | `c("error", "span")` | Vector; choices versus multiple selection below | "error" (default) rejects repeated feature IDs; "span" explicitly uses a validated discontinuous feature's outer bounds. |
-| `max_links` | `10000` | Numeric/integer; range in description | Positive integer upper limit for generated rows, default 10000. Exceeding it stops before Cartesian products are allocated. |
+| `feature_data` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Feature data frame with feature_id, accver, start, end, and optional strand, accepted by as_ggchord_feature(). |
+| `membership` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Data frame with feature_id and cluster_id. A feature can belong to one cluster; extra columns are retained in the report. |
+| `pairs` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Data frame with explicit qaccver and saccver comparisons. |
+| `paralogs` | `c("drop", "all")` | Type, units and accepted forms: see this API argument contract at right | How to handle multiple members per cluster and sequence: "drop" (default) or explicit "all". |
+| `segment_policy` | `c("error", "span")` | Type, units and accepted forms: see this API argument contract at right | "error" (default) rejects repeated feature IDs; "span" explicitly uses a validated discontinuous feature's outer bounds. |
+| `max_links` | `10000` | Type, units and accepted forms: see this API argument contract at right | Positive integer upper limit for generated rows, default 10000. Exceeding it stops before Cartesian products are allocated. |
 
 </details>
 
@@ -2547,22 +2547,22 @@ Start with the [learning overview](learn.html#tasks). Lessons compare important 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `plot` | `No formal default; requiredness follows the contract` | R object; constraints below | A registered ggchord genomic source plot or nested Fusion. |
-| `region` | `No formal default; requiredness follows the contract` | R object; constraints below | Nonempty data frame with accver, start, end in original one-based inclusive source coordinates. Bounds must be ordered positive integers. Optional instance and detail_instance select exact display instances in the source and detail panels for every row. Ambiguity fails. Explicit wrap = TRUE permits start > end across a circular source origin. Both selected leaves must declare matching full source lengths; character sources require as_ggchord_alignment(circular = TRUE). The interval is drawn as two pieces with only its two external boundary leaders. With a list of details, a detail_panel column selects the named target for each row. Nested leaves use full paths, for example detail/center; optional source_panel similarly selects a source leaf under center. Ambiguous container selection fails. |
-| `detail_plot` | `No formal default; requiredness follows the contract` | R object; constraints below | An explicit registered ggchord genomic plot, nested Fusion, a character plot from register_ggchord_alignment(), or a uniquely named list of such plots. Every panel must have at least one source region; the name center is reserved. The selected source interval must be fully visible in both panels, in the same bp/aa unit. Character plots require explicit source/column registration; ordinary unregistered plots are rejected. |
-| `side` | `c("right", "top", "left", "bottom")` | Vector; choices versus multiple selection below | A named side from fusion_panel(), including diagonal sides. For a list of plots, supply a character vector named by panel ID, with distinct fixed sides or repeated auto values for automatic perimeter allocation. Every input region still explicitly selects its detail panel. |
-| `center_size` | `NULL` | Nullable R object; type/inheritance below | Optional panel width/height fractions, following ggchord_fusion() and fusion_panel(). Defaults reserve a smaller source panel and a wider detail container for a single detail plot. With multiple details, use a named list of sizes or NULL for Fusion defaults; center_size also follows Fusion defaults. Out-of-frame allocations fail; overlap requires explicit allow_overlap. |
-| `detail_size` | `NULL` | Nullable R object; type/inheritance below | Optional panel width/height fractions, following ggchord_fusion() and fusion_panel(). Defaults reserve a smaller source panel and a wider detail container for a single detail plot. With multiple details, use a named list of sizes or NULL for Fusion defaults; center_size also follows Fusion defaults. Out-of-frame allocations fail; overlap requires explicit allow_overlap. |
-| `connector` | `c("leader", "none")` | Vector; choices versus multiple selection below | "leader" draws two decorative boundary leaders per row; "none" retains the highlights only. These are not biological ribbons or alignments. |
-| `colour` | `"#B45309"` | Character/enum; choices below | Fixed highlight/leader colour. |
-| `alpha` | `0.2` | Numeric/integer; range in description | Highlight opacity in [0,1]. Leaders use the opaque colour. |
-| `highlight_width` | `1.5` | Numeric/integer; range in description | Positive highlight band width in physical mm. |
-| `linewidth` | `0.35` | Numeric/integer; range in description | Nonnegative leader width using the usual ggplot2 convention. |
-| `linetype` | `2` | Numeric/integer; range in description | Leader line type, default dashed. |
-| `detail_box` | `NULL` | Nullable R object; type/inheritance below | Explicit detail allocation instead of side/detail_size, using the box convention in fusion_panel(). For multiple plots, supply a named list covering every detail. Physical boxes are rechecked at target size. |
-| `allow_overlap` | `FALSE` | Logical | Deliberately permit overlapping containers, following ggchord_fusion(). Later panels cover earlier ones; default FALSE. |
-| `center_box` | `NULL` | Nullable R object; type/inheritance below | Explicit source allocation instead of center_size. |
-| `route` | `c("direct", "avoid")` | Vector; choices versus multiple selection below | Direct boundary leaders (default), or avoid to route around measured other containers and native text/guide envelopes. Endpoints stay fixed; no clear route fails rather than hiding the selection. |
+| `plot` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | A registered ggchord genomic source plot or nested Fusion. |
+| `region` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Nonempty data frame with accver, start, end in original one-based inclusive source coordinates. Bounds must be ordered positive integers. Optional instance and detail_instance select exact display instances in the source and detail panels for every row. Ambiguity fails. Explicit wrap = TRUE permits start > end across a circular source origin. Both selected leaves must declare matching full source lengths; character sources require as_ggchord_alignment(circular = TRUE). The interval is drawn as two pieces with only its two external boundary leaders. With a list of details, a detail_panel column selects the named target for each row. Nested leaves use full paths, for example detail/center; optional source_panel similarly selects a source leaf under center. Ambiguous container selection fails. |
+| `detail_plot` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | An explicit registered ggchord genomic plot, nested Fusion, a character plot from register_ggchord_alignment(), or a uniquely named list of such plots. Every panel must have at least one source region; the name center is reserved. The selected source interval must be fully visible in both panels, in the same bp/aa unit. Character plots require explicit source/column registration; ordinary unregistered plots are rejected. |
+| `side` | `c("right", "top", "left", "bottom")` | Type, units and accepted forms: see this API argument contract at right | A named side from fusion_panel(), including diagonal sides. For a list of plots, supply a character vector named by panel ID, with distinct fixed sides or repeated auto values for automatic perimeter allocation. Every input region still explicitly selects its detail panel. |
+| `center_size` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional panel width/height fractions, following ggchord_fusion() and fusion_panel(). Defaults reserve a smaller source panel and a wider detail container for a single detail plot. With multiple details, use a named list of sizes or NULL for Fusion defaults; center_size also follows Fusion defaults. Out-of-frame allocations fail; overlap requires explicit allow_overlap. |
+| `detail_size` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional panel width/height fractions, following ggchord_fusion() and fusion_panel(). Defaults reserve a smaller source panel and a wider detail container for a single detail plot. With multiple details, use a named list of sizes or NULL for Fusion defaults; center_size also follows Fusion defaults. Out-of-frame allocations fail; overlap requires explicit allow_overlap. |
+| `connector` | `c("leader", "none")` | Type, units and accepted forms: see this API argument contract at right | "leader" draws two decorative boundary leaders per row; "none" retains the highlights only. These are not biological ribbons or alignments. |
+| `colour` | `"#B45309"` | Type, units and accepted forms: see this API argument contract at right | Fixed highlight/leader colour. |
+| `alpha` | `0.2` | Type, units and accepted forms: see this API argument contract at right | Highlight opacity in [0,1]. Leaders use the opaque colour. |
+| `highlight_width` | `1.5` | Type, units and accepted forms: see this API argument contract at right | Positive highlight band width in physical mm. |
+| `linewidth` | `0.35` | Type, units and accepted forms: see this API argument contract at right | Nonnegative leader width using the usual ggplot2 convention. |
+| `linetype` | `2` | Type, units and accepted forms: see this API argument contract at right | Leader line type, default dashed. |
+| `detail_box` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Explicit detail allocation instead of side/detail_size, using the box convention in fusion_panel(). For multiple plots, supply a named list covering every detail. Physical boxes are rechecked at target size. |
+| `allow_overlap` | `FALSE` | Type, units and accepted forms: see this API argument contract at right | Deliberately permit overlapping containers, following ggchord_fusion(). Later panels cover earlier ones; default FALSE. |
+| `center_box` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Explicit source allocation instead of center_size. |
+| `route` | `c("direct", "avoid")` | Type, units and accepted forms: see this API argument contract at right | Direct boundary leaders (default), or avoid to route around measured other containers and native text/guide envelopes. Endpoints stay fixed; no clear route fails rather than hiding the selection. |
 
 </details>
 
@@ -2575,10 +2575,10 @@ Start with the [learning overview](learn.html#tasks). Lessons compare important 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `data` | `No formal default; requiredness follows the contract` | API-specific data input; see the contract | Long alignment frame from as_ggchord_alignment(). |
-| `accver` | `No formal default; requiredness follows the contract` | R object; constraints below | One alignment-row ID, even if its source_accver differs. |
+| `data` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Long alignment frame from as_ggchord_alignment(). |
+| `accver` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | One alignment-row ID, even if its source_accver differs. |
 | `position` | `No formal default; requiredness follows the contract` | Positive integers or NA; source positions or alignment columns | Numeric positions, positive integral or NA. |
-| `inverse` | `FALSE` | Logical | FALSE maps alignment columns to source positions; TRUE maps source positions to alignment columns. |
+| `inverse` | `FALSE` | Type, units and accepted forms: see this API argument contract at right | FALSE maps alignment columns to source positions; TRUE maps source positions to alignment columns. |
 
 </details>
 
@@ -2591,12 +2591,12 @@ Start with the [learning overview](learn.html#tasks). Lessons compare important 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `plot` | `No formal default; requiredness follows the contract` | R object; constraints below | A ggchord plot using coord_collinear(), coord_radial_synteny() or coord_dotplot(). |
-| `accver` | `No formal default; requiredness follows the contract` | R object; constraints below | Sequence identifiers, scalar or one per position. |
+| `plot` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | A ggchord plot using coord_collinear(), coord_radial_synteny() or coord_dotplot(). |
+| `accver` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Sequence identifiers, scalar or one per position. |
 | `position` | `No formal default; requiredness follows the contract` | Numeric positions; Radial inverse uses an x/y matrix or data frame | Numeric genomic positions, or layout x when inverse = TRUE. Radial inverse mapping instead requires a matrix/data frame with x and y columns on the specified backbone. Off-backbone positions are rejected. |
-| `inverse` | `FALSE` | Logical | Convert layout x back to native sequence positions. |
-| `source` | `FALSE` | Logical | Use original source coordinates after focusing. |
-| `axis` | `NULL` | Nullable R object; type/inheritance below | Dotplot axis to map, either "x" (query) or "y" (subject). Required for Dotplots; omitted for linear and radial layouts. Dotplot gaps return NA on inverse mapping, with the chosen axis recorded in the result. |
+| `inverse` | `FALSE` | Type, units and accepted forms: see this API argument contract at right | Convert layout x back to native sequence positions. |
+| `source` | `FALSE` | Type, units and accepted forms: see this API argument contract at right | Use original source coordinates after focusing. |
+| `axis` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Dotplot axis to map, either "x" (query) or "y" (subject). Required for Dotplots; omitted for linear and radial layouts. Dotplot gaps return NA on inverse mapping, with the chosen axis recorded in the result. |
 
 </details>
 
@@ -2609,12 +2609,12 @@ Start with the [learning overview](learn.html#tasks). Lessons compare important 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `ribbon_data` | `No formal default; requiredness follows the contract` | API-specific table/supported object; see the contract | data.frame in ribbon_data format. |
-| `max_gap` | `0` | Numeric/integer; range in description | Numeric, default 0. Maximum gap (in bp) allowed between two blocks on both sequences for them to be merged. |
-| `min_pident_difference` | `0` | Numeric/integer; range in description | Numeric, default 0. When > 0, two blocks are only merged when their pident difference is <= this value. |
-| `require_same_orientation` | `TRUE` | Logical | Logical, default TRUE. Only merge blocks with the same relative query/subject direction and compatible progression of their bounds. Reversing both endpoints preserves relative direction. FALSE explicitly permits a coarser mixed-direction summary. |
-| `group_by` | `c("qaccver", "saccver")` | Vector; choices versus multiple selection below | Character vector, default c("qaccver", "saccver"). Additional grouping columns; query/subject IDs always remain grouping keys. |
-| `extra_columns` | `c("consistent", "first")` | Vector; choices versus multiple selection below | How to handle columns other than the required ribbon fields when multiple rows are merged. "consistent" (default) keeps a value only when all source rows agree and otherwise stores a typed missing value; "first" retains the first source row's value. |
+| `ribbon_data` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | data.frame in ribbon_data format. |
+| `max_gap` | `0` | Type, units and accepted forms: see this API argument contract at right | Numeric, default 0. Maximum gap (in bp) allowed between two blocks on both sequences for them to be merged. |
+| `min_pident_difference` | `0` | Type, units and accepted forms: see this API argument contract at right | Numeric, default 0. When > 0, two blocks are only merged when their pident difference is <= this value. |
+| `require_same_orientation` | `TRUE` | Type, units and accepted forms: see this API argument contract at right | Logical, default TRUE. Only merge blocks with the same relative query/subject direction and compatible progression of their bounds. Reversing both endpoints preserves relative direction. FALSE explicitly permits a coarser mixed-direction summary. |
+| `group_by` | `c("qaccver", "saccver")` | Type, units and accepted forms: see this API argument contract at right | Character vector, default c("qaccver", "saccver"). Additional grouping columns; query/subject IDs always remain grouping keys. |
+| `extra_columns` | `c("consistent", "first")` | Type, units and accepted forms: see this API argument contract at right | How to handle columns other than the required ribbon fields when multiple rows are merged. "consistent" (default) keeps a value only when all source rows agree and otherwise stores a typed missing value; "first" retains the first source row's value. |
 
 </details>
 
@@ -2627,13 +2627,13 @@ Start with the [learning overview](learn.html#tasks). Lessons compare important 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `seq_data` | `No formal default; requiredness follows the contract` | API-specific table/supported object; see the contract | Sequence data containing accver and length. |
-| `ribbon_data` | `No formal default; requiredness follows the contract` | API-specific table/supported object; see the contract | Alignment data in ggchord ribbon format. |
-| `seq_order` | `NULL` | Geometry number/vector/documented formats | Optional initial complete sequence order. The default uses the row order of seq_data. |
-| `seq_orientation` | `NULL` | Geometry number/vector/documented formats | Optional initial orientation (1 or -1), scalar, complete vector, or named vector. |
-| `optimize` | `c("order", "orientation")` | Vector; choices versus multiple selection below | Any of "order" and "orientation". |
-| `weight` | `c("length", "count", "pident")` | Vector; choices versus multiple selection below | Objective weight: "length", "count", or "pident". |
-| `max_iter` | `50L` | Numeric/integer; range in description | Positive integer maximum number of improving search rounds. |
+| `seq_data` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Sequence data containing accver and length. |
+| `ribbon_data` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Alignment data in ggchord ribbon format. |
+| `seq_order` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional initial complete sequence order. The default uses the row order of seq_data. |
+| `seq_orientation` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional initial orientation (1 or -1), scalar, complete vector, or named vector. |
+| `optimize` | `c("order", "orientation")` | Type, units and accepted forms: see this API argument contract at right | Any of "order" and "orientation". |
+| `weight` | `c("length", "count", "pident")` | Type, units and accepted forms: see this API argument contract at right | Objective weight: "length", "count", or "pident". |
+| `max_iter` | `50L` | Type, units and accepted forms: see this API argument contract at right | Positive integer maximum number of improving search rounds. |
 
 </details>
 
@@ -2646,14 +2646,14 @@ Start with the [learning overview](learn.html#tasks). Lessons compare important 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `seq_data` | `No formal default; requiredness follows the contract` | API-specific table/supported object; see the contract | Sequence input accepted by as_ggchord_seq(). |
-| `ribbon_data` | `NULL` | API-specific table/supported object; see the contract | Optional paired intervals accepted by as_ggchord_link(). |
-| `gene_data` | `NULL` | API-specific table/supported object; see the contract | Optional directional gene input accepted by as_ggchord_feature(). Nondirectional intervals belong in features. |
-| `features` | `list()` | Named list | Named lists of feature or paired-interval inputs. |
-| `links` | `list()` | Named list | Named lists of feature or paired-interval inputs. |
-| `mapping` | `list()` | aes mapping | Named list with optional seq, ribbon, gene column mappings, and features/links lists of mappings named like the respective collections. Each column mapping is a named character vector. |
-| `steps` | `list()` | Named list | Named list of explicit helper argument lists. Supported names: clean, filter, deduplicate, merge, bundle, optimize. Data arguments are supplied by preparation and cannot be overridden. |
-| `feature_data` | `NULL` | API-specific table/supported object; see the contract | Unified annotation table, mutually exclusive with gene_data. |
+| `seq_data` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Sequence input accepted by as_ggchord_seq(). |
+| `ribbon_data` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional paired intervals accepted by as_ggchord_link(). |
+| `gene_data` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional directional gene input accepted by as_ggchord_feature(). Nondirectional intervals belong in features. |
+| `features` | `list()` | Type, units and accepted forms: see this API argument contract at right | Named lists of feature or paired-interval inputs. |
+| `links` | `list()` | Type, units and accepted forms: see this API argument contract at right | Named lists of feature or paired-interval inputs. |
+| `mapping` | `list()` | Type, units and accepted forms: see this API argument contract at right | Named list with optional seq, ribbon, gene column mappings, and features/links lists of mappings named like the respective collections. Each column mapping is a named character vector. |
+| `steps` | `list()` | Type, units and accepted forms: see this API argument contract at right | Named list of explicit helper argument lists. Supported names: clean, filter, deduplicate, merge, bundle, optimize. Data arguments are supplied by preparation and cannot be overridden. |
+| `feature_data` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Unified annotation table, mutually exclusive with gene_data. |
 
 </details>
 
@@ -2666,8 +2666,8 @@ Start with the [learning overview](learn.html#tasks). Lessons compare important 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `set` | `c("all", "universal")` | Vector; choices versus multiple selection below | Return all records or only the commonly used universal subset. |
-| `aliases` | `FALSE` | Logical | Return source alias records instead of the sequence catalogue. |
+| `set` | `c("all", "universal")` | Type, units and accepted forms: see this API argument contract at right | Return all records or only the commonly used universal subset. |
+| `aliases` | `FALSE` | Type, units and accepted forms: see this API argument contract at right | Return source alias records instead of the sequence catalogue. |
 
 </details>
 
@@ -2680,10 +2680,10 @@ Start with the [learning overview](learn.html#tasks). Lessons compare important 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `feature_data` | `No formal default; requiredness follows the contract` | API-specific table/supported object; see the contract | Domain/feature data frame with feature_id, parent_id (or a single-valued parent_ids list-column), start and end. |
-| `cds` | `No formal default; requiredness follows the contract` | R object; constraints below | A map from build_ggchord_cds(). |
-| `from` | `c("protein", "genome")` | Vector; choices versus multiple selection below | "protein" (default) or "genome". |
-| `codon_boundary` | `c("error", "expand")` | Vector; choices versus multiple selection below | Inverse projection policy: "error" or "expand". |
+| `feature_data` | `No formal default; requiredness follows the contract` | data.frame; one output per input feature, with pieces in segments | Domain/feature data frame with feature_id, parent_id (or a single-valued parent_ids list-column), start and end. |
+| `cds` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | A map from build_ggchord_cds(). |
+| `from` | `c("protein", "genome")` | Type, units and accepted forms: see this API argument contract at right | "protein" (default) or "genome". |
+| `codon_boundary` | `c("error", "expand")` | Type, units and accepted forms: see this API argument contract at right | Inverse projection policy: "error" or "expand". |
 
 </details>
 
@@ -2696,9 +2696,9 @@ Start with the [learning overview](learn.html#tasks). Lessons compare important 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `link_data` | `No formal default; requiredness follows the contract` | R object; constraints below | Data frame with qfeature_id, sfeature_id identifying CDS models and ordered inclusive protein qstart, qend, sstart, send. Query and subject residue spans must be equal. If present, gapopen must be zero and source length must equal this residue span. |
-| `cds` | `No formal default; requiredness follows the contract` | R object; constraints below | A map from build_ggchord_cds(). |
-| `ungapped` | `FALSE` | Logical | Must explicitly be TRUE, confirming an ungapped residue correspondence rather than inferring it from equal endpoint spans. |
+| `link_data` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Data frame with qfeature_id, sfeature_id identifying CDS models and ordered inclusive protein qstart, qend, sstart, send. Query and subject residue spans must be equal. If present, gapopen must be zero and source length must equal this residue span. |
+| `cds` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | A map from build_ggchord_cds(). |
+| `ungapped` | `FALSE` | Type, units and accepted forms: see this API argument contract at right | Must explicitly be TRUE, confirming an ungapped residue correspondence rather than inferring it from equal endpoint spans. |
 
 </details>
 
@@ -2711,11 +2711,11 @@ Start with the [learning overview](learn.html#tasks). Lessons compare important 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `file` | `No formal default; requiredness follows the contract` | Character path/identifier/vector; see constraints | A single local aligned FASTA path; no multi-alignment concatenation. |
-| `alphabet` | `No formal default; requiredness follows the contract` | R object; constraints below | Explicit "DNA", "RNA" or "AA". IUPAC nucleotide ambiguity codes and protein ambiguity/rare-residue codes are accepted; * is accepted only for AA. The alphabet is never guessed. |
-| `source_data` | `NULL` | Nullable R object; type/inheritance below | Optional data frame with one row per alignment accver, start (first nongap source coordinate) and strand ("+" or "-"). Optional source_accver declares a different source ID; optional character sequence supplies the full forward source for verification. Coordinates must remain positive exact integers. Input metadata is retained in the ggchord_conversion attribute. |
-| `source_file` | `FALSE` | Logical | Logical. Also retain .source_file on each character row. |
-| `circular` | `FALSE` | Logical | Explicit logical declaration that every source is circular, default FALSE. Requires source_data with full source_length or full sequence. Coordinates wrap at that length in the declared strand direction; nongap characters may cover at most one complete tour. Adds source_circular and source_length columns. A circular plot never activates this conversion. |
+| `file` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | A single local aligned FASTA path; no multi-alignment concatenation. |
+| `alphabet` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Explicit "DNA", "RNA" or "AA". IUPAC nucleotide ambiguity codes and protein ambiguity/rare-residue codes are accepted; * is accepted only for AA. The alphabet is never guessed. |
+| `source_data` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional data frame with one row per alignment accver, start (first nongap source coordinate) and strand ("+" or "-"). Optional source_accver declares a different source ID; optional character sequence supplies the full forward source for verification. Coordinates must remain positive exact integers. Input metadata is retained in the ggchord_conversion attribute. |
+| `source_file` | `FALSE` | Type, units and accepted forms: see this API argument contract at right | Logical. Also retain .source_file on each character row. |
+| `circular` | `FALSE` | Type, units and accepted forms: see this API argument contract at right | Explicit logical declaration that every source is circular, default FALSE. Requires source_data with full source_length or full sequence. Coordinates wrap at that length in the declared strand direction; nongap characters may cover at most one complete tour. Adds source_circular and source_length columns. A circular plot never activates this conversion. |
 
 </details>
 
@@ -2728,9 +2728,9 @@ Start with the [learning overview](learn.html#tasks). Lessons compare important 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `file` | `NULL` | Character path/identifier/vector; see constraints | Optional path vector or glob patterns; read before files. |
-| `files` | `NULL` | Character path/identifier/vector; see constraints | Optional paths or wildcard patterns for multiple BED files. |
-| `source_file` | `FALSE` | Logical | Logical. Add a .source_file column, default FALSE. |
+| `file` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional path vector or glob patterns; read before files. |
+| `files` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional paths or wildcard patterns for multiple BED files. |
+| `source_file` | `FALSE` | Type, units and accepted forms: see this API argument contract at right | Logical. Add a .source_file column, default FALSE. |
 
 </details>
 
@@ -2743,9 +2743,9 @@ Start with the [learning overview](learn.html#tasks). Lessons compare important 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `file` | `NULL` | Character path/identifier/vector; see constraints | Optional input path vector or glob patterns, before files. |
-| `files` | `NULL` | Character path/identifier/vector; see constraints | Optional additional paths or wildcard patterns for bedGraph files. |
-| `source_file` | `FALSE` | Logical | Logical. Add .source_file to each row, default FALSE. |
+| `file` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional input path vector or glob patterns, before files. |
+| `files` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional additional paths or wildcard patterns for bedGraph files. |
+| `source_file` | `FALSE` | Type, units and accepted forms: see this API argument contract at right | Logical. Add .source_file to each row, default FALSE. |
 
 </details>
 
@@ -2758,10 +2758,10 @@ Start with the [learning overview](learn.html#tasks). Lessons compare important 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `file` | `NULL` | Character path/identifier/vector; see constraints | Optional local path vector or glob patterns; read before files. |
-| `files` | `NULL` | Character path/identifier/vector; see constraints | Optional additional local paths or glob patterns. |
-| `source_file` | `FALSE` | Logical | Logical. Add a .source_file column, default FALSE. |
-| `unmapped` | `c("error", "keep")` | Vector; choices versus multiple selection below | "error" (default) or "keep" for incomplete anchors. |
+| `file` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional local path vector or glob patterns; read before files. |
+| `files` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional additional local paths or glob patterns. |
+| `source_file` | `FALSE` | Type, units and accepted forms: see this API argument contract at right | Logical. Add a .source_file column, default FALSE. |
+| `unmapped` | `c("error", "keep")` | Type, units and accepted forms: see this API argument contract at right | "error" (default) or "keep" for incomplete anchors. |
 
 </details>
 
@@ -2774,10 +2774,10 @@ Start with the [learning overview](learn.html#tasks). Lessons compare important 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `file` | `NULL` | Character path/identifier/vector; see constraints | Optional local input path vector or glob patterns, before files. |
-| `files` | `NULL` | Character path/identifier/vector; see constraints | Optional additional paths or wildcards for local BigWig files. |
-| `which` | `NULL` | Nullable R object; type/inheritance below | NULL for the whole file, or a GRanges / data frame with character accver and numeric start/end in one-based inclusive coordinates. Unknown accessions and out-of-bounds intervals fail explicitly. An empty selection returns no signal rows. The same selection applies to each file. |
-| `source_file` | `FALSE` | Logical | Logical. Add .source_file to each row, default FALSE. |
+| `file` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional local input path vector or glob patterns, before files. |
+| `files` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional additional paths or wildcards for local BigWig files. |
+| `which` | `NULL` | Type, units and accepted forms: see this API argument contract at right | NULL for the whole file, or a GRanges / data frame with character accver and numeric start/end in one-based inclusive coordinates. Unknown accessions and out-of-bounds intervals fail explicitly. An empty selection returns no signal rows. The same selection applies to each file. |
+| `source_file` | `FALSE` | Type, units and accepted forms: see this API argument contract at right | Logical. Add .source_file to each row, default FALSE. |
 
 </details>
 
@@ -2790,13 +2790,13 @@ Start with the [learning overview](learn.html#tasks). Lessons compare important 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `file` | `NULL` | Character path/identifier/vector; see constraints | Optional path vector or glob patterns; read before files. |
-| `files` | `NULL` | Character path/identifier/vector; see constraints | Optional character vector of BLAST tabular output files (literal paths and/or wildcard patterns). All matched files are read and combined into one data.frame. |
-| `format` | `c("auto", "outfmt6", "outfmt7", "custom")` | Vector; choices versus multiple selection below | Character. "auto" (default) detects the column layout from the file; "outfmt6" requires the standard 12-column layout, "outfmt7" parses its # Fields: declaration, and "custom" requires col_names. |
-| `col_names` | `NULL` | Nullable R object; type/inheritance below | Optional character vector naming the columns in the file, used with format = "custom" or to override auto-detection. |
-| `comment` | `"#"` | Character/enum; choices below | Character comment character, default "#" (BLAST outfmt 7 header lines start with #). |
-| `source_file` | `FALSE` | Logical | Logical. Add a .source_file column when reading one or more files, default FALSE. |
-| `...` | `No formal default; requiredness follows the contract` | Forwarded arguments | Additional arguments passed to utils::read.table() (e.g. na.strings). |
+| `file` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional path vector or glob patterns; read before files. |
+| `files` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional character vector of BLAST tabular output files (literal paths and/or wildcard patterns). All matched files are read and combined into one data.frame. |
+| `format` | `c("auto", "outfmt6", "outfmt7", "custom")` | Type, units and accepted forms: see this API argument contract at right | Character. "auto" (default) detects the column layout from the file; "outfmt6" requires the standard 12-column layout, "outfmt7" parses its # Fields: declaration, and "custom" requires col_names. |
+| `col_names` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional character vector naming the columns in the file, used with format = "custom" or to override auto-detection. |
+| `comment` | `"#"` | Type, units and accepted forms: see this API argument contract at right | Character comment character, default "#" (BLAST outfmt 7 header lines start with #). |
+| `source_file` | `FALSE` | Type, units and accepted forms: see this API argument contract at right | Logical. Add a .source_file column when reading one or more files, default FALSE. |
+| `...` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Additional arguments passed to utils::read.table() (e.g. na.strings). |
 
 </details>
 
@@ -2809,13 +2809,13 @@ Start with the [learning overview](learn.html#tasks). Lessons compare important 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `file` | `NULL` | Character path/identifier/vector; see constraints | Optional local path vector or glob patterns, before files. |
-| `files` | `NULL` | Character path/identifier/vector; see constraints | Optional additional chain paths or patterns. |
-| `query_ids` | `NULL` | Nullable R object; type/inheritance below | Optional named character vectors mapping original query/target IDs to explicit source IDs. Unspecified IDs stay unchanged. Unknown map keys and conflicting full lengths fail. |
-| `subject_ids` | `NULL` | Nullable R object; type/inheritance below | Optional named character vectors mapping original query/target IDs to explicit source IDs. Unspecified IDs stay unchanged. Unknown map keys and conflicting full lengths fail. |
-| `sequence_unit` | `c("bp", "aa")` | Vector; choices versus multiple selection below | Declared coordinate unit, "bp" (default) or "aa". The format itself cannot establish the biological unit. |
-| `python` | `"python3"` | Character path/identifier/vector; see constraints | Existing interpreter with optional Biopython, default "python3". |
-| `source_file` | `FALSE` | Logical | Add .source_file to ribbon rows, default FALSE. |
+| `file` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional local path vector or glob patterns, before files. |
+| `files` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional additional chain paths or patterns. |
+| `query_ids` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional named character vectors mapping original query/target IDs to explicit source IDs. Unspecified IDs stay unchanged. Unknown map keys and conflicting full lengths fail. |
+| `subject_ids` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional named character vectors mapping original query/target IDs to explicit source IDs. Unspecified IDs stay unchanged. Unknown map keys and conflicting full lengths fail. |
+| `sequence_unit` | `c("bp", "aa")` | Type, units and accepted forms: see this API argument contract at right | Declared coordinate unit, "bp" (default) or "aa". The format itself cannot establish the biological unit. |
+| `python` | `"python3"` | Type, units and accepted forms: see this API argument contract at right | Existing interpreter with optional Biopython, default "python3". |
+| `source_file` | `FALSE` | Type, units and accepted forms: see this API argument contract at right | Add .source_file to ribbon rows, default FALSE. |
 
 </details>
 
@@ -2828,12 +2828,12 @@ Start with the [learning overview](learn.html#tasks). Lessons compare important 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `file` | `NULL` | Character path/identifier/vector; see constraints | Optional local path vector or glob patterns, before files. |
-| `files` | `NULL` | Character path/identifier/vector; see constraints | Optional additional delta paths or patterns. |
-| `executable` | `"show-coords"` | Character/enum; choices below | Existing show-coords executable name or path, default "show-coords". It must already be installed; no environment is modified. |
-| `query_ids` | `NULL` | Nullable R object; type/inheritance below | Optional explicit named source-ID maps, following read_chain(). Shared final IDs need explicit declaration on both sides and consistent full lengths. Defaults never auto-prefix IDs. |
-| `subject_ids` | `NULL` | Nullable R object; type/inheritance below | Optional explicit named source-ID maps, following read_chain(). Shared final IDs need explicit declaration on both sides and consistent full lengths. Defaults never auto-prefix IDs. |
-| `source_file` | `FALSE` | Logical | Add .source_file to ribbon rows, default FALSE. |
+| `file` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional local path vector or glob patterns, before files. |
+| `files` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional additional delta paths or patterns. |
+| `executable` | `"show-coords"` | Type, units and accepted forms: see this API argument contract at right | Existing show-coords executable name or path, default "show-coords". It must already be installed; no environment is modified. |
+| `query_ids` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional explicit named source-ID maps, following read_chain(). Shared final IDs need explicit declaration on both sides and consistent full lengths. Defaults never auto-prefix IDs. |
+| `subject_ids` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional explicit named source-ID maps, following read_chain(). Shared final IDs need explicit declaration on both sides and consistent full lengths. Defaults never auto-prefix IDs. |
+| `source_file` | `FALSE` | Type, units and accepted forms: see this API argument contract at right | Add .source_file to ribbon rows, default FALSE. |
 
 </details>
 
@@ -2846,12 +2846,12 @@ Start with the [learning overview](learn.html#tasks). Lessons compare important 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `file` | `NULL` | Character path/identifier/vector; see constraints | Optional path vector or glob patterns; read before files. |
-| `files` | `NULL` | Character path/identifier/vector; see constraints | Optional character vector of FASTA files (literal paths and/or wildcard patterns). All matched files are read and combined. |
-| `header_delim` | `NULL` | Nullable R object; type/inheritance below | Optional character. When given, each header is split at every occurrence of this delimiter and only the first piece is kept. |
-| `source_file` | `FALSE` | Logical | Logical. Add a .source_file column when reading one or more files, default FALSE. |
-| `sequence_unit` | `NULL` | Nullable R object; type/inheritance below | Optional "bp" or "aa" declaration. When supplied, adds that column to the result; the alphabet is not inferred. Omitted units retain the existing output columns and ggchord interprets them as bp. |
-| `keep_sequence` | `FALSE` | Logical | Logical, default FALSE. Also retain the actual FASTA characters in sequence, removing whitespace only and preserving case. No alphabet, reverse complement or alignment columns are inferred. Gap characters, if present, are counted in length; gapped input needs an explicit alignment-to-source map before genomic use. |
+| `file` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional path vector or glob patterns; read before files. |
+| `files` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional character vector of FASTA files (literal paths and/or wildcard patterns). All matched files are read and combined. |
+| `header_delim` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional character. When given, each header is split at every occurrence of this delimiter and only the first piece is kept. |
+| `source_file` | `FALSE` | Type, units and accepted forms: see this API argument contract at right | Logical. Add a .source_file column when reading one or more files, default FALSE. |
+| `sequence_unit` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional "bp" or "aa" declaration. When supplied, adds that column to the result; the alphabet is not inferred. Omitted units retain the existing output columns and ggchord interprets them as bp. |
+| `keep_sequence` | `FALSE` | Type, units and accepted forms: see this API argument contract at right | Logical, default FALSE. Also retain the actual FASTA characters in sequence, removing whitespace only and preserving case. No alphabet, reverse complement or alignment columns are inferred. Gap characters, if present, are counted in length; gapped input needs an explicit alignment-to-source map before genomic use. |
 
 </details>
 
@@ -2864,12 +2864,12 @@ Start with the [learning overview](learn.html#tasks). Lessons compare important 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `file` | `NULL` | Character path/identifier/vector; see constraints | Optional local paths or patterns, read before files. |
-| `files` | `NULL` | Character path/identifier/vector; see constraints | Optional additional local paths or patterns. |
-| `format` | `c("pairs", "named_groups", "groups")` | Vector; choices versus multiple selection below | Explicit schema: "pairs" (default), "named_groups", or "groups". |
-| `feature_data` | `NULL` | API-specific table/supported object; see the contract | Optional data frame with unique character feature_id, character accver and numeric start/end in declared source coordinates. Original columns remain in report$feature_data; optional strand is retained. |
-| `unmatched` | `c("error", "report")` | Vector; choices versus multiple selection below | "error" (default) rejects IDs absent from supplied feature_data; "report" retains incomplete rows with mapping flags and reports each missing ID. Without feature_data all rows stay unplaced. |
-| `source_file` | `FALSE` | Logical | Add .source_file to pairs, membership and mapped links. |
+| `file` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional local paths or patterns, read before files. |
+| `files` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional additional local paths or patterns. |
+| `format` | `c("pairs", "named_groups", "groups")` | Type, units and accepted forms: see this API argument contract at right | Explicit schema: "pairs" (default), "named_groups", or "groups". |
+| `feature_data` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional data frame with unique character feature_id, character accver and numeric start/end in declared source coordinates. Original columns remain in report$feature_data; optional strand is retained. |
+| `unmatched` | `c("error", "report")` | Type, units and accepted forms: see this API argument contract at right | "error" (default) rejects IDs absent from supplied feature_data; "report" retains incomplete rows with mapping flags and reports each missing ID. Without feature_data all rows stay unplaced. |
+| `source_file` | `FALSE` | Type, units and accepted forms: see this API argument contract at right | Add .source_file to pairs, membership and mapped links. |
 
 </details>
 
@@ -2882,13 +2882,13 @@ Start with the [learning overview](learn.html#tasks). Lessons compare important 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `file` | `NULL` | Character path/identifier/vector; see constraints | Optional path vector or glob patterns; read before files. |
-| `files` | `NULL` | Character path/identifier/vector; see constraints | Optional paths or wildcard patterns for several files. |
-| `feature_types` | `NULL` | Nullable R object; type/inheritance below | Optional feature types to select. NULL retains all. |
-| `lengths` | `NULL` | Nullable R object; type/inheritance below | Optional named numeric vector of known full sequence lengths, following as_ggchord_seq(). |
-| `python` | `"python3"` | Character path/identifier/vector; see constraints | Interpreter name or path, default "python3". It must already have the optional Biopython package installed. No environment is modified. An explicit virtual-environment interpreter keeps its entry path rather than resolving its executable symlink into a different environment. |
-| `unsupported` | `c("error", "report")` | Vector; choices versus multiple selection below | "error" or "report" for locations without a safe local interval representation. |
-| `source_file` | `FALSE` | Logical | Add .source_file columns to output tables, default FALSE. File provenance is retained in the report regardless. |
+| `file` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional path vector or glob patterns; read before files. |
+| `files` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional paths or wildcard patterns for several files. |
+| `feature_types` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional feature types to select. NULL retains all. |
+| `lengths` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional named numeric vector of known full sequence lengths, following as_ggchord_seq(). |
+| `python` | `"python3"` | Type, units and accepted forms: see this API argument contract at right | Interpreter name or path, default "python3". It must already have the optional Biopython package installed. No environment is modified. An explicit virtual-environment interpreter keeps its entry path rather than resolving its executable symlink into a different environment. |
+| `unsupported` | `c("error", "report")` | Type, units and accepted forms: see this API argument contract at right | "error" or "report" for locations without a safe local interval representation. |
+| `source_file` | `FALSE` | Type, units and accepted forms: see this API argument contract at right | Add .source_file columns to output tables, default FALSE. File provenance is retained in the report regardless. |
 
 </details>
 
@@ -2901,12 +2901,12 @@ Start with the [learning overview](learn.html#tasks). Lessons compare important 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `file` | `NULL` | Character path/identifier/vector; see constraints | Optional path vector or glob patterns; read before files. |
-| `files` | `NULL` | Character path/identifier/vector; see constraints | Optional character vector of GFF3 files (literal paths and/or wildcard patterns). All matched files are read and combined. |
-| `feature_types` | `"CDS"` | Character/enum; choices below | Character vector of feature types to keep, default "CDS". |
-| `anno_from` | `c("product", "Name", "gene", "ID")` | Vector; choices versus multiple selection below | Character vector of GFF3 attribute keys, tried in order to fill the anno column. |
-| `unstranded` | `c("plus", "drop", "keep")` | Vector; choices versus multiple selection below | "plus" (the default) assigns unknown strands to +; "drop" removes them. Use "keep" with geom_feature() to retain them as nondirectional . intervals. source_strand always records the input. |
-| `source_file` | `FALSE` | Logical | Logical. Add a .source_file column when reading one or more files, default FALSE. |
+| `file` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional path vector or glob patterns; read before files. |
+| `files` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional character vector of GFF3 files (literal paths and/or wildcard patterns). All matched files are read and combined. |
+| `feature_types` | `"CDS"` | Type, units and accepted forms: see this API argument contract at right | Character vector of feature types to keep, default "CDS". |
+| `anno_from` | `c("product", "Name", "gene", "ID")` | Type, units and accepted forms: see this API argument contract at right | Character vector of GFF3 attribute keys, tried in order to fill the anno column. |
+| `unstranded` | `c("plus", "drop", "keep")` | Type, units and accepted forms: see this API argument contract at right | "plus" (the default) assigns unknown strands to +; "drop" removes them. Use "keep" with geom_feature() to retain them as nondirectional . intervals. source_strand always records the input. |
+| `source_file` | `FALSE` | Type, units and accepted forms: see this API argument contract at right | Logical. Add a .source_file column when reading one or more files, default FALSE. |
 
 </details>
 
@@ -2919,11 +2919,11 @@ Start with the [learning overview](learn.html#tasks). Lessons compare important 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `file` | `NULL` | Character path/identifier/vector; see constraints | Optional local path vector or glob patterns, before files. |
-| `files` | `NULL` | Character path/identifier/vector; see constraints | Optional additional MAF paths or patterns. |
-| `alphabet` | `"DNA"` | Character/enum; choices below | Declared DNA, RNA or AA alphabet, default "DNA". |
-| `python` | `"python3"` | Character path/identifier/vector; see constraints | Existing interpreter with optional Biopython, default "python3". |
-| `source_file` | `FALSE` | Logical | Add .source_file to alignment/ribbon rows, default FALSE. |
+| `file` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional local path vector or glob patterns, before files. |
+| `files` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional additional MAF paths or patterns. |
+| `alphabet` | `"DNA"` | Type, units and accepted forms: see this API argument contract at right | Declared DNA, RNA or AA alphabet, default "DNA". |
+| `python` | `"python3"` | Type, units and accepted forms: see this API argument contract at right | Existing interpreter with optional Biopython, default "python3". |
+| `source_file` | `FALSE` | Type, units and accepted forms: see this API argument contract at right | Add .source_file to alignment/ribbon rows, default FALSE. |
 
 </details>
 
@@ -2936,9 +2936,9 @@ Start with the [learning overview](learn.html#tasks). Lessons compare important 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `file` | `NULL` | Character path/identifier/vector; see constraints | Optional path vector or glob patterns; read before files. |
-| `files` | `NULL` | Character path/identifier/vector; see constraints | Optional paths or wildcard patterns for multiple PAF files. |
-| `source_file` | `FALSE` | Logical | Logical. Add a .source_file column, default FALSE. |
+| `file` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional path vector or glob patterns; read before files. |
+| `files` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional paths or wildcard patterns for multiple PAF files. |
+| `source_file` | `FALSE` | Type, units and accepted forms: see this API argument contract at right | Logical. Add a .source_file column, default FALSE. |
 
 </details>
 
@@ -2951,10 +2951,10 @@ Start with the [learning overview](learn.html#tasks). Lessons compare important 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `file` | `NULL` | Character path/identifier/vector; see constraints | Optional local path vector or glob patterns, before files. |
-| `files` | `NULL` | Character path/identifier/vector; see constraints | Optional additional input paths or patterns. |
-| `format` | `c("scan_tsv", "entry_json")` | Vector; choices versus multiple selection below | Explicit schema: "scan_tsv" (default, 11-15 columns) or "entry_json" (cached entry results with metadata/proteins/locations). JSON requires optional jsonlite. No pagination links are followed; declared counts and remaining-page links stay in the report. |
-| `source_file` | `FALSE` | Logical | Add .source_file to feature rows, default FALSE. |
+| `file` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional local path vector or glob patterns, before files. |
+| `files` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional additional input paths or patterns. |
+| `format` | `c("scan_tsv", "entry_json")` | Type, units and accepted forms: see this API argument contract at right | Explicit schema: "scan_tsv" (default, 11-15 columns) or "entry_json" (cached entry results with metadata/proteins/locations). JSON requires optional jsonlite. No pagination links are followed; declared counts and remaining-page links stay in the report. |
+| `source_file` | `FALSE` | Type, units and accepted forms: see this API argument contract at right | Add .source_file to feature rows, default FALSE. |
 
 </details>
 
@@ -2967,11 +2967,11 @@ Start with the [learning overview](learn.html#tasks). Lessons compare important 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `file` | `NULL` | Character path/identifier/vector; see constraints | Optional local path vector or glob patterns, before files. |
-| `files` | `NULL` | Character path/identifier/vector; see constraints | Optional additional VCF/BCF paths or patterns. |
-| `structural` | `FALSE` | Logical | Logical. Explicitly request optional structural decoding, default FALSE. Duplicate record IDs fail in this mode because mates would be ambiguous. All source records remain accessible in the default mode. |
-| `python` | `"python3"` | Character path/identifier/vector; see constraints | Existing interpreter with optional pysam for BCF only. Ignored for VCF text; default "python3". No environment is modified. |
-| `source_file` | `FALSE` | Logical | Add .source_file to returned table rows, default FALSE. |
+| `file` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional local path vector or glob patterns, before files. |
+| `files` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional additional VCF/BCF paths or patterns. |
+| `structural` | `FALSE` | Type, units and accepted forms: see this API argument contract at right | Logical. Explicitly request optional structural decoding, default FALSE. Duplicate record IDs fail in this mode because mates would be ambiguous. All source records remain accessible in the default mode. |
+| `python` | `"python3"` | Type, units and accepted forms: see this API argument contract at right | Existing interpreter with optional pysam for BCF only. Ignored for VCF text; default "python3". No environment is modified. |
+| `source_file` | `FALSE` | Type, units and accepted forms: see this API argument contract at right | Add .source_file to returned table rows, default FALSE. |
 
 </details>
 
@@ -2984,8 +2984,8 @@ Start with the [learning overview](learn.html#tasks). Lessons compare important 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `plot` | `No formal default; requiredness follows the contract` | R object; constraints below | A single-panel Cartesian ggplot with geom_residue layers mapping x = alignment_column, y = accver, label = symbol. Identity/reverse x scales and a discrete y scale are supported. Additional independent annotations are allowed. Facets, nonlinear scales, flipped coordinates and position adjustments moving registered cells are rejected. |
-| `data` | `No formal default; requiredness follows the contract` | API-specific data input; see the contract | The displayed rows of as_ggchord_alignment(), read_aligned_fasta() or translate_ggchord_cds()$nucleotides/residues. One cell per accver/alignment_column; source coordinates must be unique within each row. Keep original columns when filtering a window. Every selected source base must be present; split spliced regions explicitly. Origin-wrapping magnify regions require explicit circular source metadata. Gap columns remain visible but have no source coordinate. |
+| `plot` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | A single-panel Cartesian ggplot with geom_residue layers mapping x = alignment_column, y = accver, label = symbol. Identity/reverse x scales and a discrete y scale are supported. Additional independent annotations are allowed. Facets, nonlinear scales, flipped coordinates and position adjustments moving registered cells are rejected. |
+| `data` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | The displayed rows of as_ggchord_alignment(), read_aligned_fasta() or translate_ggchord_cds()$nucleotides/residues. One cell per accver/alignment_column; source coordinates must be unique within each row. Keep original columns when filtering a window. Every selected source base must be present; split spliced regions explicitly. Origin-wrapping magnify regions require explicit circular source metadata. Gap columns remain visible but have no source coordinate. |
 
 </details>
 
@@ -2998,14 +2998,14 @@ Start with the [learning overview](learn.html#tasks). Lessons compare important 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `seq_data` | `No formal default; requiredness follows the contract` | API-specific table/supported object; see the contract | Full sequence table with unique accver and integer lengths. |
-| `ribbon_data` | `NULL` | API-specific table/supported object; see the contract | Optional paired interval table. |
-| `gene_data` | `NULL` | API-specific table/supported object; see the contract | Optional gene or generic feature table, including segments. |
-| `windows` | `No formal default; requiredness follows the contract` | R object; constraints below | Table with accver, start, end, unique locus_id, optional row_id (defaults to source accver) and orientation (1 or -1, defaults to 1). Bounds must be ordered, integral and within the sequence. |
-| `point_data` | `NULL` | Nullable R object; type/inheritance below | Optional point links with qaccver, saccver, qpos, spos. |
-| `cross_gap` | `c("split", "drop")` | Vector; choices versus multiple selection below | How to handle interval links clipped by selected windows. |
-| `max_links` | `10000` | Numeric/integer; range in description | Positive integer upper bound on candidate ribbon/point copies. Increase explicitly for larger, intentionally overlapping views. |
-| `feature_data` | `NULL` | API-specific table/supported object; see the contract | Unified annotation input; mutually exclusive with gene_data. |
+| `seq_data` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Full sequence table with unique accver and integer lengths. |
+| `ribbon_data` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional paired interval table. |
+| `gene_data` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional gene or generic feature table, including segments. |
+| `windows` | `No formal default; requiredness follows the contract` | Window data frame; fields and coordinates follow the argument contract | Table with accver, start, end, unique locus_id, optional row_id (defaults to source accver) and orientation (1 or -1, defaults to 1). Bounds must be ordered, integral and within the sequence. |
+| `point_data` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional point links with qaccver, saccver, qpos, spos. |
+| `cross_gap` | `c("split", "drop")` | Type, units and accepted forms: see this API argument contract at right | How to handle interval links clipped by selected windows. |
+| `max_links` | `10000` | Type, units and accepted forms: see this API argument contract at right | Positive integer upper bound on candidate ribbon/point copies. Increase explicitly for larger, intentionally overlapping views. |
+| `feature_data` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Unified annotation input; mutually exclusive with gene_data. |
 
 </details>
 
@@ -3018,11 +3018,11 @@ Start with the [learning overview](learn.html#tasks). Lessons compare important 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `cds` | `No formal default; requiredness follows the contract` | R object; constraints below | A map from build_ggchord_cds(). |
-| `sequences` | `No formal default; requiredness follows the contract` | R object; constraints below | Named character vector of complete forward source strings, or a data frame with unique accver and sequence (e.g. read_fasta_lengths() with keep_sequence = TRUE). DNAStringSet/RNAStringSet are also accepted. Every CDS source must exist and contain its declared intervals. |
-| `alphabet` | `c("DNA", "RNA")` | Vector; choices versus multiple selection below | Explicit "DNA" (default) or "RNA"; ungapped IUPAC only. |
-| `initiation` | `c("literal", "start")` | Vector; choices versus multiple selection below | "literal" (default) translates every codon literally. "start" uses the genetic code's alternative initiation codons for the first codon only; it requires a complete biological 5-prime end. |
-| `ambiguous` | `c("error", "solve")` | Vector; choices versus multiple selection below | "error" (default) rejects ambiguous codons; "solve" uses Biostrings to resolve them, emitting X when not uniquely resolvable. |
+| `cds` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | A map from build_ggchord_cds(). |
+| `sequences` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Named character vector of complete forward source strings, or a data frame with unique accver and sequence (e.g. read_fasta_lengths() with keep_sequence = TRUE). DNAStringSet/RNAStringSet are also accepted. Every CDS source must exist and contain its declared intervals. |
+| `alphabet` | `c("DNA", "RNA")` | Type, units and accepted forms: see this API argument contract at right | Explicit "DNA" (default) or "RNA"; ungapped IUPAC only. |
+| `initiation` | `c("literal", "start")` | Type, units and accepted forms: see this API argument contract at right | "literal" (default) translates every codon literally. "start" uses the genetic code's alternative initiation codons for the first codon only; it requires a complete biological 5-prime end. |
+| `ambiguous` | `c("error", "solve")` | Type, units and accepted forms: see this API argument contract at right | "error" (default) rejects ambiguous codons; "solve" uses Biostrings to resolve them, emitting X when not uniquely resolvable. |
 
 </details>
 
@@ -3035,14 +3035,14 @@ Start with the [learning overview](learn.html#tasks). Lessons compare important 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `seq_data` | `No formal default; requiredness follows the contract` | API-specific table/supported object; see the contract | data.frame/tibble, required. Basic sequence information (columns accver, length). |
-| `ribbon_data` | `NULL` | API-specific table/supported object; see the contract | data.frame/tibble, optional. Alignment results (columns qaccver, saccver, qstart, qend, sstart, send). |
-| `gene_data` | `NULL` | API-specific table/supported object; see the contract | data.frame/tibble, optional. Gene annotation data (columns accver, start, end, strand; anno is optional). |
-| `strict` | `FALSE` | Logical | Logical. When TRUE, collect issues and then stop if any severe problem is found. When FALSE (default), return the full diagnostic report without stopping. |
-| `check_coordinates` | `TRUE` | Logical | Logical, default TRUE. Whether to check that ribbon/gene coordinates stay inside [1, sequence length]. |
-| `check_duplicates` | `TRUE` | Logical | Logical, default TRUE. Whether to look for fully duplicated, near-duplicated and highly overlapping records. Reciprocal overlap requires the intersection to cover at least 90 percent of each interval, including descending ribbon endpoints. Reversed feature bounds may cross a circular origin and are excluded from linear overlap diagnostics; exact duplicates are still reported. |
-| `check_self_links` | `TRUE` | Logical | Logical, default TRUE. Whether to flag alignment rows where qaccver == saccver. |
-| `feature_data` | `NULL` | API-specific table/supported object; see the contract | Unified annotation table, mutually exclusive with gene_data. Requires accver, start, end. Missing strand is unknown; +, -, ., and +/- are accepted. Reports use table "feature" and data_summary$n_feature; the input is never modified. |
+| `seq_data` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | data.frame/tibble, required. Basic sequence information (columns accver, length). |
+| `ribbon_data` | `NULL` | Type, units and accepted forms: see this API argument contract at right | data.frame/tibble, optional. Alignment results (columns qaccver, saccver, qstart, qend, sstart, send). |
+| `gene_data` | `NULL` | Type, units and accepted forms: see this API argument contract at right | data.frame/tibble, optional. Gene annotation data (columns accver, start, end, strand; anno is optional). |
+| `strict` | `FALSE` | Type, units and accepted forms: see this API argument contract at right | Logical. When TRUE, collect issues and then stop if any severe problem is found. When FALSE (default), return the full diagnostic report without stopping. |
+| `check_coordinates` | `TRUE` | Type, units and accepted forms: see this API argument contract at right | Logical, default TRUE. Whether to check that ribbon/gene coordinates stay inside [1, sequence length]. |
+| `check_duplicates` | `TRUE` | Type, units and accepted forms: see this API argument contract at right | Logical, default TRUE. Whether to look for fully duplicated, near-duplicated and highly overlapping records. Reciprocal overlap requires the intersection to cover at least 90 percent of each interval, including descending ribbon endpoints. Reversed feature bounds may cross a circular origin and are excluded from linear overlap diagnostics; exact duplicates are still reported. |
+| `check_self_links` | `TRUE` | Type, units and accepted forms: see this API argument contract at right | Logical, default TRUE. Whether to flag alignment rows where qaccver == saccver. |
+| `feature_data` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Unified annotation table, mutually exclusive with gene_data. Requires accver, start, end. Missing strand is unknown; +, -, ., and +/- are accepted. Reports use table "feature" and data_summary$n_feature; the input is never modified. |
 
 </details>
 
@@ -3055,9 +3055,9 @@ Start with the [learning overview](learn.html#tasks). Lessons compare important 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `seq_data` | `No formal default; requiredness follows the contract` | API-specific table/supported object; see the contract | A data frame containing accver and genome foreign keys. |
-| `genomes` | `No formal default; requiredness follows the contract` | R object; constraints below | A data frame containing a unique genome primary key. |
-| `strict` | `FALSE` | Logical | Logical. Stop if relational errors are present; warnings about genomes without contigs do not cause failure. |
+| `seq_data` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | A data frame containing accver and genome foreign keys. |
+| `genomes` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | A data frame containing a unique genome primary key. |
+| `strict` | `FALSE` | Type, units and accepted forms: see this API argument contract at right | Logical. Stop if relational errors are present; warnings about genomes without contigs do not cause failure. |
 
 </details>
 
@@ -3070,14 +3070,14 @@ Start with the [learning overview](learn.html#tasks). Lessons compare important 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `plot` | `ggplot2::last_plot()` | R object; constraints below | A ggchord or ggplot object, default last_plot(). |
-| `width` | `12.39` | Numeric/integer; range in description | Positive output width. With no explicit dimensions, coord_chord() uses 12.39 inches while coord_circular() derives its width from the annotation envelope. |
-| `height` | `9.71` | Numeric/integer; range in description | Positive output height. With no explicit dimensions, coord_chord() uses 9.71 inches while coord_circular() derives both dimensions. Use NULL to fit the sequence, labels and legends while preserving equal coordinate units. Explicit width/height values are always respected. |
-| `units` | `c("in", "cm", "mm", "px")` | Vector; choices versus multiple selection below | Output units: "in", "cm", "mm", or "px". |
-| `device` | `c("png", "svg")` | Vector; choices versus multiple selection below | Preview device, "png" or "svg". SVG output requires the optional svglite package or a working base Cairo SVG device. |
-| `dpi` | `144` | Numeric/integer; range in description | Positive raster resolution, default 144. |
-| `bg` | `NULL` | Nullable R object; type/inheritance below | Optional background colour passed to ggsave(). |
-| `viewer` | `c("auto", "ide", "browser", "none")` | Vector; choices versus multiple selection below | How to open the preview: "auto" prefers getOption("viewer") and falls back to a browser in interactive sessions; "ide", "browser", and "none" select an explicit destination. "none" is useful in scripts and tests. |
+| `plot` | `ggplot2::last_plot()` | Type, units and accepted forms: see this API argument contract at right | A ggchord or ggplot object, default last_plot(). |
+| `width` | `12.39` | Type, units and accepted forms: see this API argument contract at right | Positive output width. With no explicit dimensions, coord_chord() uses 12.39 inches while coord_circular() derives its width from the annotation envelope. |
+| `height` | `9.71` | Type, units and accepted forms: see this API argument contract at right | Positive output height. With no explicit dimensions, coord_chord() uses 9.71 inches while coord_circular() derives both dimensions. Use NULL to fit the sequence, labels and legends while preserving equal coordinate units. Explicit width/height values are always respected. |
+| `units` | `c("in", "cm", "mm", "px")` | Type, units and accepted forms: see this API argument contract at right | Output units: "in", "cm", "mm", or "px". |
+| `device` | `c("png", "svg")` | Type, units and accepted forms: see this API argument contract at right | Preview device, "png" or "svg". SVG output requires the optional svglite package or a working base Cairo SVG device. |
+| `dpi` | `144` | Type, units and accepted forms: see this API argument contract at right | Positive raster resolution, default 144. |
+| `bg` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional background colour passed to ggsave(). |
+| `viewer` | `c("auto", "ide", "browser", "none")` | Type, units and accepted forms: see this API argument contract at right | How to open the preview: "auto" prefers getOption("viewer") and falls back to a browser in interactive sessions; "ide", "browser", and "none" select an explicit destination. "none" is useful in scripts and tests. |
 
 </details>
 
@@ -3093,9 +3093,9 @@ Upstream entry reference: [Rd](reference/ggplot2-helpers.html)
 
 | Parameter | Signature default | Type/contract |
 | --- | --- | --- |
-| `x` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `y` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `...` | `No formal default; see upstream contract` | Forwarded arguments; Follow upstream help for types, units and accepted values. |
+| `x` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `y` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `...` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
 
 </details>
 
@@ -3106,7 +3106,7 @@ Upstream entry reference: [Rd](reference/ggplot2-helpers.html)
 
 | Parameter | Signature default | Type/contract |
 | --- | --- | --- |
-| `x` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `x` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
 
 </details>
 
@@ -3117,7 +3117,7 @@ Upstream entry reference: [Rd](reference/ggplot2-helpers.html)
 
 | Parameter | Signature default | Type/contract |
 | --- | --- | --- |
-| `x` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `x` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
 
 </details>
 
@@ -3128,17 +3128,17 @@ Upstream entry reference: [Rd](reference/ggplot2-helpers.html)
 
 | Parameter | Signature default | Type/contract |
 | --- | --- | --- |
-| `geom` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `x` | `NULL` | Nullable R object; type/inheritance below; Follow upstream help for types, units and accepted values. |
-| `y` | `NULL` | Nullable R object; type/inheritance below; Follow upstream help for types, units and accepted values. |
-| `xmin` | `NULL` | Nullable R object; type/inheritance below; Follow upstream help for types, units and accepted values. |
-| `xmax` | `NULL` | Nullable R object; type/inheritance below; Follow upstream help for types, units and accepted values. |
-| `ymin` | `NULL` | Nullable R object; type/inheritance below; Follow upstream help for types, units and accepted values. |
-| `ymax` | `NULL` | Nullable R object; type/inheritance below; Follow upstream help for types, units and accepted values. |
-| `xend` | `NULL` | Nullable R object; type/inheritance below; Follow upstream help for types, units and accepted values. |
-| `yend` | `NULL` | Nullable R object; type/inheritance below; Follow upstream help for types, units and accepted values. |
-| `...` | `No formal default; see upstream contract` | Forwarded arguments; Follow upstream help for types, units and accepted values. |
-| `na.rm` | `FALSE` | Logical; Follow upstream help for types, units and accepted values. |
+| `geom` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `x` | `NULL` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `y` | `NULL` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `xmin` | `NULL` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `xmax` | `NULL` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `ymin` | `NULL` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `ymax` | `NULL` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `xend` | `NULL` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `yend` | `NULL` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `...` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `na.rm` | `FALSE` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
 
 </details>
 
@@ -3149,10 +3149,10 @@ Upstream entry reference: [Rd](reference/grid-helpers.html)
 
 | Parameter | Signature default | Type/contract |
 | --- | --- | --- |
-| `angle` | `30` | Numeric/integer; range in description; Follow upstream help for types, units and accepted values. |
-| `length` | `unit(0.25, "inches")` | grid physical-unit object; Follow upstream help for types, units and accepted values. |
-| `ends` | `"last"` | Character/enum; choices below; Follow upstream help for types, units and accepted values. |
-| `type` | `"open"` | Character/enum; choices below; Follow upstream help for types, units and accepted values. |
+| `angle` | `30` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `length` | `unit(0.25, "inches")` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `ends` | `"last"` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `type` | `"open"` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
 
 </details>
 
@@ -3173,17 +3173,17 @@ Upstream entry reference: [Rd](reference/ggplot2-helpers.html)
 
 | Parameter | Signature default | Type/contract |
 | --- | --- | --- |
-| `colour` | `NULL` | Nullable R object; type/inheritance below; Follow upstream help for types, units and accepted values. |
-| `linewidth` | `NULL` | Nullable R object; type/inheritance below; Follow upstream help for types, units and accepted values. |
-| `linetype` | `NULL` | Nullable R object; type/inheritance below; Follow upstream help for types, units and accepted values. |
-| `lineend` | `NULL` | Nullable R object; type/inheritance below; Follow upstream help for types, units and accepted values. |
-| `color` | `NULL` | Nullable R object; type/inheritance below; Follow upstream help for types, units and accepted values. |
-| `linejoin` | `NULL` | Nullable R object; type/inheritance below; Follow upstream help for types, units and accepted values. |
-| `arrow` | `NULL` | Nullable R object; type/inheritance below; Follow upstream help for types, units and accepted values. |
-| `arrow.fill` | `NULL` | Nullable R object; type/inheritance below; Follow upstream help for types, units and accepted values. |
-| `inherit.blank` | `FALSE` | Logical; Follow upstream help for types, units and accepted values. |
-| `size` | `deprecated()` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `...` | `No formal default; see upstream contract` | Forwarded arguments; Follow upstream help for types, units and accepted values. |
+| `colour` | `NULL` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `linewidth` | `NULL` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `linetype` | `NULL` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `lineend` | `NULL` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `color` | `NULL` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `linejoin` | `NULL` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `arrow` | `NULL` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `arrow.fill` | `NULL` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `inherit.blank` | `FALSE` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `size` | `deprecated()` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `...` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
 
 </details>
 
@@ -3194,15 +3194,15 @@ Upstream entry reference: [Rd](reference/ggplot2-helpers.html)
 
 | Parameter | Signature default | Type/contract |
 | --- | --- | --- |
-| `fill` | `NULL` | Nullable R object; type/inheritance below; Follow upstream help for types, units and accepted values. |
-| `colour` | `NULL` | Nullable R object; type/inheritance below; Follow upstream help for types, units and accepted values. |
-| `linewidth` | `NULL` | Nullable R object; type/inheritance below; Follow upstream help for types, units and accepted values. |
-| `linetype` | `NULL` | Nullable R object; type/inheritance below; Follow upstream help for types, units and accepted values. |
-| `color` | `NULL` | Nullable R object; type/inheritance below; Follow upstream help for types, units and accepted values. |
-| `linejoin` | `NULL` | Nullable R object; type/inheritance below; Follow upstream help for types, units and accepted values. |
-| `inherit.blank` | `FALSE` | Logical; Follow upstream help for types, units and accepted values. |
-| `size` | `deprecated()` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `...` | `No formal default; see upstream contract` | Forwarded arguments; Follow upstream help for types, units and accepted values. |
+| `fill` | `NULL` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `colour` | `NULL` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `linewidth` | `NULL` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `linetype` | `NULL` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `color` | `NULL` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `linejoin` | `NULL` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `inherit.blank` | `FALSE` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `size` | `deprecated()` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `...` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
 
 </details>
 
@@ -3213,19 +3213,19 @@ Upstream entry reference: [Rd](reference/ggplot2-helpers.html)
 
 | Parameter | Signature default | Type/contract |
 | --- | --- | --- |
-| `family` | `NULL` | Nullable R object; type/inheritance below; Follow upstream help for types, units and accepted values. |
-| `face` | `NULL` | Nullable R object; type/inheritance below; Follow upstream help for types, units and accepted values. |
-| `colour` | `NULL` | Nullable R object; type/inheritance below; Follow upstream help for types, units and accepted values. |
-| `size` | `NULL` | Nullable R object; type/inheritance below; Follow upstream help for types, units and accepted values. |
-| `hjust` | `NULL` | Nullable R object; type/inheritance below; Follow upstream help for types, units and accepted values. |
-| `vjust` | `NULL` | Nullable R object; type/inheritance below; Follow upstream help for types, units and accepted values. |
-| `angle` | `NULL` | Nullable R object; type/inheritance below; Follow upstream help for types, units and accepted values. |
-| `lineheight` | `NULL` | Nullable R object; type/inheritance below; Follow upstream help for types, units and accepted values. |
-| `color` | `NULL` | Nullable R object; type/inheritance below; Follow upstream help for types, units and accepted values. |
-| `margin` | `NULL` | Nullable R object; type/inheritance below; Follow upstream help for types, units and accepted values. |
-| `debug` | `NULL` | Nullable R object; type/inheritance below; Follow upstream help for types, units and accepted values. |
-| `inherit.blank` | `FALSE` | Logical; Follow upstream help for types, units and accepted values. |
-| `...` | `No formal default; see upstream contract` | Forwarded arguments; Follow upstream help for types, units and accepted values. |
+| `family` | `NULL` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `face` | `NULL` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `colour` | `NULL` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `size` | `NULL` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `hjust` | `NULL` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `vjust` | `NULL` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `angle` | `NULL` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `lineheight` | `NULL` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `color` | `NULL` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `margin` | `NULL` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `debug` | `NULL` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `inherit.blank` | `FALSE` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `...` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
 
 </details>
 
@@ -3236,8 +3236,8 @@ Upstream entry reference: [Rd](reference/ggplot2-helpers.html)
 
 | Parameter | Signature default | Type/contract |
 | --- | --- | --- |
-| `mult` | `0` | Numeric/integer; range in description; Follow upstream help for types, units and accepted values. |
-| `add` | `0` | Numeric/integer; range in description; Follow upstream help for types, units and accepted values. |
+| `mult` | `0` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `add` | `0` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
 
 </details>
 
@@ -3248,19 +3248,19 @@ Upstream entry reference: [Rd](reference/ggplot2-helpers.html)
 
 | Parameter | Signature default | Type/contract |
 | --- | --- | --- |
-| `filename` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `plot` | `get_last_plot()` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `device` | `NULL` | Nullable R object; type/inheritance below; Follow upstream help for types, units and accepted values. |
-| `path` | `NULL` | Nullable R object; type/inheritance below; Follow upstream help for types, units and accepted values. |
-| `scale` | `1` | Numeric/integer; range in description; Follow upstream help for types, units and accepted values. |
-| `width` | `NA` | Geometry number/vector/documented formats; Follow upstream help for types, units and accepted values. |
-| `height` | `NA` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `units` | `c("in", "cm", "mm", "px")` | Vector; choices versus multiple selection below; Follow upstream help for types, units and accepted values. |
-| `dpi` | `300` | Numeric/integer; range in description; Follow upstream help for types, units and accepted values. |
-| `limitsize` | `TRUE` | Logical; Follow upstream help for types, units and accepted values. |
-| `bg` | `NULL` | Nullable R object; type/inheritance below; Follow upstream help for types, units and accepted values. |
-| `create.dir` | `FALSE` | Logical; Follow upstream help for types, units and accepted values. |
-| `...` | `No formal default; see upstream contract` | Forwarded arguments; Follow upstream help for types, units and accepted values. |
+| `filename` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `plot` | `get_last_plot()` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `device` | `NULL` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `path` | `NULL` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `scale` | `1` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `width` | `NA` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `height` | `NA` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `units` | `c("in", "cm", "mm", "px")` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `dpi` | `300` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `limitsize` | `TRUE` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `bg` | `NULL` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `create.dir` | `FALSE` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `...` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
 
 </details>
 
@@ -3271,8 +3271,8 @@ Upstream entry reference: [Rd](reference/ggplot2-helpers.html)
 
 | Parameter | Signature default | Type/contract |
 | --- | --- | --- |
-| `label` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `subtitle` | `waiver()` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `label` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `subtitle` | `waiver()` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
 
 </details>
 
@@ -3283,7 +3283,7 @@ Upstream entry reference: [Rd](reference/ggplot2-helpers.html)
 
 | Parameter | Signature default | Type/contract |
 | --- | --- | --- |
-| `...` | `No formal default; see upstream contract` | Forwarded arguments; Follow upstream help for types, units and accepted values. |
+| `...` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
 
 </details>
 
@@ -3294,14 +3294,14 @@ Upstream entry reference: [Rd](reference/ggplot2-helpers.html)
 
 | Parameter | Signature default | Type/contract |
 | --- | --- | --- |
-| `...` | `No formal default; see upstream contract` | Forwarded arguments; Follow upstream help for types, units and accepted values. |
-| `title` | `waiver()` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `subtitle` | `waiver()` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `caption` | `waiver()` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `tag` | `waiver()` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `dictionary` | `waiver()` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `alt` | `waiver()` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `alt_insight` | `waiver()` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `...` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `title` | `waiver()` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `subtitle` | `waiver()` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `caption` | `waiver()` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `tag` | `waiver()` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `dictionary` | `waiver()` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `alt` | `waiver()` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `alt_insight` | `waiver()` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
 
 </details>
 
@@ -3322,12 +3322,12 @@ Upstream entry reference: [Rd](reference/ggplot2-helpers.html)
 
 | Parameter | Signature default | Type/contract |
 | --- | --- | --- |
-| `t` | `0` | Numeric/integer; range in description; Follow upstream help for types, units and accepted values. |
-| `r` | `0` | Numeric/integer; range in description; Follow upstream help for types, units and accepted values. |
-| `b` | `0` | Numeric/integer; range in description; Follow upstream help for types, units and accepted values. |
-| `l` | `0` | Numeric/integer; range in description; Follow upstream help for types, units and accepted values. |
-| `unit` | `"pt"` | Character/enum; choices below; Follow upstream help for types, units and accepted values. |
-| `...` | `No formal default; see upstream contract` | Forwarded arguments; Follow upstream help for types, units and accepted values. |
+| `t` | `0` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `r` | `0` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `b` | `0` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `l` | `0` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `unit` | `"pt"` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `...` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
 
 </details>
 
@@ -3358,7 +3358,7 @@ Upstream entry reference: [Rd](reference/ggplot2-helpers.html)
 
 | Parameter | Signature default | Type/contract |
 | --- | --- | --- |
-| `x` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
+| `x` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
 
 </details>
 
@@ -3369,153 +3369,153 @@ Upstream entry reference: [Rd](reference/ggplot2-helpers.html)
 
 | Parameter | Signature default | Type/contract |
 | --- | --- | --- |
-| `...` | `No formal default; see upstream contract` | Forwarded arguments; Follow upstream help for types, units and accepted values. |
-| `line` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `rect` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `text` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `title` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `point` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `polygon` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `geom` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `spacing` | `No formal default; see upstream contract` | Geometry number/vector/documented formats; Follow upstream help for types, units and accepted values. |
-| `margins` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `aspect.ratio` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `axis.title` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `axis.title.x` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `axis.title.x.top` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `axis.title.x.bottom` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `axis.title.y` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `axis.title.y.left` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `axis.title.y.right` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `axis.text` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `axis.text.x` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `axis.text.x.top` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `axis.text.x.bottom` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `axis.text.y` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `axis.text.y.left` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `axis.text.y.right` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `axis.text.theta` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `axis.text.r` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `axis.ticks` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `axis.ticks.x` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `axis.ticks.x.top` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `axis.ticks.x.bottom` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `axis.ticks.y` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `axis.ticks.y.left` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `axis.ticks.y.right` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `axis.ticks.theta` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `axis.ticks.r` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `axis.minor.ticks.x.top` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `axis.minor.ticks.x.bottom` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `axis.minor.ticks.y.left` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `axis.minor.ticks.y.right` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `axis.minor.ticks.theta` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `axis.minor.ticks.r` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `axis.ticks.length` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `axis.ticks.length.x` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `axis.ticks.length.x.top` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `axis.ticks.length.x.bottom` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `axis.ticks.length.y` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `axis.ticks.length.y.left` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `axis.ticks.length.y.right` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `axis.ticks.length.theta` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `axis.ticks.length.r` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `axis.minor.ticks.length` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `axis.minor.ticks.length.x` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `axis.minor.ticks.length.x.top` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `axis.minor.ticks.length.x.bottom` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `axis.minor.ticks.length.y` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `axis.minor.ticks.length.y.left` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `axis.minor.ticks.length.y.right` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `axis.minor.ticks.length.theta` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `axis.minor.ticks.length.r` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `axis.line` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `axis.line.x` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `axis.line.x.top` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `axis.line.x.bottom` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `axis.line.y` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `axis.line.y.left` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `axis.line.y.right` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `axis.line.theta` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `axis.line.r` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `legend.background` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `legend.margin` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `legend.spacing` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `legend.spacing.x` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `legend.spacing.y` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `legend.key` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `legend.key.size` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `legend.key.height` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `legend.key.width` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `legend.key.spacing` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `legend.key.spacing.x` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `legend.key.spacing.y` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `legend.key.justification` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `legend.frame` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `legend.ticks` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `legend.ticks.length` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `legend.axis.line` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `legend.text` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `legend.text.position` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `legend.title` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `legend.title.position` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `legend.position` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `legend.position.inside` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `legend.direction` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `legend.byrow` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `legend.justification` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `legend.justification.top` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `legend.justification.bottom` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `legend.justification.left` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `legend.justification.right` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `legend.justification.inside` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `legend.location` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `legend.box` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `legend.box.just` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `legend.box.margin` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `legend.box.background` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `legend.box.spacing` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `panel.background` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `panel.border` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `panel.spacing` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `panel.spacing.x` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `panel.spacing.y` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `panel.grid` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `panel.grid.major` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `panel.grid.minor` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `panel.grid.major.x` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `panel.grid.major.y` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `panel.grid.minor.x` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `panel.grid.minor.y` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `panel.ontop` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `panel.widths` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `panel.heights` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `plot.background` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `plot.title` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `plot.title.position` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `plot.subtitle` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `plot.caption` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `plot.caption.position` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `plot.tag` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `plot.tag.position` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `plot.tag.location` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `plot.margin` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `strip.background` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `strip.background.x` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `strip.background.y` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `strip.clip` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `strip.placement` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `strip.text` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `strip.text.x` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `strip.text.x.bottom` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `strip.text.x.top` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `strip.text.y` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `strip.text.y.left` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `strip.text.y.right` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `strip.switch.pad.grid` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `strip.switch.pad.wrap` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `complete` | `FALSE` | Logical; Follow upstream help for types, units and accepted values. |
-| `validate` | `TRUE` | Logical; Follow upstream help for types, units and accepted values. |
+| `...` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `line` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `rect` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `text` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `title` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `point` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `polygon` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `geom` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `spacing` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `margins` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `aspect.ratio` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `axis.title` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `axis.title.x` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `axis.title.x.top` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `axis.title.x.bottom` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `axis.title.y` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `axis.title.y.left` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `axis.title.y.right` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `axis.text` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `axis.text.x` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `axis.text.x.top` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `axis.text.x.bottom` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `axis.text.y` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `axis.text.y.left` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `axis.text.y.right` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `axis.text.theta` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `axis.text.r` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `axis.ticks` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `axis.ticks.x` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `axis.ticks.x.top` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `axis.ticks.x.bottom` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `axis.ticks.y` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `axis.ticks.y.left` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `axis.ticks.y.right` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `axis.ticks.theta` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `axis.ticks.r` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `axis.minor.ticks.x.top` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `axis.minor.ticks.x.bottom` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `axis.minor.ticks.y.left` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `axis.minor.ticks.y.right` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `axis.minor.ticks.theta` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `axis.minor.ticks.r` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `axis.ticks.length` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `axis.ticks.length.x` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `axis.ticks.length.x.top` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `axis.ticks.length.x.bottom` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `axis.ticks.length.y` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `axis.ticks.length.y.left` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `axis.ticks.length.y.right` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `axis.ticks.length.theta` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `axis.ticks.length.r` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `axis.minor.ticks.length` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `axis.minor.ticks.length.x` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `axis.minor.ticks.length.x.top` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `axis.minor.ticks.length.x.bottom` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `axis.minor.ticks.length.y` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `axis.minor.ticks.length.y.left` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `axis.minor.ticks.length.y.right` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `axis.minor.ticks.length.theta` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `axis.minor.ticks.length.r` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `axis.line` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `axis.line.x` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `axis.line.x.top` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `axis.line.x.bottom` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `axis.line.y` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `axis.line.y.left` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `axis.line.y.right` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `axis.line.theta` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `axis.line.r` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `legend.background` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `legend.margin` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `legend.spacing` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `legend.spacing.x` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `legend.spacing.y` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `legend.key` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `legend.key.size` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `legend.key.height` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `legend.key.width` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `legend.key.spacing` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `legend.key.spacing.x` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `legend.key.spacing.y` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `legend.key.justification` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `legend.frame` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `legend.ticks` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `legend.ticks.length` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `legend.axis.line` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `legend.text` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `legend.text.position` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `legend.title` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `legend.title.position` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `legend.position` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `legend.position.inside` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `legend.direction` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `legend.byrow` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `legend.justification` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `legend.justification.top` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `legend.justification.bottom` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `legend.justification.left` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `legend.justification.right` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `legend.justification.inside` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `legend.location` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `legend.box` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `legend.box.just` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `legend.box.margin` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `legend.box.background` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `legend.box.spacing` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `panel.background` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `panel.border` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `panel.spacing` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `panel.spacing.x` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `panel.spacing.y` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `panel.grid` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `panel.grid.major` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `panel.grid.minor` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `panel.grid.major.x` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `panel.grid.major.y` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `panel.grid.minor.x` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `panel.grid.minor.y` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `panel.ontop` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `panel.widths` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `panel.heights` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `plot.background` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `plot.title` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `plot.title.position` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `plot.subtitle` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `plot.caption` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `plot.caption.position` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `plot.tag` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `plot.tag.position` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `plot.tag.location` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `plot.margin` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `strip.background` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `strip.background.x` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `strip.background.y` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `strip.clip` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `strip.placement` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `strip.text` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `strip.text.x` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `strip.text.x.bottom` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `strip.text.x.top` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `strip.text.y` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `strip.text.y.left` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `strip.text.y.right` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `strip.switch.pad.grid` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `strip.switch.pad.wrap` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `complete` | `FALSE` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `validate` | `TRUE` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
 
 </details>
 
@@ -3526,9 +3526,9 @@ Upstream entry reference: [Rd](reference/grid-helpers.html)
 
 | Parameter | Signature default | Type/contract |
 | --- | --- | --- |
-| `x` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `units` | `No formal default; see upstream contract` | R object; constraints below; Follow upstream help for types, units and accepted values. |
-| `data` | `NULL` | API-specific data input; see the contract; Follow upstream help for types, units and accepted values. |
+| `x` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `units` | `No formal default; see upstream contract` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
+| `data` | `NULL` | Type, units and accepted forms: see this API argument contract at right; Follow upstream help for types, units and accepted values. |
 
 </details>
 

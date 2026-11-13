@@ -175,7 +175,7 @@ def main():
                     f'{page["slug"]}: empty or missing shared teaching block {keys}')
     subprocess.run(['python3','tools/site-audit/verify-existing-assets.py'],cwd=ROOT,check=True)
     baseline_api=subprocess.check_output(['git','show','0f5dd96:R/api-contract.R'],cwd=ROOT)
-    current_fingerprints = fingerprint_module.fingerprints(runtime_hashes={'R/api-contract.R':hashlib.md5(baseline_api).hexdigest()})
+    current_fingerprints = fingerprint_module.fingerprints(runtime_hashes={'R/api-contract.R':hashlib.md5(baseline_api).hexdigest()},recipe_source=subprocess.check_output(['git','show','0f5dd96:tools/documentation-examples.R'],cwd=ROOT,text=True))
     for a in assets:
         path = ROOT/a['file']
         require(path.is_file(),f'Missing figure {path}')
