@@ -1,0 +1,14 @@
+"case","matching_source_input_rows","anchors_off_source_before","anchors_off_source_after","internal_glyphs_off_tangent","boundary_fragments","boundary_fragments_outside_source","inner_source_exterior_before","inner_source_exterior_after"
+"pSB1C3",TRUE,5,0,0,0,0,0,0
+"pUC19",TRUE,0,0,0,10,0,1,0
+"pBR322",TRUE,0,0,0,4,0,0,0
+"pBluescript_II_SK_plus",TRUE,0,0,0,10,0,2,1
+"pET_28a_plus",TRUE,0,0,0,2,0,0,0
+"pETDuet_1",TRUE,12,0,0,4,0,2,1
+"pcDNA3_1_plus",TRUE,0,0,0,4,0,0,0
+"pDONR221",TRUE,0,0,0,0,0,0,0
+"pCAMBIA1300",TRUE,0,0,0,9,1,1,1
+"pTRE_Tight_BI",TRUE,0,0,0,4,0,7,3
+"pEarleyGate_201",TRUE,0,0,0,9,0,0,0
+"pTRIPZ",TRUE,0,0,0,4,0,0,0
+"pSpCas9_BB_2A_GFP_PX458",TRUE,0,0,0,7,3,0,0

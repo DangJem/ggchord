@@ -1,0 +1,14 @@
+case,n_visible_source_labels_before,n_visible_source_labels_after,n_hidden_source_labels_before,n_hidden_source_labels_after,n_text_overlaps_before,n_text_overlaps_after,n_leader_crossings_before,n_leader_crossings_after,n_leaders_through_text_before,n_leaders_through_text_after,n_label_outside_canvas_before,n_label_outside_canvas_after,mean_leader_length_mm_before,mean_leader_length_mm_after,max_leader_length_mm_before,max_leader_length_mm_after,converged_before,converged_after,anchors_off_own_feature_after,internal_glyphs_off_tangent_after,inside_to_exterior_feature_labels,endpoint_strings,hidden_endpoint_strings
+pSB1C3,47,47,0,0,0,0,0,0,1,1,0,0,22.3257,22.5739,55.6874,55.8595,True,True,0,0,2,1,0
+pUC19,48,48,0,0,0,0,0,0,0,0,0,0,21.0976,20.6407,55.6881,54.6625,True,True,0,0,0,1,0
+pBR322,53,53,0,0,0,0,0,0,0,0,0,0,26.7002,27.2268,69.7678,69.7678,True,True,0,0,0,1,0
+pBluescript_II_SK_plus,62,62,0,0,0,0,0,0,0,0,0,0,19.8451,19.5166,61.4549,61.4549,True,True,0,0,1,1,0
+pET_28a_plus,67,67,0,0,0,0,0,0,0,2,0,0,26.0961,26.7089,50.8961,51.4076,True,True,0,0,8,1,0
+pETDuet_1,83,83,0,0,0,0,0,0,2,3,0,0,30.1401,29.9403,62.0573,59.1097,True,True,0,0,7,1,0
+pcDNA3_1_plus,64,64,0,0,0,0,0,0,0,0,0,0,23.7861,24.9182,63.9243,63.9243,True,True,0,0,0,1,0
+pDONR221,58,58,0,0,0,0,0,0,0,0,0,0,21.0034,22.1303,61.8858,61.8858,True,True,0,0,0,1,0
+pCAMBIA1300,59,59,0,0,0,0,0,0,1,1,0,0,23.6707,23.9807,81.5195,81.5184,True,True,0,0,3,1,0
+pTRE_Tight_BI,62,62,0,0,0,0,0,0,10,4,0,0,28.4291,25.9051,96.9224,90.9522,True,True,0,0,3,1,0
+pEarleyGate_201,60,60,0,0,0,0,0,0,0,0,0,0,26.4513,28.1133,71.285,72.0341,True,True,0,0,4,1,0
+pTRIPZ,71,71,0,0,0,0,0,0,0,0,0,0,20.3864,21.0448,64.7371,64.7371,True,True,0,0,9,1,0
+pSpCas9_BB_2A_GFP_PX458,23,23,0,0,0,0,0,0,0,1,0,0,21.2009,18.9731,84.3212,36.0523,True,True,0,0,4,1,0
