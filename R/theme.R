@@ -208,7 +208,7 @@ ggchord_theme_from_environment <- function(preset, env, dots) {
     values$axis.minor.ticks.length <- grid::unit(.8, "mm")
   }
   if (preset == "plasmid" && is.null(values$axis.text.offset)) {
-    values$axis.text.offset <- grid::unit(1.15, "mm")
+    values$axis.text.offset <- grid::unit(.45, "mm")
     # The unit retains provenance through theme + theme, whose settings
     # attribute alone cannot reveal a later equal-valued native override.
     attr(values$axis.text.offset, "ggchord.automatic_axis_offset") <- TRUE

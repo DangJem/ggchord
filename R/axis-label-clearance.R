@@ -55,6 +55,30 @@ ggchord_clear_circular_axis_text <- function(text, layout) {
   for (i in at) {
     original <- text[i, , drop = FALSE]
     boxes <- boxes_for(original)
+    others <- ggchord_rbind_fill(list(static, boxes_for(text[-i, , drop = FALSE]))) %||% data.frame()
+    text_hit <- function(candidate) nrow(others) > 0L && any(vapply(
+      seq_len(nrow(candidate)), function(k) any(ggchord_oriented_box_overlaps(
+        candidate[k, , drop = FALSE], others)), logical(1)))
+    # Use the narrow channel adjacent to the backbone first. Explicit offsets
+    # and breaks keep their contract; glyph corners, rather than only a text
+    # centre, determine clearance from the backbone.
+    if (length(band) && !isTRUE(original$.axis_offset_explicit) &&
+        isTRUE(original$.axis_allow_clearance) && nrow(boxes)) {
+      radius <- sqrt(original$text_x^2+original$text_y^2)
+      outer <- max(sqrt(rowSums(ggchord_boxes_corners(boxes)^2)))
+      shift <- band[1L]-.2*units/25.4-outer
+      candidate <- original
+      candidate$text_x <- original$text_x*(radius+shift)/radius
+      candidate$text_y <- original$text_y*(radius+shift)/radius
+      close_boxes <- boxes_for(candidate)
+      if (!feature_hit(close_boxes) && !backbone_hit(close_boxes) && !root_hit(close_boxes) &&
+          !text_hit(close_boxes)) {
+        original <- candidate
+        text$text_x[i] <- candidate$text_x; text$text_y[i] <- candidate$text_y
+        text$.axis_clearance_mm[i] <- shift*25.4/units
+        boxes <- close_boxes
+      }
+    }
     feature_collision <- feature_hit(boxes)
     anchor_collision <- !feature_collision && root_hit(boxes)
     if (!feature_collision && !anchor_collision) {
@@ -65,7 +89,6 @@ ggchord_clear_circular_axis_text <- function(text, layout) {
       text$.axis_clearance_status[i] <- if (isTRUE(original$.axis_offset_explicit)) 'explicit_offset' else 'disabled'
       next
     }
-    others <- ggchord_rbind_fill(list(static, boxes_for(text[-i, , drop = FALSE]))) %||% data.frame()
     radius <- sqrt(original$text_x^2 + original$text_y^2)
     if (!is.finite(radius) || radius <= 0) next
     height <- max(boxes$oh, na.rm = TRUE)
@@ -93,7 +116,7 @@ ggchord_clear_circular_axis_text <- function(text, layout) {
       if (hits_text) next
       text$text_x[i] <- candidate$text_x
       text$text_y[i] <- candidate$text_y
-      text$.axis_clearance_mm[i] <- amount*25.4/units
+      text$.axis_clearance_mm[i] <- text$.axis_clearance_mm[i]+amount*25.4/units
       text$.axis_clearance_status[i] <- if (feature_collision) 'feature_clearance' else 'anchor_clearance'
       break
     }

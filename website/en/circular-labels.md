@@ -84,6 +84,7 @@ From the 14-character wrap example, change only label_fit to ellipsis. Then retu
 | label_segment_overlap_alpha | 0.18 | Faded leader opacity |
 | label_segment_linetype | auto | Automatic leader line type |
 | label_segment_layer | below | below/above; text retains the label layer position |
+| label_repeat | individual | bracket shares a counted label and arc bracket for consecutive matching short features |
 
 Read exported label placement and fit diagnostics before changing dimensions, label subsets, layout or wrapping. Keep original full names rather than retaining only truncated figure text.
 
@@ -113,6 +114,42 @@ labels do not automatically add text for every named subsegment.
 Dense inner annotations retain source-angle order. Candidate slots check
 text and leaders together. Leaders may cross features, but do not acquire
 multi-bend detours around text. With external placement enabled, compact
-repeated annotations can use the exterior queue as a group. This bounded
+repeated annotations in outer bands can use the exterior queue as a group;
+inner bands first try inner slots before exterior fallback. This bounded
 search does not guarantee every density fits inside; inspect visibility,
 convergence and conflict diagnostics at export dimensions.
+
+
+## Shared labels for consecutive repeats
+
+`label_repeat = "bracket"` is an explicit display style; the default
+`"individual"` retains separate labels. Consecutive non-overlapping short
+features in one band can share a counted arc label and range bracket when
+name, type, direction and resolved fill agree. An intervening annotation
+breaks the run. Arrows, coordinates and biological rows remain independent.
+Visibility and fit exports report `represented_by_shared_label` for the shared
+sources. This applies to the `feature` layout on a single closed circular
+sequence; other coordinates retain individual labels. The curved range marker
+is distinct from the label's simple leader.
+
+```r
+features <- find_common_features(plasmid_example_pTRE_Tight_BI)
+feature_position <- position_feature_stack(base_position = position_plasmid())
+ggchord(plasmid_example_pTRE_Tight_BI[c("accver", "length")], feature_data = features) +
+  geom_seq(seq_style = "double") +
+  geom_feature_plasmid(position = feature_position) +
+  geom_feature_label_repel(
+    position = feature_position,
+    label_repeat = "bracket",
+    label_fit = "shrink",
+    label_min_size = 2.5
+  ) +
+  coord_circular() +
+  theme_ggchord_plasmid()
+```
+
+Automatic plasmid axis text hugs the backbone; explicit offsets keep their
+placement. Circular feature bands reserve gutters for names that cannot fit
+inside their arrows, and text tracks use measured heights and physical gaps.
+Explicit `spacing` remains a minimum. This bounded search does not guarantee
+conflict-free placement at every density; inspect actual-size export diagnostics.

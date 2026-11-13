@@ -643,7 +643,8 @@ ggchord_repel_geometry <- function(layout) {
     arc_text$linetype <- "solid"
     arc_text$alpha <- 1
   }
-  values <- Filter(nrow, list(segment, text, arc_text))
+  bracket <- ggchord_repeat_bracket_geometry(text)
+  values <- Filter(nrow, list(segment, text, arc_text, bracket))
   if (!length(values)) {
     return(data.frame(x = numeric(), y = numeric(), .component = character()))
   }

@@ -22,6 +22,7 @@ geom_feature_label_repel(
   label_segment_overlap_alpha = 0.18,
   label_segment_linetype = "auto",
   label_segment_layer = c("below", "above"),
+  label_repeat = c("individual", "bracket"),
   ...
 )
 }
@@ -94,6 +95,12 @@ or \code{"above"} at this label layer's normal position. Text always stays at
 this layer's position. Filled features can cover leaders drawn below;
 transparent features retain their normal transparency.}
 
+\item{label_repeat}{\code{"individual"} (default) keeps one label per feature.
+\code{"bracket"} shares a counted label and an arc bracket for consecutive,
+non-overlapping short features with the same name, type, direction and
+resolved fill in one circular feature band. Source rows and individual
+arrows remain separate. Only supported with \code{label_layout = "feature"}.}
+
 \item{...}{Additional text parameters.}
 }
 \value{
@@ -125,4 +132,15 @@ ggchord(seq_data = seqs) +
   geom_feature_label_repel(data = features, position = position_plasmid(),
     label_segment_layer = "below") +
   coord_circular()
+# A shared display label preserves all seven biological operator records.
+repeated <- find_common_features(plasmid_example_pTRE_Tight_BI)
+feature_position <- position_feature_stack(base_position = position_plasmid())
+ggchord(plasmid_example_pTRE_Tight_BI[c("accver", "length")],
+  feature_data = repeated) +
+  geom_seq(seq_style = "double") +
+  geom_feature_plasmid(position = feature_position) +
+  geom_feature_label_repel(position = feature_position,
+    label_repeat = "bracket", label_fit = "shrink", label_min_size = 2.5) +
+  coord_circular() +
+  theme_ggchord_plasmid()
 }

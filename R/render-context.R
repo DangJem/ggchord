@@ -110,7 +110,7 @@ ggchord_base_gtable <- function(built) {
     if (!identical(layer$ggchord_params$label_segment_layer, "below")) next
     data <- built$data[[i]]
     if (!is.data.frame(data) || !".component" %in% names(data)) next
-    at <- data$.component %in% "segment"
+    at <- data$.component %in% c("segment", "repeat_bracket")
     if (!any(at)) next
     leaders[[length(leaders) + 1L]] <- data[at, , drop = FALSE]
     leader_layers[[length(leader_layers) + 1L]] <- layer

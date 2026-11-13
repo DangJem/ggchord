@@ -84,6 +84,7 @@ feature 默认先尝试内部，再尝试相邻与外部；radial、auto、callo
 | label_segment_overlap_alpha | 0.18 | 淡化后的透明度 |
 | label_segment_linetype | auto | 自动选择引线线型 |
 | label_segment_layer | below | below 置于数据层下方；above 恢复标签层顺序，文字位置不变 |
+| label_repeat | individual | bracket 为连续同名短特征添加共享的名称×数量与弧形括注 |
 
 诊断表在 export_ggchord_layout 的标签记录中。先读隐藏/适配原因，再调整输出尺寸、标签子集、布局或换行。需要完整源名称时不要只保存截断后的图。
 
@@ -109,5 +110,35 @@ feature 布局使用直接引线，允许穿过特征，不再多折绕路。默
 
 密集内圈注释按来源角度顺序处理，候选位置同时检查文字与引线。引线可穿过
 特征，但不为避让其他文字增加多次拐弯；优先另选合法文字位置。启用external
-时，同一区域重复的短注释可以成组使用外圈，避免内外交错。该策略是有界搜索，
+时，外层重复短注释可以成组使用外圈；较内层的特征先尝试内圈，空间不足时仍可回退。该策略是有界搜索，
 仍应查看导出中的隐藏、收敛和冲突记录，不保证任意密度都能排入内圈。
+
+
+## 连续重复特征的共享标注
+
+`label_repeat = "bracket"` 是显式的显示样式，默认 `"individual"` 仍逐条标注。
+同一特征轨道内，相邻、不重叠、名称、类型、方向和已解析填充一致的短特征，
+可共享一个沿弧的“名称 × 数量”和弧形范围括注。中间插入其他注释时不跨过它
+合并。各个箭头、坐标和源记录不合并；导出的可见性与适配记录将这些来源标为
+`represented_by_shared_label`。此样式只用于单序列闭合圆的 `feature` 布局，
+其他坐标保持逐条显示。弧形括注是范围标记，标签引线仍使用简单路径。
+
+```r
+features <- find_common_features(plasmid_example_pTRE_Tight_BI)
+feature_position <- position_feature_stack(base_position = position_plasmid())
+ggchord(plasmid_example_pTRE_Tight_BI[c("accver", "length")], feature_data = features) +
+  geom_seq(seq_style = "double") +
+  geom_feature_plasmid(position = feature_position) +
+  geom_feature_label_repel(
+    position = feature_position,
+    label_repeat = "bracket",
+    label_fit = "shrink",
+    label_min_size = 2.5
+  ) +
+  coord_circular() +
+  theme_ggchord_plasmid()
+```
+
+质粒主题的自动轴文字贴近序列骨架，显式轴偏移不变。圆形特征轨道按不能放入
+箭头的文字需求留空，文字轨道按实际字号与物理间隙排布；显式 `spacing` 仍是
+最小间距。这是有界布局，仍需按实际导出尺寸查看诊断，不能保证任意密度无冲突。

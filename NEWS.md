@@ -1,11 +1,26 @@
 # ggchord 0.27.0 (development)
 
+- Circular plasmid axis text uses a narrow measured channel next to the
+  backbone while explicit breaks and offsets keep their placement. Stacked
+  circular feature bands reserve space for labels that cannot fit their arrows
+  rather than keeping a large fixed gutter; inner label tracks use compact
+  physical clearances. Inner feature clusters try inner slots before exterior
+  fallback, which remains available when `external = TRUE`.
+
+- `geom_feature_label_repel(label_repeat = "bracket")` optionally shows one
+  counted arc label and range bracket for consecutive matching short features.
+  Individual arrows and biological records remain separate; visibility and
+  fit diagnostics distinguish shared representation from hidden labels.
+  The default `"individual"` style retains separate labels. Fixed feature
+  label group IDs now survive removal of hidden/shared children, preserving
+  leader ownership instead of dropping or misattaching those leaders.
+
 - Dense circular feature labels retain source-angle order rather than
   width-first placement. Candidate slots check both new leaders against
   existing glyphs and existing leaders against new glyphs, and reject
   crossing leaders without multi-bend detours. Compact repeated annotation
-  clusters can share the exterior queue from any feature band when external
-  labels are enabled. Final text-edge clipping now preserves the exterior
+  clusters in outer feature bands can share the exterior queue when external
+  labels are enabled; inner bands first try compact inner tracks. Final text-edge clipping now preserves the exterior
   queue's already arranged simple leaders instead of reconnecting endpoints
   and undoing its order. Source rows and internal arc text remain unchanged.
 

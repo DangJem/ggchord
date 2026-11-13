@@ -143,6 +143,7 @@ GeomChordGeneLabelRepel <- ggplot2::ggproto(
     segment <- data[data$.component %in% "segment", , drop = FALSE]
     text <- data[data$.component %in% "text", , drop = FALSE]
     arc_text <- data[data$.component %in% "arc_text", , drop = FALSE]
+    bracket <- data[data$.component %in% "repeat_bracket", , drop = FALSE]
     text_styles <- c("colour", "alpha", if (!isTRUE(text_params$.ggchord_resolved_size)) "size",
       "family", "fontface", "lineheight")
     segment <- ggchord_component_style(
@@ -158,6 +159,12 @@ GeomChordGeneLabelRepel <- ggplot2::ggproto(
       text_styles
     )
     grobs <- list()
+    if (nrow(bracket)) {
+      bracket <- ggchord_component_style(bracket, segment_params,
+        c("colour", "alpha", "linewidth", "linetype"))
+      grobs[[length(grobs)+1L]] <- ggplot2::GeomPath$draw_panel(
+        bracket, panel_params, coord, lineend = "butt", na.rm = na.rm)
+    }
     if (nrow(segment)) {
       grobs[[length(grobs) + 1L]] <- ggplot2::GeomSegment$draw_panel(
         segment, panel_params, coord,

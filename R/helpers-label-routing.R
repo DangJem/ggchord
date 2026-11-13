@@ -23,7 +23,7 @@ ggchord_inner_label_preferences <- function(gl, metrics, feature_bands,
     sid <- as.character(gl$accver[i])
     radii <- internal_tracks[[sid]]
     bounds <- source_bounds[[as.character(gl$source_row[i])]]
-    clearance <- metrics$h[i] / 2 + .012
+    clearance <- metrics$h[i] / 2 + .35*units_per_inch/25.4
     if (length(bounds) == 2L) radii <- radii[
       radii + clearance <= bounds["min"] + 1e-9
     ]
@@ -171,6 +171,7 @@ ggchord_feature_label_lanes <- function(gl, gene_polys, seq_arcs,
     concentric_circle <- all(is.finite(arc_radius)) &&
       diff(range(arc_radius)) <= max(mean(arc_radius) * .02, 1e-6)
   }
+  if (concentric_circle) gl <- ggchord_prepare_repeat_labels(gl, gene_polys, units_per_inch)
   frame <- ggchord_label_curve_frame(gl, seq_arcs)
   placed <- ggchord_text_boxes(data.frame())
   placed_leaders <- data.frame(x0 = numeric(), y0 = numeric(),
@@ -227,8 +228,10 @@ ggchord_feature_label_lanes <- function(gl, gene_polys, seq_arcs,
     bands <- bands[order(-bands$mid), , drop = FALSE]
     feature_bands[[sid]] <- bands
     gutters <- numeric()
-    label_step <- max(.046, max(all_metrics$h[rows], na.rm = TRUE) * 1.08)
-    radial_clearance <- max(all_metrics$h[rows], na.rm = TRUE) / 2 + .012
+    label_step <- max(.35 * units_per_inch / 25.4,
+      max(all_metrics$h[rows], na.rm = TRUE) * 1.05 + .6*units_per_inch/25.4)
+    radial_clearance <- max(all_metrics$h[rows], na.rm = TRUE) / 2 +
+      .35 * units_per_inch / 25.4
     if (nrow(bands) > 1L) {
       for (j in seq_len(nrow(bands) - 1L)) {
         upper <- bands$min[j] - radial_clearance
@@ -284,13 +287,15 @@ ggchord_feature_label_lanes <- function(gl, gene_polys, seq_arcs,
       !(seq_len(n) %in% priority_rows), -gl$lane, local_angle,
       gl$source_row, seq_len(n))
   }
+  order_rows <- order_rows[!is.na(gl$text[order_rows]) & nzchar(gl$text[order_rows])]
   grouped_external <- rep(FALSE, n)
   if (concentric_circle && isTRUE(allow_external)) {
     same_label <- split(seq_len(n), paste(gl$accver, gl$lane, gl$text,
       sep = "\r"))
     for (members in same_label) {
       if (length(members) < 4L ||
-          any(!is.finite(gl$lane[members])) ||
+          any(!is.finite(gl$lane[members]) | gl$lane[members] > 0L) ||
+          any(gl$feature_label_inside[members] %in% TRUE) ||
           any(is.na(gl$text[members])) ||
           !nzchar(gl$text[members[1L]])) next
       angles <- sort((atan2(gl$anchor_y[members],
@@ -318,7 +323,7 @@ ggchord_feature_label_lanes <- function(gl, gene_polys, seq_arcs,
     tangent <- c(-inward[2], inward[1])
     measured <- ggchord_text_boxes(
       gl[i, , drop = FALSE], units_per_inch = units_per_inch,
-      box_padding = .04
+      box_padding = .25/25.4
     )
     radial_step <- max(.052, measured$h * .82 + .024)
     tangent_step <- max(.040, measured$h * .68)
@@ -347,7 +352,7 @@ ggchord_feature_label_lanes <- function(gl, gene_polys, seq_arcs,
       track_radii <- sid_tracks
       if (length(bounds) == 2L) {
         track_radii <- track_radii[
-          track_radii + measured$h / 2 + .012 <= bounds["min"] + 1e-9
+          track_radii + measured$h / 2 + .1*units_per_inch/25.4 <= bounds["min"] + 1e-9
         ]
       }
       # Intervening feature bands may be crossed by a short leader drawn
@@ -440,10 +445,10 @@ ggchord_feature_label_lanes <- function(gl, gene_polys, seq_arcs,
       box <- if (concentric_circle &&
           !grepl("\n", candidate$text, fixed = TRUE)) {
         ggchord_arc_text_layout(
-          candidate, units_per_inch = units_per_inch, box_padding = .04
+          candidate, units_per_inch = units_per_inch, box_padding = .25/25.4
         )$boxes
       } else ggchord_text_boxes(
-        candidate, units_per_inch = units_per_inch, box_padding = .04
+        candidate, units_per_inch = units_per_inch, box_padding = .25/25.4
       )
       label_collision <- ggchord_boxes_overlap_any(box, placed)
       feature_collision <- ggchord_boxes_hit_features(
@@ -512,7 +517,7 @@ ggchord_feature_label_lanes <- function(gl, gene_polys, seq_arcs,
       candidate$hjust <- if (candidate$text_x >= 0) 0 else 1
       candidate$vjust <- .5
       box <- ggchord_text_boxes(candidate,
-        units_per_inch = units_per_inch, box_padding = .04)
+        units_per_inch = units_per_inch, box_padding = .25/25.4)
       leader <- ggchord_inner_label_leader(candidate, box,
         units_per_inch, exterior_radius = sequence_radius + .055)
       if (!ggchord_inner_leader_hits(leader, placed) &&
@@ -538,7 +543,7 @@ ggchord_feature_label_lanes <- function(gl, gene_polys, seq_arcs,
         candidate$hjust <- if (candidate$text_x >= 0) 0 else 1
         candidate$vjust <- .5
         box <- ggchord_text_boxes(candidate, units_per_inch = units_per_inch,
-          box_padding = .04)
+          box_padding = .25/25.4)
         label_collision <- nrow(placed) &&
           any(ggchord_oriented_box_overlaps(box, placed))
         feature_collision <- ggchord_label_hits_features(
@@ -688,6 +693,24 @@ ggchord_feature_label_lanes <- function(gl, gene_polys, seq_arcs,
           }
         }
       }
+    }
+  }
+  if (concentric_circle && isTRUE(allow_external) && !length(priority_rows)) {
+    # An accepted exterior fallback is still a poor outcome for an inner
+    # source. Give those tasks one coordinated earlier turn, retaining every
+    # already visible source. Do not recursively search drawing orders.
+    inner_external <- function(x) which(x$labels$lane > 0L &
+      x$labels$feature_label_mode %in% "external" &
+      !is.na(x$labels$text) & nzchar(x$labels$text))
+    targets <- inner_external(layout)
+    if (length(targets)) {
+      trial <- ggchord_feature_label_lanes(gl, gene_polys, seq_arcs,
+        units_per_inch = units_per_inch, max_overlaps = max_overlaps,
+        allow_external = allow_external, priority_rows = targets)
+      visible <- !is.na(layout$labels$text) & nzchar(layout$labels$text)
+      trial_visible <- !is.na(trial$labels$text) & nzchar(trial$labels$text)
+      if (all(trial_visible[visible]) &&
+          length(inner_external(trial)) < length(targets)) layout <- trial
     }
   }
   layout

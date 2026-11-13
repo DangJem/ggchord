@@ -95,6 +95,11 @@ geom_feature_label <- function(
 #'   default 1.5. Must not exceed the requested text size. Original text,
 #'   requested/final sizes and fitting reason are exported with the label.
 #' @param max_overlaps Maximum unresolved overlaps.
+#' @param label_repeat `"individual"` (default) keeps one label per feature.
+#'   `"bracket"` shares a counted label and an arc bracket for consecutive,
+#'   non-overlapping short features with the same name, type, direction and
+#'   resolved fill in one circular feature band. Source rows and individual
+#'   arrows remain separate. Only supported with `label_layout = "feature"`.
 #' @param label_segment_layer Draw leaders `"below"` all data layers (default),
 #'   or `"above"` at this label layer's normal position. Text always stays at
 #'   this layer's position. Filled features can cover leaders drawn below;
@@ -133,6 +138,17 @@ geom_feature_label <- function(
 #'   geom_feature_label_repel(data = features, position = position_plasmid(),
 #'     label_segment_layer = "below") +
 #'   coord_circular()
+#' # A shared display label preserves all seven biological operator records.
+#' repeated <- find_common_features(plasmid_example_pTRE_Tight_BI)
+#' feature_position <- position_feature_stack(base_position = position_plasmid())
+#' ggchord(plasmid_example_pTRE_Tight_BI[c("accver", "length")],
+#'   feature_data = repeated) +
+#'   geom_seq(seq_style = "double") +
+#'   geom_feature_plasmid(position = feature_position) +
+#'   geom_feature_label_repel(position = feature_position,
+#'     label_repeat = "bracket", label_fit = "shrink", label_min_size = 2.5) +
+#'   coord_circular() +
+#'   theme_ggchord_plasmid()
 geom_feature_label_repel <- function(
     mapping = NULL, data = NULL,
     label_layout = c("feature", "radial", "auto", "callout"),
@@ -146,14 +162,18 @@ geom_feature_label_repel <- function(
     show.legend = FALSE, inherit.aes = FALSE,
     label_min_size = 1.5, label_segment_overlap = "fade",
     label_segment_overlap_alpha = .18, label_segment_linetype = "auto",
-    label_segment_layer = c("below", "above"), ...) {
+    label_segment_layer = c("below", "above"),
+    label_repeat = c("individual", "bracket"), ...) {
   position_explicit <- !missing(position)
   dots <- list(...)
   ggchord_reject_label_prefix(dots, "geom_feature_label_repel()")
   ggchord_reject_manual_label_args(dots, "geom_feature_label_repel()")
+  label_repeat <- match.arg(label_repeat)
   label_segment_layer <- match.arg(label_segment_layer)
   label_layout <- match.arg(label_layout)
   label_fit <- match.arg(label_fit)
+  if (label_repeat != "individual" && label_layout != "feature")
+    ggchord_stop("geom_feature_label_repel(): label_repeat requires label_layout = 'feature'")
   label_side <- match.arg(label_side)
   if (!is.logical(external) || length(external) != 1L || is.na(external)) {
     ggchord_stop("geom_feature_label_repel(): external must be TRUE or FALSE")
@@ -181,6 +201,7 @@ geom_feature_label_repel <- function(
     lyr$ggchord_params$position_explicit <- position_explicit
     lyr$ggchord_params$label_side_requested <- label_side
     lyr$ggchord_params$feature_label_external <- external
+    lyr$ggchord_params$feature_label_repeat <- label_repeat
     lyr$ggchord_input_transform <- ggchord_feature_label_data
     lyr$ggchord_role_aes <- unique(c(
       lyr$ggchord_role_aes, "label", "feature_label", "feature_type"

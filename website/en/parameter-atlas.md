@@ -238,6 +238,7 @@ Start with the [task index](task-index.html). Lessons compare important paramete
 | `label_segment_overlap` | `"fade"` | Character/enum; choices below | Character, default "fade". How portions of a leader line covered by another label are drawn: "fade" keeps them at reduced opacity, "clip" removes them, and "show" leaves the complete leader visible. This does not affect text wrapping, ellipsis or label hiding. |
 | `label_segment_overlap_alpha` | `0.18` | Numeric/integer; range in description | Numeric in [0, 1], default 0.18. Relative opacity applied only to covered leader-line portions when label_segment_overlap = "fade". |
 | `label_segment_layer` | `c("below", "above")` | Character/enum | Draw feature-label leaders below data layers, or at the label layer position; text keeps its layer order. |
+| `label_repeat` | `c("individual", "bracket")` | Character/enum | Shares a counted arc label and range bracket for consecutive matching short features in one closed circular band; arrows and source records remain separate. |
 | `label_segment_linetype` | `"auto"` | Character/enum; choices below | Character or numeric, default "auto". Leader-line linetype. "auto" draws solid lines, except for labels that were moved to the other side of their arc, which are drawn dashed. Any other valid ggplot2 linetype (e.g. "solid", "dashed", "dotted", or a numeric dash pattern) is used for all leader lines. |
 | `...` | `Required/alternative entry; see description` | Forwarded arguments | Additional text parameters. |
 

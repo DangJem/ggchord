@@ -238,6 +238,7 @@
 | `label_segment_overlap` | `"fade"` | 字符/枚举；取值见说明 | 引导线被其他标签覆盖部分的绘制方式，默认 "fade"。"fade" 降低透明度，"clip" 删除覆盖部分，"show" 保留完整线。不会影响换行、省略或隐藏。 |
 | `label_segment_overlap_alpha` | `0.18` | 数值/整数；范围见说明 | [0, 1] 内的数值，默认 0.18；仅在 label_segment_overlap = "fade" 时控制被覆盖引导线部分的相对透明度。 |
 | `label_segment_layer` | `c("below", "above")` | 字符/枚举 | 特征标签引线默认在数据层下方；above 恢复标签层顺序，文字不变；透明填充保持透明。 |
+| `label_repeat` | `c("individual", "bracket")` | 字符/枚举 | bracket 为同一闭合圆轨道中的连续同名短特征共享名称×数量与弧形括注；箭头和源记录仍独立。 |
 | `label_segment_linetype` | `"auto"` | 字符/枚举；取值见说明 | 字符或数值，默认 "auto"。"auto" 通常用实线，移到弧线另一侧的标签用虚线；其他合法 ggplot2 线型（如 "solid"、"dashed"、"dotted" 或数字虚线模式）应用于全部引导线。 |
 | `...` | `必需/互斥入口，见说明` | 上游转发参数 | 其他文字参数。 |
 

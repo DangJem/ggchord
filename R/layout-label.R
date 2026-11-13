@@ -270,18 +270,17 @@ ggchord_layout_label_step <- function(
         repel_boxes = fixed_obstacles
       )
     }
-    # Drop hidden labels and remap segment group IDs so every segment keeps a
-    # valid reference after max_overlaps removes an interior label row.
+    # Segment builders use row indices. Resolve these to stable label group
+    # IDs before hidden/shared children are removed; source ownership survives.
     gene_labels <- ggchord_label_fit_metadata(gene_labels)
     label_fit_diagnostics <- gene_labels[intersect(c("source_row", "accver",
       "label_text_original", "label_size_requested", "label_size_final",
       "label_size_min", "label_fit_reason", "feature_label_mode"), names(gene_labels))]
     visible_labels <- !is.na(gene_labels$text) & nzchar(gene_labels$text)
     if (nrow(gene_label_segments) > 0) {
-      group_map <- match(seq_len(nrow(gene_labels)), which(visible_labels))
-      keep_segments <- !is.na(group_map[gene_label_segments$group])
+      keep_segments <- visible_labels[gene_label_segments$group]
       gene_label_segments <- gene_label_segments[keep_segments, , drop = FALSE]
-      gene_label_segments$group <- group_map[gene_label_segments$group]
+      gene_label_segments$group <- gene_labels$group[gene_label_segments$group]
     }
     gene_labels <- gene_labels[visible_labels, , drop = FALSE]
   }

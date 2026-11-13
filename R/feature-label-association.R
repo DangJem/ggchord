@@ -14,6 +14,7 @@ ggchord_feature_contains_label <- function(boxes, polygons, source_row) {
 # Intersect the unchanged source-angle ray with its actual drawn contour.
 # The side is a display attachment, never a new source position or interval.
 ggchord_feature_label_attachment <- function(candidate, polygons, outward, units_per_inch) {
+  if (isTRUE(candidate$repeat_count > 1L)) return(candidate)
   radius <- sqrt(candidate$anchor_x^2 + candidate$anchor_y^2)
   if (!is.finite(radius) || radius < 1e-8) return(candidate)
   direction <- c(candidate$anchor_x, candidate$anchor_y)/radius

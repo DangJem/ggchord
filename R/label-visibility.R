@@ -49,7 +49,19 @@ ggchord_label_fit_diagnostics <- function(layout) {
       if (!is.data.frame(g) || !nrow(g) || !"label_size_requested" %in% names(g)) return(NULL)
       if (".component" %in% names(g)) g <- g[g$.component %in% c("text", "arc_text"), , drop = FALSE]
       if (!nrow(g)) return(NULL)
-      unique(g[intersect(c("source_row", "label_size_final", "label_fit_reason"), names(g))])
+      fields <- intersect(c("source_row", "label_size_final", "label_fit_reason"), names(g))
+      if ("source_rows" %in% names(g)) {
+        g <- g[g$.component %in% "text", , drop = FALSE]
+        parts <- lapply(seq_len(nrow(g)), function(i) {
+          rows <- g$source_rows[[i]]
+          out <- g[rep(i, length(rows)), fields, drop = FALSE]
+          out$source_row <- rows
+          if (length(rows)>1L) out$label_fit_reason <- "represented_by_shared_label"
+          out
+        })
+        return(ggchord_rbind_fill(parts))
+      }
+      unique(g[fields])
     })
     resolved <- ggchord_rbind_fill(resolved)
     if (is.data.frame(resolved) && nrow(resolved)) {

@@ -248,11 +248,12 @@ ggchord_feature_lane_offsets <- function(data, lane, base, direction,
   label_text <- if ("anno" %in% names(data)) as.character(data$anno) else
     if ("label" %in% names(data)) as.character(data$label) else
       rep(NA_character_, nrow(data))
+  measured_units <- ggchord_render_context()$units_per_inch %||% .35
   label_metrics <- if (isTRUE(circular) && any(!is.na(label_text) &
       nzchar(label_text))) ggchord_text_boxes(data.frame(
         text = label_text, text_x = 0, text_y = 0,
         size = label_size
-      ), units_per_inch = .35) else NULL
+      ), units_per_inch = measured_units) else NULL
   band <- paste(
     data$accver,
     format(base, digits = 15, scientific = FALSE, trim = TRUE),
@@ -274,7 +275,7 @@ ggchord_feature_lane_offsets <- function(data, lane, base, direction,
       sid <- as.character(data$accver[idx[1L]])
       sequence_length <- if (!is.null(lengths)) unname(lengths[sid]) else
         NA_real_
-      lane_demand <- rep(1L, length(lane_width))
+      lane_demand <- rep(0L, length(lane_width))
       if (isTRUE(circular) && !is.null(label_metrics) &&
           length(sequence_length) == 1L && is.finite(sequence_length) &&
           sequence_length > 0) {
@@ -307,12 +308,14 @@ ggchord_feature_lane_offsets <- function(data, lane, base, direction,
         # own arrows.  Fixed wide gutters made mostly empty outer bands push
         # the innermost annotations into the centre or even outside the map.
         label_gutter <- if (isTRUE(circular)) {
-          base_gutter <- if (i == 2L) max(.125, spacing * 1.20) else
-            max(.035, spacing * .40)
-          step <- if (!is.null(label_metrics)) max(.05,
-            max(label_metrics$h[idx], na.rm = TRUE) * 1.12) else .05
-          min(if (i == 2L) .26 else .22,
-            base_gutter + (lane_demand[i - 1L] - 1L) * step)
+          # Reserve rows only for the outer band's names that do not fit
+          # their arrows. Empty corridors use physical stroke clearance.
+          height <- if (!is.null(label_metrics))
+            max(label_metrics$h[idx], na.rm = TRUE) else .025
+          row_pitch <- height*1.15 + .3*measured_units/25.4
+          needed <- lane_demand[i-1L]
+          max(.45*measured_units/25.4,
+            needed*row_pitch + if (needed>0L) .5*measured_units/25.4 else 0)
         } else if (i == 2L) {
           max(.125, spacing * 1.20)
         } else {
