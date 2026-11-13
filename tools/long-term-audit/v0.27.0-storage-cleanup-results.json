@@ -1,0 +1,198 @@
+{
+  "mode": "cleaned",
+  "artifacts": [
+    {
+      "path": ".codex-tmp/cran-v0.16.6/check",
+      "files": 440,
+      "logical_bytes": 17743749,
+      "allocated_bytes": 18677760
+    },
+    {
+      "path": ".codex-tmp/cran-v0.16.6/reissue-download",
+      "files": 2,
+      "logical_bytes": 4834185,
+      "allocated_bytes": 4841472
+    },
+    {
+      "path": ".codex-tmp/ocr-libs",
+      "files": 2947,
+      "logical_bytes": 262107474,
+      "allocated_bytes": 269131776
+    },
+    {
+      "path": ".codex-tmp/release-v0.16.5/devices",
+      "files": 29,
+      "logical_bytes": 2601571,
+      "allocated_bytes": 2666496
+    },
+    {
+      "path": ".codex-tmp/release-v0.16.5/devices-final",
+      "files": 29,
+      "logical_bytes": 2589088,
+      "allocated_bytes": 2650112
+    },
+    {
+      "path": ".codex-tmp/release-v0.16.5/download-check",
+      "files": 2,
+      "logical_bytes": 23075782,
+      "allocated_bytes": 23080960
+    },
+    {
+      "path": ".codex-tmp/release-v0.16.5/library",
+      "files": 841,
+      "logical_bytes": 49436885,
+      "allocated_bytes": 51548160
+    },
+    {
+      "path": ".codex-tmp/release-v0.16.6/check",
+      "files": 384,
+      "logical_bytes": 128223022,
+      "allocated_bytes": 129110016
+    },
+    {
+      "path": ".codex-tmp/release-v0.16.6/devices",
+      "files": 29,
+      "logical_bytes": 2571436,
+      "allocated_bytes": 2625536
+    },
+    {
+      "path": ".codex-tmp/release-v0.16.6/download",
+      "files": 2,
+      "logical_bytes": 47072305,
+      "allocated_bytes": 47079424
+    },
+    {
+      "path": ".site",
+      "files": 1518,
+      "logical_bytes": 103515157,
+      "allocated_bytes": 107102208
+    },
+    {
+      "path": "ggchord.Rcheck",
+      "files": 332,
+      "logical_bytes": 63719660,
+      "allocated_bytes": 64503808
+    }
+  ],
+  "candidate_allocated_bytes": 723017728,
+  "preserved_records": [
+    {
+      "file": ".codex-tmp/cleanup-records/.codex-tmp/cran-v0.16.6/check/ggchord.Rcheck/00check.log",
+      "sha256": "8cfff23ee701bbcd436d4e768d048a0533b7a6fa782f31c526a6142bc8a00024",
+      "bytes": 3498
+    },
+    {
+      "file": ".codex-tmp/cleanup-records/.codex-tmp/cran-v0.16.6/check/ggchord.Rcheck/00install.out",
+      "sha256": "2f5663356108a4e5a73d1d7dfd0127085e9635c8e74668fd1157cb6b173d5861",
+      "bytes": 559
+    },
+    {
+      "file": ".codex-tmp/cleanup-records/.codex-tmp/cran-v0.16.6/check/ggchord.Rcheck/ggchord-Ex.Rout",
+      "sha256": "a0e00b9f6760cdf4d3e8bb02b02ccb77f1a9f6dadf697191dfaa6697a665dfaa",
+      "bytes": 89098
+    },
+    {
+      "file": ".codex-tmp/cleanup-records/.codex-tmp/cran-v0.16.6/check/ggchord.Rcheck/tests/testthat.Rout",
+      "sha256": "ed5ddcb7690a0ec52c17eea139260e7747996e7d808b64b35cdcd96468ed008f",
+      "bytes": 1154
+    },
+    {
+      "file": ".codex-tmp/cleanup-records/.codex-tmp/release-v0.16.6/check/ggchord.Rcheck/00check.log",
+      "sha256": "1ad657804680e89ebe46ee691fa6c5774d2638ccdbaae678a76fc54c176b3d9d",
+      "bytes": 3159
+    },
+    {
+      "file": ".codex-tmp/cleanup-records/.codex-tmp/release-v0.16.6/check/ggchord.Rcheck/00install.out",
+      "sha256": "750827e59075a43ceefc08c9a4ee868b307e325da2ff6102c82558c508ef6b35",
+      "bytes": 579
+    },
+    {
+      "file": ".codex-tmp/cleanup-records/.codex-tmp/release-v0.16.6/check/ggchord.Rcheck/ggchord-Ex.Rout",
+      "sha256": "c3071e11f5f5a6de315212c9465a8645333982371ae61d08c73b1d58e16bb914",
+      "bytes": 68041
+    },
+    {
+      "file": ".codex-tmp/cleanup-records/.codex-tmp/release-v0.16.6/check/ggchord.Rcheck/tests/testthat.Rout",
+      "sha256": "14280b66f486e6d177a4654407120549425b647b55f3ceddfd82d3d2113d5f16",
+      "bytes": 1154
+    },
+    {
+      "file": ".codex-tmp/cleanup-records/.site/source-snapshot.json",
+      "sha256": "adf56b97b7de44de2bcaf67a0a3744cafc1325f427cf8791ca2f88968d9d8751",
+      "bytes": 95485
+    },
+    {
+      "file": ".codex-tmp/cleanup-records/.site/build-manifest.json",
+      "sha256": "e079a5ed941559765a9e4dfb5becd97e380f67d73b21c0dd10b596e5a2fe9045",
+      "bytes": 228401
+    },
+    {
+      "file": ".codex-tmp/cleanup-records/.site/render-processes.json",
+      "sha256": "93ccd61a5e25158f6d036c34932e93c41fb7f1287c798c63cf66f761e524e23c",
+      "bytes": 73
+    },
+    {
+      "file": ".codex-tmp/cleanup-records/.site/build.log",
+      "sha256": "b58899604962dcd7aa2179dc341a574e032099b1bd1bfd2b21ca9bc11d77294d",
+      "bytes": 109236
+    },
+    {
+      "file": ".codex-tmp/cleanup-records/.site/en-build.log",
+      "sha256": "bd4cf3c2a771c4d6485ab699dce12de7b37d46d481f088f6243c581a93a2211b",
+      "bytes": 54580
+    },
+    {
+      "file": ".codex-tmp/cleanup-records/.site/zh-build.log",
+      "sha256": "79113cebdb17c0019a625edf1ba09b8123b5132cc117c7cb99f77023079a9a6a",
+      "bytes": 54655
+    },
+    {
+      "file": ".codex-tmp/cleanup-records/ggchord.Rcheck/00check.log",
+      "sha256": "c82ba79ae1b08c605d4749560e2d23a7932fc16326015d8741eaf161d981a368",
+      "bytes": 3126
+    },
+    {
+      "file": ".codex-tmp/cleanup-records/ggchord.Rcheck/00install.out",
+      "sha256": "e8dadb201efcb4053784f84eca45afa1082e04f490faffc008c4c8c275e02f96",
+      "bytes": 579
+    },
+    {
+      "file": ".codex-tmp/cleanup-records/ggchord.Rcheck/ggchord-Ex.Rout",
+      "sha256": "31025e1b647a3eab70244efa6cace2582befe7eadd9a96d27592e350b8b7eb97",
+      "bytes": 60475
+    },
+    {
+      "file": ".codex-tmp/cleanup-records/ggchord.Rcheck/tests/testthat.Rout",
+      "sha256": "5a32f6760106a1742db641158b042f8e67a2db4a00dfd59706558d324c90cfee",
+      "bytes": 1154
+    }
+  ],
+  "tracked_file_count": 2247,
+  "tracked_contents_preserved": true,
+  "git_refs_preserved": true,
+  "scope": "Only known ignored build/cache copies; no Git history rewrite, package checks or image regeneration",
+  "after_cleanup_project_allocated_kib": 559424,
+  "kept_git_allocated_kib": 303748,
+  "before_project_display": "1.2 GiB from initial du -sh; directory metadata and copied small evidence make file-block totals approximate",
+  "scope_notes": {
+    "image_cause": "Repeated previews and audit images occupy space, but the largest current removable component was old Windows OCR libraries and past release/build copies, not package source data.",
+    "retained_audit_images": "Tracked final/history images and JSON kept; no hardlinks, symlinks or silent baseline substitution.",
+    "git_notes": "Read-only inventory reported old pack/reverse-index files without matching index/pack. No .git files were removed, repacked or repaired by this cleanup."
+  },
+  "tracked_contents_sha256": "0285a41cf8e9af70fe1ef74fdc1f43a4f69a0f0dea133ecac1d05061ad069b31",
+  "git_refs_sha256": "d800b87a8e6b37ac4a2f628f4506e21e0d4aa52d72e5c78d050ffc7052cee0b6",
+  "baseline_commit": "4f0a971b94773bba5ddb2db4616bd889a45dc773",
+  "verification": {
+    "source_loading": "pkgload::load_all completed",
+    "representative_plot": "Real pUC19 common features, double backbone and labels; 10x8in PNG drew and physical layout converged",
+    "temporary_smoke_png_removed": true,
+    "not_run": [
+      "testthat",
+      "package build/check",
+      "vignette compilation",
+      "website rebuild",
+      "178-image regeneration",
+      "publication device matrix"
+    ]
+  }
+}
