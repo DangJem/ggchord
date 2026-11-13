@@ -23,9 +23,6 @@ feature_palette <- c(
 )
 # ---- docstyle ----
 doc_background <- "#FFFCF5"
-identity_palette <- c("#303B71", "#36537D", "#269B82", "#A5D52C", "#ECEB31")
-identity_values <- c(0, 0.5, 0.8, 0.9, 1)
-identity_breaks <- c(0, 50, 80, 90, 95, 100)
 doc_legend_theme <- theme(
   legend.title = element_text(size = 13, face = "bold"),
   legend.text = element_text(size = 11),
@@ -44,9 +41,6 @@ identity_guide_theme <- theme(
 )
 identity_guide <- ggplot2::guide_coloursteps(
   available_aes = "ribbon_fill", even.steps = FALSE, show.limits = TRUE,
-  position = "left", direction = "vertical", theme = identity_guide_theme
-)
-identity_colourbar <- guide_ggchord_colourbar(
   position = "left", direction = "vertical", theme = identity_guide_theme
 )
 
@@ -1110,14 +1104,10 @@ p_learn_seq
 # ---- learnlinks ----
 p_learn_links <- p_learn_seq +
   geom_link_ribbon(
-    aes(ribbon_fill = pident),
     data = show_links,
     adjacent_only = FALSE, link_avoid = "smooth"
   ) +
-  scale_ribbon_fill_gradientn(
-    colours = identity_palette, values = identity_values, limits = c(0, 100),
-    breaks = identity_breaks, name = "Identity (%)", guide = identity_colourbar
-  )
+  guides(ribbon_fill = identity_guide)
 p_learn_links
 # ---- learngenes ----
 p_learn_genes <- p_learn_links +

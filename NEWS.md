@@ -14,6 +14,10 @@
   their label layer's order. Transparent fills keep their transparency.
 
 
+- Progressive gallery ribbons use the default binned Identity scale again,
+  with boundaries 0/50/80/90/95/100. Explicit continuous user scales remain
+  supported; this corrects the example rather than changing scale defaults.
+
 - Label diagnostics include the closed `capped_line` feature contours in their
   conservative polygon envelopes, including transparent interiors. Own-source
   contacts remain separate. Stroke thickness, path markers and occlusion remain
