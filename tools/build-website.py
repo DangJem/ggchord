@@ -61,8 +61,10 @@ def assert_render_source_snapshot(snapshot, input_hashes):
 def main():
     parser=argparse.ArgumentParser()
     parser.add_argument('--publication',action='store_true')
-    parser.add_argument('--render-jobs',type=int,choices=(1,2),default=2,
-                        help='Maximum concurrent native locale renderers (default: 2)')
+    parser.add_argument('--render-jobs',type=int,choices=(1,2),default=1,
+                        help='Maximum concurrent native locale renderers (default: 1)')
+    parser.add_argument('--render-batch-size',type=int,choices=range(1,13),default=4,
+                        help='Articles per independent R worker (default: 4)')
     args=parser.parse_args()
     render_snapshot = render_source_snapshot()
     out=ROOT/'.site'
@@ -145,8 +147,8 @@ def main():
     def render_locale(lang):
         # Independent bounded R workers avoid accumulating a whole site's
         # template state in one process. Every actual return code is retained.
-        jobs=[['--part=reference']]+[['--part=articles','--offset='+str(i),'--count=12']
-              for i in range(0,len(payload[lang]),12)]
+        jobs=[['--part=reference']]+[['--part=articles','--offset='+str(i),'--count='+str(args.render_batch_size)]
+              for i in range(0,len(payload[lang]),args.render_batch_size)]
         results=[];logs=[]
         for index, options in enumerate(jobs):
             assert_render_source_snapshot(render_snapshot,input_hashes)
@@ -169,6 +171,12 @@ def main():
     if any(statuses.values()):
         raise SystemExit('Native locale renderers failed: '+json.dumps(statuses)+'\n'+combined[-7000:])
     assert_render_source_snapshot(render_snapshot, input_hashes)
+    finalize(out,args,render_snapshot,input_hashes)
+
+def finalize(out,args,render_snapshot,input_hashes):
+    inputs=[ROOT/name for name in input_hashes]
+    assets=out/'assets'
+    metadata=json.loads((out/'build-metadata.json').read_text())
     # Post-process using the same XML library used by pkgdown; no hand-built page shell.
     subprocess.run(['Rscript','tools/finalize-website.R', 'publication' if args.publication else 'preview'],cwd=ROOT,check=True)
     migrations=json.loads((WEB/'page-migrations.json').read_text())
@@ -182,7 +190,7 @@ def main():
                 'const d=m[f];if(d && d!==location.pathname.split("/").pop()+location.hash)'
                 'location.replace(d)};go();addEventListener("hashchange",go)})()</script>')
             path=out/lang/name
-            if page.get('kind')=='alias':
+            if page.get('kind')=='alias' or page['slug']=='reference':
                 links=''.join('<li><a href="'+html.escape(dest,quote=True)+'">'+html.escape(anchor or page['title'][lang])+'</a></li>' for anchor,dest in mapping.items())
                 path.write_text('<!doctype html><html lang="'+('zh-Hans' if lang=='zh' else 'en')+'"><meta charset="utf-8"><title>Moved · ggchord</title><h1>'+('课程已迁移' if lang=='zh' else 'Lesson moved')+'</h1><p>'+('旧章节的具体新位置如下。' if lang=='zh' else 'Find the exact destination of each old section below.')+'</p><ul>'+links+'</ul>'+script+'</html>')
             elif name in migrations:
@@ -194,7 +202,6 @@ def main():
             path=out/lang/old;path.parent.mkdir(parents=True,exist_ok=True)
             dest=os.path.relpath(out/lang/target,path.parent)
             path.write_text(f'<!doctype html><html lang="{"zh-Hans" if lang=="zh" else "en"}"><head><meta charset="utf-8"><meta http-equiv="refresh" content="0;url={dest}"><title>ggchord</title></head><body><a href="{dest}">Continue / 继续</a></body></html>')
-        redirect('reference.html','reference/index.html')
         index=[]
         for path in sorted((out/lang).rglob('*.html')):
             if path.name=='reference.html' or any(p['slug']+'.html'==str(path.relative_to(out/lang)) and p.get('kind')=='alias' for p in PAGES):continue

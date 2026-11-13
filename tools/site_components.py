@@ -27,7 +27,9 @@ def motif(mode, css='mode-motif'):
 
 def responsive_image(key,lang,base='../assets',*,eager=False,css='',alt=None):
     entry=assets()[key]
-    return '<img class="'+css+'" src="'+base+'/'+entry['file']+'" alt="'+html.escape(alt or ('ggchord' if key=='logo' else key),quote=True)+'" width="'+str(entry['width'])+'" height="'+str(entry['height'])+'" decoding="async" '+('loading="eager" fetchpriority="high"' if eager else 'loading="lazy"')+'>'
+    captions=json.loads((ROOT/'website/assets/captions.json').read_text())
+    description=alt or ('ggchord' if key=='logo' else captions[key][lang])
+    return '<img class="'+css+'" src="'+base+'/'+entry['file']+'" alt="'+html.escape(description,quote=True)+'" width="'+str(entry['width'])+'" height="'+str(entry['height'])+'" decoding="async" '+('loading="eager" fetchpriority="high"' if eager else 'loading="lazy"')+'>'
 
 def home_hero(lang,base):
     zh=lang=='zh'

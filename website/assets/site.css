@@ -31,7 +31,7 @@ button,summary {touch-action:manipulation}
 .navbar .container {gap:8px}
 .navbar-brand {font-weight:800;letter-spacing:-.04em;color:var(--text-strong);font-size:1.4rem;display:flex;align-items:center;gap:9px}
 .navbar-brand img {order:-1;width:36px;height:36px;object-fit:contain}
-.navbar .nav-link {color:var(--text-strong);font-size:.94rem;font-weight:600;padding:10px 9px;min-height:44px}
+.navbar .nav-link {white-space:nowrap;color:var(--text-strong);font-size:.94rem;font-weight:600;padding:10px 9px;min-height:44px}
 .navbar .nav-link:is(:hover,.active) {color:var(--color-brand);text-decoration:underline;text-underline-offset:7px}
 .navbar .nav-text {font: .7rem/1.4 ui-monospace,monospace;color:var(--text-muted)}
 .navbar .dropdown-item {padding:10px 14px;min-height:44px;color:var(--text-main)}
@@ -222,3 +222,8 @@ footer {border-top:1px solid var(--color-rule);padding:22px 0;color:var(--text-m
 .module-preview{width:100%;height:180px;object-fit:contain;background:var(--surface-paper)}
 
 .gallery-controls{display:flex;flex-wrap:wrap;gap:12px;margin:16px 0}.gallery-controls label{display:grid;gap:4px;font-size:.85rem}.gallery-controls select{padding:8px;border:1px solid var(--color-control);border-radius:6px;background:var(--surface-paper);color:var(--text-main)}.gallery-controls .gallery-count{flex-basis:100%;margin:0}.gallery-card[hidden]{display:none}
+
+/* Keep the desktop header on one line, with one version indicator. */
+.navbar .container > small.nav-text{display:none}
+.navbar li.nav-text .nav-link{font:.7rem/1.4 ui-monospace,monospace}
+@media(min-width:992px) and (max-width:1599px){.navbar li.nav-text{display:none}.search-trigger{width:44px;justify-content:center;padding:8px}.search-trigger .search-trigger-label,.search-trigger kbd{display:none}}

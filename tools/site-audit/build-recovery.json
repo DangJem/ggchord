@@ -1,0 +1,30 @@
+{
+  "scope": "Build recovery observations, not a claim that failed builds passed",
+  "observations": [
+    {
+      "stage": "after Markdown repair, two locales / seven workers each",
+      "native_worker_return_codes": "all 14 were 0",
+      "finalization": "FileNotFoundError reading reference.html before creating its compatibility route",
+      "resolution": "Create reference compatibility entry with section mappings, avoid later overwriting it"
+    },
+    {
+      "stage": "attempted reuse of finalized HTML",
+      "result": "Finalizer requires native input; repeated invocation is not safe. Full clean build selected; partial HTML discarded"
+    },
+    {
+      "stage": "two concurrent locales, twelve articles per worker",
+      "result": "Both workers exited 1 while processing real-data; no R condition in log. Isolated real-data worker exited 0",
+      "resolution": "One locale at a time, four articles per fresh R worker; no diagnosis of OOM claimed"
+    },
+    {
+      "stage": "four-article build while course outputs changed",
+      "result": "Source snapshot guard correctly rejected changed inputs",
+      "resolution": "Complete R/source validation before starting the final clean build"
+    },
+    {
+      "stage": "independent protein lesson",
+      "result": "select() unavailable because prose-only dplyr instruction was not executable",
+      "resolution": "Explicit bilingual library(dplyr) code block; fresh page process passed"
+    }
+  ]
+}
