@@ -142,12 +142,12 @@ ggchord(seq_data, ribbon_data, gene_data) +
   geom_seq() + geom_ribbon() + geom_gene()
 ```
 
-[`read_blast()`](https://dangjem.github.io/ggchord/reference/read_blast.md)
+[`read_blast()`](../reference/read_blast.md)
 preserves useful extra columns (`evalue`, `bitscore`, `qcovs`, `qlen`,
 `slen`, `sstrand`, `stitle`);
-[`read_gff3()`](https://dangjem.github.io/ggchord/reference/read_gff3.md)
+[`read_gff3()`](../reference/read_gff3.md)
 preserves `type`, `source`, `score`, `phase` and `attributes`;
-[`read_fasta_lengths()`](https://dangjem.github.io/ggchord/reference/read_fasta_lengths.md)
+[`read_fasta_lengths()`](../reference/read_fasta_lengths.md)
 optionally splits NCBI-style headers with `header_delim = "|"`.
 
 ## 3. Tutorial: from data to a diagram
@@ -170,7 +170,7 @@ clean_ggchord_data(seq_data_example, ribbon_data_example, gene_data_example,
                    reversed_interval = "sort", invalid_pident = "clip")
 ```
 
-[`ggchord()`](https://dangjem.github.io/ggchord/reference/ggchord.md)
+[`ggchord()`](../reference/ggchord.md)
 also validates automatically with `validate = "warn"`. Use `"error"` to
 stop on severe problems or `"none"` for large inputs.
 
@@ -187,7 +187,7 @@ merged <- merge_ggchord_ribbons(dedup$data, max_gap = 0)
 ```
 
 The returned `$data` tables can be passed directly to
-[`ggchord()`](https://dangjem.github.io/ggchord/reference/ggchord.md).
+[`ggchord()`](../reference/ggchord.md).
 
 ### 3.3 Start with sequence arcs
 
@@ -229,7 +229,7 @@ Gene arrows with repelled labels.
 
 #### Choosing a gene-label layout
 
-[`geom_gene_label_repel()`](https://dangjem.github.io/ggchord/reference/geom_gene_label_repel.md)
+[`geom_gene_label_repel()`](../reference/geom_gene_label_repel.md)
 has three deterministic modes. `"aligned"` is the default and creates
 orderly horizontal rows and vertical columns. `"radial"` keeps text
 horizontal and uses the nearest collision-free track parallel to the
@@ -256,10 +256,10 @@ outside/inside label concepts are informed by
 and [Geneious](https://manual.geneious.com/en/latest/Sequences.html),
 while ggchord uses generic mode names and an independent implementation.
 Use
-[`geom_gene_label()`](https://dangjem.github.io/ggchord/reference/geom_gene_label.md)
+[`geom_gene_label()`](../reference/geom_gene_label.md)
 when manual label rotation or offsets are required.
 
-[`geom_gene_label()`](https://dangjem.github.io/ggchord/reference/geom_gene_label.md)
+[`geom_gene_label()`](../reference/geom_gene_label.md)
 is also the compact fixed-label option. Its v0.10.0 defaults keep text
 horizontal and outside the chord, then retain labels in input-row order
 while omitting later collisions. Set `gene_label_orientation = "radial"`
@@ -272,7 +272,7 @@ layer rather than adding a separate manual geom.
 The broader visual hierarchy draws on
 [Circos](https://genome.cshlp.org/content/19/9/1639),
 publication-oriented gene arrows in
-[clinker](https://academic.oup.com/bioinformatics/article/37/16/2473/6129045),
+[clinker](https://doi.org/10.1093/bioinformatics/btab007),
 and annotation collision ideas from [DNA Features
 Viewer](https://edinburgh-genome-foundry.github.io/DnaFeaturesViewer/).
 These are design references only; ggchord uses independent palettes,
@@ -404,10 +404,10 @@ Sequence-level parameters (`seq_radius`, `seq_gap`, `axis_label_size`,
 …) accept **a single value, an unnamed vector, a vector/list named by
 sequence ID, a list named by sequence order (`"1"`, `"2"`, …), or an
 unnamed list**. Gene-level parameters of the fixed-position
-[`geom_gene_label()`](https://dangjem.github.io/ggchord/reference/geom_gene_label.md)
+[`geom_gene_label()`](../reference/geom_gene_label.md)
 layer (`gene_label_rotation`, `gene_offset`, …) additionally accept
 per-strand (`+`/`-`) values. The automatic
-[`geom_gene_label_repel()`](https://dangjem.github.io/ggchord/reference/geom_gene_label_repel.md)
+[`geom_gene_label_repel()`](../reference/geom_gene_label_repel.md)
 modes intentionally manage their own rotation and offsets. All of the
 following are valid for fixed labels:
 
@@ -451,13 +451,13 @@ gene_label_rotation = list(20)
 
 | Layer | Function | Description |
 |----|----|----|
-| Sequence arcs | [`geom_seq()`](https://dangjem.github.io/ggchord/reference/geom_seq.md) | Draws an arc (or line) for each sequence, with direction arrows |
-| Alignment ribbons | [`geom_ribbon()`](https://dangjem.github.io/ggchord/reference/geom_ribbon.md) | Draws colored ribbons from alignment results |
-| Gene arrows | [`geom_gene()`](https://dangjem.github.io/ggchord/reference/geom_gene.md) | Draws gene/feature arrow polygons |
-| Gene labels | [`geom_gene_label()`](https://dangjem.github.io/ggchord/reference/geom_gene_label.md) | Draws gene labels at fixed positions |
-| Automatic gene labels | [`geom_gene_label_repel()`](https://dangjem.github.io/ggchord/reference/geom_gene_label_repel.md) | Deterministic aligned, radial or arc layouts with collision-free leaders |
-| Axes | [`geom_axis()`](https://dangjem.github.io/ggchord/reference/geom_axis.md) | Draws axis lines, major/minor ticks and tick labels |
-| Sequence labels | [`geom_seq_label()`](https://dangjem.github.io/ggchord/reference/geom_seq_label.md) | Places sequence names on/outside the arcs |
+| Sequence arcs | [`geom_seq()`](../reference/geom_seq.md) | Draws an arc (or line) for each sequence, with direction arrows |
+| Alignment ribbons | [`geom_ribbon()`](../reference/geom_ribbon.md) | Draws colored ribbons from alignment results |
+| Gene arrows | [`geom_gene()`](../reference/geom_gene.md) | Draws gene/feature arrow polygons |
+| Gene labels | [`geom_gene_label()`](../reference/geom_gene_label.md) | Draws gene labels at fixed positions |
+| Automatic gene labels | [`geom_gene_label_repel()`](../reference/geom_gene_label_repel.md) | Deterministic aligned, radial or arc layouts with collision-free leaders |
+| Axes | [`geom_axis()`](../reference/geom_axis.md) | Draws axis lines, major/minor ticks and tick labels |
+| Sequence labels | [`geom_seq_label()`](../reference/geom_seq_label.md) | Places sequence names on/outside the arcs |
 
 ## 8. Plot interpretation
 

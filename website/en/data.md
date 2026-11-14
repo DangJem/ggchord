@@ -1,9 +1,13 @@
 <div class="task-intro"><p>Turn file observations into plotting roles. Check minimal fields and coordinates, then use validation reports to decide on cleaning; do not guess missing lengths or strands.</p></div>
 
+<a id="prepare"></a>
+
 ## Prepare this page {#prepare}
-In a fresh R session, run the code below, then follow this page in order. Colours and layout are optional display choices; inputs select only the fields needed. For file-based examples, first extract the [input bundle](../assets/tutorial-inputs.zip) so the working directory contains `examples/`.
+In a fresh R session, run the code below, then follow this page in order. Colours and layout are optional display choices; inputs select only the fields needed. For file-based examples, first extract the [input bundle](https://github.com/DangJem/ggchord/archive/refs/heads/main.zip) so the working directory contains `examples/`.
 
 {{prepare:setup}}
+
+<a id="tables"></a>
 
 ## Sequence table `seq_data` {#tables}
 
@@ -18,6 +22,8 @@ In a fresh R session, run the code below, then follow this page in order. Colour
 
 **Optional columns** can support display or grouping, such as a separate short display name.
 
+<a id="inspect"></a>
+
 ## Link table `ribbon_data` {#inspect}
 
 {{code:frontlinktable}}
@@ -31,6 +37,8 @@ In a fresh R session, run the code below, then follow this page in order. Colour
 | `sstart`, `send` | The two interval endpoints on the subject sequence. |
 
 **Optional column** `pident` is percent identity and can be used for filtering or colour. The first row is about 98.6%. A link table can also have a `length` column for the alignment length.
+
+<a id="names"></a>
 
 ## Genes and generic features {#names}
 
@@ -48,23 +56,31 @@ In a fresh R session, run the code below, then follow this page in order. Colour
 
 The bundled example stores the original annotated strand in `source_strand`. For your own imported GFF3 records, use their `strand` directly.
 
+<a id="reading-coordinates"></a>
+
 ## Reading coordinates {#reading-coordinates}
 
 Input coordinates are 1-based and inclusive. For example, 10 through 12 covers three bases. Gene intervals carry direction in `strand`. Link intervals can encode direction in ascending or descending endpoint order, so preserve the order at each end after import.
 
-Continue to [Plotting concepts](modes.html), or see [Input formats and conversion](formats.html) when reading files.
+Continue to [Plotting concepts](modes.md), or see [Input formats and conversion](formats.md) when reading files.
 
-The BLAST-style fields reflect ggchord’s origins in alignment visualization. Query and subject use q/s prefixes, and custom IDs are accepted. See [alignment inputs](alignments.html) for actual BLAST rows.
+The BLAST-style fields reflect ggchord’s origins in alignment visualization. Query and subject use q/s prefixes, and custom IDs are accepted. See [alignment inputs](alignments.md) for actual BLAST rows.
+
+<a id="minimal-inputs"></a>
 
 ## How the minimal tables connect {#minimal-inputs}
 
-A backbone needs unique `accver` and complete `length`; DNA defaults to bp. Link `qaccver`/`saccver` and feature `accver` refer to those same identifiers. Use the three small tables above for a [minimal plot](multi-sequence-start.html) before reading file import, cleaning, hierarchy or projection details.
+A backbone needs unique `accver` and complete `length`; DNA defaults to bp. Link `qaccver`/`saccver` and feature `accver` refer to those same identifiers. Use the three small tables above for a [minimal plot](multi-sequence-start.md) before reading file import, cleaning, hierarchy or projection details.
 
-For existing files, choose a path by [input and goal](workflows.html#tools). Consult the following details as needed, retaining original inputs and repair copies.
+For existing files, choose a path by [input and goal](workflows.md#tools). Consult the following details as needed, retaining original inputs and repair copies.
+
+<a id="protein-unit"></a>
 
 ## Protein sequence units {#protein-unit}
 
-Nucleotide tables may omit the unit column and use bp. A complete protein length table declares `sequence_unit = "aa"`. A plot uses one unit. See [protein alignments](alignments.html#protein) for full inputs and figures.
+Nucleotide tables may omit the unit column and use bp. A complete protein length table declares `sequence_unit = "aa"`. A plot uses one unit. See [protein alignments](alignments.md#protein) for full inputs and figures.
+
+<a id="coordinates"></a>
 
 ## Coordinate contract {#coordinates}
 Genomic coordinates are **one-based, inclusive bp**. BED/PAF readers convert their
@@ -75,10 +91,12 @@ strand. The legacy `read_gff3()` default is an exception: `unstranded = "plus"`
 converts it to `+` while retaining `source_strand`. Use explicit
 `unstranded = "keep"` and `geom_feature()` to retain unknown strand.
 
-Protein backbones use native aa coordinates; see [protein alignments](protein-alignments.html). Use [CDS projection](projection.html) to place protein intervals on nucleotide backbones.
+Protein backbones use native aa coordinates; see [protein alignments](protein-alignments.md). Use [CDS projection](projection.md) to place protein intervals on nucleotide backbones.
 Native Cartesian layout units, genomic bp, angles in degrees, physical mm and
 track value units are different domains. See the full
-[data contract](reference/ggchord_data_contract.html).
+[data contract](../../man/ggchord_data_contract.Rd).
+
+<a id="import"></a>
 
 ## Advanced: import original records {#import}
 Run this repository-only example from its root. Original files are not rewritten.
@@ -93,6 +111,8 @@ Run this repository-only example from its root. Original files are not rewritten
 full lengths and IDs explicitly when the object lacks them. `file` and `files` both accept path vectors or globs; repeated resolved paths
 are read once in first-occurrence order. Choose one clear entry for a workflow. Missing sequence or
 homology data must be supplied by the analyst, not invented by the plotting layer.
+
+<a id="validation"></a>
 
 ## Validate, clean, prepare {#validation}
 
@@ -109,6 +129,8 @@ means a physical file line; GenBank has separate record/feature provenance.
 Aggregates may have `source_rows` and `.length_estimated` flags. Preserve these
 when filtering or merging links.
 
+<a id="repairs"></a>
+
 ## Inspect a problematic input and its repair report {#repairs}
 {{code:cleaning}}
 {{results:cleaning}}
@@ -121,6 +143,8 @@ A legitimate reverse alignment can keep endpoint order instead of being sorted.
 `prepare_ggchord_data()` therefore retains its workflow-specific default policy;
 standalone cleaning and preparation should not be assumed identical.
 
+<a id="hierarchy"></a>
+
 ## Declare genome and contig keys {#hierarchy}
 {{code:hierarchy}}
 
@@ -128,9 +152,11 @@ standalone cleaning and preparation should not be assumed identical.
 
 `hierarchy$contigs` summarizes declared membership without concatenating contigs.
 No membership is inferred from an accession prefix. Provide globally unique IDs
-when separate samples reuse local contig names. Use [file formats and adapters](formats.html)
-for format/optional-object details, and the [real-record manual](real-data.html)
+when separate samples reuse local contig names. Use [file formats and adapters](formats.md)
+for format/optional-object details, and the [real-record manual](real-data.md)
 to carry reports into a complete figure.
+
+<a id="minimal"></a>
 
 ## Minimal input and protein alignments {#minimal}
 {{results:minimal}}
@@ -138,12 +164,16 @@ to carry reports into a complete figure.
 The second positional constructor argument is `ribbon_data`, not `gene_data`.
 Use explicit argument names as in the shared examples. Optional identity, length
 and coverage fields are needed only by operations that consume them. See
-[standard BLAST/protein input](alignments.html) and [parameter formats](parameters.html).
+[standard BLAST/protein input](alignments.md) and [parameter formats](parameters.md).
+
+<a id="check-result"></a>
 
 ## Result checks {#check-result}
 Input IDs must match complete sequence records. Keep original records separate from repaired copies. Decreasing endpoints can be legitimate reverse hits; warnings do not all mean rows must be removed.
 
-<div class="next-step">Continue: <a href="modes.html">Plotting concepts →</a></div>
+<div class="next-step">Continue: <a href="modes.md">Plotting concepts →</a></div>
+
+<a id="source"></a>
 
 ## Source tables and display copies {#source}
 

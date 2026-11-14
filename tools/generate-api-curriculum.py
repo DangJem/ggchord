@@ -3,6 +3,7 @@
 """Render the explicit API curriculum decisions; do not infer teaching depth."""
 import argparse,html,json,re
 from documentation_lib import ROOT,WEB
+from site_source_links import source_document
 
 def main():
     ap=argparse.ArgumentParser();ap.add_argument('--check',action='store_true');args=ap.parse_args()
@@ -10,7 +11,7 @@ def main():
     entries=json.loads((ROOT/'tools/teaching-audit/api-signatures.json').read_text())
     aliases={alias:p.stem for p in (ROOT/'man').glob('*.Rd') for alias in re.findall(r'\\alias\{([^}]+)\}',p.read_text())}
     assert set(decisions)=={e['name'] for e in entries},'Every actual export needs an explicit decision'
-    for lang in ['en','zh']:
+    for lang in ['zh']:
         zh=lang=='zh'
         lines=[('按 API 查找用途、主讲说明、模式、综合案例和完整参数。精确默认值、格式、单位和限制见函数参考；覆盖等级保留在页末维护记录。上游重导出及纯拼写别名按家族说明，不重复制造说明。' if zh else 'Find purpose, primary section, modes, complete cases and full parameters by API. References define exact defaults, formats, units and constraints; maintenance levels appear at the end. Upstream reexports and spelling aliases are explained by family rather than duplicate sections.'),
           '\n## '+('API 功能索引' if zh else 'API usage index')+' {#apis}\n',
@@ -31,7 +32,9 @@ def main():
           '\n| API | '+('等级' if zh else 'Level')+' |\n| --- | --- |']
         lines += ['| `'+e['name']+'` | '+decisions[e['name']]['level']+' |' for e in entries]
         lines += ['\n</details>\n']
-        result='\n'.join(lines).rstrip()+'\n';path=WEB/lang/'api-curriculum.md'
+        result=source_document('\n'.join(lines).rstrip()+'\n');path=WEB/lang/'api-curriculum.md'
         if args.check:assert path.read_text()==result,'Stale API curriculum: '+lang
         else:path.write_text(result)
+    import subprocess
+    subprocess.run(['python3','tools/sync-website-languages.py',*(['--check'] if args.check else [])],cwd=ROOT,check=True)
 if __name__=='__main__':main()

@@ -1,5 +1,7 @@
 单序列圆图可从一张两列表开始。要识别特征、引物或酶切位点，则另外提供真实DNA；已有注释时可以直接画表格，无需再次识别。
 
+<a id="tables"></a>
+
 ## 输入表与可选信息 {#tables}
 | 输入 | 必需内容 | 可选内容 |
 | --- | --- | --- |
@@ -10,14 +12,20 @@
 
 最简单骨架只需要前两列，不能要求所有人都提供DNA。后两类优先使用本包搜索返回的表，字段细节查相应函数帮助。未知链特征由通用feature层表达，不伪造正链。
 
+<a id="inspect"></a>
+
 ## 查看随包真实记录 {#inspect}
 {{code:courseblockai}}
 
 单序列 ID 列叫 `accver`，可以使用自定义名称。完整DNA与长度必须一致。识别得到的是计算匹配，不是实验验证。
 
+<a id="import"></a>
+
 ## 导入自己的质粒 {#import}
-`read_fasta_lengths()`只读取FASTA标识与完整长度。识别还需要额外读取实际DNA，例如用可选Biostrings的 `readDNAStringSet()` 和 `as.character()`，保留与表格一致的ID；有GFF3/BED/GenBank或GRanges时按[格式专题](formats.html)导入注释，保留来源。跨圆周起点与分段记录按对应导入契约处理，不手工把所有片段合成一个虚假的连续区间。
+`read_fasta_lengths()`只读取FASTA标识与完整长度。识别还需要额外读取实际DNA，例如用可选Biostrings的 `readDNAStringSet()` 和 `as.character()`，保留与表格一致的ID；有GFF3/BED/GenBank或GRanges时按[格式专题](formats.md)导入注释，保留来源。跨圆周起点与分段记录按对应导入契约处理，不手工把所有片段合成一个虚假的连续区间。
+
+<a id="path"></a>
 
 ## 案例如何循序渐进 {#path}
 
-在[添加特征和标签](circular-start.html#input)逐步构建 pUC19，然后做[pUC19 与 pETDuet-1 完整案例](plasmids.html)。按需查阅[搜索条件](recognition.html)和[13 张参考图](plasmid-catalog.html)。
+在[添加特征和标签](circular-start.md#input)逐步构建 pUC19，然后做[pUC19 与 pETDuet-1 完整案例](plasmids.md)。按需查阅[搜索条件](recognition.md)和[13 张参考图](plasmid-catalog.md)。

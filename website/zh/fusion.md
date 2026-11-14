@@ -1,29 +1,43 @@
+<a id="task"></a>
+
 ## 独立视图与来源区间连接 {#task}
 
 Fusion 是组合层。综合示例在明确的面板矩形中放置 Chord 总览、Collinear 视图、Radial 视图、双序列上下文和独立局部放大。连接来自已观测 HSP 和注册来源区间；同一记录的重复显示不构成新增观测。
 
 {{manualfigure:flagfusion}}
 
+<a id="path"></a>
+
 ## 组合与布局 {#path}
 
-[面板与来源连接](fusion-start.html) · [位置、尺寸与图例](fusion-layout.html) · [跨面板路由](fusion-routing.html)
+[面板与来源连接](fusion-start.md) · [位置、尺寸与图例](fusion-layout.md) · [跨面板路由](fusion-routing.md)
+
+<a id="magnify"></a>
 
 ## 局部放大 {#magnify}
 
-以明确选区连接全局图和独立构造的局部图；注册的真实对齐字符可进一步提供残基或碱基细节。见[局部放大与字符细节](fusion-details.html)。
+以明确选区连接全局图和独立构造的局部图；注册的真实对齐字符可进一步提供残基或碱基细节。见[局部放大与字符细节](fusion-details.md)。
+
+<a id="nested"></a>
 
 ## 嵌套与环状选区 {#nested}
 
-嵌套 Fusion 保留叶面板路径；跨原点选区需要显式环绕声明和匹配的完整来源长度。见[嵌套组合与跨原点放大](fusion-advanced.html)。
+嵌套 Fusion 保留叶面板路径；跨原点选区需要显式环绕声明和匹配的完整来源长度。见[嵌套组合与跨原点放大](fusion-advanced.md)。
+
+<a id="inputs"></a>
 
 ## 支持的面板 {#inputs}
 
 按各自契约接受注册基因组视图、嵌套组合和注册 Cartesian 字符细节。Dotplot、分面和未注册外部图不做自动猜测或适配。
+<a id="flagship-selection"></a>
+
 ## 旗舰图的展示选择 {#flagship-selection}
 
 A、B、C共用同一组6条精选真实HSP和12条源CDS；完整32条HSP和266条CDS输入保留。每个有向序列对选择长度最接近4000 bp的一条HSP，每条序列按三个位置区间选择CDS，优先有信息的名称和较长特征。跨图关系为A–B、A–C、C–D，均来自所选真实记录，C同时连接两个面板。
 
 D恢复正向显示全长双序列，E显示对应HSP及两侧各800 bp的源窗口，每条序列选2条CDS。E按来源特征标识选择的四条CDS同时保留在D，D窗口内不再使用另一套独立精选。D和E的配对高亮由`magnify_ggchord()`注册，实际放大倍率随设备与面板分配重新测量；高亮不构成新增HSP，也不改变原始坐标或生物链。旗舰使用`connector = "envelope"`：D的每条序列按真实高亮区间各自描边，不以带留白的合并大框代表多个选区；两条直线从真实高亮带边缘连接E。E的框线包围序列、特征、刻度及标签，只表示展示范围；标题和说明在框外，并靠近序列内容。完整图与首页预览各自分配面板空间，放大A、拉宽B，并采用更紧凑的首页图例；C–D连接绕开E面板。跨面板颜色表示对应关系，内部ribbon颜色表示Identity。
+
+<a id="shared-guides"></a>
 
 ## 共享子图图例 {#shared-guides}
 

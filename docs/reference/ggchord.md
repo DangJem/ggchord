@@ -62,7 +62,7 @@ ggchord(
 
   Character, default `"warn"`. How to run the structured input-data
   validation (see
-  [`validate_ggchord_data`](https://dangjem.github.io/ggchord/reference/validate_ggchord_data.md)):
+  [`validate_ggchord_data`](validate_ggchord_data.md)):
   `"warn"` emits a single summary warning when the data has problems and
   caches the full report on the plot object (`p$ggchord$validation`);
   `"error"` stops on severe problems; `"none"` skips the diagnostic

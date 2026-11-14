@@ -1,3 +1,5 @@
+<a id="input"></a>
+
 ## 长度与已有注释 {#input}
 
 只需要长度与已知表格。本例 ori 行来自已核对 pUC19 注释 867–1455，与原 inspectorigin 输出一致；不运行 DNA 识别。需要 ggchord、dplyr。
@@ -8,15 +10,19 @@ library(ggchord)
 
 {{code:coursecircleinput}}
 
-![Circular backbone](../assets/coursecircle.png)
+![Circular backbone](../../man/figures/coursecircle.png)
+
+<a id="features-and-labels"></a>
 
 ## 添加特征和标签 {#features-and-labels}
 
 {{code:coursecirclefeature}}
 
-![Circular feature and label](../assets/coursecirclefeature.png)
+![Circular feature and label](../../man/figures/coursecirclefeature.png)
 
 找到 ori 在刻度上的两端，确认文字来自 anno；圆形外观不表示已验证分子拓扑。
+
+<a id="exercise"></a>
 
 ## 调整与保存 {#exercise}
 

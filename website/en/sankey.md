@@ -1,6 +1,10 @@
+<a id="input"></a>
+
 ## Prepare real sources {#input}
 
 {{prepare:foundationdata}}
+
+<a id="sankey"></a>
 
 ## Mirrored two-column relationships {#sankey}
 
@@ -15,11 +19,15 @@ shared branches in this first version.
 
 {{figure:foundationsankey}}
 
+<a id="column-gap"></a>
+
 ## Change only the column gap {#column-gap}
 
 {{code:coursesankeygap}}
 
-![Change only the column gap](../assets/coursesankeygap.png)
+![Change only the column gap](../../man/figures/coursesankeygap.png)
+
+<a id="instances"></a>
 
 ## Check sources and instances {#instances}
 

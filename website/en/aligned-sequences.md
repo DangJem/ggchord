@@ -2,13 +2,17 @@
 
 {{prepare:setup}}
 
-Extract the [input bundle](../assets/tutorial-inputs.zip) so the working directory contains examples/. Each section names its optional dependencies.
+Extract the [input bundle](https://github.com/DangJem/ggchord/archive/refs/heads/main.zip) so the working directory contains examples/. Each section names its optional dependencies.
+
+<a id="characters"></a>
 
 ## Retain actual FASTA characters {#characters}
 
 Use `keep_sequence = TRUE` to retain characters with their physical header line and optional file provenance. Only whitespace is removed; case is retained. Declare bp or aa explicitly instead of guessing the alphabet. Focusing crops the string as well as the interval; local position 1 below is original position 1001. A decreasing locus selects the same interval and does not reverse-complement it. Lengths alone cannot supply characters; HSP endpoints cannot supply mismatch or gap columns. Gapped FASTA counts gap characters and needs a separate alignment-to-source map before genomic use.
 
 {{code:courseblockar}}
+
+<a id="aligned-characters"></a>
 
 ## Existing alignments: keep columns and source positions separate {#aligned-characters}
 
@@ -20,13 +24,17 @@ These examples require the source checkout's `examples/alignment/` directory. It
 
 The first selected row has a gap at alignment column 343. Column lookup therefore returns `matched = TRUE`, `is_gap = TRUE` and a missing source position. Inverse lookup of source position 343 finds its actual alignment column, without interpolation. Positions removed by filtering return `matched = FALSE`; filtering never renumbers retained columns. `map_alignment_position()` selects an alignment-row ID even when a separately declared source ID differs.
 
-`geom_residue()` is a standard Cartesian ggplot layer. Styles and user scales follow ggplot2. It measures glyphs against actual cell width and height at draw time: `overflow = "error"` requires readable letters; `"tile"` retains colour cells where text cannot fit, without shrinking fonts. Focus fewer columns or increase physical width to show letters. For example, save `p_characters` with ordinary `ggsave(width = 12, height = 3.4, units = "in")`; simply raising DPI adds no physical room. Discrete rows, identity/reverse position scales and Cartesian coordinates are supported; this layer does not directly project characters onto backbone Coords. A Cartesian character plot with explicit source mapping can be registered using `register_ggchord_alignment()` for [Fusion character details](fusion-details.html#character-detail).
+`geom_residue()` is a standard Cartesian ggplot layer. Styles and user scales follow ggplot2. It measures glyphs against actual cell width and height at draw time: `overflow = "error"` requires readable letters; `"tile"` retains colour cells where text cannot fit, without shrinking fonts. Focus fewer columns or increase physical width to show letters. For example, save `p_characters` with ordinary `ggsave(width = 12, height = 3.4, units = "in")`; simply raising DPI adds no physical room. Discrete rows, identity/reverse position scales and Cartesian coordinates are supported; this layer does not directly project characters onto backbone Coords. A Cartesian character plot with explicit source mapping can be registered using `register_ggchord_alignment()` for [Fusion character details](fusion-details.md#character-detail).
+
+<a id="aligned-protein"></a>
 
 ### Protein excerpt {#aligned-protein}
 
 The same data contract accepts actual protein characters. This excerpt contains upstream gaps and residue differences; fill distinguishes literal symbols, not inferred functional domains.
 
 {{code:courseblockat}}
+
+<a id="aligned-source"></a>
 
 ### Explicit source coordinates {#aligned-source}
 
@@ -38,6 +46,8 @@ The following example checks consistency against ungapped fragments derived from
 
 No mismatch/gap detail can be recovered from six HSP endpoints alone. This workflow accepts existing columns, not CIGAR/A3M/Clustal/Stockholm parsing, phase inference, consensus/Logo analysis or alignment computation. Explicit CDS translation is described below; exact macro/detail registration is available in the Fusion section.
 
+<a id="cds-translation"></a>
+
 ## Source-backed CDS translation {#cds-translation}
 
 `build_ggchord_cds()` defines observed coding coordinates; `translate_ggchord_cds()` additionally needs actual complete forward DNA/RNA strings and optional **Biostrings**. This real EMALE negative-strand CDS has source phase 0 and an ATG start. Table 11 is an explicit choice checked against the unchanged upstream protein FASTA. Input provenance is in `examples/format-inputs/README.md`.
@@ -48,4 +58,4 @@ No mismatch/gap detail can be recovered from six HSP endpoints alone. This workf
 
 The default `initiation = "literal"` does not recode alternative starts; `"start"` requires a complete 5-prime end. `ambiguous = "error"` rejects fuzzy codons; explicit `"solve"` delegates to Biostrings, using X if unresolved. Unknown codes, missing/short sources and declared translation exceptions fail. `partial = "trim"` belongs to the CDS map: only the initial phase and incomplete terminal codon are excluded; later segment phases validate continuity without deleting junction bases. No missing sequence is reconstructed. RNA must be declared explicitly. Ordered `segments` support the existing spliced/origin-join contract.
 
-A complete runnable nucleotide/codon/macro example is `examples/m2-detail.R`; its negative-strand labels are centred on their three coding bases. Real spliced plus/minus controls, source hashes and original expected translations are retained in `examples/cds/`. [Register the character plot](fusion-details.html#character-detail) to connect its exact source boundaries.
+A complete runnable nucleotide/codon/macro example is `examples/m2-detail.R`; its negative-strand labels are centred on their three coding bases. Real spliced plus/minus controls, source hashes and original expected translations are retained in `examples/cds/`. [Register the character plot](fusion-details.md#character-detail) to connect its exact source boundaries.

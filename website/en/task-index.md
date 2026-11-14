@@ -1,3 +1,5 @@
+<a id="moved"></a>
+
 ## Reading overview {#moved}
 
-[Tasks](reference/index.html)
+[Tasks](../../man/)

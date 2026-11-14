@@ -2,7 +2,9 @@
 
 {{prepare:frontlinks}}
 
-先查看[第一张共线性图](multi-sequence-start.html#collinear)，再用同一组真实输入观察对齐、锚点和方向。无需了解弦图。
+先查看[第一张共线性图](multi-sequence-start.md#collinear)，再用同一组真实输入观察对齐、锚点和方向。无需了解弦图。
+
+<a id="baseline"></a>
 
 ## 输入与默认左对齐 {#baseline}
 
@@ -12,6 +14,8 @@
 {{figure:alignleft}}
 
 `base_align` 保留数据与图层，后续仅替换坐标系。默认 `align = "left"`、`anchor = NULL`、`orientation = "manual"`。横向长度使用共同尺度，短序列不会被拉伸至相同长度。
+
+<a id="alignment"></a>
 
 ## 只改变对齐方式 {#alignment}
 
@@ -25,6 +29,8 @@
 
 右端对齐。三幅图均为 9 × 6 英寸，数据、图层、行顺序与方向相同。比较的是横向平移，不是新的比对结果。
 
+<a id="anchor"></a>
+
 ## 给每条序列一个锚点 {#anchor}
 
 {{code:alignanchor}}
@@ -33,6 +39,8 @@
 与左对齐基线相比，仅增加 `anchor`。这个命名向量以 `accver` 为键，数值是源序列中点，因而在本例与完整序列居中有相同效果。它只是几何示范；科研中应从已确认的共同位点构造锚点。
 
 也可给 `accver, position` 或 `accver, start, end` 数据框。每条显示序列恰有一个锚点，缺失或重复会报错。区间锚点由 `align` 选择显示左端、中点或右端；这是应用显示方向后的边缘。多拷贝基因须先明确选择哪一份。
+
+<a id="orientation"></a>
 
 ## 自动选择显示方向 {#orientation}
 
@@ -50,6 +58,8 @@
 
 显示翻转不改写原始链，也不能单独作为真实基因组倒位的结论。手动设置 `geom_seq(seq_orientation = ...)` 时不要再启用自动方向。
 
+<a id="parameters"></a>
+
 ## 参数选择与组合边界 {#parameters}
 
 | 参数 | 默认值 | 类型、作用与限制 |
@@ -61,13 +71,17 @@
 | `segments` | `NULL` | 显式窗口表；不能与 anchor 或 auto 同用 |
 | `segment_gap` | `100` | 正数，按 bp 显示尺度预留断点空间，不是缺失长度 |
 
-这些设置属于 `coord_collinear()`，不传给其他坐标模式。分段时由窗口表掌管方向，详见[局部窗口](views.html#segments)。圆弧半径与曲率不能用于此模式。
+这些设置属于 `coord_collinear()`，不传给其他坐标模式。分段时由窗口表掌管方向，详见[局部窗口](views.md#segments)。圆弧半径与曲率不能用于此模式。
+
+<a id="adapt"></a>
 
 ## 操作示例和自己的数据 {#adapt}
 
-先只把 `align` 从 left 改成 right，观察短序列与最长序列的相对位置；再给每条序列选择一个有业务依据的锚点，解释为何可以比较。使用自己的 FASTA 长度和 BLAST/PAF 端点时先核对 ID、单位、完整长度及反向端点，见[数据导入](real-data.html#read)。
+先只把 `align` 从 left 改成 right，观察短序列与最长序列的相对位置；再给每条序列选择一个有业务依据的锚点，解释为何可以比较。使用自己的 FASTA 长度和 BLAST/PAF 端点时先核对 ID、单位、完整长度及反向端点，见[数据导入](real-data.md#read)。
 
-没有连接时先查端点和相邻行筛选，见[跨行连接](multi-sequence-links.html#routes)。接下来了解[局部窗口与分段](views.html)，完整参数见 [`coord_collinear()`](reference/coord_collinear.html)。
+没有连接时先查端点和相邻行筛选，见[跨行连接](multi-sequence-links.md#routes)。接下来了解[局部窗口与分段](views.md)，完整参数见 [`coord_collinear()`](../../man/coord_collinear.Rd)。
+
+<a id="gap"></a>
 
 ## 增加行距 {#gap}
 

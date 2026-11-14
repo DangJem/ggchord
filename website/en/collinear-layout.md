@@ -2,7 +2,9 @@
 
 {{prepare:frontlinks}}
 
-Start with [your first collinear plot](multi-sequence-start.html#collinear), then compare alignment, anchors and orientation on the same real input. No chord sections are required.
+Start with [your first collinear plot](multi-sequence-start.md#collinear), then compare alignment, anchors and orientation on the same real input. No chord sections are required.
+
+<a id="baseline"></a>
 
 ## Input and default left alignment {#baseline}
 
@@ -12,6 +14,8 @@ This page independently loads four bundled complete sequences and their observed
 {{figure:alignleft}}
 
 `base_align` keeps the data and layers fixed. Only coordinates change below. Defaults are `align = "left"`, `anchor = NULL`, and `orientation = "manual"`. All backbones share one horizontal scale; short sequences are not stretched.
+
+<a id="alignment"></a>
 
 ## Change alignment alone {#alignment}
 
@@ -25,6 +29,8 @@ The complete sequence midpoints align. Each sequence translates independently, w
 
 Right edges align. All three figures use 9 × 6 inches, identical data, layers, row order and directions. This compares translation, not newly computed alignments.
 
+<a id="anchor"></a>
+
 ## Supply one anchor per sequence {#anchor}
 
 {{code:alignanchor}}
@@ -33,6 +39,8 @@ Right edges align. All three figures use 9 × 6 inches, identical data, layers, 
 Relative to the left-aligned baseline, only `anchor` is added. The vector uses `accver` names and source sequence midpoints, so this example has the same effect as centering complete sequences. These are geometric demonstration anchors. Research anchors should come from explicitly justified common loci.
 
 Alternatively supply a table with `accver, position` or `accver, start, end`. Every displayed sequence needs exactly one anchor; missing or duplicate anchors are errors. For intervals, `align` selects the displayed left edge, midpoint or right edge after orientation. Select a specific copy before anchoring multicopy genes.
+
+<a id="orientation"></a>
 
 ## Choose display directions automatically {#orientation}
 
@@ -50,6 +58,8 @@ Only `orientation = "auto"` changes from the left-aligned baseline; `min_support
 
 A display flip does not rewrite source strands or establish a biological inversion. Do not combine explicit `geom_seq(seq_orientation = ...)` with automatic orientation.
 
+<a id="parameters"></a>
+
 ## Parameters and combination boundaries {#parameters}
 
 | Parameter | Default | Type, effect and constraints |
@@ -61,13 +71,17 @@ A display flip does not rewrite source strands or establish a biological inversi
 | `segments` | `NULL` | Explicit window table; conflicts with anchor or auto |
 | `segment_gap` | `100` | Positive display distance in bp scale units, not omitted length |
 
-These belong to `coord_collinear()`, not the other coordinate systems. Window tables own orientation in [segmented views](views.html#segments). Circular radius and curvature settings cannot be converted to this mode.
+These belong to `coord_collinear()`, not the other coordinate systems. Window tables own orientation in [segmented views](views.md#segments). Circular radius and curvature settings cannot be converted to this mode.
+
+<a id="adapt"></a>
 
 ## Use your own data {#adapt}
 
-First change only `align` from left to right and observe short sequences against the longest backbone. Then choose a justified anchor for each sequence and explain why they can be compared. For your FASTA lengths and BLAST/PAF endpoints, check IDs, units, complete lengths and reverse endpoints; see [data import](real-data.html#read).
+First change only `align` from left to right and observe short sequences against the longest backbone. Then choose a justified anchor for each sequence and explain why they can be compared. For your FASTA lengths and BLAST/PAF endpoints, check IDs, units, complete lengths and reverse endpoints; see [data import](real-data.md#read).
 
-For missing links inspect endpoints and adjacent-row filtering in [cross-row connections](multi-sequence-links.html#routes). Continue with [local windows and segments](views.html); see [`coord_collinear()`](reference/coord_collinear.html) for the complete reference.
+For missing links inspect endpoints and adjacent-row filtering in [cross-row connections](multi-sequence-links.md#routes). Continue with [local windows and segments](views.md); see [`coord_collinear()`](../../man/coord_collinear.Rd) for the complete reference.
+
+<a id="gap"></a>
 
 ## Increase row spacing {#gap}
 

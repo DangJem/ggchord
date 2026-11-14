@@ -2,6 +2,8 @@
 
 {{prepare:trackdata,tracks,foundationdata}}
 
+<a id="tracks"></a>
+
 ## 统计观测数或显示给定数值 {#tracks}
 
 `bar` 按源位置统计观测数，`col` 显示已提供的数值。各 accession/window 在视图投影或
@@ -25,12 +27,14 @@
 | point、line、path、step、text | identity | 源 x 与局部 y，text 还需 label |
 | tile、rect、area、ribbon、segment、linerange、errorbar | identity | 对应 ggplot2 原生范围字段 |
 
-可用统计包括 identity/count/bin/summary，以及已声明的 [smooth/density/ecdf 估计组合](tracks-statistics.html#estimates)。bin 必须显式给出 binwidth 或 breaks。
+可用统计包括 identity/count/bin/summary，以及已声明的 [smooth/density/ecdf 估计组合](tracks-statistics.md#estimates)。bin 必须显式给出 binwidth 或 breaks。
 支持原生 group 与 after_stat 映射；数值轴保留统计量单位。任意第三方 Geom/Stat 插件不在支持范围内，不支持的组合明确拒绝。既有 track line/tile 快捷层保留其原有行为。
 
 源位置使用 x orientation，原生文字字号目前使用 mm，区间几何只支持完整轮廓。其他方向、字号单位或局部轮廓会明确报错。原生文字样式和路径箭头继续转发。
 
 首批原生 Track 要求单面板和 ggchord 坐标系。分面、`coord_flip()`、raster、boxplot 和 violin 尚不支持，显式请求会报错。纵向投影使用 `coord_collinear(seq_axis = "vertical")`。统计结果在 dodge 等数据位置调整前保留源成员。矩形和 tile 使用输入边界，不虚构零基线。
+
+<a id="independent-bands"></a>
 
 ## 两条独立轨道与显示顺序 {#independent-bands}
 
@@ -42,9 +46,13 @@
 {{code:comparetrackorder}}
 {{figure:comparetrackorder}}
 
+<a id="window-policy"></a>
+
 ## DNA 窗口与折线边界 {#window-policy}
 
 此处 GC 为 `mean(bases %in% c("G", "C"))`：模糊碱基仍计入分母、对分子贡献为零；末窗口使用实际碱基数。当前 pUC19 不含模糊碱基，换输入时应明确并记录策略，不能假定自动忽略。局部聚焦裁剪区间并保留原汇总，不会重新计算缩短窗口的 GC。折线按输入样本及分组连接，`closed` 显式控制圆周闭合，`gap` 属于轨道的物理间隔。不能用闭合线暗示被省略源窗口之间存在连续观测。
+
+<a id="estimates"></a>
 
 ## 原生源空间估计 {#estimates}
 
@@ -65,6 +73,8 @@
 拟合使用给定的原始源 x/y，之后 Track 数值标度的变换只映射估计，不会暗中重拟合 log 空间模型；这与原生 ggplot 在 Stat 之前放置变换有别。如需在变换空间拟合，应事先显式准备、命名变换变量并声明单位。事件位置的核密度不是测序深度，ECDF 是累计分布，不是逐位点比对。
 
 真实 pUC19 GC 窗口及 G/C 位置已与原生 ggplot2 数值和组来源逐项对照，并核对曲线/竖向投影及显式缺失值控制。`check-track-estimates.R` 保存数值报告和实际 CI/均值图。有限源边界及物理 band 约束仍适用；自动摆放不改变模型或制造观测。
+
+<a id="track-focus"></a>
 
 ## 轨道与窗口使用相同源坐标 {#track-focus}
 

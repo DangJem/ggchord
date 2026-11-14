@@ -2,9 +2,9 @@
 
 Draws the gene annotation labels on a chord diagram. This layer is
 independent from
-[`geom_gene()`](https://dangjem.github.io/ggchord/reference/geom_gene.md):
+[`geom_gene()`](geom_gene.md):
 add it after
-[`geom_gene()`](https://dangjem.github.io/ggchord/reference/geom_gene.md)
+[`geom_gene()`](geom_gene.md)
 to annotate the gene arrows with their texts.
 
 ## Usage
@@ -95,7 +95,7 @@ geom_gene_label(
 
 A list of ggplot2 layers. To let the labels avoid each other and the
 genes (with leader lines), use
-[`geom_gene_label_repel()`](https://dangjem.github.io/ggchord/reference/geom_gene_label_repel.md)
+[`geom_gene_label_repel()`](geom_gene_label_repel.md)
 instead.
 
 ## Details
@@ -105,7 +105,7 @@ sit outside their sequence and labels that would collide are omitted in
 input-row order. Use `gene_label_overlap = "nudge"` to retain the legacy
 gentle adjustment, or `"allow"` to draw every label at its requested
 position. For automatic arrangement with leader lines, use
-[`geom_gene_label_repel()`](https://dangjem.github.io/ggchord/reference/geom_gene_label_repel.md)
+[`geom_gene_label_repel()`](geom_gene_label_repel.md)
 instead.
 
 ## Examples

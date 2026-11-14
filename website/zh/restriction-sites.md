@@ -1,5 +1,7 @@
 搜索切点与选择显示集合是两步。用相同三个 pUC19 命中比较引线、文字内容、顺序和内外侧，不修改 DNA 或切点。
 
+<a id="input"></a>
+
 ## 保留真实切点与搜索条件 {#input}
 
 本页独立运行。显式使用 EcoRI、BamHI、HindIII 和 methylation="none"；这是搜索条件，不是样品甲基化测量。enzyme_site_count 针对完整输入序列，筛选显示行后仍保留该统计。
@@ -9,6 +11,8 @@
 {{code:comparefinishsiterows}}
 {{output:comparefinishsiterows}}
 
+
+<a id="restriction-labels"></a>
 
 ## 同一切点比较引线 {#restriction-labels}
 
@@ -21,6 +25,8 @@ radial 默认根据文字框与圆周顺序排布，必要时使用短径向段�
 {{code:comparerestrictionstraight}}
 {{figure:comparerestrictionstraight}}
 
+
+<a id="text-content"></a>
 
 ## 内容、顺序与侧向分别改变 {#text-content}
 
@@ -35,6 +41,8 @@ radial 默认根据文字框与圆周顺序排布，必要时使用短径向段�
 {{code:comparerestrictioninside}}
 {{figure:comparerestrictioninside}}
 
+
+<a id="parameters"></a>
 
 ## 关键参数与筛选含义 {#parameters}
 
@@ -54,6 +62,8 @@ find_restriction_sites 返回全部匹配和切点，filter_restriction_sites �
 
 
 
+<a id="adapt"></a>
+
 ## 操作示例、密集图与限制 {#adapt}
 
-只增大 min_label_gap，观察标签与引线是否向外扩展；再回到默认，用 label=FALSE 只显示切点。保持完整搜索结果，另存显示子集。小图放不下时增加实际导出尺寸，而不是删除源记录。组合特征与引物后重新检查拥挤，见[密集 pETDuet-1](circular-dense-case.html#complex)。计算切点不是实际酶切实验的验证。
+只增大 min_label_gap，观察标签与引线是否向外扩展；再回到默认，用 label=FALSE 只显示切点。保持完整搜索结果，另存显示子集。小图放不下时增加实际导出尺寸，而不是删除源记录。组合特征与引物后重新检查拥挤，见[密集 pETDuet-1](circular-dense-case.md#complex)。计算切点不是实际酶切实验的验证。

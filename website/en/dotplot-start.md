@@ -2,12 +2,14 @@ Start with observed HSPs from one sequence pair, then extend to a four-sequence 
 
 {{code:courseblockam}}
 
+<a id="dotplot"></a>
+
 ## Plot original HSP endpoints {#dotplot}
 
 The source-backed EMALE PAF pair has 11 observed HSPs. Its declared sequence
 lengths supply both axes. `read_paf()` converts zero-based half-open intervals
 to the internal one-based convention and reverses target endpoints for minus
-alignments. The files and their provenance are in the [input download](formats.html).
+alignments. The files and their provenance are in the [input download](formats.md).
 The following code needs the optional `dplyr` package for data preparation.
 
 {{code:dotplotdata}}
@@ -40,6 +42,8 @@ in all participating layers. Unidentified duplicate/self rows remain distinct.
 Without cg/cs/CIGAR or another alignment trace, these are HSP segments, not
 base-level mismatches or gap paths.
 
+<a id="matrix"></a>
+
 ## Multi-sequence HSP matrix {#matrix}
 
 These inputs come from original repository FASTA and standard BLAST tables. All 32 HSPs across four sequences are retained; self-alignments, reciprocal records and missing HSPs are not invented. The 266 CDS belong to the shared source preparation and are not submitted to the Dotplot segment layer. An empty area means no supplied HSP, not proven absence of homology.
@@ -54,6 +58,8 @@ Each of the six unordered sequence pairs supplies only one query→subject direc
 
 {{manualfigure:flagdotplot}}
 
+<a id="direction"></a>
+
 ## Inspect source direction {#direction}
 
 Relative endpoint direction comes from the source record. Reversing a display axis changes the visible slope while leaving the source direction unchanged. Count the supplied directions per sequence pair:
@@ -67,6 +73,8 @@ hsp_direction <- flagship_hsp |>
 hsp_direction
 ```
 
+<a id="mapping"></a>
+
 ## Query an exact position {#mapping}
 
 Map the first HSP query start onto the concatenated x `axis`. Inverse lookup uses `inverse = TRUE` and an explicit `axis`; display gaps return NA. The four endpoints remain unchanged.
@@ -77,6 +85,8 @@ map_ggchord_position(
 )
 ```
 
+<a id="support"></a>
+
 ## Boundaries and next steps {#support}
 
-Backbone gene/feature/track/ribbon layers, facets and Fusion endpoints are unsupported. To inspect gaps or mismatches, provide actual aligned characters; see [the alignment workflow](aligned-sequences.html). Example: trace four endpoints of one segment and explain slope and colour separately.
+Backbone gene/feature/track/ribbon layers, facets and Fusion endpoints are unsupported. To inspect gaps or mismatches, provide actual aligned characters; see [the alignment workflow](aligned-sequences.md). Example: trace four endpoints of one segment and explain slope and colour separately.

@@ -11,6 +11,7 @@ from html.parser import HTMLParser
 from pathlib import Path
 from urllib.parse import unquote, urlsplit
 from documentation_lib import ROOT, WEB, PAGES, CAPTIONS, RECIPES, expand, snippets, localize_r_comments
+from site_source_links import check_source_links, check_repository_urls
 import importlib.util
 import sys
 sys.path.insert(0, str(ROOT/'tools/site-audit'))
@@ -77,6 +78,7 @@ def main():
     parser.add_argument('--source-only', action='store_true')
     args = parser.parse_args()
     subprocess.run(['python3','tools/sync-website-languages.py','--check'],cwd=ROOT,check=True)
+    subprocess.run(['python3','tools/check-repository-links.py'],cwd=ROOT,check=True)
     subprocess.run(['python3', str(ROOT / 'tools/check-teaching-content.py')], cwd=ROOT, check=True)
     errors = []
     def require(ok, message):
@@ -99,6 +101,8 @@ def main():
     for p in PAGES:
         texts = [(WEB/lang/(p['slug']+'.md')).read_text() for lang in ['en','zh']]
         for lang, text in zip(['en','zh'],texts):
+            errors.extend(check_source_links(WEB/lang/(p['slug']+'.md')))
+            errors.extend(check_repository_urls(text))
             require('中文' not in text, f'{lang}/{p["slug"]}: inconsistent language label')
             require(bool(p['title'][lang]), f'{p["slug"]}: missing localized title')
             require('{{' not in expand(text,lang),f'{lang}/{p["slug"]}: unexpanded source marker')
@@ -114,8 +118,14 @@ def main():
                 f'{lang}: orphan source pages: {sorted(actual - expected)}; '
                 f'missing source pages: {sorted(expected - actual)}')
     for filename in ['README.md', 'README-Hans.md']:
+        errors.extend(check_repository_urls((ROOT/filename).read_text()))
         require(not re.search(r'SnapGene|Geneious', (ROOT/filename).read_text(), re.I),
                 filename + ': commercial product name in design references')
+    # Only the current release is maintained; historical notes describe their own tags.
+    release_version = re.search(r'^Version:\s*(\S+)', (ROOT/'DESCRIPTION').read_text(), re.M)[1]
+    release_notes = ROOT/'tools/release-notes'/('v'+release_version+'.md')
+    if release_notes.exists():
+        errors.extend(check_repository_urls(release_notes.read_text()))
     comparisons = json.loads((WEB/'parameter-comparisons.json').read_text())
     for row in comparisons:
         require(all(key in snippets() for key in row['snippets']), row['id'] + ': missing comparison dependency')
@@ -227,6 +237,8 @@ def main():
                     if name in {f'prepare-{key}{suffix}.R' for key in RECIPES for suffix in ['', '-zh']}: origin=WEB/'showcase-recipes.json'
                     if name in ['tutorial-inputs.zip','input-hashes.json']: origin=ROOT/'examples'
                     require(origin.exists(), f'{lang}/{p["slug"]}: unknown asset {url}')
+                elif split.path:
+                    require(False, f'{lang}/{p["slug"]}: source link has no site destination {url}')
     icon = json.loads((WEB/'assets/icon.json').read_text())
     for record in icon['assets']+[icon['favicon']]:
         path=ROOT/record['file']

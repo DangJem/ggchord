@@ -1,7 +1,7 @@
 # Add an automatically arranged gene label layer
 
 Like
-[`geom_gene_label()`](https://dangjem.github.io/ggchord/reference/geom_gene_label.md),
+[`geom_gene_label()`](geom_gene_label.md),
 but labels are placed by one of three deterministic collision-avoiding
 layouts. The default `"aligned"` layout uses orderly cardinal rails,
 `"radial"` uses compact local offset tracks, and `"arc"` keeps text
@@ -98,7 +98,7 @@ options](https://manual.geneious.com/en/latest/Sequences.html).
 Low-level force, padding, orientation and segment arguments used by
 earlier releases have been removed and now produce an error. Use
 `gene_label_layout` for automatic placement, or
-[`geom_gene_label()`](https://dangjem.github.io/ggchord/reference/geom_gene_label.md)
+[`geom_gene_label()`](geom_gene_label.md)
 for manual rotation and offsets.
 
 ## Examples

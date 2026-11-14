@@ -1,6 +1,10 @@
+<a id="api"></a>
+
 ## 接口迁移 {#api}
 
 {{migration}}
+
+<a id="pages"></a>
 
 ## 旧文档地址 {#pages}
 

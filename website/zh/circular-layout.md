@@ -2,11 +2,15 @@
 
 {{code:courseblockaj}}
 
+<a id="input"></a>
+
 ## 本页输入与来源 {#input}
 
 本页在新 R 会话独立运行，需可选依赖 dplyr。`finish_features` 保留识别结果的前六行，不改变区间与链。为比较标签适配，`finish_labels` 的显示文字在原始名称后附上真实坐标，原始表仍单独保存。
 
 {{code:comparefinishcircle}}
+
+<a id="backbones"></a>
 
 ## 骨架样式与双线间距 {#backbones}
 
@@ -18,6 +22,8 @@
 {{figure:comparebonesingle}}
 {{code:comparebonegap}}
 {{figure:comparebonegap}}
+
+<a id="band-rendering"></a>
 
 ## band 色带骨架 {#band-rendering}
 
@@ -31,9 +37,11 @@ band 用填充多边形表示整条骨架，宽度由 seq_backbone_width 控制�
 {{code:comparebandwidth}}
 {{figure:comparebandwidth}}
 
+<a id="coordinates"></a>
+
 ## 圆图坐标、旋转、开口与适配 {#coordinates}
 
-零旋转的原点在 12 点钟，默认顺时针增加；正 rotation 逆时针转动整图。与上面 double 基线相比，下面分别只改变 direction 或 gap。rotation 对照见[圆图旋转](circular-layout.html#rotation)。
+零旋转的原点在 12 点钟，默认顺时针增加；正 rotation 逆时针转动整图。与上面 double 基线相比，下面分别只改变 direction 或 gap。rotation 对照见[圆图旋转](circular-layout.md#rotation)。
 
 | 参数 | 默认 | 类型与边界 |
 | --- | --- | --- |
@@ -51,6 +59,8 @@ band 用填充多边形表示整条骨架，宽度由 seq_backbone_width 控制�
 {{code:comparecirclegap}}
 {{figure:comparecirclegap}}
 
+<a id="center"></a>
+
 ## 分别设置中心名称和长度 {#center}
 
 中心文字与沿骨架的序列标签是不同图层。`name = TRUE`、`length = TRUE`，默认用换行符 separator 分隔；name 也可提供显示字符串。name_style/length_style 默认空列表，接受固定 colour、size、family、fontface、lineheight。下面先只隐藏 length，再回到基线只改变 name_style 的 size，长度字号不会跟着改变。
@@ -62,6 +72,8 @@ band 用填充多边形表示整条骨架，宽度由 seq_backbone_width 控制�
 {{code:comparecenterstyle}}
 {{figure:comparecenterstyle}}
 
+<a id="style"></a>
+
 ## 切换为单线骨架 {#style}
 
 {{prepare:firstcircle,firstfeatures}}
@@ -72,10 +84,12 @@ band 用填充多边形表示整条骨架，宽度由 seq_backbone_width 控制�
 
 `seq_style = "single"` 把双线改为单线。中心名称和 bp 刻度仍可用于定位。
 
+<a id="rotation"></a>
+
 ## 转动圆图 {#rotation}
 
 {{code:firstfeatures,frontcirclerotation}}
 
 {{figure:frontcirclerotation}}
 
-默认 `rotation = 0` 把序列起点放在 12 点钟，坐标顺时针增加。这里设置 `rotation = 90`，起点移到 9 点钟；圆周刻度和复制起点一起旋转。原始注释区间仍是同一段 bp。下一节[整理自己的序列和注释](circular-data.html#tables)。
+默认 `rotation = 0` 把序列起点放在 12 点钟，坐标顺时针增加。这里设置 `rotation = 90`，起点移到 9 点钟；圆周刻度和复制起点一起旋转。原始注释区间仍是同一段 bp。下一节[整理自己的序列和注释](circular-data.md#tables)。

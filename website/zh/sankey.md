@@ -1,6 +1,10 @@
+<a id="input"></a>
+
 ## 先准备真实来源 {#input}
 
 {{prepare:foundationdata}}
+
+<a id="sankey"></a>
 
 ## 镜像双列关系 {#sankey}
 
@@ -13,11 +17,15 @@ Sankey 将每个来源在左右两列各显示一次。左侧 query 端点连接
 
 {{figure:foundationsankey}}
 
+<a id="column-gap"></a>
+
 ## 只改变列间距 {#column-gap}
 
 {{code:coursesankeygap}}
 
-![仅改变左右列间距](../assets/coursesankeygap.png)
+![仅改变左右列间距](../../man/figures/coursesankeygap.png)
+
+<a id="instances"></a>
 
 ## 核对来源与实例 {#instances}
 

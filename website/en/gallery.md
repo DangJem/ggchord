@@ -4,10 +4,12 @@ Start with selected results, then filter by module, task, type and level. All 17
 
 {{gallery}}
 
+<a id="circular-catalog"></a>
+
 ## Sources, scripts and circular reference collection {#circular-catalog}
 
-[13 circular reference maps](plasmid-catalog.html) · [R](../assets/documentation-examples.R) · [Sources](../assets/ASSET-SOURCES.md)
+[13 circular reference maps](plasmid-catalog.md) · [R](../../tools/documentation-examples.R) · [Sources](../ASSET-SOURCES.md)
 
 <span id="source"></span><span id="reproduce"></span><span id="assets"></span>
 
-[Inputs](../assets/tutorial-inputs.zip) · [Manifest](../build-manifest.json)
+[Inputs](https://github.com/DangJem/ggchord/archive/refs/heads/main.zip) · [Figure manifest](../assets/plots.csv)

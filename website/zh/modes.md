@@ -1,13 +1,17 @@
+<a id="modules"></a>
+
 ## 四大模块及其职责 {#modules}
 
 | 模块 | 主要用途 | 坐标系或组合层 |
 | --- | --- | --- |
-| [模块一 · 多序列关系](multi-sequence.html) | 比较序列区间、注释和连接 | Chord、Collinear、Radial、Sankey |
-| [模块二 · 单序列圆图](circular.html) | 在一条完整序列上组织注释 | Circular |
-| [模块三 · 序列比对点图](dotplot.html) | 以双轴显示 query/subject 的 HSP 端点 | Dotplot |
-| [模块四 · 多视图组合](fusion.html) | 排列独立注册图并连接真实源区间 | Fusion 组合层 |
+| [模块一 · 多序列关系](multi-sequence.md) | 比较序列区间、注释和连接 | Chord、Collinear、Radial、Sankey |
+| [模块二 · 单序列圆图](circular.md) | 在一条完整序列上组织注释 | Circular |
+| [模块三 · 序列比对点图](dotplot.md) | 以双轴显示 query/subject 的 HSP 端点 | Dotplot |
+| [模块四 · 多视图组合](fusion.md) | 排列独立注册图并连接真实源区间 | Fusion 组合层 |
 
 六种 Coord 负责单张图的全局坐标；Fusion 组合独立图形，不是第七种坐标系。Dotplot 使用专属线段图层，目前不作为 Fusion 的注册端点。
+
+<a id="prepare"></a>
 
 ## 共用的绘图语法 {#prepare}
 
@@ -21,25 +25,41 @@
 | 坐标系 | 排列整张图的序列和区间 | `coord_*()` |
 | 主题 | 控制非数据外观 | `theme_*()` |
 
+<a id="choose"></a>
+
 ## 选择关系视图 {#choose}
 
+<a id="chord"></a>
+
 ### Chord：弧形关系总览 {#chord}
-沿弧形骨架组织多序列，便于观察整体连接。见[骨架、曲率与半径](chord-geometry.html)。
+沿弧形骨架组织多序列，便于观察整体连接。见[骨架、曲率与半径](chord-geometry.md)。
+
+<a id="collinear"></a>
 
 ### Collinear：顺序与局部对齐 {#collinear}
-将序列排成横行或竖列，便于比较顺序、锚点与局部窗口。见[对齐与排列](collinear-layout.html)。
+将序列排成横行或竖列，便于比较顺序、锚点与局部窗口。见[对齐与排列](collinear-layout.md)。
+
+<a id="radial"></a>
 
 ### Radial：径向共线性 {#radial}
-将序列作为辐条，保留各自坐标并在中心区域展示共线性。见[径向布局设置](radial-synteny.html)。
+将序列作为辐条，保留各自坐标并在中心区域展示共线性。见[径向布局设置](radial-synteny.md)。
+
+<a id="sankey"></a>
 
 ### Sankey：双列区间关系 {#sankey}
-每条来源序列在 query 和 subject 两列各显示一次；连带表达观测区间，不代表守恒流量。见[双列布局设置](sankey.html)。
+每条来源序列在 query 和 subject 两列各显示一次；连带表达观测区间，不代表守恒流量。见[双列布局设置](sankey.md)。
+
+<a id="circular"></a>
 
 ### Circular：单序列注释 {#circular}
-一条序列构成圆环，分别叠加已有注释、引物和限制位点。见[单序列圆图](circular.html)。
+一条序列构成圆环，分别叠加已有注释、引物和限制位点。见[单序列圆图](circular.md)。
+
+<a id="composition"></a>
 
 ### Dotplot 与 Fusion {#composition}
 Dotplot 在两条序列轴上连接 HSP 四端点。Fusion 排列已经独立有效的图，并连接明确的来源区间。两者承担不同职责，不能互换图层契约。
+
+<a id="terms"></a>
 
 ## 来源身份与单位 {#terms}
 生物学链、显示方向和比对方向分别记录。bp 与 aa 属于不同坐标域，跨域投影需要明确的 CDS 映射；完整序列长度不能从最后一个可见特征推断。
@@ -49,12 +69,16 @@ Dotplot 在两条序列轴上连接 HSP 四端点。Fusion 排列已经独立有
 
 <span id="check-result"></span><span id="coordinate-controls"></span>
 
+<a id="getting-started"></a>
+
 ## 开始使用 {#getting-started}
 
-[安装并画出第一张图](installation.html#first-plot)，再按上方四模块选择输入与图层。已有数据表时，从[最小字段](data.html#tables)核对标识、全长和单位。
+[安装并画出第一张图](installation.md#first-plot)，再按上方四模块选择输入与图层。已有数据表时，从[最小字段](data.md#tables)核对标识、全长和单位。
+
+<a id="shared-techniques"></a>
 
 ## 通用技巧 {#shared-techniques}
 
-[灵活的参数格式](parameters.html)用于支持它的几何与位置参数，区分统一值、命名值、顺序值及链值。数据差异用 aes/scale，外观用 theme；职责见上方语法表。
+[灵活的参数格式](parameters.md)用于支持它的几何与位置参数，区分统一值、命名值、顺序值及链值。数据差异用 aes/scale，外观用 theme；职责见上方语法表。
 
-[注释形状](feature-geometry.html) · [标签](labels.html) · [轨道](tracks.html) · [样式](styling.html) · [输出](output.html) · [排错](diagnostics.html)
+[注释形状](feature-geometry.md) · [标签](labels.md) · [轨道](tracks.md) · [样式](styling.md) · [输出](output.md) · [排错](diagnostics.md)

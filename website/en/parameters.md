@@ -2,6 +2,8 @@ Flexible parameter formats refine shared settings into local control for paramet
 
 {{code:courseblockac}}
 
+<a id="scalar"></a>
+
 ## One value for every sequence {#scalar}
 
 {{code:parameteruniform}}
@@ -9,12 +11,16 @@ Flexible parameter formats refine shared settings into local control for paramet
 
 Every radius is 1. A scalar is sufficient when all sequences share a setting.
 
+<a id="recommendation"></a>
+
 ## Change one sequence by name {#recommendation}
 
 {{code:parameters}}
 {{figure:parameterexample}}
 
 Only `MT118296.1` uses 0.72; the rest retain this parameter's default of 1. Keys match actual `accver` values after display reordering. Keep complete named vectors when every sequence has a different setting.
+
+<a id="vector"></a>
 
 ## Values in display order {#vector}
 
@@ -24,6 +30,8 @@ Only `MT118296.1` uses 0.72; the rest retain this parameter's default of 1. Keys
 {{figure:parametervector}}
 
 Values match display order after `seq_order` and must cover all displayed sequences. The second sequence is currently `MT118296.1`, making this plot equivalent to the preceding one.
+
+<a id="reorder"></a>
 
 ### Matching after reordering {#reorder}
 
@@ -36,8 +44,10 @@ view_ggchord(p_parameter_named_order, width = 7, height = 7, units = "in")
 view_ggchord(p_parameter_ordered_values, width = 7, height = 7, units = "in")
 ```
 
-![Named values after reordering](../assets/parameternamedorder.png)
-![Ordered values after reordering](../assets/parameterorderedvalues.png)
+![Named values after reordering](../../man/figures/parameternamedorder.png)
+![Ordered values after reordering](../../man/figures/parameterorderedvalues.png)
+
+<a id="genes"></a>
 
 ## Prepare observed CDS on both strands {#genes}
 
@@ -46,6 +56,8 @@ view_ggchord(p_parameter_ordered_values, width = 7, height = 7, units = "in")
 
 `OR222515.1` has a plus-strand record at 2624–4195 and a minus-strand record at 19246–20523; the integrase on `OQ646790.1` is plus-strand. Strands come from `source_strand`, with original coordinates retained.
 
+<a id="strand"></a>
+
 ## Set strand positions {#strand}
 
 {{code:parameterstrand}}
@@ -53,22 +65,28 @@ view_ggchord(p_parameter_ordered_values, width = 7, height = 7, units = "in")
 
 Explicit strand values are already signed: 0.08 for plus and −0.08 for minus, without another reversal. A scalar `position_strand(0.08)` expands to plus 0.08 and minus −0.08.
 
+<a id="lists"></a>
+
 ### Combine sequence and strand differences {#lists}
 
 Place the two `OR222515.1` strands asymmetrically, while the other sequence uses a smaller symmetric offset. A list expresses these two levels of variation.
 
 {{code:parameterlist}}
 
-![Offsets by observed sequence and strand](../assets/parameterlist.png)
+![Offsets by observed sequence and strand](../../man/figures/parameterlist.png)
 
 `OR222515.1` uses explicit 0.08/−0.14; the scalar 0.06 for `OQ646790.1` expands symmetrically. Omitted sequences or strands become 0 in this Position family. Do not copy this mixed list directly into `width`.
+
+<a id="width"></a>
 
 ## Set strand widths {#width}
 
 {{code:parameterwidth}}
 {{figure:parameterwidth}}
 
-Plus uses width 0.03 and minus 0.08. Width changes arrow thickness; start/end still determine interval length. Per-sequence width lists require elements following that family's strand-value rules; see [geometry parameters](reference/geom_feature.html).
+Plus uses width 0.03 and minus 0.08. Width changes arrow thickness; start/end still determine interval length. Per-sequence width lists require elements following that family's strand-value rules; see [geometry parameters](../../man/geom_feature.Rd).
+
+<a id="labels"></a>
 
 ## Place names by sequence {#labels}
 
@@ -76,6 +94,8 @@ Plus uses width 0.03 and minus 0.08. Width changes arrow thickness; start/end st
 {{figure:parameterlabels}}
 
 Text radii for `MT108731.1` and `OQ646790.1` are 75% and 115% of their backbone radii. Other sequences keep their defaults. Explicit `seq_label_radius` is incompatible with Collinear.
+
+<a id="scope"></a>
 
 ## Families and omitted values {#scope}
 
@@ -90,7 +110,9 @@ Text radii for `MT108731.1` and `OQ646790.1` are 75% and 115% of their backbone 
 | Fixed `geom_gene_label()` / `geom_feature_label()` | `label_radial_offset`, `label_circum_offset`, `label_circum_limit`, `label_rotation` by sequence or strand | Follow this family's strand rules; not every text parameter accepts lists |
 | `position_track()` | One absolute `unit()` or per-sequence numeric width/gap | Numeric settings cover every displayed sequence; absolute sizes retain their physical meaning |
 
-`seq_order` specifies ordering and `label_layout` specifies a layout mode. Automatic label layers do not accept arbitrary fixed offsets. Axes/themes, aesthetics, scales and guides retain their own interfaces. Manual colour scales match **data categories**; see [styling](styling.html). Consult the [parameter atlas](parameter-atlas.html) for exact defaults and ranges.
+`seq_order` specifies ordering and `label_layout` specifies a layout mode. Automatic label layers do not accept arbitrary fixed offsets. Axes/themes, aesthetics, scales and guides retain their own interfaces. Manual colour scales match **data categories**; see [styling](styling.md). Consult the [parameter atlas](parameter-atlas.md) for exact defaults and ranges.
+
+<a id="check-result"></a>
 
 ## Choose a format and check results {#check-result}
 

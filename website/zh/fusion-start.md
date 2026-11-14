@@ -1,6 +1,8 @@
+<a id="panels"></a>
+
 ## 先独立画好两张图 {#panels}
 
-需要 ggchord、dplyr 和[输入包](../assets/tutorial-inputs.zip)中的原始 PAF。先分别打印 course_center 和 course_detail，再组合一条已有关系。
+需要 ggchord、dplyr 和[输入包](https://github.com/DangJem/ggchord/archive/refs/heads/main.zip)中的原始 PAF。先分别打印 course_center 和 course_detail，再组合一条已有关系。
 
 ```r
 library(ggchord)
@@ -11,11 +13,13 @@ library(dplyr)
 
 {{code:coursefusion}}
 
-![独立中心图](../assets/coursefusioncenter.png)
+![独立中心图](../../man/figures/coursefusioncenter.png)
 
-![独立细节图](../assets/coursefusiondetail.png)
+![独立细节图](../../man/figures/coursefusiondetail.png)
 
-![Two panels and one source relationship](../assets/coursefusion.png)
+![Two panels and one source relationship](../../man/figures/coursefusion.png)
+
+<a id="intervals"></a>
 
 ## 核对区间、面板和实例 {#intervals}
 
@@ -31,6 +35,8 @@ course_export <- export_ggchord_fusion(p_coursefusion,
 course_export$connections
 course_export$fronts
 ```
+
+<a id="save"></a>
 
 ## 按相同尺寸保存 {#save}
 

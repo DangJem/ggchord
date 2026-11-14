@@ -1,11 +1,15 @@
 Compare fixed and automatic labels on the same six source-backed pUC19 annotations. Placement, size, wrapping and device dimensions jointly affect readability; a hidden label is not a missing annotation.
 
+<a id="input"></a>
+
 ## Prepare this page independently {#input}
 
 Requires optional dplyr. Original names remain in finish_features; display text merely appends actual coordinates. Intervals and strands stay fixed. All layers consume the same finish_labels, with 9 × 8 inch figures.
 
 {{code:comparefinishcircle}}
 
+
+<a id="fixed-labels"></a>
 
 ## Fixed labels: orientation, side and rotation {#fixed-labels}
 
@@ -20,6 +24,8 @@ The feature orientation follows each feature. Each subsequent plot changes only 
 {{code:comparefixedrotate}}
 {{figure:comparefixedrotate}}
 
+
+<a id="fixed-parameters"></a>
 
 ## Fixed-label parameters and conflicts {#fixed-parameters}
 
@@ -38,6 +44,8 @@ Do not pass fixed placement controls to automatic repel layers. Match the featur
 
 
 
+<a id="automatic-labels"></a>
+
 ## Compare four automatic layouts on identical text {#automatic-labels}
 
 Default feature first tries internal, then adjacent/external placement. Radial, auto and callout provide alternative placement strategies. Layout changes presentation, not source annotations. Keep identical text, requested size and dimensions across all four.
@@ -51,6 +59,8 @@ Default feature first tries internal, then adjacent/external placement. Radial, 
 {{code:comparecalloutfit}}
 {{figure:comparecalloutfit}}
 
+
+<a id="fitting"></a>
 
 ## Wrapping, shrinking, hiding and leaders {#fitting}
 
@@ -68,6 +78,8 @@ From the 14-character wrap example, change only label_fit to ellipsis. Then retu
 {{code:compareexternaloff}}
 {{figure:compareexternaloff}}
 
+
+<a id="automatic-parameters"></a>
 
 ## Important automatic-label defaults {#automatic-parameters}
 
@@ -102,9 +114,11 @@ label layer's drawing order:
 
 {{code:courseblockz}}
 
+<a id="adapt"></a>
+
 ## Use your annotations {#adapt}
 
-Change only label_max_lines to 3 and explain any improvement. At fixed dimensions, compare exterior fallback on/off. Fixed and automatic layers have different controls. Supply explicit label text or anno, checking IDs, intervals, strands and unique feature_id values. Continue with [primer text](primers.html#primer-labels) and the [dense pETDuet-1 case](circular-dense-case.html#complex).
+Change only label_max_lines to 3 and explain any improvement. At fixed dimensions, compare exterior fallback on/off. Fixed and automatic layers have different controls. Supply explicit label text or anno, checking IDs, intervals, strands and unique feature_id values. Continue with [primer text](primers.md#primer-labels) and the [dense pETDuet-1 case](circular-dense-case.md#complex).
 
 
 Neighbouring names compare radial travel with angular displacement; an empty
@@ -123,6 +137,8 @@ inner bands first try inner slots before exterior fallback. This bounded
 search does not guarantee every density fits inside; inspect visibility,
 convergence and conflict diagnostics at export dimensions.
 
+
+<a id="consecutive-repeats"></a>
 
 ## Shared labels for consecutive repeats {#consecutive-repeats}
 

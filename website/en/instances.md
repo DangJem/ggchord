@@ -1,6 +1,10 @@
+<a id="input"></a>
+
 ## Preparation {#input}
 
 {{prepare:foundationdata}}
+
+<a id="instances"></a>
 
 ## Named A–B–A routes {#instances}
 

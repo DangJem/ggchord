@@ -55,7 +55,7 @@ geom_seq_label(
 
   Optional character vector. Override the label texts (defaults to the
   sequence labels from
-  [`geom_seq()`](https://dangjem.github.io/ggchord/reference/geom_seq.md)
+  [`geom_seq()`](geom_seq.md)
   or the sequence IDs)
 
 - seq_labels:

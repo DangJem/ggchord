@@ -35,7 +35,7 @@ v0.9.0 已完成：
 - plot-owned 布局、稳定 `layer_id` 和逐图层 geometry registry；
 - 全部公开 geom 的 `data` / `mapping` 接入及同类图层隔离；
 - role-specific aesthetic、scale、theme、guide 和
-  [`coord_chord()`](https://dangjem.github.io/ggchord/reference/coord_chord.md)；
+  [`coord_chord()`](reference/coord_chord.md)；
 - `aligned`、`radial`、`arc` 三种确定性基因标签布局；
 - 首批静态默认样式、静态设备验收及 Plotly 实验代码清理；
 - 精简 testthat、roxygen/Rd 一致性检查和 `R CMD check`。
@@ -73,7 +73,7 @@ v0.9.0 已完成：
 - `aes()` 决定数据列映射到什么视觉属性；
 - `scale_*()` 决定映射后的取值、范围、变换、breaks、labels 和 guide；
 - `geom_*()` 决定几何形状、固定样式和局部布局；
-- [`coord_chord()`](https://dangjem.github.io/ggchord/reference/coord_chord.md)
+- [`coord_chord()`](reference/coord_chord.md)
   决定全局旋转、比例、坐标范围、裁切和自动适配；
 - `theme_*()` 决定非数据元素的外观；
 - `guide_*()` 决定图例的排列和绘制方式。
@@ -103,7 +103,7 @@ scale。只有由数据映射而来的颜色、透明度、线型和图例配置
 - v1.0.0 删除已经完成迁移的旧参数；
 - 当前被静默忽略的 `data` 和 `mapping` 直接修复，不需要弃用过程；
 - 已经完成精简的
-  [`geom_gene_label_repel()`](https://dangjem.github.io/ggchord/reference/geom_gene_label_repel.md)
+  [`geom_gene_label_repel()`](reference/geom_gene_label_repel.md)
   不恢复旧的随机排斥参数。
 
 ------------------------------------------------------------------------
@@ -119,17 +119,17 @@ scale。只有由数据映射而来的颜色、透明度、线型和图例配置
 
 1.  `compute_chord_geometry()`
     每种图层只保存一份参数，多个同类图层由最后一个 覆盖。两个
-    [`geom_seq_region()`](https://dangjem.github.io/ggchord/reference/geom_seq_region.md)
+    [`geom_seq_region()`](reference/geom_seq_region.md)
     最终会绘制完全相同的最后一组 region。
 2.  多数 geom 虽然声明了 `mapping` 和
     `data`，但实际使用固定占位数据和固定 mapping，用户输入被忽略。
 3.  `ggplot_build.ggchord()` 会重建所有图层、插入 scale 并覆盖
     coordinate，导致 标准 ggplot2 扩展行为受到限制。
-4.  [`get_chord_layout()`](https://dangjem.github.io/ggchord/reference/get_chord_layout.md)
+4.  [`get_chord_layout()`](reference/get_chord_layout.md)
     返回包环境里“最近一次构建”的布局，多图交错构建时含义 不明确。
-5.  [`ggchord()`](https://dangjem.github.io/ggchord/reference/ggchord.md)
+5.  [`ggchord()`](reference/ggchord.md)
     重复执行基础验证和
-    [`validate_ggchord_data()`](https://dangjem.github.io/ggchord/reference/validate_ggchord_data.md)，验证规则存在两个来源。
+    [`validate_ggchord_data()`](reference/validate_ggchord_data.md)，验证规则存在两个来源。
 
 #### v0.9.0 处理结果
 
@@ -145,7 +145,7 @@ scale。只有由数据映射而来的颜色、透明度、线型和图例配置
 ### 3.2 scale
 
 v0.9.0 前，scale 在
-[`make_ggchord_scales()`](https://dangjem.github.io/ggchord/reference/make_ggchord_scales.md)
+[`make_ggchord_scales()`](reference/make_ggchord_scales.md)
 中临时创建，颜色、limits、breaks、 图例标题、图例位置和 key 尺寸分散在
 geom 参数中。当前实现已公开角色专用 aesthetic 和 scale；默认 scale
 只在用户没有提供相同角色 scale 时注入。
@@ -238,7 +238,7 @@ scale_seq_position_continuous(
 ### 3.3 theme
 
 v0.9.0 前
-[`ggchord()`](https://dangjem.github.io/ggchord/reference/ggchord.md)
+[`ggchord()`](reference/ggchord.md)
 硬编码标题、边距、背景、网格和图例样式。当前默认外观已 提取为：
 
 ``` r
@@ -249,7 +249,7 @@ theme_ggchord_dark()
 theme_ggchord_publication()
 ```
 
-[`theme_ggchord()`](https://dangjem.github.io/ggchord/reference/theme_ggchord.md)
+[`theme_ggchord()`](reference/theme_ggchord.md)
 必须复现当前默认外观。只保留少量通用主题，不提供带特定期刊名称的主题。
 
 可注册的 ggchord 专用主题元素：
@@ -266,7 +266,7 @@ ggchord.gene.label.segment
 
 数据图层的填充色不进入 theme。显式 geom 参数覆盖 theme 默认值。
 
-[`ggchord()`](https://dangjem.github.io/ggchord/reference/ggchord.md)
+[`ggchord()`](reference/ggchord.md)
 中以下参数逐步迁移：
 
 - `title` → `labs(title = ...)`；
@@ -361,7 +361,7 @@ coord_chord(
 
 下列 v0.9.0 接口整理均已完成；其中旧参数仍按 2.4 的兼容策略工作。
 v0.10.0 不新增独立的手动标签 geom，而是增强现有
-[`geom_gene_label()`](https://dangjem.github.io/ggchord/reference/geom_gene_label.md)。
+[`geom_gene_label()`](reference/geom_gene_label.md)。
 
 #### `geom_seq()`
 
@@ -388,19 +388,19 @@ v0.10.0 不新增独立的手动标签 geom，而是增强现有
 #### `geom_gene()` 与 `geom_feature()`
 
 - gene/feature 分类列已可由 aes 指定，颜色和顺序由 scale 指定；
-- [`geom_feature()`](https://dangjem.github.io/ggchord/reference/geom_feature.md)
+- [`geom_feature()`](reference/geom_feature.md)
   已统一为 `mapping = NULL, data = NULL` 的 ggplot2 风格签名；
 - category 被 label 覆盖的问题已修复；
 - 多个 gene/feature 图层已经独立；
-- [`geom_gene()`](https://dangjem.github.io/ggchord/reference/geom_gene.md)
+- [`geom_gene()`](reference/geom_gene.md)
   中旧 label 参数会立即给出迁移错误；
 - feature 的 block、chevron、lollipop 留到 v0.10.0，不标记为完成。
 
 #### gene label
 
-- [`geom_gene_label()`](https://dangjem.github.io/ggchord/reference/geom_gene_label.md)
+- [`geom_gene_label()`](reference/geom_gene_label.md)
   是唯一的固定位置和手工微调图层；
-- [`geom_gene_label_repel()`](https://dangjem.github.io/ggchord/reference/geom_gene_label_repel.md)
+- [`geom_gene_label_repel()`](reference/geom_gene_label_repel.md)
   已提供 `aligned`、`radial`、`arc` 三种确定性模式；
 - 所有 label geom 的 `data`、`mapping` 已生效；
 - leader 的 colour、linewidth、alpha 默认由 theme 元素控制；
@@ -413,7 +413,7 @@ v0.10.0 不新增独立的手动标签 geom，而是增强现有
 #### `geom_axis()` 和 `geom_seq_label()`
 
 - axis breaks/labels 已移入
-  [`scale_seq_position_continuous()`](https://dangjem.github.io/ggchord/reference/scale_seq_position_continuous.md)；
+  [`scale_seq_position_continuous()`](reference/scale_seq_position_continuous.md)；
 - 轴线、tick 和文字已分别接收经过筛选的样式参数；
 - 无意义的 axis `show_legend` 已删除并给出明确错误；
 - sequence label 的 data/mapping 已生效；
@@ -448,7 +448,7 @@ v0.10.0 不新增独立的手动标签 geom，而是增强现有
 
 #### v0.9.0 处理结果
 
-- 统一结构验证入口，[`ggchord()`](https://dangjem.github.io/ggchord/reference/ggchord.md)
+- 统一结构验证入口，[`ggchord()`](reference/ggchord.md)
   只调用一套规则；
 - 清理 ribbon 时保留原始 direction 或 `sstrand`；
 - filter report 支持一行多个原因；
@@ -524,7 +524,7 @@ v0.10.0 不新增独立的手动标签 geom，而是增强现有
 ### A. 固定标签与发表级默认视觉
 
 - 增强
-  [`geom_gene_label()`](https://dangjem.github.io/ggchord/reference/geom_gene_label.md)，使其同时承担简洁默认标签和精确手工微调；
+  [`geom_gene_label()`](reference/geom_gene_label.md)，使其同时承担简洁默认标签和精确手工微调；
 - Identity 色条使用紧凑的物理尺寸，不再随设备高度无限拉伸；
 - sequence/gene 图例符号表达实际方向，并减少过粗的线条和箭头；
 - 默认白底、标题、轴线、标签、ribbon 透明度和图例间距统一校准；
@@ -534,7 +534,7 @@ v0.10.0 不新增独立的手动标签 geom，而是增强现有
 
 视觉设计只借鉴通用原则：[Circos](https://genome.cshlp.org/content/19/9/1639)
 的环形信息层级与克制
-ribbon、[clinker](https://academic.oup.com/bioinformatics/article/37/16/2473/6129045)
+ribbon、[clinker](https://doi.org/10.1093/bioinformatics/btab007)
 的发表级基因箭头、[DNA Features
 Viewer](https://edinburgh-genome-foundry.github.io/DnaFeaturesViewer/)
 的注释冲突处理，以及
@@ -556,13 +556,13 @@ scale_feature_shape_manual(values = c(
 ```
 
 首批只考虑
-`arrow`、`block`、`chevron`、`lollipop`。[`geom_gene()`](https://dangjem.github.io/ggchord/reference/geom_gene.md)
+`arrow`、`block`、`chevron`、`lollipop`。[`geom_gene()`](reference/geom_gene.md)
 保持为 gene arrow
 的便捷封装，但验收标准是几何和视觉等价，不承诺内部字节完全一致。
 
 v0.10.0 同时移除 `geom_seq_group_label()`、`scale_group_colour_manual()`
 及
-[`geom_seq()`](https://dangjem.github.io/ggchord/reference/geom_seq.md)
+[`geom_seq()`](reference/geom_seq.md)
 中的所有 `seq_group*` 参数。这是开发版的破坏性精简，
 旧参数立即报错，不保留隐式分组布局。
 
@@ -575,7 +575,7 @@ ring 的 radius、gap 和 ribbon 锚点必须可解释、可导出。
 ### D. 密集 ribbon
 
 不在
-[`geom_ribbon()`](https://dangjem.github.io/ggchord/reference/geom_ribbon.md)
+[`geom_ribbon()`](reference/geom_ribbon.md)
 中加入 `ribbon_reduce`。使用职责更明确的接口：
 
 ``` r
@@ -648,7 +648,7 @@ alias。
 
 ### 保留
 
-- [`ggchord()`](https://dangjem.github.io/ggchord/reference/ggchord.md)
+- [`ggchord()`](reference/ggchord.md)
   创建对象并能完成一次基础 build；
 - 核心 geom 组合能 build；
 - 三种 label layout 能 build；

@@ -1,0 +1,65 @@
+{
+  "scope": "Current tracked project documentation, including archived docs; published tags and source attachments unchanged.",
+  "static": {
+    "files": 608,
+    "link_occurrences": 6880,
+    "broken_targets_or_anchors": [],
+    "template_validation": "README template validated through both generated outputs"
+  },
+  "website": {
+    "language_pairs": 93,
+    "generated_html": 646,
+    "links_anchors_assets_search": "passed",
+    "browser_acceptance": false,
+    "deployed": false
+  },
+  "external": {
+    "unique_document_urls": 204,
+    "http_targets": 198,
+    "status_counts": {
+      "200": 195,
+      "302": 1,
+      "403": 2
+    },
+    "confirmed_missing": [],
+    "access_limited": [
+      {
+        "url": "https://doi.org/10.1093/bioinformatics/btab007",
+        "status": 403
+      },
+      {
+        "url": "https://genome.cshlp.org/content/19/9/1639",
+        "status": 302
+      },
+      {
+        "url": "https://support.snapgene.com/hc/en-us/articles/10383722725524-Display-Feature-Labels-Below-or-Inside-a-Map",
+        "status": 403
+      }
+    ],
+    "supplementary_code_and_data_source_urls": 33,
+    "supplementary_status": "all complete source targets returned HTTP 200; incomplete string prefixes are not standalone URLs",
+    "fragment_review": "All current HTML fragments verified against fetched page IDs; archived 404 skip navigation now targets its local main.",
+    "manual_primary_review": [
+      {
+        "url": "https://doi.org/10.1093/bioinformatics/btab007",
+        "finding": "Correct publisher article and DOI verified; publisher blocks automated fetch."
+      },
+      {
+        "url": "https://support.snapgene.com/hc/en-us/articles/10383722725524-Display-Feature-Labels-Below-or-Inside-a-Map",
+        "finding": "Primary support article fetched through search tool; direct HTTP client receives 403."
+      }
+    ],
+    "limitations": "Login redirects and anti-bot responses are recorded separately and are not claimed as HTTP 200."
+  },
+  "fixes": [
+    "Repository-relative website source links and shared explicit anchors; site expansion restores deployed URLs.",
+    "Missing vignette images/scripts copied byte-for-byte from canonical sources and checked during source synchronization.",
+    "Archived links reference real archived files or verified historical commits; archive content was not rebuilt.",
+    "Local-only commercial reference images replaced with explicit availability notices; source identities retained.",
+    "Release includes cumulative notes directly and pins source/compare links to tagged commits."
+  ],
+  "exclusions": [
+    "README template variables validated through both generated outputs.",
+    "Historical observations, localhost sessions, intentional invalid test URLs and incomplete code string prefixes retain their original meanings."
+  ]
+}

@@ -2,6 +2,8 @@
 
 {{prepare:trackdata,tracks,foundationdata}}
 
+<a id="tracks"></a>
+
 ## Count observations or display supplied values {#tracks}
 
 `bar` counts observations at source positions; `col` displays supplied values.
@@ -26,7 +28,7 @@ The shortcut below counts the same observations using the same physical band.
 | point, line, path, step, text | identity | source x and local y; text requires label |
 | tile, rect, area, ribbon, segment, linerange, errorbar | identity | corresponding native ggplot2 extents |
 
-Available statistics are identity/count/bin/summary, plus the documented [smooth/density/ecdf estimation combinations](tracks-statistics.html#estimates). Bin needs explicit binwidth
+Available statistics are identity/count/bin/summary, plus the documented [smooth/density/ecdf estimation combinations](tracks-statistics.md#estimates). Bin needs explicit binwidth
 or breaks. Native group and after_stat mappings are supported; numerical axes
 retain the statistic's value units. Arbitrary third-party Geom/Stat plugins and
 unsupported combinations are rejected. Existing
@@ -35,6 +37,8 @@ track line/tile shortcuts retain their documented behaviour.
 Source position uses x orientation; native text size currently uses mm and polygon outlines are full. Other orientations/size units/partial outlines fail explicitly. Native text styles and path arrows are forwarded.
 
 Native tracks currently require one panel and a ggchord coordinate system. Facets, `coord_flip()`, raster, boxplot and violin are outside this first supported set and are rejected explicitly. Use `coord_collinear(seq_axis = "vertical")` for vertical projection. Statistical source membership is preserved before dodge or other data positions. Rectangles and tiles use their supplied bounds without an artificial zero baseline.
+
+<a id="independent-bands"></a>
 
 ## Two independent bands and display order {#independent-bands}
 
@@ -46,9 +50,13 @@ Encode the same GC by bar height and colour using explicit gc_height/gc_colour I
 {{code:comparetrackorder}}
 {{figure:comparetrackorder}}
 
+<a id="window-policy"></a>
+
 ## DNA windows and line boundaries {#window-policy}
 
 GC here is `mean(bases %in% c("G", "C"))`: ambiguous bases remain in the denominator and contribute zero to the numerator. The final window uses its actual number of bases. This pUC19 input has no ambiguous bases; for other inputs explicitly choose and report a policy rather than assuming they are omitted. Focusing clips intervals and retains the original summary; it does not recompute GC for a shortened window. Line tracks connect the supplied samples within their grouping; `closed` explicitly controls circular closure and `gap` belongs to physical track placement. Do not use a closed line to imply continuity across omitted source windows.
+
+<a id="estimates"></a>
 
 ## Native source-space estimates {#estimates}
 
@@ -69,6 +77,8 @@ Reuse the real `bins` and `track_seq` prepared above. This explicit linear fit i
 Statistical fitting uses raw supplied source x/y. A later transformed Track value scale maps the estimates; it does not silently refit a log-space model, unlike placing a transform before a Stat in a native ggplot. If transformed-space fitting is intended, prepare and name that transformed variable explicitly and state its unit. Kernel density of event positions is not measured sequencing depth. ECDF output is a cumulative distribution, not a basewise alignment.
 
 The directed source-backed checks compare native ggplot2 results and group membership for real pUC19 GC windows and G/C positions, plus curved/vertical projection and an explicitly missing-value control. `check-track-estimates.R` retains the numerical report and actual CI/mean image. Finite source bounds and physical-band constraints still apply; automatic placement does not change the fitted model or manufacture observations.
+
+<a id="track-focus"></a>
 
 ## Tracks and windows share source coordinates {#track-focus}
 

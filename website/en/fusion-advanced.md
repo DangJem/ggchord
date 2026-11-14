@@ -2,17 +2,21 @@
 
 {{prepare:fusiondata,fusionpanels,fusionlinear,fusionview}}
 
+<a id="nested-detail"></a>
+
 ## Nested source regions retain their own namespaces {#nested-detail}
 
 A detail may itself be a Fusion. This example uses two explicit windows on the unchanged pUC19 source. The inner source is the larger window; its child is the smaller window. The outer selection targets the inner source through `detail/center`, not an arbitrary rectangle in an image.
 
 {{code:courseblockbx}}
 
-![Nested details with explicit leaf paths](../assets/courseouter.png)
+![Nested details with explicit leaf paths](../../man/figures/courseouter.png)
 
 `composition_id` plus `region_row` connects derived regions/fronts/leaders to each original selection in `focus_region_data_by_composition`. Top-level `focus_region_data` remains the original outer input. Nested leaf names use paths such as `detail/center` and `detail/detail`; a composition container is never treated as one genomic axis. If an accession occurs in multiple leaves, select the full panel path and exact instance. `source_panel` can select a source leaf under `center`. Layout exports include actual mm boundaries and requested boxes/angles.
 
 Each plot keeps its own layers, scales and statistical population; the compositor does not silently copy layers or recompute statistics. Origin wraps use the explicit source-length declaration below. The complete negative-strand CDS-to-genome-focus-to-real-character example is in `examples/m3-nested.R`. Registered characters retain their physical tile/error policy; a small nested allocation cannot make 60 letters readable merely by increasing DPI. Full multi-device publication acceptance and broader layout optimisation remain separate concerns.
+
+<a id="origin-detail"></a>
 
 ## Explicit origin-crossing selection {#origin-detail}
 
@@ -33,4 +37,4 @@ boundaries receive leaders. The seam is not another selection or relationship.
 
 {{code:courseblockby}}
 
-![An explicit origin-crossing selection](../assets/courseorigindetail.png)
+![An explicit origin-crossing selection](../../man/figures/courseorigindetail.png)

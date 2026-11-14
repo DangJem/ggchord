@@ -1,10 +1,16 @@
+<a id="compatibility"></a>
+
 ## Interfaces and compatibility {#compatibility}
 
-The function reference describes current arguments, return values and boundaries. For an existing script, consult the [migration notes](../assets/MIGRATION.md). Check sequence IDs, units and full lengths, and record the package version, inputs and code when exporting.
+The function reference describes current arguments, return values and boundaries. For an existing script, consult the [migration notes](../../MIGRATION.md). Check sequence IDs, units and full lengths, and record the package version, inputs and code when exporting.
+
+<a id="feedback"></a>
 
 ## Reporting problems {#feedback}
 
-Include minimal input, runnable code, the package version and target figure size. For a display issue, include the `view_ggchord()` preview. See [troubleshooting](faq.html) for common questions.
+Include minimal input, runnable code, the package version and target figure size. For a display issue, include the `view_ggchord()` preview. See [troubleshooting](faq.md) for common questions.
+
+<a id="sources"></a>
 
 ## Design and asset provenance {#sources}
 The grammar follows [ggplot2](https://ggplot2.tidyverse.org/): mappings, scales,
@@ -22,12 +28,14 @@ CSS/JS and documentation diagrams are original project assets under the
 repository MIT terms. The study mark is supplementary, not a replacement for
 the supplied artwork.
 
-![Compact hexagonal study mark](../assets/logo.svg) System fonts are used; no webfont, icon
+![Compact hexagonal study mark](../../man/figures/logo.svg) System fonts are used; no webfont, icon
 library or third-party image is downloaded. Plot colours come from the package's
 existing defaults or explicit example code; those literal colour choices are
 listed with the source. The site uses the existing Pandoc and R documentation
 converters at build time without bundling their binaries or stylesheets.
 
+<a id="reproducibility"></a>
+
 ## Reproducibility and build records {#reproducibility}
 
-The [build manifest](../build-manifest.json) records software and source commits. Figure inputs, selections and complete scripts are provided beside each functional example.
+The [figure manifest](../assets/plots.csv) records export dimensions and source digests. Figure inputs, selections and complete scripts are provided beside each functional example.

@@ -7,7 +7,7 @@
 ## Citation
 
 Source:
-[`DESCRIPTION`](https://github.com/DangJem/ggchord/blob/HEAD/DESCRIPTION)
+[`DESCRIPTION`](https://github.com/DangJem/ggchord/blob/30c3c546aef0de15f0f44ca3414a13b70a0cd5cd/DESCRIPTION)
 
 Dang J (2026). *ggchord: Multi-Sequence Alignment Chord Diagram
 Visualization Tool*. R package version 0.10.0,

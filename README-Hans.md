@@ -133,7 +133,7 @@ ggplot2::ggsave("ggchord.png", p, width = 10, height = 8, units = "in", dpi = 14
 ### 局部放大、对齐字符与图形预览
 
 - [ggmagnify](https://github.com/hughjonesd/ggmagnify) — 为整体图与局部放大图之间的关联表达提供参照。ggchord 围绕明确的来源区间和独立注册的序列视图发展这一表达方式。
-- [ggmsa](https://bioconductor.org/packages/ggmsa/) · [ggseqalign](https://bioconductor.org/packages/ggseqalign/) — 为 DNA、蛋白对齐显示、字符着色及与 ggplot2 图形组合提供设计研究参照，尤其关注对齐列、gap 与字符细节之间的对应关系。
+- [ggmsa](https://bioconductor.org/packages/ggmsa/) · [ggseqalign](https://www.bioconductor.org/packages/release/bioc/html/ggseqalign.html) — 为 DNA、蛋白对齐显示、字符着色及与 ggplot2 图形组合提供设计研究参照，尤其关注对齐列、gap 与字符细节之间的对应关系。
 - [ggseqlogo](https://omarwagih.github.io/ggseqlogo/) · [Jalview](https://www.jalview.org/help/html/features/annotation.html) — 在字符视图的设计研究中，用于比较序列 logo、对齐列注释、共识与保守性的表达方式，以及逐列统计与单条序列之间的关系。
 - [ggview](https://github.com/idmn/ggview) — 为按预定导出尺寸检查静态图形提供流程参照。ggchord 用 view_ggchord() 进行指定尺寸预览，用标准 ggsave() 保存。
 

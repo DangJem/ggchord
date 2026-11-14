@@ -2,7 +2,9 @@
 
 {{prepare:setup}}
 
-Extract the [input bundle](../assets/tutorial-inputs.zip) so the working directory contains examples/. Each section names its optional dependencies.
+Extract the [input bundle](https://github.com/DangJem/ggchord/archive/refs/heads/main.zip) so the working directory contains examples/. Each section names its optional dependencies.
+
+<a id="variants"></a>
 
 ## Variant records and structural breakpoints {#variants}
 
@@ -16,6 +18,8 @@ Structural decoding is opt-in, keeps confidence intervals, disables absent-mate 
 
 For modern BCF (`.bcf` or `.bcf.gz`), supply `python` naming an existing interpreter with optional **pysam**: `read_vcf("calls.bcf", python = "/path/to/environment/bin/python")`. Only BCF invokes it, transcodes to temporary VCF via HTSlib, and records decoder/version/messages. Virtual-environment interpreter paths retain their environment. Original record order, values and genotypes are preserved; transcoded text is not an original physical BCF line. No installation occurs. This reader loads selected local files into memory; select or subset large datasets upstream.
 
+<a id="genome-alignments"></a>
+
 ## Genomic alignment blocks: MAF and chain {#genome-alignments}
 
 Use an existing Python environment with optional **Biopython Bio.Align** MAF/chain support (directly verified with 1.85). `ALIGNMENT_PYTHON` can select that interpreter for this section. The source checkout/input bundle must contain `examples/genome-alignments/`. Its two unchanged fixed-version upstream files have hashes, permission attribution and a verification script; no aligner is run. An unavailable optional parser skips the example, not a successful import.
@@ -27,6 +31,8 @@ MAF retains the actual gapped characters and full declared source lengths. Negat
 The chain example explicitly selects source block 1, the source-backed NR_046654.1/chr3 relationship; upstream `_modified` format controls remain in the unchanged input and are not claimed as new biological observations. The three aligned exon blocks retain intervening gaps. Chain provides no mismatches or character cells, and a chain score is not Identity. Query maps to qaccver, target to saccver; original IDs remain separately traceable. Declare `sequence_unit` explicitly when its default bp is inappropriate.
 
 For two assemblies both named `chr1`, declare identities, for example `query_ids = c(chr1 = "assemblyB.chr1")` and `subject_ids = c(chr1 = "assemblyA.chr1")`. Defaults preserve IDs and reject ambiguous cross-role collisions; they never auto-prefix or merge assemblies. Full-length conflicts fail, and shared final IDs require explicit consistent declaration on both sides. This is source identity, separate from display instances. No pident, support count or complete source string is inferred from either format's endpoints.
+
+<a id="delta"></a>
 
 ## Existing delta alignments {#delta}
 
@@ -42,6 +48,8 @@ The source bundle also includes `arabidopsis-first-pair.delta`, an unchanged pre
 
 {{code:courseblockbd}}
 
+<a id="protein-signatures"></a>
+
 ## Existing protein signatures {#protein-signatures}
 
 These installed-package inputs contain existing Pfam annotations cached from the InterPro API for two human proteins. The original JSON bytes, retrieval date, URLs, CC0 attribution and hashes are in `inst/extdata/signature-sources.json`. `data-raw/prepare-signature-inputs.py` explicitly re-encodes the same observed fragments as TSV for a coordinate round trip. It does not run InterProScan: absent MD5, status, run date and integrated description remain `-`. The TSV is a derived format example, not a new analysis result.
@@ -54,6 +62,8 @@ Each cached JSON location is one feature with actual `segments`; its start/end o
 
 JSON needs optional **jsonlite** and reads only supplied local caches. Remaining-page URLs and declared counts stay in the report; nothing is fetched at draw time. Quality/context metadata, original fields and complete source objects remain available for auditing. These location annotations provide no complete protein characters or independent character verification. The [official format guide](https://interproscan-docs.readthedocs.io/en/v5/OutputFormats.html) and [score explanation](https://interpro-documentation.readthedocs.io/en/latest/faq.html#why-are-there-no-e-values-associated-with-interpro-entries) describe the underlying conventions.
 
+<a id="feature-relations"></a>
+
 ## Existing feature relationships {#feature-relations}
 
 `read_feature_relations()` reads existing pairs or group memberships offline. The installed plant subsets preserve complete original MCScanX data lines from a pinned source commit. Permission, original URLs, hashes and physical subset indices are recorded in `inst/extdata/feature-relation-sources.json`; `data-raw/prepare-feature-relations.py` reproduces them without running an analysis.
@@ -65,6 +75,8 @@ The caller declares ascending one-based-inclusive contiguous anchors; the file s
 `pairs` accepts two IDs and an optional score. `named_groups` retains the first field as a native character group ID, including numeric-looking IDs; `groups` treats every field as a member and only records a file-local group index. Memberships never expand into all pairwise connections. Duplicates, singleton groups, member order, raw fields and physical lines stay visible.
 
 Optional `feature_data` matches exact unique `feature_id` values. Case, versions and prefixes are never edited; the pair example and group example have different original ID namespaces and companion tables. Missing IDs fail by default; `unmatched = "report"` preserves original rows and flags incomplete mappings. Ambiguous duplicate feature IDs always fail. Without positions the reader still returns all relationships, with no mapped links. Annotation strand is retained separately, without assigning alignment direction; segmented annotations require an explicit contiguous anchor table. No full lengths, Identity, support or source characters are inferred.
+
+<a id="graph-paths"></a>
 
 ## Graph paths: exploratory subsets {#graph-paths}
 

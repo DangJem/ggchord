@@ -3,6 +3,7 @@
 """Current signatures plus canonical, already-translated Rd argument contracts."""
 import argparse,html,importlib.util,json,re
 from documentation_lib import ROOT,WEB
+from site_source_links import source_document
 spec=importlib.util.spec_from_file_location('translations',ROOT/'tools/reference-translations.py')
 ref=importlib.util.module_from_spec(spec);spec.loader.exec_module(ref)
 
@@ -79,7 +80,7 @@ def main():
                 content += ['| `'+parameter+'` | `'+(default or ('无形式默认；见上游契约' if zh else 'No formal default; see upstream contract'))+'` | '+kind(name,parameter,default,lang)+'; '+note+' |']
                 records.append(dict(api=name,parameter=parameter,default=default,type=kind(name,parameter,default,'en'),constraint='Follow upstream help for types, units and accepted values.',source=str(path.relative_to(ROOT)) if path else entry['owner'],requiredness='upstream contract'))
             content += ['\n</details>\n']
-        result='\n'.join(content).rstrip()+'\n';target=WEB/lang/'parameter-atlas.md'
+        result=source_document('\n'.join(content).rstrip()+'\n');target=WEB/lang/'parameter-atlas.md'
         if args.check:assert target.read_text()==result,'Stale parameter atlas: '+lang
         else:target.write_text(result)
     target=ROOT/'tools/teaching-audit/parameter-contracts.json'

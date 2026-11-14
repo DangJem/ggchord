@@ -42,7 +42,7 @@ def render_source_snapshot():
     files.update(ROOT/r['file'] for r in json.loads((WEB/'manual-figures.json').read_text()))
     files.update(ROOT/name for name in [
         'DESCRIPTION','NAMESPACE','LICENSE','_pkgdown.yml',
-        'tools/build-website.py','tools/documentation_lib.py','tools/site_search.py','tools/site_registry.py','tools/site_components.py',
+        'tools/build-website.py','tools/documentation_lib.py','tools/site_source_links.py','tools/site_search.py','tools/site_registry.py','tools/site_components.py',
         'tools/render-website.R','tools/finalize-website.R','tools/site-course-examples.R','tools/site-flagships.R',
         'tools/reference-translations.py','tools/documentation-examples.R',
         'tools/documentation-plots.R','tools/audit-source-snapshot.R',
@@ -87,6 +87,7 @@ def main():
     for key in [*CAPTIONS, 'logo']:
         p=ROOT/'man/figures'/(key+'.png')
         shutil.copy2(p,assets/p.name)
+    shutil.copy2(ROOT/'man/figures/logo.svg',assets/'logo.svg')
     for row in json.loads((WEB/'course-figures.json').read_text()):
         shutil.copy2(ROOT/row['file'],assets/Path(row['file']).name)
     for name in ['documentation-examples.R','documentation-plots.R']:

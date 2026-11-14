@@ -2,6 +2,8 @@
 
 <span id="prepare"></span>
 
+<a id="roles"></a>
+
 ## Build styles from data roles {#roles}
 
 Use four chord backbones and one observed alignment. Map the ribbon fill to the query ID and assign that category one named colour. Sequence colours retain their default scale.
@@ -17,12 +19,16 @@ Use four chord backbones and one observed alignment. Map the ribbon fill to the 
 | `link_colour`, `link_alpha`, `link_linewidth`, `link_linetype` | Point-link metadata | Continuous or manual link scales |
 | `track_value`, `track_fill`, `track_colour` | Values/categories in one named track | Named value domain and colour/fill scales |
 
+<a id="priority"></a>
+
 ## Fixed styles and user scale priority {#priority}
 Put a constant style outside `aes()`. Map variable styles inside it and supply an
 appropriate scale. An explicitly fixed geom value takes precedence; omitting that
 argument keeps mapping active. Your scale takes priority over automatic defaults.
 Repeated same-kind layers keep independent data/mapping/parameters. A geometric
 vector named by `accver` does not mean a scale also accepts per-sequence lists.
+
+<a id="guides"></a>
 
 ## Make legends readable {#guides}
 `guide_ggchord_legend()` controls discrete role legends; `guide_ggchord_colourbar()`
@@ -31,8 +37,12 @@ with `colour` preferred in this documentation. Use `show.legend` on a layer,
 `guides()` for guide choices and `theme(legend.position = ...)` for placement.
 A wide guide may need multiple rows or a wider export, not smaller biological data.
 
+<a id="themes"></a>
+
 ## Select a theme for the scene {#themes}
 This page uses the default theme. Add `theme()` to adjust text, legends or background; for example, `theme(text = element_text(size = 12))` sets the base text size. `theme_ggchord_publication()` provides a publication style and `theme_ggchord_plasmid()` suits circular maps. Themes control non-data appearance without changing coordinates or mapped colours.
+
+<a id="adaptive"></a>
 
 ## Target-size layout {#adaptive}
 
@@ -63,12 +73,16 @@ uses its allocated size; outer panel allocations and the cross-panel guide are
 separate. Facets, arbitrary custom grobs, blanket scaling of geometric constants
 and font embedding certification are outside this policy.
 
+<a id="check-result"></a>
+
 ## Result checks {#check-result}
 Links from the same query share a colour; continuous identity needs a continuous scale. Put fixed colours outside aes() and make each guide explain its mapping.
 
-<div class="next-step">Continue: <a href="annotations.html">Features, stacking and genomic decoration →</a></div>
+<div class="next-step">Continue: <a href="annotations.md">Features, stacking and genomic decoration →</a></div>
 
-See [scale families](scale-families.html) for runnable manual/continuous/steps/identity, line type, opacity and theme examples.
+See [scale families](scale-families.md) for runnable manual/continuous/steps/identity, line type, opacity and theme examples.
+
+<a id="native-theme"></a>
 
 ## Detailed appearance with standard theme syntax {#native-theme}
 
@@ -85,6 +99,8 @@ See [scale families](scale-families.html) for runnable manual/continuous/steps/i
 
 The registered `ggchord.axis.*` physical settings accept scalar absolute units, just like the existing short arguments in `theme_ggchord()`. Prefer `theme(ggchord.axis.gap = unit(1, "mm"))` for later adjustments. Use one spelling in a theme constructor; supplying both spellings for the same setting is an error. A later `theme()` merges fields in the familiar ggplot2 order. `ggchord.seq.label`, `ggchord.gene.label`, `ggchord.feature.label` and their `.segment` line elements style their actual annotation layers, while explicit geom styles/mappings remain authoritative. Ordinary Cartesian `axis.text.x` is not a substitute for the automatic genomic sequence axis; Dotplot has independent native x/y axes.
 
+<a id="track-theme"></a>
+
 ### Shared Track appearance and local overrides {#track-theme}
 
 The following real GC fractions come from the unchanged bundled pUC19 sequence. It needs optional dplyr. The Track's data scale owns the fraction domain and unit; its local native Guide owns axis appearance. The ordinary theme owns shared decorations. No coverage or read support is invented.
@@ -99,8 +115,12 @@ Layers with one Track ID share a band, value domain and one numerical reference;
 
 <span id="mapping-prepare"></span>
 
+<a id="grammar"></a>
+
 ## Assign each responsibility {#grammar}
-[Plotting concepts](modes.html#prepare) explains layers, mappings, scales and coordinates. The example below applies that distinction to alignment identity.
+[Plotting concepts](modes.md#prepare) explains layers, mappings, scales and coordinates. The example below applies that distinction to alignment identity.
+
+<a id="mapping"></a>
 
 ## Map link identity {#mapping}
 
@@ -108,6 +128,8 @@ Layers with one Track ID share a band, value domain and one numerical reference;
 {{code:adjustments}}
 
 {{figure:mappingexample}}
+
+<a id="position"></a>
 
 ## Place features {#position}
 Use `position_strand(c("+" = .1, "-" = -.2))` for signed strand offsets.
@@ -119,7 +141,9 @@ are recommended. This syntax does not extend to scales, guides or themes.
 Each layer owns its own `data`, `mapping` and parameters. Repeated feature or
 link layers do not replace one another. Use ordinary ggplot2 `show.legend` and
 `inherit.aes`; role input mappings precede geometry, while staged visual mappings
-follow ggplot2 evaluation. See the [API contract](reference/ggchord_api_contract.html).
+follow ggplot2 evaluation. See the [API contract](../../man/ggchord_api_contract.Rd).
+
+<a id="check-result-supplement"></a>
 
 ## Result checks {#check-result-supplement}
 Use a coordinate for global rotation, named values for per-sequence geometry, and mappings plus scales for data-dependent colour.

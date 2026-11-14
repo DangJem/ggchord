@@ -1,3 +1,5 @@
+<a id="moved"></a>
+
 ## Section moved {#moved}
 
-[Multi-sequence relationships](multi-sequence.html#task)
+[Multi-sequence relationships](multi-sequence.md#task)

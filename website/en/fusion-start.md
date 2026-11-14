@@ -1,6 +1,8 @@
+<a id="panels"></a>
+
 ## Start with two independent plots {#panels}
 
-Use ggchord, dplyr and the original PAF in the [input bundle](../assets/tutorial-inputs.zip). Print course_center and course_detail independently, then connect one existing relationship.
+Use ggchord, dplyr and the original PAF in the [input bundle](https://github.com/DangJem/ggchord/archive/refs/heads/main.zip). Print course_center and course_detail independently, then connect one existing relationship.
 
 ```r
 library(ggchord)
@@ -11,11 +13,13 @@ library(dplyr)
 
 {{code:coursefusion}}
 
-![Independent center plot](../assets/coursefusioncenter.png)
+![Independent center plot](../../man/figures/coursefusioncenter.png)
 
-![Independent detail plot](../assets/coursefusiondetail.png)
+![Independent detail plot](../../man/figures/coursefusiondetail.png)
 
-![Two panels and one source relationship](../assets/coursefusion.png)
+![Two panels and one source relationship](../../man/figures/coursefusion.png)
+
+<a id="intervals"></a>
 
 ## Check intervals, panels and instances {#intervals}
 
@@ -31,6 +35,8 @@ course_export <- export_ggchord_fusion(p_coursefusion,
 course_export$connections
 course_export$fronts
 ```
+
+<a id="save"></a>
 
 ## Save at the same size {#save}
 

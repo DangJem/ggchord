@@ -1,3 +1,5 @@
+<a id="moved"></a>
+
 ## Section moved {#moved}
 
-[Circular backbones and layout](circular-layout.html#input)
+[Circular backbones and layout](circular-layout.md#input)

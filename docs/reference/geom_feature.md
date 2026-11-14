@@ -56,7 +56,7 @@ geom_feature(
   Fixed feature geometry used when `feature_shape` is not mapped in
   `aes()`: `"arrow"`, `"block"`, `"chevron"`, or `"lollipop"`. The
   default is `"arrow"`. Use `aes(feature_shape = type)` together with
-  [`scale_feature_shape_manual()`](https://dangjem.github.io/ggchord/reference/scale_feature_shape_manual.md)
+  [`scale_feature_shape_manual()`](scale_feature_shape_manual.md)
   to map categories to geometry.
 
 - feature_colors:
@@ -90,7 +90,7 @@ geom_feature(
 - ...:
 
   Additional arguments passed to
-  [`geom_gene()`](https://dangjem.github.io/ggchord/reference/geom_gene.md).
+  [`geom_gene()`](geom_gene.md).
 
 ## Value
 

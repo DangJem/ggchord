@@ -1,13 +1,13 @@
 # ggchord：基于 ggplot2 的多序列弦图可视化工具
 
 🌐
-语言切换：【[现代汉语（Hans）](https://dangjem.github.io/ggchord/README-Hans.md)
-\| [English](https://dangjem.github.io/ggchord/README.md)】
+语言切换：【[现代汉语（Hans）](README-Hans.md)
+\| [English](https://github.com/DangJem/ggchord/blob/30c3c546aef0de15f0f44ca3414a13b70a0cd5cd/README.md)】
 
 ## 概述
 
 `ggchord` 是一个基于 `ggplot2` 的 R
-语言包，采用**分层的图形语法**将多序列数据绘制为直观的弦图。与“一个大函数”不同，你通过叠加图层来构建图形：[`ggchord()`](https://dangjem.github.io/ggchord/reference/ggchord.md)
+语言包，采用**分层的图形语法**将多序列数据绘制为直观的弦图。与“一个大函数”不同，你通过叠加图层来构建图形：[`ggchord()`](reference/ggchord.md)
 负责提供数据与全局选项，每个 `geom_*`
 图层负责绘制一类元素（序列弧线、比对连接带、基因注释、坐标轴、标签）。每个图层都有合理的默认值，因此**一行代码即可画出完整的弦图**，需要精细控制时也可以分别微调每个图层。
 
@@ -16,7 +16,7 @@
 ## 主要功能
 
 - **真正的 `ggplot2` 分层风格**：数据与全局选项交给
-  [`ggchord()`](https://dangjem.github.io/ggchord/reference/ggchord.md)，每个
+  [`ggchord()`](reference/ggchord.md)，每个
   `geom_*` 图层管理自己的布局参数。
 - **开箱即用**：`ggchord(data) + geom_seq() + geom_ribbon() + geom_gene() + geom_axis()`
   即可得到完整图形。
@@ -80,16 +80,16 @@ ggchord(
 使用全部默认参数的弦图
 
 核心思想就一句话：**数据交给
-[`ggchord()`](https://dangjem.github.io/ggchord/reference/ggchord.md)，样式交给各图层**。
+[`ggchord()`](reference/ggchord.md)，样式交给各图层**。
 
 ## 延伸阅读
 
 | 需求 | 资源 |
 |----|----|
-| 完整教程：数据准备、导入、校验、清理、示例与灵活参数格式 | [**ggchord 教程**](https://dangjem.github.io/ggchord/articles/ggchord_vignette.html)（[源文件](https://dangjem.github.io/ggchord/vignettes/ggchord_vignette.Rmd)） |
-| 汉语完整使用指南 | [**ggchord 汉语指南**](https://dangjem.github.io/ggchord/articles/ggchord_guide_hans.html)（[源文件](https://dangjem.github.io/ggchord/vignettes/ggchord_guide_hans.Rmd)） |
+| 完整教程：数据准备、导入、校验、清理、示例与灵活参数格式 | [**ggchord 教程**](https://dangjem.github.io/ggchord/articles/ggchord_vignette.html)（[源文件](https://github.com/DangJem/ggchord/blob/30c3c546aef0de15f0f44ca3414a13b70a0cd5cd/vignettes/ggchord_vignette.Rmd)） |
+| 汉语完整使用指南 | [**ggchord 汉语指南**](https://dangjem.github.io/ggchord/articles/ggchord_guide_hans.html)（[源文件](https://github.com/DangJem/ggchord/blob/30c3c546aef0de15f0f44ca3414a13b70a0cd5cd/vignettes/ggchord_guide_hans.Rmd)） |
 | 完整的函数与参数参考 | [**函数参考**](https://dangjem.github.io/ggchord/reference/index.html) |
-| 版本更新记录 | [**NEWS.md**](https://dangjem.github.io/ggchord/NEWS.md) |
+| 版本更新记录 | [**NEWS.md**](https://github.com/DangJem/ggchord/blob/30c3c546aef0de15f0f44ca3414a13b70a0cd5cd/NEWS.md) |
 
 ## 贡献与反馈
 

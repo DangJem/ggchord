@@ -1,6 +1,10 @@
+<a id="input"></a>
+
 ## 准备 {#input}
 
 {{prepare:foundationdata}}
+
+<a id="instances"></a>
 
 ## 命名 A–B–A 路由 {#instances}
 

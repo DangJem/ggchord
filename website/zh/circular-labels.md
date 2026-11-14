@@ -1,11 +1,15 @@
 用相同六条真实 pUC19 注释比较固定与自动标签。位置、字号、换行与输出尺寸共同影响可读性；文字隐藏不代表注释消失。
 
+<a id="input"></a>
+
 ## 独立准备本页 {#input}
 
 需可选依赖 dplyr。原始名称保存在 finish_features，显示文字仅附加真实坐标，不修改注释区间或链。图层读取相同 finish_labels；下面所有图均为 9 × 8 英寸。
 
 {{code:comparefinishcircle}}
 
+
+<a id="fixed-labels"></a>
 
 ## 固定标签：方向、侧向与旋转 {#fixed-labels}
 
@@ -20,6 +24,8 @@
 {{code:comparefixedrotate}}
 {{figure:comparefixedrotate}}
 
+
+<a id="fixed-parameters"></a>
 
 ## 固定入口的参数与冲突 {#fixed-parameters}
 
@@ -38,6 +44,8 @@
 
 
 
+<a id="automatic-labels"></a>
+
 ## 同一文字比较四种自动布局 {#automatic-labels}
 
 feature 默认先尝试内部，再尝试相邻与外部；radial、auto、callout 提供不同摆放策略。布局只改变显示，不能新增或删除源注释。四图保留相同输入、请求字号与尺寸。
@@ -51,6 +59,8 @@ feature 默认先尝试内部，再尝试相邻与外部；radial、auto、callo
 {{code:comparecalloutfit}}
 {{figure:comparecalloutfit}}
 
+
+<a id="fitting"></a>
 
 ## 换行、缩小、隐藏和引线 {#fitting}
 
@@ -68,6 +78,8 @@ feature 默认先尝试内部，再尝试相邻与外部；radial、auto、callo
 {{code:compareexternaloff}}
 {{figure:compareexternaloff}}
 
+
+<a id="automatic-parameters"></a>
 
 ## 自动入口的重要默认值 {#automatic-parameters}
 
@@ -100,9 +112,11 @@ feature 布局使用直接引线，允许穿过特征，不再多折绕路。默
 
 {{code:courseblockz}}
 
+<a id="adapt"></a>
+
 ## 操作示例与自备注释 {#adapt}
 
-只把 label_max_lines 改为 3，解释是否改善了拥挤；再固定输出尺寸，比较外部回退开关。固定标签与自动标签有各自接口，不能混用。自备数据用明确 label 文本或 anno，核对 ID、区间、链及唯一 feature_id。继续看[引物文字](primers.html#primer-labels)和[密集 pETDuet-1 案例](circular-dense-case.html#complex)。
+只把 label_max_lines 改为 3，解释是否改善了拥挤；再固定输出尺寸，比较外部回退开关。固定标签与自动标签有各自接口，不能混用。自备数据用明确 label 文本或 anno，核对 ID、区间、链及唯一 feature_id。继续看[引物文字](primers.md#primer-labels)和[密集 pETDuet-1 案例](circular-dense-case.md#complex)。
 
 
 相邻注释优先比较实际径向距离与角向位移，内侧有空闲轨道时不强迫它们在同一
@@ -116,6 +130,8 @@ feature 布局使用直接引线，允许穿过特征，不再多折绕路。默
 时，外层重复短注释可以成组使用外圈；较内层的特征先尝试内圈，空间不足时仍可回退。该策略是有界搜索，
 仍应查看导出中的隐藏、收敛和冲突记录，不保证任意密度都能排入内圈。
 
+
+<a id="consecutive-repeats"></a>
 
 ## 连续重复特征的共享标注 {#consecutive-repeats}
 

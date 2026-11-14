@@ -42,6 +42,10 @@ def table(headers, rows):
         ['| ' + ' | '.join(map(cell, row)) + ' |' for row in rows])
 
 def expand(text, lang, *, figures='assets', reference=''):
+    from site_source_links import site_document
+    # Static source links keep the site's paths; tutorial generation then applies
+    # its existing asset rules. The figures argument belongs to generated macros.
+    text = site_document(text)
     from site_components import home_hero, task_cards, responsive_image, lesson_urls, manual_home, manual_figure, manual_figures
     text=text.replace('{{manualhome}}',manual_home(lang,figures))
     text=re.sub(r'\{\{manualfigure:(\w+)\}\}',lambda m:manual_figure(m[1],lang,figures),text)

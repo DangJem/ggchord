@@ -1,5 +1,7 @@
 <div class="task-intro"><p>为已有输入选择局部窗口或分段视图，同时保留原始位置与显示变换的区别。</p></div>
 
+<a id="focus"></a>
+
 ## 保留来源的局部聚焦 {#focus}
 
 
@@ -9,6 +11,8 @@
 focus 把保留位置移到局部一基坐标，同时保留源原点、截断标记与报告。
 `boundary = "trim"` 可按线性显示投影裁剪连接，不重新比对序列；缩放后的比对长度
 带估计标记。`coordinates = "source"` 恢复源坐标轴标签，重复聚焦后同样适用。
+
+<a id="segments"></a>
 
 ## 独立窗口与局部翻转 {#segments}
 {{code:segment}}
@@ -20,6 +24,8 @@ focus 把保留位置移到局部一基坐标，同时保留源原点、截断�
 位置映射到图中，供普通 ggplot2 注释使用。多个窗口共享源序列时应指定窗口 ID。
 显示方向不表示原始链发生改变。
 
+<a id="homology"></a>
+
 ## 显式生物学关系 {#homology}
 `find_ggchord_loci()` 按声明的注释/名称查询选择位置。
 `link_ggchord_clusters()` 要求显式成员表和序列对，基因名称相同不构成同源证据。
@@ -27,17 +33,21 @@ focus 把保留位置移到局部一基坐标，同时保留源原点、截断�
 `merge_ggchord_ribbons()` 整理已有比对，保留源成员和估计长度标记。
 聚束和密度统计汇总已提供连接，不创建新的序列比对。
 
+<a id="mapping"></a>
+
 ## 按源坐标放置普通注释 {#mapping}
 {{code:mappingposition}}
 {{figure:mappingposition}}
 
 黑点标出第一条序列的 10,100 bp。
 
-先运行[focus 例子](views.html#focus)。辅助函数返回第一个所选窗口起点后 100 bp 位置的笛卡尔 x/y，
+先运行[focus 例子](views.md#focus)。辅助函数返回第一个所选窗口起点后 100 bp 位置的笛卡尔 x/y，
 不把全部普通 ggplot2 坐标变成基因组 bp。分段视图应选窗口 ID，检查落在省略间隙
-的位置，不跨间隙外推。区域 选择来自明确注释/同源分组 证据时见[显式同源关系](homology.html)。
+的位置，不跨间隙外推。区域 选择来自明确注释/同源分组 证据时见[显式同源关系](homology.md)。
+
+<a id="check-result"></a>
 
 ## 检查要点 {#check-result}
 关注裁剪报告、断点与源坐标。被省略的间隙没有映射；显示翻转不应直接解释为生物学倒位。
 
-<div class="next-step">继续：<a href="homology.html">CDS 同源邻域比较 →</a></div>
+<div class="next-step">继续：<a href="homology.md">CDS 同源邻域比较 →</a></div>

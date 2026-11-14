@@ -1,5 +1,7 @@
 <div class="task-intro"><p>Read the default BLAST columns in observed alignments and select the six endpoint fields needed for plotting.</p></div>
 
+<a id="prepare"></a>
+
 ## Why begin with BLAST input? {#prepare}
 
 ggchord was originally designed to visualize BLASTn alignments as ribbons between nucleotide sequences. BLAST tables are its default recommended alignment input, and the link fields retain query/subject naming as the plotting tools have expanded.
@@ -13,6 +15,8 @@ blastn -query query.fna -subject subject.fna -outfmt 6 -out hits-dna.tsv
 blastp -query proteins.faa -subject reference.faa -outfmt 7 -out hits-protein.tsv
 ```
 
+<a id="standard"></a>
+
 ## Use the default tabular columns {#standard}
 
 Both tabular formats use these 12 columns, in this order, unless you provide a field list.
@@ -24,19 +28,23 @@ Both tabular formats use these 12 columns, in this order, unless you provide a f
 | 7–10 | `qstart`, `qend`, `sstart`, `send` | One-based inclusive endpoints on each sequence. Descending coordinates preserve alignment direction |
 | 11–12 | `evalue`, `bitscore` | Expected count and score in bits. Lower E-values and higher bit scores generally indicate stronger hits |
 
-Extract the [input bundle](../assets/tutorial-inputs.zip) and work from the directory containing `examples/`. The example file preserves the first 12 fields of observed HSPs.
+Extract the [input bundle](https://github.com/DangJem/ggchord/archive/refs/heads/main.zip) and work from the directory containing `examples/`. The example file preserves the first 12 fields of observed HSPs.
 
 {{code:standardblast}}
 {{output:standardblast}}
 
 The reader puts the six plotting fields first in the returned table.
 
+<a id="minimal"></a>
+
 ## Select six fields for plotting {#minimal}
 
 {{code:blastendpoints}}
 {{output:blastendpoints}}
 
-A ribbon uses the two sequence IDs and their start and end positions. Keep `pident` to colour or filter by identity and `length` to filter by alignment length. For a custom headerless file, pass the actual field order as `col_names` to `read_blast()`. For a table already in R, see [link conversion](import-sequences.html#adapters).
+A ribbon uses the two sequence IDs and their start and end positions. Keep `pident` to colour or filter by identity and `length` to filter by alignment length. For a custom headerless file, pass the actual field order as `col_names` to `read_blast()`. For a table already in R, see [link conversion](import-sequences.md#adapters).
+
+<a id="protein"></a>
 
 ## Choose the coordinate unit first {#protein}
 
@@ -48,9 +56,11 @@ A ribbon uses the two sequence IDs and their start and end positions. Keep `pide
 
 One plot uses one coordinate unit. Full sequences supply protein lengths, while HSP endpoints describe only aligned intervals. BLASTx and tBLASTn have endpoints in different units and require a chosen common display domain. Nucleotide strand and protein N→C order have distinct biological meanings.
 
-[Draw a native BLASTp protein comparison](protein-alignments.html#protein), or continue to [the four plotting modules](modes.html).
+[Draw a native BLASTp protein comparison](protein-alignments.md#protein), or continue to [the four plotting modules](modes.md).
 
-<span id="projection"></span>To locate protein hits on a nucleotide genome, read [CDS coordinate projection](projection.html).
+<span id="projection"></span>To locate protein hits on a nucleotide genome, read [CDS coordinate projection](projection.md).
+
+<a id="source"></a>
 
 ## Sources and limits {#source}
 Original EMALE records come from the public gggenomes EMALE dataset.
@@ -59,7 +69,9 @@ upstream figures or plotting code. The input bundle's `sources.json` records URL
 archive members, line ranges, hashes and selection. Parsing neither reruns
 alignments nor establishes biological function.
 
+<a id="check-result"></a>
+
 ## Result checks {#check-result}
 Choose nucleotide or protein coordinates, then check table fields, full lengths and units.
 
-<div class="next-step">Continue: <a href="protein-alignments.html">BLASTp protein comparisons →</a></div>
+<div class="next-step">Continue: <a href="protein-alignments.md">BLASTp protein comparisons →</a></div>

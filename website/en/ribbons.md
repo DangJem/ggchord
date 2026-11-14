@@ -2,6 +2,8 @@
 
 <span id="prepare"></span>
 
+<a id="input"></a>
+
 ## Begin with the original link table {#input}
 
 {{code:ribboninputs,ribbons}}
@@ -9,6 +11,8 @@
 {{results:ribbons}}
 
 The first three counts follow one pipeline. Bundling starts from the original table and has its own count.
+
+<a id="transformations"></a>
 
 ## Understand each transformation {#transformations}
 Filtering keeps observations meeting declared thresholds. Reciprocal-overlap
@@ -19,6 +23,8 @@ Bundling groups nearby query/subject locations into an aggregate. Inspect each
 The merged or bundled envelope is not a newly computed nucleotide alignment.
 Estimated lengths retain their flags; unobserved identity is never invented.
 
+<a id="density"></a>
+
 ## Density is an explicit statistic {#density}
 {{code:ribbondensity}}
 
@@ -26,16 +32,20 @@ Estimated lengths retain their flags; unobserved identity is never invented.
 
 Each end is divided into four position bins. Ribbons darken when more alignments share the same sequence pair, direction and bins. The legend shows the computed count from `after_stat(bundle_n)`. Each input row still gives one ribbon. Use `stat_ribbon_bundle()` to aggregate neighbouring ribbons.
 
-Choose point versus interval geometry in the [links section](multi-sequence-links.html#interval-points).
+Choose point versus interval geometry in the [links section](multi-sequence-links.md#interval-points).
+
+<a id="check-result"></a>
 
 ## Result checks {#check-result}
 Inspect each report and member rows before reading the plot. Aggregated bands are not new alignments; point links summarize midpoints of existing HSPs.
 
-<div class="next-step">Continue: <a href="instances.html">Repeated displays and instance selection →</a></div>
+<div class="next-step">Continue: <a href="instances.md">Repeated displays and instance selection →</a></div>
 
-Continue to [link statistics](ribbons.html#statistics) for bundle_n, bundle_weight, density and bins/weight/group_by/min_bundle.
+Continue to [link statistics](ribbons.md#statistics) for bundle_n, bundle_weight, density and bins/weight/group_by/min_bundle.
 
 Density colouring and bundling are different operations. Retain original HSPs before declaring bins, weights, groups and aggregation meaning.
+
+<a id="statistics"></a>
 
 ## Observed input and minimal fields {#statistics}
 
@@ -43,6 +53,8 @@ Independently use bundled complete sequence lengths and observed HSPs; no new al
 
 {{code:comparedensitydata}}
 
+
+<a id="statistics-density"></a>
 
 ## Four versus eight bins: one ribbon per observation {#statistics-density}
 
@@ -54,6 +66,8 @@ Normalize each endpoint midpoint by its complete sequence length and bin by pair
 {{figure:comparedensityeight}}
 
 
+<a id="statistics-bundle"></a>
+
 ## Bundling combines displayed members {#statistics-bundle}
 
 `stat_ribbon_bundle` creates envelopes within bins/groups with min_bundle at least 2. Smaller groups remain individual ribbons; input counts are not bundle counts. Envelopes are not newly computed nucleotide alignments and do not invent identity. `bundle_ggchord_ribbons` returns retained tables and reports for inspection before plotting.
@@ -63,6 +77,8 @@ Normalize each endpoint midpoint by its complete sequence length and bin by pair
 {{code:comparebundlesummary}}
 {{output:comparebundlesummary}}
 
+
+<a id="statistics-parameters"></a>
 
 ## Computed variables, weights and preprocessing {#statistics-parameters}
 
@@ -80,6 +96,8 @@ Filtering selects observations by criteria; deduplication selects representative
 
 
 
+<a id="statistics-adapt"></a>
+
 ## Use your alignments {#statistics-adapt}
 
-Set bins to 6, observe colour changes and confirm retention of original observations. Preserve actual condition columns for group_by rather than pooling samples implicitly. Link statistics support chord/collinear views; single circular mode rejects link layers. Continue with [link preparation](ribbons.html), [real cases](real-data.html) and [scale families](scale-families.html).
+Set bins to 6, observe colour changes and confirm retention of original observations. Preserve actual condition columns for group_by rather than pooling samples implicitly. Link statistics support chord/collinear views; single circular mode rejects link layers. Continue with [link preparation](ribbons.md), [real cases](real-data.md) and [scale families](scale-families.md).

@@ -1,3 +1,5 @@
+<a id="input"></a>
+
 ## Prepare once {#input}
 
 The same source input need not produce the same default relation set. First explicitly select all pairs to compare geometry, then inspect each view’s default selection. Dependencies: ggchord and dplyr.
@@ -6,21 +8,31 @@ The same source input need not produce the same default relation set. First expl
 
 {{code:coursecomparison}}
 
+<a id="chord"></a>
+
 ### Chord {#chord}
 
-![Chord: same source tables and all-pair links](../assets/coursechord.png)
+![Chord: same source tables and all-pair links](../../man/figures/coursechord.png)
+
+<a id="linear"></a>
 
 ### Linear {#linear}
 
-![Linear: same source tables and all-pair links](../assets/courselinear.png)
+![Linear: same source tables and all-pair links](../../man/figures/courselinear.png)
+
+<a id="radial"></a>
 
 ### Radial {#radial}
 
-![Radial: same source tables and all-pair links](../assets/courseradial.png)
+![Radial: same source tables and all-pair links](../../man/figures/courseradial.png)
+
+<a id="sankey"></a>
 
 ### Sankey {#sankey}
 
-![Sankey: same source tables and all-pair links](../assets/coursesankey.png)
+![Sankey: same source tables and all-pair links](../../man/figures/coursesankey.png)
+
+<a id="selection"></a>
 
 ## Default selection and comparable conditions {#selection}
 
@@ -33,6 +45,8 @@ The same source input need not produce the same default relation set. First expl
 
 {{code:coursecomparisonreport}}
 
+<a id="flagship"></a>
+
 ## Retained flagships and derived views {#flagship}
 
 The existing Chord and Collinear flagships are retained with their original composition, input selection, colours and layer design; the Chord image is redrawn solely for the confirmed default outline fix. Radial derives from Chord; Sankey derives from Collinear. The retained parents share source preparation but keep their original feature and cross-row HSP display selections, so the four images are not claimed to use an identical displayed subset.
@@ -43,13 +57,19 @@ Radial removes Chord-only radii and curvature. Sankey uses each column’s nativ
 
 {{code:flagshipmulti}}
 
+<a id="flagship-chord"></a>
+
 ### Chord {#flagship-chord}
 
 {{manualfigure:flagchord}}
 
+<a id="flagship-collinear"></a>
+
 ### Collinear {#flagship-collinear}
 
 {{manualfigure:flaglinear}}
+
+<a id="flagship-radial"></a>
 
 ### Radial {#flagship-radial}
 
@@ -61,6 +81,8 @@ view_ggchord(flag_radial, width = 12, height = 10.5, units = "in")
 
 {{manualfigure:flagradial}}
 
+<a id="flagship-sankey"></a>
+
 ### Sankey {#flagship-sankey}
 
 Four sequences stack in each column on a 10 × 16 inch portrait canvas. All 16 original CDS geometries and name candidates, and the 10 selected HSPs remain. Both display copies receive annotations; names are no longer sampled to one per sequence. Short connections and local collision handling keep names near their features. Complete coordinates and all three guides remain; homepage previews separately omit dense names and coordinate text.
@@ -71,9 +93,13 @@ view_ggchord(flag_sankey, width = 10, height = 16, units = "in")
 
 {{manualfigure:flagsankey}}
 
+<a id="direction-and-adjacency"></a>
+
 ## Directions, instances and display scale {#direction-and-adjacency}
 
 Biological strand, HSP endpoint direction, display orientation and seq_order are separate. Sankey copies do not add observations; interval widths do not imply flow conservation. Reuse layers only within their shared support.
+
+<a id="projection"></a>
 
 ## Visual length and connection style {#projection}
 
@@ -99,6 +125,8 @@ ribbon fill scale overrides endpoint interpolation. Explicit pident uses a fixed
 0–100 domain, boundaries 0/50/80/90/95/100 and five numerical interval proportions
 50/30/10/5/5%. User scales and guides remain authoritative.
 
+<a id="tip"></a>
+
 ### Optional subject taper {#tip}
 
 {{code:foundationarrow}}
@@ -110,9 +138,11 @@ render loop measures guide and panel space together. Explicit guide/theme
 settings win. Circular outer labels share a measured queue at every label count;
 `label_visibility` reports source row, visibility and available placement fields.
 An unavailable collision count is not zero. Tiny canvases can remain crowded;
-inspect [output diagnostics](output.html) at the intended export size.
+inspect [output diagnostics](output.md) at the intended export size.
 
 Automatic Identity rulers reserve length from measured boundary text rather than generic legend swatch sizes. Set `legend.ribbon.key.height` or `legend.ribbon.key.width`, or supply an explicit guide, for a manual length. In circular layouts, parallel axis labels follow the circle glyph by glyph; horizontal and numeric orientations remain straight.
+
+<a id="exercise"></a>
 
 ## Preview and save {#exercise}
 

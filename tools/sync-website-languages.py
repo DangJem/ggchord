@@ -57,7 +57,7 @@ def protected(text):
 
 def mask_target(source, target):
     for i, value in sorted(enumerate(protected(source)), key=lambda item: -len(item[1])):
-        localized = value.replace('../assets/MIGRATION-Hans.md', '../assets/MIGRATION.md')
+        localized = value.replace('../assets/MIGRATION-Hans.md', '../assets/MIGRATION.md').replace('../../MIGRATION-Hans.md', '../../MIGRATION.md')
         if localized not in target:
             # Natural English may omit backticks around an inline identifier.
             if value.startswith('`') and localized.strip('`') in target:
@@ -73,7 +73,7 @@ def unmask(source, target):
         marker = f'⟦shared:{i}⟧'
         if marker not in target:
             raise ValueError('Translation lost protected placeholder: ' + marker)
-        value = value.replace('../assets/MIGRATION-Hans.md', '../assets/MIGRATION.md')
+        value = value.replace('../assets/MIGRATION-Hans.md', '../assets/MIGRATION.md').replace('../../MIGRATION-Hans.md', '../../MIGRATION.md')
         target = target.replace(marker, value)
     if '⟦shared:' in target:
         raise ValueError('Unknown shared placeholder')
@@ -95,7 +95,7 @@ def validate_shape(source, target, kind):
         raise ValueError('Translation contains executable structure')
     source_urls = re.findall(r'(?<=\]\()[^\)\n]*(?=\))', source)
     target_urls = re.findall(r'(?<=\]\()[^\)\n]*(?=\))', target)
-    if sorted(u.replace('../assets/MIGRATION-Hans.md', '../assets/MIGRATION.md') for u in source_urls) != sorted(target_urls):
+    if sorted(u.replace('../assets/MIGRATION-Hans.md', '../assets/MIGRATION.md').replace('../../MIGRATION-Hans.md', '../../MIGRATION.md') for u in source_urls) != sorted(target_urls):
         raise ValueError('Translated links/images differ from source')
 
 

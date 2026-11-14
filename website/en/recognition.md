@@ -1,7 +1,11 @@
 <div class="task-intro"><p>Search known DNA for primers, restriction sites and common features, then choose a display. Computational matches and experimental validation are different.</p></div>
 
+<a id="prepare"></a>
+
 ## Prepare this page {#prepare}
 This example uses bundled pUC19.
+
+<a id="search"></a>
 
 ## Search and display are separate {#search}
 Use the bundled pUC19 DNA for exact catalogue-primer and selected restriction searches:
@@ -16,12 +20,16 @@ The actual pUC19 hits shown here should be inspected in the returned table. Sear
 Primer `"three_prime"` mode finds an exact suffix, with no mismatch model;
 its Wallace melting-temperature estimate is a composition heuristic.
 
+<a id="restriction"></a>
+
 ## Restriction interpretation {#restriction}
 `find_restriction_sites()` returns unfiltered matches and cleavage coordinates;
 `filter_restriction_sites()` selects a display set. Enzyme site counts refer to
 the full supplied sequence and remain stable after filtering. `methylation = "auto"` uses audited context only for exactly recognized bundled references;
 it does not claim unknown samples are unblocked. This example explicitly uses `"none"`; this is a search assumption, not a measurement
 of methylation in a physical sample. `geom_restriction_site(leader = "radial")` is the default route.
+
+<a id="features"></a>
 
 ## General feature recognition {#features}
 `find_common_features()` supports curated exact-reference annotations, DNA and
@@ -30,26 +38,32 @@ translation; they do not implement splicing, alternative initiation or
 origin-crossing protein matches. Source genetic-code metadata does not select
 another translation table. For nonstandard codes use DNA matching or external
 code-aware analysis. Confidence is a heuristic label, not a probability.
-Use [explicit CDS projection](projection.html) for known protein/genome maps.
+Use [explicit CDS projection](projection.md) for known protein/genome maps.
+
+<a id="reference"></a>
 
 ## Follow an annotated reference workflow {#reference}
 This short workflow uses the same source-backed plasmid as the complete map. The [complete pUC19
-workflow](plasmids.html) demonstrates catalogue annotations, exact reference
+workflow](plasmids.md) demonstrates catalogue annotations, exact reference
 matching, site display filtering, primer labels and feature stacking together.
 Changing only a sequence name does not make it a recognized reference; sequence
 content determines source-backed recognition. Read the result methods and
 methylation provenance instead of assigning reference claims to an unknown sample.
 
+<a id="check-result"></a>
+
 ## Result checks {#check-result}
 Inspect match positions, methods and provenance. Restriction filtering is a display choice; methylation search conditions are not a measurement of an unknown sample.
 
-<div class="next-step">Continue: <a href="primers.html">Primer recognition, arcs and labels →</a></div>
+<div class="next-step">Continue: <a href="primers.md">Primer recognition, arcs and labels →</a></div>
 
-After inspecting matches, follow [primer arcs and text](primers.html) and [restriction labels/leaders](restriction-sites.html). See [circular layers](circular-layout.html#input) for backbones/centre/lanes and [circular labels](circular-labels.html) for fixed/automatic text.
+After inspecting matches, follow [primer arcs and text](primers.md) and [restriction labels/leaders](restriction-sites.md). See [circular layers](circular-layout.md#input) for backbones/centre/lanes and [circular labels](circular-labels.md) for fixed/automatic text.
+
+<a id="catalog"></a>
 
 ## A catalogue is not a search result {#catalog}
 
-`primer_catalog` returns oligonucleotide records; aliases=TRUE returns source aliases. Catalogue direction is descriptive; find_primer_bindings determines binding direction on target DNA. Multiple names for one sequence do not represent distinct oligonucleotides. Continue with [primers](primers.html) to search and draw.
+`primer_catalog` returns oligonucleotide records; aliases=TRUE returns source aliases. Catalogue direction is descriptive; find_primer_bindings determines binding direction on target DNA. Multiple names for one sequence do not represent distinct oligonucleotides. Continue with [primers](primers.md) to search and draw.
 
 {{code:comparecatalog}}
 {{console:comparecatalog}}

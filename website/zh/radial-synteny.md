@@ -1,3 +1,5 @@
+<a id="radial"></a>
+
 ## 真实比例的径向辐条 {#radial}
 
 随包四序列数据保留原始长度和CDS链。以下显式展示筛选选择长度至少900 bp、identity
@@ -24,12 +26,14 @@ N=2每条原始HSP只绘一次，N=1报错。反向HSP保留完整、有顺序�
 
 {{code:courseradialangle}}
 
-![仅改变首辐条角度](../assets/courseradialangle.png)
+![仅改变首辐条角度](../../man/figures/courseradialangle.png)
 
 
 Ribbon可用显式`pairs`或`adjacent_only=FALSE`选择非邻接关系；非邻接点连接须指定
-`between`。命名A–B–A实例沿用[明确路由契约](instances.html#instances)。
+`between`。命名A–B–A实例沿用[明确路由契约](instances.md#instances)。
 用户控制点使用最终x/y布局单位。端点渐变和subject尖头仍须显式选择，默认保留Identity填充。
+
+<a id="export"></a>
 
 ## 导出与反向映射 {#export}
 
@@ -40,9 +44,13 @@ Ribbon可用显式`pairs`或`adjacent_only=FALSE`选择非邻接关系；非邻�
 仅凭多条辐条共享的单个x值猜位置。focus/segment输入保留源原点；径向显示不将多个
 窗口拼为一条辐条。
 
+<a id="support"></a>
+
 ## 操作示例与支持边界 {#support}
 
 只改 start_angle 不改其他参数，核对源坐标及方向。N=1、shared branches、单圆专属层和多窗口拼接为一条辐条不支持；逆映射要给骨架上的 x/y。
+
+<a id="nonadjacent"></a>
 
 ## 非相邻连接的边框与外拱 {#nonadjacent}
 

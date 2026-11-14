@@ -2,7 +2,9 @@
 
 {{prepare:setup}}
 
-先解压[真实输入包](../assets/tutorial-inputs.zip)，工作目录须含 examples/；每节单列可选依赖。
+先解压[真实输入包](https://github.com/DangJem/ggchord/archive/refs/heads/main.zip)，工作目录须含 examples/；每节单列可选依赖。
+
+<a id="adapters"></a>
 
 ## 把已有表格转换成需要的列 {#adapters}
 这里使用随包的实际序列、连接和基因，
@@ -14,7 +16,9 @@
 
 转换返回普通数据框，并记录 `ggchord_conversion` 信息。标识原样保留；缺少完整
 序列长度时应补充可靠来源，不能把最大注释端点当作全长。核酸与蛋白比对的最小列
-和单位见[导入比对结果](alignments.html)。
+和单位见[导入比对结果](alignments.md)。
+
+<a id="genbank"></a>
 
 ## GenBank：保留记录身份 {#genbank}
 {{code:genbank}}
@@ -29,7 +33,9 @@
 
 显式 `python` 路径保留选定虚拟环境，包括解释器符号链接；不安装或改动环境。
 
-解压[说明输入包](../assets/tutorial-inputs.zip)，使工作目录包含 `examples/`。每次先读一种文件并检查返回的几行，再按序列 ID 对齐输入。
+解压[说明输入包](https://github.com/DangJem/ggchord/archive/refs/heads/main.zip)，使工作目录包含 `examples/`。每次先读一种文件并检查返回的几行，再按序列 ID 对齐输入。
+
+<a id="files"></a>
 
 ## FASTA 长度与 GFF3 注释 {#files}
 
@@ -43,13 +49,17 @@ FASTA 给出完整长度。GFF3 返回区间、类型和原始链，绘图前可
 
 {{output:frontimportgff}}
 
+<a id="blast"></a>
+
 ## 读取 BLAST 表 {#blast}
 
 {{code:frontimportblast}}
 
 {{output:frontimportblast}}
 
-每一行是一对区间。保留两端坐标顺序，核对两列序列 ID 能在 FASTA 中找到。如何生成标准 BLAST 文件见[比对输入](alignments.html)。
+每一行是一对区间。保留两端坐标顺序，核对两列序列 ID 能在 FASTA 中找到。如何生成标准 BLAST 文件见[比对输入](alignments.md)。
+
+<a id="alternatives"></a>
 
 ## 直接转换 Bioconductor 对象 {#alternatives}
 
@@ -65,4 +75,4 @@ GInteractions 的第一端是 query，第二端是 subject。下面的最小输�
 
 {{output:frontimportgi}}
 
-其他输入对象见[导入与转换](import-intervals.html#ranges)。用转换后的表[添加图层](multi-sequence-start.html#draw)。
+其他输入对象见[导入与转换](import-intervals.md#ranges)。用转换后的表[添加图层](multi-sequence-start.md#draw)。

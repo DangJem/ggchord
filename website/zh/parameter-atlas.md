@@ -1,9 +1,11 @@
 本页按用途汇总当前完整函数参数，不替代用法说明。默认表达式来自实际 formals，说明来自同版本 Rd；NULL 可能在布局阶段解析为默认值。候选向量既可能供 match.arg 选择，也可能表示同时启用多个选项，须阅读说明。上游重导出遵循其自身帮助。
 
-优先从[功能索引](reference/index.html)进入用法，重要参数对照见对应说明，完整签名和额外参数转发见函数参考。以下按需展开；不会把上游 ... 的全部可能参数伪装成 ggchord 的独立 API。
+优先从[功能索引](../../man/)进入用法，重要参数对照见对应说明，完整签名和额外参数转发见函数参考。以下按需展开；不会把上游 ... 的全部可能参数伪装成 ggchord 的独立 API。
 
 <label class="atlas-filter">查找函数或参数<input type="search" id="parameter-filter" autocomplete="off"></label><p id="parameter-filter-status" class="atlas-status" role="status"></p>
 
+
+<a id="coordinates"></a>
 
 ## 坐标与全局视图 {#coordinates}
 
@@ -11,7 +13,7 @@
 <details><summary><code>coord_chord()</code></summary>
 
 
-[完整参考](reference/coord_chord.html)
+[完整参考](../../man/coord_chord.Rd)
 
 
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
@@ -30,7 +32,7 @@
 <details><summary><code>coord_circular()</code></summary>
 
 
-[完整参考](reference/coord_circular.html)
+[完整参考](../../man/coord_circular.Rd)
 
 
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
@@ -51,7 +53,7 @@
 <details><summary><code>coord_collinear()</code></summary>
 
 
-[完整参考](reference/coord_collinear.html)
+[完整参考](../../man/coord_collinear.Rd)
 
 
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
@@ -76,7 +78,7 @@
 <details><summary><code>coord_dotplot()</code></summary>
 
 
-[完整参考](reference/coord_dotplot.html)
+[完整参考](../../man/coord_dotplot.Rd)
 
 
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
@@ -98,7 +100,7 @@
 <details><summary><code>coord_radial_synteny()</code></summary>
 
 
-[完整参考](reference/coord_radial_synteny.html)
+[完整参考](../../man/coord_radial_synteny.Rd)
 
 
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
@@ -120,7 +122,7 @@
 <details><summary><code>coord_sankey()</code></summary>
 
 
-[完整参考](reference/coord_sankey.html)
+[完整参考](../../man/coord_sankey.Rd)
 
 
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
@@ -137,13 +139,15 @@
 </details>
 
 
+<a id="layers"></a>
+
 ## 几何与标签 {#layers}
 
 <span id="api-geom_alignment_segment"></span>
 <details><summary><code>geom_alignment_segment()</code></summary>
 
 
-[完整参考](reference/geom_alignment_segment.html)
+[完整参考](../../man/geom_alignment_segment.Rd)
 
 
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
@@ -166,7 +170,7 @@
 <details><summary><code>geom_feature()</code></summary>
 
 
-[完整参考](reference/geom_feature.html)
+[完整参考](../../man/geom_feature.Rd)
 
 
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
@@ -194,7 +198,7 @@
 <details><summary><code>geom_feature_label()</code></summary>
 
 
-[完整参考](reference/geom_feature_label.html)
+[完整参考](../../man/geom_feature_label.Rd)
 
 
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
@@ -220,7 +224,7 @@
 <details><summary><code>geom_feature_label_repel()</code></summary>
 
 
-[完整参考](reference/geom_feature_label_repel.html)
+[完整参考](../../man/geom_feature_label_repel.Rd)
 
 
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
@@ -252,7 +256,7 @@
 <details><summary><code>geom_feature_plasmid()</code></summary>
 
 
-[完整参考](reference/geom_feature_plasmid.html)
+[完整参考](../../man/geom_feature_plasmid.Rd)
 
 
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
@@ -280,7 +284,7 @@
 <details><summary><code>geom_gene()</code></summary>
 
 
-[完整参考](reference/geom_gene.html)
+[完整参考](../../man/geom_gene.Rd)
 
 
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
@@ -303,7 +307,7 @@
 <details><summary><code>geom_gene_label()</code></summary>
 
 
-[完整参考](reference/geom_gene_label.html)
+[完整参考](../../man/geom_gene_label.Rd)
 
 
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
@@ -329,7 +333,7 @@
 <details><summary><code>geom_gene_label_repel()</code></summary>
 
 
-[完整参考](reference/geom_gene_label_repel.html)
+[完整参考](../../man/geom_gene_label_repel.Rd)
 
 
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
@@ -357,7 +361,7 @@
 <details><summary><code>geom_link_line()</code></summary>
 
 
-[完整参考](reference/geom_link_line.html)
+[完整参考](../../man/geom_link_line.Rd)
 
 
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
@@ -388,7 +392,7 @@
 <details><summary><code>geom_link_ribbon()</code></summary>
 
 
-[完整参考](reference/geom_link_ribbon.html)
+[完整参考](../../man/geom_link_ribbon.Rd)
 
 
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
@@ -423,7 +427,7 @@
 <details><summary><code>geom_primer()</code></summary>
 
 
-[完整参考](reference/geom_primer.html)
+[完整参考](../../man/geom_primer.Rd)
 
 
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
@@ -445,7 +449,7 @@
 <details><summary><code>geom_primer_label_repel()</code></summary>
 
 
-[完整参考](reference/geom_primer_label_repel.html)
+[完整参考](../../man/geom_primer_label_repel.Rd)
 
 
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
@@ -467,7 +471,7 @@
 <details><summary><code>geom_residue()</code></summary>
 
 
-[完整参考](reference/geom_residue.html)
+[完整参考](../../man/geom_residue.Rd)
 
 
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
@@ -486,7 +490,7 @@
 <details><summary><code>geom_restriction_site()</code></summary>
 
 
-[完整参考](reference/geom_restriction_site.html)
+[完整参考](../../man/geom_restriction_site.Rd)
 
 
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
@@ -517,7 +521,7 @@
 <details><summary><code>geom_seq()</code></summary>
 
 
-[完整参考](reference/geom_seq.html)
+[完整参考](../../man/geom_seq.Rd)
 
 
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
@@ -545,7 +549,7 @@
 <details><summary><code>geom_seq_break()</code></summary>
 
 
-[完整参考](reference/geom_seq_break.html)
+[完整参考](../../man/geom_seq_break.Rd)
 
 
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
@@ -567,7 +571,7 @@
 <details><summary><code>geom_seq_center_label()</code></summary>
 
 
-[完整参考](reference/geom_seq_center_label.html)
+[完整参考](../../man/geom_seq_center_label.Rd)
 
 
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
@@ -589,7 +593,7 @@
 <details><summary><code>geom_seq_label()</code></summary>
 
 
-[完整参考](reference/geom_seq_label.html)
+[完整参考](../../man/geom_seq_label.Rd)
 
 
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
@@ -614,7 +618,7 @@
 <details><summary><code>geom_seq_region()</code></summary>
 
 
-[完整参考](reference/geom_seq_region.html)
+[完整参考](../../man/geom_seq_region.Rd)
 
 
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
@@ -638,7 +642,7 @@
 <details><summary><code>geom_seq_scale()</code></summary>
 
 
-[完整参考](reference/geom_seq_scale.html)
+[完整参考](../../man/geom_seq_scale.Rd)
 
 
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
@@ -665,7 +669,7 @@
 <details><summary><code>geom_track()</code></summary>
 
 
-[完整参考](reference/geom_track.html)
+[完整参考](../../man/geom_track.Rd)
 
 
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
@@ -688,7 +692,7 @@
 <details><summary><code>geom_track_bar()</code></summary>
 
 
-[完整参考](reference/geom_track.html)
+[完整参考](../../man/geom_track.Rd)
 
 
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
@@ -713,7 +717,7 @@
 <details><summary><code>geom_track_col()</code></summary>
 
 
-[完整参考](reference/geom_track.html)
+[完整参考](../../man/geom_track.Rd)
 
 
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
@@ -732,7 +736,7 @@
 <details><summary><code>geom_track_line()</code></summary>
 
 
-[完整参考](reference/geom_track_tile.html)
+[完整参考](../../man/geom_track_tile.Rd)
 
 
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
@@ -756,7 +760,7 @@
 <details><summary><code>geom_track_tile()</code></summary>
 
 
-[完整参考](reference/geom_track_tile.html)
+[完整参考](../../man/geom_track_tile.Rd)
 
 
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
@@ -777,13 +781,15 @@
 </details>
 
 
+<a id="positions"></a>
+
 ## 局部放置 {#positions}
 
 <span id="api-position_feature_stack"></span>
 <details><summary><code>position_feature_stack()</code></summary>
 
 
-[完整参考](reference/position_feature_stack.html)
+[完整参考](../../man/position_feature_stack.Rd)
 
 
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
@@ -798,7 +804,7 @@
 <details><summary><code>position_plasmid()</code></summary>
 
 
-[完整参考](reference/position_plasmid.html)
+[完整参考](../../man/position_plasmid.Rd)
 
 
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
@@ -811,7 +817,7 @@
 <details><summary><code>position_strand()</code></summary>
 
 
-[完整参考](reference/position_strand.html)
+[完整参考](../../man/position_strand.Rd)
 
 
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
@@ -824,7 +830,7 @@
 <details><summary><code>position_track()</code></summary>
 
 
-[完整参考](reference/position_track.html)
+[完整参考](../../man/position_track.Rd)
 
 
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
@@ -838,13 +844,15 @@
 </details>
 
 
+<a id="statistics"></a>
+
 ## 连接统计 {#statistics}
 
 <span id="api-stat_ribbon_bundle"></span>
 <details><summary><code>stat_ribbon_bundle()</code></summary>
 
 
-[完整参考](reference/stat_ribbon_bundle.html)
+[完整参考](../../man/stat_ribbon_bundle.Rd)
 
 
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
@@ -866,7 +874,7 @@
 <details><summary><code>stat_ribbon_density()</code></summary>
 
 
-[完整参考](reference/stat_ribbon_density.html)
+[完整参考](../../man/stat_ribbon_density.Rd)
 
 
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
@@ -884,13 +892,15 @@
 </details>
 
 
+<a id="scales"></a>
+
 ## 角色标度 {#scales}
 
 <span id="api-scale_feature_fill_manual"></span>
 <details><summary><code>scale_feature_fill_manual()</code></summary>
 
 
-[完整参考](reference/scale_gene_fill_manual.html)
+[完整参考](../../man/scale_gene_fill_manual.Rd)
 
 
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
@@ -905,7 +915,7 @@
 <details><summary><code>scale_feature_fill_plasmid()</code></summary>
 
 
-[完整参考](reference/scale_feature_fill_plasmid.html)
+[完整参考](../../man/scale_feature_fill_plasmid.Rd)
 
 
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
@@ -919,7 +929,7 @@
 <details><summary><code>scale_feature_shape_manual()</code></summary>
 
 
-[完整参考](reference/scale_feature_shape_manual.html)
+[完整参考](../../man/scale_feature_shape_manual.Rd)
 
 
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
@@ -936,7 +946,7 @@
 <details><summary><code>scale_feature_shape_plasmid()</code></summary>
 
 
-[完整参考](reference/scale_feature_fill_plasmid.html)
+[完整参考](../../man/scale_feature_fill_plasmid.Rd)
 
 
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
@@ -951,7 +961,7 @@
 <details><summary><code>scale_gene_fill_manual()</code></summary>
 
 
-[完整参考](reference/scale_gene_fill_manual.html)
+[完整参考](../../man/scale_gene_fill_manual.Rd)
 
 
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
@@ -965,7 +975,7 @@
 <details><summary><code>scale_link_alpha_continuous()</code></summary>
 
 
-[完整参考](reference/scale_link.html)
+[完整参考](../../man/scale_link.Rd)
 
 
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
@@ -978,7 +988,7 @@
 <details><summary><code>scale_link_alpha_manual()</code></summary>
 
 
-[完整参考](reference/scale_link.html)
+[完整参考](../../man/scale_link.Rd)
 
 
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
@@ -992,7 +1002,7 @@
 <details><summary><code>scale_link_color_gradientn()</code></summary>
 
 
-[完整参考](reference/scale_link.html)
+[完整参考](../../man/scale_link.Rd)
 
 
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
@@ -1005,7 +1015,7 @@
 <details><summary><code>scale_link_color_manual()</code></summary>
 
 
-[完整参考](reference/scale_link.html)
+[完整参考](../../man/scale_link.Rd)
 
 
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
@@ -1019,7 +1029,7 @@
 <details><summary><code>scale_link_colour_gradientn()</code></summary>
 
 
-[完整参考](reference/scale_link.html)
+[完整参考](../../man/scale_link.Rd)
 
 
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
@@ -1032,7 +1042,7 @@
 <details><summary><code>scale_link_colour_manual()</code></summary>
 
 
-[完整参考](reference/scale_link.html)
+[完整参考](../../man/scale_link.Rd)
 
 
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
@@ -1046,7 +1056,7 @@
 <details><summary><code>scale_link_linetype_manual()</code></summary>
 
 
-[完整参考](reference/scale_link.html)
+[完整参考](../../man/scale_link.Rd)
 
 
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
@@ -1060,7 +1070,7 @@
 <details><summary><code>scale_link_linewidth_continuous()</code></summary>
 
 
-[完整参考](reference/scale_link.html)
+[完整参考](../../man/scale_link.Rd)
 
 
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
@@ -1073,7 +1083,7 @@
 <details><summary><code>scale_link_linewidth_manual()</code></summary>
 
 
-[完整参考](reference/scale_link.html)
+[完整参考](../../man/scale_link.Rd)
 
 
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
@@ -1087,7 +1097,7 @@
 <details><summary><code>scale_region_fill_manual()</code></summary>
 
 
-[完整参考](reference/scale_gene_fill_manual.html)
+[完整参考](../../man/scale_gene_fill_manual.Rd)
 
 
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
@@ -1101,7 +1111,7 @@
 <details><summary><code>scale_ribbon_alpha_continuous()</code></summary>
 
 
-[完整参考](reference/scale_ribbon_alpha_continuous.html)
+[完整参考](../../man/scale_ribbon_alpha_continuous.Rd)
 
 
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
@@ -1115,7 +1125,7 @@
 <details><summary><code>scale_ribbon_alpha_manual()</code></summary>
 
 
-[完整参考](reference/scale_ribbon_alpha_continuous.html)
+[完整参考](../../man/scale_ribbon_alpha_continuous.Rd)
 
 
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
@@ -1129,7 +1139,7 @@
 <details><summary><code>scale_ribbon_color_manual()</code></summary>
 
 
-[完整参考](reference/scale_ribbon_alpha_continuous.html)
+[完整参考](../../man/scale_ribbon_alpha_continuous.Rd)
 
 
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
@@ -1143,7 +1153,7 @@
 <details><summary><code>scale_ribbon_colour_manual()</code></summary>
 
 
-[完整参考](reference/scale_ribbon_alpha_continuous.html)
+[完整参考](../../man/scale_ribbon_alpha_continuous.Rd)
 
 
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
@@ -1157,7 +1167,7 @@
 <details><summary><code>scale_ribbon_fill_gradientn()</code></summary>
 
 
-[完整参考](reference/scale_ribbon_fill_stepsn.html)
+[完整参考](../../man/scale_ribbon_fill_stepsn.Rd)
 
 
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
@@ -1174,7 +1184,7 @@
 <details><summary><code>scale_ribbon_fill_identity()</code></summary>
 
 
-[完整参考](reference/scale_ribbon_fill_stepsn.html)
+[完整参考](../../man/scale_ribbon_fill_stepsn.Rd)
 
 
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
@@ -1187,7 +1197,7 @@
 <details><summary><code>scale_ribbon_fill_manual()</code></summary>
 
 
-[完整参考](reference/scale_ribbon_fill_stepsn.html)
+[完整参考](../../man/scale_ribbon_fill_stepsn.Rd)
 
 
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
@@ -1201,7 +1211,7 @@
 <details><summary><code>scale_ribbon_fill_stepsn()</code></summary>
 
 
-[完整参考](reference/scale_ribbon_fill_stepsn.html)
+[完整参考](../../man/scale_ribbon_fill_stepsn.Rd)
 
 
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
@@ -1218,7 +1228,7 @@
 <details><summary><code>scale_ribbon_linetype_manual()</code></summary>
 
 
-[完整参考](reference/scale_ribbon_alpha_continuous.html)
+[完整参考](../../man/scale_ribbon_alpha_continuous.Rd)
 
 
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
@@ -1232,7 +1242,7 @@
 <details><summary><code>scale_seq_color_manual()</code></summary>
 
 
-[完整参考](reference/scale_seq_colour_manual.html)
+[完整参考](../../man/scale_seq_colour_manual.Rd)
 
 
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
@@ -1246,7 +1256,7 @@
 <details><summary><code>scale_seq_colour_manual()</code></summary>
 
 
-[完整参考](reference/scale_seq_colour_manual.html)
+[完整参考](../../man/scale_seq_colour_manual.Rd)
 
 
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
@@ -1260,7 +1270,7 @@
 <details><summary><code>scale_seq_position_continuous()</code></summary>
 
 
-[完整参考](reference/scale_seq_position_continuous.html)
+[完整参考](../../man/scale_seq_position_continuous.Rd)
 
 
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
@@ -1284,7 +1294,7 @@
 <details><summary><code>scale_seq_ring_manual()</code></summary>
 
 
-[完整参考](reference/scale_seq_ring_manual.html)
+[完整参考](../../man/scale_seq_ring_manual.Rd)
 
 
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
@@ -1301,7 +1311,7 @@
 <details><summary><code>scale_track_colour_gradientn()</code></summary>
 
 
-[完整参考](reference/scale_track_fill_gradientn.html)
+[完整参考](../../man/scale_track_fill_gradientn.Rd)
 
 
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
@@ -1317,7 +1327,7 @@
 <details><summary><code>scale_track_colour_manual()</code></summary>
 
 
-[完整参考](reference/scale_track_fill_gradientn.html)
+[完整参考](../../man/scale_track_fill_gradientn.Rd)
 
 
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
@@ -1332,7 +1342,7 @@
 <details><summary><code>scale_track_fill_gradientn()</code></summary>
 
 
-[完整参考](reference/scale_track_fill_gradientn.html)
+[完整参考](../../man/scale_track_fill_gradientn.Rd)
 
 
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
@@ -1348,7 +1358,7 @@
 <details><summary><code>scale_track_fill_manual()</code></summary>
 
 
-[完整参考](reference/scale_track_fill_gradientn.html)
+[完整参考](../../man/scale_track_fill_gradientn.Rd)
 
 
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
@@ -1363,7 +1373,7 @@
 <details><summary><code>scale_track_value_continuous()</code></summary>
 
 
-[完整参考](reference/scale_track_value_continuous.html)
+[完整参考](../../man/scale_track_value_continuous.Rd)
 
 
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
@@ -1382,13 +1392,15 @@
 </details>
 
 
+<a id="guides"></a>
+
 ## 图例与 guide {#guides}
 
 <span id="api-guide_ggchord_colorbar"></span>
 <details><summary><code>guide_ggchord_colorbar()</code></summary>
 
 
-[完整参考](reference/guide_ggchord_legend.html)
+[完整参考](../../man/guide_ggchord_legend.Rd)
 
 
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
@@ -1415,7 +1427,7 @@
 <details><summary><code>guide_ggchord_colourbar()</code></summary>
 
 
-[完整参考](reference/guide_ggchord_legend.html)
+[完整参考](../../man/guide_ggchord_legend.Rd)
 
 
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
@@ -1442,7 +1454,7 @@
 <details><summary><code>guide_ggchord_legend()</code></summary>
 
 
-[完整参考](reference/guide_ggchord_legend.html)
+[完整参考](../../man/guide_ggchord_legend.Rd)
 
 
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
@@ -1462,13 +1474,15 @@
 </details>
 
 
+<a id="themes"></a>
+
 ## 主题与物理外观 {#themes}
 
 <span id="api-theme_ggchord"></span>
 <details><summary><code>theme_ggchord()</code></summary>
 
 
-[完整参考](reference/theme_ggchord.html)
+[完整参考](../../man/theme_ggchord.Rd)
 
 
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
@@ -1589,7 +1603,7 @@
 <details><summary><code>theme_ggchord_dark()</code></summary>
 
 
-[完整参考](reference/theme_ggchord.html)
+[完整参考](../../man/theme_ggchord.Rd)
 
 
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
@@ -1710,7 +1724,7 @@
 <details><summary><code>theme_ggchord_minimal()</code></summary>
 
 
-[完整参考](reference/theme_ggchord.html)
+[完整参考](../../man/theme_ggchord.Rd)
 
 
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
@@ -1831,7 +1845,7 @@
 <details><summary><code>theme_ggchord_plasmid()</code></summary>
 
 
-[完整参考](reference/theme_ggchord.html)
+[完整参考](../../man/theme_ggchord.Rd)
 
 
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
@@ -1952,7 +1966,7 @@
 <details><summary><code>theme_ggchord_publication()</code></summary>
 
 
-[完整参考](reference/theme_ggchord.html)
+[完整参考](../../man/theme_ggchord.Rd)
 
 
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
@@ -2070,13 +2084,15 @@
 </details>
 
 
+<a id="workflows"></a>
+
 ## 输入、转换、诊断与输出 {#workflows}
 
 <span id="api-adapt_ggchord"></span>
 <details><summary><code>adapt_ggchord()</code></summary>
 
 
-[完整参考](reference/adapt_ggchord.html)
+[完整参考](../../man/adapt_ggchord.Rd)
 
 
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
@@ -2092,7 +2108,7 @@
 <details><summary><code>as_ggchord_alignment()</code></summary>
 
 
-[完整参考](reference/as_ggchord_alignment.html)
+[完整参考](../../man/as_ggchord_alignment.Rd)
 
 
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
@@ -2108,7 +2124,7 @@
 <details><summary><code>as_ggchord_feature()</code></summary>
 
 
-[完整参考](reference/as_ggchord_feature.html)
+[完整参考](../../man/as_ggchord_feature.Rd)
 
 
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
@@ -2122,7 +2138,7 @@
 <details><summary><code>as_ggchord_link()</code></summary>
 
 
-[完整参考](reference/as_ggchord_link.html)
+[完整参考](../../man/as_ggchord_link.Rd)
 
 
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
@@ -2136,7 +2152,7 @@
 <details><summary><code>as_ggchord_seq()</code></summary>
 
 
-[完整参考](reference/as_ggchord_seq.html)
+[完整参考](../../man/as_ggchord_seq.Rd)
 
 
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
@@ -2152,7 +2168,7 @@
 <details><summary><code>build_ggchord_cds()</code></summary>
 
 
-[完整参考](reference/build_ggchord_cds.html)
+[完整参考](../../man/build_ggchord_cds.Rd)
 
 
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
@@ -2167,7 +2183,7 @@
 <details><summary><code>bundle_ggchord_ribbons()</code></summary>
 
 
-[完整参考](reference/bundle_ggchord_ribbons.html)
+[完整参考](../../man/bundle_ggchord_ribbons.Rd)
 
 
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
@@ -2185,7 +2201,7 @@
 <details><summary><code>clean_ggchord_data()</code></summary>
 
 
-[完整参考](reference/clean_ggchord_data.html)
+[完整参考](../../man/clean_ggchord_data.Rd)
 
 
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
@@ -2207,7 +2223,7 @@
 <details><summary><code>deduplicate_ggchord_ribbons()</code></summary>
 
 
-[完整参考](reference/deduplicate_ggchord_ribbons.html)
+[完整参考](../../man/deduplicate_ggchord_ribbons.Rd)
 
 
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
@@ -2224,7 +2240,7 @@
 <details><summary><code>diagnose_ggchord()</code></summary>
 
 
-[完整参考](reference/diagnose_ggchord.html)
+[完整参考](../../man/diagnose_ggchord.Rd)
 
 
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
@@ -2245,7 +2261,7 @@
 <details><summary><code>export_ggchord_fusion()</code></summary>
 
 
-[完整参考](reference/export_ggchord_fusion.html)
+[完整参考](../../man/export_ggchord_fusion.Rd)
 
 
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
@@ -2260,7 +2276,7 @@
 <details><summary><code>export_ggchord_layout()</code></summary>
 
 
-[完整参考](reference/export_ggchord_layout.html)
+[完整参考](../../man/export_ggchord_layout.Rd)
 
 
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
@@ -2275,7 +2291,7 @@
 <details><summary><code>filter_ggchord_ribbons()</code></summary>
 
 
-[完整参考](reference/filter_ggchord_ribbons.html)
+[完整参考](../../man/filter_ggchord_ribbons.Rd)
 
 
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
@@ -2299,7 +2315,7 @@
 <details><summary><code>filter_restriction_sites()</code></summary>
 
 
-[完整参考](reference/filter_restriction_sites.html)
+[完整参考](../../man/filter_restriction_sites.Rd)
 
 
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
@@ -2319,7 +2335,7 @@
 <details><summary><code>find_common_features()</code></summary>
 
 
-[完整参考](reference/find_common_features.html)
+[完整参考](../../man/find_common_features.Rd)
 
 
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
@@ -2340,7 +2356,7 @@
 <details><summary><code>find_ggchord_loci()</code></summary>
 
 
-[完整参考](reference/find_ggchord_loci.html)
+[完整参考](../../man/find_ggchord_loci.Rd)
 
 
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
@@ -2357,7 +2373,7 @@
 <details><summary><code>find_primer_bindings()</code></summary>
 
 
-[完整参考](reference/find_primer_bindings.html)
+[完整参考](../../man/find_primer_bindings.Rd)
 
 
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
@@ -2376,7 +2392,7 @@
 <details><summary><code>find_restriction_sites()</code></summary>
 
 
-[完整参考](reference/find_restriction_sites.html)
+[完整参考](../../man/find_restriction_sites.Rd)
 
 
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
@@ -2394,7 +2410,7 @@
 <details><summary><code>focus_ggchord_data()</code></summary>
 
 
-[完整参考](reference/focus_ggchord_data.html)
+[完整参考](../../man/focus_ggchord_data.Rd)
 
 
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
@@ -2413,7 +2429,7 @@
 <details><summary><code>focus_ggchord_track()</code></summary>
 
 
-[完整参考](reference/focus_ggchord_track.html)
+[完整参考](../../man/focus_ggchord_track.Rd)
 
 
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
@@ -2430,7 +2446,7 @@
 <details><summary><code>fusion_panel()</code></summary>
 
 
-[完整参考](reference/fusion_panel.html)
+[完整参考](../../man/fusion_panel.Rd)
 
 
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
@@ -2449,7 +2465,7 @@
 <details><summary><code>fusion_ribbon()</code></summary>
 
 
-[完整参考](reference/fusion_ribbon.html)
+[完整参考](../../man/fusion_ribbon.Rd)
 
 
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
@@ -2477,7 +2493,7 @@
 <details><summary><code>get_chord_layout()</code></summary>
 
 
-[完整参考](reference/get_chord_layout.html)
+[完整参考](../../man/get_chord_layout.Rd)
 
 
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
@@ -2491,7 +2507,7 @@
 <details><summary><code>ggchord()</code></summary>
 
 
-[完整参考](reference/ggchord.html)
+[完整参考](../../man/ggchord.Rd)
 
 
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
@@ -2510,7 +2526,7 @@
 <details><summary><code>ggchord_fusion()</code></summary>
 
 
-[完整参考](reference/ggchord_fusion.html)
+[完整参考](../../man/ggchord_fusion.Rd)
 
 
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
@@ -2528,7 +2544,7 @@
 <details><summary><code>link_ggchord_clusters()</code></summary>
 
 
-[完整参考](reference/link_ggchord_clusters.html)
+[完整参考](../../man/link_ggchord_clusters.Rd)
 
 
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
@@ -2546,7 +2562,7 @@
 <details><summary><code>magnify_ggchord()</code></summary>
 
 
-[完整参考](reference/magnify_ggchord.html)
+[完整参考](../../man/magnify_ggchord.Rd)
 
 
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
@@ -2575,7 +2591,7 @@
 <details><summary><code>map_alignment_position()</code></summary>
 
 
-[完整参考](reference/map_alignment_position.html)
+[完整参考](../../man/map_alignment_position.Rd)
 
 
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
@@ -2591,7 +2607,7 @@
 <details><summary><code>map_ggchord_position()</code></summary>
 
 
-[完整参考](reference/map_ggchord_position.html)
+[完整参考](../../man/map_ggchord_position.Rd)
 
 
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
@@ -2609,7 +2625,7 @@
 <details><summary><code>merge_ggchord_ribbons()</code></summary>
 
 
-[完整参考](reference/merge_ggchord_ribbons.html)
+[完整参考](../../man/merge_ggchord_ribbons.Rd)
 
 
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
@@ -2627,7 +2643,7 @@
 <details><summary><code>optimize_ggchord_layout()</code></summary>
 
 
-[完整参考](reference/optimize_ggchord_layout.html)
+[完整参考](../../man/optimize_ggchord_layout.Rd)
 
 
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
@@ -2646,7 +2662,7 @@
 <details><summary><code>prepare_ggchord_data()</code></summary>
 
 
-[完整参考](reference/prepare_ggchord_data.html)
+[完整参考](../../man/prepare_ggchord_data.Rd)
 
 
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
@@ -2666,7 +2682,7 @@
 <details><summary><code>primer_catalog()</code></summary>
 
 
-[完整参考](reference/primer_catalog.html)
+[完整参考](../../man/primer_catalog.Rd)
 
 
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
@@ -2680,7 +2696,7 @@
 <details><summary><code>project_ggchord_features()</code></summary>
 
 
-[完整参考](reference/project_ggchord_features.html)
+[完整参考](../../man/project_ggchord_features.Rd)
 
 
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
@@ -2696,7 +2712,7 @@
 <details><summary><code>project_ggchord_links()</code></summary>
 
 
-[完整参考](reference/project_ggchord_links.html)
+[完整参考](../../man/project_ggchord_links.Rd)
 
 
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
@@ -2711,7 +2727,7 @@
 <details><summary><code>read_aligned_fasta()</code></summary>
 
 
-[完整参考](reference/read_aligned_fasta.html)
+[完整参考](../../man/read_aligned_fasta.Rd)
 
 
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
@@ -2728,7 +2744,7 @@
 <details><summary><code>read_bed()</code></summary>
 
 
-[完整参考](reference/read_bed.html)
+[完整参考](../../man/read_bed.Rd)
 
 
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
@@ -2743,7 +2759,7 @@
 <details><summary><code>read_bedgraph()</code></summary>
 
 
-[完整参考](reference/read_bedgraph.html)
+[完整参考](../../man/read_bedgraph.Rd)
 
 
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
@@ -2758,7 +2774,7 @@
 <details><summary><code>read_bedpe()</code></summary>
 
 
-[完整参考](reference/read_bedpe.html)
+[完整参考](../../man/read_bedpe.Rd)
 
 
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
@@ -2774,7 +2790,7 @@
 <details><summary><code>read_bigwig()</code></summary>
 
 
-[完整参考](reference/read_bigwig.html)
+[完整参考](../../man/read_bigwig.Rd)
 
 
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
@@ -2790,7 +2806,7 @@
 <details><summary><code>read_blast()</code></summary>
 
 
-[完整参考](reference/read_blast.html)
+[完整参考](../../man/read_blast.Rd)
 
 
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
@@ -2809,7 +2825,7 @@
 <details><summary><code>read_chain()</code></summary>
 
 
-[完整参考](reference/read_chain.html)
+[完整参考](../../man/read_chain.Rd)
 
 
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
@@ -2828,7 +2844,7 @@
 <details><summary><code>read_delta()</code></summary>
 
 
-[完整参考](reference/read_delta.html)
+[完整参考](../../man/read_delta.Rd)
 
 
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
@@ -2846,7 +2862,7 @@
 <details><summary><code>read_fasta_lengths()</code></summary>
 
 
-[完整参考](reference/read_fasta_lengths.html)
+[完整参考](../../man/read_fasta_lengths.Rd)
 
 
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
@@ -2864,7 +2880,7 @@
 <details><summary><code>read_feature_relations()</code></summary>
 
 
-[完整参考](reference/read_feature_relations.html)
+[完整参考](../../man/read_feature_relations.Rd)
 
 
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
@@ -2882,7 +2898,7 @@
 <details><summary><code>read_genbank()</code></summary>
 
 
-[完整参考](reference/read_genbank.html)
+[完整参考](../../man/read_genbank.Rd)
 
 
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
@@ -2901,7 +2917,7 @@
 <details><summary><code>read_gff3()</code></summary>
 
 
-[完整参考](reference/read_gff3.html)
+[完整参考](../../man/read_gff3.Rd)
 
 
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
@@ -2919,7 +2935,7 @@
 <details><summary><code>read_maf()</code></summary>
 
 
-[完整参考](reference/read_maf.html)
+[完整参考](../../man/read_maf.Rd)
 
 
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
@@ -2936,7 +2952,7 @@
 <details><summary><code>read_paf()</code></summary>
 
 
-[完整参考](reference/read_paf.html)
+[完整参考](../../man/read_paf.Rd)
 
 
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
@@ -2951,7 +2967,7 @@
 <details><summary><code>read_signature_matches()</code></summary>
 
 
-[完整参考](reference/read_signature_matches.html)
+[完整参考](../../man/read_signature_matches.Rd)
 
 
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
@@ -2967,7 +2983,7 @@
 <details><summary><code>read_vcf()</code></summary>
 
 
-[完整参考](reference/read_vcf.html)
+[完整参考](../../man/read_vcf.Rd)
 
 
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
@@ -2984,7 +3000,7 @@
 <details><summary><code>register_ggchord_alignment()</code></summary>
 
 
-[完整参考](reference/register_ggchord_alignment.html)
+[完整参考](../../man/register_ggchord_alignment.Rd)
 
 
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
@@ -2998,7 +3014,7 @@
 <details><summary><code>segment_ggchord_data()</code></summary>
 
 
-[完整参考](reference/segment_ggchord_data.html)
+[完整参考](../../man/segment_ggchord_data.Rd)
 
 
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
@@ -3018,7 +3034,7 @@
 <details><summary><code>translate_ggchord_cds()</code></summary>
 
 
-[完整参考](reference/translate_ggchord_cds.html)
+[完整参考](../../man/translate_ggchord_cds.Rd)
 
 
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
@@ -3035,7 +3051,7 @@
 <details><summary><code>validate_ggchord_data()</code></summary>
 
 
-[完整参考](reference/validate_ggchord_data.html)
+[完整参考](../../man/validate_ggchord_data.Rd)
 
 
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
@@ -3055,7 +3071,7 @@
 <details><summary><code>validate_ggchord_hierarchy()</code></summary>
 
 
-[完整参考](reference/validate_ggchord_hierarchy.html)
+[完整参考](../../man/validate_ggchord_hierarchy.Rd)
 
 
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
@@ -3070,7 +3086,7 @@
 <details><summary><code>view_ggchord()</code></summary>
 
 
-[完整参考](reference/view_ggchord.html)
+[完整参考](../../man/view_ggchord.Rd)
 
 
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
@@ -3087,6 +3103,8 @@
 </details>
 
 
+<a id="upstream"></a>
+
 ## 上游重导出与对象 {#upstream}
 
 这些入口保留上游 ggplot2/grid 语义；它们不是新增的 ggchord 图层。after_stat/after_scale 的阶段不同，不能由 identical 结果推断可互换。
@@ -3094,7 +3112,7 @@
 <span id="api-aes"></span>
 <details><summary><code>aes</code> · ggplot2</summary>
 
-上游入口参考: [Rd](reference/ggplot2-helpers.html)
+上游入口参考: [Rd](../../man/ggplot2-helpers.Rd)
 
 | 参数 | 签名默认 | 类型/约束 |
 | --- | --- | --- |
@@ -3107,7 +3125,7 @@
 <span id="api-after_scale"></span>
 <details><summary><code>after_scale</code> · ggplot2</summary>
 
-上游入口参考: [Rd](reference/ggplot2-helpers.html)
+上游入口参考: [Rd](../../man/ggplot2-helpers.Rd)
 
 | 参数 | 签名默认 | 类型/约束 |
 | --- | --- | --- |
@@ -3118,7 +3136,7 @@
 <span id="api-after_stat"></span>
 <details><summary><code>after_stat</code> · ggplot2</summary>
 
-上游入口参考: [Rd](reference/ggplot2-helpers.html)
+上游入口参考: [Rd](../../man/ggplot2-helpers.Rd)
 
 | 参数 | 签名默认 | 类型/约束 |
 | --- | --- | --- |
@@ -3129,7 +3147,7 @@
 <span id="api-annotate"></span>
 <details><summary><code>annotate</code> · ggplot2</summary>
 
-上游入口参考: [Rd](reference/ggplot2-helpers.html)
+上游入口参考: [Rd](../../man/ggplot2-helpers.Rd)
 
 | 参数 | 签名默认 | 类型/约束 |
 | --- | --- | --- |
@@ -3150,7 +3168,7 @@
 <span id="api-arrow"></span>
 <details><summary><code>arrow</code> · grid</summary>
 
-上游入口参考: [Rd](reference/grid-helpers.html)
+上游入口参考: [Rd](../../man/grid-helpers.Rd)
 
 | 参数 | 签名默认 | 类型/约束 |
 | --- | --- | --- |
@@ -3164,7 +3182,7 @@
 <span id="api-element_blank"></span>
 <details><summary><code>element_blank</code> · ggplot2</summary>
 
-上游入口参考: [Rd](reference/ggplot2-helpers.html)
+上游入口参考: [Rd](../../man/ggplot2-helpers.Rd)
 
 | 参数 | 签名默认 | 类型/约束 |
 | --- | --- | --- |
@@ -3174,7 +3192,7 @@
 <span id="api-element_line"></span>
 <details><summary><code>element_line</code> · ggplot2</summary>
 
-上游入口参考: [Rd](reference/ggplot2-helpers.html)
+上游入口参考: [Rd](../../man/ggplot2-helpers.Rd)
 
 | 参数 | 签名默认 | 类型/约束 |
 | --- | --- | --- |
@@ -3195,7 +3213,7 @@
 <span id="api-element_rect"></span>
 <details><summary><code>element_rect</code> · ggplot2</summary>
 
-上游入口参考: [Rd](reference/ggplot2-helpers.html)
+上游入口参考: [Rd](../../man/ggplot2-helpers.Rd)
 
 | 参数 | 签名默认 | 类型/约束 |
 | --- | --- | --- |
@@ -3214,7 +3232,7 @@
 <span id="api-element_text"></span>
 <details><summary><code>element_text</code> · ggplot2</summary>
 
-上游入口参考: [Rd](reference/ggplot2-helpers.html)
+上游入口参考: [Rd](../../man/ggplot2-helpers.Rd)
 
 | 参数 | 签名默认 | 类型/约束 |
 | --- | --- | --- |
@@ -3237,7 +3255,7 @@
 <span id="api-expansion"></span>
 <details><summary><code>expansion</code> · ggplot2</summary>
 
-上游入口参考: [Rd](reference/ggplot2-helpers.html)
+上游入口参考: [Rd](../../man/ggplot2-helpers.Rd)
 
 | 参数 | 签名默认 | 类型/约束 |
 | --- | --- | --- |
@@ -3249,7 +3267,7 @@
 <span id="api-ggsave"></span>
 <details><summary><code>ggsave</code> · ggplot2</summary>
 
-上游入口参考: [Rd](reference/ggplot2-helpers.html)
+上游入口参考: [Rd](../../man/ggplot2-helpers.Rd)
 
 | 参数 | 签名默认 | 类型/约束 |
 | --- | --- | --- |
@@ -3272,7 +3290,7 @@
 <span id="api-ggtitle"></span>
 <details><summary><code>ggtitle</code> · ggplot2</summary>
 
-上游入口参考: [Rd](reference/ggplot2-helpers.html)
+上游入口参考: [Rd](../../man/ggplot2-helpers.Rd)
 
 | 参数 | 签名默认 | 类型/约束 |
 | --- | --- | --- |
@@ -3284,7 +3302,7 @@
 <span id="api-guides"></span>
 <details><summary><code>guides</code> · ggplot2</summary>
 
-上游入口参考: [Rd](reference/ggplot2-helpers.html)
+上游入口参考: [Rd](../../man/ggplot2-helpers.Rd)
 
 | 参数 | 签名默认 | 类型/约束 |
 | --- | --- | --- |
@@ -3295,7 +3313,7 @@
 <span id="api-labs"></span>
 <details><summary><code>labs</code> · ggplot2</summary>
 
-上游入口参考: [Rd](reference/ggplot2-helpers.html)
+上游入口参考: [Rd](../../man/ggplot2-helpers.Rd)
 
 | 参数 | 签名默认 | 类型/约束 |
 | --- | --- | --- |
@@ -3313,7 +3331,7 @@
 <span id="api-last_plot"></span>
 <details><summary><code>last_plot</code> · ggplot2</summary>
 
-上游入口参考: [Rd](reference/ggplot2-helpers.html)
+上游入口参考: [Rd](../../man/ggplot2-helpers.Rd)
 
 | 参数 | 签名默认 | 类型/约束 |
 | --- | --- | --- |
@@ -3323,7 +3341,7 @@
 <span id="api-margin"></span>
 <details><summary><code>margin</code> · ggplot2</summary>
 
-上游入口参考: [Rd](reference/ggplot2-helpers.html)
+上游入口参考: [Rd](../../man/ggplot2-helpers.Rd)
 
 | 参数 | 签名默认 | 类型/约束 |
 | --- | --- | --- |
@@ -3339,7 +3357,7 @@
 <span id="api-position_identity"></span>
 <details><summary><code>position_identity</code> · ggplot2</summary>
 
-上游入口参考: [Rd](reference/ggplot2-helpers.html)
+上游入口参考: [Rd](../../man/ggplot2-helpers.Rd)
 
 | 参数 | 签名默认 | 类型/约束 |
 | --- | --- | --- |
@@ -3349,7 +3367,7 @@
 <span id="api-PositionIdentity"></span>
 <details><summary><code>PositionIdentity</code> · object</summary>
 
-上游入口参考: [Rd](reference/ggplot2-helpers.html)
+上游入口参考: [Rd](../../man/ggplot2-helpers.Rd)
 
 | 参数 | 签名默认 | 类型/约束 |
 | --- | --- | --- |
@@ -3359,7 +3377,7 @@
 <span id="api-rel"></span>
 <details><summary><code>rel</code> · ggplot2</summary>
 
-上游入口参考: [Rd](reference/ggplot2-helpers.html)
+上游入口参考: [Rd](../../man/ggplot2-helpers.Rd)
 
 | 参数 | 签名默认 | 类型/约束 |
 | --- | --- | --- |
@@ -3370,7 +3388,7 @@
 <span id="api-theme"></span>
 <details><summary><code>theme</code> · ggplot2</summary>
 
-上游入口参考: [Rd](reference/ggplot2-helpers.html)
+上游入口参考: [Rd](../../man/ggplot2-helpers.Rd)
 
 | 参数 | 签名默认 | 类型/约束 |
 | --- | --- | --- |
@@ -3527,7 +3545,7 @@
 <span id="api-unit"></span>
 <details><summary><code>unit</code> · grid</summary>
 
-上游入口参考: [Rd](reference/grid-helpers.html)
+上游入口参考: [Rd](../../man/grid-helpers.Rd)
 
 | 参数 | 签名默认 | 类型/约束 |
 | --- | --- | --- |
@@ -3540,7 +3558,7 @@
 <span id="api-waiver"></span>
 <details><summary><code>waiver</code> · ggplot2</summary>
 
-上游入口参考: [Rd](reference/ggplot2-helpers.html)
+上游入口参考: [Rd](../../man/ggplot2-helpers.Rd)
 
 | 参数 | 签名默认 | 类型/约束 |
 | --- | --- | --- |

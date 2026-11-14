@@ -71,7 +71,7 @@ geom_gene(
 ## Value
 
 A list of ggplot2 layers. To annotate the genes with their labels, add a
-[`geom_gene_label()`](https://dangjem.github.io/ggchord/reference/geom_gene_label.md)
+[`geom_gene_label()`](geom_gene_label.md)
 layer.
 
 ## Examples

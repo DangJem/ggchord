@@ -1,5 +1,14 @@
 # ggchord 0.27.1
 
+- Post-release documentation: website Markdown links resolve to tracked repository
+  files and explicit source anchors; the site builder translates them to published
+  page and asset URLs. Both language editions remain synchronized. Release notes
+  include cumulative changes directly, without a link to a missing historical file.
+- Repository-wide link repair also supplies missing vignette images and source
+  scripts, pins archived source links to their historical commits, and replaces
+  unavailable local-only comparison images with explicit availability notices.
+  Documentation checks cover tracked Markdown, HTML, Rd and Rmd targets/anchors;
+  external HTTP failures and access restrictions are reviewed separately.
 - Radial ribbons now use solid outlines between cyclic neighbours and dashed
   outlines between non-neighbours; the first and last spokes are neighbours.
   Explicit fixed/mapped line types and user scales retain priority. Radial

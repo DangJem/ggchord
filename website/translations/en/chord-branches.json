@@ -1,13 +1,13 @@
 {
-  "source_sha256": "86b300eb05f599d1d411e71e38da82675ee8303408b258892cf512bfe761174b",
+  "source_sha256": "44952639d1b15144a8ad83c256488ce64867d8d55442da73758e5ac22eba65b6",
   "blocks": {
-    "0": {
+    "1": {
       "source_sha256": "65558b765341744300f6b1268eea89e49563657e225330407740cb387a66bc22",
       "status": "reviewed",
       "translation": "## Section moved ⟦shared:0⟧\n"
     },
-    "1": {
-      "source_sha256": "826602a063a0f64085f38fd6465f614153481c2a7bd70783c645c50338acba2c",
+    "2": {
+      "source_sha256": "66e10ef60054eb19350b044bf4dde9a567fda9289bd48b789c2b62732cffaa41",
       "status": "reviewed",
       "translation": "[Intervals, points and cross-row links](⟦shared:0⟧)\n"
     }

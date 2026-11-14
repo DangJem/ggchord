@@ -1,3 +1,5 @@
+<a id="moved"></a>
+
 ## 统计课已合并 {#moved}
 
-[Statistics](ribbons.html#statistics)
+[Statistics](ribbons.md#statistics)

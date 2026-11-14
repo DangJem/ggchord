@@ -2,7 +2,9 @@
 
 {{prepare:setup}}
 
-Extract the [input bundle](../assets/tutorial-inputs.zip) so the working directory contains examples/. Each section names its optional dependencies.
+Extract the [input bundle](https://github.com/DangJem/ggchord/archive/refs/heads/main.zip) so the working directory contains examples/. Each section names its optional dependencies.
+
+<a id="signals"></a>
 
 ## Continuous signals: bedGraph and BigWig {#signals}
 
@@ -13,6 +15,8 @@ This installed-package example contains actual GC percentages computed from the 
 bedGraph uses four tab-separated columns, zero-based half-open coordinates and finite signed values. Import converts coordinates once; original endpoints, values, physical lines and opaque display headers remain traceable. One file represents one signal; split multiple track definitions. Literal sequence IDs `track` and `browser` are valid. Headers never set plot styles. Overlaps remain rows, without an implicit last-wins rule.
 
 Rectangles use `start - 1` and `end` as cell boundaries; no line is interpolated across absent ranges. BigWig requires optional **rtracklayer**, whose decoder does not support Windows. Use an existing bedGraph file there. Binary GRanges coordinates are already one-based inclusive. Imported runs retain binary floating-point precision; run counts are not original measurement counts. Full lengths come from the file header. Query windows form an unstranded union, results are clipped to it, and empty selection returns zero rows. Missing intervals stay absent, distinct from a stored zero; no coverage, identity, support, units or pre-clipping observation IDs are invented. Each Track's mapping, value range, units and Guide remain explicit.
+
+<a id="aligned-reads"></a>
 
 ## Aligned reads: an optional coverage bridge {#aligned-reads}
 

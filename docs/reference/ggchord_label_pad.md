@@ -2,7 +2,7 @@
 
 Kept for backwards compatibility. Plot limits are now computed
 adaptively by
-[`ggchord_adaptive_limits()`](https://dangjem.github.io/ggchord/reference/ggchord_adaptive_limits.md),
+[`ggchord_adaptive_limits()`](ggchord_adaptive_limits.md),
 which fits the actual text boxes rather than adding a single
 conservative margin on every side.
 

@@ -1,5 +1,7 @@
 Compare four complete proteins with two bundled tables, without downloading inputs or running BLASTp. Both backbones and alignment endpoints use amino-acid coordinates (aa).
 
+<a id="protein"></a>
+
 ## Plot BLASTp protein alignments directly {#protein}
 
 `protein_seq_data_example` contains three EMALE proteins and one Mavirus protein. Inspect identifiers, full lengths and units:
@@ -28,9 +30,11 @@ Pairwise identity ranges from about 35.7% to 99.0%. The plot uses the default Id
 
 Use generic layers such as `geom_feature()` for annotations at amino-acid positions, declaring `directionality = "none"` for nondirectional intervals. One plot uses either aa or bp. The endpoints of `blastx` and `tblastn` have different units and require conversion to one coordinate domain or separate displays. Gene arrows, primers and restriction sites require nucleotide input. A circular protein layout describes a visual arrangement.
 
+<a id="projection"></a>
+
 ## Place protein hits on a nucleotide genome {#projection}
 
-To locate hits on a nucleotide backbone, supply known CDS mappings and project aa intervals to bp. This separate example uses a source HSP for BVI_023A_0009 with a complete CDS, then projects its query end. This subsection reads original files from the [manual input bundle](formats.html).
+To locate hits on a nucleotide backbone, supply known CDS mappings and project aa intervals to bp. This separate example uses a source HSP for BVI_023A_0009 with a complete CDS, then projects its query end. This subsection reads original files from the [manual input bundle](formats.md).
 
 ```r
 library(dplyr)
@@ -42,13 +46,17 @@ library(dplyr)
 {{output:proteinproject}}
 {{results:protein}}
 
-Residues 50–289 project to 7,181–7,900 bp on BVI_023A, on the reverse strand. A single-end projection can retain the span of a gapped HSP. Connecting two genomes also requires the subject CDS model. See [CDS projection](projection.html) for a supported ungapped two-ended example.
+Residues 50–289 project to 7,181–7,900 bp on BVI_023A, on the reverse strand. A single-end projection can retain the span of a gapped HSP. Connecting two genomes also requires the subject CDS model. See [CDS projection](projection.md) for a supported ungapped two-ended example.
+
+<a id="source"></a>
 
 ## Data source {#source}
 
 The bundled identifiers are BVI_029_0020, BVI_058_0011, E4-10_023_0015 and ADZ16414.1. Complete FASTA records come from public EMALE/Mavirus data. NCBI BLASTp 2.17.0+ computed all comparisons, retaining one HSP per pair. The raw output retains self hits and both directions, for 16 rows. The example table retains one direction per unordered pair in sequence-table order, without changing endpoints or identity.
 
 The input bundle's `examples/protein/` directory retains complete FASTA records, raw BLASTp output and `sources.json` hashes. Rebuild rules are in `data-raw/prepare-bundled-proteins.py` and `data-raw/generate_protein_data.R`. Plotting uses bundled objects and does not require BLASTp.
+
+<a id="check-result"></a>
 
 ## Result checks {#check-result}
 

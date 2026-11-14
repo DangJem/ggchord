@@ -1,13 +1,13 @@
 {
-  "source_sha256": "19ade22378fb98e8cecb41a0d71d5c7a60331e4bf46fcb025ceca53514c55fec",
+  "source_sha256": "086763945fd669ab663ad2ff4c2bd5747958fc8227fa400405f0421f4e0fbba4",
   "blocks": {
-    "0": {
+    "1": {
       "source_sha256": "65558b765341744300f6b1268eea89e49563657e225330407740cb387a66bc22",
       "status": "reviewed",
       "translation": "## Section moved ⟦shared:0⟧\n"
     },
-    "1": {
-      "source_sha256": "99838d18c6eae60ce23867dfd451900d5a5dd738f8a87b085d35eef9500b4aaa",
+    "2": {
+      "source_sha256": "add1be6cd109519925b76077565dee8ad44301848ba1dd725b6a232aff7be495",
       "status": "reviewed",
       "translation": "[Mappings, scales, guides and themes](⟦shared:0⟧)\n"
     }

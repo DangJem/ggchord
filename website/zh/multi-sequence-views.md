@@ -1,3 +1,5 @@
+<a id="input"></a>
+
 ## 一次准备 {#input}
 
 相同来源输入不代表默认展示完全相同的关系。本例先明确全对选择再比较几何；随后核对各视图默认筛选。依赖：ggchord、dplyr。
@@ -6,21 +8,31 @@
 
 {{code:coursecomparison}}
 
+<a id="chord"></a>
+
 ### Chord {#chord}
 
-![chord：同源数据全对关系](../assets/coursechord.png)
+![chord：同源数据全对关系](../../man/figures/coursechord.png)
+
+<a id="linear"></a>
 
 ### Linear {#linear}
 
-![linear：同源数据全对关系](../assets/courselinear.png)
+![linear：同源数据全对关系](../../man/figures/courselinear.png)
+
+<a id="radial"></a>
 
 ### Radial {#radial}
 
-![radial：同源数据全对关系](../assets/courseradial.png)
+![radial：同源数据全对关系](../../man/figures/courseradial.png)
+
+<a id="sankey"></a>
 
 ### Sankey {#sankey}
 
-![sankey：同源数据全对关系](../assets/coursesankey.png)
+![sankey：同源数据全对关系](../../man/figures/coursesankey.png)
+
+<a id="selection"></a>
 
 ## 默认选择与可比条件 {#selection}
 
@@ -33,6 +45,8 @@
 
 {{code:coursecomparisonreport}}
 
+<a id="flagship"></a>
+
 ## 保留旗舰与派生视图 {#flagship}
 
 弦图和共线性图继续使用现有旗舰版本，保留构图、输入筛选、配色和图层设计；图像仅随本次已确认的默认线型缺陷修复而重绘。Radial 从现有弦图派生，Sankey 从现有共线性图派生。两套既有旗舰共用来源准备，但各自保留原有特征与跨行 HSP 的显示选择，因此不把四图说成完全相同的显示子集。
@@ -43,13 +57,19 @@ Radial 移除 Chord 专属的半径和曲率；Sankey 使用各列原生坐标�
 
 {{code:flagshipmulti}}
 
+<a id="flagship-chord"></a>
+
 ### Chord {#flagship-chord}
 
 {{manualfigure:flagchord}}
 
+<a id="flagship-collinear"></a>
+
 ### Collinear {#flagship-collinear}
 
 {{manualfigure:flaglinear}}
+
+<a id="flagship-radial"></a>
 
 ### Radial {#flagship-radial}
 
@@ -61,6 +81,8 @@ view_ggchord(flag_radial, width = 12, height = 10.5, units = "in")
 
 {{manualfigure:flagradial}}
 
+<a id="flagship-sankey"></a>
+
 ### Sankey {#flagship-sankey}
 
 四条序列在两列中纵向排列，使用 10 × 16 英寸纵向画布。16 条原 CDS 几何与名称候选、10 条已选择 HSP 均保留；左右副本分别标注，名称不再每序列只选一条。列外的短连接与局部避让保持文字靠近对应特征；完整刻度和三组图例保留。首页预览另省略密集名称和坐标文字。
@@ -71,9 +93,13 @@ view_ggchord(flag_sankey, width = 10, height = 16, units = "in")
 
 {{manualfigure:flagsankey}}
 
+<a id="direction-and-adjacency"></a>
+
 ## 方向、实例与显示比例 {#direction-and-adjacency}
 
 生物学链、HSP 端点方向、显示 orientation 和 seq_order 各有独立含义。Sankey 的左右副本不增加观测，区间宽度不是流量守恒。图层仅在共同支持范围内可复用。
+
+<a id="projection"></a>
 
 ## 显示长度与连接样式 {#projection}
 
@@ -94,6 +120,8 @@ view_ggchord(flag_sankey, width = 10, height = 16, units = "in")
 Ribbon 填充标度会覆盖显式启用的端点插值。显式 pident 使用固定 0–100 域，边界为
 0/50/80/90/95/100，五段数值比例为 50/30/10/5/5%。用户标度与 guide 优先。
 
+<a id="tip"></a>
+
 ### 可选 subject 收尖 {#tip}
 
 {{code:foundationarrow}}
@@ -103,9 +131,11 @@ Ribbon 填充标度会覆盖显式启用的端点插值。显式 pident 使用�
 自动离散图例测量文字后选择行列，渲染循环联合测量图例与 panel；显式 guide/theme
 设置优先。圆图外侧标签在所有数量下共享测量队列，`label_visibility` 报告源行、可见性
 及可用的放置字段。未测得碰撞数不等于零。过小画布仍可能拥挤，请按目标导出尺寸
-检查[输出诊断](output.html)。
+检查[输出诊断](output.md)。
 
 自动 Identity 标尺按边界文字的实际尺寸预留长度，不再把通用色块尺寸当成整条标尺长度。手动指定长度时，使用 `legend.ribbon.key.height`、`legend.ribbon.key.width` 或显式 guide。圆图 parallel 坐标轴文字逐字符沿圆弧排布；水平和数值角度仍保留直线文字。
+
+<a id="exercise"></a>
 
 ## 操作示例 {#exercise}
 

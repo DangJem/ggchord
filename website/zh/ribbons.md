@@ -2,6 +2,8 @@
 
 <span id="prepare"></span>
 
+<a id="input"></a>
+
 ## 从原始连接表开始 {#input}
 
 {{code:ribboninputs,ribbons}}
@@ -10,11 +12,15 @@
 
 前三列沿同一条处理路径统计。聚束从原始表开始，行数单独理解。
 
+<a id="transformations"></a>
+
 ## 理解每步转换 {#transformations}
 筛选保留满足已声明阈值的观测；互惠重叠去重选择已有代表观测，不累加相似度；
 合并把邻近兼容区间组合为显示外包范围；聚束按邻近 query/subject 位置形成汇总。
 逐步检查 `$report` 和源行成员，特别注意冲突的额外元数据。
 合并或聚束范围不是重新计算的核苷酸比对，估计长度保留标记，不凭空生成相似度。
+
+<a id="density"></a>
 
 ## 密度是显式统计 {#density}
 {{code:ribbondensity}}
@@ -23,16 +29,20 @@
 
 这里把两端各分成四个位置箱。共享同一序列对、方向和位置箱的观测越多，带越深。图例显示每箱观测数；`after_stat(bundle_n)` 取统计层算出的计数。几何仍是一行输入对应一条带。需要把邻近带合成一条时，用 `stat_ribbon_bundle()`。
 
-点与区间连接的几何选择见[连接课](multi-sequence-links.html#interval-points)。
+点与区间连接的几何选择见[连接课](multi-sequence-links.md#interval-points)。
+
+<a id="check-result"></a>
 
 ## 检查要点 {#check-result}
 先检查各步骤 report 和成员行，再读图。聚合带的范围不是新比对；点连接是已有 HSP 中点的摘要。
 
-<div class="next-step">继续：<a href="instances.html">重复显示与实例选择 →</a></div>
+<div class="next-step">继续：<a href="instances.md">重复显示与实例选择 →</a></div>
 
-需要明确理解 bundle_n、bundle_weight、density 与 bins/weight/group_by/min_bundle，继续[连接统计](ribbons.html#statistics)。
+需要明确理解 bundle_n、bundle_weight、density 与 bins/weight/group_by/min_bundle，继续[连接统计](ribbons.md#statistics)。
 
 密度着色与聚束不是同一个操作。先保留原始 HSP，再说明箱数、权重、分组与显示汇总的意义。
+
+<a id="statistics"></a>
 
 ## 真实输入与最小字段 {#statistics}
 
@@ -40,6 +50,8 @@
 
 {{code:comparedensitydata}}
 
+
+<a id="statistics-density"></a>
 
 ## 四箱与八箱：一行观测仍是一条带 {#statistics-density}
 
@@ -51,6 +63,8 @@
 {{figure:comparedensityeight}}
 
 
+<a id="statistics-bundle"></a>
+
 ## 聚束真正合并显示成员 {#statistics-bundle}
 
 stat_ribbon_bundle 在相同箱和分组内生成汇总带，min_bundle 至少为 2；较小的组仍保留为独立带，不能把全部输入行数直接当作聚束数。显示外包范围不等于重新计算的核苷酸比对，不制造新 identity。bundle_ggchord_ribbons 返回可保留的表和 report，适合先检查、再画图。
@@ -60,6 +74,8 @@ stat_ribbon_bundle 在相同箱和分组内生成汇总带，min_bundle 至少�
 {{code:comparebundlesummary}}
 {{output:comparebundlesummary}}
 
+
+<a id="statistics-parameters"></a>
 
 ## 统计变量、权重与筛选顺序 {#statistics-parameters}
 
@@ -77,6 +93,8 @@ stat_ribbon_bundle 在相同箱和分组内生成汇总带，min_bundle 至少�
 
 
 
+<a id="statistics-adapt"></a>
+
 ## 用自己的比对与操作示例 {#statistics-adapt}
 
-把 bins 改为 6，观察相同位置的颜色是否变化，再检查原始行是否都还保留。需要按实验或样本分开时，在源表保留真实条件列并传 group_by。连接统计用于弦图或共线性图；单序列圆图不支持连接层。继续[比对处理](ribbons.html)、[真实案例](real-data.html)和[标度家族](scale-families.html)。
+把 bins 改为 6，观察相同位置的颜色是否变化，再检查原始行是否都还保留。需要按实验或样本分开时，在源表保留真实条件列并传 group_by。连接统计用于弦图或共线性图；单序列圆图不支持连接层。继续[比对处理](ribbons.md)、[真实案例](real-data.md)和[标度家族](scale-families.md)。

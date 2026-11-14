@@ -1,3 +1,5 @@
+<a id="radial"></a>
+
 ## Proportional radial spokes {#radial}
 
 The bundled four-sequence data retain their original lengths and CDS strands.
@@ -30,14 +32,16 @@ spacing, not deleted sequence. Sequence names sit beyond the outer tips.
 
 {{code:courseradialangle}}
 
-![Change only the first-spoke angle](../assets/courseradialangle.png)
+![Change only the first-spoke angle](../../man/figures/courseradialangle.png)
 
 
 Ribbons can select nonneighbors with explicit `pairs` or
 `adjacent_only=FALSE`. Nonneighbor point links need `between`; named A–B–A
-instances use the same unambiguous [routing contract](instances.html#instances).
+instances use the same unambiguous [routing contract](instances.md#instances).
 User control points use final x/y coordinates. Endpoint gradients and subject
 tips remain explicit options; default ribbons retain Identity fills.
+
+<a id="export"></a>
 
 ## Export and reverse-map {#export}
 
@@ -50,9 +54,13 @@ x and y on the selected backbone. This avoids inventing a position from a
 single x value shared by multiple spokes. Focus/segment inputs retain source
 origins; radial display does not join multiple windows onto one spoke.
 
+<a id="support"></a>
+
 ## Usage and boundaries {#support}
 
 Change only start_angle and verify source coordinates and directions. N=1, shared branches, circular-only layers and stitching separate windows into one spoke are unsupported. Inverse mapping needs backbone x/y.
+
+<a id="nonadjacent"></a>
 
 ## Nonadjacent outlines and outward lift {#nonadjacent}
 

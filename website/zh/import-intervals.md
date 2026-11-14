@@ -2,7 +2,9 @@
 
 {{prepare:setup}}
 
-先解压[真实输入包](../assets/tutorial-inputs.zip)，工作目录须含 examples/；每节单列可选依赖。
+先解压[真实输入包](https://github.com/DangJem/ggchord/archive/refs/heads/main.zip)，工作目录须含 examples/；每节单列可选依赖。
+
+<a id="zero-based"></a>
 
 ## BED 和 PAF：坐标只转换一次 {#zero-based}
 BED 的起点从 0 开始，终点不包含在区间内。下例读入一条 pUC19 复制起点记录，比较读入前后的坐标。
@@ -20,6 +22,8 @@ PAF 提供两端全长和区间。先选出 mapq ≥ 30 的比对，再由两端
 
 反向比对用递减的 subject 端点表达。绘图使用读取器转换后的坐标。
 
+<a id="ranges"></a>
+
 ## 可选的区间对象 {#ranges}
 
 第一段把序列 a 上的 10–30 bp 转成特征表。第二段把 a 上的 10–30 bp 与 b 上的 40–60 bp 连成一条记录。GRanges 表示一个区间，GInteractions 表示一对区间。先安装 GenomicRanges 和 InteractionSet，完整序列长度由 seqlengths 提供。
@@ -31,6 +35,8 @@ PAF 提供两端全长和区间。先选出 mapq ≥ 30 的比对，再由两端
 {{code:frontimportgi}}
 
 {{output:frontimportgi}}
+
+<a id="bedpe"></a>
 
 ## BED双端区间 {#bedpe}
 

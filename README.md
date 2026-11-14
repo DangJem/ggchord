@@ -133,7 +133,7 @@ The following projects inform ggchord’s graphical grammar, sequence layouts an
 ### Local magnification, aligned characters and figure preview
 
 - [ggmagnify](https://github.com/hughjonesd/ggmagnify) — Provides a reference for connecting an overview to a magnified inset. ggchord develops this presentation idea around explicit source intervals and independently registered sequence views.
-- [ggmsa](https://bioconductor.org/packages/ggmsa/) · [ggseqalign](https://bioconductor.org/packages/ggseqalign/) — Inform design studies of DNA/protein alignment displays, character colouring and composition with ggplot2 graphics, especially the relationship between alignment columns, gaps and character-level detail.
+- [ggmsa](https://bioconductor.org/packages/ggmsa/) · [ggseqalign](https://www.bioconductor.org/packages/release/bioc/html/ggseqalign.html) — Inform design studies of DNA/protein alignment displays, character colouring and composition with ggplot2 graphics, especially the relationship between alignment columns, gaps and character-level detail.
 - [ggseqlogo](https://omarwagih.github.io/ggseqlogo/) · [Jalview](https://www.jalview.org/help/html/features/annotation.html) — Provide comparison references in character-view design studies: sequence-logo semantics, alignment-column annotations, consensus and conservation displays, and the relationship between per-column summaries and individual sequences.
 - [ggview](https://github.com/idmn/ggview) — Informs the workflow of previewing a static figure at its intended export size. ggchord uses view_ggchord() for sized preview and standard ggsave() for saving.
 

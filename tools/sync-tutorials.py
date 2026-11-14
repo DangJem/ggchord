@@ -39,7 +39,8 @@ knitr::opts_chunk$set(eval = FALSE, collapse = TRUE, comment = "#>")
 
     for p in CHAPTERS:
         body = expand((WEB/lang/(p['slug']+'.md')).read_text(), lang, figures='tutorial-assets')
-        body = re.sub(r'(?<=tutorial-assets/)([a-z]+)\.png', r'\1.jpg', body)
+        body = re.sub(r'(?<=tutorial-assets/)([a-z]+)\.png',
+            lambda m: m[1]+('.jpg' if (ROOT/'vignettes/tutorial-assets'/(m[1]+'.jpg')).is_file() else '.png'), body)
         # The website opens a separate full-size file. CRAN serves the vignette
         # HTML on its own, so retain only the image that Pandoc can embed.
         body = re.sub(r'<a class="figure-link"[^>]*>(<img [^>]*>)</a>', r'\1', body)
@@ -92,9 +93,21 @@ def main():
     args = parser.parse_args()
     import subprocess
     subprocess.run(["python3","tools/sync-website-languages.py","--check"],cwd=ROOT,check=True)
+    tutorials = {lang: tutorial(lang) for lang in ('en','zh')}
+    # Small existing JPEGs retain their bytes; other figures and complete R
+    # sources are copied from their canonical files, never assumed to exist.
+    assets = set(re.findall(r'tutorial-assets/([\w-]+\.(?:png|R))', '\n'.join(tutorials.values()))) - {'logo.png'}
+    for name in sorted(assets):
+        source = ROOT/('tools' if name.endswith('.R') else 'man/figures')/name
+        target = ROOT/'vignettes/tutorial-assets'/name
+        if args.check:
+            if not target.is_file() or target.read_bytes()!=source.read_bytes():
+                raise SystemExit('Missing/stale tutorial asset: '+str(target))
+        else:
+            target.write_bytes(source.read_bytes())
     for lang, name in [('en', 'ggchord_vignette.Rmd'), ('zh', 'ggchord_guide_hans.Rmd')]:
         path = ROOT/'vignettes'/name
-        content = tutorial(lang)
+        content = tutorials[lang]
         if args.check:
             if path.read_text() != content:
                 raise SystemExit(f'Out-of-date tutorial: {path}')

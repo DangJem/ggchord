@@ -130,7 +130,7 @@ view_ggchord(p_chord_ribbon, width = 7, height = 7, units = "in")
 ```
 
 
-<figure class="documentation-figure"><img src="tutorial-assets/frontribbon.jpg" alt="One alignment ribbon added" width="1008" height="1008" loading="lazy"><figcaption>One alignment ribbon added</figcaption></figure>
+<figure class="documentation-figure"><img src="tutorial-assets/frontribbon.png" alt="One alignment ribbon added" width="1008" height="1008" loading="lazy"><figcaption>One alignment ribbon added</figcaption></figure>
 
 Follow the ribbon to both ends. It spans 26,298–51,139 bp on `MT108731.1` and 7,121–31,959 bp on `MT118296.1`. Each end covers an interval, so this layer uses `geom_link_ribbon()`.
 
@@ -151,7 +151,7 @@ view_ggchord(p_chord_feature, width = 7, height = 7, units = "in")
 ```
 
 
-<figure class="documentation-figure"><img src="tutorial-assets/frontfeature.jpg" alt="One integrase CDS added to the green backbone" width="1008" height="1008" loading="lazy"><figcaption>One integrase CDS added to the green backbone</figcaption></figure>
+<figure class="documentation-figure"><img src="tutorial-assets/frontfeature.png" alt="One integrase CDS added to the green backbone" width="1008" height="1008" loading="lazy"><figcaption>One integrase CDS added to the green backbone</figcaption></figure>
 
 Find the red arrow on green `OQ646790.1`. It marks the plus-strand integrase CDS from 43,765 to 46,140 bp. The ribbon and this CDS use independent input tables.
 
@@ -167,7 +167,7 @@ view_ggchord(p_chord_gene_labels, width = 7, height = 7, units = "in")
 ```
 
 
-<figure class="documentation-figure"><img src="tutorial-assets/frontgenelabels.jpg" alt="Add the feature name while retaining backbones, ribbon and CDS" width="1008" height="1008" loading="lazy"><figcaption>Add the feature name while retaining backbones, ribbon and CDS</figcaption></figure>
+<figure class="documentation-figure"><img src="tutorial-assets/frontgenelabels.png" alt="Add the feature name while retaining backbones, ribbon and CDS" width="1008" height="1008" loading="lazy"><figcaption>Add the feature name while retaining backbones, ribbon and CDS</figcaption></figure>
 
 ### Switch to a linear layout {#multi-sequence-start-collinear}
 
@@ -287,7 +287,7 @@ view_ggchord(p_viewdotplot, width = 8, height = 7, units = "in")
 ```
 
 
-<figure class="documentation-figure"><img src="tutorial-assets/viewdotplot.jpg" alt="All 11 source-backed EMALE PAF HSPs in one-based native coordinates; reverse alignments retain their negative slope." width="1152" height="1008" loading="lazy"><figcaption>All 11 source-backed EMALE PAF HSPs in one-based native coordinates; reverse alignments retain their negative slope.</figcaption></figure>
+<figure class="documentation-figure"><img src="tutorial-assets/viewdotplot.png" alt="All 11 source-backed EMALE PAF HSPs in one-based native coordinates; reverse alignments retain their negative slope." width="1152" height="1008" loading="lazy"><figcaption>All 11 source-backed EMALE PAF HSPs in one-based native coordinates; reverse alignments retain their negative slope.</figcaption></figure>
 
 The legacy constructor may warn about descending endpoints in these valid reverse HSPs. Keep the normalized ordering; sorting each interval would erase the displayed inversion.
 
@@ -393,7 +393,7 @@ flag_dotplot <- ggchord(flagship_sequences, flagship_hsp) +
 ```
 
 
-<figure class="documentation-figure" data-figure="flagdotplot"><img src="tutorial-assets/flagdotplot.jpg" alt="Four-sequence HSP matrix" width="1872" height="1728" loading="lazy" decoding="async"><figcaption>Four-sequence HSP matrix · <a href="tutorial-assets/site-flagships.R">Complete R source</a></figcaption></figure>
+<figure class="documentation-figure" data-figure="flagdotplot"><img src="tutorial-assets/flagdotplot.png" alt="Four-sequence HSP matrix" width="1872" height="1728" loading="lazy" decoding="async"><figcaption>Four-sequence HSP matrix · <a href="tutorial-assets/site-flagships.R">Complete R source</a></figcaption></figure>
 
 ### Inspect source direction {#dotplot-start-direction}
 

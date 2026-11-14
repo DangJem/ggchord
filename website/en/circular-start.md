@@ -1,3 +1,5 @@
+<a id="input"></a>
+
 ## Length and a prepared annotation {#input}
 
 Only lengths and prepared tables are needed. The ori row is the verified pUC19 annotation 867–1455, matching the original inspectorigin output; no DNA recognition is run. Dependencies: ggchord and dplyr.
@@ -8,15 +10,19 @@ library(ggchord)
 
 {{code:coursecircleinput}}
 
-![Circular backbone](../assets/coursecircle.png)
+![Circular backbone](../../man/figures/coursecircle.png)
+
+<a id="features-and-labels"></a>
 
 ## Add the feature and its label {#features-and-labels}
 
 {{code:coursecirclefeature}}
 
-![Circular feature and label](../assets/coursecirclefeature.png)
+![Circular feature and label](../../man/figures/coursecirclefeature.png)
 
 Locate both ori endpoints on the ticks and trace the label to anno. A circular display is not evidence of molecular topology.
+
+<a id="exercise"></a>
 
 ## Preview and save {#exercise}
 

@@ -2,7 +2,9 @@
 
 {{prepare:setup}}
 
-Extract the [input bundle](../assets/tutorial-inputs.zip) so the working directory contains examples/. Each section names its optional dependencies.
+Extract the [input bundle](https://github.com/DangJem/ggchord/archive/refs/heads/main.zip) so the working directory contains examples/. Each section names its optional dependencies.
+
+<a id="zero-based"></a>
 
 ## BED and PAF: convert coordinates once {#zero-based}
 BED starts at zero and excludes the right endpoint. Read the pUC19 origin interval and compare the coordinates before and after import.
@@ -20,6 +22,8 @@ PAF gives the full sequence lengths and alignment spans. Select alignments with 
 
 A reverse alignment has descending subject coordinates. Use the converted coordinates directly for plotting.
 
+<a id="ranges"></a>
+
 ## Optional interval objects {#ranges}
 
 Convert one interval and then an interval pair. Full lengths come from `seqlengths`. Install GenomicRanges for the first example and InteractionSet for the second.
@@ -31,6 +35,8 @@ Convert one interval and then an interval pair. Full lengths come from `seqlengt
 {{code:frontimportgi}}
 
 {{output:frontimportgi}}
+
+<a id="bedpe"></a>
 
 ## Paired BED intervals {#bedpe}
 

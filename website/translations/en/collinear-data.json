@@ -1,13 +1,13 @@
 {
-  "source_sha256": "396d4af2594de8452027520b1e26b03576fc2bd7833d8237713e1f72719d0359",
+  "source_sha256": "4f1ba3d475c7cc8c5c70dffe2aa457b59c15b1b52642c73e0e459bdf9647df81",
   "blocks": {
-    "0": {
+    "1": {
       "source_sha256": "2736b28cdadea5df6f3e3ae600d75191592801183d436bb767d65b8f7e9bcc4b",
       "status": "reviewed",
       "translation": "## This section has moved ⟦shared:0⟧\n"
     },
-    "1": {
-      "source_sha256": "b352dbdf54b71e8801a71f51f772c4903ae8e91c41ef5fdb47799968a13cacdb",
+    "2": {
+      "source_sha256": "607b8b7cfa6195a97be3577ac34147d6104d65a99b54684be63196d5278566dc",
       "status": "reviewed",
       "translation": "[Choose four views with the same data](⟦shared:0⟧)\n"
     }

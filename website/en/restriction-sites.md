@@ -1,5 +1,7 @@
 Searching cuts and choosing a display subset are separate steps. Compare leaders, text content, order and side on the same three pUC19 hits, without editing DNA or cut coordinates.
 
+<a id="input"></a>
+
 ## Retain cut coordinates and search assumptions {#input}
 
 Run independently with explicit EcoRI, BamHI and HindIII and methylation="none". This is a search assumption, not a measurement of sample methylation. enzyme_site_count refers to the complete input sequence and survives display filtering.
@@ -9,6 +11,8 @@ Run independently with explicit EcoRI, BamHI and HindIII and methylation="none".
 {{code:comparefinishsiterows}}
 {{output:comparefinishsiterows}}
 
+
+<a id="restriction-labels"></a>
 
 ## Compare leaders at the same cut sites {#restriction-labels}
 
@@ -21,6 +25,8 @@ Default radial uses text bounds and circular order, with radial stubs and fan co
 {{code:comparerestrictionstraight}}
 {{figure:comparerestrictionstraight}}
 
+
+<a id="text-content"></a>
 
 ## Change content, order and side separately {#text-content}
 
@@ -35,6 +41,8 @@ Each figure returns to the radial baseline, changing only label_style, label_ord
 {{code:comparerestrictioninside}}
 {{figure:comparerestrictioninside}}
 
+
+<a id="parameters"></a>
 
 ## Key parameters and filtering meaning {#parameters}
 
@@ -54,6 +62,8 @@ find_restriction_sites returns matches and cuts; filter_restriction_sites select
 
 
 
+<a id="adapt"></a>
+
 ## Dense maps and usage limits {#adapt}
 
-Increase only min_label_gap and inspect outward label/leader movement; then restore defaults and set label=FALSE for ticks only. Retain full search results separately from the display subset. Increase export dimensions instead of deleting source observations to fit a small image. Recheck crowding after combining features and primers in [dense pETDuet-1](circular-dense-case.html#complex). Computed cuts do not validate a digestion experiment.
+Increase only min_label_gap and inspect outward label/leader movement; then restore defaults and set label=FALSE for ticks only. Retain full search results separately from the display subset. Increase export dimensions instead of deleting source observations to fit a small image. Recheck crowding after combining features and primers in [dense pETDuet-1](circular-dense-case.md#complex). Computed cuts do not validate a digestion experiment.

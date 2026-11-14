@@ -2,6 +2,8 @@
 
 {{prepare:fusiondata,fusionpanels,fusionlinear,fusionview}}
 
+<a id="styles"></a>
+
 ## Styles and physical layout {#styles}
 
 Cross-panel layers accept `aes(fill=..., colour=..., alpha=..., linewidth=..., linetype=...)` with ordinary ggplot2 scales. Panel role-specific scales remain
@@ -21,17 +23,21 @@ merged. Use `show.legend=FALSE` or local `theme()` deliberately where appropriat
 Composition `guides()` configures cross-panel Guides; `theme()` also styles the native outer plot furniture described below. Required
 guide space is measured; a canvas too small for it fails with a diagnostic.
 
+<a id="advanced-placement"></a>
+
 ## Eight directions and independent physical placement {#advanced-placement}
 
 `fusion_panel()` supports the four cardinal sides plus `topright`, `topleft`, `bottomright` and `bottomleft`. Default corner layouts reserve space for all eight; side names remain unique. For other arrangements use `angle`/`distance` or an explicit `box`. There is no fixed panel-count limit for explicit boxes/angles: every allocation must still fit. Placement changes the container, not the child's Coord or text orientation. Angles describe physical directions on rectangular exports; distance is a fraction of half the shorter allocation dimension, measured from the centre allocation.
 
 {{code:courseblockbn}}
 
-![Explicit layout in millimeters](../assets/coursephysicalbox.png)
+![Explicit layout in millimeters](../../man/figures/coursephysicalbox.png)
 
 A numeric box uses xmin, xmax, ymin, ymax fractions; an absolute-unit box keeps its physical dimensions. Coordinates refer to the composition content area after native outer plot decorations and cross-panel Guides. Do not combine box with side/size/angle/distance, or center_box with center_size. Physical allocations are checked at every target size; they are never silently clamped. Explicit `allow_overlap = TRUE` on `ggchord_fusion()` or `magnify_ggchord()` permits deliberate overlays. Later panels cover earlier panels, using vector grid clipping rather than PNG crops; translucent connections are not repainted twice in the same area. The export's `overlaps` table records covering order. This permits intentional masks and does not promise automatic obstacle avoidance.
 
 Sankey source IDs occur in both mirrored columns. Choose an exact `q_instance`/`s_instance` from `get_chord_layout(plot)$display_instances`; omission fails when ambiguous. Radial and Chord use their own registered backbone frames. All q/s intervals, units and source records remain unchanged. If a declared `source_hsp_id` appears repeatedly, every participating Fusion layer must opt into `allow_repeated = TRUE`, including layers inside nested compositions. `source_observations` distinguishes explicit evidence IDs from display counts. This does not infer identity by comparing equal table values. Dotplot has independent axes and is not yet a registered Fusion endpoint.
+
+<a id="outer-guides"></a>
 
 ## Outer Guides and the panel budget {#outer-guides}
 
@@ -41,7 +47,7 @@ outside positions, rather than all requiring one shared side:
 
 {{code:courseblockbo}}
 
-![Multi-side guide allocation](../assets/courseguidefusion.png)
+![Multi-side guide allocation](../../man/figures/courseguidefusion.png)
 
 `layout = "fixed"` keeps existing placements. `"adaptive"` reuses the native
 Guide candidate/measurement engine, jointly considers side budgets and panel
@@ -59,6 +65,8 @@ hides composition Guides using native ggplot2 semantics. Inside composition
 Guides remain unsupported; each independent panel can still own local Guides.
 This is a bounded physical-space search, not a claim of global optimality.
 
+<a id="auto-perimeter"></a>
+
 ## Automatic perimeter panels {#auto-perimeter}
 
 Set `fusion_panel(..., side = "auto")` to place more than eight independent
@@ -70,7 +78,7 @@ arbitrary text will fit. Use each child's own label/physical-size policy.
 
 {{code:courseblockbp}}
 
-![Twelve deliberate views of one HSP](../assets/courseautofusion.png)
+![Twelve deliberate views of one HSP](../../man/figures/courseautofusion.png)
 
 This real example intentionally displays one observed HSP twelve times. Its
 explicit `source_hsp_id` and `allow_repeated = TRUE` distinguish 12 connections
@@ -82,6 +90,8 @@ Multiple magnify details can use repeated named `"auto"` sides, with explicit
 no panel is discarded. The search is deterministic and conservative, not a
 global optimum or a promise that any count fits every canvas.
 
+<a id="plot-furniture"></a>
+
 ## Native outer plot furniture {#plot-furniture}
 
 Use ordinary `labs()` and plot Theme elements for the composition's title,
@@ -92,7 +102,7 @@ axes, theme and source coordinates. Fusion has no Cartesian data axes.
 
 {{code:courseblockbq}}
 
-![Outer title and caption](../assets/coursestyledguidefusion.png)
+![Outer title and caption](../../man/figures/coursestyledguidefusion.png)
 
 `metadata$content_bounds_mm`/`content_canvas_mm` describe the actual inner
 composition frame; `plot_decoration` records effective labels and native
@@ -108,6 +118,8 @@ connections from accumulating repeated paints in explicit overlap mode.
 The source tables, selected intervals and palette mappings remain unchanged.
 
 Ordinary child margins do not act as masks for composition connections. In explicit overlap mode, links traverse the full container below its foreground; later containers retain the declared covering order. Use measured `route = "avoid"` for annotation clearance instead of relying on accidental margin gaps.
+
+<a id="flagship"></a>
 
 ## Integrated composition: global views and a local detail {#flagship}
 

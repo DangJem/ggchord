@@ -1,11 +1,15 @@
 Choose the meaning of data before roles and scales. Use the same observed HSPs, annotations and GC windows for continuous values, categories, identity, opacity, widths, line types and themes, grouping related helpers on one page.
 
+<a id="input"></a>
+
 ## Independent input and scale responsibilities {#input}
 
 Independently load ggchord and optional dplyr. Complete lengths, HSP identity and query/subject IDs come from bundled source records. Named vectors assign display values to existing categories, not new samples or measurements. Map inside aes, fix styles in geoms, and let explicit scales override automatic defaults. Explicit fixed aesthetics override matching mappings; omit fixed alpha when mapping opacity.
 
 {{code:comparescaledata}}
 
+
+<a id="numeric"></a>
 
 ## Continuous, stepped and direct colour values {#numeric}
 
@@ -17,6 +21,8 @@ Both map observed pident to ribbon_fill with fixed 0–100 domain, palette and d
 {{figure:comparescalesteps}}
 
 
+<a id="identity"></a>
+
 ## Identity preserves supplied colour values {#identity}
 
 First derive display colours from observed identity using an explicit 90% threshold, then preserve those strings with scale_ribbon_fill_identity. This is declared display classification, not a way to recover continuous identity. Use a gradient for a continuous legend. Identity normally hides its guide; provide deliberate breaks, labels and guide when one is needed.
@@ -24,12 +30,16 @@ First derive display colours from observed identity using an explicit 90% thresh
 {{code:comparescaleidentity}}
 
 
+<a id="categories"></a>
+
 ## Category fill, opacity, outline and line type {#categories}
 
 The same qaccver receives the same display values. Name manual values by actual categories to avoid order-dependent mismatches. This combines independently trained roles rather than claiming a single-parameter visual experiment. Use `scale_ribbon_alpha_continuous(range=...)` for numeric opacity and `scale_ribbon_alpha_manual` for categories. Colour and linetype change outlines, not alignment direction.
 
 {{code:comparescalemanual}}
 
+
+<a id="point-links"></a>
 
 ## Independent scales for point links {#point-links}
 
@@ -43,6 +53,8 @@ Automatic numeric pident mappings use the 0–100 domain and six Identity ticks:
 {{figure:comparescalelinkcontinuous}}
 
 
+<a id="features"></a>
+
 ## Feature, gene and region roles {#features}
 
 Map feature_fill and feature_shape to the same type to merge their guide silhouettes; request a separate shape guide explicitly. Fixed shape overrides its mapping. Mapping all types to arrow demonstrates mapping without inventing functional shape semantics. Plasmid fill/shape presets use their documented category rules.
@@ -51,6 +63,8 @@ Map feature_fill and feature_shape to the same type to merge their guide silhoue
 {{code:comparescalepreset}}
 
 
+<a id="rings"></a>
+
 ## Gene strand, sequence rings and regions {#rings}
 
 Restore biological strands from source_strand. Region, gene and ribbon fill roles are independent. `seq_ring` requires explicit positive radii, never inferred track counts; it conflicts with seq_radius and collinear mode. Sequence radius mapping is distinct from quantitative position_track bands.
@@ -58,6 +72,8 @@ Restore biological strands from source_strand. Region, gene and ribbon fill role
 {{code:comparescalegenering}}
 {{code:comparescaleregion}}
 
+
+<a id="tracks"></a>
 
 ## Named track domains and colours {#tracks}
 
@@ -68,6 +84,8 @@ Compute windows from actual pUC19 DNA. `track_value` controls height; track_fill
 {{code:comparescaletrackgradient}}
 
 
+<a id="guides"></a>
+
 ## Guides, spelling aliases and staged mapping {#guides}
 
 `guide_ggchord_legend` manages discrete role guides and guide_ggchord_colourbar continuous colour bars. `show.legend` controls participation, guides chooses guides, and theme controls position/direction/appearance. Colour/color aliases are equivalent: guide_ggchord_colorbar, scale_seq_color_manual, scale_ribbon_color_manual, scale_link_color_manual and scale_link_color_gradientn correspond to colour versions. Do not add both synonymous scales expecting cumulative control.
@@ -75,6 +93,8 @@ Compute windows from actual pUC19 DNA. `track_value` controls height; track_fill
 `after_stat` reads computed variables such as bundle_n in the next section; after_scale computes supported visual attributes after scaling. They come from ggplot2 and have distinct staged semantics even when their R objects compare equal. All ggplot2/grid reexports follow upstream help, with ownership explicit in the parameter atlas.
 
 
+
+<a id="themes"></a>
 
 ## Themes style non-data appearance {#themes}
 
@@ -85,6 +105,8 @@ Compute windows from actual pUC19 DNA. `track_value` controls height; track_fill
 {{figure:comparethemedark}}
 
 
+<a id="adapt"></a>
+
 ## Selection rules {#adapt}
 
-Switch pident from gradient to explicit steps, restore the gradient, then change only the alpha output range. Check that guides still represent the same data units. Give additional layers independent data/mapping and retain explicit user scales. See the [parameter atlas](parameter-atlas.html) for complete defaults, types and forwarding, and [link statistics](ribbons.html#statistics) for aggregation.
+Switch pident from gradient to explicit steps, restore the gradient, then change only the alpha output range. Check that guides still represent the same data units. Give additional layers independent data/mapping and retain explicit user scales. See the [parameter atlas](parameter-atlas.md) for complete defaults, types and forwarding, and [link statistics](ribbons.md#statistics) for aggregation.

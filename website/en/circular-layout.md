@@ -2,11 +2,15 @@ Prepared annotations need only lengths and tables. DNA is used here to prepare t
 
 {{code:courseblockaj}}
 
+<a id="input"></a>
+
 ## Input and provenance {#input}
 
 Run independently in a fresh R session with optional dplyr. `finish_features` retains the first six recognition rows without changing intervals or strands. `finish_labels` appends actual coordinates to source names for label-fitting demonstrations; the original table remains separate.
 
 {{code:comparefinishcircle}}
+
+<a id="backbones"></a>
 
 ## Backbone styles and double-line spacing {#backbones}
 
@@ -18,6 +22,8 @@ In single circular mode, `seq_style = "auto"` selects double. Single draws one b
 {{figure:comparebonesingle}}
 {{code:comparebonegap}}
 {{figure:comparebonegap}}
+
+<a id="band-rendering"></a>
 
 ## Band backbone {#band-rendering}
 
@@ -31,9 +37,11 @@ From the band baseline, double only band width while retaining other settings.
 {{code:comparebandwidth}}
 {{figure:comparebandwidth}}
 
+<a id="coordinates"></a>
+
 ## Circular direction, rotation, opening and fit {#coordinates}
 
-The zero origin is at 12 o’clock with clockwise coordinates. Positive rotation turns the complete plot counterclockwise. Relative to double above, each example changes only direction or gap. See the [rotation contrast](circular-layout.html#rotation).
+The zero origin is at 12 o’clock with clockwise coordinates. Positive rotation turns the complete plot counterclockwise. Relative to double above, each example changes only direction or gap. See the [rotation contrast](circular-layout.md#rotation).
 
 | Parameter | Default | Type and boundary |
 | --- | --- | --- |
@@ -51,6 +59,8 @@ Automatic fitting may change overall scale and the readable subset of tick label
 {{code:comparecirclegap}}
 {{figure:comparecirclegap}}
 
+<a id="center"></a>
+
 ## Style centre name and length separately {#center}
 
 Centre text is separate from labels along the backbone. `name = TRUE` and `length = TRUE` are separated by a newline by default; name also accepts a display string. Empty name_style/length_style lists accept fixed colour, size, family, fontface and lineheight. First hide only length. Then return to baseline and change only name_style size, retaining the length text style.
@@ -62,6 +72,8 @@ Centre text is separate from labels along the backbone. `name = TRUE` and `lengt
 {{code:comparecenterstyle}}
 {{figure:comparecenterstyle}}
 
+<a id="style"></a>
+
 ## Switch to a single backbone {#style}
 
 {{prepare:firstcircle,firstfeatures}}
@@ -72,10 +84,12 @@ Centre text is separate from labels along the backbone. `name = TRUE` and `lengt
 
 `seq_style = "single"` replaces the double backbone with one line. The centre label and bp ticks remain visible.
 
+<a id="rotation"></a>
+
 ## Rotate the map {#rotation}
 
 {{code:firstfeatures,frontcirclerotation}}
 
 {{figure:frontcirclerotation}}
 
-The default `rotation = 0` places the sequence origin at 12 o’clock, with coordinates increasing clockwise. Here `rotation = 90` moves it to 9 o’clock, rotating the ticks and replication origin together. The annotation still covers the same source bp interval. Next, [prepare your own sequence and annotations](circular-data.html#tables).
+The default `rotation = 0` places the sequence origin at 12 o’clock, with coordinates increasing clockwise. Here `rotation = 90` moves it to 9 o’clock, rotating the ticks and replication origin together. The annotation still covers the same source bp interval. Next, [prepare your own sequence and annotations](circular-data.md#tables).

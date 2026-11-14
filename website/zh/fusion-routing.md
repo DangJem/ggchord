@@ -2,11 +2,13 @@
 
 {{prepare:fusiondata,fusionpanels,fusionlinear,fusionview}}
 
+<a id="intervals"></a>
+
 ## 连接真实来源区间 {#intervals}
 
 Fusion组合独立的基因组图形，并连接其真实序列区间。中央和外围可使用已注册基因组Coord，Sankey/Radial保留明确显示实例，也支持嵌套Fusion和已注册字符细节。每张子图仍可单独使用；组合层先在实际物理尺寸内重新构建各面板，再绘制连接。
 
-从[输入下载与来源页](formats.html)取得原始EMALE PAF。本例的数据整理需要可选依赖`dplyr`。PAF包含11条已观测HSP；下面显式选择长度≥900、Identity≥85%的两条用于跨面板展示。计数轨道按明确的2,000 bp分箱统计全部原始query起点观测，不解释为覆盖深度。最后一个显示分箱明确裁切到真实序列边界，来源观测及计数保留。
+从[输入下载与来源页](formats.md)取得原始EMALE PAF。本例的数据整理需要可选依赖`dplyr`。PAF包含11条已观测HSP；下面显式选择长度≥900、Identity≥85%的两条用于跨面板展示。计数轨道按明确的2,000 bp分箱统计全部原始query起点观测，不解释为覆盖深度。最后一个显示分箱明确裁切到真实序列边界，来源观测及计数保留。
 
 {{code:fusiondata}}
 
@@ -22,6 +24,8 @@ Fusion组合独立的基因组图形，并连接其真实序列区间。中央�
 
 {{figure:fusionview}}
 
+<a id="panels"></a>
+
 ## 注册面板与显示实例 {#panels}
 
 首例的每个命名方向最多一个面板：`right`、`top`、`left`、`bottom`；斜向、自由区域与自动排布见后文。ID必须唯一，`center`是保留名称。`size=c(width,height)`与`center_size`使用扣除原生外层装饰及跨面板图例后内容区的相对比例。明确指定的区域发生重叠时会报错，不擅自移动面板。
@@ -35,6 +39,8 @@ Fusion组合独立的基因组图形，并连接其真实序列区间。中央�
 
 选择信息也可写入`qpanel`、`spanel`、`q_instance`、`s_instance`列。同一panel选择不得同时写固定参数和同名列。如果accession出现在多个面板或重复实例中，只有完整可见区间的候选唯一时才允许省略选择；有歧义会报错，必须指定目标面板和实例。对于明确改名的focus窗口，仍可通过保留的来源原点使用原始accession和源坐标。
 重复展示`source_hsp_id`时，每个参与图层均须设置`allow_repeated=TRUE`。没有ID时按各层源行记录，不因值相同就猜测为同一生物学身份。
+
+<a id="export"></a>
 
 ## 导出与核对锚点 {#export}
 
@@ -52,6 +58,8 @@ Fusion组合独立的基因组图形，并连接其真实序列区间。中央�
 要求区间完整可见；需要局部窗口或拆分时，先在来源工作流中明确准备。跨原点仍需明确拆分，不支持直接bp↔aa连接、Dotplot端点、分面、猜测外部ggplot坐标。实测障碍路由见后文。其他已注册视图及显式区域分配见后文。
 连接可以交叉或穿过面板内部；前景注释保留，但不保证任意组合都无碰撞。
 
+<a id="routing"></a>
+
 ## 实测路由与显示通道 {#routing}
 
 `fusion_ribbon(route = "avoid")` 保留两端完整区间及物理离开法线，在实测的其他
@@ -65,7 +73,7 @@ read support 或新增观测。分组由用户声明，不推断同源簇或关�
 
 {{code:courseblockbl}}
 
-![显式显示通道与障碍](../assets/courserouted.png)
+![显式显示通道与障碍](../../man/figures/courserouted.png)
 
 `magnify_ggchord(route = "avoid")` 将相同实测空间契约用于装饰引线。导出的
 `leader_paths` 含最终折线顶点，与生物学 `paths` 分开。`routing_corridors` 记录

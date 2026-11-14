@@ -28,6 +28,31 @@ python3 tools/sync-website-languages.py --check
 参数图谱由当前API/契约生成汉语源，再走同一英语生成流程；R包英语Rd及其汉语
 函数参考仍遵循既有帮助源和摘要译文机制，不能当作可独立编辑的网站正文。
 
+正文链接使用仓库中真实存在的文件：同语言页面用 `.md`，函数帮助用
+`../../man/*.Rd`，科学图像用 `../../man/figures/`；章节保留明确的 HTML 锚点。
+`tools/site_source_links.py` 只在展开正文时将它们转换为网站的 `.html` 和资产路径，
+因此 GitHub 源码阅读与生成网站共用一份正文。不要在源页引用只存在于构建目录的文件。
+源码检查同时核对本地目标、跟踪状态与锚点；Release 的版本链接按完整 tag 引用检查，
+不能用同名分支代替标签。
+
+Prose links point to real repository files: `.md` pages, `../../man/*.Rd` help,
+and `../../man/figures/` images, with explicit HTML section anchors. Expansion
+converts these to site URLs through `tools/site_source_links.py`; build-only
+files must not be linked from source pages. Source checks cover tracked targets
+and anchors. Versioned Release links are checked against explicit tags rather
+than same-named branches.
+
+`python3 tools/check-repository-links.py` 同时检查当前与归档文档的真实文件目标、
+锚点及 GitHub 提交引用；共享 README 模板按两种语言的生成位置验证。
+`--report /tmp/ggchord-links.json` 可列出待联网复核的外链。联网检查应区分 404、
+登录跳转、访问拦截及临时网络错误，不改写历史观测记录或测试用假地址。
+
+The repository link check covers current and archived documentation; the shared
+README template is validated through both generated outputs. Its optional JSON
+report lists external URLs for separate online review. Distinguish missing
+pages from login redirects, access restrictions and network errors, and preserve
+historical observations and deliberately invalid test URLs.
+
 ## 生成基础 / Generator
 
 唯一正式生成基础为 **pkgdown + Bootstrap 5**：顶栏、文章布局、主题切换及完整

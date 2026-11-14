@@ -2,6 +2,8 @@
 
 <span id="prepare"></span>
 
+<a id="layout"></a>
+
 ## Choose a chord label layout {#layout}
 Gene labels offer `"auto"`, `"radial"` and `"arc"` layouts. General feature
 labels additionally support the internal-first `"feature"` default and external
@@ -12,6 +14,8 @@ not interchangeable presets.
 
 {{code:labels}}
 {{figure:labels}}
+
+<a id="fixed"></a>
 
 ## Fixed and automatic placement {#fixed}
 Use `geom_gene_label()` or `geom_feature_label()` for manual `label_rotation`,
@@ -29,8 +33,12 @@ or hide; the feature geometry remains. Inspect `label_fit_diagnostics` and
 
 This fixes text rotation at 30 degrees. Fixed placement does not spread neighbouring labels; unresolved text may hide. One label is visible here while all four CDS arrows remain. Compare the automatic layouts below when more names need to be displayed.
 
+<a id="anchors"></a>
+
 ## Match labels to arrows {#anchors}
 Use the same CDS records for arrows and labels, preserving identifiers, intervals and biological strands. Filter labels from that table without changing source coordinates. Fixed layouts allow radial offsets and text rotation.
+
+<a id="comparison"></a>
 
 ## Compare the three gene layouts {#comparison}
 {{code:labellayouts}}
@@ -45,10 +53,12 @@ shared columns where applicable, radial follows local contours and arc follows
 the sequence tangent. `p_manual_labels` shows the separate fixed-label route;
 its explicit rotation does not belong in an automatic repel layer.
 General feature labels have additional internal-first/callout choices; see the
-[complete circular workflow](plasmids.html) for dense mixed annotation and
-[stacking](annotations.html#stack) for inherited or explicit Position anchors.
+[complete circular workflow](plasmids.md) for dense mixed annotation and
+[stacking](annotations.md#stack) for inherited or explicit Position anchors.
+
+<a id="check-result"></a>
 
 ## Result checks {#check-result}
 The three layout comparisons share the same input. Assess text direction, leaders and hiding reasons together; missing text does not mean a feature was lost.
 
-<div class="next-step">Continue: <a href="parameters.html">Flexible parameter formats →</a></div>
+<div class="next-step">Continue: <a href="parameters.md">Flexible parameter formats →</a></div>

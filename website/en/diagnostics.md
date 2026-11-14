@@ -1,13 +1,15 @@
+<a id="symptoms"></a>
+
 ## Locate the problem by symptom {#symptoms}
 
 Check the input and current plot before inspecting diagnostics. These actions preserve original observations and coordinates.
 
 | Symptom | Minimal check | Adjustment and verification |
 | --- | --- | --- |
-| Missing sequence or feature | Exact accver matching, valid complete lengths and units | Correct evidence-backed ID mappings and rebuild a minimal plot; see [table checks](data.html#validation) |
-| Missing link | Endpoint IDs, intervals, explicit filters and the Coord's adjacency default | Use `adjacent_only = FALSE` when all-pair selection is intended; inspect [selection rules](multi-sequence-views.html#selection) and verify the source row in exports |
-| Crowded or hidden labels | Run `diagnose_ggchord()` at final dimensions; inspect visibility reasons and the plot | Adjust [label layout](labels.html), wrapping or canvas; recheck visibility/conflicts without treating missing counts as zero |
-| Exported positions differ or guides clip | Compare preview/save width, height, units, device, fonts and warnings | Reuse [target dimensions](output.html#size) and inspect the saved file; dpi does not replace physical dimensions |
+| Missing sequence or feature | Exact accver matching, valid complete lengths and units | Correct evidence-backed ID mappings and rebuild a minimal plot; see [table checks](data.md#validation) |
+| Missing link | Endpoint IDs, intervals, explicit filters and the Coord's adjacency default | Use `adjacent_only = FALSE` when all-pair selection is intended; inspect [selection rules](multi-sequence-views.md#selection) and verify the source row in exports |
+| Crowded or hidden labels | Run `diagnose_ggchord()` at final dimensions; inspect visibility reasons and the plot | Adjust [label layout](labels.md), wrapping or canvas; recheck visibility/conflicts without treating missing counts as zero |
+| Exported positions differ or guides clip | Compare preview/save width, height, units, device, fonts and warnings | Reuse [target dimensions](output.md#size) and inspect the saved file; dpi does not replace physical dimensions |
 
 Requires ggchord and optional dplyr for later tables. Start with a minimal backbone at a normal size.
 
@@ -23,6 +25,8 @@ report$checks
 Inspect failures/warnings and use the matching action above. Later sections explain export fields and measurement boundaries as needed.
 
 
+<a id="geometry"></a>
+
 ## Consume geometry by name {#geometry}
 {{code:frontgeometry}}
 
@@ -32,7 +36,9 @@ Inspect failures/warnings and use the matching action above. Later sections expl
 `get_chord_layout()` retains the complete documented layout; neither is deprecated.
 Select named fields, not fixed column positions. `source_row` indexes resolved
 layer input; IDs are build-local resources, not permanent biological identifiers.
-See the complete [layout contract](reference/ggchord_layout_contract.html).
+See the complete [layout contract](../../man/ggchord_layout_contract.Rd).
+
+<a id="diagnostics"></a>
 
 ## Interpret evidence {#diagnostics}
 `diagnose_ggchord()` separates measured panel size from geometry convergence.
@@ -47,9 +53,13 @@ and inspect the result. Previews and diagnostics use independent render copies.
 Direct mutation of shared ggproto layer environments retains ordinary ggplot2
 reference semantics; it is not an automatically isolated edit.
 
+<a id="consumption"></a>
+
 ## Complete layout, tables and opt-in ordering {#consumption}
 
-The preceding table identifies the backbone layer. Set `original_data = TRUE` in `export_ggchord_layout()` to include input rows. See the [layout contract](reference/ggchord_layout_contract.html) for the full layout and [order and orientation](reference/optimize_ggchord_layout.html) for reordering.
+The preceding table identifies the backbone layer. Set `original_data = TRUE` in `export_ggchord_layout()` to include input rows. See the [layout contract](../../man/ggchord_layout_contract.Rd) for the full layout and [order and orientation](../../man/optimize_ggchord_layout.Rd) for reordering.
+
+<a id="label-quality"></a>
 
 ## Measure label contacts {#label-quality}
 
@@ -72,6 +82,8 @@ On cramped circular canvases, already-crossed exterior leaders can acquire bound
 The `scale` and `adaptive` policies also adjust omitted fixed linewidths in native sequence, point-link, ribbon and alignment layers. Explicit linewidth values, including values equal to the default, remain fixed; mapped linewidths keep their scales. `fixed` and plots without a policy retain their styles. This does not multiply every geometry constant or native theme-derived aesthetic expression.
 
 {{prepare:comparescaledata}}
+
+<a id="target-size"></a>
 
 ## Target-size diagnostics and explicit ordering {#target-size}
 

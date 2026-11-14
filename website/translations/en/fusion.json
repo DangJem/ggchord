@@ -1,82 +1,82 @@
 {
-  "source_sha256": "f4b538486eb1e02defd13b53a40cf827e032b35ef378fa04e63a6ac28eb57432",
+  "source_sha256": "b93b394ba4ce0784980b744d52e50f53069bdffdf6de8e3510f87adbf08db214",
   "blocks": {
-    "0": {
+    "1": {
       "source_sha256": "61fb363c7a49e9dab5d78878395d1848cdfeaf5b3d3ecc1ca60c9829a863e0a2",
       "status": "reviewed",
       "translation": "## Independent views, connected source intervals ⟦shared:0⟧\n"
     },
-    "1": {
+    "2": {
       "source_sha256": "cefa613b6b9f5b2bd09d27bccb70a3de064ddac11695c7ebaded64358d3fe9aa",
       "status": "reviewed",
       "translation": "Fusion is a composition layer. The complete example places a Chord overview, Collinear view, Radial view, two-genome context and independent local magnification in explicit panel rectangles. Connections use observed HSPs and registered source intervals; repeated display does not create additional observations.\n"
     },
-    "3": {
+    "5": {
       "source_sha256": "1e022fdf3e1891419a11ee48fbe8e02c905ffc262d84abaac4af3a813ae79c76",
       "status": "reviewed",
       "translation": "## Panel composition ⟦shared:0⟧\n"
     },
-    "4": {
-      "source_sha256": "511f5c1bb2d81294fb55cd522f55ebb8ecf7a3e3aecef8fa90eca9bd09413665",
+    "6": {
+      "source_sha256": "3e6f8b3d79fa3e37f2cfa5a76a404676b5075cd834f3c3d4c12ebdee7de4337e",
       "status": "reviewed",
       "translation": "[Panels and source links](⟦shared:0⟧) · [Position, size and guides](⟦shared:1⟧) · [Cross-panel routing](⟦shared:2⟧)\n"
     },
-    "5": {
+    "8": {
       "source_sha256": "b112f685b89abbed1fb5a370ed86f7352a57db28a8edbae03b1f9999f7159e61",
       "status": "reviewed",
       "translation": "## Local magnification ⟦shared:0⟧\n"
     },
-    "6": {
-      "source_sha256": "5df7bb05ffd1cf6dbc780b00725f7b8c87989952e0f70bdd48e523f3e9e72a3d",
+    "9": {
+      "source_sha256": "773ff622eb0de05b57f83899507031cecdc1bf38e3d4e55bccfe826eea0a9113",
       "status": "reviewed",
       "translation": "Use explicit regions to connect a global view to independently constructed detail plots. Registered aligned characters can provide exact residue or nucleotide details. [Local magnification and character details](⟦shared:0⟧).\n"
     },
-    "7": {
+    "11": {
       "source_sha256": "1b7159d21873f28061a9c61f29c16348a31a7d779b7da6d4828c4b50b335d95d",
       "status": "reviewed",
       "translation": "## Nested and circular regions ⟦shared:0⟧\n"
     },
-    "8": {
-      "source_sha256": "837f705c7698a2e4790494c6d52b7e703bafbe0021b799c857b39233b4603c9f",
+    "12": {
+      "source_sha256": "916895ef225e277cd16146472cfec0e5e2fbc5c5647715b8f352fc715eb48094",
       "status": "reviewed",
       "translation": "Nested Fusion preserves leaf-panel paths. An origin-crossing region needs explicit wrapping and compatible complete source lengths. [Nested composition and origin-crossing zoom](⟦shared:0⟧).\n"
     },
-    "9": {
+    "14": {
       "source_sha256": "f9971be411ed0e1022a42c9bfc060b63957480c6dcb040493ea2d2aba14d1c53",
       "status": "reviewed",
       "translation": "## Supported panel types ⟦shared:0⟧\n"
     },
-    "10": {
+    "15": {
       "source_sha256": "3f079c2749f218e7efa6ac4d5d8a28db27a0daaab2cf464f09baec7604afde9c",
       "status": "reviewed",
       "translation": "Registered genomic views, nested compositions and registered Cartesian character details are supported according to their contracts. Dotplot, facets and unregistered external plots are not inferred or adapted automatically.\n"
     },
-    "11": {
+    "17": {
       "source_sha256": "6db4cb5e1a215bb2ff81b968f3c87bd689da15c1e8dedf5ade406d867d46799f",
       "status": "reviewed",
       "translation": "## Flagship display selections ⟦shared:0⟧\n"
     },
-    "12": {
+    "18": {
       "source_sha256": "20b9ff565aa95b985510b027863fc86c61d3f22381d1763c622b67b422321630",
       "status": "reviewed",
       "translation": "A, B and C share six selected real HSPs and twelve source CDS; complete 32-HSP/266-CDS inputs remain available. One HSP closest to 4000 bp is selected per directed sequence pair. CDS are selected from three positional bins per sequence, preferring informative names and longer features. A-B, A-C and C-D correspondences use selected original records, with C connected to two panels.\n"
     },
-    "13": {
+    "19": {
       "source_sha256": "aaf512d668549839c80629b7aa8b1f592b4f8e77167869042d9bb70f4d2b2cd4",
       "status": "reviewed",
       "translation": "D restores forward full-length sequences. E shows the corresponding HSP and source windows with 800 bp flanking context on either side, selecting two CDS per sequence. The same four CDS selected by source feature identifiers in E are retained in D; D no longer uses an independent selection inside these windows. Paired highlights in D and E are registered by ⟦shared:0⟧; actual magnification is remeasured for the device and panel allocation. Highlights are not additional HSPs and do not change source coordinates or biological strands. The flagship uses ⟦shared:1⟧: each sequence in D has its exact source highlight individually outlined, without a padded rectangle enclosing multiple selections. Two straight leaders connect actual source-band edges to E. The E frame encloses sequences, features, ticks and labels as a display boundary only; its heading and description remain outside and close to the sequence content. Full-size and homepage outputs allocate panel space separately, enlarge A, widen B and use more compact homepage legends. The C-D connection avoids E. Cross-panel colours identify correspondences; internal ribbon colours show Identity.\n"
     },
-    "14": {
+    "21": {
       "source_sha256": "90eecf469b6a28c0f897a3727cde7ea9e1142c6a9b2f9120b343a23af90f50d6",
       "status": "reviewed",
       "translation": "## Shared child legends ⟦shared:0⟧\n"
     },
-    "15": {
+    "22": {
       "source_sha256": "a8e8c223f129ff8edfa0165ead35dd40215738ebb4c8c7e1ce828e95ef191da5",
       "status": "reviewed",
       "translation": "⟦shared:0⟧ collects native outside child legends at the composition edge, displaying visually identical legends once. Default ⟦shared:1⟧ retains the earlier layout. Original plots are not modified, and explicitly hidden legends remain hidden. Each panel still uses its own scales: shared semantics require matching limits, breaks and guide styles. Legends with the same title but different contents are not forcibly merged.\n"
     },
-    "16": {
+    "23": {
       "source_sha256": "c6ea5f0d0703d3f018a5b6a47f006dbf5b86da85e402e2499918b448e898794e",
       "status": "reviewed",
       "translation": "The flagship places Sequence, Strand, Identity and cross-panel Correspondence legends together at the bottom, freeing space in the children. Inside legends cannot be collected; nested cross-panel legends remain managed by their own compositions. Collected legends are measured and wrapped at the actual device size. If one legend is too wide, configure its native guide or enlarge the canvas.\n"

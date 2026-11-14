@@ -1,6 +1,10 @@
+<a id="api"></a>
+
 ## API migration {#api}
 
 {{migration}}
+
+<a id="pages"></a>
 
 ## Old documentation addresses {#pages}
 

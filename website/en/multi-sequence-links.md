@@ -2,6 +2,8 @@
 
 {{prepare:frontbackbone,frontlinks}}
 
+<a id="control"></a>
+
 ## Change where a ribbon passes {#control}
 
 {{code:frontbackbone,frontlinks,frontribbon}}
@@ -15,6 +17,8 @@ The default control is at the layout origin. Set `link_ctrl_point` to `c(0, 0.8)
 {{figure:frontroute}}
 
 Control points use unrotated layout coordinates. With the default rotation of 0°, (0, 0.8) pulls the ribbon upwards. Rotating the whole layout also rotates the control point. A Bézier control pulls the curve without generally lying on it.
+
+<a id="clearance"></a>
 
 ## Compare clearance around a real CDS {#clearance}
 
@@ -32,6 +36,8 @@ Take the CDS at 48,053–49,111 bp on `MT108731.1`. It falls within the alignmen
 
 `link_avoid = "smooth"` increases clearance locally near the CDS. At the same spot on the `MT108731.1` backbone, the ribbon edge recedes to leave space for the arrow. The default `"uniform"` applies one clearance across each endpoint interval. A numeric `link_gap` sets the spacing directly.
 
+<a id="point-markers"></a>
+
 ## Link two positions and highlight an interval {#point-markers}
 
 {{code:frontmarkers}}
@@ -40,7 +46,9 @@ Take the CDS at 48,053–49,111 bp on `MT108731.1`. It falls within the alignmen
 
 The outer band marks the full interval on the query sequence. `region_side = "outside"` places it outside the backbone. The straight line joins the two interval midpoints, and the `arrow` points to the subject. Use a ribbon to show the full span on both sides.
 
-Next, [place sequence and gene labels](multi-sequence-labels.html#sequence-labels).
+Next, [place sequence and gene labels](multi-sequence-labels.md#sequence-labels).
+
+<a id="branch-contract"></a>
 
 ## Branches, filtering and fixed-style boundaries {#branch-contract}
 
@@ -54,13 +62,17 @@ Next, [place sequence and gene labels](multi-sequence-labels.html#sequence-label
 | `link_ctrl_point` | `NULL` | Origin in chord mode; endpoint-derived in collinear mode; not bp coordinates |
 | `nonadjacent_linewidth` | `0.4` | Only nonadjacent collinear borders; 0 reuses ordinary linewidth |
 
-Set fixed `fill/alpha/colour/linewidth` outside `aes()`. Map data differences to dedicated ribbon roles with matching scales. Explicit fixed values override matching mappings; omit fixed alpha when mapping opacity. Colour differences do not establish biological relationships. See [`geom_link_ribbon()`](reference/geom_link_ribbon.html) for the full signature.
+Set fixed `fill/alpha/colour/linewidth` outside `aes()`. Map data differences to dedicated ribbon roles with matching scales. Explicit fixed values override matching mappings; omit fixed alpha when mapping opacity. Colour differences do not establish biological relationships. See [`geom_link_ribbon()`](../../man/geom_link_ribbon.Rd) for the full signature.
 
-Continue with [shared branches and point links](multi-sequence-links.html#input) to compare trunks, trunk fractions and curved/straight paths.
+Continue with [shared branches and point links](multi-sequence-links.md#input) to compare trunks, trunk fractions and curved/straight paths.
+
+<a id="cross-row"></a>
 
 ## Cross-row links {#cross-row}
 
 {{prepare:frontlinearbase,frontlinks,frontlinearlink}}
+
+<a id="routes"></a>
 
 ## Allow a cross-row link {#routes}
 
@@ -71,6 +83,8 @@ Continue with [shared branches and point links](multi-sequence-links.html#input)
 Only Collinear uses thin solid outlines for adjacent rows and heavier dashed outlines for cross-row ribbons. Chord, Radial and Sankey use ordinary solid outlines by default. `linewidth` controls the ordinary width; `nonadjacent_linewidth` separately controls cross-row width and defaults to 0.4.
 
 The second ribbon layer receives one alignment between the first and third rows. Set `adjacent_only = FALSE` to show it. The default dashed outline marks the skipped row. The original ribbon between rows one and two stays in its own layer.
+
+<a id="width"></a>
 
 ## Set the cross-row outline width {#width}
 
@@ -84,13 +98,19 @@ The second ribbon layer receives one alignment between the first and third rows.
 
 Zero uses the layer's ordinary `linewidth`, here 0.2. The outline remains dashed. When using `aes(linewidth = ...)`, the mapping and scale control the widths.
 
+<a id="branches-and-points"></a>
+
 ## Shared branches and point links {#branches-and-points}
+
+<a id="input"></a>
 
 ## Prepare an illustrative shared endpoint {#input}
 
 {{code:comparebranchdata}}
 
 Three illustrative sequences each span 1000 bp. Two links share query interval 200–600 bp and connect to different target intervals. Coordinates are one-based inclusive. Every figure uses 9 × 7 inches; endpoints stay fixed across branch settings.
+
+<a id="branches"></a>
 
 ## Independent ribbons and a shared query trunk {#branches}
 
@@ -103,6 +123,8 @@ With default `link_branch = "none"`, the ribbons travel independently and may ov
 {{figure:comparebranchquery}}
 
 Only change to `"query"`: equal query endpoints can share a trunk. Overlapping intervals are not necessarily equal endpoints. Real data without suitable groups may show no change when branching is enabled. `"subject"` groups equal subject endpoints instead.
+
+<a id="fraction"></a>
 
 ## Change the trunk fraction {#fraction}
 
@@ -117,6 +139,8 @@ Relative to the query-branch figure, only `link_branch_fraction` changes from de
 | `link_branch_fraction` | `0.15` | In (0, 0.5]; none does not create a shared trunk |
 | `link_ctrl_point` | `NULL` | Shapes far ends when branching; the trunk determines its junction |
 | `pairs` | `NULL` | qaccver/saccver table selecting existing pairs, not generating alignments |
+
+<a id="point-links"></a>
 
 ## Replace intervals with points {#point-links}
 
@@ -133,15 +157,19 @@ Default `link_type = "curve"` connects the selected positions with curves.
 
 Only change to `"straight"`, keeping input, anchors and dimensions fixed. Add `arrow = grid::arrow()` separately for direction. It represents the query-to-subject drawing convention, not independent evidence of gene strand or transcription.
 
+<a id="adapt"></a>
+
 ## Real inputs and coordinate choices {#adapt}
 
-Preserve real query/subject endpoints. Do not edit unequal endpoints to manufacture shared trunks. See [link preparation](ribbons.html) for filtering and bundling; geometric branching does not perform those statistics.
+Preserve real query/subject endpoints. Do not edit unequal endpoints to manufacture shared trunks. See [link preparation](ribbons.md) for filtering and bundling; geometric branching does not perform those statistics.
 
-Chord and collinear modes accept these link layers; single circular mode rejects ribbon/link. Linear adjacency filtering still applies. Check `adjacent_only` or explicit `pairs` before showing cross-row ribbons; see [cross-row links](multi-sequence-links.html#routes).
+Chord and collinear modes accept these link layers; single circular mode rejects ribbon/link. Linear adjacency filtering still applies. Check `adjacent_only` or explicit `pairs` before showing cross-row ribbons; see [cross-row links](multi-sequence-links.md#routes).
 
-Example: change only the trunk fraction to 0.25. Return to the default fraction and compare curved versus straight point links. With your own data, first decide whether interval lengths or individual positions matter, then consult [`geom_link_ribbon()`](reference/geom_link_ribbon.html) and [`geom_link_line()`](reference/geom_link_line.html).
+Example: change only the trunk fraction to 0.25. Return to the default fraction and compare curved versus straight point links. With your own data, first decide whether interval lengths or individual positions matter, then consult [`geom_link_ribbon()`](../../man/geom_link_ribbon.Rd) and [`geom_link_line()`](../../man/geom_link_line.Rd).
 
 {{prepare:ribboninputs}}
+
+<a id="interval-points"></a>
 
 ## Choose interval ribbons or point links {#interval-points}
 

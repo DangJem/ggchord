@@ -2,6 +2,8 @@
 
 <span id="prepare"></span>
 
+<a id="roles"></a>
+
 ## 从数据角色构建样式 {#roles}
 
 使用四条弦图骨架和一条实际比对。把连接带填色映射到 query ID，再用一个命名颜色值给该类别设色。序列颜色继续由默认序列标度处理。
@@ -17,11 +19,15 @@
 | `link_colour`, `link_alpha`, `link_linewidth`, `link_linetype` | 点连接元数据 | 连续或手动 link标度|
 | `track_value`, `track_fill`, `track_colour` | 命名轨道的数值/类别 | 命名数值域与颜色/填色标度 |
 
+<a id="priority"></a>
+
 ## 固定样式和用户标度优先 {#priority}
 常量样式写在 `aes()` 外，变化样式写在映射中并配合合适的标度。
 显式几何层固定值优先，省略该固定参数才保持映射。用户标度优先于自动默认。
 同类多层独立保留数据、映射和参数。按 `accver` 命名的几何向量，不表示标度
 也接受逐序列列表。
+
+<a id="guides"></a>
 
 ## 组织可读图例 {#guides}
 `guide_ggchord_legend()` 控制离散角色图例，`guide_ggchord_colourbar()` 控制连续颜色
@@ -29,8 +35,12 @@
 决定显示，`guides()` 选择图例，`theme(legend.position = ...)` 决定位置。
 过宽图例可分行或增加导出宽度，不需要删减生物学数据来迁就。
 
+<a id="themes"></a>
+
 ## 为图形选择主题 {#themes}
 本页使用默认主题。需要调整文字、图例或背景时，在图后添加 `theme()`；例如 `theme(text = element_text(size = 12))` 设置基础字号。`theme_ggchord_publication()` 提供出版样式，`theme_ggchord_plasmid()` 用于单序列圆图。这些主题控制非数据外观，不改变坐标或数据配色。
+
+<a id="adaptive"></a>
 
 ## 按目标尺寸排版 {#adaptive}
 
@@ -54,12 +64,16 @@
 跨面板图例另行控制。分面、任意自定义 grob、所有几何常量的整体缩放，以及字体
 嵌入认证不在本策略范围内。
 
+<a id="check-result"></a>
+
 ## 检查要点 {#check-result}
 同一 query 的连接颜色一致；连续相似度应使用连续标度。固定颜色放在 aes() 外，图例必须能说明映射。
 
-<div class="next-step">继续：<a href="annotations.html">绘制注释与处理重叠 →</a></div>
+<div class="next-step">继续：<a href="annotations.md">绘制注释与处理重叠 →</a></div>
 
-各角色 manual/continuous/steps/identity、线型、透明度和主题的完整可运行家族例子见[标度家族](scale-families.html)。
+各角色 manual/continuous/steps/identity、线型、透明度和主题的完整可运行家族例子见[标度家族](scale-families.md)。
+
+<a id="native-theme"></a>
 
 ## 使用标准 theme 细调外观 {#native-theme}
 
@@ -76,6 +90,8 @@
 
 注册的 `ggchord.axis.*` 物理设置接受单个绝对单位，与 `theme_ggchord()` 现有短参数使用同一配置。后续细调优先写 `theme(ggchord.axis.gap = unit(1, "mm"))`。一次主题构造只使用一种拼写，同义入口同时提供会报错；后续 `theme()` 按熟悉的ggplot2逐字段合并。`ggchord.seq.label`、`ggchord.gene.label`、`ggchord.feature.label`及其 `.segment` 线元素控制真实注释图层，显式Geom样式/映射仍优先。普通Cartesian的 `axis.text.x` 不代替自动序列轴；Dotplot保留独立原生x/y轴。
 
+<a id="track-theme"></a>
+
 ### Track共享外观与局部覆盖 {#track-theme}
 
 以下真实GC比例来自未改动的随包pUC19序列，需可选dplyr。Track数据Scale负责比例值域和单位，其局部原生Guide负责轴装饰，普通Theme负责共享外观，没有虚构测序深度或read support。
@@ -90,8 +106,12 @@
 
 <span id="mapping-prepare"></span>
 
+<a id="grammar"></a>
+
 ## 职责分配 {#grammar}
-[绘图基本概念](modes.html#prepare)解释图层、映射、标度和坐标的分工。下面只演示如何把这种分工用到比对相似度。
+[绘图基本概念](modes.md#prepare)解释图层、映射、标度和坐标的分工。下面只演示如何把这种分工用到比对相似度。
+
+<a id="mapping"></a>
 
 ## 映射连接相似度 {#mapping}
 
@@ -99,6 +119,8 @@
 {{code:adjustments}}
 
 {{figure:mappingexample}}
+
+<a id="position"></a>
 
 ## 放置注释 {#position}
 使用 `position_strand(c("+" = .1, "-" = -.2))` 指定带符号的逐链位移。
@@ -108,7 +130,9 @@
 
 每层独立拥有 `data`、`mapping` 和参数，同类注释/连接层不会互相替换。
 `show.legend` 和 `inherit.aes` 遵循 ggplot2。输入角色映射在几何生成前处理，
-后期视觉映射遵循 ggplot2 求值。详见 [接口说明](reference/ggchord_api_contract.html)。
+后期视觉映射遵循 ggplot2 求值。详见 [接口说明](../../man/ggchord_api_contract.Rd)。
+
+<a id="check-result-supplement"></a>
 
 ## 检查要点 {#check-result-supplement}
 旋转整体图形使用 coord；逐序列几何使用明确命名值；颜色随数据变化时使用映射和标度。

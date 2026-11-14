@@ -1,13 +1,15 @@
+<a id="symptoms"></a>
+
 ## 按症状定位问题 {#symptoms}
 
 先核对输入和当前图，再查看诊断。下面的调整入口保留原始记录；不通过删观测或修改坐标凑出理想图。
 
 | 症状 | 最小检查 | 调整入口与复核 |
 | --- | --- | --- |
-| 某条序列或特征没有显示 | 核对 accver 是否逐字匹配、全长与单位是否有效 | 修正有证据的标识映射，重画最小图；见[表格检查](data.html#validation) |
-| 连接缺失 | 检查两端 ID、区间、已执行筛选和当前 Coord 的邻接默认 | 需要全对时显式 `adjacent_only = FALSE`；对照[关系选择](multi-sequence-views.html#selection)，确认对应源行仍在导出中 |
-| 标签拥挤或隐藏 | 按最终宽高运行 `diagnose_ggchord()`，查看标签保留/隐藏原因及实际图 | 在[标签设置](labels.html)调整布局、文字换行或画布；复核可见性与冲突，不把缺失计数当零 |
-| 导出后位置变化或图例裁切 | 比较预览与 ggsave 的宽高、单位、设备及字体；查看警告 | 复用[目标尺寸](output.html#size)，检查导出文件；dpi 不能替代物理画布尺寸 |
+| 某条序列或特征没有显示 | 核对 accver 是否逐字匹配、全长与单位是否有效 | 修正有证据的标识映射，重画最小图；见[表格检查](data.md#validation) |
+| 连接缺失 | 检查两端 ID、区间、已执行筛选和当前 Coord 的邻接默认 | 需要全对时显式 `adjacent_only = FALSE`；对照[关系选择](multi-sequence-views.md#selection)，确认对应源行仍在导出中 |
+| 标签拥挤或隐藏 | 按最终宽高运行 `diagnose_ggchord()`，查看标签保留/隐藏原因及实际图 | 在[标签设置](labels.md)调整布局、文字换行或画布；复核可见性与冲突，不把缺失计数当零 |
+| 导出后位置变化或图例裁切 | 比较预览与 ggsave 的宽高、单位、设备及字体；查看警告 | 复用[目标尺寸](output.md#size)，检查导出文件；dpi 不能替代物理画布尺寸 |
 
 需要 ggchord；下方进阶表格整理还使用可选 dplyr。先准备一个正常尺寸的最小骨架。
 
@@ -23,6 +25,8 @@ report$checks
 检查报告中的失败或警告，再沿上表进入对应设置。后续章节解释导出字段和测量边界，按需要查阅。
 
 
+<a id="geometry"></a>
+
 ## 按字段名消费几何 {#geometry}
 {{code:frontgeometry}}
 
@@ -31,7 +35,9 @@ report$checks
 `export_ggchord_layout()` 是推荐的分层表格接口；`get_chord_layout()` 保留完整的
 已记录布局，两者都未弃用。选择字段名，不依赖固定列位置。
 `source_row` 指已解析图层输入行，ID 是构建期资源，不是永久生物学标识。
-详见完整[布局结果说明](reference/ggchord_layout_contract.html)。
+详见完整[布局结果说明](../../man/ggchord_layout_contract.Rd)。
+
+<a id="diagnostics"></a>
 
 ## 理解诊断证据 {#diagnostics}
 `diagnose_ggchord()` 区分面板已测量与几何收敛。面板已测量不表示文字无碰撞、字体
@@ -42,9 +48,13 @@ report$checks
 预览和诊断使用独立渲染副本。直接改动共享 ggproto 图层环境仍遵循普通 ggplot2
 引用语义，不会自动隔离为一次独立编辑。
 
+<a id="consumption"></a>
+
 ## 完整布局、表格与主动选择的排序 {#consumption}
 
-前面的结果表已足够追踪骨架图层。需要附上原始输入行时，给 `export_ggchord_layout()` 加 `original_data = TRUE`。需要查看完整布局或改变顺序时，分别查阅 [布局契约](reference/ggchord_layout_contract.html) 与 [排序和方向](reference/optimize_ggchord_layout.html)。
+前面的结果表已足够追踪骨架图层。需要附上原始输入行时，给 `export_ggchord_layout()` 加 `original_data = TRUE`。需要查看完整布局或改变顺序时，分别查阅 [布局契约](../../man/ggchord_layout_contract.Rd) 与 [排序和方向](../../man/optimize_ggchord_layout.Rd)。
+
+<a id="label-quality"></a>
 
 ## 测量标签接触 {#label-quality}
 
@@ -67,6 +77,8 @@ SnapGene 作为清晰注释层级与规整引线的显示效果参考，不要�
 `scale` 与 `adaptive` 策略也会调整原生序列、点链接、ribbon 和 alignment 图层中省略的固定线宽。显式线宽（包括与默认值相等的值）保持固定，映射线宽保留其标度规则；`fixed` 和未添加策略的图保持既有样式。这不表示所有几何常量或原生主题派生的美学表达式都统一相乘。
 
 {{prepare:comparescaledata}}
+
+<a id="target-size"></a>
 
 ## 目标尺寸诊断与明确顺序优化 {#target-size}
 

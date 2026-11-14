@@ -1,5 +1,7 @@
 <div class="task-intro"><p>Select local windows or segments while keeping source positions distinct from display transformations.</p></div>
 
+<a id="focus"></a>
+
 ## Focus without losing origins {#focus}
 
 
@@ -12,6 +14,8 @@ links by a linear display projection; it does not realign sequences. A scaled
 alignment length is flagged as estimated. `coordinates = "source"` restores
 source axis labels, including after repeated focusing.
 
+<a id="segments"></a>
+
 ## Independent windows and local reversal {#segments}
 {{code:segment}}
 {{figure:segment}}
@@ -23,6 +27,8 @@ Each window has a reversible source mapping; omitted gaps have no mapping.
 ggplot2 annotations. Supply the window ID when windows share a source sequence.
 Do not interpret display orientation as a change to the original strand.
 
+<a id="homology"></a>
+
 ## Explicit biological relationships {#homology}
 `find_ggchord_loci()` selects declared feature/name queries. `link_ggchord_clusters()`
 requires an explicit membership table and sequence pairs; equal gene names do
@@ -31,19 +37,23 @@ and `merge_ggchord_ribbons()` prepare existing alignments, preserving source
 membership and estimated-length flags. Bundle and density statistics summarize
 provided links rather than creating new sequence alignments.
 
+<a id="mapping"></a>
+
 ## Map an annotation back to source coordinates {#mapping}
 {{code:mappingposition}}
 {{figure:mappingposition}}
 
 The dot marks source position 10,100 bp on the first sequence.
 
-Run the [focus example](views.html#focus) first. The helper returns Cartesian x/y
+Run the [focus example](views.md#focus) first. The helper returns Cartesian x/y
 for a source position 100 bp inside the first selected window. It does not make all ordinary ggplot2 coordinates
 become genomic bp. In segmented views choose the window ID, and check positions
-in omitted gaps rather than extrapolating across them. Use [explicit homologs](homology.html)
+in omitted gaps rather than extrapolating across them. Use [explicit homologs](homology.md)
 when the locus selection comes from declared feature/cluster evidence.
+
+<a id="check-result"></a>
 
 ## Result checks {#check-result}
 Inspect cropping reports, break markers and source coordinates. Omitted gaps have no mapping; a display flip alone is not evidence of inversion.
 
-<div class="next-step">Continue: <a href="homology.html">CDS neighbourhood comparison →</a></div>
+<div class="next-step">Continue: <a href="homology.md">CDS neighbourhood comparison →</a></div>

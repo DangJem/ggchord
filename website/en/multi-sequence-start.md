@@ -1,8 +1,10 @@
 Build backbones, a link, a feature and labels in one section using bundled source records. Run in order; this section uses ggchord and optional dplyr.
 
+<a id="draw"></a>
+
 ## Draw the backbones {#draw}
 
-Run this section in a fresh R session after following the [installation instructions](installation.html).
+Run this section in a fresh R session after following the [installation instructions](installation.md).
 
 {{code:courseblockac}}
 
@@ -10,15 +12,21 @@ Run this section in a fresh R session after following the [installation instruct
 
 {{figure:frontbackbone}}
 
+<a id="read"></a>
+
 ## Read the plot {#read}
 
 Each arc represents a row of the sequence table. Find `MT108731.1` by its label and compare it with `MT118296.1`. These two sequences are 64,323 bp and 32,090 bp, so the first arc is about twice as long as the second.
 
 `geom_seq()` draws the backbones, `geom_seq_label()` adds their IDs, and `coord_chord()` arranges the backbones as arcs.
 
+<a id="try"></a>
+
 ## What the label layer controls {#try}
 
 Remove the `geom_seq_label()` line and run the code again. The arcs stay in place and the sequence names disappear.
+
+<a id="links"></a>
 
 ## Add an alignment ribbon {#links}
 
@@ -32,6 +40,8 @@ Follow the ribbon to both ends. It spans 26,298–51,139 bp on `MT108731.1` and 
 
 The default colour reflects the alignment identity for this row, about 98.6%. The crossed shape comes from how the interval ends are joined. Use the alignment coordinates to assess inversion.
 
+<a id="add-genes"></a>
+
 ## Add a CDS {#add-genes}
 
 <span id="prepare"></span><span id="inspect-genes"></span><span id="genes"></span>Select the original annotation starting at 43,765 bp on `OQ646790.1` and recover its biological strand.
@@ -44,20 +54,26 @@ Find the red arrow on green `OQ646790.1`. It marks the plus-strand integrase CDS
 
 To display the CDS name, add `geom_gene_label(data = chord_genes_example)`. It reads the label from `anno`. 
 
+<a id="labels"></a>
+
 ## Display the feature name {#labels}
 
 {{code:frontgenelabels}}
 
 {{figure:frontgenelabels}}
 
+<a id="collinear"></a>
+
 ## Switch to a linear layout {#collinear}
 
 {{code:courseblockad}}
 
-![Collinear](../assets/frontlabelledlinear.png)
+![Collinear](../../man/figures/frontlabelledlinear.png)
 
-This retains the ribbon, CDS and feature-name layers; Collinear selects adjacent rows by default. Compare all four views in the [next section](multi-sequence-views.html).
+This retains the ribbon, CDS and feature-name layers; Collinear selects adjacent rows by default. Compare all four views in the [next section](multi-sequence-views.md).
+
+<a id="adapt"></a>
 
 ## Use your own sequences {#adapt}
 
-Replace `seq_data_example` with a table containing `accver` and `length`. See [Basic input tables](data.html#prepare) for the column definitions, [Flexible parameter formats](parameters.html) for local settings, and [Four-view comparison](multi-sequence-views.html#input) for a strict coordinate comparison.
+Replace `seq_data_example` with a table containing `accver` and `length`. See [Basic input tables](data.md#prepare) for the column definitions, [Flexible parameter formats](parameters.md) for local settings, and [Four-view comparison](multi-sequence-views.md#input) for a strict coordinate comparison.

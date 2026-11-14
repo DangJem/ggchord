@@ -2,6 +2,8 @@
 
 <span id="prepare"></span>
 
+<a id="stack"></a>
+
 ## Preserve feature semantics {#stack}
 Use the first six pUC19 annotations to see how overlapping intervals share stacked positions. Source strand is retained.
 
@@ -12,6 +14,8 @@ Use the first six pUC19 annotations to see how overlapping intervals share stack
 uses the same Position, so text anchors follow those lanes. Prefer unique
 `feature_id` values for subset/reordered label inputs. The strict gene shortcut
 requires known `+/-`; general features retain unknown/bidirectional semantics.
+
+<a id="shapes"></a>
 
 ## Choose shapes by meaning {#shapes}
 | Geometry | Typical use | Important distinction |
@@ -26,6 +30,8 @@ identical defaults. Use `position_strand()` for signed offsets and
 `position_plasmid()` as a circular placement preset; the latter is not a fourth
 coordinate mode.
 
+<a id="decoration"></a>
+
 ## Highlight an interval without rewriting observations {#decoration}
 {{code:decorations}}
 {{figure:decorations}}
@@ -35,15 +41,19 @@ names sequences, `geom_seq_center_label()` supplies name/length in a single circ
 and `geom_seq_break()` marks cropped/segmented ends. `geom_seq_scale()` is an
 independent sequence-position reference bar for collinear plots; it differs from
 `scale_seq_position_continuous()`, which controls genomic axes on sequences.
-An ordinary ggplot2 annotation should use [position mapping](views.html#mapping)
+An ordinary ggplot2 annotation should use [position mapping](views.md#mapping)
 instead of treating bp as Cartesian x/y.
+
+<a id="check-result"></a>
 
 ## Result checks {#check-result}
 Check intervals and strands before shapes and labels. Unknown strands remain in general features; stacking changes display placement, not genomic coordinates.
 
-<div class="next-step">Continue: <a href="feature-geometry.html">Gene and feature arrow geometry →</a></div>
+<div class="next-step">Continue: <a href="feature-geometry.md">Gene and feature arrow geometry →</a></div>
 
-Compare shouldered/flush/triangle arrows on one observed CDS in [arrow geometry](feature-geometry.html#arrow-heads).
+Compare shouldered/flush/triangle arrows on one observed CDS in [arrow geometry](feature-geometry.md#arrow-heads).
+
+<a id="region-parameters"></a>
 
 ## Region side, width and offset {#region-parameters}
 

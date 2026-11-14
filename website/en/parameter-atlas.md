@@ -1,9 +1,11 @@
 Browse complete current parameters by purpose. Defaults come from actual formals and descriptions from matching Rd. NULL can resolve during layout. A choice vector may mean match.arg alternatives or multiple enabled options; read its description. Upstream reexports follow their own help.
 
-Start with the [function index](reference/index.html). Examples compare important parameters; references define full signatures and forwarding. Expand functions as needed; upstream dots are not presented as separate ggchord APIs.
+Start with the [function index](../../man/). Examples compare important parameters; references define full signatures and forwarding. Expand functions as needed; upstream dots are not presented as separate ggchord APIs.
 
 <label class="atlas-filter">Find a function or parameter<input type="search" id="parameter-filter" autocomplete="off"></label><p id="parameter-filter-status" class="atlas-status" role="status"></p>
 
+
+<a id="coordinates"></a>
 
 ## Coordinates and global views {#coordinates}
 
@@ -11,7 +13,7 @@ Start with the [function index](reference/index.html). Examples compare importan
 <details><summary><code>coord_chord()</code></summary>
 
 
-[Full reference](reference/coord_chord.html)
+[Full reference](../../man/coord_chord.Rd)
 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
@@ -30,7 +32,7 @@ Start with the [function index](reference/index.html). Examples compare importan
 <details><summary><code>coord_circular()</code></summary>
 
 
-[Full reference](reference/coord_circular.html)
+[Full reference](../../man/coord_circular.Rd)
 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
@@ -51,7 +53,7 @@ Start with the [function index](reference/index.html). Examples compare importan
 <details><summary><code>coord_collinear()</code></summary>
 
 
-[Full reference](reference/coord_collinear.html)
+[Full reference](../../man/coord_collinear.Rd)
 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
@@ -76,7 +78,7 @@ Start with the [function index](reference/index.html). Examples compare importan
 <details><summary><code>coord_dotplot()</code></summary>
 
 
-[Full reference](reference/coord_dotplot.html)
+[Full reference](../../man/coord_dotplot.Rd)
 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
@@ -98,7 +100,7 @@ Start with the [function index](reference/index.html). Examples compare importan
 <details><summary><code>coord_radial_synteny()</code></summary>
 
 
-[Full reference](reference/coord_radial_synteny.html)
+[Full reference](../../man/coord_radial_synteny.Rd)
 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
@@ -120,7 +122,7 @@ Start with the [function index](reference/index.html). Examples compare importan
 <details><summary><code>coord_sankey()</code></summary>
 
 
-[Full reference](reference/coord_sankey.html)
+[Full reference](../../man/coord_sankey.Rd)
 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
@@ -137,13 +139,15 @@ Start with the [function index](reference/index.html). Examples compare importan
 </details>
 
 
+<a id="layers"></a>
+
 ## Geometry and labels {#layers}
 
 <span id="api-geom_alignment_segment"></span>
 <details><summary><code>geom_alignment_segment()</code></summary>
 
 
-[Full reference](reference/geom_alignment_segment.html)
+[Full reference](../../man/geom_alignment_segment.Rd)
 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
@@ -166,7 +170,7 @@ Start with the [function index](reference/index.html). Examples compare importan
 <details><summary><code>geom_feature()</code></summary>
 
 
-[Full reference](reference/geom_feature.html)
+[Full reference](../../man/geom_feature.Rd)
 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
@@ -194,7 +198,7 @@ Start with the [function index](reference/index.html). Examples compare importan
 <details><summary><code>geom_feature_label()</code></summary>
 
 
-[Full reference](reference/geom_feature_label.html)
+[Full reference](../../man/geom_feature_label.Rd)
 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
@@ -220,7 +224,7 @@ Start with the [function index](reference/index.html). Examples compare importan
 <details><summary><code>geom_feature_label_repel()</code></summary>
 
 
-[Full reference](reference/geom_feature_label_repel.html)
+[Full reference](../../man/geom_feature_label_repel.Rd)
 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
@@ -252,7 +256,7 @@ Start with the [function index](reference/index.html). Examples compare importan
 <details><summary><code>geom_feature_plasmid()</code></summary>
 
 
-[Full reference](reference/geom_feature_plasmid.html)
+[Full reference](../../man/geom_feature_plasmid.Rd)
 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
@@ -280,7 +284,7 @@ Start with the [function index](reference/index.html). Examples compare importan
 <details><summary><code>geom_gene()</code></summary>
 
 
-[Full reference](reference/geom_gene.html)
+[Full reference](../../man/geom_gene.Rd)
 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
@@ -303,7 +307,7 @@ Start with the [function index](reference/index.html). Examples compare importan
 <details><summary><code>geom_gene_label()</code></summary>
 
 
-[Full reference](reference/geom_gene_label.html)
+[Full reference](../../man/geom_gene_label.Rd)
 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
@@ -329,7 +333,7 @@ Start with the [function index](reference/index.html). Examples compare importan
 <details><summary><code>geom_gene_label_repel()</code></summary>
 
 
-[Full reference](reference/geom_gene_label_repel.html)
+[Full reference](../../man/geom_gene_label_repel.Rd)
 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
@@ -357,7 +361,7 @@ Start with the [function index](reference/index.html). Examples compare importan
 <details><summary><code>geom_link_line()</code></summary>
 
 
-[Full reference](reference/geom_link_line.html)
+[Full reference](../../man/geom_link_line.Rd)
 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
@@ -388,7 +392,7 @@ Start with the [function index](reference/index.html). Examples compare importan
 <details><summary><code>geom_link_ribbon()</code></summary>
 
 
-[Full reference](reference/geom_link_ribbon.html)
+[Full reference](../../man/geom_link_ribbon.Rd)
 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
@@ -423,7 +427,7 @@ Start with the [function index](reference/index.html). Examples compare importan
 <details><summary><code>geom_primer()</code></summary>
 
 
-[Full reference](reference/geom_primer.html)
+[Full reference](../../man/geom_primer.Rd)
 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
@@ -445,7 +449,7 @@ Start with the [function index](reference/index.html). Examples compare importan
 <details><summary><code>geom_primer_label_repel()</code></summary>
 
 
-[Full reference](reference/geom_primer_label_repel.html)
+[Full reference](../../man/geom_primer_label_repel.Rd)
 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
@@ -467,7 +471,7 @@ Start with the [function index](reference/index.html). Examples compare importan
 <details><summary><code>geom_residue()</code></summary>
 
 
-[Full reference](reference/geom_residue.html)
+[Full reference](../../man/geom_residue.Rd)
 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
@@ -486,7 +490,7 @@ Start with the [function index](reference/index.html). Examples compare importan
 <details><summary><code>geom_restriction_site()</code></summary>
 
 
-[Full reference](reference/geom_restriction_site.html)
+[Full reference](../../man/geom_restriction_site.Rd)
 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
@@ -517,7 +521,7 @@ Start with the [function index](reference/index.html). Examples compare importan
 <details><summary><code>geom_seq()</code></summary>
 
 
-[Full reference](reference/geom_seq.html)
+[Full reference](../../man/geom_seq.Rd)
 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
@@ -545,7 +549,7 @@ Start with the [function index](reference/index.html). Examples compare importan
 <details><summary><code>geom_seq_break()</code></summary>
 
 
-[Full reference](reference/geom_seq_break.html)
+[Full reference](../../man/geom_seq_break.Rd)
 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
@@ -567,7 +571,7 @@ Start with the [function index](reference/index.html). Examples compare importan
 <details><summary><code>geom_seq_center_label()</code></summary>
 
 
-[Full reference](reference/geom_seq_center_label.html)
+[Full reference](../../man/geom_seq_center_label.Rd)
 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
@@ -589,7 +593,7 @@ Start with the [function index](reference/index.html). Examples compare importan
 <details><summary><code>geom_seq_label()</code></summary>
 
 
-[Full reference](reference/geom_seq_label.html)
+[Full reference](../../man/geom_seq_label.Rd)
 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
@@ -614,7 +618,7 @@ Start with the [function index](reference/index.html). Examples compare importan
 <details><summary><code>geom_seq_region()</code></summary>
 
 
-[Full reference](reference/geom_seq_region.html)
+[Full reference](../../man/geom_seq_region.Rd)
 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
@@ -638,7 +642,7 @@ Start with the [function index](reference/index.html). Examples compare importan
 <details><summary><code>geom_seq_scale()</code></summary>
 
 
-[Full reference](reference/geom_seq_scale.html)
+[Full reference](../../man/geom_seq_scale.Rd)
 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
@@ -665,7 +669,7 @@ Start with the [function index](reference/index.html). Examples compare importan
 <details><summary><code>geom_track()</code></summary>
 
 
-[Full reference](reference/geom_track.html)
+[Full reference](../../man/geom_track.Rd)
 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
@@ -688,7 +692,7 @@ Start with the [function index](reference/index.html). Examples compare importan
 <details><summary><code>geom_track_bar()</code></summary>
 
 
-[Full reference](reference/geom_track.html)
+[Full reference](../../man/geom_track.Rd)
 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
@@ -713,7 +717,7 @@ Start with the [function index](reference/index.html). Examples compare importan
 <details><summary><code>geom_track_col()</code></summary>
 
 
-[Full reference](reference/geom_track.html)
+[Full reference](../../man/geom_track.Rd)
 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
@@ -732,7 +736,7 @@ Start with the [function index](reference/index.html). Examples compare importan
 <details><summary><code>geom_track_line()</code></summary>
 
 
-[Full reference](reference/geom_track_tile.html)
+[Full reference](../../man/geom_track_tile.Rd)
 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
@@ -756,7 +760,7 @@ Start with the [function index](reference/index.html). Examples compare importan
 <details><summary><code>geom_track_tile()</code></summary>
 
 
-[Full reference](reference/geom_track_tile.html)
+[Full reference](../../man/geom_track_tile.Rd)
 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
@@ -777,13 +781,15 @@ Start with the [function index](reference/index.html). Examples compare importan
 </details>
 
 
+<a id="positions"></a>
+
 ## Local placement {#positions}
 
 <span id="api-position_feature_stack"></span>
 <details><summary><code>position_feature_stack()</code></summary>
 
 
-[Full reference](reference/position_feature_stack.html)
+[Full reference](../../man/position_feature_stack.Rd)
 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
@@ -798,7 +804,7 @@ Start with the [function index](reference/index.html). Examples compare importan
 <details><summary><code>position_plasmid()</code></summary>
 
 
-[Full reference](reference/position_plasmid.html)
+[Full reference](../../man/position_plasmid.Rd)
 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
@@ -811,7 +817,7 @@ Start with the [function index](reference/index.html). Examples compare importan
 <details><summary><code>position_strand()</code></summary>
 
 
-[Full reference](reference/position_strand.html)
+[Full reference](../../man/position_strand.Rd)
 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
@@ -824,7 +830,7 @@ Start with the [function index](reference/index.html). Examples compare importan
 <details><summary><code>position_track()</code></summary>
 
 
-[Full reference](reference/position_track.html)
+[Full reference](../../man/position_track.Rd)
 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
@@ -838,13 +844,15 @@ Start with the [function index](reference/index.html). Examples compare importan
 </details>
 
 
+<a id="statistics"></a>
+
 ## Link statistics {#statistics}
 
 <span id="api-stat_ribbon_bundle"></span>
 <details><summary><code>stat_ribbon_bundle()</code></summary>
 
 
-[Full reference](reference/stat_ribbon_bundle.html)
+[Full reference](../../man/stat_ribbon_bundle.Rd)
 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
@@ -866,7 +874,7 @@ Start with the [function index](reference/index.html). Examples compare importan
 <details><summary><code>stat_ribbon_density()</code></summary>
 
 
-[Full reference](reference/stat_ribbon_density.html)
+[Full reference](../../man/stat_ribbon_density.Rd)
 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
@@ -884,13 +892,15 @@ Start with the [function index](reference/index.html). Examples compare importan
 </details>
 
 
+<a id="scales"></a>
+
 ## Role scales {#scales}
 
 <span id="api-scale_feature_fill_manual"></span>
 <details><summary><code>scale_feature_fill_manual()</code></summary>
 
 
-[Full reference](reference/scale_gene_fill_manual.html)
+[Full reference](../../man/scale_gene_fill_manual.Rd)
 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
@@ -905,7 +915,7 @@ Start with the [function index](reference/index.html). Examples compare importan
 <details><summary><code>scale_feature_fill_plasmid()</code></summary>
 
 
-[Full reference](reference/scale_feature_fill_plasmid.html)
+[Full reference](../../man/scale_feature_fill_plasmid.Rd)
 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
@@ -919,7 +929,7 @@ Start with the [function index](reference/index.html). Examples compare importan
 <details><summary><code>scale_feature_shape_manual()</code></summary>
 
 
-[Full reference](reference/scale_feature_shape_manual.html)
+[Full reference](../../man/scale_feature_shape_manual.Rd)
 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
@@ -936,7 +946,7 @@ Start with the [function index](reference/index.html). Examples compare importan
 <details><summary><code>scale_feature_shape_plasmid()</code></summary>
 
 
-[Full reference](reference/scale_feature_fill_plasmid.html)
+[Full reference](../../man/scale_feature_fill_plasmid.Rd)
 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
@@ -951,7 +961,7 @@ Start with the [function index](reference/index.html). Examples compare importan
 <details><summary><code>scale_gene_fill_manual()</code></summary>
 
 
-[Full reference](reference/scale_gene_fill_manual.html)
+[Full reference](../../man/scale_gene_fill_manual.Rd)
 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
@@ -965,7 +975,7 @@ Start with the [function index](reference/index.html). Examples compare importan
 <details><summary><code>scale_link_alpha_continuous()</code></summary>
 
 
-[Full reference](reference/scale_link.html)
+[Full reference](../../man/scale_link.Rd)
 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
@@ -978,7 +988,7 @@ Start with the [function index](reference/index.html). Examples compare importan
 <details><summary><code>scale_link_alpha_manual()</code></summary>
 
 
-[Full reference](reference/scale_link.html)
+[Full reference](../../man/scale_link.Rd)
 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
@@ -992,7 +1002,7 @@ Start with the [function index](reference/index.html). Examples compare importan
 <details><summary><code>scale_link_color_gradientn()</code></summary>
 
 
-[Full reference](reference/scale_link.html)
+[Full reference](../../man/scale_link.Rd)
 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
@@ -1005,7 +1015,7 @@ Start with the [function index](reference/index.html). Examples compare importan
 <details><summary><code>scale_link_color_manual()</code></summary>
 
 
-[Full reference](reference/scale_link.html)
+[Full reference](../../man/scale_link.Rd)
 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
@@ -1019,7 +1029,7 @@ Start with the [function index](reference/index.html). Examples compare importan
 <details><summary><code>scale_link_colour_gradientn()</code></summary>
 
 
-[Full reference](reference/scale_link.html)
+[Full reference](../../man/scale_link.Rd)
 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
@@ -1032,7 +1042,7 @@ Start with the [function index](reference/index.html). Examples compare importan
 <details><summary><code>scale_link_colour_manual()</code></summary>
 
 
-[Full reference](reference/scale_link.html)
+[Full reference](../../man/scale_link.Rd)
 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
@@ -1046,7 +1056,7 @@ Start with the [function index](reference/index.html). Examples compare importan
 <details><summary><code>scale_link_linetype_manual()</code></summary>
 
 
-[Full reference](reference/scale_link.html)
+[Full reference](../../man/scale_link.Rd)
 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
@@ -1060,7 +1070,7 @@ Start with the [function index](reference/index.html). Examples compare importan
 <details><summary><code>scale_link_linewidth_continuous()</code></summary>
 
 
-[Full reference](reference/scale_link.html)
+[Full reference](../../man/scale_link.Rd)
 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
@@ -1073,7 +1083,7 @@ Start with the [function index](reference/index.html). Examples compare importan
 <details><summary><code>scale_link_linewidth_manual()</code></summary>
 
 
-[Full reference](reference/scale_link.html)
+[Full reference](../../man/scale_link.Rd)
 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
@@ -1087,7 +1097,7 @@ Start with the [function index](reference/index.html). Examples compare importan
 <details><summary><code>scale_region_fill_manual()</code></summary>
 
 
-[Full reference](reference/scale_gene_fill_manual.html)
+[Full reference](../../man/scale_gene_fill_manual.Rd)
 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
@@ -1101,7 +1111,7 @@ Start with the [function index](reference/index.html). Examples compare importan
 <details><summary><code>scale_ribbon_alpha_continuous()</code></summary>
 
 
-[Full reference](reference/scale_ribbon_alpha_continuous.html)
+[Full reference](../../man/scale_ribbon_alpha_continuous.Rd)
 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
@@ -1115,7 +1125,7 @@ Start with the [function index](reference/index.html). Examples compare importan
 <details><summary><code>scale_ribbon_alpha_manual()</code></summary>
 
 
-[Full reference](reference/scale_ribbon_alpha_continuous.html)
+[Full reference](../../man/scale_ribbon_alpha_continuous.Rd)
 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
@@ -1129,7 +1139,7 @@ Start with the [function index](reference/index.html). Examples compare importan
 <details><summary><code>scale_ribbon_color_manual()</code></summary>
 
 
-[Full reference](reference/scale_ribbon_alpha_continuous.html)
+[Full reference](../../man/scale_ribbon_alpha_continuous.Rd)
 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
@@ -1143,7 +1153,7 @@ Start with the [function index](reference/index.html). Examples compare importan
 <details><summary><code>scale_ribbon_colour_manual()</code></summary>
 
 
-[Full reference](reference/scale_ribbon_alpha_continuous.html)
+[Full reference](../../man/scale_ribbon_alpha_continuous.Rd)
 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
@@ -1157,7 +1167,7 @@ Start with the [function index](reference/index.html). Examples compare importan
 <details><summary><code>scale_ribbon_fill_gradientn()</code></summary>
 
 
-[Full reference](reference/scale_ribbon_fill_stepsn.html)
+[Full reference](../../man/scale_ribbon_fill_stepsn.Rd)
 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
@@ -1174,7 +1184,7 @@ Start with the [function index](reference/index.html). Examples compare importan
 <details><summary><code>scale_ribbon_fill_identity()</code></summary>
 
 
-[Full reference](reference/scale_ribbon_fill_stepsn.html)
+[Full reference](../../man/scale_ribbon_fill_stepsn.Rd)
 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
@@ -1187,7 +1197,7 @@ Start with the [function index](reference/index.html). Examples compare importan
 <details><summary><code>scale_ribbon_fill_manual()</code></summary>
 
 
-[Full reference](reference/scale_ribbon_fill_stepsn.html)
+[Full reference](../../man/scale_ribbon_fill_stepsn.Rd)
 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
@@ -1201,7 +1211,7 @@ Start with the [function index](reference/index.html). Examples compare importan
 <details><summary><code>scale_ribbon_fill_stepsn()</code></summary>
 
 
-[Full reference](reference/scale_ribbon_fill_stepsn.html)
+[Full reference](../../man/scale_ribbon_fill_stepsn.Rd)
 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
@@ -1218,7 +1228,7 @@ Start with the [function index](reference/index.html). Examples compare importan
 <details><summary><code>scale_ribbon_linetype_manual()</code></summary>
 
 
-[Full reference](reference/scale_ribbon_alpha_continuous.html)
+[Full reference](../../man/scale_ribbon_alpha_continuous.Rd)
 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
@@ -1232,7 +1242,7 @@ Start with the [function index](reference/index.html). Examples compare importan
 <details><summary><code>scale_seq_color_manual()</code></summary>
 
 
-[Full reference](reference/scale_seq_colour_manual.html)
+[Full reference](../../man/scale_seq_colour_manual.Rd)
 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
@@ -1246,7 +1256,7 @@ Start with the [function index](reference/index.html). Examples compare importan
 <details><summary><code>scale_seq_colour_manual()</code></summary>
 
 
-[Full reference](reference/scale_seq_colour_manual.html)
+[Full reference](../../man/scale_seq_colour_manual.Rd)
 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
@@ -1260,7 +1270,7 @@ Start with the [function index](reference/index.html). Examples compare importan
 <details><summary><code>scale_seq_position_continuous()</code></summary>
 
 
-[Full reference](reference/scale_seq_position_continuous.html)
+[Full reference](../../man/scale_seq_position_continuous.Rd)
 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
@@ -1284,7 +1294,7 @@ Start with the [function index](reference/index.html). Examples compare importan
 <details><summary><code>scale_seq_ring_manual()</code></summary>
 
 
-[Full reference](reference/scale_seq_ring_manual.html)
+[Full reference](../../man/scale_seq_ring_manual.Rd)
 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
@@ -1301,7 +1311,7 @@ Start with the [function index](reference/index.html). Examples compare importan
 <details><summary><code>scale_track_colour_gradientn()</code></summary>
 
 
-[Full reference](reference/scale_track_fill_gradientn.html)
+[Full reference](../../man/scale_track_fill_gradientn.Rd)
 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
@@ -1317,7 +1327,7 @@ Start with the [function index](reference/index.html). Examples compare importan
 <details><summary><code>scale_track_colour_manual()</code></summary>
 
 
-[Full reference](reference/scale_track_fill_gradientn.html)
+[Full reference](../../man/scale_track_fill_gradientn.Rd)
 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
@@ -1332,7 +1342,7 @@ Start with the [function index](reference/index.html). Examples compare importan
 <details><summary><code>scale_track_fill_gradientn()</code></summary>
 
 
-[Full reference](reference/scale_track_fill_gradientn.html)
+[Full reference](../../man/scale_track_fill_gradientn.Rd)
 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
@@ -1348,7 +1358,7 @@ Start with the [function index](reference/index.html). Examples compare importan
 <details><summary><code>scale_track_fill_manual()</code></summary>
 
 
-[Full reference](reference/scale_track_fill_gradientn.html)
+[Full reference](../../man/scale_track_fill_gradientn.Rd)
 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
@@ -1363,7 +1373,7 @@ Start with the [function index](reference/index.html). Examples compare importan
 <details><summary><code>scale_track_value_continuous()</code></summary>
 
 
-[Full reference](reference/scale_track_value_continuous.html)
+[Full reference](../../man/scale_track_value_continuous.Rd)
 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
@@ -1382,13 +1392,15 @@ Start with the [function index](reference/index.html). Examples compare importan
 </details>
 
 
+<a id="guides"></a>
+
 ## Legends and guides {#guides}
 
 <span id="api-guide_ggchord_colorbar"></span>
 <details><summary><code>guide_ggchord_colorbar()</code></summary>
 
 
-[Full reference](reference/guide_ggchord_legend.html)
+[Full reference](../../man/guide_ggchord_legend.Rd)
 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
@@ -1415,7 +1427,7 @@ Start with the [function index](reference/index.html). Examples compare importan
 <details><summary><code>guide_ggchord_colourbar()</code></summary>
 
 
-[Full reference](reference/guide_ggchord_legend.html)
+[Full reference](../../man/guide_ggchord_legend.Rd)
 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
@@ -1442,7 +1454,7 @@ Start with the [function index](reference/index.html). Examples compare importan
 <details><summary><code>guide_ggchord_legend()</code></summary>
 
 
-[Full reference](reference/guide_ggchord_legend.html)
+[Full reference](../../man/guide_ggchord_legend.Rd)
 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
@@ -1462,13 +1474,15 @@ Start with the [function index](reference/index.html). Examples compare importan
 </details>
 
 
+<a id="themes"></a>
+
 ## Themes and physical appearance {#themes}
 
 <span id="api-theme_ggchord"></span>
 <details><summary><code>theme_ggchord()</code></summary>
 
 
-[Full reference](reference/theme_ggchord.html)
+[Full reference](../../man/theme_ggchord.Rd)
 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
@@ -1589,7 +1603,7 @@ Start with the [function index](reference/index.html). Examples compare importan
 <details><summary><code>theme_ggchord_dark()</code></summary>
 
 
-[Full reference](reference/theme_ggchord.html)
+[Full reference](../../man/theme_ggchord.Rd)
 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
@@ -1710,7 +1724,7 @@ Start with the [function index](reference/index.html). Examples compare importan
 <details><summary><code>theme_ggchord_minimal()</code></summary>
 
 
-[Full reference](reference/theme_ggchord.html)
+[Full reference](../../man/theme_ggchord.Rd)
 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
@@ -1831,7 +1845,7 @@ Start with the [function index](reference/index.html). Examples compare importan
 <details><summary><code>theme_ggchord_plasmid()</code></summary>
 
 
-[Full reference](reference/theme_ggchord.html)
+[Full reference](../../man/theme_ggchord.Rd)
 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
@@ -1952,7 +1966,7 @@ Start with the [function index](reference/index.html). Examples compare importan
 <details><summary><code>theme_ggchord_publication()</code></summary>
 
 
-[Full reference](reference/theme_ggchord.html)
+[Full reference](../../man/theme_ggchord.Rd)
 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
@@ -2070,13 +2084,15 @@ Start with the [function index](reference/index.html). Examples compare importan
 </details>
 
 
+<a id="workflows"></a>
+
 ## Input, conversion, diagnostics and output {#workflows}
 
 <span id="api-adapt_ggchord"></span>
 <details><summary><code>adapt_ggchord()</code></summary>
 
 
-[Full reference](reference/adapt_ggchord.html)
+[Full reference](../../man/adapt_ggchord.Rd)
 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
@@ -2092,7 +2108,7 @@ Start with the [function index](reference/index.html). Examples compare importan
 <details><summary><code>as_ggchord_alignment()</code></summary>
 
 
-[Full reference](reference/as_ggchord_alignment.html)
+[Full reference](../../man/as_ggchord_alignment.Rd)
 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
@@ -2108,7 +2124,7 @@ Start with the [function index](reference/index.html). Examples compare importan
 <details><summary><code>as_ggchord_feature()</code></summary>
 
 
-[Full reference](reference/as_ggchord_feature.html)
+[Full reference](../../man/as_ggchord_feature.Rd)
 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
@@ -2122,7 +2138,7 @@ Start with the [function index](reference/index.html). Examples compare importan
 <details><summary><code>as_ggchord_link()</code></summary>
 
 
-[Full reference](reference/as_ggchord_link.html)
+[Full reference](../../man/as_ggchord_link.Rd)
 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
@@ -2136,7 +2152,7 @@ Start with the [function index](reference/index.html). Examples compare importan
 <details><summary><code>as_ggchord_seq()</code></summary>
 
 
-[Full reference](reference/as_ggchord_seq.html)
+[Full reference](../../man/as_ggchord_seq.Rd)
 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
@@ -2152,7 +2168,7 @@ Start with the [function index](reference/index.html). Examples compare importan
 <details><summary><code>build_ggchord_cds()</code></summary>
 
 
-[Full reference](reference/build_ggchord_cds.html)
+[Full reference](../../man/build_ggchord_cds.Rd)
 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
@@ -2167,7 +2183,7 @@ Start with the [function index](reference/index.html). Examples compare importan
 <details><summary><code>bundle_ggchord_ribbons()</code></summary>
 
 
-[Full reference](reference/bundle_ggchord_ribbons.html)
+[Full reference](../../man/bundle_ggchord_ribbons.Rd)
 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
@@ -2185,7 +2201,7 @@ Start with the [function index](reference/index.html). Examples compare importan
 <details><summary><code>clean_ggchord_data()</code></summary>
 
 
-[Full reference](reference/clean_ggchord_data.html)
+[Full reference](../../man/clean_ggchord_data.Rd)
 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
@@ -2207,7 +2223,7 @@ Start with the [function index](reference/index.html). Examples compare importan
 <details><summary><code>deduplicate_ggchord_ribbons()</code></summary>
 
 
-[Full reference](reference/deduplicate_ggchord_ribbons.html)
+[Full reference](../../man/deduplicate_ggchord_ribbons.Rd)
 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
@@ -2224,7 +2240,7 @@ Start with the [function index](reference/index.html). Examples compare importan
 <details><summary><code>diagnose_ggchord()</code></summary>
 
 
-[Full reference](reference/diagnose_ggchord.html)
+[Full reference](../../man/diagnose_ggchord.Rd)
 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
@@ -2245,7 +2261,7 @@ Start with the [function index](reference/index.html). Examples compare importan
 <details><summary><code>export_ggchord_fusion()</code></summary>
 
 
-[Full reference](reference/export_ggchord_fusion.html)
+[Full reference](../../man/export_ggchord_fusion.Rd)
 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
@@ -2260,7 +2276,7 @@ Start with the [function index](reference/index.html). Examples compare importan
 <details><summary><code>export_ggchord_layout()</code></summary>
 
 
-[Full reference](reference/export_ggchord_layout.html)
+[Full reference](../../man/export_ggchord_layout.Rd)
 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
@@ -2275,7 +2291,7 @@ Start with the [function index](reference/index.html). Examples compare importan
 <details><summary><code>filter_ggchord_ribbons()</code></summary>
 
 
-[Full reference](reference/filter_ggchord_ribbons.html)
+[Full reference](../../man/filter_ggchord_ribbons.Rd)
 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
@@ -2299,7 +2315,7 @@ Start with the [function index](reference/index.html). Examples compare importan
 <details><summary><code>filter_restriction_sites()</code></summary>
 
 
-[Full reference](reference/filter_restriction_sites.html)
+[Full reference](../../man/filter_restriction_sites.Rd)
 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
@@ -2319,7 +2335,7 @@ Start with the [function index](reference/index.html). Examples compare importan
 <details><summary><code>find_common_features()</code></summary>
 
 
-[Full reference](reference/find_common_features.html)
+[Full reference](../../man/find_common_features.Rd)
 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
@@ -2340,7 +2356,7 @@ Start with the [function index](reference/index.html). Examples compare importan
 <details><summary><code>find_ggchord_loci()</code></summary>
 
 
-[Full reference](reference/find_ggchord_loci.html)
+[Full reference](../../man/find_ggchord_loci.Rd)
 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
@@ -2357,7 +2373,7 @@ Start with the [function index](reference/index.html). Examples compare importan
 <details><summary><code>find_primer_bindings()</code></summary>
 
 
-[Full reference](reference/find_primer_bindings.html)
+[Full reference](../../man/find_primer_bindings.Rd)
 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
@@ -2376,7 +2392,7 @@ Start with the [function index](reference/index.html). Examples compare importan
 <details><summary><code>find_restriction_sites()</code></summary>
 
 
-[Full reference](reference/find_restriction_sites.html)
+[Full reference](../../man/find_restriction_sites.Rd)
 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
@@ -2394,7 +2410,7 @@ Start with the [function index](reference/index.html). Examples compare importan
 <details><summary><code>focus_ggchord_data()</code></summary>
 
 
-[Full reference](reference/focus_ggchord_data.html)
+[Full reference](../../man/focus_ggchord_data.Rd)
 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
@@ -2413,7 +2429,7 @@ Start with the [function index](reference/index.html). Examples compare importan
 <details><summary><code>focus_ggchord_track()</code></summary>
 
 
-[Full reference](reference/focus_ggchord_track.html)
+[Full reference](../../man/focus_ggchord_track.Rd)
 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
@@ -2430,7 +2446,7 @@ Start with the [function index](reference/index.html). Examples compare importan
 <details><summary><code>fusion_panel()</code></summary>
 
 
-[Full reference](reference/fusion_panel.html)
+[Full reference](../../man/fusion_panel.Rd)
 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
@@ -2449,7 +2465,7 @@ Start with the [function index](reference/index.html). Examples compare importan
 <details><summary><code>fusion_ribbon()</code></summary>
 
 
-[Full reference](reference/fusion_ribbon.html)
+[Full reference](../../man/fusion_ribbon.Rd)
 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
@@ -2477,7 +2493,7 @@ Start with the [function index](reference/index.html). Examples compare importan
 <details><summary><code>get_chord_layout()</code></summary>
 
 
-[Full reference](reference/get_chord_layout.html)
+[Full reference](../../man/get_chord_layout.Rd)
 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
@@ -2491,7 +2507,7 @@ Start with the [function index](reference/index.html). Examples compare importan
 <details><summary><code>ggchord()</code></summary>
 
 
-[Full reference](reference/ggchord.html)
+[Full reference](../../man/ggchord.Rd)
 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
@@ -2510,7 +2526,7 @@ Start with the [function index](reference/index.html). Examples compare importan
 <details><summary><code>ggchord_fusion()</code></summary>
 
 
-[Full reference](reference/ggchord_fusion.html)
+[Full reference](../../man/ggchord_fusion.Rd)
 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
@@ -2528,7 +2544,7 @@ Start with the [function index](reference/index.html). Examples compare importan
 <details><summary><code>link_ggchord_clusters()</code></summary>
 
 
-[Full reference](reference/link_ggchord_clusters.html)
+[Full reference](../../man/link_ggchord_clusters.Rd)
 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
@@ -2546,7 +2562,7 @@ Start with the [function index](reference/index.html). Examples compare importan
 <details><summary><code>magnify_ggchord()</code></summary>
 
 
-[Full reference](reference/magnify_ggchord.html)
+[Full reference](../../man/magnify_ggchord.Rd)
 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
@@ -2575,7 +2591,7 @@ Start with the [function index](reference/index.html). Examples compare importan
 <details><summary><code>map_alignment_position()</code></summary>
 
 
-[Full reference](reference/map_alignment_position.html)
+[Full reference](../../man/map_alignment_position.Rd)
 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
@@ -2591,7 +2607,7 @@ Start with the [function index](reference/index.html). Examples compare importan
 <details><summary><code>map_ggchord_position()</code></summary>
 
 
-[Full reference](reference/map_ggchord_position.html)
+[Full reference](../../man/map_ggchord_position.Rd)
 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
@@ -2609,7 +2625,7 @@ Start with the [function index](reference/index.html). Examples compare importan
 <details><summary><code>merge_ggchord_ribbons()</code></summary>
 
 
-[Full reference](reference/merge_ggchord_ribbons.html)
+[Full reference](../../man/merge_ggchord_ribbons.Rd)
 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
@@ -2627,7 +2643,7 @@ Start with the [function index](reference/index.html). Examples compare importan
 <details><summary><code>optimize_ggchord_layout()</code></summary>
 
 
-[Full reference](reference/optimize_ggchord_layout.html)
+[Full reference](../../man/optimize_ggchord_layout.Rd)
 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
@@ -2646,7 +2662,7 @@ Start with the [function index](reference/index.html). Examples compare importan
 <details><summary><code>prepare_ggchord_data()</code></summary>
 
 
-[Full reference](reference/prepare_ggchord_data.html)
+[Full reference](../../man/prepare_ggchord_data.Rd)
 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
@@ -2666,7 +2682,7 @@ Start with the [function index](reference/index.html). Examples compare importan
 <details><summary><code>primer_catalog()</code></summary>
 
 
-[Full reference](reference/primer_catalog.html)
+[Full reference](../../man/primer_catalog.Rd)
 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
@@ -2680,7 +2696,7 @@ Start with the [function index](reference/index.html). Examples compare importan
 <details><summary><code>project_ggchord_features()</code></summary>
 
 
-[Full reference](reference/project_ggchord_features.html)
+[Full reference](../../man/project_ggchord_features.Rd)
 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
@@ -2696,7 +2712,7 @@ Start with the [function index](reference/index.html). Examples compare importan
 <details><summary><code>project_ggchord_links()</code></summary>
 
 
-[Full reference](reference/project_ggchord_links.html)
+[Full reference](../../man/project_ggchord_links.Rd)
 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
@@ -2711,7 +2727,7 @@ Start with the [function index](reference/index.html). Examples compare importan
 <details><summary><code>read_aligned_fasta()</code></summary>
 
 
-[Full reference](reference/read_aligned_fasta.html)
+[Full reference](../../man/read_aligned_fasta.Rd)
 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
@@ -2728,7 +2744,7 @@ Start with the [function index](reference/index.html). Examples compare importan
 <details><summary><code>read_bed()</code></summary>
 
 
-[Full reference](reference/read_bed.html)
+[Full reference](../../man/read_bed.Rd)
 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
@@ -2743,7 +2759,7 @@ Start with the [function index](reference/index.html). Examples compare importan
 <details><summary><code>read_bedgraph()</code></summary>
 
 
-[Full reference](reference/read_bedgraph.html)
+[Full reference](../../man/read_bedgraph.Rd)
 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
@@ -2758,7 +2774,7 @@ Start with the [function index](reference/index.html). Examples compare importan
 <details><summary><code>read_bedpe()</code></summary>
 
 
-[Full reference](reference/read_bedpe.html)
+[Full reference](../../man/read_bedpe.Rd)
 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
@@ -2774,7 +2790,7 @@ Start with the [function index](reference/index.html). Examples compare importan
 <details><summary><code>read_bigwig()</code></summary>
 
 
-[Full reference](reference/read_bigwig.html)
+[Full reference](../../man/read_bigwig.Rd)
 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
@@ -2790,7 +2806,7 @@ Start with the [function index](reference/index.html). Examples compare importan
 <details><summary><code>read_blast()</code></summary>
 
 
-[Full reference](reference/read_blast.html)
+[Full reference](../../man/read_blast.Rd)
 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
@@ -2809,7 +2825,7 @@ Start with the [function index](reference/index.html). Examples compare importan
 <details><summary><code>read_chain()</code></summary>
 
 
-[Full reference](reference/read_chain.html)
+[Full reference](../../man/read_chain.Rd)
 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
@@ -2828,7 +2844,7 @@ Start with the [function index](reference/index.html). Examples compare importan
 <details><summary><code>read_delta()</code></summary>
 
 
-[Full reference](reference/read_delta.html)
+[Full reference](../../man/read_delta.Rd)
 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
@@ -2846,7 +2862,7 @@ Start with the [function index](reference/index.html). Examples compare importan
 <details><summary><code>read_fasta_lengths()</code></summary>
 
 
-[Full reference](reference/read_fasta_lengths.html)
+[Full reference](../../man/read_fasta_lengths.Rd)
 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
@@ -2864,7 +2880,7 @@ Start with the [function index](reference/index.html). Examples compare importan
 <details><summary><code>read_feature_relations()</code></summary>
 
 
-[Full reference](reference/read_feature_relations.html)
+[Full reference](../../man/read_feature_relations.Rd)
 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
@@ -2882,7 +2898,7 @@ Start with the [function index](reference/index.html). Examples compare importan
 <details><summary><code>read_genbank()</code></summary>
 
 
-[Full reference](reference/read_genbank.html)
+[Full reference](../../man/read_genbank.Rd)
 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
@@ -2901,7 +2917,7 @@ Start with the [function index](reference/index.html). Examples compare importan
 <details><summary><code>read_gff3()</code></summary>
 
 
-[Full reference](reference/read_gff3.html)
+[Full reference](../../man/read_gff3.Rd)
 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
@@ -2919,7 +2935,7 @@ Start with the [function index](reference/index.html). Examples compare importan
 <details><summary><code>read_maf()</code></summary>
 
 
-[Full reference](reference/read_maf.html)
+[Full reference](../../man/read_maf.Rd)
 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
@@ -2936,7 +2952,7 @@ Start with the [function index](reference/index.html). Examples compare importan
 <details><summary><code>read_paf()</code></summary>
 
 
-[Full reference](reference/read_paf.html)
+[Full reference](../../man/read_paf.Rd)
 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
@@ -2951,7 +2967,7 @@ Start with the [function index](reference/index.html). Examples compare importan
 <details><summary><code>read_signature_matches()</code></summary>
 
 
-[Full reference](reference/read_signature_matches.html)
+[Full reference](../../man/read_signature_matches.Rd)
 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
@@ -2967,7 +2983,7 @@ Start with the [function index](reference/index.html). Examples compare importan
 <details><summary><code>read_vcf()</code></summary>
 
 
-[Full reference](reference/read_vcf.html)
+[Full reference](../../man/read_vcf.Rd)
 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
@@ -2984,7 +3000,7 @@ Start with the [function index](reference/index.html). Examples compare importan
 <details><summary><code>register_ggchord_alignment()</code></summary>
 
 
-[Full reference](reference/register_ggchord_alignment.html)
+[Full reference](../../man/register_ggchord_alignment.Rd)
 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
@@ -2998,7 +3014,7 @@ Start with the [function index](reference/index.html). Examples compare importan
 <details><summary><code>segment_ggchord_data()</code></summary>
 
 
-[Full reference](reference/segment_ggchord_data.html)
+[Full reference](../../man/segment_ggchord_data.Rd)
 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
@@ -3018,7 +3034,7 @@ Start with the [function index](reference/index.html). Examples compare importan
 <details><summary><code>translate_ggchord_cds()</code></summary>
 
 
-[Full reference](reference/translate_ggchord_cds.html)
+[Full reference](../../man/translate_ggchord_cds.Rd)
 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
@@ -3035,7 +3051,7 @@ Start with the [function index](reference/index.html). Examples compare importan
 <details><summary><code>validate_ggchord_data()</code></summary>
 
 
-[Full reference](reference/validate_ggchord_data.html)
+[Full reference](../../man/validate_ggchord_data.Rd)
 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
@@ -3055,7 +3071,7 @@ Start with the [function index](reference/index.html). Examples compare importan
 <details><summary><code>validate_ggchord_hierarchy()</code></summary>
 
 
-[Full reference](reference/validate_ggchord_hierarchy.html)
+[Full reference](../../man/validate_ggchord_hierarchy.Rd)
 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
@@ -3070,7 +3086,7 @@ Start with the [function index](reference/index.html). Examples compare importan
 <details><summary><code>view_ggchord()</code></summary>
 
 
-[Full reference](reference/view_ggchord.html)
+[Full reference](../../man/view_ggchord.Rd)
 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
@@ -3087,6 +3103,8 @@ Start with the [function index](reference/index.html). Examples compare importan
 </details>
 
 
+<a id="upstream"></a>
+
 ## Upstream reexports and objects {#upstream}
 
 These retain upstream ggplot2/grid semantics rather than defining new ggchord layers. After_stat and after_scale differ by stage even if identical compares their R objects equal.
@@ -3094,7 +3112,7 @@ These retain upstream ggplot2/grid semantics rather than defining new ggchord la
 <span id="api-aes"></span>
 <details><summary><code>aes</code> · ggplot2</summary>
 
-Upstream entry reference: [Rd](reference/ggplot2-helpers.html)
+Upstream entry reference: [Rd](../../man/ggplot2-helpers.Rd)
 
 | Parameter | Signature default | Type/contract |
 | --- | --- | --- |
@@ -3107,7 +3125,7 @@ Upstream entry reference: [Rd](reference/ggplot2-helpers.html)
 <span id="api-after_scale"></span>
 <details><summary><code>after_scale</code> · ggplot2</summary>
 
-Upstream entry reference: [Rd](reference/ggplot2-helpers.html)
+Upstream entry reference: [Rd](../../man/ggplot2-helpers.Rd)
 
 | Parameter | Signature default | Type/contract |
 | --- | --- | --- |
@@ -3118,7 +3136,7 @@ Upstream entry reference: [Rd](reference/ggplot2-helpers.html)
 <span id="api-after_stat"></span>
 <details><summary><code>after_stat</code> · ggplot2</summary>
 
-Upstream entry reference: [Rd](reference/ggplot2-helpers.html)
+Upstream entry reference: [Rd](../../man/ggplot2-helpers.Rd)
 
 | Parameter | Signature default | Type/contract |
 | --- | --- | --- |
@@ -3129,7 +3147,7 @@ Upstream entry reference: [Rd](reference/ggplot2-helpers.html)
 <span id="api-annotate"></span>
 <details><summary><code>annotate</code> · ggplot2</summary>
 
-Upstream entry reference: [Rd](reference/ggplot2-helpers.html)
+Upstream entry reference: [Rd](../../man/ggplot2-helpers.Rd)
 
 | Parameter | Signature default | Type/contract |
 | --- | --- | --- |
@@ -3150,7 +3168,7 @@ Upstream entry reference: [Rd](reference/ggplot2-helpers.html)
 <span id="api-arrow"></span>
 <details><summary><code>arrow</code> · grid</summary>
 
-Upstream entry reference: [Rd](reference/grid-helpers.html)
+Upstream entry reference: [Rd](../../man/grid-helpers.Rd)
 
 | Parameter | Signature default | Type/contract |
 | --- | --- | --- |
@@ -3164,7 +3182,7 @@ Upstream entry reference: [Rd](reference/grid-helpers.html)
 <span id="api-element_blank"></span>
 <details><summary><code>element_blank</code> · ggplot2</summary>
 
-Upstream entry reference: [Rd](reference/ggplot2-helpers.html)
+Upstream entry reference: [Rd](../../man/ggplot2-helpers.Rd)
 
 | Parameter | Signature default | Type/contract |
 | --- | --- | --- |
@@ -3174,7 +3192,7 @@ Upstream entry reference: [Rd](reference/ggplot2-helpers.html)
 <span id="api-element_line"></span>
 <details><summary><code>element_line</code> · ggplot2</summary>
 
-Upstream entry reference: [Rd](reference/ggplot2-helpers.html)
+Upstream entry reference: [Rd](../../man/ggplot2-helpers.Rd)
 
 | Parameter | Signature default | Type/contract |
 | --- | --- | --- |
@@ -3195,7 +3213,7 @@ Upstream entry reference: [Rd](reference/ggplot2-helpers.html)
 <span id="api-element_rect"></span>
 <details><summary><code>element_rect</code> · ggplot2</summary>
 
-Upstream entry reference: [Rd](reference/ggplot2-helpers.html)
+Upstream entry reference: [Rd](../../man/ggplot2-helpers.Rd)
 
 | Parameter | Signature default | Type/contract |
 | --- | --- | --- |
@@ -3214,7 +3232,7 @@ Upstream entry reference: [Rd](reference/ggplot2-helpers.html)
 <span id="api-element_text"></span>
 <details><summary><code>element_text</code> · ggplot2</summary>
 
-Upstream entry reference: [Rd](reference/ggplot2-helpers.html)
+Upstream entry reference: [Rd](../../man/ggplot2-helpers.Rd)
 
 | Parameter | Signature default | Type/contract |
 | --- | --- | --- |
@@ -3237,7 +3255,7 @@ Upstream entry reference: [Rd](reference/ggplot2-helpers.html)
 <span id="api-expansion"></span>
 <details><summary><code>expansion</code> · ggplot2</summary>
 
-Upstream entry reference: [Rd](reference/ggplot2-helpers.html)
+Upstream entry reference: [Rd](../../man/ggplot2-helpers.Rd)
 
 | Parameter | Signature default | Type/contract |
 | --- | --- | --- |
@@ -3249,7 +3267,7 @@ Upstream entry reference: [Rd](reference/ggplot2-helpers.html)
 <span id="api-ggsave"></span>
 <details><summary><code>ggsave</code> · ggplot2</summary>
 
-Upstream entry reference: [Rd](reference/ggplot2-helpers.html)
+Upstream entry reference: [Rd](../../man/ggplot2-helpers.Rd)
 
 | Parameter | Signature default | Type/contract |
 | --- | --- | --- |
@@ -3272,7 +3290,7 @@ Upstream entry reference: [Rd](reference/ggplot2-helpers.html)
 <span id="api-ggtitle"></span>
 <details><summary><code>ggtitle</code> · ggplot2</summary>
 
-Upstream entry reference: [Rd](reference/ggplot2-helpers.html)
+Upstream entry reference: [Rd](../../man/ggplot2-helpers.Rd)
 
 | Parameter | Signature default | Type/contract |
 | --- | --- | --- |
@@ -3284,7 +3302,7 @@ Upstream entry reference: [Rd](reference/ggplot2-helpers.html)
 <span id="api-guides"></span>
 <details><summary><code>guides</code> · ggplot2</summary>
 
-Upstream entry reference: [Rd](reference/ggplot2-helpers.html)
+Upstream entry reference: [Rd](../../man/ggplot2-helpers.Rd)
 
 | Parameter | Signature default | Type/contract |
 | --- | --- | --- |
@@ -3295,7 +3313,7 @@ Upstream entry reference: [Rd](reference/ggplot2-helpers.html)
 <span id="api-labs"></span>
 <details><summary><code>labs</code> · ggplot2</summary>
 
-Upstream entry reference: [Rd](reference/ggplot2-helpers.html)
+Upstream entry reference: [Rd](../../man/ggplot2-helpers.Rd)
 
 | Parameter | Signature default | Type/contract |
 | --- | --- | --- |
@@ -3313,7 +3331,7 @@ Upstream entry reference: [Rd](reference/ggplot2-helpers.html)
 <span id="api-last_plot"></span>
 <details><summary><code>last_plot</code> · ggplot2</summary>
 
-Upstream entry reference: [Rd](reference/ggplot2-helpers.html)
+Upstream entry reference: [Rd](../../man/ggplot2-helpers.Rd)
 
 | Parameter | Signature default | Type/contract |
 | --- | --- | --- |
@@ -3323,7 +3341,7 @@ Upstream entry reference: [Rd](reference/ggplot2-helpers.html)
 <span id="api-margin"></span>
 <details><summary><code>margin</code> · ggplot2</summary>
 
-Upstream entry reference: [Rd](reference/ggplot2-helpers.html)
+Upstream entry reference: [Rd](../../man/ggplot2-helpers.Rd)
 
 | Parameter | Signature default | Type/contract |
 | --- | --- | --- |
@@ -3339,7 +3357,7 @@ Upstream entry reference: [Rd](reference/ggplot2-helpers.html)
 <span id="api-position_identity"></span>
 <details><summary><code>position_identity</code> · ggplot2</summary>
 
-Upstream entry reference: [Rd](reference/ggplot2-helpers.html)
+Upstream entry reference: [Rd](../../man/ggplot2-helpers.Rd)
 
 | Parameter | Signature default | Type/contract |
 | --- | --- | --- |
@@ -3349,7 +3367,7 @@ Upstream entry reference: [Rd](reference/ggplot2-helpers.html)
 <span id="api-PositionIdentity"></span>
 <details><summary><code>PositionIdentity</code> · object</summary>
 
-Upstream entry reference: [Rd](reference/ggplot2-helpers.html)
+Upstream entry reference: [Rd](../../man/ggplot2-helpers.Rd)
 
 | Parameter | Signature default | Type/contract |
 | --- | --- | --- |
@@ -3359,7 +3377,7 @@ Upstream entry reference: [Rd](reference/ggplot2-helpers.html)
 <span id="api-rel"></span>
 <details><summary><code>rel</code> · ggplot2</summary>
 
-Upstream entry reference: [Rd](reference/ggplot2-helpers.html)
+Upstream entry reference: [Rd](../../man/ggplot2-helpers.Rd)
 
 | Parameter | Signature default | Type/contract |
 | --- | --- | --- |
@@ -3370,7 +3388,7 @@ Upstream entry reference: [Rd](reference/ggplot2-helpers.html)
 <span id="api-theme"></span>
 <details><summary><code>theme</code> · ggplot2</summary>
 
-Upstream entry reference: [Rd](reference/ggplot2-helpers.html)
+Upstream entry reference: [Rd](../../man/ggplot2-helpers.Rd)
 
 | Parameter | Signature default | Type/contract |
 | --- | --- | --- |
@@ -3527,7 +3545,7 @@ Upstream entry reference: [Rd](reference/ggplot2-helpers.html)
 <span id="api-unit"></span>
 <details><summary><code>unit</code> · grid</summary>
 
-Upstream entry reference: [Rd](reference/grid-helpers.html)
+Upstream entry reference: [Rd](../../man/grid-helpers.Rd)
 
 | Parameter | Signature default | Type/contract |
 | --- | --- | --- |
@@ -3540,7 +3558,7 @@ Upstream entry reference: [Rd](reference/grid-helpers.html)
 <span id="api-waiver"></span>
 <details><summary><code>waiver</code> · ggplot2</summary>
 
-Upstream entry reference: [Rd](reference/ggplot2-helpers.html)
+Upstream entry reference: [Rd](../../man/ggplot2-helpers.Rd)
 
 | Parameter | Signature default | Type/contract |
 | --- | --- | --- |

@@ -1,6 +1,8 @@
+<a id="input"></a>
+
 ## Complete pUC19 inputs {#input}
 
-This page explains the composition of one complete reference map. pETDuet-1 and its dense-label choices are described [separately](circular-dense-case.html).
+This page explains the composition of one complete reference map. pETDuet-1 and its dense-label choices are described [separately](circular-dense-case.md).
 
 {{code:courseblockg}}
 
@@ -14,9 +16,13 @@ view_ggchord(p, width = 10, height = 8, units = "in")
 
 {{figure:catalogpuc}}
 
+<a id="layers"></a>
+
 ## Read the layers {#layers}
 
 The double backbone carries source positions. All reference features retain their original intervals, strands and segments. Feature labels share the stacking Position; independent primers and restriction sites use their own tables and layers. The centre gives identity and complete length.
+
+<a id="sites"></a>
 
 ## Inspect the complete tables {#sites}
 
@@ -29,9 +35,13 @@ nrow(reference$sites)
 
 The chosen source profile contains 9 features and 39 restriction rows at 33 distinct positions. It has no independent reference-primer rows. Raw enzyme matches remain in `reference$all_sites`; the declared source profile is not a three-site display subset.
 
+<a id="adapt"></a>
+
 ## Use your own annotations {#adapt}
 
 Prepared annotation, primer and site tables can go directly to independent layers. Sequence recognition is optional when the tables already exist. Full lengths and source units must be supplied independently.
+
+<a id="save-result"></a>
 
 ## Save at the same size {#save-result}
 

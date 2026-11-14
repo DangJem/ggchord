@@ -1,13 +1,13 @@
 {
-  "source_sha256": "cf01828ff297c4e5ac661ed11f1009f6c2b112332a1b359922b43c361bc2b583",
+  "source_sha256": "ccd2451d732715c33232cba529fc001f10855587dda211bf35b14a882cbf9a53",
   "blocks": {
-    "0": {
+    "1": {
       "source_sha256": "65558b765341744300f6b1268eea89e49563657e225330407740cb387a66bc22",
       "status": "reviewed",
       "translation": "## Section moved ⟦shared:0⟧\n"
     },
-    "1": {
-      "source_sha256": "6809b3d3c1e83a9d13e88ad2b737b4ae4ac15b042aabad85f6175d26d4311059",
+    "2": {
+      "source_sha256": "4a9721bb4702ad577af9827334221558fa56e6b5332213e5b6de603a96d207e6",
       "status": "reviewed",
       "translation": "[Read a two-axis Dotplot from existing HSPs](⟦shared:0⟧)\n"
     }

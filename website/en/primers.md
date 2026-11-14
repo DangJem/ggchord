@@ -1,5 +1,7 @@
 Identify binding intervals on actual DNA before choosing arc and label placement. Computational matches are not wet-lab validation, and catalogue direction hints do not determine the binding strand on the target.
 
+<a id="input"></a>
+
 ## Catalogue, search and actual input {#input}
 
 Independently load pUC19 and retain the first three exact universal-catalogue hits for clear display. Results retain primer name, oligonucleotide, one-based interval, strand, match method and uniqueness. Select after searching; absence from this display subset is not absence from the full result.
@@ -9,6 +11,8 @@ Independently load pUC19 and retain the first three exact universal-catalogue hi
 {{code:comparefinishprimerrows}}
 {{output:comparefinishprimerrows}}
 
+
+<a id="primer-arcs"></a>
 
 ## Primer arc placement and width {#primer-arcs}
 
@@ -29,6 +33,8 @@ Relative to outside placement, change only arc_offset from 0.045 to 0.09:
 {{figure:compareprimerwidth}}
 
 
+<a id="primer-labels"></a>
+
 ## Primer names, range text and side {#primer-labels}
 
 Labels default to outside with show_location=TRUE; leaders originate at the directional arc’s 3′ tip. Compare baseline with only location text hidden, or only side changed to inside. Hiding text does not shorten binding intervals. Interior text can overlap other features; default max_overlaps=Inf does not guarantee collision-free mixed layers.
@@ -41,6 +47,8 @@ Labels default to outside with show_location=TRUE; leaders originate at the dire
 {{figure:compareprimerlabelinside}}
 
 
+<a id="parameters"></a>
+
 ## Search versus drawing choices {#parameters}
 
 `primer_catalog(set="all", aliases=FALSE)` returns deduplicated oligonucleotides; universal selects common records and aliases=TRUE shows source names for shared sequences. `find_primer_bindings()` computes matches on DNA; circular searches include origin-spanning matches, while linear targets need circular=FALSE. Exact three_prime suffix matching is not a general mismatch thermodynamic model. Wallace temperature is a composition-based heuristic.
@@ -49,6 +57,8 @@ Primer geometry defaults: colour=#A020F0, side=between, arc_offset=0.045, arc_li
 
 
 
+<a id="adapt"></a>
+
 ## Practice and your primers {#adapt}
 
-Change only arc_offset, then return to defaults and hide location text. Provide actual oligonucleotides and names, inspect match fields before selecting displayed hits. See the [parameter atlas](parameter-atlas.html) for complete current defaults and [restriction sites](restriction-sites.html) or the [full plasmid workflow](plasmids.html) next.
+Change only arc_offset, then return to defaults and hide location text. Provide actual oligonucleotides and names, inspect match fields before selecting displayed hits. See the [parameter atlas](parameter-atlas.md) for complete current defaults and [restriction sites](restriction-sites.md) or the [full plasmid workflow](plasmids.md) next.
