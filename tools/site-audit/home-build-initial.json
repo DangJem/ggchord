@@ -1,0 +1,61 @@
+{
+  "status": "incomplete; input snapshot guard rejected changed source",
+  "exit_code": 1,
+  "reason": "A page-output refresh had converted an unrelated null cell into an empty object; reverted that generated JSON to the baseline before continuing. The in-progress build correctly stopped because inputs changed.",
+  "workers": {
+    "en": [
+      {
+        "options": [
+          "--part=reference"
+        ],
+        "return_code": 0,
+        "log": "en-worker-0.log"
+      },
+      {
+        "options": [
+          "--part=articles",
+          "--offset=0",
+          "--count=4"
+        ],
+        "return_code": 0,
+        "log": "en-worker-1.log"
+      },
+      {
+        "options": [
+          "--part=articles",
+          "--offset=4",
+          "--count=4"
+        ],
+        "return_code": 0,
+        "log": "en-worker-2.log"
+      }
+    ],
+    "zh": [
+      {
+        "options": [
+          "--part=reference"
+        ],
+        "return_code": 0,
+        "log": "zh-worker-0.log"
+      },
+      {
+        "options": [
+          "--part=articles",
+          "--offset=0",
+          "--count=4"
+        ],
+        "return_code": 0,
+        "log": "zh-worker-1.log"
+      },
+      {
+        "options": [
+          "--part=articles",
+          "--offset=4",
+          "--count=4"
+        ],
+        "return_code": 0,
+        "log": "zh-worker-2.log"
+      }
+    ]
+  }
+}

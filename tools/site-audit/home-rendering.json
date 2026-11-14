@@ -366,6 +366,29 @@
       "all_source_fields_identical": true
     },
     "radial_gene": {
+      "original_records": 20,
+      "all_source_fields_identical": true
+    },
+    "sankey_ribbon": {
+      "original_records": 10,
+      "all_source_fields_identical": true
+    },
+    "sankey_gene": {
+      "original_records": 32,
+      "all_source_fields_identical": true
+    }
+  },
+  "labels": {
+    "radial_selected": 4,
+    "sankey_selected": 4,
+    "rule": "Per sequence: non-hypothetical name first, then descending feature length; no coordinate changes. Preview relationship figures omit CDS-name layers, retaining geometries."
+  },
+  "initial_source_checks": {
+    "radial_ribbon": {
+      "original_records": 12,
+      "all_source_fields_identical": true
+    },
+    "radial_gene": {
       "original_records": 0,
       "all_source_fields_identical": true
     },
@@ -378,9 +401,10 @@
       "all_source_fields_identical": true
     }
   },
-  "labels": {
-    "radial_selected": 4,
-    "sankey_selected": 4,
-    "rule": "Per sequence: non-hypothetical name first, then descending feature length; no coordinate changes. Preview relationship figures omit CDS-name layers, retaining geometries."
+  "source_check_correction": {
+    "reason": "Initial gene selector used gene instead of the public gene_poly component and returned zero rows; empty checks are rejected and superseded.",
+    "nonempty_source_verification": true,
+    "verifier_sha256": "fa2f6bf743452d4fa65fdfceeaf7173fd1d282fccbf110c68a02c18a6aaeb6ed",
+    "scope": "Corrected public input comparison only; original PNG render hashes and execution source hashes retained."
   }
 }

@@ -34,7 +34,9 @@ def main():
             return dict(re.findall(r'^# ---- ([a-z]+) ----\n(.*?)(?=^# ---- [a-z]+ ----)',text,re.M|re.S))
         old_chunks=chunks(before.decode());new_chunks=chunks((ROOT/'tools/site-flagships.R').read_text())
         assert {key for key in old_chunks.keys()|new_chunks.keys() if old_chunks.get(key)!=new_chunks.get(key)}=={'flagshipmulti'}
-        assert all(row['all_source_fields_identical'] for row in revised['source_checks'].values())
+        assert all(row['original_records']>0 and row['all_source_fields_identical'] for row in revised['source_checks'].values())
+        if revised.get('source_check_correction'):
+            assert revised['source_check_correction']['verifier_sha256']==sha(ROOT/'tools/site-audit/render-home.R')
 
     retained = json.loads((ROOT/'tools/long-term-audit/v0.27.0-normal-layout-verification.json').read_text())
     profiles = json.loads((ROOT/'website/reference-catalog.json').read_text())

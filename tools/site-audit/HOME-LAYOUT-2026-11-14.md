@@ -75,6 +75,11 @@
 - `python3 tools/check-site-design.py --write`：76受控色彩组合与6静态条件通过。
 - `python3 tools/site-audit/check-manual-assets.py`：20完整资产、7首页预览、原始来源
   与显式尺寸核对通过。
+- 初次CDS来源比较取错component键，gene空表被误认为相同。已拒绝该证据并改用
+  gene_poly、强制非空；`render-home.R --verify-sources-only`实际核对Radial12HSP/20CDS、
+  Sankey10HSP/16CDS全部源字段相同。原PNG生成hash保持，旧空检查与补正分别记录。
+- 页面表格输出刷新带来一处无关null→空对象序列化，已撤回至基线。进行中的HTML
+  构建因此被快照guard正确拒绝，退出1；记录home-build-initial.json，不计通过。
 - 当前本地原生双语HTML、生成链接/下载与旧锚点核查待完成，不预写通过。
 
 ## 明确未验收

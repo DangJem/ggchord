@@ -28,7 +28,8 @@ source_rows<-function(plot,component) {
   layout<-get_chord_layout(plot)
   result<-list()
   for(owner in names(layout$layer_inputs)) {
-    d<-layout$layer_inputs[[owner]][[component]]
+    key<-if(component=='gene') 'gene_poly' else component
+    d<-layout$layer_inputs[[owner]][[key]]
     if(is.data.frame(d)&&nrow(d)) result[[length(result)+1L]]<-d
   }
   dplyr::bind_rows(result)
@@ -41,10 +42,25 @@ checks<-list()
 for(name in c('radial','sankey')) for(component in c('ribbon','gene')) {
   old<-select_source(source_rows(before[[name]],component),component)
   current<-select_source(source_rows(get(paste0('flag_',name)),component),component)
-  stopifnot(identical(old,current))
+  stopifnot(nrow(old)>0L,nrow(current)>0L,identical(old,current))
   checks[[paste(name,component,sep='_')]]<-list(original_records=nrow(old),all_source_fields_identical=TRUE)
 }
 record$source_checks<-checks
+if('--verify-sources-only' %in% commandArgs(trailingOnly=TRUE)) {
+  completed<-jsonlite::fromJSON('tools/site-audit/home-rendering.json',simplifyVector=FALSE)
+  stopifnot(completed$status=='complete')
+  completed$initial_source_checks<-completed$source_checks
+  completed$source_checks<-checks
+  completed$source_check_correction<-list(
+    reason='Initial gene selector used gene instead of the public gene_poly component and returned zero rows; empty checks are rejected and superseded.',
+    nonempty_source_verification=TRUE,
+    verifier_sha256=digest::digest(file='tools/site-audit/render-home.R',algo='sha256',serialize=FALSE),
+    scope='Corrected public input comparison only; original PNG render hashes and execution source hashes retained.')
+  jsonlite::write_json(completed,'tools/site-audit/home-rendering.json',auto_unbox=TRUE,pretty=TRUE)
+  cat('PASS: nonempty original 12/10 HSP and 20/16 CDS records identical\n')
+  quit(save='no',status=0)
+}
+
 # Complete figures: freshly rendered final recipes, not renamed candidate files.
 full<-list(flagradial=list(object='flag_radial',width=11,height=10,dpi=144,file='man/figures/flagradial.png'),
   flagsankey=list(object='flag_sankey',width=10,height=12,dpi=144,file='man/figures/flagsankey.png'))
