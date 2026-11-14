@@ -41,4 +41,4 @@ links need the subject CDS and justified ungapped correspondence. See
 ## Result checks {#check-result}
 Check parent CDS IDs, projection reports and returned segments. The selected residue range is a display example, not a detected domain.
 
-<div class="next-step">Continue: <a href="alignments.html">Import nucleotide and protein alignments →</a></div>
+<div class="next-step">Continue: <a href="workflows.html">Data workflows →</a></div>

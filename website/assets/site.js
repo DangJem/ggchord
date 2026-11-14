@@ -61,6 +61,8 @@
   }
   // The search dialog is local, structured, keyboard-first and lazy-loaded.
   const dialog=document.querySelector('#site-search-dialog'),trigger=document.querySelector('#site-search-trigger');
+  const shortcut=trigger?.querySelector('kbd');
+  if(shortcut)shortcut.textContent=/Mac|iPhone|iPad/.test(navigator.platform)?'⌘ K':'Ctrl K';
   const input=document.querySelector('#site-search'),results=document.querySelector('#site-results'),status=document.querySelector('#search-status');
   if(dialog&&trigger&&input&&results) {
     const labels=zh?{all:'全部',course:'说明',function:'函数',parameter:'参数',task:'任务',tool:'查询工具',faq:'排错'}:{all:'All',course:'Sections',function:'Functions',parameter:'Parameters',task:'Tasks',tool:'Tools',faq:'FAQ'};

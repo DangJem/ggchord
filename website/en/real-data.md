@@ -58,7 +58,7 @@ Backbones use `accver` and `length`. Ribbons use IDs and endpoints on both seque
 ## Result checks {#check-result}
 Check that IDs agree across the tables, inspect filtering reports and verify that guides encode identity and strand. Use the overview to locate regions, then focus a neighbourhood to study a CDS.
 
-<div class="next-step">Continue: <a href="homology.html">Explicit homologs and coding-coordinate links →</a></div>
+<div class="next-step">Continue: <a href="modes.html">Plotting concepts →</a></div>
 
 ## Save this result {#save-result}
 Save the plot just created to the working directory; use matching dimensions for preview.

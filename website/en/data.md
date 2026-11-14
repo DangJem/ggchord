@@ -143,7 +143,7 @@ and coverage fields are needed only by operations that consume them. See
 ## Result checks {#check-result}
 Input IDs must match complete sequence records. Keep original records separate from repaired copies. Decreasing endpoints can be legitimate reverse hits; warnings do not all mean rows must be removed.
 
-<div class="next-step">Continue: <a href="formats.html">File formats and explicit adapters →</a></div>
+<div class="next-step">Continue: <a href="modes.html">Plotting concepts →</a></div>
 
 ## Source tables and display copies {#source}
 

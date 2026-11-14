@@ -45,4 +45,4 @@ when the locus selection comes from declared feature/cluster evidence.
 ## Result checks {#check-result}
 Inspect cropping reports, break markers and source coordinates. Omitted gaps have no mapping; a display flip alone is not evidence of inversion.
 
-<div class="next-step">Continue: <a href="homology.html">Explicit homologs and coding-coordinate links →</a></div>
+<div class="next-step">Continue: <a href="homology.html">CDS neighbourhood comparison →</a></div>

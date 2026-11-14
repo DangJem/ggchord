@@ -62,4 +62,4 @@ alignments nor establishes biological function.
 ## Result checks {#check-result}
 Choose nucleotide or protein coordinates, then check table fields, full lengths and units.
 
-<div class="next-step">Continue: <a href="projection.html">CDS coordinate projection →</a></div>
+<div class="next-step">Continue: <a href="protein-alignments.html">BLASTp protein comparisons →</a></div>

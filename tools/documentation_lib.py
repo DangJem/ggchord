@@ -155,7 +155,16 @@ def expand(text, lang, *, figures='assets', reference=''):
         kind='contrast' if key in comparison_ids else 'case' if key in featured or key.startswith(('showcase','catalog','real')) else 'step'
         task='labels' if any(word in key for word in ['label','text','fit']) else 'tracks' if any(word in key for word in ['track','gc','count']) else 'links' if any(word in key for word in ['ribbon','link','route','fusion']) else 'layout'
         difficulty='advanced' if kind=='contrast' or module=='fusion' else 'beginner' if kind=='step' else 'intermediate'
-        title=re.split(r'[:：]| · ',CAPTIONS[key][lang],maxsplit=1)[0]
+        featured_titles={
+          'showcasechord':('四基因组 Chord 关系图','Four-genome Chord comparison'),
+          'showcasecollinear':('四基因组共线性图','Four-genome collinearity'),
+          'showcaseplasmid':('pETDuet-1 密集注释','Dense pETDuet-1 annotations'),
+          'viewdotplot':('真实 HSP 双轴点图','Observed HSP Dotplot'),
+          'viewradial':('径向辐条与注释轨道','Radial spokes and annotation tracks'),
+          'foundationsankey':('镜像双列区间关系','Mirrored interval relationships'),
+          'fusionview':('圆图与线性面板连接','Circular-to-linear composition'),
+          'plasmid':('pUC19 注释与位点','pUC19 annotations and sites')}
+        title=featured_titles[key][0 if lang=='zh' else 1] if key in featured_titles else re.split(r'[:：，；。]| · |; |[.] ',CAPTIONS[key][lang],maxsplit=1)[0]
         gallery.append(f'<section class="gallery-card" data-gallery-module="{module}" data-gallery-kind="{kind}" data-gallery-task="{task}" data-gallery-level="{difficulty}" data-featured="{str(key in featured).lower()}"><h3 id="{key}">{html.escape(title)}</h3>'
             f'<p class="gallery-description">{html.escape(CAPTIONS[key][lang])}</p>{figure(key,source_url)}<p><a href="{lesson}">{label}</a>{source_link}</p>'
             f'<p class="asset-size"><code>{asset["object"]}</code> · {asset["width"]} × {asset["height"]} in · '

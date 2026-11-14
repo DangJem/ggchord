@@ -57,7 +57,7 @@
 ## 检查要点 {#check-result}
 同一 query 的连接颜色一致；连续相似度应使用连续标度。固定颜色放在 aes() 外，图例必须能说明映射。
 
-<div class="next-step">继续：<a href="styling.html#roles">调整图形 →</a></div>
+<div class="next-step">继续：<a href="annotations.html">绘制注释与处理重叠 →</a></div>
 
 各角色 manual/continuous/steps/identity、线型、透明度和主题的完整可运行家族例子见[标度家族](scale-families.html)。
 

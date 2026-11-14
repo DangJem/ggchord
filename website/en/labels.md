@@ -50,4 +50,4 @@ General feature labels have additional internal-first/callout choices; see the
 ## Result checks {#check-result}
 The three layout comparisons share the same input. Assess text direction, leaders and hiding reasons together; missing text does not mean a feature was lost.
 
-<div class="next-step">Continue: <a href="output.html">Export, preview and diagnostics →</a></div>
+<div class="next-step">Continue: <a href="parameters.html">Flexible parameter formats →</a></div>

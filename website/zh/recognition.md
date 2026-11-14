@@ -38,7 +38,7 @@ Wallace 熔解温度估计是基于组成的启发式值。
 ## 检查要点 {#check-result}
 查看命中坐标、方法与来源。酶位点筛选是显示选择；甲基化搜索条件不是对未知样本状态的测量。
 
-<div class="next-step">继续：<a href="plasmids.html">绘制完整质粒图 →</a></div>
+<div class="next-step">继续：<a href="primers.html">识别引物、弧线与文字 →</a></div>
 
 识别结果确认后，分别复现[引物弧线与文字](primers.html)和[酶切标签与引线](restriction-sites.html)。圆图骨架、中心文字和分层见[图层课](circular-layout.html#input)，固定与自动文字见[圆图标签](circular-labels.html)。
 

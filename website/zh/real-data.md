@@ -53,7 +53,7 @@ FASTA 提供序列 ID 和长度，GFF3 提供注释范围与链，BLAST 提供�
 ## 检查要点 {#check-result}
 检查序列 ID 在三张表中一致，查看筛选报告，再确认图例表达相似度与链方向。全长概览用于定位；若要研究具体 CDS，请继续聚焦邻域。
 
-<div class="next-step">继续：<a href="homology.html">连接同源基因 →</a></div>
+<div class="next-step">继续：<a href="modes.html">绘图基本概念 →</a></div>
 
 ## 保存本页结果 {#save-result}
 在工作目录中保存刚刚创建的图；预览时使用相同宽高。

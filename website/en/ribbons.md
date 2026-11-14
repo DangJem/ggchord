@@ -31,7 +31,7 @@ Choose point versus interval geometry in the [links section](multi-sequence-link
 ## Result checks {#check-result}
 Inspect each report and member rows before reading the plot. Aggregated bands are not new alignments; point links summarize midpoints of existing HSPs.
 
-<div class="next-step">Continue: <a href="views.html">Focus, segments and homology →</a></div>
+<div class="next-step">Continue: <a href="instances.html">Repeated displays and instance selection →</a></div>
 
 Continue to [link statistics](ribbons.html#statistics) for bundle_n, bundle_weight, density and bins/weight/group_by/min_bundle.
 

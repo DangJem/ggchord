@@ -109,7 +109,6 @@ for(lang in c('en','zh')) {
   xml2::xml_set_attr(xml2::xml_find_first(doc,'//body'),'data-module',module)
   # The same canonical group order supplies section numbers, previous and next.
   # Alias fragments are resolved before choosing a page; they cannot add steps.
-  migrations <- jsonlite::fromJSON('website/page-migrations.json', simplifyVector=FALSE)
   canonical_page <- function(key) {
     seen <- character()
     repeat {
@@ -118,8 +117,10 @@ for(lang in c('en','zh')) {
       item <- page_record(key)
       if(is.null(item)) stop('Unknown navigation page: ',key)
       if(!identical(item$kind,'alias')) return(key)
-      target <- migrations[[paste0(key,'.html')]][['']]
-      key <- sub('[.]html.*$','',target)
+      target <- sub('#.*$','',item$canonical_path)
+      resolved <- Filter(function(x) !identical(x$kind,'alias') && identical(x$canonical_path,target),page_index)
+      if(length(resolved)!=1L) stop('Alias has no unique canonical page: ',key)
+      key <- resolved[[1L]]$slug
     }
   }
   path_keys <- unique(vapply(unlist(group$pages),canonical_page,''))

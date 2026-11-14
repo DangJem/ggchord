@@ -61,4 +61,4 @@ EMALE 原始输出来自 gggenomes 的公开 EMALE 数据。
 ## 检查要点 {#check-result}
 先确认本次比较的对象是核酸还是蛋白，再检查表格列、完整长度与坐标单位。
 
-<div class="next-step">继续：<a href="projection.html">将蛋白坐标转换为基因组坐标 →</a></div>
+<div class="next-step">继续：<a href="protein-alignments.html">BLASTp 蛋白比较 →</a></div>

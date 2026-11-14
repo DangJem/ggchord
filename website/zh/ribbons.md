@@ -28,7 +28,7 @@
 ## 检查要点 {#check-result}
 先检查各步骤 report 和成员行，再读图。聚合带的范围不是新比对；点连接是已有 HSP 中点的摘要。
 
-<div class="next-step">继续：<a href="views.html">查看局部和分段区域 →</a></div>
+<div class="next-step">继续：<a href="instances.html">重复显示与实例选择 →</a></div>
 
 需要明确理解 bundle_n、bundle_weight、density 与 bins/weight/group_by/min_bundle，继续[连接统计](ribbons.html#statistics)。
 

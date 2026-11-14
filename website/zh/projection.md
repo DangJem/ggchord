@@ -37,4 +37,4 @@ DNA 匹配、氨基酸区间投影和真实翻译/比对是不同步骤，绘图
 ## 检查要点 {#check-result}
 检查父 CDS ID、投影报告及返回分段。选择的残基区间只是显示例子，不能将其描述为检测到的结构域。
 
-<div class="next-step">继续：<a href="alignments.html">导入核酸和蛋白比对 →</a></div>
+<div class="next-step">继续：<a href="workflows.html">数据处理流程 →</a></div>

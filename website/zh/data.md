@@ -132,7 +132,7 @@
 ## 检查要点 {#check-result}
 输入 ID 必须能匹配到完整序列表；原始记录与修复副本分开保存。反向比对端点递减可以合法，不能把所有警告都当作需要删除的数据。
 
-<div class="next-step">继续：<a href="formats.html">导入和转换数据 →</a></div>
+<div class="next-step">继续：<a href="modes.html">绘图基本概念 →</a></div>
 
 ## 来源表与显示副本 {#source}
 

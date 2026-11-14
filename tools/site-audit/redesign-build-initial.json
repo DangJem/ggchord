@@ -1,0 +1,223 @@
+{
+  "status": "intentionally interrupted before completion",
+  "exit_code": 143,
+  "reason": "Review found an alias-resolution branch using an empty R list key and insufficiently short gallery headings; no successful full-site claim.",
+  "workers": {
+    "en": [
+      {
+        "options": [
+          "--part=reference"
+        ],
+        "return_code": 0,
+        "log": "en-worker-0.log"
+      },
+      {
+        "options": [
+          "--part=articles",
+          "--offset=0",
+          "--count=4"
+        ],
+        "return_code": 0,
+        "log": "en-worker-1.log"
+      },
+      {
+        "options": [
+          "--part=articles",
+          "--offset=4",
+          "--count=4"
+        ],
+        "return_code": 0,
+        "log": "en-worker-2.log"
+      },
+      {
+        "options": [
+          "--part=articles",
+          "--offset=8",
+          "--count=4"
+        ],
+        "return_code": 0,
+        "log": "en-worker-3.log"
+      },
+      {
+        "options": [
+          "--part=articles",
+          "--offset=12",
+          "--count=4"
+        ],
+        "return_code": 0,
+        "log": "en-worker-4.log"
+      },
+      {
+        "options": [
+          "--part=articles",
+          "--offset=16",
+          "--count=4"
+        ],
+        "return_code": 0,
+        "log": "en-worker-5.log"
+      },
+      {
+        "options": [
+          "--part=articles",
+          "--offset=20",
+          "--count=4"
+        ],
+        "return_code": 0,
+        "log": "en-worker-6.log"
+      },
+      {
+        "options": [
+          "--part=articles",
+          "--offset=24",
+          "--count=4"
+        ],
+        "return_code": 0,
+        "log": "en-worker-7.log"
+      },
+      {
+        "options": [
+          "--part=articles",
+          "--offset=28",
+          "--count=4"
+        ],
+        "return_code": 0,
+        "log": "en-worker-8.log"
+      },
+      {
+        "options": [
+          "--part=articles",
+          "--offset=32",
+          "--count=4"
+        ],
+        "return_code": 0,
+        "log": "en-worker-9.log"
+      },
+      {
+        "options": [
+          "--part=articles",
+          "--offset=36",
+          "--count=4"
+        ],
+        "return_code": 0,
+        "log": "en-worker-10.log"
+      },
+      {
+        "options": [
+          "--part=articles",
+          "--offset=40",
+          "--count=4"
+        ],
+        "return_code": 0,
+        "log": "en-worker-11.log"
+      },
+      {
+        "options": [
+          "--part=articles",
+          "--offset=44",
+          "--count=4"
+        ],
+        "return_code": 0,
+        "log": "en-worker-12.log"
+      },
+      {
+        "options": [
+          "--part=articles",
+          "--offset=48",
+          "--count=4"
+        ],
+        "return_code": 0,
+        "log": "en-worker-13.log"
+      },
+      {
+        "options": [
+          "--part=articles",
+          "--offset=52",
+          "--count=4"
+        ],
+        "return_code": 0,
+        "log": "en-worker-14.log"
+      },
+      {
+        "options": [
+          "--part=articles",
+          "--offset=56",
+          "--count=4"
+        ],
+        "return_code": 0,
+        "log": "en-worker-15.log"
+      },
+      {
+        "options": [
+          "--part=articles",
+          "--offset=60",
+          "--count=4"
+        ],
+        "return_code": 0,
+        "log": "en-worker-16.log"
+      },
+      {
+        "options": [
+          "--part=articles",
+          "--offset=64",
+          "--count=4"
+        ],
+        "return_code": 1,
+        "log": "en-worker-17.log"
+      }
+    ],
+    "zh": [
+      {
+        "options": [
+          "--part=reference"
+        ],
+        "return_code": 0,
+        "log": "zh-worker-0.log"
+      },
+      {
+        "options": [
+          "--part=articles",
+          "--offset=0",
+          "--count=4"
+        ],
+        "return_code": 0,
+        "log": "zh-worker-1.log"
+      },
+      {
+        "options": [
+          "--part=articles",
+          "--offset=4",
+          "--count=4"
+        ],
+        "return_code": 0,
+        "log": "zh-worker-2.log"
+      },
+      {
+        "options": [
+          "--part=articles",
+          "--offset=8",
+          "--count=4"
+        ],
+        "return_code": 0,
+        "log": "zh-worker-3.log"
+      },
+      {
+        "options": [
+          "--part=articles",
+          "--offset=12",
+          "--count=4"
+        ],
+        "return_code": 0,
+        "log": "zh-worker-4.log"
+      },
+      {
+        "options": [
+          "--part=articles",
+          "--offset=16",
+          "--count=4"
+        ],
+        "return_code": 0,
+        "log": "zh-worker-5.log"
+      }
+    ]
+  }
+}

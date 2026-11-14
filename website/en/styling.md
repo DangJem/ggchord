@@ -66,7 +66,7 @@ and font embedding certification are outside this policy.
 ## Result checks {#check-result}
 Links from the same query share a colour; continuous identity needs a continuous scale. Put fixed colours outside aes() and make each guide explain its mapping.
 
-<div class="next-step">Continue: <a href="styling.html#roles">Common adjustments and grammar →</a></div>
+<div class="next-step">Continue: <a href="annotations.html">Features, stacking and genomic decoration →</a></div>
 
 See [scale families](scale-families.html) for runnable manual/continuous/steps/identity, line type, opacity and theme examples.
 

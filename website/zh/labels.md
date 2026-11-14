@@ -45,4 +45,4 @@
 ## 检查要点 {#check-result}
 三张布局对照使用同一输入。判断可读性时同时看文字方向、连线和隐藏原因；没有标签不等于注释丢失。
 
-<div class="next-step">继续：<a href="output.html">预览和保存图形 →</a></div>
+<div class="next-step">继续：<a href="parameters.html">灵活的参数格式 →</a></div>

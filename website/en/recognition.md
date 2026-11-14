@@ -44,7 +44,7 @@ methylation provenance instead of assigning reference claims to an unknown sampl
 ## Result checks {#check-result}
 Inspect match positions, methods and provenance. Restriction filtering is a display choice; methylation search conditions are not a measurement of an unknown sample.
 
-<div class="next-step">Continue: <a href="plasmids.html">A complete circular annotation workflow →</a></div>
+<div class="next-step">Continue: <a href="primers.html">Primer recognition, arcs and labels →</a></div>
 
 After inspecting matches, follow [primer arcs and text](primers.html) and [restriction labels/leaders](restriction-sites.html). See [circular layers](circular-layout.html#input) for backbones/centre/lanes and [circular labels](circular-labels.html) for fixed/automatic text.
 

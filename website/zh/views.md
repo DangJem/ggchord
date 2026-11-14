@@ -40,4 +40,4 @@ focus 把保留位置移到局部一基坐标，同时保留源原点、截断�
 ## 检查要点 {#check-result}
 关注裁剪报告、断点与源坐标。被省略的间隙没有映射；显示翻转不应直接解释为生物学倒位。
 
-<div class="next-step">继续：<a href="homology.html">连接同源基因 →</a></div>
+<div class="next-step">继续：<a href="homology.html">CDS 同源邻域比较 →</a></div>
