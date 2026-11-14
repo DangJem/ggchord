@@ -82,8 +82,10 @@ def main():
     for p in (WEB/'assets').iterdir():
         if p.is_file():shutil.copy2(p,assets/p.name)
     complete_examples(assets)
-    for p in (ROOT/'man/figures').iterdir():
-        if p.is_file() and (p.stem in CAPTIONS or p.stem=='logo'):shutil.copy2(p,assets/p.name)
+    # Copy the declared inventory explicitly; directory enumeration can omit an asset.
+    for key in [*CAPTIONS, 'logo']:
+        p=ROOT/'man/figures'/(key+'.png')
+        shutil.copy2(p,assets/p.name)
     for row in json.loads((WEB/'course-figures.json').read_text()):
         shutil.copy2(ROOT/row['file'],assets/Path(row['file']).name)
     for name in ['documentation-examples.R','documentation-plots.R']:

@@ -1,0 +1,59 @@
+{
+  "initial_processes": {
+    "render_jobs": 1,
+    "return_codes": {
+      "en": 0,
+      "zh": 0
+    },
+    "initial_return_codes": {
+      "en": 1,
+      "zh": 0
+    },
+    "recovery_record": "tools/site-audit/manual-build-recovery.json"
+  },
+  "retries": [
+    {
+      "language": "en",
+      "options": [
+        "--part=articles",
+        "--offset=64",
+        "--count=1"
+      ],
+      "return_code": 0,
+      "log": "en-recovery-0.log"
+    },
+    {
+      "language": "en",
+      "options": [
+        "--part=articles",
+        "--offset=65",
+        "--count=1"
+      ],
+      "return_code": 0,
+      "log": "en-recovery-1.log"
+    },
+    {
+      "language": "en",
+      "options": [
+        "--part=articles",
+        "--offset=66",
+        "--count=1"
+      ],
+      "return_code": 0,
+      "log": "en-recovery-2.log"
+    },
+    {
+      "language": "en",
+      "options": [
+        "--part=articles",
+        "--offset=67",
+        "--count=1"
+      ],
+      "return_code": 0,
+      "log": "en-recovery-3.log"
+    }
+  ],
+  "scope": "Native HTML retries only; exact original render/archive inputs required; no browser, package or publication checks",
+  "status": "recovered and finalized with unchanged source inputs",
+  "initial_workers_preserved": true
+}
