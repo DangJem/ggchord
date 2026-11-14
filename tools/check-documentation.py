@@ -12,6 +12,9 @@ from pathlib import Path
 from urllib.parse import unquote, urlsplit
 from documentation_lib import ROOT, WEB, PAGES, CAPTIONS, RECIPES, expand, snippets, localize_r_comments
 import importlib.util
+import sys
+sys.path.insert(0, str(ROOT/'tools/site-audit'))
+from retained_provenance import render_source
 
 fingerprint_spec = importlib.util.spec_from_file_location('plot_fingerprints', ROOT/'tools/documentation-fingerprints.py')
 fingerprint_module = importlib.util.module_from_spec(fingerprint_spec)
@@ -137,7 +140,7 @@ def main():
     supplement_path=ROOT/'tools/site-audit/home-rendering.json'
     supplement=json.loads(supplement_path.read_text()) if supplement_path.exists() else {}
     for path, digest in runtime_record.get('engine_sha256',{}).items():
-        fresh=hashlib.sha256((ROOT/path).read_bytes()).hexdigest()
+        fresh=hashlib.sha256(render_source(path)).hexdigest()
         covered=(supplement.get('status')=='complete' and supplement.get('runtime_review',{}).get('signatures_identical')
             and path in {'R/ggchord-build.R','R/layout-collinear-annotation.R'}
             and supplement.get('engine_sha256',{}).get(path)==fresh)

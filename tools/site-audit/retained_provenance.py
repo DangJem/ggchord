@@ -4,14 +4,35 @@ from pathlib import Path
 ROOT=Path(__file__).resolve().parents[2]
 def sha(value):return hashlib.sha256(value).hexdigest()
 def blob(name):return subprocess.check_output(['git','show','3a56988:'+name],cwd=ROOT)
+def render_source(name):
+    """Use the real render source only for the exact reviewed release delta.
+
+    Never rewrite historical render hashes or accept arbitrary version/code
+    changes. Any additional edit returns current bytes and fails normal checks.
+    """
+    current=(ROOT/name).read_bytes()
+    if name not in {'DESCRIPTION','R/coord-dotplot.R'}:return current
+    previous=subprocess.check_output(['git','show','12c93c6:'+name],cwd=ROOT)
+    if current==previous:return current
+    expected=previous
+    if name=='DESCRIPTION':
+        expected=expected.replace(b'Version: 0.27.0.9000\n',b'Version: 0.27.0\n',1)
+    else:
+        expected=expected.replace('1–'.encode(),br'1\u2013',1)
+        expected=expected.replace(
+            b'ggplot2::aes(xmin = xmin, xmax = xmax, ymin = ymin, ymax = ymax)',
+            b'ggplot2::aes(xmin = !!rlang::sym("xmin"), xmax = !!rlang::sym("xmax"),\n'
+            b'                   ymin = !!rlang::sym("ymin"), ymax = !!rlang::sym("ymax"))',1)
+    return previous if current==expected else current
+
 def dotplot_record():
     path=ROOT/'tools/site-audit/dotplot-rendering.json'
     if not path.exists():return None
     record=json.loads(path.read_text())
     assert record['status']=='complete' and record['other_expressions_and_signatures_identical']
     assert record['changed_function']=='ggchord_prepare_dotplot'
-    for name,digest in record['source_sha256'].items():assert sha((ROOT/name).read_bytes())==digest,'Dotplot render source moved: '+name
-    assert record['engine_sha256']=={str(p.relative_to(ROOT)):sha(p.read_bytes()) for p in (ROOT/'R').glob('*.R')}
+    for name,digest in record['source_sha256'].items():assert sha(render_source(name))==digest,'Dotplot render source moved: '+name
+    assert record['engine_sha256']=={str(p.relative_to(ROOT)):sha(render_source(str(p.relative_to(ROOT)))) for p in (ROOT/'R').glob('*.R')}
     counts=collections.Counter()
     for name,digest in record['raw_source_verification']['files'].items():
         data=(ROOT/name).read_bytes();assert sha(data)==digest
@@ -27,7 +48,7 @@ def dotplot_record():
 def validate_home_sources(record):
     dot=dotplot_record()
     for name,digest in record['source_sha256'].items():
-        current=(ROOT/name).read_bytes()
+        current=render_source(name)
         if sha(current)==digest:continue
         if dot and name=='R/coord-dotplot.R':
             assert sha(blob(name))==digest

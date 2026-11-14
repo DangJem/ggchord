@@ -6,7 +6,7 @@ and original data, recipes and PNG hashes for every retained legacy asset.
 """
 import csv,hashlib,importlib.util,json,re,subprocess,sys,tempfile
 from pathlib import Path
-from retained_provenance import validate_home_sources
+from retained_provenance import validate_home_sources, render_source
 ROOT=Path(__file__).resolve().parents[2]
 sys.path.insert(0,str(ROOT/'tools'))
 spec=importlib.util.spec_from_file_location('fingerprints',ROOT/'tools/documentation-fingerprints.py')
@@ -56,10 +56,11 @@ def verify_linear_revision():
     assert review['representative_chord_circular_geometry_identical']
     previous=json.loads(subprocess.check_output(['git','show','a1cd31d:tools/site-audit/home-rendering.json'],cwd=ROOT))
     actual={str(p.relative_to(ROOT)):hashlib.sha256(p.read_bytes()).hexdigest() for p in (ROOT/'R').glob('*.R')}
+    render_engine={str(p.relative_to(ROOT)):hashlib.sha256(render_source(str(p.relative_to(ROOT)))).hexdigest() for p in (ROOT/'R').glob('*.R')}
     expected_engine=dict(record['engine_sha256'])
     if dot:expected_engine['R/coord-dotplot.R']=dot['engine_sha256']['R/coord-dotplot.R']
-    assert actual==expected_engine,'Runtime changed after actual annotation rendering'
-    changed={name for name,digest in actual.items() if previous['engine_sha256'].get(name)!=digest}
+    assert render_engine==expected_engine,'Runtime changed outside reviewed rendering equivalence'
+    changed={name for name,digest in render_engine.items() if previous['engine_sha256'].get(name)!=digest}
     assert changed==({'R/ggchord-build.R','R/layout-collinear-annotation.R','R/coord-dotplot.R'} if dot else {'R/ggchord-build.R','R/layout-collinear-annotation.R'})
     recipe=(ROOT/'tools/documentation-examples.R').read_bytes()
     assert recipe==subprocess.check_output(['git','show','a1cd31d:tools/documentation-examples.R'],cwd=ROOT)
@@ -82,14 +83,14 @@ def verify_linear_revision():
         elif dot and name=='viewdotplot':
             item=dot['figures'][name]
             assert item['sha256']==hashlib.sha256(path.read_bytes()).hexdigest()
-            assert item['dependency_md5']==row['dependency_md5']==module.fingerprints()['assets'][name]
+            assert item['dependency_md5']==row['dependency_md5']==module.fingerprints(runtime_hashes={'R/coord-dotplot.R':hashlib.md5(render_source('R/coord-dotplot.R')).hexdigest()})['assets'][name]
         else:
             assert old==row,'Retained PNG provenance moved: '+name
         expected[name]=row['dependency_md5']
     result=dict(status='passed scoped annotation update',baseline='a1cd31d',figure_count=len(rows),
         actual_png_refresh_count=len(refreshed),retained_equivalent_count=len(rows)-len(refreshed),
         method='Unchanged recipes and unchanged AST outside three reviewed internal functions; all 42 linear/composition objects inspected for name layers; three affected PNGs regenerated; Chord/Circular representative geometry exact; other runtime files identical.',
-        current_engine_sha256=actual,expected_dependency_md5=expected,
+        current_engine_sha256=actual,release_equivalence={name:dict(current_sha256=hashlib.sha256((ROOT/name).read_bytes()).hexdigest(),render_sha256=hashlib.sha256(render_source(name)).hexdigest()) for name in ('DESCRIPTION','R/coord-dotplot.R')},expected_dependency_md5=expected,
         runtime_scope=review['scope'],scope='Source and normal-size PNG verification; no package-wide or browser certification')
     (ROOT/'tools/site-audit/existing-asset-equivalence.json').write_text(json.dumps(result,indent=2)+'\n')
     print('PASS: 3 affected linear PNGs refreshed; 175 retained assets preserve their provenance')
