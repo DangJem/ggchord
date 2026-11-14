@@ -24,7 +24,7 @@ the supplied artwork.
 
 ![Compact hexagonal study mark](../assets/logo.svg) System fonts are used; no webfont, icon
 library or third-party image is downloaded. Plot colours come from the package's
-existing defaults or explicit teaching code; those literal colour choices are
+existing defaults or explicit example code; those literal colour choices are
 listed with the source. The site uses the existing Pandoc and R documentation
 converters at build time without bundling their binaries or stylesheets.
 

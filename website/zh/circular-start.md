@@ -1,6 +1,6 @@
 ## 长度与已有注释 {#input}
 
-只需要长度与已知表格。本课 ori 行来自已核对 pUC19 注释 867–1455，与原 inspectorigin 输出一致；不运行 DNA 识别。需要 ggchord、dplyr。
+只需要长度与已知表格。本例 ori 行来自已核对 pUC19 注释 867–1455，与原 inspectorigin 输出一致；不运行 DNA 识别。需要 ggchord、dplyr。
 
 ```r
 library(ggchord)

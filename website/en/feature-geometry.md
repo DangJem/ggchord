@@ -60,7 +60,7 @@ Do not hide short intervals by enlarging heads. Check source length before choos
 
 `geom_feature_plasmid()` is a preset with different width, head dimensions and Position defaults. Changing several defaults while comparing it to gene is not a single-parameter experiment. Segmented annotation boundaries mark segments, not different genes.
 
-## Modes, exercises and next steps {#adapt}
+## Modes, input adaptation and next steps {#adapt}
 
 Gene arrows support bp inputs in chord, collinear and single circular modes. Use generic features for aa intervals. Focusing and display reversal do not rewrite biological strand; see [compatibility](compatibility.html).
 

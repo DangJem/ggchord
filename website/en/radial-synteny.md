@@ -50,6 +50,6 @@ x and y on the selected backbone. This avoids inventing a position from a
 single x value shared by multiple spokes. Focus/segment inputs retain source
 origins; radial display does not join multiple windows onto one spoke.
 
-## Exercise and boundaries {#support}
+## Usage and boundaries {#support}
 
 Change only start_angle and verify source coordinates and directions. N=1, shared branches, circular-only layers and stitching separate windows into one spoke are unsupported. Inverse mapping needs backbone x/y.

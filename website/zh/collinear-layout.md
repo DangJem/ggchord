@@ -2,7 +2,7 @@
 
 {{prepare:frontlinks}}
 
-先学会[第一张共线性图](multi-sequence-start.html#collinear)，再用同一组真实输入观察对齐、锚点和方向。无需了解弦图。
+先查看[第一张共线性图](multi-sequence-start.html#collinear)，再用同一组真实输入观察对齐、锚点和方向。无需了解弦图。
 
 ## 输入与默认左对齐 {#baseline}
 

@@ -38,9 +38,9 @@ Check units, layers and parameters before changing coordinates. This table combi
 
 A Position controls local placement; it cannot convert an unsupported layer into a different coordinate layer. Outside/inside means above/below in collinear mode and follows the outward/inward local normal in circular mode. Re-read the result when transferring settings. See [four direction concepts](collinear-layout.html#orientation) for display direction versus biological strand.
 
-## Versions and reproducibility {#versions}
+## Input units and script reuse {#versions}
 
-See [installation](installation.html) for supported versions and [migration](../assets/MIGRATION.md) when updating existing scripts. Single circular mode requires one displayed sequence. Circular protein layout is a display choice, not a claim of molecular circularity. Project mixed bp/aa inputs first or plot them separately.
+See [installation](installation.html) for setup instructions and [migration](../assets/MIGRATION.md) when updating existing scripts. Single circular mode requires one displayed sequence. Circular protein layout is a display choice, not a claim of molecular circularity. Project mixed bp/aa inputs first or plot them separately.
 
 
 ## New coordinate systems {#new-views}

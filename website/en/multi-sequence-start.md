@@ -2,7 +2,7 @@ Build backbones, a link, a feature and labels in one section using bundled sourc
 
 ## Draw the backbones {#draw}
 
-Run this section in a fresh R session after installing the version described on the [installation page](installation.html).
+Run this section in a fresh R session after following the [installation instructions](installation.html).
 
 {{code:courseblockac}}
 

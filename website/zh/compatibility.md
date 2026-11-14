@@ -27,7 +27,7 @@
 | [`geom_track_col()`](reference/geom_track.html) | 支持 | 支持 | 支持 | 条件支持 | 条件支持 | 不支持 | 显式 position_track、数值高度与数值域 |
 | [`geom_track_line()`](reference/geom_track.html) | 支持 | 支持 | 支持 | 条件支持 | 条件支持 | 不支持 | 显式 position_track；闭合须明确请求，不跨缺失样本连接 |
 | [`geom_track_tile()`](reference/geom_track.html) | 支持 | 支持 | 支持 | 条件支持 | 条件支持 | 不支持 | 显式 position_track；不要求数值高度 |
-| [`geom_alignment_segment()`](reference/geom_alignment_segment.html) | 不支持 | 不支持 | 不支持 | 条件支持 | 条件支持 | 不支持 | 不支持 | 不支持 | HSP identity 线段 | 专用双轴几何 |
+| [`geom_alignment_segment()`](reference/geom_alignment_segment.html) | 不支持 | 不支持 | 不支持 | 不支持 | 不支持 | HSP identity 线段 | 专用双轴几何 |
 
 
 23 个代表性图层分别在三种主要模式实际渲染，共 69 组明确标注的合成几何输入：59 组成功，10 组按契约拒绝，包含自动引物标签。中心标签在单序列弦图及圆图支持 bp/aa；引物与酶切要求 DNA。帮助已澄清这些边界。此处验证模式边界，不表示所有参数组合、生物识别或设备均已验收。参见[完整运行记录](../assets/source/tools/teaching-audit/layer-compatibility.csv)。
@@ -38,9 +38,9 @@
 
 Position 只控制局部放置，不把不支持的图层转换成另一种坐标图层。共线性图的 outside/inside 是上方/下方，圆图是局部法线的外/内；复制配置前应重新读图。显示翻转与基因生物学链的区别见[四种方向](collinear-layout.html#orientation)。
 
-## 版本与复现 {#versions}
+## 输入单位与脚本复用 {#versions}
 
-支持版本见[安装页](installation.html)，更新现有脚本时请参阅[迁移说明](../assets/MIGRATION-Hans.md)。单圆图只接受单条显示序列；圆形蛋白只是显示布局，不声明蛋白分子为圆形。混合 bp/aa 数据必须先投影或分别作图。
+安装方法见[安装页](installation.html)，更新现有脚本时请参阅[迁移说明](../assets/MIGRATION-Hans.md)。单圆图只接受单条显示序列；圆形蛋白只是显示布局，不声明蛋白分子为圆形。混合 bp/aa 数据必须先投影或分别作图。
 
 
 ## 新增坐标系 {#new-views}

@@ -23,6 +23,6 @@ Compare identity versus a shared feature stack on the same six annotations. Pass
 {{code:comparepositionstack}}
 {{figure:comparepositionstack}}
 
-## Exercises, replacement input and next steps {#adapt}
+## Replace input and continue {#adapt}
 
 Change only double-line spacing to 0.04, then change the centre length_style size. Keep complete source lengths; do not infer them from maximum feature ends. For FASTA/GenBank/GFF3, check IDs and coordinates in [formats](formats.html). Continue with [circular labels](circular-labels.html), [primers](primers.html), [restriction sites](restriction-sites.html) and [tracks](tracks.html). Preview at the figure dimensions and use the same width/height in ggsave.

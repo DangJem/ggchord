@@ -18,7 +18,7 @@ library(ggchord)
 
 Locate both ori endpoints on the ticks and trace the label to anno. A circular display is not evidence of molecular topology.
 
-## Exercise and save {#exercise}
+## Preview and save {#exercise}
 
 Remove the label layer and rerun; backbone and source interval stay unchanged. Replace the row with your own known annotation.
 

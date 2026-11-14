@@ -2,7 +2,7 @@
 
 ## 绘制骨架 {#draw}
 
-按[安装页](installation.html)安装本网站对应版本后，在全新 R 会话运行本课。
+按[安装页](installation.html)完成安装后，在全新 R 会话运行本例。
 
 {{code:courseblockac}}
 

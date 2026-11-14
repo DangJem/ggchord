@@ -101,7 +101,7 @@ label layer's drawing order:
 
 {{code:courseblockz}}
 
-## Exercises and your annotations {#adapt}
+## Use your annotations {#adapt}
 
 Change only label_max_lines to 3 and explain any improvement. At fixed dimensions, compare exterior fallback on/off. Fixed and automatic layers have different controls. Supply explicit label text or anno, checking IDs, intervals, strands and unique feature_id values. Continue with [primer text](primers.html#primer-labels) and the [dense pETDuet-1 case](circular-dense-case.html#complex).
 

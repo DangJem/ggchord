@@ -9,7 +9,7 @@ CHAPTERS = [next(p for p in PAGES if p['slug'] == slug) for slug in INTRO_CHAPTE
 
 def tutorial(lang):
     title = 'ggchord: sequence plots and composition' if lang == 'en' else 'ggchord：序列图与多视图组合说明'
-    intro = ('Choose among four plotting modules. Each opening lesson includes its own setup. '
+    intro = ('Choose among four plotting modules. Each opening example includes its own setup. '
         'Continue online for data import, advanced workflows and complete research examples.' if lang == 'en' else
         '按任务选择四个绘图模块，每个模块都提供独立的首图代码。'
         '自备数据、专业专题和完整科研案例请继续查阅在线说明。')

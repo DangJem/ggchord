@@ -80,6 +80,6 @@ Filtering selects observations by criteria; deduplication selects representative
 
 
 
-## Your alignments and exercises {#statistics-adapt}
+## Use your alignments {#statistics-adapt}
 
 Set bins to 6, observe colour changes and confirm retention of original observations. Preserve actual condition columns for group_by rather than pooling samples implicitly. Link statistics support chord/collinear views; single circular mode rejects link layers. Continue with [link preparation](ribbons.html), [real cases](real-data.html) and [scale families](scale-families.html).

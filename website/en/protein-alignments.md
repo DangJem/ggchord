@@ -46,7 +46,7 @@ Residues 50–289 project to 7,181–7,900 bp on BVI_023A, on the reverse strand
 
 ## Data source {#source}
 
-The bundled identifiers are BVI_029_0020, BVI_058_0011, E4-10_023_0015 and ADZ16414.1. Complete FASTA records come from public EMALE/Mavirus data. NCBI BLASTp 2.17.0+ computed all comparisons, retaining one HSP per pair. The raw output retains self hits and both directions, for 16 rows. The teaching table retains one direction per unordered pair in sequence-table order, without changing endpoints or identity.
+The bundled identifiers are BVI_029_0020, BVI_058_0011, E4-10_023_0015 and ADZ16414.1. Complete FASTA records come from public EMALE/Mavirus data. NCBI BLASTp 2.17.0+ computed all comparisons, retaining one HSP per pair. The raw output retains self hits and both directions, for 16 rows. The example table retains one direction per unordered pair in sequence-table order, without changing endpoints or identity.
 
 The input bundle's `examples/protein/` directory retains complete FASTA records, raw BLASTp output and `sources.json` hashes. Rebuild rules are in `data-raw/prepare-bundled-proteins.py` and `data-raw/generate_protein_data.R`. Plotting uses bundled objects and does not require BLASTp.
 

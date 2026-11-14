@@ -1008,7 +1008,7 @@
   {
     "id": "comparescalegradient",
     "object": "p_comparescalegradient",
-    "parameter": "scale/stat/theme as described in lesson",
+    "parameter": "scale/stat/theme as described in the section",
     "value": "comparescalegradient",
     "snippets": [
       "comparescaledata",
@@ -1027,7 +1027,7 @@
   {
     "id": "comparescalesteps",
     "object": "p_comparescalesteps",
-    "parameter": "scale/stat/theme as described in lesson",
+    "parameter": "scale/stat/theme as described in the section",
     "value": "comparescalesteps",
     "snippets": [
       "comparescaledata",
@@ -1046,7 +1046,7 @@
   {
     "id": "comparescalelinkcontinuous",
     "object": "p_comparescalelinkcontinuous",
-    "parameter": "scale/stat/theme as described in lesson",
+    "parameter": "scale/stat/theme as described in the section",
     "value": "comparescalelinkcontinuous",
     "snippets": [
       "comparescaledata",
@@ -1066,7 +1066,7 @@
   {
     "id": "comparethememinimal",
     "object": "p_comparethememinimal",
-    "parameter": "scale/stat/theme as described in lesson",
+    "parameter": "scale/stat/theme as described in the section",
     "value": "comparethememinimal",
     "snippets": [
       "comparescaledata",
@@ -1085,7 +1085,7 @@
   {
     "id": "comparethemedark",
     "object": "p_comparethemedark",
-    "parameter": "scale/stat/theme as described in lesson",
+    "parameter": "scale/stat/theme as described in the section",
     "value": "comparethemedark",
     "snippets": [
       "comparescaledata",
@@ -1104,7 +1104,7 @@
   {
     "id": "comparedensityfour",
     "object": "p_comparedensityfour",
-    "parameter": "scale/stat/theme as described in lesson",
+    "parameter": "scale/stat/theme as described in the section",
     "value": "comparedensityfour",
     "snippets": [
       "comparedensitydata",
@@ -1123,7 +1123,7 @@
   {
     "id": "comparedensityeight",
     "object": "p_comparedensityeight",
-    "parameter": "scale/stat/theme as described in lesson",
+    "parameter": "scale/stat/theme as described in the section",
     "value": "comparedensityeight",
     "snippets": [
       "comparedensitydata",
@@ -1142,7 +1142,7 @@
   {
     "id": "comparebundle",
     "object": "p_comparebundle",
-    "parameter": "scale/stat/theme as described in lesson",
+    "parameter": "scale/stat/theme as described in the section",
     "value": "comparebundle",
     "snippets": [
       "comparedensitydata",

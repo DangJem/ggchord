@@ -133,7 +133,7 @@ Default `link_type = "curve"` connects the selected positions with curves.
 
 Only change to `"straight"`, keeping input, anchors and dimensions fixed. Add `arrow = grid::arrow()` separately for direction. It represents the query-to-subject drawing convention, not independent evidence of gene strand or transcription.
 
-## Real data, modes and exercises {#adapt}
+## Real inputs and coordinate choices {#adapt}
 
 Preserve real query/subject endpoints. Do not edit unequal endpoints to manufacture shared trunks. See [link preparation](ribbons.html) for filtering and bundling; geometric branching does not perform those statistics.
 

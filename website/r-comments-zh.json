@@ -4,7 +4,7 @@
   "Packaged real GC signal, not measured read coverage.": "随包真实 GC 信号，不是实测测序覆盖度。",
   "Explicit re-encoding of cached AA annotations, not a new analysis run.": "明确重编码缓存的 AA 注释，不是新运行的分析。",
   "Actual 100-bp-window GC percentages; not measured read coverage.": "真实 100 bp 窗口 GC 百分比，不是实测测序覆盖度。",
-  "Explicit synthetic format example; real-data workflow is in the tutorial.": "明确标记的人工格式示例，真实数据工作流见教程。",
+  "Explicit synthetic format example; real-data workflow is in the tutorial.": "明确标记的人工格式示例，真实数据工作流见说明。",
   "Explicit synthetic format example, not a biological alignment claim.": "明确标记的人工格式示例，不声称为生物学比对结果。",
   "Requires an existing Python environment with optional Biopython.": "需要已有 Python 环境及可选 Biopython。",
   "Explicit synthetic codon contract, not a biological annotation claim.": "明确标记的人工密码子契约示例，不声称为生物学注释结果。",
@@ -21,7 +21,7 @@
   "Gaps are retained: projecting one query span does not assert an ungapped pair.": "保留缺口信息，单侧范围投影不声明双端无缺口对应。",
   "The original NCBI L09137.2 record identifies pUC19c; keep that identity.": "NCBI 原始 L09137.2 记录名为 pUC19c，保留该标识。",
   "Exact CDS DNA equality supplies evidence for these selected ungapped residues.": "两段 CDS DNA 完全一致，为所选残基的无缺口对应提供依据。",
-  "Restore the biological strand saved separately in this bundled teaching table.": "使用随包教学表中单独保存的原始注释链。",
+  "Restore the biological strand saved separately in this bundled teaching table.": "使用随包示例表中单独保存的原始注释链。",
   "Select one CDS per sequence. Prefer a specific annotation when available.": "每条序列选一个 CDS，优先使用有明确名称的注释。",
   "Original repository records; extract the tutorial input bundle first.": "使用仓库原始记录，先解压教学输入包。",
   "At most three substantial observed HSPs per pair; no coordinates are invented.": "每对序列最多保留三条较长的实际比对，使用原始坐标。",
@@ -50,7 +50,7 @@
   "Self-correspondence of one real CDS, solely to demonstrate coordinate conversion.": "用一条真实 CDS 的自对应演示坐标转换。",
   "Standard 12-column records; requires the source checkout or tutorial input bundle.": "使用标准 12 列记录，需要仓库源码或教学输入包。",
   "The same observed residues are paired, so the correspondence is ungapped.": "配对相同的实际残基，因此对应关系无缺口。",
-  "Shared executable documentation snippets, canonical website and vignette source.": "网站和离线教程共用的可执行示例源码。",
+  "Shared executable documentation snippets, canonical website and vignette source.": "网站和离线说明共用的可执行示例源码。",
   "Prefer source-backed bundled data; retain metadata outside plotting inputs.": "优先使用有来源的随包数据，绘图列之外保留完整元数据。",
   "Prefer a CDS overlapping a displayed ribbon endpoint within each positive-strand bin.": "每个正链分组优先选择与已展示连接端点重叠的 CDS。",
   "Shared controls sit just beyond the intervening backbones, rather than far away.": "共享控制点放在中间骨架稍外侧。",
@@ -60,5 +60,5 @@
   "A shared display label preserves all seven biological operator records.": "共享显示标签保留全部七条生物学 operator 记录。",
   "This four-column tool table is not GFF3. Explicitly declare source anchors.": "此工具的四列位置表不是 GFF3；显式声明源锚点。",
   "Requires the source checkout, dplyr and optional Biostrings.": "需要源码 checkout、dplyr 及可选 Biostrings。",
-  "Requires dplyr and the source checkout or tutorial input bundle.": "需要 dplyr 和源码 checkout 或教程输入包。"
+  "Requires dplyr and the source checkout or tutorial input bundle.": "需要 dplyr 和源码 checkout 或说明输入包。"
 }

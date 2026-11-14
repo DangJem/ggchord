@@ -63,7 +63,7 @@ A display flip does not rewrite source strands or establish a biological inversi
 
 These belong to `coord_collinear()`, not the other coordinate systems. Window tables own orientation in [segmented views](views.html#segments). Circular radius and curvature settings cannot be converted to this mode.
 
-## Exercises and your own data {#adapt}
+## Use your own data {#adapt}
 
 First change only left to right and observe short sequences against the longest backbone. Then choose a justified anchor for each sequence and explain why they can be compared. For your FASTA lengths and BLAST/PAF endpoints, check IDs, units, complete lengths and reverse endpoints; see [data import](real-data.html#read).
 

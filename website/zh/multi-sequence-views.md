@@ -1,6 +1,6 @@
 ## 保留旗舰与派生视图 {#flagship}
 
-弦图和共线性图继续使用现有旗舰版本，不改变图像、输入筛选、配色或图层设计。Radial 从现有弦图派生，Sankey 从现有共线性图派生。两套既有旗舰共用来源准备，但各自保留原有特征与跨行 HSP 的显示选择，因此不把四图说成完全相同的显示子集。
+弦图和共线性图继续使用现有旗舰版本，保留构图、输入筛选、配色和图层设计；图像仅随本次已确认的默认线型缺陷修复而重绘。Radial 从现有弦图派生，Sankey 从现有共线性图派生。两套既有旗舰共用来源准备，但各自保留原有特征与跨行 HSP 的显示选择，因此不把四图说成完全相同的显示子集。
 
 {{prepare:sequencepalette,docstyle,showcasedata,chordshowcasegenes,showcasechord,showcasecollinear}}
 
@@ -26,7 +26,7 @@ Radial 不使用 Chord 专属的半径/曲率，因此只替换派生图的骨�
 
 ## 一次准备 {#input}
 
-相同来源输入不代表默认展示完全相同的关系。本课先明确全对选择再比较几何；随后核对各视图默认筛选。依赖：ggchord、dplyr。
+相同来源输入不代表默认展示完全相同的关系。本例先明确全对选择再比较几何；随后核对各视图默认筛选。依赖：ggchord、dplyr。
 
 {{prepare:radialdata}}
 
@@ -50,12 +50,12 @@ Radial 不使用 Chord 专属的半径/曲率，因此只替换派生图的骨�
 
 ## 默认选择与可比条件 {#selection}
 
-| 视图 | 默认关系选择 | 本课条件 |
+| 视图 | 默认关系选择 | 本例条件 |
 | --- | --- | --- |
 | Chord | 全对 | 同一 HSP 表，显式全对 |
 | Collinear | 相邻行 | 显式 adjacent_only = FALSE |
 | Radial | 环形邻居 | 显式 adjacent_only = FALSE |
-| Sankey | 排除同实体自身关系 | 本课真实表不含自身关系 |
+| Sankey | 排除同实体自身关系 | 本例真实表不含自身关系 |
 
 {{code:coursecomparisonreport}}
 

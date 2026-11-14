@@ -18,7 +18,7 @@ knitr::opts_chunk$set(eval = FALSE, collapse = TRUE, comment = "#>")
 
 <img src="tutorial-assets/logo.png" alt="ggchord" width="200">
 
-Choose among four plotting modules. Each opening lesson includes its own setup. Continue online for data import, advanced workflows and complete research examples.
+Choose among four plotting modules. Each opening example includes its own setup. Continue online for data import, advanced workflows and complete research examples.
 
 
 ## Download and installation {#installation}
@@ -66,7 +66,7 @@ Build backbones, a link, a feature and labels in one section using bundled sourc
 
 ### Draw the backbones {#multi-sequence-start-draw}
 
-Run this section in a fresh R session after installing the version described on the [installation page](#installation).
+Run this section in a fresh R session after following the [installation instructions](#installation).
 
 
 ```{r example-3, eval=FALSE}
@@ -209,7 +209,7 @@ view_ggchord(p_coursecirclefeature)
 
 Locate both ori endpoints on the ticks and trace the label to anno. A circular display is not evidence of molecular topology.
 
-### Exercise and save {#circular-start-exercise}
+### Preview and save {#circular-start-exercise}
 
 Remove the label layer and rerun; backbone and source interval stay unchanged. Replace the row with your own known annotation.
 

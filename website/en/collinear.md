@@ -1,4 +1,4 @@
-<div class="section-intro">The complete Module II result: four real genomes, strand-separated features and outward-routed cross-row links.</div>
+<div class="section-intro">The complete multi-sequence Collinear result: four real genomes, strand-separated features and outward-routed cross-row links.</div>
 
 
 ## Research question, alignment and tradeoffs {#question}
