@@ -9,7 +9,8 @@ ggchord_fusion(
   center_size = NULL,
   layout = c("fixed", "adaptive"),
   allow_overlap = FALSE,
-  center_box = NULL
+  center_box = NULL,
+  guides = c("keep", "collect")
 )
 }
 \arguments{
@@ -38,6 +39,15 @@ earlier content. This is deliberate placement, not global collision avoidance.}
 fractions of the composition content area excluding outer decorations and
 Guides, or four absolute
 grid units. Use instead of center_size. See fusion_panel().}
+
+\item{guides}{\code{"keep"} (default) leaves child plot legends local.
+\code{"collect"} moves their native outside legends to the composition edge
+and removes visually identical duplicates. Scales are not combined or
+retrained across panels: use matching limits, breaks and guide styles for
+shared semantics. Different legends are retained separately, even with
+identical titles. Child \code{legend.position = "none"} stays hidden; inside
+legends cannot be collected. Nested cross-panel legends stay local to
+their composition. Collected boxes wrap to available device width.}
 }
 \value{
 A Fusion object, printable and accepted by \code{\link[ggplot2:ggsave]{ggplot2::ggsave()}}.
@@ -58,7 +68,7 @@ data(seq_data_example)
 seqs <- seq_data_example |> select(accver, length) |> slice_head(n = 2)
 center <- ggchord(seqs) + geom_seq() + coord_chord()
 detail <- ggchord(seqs) + geom_seq() + coord_collinear(seq_axis = "vertical")
-ggchord_fusion(center) +
+ggchord_fusion(center, guides = "collect") +
   fusion_panel(detail, id = "detail", side = "right") +
   ggplot2::labs(title = "Independent genomic views",
     caption = "Source: bundled sequence records")

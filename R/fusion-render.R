@@ -6,7 +6,13 @@ ggchord_build_fusion_core <- function(x) {
     height=grid::convertHeight(grid::unit(1,"npc"),"mm",TRUE))
   origin <- grid::deviceLoc(grid::unit(0,"npc"),grid::unit(0,"npc"),valueOnly=TRUE)
   origin <- c(origin$x,origin$y)*25.4
+  collected <- list(boxes=list())
+  if (identical(x$fusion_guides,"collect")) {
+    collected <- ggchord_fusion_collect_guides(x)
+    x <- collected$plot
+  }
   styles <- ggchord_fusion_styles(x)
+  styles <- ggchord_fusion_shared_guides(styles,collected$boxes,x,canvas)
   guide_size <- if (styles$side == "none") c(0, 0) else if (styles$side != "multiple")
     styles$sizes[styles$side, ] else apply(styles$sizes, 2, max)
   budget <- ggchord_fusion_guide_budget(canvas, styles$sizes)

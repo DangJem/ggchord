@@ -2461,7 +2461,7 @@ Start with the [function index](reference/index.html). Examples compare importan
 | `gradient` | `FALSE` | Type, units and accepted forms: see this API argument contract at right | Opt in to query-to-subject sequence-colour interpolation. Cannot be combined with an explicit fill or fill mapping. |
 | `tip` | `c("none", "subject")` | Type, units and accepted forms: see this API argument contract at right | "none" or a decorative "subject" tip. Source fronts remain exported in full even when the tip is drawn. |
 | `allow_repeated` | `FALSE` | Type, units and accepted forms: see this API argument contract at right | Explicitly allow repeated source_hsp_id display. |
-| `curvature` | `0.3` | Type, units and accepted forms: see this API argument contract at right | Control distance relative to endpoint separation, in [0,1]. |
+| `curvature` | `0.3` | Type, units and accepted forms: see this API argument contract at right | Control distance relative to endpoint separation, in [0,1]. Nearly tangential arrivals use coherent perpendicular endpoint normals to avoid artificial S bends; ordered source fronts are never rearranged. |
 | `fill` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Fixed styles; explicit values take priority over mappings. The default fill without pident is steelblue. |
 | `colour` | `NA` | Type, units and accepted forms: see this API argument contract at right | Fixed styles; explicit values take priority over mappings. The default fill without pident is steelblue. |
 | `alpha` | `0.35` | Type, units and accepted forms: see this API argument contract at right | Fixed styles; explicit values take priority over mappings. The default fill without pident is steelblue. |
@@ -2520,6 +2520,7 @@ Start with the [function index](reference/index.html). Examples compare importan
 | `layout` | `c("fixed", "adaptive")` | Type, units and accepted forms: see this API argument contract at right | "fixed" uses fixed panel allocations; "adaptive" also adjusts the central allocation to the physical aspect ratio and jointly measures native cross-panel Guide candidates against panel allocations. Unlocked Guide positions/direction/rows may adapt; explicit native settings and absolute boxes stay fixed. Multiple outside Guide positions are allowed. Both rebuild labels and guides at actual panel sizes without shrinking explicit fonts. Impossible space constraints fail rather than dropping keys. |
 | `allow_overlap` | `FALSE` | Type, units and accepted forms: see this API argument contract at right | Explicitly allow container overlap. Default FALSE fails on overlap. When TRUE, later panels paint over earlier panels. Connections use disjoint native grid clips to avoid accumulating translucent fills. Ordinary child margins do not break links; later containers still cover earlier content. This is deliberate placement, not global collision avoidance. |
 | `center_box` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional centre allocation: xmin, xmax, ymin, ymax as four fractions of the composition content area excluding outer decorations and Guides, or four absolute grid units. Use instead of center_size. See fusion_panel(). |
+| `guides` | `c("keep", "collect")` | Type, units and accepted forms: see this API argument contract at right | "keep" (default) leaves child plot legends local. "collect" moves their native outside legends to the composition edge and removes visually identical duplicates. Scales are not combined or retrained across panels: use matching limits, breaks and guide styles for shared semantics. Different legends are retained separately, even with identical titles. Child legend.position = "none" stays hidden; inside legends cannot be collected. Nested cross-panel legends stay local to their composition. Collected boxes wrap to available device width. |
 
 </details>
 
@@ -2566,6 +2567,7 @@ Start with the [function index](reference/index.html). Examples compare importan
 | `allow_overlap` | `FALSE` | Type, units and accepted forms: see this API argument contract at right | Deliberately permit overlapping containers, following ggchord_fusion(). Later panels cover earlier ones; default FALSE. |
 | `center_box` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Explicit source allocation instead of center_size. |
 | `route` | `c("direct", "avoid")` | Type, units and accepted forms: see this API argument contract at right | Direct boundary leaders (default), or avoid to route around measured other containers and native text/guide envelopes. Endpoints stay fixed; no clear route fails rather than hiding the selection. |
+| `guides` | `c("keep", "collect")` | Type, units and accepted forms: see this API argument contract at right | Child legend placement, passed to ggchord_fusion(). Default "keep"; use "collect" for shared native outside legends. |
 
 </details>
 

@@ -1,6 +1,6 @@
 ## Independent views, connected source intervals {#task}
 
-Fusion is the composition layer. This example places a Chord overview, a Collinear view, a Radial view and a local two-sequence detail into explicit panel rectangles. All links refer to observed HSPs and registered source intervals; repeated displays do not become additional observations.
+Fusion is a composition layer. The complete example places a Chord overview, Collinear view, Radial view, two-genome context and independent local magnification in explicit panel rectangles. Connections use observed HSPs and registered source intervals; repeated display does not create additional observations.
 
 {{manualfigure:flagfusion}}
 
@@ -21,4 +21,12 @@ Nested Fusion preserves leaf-panel paths. An origin-crossing region needs explic
 Registered genomic views, nested compositions and registered Cartesian character details are supported according to their contracts. Dotplot, facets and unregistered external plots are not inferred or adapted automatically.
 ## Flagship display selections {#flagship-selection}
 
-Each of the three flagship overview panels retains 32 original HSPs and 266 CDS. Only three actual observations are selected for cross-panel correspondences. The local view selects the shortest observed HSP of at least 2000 bp, with 800 bp of context on either side (clipped at sequence boundaries), showing existing CDS and names. Pale cross-panel bands mark corresponding intervals; within-panel ribbon colours show Identity. Display selections and repeated views are not additional observations.
+A, B and C share six selected real HSPs and twelve source CDS; complete 32-HSP/266-CDS inputs remain available. One HSP closest to 4000 bp is selected per directed sequence pair. CDS are selected from three positional bins per sequence, preferring informative names and longer features. A-B, A-C and C-D correspondences use selected original records, with C connected to two panels.
+
+D restores forward full-length sequences. E shows the corresponding HSP and source windows with 800 bp flanking context on either side, selecting two CDS per sequence. Paired highlights in D and E are registered by `magnify_ggchord()`; actual magnification is remeasured for the device and panel allocation. Highlights are not additional HSPs and do not change source coordinates or biological strands. Four dashed leaders connect the actual source-window boundaries and avoid measured text bounds. D moves up and left; E gains height and top annotation space, while the C-D connection avoids the E panel. Cross-panel colours identify correspondences; internal ribbon colours show Identity.
+
+## Shared child legends {#shared-guides}
+
+`ggchord_fusion(center, guides = "collect")` collects native outside child legends at the composition edge, displaying visually identical legends once. Default `guides = "keep"` retains the earlier layout. Original plots are not modified, and explicitly hidden legends remain hidden. Each panel still uses its own scales: shared semantics require matching limits, breaks and guide styles. Legends with the same title but different contents are not forcibly merged.
+
+The flagship places Sequence, Strand, Identity and cross-panel Correspondence legends together at the bottom, freeing space in the children. Inside legends cannot be collected; nested cross-panel legends remain managed by their own compositions. Collected legends are measured and wrapped at the actual device size. If one legend is too wide, configure its native guide or enlarge the canvas.

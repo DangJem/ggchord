@@ -9,11 +9,22 @@
   adjustable annular midpoint lift and separate occupied channels to clear
   intervening spokes, preserving original HSP and CDS coordinates and source identities.
 
-- Fusion flagship now labels its four views, shares an Identity ruler, enlarges
-  the Radial overview and reduces cross-panel emphasis. All 32 HSPs and 266 CDS
-  remain in each overview; three explicitly selected correspondences connect
-  panels. The detail uses a shorter observed HSP with 800 bp flanking context
-  and source CDS labels. Homepage previews derive from the same updated plots.
+- `ggchord_fusion(guides = "collect")` collects native child legends outside
+  the composition and removes visually identical duplicates, without changing
+  child scales or source plots. Default keep retains earlier behaviour.
+- Fusion flagship uses a shared outer legend, six source HSPs and twelve CDS
+  in each overview, stronger A-B/A-C/C-D interval correspondences and larger
+  panels. Full 32-HSP/266-CDS inputs remain unchanged. Detail panels display
+  selected source annotations with flanking context. D retains forward full-length
+  sequences; E is registered source-window magnification with paired highlights
+  and four boundary leaders routed around measured text. D moves up and left
+  to enlarge E, whose top annotation space clears its heading. The C-D ribbon
+  avoids the E panel.
+
+- Cross-panel curves choose coherent endpoint normals for nearly tangential
+  arrivals, avoiding artificial S bends without sorting or reversing real
+  interval fronts. `magnify_ggchord(guides = "collect")` forwards shared native
+  legend placement to its Fusion, retaining keep as the default.
 
 # ggchord 0.27.0
 

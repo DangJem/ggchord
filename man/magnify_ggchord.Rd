@@ -20,7 +20,8 @@ magnify_ggchord(
   detail_box = NULL,
   allow_overlap = FALSE,
   center_box = NULL,
-  route = c("direct", "avoid")
+  route = c("direct", "avoid"),
+  guides = c("keep", "collect")
 )
 }
 \arguments{
@@ -83,6 +84,9 @@ ggchord_fusion(). Later panels cover earlier ones; default FALSE.}
 \item{route}{Direct boundary leaders (default), or avoid to route around
 measured other containers and native text/guide envelopes. Endpoints stay
 fixed; no clear route fails rather than hiding the selection.}
+
+\item{guides}{Child legend placement, passed to \code{\link[=ggchord_fusion]{ggchord_fusion()}}.
+Default \code{"keep"}; use \code{"collect"} for shared native outside legends.}
 }
 \value{
 A \code{\link[=ggchord_fusion]{ggchord_fusion()}} object. \code{\link[=export_ggchord_fusion]{export_ggchord_fusion()}} additionally

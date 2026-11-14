@@ -60,6 +60,8 @@
 #' @param highlight_width Positive highlight band width in physical mm.
 #' @param linewidth Nonnegative leader width using the usual ggplot2 convention.
 #' @param linetype Leader line type, default dashed.
+#' @param guides Child legend placement, passed to [ggchord_fusion()].
+#'   Default `"keep"`; use `"collect"` for shared native outside legends.
 #' @return A [ggchord_fusion()] object. [export_ggchord_fusion()] additionally
 #'   returns focus_regions, focus_fronts and leaders in mm, plus original
 #'   focus_region_data (without metadata-name collisions), preserving the input
@@ -86,8 +88,9 @@
 magnify_ggchord <- function(plot, region, detail_plot,
     side = c("right", "top", "left", "bottom"), center_size = NULL, detail_size = NULL,
     connector = c("leader", "none"), colour = "#B45309", alpha = .2,
-    highlight_width = 1.5, linewidth = .35, linetype = 2, detail_box = NULL, allow_overlap = FALSE, center_box = NULL, route = c("direct", "avoid")) {
+    highlight_width = 1.5, linewidth = .35, linetype = 2, detail_box = NULL, allow_overlap = FALSE, center_box = NULL, route = c("direct", "avoid"), guides = c("keep", "collect")) {
   route <- match.arg(route)
+  guides <- match.arg(guides)
   side_supplied <- !missing(side)
   ggchord_fusion_check_plot(plot, center = TRUE)
   caller <- "magnify_ggchord()"
@@ -149,7 +152,7 @@ magnify_ggchord <- function(plot, region, detail_plot,
     detail_size[ids]
   } else stats::setNames(rep(list(detail_size),length(ids)),ids)
   if (multiple || !is.null(boxes)) {
-    result <- ggchord_fusion(plot, center_size = center_size, allow_overlap = allow_overlap, center_box = center_box)
+    result <- ggchord_fusion(plot, center_size = center_size, allow_overlap = allow_overlap, center_box = center_box, guides = guides)
     for (id in ids) result <- result + if (!is.null(boxes)) fusion_panel(details[[id]], id, box = boxes[[id]]) else
       fusion_panel(details[[id]], id, sides[[id]], sizes[[id]])
   } else {
@@ -157,7 +160,7 @@ magnify_ggchord <- function(plot, region, detail_plot,
     lateral <- side %in% c("right", "left")
     if (side != "auto" && is.null(center_size) && is.null(center_box)) center_size <- if (lateral) c(.4,.8) else c(.8,.4)
     if (side != "auto" && is.null(detail_size)) detail_size <- if (lateral) c(.42,.88) else c(.88,.42)
-    result <- ggchord_fusion(plot, center_size = center_size, allow_overlap = allow_overlap, center_box = center_box) +
+    result <- ggchord_fusion(plot, center_size = center_size, allow_overlap = allow_overlap, center_box = center_box, guides = guides) +
       fusion_panel(detail_plot, "detail", side = side, size = detail_size)
   }
   resolved_region <- as.data.frame(region)

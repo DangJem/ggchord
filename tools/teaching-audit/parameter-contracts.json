@@ -13600,7 +13600,7 @@
     "parameter": "curvature",
     "default": "0.3",
     "type": "Type, units and accepted forms: see this API argument contract at right",
-    "constraint": "Control distance relative to endpoint separation, in [0,1].",
+    "constraint": "Control distance relative to endpoint separation, in [0,1]. Nearly tangential arrivals use coherent perpendicular endpoint normals to avoid artificial S bends; ordered source fronts are never rearranged.",
     "source": "man/fusion_ribbon.Rd",
     "requiredness": "see API contract; not inferred from formals",
     "type_source": "canonical Rd argument contract",
@@ -13849,6 +13849,17 @@
     "units": "see canonical argument contract"
   },
   {
+    "api": "ggchord_fusion",
+    "parameter": "guides",
+    "default": "c(\"keep\", \"collect\")",
+    "type": "Type, units and accepted forms: see this API argument contract at right",
+    "constraint": "\"keep\" (default) leaves child plot legends local. \"collect\" moves their native outside legends to the composition edge and removes visually identical duplicates. Scales are not combined or retrained across panels: use matching limits, breaks and guide styles for shared semantics. Different legends are retained separately, even with identical titles. Child legend.position = \"none\" stays hidden; inside legends cannot be collected. Nested cross-panel legends stay local to their composition. Collected boxes wrap to available device width.",
+    "source": "man/ggchord_fusion.Rd",
+    "requiredness": "see API contract; not inferred from formals",
+    "type_source": "canonical Rd argument contract",
+    "units": "see canonical argument contract"
+  },
+  {
     "api": "link_ggchord_clusters",
     "parameter": "feature_data",
     "default": "",
@@ -14085,6 +14096,17 @@
     "default": "c(\"direct\", \"avoid\")",
     "type": "Type, units and accepted forms: see this API argument contract at right",
     "constraint": "Direct boundary leaders (default), or avoid to route around measured other containers and native text/guide envelopes. Endpoints stay fixed; no clear route fails rather than hiding the selection.",
+    "source": "man/magnify_ggchord.Rd",
+    "requiredness": "see API contract; not inferred from formals",
+    "type_source": "canonical Rd argument contract",
+    "units": "see canonical argument contract"
+  },
+  {
+    "api": "magnify_ggchord",
+    "parameter": "guides",
+    "default": "c(\"keep\", \"collect\")",
+    "type": "Type, units and accepted forms: see this API argument contract at right",
+    "constraint": "Child legend placement, passed to ggchord_fusion(). Default \"keep\"; use \"collect\" for shared native outside legends.",
     "source": "man/magnify_ggchord.Rd",
     "requiredness": "see API contract; not inferred from formals",
     "type_source": "canonical Rd argument contract",

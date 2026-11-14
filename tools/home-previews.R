@@ -89,28 +89,4 @@ home_dotplot <- ggchord(flagship_sequences, flagship_hsp) +
     axis.title = element_text(size = 11), axis.text = element_text(size = 10),
     panel.grid.major = element_blank()
   )
-# Four-panel flagship source: all 32 HSPs and 266 CDS in each overview.
-# Hide coordinate text for the preview, retaining names, geometry and real endpoints.
-home_fusion_theme <- home_relationship_theme + theme(plot.margin = margin(2, 2, 2, 2))
-home_fusion_base <- ggchord(flagship_sequences, flagship_hsp, feature_data = flagship_features) +
-  geom_link_ribbon(adjacent_only = FALSE, alpha = 0.45, linewidth = 0.12, allow_repeated = TRUE) +
-  geom_seq(aes(seq_colour = accver), linewidth = 1.1) +
-  geom_gene(aes(gene_fill = strand), position = flagship_position, width = 0.025) +
-  geom_seq_label(size = 2.6) +
-  scale_seq_colour_manual(values = flagship_colours) +
-  scale_gene_fill_manual(values = gene_palette) + home_fusion_theme
-home_fusion <- ggchord_fusion(fusion_chord_view + home_fusion_theme,
-  center_box = c(0.01, 0.47, 0.53, 0.99)) +
-  fusion_panel(fusion_linear_view + home_fusion_theme, id = "linear",
-    box = c(0.53, 0.99, 0.53, 0.99)) +
-  fusion_panel(fusion_radial_view + home_fusion_theme, id = "radial",
-    box = c(0.01, 0.47, 0.01, 0.47)) +
-  fusion_panel(fusion_detail_view + home_fusion_theme, id = "detail",
-    box = c(0.53, 0.99, 0.01, 0.47)) +
-  fusion_ribbon(flagship_hsp |> slice(2), qpanel = "center", spanel = "linear",
-    fill = "#269B82", alpha = 0.16, allow_repeated = TRUE) +
-  fusion_ribbon(flagship_hsp |> slice(6), qpanel = "center", spanel = "radial",
-    fill = "#D59B17", alpha = 0.14, allow_repeated = TRUE) +
-  fusion_ribbon(flagship_selected, qpanel = "center", spanel = "detail",
-    fill = "#E64B35", alpha = 0.07, allow_repeated = TRUE) +
-  theme(plot.background = element_rect(fill = home_paper, colour = NA))
+home_fusion <- make_flagship_fusion(preview = TRUE)

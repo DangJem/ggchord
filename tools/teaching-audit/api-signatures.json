@@ -1057,7 +1057,8 @@
       "center_size": "NULL",
       "layout": "c(\"fixed\", \"adaptive\")",
       "allow_overlap": "FALSE",
-      "center_box": "NULL"
+      "center_box": "NULL",
+      "guides": "c(\"keep\", \"collect\")"
     }
   },
   {
@@ -1213,7 +1214,8 @@
       "detail_box": "NULL",
       "allow_overlap": "FALSE",
       "center_box": "NULL",
-      "route": "c(\"direct\", \"avoid\")"
+      "route": "c(\"direct\", \"avoid\")",
+      "guides": "c(\"keep\", \"collect\")"
     }
   },
   {

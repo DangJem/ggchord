@@ -41,7 +41,9 @@ exported in full even when the tip is drawn.}
 
 \item{allow_repeated}{Explicitly allow repeated source_hsp_id display.}
 
-\item{curvature}{Control distance relative to endpoint separation, in \verb{[0,1]}.}
+\item{curvature}{Control distance relative to endpoint separation, in \verb{[0,1]}.
+Nearly tangential arrivals use coherent perpendicular endpoint normals
+to avoid artificial S bends; ordered source fronts are never rearranged.}
 
 \item{fill, colour, alpha, linewidth, linetype}{Fixed styles; explicit values
 take priority over mappings. The default fill without pident is steelblue.}
