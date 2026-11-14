@@ -52,9 +52,9 @@ knitr::opts_chunk$set(eval = FALSE, collapse = TRUE, comment = "#>")
                 return f'[{label}](#{slug}' + (f'-{anchor}' if anchor else '') + ')'
             target = f'https://dangjem.github.io/ggchord/{lang}/{slug}.html'
             return f'[{label}]({target}' + (f'#{anchor}' if anchor else '') + ')'
-        body = re.sub(r'\[([^\]]+)\]\(([a-z-]+)\.html(?:#([^)]*))?\)', lesson_link, body)
+        body = re.sub(r'\[([^\]]+)\]\(([a-z0-9_/-]+)\.html(?:#([^)]*))?\)', lesson_link, body)
         body = body.replace('(../assets/source/', f'(https://dangjem.github.io/ggchord/assets/source/')
-        body = re.sub(r'\(\.\./assets/(course\w+\.png)\)',r'(../man/figures/\1)',body)
+        body = re.sub(r'\(\.\./assets/([a-z]+\.png)\)',r'(../man/figures/\1)',body)
         body = body.replace('(../build-manifest.json)', '(https://dangjem.github.io/ggchord/build-manifest.json)')
         body = body.replace('(../assets/tutorial-inputs.zip)', '(https://dangjem.github.io/ggchord/assets/tutorial-inputs.zip)')
         body = body.replace('(../assets/MIGRATION.md)', '(../MIGRATION.md)').replace('(../assets/MIGRATION-Hans.md)', '(../MIGRATION-Hans.md)')

@@ -22,3 +22,12 @@
 
 ## 检查要点 {#check-result}
 预览与保存使用相同宽高。检查文字、图例与警告；一次测量成功不代表跨设备字体和发布质量已认证。
+
+## 选择文件格式 {#formats}
+
+PNG 适合网页与幻灯片；PDF/SVG 用于需要矢量输出的工作流。文件名扩展名选择默认设备，明确指定设备时以该设备为准。宽高继续复用前面的目标尺寸；字体可用性与嵌入须在最终文件中核对。
+
+```r
+ggsave("comparison.pdf", p_linear_base,
+  width = output_width, height = output_height, units = "in")
+```

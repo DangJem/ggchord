@@ -18,11 +18,15 @@ library(ggchord)
 
 找到 ori 在刻度上的两端，确认文字来自 anno；圆形外观不表示已验证分子拓扑。
 
-## 操作示例与保存 {#exercise}
+## 调整与保存 {#exercise}
 
 去掉标签层再运行，骨架和源区间保持。用自己的已知注释替换该行。
 
 ```r
+circular_width <- 10
+circular_height <- 8
+view_ggchord(p_coursecirclefeature,
+  width = circular_width, height = circular_height, units = "in")
 ggsave("circular-first.png", p_coursecirclefeature,
-  width = 10, height = 8, units = "in", dpi = 144)
+  width = circular_width, height = circular_height, units = "in", dpi = 144)
 ```

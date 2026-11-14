@@ -50,6 +50,8 @@ for(lang in c('en','zh')) {
     for(node in labelled) if(identical(xml2::xml_attr(node,'aria-labelledby'),old_id))
       xml2::xml_set_attr(node,'aria-labelledby',id)
   }
+  for(navbar in xml2::xml_find_all(doc,'//nav[contains(@class,"navbar-expand-lg")]'))
+    xml2::xml_set_attr(navbar,'class',sub('navbar-expand-lg','navbar-expand-xl',xml2::xml_attr(navbar,'class'),fixed=TRUE))
   main<-xml2::xml_find_first(doc,'//main')
   xml2::xml_set_attr(main,'tabindex','-1')
   slug <- sub('\\.html$','',basename(relative))
@@ -104,34 +106,49 @@ for(lang in c('en','zh')) {
   group <- selected_groups[[1]]
   record <- page_record(current_page)
   module <- if(!is.null(record)) record$module else 'information'
-  parent <- if(startsWith(relative,'reference/')) 'reference' else if(!is.null(record$parent)) record$parent else 'about'
-  parent_record <- page_record(parent)
   xml2::xml_set_attr(xml2::xml_find_first(doc,'//body'),'data-module',module)
+  # The same canonical group order supplies section numbers, previous and next.
+  # Alias fragments are resolved before choosing a page; they cannot add steps.
+  migrations <- jsonlite::fromJSON('website/page-migrations.json', simplifyVector=FALSE)
+  canonical_page <- function(key) {
+    seen <- character()
+    repeat {
+      if(key %in% seen) stop('Navigation alias cycle: ', key)
+      seen <- c(seen,key)
+      item <- page_record(key)
+      if(is.null(item)) stop('Unknown navigation page: ',key)
+      if(!identical(item$kind,'alias')) return(key)
+      target <- migrations[[paste0(key,'.html')]][['']]
+      key <- sub('[.]html.*$','',target)
+    }
+  }
+  path_keys <- unique(vapply(unlist(group$pages),canonical_page,''))
+  step <- match(current_page,path_keys)
+  category_title <- group$title[[lang]]
+  category_path <- page_record(group$landing)$canonical_path
+  if(group$id=='start') category_path <- 'modes.html#getting-started'
+  if(group$id=='shared-techniques') category_path <- 'modes.html#shared-techniques'
+  if(group$id=='data') category_path <- 'workflows.html#tools'
+  if(current_page %in% c('multi-sequence','circular','dotplot','fusion')) {
+    category_title <- if(lang=='zh') '绘图模块' else 'Plotting modules'
+    category_path <- 'modes.html#modules'
+  }
   crumb <- paste0('<nav class="breadcrumb" aria-label="',if(lang=='zh')'位置导航' else 'Breadcrumb','">',
     '<a href="',prefix,'index.html">',if(lang=='zh')'首页' else 'Home','</a><span aria-hidden="true">/</span>',
-    '<a href="',prefix,parent_record$canonical_path,'">',htmltools::htmlEscape(parent_record$title[[lang]]),
-    '</a><span aria-hidden="true">/</span><span aria-current="page">',
-    htmltools::htmlEscape(xml2::xml_text(xml2::xml_find_first(main,'.//h1'))),'</span></nav>')
+    if(!identical(category_path,relative)) paste0('<a href="',prefix,category_path,'">',
+      htmltools::htmlEscape(category_title),'</a><span aria-hidden="true">/</span>') else '',
+    '<span aria-current="page">',htmltools::htmlEscape(xml2::xml_text(xml2::xml_find_first(main,'.//h1'))),'</span></nav>')
   if(current_page!='index') xml2::xml_add_sibling(xml2::xml_find_first(main,'.//h1'),nav_fragment(crumb),.where='before')
-  if(length(current_group) && current_page != 'index' && !startsWith(relative, 'reference/')) {
-    group <- current_group[[1]]
-    group_title <- htmltools::htmlEscape(group$title[[lang]])
-    sequence <- !is.null(record) && length(record$next_steps)>0L
-    stage <- group_title
-    if(sequence) {
-      step <- match(current_page, group$pages)
-      total <- length(group$pages)
-      stage <- paste(group_title, '·', if(lang == 'zh') sprintf('第 %d 节，共 %d 节', step, total)
-        else sprintf('Section %d of %d', step, total))
-      prev <- if(step > 1) page_link(group$pages[[step - 1]], if(lang == 'zh') '← 上一节' else '← Previous section')
-      next_link <- page_link(record$next_steps[[1]], if(lang == 'zh') '下一步 →' else 'Next step →')
-      end <- page_link('modes', if(lang == 'zh') '基本概念' else 'Concepts')
-      xml2::xml_add_child(main, nav_fragment(paste0('<nav class="lesson-pagination" aria-label="',
-        if(lang == 'zh') '章节进度' else 'Chapter navigation', '">', prev,
-        next_link, '</nav>')))
+  if(length(current_group) && current_page != 'index' && !startsWith(relative,'reference/')) {
+    stage <- htmltools::htmlEscape(category_title)
+    if(length(path_keys)>1L && !is.na(step)) {
+      stage <- paste(stage,'·',if(lang=='zh') sprintf('第 %d 节，共 %d 节',step,length(path_keys)) else sprintf('Section %d of %d',step,length(path_keys)))
+      prev <- if(step>1L) page_link(path_keys[[step-1L]],if(lang=='zh')'← 上一节' else '← Previous section') else ''
+      next_link <- if(step<length(path_keys)) page_link(path_keys[[step+1L]],if(lang=='zh')'下一节 →' else 'Next section →') else page_link('modes',if(lang=='zh')'其他绘图任务 →' else 'Other plotting tasks →')
+      xml2::xml_add_child(main,nav_fragment(paste0('<nav class="lesson-pagination" aria-label="',
+        if(lang=='zh')'章节导航' else 'Section navigation','">',prev,next_link,'</nav>')))
     }
-    xml2::xml_add_sibling(xml2::xml_find_first(main, './/h1'), nav_fragment(
-      paste0('<p class="lesson-stage">', stage, '</p>')), .where = 'before')
+    xml2::xml_add_sibling(xml2::xml_find_first(main,'.//h1'),nav_fragment(paste0('<p class="lesson-stage">',stage,'</p>')),.where='before')
   }
   if (current_page != "index" && length(current_group) && !startsWith(relative, "reference/")) {
     chapter_number <- if (current_page == "index") integer() else section_numbers[[current_page]]
@@ -139,13 +156,13 @@ for(lang in c('en','zh')) {
       xml2::xml_add_sibling(xml2::xml_contents(node)[[1]], nav_fragment(paste0('<span class="section-number">',
         number, ' </span>')), .where = 'before')
     }
-    if (length(chapter_number) && !(current_page %in% c('multi-sequence','circular','dotplot','fusion'))) add_number(xml2::xml_find_first(main, './/h1'), chapter_number)
+    if (length(chapter_number) && record$kind %in% c('tutorial','case')) add_number(xml2::xml_find_first(main, './/h1'), chapter_number)
     counts <- integer(3)
     for (heading in xml2::xml_find_all(main, './/*[self::h2 or self::h3 or self::h4][@id]')) {
       level <- as.integer(sub('h', '', xml2::xml_name(heading))) - 1L
       counts[level] <- counts[level] + 1L
       counts[seq_along(counts) > level] <- 0L
-      add_number(heading, paste(c(chapter_number, counts[seq_len(level)]), collapse = '.'))
+      if(record$kind %in% c('tutorial','case')) add_number(heading, paste(counts[seq_len(level)], collapse = '.'))
     }
   }
   if(lang=='zh') {
@@ -232,7 +249,7 @@ for(lang in c('en','zh')) {
   target<-xml2::xml_find_first(doc,'(//div[@id="navbar"]/ul[contains(@class,"navbar-nav")])[last()]')
   label<-if(lang=='zh')'搜索说明' else 'Search documentation'
   search<-fragment(paste0('<li class="nav-item local-search"><button type="button" class="search-trigger" id="site-search-trigger" aria-haspopup="dialog"><span aria-hidden="true">⌕</span><span class="search-trigger-label">',
-   if(lang=='zh')'搜索任务、函数、参数' else 'Search tasks, functions, parameters','</span><kbd aria-hidden="true">⌘ K</kbd></button>',
+   if(lang=='zh')'搜索文档' else 'Search docs','</span><kbd aria-hidden="true">⌘ K</kbd></button>',
    '<noscript><a href="',prefix,'task-index.html">',label,'</a></noscript></li>'))
   xml2::xml_add_child(target,search)
   body<-xml2::xml_find_first(doc,'//body')
@@ -280,7 +297,7 @@ for(lang in c('en','zh')) {
    parent<-xml2::xml_parent(pre)
    if(xml2::xml_name(parent)=='details')next
    is_r <- grepl('sourceCode|r-output|usage',paste(xml2::xml_attr(pre,'class'),xml2::xml_attr(parent,'class')))
-   label <- if(is_r) if(lang=='zh')'R · 本步代码' else 'R · Step code' else if(lang=='zh')'输出 / 文本' else 'Output / text'
+   label <- if(is_r) if(lang=='zh')'R · 示例代码' else 'R · Example code' else if(lang=='zh')'输出 / 文本' else 'Output / text'
    details<-fragment(paste0('<details class="code-disclosure" data-code-kind="',if(is_r)'r' else 'output','" open><summary>',label,'</summary>',as.character(pre),'</details>'))
    xml2::xml_add_sibling(pre,details,.where='before')
    xml2::xml_remove(pre)

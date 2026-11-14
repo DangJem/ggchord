@@ -1,5 +1,13 @@
 # ggchord 0.27.0 (development)
 
+- Website: restore Flexible parameter formats as a searchable capability, separate
+  parameter-family matching/default rules, and add source-backed reorder/strand
+  comparisons. Cumulative plotting examples retain links and labels across Coord
+  changes; strict four-view comparisons precede independently selected flagships.
+- Website: unify section navigation, correct reference example destinations, place
+  minimal Dotplot input first, and add input-based workflows, symptom-based
+  diagnostics and shared preview/export dimensions. Improve code text, search,
+  reference filtering and gallery labels in both languages.
 
 - CI: Unicode text bounds now use the existing Unicode-capable fallback when the
   active device is base PDF/PostScript, restoring the caller device afterwards.
@@ -16,14 +24,14 @@
   ordinary solid outlines by default. Fixed and mapped line types retain
   priority; source HSPs, selection and ribbon geometry are unchanged.
 
-- The documentation source now organizes learning into multi-sequence
+- The documentation source now organizes usage into multi-sequence
   relationships, single-sequence circular maps, HSP Dotplots and Fusion
-  composition. Shared first lessons, source-aware detail recipes, task search
+  composition. Shared minimal examples, source-aware detail examples, task search
   and gallery filters use explicit page metadata and section migrations.
   Original figure identifiers and sources are retained alongside new course PNGs.
 
-- Website installation guidance pins the development runtime source and separates
-  it from stable-version help. Projection, GFF3 unknown-strand handling, count
+- Website installation guidance uses a general GitHub installation path with
+  minimum requirements and commands to inspect the active environment. Projection, GFF3 unknown-strand handling, count
   versus supplied-value tracks, registered character details and Fusion scope
   are described consistently. Parameter atlas types use API context, distinguish
   missing formal defaults from required arguments, and document count bars'

@@ -48,3 +48,13 @@ Biological strand, display orientation and alignment direction are distinct. bp 
 
 
 <span id="check-result"></span><span id="coordinate-controls"></span>
+
+## Get started {#getting-started}
+
+[Install and draw a first plot](installation.html#first-plot), then choose inputs and layers from the four modules above. With existing tables, check [minimal fields](data.html#tables), identifiers, complete lengths and units.
+
+## Shared techniques {#shared-techniques}
+
+[Flexible parameter formats](parameters.html) distinguish shared, named, ordered and strand settings for supported geometry and Position parameters. Use aes/scales for data differences and themes for appearance; see the grammar table above.
+
+[Feature shapes](feature-geometry.html) · [Labels](labels.html) · [Tracks](tracks.html) · [Styling](styling.html) · [Output](output.html) · [Diagnostics](diagnostics.html)

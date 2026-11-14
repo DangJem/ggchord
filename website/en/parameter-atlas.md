@@ -2,6 +2,8 @@ Browse complete current parameters by purpose. Defaults come from actual formals
 
 Start with the [function index](reference/index.html). Examples compare important parameters; references define full signatures and forwarding. Expand functions as needed; upstream dots are not presented as separate ggchord APIs.
 
+<label class="atlas-filter">Find a function or parameter<input type="search" id="parameter-filter" autocomplete="off"></label><p id="parameter-filter-status" class="atlas-status" role="status"></p>
+
 
 ## Coordinates and global views {#coordinates}
 

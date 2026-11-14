@@ -16,7 +16,7 @@ Each arc represents a row of the sequence table. Find `MT108731.1` by its label 
 
 `geom_seq()` draws the backbones, `geom_seq_label()` adds their IDs, and `coord_chord()` arranges the backbones as arcs.
 
-## Try removing the labels {#try}
+## What the label layer controls {#try}
 
 Remove the `geom_seq_label()` line and run the code again. The arcs stay in place and the sequence names disappear.
 
@@ -54,8 +54,12 @@ To display the CDS name, add `geom_gene_label(data = chord_genes_example)`. It r
 
 {{code:courseblockad}}
 
-This keeps the input and layers, while Collinear selects adjacent rows by default. Compare all four views in the [next section](multi-sequence-views.html).
+![Collinear](../assets/frontlabelledlinear.png)
+
+This retains the ribbon, CDS and feature-name layers; Collinear selects adjacent rows by default. Compare all four views in the [next section](multi-sequence-views.html).
 
 ## Use your own sequences {#adapt}
 
 Replace `seq_data_example` with a table containing `accver` and `length`. See [Basic input tables](data.html#prepare) for the column definitions.
+
+For local settings, see [Flexible parameter formats](parameters.html).

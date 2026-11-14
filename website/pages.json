@@ -35,10 +35,12 @@
     "id": "installation",
     "kind": "tutorial",
     "canonical_path": "installation.html",
-    "parent": "installation",
+    "parent": "index",
     "module": "start",
     "prerequisites": [],
-    "next_steps": [],
+    "next_steps": [
+      "modes"
+    ],
     "apis": [],
     "recipe_ids": [],
     "figure_ids": [],
@@ -58,7 +60,9 @@
     "parent": "installation",
     "module": "start",
     "prerequisites": [],
-    "next_steps": [],
+    "next_steps": [
+      "data"
+    ],
     "apis": [],
     "recipe_ids": [],
     "figure_ids": [
@@ -202,7 +206,7 @@
     "module": "multi-sequence",
     "prerequisites": [],
     "next_steps": [
-      "collinear-layout"
+      "chord"
     ],
     "apis": [
       "library",
@@ -303,7 +307,7 @@
     "module": "multi-sequence",
     "prerequisites": [],
     "next_steps": [
-      "ribbon-statistics"
+      "instances"
     ],
     "apis": [
       "filter_ggchord_ribbons",
@@ -406,7 +410,7 @@
     "module": "multi-sequence",
     "prerequisites": [],
     "next_steps": [
-      "collinear"
+      "collinear-layout"
     ],
     "apis": [
       "c",
@@ -592,9 +596,7 @@
     "parent": "multi-sequence",
     "module": "multi-sequence",
     "prerequisites": [],
-    "next_steps": [
-      "chord"
-    ],
+    "next_steps": [],
     "apis": [
       "library",
       "bind_rows",
@@ -705,7 +707,9 @@
     "parent": "multi-sequence",
     "module": "multi-sequence",
     "prerequisites": [],
-    "next_steps": [],
+    "next_steps": [
+      "radial-synteny"
+    ],
     "apis": [
       "filter",
       "c",
@@ -1090,7 +1094,9 @@
     "parent": "index",
     "module": "data",
     "prerequisites": [],
-    "next_steps": [],
+    "next_steps": [
+      "import-sequences"
+    ],
     "apis": [],
     "recipe_ids": [],
     "figure_ids": [],
@@ -1110,7 +1116,9 @@
     "parent": "formats",
     "module": "data",
     "prerequisites": [],
-    "next_steps": [],
+    "next_steps": [
+      "protein-alignments"
+    ],
     "apis": [
       "read_blast",
       "head",
@@ -1137,7 +1145,9 @@
     "parent": "formats",
     "module": "data",
     "prerequisites": [],
-    "next_steps": [],
+    "next_steps": [
+      "workflows"
+    ],
     "apis": [
       "mutate",
       "build_ggchord_cds",
@@ -1192,7 +1202,9 @@
     "parent": "styling",
     "module": "shared-techniques",
     "prerequisites": [],
-    "next_steps": [],
+    "next_steps": [
+      "feature-geometry"
+    ],
     "apis": [
       "head",
       "find_common_features",
@@ -1247,7 +1259,9 @@
     "parent": "styling",
     "module": "shared-techniques",
     "prerequisites": [],
-    "next_steps": [],
+    "next_steps": [
+      "parameters"
+    ],
     "apis": [
       "head",
       "subset",
@@ -1290,7 +1304,9 @@
     "parent": "styling",
     "module": "shared-techniques",
     "prerequisites": [],
-    "next_steps": [],
+    "next_steps": [
+      "tracks-statistics"
+    ],
     "apis": [
       "c",
       "seq.int",
@@ -1354,10 +1370,12 @@
     "id": "styling",
     "kind": "tutorial",
     "canonical_path": "styling.html",
-    "parent": "index",
+    "parent": "modes",
     "module": "shared-techniques",
     "prerequisites": [],
-    "next_steps": [],
+    "next_steps": [
+      "annotations"
+    ],
     "apis": [
       "ggchord",
       "geom_seq",
@@ -1407,17 +1425,19 @@
   {
     "slug": "parameters",
     "title": {
-      "zh": "参数格式与逐序列配置",
-      "en": "Parameter formats and per-sequence settings"
+      "zh": "灵活的参数格式",
+      "en": "Flexible parameter formats"
     },
     "group": "article",
     "id": "parameters",
     "kind": "tutorial",
     "canonical_path": "parameters.html",
-    "parent": "styling",
+    "parent": "modes",
     "module": "shared-techniques",
     "prerequisites": [],
-    "next_steps": [],
+    "next_steps": [
+      "scale-families"
+    ],
     "apis": [
       "ggchord",
       "geom_seq",
@@ -1487,7 +1507,9 @@
     "parent": "styling",
     "module": "shared-techniques",
     "prerequisites": [],
-    "next_steps": [],
+    "next_steps": [
+      "diagnostics"
+    ],
     "apis": [
       "ggchord",
       "geom_seq",
@@ -1520,7 +1542,9 @@
     "parent": "index",
     "module": "reference",
     "prerequisites": [],
-    "next_steps": [],
+    "next_steps": [
+      "compatibility"
+    ],
     "apis": [],
     "recipe_ids": [],
     "figure_ids": [],
@@ -1562,7 +1586,9 @@
     "parent": "about",
     "module": "information",
     "prerequisites": [],
-    "next_steps": [],
+    "next_steps": [
+      "migration"
+    ],
     "apis": [],
     "recipe_ids": [],
     "figure_ids": [],
@@ -1630,7 +1656,9 @@
     "parent": "index",
     "module": "information",
     "prerequisites": [],
-    "next_steps": [],
+    "next_steps": [
+      "faq"
+    ],
     "apis": [],
     "recipe_ids": [],
     "figure_ids": [],
@@ -1650,7 +1678,9 @@
     "parent": "formats",
     "module": "data",
     "prerequisites": [],
-    "next_steps": [],
+    "next_steps": [
+      "projection"
+    ],
     "apis": [
       "c",
       "ggchord",
@@ -1702,7 +1732,7 @@
     "module": "multi-sequence",
     "prerequisites": [],
     "next_steps": [
-      "multi-sequence-links"
+      "collinear"
     ],
     "apis": [
       "library",
@@ -1769,7 +1799,9 @@
     "parent": "reference",
     "module": "reference",
     "prerequisites": [],
-    "next_steps": [],
+    "next_steps": [
+      "parameter-atlas"
+    ],
     "apis": [],
     "recipe_ids": [],
     "figure_ids": [],
@@ -1789,7 +1821,9 @@
     "parent": "styling",
     "module": "shared-techniques",
     "prerequisites": [],
-    "next_steps": [],
+    "next_steps": [
+      "labels"
+    ],
     "apis": [
       "library",
       "filter",
@@ -2081,7 +2115,9 @@
     "parent": "styling",
     "module": "shared-techniques",
     "prerequisites": [],
-    "next_steps": [],
+    "next_steps": [
+      "tracks"
+    ],
     "apis": [
       "library",
       "c",
@@ -2248,7 +2284,9 @@
     "parent": "reference",
     "module": "reference",
     "prerequisites": [],
-    "next_steps": [],
+    "next_steps": [
+      "api-curriculum"
+    ],
     "apis": [],
     "recipe_ids": [],
     "figure_ids": [],
@@ -2367,7 +2405,7 @@
     "id": "fusion",
     "kind": "module",
     "canonical_path": "fusion.html",
-    "parent": "installation",
+    "parent": "modes",
     "module": "fusion",
     "prerequisites": [],
     "next_steps": [
@@ -2391,7 +2429,7 @@
     "id": "multi-sequence",
     "kind": "module",
     "canonical_path": "multi-sequence.html",
-    "parent": "installation",
+    "parent": "modes",
     "module": "multi-sequence",
     "prerequisites": [],
     "next_steps": [
@@ -2415,7 +2453,7 @@
     "id": "circular",
     "kind": "module",
     "canonical_path": "circular.html",
-    "parent": "installation",
+    "parent": "modes",
     "module": "circular",
     "prerequisites": [],
     "next_steps": [
@@ -2439,7 +2477,7 @@
     "id": "dotplot",
     "kind": "module",
     "canonical_path": "dotplot.html",
-    "parent": "installation",
+    "parent": "modes",
     "module": "dotplot",
     "prerequisites": [],
     "next_steps": [
@@ -2506,8 +2544,8 @@
   {
     "slug": "multi-sequence-views",
     "title": {
-      "zh": "旗舰图与视图转换",
-      "en": "Flagships and view conversion"
+      "zh": "四视图对照与旗舰实例",
+      "en": "Four-view comparison and flagship examples"
     },
     "group": "article",
     "id": "multi-sequence-views",
@@ -2645,7 +2683,7 @@
       "multi-sequence-start"
     ],
     "next_steps": [
-      "radial-synteny"
+      "views"
     ],
     "apis": [
       "library",
@@ -2693,7 +2731,7 @@
       "multi-sequence-start"
     ],
     "next_steps": [
-      "instances"
+      "sankey"
     ],
     "apis": [
       "library",
@@ -2751,7 +2789,7 @@
     "module": "multi-sequence",
     "prerequisites": [],
     "next_steps": [
-      "ribbons"
+      "chord-geometry"
     ],
     "apis": [
       "library",
@@ -2798,7 +2836,7 @@
     "module": "multi-sequence",
     "prerequisites": [],
     "next_steps": [
-      "chord-geometry"
+      "multi-sequence-links"
     ],
     "apis": [
       "library",
@@ -2915,7 +2953,7 @@
     "module": "multi-sequence",
     "prerequisites": [],
     "next_steps": [
-      "sankey"
+      "ribbons"
     ],
     "apis": [
       "library",
@@ -3271,7 +3309,9 @@
     "parent": "formats",
     "module": "data",
     "prerequisites": [],
-    "next_steps": [],
+    "next_steps": [
+      "import-intervals"
+    ],
     "apis": [
       "library",
       "select",
@@ -3325,7 +3365,9 @@
     "parent": "formats",
     "module": "data",
     "prerequisites": [],
-    "next_steps": [],
+    "next_steps": [
+      "import-signals"
+    ],
     "apis": [
       "library",
       "select",
@@ -3386,7 +3428,9 @@
     "parent": "formats",
     "module": "data",
     "prerequisites": [],
-    "next_steps": [],
+    "next_steps": [
+      "import-relations"
+    ],
     "apis": [
       "library",
       "select",
@@ -3442,7 +3486,9 @@
     "parent": "formats",
     "module": "data",
     "prerequisites": [],
-    "next_steps": [],
+    "next_steps": [
+      "aligned-sequences"
+    ],
     "apis": [
       "library",
       "select",
@@ -3501,7 +3547,9 @@
     "parent": "formats",
     "module": "data",
     "prerequisites": [],
-    "next_steps": [],
+    "next_steps": [
+      "alignments"
+    ],
     "apis": [
       "library",
       "select",
@@ -3571,7 +3619,9 @@
     "parent": "styling",
     "module": "shared-techniques",
     "prerequisites": [],
-    "next_steps": [],
+    "next_steps": [
+      "output"
+    ],
     "apis": [
       "library",
       "c",
@@ -3688,7 +3738,9 @@
     "parent": "formats",
     "module": "data",
     "prerequisites": [],
-    "next_steps": [],
+    "next_steps": [
+      "real-data"
+    ],
     "apis": [],
     "recipe_ids": [],
     "figure_ids": [],

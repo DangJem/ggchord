@@ -56,6 +56,12 @@
 
 字段采用 BLAST 风格，是 ggchord 从比对可视化发展而来的命名沿革。query/subject 对应 q/s 前缀；自定义 ID 也可以使用。实际 BLAST 表见[比对输入](alignments.html)。
 
+## 最小输入的对应关系 {#minimal-inputs}
+
+只画骨架时，提供唯一 `accver` 与完整 `length` 即可；核酸默认 bp。连接表用 `qaccver`/`saccver` 指向序列表，特征表用 `accver` 指向同一标识。先用上方三个小表完成[最小绘图](multi-sequence-start.html)，无须先掌握下面的文件导入、清理、层级或投影机制。
+
+已有文件时按[输入与目标](workflows.html#tools)选择读取流程。以下内容按需要查阅，保留原始输入和修复副本。
+
 ## 蛋白序列的单位 {#protein-unit}
 
 核酸表可省略单位列，默认使用 bp。完整蛋白长度表应声明 `sequence_unit = "aa"`，同一图使用一个单位。[蛋白比对示例](alignments.html#protein)展示完整输入和配图。
@@ -70,7 +76,7 @@
 蛋白骨架使用原生 aa 坐标，见[蛋白比对](protein-alignments.html)。显示在核酸骨架上时需要[CDS 投影](projection.html)。笛卡尔布局单位、基因组 bp、角度、
 物理 mm 和轨道数值单位是不同的域。详见完整的[数据格式说明](reference/ggchord_data_contract.html)。
 
-## 导入原始记录 {#import}
+## 进阶：导入原始记录 {#import}
 在仓库根目录运行这个仅用于源码仓库的例子，不改写原始文件。
 
 {{code:imports}}

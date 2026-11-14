@@ -1,4 +1,4 @@
-一课完成骨架、连接、特征和标签。输入来自随包真实记录，按下面顺序运行；需要 ggchord 和可选 dplyr。
+逐步构建骨架、连接、特征和标签。输入来自随包真实记录，按下面顺序运行；需要 ggchord 和可选 dplyr。
 
 ## 绘制骨架 {#draw}
 
@@ -16,7 +16,7 @@
 
 `geom_seq()` 画出骨架，`geom_seq_label()` 标出序列 ID，`coord_chord()` 把四条骨架排成弧形。
 
-## 试着去掉标签 {#try}
+## 标签层的作用 {#try}
 
 删除 `geom_seq_label()` 那一行并重新运行。四条弧会保留，序列名会消失。
 
@@ -42,7 +42,7 @@
 
 绿色的 `OQ646790.1` 上出现红色箭头。它是 integrase 的 CDS，范围为 43,765–46,140 bp，原始注释为正链。连接带和这个 CDS 使用各自的数据。
 
-如果需要显示 CDS 名称，可以加上 `geom_gene_label(data = chord_genes_example)`，标签来自 `anno` 列。下一节用相同骨架比较[旋转与间隙](chord-geometry.html#orientation)。
+如果需要显示 CDS 名称，可以加上 `geom_gene_label(data = chord_genes_example)`，标签来自 `anno` 列。
 
 ## 显示特征名称 {#labels}
 
@@ -54,8 +54,10 @@
 
 {{code:courseblockad}}
 
-这一步保持输入与图层，但线性视图默认只连接相邻行。完整四视图对照见[下一课](multi-sequence-views.html)。
+![Collinear](../assets/frontlabelledlinear.png)
+
+这一步保留连接、CDS 和特征名称图层；线性视图默认只连接相邻行。完整四视图对照见[四视图对照](multi-sequence-views.html)。
 
 ## 换成自己的序列 {#adapt}
 
-把 `seq_data_example` 换成含 `accver` 和 `length` 的表即可。列的含义见[基本数据表](data.html#prepare)。接下来[添加连接和特征](multi-sequence-start.html#draw)。
+把 `seq_data_example` 换成含 `accver` 和 `length` 的表即可。列的含义见[基本数据表](data.html#prepare)。局部参数配置见[灵活的参数格式](parameters.html)，四种坐标的严格对照见[四视图对照](multi-sequence-views.html#input)。

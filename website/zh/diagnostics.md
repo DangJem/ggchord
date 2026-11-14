@@ -1,6 +1,27 @@
+## 按症状定位问题 {#symptoms}
+
+先核对输入和当前图，再查看诊断。下面的调整入口保留原始记录；不通过删观测或修改坐标凑出理想图。
+
+| 症状 | 最小检查 | 调整入口与复核 |
+| --- | --- | --- |
+| 某条序列或特征没有显示 | 核对 accver 是否逐字匹配、全长与单位是否有效 | 修正有证据的标识映射，重画最小图；见[表格检查](data.html#validation) |
+| 连接缺失 | 检查两端 ID、区间、已执行筛选和当前 Coord 的邻接默认 | 需要全对时显式 `adjacent_only = FALSE`；对照[关系选择](multi-sequence-views.html#selection)，确认对应源行仍在导出中 |
+| 标签拥挤或隐藏 | 按最终宽高运行 `diagnose_ggchord()`，查看标签保留/隐藏原因及实际图 | 在[标签设置](labels.html)调整布局、文字换行或画布；复核可见性与冲突，不把缺失计数当零 |
+| 导出后位置变化或图例裁切 | 比较预览与 ggsave 的宽高、单位、设备及字体；查看警告 | 复用[目标尺寸](output.html#size)，检查导出文件；dpi 不能替代物理画布尺寸 |
+
+需要 ggchord；下方进阶表格整理还使用可选 dplyr。先准备一个正常尺寸的最小骨架。
+
 {{code:courseblockbj}}
 
 {{prepare:frontlinearbase}}
+
+```r
+report <- diagnose_ggchord(p_linear_base, width = 8, height = 5, device = "png")
+report$checks
+```
+
+检查报告中的失败或警告，再沿上表进入对应设置。后续章节解释导出字段和测量边界，按需要查阅。
+
 
 ## 按字段名消费几何 {#geometry}
 {{code:frontgeometry}}

@@ -29,7 +29,7 @@
   document.querySelectorAll('details.code-disclosure').forEach(details=>{
     const code=details.querySelector('pre code')||details.querySelector('pre');if(!code)return;
     const button=document.createElement('button');button.type='button';button.className='copy-code';
-    const label=details.dataset.codeKind==='output'?(zh?'复制输出':'Copy output'):(zh?'复制本步':'Copy step');button.textContent=label;button.setAttribute('aria-live','polite');
+    const label=details.dataset.codeKind==='output'?(zh?'复制输出':'Copy output'):(zh?'复制代码':'Copy code');button.textContent=label;button.setAttribute('aria-live','polite');
     details.querySelector('summary').after(button);button.addEventListener('click',()=>copy(button,code.textContent,label));
   });
   document.querySelectorAll('.copy-full-example').forEach(button=>{
@@ -39,6 +39,26 @@
       catch (_) {button.textContent=zh?'脚本暂不可用，请使用下载链接':'Script unavailable; use the download link';}
     });
   });
+  // Filter exact API/parameter names without replacing the full reference.
+  const parameterFilter=document.querySelector('#parameter-filter');
+  if(parameterFilter){
+    const entries=[...document.querySelectorAll('main details')].filter(d=>d.querySelector(':scope > summary code'));
+    const notice=document.querySelector('#parameter-filter-status');
+    const update=()=>{
+      const query=parameterFilter.value.trim().toLocaleLowerCase();let count=0;
+      entries.forEach(details=>{
+        const api=details.querySelector(':scope > summary code').textContent.toLocaleLowerCase();
+        const rows=[...details.querySelectorAll('tbody tr')];
+        const apiMatches=api.includes(query);
+        let matching=0;
+        rows.forEach(row=>{const name=row.querySelector('td')?.textContent.toLocaleLowerCase()||'';row.hidden=Boolean(query)&&!apiMatches&&!name.includes(query);if(!row.hidden)matching++;});
+        details.hidden=Boolean(query)&&!apiMatches&&!matching;
+        if(!details.hidden){count++;if(query)details.open=true;}
+      });
+      notice.textContent=zh?`${count} 个函数匹配`:`${count} functions match`;
+    };
+    parameterFilter.addEventListener('input',update);
+  }
   // The search dialog is local, structured, keyboard-first and lazy-loaded.
   const dialog=document.querySelector('#site-search-dialog'),trigger=document.querySelector('#site-search-trigger');
   const input=document.querySelector('#site-search'),results=document.querySelector('#site-results'),status=document.querySelector('#search-status');
@@ -78,10 +98,10 @@
           if((r.queries||[]).some(q=>q.toLocaleLowerCase()===query))score+=2200;
           return {r,score};
         }).filter(Boolean).sort((a,b)=>b.score-a.score);
-        status.textContent=ranked.length?(zh?`${ranked.length} 项匹配，显示前 20 项`:`${ranked.length} matches; showing up to 20`):(zh?'没有找到结果。试试函数全名、另一个任务词，或使用任务索引。':'No results. Try a full function name, another task, or the task index.');
-        input.setAttribute('aria-expanded',String(ranked.length>0));
         const seenPages=new Set();
         const grouped=ranked.filter(({r})=>{const key=r.kind==='parameter'?r.url:r.url.split('#')[0];if(seenPages.has(key))return false;seenPages.add(key);return true;});
+        status.textContent=grouped.length?(zh?`${grouped.length} 项匹配，显示 ${Math.min(20,grouped.length)} 项`:`${grouped.length} matches; showing ${Math.min(20,grouped.length)}`):(zh?'没有找到结果。试试函数全名或另一个任务词。':'No results. Try a full function name or another task.');
+        input.setAttribute('aria-expanded',String(grouped.length>0));
         for(const {r} of grouped.slice(0,20)) {
           const li=document.createElement('li');li.setAttribute('role','presentation');
           const a=document.createElement('a');a.href=new URL(r.url,indexURL).href;a.id='search-result-'+items.length;a.setAttribute('role','option');a.tabIndex=-1;a.setAttribute('aria-selected','false');

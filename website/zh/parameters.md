@@ -1,18 +1,20 @@
-需要所有序列共用一个值、分别按序列指定，或按正负链设置时，可以沿用同一套写法。下面各图都使用四条随包序列。
+灵活的参数格式让支持它的参数从统一设置细化到局部控制。下面始终使用相同四条随包序列；前三幅图只比较 `seq_radius`，画布均为 7 × 7 英寸。需要 ggchord；真实 CDS 整理使用可选 dplyr。
+
+{{code:courseblockac}}
 
 ## 一个值应用到所有序列 {#scalar}
 
 {{code:parameteruniform}}
 {{figure:parameteruniform}}
 
-四个骨架间隙都设为 0.08。单个数适用于所有序列。
+半径统一为 1。所有序列采用相同设置时，单值已经足够。
 
 ## 按名称只改一条序列 {#recommendation}
 
 {{code:parameters}}
 {{figure:parameterexample}}
 
-命名向量把 MT118296.1 的半径设为 0.72，其余保留默认值 1。重排序列后，值仍按 ID 匹配。
+只把 `MT118296.1` 的半径改为 0.72，其余保留本参数默认值 1。键是实际 `accver`；调整显示顺序后仍按 ID 匹配。完整配置中每条序列确有不同值时，保留完整命名向量。
 
 ## 按显示顺序分别设置 {#vector}
 
@@ -21,53 +23,75 @@
 {{code:parametervector}}
 {{figure:parametervector}}
 
-四个半径依次对应序列表中的四条记录。无名向量必须与序列数等长；若经常调整顺序，使用命名向量更容易核对。
+四个值对应处理 `seq_order` 后的显示顺序，长度须与显示序列数相同。当前第二条是 `MT118296.1`，所以本图与上一张相同。
 
-## 为正负链准备两条真实 CDS {#genes}
+### 重排时两种匹配的差异 {#reorder}
+
+保持原向量，只改变 `seq_order`。命名值仍修改 `MT118296.1`；无名向量的第二个值改为作用在第二条显示序列 `MT108731.1`。
+
+{{code:parameterreorder}}
+
+```r
+view_ggchord(p_parameter_named_order, width = 7, height = 7, units = "in")
+view_ggchord(p_parameter_ordered_values, width = 7, height = 7, units = "in")
+```
+
+![重排后的命名值](../assets/parameternamedorder.png)
+![重排后的顺序值](../assets/parameterorderedvalues.png)
+
+## 准备真实正负链 CDS {#genes}
 
 {{code:parametergenes}}
 {{output:parametergenes}}
 
-integrase 是 OQ646790.1 上的正链 CDS，Int 是 OR222515.1 上的负链 CDS。保留原始链来演示下面两种设置。
+`OR222515.1` 同时有 2624–4195 的正链和 19246–20523 的负链记录；`OQ646790.1` 的 integrase 为正链。所有链取自 `source_strand`，不改变源坐标。
 
 ## 分别设置链的位置 {#strand}
 
 {{code:parameterstrand}}
 {{figure:parameterstrand}}
 
-正链偏移为 0.08，负链为 −0.08。位置由 `position_strand()` 控制，表中的坐标与链不变。
+显式链值已经带符号：正链 0.08、负链 −0.08，不再次反转。单值 `position_strand(0.08)` 则按规则展开为正链 0.08、负链 −0.08。
+
+### 同时按序列和链设置 {#lists}
+
+实际目标是让 `OR222515.1` 正负链不对称偏移，另一条序列采用较小的对称偏移。此时列表能表达两层差异。
+
+{{code:parameterlist}}
+
+![按真实序列和链设置偏移](../assets/parameterlist.png)
+
+`OR222515.1` 使用显式的 0.08/−0.14；`OQ646790.1` 的单值 0.06 按正负链对称展开。未指定序列或链在这个 Position 家族中补 0。该混合列表不能直接复制给 `width`。
 
 ## 分别设置链的宽度 {#width}
 
 {{code:parameterwidth}}
 {{figure:parameterwidth}}
 
-正链箭头宽度为 0.03，负链为 0.08。箭头宽度改变显示厚度，基因区间长度仍由 start/end 决定。
+正链宽度 0.03、负链 0.08，改变箭头厚度，区间长度仍来自 start/end。需要逐序列宽度列表时，各元素须满足本家族的链值规则，详见[几何参数](reference/geom_feature.html)。
 
 ## 按序列放置名称 {#labels}
 
 {{code:parameterlabels}}
 {{figure:parameterlabels}}
 
-MT108731.1 的文字半径为骨架半径的 75%，OQ646790.1 为 115%；另外两条使用默认位置。每个支持的参数独立接收命名值。
+`MT108731.1` 与 `OQ646790.1` 的文字半径分别为骨架的 75% 和 115%，其余使用默认位置。显式 `seq_label_radius` 不适用于 Collinear。
 
-## 哪些参数支持 {#scope}
-| 接口 | 支持参数 | 匹配范围 |
+## 参数家族与未指定项 {#scope}
+
+| 接口 | 可用格式与匹配 | 边界与未指定项 |
 | --- | --- | --- |
-| `geom_seq()` | `seq_radius`, `seq_curvature`, `seq_gap`, `seq_orientation` | 按序列；半径/曲率的效果取决于坐标模式 |
-| `geom_seq_label()` | `labels`, `seq_label_radius`, `seq_label_rotation`, `size`, `seq_label_hjust`, `seq_label_vjust` | 按序列；`seq_label_orientation` 是单个模式选项 |
-| `geom_link_ribbon()` / `geom_link_line()` | `link_gap` | 按端点所在序列；控制点不是逐序列标量 |
-| `geom_gene()` / `geom_feature()` | `width` | 按序列，或分别按 `+`/`-` 链 |
-| `position_strand()` / `position_plasmid()` | `offset` | 按序列或链；优先使用 Position 而非兼容 offset 入口 |
-| 固定标签 `geom_gene_label()` / `geom_feature_label()` | `label_radial_offset`, `label_circum_offset`, `label_circum_limit`, `label_rotation` | 按序列或链；不代表所有文本参数都接受列表 |
-| `position_track()` | 数值型 `width`, `gap` | 原生布局数值可按序列；物理 `unit()` 使用单个绝对尺寸 |
+| `geom_seq()` | 单值、按 accver、按显示顺序及相应标量列表 | `seq_radius`、`seq_curvature`、`seq_gap`、`seq_orientation` 各有默认；效果与支持范围依 Coord |
+| `geom_seq_label()` | `labels`、半径、旋转、size、hjust/vjust 按序列 | `seq_label_orientation` 是单个模式；显式半径与 Collinear 不兼容 |
+| `geom_link_ribbon()` / `geom_link_line()` | `link_gap` 按端点所在序列 | `NULL` 保留自动行为；控制点不属于逐序列标量 |
+| `geom_gene()` / `geom_feature()` | `width` 按序列或链，列表元素遵循链值规则 | 未指定项用本参数默认；不接受 Position 的任意混合列表 |
+| `position_strand()` | `offset` 可单值、按序列、显式链值、逐序列混合列表 | 单值 x 展开为 +x/−x；显式链值不反转；未指定序列或链补 0 |
+| `position_plasmid()` | `offset` 单值或逐序列标量配置 | 两链共用偏移，不支持逐链；未指定序列补 0 |
+| 固定 `geom_gene_label()` / `geom_feature_label()` | `label_radial_offset`、`label_circum_offset`、`label_circum_limit`、`label_rotation` 按序列或链 | 不代表所有文本参数支持列表；按本家族链值规则解析 |
+| `position_track()` | 单个绝对 `unit()`；或原生数值的逐序列 width/gap | 数值须覆盖全部显示序列；物理尺寸保留毫米含义 |
 
-`seq_order` 本身就是序列排列，不是上述值的循环规则。自动避让标签的 `label_layout`
-是布局模式；手动角度和偏移请使用固定标签层，不把它们塞进自动标签的 `...`。
-axis/theme、aesthetic、标度、图例不继承这套列表扩展规则。手工标度本来就支持
-按**数据类别**命名的颜色向量，那属于 ggplot2 的标度语义，见[配色说明](styling.html)。
+`seq_order` 是排列，`label_layout` 是布局模式。自动避让层不接收任意固定偏移。axis/theme、aesthetic、标度与 guide 不继承这套列表规则；手工颜色标度按**数据类别**匹配，见[配色说明](styling.html)。精确默认值和取值范围见[参数图谱](parameter-atlas.html)。
 
-## 检查要点 {#check-result}
-命名向量的键应对应实际 accver 或 +/− 链。重排后再次检查匹配；不要将列表规则推广到 theme、scale 或 aesthetic。
+## 选择写法与核对结果 {#check-result}
 
-<div class="next-step">继续：<a href="styling.html">设置配色、图例和主题 →</a></div>
+统一设置用单值；少数局部差异优先用命名值；依赖显示顺序时用等长向量；两层差异确实必要且接口支持时才用列表。核对 ID、显示顺序、未指定项和真实结果。其他技巧页采用适合任务的最短表达，不按向量或列表的数量评价示例。

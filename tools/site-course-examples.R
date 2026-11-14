@@ -212,7 +212,8 @@ geom_feature_label_repel(
 # ---- courseblockac ----
 library(ggchord)
 # ---- courseblockad ----
-p_chord_feature + coord_collinear()
+p_chord_linear <- p_chord_gene_labels + coord_collinear()
+p_chord_linear
 # ---- courseblockae ----
 get_chord_layout(p_foundationsankey)$display_instances
 # ---- courseblockaf ----
@@ -747,4 +748,43 @@ report$focus_region_data_by_composition
 # Requires dplyr and the source checkout or tutorial input bundle.
 source("examples/origin-detail.R")
 origin_detail
+# ---- parameterreorder ----
+parameter_order <- c("OQ646790.1", "MT108731.1", "MT118296.1", "OR222515.1")
+p_parameter_named_order <- ggchord(seq_data_example) +
+  geom_seq(seq_order = parameter_order, seq_radius = c("MT118296.1" = 0.72)) +
+  geom_seq_label() +
+  coord_chord()
+p_parameter_ordered_values <- ggchord(seq_data_example) +
+  geom_seq(seq_order = parameter_order, seq_radius = c(1, 0.72, 1, 1)) +
+  geom_seq_label() +
+  coord_chord()
+# ---- parameterlist ----
+feature_position <- position_strand(offset = list(
+  "OR222515.1" = c("+" = 0.08, "-" = -0.14),
+  "OQ646790.1" = 0.06
+))
+p_parameter_list <- ggchord(seq_data_example) +
+  geom_seq() +
+  geom_seq_label() +
+  geom_gene(data = parameter_genes, position = feature_position) +
+  coord_chord()
+p_parameter_list
+# ---- dotplotmatrixdata ----
+library(ggchord)
+library(dplyr)
+flagship_paper <- "#FFFCF5"
+flagship_sequences <- read_fasta_lengths("examples/fasta/*.fna") |>
+  select(accver, length)
+flagship_hsp <- read_blast(files = "examples/blastn-standard/*.tsv", source_file = TRUE) |>
+  mutate(source_hsp_id = paste0("source-HSP-", row_number()))
+flagship_theme <- theme_ggchord_publication() +
+  theme(
+    plot.background = element_rect(fill = flagship_paper, colour = NA),
+    panel.background = element_rect(fill = flagship_paper, colour = NA),
+    legend.background = element_rect(fill = flagship_paper, colour = NA),
+    legend.key = element_rect(fill = flagship_paper, colour = NA),
+    legend.position = "right", legend.box = "vertical", legend.text = element_text(size = 8),
+    legend.title = element_text(size = 9),
+    plot.margin = margin(12, 16, 12, 16)
+  )
 # ---- courseend ----

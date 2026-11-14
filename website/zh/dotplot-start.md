@@ -1,33 +1,4 @@
-## 多序列综合矩阵 {#matrix}
-
-以下输入来自仓库原始 FASTA 和标准 BLAST 表。完整保留四序列的 32 条 HSP，不补造自比对、对称记录或缺失的 HSP。266 条 CDS 属于共用来源表，但不交给 Dotplot 的线段层。空白区域表示本次输入没有关系记录，不能据此认定不存在同源性。
-
-{{code:flagshipdata,flagshipdot}}
-
-{{manualfigure:flagdotplot}}
-
-## 按来源记录检查方向 {#direction}
-
-四端点的相对方向来自源记录；反转显示轴会改变视觉斜率，但不改原始方向。可以按序列对统计已有 HSP 的方向：
-
-```r
-hsp_direction <- flagship_hsp |>
-  mutate(relative_direction = if_else(
-    (qend - qstart) * (send - sstart) < 0, "reverse", "forward"
-  )) |>
-  count(qaccver, saccver, relative_direction, name = "HSP")
-hsp_direction
-```
-
-## 查询精确坐标 {#mapping}
-
-下面将首条 HSP 的 query 起点换算到拼接 x 轴。反查时用 `inverse = TRUE`，并明确 `axis`；显示间隙返回 NA。该转换不改变四端点。
-
-```r
-map_ggchord_position(
-  flag_dotplot, flagship_hsp$qaccver[1], flagship_hsp$qstart[1], axis = "x"
-)
-```
+本页先用一对序列的真实 HSP 画出双轴线段，再扩展到四序列综合矩阵。最小输入是完整序列长度和 HSP 四端点；无需注释表。
 
 {{code:courseblockam}}
 
@@ -60,6 +31,39 @@ map_ggchord_position(
 轴标签默认仍是窗口相对位置。未知方向会警告、省略并报告；方向元数据与端点冲突时报错。
 同一显式HSP ID重复展示需要所有参与层指定`allow_repeated=TRUE`；无ID的重复或自比对
 原行保持独立。没有cg/cs/CIGAR或其他精细轨迹时，只展示HSP线段，不推断逐碱基错配和缺口。
+
+## 多序列综合矩阵 {#matrix}
+
+以下输入来自仓库原始 FASTA 和标准 BLAST 表。完整保留四序列的 32 条 HSP，不补造自比对、对称记录或缺失的 HSP。266 条 CDS 属于共用来源表，但不交给 Dotplot 的线段层。空白区域表示本次输入没有关系记录，不能据此认定不存在同源性。
+
+{{prepare:dotplotmatrixdata}}
+
+{{code:flagshipdot}}
+
+{{manualfigure:flagdotplot}}
+
+## 按来源记录检查方向 {#direction}
+
+四端点的相对方向来自源记录；反转显示轴会改变视觉斜率，但不改原始方向。可以按序列对统计已有 HSP 的方向：
+
+```r
+hsp_direction <- flagship_hsp |>
+  mutate(relative_direction = if_else(
+    (qend - qstart) * (send - sstart) < 0, "reverse", "forward"
+  )) |>
+  count(qaccver, saccver, relative_direction, name = "HSP")
+hsp_direction
+```
+
+## 查询精确坐标 {#mapping}
+
+下面将首条 HSP 的 query 起点换算到拼接 x 轴。反查时用 `inverse = TRUE`，并明确 `axis`；显示间隙返回 NA。该转换不改变四端点。
+
+```r
+map_ggchord_position(
+  flag_dotplot, flagship_hsp$qaccver[1], flagship_hsp$qstart[1], axis = "x"
+)
+```
 
 ## 边界与下一步 {#support}
 

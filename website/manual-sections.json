@@ -124,6 +124,7 @@
       "pages": [
         "fusion",
         "fusion-start",
+        "fusion-routing",
         "fusion-layout"
       ]
     },
@@ -133,7 +134,6 @@
         "en": "Links and magnification"
       },
       "pages": [
-        "fusion-routing",
         "fusion-details",
         "fusion-advanced"
       ]

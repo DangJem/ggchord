@@ -4,7 +4,7 @@
 Require exact reviewed runtime changes, actual refresh records for Chord/Radial,
 and original data, recipes and PNG hashes for every retained legacy asset.
 """
-import csv,hashlib,importlib.util,json,subprocess,sys,tempfile
+import csv,hashlib,importlib.util,json,re,subprocess,sys,tempfile
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[2]
 sys.path.insert(0,str(ROOT/'tools'))
@@ -74,17 +74,46 @@ def main():
     actual=(ROOT/'tools/documentation-examples.R').read_bytes()
     original=blob('tools/documentation-examples.R')
     explicit=original.replace(b'read_gff3("examples/format-inputs/emales-BVI_023A.gff3", source_file = TRUE)',b'read_gff3("examples/format-inputs/emales-BVI_023A.gff3", unstranded = "keep", source_file = TRUE)')
-    assert actual==explicit,'Recipe edits exceed the exact explicit-keep change'
+    def chunks(source):
+        return dict(re.findall(r'^# ---- ([a-z]+) ----\n(.*?)(?=^# ---- [a-z]+ ----)',source.decode(),re.M|re.S))
+    before_chunks=chunks(explicit);after_chunks=chunks(actual)
+    changed_chunks={k for k in before_chunks.keys()|after_chunks.keys() if before_chunks.get(k)!=after_chunks.get(k)}
+    approved={'frontgenelabels','frontradius','frontcurvature','parameteruniform',
+              'parametervector','parametergenes','frontpreview','frontsave'}
+    assert changed_chunks==approved,'Unreviewed example changes: '+str(changed_chunks)
+    redesign=json.loads((ROOT/'tools/site-audit/redesign-rendering.json').read_text())
+    assert redesign['status']=='complete'
+    assert redesign['example_sha256']==hashlib.sha256(actual).hexdigest(),'Examples changed since actual rendering'
+    assert all(redesign['public_checks'].values()),'Incomplete public behavior verification'
+    affected={'frontgenelabels','frontradius','frontcurvature','parameteruniform',
+              'parameterexample','parametervector','parameterstrand','parameterwidth'}
+    # The changed preparations write only their own plots/tables. parameter_genes
+    # is consumed only by strand/width; preview/save do not create figure inputs.
+    assert {key for key,code in after_chunks.items() if 'parameter_genes' in code}=={'parametergenes','parameterstrand','parameterwidth'}
+    for key in changed_chunks-{'frontpreview','frontsave','parametergenes'}:
+        assigned=set(re.findall(r'^(p_\w+) <-',after_chunks[key],re.M))
+        assert assigned,'Missing independent graph assignment: '+key
+        for other,code in after_chunks.items():
+            if other!=key and key!='frontgenelabels':
+                assert not any(re.search(r'\b'+name+r'\b',code) for name in assigned),'New shared dependency: '+other
+    current_redesign=module.fingerprints()['assets']
+
     subprocess.run(['Rscript','--vanilla','-e',
         'pkgload::load_all(quiet=TRUE);f<-"examples/format-inputs/emales-BVI_023A.gff3";a<-read_gff3(f,source_file=TRUE);b<-read_gff3(f,source_file=TRUE,unstranded="keep");stopifnot(identical(a,b),all(a$source_strand %in% c("+","-")));cat("PASS: explicit keep preserves all 24 source CDS records\\n")'],cwd=ROOT,check=True)
     overrides={name:hashlib.md5(blob(name)).hexdigest() for name in changed}
     expected=module.fingerprints(runtime_hashes=overrides,recipe_source=original.decode())['assets']
-    current=module.fingerprints(runtime_hashes={name:hashlib.md5(blob(name)).hexdigest() for name in CI_FILES})['assets']
+    current=module.fingerprints(runtime_hashes={name:hashlib.md5(blob(name)).hexdigest() for name in CI_FILES},recipe_source=explicit.decode())['assets']
     rows=list(csv.DictReader((ROOT/'website/assets/plots.csv').open()))
     actual=set(refresh['figures']) if refresh else set()
     if refresh:assert actual=={r['id'] for r in rows if r['coordinate'] in {'chord','radial_synteny'}}
     for row in rows:
-        if row['id'] in actual:
+        if row['id'] in affected:
+            record=redesign['figures'][row['id']]
+            assert record['status']=='actual PNG rendered' and record['md5']==row['md5']
+            assert record['sha256']==hashlib.sha256((ROOT/row['file']).read_bytes()).hexdigest()
+            expected[row['id']]=current_redesign[row['id']]
+            assert record['dependency_md5']==expected[row['id']]
+        elif row['id'] in actual:
             record=refresh['figures'][row['id']]
             assert record['status']=='actual PNG rendered' and record['md5']==row['md5']
             assert hashlib.sha256((ROOT/row['file']).read_bytes()).hexdigest()==record['sha256']
@@ -93,6 +122,9 @@ def main():
         assert hashlib.md5((ROOT/row['file']).read_bytes()).hexdigest()==row['md5'],row['id']+': changed PNG'
     result=dict(status='scoped actual PNG refresh plus retained equivalent figures' if refresh else 'equivalent dependencies; old renders retained',baseline=BASE,
         method='R parse equality for documentation-only edits; exact reviewed runtime style delta with four-Coord behavior/geometry proof; 61 actual PNG refresh records; explicit-keep input equality and baseline hashes for the remaining 117 PNGs',
+        redesign_actual_png_count=len(affected),redesign_retained_png_count=len(rows)-len(affected),
+        redesign_changed_chunks=sorted(changed_chunks),
+        redesign_scope='Eight current normal-size PNG rerenders; other legacy PNGs retain their original render records under exact independent-example boundary checks.',
         current_api_document_sha256=hashlib.sha256((ROOT/'R/api-contract.R').read_bytes()).hexdigest(),
         png_equivalence_scope='Exact CI delta only changes active base PDF/PostScript Unicode measurement, unreachable for PNG; S3 method body unchanged',
         figure_count=len(rows),actual_png_refresh_count=len(actual),retained_equivalent_count=len(rows)-len(actual),
@@ -100,5 +132,5 @@ def main():
         runtime_scope='Exact reviewed cross-row style patch; circular/linear/dotplot and two-source Fusion files retained, Chord/Radial rendered' if refresh else 'Documentation-only runtime change',
         scope='Scoped actual PNG refresh and retained-asset equivalence; no device matrix, package tests or general behavior certification')
     (ROOT/'tools/site-audit/existing-asset-equivalence.json').write_text(json.dumps(result,indent=2)+'\n')
-    print('PASS:',len(actual),'actual refreshed PNGs;',len(rows)-len(actual),'retained with scoped equivalent dependencies')
+    print('PASS:',len(affected),'current PNG rerenders;',len(rows)-len(affected),'legacy PNGs retained with scoped source equivalence')
 if __name__=='__main__':main()

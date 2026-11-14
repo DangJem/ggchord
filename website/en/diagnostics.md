@@ -1,6 +1,27 @@
+## Locate the problem by symptom {#symptoms}
+
+Check the input and current plot before inspecting diagnostics. These actions preserve original observations and coordinates.
+
+| Symptom | Minimal check | Adjustment and verification |
+| --- | --- | --- |
+| Missing sequence or feature | Exact accver matching, valid complete lengths and units | Correct evidence-backed ID mappings and rebuild a minimal plot; see [table checks](data.html#validation) |
+| Missing link | Endpoint IDs, intervals, explicit filters and the Coord's adjacency default | Use `adjacent_only = FALSE` when all-pair selection is intended; inspect [selection rules](multi-sequence-views.html#selection) and verify the source row in exports |
+| Crowded or hidden labels | Run `diagnose_ggchord()` at final dimensions; inspect visibility reasons and the plot | Adjust [label layout](labels.html), wrapping or canvas; recheck visibility/conflicts without treating missing counts as zero |
+| Exported positions differ or guides clip | Compare preview/save width, height, units, device, fonts and warnings | Reuse [target dimensions](output.html#size) and inspect the saved file; dpi does not replace physical dimensions |
+
+Requires ggchord and optional dplyr for later tables. Start with a minimal backbone at a normal size.
+
 {{code:courseblockbj}}
 
 {{prepare:frontlinearbase}}
+
+```r
+report <- diagnose_ggchord(p_linear_base, width = 8, height = 5, device = "png")
+report$checks
+```
+
+Inspect failures/warnings and use the matching action above. Later sections explain export fields and measurement boundaries as needed.
+
 
 ## Consume geometry by name {#geometry}
 {{code:frontgeometry}}

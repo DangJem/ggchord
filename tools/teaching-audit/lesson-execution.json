@@ -121,15 +121,15 @@
     },
     "parameters": {
       "result": "success",
-      "chunks": ["parameteruniform", "parameters", "parametervector", "parametergenes", "parameterstrand", "parameterwidth", "parameterlabels"],
-      "raw_blocks": 0,
+      "chunks": ["courseblockac", "parameteruniform", "parameters", "parametervector", "parameterreorder", "parametergenes", "parameterstrand", "parameterlist", "parameterwidth", "parameterlabels"],
+      "raw_blocks": 1,
       "isolation": "separate R environment; packages loaded as declared by lesson snippets",
       "exports": "raw save/preview arguments checked; actual PNG exports verified separately"
     },
     "output": {
       "result": "success",
       "chunks": "frontlinearbase",
-      "raw_blocks": 0,
+      "raw_blocks": 1,
       "isolation": "separate R environment; packages loaded as declared by lesson snippets",
       "exports": "raw save/preview arguments checked; actual PNG exports verified separately"
     },
@@ -191,7 +191,7 @@
     },
     "multi-sequence-views": {
       "result": "success",
-      "chunks": ["sequencepalette", "docstyle", "showcasedata", "chordshowcasegenes", "showcasechord", "showcasecollinear", "flagshipmulti", "radialdata", "coursecomparison", "coursecomparisonreport", "foundationdata", "foundationequal", "foundationarrow"],
+      "chunks": ["radialdata", "coursecomparison", "coursecomparisonreport", "sequencepalette", "docstyle", "showcasedata", "chordshowcasegenes", "showcasechord", "showcasecollinear", "flagshipmulti", "foundationdata", "foundationequal", "foundationarrow"],
       "raw_blocks": 0,
       "isolation": "separate R environment; packages loaded as declared by lesson snippets",
       "exports": "raw save/preview arguments checked; actual PNG exports verified separately"
@@ -275,7 +275,7 @@
     },
     "dotplot-start": {
       "result": "success",
-      "chunks": ["flagshipdata", "flagshipdot", "courseblockam", "dotplotdata", "dotplotview", "dotplotreverse"],
+      "chunks": ["courseblockam", "dotplotdata", "dotplotview", "dotplotreverse", "dotplotmatrixdata", "flagshipdot"],
       "raw_blocks": 2,
       "isolation": "separate R environment; packages loaded as declared by lesson snippets",
       "exports": "raw save/preview arguments checked; actual PNG exports verified separately"
@@ -325,7 +325,7 @@
     "diagnostics": {
       "result": "success",
       "chunks": ["courseblockbj", "frontlinearbase", "frontgeometry", "comparescaledata", "comparediagnostics"],
-      "raw_blocks": 0,
+      "raw_blocks": 1,
       "isolation": "separate R environment; packages loaded as declared by lesson snippets",
       "exports": "raw save/preview arguments checked; actual PNG exports verified separately"
     },
@@ -365,7 +365,7 @@
       "exports": "raw save/preview arguments checked; actual PNG exports verified separately"
     }
   },
-  "shared_code_sha256": "abb8b3c3aa21ea2d21374a9da0a2b1d932066492a91a21a0d2572bc661b077a9",
+  "shared_code_sha256": "ad691f68020e6e343c412d6b97aeec2eb069cedd025eba71cf025f1a93fdd58a",
   "engine_sha256": {
     "R/aaa-geom.R": "d5f96ca626a3ac478bb59b6deb363a0d5998be4f279a865242814fc319c9bad5",
     "R/adaptive-layout.R": "deb567583f4d8fe07d973e44cba6e8e2ed73cd25e5b820b5b9493b545a41a0d5",

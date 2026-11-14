@@ -7,6 +7,17 @@ install.packages("remotes")
 remotes::install_github("DangJem/ggchord", dependencies = NA)
 ```
 
+## Environment and installation checks {#environment}
+
+Requires R ≥ 4.1.0 and ggplot2 ≥ 4.0.0. Inspect the packages actually used by the current session and include this output when reporting a problem.
+
+```r
+getRversion()
+packageVersion("ggplot2")
+packageVersion("ggchord")
+find.package("ggchord")
+```
+
 ## Load and draw {#first-plot}
 
 ```r
@@ -19,13 +30,22 @@ p <- ggchord(seq_data_example) +
 p
 ```
 
+Success produces four arcs with different lengths and sequence IDs, without a build error. For missing functions, inspect the library path and loaded package before checking the matching [function reference](reference/index.html).
+
 ## Optional packages and input files {#support-evidence}
 
 Examples that use dplyr, Biostrings or a format decoder declare that dependency beside the code. Install it only for the corresponding workflow. Built-in data works offline; file examples use the [input archive](formats.html).
 
 ## If installation fails {#troubleshooting}
 
-Read the first dependency or compiler error, restart R after installation, then use `help(package = "ggchord")` to inspect available functions. See [diagnostics](diagnostics.html) for plotting errors.
+| Symptom | First check | Action |
+| --- | --- | --- |
+| Repository or index cannot download | First network error, proxy and GitHub access | Restore access and retry without changing data |
+| Missing or outdated dependency | Dependency named in the error and minimum R | Install/update that dependency, then retry |
+| Source compilation fails | First compiler error and platform build tools | Install the appropriate R development tools and retain the log |
+| Installation succeeds but functions are missing | `find.package()` and the loaded library | Restart R, load the correct library and retry the minimal plot |
+
+For input and plotting problems, see [diagnostics](diagnostics.html).
 
 ## Related sections {#first-steps}
 

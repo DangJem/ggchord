@@ -546,21 +546,23 @@ p_parameters <- ggchord(seq_data_example) +
 p_parameters
 # ---- parameteruniform ----
 p_parameter_uniform <- ggchord(seq_data_example) +
-  geom_seq(seq_gap = 0.08) +
+  geom_seq(seq_radius = 1) +
   geom_seq_label() +
   coord_chord()
 p_parameter_uniform
 # ---- parametervector ----
 p_parameter_vector <- ggchord(seq_data_example) +
-  geom_seq(seq_radius = c(1, 0.8, 1.2, 1)) +
+  geom_seq(seq_radius = c(1, 0.72, 1, 1)) +
   geom_seq_label() +
   coord_chord()
 p_parameter_vector
 # ---- parametergenes ----
-parameter_genes <- subset(gene_data_example,
-  (accver == "OQ646790.1" & start == 43765) |
-  (accver == "OR222515.1" & start == 19246))
-parameter_genes$strand <- parameter_genes$source_strand
+parameter_genes <- gene_data_example |>
+  dplyr::filter(
+    (accver == "OQ646790.1" & start == 43765) |
+    (accver == "OR222515.1" & start %in% c(2624, 19246))
+  ) |>
+  dplyr::mutate(strand = source_strand)
 parameter_genes[c("accver", "start", "end", "strand", "anno")]
 # ---- parameterstrand ----
 p_parameter_strand <- ggchord(seq_data_example) +
@@ -620,16 +622,14 @@ p_chord_gap <- ggchord(seq_data = seq_data_example) +
   coord_chord()
 p_chord_gap
 # ---- frontradius ----
-chord_radius <- c("MT108731.1" = 1, "MT118296.1" = 0.72,
-                  "OQ646790.1" = 1, "OR222515.1" = 1)
+chord_radius <- c("MT118296.1" = 0.72)
 p_chord_radius <- ggchord(seq_data = seq_data_example) +
   geom_seq(seq_radius = chord_radius) +
   geom_seq_label() +
   coord_chord()
 p_chord_radius
 # ---- frontcurvature ----
-chord_curvature <- c("MT108731.1" = 1, "MT118296.1" = 0,
-                     "OQ646790.1" = 1, "OR222515.1" = 1)
+chord_curvature <- c("MT118296.1" = 0)
 p_chord_curvature <- ggchord(seq_data = seq_data_example) +
   geom_seq(seq_curvature = chord_curvature) +
   geom_seq_label() +
@@ -667,12 +667,8 @@ p_chord_sequence_labels <- ggchord(seq_data = seq_data_example) +
   coord_chord()
 p_chord_sequence_labels
 # ---- frontgenelabels ----
-p_chord_gene_labels <- ggchord(seq_data_example) +
-  geom_seq() +
-  geom_seq_label() +
-  geom_gene(data = chord_genes_example) +
-  geom_gene_label(data = chord_genes_example, label_radial_offset = 0.10) +
-  coord_chord()
+p_chord_gene_labels <- p_chord_feature +
+  geom_gene_label(data = chord_genes_example, label_radial_offset = 0.10)
 p_chord_gene_labels
 # ---- frontmarkers ----
 chord_query_region <- data.frame(
@@ -748,9 +744,12 @@ subject <- GenomicRanges::GRanges("b", IRanges::IRanges(40, 60), seqlengths = c(
 pair <- InteractionSet::GInteractions(query, subject)
 as_ggchord_link(pair)
 # ---- frontpreview ----
-view_ggchord(p_linear_base, width = 8, height = 5, units = "in")
+output_width <- 8
+output_height <- 5
+view_ggchord(p_linear_base, width = output_width, height = output_height, units = "in")
 # ---- frontsave ----
-ggsave("comparison.png", p_linear_base, width = 8, height = 5, units = "in", dpi = 144)
+ggsave("comparison.png", p_linear_base,
+  width = output_width, height = output_height, units = "in", dpi = 144)
 # ---- frontgeometry ----
 layout <- export_ggchord_layout(p_linear_base, include = "seq")
 head(unique(layout$seq[c("layer_id", "component", "source_row")]), 4)

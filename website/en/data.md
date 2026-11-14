@@ -56,6 +56,12 @@ Continue to [Plotting concepts](modes.html), or see [Input formats and conversio
 
 The BLAST-style fields reflect ggchord’s origins in alignment visualization. Query and subject use q/s prefixes, and custom IDs are accepted. See [alignment inputs](alignments.html) for actual BLAST rows.
 
+## How the minimal tables connect {#minimal-inputs}
+
+A backbone needs unique `accver` and complete `length`; DNA defaults to bp. Link `qaccver`/`saccver` and feature `accver` refer to those same identifiers. Use the three small tables above for a [minimal plot](multi-sequence-start.html) before reading file import, cleaning, hierarchy or projection details.
+
+For existing files, choose a path by [input and goal](workflows.html#tools). Consult the following details as needed, retaining original inputs and repair copies.
+
 ## Protein sequence units {#protein-unit}
 
 Nucleotide tables may omit the unit column and use bp. A complete protein length table declares `sequence_unit = "aa"`. A plot uses one unit. See [protein alignments](alignments.html#protein) for full inputs and figures.
@@ -74,7 +80,7 @@ Native Cartesian layout units, genomic bp, angles in degrees, physical mm and
 track value units are different domains. See the full
 [data contract](reference/ggchord_data_contract.html).
 
-## Import original records {#import}
+## Advanced: import original records {#import}
 Run this repository-only example from its root. Original files are not rewritten.
 
 {{code:imports}}

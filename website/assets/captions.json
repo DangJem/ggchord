@@ -264,8 +264,8 @@
     "en": "Move sequence labels inward and set them horizontally"
   },
   "frontgenelabels": {
-    "zh": "给 CDS 添加原始注释名",
-    "en": "Label the CDS with its original annotation"
+    "zh": "保留骨架、连接与 CDS，增加特征名称",
+    "en": "Add the feature name while retaining backbones, ribbon and CDS"
   },
   "frontmarkers": {
     "zh": "区间高亮与有向点连接",
@@ -336,12 +336,12 @@
     "zh": "四条完整蛋白及六对实际 BLASTp 比对的弦图"
   },
   "parameteruniform": {
-    "en": "One gap value for every sequence",
-    "zh": "所有序列使用同一间隙"
+    "zh": "统一半径：所有序列使用 1",
+    "en": "Uniform radius: every sequence uses 1"
   },
   "parametervector": {
-    "en": "Four radii in sequence-table order",
-    "zh": "按序列表顺序指定四个半径"
+    "zh": "顺序半径：第二条显示序列使用 0.72",
+    "en": "Ordered radii: the second displayed sequence uses 0.72"
   },
   "parameterstrand": {
     "en": "Opposite offsets for forward and reverse CDS",

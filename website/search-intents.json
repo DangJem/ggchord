@@ -146,5 +146,28 @@
       "zh": "按任务选择当前章节或精确参数；详见输入与支持边界。",
       "en": "Choose the current section or exact parameter; inspect its input and support boundary."
     }
+  },
+  {
+    "queries": [
+      "灵活的参数格式",
+      "灵活参数",
+      "灵活参数配置",
+      "参数格式与逐序列配置",
+      "逐序列",
+      "按链",
+      "命名向量",
+      "列表",
+      "Flexible parameters",
+      "Flexible parameter formats"
+    ],
+    "url": "parameters.html",
+    "title": {
+      "zh": "灵活的参数格式",
+      "en": "Flexible parameter formats"
+    },
+    "summary": {
+      "zh": "单值、按 accver 命名、按显示顺序、按链及适用列表；分别说明匹配、补值和家族边界。",
+      "en": "Scalars, accver names, display order, strands and supported lists; matching, omitted values and family boundaries."
+    }
   }
 ]

@@ -1,6 +1,6 @@
 ## Shared data, four views {#task}
 
-The same complete sequence lengths, source CDS and observed HSPs support four relationship coordinates. The flagship examples below retain identical data, layers and mappings; only the Coord changes. All-pair links are explicit, so adjacent-row defaults cannot change the comparison silently.
+Complete sequence lengths, observed HSPs and real CDS can share four relationship coordinates. The [strict comparison](multi-sequence-views.html#input) keeps inputs, layers and mappings fixed with explicit all-pair selection. The Chord flagship below has its own display choices; see [flagship notes](multi-sequence-views.html#flagship).
 
 {{manualfigure:flagchord}}
 

@@ -3695,6 +3695,46 @@
         "tools/site-course-examples.R": "35be92b9fe12fadde2dd356c43897cfa873a719fbc9989bf62f07e4d16175f61",
         "website/course-figures.json": "01a6c9b54b9777744b8c362a051d8818e2897cdb7c7e15aa7a2eb8cc120d1dfd"
       }
+    },
+    "parameternamedorder": {
+      "status": "actual PNG rendered",
+      "file": "man/figures/parameternamedorder.png",
+      "sha256": "819512f8e985916692a33224e6ca94ffe7b565e693310c959a106b6f35739f2f",
+      "code_sha256": "fb851d537b82f4ccb3fee074c6bc025adc125658e0366328d62e4d8149829519",
+      "width": 7,
+      "height": 7,
+      "dpi": 144,
+      "runtime_record": "tools/site-audit/redesign-rendering.json"
+    },
+    "parameterorderedvalues": {
+      "status": "actual PNG rendered",
+      "file": "man/figures/parameterorderedvalues.png",
+      "sha256": "e3e6807b5547cb6e29f81c48582908614006823694764e9ee03990d23c7caa55",
+      "code_sha256": "fb851d537b82f4ccb3fee074c6bc025adc125658e0366328d62e4d8149829519",
+      "width": 7,
+      "height": 7,
+      "dpi": 144,
+      "runtime_record": "tools/site-audit/redesign-rendering.json"
+    },
+    "parameterlist": {
+      "status": "actual PNG rendered",
+      "file": "man/figures/parameterlist.png",
+      "sha256": "d72ab84ca6625b10e2e536f72ed284fa0e2e106f688bc2e5104d93e44a252d31",
+      "code_sha256": "8fd28b7df1adebe3589d644044c8eef4347daecc8c7892410c10d18d1647c2d8",
+      "width": 7,
+      "height": 7,
+      "dpi": 144,
+      "runtime_record": "tools/site-audit/redesign-rendering.json"
+    },
+    "frontlabelledlinear": {
+      "status": "actual PNG rendered",
+      "file": "man/figures/frontlabelledlinear.png",
+      "sha256": "53ecf871ad76f01f2edd687bd06217af8baa155d1f084f95af17b5e0cd55437b",
+      "code_sha256": "777a45568f8ecd1e0429a6a3d4c4b4d343a110a3fd9f6244aa442f3a49fe4323",
+      "width": 8,
+      "height": 5,
+      "dpi": 144,
+      "runtime_record": "tools/site-audit/redesign-rendering.json"
     }
   },
   "source_sha256": {

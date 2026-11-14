@@ -72,10 +72,14 @@ def manual_home(lang,base):
       ('circular','II','单序列圆图','Single-sequence circular maps',picture('flagcircular','Circular','circular.html'),''),
       ('dotplot','III','HSP 点图','HSP Dotplot',picture('flagdotplot','Dotplot','dotplot.html'),''),
       ('fusion','IV','多视图组合','Multi-view composition',picture('flagfusion','Fusion','fusion.html'),'')]
-    cards=''.join(f'<section class="home-module"><h2><a href="{slug}.html"><span class="module-index">{number}</span> {cn if zh else en}</a></h2><div class="home-module-art {css}">{art}</div></section>' for slug,number,cn,en,art,css in panels)
+    minimums={'multi-sequence':('序列 ID 与完整长度；按需加入 HSP 和注释。','Sequence IDs and complete lengths; optional HSPs and annotations.'),
+      'circular':('一条序列长度与已有注释；识别功能另需 DNA。','One complete sequence and annotations; recognition also needs DNA.'),
+      'dotplot':('完整来源长度与 HSP 四端点。','Complete source lengths and four HSP endpoints.'),
+      'fusion':('独立有效视图与明确的源区间。','Valid independent views and explicit source intervals.')}
+    cards=''.join(f'<section class="home-module"><h2><a href="{slug}.html"><span class="module-index">{number}</span> {cn if zh else en}</a></h2><div class="home-module-art {css}">{art}</div><p class="home-minimum">{minimums[slug][0 if zh else 1]}</p></section>' for slug,number,cn,en,art,css in panels)
     logo=responsive_image('logo',lang,base,eager=True,css='manual-logo')
     return ('<div class="home-shell"><section class="manual-brand">'+logo+'<h1>ggchord</h1><p class="manual-tagline">'+
-      ('序列、注释与关系。四个模块，一套语法。' if zh else 'Sequences, annotations and relationships. Four modules. One grammar.')+
-      '</p><div class="manual-actions"><a class="primary-action" href="installation.html">'+('下载与安装' if zh else 'Install')+'</a><a href="reference/index.html">API →</a></div><p class="home-contract">'+
+      ('用一致的图层语法，构建序列关系图与注释图。' if zh else 'Build sequence relationship and annotation plots with consistent layer grammar.')+
+      '</p><div class="manual-actions"><a class="primary-action" href="multi-sequence-start.html">'+('绘制第一张图' if zh else 'Draw a first plot')+'</a><a href="#modules">'+('选择绘图任务' if zh else 'Choose a plotting task')+'</a></div><nav class="home-features" aria-label="'+('核心能力' if zh else 'Core capabilities')+'"><a href="multi-sequence-views.html#input">'+('视图转换' if zh else 'Switch views')+'</a><a href="parameters.html">'+('灵活的参数格式' if zh else 'Flexible parameter formats')+'</a><a href="fusion-start.html">'+('组合与输出' if zh else 'Composition and output')+'</a></nav><p class="home-contract">'+
       ('多序列包含四种 Coord；Fusion 是独立视图的组合层。' if zh else 'Four relationship Coord types. Fusion combines independent views.')+
-      '</p></section><div class="home-capabilities">'+cards+'</div></div>')
+      '</p></section><div class="home-capabilities" id="modules">'+cards+'</div></div>')

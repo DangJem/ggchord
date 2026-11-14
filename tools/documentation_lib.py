@@ -53,9 +53,10 @@ def expand(text, lang, *, figures='assets', reference=''):
         round(float(a['height'])*float(a['dpi']))) for a in assets}
     def preparation(match):
         keys=match[1].split(',')
-        return '\n'.join(
-            '\n```r\n' + re.sub(r'\np_\w+$', '', chunks[key]) + '\n```\n'
-            for key in keys)
+        code='\n'.join('\n```r\n'+re.sub(r'\np_\w+$','',chunks[key])+'\n```\n' for key in keys)
+        label='准备数据与配置（展开）' if lang=='zh' else 'Data preparation and settings (expand)'
+        return '\n<details class="preparation"><summary>'+label+'</summary>\n\n'+code+'\n</details>\n'
+
     text=re.sub(r'\{\{prepare:([\w,]+)\}\}',preparation,text)
     def recipe(match):
         key = match[1]
@@ -81,6 +82,7 @@ def expand(text, lang, *, figures='assets', reference=''):
             f'title="{hint}" data-code-url="{code_url}">{preview}</a>'
             f'<figcaption>{caption} · <span class="figure-hint">{hint}</span></figcaption></figure>')
     previews = {a['object']: (float(a['width']), float(a['height'])) for a in assets}
+    previews.update({r['object']:(r['width'],r['height']) for r in json.loads((WEB/'course-figures.json').read_text())})
     def preview_code(code):
         lines = code.splitlines()
         if lines[-1] in previews:
@@ -153,8 +155,9 @@ def expand(text, lang, *, figures='assets', reference=''):
         kind='contrast' if key in comparison_ids else 'case' if key in featured or key.startswith(('showcase','catalog','real')) else 'step'
         task='labels' if any(word in key for word in ['label','text','fit']) else 'tracks' if any(word in key for word in ['track','gc','count']) else 'links' if any(word in key for word in ['ribbon','link','route','fusion']) else 'layout'
         difficulty='advanced' if kind=='contrast' or module=='fusion' else 'beginner' if kind=='step' else 'intermediate'
-        gallery.append(f'<section class="gallery-card" data-gallery-module="{module}" data-gallery-kind="{kind}" data-gallery-task="{task}" data-gallery-level="{difficulty}" data-featured="{str(key in featured).lower()}"><h3 id="{key}">{html.escape(CAPTIONS[key][lang])}</h3>'
-            f'{figure(key,source_url)}<p><a href="{lesson}">{label}</a>{source_link}</p>'
+        title=re.split(r'[:：]| · ',CAPTIONS[key][lang],maxsplit=1)[0]
+        gallery.append(f'<section class="gallery-card" data-gallery-module="{module}" data-gallery-kind="{kind}" data-gallery-task="{task}" data-gallery-level="{difficulty}" data-featured="{str(key in featured).lower()}"><h3 id="{key}">{html.escape(title)}</h3>'
+            f'<p class="gallery-description">{html.escape(CAPTIONS[key][lang])}</p>{figure(key,source_url)}<p><a href="{lesson}">{label}</a>{source_link}</p>'
             f'<p class="asset-size"><code>{asset["object"]}</code> · {asset["width"]} × {asset["height"]} in · '
             f'{asset["dpi"]} dpi</p></section>')
     results_path = WEB/'assets/example-results.json'
@@ -187,7 +190,7 @@ def expand(text, lang, *, figures='assets', reference=''):
           ', '.join('`'+k+'`' for k in c['snippets'])+(' · '+', '.join(c['figures']) if c['figures'] else '')] for c in coverage]))
     def selector(name,label,options):
         return '<label>'+label+'<select data-gallery-filter="'+name+'">'+''.join('<option value="'+v+'">'+t+'</option>' for v,t in options)+'</select></label>'
-    controls='<div class="gallery-controls">'+selector('featured','选择范围' if lang=='zh' else 'Selection',[('featured','精选' if lang=='zh' else 'Featured'),('all','全部' if lang=='zh' else 'All')])+selector('module','模块' if lang=='zh' else 'Module',[('all','All'),('multi-sequence','Multi-sequence'),('circular','Circular'),('dotplot','Dotplot'),('fusion','Fusion')])+selector('kind','类型' if lang=='zh' else 'Type',[('all','All'),('case','完整案例' if lang=='zh' else 'Case'),('step','步骤' if lang=='zh' else 'Step'),('contrast','参数对照' if lang=='zh' else 'Contrast')])+selector('task','任务' if lang=='zh' else 'Task',[('all','All'),('layout','Layout'),('labels','Labels'),('tracks','Tracks'),('links','Links')])+selector('level','难度' if lang=='zh' else 'Level',[('all','All'),('beginner','Beginner'),('intermediate','Intermediate'),('advanced','Advanced')])+'<p class="gallery-count" role="status"></p></div>'
+    controls='<div class="gallery-controls">'+selector('featured','选择范围' if lang=='zh' else 'Selection',[('featured','精选' if lang=='zh' else 'Featured'),('all','全部' if lang=='zh' else 'All')])+selector('module','模块' if lang=='zh' else 'Module',[('all','全部' if lang=='zh' else 'All'),('multi-sequence','多序列关系' if lang=='zh' else 'Multi-sequence'),('circular','单序列圆图' if lang=='zh' else 'Circular'),('dotplot','Dotplot'),('fusion','Fusion')])+selector('kind','类型' if lang=='zh' else 'Type',[('all','全部' if lang=='zh' else 'All'),('case','完整案例' if lang=='zh' else 'Case'),('step','步骤' if lang=='zh' else 'Step'),('contrast','参数对照' if lang=='zh' else 'Contrast')])+selector('task','任务' if lang=='zh' else 'Task',[('all','全部' if lang=='zh' else 'All'),('layout','布局' if lang=='zh' else 'Layout'),('labels','标签' if lang=='zh' else 'Labels'),('tracks','轨道' if lang=='zh' else 'Tracks'),('links','连接' if lang=='zh' else 'Links')])+selector('level','难度' if lang=='zh' else 'Level',[('all','全部' if lang=='zh' else 'All'),('beginner','基础' if lang=='zh' else 'Beginner'),('intermediate','进阶' if lang=='zh' else 'Intermediate'),('advanced','高级' if lang=='zh' else 'Advanced')])+'<p class="gallery-count" role="status"></p></div>'
     text = text.replace('{{gallery}}', controls+'<div class="gallery-grid">'+''.join(gallery)+'</div>').replace('{{reference}}', reference)
     return text
 

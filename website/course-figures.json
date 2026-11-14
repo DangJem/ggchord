@@ -407,5 +407,76 @@
       "en": "Independent detail plot"
     },
     "source": "The independently valid child plot from the same one-HSP Fusion preparation; no screenshot cropping."
+  },
+  {
+    "id": "parameternamedorder",
+    "object": "p_parameter_named_order",
+    "snippets": [
+      "parameterreorder"
+    ],
+    "width": 7,
+    "height": 7,
+    "dpi": 144,
+    "file": "man/figures/parameternamedorder.png",
+    "caption": {
+      "zh": "重排后命名值仍修改 MT118296.1",
+      "en": "Named values still change MT118296.1 after reordering"
+    },
+    "source": "Bundled original CDS records and source_strand; display offsets only, unchanged source positions."
+  },
+  {
+    "id": "parameterorderedvalues",
+    "object": "p_parameter_ordered_values",
+    "snippets": [
+      "parameterreorder"
+    ],
+    "width": 7,
+    "height": 7,
+    "dpi": 144,
+    "file": "man/figures/parameterorderedvalues.png",
+    "caption": {
+      "zh": "重排后顺序值修改第二条显示序列 MT108731.1",
+      "en": "Ordered values change the second display, MT108731.1, after reordering"
+    },
+    "source": "Bundled original CDS records and source_strand; display offsets only, unchanged source positions."
+  },
+  {
+    "id": "parameterlist",
+    "object": "p_parameter_list",
+    "snippets": [
+      "parametergenes",
+      "parameterlist"
+    ],
+    "width": 7,
+    "height": 7,
+    "dpi": 144,
+    "file": "man/figures/parameterlist.png",
+    "caption": {
+      "zh": "OR222515.1 双链不对称偏移，OQ646790.1 保持单值规则",
+      "en": "Asymmetric OR222515.1 strand offsets and a scalar rule for OQ646790.1"
+    },
+    "source": "Bundled original CDS records and source_strand; display offsets only, unchanged source positions."
+  },
+  {
+    "id": "frontlabelledlinear",
+    "object": "p_chord_linear",
+    "snippets": [
+      "frontbackbone",
+      "frontlinks",
+      "frontribbon",
+      "frontgenes",
+      "frontfeature",
+      "frontgenelabels",
+      "courseblockad"
+    ],
+    "width": 8,
+    "height": 5,
+    "dpi": 144,
+    "file": "man/figures/frontlabelledlinear.png",
+    "caption": {
+      "zh": "切换 Collinear 后保留连接、CDS 与特征名称",
+      "en": "Collinear retains the ribbon, CDS and feature-name layers"
+    },
+    "source": "Bundled original HSP and source-strand CDS; cumulative graph object."
   }
 ]

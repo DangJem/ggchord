@@ -48,3 +48,13 @@ Dotplot 在两条序列轴上连接 HSP 四端点。Fusion 排列已经独立有
 
 
 <span id="check-result"></span><span id="coordinate-controls"></span>
+
+## 开始使用 {#getting-started}
+
+[安装并画出第一张图](installation.html#first-plot)，再按上方四模块选择输入与图层。已有数据表时，从[最小字段](data.html#tables)核对标识、全长和单位。
+
+## 通用技巧 {#shared-techniques}
+
+[灵活的参数格式](parameters.html)用于支持它的几何与位置参数，区分统一值、命名值、顺序值及链值。数据差异用 aes/scale，外观用 theme；职责见上方语法表。
+
+[注释形状](feature-geometry.html) · [标签](labels.html) · [轨道](tracks.html) · [样式](styling.html) · [输出](output.html) · [排错](diagnostics.html)

@@ -2,6 +2,8 @@
 
 优先从[功能索引](reference/index.html)进入用法，重要参数对照见对应说明，完整签名和额外参数转发见函数参考。以下按需展开；不会把上游 ... 的全部可能参数伪装成 ggchord 的独立 API。
 
+<label class="atlas-filter">查找函数或参数<input type="search" id="parameter-filter" autocomplete="off"></label><p id="parameter-filter-status" class="atlas-status" role="status"></p>
+
 
 ## 坐标与全局视图 {#coordinates}
 

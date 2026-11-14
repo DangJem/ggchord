@@ -1,29 +1,3 @@
-## 保留旗舰与派生视图 {#flagship}
-
-弦图和共线性图继续使用现有旗舰版本，保留构图、输入筛选、配色和图层设计；图像仅随本次已确认的默认线型缺陷修复而重绘。Radial 从现有弦图派生，Sankey 从现有共线性图派生。两套既有旗舰共用来源准备，但各自保留原有特征与跨行 HSP 的显示选择，因此不把四图说成完全相同的显示子集。
-
-{{prepare:sequencepalette,docstyle,showcasedata,chordshowcasegenes,showcasechord,showcasecollinear}}
-
-Radial 不使用 Chord 专属的半径/曲率，因此只替换派生图的骨架参数；Sankey 的跨行连接不照搬 Collinear 的 Cartesian 控制点，并使用各列原生坐标轴，不保留仅适用于 Collinear 的共享比例尺。Sankey 的名称层每序列选择一条来源注释，优先非假设蛋白、再按长度排序，并放在列旁；全部原特征几何与来源表保留。原旗舰的构图、数据准备与配色保留；图像仅在修复默认虚线等已确认问题时更新。
-
-{{code:flagshipmulti}}
-
-### Chord {#flagship-chord}
-
-{{manualfigure:flagchord}}
-
-### Collinear {#flagship-collinear}
-
-{{manualfigure:flaglinear}}
-
-### Radial {#flagship-radial}
-
-{{manualfigure:flagradial}}
-
-### Sankey {#flagship-sankey}
-
-{{manualfigure:flagsankey}}
-
 ## 一次准备 {#input}
 
 相同来源输入不代表默认展示完全相同的关系。本例先明确全对选择再比较几何；随后核对各视图默认筛选。依赖：ggchord、dplyr。
@@ -58,6 +32,32 @@ Radial 不使用 Chord 专属的半径/曲率，因此只替换派生图的骨�
 | Sankey | 排除同实体自身关系 | 本例真实表不含自身关系 |
 
 {{code:coursecomparisonreport}}
+
+## 保留旗舰与派生视图 {#flagship}
+
+弦图和共线性图继续使用现有旗舰版本，保留构图、输入筛选、配色和图层设计；图像仅随本次已确认的默认线型缺陷修复而重绘。Radial 从现有弦图派生，Sankey 从现有共线性图派生。两套既有旗舰共用来源准备，但各自保留原有特征与跨行 HSP 的显示选择，因此不把四图说成完全相同的显示子集。
+
+{{prepare:sequencepalette,docstyle,showcasedata,chordshowcasegenes,showcasechord,showcasecollinear}}
+
+Radial 不使用 Chord 专属的半径/曲率，因此只替换派生图的骨架参数；Sankey 的跨行连接不照搬 Collinear 的 Cartesian 控制点，并使用各列原生坐标轴，不保留仅适用于 Collinear 的共享比例尺。Sankey 的名称层每序列选择一条来源注释，优先非假设蛋白、再按长度排序，并放在列旁；全部原特征几何与来源表保留。原旗舰的构图、数据准备与配色保留；图像仅在修复默认虚线等已确认问题时更新。
+
+{{code:flagshipmulti}}
+
+### Chord {#flagship-chord}
+
+{{manualfigure:flagchord}}
+
+### Collinear {#flagship-collinear}
+
+{{manualfigure:flaglinear}}
+
+### Radial {#flagship-radial}
+
+{{manualfigure:flagradial}}
+
+### Sankey {#flagship-sankey}
+
+{{manualfigure:flagsankey}}
 
 ## 方向、实例与显示比例 {#direction-and-adjacency}
 

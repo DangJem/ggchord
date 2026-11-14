@@ -1,6 +1,6 @@
 ## 同一数据，四种视图 {#task}
 
-完整序列长度、真实 CDS 和已观测 HSP 可以共用四种关系坐标。旗舰对照保持相同数据、图层和映射，只替换 Coord；显式显示全对关系，避免相邻行默认筛选改变比较范围。
+完整序列长度、真实 CDS 和已观测 HSP 可以共用四种关系坐标。[严格四视图对照](multi-sequence-views.html#input)保持相同输入、图层和映射，并显式显示全对关系。下图为独立设计的 Chord 旗舰；四张旗舰各自的显示选择和坐标适配见[旗舰说明](multi-sequence-views.html#flagship)。
 
 {{manualfigure:flagchord}}
 

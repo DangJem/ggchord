@@ -23,3 +23,12 @@ final vector output; font availability and embedding remain device-dependent.
 
 ## Result checks {#check-result}
 Use matching dimensions for preview and saving. Inspect text, guides and warnings; a successful measurement does not certify fonts or release quality across devices.
+
+## Choose a file format {#formats}
+
+PNG serves web pages and slides; PDF/SVG serve vector-output workflows. The extension selects the default device unless a device is explicitly supplied. Reuse the target dimensions above and check fonts and embedding in the final file.
+
+```r
+ggsave("comparison.pdf", p_linear_base,
+  width = output_width, height = output_height, units = "in")
+```

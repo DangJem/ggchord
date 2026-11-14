@@ -1,33 +1,4 @@
-## Multi-sequence HSP matrix {#matrix}
-
-These inputs come from original repository FASTA and standard BLAST tables. All 32 HSPs across four sequences are retained; self-alignments, reciprocal records and missing HSPs are not invented. The 266 CDS belong to the shared source preparation and are not submitted to the Dotplot segment layer. An empty area means no supplied HSP, not proven absence of homology.
-
-{{code:flagshipdata,flagshipdot}}
-
-{{manualfigure:flagdotplot}}
-
-## Inspect source direction {#direction}
-
-Relative endpoint direction comes from the source record. Reversing a display axis changes the visible slope while leaving the source direction unchanged. Count the supplied directions per sequence pair:
-
-```r
-hsp_direction <- flagship_hsp |>
-  mutate(relative_direction = if_else(
-    (qend - qstart) * (send - sstart) < 0, "reverse", "forward"
-  )) |>
-  count(qaccver, saccver, relative_direction, name = "HSP")
-hsp_direction
-```
-
-## Query an exact position {#mapping}
-
-Map the first HSP query start onto the concatenated x axis. Inverse lookup uses `inverse = TRUE` and an explicit axis; display gaps return NA. The four endpoints remain unchanged.
-
-```r
-map_ggchord_position(
-  flag_dotplot, flagship_hsp$qaccver[1], flagship_hsp$qstart[1], axis = "x"
-)
-```
+Start with observed HSPs from one sequence pair, then extend to a four-sequence matrix. The minimal inputs are complete sequence lengths and four HSP endpoints; annotations are optional.
 
 {{code:courseblockam}}
 
@@ -68,6 +39,39 @@ metadata is rejected. Repeated declared HSP IDs require `allow_repeated=TRUE`
 in all participating layers. Unidentified duplicate/self rows remain distinct.
 Without cg/cs/CIGAR or another alignment trace, these are HSP segments, not
 base-level mismatches or gap paths.
+
+## Multi-sequence HSP matrix {#matrix}
+
+These inputs come from original repository FASTA and standard BLAST tables. All 32 HSPs across four sequences are retained; self-alignments, reciprocal records and missing HSPs are not invented. The 266 CDS belong to the shared source preparation and are not submitted to the Dotplot segment layer. An empty area means no supplied HSP, not proven absence of homology.
+
+{{prepare:dotplotmatrixdata}}
+
+{{code:flagshipdot}}
+
+{{manualfigure:flagdotplot}}
+
+## Inspect source direction {#direction}
+
+Relative endpoint direction comes from the source record. Reversing a display axis changes the visible slope while leaving the source direction unchanged. Count the supplied directions per sequence pair:
+
+```r
+hsp_direction <- flagship_hsp |>
+  mutate(relative_direction = if_else(
+    (qend - qstart) * (send - sstart) < 0, "reverse", "forward"
+  )) |>
+  count(qaccver, saccver, relative_direction, name = "HSP")
+hsp_direction
+```
+
+## Query an exact position {#mapping}
+
+Map the first HSP query start onto the concatenated x axis. Inverse lookup uses `inverse = TRUE` and an explicit axis; display gaps return NA. The four endpoints remain unchanged.
+
+```r
+map_ggchord_position(
+  flag_dotplot, flagship_hsp$qaccver[1], flagship_hsp$qstart[1], axis = "x"
+)
+```
 
 ## Boundaries and next steps {#support}
 

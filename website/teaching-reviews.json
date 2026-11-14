@@ -273,7 +273,7 @@
       "zh": "单序列圆图坐标系"
     },
     "alias_of": "",
-    "case": "chord",
+    "case": "circular-start",
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
       "en": "one sequence; bp or aa; no ribbon/link layers",
@@ -782,7 +782,7 @@
       "zh": "在圆形质粒上绘制 SnapGene 风格注释"
     },
     "alias_of": "",
-    "case": "chord",
+    "case": "plasmids",
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
       "en": "generic geometry preset; intended circular; compare defaults before transfer; Radial per new-view support matrix",
@@ -1593,7 +1593,7 @@
       "zh": "将两条链的注释放在同一带上"
     },
     "alias_of": "",
-    "case": "chord",
+    "case": "circular-features",
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
       "en": "local shared-band preset; intended circular",
@@ -1602,8 +1602,8 @@
   },
   "position_strand": {
     "level": "L2",
-    "page": "circular-features",
-    "anchor": "stacking",
+    "page": "parameters",
+    "anchor": "strand",
     "reason": "Reviewed input/output, constraints and runnable canonical section; key-parameter level applies only to listed behavior",
     "modes": "local signed placement on valid feature/gene layers",
     "parameters": [
@@ -1614,7 +1614,7 @@
       "zh": "按链将注释放在两侧"
     },
     "alias_of": "",
-    "case": "chord",
+    "case": "parameters",
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
       "en": "local signed placement on valid feature/gene layers",
@@ -3050,7 +3050,7 @@
       "zh": "将线性序列投影到径向辐条"
     },
     "alias_of": "",
-    "case": "dotplot-start",
+    "case": "radial-synteny",
     "scope": "Native endpoints and per-coordinate explicit support contract",
     "modes_localized": {
       "en": "Proportional/equal spokes, cyclic actual HSPs and shared feature/Track frames",

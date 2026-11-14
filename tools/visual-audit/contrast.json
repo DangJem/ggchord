@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "source": "website/assets/site.css",
-  "source_sha256": "377cb084f82bd6114adb75dfd76a512994ee268261eceaa590c6d6486f579ecf",
+  "source_sha256": "27150ce990fdab826c2e53f81d32e4bd047860080cb2f59cac9a527444802857",
   "method": {
     "reference": "https://www.w3.org/TR/WCAG22/#contrast-minimum",
     "non_text_reference": "https://www.w3.org/TR/WCAG22/#non-text-contrast",
@@ -49,6 +49,7 @@
       "--toc-width": "188px",
       "--header-height": "76px",
       "--header-min": "76px",
+      "--code-font-size": "15px",
       "--bs-body-color": "var(--text-main)",
       "--bs-body-bg": "var(--surface-canvas)",
       "--bs-link-color": "var(--color-brand)",
