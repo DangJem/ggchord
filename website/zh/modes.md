@@ -4,7 +4,7 @@
 | --- | --- | --- |
 | [模块一 · 多序列关系](multi-sequence.html) | 比较序列区间、注释和连接 | Chord、Collinear、Radial、Sankey |
 | [模块二 · 单序列圆图](circular.html) | 在一条完整序列上组织注释 | Circular |
-| [模块三 · HSP 点图](dotplot.html) | 以双轴显示 query/subject 的 HSP 端点 | Dotplot |
+| [模块三 · 序列比对点图](dotplot.html) | 以双轴显示 query/subject 的 HSP 端点 | Dotplot |
 | [模块四 · 多视图组合](fusion.html) | 排列独立注册图并连接真实源区间 | Fusion 组合层 |
 
 六种 Coord 负责单张图的全局坐标；Fusion 组合独立图形，不是第七种坐标系。Dotplot 使用专属线段图层，目前不作为 Fusion 的注册端点。

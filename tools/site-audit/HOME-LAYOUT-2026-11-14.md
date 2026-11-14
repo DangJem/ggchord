@@ -80,10 +80,44 @@
   Sankey10HSP/16CDS全部源字段相同。原PNG生成hash保持，旧空检查与补正分别记录。
 - 页面表格输出刷新带来一处无关null→空对象序列化，已撤回至基线。进行中的HTML
   构建因此被快照guard正确拒绝，退出1；记录home-build-initial.json，不计通过。
-- 当前本地原生双语HTML、生成链接/下载与旧锚点核查待完成，不预写通过。
+- 当前原生双语HTML已完成：汉语全成功，英语最后4页批次退出1且日志未给明确原因。
+  保留失败，原输入逐页隔离重试4页全部成功后完成后处理，见home-build-recovery.json。
+- 最终93语言对/157导出/121帮助、生成链接/锚点/搜索、582旧地址/1146旧章节/14别名、
+  132导航记录和20同义查询通过。76归档输入、52英语脚本展开30文件逐项源字节相同。
+- 最终首页模板检查一个H1、四模块、七预览、内容顺序、对应完整图/源码入口、图片
+  尺寸/背景/来源hash通过。回环HTTP582地址、未知404与双语恢复页通过；核查服务已关闭。
+- 基本概念表一处旧模块名与新入口同步：维护Markdown、对应HTML和该页索引精确替换
+  单一标签，代码/锚点/图片不变；随后只更新该页源hash的生成库存及下载副本。
+  原生构建与这些派生同步分别留痕，见home-entry-label-sync.json。
 
 ## 明确未验收
 
 用户选择不操作浏览器。本轮未检查实际桌面/窄窗口/短窗口/200%缩放、键盘/主题
 交互与computed样式。CSS断点和自然高度的源码检查不代表这些状态已通过。
 没有正式发布、部署或包级设备/平台/字体认证；本轮不改底层几何算法或原始记录。
+
+## 最终交付状态
+
+本轮约定的源码、制图与本地构建核对已完成，逐项结果见home-verification.json。
+实现提交44fc498，非空来源检查/CSS收敛提交73fd7a2，最终证据另提交。9张最终PNG
+均实际查看；候选过程PNG只留临时目录。全站源和所有scientific inputs均保持可追踪。
+实际浏览器/桌面/窄屏/短窗口/缩放和移动端明确未验收，不因静态规则通过记为完成。
+本轮不改R底层实现、原始输入、默认测试或冻结docs；main仍24c1efe，未合并/推送/部署。
+
+主要复现命令：
+
+```sh
+Rscript --vanilla tools/site-audit/render-home.R
+Rscript --vanilla tools/site-audit/render-home.R --verify-sources-only
+python3 tools/check-documentation.py --source-only
+python3 tools/build-website.py --render-jobs=2
+# 仅当原生批次确实失败且源未变时恢复：
+python3 tools/site-audit/recover-native-render.py --record tools/site-audit/home-build-recovery.json
+python3 tools/check-documentation.py
+python3 tools/site-audit/check-built.py
+python3 tools/site-audit/check-manual-assets.py --built
+```
+
+归档检查复用check-native-archive.py原逻辑，仅输出到home-archive.json。显式制图
+脚本要求Git开发checkout，以3a6b412原示例作非空输入对照；安装后的R包不依赖这些
+开发脚本。没有新增默认测试项目或发布设备矩阵。

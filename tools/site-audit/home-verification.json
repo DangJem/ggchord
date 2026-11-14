@@ -1,0 +1,117 @@
+{
+  "status": "complete within agreed source/build/image scope",
+  "baseline": "3a6b412",
+  "implementation_commits": [
+    "44fc498",
+    "73fd7a2"
+  ],
+  "home": {
+    "language_pairs": 93,
+    "h1": 1,
+    "modules": 4,
+    "previews": 7,
+    "logo_css_width": 224,
+    "container_max_css_width": 1280,
+    "order": "name, purpose, preview, plot type, guide entry"
+  },
+  "figures": {
+    "full_flagships_rendered": 2,
+    "homepage_previews_rendered": 7,
+    "visually_reviewed": 9,
+    "source_checks": {
+      "radial_ribbon": {
+        "original_records": 12,
+        "all_source_fields_identical": true
+      },
+      "radial_gene": {
+        "original_records": 20,
+        "all_source_fields_identical": true
+      },
+      "sankey_ribbon": {
+        "original_records": 10,
+        "all_source_fields_identical": true
+      },
+      "sankey_gene": {
+        "original_records": 32,
+        "all_source_fields_identical": true
+      }
+    },
+    "correction": {
+      "reason": "Initial gene selector used gene instead of the public gene_poly component and returned zero rows; empty checks are rejected and superseded.",
+      "nonempty_source_verification": true,
+      "verifier_sha256": "fa2f6bf743452d4fa65fdfceeaf7173fd1d282fccbf110c68a02c18a6aaeb6ed",
+      "scope": "Corrected public input comparison only; original PNG render hashes and execution source hashes retained."
+    },
+    "cropped_pngs": 0
+  },
+  "checks": {
+    "exports": 157,
+    "help_topics": 121,
+    "canonical_navigation_records": 132,
+    "synonym_queries": 20,
+    "audited_urls": 582,
+    "old_sections": 1146,
+    "public_aliases": 14,
+    "archive_inputs": 76,
+    "english_download_scripts": 52,
+    "expanded_input_files": 30
+  },
+  "native_processes": {
+    "render_jobs": 2,
+    "return_codes": {
+      "en": 0,
+      "zh": 0
+    },
+    "initial_return_codes": {
+      "en": 1,
+      "zh": 0
+    },
+    "recovery_record": "tools/site-audit/home-build-recovery.json"
+  },
+  "derived_refreshes": [
+    {
+      "scope": "Exact canonical module label correction from maintained Han Markdown source to corresponding generated page and local search records only; no translation of generated HTML, code/anchors/images unchanged.",
+      "before": {
+        "source": "296e870100f84781d2de37873a4550a998793c699ea492662079d84aedf29108",
+        "html": "9e6e4b1fdc6b892edb1b84d667b1fa48d1a5de64c8292ae1a0bad72798b899f6",
+        "index": "34a1e5d97c49146a0ada6f53578fe570cfca3fc31d1b2809082554dd4845b53f",
+        "snapshot": "0549545051468c873e96896526f59b57a31d26626331382a2164703cf4d8ba53"
+      },
+      "source": "website/zh/modes.md",
+      "after": {
+        "source": "77511ab5ead0290cd8c873a8802a35a2092dc4a5384892c44b810c5a59984cf0",
+        "html": "2f59d37a1ab5ddcbdec2d39725affdaacc9792034862ddd1b3eeab0a23d098a5",
+        "index": "a0ea1f0f6445784516516bf0800975e7762f8324dad3c2aa22136c3f7c854082"
+      },
+      "search_fields": 4
+    },
+    {
+      "scope": "Generated source inventory update following the exact maintained module label correction; one zh/modes source digest only, no native page/plot inputs or code changed.",
+      "files": {
+        "tools/teaching-audit/content-pages-v0.27.0.csv": "5c43920ab5c4c23e370f123f93ba2ff11362b6ec1ffb20697d776ce876177385"
+      },
+      "rows": [
+        {
+          "page": "zh/modes",
+          "before": "296e870100f84781d2de37873a4550a998793c699ea492662079d84aedf29108",
+          "after": "77511ab5ead0290cd8c873a8802a35a2092dc4a5384892c44b810c5a59984cf0"
+        }
+      ]
+    }
+  ],
+  "source_snapshot_sha256": "995f86b391dd58e231d780f3f5f49be198f82abd4752055cd20d6b05f40069e0",
+  "unchanged": [
+    "R implementation",
+    "original inputs",
+    "package metadata/namespace",
+    "default tests",
+    "frozen docs/"
+  ],
+  "not_performed": [
+    "Browser layout/viewport/zoom/computed-style or interaction acceptance: excluded by user",
+    "Mobile checks",
+    "Package testthat/build/check and vignette rendering",
+    "Release device/platform matrix",
+    "Merge main, push, deployment or release"
+  ]
+}
