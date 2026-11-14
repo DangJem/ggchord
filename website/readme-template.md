@@ -42,6 +42,22 @@
 
 [{{case}}](website/{{lang}}/collinear.md) · [{{layout}}](website/{{lang}}/collinear-layout.md) · [{{plot-source}}](tools/documentation-examples.R)
 
+### {{radial-title}}
+
+{{radial-caption}}
+
+![{{radial-alt}}](man/figures/flagradial.png)
+
+[{{case}}](website/{{lang}}/radial-synteny.md) · [{{plot-source}}](tools/site-flagships.R)
+
+### {{sankey-title}}
+
+{{sankey-caption}}
+
+![{{sankey-alt}}](man/figures/flagsankey.png)
+
+[{{case}}](website/{{lang}}/sankey.md) · [{{plot-source}}](tools/site-flagships.R)
+
 ### {{circular-title}}
 
 {{circular-caption}}
@@ -115,25 +131,28 @@ view_ggchord(p, width = 10, height = 8, units = "in")
 ggplot2::ggsave("ggchord.png", p, width = 10, height = 8, units = "in", dpi = 144)
 ```
 
-<a id="documentation"></a>
-## {{documentation}}
+<a id="design-inspiration"></a>
+## {{inspiration-title}}
 
-- [{{concepts}}](website/{{lang}}/modes.md) · [{{inputs}}](website/{{lang}}/data.md) · [{{import}}](website/{{lang}}/formats.md)
-- [{{labels}}](website/{{lang}}/labels.md) · [{{styling}}](website/{{lang}}/styling.md) · [{{save}}](website/{{lang}}/output.md)
-- [{{diagnostics}}](website/{{lang}}/diagnostics.md) · [{{reference}}](man/) · [{{changes}}](NEWS.md)
+{{inspiration-intro}}
 
-<details>
-<summary>{{acknowledgements}}</summary>
+### {{inspiration-grammar-title}}
 
-{{thanks}}
+- [ggplot2](https://ggplot2.tidyverse.org/) — {{inspiration-grammar}}
+- [BLAST](https://blast.ncbi.nlm.nih.gov/doc/blast-help/) — {{inspiration-naming}}
+- [Circos](https://circos.ca/) · [circlize](https://github.com/jokergoo/circlize) — {{inspiration-circular}}
 
-- [ggplot2](https://ggplot2.tidyverse.org/) — {{thanks-grammar}}
-- [BLAST](https://blast.ncbi.nlm.nih.gov/doc/blast-help/) — {{thanks-naming}}
-- [Circos](https://circos.ca/) · [circlize](https://github.com/jokergoo/circlize) — {{thanks-circular}}
-- [clinker](https://github.com/gamcil/clinker) · [gggenes](https://github.com/wilkox/gggenes) · [genoPlotR](https://genoplotr.r-forge.r-project.org/) — {{thanks-synteny}}
-- [DNA Features Viewer](https://github.com/Edinburgh-Genome-Foundry/DnaFeaturesViewer) · [gggenomes](https://thackl.github.io/gggenomes/) — {{thanks-features}}
-- [ggview](https://github.com/idmn/ggview) — {{thanks-preview}}
+### {{inspiration-features-title}}
 
-</details>
+- [clinker](https://github.com/gamcil/clinker) · [gggenes](https://github.com/wilkox/gggenes) · [genoPlotR](https://genoplotr.r-forge.r-project.org/) — {{inspiration-synteny}}
+- [gggenomes](https://thackl.github.io/gggenomes/) — {{inspiration-genomes}}
+- [DNA Features Viewer](https://github.com/Edinburgh-Genome-Foundry/DnaFeaturesViewer) — {{inspiration-features}}
+
+### {{inspiration-detail-title}}
+
+- [ggmagnify](https://github.com/hughjonesd/ggmagnify) — {{inspiration-magnify}}
+- [ggmsa](https://bioconductor.org/packages/ggmsa/) · [ggseqalign](https://bioconductor.org/packages/ggseqalign/) — {{inspiration-alignment}}
+- [ggseqlogo](https://omarwagih.github.io/ggseqlogo/) · [Jalview](https://www.jalview.org/help/html/features/annotation.html) — {{inspiration-columns}}
+- [ggview](https://github.com/idmn/ggview) — {{inspiration-preview}}
 
 [{{issues}}](https://github.com/DangJem/ggchord/issues) · [MIT {{license}}](LICENSE)

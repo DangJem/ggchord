@@ -207,80 +207,92 @@
     "en": "Preview and save at the same explicit dimensions so labels are arranged for the intended figure size.",
     "zh": "按相同的明确宽高预览并保存，让标签按预定成图尺寸排布。"
   },
-  "documentation": {
-    "en": "Documentation and resources",
-    "zh": "说明与资源"
+  "inspiration-grammar": {
+    "en": "Provides the layered grammar and the division of responsibilities between mappings, scales, guides, geometry, coordinates and themes. ggchord follows this model so users can compose layers and supply their own scales and styles.",
+    "zh": "提供分层绘图语法，以及映射、标度、图例、几何、坐标与主题的职责划分。ggchord 沿用这一模型，让用户组合独立图层，并使用自己的标度和样式。"
   },
-  "concepts": {
-    "en": "Plotting concepts",
-    "zh": "绘图基本概念"
+  "inspiration-naming": {
+    "en": "Informs the compact query/subject field names used to trace alignment records, endpoints and sequence identifiers. Plotting consumes existing results rather than running an alignment program.",
+    "zh": "为紧凑的 query/subject 字段命名提供参照，便于追踪比对记录、端点与序列标识。绘图读取已有结果，不在绘图阶段运行比对程序。"
   },
-  "inputs": {
-    "en": "Input tables",
-    "zh": "输入数据表"
+  "inspiration-circular": {
+    "en": "Provide references for circular information hierarchy, restrained ribbon display, multi-track organization and the reading order of sequence relationships. These ideas inform the arrangement of backbones, annotations and links.",
+    "zh": "为环形信息层级、克制的连接带表达、多轨道组织及关系阅读顺序提供参照，帮助组织序列骨架、注释与连接之间的层次。"
   },
-  "import": {
-    "en": "File formats",
-    "zh": "文件导入"
+  "inspiration-synteny": {
+    "en": "Offer clear examples of strand-aware gene arrows, gene-cluster comparisons and linear synteny. They inform how sequence direction, feature placement and connections are presented together.",
+    "zh": "为保留链方向的基因箭头、基因簇比较和直线共线性提供清晰范例，帮助协调序列方向、特征位置与连接关系的表达。"
   },
-  "labels": {
-    "en": "Labels",
-    "zh": "标签布局"
+  "inspiration-features": {
+    "en": "Provides a reference for readable feature annotations, crowded-label handling and local feature layouts. It informs the emphasis on connecting labels clearly to their source intervals.",
+    "zh": "为可读的特征注释、拥挤标签处理和局部特征布局提供参照，帮助明确标签与其来源区间之间的对应关系。"
   },
-  "styling": {
-    "en": "Appearance",
-    "zh": "外观与主题"
-  },
-  "save": {
-    "en": "Figure output",
-    "zh": "图形输出"
-  },
-  "diagnostics": {
-    "en": "Diagnostics",
-    "zh": "诊断与排错"
-  },
-  "reference": {
-    "en": "Function reference sources",
-    "zh": "函数参考源码"
-  },
-  "changes": {
-    "en": "Changes",
-    "zh": "变更记录"
-  },
-  "acknowledgements": {
-    "en": "Design references and acknowledgements",
-    "zh": "设计参考与致谢"
-  },
-  "thanks": {
-    "en": "ggchord draws on the following projects and public tools for design and comparison:",
-    "zh": "ggchord 的设计与比较参考了以下项目和公共工具："
-  },
-  "thanks-grammar": {
-    "en": "layered graphical grammar.",
-    "zh": "分层绘图语法。"
-  },
-  "thanks-naming": {
-    "en": "query/subject field naming.",
-    "zh": "query/subject 字段命名。"
-  },
-  "thanks-circular": {
-    "en": "circular hierarchy and tracks.",
-    "zh": "环形信息层级与轨道表达。"
-  },
-  "thanks-synteny": {
-    "en": "gene arrows and synteny comparisons.",
-    "zh": "基因箭头与共线性比较。"
-  },
-  "thanks-features": {
-    "en": "annotation placement and local comparisons.",
-    "zh": "注释布局与局部比较。"
-  },
-  "thanks-preview": {
-    "en": "previewing figures at export dimensions.",
-    "zh": "按导出尺寸预览图形。"
+  "inspiration-preview": {
+    "en": "Informs the workflow of previewing a static figure at its intended export size. ggchord uses view_ggchord() for sized preview and standard ggsave() for saving.",
+    "zh": "为按预定导出尺寸检查静态图形提供流程参照。ggchord 用 view_ggchord() 进行指定尺寸预览，用标准 ggsave() 保存。"
   },
   "license": {
     "en": "license",
     "zh": "许可证"
+  },
+  "radial-title": {
+    "en": "Radial · synteny along radial spokes",
+    "zh": "Radial · 径向辐条上的共线性"
+  },
+  "radial-caption": {
+    "en": "Derived from the Chord flagship, using its source preparation and selected features. Radial backbones expose interval relationships while preserving sequence identities and native positions.",
+    "zh": "从弦图旗舰复用来源准备与精选特征，改用径向辐条骨架展示区间关系；序列身份与原生位置保持可追溯。"
+  },
+  "radial-alt": {
+    "en": "Radial flagship derived from the four-genome Chord example",
+    "zh": "从四基因组弦图派生的 Radial 旗舰"
+  },
+  "sankey-title": {
+    "en": "Sankey · source intervals across two mirrored columns",
+    "zh": "Sankey · 镜像双列中的来源区间"
+  },
+  "sankey-caption": {
+    "en": "Derived from the Collinear flagship, retaining its selected genes and HSPs. Mirrored sequence columns show observed interval relationships; ribbon width is not a conserved flow quantity.",
+    "zh": "从共线性旗舰派生，保留对应的精选基因与 HSP。序列镜像排列在两列中，连接带表示已有区间关系，带宽不代表守恒流量。"
+  },
+  "sankey-alt": {
+    "en": "Sankey flagship derived from the four-genome Collinear example",
+    "zh": "从四基因组共线性图派生的 Sankey 旗舰"
+  },
+  "inspiration-grammar-title": {
+    "en": "Graphical grammar and sequence relationships",
+    "zh": "绘图语法与序列关系表达"
+  },
+  "inspiration-features-title": {
+    "en": "Gene arrows, annotation placement and local comparison",
+    "zh": "基因箭头、注释布局与局部比较"
+  },
+  "inspiration-genomes": {
+    "en": "Informs tidy multi-table inputs, focus/sync workflows, feature stacking, local anchoring and local display reversal. Its approach helps keep data preparation distinct from display choices.",
+    "zh": "为 tidy 多表输入、focus/sync 工作流、特征堆叠、局部锚定与局部显示翻转提供参照，帮助区分数据整理和显示选择的职责。"
+  },
+  "inspiration-detail-title": {
+    "en": "Local magnification, aligned characters and figure preview",
+    "zh": "局部放大、对齐字符与图形预览"
+  },
+  "inspiration-magnify": {
+    "en": "Provides a reference for connecting an overview to a magnified inset. ggchord develops this presentation idea around explicit source intervals and independently registered sequence views.",
+    "zh": "为整体图与局部放大图之间的关联表达提供参照。ggchord 围绕明确的来源区间和独立注册的序列视图发展这一表达方式。"
+  },
+  "inspiration-alignment": {
+    "en": "Inform design studies of DNA/protein alignment displays, character colouring and composition with ggplot2 graphics, especially the relationship between alignment columns, gaps and character-level detail.",
+    "zh": "为 DNA、蛋白对齐显示、字符着色及与 ggplot2 图形组合提供设计研究参照，尤其关注对齐列、gap 与字符细节之间的对应关系。"
+  },
+  "inspiration-columns": {
+    "en": "Provide comparison references in character-view design studies: sequence-logo semantics, alignment-column annotations, consensus and conservation displays, and the relationship between per-column summaries and individual sequences.",
+    "zh": "在字符视图的设计研究中，用于比较序列 logo、对齐列注释、共识与保守性的表达方式，以及逐列统计与单条序列之间的关系。"
+  },
+  "inspiration-title": {
+    "en": "Design inspiration",
+    "zh": "设计灵感来源"
+  },
+  "inspiration-intro": {
+    "en": "The following projects inform ggchord’s graphical grammar, sequence layouts and detail views. Each entry describes the aspect that influenced the design.",
+    "zh": "以下项目为 ggchord 的绘图语法、序列布局与细节视图提供设计灵感，各项分别说明具体的启发方向。"
   }
 }

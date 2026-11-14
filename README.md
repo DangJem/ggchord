@@ -42,6 +42,22 @@ Compare four genomes on a shared base-pair scale. Selected CDS sit on either sid
 
 [Complete example](website/en/collinear.md) · [Alignment and arrangement](website/en/collinear-layout.md) · [Plot source](tools/documentation-examples.R)
 
+### Radial · synteny along radial spokes
+
+Derived from the Chord flagship, using its source preparation and selected features. Radial backbones expose interval relationships while preserving sequence identities and native positions.
+
+![Radial flagship derived from the four-genome Chord example](man/figures/flagradial.png)
+
+[Complete example](website/en/radial-synteny.md) · [Plot source](tools/site-flagships.R)
+
+### Sankey · source intervals across two mirrored columns
+
+Derived from the Collinear flagship, retaining its selected genes and HSPs. Mirrored sequence columns show observed interval relationships; ribbon width is not a conserved flow quantity.
+
+![Sankey flagship derived from the four-genome Collinear example](man/figures/flagsankey.png)
+
+[Complete example](website/en/sankey.md) · [Plot source](tools/site-flagships.R)
+
 ### Circular · dense pETDuet-1 annotations
 
 A complete circular map with 20 features, five reference primers and 58 grouped cut positions from the declared enzyme set. Original sequence positions and annotation identities are retained.
@@ -115,25 +131,28 @@ view_ggchord(p, width = 10, height = 8, units = "in")
 ggplot2::ggsave("ggchord.png", p, width = 10, height = 8, units = "in", dpi = 144)
 ```
 
-<a id="documentation"></a>
-## Documentation and resources
+<a id="design-inspiration"></a>
+## Design inspiration
 
-- [Plotting concepts](website/en/modes.md) · [Input tables](website/en/data.md) · [File formats](website/en/formats.md)
-- [Labels](website/en/labels.md) · [Appearance](website/en/styling.md) · [Figure output](website/en/output.md)
-- [Diagnostics](website/en/diagnostics.md) · [Function reference sources](man/) · [Changes](NEWS.md)
+The following projects inform ggchord’s graphical grammar, sequence layouts and detail views. Each entry describes the aspect that influenced the design.
 
-<details>
-<summary>Design references and acknowledgements</summary>
+### Graphical grammar and sequence relationships
 
-ggchord draws on the following projects and public tools for design and comparison:
+- [ggplot2](https://ggplot2.tidyverse.org/) — Provides the layered grammar and the division of responsibilities between mappings, scales, guides, geometry, coordinates and themes. ggchord follows this model so users can compose layers and supply their own scales and styles.
+- [BLAST](https://blast.ncbi.nlm.nih.gov/doc/blast-help/) — Informs the compact query/subject field names used to trace alignment records, endpoints and sequence identifiers. Plotting consumes existing results rather than running an alignment program.
+- [Circos](https://circos.ca/) · [circlize](https://github.com/jokergoo/circlize) — Provide references for circular information hierarchy, restrained ribbon display, multi-track organization and the reading order of sequence relationships. These ideas inform the arrangement of backbones, annotations and links.
 
-- [ggplot2](https://ggplot2.tidyverse.org/) — layered graphical grammar.
-- [BLAST](https://blast.ncbi.nlm.nih.gov/doc/blast-help/) — query/subject field naming.
-- [Circos](https://circos.ca/) · [circlize](https://github.com/jokergoo/circlize) — circular hierarchy and tracks.
-- [clinker](https://github.com/gamcil/clinker) · [gggenes](https://github.com/wilkox/gggenes) · [genoPlotR](https://genoplotr.r-forge.r-project.org/) — gene arrows and synteny comparisons.
-- [DNA Features Viewer](https://github.com/Edinburgh-Genome-Foundry/DnaFeaturesViewer) · [gggenomes](https://thackl.github.io/gggenomes/) — annotation placement and local comparisons.
-- [ggview](https://github.com/idmn/ggview) — previewing figures at export dimensions.
+### Gene arrows, annotation placement and local comparison
 
-</details>
+- [clinker](https://github.com/gamcil/clinker) · [gggenes](https://github.com/wilkox/gggenes) · [genoPlotR](https://genoplotr.r-forge.r-project.org/) — Offer clear examples of strand-aware gene arrows, gene-cluster comparisons and linear synteny. They inform how sequence direction, feature placement and connections are presented together.
+- [gggenomes](https://thackl.github.io/gggenomes/) — Informs tidy multi-table inputs, focus/sync workflows, feature stacking, local anchoring and local display reversal. Its approach helps keep data preparation distinct from display choices.
+- [DNA Features Viewer](https://github.com/Edinburgh-Genome-Foundry/DnaFeaturesViewer) — Provides a reference for readable feature annotations, crowded-label handling and local feature layouts. It informs the emphasis on connecting labels clearly to their source intervals.
+
+### Local magnification, aligned characters and figure preview
+
+- [ggmagnify](https://github.com/hughjonesd/ggmagnify) — Provides a reference for connecting an overview to a magnified inset. ggchord develops this presentation idea around explicit source intervals and independently registered sequence views.
+- [ggmsa](https://bioconductor.org/packages/ggmsa/) · [ggseqalign](https://bioconductor.org/packages/ggseqalign/) — Inform design studies of DNA/protein alignment displays, character colouring and composition with ggplot2 graphics, especially the relationship between alignment columns, gaps and character-level detail.
+- [ggseqlogo](https://omarwagih.github.io/ggseqlogo/) · [Jalview](https://www.jalview.org/help/html/features/annotation.html) — Provide comparison references in character-view design studies: sequence-logo semantics, alignment-column annotations, consensus and conservation displays, and the relationship between per-column summaries and individual sequences.
+- [ggview](https://github.com/idmn/ggview) — Informs the workflow of previewing a static figure at its intended export size. ggchord uses view_ggchord() for sized preview and standard ggsave() for saving.
 
 [Report an issue](https://github.com/DangJem/ggchord/issues) · [MIT license](LICENSE)

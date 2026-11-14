@@ -42,6 +42,22 @@
 
 [完整案例](website/zh/collinear.md) · [对齐与排列](website/zh/collinear-layout.md) · [绘图源码](tools/documentation-examples.R)
 
+### Radial · 径向辐条上的共线性
+
+从弦图旗舰复用来源准备与精选特征，改用径向辐条骨架展示区间关系；序列身份与原生位置保持可追溯。
+
+![从四基因组弦图派生的 Radial 旗舰](man/figures/flagradial.png)
+
+[完整案例](website/zh/radial-synteny.md) · [绘图源码](tools/site-flagships.R)
+
+### Sankey · 镜像双列中的来源区间
+
+从共线性旗舰派生，保留对应的精选基因与 HSP。序列镜像排列在两列中，连接带表示已有区间关系，带宽不代表守恒流量。
+
+![从四基因组共线性图派生的 Sankey 旗舰](man/figures/flagsankey.png)
+
+[完整案例](website/zh/sankey.md) · [绘图源码](tools/site-flagships.R)
+
 ### Circular · pETDuet-1 密集注释
 
 完整圆图包含 20 个特征、5 个参考引物，以及声明酶集合中的 58 个合并切点位置。序列位置与注释身份均来自原始输入。
@@ -115,25 +131,28 @@ view_ggchord(p, width = 10, height = 8, units = "in")
 ggplot2::ggsave("ggchord.png", p, width = 10, height = 8, units = "in", dpi = 144)
 ```
 
-<a id="documentation"></a>
-## 说明与资源
+<a id="design-inspiration"></a>
+## 设计灵感来源
 
-- [绘图基本概念](website/zh/modes.md) · [输入数据表](website/zh/data.md) · [文件导入](website/zh/formats.md)
-- [标签布局](website/zh/labels.md) · [外观与主题](website/zh/styling.md) · [图形输出](website/zh/output.md)
-- [诊断与排错](website/zh/diagnostics.md) · [函数参考源码](man/) · [变更记录](NEWS.md)
+以下项目为 ggchord 的绘图语法、序列布局与细节视图提供设计灵感，各项分别说明具体的启发方向。
 
-<details>
-<summary>设计参考与致谢</summary>
+### 绘图语法与序列关系表达
 
-ggchord 的设计与比较参考了以下项目和公共工具：
+- [ggplot2](https://ggplot2.tidyverse.org/) — 提供分层绘图语法，以及映射、标度、图例、几何、坐标与主题的职责划分。ggchord 沿用这一模型，让用户组合独立图层，并使用自己的标度和样式。
+- [BLAST](https://blast.ncbi.nlm.nih.gov/doc/blast-help/) — 为紧凑的 query/subject 字段命名提供参照，便于追踪比对记录、端点与序列标识。绘图读取已有结果，不在绘图阶段运行比对程序。
+- [Circos](https://circos.ca/) · [circlize](https://github.com/jokergoo/circlize) — 为环形信息层级、克制的连接带表达、多轨道组织及关系阅读顺序提供参照，帮助组织序列骨架、注释与连接之间的层次。
 
-- [ggplot2](https://ggplot2.tidyverse.org/) — 分层绘图语法。
-- [BLAST](https://blast.ncbi.nlm.nih.gov/doc/blast-help/) — query/subject 字段命名。
-- [Circos](https://circos.ca/) · [circlize](https://github.com/jokergoo/circlize) — 环形信息层级与轨道表达。
-- [clinker](https://github.com/gamcil/clinker) · [gggenes](https://github.com/wilkox/gggenes) · [genoPlotR](https://genoplotr.r-forge.r-project.org/) — 基因箭头与共线性比较。
-- [DNA Features Viewer](https://github.com/Edinburgh-Genome-Foundry/DnaFeaturesViewer) · [gggenomes](https://thackl.github.io/gggenomes/) — 注释布局与局部比较。
-- [ggview](https://github.com/idmn/ggview) — 按导出尺寸预览图形。
+### 基因箭头、注释布局与局部比较
 
-</details>
+- [clinker](https://github.com/gamcil/clinker) · [gggenes](https://github.com/wilkox/gggenes) · [genoPlotR](https://genoplotr.r-forge.r-project.org/) — 为保留链方向的基因箭头、基因簇比较和直线共线性提供清晰范例，帮助协调序列方向、特征位置与连接关系的表达。
+- [gggenomes](https://thackl.github.io/gggenomes/) — 为 tidy 多表输入、focus/sync 工作流、特征堆叠、局部锚定与局部显示翻转提供参照，帮助区分数据整理和显示选择的职责。
+- [DNA Features Viewer](https://github.com/Edinburgh-Genome-Foundry/DnaFeaturesViewer) — 为可读的特征注释、拥挤标签处理和局部特征布局提供参照，帮助明确标签与其来源区间之间的对应关系。
+
+### 局部放大、对齐字符与图形预览
+
+- [ggmagnify](https://github.com/hughjonesd/ggmagnify) — 为整体图与局部放大图之间的关联表达提供参照。ggchord 围绕明确的来源区间和独立注册的序列视图发展这一表达方式。
+- [ggmsa](https://bioconductor.org/packages/ggmsa/) · [ggseqalign](https://bioconductor.org/packages/ggseqalign/) — 为 DNA、蛋白对齐显示、字符着色及与 ggplot2 图形组合提供设计研究参照，尤其关注对齐列、gap 与字符细节之间的对应关系。
+- [ggseqlogo](https://omarwagih.github.io/ggseqlogo/) · [Jalview](https://www.jalview.org/help/html/features/annotation.html) — 在字符视图的设计研究中，用于比较序列 logo、对齐列注释、共识与保守性的表达方式，以及逐列统计与单条序列之间的关系。
+- [ggview](https://github.com/idmn/ggview) — 为按预定导出尺寸检查静态图形提供流程参照。ggchord 用 view_ggchord() 进行指定尺寸预览，用标准 ggsave() 保存。
 
 [问题反馈](https://github.com/DangJem/ggchord/issues) · [MIT 许可证](LICENSE)
