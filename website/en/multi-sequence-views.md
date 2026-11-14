@@ -53,9 +53,21 @@ Radial does not use Chord-specific radii/curvature, so only the derived backbone
 
 ### Radial {#flagship-radial}
 
+Use an 11 × 10 inch canvas, spokes starting at 45°, and horizontal sequence IDs. All 20 original CDS geometries remain; the name layer selects one CDS per sequence, preferring a non-hypothetical annotation and then longer length. Identity retains numeric interval proportions below the plot, freeing the main panel width.
+
+```r
+view_ggchord(flag_radial, width = 11, height = 10, units = "in")
+```
+
 {{manualfigure:flagradial}}
 
 ### Sankey {#flagship-sankey}
+
+Four sequences stack in each column, using a 10 × 12 inch portrait canvas and explicit column spacing. The 16 original CDS geometries and 10 selected HSPs remain; thicker arrows and one representative name per sequence improve separation. Complete coordinates and the Identity guide remain, while the homepage preview separately omits dense coordinate text.
+
+```r
+view_ggchord(flag_sankey, width = 10, height = 12, units = "in")
+```
 
 {{manualfigure:flagsankey}}
 
@@ -105,3 +117,5 @@ Automatic Identity rulers reserve length from measured boundary text rather than
 ## Preview and save {#exercise}
 
 Choose an HSP and identify its two sources. Restore default adjacency and explain a possible omission. Save your chosen view at target size and retain the input table.
+
+The Chord and Collinear complete flagships retain their designs. Radial and Sankey use the revised export dimensions and decoration above, with original HSP and CDS inputs preserved.

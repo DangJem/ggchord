@@ -35,18 +35,52 @@ flagship_theme <- theme_ggchord_publication() +
     plot.margin = margin(12, 16, 12, 16)
   )
 # ---- flagshipmulti ----
+relationship_identity <- ggplot2::guide_coloursteps(
+  available_aes = "ribbon_fill", even.steps = FALSE, show.limits = TRUE,
+  position = "bottom", direction = "horizontal",
+  theme = theme(
+    legend.key.width = unit(130, "mm"), legend.key.height = unit(4, "mm"),
+    legend.title = element_text(size = 10), legend.text = element_text(size = 9),
+    legend.margin = margin(2, 2, 2, 2)
+  )
+)
+relationship_guides <- guides(
+  seq_colour = "none",
+  gene_fill = guide_ggchord_legend(
+    nrow = 1, position = "bottom", override.aes = list(strand = c("+", "-"))
+  ),
+  ribbon_fill = relationship_identity
+)
+relationship_theme <- doc_theme + theme(
+  legend.position = "bottom", legend.box = "vertical",
+  legend.title = element_text(size = 10, face = "bold"),
+  legend.text = element_text(size = 9),
+  legend.box.spacing = unit(3, "mm"), legend.spacing.y = unit(2, "mm"),
+  legend.margin = margin(2, 2, 2, 2),
+  ggchord.axis.text = element_text(size = 9),
+  plot.margin = margin(8, 10, 8, 10),
+  plot.title = element_text(size = 17), plot.subtitle = element_text(size = 10)
+)
+radial_labels <- chord_genes |>
+  group_by(accver) |>
+  arrange(grepl("hypothetical", anno, ignore.case = TRUE), desc(end - start), .by_group = TRUE) |>
+  slice_head(n = 1) |>
+  ungroup()
+radial_position <- position_strand(c("+" = -0.055, "-" = 0.055))
 flag_radial <- ggchord(show_sequences, show_links) +
-  geom_link_ribbon(adjacent_only = FALSE, link_avoid = "smooth", alpha = 0.46, linewidth = 0.14) +
+  geom_link_ribbon(adjacent_only = FALSE, link_avoid = "smooth", alpha = 0.46, linewidth = 0.20) +
   geom_seq(seq_orientation = show_optimization$seq_orientation, seq_gap = 0.3, linewidth = 1.1) +
-  geom_gene(data = chord_genes, position = chord_position, width = 0.025) +
-  geom_gene_label_repel(data = chord_labels, label_layout = "radial", label_wrap = 24,
-    size = 2.8, label_max_lines = 3, position = chord_position) +
-  geom_seq_label(size = 4) +
-  scale_seq_colour_manual(values = seq_palette, name = "Sequence", guide = sequence_guide) +
+  geom_gene(data = chord_genes, position = radial_position, width = 0.065) +
+  geom_gene_label_repel(data = radial_labels, label_layout = "radial", label_wrap = 22,
+    size = 3.3, label_max_lines = 3, position = radial_position) +
+  geom_seq_label(size = 4.4, seq_label_orientation = "horizontal") +
+  scale_seq_colour_manual(values = seq_palette, name = "Sequence") +
   scale_gene_fill_manual(values = gene_palette, breaks = c("+", "-"), name = "Strand") +
-  guides(gene_fill = strand_guide, ribbon_fill = identity_guide) +
-  doc_axis() + coord_radial_synteny() + doc_theme +
-  labs(title = "Four genomes, a radial view", subtitle = "Derived from the retained Chord flagship")
+  scale_seq_position_continuous(n.breaks = 2, minor_breaks = NULL,
+    labels = function(x) format(x, scientific = FALSE, big.mark = ",", trim = TRUE)) +
+  coord_radial_synteny(start_angle = 45, inner_radius = 0.7) +
+  relationship_theme + relationship_guides +
+  labs(title = "Four genomes, a radial view", subtitle = "Original Chord sources; one representative CDS name per sequence")
 sankey_labels <- show_linear_features |>
   group_by(accver) |>
   arrange(grepl("hypothetical", anno, ignore.case = TRUE), desc(end - start), .by_group = TRUE) |>
@@ -54,20 +88,21 @@ sankey_labels <- show_linear_features |>
   ungroup()
 flag_sankey <- ggchord(show_sequences, gene_data = show_linear_features) +
   geom_link_ribbon(aes(ribbon_fill = pident), data = show_adjacent,
-    link_avoid = "smooth", alpha = 0.48, linewidth = 0.22) +
+    link_avoid = "smooth", alpha = 0.48, linewidth = 0.25) +
   geom_link_ribbon(aes(ribbon_fill = pident), data = show_cross,
     adjacent_only = FALSE, link_avoid = "smooth", alpha = 0.28, linewidth = 0.3) +
-  geom_seq(seq_gap = 0.42, linewidth = 1) +
-  geom_gene(position = position_strand(0.09), width = 0.045) +
+  geom_seq(seq_gap = 0.30, linewidth = 1.1) +
+  geom_gene(position = position_strand(0.09), width = 0.075) +
   geom_gene_label(data = sankey_labels,
     label_orientation = "horizontal", label_side = "outside", label_overlap = "allow",
-    label_radial_offset = 0.22, label_wrap = 16, position = position_strand(0.09), size = 2.6) +
-  geom_seq_label(size = 4) +
-  scale_seq_colour_manual(values = seq_palette, name = "Sequence", guide = sequence_guide) +
+    label_radial_offset = 0.25, label_wrap = 16, position = position_strand(0.09), size = 3.3) +
+  geom_seq_label(size = 4.4) +
+  scale_seq_colour_manual(values = seq_palette, name = "Sequence") +
   scale_gene_fill_manual(values = gene_palette, breaks = c("+", "-"), name = "Strand") +
-  guides(gene_fill = strand_guide, ribbon_fill = identity_guide) +
-  doc_axis() + coord_sankey() + doc_theme +
-  labs(title = "Four genomes, mirrored relationships", subtitle = "Derived from the retained Collinear flagship")
+  scale_seq_position_continuous(n.breaks = 2, minor_breaks = NULL,
+    labels = function(x) format(x, scientific = FALSE, big.mark = ",", trim = TRUE)) +
+  coord_sankey(column_gap = 5.2) + relationship_theme + relationship_guides +
+  labs(title = "Four genomes, mirrored relationships", subtitle = "Original Collinear sources; independent query and subject displays")
 # ---- fusionoverview ----
 flagship_position <- position_strand(0.045)
 flagship_base <- ggchord(flagship_sequences, flagship_hsp, feature_data = flagship_features) +

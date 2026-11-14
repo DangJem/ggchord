@@ -1,0 +1,81 @@
+[
+  {
+    "id": "homechord",
+    "object": "home_chord",
+    "name": "Chord",
+    "width": 5,
+    "height": 4.6,
+    "dpi": 160,
+    "file": "man/figures/homechord.png",
+    "full": "flagchord",
+    "source": "Existing source-backed examples; display-only preview, never cropped; original geometry input records retained; reduced annotation text/legends documented in generator."
+  },
+  {
+    "id": "homecollinear",
+    "object": "home_collinear",
+    "name": "Collinear",
+    "width": 5,
+    "height": 4.6,
+    "dpi": 160,
+    "file": "man/figures/homecollinear.png",
+    "full": "flaglinear",
+    "source": "Existing source-backed examples; display-only preview, never cropped; original geometry input records retained; reduced annotation text/legends documented in generator."
+  },
+  {
+    "id": "homeradial",
+    "object": "home_radial",
+    "name": "Radial",
+    "width": 5,
+    "height": 4.6,
+    "dpi": 160,
+    "file": "man/figures/homeradial.png",
+    "full": "flagradial",
+    "source": "Existing source-backed examples; display-only preview, never cropped; original geometry input records retained; reduced annotation text/legends documented in generator."
+  },
+  {
+    "id": "homesankey",
+    "object": "home_sankey",
+    "name": "Sankey",
+    "width": 5,
+    "height": 4.6,
+    "dpi": 160,
+    "file": "man/figures/homesankey.png",
+    "full": "flagsankey",
+    "source": "Existing source-backed examples; display-only preview, never cropped; original geometry input records retained; reduced annotation text/legends documented in generator."
+  },
+  {
+    "id": "homecircular",
+    "object": "home_circular",
+    "name": "Circular",
+    "width": 6,
+    "height": 5.2,
+    "dpi": 160,
+    "file": "man/figures/homecircular.png",
+    "full": "completepuc",
+    "source": "Existing source-backed examples; display-only preview, never cropped; original geometry input records retained; reduced annotation text/legends documented in generator."
+  },
+  {
+    "id": "homedotplot",
+    "object": "home_dotplot",
+    "name": "Dotplot",
+    "width": 6.5,
+    "height": 5.2,
+    "dpi": 160,
+    "file": "man/figures/homedotplot.png",
+    "full": "flagdotplot",
+    "source": "Existing source-backed examples; display-only preview, never cropped; original geometry input records retained; reduced annotation text/legends documented in generator."
+  },
+  {
+    "id": "homefusion",
+    "object": "home_fusion",
+    "name": "Fusion",
+    "width": 7,
+    "height": 5.5,
+    "dpi": 160,
+    "file": "man/figures/homefusion.png",
+    "full": "coursefusion",
+    "source": "Existing coursefusion two-panel example; same source sequences and first observed fusion_links HSP; preview-only centre text and decoration.",
+    "full_file": "coursefusion.png",
+    "page": "fusion-start.html"
+  }
+]

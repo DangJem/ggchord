@@ -43,7 +43,7 @@ def task_cards(lang):
     specs=[
       ('multi-sequence','多序列关系','Multi-sequence relationships','Chord · Collinear · Radial · Sankey','viewradial','序列 ID、完整长度；连接和特征按需加入。','Sequence IDs, complete lengths; optional links and features.'),
       ('circular','单序列圆图','Single-sequence circular maps','Circular','showcaseplasmid','一条序列长度与已有注释表；计算或搜索另需 DNA。','One sequence length and prepared annotations; computations need DNA.'),
-      ('dotplot','HSP 点图','HSP Dotplot','Dotplot','viewdotplot','已有 HSP 端点与完整来源长度；不运行比对。','Existing HSP endpoints and complete lengths; no alignment run.'),
+      ('dotplot','序列比对点图','Sequence alignment Dotplot','Dotplot','viewdotplot','已有 HSP 端点与完整来源长度；不运行比对。','Existing HSP endpoints and complete lengths; no alignment run.'),
       ('fusion','多视图组合','Multi-view composition','Fusion','fusionview','独立有效的已注册图与明确来源区间；不是新的 Coord。','Independently valid registered plots and explicit source intervals.')]
     result='<div class="task-cards">'
     for slug,cn,en,views,fig,input_cn,input_en in specs:
@@ -63,23 +63,26 @@ def manual_figure(key,lang,base='../assets'):
 
 def manual_home(lang,base):
     zh=lang=='zh'
-    def picture(key,label,target):
-        r=manual_figures()[key]
-        return (f'<a class="home-preview" href="{target}"><img src="{base}/{key}.png" alt="{html.escape(r["caption"][lang],quote=True)}" '
-          f'width="{round(r["width"]*r["dpi"])}" height="{round(r["height"]*r["dpi"])}" decoding="async"><span>{label}</span></a>')
-    four=''.join(picture(key,label,'multi-sequence-views.html#flagship-'+label.lower()) for key,label in [('flagchord','Chord'),('flaglinear','Collinear'),('flagradial','Radial'),('flagsankey','Sankey')])
-    panels=[('multi-sequence','I','多序列关系','Multi-sequence relationships',four,'home-four'),
-      ('circular','II','单序列圆图','Single-sequence circular maps',picture('flagcircular','Circular','circular.html'),''),
-      ('dotplot','III','HSP 点图','HSP Dotplot',picture('flagdotplot','Dotplot','dotplot.html'),''),
-      ('fusion','IV','多视图组合','Multi-view composition',picture('flagfusion','Fusion','fusion.html'),'')]
-    minimums={'multi-sequence':('序列 ID 与完整长度；按需加入 HSP 和注释。','Sequence IDs and complete lengths; optional HSPs and annotations.'),
-      'circular':('一条序列长度与已有注释；识别功能另需 DNA。','One complete sequence and annotations; recognition also needs DNA.'),
-      'dotplot':('完整来源长度与 HSP 四端点。','Complete source lengths and four HSP endpoints.'),
-      'fusion':('独立有效视图与明确的源区间。','Valid independent views and explicit source intervals.')}
-    cards=''.join(f'<section class="home-module"><h2><a href="{slug}.html"><span class="module-index">{number}</span> {cn if zh else en}</a></h2><div class="home-module-art {css}">{art}</div><p class="home-minimum">{minimums[slug][0 if zh else 1]}</p></section>' for slug,number,cn,en,art,css in panels)
-    logo=responsive_image('logo',lang,base,eager=True,css='manual-logo')
-    return ('<div class="home-shell"><section class="manual-brand">'+logo+'<h1>ggchord</h1><p class="manual-tagline">'+
-      ('用一致的图层语法，构建序列关系图与注释图。' if zh else 'Build sequence relationship and annotation plots with consistent layer grammar.')+
-      '</p><div class="manual-actions"><a class="primary-action" href="multi-sequence-start.html">'+('绘制第一张图' if zh else 'Draw a first plot')+'</a><a href="#modules">'+('选择绘图任务' if zh else 'Choose a plotting task')+'</a></div><nav class="home-features" aria-label="'+('核心能力' if zh else 'Core capabilities')+'"><a href="multi-sequence-views.html#input">'+('视图转换' if zh else 'Switch views')+'</a><a href="parameters.html">'+('灵活的参数格式' if zh else 'Flexible parameter formats')+'</a><a href="fusion-start.html">'+('组合与输出' if zh else 'Composition and output')+'</a></nav><p class="home-contract">'+
-      ('多序列包含四种 Coord；Fusion 是独立视图的组合层。' if zh else 'Four relationship Coord types. Fusion combines independent views.')+
-      '</p></section><div class="home-capabilities" id="modules">'+cards+'</div></div>')
+    content=json.loads((ROOT/'website/home.json').read_text())
+    previews={row['id']:row for row in json.loads((ROOT/'website/home-previews.json').read_text())}
+    full=manual_figures()
+    escape=lambda value:html.escape(value,quote=True)
+    def picture(key):
+        row=previews[key];original=full.get(row['full'],{'page':row.get('page')})
+        complete=row.get('full_file',row['full']+'.png')
+        text=(content['modules'][next(i for i,m in enumerate(content['modules']) if key in m['figures'])]['title'][lang]+' · '+row['name'])
+        return (f'<figure class="home-preview"><a class="figure-link" href="{base}/{complete}" data-code-url="{original["page"]}" aria-label="'+
+          escape(('查看完整图：' if zh else 'View complete figure: ')+row['name'])+f'"><img src="{base}/{key}.png" alt="{escape(text)}" '
+          f'width="{round(row["width"]*row["dpi"])}" height="{round(row["height"]*row["dpi"])}" loading="lazy" decoding="async"></a>'
+          f'<figcaption>{row["name"]}</figcaption></figure>')
+    cards=[]
+    for module in content['modules']:
+        title=escape(module['title'][lang]);purpose=escape(module['purpose'][lang])
+        grid=' home-four' if len(module['figures'])==4 else ''
+        cards.append(f'<section class="home-module" aria-labelledby="home-{module["slug"]}"><h2 id="home-{module["slug"]}"><span class="module-index">{module["number"]}</span>{title}</h2>'
+          f'<p class="home-purpose">{purpose}</p><div class="home-module-art{grid}">'+''.join(picture(key) for key in module['figures'])+'</div>'
+          f'<div class="home-module-actions"><a class="module-entry" href="{module["entry"]}">'+('进入教程' if zh else 'Open guide')+' →</a>'
+          f'<a class="home-source" href="{base}/home-previews.R">'+('预览源码' if zh else 'Preview source')+'</a></div></section>')
+    features=''.join('<a href="'+item['url']+'"><strong>'+escape(item['title'][lang])+'</strong><span>'+escape(item['description'][lang])+'</span></a>' for item in content['capabilities'])
+    hero=content['hero']
+    return ('<div class="home-shell"><section class="home-introduction"><div class="home-intro-copy"><p class="eyebrow">'+escape(hero['eyebrow'][lang])+'</p><h1>'+escape(hero['title'][lang])+'</h1><p class="home-description">'+escape(hero['description'][lang])+'</p><div class="home-actions"><a class="primary-action" href="multi-sequence-start.html">'+('绘制第一张图' if zh else 'Draw a first plot')+'</a><a class="secondary-action" href="#modules">'+('选择绘图任务' if zh else 'Choose a plotting task')+' →</a></div></div>'+responsive_image('logo',lang,base,eager=True,css='home-logo')+'</section><nav class="home-features" aria-label="'+('核心能力' if zh else 'Core capabilities')+'">'+features+'</nav><div class="home-capabilities" id="modules">'+''.join(cards)+'</div><p class="home-image-note">'+('首页预览为现有真实示例的简化显示，点击图像可查看完整图；各页保留完整输入和代码。' if zh else 'Homepage previews simplify the display of existing source-backed examples. Open each image for the complete figure; its page retains full inputs and code.')+'</p></div>')

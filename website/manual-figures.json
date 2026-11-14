@@ -62,11 +62,11 @@
       "showcasecollinear",
       "flagshipmulti"
     ],
-    "source": "Derived from the retained Chord flagship; source preparation and biological data preserved",
+    "source": "Same Chord source HSPs and CDS geometries; revised 11x10 canvas, horizontal source names, compact horizontal Identity guide; one representative CDS-name input per sequence.",
     "page": "multi-sequence-views.html",
-    "width": 12,
-    "height": 9,
-    "dpi": 120
+    "width": 11,
+    "height": 10,
+    "dpi": 144
   },
   {
     "id": "flagsankey",
@@ -85,11 +85,11 @@
       "showcasecollinear",
       "flagshipmulti"
     ],
-    "source": "Derived from the retained Collinear flagship; source preparation and biological data preserved",
+    "source": "Same Collinear source HSPs and CDS geometries; revised 10x12 portrait canvas, wider column spacing and compact horizontal Identity guide.",
     "page": "multi-sequence-views.html",
-    "width": 12,
-    "height": 9,
-    "dpi": 120
+    "width": 10,
+    "height": 12,
+    "dpi": 144
   },
   {
     "id": "flagdotplot",

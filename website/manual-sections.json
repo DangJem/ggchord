@@ -106,8 +106,8 @@
   "dotplot": [
     {
       "title": {
-        "zh": "HSP 点图",
-        "en": "HSP Dotplot"
+        "zh": "序列比对点图",
+        "en": "Sequence alignment Dotplot"
       },
       "pages": [
         "dotplot",

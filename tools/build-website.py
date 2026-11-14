@@ -46,7 +46,7 @@ def render_source_snapshot():
         'tools/render-website.R','tools/finalize-website.R','tools/site-course-examples.R','tools/site-flagships.R',
         'tools/reference-translations.py','tools/documentation-examples.R',
         'tools/documentation-plots.R','tools/audit-source-snapshot.R',
-        'tools/render-teaching-comparisons.R','tools/documentation-fingerprints.py'])
+        'tools/render-teaching-comparisons.R','tools/home-previews.R','tools/documentation-fingerprints.py'])
     return {str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest()
             for p in sorted(files)}
 
@@ -95,6 +95,9 @@ def main():
     shutil.copy2(ROOT/'tools/site-flagships.R',assets/'site-flagships.R')
     for row in json.loads((WEB/'manual-figures.json').read_text()):
         shutil.copy2(ROOT/row['file'],assets/(row['id']+'.png'))
+    for row in json.loads((WEB/'home-previews.json').read_text()):
+        shutil.copy2(ROOT/row['file'],assets/Path(row['file']).name)
+    shutil.copy2(ROOT/'tools/home-previews.R',assets/'home-previews.R')
     shutil.copy2(ROOT/'NEWS.md',assets/'NEWS.md')
     for name in ['MIGRATION.md', 'MIGRATION-Hans.md']:
         shutil.copy2(ROOT/name, assets/name)

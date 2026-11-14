@@ -32,7 +32,9 @@
   {
     "queries": [
       "Dotplot",
-      "HSP 点图"
+      "HSP 点图",
+      "序列比对点图",
+      "Sequence alignment Dotplot"
     ],
     "url": "dotplot-start.html",
     "title": {

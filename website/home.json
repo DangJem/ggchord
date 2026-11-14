@@ -1,0 +1,120 @@
+{
+  "hero": {
+    "eyebrow": {
+      "zh": "ggchord · R / ggplot2",
+      "en": "ggchord · R / ggplot2"
+    },
+    "title": {
+      "zh": "用一致的图层语法，呈现序列与关系。",
+      "en": "Sequence plots built with consistent layer grammar."
+    },
+    "description": {
+      "zh": "比较多条序列、标注环形基因组、查看序列比对，并把独立视图组合成一张图。",
+      "en": "Compare sequences, annotate circular genomes, inspect alignments, and connect independent views in one figure."
+    }
+  },
+  "capabilities": [
+    {
+      "url": "multi-sequence-views.html#input",
+      "title": {
+        "zh": "视图转换",
+        "en": "Switch views"
+      },
+      "description": {
+        "zh": "复用数据与图层，从不同角度查看同一组关系。",
+        "en": "Reuse data and layers to inspect relationships from different perspectives."
+      }
+    },
+    {
+      "url": "parameters.html",
+      "title": {
+        "zh": "灵活的参数格式",
+        "en": "Flexible parameter formats"
+      },
+      "description": {
+        "zh": "从统一设置到按序列、按链配置，逐步调整局部效果。",
+        "en": "Refine shared settings into local changes by sequence or strand."
+      }
+    },
+    {
+      "url": "fusion-start.html",
+      "title": {
+        "zh": "组合与输出",
+        "en": "Composition and output"
+      },
+      "description": {
+        "zh": "连接独立面板，并按目标尺寸预览和保存。",
+        "en": "Connect independent panels, then preview and save at the intended size."
+      }
+    }
+  ],
+  "modules": [
+    {
+      "slug": "multi-sequence",
+      "number": "01",
+      "title": {
+        "zh": "多序列关系",
+        "en": "Multi-sequence relationships"
+      },
+      "purpose": {
+        "zh": "比较基因组或基因簇，查看注释位置与区间之间的连接。",
+        "en": "Compare genomes or gene clusters through annotations and interval relationships."
+      },
+      "figures": [
+        "homechord",
+        "homecollinear",
+        "homeradial",
+        "homesankey"
+      ],
+      "entry": "multi-sequence-start.html"
+    },
+    {
+      "slug": "circular",
+      "number": "02",
+      "title": {
+        "zh": "单序列圆图",
+        "en": "Single-sequence circular maps"
+      },
+      "purpose": {
+        "zh": "沿一条环形序列组织特征、名称与定量轨道。",
+        "en": "Organize features, labels and quantitative tracks around one circular sequence."
+      },
+      "figures": [
+        "homecircular"
+      ],
+      "entry": "circular-start.html"
+    },
+    {
+      "slug": "dotplot",
+      "number": "03",
+      "title": {
+        "zh": "序列比对点图",
+        "en": "Sequence alignment Dotplot"
+      },
+      "purpose": {
+        "zh": "在两条坐标轴上查看序列比对区段、方向与一致性。",
+        "en": "Inspect aligned intervals, direction and identity on two sequence axes."
+      },
+      "figures": [
+        "homedotplot"
+      ],
+      "entry": "dotplot-start.html"
+    },
+    {
+      "slug": "fusion",
+      "number": "04",
+      "title": {
+        "zh": "多视图组合",
+        "en": "Multi-view composition"
+      },
+      "purpose": {
+        "zh": "把环形概览与线性细节放在一起，用真实来源区间连接独立面板。",
+        "en": "Connect a circular overview with linear detail through real source intervals."
+      },
+      "figures": [
+        "homefusion"
+      ],
+      "entry": "fusion-start.html"
+    }
+  ]
+}

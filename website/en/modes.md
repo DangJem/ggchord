@@ -4,7 +4,7 @@
 | --- | --- | --- |
 | [I · Multi-sequence relationships](multi-sequence.html) | Compare sequence intervals, annotations and links | Chord, Collinear, Radial and Sankey |
 | [II · Single-sequence circular maps](circular.html) | Annotate one complete sequence | Circular |
-| [III · HSP Dotplot](dotplot.html) | Display query/subject HSP endpoints on two axes | Dotplot |
+| [III · Sequence alignment Dotplot](dotplot.html) | Display query/subject HSP endpoints on two axes | Dotplot |
 | [IV · Multi-view composition](fusion.html) | Place independent registered views and connect source intervals | Fusion composition layer |
 
 There are six Coord types. Fusion combines plots; it is not a seventh coordinate system. Dotplot uses a dedicated segment layer and is not a registered Fusion endpoint.

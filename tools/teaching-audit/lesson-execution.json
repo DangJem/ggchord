@@ -2,126 +2,250 @@
   "pages": {
     "chord-geometry": {
       "result": "success",
-      "chunks": ["courseblockb", "frontbackbone", "frontrotation", "frontgap", "frontradius", "frontcurvature"],
+      "chunks": [
+        "courseblockb",
+        "frontbackbone",
+        "frontrotation",
+        "frontgap",
+        "frontradius",
+        "frontcurvature"
+      ],
       "raw_blocks": 0,
       "isolation": "separate R environment; packages loaded as declared by lesson snippets",
       "exports": "raw save/preview arguments checked; actual PNG exports verified separately"
     },
     "ribbons": {
       "result": "success",
-      "chunks": ["ribboninputs", "ribbons", "ribbondensity", "comparedensitydata", "comparedensityfour", "comparedensityeight", "comparebundle", "comparebundlesummary"],
+      "chunks": [
+        "ribboninputs",
+        "ribbons",
+        "ribbondensity",
+        "comparedensitydata",
+        "comparedensityfour",
+        "comparedensityeight",
+        "comparebundle",
+        "comparebundlesummary"
+      ],
       "raw_blocks": 0,
       "isolation": "separate R environment; packages loaded as declared by lesson snippets",
       "exports": "raw save/preview arguments checked; actual PNG exports verified separately"
     },
     "real-data": {
       "result": "success",
-      "chunks": ["realimport", "realprepare", "realfeatures", "realchord", "reallinear", "courseblockc"],
+      "chunks": [
+        "realimport",
+        "realprepare",
+        "realfeatures",
+        "realchord",
+        "reallinear",
+        "courseblockc"
+      ],
       "raw_blocks": 0,
       "isolation": "separate R environment; packages loaded as declared by lesson snippets",
       "exports": "raw save/preview arguments checked; actual PNG exports verified separately"
     },
     "chord": {
       "result": "success",
-      "chunks": ["sequencepalette", "docstyle", "showcasedata", "chordshowcasegenes", "showcasechord", "courseblockd"],
+      "chunks": [
+        "sequencepalette",
+        "docstyle",
+        "showcasedata",
+        "chordshowcasegenes",
+        "showcasechord",
+        "courseblockd"
+      ],
       "raw_blocks": 0,
       "isolation": "separate R environment; packages loaded as declared by lesson snippets",
       "exports": "raw save/preview arguments checked; actual PNG exports verified separately"
     },
     "homology": {
       "result": "success",
-      "chunks": ["homologinput", "homologdna", "homologmembership", "homologs", "linkprojection", "courseblocke"],
+      "chunks": [
+        "homologinput",
+        "homologdna",
+        "homologmembership",
+        "homologs",
+        "linkprojection",
+        "courseblocke"
+      ],
       "raw_blocks": 0,
       "isolation": "separate R environment; packages loaded as declared by lesson snippets",
       "exports": "raw save/preview arguments checked; actual PNG exports verified separately"
     },
     "views": {
       "result": "success",
-      "chunks": ["focus", "segment", "mappingposition"],
+      "chunks": [
+        "focus",
+        "segment",
+        "mappingposition"
+      ],
       "raw_blocks": 0,
       "isolation": "separate R environment; packages loaded as declared by lesson snippets",
       "exports": "raw save/preview arguments checked; actual PNG exports verified separately"
     },
     "collinear": {
       "result": "success",
-      "chunks": ["sequencepalette", "docstyle", "showcasedata", "showcasecollinear", "courseblockf"],
+      "chunks": [
+        "sequencepalette",
+        "docstyle",
+        "showcasedata",
+        "showcasecollinear",
+        "courseblockf"
+      ],
       "raw_blocks": 0,
       "isolation": "separate R environment; packages loaded as declared by lesson snippets",
       "exports": "raw save/preview arguments checked; actual PNG exports verified separately"
     },
     "recognition": {
       "result": "success",
-      "chunks": ["recognition", "comparecatalog"],
+      "chunks": [
+        "recognition",
+        "comparecatalog"
+      ],
       "raw_blocks": 0,
       "isolation": "separate R environment; packages loaded as declared by lesson snippets",
       "exports": "raw save/preview arguments checked; actual PNG exports verified separately"
     },
     "plasmid-catalog": {
       "result": "success",
-      "chunks": ["courseblockg", "referencebuilder", "courseblockh", "courseblocki", "courseblockj", "courseblockk", "courseblockl", "courseblockm", "courseblockn", "courseblocko", "courseblockp", "courseblockq", "courseblockr", "courseblocks", "courseblockt"],
+      "chunks": [
+        "courseblockg",
+        "referencebuilder",
+        "courseblockh",
+        "courseblocki",
+        "courseblockj",
+        "courseblockk",
+        "courseblockl",
+        "courseblockm",
+        "courseblockn",
+        "courseblocko",
+        "courseblockp",
+        "courseblockq",
+        "courseblockr",
+        "courseblocks",
+        "courseblockt"
+      ],
       "raw_blocks": 0,
       "isolation": "separate R environment; packages loaded as declared by lesson snippets",
       "exports": "raw save/preview arguments checked; actual PNG exports verified separately"
     },
     "plasmids": {
       "result": "success",
-      "chunks": ["courseblockg", "referencebuilder"],
+      "chunks": [
+        "courseblockg",
+        "referencebuilder"
+      ],
       "raw_blocks": 3,
       "isolation": "separate R environment; packages loaded as declared by lesson snippets",
       "exports": "raw save/preview arguments checked; actual PNG exports verified separately"
     },
     "data": {
       "result": "success",
-      "chunks": ["setup", "frontseqtable", "frontlinktable", "frontgenetable", "imports", "validation", "cleaning", "hierarchy", "foundationdata"],
+      "chunks": [
+        "setup",
+        "frontseqtable",
+        "frontlinktable",
+        "frontgenetable",
+        "imports",
+        "validation",
+        "cleaning",
+        "hierarchy",
+        "foundationdata"
+      ],
       "raw_blocks": 0,
       "isolation": "separate R environment; packages loaded as declared by lesson snippets",
       "exports": "raw save/preview arguments checked; actual PNG exports verified separately"
     },
     "alignments": {
       "result": "success",
-      "chunks": ["standardblast", "blastendpoints"],
+      "chunks": [
+        "standardblast",
+        "blastendpoints"
+      ],
       "raw_blocks": 0,
       "isolation": "separate R environment; packages loaded as declared by lesson snippets",
       "exports": "raw save/preview arguments checked; actual PNG exports verified separately"
     },
     "projection": {
       "result": "success",
-      "chunks": ["homologinput", "homologdna", "homologmembership", "projection", "linkprojection"],
+      "chunks": [
+        "homologinput",
+        "homologdna",
+        "homologmembership",
+        "projection",
+        "linkprojection"
+      ],
       "raw_blocks": 0,
       "isolation": "separate R environment; packages loaded as declared by lesson snippets",
       "exports": "raw save/preview arguments checked; actual PNG exports verified separately"
     },
     "annotations": {
       "result": "success",
-      "chunks": ["featurestack", "decorations", "comparefinishchord", "compareregioninside", "compareregionoutside", "compareregionwidth", "compareregionoffset"],
+      "chunks": [
+        "featurestack",
+        "decorations",
+        "comparefinishchord",
+        "compareregioninside",
+        "compareregionoutside",
+        "compareregionwidth",
+        "compareregionoffset"
+      ],
       "raw_blocks": 0,
       "isolation": "separate R environment; packages loaded as declared by lesson snippets",
       "exports": "raw save/preview arguments checked; actual PNG exports verified separately"
     },
     "labels": {
       "result": "success",
-      "chunks": ["labels", "manualgenelabels", "labellayouts"],
+      "chunks": [
+        "labels",
+        "manualgenelabels",
+        "labellayouts"
+      ],
       "raw_blocks": 0,
       "isolation": "separate R environment; packages loaded as declared by lesson snippets",
       "exports": "raw save/preview arguments checked; actual PNG exports verified separately"
     },
     "tracks": {
       "result": "success",
-      "chunks": ["trackdata", "frontgctable", "tracks", "multitrack", "tracktile", "comparetrackthin", "courseblockv"],
+      "chunks": [
+        "trackdata",
+        "frontgctable",
+        "tracks",
+        "multitrack",
+        "tracktile",
+        "comparetrackthin",
+        "courseblockv"
+      ],
       "raw_blocks": 0,
       "isolation": "separate R environment; packages loaded as declared by lesson snippets",
       "exports": "raw save/preview arguments checked; actual PNG exports verified separately"
     },
     "styling": {
       "result": "success",
-      "chunks": ["styling", "courseblockw", "courseblockx", "adjustments"],
+      "chunks": [
+        "styling",
+        "courseblockw",
+        "courseblockx",
+        "adjustments"
+      ],
       "raw_blocks": 0,
       "isolation": "separate R environment; packages loaded as declared by lesson snippets",
       "exports": "raw save/preview arguments checked; actual PNG exports verified separately"
     },
     "parameters": {
       "result": "success",
-      "chunks": ["courseblockac", "parameteruniform", "parameters", "parametervector", "parameterreorder", "parametergenes", "parameterstrand", "parameterlist", "parameterwidth", "parameterlabels"],
+      "chunks": [
+        "courseblockac",
+        "parameteruniform",
+        "parameters",
+        "parametervector",
+        "parameterreorder",
+        "parametergenes",
+        "parameterstrand",
+        "parameterlist",
+        "parameterwidth",
+        "parameterlabels"
+      ],
       "raw_blocks": 1,
       "isolation": "separate R environment; packages loaded as declared by lesson snippets",
       "exports": "raw save/preview arguments checked; actual PNG exports verified separately"
@@ -135,56 +259,147 @@
     },
     "protein-alignments": {
       "result": "success",
-      "chunks": ["nativeproteininput", "nativeproteinlinks", "nativeproteinplot", "nativeproteinchord", "protein", "proteinproject"],
+      "chunks": [
+        "nativeproteininput",
+        "nativeproteinlinks",
+        "nativeproteinplot",
+        "nativeproteinchord",
+        "protein",
+        "proteinproject"
+      ],
       "raw_blocks": 1,
       "isolation": "separate R environment; packages loaded as declared by lesson snippets",
       "exports": "raw save/preview arguments checked; actual PNG exports verified separately"
     },
     "collinear-layout": {
       "result": "success",
-      "chunks": ["courseblocky", "frontlinks", "alignbase", "aligncenter", "alignright", "alignanchor", "alignauto", "frontlineargap"],
+      "chunks": [
+        "courseblocky",
+        "frontlinks",
+        "alignbase",
+        "aligncenter",
+        "alignright",
+        "alignanchor",
+        "alignauto",
+        "frontlineargap"
+      ],
       "raw_blocks": 0,
       "isolation": "separate R environment; packages loaded as declared by lesson snippets",
       "exports": "raw save/preview arguments checked; actual PNG exports verified separately"
     },
     "feature-geometry": {
       "result": "success",
-      "chunks": ["comparegenedata", "comparefindloci", "comparegeneshouldered", "comparegeneflush", "comparegenetriangle", "compareshortauto", "compareshortwedge", "compareshortblock"],
+      "chunks": [
+        "comparegenedata",
+        "comparefindloci",
+        "comparegeneshouldered",
+        "comparegeneflush",
+        "comparegenetriangle",
+        "compareshortauto",
+        "compareshortwedge",
+        "compareshortblock"
+      ],
       "raw_blocks": 0,
       "isolation": "separate R environment; packages loaded as declared by lesson snippets",
       "exports": "raw save/preview arguments checked; actual PNG exports verified separately"
     },
     "circular-labels": {
       "result": "success",
-      "chunks": ["comparefinishcircle", "comparefixedfeature", "comparefixedhorizontal", "comparefixedinside", "comparefixedrotate", "comparefeaturefit", "compareradialfit", "compareautofit", "comparecalloutfit", "compareshrinkfit", "comparewrapfit", "compareellipsisfit", "compareexternaloff", "courseblockz", "courseblockaa", "courseblockab"],
+      "chunks": [
+        "comparefinishcircle",
+        "comparefixedfeature",
+        "comparefixedhorizontal",
+        "comparefixedinside",
+        "comparefixedrotate",
+        "comparefeaturefit",
+        "compareradialfit",
+        "compareautofit",
+        "comparecalloutfit",
+        "compareshrinkfit",
+        "comparewrapfit",
+        "compareellipsisfit",
+        "compareexternaloff",
+        "courseblockz",
+        "courseblockaa",
+        "courseblockab"
+      ],
       "raw_blocks": 0,
       "isolation": "separate R environment; packages loaded as declared by lesson snippets",
       "exports": "raw save/preview arguments checked; actual PNG exports verified separately"
     },
     "primers": {
       "result": "success",
-      "chunks": ["comparefinishdnabase", "comparefinishprimer", "comparefinishprimerrows", "compareprimerbetween", "compareprimeroutside", "compareprimeroffset", "compareprimerinside", "compareprimerwidth", "compareprimerlabel", "compareprimernolocation", "compareprimerlabelinside"],
+      "chunks": [
+        "comparefinishdnabase",
+        "comparefinishprimer",
+        "comparefinishprimerrows",
+        "compareprimerbetween",
+        "compareprimeroutside",
+        "compareprimeroffset",
+        "compareprimerinside",
+        "compareprimerwidth",
+        "compareprimerlabel",
+        "compareprimernolocation",
+        "compareprimerlabelinside"
+      ],
       "raw_blocks": 0,
       "isolation": "separate R environment; packages loaded as declared by lesson snippets",
       "exports": "raw save/preview arguments checked; actual PNG exports verified separately"
     },
     "restriction-sites": {
       "result": "success",
-      "chunks": ["comparefinishdnabase", "comparefinishsites", "comparefinishsiterows", "comparerestrictionradial", "comparerestrictionelbow", "comparerestrictionstraight", "comparerestrictionenzyme", "comparerestrictionposition", "comparerestrictionorder", "comparerestrictioninside"],
+      "chunks": [
+        "comparefinishdnabase",
+        "comparefinishsites",
+        "comparefinishsiterows",
+        "comparerestrictionradial",
+        "comparerestrictionelbow",
+        "comparerestrictionstraight",
+        "comparerestrictionenzyme",
+        "comparerestrictionposition",
+        "comparerestrictionorder",
+        "comparerestrictioninside"
+      ],
       "raw_blocks": 0,
       "isolation": "separate R environment; packages loaded as declared by lesson snippets",
       "exports": "raw save/preview arguments checked; actual PNG exports verified separately"
     },
     "scale-families": {
       "result": "success",
-      "chunks": ["comparescaledata", "comparescalegradient", "comparescalesteps", "comparescaleidentity", "comparescalemanual", "comparescalelinkdata", "comparescalelinkmanual", "comparescalelinkcontinuous", "comparescalefeature", "comparescalepreset", "comparescalegenering", "comparescaleregion", "trackdata", "comparescaletrack", "comparescaletrackgradient", "comparethemes"],
+      "chunks": [
+        "comparescaledata",
+        "comparescalegradient",
+        "comparescalesteps",
+        "comparescaleidentity",
+        "comparescalemanual",
+        "comparescalelinkdata",
+        "comparescalelinkmanual",
+        "comparescalelinkcontinuous",
+        "comparescalefeature",
+        "comparescalepreset",
+        "comparescalegenering",
+        "comparescaleregion",
+        "trackdata",
+        "comparescaletrack",
+        "comparescaletrackgradient",
+        "comparethemes"
+      ],
       "raw_blocks": 0,
       "isolation": "separate R environment; packages loaded as declared by lesson snippets",
       "exports": "raw save/preview arguments checked; actual PNG exports verified separately"
     },
     "multi-sequence-start": {
       "result": "success",
-      "chunks": ["courseblockac", "frontbackbone", "frontlinks", "frontribbon", "frontgenes", "frontfeature", "frontgenelabels", "courseblockad"],
+      "chunks": [
+        "courseblockac",
+        "frontbackbone",
+        "frontlinks",
+        "frontribbon",
+        "frontgenes",
+        "frontfeature",
+        "frontgenelabels",
+        "courseblockad"
+      ],
       "raw_blocks": 0,
       "isolation": "separate R environment; packages loaded as declared by lesson snippets",
       "exports": "raw save/preview arguments checked; actual PNG exports verified separately"
@@ -192,55 +407,114 @@
     "multi-sequence-views": {
       "result": "success",
       "chunks": ["radialdata", "coursecomparison", "coursecomparisonreport", "sequencepalette", "docstyle", "showcasedata", "chordshowcasegenes", "showcasechord", "showcasecollinear", "flagshipmulti", "foundationdata", "foundationequal", "foundationarrow"],
-      "raw_blocks": 0,
-      "isolation": "separate R environment; packages loaded as declared by lesson snippets",
+      "raw_blocks": 2,
+      "isolation": "fresh R process, separate documentation environment",
       "exports": "raw save/preview arguments checked; actual PNG exports verified separately"
     },
     "sankey": {
       "result": "success",
-      "chunks": ["foundationdata", "foundationsankey", "coursesankeygap", "courseblockae"],
+      "chunks": [
+        "foundationdata",
+        "foundationsankey",
+        "coursesankeygap",
+        "courseblockae"
+      ],
       "raw_blocks": 0,
       "isolation": "separate R environment; packages loaded as declared by lesson snippets",
       "exports": "raw save/preview arguments checked; actual PNG exports verified separately"
     },
     "radial-synteny": {
       "result": "success",
-      "chunks": ["radialdata", "radialview", "coursecomparison", "courseradialangle", "radialmap"],
+      "chunks": [
+        "radialdata",
+        "radialview",
+        "coursecomparison",
+        "courseradialangle",
+        "radialmap"
+      ],
       "raw_blocks": 0,
       "isolation": "separate R environment; packages loaded as declared by lesson snippets",
       "exports": "raw save/preview arguments checked; actual PNG exports verified separately"
     },
     "instances": {
       "result": "success",
-      "chunks": ["foundationdata", "foundationinstances"],
+      "chunks": [
+        "foundationdata",
+        "foundationinstances"
+      ],
       "raw_blocks": 0,
       "isolation": "separate R environment; packages loaded as declared by lesson snippets",
       "exports": "raw save/preview arguments checked; actual PNG exports verified separately"
     },
     "multi-sequence-layout": {
       "result": "success",
-      "chunks": ["courseblockaf", "frontbackbone", "frontorientation", "frontorder"],
+      "chunks": [
+        "courseblockaf",
+        "frontbackbone",
+        "frontorientation",
+        "frontorder"
+      ],
       "raw_blocks": 0,
       "isolation": "separate R environment; packages loaded as declared by lesson snippets",
       "exports": "raw save/preview arguments checked; actual PNG exports verified separately"
     },
     "multi-sequence-links": {
       "result": "success",
-      "chunks": ["courseblockag", "frontbackbone", "frontlinks", "frontribbon", "frontroute", "frontobstacle", "frontnoavoid", "frontsmooth", "frontmarkers", "frontlinearbase", "frontlinearlink", "frontlinearcross", "frontcrosswidth", "frontcrosssame", "comparebranchdata", "comparebranchnone", "comparebranchquery", "comparebranchfraction", "comparepointdata", "comparelinkcurve", "comparelinkstraight", "ribboninputs", "pointlinks"],
+      "chunks": [
+        "courseblockag",
+        "frontbackbone",
+        "frontlinks",
+        "frontribbon",
+        "frontroute",
+        "frontobstacle",
+        "frontnoavoid",
+        "frontsmooth",
+        "frontmarkers",
+        "frontlinearbase",
+        "frontlinearlink",
+        "frontlinearcross",
+        "frontcrosswidth",
+        "frontcrosssame",
+        "comparebranchdata",
+        "comparebranchnone",
+        "comparebranchquery",
+        "comparebranchfraction",
+        "comparepointdata",
+        "comparelinkcurve",
+        "comparelinkstraight",
+        "ribboninputs",
+        "pointlinks"
+      ],
       "raw_blocks": 0,
       "isolation": "separate R environment; packages loaded as declared by lesson snippets",
       "exports": "raw save/preview arguments checked; actual PNG exports verified separately"
     },
     "multi-sequence-labels": {
       "result": "success",
-      "chunks": ["courseblockah", "frontbackbone", "frontlinks", "frontribbon", "frontgenes", "frontfeature", "frontseqlabels", "frontgenelabels", "comparefinishchord", "compareseqlabelarc", "compareseqlabelhorizontal", "compareseqlabelrotation"],
+      "chunks": [
+        "courseblockah",
+        "frontbackbone",
+        "frontlinks",
+        "frontribbon",
+        "frontgenes",
+        "frontfeature",
+        "frontseqlabels",
+        "frontgenelabels",
+        "comparefinishchord",
+        "compareseqlabelarc",
+        "compareseqlabelhorizontal",
+        "compareseqlabelrotation"
+      ],
       "raw_blocks": 0,
       "isolation": "separate R environment; packages loaded as declared by lesson snippets",
       "exports": "raw save/preview arguments checked; actual PNG exports verified separately"
     },
     "circular-start": {
       "result": "success",
-      "chunks": ["coursecircleinput", "coursecirclefeature"],
+      "chunks": [
+        "coursecircleinput",
+        "coursecirclefeature"
+      ],
       "raw_blocks": 2,
       "isolation": "separate R environment; packages loaded as declared by lesson snippets",
       "exports": "raw save/preview arguments checked; actual PNG exports verified separately"
@@ -254,112 +528,252 @@
     },
     "circular-layout": {
       "result": "success",
-      "chunks": ["courseblockaj", "comparefinishcircle", "comparebonedouble", "comparebonesingle", "comparebonegap", "compareboneband", "comparebandwidth", "comparecirclecounter", "comparecirclegap", "comparecenter", "comparecenternolength", "comparecenterstyle", "firstcircle", "firstfeatures", "frontcirclestyle", "frontcirclerotation"],
+      "chunks": [
+        "courseblockaj",
+        "comparefinishcircle",
+        "comparebonedouble",
+        "comparebonesingle",
+        "comparebonegap",
+        "compareboneband",
+        "comparebandwidth",
+        "comparecirclecounter",
+        "comparecirclegap",
+        "comparecenter",
+        "comparecenternolength",
+        "comparecenterstyle",
+        "firstcircle",
+        "firstfeatures",
+        "frontcirclestyle",
+        "frontcirclerotation"
+      ],
       "raw_blocks": 0,
       "isolation": "separate R environment; packages loaded as declared by lesson snippets",
       "exports": "raw save/preview arguments checked; actual PNG exports verified separately"
     },
     "circular-features": {
       "result": "success",
-      "chunks": ["courseblockak", "comparefinishcircle", "comparefeaturearrow", "comparefeatureblock", "comparefeaturepreset", "comparefinishstack", "comparepositionidentity", "comparepositionstack"],
+      "chunks": [
+        "courseblockak",
+        "comparefinishcircle",
+        "comparefeaturearrow",
+        "comparefeatureblock",
+        "comparefeaturepreset",
+        "comparefinishstack",
+        "comparepositionidentity",
+        "comparepositionstack"
+      ],
       "raw_blocks": 0,
       "isolation": "separate R environment; packages loaded as declared by lesson snippets",
       "exports": "raw save/preview arguments checked; actual PNG exports verified separately"
     },
     "circular-dense-case": {
       "result": "success",
-      "chunks": ["courseblockg", "referencebuilder"],
+      "chunks": [
+        "courseblockg",
+        "referencebuilder"
+      ],
       "raw_blocks": 2,
       "isolation": "separate R environment; packages loaded as declared by lesson snippets",
       "exports": "raw save/preview arguments checked; actual PNG exports verified separately"
     },
     "dotplot-start": {
       "result": "success",
-      "chunks": ["courseblockam", "dotplotdata", "dotplotview", "dotplotreverse", "dotplotmatrixdata", "flagshipdot"],
+      "chunks": [
+        "courseblockam",
+        "dotplotdata",
+        "dotplotview",
+        "dotplotreverse",
+        "dotplotmatrixdata",
+        "flagshipdot"
+      ],
       "raw_blocks": 2,
       "isolation": "separate R environment; packages loaded as declared by lesson snippets",
       "exports": "raw save/preview arguments checked; actual PNG exports verified separately"
     },
     "import-sequences": {
       "result": "success",
-      "chunks": ["courseblockan", "setup", "adapters", "genbank", "frontimportseq", "frontimportgff", "frontimportblast", "frontimportgr", "frontimportgi"],
+      "chunks": [
+        "courseblockan",
+        "setup",
+        "adapters",
+        "genbank",
+        "frontimportseq",
+        "frontimportgff",
+        "frontimportblast",
+        "frontimportgr",
+        "frontimportgi"
+      ],
       "raw_blocks": 0,
       "isolation": "separate R environment; packages loaded as declared by lesson snippets",
       "exports": "raw save/preview arguments checked; actual PNG exports verified separately"
     },
     "import-intervals": {
       "result": "success",
-      "chunks": ["courseblockao", "setup", "formats", "formatpaf", "drawpaf", "frontimportgr", "frontimportgi", "courseblockap"],
+      "chunks": [
+        "courseblockao",
+        "setup",
+        "formats",
+        "formatpaf",
+        "drawpaf",
+        "frontimportgr",
+        "frontimportgi",
+        "courseblockap"
+      ],
       "raw_blocks": 0,
       "isolation": "separate R environment; packages loaded as declared by lesson snippets",
       "exports": "raw save/preview arguments checked; actual PNG exports verified separately"
     },
     "aligned-sequences": {
       "result": "success",
-      "chunks": ["courseblockaq", "setup", "courseblockar", "courseblockas", "courseblockat", "courseblockau", "courseblockav"],
+      "chunks": [
+        "courseblockaq",
+        "setup",
+        "courseblockar",
+        "courseblockas",
+        "courseblockat",
+        "courseblockau",
+        "courseblockav"
+      ],
       "raw_blocks": 0,
       "isolation": "separate R environment; packages loaded as declared by lesson snippets",
       "exports": "raw save/preview arguments checked; actual PNG exports verified separately"
     },
     "import-signals": {
       "result": "success",
-      "chunks": ["courseblockaw", "setup", "courseblockax", "courseblockay"],
+      "chunks": [
+        "courseblockaw",
+        "setup",
+        "courseblockax",
+        "courseblockay"
+      ],
       "raw_blocks": 0,
       "isolation": "separate R environment; packages loaded as declared by lesson snippets",
       "exports": "raw save/preview arguments checked; actual PNG exports verified separately"
     },
     "import-relations": {
       "result": "success",
-      "chunks": ["courseblockaz", "setup", "courseblockba", "courseblockbb", "courseblockbc", "courseblockbd", "courseblockbe", "courseblockbf"],
+      "chunks": [
+        "courseblockaz",
+        "setup",
+        "courseblockba",
+        "courseblockbb",
+        "courseblockbc",
+        "courseblockbd",
+        "courseblockbe",
+        "courseblockbf"
+      ],
       "raw_blocks": 0,
       "isolation": "separate R environment; packages loaded as declared by lesson snippets",
       "exports": "raw save/preview arguments checked; actual PNG exports verified separately"
     },
     "tracks-statistics": {
       "result": "success",
-      "chunks": ["courseblockbg", "trackdata", "tracks", "foundationdata", "foundationcount", "courseblockbh", "comparemultitrackdata", "comparetracktwo", "comparetrackorder", "courseblockbi", "comparetrackfocus"],
+      "chunks": [
+        "courseblockbg",
+        "trackdata",
+        "tracks",
+        "foundationdata",
+        "foundationcount",
+        "courseblockbh",
+        "comparemultitrackdata",
+        "comparetracktwo",
+        "comparetrackorder",
+        "courseblockbi",
+        "comparetrackfocus"
+      ],
       "raw_blocks": 0,
       "isolation": "separate R environment; packages loaded as declared by lesson snippets",
       "exports": "raw save/preview arguments checked; actual PNG exports verified separately"
     },
     "diagnostics": {
       "result": "success",
-      "chunks": ["courseblockbj", "frontlinearbase", "frontgeometry", "comparescaledata", "comparediagnostics"],
+      "chunks": [
+        "courseblockbj",
+        "frontlinearbase",
+        "frontgeometry",
+        "comparescaledata",
+        "comparediagnostics"
+      ],
       "raw_blocks": 1,
       "isolation": "separate R environment; packages loaded as declared by lesson snippets",
       "exports": "raw save/preview arguments checked; actual PNG exports verified separately"
     },
     "fusion-routing": {
       "result": "success",
-      "chunks": ["courseblockbk", "fusiondata", "fusionpanels", "fusionlinear", "fusionview", "fusionfour", "fusionexport", "fusionsave", "courseblockbl"],
+      "chunks": [
+        "courseblockbk",
+        "fusiondata",
+        "fusionpanels",
+        "fusionlinear",
+        "fusionview",
+        "fusionfour",
+        "fusionexport",
+        "fusionsave",
+        "courseblockbl"
+      ],
       "raw_blocks": 0,
       "isolation": "separate R environment; packages loaded as declared by lesson snippets",
       "exports": "raw save/preview arguments checked; actual PNG exports verified separately"
     },
     "fusion-layout": {
       "result": "success",
-      "chunks": ["courseblockbm", "fusiondata", "fusionpanels", "fusionlinear", "fusionview", "fusionstyle", "courseblockbn", "courseblockbo", "courseblockbp", "courseblockbq", "flagshipdata", "fusionoverview", "flagshipfusion"],
+      "chunks": [
+        "courseblockbm",
+        "fusiondata",
+        "fusionpanels",
+        "fusionlinear",
+        "fusionview",
+        "fusionstyle",
+        "courseblockbn",
+        "courseblockbo",
+        "courseblockbp",
+        "courseblockbq",
+        "flagshipdata",
+        "fusionoverview",
+        "flagshipfusion"
+      ],
       "raw_blocks": 0,
       "isolation": "separate R environment; packages loaded as declared by lesson snippets",
       "exports": "raw save/preview arguments checked; actual PNG exports verified separately"
     },
     "fusion-details": {
       "result": "success",
-      "chunks": ["courseblockbr", "fusiondata", "fusionpanels", "fusionlinear", "fusionview", "courseblockbs", "courseblockbt", "courseblockbu", "courseblockbv"],
+      "chunks": [
+        "courseblockbr",
+        "fusiondata",
+        "fusionpanels",
+        "fusionlinear",
+        "fusionview",
+        "courseblockbs",
+        "courseblockbt",
+        "courseblockbu",
+        "courseblockbv"
+      ],
       "raw_blocks": 0,
       "isolation": "separate R environment; packages loaded as declared by lesson snippets",
       "exports": "raw save/preview arguments checked; actual PNG exports verified separately"
     },
     "fusion-advanced": {
       "result": "success",
-      "chunks": ["courseblockbw", "fusiondata", "fusionpanels", "fusionlinear", "fusionview", "courseblockbx", "courseblockby"],
+      "chunks": [
+        "courseblockbw",
+        "fusiondata",
+        "fusionpanels",
+        "fusionlinear",
+        "fusionview",
+        "courseblockbx",
+        "courseblockby"
+      ],
       "raw_blocks": 0,
       "isolation": "separate R environment; packages loaded as declared by lesson snippets",
       "exports": "raw save/preview arguments checked; actual PNG exports verified separately"
     },
     "fusion-start": {
       "result": "success",
-      "chunks": ["fusiondata", "coursefusion"],
+      "chunks": [
+        "fusiondata",
+        "coursefusion"
+      ],
       "raw_blocks": 3,
       "isolation": "separate R environment; packages loaded as declared by lesson snippets",
       "exports": "raw save/preview arguments checked; actual PNG exports verified separately"

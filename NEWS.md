@@ -1,5 +1,14 @@
 # ggchord 0.27.0 (development)
 
+- Website home now uses an introduction above a full-width four-module grid,
+  with dedicated source-backed previews, concise capability descriptions and
+  natural page height. Sequence alignment Dotplot replaces the HSP-only entry
+  name; original technical HSP terminology and contracts remain unchanged.
+- Radial and Sankey flagship examples use view-specific export proportions,
+  compact horizontal Identity guides and larger feature/name styling. Their
+  original HSP endpoints and CDS inputs remain; the Radial name layer selects
+  one representative CDS per sequence. Complete Chord/Collinear designs remain.
+
 - Website: restore Flexible parameter formats as a searchable capability, separate
   parameter-family matching/default rules, and add source-backed reorder/strand
   comparisons. Cumulative plotting examples retain links and labels across Coord

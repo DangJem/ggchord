@@ -39,7 +39,7 @@
 
 {{prepare:sequencepalette,docstyle,showcasedata,chordshowcasegenes,showcasechord,showcasecollinear}}
 
-Radial 不使用 Chord 专属的半径/曲率，因此只替换派生图的骨架参数；Sankey 的跨行连接不照搬 Collinear 的 Cartesian 控制点，并使用各列原生坐标轴，不保留仅适用于 Collinear 的共享比例尺。Sankey 的名称层每序列选择一条来源注释，优先非假设蛋白、再按长度排序，并放在列旁；全部原特征几何与来源表保留。原旗舰的构图、数据准备与配色保留；图像仅在修复默认虚线等已确认问题时更新。
+Radial 不使用 Chord 专属的半径/曲率，因此派生时移除这些骨架参数；Sankey 的跨行连接不照搬 Collinear 的 Cartesian 控制点，并使用各列原生坐标轴，不保留仅适用于 Collinear 的共享比例尺。Sankey 的名称层每序列选择一条来源注释，优先非假设蛋白、再按长度排序，并放在列旁；全部原特征几何与来源表保留。原旗舰的构图、数据准备与配色保留；Chord/Collinear 的完整旗舰继续保留；本轮单独调整 Radial/Sankey 的画布、图例和文字密度，原 HSP 与 CDS 几何输入保持。
 
 {{code:flagshipmulti}}
 
@@ -53,9 +53,21 @@ Radial 不使用 Chord 专属的半径/曲率，因此只替换派生图的骨�
 
 ### Radial {#flagship-radial}
 
+采用 11 × 10 英寸画布，辐条从 45° 起排、序列名水平显示。保留全部 20 条原 CDS 几何；名称按序列优先非假设蛋白、再按长度选择一条，避免把完整名称清单压在预览中。Identity 仍按数值区间比例显示，移到下方，不占侧边主体宽度。
+
+```r
+view_ggchord(flag_radial, width = 11, height = 10, units = "in")
+```
+
 {{manualfigure:flagradial}}
 
 ### Sankey {#flagship-sankey}
+
+四条序列在两列中纵向排列，使用 10 × 12 英寸纵向画布和显式列间距。16 条原 CDS 几何及 10 条已选择 HSP 保留；基因箭头加厚，每条序列继续只标一个代表名称。完整刻度和 Identity 图例保留，首页预览另减去密集坐标文字。
+
+```r
+view_ggchord(flag_sankey, width = 10, height = 12, units = "in")
+```
 
 {{manualfigure:flagsankey}}
 

@@ -66,8 +66,8 @@
   {
     "id": "dotplot",
     "title": {
-      "zh": "模块三 · HSP 点图",
-      "en": "Module III · HSP Dotplot"
+      "zh": "模块三 · 序列比对点图",
+      "en": "Module III · Sequence alignment Dotplot"
     },
     "landing": "dotplot",
     "pages": [
