@@ -3,6 +3,7 @@
   "baseline": "0f5dd96da57876da74cd1234c7de9cf5579c80b8",
   "method": "R parse equality for documentation-only edits; exact reviewed runtime style delta with four-Coord behavior/geometry proof; 61 actual PNG refresh records; explicit-keep input equality and baseline hashes for the remaining 117 PNGs",
   "current_api_document_sha256": "3ebf3af00ac4808cc4beabd3712cb81ab6db5a11ba50d4ee208c3eacbbd8977f",
+  "png_equivalence_scope": "Exact CI delta only changes active base PDF/PostScript Unicode measurement, unreachable for PNG; S3 method body unchanged",
   "figure_count": 178,
   "actual_png_refresh_count": 61,
   "retained_equivalent_count": 117,

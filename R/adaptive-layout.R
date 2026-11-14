@@ -68,7 +68,7 @@ adapt_ggchord <- function(mode = c("adaptive", "fixed", "scale"),
 
 #' @export
 #' @importFrom ggplot2 ggplot_add
-ggplot_add.ggchord_layout_policy <- function(object, plot, object_name) {
+ggplot_add.ggchord_layout_policy <- function(object, plot, ...) {
   if (!inherits(plot,"ggchord")) ggchord_stop("adapt_ggchord(): add the policy to an individual ggchord plot")
   if (!inherits(plot$facet,"FacetNull")) ggchord_stop("adapt_ggchord(): faceted layouts are not supported")
   plot$ggchord$layout_policy <- unclass(object)

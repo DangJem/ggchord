@@ -334,8 +334,10 @@ ggchord_text_boxes <- function(df,
   h <- numeric(n)
   valid <- !is.na(texts) & nzchar(texts)
   if (any(valid)) {
-    close_device <- if (grDevices::dev.cur() > 1L) function() invisible(NULL) else
-      ggchord_measurement_device(text = texts[valid])
+    legacy_device <- names(grDevices::dev.cur()) %in% c("pdf", "postscript")
+    unicode <- any(utf8ToInt(paste(texts[valid], collapse = "")) > 127L)
+    close_device <- if (grDevices::dev.cur() > 1L && !(legacy_device && unicode))
+      function() invisible(NULL) else ggchord_measurement_device(text = texts[valid])
     on.exit(close_device())
     valid_rows <- which(valid)
     for (i in valid_rows) {

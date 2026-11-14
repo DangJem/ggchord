@@ -1,0 +1,57 @@
+{
+  "status": "local directed checks passed; remote verification pending",
+  "source_runs": {
+    "documentation": "43550442714",
+    "package": "43449259688"
+  },
+  "problems": [
+    {
+      "problem": "Missing historical baseline in shallow checkout",
+      "fix": "Full checkout history; install R and only required source-check dependencies"
+    },
+    {
+      "problem": "Fixed built layer indices selected automatic axes instead of gene/primer layers",
+      "fix": "Gene fill output selected by its aesthetic; empty primer checked with public export; retain minimal regressions"
+    },
+    {
+      "problem": "Unicode text boxes reused active base PDF/PostScript device",
+      "fix": "Use existing Unicode fallback only for non-ASCII on those devices; restore caller; PNG/ASCII PDF metrics unchanged"
+    },
+    {
+      "problem": "ggplot_add layout-policy method missing generic ellipsis",
+      "fix": "Accept ...; method body unchanged"
+    }
+  ],
+  "tests": {
+    "before_files": 13,
+    "before_lines": 1067,
+    "after_files": 3,
+    "after_lines": 121,
+    "cases": 9,
+    "reference_commit": "752e0e19da04b6813f0524d784843901ac64dcb2",
+    "reference_test_files": 2,
+    "reference_cases": 5,
+    "scope": "Core data/plot paths and current confirmed regressions; removed checks not relocated; additions require explicit user agreement"
+  },
+  "checks": [
+    "Three failing cases directly checked using stopifnot; no testthat runner",
+    "Adaptive policy dispatch and generic ellipsis checked directly",
+    "Four coordinate automatic/fixed ribbon style inputs checked directly",
+    "Text box outputs equal to original on PNG (ASCII and Unicode) and ASCII PDF",
+    "52 documentation pages prepared in separate environments in one fresh R process",
+    "Basic reduced text-reader coordinates checked directly",
+    "All remaining tests parse"
+  ],
+  "source_sha256": {
+    "R/adaptive-layout.R": "deb567583f4d8fe07d973e44cba6e8e2ed73cd25e5b820b5b9493b545a41a0d5",
+    "R/helpers-label-boxes.R": "c3bc2414f544b73dd95c5a6648b50b006967a92c9f72f850325f36a9047461b1",
+    "tests/testthat/test-data.R": "64b95687da1fdd5e5274ec94d0ed370a1a978b749a6e87c800fae56303a26aaa",
+    "tests/testthat/test-plot.R": "e0a36b34d2a13f0651581c5884437aacb6768868c237bdd108eb25ba6325a2f7"
+  },
+  "limits": [
+    "No local package test runner, R CMD build/check, vignette execution or release matrix",
+    "No browser acceptance",
+    "Prior PNG renders retained with exact device-branch equivalence, no new render stamps",
+    "Merge/push authorized; release/deployment not authorized"
+  ]
+}

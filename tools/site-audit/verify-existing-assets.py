@@ -28,17 +28,36 @@ def verify_reviewed_style_patch():
         original=Path(folder)/'geom-ribbon.R';original.write_bytes(blob('R/geom-ribbon.R'))
         subprocess.run(['Rscript','--vanilla','-e','a<-commandArgs(TRUE);stopifnot(identical(parse(a[1],keep.source=FALSE),parse("R/geom-ribbon.R",keep.source=FALSE)))',str(original)],cwd=ROOT,check=True)
 
+CI_FILES = {'R/helpers-label-boxes.R', 'R/adaptive-layout.R'}
+
+def verify_ci_patch():
+    old = '    close_device <- if (grDevices::dev.cur() > 1L) function() invisible(NULL) else\n      ggchord_measurement_device(text = texts[valid])'
+    new = '    legacy_device <- names(grDevices::dev.cur()) %in% c("pdf", "postscript")\n    unicode <- any(utf8ToInt(paste(texts[valid], collapse = "")) > 127L)\n    close_device <- if (grDevices::dev.cur() > 1L && !(legacy_device && unicode))\n      function() invisible(NULL) else ggchord_measurement_device(text = texts[valid])'
+    source = blob('R/helpers-label-boxes.R').decode()
+    assert source.count(old) == 1
+    assert (ROOT/'R/helpers-label-boxes.R').read_text() == source.replace(old, new, 1)
+    source = blob('R/adaptive-layout.R').decode()
+    old_sig = 'ggplot_add.ggchord_layout_policy <- function(object, plot, object_name) {'
+    new_sig = 'ggplot_add.ggchord_layout_policy <- function(object, plot, ...) {'
+    assert source.count(old_sig) == 1
+    assert (ROOT/'R/adaptive-layout.R').read_text() == source.replace(old_sig, new_sig, 1)
+    # Registered images use PNG devices: the added base PDF/PostScript Unicode
+    # branch is unreachable there. S3 method body is unchanged. Preserve the
+    # real render hashes instead of stamping these old images as freshly drawn.
+
 def main():
     changed=subprocess.check_output(['git','diff',BASE,'--name-only','--','R','data'],cwd=ROOT,text=True).splitlines()
     allowed={'R/api-contract.R','R/collinear-utils.R','R/coord-sankey.R','R/geom-ribbon.R',
-      'R/ggchord-build.R','R/ggchord-frame.R','R/layout-collinear.R','R/layout-ribbon-step.R'}
+      'R/ggchord-build.R','R/ggchord-frame.R','R/layout-collinear.R','R/layout-ribbon-step.R'} | CI_FILES
     assert not set(changed)-allowed,'Unreviewed runtime/data changes: '+str(changed)
+    verify_ci_patch()
     refresh_path=ROOT/'tools/site-audit/ribbon-figure-refresh.json'
     refresh=json.loads(refresh_path.read_text()) if set(changed)-{'R/api-contract.R'} else None
     if refresh:
         assert refresh['status']=='complete','Affected PNG refresh is incomplete'
         for name,digest in refresh['runtime_sha256'].items():
-            assert hashlib.sha256((ROOT/name).read_bytes()).hexdigest()==digest,'Runtime moved after refresh: '+name
+            actual = blob(name) if name in CI_FILES else (ROOT/name).read_bytes()
+            assert hashlib.sha256(actual).hexdigest()==digest,'Runtime moved after refresh: '+name
         before=json.loads((ROOT/'tools/site-audit/ribbon-styles-before.json').read_text())
         after=json.loads((ROOT/'tools/site-audit/ribbon-styles-after.json').read_text())
         for name,row in after['views'].items():
@@ -60,7 +79,7 @@ def main():
         'pkgload::load_all(quiet=TRUE);f<-"examples/format-inputs/emales-BVI_023A.gff3";a<-read_gff3(f,source_file=TRUE);b<-read_gff3(f,source_file=TRUE,unstranded="keep");stopifnot(identical(a,b),all(a$source_strand %in% c("+","-")));cat("PASS: explicit keep preserves all 24 source CDS records\\n")'],cwd=ROOT,check=True)
     overrides={name:hashlib.md5(blob(name)).hexdigest() for name in changed}
     expected=module.fingerprints(runtime_hashes=overrides,recipe_source=original.decode())['assets']
-    current=module.fingerprints()['assets']
+    current=module.fingerprints(runtime_hashes={name:hashlib.md5(blob(name)).hexdigest() for name in CI_FILES})['assets']
     rows=list(csv.DictReader((ROOT/'website/assets/plots.csv').open()))
     actual=set(refresh['figures']) if refresh else set()
     if refresh:assert actual=={r['id'] for r in rows if r['coordinate'] in {'chord','radial_synteny'}}
@@ -75,6 +94,7 @@ def main():
     result=dict(status='scoped actual PNG refresh plus retained equivalent figures' if refresh else 'equivalent dependencies; old renders retained',baseline=BASE,
         method='R parse equality for documentation-only edits; exact reviewed runtime style delta with four-Coord behavior/geometry proof; 61 actual PNG refresh records; explicit-keep input equality and baseline hashes for the remaining 117 PNGs',
         current_api_document_sha256=hashlib.sha256((ROOT/'R/api-contract.R').read_bytes()).hexdigest(),
+        png_equivalence_scope='Exact CI delta only changes active base PDF/PostScript Unicode measurement, unreachable for PNG; S3 method body unchanged',
         figure_count=len(rows),actual_png_refresh_count=len(actual),retained_equivalent_count=len(rows)-len(actual),
         expected_dependency_md5=expected,figures={r['id']:r['md5'] for r in rows},
         runtime_scope='Exact reviewed cross-row style patch; circular/linear/dotplot and two-source Fusion files retained, Chord/Radial rendered' if refresh else 'Documentation-only runtime change',

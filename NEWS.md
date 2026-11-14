@@ -1,5 +1,13 @@
 # ggchord 0.27.0 (development)
 
+
+- CI: Unicode text bounds now use the existing Unicode-capable fallback when the
+  active device is base PDF/PostScript, restoring the caller device afterwards.
+  The layout-policy addition method accepts the ggplot2 generic's `...` arguments.
+- Tests: retain two short data/plot files; remove redundant geometry, device and
+  parameter checks. Core fill and empty-primer regressions select actual layers
+  rather than assuming positions before automatic axis insertion.
+
 - Sankey projection preserves missing angle metadata in mixed text/leader
   records instead of failing during readable-angle normalization.
 
