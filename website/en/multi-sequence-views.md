@@ -39,7 +39,7 @@ The existing Chord and Collinear flagships are retained with their original comp
 
 {{prepare:sequencepalette,docstyle,showcasedata,chordshowcasegenes,showcasechord,showcasecollinear}}
 
-Radial does not use Chord-specific radii/curvature, so only the derived backbone parameters are replaced. Sankey does not reuse Cartesian cross-row control points from Collinear and uses each column’s native axis instead of a Collinear-only shared scale bar. Sankey places one selected source annotation beside each sequence column, preferring non-hypothetical annotations and then length, while retaining every original feature geometry and source table. The retained flagship design, preparation and colours are preserved; images are refreshed only for confirmed fixes such as the automatic outline bug.
+Radial removes Chord-only radii and curvature. Sankey uses each column’s native axis, replacing Collinear Cartesian controls and its shared scale bar. Complete figures retain all original CDS name candidates, Sequence guides and source records. Labels are placed near their features in final projected coordinates using measured text sizes and short leaders. Crowded names that cannot fit may still be hidden; use `diagnose_ggchord()` at the export size to inspect visibility and contacts.
 
 {{code:flagshipmulti}}
 
@@ -53,20 +53,20 @@ Radial does not use Chord-specific radii/curvature, so only the derived backbone
 
 ### Radial {#flagship-radial}
 
-Use an 11 × 10 inch canvas, spokes starting at 45°, and horizontal sequence IDs. All 20 original CDS geometries remain; the name layer selects one CDS per sequence, preferring a non-hypothetical annotation and then longer length. Identity retains numeric interval proportions below the plot, freeing the main panel width.
+Use a 12 × 10.5 inch canvas, spokes starting at 45°, and horizontal sequence IDs. All 20 original CDS geometries and name candidates remain. Local labels avoid long leaders and global side columns that shrink the sequence panel. Sequence, Strand and the numerically proportional Identity guide sit below the plot.
 
 ```r
-view_ggchord(flag_radial, width = 11, height = 10, units = "in")
+view_ggchord(flag_radial, width = 12, height = 10.5, units = "in")
 ```
 
 {{manualfigure:flagradial}}
 
 ### Sankey {#flagship-sankey}
 
-Four sequences stack in each column, using a 10 × 12 inch portrait canvas and explicit column spacing. The 16 original CDS geometries and 10 selected HSPs remain; thicker arrows and one representative name per sequence improve separation. Complete coordinates and the Identity guide remain, while the homepage preview separately omits dense coordinate text.
+Four sequences stack in each column on a 10 × 16 inch portrait canvas. All 16 original CDS geometries and name candidates, and the 10 selected HSPs remain. Both display copies receive annotations; names are no longer sampled to one per sequence. Short connections and local collision handling keep names near their features. Complete coordinates and all three guides remain; homepage previews separately omit dense names and coordinate text.
 
 ```r
-view_ggchord(flag_sankey, width = 10, height = 12, units = "in")
+view_ggchord(flag_sankey, width = 10, height = 16, units = "in")
 ```
 
 {{manualfigure:flagsankey}}

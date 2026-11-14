@@ -61,11 +61,14 @@ home_circular_labels <- home_circular_features |>
 home_circular_position <- position_feature_stack(base_position = position_plasmid())
 home_circular <- ggchord(plasmid_example_pUC19, feature_data = home_circular_features) +
   geom_seq(seq_style = "double", linewidth = 0.8) +
-  geom_feature_plasmid(aes(feature_fill = type), position = home_circular_position) +
+  geom_feature_plasmid(position = home_circular_position) +
   geom_feature_label_repel(data = home_circular_labels, position = home_circular_position,
     size = 4, label_fit = "shrink", label_min_size = 3) +
   geom_seq_center_label(size = 4.5) +
-  scale_feature_fill_manual(values = feature_palette, guide = "none") +
+  scale_feature_fill_manual(
+    values = setNames(home_circular_features$feature_color, home_circular_features$anno),
+    guide = "none"
+  ) +
   coord_circular() + home_axis + home_theme
 # Same 32 observed HSPs; segment-centre sequence IDs replace dense coordinate text.
 home_dot_axis <- export_ggchord_layout(flag_dotplot)$axis_layout
@@ -85,18 +88,28 @@ home_dotplot <- ggchord(flagship_sequences, flagship_hsp) +
     axis.title = element_text(size = 11), axis.text = element_text(size = 10),
     panel.grid.major = element_blank()
   )
-# Existing two-panel source example; one complete observed HSP joins real intervals.
-home_fusion_center <- ggchord(fusion_seqs |> slice(1)) +
-  geom_seq(linewidth = 1.2, show.legend = FALSE) +
-  geom_seq_center_label(size = 4) +
-  coord_circular() + home_theme
-home_fusion_detail <- ggchord(fusion_seqs) +
-  geom_seq(linewidth = 1.2, show.legend = FALSE) +
-  geom_seq_label(size = 3.7, labels = setNames(c("Query", "Subject"), fusion_seqs$accver)) +
-  coord_collinear(seq_axis = "vertical") + home_relationship_theme
-home_fusion <- ggchord_fusion(home_fusion_center) +
-  fusion_panel(home_fusion_detail, id = "detail", side = "right") +
-  fusion_ribbon(
-    fusion_links |> slice(1), qpanel = "center", spanel = "detail",
-    fill = "#269B82", alpha = 0.35
-  ) + theme(plot.background = element_rect(fill = home_paper, colour = NA))
+# Four-panel flagship source: all 32 HSPs and 266 CDS in each overview.
+# Hide coordinate text for the preview, retaining names, geometry and real endpoints.
+home_fusion_theme <- home_relationship_theme + theme(plot.margin = margin(2, 2, 2, 2))
+home_fusion_base <- ggchord(flagship_sequences, flagship_hsp, feature_data = flagship_features) +
+  geom_link_ribbon(adjacent_only = FALSE, alpha = 0.45, linewidth = 0.12, allow_repeated = TRUE) +
+  geom_seq(aes(seq_colour = accver), linewidth = 1.1) +
+  geom_gene(aes(gene_fill = strand), position = flagship_position, width = 0.025) +
+  geom_seq_label(size = 2.6) +
+  scale_seq_colour_manual(values = flagship_colours) +
+  scale_gene_fill_manual(values = gene_palette) + home_fusion_theme
+home_fusion <- ggchord_fusion(home_fusion_base + coord_chord(),
+  center_box = c(0.01, 0.49, 0.52, 0.99)) +
+  fusion_panel(home_fusion_base + coord_collinear(), id = "linear",
+    box = c(0.54, 0.99, 0.52, 0.99)) +
+  fusion_panel(home_fusion_base + coord_radial_synteny(start_angle = 45), id = "radial",
+    box = c(0.01, 0.49, 0.01, 0.48)) +
+  fusion_panel(flagship_detail + home_fusion_theme, id = "detail",
+    box = c(0.54, 0.99, 0.01, 0.48)) +
+  fusion_ribbon(flagship_hsp |> slice(2:5), qpanel = "center", spanel = "linear",
+    fill = "#269B82", alpha = 0.22, allow_repeated = TRUE) +
+  fusion_ribbon(flagship_hsp |> slice(6:9), qpanel = "center", spanel = "radial",
+    fill = "#D59B17", alpha = 0.22, allow_repeated = TRUE) +
+  fusion_ribbon(flagship_selected, qpanel = "center", spanel = "detail",
+    fill = "#E64B35", alpha = 0.24, allow_repeated = TRUE) +
+  theme(plot.background = element_rect(fill = home_paper, colour = NA))

@@ -1429,10 +1429,12 @@ compute_chord_geometry <- function(plot) {
     primary$circular_annotation_registry <-
       resolved_annotations$annotation_registry
   } else if (isTRUE(primary$collinear)) {
-    registry <- ggchord_collinear_share_labels(registry, primary)
-    primary$collinear_label_diagnostics <-
-      attr(registry, "collinear_label_diagnostics")
-    attr(registry, "collinear_label_diagnostics") <- NULL
+    if (!isTRUE(plot$coordinates$ggchord_radial) && !isTRUE(plot$coordinates$ggchord_sankey) &&
+        !identical(plot$coordinates$collinear_seq_axis, "vertical")) {
+      registry <- ggchord_collinear_share_labels(registry, primary)
+      primary$collinear_label_diagnostics <- attr(registry, "collinear_label_diagnostics")
+      attr(registry, "collinear_label_diagnostics") <- NULL
+    }
   } else if (!circular_resolved && !external_resolved) {
     registry <- ggchord_share_external_annotations(registry, primary)
   }
@@ -1572,6 +1574,40 @@ compute_chord_geometry <- function(plot) {
     if (isTRUE(plot$coordinates$ggchord_sankey)) primary <- ggchord_project_sankey_layout(primary,plot) else
       if (isTRUE(primary$collinear) && identical(plot$coordinates$collinear_seq_axis, "vertical"))
       primary <- ggchord_project_vertical_layout(primary)
+  }
+  projected_labels <- any(vapply(primary$layer_geometry, function(owner) any(vapply(
+    owner[intersect(names(owner), c("gene_text", "gene_text_repel", "gene_label_repel"))],
+    function(d) is.data.frame(d) && nrow(d) > 0L, logical(1L))), logical(1L)))
+  if (projected_labels && (isTRUE(primary$radial_projected) || isTRUE(primary$sankey_projected) ||
+      isTRUE(primary$vertical_projected))) {
+    primary$layer_geometry <- ggchord_collinear_share_labels(primary$layer_geometry, primary)
+    primary$collinear_label_diagnostics <- attr(primary$layer_geometry, "collinear_label_diagnostics")
+    attr(primary$layer_geometry, "collinear_label_diagnostics") <- NULL
+    labels <- lapply(primary$layer_geometry, function(owner) {
+      d <- owner$gene_label_repel
+      if (is.data.frame(d) && nrow(d)) d <- d[d$.component %in% "text", , drop = FALSE]
+      ggchord_rbind_fill(Filter(function(x) is.data.frame(x) && nrow(x),
+        list(owner$gene_text, owner$gene_text_repel, d)))
+    })
+    primary$gene_labels <- ggchord_rbind_fill(labels) %||% data.frame()
+    segments <- lapply(primary$layer_geometry, function(owner) {
+      d <- owner$gene_label_repel
+      if (is.data.frame(d) && nrow(d)) d <- d[d$.component %in% "segment", , drop = FALSE]
+      ggchord_rbind_fill(Filter(function(x) is.data.frame(x) && nrow(x),
+        list(owner$gene_label_segment, d)))
+    })
+    primary$gene_label_segments <- ggchord_rbind_fill(segments) %||% data.frame()
+    # Discard pre-placement text extents; they must not enlarge the final panel.
+    geometry <- c(unlist(primary$layer_geometry, recursive = FALSE),
+      list(primary$axis_lines, primary$axis_ticks))
+    xx <- yy <- numeric()
+    for (d in geometry) if (is.data.frame(d)) for (pair in list(c("x", "y"),
+        c("x0", "y0"), c("x1", "y1"), c("xend", "yend"), c("text_x", "text_y"),
+        c("label_x", "label_y"))) {
+      if (all(pair %in% names(d))) { xx <- c(xx, d[[pair[1]]]); yy <- c(yy, d[[pair[2]]]) }
+    }
+    primary$extremes <- list(x_min = min(xx, na.rm = TRUE), x_max = max(xx, na.rm = TRUE),
+      y_min = min(yy, na.rm = TRUE), y_max = max(yy, na.rm = TRUE))
   }
   primary <- ggchord_check_displayed_hsps(primary, plot)
   if (!is.null(plot$ggchord$ref)) {

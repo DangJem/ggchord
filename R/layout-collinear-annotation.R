@@ -314,7 +314,7 @@ ggchord_collinear_gene_labels <- function(p, layout) {
       feature_label_orientation = if (angle == 90) "vertical" else "horizontal",
       feature_label_inside = FALSE, feature_label_mode = "adjacent",
       label_layout = "collinear", label_lane = 0L, .feature_width = width,
-      label_side = side, label_overlap = p$gene_label_overlap,
+      label_side = side, label_side_policy = p$gene_label_side, label_overlap = p$gene_label_overlap,
       label_segment_linetype = rep_len(
         p$gene_label_segment_linetype %||% "auto", nrow(d))[i],
       label_segment_overlap = p$gene_label_segment_overlap,
@@ -420,8 +420,38 @@ ggchord_linear_line_hits_box <- function(a, b, box) {
 }
 
 ggchord_collinear_share_labels <- function(registry, layout) {
+  original_registry <- registry
   units <- layout$text_units_per_inch
   ref <- layout$sequence_reference
+  projected <- isTRUE(layout$radial_projected) || isTRUE(layout$sankey_projected) ||
+    identical(layout$seq_axis, "vertical")
+  # Solve in physical inches: aspect constraints can give x/y different scales.
+  metric <- ggchord_render_context()$axis_units_per_inch
+  if (is.null(metric) || any(!is.finite(metric)) || any(metric <= 0)) metric <- c(x = units, y = units)
+  units <- 1
+  map_xy <- function(d, inverse = FALSE) {
+    if (!is.data.frame(d) || !nrow(d)) return(d)
+    for (pair in list(c("x", "y"), c("x0", "y0"), c("x1", "y1"),
+        c("xend", "yend"), c("text_x", "text_y"), c("label_x", "label_y"), c("anchor_x", "anchor_y"))) {
+      if (!all(pair %in% names(d))) next
+      for (j in 1:2) d[[pair[j]]] <- if (inverse) d[[pair[j]]] * metric[j] else d[[pair[j]]] / metric[j]
+    }
+    d
+  }
+  registry <- lapply(registry, function(owner) lapply(owner, map_xy))
+  paths <- lapply(layout$seq_arcs, function(d) map_xy(d))
+  normal <- function(row, normalize = TRUE) {
+    id <- as.character(row$accver)
+    if (isTRUE(layout$radial_projected)) {
+      frame <- layout$radial_frames[match(id, layout$radial_frames$key), ]
+      v <- c(frame$nx, frame$ny)
+    } else if (isTRUE(layout$sankey_projected)) {
+      frame <- layout$sankey_frames[match(id, layout$sankey_frames$key), ]
+      v <- c(frame$normal_sign, 0)
+    } else if (projected) v <- c(-1, 0) else v <- c(0, 1)
+    v <- v / metric
+    if (normalize) v / sqrt(sum(v^2)) else v
+  }
   polygons <- list()
   fixed <- automatic <- list()
   diagnostics <- list()
@@ -442,6 +472,11 @@ ggchord_collinear_share_labels <- function(registry, layout) {
         d <- d[d$.component %in% "text", , drop = FALSE]
       }
       if (!nrow(d)) next
+      if (projected && component != "gene_text") {
+        d$text_angle <- 0
+        d$angle <- 0
+        d$feature_label_orientation <- "horizontal"
+      }
       item <- list(layer_id = id, component = component, labels = d)
       if (identical(component, "gene_text")) fixed[[length(fixed) + 1L]] <- item else
         automatic[[length(automatic) + 1L]] <- item
@@ -460,18 +495,26 @@ ggchord_collinear_share_labels <- function(registry, layout) {
       lower <- unname(ref$y[id]) + track_bands$normal_min[i]
       upper <- unname(ref$y[id]) + track_bands$normal_max[i]
       if (!all(is.finite(c(limits, lower, upper)))) next
-      polygons[[length(polygons) + 1L]] <- data.frame(
-        x = limits[c(1L, 2L, 2L, 1L, 1L)],
-        y = c(lower, lower, upper, upper, lower),
-        accver = id, .is_track = TRUE, stringsAsFactors = FALSE)
+      band <- data.frame(x = limits[c(1L, 2L, 2L, 1L, 1L)],
+        y = c(lower, lower, upper, upper, lower), accver = id, .is_track = TRUE)
+      if (isTRUE(layout$radial_projected)) {
+        xy <- ggchord_radial_points(band$x, band$y, band$accver, layout$radial_frames)
+        band$x <- xy[, 1]; band$y <- xy[, 2]
+      } else if (isTRUE(layout$sankey_projected)) {
+        xy <- ggchord_sankey_points(band$x, band$y, band$accver, layout$sankey_frames)
+        band$x <- xy[, 1]; band$y <- xy[, 2]
+      } else if (projected) {
+        old_x <- band$x; band$x <- -band$y; band$y <- old_x
+      }
+      polygons[[length(polygons) + 1L]] <- map_xy(band)
     }
   }
-  if (!length(fixed) && !length(automatic)) return(registry)
+  if (!length(fixed) && !length(automatic)) return(original_registry)
   sequence_labels <- Filter(function(d) is.data.frame(d) && nrow(d),
     lapply(registry, `[[`, "seq_label"))
   sequence_labels <- if (length(sequence_labels)) ggchord_rbind_fill(sequence_labels) else
-    layout$seq_labels_df
-  placed <- ggchord_text_obstacle_boxes(sequence_labels, layout$axis_ticks,
+    map_xy(layout$seq_labels_df)
+  placed <- ggchord_text_obstacle_boxes(sequence_labels, map_xy(layout$axis_ticks),
     layout$show_axis, units_per_inch = units, box_padding = .015)
   own_polygons <- function(row) vapply(polygons, function(polygon) {
       if (
@@ -485,19 +528,23 @@ ggchord_collinear_share_labels <- function(registry, layout) {
   geometry_hits <- function(box, row) {
     own <- own_polygons(row) & isTRUE(row$feature_label_inside)
     if (ggchord_boxes_hit_features(box, polygons[!own])) return(TRUE)
-    any(vapply(layout$seqs, function(id) {
-      if (isTRUE(row$feature_label_inside) && identical(id, as.character(row$accver)))
-        return(FALSE)
-      limits <- range(ggchord_collinear_x(c(0, ref$lens[id]), id, ref))
-      box$xmin < limits[2] && box$xmax > limits[1] &&
-        box$ymin < ref$y[id] + .006 && box$ymax > ref$y[id] - .006
+    any(vapply(names(paths), function(id) {
+      if (isTRUE(row$feature_label_inside) && identical(id, as.character(row$accver))) return(FALSE)
+      path <- paths[[id]]
+      if (!is.data.frame(path) || !nrow(path)) return(FALSE)
+      # A straight backbone is a path, not a full horizontal strip after projection.
+      ggchord_linear_line_hits_box(c(path$x[1], path$y[1]),
+        c(tail(path$x, 1), tail(path$y, 1)), box)
     }, logical(1L)))
   }
   route_for <- function(row) {
-    if (isTRUE(row$feature_label_inside) || abs(row$text_y - row$anchor_y) < .015) return(NULL)
-    side <- sign(row$text_y - row$anchor_y)
-    list(a = c(row$anchor_x, row$anchor_y + side * row$.feature_width / 2),
-      b = c(row$text_x, row$text_y))
+    if (isTRUE(row$feature_label_inside)) return(NULL)
+    n <- normal(row) * as.numeric(row$label_side %||% 1)
+    width <- row$.feature_width * sqrt(sum(normal(row, normalize = FALSE)^2))
+    a <- c(row$anchor_x, row$anchor_y) + n * width / 2
+    b <- c(row$text_x, row$text_y)
+    if (sqrt(sum((a - b)^2)) < .01 * units) return(NULL)
+    list(a = a, b = b)
   }
   route_conflicts <- function(row, box, repel) {
     text_hits <- if (length(placed_routes)) sum(vapply(placed_routes, function(route) {
@@ -513,11 +560,12 @@ ggchord_collinear_share_labels <- function(registry, layout) {
         ggchord_point_in_polygon(mean(c(route$a[1], route$b[1])),
           mean(c(route$a[2], route$b[2])), poly)
     }, logical(1L)))
-    geometry <- geometry + sum(vapply(layout$seqs, function(id) {
-      limits <- range(ggchord_collinear_x(c(0, ref$lens[id]), id, ref))
-      route$a[1] >= limits[1] && route$a[1] <= limits[2] &&
-        ref$y[id] > min(route$a[2], route$b[2]) + 1e-7 &&
-        ref$y[id] < max(route$a[2], route$b[2]) - 1e-7
+    geometry <- geometry + sum(vapply(names(paths), function(id) {
+      if (identical(id, as.character(row$accver))) return(FALSE)
+      path <- paths[[id]]
+      if (!is.data.frame(path) || !nrow(path)) return(FALSE)
+      ggchord_segments_cross(route$a[1], route$a[2], route$b[1], route$b[2],
+        path$x[1], path$y[1], tail(path$x, 1), tail(path$y, 1))
     }, logical(1L)))
     crosses <- if (length(placed_routes)) sum(vapply(placed_routes, function(old) {
       ggchord_segments_cross(route$a[1], route$a[2], route$b[1], route$b[2],
@@ -542,51 +590,44 @@ ggchord_collinear_share_labels <- function(registry, layout) {
       movable <- repel || identical(policy, "nudge")
       side <- as.numeric(row$label_side %||%
         ifelse(row$text_y >= row$anchor_y, 1, -1))
-      measured <- ggchord_text_boxes(row, units_per_inch = units, box_padding = .025)
-      step <- measured$h + .025
-      initial_y <- row$text_y
+      measured <- ggchord_text_boxes(row, units_per_inch = units, box_padding = .02 * units)
+      initial <- c(row$text_x, row$text_y)
+      n <- normal(row) * side
+      tangent <- c(n[2], -n[1])
+      # Tangential alternatives compete with nearby normal lanes, rather than
+      # being tried only after dozens of distant rows have failed.
+      normal_step <- max(.055 * units, .65 * (abs(n[1]) * measured$w + abs(n[2]) * measured$h))
+      tangent_step <- max(.065 * units, .45 * (abs(tangent[1]) * measured$w + abs(tangent[2]) * measured$h))
+      candidates <- if (movable) expand.grid(lane = 0:5, shift = c(0, -0.5, 0.5, -1, 1, -1.5, 1.5, -2, 2, -3, 3),
+        flip = if (repel && identical(row$label_side_policy, "auto")) c(FALSE, TRUE) else FALSE) else
+        data.frame(lane = 0L, shift = 0L, flip = FALSE)
+      candidates$distance <- sqrt((candidates$lane * normal_step)^2 + (candidates$shift * tangent_step)^2) + ifelse(candidates$flip, .05 * units, 0)
+      candidates <- candidates[candidates$distance <= max(.65 * units, measured$w * .8), , drop = FALSE]
+      candidates <- candidates[order(candidates$distance, abs(candidates$shift), candidates$lane), , drop = FALSE]
       found <- FALSE
-      for (lane in if (movable) 0:64 else 0L) {
-        row$text_y <- initial_y + side * lane * step
-        if (lane > 0L) {
+      for (candidate in seq_len(nrow(candidates))) {
+        lane <- candidates$lane[candidate]
+        flipped <- candidates$flip[candidate]
+        row$label_side <- side * if (flipped) -1 else 1
+        row$side_flipped <- if (flipped) !gl$side_flipped[i] else gl$side_flipped[i]
+        delta <- (if (flipped) 2 * (c(row$anchor_x, row$anchor_y) - initial) else c(0, 0)) +
+          n * (if (flipped) -1 else 1) * lane * normal_step +
+          tangent * candidates$shift[candidate] * tangent_step
+        row$text_x <- initial[1] + delta[1]; row$text_y <- initial[2] + delta[2]
+        if (any(delta != 0)) {
           row$feature_label_inside <- FALSE
           row$feature_label_mode <- "adjacent"
           row$feature_label_colour <- "#202020"
         }
-        box <- ggchord_text_boxes(row, units_per_inch = units,
-          box_padding = if (isTRUE(row$feature_label_inside)) .005 else .025)
+        box <- measured
+        for (field in c("x", "cx", "xmin", "xmax")) box[[field]] <- box[[field]] + delta[1]
+        for (field in c("y", "cy", "ymin", "ymax")) box[[field]] <- box[[field]] + delta[2]
         collision <- (!is.null(placed) && nrow(placed) &&
           any(ggchord_oriented_box_overlaps(box, placed))) || geometry_hits(box, row)
         route_hits <- route_conflicts(row, box, repel)
-        collision <- collision || any(route_hits > 0)
-        if (!collision || (!repel && identical(policy, "allow"))) {
+        if ((!collision && !any(route_hits > 0)) || (!repel && identical(policy, "allow"))) {
           found <- TRUE
           break
-        }
-      }
-      # A vertical leader can be trapped under an earlier label even when a
-      # nearby diagonal route is clear. Try small horizontal alternatives
-      # before hiding a repel label; retain all existing collision checks.
-      if (!found && repel) {
-        initial_x <- gl$text_x[i]
-        x_step <- max(measured$w * .6, .04)
-        for (shift in c(-1, 1, -2, 2, -3, 3, -4, 4)) {
-          row$text_x <- initial_x + shift * x_step
-          for (lane in 0:4) {
-            row$text_y <- initial_y + side * lane * step
-            row$feature_label_inside <- FALSE
-            row$feature_label_mode <- "adjacent"
-            row$feature_label_colour <- "#202020"
-            box <- ggchord_text_boxes(row, units_per_inch = units, box_padding = .025)
-            collision <- (!is.null(placed) && nrow(placed) &&
-              any(ggchord_oriented_box_overlaps(box, placed))) || geometry_hits(box, row)
-            route_hits <- route_conflicts(row, box, repel)
-            if (!collision && !any(route_hits > 0)) {
-              found <- TRUE
-              break
-            }
-          }
-          if (found) break
         }
       }
       row <- ggchord_label_fit_metadata(row)
@@ -621,6 +662,7 @@ ggchord_collinear_share_labels <- function(registry, layout) {
     }
     gl <- gl[visible, , drop = FALSE]
     if (!repel) {
+      gl$label <- gl$text
       registry[[item$layer_id]][[item$component]] <<- gl
       return(invisible(NULL))
     }
@@ -628,14 +670,14 @@ ggchord_collinear_share_labels <- function(registry, layout) {
     segments <- original[original$.component %in% "segment", , drop = FALSE]
     rebuilt <- list()
     for (i in seq_len(nrow(gl))) {
-      if (isTRUE(gl$feature_label_inside[i]) ||
-          abs(gl$text_y[i] - gl$anchor_y[i]) < .015) next
+      if (isTRUE(gl$feature_label_inside[i])) next
       group <- gl$group[i]
       template <- segments[segments$group %in% group, , drop = FALSE]
       base <- if (nrow(template)) template[1L, , drop = FALSE] else gl[i, , drop = FALSE]
-      base$x0 <- base$x <- gl$anchor_x[i]
-      base$y0 <- base$y <- gl$anchor_y[i] + sign(gl$text_y[i] - gl$anchor_y[i]) *
-        gl$.feature_width[i] / 2
+      route <- route_for(gl[i, , drop = FALSE])
+      if (is.null(route)) next
+      base$x0 <- base$x <- route$a[1]
+      base$y0 <- base$y <- route$a[2]
       base$x1 <- base$xend <- gl$text_x[i]
       base$y1 <- base$yend <- gl$text_y[i]
       base$group <- i
@@ -670,6 +712,7 @@ ggchord_collinear_share_labels <- function(registry, layout) {
   }
   for (item in fixed) solve(item, FALSE)
   for (item in automatic) solve(item, TRUE)
+  registry <- lapply(registry, function(owner) lapply(owner, map_xy, inverse = TRUE))
   attr(registry, "collinear_label_diagnostics") <- if (length(diagnostics))
     do.call(rbind, diagnostics) else data.frame()
   registry

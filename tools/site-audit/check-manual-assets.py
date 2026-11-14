@@ -27,6 +27,17 @@ def main():
     revised=json.loads(revised_path.read_text()) if revised_path.exists() else None
     if revised:
         assert revised['status']=='complete','Homepage image generation incomplete'
+        for path,digest in revised['source_sha256'].items():
+            metadata=revised.get('post_render_metadata',{})
+            current=(ROOT/path).read_bytes()
+            if path==metadata.get('file'):
+                assert hashlib.sha256(current).hexdigest()==metadata['after_sha256']
+                rewind=json.loads(current)
+                row=next(r for r in rewind if r['id']=='flaglinear')
+                assert set(metadata['previous_fields'])=={'source','sha256'}
+                row.update(metadata['previous_fields'])
+                current=(json.dumps(rewind,ensure_ascii=False,indent=2)+'\n').encode()
+            assert hashlib.sha256(current).hexdigest()==digest,'Rendering source changed: '+path
         assert revised['source_sha256']['tools/site-flagships.R']==source_sha
         before=subprocess.check_output(['git','show','3a6b412:tools/site-flagships.R'],cwd=ROOT)
         assert hashlib.sha256(before).hexdigest()==render['source_sha256']
@@ -47,7 +58,10 @@ def main():
     for row in rows:
         file = ROOT/row['file']
         digest = sha(file)
-        if revised and row['id'] in ('flagradial','flagsankey'):
+        if revised and row['id']=='flaglinear' and 'showcasecollinear' in revised.get('legacy_figures',{}):
+            record=revised['legacy_figures']['showcasecollinear']
+            assert record['sha256']==digest and record['status']=='actual PNG rendered'
+        elif revised and row['id'] in ('flagradial','flagsankey'):
             record=revised['figures'][row['id']]
             assert record['status']=='actual PNG rendered'
             assert record['sha256']==digest
@@ -90,7 +104,9 @@ def main():
         assert home['modules'][2]['title']['zh']=='序列比对点图'
         css=(ROOT/'website/assets/site.css').read_text()
         assert 'svh' not in css and '.home-shell{height:' not in css
-        assert '.home-logo{display:block;width:224px' in css
+        logo=re.search(r'\.home-logo\{display:block;width:(\d+)px',css)
+        assert logo and 280<=int(logo[1])<=320
+        assert 'body[data-page=index]{background:var(--surface-home)}' in css
         assert 'body[data-page=index] > .container{max-width:1280px}' in css
         assert 'object-fit:cover' not in css
         if args.built:

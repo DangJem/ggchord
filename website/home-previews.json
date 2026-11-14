@@ -69,13 +69,11 @@
     "id": "homefusion",
     "object": "home_fusion",
     "name": "Fusion",
-    "width": 7,
-    "height": 5.5,
+    "width": 10,
+    "height": 8,
     "dpi": 160,
     "file": "man/figures/homefusion.png",
-    "full": "coursefusion",
-    "source": "Existing coursefusion two-panel example; same source sequences and first observed fusion_links HSP; preview-only centre text and decoration.",
-    "full_file": "coursefusion.png",
-    "page": "fusion-start.html"
+    "full": "flagfusion",
+    "source": "Original four-panel flagship; all 32 source HSPs and 266 CDS in overview panels; source-backed focused detail and original inter-panel HSP selections. Preview-only decoration and panel layout."
   }
 ]

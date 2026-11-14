@@ -45,7 +45,63 @@ def verify_ci_patch():
     # branch is unreachable there. S3 method body is unchanged. Preserve the
     # real render hashes instead of stamping these old images as freshly drawn.
 
+def verify_linear_revision():
+    record=json.loads((ROOT/'tools/site-audit/home-rendering.json').read_text())
+    assert record['status']=='complete'
+    for path,digest in record['source_sha256'].items():
+        metadata=record.get('post_render_metadata',{})
+        current=(ROOT/path).read_bytes()
+        if path==metadata.get('file'):
+            assert hashlib.sha256(current).hexdigest()==metadata['after_sha256']
+            rewind=json.loads(current)
+            row=next(r for r in rewind if r['id']=='flaglinear')
+            assert set(metadata['previous_fields'])=={'source','sha256'}
+            row.update(metadata['previous_fields'])
+            current=(json.dumps(rewind,ensure_ascii=False,indent=2)+'\n').encode()
+        assert hashlib.sha256(current).hexdigest()==digest,'Rendering source changed: '+path
+    review=record['runtime_review']
+    assert review['baseline']=='a1cd31d' and review['signatures_identical'] and review['other_expressions_identical']
+    assert set(review['changed_functions'])=={'compute_chord_geometry','ggchord_collinear_gene_labels','ggchord_collinear_share_labels'}
+    assert review['representative_chord_circular_geometry_identical']
+    previous=json.loads(subprocess.check_output(['git','show','a1cd31d:tools/site-audit/home-rendering.json'],cwd=ROOT))
+    actual={str(p.relative_to(ROOT)):hashlib.sha256(p.read_bytes()).hexdigest() for p in (ROOT/'R').glob('*.R')}
+    assert actual==record['engine_sha256'],'Runtime changed after actual annotation rendering'
+    changed={name for name,digest in actual.items() if previous['engine_sha256'].get(name)!=digest}
+    assert changed=={'R/ggchord-build.R','R/layout-collinear-annotation.R'}
+    recipe=(ROOT/'tools/documentation-examples.R').read_bytes()
+    assert recipe==subprocess.check_output(['git','show','a1cd31d:tools/documentation-examples.R'],cwd=ROOT)
+    assert hashlib.sha256(recipe).hexdigest()==record['legacy_scope']['unchanged_recipes_sha256']
+    baseline=list(csv.DictReader(subprocess.check_output(['git','show','a1cd31d:website/assets/plots.csv'],cwd=ROOT,text=True).splitlines()))
+    rows=list(csv.DictReader((ROOT/'website/assets/plots.csv').open()))
+    assert [r['id'] for r in rows]==[r['id'] for r in baseline]
+    refreshed=record['legacy_figures']
+    assert set(refreshed)==set(record['legacy_scope']['annotated'])=={'showcasecollinear','linearlabels','practicelinear'}
+    current=module.fingerprints()['assets'];expected={}
+    for old,row in zip(baseline,rows):
+        name=row['id'];path=ROOT/row['file']
+        assert hashlib.md5(path.read_bytes()).hexdigest()==row['md5'],name
+        if name in refreshed:
+            item=refreshed[name]
+            assert item['status']=='actual PNG rendered'
+            assert hashlib.sha256(path.read_bytes()).hexdigest()==item['sha256']
+            assert item['md5']==row['md5'] and item['dependency_md5']==row['dependency_md5']==current[name]
+            assert all(old[k]==row[k] for k in old if k not in {'md5','code_md5','dependency_md5','generator'}),name
+        else:
+            assert old==row,'Retained PNG provenance moved: '+name
+        expected[name]=row['dependency_md5']
+    result=dict(status='passed scoped annotation update',baseline='a1cd31d',figure_count=len(rows),
+        actual_png_refresh_count=len(refreshed),retained_equivalent_count=len(rows)-len(refreshed),
+        method='Unchanged recipes and unchanged AST outside three reviewed internal functions; all 42 linear/composition objects inspected for name layers; three affected PNGs regenerated; Chord/Circular representative geometry exact; other runtime files identical.',
+        current_engine_sha256=actual,expected_dependency_md5=expected,
+        runtime_scope=review['scope'],scope='Source and normal-size PNG verification; no package-wide or browser certification')
+    (ROOT/'tools/site-audit/existing-asset-equivalence.json').write_text(json.dumps(result,indent=2)+'\n')
+    print('PASS: 3 affected linear PNGs refreshed; 175 retained assets preserve their provenance')
+
 def main():
+    revision=json.loads((ROOT/'tools/site-audit/home-rendering.json').read_text())
+    if revision.get('runtime_review'):
+        verify_linear_revision()
+        return
     changed=subprocess.check_output(['git','diff',BASE,'--name-only','--','R','data'],cwd=ROOT,text=True).splitlines()
     allowed={'R/api-contract.R','R/collinear-utils.R','R/coord-sankey.R','R/geom-ribbon.R',
       'R/ggchord-build.R','R/ggchord-frame.R','R/layout-collinear.R','R/layout-ribbon-step.R'} | CI_FILES

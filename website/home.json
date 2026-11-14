@@ -108,8 +108,8 @@
         "en": "Multi-view composition"
       },
       "purpose": {
-        "zh": "把环形概览与线性细节放在一起，用真实来源区间连接独立面板。",
-        "en": "Connect a circular overview with linear detail through real source intervals."
+        "zh": "组合弦图、共线性图、径向视图和局部细节，用真实区间连接独立面板。",
+        "en": "Combine Chord, Collinear, radial and detailed views, connecting independent panels through real intervals."
       },
       "figures": [
         "homefusion"

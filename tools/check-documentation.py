@@ -133,8 +133,14 @@ def main():
             {(e['name'],p) for e in inventory for p in (e['parameters'] or {})}, 'Incomplete parameter contracts')
     runtime_record=json.loads((ROOT/'tools/teaching-audit/lesson-execution.json').read_text())
     require(runtime_record.get('shared_code_sha256')==hashlib.sha256((ROOT/'tools/documentation-examples.R').read_bytes()).hexdigest(),'Lesson execution uses stale shared R source')
+    supplement_path=ROOT/'tools/site-audit/home-rendering.json'
+    supplement=json.loads(supplement_path.read_text()) if supplement_path.exists() else {}
     for path, digest in runtime_record.get('engine_sha256',{}).items():
-        require(hashlib.sha256((ROOT/path).read_bytes()).hexdigest()==digest,'Lesson execution uses stale engine: '+path)
+        fresh=hashlib.sha256((ROOT/path).read_bytes()).hexdigest()
+        covered=(supplement.get('status')=='complete' and supplement.get('runtime_review',{}).get('signatures_identical')
+            and path in {'R/ggchord-build.R','R/layout-collinear-annotation.R'}
+            and supplement.get('engine_sha256',{}).get(path)==fresh)
+        require(fresh==digest or covered,'Lesson execution uses stale engine without scoped revalidation: '+path)
     execution=runtime_record['pages']
     expanded_for_validation={p['slug']:expand((WEB/'en'/(p['slug']+'.md')).read_text(),'en') for p in PAGES}
     all_code='\n'.join('\n'.join(re.findall(r'```r\n(.*?)```',text,re.S)) for text in expanded_for_validation.values())

@@ -6,8 +6,13 @@
   name; original technical HSP terminology and contracts remain unchanged.
 - Radial and Sankey flagship examples use view-specific export proportions,
   compact horizontal Identity guides and larger feature/name styling. Their
-  original HSP endpoints and CDS inputs remain; the Radial name layer selects
-  one representative CDS per sequence. Complete Chord/Collinear designs remain.
+  original HSP endpoints and CDS inputs remain, with all original name candidates
+  and Sequence guides restored. Circular homepage colours use the source name
+  palette; the Fusion preview again derives from the four-panel flagship.
+- Collinear annotations search nearby positions before distant lanes. Radial,
+  Sankey and vertical Collinear labels resolve collisions after projection using
+  physical text dimensions, preserving manual placements and source records.
+  Fixed-label visibility diagnostics now report their actual displayed text.
 
 - Website: restore Flexible parameter formats as a searchable capability, separate
   parameter-family matching/default rules, and add source-backed reorder/strand

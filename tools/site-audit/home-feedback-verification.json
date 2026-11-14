@@ -1,0 +1,111 @@
+{
+  "status": "source, PNG and native build verification complete; language-source migration follows",
+  "baseline": "a1cd31d",
+  "branch": "v0.27.0",
+  "full_figure_quality": {
+    "radial": {
+      "measured": true,
+      "n_source_labels": 20,
+      "n_visible_source_labels": 20,
+      "n_hidden_source_labels": 0,
+      "n_text_boxes": 32,
+      "n_text_objects": 32,
+      "n_leaders": 20,
+      "n_text_overlaps": 0,
+      "n_leader_crossings": 0,
+      "n_leaders_through_text": 0,
+      "n_label_outside_canvas": 0,
+      "mean_leader_length_mm": 7.8525,
+      "max_leader_length_mm": 12.1601,
+      "n_feature_polygons": 20,
+      "n_feature_parts_unchecked": 0,
+      "n_text_over_feature": 0,
+      "n_text_feature_unresolved": 2,
+      "n_text_on_own_feature": 0
+    },
+    "sankey": {
+      "measured": true,
+      "n_source_labels": 32,
+      "n_visible_source_labels": 32,
+      "n_hidden_source_labels": 0,
+      "n_text_boxes": 56,
+      "n_text_objects": 56,
+      "n_leaders": 32,
+      "n_text_overlaps": 0,
+      "n_leader_crossings": 0,
+      "n_leaders_through_text": 0,
+      "n_label_outside_canvas": 0,
+      "mean_leader_length_mm": 3.5784,
+      "max_leader_length_mm": 5.0075,
+      "n_feature_polygons": 32,
+      "n_feature_parts_unchecked": 0,
+      "n_text_over_feature": 0,
+      "n_text_feature_unresolved": 0,
+      "n_text_on_own_feature": 0
+    },
+    "collinear": {
+      "measured": true,
+      "n_source_labels": 16,
+      "n_visible_source_labels": 16,
+      "n_hidden_source_labels": 0,
+      "n_text_boxes": 32,
+      "n_text_objects": 32,
+      "n_leaders": 16,
+      "n_text_overlaps": 0,
+      "n_leader_crossings": 0,
+      "n_leaders_through_text": 0,
+      "n_label_outside_canvas": 0,
+      "mean_leader_length_mm": 3.0795,
+      "max_leader_length_mm": 7.47,
+      "n_feature_polygons": 16,
+      "n_feature_parts_unchecked": 0,
+      "n_text_over_feature": 0,
+      "n_text_feature_unresolved": 0,
+      "n_text_on_own_feature": 0
+    }
+  },
+  "source_checks": {
+    "radial_ribbon": {
+      "original_records": 12,
+      "all_source_fields_identical": true
+    },
+    "radial_gene": {
+      "original_records": 20,
+      "all_source_fields_identical": true
+    },
+    "sankey_ribbon": {
+      "original_records": 10,
+      "all_source_fields_identical": true
+    },
+    "sankey_gene": {
+      "original_records": 32,
+      "all_source_fields_identical": true
+    }
+  },
+  "home": {
+    "logo_width_px": 288,
+    "background": "#FFFCF5",
+    "modules": 4,
+    "previews": 7,
+    "columns": 2,
+    "natural_height": true
+  },
+  "checks": {
+    "language_pairs": 93,
+    "exports": 157,
+    "Rd": 121,
+    "legacy_urls": 582,
+    "legacy_sections": 1146,
+    "aliases": 14,
+    "archive_inputs": 76,
+    "resolved_example_files": 30
+  },
+  "native_build": "English final batch failed; four isolated retries succeeded with unchanged source; original failure retained",
+  "not_run": [
+    "browser interaction",
+    "viewport/zoom/mobile acceptance",
+    "package release checks",
+    "deployment",
+    "merge or push"
+  ]
+}

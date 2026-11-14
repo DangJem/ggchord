@@ -45,7 +45,7 @@ relationship_identity <- ggplot2::guide_coloursteps(
   )
 )
 relationship_guides <- guides(
-  seq_colour = "none",
+  seq_colour = guide_ggchord_legend(nrow = 1, position = "bottom"),
   gene_fill = guide_ggchord_legend(
     nrow = 1, position = "bottom", override.aes = list(strand = c("+", "-"))
   ),
@@ -61,31 +61,25 @@ relationship_theme <- doc_theme + theme(
   plot.margin = margin(8, 10, 8, 10),
   plot.title = element_text(size = 17), plot.subtitle = element_text(size = 10)
 )
-radial_labels <- chord_genes |>
-  group_by(accver) |>
-  arrange(grepl("hypothetical", anno, ignore.case = TRUE), desc(end - start), .by_group = TRUE) |>
-  slice_head(n = 1) |>
-  ungroup()
+radial_labels <- chord_genes
 radial_position <- position_strand(c("+" = -0.055, "-" = 0.055))
 flag_radial <- ggchord(show_sequences, show_links) +
   geom_link_ribbon(adjacent_only = FALSE, link_avoid = "smooth", alpha = 0.46, linewidth = 0.20) +
   geom_seq(seq_orientation = show_optimization$seq_orientation, seq_gap = 0.3, linewidth = 1.1) +
   geom_gene(data = chord_genes, position = radial_position, width = 0.065) +
-  geom_gene_label_repel(data = radial_labels, label_layout = "radial", label_wrap = 22,
-    size = 3.3, label_max_lines = 3, position = radial_position) +
-  geom_seq_label(size = 4.4, seq_label_orientation = "horizontal") +
+  geom_gene_label_repel(data = radial_labels, label_side = "auto", label_wrap = 20,
+    label_max_lines = 3, position = radial_position, size = 3.1) +
+  geom_seq_label(size = 4.4, seq_label_orientation = "horizontal",
+    seq_label_vjust = c("MT108731.1" = 0.5, "MT118296.1" = 0.5,
+      "OQ646790.1" = 1.5, "OR222515.1" = 0.5)) +
   scale_seq_colour_manual(values = seq_palette, name = "Sequence") +
   scale_gene_fill_manual(values = gene_palette, breaks = c("+", "-"), name = "Strand") +
   scale_seq_position_continuous(n.breaks = 2, minor_breaks = NULL,
     labels = function(x) format(x, scientific = FALSE, big.mark = ",", trim = TRUE)) +
   coord_radial_synteny(start_angle = 45, inner_radius = 0.7) +
   relationship_theme + relationship_guides +
-  labs(title = "Four genomes, a radial view", subtitle = "Original Chord sources; one representative CDS name per sequence")
-sankey_labels <- show_linear_features |>
-  group_by(accver) |>
-  arrange(grepl("hypothetical", anno, ignore.case = TRUE), desc(end - start), .by_group = TRUE) |>
-  slice_head(n = 1) |>
-  ungroup()
+  labs(title = "Four genomes, a radial view", subtitle = "Original Chord sources; all 20 CDS annotations")
+sankey_labels <- show_linear_features
 flag_sankey <- ggchord(show_sequences, gene_data = show_linear_features) +
   geom_link_ribbon(aes(ribbon_fill = pident), data = show_adjacent,
     link_avoid = "smooth", alpha = 0.48, linewidth = 0.25) +
@@ -93,15 +87,14 @@ flag_sankey <- ggchord(show_sequences, gene_data = show_linear_features) +
     adjacent_only = FALSE, link_avoid = "smooth", alpha = 0.28, linewidth = 0.3) +
   geom_seq(seq_gap = 0.30, linewidth = 1.1) +
   geom_gene(position = position_strand(0.09), width = 0.075) +
-  geom_gene_label(data = sankey_labels,
-    label_orientation = "horizontal", label_side = "outside", label_overlap = "allow",
-    label_radial_offset = 0.25, label_wrap = 16, position = position_strand(0.09), size = 3.3) +
+  geom_gene_label_repel(data = sankey_labels, label_wrap = 20,
+    label_max_lines = 3, position = position_strand(0.09), size = 3.1) +
   geom_seq_label(size = 4.4) +
   scale_seq_colour_manual(values = seq_palette, name = "Sequence") +
   scale_gene_fill_manual(values = gene_palette, breaks = c("+", "-"), name = "Strand") +
   scale_seq_position_continuous(n.breaks = 2, minor_breaks = NULL,
     labels = function(x) format(x, scientific = FALSE, big.mark = ",", trim = TRUE)) +
-  coord_sankey(column_gap = 5.2) + relationship_theme + relationship_guides +
+  coord_sankey(column_gap = 4.2, ratio = 1.15) + relationship_theme + relationship_guides +
   labs(title = "Four genomes, mirrored relationships", subtitle = "Original Collinear sources; independent query and subject displays")
 # ---- fusionoverview ----
 flagship_position <- position_strand(0.045)

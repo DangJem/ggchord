@@ -38,12 +38,11 @@
       "showcasechord",
       "showcasecollinear"
     ],
-    "source": "Retained existing flagship; original code, image bytes and display choices unchanged",
+    "source": "Existing source-backed Collinear flagship; preparation, HSP/CDS inputs and palette retained; annotations resolved by the current layout engine.",
     "page": "multi-sequence-views.html",
     "width": 12.0,
     "height": 8.0,
-    "dpi": 144.0,
-    "sha256": "84cda96b15b6a4705d9fa28f0b86c8a8ee7303ba21ffe2bc554b90f94180ba9e"
+    "dpi": 144.0
   },
   {
     "id": "flagradial",
@@ -62,10 +61,10 @@
       "showcasecollinear",
       "flagshipmulti"
     ],
-    "source": "Same Chord source HSPs and CDS geometries; revised 11x10 canvas, horizontal source names, compact horizontal Identity guide; one representative CDS-name input per sequence.",
+    "source": "Original 12 HSPs and 20 CDS; all source-name candidates, local post-projection label placement, restored Sequence guide; 12x10.5 inch canvas.",
     "page": "multi-sequence-views.html",
-    "width": 11,
-    "height": 10,
+    "width": 12,
+    "height": 10.5,
     "dpi": 144
   },
   {
@@ -85,10 +84,10 @@
       "showcasecollinear",
       "flagshipmulti"
     ],
-    "source": "Same Collinear source HSPs and CDS geometries; revised 10x12 portrait canvas, wider column spacing and compact horizontal Identity guide.",
+    "source": "Original 10 HSPs and 16 CDS; complete mirrored annotation candidates, local post-projection label placement and restored Sequence guide; 10x16 inch canvas.",
     "page": "multi-sequence-views.html",
     "width": 10,
-    "height": 12,
+    "height": 16,
     "dpi": 144
   },
   {
