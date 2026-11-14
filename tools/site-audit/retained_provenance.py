@@ -11,7 +11,7 @@ def radial_revision():
     assert record['status']=='complete' and record['baseline']=='4f68edf'
     for name,digest in record['source_sha256'].items():
         assert sha((ROOT/name).read_bytes())==digest,'Radial reviewed source moved: '+name
-    assert set(record['figures'])=={'flagradial','homeradial','flagfusion','homefusion'} | {name for name,item in record.get('legacy_geometry',{}).items() if item['changed_controls']>0}
+    assert set(record['figures'])=={'flagradial','homeradial','flagfusion','homefusion'} | {name for name,item in record.get('legacy_geometry',{}).items() if item['changed_controls']>0 or item.get('changed_obstacle_routes',0)>0}
     for item in record['figures'].values():
         assert sha((ROOT/item['file']).read_bytes())==item['sha256']
     assert record['checks']['source_fields_identical'] and record['checks']['backbone_clearance_min']>.1
@@ -26,7 +26,7 @@ def render_source(name):
     current=(ROOT/name).read_bytes()
     revision=radial_revision()
     if revision and name in {'DESCRIPTION','R/coord-radial-synteny.R','R/geom-ribbon.R',
-                            'R/ggchord-frame.R','R/fusion.R','R/fusion-render.R','R/magnify.R',
+                            'R/ggchord-frame.R','R/fusion.R','R/fusion-render.R','R/fusion-routing.R','R/magnify.R',
                             'tools/site-flagships.R','tools/home-previews.R','website/home-previews.json'}:
         current=subprocess.check_output(['git','show','4f68edf:'+name],cwd=ROOT)
     if name not in {'DESCRIPTION','R/coord-dotplot.R'}:return current

@@ -77,7 +77,7 @@
     "R/geom-seq.R": "266c3b93dccc114f9506b595c8468e79aa27a1c8b24fba6e3ae6737fd031ffae",
     "R/label-quality.R": "38765a0043a6f8f7b6d2fd4c5c606378855443b2aa5f9bde8c6062f6f5b1f92c",
     "R/guide-measure.R": "0cf17edf1f0d23ae44b67411c7414841f84cadc11de271738216434a57737676",
-    "R/fusion-routing.R": "bce028f9cea881bb0ac9608c74cfd029024e9a5c6ac81d8d40aa807d3f8f313c",
+    "R/fusion-routing.R": "e68086c8b40712a8e297ee567da6b8c005a06bee715108982342d59a3ad38ee3",
     "R/layout-collinear-annotation.R": "741cce616510fe7eecd004d024115da5e351f03fc804f90286b67c69df704c94",
     "R/feature-label-association.R": "82a908de521357d61f74572aec5d3ec2be747fcfe1d8bca1d6a2c0af6ae7dce0",
     "R/feature-contour-clipping.R": "2c1dc92c0235b28084e88746a5cc5aaec4043b25d0cf7c072f852b9b85dacd30",
@@ -128,7 +128,7 @@
     "R/ggchord-scales.R": "ec84da03ed4e9d9d8c8dc6227196a007a932b5aeca302d5d6e54d7a06d7e014a",
     "R/data-segment.R": "f6597e0675ca22f2e7eaa3ed8ddf67dd2f35652f14fe450493cebeb22f5e1d6d",
     "R/data-genbank.R": "4fa44a959a6f80ceedfcb99b658eee8d2b355cabcb3164ba33e9997c484a5565",
-    "R/magnify.R": "f40c30eb0c627959b63124d1423870d0ebe72a857a83a68717e0940f68d63ea6",
+    "R/magnify.R": "76b21b96a188bdacb0332d886c9344a94f1b95197188e3d7d1738543de661f79",
     "R/focus.R": "1016cfe1273b3028aa4bf2612d09f386cdeac9b2caef473ce56e338b7e67599e",
     "R/geom-seq-center-label.R": "f973a67bdec4794b9a8f4514c151c62bfb0a6f0e7fbd35949527b65bb1e9f388",
     "R/coord-radial-synteny.R": "ba75434cb5a1c2f00327be1a6267ae5c8e96b37eb7faa0fcee21517e74b6d26d",
@@ -141,7 +141,7 @@
   },
   "release_equivalence": {
     "DESCRIPTION": {
-      "current_sha256": "c8e9e94ebb5fdc01bee51829b5a893f965c22c7752b1f6c02e081056b43508b5",
+      "current_sha256": "fee0a9301df8ebc1372ec97c08adb64678a4361bc9014024e25ceeefb69af1f9",
       "render_sha256": "1a57224db5d642848037c98e79cc21e724acbfbc48d9ce0e12fe8f2537edc172"
     },
     "R/coord-dotplot.R": {

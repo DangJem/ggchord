@@ -26,69 +26,45 @@
 <a id="examples"></a>
 ## 真实数据综合示例
 
-### Chord · 四条基因组的关系总览
-
-混合曲率骨架、保留真实链方向的 CDS 箭头、来源标签与 Identity 连接带组合展示。特征与 HSP 按显示需要从原始记录中选取。
-
-![四条基因组的弦图旗舰：基因标签与比对连接带](man/figures/showcasechord.png)
-
-[完整案例](website/zh/chord.md) · [四种关系视图转换](website/zh/multi-sequence-views.md) · [绘图源码](tools/documentation-examples.R)
-
-### Collinear · 顺序、方向与跨行连接
-
-在共同的 bp 标尺下比较四条基因组，骨架两侧展示精选 CDS。跨越非相邻显示行的连接带使用虚线轮廓。
-
-![四条基因组的共线性旗舰：分链基因与跨行连接带](man/figures/showcasecollinear.png)
-
-[完整案例](website/zh/collinear.md) · [对齐与排列](website/zh/collinear-layout.md) · [绘图源码](tools/documentation-examples.R)
-
-### Radial · 径向辐条上的共线性
-
-从弦图旗舰复用来源准备与精选特征，改用径向辐条骨架展示区间关系；序列身份与原生位置保持可追溯。
-
-![从四基因组弦图派生的 Radial 旗舰](man/figures/flagradial.png)
-
-[完整案例](website/zh/radial-synteny.md) · [绘图源码](tools/site-flagships.R)
-
-### Sankey · 镜像双列中的来源区间
-
-从共线性旗舰派生，保留对应的精选基因与 HSP。序列镜像排列在两列中，连接带表示已有区间关系，带宽不代表守恒流量。
-
-![从四基因组共线性图派生的 Sankey 旗舰](man/figures/flagsankey.png)
-
-[完整案例](website/zh/sankey.md) · [绘图源码](tools/site-flagships.R)
-
-### Circular · pETDuet-1 密集注释
-
-完整圆图包含 20 个特征、5 个参考引物，以及声明酶集合中的 58 个合并切点位置。序列位置与注释身份均来自原始输入。
-
-![pETDuet-1 圆图旗舰：完整特征、引物与限制位点](man/figures/showcaseplasmid.png)
-
-[完整案例](website/zh/circular-dense-case.md) · [13 个完整参考图](website/zh/plasmid-catalog.md) · [绘图源码](tools/documentation-examples.R)
-
-### HSP 矩阵与多视图组合
+### I · 多序列关系
 
 <table>
   <tr>
-    <th>III · HSP 点图</th>
-    <th>IV · 多视图组合</th>
+    <td width="50%"><strong>Chord · 四条基因组的关系总览</strong><br><a href="man/figures/showcasechord.png"><img src="man/figures/showcasechord.png" alt="四条基因组的弦图旗舰：基因标签与比对连接带" width="460"></a><br>混合曲率骨架、保留真实链方向的 CDS 箭头、来源标签与 Identity 连接带组合展示。特征与 HSP 按显示需要从原始记录中选取。<br><a href="website/zh/chord.md">完整案例 →</a></td>
+    <td width="50%"><strong>Collinear · 顺序、方向与跨行连接</strong><br><a href="man/figures/showcasecollinear.png"><img src="man/figures/showcasecollinear.png" alt="四条基因组的共线性旗舰：分链基因与跨行连接带" width="460"></a><br>在共同的 bp 标尺下比较四条基因组，骨架两侧展示精选 CDS。跨越非相邻显示行的连接带使用虚线轮廓。<br><a href="website/zh/collinear.md">完整案例 →</a></td>
   </tr>
   <tr>
-    <td width="50%"><a href="man/figures/flagdotplot.png"><img src="man/figures/flagdotplot.png" alt="四序列、32 条原始 HSP 的双轴矩阵" width="460"></a></td>
-    <td width="50%"><a href="man/figures/flagfusion.png"><img src="man/figures/flagfusion.png" alt="连接 Chord、Collinear、Radial 与局部放大的组合图" width="460"></a></td>
-  </tr>
-  <tr>
-    <td>32 条原始 HSP；颜色表示 Identity，线宽表示原记录中的比对长度。</td>
-    <td>在同一组合中关联全局关系、共线性比较与来源区间的局部放大。</td>
-  </tr>
-  <tr>
-    <td><a href="website/zh/dotplot-start.md">双轴、方向与映射 →</a></td>
-    <td><a href="website/zh/fusion-details.md">局部放大与字符细节 →</a></td>
+    <td width="50%"><strong>Radial · 径向辐条上的共线性</strong><br><a href="man/figures/flagradial.png"><img src="man/figures/flagradial.png" alt="从四基因组弦图派生的 Radial 旗舰" width="460"></a><br>从弦图旗舰复用来源准备与精选特征，改用径向辐条骨架展示区间关系；序列身份与原生位置保持可追溯。<br><a href="website/zh/radial-synteny.md">完整案例 →</a></td>
+    <td width="50%"><strong>Sankey · 镜像双列中的来源区间</strong><br><a href="man/figures/flagsankey.png"><img src="man/figures/flagsankey.png" alt="从四基因组共线性图派生的 Sankey 旗舰" width="460"></a><br>从共线性旗舰派生，保留对应的精选基因与 HSP。序列镜像排列在两列中，连接带表示已有区间关系，带宽不代表守恒流量。<br><a href="website/zh/sankey.md">完整案例 →</a></td>
   </tr>
 </table>
 
+### II · 单序列圆图
+
+<a href="man/figures/showcaseplasmid.png"><img src="man/figures/showcaseplasmid.png" alt="pETDuet-1 圆图旗舰：完整特征、引物与限制位点" width="460"></a>
+
+完整圆图包含 20 个特征、5 个参考引物，以及声明酶集合中的 58 个合并切点位置。序列位置与注释身份均来自原始输入。
+
+[完整案例](website/zh/circular-dense-case.md)
+
+### III · HSP 点图
+
+<a href="man/figures/flagdotplot.png"><img src="man/figures/flagdotplot.png" alt="四序列、32 条原始 HSP 的双轴矩阵" width="460"></a>
+
+32 条原始 HSP；颜色表示 Identity，线宽表示原记录中的比对长度。
+
+[完整案例](website/zh/dotplot-start.md)
+
+### IV · 多视图组合
+
+<a href="man/figures/flagfusion.png"><img src="man/figures/flagfusion.png" alt="连接 Chord、Collinear、Radial 与局部放大的组合图" width="460"></a>
+
+在同一组合中关联全局关系、共线性比较与来源区间的局部放大。
+
+[完整案例](website/zh/fusion-details.md)
+
 图像的输入、显示选择与绘图定义均可追溯：
-[输入文件](examples/) · [Dotplot / Fusion 源码](tools/site-flagships.R) · [数据来源与归属](website/ASSET-SOURCES.md)
+[输入文件](examples/) · [Dotplot / Fusion 源码](tools/site-flagships.R) · [绘图源码](tools/documentation-examples.R) · [数据来源与归属](website/ASSET-SOURCES.md)
 
 <a id="get-started"></a>
 ## 开始使用

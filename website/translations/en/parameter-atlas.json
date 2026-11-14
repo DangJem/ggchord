@@ -1,5 +1,5 @@
 {
-  "source_sha256": "c3ee2318a4d571001ab7ee175b8ba8d5da26c5f5fb217421b9cd86ef1236a8d7",
+  "source_sha256": "8c5e32d7dafd61258deaf2397e39e4cf4b893d914b6bec604b81759ff7f18eed",
   "blocks": {
     "0": {
       "source_sha256": "b65042735ad0aed85715a6b9cf15b4240d2c51e05524a13db0eed5c62d2d0739",
@@ -8517,9 +8517,9 @@
       "translation": "| ⟦shared:0⟧ | ⟦shared:1⟧ | Type, units and accepted forms: see this API argument contract at right | Optional panel width/height fractions, following ggchord_fusion() and fusion_panel(). Defaults reserve a smaller source panel and a wider detail container for a single detail plot. With multiple details, use a named list of sizes or NULL for Fusion defaults; center_size also follows Fusion defaults. Out-of-frame allocations fail; overlap requires explicit allow_overlap. |\n"
     },
     "1912": {
-      "source_sha256": "cf75175ca0ba54cf1a33556219df9f507b88a8e69157f0f0868d1f5a20d307d6",
+      "source_sha256": "fec1940cb78ccf39a3714c49e22761e318dc8f38683a7829dd50e4995d9505dd",
       "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | ⟦shared:1⟧ | Type, units and accepted forms: see this API argument contract at right | \"leader\" draws two decorative boundary leaders per row; \"none\" retains the highlights only. These are not biological ribbons or alignments. |\n"
+      "translation": "| ⟦shared:0⟧ | ⟦shared:1⟧ | Type, units and accepted forms: see this API argument contract at right | \"leader\" draws two decorative boundary leaders per row; \"none\" retains the highlights only. \"envelope\" groups selections by source/detail panel pair, outlines each exact source highlight band and frames the displayed detail sequences with their native labels (excluding plot titles and guides). Two leaders join actual source-band edges to the detail frame. Source selections are never enclosed in a padded combined rectangle. The detail frame is a display boundary, not a genomic interval. These are not biological ribbons or alignments. |\n"
     },
     "1913": {
       "source_sha256": "3cbd95c176f70dd7fbbeb08fa480ba86dedf8d3f26e7779c075fa9ba722fd162",

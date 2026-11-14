@@ -198,52 +198,68 @@ fusion_shared_styles <- list(
     legend.title = element_text(size = 9, face = "bold"), legend.text = element_text(size = 8),
     legend.margin = margin(2, 2, 2, 2), legend.spacing.x = grid::unit(2, "mm"),
     plot.margin = margin(3, 5, 3, 5), plot.title = element_text(size = 15, face = "bold", hjust = 0),
-    plot.subtitle = element_text(size = 9, colour = "#52646A"), ggchord.axis.text = element_text(size = 8))
+    plot.subtitle = element_text(size = 9, colour = "#52646A"),
+    plot.title.position = "plot", ggchord.axis.text = element_text(size = 9))
 )
-make_fusion_view <- function(coord, title, subtitle) {
+make_fusion_view <- function(coord, title, subtitle, label_radius = NULL) {
+  label_layer <- if (is.null(label_radius)) {
+    geom_seq_label(size = 3.5, seq_label_orientation = "horizontal")
+  } else {
+    geom_seq_label(size = 3.5, seq_label_radius = label_radius,
+      seq_label_orientation = "horizontal")
+  }
   ggchord(flagship_sequences, fusion_display_hsp, feature_data = fusion_display_features) +
     geom_link_ribbon(adjacent_only = FALSE, alpha = 0.25, linewidth = 0.10,
       nonadjacent_linewidth = 0.22, allow_repeated = TRUE) +
     geom_seq(aes(seq_colour = accver), seq_orientation = fusion_orientation, linewidth = 1.1) +
-    geom_gene(aes(gene_fill = strand), position = flagship_position, width = 0.035) +
-    geom_seq_label(size = 3.2, seq_label_orientation = "horizontal") +
+    geom_gene(aes(gene_fill = strand), position = flagship_position, width = 0.04) +
+    label_layer +
     coord + fusion_shared_styles + labs(title = title, subtitle = subtitle)
 }
-fusion_chord_view <- make_fusion_view(coord_chord(rotation = 45),
-  "A  |  Chord", "Six observed HSPs; three source CDS per genome") +
+fusion_chord_view <- make_fusion_view(coord_chord(rotation = 45,
+    xlim = c(-1.22, 1.02), ylim = c(-1.02, 1.22), fit = "manual"),
+  "A  |  Chord", "6 HSPs; 3 CDS per genome", label_radius = 1.12) +
   theme(ggchord.axis.text = element_blank(), ggchord.axis.ticks = element_blank())
-fusion_linear_view <- make_fusion_view(coord_collinear(),
-  "B  |  Collinear", "The same selected intervals in linear coordinates") +
+fusion_linear_view <- make_fusion_view(coord_collinear(ratio = 0.78),
+  "B  |  Collinear", "The same intervals in linear coordinates") +
   scale_seq_position_continuous(n.breaks = 2, minor_breaks = NULL)
 fusion_radial_view <- make_fusion_view(coord_radial_synteny(start_angle = 45, inner_radius = 0.7),
-  "C  |  Radial", "Shared intervals; A - C and C - D correspondences") +
+  "C  |  Radial", "Shared intervals; A / D") +
   theme(ggchord.axis.text = element_blank(), ggchord.axis.ticks = element_blank())
 fusion_zoom_view <- ggchord(flagship_focused$seq_data, flagship_focused$ribbon_data,
   feature_data = fusion_detail_features) +
   geom_link_ribbon(allow_repeated = TRUE, alpha = 0.25, linewidth = 0.10) +
   geom_seq(aes(seq_colour = accver), seq_orientation = 1, linewidth = 1.1) +
-  geom_gene(aes(gene_fill = strand), position = flagship_position, width = 0.035) +
-  geom_gene_label_repel(size = 2.8, label_wrap = 22, label_max_lines = 2, position = flagship_position) +
-  geom_seq_label(size = 3.2, seq_label_orientation = "horizontal") +
+  geom_gene(aes(gene_fill = strand), position = flagship_position, width = 0.04) +
+  geom_gene_label_repel(size = 3.05, label_wrap = 22, label_max_lines = 2, position = flagship_position) +
+  geom_seq_label(size = 3.5, seq_label_orientation = "horizontal") +
   coord_collinear(ratio = 0.85, fit = "manual",
-    xlim = c(-0.55, 2.2), ylim = c(-0.8, 0.45)) + fusion_shared_styles +
+    xlim = c(-0.42, 2.08), ylim = c(-0.72, 0.22)) + fusion_shared_styles +
   scale_seq_position_continuous(n.breaks = 3, minor_breaks = NULL) +
-  labs(title = "E  |  Local magnification", subtitle = "Detail of the highlighted windows in D; 800 bp flanking context")
+  labs(title = "E  |  Local zoom", subtitle = "Source windows + 800 bp flanks") +
+  theme(plot.title = element_text(hjust = 0.5), plot.subtitle = element_text(hjust = 0.5))
 fusion_context_sequences <- flagship_sequences |> filter(accver %in% flagship_windows$accver)
-fusion_context_features <- fusion_display_features |> filter(accver %in% flagship_windows$accver)
+fusion_detail_source_features <- flagship_features |>
+  semi_join(fusion_detail_features, by = c("accver", "feature_id"))
+fusion_context_features <- fusion_display_features |>
+  inner_join(flagship_windows, by = "accver", suffix = c("", ".window")) |>
+  filter(end < start.window | start > end.window) |>
+  select(-start.window, -end.window) |>
+  bind_rows(fusion_detail_source_features) |>
+  distinct(accver, feature_id, .keep_all = TRUE)
 fusion_detail_view <- ggchord(fusion_context_sequences, flagship_selected, feature_data = fusion_context_features) +
   geom_link_ribbon(allow_repeated = TRUE, alpha = 0.25, linewidth = 0.10) +
   geom_seq(aes(seq_colour = accver), seq_orientation = 1, linewidth = 1.1) +
-  geom_gene(aes(gene_fill = strand), position = flagship_position, width = 0.035) +
-  geom_seq_label(size = 3.2, seq_label_orientation = "horizontal") +
+  geom_gene(aes(gene_fill = strand), position = flagship_position, width = 0.04) +
+  geom_seq_label(size = 3.5, seq_label_orientation = "horizontal") +
   coord_collinear(ratio = 0.7) + fusion_shared_styles +
   scale_seq_position_continuous(n.breaks = 2, minor_breaks = NULL) +
-  labs(title = "D  |  Two-genome context", subtitle = "Full-length sequences; marked windows are enlarged in E")
+  labs(title = "D  |  Two-genome context", subtitle = "Full-length sequences; outlined windows are enlarged in E")
 flagship_detail <- fusion_zoom_view
 fusion_connections <- list(
   fusion_ribbon(fusion_relation_ab |> mutate(relation = "A - B"), aes(fill = relation),
     qpanel = "chord", spanel = "linear", alpha = 0.65, colour = "#3E5763", linewidth = 0.35,
-    curvature = 0.2, allow_repeated = TRUE),
+    curvature = 0.09, allow_repeated = TRUE),
   fusion_ribbon(fusion_relation_ac |> mutate(relation = "A - C"), aes(fill = relation),
     qpanel = "chord", spanel = "radial", alpha = 0.65, colour = "#3E5763", linewidth = 0.35,
     curvature = 0.2, allow_repeated = TRUE),
@@ -252,19 +268,32 @@ fusion_connections <- list(
     curvature = 0.2, route = "avoid", route_width = 1.5, allow_repeated = TRUE)
 )
 make_flagship_fusion <- function(preview = FALSE) {
-  out <- magnify_ggchord(fusion_detail_view, region = flagship_windows,
-    detail_plot = list(zoom = fusion_zoom_view), guides = "collect",
-    center_box = c(0.49, 0.99, 0.37, 0.59),
-    detail_box = list(zoom = c(0.51, 0.99, 0.01, 0.33)),
-    colour = "#6C5B86", alpha = 0.20, highlight_width = 2,
-    linewidth = 0.30, connector = "leader", route = "avoid") +
-    fusion_panel(fusion_chord_view, id = "chord", box = c(0.01, 0.48, 0.60, 0.99)) +
-    fusion_panel(fusion_linear_view, id = "linear", box = c(0.52, 0.99, 0.60, 0.99)) +
-    fusion_panel(fusion_radial_view, id = "radial", box = c(0.01, 0.48, 0.03, 0.55))
+  output_styles <- list(
+    guides(ribbon_fill = ggplot2::guide_coloursteps(available_aes = "ribbon_fill",
+      even.steps = preview, show.limits = TRUE, position = "bottom", direction = "horizontal",
+      theme = theme(legend.key.width = grid::unit(if (preview) 64 else 85, "mm"),
+        legend.key.height = grid::unit(3, "mm")))),
+    theme(plot.title = element_text(size = if (preview) 15 else 16),
+      plot.subtitle = element_text(size = if (preview) 9 else 10),
+      legend.text = element_text(size = if (preview) 8 else 9))
+  )
+  out <- magnify_ggchord(fusion_detail_view + output_styles, region = flagship_windows,
+    detail_plot = list(zoom = fusion_zoom_view + output_styles), guides = "collect",
+    center_box = c(0.465, 0.97, 0.385, 0.59),
+    detail_box = list(zoom = c(0.49, 0.99, 0.01, 0.36)),
+    colour = "#725094", alpha = 0.35, highlight_width = 4,
+    linewidth = 0.40, connector = "envelope", route = "avoid") +
+    fusion_panel(fusion_chord_view + output_styles, id = "chord",
+      box = c(0.01, 0.455, if (preview) 0.52 else 0.54, 0.99)) +
+    fusion_panel(fusion_linear_view + output_styles, id = "linear", box = c(0.52, 0.995, 0.60, 0.99)) +
+    fusion_panel(fusion_radial_view + output_styles, id = "radial",
+      box = c(0.01, 0.455, 0, if (preview) 0.50 else 0.52))
   for (connection in fusion_connections) out <- out + connection
-  out <- out + scale_fill_manual(name = "Correspondence", values = c("A - B" = "#527FB8",
+  out <- out + scale_fill_manual(name = if (preview) "Links" else "Correspondence", values = c("A - B" = "#527FB8",
     "A - C" = "#CE9741", "C - D" = "#9064AC")) +
-    guides(fill = guide_legend(nrow = 1, position = "bottom")) +
+    guides(fill = guide_legend(nrow = 1, position = "bottom",
+      theme = if(preview) theme(legend.key.width = grid::unit(3, "mm"),
+        legend.key.height = grid::unit(3, "mm")) else NULL)) +
     theme(plot.background = element_rect(fill = flagship_paper, colour = NA),
       legend.position = "bottom", legend.title = element_text(size = 9, face = "bold"),
       legend.text = element_text(size = 8), plot.title = element_text(size = 22, face = "bold", hjust = 0),
@@ -273,7 +302,7 @@ make_flagship_fusion <- function(preview = FALSE) {
       plot.margin = margin(8, 10, 8, 10))
   if (!preview) out <- out + labs(title = "One dataset, five linked views",
     subtitle = "Six selected HSPs and twelve source CDS per overview; full inputs retained separately",
-    caption = "Coloured ribbons: observed HSP correspondences. D-E dashed leaders mark the magnified source-window boundaries.")
+    caption = "Coloured ribbons: observed HSPs. D outlines mark exact source windows; dashed leaders point to E.")
   out
 }
 flag_fusion <- make_flagship_fusion()

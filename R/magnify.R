@@ -51,7 +51,13 @@
 #' @param allow_overlap Deliberately permit overlapping containers, following
 #'   ggchord_fusion(). Later panels cover earlier ones; default FALSE.
 #' @param connector `"leader"` draws two decorative boundary leaders per row; `"none"`
-#'   retains the highlights only. These are not biological ribbons or alignments.
+#'   retains the highlights only. `"envelope"` groups selections by source/detail
+#'   panel pair, outlines each exact source highlight band and frames the
+#'   displayed detail sequences with their native labels (excluding plot titles
+#'   and guides). Two leaders join actual source-band edges to the detail frame.
+#'   Source selections are never enclosed in a padded combined rectangle.
+#'   The detail frame is a display boundary, not a genomic interval.
+#'   These are not biological ribbons or alignments.
 #' @param route Direct boundary leaders (default), or avoid to route around
 #'   measured other containers and native text/guide envelopes. Endpoints stay
 #'   fixed; no clear route fails rather than hiding the selection.
@@ -73,6 +79,8 @@
 #'   polyline vertices. Routing is deterministic in measured physical space, not
 #'   a guarantee of globally optimal layout or automatic layer rebuilding. The measured ratio may be below one if the chosen
 #'   detail allocation does not enlarge the region.
+#'   Envelope leaders use their group's first region_row as the export key;
+#'   focus_regions$leader_group records that key for every member selection.
 #' @export
 #' @examples
 #' library(dplyr)
@@ -84,10 +92,11 @@
 #'   geom_seq() + coord_collinear(seq_axis = "vertical")
 #' magnify_ggchord(whole, region, detail)
 #' magnify_ggchord(whole, region, detail,
-#'   center_box = c(.02, .35, .2, .8), detail_box = c(.45, .98, .1, .9))
+#'   center_box = c(.02, .35, .2, .8), detail_box = c(.45, .98, .1, .9),
+#'   connector = "envelope")
 magnify_ggchord <- function(plot, region, detail_plot,
     side = c("right", "top", "left", "bottom"), center_size = NULL, detail_size = NULL,
-    connector = c("leader", "none"), colour = "#B45309", alpha = .2,
+    connector = c("leader", "none", "envelope"), colour = "#B45309", alpha = .2,
     highlight_width = 1.5, linewidth = .35, linetype = 2, detail_box = NULL, allow_overlap = FALSE, center_box = NULL, route = c("direct", "avoid"), guides = c("keep", "collect")) {
   route <- match.arg(route)
   guides <- match.arg(guides)
@@ -211,8 +220,101 @@ ggchord_build_focus <- function(focus, panels) {
   }
   bind <- function(name) do.call(rbind, lapply(pieces, `[[`, name))
   grobs <- function(name) unlist(lapply(pieces, `[[`, name), recursive = FALSE)
-  list(input = focus$input, underlay = grobs("underlay"), overlay = grobs("overlay"),
+  result <- list(input = focus$input, underlay = grobs("underlay"), overlay = grobs("overlay"),
     regions = bind("regions"), fronts = bind("fronts"), leaders = bind("leaders"), leader_paths = bind("leader_paths"))
+  if (focus$connector == "envelope") result <- ggchord_focus_envelopes(result, focus)
+  result
+}
+
+# An envelope is a display frame for several registered selections, not an HSP.
+ggchord_focus_envelopes <- function(result, focus) {
+  regions <- result$regions
+  result$regions$leader_group <- rep(NA_integer_,nrow(regions))
+  groups <- split(seq_len(nrow(regions)), paste(regions$source_panel,regions$detail_panel,sep="\r"))
+  for (rows in groups) {
+    region <- regions[rows[1L], ]
+    front <- result$fronts[result$fronts$region_row %in% regions$region_row[rows], ]
+    q <- front[front$panel_id == region$source_panel, ]
+    padding <- focus$width/2 + 1
+    band <- rbind(cbind(q$x+focus$width/2*q$normal_x,q$y+focus$width/2*q$normal_y),
+      cbind(q$x-focus$width/2*q$normal_x,q$y-focus$width/2*q$normal_y))
+    qb <- c(range(band[,1]),range(band[,2]))
+    s <- front[front$panel_id == region$detail_panel, ]
+    sb <- c(min(s$x)-padding,max(s$x)+padding,min(s$y)-padding,max(s$y)+padding)
+    text <- focus$obstacles[focus$obstacles$kind == "text" &
+      focus$obstacles$panel_id == region$detail_panel, ]
+    if (nrow(text)) sb <- c(min(sb[1],text$xmin-1),max(sb[2],text$xmax+1),
+      min(sb[3],text$ymin-1),max(sb[4],text$ymax+1))
+    delta <- c(mean(sb[1:2])-mean(qb[1:2]),mean(sb[3:4])-mean(qb[3:4]))
+    vertical <- abs(delta[2]) >= abs(delta[1])
+    corners <- function(box, source) {
+      if (vertical) cbind(box[1:2],box[if ((delta[2]>0)==source) 4L else 3L]) else
+        cbind(box[if ((delta[1]>0)==source) 2L else 1L],box[3:4])
+    }
+    # Facing outer edges belong to actual source bands, never to empty space
+    # between independent selections or to an added display margin.
+    axis <- if (vertical) 1L else 2L
+    facing <- if (vertical) 2L else 1L
+    source_edges <- function(points) do.call(rbind,lapply(range(points[,axis]),function(edge) {
+      candidates<-points[points[,axis]==edge,,drop=FALSE]
+      at<-if(delta[facing]>0) which.max(candidates[,facing]) else which.min(candidates[,facing])
+      candidates[at,,drop=FALSE]
+    }))
+    a <- source_edges(band)
+    b <- corners(sb,FALSE)
+    obstacles <- ggchord_route_inflate(ggchord_route_obstacles(focus$obstacles,
+      c(region$source_panel,region$detail_panel)), focus$linewidth/2)
+    if (identical(focus$route,"avoid") && any(vapply(1:2,function(i)
+        any(ggchord_route_segment_hits(a[i,],b[i,],obstacles)),logical(1)))) {
+      # For a narrow canvas, use another real edge before adding a bend.
+      # With multiple selections prefer one source band for each leader.
+      options <- lapply(split(q,paste(q$region_row,q$region_piece)),function(f) {
+        source_edges(rbind(cbind(f$x+focus$width/2*f$normal_x,f$y+focus$width/2*f$normal_y),
+          cbind(f$x-focus$width/2*f$normal_x,f$y-focus$width/2*f$normal_y)))
+      })
+      pairs <- expand.grid(left=seq_along(options),right=seq_along(options))
+      if(length(options)>1L) pairs <- pairs[pairs$left!=pairs$right,,drop=FALSE]
+      scores <- t(vapply(seq_len(nrow(pairs)),function(i) {
+        p<-rbind(options[[pairs$left[i]]][1,],options[[pairs$right[i]]][2,])
+        hits<-sum(vapply(1:2,function(j) sum(ggchord_route_segment_hits(p[j,],b[j,],obstacles)),integer(1)))
+        crossing<-sum(ggchord_route_segment_crossings(p[1,],b[1,],
+          data.frame(x1=p[2,1],y1=p[2,2],x2=b[2,1],y2=b[2,2])))
+        c(hits,crossing,sum(sqrt(rowSums((p-b)^2))))
+      },numeric(3)))
+      at <- order(scores[,1],scores[,2],scores[,3])[1L]
+      if(scores[at,1]==0 && scores[at,2]==0) a <- rbind(
+        options[[pairs$left[at]]][1,],options[[pairs$right[at]]][2,])
+    }
+    leaders <- list(); paths <- list()
+    for (i in 1:2) {
+      hits <- sum(ggchord_route_segment_hits(a[i,],b[i,],obstacles))
+      route <- focus$route %||% "direct"
+      line <- if (route == "avoid" && hits > 0L) ggchord_route_shortest(a[i,],b[i,],obstacles,
+        focus$canvas,clearance=focus$linewidth/2+.6) else rbind(a[i,],b[i,])
+      if (is.null(line)) ggchord_stop("magnify_ggchord(): no clear envelope route; move/enlarge panels")
+      boundary <- paste0("envelope_",i)
+      leaders[[i]] <- data.frame(boundary=boundary,source_position_boundary=NA_real_,
+        x=a[i,1],y=a[i,2],xend=b[i,1],yend=b[i,2],coordinate_space="composition",units="mm",
+        semantic="decorative_focus_envelope",route=route,
+        route_status=if(nrow(line)>2L) "routed_clear" else if(hits) "direct_collision" else "direct_clear",
+        obstacle_collisions=if(route=="avoid") 0L else hits,
+        length_mm=sum(sqrt(rowSums((line[-1,,drop=FALSE]-line[-nrow(line),,drop=FALSE])^2))),
+        region_row=region$region_row,region_piece=region$region_piece)
+      paths[[i]] <- data.frame(boundary=boundary,vertex=seq_len(nrow(line)),x=line[,1],y=line[,2],
+        coordinate_space="composition",units="mm",region_row=region$region_row,region_piece=region$region_piece)
+      result$underlay <- c(result$underlay,list(grid::polylineGrob(line[,1],line[,2],default.units="mm",
+        gp=grid::gpar(col=focus$colour,lwd=focus$linewidth*72.27/25.4,lty=focus$linetype))))
+    }
+    for (name in c("leaders","leader_paths")) result[[name]] <- ggchord_rbind_fill(
+      list(result[[name]],do.call(rbind,if(name=="leaders") leaders else paths)))
+    frame <- function(box) grid::rectGrob(x=mean(box[1:2]),y=mean(box[3:4]),
+      width=diff(box[1:2]),height=diff(box[3:4]),default.units="mm",
+      gp=grid::gpar(col=focus$colour,fill=NA,lwd=focus$linewidth*72.27/25.4))
+    result$overlay <- c(result$overlay,stats::setNames(list(frame(sb)),region$detail_panel))
+    # Shared leaders use the first input row as their stable group key.
+    result$regions$leader_group[rows] <- region$region_row
+  }
+  result
 }
 
 # Full source lengths belong to provenance, not the displayed local span.
@@ -271,14 +373,15 @@ ggchord_build_focus_region <- function(focus, panels, region, boundaries = c("st
       default.units = "mm", gp = grid::gpar(col = focus$colour,
         lwd = focus$linewidth * 72.27/25.4, lty = focus$linetype)))
   }
-  highlight <- function(front) {
+  highlight <- function(front, outline = FALSE) {
     offset <- focus$width/2
     grid::polygonGrob(
       c(front$x+offset*front$normal_x, rev(front$x-offset*front$normal_x)),
       c(front$y+offset*front$normal_y, rev(front$y-offset*front$normal_y)),
-      default.units = "mm", gp = grid::gpar(col = NA,fill = scales::alpha(focus$colour,focus$alpha)))
+      default.units = "mm", gp = grid::gpar(col = if(outline) focus$colour else NA,
+        lwd = focus$linewidth*72.27/25.4,fill = scales::alpha(focus$colour,focus$alpha)))
   }
-  highlights <- stats::setNames(list(highlight(qf),highlight(sf)), c(q$panel, s$panel))
+  highlights <- stats::setNames(list(highlight(qf,focus$connector=="envelope"),highlight(sf)), c(q$panel, s$panel))
   length_mm <- function(front) sum(sqrt(diff(front$x)^2+diff(front$y)^2))
   source_mm <- length_mm(qf); detail_mm <- length_mm(sf)
   if (any(!is.finite(c(source_mm,detail_mm))) || min(source_mm,detail_mm)<=0)
@@ -292,6 +395,8 @@ ggchord_build_focus_region <- function(focus, panels, region, boundaries = c("st
   report$collision_status <- if (nrow(leaders)) paste(unique(leaders$route_status), collapse = ";") else "no_leaders"
   report$highlight_width_mm <- focus$width; report$highlight_alpha <- focus$alpha
   report$colour <- focus$colour; report$connector <- focus$connector
+  report$source_highlight_outline <- focus$connector=="envelope"
+  report$source_highlight_padding_mm <- 0
   report$leader_linewidth <- focus$linewidth; report$leader_linetype <- focus$linetype
   qf$panel_id <- q$panel; qf$instance_id <- q$instance
   sf$panel_id <- s$panel; sf$instance_id <- s$instance

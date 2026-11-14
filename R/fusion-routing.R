@@ -264,9 +264,21 @@ ggchord_fusion_guide_obstacles <- function(table, id, origin) {
     on.exit(grid::popViewport())
     lo <- grid::deviceLoc(grid::unit(0, 'npc'), grid::unit(0, 'npc'), valueOnly = TRUE)
     hi <- grid::deviceLoc(grid::unit(1, 'npc'), grid::unit(1, 'npc'), valueOnly = TRUE)
+    measurement <- 'resolved_gtable_cell'
+    grob <- table$grobs[[i]]
+    if (entry$name %in% c('title','subtitle','caption','tag') &&
+        inherits(grob,'titleGrob') && length(grob$children)==1L &&
+        inherits(grob$children[[1L]],'text')) {
+      # A native heading cell includes unused horizontal space. Route around
+      # the actual glyphs, preserving their margins, justification and font.
+      text <- grob$children[[1L]]
+      lo <- grid::deviceLoc(grid::grobX(text,180),grid::grobY(text,270),valueOnly=TRUE)
+      hi <- grid::deviceLoc(grid::grobX(text,0),grid::grobY(text,90),valueOnly=TRUE)
+      measurement <- 'native_heading_glyphs'
+    }
     data.frame(panel_id = id, kind = if (grepl('^guide-box', entry$name)) 'guide' else 'decoration', xmin = lo$x*25.4-origin[1],
       xmax = hi$x*25.4-origin[1], ymin = lo$y*25.4-origin[2], ymax = hi$y*25.4-origin[2],
-      measurement = 'resolved_gtable_cell')
+      measurement = measurement)
   }))
   # Empty native axis/title cells can contain non-zeroGrob wrappers while
   # occupying no area. They are not furniture obstacles: treating their
@@ -316,8 +328,10 @@ ggchord_fusion_recheck_routes <- function(export, obstacles) {
   }
   for (i in seq_len(nrow(export$focus_regions))) {
     region <- export$focus_regions[i, , drop = FALSE]
+    group <- if (identical(region$connector,"envelope")) region$leader_group else region$region_row
     selected <- export$leaders$composition_id == region$composition_id &
-      export$leaders$region_row == region$region_row & export$leaders$region_piece == region$region_piece
+      export$leaders$region_row == group &
+      (export$leaders$region_piece == region$region_piece | region$connector == "envelope")
     states <- export$leaders$route_status[selected]
     export$focus_regions$collision_status[i] <- if (length(states)) paste(unique(states), collapse = ";") else "no_leaders"
   }

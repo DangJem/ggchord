@@ -35,7 +35,7 @@ test_that("feature, region and point-link layers retain source rows", {
   expect_equal(unique(out$link$source_row), 1L)
 })
 
-test_that("only Collinear uses automatic cross-row ribbon styles", {
+test_that("automatic ribbon styles follow each coordinate's adjacency", {
   s <- data.frame(accver = LETTERS[1:4], length = 1000)
   h <- data.frame(qaccver = "A", saccver = c("B", "C", "D"),
     qstart = 100, qend = 200, sstart = 300, send = 400)
@@ -47,7 +47,9 @@ test_that("only Collinear uses automatic cross-row ribbon styles", {
     built <- ggplot2::ggplot_build(p)
     ribbons <- Filter(function(d) "ribbon_fill" %in% names(d), built$data)
     styles <- function(d) unname(vapply(split(d$linetype, d$group), unique, character(1)))
-    expect_equal(styles(ribbons[[1]]), if (i == 2) c("solid", "dashed", "dashed") else rep("solid", 3))
+    expected <- switch(i, rep("solid", 3), c("solid", "dashed", "dashed"),
+      c("solid", "dashed", "solid"), rep("solid", 3))
+    expect_equal(styles(ribbons[[1]]), expected)
     expect_equal(styles(ribbons[[2]]), rep("dotted", 3))
   }
 })

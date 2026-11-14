@@ -74,6 +74,6 @@
     "dpi": 160,
     "file": "man/figures/homefusion.png",
     "full": "flagfusion",
-    "source": "Shared five-panel flagship: six selected original HSPs and twelve source CDS per overview; full 32-HSP/266-CDS inputs retained; forward two-genome context, registered source-window magnification, three original cross-panel correspondences and collected native legends."
+    "source": "Shared five-panel flagship with an output-specific layout and compact shared legends: six selected original HSPs and twelve source CDS per overview; full 32-HSP/266-CDS inputs retained; forward two-genome context, registered source-window magnification and three original cross-panel correspondences. No image cropping."
   }
 ]

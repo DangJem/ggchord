@@ -11,7 +11,7 @@ magnify_ggchord(
   side = c("right", "top", "left", "bottom"),
   center_size = NULL,
   detail_size = NULL,
-  connector = c("leader", "none"),
+  connector = c("leader", "none", "envelope"),
   colour = "#B45309",
   alpha = 0.2,
   highlight_width = 1.5,
@@ -60,7 +60,13 @@ also follows Fusion defaults. Out-of-frame allocations fail; overlap
 requires explicit allow_overlap.}
 
 \item{connector}{\code{"leader"} draws two decorative boundary leaders per row; \code{"none"}
-retains the highlights only. These are not biological ribbons or alignments.}
+retains the highlights only. \code{"envelope"} groups selections by source/detail
+panel pair, outlines each exact source highlight band and frames the
+displayed detail sequences with their native labels (excluding plot titles
+and guides). Two leaders join actual source-band edges to the detail frame.
+Source selections are never enclosed in a padded combined rectangle.
+The detail frame is a display boundary, not a genomic interval.
+These are not biological ribbons or alignments.}
 
 \item{colour}{Fixed highlight/leader colour.}
 
@@ -100,6 +106,8 @@ connections or relationship_data. leader_paths contains the final decorative
 polyline vertices. Routing is deterministic in measured physical space, not
 a guarantee of globally optimal layout or automatic layer rebuilding. The measured ratio may be below one if the chosen
 detail allocation does not enlarge the region.
+Envelope leaders use their group's first region_row as the export key;
+focus_regions$leader_group records that key for every member selection.
 }
 \description{
 Marks real source intervals in registered genomic panels and connects them to
@@ -125,5 +133,6 @@ detail <- ggchord(local$seq_data) +
   geom_seq() + coord_collinear(seq_axis = "vertical")
 magnify_ggchord(whole, region, detail)
 magnify_ggchord(whole, region, detail,
-  center_box = c(.02, .35, .2, .8), detail_box = c(.45, .98, .1, .9))
+  center_box = c(.02, .35, .2, .8), detail_box = c(.45, .98, .1, .9),
+  connector = "envelope")
 }

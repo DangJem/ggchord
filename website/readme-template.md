@@ -26,69 +26,45 @@
 <a id="examples"></a>
 ## {{examples}}
 
-### {{chord-title}}
-
-{{chord-caption}}
-
-![{{chord-alt}}](man/figures/showcasechord.png)
-
-[{{case}}](website/{{lang}}/chord.md) · [{{four-views}}](website/{{lang}}/multi-sequence-views.md) · [{{plot-source}}](tools/documentation-examples.R)
-
-### {{linear-title}}
-
-{{linear-caption}}
-
-![{{linear-alt}}](man/figures/showcasecollinear.png)
-
-[{{case}}](website/{{lang}}/collinear.md) · [{{layout}}](website/{{lang}}/collinear-layout.md) · [{{plot-source}}](tools/documentation-examples.R)
-
-### {{radial-title}}
-
-{{radial-caption}}
-
-![{{radial-alt}}](man/figures/flagradial.png)
-
-[{{case}}](website/{{lang}}/radial-synteny.md) · [{{plot-source}}](tools/site-flagships.R)
-
-### {{sankey-title}}
-
-{{sankey-caption}}
-
-![{{sankey-alt}}](man/figures/flagsankey.png)
-
-[{{case}}](website/{{lang}}/sankey.md) · [{{plot-source}}](tools/site-flagships.R)
-
-### {{circular-title}}
-
-{{circular-caption}}
-
-![{{circular-alt}}](man/figures/showcaseplasmid.png)
-
-[{{case}}](website/{{lang}}/circular-dense-case.md) · [{{reference-maps}}](website/{{lang}}/plasmid-catalog.md) · [{{plot-source}}](tools/documentation-examples.R)
-
-### {{more-views}}
+### {{multi}}
 
 <table>
   <tr>
-    <th>{{dotplot}}</th>
-    <th>{{fusion}}</th>
+    <td width="50%"><strong>{{chord-title}}</strong><br><a href="man/figures/showcasechord.png"><img src="man/figures/showcasechord.png" alt="{{chord-alt}}" width="460"></a><br>{{chord-caption}}<br><a href="website/{{lang}}/chord.md">{{case}} →</a></td>
+    <td width="50%"><strong>{{linear-title}}</strong><br><a href="man/figures/showcasecollinear.png"><img src="man/figures/showcasecollinear.png" alt="{{linear-alt}}" width="460"></a><br>{{linear-caption}}<br><a href="website/{{lang}}/collinear.md">{{case}} →</a></td>
   </tr>
   <tr>
-    <td width="50%"><a href="man/figures/flagdotplot.png"><img src="man/figures/flagdotplot.png" alt="{{dotplot-alt}}" width="460"></a></td>
-    <td width="50%"><a href="man/figures/flagfusion.png"><img src="man/figures/flagfusion.png" alt="{{fusion-alt}}" width="460"></a></td>
-  </tr>
-  <tr>
-    <td>{{dotplot-caption}}</td>
-    <td>{{fusion-caption}}</td>
-  </tr>
-  <tr>
-    <td><a href="website/{{lang}}/dotplot-start.md">{{dotplot-guide}}</a></td>
-    <td><a href="website/{{lang}}/fusion-details.md">{{fusion-guide}}</a></td>
+    <td width="50%"><strong>{{radial-title}}</strong><br><a href="man/figures/flagradial.png"><img src="man/figures/flagradial.png" alt="{{radial-alt}}" width="460"></a><br>{{radial-caption}}<br><a href="website/{{lang}}/radial-synteny.md">{{case}} →</a></td>
+    <td width="50%"><strong>{{sankey-title}}</strong><br><a href="man/figures/flagsankey.png"><img src="man/figures/flagsankey.png" alt="{{sankey-alt}}" width="460"></a><br>{{sankey-caption}}<br><a href="website/{{lang}}/sankey.md">{{case}} →</a></td>
   </tr>
 </table>
 
+### {{circular}}
+
+<a href="man/figures/showcaseplasmid.png"><img src="man/figures/showcaseplasmid.png" alt="{{circular-alt}}" width="460"></a>
+
+{{circular-caption}}
+
+[{{case}}](website/{{lang}}/circular-dense-case.md)
+
+### {{dotplot}}
+
+<a href="man/figures/flagdotplot.png"><img src="man/figures/flagdotplot.png" alt="{{dotplot-alt}}" width="460"></a>
+
+{{dotplot-caption}}
+
+[{{case}}](website/{{lang}}/dotplot-start.md)
+
+### {{fusion}}
+
+<a href="man/figures/flagfusion.png"><img src="man/figures/flagfusion.png" alt="{{fusion-alt}}" width="460"></a>
+
+{{fusion-caption}}
+
+[{{case}}](website/{{lang}}/fusion-details.md)
+
 {{source-note}}
-[{{source-inputs}}](examples/) · [{{source-figures}}](tools/site-flagships.R) · [{{source-attribution}}](website/ASSET-SOURCES.md)
+[{{source-inputs}}](examples/) · [{{source-figures}}](tools/site-flagships.R) · [{{plot-source}}](tools/documentation-examples.R) · [{{source-attribution}}](website/ASSET-SOURCES.md)
 
 <a id="get-started"></a>
 ## {{get-started}}

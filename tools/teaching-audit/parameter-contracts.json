@@ -13994,9 +13994,9 @@
   {
     "api": "magnify_ggchord",
     "parameter": "connector",
-    "default": "c(\"leader\", \"none\")",
+    "default": "c(\"leader\", \"none\", \"envelope\")",
     "type": "Type, units and accepted forms: see this API argument contract at right",
-    "constraint": "\"leader\" draws two decorative boundary leaders per row; \"none\" retains the highlights only. These are not biological ribbons or alignments.",
+    "constraint": "\"leader\" draws two decorative boundary leaders per row; \"none\" retains the highlights only. \"envelope\" groups selections by source/detail panel pair, outlines each exact source highlight band and frames the displayed detail sequences with their native labels (excluding plot titles and guides). Two leaders join actual source-band edges to the detail frame. Source selections are never enclosed in a padded combined rectangle. The detail frame is a display boundary, not a genomic interval. These are not biological ribbons or alignments.",
     "source": "man/magnify_ggchord.Rd",
     "requiredness": "see API contract; not inferred from formals",
     "type_source": "canonical Rd argument contract",

@@ -1,4 +1,4 @@
-# ggchord 0.27.1 (development)
+# ggchord 0.27.1
 
 - Radial ribbons now use solid outlines between cyclic neighbours and dashed
   outlines between non-neighbours; the first and last spokes are neighbours.
@@ -17,9 +17,25 @@
   panels. Full 32-HSP/266-CDS inputs remain unchanged. Detail panels display
   selected source annotations with flanking context. D retains forward full-length
   sequences; E is registered source-window magnification with paired highlights
-  and four boundary leaders routed around measured text. D moves up and left
-  to enlarge E, whose top annotation space clears its heading. The C-D ribbon
-  avoids the E panel.
+  and two envelope leaders. D and E retain the same four selected source CDS
+  within the zoom windows. Each source highlight band has its own exact outline,
+  without a padded rectangle around multiple sequences. A is enlarged, B is
+  wider, and sequence names, features and annotations are more readable.
+  E's compact sequence-and-label frame excludes its heading; the C-D ribbon
+  avoids E. The heading sits closer to the sequence content.
+- `magnify_ggchord(connector = "envelope")` groups selected windows by source/detail
+  panel pair, joins real source highlight edges to a detail sequence-and-label
+  frame with two leaders, and retains exact per-interval source outlines and data.
+  The detail frame is a display envelope, not a genomic interval. Default
+  per-interval leaders remain unchanged.
+- Full-size and homepage Fusion layouts allocate more height to Chord, with
+  output-specific title sizes and more compact homepage legends. Scientific
+  colours, source data and full-figure/tutorial destinations are retained.
+- README real-data examples are grouped by four modules; multi-sequence views
+  use a compact two-column gallery, with links to full figures and tutorials.
+- Cross-panel obstacle routing measures native heading glyphs rather than
+  treating unused space in the entire heading cell as blocked. Native title
+  fonts, margins and justification are retained.
 
 - Cross-panel curves choose coherent endpoint normals for nearly tangential
   arrivals, avoiding artificial S bends without sorting or reversing real

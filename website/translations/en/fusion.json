@@ -1,5 +1,5 @@
 {
-  "source_sha256": "b6f4e7f844053652c7f9ad03a71bd156944867621a2c263bf7dc0b5f48348d8e",
+  "source_sha256": "f4b538486eb1e02defd13b53a40cf827e032b35ef378fa04e63a6ac28eb57432",
   "blocks": {
     "0": {
       "source_sha256": "61fb363c7a49e9dab5d78878395d1848cdfeaf5b3d3ecc1ca60c9829a863e0a2",
@@ -62,9 +62,9 @@
       "translation": "A, B and C share six selected real HSPs and twelve source CDS; complete 32-HSP/266-CDS inputs remain available. One HSP closest to 4000 bp is selected per directed sequence pair. CDS are selected from three positional bins per sequence, preferring informative names and longer features. A-B, A-C and C-D correspondences use selected original records, with C connected to two panels.\n"
     },
     "13": {
-      "source_sha256": "fd51c3927ce5dbeb3f0bc6a482772791cee686b307ad1bd40e9a9511d43a3acc",
+      "source_sha256": "aaf512d668549839c80629b7aa8b1f592b4f8e77167869042d9bb70f4d2b2cd4",
       "status": "reviewed",
-      "translation": "D restores forward full-length sequences. E shows the corresponding HSP and source windows with 800 bp flanking context on either side, selecting two CDS per sequence. Paired highlights in D and E are registered by ⟦shared:0⟧; actual magnification is remeasured for the device and panel allocation. Highlights are not additional HSPs and do not change source coordinates or biological strands. Four dashed leaders connect the actual source-window boundaries and avoid measured text bounds. D moves up and left; E gains height and top annotation space, while the C-D connection avoids the E panel. Cross-panel colours identify correspondences; internal ribbon colours show Identity.\n"
+      "translation": "D restores forward full-length sequences. E shows the corresponding HSP and source windows with 800 bp flanking context on either side, selecting two CDS per sequence. The same four CDS selected by source feature identifiers in E are retained in D; D no longer uses an independent selection inside these windows. Paired highlights in D and E are registered by ⟦shared:0⟧; actual magnification is remeasured for the device and panel allocation. Highlights are not additional HSPs and do not change source coordinates or biological strands. The flagship uses ⟦shared:1⟧: each sequence in D has its exact source highlight individually outlined, without a padded rectangle enclosing multiple selections. Two straight leaders connect actual source-band edges to E. The E frame encloses sequences, features, ticks and labels as a display boundary only; its heading and description remain outside and close to the sequence content. Full-size and homepage outputs allocate panel space separately, enlarge A, widen B and use more compact homepage legends. The C-D connection avoids E. Cross-panel colours identify correspondences; internal ribbon colours show Identity.\n"
     },
     "14": {
       "source_sha256": "90eecf469b6a28c0f897a3727cde7ea9e1142c6a9b2f9120b343a23af90f50d6",
