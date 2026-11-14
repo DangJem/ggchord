@@ -1,3 +1,20 @@
+# ggchord 0.27.1 (development)
+
+- Radial ribbons now use solid outlines between cyclic neighbours and dashed
+  outlines between non-neighbours; the first and last spokes are neighbours.
+  Explicit fixed/mapped line types and user scales retain priority. Radial
+  uses the same nonadjacent_linewidth default as Collinear; Chord and Sankey
+  defaults are unchanged.
+- Radial flagship MT108731.1 and OR222515.1 are displayed outward. Nonadjacent connections use
+  adjustable annular midpoint lift and separate occupied channels to clear
+  intervening spokes, preserving original HSP and CDS coordinates and source identities.
+
+- Fusion flagship now labels its four views, shares an Identity ruler, enlarges
+  the Radial overview and reduces cross-panel emphasis. All 32 HSPs and 266 CDS
+  remain in each overview; three explicitly selected correspondences connect
+  panels. The detail uses a shorter observed HSP with 800 bp flanking context
+  and source CDS labels. Homepage previews derive from the same updated plots.
+
 # ggchord 0.27.0
 
 - Website prose now has one Han source with saved, reviewed English translations.

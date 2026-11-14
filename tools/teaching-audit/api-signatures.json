@@ -225,7 +225,8 @@
       "ylim": "NULL",
       "expand": "FALSE",
       "clip": "\"off\"",
-      "fit": "c(\"labels\", \"geometry\", \"manual\")"
+      "fit": "c(\"labels\", \"geometry\", \"manual\")",
+      "nonadjacent_bulge": "0"
     }
   },
   {

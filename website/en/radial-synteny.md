@@ -53,3 +53,18 @@ origins; radial display does not join multiple windows onto one spoke.
 ## Usage and boundaries {#support}
 
 Change only start_angle and verify source coordinates and directions. N=1, shared branches, circular-only layers and stitching separate windows into one spoke are unsupported. Inverse mapping needs backbone x/y.
+
+## Nonadjacent outlines and outward lift {#nonadjacent}
+
+In final cyclic order, neighbouring ribbons (including first/last) remain solid. Non-neighbours use dashed outlines with the same 0.4 mm width as Collinear. `nonadjacent_linewidth=0` restores ordinary widths; explicit line types, width mappings and user scales take priority.
+
+`nonadjacent_bulge` sets outward lift for nonadjacent annular paths, default 0. Positive values also increase lift as needed to clear full intervening spokes and separate same-channel ribbon bands. The longest proportional spoke has length 2; 0.2 below is in display layout units, not bp. Endpoints, source coordinates and interval widths remain intact; crossings required by endpoint order may remain.
+
+```r
+ggchord(radial_seqs, radial_hsp) +
+  geom_seq() +
+  geom_link_ribbon(adjacent_only = FALSE) +
+  coord_radial_synteny(nonadjacent_bulge = 0.2)
+```
+
+For per-row manual adjustments, `link_ctrl_point` accepts Cartesian controls for the two edges and takes priority over automatic lift; it changes the annular path shape. `link_gap` only controls clearance near sequence endpoints and cannot replace midpoint lift.

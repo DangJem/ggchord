@@ -37,7 +37,11 @@ make_ribbon_geom <- function(outline = FALSE, linetype = FALSE) {
 #'   Two numbers specify one shared control; four numbers specify controls for
 #'   the two ribbon edges. A per-row list may contain pairs of coordinate vectors.
 #'   NULL uses the origin \code{c(0, 0)} in chord layouts and derives controls
-#'   from the sequence endpoints in collinear layouts. With shared branches,
+#'   from the sequence endpoints in collinear layouts. In Radial layouts NULL
+#'   uses annular curves; explicit controls use final Cartesian layout units,
+#'   one point for each edge. Use a separate layer to adjust nonadjacent links
+#'   without changing adjacent curves. This controls the middle of the path;
+#'   `link_gap` only controls clearance at the sequence endpoints. With shared branches,
 #'   controls shape the far ends while the junction follows the shared trunk.
 #' @param link_gap Optional numeric/vector controlling spacing between
 #'   sequences and ribbon endpoints. With the default
@@ -66,15 +70,19 @@ make_ribbon_geom <- function(outline = FALSE, linetype = FALSE) {
 #'   take precedence over matching mappings; omitted defaults do not suppress
 #'   user mappings. For example, omit `alpha` when mapping `ribbon_alpha`.
 #' @param nonadjacent_linewidth Fixed outline width for non-adjacent displayed
-#'   rows in [coord_collinear()], default 0.4 mm. These ribbons use dashed
+#'   rows in [coord_collinear()] or nonadjacent spokes in
+#'   [coord_radial_synteny()], default 0.4 mm. These ribbons use dashed
 #'   outlines by default. Zero uses the layer's ordinary `linewidth` for every
 #'   ribbon. This changes width independently of line type. An explicit
 #'   `aes(linewidth = ...)` controls widths instead of this fixed default.
 #' @param linetype Fixed outline line type. The default `NULL` uses solid
-#'   outlines in Chord, Radial and Sankey views. Only [coord_collinear()]
+#'   outlines in Chord and Sankey views. [coord_collinear()]
 #'   uses dashed outlines for non-adjacent displayed rows, with widths set by
 #'   `nonadjacent_linewidth`; adjacent rows stay solid. This row convention
 #'   follows final display order, independently of alignment direction.
+#'   [coord_radial_synteny()] also uses dashed nonadjacent outlines, with
+#'   adjacency defined cyclically (including first/last); `nonadjacent_linewidth`
+#'   uses the same width convention as Collinear.
 #'   Explicit fixed styles or `aes(ribbon_linetype = ...)` (also
 #'   `aes(linetype = ...)`) replace the automatic styles. Use a matching scale
 #'   for data mappings; automatic styles do not train a linetype scale.

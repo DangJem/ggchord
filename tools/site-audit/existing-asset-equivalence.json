@@ -36,7 +36,7 @@
     "R/helpers-device.R": "25fa792c520f4c539c1b1c3f2b878c1295b0c11f23347ae5991778b0cbfb0570",
     "R/layout-transform.R": "c8f02c77f0136643b329b44f09c004eb88e79795b55f92fcf3f8819a18ec4fc5",
     "R/viewer.R": "f482af4be44c1892b2bc14616014eb237a4de4a16e341bc87e2293e6ef917960",
-    "R/ggchord-frame.R": "360117dfdf1cf611abc1cd0817e82c782f3204fb630ffc605b70a09a5255d133",
+    "R/ggchord-frame.R": "5f078adafb862bebb44b3718f2455622e97c0531a90079c07913a8142baf3be6",
     "R/feature-label-repeat.R": "3d34ae08b9e5ab6be77e94b9eb6d41f4f7f52aefc4ad7b2a75ce6468aee15cb5",
     "R/view-projection.R": "af38488dff2a56f2f986a38e9fbcde86126da45a749f04ce6186dd342d8bf167",
     "R/annotation-input.R": "4e812c5797683384e0ca5fc0636654640f1af57ff77c63ee06fcbce3c15d9668",
@@ -84,7 +84,7 @@
     "R/label-visibility.R": "e1afc842e8e9539e279d6b24a070a67a948c633745efb2c4f5c76dc5bd5759ef",
     "R/geom-seq-label.R": "ab577a6a262a2582dae4e0c99da1987fa1ccb6e4f328f578e5d672c98f9ca6a4",
     "R/layout-circular-registry.R": "e95b173b1a3acc14988057fb7764bd0bd8205745cd50267cb9b1310bb5c45a5d",
-    "R/geom-ribbon.R": "caeefa51d236ccd61fe46c36f9e26d09942aa48e49a2a3697bca15abc0fa6281",
+    "R/geom-ribbon.R": "8a3409378cc00582cfb41cd655ed54d3b525dda2ce77af108690cd8829c4f408",
     "R/helpers-label-clipping.R": "a04b66ad29cc5a6cc3988e8699ed0b62ad902f37294e851bef9ac1531710c1f1",
     "R/panel-project.R": "724cf83dd6ecf6446efb71d5bfc61438d4a96e92e9d47fad38e5a930ba59cf1b",
     "R/geom-seq-scale.R": "671c40e95584734d2b01d35d13c9f7216ddc643924182f4a65402ab5b596114c",
@@ -131,7 +131,7 @@
     "R/magnify.R": "8278eef648a3464349c6afb3702bbbf51f142dd4405f97942f44aac09435a933",
     "R/focus.R": "1016cfe1273b3028aa4bf2612d09f386cdeac9b2caef473ce56e338b7e67599e",
     "R/geom-seq-center-label.R": "f973a67bdec4794b9a8f4514c151c62bfb0a6f0e7fbd35949527b65bb1e9f388",
-    "R/coord-radial-synteny.R": "91f447518bbbd9317b8f8b7f3f6d39f4aad683d4cf6fc2accfc169e86c79c209",
+    "R/coord-radial-synteny.R": "ba75434cb5a1c2f00327be1a6267ae5c8e96b37eb7faa0fcee21517e74b6d26d",
     "R/data-formats.R": "341fd7d8e034d34b081fef5d6deeb09610af9bd1621be7930194b141023e047c",
     "R/ribbon-flow.R": "342f512d58b982348e2f295b899076b5e7a3105d83ea4a3ee6a31a364c463579",
     "R/data-contract.R": "8aebb29b0cad5965a04e62ce584f9a18dae9d4227924be983bd0ec9834bcc25e",
@@ -141,7 +141,7 @@
   },
   "release_equivalence": {
     "DESCRIPTION": {
-      "current_sha256": "df8e279cee2022b0c158b8905f192639f9700f275583e8c25e7b416f846dfc67",
+      "current_sha256": "c8e9e94ebb5fdc01bee51829b5a893f965c22c7752b1f6c02e081056b43508b5",
       "render_sha256": "1a57224db5d642848037c98e79cc21e724acbfbc48d9ce0e12fe8f2537edc172"
     },
     "R/coord-dotplot.R": {

@@ -256,7 +256,7 @@ prepare_ggchord_plot <- function(plot) {
     if (empty) new_layers[[i]]$inherit.aes <- FALSE
     built <- new_layers[[i]]
     cross_width <- lyr$ggchord_params$nonadjacent_linewidth %||% 0.4
-    if (ggchord_collinear_row_styles(plot$coordinates) &&
+    if ((ggchord_collinear_row_styles(plot$coordinates) || isTRUE(plot$coordinates$ggchord_radial)) &&
         identical(lyr$ggchord_type, "ribbon") &&
         !empty && cross_width > 0 && !is.null(built$aes_params$linewidth)) {
       built$data$.ggchord_ribbon_linewidth <- ifelse(

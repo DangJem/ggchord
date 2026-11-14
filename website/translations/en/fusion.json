@@ -1,5 +1,5 @@
 {
-  "source_sha256": "f7f55e5d69d44c857cfe452bc8e72fb9c341af3ac0688c4a99521a214067a669",
+  "source_sha256": "92482662dd260dcd3108337f42812d7ec3de5df550b530004e9d2eb7a4da6d8e",
   "blocks": {
     "0": {
       "source_sha256": "61fb363c7a49e9dab5d78878395d1848cdfeaf5b3d3ecc1ca60c9829a863e0a2",
@@ -50,6 +50,16 @@
       "source_sha256": "3f079c2749f218e7efa6ac4d5d8a28db27a0daaab2cf464f09baec7604afde9c",
       "status": "reviewed",
       "translation": "Registered genomic views, nested compositions and registered Cartesian character details are supported according to their contracts. Dotplot, facets and unregistered external plots are not inferred or adapted automatically.\n"
+    },
+    "11": {
+      "source_sha256": "6db4cb5e1a215bb2ff81b968f3c87bd689da15c1e8dedf5ade406d867d46799f",
+      "status": "reviewed",
+      "translation": "## Flagship display selections ⟦shared:0⟧\n"
+    },
+    "12": {
+      "source_sha256": "118355b35a95e589092be80d3a150267cdbd57f689a46a9e24adb6834bd794b6",
+      "status": "reviewed",
+      "translation": "Each of the three flagship overview panels retains 32 original HSPs and 266 CDS. Only three actual observations are selected for cross-panel correspondences. The local view selects the shortest observed HSP of at least 2000 bp, with 800 bp of context on either side (clipped at sequence boundaries), showing existing CDS and names. Pale cross-panel bands mark corresponding intervals; within-panel ribbon colours show Identity. Display selections and repeated views are not additional observations.\n"
     }
   }
 }

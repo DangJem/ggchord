@@ -4,6 +4,19 @@ from pathlib import Path
 ROOT=Path(__file__).resolve().parents[2]
 def sha(value):return hashlib.sha256(value).hexdigest()
 def blob(name):return subprocess.check_output(['git','show','3a56988:'+name],cwd=ROOT)
+def radial_revision():
+    path=ROOT/'tools/site-audit/radial-update.json'
+    if not path.exists():return None
+    record=json.loads(path.read_text())
+    assert record['status']=='complete' and record['baseline']=='4f68edf'
+    for name,digest in record['source_sha256'].items():
+        assert sha((ROOT/name).read_bytes())==digest,'Radial reviewed source moved: '+name
+    assert set(record['figures'])=={'flagradial','homeradial','flagfusion','homefusion'}
+    for item in record['figures'].values():
+        assert sha((ROOT/item['file']).read_bytes())==item['sha256']
+    assert record['checks']['source_fields_identical'] and record['checks']['backbone_clearance_min']>.1
+    return record
+
 def render_source(name):
     """Use the real render source only for the exact reviewed release delta.
 
@@ -11,6 +24,10 @@ def render_source(name):
     changes. Any additional edit returns current bytes and fails normal checks.
     """
     current=(ROOT/name).read_bytes()
+    revision=radial_revision()
+    if revision and name in {'DESCRIPTION','R/coord-radial-synteny.R','R/geom-ribbon.R',
+                            'R/ggchord-frame.R','tools/site-flagships.R','tools/home-previews.R'}:
+        current=subprocess.check_output(['git','show','4f68edf:'+name],cwd=ROOT)
     if name not in {'DESCRIPTION','R/coord-dotplot.R'}:return current
     previous=subprocess.check_output(['git','show','12c93c6:'+name],cwd=ROOT)
     if current==previous:return current

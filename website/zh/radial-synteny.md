@@ -43,3 +43,18 @@ Ribbon可用显式`pairs`或`adjacent_only=FALSE`选择非邻接关系；非邻�
 ## 操作示例与支持边界 {#support}
 
 只改 start_angle 不改其他参数，核对源坐标及方向。N=1、shared branches、单圆专属层和多窗口拼接为一条辐条不支持；逆映射要给骨架上的 x/y。
+
+## 非相邻连接的边框与外拱 {#nonadjacent}
+
+按最终环形顺序，相邻（含首尾）ribbon保持实线，非相邻ribbon使用虚线和与Collinear一致的0.4 mm边框。`nonadjacent_linewidth=0`恢复普通线宽；显式线型、线宽映射和用户标度优先。
+
+`nonadjacent_bulge`调整非相邻环形路径的外拱量，默认0；正值还会按完整中间辐条及同通道连接的带宽增加必要外拱。最长比例辐条长2，以下0.2是显示布局单位，不是bp。端点、源坐标和区间宽度保留，端点顺序要求的交叉仍可能存在。
+
+```r
+ggchord(radial_seqs, radial_hsp) +
+  geom_seq() +
+  geom_link_ribbon(adjacent_only = FALSE) +
+  coord_radial_synteny(nonadjacent_bulge = 0.2)
+```
+
+需要逐条手动调整时，`link_ctrl_point`支持按输入行提供两条边的笛卡尔控制点，优先于自动外拱；这会改变环形路径形态。`link_gap`只控制序列端点附近的间隙，不能替代中部外拱。

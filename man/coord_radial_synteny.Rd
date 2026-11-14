@@ -13,7 +13,8 @@ coord_radial_synteny(
   ylim = NULL,
   expand = FALSE,
   clip = "off",
-  fit = c("labels", "geometry", "manual")
+  fit = c("labels", "geometry", "manual"),
+  nonadjacent_bulge = 0
 )
 }
 \arguments{
@@ -40,6 +41,15 @@ additional ggplot2 coordinate expansion.}
 \item{fit}{Fitting strategy: \code{"labels"} includes measured label boxes,
 \code{"geometry"} fits geometric elements only, and \code{"manual"}
 requires explicit \code{xlim} and \code{ylim}.}
+
+\item{nonadjacent_bulge}{Non-negative outward lift at the midpoint of
+nonadjacent annular ribbons, in layout units (the longest proportional
+spoke has length 2). Default 0 retains the original path. The lift and its
+slope vanish at both endpoints. Adjacent ribbons and point links are
+unchanged. A positive lift also separates overlapping nonadjacent ribbon
+midpoints in the same channel, retaining their individual interval widths;
+this does not eliminate crossings forced by source endpoint order.
+Explicit \code{geom_link_ribbon(link_ctrl_point = ...)} takes priority.}
 }
 \value{
 A ggchord coordinate object.
@@ -62,7 +72,9 @@ names are placed just beyond the outer ends to keep the central hole clear.
 
 Ribbons default to cyclic neighbors. Use explicit \code{pairs} or
 \code{adjacent_only = FALSE} for nonadjacent ribbons; point links to nonneighbors
-require explicit \code{between}. Default curved connections stay in an annular
+require explicit \code{between}. Adjacent ribbon outlines are solid; nonadjacent
+outlines are dashed, following the final cyclic spoke order. Explicit fixed
+or mapped line types take priority. Default curved connections stay in an annular
 channel, retaining the complete interval fronts and inversion twists.
 Explicit control points use final layout x/y units. Shared link branches,
 circular-only annotations, shared straight scale bars and joined multi-window

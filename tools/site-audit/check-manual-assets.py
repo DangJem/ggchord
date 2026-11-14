@@ -8,7 +8,7 @@ import subprocess
 from pathlib import Path
 
 from PIL import Image
-from retained_provenance import validate_home_sources
+from retained_provenance import validate_home_sources, radial_revision, render_source
 
 ROOT = Path(__file__).resolve().parents[2]
 
@@ -21,6 +21,7 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--built', action='store_true')
     args = parser.parse_args()
+    radial=radial_revision()
     rows = json.loads((ROOT/'website/manual-figures.json').read_text())
     render = json.loads((ROOT/'tools/site-audit/flagship-rendering.json').read_text())
     source_sha = sha(ROOT/'tools/site-flagships.R')
@@ -33,7 +34,7 @@ def main():
         assert hashlib.sha256(before).hexdigest()==render['source_sha256']
         def chunks(text):
             return dict(re.findall(r'^# ---- ([a-z]+) ----\n(.*?)(?=^# ---- [a-z]+ ----)',text,re.M|re.S))
-        old_chunks=chunks(before.decode());new_chunks=chunks((ROOT/'tools/site-flagships.R').read_text())
+        old_chunks=chunks(before.decode());new_chunks=chunks(render_source('tools/site-flagships.R').decode())
         assert {key for key in old_chunks.keys()|new_chunks.keys() if old_chunks.get(key)!=new_chunks.get(key)}==({'flagshipmulti','flagshipdot'} if dot else {'flagshipmulti'})
         assert all(row['original_records']>0 and row['all_source_fields_identical'] for row in revised['source_checks'].values())
         if revised.get('source_check_correction'):
@@ -48,7 +49,10 @@ def main():
     for row in rows:
         file = ROOT/row['file']
         digest = sha(file)
-        if revised and dot and row['id']=='flagdotplot':
+        if radial and row['id'] in radial['figures']:
+            record=radial['figures'][row['id']]
+            assert record['sha256']==digest and all(record[k]==row[k] for k in ('width','height','dpi'))
+        elif revised and dot and row['id']=='flagdotplot':
             record=dot['figures']['flagdotplot']
             assert record['sha256']==digest and all(record[k]==row[k] for k in ('width','height','dpi'))
         elif revised and row['id']=='flaglinear' and 'showcasecollinear' in revised.get('legacy_figures',{}):
@@ -81,7 +85,7 @@ def main():
             assert sha(ROOT/'.site/assets'/f"{row['id']}.png") == digest, row['id']
     previews=json.loads((ROOT/'website/home-previews.json').read_text()) if revised else []
     for row in previews:
-        record=(dot['figures'][row['id']] if dot and row['id']=='homedotplot' else revised['figures'][row['id']])
+        record=(radial['figures'][row['id']] if radial and row['id'] in radial['figures'] else dot['figures'][row['id']] if dot and row['id']=='homedotplot' else revised['figures'][row['id']])
         assert record['sha256']==sha(ROOT/row['file']),row['id']
         assert record['status']=='actual PNG rendered'
         with Image.open(ROOT/row['file']) as im:

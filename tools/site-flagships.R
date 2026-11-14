@@ -62,10 +62,14 @@ relationship_theme <- doc_theme + theme(
   plot.title = element_text(size = 17), plot.subtitle = element_text(size = 10)
 )
 radial_labels <- chord_genes
+radial_orientation <- show_optimization$seq_orientation
+radial_orientation[c("MT108731.1", "OR222515.1")] <- 1
+# Adjustable annular lift for non-neighbours, in layout units; longest spoke = 2.
+radial_cross_bulge <- 0.20
 radial_position <- position_strand(c("+" = -0.055, "-" = 0.055))
 flag_radial <- ggchord(show_sequences, show_links) +
   geom_link_ribbon(adjacent_only = FALSE, link_avoid = "smooth", alpha = 0.46, linewidth = 0.20) +
-  geom_seq(seq_orientation = show_optimization$seq_orientation, seq_gap = 0.3, linewidth = 1.1) +
+  geom_seq(seq_orientation = radial_orientation, seq_gap = 0.3, linewidth = 1.1) +
   geom_gene(data = chord_genes, position = radial_position, width = 0.065) +
   geom_gene_label_repel(data = radial_labels, label_side = "auto", label_wrap = 20,
     label_max_lines = 3, position = radial_position, size = 3.1) +
@@ -76,7 +80,8 @@ flag_radial <- ggchord(show_sequences, show_links) +
   scale_gene_fill_manual(values = gene_palette, breaks = c("+", "-"), name = "Strand") +
   scale_seq_position_continuous(n.breaks = 2, minor_breaks = NULL,
     labels = function(x) format(x, scientific = FALSE, big.mark = ",", trim = TRUE)) +
-  coord_radial_synteny(start_angle = 45, inner_radius = 0.7) +
+  coord_radial_synteny(start_angle = 45, inner_radius = 0.7,
+    nonadjacent_bulge = radial_cross_bulge) +
   relationship_theme + relationship_guides +
   labs(title = "Four genomes, a radial view", subtitle = "Original Chord sources; all 20 CDS annotations")
 sankey_labels <- show_linear_features
@@ -148,11 +153,27 @@ flag_dotplot <- ggchord(flagship_sequences, flagship_hsp) +
     plot.margin = margin(12, 16, 12, 16)
   )
 # ---- flagshipfusion ----
-flagship_selected <- flagship_hsp |> slice(1)
+fusion_identity_guide <- ggplot2::guide_coloursteps(
+  available_aes = "ribbon_fill", even.steps = FALSE, show.limits = TRUE,
+  position = "bottom", direction = "horizontal",
+  theme = theme(
+    legend.key.width = unit(130, "mm"), legend.key.height = unit(4, "mm"),
+    legend.title = element_text(size = 10), legend.text = element_text(size = 9),
+    legend.margin = margin(2, 2, 2, 2)
+  )
+)
+fusion_orientation <- setNames(rep(1, nrow(flagship_sequences)), flagship_sequences$accver)
+flagship_selected <- flagship_hsp |>
+  filter(length >= 2000) |>
+  arrange(length, qaccver, saccver) |>
+  slice_head(n = 1)
 flagship_windows <- bind_rows(
   flagship_selected |> transmute(accver = qaccver, start = pmin(qstart, qend), end = pmax(qstart, qend)),
   flagship_selected |> transmute(accver = saccver, start = pmin(sstart, send), end = pmax(sstart, send))
-)
+) |>
+  left_join(flagship_sequences, by = "accver") |>
+  mutate(start = pmax(1, start - 800), end = pmin(length, end + 800)) |>
+  select(accver, start, end)
 flagship_focused <- focus_ggchord_data(flagship_sequences, ribbon_data = flagship_selected,
   feature_data = flagship_features, loci = flagship_windows)
 flagship_detail <- ggchord(flagship_focused$seq_data, flagship_focused$ribbon_data,
@@ -160,23 +181,58 @@ flagship_detail <- ggchord(flagship_focused$seq_data, flagship_focused$ribbon_da
   geom_link_ribbon(allow_repeated = TRUE, alpha = 0.45) +
   geom_seq(aes(seq_colour = accver)) +
   geom_gene(aes(gene_fill = strand), width = 0.045) +
-  geom_seq_label(size = 2.6) + coord_collinear() +
+  geom_gene_label_repel(size = 2.6, label_wrap = 22, label_max_lines = 2) +
+  geom_seq_label(size = 3.3) + coord_collinear() +
   scale_seq_colour_manual(values = flagship_colours) +
   scale_gene_fill_manual(values = c("+" = "#CE1536", "-" = "#346B9D", "." = "#8291A6")) +
   flagship_theme + theme(legend.position = "none")
-flagship_quiet <- theme(legend.position = "none")
-flag_fusion <- ggchord_fusion(fusion_chord + flagship_quiet,
-  center_box = c(0.02, 0.46, 0.53, 0.98)) +
-  fusion_panel(fusion_collinear + flagship_quiet, id = "linear", box = c(0.57, 0.98, 0.53, 0.98)) +
-  fusion_panel(fusion_radial + flagship_quiet, id = "radial", box = c(0.02, 0.46, 0.02, 0.43)) +
-  fusion_panel(flagship_detail, id = "detail", box = c(0.57, 0.98, 0.02, 0.43)) +
-  fusion_ribbon(flagship_hsp |> slice(2:5), qpanel = "center", spanel = "linear",
-    fill = "#269B82", alpha = 0.28, allow_repeated = TRUE) +
-  fusion_ribbon(flagship_hsp |> slice(6:9), qpanel = "center", spanel = "radial",
-    fill = "#D59B17", alpha = 0.28, allow_repeated = TRUE) +
+flagship_quiet <- theme(legend.position = "none", plot.margin = margin(8, 10, 8, 10),
+  plot.title = element_text(size = 13, face = "bold", hjust = 0),
+  plot.subtitle = element_text(size = 9, colour = "#52646A"),
+  ggchord.axis.text = element_text(size = 7))
+fusion_chord_view <- fusion_chord + flagship_quiet +
+  theme(ggchord.axis.text = element_blank(), ggchord.axis.ticks = element_blank()) +
+  labs(title = "A  |  Chord", subtitle = "Global homology across four genomes") +
+  theme(legend.position = "bottom", legend.margin = margin(2, 2, 2, 2)) +
+  guides(seq_colour = "none", gene_fill = "none", ribbon_fill = fusion_identity_guide)
+fusion_linear_view <- fusion_collinear + flagship_quiet +
+  scale_seq_position_continuous(n.breaks = 2, minor_breaks = NULL) +
+  labs(title = "B  |  Collinear", subtitle = "Same observed intervals, linear coordinates")
+fusion_radial_view <- ggchord(flagship_sequences, flagship_hsp, feature_data = flagship_features) +
+  geom_link_ribbon(adjacent_only = FALSE, alpha = 0.40, linewidth = 0.12, allow_repeated = TRUE) +
+  geom_seq(aes(seq_colour = accver), seq_orientation = fusion_orientation, linewidth = 1.1) +
+  geom_gene(aes(gene_fill = strand), position = flagship_position, width = 0.025) +
+  geom_seq_label(size = 3.2, seq_label_orientation = "horizontal") +
+  scale_seq_colour_manual(values = flagship_colours) +
+  scale_gene_fill_manual(values = c("+" = "#CE1536", "-" = "#346B9D", "." = "#8291A6")) +
+  coord_radial_synteny(start_angle = 45, inner_radius = 0.7) +
+  flagship_theme + flagship_quiet +
+  theme(ggchord.axis.text = element_blank(), ggchord.axis.ticks = element_blank()) +
+  labs(title = "C  |  Radial", subtitle = "Length-proportional spokes; cyclic neighbours")
+fusion_detail_view <- flagship_detail + flagship_quiet +
+  coord_collinear(ratio = 1) +
+  scale_seq_position_continuous(n.breaks = 3, minor_breaks = NULL) +
+  labs(title = "D  |  Local alignment and CDS",
+    subtitle = "2.5 kb observed HSP, with 800 bp of flanking context")
+flag_fusion <- ggchord_fusion(fusion_chord_view,
+  center_box = c(0.01, 0.47, 0.53, 0.98)) +
+  fusion_panel(fusion_linear_view, id = "linear", box = c(0.53, 0.99, 0.53, 0.98)) +
+  fusion_panel(fusion_radial_view, id = "radial", box = c(0.01, 0.47, 0.03, 0.48)) +
+  fusion_panel(fusion_detail_view, id = "detail", box = c(0.53, 0.99, 0.03, 0.48)) +
+  fusion_ribbon(flagship_hsp |> slice(2), qpanel = "center", spanel = "linear",
+    fill = "#269B82", alpha = 0.16, allow_repeated = TRUE) +
+  fusion_ribbon(flagship_hsp |> slice(6), qpanel = "center", spanel = "radial",
+    fill = "#D59B17", alpha = 0.14, allow_repeated = TRUE) +
   fusion_ribbon(flagship_selected, qpanel = "center", spanel = "detail",
-    fill = "#E64B35", alpha = 0.32, allow_repeated = TRUE) +
-  theme(plot.background = element_rect(fill = flagship_paper, colour = NA))
+    fill = "#E64B35", alpha = 0.07, allow_repeated = TRUE) +
+  labs(title = "One dataset, four linked views",
+    subtitle = "32 observed HSPs and 266 CDS in each overview; three explicit cross-panel correspondences",
+    caption = "Sequence colours identify genomes; ribbon fill shows Identity. Local detail uses a shorter observed HSP.") +
+  theme(plot.background = element_rect(fill = flagship_paper, colour = NA),
+    plot.title = element_text(size = 22, face = "bold", hjust = 0),
+    plot.subtitle = element_text(size = 11, colour = "#52646A"),
+    plot.caption = element_text(size = 10, colour = "#52646A", hjust = 0),
+    plot.margin = margin(12, 14, 10, 14))
 # ---- referencebuilder ----
 make_reference_map <- function(sequence, paper = "white") {
   features <- find_common_features(sequence)

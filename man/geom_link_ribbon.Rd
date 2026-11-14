@@ -39,7 +39,11 @@ geom_link_ribbon(
 Two numbers specify one shared control; four numbers specify controls for
 the two ribbon edges. A per-row list may contain pairs of coordinate vectors.
 NULL uses the origin \code{c(0, 0)} in chord layouts and derives controls
-from the sequence endpoints in collinear layouts. With shared branches,
+from the sequence endpoints in collinear layouts. In Radial layouts NULL
+uses annular curves; explicit controls use final Cartesian layout units,
+one point for each edge. Use a separate layer to adjust nonadjacent links
+without changing adjacent curves. This controls the middle of the path;
+\code{link_gap} only controls clearance at the sequence endpoints. With shared branches,
 controls shape the far ends while the junction follows the shared trunk.}
 
 \item{link_gap}{Optional numeric/vector controlling spacing between
@@ -67,10 +71,13 @@ take precedence over matching mappings; omitted defaults do not suppress
 user mappings. For example, omit \code{alpha} when mapping \code{ribbon_alpha}.}
 
 \item{linetype}{Fixed outline line type. The default \code{NULL} uses solid
-outlines in Chord, Radial and Sankey views. Only \code{\link[=coord_collinear]{coord_collinear()}}
+outlines in Chord and Sankey views. \code{\link[=coord_collinear]{coord_collinear()}}
 uses dashed outlines for non-adjacent displayed rows, with widths set by
 \code{nonadjacent_linewidth}; adjacent rows stay solid. This row convention
 follows final display order, independently of alignment direction.
+\code{\link[=coord_radial_synteny]{coord_radial_synteny()}} also uses dashed nonadjacent outlines, with
+adjacency defined cyclically (including first/last); \code{nonadjacent_linewidth}
+uses the same width convention as Collinear.
 Explicit fixed styles or \code{aes(ribbon_linetype = ...)} (also
 \code{aes(linetype = ...)}) replace the automatic styles. Use a matching scale
 for data mappings; automatic styles do not train a linetype scale.
@@ -89,7 +96,8 @@ by \code{\link[=export_ggchord_layout]{export_ggchord_layout()}}.}
 \item{position, show.legend, inherit.aes}{Standard ggplot2 layer arguments.}
 
 \item{nonadjacent_linewidth}{Fixed outline width for non-adjacent displayed
-rows in \code{\link[=coord_collinear]{coord_collinear()}}, default 0.4 mm. These ribbons use dashed
+rows in \code{\link[=coord_collinear]{coord_collinear()}} or nonadjacent spokes in
+\code{\link[=coord_radial_synteny]{coord_radial_synteny()}}, default 0.4 mm. These ribbons use dashed
 outlines by default. Zero uses the layer's ordinary \code{linewidth} for every
 ribbon. This changes width independently of line type. An explicit
 \code{aes(linewidth = ...)} controls widths instead of this fixed default.}

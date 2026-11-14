@@ -1,5 +1,5 @@
 {
-  "source_sha256": "76ca4ea96c7db303ddc979a0d0ab5e6d5581d3c42ee668c0b1857c3366806220",
+  "source_sha256": "d209bd5e12f791c64cc172e637e3ced86a842a3238fdf39010feb7b3278bf9c1",
   "blocks": {
     "0": {
       "source_sha256": "98c6947d28f5113c77a7b9cac36987e362aa926a32e6ee6f129e533a83ead15a",
@@ -50,6 +50,26 @@
       "source_sha256": "a27944c62319b32ab219d362015990a824cc193fb5dfe8013f1e6dfcddab55c2",
       "status": "reviewed",
       "translation": "Change only start_angle and verify source coordinates and directions. N=1, shared branches, circular-only layers and stitching separate windows into one spoke are unsupported. Inverse mapping needs backbone x/y.\n"
+    },
+    "16": {
+      "source_sha256": "72b0f318e6428ff72921494fc81551fcac26ec6823b77c1f03dbcb47d5135f63",
+      "status": "reviewed",
+      "translation": "## Nonadjacent outlines and outward lift ⟦shared:0⟧\n"
+    },
+    "17": {
+      "source_sha256": "638f807204c707eb8dd86d52ec59278ee24b18028c6ad07cceda80d302a8a21e",
+      "status": "reviewed",
+      "translation": "In final cyclic order, neighbouring ribbons (including first/last) remain solid. Non-neighbours use dashed outlines with the same 0.4 mm width as Collinear. ⟦shared:0⟧ restores ordinary widths; explicit line types, width mappings and user scales take priority.\n"
+    },
+    "18": {
+      "source_sha256": "885e513b23200804449ec815c1a767af367ff3c4439f4675ffbe280576aa0716",
+      "status": "reviewed",
+      "translation": "⟦shared:0⟧ sets outward lift for nonadjacent annular paths, default 0. Positive values also increase lift as needed to clear full intervening spokes and separate same-channel ribbon bands. The longest proportional spoke has length 2; 0.2 below is in display layout units, not bp. Endpoints, source coordinates and interval widths remain intact; crossings required by endpoint order may remain.\n"
+    },
+    "20": {
+      "source_sha256": "583473f48a442784a9b4673967b267c460b9b44087361ec9509b250b3953a2e8",
+      "status": "reviewed",
+      "translation": "For per-row manual adjustments, ⟦shared:0⟧ accepts Cartesian controls for the two edges and takes priority over automatic lift; it changes the annular path shape. ⟦shared:1⟧ only controls clearance near sequence endpoints and cannot replace midpoint lift.\n"
     }
   }
 }

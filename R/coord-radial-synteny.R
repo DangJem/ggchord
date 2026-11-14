@@ -16,7 +16,9 @@
 #'
 #' Ribbons default to cyclic neighbors. Use explicit `pairs` or
 #' `adjacent_only = FALSE` for nonadjacent ribbons; point links to nonneighbors
-#' require explicit `between`. Default curved connections stay in an annular
+#' require explicit `between`. Adjacent ribbon outlines are solid; nonadjacent
+#' outlines are dashed, following the final cyclic spoke order. Explicit fixed
+#' or mapped line types take priority. Default curved connections stay in an annular
 #' channel, retaining the complete interval fronts and inversion twists.
 #' Explicit control points use final layout x/y units. Shared link branches,
 #' circular-only annotations, shared straight scale bars and joined multi-window
@@ -33,6 +35,14 @@
 #' @param inner_radius Positive inner radius in layout units, default 0.6.
 #'   The longest proportional spoke has length 2. The central hole is display
 #'   spacing and does not remove any source positions.
+#' @param nonadjacent_bulge Non-negative outward lift at the midpoint of
+#'   nonadjacent annular ribbons, in layout units (the longest proportional
+#'   spoke has length 2). Default 0 retains the original path. The lift and its
+#'   slope vanish at both endpoints. Adjacent ribbons and point links are
+#'   unchanged. A positive lift also separates overlapping nonadjacent ribbon
+#'   midpoints in the same channel, retaining their individual interval widths;
+#'   this does not eliminate crossings forced by source endpoint order.
+#'   Explicit `geom_link_ribbon(link_ctrl_point = ...)` takes priority.
 #' @inheritParams coord_collinear
 #' @return A ggchord coordinate object.
 #' @export
@@ -46,20 +56,24 @@
 #'   coord_radial_synteny(start_angle = 90, inner_radius = 0.7)
 coord_radial_synteny <- function(start_angle = 90, clockwise = TRUE,
     inner_radius = 0.6, ratio = 1, xlim = NULL, ylim = NULL,
-    expand = FALSE, clip = "off", fit = c("labels", "geometry", "manual")) {
+    expand = FALSE, clip = "off", fit = c("labels", "geometry", "manual"),
+    nonadjacent_bulge = 0) {
   for (name in c("start_angle", "inner_radius")) {
     value <- get(name)
     if (!is.numeric(value) || length(value) != 1L || !is.finite(value))
       ggchord_stop("coord_radial_synteny(): ", name, " must be a finite number")
   }
   if (inner_radius <= 0) ggchord_stop("coord_radial_synteny(): inner_radius must be positive")
+  if (!is.numeric(nonadjacent_bulge) || length(nonadjacent_bulge) != 1L ||
+      !is.finite(nonadjacent_bulge) || nonadjacent_bulge < 0)
+    ggchord_stop("coord_radial_synteny(): nonadjacent_bulge must be one finite non-negative number")
   if (!is.logical(clockwise) || length(clockwise) != 1L || is.na(clockwise))
     ggchord_stop("coord_radial_synteny(): clockwise must be TRUE or FALSE")
   base <- coord_collinear(ratio = ratio, xlim = xlim, ylim = ylim,
     expand = expand, clip = clip, fit = fit)
   ggplot2::ggproto("CoordRadialSynteny", base, ggchord_radial = TRUE,
     radial_start_angle = start_angle, radial_clockwise = clockwise,
-    radial_inner_radius = inner_radius)
+    radial_inner_radius = inner_radius, radial_nonadjacent_bulge = nonadjacent_bulge)
 }
 
 # An isometry per source frame: along-axis distances and physical band widths
@@ -105,7 +119,7 @@ ggchord_project_radial_data <- function(data, frames, id = NULL, fixed_angle = F
 # Polar interpolation keeps the default connection out of the central hole.
 # Endpoint r is interpolated smoothly, so the curve meets each front along
 # its local normal, including the two-spoke semicircular channel.
-ggchord_radial_edge <- function(a, b, delta, controls = NULL, n = 50L) {
+ggchord_radial_edge <- function(a, b, delta, controls = NULL, n = 50L, bulge = 0) {
   if (!is.null(controls)) return(bezier_pts(a, b, controls[[1]], controls[[2]], n = n))
   t <- seq(0, 1, length.out = n)
   ra <- sqrt(sum(a^2)); rb <- sqrt(sum(b^2))
@@ -115,6 +129,7 @@ ggchord_radial_edge <- function(a, b, delta, controls = NULL, n = 50L) {
   if (delta > 0 && change < 0) change <- change + 2 * pi
   if (delta < 0 && change > 0) change <- change - 2 * pi
   r <- ra + (rb - ra) * (3 * t^2 - 2 * t^3)
+  if (bulge != 0) r <- r + bulge * 16 * t^2 * (1 - t)^2
   angle <- aa + change * t
   cbind(x = r * cos(angle), y = r * sin(angle))
 }
@@ -126,7 +141,7 @@ ggchord_radial_connections <- function(d, input, params, component, layout, fram
   ref <- layout$sequence_reference
   configured <- params$ribbon_gap %||% params$link_gap
   gaps <- process_sequence_param(configured %||% .035, layout$seqs, "link_gap", .035)
-  pieces <- list(); endpoints <- list()
+  pieces <- list(); endpoints <- list(); channels <- list()
   for (i in unique(d$source_row)) {
     template <- d[d$source_row == i, , drop = FALSE]
     q <- as.character(input$qaccver[i]); s <- as.character(input$saccver[i])
@@ -161,10 +176,53 @@ ggchord_radial_connections <- function(d, input, params, component, layout, fram
     if (component == "ribbon") {
       qxy <- front(q, input$qstart[i], input$qend[i], normal_q)
       sxy <- front(s, input$sstart[i], input$send[i], normal_s)
+      bulge <- if (adjacent) 0 else layout$radial_nonadjacent_bulge %||% 0
+      if (bulge > 0 && is.null(params$ribbon_ctrl_point)) {
+        # Clear the full intervening backbones, not merely their centre points.
+        # Both ribbon edges must pass outside each spoke tip in this channel.
+        tips <- frames$inner + layout$sequence_layout$xmax - layout$sequence_layout$xmin
+        for (edge_index in c(1L, nrow(qxy))) {
+          qa <- atan2(qxy[edge_index, 2], qxy[edge_index, 1])
+          sa <- atan2(sxy[edge_index, 2], sxy[edge_index, 1])
+          turn <- (sa - qa + pi) %% (2 * pi) - pi
+          if (delta > 0 && turn < 0) turn <- turn + 2 * pi
+          if (delta < 0 && turn > 0) turn <- turn - 2 * pi
+          for (j in setdiff(seq_len(count), c(qi, si))) {
+            offset <- (frames$theta[j] - qa) %% (2 * pi)
+            if (turn < 0) offset <- offset - 2 * pi
+            t <- offset / turn
+            if (!is.finite(t) || t <= 0 || t >= 1) next
+            ra <- sqrt(sum(qxy[edge_index, ]^2))
+            rb <- sqrt(sum(sxy[edge_index, ]^2))
+            radius <- ra + (rb - ra) * (3 * t^2 - 2 * t^3)
+            bulge <- max(bulge, (tips[j] + .12 - radius) / (16 * t^2 * (1 - t)^2))
+          }
+        }
+        angle <- frames$theta[qi] + delta / 2
+        channel <- paste(paste(sort(c(q, s)), collapse = ":"),
+          sprintf("%.6f", atan2(sin(angle), cos(angle))))
+        along <- seq(.25, .75, length.out = 11L)
+        weight <- 16 * along^2 * (1 - along)^2
+        qr <- sqrt(rowSums(qxy[c(1L, nrow(qxy)), , drop = FALSE]^2))
+        sr <- sqrt(rowSums(sxy[c(1L, nrow(sxy)), , drop = FALSE]^2))
+        edges <- vapply(seq_len(2L), function(k)
+          qr[k] + (sr[k] - qr[k]) * (3 * along^2 - 2 * along^3), numeric(length(along)))
+        span <- cbind(pmin(edges[, 1], edges[, 2]), pmax(edges[, 1], edges[, 2])) + bulge * weight
+        occupied <- channels[[channel]]
+        if (length(occupied)) occupied <- occupied[order(vapply(occupied, function(x) mean(x[, 1]), numeric(1)))]
+        if (length(occupied)) for (previous in occupied) {
+          if (any(span[, 1] < previous[, 2] + .05 & span[, 2] > previous[, 1] - .05)) {
+            shift <- max((previous[, 2] + .05 - span[, 1]) / weight)
+            span <- span + shift * weight; bulge <- bulge + shift
+          }
+        }
+        channels[[channel]] <- c(occupied, list(span))
+      }
       edge <- function(a, b, which) {
         cp <- if (is.null(params$ribbon_ctrl_point)) NULL else
           rep(ggchord_link_controls(params$ribbon_ctrl_point, i, (a + b) / 2)[which], 2L)
-        ggchord_radial_edge(a, b, delta, cp)
+        ggchord_radial_edge(a, b, delta, cp,
+          bulge = bulge)
       }
       a <- edge(qxy[1, ], sxy[1, ], 1L)
       b <- edge(qxy[nrow(qxy), ], sxy[nrow(sxy), ], 2L)
@@ -191,7 +249,8 @@ ggchord_radial_connections <- function(d, input, params, component, layout, fram
         sboundary_end = if (input$sstart[i] <= input$send[i]) input$send[i] else input$send[i] - 1,
         qx_start = qxy[1, 1], qy_start = qxy[1, 2], qx_end = tail(qxy[, 1], 1), qy_end = tail(qxy[, 2], 1),
         sx_start = sxy[1, 1], sy_start = sxy[1, 2], sx_end = tail(sxy[, 1], 1), sy_end = tail(sxy[, 2], 1),
-        adjacent = adjacent, channel_angle = delta)
+        adjacent = adjacent, channel_angle = delta,
+        route_bulge = if (is.null(params$ribbon_ctrl_point)) bulge else NA_real_)
     }
     pieces[[length(pieces) + 1L]] <- piece
   }
@@ -210,6 +269,7 @@ ggchord_project_radial_layout <- function(layout, plot) {
     source_y = unname(layout$sequence_reference$y[layout$seqs]), axis_min = tab$xmin,
     ratio = plot$coordinates$ratio %||% 1)
   layout$radial_clockwise <- plot$coordinates$radial_clockwise
+  layout$radial_nonadjacent_bulge <- plot$coordinates$radial_nonadjacent_bulge %||% 0
   endpoints <- list()
   for (owner in names(layout$layer_geometry)) for (component in names(layout$layer_geometry[[owner]])) {
     d <- layout$layer_geometry[[owner]][[component]]
@@ -236,6 +296,11 @@ ggchord_project_radial_layout <- function(layout, plot) {
     input <- layout$layer_inputs[[owner]][[component]]
     layer <- plot$layers[[which(vapply(plot$layers, function(l) identical(l$ggchord_layer_id, owner), logical(1)))[1]]]
     result <- ggchord_radial_connections(d, input, layer$ggchord_params, component, layout, frames)
+    if (component == "ribbon" &&
+        is.null(layer$ggchord_params$ribbon_outline_linetype) &&
+        !any(c("linetype", "ribbon_linetype") %in% names(layer$ggchord_input_mapping))) {
+      result$data$linetype_val <- ifelse(result$data$.ggchord_adjacent, "solid", "dashed")
+    }
     layout$layer_geometry[[owner]][[component]] <- result$data
     if (!is.null(result$endpoints)) {
       result$endpoints$layer_id <- owner

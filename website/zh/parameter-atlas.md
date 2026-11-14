@@ -112,6 +112,7 @@
 | `expand` | `FALSE` | 类型、单位及允许格式见右侧本函数参数契约 | 逻辑值，是否扩展坐标范围，默认FALSE。自动拟合已有小幅安全边距；设为TRUE可再请求ggplot2坐标扩展。 |
 | `clip` | `"off"` | 类型、单位及允许格式见右侧本函数参数契约 | 是否将绘制裁剪到面板，默认"off"。 |
 | `fit` | `c("labels", "geometry", "manual")` | 类型、单位及允许格式见右侧本函数参数契约 | 拟合策略："labels"包含实测标签框，"geometry"只拟合几何元素，"manual"要求显式xlim及ylim。 |
+| `nonadjacent_bulge` | `0` | 类型、单位及允许格式见右侧本函数参数契约 | 非相邻环形 ribbon 中点的非负外拱量，单位为布局单位（最长比例辐条长2）。默认0保留原路径；外拱量及其斜率在两端均为0。相邻连接和点连接不变。正值还会按实际区间宽度分开同通道中部重叠的非相邻 ribbon；来源端点顺序迫使的交叉不会被消除。显式geom_link_ribbon(link_ctrl_point = ...)优先。 |
 
 </details>
 
@@ -394,7 +395,7 @@
 | --- | --- | --- | --- |
 | `mapping` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 默认 NULL，使用预计算数据。 |
 | `data` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 默认 NULL，从布局自动获取。 |
-| `link_ctrl_point` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 可选的贝塞尔边界控制向量/列表。两个数指定共享控制点，四个数分别指定两条边界的控制点；逐行列表可含成对坐标向量。NULL 在弦图中使用原点 c(0, 0)，在线性图中由序列端点推导控制点。共享分支时，控制点影响远端形状，汇合处跟随共享主干。 |
+| `link_ctrl_point` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 可选Bezier边界控制点向量或列表。两个数指定一个共享点，四个数分别指定两条边的控制点。逐行列表可包含成对坐标向量。NULL在Chord中使用原点c(0, 0)，在线性布局中从序列端点推导控制点。在Radial中NULL使用环形曲线，显式点使用最终笛卡尔布局单位，每条边一个点。可用独立图层单独调整非相邻连接。控制点调整路径中部，link_gap只调整端点间隙。共享分支时，控制点塑造远端，汇合位置由共享主干决定。 |
 | `link_gap` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 可选数值/向量，控制序列与连接端点的间距。默认 link_avoid = "uniform" 时，NULL 为每个端点统一选择考虑障碍的间距；"smooth" 仅在 geom_gene()、geom_feature() 多边形附近局部调整，"none" 则使用固定 0.035。忽略文字与引导线。提供数值会关闭自动规则并精确使用该间距。线性布局会缩减自动基础间距以适应窄通道；无法容纳的显式间距或注释避让距离会报错。 |
 | `link_avoid` | `c("uniform", "none", "smooth")` | 类型、单位及允许格式见右侧本函数参数契约 | 避障方式："uniform"（默认）、"none" 或 "smooth"。平滑方式局部调整，统一方式在整个端点采用同一间距。 |
 | `link_branch` | `c("none", "query", "subject")` | 类型、单位及允许格式见右侧本函数参数契约 | 共享相同 query 或 subject 端点："none"、"query"、"subject"。 |
@@ -403,13 +404,13 @@
 | `alpha` | `0.42` | 类型、单位及允许格式见右侧本函数参数契约 | 标准固定样式。显式值优先于对应映射；省略的默认值不会阻止用户映射。例如映射 ribbon_alpha 时应省略 alpha。 |
 | `colour` | `"#59636D"` | 类型、单位及允许格式见右侧本函数参数契约 | 标准固定样式。显式值优先于对应映射；省略的默认值不会阻止用户映射。例如映射 ribbon_alpha 时应省略 alpha。 |
 | `linewidth` | `0.08` | 类型、单位及允许格式见右侧本函数参数契约 | 标准固定样式。显式值优先于对应映射；省略的默认值不会阻止用户映射。例如映射 ribbon_alpha 时应省略 alpha。 |
-| `linetype` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 固定边框线型。默认 NULL 在 Chord、Radial 和 Sankey 中使用实线。只有 coord_collinear() 对非相邻显示行使用虚线，线宽由 nonadjacent_linewidth 控制；相邻行保持实线。此行间约定按最终显示顺序确定，与比对方向无关。显式固定线型或 aes(ribbon_linetype = ...)（也支持 aes(linetype = ...)）覆盖自动线型。数据映射应搭配对应标度，自动线型不会训练线型标度；inherit.aes = TRUE 时使用全局线型映射。 |
+| `linetype` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 固定边框线型。默认NULL在Chord和Sankey中使用实线。coord_collinear()对非相邻行使用虚线，线宽由nonadjacent_linewidth控制，相邻行保持实线；此约定按最终显示顺序确定，与比对方向无关。coord_radial_synteny()也对非相邻辐条使用虚线，首尾视为相邻，nonadjacent_linewidth遵循与Collinear相同的线宽规则。显式固定样式或aes(ribbon_linetype = ...)（也支持aes(linetype = ...)）覆盖自动样式。数据映射应使用对应标度；自动线型不训练线型标度。inherit.aes = TRUE时继承全局线型映射。 |
 | `adjacent_only` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 是否只连接相邻序列。NULL 在 coord_collinear() 中相当于 TRUE，在 coord_chord() 中相当于 FALSE。设为 FALSE 可保留跨轨道连接；弦图首尾也是相邻。 |
 | `pairs` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 可选数据框，以 qaccver 和 saccver 选择无序比较对。adjacent_only = NULL 时，显式比较对优先于坐标系默认值。export_ggchord_layout() 报告省略行。 |
 | `position` | `"identity"` | 类型、单位及允许格式见右侧本函数参数契约 | 标准 ggplot2 图层参数。 |
 | `show.legend` | `TRUE` | 类型、单位及允许格式见右侧本函数参数契约 | 标准 ggplot2 图层参数。 |
 | `inherit.aes` | `FALSE` | 类型、单位及允许格式见右侧本函数参数契约 | 标准 ggplot2 图层参数。 |
-| `nonadjacent_linewidth` | `0.4` | 类型、单位及允许格式见右侧本函数参数契约 | 共线性布局 coord_collinear() 中非相邻显示行的固定边框线宽，默认 0.4 mm。这些连接带默认使用虚线。设为 0 时，所有连接带沿用普通 linewidth。此参数只控制线宽，不改变线型；显式 aes(linewidth = ...) 映射优先。 |
+| `nonadjacent_linewidth` | `0.4` | 类型、单位及允许格式见右侧本函数参数契约 | coord_collinear()的非相邻行或coord_radial_synteny()的非相邻辐条的固定边框线宽，默认0.4 mm，默认使用虚线。设为0时全部连接使用图层普通linewidth。线宽与线型独立；显式aes(linewidth = ...)映射优先。 |
 | `between` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 两个显示实例名称或声明序号，用于确定唯一路由。 |
 | `allow_repeated` | `FALSE` | 类型、单位及允许格式见右侧本函数参数契约 | 显式允许声明的 source_hsp_id 出现在多个显示关系中。 |
 | `tip` | `c("none", "subject")` | 类型、单位及允许格式见右侧本函数参数契约 | 默认 none 保留完整区间端面；也可选择 subject 端收尖。肩部在通道 88% 处保留平移后的目标端点跨度。尖点是端面中点的装饰标记，不代表单个匹配碱基或生物转移方向。退化端面会警告并恢复完整端面。源区间保持不变。 |

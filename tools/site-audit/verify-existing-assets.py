@@ -70,7 +70,10 @@ def verify_linear_revision():
     assert [r['id'] for r in rows]==[r['id'] for r in baseline]
     refreshed=record['legacy_figures']
     assert set(refreshed)==set(record['legacy_scope']['annotated'])=={'showcasecollinear','linearlabels','practicelinear'}
-    current=module.fingerprints(runtime_hashes={'R/coord-dotplot.R':hashlib.md5(subprocess.check_output(['git','show','3a56988:R/coord-dotplot.R'],cwd=ROOT)).hexdigest()} if dot else None)['assets'];expected={}
+    render_hashes={name:hashlib.md5(render_source(name)).hexdigest() for name in actual}
+    legacy_hashes=dict(render_hashes)
+    if dot:legacy_hashes['R/coord-dotplot.R']=hashlib.md5(subprocess.check_output(['git','show','3a56988:R/coord-dotplot.R'],cwd=ROOT)).hexdigest()
+    current=module.fingerprints(runtime_hashes=legacy_hashes)['assets'];expected={}
     for old,row in zip(baseline,rows):
         name=row['id'];path=ROOT/row['file']
         assert hashlib.md5(path.read_bytes()).hexdigest()==row['md5'],name
@@ -83,7 +86,7 @@ def verify_linear_revision():
         elif dot and name=='viewdotplot':
             item=dot['figures'][name]
             assert item['sha256']==hashlib.sha256(path.read_bytes()).hexdigest()
-            assert item['dependency_md5']==row['dependency_md5']==module.fingerprints(runtime_hashes={'R/coord-dotplot.R':hashlib.md5(render_source('R/coord-dotplot.R')).hexdigest()})['assets'][name]
+            assert item['dependency_md5']==row['dependency_md5']==module.fingerprints(runtime_hashes=render_hashes)['assets'][name]
         else:
             assert old==row,'Retained PNG provenance moved: '+name
         expected[name]=row['dependency_md5']

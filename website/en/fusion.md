@@ -19,3 +19,6 @@ Nested Fusion preserves leaf-panel paths. An origin-crossing region needs explic
 ## Supported panel types {#inputs}
 
 Registered genomic views, nested compositions and registered Cartesian character details are supported according to their contracts. Dotplot, facets and unregistered external plots are not inferred or adapted automatically.
+## Flagship display selections {#flagship-selection}
+
+Each of the three flagship overview panels retains 32 original HSPs and 266 CDS. Only three actual observations are selected for cross-panel correspondences. The local view selects the shortest observed HSP of at least 2000 bp, with 800 bp of context on either side (clipped at sequence boundaries), showing existing CDS and names. Pale cross-panel bands mark corresponding intervals; within-panel ribbon colours show Identity. Display selections and repeated views are not additional observations.

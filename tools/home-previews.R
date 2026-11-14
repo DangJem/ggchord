@@ -42,11 +42,12 @@ home_collinear <- ggchord(show_sequences) +
   home_colours + home_axis + show_linear_coord + home_relationship_theme
 home_radial <- ggchord(show_sequences, show_links) +
   geom_link_ribbon(adjacent_only = FALSE, alpha = 0.55, linewidth = 0.2) +
-  geom_seq(seq_orientation = show_optimization$seq_orientation, linewidth = 1.2) +
+  geom_seq(seq_orientation = radial_orientation, linewidth = 1.2) +
   geom_gene(data = chord_genes, position = radial_position, width = 0.065) +
   geom_seq_label(size = 4, seq_label_orientation = "horizontal") +
   home_colours + home_axis +
-  coord_radial_synteny(start_angle = 45, inner_radius = 0.7) + home_relationship_theme
+  coord_radial_synteny(start_angle = 45, inner_radius = 0.7,
+    nonadjacent_bulge = radial_cross_bulge) + home_relationship_theme
 home_sankey <- ggchord(show_sequences) +
   geom_link_ribbon(data = show_adjacent, alpha = 0.55, linewidth = 0.2) +
   geom_link_ribbon(data = show_cross, adjacent_only = FALSE, alpha = 0.35, linewidth = 0.25) +
@@ -98,18 +99,18 @@ home_fusion_base <- ggchord(flagship_sequences, flagship_hsp, feature_data = fla
   geom_seq_label(size = 2.6) +
   scale_seq_colour_manual(values = flagship_colours) +
   scale_gene_fill_manual(values = gene_palette) + home_fusion_theme
-home_fusion <- ggchord_fusion(home_fusion_base + coord_chord(),
-  center_box = c(0.01, 0.49, 0.52, 0.99)) +
-  fusion_panel(home_fusion_base + coord_collinear(), id = "linear",
-    box = c(0.54, 0.99, 0.52, 0.99)) +
-  fusion_panel(home_fusion_base + coord_radial_synteny(start_angle = 45), id = "radial",
-    box = c(0.01, 0.49, 0.01, 0.48)) +
-  fusion_panel(flagship_detail + home_fusion_theme, id = "detail",
-    box = c(0.54, 0.99, 0.01, 0.48)) +
-  fusion_ribbon(flagship_hsp |> slice(2:5), qpanel = "center", spanel = "linear",
-    fill = "#269B82", alpha = 0.22, allow_repeated = TRUE) +
-  fusion_ribbon(flagship_hsp |> slice(6:9), qpanel = "center", spanel = "radial",
-    fill = "#D59B17", alpha = 0.22, allow_repeated = TRUE) +
+home_fusion <- ggchord_fusion(fusion_chord_view + home_fusion_theme,
+  center_box = c(0.01, 0.47, 0.53, 0.99)) +
+  fusion_panel(fusion_linear_view + home_fusion_theme, id = "linear",
+    box = c(0.53, 0.99, 0.53, 0.99)) +
+  fusion_panel(fusion_radial_view + home_fusion_theme, id = "radial",
+    box = c(0.01, 0.47, 0.01, 0.47)) +
+  fusion_panel(fusion_detail_view + home_fusion_theme, id = "detail",
+    box = c(0.53, 0.99, 0.01, 0.47)) +
+  fusion_ribbon(flagship_hsp |> slice(2), qpanel = "center", spanel = "linear",
+    fill = "#269B82", alpha = 0.16, allow_repeated = TRUE) +
+  fusion_ribbon(flagship_hsp |> slice(6), qpanel = "center", spanel = "radial",
+    fill = "#D59B17", alpha = 0.14, allow_repeated = TRUE) +
   fusion_ribbon(flagship_selected, qpanel = "center", spanel = "detail",
-    fill = "#E64B35", alpha = 0.24, allow_repeated = TRUE) +
+    fill = "#E64B35", alpha = 0.07, allow_repeated = TRUE) +
   theme(plot.background = element_rect(fill = home_paper, colour = NA))
