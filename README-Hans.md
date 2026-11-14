@@ -33,6 +33,9 @@
     <td width="50%"><strong>Chord · 四条基因组的关系总览</strong><br><a href="man/figures/showcasechord.png"><img src="man/figures/showcasechord.png" alt="四条基因组的弦图旗舰：基因标签与比对连接带" width="460"></a><br>混合曲率骨架、保留真实链方向的 CDS 箭头、来源标签与 Identity 连接带组合展示。特征与 HSP 按显示需要从原始记录中选取。<br><a href="website/zh/chord.md">完整案例 →</a></td>
     <td width="50%"><strong>Collinear · 顺序、方向与跨行连接</strong><br><a href="man/figures/showcasecollinear.png"><img src="man/figures/showcasecollinear.png" alt="四条基因组的共线性旗舰：分链基因与跨行连接带" width="460"></a><br>在共同的 bp 标尺下比较四条基因组，骨架两侧展示精选 CDS。跨越非相邻显示行的连接带使用虚线轮廓。<br><a href="website/zh/collinear.md">完整案例 →</a></td>
   </tr>
+</table>
+
+<table>
   <tr>
     <td width="50%"><strong>Radial · 径向辐条上的共线性</strong><br><a href="man/figures/flagradial.png"><img src="man/figures/flagradial.png" alt="从四基因组弦图派生的 Radial 旗舰" width="460"></a><br>从弦图旗舰复用来源准备与精选特征，改用径向辐条骨架展示区间关系；序列身份与原生位置保持可追溯。<br><a href="website/zh/radial-synteny.md">完整案例 →</a></td>
     <td width="50%"><strong>Sankey · 镜像双列中的来源区间</strong><br><a href="man/figures/flagsankey.png"><img src="man/figures/flagsankey.png" alt="从四基因组共线性图派生的 Sankey 旗舰" width="460"></a><br>从共线性旗舰派生，保留对应的精选基因与 HSP。序列镜像排列在两列中，连接带表示已有区间关系，带宽不代表守恒流量。<br><a href="website/zh/sankey.md">完整案例 →</a></td>

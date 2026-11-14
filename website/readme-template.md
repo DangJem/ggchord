@@ -33,6 +33,9 @@
     <td width="50%"><strong>{{chord-title}}</strong><br><a href="man/figures/showcasechord.png"><img src="man/figures/showcasechord.png" alt="{{chord-alt}}" width="460"></a><br>{{chord-caption}}<br><a href="website/{{lang}}/chord.md">{{case}} →</a></td>
     <td width="50%"><strong>{{linear-title}}</strong><br><a href="man/figures/showcasecollinear.png"><img src="man/figures/showcasecollinear.png" alt="{{linear-alt}}" width="460"></a><br>{{linear-caption}}<br><a href="website/{{lang}}/collinear.md">{{case}} →</a></td>
   </tr>
+</table>
+
+<table>
   <tr>
     <td width="50%"><strong>{{radial-title}}</strong><br><a href="man/figures/flagradial.png"><img src="man/figures/flagradial.png" alt="{{radial-alt}}" width="460"></a><br>{{radial-caption}}<br><a href="website/{{lang}}/radial-synteny.md">{{case}} →</a></td>
     <td width="50%"><strong>{{sankey-title}}</strong><br><a href="man/figures/flagsankey.png"><img src="man/figures/flagsankey.png" alt="{{sankey-alt}}" width="460"></a><br>{{sankey-caption}}<br><a href="website/{{lang}}/sankey.md">{{case}} →</a></td>
