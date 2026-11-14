@@ -1,7 +1,7 @@
 {
   "package_version": "0.27.0.9000",
   "channel": "development",
-  "runtime_source_commit": "0f5dd96da57876da74cd1234c7de9cf5579c80b8",
+  "runtime_source_commit": "66314d138a895a5f956a84033e9a03f383fbf0a5",
   "stable_version": "0.16.6",
-  "installation": "Pinned public runtime baseline; local documentation changes are recorded separately in build-manifest.json."
+  "installation": "General GitHub installation; inspect the active package and environment. The documentation build records its own source commit and file hashes."
 }

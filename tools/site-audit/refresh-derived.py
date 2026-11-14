@@ -12,13 +12,25 @@ def main():
     site=ROOT/'.site';snapshot_path=site/'source-snapshot.json'
     snapshot=json.loads(snapshot_path.read_text());old_snapshot=sha(snapshot_path)
     assert snapshot['status']=='verified unchanged across rendering and finalization'
-    allowed={'website/assets/site.css','website/assets/site.js','tools/site_search.py'}
+    allowed={'website/assets/site.css','website/assets/site.js','tools/site_search.py','website/version.json'}
     changed={name for name,value in snapshot['render_inputs'].items() if sha(ROOT/name)!=value}
     assert changed and changed<=allowed,'Only derived presentation/search inputs may change: '+str(changed)
     manifest_path=site/'build-manifest.json';manifest=json.loads(manifest_path.read_text())
     for name in sorted(changed):
         path=ROOT/name
-        if name=='tools/site_search.py':
+        if name=='website/version.json':
+            # This metadata is copied before native rendering. Only descriptive
+            # installation/runtime provenance may change in this scoped refresh.
+            # Native HTML, package versions and source inputs stay fixed.
+            target=site/'build-metadata.json'
+            metadata=json.loads(target.read_text());values=json.loads(path.read_text())
+            differences={key for key,value in values.items() if metadata.get(key)!=value}
+            assert differences <= {'installation','runtime_source_commit'},differences
+            html_before={str(p):sha(p) for p in site.rglob('*.html')}
+            metadata.update(values)
+            target.write_text(json.dumps(metadata,indent=2)+'\n')
+            assert html_before=={str(p):sha(p) for p in site.rglob('*.html')}
+        elif name=='tools/site_search.py':
             before={str(p):sha(p) for p in site.rglob('*.html')}
             for lang in ['en','zh']:
                 target=site/lang/'search.json';old=json.loads(target.read_text())
@@ -36,7 +48,7 @@ def main():
         manifest['source_sha256'][name]=sha(path)
     snapshot.setdefault('derived_refreshes',[]).append(dict(
         previous_snapshot_sha256=old_snapshot,files={n:sha(ROOT/n) for n in sorted(changed)},
-        scope='Copied CSS/JS cache keys or local search index from unchanged canonical HTML; no native content/examples rerendered'))
+        scope='Copied CSS/JS cache keys, installation/runtime metadata, or local search index from unchanged canonical HTML; no native content/examples rerendered'))
     snapshot_path.write_text(json.dumps(snapshot,indent=2)+'\n')
     manifest['derived_refreshes']=snapshot['derived_refreshes'];manifest['dirty']=True
     manifest_path.write_text(json.dumps(manifest,ensure_ascii=False,indent=2)+'\n')

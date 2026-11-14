@@ -18,8 +18,341 @@
     "theme_ggchord_publication"
   ],
   "original_figure_ids": 178,
-  "new_course_pngs": 22,
+  "new_course_pngs": 26,
   "archive_inputs": 76,
+  "canonical_navigation_records": 132,
+  "parameter_synonym_queries": [
+    {
+      "language": "en",
+      "query": "灵活的参数格式",
+      "count_after_deduplication": 1,
+      "top_three": [
+        {
+          "url": "parameters.html",
+          "title": "Flexible parameter formats",
+          "score": 2260
+        }
+      ]
+    },
+    {
+      "language": "en",
+      "query": "灵活参数",
+      "count_after_deduplication": 1,
+      "top_three": [
+        {
+          "url": "parameters.html",
+          "title": "Flexible parameter formats",
+          "score": 2230
+        }
+      ]
+    },
+    {
+      "language": "en",
+      "query": "灵活参数配置",
+      "count_after_deduplication": 1,
+      "top_three": [
+        {
+          "url": "parameters.html",
+          "title": "Flexible parameter formats",
+          "score": 2245
+        }
+      ]
+    },
+    {
+      "language": "en",
+      "query": "参数格式与逐序列配置",
+      "count_after_deduplication": 1,
+      "top_three": [
+        {
+          "url": "parameters.html",
+          "title": "Flexible parameter formats",
+          "score": 2275
+        }
+      ]
+    },
+    {
+      "language": "en",
+      "query": "逐序列",
+      "count_after_deduplication": 1,
+      "top_three": [
+        {
+          "url": "parameters.html",
+          "title": "Flexible parameter formats",
+          "score": 2230
+        }
+      ]
+    },
+    {
+      "language": "en",
+      "query": "按链",
+      "count_after_deduplication": 1,
+      "top_three": [
+        {
+          "url": "parameters.html",
+          "title": "Flexible parameter formats",
+          "score": 2215
+        }
+      ]
+    },
+    {
+      "language": "en",
+      "query": "命名向量",
+      "count_after_deduplication": 1,
+      "top_three": [
+        {
+          "url": "parameters.html",
+          "title": "Flexible parameter formats",
+          "score": 2230
+        }
+      ]
+    },
+    {
+      "language": "en",
+      "query": "列表",
+      "count_after_deduplication": 1,
+      "top_three": [
+        {
+          "url": "parameters.html",
+          "title": "Flexible parameter formats",
+          "score": 2215
+        }
+      ]
+    },
+    {
+      "language": "en",
+      "query": "Flexible parameters",
+      "count_after_deduplication": 3,
+      "top_three": [
+        {
+          "url": "parameters.html",
+          "title": "Flexible parameter formats",
+          "score": 2250
+        },
+        {
+          "url": "modes.html",
+          "title": "Plotting concepts",
+          "score": 100
+        },
+        {
+          "url": "parameter-atlas.html",
+          "title": "Complete parameters and defaults atlas",
+          "score": 20
+        }
+      ]
+    },
+    {
+      "language": "en",
+      "query": "Flexible parameter formats",
+      "count_after_deduplication": 5,
+      "top_three": [
+        {
+          "url": "parameters.html",
+          "title": "Flexible parameter formats",
+          "score": 3305
+        },
+        {
+          "url": "labels.html",
+          "title": "Automatic label layouts and text fitting",
+          "score": 100
+        },
+        {
+          "url": "modes.html",
+          "title": "Plotting concepts",
+          "score": 100
+        }
+      ]
+    },
+    {
+      "language": "zh",
+      "query": "灵活的参数格式",
+      "count_after_deduplication": 5,
+      "top_three": [
+        {
+          "url": "parameters.html",
+          "title": "灵活的参数格式",
+          "score": 3340
+        },
+        {
+          "url": "labels.html",
+          "title": "自动布局与文字适配",
+          "score": 100
+        },
+        {
+          "url": "modes.html",
+          "title": "绘图基本概念",
+          "score": 100
+        }
+      ]
+    },
+    {
+      "language": "zh",
+      "query": "灵活参数",
+      "count_after_deduplication": 6,
+      "top_three": [
+        {
+          "url": "parameters.html",
+          "title": "灵活的参数格式",
+          "score": 2270
+        },
+        {
+          "url": "labels.html",
+          "title": "自动布局与文字适配",
+          "score": 100
+        },
+        {
+          "url": "modes.html",
+          "title": "绘图基本概念",
+          "score": 100
+        }
+      ]
+    },
+    {
+      "language": "zh",
+      "query": "灵活参数配置",
+      "count_after_deduplication": 3,
+      "top_three": [
+        {
+          "url": "parameters.html",
+          "title": "灵活的参数格式",
+          "score": 2285
+        },
+        {
+          "url": "multi-sequence-start.html",
+          "title": "共用数据与图层",
+          "score": 100
+        },
+        {
+          "url": "parameter-atlas.html",
+          "title": "完整参数与默认值图谱",
+          "score": 20
+        }
+      ]
+    },
+    {
+      "language": "zh",
+      "query": "参数格式与逐序列配置",
+      "count_after_deduplication": 1,
+      "top_three": [
+        {
+          "url": "parameters.html",
+          "title": "灵活的参数格式",
+          "score": 2315
+        }
+      ]
+    },
+    {
+      "language": "zh",
+      "query": "逐序列",
+      "count_after_deduplication": 7,
+      "top_three": [
+        {
+          "url": "parameters.html",
+          "title": "灵活的参数格式",
+          "score": 2230
+        },
+        {
+          "url": "chord.html",
+          "title": "Chord 综合实例",
+          "score": 100
+        },
+        {
+          "url": "styling.html",
+          "title": "配置配色、图例和主题",
+          "score": 100
+        }
+      ]
+    },
+    {
+      "language": "zh",
+      "query": "按链",
+      "count_after_deduplication": 11,
+      "top_three": [
+        {
+          "url": "parameters.html",
+          "title": "灵活的参数格式",
+          "score": 2215
+        },
+        {
+          "url": "reference/position_strand.html",
+          "title": "按链将注释放在两侧 — position_strand",
+          "score": 170
+        },
+        {
+          "url": "data.html",
+          "title": "表格字段与坐标约定",
+          "score": 100
+        }
+      ]
+    },
+    {
+      "language": "zh",
+      "query": "命名向量",
+      "count_after_deduplication": 34,
+      "top_three": [
+        {
+          "url": "parameters.html",
+          "title": "灵活的参数格式",
+          "score": 2230
+        },
+        {
+          "url": "collinear-layout.html",
+          "title": "Collinear：对齐与排列",
+          "score": 100
+        },
+        {
+          "url": "data.html",
+          "title": "表格字段与坐标约定",
+          "score": 100
+        }
+      ]
+    },
+    {
+      "language": "zh",
+      "query": "列表",
+      "count_after_deduplication": 64,
+      "top_three": [
+        {
+          "url": "parameters.html",
+          "title": "灵活的参数格式",
+          "score": 2215
+        },
+        {
+          "url": "data.html#tables",
+          "title": "表格字段与坐标约定 · \n2 序列表 seq_data\n",
+          "score": 285
+        },
+        {
+          "url": "alignments.html",
+          "title": "导入核酸和蛋白比对",
+          "score": 100
+        }
+      ]
+    },
+    {
+      "language": "zh",
+      "query": "Flexible parameters",
+      "count_after_deduplication": 1,
+      "top_three": [
+        {
+          "url": "parameters.html",
+          "title": "灵活的参数格式",
+          "score": 2230
+        }
+      ]
+    },
+    {
+      "language": "zh",
+      "query": "Flexible parameter formats",
+      "count_after_deduplication": 1,
+      "top_three": [
+        {
+          "url": "parameters.html",
+          "title": "灵活的参数格式",
+          "score": 2245
+        }
+      ]
+    }
+  ],
   "scope": "Local files, declared source/known generated chapter anchors and download bytes; not remote deployment or arbitrary unrecorded historical fragments",
   "failures": []
 }

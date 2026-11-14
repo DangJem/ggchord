@@ -1,0 +1,108 @@
+{
+  "status": "completed within agreed local scope",
+  "baseline": "24c1efe",
+  "implementation_commits": [
+    "e658246",
+    "a5d50dc"
+  ],
+  "package_runtime_original_data_tests_and_frozen_docs_unchanged": true,
+  "verification": {
+    "language_pairs": 93,
+    "prepared_pages": 52,
+    "legacy_png_rerenders": 8,
+    "new_pngs": 4,
+    "reviewed_pngs": 12,
+    "retained_legacy_pngs": 170,
+    "exports": 157,
+    "reference_topics": 121,
+    "canonical_navigation_records": 132,
+    "parameter_synonym_queries": 20,
+    "audited_urls": 582,
+    "old_section_destinations": 1146,
+    "public_aliases": 14,
+    "archive_inputs": 76,
+    "english_download_scripts": 52,
+    "expanded_input_files": 30,
+    "public_parameter_family_builds": {
+      "position_plasmid_rejects_strand_values": true,
+      "numeric_track_requires_complete_coverage": true,
+      "complete_numeric_track_build": true,
+      "scope": "Small public builds for the revised parameter-family documentation, no test suite/device matrix"
+    },
+    "syntax_color_pairs": [
+      {
+        "theme": "light",
+        "foreground": "#5b4592",
+        "background": "#f0f3f0",
+        "ratio": 6.928
+      },
+      {
+        "theme": "light",
+        "foreground": "#76512a",
+        "background": "#f0f3f0",
+        "ratio": 6.302
+      },
+      {
+        "theme": "light",
+        "foreground": "#506466",
+        "background": "#f0f3f0",
+        "ratio": 5.597
+      },
+      {
+        "theme": "dark",
+        "foreground": "#d1bdff",
+        "background": "#192f35",
+        "ratio": 8.293
+      },
+      {
+        "theme": "dark",
+        "foreground": "#e9c58e",
+        "background": "#192f35",
+        "ratio": 8.565
+      },
+      {
+        "theme": "dark",
+        "foreground": "#b1c6c2",
+        "background": "#192f35",
+        "ratio": 7.821
+      }
+    ],
+    "source_snapshot_sha256": "e96a4bcc94e01087e3f755519eea6d16a74c9635bd995ee00dc59a44a0ed5efc",
+    "native_processes": {
+      "render_jobs": 2,
+      "return_codes": {
+        "en": 0,
+        "zh": 0
+      },
+      "initial_return_codes": {
+        "en": 1,
+        "zh": 0
+      },
+      "recovery_record": "tools/site-audit/redesign-build-recovery.json"
+    },
+    "derived_asset_refreshes": [
+      {
+        "previous_snapshot_sha256": "90dfab0f29126cef81f3bdc1fbbb5145f775e77744a729b3dc0c676d4ffc4555",
+        "files": {
+          "website/assets/site.js": "50c00e712af9a3198f768887a745ec0b41020719b79a94f0ab79852f11f432cc",
+          "website/version.json": "e4a704fdb9bf39856d295d10bf05f35df4075cdf765885190e844f1bd55182e9"
+        },
+        "scope": "Copied CSS/JS cache keys, installation/runtime metadata, or local search index from unchanged canonical HTML; no native content/examples rerendered"
+      }
+    ]
+  },
+  "source_or_execution_records": [
+    "redesign-rendering.json",
+    "redesign-build-initial.json",
+    "redesign-build-recovery.json",
+    "built-check.json",
+    "redesign-archive.json",
+    "http-check.json"
+  ],
+  "not_performed": [
+    "Browser interaction/computed styles/keyboard/theme/viewport acceptance (cancelled by user)",
+    "Mobile acceptance (excluded by user)",
+    "Package testthat/build/check/vignette rendering/release device matrix",
+    "Merge main, push, deployment, tag or GitHub Release"
+  ]
+}

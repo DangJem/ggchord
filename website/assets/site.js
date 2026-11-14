@@ -169,6 +169,14 @@
       links.forEach(a=>{if(a.hash==='#'+target.id)a.setAttribute('aria-current','location');else a.removeAttribute('aria-current');});
     },{rootMargin:'-90px 0px -55% 0px',threshold:[0,1]});targets.forEach(h=>observer.observe(h));
   }
-  function openLinkedSection(){const target=document.getElementById(decodeURIComponent(location.hash.slice(1)));let section=target?.closest('details')||(target?.nextElementSibling?.tagName==='DETAILS'?target.nextElementSibling:null);if(section&&!section.open){section.open=true;target.scrollIntoView();}}
+  function openLinkedSection(){
+    const target=document.getElementById(decodeURIComponent(location.hash.slice(1)));
+    if(parameterFilter&&target&&/^(param-|api-)/.test(target.id)){
+      parameterFilter.value='';parameterFilter.dispatchEvent(new Event('input'));
+    }
+    const following=target?.nextElementSibling||target?.closest('p')?.nextElementSibling;
+    const section=target?.closest('details')||(following?.tagName==='DETAILS'?following:null);
+    if(section&&!section.open){section.open=true;target.scrollIntoView();}
+  }
   openLinkedSection();addEventListener('hashchange',openLinkedSection);
 })();

@@ -12,6 +12,12 @@ sys.path.insert(0, str(ROOT/'tools'))
 spec = importlib.util.spec_from_file_location('native_builder', ROOT/'tools/build-website.py')
 builder = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(builder)
+parser = argparse.ArgumentParser(description=__doc__)
+parser.add_argument('--record', default='tools/site-audit/manual-build-recovery.json',
+                    help='Repository-relative JSON result path under tools/site-audit')
+args = parser.parse_args()
+record = (ROOT/args.record).resolve()
+assert record.parent == (ROOT/'tools/site-audit').resolve() and record.suffix == '.json'
 out = ROOT/'.site'
 snapshot = json.loads((out/'source-snapshot.json').read_text())
 assert snapshot['status'] == 'started; completion unverified'
@@ -21,7 +27,6 @@ payload = json.loads((out/'page-content.json').read_text())
 builder.assert_render_source_snapshot(snapshot['render_inputs'], snapshot['archive_inputs'])
 recovery = dict(initial_processes=processes, retries=[],
                 scope='Native HTML retries only; exact original render/archive inputs required; no browser, package or publication checks')
-record = ROOT/'tools/site-audit/manual-build-recovery.json'
 for lang in ('en', 'zh'):
     path = out/(lang+'-workers.json')
     workers = json.loads(path.read_text())
@@ -55,7 +60,7 @@ for lang in ('en', 'zh'):
     path.write_text(json.dumps(workers, indent=2)+'\n')
 processes['initial_return_codes'] = processes['return_codes']
 processes['return_codes'] = dict(en=0, zh=0)
-processes['recovery_record'] = 'tools/site-audit/manual-build-recovery.json'
+processes['recovery_record'] = str(record.relative_to(ROOT))
 (out/'render-processes.json').write_text(json.dumps(processes, indent=2)+'\n')
 builder.assert_render_source_snapshot(snapshot['render_inputs'], snapshot['archive_inputs'])
 builder.finalize(out, argparse.Namespace(publication=False), snapshot['render_inputs'], snapshot['archive_inputs'])
