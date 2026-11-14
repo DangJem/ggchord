@@ -27,3 +27,7 @@ library or third-party image is downloaded. Plot colours come from the package's
 existing defaults or explicit teaching code; those literal colour choices are
 listed with the source. The site uses the existing Pandoc and R documentation
 converters at build time without bundling their binaries or stylesheets.
+
+## Reproducibility and build records {#reproducibility}
+
+The [build manifest](../build-manifest.json) records software and source commits. Figure inputs, selections and complete scripts are provided beside each functional example.

@@ -15,7 +15,7 @@
 每条序列按已有的正、负链分别抽样，无 CDS 长度门槛。两条 MT 序列没有负链 CDS，OQ646790.1 唯一的负链 CDS 为 207 bp。本图用显式 Position 把正链箭头放在内侧、负链箭头放在外侧。箭头方向、颜色和数据仍使用原始链。正链抽样优先保留与所显示比对端点重叠的记录，以展示连接带局部避障。每条箭头使用原始注释作为标签，包括 hypothetical protein。
 
 ## 准备原始记录 {#prepare}
-将[教程输入包](../assets/tutorial-inputs.zip)解压到工作目录，使其包含 `examples/`。使用 `install.packages(c("dplyr", "purrr", "tidyr"))` 安装示例可选依赖；完整流程用它们整理表格和计算 GC 轨道。
+将[说明输入包](../assets/tutorial-inputs.zip)解压到工作目录，使其包含 `examples/`。使用 `install.packages(c("dplyr", "purrr", "tidyr"))` 安装示例可选依赖；完整流程用它们整理表格和计算 GC 轨道。
 
 准备脚本包含原始数据读取、筛选和显示设置。将脚本放在当前工作目录。
 
@@ -40,7 +40,7 @@
 ## 阅读与调整 {#read}
 先看序列颜色和基因方向，再沿较大的比对区间阅读连接。连接交叉本身不能证明重排。色条使用 ggchord 默认分段标度，按实际显示的比对一致性读数。
 
-需要减少连接时查看[连接筛选](ribbons.html)，调整文字密度时查看[标签](labels.html)，改变半径和曲率时查看[逐序列参数](parameters.html)。从文件读取开始学习可先看[真实序列比较](real-data.html)。
+需要减少连接时查看[连接筛选](ribbons.html)，调整文字密度时查看[标签](labels.html)，改变半径和曲率时查看[逐序列参数](parameters.html)。从文件读取开始了解可先看[真实序列比较](real-data.html)。
 
 ## 按预定尺寸保存 {#save}
 {{code:courseblockd}}

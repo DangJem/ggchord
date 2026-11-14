@@ -1,3 +1,3 @@
-## Learning overview {#moved}
+## Reading overview {#moved}
 
-[Tasks](learn.html#tasks)
+[Tasks](reference/index.html)

@@ -34,4 +34,4 @@ ggsave("fusion-first.png", p_coursefusion,
   width = 12, height = 8, units = "in", dpi = 144)
 ```
 
-Exercise: choose another real HSP and identify qpanel/spanel and its source row. Dotplot, facets and unregistered external plots are unsupported.
+Example: choose another real HSP and identify qpanel/spanel and its source row. Dotplot, facets and unregistered external plots are unsupported.

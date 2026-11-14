@@ -1,11 +1,12 @@
 # Verify that task pages prepare their own R objects, without building the package,
 # knitting vignettes, saving user files, opening previews or running a test suite.
 source('tools/audit-source-snapshot.R')
-audit_session <- audit_source_snapshot(additional = c('tools/check-documentation-lessons.R', 'tools/documentation-examples.R', 'tools/site-course-examples.R', 'website/pages.json', 'website/showcase-recipes.json', list.files('website/en', '[.]md$', full.names = TRUE)))
+audit_session <- audit_source_snapshot(additional = c('tools/check-documentation-lessons.R', 'tools/documentation-examples.R', 'tools/site-course-examples.R', 'tools/site-flagships.R', 'website/pages.json', 'website/showcase-recipes.json', list.files('website/en', '[.]md$', full.names = TRUE)))
 pkgload::load_all(quiet = TRUE)
 audit_assert_source_snapshot(audit_session)
 lines <- c(readLines('tools/documentation-examples.R', warn = FALSE),
-  readLines('tools/site-course-examples.R', warn = FALSE))
+  readLines('tools/site-course-examples.R', warn = FALSE),
+  readLines('tools/site-flagships.R', warn = FALSE))
 markers <- grep('^# ---- [a-z]+ ----$', lines)
 chunks <- setNames(lapply(seq_len(length(markers)-1L), function(i)
   lines[seq.int(markers[i]+1L, markers[i+1L]-1L)]),

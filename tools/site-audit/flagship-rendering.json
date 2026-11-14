@@ -1,0 +1,68 @@
+{
+  "figures": {
+    "flagradial": {
+      "file": "man/figures/flagradial.png",
+      "sha256": "ea24dafaa0e3fc79f83f481eeddab30b71c806bdb6902c643dabf51358b2d506",
+      "width": 12,
+      "height": 9,
+      "dpi": 120,
+      "background": "#FFFCF5",
+      "rendered_source_sha256": "96c39c6ea6d0fcee4da910d4cd1210f71462b04ebb8d8e0645fb06076aa312b5"
+    },
+    "flagsankey": {
+      "file": "man/figures/flagsankey.png",
+      "sha256": "57a1e672314e60cb6966a2465022ffb088d1219cab7567421c3703405ce41a13",
+      "width": 12,
+      "height": 9,
+      "dpi": 120,
+      "background": "#FFFCF5",
+      "rendered_source_sha256": "96c39c6ea6d0fcee4da910d4cd1210f71462b04ebb8d8e0645fb06076aa312b5"
+    },
+    "flagdotplot": {
+      "file": "man/figures/flagdotplot.png",
+      "sha256": "6ccd5a904a6494c4c8e92692148c97d1f778e47798883d972d7f8bb5bea90906",
+      "width": 12,
+      "height": 9,
+      "dpi": 120,
+      "background": "#FFFCF5",
+      "rendered_source_sha256": "96c39c6ea6d0fcee4da910d4cd1210f71462b04ebb8d8e0645fb06076aa312b5"
+    },
+    "flagfusion": {
+      "file": "man/figures/flagfusion.png",
+      "sha256": "6dd1f0f99c54cb2338bdd3b5fd6385f4f5ddb495f9f10822dccef0b0e3d9e7a4",
+      "width": 16,
+      "height": 12,
+      "dpi": 120,
+      "background": "#FFFCF5",
+      "rendered_source_sha256": "96c39c6ea6d0fcee4da910d4cd1210f71462b04ebb8d8e0645fb06076aa312b5"
+    }
+  },
+  "source_sha256": "96c39c6ea6d0fcee4da910d4cd1210f71462b04ebb8d8e0645fb06076aa312b5",
+  "inputs": {
+    "sequences": 4,
+    "hsp": 32,
+    "cds": 266,
+    "retained_flagship_parent_data": 12,
+    "retained_chord_features": 20,
+    "retained_linear_features": 16,
+    "linear_displayed_hsp": 10
+  },
+  "scope": "Retained Chord/Collinear design and biological data; Chord redrawn for the default-style bug fix. Radial/Sankey derive from these parents; Dotplot/Fusion use expanded source tables. Normal PNGs only, no browser or publication checks.",
+  "retained_existing_flagships": {
+    "showcasechord": {
+      "file": "man/figures/showcasechord.png",
+      "sha256": "8551481cfa512495846321ffddd9e4b02ee98806a1453d604aa65b6dfb8b2daf",
+      "status": "existing design retained; actual PNG refreshed for default-style bug fix"
+    },
+    "showcasecollinear": {
+      "file": "man/figures/showcasecollinear.png",
+      "sha256": "84cda96b15b6a4705d9fa28f0b86c8a8ee7303ba21ffe2bc554b90f94180ba9e",
+      "status": "original bytes retained"
+    },
+    "showcaseplasmid": {
+      "file": "man/figures/showcaseplasmid.png",
+      "sha256": "a3e63cc6afaf14906a2d06bee9fb0bfdd299b34469538f0f35684578a83dc55a",
+      "status": "original bytes retained"
+    }
+  }
+}

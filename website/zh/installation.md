@@ -1,42 +1,17 @@
-## 选择版本与依赖 {#requirements}
+## 从 GitHub 安装 {#requirements}
 
-本教程使用 **0.27.0.9000 开发接口**。先选择匹配的安装来源；正式版 0.16.6 与开发版不可混用教学范围。
-
-R ≥ 4.1.0; ggplot2 ≥ 4.0.0.
+从项目仓库安装 ggchord 及必需依赖。源码安装需要可用的 R 开发环境。
 
 ```r
 install.packages("remotes")
+remotes::install_github("DangJem/ggchord", dependencies = NA)
 ```
 
-### 正式版 {#stable}
-
-最近正式版为 0.16.6。其源码与对应版本帮助见 [GitHub v0.16.6](https://github.com/DangJem/ggchord/releases/tag/v0.16.6)。安装固定标签后，请使用该版本附带帮助；本教程含较新的接口。
-
-```r
-remotes::install_github("DangJem/ggchord@v0.16.6", dependencies = NA)
-```
-
-### 开发快照 {#source}
-
-开发运行时固定为公开审计提交 `0f5dd96da57876da74cd1234c7de9cf5579c80b8`，不要从最大命中位置推断版本。当前本地文档重构没有改变运行时行为；文档提交、构建时间与输入哈希另见[构建清单](../build-manifest.json)。安装需联网下载源码和依赖。
-
-```r
-runtime_commit <- "0f5dd96da57876da74cd1234c7de9cf5579c80b8"
-remotes::install_github(
-  paste0("DangJem/ggchord@", runtime_commit),
-  dependencies = NA, upgrade = "never"
-)
-```
-
-<span id="verified-versions"></span>
-
-## 新会话确认与第一图 {#troubleshooting}
+## 加载与绘制 {#first-plot}
 
 ```r
 library(ggchord)
-stopifnot(as.character(packageVersion("ggchord")) == "0.27.0.9000")
-stopifnot(packageDescription("ggchord")$RemoteSha ==
-  "0f5dd96da57876da74cd1234c7de9cf5579c80b8")
+
 p <- ggchord(seq_data_example) +
   geom_seq() +
   geom_seq_label() +
@@ -44,14 +19,17 @@ p <- ggchord(seq_data_example) +
 p
 ```
 
-### 可选依赖 {#support-evidence}
+## 可选依赖与输入文件 {#support-evidence}
 
-基础首图只需 ggchord；数据整理课程显式使用 dplyr，各导入课单列可选解码器。
+使用 dplyr、Biostrings 或格式解码器的示例会在代码旁声明依赖，按对应工作流安装即可。随包数据可离线使用；文件示例使用[输入归档](formats.html)。
 
-## 继续学习 {#first-steps}
+## 安装失败时 {#troubleshooting}
 
-<span id="first-plot"></span><span id="input"></span><span id="read"></span>
+先检查第一条依赖或编译错误，安装后重新启动 R，再用 `help(package = "ggchord")` 查看可用函数。绘图问题见[诊断与排错](diagnostics.html)。
 
-- [基本数据表](data.html#prepare)
-- [第一张多序列图](multi-sequence-start.html#draw)
-- <span id="save"></span>[按目标尺寸保存](output.html)
+## 相关说明 {#first-steps}
+
+[绘图基本概念](modes.html) · [输入数据表](data.html) · [保存图形](output.html)
+
+
+<span id="input"></span><span id="read"></span><span id="save"></span><span id="source"></span><span id="stable"></span><span id="verified-versions"></span>

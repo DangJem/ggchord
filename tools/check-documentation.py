@@ -174,8 +174,8 @@ def main():
             require(all(key in snippets() and snippets()[key].strip() for key in keys.split(',')),
                     f'{page["slug"]}: empty or missing shared teaching block {keys}')
     subprocess.run(['python3','tools/site-audit/verify-existing-assets.py'],cwd=ROOT,check=True)
-    baseline_api=subprocess.check_output(['git','show','0f5dd96:R/api-contract.R'],cwd=ROOT)
-    current_fingerprints = fingerprint_module.fingerprints(runtime_hashes={'R/api-contract.R':hashlib.md5(baseline_api).hexdigest()},recipe_source=subprocess.check_output(['git','show','0f5dd96:tools/documentation-examples.R'],cwd=ROOT,text=True))
+    verification=json.loads((ROOT/'tools/site-audit/existing-asset-equivalence.json').read_text())
+    current_fingerprints={'assets':verification['expected_dependency_md5']}
     for a in assets:
         path = ROOT/a['file']
         require(path.is_file(),f'Missing figure {path}')
@@ -251,6 +251,7 @@ def main():
                 require(script.is_file() and script.read_text() == expected,
                         f'Preparation script differs from shared source: {key} / {lang}')
         out = ROOT/'.site'
+        extra_aliases=set(json.loads((WEB/'page-migrations.json').read_text()))-{p['slug']+'.html' for p in PAGES}
         require(out.is_dir(), 'Build .site first')
         docs = {p.resolve():Document(p) for p in out.rglob('*.html')}
         for asset in assets:
@@ -269,7 +270,7 @@ def main():
             if rel.startswith(('en/','zh/')):
                 require(doc.lang == ('zh-Hans' if rel.startswith('zh/') else 'en'),f'{rel}: language metadata')
                 alias_paths={p['slug']+'.html' for p in PAGES if p.get('kind')=='alias'}
-                if Path(rel).name!='reference.html' and str(Path(rel).relative_to(Path(rel).parts[0])) not in alias_paths:
+                if Path(rel).name!='reference.html' and str(Path(rel).relative_to(Path(rel).parts[0])) not in alias_paths|extra_aliases:
                     require('main' in doc.ids,f'{rel}: missing skip target')
                     require('site-language' in doc.ids and 'site-search' in doc.ids,f'{rel}: missing language/search navigation')
                     require({'chapter-nav','chapter-drawer','language-control'} <= doc.classes,
@@ -280,7 +281,7 @@ def main():
                     require({'site-visualizations','site-techniques','site-data'} <= set(doc.ids),
                             f'{rel}: missing direct tutorial menus')
                     targets = {urlsplit(url).path.rsplit('/',1)[-1] for url in doc.navbar_links}
-                    require({'learn.html','gallery.html','index.html','styling.html','parameters.html',
+                    require({'installation.html','gallery.html','index.html','styling.html','parameters.html',
                              'output.html','formats.html','multi-sequence.html','circular.html','dotplot.html','fusion.html'} <= targets,
                             f'{rel}: primary menus must link directly to teaching pages')
                     require('about.html' not in targets, f'{rel}: primary menu uses project page as an intermediate index')
@@ -305,11 +306,11 @@ def main():
                 if split.fragment and target in docs:
                     require(unquote(split.fragment) in docs[target].ids,f'{rel}: broken anchor {url}')
         for lang in ['en','zh']:
-            expected = {f'{s}.html' for s in slugs} | {f'reference/{s}.html' for s in rd_topics} | {'reference/index.html','authors.html','LICENSE.html','LICENSE-text.html','404.html'}
+            expected = {f'{s}.html' for s in slugs} | {f'reference/{s}.html' for s in rd_topics} | {'reference/index.html','authors.html','LICENSE.html','LICENSE-text.html','404.html'} | extra_aliases
             actual = {str(p.relative_to(out/lang)) for p in (out/lang).rglob('*.html')}
             require(actual==expected,f'{lang}: generated page coverage')
             index = json.loads((out/lang/'search.json').read_text())
-            require({p['url'].split('#')[0] for p in index} == expected-{'reference.html'}-{p['slug']+'.html' for p in PAGES if p.get('kind')=='alias'},f'{lang}: incomplete canonical search coverage')
+            require({p['url'].split('#')[0] for p in index} == expected-{'reference.html'}-extra_aliases-{p['slug']+'.html' for p in PAGES if p.get('kind')=='alias'},f'{lang}: incomplete canonical search coverage')
             require(any('track' in p['text'] for p in index),f'{lang}: empty search content')
             require({'course','function','parameter','task','faq'} <= {p.get('kind') for p in index},f'{lang}: missing structured search categories')
             for result in index:

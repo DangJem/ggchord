@@ -68,7 +68,7 @@ Continue with [shared branches and point links](multi-sequence-links.html#input)
 
 {{figure:frontlinearcross}}
 
-Adjacent ribbons use thin solid outlines and non-adjacent rows use heavier dashed outlines. `linewidth` controls the ordinary width; `nonadjacent_linewidth` separately controls cross-row width and defaults to 0.4.
+Only Collinear uses thin solid outlines for adjacent rows and heavier dashed outlines for cross-row ribbons. Chord, Radial and Sankey use ordinary solid outlines by default. `linewidth` controls the ordinary width; `nonadjacent_linewidth` separately controls cross-row width and defaults to 0.4.
 
 The second ribbon layer receives one alignment between the first and third rows. Set `adjacent_only = FALSE` to show it. The default dashed outline marks the skipped row. The original ribbon between rows one and two stays in its own layer.
 
@@ -139,7 +139,7 @@ Preserve real query/subject endpoints. Do not edit unequal endpoints to manufact
 
 Chord and collinear modes accept these link layers; single circular mode rejects ribbon/link. Linear adjacency filtering still applies. Check `adjacent_only` or explicit `pairs` before showing cross-row ribbons; see [cross-row links](multi-sequence-links.html#routes).
 
-Exercise: change only the trunk fraction to 0.25. Return to the default fraction and compare curved versus straight point links. With your own data, first decide whether interval lengths or individual positions matter, then consult [`geom_link_ribbon()`](reference/geom_link_ribbon.html) and [`geom_link_line()`](reference/geom_link_line.html).
+Example: change only the trunk fraction to 0.25. Return to the default fraction and compare curved versus straight point links. With your own data, first decide whether interval lengths or individual positions matter, then consult [`geom_link_ribbon()`](reference/geom_link_ribbon.html) and [`geom_link_line()`](reference/geom_link_line.html).
 
 {{prepare:ribboninputs}}
 

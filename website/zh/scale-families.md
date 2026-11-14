@@ -85,6 +85,6 @@ theme_ggchord、minimal、publication、dark 是共享非数据样式的不同�
 {{figure:comparethemedark}}
 
 
-## 练习与选择规则 {#adapt}
+## 操作示例与选择规则 {#adapt}
 
 先把 pident 映射从连续渐变改为显式分段，再改回渐变，只改变 alpha 输出范围；核对图例是否仍表示相同数据单位。新增图层时给每层独立 data/mapping，保留已存在的用户 scale。完整参数、类型、默认与转发边界见[参数图谱](parameter-atlas.html)；聚束和密度见[连接统计](ribbons.html#statistics)。

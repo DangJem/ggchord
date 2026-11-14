@@ -42,7 +42,7 @@
 通用注释标签还可选内部优先/callout，密集混合注释见[完整圆图](plasmids.html)，
 继承或显式 Position 锚点见[堆叠](annotations.html#stack)。
 
-## 完成后检查 {#check-result}
+## 检查要点 {#check-result}
 三张布局对照使用同一输入。判断可读性时同时看文字方向、连线和隐藏原因；没有标签不等于注释丢失。
 
 <div class="next-step">继续：<a href="output.html">预览和保存图形 →</a></div>

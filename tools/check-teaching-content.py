@@ -30,7 +30,7 @@ for page in PAGES:
             for category, pattern in PATTERNS.items():
                 if re.search(pattern, line, re.I):
                     # Installation/migration explain versions intentionally.
-                    exempt = page['slug'] in ('installation', 'migration')
+                    exempt = page['slug'] in ('about', 'migration')
                     findings.append(dict(path=str(path.relative_to(ROOT)), line=number,
                         category=category, evidence=line.strip(),
                         disposition='version guidance; contextual exception' if exempt else 'review required'))
@@ -42,7 +42,7 @@ for page in PAGES:
             source_review='review required' if hits else 'static editorial/structure scan passed',
             code='shared snippet/lesson execution recorded separately',
             rendering='HTML links/anchors checked by check-documentation.py',
-            visual_scope='representative browser pages; not every page individually',
+            visual_scope='browser interaction acceptance cancelled by user; source/R/asset checks only',
             findings='; '.join(hits)))
 out = ROOT / 'tools/teaching-audit'
 for name, data, fields in [

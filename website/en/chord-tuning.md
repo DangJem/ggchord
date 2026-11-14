@@ -1,3 +1,3 @@
-## Lesson moved {#moved}
+## Section moved {#moved}
 
 [Adjust individual backbones](chord-geometry.html#orientation)

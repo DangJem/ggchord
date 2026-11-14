@@ -1,15 +1,12 @@
-These 13 maps are an optional reference gallery, not a mandatory sequence of lessons. Complete [first circular maps](circular-start.html#input) and [annotations/labels](circular-layout.html#input), then choose a vector and density similar to your own.
+Each map retains all source features, independent reference primers and every site in its declared enzyme profile. No three-site sampling is used. Maps use their own complete sequence, the same layers and a 10 × 8 in canvas. Open the full-resolution image for annotation text.
 
-These 13 maps use distinct repository FASTA records. The sequence and annotation sources remain available for each map.
-
-## Prepare all cases once {#prepare}
-Run `library(dplyr)` before using the shared plotting script.
+## Preparation and complete display policy {#prepare}
 
 {{code:courseblockg}}
 
-{{recipe:catalog}}
+{{code:referencebuilder}}
 
-Save and run the shared script, then copy the three lines beside a figure. All features are drawn. Their names are placed inside when possible and may move outside when space runs out. Restriction sites nearest three evenly spaced target positions supply the outer enzyme and position labels.
+`reference$features`, `reference$primers` and `reference$sites` are the complete tables submitted to the plot. `reference$all_sites` retains raw matches; `reference$policy` identifies the enzyme profile. Feature geometry is not thinned and the site profile is not sampled to a fixed count.
 
 ## Inputs and recognition results {#counts}
 {{plasmidcatalog}}
@@ -79,22 +76,14 @@ Save and run the shared script, then copy the three lines beside a figure. All f
 
 {{figure:catalogcas}}
 
-## Next {#next}
-After comparing densities, continue to [The complete case](circular-dense-case.html#complex), adding separate primer and restriction layers.
+## Enzyme profiles and provenance {#reference-selection}
 
-## When comparing gallery maps {#gallery-limits}
+Saved reference profiles take priority within `commercial_nonredundant`. The pETDuet-1 file saves None while its reference PNG shows sites, so `unique_6plus` is selected explicitly. This does not claim to recover the original PNG export settings. Every row of the chosen profile is retained. Complete means that declared profile, rather than every candidate from every enzyme database on one map.
 
-Each map uses its own complete FASTA and source annotations; do not transfer another reference’s features or cuts to different DNA. Sites nearest three evenly spaced targets are a display selection, not evidence that other cuts are absent. Names may be internal, exterior or hidden while feature geometry remains. Inspect dense cases at their declared dimensions rather than editing source intervals to fit a reduced screenshot.
+Independent primers use `set = "reference"`. A source without independent reference primers has zero such rows; no records are invented. Named pieces remain in `segments` rather than becoming new top-level features. Enzymes at a shared position can share a label while their input records remain available.
 
+## Related views {#next}
 
-## Comparing reference selections {#reference-selection}
+[pUC19 layers](plasmids.html) · [pETDuet-1 dense layout](circular-dense-case.html) · [Labels and output size](circular-labels.html)
 
-This gallery deliberately draws three site rows per map. For a saved enzyme
-profile, apply `filter_restriction_sites(sites, set = "reference",
-parent_set = "commercial_nonredundant")` to complete recognition results.
-Saved profiles do not recover every old PNG export setting or enzyme-library
-version: pETDuet-1 saves None despite showing cutters in the PNG. Independent
-primers require `find_primer_bindings(sequence, set = "reference")` and primer
-layers. Named subsegments remain in `segments`; they are not extra top-level
-features, and dotted boundaries do not automatically receive extra labels.
-Inspect dense maps again at their actual export dimensions.
+<span id="gallery-limits"></span>

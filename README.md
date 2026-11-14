@@ -17,7 +17,7 @@ R ≥ 4.1.0 · ggplot2 ≥ 4.0.0
 ```r
 install.packages("remotes")
 remotes::install_github(
-  "DangJem/ggchord@0f5dd96da57876da74cd1234c7de9cf5579c80b8",
+  "DangJem/ggchord",
   dependencies = NA, upgrade = "never"
 )
 ```
@@ -26,7 +26,7 @@ For a checkout of this version, use `pkgload::load_all(".")` from its root. The 
 
 ## Three source-backed comprehensive examples
 
-These three complete examples demonstrate this version. Inputs are traceable; each guide provides preparation and interpretation. New users can begin with the minimal first-plot lesson.
+These three complete examples demonstrate this version. Inputs are traceable; each guide provides preparation and interpretation. New users can begin with the minimal first-plot example.
 
 <details>
 <summary>Run first: shared appearance for all three views</summary>
@@ -400,7 +400,7 @@ view_ggchord(p_show_plasmid, width = 16.5, height = 8, units = "in")
 
 </details>
 
-[Read the full guide →](https://dangjem.github.io/ggchord/en/plasmids.html#complex)
+[Read the full guide →](https://dangjem.github.io/ggchord/en/circular-dense-case.html#complex)
 
 `aes()` maps data; scales define mapping and guides; geoms define geometry and fixed styles; Positions place local geometry; coords select the global view; themes style non-data elements.
 
@@ -438,7 +438,7 @@ These projects inform design and comparison. Consult ggchord's function document
 ## Continue
 
 - [Get started](https://dangjem.github.io/ggchord/en/installation.html)
-- [Learning overview](https://dangjem.github.io/ggchord/en/learn.html)
+- [Plotting concepts](https://dangjem.github.io/ggchord/en/modes.html)
 - [Function reference](https://dangjem.github.io/ggchord/en/reference/index.html)
 - [Gallery](https://dangjem.github.io/ggchord/en/gallery.html)
 - [Further information](https://dangjem.github.io/ggchord/en/about.html)

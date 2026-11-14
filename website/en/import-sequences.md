@@ -30,7 +30,7 @@ The GenBank example was rerun with Python Biopython 1.85 enabled: it returned L0
 
 An explicit `python` path keeps the selected virtual environment, including interpreter symlinks; no environment is installed or modified.
 
-Extract the [tutorial bundle](../assets/tutorial-inputs.zip) so the working directory contains `examples/`. Read one format at a time, inspect a few rows, then match sequence IDs.
+Extract the [manual bundle](../assets/tutorial-inputs.zip) so the working directory contains `examples/`. Read one format at a time, inspect a few rows, then match sequence IDs.
 
 ## FASTA lengths and GFF3 annotations {#files}
 

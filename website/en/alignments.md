@@ -59,7 +59,7 @@ upstream figures or plotting code. The input bundle's `sources.json` records URL
 archive members, line ranges, hashes and selection. Parsing neither reruns
 alignments nor establishes biological function.
 
-## Check your result {#check-result}
+## Result checks {#check-result}
 Choose nucleotide or protein coordinates, then check table fields, full lengths and units.
 
 <div class="next-step">Continue: <a href="projection.html">CDS coordinate projection →</a></div>

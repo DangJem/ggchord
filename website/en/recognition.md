@@ -41,7 +41,7 @@ Changing only a sequence name does not make it a recognized reference; sequence
 content determines source-backed recognition. Read the result methods and
 methylation provenance instead of assigning reference claims to an unknown sample.
 
-## Check your result {#check-result}
+## Result checks {#check-result}
 Inspect match positions, methods and provenance. Restriction filtering is a display choice; methylation search conditions are not a measurement of an unknown sample.
 
 <div class="next-step">Continue: <a href="plasmids.html">A complete circular annotation workflow →</a></div>

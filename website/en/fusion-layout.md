@@ -109,3 +109,11 @@ connections from accumulating repeated paints in explicit overlap mode.
 The source tables, selected intervals and palette mappings remain unchanged.
 
 Ordinary child margins do not act as masks for composition connections. In explicit overlap mode, links traverse the full container below its foreground; later containers retain the declared covering order. Use measured `route = "avoid"` for annotation clearance instead of relying on accidental margin gaps.
+
+## Integrated composition: global views and a local detail {#flagship}
+
+Four independently valid views retain common sources. `box` controls physical allocation; `focus_ggchord_data()` explicitly prepares local windows. Cross-panel ribbons reuse source HSPs, and every participating layer declares repeated display.
+
+{{code:flagshipdata,fusionoverview,flagshipfusion}}
+
+{{manualfigure:flagfusion}}

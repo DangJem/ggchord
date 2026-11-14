@@ -1,60 +1,50 @@
-先按任务选[四个模块](learn.html#modules)：多序列关系（Chord/Collinear/Radial/Sankey）、单序列 Circular、HSP Dotplot、Fusion 组合。六种 Coord 与组合层职责不同。
+## 四大模块及其职责 {#modules}
 
-## 图由什么组成？ {#prepare}
-
-| 概念 | 图上的含义 | 在代码中 |
+| 模块 | 主要用途 | 坐标系或组合层 |
 | --- | --- | --- |
-| 序列骨架 | 代表一条序列，区间沿骨架定位。 | `geom_seq()` |
-| 特征 | 序列上的一个区间，例如 CDS 或复制起点。已知链的基因可显示为箭头。 | `geom_feature()`、`geom_gene()` |
-| 连接 | 把两条序列上的对应区间连成带，或把两个位置连成线。 | `geom_link_ribbon()`、`geom_link_line()` |
-| 图层 | 向同一张图添加一种元素，例如骨架或标签。 | 用 `+` 添加 `geom_*()` |
-| 坐标系 | 决定骨架排成弧形、横行还是单个圆环。 | `coord_*()` |
-| 映射和标度 | 将表中的值关联到颜色等属性，再规定具体显示规则。 | `aes()` 和 `scale_*()` |
+| [模块一 · 多序列关系](multi-sequence.html) | 比较序列区间、注释和连接 | Chord、Collinear、Radial、Sankey |
+| [模块二 · 单序列圆图](circular.html) | 在一条完整序列上组织注释 | Circular |
+| [模块三 · HSP 点图](dotplot.html) | 以双轴显示 query/subject 的 HSP 端点 | Dotplot |
+| [模块四 · 多视图组合](fusion.html) | 排列独立注册图并连接真实源区间 | Fusion 组合层 |
 
-生物学链来自特征表。显示方向决定坐标在图上沿哪个方向增长。比对方向来自两端的坐标顺序或比对记录。阅读箭头、骨架或连带时，先分清自己在看哪一种方向。
+六种 Coord 负责单张图的全局坐标；Fusion 组合独立图形，不是第七种坐标系。Dotplot 使用专属线段图层，目前不作为 Fusion 的注册端点。
 
-## 选择一种布局 {#choose}
+## 共用的绘图语法 {#prepare}
 
-### 弦图 {#chord}
+| 组成 | 职责 | 入口 |
+| --- | --- | --- |
+| 数据 | 来源标识、完整长度、区间与单位 | `ggchord()` |
+| 几何图层 | 骨架、连接、特征、轨道和文字 | `geom_*()` |
+| 映射 | 将数据字段关联到视觉属性 | `aes()` |
+| 标度 | 规定颜色、取值范围和图例 | `scale_*()` |
+| 局部位置 | 安排特征、标签和轨道 | `position_*()` |
+| 坐标系 | 排列整张图的序列和区间 | `coord_*()` |
+| 主题 | 控制非数据外观 | `theme_*()` |
 
-{{figure:frontbackbone}}
+## 选择关系视图 {#choose}
 
-`coord_chord()` 把多条序列排在同一张图里，便于查看整体连接关系。[从序列骨架开始](multi-sequence-start.html#draw)。
+### Chord：弧形关系总览 {#chord}
+沿弧形骨架组织多序列，便于观察整体连接。见[骨架、曲率与半径](chord-geometry.html)。
 
-### 共线性图 {#collinear}
+### Collinear：顺序与局部对齐 {#collinear}
+将序列排成横行或竖列，便于比较顺序、锚点与局部窗口。见[对齐与排列](collinear-layout.html)。
 
-{{figure:frontlinearbase}}
+### Radial：径向共线性 {#radial}
+将序列作为辐条，保留各自坐标并在中心区域展示共线性。见[径向布局设置](radial-synteny.html)。
 
-`coord_collinear()` 把骨架排成横行，便于比较位置和顺序。[进入共线性图章节](multi-sequence-start.html#collinear)。共线性图的区间连接默认保留相邻显示行之间的记录。
+### Sankey：双列区间关系 {#sankey}
+每条来源序列在 query 和 subject 两列各显示一次；连带表达观测区间，不代表守恒流量。见[双列布局设置](sankey.html)。
 
-### 单序列圆图 {#circular}
+### Circular：单序列注释 {#circular}
+一条序列构成圆环，分别叠加已有注释、引物和限制位点。见[单序列圆图](circular.html)。
 
-{{figure:firstcircle}}
+### Dotplot 与 Fusion {#composition}
+Dotplot 在两条序列轴上连接 HSP 四端点。Fusion 排列已经独立有效的图，并连接明确的来源区间。两者承担不同职责，不能互换图层契约。
 
-`coord_circular()` 把一条序列画成圆环，适合标注质粒等环状 DNA。[进入单序列圆图章节](circular-start.html#input)。
-
-## 从数据到图形 {#composition}
-
-先确定完整序列的 ID、长度与单位，再区分注释区间和序列间的对应关系。相同数据可以放入不同坐标系，骨架形状改变时，表中的原始位置和链方向仍是解释依据。
-
-颜色可以表达序列身份、特征类别或比对一致性。图例应与所表达的数据含义一致。基因的生物学链、骨架的显示方向和比对两端的相对方向各有来源，读图时分别核对。
-
-## 术语与单位 {#terms}
+## 来源身份与单位 {#terms}
+生物学链、显示方向和比对方向分别记录。bp 与 aa 属于不同坐标域，跨域投影需要明确的 CDS 映射；完整序列长度不能从最后一个可见特征推断。
 
 {{terms}}
 
-<span id="check-result"></span>接下来选择一个绘图模块，从默认骨架开始。具体参数、标签和输出设置在有图可对照之后学习。
 
-## 自动适配、范围与裁剪 {#coordinate-controls}
-
-这些设置在序列几何之后控制全图，不改变源坐标，也不推断缺失长度。各坐标的完整签名见[参数图谱](parameter-atlas.html)。
-
-| 设置 | 默认值 | 实际影响 |
-| --- | --- | --- |
-| `fit` | `"labels"` | labels 包含测量标签，geometry 只适配几何，manual 要求显式 xlim 和 ylim；改变文字或导出尺寸后重查 |
-| `xlim` / `ylim` | `NULL` | 显式范围优先于自动适配，可能使部分内容不可见 |
-| `ratio` | `1` | 固定 y/x 比例；改变视觉几何，不改变生物距离 |
-| `clip` | `"off"` | `"on"` 将绘制裁剪到面板，不删除源记录 |
-| `expand` | `FALSE` | 额外 ggplot2 扩展；自动适配已有少量留白 |
-
-适配后的面板不保证所有标签都可读。按最终尺寸查看诊断，源坐标错误应从输入修正。
+<span id="check-result"></span><span id="coordinate-controls"></span>

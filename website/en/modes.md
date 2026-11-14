@@ -1,60 +1,50 @@
-Choose among [four modules](learn.html#modules): multi-sequence relationships (Chord/Collinear/Radial/Sankey), single-sequence Circular, HSP Dotplot and Fusion composition. Six Coords and the composition layer have distinct responsibilities.
+## Four modules and their responsibilities {#modules}
 
-## What makes up a plot? {#prepare}
-
-| Concept | Meaning in the plot | In code |
+| Module | Purpose | Coordinate or composition |
 | --- | --- | --- |
-| Sequence backbone | Represents one sequence. Intervals are positioned along it. | `geom_seq()` |
-| Feature | An interval on a sequence, such as a CDS or replication origin. A gene with a known strand can appear as an arrow. | `geom_feature()`, `geom_gene()` |
-| Link | Joins corresponding intervals with a ribbon or joins two positions with a line. | `geom_link_ribbon()`, `geom_link_line()` |
-| Layer | Adds one kind of element, such as a backbone or label, to the plot. | Add `geom_*()` with `+` |
-| Coordinate system | Arranges backbones as arcs, rows or a single ring. | `coord_*()` |
-| Mapping and scale | Connect table values to properties such as colour and specify how they are displayed. | `aes()` and `scale_*()` |
+| [I · Multi-sequence relationships](multi-sequence.html) | Compare sequence intervals, annotations and links | Chord, Collinear, Radial and Sankey |
+| [II · Single-sequence circular maps](circular.html) | Annotate one complete sequence | Circular |
+| [III · HSP Dotplot](dotplot.html) | Display query/subject HSP endpoints on two axes | Dotplot |
+| [IV · Multi-view composition](fusion.html) | Place independent registered views and connect source intervals | Fusion composition layer |
 
-Biological strand comes from the feature table. Display orientation determines which way coordinates increase on the page. Alignment direction comes from endpoint order or alignment records. Identify which direction you are reading when looking at an arrow, backbone or ribbon.
+There are six Coord types. Fusion combines plots; it is not a seventh coordinate system. Dotplot uses a dedicated segment layer and is not a registered Fusion endpoint.
 
-## Choose a layout {#choose}
+## Shared plotting grammar {#prepare}
 
-### Chord plot {#chord}
+| Component | Responsibility | Entry |
+| --- | --- | --- |
+| Data | Source identifiers, complete lengths, intervals and units | `ggchord()` |
+| Geometry | Backbones, links, features, tracks and text | `geom_*()` |
+| Mapping | Associate data with an aesthetic | `aes()` |
+| Scale | Define colours, ranges and guides | `scale_*()` |
+| Position | Place features and tracks locally | `position_*()` |
+| Coordinate | Arrange the complete view | `coord_*()` |
+| Theme | Non-data appearance | `theme_*()` |
 
-{{figure:frontbackbone}}
+## Choose a relationship view {#choose}
 
-`coord_chord()` arranges multiple sequences in one view so you can see their overall relationships. [Start with sequence backbones](multi-sequence-start.html#draw).
+### Chord {#chord}
+An overview of relationships around curved backbones. [Geometry and curvature](chord-geometry.html).
 
-### Collinear plot {#collinear}
+### Collinear {#collinear}
+Aligned rows for sequence order, local windows and anchor comparisons. [Alignment and arrangement](collinear-layout.html).
 
-{{figure:frontlinearbase}}
+### Radial {#radial}
+Radial spokes retain sequence coordinates while showing syntenic links around the centre. [Radial settings](radial-synteny.html).
 
-`coord_collinear()` lays backbones out in rows to make position and order easier to compare. [Open the collinear chapter](multi-sequence-start.html#collinear). Collinear ribbons default to links between adjacent display rows.
+### Sankey {#sankey}
+Two columns repeat each source as a query and subject display instance. The bands represent observed intervals, not conserved flow. [Sankey settings](sankey.html).
 
-### Single-sequence circular plot {#circular}
+### Circular {#circular}
+One sequence ring with prepared annotations, primers and restriction sites. [Circular maps](circular.html).
 
-{{figure:firstcircle}}
+### Dotplot and Fusion {#composition}
+Dotplot places HSP endpoints on two sequence axes. Fusion lays out already-valid independent plots and connects explicit source intervals. Their data and geometry contracts differ.
 
-`coord_circular()` draws a single sequence as a ring, suitable for annotating plasmids and other circular DNA. [Open the circular chapter](circular-start.html#input).
-
-## From data to a figure {#composition}
-
-Start with full sequence IDs, lengths and units, then distinguish annotations from relationships between sequences. The same input can use different coordinate layouts. Source positions and biological strands remain the basis for interpretation.
-
-Colour may identify sequences, feature classes or alignment identity. Legends should explain that meaning. Biological strand, display orientation and relative alignment direction have distinct sources and should be checked separately.
-
-## Terms and units {#terms}
+## Source identity and units {#terms}
+Biological strand, display orientation and alignment direction are distinct. bp and aa are separate coordinate domains; cross-domain projection needs an explicit CDS map. Source lengths are never inferred from the last visible feature.
 
 {{terms}}
 
-<span id="check-result"></span>Choose a plotting module and start with default backbones. Explore parameters, labels and export settings once you have a figure to compare.
 
-## Fit, limits and clipping {#coordinate-controls}
-
-The following fit/clip defaults apply to Chord, Collinear, Circular, Sankey and Radial. Dotplot has no fit argument and defaults to clip="on". These controls act on the complete view after sequence geometry. They do not change source coordinates or infer missing lengths. See the [parameter atlas](parameter-atlas.html) for each coordinate signature.
-
-| Control | Default | Practical effect |
-| --- | --- | --- |
-| `fit` | `"labels"` | `labels` includes measured labels; `geometry` fits geometry only; `manual` requires xlim and ylim. Recheck after changing label or export size |
-| `xlim` / `ylim` | `NULL` | Explicit user limits take priority over automatic fitting; they can omit content |
-| `ratio` | `1` | Fixed y/x aspect; changing it affects visual geometry, not biological distance |
-| `clip` | `"off"` | `"on"` clips drawing to the panel; it does not remove source records |
-| `expand` | `FALSE` | Additional ggplot2 expansion; automatic fitting already adds a small margin |
-
-A fitted panel cannot guarantee that every label remains readable. Inspect the final target size and diagnostics; avoid solving a source-coordinate mistake by widening limits.
+<span id="check-result"></span><span id="coordinate-controls"></span>

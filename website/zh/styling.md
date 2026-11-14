@@ -54,7 +54,7 @@
 跨面板图例另行控制。分面、任意自定义 grob、所有几何常量的整体缩放，以及字体
 嵌入认证不在本策略范围内。
 
-## 完成后检查 {#check-result}
+## 检查要点 {#check-result}
 同一 query 的连接颜色一致；连续相似度应使用连续标度。固定颜色放在 aes() 外，图例必须能说明映射。
 
 <div class="next-step">继续：<a href="styling.html#roles">调整图形 →</a></div>
@@ -110,5 +110,5 @@
 `show.legend` 和 `inherit.aes` 遵循 ggplot2。输入角色映射在几何生成前处理，
 后期视觉映射遵循 ggplot2 求值。详见 [接口说明](reference/ggchord_api_contract.html)。
 
-## 完成后检查 {#check-result-supplement}
+## 检查要点 {#check-result-supplement}
 旋转整体图形使用 coord；逐序列几何使用明确命名值；颜色随数据变化时使用映射和标度。

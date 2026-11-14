@@ -25,4 +25,4 @@ Sankey 将每个来源在左右两列各显示一次。左侧 query 端点连接
 
 两条来源在左右各显示一次；不能手工复制 seq_data 冒充新观测。互反记录保持独立。self_links = TRUE 只启用已有自身记录，不补造关系。seq_order 每个来源只能出现一次；between 和 shared branches 不支持。
 
-练习：从一条 ribbon 的左右端找回 query 和 subject，并解释为什么两端总宽不需守恒。
+操作示例：从一条 ribbon 的左右端找回 query 和 subject，并解释为什么两端总宽不需守恒。

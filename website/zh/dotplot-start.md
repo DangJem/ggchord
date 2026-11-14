@@ -1,3 +1,34 @@
+## 多序列综合矩阵 {#matrix}
+
+以下输入来自仓库原始 FASTA 和标准 BLAST 表。完整保留四序列的 32 条 HSP，不补造自比对、对称记录或缺失的 HSP。266 条 CDS 属于共用来源表，但不交给 Dotplot 的线段层。空白区域表示本次输入没有关系记录，不能据此认定不存在同源性。
+
+{{code:flagshipdata,flagshipdot}}
+
+{{manualfigure:flagdotplot}}
+
+## 按来源记录检查方向 {#direction}
+
+四端点的相对方向来自源记录；反转显示轴会改变视觉斜率，但不改原始方向。可以按序列对统计已有 HSP 的方向：
+
+```r
+hsp_direction <- flagship_hsp |>
+  mutate(relative_direction = if_else(
+    (qend - qstart) * (send - sstart) < 0, "reverse", "forward"
+  )) |>
+  count(qaccver, saccver, relative_direction, name = "HSP")
+hsp_direction
+```
+
+## 查询精确坐标 {#mapping}
+
+下面将首条 HSP 的 query 起点换算到拼接 x 轴。反查时用 `inverse = TRUE`，并明确 `axis`；显示间隙返回 NA。该转换不改变四端点。
+
+```r
+map_ggchord_position(
+  flag_dotplot, flagship_hsp$qaccver[1], flagship_hsp$qstart[1], axis = "x"
+)
+```
+
 {{code:courseblockam}}
 
 ## 绘制HSP真实端点 {#dotplot}
@@ -32,4 +63,4 @@
 
 ## 边界与下一步 {#support}
 
-不支持骨架 gene/feature/track/ribbon 层、facet 或作为 Fusion 端点。需要 gap/mismatch 时，提供真实字符对齐，见[字符工作流](aligned-sequences.html)。练习：选一条线，找回四端点，分别解释斜率和配色。
+不支持骨架 gene/feature/track/ribbon 层、facet 或作为 Fusion 端点。需要 gap/mismatch 时，提供真实字符对齐，见[字符工作流](aligned-sequences.html)。操作示例：选一条线，找回四端点，分别解释斜率和配色。

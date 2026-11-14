@@ -1,3 +1,1 @@
 path,line,category,evidence,disposition
-website/en/installation.md,21,internal revision,"The development runtime is pinned to public audit commit `0f5dd96da57876da74cd1234c7de9cf5579c80b8`. This local documentation refactor does not change runtime behavior. The separate documentation revision, build time and input hashes are recorded in the [build manifest](../build-manifest.json). Installation downloads source and dependencies.",version guidance; contextual exception
-website/zh/installation.md,21,internal revision,开发运行时固定为公开审计提交 `0f5dd96da57876da74cd1234c7de9cf5579c80b8`，不要从最大命中位置推断版本。当前本地文档重构没有改变运行时行为；文档提交、构建时间与输入哈希另见[构建清单](../build-manifest.json)。安装需联网下载源码和依赖。,version guidance; contextual exception

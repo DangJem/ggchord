@@ -68,7 +68,7 @@ Axes/themes, aesthetics, scales and guides do not inherit the list extension.
 Manual scales do accept vectors named by **data categories**, under ordinary
 ggplot2 scale semantics; see [styling](styling.html).
 
-## Check your result {#check-result}
+## Result checks {#check-result}
 Named-vector keys must match actual accver values or +/− strands. Recheck matching after reordering; list rules do not extend to themes, scales or aesthetics.
 
 <div class="next-step">Continue: <a href="styling.html">Mappings, scales, guides and themes →</a></div>

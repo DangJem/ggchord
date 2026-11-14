@@ -35,12 +35,12 @@ Wallace 熔解温度估计是基于组成的启发式值。
 只修改序列名称不能让它成为已知参考，有来源的识别依据是序列内容。
 应读取结果方法及甲基化来源，不能把参考结论赋予未知样本。
 
-## 完成后检查 {#check-result}
+## 检查要点 {#check-result}
 查看命中坐标、方法与来源。酶位点筛选是显示选择；甲基化搜索条件不是对未知样本状态的测量。
 
 <div class="next-step">继续：<a href="plasmids.html">绘制完整质粒图 →</a></div>
 
-识别结果确认后，分别跟做[引物弧线与文字](primers.html)和[酶切标签与引线](restriction-sites.html)。圆图骨架、中心文字和分层见[图层课](circular-layout.html#input)，固定与自动文字见[圆图标签](circular-labels.html)。
+识别结果确认后，分别复现[引物弧线与文字](primers.html)和[酶切标签与引线](restriction-sites.html)。圆图骨架、中心文字和分层见[图层课](circular-layout.html#input)，固定与自动文字见[圆图标签](circular-labels.html)。
 
 ## 目录不是搜索结果 {#catalog}
 

@@ -18,9 +18,13 @@ page_record <- function(key) {
 }
 figure_lessons <- jsonlite::fromJSON('website/figure-lessons.json')
 module_motifs <- jsonlite::fromJSON('website/module-motifs.json')
-course_stages <- jsonlite::fromJSON('website/course-stages.json', simplifyVector=FALSE)
-section_numbers <- unlist(lapply(navigation, function(group)
-  setNames(seq_along(group$pages), unlist(group$pages))), use.names = TRUE)
+manual_sections <- jsonlite::fromJSON('website/manual-sections.json', simplifyVector=FALSE)
+section_numbers <- unlist(lapply(navigation, function(group) {
+  keys <- unlist(group$pages)
+  codes <- paste0(group$number, '.', seq_along(keys)-1L)
+  codes[keys == group$landing] <- as.character(group$number)
+  setNames(codes, keys)
+}), use.names = TRUE)
 for(lang in c('en','zh')) {
  root<-file.path('.site',lang)
  for(path in list.files(root,'\\.html$',recursive=TRUE,full.names=TRUE)) {
@@ -54,7 +58,7 @@ for(lang in c('en','zh')) {
     xml2::xml_set_text(xml2::xml_find_first(doc,'//title'),paste(label,'• ggchord'))
   }
   if(slug=='404' && lang=='zh') for(node in xml2::xml_find_all(main,'.//p'))
-    xml2::xml_set_text(node,'未找到页面。请从首页、学习总览或搜索找回所需内容。')
+    xml2::xml_set_text(node,'未找到页面。请从首页、功能模块或搜索找回所需内容。')
   xml2::xml_set_attr(xml2::xml_find_first(doc,'//body'),'data-page',if(startsWith(relative,'reference/')) 'reference' else slug)
   if(slug=='index' && length(xml2::xml_find_all(main,'.//h1'))>1L) xml2::xml_remove(xml2::xml_find_first(main,'./h1'))
   layout <- xml2::xml_parent(main)
@@ -71,19 +75,22 @@ for(lang in c('en','zh')) {
   selected_groups <- Filter(function(group) current_page %in% group$pages, navigation)
   if(!length(selected_groups)) selected_groups <- Filter(function(group) group$id=='information',navigation)
   chapter_links <- paste(vapply(selected_groups, function(group) {
-    stages <- course_stages[[group$id]]
-    links <- ''
-    for(key in unlist(group$pages)) {
-      stage <- if(is.null(stages)) NULL else Filter(function(x) key %in% unlist(x$pages),stages)
-      if(length(stage) && identical(key,stage[[1]]$pages[[1]])) links <- paste0(links,
-        '<span class="learning-stage">',htmltools::htmlEscape(stage[[1]]$title[[lang]]),'</span>')
-      links <- paste0(links,page_link(key))
-    }
-    paste0('<a class="course-home" href="',prefix,sub('[.]html$','',page_record(group$landing)$canonical_path),'.html">',
-      if(lang=='zh')'课程首页 · ' else 'Course home · ',htmltools::htmlEscape(group$title[[lang]]),
-      '</a><details class="chapter-section" open><summary>',htmltools::htmlEscape(group$title[[lang]]),
-      '</summary>',links,'</details><a class="other-courses" href="',prefix,'learn.html">',
-      if(lang=='zh')'浏览其他课程与专题 →' else 'Browse other courses and topics →','</a>')
+    sections <- manual_sections[[group$id]]
+    links <- paste(vapply(sections, function(section) {
+      items <- paste(vapply(unlist(section$pages), function(key) {
+        if(key == group$landing) return('')
+        link <- page_link(key)
+        numbered <- sub('>',paste0('><span class="chapter-number">',section_numbers[[key]],'</span>'),link,fixed=TRUE)
+        paste0('<li>',numbered,'</li>')
+      },''),collapse='')
+      if(!nzchar(items)) return('')
+      paste0('<div class="manual-section"><span class="manual-section-title">',
+        htmltools::htmlEscape(section$title[[lang]]),'</span><ul class="manual-section-pages">',items,'</ul></div>')
+    },''),collapse='')
+    paste0('<a class="module-home" href="',prefix,page_record(group$landing)$canonical_path,'">',
+      htmltools::htmlEscape(group$title[[lang]]),'</a>',links,
+      '<a class="other-courses" href="',prefix,'modes.html#modules">',
+      if(lang=='zh')'四大模块与基本概念 →' else 'Four modules and concepts →','</a>')
   }, ''), collapse = '')
   nav_fragment <- function(html) xml2::xml_find_first(xml2::read_html(paste0('<html><body>',html,'</body></html>')),'//body/*')
   xml2::xml_add_sibling(main,nav_fragment(paste0('<nav class="chapter-nav" aria-label="',
@@ -117,7 +124,7 @@ for(lang in c('en','zh')) {
         else sprintf('Section %d of %d', step, total))
       prev <- if(step > 1) page_link(group$pages[[step - 1]], if(lang == 'zh') '← 上一节' else '← Previous section')
       next_link <- page_link(record$next_steps[[1]], if(lang == 'zh') '下一步 →' else 'Next step →')
-      end <- page_link('learn', if(lang == 'zh') '学习总览' else 'Learning paths')
+      end <- page_link('modes', if(lang == 'zh') '基本概念' else 'Concepts')
       xml2::xml_add_child(main, nav_fragment(paste0('<nav class="lesson-pagination" aria-label="',
         if(lang == 'zh') '章节进度' else 'Chapter navigation', '">', prev,
         next_link, '</nav>')))
@@ -125,13 +132,13 @@ for(lang in c('en','zh')) {
     xml2::xml_add_sibling(xml2::xml_find_first(main, './/h1'), nav_fragment(
       paste0('<p class="lesson-stage">', stage, '</p>')), .where = 'before')
   }
-  if (current_page == "index" || (length(current_group) && !startsWith(relative, "reference/"))) {
+  if (current_page != "index" && length(current_group) && !startsWith(relative, "reference/")) {
     chapter_number <- if (current_page == "index") integer() else section_numbers[[current_page]]
     add_number <- function(node, number) {
       xml2::xml_add_sibling(xml2::xml_contents(node)[[1]], nav_fragment(paste0('<span class="section-number">',
         number, ' </span>')), .where = 'before')
     }
-    if (length(chapter_number)) add_number(xml2::xml_find_first(main, './/h1'), paste0(chapter_number, '.'))
+    if (length(chapter_number) && !(current_page %in% c('multi-sequence','circular','dotplot','fusion'))) add_number(xml2::xml_find_first(main, './/h1'), chapter_number)
     counts <- integer(3)
     for (heading in xml2::xml_find_all(main, './/*[self::h2 or self::h3 or self::h4][@id]')) {
       level <- as.integer(sub('h', '', xml2::xml_name(heading))) - 1L
@@ -222,7 +229,7 @@ for(lang in c('en','zh')) {
   if(lang=='zh') xml2::xml_set_attr(xml2::xml_find_first(language,'.//a[@lang="en"]'),'id','site-language')
   xml2::xml_add_sibling(toggle,language,.where='before')
   target<-xml2::xml_find_first(doc,'(//div[@id="navbar"]/ul[contains(@class,"navbar-nav")])[last()]')
-  label<-if(lang=='zh')'搜索文档' else 'Search documentation'
+  label<-if(lang=='zh')'搜索说明' else 'Search documentation'
   search<-fragment(paste0('<li class="nav-item local-search"><button type="button" class="search-trigger" id="site-search-trigger" aria-haspopup="dialog"><span aria-hidden="true">⌕</span><span class="search-trigger-label">',
    if(lang=='zh')'搜索任务、函数、参数' else 'Search tasks, functions, parameters','</span><kbd aria-hidden="true">⌘ K</kbd></button>',
    '<noscript><a href="',prefix,'task-index.html">',label,'</a></noscript></li>'))
@@ -230,8 +237,7 @@ for(lang in c('en','zh')) {
   body<-xml2::xml_find_first(doc,'//body')
   xml2::xml_set_attr(body,'data-kind',if(startsWith(relative,'reference/')) 'api' else if(!is.null(record)) record$kind else 'utility')
   metadata <- jsonlite::fromJSON('.site/build-metadata.json')
-  xml2::xml_add_child(target,fragment(paste0('<li class="nav-item nav-text"><a class="nav-link" href="',prefix,'installation.html">',
-    metadata$package_version,' · ',metadata$channel,'</a></li>')))
+  xml2::xml_remove(xml2::xml_find_all(doc,'//nav//small[contains(@class,"nav-text")]'))
   xml2::xml_add_child(body,fragment(paste0('<dialog class="search-dialog" id="site-search-dialog" aria-labelledby="site-search-title"><div class="search-heading"><h2 id="site-search-title">',label,
    '</h2><button type="button" class="search-close" aria-label="',if(lang=='zh')'关闭搜索' else 'Close search','">×</button></div>',
    '<label class="search-field" for="site-search"><span class="visually-hidden">',label,'</span><input id="site-search" type="search" role="combobox" aria-autocomplete="list" aria-controls="site-results" aria-expanded="false" autocomplete="off" placeholder="',
@@ -239,7 +245,7 @@ for(lang in c('en','zh')) {
    if(lang=='zh')'筛选结果类型' else 'Filter result types','"></div><p class="search-count" id="search-status" role="status"></p><ul id="site-results" class="search-results" role="listbox" aria-label="',
    if(lang=='zh')'搜索结果' else 'Search results','"></ul><div class="search-help">',
    if(lang=='zh')'↑ ↓ 选择 · Enter 打开 · Esc 关闭；也可按任务查找。' else '↑ ↓ select · Enter open · Esc close; or browse by task.',
-   ' <a href="',prefix,'task-index.html">',if(lang=='zh')'任务索引' else 'Task index','</a></div></dialog>')))
+   ' <a href="',prefix,'task-index.html">',if(lang=='zh')'API 与功能' else 'API and functions','</a></div></dialog>')))
   xml2::xml_set_attr(body,'data-lang',lang)
   xml2::xml_set_attr(body,'data-search',paste0(paste(rep('../',deep),collapse=''),'search.json'))
   if(startsWith(relative,'reference/')) {
@@ -247,9 +253,9 @@ for(lang in c('en','zh')) {
    reviews <- jsonlite::fromJSON('website/teaching-reviews.json',simplifyVector=FALSE)
    matching <- Filter(function(name) identical(alias_topics[[name]],slug),names(reviews))
    lesson <- if(length(matching)) reviews[[matching[[1]]]] else NULL
-   target_page <- if(!is.null(lesson)) paste0(lesson$page,'.html#',lesson$anchor) else 'learn.html'
+   target_page <- if(!is.null(lesson)) paste0(lesson$page,'.html#',lesson$anchor) else 'modes.html'
    link<-paste0(paste(rep('../',deep),collapse=''),target_page)
-   xml2::xml_add_child(main,fragment(paste0('<p class="reference-language-note">',info,' <a href="',link,'">',if(lang=='zh')'使用教程' else 'Tutorials','</a></p>')),.where=1L)
+   xml2::xml_add_child(main,fragment(paste0('<p class="reference-language-note">',info,' <a href="',link,'">',if(lang=='zh')'用法说明' else 'Usage guide','</a></p>')),.where=1L)
   }
   # Native locale messages add a translated S3 preamble to usage code. Keep
   # this generated comment canonical too, while translating surrounding prose.
@@ -287,6 +293,9 @@ for(lang in c('en','zh')) {
     xml2::xml_add_sibling(table,wrapper,.where='before')
     xml2::xml_add_child(xml2::xml_find_first(table,'preceding-sibling::*[1]'),table)
     xml2::xml_remove(table)
+  }
+  for(cell in xml2::xml_find_all(main,'.//table//td')) {
+    if(grepl('^[0-9]+([.,][0-9]+)*$',trimws(xml2::xml_text(cell)))) xml2::xml_set_attr(cell,'class','numeric')
   }
   for(output in xml2::xml_find_all(main,'.//*[contains(@class,"data-output")]')) {
     xml2::xml_set_attr(output,'tabindex','0')
@@ -336,6 +345,7 @@ for(lang in c('en','zh')) {
   }
   for(figure in xml2::xml_find_all(main,'.//figure[@data-figure]')) {
     key <- xml2::xml_attr(figure,'data-figure')
+    if(!key %in% names(figure_lessons)) next
     code_url <- if(current_page=='gallery') paste0(base,'documentation-examples.R') else
       paste0(prefix,if(grepl('#',figure_lessons[[key]],fixed=TRUE)) sub('#','.html#',figure_lessons[[key]],fixed=TRUE) else paste0(figure_lessons[[key]],'.html'))
     xml2::xml_set_attr(xml2::xml_find_first(figure,'./a'),'data-code-url',code_url)

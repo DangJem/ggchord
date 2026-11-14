@@ -63,7 +63,7 @@ uses its allocated size; outer panel allocations and the cross-panel guide are
 separate. Facets, arbitrary custom grobs, blanket scaling of geometric constants
 and font embedding certification are outside this policy.
 
-## Check your result {#check-result}
+## Result checks {#check-result}
 Links from the same query share a colour; continuous identity needs a continuous scale. Put fixed colours outside aes() and make each guide explain its mapping.
 
 <div class="next-step">Continue: <a href="styling.html#roles">Common adjustments and grammar →</a></div>
@@ -120,5 +120,5 @@ link layers do not replace one another. Use ordinary ggplot2 `show.legend` and
 `inherit.aes`; role input mappings precede geometry, while staged visual mappings
 follow ggplot2 evaluation. See the [API contract](reference/ggchord_api_contract.html).
 
-## Check your result {#check-result-supplement}
+## Result checks {#check-result-supplement}
 Use a coordinate for global rotation, named values for per-sequence geometry, and mappings plus scales for data-dependent colour.

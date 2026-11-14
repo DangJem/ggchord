@@ -43,7 +43,7 @@
   const dialog=document.querySelector('#site-search-dialog'),trigger=document.querySelector('#site-search-trigger');
   const input=document.querySelector('#site-search'),results=document.querySelector('#site-results'),status=document.querySelector('#search-status');
   if(dialog&&trigger&&input&&results) {
-    const labels=zh?{all:'全部',course:'课程',function:'函数',parameter:'参数',task:'任务',tool:'查询工具',faq:'排错'}:{all:'All',course:'Courses',function:'Functions',parameter:'Parameters',task:'Tasks',tool:'Tools',faq:'FAQ'};
+    const labels=zh?{all:'全部',course:'说明',function:'函数',parameter:'参数',task:'任务',tool:'查询工具',faq:'排错'}:{all:'All',course:'Sections',function:'Functions',parameter:'Parameters',task:'Tasks',tool:'Tools',faq:'FAQ'};
     const indexURL=new URL(document.body.dataset.search,location.href);
     let records,loading,filter='all',selected=-1,items=[],invoker;
     const tokens=q=>q.match(/[a-z_][a-z0-9_.]*|[\p{Script=Han}]+/giu)?.flatMap(s=>/^[\p{Script=Han}]{3,}$/u.test(s)?(s.match(/.{1,2}/gu)||[]):[s])||[];

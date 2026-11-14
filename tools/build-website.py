@@ -39,10 +39,11 @@ def render_source_snapshot():
     files = {p for root in roots for p in root.rglob('*')
              if p.is_file() and '__pycache__' not in p.parts}
     files.update(ROOT.glob('*.md'))
+    files.update(ROOT/r['file'] for r in json.loads((WEB/'manual-figures.json').read_text()))
     files.update(ROOT/name for name in [
         'DESCRIPTION','NAMESPACE','LICENSE','_pkgdown.yml',
         'tools/build-website.py','tools/documentation_lib.py','tools/site_search.py','tools/site_registry.py','tools/site_components.py',
-        'tools/render-website.R','tools/finalize-website.R','tools/site-course-examples.R',
+        'tools/render-website.R','tools/finalize-website.R','tools/site-course-examples.R','tools/site-flagships.R',
         'tools/reference-translations.py','tools/documentation-examples.R',
         'tools/documentation-plots.R','tools/audit-source-snapshot.R',
         'tools/render-teaching-comparisons.R','tools/documentation-fingerprints.py'])
@@ -89,6 +90,9 @@ def main():
         shutil.copy2(ROOT/'tools'/name,assets/name)
     shutil.copy2(ROOT/'tools/site-course-examples.R',assets/'site-course-examples.R')
     shutil.copy2(WEB/'course-figures.json',assets/'course-figures.json')
+    shutil.copy2(ROOT/'tools/site-flagships.R',assets/'site-flagships.R')
+    for row in json.loads((WEB/'manual-figures.json').read_text()):
+        shutil.copy2(ROOT/row['file'],assets/(row['id']+'.png'))
     shutil.copy2(ROOT/'NEWS.md',assets/'NEWS.md')
     for name in ['MIGRATION.md', 'MIGRATION-Hans.md']:
         shutil.copy2(ROOT/name, assets/name)
@@ -139,7 +143,7 @@ def main():
             headings=re.findall(r'<h[23] id="([^"]+)"[^>]*>(.*?)</h[23]>',body,re.S)
             toc=''.join(f'<li><a href="#{a}">{re.sub("<[^>]+>","",t)}</a></li>' for a,t in headings)
             sidebar=('<h2>本页目录</h2>' if lang=='zh' else '<h2>On this page</h2>')+'<ul class="toc-list">'+toc+'</ul>'
-            sidebar+=('<h2>项目资料</h2>' if lang=='zh' else '<h2>Project</h2>')+'<ul><li><a href="https://github.com/DangJem/ggchord">GitHub</a></li><li><a href="about.html#modules">'+('章节索引' if lang=='zh' else 'Chapter index')+'</a></li><li>MIT</li></ul>'
+            sidebar+=('<h2>项目资料</h2>' if lang=='zh' else '<h2>Project</h2>')+'<ul><li><a href="https://github.com/DangJem/ggchord">GitHub</a></li><li><a href="modes.html#modules">'+('章节索引' if lang=='zh' else 'Chapter index')+'</a></li><li>MIT</li></ul>'
             payload[lang].append(dict(slug=page['slug'],title=page['title'][lang],body=body,sidebar=sidebar))
     (out/'page-content.json').write_text(json.dumps(payload,ensure_ascii=False)+'\n')
     # Locales write separate destinations and share only immutable source files.
@@ -192,11 +196,18 @@ def finalize(out,args,render_snapshot,input_hashes):
             path=out/lang/name
             if page.get('kind')=='alias' or page['slug']=='reference':
                 links=''.join('<li><a href="'+html.escape(dest,quote=True)+'">'+html.escape(anchor or page['title'][lang])+'</a></li>' for anchor,dest in mapping.items())
-                path.write_text('<!doctype html><html lang="'+('zh-Hans' if lang=='zh' else 'en')+'"><meta charset="utf-8"><title>Moved · ggchord</title><h1>'+('课程已迁移' if lang=='zh' else 'Lesson moved')+'</h1><p>'+('旧章节的具体新位置如下。' if lang=='zh' else 'Find the exact destination of each old section below.')+'</p><ul>'+links+'</ul>'+script+'</html>')
+                path.write_text('<!doctype html><html lang="'+('zh-Hans' if lang=='zh' else 'en')+'"><meta charset="utf-8"><title>Moved · ggchord</title><h1>'+('章节已迁移' if lang=='zh' else 'Section moved')+'</h1><p>'+('旧章节的具体新位置如下。' if lang=='zh' else 'Find the exact destination of each old section below.')+'</p><ul>'+links+'</ul>'+script+'</html>')
             elif name in migrations:
                 path.write_text(path.read_text().replace('</head>',script+'</head>',1))
     # Keep project presentation files identical to the source digested by finalization.
     for name in ['site.css','site.js']: shutil.copy2(WEB/'assets'/name,assets/name)
+    extra_migrations=set(migrations)-{p['slug']+'.html' for p in PAGES}
+    for lang in ['en','zh']:
+        for name in extra_migrations:
+            mapping=migrations[name]
+            if not mapping.get(''):continue
+            script=('<script>const m='+json.dumps(mapping,ensure_ascii=False)+';location.replace(m[decodeURIComponent(location.hash.slice(1))]||m[String()])</script>')
+            (out/lang/name).write_text('<!doctype html><html lang="'+('zh-Hans' if lang=='zh' else 'en')+'"><meta charset="utf-8"><title>ggchord</title>'+script+'<a href="'+mapping['']+'">Continue / 继续</a></html>')
     for lang in ['en','zh']:
         def redirect(old,target):
             path=out/lang/old;path.parent.mkdir(parents=True,exist_ok=True)
@@ -204,7 +215,7 @@ def finalize(out,args,render_snapshot,input_hashes):
             path.write_text(f'<!doctype html><html lang="{"zh-Hans" if lang=="zh" else "en"}"><head><meta charset="utf-8"><meta http-equiv="refresh" content="0;url={dest}"><title>ggchord</title></head><body><a href="{dest}">Continue / 继续</a></body></html>')
         index=[]
         for path in sorted((out/lang).rglob('*.html')):
-            if path.name=='reference.html' or any(p['slug']+'.html'==str(path.relative_to(out/lang)) and p.get('kind')=='alias' for p in PAGES):continue
+            if str(path.relative_to(out/lang)) in extra_migrations or path.name=='reference.html' or any(p['slug']+'.html'==str(path.relative_to(out/lang)) and p.get('kind')=='alias' for p in PAGES):continue
             content=path.read_text()
             title=html.unescape(re.search(r'<title>(.*?)</title>',content,re.S)[1]).split(' • ')[0]
             main=re.search(r'<main\b[^>]*>(.*?)</main>',content,re.S)

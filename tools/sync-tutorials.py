@@ -8,11 +8,11 @@ INTRO_CHAPTERS = ('installation', 'multi-sequence-start', 'circular-start', 'dot
 CHAPTERS = [next(p for p in PAGES if p['slug'] == slug) for slug in INTRO_CHAPTERS]
 
 def tutorial(lang):
-    title = 'ggchord: sequence plots and composition' if lang == 'en' else 'ggchord：序列图与多视图组合教程'
+    title = 'ggchord: sequence plots and composition' if lang == 'en' else 'ggchord：序列图与多视图组合说明'
     intro = ('Choose among four plotting modules. Each opening lesson includes its own setup. '
         'Continue online for data import, advanced workflows and complete research examples.' if lang == 'en' else
         '按任务选择四个绘图模块，每个模块都提供独立的首图代码。'
-        '自备数据、专业专题和完整科研案例请继续查阅在线教程。')
+        '自备数据、专业专题和完整科研案例请继续查阅在线说明。')
     text = f'''---
 title: "{title}"
 output:
@@ -111,7 +111,7 @@ R ≥ 4.1.0 · ggplot2 ≥ 4.0.0
 ```r
 install.packages("remotes")
 remotes::install_github(
-  "DangJem/ggchord@0f5dd96da57876da74cd1234c7de9cf5579c80b8",
+  "DangJem/ggchord",
   dependencies = NA, upgrade = "never"
 )
 ```
@@ -122,7 +122,7 @@ remotes::install_github(
     text += (' 示例使用 dplyr（≥ 1.1.0）、purrr、tidyr 和原生 `|>`，这些是示例可选依赖。' if zh else
         ' Examples use dplyr (≥ 1.1.0), purrr, tidyr and the native `|>` pipe as optional example dependencies.')
     text += f'\n\n## {quick}\n\n'
-    text += ('以下三张综合示例展示本版的组合能力。原始输入保持可追溯，完整准备代码和解释见对应教程；初次使用请从最小首图开始。' if zh else 'These three complete examples demonstrate this version. Inputs are traceable; each guide provides preparation and interpretation. New users can begin with the minimal first-plot lesson.')+'\n\n'
+    text += ('以下三张综合示例展示本版的组合能力。原始输入保持可追溯，完整准备代码和解释见对应说明；初次使用请从最小首图开始。' if zh else 'These three complete examples demonstrate this version. Inputs are traceable; each guide provides preparation and interpretation. New users can begin with the minimal first-plot example.')+'\n\n'
     def preparation(keys, label):
         return '<details>\n<summary>'+label+'</summary>\n\n'+''.join(
             '```r\n'+localize_r_comments(code[key], lang)+'\n```\n\n' for key in keys)+'</details>\n\n'
@@ -132,7 +132,7 @@ remotes::install_github(
         ('showcasechord', 'showcasechord', '弦图：四基因组、混合曲率与相似度' if zh else 'Chord: four genomes, mixed curvature and identity',
          'chord', '按每条序列的真实正负链分别抽样，无 CDS 长度门槛。两条 MT 序列的原始注释只有正链 CDS。正链置于内侧，连接带在重叠端点局部避让。' if zh else 'CDS are sampled separately by source strand without a length threshold. The two MT records have only positive-strand CDS in the source annotations. Positive-strand arrows sit inside, where ribbons leave clearance at overlapping endpoints.', ['showcasedata','chordshowcasegenes']),
         ('showcaseplasmid', 'showcaseplasmid', '质粒图：pETDuet-1密集注释' if zh else 'Plasmid: dense pETDuet-1 annotation',
-         'plasmids#complex', '双链骨架、20个特征、5个参考引物和58个合并切点；位置和名称来自真实输入。' if zh else 'A double backbone, 20 features, five reference primers and 58 grouped cut positions from real inputs.', ['showcaseplasmiddata']),
+         'circular-dense-case#complex', '双链骨架、20个特征、5个参考引物和58个合并切点；位置和名称来自真实输入。' if zh else 'A double backbone, 20 features, five reference primers and 58 grouped cut positions from real inputs.', ['showcaseplasmiddata']),
         ('showcasecollinear', 'showcasecollinear', '共线性图：四序列与跨行连接' if zh else 'Collinear: four genomes with cross-row links',
          'collinear', '正负链分列、逐一标注的精选CDS、局部避障、虚线跨行ribbon与右侧控制点路由。' if zh else 'Strand-separated selected CDS with labels, local clearance, dashed cross-row ribbons and right-side control-point routes.', ['showcasedata'])]
     views.sort(key=lambda view: ['showcasechord','showcasecollinear','showcaseplasmid'].index(view[0]))
@@ -146,7 +146,7 @@ remotes::install_github(
         code[key] = code[key].rsplit('\n', 1)[0] + (
             f'\nview_ggchord({plot_name}, width = {width}, height = {height}, units = "in")')
         text += preparation(setup+[key], '数据准备与绘图代码 · 展开运行' if zh else 'Preparation and plot code · expand to run')
-        text += ('[查看完整教程 →](' if zh else '[Read the full guide →](')+site+lesson.split('#')[0]+'.html'+('#'+lesson.split('#')[1] if '#' in lesson else '')+')\n\n'
+        text += ('[查看完整说明 →](' if zh else '[Read the full guide →](')+site+lesson.split('#')[0]+'.html'+('#'+lesson.split('#')[1] if '#' in lesson else '')+')\n\n'
     text += ('`aes()` 映射数据，`scale_*()` 定义映射和图例，geom 定义几何与固定样式，Position 负责局部放置，coord 负责全局坐标，theme 负责非数据外观。'
         if zh else '`aes()` maps data; scales define mapping and guides; geoms define geometry and fixed styles; Positions place local geometry; coords select the global view; themes style non-data elements.')
     text += f'\n\n## {sizing}\n\n'
@@ -156,10 +156,10 @@ remotes::install_github(
     text += '\n' + (WEB / f'readme-roadmap-{lang}.md').read_text()
     text += '\n' + (WEB / f'readme-inspirations-{lang}.md').read_text()
     text += f'\n## {onwards}\n\n'
-    guides = ([('开始使用', 'installation'), ('学习总览', 'learn'),
+    guides = ([('开始使用', 'installation'), ('基本概念', 'modes'),
         ('函数文档', 'reference/index'), ('示例图集', 'gallery'),
         ('其他信息', 'about')] if zh else
-        [('Get started', 'installation'), ('Learning overview', 'learn'),
+        [('Get started', 'installation'), ('Plotting concepts', 'modes'),
          ('Function reference', 'reference/index'), ('Gallery', 'gallery'),
          ('Further information', 'about')])
     text += '\n'.join('- ['+label+']('+site+slug+'.html)' for label, slug in guides)+'\n'

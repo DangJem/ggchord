@@ -42,7 +42,7 @@ become genomic bp. In segmented views choose the window ID, and check positions
 in omitted gaps rather than extrapolating across them. Use [explicit homologs](homology.html)
 when the locus selection comes from declared feature/cluster evidence.
 
-## Check your result {#check-result}
+## Result checks {#check-result}
 Inspect cropping reports, break markers and source coordinates. Omitted gaps have no mapping; a display flip alone is not evidence of inversion.
 
 <div class="next-step">Continue: <a href="homology.html">Explicit homologs and coding-coordinate links →</a></div>

@@ -18,7 +18,7 @@ For modern BCF (`.bcf` or `.bcf.gz`), supply `python` naming an existing interpr
 
 ## Genomic alignment blocks: MAF and chain {#genome-alignments}
 
-Use an existing Python environment with optional **Biopython Bio.Align** MAF/chain support (directly verified with 1.85). `ALIGNMENT_PYTHON` can select that interpreter for this lesson. The source checkout/input bundle must contain `examples/genome-alignments/`. Its two unchanged fixed-version upstream files have hashes, permission attribution and a verification script; no aligner is run. An unavailable optional parser skips the example, not a successful import.
+Use an existing Python environment with optional **Biopython Bio.Align** MAF/chain support (directly verified with 1.85). `ALIGNMENT_PYTHON` can select that interpreter for this section. The source checkout/input bundle must contain `examples/genome-alignments/`. Its two unchanged fixed-version upstream files have hashes, permission attribution and a verification script; no aligner is run. An unavailable optional parser skips the example, not a successful import.
 
 {{code:courseblockbb}}
 
@@ -30,7 +30,7 @@ For two assemblies both named `chr1`, declare identities, for example `query_ids
 
 ## Existing delta alignments {#delta}
 
-`read_delta()` requires an existing **show-coords** program; `DELTA_DECODER` can select its executable for this lesson. It reads existing NUCMER/PROMER results, never invokes an aligner or opens the historical FASTA paths in the file preamble. The unchanged upstream Drosophila example, pinned version, original permission notice and hashes are in `examples/genome-alignments/`. An absent executable skips this optional example; that is not successful decoding.
+`read_delta()` requires an existing **show-coords** program; `DELTA_DECODER` can select its executable for this section. It reads existing NUCMER/PROMER results, never invokes an aligner or opens the historical FASTA paths in the file preamble. The unchanged upstream Drosophila example, pinned version, original permission notice and hashes are in `examples/genome-alignments/`. An absent executable skips this optional example; that is not successful decoding.
 
 {{code:courseblockbc}}
 

@@ -1,0 +1,234 @@
+{
+  "multi-sequence": [
+    {
+      "title": {
+        "zh": "共用数据与显示规则",
+        "en": "Shared inputs and display rules"
+      },
+      "pages": [
+        "multi-sequence",
+        "multi-sequence-start",
+        "multi-sequence-views",
+        "multi-sequence-layout",
+        "multi-sequence-links",
+        "multi-sequence-labels",
+        "ribbons",
+        "instances"
+      ]
+    },
+    {
+      "title": {
+        "zh": "Chord",
+        "en": "Chord"
+      },
+      "pages": [
+        "chord-geometry",
+        "chord"
+      ]
+    },
+    {
+      "title": {
+        "zh": "Collinear",
+        "en": "Collinear"
+      },
+      "pages": [
+        "collinear-layout",
+        "collinear"
+      ]
+    },
+    {
+      "title": {
+        "zh": "Radial",
+        "en": "Radial"
+      },
+      "pages": [
+        "radial-synteny"
+      ]
+    },
+    {
+      "title": {
+        "zh": "Sankey",
+        "en": "Sankey"
+      },
+      "pages": [
+        "sankey"
+      ]
+    },
+    {
+      "title": {
+        "zh": "关系与局部比较",
+        "en": "Relationships and local comparisons"
+      },
+      "pages": [
+        "views",
+        "homology"
+      ]
+    }
+  ],
+  "circular": [
+    {
+      "title": {
+        "zh": "骨架与数据",
+        "en": "Backbone and data"
+      },
+      "pages": [
+        "circular",
+        "circular-start",
+        "circular-data",
+        "circular-layout"
+      ]
+    },
+    {
+      "title": {
+        "zh": "注释与标注",
+        "en": "Annotations and labels"
+      },
+      "pages": [
+        "circular-features",
+        "circular-labels",
+        "recognition",
+        "primers",
+        "restriction-sites"
+      ]
+    },
+    {
+      "title": {
+        "zh": "完整参考图",
+        "en": "Complete reference maps"
+      },
+      "pages": [
+        "plasmids",
+        "circular-dense-case",
+        "plasmid-catalog"
+      ]
+    }
+  ],
+  "dotplot": [
+    {
+      "title": {
+        "zh": "HSP 点图",
+        "en": "HSP Dotplot"
+      },
+      "pages": [
+        "dotplot",
+        "dotplot-start"
+      ]
+    }
+  ],
+  "fusion": [
+    {
+      "title": {
+        "zh": "组合与布局",
+        "en": "Composition and layout"
+      },
+      "pages": [
+        "fusion",
+        "fusion-start",
+        "fusion-layout"
+      ]
+    },
+    {
+      "title": {
+        "zh": "连接与放大",
+        "en": "Links and magnification"
+      },
+      "pages": [
+        "fusion-routing",
+        "fusion-details",
+        "fusion-advanced"
+      ]
+    }
+  ],
+  "start": [
+    {
+      "title": {
+        "zh": "开始使用",
+        "en": "Get started"
+      },
+      "pages": [
+        "installation",
+        "modes",
+        "data"
+      ]
+    }
+  ],
+  "shared-techniques": [
+    {
+      "title": {
+        "zh": "通用技巧",
+        "en": "Shared techniques"
+      },
+      "pages": [
+        "styling",
+        "annotations",
+        "feature-geometry",
+        "labels",
+        "parameters",
+        "scale-families",
+        "tracks",
+        "tracks-statistics",
+        "output",
+        "diagnostics"
+      ]
+    }
+  ],
+  "data": [
+    {
+      "title": {
+        "zh": "数据与工作流",
+        "en": "Data and workflows"
+      },
+      "pages": [
+        "formats",
+        "import-sequences",
+        "import-intervals",
+        "import-signals",
+        "aligned-sequences",
+        "import-relations",
+        "alignments",
+        "protein-alignments",
+        "projection",
+        "workflows",
+        "real-data"
+      ]
+    }
+  ],
+  "cases": [
+    {
+      "title": {
+        "zh": "案例图库",
+        "en": "Gallery"
+      },
+      "pages": [
+        "gallery"
+      ]
+    }
+  ],
+  "reference": [
+    {
+      "title": {
+        "zh": "API 参考",
+        "en": "API reference"
+      },
+      "pages": [
+        "reference",
+        "compatibility",
+        "parameter-atlas",
+        "api-curriculum"
+      ]
+    }
+  ],
+  "information": [
+    {
+      "title": {
+        "zh": "项目信息",
+        "en": "Project information"
+      },
+      "pages": [
+        "about",
+        "faq",
+        "migration"
+      ]
+    }
+  ]
+}

@@ -266,12 +266,12 @@
     "": "fusion.html"
   },
   "about.html": {
-    "modules": "learn.html#modules",
+    "modules": "modes.html#modules",
     "": "about.html",
     "compatibility": "about.html#compatibility",
     "feedback": "about.html#feedback",
     "sources": "about.html#sources",
-    "path-techniques": "learn.html#foundations",
+    "path-techniques": "installation.html",
     "path-chord": "multi-sequence.html#path",
     "path-collinear": "multi-sequence.html#path",
     "path-plasmid": "circular.html#path",
@@ -282,9 +282,9 @@
     "path-information": "about.html#compatibility"
   },
   "task-index.html": {
-    "": "learn.html#tasks",
-    "tasks": "learn.html#tasks",
-    "paths": "learn.html#paths"
+    "": "reference/index.html",
+    "tasks": "reference/index.html",
+    "paths": "installation.html"
   },
   "ribbon-statistics.html": {
     "": "ribbons.html#statistics",
@@ -301,5 +301,22 @@
   "reference.html": {
     "": "reference/index.html",
     "about": "reference/index.html"
+  },
+  "learn.html": {
+    "": "installation.html",
+    "modules": "modes.html#modules",
+    "foundations": "installation.html",
+    "tasks": "reference/index.html",
+    "paths": "installation.html"
+  },
+  "index.html": {
+    "choose": "modes.html#modules",
+    "quick-start": "installation.html#first-plot",
+    "results": "gallery.html",
+    "chord": "chord.html",
+    "collinear": "collinear.html",
+    "circular": "circular-dense-case.html",
+    "learn": "installation.html",
+    "versions": "about.html#reproducibility"
   }
 }

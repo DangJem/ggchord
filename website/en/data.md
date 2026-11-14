@@ -123,7 +123,7 @@ standalone cleaning and preparation should not be assumed identical.
 `hierarchy$contigs` summarizes declared membership without concatenating contigs.
 No membership is inferred from an accession prefix. Provide globally unique IDs
 when separate samples reuse local contig names. Use [file formats and adapters](formats.html)
-for format/optional-object details, and the [real-record tutorial](real-data.html)
+for format/optional-object details, and the [real-record manual](real-data.html)
 to carry reports into a complete figure.
 
 ## Minimal input and protein alignments {#minimal}
@@ -134,7 +134,7 @@ Use explicit argument names as in the shared examples. Optional identity, length
 and coverage fields are needed only by operations that consume them. See
 [standard BLAST/protein input](alignments.html) and [parameter formats](parameters.html).
 
-## Check your result {#check-result}
+## Result checks {#check-result}
 Input IDs must match complete sequence records. Keep original records separate from repaired copies. Decreasing endpoints can be legitimate reverse hits; warnings do not all mean rows must be removed.
 
 <div class="next-step">Continue: <a href="formats.html">File formats and explicit adapters →</a></div>

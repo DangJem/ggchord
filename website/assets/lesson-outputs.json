@@ -108,20 +108,6 @@
   "comparecatalog": {
     "console": "                primer_id  preferred_name                 sequence length is_universal                              source\n1 primer_657c543f56a4ea50 M13/pUC Reverse  AGCGGATAACAATTTCACACAGG     23         TRUE Addgene sequencing primer reference\n2 primer_97528c53fc4933a5    pBAD Forward     ATGCCATAGCATTTTTATCC     20         TRUE Addgene sequencing primer reference\n3 primer_9cc7178a1c0c1c24             SP6       ATTTAGGTGACACTATAG     18         TRUE Addgene sequencing primer reference\n4 primer_656f3aef2d2c0a76    MSCV Reverse CAGCGGGGCTGCTAAAGCGCATGC     24         TRUE Addgene sequencing primer reference"
   },
-  "frontplasmidsummary": {
-    "columns": [
-      "features",
-      "primers",
-      "displayed_sites"
-    ],
-    "rows": [
-      [
-        7,
-        6,
-        3
-      ]
-    ]
-  },
   "frontseqtable": {
     "columns": [
       "accver",
@@ -607,20 +593,6 @@
         "447",
         "1",
         "unknown"
-      ]
-    ]
-  },
-  "frontduetsummary": {
-    "columns": [
-      "features",
-      "primers",
-      "selected_site_rows"
-    ],
-    "rows": [
-      [
-        20,
-        5,
-        139
       ]
     ]
   },

@@ -3,7 +3,7 @@ The available physical space changed. Use [explicit-size preview and saving](out
 Check hidden-label diagnostics; do not infer missing input rows from absent text.
 
 ## How do I find supported parameters? {#removed}
-Use the [function reference](reference.html) to check argument meanings and defaults. Put mappings in `aes()`, fixed styles on the layer, and colour rules in `scale_*()`; see [plotting concepts](modes.html). Functions accept both `colour` and `color` spellings; examples use `colour`.
+Use the [function reference](reference/index.html) to check argument meanings and defaults. Put mappings in `aes()`, fixed styles on the layer, and colour rules in `scale_*()`; see [plotting concepts](modes.html). Functions accept both `colour` and `color` spellings; examples use `colour`.
 
 ## Why is a feature rejected as a gene? {#strand}
 The gene shortcut requires known `+`/`-` strand. Keep unknown strand in a general

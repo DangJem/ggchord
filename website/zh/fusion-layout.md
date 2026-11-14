@@ -82,3 +82,11 @@ Guide。这是有界物理空间搜索，不声称全局最优。
 重叠模式下半透明连接重复叠画；源表、已选区间及颜色映射保持不变。
 
 普通子图边距不会充当组合连接的遮罩。显式重叠模式下，连接在前景下方穿过完整容器，后层容器仍按声明顺序覆盖。需要为标注留空时使用实测 `route = "avoid"`，不依赖意外的边距断带。
+
+## 综合组合：全局视图与局部放大 {#flagship}
+
+四个独立有效图共用真实来源；`box` 只决定物理分配，`focus_ggchord_data()` 显式准备局部窗口。跨面板连带重用源 HSP，所有参与层声明允许重复显示。
+
+{{code:flagshipdata,fusionoverview,flagshipfusion}}
+
+{{manualfigure:flagfusion}}

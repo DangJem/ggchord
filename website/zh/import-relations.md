@@ -18,7 +18,7 @@ VCF 需要可选 **VariantAnnotation**，显式结构变异解码另外需要 **
 
 ## 基因组对齐块：MAF 与 chain {#genome-alignments}
 
-使用已有 Python 环境，其中须安装支持 MAF/chain 的可选 **Biopython Bio.Align**，已直接验证 1.85。课程可通过 `ALIGNMENT_PYTHON` 选择该解释器。源码 checkout/输入包须包含 `examples/genome-alignments/`；两个未改动的固定上游版本文件有哈希、许可归属及验证脚本，不运行 aligner。可选解析器不可用意味着跳过示例，不是成功导入。
+使用已有 Python 环境，其中须安装支持 MAF/chain 的可选 **Biopython Bio.Align**，已直接验证 1.85。章节可通过 `ALIGNMENT_PYTHON` 选择该解释器。源码 checkout/输入包须包含 `examples/genome-alignments/`；两个未改动的固定上游版本文件有哈希、许可归属及验证脚本，不运行 aligner。可选解析器不可用意味着跳过示例，不是成功导入。
 
 {{code:courseblockbb}}
 
@@ -30,7 +30,7 @@ Chain 示例显式选择源块 1，即有来源的 NR_046654.1/chr3 关系；上
 
 ## 已有 delta 比对 {#delta}
 
-`read_delta()` 需要已有 **show-coords** 程序；本课程可通过 `DELTA_DECODER` 选择其可执行文件。读取的是已有 NUCMER/PROMER 结果，不调用 aligner，也不打开序言中的历史 FASTA 路径。未改动的上游 Drosophila 示例、固定版本、原始许可及哈希保留在 `examples/genome-alignments/`。程序缺失时跳过可选示例，不代表成功解码。
+`read_delta()` 需要已有 **show-coords** 程序；本章节可通过 `DELTA_DECODER` 选择其可执行文件。读取的是已有 NUCMER/PROMER 结果，不调用 aligner，也不打开序言中的历史 FASTA 路径。未改动的上游 Drosophila 示例、固定版本、原始许可及哈希保留在 `examples/genome-alignments/`。程序缺失时跳过可选示例，不代表成功解码。
 
 {{code:courseblockbc}}
 

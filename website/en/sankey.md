@@ -27,4 +27,4 @@ shared branches in this first version.
 
 Each of two sources appears once on each side. Do not duplicate seq_data to manufacture observations. Reciprocal records stay distinct. self_links = TRUE enables existing self records without creating any. seq_order contains each source once; between and shared branches are unsupported.
 
-Exercise: trace both ends of one ribbon back to query and subject and explain why total widths need not be conserved.
+Example: trace both ends of one ribbon back to query and subject and explain why total widths need not be conserved.

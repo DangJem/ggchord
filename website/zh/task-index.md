@@ -1,3 +1,3 @@
-## 学习总览 {#moved}
+## 功能索引 {#moved}
 
-[Tasks](learn.html#tasks)
+[Tasks](reference/index.html)

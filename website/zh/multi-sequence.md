@@ -1,18 +1,24 @@
-## 任务与结果 {#task}
+## 同一数据，四种视图 {#task}
 
-同一份来源表，选择 Chord、Collinear、Radial 或 Sankey；共同图层可以复用，默认关系选择与专属几何各有区别。
+完整序列长度、真实 CDS 和已观测 HSP 可以共用四种关系坐标。旗舰对照保持相同数据、图层和映射，只替换 Coord；显式显示全对关系，避免相邻行默认筛选改变比较范围。
 
-{{figure:viewradial}}
+{{manualfigure:flagchord}}
 
-## 学习路线 {#path}
+## 共用输入与图层 {#path}
 
-- [绘制序列骨架](multi-sequence-start.html)
-- [绘制共线性骨架](multi-sequence-views.html)
-- [HSP点阵图与径向共线性](radial-synteny.html)
-- [来源实例、轨道与新视图](sankey.html)
-- [四序列综合案例](chord.html)
-- [四基因组共线性案例](collinear.html)
+[数据与图层](multi-sequence-start.html) · [四视图对照](multi-sequence-views.html) · [显示规则](multi-sequence-layout.html) · [连接](multi-sequence-links.html) · [标签](multi-sequence-labels.html)
 
-## 输入与边界 {#inputs}
+## Chord：弧形关系 {#chord}
+弧形骨架、半径、曲率和区间连接路由。[几何设置](chord-geometry.html) · [综合实例](chord.html)。
 
-需要来源 ID、完整长度和所用图层的标准表；原生 bp/aa 单位保持一致。先核对[数据契约](data.html)与[兼容范围](compatibility.html)。
+## Collinear：顺序与对齐 {#collinear}
+横行或竖列排列、锚点、显示方向和局部窗口。[排列设置](collinear-layout.html) · [综合实例](collinear.html)。
+
+## Radial：径向共线性 {#radial}
+辐条序列、起始角度和角向排列。[径向设置与显示实例](radial-synteny.html)。
+
+## Sankey：双列区间关系 {#sankey}
+镜像 query/subject 列、列间距和重复显示实例。[双列设置](sankey.html)。
+
+## 输入契约 {#inputs}
+完整来源长度、标识和单位独立于显示几何。生物学链来自注释，切换坐标不会重写它。[数据契约](data.html) · [兼容范围](compatibility.html)。

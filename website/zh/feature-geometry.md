@@ -60,10 +60,10 @@
 
 `geom_feature_plasmid()` 是具有不同默认宽度、头部尺寸和 Position 的预设。比较它与 gene 时若同时改变多个默认值，就不是单参数实验。分段注释的边界线用于标识分段，不表示不同基因。
 
-## 模式、练习和下一步 {#adapt}
+## 模式、操作示例和下一步 {#adapt}
 
 基因箭头可用于弦图、共线性图和单序列圆图的 bp 数据；蛋白 aa 区间用通用特征。局部窗口与显示翻转不改写原始链，见[兼容边界](compatibility.html)。
 
 先只将共同头部宽度从 1.6 改回 1，比较肩部是否还明显；再仅改变 `width`，观察箭身与骨架的相对宽度。按相同设备尺寸比较，不调整源区间来改善外观。
 
-继续学习[特征堆叠](annotations.html#stack)、[标签](labels.html)，或将同一 CDS 加入[四基因组案例](collinear.html)。完整接口见 [`geom_gene()`](reference/geom_gene.html)、[`geom_feature()`](reference/geom_feature.html)。
+相关功能[特征堆叠](annotations.html#stack)、[标签](labels.html)，或将同一 CDS 加入[四基因组案例](collinear.html)。完整接口见 [`geom_gene()`](reference/geom_gene.html)、[`geom_feature()`](reference/geom_feature.html)。

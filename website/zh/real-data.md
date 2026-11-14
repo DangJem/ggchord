@@ -5,10 +5,10 @@
 
 本案例以原始文件为起点，回答四条源基因组的已观测相似区间和 CDS 如何组合成全长比较。FASTA/GFF3 标识及来源对应[四序列案例](chord.html#question)。BLAST 标准表由保留原值的原始输出转换，转换规则和输入行来源在 examples/blastn-standard/provenance.csv 中。
 
-包代码使用 MIT 许可；原始数据库记录及第三方参考目录的权利和使用条件按各来源保留，不把包许可自动套到所有输入。教学输入包提供未改写文件、SHA256 和来源说明。格式专题的 EMALE 记录另保留 gggenomes MIT 来源许可，见输入包中的 GGGENOMES-LICENSE.txt。
+包代码使用 MIT 许可；原始数据库记录及第三方参考目录的权利和使用条件按各来源保留，不把包许可自动套到所有输入。说明输入包提供未改写文件、SHA256 和来源说明。格式专题的 EMALE 记录另保留 gggenomes MIT 来源许可，见输入包中的 GGGENOMES-LICENSE.txt。
 
 ## 本页准备 {#prepare}
-解压[教学输入](../assets/tutorial-inputs.zip)，使工作目录包含 `examples/`。
+解压[说明输入](../assets/tutorial-inputs.zip)，使工作目录包含 `examples/`。
 
 ## 读取并检查原始记录 {#read}
 {{code:realimport}}
@@ -43,14 +43,14 @@ FASTA 提供序列 ID 和长度，GFF3 提供注释范围与链，BLAST 提供�
 按图集明确尺寸预览保存见[输出](output.html)。
 
 ## 随图保留证据 {#provenance}
-教学输入包包含 FASTA、GFF3、BLAST 表格、SHA256 清单和共享示例脚本。
+说明输入包包含 FASTA、GFF3、BLAST 表格、SHA256 清单和共享示例脚本。
 绘图清单记录代码 hash、PNG 设备、宽高和 dpi。accession 名称标识来源记录，
 图片不替代原始注释或比对证据。
 
 ## 先选列，再传入函数 {#minimal-fields}
-骨架使用 `accver` 与 `length`，连接使用两端 ID 和端点。这个例子还用 `pident` 和 `length` 筛选连接。参见[比对输入教程](alignments.html)。
+骨架使用 `accver` 与 `length`，连接使用两端 ID 和端点。这个例子还用 `pident` 和 `length` 筛选连接。参见[比对输入说明](alignments.html)。
 
-## 完成后检查 {#check-result}
+## 检查要点 {#check-result}
 检查序列 ID 在三张表中一致，查看筛选报告，再确认图例表达相似度与链方向。全长概览用于定位；若要研究具体 CDS，请继续聚焦邻域。
 
 <div class="next-step">继续：<a href="homology.html">连接同源基因 →</a></div>

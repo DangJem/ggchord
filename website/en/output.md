@@ -21,5 +21,5 @@ The website, README and vignettes share PNG previews generated with
 interactively resized panel. Use your intended PDF/SVG device explicitly for
 final vector output; font availability and embedding remain device-dependent.
 
-## Check your result {#check-result}
+## Result checks {#check-result}
 Use matching dimensions for preview and saving. Inspect text, guides and warnings; a successful measurement does not certify fonts or release quality across devices.

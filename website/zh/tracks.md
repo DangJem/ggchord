@@ -66,9 +66,9 @@
 {{code:comparetrackthin}}
 {{figure:comparetrackthin}}
 
-颜色仍表示同一批 GC 比例，变窄的是物理带宽。`geom_track_tile()` 负责区间色块，Position 负责带宽；它们不改变窗口里的碱基组成。把 4 改为 6 mm 练习一次，保留同一导出尺寸。柱图的数值高度另由 `track_value` 和 value scale 控制，不能用缩窄带宽代替数值归一化。
+颜色仍表示同一批 GC 比例，变窄的是物理带宽。`geom_track_tile()` 负责区间色块，Position 负责带宽；它们不改变窗口里的碱基组成。把 4 改为 6 mm 操作示例一次，保留同一导出尺寸。柱图的数值高度另由 `track_value` 和 value scale 控制，不能用缩窄带宽代替数值归一化。
 
-## 完成后检查 {#check-result}
+## 检查要点 {#check-result}
 bins 的 gc 在 0–1 之间，每行对应一个实际窗口；最后窗口可短于 100 bp。柱高与折线共用 0–1 的比例尺度。
 
 ## 保存本页结果 {#save-result}

@@ -25,7 +25,7 @@
 
 点与区间连接的几何选择见[连接课](multi-sequence-links.html#interval-points)。
 
-## 完成后检查 {#check-result}
+## 检查要点 {#check-result}
 先检查各步骤 report 和成员行，再读图。聚合带的范围不是新比对；点连接是已有 HSP 中点的摘要。
 
 <div class="next-step">继续：<a href="views.html">查看局部和分段区域 →</a></div>
@@ -77,6 +77,6 @@ stat_ribbon_bundle 在相同箱和分组内生成汇总带，min_bundle 至少�
 
 
 
-## 用自己的比对与练习 {#statistics-adapt}
+## 用自己的比对与操作示例 {#statistics-adapt}
 
 把 bins 改为 6，观察相同位置的颜色是否变化，再检查原始行是否都还保留。需要按实验或样本分开时，在源表保留真实条件列并传 group_by。连接统计用于弦图或共线性图；单序列圆图不支持连接层。继续[比对处理](ribbons.html)、[真实案例](real-data.html)和[标度家族](scale-families.html)。

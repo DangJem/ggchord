@@ -13,7 +13,7 @@
     "module": "start",
     "prerequisites": [],
     "next_steps": [
-      "learn"
+      "installation"
     ],
     "apis": [],
     "recipe_ids": [],
@@ -29,13 +29,13 @@
     "slug": "installation",
     "title": {
       "zh": "下载与安装",
-      "en": "Download and install"
+      "en": "Download and installation"
     },
     "group": "start",
     "id": "installation",
     "kind": "tutorial",
     "canonical_path": "installation.html",
-    "parent": "learn",
+    "parent": "installation",
     "module": "start",
     "prerequisites": [],
     "next_steps": [],
@@ -55,7 +55,7 @@
     "id": "modes",
     "kind": "tutorial",
     "canonical_path": "modes.html",
-    "parent": "learn",
+    "parent": "installation",
     "module": "start",
     "prerequisites": [],
     "next_steps": [],
@@ -191,8 +191,8 @@
   {
     "slug": "chord-geometry",
     "title": {
-      "zh": "逐条调整骨架",
-      "en": "Adjust individual backbones"
+      "zh": "Chord：弧形骨架与几何",
+      "en": "Chord: backbone geometry"
     },
     "group": "article",
     "id": "chord-geometry",
@@ -395,8 +395,8 @@
   {
     "slug": "chord",
     "title": {
-      "zh": "四序列综合案例",
-      "en": "Four-sequence case study"
+      "zh": "Chord 综合实例",
+      "en": "Chord example"
     },
     "group": "article",
     "id": "chord",
@@ -582,8 +582,8 @@
   {
     "slug": "homology",
     "title": {
-      "zh": "比较有证据的 CDS 邻域",
-      "en": "Compare source-backed CDS neighbourhoods"
+      "zh": "CDS 同源邻域比较",
+      "en": "CDS neighbourhood comparison"
     },
     "group": "article",
     "id": "homology",
@@ -695,8 +695,8 @@
   {
     "slug": "collinear",
     "title": {
-      "zh": "四基因组共线性案例",
-      "en": "Four-genome collinear case study"
+      "zh": "Collinear 综合实例",
+      "en": "Collinear example"
     },
     "group": "article",
     "id": "collinear",
@@ -898,8 +898,8 @@
   {
     "slug": "plasmid-catalog",
     "title": {
-      "zh": "13 个质粒参考案例",
-      "en": "Thirteen plasmid reference maps"
+      "zh": "13 个质粒完整参考图",
+      "en": "13 complete plasmid reference maps"
     },
     "group": "article",
     "id": "plasmid-catalog",
@@ -911,43 +911,36 @@
     "next_steps": [],
     "apis": [
       "library",
-      "make_catalog_plot",
-      "find_common_features",
-      "view_ggchord",
-      "theme",
-      "element_text",
-      "unit",
-      "margin",
-      "guide_ggchord_legend",
-      "list",
-      "c",
-      "guide_coloursteps",
-      "theme_ggchord_publication",
-      "element_rect",
-      "element_blank",
       "function",
-      "scale_seq_position_continuous",
-      "format",
+      "find_common_features",
+      "find_restriction_sites",
+      "attr",
+      "filter_restriction_sites",
+      "if",
+      "nrow",
+      "find_primer_bindings",
       "position_feature_stack",
       "position_plasmid",
-      "find_restriction_sites",
-      "vapply",
-      "which.min",
-      "abs",
-      "integer",
-      "unique",
       "ggchord",
-      "select",
+      "c",
       "geom_seq",
       "geom_feature_plasmid",
       "geom_feature_label_repel",
-      "geom_restriction_site",
       "geom_seq_center_label",
       "coord_circular",
-      "theme_ggchord_plasmid"
+      "theme_ggchord_plasmid",
+      "geom_restriction_site",
+      "geom_primer",
+      "geom_primer_label_repel",
+      "theme",
+      "element_rect",
+      "list",
+      "make_reference_map",
+      "view_ggchord"
     ],
     "recipe_ids": [
       "courseblockg",
+      "referencebuilder",
       "courseblockh",
       "courseblocki",
       "courseblockj",
@@ -960,9 +953,7 @@
       "courseblockq",
       "courseblockr",
       "courseblocks",
-      "courseblockt",
-      "docstyle",
-      "catalogplots"
+      "courseblockt"
     ],
     "figure_ids": [
       "catalogpsb",
@@ -985,8 +976,8 @@
   {
     "slug": "plasmids",
     "title": {
-      "zh": "pUC19 与 pETDuet-1 完整案例",
-      "en": "Complete pUC19 and pETDuet-1 cases"
+      "zh": "pUC19：完整注释图",
+      "en": "pUC19: a complete annotated map"
     },
     "group": "article",
     "id": "plasmids",
@@ -1000,31 +991,34 @@
     ],
     "apis": [
       "library",
+      "function",
       "find_common_features",
-      "filter",
-      "find_primer_bindings",
       "find_restriction_sites",
+      "attr",
       "filter_restriction_sites",
-      "c",
-      "data.frame",
+      "if",
       "nrow",
+      "find_primer_bindings",
       "position_feature_stack",
       "position_plasmid",
       "ggchord",
+      "c",
       "geom_seq",
-      "geom_seq_center_label",
       "geom_feature_plasmid",
       "geom_feature_label_repel",
-      "geom_primer",
-      "geom_restriction_site",
+      "geom_seq_center_label",
       "coord_circular",
-      "ggsave"
+      "theme_ggchord_plasmid",
+      "geom_restriction_site",
+      "geom_primer",
+      "geom_primer_label_repel",
+      "theme",
+      "element_rect",
+      "list"
     ],
     "recipe_ids": [
-      "plasmidinput",
-      "frontplasmidsummary",
-      "plasmid",
-      "courseblocku"
+      "courseblockg",
+      "referencebuilder"
     ],
     "figure_ids": [
       "plasmid"
@@ -1042,7 +1036,7 @@
     "id": "data",
     "kind": "tutorial",
     "canonical_path": "data.html",
-    "parent": "learn",
+    "parent": "installation",
     "module": "start",
     "prerequisites": [],
     "next_steps": [],
@@ -1133,8 +1127,8 @@
   {
     "slug": "projection",
     "title": {
-      "zh": "将蛋白区间转换为基因组坐标",
-      "en": "Project protein intervals to genomic coordinates"
+      "zh": "蛋白—基因组坐标投影",
+      "en": "Protein-to-genome coordinate projection"
     },
     "group": "guide",
     "id": "projection",
@@ -1413,8 +1407,8 @@
   {
     "slug": "parameters",
     "title": {
-      "zh": "灵活参数配置",
-      "en": "Flexible parameter configuration"
+      "zh": "参数格式与逐序列配置",
+      "en": "Parameter formats and per-sequence settings"
     },
     "group": "article",
     "id": "parameters",
@@ -1626,8 +1620,8 @@
   {
     "slug": "about",
     "title": {
-      "zh": "网站信息与章节索引",
-      "en": "Site information and chapter index"
+      "zh": "项目信息与来源",
+      "en": "Project information and sources"
     },
     "group": "guide",
     "id": "about",
@@ -1646,8 +1640,8 @@
   {
     "slug": "protein-alignments",
     "title": {
-      "zh": "从 BLASTp 绘制蛋白比较图",
-      "en": "Protein comparisons from BLASTp"
+      "zh": "BLASTp 蛋白比较",
+      "en": "BLASTp protein comparisons"
     },
     "group": "guide",
     "id": "protein-alignments",
@@ -1697,8 +1691,8 @@
   {
     "slug": "collinear-layout",
     "title": {
-      "zh": "对齐、锚点与显示方向",
-      "en": "Alignment, anchors and display directions"
+      "zh": "Collinear：对齐与排列",
+      "en": "Collinear: alignment and ordering"
     },
     "group": "article",
     "id": "collinear-layout",
@@ -1751,7 +1745,7 @@
     "group": "guide",
     "id": "task-index",
     "kind": "alias",
-    "canonical_path": "learn.html",
+    "canonical_path": "installation.html",
     "parent": "about",
     "module": "information",
     "prerequisites": [],
@@ -1904,8 +1898,8 @@
   {
     "slug": "circular-labels",
     "title": {
-      "zh": "圆图固定标签与自动适配",
-      "en": "Fixed circular labels and automatic fitting"
+      "zh": "圆图标签与避让",
+      "en": "Circular labels and overlap handling"
     },
     "group": "article",
     "id": "circular-labels",
@@ -2077,8 +2071,8 @@
   {
     "slug": "scale-families",
     "title": {
-      "zh": "按角色选择标度、图例与主题",
-      "en": "Choose scales, guides and themes by role"
+      "zh": "标度、图例与主题",
+      "en": "Scales, guides and themes"
     },
     "group": "guide",
     "id": "scale-families",
@@ -2284,8 +2278,8 @@
   {
     "slug": "api-curriculum",
     "title": {
-      "en": "API teaching map",
-      "zh": "全部 API 教学映射"
+      "zh": "API 功能覆盖记录",
+      "en": "API coverage record"
     },
     "group": "reference",
     "id": "api-curriculum",
@@ -2366,14 +2360,14 @@
   {
     "slug": "fusion",
     "title": {
-      "en": "Real interval links across panels",
-      "zh": "真实区间跨面板组合"
+      "zh": "模块四 · 多视图组合",
+      "en": "Module IV · Multi-view composition"
     },
     "group": "article",
     "id": "fusion",
     "kind": "module",
     "canonical_path": "fusion.html",
-    "parent": "learn",
+    "parent": "installation",
     "module": "fusion",
     "prerequisites": [],
     "next_steps": [
@@ -2388,36 +2382,16 @@
     "aliases": []
   },
   {
-    "slug": "learn",
-    "title": {
-      "zh": "学习总览与任务查询",
-      "en": "Learning paths and tasks"
-    },
-    "group": "guide",
-    "id": "learn",
-    "kind": "index",
-    "canonical_path": "learn.html",
-    "parent": "index",
-    "module": "start",
-    "prerequisites": [],
-    "next_steps": [],
-    "apis": [],
-    "recipe_ids": [],
-    "figure_ids": [],
-    "translation_key": "learn",
-    "aliases": []
-  },
-  {
     "slug": "multi-sequence",
     "title": {
-      "zh": "多序列关系",
-      "en": "Multi-sequence relationships"
+      "zh": "模块一 · 多序列关系",
+      "en": "Module I · Multi-sequence relationships"
     },
     "group": "guide",
     "id": "multi-sequence",
     "kind": "module",
     "canonical_path": "multi-sequence.html",
-    "parent": "learn",
+    "parent": "installation",
     "module": "multi-sequence",
     "prerequisites": [],
     "next_steps": [
@@ -2434,14 +2408,14 @@
   {
     "slug": "circular",
     "title": {
-      "zh": "单序列圆图",
-      "en": "Single-sequence circular maps"
+      "zh": "模块二 · 单序列圆图",
+      "en": "Module II · Single-sequence circular maps"
     },
     "group": "guide",
     "id": "circular",
     "kind": "module",
     "canonical_path": "circular.html",
-    "parent": "learn",
+    "parent": "installation",
     "module": "circular",
     "prerequisites": [],
     "next_steps": [
@@ -2458,14 +2432,14 @@
   {
     "slug": "dotplot",
     "title": {
-      "zh": "HSP 点图",
-      "en": "HSP Dotplot"
+      "zh": "模块三 · HSP 点图",
+      "en": "Module III · HSP Dotplot"
     },
     "group": "guide",
     "id": "dotplot",
     "kind": "module",
     "canonical_path": "dotplot.html",
-    "parent": "learn",
+    "parent": "installation",
     "module": "dotplot",
     "prerequisites": [],
     "next_steps": [
@@ -2482,8 +2456,8 @@
   {
     "slug": "multi-sequence-start",
     "title": {
-      "zh": "第一张多序列关系图",
-      "en": "First multi-sequence relationship plot"
+      "zh": "共用数据与图层",
+      "en": "Shared data and layers"
     },
     "group": "article",
     "id": "multi-sequence-start",
@@ -2532,8 +2506,8 @@
   {
     "slug": "multi-sequence-views",
     "title": {
-      "zh": "同一数据选择四种视图",
-      "en": "Choose four views with the same data"
+      "zh": "旗舰图与视图转换",
+      "en": "Flagships and view conversion"
     },
     "group": "article",
     "id": "multi-sequence-views",
@@ -2548,35 +2522,95 @@
       "multi-sequence-layout"
     ],
     "apis": [
+      "setNames",
+      "c",
+      "theme",
+      "element_text",
+      "unit",
+      "margin",
+      "guide_ggchord_legend",
+      "list",
+      "guide_coloursteps",
+      "theme_ggchord_publication",
+      "element_rect",
+      "element_blank",
+      "function",
+      "scale_seq_position_continuous",
+      "format",
       "library",
+      "read_fasta_lengths",
       "select",
-      "mutate",
-      "paste0",
-      "row_number",
+      "read_gff3",
       "filter",
+      "read_blast",
       "group_by",
       "slice_max",
       "ungroup",
-      "transmute",
-      "ggchord",
-      "geom_seq",
-      "geom_seq_label",
-      "geom_link_ribbon",
-      "geom_feature",
-      "coord_chord",
-      "coord_collinear",
-      "coord_radial_synteny",
-      "coord_sankey",
-      "list",
-      "lapply",
-      "function",
-      "export_ggchord_layout",
-      "names",
+      "arrange",
+      "mutate",
+      "ntile",
+      "row_number",
+      "is.na",
+      "desc",
       "slice_head",
-      "c",
-      "aes"
+      "slice",
+      "n",
+      "bind_rows",
+      "distinct",
+      "optimize_ggchord_layout",
+      "transmute",
+      "pmin",
+      "pmax",
+      "semi_join",
+      "join_by",
+      "overlaps",
+      "left_join",
+      "if",
+      "first",
+      "coalesce",
+      "position_strand",
+      "ggchord",
+      "geom_link_ribbon",
+      "geom_seq",
+      "geom_gene",
+      "geom_gene_label_repel",
+      "geom_seq_label",
+      "scale_seq_colour_manual",
+      "scale_gene_fill_manual",
+      "guides",
+      "doc_axis",
+      "coord_chord",
+      "labs",
+      "match",
+      "abs",
+      "coord_collinear",
+      "get_chord_layout",
+      "map2",
+      "seq",
+      "min",
+      "max",
+      "mean",
+      "aes",
+      "nchar",
+      "geom_seq_scale",
+      "coord_radial_synteny",
+      "grepl",
+      "geom_gene_label",
+      "coord_sankey",
+      "paste0",
+      "geom_feature",
+      "lapply",
+      "export_ggchord_layout",
+      "names"
     ],
     "recipe_ids": [
+      "sequencepalette",
+      "docstyle",
+      "showcasedata",
+      "chordshowcasegenes",
+      "showcasechord",
+      "showcasecollinear",
+      "flagshipmulti",
       "radialdata",
       "coursecomparison",
       "coursecomparisonreport",
@@ -2598,8 +2632,8 @@
   {
     "slug": "sankey",
     "title": {
-      "zh": "镜像区间关系与 Sankey",
-      "en": "Mirrored interval relationships with Sankey"
+      "zh": "Sankey：双列区间关系",
+      "en": "Sankey: mirrored interval relationships"
     },
     "group": "article",
     "id": "sankey",
@@ -2646,8 +2680,8 @@
   {
     "slug": "radial-synteny",
     "title": {
-      "zh": "径向共线性与源位置反查",
-      "en": "Radial synteny and source-position mapping"
+      "zh": "Radial：径向共线性",
+      "en": "Radial: synteny spokes"
     },
     "group": "article",
     "id": "radial-synteny",
@@ -2706,8 +2740,8 @@
   {
     "slug": "instances",
     "title": {
-      "zh": "重复显示来源与实例路由",
-      "en": "Repeated source instances and routing"
+      "zh": "重复显示与实例选择",
+      "en": "Repeated displays and instance selection"
     },
     "group": "article",
     "id": "instances",
@@ -2753,8 +2787,8 @@
   {
     "slug": "multi-sequence-layout",
     "title": {
-      "zh": "排序、显示方向与比例",
-      "en": "Order, display direction and scale"
+      "zh": "坐标与显示规则",
+      "en": "Coordinates and display rules"
     },
     "group": "article",
     "id": "multi-sequence-layout",
@@ -2870,8 +2904,8 @@
   {
     "slug": "multi-sequence-labels",
     "title": {
-      "zh": "多序列名字与特征标签",
-      "en": "Multi-sequence names and feature labels"
+      "zh": "序列名与特征标签",
+      "en": "Sequence names and feature labels"
     },
     "group": "article",
     "id": "multi-sequence-labels",
@@ -2927,8 +2961,8 @@
   {
     "slug": "circular-start",
     "title": {
-      "zh": "第一张单序列圆图",
-      "en": "First single-sequence circular map"
+      "zh": "圆形骨架与已有注释",
+      "en": "Circular backbone and annotations"
     },
     "group": "article",
     "id": "circular-start",
@@ -2965,8 +2999,8 @@
   {
     "slug": "circular-data",
     "title": {
-      "zh": "圆图长度、注释与可选 DNA",
-      "en": "Circular lengths, annotations and optional DNA"
+      "zh": "圆图数据准备",
+      "en": "Circular data preparation"
     },
     "group": "article",
     "id": "circular-data",
@@ -3061,8 +3095,8 @@
   {
     "slug": "circular-features",
     "title": {
-      "zh": "圆图注释、形状与重叠",
-      "en": "Circular features, shapes and overlap"
+      "zh": "特征、引物与限制位点",
+      "en": "Features, primers and restriction sites"
     },
     "group": "article",
     "id": "circular-features",
@@ -3114,8 +3148,8 @@
   {
     "slug": "circular-dense-case",
     "title": {
-      "zh": "密集单序列注释案例",
-      "en": "Dense single-sequence annotation case"
+      "zh": "pETDuet-1：密集注释布局",
+      "en": "pETDuet-1: dense annotations"
     },
     "group": "article",
     "id": "circular-dense-case",
@@ -3128,49 +3162,35 @@
       "plasmid-catalog"
     ],
     "apis": [
-      "data.frame",
+      "library",
+      "function",
+      "find_common_features",
+      "find_restriction_sites",
+      "attr",
+      "filter_restriction_sites",
+      "if",
       "nrow",
+      "find_primer_bindings",
       "position_feature_stack",
       "position_plasmid",
       "ggchord",
+      "c",
       "geom_seq",
       "geom_feature_plasmid",
       "geom_feature_label_repel",
-      "geom_primer",
-      "geom_primer_label_repel",
-      "geom_restriction_site",
       "geom_seq_center_label",
       "coord_circular",
       "theme_ggchord_plasmid",
+      "geom_restriction_site",
+      "geom_primer",
+      "geom_primer_label_repel",
       "theme",
-      "element_text",
-      "unit",
       "element_rect",
-      "element_blank",
-      "ggsave",
-      "margin",
-      "guide_ggchord_legend",
-      "list",
-      "c",
-      "guide_coloursteps",
-      "theme_ggchord_publication",
-      "function",
-      "scale_seq_position_continuous",
-      "format",
-      "library",
-      "data",
-      "select",
-      "find_common_features",
-      "find_primer_bindings",
-      "find_restriction_sites",
-      "filter_restriction_sites"
+      "list"
     ],
     "recipe_ids": [
-      "frontduetsummary",
-      "showcaseplasmid",
-      "courseblockal",
-      "docstyle",
-      "showcaseplasmiddata"
+      "courseblockg",
+      "referencebuilder"
     ],
     "figure_ids": [
       "showcaseplasmid"
@@ -3181,8 +3201,8 @@
   {
     "slug": "dotplot-start",
     "title": {
-      "zh": "从已有 HSP 读取双轴点图",
-      "en": "Read a two-axis Dotplot from existing HSPs"
+      "zh": "HSP 双轴、方向与映射",
+      "en": "HSP axes, orientation and mapping"
     },
     "group": "article",
     "id": "dotplot-start",
@@ -3194,17 +3214,39 @@
     "next_steps": [],
     "apis": [
       "library",
-      "read_paf",
-      "bind_rows",
+      "read_fasta_lengths",
+      "select",
+      "read_blast",
+      "mutate",
+      "paste0",
+      "row_number",
+      "read_gff3",
+      "filter",
       "transmute",
-      "distinct",
+      "pmin",
+      "c",
+      "theme_ggchord_publication",
+      "theme",
+      "element_rect",
+      "element_text",
+      "margin",
       "ggchord",
       "geom_alignment_segment",
       "aes",
+      "scale_link_linewidth_continuous",
+      "length",
       "coord_dotplot",
+      "labs",
+      "position",
+      "element_line",
+      "read_paf",
+      "bind_rows",
+      "distinct",
       "export_ggchord_layout"
     ],
     "recipe_ids": [
+      "flagshipdata",
+      "flagshipdot",
       "courseblockam",
       "dotplotdata",
       "dotplotview",
@@ -3334,8 +3376,8 @@
   {
     "slug": "aligned-sequences",
     "title": {
-      "zh": "真实字符、对齐列与源位置",
-      "en": "Characters, alignment columns and source positions"
+      "zh": "对齐字符与来源坐标",
+      "en": "Aligned characters and source coordinates"
     },
     "group": "article",
     "id": "aligned-sequences",
@@ -3390,8 +3432,8 @@
   {
     "slug": "import-signals",
     "title": {
-      "zh": "连续信号与可选覆盖桥接",
-      "en": "Continuous signals and optional coverage bridges"
+      "zh": "信号与覆盖数据",
+      "en": "Signals and coverage data"
     },
     "group": "article",
     "id": "import-signals",
@@ -3449,8 +3491,8 @@
   {
     "slug": "import-relations",
     "title": {
-      "zh": "已有关系、变异与注释适配",
-      "en": "Existing relationships, variants and annotations"
+      "zh": "关系、变异与注释输入",
+      "en": "Relationships, variants and annotations"
     },
     "group": "article",
     "id": "import-relations",
@@ -3519,8 +3561,8 @@
   {
     "slug": "tracks-statistics",
     "title": {
-      "zh": "轨道统计、窗口与独立数值域",
-      "en": "Track statistics, windows and independent domains"
+      "zh": "计数、分箱与轨道统计",
+      "en": "Counts, bins and track statistics"
     },
     "group": "article",
     "id": "tracks-statistics",
@@ -3592,8 +3634,8 @@
   {
     "slug": "diagnostics",
     "title": {
-      "zh": "来源几何与排版诊断",
-      "en": "Source geometry and layout diagnostics"
+      "zh": "数据与布局诊断",
+      "en": "Data and layout diagnostics"
     },
     "group": "article",
     "id": "diagnostics",
@@ -3636,8 +3678,8 @@
   {
     "slug": "workflows",
     "title": {
-      "zh": "按任务选择数据工作流",
-      "en": "Choose a data workflow by task"
+      "zh": "数据处理流程",
+      "en": "Data workflows"
     },
     "group": "article",
     "id": "workflows",
@@ -3656,8 +3698,8 @@
   {
     "slug": "fusion-routing",
     "title": {
-      "zh": "来源、实例与实测路线",
-      "en": "Sources, instances and measured routes"
+      "zh": "跨面板连接与路由",
+      "en": "Cross-panel links and routing"
     },
     "group": "article",
     "id": "fusion-routing",
@@ -3722,8 +3764,8 @@
   {
     "slug": "fusion-layout",
     "title": {
-      "zh": "安排面板、图例与外层装饰",
-      "en": "Arrange panels, guides and outer decoration"
+      "zh": "面板位置、尺寸与图例",
+      "en": "Panel placement, size and guides"
     },
     "group": "article",
     "id": "fusion-layout",
@@ -3773,7 +3815,21 @@
       "theme",
       "element_text",
       "margin",
-      "element_rect"
+      "element_rect",
+      "read_fasta_lengths",
+      "read_blast",
+      "mutate",
+      "paste0",
+      "row_number",
+      "read_gff3",
+      "pmin",
+      "theme_ggchord_publication",
+      "position_strand",
+      "geom_gene",
+      "scale_gene_fill_manual",
+      "coord_radial_synteny",
+      "pmax",
+      "focus_ggchord_data"
     ],
     "recipe_ids": [
       "courseblockbm",
@@ -3785,7 +3841,10 @@
       "courseblockbn",
       "courseblockbo",
       "courseblockbp",
-      "courseblockbq"
+      "courseblockbq",
+      "flagshipdata",
+      "fusionoverview",
+      "flagshipfusion"
     ],
     "figure_ids": [],
     "translation_key": "fusion-layout",
@@ -3794,8 +3853,8 @@
   {
     "slug": "fusion-details",
     "title": {
-      "zh": "按来源重建局部与字符细节",
-      "en": "Rebuild local and character details from sources"
+      "zh": "局部放大与字符细节",
+      "en": "Local magnification and character details"
     },
     "group": "article",
     "id": "fusion-details",
@@ -3883,8 +3942,8 @@
   {
     "slug": "fusion-advanced",
     "title": {
-      "zh": "嵌套与跨原点食谱",
-      "en": "Nested and origin-crossing recipes"
+      "zh": "嵌套组合与跨原点放大",
+      "en": "Nested composition and origin-crossing zoom"
     },
     "group": "article",
     "id": "fusion-advanced",
@@ -3943,8 +4002,8 @@
   {
     "slug": "fusion-start",
     "title": {
-      "zh": "两张独立图的一条真实连接",
-      "en": "One real link between independent plots"
+      "zh": "组合面板与真实区间连接",
+      "en": "Panels and source-interval connections"
     },
     "group": "article",
     "id": "fusion-start",

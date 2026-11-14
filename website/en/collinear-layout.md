@@ -2,7 +2,7 @@
 
 {{prepare:frontlinks}}
 
-Start with [your first collinear plot](multi-sequence-start.html#collinear), then compare alignment, anchors and orientation on the same real input. No chord lessons are required.
+Start with [your first collinear plot](multi-sequence-start.html#collinear), then compare alignment, anchors and orientation on the same real input. No chord sections are required.
 
 ## Input and default left alignment {#baseline}
 

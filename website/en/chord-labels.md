@@ -1,3 +1,3 @@
-## Lesson moved {#moved}
+## Section moved {#moved}
 
 [Multi-sequence names and feature labels](multi-sequence-labels.html#sequence-labels)

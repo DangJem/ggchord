@@ -47,7 +47,7 @@ General feature labels have additional internal-first/callout choices; see the
 [complete circular workflow](plasmids.html) for dense mixed annotation and
 [stacking](annotations.html#stack) for inherited or explicit Position anchors.
 
-## Check your result {#check-result}
+## Result checks {#check-result}
 The three layout comparisons share the same input. Assess text direction, leaders and hiding reasons together; missing text does not mean a feature was lost.
 
 <div class="next-step">Continue: <a href="output.html">Export, preview and diagnostics →</a></div>

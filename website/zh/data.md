@@ -1,7 +1,7 @@
 <div class="task-intro"><p>把文件中的观测整理成绘图角色。先检查最小字段与坐标，再使用校验报告决定是否清理；不要为了出图猜测缺失的长度或方向。</p></div>
 
 ## 本页准备 {#prepare}
-先选出校验所需的列。运行文件示例前解压[教学输入](../assets/tutorial-inputs.zip)，使工作目录包含 `examples/`。
+先选出校验所需的列。运行文件示例前解压[说明输入](../assets/tutorial-inputs.zip)，使工作目录包含 `examples/`。
 
 {{prepare:setup}}
 
@@ -112,7 +112,7 @@
 
 `hierarchy$contigs` 汇总已声明归属，不拼接 contig，也不由 accession 前缀推断归属。
 不同样本重复局部 contig 名时须显式提供全局唯一标识。
-[文件格式与适配器](formats.html)说明格式及可选对象，[真实记录教程](real-data.html)
+[文件格式与适配器](formats.html)说明格式及可选对象，[真实记录说明](real-data.html)
 把这些报告带入完整绘图流程。
 
 ## 最小输入与蛋白比对 {#minimal}
@@ -123,7 +123,7 @@
 映射、筛选或统计中才需要。详见[标准 BLAST 与蛋白输入](alignments.html)和
 [按序列、按链设置参数](parameters.html)。
 
-## 完成后检查 {#check-result}
+## 检查要点 {#check-result}
 输入 ID 必须能匹配到完整序列表；原始记录与修复副本分开保存。反向比对端点递减可以合法，不能把所有警告都当作需要删除的数据。
 
 <div class="next-step">继续：<a href="formats.html">导入和转换数据 →</a></div>

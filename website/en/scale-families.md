@@ -72,7 +72,7 @@ Compute windows from actual pUC19 DNA. `track_value` controls height; track_fill
 
 `guide_ggchord_legend` manages discrete role guides and guide_ggchord_colourbar continuous colour bars. `show.legend` controls participation, guides chooses guides, and theme controls position/direction/appearance. Colour/color aliases are equivalent: guide_ggchord_colorbar, scale_seq_color_manual, scale_ribbon_color_manual, scale_link_color_manual and scale_link_color_gradientn correspond to colour versions. Do not add both synonymous scales expecting cumulative control.
 
-`after_stat` reads computed variables such as bundle_n in the next lesson; after_scale computes supported visual attributes after scaling. They come from ggplot2 and have distinct staged semantics even when their R objects compare equal. All ggplot2/grid reexports follow upstream help, with ownership explicit in the parameter atlas.
+`after_stat` reads computed variables such as bundle_n in the next section; after_scale computes supported visual attributes after scaling. They come from ggplot2 and have distinct staged semantics even when their R objects compare equal. All ggplot2/grid reexports follow upstream help, with ownership explicit in the parameter atlas.
 
 
 

@@ -72,7 +72,7 @@ Compare with the 10 mm band above. Keep the same 9 × 8 inch device, windows, co
 
 Colours still encode the same GC fractions. Only physical band width shrinks. The geom draws interval tiles and the Position controls band width; neither changes base composition. Try 6 mm while retaining export dimensions. Bar heights are separately controlled by `track_value` and its value scale; reducing band width is not numerical normalization.
 
-## Check your result {#check-result}
+## Result checks {#check-result}
 GC in bins lies between 0 and 1; each row is an actual window and the last may be shorter than 100 bp. Bars and line share the same 0–1 fraction scale.
 
 ## Save this result {#save-result}

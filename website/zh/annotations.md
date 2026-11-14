@@ -36,7 +36,7 @@
 的 `scale_seq_position_continuous()` 不同。普通 ggplot2 注释应使用
 [位置映射](views.html#mapping)，不能把 bp 直接当作笛卡尔 x/y。
 
-## 完成后检查 {#check-result}
+## 检查要点 {#check-result}
 先检查区间与链，再看形状与标签。未知链仍保留在通用注释中；堆叠改变显示位置，不改变原始基因组坐标。
 
 <div class="next-step">继续：<a href="labels.html">放置和调整标签 →</a></div>

@@ -40,6 +40,6 @@ Ribbon可用显式`pairs`或`adjacent_only=FALSE`选择非邻接关系；非邻�
 仅凭多条辐条共享的单个x值猜位置。focus/segment输入保留源原点；径向显示不将多个
 窗口拼为一条辐条。
 
-## 练习与支持边界 {#support}
+## 操作示例与支持边界 {#support}
 
 只改 start_angle 不改其他参数，核对源坐标及方向。N=1、shared branches、单圆专属层和多窗口拼接为一条辐条不支持；逆映射要给骨架上的 x/y。

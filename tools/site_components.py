@@ -49,3 +49,33 @@ def task_cards(lang):
     for slug,cn,en,views,fig,input_cn,input_en in specs:
         result+=f'<section class="task-card" data-module="{slug}"><a href="{slug}.html">'+responsive_image(fig,lang,css='module-preview')+f'<h3>{cn if zh else en}</h3></a><p>{views}</p><p class="minimum-input">'+(input_cn if zh else input_en)+f'</p><a href="{slug}.html">'+('进入模块' if zh else 'Explore module')+' →</a></section>'
     return result+'</div>'
+
+@lru_cache(maxsize=1)
+def manual_figures():
+    return {r['id']:r for r in json.loads((ROOT/'website/manual-figures.json').read_text())}
+
+def manual_figure(key,lang,base='../assets'):
+    r=manual_figures()[key];caption=html.escape(r['caption'][lang])
+    target=base+'/'+key+'.png'
+    return (f'<figure class="documentation-figure" data-figure="{key}"><a class="figure-link" href="{target}" data-code-url="{r["page"]}">'
+      f'<img src="{target}" alt="{caption}" width="{round(r["width"]*r["dpi"])}" height="{round(r["height"]*r["dpi"])}" loading="lazy" decoding="async"></a>'
+      f'<figcaption>{caption} · <a href="{base}/site-flagships.R">'+('完整 R 源码' if lang=='zh' else 'Complete R source')+'</a></figcaption></figure>')
+
+def manual_home(lang,base):
+    zh=lang=='zh'
+    def picture(key,label,target):
+        r=manual_figures()[key]
+        return (f'<a class="home-preview" href="{target}"><img src="{base}/{key}.png" alt="{html.escape(r["caption"][lang],quote=True)}" '
+          f'width="{round(r["width"]*r["dpi"])}" height="{round(r["height"]*r["dpi"])}" decoding="async"><span>{label}</span></a>')
+    four=''.join(picture(key,label,'multi-sequence-views.html#flagship-'+label.lower()) for key,label in [('flagchord','Chord'),('flaglinear','Collinear'),('flagradial','Radial'),('flagsankey','Sankey')])
+    panels=[('multi-sequence','I','多序列关系','Multi-sequence relationships',four,'home-four'),
+      ('circular','II','单序列圆图','Single-sequence circular maps',picture('flagcircular','Circular','circular.html'),''),
+      ('dotplot','III','HSP 点图','HSP Dotplot',picture('flagdotplot','Dotplot','dotplot.html'),''),
+      ('fusion','IV','多视图组合','Multi-view composition',picture('flagfusion','Fusion','fusion.html'),'')]
+    cards=''.join(f'<section class="home-module"><h2><a href="{slug}.html"><span class="module-index">{number}</span> {cn if zh else en}</a></h2><div class="home-module-art {css}">{art}</div></section>' for slug,number,cn,en,art,css in panels)
+    logo=responsive_image('logo',lang,base,eager=True,css='manual-logo')
+    return ('<div class="home-shell"><section class="manual-brand">'+logo+'<h1>ggchord</h1><p class="manual-tagline">'+
+      ('序列、注释与关系。四个模块，一套语法。' if zh else 'Sequences, annotations and relationships. Four modules. One grammar.')+
+      '</p><div class="manual-actions"><a class="primary-action" href="installation.html">'+('下载与安装' if zh else 'Install')+'</a><a href="reference/index.html">API →</a></div><p class="home-contract">'+
+      ('多序列包含四种 Coord；Fusion 是独立视图的组合层。' if zh else 'Four relationship Coord types. Fusion combines independent views.')+
+      '</p></section><div class="home-capabilities">'+cards+'</div></div>')

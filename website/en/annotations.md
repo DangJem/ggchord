@@ -38,7 +38,7 @@ independent sequence-position reference bar for collinear plots; it differs from
 An ordinary ggplot2 annotation should use [position mapping](views.html#mapping)
 instead of treating bp as Cartesian x/y.
 
-## Check your result {#check-result}
+## Result checks {#check-result}
 Check intervals and strands before shapes and labels. Unknown strands remain in general features; stacking changes display placement, not genomic coordinates.
 
 <div class="next-step">Continue: <a href="labels.html">Labels and local placement →</a></div>

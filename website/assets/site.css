@@ -227,3 +227,65 @@ footer {border-top:1px solid var(--color-rule);padding:22px 0;color:var(--text-m
 .navbar .container > small.nav-text{display:none}
 .navbar li.nav-text .nav-link{font:.7rem/1.4 ui-monospace,monospace}
 @media(min-width:992px) and (max-width:1599px){.navbar li.nav-text{display:none}.search-trigger{width:44px;justify-content:center;padding:8px}.search-trigger .search-trigger-label,.search-trigger kbd{display:none}}
+/* Manual navigation: one aligned header, explicit wide menus, readable sidebars. */
+.navbar .container{align-items:center;column-gap:10px}
+.navbar .navbar-nav,.navbar-collapse{align-items:center}
+.navbar .navbar-brand{min-height:48px;margin-block:0;padding-block:0}
+.navbar .navbar-brand img{width:44px;height:44px}
+.navbar .nav-link{display:flex;align-items:center;min-height:48px;padding-block:8px;line-height:1.3}
+.navbar .container>small.nav-text,.navbar li.nav-text{display:none}
+.language-control summary{display:flex;align-items:center;min-height:48px;line-height:1.3}
+.search-trigger{height:44px;min-height:44px;width:44px;padding:8px;justify-content:center}
+.search-trigger .search-trigger-label,.search-trigger kbd{display:none}
+.navbar .dropdown-menu{width:max-content;min-width:24rem;max-width:min(36rem,calc(100vw - 40px));padding:8px}
+.navbar .dropdown-item{padding:11px 16px;line-height:1.45;white-space:normal;overflow-wrap:normal;word-break:normal}
+.chapter-nav,.page-nav{font-size:.96rem;line-height:1.55}
+.chapter-nav a,.chapter-nav summary,.page-nav a,.page-nav li,.chapter-drawer a{font-size:.96rem;line-height:1.55}
+.navigation-title,.chapter-nav .manual-section-title{font-size:.9rem;font-weight:750}
+.chapter-nav .manual-section-title{display:block;color:var(--text-strong);margin:22px 0 8px}
+.chapter-nav .chapter-number{display:inline-block;min-width:2.5em;color:var(--text-muted);font-variant-numeric:tabular-nums}
+.chapter-nav .module-home{font-size:1rem;font-weight:750;display:block;margin-bottom:16px}
+.chapter-nav .manual-section-pages{margin:0;padding-left:0;list-style:none}
+.chapter-nav .manual-section-pages a{display:block;padding:6px 4px;text-decoration:none}
+@media(min-width:1400px){.doc-layout{grid-template-columns:250px minmax(0,1fr) 200px;gap:28px}}
+/* Wide tables scroll locally. Row/column hierarchy stays quiet and consistent. */
+main .table-scroll{border:1px solid var(--color-rule);border-radius:8px;overflow-x:auto;margin:22px 0;background:var(--surface-paper)}
+main .table-scroll table{width:100%;margin:0;border-collapse:collapse;font-size:.9rem;line-height:1.6}
+main table thead th{padding:13px 16px;background:var(--surface-soft);color:var(--text-strong);font-weight:750;border-bottom:2px solid var(--color-rule);text-align:left;vertical-align:bottom}
+main table tbody td,main table tbody th{padding:12px 16px;border-bottom:1px solid var(--color-rule);vertical-align:top}
+main table tbody tr:nth-child(even){background:var(--surface-code)}
+main table tbody tr:last-child>*{border-bottom:0}
+main table tbody th,main table td:first-child{font-weight:550}
+main table td.numeric,main table th.numeric{text-align:right;font-variant-numeric:tabular-nums}
+main .wide-table{min-width:680px}
+main table td:first-child code{white-space:nowrap}
+main table code{font-size:.9em}
+/* The home is a compact capability map; short windows can still scroll safely. */
+body[data-page=index]{background:#FFFCF5}
+body[data-page=index] .doc-layout{margin-block:0;min-height:0}
+body[data-page=index] main{background:#FFFCF5;border:0;padding:18px 28px}
+.home-shell{display:grid;grid-template-columns:minmax(200px,25%) minmax(0,1fr);gap:32px;align-items:center;min-height:calc(100svh - 160px)}
+.manual-brand{text-align:center;align-self:center}
+.manual-logo{width:min(100%,300px);height:auto;display:block;margin:0 auto}
+.manual-brand h1{font-size:2.1rem;letter-spacing:-.05em;margin:0 0 12px}
+.manual-tagline{font-size:1.1rem;line-height:1.6;margin:10px 0 20px}
+.manual-actions{display:flex;align-items:center;justify-content:center;gap:20px;font-size:.9rem}
+.home-contract{font-size:.8rem;color:var(--text-muted);line-height:1.65;margin-top:20px}
+.home-capabilities{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px 24px}
+.home-module{min-width:0;border-bottom:1px solid #D7DED5;padding:8px 0 12px}
+.home-module h2{font-size:1.05rem;margin:0 0 10px;line-height:1.45}
+.home-module h2 a{text-decoration:none;color:var(--text-strong)}
+.module-index{color:var(--color-brand);font:700 .86rem ui-monospace,monospace;margin-right:7px}
+.home-module-art{height:clamp(150px,23svh,240px);min-width:0}
+.home-preview{display:grid;grid-template-rows:minmax(0,1fr) auto;height:100%;min-height:0;text-decoration:none;color:var(--text-muted);text-align:center}
+.home-preview img{width:100%;height:100%;min-height:0;object-fit:contain;background:#FFFCF5}
+.home-preview span{font:.72rem/1.4 ui-monospace,monospace;margin-top:3px}
+.home-four{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:repeat(2,minmax(0,1fr));gap:6px 10px}
+body[data-page=index] footer{padding:10px 0;margin:0;font-size:.72rem}
+@media(max-width:1050px){.home-shell{grid-template-columns:180px minmax(0,1fr);gap:22px}.manual-logo{width:180px}}
+@media(max-width:750px){.home-shell{grid-template-columns:1fr}.manual-logo{width:160px}.home-module-art{height:220px}.home-capabilities{grid-template-columns:1fr}}
+
+body[data-page=index] main{min-height:0}
+.home-shell{height:calc(100svh - 176px);min-height:560px}
+.manual-section-pages a[aria-current=page]{background:var(--surface-soft);border-left:3px solid var(--color-brand);font-weight:750}
+[data-bs-theme=dark] body[data-page=index],[data-bs-theme=dark] body[data-page=index] main{background:var(--surface-canvas)}

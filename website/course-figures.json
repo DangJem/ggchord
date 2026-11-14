@@ -134,7 +134,7 @@
       "zh": "长度与骨架",
       "en": "Length and backbone"
     },
-    "source": "Existing pUC19 origin row accver=pUC19, start=867, end=1455, type=rep_origin, anno=ori; matches the audited inspectorigin output and source annotation. No recognition is run in this lesson."
+    "source": "Existing pUC19 origin row accver=pUC19, start=867, end=1455, type=rep_origin, anno=ori; matches the audited inspectorigin output and source annotation. No recognition is run in this section."
   },
   {
     "id": "coursecirclefeature",
@@ -151,7 +151,7 @@
       "zh": "已有注释与名称",
       "en": "Prepared annotation and label"
     },
-    "source": "Existing pUC19 origin row accver=pUC19, start=867, end=1455, type=rep_origin, anno=ori; matches the audited inspectorigin output and source annotation. No recognition is run in this lesson."
+    "source": "Existing pUC19 origin row accver=pUC19, start=867, end=1455, type=rep_origin, anno=ori; matches the audited inspectorigin output and source annotation. No recognition is run in this section."
   },
   {
     "id": "coursefocusedview",

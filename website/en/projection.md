@@ -38,7 +38,7 @@ Real BLASTp HSPs may contain gaps: query spans can still be projected, but paire
 links need the subject CDS and justified ungapped correspondence. See
 [real BLASTp import/projection](protein-alignments.html#projection). Genomic plots use the projected bp coordinates.
 
-## Check your result {#check-result}
+## Result checks {#check-result}
 Check parent CDS IDs, projection reports and returned segments. The selected residue range is a display example, not a detected domain.
 
 <div class="next-step">Continue: <a href="alignments.html">Import nucleotide and protein alignments →</a></div>

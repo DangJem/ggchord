@@ -2,30 +2,12 @@
   {
     "id": "modes",
     "title": {
-      "en": "Three coordinate modes",
-      "zh": "三种坐标模式"
+      "zh": "四模块与六种坐标",
+      "en": "Four modules and six coordinates"
     },
-    "articles": [
-      "modes",
-      "chord-geometry",
-      "output",
-      "multi-sequence-start",
-      "multi-sequence-layout",
-      "multi-sequence-links",
-      "multi-sequence-labels",
-      "circular-layout",
-      "diagnostics"
-    ],
-    "snippets": [
-      "frontbackbone",
-      "frontlinearbase",
-      "firstcircle"
-    ],
-    "figures": [
-      "frontbackbone",
-      "frontlinearbase",
-      "firstcircle"
-    ],
+    "articles": [],
+    "snippets": [],
+    "figures": [],
     "result": null
   },
   {
@@ -56,15 +38,18 @@
       "zh": "完整圆图注释"
     },
     "articles": [
-      "plasmids"
+      "plasmid-catalog",
+      "plasmids",
+      "circular-dense-case"
     ],
     "snippets": [
-      "plasmid"
+      "referencebuilder"
     ],
     "figures": [
-      "plasmid"
+      "catalogpuc",
+      "catalogduet"
     ],
-    "result": "plasmid"
+    "result": null
   },
   {
     "id": "validation",
@@ -174,13 +159,11 @@
       "zh": "自动与固定标签"
     },
     "articles": [
-      "plasmids",
       "labels"
     ],
     "snippets": [
       "labellayouts",
-      "labels",
-      "plasmid"
+      "labels"
     ],
     "figures": [
       "labelauto",
@@ -239,15 +222,17 @@
     },
     "articles": [
       "recognition",
-      "plasmids"
+      "plasmid-catalog",
+      "plasmids",
+      "circular-dense-case"
     ],
     "snippets": [
       "recognition",
-      "plasmid"
+      "referencebuilder"
     ],
     "figures": [
-      "plasmid",
-      "recognition"
+      "recognition",
+      "catalogpuc"
     ],
     "result": null
   },

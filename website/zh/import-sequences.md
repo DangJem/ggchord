@@ -29,7 +29,7 @@
 
 显式 `python` 路径保留选定虚拟环境，包括解释器符号链接；不安装或改动环境。
 
-解压[教学输入包](../assets/tutorial-inputs.zip)，使工作目录包含 `examples/`。每次先读一种文件并检查返回的几行，再按序列 ID 对齐输入。
+解压[说明输入包](../assets/tutorial-inputs.zip)，使工作目录包含 `examples/`。每次先读一种文件并检查返回的几行，再按序列 ID 对齐输入。
 
 ## FASTA 长度与 GFF3 注释 {#files}
 

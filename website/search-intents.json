@@ -5,12 +5,12 @@
     ],
     "url": "sankey.html",
     "title": {
-      "zh": "镜像 Sankey 课程",
-      "en": "Mirrored Sankey lesson"
+      "zh": "镜像 Sankey 章节",
+      "en": "Mirrored Sankey section"
     },
     "summary": {
-      "zh": "按任务选择当前课程或精确参数；详见输入与支持边界。",
-      "en": "Choose the current lesson or exact parameter; inspect its input and support boundary."
+      "zh": "按任务选择当前章节或精确参数；详见输入与支持边界。",
+      "en": "Choose the current section or exact parameter; inspect its input and support boundary."
     }
   },
   {
@@ -21,12 +21,12 @@
     ],
     "url": "radial-synteny.html",
     "title": {
-      "zh": "径向共线性课程",
-      "en": "Radial synteny lesson"
+      "zh": "径向共线性章节",
+      "en": "Radial synteny section"
     },
     "summary": {
-      "zh": "按任务选择当前课程或精确参数；详见输入与支持边界。",
-      "en": "Choose the current lesson or exact parameter; inspect its input and support boundary."
+      "zh": "按任务选择当前章节或精确参数；详见输入与支持边界。",
+      "en": "Choose the current section or exact parameter; inspect its input and support boundary."
     }
   },
   {
@@ -40,8 +40,8 @@
       "en": "Read a Dotplot from HSPs"
     },
     "summary": {
-      "zh": "按任务选择当前课程或精确参数；详见输入与支持边界。",
-      "en": "Choose the current lesson or exact parameter; inspect its input and support boundary."
+      "zh": "按任务选择当前章节或精确参数；详见输入与支持边界。",
+      "en": "Choose the current section or exact parameter; inspect its input and support boundary."
     }
   },
   {
@@ -55,8 +55,8 @@
       "en": "Two-panel source-backed composition"
     },
     "summary": {
-      "zh": "按任务选择当前课程或精确参数；详见输入与支持边界。",
-      "en": "Choose the current lesson or exact parameter; inspect its input and support boundary."
+      "zh": "按任务选择当前章节或精确参数；详见输入与支持边界。",
+      "en": "Choose the current section or exact parameter; inspect its input and support boundary."
     }
   },
   {
@@ -70,8 +70,8 @@
       "en": "Use geom_track_col for supplied values"
     },
     "summary": {
-      "zh": "按任务选择当前课程或精确参数；详见输入与支持边界。",
-      "en": "Choose the current lesson or exact parameter; inspect its input and support boundary."
+      "zh": "按任务选择当前章节或精确参数；详见输入与支持边界。",
+      "en": "Choose the current section or exact parameter; inspect its input and support boundary."
     }
   },
   {
@@ -85,8 +85,8 @@
       "en": "Counts and supplied values: bar and col"
     },
     "summary": {
-      "zh": "按任务选择当前课程或精确参数；详见输入与支持边界。",
-      "en": "Choose the current lesson or exact parameter; inspect its input and support boundary."
+      "zh": "按任务选择当前章节或精确参数；详见输入与支持边界。",
+      "en": "Choose the current section or exact parameter; inspect its input and support boundary."
     }
   },
   {
@@ -100,8 +100,8 @@
       "en": "Save a plot at target size"
     },
     "summary": {
-      "zh": "按任务选择当前课程或精确参数；详见输入与支持边界。",
-      "en": "Choose the current lesson or exact parameter; inspect its input and support boundary."
+      "zh": "按任务选择当前章节或精确参数；详见输入与支持边界。",
+      "en": "Choose the current section or exact parameter; inspect its input and support boundary."
     }
   },
   {
@@ -115,8 +115,8 @@
       "en": "Inspect label layout and target size"
     },
     "summary": {
-      "zh": "按任务选择当前课程或精确参数；详见输入与支持边界。",
-      "en": "Choose the current lesson or exact parameter; inspect its input and support boundary."
+      "zh": "按任务选择当前章节或精确参数；详见输入与支持边界。",
+      "en": "Choose the current section or exact parameter; inspect its input and support boundary."
     }
   },
   {
@@ -129,8 +129,8 @@
       "en": "Unified feature_data inputs"
     },
     "summary": {
-      "zh": "按任务选择当前课程或精确参数；详见输入与支持边界。",
-      "en": "Choose the current lesson or exact parameter; inspect its input and support boundary."
+      "zh": "按任务选择当前章节或精确参数；详见输入与支持边界。",
+      "en": "Choose the current section or exact parameter; inspect its input and support boundary."
     }
   },
   {
@@ -143,8 +143,8 @@
       "en": "windows in segment_ggchord_data"
     },
     "summary": {
-      "zh": "按任务选择当前课程或精确参数；详见输入与支持边界。",
-      "en": "Choose the current lesson or exact parameter; inspect its input and support boundary."
+      "zh": "按任务选择当前章节或精确参数；详见输入与支持边界。",
+      "en": "Choose the current section or exact parameter; inspect its input and support boundary."
     }
   }
 ]

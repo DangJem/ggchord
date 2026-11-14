@@ -34,4 +34,4 @@ ggsave("fusion-first.png", p_coursefusion,
   width = 12, height = 8, units = "in", dpi = 144)
 ```
 
-练习：换成另一条真实 HSP，指出 qpanel/spanel 与源行。Dotplot、facet 和未注册外部图当前不支持。
+操作示例：换成另一条真实 HSP，指出 qpanel/spanel 与源行。Dotplot、facet 和未注册外部图当前不支持。

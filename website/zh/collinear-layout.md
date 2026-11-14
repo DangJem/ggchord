@@ -2,7 +2,7 @@
 
 {{prepare:frontlinks}}
 
-先学会[第一张共线性图](multi-sequence-start.html#collinear)，再用同一组真实输入观察对齐、锚点和方向。无需学习弦图。
+先学会[第一张共线性图](multi-sequence-start.html#collinear)，再用同一组真实输入观察对齐、锚点和方向。无需了解弦图。
 
 ## 输入与默认左对齐 {#baseline}
 
@@ -63,11 +63,11 @@
 
 这些设置属于 `coord_collinear()`，不传给其他坐标模式。分段时由窗口表掌管方向，详见[局部窗口](views.html#segments)。圆弧半径与曲率不能用于此模式。
 
-## 练习和自己的数据 {#adapt}
+## 操作示例和自己的数据 {#adapt}
 
 先只把 `align` 从 left 改成 right，观察短序列与最长序列的相对位置；再给每条序列选择一个有业务依据的锚点，解释为何可以比较。使用自己的 FASTA 长度和 BLAST/PAF 端点时先核对 ID、单位、完整长度及反向端点，见[数据导入](real-data.html#read)。
 
-没有连接时先查端点和相邻行筛选，见[跨行连接](multi-sequence-links.html#routes)。接下来学习[局部窗口与分段](views.html)，完整参数见 [`coord_collinear()`](reference/coord_collinear.html)。
+没有连接时先查端点和相邻行筛选，见[跨行连接](multi-sequence-links.html#routes)。接下来了解[局部窗口与分段](views.html)，完整参数见 [`coord_collinear()`](reference/coord_collinear.html)。
 
 ## 增加行距 {#gap}
 

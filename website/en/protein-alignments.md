@@ -30,7 +30,7 @@ Use generic layers such as `geom_feature()` for annotations at amino-acid positi
 
 ## Place protein hits on a nucleotide genome {#projection}
 
-To locate hits on a nucleotide backbone, supply known CDS mappings and project aa intervals to bp. This separate example uses a source HSP for BVI_023A_0009 with a complete CDS, then projects its query end. This subsection reads original files from the [tutorial input bundle](formats.html).
+To locate hits on a nucleotide backbone, supply known CDS mappings and project aa intervals to bp. This separate example uses a source HSP for BVI_023A_0009 with a complete CDS, then projects its query end. This subsection reads original files from the [manual input bundle](formats.html).
 
 ```r
 library(dplyr)
@@ -50,6 +50,6 @@ The bundled identifiers are BVI_029_0020, BVI_058_0011, E4-10_023_0015 and ADZ16
 
 The input bundle's `examples/protein/` directory retains complete FASTA records, raw BLASTp output and `sources.json` hashes. Rebuild rules are in `data-raw/prepare-bundled-proteins.py` and `data-raw/generate_protein_data.R`. Plotting uses bundled objects and does not require BLASTp.
 
-## Check your result {#check-result}
+## Result checks {#check-result}
 
 Check complete lengths, endpoints and units. Native protein plots use aa. Locating hits on a genome requires CDS projection to bp. Use `view_ggchord()` to inspect the target output size.

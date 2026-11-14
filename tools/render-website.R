@@ -23,9 +23,9 @@ if('zh' %in% languages && part!='articles') {
 for (lang in languages) {
   is_han <- lang == 'zh'
   Sys.setenv(LANGUAGE=if(is_han)'zh_CN' else 'en')
-  nav_names <- if(is_han) c('开始使用','绘图模块','通用技巧','数据与工作流','案例图库','API 参考') else
-    c('Get started','Plotting modules','Shared techniques','Data & workflows','Gallery','API reference')
-  keys <- c('start','plots','techniques','data','gallery','reference')
+  nav_names <- if(is_han) c('首页','开始使用','绘图模块','通用技巧','数据与工作流','案例图库','API 参考') else
+    c('Home','Get started','Plotting modules','Shared techniques','Data & workflows','Gallery','API reference')
+  keys <- c('home','start','plots','techniques','data','gallery','reference')
   components <- setNames(lapply(seq_along(keys),function(i) list(text=nav_names[i])),keys)
   # Every primary menu opens useful teaching directly; the project page remains
   # an auxiliary index rather than a required intermediate navigation step.
@@ -41,7 +41,8 @@ for (lang in languages) {
   data <- Filter(function(x) x$id == 'data', groups)[[1L]]
   components$techniques$menu <- page_menu(unlist(shared$pages))
   components$data$menu <- page_menu(unlist(data$pages))
-  components$start$href <- 'learn.html'
+  components$home$href <- 'index.html'
+  components$start$menu <- page_menu(c('installation','modes','data'))
   components$gallery$href <- 'gallery.html'
   components$reference$href <- 'reference/index.html'
   cfg <- list(destination=paste0('.site/',lang),lang=if(is_han)'zh_CN' else 'en',

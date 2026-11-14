@@ -1,15 +1,12 @@
-这 13 张图是可选参考图库，不是需要逐页完成的课程。先完成[基础圆图](circular-start.html#input)、[注释与标签](circular-layout.html#input)，再按自己的载体和拥挤程度检索。
+这些图保留各质粒的完整来源特征、独立参考引物和所声明酶集合的全部位点。没有等距抽取三个切点。每个图使用自己的完整序列、同一套标注图层和 10 × 8 in 尺寸；点击查看高清图。
 
-这 13 张图使用各自的仓库 FASTA 参考序列。载体用途用于选例，图中注释来自相应的参考序列。完整来源和长度由随包数据及生成规则保留。
-
-## 一次准备全部案例 {#prepare}
-共享脚本使用 dplyr 选择序列列。先运行 `library(dplyr)`。
+## 准备与完整显示规则 {#prepare}
 
 {{code:courseblockg}}
 
-{{recipe:catalog}}
+{{code:referencebuilder}}
 
-将脚本放入工作目录并运行，然后选一张图跟做。保留全部特征。名称先在圈内放置，放不下的可移到外圈。外圈单独标注最接近三个等距目标位置的实际酶切位点，显示酶名与位置。
+`reference$features`、`reference$primers`、`reference$sites` 是实际入图的完整表；`reference$all_sites` 保留原始匹配，`reference$policy` 说明使用的酶集合。特征几何不删减，位点集合不做固定数量抽样。
 
 ## 输入与识别结果 {#counts}
 {{plasmidcatalog}}
@@ -79,20 +76,14 @@
 
 {{figure:catalogcas}}
 
-## 下一步 {#next}
-比较不同密度后，进入[综合实战](circular-dense-case.html#complex)，添加独立引物与酶切图层。
+## 酶集合与来源边界 {#reference-selection}
 
-## 比较时注意 {#gallery-limits}
+保存的 reference profile 优先，父集合为 `commercial_nonredundant`。pETDuet-1 的源文件保存 None、原参考 PNG 却有位点，因此明确使用 `unique_6plus`，不声称恢复了原 PNG 的导出设置。该集合中的每一行均保留；“完整”指这套明确的集合，不等于把所有酶库中的全部候选同时排到图上。
 
-每图使用自己的完整 FASTA 和来源注释，不能把一个参考的特征或切点搬到不同 DNA。切点按三个均匀目标选择最近实际位置，是显示选择；不表示其他切点不存在。名称可能内置、外移或隐藏，全部特征几何仍保留。密集图需按标注尺寸查看，缩小截图后读不清不能据此修改源区间。
+独立引物取 `set = "reference"`。来源没有独立参考引物时计数为 0，不补造记录。具名子段保存在 `segments` 中，不是额外的顶层特征。相同位置的酶可共用标注，但原始记录仍在表中。
 
+## 按用途查看 {#next}
 
-## 与原参考图比较时的选择 {#reference-selection}
+[pUC19 完整图层说明](plasmids.html) · [pETDuet-1 密集布局](circular-dense-case.html) · [标签与尺寸](circular-labels.html)
 
-本页固定取3条位点用于简化展示，不能用位点数判断识别完整性。要保留原记录
-的酶集合选择，先对完整结果使用
-`filter_restriction_sites(sites, set = "reference", parent_set = "commercial_nonredundant")`。
-它复用保存profile，不能保证恢复旧PNG的全部导出设置或同名酶库；例如pETDuet-1
-原文件保存None而旧PNG显示位点。独立引物需另加`find_primer_bindings(sequence,
-set = "reference")`及primer图层。具名子段在`segments`中，不计为另一个顶层特征；
-虚线分段也不自动生成额外文字。密集全量标签需要按输出尺寸重新检查。
+<span id="gallery-limits"></span>

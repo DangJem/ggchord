@@ -420,7 +420,7 @@
   {
     "task": {
       "zh": "查看全部接口的主讲位置",
-      "en": "Locate every API lesson"
+      "en": "Locate every API section"
     },
     "api": "ggchord",
     "parameters": "all exported APIs",

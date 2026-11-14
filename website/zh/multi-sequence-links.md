@@ -68,7 +68,7 @@
 
 {{figure:frontlinearcross}}
 
-相邻带默认使用细实线，非相邻行之间的带默认使用较粗虚线。普通线宽由 `linewidth` 控制；跨行线宽由 `nonadjacent_linewidth` 单独控制，默认 0.4。
+只有 Collinear 的相邻行连接默认使用细实线，跨行连接默认使用较粗虚线。Chord、Radial 和 Sankey 不应用这个自动跨行样式，默认使用普通实线。普通线宽由 `linewidth` 控制；跨行线宽由 `nonadjacent_linewidth` 单独控制，默认 0.4。
 
 第二个连接层只接收一条第一行到第三行的比对。`adjacent_only = FALSE` 让这条带可见，默认虚线轮廓提示它跨过中间一行。原来第一、二行的连接仍由第一个层绘制。
 
@@ -133,13 +133,13 @@
 
 只改为 `"straight"`；位置、输入和尺寸相同。需要有向箭头时另加 `arrow = grid::arrow()`，其方向表达 query 到 subject 的绘图约定，不能单独作为基因链或转录证据。
 
-## 真实数据、模式与练习 {#adapt}
+## 真实数据、模式与操作示例 {#adapt}
 
 真实比对必须保留自己的 q/s 端点。若没有完全相同的端点，不要为了形成主干而改写坐标。筛选与聚束见[连接处理](ribbons.html)，几何分支不会自动完成这些统计操作。
 
 弦图与共线性图可用这些连接层；单序列圆图拒绝 ribbon/link。共线性图的邻接筛选仍适用，要显示跨行带先检查 `adjacent_only` 或显式 `pairs`，见[跨行连接](multi-sequence-links.html#routes)。
 
-练习：只将主干比例改为 0.25；再回到默认比例，比较曲线与直线的选点。用自己的数据时先决定需要展示区间长度还是单个位置，随后查看 [`geom_link_ribbon()`](reference/geom_link_ribbon.html) 与 [`geom_link_line()`](reference/geom_link_line.html)。
+操作示例：只将主干比例改为 0.25；再回到默认比例，比较曲线与直线的选点。用自己的数据时先决定需要展示区间长度还是单个位置，随后查看 [`geom_link_ribbon()`](reference/geom_link_ribbon.html) 与 [`geom_link_line()`](reference/geom_link_line.html)。
 
 {{prepare:ribboninputs}}
 

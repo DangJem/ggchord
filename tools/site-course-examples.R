@@ -71,55 +71,68 @@ library(ggchord)
 library(dplyr)
 # ---- courseblockh ----
 sequence <- plasmid_example_pSB1C3
-p <- make_catalog_plot(sequence, find_common_features(sequence))
+reference <- make_reference_map(sequence)
+p <- reference$plot
 view_ggchord(p, width = 10, height = 8, units = "in")
 # ---- courseblocki ----
 sequence <- plasmid_example_pUC19
-p <- make_catalog_plot(sequence, find_common_features(sequence))
+reference <- make_reference_map(sequence)
+p <- reference$plot
 view_ggchord(p, width = 10, height = 8, units = "in")
 # ---- courseblockj ----
 sequence <- plasmid_example_pBR322
-p <- make_catalog_plot(sequence, find_common_features(sequence))
+reference <- make_reference_map(sequence)
+p <- reference$plot
 view_ggchord(p, width = 10, height = 8, units = "in")
 # ---- courseblockk ----
 sequence <- plasmid_example_pBluescript_II_SK_plus
-p <- make_catalog_plot(sequence, find_common_features(sequence))
+reference <- make_reference_map(sequence)
+p <- reference$plot
 view_ggchord(p, width = 10, height = 8, units = "in")
 # ---- courseblockl ----
 sequence <- plasmid_example_pET_28a_plus
-p <- make_catalog_plot(sequence, find_common_features(sequence))
+reference <- make_reference_map(sequence)
+p <- reference$plot
 view_ggchord(p, width = 10, height = 8, units = "in")
 # ---- courseblockm ----
 sequence <- plasmid_example_pETDuet_1
-p <- make_catalog_plot(sequence, find_common_features(sequence))
+reference <- make_reference_map(sequence)
+p <- reference$plot
 view_ggchord(p, width = 10, height = 8, units = "in")
 # ---- courseblockn ----
 sequence <- plasmid_example_pDONR221
-p <- make_catalog_plot(sequence, find_common_features(sequence))
+reference <- make_reference_map(sequence)
+p <- reference$plot
 view_ggchord(p, width = 10, height = 8, units = "in")
 # ---- courseblocko ----
 sequence <- plasmid_example_pcDNA3_1_plus
-p <- make_catalog_plot(sequence, find_common_features(sequence))
+reference <- make_reference_map(sequence)
+p <- reference$plot
 view_ggchord(p, width = 10, height = 8, units = "in")
 # ---- courseblockp ----
 sequence <- plasmid_example_pTRE_Tight_BI
-p <- make_catalog_plot(sequence, find_common_features(sequence))
+reference <- make_reference_map(sequence)
+p <- reference$plot
 view_ggchord(p, width = 10, height = 8, units = "in")
 # ---- courseblockq ----
 sequence <- plasmid_example_pTRIPZ
-p <- make_catalog_plot(sequence, find_common_features(sequence))
+reference <- make_reference_map(sequence)
+p <- reference$plot
 view_ggchord(p, width = 10, height = 8, units = "in")
 # ---- courseblockr ----
 sequence <- plasmid_example_pCAMBIA1300
-p <- make_catalog_plot(sequence, find_common_features(sequence))
+reference <- make_reference_map(sequence)
+p <- reference$plot
 view_ggchord(p, width = 10, height = 8, units = "in")
 # ---- courseblocks ----
 sequence <- plasmid_example_pEarleyGate_201
-p <- make_catalog_plot(sequence, find_common_features(sequence))
+reference <- make_reference_map(sequence)
+p <- reference$plot
 view_ggchord(p, width = 10, height = 8, units = "in")
 # ---- courseblockt ----
 sequence <- plasmid_example_pSpCas9_BB_2A_GFP_PX458
-p <- make_catalog_plot(sequence, find_common_features(sequence))
+reference <- make_reference_map(sequence)
+p <- reference$plot
 view_ggchord(p, width = 10, height = 8, units = "in")
 # ---- courseblocku ----
 ggsave("pUC19-map.png", p_plasmid, width = 10, height = 9, units = "in", dpi = 144)

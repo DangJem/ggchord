@@ -1,0 +1,10 @@
+{
+  "status": "passed",
+  "manual_images": 20,
+  "new_flagship_pngs": 4,
+  "complete_reference_maps": 13,
+  "common_home_background": "#FFFCF5",
+  "built_assets_checked": false,
+  "helper_sha256": "96c39c6ea6d0fcee4da910d4cd1210f71462b04ebb8d8e0645fb06076aa312b5",
+  "scope": "Source and PNG provenance; reused reference maps retain earlier measured-layout evidence. No browser interaction or viewport acceptance."
+}

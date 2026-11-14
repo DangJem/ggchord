@@ -1,8 +1,8 @@
-Build backbones, a link, a feature and labels in one lesson using bundled source records. Run in order; this lesson uses ggchord and optional dplyr.
+Build backbones, a link, a feature and labels in one section using bundled source records. Run in order; this section uses ggchord and optional dplyr.
 
 ## Draw the backbones {#draw}
 
-Run this lesson in a fresh R session after installing the version described on the [installation page](installation.html).
+Run this section in a fresh R session after installing the version described on the [installation page](installation.html).
 
 {{code:courseblockac}}
 
@@ -54,7 +54,7 @@ To display the CDS name, add `geom_gene_label(data = chord_genes_example)`. It r
 
 {{code:courseblockad}}
 
-This keeps the input and layers, while Collinear selects adjacent rows by default. Compare all four views in the [next lesson](multi-sequence-views.html).
+This keeps the input and layers, while Collinear selects adjacent rows by default. Compare all four views in the [next section](multi-sequence-views.html).
 
 ## Use your own sequences {#adapt}
 

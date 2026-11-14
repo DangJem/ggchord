@@ -1,16 +1,22 @@
-## Task and result {#task}
+## HSP relationships on two sequence axes {#task}
 
-Plot four existing HSP endpoints on independent axes. Segments are not base-level alignment traces, and Dotplot is not a registered Fusion endpoint.
+This matrix uses all 32 original HSP records across four complete sequence inputs. Both axes preserve accession identity and local positions. Identity controls colour; observed HSP length controls stroke width.
 
-{{figure:viewdotplot}}
+{{manualfigure:flagdotplot}}
 
-## Learning route {#path}
+## What the module supports {#path}
 
-- [HSP Dotplots and radial synteny](dotplot-start.html#dotplot)
-- [Import nucleotide and protein alignments](alignments.html)
-- [Protein comparisons from BLASTp](protein-alignments.html)
-- [Import and convert data](formats.html)
+- Multiple query and subject sequences, explicit axis order and native-unit gaps.
+- Forward and reverse HSP endpoints, independent display orientation on either axis.
+- Identity and other supplied metrics mapped through link scales.
+- Exact source-to-display conversion, visible windows and traceable input rows.
 
-## Inputs and boundaries {#inputs}
+[Data, axes and mapping](dotplot-start.html) · [Alignment imports](alignments.html) · [Protein coordinates](protein-alignments.html)
 
-Provide source IDs, complete lengths and the standard tables required by your layers. Keep native bp/aa units consistent. Check [input conventions](data.html) and [compatibility](compatibility.html).
+## Required inputs {#inputs}
+
+Supply complete lengths and query/subject IDs, plus qstart/qend/sstart/send for each HSP. Axis concatenation does not fuse biological sequence identities. bp and aa need separate coordinate domains or an explicit projection.
+
+## Boundaries {#support}
+
+Each mark is an HSP endpoint segment, not a base-by-base reconstruction. Mismatches and gaps need observed aligned characters or an exact alignment trace. Backbone gene/feature/track layers do not apply here. Dotplot is not a registered Fusion endpoint.

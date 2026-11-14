@@ -20,4 +20,4 @@ The compact names retain ggchord's early BLAST workflow history. accver need not
 
 ## A progressive case sequence {#path}
 
-Build pUC19 step by step in the [layer lesson](circular-start.html#input), then complete the [pUC19 and pETDuet-1 cases](plasmids.html). Consult [search assumptions](recognition.html) and the [13 reference maps](plasmid-catalog.html) as needed. The bundled pUC19c alias refers to the same example.
+Build pUC19 step by step in the [layer section](circular-start.html#input), then complete the [pUC19 and pETDuet-1 cases](plasmids.html). Consult [search assumptions](recognition.html) and the [13 reference maps](plasmid-catalog.html) as needed. The bundled pUC19c alias refers to the same example.

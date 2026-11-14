@@ -1,3 +1,29 @@
+## 保留旗舰与派生视图 {#flagship}
+
+弦图和共线性图继续使用现有旗舰版本，不改变图像、输入筛选、配色或图层设计。Radial 从现有弦图派生，Sankey 从现有共线性图派生。两套既有旗舰共用来源准备，但各自保留原有特征与跨行 HSP 的显示选择，因此不把四图说成完全相同的显示子集。
+
+{{prepare:sequencepalette,docstyle,showcasedata,chordshowcasegenes,showcasechord,showcasecollinear}}
+
+Radial 不使用 Chord 专属的半径/曲率，因此只替换派生图的骨架参数；Sankey 的跨行连接不照搬 Collinear 的 Cartesian 控制点，并使用各列原生坐标轴，不保留仅适用于 Collinear 的共享比例尺。Sankey 的名称层每序列选择一条来源注释，优先非假设蛋白、再按长度排序，并放在列旁；全部原特征几何与来源表保留。原旗舰的构图、数据准备与配色保留；图像仅在修复默认虚线等已确认问题时更新。
+
+{{code:flagshipmulti}}
+
+### Chord {#flagship-chord}
+
+{{manualfigure:flagchord}}
+
+### Collinear {#flagship-collinear}
+
+{{manualfigure:flaglinear}}
+
+### Radial {#flagship-radial}
+
+{{manualfigure:flagradial}}
+
+### Sankey {#flagship-sankey}
+
+{{manualfigure:flagsankey}}
+
 ## 一次准备 {#input}
 
 相同来源输入不代表默认展示完全相同的关系。本课先明确全对选择再比较几何；随后核对各视图默认筛选。依赖：ggchord、dplyr。
@@ -69,6 +95,6 @@ Ribbon 填充标度会覆盖显式启用的端点插值。显式 pident 使用�
 
 自动 Identity 标尺按边界文字的实际尺寸预留长度，不再把通用色块尺寸当成整条标尺长度。手动指定长度时，使用 `legend.ribbon.key.height`、`legend.ribbon.key.width` 或显式 guide。圆图 parallel 坐标轴文字逐字符沿圆弧排布；水平和数值角度仍保留直线文字。
 
-## 练习 {#exercise}
+## 操作示例 {#exercise}
 
 选一条 HSP，指出两端来源；恢复默认邻接后说明为何可能省略。按目标尺寸保存选定视图，保留输入表。

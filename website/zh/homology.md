@@ -41,7 +41,7 @@
 
 这里选择相同 CDS 的前 20 个残基，因此 `ungapped = TRUE` 有实际序列依据。普通 BLASTp HSP 不能仅凭两端跨度相等作出这个断言。工具保留源蛋白统计，不把蛋白相似度冒充核苷酸相似度。
 
-## 完成后检查 {#check-result}
+## 检查要点 {#check-result}
 两条 AmpR 箭头均沿负链方向。对应关系来自编码 DNA；源坐标与聚焦报告解释了局部显示。保存时使用 [10 × 5 in 的明确尺寸](output.html)。
 
 下一步：[真实 BLASTp 查询区间读取](alignments.html#protein)、[CDS 投影及分段限制](projection.html)、[独立局部窗口](views.html)。

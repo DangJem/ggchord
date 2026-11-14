@@ -1,4 +1,4 @@
-<div class="task-intro"><p>用真实比对记录学习 BLAST 的默认列，并选出绘图所需的六个端点字段。</p></div>
+<div class="task-intro"><p>用真实比对记录了解 BLAST 的默认列，并选出绘图所需的六个端点字段。</p></div>
 
 ## 为什么从 BLAST 输入开始 {#prepare}
 
@@ -24,7 +24,7 @@ blastp -query proteins.faa -subject reference.faa -outfmt 7 -out hits-protein.ts
 | 7–10 | `qstart`、`qend`、`sstart`、`send` | 两端的起止坐标，从 1 开始并包含两端。递减端点保留比对方向 |
 | 11–12 | `evalue`、`bitscore` | 期望值和以 bit 为单位的得分，通常前者越小、后者越大，命中证据越强 |
 
-解压[教学输入](../assets/tutorial-inputs.zip)后，从包含 `examples/` 的目录运行。示例文件保存了实际 HSP 的前 12 列。
+解压[说明输入](../assets/tutorial-inputs.zip)后，从包含 `examples/` 的目录运行。示例文件保存了实际 HSP 的前 12 列。
 
 {{code:standardblast}}
 {{output:standardblast}}
@@ -55,10 +55,10 @@ blastp -query proteins.faa -subject reference.faa -outfmt 7 -out hits-protein.ts
 ## 来源与限制 {#source}
 EMALE 原始输出来自 gggenomes 的公开 EMALE 数据。
 本项目只复用数据记录，用 ggchord 自行绘图；没有复制上游图或绘图代码。
-下载、原始成员、行号范围、SHA256 和筛选规则见教学输入包的 `sources.json`。
+下载、原始成员、行号范围、SHA256 和筛选规则见说明输入包的 `sources.json`。
 表格解析不重新运行比对，也不验证命中的生物学功能。
 
-## 完成后检查 {#check-result}
+## 检查要点 {#check-result}
 先确认本次比较的对象是核酸还是蛋白，再检查表格列、完整长度与坐标单位。
 
 <div class="next-step">继续：<a href="projection.html">将蛋白坐标转换为基因组坐标 →</a></div>

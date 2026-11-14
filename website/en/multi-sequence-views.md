@@ -1,3 +1,29 @@
+## Retained flagships and derived views {#flagship}
+
+The existing Chord and Collinear flagships are retained without changing their images, input selection, colours or layer design. Radial derives from Chord; Sankey derives from Collinear. The retained parents share source preparation but keep their original feature and cross-row HSP display selections, so the four images are not claimed to use an identical displayed subset.
+
+{{prepare:sequencepalette,docstyle,showcasedata,chordshowcasegenes,showcasechord,showcasecollinear}}
+
+Radial does not use Chord-specific radii/curvature, so only the derived backbone parameters are replaced. Sankey does not reuse Cartesian cross-row control points from Collinear and uses each column’s native axis instead of a Collinear-only shared scale bar. Sankey places one selected source annotation beside each sequence column, preferring non-hypothetical annotations and then length, while retaining every original feature geometry and source table. The retained flagship design, preparation and colours are preserved; images are refreshed only for confirmed fixes such as the automatic outline bug.
+
+{{code:flagshipmulti}}
+
+### Chord {#flagship-chord}
+
+{{manualfigure:flagchord}}
+
+### Collinear {#flagship-collinear}
+
+{{manualfigure:flaglinear}}
+
+### Radial {#flagship-radial}
+
+{{manualfigure:flagradial}}
+
+### Sankey {#flagship-sankey}
+
+{{manualfigure:flagsankey}}
+
 ## Prepare once {#input}
 
 The same source input need not produce the same default relation set. First explicitly select all pairs to compare geometry, then inspect each view’s default selection. Dependencies: ggchord and dplyr.

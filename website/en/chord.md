@@ -1,4 +1,4 @@
-<div class="lesson-intro">Bring four genomes into one connected view. Combine straight and curved backbones, strand-aware genes and the default stepped identity scale without hiding where the data came from.</div>
+<div class="section-intro">Bring four genomes into one connected view. Combine straight and curved backbones, strand-aware genes and the default stepped identity scale without hiding where the data came from.</div>
 
 
 ## Research question and evidence limits {#question}
@@ -15,7 +15,7 @@ Compare the dark blue `MT118296.1` and teal `OQ646790.1` backbones first. Their 
 CDS are sampled separately for each available source strand, without a length threshold. Neither MT record has a negative-strand CDS. The sole negative-strand CDS on OQ646790.1 is 207 bp. An explicit Position places positive-strand arrows inside and negative-strand arrows outside. Arrow direction, colour and data retain the source strands. Positive-strand sampling favours CDS that overlap displayed link endpoints so the view demonstrates local ribbon clearance. Every arrow uses its original annotation as the label, including hypothetical protein.
 
 ## Prepare original records {#prepare}
-Extract the [tutorial input bundle](../assets/tutorial-inputs.zip) into the working directory, so it contains `examples/`. Install the optional example packages with `install.packages(c("dplyr", "purrr", "tidyr"))`; they prepare tables, map lists and inspect endpoint columns.
+Extract the [manual input bundle](../assets/tutorial-inputs.zip) into the working directory, so it contains `examples/`. Install the optional example packages with `install.packages(c("dplyr", "purrr", "tidyr"))`; they prepare tables, map lists and inspect endpoint columns.
 
 Put the preparation script in your working directory. It contains the input, selection and display settings.
 

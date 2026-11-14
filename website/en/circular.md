@@ -4,7 +4,7 @@ Lengths and prepared annotations are sufficient to draw. Sequence characters are
 
 {{figure:showcaseplasmid}}
 
-## Learning route {#path}
+## Function index {#path}
 
 - [Draw your first circular map](circular-start.html#input)
 - [Single-sequence length, DNA and annotations](circular-data.html#tables)
@@ -16,3 +16,5 @@ Lengths and prepared annotations are sufficient to draw. Sequence characters are
 ## Inputs and boundaries {#inputs}
 
 Provide source IDs, complete lengths and the standard tables required by your layers. Keep native bp/aa units consistent. Check [input conventions](data.html) and [compatibility](compatibility.html).
+
+[pETDuet-1: dense layout](circular-dense-case.html) · [13 complete reference maps](plasmid-catalog.html)

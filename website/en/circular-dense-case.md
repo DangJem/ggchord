@@ -1,23 +1,35 @@
-## Complete example: a dense pETDuet-1 map {#complex}
+## Dense, complete annotation inputs {#complex}
 
-Use the pUC19 example above to learn the layers, then move to the richer pETDuet-1 map. Inputs come from the bundled sequence, feature and reference-primer catalogues. The restriction subset retains unique six-base-or-longer recognition sites from commercial_all; it is not every cut made by every enzyme.
+This independent pETDuet-1 example demonstrates the interaction of complete annotations, primers and enzyme labels at a normal output size. It does not depend on objects from the pUC19 page.
 
-This example runs independently. Put the preparation script in your working directory.
+{{code:courseblockg}}
 
-{{recipe:plasmid}}
+{{code:referencebuilder}}
 
-{{code:frontduetsummary}}
+```r
+reference <- make_reference_map(plasmid_example_pETDuet_1)
+p <- reference$plot
+view_ggchord(p, width = 10, height = 8, units = "in")
+```
 
-{{output:frontduetsummary}}
+{{figure:catalogduet}}
 
-{{code:showcaseplasmid}}
+## What complete means here {#source-profile}
 
-{{figure:showcaseplasmid}}
+All 20 features, 5 independent reference primers and 58 site rows in the selected profile are supplied. These sites occupy 54 distinct positions. The source saves an empty enzyme profile, so the explicit policy is unique six-or-more-base commercial nonredundant cutters. Enzyme-profile selection and arbitrary display sampling are different operations.
 
-The adjacent code renders this 16.5 × 8 inch preview. Restriction, primer and selected feature labels share the outer region, and dense sites can push their labels farther from the backbone. The coordinate system fits the labels automatically. Check the leaders and text again if you reduce the preview size.
+## Label and geometry responsibilities {#layout}
 
-Inputs contain 20 features, five reference primers and 58 grouped cut positions. The feature preset retains plum coding regions, mint resistance genes, yellow origins and blue regulatory features; primers are purple, consistently across this site. Dense labels depend on export size; open the full image to read them.
+Stacking determines feature bands. The label layer first uses available internal space and can move text outside; shared source positions remain fixed. A shared enzyme label can describe several rows at one position. Do not infer source counts from the number of text strings.
 
-The explicit viewport keeps the dense map at the documented export size. `label_fit = "shrink"` allows short-feature labels to fit down to 2.5 mm; labels that do not fit remain callouts. Preview and save at the same 16.5 × 8 in size.
+## More room without deleting data {#size}
 
-{{code:courseblockal}}
+The same plot can be exported on a wider canvas. This changes physical space; it does not alter features, selected sites, strands or complete length. Check label diagnostics when selecting an output size.
+
+```r
+ggsave("pETDuet-complete.png", p, width = 16.5, height = 8, units = "in", dpi = 144)
+```
+
+## Related functions {#next}
+
+[Feature stacking](circular-features.html) · [Labels](circular-labels.html) · [All 13 reference maps](plasmid-catalog.html)

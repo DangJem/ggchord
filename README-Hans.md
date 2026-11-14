@@ -17,7 +17,7 @@ R ≥ 4.1.0 · ggplot2 ≥ 4.0.0
 ```r
 install.packages("remotes")
 remotes::install_github(
-  "DangJem/ggchord@0f5dd96da57876da74cd1234c7de9cf5579c80b8",
+  "DangJem/ggchord",
   dependencies = NA, upgrade = "never"
 )
 ```
@@ -26,7 +26,7 @@ remotes::install_github(
 
 ## 三个真实数据综合示例
 
-以下三张综合示例展示本版的组合能力。原始输入保持可追溯，完整准备代码和解释见对应教程；初次使用请从最小首图开始。
+以下三张综合示例展示本版的组合能力。原始输入保持可追溯，完整准备代码和解释见对应说明；初次使用请从最小首图开始。
 
 <details>
 <summary>先运行：三张图共用的样式</summary>
@@ -214,7 +214,7 @@ view_ggchord(p_show_chord, width = 12, height = 10, units = "in")
 
 </details>
 
-[查看完整教程 →](https://dangjem.github.io/ggchord/zh/chord.html)
+[查看完整说明 →](https://dangjem.github.io/ggchord/zh/chord.html)
 
 ### 共线性图：四序列与跨行连接
 
@@ -343,7 +343,7 @@ view_ggchord(p_show_collinear, width = 12, height = 8, units = "in")
 
 </details>
 
-[查看完整教程 →](https://dangjem.github.io/ggchord/zh/collinear.html)
+[查看完整说明 →](https://dangjem.github.io/ggchord/zh/collinear.html)
 
 ### 质粒图：pETDuet-1密集注释
 
@@ -400,7 +400,7 @@ view_ggchord(p_show_plasmid, width = 16.5, height = 8, units = "in")
 
 </details>
 
-[查看完整教程 →](https://dangjem.github.io/ggchord/zh/plasmids.html#complex)
+[查看完整说明 →](https://dangjem.github.io/ggchord/zh/circular-dense-case.html#complex)
 
 `aes()` 映射数据，`scale_*()` 定义映射和图例，geom 定义几何与固定样式，Position 负责局部放置，coord 负责全局坐标，theme 负责非数据外观。
 
@@ -438,7 +438,7 @@ ggchord 的图形语法、基因组表达和预览流程参考了以下开源项
 ## 继续阅读
 
 - [开始使用](https://dangjem.github.io/ggchord/zh/installation.html)
-- [学习总览](https://dangjem.github.io/ggchord/zh/learn.html)
+- [基本概念](https://dangjem.github.io/ggchord/zh/modes.html)
 - [函数文档](https://dangjem.github.io/ggchord/zh/reference/index.html)
 - [示例图集](https://dangjem.github.io/ggchord/zh/gallery.html)
 - [其他信息](https://dangjem.github.io/ggchord/zh/about.html)

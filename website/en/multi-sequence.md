@@ -1,18 +1,24 @@
-## Task and result {#task}
+## Shared data, four views {#task}
 
-Use Chord, Collinear, Radial or Sankey with the same source tables. Compatible layers can be reused; default relation selection and geometry differ.
+The same complete sequence lengths, source CDS and observed HSPs support four relationship coordinates. The flagship examples below retain identical data, layers and mappings; only the Coord changes. All-pair links are explicit, so adjacent-row defaults cannot change the comparison silently.
 
-{{figure:viewradial}}
+{{manualfigure:flagchord}}
 
-## Learning route {#path}
+## Common inputs and layers {#path}
 
-- [Draw sequence backbones](multi-sequence-start.html)
-- [Draw your first collinear plot](multi-sequence-views.html)
-- [HSP Dotplots and radial synteny](radial-synteny.html)
-- [Source instances, tracks and new views](sankey.html)
-- [Four-sequence case study](chord.html)
-- [Four-genome collinear case study](collinear.html)
+[Data and layers](multi-sequence-start.html) · [Four-view comparison](multi-sequence-views.html) · [Display rules](multi-sequence-layout.html) · [Links](multi-sequence-links.html) · [Labels](multi-sequence-labels.html)
 
-## Inputs and boundaries {#inputs}
+## Chord {#chord}
+Curved backbones, radius, curvature and routed interval links. [Settings](chord-geometry.html) · [Example](chord.html).
 
-Provide source IDs, complete lengths and the standard tables required by your layers. Keep native bp/aa units consistent. Check [input conventions](data.html) and [compatibility](compatibility.html).
+## Collinear {#collinear}
+Row or column arrangement, anchors, orientation and local windows. [Settings](collinear-layout.html) · [Example](collinear.html).
+
+## Radial {#radial}
+Sequence spokes, start angle and angular arrangement. [Settings and source instances](radial-synteny.html).
+
+## Sankey {#sankey}
+Mirrored query/subject columns, column gap and repeated display instances. [Settings](sankey.html).
+
+## Input contract {#inputs}
+Complete source lengths, identifiers and units remain independent of display geometry. Biological strand comes from annotation; changing the coordinate does not rewrite it. [Data contract](data.html) · [Compatibility](compatibility.html).

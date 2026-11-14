@@ -5,19 +5,19 @@
       "zh": "开始使用",
       "en": "Get started"
     },
-    "landing": "learn",
+    "landing": "installation",
     "pages": [
-      "learn",
       "installation",
       "modes",
       "data"
-    ]
+    ],
+    "number": 0
   },
   {
     "id": "multi-sequence",
     "title": {
-      "zh": "多序列关系",
-      "en": "Multi-sequence relationships"
+      "zh": "模块一 · 多序列关系",
+      "en": "Module I · Multi-sequence relationships"
     },
     "landing": "multi-sequence",
     "pages": [
@@ -25,25 +25,26 @@
       "multi-sequence-start",
       "multi-sequence-views",
       "multi-sequence-layout",
-      "chord-geometry",
-      "collinear-layout",
       "multi-sequence-links",
       "multi-sequence-labels",
-      "sankey",
-      "radial-synteny",
-      "instances",
       "ribbons",
-      "views",
-      "homology",
+      "instances",
+      "chord-geometry",
       "chord",
-      "collinear"
-    ]
+      "collinear-layout",
+      "collinear",
+      "radial-synteny",
+      "sankey",
+      "views",
+      "homology"
+    ],
+    "number": 1
   },
   {
     "id": "circular",
     "title": {
-      "zh": "单序列圆图",
-      "en": "Single-sequence circular maps"
+      "zh": "模块二 · 单序列圆图",
+      "en": "Module II · Single-sequence circular maps"
     },
     "landing": "circular",
     "pages": [
@@ -59,25 +60,27 @@
       "plasmids",
       "circular-dense-case",
       "plasmid-catalog"
-    ]
+    ],
+    "number": 2
   },
   {
     "id": "dotplot",
     "title": {
-      "zh": "HSP 点图",
-      "en": "HSP Dotplot"
+      "zh": "模块三 · HSP 点图",
+      "en": "Module III · HSP Dotplot"
     },
     "landing": "dotplot",
     "pages": [
       "dotplot",
       "dotplot-start"
-    ]
+    ],
+    "number": 3
   },
   {
     "id": "fusion",
     "title": {
-      "zh": "多视图组合",
-      "en": "Multi-view composition"
+      "zh": "模块四 · 多视图组合",
+      "en": "Module IV · Multi-view composition"
     },
     "landing": "fusion",
     "pages": [
@@ -87,7 +90,8 @@
       "fusion-layout",
       "fusion-details",
       "fusion-advanced"
-    ]
+    ],
+    "number": 4
   },
   {
     "id": "shared-techniques",
@@ -107,7 +111,8 @@
       "tracks-statistics",
       "output",
       "diagnostics"
-    ]
+    ],
+    "number": 5
   },
   {
     "id": "data",
@@ -128,7 +133,8 @@
       "projection",
       "workflows",
       "real-data"
-    ]
+    ],
+    "number": 6
   },
   {
     "id": "cases",
@@ -139,7 +145,8 @@
     "landing": "gallery",
     "pages": [
       "gallery"
-    ]
+    ],
+    "number": 7
   },
   {
     "id": "reference",
@@ -153,7 +160,8 @@
       "compatibility",
       "parameter-atlas",
       "api-curriculum"
-    ]
+    ],
+    "number": 8
   },
   {
     "id": "information",
@@ -166,6 +174,7 @@
       "about",
       "faq",
       "migration"
-    ]
+    ],
+    "number": 9
   }
 ]

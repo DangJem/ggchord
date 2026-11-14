@@ -65,9 +65,9 @@ MT108731.1 的文字半径为骨架半径的 75%，OQ646790.1 为 115%；另外�
 `seq_order` 本身就是序列排列，不是上述值的循环规则。自动避让标签的 `label_layout`
 是布局模式；手动角度和偏移请使用固定标签层，不把它们塞进自动标签的 `...`。
 axis/theme、aesthetic、标度、图例不继承这套列表扩展规则。手工标度本来就支持
-按**数据类别**命名的颜色向量，那属于 ggplot2 的标度语义，见[配色教程](styling.html)。
+按**数据类别**命名的颜色向量，那属于 ggplot2 的标度语义，见[配色说明](styling.html)。
 
-## 完成后检查 {#check-result}
+## 检查要点 {#check-result}
 命名向量的键应对应实际 accver 或 +/− 链。重排后再次检查匹配；不要将列表规则推广到 theme、scale 或 aesthetic。
 
 <div class="next-step">继续：<a href="styling.html">设置配色、图例和主题 →</a></div>

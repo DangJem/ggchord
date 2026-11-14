@@ -1,11 +1,11 @@
 ---
-title: "ggchord：序列图与多视图组合教程"
+title: "ggchord：序列图与多视图组合说明"
 output:
   rmarkdown::html_vignette:
     self_contained: true
     css: vignette.css
 vignette: >
-  %\VignetteIndexEntry{ggchord：序列图与多视图组合教程}
+  %\VignetteIndexEntry{ggchord：序列图与多视图组合说明}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -18,50 +18,25 @@ knitr::opts_chunk$set(eval = FALSE, collapse = TRUE, comment = "#>")
 
 <img src="tutorial-assets/logo.png" alt="ggchord" width="200">
 
-按任务选择四个绘图模块，每个模块都提供独立的首图代码。自备数据、专业专题和完整科研案例请继续查阅在线教程。
+按任务选择四个绘图模块，每个模块都提供独立的首图代码。自备数据、专业专题和完整科研案例请继续查阅在线说明。
 
 
 ## 下载与安装 {#installation}
 
-### 选择版本与依赖 {#installation-requirements}
+### 从 GitHub 安装 {#installation-requirements}
 
-本教程使用 **0.27.0.9000 开发接口**。先选择匹配的安装来源；正式版 0.16.6 与开发版不可混用教学范围。
-
-R ≥ 4.1.0; ggplot2 ≥ 4.0.0.
+从项目仓库安装 ggchord 及必需依赖。源码安装需要可用的 R 开发环境。
 
 ```{r example-1, eval=FALSE}
 install.packages("remotes")
+remotes::install_github("DangJem/ggchord", dependencies = NA)
 ```
 
-#### 正式版 {#installation-stable}
-
-最近正式版为 0.16.6。其源码与对应版本帮助见 [GitHub v0.16.6](https://github.com/DangJem/ggchord/releases/tag/v0.16.6)。安装固定标签后，请使用该版本附带帮助；本教程含较新的接口。
+### 加载与绘制 {#installation-first-plot}
 
 ```{r example-2, eval=FALSE}
-remotes::install_github("DangJem/ggchord@v0.16.6", dependencies = NA)
-```
-
-#### 开发快照 {#installation-source}
-
-开发运行时固定为公开审计提交 `0f5dd96da57876da74cd1234c7de9cf5579c80b8`，不要从最大命中位置推断版本。当前本地文档重构没有改变运行时行为；文档提交、构建时间与输入哈希另见[构建清单](https://dangjem.github.io/ggchord/build-manifest.json)。安装需联网下载源码和依赖。
-
-```{r example-3, eval=FALSE}
-runtime_commit <- "0f5dd96da57876da74cd1234c7de9cf5579c80b8"
-remotes::install_github(
-  paste0("DangJem/ggchord@", runtime_commit),
-  dependencies = NA, upgrade = "never"
-)
-```
-
-<span id="verified-versions"></span>
-
-### 新会话确认与第一图 {#installation-troubleshooting}
-
-```{r example-4, eval=FALSE}
 library(ggchord)
-stopifnot(as.character(packageVersion("ggchord")) == "0.27.0.9000")
-stopifnot(packageDescription("ggchord")$RemoteSha ==
-  "0f5dd96da57876da74cd1234c7de9cf5579c80b8")
+
 p <- ggchord(seq_data_example) +
   geom_seq() +
   geom_seq_label() +
@@ -69,20 +44,23 @@ p <- ggchord(seq_data_example) +
 p
 ```
 
-#### 可选依赖 {#installation-support-evidence}
+### 可选依赖与输入文件 {#installation-support-evidence}
 
-基础首图只需 ggchord；数据整理课程显式使用 dplyr，各导入课单列可选解码器。
+使用 dplyr、Biostrings 或格式解码器的示例会在代码旁声明依赖，按对应工作流安装即可。随包数据可离线使用；文件示例使用[输入归档](https://dangjem.github.io/ggchord/zh/formats.html)。
 
-### 继续学习 {#installation-first-steps}
+### 安装失败时 {#installation-troubleshooting}
 
-<span id="first-plot"></span><span id="input"></span><span id="read"></span>
+先检查第一条依赖或编译错误，安装后重新启动 R，再用 `help(package = "ggchord")` 查看可用函数。绘图问题见[诊断与排错](https://dangjem.github.io/ggchord/zh/diagnostics.html)。
 
-- [基本数据表](https://dangjem.github.io/ggchord/zh/data.html#prepare)
-- [第一张多序列图](#multi-sequence-start-draw)
-- <span id="save"></span>[按目标尺寸保存](https://dangjem.github.io/ggchord/zh/output.html)
+### 相关说明 {#installation-first-steps}
+
+[绘图基本概念](https://dangjem.github.io/ggchord/zh/modes.html) · [输入数据表](https://dangjem.github.io/ggchord/zh/data.html) · [保存图形](https://dangjem.github.io/ggchord/zh/output.html)
 
 
-## 第一张多序列关系图 {#multi-sequence-start}
+<span id="input"></span><span id="read"></span><span id="save"></span><span id="source"></span><span id="stable"></span><span id="verified-versions"></span>
+
+
+## 共用数据与图层 {#multi-sequence-start}
 
 一课完成骨架、连接、特征和标签。输入来自随包真实记录，按下面顺序运行；需要 ggchord 和可选 dplyr。
 
@@ -91,13 +69,13 @@ p
 按[安装页](#installation)安装本网站对应版本后，在全新 R 会话运行本课。
 
 
-```{r example-5, eval=FALSE}
+```{r example-3, eval=FALSE}
 library(ggchord)
 ```
 
 
 
-```{r example-6, eval=FALSE}
+```{r example-4, eval=FALSE}
 p_chord_backbone <- ggchord(seq_data = seq_data_example) +
   geom_seq() +
   geom_seq_label() +
@@ -123,7 +101,7 @@ view_ggchord(p_chord_backbone, width = 7, height = 7, units = "in")
 取随包比对表的第一行。它连接四条骨架中的两条。
 
 
-```{r example-7, eval=FALSE}
+```{r example-5, eval=FALSE}
 chord_links <- head(ribbon_data_example, 1)
 
 p_chord_ribbon <- p_chord_backbone +
@@ -143,7 +121,7 @@ view_ggchord(p_chord_ribbon, width = 7, height = 7, units = "in")
 <span id="prepare"></span><span id="inspect-genes"></span><span id="genes"></span>选出 `OQ646790.1` 上从 43,765 bp 开始的原始注释，并取回它的真实链方向。
 
 
-```{r example-8, eval=FALSE}
+```{r example-6, eval=FALSE}
 chord_genes_example <- subset(gene_data_example, accver == "OQ646790.1" & start == 43765)
 chord_genes_example$strand <- chord_genes_example$source_strand
 
@@ -162,7 +140,7 @@ view_ggchord(p_chord_feature, width = 7, height = 7, units = "in")
 ### 显示特征名称 {#multi-sequence-start-labels}
 
 
-```{r example-9, eval=FALSE}
+```{r example-7, eval=FALSE}
 p_chord_gene_labels <- ggchord(seq_data_example) +
   geom_seq() +
   geom_seq_label() +
@@ -178,7 +156,7 @@ view_ggchord(p_chord_gene_labels, width = 7, height = 7, units = "in")
 ### 切换线性布局 {#multi-sequence-start-collinear}
 
 
-```{r example-10, eval=FALSE}
+```{r example-8, eval=FALSE}
 p_chord_feature + coord_collinear()
 ```
 
@@ -190,18 +168,18 @@ p_chord_feature + coord_collinear()
 把 `seq_data_example` 换成含 `accver` 和 `length` 的表即可。列的含义见[基本数据表](https://dangjem.github.io/ggchord/zh/data.html#prepare)。接下来[添加连接和特征](#multi-sequence-start-draw)。
 
 
-## 第一张单序列圆图 {#circular-start}
+## 圆形骨架与已有注释 {#circular-start}
 
 ### 长度与已有注释 {#circular-start-input}
 
 只需要长度与已知表格。本课 ori 行来自已核对 pUC19 注释 867–1455，与原 inspectorigin 输出一致；不运行 DNA 识别。需要 ggchord、dplyr。
 
-```{r example-11, eval=FALSE}
+```{r example-9, eval=FALSE}
 library(ggchord)
 ```
 
 
-```{r example-12, eval=FALSE}
+```{r example-10, eval=FALSE}
 library(dplyr)
 circle_seqs <- plasmid_example_pUC19 |> select(accver, length)
 circle_origins <- tibble(
@@ -218,7 +196,7 @@ p_coursecircle <- ggchord(circle_seqs) +
 ### 添加特征和标签 {#circular-start-features-and-labels}
 
 
-```{r example-13, eval=FALSE}
+```{r example-11, eval=FALSE}
 p_coursecirclefeature <- p_coursecircle +
   geom_feature_plasmid(data = circle_origins) +
   geom_feature_label(data = circle_origins,
@@ -231,20 +209,88 @@ view_ggchord(p_coursecirclefeature)
 
 找到 ori 在刻度上的两端，确认文字来自 anno；圆形外观不表示已验证分子拓扑。
 
-### 练习与保存 {#circular-start-exercise}
+### 操作示例与保存 {#circular-start-exercise}
 
 去掉标签层再运行，骨架和源区间保持。用自己的已知注释替换该行。
 
-```{r example-14, eval=FALSE}
+```{r example-12, eval=FALSE}
 ggsave("circular-first.png", p_coursecirclefeature,
   width = 10, height = 8, units = "in", dpi = 144)
 ```
 
 
-## 从已有 HSP 读取双轴点图 {#dotplot-start}
+## HSP 双轴、方向与映射 {#dotplot-start}
 
+### 多序列综合矩阵 {#dotplot-start-matrix}
+
+以下输入来自仓库原始 FASTA 和标准 BLAST 表。完整保留四序列的 32 条 HSP，不补造自比对、对称记录或缺失的 HSP。266 条 CDS 属于共用来源表，但不交给 Dotplot 的线段层。空白区域表示本次输入没有关系记录，不能据此认定不存在同源性。
+
+
+```{r example-13, eval=FALSE}
+library(ggchord)
+library(dplyr)
+flagship_paper <- "#FFFCF5"
+flagship_sequences <- read_fasta_lengths("examples/fasta/*.fna") |>
+  select(accver, length)
+flagship_hsp <- read_blast(files = "examples/blastn-standard/*.tsv", source_file = TRUE) |>
+  mutate(source_hsp_id = paste0("source-HSP-", row_number()))
+flagship_features <- read_gff3("examples/gff3/*.gff3", unstranded = "keep") |>
+  filter(type == "CDS")
+flagship_events <- flagship_hsp |>
+  transmute(accver = qaccver, pos = pmin(qstart, qend))
+flagship_colours <- c(
+  "MT108731.1" = "#E64B35", "MT118296.1" = "#233E4A",
+  "OQ646790.1" = "#269B82", "OR222515.1" = "#D59B17"
+)
+flagship_theme <- theme_ggchord_publication() +
+  theme(
+    plot.background = element_rect(fill = flagship_paper, colour = NA),
+    panel.background = element_rect(fill = flagship_paper, colour = NA),
+    legend.background = element_rect(fill = flagship_paper, colour = NA),
+    legend.key = element_rect(fill = flagship_paper, colour = NA),
+    legend.position = "right", legend.box = "vertical", legend.text = element_text(size = 8),
+    legend.title = element_text(size = 9),
+    plot.margin = margin(12, 16, 12, 16)
+  )
+
+flag_dotplot <- ggchord(flagship_sequences, flagship_hsp) +
+  geom_alignment_segment(aes(link_colour = pident, link_linewidth = length), alpha = 0.85) +
+  scale_link_linewidth_continuous(range = c(0.45, 1.7), name = "HSP length (bp)") +
+  coord_dotplot(x_seqs = flagship_sequences$accver, y_seqs = flagship_sequences$accver,
+    gap = 4000) +
+  labs(x = "Query position (bp)", y = "Subject position (bp)") +
+  flagship_theme +
+  theme(panel.grid.major = element_line(colour = "#DFDED5", linewidth = 0.25))
+```
+
+
+<figure class="documentation-figure" data-figure="flagdotplot"><img src="tutorial-assets/flagdotplot.jpg" alt="四序列 HSP 双轴总览" width="1440" height="1080" loading="lazy" decoding="async"><figcaption>四序列 HSP 双轴总览 · <a href="tutorial-assets/site-flagships.R">完整 R 源码</a></figcaption></figure>
+
+### 按来源记录检查方向 {#dotplot-start-direction}
+
+四端点的相对方向来自源记录；反转显示轴会改变视觉斜率，但不改原始方向。可以按序列对统计已有 HSP 的方向：
+
+```{r example-14, eval=FALSE}
+hsp_direction <- flagship_hsp |>
+  mutate(relative_direction = if_else(
+    (qend - qstart) * (send - sstart) < 0, "reverse", "forward"
+  )) |>
+  count(qaccver, saccver, relative_direction, name = "HSP")
+hsp_direction
+```
+
+### 查询精确坐标 {#dotplot-start-mapping}
+
+下面将首条 HSP 的 query 起点换算到拼接 x 轴。反查时用 `inverse = TRUE`，并明确 `axis`；显示间隙返回 NA。该转换不改变四端点。
 
 ```{r example-15, eval=FALSE}
+map_ggchord_position(
+  flag_dotplot, flagship_hsp$qaccver[1], flagship_hsp$qstart[1], axis = "x"
+)
+```
+
+
+```{r example-16, eval=FALSE}
 library(ggchord)
 library(dplyr)
 ```
@@ -257,7 +303,7 @@ library(dplyr)
 原始文件及来源见[输入下载](https://dangjem.github.io/ggchord/zh/formats.html)。以下准备代码需要可选依赖`dplyr`。
 
 
-```{r example-16, eval=FALSE}
+```{r example-17, eval=FALSE}
 library(dplyr)
 dotplot_hsp <- read_paf("examples/format-inputs/emales-pair.paf")
 dotplot_seqs <- bind_rows(
@@ -273,7 +319,7 @@ dotplot_seqs <- bind_rows(
 刻度为0/50/80/90/95/100；显式用户标度优先。
 
 
-```{r example-17, eval=FALSE}
+```{r example-18, eval=FALSE}
 p_viewdotplot <- ggchord(dotplot_seqs, dotplot_hsp) +
   geom_alignment_segment(aes(link_colour = pident), linewidth = 0.65) +
   coord_dotplot()
@@ -290,7 +336,7 @@ view_ggchord(p_viewdotplot, width = 8, height = 7, units = "in")
 每条序列从源位置1起算；拼接后的区段保留各自accession和局部刻度标签。
 
 
-```{r example-18, eval=FALSE}
+```{r example-19, eval=FALSE}
 dotplot_reversed <- ggchord(dotplot_seqs, dotplot_hsp) +
   geom_alignment_segment(aes(link_colour = pident), linewidth = 0.65) +
   coord_dotplot(y_orientation = -1)
@@ -307,22 +353,22 @@ dotplot_layout$axis_layout
 
 ### 边界与下一步 {#dotplot-start-support}
 
-不支持骨架 gene/feature/track/ribbon 层、facet 或作为 Fusion 端点。需要 gap/mismatch 时，提供真实字符对齐，见[字符工作流](https://dangjem.github.io/ggchord/zh/aligned-sequences.html)。练习：选一条线，找回四端点，分别解释斜率和配色。
+不支持骨架 gene/feature/track/ribbon 层、facet 或作为 Fusion 端点。需要 gap/mismatch 时，提供真实字符对齐，见[字符工作流](https://dangjem.github.io/ggchord/zh/aligned-sequences.html)。操作示例：选一条线，找回四端点，分别解释斜率和配色。
 
 
-## 两张独立图的一条真实连接 {#fusion-start}
+## 组合面板与真实区间连接 {#fusion-start}
 
 ### 先独立画好两张图 {#fusion-start-panels}
 
 需要 ggchord、dplyr 和[输入包](https://dangjem.github.io/ggchord/assets/tutorial-inputs.zip)中的原始 PAF。先分别打印 course_center 和 course_detail，再组合一条已有关系。
 
-```{r example-19, eval=FALSE}
+```{r example-20, eval=FALSE}
 library(ggchord)
 library(dplyr)
 ```
 
 
-```{r example-20, eval=FALSE}
+```{r example-21, eval=FALSE}
 library(dplyr)
 fusion_hsp <- read_paf("examples/format-inputs/emales-pair.paf")
 fusion_seqs <- bind_rows(
@@ -339,7 +385,7 @@ fusion_events <- fusion_hsp |>
 
 
 
-```{r example-21, eval=FALSE}
+```{r example-22, eval=FALSE}
 course_center <- ggchord(fusion_seqs |> slice(1)) +
   geom_seq(show.legend = FALSE) +
   coord_circular()
@@ -367,7 +413,7 @@ view_ggchord(p_coursefusion)
 
 Fusion 是组合对象，不是第七 Coord。每个面板保留自己的数据、图层、标度和比例；side 仅摆放，不旋转子图。两端须同单位、完整可见且路由唯一，不能直接连接 bp 与 aa。
 
-```{r example-22, eval=FALSE}
+```{r example-23, eval=FALSE}
 course_export <- export_ggchord_fusion(p_coursefusion, width = 12, height = 8)
 course_export$connections
 course_export$fronts
@@ -375,19 +421,19 @@ course_export$fronts
 
 ### 按相同尺寸保存 {#fusion-start-save}
 
-```{r example-23, eval=FALSE}
+```{r example-24, eval=FALSE}
 ggsave("fusion-first.png", p_coursefusion,
   width = 12, height = 8, units = "in", dpi = 144)
 ```
 
-练习：换成另一条真实 HSP，指出 qpanel/spanel 与源行。Dotplot、facet 和未注册外部图当前不支持。
+操作示例：换成另一条真实 HSP，指出 qpanel/spanel 与源行。Dotplot、facet 和未注册外部图当前不支持。
 
 
 ## HSP点阵图与径向辐条 {#view-expansion}
 
 复用已有来源表，无需另一套比对表。Dotplot线段保留四个HSP端点，Radial使用已有环形邻接关系和真实长度比例。来源准备、支持图层与位置反查见网站view-expansion章节。
 
-```{r example-24, eval=FALSE}
+```{r example-25, eval=FALSE}
 ggchord(seq_data_example, ribbon_data_example) +
   geom_alignment_segment(aes(link_colour = pident)) +
   coord_dotplot()

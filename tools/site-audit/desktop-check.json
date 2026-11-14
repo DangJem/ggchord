@@ -1,20 +1,20 @@
 {
-  "status": "pending user unlock",
-  "reason": "Native Mac UI reported locked screen; browser extension was unavailable earlier",
-  "planned_widths": [
-    1280,
-    1440,
-    1920
-  ],
+  "status": "cancelled by explicit user request",
+  "reason": "On 2026-11-14 the user removed all future desktop interaction acceptance; mobile testing remains excluded",
   "mobile_testing": false,
   "observations_before_final_build": [
     "At 1440px, duplicate version text compressed the header; CSS fix committed in 7e6a4c0"
   ],
-  "not_verified_on_final_build": [
+  "scope": "No browser interaction or viewport acceptance for the manual redesign; source, R figures, assets and build checks remain",
+  "previously_planned_widths": [
+    1280,
+    1440,
+    1920
+  ],
+  "excluded_by_user": [
     "Viewport layout at all three widths",
     "Navigation and language switch",
     "Search ranking and keyboard focus",
     "Gallery filters/hash reveal and image viewer"
-  ],
-  "scope": "Earlier preview observation is not final browser acceptance"
+  ]
 }

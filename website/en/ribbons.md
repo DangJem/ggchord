@@ -26,9 +26,9 @@ Estimated lengths retain their flags; unobserved identity is never invented.
 
 Each end is divided into four position bins. Ribbons darken when more alignments share the same sequence pair, direction and bins. The legend shows the computed count from `after_stat(bundle_n)`. Each input row still gives one ribbon. Use `stat_ribbon_bundle()` to aggregate neighbouring ribbons.
 
-Choose point versus interval geometry in the [links lesson](multi-sequence-links.html#interval-points).
+Choose point versus interval geometry in the [links section](multi-sequence-links.html#interval-points).
 
-## Check your result {#check-result}
+## Result checks {#check-result}
 Inspect each report and member rows before reading the plot. Aggregated bands are not new alignments; point links summarize midpoints of existing HSPs.
 
 <div class="next-step">Continue: <a href="views.html">Focus, segments and homology →</a></div>

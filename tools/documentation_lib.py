@@ -13,6 +13,7 @@ RECIPES = json.loads((WEB / 'showcase-recipes.json').read_text())
 def snippets():
     text = (ROOT / 'tools/documentation-examples.R').read_text()
     text += '\n' + (ROOT / 'tools/site-course-examples.R').read_text()
+    text += '\n' + (ROOT / 'tools/site-flagships.R').read_text()
     return dict((name, code.strip()) for name, code in re.findall(
         r'^# ---- (\w+) ----\n(.*?)(?=^# ---- \w+ ----)', text, re.M | re.S)
         if name not in {'end','courseend'})
@@ -41,7 +42,9 @@ def table(headers, rows):
         ['| ' + ' | '.join(map(cell, row)) + ' |' for row in rows])
 
 def expand(text, lang, *, figures='assets', reference=''):
-    from site_components import home_hero, task_cards, responsive_image, lesson_urls
+    from site_components import home_hero, task_cards, responsive_image, lesson_urls, manual_home, manual_figure, manual_figures
+    text=text.replace('{{manualhome}}',manual_home(lang,figures))
+    text=re.sub(r'\{\{manualfigure:(\w+)\}\}',lambda m:manual_figure(m[1],lang,figures),text)
     text=text.replace('{{sitehero}}',home_hero(lang,figures)).replace('{{taskcards}}',task_cards(lang))
     chunks = {name: localize_r_comments(code, lang) for name, code in snippets().items()}
     with (WEB / 'assets/plots.csv').open() as f:
@@ -63,6 +66,8 @@ def expand(text, lang, *, figures='assets', reference=''):
         return f'[{label}]({figures}/{name})\n\n```r\nsource("{name}")\n```\n'
     text = re.sub(r'\{\{recipe:(\w+)\}\}', recipe, text)
     def figure(key, source_url=None):
+        replacement=next((r for r in manual_figures().values() if r.get('replaces')==key),None)
+        if replacement:return manual_figure(replacement['id'],lang,figures)
         caption=html.escape(CAPTIONS[key][lang])
         code_url=source_url or lesson_urls().get(key,'gallery.html')
         if figures!='../assets':
@@ -119,11 +124,10 @@ def expand(text, lang, *, figures='assets', reference=''):
         for key,page,title_en,title_zh in showcase_specs)+'</div>'
     text = text.replace('{{showcases}}', overview)
     if '{{plasmidcatalog}}' in text:
-        with (WEB/'assets/plasmid-catalog.csv').open() as source:
-            catalog = list(csv.DictReader(source))
+        catalog=json.loads((WEB/'reference-catalog.json').read_text())
         text = text.replace('{{plasmidcatalog}}', table(
-            ['Reference', 'Length (bp)', 'Features'] if lang == 'en' else ['参考序列', '长度（bp）', '识别特征数'],
-            [[f'[{row["accver"]}](#{row["figure"]})', row['length'], row['features']] for row in catalog]))
+            ['Reference','Length (bp)','Features','Reference primers','Site rows','Positions'] if lang=='en' else ['参考序列','长度（bp）','特征','参考引物','位点行','切点位置'],
+            [[f'[{row["accver"]}](#{row["figure"]})',row['length'],row['features'],row['source_primers'],row['selected_sites'],row['selected_positions']] for row in catalog]))
     migration = json.loads((WEB / 'migrations.json').read_text())
     rows = [[f'`{r[0]}`', f'`{r[1]}`', r[2], r[3 if lang == 'en' else 4]] for r in migration]
     text = text.replace('{{migration}}', table(
@@ -140,9 +144,9 @@ def expand(text, lang, *, figures='assets', reference=''):
     for asset in assets:
         key = asset['id']
         page,_,anchor=destinations[key].partition('#')
-        label='Related lesson →' if lang=='en' else '相关教程 →'
+        label='Related section →' if lang=='en' else '相关说明 →'
         source_label='Shared R source' if lang=='en' else '共享 R 源码'
-        source_url=f'{figures}/documentation-examples.R' if figures=='../assets' else None
+        source_url=f'{figures}/'+('site-flagships.R' if any(r.get('replaces')==key for r in manual_figures().values()) else 'documentation-examples.R') if figures=='../assets' else None
         source_link=f' · <a href="{source_url}">{source_label}</a>' if source_url else ''
         lesson=page+'.html'+('#'+anchor if anchor else '')
         module={'chord':'multi-sequence','collinear':'multi-sequence','radial':'multi-sequence','sankey':'multi-sequence','circular':'circular','dotplot':'dotplot','fusion':'fusion'}.get(asset['coordinate'],page_records.get(page,{}).get('module','shared'))
@@ -178,7 +182,7 @@ def expand(text, lang, *, figures='assets', reference=''):
                 '\n'.join(f'- [{titles[k]}]({k}.html)' for k in entries))
     text=text.replace('{{articles}}','\n\n'.join(article_groups))
     text=text.replace('{{coverage}}',table(
-        ['Capability','Read','Executable source / output'] if lang=='en' else ['功能','使用教程','代码与结果'],
+        ['Capability','Read','Executable source / output'] if lang=='en' else ['功能','用法说明','代码与结果'],
         [[c['title'][lang],', '.join(f'[{titles[k]}]({k}.html)' for k in c['articles']),
           ', '.join('`'+k+'`' for k in c['snippets'])+(' · '+', '.join(c['figures']) if c['figures'] else '')] for c in coverage]))
     def selector(name,label,options):

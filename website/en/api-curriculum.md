@@ -1,8 +1,8 @@
-Find purpose, primary lesson, modes, complete cases and full parameters by API. Levels assess teaching scope, not every parameter combination. L2 includes runnable minimal use and input/output explanation; L3 adds key-parameter contrasts. Upstream reexports and spelling aliases are explained by family rather than duplicate lessons.
+Find purpose, primary section, modes, complete cases and full parameters by API. Levels assess documentation scope, not every parameter combination. L2 includes runnable minimal use and input/output explanation; L3 adds key-parameter contrasts. Upstream reexports and spelling aliases are explained by family rather than duplicate sections.
 
-## API learning paths {#apis}
+## API usage index {#apis}
 
-| API/reference | Purpose | Lesson and level | Mode/input boundary | Parameter atlas | Case/workflow |
+| API/reference | Purpose | Section and level | Mode/input boundary | Parameter atlas | Case/workflow |
 | --- | --- | --- | --- | --- | --- |
 | [`adapt_ggchord`](reference/adapt_ggchord.html) | Opt into bounded theme scaling and joint guide layout at the target size | [L2](styling.html#adaptive) | fixed/scale/adaptive; explicit settings remain authoritative; no global collision guarantee | [↗](parameter-atlas.html#api-adapt_ggchord) | [↗](styling.html) |
 | [`aes`](reference/ggplot2-helpers.html) | Selected ggplot2 helpers for ggchord plots | [upstream](parameter-atlas.html#upstream) | upstream; applies only to matching supported ggplot roles | [↗](parameter-atlas.html#api-aes) | [↗](chord.html) |
@@ -164,4 +164,4 @@ Find purpose, primary lesson, modes, complete cases and full parameters by API. 
 
 ## How to reproduce {#reproduce}
 
-Start at the preparation code in the primary lesson. Learn fields in [basic tables](data.html) and conversions in [formats](formats.html). Shared lesson snippets execute in independent environments and important comparisons are rendered by ggchord. Explicit synthetic geometry demonstrations are not biological evidence. Keep version/source/verification records and use the [installation page](installation.html) to distinguish development and stable versions.
+Start at the preparation code in the primary section. Inspect fields in [basic tables](data.html) and conversions in [formats](formats.html). Shared example snippets execute in independent environments and important comparisons are rendered by ggchord. Explicit synthetic geometry demonstrations are not biological evidence. Retain inputs, source and reproduction notes; see [installation](installation.html) for setup.

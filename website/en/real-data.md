@@ -5,7 +5,7 @@
 
 Starting with original files, compare observed similarity intervals and CDS across four source genomes. FASTA/GFF3 identifiers and sources match the [four-sequence case](chord.html#question). Standard BLAST tables retain original values; conversion and physical source rows are recorded in examples/blastn-standard/provenance.csv.
 
-Package code is MIT-licensed. Original database records and third-party catalogues retain their own source terms; package licensing does not automatically relicense every input. The tutorial archive carries unchanged files, SHA256 and provenance. The separate EMALE format examples retain gggenomes MIT source licensing in GGGENOMES-LICENSE.txt.
+Package code is MIT-licensed. Original database records and third-party catalogues retain their own source terms; package licensing does not automatically relicense every input. The manual archive carries unchanged files, SHA256 and provenance. The separate EMALE format examples retain gggenomes MIT source licensing in GGGENOMES-LICENSE.txt.
 
 ## Prepare this page {#prepare}
 Extract the [input bundle](../assets/tutorial-inputs.zip) so your working directory contains `examples/`.
@@ -55,7 +55,7 @@ not a replacement for the original annotations or alignment evidence.
 ## Select fields before passing data {#minimal-fields}
 Backbones use `accver` and `length`. Ribbons use IDs and endpoints on both sequences. This example also filters on `pident` and `length`. See [alignment inputs](alignments.html).
 
-## Check your result {#check-result}
+## Result checks {#check-result}
 Check that IDs agree across the tables, inspect filtering reports and verify that guides encode identity and strand. Use the overview to locate regions, then focus a neighbourhood to study a CDS.
 
 <div class="next-step">Continue: <a href="homology.html">Explicit homologs and coding-coordinate links →</a></div>

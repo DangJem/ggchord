@@ -41,7 +41,7 @@ Blue arrows show the reverse-strand AmpR CDS and the grey band connects the veri
 
 The first 20 residues of identical CDS provide sequence evidence for `ungapped = TRUE`. Equal spans alone do not justify that claim for ordinary BLASTp HSPs. The utility retains protein statistics rather than presenting them as nucleotide identity.
 
-## Check your result {#check-result}
+## Result checks {#check-result}
 Both AmpR arrows show the reverse strand. Coding DNA supports correspondence; source axes and focus reports explain the local display. Save at [explicit 10 × 5 in dimensions](output.html).
 
 Next: [read real BLASTp query intervals](alignments.html#protein), understand [CDS projection and segments](projection.html), or create [independent local windows](views.html).

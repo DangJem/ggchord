@@ -1,0 +1,132 @@
+[
+  {
+    "accver": "pSB1C3",
+    "length": "2070",
+    "features": "7",
+    "figure": "catalogpsb",
+    "source_primers": 2,
+    "selected_sites": 38,
+    "selected_positions": 33,
+    "site_policy": "saved reference profile; current commercial nonredundant representatives"
+  },
+  {
+    "accver": "pUC19",
+    "length": "2686",
+    "features": "9",
+    "figure": "catalogpuc",
+    "source_primers": 0,
+    "selected_sites": 39,
+    "selected_positions": 33,
+    "site_policy": "saved reference profile; current commercial nonredundant representatives"
+  },
+  {
+    "accver": "pBR322",
+    "length": "4361",
+    "features": "6",
+    "figure": "catalogpbr",
+    "source_primers": 0,
+    "selected_sites": 47,
+    "selected_positions": 42,
+    "site_policy": "saved reference profile; current commercial nonredundant representatives"
+  },
+  {
+    "accver": "pBluescript II SK(+)",
+    "length": "2961",
+    "features": "14",
+    "figure": "catalogblue",
+    "source_primers": 0,
+    "selected_sites": 48,
+    "selected_positions": 42,
+    "site_policy": "saved reference profile; current commercial nonredundant representatives"
+  },
+  {
+    "accver": "pET-28a(+)",
+    "length": "5369",
+    "features": "16",
+    "figure": "catalogpet",
+    "source_primers": 0,
+    "selected_sites": 51,
+    "selected_positions": 45,
+    "site_policy": "saved reference profile; current commercial nonredundant representatives"
+  },
+  {
+    "accver": "pETDuet-1",
+    "length": "5420",
+    "features": "20",
+    "figure": "catalogduet",
+    "source_primers": 5,
+    "selected_sites": 58,
+    "selected_positions": 54,
+    "site_policy": "explicit unique 6+ commercial nonredundant comparison; saved None disagrees with PNG"
+  },
+  {
+    "accver": "pDONR221",
+    "length": "4761",
+    "features": "11",
+    "figure": "catalogdonr",
+    "source_primers": 0,
+    "selected_sites": 47,
+    "selected_positions": 42,
+    "site_policy": "saved reference profile; current commercial nonredundant representatives"
+  },
+  {
+    "accver": "pcDNA3.1(+)",
+    "length": "5428",
+    "features": "13",
+    "figure": "catalogpcdna",
+    "source_primers": 0,
+    "selected_sites": 51,
+    "selected_positions": 47,
+    "site_policy": "saved reference profile; current commercial nonredundant representatives"
+  },
+  {
+    "accver": "pTRE-Tight-BI",
+    "length": "2856",
+    "features": "15",
+    "figure": "catalogtre",
+    "source_primers": 0,
+    "selected_sites": 47,
+    "selected_positions": 44,
+    "site_policy": "saved reference profile; current commercial nonredundant representatives"
+  },
+  {
+    "accver": "pTRIPZ",
+    "length": "13320",
+    "features": "33",
+    "figure": "catalogtripz",
+    "source_primers": 0,
+    "selected_sites": 38,
+    "selected_positions": 35,
+    "site_policy": "saved reference profile; current commercial nonredundant representatives"
+  },
+  {
+    "accver": "pCAMBIA1300",
+    "length": "8959",
+    "features": "17",
+    "figure": "catalogcambia",
+    "source_primers": 0,
+    "selected_sites": 42,
+    "selected_positions": 37,
+    "site_policy": "saved reference profile; current commercial nonredundant representatives"
+  },
+  {
+    "accver": "pEarleyGate 201",
+    "length": "11779",
+    "features": "21",
+    "figure": "catalogearley",
+    "source_primers": 0,
+    "selected_sites": 39,
+    "selected_positions": 37,
+    "site_policy": "saved reference profile; current commercial nonredundant representatives"
+  },
+  {
+    "accver": "pSpCas9(BB)-2A-GFP (PX458)",
+    "length": "9288",
+    "features": "19",
+    "figure": "catalogcas",
+    "source_primers": 0,
+    "selected_sites": 4,
+    "selected_positions": 4,
+    "site_policy": "saved reference profile; current commercial nonredundant representatives"
+  }
+]
