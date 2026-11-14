@@ -219,4 +219,4 @@ CATEGORIES = {
  'recognition': ('Sequence recognition', '序列识别'),
  'workflow': ('Projection and comparison workflows', '投影与比较工作流'),
  'output': ('Output and diagnostics', '输出与诊断'),
- 'other': ('Methods, teaching data and upstream reexports', '方法、教学数据与上游重导出')}
+ 'other': ('Methods, example data and upstream reexports', '方法、示例数据与上游重导出')}

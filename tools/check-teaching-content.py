@@ -71,6 +71,9 @@ for name in templates:
             continue  # Raw templates contain internal lesson/recipe identifiers.
         if re.search(pattern, text, re.I):
             raise SystemExit(f'Review template: {name}: {category}')
+# Generated historical entry must not advertise the deleted overview.
+builder = (ROOT/'tools/build-website.py').read_text()
+assert 'zh/learn.html' not in builder and '学习总览' not in builder
 bad = [row for row in rows if row['findings']]
 if bad:
     raise SystemExit('Editorial review required: ' + ', '.join(row['language']+'/'+row['slug'] for row in bad))

@@ -244,7 +244,7 @@ def finalize(out,args,render_snapshot,input_hashes):
         if rel in routes:continue
         path=out/rel;path.parent.mkdir(parents=True,exist_ok=True)
         if rel=='README-Hans.html':
-            path.write_text('<!doctype html><html lang="zh-Hans"><meta charset="utf-8"><title>历史汉语入口 · ggchord</title><h1>历史汉语 README</h1><p>此地址保留历史来源说明，不表示与当前教程逐项等价。</p><a href="zh/learn.html">现代汉语学习总览</a> · <a href="https://github.com/DangJem/ggchord/blob/0f5dd96da57876da74cd1234c7de9cf5579c80b8/README-Hans.md">固定审计版本 README</a></html>')
+            path.write_text('<!doctype html><html lang="zh-Hans"><meta charset="utf-8"><title>历史汉语入口 · ggchord</title><h1>历史汉语 README</h1><p>此地址保留历史来源说明，不表示与当前说明逐项等价。</p><a href="zh/installation.html">现代汉语使用说明</a> · <a href="https://github.com/DangJem/ggchord/blob/0f5dd96da57876da74cd1234c7de9cf5579c80b8/README-Hans.md">固定审计版本 README</a></html>')
             retired.append(rel);continue
         en=os.path.relpath(out/'en/reference/index.html',path.parent);zh=os.path.relpath(out/'zh/reference/index.html',path.parent)
         path.write_text(f'<!doctype html><html lang="en"><head><meta charset="utf-8"><title>Historical documentation</title></head><body><h1>Historical documentation / 历史文档</h1><p>This historical URL has no exact current equivalent. 此旧地址没有一一对应的当前页面。</p><a href="{en}">Current reference</a> · <a href="{zh}">现代汉语参考</a></body></html>')
