@@ -916,6 +916,7 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
       seq_label_hjust_explicit = !is.null(seq_label_params$seq_label_hjust),
       seq_label_vjust_explicit = !is.null(seq_label_params$seq_label_vjust),
       collinear_transform = collinear_transform,
+      collinear_crossrow_styles = ggchord_collinear_row_styles(plot$coordinates),
       collinear_vertical = isTRUE(plot$coordinates$ggchord_sankey) ||
         identical(plot$coordinates$collinear_seq_axis, "vertical"))
   } else compute_chord_layout

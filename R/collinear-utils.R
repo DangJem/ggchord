@@ -1,3 +1,9 @@
+# Cross-row outline conventions belong to linear rows, not every derived Coord.
+ggchord_collinear_row_styles <- function(coord) {
+  isTRUE(coord$ggchord_collinear) &&
+    !isTRUE(coord$ggchord_radial) && !isTRUE(coord$ggchord_sankey)
+}
+
 # Explicit selection retains the row identity of the full resolved layer input.
 ggchord_select_ribbons <- function(data, seqs, params, collinear = FALSE, display_rows = NULL, cyclic = FALSE) {
   if (is.null(data)) return(list(data = NULL, report = data.frame()))

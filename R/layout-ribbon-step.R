@@ -125,9 +125,7 @@ ggchord_layout_ribbon_step <- function(
     } else if (identical(ribbon_direction, "linetype")) {
       ribbon_linetype_vec <- rep("solid", length(valid_idx))
     } else {
-      ribbon_linetype_vec <- ifelse(
-        ribbon_data$.ggchord_adjacent[valid_idx], "solid", "dashed"
-      )
+      ribbon_linetype_vec <- rep("solid", length(valid_idx))
     }
 
     front_fallbacks <- 0L

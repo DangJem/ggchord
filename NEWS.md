@@ -1,5 +1,13 @@
 # ggchord 0.27.0 (development)
 
+- Sankey projection preserves missing angle metadata in mixed text/leader
+  records instead of failing during readable-angle normalization.
+
+- Automatic dashed/heavier ribbon outlines now apply only to non-adjacent
+  Collinear rows (horizontal or vertical). Chord, Radial and Sankey use
+  ordinary solid outlines by default. Fixed and mapped line types retain
+  priority; source HSPs, selection and ribbon geometry are unchanged.
+
 - The documentation source now organizes learning into multi-sequence
   relationships, single-sequence circular maps, HSP Dotplots and Fusion
   composition. Shared first lessons, source-aware detail recipes, task search

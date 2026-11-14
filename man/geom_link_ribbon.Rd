@@ -67,10 +67,10 @@ take precedence over matching mappings; omitted defaults do not suppress
 user mappings. For example, omit \code{alpha} when mapping \code{ribbon_alpha}.}
 
 \item{linetype}{Fixed outline line type. The default \code{NULL} uses solid
-outlines for adjacent displayed sequences and dashed outlines for
-non-adjacent sequences. Collinear outline widths use
-\code{nonadjacent_linewidth}. Chord adjacency includes the first/last pair.
-This follows the final display order, independently of alignment direction.
+outlines in Chord, Radial and Sankey views. Only \code{\link[=coord_collinear]{coord_collinear()}}
+uses dashed outlines for non-adjacent displayed rows, with widths set by
+\code{nonadjacent_linewidth}; adjacent rows stay solid. This row convention
+follows final display order, independently of alignment direction.
 Explicit fixed styles or \code{aes(ribbon_linetype = ...)} (also
 \code{aes(linetype = ...)}) replace the automatic styles. Use a matching scale
 for data mappings; automatic styles do not train a linetype scale.

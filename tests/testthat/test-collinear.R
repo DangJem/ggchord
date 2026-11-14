@@ -27,7 +27,7 @@ test_that("collinear labels preserve feature stacking and their own text", {
     lapply(unique(after$feature[placement]), unname))
 })
 
-test_that("ribbon outline defaults follow display adjacency without changing mapped layers", {
+test_that("only Collinear rows get automatic cross-row outlines, preserving explicit styles", {
   seq <- data.frame(accver = LETTERS[1:4], length = 1000)
   ribbon <- data.frame(qaccver = "A", saccver = c("B", "C", "D"),
     qstart = 100, qend = 200, sstart = c(400, 300, 600),
@@ -55,6 +55,16 @@ test_that("ribbon outline defaults follow display adjacency without changing map
     coord_collinear())
   expect_equal(styles(mapped$data[[2L]]), c("solid", "dashed", "dashed"))
   expect_equal(styles(mapped$data[[3L]]), rep("dotdash", 3L))
+  for (coord in list(coord_chord(), coord_radial_synteny(), coord_sankey())) {
+    view <- ggplot2::ggplot_build(base +
+      geom_link_ribbon(adjacent_only = FALSE, linewidth = .2) +
+      geom_link_ribbon(aes(ribbon_linetype = kind), adjacent_only = FALSE) +
+      scale_ribbon_linetype_manual(values = c(a = "dotted", b = "dotdash", c = "longdash")) +
+      coord)
+    expect_equal(styles(view$data[[2L]]), rep("solid", 3L))
+    expect_equal(unique(view$data[[2L]]$linewidth), .2)
+    expect_equal(styles(view$data[[3L]]), c("dotted", "dotdash", "longdash"))
+  }
 })
 
 

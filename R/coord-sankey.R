@@ -49,8 +49,10 @@ ggchord_project_sankey_data <- function(data, frames, id = NULL) {
   for (field in intersect(c("angle", "text_angle", "label_angle"), names(data))) {
     angle <- data[[field]] * pi/180
     degrees <- atan2(-cos(angle), frames$normal_sign[at] * sin(angle)) * 180/pi
-    degrees[degrees > 90] <- degrees[degrees > 90] - 180
-    degrees[degrees < -90] <- degrees[degrees < -90] + 180
+    above <- which(degrees > 90)
+    degrees[above] <- degrees[above] - 180
+    below <- which(degrees < -90)
+    degrees[below] <- degrees[below] + 180
     data[[field]] <- degrees
   }
   data

@@ -71,10 +71,10 @@ make_ribbon_geom <- function(outline = FALSE, linetype = FALSE) {
 #'   ribbon. This changes width independently of line type. An explicit
 #'   `aes(linewidth = ...)` controls widths instead of this fixed default.
 #' @param linetype Fixed outline line type. The default `NULL` uses solid
-#'   outlines for adjacent displayed sequences and dashed outlines for
-#'   non-adjacent sequences. Collinear outline widths use
-#'   `nonadjacent_linewidth`. Chord adjacency includes the first/last pair.
-#'   This follows the final display order, independently of alignment direction.
+#'   outlines in Chord, Radial and Sankey views. Only [coord_collinear()]
+#'   uses dashed outlines for non-adjacent displayed rows, with widths set by
+#'   `nonadjacent_linewidth`; adjacent rows stay solid. This row convention
+#'   follows final display order, independently of alignment direction.
 #'   Explicit fixed styles or `aes(ribbon_linetype = ...)` (also
 #'   `aes(linetype = ...)`) replace the automatic styles. Use a matching scale
 #'   for data mappings; automatic styles do not train a linetype scale.
