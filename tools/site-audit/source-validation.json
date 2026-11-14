@@ -1,54 +1,104 @@
 {
-  "scope": "Validation commands actually executed in this task; native output/browser evidence is reported separately",
+  "scope": "Current manual redesign: source/R/PNG validation; native build and HTTP evidence recorded separately; all browser acceptance cancelled by user",
   "commands": [
     {
       "command": "python3 tools/check-documentation.py --source-only",
-      "result": "passed: 94 paired entries; 157 exports; 121 Rd; 1149 protected translations"
+      "result": "passed: 93 paired entries, 157 exports, 121 Rd topics, equivalent executable code, 1149 protected translations and generated metadata/assets"
     },
     {
       "command": "Rscript --vanilla tools/check-documentation-lessons.R --write-outputs",
-      "result": "passed: 52 current pages, separate environments in one new R process; package namespaces can be shared"
+      "result": "passed: 52 current page preparations in separate environments in one fresh R process; namespaces may be shared; save/preview arguments checked only"
     },
     {
-      "command": "Rscript --vanilla tools/check-documentation-lessons.R --page=protein-alignments --update-outputs",
-      "result": "passed in a fresh R process after adding the executable dplyr import"
+      "command": "Rscript --vanilla tools/check-documentation-lessons.R --page=multi-sequence-views --update-outputs",
+      "result": "passed in a fresh R process after final derived Sankey label selection; subsequent edits changed prose only"
     },
     {
-      "command": "Rscript --vanilla tools/check-documentation-lessons.R --page=aligned-sequences --update-outputs",
-      "result": "passed in a fresh R process with explicit GFF3 keep"
+      "command": "Rscript --vanilla tools/site-audit/check-ribbon-coordinate-styles.R",
+      "result": "passed: automatic/fixed/mapped styles for four public Coord builds, ordinary widths outside Collinear and same ribbon geometry as before the fix"
     },
     {
-      "command": "python3 tools/check-first-lessons.py",
-      "result": "passed earlier: four separate new R processes and public build/export; first-lessons.json holds exact script hashes"
-    },
-    {
-      "command": "python3 tools/render-site-courses.py [plus --only for added independent Fusion views]",
-      "result": "22 actual PNGs; each code/hash/render-input record retained in course-rendering.json"
-    },
-    {
-      "command": "Rscript --vanilla tools/site-audit/check-semantics.R",
-      "result": "passed: semantic-check.json"
+      "command": "Rscript --vanilla tools/site-audit/refresh-ribbon-figures.R",
+      "result": "61 affected original Chord/Radial normal-size PNGs actually rendered; startup source/runtime and per-image hashes recorded"
     },
     {
       "command": "python3 tools/site-audit/verify-existing-assets.py",
-      "result": "passed: exact explicit-keep edit proved input-identical for all 24 source CDS; 178 original PNG/dependency checks"
+      "result": "passed: exact reviewed style delta, 61 actual PNG refresh records, 117 retained equivalent original assets; explicit keep preserves all 24 source CDS rows"
+    },
+    {
+      "command": "python3 tools/render-site-courses.py --only coursechord courseradial courseradialangle",
+      "result": "three affected course PNGs actually redrawn; other 19 retained per-image render records, no false restamp"
+    },
+    {
+      "command": "Rscript --vanilla tools/render-site-flagships.R flagradial flagsankey flagdotplot flagfusion",
+      "result": "four new flagship PNGs actually rendered; source hash fixed throughout rendering; biological input tables unchanged"
+    },
+    {
+      "command": "python3 tools/site-audit/check-manual-assets.py",
+      "result": "passed: 20 manual images, 13 complete source-backed reference maps and seven matching homepage paper colours"
     },
     {
       "command": "python3 tools/check-site-design.py --write",
-      "result": "passed: 76 controlled contrast pairs and six static rules; not a WCAG certification"
+      "result": "passed: 76 controlled contrast pairs and six static rules; no browser or WCAG certification"
+    },
+    {
+      "command": "Rscript --vanilla -e parse(render/finalize templates)",
+      "result": "passed: both R templates parse"
+    },
+    {
+      "command": "git diff --check",
+      "result": "passed"
+    },
+    {
+      "command": "python3 tools/build-website.py --render-jobs 1 --render-batch-size 4",
+      "result": "35/36 initial workers returned 0; final English worker exited 1 without a diagnostic; followed by isolated recovery, not counted as initially passing"
+    },
+    {
+      "command": "python3 tools/site-audit/recover-native-render.py",
+      "result": "four failed/unattempted English articles rendered in separate new processes, all returned 0; finalized with unchanged render/archive inputs; original worker failure retained"
+    },
+    {
+      "command": "python3 tools/site-audit/finish-manual-static.py",
+      "result": "exact two-file source delta proved; normalized only start-menu id/ARIA attributes in 388 HTML files and copied one missing original PNG; source snapshot records the guarded correction"
+    },
+    {
+      "command": "python3 tools/check-documentation.py",
+      "result": "passed: 93 paired entries, generated links/anchors/search, assets, equivalent executable examples, 157 exports and 121 Rd topics"
+    },
+    {
+      "command": "python3 tools/site-audit/check-built.py",
+      "result": "passed: 582 audited URLs, 1146 old section destinations, 14 public aliases, 178 original figure IDs, 22 added example PNGs and download hashes"
+    },
+    {
+      "command": "python3 tools/site-audit/check-manual-assets.py --built",
+      "result": "passed: 20 copied manual images; four new flagships, 13 complete reference maps, seven matching homepage backgrounds"
+    },
+    {
+      "command": "python3 tools/long-term-audit/check-native-archive.py",
+      "result": "passed: 76 archive inputs and 30 expanded code paths; current source snapshot verified; historical output restored and current report copied to native-archive-check.json"
+    },
+    {
+      "command": "NO_PROXY=127.0.0.1,localhost no_proxy=127.0.0.1,localhost python3 tools/site-audit/check-http.py",
+      "result": "passed against a new loopback-only server: 582 HTTP 200 routes, unknown route 404 and bilingual recovery file; initial old preview/proxy 503 was not counted as passing"
     }
   ],
   "current_source_sha256": {
     "tools/documentation-examples.R": "abb8b3c3aa21ea2d21374a9da0a2b1d932066492a91a21a0d2572bc661b077a9",
-    "tools/site-course-examples.R": "16848ad5459b31e2ef3b246bca5d04ecd9ec128965a3fbef54e95741dc05aff0",
-    "tools/check-documentation-lessons.R": "dd229a13aa63bd7349a438a4faeec470e15379a5df860bae9f1a50933fc14b54",
-    "tools/check-first-lessons.py": "bf33c7f6543408e1b180af873f764d9e444a7e87eb7a58106b3c0fef0cd1b72f",
-    "tools/site-audit/check-semantics.R": "a0897aad78d14633126d5ebb762650a80d5545a2d92538aa521a46ace8fd74d0"
+    "tools/site-course-examples.R": "7920c8d94ac43c10137a5baf7c807a57302aa7ae7db210228be878870f5a3d16",
+    "tools/site-flagships.R": "96c39c6ea6d0fcee4da910d4cd1210f71462b04ebb8d8e0645fb06076aa312b5",
+    "tools/check-documentation-lessons.R": "6571e1709b4d2161430e14e572f2b1c21bc4caa9c92bc9418684b2ae5710e5cc",
+    "tools/site-audit/check-ribbon-coordinate-styles.R": "1e0723d3596872bba681f7c713d45d47635681373c47e25f127423198bafb591",
+    "tools/site-audit/verify-existing-assets.py": "6126ab216a878621ddb8803901f0981bbc354e124e32715f41d6179128442db4",
+    "tools/site-audit/check-manual-assets.py": "27fec2c8652be8dd91114359c948415dd97cbc7994bf0f75034320d9e7fdf327"
   },
   "limits": [
-    "No remote install executed",
-    "Optional GenBank NULL is a skip, not successful parsing",
-    "No testthat, package build/check, vignette knitting or publication device matrix",
-    "Selected source-backed self-correspondence in the shape check is not a detected biological alignment"
-  ]
+    "No remote install or optional decoder installation executed",
+    "GenBank NULL is a skipped optional branch, not successful parsing; earlier Biopython records remain historical",
+    "No testthat, devtools::test, R CMD build/check, vignette execution or publication device matrix",
+    "Desktop interaction acceptance cancelled explicitly by user; mobile excluded",
+    "Homepage compactness, navbar alignment and sidebar legibility changed in source; no viewport or interaction acceptance claimed",
+    "Previously executed four-process first-plot checks remain historical for their recorded engine/scripts"
+  ],
+  "source_checks_after_final_prose_fixes": "passed; no executable snippets or plot inputs changed after the final page preparation and PNG renders",
+  "sidebar_grouping_check": "passed: every navigation page appears exactly once in its manual section grouping"
 }

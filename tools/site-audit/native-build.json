@@ -1,13 +1,19 @@
 {
-  "native_builder_commit": "7e6a4c0e359a8b29fc8a62e83aff4b89cd32b7e4",
-  "build_time": "2026-11-13T18:46:43.764963+00:00",
+  "native_builder_commit": "4b059e30a84f7e2245d63ffde652725519c00ebb",
+  "postprocessing_source_commit": "c6067f4816c308ca9f7da6c9158c633b767126b5",
+  "build_time": "2026-11-14T05:27:33.483461+00:00",
   "runtime": "R version 4.6.0 (2026-04-24); ggplot2 4.0.3",
   "processes": {
     "render_jobs": 1,
     "return_codes": {
       "en": 0,
       "zh": 0
-    }
+    },
+    "initial_return_codes": {
+      "en": 1,
+      "zh": 0
+    },
+    "recovery_record": "tools/site-audit/manual-build-recovery.json"
   },
   "workers": {
     "en": [
@@ -168,17 +174,50 @@
           "--offset=64",
           "--count=4"
         ],
-        "return_code": 0,
-        "log": "en-worker-17.log"
-      },
-      {
-        "options": [
-          "--part=articles",
-          "--offset=68",
-          "--count=4"
-        ],
-        "return_code": 0,
-        "log": "en-worker-18.log"
+        "return_code": 1,
+        "log": "en-worker-17.log",
+        "recovery": [
+          {
+            "language": "en",
+            "options": [
+              "--part=articles",
+              "--offset=64",
+              "--count=1"
+            ],
+            "return_code": 0,
+            "log": "en-recovery-0.log"
+          },
+          {
+            "language": "en",
+            "options": [
+              "--part=articles",
+              "--offset=65",
+              "--count=1"
+            ],
+            "return_code": 0,
+            "log": "en-recovery-1.log"
+          },
+          {
+            "language": "en",
+            "options": [
+              "--part=articles",
+              "--offset=66",
+              "--count=1"
+            ],
+            "return_code": 0,
+            "log": "en-recovery-2.log"
+          },
+          {
+            "language": "en",
+            "options": [
+              "--part=articles",
+              "--offset=67",
+              "--count=1"
+            ],
+            "return_code": 0,
+            "log": "en-recovery-3.log"
+          }
+        ]
       }
     ],
     "zh": [
@@ -341,27 +380,82 @@
         ],
         "return_code": 0,
         "log": "zh-worker-17.log"
-      },
-      {
-        "options": [
-          "--part=articles",
-          "--offset=68",
-          "--count=4"
-        ],
-        "return_code": 0,
-        "log": "zh-worker-18.log"
       }
     ]
   },
-  "source_snapshot_sha256": "7a0b860a85c063ae413116b2e538c002563faebdc8f25833b43432db11cb43fd",
+  "recovery": {
+    "initial_processes": {
+      "render_jobs": 1,
+      "return_codes": {
+        "en": 0,
+        "zh": 0
+      },
+      "initial_return_codes": {
+        "en": 1,
+        "zh": 0
+      },
+      "recovery_record": "tools/site-audit/manual-build-recovery.json"
+    },
+    "retries": [
+      {
+        "language": "en",
+        "options": [
+          "--part=articles",
+          "--offset=64",
+          "--count=1"
+        ],
+        "return_code": 0,
+        "log": "en-recovery-0.log"
+      },
+      {
+        "language": "en",
+        "options": [
+          "--part=articles",
+          "--offset=65",
+          "--count=1"
+        ],
+        "return_code": 0,
+        "log": "en-recovery-1.log"
+      },
+      {
+        "language": "en",
+        "options": [
+          "--part=articles",
+          "--offset=66",
+          "--count=1"
+        ],
+        "return_code": 0,
+        "log": "en-recovery-2.log"
+      },
+      {
+        "language": "en",
+        "options": [
+          "--part=articles",
+          "--offset=67",
+          "--count=1"
+        ],
+        "return_code": 0,
+        "log": "en-recovery-3.log"
+      }
+    ],
+    "scope": "Native HTML retries only; exact original render/archive inputs required; no browser, package or publication checks",
+    "status": "recovered and finalized with unchanged source inputs",
+    "initial_workers_preserved": true
+  },
+  "source_snapshot_sha256": "5cfb3ef44d59ba64143aa57770413515453340541a262c5193f2998a9d4f785e",
   "derived_refreshes": [
     {
-      "previous_snapshot_sha256": "49bd7c8b3e8d065c024504b038848be3476c0904003e64a23d3ecc76fd91f512",
-      "files": {
-        "tools/site_search.py": "e35f778402d7e52dd6237e1dc987b754df5d3e5e997ebea07e7ef1a617256d9d"
+      "previous_snapshot_sha256": "c7ce8b5e28fdee3272cf8729254438abce0a9dbeec1b0451b96d6222755edbc3",
+      "source_files": {
+        "tools/finalize-website.R": "13c9d7305d59dc2b8aeda6bbc93d4613c191711ff2a54963b9dc189ce20aa71c",
+        "tools/build-website.py": "1f64ccf1601d7bbcd34642e0ee210066cacff0228014755a9e244ee5826388bb"
       },
-      "scope": "Copied CSS/JS cache keys or local search index from unchanged canonical HTML; no native content/examples rerendered"
+      "html_files": 388,
+      "copied_assets": {
+        "showcasecollinear.png": "84cda96b15b6a4705d9fa28f0b86c8a8ee7303ba21ffe2bc554b90f94180ba9e"
+      },
+      "scope": "Exact new start-menu id/ARIA normalization and missing PNG copy only; all article bodies, executable examples and archive inputs retained. No native content rerender or browser acceptance."
     }
   ],
-  "scope": "Local native HTML plus guarded search refresh; no deployment, package tests or vignette execution"
+  "scope": "Local native bilingual HTML, four isolated article retries and exact guarded menu-id/PNG correction; initial failed worker retained. No browser acceptance, deployment, package tests or vignette execution"
 }

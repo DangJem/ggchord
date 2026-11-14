@@ -2,97 +2,97 @@
   {
     "language": "en",
     "old": "index.html#choose",
-    "target": "index.html#choose",
+    "target": "modes.html#modules",
     "valid": true
   },
   {
     "language": "en",
     "old": "index.html#chord",
-    "target": "index.html#chord",
+    "target": "chord.html",
     "valid": true
   },
   {
     "language": "en",
     "old": "index.html#circular",
-    "target": "index.html#circular",
+    "target": "circular-dense-case.html",
     "valid": true
   },
   {
     "language": "en",
     "old": "index.html#collinear",
-    "target": "index.html#collinear",
+    "target": "collinear.html",
     "valid": true
   },
   {
     "language": "en",
     "old": "index.html#learn",
-    "target": "index.html#learn",
+    "target": "installation.html",
     "valid": true
   },
   {
     "language": "en",
     "old": "index.html#quick-start",
-    "target": "index.html#quick-start",
+    "target": "installation.html#first-plot",
     "valid": true
   },
   {
     "language": "en",
     "old": "index.html#results",
-    "target": "index.html#results",
+    "target": "gallery.html",
     "valid": true
   },
   {
     "language": "en",
     "old": "index.html#versions",
-    "target": "index.html#versions",
+    "target": "about.html#reproducibility",
     "valid": true
   },
   {
     "language": "zh",
     "old": "index.html#choose",
-    "target": "index.html#choose",
+    "target": "modes.html#modules",
     "valid": true
   },
   {
     "language": "zh",
     "old": "index.html#chord",
-    "target": "index.html#chord",
+    "target": "chord.html",
     "valid": true
   },
   {
     "language": "zh",
     "old": "index.html#circular",
-    "target": "index.html#circular",
+    "target": "circular-dense-case.html",
     "valid": true
   },
   {
     "language": "zh",
     "old": "index.html#collinear",
-    "target": "index.html#collinear",
+    "target": "collinear.html",
     "valid": true
   },
   {
     "language": "zh",
     "old": "index.html#learn",
-    "target": "index.html#learn",
+    "target": "installation.html",
     "valid": true
   },
   {
     "language": "zh",
     "old": "index.html#quick-start",
-    "target": "index.html#quick-start",
+    "target": "installation.html#first-plot",
     "valid": true
   },
   {
     "language": "zh",
     "old": "index.html#results",
-    "target": "index.html#results",
+    "target": "gallery.html",
     "valid": true
   },
   {
     "language": "zh",
     "old": "index.html#versions",
-    "target": "index.html#versions",
+    "target": "about.html#reproducibility",
     "valid": true
   },
   {
@@ -4058,25 +4058,25 @@
   {
     "language": "en",
     "old": "task-index.html#paths",
-    "target": "learn.html#paths",
+    "target": "installation.html",
     "valid": true
   },
   {
     "language": "en",
     "old": "task-index.html#tasks",
-    "target": "learn.html#tasks",
+    "target": "reference/index.html",
     "valid": true
   },
   {
     "language": "zh",
     "old": "task-index.html#paths",
-    "target": "learn.html#paths",
+    "target": "installation.html",
     "valid": true
   },
   {
     "language": "zh",
     "old": "task-index.html#tasks",
-    "target": "learn.html#tasks",
+    "target": "reference/index.html",
     "valid": true
   },
   {
@@ -6770,7 +6770,7 @@
   {
     "language": "en",
     "old": "about.html#modules",
-    "target": "learn.html#modules",
+    "target": "modes.html#modules",
     "valid": true
   },
   {
@@ -6794,7 +6794,7 @@
   {
     "language": "zh",
     "old": "about.html#modules",
-    "target": "learn.html#modules",
+    "target": "modes.html#modules",
     "valid": true
   },
   {
