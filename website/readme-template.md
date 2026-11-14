@@ -90,8 +90,11 @@
 {{source-note}}
 [{{source-inputs}}](examples/) · [{{source-figures}}](tools/site-flagships.R) · [{{source-attribution}}](website/ASSET-SOURCES.md)
 
+<a id="get-started"></a>
+## {{get-started}}
+
 <a id="installation"></a>
-## {{installation}}
+### {{installation}}
 
 R ≥ 4.1.0 · ggplot2 ≥ 4.0.0
 
@@ -103,7 +106,7 @@ remotes::install_github("DangJem/ggchord", dependencies = NA)
 {{optional-deps}}
 
 <a id="quick-start"></a>
-## {{quick-start}}
+### {{quick-start}}
 
 {{quick-intro}}
 
@@ -122,7 +125,7 @@ p
 {{quick-note}}
 
 <a id="output"></a>
-## {{output}}
+### {{output}}
 
 {{output-intro}}
 

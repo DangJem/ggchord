@@ -294,5 +294,9 @@
   "inspiration-intro": {
     "en": "The following projects inform ggchord’s graphical grammar, sequence layouts and detail views. Each entry describes the aspect that influenced the design.",
     "zh": "以下项目为 ggchord 的绘图语法、序列布局与细节视图提供设计灵感，各项分别说明具体的启发方向。"
+  },
+  "get-started": {
+    "en": "Get started",
+    "zh": "开始使用"
   }
 }

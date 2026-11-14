@@ -90,8 +90,11 @@
 图像的输入、显示选择与绘图定义均可追溯：
 [输入文件](examples/) · [Dotplot / Fusion 源码](tools/site-flagships.R) · [数据来源与归属](website/ASSET-SOURCES.md)
 
+<a id="get-started"></a>
+## 开始使用
+
 <a id="installation"></a>
-## 安装
+### 安装
 
 R ≥ 4.1.0 · ggplot2 ≥ 4.0.0
 
@@ -103,7 +106,7 @@ remotes::install_github("DangJem/ggchord", dependencies = NA)
 下面的最小示例只需加载 ggchord。完整数据整理示例会在代码旁声明 dplyr、purrr、tidyr 等可选依赖。
 
 <a id="quick-start"></a>
-## 绘制第一张图
+### 绘制第一张图
 
 使用随包表格绘制序列骨架、比对连接带和序列名称，无需下载文件或运行比对程序。
 
@@ -122,7 +125,7 @@ p
 这段最小示例展示图层组合方式。上方综合图进一步加入了对应的来源注释、显示选择和样式。
 
 <a id="output"></a>
-## 预览与保存
+### 预览与保存
 
 按相同的明确宽高预览并保存，让标签按预定成图尺寸排布。
 

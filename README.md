@@ -90,8 +90,11 @@ A complete circular map with 20 features, five reference primers and 58 grouped 
 Figures share traceable inputs and plot definitions. See the source records and reproduction notes:
 [Input files](examples/) · [Dotplot / Fusion source](tools/site-flagships.R) · [Data sources and attribution](website/ASSET-SOURCES.md)
 
+<a id="get-started"></a>
+## Get started
+
 <a id="installation"></a>
-## Installation
+### Installation
 
 R ≥ 4.1.0 · ggplot2 ≥ 4.0.0
 
@@ -103,7 +106,7 @@ remotes::install_github("DangJem/ggchord", dependencies = NA)
 The minimal example below needs only ggchord. Complete data-preparation examples declare optional dependencies such as dplyr, purrr and tidyr alongside their code.
 
 <a id="quick-start"></a>
-## Draw a first plot
+### Draw a first plot
 
 Use bundled tables to draw sequence backbones, alignment ribbons and sequence names. No file download or alignment program is needed.
 
@@ -122,7 +125,7 @@ p
 This small example shows the layer grammar. The figures above add their own source annotations, display choices and styling.
 
 <a id="output"></a>
-## Preview and save
+### Preview and save
 
 Preview and save at the same explicit dimensions so labels are arranged for the intended figure size.
 
