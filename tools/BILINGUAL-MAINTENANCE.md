@@ -3,3 +3,5 @@
 今后以一种语言的 Markdown 或结构化内容为源，另一种语言的翻译保存并校对；代码、数据、图片、章节结构、锚点和导航标识共享，再分别生成两种语言的 HTML。不要直接翻译生成后的 HTML。
 
 主语言尚未指定。现有两套正文在迁移实现前继续维护；此约定是后续方案，不代表迁移已经完成。
+
+README 已先采用共用结构：`website/readme-template.md` 维护布局、链接和 R 代码，`website/readme-text.json` 保存英语文案与对应汉语译文，由 `tools/sync-tutorials.py` 生成两份 README。网站正文的整体迁移仍未实施。

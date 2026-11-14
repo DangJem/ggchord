@@ -76,95 +76,15 @@ knitr::opts_chunk$set(eval = FALSE, collapse = TRUE, comment = "#>")
     return text.rstrip()+"\n"
 
 def readme(lang):
-    from documentation_lib import snippets
-    code = snippets()
-    zh = lang == 'zh'
-    development_version = re.search(r'^Version:\s*(\S+)',
-        (ROOT/'DESCRIPTION').read_text(), re.M).group(1)
-    development_version = re.sub(r'\.9000$', '', development_version)
-    title = 'ggchord：序列图与多视图组合' if zh else 'ggchord: sequence plots and composition'
-    intro = ('基于 ggplot2 的 R 包。用独立图层组合序列骨架、区间连接、基因、通用注释、标签和定量轨道。'
-        if zh else 'An R package built on ggplot2. Combine independent layers for sequence backbones, interval links, genes, general features, labels and quantitative tracks.')
-    status = (f'正式版为 **ggchord 0.16.6**；本文示例由本地 **v{development_version}** 开发源码生成。正式资产见 GitHub Releases。'
-        if zh else f'The stable release is **ggchord 0.16.6**. These examples are generated from the local **v{development_version}** development source. Formal assets are on GitHub Releases.')
-    install = '安装' if zh else 'Install'
-    quick = '三个真实数据综合示例' if zh else 'Three source-backed comprehensive examples'
-    sizing = '预览与保存' if zh else 'Preview and save'
-    onwards = '继续阅读' if zh else 'Continue'
-    site = f'https://dangjem.github.io/ggchord/{lang}/'
-    text = f'''<p align="center">
-  <a href="{site}index.html"><img src="man/figures/logo.png" alt="ggchord" width="320"></a>
-</p>
+    """One README layout/code source with saved, reviewed prose translations."""
+    import json
+    template = (WEB/'readme-template.md').read_text()
+    translations = json.loads((WEB/'readme-text.json').read_text())
+    def replace(match):
+        key = match[1]
+        return lang if key == 'lang' else translations[key][lang]
+    return re.sub(r'\{\{([a-z-]+)\}\}', replace, template)
 
-[English](README.md) · [现代汉语](README-Hans.md)
-
-# {title}
-
-{intro}
-
-{status}
-
-## {install}
-
-R ≥ 4.1.0 · ggplot2 ≥ 4.0.0
-
-```r
-install.packages("remotes")
-remotes::install_github(
-  "DangJem/ggchord",
-  dependencies = NA, upgrade = "never"
-)
-```
-
-'''
-    text += ('如已检出本版源码，在仓库根目录使用 `pkgload::load_all(".")`。正式版可从 CRAN 安装。' if zh else
-        'For a checkout of this version, use `pkgload::load_all(".")` from its root. The stable release is available from CRAN.')
-    text += (' 示例使用 dplyr（≥ 1.1.0）、purrr、tidyr 和原生 `|>`，这些是示例可选依赖。' if zh else
-        ' Examples use dplyr (≥ 1.1.0), purrr, tidyr and the native `|>` pipe as optional example dependencies.')
-    text += f'\n\n## {quick}\n\n'
-    text += ('以下三张综合示例展示本版的组合能力。原始输入保持可追溯，完整准备代码和解释见对应说明；初次使用请从最小首图开始。' if zh else 'These three complete examples demonstrate this version. Inputs are traceable; each guide provides preparation and interpretation. New users can begin with the minimal first-plot example.')+'\n\n'
-    def preparation(keys, label):
-        return '<details>\n<summary>'+label+'</summary>\n\n'+''.join(
-            '```r\n'+localize_r_comments(code[key], lang)+'\n```\n\n' for key in keys)+'</details>\n\n'
-    text += preparation(['sequencepalette','docstyle'],
-        '先运行：三张图共用的样式' if zh else 'Run first: shared appearance for all three views')
-    views = [
-        ('showcasechord', 'showcasechord', '弦图：四基因组、混合曲率与相似度' if zh else 'Chord: four genomes, mixed curvature and identity',
-         'chord', '按每条序列的真实正负链分别抽样，无 CDS 长度门槛。两条 MT 序列的原始注释只有正链 CDS。正链置于内侧，连接带在重叠端点局部避让。' if zh else 'CDS are sampled separately by source strand without a length threshold. The two MT records have only positive-strand CDS in the source annotations. Positive-strand arrows sit inside, where ribbons leave clearance at overlapping endpoints.', ['showcasedata','chordshowcasegenes']),
-        ('showcaseplasmid', 'showcaseplasmid', '质粒图：pETDuet-1密集注释' if zh else 'Plasmid: dense pETDuet-1 annotation',
-         'circular-dense-case#complex', '双链骨架、20个特征、5个参考引物和58个合并切点；位置和名称来自真实输入。' if zh else 'A double backbone, 20 features, five reference primers and 58 grouped cut positions from real inputs.', ['showcaseplasmiddata']),
-        ('showcasecollinear', 'showcasecollinear', '共线性图：四序列与跨行连接' if zh else 'Collinear: four genomes with cross-row links',
-         'collinear', '正负链分列、逐一标注的精选CDS、局部避障、虚线跨行ribbon与右侧控制点路由。' if zh else 'Strand-separated selected CDS with labels, local clearance, dashed cross-row ribbons and right-side control-point routes.', ['showcasedata'])]
-    views.sort(key=lambda view: ['showcasechord','showcasecollinear','showcaseplasmid'].index(view[0]))
-    for key, figure, heading, lesson, purpose, setup in views:
-        text += '### '+heading+'\n\n'+purpose+'\n\n'
-        # Put the product result before the optional preparation, while retaining runnable code.
-        text += '!['+heading+'](man/figures/'+figure+'.png)\n\n'
-        width, height = {'showcasechord': (12, 10), 'showcasecollinear': (12, 8),
-                         'showcaseplasmid': (16.5, 8)}[key]
-        plot_name = code[key].splitlines()[-1]
-        code[key] = code[key].rsplit('\n', 1)[0] + (
-            f'\nview_ggchord({plot_name}, width = {width}, height = {height}, units = "in")')
-        text += preparation(setup+[key], '数据准备与绘图代码 · 展开运行' if zh else 'Preparation and plot code · expand to run')
-        text += ('[查看完整说明 →](' if zh else '[Read the full guide →](')+site+lesson.split('#')[0]+'.html'+('#'+lesson.split('#')[1] if '#' in lesson else '')+')\n\n'
-    text += ('`aes()` 映射数据，`scale_*()` 定义映射和图例，geom 定义几何与固定样式，Position 负责局部放置，coord 负责全局坐标，theme 负责非数据外观。'
-        if zh else '`aes()` maps data; scales define mapping and guides; geoms define geometry and fixed styles; Positions place local geometry; coords select the global view; themes style non-data elements.')
-    text += f'\n\n## {sizing}\n\n'
-    text += ('RStudio Plots 会按面板尺寸重新排列标签。按相同显式宽高预览并保存：' if zh else
-        'RStudio Plots can rearrange labels when its panel changes. Preview and save at the same explicit dimensions:')
-    text += '\n\n```r\nview_ggchord(p_show_collinear, width = 12, height = 8, units = "in")\nggsave("comparison.png", p_show_collinear, width = 12, height = 8, units = "in", dpi = 144)\n```\n'
-    text += '\n' + (WEB / f'readme-roadmap-{lang}.md').read_text()
-    text += '\n' + (WEB / f'readme-inspirations-{lang}.md').read_text()
-    text += f'\n## {onwards}\n\n'
-    guides = ([('开始使用', 'installation'), ('基本概念', 'modes'),
-        ('函数文档', 'reference/index'), ('示例图集', 'gallery'),
-        ('其他信息', 'about')] if zh else
-        [('Get started', 'installation'), ('Plotting concepts', 'modes'),
-         ('Function reference', 'reference/index'), ('Gallery', 'gallery'),
-         ('Further information', 'about')])
-    text += '\n'.join('- ['+label+']('+site+slug+'.html)' for label, slug in guides)+'\n'
-    text += '\n[Issues](https://github.com/DangJem/ggchord/issues) · [MIT license](LICENSE)\n'
-    return text.rstrip()+"\n"
 
 def main():
     parser = argparse.ArgumentParser()
