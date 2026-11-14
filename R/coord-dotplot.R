@@ -187,7 +187,7 @@ ggchord_prepare_dotplot <- function(plot) {
     scale <- if (axis == "x") ggplot2::scale_x_continuous else ggplot2::scale_y_continuous
     # Blank expansion geometry trains complete axis extents without censoring
     # additional ordinary annotation layers or changing the source HSP data.
-    segment_labels <- paste0(frame$accver, "\n1–",
+    segment_labels <- paste0(frame$accver, "\n1\u2013",
       format(frame$length, trim = TRUE, scientific = FALSE, big.mark = ","), " ", layout$sequence_unit)
     centers <- (frame$min + frame$max) / 2
     if (nrow(frame) > 1L) {
@@ -225,7 +225,8 @@ ggchord_prepare_dotplot <- function(plot) {
     # White gaps represent display spacing only. Each rectangle is the actual
     # query/subject extent, so short sequences retain proportionally smaller cells.
     layer <- ggplot2::geom_rect(data = cells,
-      ggplot2::aes(xmin = xmin, xmax = xmax, ymin = ymin, ymax = ymax),
+      ggplot2::aes(xmin = !!rlang::sym("xmin"), xmax = !!rlang::sym("xmax"),
+                   ymin = !!rlang::sym("ymin"), ymax = !!rlang::sym("ymax")),
       inherit.aes = FALSE, show.legend = FALSE,
       fill = ifelse((cells$query + cells$subject) %% 2 == 0, "#F0F6F3", "#FFFFFF"),
       colour = "#A9BBB4", linewidth = .35)

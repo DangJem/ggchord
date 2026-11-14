@@ -1,4 +1,4 @@
-# ggchord 0.27.0 (development)
+# ggchord 0.27.0
 
 - Website prose now has one Han source with saved, reviewed English translations.
   Build checks reject stale translations or independently edited generated pages.
