@@ -1,0 +1,30 @@
+{
+  "source_sha256": "9159e36bf8cc085db63cef964e03e151551fbc093613721eae7ceac68e2390a8",
+  "strings": {
+    "map_alignment_position/position/type": {
+      "source_sha256": "02100c6f07d954c0869fa2712bedc2429f926df27e1dab3c7deebe0ab40f7e6d",
+      "status": "reviewed",
+      "translation": "Positive integers or NA; source positions or alignment columns"
+    },
+    "map_ggchord_position/position/type": {
+      "source_sha256": "9abce2bb2ac1f8088d04cca8569116d60086871b6fbc6c6f66e2823b74dcd83c",
+      "status": "reviewed",
+      "translation": "Numeric positions; Radial inverse uses an x/y matrix or data frame"
+    },
+    "project_ggchord_features/feature_data/type": {
+      "source_sha256": "2a38c5eda93db5519a773ad1bc4e4df64a61b2e91bdc0080529ff97a2de46d62",
+      "status": "reviewed",
+      "translation": "data.frame; one output per input feature, with pieces in segments"
+    },
+    "segment_ggchord_data/windows/type": {
+      "source_sha256": "4ab911cd674e0912a7839f606dde83fe653e3a1cfe6f49636944d3555d58cc86",
+      "status": "reviewed",
+      "translation": "Window data frame; fields and coordinates follow the argument contract"
+    },
+    "geom_track_bar/baseline/type": {
+      "source_sha256": "69449fc5e107b71d864e6bd66907d0ada4fefd8e9be3aac737436046f61a3fe0",
+      "status": "reviewed",
+      "translation": "Numeric 0; count bars reject nonzero baselines"
+    }
+  }
+}

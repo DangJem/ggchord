@@ -1,0 +1,60 @@
+{
+  "source_sha256": "6fd986086f14e5921a83407b40ffd5963903353e0e84cd4ce036dbd28c276593",
+  "blocks": {
+    "2": {
+      "source_sha256": "b890eedee2b36821550a3ffc2df09a84a5a51f387908a11514530721d2d0dfa6",
+      "status": "reviewed",
+      "translation": "Extract the [input bundle](⟦shared:0⟧) so the working directory contains examples/. Each section names its optional dependencies.\n"
+    },
+    "3": {
+      "source_sha256": "31f394b5e9093014bd71c5bbcca5c7251c0b33349c143702da98bfa20408490b",
+      "status": "reviewed",
+      "translation": "## BED and PAF: convert coordinates once ⟦shared:0⟧\n"
+    },
+    "4": {
+      "source_sha256": "4ecc7f863f97f03a543e60e467d1b559d7c029f245089a169837f2c4533a793f",
+      "status": "reviewed",
+      "translation": "BED starts at zero and excludes the right endpoint. Read the pUC19 origin interval and compare the coordinates before and after import.\n"
+    },
+    "7": {
+      "source_sha256": "5956db4996ce7275b40d3518e8b3a44d8469294203be0debfd6da91b37a3efb7",
+      "status": "reviewed",
+      "translation": "PAF gives the full sequence lengths and alignment spans. Select alignments with mapq ≥ 30, then collect both sequences and their lengths for plotting.\n"
+    },
+    "12": {
+      "source_sha256": "a73f35689bce46948a9165e1dda4e584278f28708a2a3b9192ba6fbad12b22b0",
+      "status": "reviewed",
+      "translation": "A reverse alignment has descending subject coordinates. Use the converted coordinates directly for plotting.\n"
+    },
+    "13": {
+      "source_sha256": "c344fff78e1c1d1098ba5fdcbfbb651f9884138d191c70db42c729653327379c",
+      "status": "reviewed",
+      "translation": "## Optional interval objects ⟦shared:0⟧\n"
+    },
+    "14": {
+      "source_sha256": "51af69bbec1b413925b7fca0ea413e8c397dede690a4beb216dde9735bebcdbf",
+      "status": "reviewed",
+      "translation": "Convert one interval and then an interval pair. Full lengths come from `seqlengths`. Install GenomicRanges for the first example and InteractionSet for the second.\n"
+    },
+    "19": {
+      "source_sha256": "b8e8519a0e321e4f73b9bb8058535455e630c030f659b0ced463b8a4c45456c0",
+      "status": "reviewed",
+      "translation": "## Paired BED intervals ⟦shared:0⟧\n"
+    },
+    "20": {
+      "source_sha256": "e3e4edb40d6a24d4c0a39d72187ae702536cfab80bac914909db6902c58b6ef5",
+      "status": "reviewed",
+      "translation": "⟦shared:0⟧ reads six required tab-separated fields, optional name/score/two strands and additional metadata. The first anchor stays query and the second stays subject. Scores remain strings; neither Identity nor read support is inferred. The format follows the [BEDPE description](⟦shared:1⟧).\n"
+    },
+    "21": {
+      "source_sha256": "2ebe97aac23bc895d852ba911c3d75e39f3beefa9401f349af6fd340084ab656",
+      "status": "reviewed",
+      "translation": "This example re-encodes the intervals of bundled observed alignments for a coordinate round trip; it is not paired-read evidence. Six columns contain no strand evidence, so the imported anchor strands and relative direction remain unknown. Supply real strand columns when known; do not infer them from ascending coordinates.\n"
+    },
+    "23": {
+      "source_sha256": "6aabd8c21cf7da5ef5cd2df10ec44f95a215e26472b84ce9e911c89918898e94",
+      "status": "reviewed",
+      "translation": "Negative-strand anchors use decreasing canonical endpoints, consistent with paired-interval adapters; the original start/end and strand fields are also retained. Names are not assumed unique. Extra columns remain in ⟦shared:0⟧, named ⟦shared:1⟧ onwards. Unknown chromosomes (⟦shared:2⟧) and boundaries (⟦shared:3⟧) fail by default. Explicit ⟦shared:4⟧ retains incomplete rows for auditing; filter ⟦shared:5⟧ before adaptation or plotting. Invalid known coordinates and zero-width intervals always fail. For interval ribbons without Identity, set a constant fill explicitly rather than manufacturing pident.\n"
+    }
+  }
+}

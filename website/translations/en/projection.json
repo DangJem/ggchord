@@ -1,0 +1,70 @@
+{
+  "source_sha256": "b582f5ac3894db99717fc9c498aff977055378916e54b18dba17dccfabd71c98",
+  "blocks": {
+    "0": {
+      "source_sha256": "a58040672418977cb302f5dba056054cc074dd0e2d6165a48ff6e6fe79db72f5",
+      "status": "reviewed",
+      "translation": "⟦shared:0⟧⟦shared:1⟧Project known protein intervals to genomic positions through real CDS, retaining phase, strand and segmentation explicitly.⟦shared:2⟧⟦shared:3⟧\n"
+    },
+    "1": {
+      "source_sha256": "0fa3fbfa0a873728926e3af5e6670e13482733d3820f9266bf2ef86dfe4f9a5c",
+      "status": "reviewed",
+      "translation": "## Prepare this page ⟦shared:0⟧\n"
+    },
+    "2": {
+      "source_sha256": "aea85f0461d2654ae635208a27a64a6bc8e56ee0e8cf203f14759ee87a755dba",
+      "status": "reviewed",
+      "translation": "Use the [verified AmpR input](⟦shared:0⟧) or save and run the preparation script below.\n"
+    },
+    "4": {
+      "source_sha256": "3604c1bb8a038550c8f3b50fccb7b82f6eb043595388847fc0c1108c001870c3",
+      "status": "reviewed",
+      "translation": "## Start with source-backed CDS ⟦shared:0⟧\n"
+    },
+    "5": {
+      "source_sha256": "0706aea453bf091a39324a2a5e09a470056a0553b4863b4e190c9d801dca8421",
+      "status": "reviewed",
+      "translation": "Run the [identical-CDS comparison](⟦shared:0⟧) first. It uses real\nbundled plasmid annotations and DNA. Complete CDS use explicit phase 0 and\ntranslation table 11.\n"
+    },
+    "8": {
+      "source_sha256": "8a90470c51edebcee9c44272fca1d28822043b9f0ba912ec916d50f54fbaa56d",
+      "status": "reviewed",
+      "translation": "This example selects residues 2–20 for display; it does not claim a detected\nprotein domain. Projection returns genomic intervals with strand/segment context.\nActual domains require exact parent CDS IDs and amino-acid ranges; annotation\nnames or maximum feature endpoints cannot supply missing evidence.\n"
+    },
+    "9": {
+      "source_sha256": "93df272e96b0d729b6ed974bf30c3783fe334c345e74e72f90153ad2c19bf3ad",
+      "status": "reviewed",
+      "translation": "## Segments, phase and partial regions ⟦shared:0⟧\n"
+    },
+    "10": {
+      "source_sha256": "6fa0ea6b11b4e21cc047a3f0041ca359a7025d85ffc68341f73d060c9bf02228",
+      "status": "reviewed",
+      "translation": "⟦shared:0⟧ constructs a segment map; ⟦shared:1⟧ then\nprojects amino-acid intervals through it. Each input feature returns one row;\nits genomic pieces are retained in the ⟦shared:2⟧ list-column. ⟦shared:3⟧ can instead split into several paired rows. Multiplying coordinates\nby three is insufficient. Inspect policies/reports\nfor partial CDS, phase and truncation. DNA matching, interval projection and\nactual translation/alignment are distinct operations.\n"
+    },
+    "11": {
+      "source_sha256": "401c1a716360ab92449ba3ece91c91ddfcd95150a0a6664f7380b88d46c28ae1",
+      "status": "reviewed",
+      "translation": "## BLASTp query spans and two-ended links ⟦shared:0⟧\n"
+    },
+    "14": {
+      "source_sha256": "3f3033c6d965df1f1f40bb6dd79af24acabb5d23e6904f82ff466c0637917cd2",
+      "status": "reviewed",
+      "translation": "This ungapped case relies on [verified identical coding DNA](⟦shared:0⟧).\nReal BLASTp HSPs may contain gaps: query spans can still be projected, but paired\nlinks need the subject CDS and justified ungapped correspondence. See\n[real BLASTp import/projection](⟦shared:1⟧). Genomic plots use the projected bp coordinates.\n"
+    },
+    "15": {
+      "source_sha256": "96d3b3403a7277d64e0e970205753ee81e2d284e9e04a56212cef8617bb26319",
+      "status": "reviewed",
+      "translation": "## Result checks ⟦shared:0⟧\n"
+    },
+    "16": {
+      "source_sha256": "18df9017d47f717531492bb89ceb451acb6044b3558e83d56b2c3174aeb2894b",
+      "status": "reviewed",
+      "translation": "Check parent CDS IDs, projection reports and returned segments. The selected residue range is a display example, not a detected domain.\n"
+    },
+    "17": {
+      "source_sha256": "2b895aafc04aeb1efa48db8b9791f66cb1eeb446432a455feb48c0bce151ed55",
+      "status": "reviewed",
+      "translation": "⟦shared:0⟧Continue: ⟦shared:1⟧Data workflows →⟦shared:2⟧⟦shared:3⟧\n"
+    }
+  }
+}

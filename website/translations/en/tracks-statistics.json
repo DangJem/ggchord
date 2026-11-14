@@ -1,0 +1,150 @@
+{
+  "source_sha256": "f96cfc7f76e836826a9c97d21d8a4e97707eae4addb967194664a6a70a3fe30f",
+  "blocks": {
+    "2": {
+      "source_sha256": "915e5a9d83418695db686ead0306a42583df6b8101712048915edd5db8a2bf9f",
+      "status": "reviewed",
+      "translation": "## Count observations or display supplied values ⟦shared:0⟧\n"
+    },
+    "3": {
+      "source_sha256": "d519229903a950d6c6aa0e51c62d552722f5ff58428a41facff3176dc47b3d71",
+      "status": "reviewed",
+      "translation": "⟦shared:0⟧ counts observations at source positions; ⟦shared:1⟧ displays supplied values.\nEach accession/window computes its Stat and data Position before view projection\nor display replication. ⟦shared:2⟧ selects the physical band;\n⟦shared:3⟧ independently selects a native data adjustment such as stack or dodge.\nThe earlier ⟦shared:4⟧ band spelling remains accepted.\n"
+    },
+    "6": {
+      "source_sha256": "40cc0352df51ebbcc34c41af00ceaff94d30c08e44d4a454a3bf4bb481215487",
+      "status": "reviewed",
+      "translation": "The shortcut below counts the same observations using the same physical band.\n"
+    },
+    "8": {
+      "source_sha256": "7904d528be683501ee240489b8e51a681a63155ea61662e0cf6b420c218746c5",
+      "status": "reviewed",
+      "translation": "| Geometry | Default Stat | Input meaning |\n"
+    },
+    "9": {
+      "source_sha256": "a9e436d2babd638ade86791e162e7de5a6b1b3128c6ae9ed93504fbf3c53dc93",
+      "status": "reviewed",
+      "translation": "| --- | --- | --- |\n"
+    },
+    "10": {
+      "source_sha256": "777d2cb881714912afbdff72efb1e552750eb2703bb2bed97e2a25746bfe4cb2",
+      "status": "reviewed",
+      "translation": "| bar | count | x/pos observations, optional weight |\n"
+    },
+    "11": {
+      "source_sha256": "94775eb02817878c79e3ecf29152d0d4ffceac918ca183a7c3796b77ff1371f5",
+      "status": "reviewed",
+      "translation": "| col | identity | supplied y/track_value; interval or position |\n"
+    },
+    "12": {
+      "source_sha256": "045d16b94dd8a03e0e96dbaaa701a91a5979a27a810213e8294b575eaf0cdb02",
+      "status": "reviewed",
+      "translation": "| point, line, path, step, text | identity | source x and local y; text requires label |\n"
+    },
+    "13": {
+      "source_sha256": "4a10a9dc6076b1ef5010431029aa4bc743c51eb986fc812ece4b6c77e85fa8ff",
+      "status": "reviewed",
+      "translation": "| tile, rect, area, ribbon, segment, linerange, errorbar | identity | corresponding native ggplot2 extents |\n"
+    },
+    "14": {
+      "source_sha256": "f3fbc473d1d0f499fd47b478c8314905ecbf831344fe2cdb6ab513f2a28b871f",
+      "status": "reviewed",
+      "translation": "Available statistics are identity/count/bin/summary, plus the documented [smooth/density/ecdf estimation combinations](⟦shared:0⟧). Bin needs explicit binwidth\nor breaks. Native group and after_stat mappings are supported; numerical axes\nretain the statistic's value units. Arbitrary third-party Geom/Stat plugins and\nunsupported combinations are rejected. Existing\ntrack line/tile shortcuts retain their documented behaviour.\n"
+    },
+    "15": {
+      "source_sha256": "138fd4752c35a0c3a95a07e11034eb8d98872e26f19dd38f229a254ec8c1f72f",
+      "status": "reviewed",
+      "translation": "Source position uses x orientation; native text size currently uses mm and polygon outlines are full. Other orientations/size units/partial outlines fail explicitly. Native text styles and path arrows are forwarded.\n"
+    },
+    "16": {
+      "source_sha256": "1cc715a762593ac46c5eab1318c4dec3f3883d41ec78b916f08ac93a94fb958b",
+      "status": "reviewed",
+      "translation": "Native tracks currently require one panel and a ggchord coordinate system. Facets, ⟦shared:0⟧, raster, boxplot and violin are outside this first supported set and are rejected explicitly. Use ⟦shared:1⟧ for vertical projection. Statistical source membership is preserved before dodge or other data positions. Rectangles and tiles use their supplied bounds without an artificial zero baseline.\n"
+    },
+    "17": {
+      "source_sha256": "7dc386bfff31962b56a6178af98906c3aa897394b413ca6eb1145c54274a5224",
+      "status": "reviewed",
+      "translation": "## Two independent bands and display order ⟦shared:0⟧\n"
+    },
+    "18": {
+      "source_sha256": "ed2b0120329a5c321c070963322e066cfd124753d4ce5ae6faded789b1609364",
+      "status": "reviewed",
+      "translation": "Encode the same GC by bar height and colour using explicit gc_height/gc_colour IDs. Set height and colour domains 0–1 separately, with distinct physical widths. The second figure changes only colour order from 2 to 0, moving that band nearer the backbone. Order is a finite priority, not a measurement or required one-based index; ties use IDs. Layers sharing an ID must agree on side/order/width/gap. Lines do not implicitly bridge independent windows.\n"
+    },
+    "24": {
+      "source_sha256": "30de0dd247a35a39403197392819b62e484df983a26417f99ecd7ef71db5ee44",
+      "status": "reviewed",
+      "translation": "## DNA windows and line boundaries ⟦shared:0⟧\n"
+    },
+    "25": {
+      "source_sha256": "0af2500892a2cdbe493f50dda22b82c5903f7774dee60123d6ac9cce4efc7ffa",
+      "status": "reviewed",
+      "translation": "GC here is ⟦shared:0⟧: ambiguous bases remain in the denominator and contribute zero to the numerator. The final window uses its actual number of bases. This pUC19 input has no ambiguous bases; for other inputs explicitly choose and report a policy rather than assuming they are omitted. Focusing clips intervals and retains the original summary; it does not recompute GC for a shortened window. Line tracks connect the supplied samples within their grouping; ⟦shared:1⟧ explicitly controls circular closure and ⟦shared:2⟧ belongs to physical track placement. Do not use a closed line to imply continuity across omitted source windows.\n"
+    },
+    "26": {
+      "source_sha256": "01d6253cbaa7db2174d17ff47ec7ec3feb12b331ee03dbe9a430f5e7d3ba453f",
+      "status": "reviewed",
+      "translation": "## Native source-space estimates ⟦shared:0⟧\n"
+    },
+    "27": {
+      "source_sha256": "b08df703a30963f2d23ef73981810bb97e5edff39502474f53357bc92622b9bf",
+      "status": "reviewed",
+      "translation": "⟦shared:0⟧ also delegates ⟦shared:1⟧, ⟦shared:2⟧ and ⟦shared:3⟧ to native ggplot2 statistics **before projection**. These create estimates of supplied observations, not additional observations. They run independently by accession/window and explicit group. Estimation ⟦shared:4⟧ records the eligible group submitted to the estimator after native missing-value handling; it is not per-point influence, positive read support or a custom model's additional internal filtering report.\n"
+    },
+    "28": {
+      "source_sha256": "c72a59f1b4fc8c5edb377a6da5c20b2324d287ac21a98038f9207936f3f08be8",
+      "status": "reviewed",
+      "translation": "| Statistic | Documented geometry | Input and explicit choices | Data Position |\n"
+    },
+    "29": {
+      "source_sha256": "e246b588984abccc6839146f115ed662307bfba56c0bb91c546a281636c81359",
+      "status": "reviewed",
+      "translation": "| --- | --- | --- | --- |\n"
+    },
+    "30": {
+      "source_sha256": "f4d57751457c257c079ac21e5c1a820a84f7e8a874fdb935686a3cc60de11b47",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | ⟦shared:1⟧, ⟦shared:2⟧, ⟦shared:3⟧, ⟦shared:4⟧ | Source ⟦shared:5⟧ and raw numerical ⟦shared:6⟧; choose method/formula; ribbon requires SE bounds | ⟦shared:7⟧ or native PositionIdentity |\n"
+    },
+    "31": {
+      "source_sha256": "d186c9badcce14fb5bbd603805f097a87f0ea7dff89ae70431b05bf6cdfe723e",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | ⟦shared:1⟧, ⟦shared:2⟧, ⟦shared:3⟧, ⟦shared:4⟧ | Positions in ⟦shared:5⟧, optional weights; choose bandwidth; ⟦shared:6⟧ is density per source-position unit | ⟦shared:7⟧ or native PositionIdentity |\n"
+    },
+    "32": {
+      "source_sha256": "b2bbdc51b583a466c14ae4882c01d42218d1c9c7baf55e3533ae00ac98c1fecc",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | ⟦shared:1⟧, ⟦shared:2⟧, ⟦shared:3⟧, ⟦shared:4⟧ | Positions in ⟦shared:5⟧; ⟦shared:6⟧ is cumulative fraction; explicit ⟦shared:7⟧ avoids infinite source anchors | ⟦shared:8⟧ or native PositionIdentity |\n"
+    },
+    "33": {
+      "source_sha256": "137b18ddaf67cccc48dc053aabf75aa26f03cbec7d77b049a4ba1d99f2e7eaa4",
+      "status": "reviewed",
+      "translation": "Other combinations of these statistics fail explicitly. Use ⟦shared:0⟧ explicitly for density area because area otherwise defaults to stacking. ⟦shared:1⟧ remains the Track source-boundary policy and does not forward the native density boundary-correction parameter. Facets, boxplots, violins, raster and arbitrary third-party Geom/Stat objects remain unsupported; a numerical name in a function is not a projection contract.\n"
+    },
+    "34": {
+      "source_sha256": "e286f2996259132660667f1f4f3d2677cf09c91f898a4c6d8cbb2b9e4d4bea3d",
+      "status": "reviewed",
+      "translation": "Reuse the real ⟦shared:0⟧ and ⟦shared:1⟧ prepared above. This explicit linear fit is a display summary of the GC fractions, with a native confidence ribbon and mean line sharing one Track:\n"
+    },
+    "36": {
+      "source_sha256": "acae15a1524860cc0274b1e2b9075b10bb52358dad32263bf0bea6cb050e4a15",
+      "status": "reviewed",
+      "translation": "Statistical fitting uses raw supplied source x/y. A later transformed Track value scale maps the estimates; it does not silently refit a log-space model, unlike placing a transform before a Stat in a native ggplot. If transformed-space fitting is intended, prepare and name that transformed variable explicitly and state its unit. Kernel density of event positions is not measured sequencing depth. ECDF output is a cumulative distribution, not a basewise alignment.\n"
+    },
+    "37": {
+      "source_sha256": "ffbd4b9bfefae81a2dec69f6e0b8d09357d3c44e883cdc8f3dd16789018e2b74",
+      "status": "reviewed",
+      "translation": "The directed source-backed checks compare native ggplot2 results and group membership for real pUC19 GC windows and G/C positions, plus curved/vertical projection and an explicitly missing-value control. ⟦shared:0⟧ retains the numerical report and actual CI/mean image. Finite source bounds and physical-band constraints still apply; automatic placement does not change the fitted model or manufacture observations.\n"
+    },
+    "38": {
+      "source_sha256": "60552fb71292d4699b8681381fbdcb46d5eca2a906ebb85e6e005dc0d03f073e",
+      "status": "reviewed",
+      "translation": "## Tracks and windows share source coordinates ⟦shared:0⟧\n"
+    },
+    "39": {
+      "source_sha256": "09dd2063faf98e59d469c1f3cb15490683b59ef4223ecc29af818b4e1b8d13d8",
+      "status": "reviewed",
+      "translation": "Focus pUC19 to 500–1500 bp and trim the same observed GC windows as intervals. `focus_ggchord_track` does not recompute averages, invent boundary samples or bridge omitted windows. Return to actual DNA and declare new windows/denominators if finer GC summaries are needed.\n"
+    }
+  }
+}

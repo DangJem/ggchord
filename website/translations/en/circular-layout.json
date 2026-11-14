@@ -1,0 +1,130 @@
+{
+  "source_sha256": "894dbd4edd0b633bc8cb4985315c8883129335f5e0cc26ae70f84e46c70b2488",
+  "blocks": {
+    "0": {
+      "source_sha256": "b2a2200c82dd4558081108554d970017139bde7ea3dccb1bffa02c1b7d39b90d",
+      "status": "reviewed",
+      "translation": "Prepared annotations need only lengths and tables. DNA is used here to prepare the example annotation, not as a plotting requirement.\n"
+    },
+    "2": {
+      "source_sha256": "00711b39d05b8b76173787955c583756ef852248e3ca802138281b22a0d55bd8",
+      "status": "reviewed",
+      "translation": "## Input and provenance ⟦shared:0⟧\n"
+    },
+    "3": {
+      "source_sha256": "71b3fa65e0b83608336197bd8befa55014f9e5fd24dc0f0186d7d4960f26e670",
+      "status": "reviewed",
+      "translation": "Run independently in a fresh R session with optional dplyr. ⟦shared:0⟧ retains the first six recognition rows without changing intervals or strands. ⟦shared:1⟧ appends actual coordinates to source names for label-fitting demonstrations; the original table remains separate.\n"
+    },
+    "5": {
+      "source_sha256": "ada923071681037026867d2074863b2966165fa6090c4fe6661fd0a1e62fcfb5",
+      "status": "reviewed",
+      "translation": "## Backbone styles and double-line spacing ⟦shared:0⟧\n"
+    },
+    "6": {
+      "source_sha256": "4e3c5ac975ecf391b27e315b1443ea00030c69bbf2c7b0ee14d994723d8979f1",
+      "status": "reviewed",
+      "translation": "In single circular mode, ⟦shared:0⟧ selects double. Single draws one backbone and double draws two. Keep the same sequence and 9 × 8 inch size, changing only style or double-line spacing. ⟦shared:1⟧ defaults to 0.025; band width ⟦shared:2⟧ defaults to 0.035. Neither is stroke ⟦shared:3⟧.\n"
+    },
+    "13": {
+      "source_sha256": "2ef7d80623c7e910219faea2ae44c1f19177378b273980d69bec6e3d199f4688",
+      "status": "reviewed",
+      "translation": "## Band backbone ⟦shared:0⟧\n"
+    },
+    "14": {
+      "source_sha256": "ec3e4e0bbe6565dd49e2827420bf39611ac41497aac6050bd872e8c505cc38c5",
+      "status": "reviewed",
+      "translation": "Band represents the complete backbone with a filled polygon. seq_backbone_width controls its width, default 0.035. This is actual band geometry; only seq_style changes from the double baseline.\n"
+    },
+    "17": {
+      "source_sha256": "10c4976f5c4d9cf8c80ba76bc3bb4cc0565b4ff21ce8dd0b0733eedea589d430",
+      "status": "reviewed",
+      "translation": "From the band baseline, double only band width while retaining other settings.\n"
+    },
+    "20": {
+      "source_sha256": "9eb49fa675527b7f487fa8b297e0affd3544d247d740f1809c58319d6e72e917",
+      "status": "reviewed",
+      "translation": "## Circular direction, rotation, opening and fit ⟦shared:0⟧\n"
+    },
+    "21": {
+      "source_sha256": "67f50e109289a6fd978a85283dbabaaf71c69d1459e84f17170d258b257b8ed9",
+      "status": "reviewed",
+      "translation": "The zero origin is at 12 o’clock with clockwise coordinates. Positive rotation turns the complete plot counterclockwise. Relative to double above, each example changes only direction or gap. See the [rotation contrast](⟦shared:0⟧).\n"
+    },
+    "22": {
+      "source_sha256": "fcb85b3df1d40d798f5b01aeecf98ad0f474c5edb992e9dfa91ea4a6bc3d5aa3",
+      "status": "reviewed",
+      "translation": "| Parameter | Default | Type and boundary |\n"
+    },
+    "23": {
+      "source_sha256": "a9e436d2babd638ade86791e162e7de5a6b1b3128c6ae9ed93504fbf3c53dc93",
+      "status": "reviewed",
+      "translation": "| --- | --- | --- |\n"
+    },
+    "24": {
+      "source_sha256": "e69cce9847cbbc36043380ea25eed4c384ab0bdadaa5f825b9f53d847e4a91c2",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | 0 | Finite degrees; 90 places origin at 9 o’clock |\n"
+    },
+    "25": {
+      "source_sha256": "9cd75a9df9d0825fdf62a5766a1307126662b1987c043134aec5c7611fcaad71",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | clockwise | clockwise/counterclockwise; not biological strand |\n"
+    },
+    "26": {
+      "source_sha256": "7e0dd34222d8c8a960ada679850c9bb2322df57dcc86dfae06036ed6c1fc6643",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | 0 | Degrees in [0,360); does not remove bases |\n"
+    },
+    "27": {
+      "source_sha256": "1ab8dde1a1b9fe291646157f495f1d6b228c518eae906c942affec35e20e20b6",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | labels | labels/geometry/manual; controls inclusion of labels in fitting |\n"
+    },
+    "28": {
+      "source_sha256": "d49fa703066517f103cdade526e78b83967c66edb5a03143ec7f6f7dc6e14514",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | 1 | Global aspect ratio, not a change in units |\n"
+    },
+    "29": {
+      "source_sha256": "148a416d5253189ed2c8432df6e70d058728dc6ba307969b1185efdf7c6a3f04",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | off | Coordinate clipping can cut exterior text |\n"
+    },
+    "30": {
+      "source_sha256": "6c6ec07d2ac3776f424d18d142c7a28ec71bf1800abd6e6d2cf22c289ea3246e",
+      "status": "reviewed",
+      "translation": "Automatic fitting may change overall scale and the readable subset of tick labels at fixed device size. Inspect text and leaders before fixing ⟦shared:0⟧; clipping is not loss of source data. Circular mode owns gap/direction and rejects geom_seq seq_gap/seq_orientation.\n"
+    },
+    "35": {
+      "source_sha256": "50fe31403b1f661f23beced02f5be61dd3fedc7a82b8ee4acb8488eaf5dd389a",
+      "status": "reviewed",
+      "translation": "## Style centre name and length separately ⟦shared:0⟧\n"
+    },
+    "36": {
+      "source_sha256": "c1b4aca07ff0b537b781b3bf05f726ad95d877189fa46a018514d41362c54fba",
+      "status": "reviewed",
+      "translation": "Centre text is separate from labels along the backbone. ⟦shared:0⟧ and ⟦shared:1⟧ are separated by a newline by default; name also accepts a display string. Empty name_style/length_style lists accept fixed colour, size, family, fontface and lineheight. First hide only length. Then return to baseline and change only name_style size, retaining the length text style.\n"
+    },
+    "43": {
+      "source_sha256": "fcaa04529578a65e95494206c49bc31dd14c320f850200e67157995227e653d6",
+      "status": "reviewed",
+      "translation": "## Switch to a single backbone ⟦shared:0⟧\n"
+    },
+    "47": {
+      "source_sha256": "64b415861ffefd43a061b453cd62f0d8135153ca4796e564e010947590cee859",
+      "status": "reviewed",
+      "translation": "⟦shared:0⟧ replaces the double backbone with one line. The centre label and bp ticks remain visible.\n"
+    },
+    "48": {
+      "source_sha256": "59864adb7764a3b3524c3032f621d5a4adcb7acfa5a3cdf18b8e4c7301c4cde7",
+      "status": "reviewed",
+      "translation": "## Rotate the map ⟦shared:0⟧\n"
+    },
+    "51": {
+      "source_sha256": "22346bd581f895e061e6c9da76ba4bcee1adbbc5e954097463fd270ee4693a71",
+      "status": "reviewed",
+      "translation": "The default ⟦shared:0⟧ places the sequence origin at 12 o’clock, with coordinates increasing clockwise. Here ⟦shared:1⟧ moves it to 9 o’clock, rotating the ticks and replication origin together. The annotation still covers the same source bp interval. Next, [prepare your own sequence and annotations](⟦shared:2⟧).\n"
+    }
+  }
+}

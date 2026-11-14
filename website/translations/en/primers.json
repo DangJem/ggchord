@@ -1,0 +1,70 @@
+{
+  "source_sha256": "5db06f99306879c53d45b33ea77e38cfd7594978ac89e963ee2de4b4e89bd9f7",
+  "blocks": {
+    "0": {
+      "source_sha256": "ab6da9f95b3e31156050b459514859c0b22d77da83dac994a5a3a15225598969",
+      "status": "reviewed",
+      "translation": "Identify binding intervals on actual DNA before choosing arc and label placement. Computational matches are not wet-lab validation, and catalogue direction hints do not determine the binding strand on the target.\n"
+    },
+    "1": {
+      "source_sha256": "9c2e4254b0421ccb31817f6bba9b6c00ead01c405e18c7505e137f28573b98ae",
+      "status": "reviewed",
+      "translation": "## Catalogue, search and actual input ⟦shared:0⟧\n"
+    },
+    "2": {
+      "source_sha256": "9d63376c43b74be71d4f6ba52453d7b9bee4058093a1855ac93fd4fdb8a577fa",
+      "status": "reviewed",
+      "translation": "Independently load pUC19 and retain the first three exact universal-catalogue hits for clear display. Results retain primer name, oligonucleotide, one-based interval, strand, match method and uniqueness. Select after searching; absence from this display subset is not absence from the full result.\n"
+    },
+    "7": {
+      "source_sha256": "6c089563d342383a0e1157e473dcadd7d94dec494fc352c55cfcf9f37717f914",
+      "status": "reviewed",
+      "translation": "## Primer arc placement and width ⟦shared:0⟧\n"
+    },
+    "8": {
+      "source_sha256": "fec3fb1705ff64f632aa7a8adff6c38ecaabace0368981e62d9947c103b876f2",
+      "status": "reviewed",
+      "translation": "Default between follows the backbone centre line. Outside/inside use arc_offset (default 0.045) along the local normal. The between/outside/inside examples change only side. The wider-arc example returns to between and changes only arc_linewidth from 0.026 to 0.05. This local geometry width is not bp or text size.\n"
+    },
+    "13": {
+      "source_sha256": "b48551d9b6819b2467195c4cc4b5aa4242ecebb6012a39ed0391cf4f15e03053",
+      "status": "reviewed",
+      "translation": "Relative to outside placement, change only arc_offset from 0.045 to 0.09:\n"
+    },
+    "20": {
+      "source_sha256": "faedd249fd832e6871b2f913982670b6a71050032fd39c7fce1505addc236f4c",
+      "status": "reviewed",
+      "translation": "## Primer names, range text and side ⟦shared:0⟧\n"
+    },
+    "21": {
+      "source_sha256": "df6fbab990f31f6019642d467a7fe79650813404f6b9e61a5fd2cffc60a67f63",
+      "status": "reviewed",
+      "translation": "Labels default to outside with show_location=TRUE; leaders originate at the directional arc’s 3′ tip. Compare baseline with only location text hidden, or only side changed to inside. Hiding text does not shorten binding intervals. Interior text can overlap other features; default max_overlaps=Inf does not guarantee collision-free mixed layers.\n"
+    },
+    "28": {
+      "source_sha256": "a27f739e8604401e1936bd37d42ad52fc3636dcfddaf8fb5308280af2a773d33",
+      "status": "reviewed",
+      "translation": "## Search versus drawing choices ⟦shared:0⟧\n"
+    },
+    "29": {
+      "source_sha256": "ca7c98e1b4d506a2b2f4a1745b057eb17fd52c0c343f505537124fbcce6c473f",
+      "status": "reviewed",
+      "translation": "⟦shared:0⟧ returns deduplicated oligonucleotides; universal selects common records and aliases=TRUE shows source names for shared sequences. ⟦shared:1⟧ computes matches on DNA; circular searches include origin-spanning matches, while linear targets need circular=FALSE. Exact three_prime suffix matching is not a general mismatch thermodynamic model. Wallace temperature is a composition-based heuristic.\n"
+    },
+    "30": {
+      "source_sha256": "344c02b0d434ab9525f9c67400d8724088978719cfce93fb91acb28de68b6fa6",
+      "status": "reviewed",
+      "translation": "Primer geometry defaults: colour=#A020F0, side=between, arc_offset=0.045, arc_linewidth=0.026. Text defaults: side=outside, show_location=TRUE, max_overlaps=Inf. Both require the same target sequence; renaming accver does not transfer bindings to another DNA. Use single circular mode; aa inputs reject nucleotide-only layers.\n"
+    },
+    "31": {
+      "source_sha256": "27b6d91942ba325b2bf58b02d3cc77660daf6cbb257882a483c25baefce3847b",
+      "status": "reviewed",
+      "translation": "## Practice and your primers ⟦shared:0⟧\n"
+    },
+    "32": {
+      "source_sha256": "0f54385a3d7acba25b301bc99d33452f717d0511965d35b585ab285bb0d4a9bb",
+      "status": "reviewed",
+      "translation": "Change only arc_offset, then return to defaults and hide location text. Provide actual oligonucleotides and names, inspect match fields before selecting displayed hits. See the [parameter atlas](⟦shared:0⟧) for complete current defaults and [restriction sites](⟦shared:1⟧) or the [full plasmid workflow](⟦shared:2⟧) next.\n"
+    }
+  }
+}

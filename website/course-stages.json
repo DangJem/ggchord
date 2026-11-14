@@ -2,8 +2,8 @@
   "chord": [
     {
       "title": {
-        "en": "Essential foundations",
-        "zh": "基础必学"
+        "zh": "基础必学",
+        "en": "Essential foundations"
       },
       "pages": [
         "chord-start",
@@ -14,8 +14,8 @@
     },
     {
       "title": {
-        "en": "Optional techniques",
-        "zh": "进阶可选"
+        "zh": "进阶可选",
+        "en": "Optional techniques"
       },
       "pages": [
         "chord-routing",
@@ -28,8 +28,8 @@
     },
     {
       "title": {
-        "en": "Complete cases and references",
-        "zh": "综合案例与参考"
+        "zh": "综合案例与参考",
+        "en": "Complete cases and references"
       },
       "pages": [
         "chord"
@@ -39,8 +39,8 @@
   "collinear": [
     {
       "title": {
-        "en": "Essential foundations",
-        "zh": "基础必学"
+        "zh": "基础必学",
+        "en": "Essential foundations"
       },
       "pages": [
         "collinear-start",
@@ -51,8 +51,8 @@
     },
     {
       "title": {
-        "en": "Optional techniques",
-        "zh": "进阶可选"
+        "zh": "进阶可选",
+        "en": "Optional techniques"
       },
       "pages": [
         "collinear-layout",
@@ -63,8 +63,8 @@
     },
     {
       "title": {
-        "en": "Complete cases and references",
-        "zh": "综合案例与参考"
+        "zh": "综合案例与参考",
+        "en": "Complete cases and references"
       },
       "pages": [
         "collinear"
@@ -74,8 +74,8 @@
   "plasmid": [
     {
       "title": {
-        "en": "Essential foundations",
-        "zh": "基础必学"
+        "zh": "基础必学",
+        "en": "Essential foundations"
       },
       "pages": [
         "plasmid-start",
@@ -86,8 +86,8 @@
     },
     {
       "title": {
-        "en": "Optional techniques",
-        "zh": "进阶可选"
+        "zh": "进阶可选",
+        "en": "Optional techniques"
       },
       "pages": [
         "circular-layers",
@@ -101,8 +101,8 @@
     },
     {
       "title": {
-        "en": "Complete cases and references",
-        "zh": "综合案例与参考"
+        "zh": "综合案例与参考",
+        "en": "Complete cases and references"
       },
       "pages": [
         "plasmid-catalog",

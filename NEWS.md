@@ -1,5 +1,11 @@
 # ggchord 0.27.0 (development)
 
+- Website prose now has one Han source with saved, reviewed English translations.
+  Build checks reject stale translations or independently edited generated pages.
+- Multi-sequence Dotplots separate sequence/range headers from local coordinates,
+  with outlined length-proportional comparison cells. Explicit position scales
+  retain priority, and original HSP endpoints and axis mappings remain unchanged.
+
 - Website home now uses an introduction above a full-width four-module grid,
   with dedicated source-backed previews, concise capability descriptions and
   natural page height. Sequence alignment Dotplot replaces the HSP-only entry

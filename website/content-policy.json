@@ -1,0 +1,555 @@
+{
+  "schema": 1,
+  "source_language": "zh",
+  "generated_language": "en",
+  "rule": "Edit Han Markdown and content-zh JSON only. Review saved English translations, then regenerate; generated files are checked before any build.",
+  "markdown": [
+    {
+      "source": "zh/index.md",
+      "translations": "translations/en/index.json",
+      "output": "en/index.md"
+    },
+    {
+      "source": "zh/installation.md",
+      "translations": "translations/en/installation.json",
+      "output": "en/installation.md"
+    },
+    {
+      "source": "zh/modes.md",
+      "translations": "translations/en/modes.json",
+      "output": "en/modes.md"
+    },
+    {
+      "source": "zh/chord-start.md",
+      "translations": "translations/en/chord-start.json",
+      "output": "en/chord-start.md"
+    },
+    {
+      "source": "zh/chord-data.md",
+      "translations": "translations/en/chord-data.json",
+      "output": "en/chord-data.md"
+    },
+    {
+      "source": "zh/chord-import.md",
+      "translations": "translations/en/chord-import.json",
+      "output": "en/chord-import.md"
+    },
+    {
+      "source": "zh/chord-build.md",
+      "translations": "translations/en/chord-build.json",
+      "output": "en/chord-build.md"
+    },
+    {
+      "source": "zh/chord-tuning.md",
+      "translations": "translations/en/chord-tuning.json",
+      "output": "en/chord-tuning.md"
+    },
+    {
+      "source": "zh/chord-geometry.md",
+      "translations": "translations/en/chord-geometry.json",
+      "output": "en/chord-geometry.md"
+    },
+    {
+      "source": "zh/chord-routing.md",
+      "translations": "translations/en/chord-routing.json",
+      "output": "en/chord-routing.md"
+    },
+    {
+      "source": "zh/chord-labels.md",
+      "translations": "translations/en/chord-labels.json",
+      "output": "en/chord-labels.md"
+    },
+    {
+      "source": "zh/ribbons.md",
+      "translations": "translations/en/ribbons.json",
+      "output": "en/ribbons.md"
+    },
+    {
+      "source": "zh/real-data.md",
+      "translations": "translations/en/real-data.json",
+      "output": "en/real-data.md"
+    },
+    {
+      "source": "zh/chord.md",
+      "translations": "translations/en/chord.json",
+      "output": "en/chord.md"
+    },
+    {
+      "source": "zh/collinear-start.md",
+      "translations": "translations/en/collinear-start.json",
+      "output": "en/collinear-start.md"
+    },
+    {
+      "source": "zh/collinear-data.md",
+      "translations": "translations/en/collinear-data.json",
+      "output": "en/collinear-data.md"
+    },
+    {
+      "source": "zh/collinear-build.md",
+      "translations": "translations/en/collinear-build.json",
+      "output": "en/collinear-build.md"
+    },
+    {
+      "source": "zh/collinear-routing.md",
+      "translations": "translations/en/collinear-routing.json",
+      "output": "en/collinear-routing.md"
+    },
+    {
+      "source": "zh/homology.md",
+      "translations": "translations/en/homology.json",
+      "output": "en/homology.md"
+    },
+    {
+      "source": "zh/views.md",
+      "translations": "translations/en/views.json",
+      "output": "en/views.md"
+    },
+    {
+      "source": "zh/collinear.md",
+      "translations": "translations/en/collinear.json",
+      "output": "en/collinear.md"
+    },
+    {
+      "source": "zh/plasmid-start.md",
+      "translations": "translations/en/plasmid-start.json",
+      "output": "en/plasmid-start.md"
+    },
+    {
+      "source": "zh/plasmid-data.md",
+      "translations": "translations/en/plasmid-data.json",
+      "output": "en/plasmid-data.md"
+    },
+    {
+      "source": "zh/plasmid-build.md",
+      "translations": "translations/en/plasmid-build.json",
+      "output": "en/plasmid-build.md"
+    },
+    {
+      "source": "zh/recognition.md",
+      "translations": "translations/en/recognition.json",
+      "output": "en/recognition.md"
+    },
+    {
+      "source": "zh/plasmid-catalog.md",
+      "translations": "translations/en/plasmid-catalog.json",
+      "output": "en/plasmid-catalog.md"
+    },
+    {
+      "source": "zh/plasmids.md",
+      "translations": "translations/en/plasmids.json",
+      "output": "en/plasmids.md"
+    },
+    {
+      "source": "zh/data.md",
+      "translations": "translations/en/data.json",
+      "output": "en/data.md"
+    },
+    {
+      "source": "zh/formats.md",
+      "translations": "translations/en/formats.json",
+      "output": "en/formats.md"
+    },
+    {
+      "source": "zh/alignments.md",
+      "translations": "translations/en/alignments.json",
+      "output": "en/alignments.md"
+    },
+    {
+      "source": "zh/projection.md",
+      "translations": "translations/en/projection.json",
+      "output": "en/projection.md"
+    },
+    {
+      "source": "zh/annotations.md",
+      "translations": "translations/en/annotations.json",
+      "output": "en/annotations.md"
+    },
+    {
+      "source": "zh/labels.md",
+      "translations": "translations/en/labels.json",
+      "output": "en/labels.md"
+    },
+    {
+      "source": "zh/tracks.md",
+      "translations": "translations/en/tracks.json",
+      "output": "en/tracks.md"
+    },
+    {
+      "source": "zh/styling.md",
+      "translations": "translations/en/styling.json",
+      "output": "en/styling.md"
+    },
+    {
+      "source": "zh/parameters.md",
+      "translations": "translations/en/parameters.json",
+      "output": "en/parameters.md"
+    },
+    {
+      "source": "zh/adjustments.md",
+      "translations": "translations/en/adjustments.json",
+      "output": "en/adjustments.md"
+    },
+    {
+      "source": "zh/output.md",
+      "translations": "translations/en/output.json",
+      "output": "en/output.md"
+    },
+    {
+      "source": "zh/reference.md",
+      "translations": "translations/en/reference.json",
+      "output": "en/reference.md"
+    },
+    {
+      "source": "zh/gallery.md",
+      "translations": "translations/en/gallery.json",
+      "output": "en/gallery.md"
+    },
+    {
+      "source": "zh/faq.md",
+      "translations": "translations/en/faq.json",
+      "output": "en/faq.md"
+    },
+    {
+      "source": "zh/collinear-tuning.md",
+      "translations": "translations/en/collinear-tuning.json",
+      "output": "en/collinear-tuning.md"
+    },
+    {
+      "source": "zh/plasmid-tuning.md",
+      "translations": "translations/en/plasmid-tuning.json",
+      "output": "en/plasmid-tuning.md"
+    },
+    {
+      "source": "zh/about.md",
+      "translations": "translations/en/about.json",
+      "output": "en/about.md"
+    },
+    {
+      "source": "zh/protein-alignments.md",
+      "translations": "translations/en/protein-alignments.json",
+      "output": "en/protein-alignments.md"
+    },
+    {
+      "source": "zh/collinear-layout.md",
+      "translations": "translations/en/collinear-layout.json",
+      "output": "en/collinear-layout.md"
+    },
+    {
+      "source": "zh/task-index.md",
+      "translations": "translations/en/task-index.json",
+      "output": "en/task-index.md"
+    },
+    {
+      "source": "zh/compatibility.md",
+      "translations": "translations/en/compatibility.json",
+      "output": "en/compatibility.md"
+    },
+    {
+      "source": "zh/feature-geometry.md",
+      "translations": "translations/en/feature-geometry.json",
+      "output": "en/feature-geometry.md"
+    },
+    {
+      "source": "zh/chord-branches.md",
+      "translations": "translations/en/chord-branches.json",
+      "output": "en/chord-branches.md"
+    },
+    {
+      "source": "zh/circular-layers.md",
+      "translations": "translations/en/circular-layers.json",
+      "output": "en/circular-layers.md"
+    },
+    {
+      "source": "zh/circular-labels.md",
+      "translations": "translations/en/circular-labels.json",
+      "output": "en/circular-labels.md"
+    },
+    {
+      "source": "zh/primers.md",
+      "translations": "translations/en/primers.json",
+      "output": "en/primers.md"
+    },
+    {
+      "source": "zh/restriction-sites.md",
+      "translations": "translations/en/restriction-sites.json",
+      "output": "en/restriction-sites.md"
+    },
+    {
+      "source": "zh/scale-families.md",
+      "translations": "translations/en/scale-families.json",
+      "output": "en/scale-families.md"
+    },
+    {
+      "source": "zh/ribbon-statistics.md",
+      "translations": "translations/en/ribbon-statistics.json",
+      "output": "en/ribbon-statistics.md"
+    },
+    {
+      "source": "zh/parameter-atlas.md",
+      "translations": "translations/en/parameter-atlas.json",
+      "output": "en/parameter-atlas.md"
+    },
+    {
+      "source": "zh/workflow-tools.md",
+      "translations": "translations/en/workflow-tools.json",
+      "output": "en/workflow-tools.md"
+    },
+    {
+      "source": "zh/api-curriculum.md",
+      "translations": "translations/en/api-curriculum.json",
+      "output": "en/api-curriculum.md"
+    },
+    {
+      "source": "zh/foundation.md",
+      "translations": "translations/en/foundation.json",
+      "output": "en/foundation.md"
+    },
+    {
+      "source": "zh/view-expansion.md",
+      "translations": "translations/en/view-expansion.json",
+      "output": "en/view-expansion.md"
+    },
+    {
+      "source": "zh/fusion.md",
+      "translations": "translations/en/fusion.json",
+      "output": "en/fusion.md"
+    },
+    {
+      "source": "zh/multi-sequence.md",
+      "translations": "translations/en/multi-sequence.json",
+      "output": "en/multi-sequence.md"
+    },
+    {
+      "source": "zh/circular.md",
+      "translations": "translations/en/circular.json",
+      "output": "en/circular.md"
+    },
+    {
+      "source": "zh/dotplot.md",
+      "translations": "translations/en/dotplot.json",
+      "output": "en/dotplot.md"
+    },
+    {
+      "source": "zh/multi-sequence-start.md",
+      "translations": "translations/en/multi-sequence-start.json",
+      "output": "en/multi-sequence-start.md"
+    },
+    {
+      "source": "zh/multi-sequence-views.md",
+      "translations": "translations/en/multi-sequence-views.json",
+      "output": "en/multi-sequence-views.md"
+    },
+    {
+      "source": "zh/sankey.md",
+      "translations": "translations/en/sankey.json",
+      "output": "en/sankey.md"
+    },
+    {
+      "source": "zh/radial-synteny.md",
+      "translations": "translations/en/radial-synteny.json",
+      "output": "en/radial-synteny.md"
+    },
+    {
+      "source": "zh/instances.md",
+      "translations": "translations/en/instances.json",
+      "output": "en/instances.md"
+    },
+    {
+      "source": "zh/multi-sequence-layout.md",
+      "translations": "translations/en/multi-sequence-layout.json",
+      "output": "en/multi-sequence-layout.md"
+    },
+    {
+      "source": "zh/multi-sequence-links.md",
+      "translations": "translations/en/multi-sequence-links.json",
+      "output": "en/multi-sequence-links.md"
+    },
+    {
+      "source": "zh/multi-sequence-labels.md",
+      "translations": "translations/en/multi-sequence-labels.json",
+      "output": "en/multi-sequence-labels.md"
+    },
+    {
+      "source": "zh/circular-start.md",
+      "translations": "translations/en/circular-start.json",
+      "output": "en/circular-start.md"
+    },
+    {
+      "source": "zh/circular-data.md",
+      "translations": "translations/en/circular-data.json",
+      "output": "en/circular-data.md"
+    },
+    {
+      "source": "zh/circular-layout.md",
+      "translations": "translations/en/circular-layout.json",
+      "output": "en/circular-layout.md"
+    },
+    {
+      "source": "zh/circular-features.md",
+      "translations": "translations/en/circular-features.json",
+      "output": "en/circular-features.md"
+    },
+    {
+      "source": "zh/circular-dense-case.md",
+      "translations": "translations/en/circular-dense-case.json",
+      "output": "en/circular-dense-case.md"
+    },
+    {
+      "source": "zh/dotplot-start.md",
+      "translations": "translations/en/dotplot-start.json",
+      "output": "en/dotplot-start.md"
+    },
+    {
+      "source": "zh/import-sequences.md",
+      "translations": "translations/en/import-sequences.json",
+      "output": "en/import-sequences.md"
+    },
+    {
+      "source": "zh/import-intervals.md",
+      "translations": "translations/en/import-intervals.json",
+      "output": "en/import-intervals.md"
+    },
+    {
+      "source": "zh/aligned-sequences.md",
+      "translations": "translations/en/aligned-sequences.json",
+      "output": "en/aligned-sequences.md"
+    },
+    {
+      "source": "zh/import-signals.md",
+      "translations": "translations/en/import-signals.json",
+      "output": "en/import-signals.md"
+    },
+    {
+      "source": "zh/import-relations.md",
+      "translations": "translations/en/import-relations.json",
+      "output": "en/import-relations.md"
+    },
+    {
+      "source": "zh/tracks-statistics.md",
+      "translations": "translations/en/tracks-statistics.json",
+      "output": "en/tracks-statistics.md"
+    },
+    {
+      "source": "zh/diagnostics.md",
+      "translations": "translations/en/diagnostics.json",
+      "output": "en/diagnostics.md"
+    },
+    {
+      "source": "zh/workflows.md",
+      "translations": "translations/en/workflows.json",
+      "output": "en/workflows.md"
+    },
+    {
+      "source": "zh/fusion-routing.md",
+      "translations": "translations/en/fusion-routing.json",
+      "output": "en/fusion-routing.md"
+    },
+    {
+      "source": "zh/fusion-layout.md",
+      "translations": "translations/en/fusion-layout.json",
+      "output": "en/fusion-layout.md"
+    },
+    {
+      "source": "zh/fusion-details.md",
+      "translations": "translations/en/fusion-details.json",
+      "output": "en/fusion-details.md"
+    },
+    {
+      "source": "zh/fusion-advanced.md",
+      "translations": "translations/en/fusion-advanced.json",
+      "output": "en/fusion-advanced.md"
+    },
+    {
+      "source": "zh/fusion-start.md",
+      "translations": "translations/en/fusion-start.json",
+      "output": "en/fusion-start.md"
+    },
+    {
+      "source": "zh/migration.md",
+      "translations": "translations/en/migration.json",
+      "output": "en/migration.md"
+    },
+    {
+      "source": "readme-inspirations-zh.md",
+      "translations": "translations/en/readme-inspirations.json",
+      "output": "readme-inspirations-en.md"
+    },
+    {
+      "source": "readme-roadmap-zh.md",
+      "translations": "translations/en/readme-roadmap.json",
+      "output": "readme-roadmap-en.md"
+    }
+  ],
+  "structured": [
+    {
+      "source": "content-zh/navigation.json",
+      "translations": "translations/en/content/navigation.json",
+      "output": "navigation.json"
+    },
+    {
+      "source": "content-zh/manual-sections.json",
+      "translations": "translations/en/content/manual-sections.json",
+      "output": "manual-sections.json"
+    },
+    {
+      "source": "content-zh/course-stages.json",
+      "translations": "translations/en/content/course-stages.json",
+      "output": "course-stages.json"
+    },
+    {
+      "source": "content-zh/teaching-reviews.json",
+      "translations": "translations/en/content/teaching-reviews.json",
+      "output": "teaching-reviews.json"
+    },
+    {
+      "source": "content-zh/search-intents.json",
+      "translations": "translations/en/content/search-intents.json",
+      "output": "search-intents.json"
+    },
+    {
+      "source": "content-zh/manual-figures.json",
+      "translations": "translations/en/content/manual-figures.json",
+      "output": "manual-figures.json"
+    },
+    {
+      "source": "content-zh/course-figures.json",
+      "translations": "translations/en/content/course-figures.json",
+      "output": "course-figures.json"
+    },
+    {
+      "source": "content-zh/coverage.json",
+      "translations": "translations/en/content/coverage.json",
+      "output": "coverage.json"
+    },
+    {
+      "source": "content-zh/readme-text.json",
+      "translations": "translations/en/content/readme-text.json",
+      "output": "readme-text.json"
+    },
+    {
+      "source": "content-zh/home.json",
+      "translations": "translations/en/content/home.json",
+      "output": "home.json"
+    },
+    {
+      "source": "content-zh/pages.json",
+      "translations": "translations/en/content/pages.json",
+      "output": "pages.json"
+    },
+    {
+      "source": "content-zh/parameter-overrides.json",
+      "translations": "translations/en/content/parameter-overrides.json",
+      "output": "parameter-overrides.json"
+    },
+    {
+      "source": "content-zh/teaching-tasks.json",
+      "translations": "translations/en/content/teaching-tasks.json",
+      "output": "teaching-tasks.json"
+    },
+    {
+      "source": "content-zh/assets/captions.json",
+      "translations": "translations/en/content/assets/captions.json",
+      "output": "assets/captions.json"
+    }
+  ]
+}

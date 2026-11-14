@@ -6,7 +6,7 @@ Start with [your first collinear plot](multi-sequence-start.html#collinear), the
 
 ## Input and default left alignment {#baseline}
 
-This page independently loads four bundled complete sequences and their observed alignments. Sequences need `accver, length`; links need both IDs and query/subject endpoints in bp, one-based inclusive. Preserve reverse endpoints rather than sorting them.
+This page independently loads four bundled complete sequences and their observed alignments. Sequences need ``accver`, `length``; links need both IDs and query/subject endpoints in bp, one-based inclusive. Preserve reverse endpoints rather than sorting them.
 
 {{code:alignbase}}
 {{figure:alignleft}}
@@ -65,7 +65,7 @@ These belong to `coord_collinear()`, not the other coordinate systems. Window ta
 
 ## Use your own data {#adapt}
 
-First change only left to right and observe short sequences against the longest backbone. Then choose a justified anchor for each sequence and explain why they can be compared. For your FASTA lengths and BLAST/PAF endpoints, check IDs, units, complete lengths and reverse endpoints; see [data import](real-data.html#read).
+First change only `align` from left to right and observe short sequences against the longest backbone. Then choose a justified anchor for each sequence and explain why they can be compared. For your FASTA lengths and BLAST/PAF endpoints, check IDs, units, complete lengths and reverse endpoints; see [data import](real-data.html#read).
 
 For missing links inspect endpoints and adjacent-row filtering in [cross-row connections](multi-sequence-links.html#routes). Continue with [local windows and segments](views.html); see [`coord_collinear()`](reference/coord_collinear.html) for the complete reference.
 

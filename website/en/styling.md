@@ -104,6 +104,7 @@ Layers with one Track ID share a band, value domain and one numerical reference;
 
 ## Map link identity {#mapping}
 
+
 {{code:adjustments}}
 
 {{figure:mappingexample}}

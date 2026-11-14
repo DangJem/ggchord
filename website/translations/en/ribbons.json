@@ -1,0 +1,165 @@
+{
+  "source_sha256": "f4983b12f54c6e0c6deec8e4cba3a146c0ad14cfc893a034745d0edeff5eab77",
+  "blocks": {
+    "0": {
+      "source_sha256": "eda3be16dd44f383ce4723ae4ab0dd063d7a91d112f7104ca557b639263c2ced",
+      "status": "reviewed",
+      "translation": "⟦shared:0⟧⟦shared:1⟧Reduce link clutter while retaining provenance: filtering, deduplication, merging and bundling have different meanings.⟦shared:2⟧⟦shared:3⟧\n"
+    },
+    "2": {
+      "source_sha256": "1adc5840c77dac1fc13deb5ffd46dd1fd8f954e3d456391a1cab76114683bc7c",
+      "status": "reviewed",
+      "translation": "## Begin with the original link table ⟦shared:0⟧\n"
+    },
+    "5": {
+      "source_sha256": "ef9ad38de81216cde3ddbabed67a6f072bd22025890317a770eaa30fc6fb9805",
+      "status": "reviewed",
+      "translation": "The first three counts follow one pipeline. Bundling starts from the original table and has its own count.\n"
+    },
+    "6": {
+      "source_sha256": "d00577b0e4065b4f18cbe5248bd84a28a8646e64aeb86fbd791d1b38fbdb5738",
+      "status": "reviewed",
+      "translation": "## Understand each transformation ⟦shared:0⟧\n"
+    },
+    "7": {
+      "source_sha256": "3a7ffde2183e32f55134e842213ca701011e5814fe9508e2b46932f41ed5214f",
+      "status": "reviewed",
+      "translation": "Filtering keeps observations meeting declared thresholds. Reciprocal-overlap\ndeduplication selects a representative existing observation; it does not sum\nidentities. Merging combines nearby compatible intervals into a display envelope.\nBundling groups nearby query/subject locations into an aggregate. Inspect each\n⟦shared:0⟧ and source-row membership, especially when extra metadata conflict.\nThe merged or bundled envelope is not a newly computed nucleotide alignment.\nEstimated lengths retain their flags; unobserved identity is never invented.\n"
+    },
+    "8": {
+      "source_sha256": "4376be4f023aeea444b0b4139e5255debf74f8e26967ea1240608a72d222d3ba",
+      "status": "reviewed",
+      "translation": "## Density is an explicit statistic ⟦shared:0⟧\n"
+    },
+    "11": {
+      "source_sha256": "2e5b8ac4e583aead75c836411e2fe0379f210c0d399b6dfe2b5fd5a9005d128f",
+      "status": "reviewed",
+      "translation": "Each end is divided into four position bins. Ribbons darken when more alignments share the same sequence pair, direction and bins. The legend shows the computed count from ⟦shared:0⟧. Each input row still gives one ribbon. Use ⟦shared:1⟧ to aggregate neighbouring ribbons.\n"
+    },
+    "12": {
+      "source_sha256": "ebdd762184854b3b44aade2495113603e4d1fd647173506cc227ce28afd2217c",
+      "status": "reviewed",
+      "translation": "Choose point versus interval geometry in the [links section](⟦shared:0⟧).\n"
+    },
+    "13": {
+      "source_sha256": "96d3b3403a7277d64e0e970205753ee81e2d284e9e04a56212cef8617bb26319",
+      "status": "reviewed",
+      "translation": "## Result checks ⟦shared:0⟧\n"
+    },
+    "14": {
+      "source_sha256": "922d95793af71bc4c74b03e6f8d4b06e4a624e9333baca81a7582c5c957ce3d1",
+      "status": "reviewed",
+      "translation": "Inspect each report and member rows before reading the plot. Aggregated bands are not new alignments; point links summarize midpoints of existing HSPs.\n"
+    },
+    "15": {
+      "source_sha256": "168986b646361020aec930712ec489cc00b42c188fd66322db2c69f8a48697c2",
+      "status": "reviewed",
+      "translation": "⟦shared:0⟧Continue: ⟦shared:1⟧Repeated displays and instance selection →⟦shared:2⟧⟦shared:3⟧\n"
+    },
+    "16": {
+      "source_sha256": "257ab4387d0078ddb2371b6260b7a0a0d72e7e6b36bf530898b75bc49a6d11eb",
+      "status": "reviewed",
+      "translation": "Continue to [link statistics](⟦shared:0⟧) for bundle_n, bundle_weight, density and bins/weight/group_by/min_bundle.\n"
+    },
+    "17": {
+      "source_sha256": "777fd4dd8fc8d15b171203dc6ac644fbd2491de12a9e1c8763fa808dbe0f55ee",
+      "status": "reviewed",
+      "translation": "Density colouring and bundling are different operations. Retain original HSPs before declaring bins, weights, groups and aggregation meaning.\n"
+    },
+    "18": {
+      "source_sha256": "27b828c9eff4d059615ac539e5a8b67184067b8bcfed09fd712c412cace31050",
+      "status": "reviewed",
+      "translation": "## Observed input and minimal fields ⟦shared:0⟧\n"
+    },
+    "19": {
+      "source_sha256": "abae73ce97f5b2d50913a9f98dfcca2541f5c0e9d78163e6180f747de1889905",
+      "status": "reviewed",
+      "translation": "Independently use bundled complete sequence lengths and observed HSPs; no new alignment is computed. In addition to IDs/endpoints, weight=length requires length and weight=pident requires both length and pident. Do not infer those statistics from spans.\n"
+    },
+    "21": {
+      "source_sha256": "24dbcde717c45fb9c76c2f78355c9ada9c418de71c0c3f6068ab47c02c221282",
+      "status": "reviewed",
+      "translation": "## Four versus eight bins: one ribbon per observation ⟦shared:0⟧\n"
+    },
+    "22": {
+      "source_sha256": "05f06f388be290df37f844bb94bd84b7d36de55e4687722db02c667bcf9b56f4",
+      "status": "reviewed",
+      "translation": "Normalize each endpoint midpoint by its complete sequence length and bin by pair, direction and optional group_by. Changing only bins from 4 to 8 retains input HSP rows while changing grouping granularity. Bundle_n counts grouped observations, not sequencing depth; after_stat reads the computed result.\n"
+    },
+    "27": {
+      "source_sha256": "b5bea3d3305e0ec76b2fb68f24edbf612b4fd00cda5cdaf761c85a796a8ec6f4",
+      "status": "reviewed",
+      "translation": "## Bundling combines displayed members ⟦shared:0⟧\n"
+    },
+    "28": {
+      "source_sha256": "9aad84d8b71f9941f22964992f95d07c3cd36ac7ecaaec9dc73430ae646c4fa1",
+      "status": "reviewed",
+      "translation": "`stat_ribbon_bundle` creates envelopes within bins/groups with min_bundle at least 2. Smaller groups remain individual ribbons; input counts are not bundle counts. Envelopes are not newly computed nucleotide alignments and do not invent identity. `bundle_ggchord_ribbons` returns retained tables and reports for inspection before plotting.\n"
+    },
+    "33": {
+      "source_sha256": "ff7db20203baef5b36fde80cc92ba6d8c076f980fafa125846a5cd9733036312",
+      "status": "reviewed",
+      "translation": "## Computed variables, weights and preprocessing ⟦shared:0⟧\n"
+    },
+    "34": {
+      "source_sha256": "2388bcefaa5021c02386c540f2d5d0fcf8f37bfc2277be7c7e4d99ced0d2fcea",
+      "status": "reviewed",
+      "translation": "| Parameter/variable | Default or meaning |\n"
+    },
+    "35": {
+      "source_sha256": "3491e014f5503eb5b2fca81db42f6f72765980ba5b5e48ef135b6cf69d7f92cc",
+      "status": "reviewed",
+      "translation": "| --- | --- |\n"
+    },
+    "36": {
+      "source_sha256": "e8f48a004cc2add1c27510c5132ab7a89a04a735a19d32513c75f4c2797eeadb",
+      "status": "reviewed",
+      "translation": "| bins | 80; positive integer normalized midpoint bins per sequence |\n"
+    },
+    "37": {
+      "source_sha256": "195d4c1b8506338c4c5e72906356082c038d0cb53eb6db2976094f8d11495488",
+      "status": "reviewed",
+      "translation": "| weight | length; length/count/pident determines weight source |\n"
+    },
+    "38": {
+      "source_sha256": "15f5da0474aae0f50edfa1b055ee7ff14fbb3215b9f34e90b84f9b2b4b02977a",
+      "status": "reviewed",
+      "translation": "| group_by | NULL; columns defining independent conditions |\n"
+    },
+    "39": {
+      "source_sha256": "ee4e5d95e039fa2311f0e8291c5efc4de987b49615efcefd92f5c0b43828a47d",
+      "status": "reviewed",
+      "translation": "| min_bundle | 2; bundling requires at least two members |\n"
+    },
+    "40": {
+      "source_sha256": "c0f7fa638a760e8cb013c5ca824aed9948aab65dcfdbcaceba422f83c3e331ab",
+      "status": "reviewed",
+      "translation": "| bundle_n | Original member count within a group |\n"
+    },
+    "41": {
+      "source_sha256": "33ee769d3f40c6b3542bc95bc471820ac7e29f8a1adba864610f15d214329dfd",
+      "status": "reviewed",
+      "translation": "| bundle_weight | Sum of row weights: count uses 1, length uses observed length, pident uses length × pident / 100 |\n"
+    },
+    "42": {
+      "source_sha256": "dbc78531a9368f108b87c4b6140ba64a7d5118a81bd6780e531ce635814b552d",
+      "status": "reviewed",
+      "translation": "| density | Group weight divided by the maximum group weight for that ordered sequence pair, in 0–1; not absolute coverage depth |\n"
+    },
+    "43": {
+      "source_sha256": "fbf35d477006a92f04ab7719f5c4de371a779709fdda25ecb7bc73dd58ec8059",
+      "status": "reviewed",
+      "translation": "Filtering selects observations by criteria; deduplication selects representatives; merge combines compatible neighbourhoods; bundle aggregates normalized bins. Order changes the input set, so retain reports and membership at each step. Envelopes are not original alignments for unqualified biological inference.\n"
+    },
+    "44": {
+      "source_sha256": "c08af09ea2110cf67621d01400870259999a5884bbb60dfe8672b7eebb38de11",
+      "status": "reviewed",
+      "translation": "## Use your alignments ⟦shared:0⟧\n"
+    },
+    "45": {
+      "source_sha256": "43c6d6b8058abde075b8907ebdbfb9b54db7212b2987811389334cd719ad10b0",
+      "status": "reviewed",
+      "translation": "Set bins to 6, observe colour changes and confirm retention of original observations. Preserve actual condition columns for group_by rather than pooling samples implicitly. Link statistics support chord/collinear views; single circular mode rejects link layers. Continue with [link preparation](⟦shared:0⟧), [real cases](⟦shared:1⟧) and [scale families](⟦shared:2⟧).\n"
+    }
+  }
+}

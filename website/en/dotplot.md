@@ -2,6 +2,8 @@
 
 This matrix uses all 32 original HSP records across four complete sequence inputs. Both axes preserve accession identity and local positions. Identity controls colour; observed HSP length controls stroke width.
 
+To read the matrix, choose a query sequence at the top and a subject sequence on the left. Their outlined intersection is the comparison region for that pair. Headers show complete ranges; bottom and right ticks use local positions. Cell sizes retain sequence-length proportions, and an empty region means only that the input contains no HSP there.
+
 {{manualfigure:flagdotplot}}
 
 ## What the module supports {#path}

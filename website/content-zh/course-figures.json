@@ -1,0 +1,456 @@
+[
+  {
+    "id": "coursechord",
+    "object": "p_coursechord",
+    "snippets": [
+      "radialdata",
+      "coursecomparison"
+    ],
+    "width": 10,
+    "height": 8,
+    "dpi": 110,
+    "file": "man/figures/coursechord.png",
+    "caption": {
+      "zh": "chord：同源数据全对关系"
+    },
+    "source": "Bundled source-backed lengths/HSPs/CDS, with biological source_strand restored; explicit selection recorded in preparation."
+  },
+  {
+    "id": "courselinear",
+    "object": "p_courselinear",
+    "snippets": [
+      "radialdata",
+      "coursecomparison"
+    ],
+    "width": 10,
+    "height": 8,
+    "dpi": 110,
+    "file": "man/figures/courselinear.png",
+    "caption": {
+      "zh": "linear：同源数据全对关系"
+    },
+    "source": "Bundled source-backed lengths/HSPs/CDS, with biological source_strand restored; explicit selection recorded in preparation."
+  },
+  {
+    "id": "courseradial",
+    "object": "p_courseradial",
+    "snippets": [
+      "radialdata",
+      "coursecomparison"
+    ],
+    "width": 10,
+    "height": 8,
+    "dpi": 110,
+    "file": "man/figures/courseradial.png",
+    "caption": {
+      "zh": "radial：同源数据全对关系"
+    },
+    "source": "Bundled source-backed lengths/HSPs/CDS, with biological source_strand restored; explicit selection recorded in preparation."
+  },
+  {
+    "id": "coursesankey",
+    "object": "p_coursesankey",
+    "snippets": [
+      "radialdata",
+      "coursecomparison"
+    ],
+    "width": 10,
+    "height": 8,
+    "dpi": 110,
+    "file": "man/figures/coursesankey.png",
+    "caption": {
+      "zh": "sankey：同源数据全对关系"
+    },
+    "source": "Bundled source-backed lengths/HSPs/CDS, with biological source_strand restored; explicit selection recorded in preparation."
+  },
+  {
+    "id": "coursesankeygap",
+    "object": "p_coursesankeygap",
+    "snippets": [
+      "foundationdata",
+      "foundationsankey",
+      "coursesankeygap"
+    ],
+    "width": 10,
+    "height": 8,
+    "dpi": 110,
+    "file": "man/figures/coursesankeygap.png",
+    "caption": {
+      "zh": "仅改变左右列间距"
+    },
+    "source": "Bundled source-backed lengths/HSPs/CDS, with biological source_strand restored; explicit selection recorded in preparation."
+  },
+  {
+    "id": "courseradialangle",
+    "object": "p_courseradialangle",
+    "snippets": [
+      "radialdata",
+      "coursecomparison",
+      "courseradialangle"
+    ],
+    "width": 10,
+    "height": 8,
+    "dpi": 110,
+    "file": "man/figures/courseradialangle.png",
+    "caption": {
+      "zh": "仅改变首辐条角度"
+    },
+    "source": "Bundled source-backed lengths/HSPs/CDS, with biological source_strand restored; explicit selection recorded in preparation."
+  },
+  {
+    "id": "coursefusion",
+    "object": "p_coursefusion",
+    "snippets": [
+      "fusiondata",
+      "coursefusion"
+    ],
+    "width": 12,
+    "height": 8,
+    "dpi": 110,
+    "file": "man/figures/coursefusion.png",
+    "caption": {
+      "zh": "两个独立面板与一条真实关系"
+    },
+    "source": "Bundled source-backed lengths/HSPs/CDS, with biological source_strand restored; explicit selection recorded in preparation."
+  },
+  {
+    "id": "coursecircle",
+    "object": "p_coursecircle",
+    "snippets": [
+      "coursecircleinput"
+    ],
+    "width": 10,
+    "height": 8,
+    "dpi": 110,
+    "file": "man/figures/coursecircle.png",
+    "caption": {
+      "zh": "长度与骨架"
+    },
+    "source": "Existing pUC19 origin row accver=pUC19, start=867, end=1455, type=rep_origin, anno=ori; matches the audited inspectorigin output and source annotation. No recognition is run in this section."
+  },
+  {
+    "id": "coursecirclefeature",
+    "object": "p_coursecirclefeature",
+    "snippets": [
+      "coursecircleinput",
+      "coursecirclefeature"
+    ],
+    "width": 10,
+    "height": 8,
+    "dpi": 110,
+    "file": "man/figures/coursecirclefeature.png",
+    "caption": {
+      "zh": "已有注释与名称"
+    },
+    "source": "Existing pUC19 origin row accver=pUC19, start=867, end=1455, type=rep_origin, anno=ori; matches the audited inspectorigin output and source annotation. No recognition is run in this section."
+  },
+  {
+    "id": "coursefocusedview",
+    "object": "focused_view",
+    "snippets": [
+      "fusiondata",
+      "fusionpanels",
+      "fusionlinear",
+      "fusionview",
+      "courseblockbs"
+    ],
+    "width": 12,
+    "height": 8,
+    "dpi": 110,
+    "file": "man/figures/coursefocusedview.png",
+    "caption": {
+      "zh": "单一来源局部细节"
+    },
+    "source": "Exact shared code extracted from the audited Fusion example; actual source inputs and selection remain in the registered snippets."
+  },
+  {
+    "id": "coursepaireddetail",
+    "object": "paired_detail",
+    "snippets": [
+      "fusiondata",
+      "fusionpanels",
+      "fusionlinear",
+      "fusionview",
+      "courseblockbt"
+    ],
+    "width": 12,
+    "height": 8,
+    "dpi": 110,
+    "file": "man/figures/coursepaireddetail.png",
+    "caption": {
+      "zh": "HSP 两端共享细节图"
+    },
+    "source": "Exact shared code extracted from the audited Fusion example; actual source inputs and selection remain in the registered snippets."
+  },
+  {
+    "id": "coursemultiple",
+    "object": "multiple",
+    "snippets": [
+      "fusiondata",
+      "fusionpanels",
+      "fusionlinear",
+      "fusionview",
+      "courseblockbu"
+    ],
+    "width": 12,
+    "height": 8,
+    "dpi": 110,
+    "file": "man/figures/coursemultiple.png",
+    "caption": {
+      "zh": "两个独立来源细节面板"
+    },
+    "source": "Exact shared code extracted from the audited Fusion example; actual source inputs and selection remain in the registered snippets."
+  },
+  {
+    "id": "coursecharacterdetail",
+    "object": "character_detail",
+    "snippets": [
+      "fusiondata",
+      "fusionpanels",
+      "fusionlinear",
+      "fusionview",
+      "courseblockbv"
+    ],
+    "width": 16,
+    "height": 5,
+    "dpi": 110,
+    "file": "man/figures/coursecharacterdetail.png",
+    "caption": {
+      "zh": "已有真实字符的注册细节"
+    },
+    "source": "Exact shared code extracted from the audited Fusion example; actual source inputs and selection remain in the registered snippets."
+  },
+  {
+    "id": "coursephysicalbox",
+    "object": "physical_box",
+    "snippets": [
+      "fusiondata",
+      "fusionpanels",
+      "fusionlinear",
+      "fusionview",
+      "courseblockbn"
+    ],
+    "width": 12,
+    "height": 6,
+    "dpi": 110,
+    "file": "man/figures/coursephysicalbox.png",
+    "caption": {
+      "zh": "显式毫米布局"
+    },
+    "source": "Exact shared code extracted from the audited Fusion example; actual source inputs and selection remain in the registered snippets."
+  },
+  {
+    "id": "courseguidefusion",
+    "object": "guide_fusion",
+    "snippets": [
+      "fusiondata",
+      "fusionpanels",
+      "fusionlinear",
+      "fusionview",
+      "courseblockbo"
+    ],
+    "width": 12,
+    "height": 8,
+    "dpi": 110,
+    "file": "man/figures/courseguidefusion.png",
+    "caption": {
+      "zh": "多侧图例预算"
+    },
+    "source": "Exact shared code extracted from the audited Fusion example; actual source inputs and selection remain in the registered snippets."
+  },
+  {
+    "id": "courseautofusion",
+    "object": "auto_fusion",
+    "snippets": [
+      "fusiondata",
+      "fusionpanels",
+      "fusionlinear",
+      "fusionview",
+      "courseblockbp"
+    ],
+    "width": 14,
+    "height": 10,
+    "dpi": 110,
+    "file": "man/figures/courseautofusion.png",
+    "caption": {
+      "zh": "同一 HSP 的十二次有意展示"
+    },
+    "source": "Exact shared code extracted from the audited Fusion example; actual source inputs and selection remain in the registered snippets."
+  },
+  {
+    "id": "coursestyledguidefusion",
+    "object": "styled_guide_fusion",
+    "snippets": [
+      "fusiondata",
+      "fusionpanels",
+      "fusionlinear",
+      "fusionview",
+      "courseblockbo",
+      "courseblockbq"
+    ],
+    "width": 12,
+    "height": 8,
+    "dpi": 110,
+    "file": "man/figures/coursestyledguidefusion.png",
+    "caption": {
+      "zh": "外层标题与图注"
+    },
+    "source": "Exact shared code extracted from the audited Fusion example; actual source inputs and selection remain in the registered snippets."
+  },
+  {
+    "id": "courseouter",
+    "object": "outer",
+    "snippets": [
+      "fusiondata",
+      "fusionpanels",
+      "fusionlinear",
+      "fusionview",
+      "courseblockbx"
+    ],
+    "width": 14,
+    "height": 7,
+    "dpi": 110,
+    "file": "man/figures/courseouter.png",
+    "caption": {
+      "zh": "具有叶路径的嵌套细节"
+    },
+    "source": "Exact shared code extracted from the audited Fusion example; actual source inputs and selection remain in the registered snippets."
+  },
+  {
+    "id": "courseorigindetail",
+    "object": "origin_detail",
+    "snippets": [
+      "fusiondata",
+      "fusionpanels",
+      "fusionlinear",
+      "fusionview",
+      "courseblockby"
+    ],
+    "width": 16,
+    "height": 5,
+    "dpi": 110,
+    "file": "man/figures/courseorigindetail.png",
+    "caption": {
+      "zh": "显式跨原点选区"
+    },
+    "source": "Exact shared code extracted from the audited Fusion example; actual source inputs and selection remain in the registered snippets."
+  },
+  {
+    "id": "courserouted",
+    "object": "routed",
+    "snippets": [
+      "fusiondata",
+      "fusionpanels",
+      "fusionlinear",
+      "fusionview",
+      "courseblockbl"
+    ],
+    "width": 12,
+    "height": 8,
+    "dpi": 110,
+    "file": "man/figures/courserouted.png",
+    "caption": {
+      "zh": "显式显示通道与障碍"
+    },
+    "source": "Exact shared code extracted from the audited Fusion example; actual source inputs and selection remain in the registered snippets."
+  },
+  {
+    "id": "coursefusioncenter",
+    "object": "course_center",
+    "snippets": [
+      "fusiondata",
+      "coursefusion"
+    ],
+    "width": 6,
+    "height": 6,
+    "dpi": 110,
+    "file": "man/figures/coursefusioncenter.png",
+    "caption": {
+      "zh": "独立中心图"
+    },
+    "source": "The independently valid child plot from the same one-HSP Fusion preparation; no screenshot cropping."
+  },
+  {
+    "id": "coursefusiondetail",
+    "object": "course_detail",
+    "snippets": [
+      "fusiondata",
+      "coursefusion"
+    ],
+    "width": 6,
+    "height": 8,
+    "dpi": 110,
+    "file": "man/figures/coursefusiondetail.png",
+    "caption": {
+      "zh": "独立细节图"
+    },
+    "source": "The independently valid child plot from the same one-HSP Fusion preparation; no screenshot cropping."
+  },
+  {
+    "id": "parameternamedorder",
+    "object": "p_parameter_named_order",
+    "snippets": [
+      "parameterreorder"
+    ],
+    "width": 7,
+    "height": 7,
+    "dpi": 144,
+    "file": "man/figures/parameternamedorder.png",
+    "caption": {
+      "zh": "重排后命名值仍修改 MT118296.1"
+    },
+    "source": "Bundled original CDS records and source_strand; display offsets only, unchanged source positions."
+  },
+  {
+    "id": "parameterorderedvalues",
+    "object": "p_parameter_ordered_values",
+    "snippets": [
+      "parameterreorder"
+    ],
+    "width": 7,
+    "height": 7,
+    "dpi": 144,
+    "file": "man/figures/parameterorderedvalues.png",
+    "caption": {
+      "zh": "重排后顺序值修改第二条显示序列 MT108731.1"
+    },
+    "source": "Bundled original CDS records and source_strand; display offsets only, unchanged source positions."
+  },
+  {
+    "id": "parameterlist",
+    "object": "p_parameter_list",
+    "snippets": [
+      "parametergenes",
+      "parameterlist"
+    ],
+    "width": 7,
+    "height": 7,
+    "dpi": 144,
+    "file": "man/figures/parameterlist.png",
+    "caption": {
+      "zh": "OR222515.1 双链不对称偏移，OQ646790.1 保持单值规则"
+    },
+    "source": "Bundled original CDS records and source_strand; display offsets only, unchanged source positions."
+  },
+  {
+    "id": "frontlabelledlinear",
+    "object": "p_chord_linear",
+    "snippets": [
+      "frontbackbone",
+      "frontlinks",
+      "frontribbon",
+      "frontgenes",
+      "frontfeature",
+      "frontgenelabels",
+      "courseblockad"
+    ],
+    "width": 8,
+    "height": 5,
+    "dpi": 144,
+    "file": "man/figures/frontlabelledlinear.png",
+    "caption": {
+      "zh": "切换 Collinear 后保留连接、CDS 与特征名称"
+    },
+    "source": "Bundled original HSP and source-strand CDS; cumulative graph object."
+  }
+]

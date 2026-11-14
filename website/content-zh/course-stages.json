@@ -1,0 +1,104 @@
+{
+  "chord": [
+    {
+      "title": {
+        "zh": "基础必学"
+      },
+      "pages": [
+        "chord-start",
+        "chord-build",
+        "chord-tuning",
+        "chord-geometry"
+      ]
+    },
+    {
+      "title": {
+        "zh": "进阶可选"
+      },
+      "pages": [
+        "chord-routing",
+        "chord-branches",
+        "chord-labels",
+        "chord-import",
+        "ribbons",
+        "ribbon-statistics"
+      ]
+    },
+    {
+      "title": {
+        "zh": "综合案例与参考"
+      },
+      "pages": [
+        "chord"
+      ]
+    }
+  ],
+  "collinear": [
+    {
+      "title": {
+        "zh": "基础必学"
+      },
+      "pages": [
+        "collinear-start",
+        "collinear-data",
+        "collinear-build",
+        "collinear-tuning"
+      ]
+    },
+    {
+      "title": {
+        "zh": "进阶可选"
+      },
+      "pages": [
+        "collinear-layout",
+        "collinear-routing",
+        "views",
+        "homology"
+      ]
+    },
+    {
+      "title": {
+        "zh": "综合案例与参考"
+      },
+      "pages": [
+        "collinear"
+      ]
+    }
+  ],
+  "plasmid": [
+    {
+      "title": {
+        "zh": "基础必学"
+      },
+      "pages": [
+        "plasmid-start",
+        "plasmid-data",
+        "plasmid-build",
+        "plasmid-tuning"
+      ]
+    },
+    {
+      "title": {
+        "zh": "进阶可选"
+      },
+      "pages": [
+        "circular-layers",
+        "annotations",
+        "circular-labels",
+        "tracks",
+        "recognition",
+        "primers",
+        "restriction-sites"
+      ]
+    },
+    {
+      "title": {
+        "zh": "综合案例与参考"
+      },
+      "pages": [
+        "plasmid-catalog",
+        "plasmids"
+      ]
+    }
+  ]
+}

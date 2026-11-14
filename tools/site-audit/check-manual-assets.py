@@ -8,6 +8,7 @@ import subprocess
 from pathlib import Path
 
 from PIL import Image
+from retained_provenance import validate_home_sources
 
 ROOT = Path(__file__).resolve().parents[2]
 
@@ -27,24 +28,13 @@ def main():
     revised=json.loads(revised_path.read_text()) if revised_path.exists() else None
     if revised:
         assert revised['status']=='complete','Homepage image generation incomplete'
-        for path,digest in revised['source_sha256'].items():
-            metadata=revised.get('post_render_metadata',{})
-            current=(ROOT/path).read_bytes()
-            if path==metadata.get('file'):
-                assert hashlib.sha256(current).hexdigest()==metadata['after_sha256']
-                rewind=json.loads(current)
-                row=next(r for r in rewind if r['id']=='flaglinear')
-                assert set(metadata['previous_fields'])=={'source','sha256'}
-                row.update(metadata['previous_fields'])
-                current=(json.dumps(rewind,ensure_ascii=False,indent=2)+'\n').encode()
-            assert hashlib.sha256(current).hexdigest()==digest,'Rendering source changed: '+path
-        assert revised['source_sha256']['tools/site-flagships.R']==source_sha
+        dot=validate_home_sources(revised)
         before=subprocess.check_output(['git','show','3a6b412:tools/site-flagships.R'],cwd=ROOT)
         assert hashlib.sha256(before).hexdigest()==render['source_sha256']
         def chunks(text):
             return dict(re.findall(r'^# ---- ([a-z]+) ----\n(.*?)(?=^# ---- [a-z]+ ----)',text,re.M|re.S))
         old_chunks=chunks(before.decode());new_chunks=chunks((ROOT/'tools/site-flagships.R').read_text())
-        assert {key for key in old_chunks.keys()|new_chunks.keys() if old_chunks.get(key)!=new_chunks.get(key)}=={'flagshipmulti'}
+        assert {key for key in old_chunks.keys()|new_chunks.keys() if old_chunks.get(key)!=new_chunks.get(key)}==({'flagshipmulti','flagshipdot'} if dot else {'flagshipmulti'})
         assert all(row['original_records']>0 and row['all_source_fields_identical'] for row in revised['source_checks'].values())
         if revised.get('source_check_correction'):
             assert revised['source_check_correction']['verifier_sha256']==sha(ROOT/'tools/site-audit/render-home.R')
@@ -58,7 +48,10 @@ def main():
     for row in rows:
         file = ROOT/row['file']
         digest = sha(file)
-        if revised and row['id']=='flaglinear' and 'showcasecollinear' in revised.get('legacy_figures',{}):
+        if revised and dot and row['id']=='flagdotplot':
+            record=dot['figures']['flagdotplot']
+            assert record['sha256']==digest and all(record[k]==row[k] for k in ('width','height','dpi'))
+        elif revised and row['id']=='flaglinear' and 'showcasecollinear' in revised.get('legacy_figures',{}):
             record=revised['legacy_figures']['showcasecollinear']
             assert record['sha256']==digest and record['status']=='actual PNG rendered'
         elif revised and row['id'] in ('flagradial','flagsankey'):
@@ -88,7 +81,7 @@ def main():
             assert sha(ROOT/'.site/assets'/f"{row['id']}.png") == digest, row['id']
     previews=json.loads((ROOT/'website/home-previews.json').read_text()) if revised else []
     for row in previews:
-        record=revised['figures'][row['id']]
+        record=(dot['figures'][row['id']] if dot and row['id']=='homedotplot' else revised['figures'][row['id']])
         assert record['sha256']==sha(ROOT/row['file']),row['id']
         assert record['status']=='actual PNG rendered'
         with Image.open(ROOT/row['file']) as im:

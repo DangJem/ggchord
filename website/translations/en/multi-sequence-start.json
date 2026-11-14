@@ -1,0 +1,115 @@
+{
+  "source_sha256": "45f89c3cd043b5830c1b073a409e7ad72370e006be4e0685f22a718404974aba",
+  "blocks": {
+    "0": {
+      "source_sha256": "6f150531a9654cdf7dc6c33c55e2c4166b13239790ea20fda242ef569331f931",
+      "status": "reviewed",
+      "translation": "Build backbones, a link, a feature and labels in one section using bundled source records. Run in order; this section uses ggchord and optional dplyr.\n"
+    },
+    "1": {
+      "source_sha256": "34db05dfcc3cefdc067444eaab49752dee6643569981970c5c18e547ac357903",
+      "status": "reviewed",
+      "translation": "## Draw the backbones ⟦shared:0⟧\n"
+    },
+    "2": {
+      "source_sha256": "ff5ede92c272f69a6cbb1c42d547797178f88d0b2b2e03ae57a812c4f29e6a25",
+      "status": "reviewed",
+      "translation": "Run this section in a fresh R session after following the [installation instructions](⟦shared:0⟧).\n"
+    },
+    "6": {
+      "source_sha256": "7da9c37f1f187dde14a0f6c93a38cd9eb194c8e2b1168f811b42695b5f27c745",
+      "status": "reviewed",
+      "translation": "## Read the plot ⟦shared:0⟧\n"
+    },
+    "7": {
+      "source_sha256": "0159e8f07ea69d6cc998be398a58245b5d3550795b79d16a649c88501811e781",
+      "status": "reviewed",
+      "translation": "Each arc represents a row of the sequence table. Find ⟦shared:0⟧ by its label and compare it with ⟦shared:1⟧. These two sequences are 64,323 bp and 32,090 bp, so the first arc is about twice as long as the second.\n"
+    },
+    "8": {
+      "source_sha256": "e4008c1a4fdf88f39aa0426fb2a306151fd5bc57bc7f5044dff184f692db15e4",
+      "status": "reviewed",
+      "translation": "⟦shared:0⟧ draws the backbones, ⟦shared:1⟧ adds their IDs, and ⟦shared:2⟧ arranges the backbones as arcs.\n"
+    },
+    "9": {
+      "source_sha256": "c05afaf146fdac22016cfb34180b8787305f03b8c44df8f7c2a6553c45b5df84",
+      "status": "reviewed",
+      "translation": "## What the label layer controls ⟦shared:0⟧\n"
+    },
+    "10": {
+      "source_sha256": "954dbd441a94ef597be5616b5167cc9ae575d12ef6638890f093e614c7841346",
+      "status": "reviewed",
+      "translation": "Remove the ⟦shared:0⟧ line and run the code again. The arcs stay in place and the sequence names disappear.\n"
+    },
+    "11": {
+      "source_sha256": "0428592f4282c02cc1f59ce17f57adef6ac01ead18ada2075bec4679c73d8624",
+      "status": "reviewed",
+      "translation": "## Add an alignment ribbon ⟦shared:0⟧\n"
+    },
+    "12": {
+      "source_sha256": "c9abdb84d67ec67a4a486425d1d314634e35a0859173f7bd4514bdf1d7b2b8fa",
+      "status": "reviewed",
+      "translation": "Take the first row of the bundled alignment table. It connects two of the four sequences.\n"
+    },
+    "15": {
+      "source_sha256": "41acb34a89028f7b6cbdef43186bdbf17e803715a5956e4ba4a5e4df2e722e4c",
+      "status": "reviewed",
+      "translation": "Follow the ribbon to both ends. It spans 26,298–51,139 bp on ⟦shared:0⟧ and 7,121–31,959 bp on ⟦shared:1⟧. Each end covers an interval, so this layer uses ⟦shared:2⟧.\n"
+    },
+    "16": {
+      "source_sha256": "cc85ae7b60007afd863e376c38ceeedeccf4cea2dbb6f793838a8c9be9841e06",
+      "status": "reviewed",
+      "translation": "The default colour reflects the alignment identity for this row, about 98.6%. The crossed shape comes from how the interval ends are joined. Use the alignment coordinates to assess inversion.\n"
+    },
+    "17": {
+      "source_sha256": "deb79c7723c1c3e4c2291e6542a9f543493d75514975842724c478f8a6719eeb",
+      "status": "reviewed",
+      "translation": "## Add a CDS ⟦shared:0⟧\n"
+    },
+    "18": {
+      "source_sha256": "3cf382a155354c447b0e1a34ea85fb22b9dca7461267c3a009038f765a4fd65c",
+      "status": "reviewed",
+      "translation": "⟦shared:0⟧⟦shared:1⟧⟦shared:2⟧⟦shared:1⟧⟦shared:3⟧⟦shared:1⟧Select the original annotation starting at 43,765 bp on ⟦shared:4⟧ and recover its biological strand.\n"
+    },
+    "21": {
+      "source_sha256": "e066aef7786d26412072813b69c5f39396b379a4dbc6faa917afd06c966c91e7",
+      "status": "reviewed",
+      "translation": "Find the red arrow on green ⟦shared:0⟧. It marks the plus-strand integrase CDS from 43,765 to 46,140 bp. The ribbon and this CDS use independent input tables.\n"
+    },
+    "22": {
+      "source_sha256": "1a577ee4f34b3199f2c8db0ab0b149a77e8a89522bb6906805ace8bfa629bbda",
+      "status": "reviewed",
+      "translation": "To display the CDS name, add ⟦shared:0⟧. It reads the label from ⟦shared:1⟧. \n"
+    },
+    "23": {
+      "source_sha256": "56e029064676a19da7101299fcfd96da52256af080b376497d6721dcc0541a8f",
+      "status": "reviewed",
+      "translation": "## Display the feature name ⟦shared:0⟧\n"
+    },
+    "26": {
+      "source_sha256": "c8228fdc90fab2e9f58b91bf2d3634e43887a82d00ac7528d4aabf5a4a2b4f45",
+      "status": "reviewed",
+      "translation": "## Switch to a linear layout ⟦shared:0⟧\n"
+    },
+    "28": {
+      "source_sha256": "109810154f48e84f26362d4ce1f74b9933b7a9a9b067430b28abff91b7990a15",
+      "status": "reviewed",
+      "translation": "![Collinear](⟦shared:0⟧)\n"
+    },
+    "29": {
+      "source_sha256": "656a24a5def896cf6de51bc083a89f013066ef8457c909727a35c096833387ec",
+      "status": "reviewed",
+      "translation": "This retains the ribbon, CDS and feature-name layers; Collinear selects adjacent rows by default. Compare all four views in the [next section](⟦shared:0⟧).\n"
+    },
+    "30": {
+      "source_sha256": "cc2ccda9e97b5e5d4143a725729d4c02d6c658b78cad67220c86fdb28f2cd299",
+      "status": "reviewed",
+      "translation": "## Use your own sequences ⟦shared:0⟧\n"
+    },
+    "31": {
+      "source_sha256": "910c8d4fdb19e2a93e2ad5c35f103b6508682ea70826a5668a71f1824b40c09e",
+      "status": "reviewed",
+      "translation": "Replace ⟦shared:0⟧ with a table containing ⟦shared:1⟧ and ⟦shared:2⟧. See [Basic input tables](⟦shared:3⟧) for the column definitions, [Flexible parameter formats](⟦shared:4⟧) for local settings, and [Four-view comparison](⟦shared:5⟧) for a strict coordinate comparison.\n"
+    }
+  }
+}

@@ -1,0 +1,216 @@
+{
+  "multi-sequence": [
+    {
+      "title": {
+        "zh": "共用数据与显示规则"
+      },
+      "pages": [
+        "multi-sequence",
+        "multi-sequence-start",
+        "multi-sequence-views",
+        "multi-sequence-layout",
+        "multi-sequence-links",
+        "multi-sequence-labels",
+        "ribbons",
+        "instances"
+      ]
+    },
+    {
+      "title": {
+        "zh": "Chord"
+      },
+      "pages": [
+        "chord-geometry",
+        "chord"
+      ]
+    },
+    {
+      "title": {
+        "zh": "Collinear"
+      },
+      "pages": [
+        "collinear-layout",
+        "collinear"
+      ]
+    },
+    {
+      "title": {
+        "zh": "Radial"
+      },
+      "pages": [
+        "radial-synteny"
+      ]
+    },
+    {
+      "title": {
+        "zh": "Sankey"
+      },
+      "pages": [
+        "sankey"
+      ]
+    },
+    {
+      "title": {
+        "zh": "关系与局部比较"
+      },
+      "pages": [
+        "views",
+        "homology"
+      ]
+    }
+  ],
+  "circular": [
+    {
+      "title": {
+        "zh": "骨架与数据"
+      },
+      "pages": [
+        "circular",
+        "circular-start",
+        "circular-data",
+        "circular-layout"
+      ]
+    },
+    {
+      "title": {
+        "zh": "注释与标注"
+      },
+      "pages": [
+        "circular-features",
+        "circular-labels",
+        "recognition",
+        "primers",
+        "restriction-sites"
+      ]
+    },
+    {
+      "title": {
+        "zh": "完整参考图"
+      },
+      "pages": [
+        "plasmids",
+        "circular-dense-case",
+        "plasmid-catalog"
+      ]
+    }
+  ],
+  "dotplot": [
+    {
+      "title": {
+        "zh": "序列比对点图"
+      },
+      "pages": [
+        "dotplot",
+        "dotplot-start"
+      ]
+    }
+  ],
+  "fusion": [
+    {
+      "title": {
+        "zh": "组合与布局"
+      },
+      "pages": [
+        "fusion",
+        "fusion-start",
+        "fusion-routing",
+        "fusion-layout"
+      ]
+    },
+    {
+      "title": {
+        "zh": "连接与放大"
+      },
+      "pages": [
+        "fusion-details",
+        "fusion-advanced"
+      ]
+    }
+  ],
+  "start": [
+    {
+      "title": {
+        "zh": "开始使用"
+      },
+      "pages": [
+        "installation",
+        "modes",
+        "data"
+      ]
+    }
+  ],
+  "shared-techniques": [
+    {
+      "title": {
+        "zh": "通用技巧"
+      },
+      "pages": [
+        "styling",
+        "annotations",
+        "feature-geometry",
+        "labels",
+        "parameters",
+        "scale-families",
+        "tracks",
+        "tracks-statistics",
+        "output",
+        "diagnostics"
+      ]
+    }
+  ],
+  "data": [
+    {
+      "title": {
+        "zh": "数据与工作流"
+      },
+      "pages": [
+        "formats",
+        "import-sequences",
+        "import-intervals",
+        "import-signals",
+        "aligned-sequences",
+        "import-relations",
+        "alignments",
+        "protein-alignments",
+        "projection",
+        "workflows",
+        "real-data"
+      ]
+    }
+  ],
+  "cases": [
+    {
+      "title": {
+        "zh": "案例图库"
+      },
+      "pages": [
+        "gallery"
+      ]
+    }
+  ],
+  "reference": [
+    {
+      "title": {
+        "zh": "API 参考"
+      },
+      "pages": [
+        "reference",
+        "compatibility",
+        "parameter-atlas",
+        "api-curriculum"
+      ]
+    }
+  ],
+  "information": [
+    {
+      "title": {
+        "zh": "项目信息"
+      },
+      "pages": [
+        "about",
+        "faq",
+        "migration"
+      ]
+    }
+  ]
+}

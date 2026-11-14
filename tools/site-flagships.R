@@ -110,14 +110,43 @@ fusion_chord <- flagship_base + coord_chord()
 fusion_collinear <- flagship_base + coord_collinear()
 fusion_radial <- flagship_base + coord_radial_synteny()
 # ---- flagshipdot ----
+dotplot_pair_counts <- flagship_hsp |>
+  count(qaccver, saccver, name = "HSP")
+dotplot_frames <- export_ggchord_layout(
+  ggchord(flagship_sequences, flagship_hsp) + geom_alignment_segment() +
+    coord_dotplot(x_seqs = flagship_sequences$accver,
+      y_seqs = flagship_sequences$accver, gap = 4000)
+)$axis_layout
+dotplot_cells <- tidyr::expand_grid(
+  qaccver = flagship_sequences$accver, saccver = flagship_sequences$accver
+) |>
+  left_join(dotplot_pair_counts, by = c("qaccver", "saccver")) |>
+  mutate(HSP = coalesce(HSP, 0L)) |>
+  left_join(dotplot_frames |> filter(axis == "x") |>
+    transmute(qaccver = accver, x = min, xmax = max), by = "qaccver") |>
+  left_join(dotplot_frames |> filter(axis == "y") |>
+    transmute(saccver = accver, y = max, ymin = min), by = "saccver") |>
+  mutate(x = x + (xmax - x) * 0.04, y = y - (y - ymin) * 0.05,
+    label = if_else(HSP > 0L, paste(HSP, "HSP"), "No input HSP"))
 flag_dotplot <- ggchord(flagship_sequences, flagship_hsp) +
   geom_alignment_segment(aes(link_colour = pident, link_linewidth = length), alpha = 0.85) +
-  scale_link_linewidth_continuous(range = c(0.45, 1.7), name = "HSP length (bp)") +
+  scale_link_linewidth_continuous(range = c(0.8, 1.8), name = "HSP length (bp)") +
   coord_dotplot(x_seqs = flagship_sequences$accver, y_seqs = flagship_sequences$accver,
     gap = 4000) +
-  labs(x = "Query position (bp)", y = "Subject position (bp)") +
+  ggplot2::geom_text(data = dotplot_cells, aes(x = x, y = y, label = label),
+    inherit.aes = FALSE, hjust = 0, vjust = 1, size = 2.8, colour = "#566E67") +
+  labs(title = "Six observed sequence pairs · 32 HSPs",
+    subtitle = "One query→subject direction per pair; empty cells contain no input records") +
   flagship_theme +
-  theme(panel.grid.major = element_line(colour = "#DFDED5", linewidth = 0.25))
+  theme(
+    panel.grid = element_blank(), legend.position = "bottom", legend.box = "horizontal",
+    axis.text = element_text(size = 9),
+    axis.text.x.top = element_text(size = 10, face = "bold", margin = margin(b = 9)),
+    axis.text.y.left = element_text(size = 10, face = "bold", margin = margin(r = 9)),
+    axis.text.y.right = element_text(size = 9),
+    axis.ticks.length = unit(1.5, "mm"),
+    plot.margin = margin(12, 16, 12, 16)
+  )
 # ---- flagshipfusion ----
 flagship_selected <- flagship_hsp |> slice(1)
 flagship_windows <- bind_rows(

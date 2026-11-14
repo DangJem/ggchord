@@ -38,7 +38,7 @@ Take the CDS at 48,053–49,111 bp on `MT108731.1`. It falls within the alignmen
 
 {{figure:frontmarkers}}
 
-The outer band marks the full interval on the query sequence. `region_side = "outside"` places it outside the backbone. The straight line joins the two interval midpoints, and the arrow points to the subject. Use a ribbon to show the full span on both sides.
+The outer band marks the full interval on the query sequence. `region_side = "outside"` places it outside the backbone. The straight line joins the two interval midpoints, and the `arrow` points to the subject. Use a ribbon to show the full span on both sides.
 
 Next, [place sequence and gene labels](multi-sequence-labels.html#sequence-labels).
 

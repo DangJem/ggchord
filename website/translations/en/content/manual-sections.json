@@ -1,0 +1,95 @@
+{
+  "source_sha256": "9bb6d87a3db7294b971f3b0581b3ac687ae7358642397864f66d7520d239641e",
+  "strings": {
+    "multi-sequence/0/title": {
+      "source_sha256": "71f451cf89230d8edc8b662e64880ff923f3c42ae7a92b250b52dc5bb7ed6f18",
+      "status": "reviewed",
+      "translation": "Shared inputs and display rules"
+    },
+    "multi-sequence/1/title": {
+      "source_sha256": "456bb0100878d4840d9afc2a296736fdb8e6eddb7641902a990da60ebe248977",
+      "status": "reviewed",
+      "translation": "Chord"
+    },
+    "multi-sequence/2/title": {
+      "source_sha256": "8f9e4cc91dde749a8df1c472eb3737da1a14881a6e3f76800ea934ccc421c0f3",
+      "status": "reviewed",
+      "translation": "Collinear"
+    },
+    "multi-sequence/3/title": {
+      "source_sha256": "02693d5af96479f14f504da89bf94efd593d4349794996af1cb7fb65ab0e5e9b",
+      "status": "reviewed",
+      "translation": "Radial"
+    },
+    "multi-sequence/4/title": {
+      "source_sha256": "362c638c72a060cda5e08c29c6c957acae71da857d23eb85f35c78f9d2577638",
+      "status": "reviewed",
+      "translation": "Sankey"
+    },
+    "multi-sequence/5/title": {
+      "source_sha256": "d96197829261bd2999d1266da733205d7675b75495d99c6eb780fca9a4deac9f",
+      "status": "reviewed",
+      "translation": "Relationships and local comparisons"
+    },
+    "circular/0/title": {
+      "source_sha256": "931557099d7b1de282cdcead5490bb778aa02951a801694e854291b51369f14b",
+      "status": "reviewed",
+      "translation": "Backbone and data"
+    },
+    "circular/1/title": {
+      "source_sha256": "b048eaa1dd0db81079a7a02e9ff6754deec80b735a3d1bf418072d7b7edd9db3",
+      "status": "reviewed",
+      "translation": "Annotations and labels"
+    },
+    "circular/2/title": {
+      "source_sha256": "851fae7a83f2f1bae3597186801c4471b611f52078a277fa97204c836cd1b1eb",
+      "status": "reviewed",
+      "translation": "Complete reference maps"
+    },
+    "dotplot/0/title": {
+      "source_sha256": "634b698059b9449b58c5f0e0a77517837e1c64840a17d06f3d0480dd4ea4dad7",
+      "status": "reviewed",
+      "translation": "Sequence alignment Dotplot"
+    },
+    "fusion/0/title": {
+      "source_sha256": "9311165efd0f27be828c089e14189021da085eb287501bfd987ea87fca9ccb43",
+      "status": "reviewed",
+      "translation": "Composition and layout"
+    },
+    "fusion/1/title": {
+      "source_sha256": "fea25f6567e4db3cddf0c84428d0714f3bfd0783bf264c26d432baf296f5eccf",
+      "status": "reviewed",
+      "translation": "Links and magnification"
+    },
+    "start/0/title": {
+      "source_sha256": "715ee9dc842f34e48f267f0bf3261d7980e544b26eb3d2f0ff20e19b121c4a99",
+      "status": "reviewed",
+      "translation": "Get started"
+    },
+    "shared-techniques/0/title": {
+      "source_sha256": "e67a8dae21f2b855050b2deaacbb3a27db68a882500b57c8783f56d392d93945",
+      "status": "reviewed",
+      "translation": "Shared techniques"
+    },
+    "data/0/title": {
+      "source_sha256": "26dfa22fcf450bbc0760c529cb98110502b029cca12d43de2a940374356333e2",
+      "status": "reviewed",
+      "translation": "Data and workflows"
+    },
+    "cases/0/title": {
+      "source_sha256": "2c400ce3c2dea9394f8d06d5af230e0e84a5aed6e386bcc56f9bf34a62a14722",
+      "status": "reviewed",
+      "translation": "Gallery"
+    },
+    "reference/0/title": {
+      "source_sha256": "63e51325a41ffa3e76da38b0e104e00727207b6b3251c38524908b16181a7cb4",
+      "status": "reviewed",
+      "translation": "API reference"
+    },
+    "information/0/title": {
+      "source_sha256": "46e1eb2d8785badc69fe850386f02e174f80674683fb70bc9f8f1cd1d1fb6658",
+      "status": "reviewed",
+      "translation": "Project information"
+    }
+  }
+}

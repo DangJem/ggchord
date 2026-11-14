@@ -1,0 +1,15 @@
+{
+  "source_sha256": "19ade22378fb98e8cecb41a0d71d5c7a60331e4bf46fcb025ceca53514c55fec",
+  "blocks": {
+    "0": {
+      "source_sha256": "65558b765341744300f6b1268eea89e49563657e225330407740cb387a66bc22",
+      "status": "reviewed",
+      "translation": "## Section moved ⟦shared:0⟧\n"
+    },
+    "1": {
+      "source_sha256": "99838d18c6eae60ce23867dfd451900d5a5dd738f8a87b085d35eef9500b4aaa",
+      "status": "reviewed",
+      "translation": "[Mappings, scales, guides and themes](⟦shared:0⟧)\n"
+    }
+  }
+}

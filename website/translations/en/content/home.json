@@ -1,0 +1,90 @@
+{
+  "source_sha256": "7eed79c682750562ca030c40569c5b2bad8daceb440c5acef6592e51c9106f68",
+  "strings": {
+    "hero/eyebrow": {
+      "source_sha256": "e35094efa05f697f0df6b248d518549b4e7e77ff84ade7bc66bc581c4b7e3b24",
+      "status": "reviewed",
+      "translation": "ggchord · R / ggplot2"
+    },
+    "hero/title": {
+      "source_sha256": "6d708da7e3c018afa55f757a638f155bbd6999a6c808bf3aa982d48d120ca5ed",
+      "status": "reviewed",
+      "translation": "Sequence plots built with consistent layer grammar."
+    },
+    "hero/description": {
+      "source_sha256": "7b1bf60c6317f38c73a90c3411262f61cab9dc3b7aeafb7db5e4dac7fcdc1651",
+      "status": "reviewed",
+      "translation": "Compare sequences, annotate circular genomes, inspect alignments, and connect independent views in one figure."
+    },
+    "capabilities/0/title": {
+      "source_sha256": "5d8d0ef686b0e017907014798f092e245061b34cfa3cc0692ab4357003817dea",
+      "status": "reviewed",
+      "translation": "Switch views"
+    },
+    "capabilities/0/description": {
+      "source_sha256": "39d44362a21f2b7942f53fcfff372eed8a6798e42f7fd3495c7289ceda481f81",
+      "status": "reviewed",
+      "translation": "Reuse data and layers to inspect relationships from different perspectives."
+    },
+    "capabilities/1/title": {
+      "source_sha256": "5f40e5e947d70c34e604d81bf7ca69e61596910617b62c5991a38df79f8a39c0",
+      "status": "reviewed",
+      "translation": "Flexible parameter formats"
+    },
+    "capabilities/1/description": {
+      "source_sha256": "52edb1ede28d0c0c2f49ab050fea5aef643a24928ca3d528367d742f0e5c5086",
+      "status": "reviewed",
+      "translation": "Refine shared settings into local changes by sequence or strand."
+    },
+    "capabilities/2/title": {
+      "source_sha256": "92d769d2de67234a68c269c9403dd5a8283b0fd305a4474f5d473ee88a475658",
+      "status": "reviewed",
+      "translation": "Composition and output"
+    },
+    "capabilities/2/description": {
+      "source_sha256": "c53fff3abdec87873f33a3c958aeef7a9551a9abc7ecb8b0e1287357cd8b3c2f",
+      "status": "reviewed",
+      "translation": "Connect independent panels, then preview and save at the intended size."
+    },
+    "modules/0/title": {
+      "source_sha256": "6ee7675f0e2e418db2b51921533d7672ffd4e549ba0232464efbb17c5f405367",
+      "status": "reviewed",
+      "translation": "Multi-sequence relationships"
+    },
+    "modules/0/purpose": {
+      "source_sha256": "f100527c4c96206d378c7f94e0913c2ef7488ab0a5a66cac1de35d6916d0ab99",
+      "status": "reviewed",
+      "translation": "Compare genomes or gene clusters through annotations and interval relationships."
+    },
+    "modules/1/title": {
+      "source_sha256": "7492978c0f12187f83f9bdfe6272f3e5b9a64368227b35f88959f8e97a18ac9c",
+      "status": "reviewed",
+      "translation": "Single-sequence circular maps"
+    },
+    "modules/1/purpose": {
+      "source_sha256": "004f7804514d2ec3d6e2946dce771f3505b04e28ae4cb15be4a7d2795e8f32c0",
+      "status": "reviewed",
+      "translation": "Organize features, labels and quantitative tracks around one circular sequence."
+    },
+    "modules/2/title": {
+      "source_sha256": "634b698059b9449b58c5f0e0a77517837e1c64840a17d06f3d0480dd4ea4dad7",
+      "status": "reviewed",
+      "translation": "Sequence alignment Dotplot"
+    },
+    "modules/2/purpose": {
+      "source_sha256": "8baf42ebbb04be4748fa184452875e22001d72e86d8522fd2c9a7c7a4deb718d",
+      "status": "reviewed",
+      "translation": "Inspect aligned intervals, direction and identity on two sequence axes."
+    },
+    "modules/3/title": {
+      "source_sha256": "e663b1ecece03f85064b528f6c06e4ef1b5d940c458ab6f41dd2295d601a6aae",
+      "status": "reviewed",
+      "translation": "Multi-view composition"
+    },
+    "modules/3/purpose": {
+      "source_sha256": "596175f065856c6f3c2e8c790b6fe563ec8b0d6b309ce0357c5ac62bf3ee01b7",
+      "status": "reviewed",
+      "translation": "Combine Chord, Collinear, radial and detailed views, connecting independent panels through real intervals."
+    }
+  }
+}

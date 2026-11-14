@@ -117,5 +117,3 @@ Automatic Identity rulers reserve length from measured boundary text rather than
 ## Preview and save {#exercise}
 
 Choose an HSP and identify its two sources. Restore default adjacency and explain a possible omission. Save your chosen view at target size and retain the input table.
-
-The Chord and Collinear complete flagships retain their designs. Radial and Sankey use the revised export dimensions and decoration above, with original HSP and CDS inputs preserved.

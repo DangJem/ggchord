@@ -1,0 +1,80 @@
+{
+  "source_sha256": "df52a8fdb4d056a5d0e85266424541200e0df217949717906191946f57c5d538",
+  "blocks": {
+    "0": {
+      "source_sha256": "59f668b6cec390f4aa954e0a89ea5a4e949290e97fa41c844e1949bf187bf5d8",
+      "status": "reviewed",
+      "translation": "A single-sequence circular map starts with two columns. Feature, primer and restriction searches additionally need real DNA; existing annotations can be drawn directly without running recognition again.\n"
+    },
+    "1": {
+      "source_sha256": "48d2240e1a0d5effa8c0cb9c6cb2b02e27c64d9238a649dca3a10f1bf9ed8e8e",
+      "status": "reviewed",
+      "translation": "## Tables and optional information ⟦shared:0⟧\n"
+    },
+    "2": {
+      "source_sha256": "b98fafe87ca979c1a3ca88f6b0e3cafccd406fb5dc7dc1b4ea5c670ae55dc1d8",
+      "status": "reviewed",
+      "translation": "| Input | Required content | Optional content |\n"
+    },
+    "3": {
+      "source_sha256": "a9e436d2babd638ade86791e162e7de5a6b1b3128c6ae9ed93504fbf3c53dc93",
+      "status": "reviewed",
+      "translation": "| --- | --- | --- |\n"
+    },
+    "4": {
+      "source_sha256": "31df46496ac2d55f5867e9ca08d4c4607d96abad66cff47bdef3a15c72002846",
+      "status": "reviewed",
+      "translation": "| Backbone | accver, length; exactly one sequence | label for display; sequence for searches |\n"
+    },
+    "5": {
+      "source_sha256": "f5be374867349d127508f2821da8787e15afe39ecfb346ed815abdb430c54390",
+      "status": "reviewed",
+      "translation": "| Features | accver, start, end and declared directionality | type, anno/label, feature_id and shape categories |\n"
+    },
+    "6": {
+      "source_sha256": "33bfaffb907ffeb1b1c1422da503ab044d918cd9d328dcf90e44a90429b9cdd1",
+      "status": "reviewed",
+      "translation": "| Primers | Computed binding interval, strand/name roles required by the geom | Recognition and provenance fields |\n"
+    },
+    "7": {
+      "source_sha256": "dadefb33dd5f95335f3b493c60f809050e1c2e04b393104a951e331eed69688c",
+      "status": "reviewed",
+      "translation": "| Restriction sites | Position/name roles required by the geom | Enzyme catalogue, methylation assumption and filter provenance |\n"
+    },
+    "8": {
+      "source_sha256": "09e83c4c0bc55a87a04953a83bba103edadf92572922ca83a89e091657e94227",
+      "status": "reviewed",
+      "translation": "Backbones do not require DNA. Prefer search-result tables for the latter layers and consult their help for detailed fields. Unknown-strand annotations belong in generic feature layers.\n"
+    },
+    "9": {
+      "source_sha256": "13805b0feef5d487dd475e37ef56d3e069dc354f0b207b09636a2ef265fd0fb4",
+      "status": "reviewed",
+      "translation": "## Inspect bundled real records ⟦shared:0⟧\n"
+    },
+    "11": {
+      "source_sha256": "f5de000cc0c2400b567dc3dc79e45ef1d191e533cdff17606b44442226a284e5",
+      "status": "reviewed",
+      "translation": "The compact names retain ggchord's early BLAST workflow history. ⟦shared:0⟧ need not be a database accession. Full DNA and length must agree. Recognition is computational matching, not experimental validation.\n"
+    },
+    "12": {
+      "source_sha256": "0f0a3068690966acc1bf0fbc7b547b0dacf927508484c3e7bdbbe58fe28cdc11",
+      "status": "reviewed",
+      "translation": "## Import your own plasmid ⟦shared:0⟧\n"
+    },
+    "13": {
+      "source_sha256": "50feed56c4c787cff1621bed8a7918962d55b6af1c40fea77561bc120ef1afff",
+      "status": "reviewed",
+      "translation": "⟦shared:0⟧ reads IDs and full lengths only. Searches additionally need actual DNA, for example read with optional Biostrings ⟦shared:1⟧ and ⟦shared:2⟧, retaining matching IDs. GFF3/BED/GenBank or GRanges annotations follow the [format guide](⟦shared:3⟧), retaining provenance. Handle circular-origin and segmented records according to the reader contract; do not invent one continuous interval by merging every segment.\n"
+    },
+    "14": {
+      "source_sha256": "a473eed216b141642291a90790af3f587eadb05f0bf091e09238db15f7ac1a62",
+      "status": "reviewed",
+      "translation": "## A progressive case sequence ⟦shared:0⟧\n"
+    },
+    "15": {
+      "source_sha256": "6f27b221d7a5df8a4a933131c3692675d158540022bffc5f62dcaae20a6169c8",
+      "status": "reviewed",
+      "translation": "Build pUC19 step by step in the [layer section](⟦shared:0⟧), then complete the [pUC19 and pETDuet-1 cases](⟦shared:1⟧). Consult [search assumptions](⟦shared:2⟧) and the [13 reference maps](⟦shared:3⟧) as needed. The bundled pUC19c alias refers to the same example.\n"
+    }
+  }
+}

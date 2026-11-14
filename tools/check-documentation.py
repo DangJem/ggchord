@@ -73,6 +73,7 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--source-only', action='store_true')
     args = parser.parse_args()
+    subprocess.run(['python3','tools/sync-website-languages.py','--check'],cwd=ROOT,check=True)
     subprocess.run(['python3', str(ROOT / 'tools/check-teaching-content.py')], cwd=ROOT, check=True)
     errors = []
     def require(ok, message):
@@ -140,6 +141,10 @@ def main():
         covered=(supplement.get('status')=='complete' and supplement.get('runtime_review',{}).get('signatures_identical')
             and path in {'R/ggchord-build.R','R/layout-collinear-annotation.R'}
             and supplement.get('engine_sha256',{}).get(path)==fresh)
+        if path=='R/coord-dotplot.R':
+            dot_path=ROOT/'tools/site-audit/dotplot-rendering.json'
+            dot=json.loads(dot_path.read_text()) if dot_path.exists() else {}
+            covered=dot.get('status')=='complete' and dot.get('engine_sha256',{}).get(path)==fresh and dot.get('other_expressions_and_signatures_identical')
         require(fresh==digest or covered,'Lesson execution uses stale engine without scoped revalidation: '+path)
     execution=runtime_record['pages']
     expanded_for_validation={p['slug']:expand((WEB/'en'/(p['slug']+'.md')).read_text(),'en') for p in PAGES}

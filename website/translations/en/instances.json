@@ -1,0 +1,30 @@
+{
+  "source_sha256": "a6a13c95000e88dbcaf8ab824aaf51f5ae27005bab545f36bd5776a021acfa22",
+  "blocks": {
+    "0": {
+      "source_sha256": "09ace860e79f78a4c4492087ed38b4680da18f47636ec3a89a54bb0cb0f138b9",
+      "status": "reviewed",
+      "translation": "## Preparation ⟦shared:0⟧\n"
+    },
+    "2": {
+      "source_sha256": "fbad14d4d776bc911910165dd1fecc9b2e8eda348283fc31b7d6aa46590cd694",
+      "status": "reviewed",
+      "translation": "## Named A–B–A routes ⟦shared:0⟧\n"
+    },
+    "3": {
+      "source_sha256": "6f201b45f648d9b0f03dc9e3e47923fb15fea1a07903db1e52ea4c5f42dc96aa",
+      "status": "reviewed",
+      "translation": "The three displayed rows refer to two biological sequences. ⟦shared:0⟧ values\nidentify sources; names identify instances. Filter each layer's original HSPs\nbefore routing. ⟦shared:1⟧ accepts two names or two declaration-order indices.\nAmbiguous routes fail. The two subsets below are disjoint and preserve every HSP.\n"
+    },
+    "6": {
+      "source_sha256": "03c553bab369709d1814eb72f3f99aa519c4cc1c56b764d3c3aa73f18df83496",
+      "status": "reviewed",
+      "translation": "The same ⟦shared:0⟧ can use ⟦shared:1⟧ or ⟦shared:2⟧.\nVertical Collinear changes the global view while keeping source strands and\npositions. Positive local normal points left. Explicit text styles retain\npriority. ⟦shared:3⟧ accepts an instance name; its inverse input\nis final y in vertical views.\n"
+    },
+    "7": {
+      "source_sha256": "119ce674781807aa71277028b4cfc103bfec8842cf5549a746882053c4909e73",
+      "status": "reviewed",
+      "translation": "⟦shared:0⟧ supplies ⟦shared:1⟧, ⟦shared:2⟧ and\n⟦shared:3⟧. Explicit ⟦shared:4⟧ detects repeated display across\nlayers; use ⟦shared:5⟧ only when that repetition is intended. Without\nan ID, identity stays layer-local; equal row values do not establish identity.\n"
+    }
+  }
+}

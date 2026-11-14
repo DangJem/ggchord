@@ -1,0 +1,77 @@
+{
+  "status": "complete within source, PNG and native-build scope",
+  "baseline": "3a56988",
+  "language": {
+    "status": "passed",
+    "source_language": "zh",
+    "generated_language": "en",
+    "counts": {
+      "pages": 93,
+      "extra_markdown": 2,
+      "structured_files": 14,
+      "translated_blocks": 4028,
+      "translated_strings": 867
+    },
+    "checks": {
+      "source_change": true,
+      "missing_translation": true,
+      "unreviewed_translation": true,
+      "lost_protected_token": true,
+      "structure_drift": true,
+      "all_outputs_exact": true,
+      "independent_English_edit_rejected": true
+    },
+    "generator_sha256": "a810aded0453175d1e9a5a956a41c29e3a2f3204f79275f399b4aadcbb7da085",
+    "scope": "Single-source generation plus in-memory/temporary-file rejection probes; no external translation or HTML translation.",
+    "canonical_structure": {
+      "hand_edited_markdown": "website/zh/*.md",
+      "hand_edited_structured": "website/content-zh/",
+      "saved_English": "website/translations/en/",
+      "generated_markdown": "website/en/*.md",
+      "generated_paired_metadata": "Destinations listed in website/content-policy.json",
+      "reference": "Existing canonical Rd and digest-bound Han reference translations retained"
+    },
+    "draft_preparation": {
+      "unchanged_duplicate_source_keeps_individual_English": true,
+      "changed_source_is_needs_review": true,
+      "probe": "Temporary fixture; both preflighted final prepare branch cases passed",
+      "whole_catalog_prepare_idempotent": true
+    }
+  },
+  "dotplot": {
+    "original_HSPs": 32,
+    "alignment_and_axis_fields_identical": true,
+    "directed_pairs": 6,
+    "self_HSPs": 0,
+    "reciprocal_pairs": 0,
+    "reversed_axis_retains_32": true,
+    "inverse_mapping": true,
+    "explicit_position_scale_wins": true
+  },
+  "native_build": "English final batch failed; four isolated retries succeeded with original inputs; failure retained",
+  "checks": {
+    "language_pairs": 93,
+    "exports": 157,
+    "help_topics": 121,
+    "legacy_urls": 582,
+    "old_sections": 1146,
+    "aliases": 14,
+    "navigation_records": 132,
+    "search_synonym_queries": 20,
+    "archive_inputs": 76,
+    "resolved_example_files": 30,
+    "manual_images": 20,
+    "homepage_previews": 7,
+    "HTTP": "582 URLs, unknown 404, bilingual recovery file"
+  },
+  "preview": "http://127.0.0.1:57052/zh/index.html",
+  "not_run": [
+    "browser interaction",
+    "viewport/mobile/zoom acceptance",
+    "package release checks",
+    "main integration",
+    "push",
+    "deployment",
+    "release"
+  ]
+}

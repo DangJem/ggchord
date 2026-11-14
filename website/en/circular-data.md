@@ -13,7 +13,7 @@ Backbones do not require DNA. Prefer search-result tables for the latter layers 
 ## Inspect bundled real records {#inspect}
 {{code:courseblockai}}
 
-The compact names retain ggchord's early BLAST workflow history. accver need not be a database accession. Full DNA and length must agree. Recognition is computational matching, not experimental validation.
+The compact names retain ggchord's early BLAST workflow history. `accver` need not be a database accession. Full DNA and length must agree. Recognition is computational matching, not experimental validation.
 
 ## Import your own plasmid {#import}
 `read_fasta_lengths()` reads IDs and full lengths only. Searches additionally need actual DNA, for example read with optional Biostrings `readDNAStringSet()` and `as.character()`, retaining matching IDs. GFF3/BED/GenBank or GRanges annotations follow the [format guide](formats.html), retaining provenance. Handle circular-origin and segmented records according to the reader contract; do not invent one continuous interval by merging every segment.

@@ -1,0 +1,55 @@
+{
+  "source_sha256": "4b79fcde69969fbe3357fe7afdc8dce1303674dcb0df3bd61e8a8b9aac7345a0",
+  "blocks": {
+    "0": {
+      "source_sha256": "a23e9ff9d3571f198fcbd7f0414403908030029fe804e4a41e1ce51b82225bf7",
+      "status": "reviewed",
+      "translation": "## Interfaces and compatibility ⟦shared:0⟧\n"
+    },
+    "1": {
+      "source_sha256": "d2e17d7f8576bf1eddb747724f372abec8a2cea0c1f3a182cc20274ecfbe7add",
+      "status": "reviewed",
+      "translation": "The function reference describes current arguments, return values and boundaries. For an existing script, consult the [migration notes](⟦shared:0⟧). Check sequence IDs, units and full lengths, and record the package version, inputs and code when exporting.\n"
+    },
+    "2": {
+      "source_sha256": "0bac60f1ce13c20845272ecb57aad49537091e3ae0df8563c203dec5bbab2c1b",
+      "status": "reviewed",
+      "translation": "## Reporting problems ⟦shared:0⟧\n"
+    },
+    "3": {
+      "source_sha256": "8feb7de926018cf05b73c089ee7287d46c6db17a1f37d052a35ee351bdc6b6ec",
+      "status": "reviewed",
+      "translation": "Include minimal input, runnable code, the package version and target figure size. For a display issue, include the ⟦shared:0⟧ preview. See [troubleshooting](⟦shared:1⟧) for common questions.\n"
+    },
+    "4": {
+      "source_sha256": "c0d0e2388e084dd4088249f509e5dce0ee4a6e92f4450ff251daea8fac2054e7",
+      "status": "reviewed",
+      "translation": "## Design and asset provenance ⟦shared:0⟧\n"
+    },
+    "5": {
+      "source_sha256": "f915b7583269d2d0ead8deda5bc5e9972e26636ef4859258660d49b9039d64db",
+      "status": "reviewed",
+      "translation": "The grammar follows [ggplot2](⟦shared:0⟧): mappings, scales,\ngeometry, positions, coordinates and themes retain distinct responsibilities.\nCompact query/subject field names follow BLAST-style tables; ggchord does not run\nan alignment tool during drawing. Circular hierarchy and feature readability\nare compared with Circos, clinker and DNA Features Viewer, as recorded in the\nrepository design documents. These are conceptual comparisons, not copied APIs.\n"
+    },
+    "6": {
+      "source_sha256": "f9da4fbbbf4f24b17e7fbad62f84e63791640d993266db3f81d8762353402d77",
+      "status": "reviewed",
+      "translation": "The detailed ggchord artwork was supplied by the user on 2026-11-01 for this\nwebsite and documentation. Full-size PNG and WebP preserve every decoded RGBA\npixel. Only the small navigation thumbnail is resized. See the [image manifest](⟦shared:0⟧)\nfor source hashes and exact sizes. The compact hexagonal study mark below, site\nCSS/JS and documentation diagrams are original project assets under the\nrepository MIT terms. The study mark is supplementary, not a replacement for\nthe supplied artwork.\n"
+    },
+    "7": {
+      "source_sha256": "938e06f0541d782fd439233313111d17d3cb59f483879294e34fbeabefe69639",
+      "status": "reviewed",
+      "translation": "![Compact hexagonal study mark](⟦shared:0⟧) System fonts are used; no webfont, icon\nlibrary or third-party image is downloaded. Plot colours come from the package's\nexisting defaults or explicit example code; those literal colour choices are\nlisted with the source. The site uses the existing Pandoc and R documentation\nconverters at build time without bundling their binaries or stylesheets.\n"
+    },
+    "8": {
+      "source_sha256": "538f598573b87f5f3be6b9ef9cb8d4d475d115e85a19124978ef6e560fe5655e",
+      "status": "reviewed",
+      "translation": "## Reproducibility and build records ⟦shared:0⟧\n"
+    },
+    "9": {
+      "source_sha256": "511c56ed398344c3de1b36ee1f327dd408c19c0b8e92cc76ac27770aa86fdd4e",
+      "status": "reviewed",
+      "translation": "The [build manifest](⟦shared:0⟧) records software and source commits. Figure inputs, selections and complete scripts are provided beside each functional example.\n"
+    }
+  }
+}

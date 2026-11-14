@@ -1,0 +1,35 @@
+{
+  "source_sha256": "a92c961696be794043a1b43f5b730a734b33d27f3664edba26502f4b6a32f573",
+  "blocks": {
+    "2": {
+      "source_sha256": "702ed3258c5e1679e09369bc3d6489b979df73b44e493928308d048ca9dfaf84",
+      "status": "reviewed",
+      "translation": "## Generic shapes and the plasmid preset ⟦shared:0⟧\n"
+    },
+    "3": {
+      "source_sha256": "20c0d3a94a7acaf1aea231b79e2ebfecbb42aa581fcbe51bb8cba21272efb525",
+      "status": "reviewed",
+      "translation": "On the same six source annotations, change only arrow to block. A block omits the directional arrow without changing strand. The third figure shows the combined geom_feature_plasmid preset: width=0.058, arrow_head_length=0.068, arrow_head_width=1.42 and plasmid Position. It changes several defaults and is not a single-parameter contrast. See [shape choices](⟦shared:0⟧) and [arrow/short-feature geometry](⟦shared:1⟧).\n"
+    },
+    "10": {
+      "source_sha256": "0336ce1e191990f01dcfc0920b6d20982820c5987d1247a62fded9af58c9d0e0",
+      "status": "reviewed",
+      "translation": "## Share placement between overlapping features and labels ⟦shared:0⟧\n"
+    },
+    "11": {
+      "source_sha256": "1feb2f411010f8b5ef912c93525960ed82e9d8491367cf382074b01c6a810552",
+      "status": "reviewed",
+      "translation": "Compare identity versus a shared feature stack on the same six annotations. Pass the Position to both geometry and labels rather than moving text alone. ⟦shared:0⟧ applies an optional base Position before allocating overlap lanes. ⟦shared:1⟧ is a local preset; ⟦shared:2⟧ applies signed offsets by biological strand. Inside/outside is not a substitute for strand evidence.\n"
+    },
+    "17": {
+      "source_sha256": "bdb191c0494c6046a5936fe6dc28d65e0778f5f747c4e5c2256f96e738593341",
+      "status": "reviewed",
+      "translation": "## Replace input and continue ⟦shared:0⟧\n"
+    },
+    "18": {
+      "source_sha256": "e208c8d26499545b157548b0d2dff075bf8dfc46f77c7b7786008160731c8e40",
+      "status": "reviewed",
+      "translation": "Change only double-line spacing to 0.04, then change the centre length_style size. Keep complete source lengths; do not infer them from maximum feature ends. For FASTA/GenBank/GFF3, check IDs and coordinates in [formats](⟦shared:0⟧). Continue with [circular labels](⟦shared:1⟧), [primers](⟦shared:2⟧), [restriction sites](⟦shared:3⟧) and [tracks](⟦shared:4⟧). Preview at the figure dimensions and use the same width/height in ggsave.\n"
+    }
+  }
+}

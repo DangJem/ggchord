@@ -1,0 +1,50 @@
+{
+  "source_sha256": "e0babeb1e422a6a77aa6251679993493b35c790cbde3b804b28f31f12c20dbb2",
+  "blocks": {
+    "2": {
+      "source_sha256": "61d5a21510cf8c0cbdbe7909c6bb82b22db997a68bf46f66158b08eedc4bfe66",
+      "status": "reviewed",
+      "translation": "## Nested source regions retain their own namespaces ⟦shared:0⟧\n"
+    },
+    "3": {
+      "source_sha256": "f2a28dc8e7adfc3d214c9d5e5a290c522539fca6cbc192ae50827947a89c847e",
+      "status": "reviewed",
+      "translation": "A detail may itself be a Fusion. This example uses two explicit windows on the unchanged pUC19 source. The inner source is the larger window; its child is the smaller window. The outer selection targets the inner source through ⟦shared:0⟧, not an arbitrary rectangle in an image.\n"
+    },
+    "5": {
+      "source_sha256": "98b4b2a54da8715ec3bf64311a8243d265de1f929cd0f48d22339bd420536ef7",
+      "status": "reviewed",
+      "translation": "![Nested details with explicit leaf paths](⟦shared:0⟧)\n"
+    },
+    "6": {
+      "source_sha256": "f0dc352d9082d90dd62d297d95f6292a6805cd595ab40ac62efef100e2ea7796",
+      "status": "reviewed",
+      "translation": "⟦shared:0⟧ plus ⟦shared:1⟧ connects derived regions/fronts/leaders to each original selection in ⟦shared:2⟧. Top-level ⟦shared:3⟧ remains the original outer input. Nested leaf names use paths such as ⟦shared:4⟧ and ⟦shared:5⟧; a composition container is never treated as one genomic axis. If an accession occurs in multiple leaves, select the full panel path and exact instance. ⟦shared:6⟧ can select a source leaf under ⟦shared:7⟧. Layout exports include actual mm boundaries and requested boxes/angles.\n"
+    },
+    "7": {
+      "source_sha256": "77f9cc54b5391c0d58dc9480c5c8cc37d430c55988273e345020cd580344f53c",
+      "status": "reviewed",
+      "translation": "Each plot keeps its own layers, scales and statistical population; the compositor does not silently copy layers or recompute statistics. Origin wraps use the explicit source-length declaration below. The complete negative-strand CDS-to-genome-focus-to-real-character example is in ⟦shared:0⟧. Registered characters retain their physical tile/error policy; a small nested allocation cannot make 60 letters readable merely by increasing DPI. Full multi-device publication acceptance and broader layout optimisation remain separate concerns.\n"
+    },
+    "8": {
+      "source_sha256": "17aa6713b21ab2219619c93c3744afe5094e2e32d894b7e0f0e9a294f69adf33",
+      "status": "reviewed",
+      "translation": "## Explicit origin-crossing selection ⟦shared:0⟧\n"
+    },
+    "9": {
+      "source_sha256": "94bc59924fae240612e21a357200e8cfb7b4895247c727947b33ee856e0d8925",
+      "status": "reviewed",
+      "translation": "Circular layout is not evidence of a circular source. Set ⟦shared:1⟧ on a\nselection with ⟦shared:0⟧. Both selected leaf panels must retain the same\nfull source length. Character adapters additionally require ⟦shared:2⟧\nand ⟦shared:3⟧ with a full sequence or an exact ⟦shared:4⟧; without the\nfull string, characters remain unverified. At most one source tour is allowed,\nso inverse source-to-column mapping stays unique. Negative strands wrap in\ntheir own direction and retain gaps. Different focused instances are never\njoined implicitly.\n"
+    },
+    "10": {
+      "source_sha256": "286e07d17bdf03b486383521581c392a5f6ec9265ef091ec5bc3813fdc0a0259",
+      "status": "reviewed",
+      "translation": "Run the complete real pUC19 workflow in ⟦shared:0⟧. It extracts\n82 observed bases (2640–2686, then 1–35) from the unchanged bundled FASTA.\n⟦shared:1⟧ retains the original single row. Derived tables identify\ntwo pieces with ⟦shared:2⟧, sharing one ⟦shared:3⟧; only the two external\nboundaries receive leaders. The seam is not another selection or relationship.\n"
+    },
+    "12": {
+      "source_sha256": "85d6a54228b2c465363473c0da9108f808dc7179b22653c0033c47b22e03aaeb",
+      "status": "reviewed",
+      "translation": "![An explicit origin-crossing selection](⟦shared:0⟧)\n"
+    }
+  }
+}

@@ -1,0 +1,75 @@
+{
+  "source_sha256": "291cfc7f1fa0b7048fc97cb8139d310fc4c9c441f52d61004e94ff504cd80154",
+  "blocks": {
+    "0": {
+      "source_sha256": "a6c4a2490125677b4ece2fd4f2b51afebb5df32a7a75ecf7286a0efd51974052",
+      "status": "reviewed",
+      "translation": "## Shared data, four views ⟦shared:0⟧\n"
+    },
+    "1": {
+      "source_sha256": "2c6909179a432065de43234f561f9c27376cdc25df16a89b3b02304d71de1631",
+      "status": "reviewed",
+      "translation": "Complete sequence lengths, observed HSPs and real CDS can share four relationship coordinates. The [strict comparison](⟦shared:0⟧) keeps inputs, layers and mappings fixed with explicit all-pair selection. The Chord flagship below has its own display choices; see [flagship notes](⟦shared:1⟧).\n"
+    },
+    "3": {
+      "source_sha256": "560a4a9896eb653dffbfdf16459497fca3a97c81489e79e080ce390cf1cb6a09",
+      "status": "reviewed",
+      "translation": "## Common inputs and layers ⟦shared:0⟧\n"
+    },
+    "4": {
+      "source_sha256": "5f04aa5862e5e6c3731554023e60f924cf96d46322e99ceb2cf4f3b51c899b9c",
+      "status": "reviewed",
+      "translation": "[Data and layers](⟦shared:0⟧) · [Four-view comparison](⟦shared:1⟧) · [Display rules](⟦shared:2⟧) · [Links](⟦shared:3⟧) · [Labels](⟦shared:4⟧)\n"
+    },
+    "5": {
+      "source_sha256": "beeb3a8bd5ae976606829ea47e948de54d2e903b678a527b4ffb80b643cfe7c1",
+      "status": "reviewed",
+      "translation": "## Chord ⟦shared:0⟧\n"
+    },
+    "6": {
+      "source_sha256": "99826c7cf8cb569224a113be942fd552f5c91ec33c1885475678dd15c60c3a86",
+      "status": "reviewed",
+      "translation": "Curved backbones, radius, curvature and routed interval links. [Settings](⟦shared:0⟧) · [Example](⟦shared:1⟧).\n"
+    },
+    "7": {
+      "source_sha256": "17d45425336fb5e824f0d4dd4838030544609e4888f81c7958cea061ef0e2e12",
+      "status": "reviewed",
+      "translation": "## Collinear ⟦shared:0⟧\n"
+    },
+    "8": {
+      "source_sha256": "28dac5ac1306433625b5c87b41c028258487b80a8589154bb0d239f04fb12c2c",
+      "status": "reviewed",
+      "translation": "Row or column arrangement, anchors, orientation and local windows. [Settings](⟦shared:0⟧) · [Example](⟦shared:1⟧).\n"
+    },
+    "9": {
+      "source_sha256": "c7eaf50e620c570de70b630e5f14e425fa7daea7975cebed731b31985d363c2a",
+      "status": "reviewed",
+      "translation": "## Radial ⟦shared:0⟧\n"
+    },
+    "10": {
+      "source_sha256": "547195a9a984363dd58da7be649af459765cfca36eecea489c25c9d70bc049af",
+      "status": "reviewed",
+      "translation": "Sequence spokes, start angle and angular arrangement. [Settings and source instances](⟦shared:0⟧).\n"
+    },
+    "11": {
+      "source_sha256": "0f97905451c118ab7931dfae1f2e87939a9d310d77cf6cc989944a6db1e616f3",
+      "status": "reviewed",
+      "translation": "## Sankey ⟦shared:0⟧\n"
+    },
+    "12": {
+      "source_sha256": "e9ec5c2f93b8a5aef0db68b97fd032bbd1427fae19771842baf36375ac929be3",
+      "status": "reviewed",
+      "translation": "Mirrored query/subject columns, column gap and repeated display instances. [Settings](⟦shared:0⟧).\n"
+    },
+    "13": {
+      "source_sha256": "35d6ee340e06b141ba826dd4e629eae71f1a84946691c1bcedfd9913b9858cd4",
+      "status": "reviewed",
+      "translation": "## Input contract ⟦shared:0⟧\n"
+    },
+    "14": {
+      "source_sha256": "14c4c4c4d3df5fab9a1695cfc33f7c53bf31b769e804efd60ef5e9b855ecb40c",
+      "status": "reviewed",
+      "translation": "Complete source lengths, identifiers and units remain independent of display geometry. Biological strand comes from annotation; changing the coordinate does not rewrite it. [Data contract](⟦shared:0⟧) · [Compatibility](⟦shared:1⟧).\n"
+    }
+  }
+}

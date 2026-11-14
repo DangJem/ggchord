@@ -1,0 +1,115 @@
+{
+  "source_sha256": "dd86970e85202f2753dda68492f2b80708452b230493e98e4bec8e193a72455d",
+  "strings": {
+    "0/title": {
+      "source_sha256": "6c1a0c934df60b7772509f1d15cf38411f3a976583e33661a496279e8df7feca",
+      "status": "reviewed",
+      "translation": "Mirrored Sankey section"
+    },
+    "0/summary": {
+      "source_sha256": "55a29c3a805466014c48cffd7858171fd5a783021dece41344eb770abbd694ab",
+      "status": "reviewed",
+      "translation": "Choose the current section or exact parameter; inspect its input and support boundary."
+    },
+    "1/title": {
+      "source_sha256": "2ec462852cbf3daaf8948f863d91e0a3ea555218037ae942e6a65d37eac5fd80",
+      "status": "reviewed",
+      "translation": "Radial synteny section"
+    },
+    "1/summary": {
+      "source_sha256": "55a29c3a805466014c48cffd7858171fd5a783021dece41344eb770abbd694ab",
+      "status": "reviewed",
+      "translation": "Choose the current section or exact parameter; inspect its input and support boundary."
+    },
+    "2/title": {
+      "source_sha256": "1f9a16db0d0772ca3417f1f6a4a802eee71e5881b4d461f87c0b8711bcdd87ce",
+      "status": "reviewed",
+      "translation": "Read a Dotplot from HSPs"
+    },
+    "2/summary": {
+      "source_sha256": "55a29c3a805466014c48cffd7858171fd5a783021dece41344eb770abbd694ab",
+      "status": "reviewed",
+      "translation": "Choose the current section or exact parameter; inspect its input and support boundary."
+    },
+    "3/title": {
+      "source_sha256": "f3a745982485ab2f79ae9ba9714cda6a633b2f8d2e0f5ab990f0603885c8655f",
+      "status": "reviewed",
+      "translation": "Two-panel source-backed composition"
+    },
+    "3/summary": {
+      "source_sha256": "55a29c3a805466014c48cffd7858171fd5a783021dece41344eb770abbd694ab",
+      "status": "reviewed",
+      "translation": "Choose the current section or exact parameter; inspect its input and support boundary."
+    },
+    "4/title": {
+      "source_sha256": "ac68c1e67e4229973a9c44c42f79ba2ac2a15c6059b545cf046f46004c1d7229",
+      "status": "reviewed",
+      "translation": "Use geom_track_col for supplied values"
+    },
+    "4/summary": {
+      "source_sha256": "55a29c3a805466014c48cffd7858171fd5a783021dece41344eb770abbd694ab",
+      "status": "reviewed",
+      "translation": "Choose the current section or exact parameter; inspect its input and support boundary."
+    },
+    "5/title": {
+      "source_sha256": "7b565cc0483d47ce80886fadead78991125c794bff213dc78505baa695a30fab",
+      "status": "reviewed",
+      "translation": "Counts and supplied values: bar and col"
+    },
+    "5/summary": {
+      "source_sha256": "55a29c3a805466014c48cffd7858171fd5a783021dece41344eb770abbd694ab",
+      "status": "reviewed",
+      "translation": "Choose the current section or exact parameter; inspect its input and support boundary."
+    },
+    "6/title": {
+      "source_sha256": "23bd780aea17e535e2a0812d231d2e92de51948058c59d1724cee28000da5240",
+      "status": "reviewed",
+      "translation": "Save a plot at target size"
+    },
+    "6/summary": {
+      "source_sha256": "55a29c3a805466014c48cffd7858171fd5a783021dece41344eb770abbd694ab",
+      "status": "reviewed",
+      "translation": "Choose the current section or exact parameter; inspect its input and support boundary."
+    },
+    "7/title": {
+      "source_sha256": "24a8607b75a117f6ebab5630573f2d53b2f489293112c7d174fb9b6d22b1ab31",
+      "status": "reviewed",
+      "translation": "Inspect label layout and target size"
+    },
+    "7/summary": {
+      "source_sha256": "55a29c3a805466014c48cffd7858171fd5a783021dece41344eb770abbd694ab",
+      "status": "reviewed",
+      "translation": "Choose the current section or exact parameter; inspect its input and support boundary."
+    },
+    "8/title": {
+      "source_sha256": "026814c3bf9bb73971db390a84e624e5aa62abfb14cfea6b89a093a32b7e346e",
+      "status": "reviewed",
+      "translation": "Unified feature_data inputs"
+    },
+    "8/summary": {
+      "source_sha256": "55a29c3a805466014c48cffd7858171fd5a783021dece41344eb770abbd694ab",
+      "status": "reviewed",
+      "translation": "Choose the current section or exact parameter; inspect its input and support boundary."
+    },
+    "9/title": {
+      "source_sha256": "8fb3d42a0b3b237564e2ef04e652a19a24be0326e4713677673a22ebc305bbb8",
+      "status": "reviewed",
+      "translation": "windows in segment_ggchord_data"
+    },
+    "9/summary": {
+      "source_sha256": "55a29c3a805466014c48cffd7858171fd5a783021dece41344eb770abbd694ab",
+      "status": "reviewed",
+      "translation": "Choose the current section or exact parameter; inspect its input and support boundary."
+    },
+    "10/title": {
+      "source_sha256": "5f40e5e947d70c34e604d81bf7ca69e61596910617b62c5991a38df79f8a39c0",
+      "status": "reviewed",
+      "translation": "Flexible parameter formats"
+    },
+    "10/summary": {
+      "source_sha256": "254b551abc511c2d36cf01544b2ceabbdfd82a581f361d5dfdc356c011346c74",
+      "status": "reviewed",
+      "translation": "Scalars, accver names, display order, strands and supported lists; matching, omitted values and family boundaries."
+    }
+  }
+}

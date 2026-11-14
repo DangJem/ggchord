@@ -312,6 +312,10 @@ dotplot_layout$axis_layout
 
 以下输入来自仓库原始 FASTA 和标准 BLAST 表。完整保留四序列的 32 条 HSP，不补造自比对、对称记录或缺失的 HSP。266 条 CDS 属于共用来源表，但不交给 Dotplot 的线段层。空白区域表示本次输入没有关系记录，不能据此认定不存在同源性。
 
+上方列标题标明 query 序列及完整的 1–length 范围，左侧行标题标明 subject 序列范围；下方和右侧只显示各自序列的局部坐标。沿一列和一行的交点即可定位一对序列。每个带边框的矩形保留两条序列真实长度对应的宽高，淡色背景只帮助分区，不编码相似性。矩形间的留白是显示间隙。
+
+这份输入的 6 个无序序列组合各只提供一个 query→subject 方向，没有反向互换记录，也没有自身比对。因此有 HSP 的区域只占半边；矩阵内标明每对记录数和无输入区域。不是渲染遗漏，也不把另一半留空解释为没有同源性。这里不自动镜像、补对角线或运行新的比对。此准备还使用可选依赖 tidyr。
+
 
 <details class="preparation"><summary>准备数据与配置（展开）</summary>
 
@@ -341,18 +345,47 @@ flagship_theme <- theme_ggchord_publication() +
 
 
 ```{r example-19, eval=FALSE}
+dotplot_pair_counts <- flagship_hsp |>
+  count(qaccver, saccver, name = "HSP")
+dotplot_frames <- export_ggchord_layout(
+  ggchord(flagship_sequences, flagship_hsp) + geom_alignment_segment() +
+    coord_dotplot(x_seqs = flagship_sequences$accver,
+      y_seqs = flagship_sequences$accver, gap = 4000)
+)$axis_layout
+dotplot_cells <- tidyr::expand_grid(
+  qaccver = flagship_sequences$accver, saccver = flagship_sequences$accver
+) |>
+  left_join(dotplot_pair_counts, by = c("qaccver", "saccver")) |>
+  mutate(HSP = coalesce(HSP, 0L)) |>
+  left_join(dotplot_frames |> filter(axis == "x") |>
+    transmute(qaccver = accver, x = min, xmax = max), by = "qaccver") |>
+  left_join(dotplot_frames |> filter(axis == "y") |>
+    transmute(saccver = accver, y = max, ymin = min), by = "saccver") |>
+  mutate(x = x + (xmax - x) * 0.04, y = y - (y - ymin) * 0.05,
+    label = if_else(HSP > 0L, paste(HSP, "HSP"), "No input HSP"))
 flag_dotplot <- ggchord(flagship_sequences, flagship_hsp) +
   geom_alignment_segment(aes(link_colour = pident, link_linewidth = length), alpha = 0.85) +
-  scale_link_linewidth_continuous(range = c(0.45, 1.7), name = "HSP length (bp)") +
+  scale_link_linewidth_continuous(range = c(0.8, 1.8), name = "HSP length (bp)") +
   coord_dotplot(x_seqs = flagship_sequences$accver, y_seqs = flagship_sequences$accver,
     gap = 4000) +
-  labs(x = "Query position (bp)", y = "Subject position (bp)") +
+  ggplot2::geom_text(data = dotplot_cells, aes(x = x, y = y, label = label),
+    inherit.aes = FALSE, hjust = 0, vjust = 1, size = 2.8, colour = "#566E67") +
+  labs(title = "Six observed sequence pairs · 32 HSPs",
+    subtitle = "One query→subject direction per pair; empty cells contain no input records") +
   flagship_theme +
-  theme(panel.grid.major = element_line(colour = "#DFDED5", linewidth = 0.25))
+  theme(
+    panel.grid = element_blank(), legend.position = "bottom", legend.box = "horizontal",
+    axis.text = element_text(size = 9),
+    axis.text.x.top = element_text(size = 10, face = "bold", margin = margin(b = 9)),
+    axis.text.y.left = element_text(size = 10, face = "bold", margin = margin(r = 9)),
+    axis.text.y.right = element_text(size = 9),
+    axis.ticks.length = unit(1.5, "mm"),
+    plot.margin = margin(12, 16, 12, 16)
+  )
 ```
 
 
-<figure class="documentation-figure" data-figure="flagdotplot"><img src="tutorial-assets/flagdotplot.jpg" alt="四序列 HSP 双轴总览" width="1440" height="1080" loading="lazy" decoding="async"><figcaption>四序列 HSP 双轴总览 · <a href="tutorial-assets/site-flagships.R">完整 R 源码</a></figcaption></figure>
+<figure class="documentation-figure" data-figure="flagdotplot"><img src="tutorial-assets/flagdotplot.jpg" alt="四序列 HSP 双轴总览" width="1872" height="1728" loading="lazy" decoding="async"><figcaption>四序列 HSP 双轴总览 · <a href="tutorial-assets/site-flagships.R">完整 R 源码</a></figcaption></figure>
 
 ### 按来源记录检查方向 {#dotplot-start-direction}
 

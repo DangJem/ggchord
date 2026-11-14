@@ -46,7 +46,7 @@ def render_source_snapshot():
         'tools/render-website.R','tools/finalize-website.R','tools/site-course-examples.R','tools/site-flagships.R',
         'tools/reference-translations.py','tools/documentation-examples.R',
         'tools/documentation-plots.R','tools/audit-source-snapshot.R',
-        'tools/render-teaching-comparisons.R','tools/home-previews.R','tools/documentation-fingerprints.py'])
+        'tools/render-teaching-comparisons.R','tools/home-previews.R','tools/documentation-fingerprints.py','tools/sync-website-languages.py'])
     return {str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest()
             for p in sorted(files)}
 
@@ -67,6 +67,7 @@ def main():
     parser.add_argument('--render-batch-size',type=int,choices=range(1,13),default=4,
                         help='Articles per independent R worker (default: 4)')
     args=parser.parse_args()
+    subprocess.run(["python3", "tools/sync-website-languages.py", "--check"], cwd=ROOT, check=True)
     render_snapshot = render_source_snapshot()
     out=ROOT/'.site'
     if out.is_symlink():raise SystemExit('Refusing a symlink output directory')

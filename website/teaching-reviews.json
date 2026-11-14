@@ -7,15 +7,15 @@
     "modes": "upstream; applies only to matching supported ggplot roles",
     "parameters": [],
     "purpose": {
-      "en": "Selected ggplot2 helpers for ggchord plots",
-      "zh": "适用于 ggchord 的部分 ggplot2 辅助函数"
+      "zh": "适用于 ggchord 的部分 ggplot2 辅助函数",
+      "en": "Selected ggplot2 helpers for ggchord plots"
     },
     "alias_of": "",
     "case": "chord",
     "scope": "inherited upstream contract",
     "modes_localized": {
-      "en": "upstream; applies only to matching supported ggplot roles",
-      "zh": "上游对象/接口；遵循 ggplot2/grid 的原始契约"
+      "zh": "上游对象/接口；遵循 ggplot2/grid 的原始契约",
+      "en": "upstream; applies only to matching supported ggplot roles"
     }
   },
   "after_scale": {
@@ -26,15 +26,15 @@
     "modes": "upstream; applies only to matching supported ggplot roles",
     "parameters": [],
     "purpose": {
-      "en": "Selected ggplot2 helpers for ggchord plots",
-      "zh": "适用于 ggchord 的部分 ggplot2 辅助函数"
+      "zh": "适用于 ggchord 的部分 ggplot2 辅助函数",
+      "en": "Selected ggplot2 helpers for ggchord plots"
     },
     "alias_of": "",
     "case": "chord",
     "scope": "inherited upstream contract",
     "modes_localized": {
-      "en": "upstream; applies only to matching supported ggplot roles",
-      "zh": "上游对象/接口；遵循 ggplot2/grid 的原始契约"
+      "zh": "上游对象/接口；遵循 ggplot2/grid 的原始契约",
+      "en": "upstream; applies only to matching supported ggplot roles"
     }
   },
   "after_stat": {
@@ -45,15 +45,15 @@
     "modes": "upstream; applies only to matching supported ggplot roles",
     "parameters": [],
     "purpose": {
-      "en": "Selected ggplot2 helpers for ggchord plots",
-      "zh": "适用于 ggchord 的部分 ggplot2 辅助函数"
+      "zh": "适用于 ggchord 的部分 ggplot2 辅助函数",
+      "en": "Selected ggplot2 helpers for ggchord plots"
     },
     "alias_of": "",
     "case": "chord",
     "scope": "inherited upstream contract",
     "modes_localized": {
-      "en": "upstream; applies only to matching supported ggplot roles",
-      "zh": "上游对象/接口；遵循 ggplot2/grid 的原始契约"
+      "zh": "上游对象/接口；遵循 ggplot2/grid 的原始契约",
+      "en": "upstream; applies only to matching supported ggplot roles"
     }
   },
   "annotate": {
@@ -64,15 +64,15 @@
     "modes": "upstream; applies only to matching supported ggplot roles",
     "parameters": [],
     "purpose": {
-      "en": "Selected ggplot2 helpers for ggchord plots",
-      "zh": "适用于 ggchord 的部分 ggplot2 辅助函数"
+      "zh": "适用于 ggchord 的部分 ggplot2 辅助函数",
+      "en": "Selected ggplot2 helpers for ggchord plots"
     },
     "alias_of": "",
     "case": "chord",
     "scope": "inherited upstream contract",
     "modes_localized": {
-      "en": "upstream; applies only to matching supported ggplot roles",
-      "zh": "上游对象/接口；遵循 ggplot2/grid 的原始契约"
+      "zh": "上游对象/接口；遵循 ggplot2/grid 的原始契约",
+      "en": "upstream; applies only to matching supported ggplot roles"
     }
   },
   "arrow": {
@@ -83,15 +83,15 @@
     "modes": "upstream; applies only to matching supported ggplot roles",
     "parameters": [],
     "purpose": {
-      "en": "Physical units and direction arrows",
-      "zh": "物理单位与方向箭头"
+      "zh": "物理单位与方向箭头",
+      "en": "Physical units and direction arrows"
     },
     "alias_of": "",
     "case": "chord",
     "scope": "inherited upstream contract",
     "modes_localized": {
-      "en": "upstream; applies only to matching supported ggplot roles",
-      "zh": "上游对象/接口；遵循 ggplot2/grid 的原始契约"
+      "zh": "上游对象/接口；遵循 ggplot2/grid 的原始契约",
+      "en": "upstream; applies only to matching supported ggplot roles"
     }
   },
   "as_ggchord_feature": {
@@ -105,15 +105,15 @@
       "mapping"
     ],
     "purpose": {
-      "en": "Convert intervals to generic ggchord features",
-      "zh": "将区间转换为 ggchord 通用注释"
+      "zh": "将区间转换为 ggchord 通用注释",
+      "en": "Convert intervals to generic ggchord features"
     },
     "alias_of": "",
     "case": "formats",
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
-      "en": "table/S4 adapter; coordinates and biological direction retained",
-      "zh": "表格/受支持对象适配；完整长度与 ID 不得猜测"
+      "zh": "表格/受支持对象适配；完整长度与 ID 不得猜测",
+      "en": "table/S4 adapter; coordinates and biological direction retained"
     }
   },
   "as_ggchord_link": {
@@ -127,15 +127,15 @@
       "mapping"
     ],
     "purpose": {
-      "en": "Convert paired genomic intervals to ggchord links",
-      "zh": "将成对基因组区间转换为 ggchord 连接"
+      "zh": "将成对基因组区间转换为 ggchord 连接",
+      "en": "Convert paired genomic intervals to ggchord links"
     },
     "alias_of": "",
     "case": "formats",
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
-      "en": "table/GInteractions adapter; no invented alignment statistics",
-      "zh": "表格/受支持对象适配；完整长度与 ID 不得猜测"
+      "zh": "表格/受支持对象适配；完整长度与 ID 不得猜测",
+      "en": "table/GInteractions adapter; no invented alignment statistics"
     }
   },
   "as_ggchord_seq": {
@@ -151,15 +151,15 @@
       "ids"
     ],
     "purpose": {
-      "en": "Convert sequence information to ggchord input",
-      "zh": "将序列信息转换为 ggchord 输入"
+      "zh": "将序列信息转换为 ggchord 输入",
+      "en": "Convert sequence information to ggchord input"
     },
     "alias_of": "",
     "case": "formats",
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
-      "en": "table/S4 adapter; complete lengths and explicit IDs/units",
-      "zh": "表格/受支持对象适配；完整长度与 ID 不得猜测"
+      "zh": "表格/受支持对象适配；完整长度与 ID 不得猜测",
+      "en": "table/S4 adapter; complete lengths and explicit IDs/units"
     }
   },
   "build_ggchord_cds": {
@@ -174,15 +174,15 @@
       "partial"
     ],
     "purpose": {
-      "en": "Build an explicit spliced CDS coordinate map",
-      "zh": "建立显式的剪接 CDS 坐标映射"
+      "zh": "建立显式的剪接 CDS 坐标映射",
+      "en": "Build an explicit spliced CDS coordinate map"
     },
     "alias_of": "",
     "case": "homology",
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
-      "en": "known genomic CDS, phase and genetic code; no guessed correspondence",
-      "zh": "显式 CDS/相位/单位的编码坐标工作流"
+      "zh": "显式 CDS/相位/单位的编码坐标工作流",
+      "en": "known genomic CDS, phase and genetic code; no guessed correspondence"
     }
   },
   "bundle_ggchord_ribbons": {
@@ -198,15 +198,15 @@
       "group_by"
     ],
     "purpose": {
-      "en": "Bundle dense alignment ribbons explicitly",
-      "zh": "显式聚束密集比对连接"
+      "zh": "显式聚束密集比对连接",
+      "en": "Bundle dense alignment ribbons explicitly"
     },
     "alias_of": "",
     "case": "chord",
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
-      "en": "explicit normalized-bin aggregation; original observations retained separately",
-      "zh": "处理已有比对；不生成新的序列比对"
+      "zh": "处理已有比对；不生成新的序列比对",
+      "en": "explicit normalized-bin aggregation; original observations retained separately"
     }
   },
   "clean_ggchord_data": {
@@ -222,15 +222,15 @@
       "invalid_pident"
     ],
     "purpose": {
-      "en": "Clean ggchord input data with explicit, report-driven policies",
-      "zh": "按明确策略清理输入并返回报告"
+      "zh": "按明确策略清理输入并返回报告",
+      "en": "Clean ggchord input data with explicit, report-driven policies"
     },
     "alias_of": "",
     "case": "real-data",
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
-      "en": "explicit repair policies with original tables retained",
-      "zh": "显式校验/修复/成员工作流；保留源表及报告"
+      "zh": "显式校验/修复/成员工作流；保留源表及报告",
+      "en": "explicit repair policies with original tables retained"
     }
   },
   "coord_chord": {
@@ -245,15 +245,15 @@
       "fit"
     ],
     "purpose": {
-      "en": "Chord diagram coordinate system",
-      "zh": "弦图坐标系"
+      "zh": "弦图坐标系",
+      "en": "Chord diagram coordinate system"
     },
     "alias_of": "",
     "case": "chord",
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
-      "en": "chord",
-      "zh": "弦图；整图旋转与逐序列几何分工"
+      "zh": "弦图；整图旋转与逐序列几何分工",
+      "en": "chord"
     }
   },
   "coord_circular": {
@@ -269,15 +269,15 @@
       "fit"
     ],
     "purpose": {
-      "en": "Single-sequence circular coordinate system",
-      "zh": "单序列圆图坐标系"
+      "zh": "单序列圆图坐标系",
+      "en": "Single-sequence circular coordinate system"
     },
     "alias_of": "",
     "case": "circular-start",
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
-      "en": "one sequence; bp or aa; no ribbon/link layers",
-      "zh": "单条序列；bp/aa 布局；不接受 ribbon/link"
+      "zh": "单条序列；bp/aa 布局；不接受 ribbon/link",
+      "en": "one sequence; bp or aa; no ribbon/link layers"
     }
   },
   "coord_collinear": {
@@ -295,15 +295,15 @@
       "segment_gap"
     ],
     "purpose": {
-      "en": "Linear multi-sequence collinearity coordinates",
-      "zh": "直线型多序列共线性坐标系"
+      "zh": "直线型多序列共线性坐标系",
+      "en": "Linear multi-sequence collinearity coordinates"
     },
     "alias_of": "",
     "case": "collinear",
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
-      "en": "collinear; bp or aa; circular-only local controls rejected",
-      "zh": "共线性；bp/aa；拒绝圆图专属参数"
+      "zh": "共线性；bp/aa；拒绝圆图专属参数",
+      "en": "collinear; bp or aa; circular-only local controls rejected"
     }
   },
   "deduplicate_ggchord_ribbons": {
@@ -319,15 +319,15 @@
       "min_reciprocal_overlap"
     ],
     "purpose": {
-      "en": "Deduplicate alignment ribbons",
-      "zh": "去除重复比对区间"
+      "zh": "去除重复比对区间",
+      "en": "Deduplicate alignment ribbons"
     },
     "alias_of": "",
     "case": "chord",
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
-      "en": "select existing representatives with source membership",
-      "zh": "处理已有比对；不生成新的序列比对"
+      "zh": "处理已有比对；不生成新的序列比对",
+      "en": "select existing representatives with source membership"
     }
   },
   "diagnose_ggchord": {
@@ -347,15 +347,15 @@
       "min_linewidth"
     ],
     "purpose": {
-      "en": "Inspect one target-size render without changing the plot",
-      "zh": "检查指定尺寸的一次渲染而不改变原图"
+      "zh": "检查指定尺寸的一次渲染而不改变原图",
+      "en": "Inspect one target-size render without changing the plot"
     },
     "alias_of": "",
     "case": "chord",
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
-      "en": "one target-size device; advisory, not universal quality certification",
-      "zh": "单一目标尺寸和设备；提示不等于全面质量保证"
+      "zh": "单一目标尺寸和设备；提示不等于全面质量保证",
+      "en": "one target-size device; advisory, not universal quality certification"
     }
   },
   "element_blank": {
@@ -366,15 +366,15 @@
     "modes": "upstream; applies only to matching supported ggplot roles",
     "parameters": [],
     "purpose": {
-      "en": "Selected ggplot2 helpers for ggchord plots",
-      "zh": "适用于 ggchord 的部分 ggplot2 辅助函数"
+      "zh": "适用于 ggchord 的部分 ggplot2 辅助函数",
+      "en": "Selected ggplot2 helpers for ggchord plots"
     },
     "alias_of": "",
     "case": "chord",
     "scope": "inherited upstream contract",
     "modes_localized": {
-      "en": "upstream; applies only to matching supported ggplot roles",
-      "zh": "上游对象/接口；遵循 ggplot2/grid 的原始契约"
+      "zh": "上游对象/接口；遵循 ggplot2/grid 的原始契约",
+      "en": "upstream; applies only to matching supported ggplot roles"
     }
   },
   "element_line": {
@@ -385,15 +385,15 @@
     "modes": "upstream; applies only to matching supported ggplot roles",
     "parameters": [],
     "purpose": {
-      "en": "Selected ggplot2 helpers for ggchord plots",
-      "zh": "适用于 ggchord 的部分 ggplot2 辅助函数"
+      "zh": "适用于 ggchord 的部分 ggplot2 辅助函数",
+      "en": "Selected ggplot2 helpers for ggchord plots"
     },
     "alias_of": "",
     "case": "chord",
     "scope": "inherited upstream contract",
     "modes_localized": {
-      "en": "upstream; applies only to matching supported ggplot roles",
-      "zh": "上游对象/接口；遵循 ggplot2/grid 的原始契约"
+      "zh": "上游对象/接口；遵循 ggplot2/grid 的原始契约",
+      "en": "upstream; applies only to matching supported ggplot roles"
     }
   },
   "element_rect": {
@@ -404,15 +404,15 @@
     "modes": "upstream; applies only to matching supported ggplot roles",
     "parameters": [],
     "purpose": {
-      "en": "Selected ggplot2 helpers for ggchord plots",
-      "zh": "适用于 ggchord 的部分 ggplot2 辅助函数"
+      "zh": "适用于 ggchord 的部分 ggplot2 辅助函数",
+      "en": "Selected ggplot2 helpers for ggchord plots"
     },
     "alias_of": "",
     "case": "chord",
     "scope": "inherited upstream contract",
     "modes_localized": {
-      "en": "upstream; applies only to matching supported ggplot roles",
-      "zh": "上游对象/接口；遵循 ggplot2/grid 的原始契约"
+      "zh": "上游对象/接口；遵循 ggplot2/grid 的原始契约",
+      "en": "upstream; applies only to matching supported ggplot roles"
     }
   },
   "element_text": {
@@ -423,15 +423,15 @@
     "modes": "upstream; applies only to matching supported ggplot roles",
     "parameters": [],
     "purpose": {
-      "en": "Selected ggplot2 helpers for ggchord plots",
-      "zh": "适用于 ggchord 的部分 ggplot2 辅助函数"
+      "zh": "适用于 ggchord 的部分 ggplot2 辅助函数",
+      "en": "Selected ggplot2 helpers for ggchord plots"
     },
     "alias_of": "",
     "case": "chord",
     "scope": "inherited upstream contract",
     "modes_localized": {
-      "en": "upstream; applies only to matching supported ggplot roles",
-      "zh": "上游对象/接口；遵循 ggplot2/grid 的原始契约"
+      "zh": "上游对象/接口；遵循 ggplot2/grid 的原始契约",
+      "en": "upstream; applies only to matching supported ggplot roles"
     }
   },
   "expansion": {
@@ -442,15 +442,15 @@
     "modes": "upstream; applies only to matching supported ggplot roles",
     "parameters": [],
     "purpose": {
-      "en": "Selected ggplot2 helpers for ggchord plots",
-      "zh": "适用于 ggchord 的部分 ggplot2 辅助函数"
+      "zh": "适用于 ggchord 的部分 ggplot2 辅助函数",
+      "en": "Selected ggplot2 helpers for ggchord plots"
     },
     "alias_of": "",
     "case": "chord",
     "scope": "inherited upstream contract",
     "modes_localized": {
-      "en": "upstream; applies only to matching supported ggplot roles",
-      "zh": "上游对象/接口；遵循 ggplot2/grid 的原始契约"
+      "zh": "上游对象/接口；遵循 ggplot2/grid 的原始契约",
+      "en": "upstream; applies only to matching supported ggplot roles"
     }
   },
   "export_ggchord_layout": {
@@ -465,15 +465,15 @@
       "original_data"
     ],
     "purpose": {
-      "en": "Export computed ggchord geometry",
-      "zh": "导出 ggchord 计算几何"
+      "zh": "导出 ggchord 计算几何",
+      "en": "Export computed ggchord geometry"
     },
     "alias_of": "",
     "case": "chord",
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
-      "en": "layer-aware public tables for all supported plots",
-      "zh": "所有受支持图；按图层导出公共表"
+      "zh": "所有受支持图；按图层导出公共表",
+      "en": "layer-aware public tables for all supported plots"
     }
   },
   "filter_ggchord_ribbons": {
@@ -487,15 +487,15 @@
       "min_length"
     ],
     "purpose": {
-      "en": "Filter alignment ribbons before plotting",
-      "zh": "绘图前筛选比对区间"
+      "zh": "绘图前筛选比对区间",
+      "en": "Filter alignment ribbons before plotting"
     },
     "alias_of": "",
     "case": "chord",
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
-      "en": "observed alignment filtering, not recomputation",
-      "zh": "处理已有比对；不生成新的序列比对"
+      "zh": "处理已有比对；不生成新的序列比对",
+      "en": "observed alignment filtering, not recomputation"
     }
   },
   "filter_restriction_sites": {
@@ -510,15 +510,15 @@
       "enzymes"
     ],
     "purpose": {
-      "en": "Filter restriction sites for display",
-      "zh": "筛选要显示的酶切位点"
+      "zh": "筛选要显示的酶切位点",
+      "en": "Filter restriction sites for display"
     },
     "alias_of": "",
     "case": "plasmids",
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
-      "en": "display set selection preserves complete-target counts",
-      "zh": "显示集合选择；保留完整目标上的位点计数"
+      "zh": "显示集合选择；保留完整目标上的位点计数",
+      "en": "display set selection preserves complete-target counts"
     }
   },
   "find_common_features": {
@@ -539,15 +539,15 @@
       "resolve"
     ],
     "purpose": {
-      "en": "Find common biological features in DNA sequences",
-      "zh": "在 DNA 中查找常见生物学注释"
+      "zh": "在 DNA 中查找常见生物学注释",
+      "en": "Find common biological features in DNA sequences"
     },
     "alias_of": "",
     "case": "plasmids",
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
-      "en": "DNA/reference feature recognition with method/provenance, not wet-lab validation",
-      "zh": "DNA/参考注释识别；保留方法与来源"
+      "zh": "DNA/参考注释识别；保留方法与来源",
+      "en": "DNA/reference feature recognition with method/provenance, not wet-lab validation"
     }
   },
   "find_ggchord_loci": {
@@ -564,15 +564,15 @@
       "downstream"
     ],
     "purpose": {
-      "en": "Find genomic loci around explicitly identified features",
-      "zh": "围绕明确指定的注释查找基因组区域"
+      "zh": "围绕明确指定的注释查找基因组区域",
+      "en": "Find genomic loci around explicitly identified features"
     },
     "alias_of": "",
     "case": "views",
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
-      "en": "genomic workflow with explicit target IDs and source strands",
-      "zh": "基因组窗口；显式目标 ID 与真实链"
+      "zh": "基因组窗口；显式目标 ID 与真实链",
+      "en": "genomic workflow with explicit target IDs and source strands"
     }
   },
   "find_primer_bindings": {
@@ -591,15 +591,15 @@
       "unique_only"
     ],
     "purpose": {
-      "en": "Find sequencing-primer binding sites",
-      "zh": "查找测序引物结合位点"
+      "zh": "查找测序引物结合位点",
+      "en": "Find sequencing-primer binding sites"
     },
     "alias_of": "",
     "case": "plasmids",
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
-      "en": "actual DNA and explicit oligonucleotides/catalogue; matches not experiments",
-      "zh": "实际 DNA 与寡核苷酸；命中不等于实验验证"
+      "zh": "实际 DNA 与寡核苷酸；命中不等于实验验证",
+      "en": "actual DNA and explicit oligonucleotides/catalogue; matches not experiments"
     }
   },
   "find_restriction_sites": {
@@ -617,15 +617,15 @@
       "methylation"
     ],
     "purpose": {
-      "en": "Find restriction pattern matches and cleavage coordinates",
-      "zh": "查找酶切模式匹配及切割坐标"
+      "zh": "查找酶切模式匹配及切割坐标",
+      "en": "Find restriction pattern matches and cleavage coordinates"
     },
     "alias_of": "",
     "case": "plasmids",
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
-      "en": "actual DNA and explicit methylation assumptions; full site results",
-      "zh": "实际 DNA；明确甲基化假设；完整位点结果"
+      "zh": "实际 DNA；明确甲基化假设；完整位点结果",
+      "en": "actual DNA and explicit methylation assumptions; full site results"
     }
   },
   "focus_ggchord_data": {
@@ -643,15 +643,15 @@
       "boundary"
     ],
     "purpose": {
-      "en": "Focus ggchord data on one or more loci",
-      "zh": "将 ggchord 数据聚焦到一个或多个区域"
+      "zh": "将 ggchord 数据聚焦到一个或多个区域",
+      "en": "Focus ggchord data on one or more loci"
     },
     "alias_of": "",
     "case": "homology",
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
-      "en": "explicit source windows with reversible origins and clipping reports",
-      "zh": "显式输入、窗口与来源的工作流"
+      "zh": "显式输入、窗口与来源的工作流",
+      "en": "explicit source windows with reversible origins and clipping reports"
     }
   },
   "focus_ggchord_track": {
@@ -668,15 +668,15 @@
       "boundary"
     ],
     "purpose": {
-      "en": "Focus quantitative intervals or samples without bridging omitted windows",
-      "zh": "聚焦定量区间或采样点而不跨越省略窗口"
+      "zh": "聚焦定量区间或采样点而不跨越省略窗口",
+      "en": "Focus quantitative intervals or samples without bridging omitted windows"
     },
     "alias_of": "",
     "case": "tracks",
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
-      "en": "point/interval track data; shares declared loci with focus/segment",
-      "zh": "点/区间轨道；与显示窗口共享 loci"
+      "zh": "点/区间轨道；与显示窗口共享 loci",
+      "en": "point/interval track data; shares declared loci with focus/segment"
     }
   },
   "geom_feature": {
@@ -693,15 +693,15 @@
       "segment_boundaries"
     ],
     "purpose": {
-      "en": "Draw generic genomic features",
-      "zh": "绘制通用基因组注释"
+      "zh": "绘制通用基因组注释",
+      "en": "Draw generic genomic features"
     },
     "alias_of": "",
     "case": "chord",
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
-      "en": "all three; generic annotations including unknown strand and aa; Radial per new-view support matrix",
-      "zh": "兼容骨架坐标（见支持表）；通用注释可保留未知链及 aa 区间；Radial见新增视图支持矩阵"
+      "zh": "兼容骨架坐标（见支持表）；通用注释可保留未知链及 aa 区间；Radial见新增视图支持矩阵",
+      "en": "all three; generic annotations including unknown strand and aa; Radial per new-view support matrix"
     }
   },
   "geom_feature_label": {
@@ -720,15 +720,15 @@
       "label_wrap"
     ],
     "purpose": {
-      "en": "Label generic genomic features",
-      "zh": "为通用基因组注释添加标签"
+      "zh": "为通用基因组注释添加标签",
+      "en": "Label generic genomic features"
     },
     "alias_of": "",
     "case": "chord",
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
-      "en": "all three; linear uses vertical/horizontal rows for radial/tangent; Radial per new-view support matrix",
-      "zh": "兼容骨架坐标（见支持表）；直线图的 radial/tangent 为竖排/横排；Radial见新增视图支持矩阵"
+      "zh": "兼容骨架坐标（见支持表）；直线图的 radial/tangent 为竖排/横排；Radial见新增视图支持矩阵",
+      "en": "all three; linear uses vertical/horizontal rows for radial/tangent; Radial per new-view support matrix"
     }
   },
   "geom_feature_label_repel": {
@@ -751,15 +751,15 @@
       "label_segment_colour"
     ],
     "purpose": {
-      "en": "Automatically arrange generic feature labels",
-      "zh": "自动安排通用注释标签"
+      "zh": "自动安排通用注释标签",
+      "en": "Automatically arrange generic feature labels"
     },
     "alias_of": "",
     "case": "chord",
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
-      "en": "all three; external=FALSE rejected by linear mode; Radial per new-view support matrix",
-      "zh": "兼容骨架坐标（见支持表）；直线图拒绝 external=FALSE；Radial见新增视图支持矩阵"
+      "zh": "兼容骨架坐标（见支持表）；直线图拒绝 external=FALSE；Radial见新增视图支持矩阵",
+      "en": "all three; external=FALSE rejected by linear mode; Radial per new-view support matrix"
     }
   },
   "geom_feature_plasmid": {
@@ -778,15 +778,15 @@
       "position"
     ],
     "purpose": {
-      "en": "Draw SnapGene-style features on a circular plasmid",
-      "zh": "在圆形质粒上绘制 SnapGene 风格注释"
+      "zh": "在圆形质粒上绘制 SnapGene 风格注释",
+      "en": "Draw SnapGene-style features on a circular plasmid"
     },
     "alias_of": "",
     "case": "plasmids",
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
-      "en": "generic geometry preset; intended circular; compare defaults before transfer; Radial per new-view support matrix",
-      "zh": "通用几何的组合预设；默认面向圆图；Radial见新增视图支持矩阵"
+      "zh": "通用几何的组合预设；默认面向圆图；Radial见新增视图支持矩阵",
+      "en": "generic geometry preset; intended circular; compare defaults before transfer; Radial per new-view support matrix"
     }
   },
   "geom_gene": {
@@ -803,15 +803,15 @@
       "short_feature"
     ],
     "purpose": {
-      "en": "Add a gene arrow layer",
-      "zh": "添加基因箭头图层"
+      "zh": "添加基因箭头图层",
+      "en": "Add a gene arrow layer"
     },
     "alias_of": "",
     "case": "chord",
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
-      "en": "all three on bp; known strand required; Radial per new-view support matrix",
-      "zh": "兼容骨架坐标（见支持表）的 bp 数据；需已知正负链；Radial见新增视图支持矩阵"
+      "zh": "兼容骨架坐标（见支持表）的 bp 数据；需已知正负链；Radial见新增视图支持矩阵",
+      "en": "all three on bp; known strand required; Radial per new-view support matrix"
     }
   },
   "geom_gene_label": {
@@ -828,15 +828,15 @@
       "label_overlap"
     ],
     "purpose": {
-      "en": "Add a gene label layer",
-      "zh": "添加固定基因标签图层"
+      "zh": "添加固定基因标签图层",
+      "en": "Add a gene label layer"
     },
     "alias_of": "",
     "case": "chord",
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
-      "en": "bp gene labels; circular/linear orientation differs; Radial per new-view support matrix",
-      "zh": "bp 基因标签；各坐标的方向含义不同；Radial见新增视图支持矩阵"
+      "zh": "bp 基因标签；各坐标的方向含义不同；Radial见新增视图支持矩阵",
+      "en": "bp gene labels; circular/linear orientation differs; Radial per new-view support matrix"
     }
   },
   "geom_gene_label_repel": {
@@ -853,15 +853,15 @@
       "max_overlaps"
     ],
     "purpose": {
-      "en": "Add an automatically arranged gene label layer",
-      "zh": "添加自动布局的基因标签图层"
+      "zh": "添加自动布局的基因标签图层",
+      "en": "Add an automatically arranged gene label layer"
     },
     "alias_of": "",
     "case": "chord",
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
-      "en": "bp gene labels; linear shares row layout; Radial per new-view support matrix",
-      "zh": "bp 基因标签；直线图统一使用行布局；Radial见新增视图支持矩阵"
+      "zh": "bp 基因标签；直线图统一使用行布局；Radial见新增视图支持矩阵",
+      "en": "bp gene labels; linear shares row layout; Radial per new-view support matrix"
     }
   },
   "geom_link_line": {
@@ -878,15 +878,15 @@
       "arrow"
     ],
     "purpose": {
-      "en": "Draw point-to-point sequence links",
-      "zh": "绘制序列间的点连接"
+      "zh": "绘制序列间的点连接",
+      "en": "Draw point-to-point sequence links"
     },
     "alias_of": "",
     "case": "chord",
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
-      "en": "chord/collinear; explicit qpos/spos; circular rejected; Radial per new-view support matrix",
-      "zh": "弦图/共线性；需 qpos/spos；圆图拒绝；Radial见新增视图支持矩阵"
+      "zh": "弦图/共线性；需 qpos/spos；圆图拒绝；Radial见新增视图支持矩阵",
+      "en": "chord/collinear; explicit qpos/spos; circular rejected; Radial per new-view support matrix"
     }
   },
   "geom_link_ribbon": {
@@ -907,15 +907,15 @@
       "gradient"
     ],
     "purpose": {
-      "en": "Add an alignment ribbon layer",
-      "zh": "添加比对区间连接图层"
+      "zh": "添加比对区间连接图层",
+      "en": "Add an alignment ribbon layer"
     },
     "alias_of": "",
     "case": "chord",
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
-      "en": "chord/collinear; circular rejected; linear adjacency follows displayed rows; Radial per new-view support matrix",
-      "zh": "弦图/共线性；邻接按显示顺序；圆图拒绝；Radial见新增视图支持矩阵"
+      "zh": "弦图/共线性；邻接按显示顺序；圆图拒绝；Radial见新增视图支持矩阵",
+      "en": "chord/collinear; circular rejected; linear adjacency follows displayed rows; Radial per new-view support matrix"
     }
   },
   "geom_primer": {
@@ -930,15 +930,15 @@
       "arc_linewidth"
     ],
     "purpose": {
-      "en": "Draw primer binding ranges on a circular sequence",
-      "zh": "在圆形序列上绘制引物结合范围"
+      "zh": "在圆形序列上绘制引物结合范围",
+      "en": "Draw primer binding ranges on a circular sequence"
     },
     "alias_of": "",
     "case": "plasmids",
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
-      "en": "bp single circular recommended; single chord composition available; linear rejected",
-      "zh": "bp；推荐单圆图；单序列弦图可组合；共线性拒绝"
+      "zh": "bp；推荐单圆图；单序列弦图可组合；共线性拒绝",
+      "en": "bp single circular recommended; single chord composition available; linear rejected"
     }
   },
   "geom_primer_label_repel": {
@@ -953,15 +953,15 @@
       "max_overlaps"
     ],
     "purpose": {
-      "en": "Arrange primer labels and leaders",
-      "zh": "排列引物标签和引导线"
+      "zh": "排列引物标签和引导线",
+      "en": "Arrange primer labels and leaders"
     },
     "alias_of": "",
     "case": "plasmids",
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
-      "en": "bp single circular recommended; linear rejected",
-      "zh": "bp；推荐单圆图；共线性拒绝"
+      "zh": "bp；推荐单圆图；共线性拒绝",
+      "en": "bp single circular recommended; linear rejected"
     }
   },
   "geom_restriction_site": {
@@ -982,15 +982,15 @@
       "label_size"
     ],
     "purpose": {
-      "en": "Draw restriction sites, labels and deterministic leaders",
-      "zh": "绘制酶切位点、标签和确定性引导线"
+      "zh": "绘制酶切位点、标签和确定性引导线",
+      "en": "Draw restriction sites, labels and deterministic leaders"
     },
     "alias_of": "",
     "case": "plasmids",
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
-      "en": "bp single circular recommended; linear rejected",
-      "zh": "bp；推荐单圆图；共线性拒绝"
+      "zh": "bp；推荐单圆图；共线性拒绝",
+      "en": "bp single circular recommended; linear rejected"
     }
   },
   "geom_seq": {
@@ -1010,15 +1010,15 @@
       "seq_order"
     ],
     "purpose": {
-      "en": "Add a sequence arc layer",
-      "zh": "添加序列骨架图层"
+      "zh": "添加序列骨架图层",
+      "en": "Add a sequence arc layer"
     },
     "alias_of": "",
     "case": "chord",
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
-      "en": "all three; linear rejects radius/curvature/ring; circular owns gap/direction; Radial per new-view support matrix",
-      "zh": "兼容骨架坐标（见支持表）；直线图拒绝半径/曲率/ring；圆图自管方向与开口；Radial见新增视图支持矩阵"
+      "zh": "兼容骨架坐标（见支持表）；直线图拒绝半径/曲率/ring；圆图自管方向与开口；Radial见新增视图支持矩阵",
+      "en": "all three; linear rejects radius/curvature/ring; circular owns gap/direction; Radial per new-view support matrix"
     }
   },
   "geom_seq_break": {
@@ -1031,15 +1031,15 @@
       "position"
     ],
     "purpose": {
-      "en": "Mark cropped ends of linear sequences",
-      "zh": "标记线性序列的裁剪端点"
+      "zh": "标记线性序列的裁剪端点",
+      "en": "Mark cropped ends of linear sequences"
     },
     "alias_of": "",
     "case": "collinear",
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
-      "en": "collinear only, focused/segmented truncated-end metadata required; Radial per new-view support matrix",
-      "zh": "仅共线性；需要聚焦/分段端点元数据；Radial见新增视图支持矩阵"
+      "zh": "仅共线性；需要聚焦/分段端点元数据；Radial见新增视图支持矩阵",
+      "en": "collinear only, focused/segmented truncated-end metadata required; Radial per new-view support matrix"
     }
   },
   "geom_seq_center_label": {
@@ -1056,15 +1056,15 @@
       "length_style"
     ],
     "purpose": {
-      "en": "Add a circular-sequence centre label",
-      "zh": "添加圆形序列中心标签"
+      "zh": "添加圆形序列中心标签",
+      "en": "Add a circular-sequence centre label"
     },
     "alias_of": "",
     "case": "chord",
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
-      "en": "one sequence; circular recommended; linear rejected",
-      "zh": "单条序列；推荐圆图；共线性拒绝"
+      "zh": "单条序列；推荐圆图；共线性拒绝",
+      "en": "one sequence; circular recommended; linear rejected"
     }
   },
   "geom_seq_label": {
@@ -1083,15 +1083,15 @@
       "check_overlap"
     ],
     "purpose": {
-      "en": "Add a sequence label layer",
-      "zh": "添加序列名称图层"
+      "zh": "添加序列名称图层",
+      "en": "Add a sequence label layer"
     },
     "alias_of": "",
     "case": "chord",
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
-      "en": "all three; linear rejects explicit seq_label_radius; Radial per new-view support matrix",
-      "zh": "兼容骨架坐标（见支持表）；直线图拒绝显式径向半径；Radial见新增视图支持矩阵"
+      "zh": "兼容骨架坐标（见支持表）；直线图拒绝显式径向半径；Radial见新增视图支持矩阵",
+      "en": "all three; linear rejects explicit seq_label_radius; Radial per new-view support matrix"
     }
   },
   "geom_seq_region": {
@@ -1106,15 +1106,15 @@
       "region_offset"
     ],
     "purpose": {
-      "en": "Highlight regions along sequence arcs",
-      "zh": "沿序列骨架突出显示区域"
+      "zh": "沿序列骨架突出显示区域",
+      "en": "Highlight regions along sequence arcs"
     },
     "alias_of": "",
     "case": "chord",
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
-      "en": "all three, valid source intervals and units; Radial per new-view support matrix",
-      "zh": "兼容骨架坐标（见支持表）；区间、ID、单位需合法；Radial见新增视图支持矩阵"
+      "zh": "兼容骨架坐标（见支持表）；区间、ID、单位需合法；Radial见新增视图支持矩阵",
+      "en": "all three, valid source intervals and units; Radial per new-view support matrix"
     }
   },
   "geom_seq_scale": {
@@ -1132,15 +1132,15 @@
       "label_gap"
     ],
     "purpose": {
-      "en": "Add a shared sequence-position scale bar to a linear display",
-      "zh": "在线性图中添加共享的序列位置比例尺"
+      "zh": "在线性图中添加共享的序列位置比例尺",
+      "en": "Add a shared sequence-position scale bar to a linear display"
     },
     "alias_of": "",
     "case": "collinear",
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
-      "en": "collinear only; native bp/aa ruler",
-      "zh": "仅共线性；原生 bp/aa 标尺"
+      "zh": "仅共线性；原生 bp/aa 标尺",
+      "en": "collinear only; native bp/aa ruler"
     }
   },
   "geom_track_bar": {
@@ -1155,15 +1155,15 @@
       "position"
     ],
     "purpose": {
-      "en": "Count observations at source positions",
-      "zh": "按源位置统计观测数"
+      "zh": "按源位置统计观测数",
+      "en": "Count observations at source positions"
     },
     "alias_of": "",
     "case": "multi-sequence",
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
-      "en": "Count observations at source positions in compatible backbone views; zero baseline; binning is a separate explicit Stat",
-      "zh": "兼容骨架坐标中的源位置观测计数；基线仅 0；分箱是另行声明的 Stat"
+      "zh": "兼容骨架坐标中的源位置观测计数；基线仅 0；分箱是另行声明的 Stat",
+      "en": "Count observations at source positions in compatible backbone views; zero baseline; binning is a separate explicit Stat"
     }
   },
   "geom_track_line": {
@@ -1178,15 +1178,15 @@
       "position"
     ],
     "purpose": {
-      "en": "Draw explicit quantitative tracks along sequence backbones",
-      "zh": "沿序列骨架绘制定量轨道"
+      "zh": "沿序列骨架绘制定量轨道",
+      "en": "Draw explicit quantitative tracks along sequence backbones"
     },
     "alias_of": "",
     "case": "tracks",
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
-      "en": "all three; increasing positions per group; closed requires complete circular gap=0; Radial per new-view support matrix",
-      "zh": "兼容骨架坐标（见支持表）；每组位置递增；closed 需完整闭圆；Radial见新增视图支持矩阵"
+      "zh": "兼容骨架坐标（见支持表）；每组位置递增；closed 需完整闭圆；Radial见新增视图支持矩阵",
+      "en": "all three; increasing positions per group; closed requires complete circular gap=0; Radial per new-view support matrix"
     }
   },
   "geom_track_tile": {
@@ -1200,15 +1200,15 @@
       "position"
     ],
     "purpose": {
-      "en": "Draw explicit quantitative tracks along sequence backbones",
-      "zh": "沿序列骨架绘制定量轨道"
+      "zh": "沿序列骨架绘制定量轨道",
+      "en": "Draw explicit quantitative tracks along sequence backbones"
     },
     "alias_of": "",
     "case": "tracks",
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
-      "en": "all three; explicit named track; overlapping input tiles keep drawing order; Radial per new-view support matrix",
-      "zh": "兼容骨架坐标（见支持表）；显式轨道；重叠按输入顺序绘制；Radial见新增视图支持矩阵"
+      "zh": "兼容骨架坐标（见支持表）；显式轨道；重叠按输入顺序绘制；Radial见新增视图支持矩阵",
+      "en": "all three; explicit named track; overlapping input tiles keep drawing order; Radial per new-view support matrix"
     }
   },
   "get_chord_layout": {
@@ -1221,15 +1221,15 @@
       "plot"
     ],
     "purpose": {
-      "en": "Get the chord layout from a ggchord plot",
-      "zh": "获取 ggchord 图的完整布局"
+      "zh": "获取 ggchord 图的完整布局",
+      "en": "Get the chord layout from a ggchord plot"
     },
     "alias_of": "",
     "case": "chord",
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
-      "en": "complete documented layout for all supported plots",
-      "zh": "所有受支持图；完整文档化布局"
+      "zh": "所有受支持图；完整文档化布局",
+      "en": "complete documented layout for all supported plots"
     }
   },
   "ggchord": {
@@ -1245,15 +1245,15 @@
       "validate"
     ],
     "purpose": {
-      "en": "Create sequence plots from tables and independent layers",
-      "zh": "用数据表和独立图层创建序列图"
+      "zh": "用数据表和独立图层创建序列图",
+      "en": "Create sequence plots from tables and independent layers"
     },
     "alias_of": "",
     "case": "real-data",
     "scope": "source-backed complete workflow",
     "modes_localized": {
-      "en": "constructor; one declared unit per plot",
-      "zh": "兼容坐标（见支持表）；同一图的 bp/aa 单位必须一致"
+      "zh": "兼容坐标（见支持表）；同一图的 bp/aa 单位必须一致",
+      "en": "constructor; one declared unit per plot"
     }
   },
   "ggsave": {
@@ -1264,15 +1264,15 @@
     "modes": "upstream; applies only to matching supported ggplot roles",
     "parameters": [],
     "purpose": {
-      "en": "Selected ggplot2 helpers for ggchord plots",
-      "zh": "适用于 ggchord 的部分 ggplot2 辅助函数"
+      "zh": "适用于 ggchord 的部分 ggplot2 辅助函数",
+      "en": "Selected ggplot2 helpers for ggchord plots"
     },
     "alias_of": "",
     "case": "chord",
     "scope": "inherited upstream contract",
     "modes_localized": {
-      "en": "upstream; applies only to matching supported ggplot roles",
-      "zh": "上游对象/接口；遵循 ggplot2/grid 的原始契约"
+      "zh": "上游对象/接口；遵循 ggplot2/grid 的原始契约",
+      "en": "upstream; applies only to matching supported ggplot roles"
     }
   },
   "ggtitle": {
@@ -1283,15 +1283,15 @@
     "modes": "upstream; applies only to matching supported ggplot roles",
     "parameters": [],
     "purpose": {
-      "en": "Selected ggplot2 helpers for ggchord plots",
-      "zh": "适用于 ggchord 的部分 ggplot2 辅助函数"
+      "zh": "适用于 ggchord 的部分 ggplot2 辅助函数",
+      "en": "Selected ggplot2 helpers for ggchord plots"
     },
     "alias_of": "",
     "case": "chord",
     "scope": "inherited upstream contract",
     "modes_localized": {
-      "en": "upstream; applies only to matching supported ggplot roles",
-      "zh": "上游对象/接口；遵循 ggplot2/grid 的原始契约"
+      "zh": "上游对象/接口；遵循 ggplot2/grid 的原始契约",
+      "en": "upstream; applies only to matching supported ggplot roles"
     }
   },
   "guide_ggchord_colorbar": {
@@ -1306,15 +1306,15 @@
       "direction"
     ],
     "purpose": {
-      "en": "Guides for ggchord role aesthetics",
-      "zh": "ggchord 角色 aesthetic 图例"
+      "zh": "ggchord 角色 aesthetic 图例",
+      "en": "Guides for ggchord role aesthetics"
     },
     "alias_of": "guide_ggchord_colourbar",
     "case": "chord",
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
-      "en": "matching discrete/continuous role guide; all supported plots",
-      "zh": "受支持图的相应主题/图例；按角色及设备解释"
+      "zh": "受支持图的相应主题/图例；按角色及设备解释",
+      "en": "matching discrete/continuous role guide; all supported plots"
     }
   },
   "guide_ggchord_colourbar": {
@@ -1329,15 +1329,15 @@
       "direction"
     ],
     "purpose": {
-      "en": "Guides for ggchord role aesthetics",
-      "zh": "ggchord 角色 aesthetic 图例"
+      "zh": "ggchord 角色 aesthetic 图例",
+      "en": "Guides for ggchord role aesthetics"
     },
     "alias_of": "",
     "case": "chord",
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
-      "en": "matching discrete/continuous role guide; all supported plots",
-      "zh": "受支持图的相应主题/图例；按角色及设备解释"
+      "zh": "受支持图的相应主题/图例；按角色及设备解释",
+      "en": "matching discrete/continuous role guide; all supported plots"
     }
   },
   "guide_ggchord_legend": {
@@ -1354,15 +1354,15 @@
       "direction"
     ],
     "purpose": {
-      "en": "Guides for ggchord role aesthetics",
-      "zh": "ggchord 角色 aesthetic 图例"
+      "zh": "ggchord 角色 aesthetic 图例",
+      "en": "Guides for ggchord role aesthetics"
     },
     "alias_of": "",
     "case": "chord",
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
-      "en": "matching discrete/continuous role guide; all supported plots",
-      "zh": "受支持图的相应主题/图例；按角色及设备解释"
+      "zh": "受支持图的相应主题/图例；按角色及设备解释",
+      "en": "matching discrete/continuous role guide; all supported plots"
     }
   },
   "guides": {
@@ -1373,15 +1373,15 @@
     "modes": "upstream; applies only to matching supported ggplot roles",
     "parameters": [],
     "purpose": {
-      "en": "Selected ggplot2 helpers for ggchord plots",
-      "zh": "适用于 ggchord 的部分 ggplot2 辅助函数"
+      "zh": "适用于 ggchord 的部分 ggplot2 辅助函数",
+      "en": "Selected ggplot2 helpers for ggchord plots"
     },
     "alias_of": "",
     "case": "chord",
     "scope": "inherited upstream contract",
     "modes_localized": {
-      "en": "upstream; applies only to matching supported ggplot roles",
-      "zh": "上游对象/接口；遵循 ggplot2/grid 的原始契约"
+      "zh": "上游对象/接口；遵循 ggplot2/grid 的原始契约",
+      "en": "upstream; applies only to matching supported ggplot roles"
     }
   },
   "labs": {
@@ -1392,15 +1392,15 @@
     "modes": "upstream; applies only to matching supported ggplot roles",
     "parameters": [],
     "purpose": {
-      "en": "Selected ggplot2 helpers for ggchord plots",
-      "zh": "适用于 ggchord 的部分 ggplot2 辅助函数"
+      "zh": "适用于 ggchord 的部分 ggplot2 辅助函数",
+      "en": "Selected ggplot2 helpers for ggchord plots"
     },
     "alias_of": "",
     "case": "chord",
     "scope": "inherited upstream contract",
     "modes_localized": {
-      "en": "upstream; applies only to matching supported ggplot roles",
-      "zh": "上游对象/接口；遵循 ggplot2/grid 的原始契约"
+      "zh": "上游对象/接口；遵循 ggplot2/grid 的原始契约",
+      "en": "upstream; applies only to matching supported ggplot roles"
     }
   },
   "last_plot": {
@@ -1411,15 +1411,15 @@
     "modes": "upstream; applies only to matching supported ggplot roles",
     "parameters": [],
     "purpose": {
-      "en": "Selected ggplot2 helpers for ggchord plots",
-      "zh": "适用于 ggchord 的部分 ggplot2 辅助函数"
+      "zh": "适用于 ggchord 的部分 ggplot2 辅助函数",
+      "en": "Selected ggplot2 helpers for ggchord plots"
     },
     "alias_of": "",
     "case": "chord",
     "scope": "inherited upstream contract",
     "modes_localized": {
-      "en": "upstream; applies only to matching supported ggplot roles",
-      "zh": "上游对象/接口；遵循 ggplot2/grid 的原始契约"
+      "zh": "上游对象/接口；遵循 ggplot2/grid 的原始契约",
+      "en": "upstream; applies only to matching supported ggplot roles"
     }
   },
   "link_ggchord_clusters": {
@@ -1435,15 +1435,15 @@
       "paralogs"
     ],
     "purpose": {
-      "en": "Convert explicit homology-cluster membership to feature links",
-      "zh": "将显式同源分组成员转换为注释连接"
+      "zh": "将显式同源分组成员转换为注释连接",
+      "en": "Convert explicit homology-cluster membership to feature links"
     },
     "alias_of": "",
     "case": "homology",
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
-      "en": "explicit biological membership; matching names alone are insufficient",
-      "zh": "消费明确成员表；同名不能证明同源"
+      "zh": "消费明确成员表；同名不能证明同源",
+      "en": "explicit biological membership; matching names alone are insufficient"
     }
   },
   "map_ggchord_position": {
@@ -1460,15 +1460,15 @@
       "source"
     ],
     "purpose": {
-      "en": "Map source positions and display coordinates",
-      "zh": "映射源位置与显示坐标"
+      "zh": "映射源位置与显示坐标",
+      "en": "Map source positions and display coordinates"
     },
     "alias_of": "",
     "case": "dotplot-start",
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
-      "en": "Native/source positions; explicit Dotplot axis, or both x/y for radial inverse",
-      "zh": "原生或源坐标；Dotplot须选轴，Radial反查须给x/y"
+      "zh": "原生或源坐标；Dotplot须选轴，Radial反查须给x/y",
+      "en": "Native/source positions; explicit Dotplot axis, or both x/y for radial inverse"
     }
   },
   "margin": {
@@ -1479,15 +1479,15 @@
     "modes": "upstream; applies only to matching supported ggplot roles",
     "parameters": [],
     "purpose": {
-      "en": "Selected ggplot2 helpers for ggchord plots",
-      "zh": "适用于 ggchord 的部分 ggplot2 辅助函数"
+      "zh": "适用于 ggchord 的部分 ggplot2 辅助函数",
+      "en": "Selected ggplot2 helpers for ggchord plots"
     },
     "alias_of": "",
     "case": "chord",
     "scope": "inherited upstream contract",
     "modes_localized": {
-      "en": "upstream; applies only to matching supported ggplot roles",
-      "zh": "上游对象/接口；遵循 ggplot2/grid 的原始契约"
+      "zh": "上游对象/接口；遵循 ggplot2/grid 的原始契约",
+      "en": "upstream; applies only to matching supported ggplot roles"
     }
   },
   "merge_ggchord_ribbons": {
@@ -1501,15 +1501,15 @@
       "min_pident_difference"
     ],
     "purpose": {
-      "en": "Merge adjacent or overlapping alignment blocks of the same sequence pair",
-      "zh": "合并同序列对的相邻或重叠比对块"
+      "zh": "合并同序列对的相邻或重叠比对块",
+      "en": "Merge adjacent or overlapping alignment blocks of the same sequence pair"
     },
     "alias_of": "",
     "case": "chord",
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
-      "en": "compatible display envelopes with estimation/provenance flags",
-      "zh": "处理已有比对；不生成新的序列比对"
+      "zh": "处理已有比对；不生成新的序列比对",
+      "en": "compatible display envelopes with estimation/provenance flags"
     }
   },
   "optimize_ggchord_layout": {
@@ -1526,15 +1526,15 @@
       "max_iter"
     ],
     "purpose": {
-      "en": "Optimize sequence order and orientation for ribbon readability",
-      "zh": "优化序列顺序和方向以改善连接可读性"
+      "zh": "优化序列顺序和方向以改善连接可读性",
+      "en": "Optimize sequence order and orientation for ribbon readability"
     },
     "alias_of": "",
     "case": "chord",
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
-      "en": "explicit input sequence order/orientation heuristic, not biological inference",
-      "zh": "明确请求的顺序/方向启发式；不是生物学推断"
+      "zh": "明确请求的顺序/方向启发式；不是生物学推断",
+      "en": "explicit input sequence order/orientation heuristic, not biological inference"
     }
   },
   "position_feature_stack": {
@@ -1549,15 +1549,15 @@
       "base_position"
     ],
     "purpose": {
-      "en": "Stack overlapping genes or features on local lanes",
-      "zh": "将重叠基因或注释堆叠到局部轨道"
+      "zh": "将重叠基因或注释堆叠到局部轨道",
+      "en": "Stack overlapping genes or features on local lanes"
     },
     "alias_of": "",
     "case": "chord",
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
-      "en": "feature lanes; base Position before overlap allocation",
-      "zh": "先应用基础 Position，再分配重叠轨道"
+      "zh": "先应用基础 Position，再分配重叠轨道",
+      "en": "feature lanes; base Position before overlap allocation"
     }
   },
   "position_identity": {
@@ -1568,15 +1568,15 @@
     "modes": "upstream; applies only to matching supported ggplot roles",
     "parameters": [],
     "purpose": {
-      "en": "Selected ggplot2 helpers for ggchord plots",
-      "zh": "适用于 ggchord 的部分 ggplot2 辅助函数"
+      "zh": "适用于 ggchord 的部分 ggplot2 辅助函数",
+      "en": "Selected ggplot2 helpers for ggchord plots"
     },
     "alias_of": "",
     "case": "chord",
     "scope": "inherited upstream contract",
     "modes_localized": {
-      "en": "upstream; applies only to matching supported ggplot roles",
-      "zh": "上游对象/接口；遵循 ggplot2/grid 的原始契约"
+      "zh": "上游对象/接口；遵循 ggplot2/grid 的原始契约",
+      "en": "upstream; applies only to matching supported ggplot roles"
     }
   },
   "position_plasmid": {
@@ -1589,15 +1589,15 @@
       "offset"
     ],
     "purpose": {
-      "en": "Place both feature strands on one shared band",
-      "zh": "将两条链的注释放在同一带上"
+      "zh": "将两条链的注释放在同一带上",
+      "en": "Place both feature strands on one shared band"
     },
     "alias_of": "",
     "case": "circular-features",
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
-      "en": "local shared-band preset; intended circular",
-      "zh": "共享注释带的局部预设；默认面向圆图"
+      "zh": "共享注释带的局部预设；默认面向圆图",
+      "en": "local shared-band preset; intended circular"
     }
   },
   "position_strand": {
@@ -1610,15 +1610,15 @@
       "offset"
     ],
     "purpose": {
-      "en": "Place features on opposite sides according to strand",
-      "zh": "按链将注释放在两侧"
+      "zh": "按链将注释放在两侧",
+      "en": "Place features on opposite sides according to strand"
     },
     "alias_of": "",
     "case": "parameters",
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
-      "en": "local signed placement on valid feature/gene layers",
-      "zh": "合法特征/基因的带符号局部放置"
+      "zh": "合法特征/基因的带符号局部放置",
+      "en": "local signed placement on valid feature/gene layers"
     }
   },
   "position_track": {
@@ -1635,15 +1635,15 @@
       "gap"
     ],
     "purpose": {
-      "en": "Place a quantitative layer in an explicit sequence-local band",
-      "zh": "在显式序列局部带中放置定量图层"
+      "zh": "在显式序列局部带中放置定量图层",
+      "en": "Place a quantitative layer in an explicit sequence-local band"
     },
     "alias_of": "",
     "case": "tracks",
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
-      "en": "all three; same track ID shares consistent declarations",
-      "zh": "兼容骨架坐标（见支持表）；同 ID 的声明和值域需一致"
+      "zh": "兼容骨架坐标（见支持表）；同 ID 的声明和值域需一致",
+      "en": "all three; same track ID shares consistent declarations"
     }
   },
   "PositionIdentity": {
@@ -1654,15 +1654,15 @@
     "modes": "upstream; applies only to matching supported ggplot roles",
     "parameters": [],
     "purpose": {
-      "en": "Selected ggplot2 helpers for ggchord plots",
-      "zh": "适用于 ggchord 的部分 ggplot2 辅助函数"
+      "zh": "适用于 ggchord 的部分 ggplot2 辅助函数",
+      "en": "Selected ggplot2 helpers for ggchord plots"
     },
     "alias_of": "",
     "case": "chord",
     "scope": "inherited upstream contract",
     "modes_localized": {
-      "en": "upstream; applies only to matching supported ggplot roles",
-      "zh": "上游对象/接口；遵循 ggplot2/grid 的原始契约"
+      "zh": "上游对象/接口；遵循 ggplot2/grid 的原始契约",
+      "en": "upstream; applies only to matching supported ggplot roles"
     }
   },
   "prepare_ggchord_data": {
@@ -1677,15 +1677,15 @@
       "gene_data"
     ],
     "purpose": {
-      "en": "Prepare named ggchord tables with an explicit audit trail",
-      "zh": "准备命名输入表并保留明确审计记录"
+      "zh": "准备命名输入表并保留明确审计记录",
+      "en": "Prepare named ggchord tables with an explicit audit trail"
     },
     "alias_of": "",
     "case": "real-data",
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
-      "en": "workflow preparation; defaults differ from standalone cleaning",
-      "zh": "显式校验/修复/成员工作流；保留源表及报告"
+      "zh": "显式校验/修复/成员工作流；保留源表及报告",
+      "en": "workflow preparation; defaults differ from standalone cleaning"
     }
   },
   "primer_catalog": {
@@ -1699,15 +1699,15 @@
       "aliases"
     ],
     "purpose": {
-      "en": "Inspect the bundled sequencing-primer catalogue",
-      "zh": "查看随包测序引物目录"
+      "zh": "查看随包测序引物目录",
+      "en": "Inspect the bundled sequencing-primer catalogue"
     },
     "alias_of": "",
     "case": "plasmids",
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
-      "en": "catalogue metadata, not a binding search",
-      "zh": "目录元数据；不是目标上的结合搜索"
+      "zh": "目录元数据；不是目标上的结合搜索",
+      "en": "catalogue metadata, not a binding search"
     }
   },
   "project_ggchord_features": {
@@ -1721,15 +1721,15 @@
       "cds"
     ],
     "purpose": {
-      "en": "Project protein domains or genomic features through a spliced CDS map",
-      "zh": "通过剪接 CDS 映射投影蛋白结构域或基因组注释"
+      "zh": "通过剪接 CDS 映射投影蛋白结构域或基因组注释",
+      "en": "Project protein domains or genomic features through a spliced CDS map"
     },
     "alias_of": "",
     "case": "homology",
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
-      "en": "supported amino-acid intervals through explicit CDS segment maps",
-      "zh": "显式 CDS/相位/单位的编码坐标工作流"
+      "zh": "显式 CDS/相位/单位的编码坐标工作流",
+      "en": "supported amino-acid intervals through explicit CDS segment maps"
     }
   },
   "project_ggchord_links": {
@@ -1744,15 +1744,15 @@
       "ungapped"
     ],
     "purpose": {
-      "en": "Project explicitly ungapped protein links to genomic coding segments",
-      "zh": "将明确无缺口的蛋白连接投影为基因组编码片段"
+      "zh": "将明确无缺口的蛋白连接投影为基因组编码片段",
+      "en": "Project explicitly ungapped protein links to genomic coding segments"
     },
     "alias_of": "",
     "case": "homology",
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
-      "en": "known paired protein/CDS correspondence; gaps require justified handling",
-      "zh": "显式 CDS/相位/单位的编码坐标工作流"
+      "zh": "显式 CDS/相位/单位的编码坐标工作流",
+      "en": "known paired protein/CDS correspondence; gaps require justified handling"
     }
   },
   "read_bed": {
@@ -1766,15 +1766,15 @@
       "files"
     ],
     "purpose": {
-      "en": "Read BED intervals as ggchord features",
-      "zh": "将 BED 区间读为 ggchord 注释"
+      "zh": "将 BED 区间读为 ggchord 注释",
+      "en": "Read BED intervals as ggchord features"
     },
     "alias_of": "",
     "case": "formats",
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
-      "en": "zero-based half-open BED converted once",
-      "zh": "本地文件到标准表；按源格式转换坐标和声明单位"
+      "zh": "本地文件到标准表；按源格式转换坐标和声明单位",
+      "en": "zero-based half-open BED converted once"
     }
   },
   "read_blast": {
@@ -1788,15 +1788,15 @@
       "files"
     ],
     "purpose": {
-      "en": "Read one or more BLAST tabular output files into ribbon_data format",
-      "zh": "将一个或多个 BLAST 表格文件读为连接数据"
+      "zh": "将一个或多个 BLAST 表格文件读为连接数据",
+      "en": "Read one or more BLAST tabular output files into ribbon_data format"
     },
     "alias_of": "",
     "case": "real-data",
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
-      "en": "local observed BLAST records; retain q/s coordinate meaning",
-      "zh": "本地文件到标准表；按源格式转换坐标和声明单位"
+      "zh": "本地文件到标准表；按源格式转换坐标和声明单位",
+      "en": "local observed BLAST records; retain q/s coordinate meaning"
     }
   },
   "read_fasta_lengths": {
@@ -1812,15 +1812,15 @@
       "keep_sequence"
     ],
     "purpose": {
-      "en": "Read one or more FASTA files into seq_data format",
-      "zh": "将一个或多个 FASTA 文件读为序列数据"
+      "zh": "将一个或多个 FASTA 文件读为序列数据",
+      "en": "Read one or more FASTA files into seq_data format"
     },
     "alias_of": "",
     "case": "real-data",
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
-      "en": "local FASTA; declared bp/aa unit and complete lengths",
-      "zh": "本地文件到标准表；按源格式转换坐标和声明单位"
+      "zh": "本地文件到标准表；按源格式转换坐标和声明单位",
+      "en": "local FASTA; declared bp/aa unit and complete lengths"
     }
   },
   "read_genbank": {
@@ -1836,15 +1836,15 @@
       "unsupported"
     ],
     "purpose": {
-      "en": "Import local GenBank or GBFF records using an optional mature parser",
-      "zh": "使用可选成熟解析器导入本地 GenBank 或 GBFF"
+      "zh": "使用可选成熟解析器导入本地 GenBank 或 GBFF",
+      "en": "Import local GenBank or GBFF records using an optional mature parser"
     },
     "alias_of": "",
     "case": "formats",
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
-      "en": "local GenBank; explicit installed Biopython parser; provenance retained",
-      "zh": "本地文件到标准表；按源格式转换坐标和声明单位"
+      "zh": "本地文件到标准表；按源格式转换坐标和声明单位",
+      "en": "local GenBank; explicit installed Biopython parser; provenance retained"
     }
   },
   "read_gff3": {
@@ -1859,15 +1859,15 @@
       "unstranded"
     ],
     "purpose": {
-      "en": "Read one or more GFF3 files into gene_data format",
-      "zh": "将一个或多个 GFF3 文件读为注释数据"
+      "zh": "将一个或多个 GFF3 文件读为注释数据",
+      "en": "Read one or more GFF3 files into gene_data format"
     },
     "alias_of": "",
     "case": "real-data",
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
-      "en": "local one-based inclusive genomic annotation",
-      "zh": "本地文件到标准表；按源格式转换坐标和声明单位"
+      "zh": "本地文件到标准表；按源格式转换坐标和声明单位",
+      "en": "local one-based inclusive genomic annotation"
     }
   },
   "read_paf": {
@@ -1881,15 +1881,15 @@
       "files"
     ],
     "purpose": {
-      "en": "Read PAF mappings as ggchord links",
-      "zh": "将 PAF 比对读为 ggchord 连接"
+      "zh": "将 PAF 比对读为 ggchord 连接",
+      "en": "Read PAF mappings as ggchord links"
     },
     "alias_of": "",
     "case": "formats",
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
-      "en": "PAF with complete source lengths and strand-aware endpoint conversion",
-      "zh": "本地文件到标准表；按源格式转换坐标和声明单位"
+      "zh": "本地文件到标准表；按源格式转换坐标和声明单位",
+      "en": "PAF with complete source lengths and strand-aware endpoint conversion"
     }
   },
   "rel": {
@@ -1900,15 +1900,15 @@
     "modes": "upstream; applies only to matching supported ggplot roles",
     "parameters": [],
     "purpose": {
-      "en": "Selected ggplot2 helpers for ggchord plots",
-      "zh": "适用于 ggchord 的部分 ggplot2 辅助函数"
+      "zh": "适用于 ggchord 的部分 ggplot2 辅助函数",
+      "en": "Selected ggplot2 helpers for ggchord plots"
     },
     "alias_of": "",
     "case": "chord",
     "scope": "inherited upstream contract",
     "modes_localized": {
-      "en": "upstream; applies only to matching supported ggplot roles",
-      "zh": "上游对象/接口；遵循 ggplot2/grid 的原始契约"
+      "zh": "上游对象/接口；遵循 ggplot2/grid 的原始契约",
+      "en": "upstream; applies only to matching supported ggplot roles"
     }
   },
   "scale_feature_fill_manual": {
@@ -1922,15 +1922,15 @@
       "limits"
     ],
     "purpose": {
-      "en": "Gene, feature and region fill scales",
-      "zh": "基因、注释及区域填色标度"
+      "zh": "基因、注释及区域填色标度",
+      "en": "Gene, feature and region fill scales"
     },
     "alias_of": "",
     "case": "chord",
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
-      "en": "all three; matching generic feature role/preset",
-      "zh": "兼容骨架坐标（见支持表）；匹配通用注释角色或预设"
+      "zh": "兼容骨架坐标（见支持表）；匹配通用注释角色或预设",
+      "en": "all three; matching generic feature role/preset"
     }
   },
   "scale_feature_fill_plasmid": {
@@ -1943,15 +1943,15 @@
       "limits"
     ],
     "purpose": {
-      "en": "Plasmid-map feature presets",
-      "zh": "质粒注释预设标度"
+      "zh": "质粒注释预设标度",
+      "en": "Plasmid-map feature presets"
     },
     "alias_of": "",
     "case": "chord",
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
-      "en": "all three; matching generic feature role/preset",
-      "zh": "兼容骨架坐标（见支持表）；匹配通用注释角色或预设"
+      "zh": "兼容骨架坐标（见支持表）；匹配通用注释角色或预设",
+      "en": "all three; matching generic feature role/preset"
     }
   },
   "scale_feature_shape_manual": {
@@ -1967,15 +1967,15 @@
       "name"
     ],
     "purpose": {
-      "en": "Feature shape scale",
-      "zh": "注释形状标度"
+      "zh": "注释形状标度",
+      "en": "Feature shape scale"
     },
     "alias_of": "",
     "case": "chord",
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
-      "en": "all three; matching generic feature role/preset",
-      "zh": "兼容骨架坐标（见支持表）；匹配通用注释角色或预设"
+      "zh": "兼容骨架坐标（见支持表）；匹配通用注释角色或预设",
+      "en": "all three; matching generic feature role/preset"
     }
   },
   "scale_feature_shape_plasmid": {
@@ -1989,15 +1989,15 @@
       "guide"
     ],
     "purpose": {
-      "en": "Plasmid-map feature presets",
-      "zh": "质粒注释预设标度"
+      "zh": "质粒注释预设标度",
+      "en": "Plasmid-map feature presets"
     },
     "alias_of": "",
     "case": "chord",
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
-      "en": "all three; matching generic feature role/preset",
-      "zh": "兼容骨架坐标（见支持表）；匹配通用注释角色或预设"
+      "zh": "兼容骨架坐标（见支持表）；匹配通用注释角色或预设",
+      "en": "all three; matching generic feature role/preset"
     }
   },
   "scale_gene_fill_manual": {
@@ -2010,15 +2010,15 @@
       "values"
     ],
     "purpose": {
-      "en": "Gene, feature and region fill scales",
-      "zh": "基因、注释及区域填色标度"
+      "zh": "基因、注释及区域填色标度",
+      "en": "Gene, feature and region fill scales"
     },
     "alias_of": "",
     "case": "chord",
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
-      "en": "bp gene layers; compatible backbone coordinates",
-      "zh": "兼容骨架坐标（见支持表）的 bp 基因图层"
+      "zh": "兼容骨架坐标（见支持表）的 bp 基因图层",
+      "en": "bp gene layers; compatible backbone coordinates"
     }
   },
   "scale_link_alpha_continuous": {
@@ -2029,15 +2029,15 @@
     "modes": "chord/collinear matching point-link roles",
     "parameters": [],
     "purpose": {
-      "en": "Scales for point links",
-      "zh": "点连接标度"
+      "zh": "点连接标度",
+      "en": "Scales for point links"
     },
     "alias_of": "",
     "case": "chord",
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
-      "en": "chord/collinear matching point-link roles",
-      "zh": "弦图/共线性；匹配点连接角色"
+      "zh": "弦图/共线性；匹配点连接角色",
+      "en": "chord/collinear matching point-link roles"
     }
   },
   "scale_link_alpha_manual": {
@@ -2050,15 +2050,15 @@
       "values"
     ],
     "purpose": {
-      "en": "Scales for point links",
-      "zh": "点连接标度"
+      "zh": "点连接标度",
+      "en": "Scales for point links"
     },
     "alias_of": "",
     "case": "chord",
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
-      "en": "chord/collinear matching point-link roles",
-      "zh": "弦图/共线性；匹配点连接角色"
+      "zh": "弦图/共线性；匹配点连接角色",
+      "en": "chord/collinear matching point-link roles"
     }
   },
   "scale_link_color_gradientn": {
@@ -2069,15 +2069,15 @@
     "modes": "chord/collinear matching point-link roles",
     "parameters": [],
     "purpose": {
-      "en": "Scales for point links",
-      "zh": "点连接标度"
+      "zh": "点连接标度",
+      "en": "Scales for point links"
     },
     "alias_of": "scale_link_colour_gradientn",
     "case": "chord",
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
-      "en": "chord/collinear matching point-link roles",
-      "zh": "弦图/共线性；匹配点连接角色"
+      "zh": "弦图/共线性；匹配点连接角色",
+      "en": "chord/collinear matching point-link roles"
     }
   },
   "scale_link_color_manual": {
@@ -2090,15 +2090,15 @@
       "values"
     ],
     "purpose": {
-      "en": "Scales for point links",
-      "zh": "点连接标度"
+      "zh": "点连接标度",
+      "en": "Scales for point links"
     },
     "alias_of": "scale_link_colour_manual",
     "case": "chord",
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
-      "en": "chord/collinear matching point-link roles",
-      "zh": "弦图/共线性；匹配点连接角色"
+      "zh": "弦图/共线性；匹配点连接角色",
+      "en": "chord/collinear matching point-link roles"
     }
   },
   "scale_link_colour_gradientn": {
@@ -2109,15 +2109,15 @@
     "modes": "chord/collinear matching point-link roles",
     "parameters": [],
     "purpose": {
-      "en": "Scales for point links",
-      "zh": "点连接标度"
+      "zh": "点连接标度",
+      "en": "Scales for point links"
     },
     "alias_of": "",
     "case": "chord",
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
-      "en": "chord/collinear matching point-link roles",
-      "zh": "弦图/共线性；匹配点连接角色"
+      "zh": "弦图/共线性；匹配点连接角色",
+      "en": "chord/collinear matching point-link roles"
     }
   },
   "scale_link_colour_manual": {
@@ -2130,15 +2130,15 @@
       "values"
     ],
     "purpose": {
-      "en": "Scales for point links",
-      "zh": "点连接标度"
+      "zh": "点连接标度",
+      "en": "Scales for point links"
     },
     "alias_of": "",
     "case": "chord",
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
-      "en": "chord/collinear matching point-link roles",
-      "zh": "弦图/共线性；匹配点连接角色"
+      "zh": "弦图/共线性；匹配点连接角色",
+      "en": "chord/collinear matching point-link roles"
     }
   },
   "scale_link_linetype_manual": {
@@ -2151,15 +2151,15 @@
       "values"
     ],
     "purpose": {
-      "en": "Scales for point links",
-      "zh": "点连接标度"
+      "zh": "点连接标度",
+      "en": "Scales for point links"
     },
     "alias_of": "",
     "case": "chord",
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
-      "en": "chord/collinear matching point-link roles",
-      "zh": "弦图/共线性；匹配点连接角色"
+      "zh": "弦图/共线性；匹配点连接角色",
+      "en": "chord/collinear matching point-link roles"
     }
   },
   "scale_link_linewidth_continuous": {
@@ -2170,15 +2170,15 @@
     "modes": "chord/collinear matching point-link roles",
     "parameters": [],
     "purpose": {
-      "en": "Scales for point links",
-      "zh": "点连接标度"
+      "zh": "点连接标度",
+      "en": "Scales for point links"
     },
     "alias_of": "",
     "case": "chord",
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
-      "en": "chord/collinear matching point-link roles",
-      "zh": "弦图/共线性；匹配点连接角色"
+      "zh": "弦图/共线性；匹配点连接角色",
+      "en": "chord/collinear matching point-link roles"
     }
   },
   "scale_link_linewidth_manual": {
@@ -2191,15 +2191,15 @@
       "values"
     ],
     "purpose": {
-      "en": "Scales for point links",
-      "zh": "点连接标度"
+      "zh": "点连接标度",
+      "en": "Scales for point links"
     },
     "alias_of": "",
     "case": "chord",
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
-      "en": "chord/collinear matching point-link roles",
-      "zh": "弦图/共线性；匹配点连接角色"
+      "zh": "弦图/共线性；匹配点连接角色",
+      "en": "chord/collinear matching point-link roles"
     }
   },
   "scale_region_fill_manual": {
@@ -2212,15 +2212,15 @@
       "values"
     ],
     "purpose": {
-      "en": "Gene, feature and region fill scales",
-      "zh": "基因、注释及区域填色标度"
+      "zh": "基因、注释及区域填色标度",
+      "en": "Gene, feature and region fill scales"
     },
     "alias_of": "",
     "case": "chord",
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
-      "en": "all three; matching region_fill role",
-      "zh": "兼容骨架坐标（见支持表）；匹配 region_fill"
+      "zh": "兼容骨架坐标（见支持表）；匹配 region_fill",
+      "en": "all three; matching region_fill role"
     }
   },
   "scale_ribbon_alpha_continuous": {
@@ -2233,15 +2233,15 @@
       "range"
     ],
     "purpose": {
-      "en": "Ribbon alpha, outline and linetype scales",
-      "zh": "区间连接透明度、轮廓及线型标度"
+      "zh": "区间连接透明度、轮廓及线型标度",
+      "en": "Ribbon alpha, outline and linetype scales"
     },
     "alias_of": "",
     "case": "chord",
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
-      "en": "chord/collinear matching ribbon roles",
-      "zh": "弦图/共线性；匹配连接带角色"
+      "zh": "弦图/共线性；匹配连接带角色",
+      "en": "chord/collinear matching ribbon roles"
     }
   },
   "scale_ribbon_alpha_manual": {
@@ -2254,15 +2254,15 @@
       "values"
     ],
     "purpose": {
-      "en": "Ribbon alpha, outline and linetype scales",
-      "zh": "区间连接透明度、轮廓及线型标度"
+      "zh": "区间连接透明度、轮廓及线型标度",
+      "en": "Ribbon alpha, outline and linetype scales"
     },
     "alias_of": "",
     "case": "chord",
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
-      "en": "chord/collinear matching ribbon roles",
-      "zh": "弦图/共线性；匹配连接带角色"
+      "zh": "弦图/共线性；匹配连接带角色",
+      "en": "chord/collinear matching ribbon roles"
     }
   },
   "scale_ribbon_color_manual": {
@@ -2275,15 +2275,15 @@
       "values"
     ],
     "purpose": {
-      "en": "Ribbon alpha, outline and linetype scales",
-      "zh": "区间连接透明度、轮廓及线型标度"
+      "zh": "区间连接透明度、轮廓及线型标度",
+      "en": "Ribbon alpha, outline and linetype scales"
     },
     "alias_of": "scale_ribbon_colour_manual",
     "case": "chord",
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
-      "en": "chord/collinear matching ribbon roles",
-      "zh": "弦图/共线性；匹配连接带角色"
+      "zh": "弦图/共线性；匹配连接带角色",
+      "en": "chord/collinear matching ribbon roles"
     }
   },
   "scale_ribbon_colour_manual": {
@@ -2296,15 +2296,15 @@
       "values"
     ],
     "purpose": {
-      "en": "Ribbon alpha, outline and linetype scales",
-      "zh": "区间连接透明度、轮廓及线型标度"
+      "zh": "区间连接透明度、轮廓及线型标度",
+      "en": "Ribbon alpha, outline and linetype scales"
     },
     "alias_of": "",
     "case": "chord",
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
-      "en": "chord/collinear matching ribbon roles",
-      "zh": "弦图/共线性；匹配连接带角色"
+      "zh": "弦图/共线性；匹配连接带角色",
+      "en": "chord/collinear matching ribbon roles"
     }
   },
   "scale_ribbon_fill_gradientn": {
@@ -2319,15 +2319,15 @@
       "colours"
     ],
     "purpose": {
-      "en": "Ribbon fill scales",
-      "zh": "区间连接填色标度"
+      "zh": "区间连接填色标度",
+      "en": "Ribbon fill scales"
     },
     "alias_of": "",
     "case": "chord",
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
-      "en": "chord/collinear matching ribbon roles",
-      "zh": "弦图/共线性；匹配连接带角色"
+      "zh": "弦图/共线性；匹配连接带角色",
+      "en": "chord/collinear matching ribbon roles"
     }
   },
   "scale_ribbon_fill_identity": {
@@ -2338,15 +2338,15 @@
     "modes": "chord/collinear matching ribbon roles",
     "parameters": [],
     "purpose": {
-      "en": "Ribbon fill scales",
-      "zh": "区间连接填色标度"
+      "zh": "区间连接填色标度",
+      "en": "Ribbon fill scales"
     },
     "alias_of": "",
     "case": "chord",
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
-      "en": "chord/collinear matching ribbon roles",
-      "zh": "弦图/共线性；匹配连接带角色"
+      "zh": "弦图/共线性；匹配连接带角色",
+      "en": "chord/collinear matching ribbon roles"
     }
   },
   "scale_ribbon_fill_manual": {
@@ -2359,15 +2359,15 @@
       "values"
     ],
     "purpose": {
-      "en": "Ribbon fill scales",
-      "zh": "区间连接填色标度"
+      "zh": "区间连接填色标度",
+      "en": "Ribbon fill scales"
     },
     "alias_of": "",
     "case": "chord",
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
-      "en": "chord/collinear matching ribbon roles",
-      "zh": "弦图/共线性；匹配连接带角色"
+      "zh": "弦图/共线性；匹配连接带角色",
+      "en": "chord/collinear matching ribbon roles"
     }
   },
   "scale_ribbon_fill_stepsn": {
@@ -2382,15 +2382,15 @@
       "colours"
     ],
     "purpose": {
-      "en": "Ribbon fill scales",
-      "zh": "区间连接填色标度"
+      "zh": "区间连接填色标度",
+      "en": "Ribbon fill scales"
     },
     "alias_of": "",
     "case": "chord",
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
-      "en": "chord/collinear matching ribbon roles",
-      "zh": "弦图/共线性；匹配连接带角色"
+      "zh": "弦图/共线性；匹配连接带角色",
+      "en": "chord/collinear matching ribbon roles"
     }
   },
   "scale_ribbon_linetype_manual": {
@@ -2403,15 +2403,15 @@
       "values"
     ],
     "purpose": {
-      "en": "Ribbon alpha, outline and linetype scales",
-      "zh": "区间连接透明度、轮廓及线型标度"
+      "zh": "区间连接透明度、轮廓及线型标度",
+      "en": "Ribbon alpha, outline and linetype scales"
     },
     "alias_of": "",
     "case": "chord",
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
-      "en": "chord/collinear matching ribbon roles",
-      "zh": "弦图/共线性；匹配连接带角色"
+      "zh": "弦图/共线性；匹配连接带角色",
+      "en": "chord/collinear matching ribbon roles"
     }
   },
   "scale_seq_color_manual": {
@@ -2424,15 +2424,15 @@
       "values"
     ],
     "purpose": {
-      "en": "Sequence colour scales",
-      "zh": "序列颜色标度"
+      "zh": "序列颜色标度",
+      "en": "Sequence colour scales"
     },
     "alias_of": "scale_seq_colour_manual",
     "case": "chord",
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
-      "en": "all three; matching sequence colour role",
-      "zh": "兼容骨架坐标（见支持表）；匹配序列颜色角色"
+      "zh": "兼容骨架坐标（见支持表）；匹配序列颜色角色",
+      "en": "all three; matching sequence colour role"
     }
   },
   "scale_seq_colour_manual": {
@@ -2445,15 +2445,15 @@
       "values"
     ],
     "purpose": {
-      "en": "Sequence colour scales",
-      "zh": "序列颜色标度"
+      "zh": "序列颜色标度",
+      "en": "Sequence colour scales"
     },
     "alias_of": "",
     "case": "chord",
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
-      "en": "all three; matching sequence colour role",
-      "zh": "兼容骨架坐标（见支持表）；匹配序列颜色角色"
+      "zh": "兼容骨架坐标（见支持表）；匹配序列颜色角色",
+      "en": "all three; matching sequence colour role"
     }
   },
   "scale_seq_position_continuous": {
@@ -2468,15 +2468,15 @@
       "name"
     ],
     "purpose": {
-      "en": "Genomic sequence position scale",
-      "zh": "基因组序列位置标度"
+      "zh": "基因组序列位置标度",
+      "en": "Genomic sequence position scale"
     },
     "alias_of": "",
     "case": "chord",
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
-      "en": "all three; position axis, separate from the collinear ruler",
-      "zh": "兼容骨架坐标（见支持表）的位置轴；与直线标尺不同"
+      "zh": "兼容骨架坐标（见支持表）的位置轴；与直线标尺不同",
+      "en": "all three; position axis, separate from the collinear ruler"
     }
   },
   "scale_seq_ring_manual": {
@@ -2492,15 +2492,15 @@
       "name"
     ],
     "purpose": {
-      "en": "Explicit sequence ring scale",
-      "zh": "显式序列环标度"
+      "zh": "显式序列环标度",
+      "en": "Explicit sequence ring scale"
     },
     "alias_of": "",
     "case": "chord",
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
-      "en": "chord/circular; positive declared radii; linear rejected",
-      "zh": "弦图/圆图；显式正半径；共线性拒绝"
+      "zh": "弦图/圆图；显式正半径；共线性拒绝",
+      "en": "chord/circular; positive declared radii; linear rejected"
     }
   },
   "scale_track_colour_gradientn": {
@@ -2514,15 +2514,15 @@
       "colours"
     ],
     "purpose": {
-      "en": "Set a track's fill or colour mapping",
-      "zh": "设置轨道填色或颜色映射"
+      "zh": "设置轨道填色或颜色映射",
+      "en": "Set a track's fill or colour mapping"
     },
     "alias_of": "",
     "case": "tracks",
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
-      "en": "all three; scale ID must match position_track",
-      "zh": "兼容骨架坐标（见支持表）；ID 必须匹配 position_track"
+      "zh": "兼容骨架坐标（见支持表）；ID 必须匹配 position_track",
+      "en": "all three; scale ID must match position_track"
     }
   },
   "scale_track_colour_manual": {
@@ -2535,15 +2535,15 @@
       "values"
     ],
     "purpose": {
-      "en": "Set a track's fill or colour mapping",
-      "zh": "设置轨道填色或颜色映射"
+      "zh": "设置轨道填色或颜色映射",
+      "en": "Set a track's fill or colour mapping"
     },
     "alias_of": "",
     "case": "tracks",
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
-      "en": "all three; scale ID must match position_track",
-      "zh": "兼容骨架坐标（见支持表）；ID 必须匹配 position_track"
+      "zh": "兼容骨架坐标（见支持表）；ID 必须匹配 position_track",
+      "en": "all three; scale ID must match position_track"
     }
   },
   "scale_track_fill_gradientn": {
@@ -2557,15 +2557,15 @@
       "colours"
     ],
     "purpose": {
-      "en": "Set a track's fill or colour mapping",
-      "zh": "设置轨道填色或颜色映射"
+      "zh": "设置轨道填色或颜色映射",
+      "en": "Set a track's fill or colour mapping"
     },
     "alias_of": "",
     "case": "tracks",
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
-      "en": "all three; scale ID must match position_track",
-      "zh": "兼容骨架坐标（见支持表）；ID 必须匹配 position_track"
+      "zh": "兼容骨架坐标（见支持表）；ID 必须匹配 position_track",
+      "en": "all three; scale ID must match position_track"
     }
   },
   "scale_track_fill_manual": {
@@ -2578,15 +2578,15 @@
       "values"
     ],
     "purpose": {
-      "en": "Set a track's fill or colour mapping",
-      "zh": "设置轨道填色或颜色映射"
+      "zh": "设置轨道填色或颜色映射",
+      "en": "Set a track's fill or colour mapping"
     },
     "alias_of": "",
     "case": "tracks",
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
-      "en": "all three; scale ID must match position_track",
-      "zh": "兼容骨架坐标（见支持表）；ID 必须匹配 position_track"
+      "zh": "兼容骨架坐标（见支持表）；ID 必须匹配 position_track",
+      "en": "all three; scale ID must match position_track"
     }
   },
   "scale_track_value_continuous": {
@@ -2602,15 +2602,15 @@
       "name"
     ],
     "purpose": {
-      "en": "Set a named track's numerical height scale",
-      "zh": "设置命名轨道的数值高度标度"
+      "zh": "设置命名轨道的数值高度标度",
+      "en": "Set a named track's numerical height scale"
     },
     "alias_of": "",
     "case": "tracks",
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
-      "en": "all three; scale ID must match position_track",
-      "zh": "兼容骨架坐标（见支持表）；ID 必须匹配 position_track"
+      "zh": "兼容骨架坐标（见支持表）；ID 必须匹配 position_track",
+      "en": "all three; scale ID must match position_track"
     }
   },
   "segment_ggchord_data": {
@@ -2629,15 +2629,15 @@
       "max_links"
     ],
     "purpose": {
-      "en": "Prepare independent windows for a segmented linear display",
-      "zh": "为分段线性图准备独立窗口"
+      "zh": "为分段线性图准备独立窗口",
+      "en": "Prepare independent windows for a segmented linear display"
     },
     "alias_of": "",
     "case": "views",
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
-      "en": "independent windows and declared local display reversal",
-      "zh": "显式输入、窗口与来源的工作流"
+      "zh": "显式输入、窗口与来源的工作流",
+      "en": "independent windows and declared local display reversal"
     }
   },
   "stat_ribbon_bundle": {
@@ -2653,15 +2653,15 @@
       "group_by"
     ],
     "purpose": {
-      "en": "Bundle ribbons as a ggchord stat",
-      "zh": "以统计图层聚束区间连接"
+      "zh": "以统计图层聚束区间连接",
+      "en": "Bundle ribbons as a ggchord stat"
     },
     "alias_of": "",
     "case": "chord",
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
-      "en": "chord/collinear ribbon layer; explicit aggregation",
-      "zh": "弦图/共线性；显式聚束"
+      "zh": "弦图/共线性；显式聚束",
+      "en": "chord/collinear ribbon layer; explicit aggregation"
     }
   },
   "stat_ribbon_density": {
@@ -2676,15 +2676,15 @@
       "group_by"
     ],
     "purpose": {
-      "en": "Compute local ribbon density as a ggchord stat",
-      "zh": "以统计图层计算局部连接密度"
+      "zh": "以统计图层计算局部连接密度",
+      "en": "Compute local ribbon density as a ggchord stat"
     },
     "alias_of": "",
     "case": "chord",
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
-      "en": "chord/collinear ribbon layer; one ribbon per source observation",
-      "zh": "弦图/共线性；一行观测仍是一条带"
+      "zh": "弦图/共线性；一行观测仍是一条带",
+      "en": "chord/collinear ribbon layer; one ribbon per source observation"
     }
   },
   "theme": {
@@ -2695,15 +2695,15 @@
     "modes": "upstream; applies only to matching supported ggplot roles",
     "parameters": [],
     "purpose": {
-      "en": "Selected ggplot2 helpers for ggchord plots",
-      "zh": "适用于 ggchord 的部分 ggplot2 辅助函数"
+      "zh": "适用于 ggchord 的部分 ggplot2 辅助函数",
+      "en": "Selected ggplot2 helpers for ggchord plots"
     },
     "alias_of": "",
     "case": "chord",
     "scope": "inherited upstream contract",
     "modes_localized": {
-      "en": "upstream; applies only to matching supported ggplot roles",
-      "zh": "上游对象/接口；遵循 ggplot2/grid 的原始契约"
+      "zh": "上游对象/接口；遵循 ggplot2/grid 的原始契约",
+      "en": "upstream; applies only to matching supported ggplot roles"
     }
   },
   "theme_ggchord": {
@@ -2718,15 +2718,15 @@
       "axis.gap"
     ],
     "purpose": {
-      "en": "ggchord themes",
-      "zh": "ggchord 主题"
+      "zh": "ggchord 主题",
+      "en": "ggchord themes"
     },
     "alias_of": "",
     "case": "chord",
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
-      "en": "non-data style; plasmid preset intended circular",
-      "zh": "受支持图的相应主题/图例；按角色及设备解释"
+      "zh": "受支持图的相应主题/图例；按角色及设备解释",
+      "en": "non-data style; plasmid preset intended circular"
     }
   },
   "theme_ggchord_dark": {
@@ -2741,15 +2741,15 @@
       "axis.gap"
     ],
     "purpose": {
-      "en": "ggchord themes",
-      "zh": "ggchord 主题"
+      "zh": "ggchord 主题",
+      "en": "ggchord themes"
     },
     "alias_of": "",
     "case": "chord",
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
-      "en": "non-data style; plasmid preset intended circular",
-      "zh": "受支持图的相应主题/图例；按角色及设备解释"
+      "zh": "受支持图的相应主题/图例；按角色及设备解释",
+      "en": "non-data style; plasmid preset intended circular"
     }
   },
   "theme_ggchord_minimal": {
@@ -2764,15 +2764,15 @@
       "axis.gap"
     ],
     "purpose": {
-      "en": "ggchord themes",
-      "zh": "ggchord 主题"
+      "zh": "ggchord 主题",
+      "en": "ggchord themes"
     },
     "alias_of": "",
     "case": "chord",
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
-      "en": "non-data style; plasmid preset intended circular",
-      "zh": "受支持图的相应主题/图例；按角色及设备解释"
+      "zh": "受支持图的相应主题/图例；按角色及设备解释",
+      "en": "non-data style; plasmid preset intended circular"
     }
   },
   "theme_ggchord_plasmid": {
@@ -2787,15 +2787,15 @@
       "axis.gap"
     ],
     "purpose": {
-      "en": "ggchord themes",
-      "zh": "ggchord 主题"
+      "zh": "ggchord 主题",
+      "en": "ggchord themes"
     },
     "alias_of": "",
     "case": "chord",
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
-      "en": "non-data style; plasmid preset intended circular",
-      "zh": "受支持图的相应主题/图例；按角色及设备解释"
+      "zh": "受支持图的相应主题/图例；按角色及设备解释",
+      "en": "non-data style; plasmid preset intended circular"
     }
   },
   "theme_ggchord_publication": {
@@ -2810,15 +2810,15 @@
       "axis.gap"
     ],
     "purpose": {
-      "en": "ggchord themes",
-      "zh": "ggchord 主题"
+      "zh": "ggchord 主题",
+      "en": "ggchord themes"
     },
     "alias_of": "",
     "case": "chord",
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
-      "en": "non-data style; plasmid preset intended circular",
-      "zh": "受支持图的相应主题/图例；按角色及设备解释"
+      "zh": "受支持图的相应主题/图例；按角色及设备解释",
+      "en": "non-data style; plasmid preset intended circular"
     }
   },
   "unit": {
@@ -2829,15 +2829,15 @@
     "modes": "upstream; applies only to matching supported ggplot roles",
     "parameters": [],
     "purpose": {
-      "en": "Physical units and direction arrows",
-      "zh": "物理单位与方向箭头"
+      "zh": "物理单位与方向箭头",
+      "en": "Physical units and direction arrows"
     },
     "alias_of": "",
     "case": "chord",
     "scope": "inherited upstream contract",
     "modes_localized": {
-      "en": "upstream; applies only to matching supported ggplot roles",
-      "zh": "上游对象/接口；遵循 ggplot2/grid 的原始契约"
+      "zh": "上游对象/接口；遵循 ggplot2/grid 的原始契约",
+      "en": "upstream; applies only to matching supported ggplot roles"
     }
   },
   "validate_ggchord_data": {
@@ -2852,15 +2852,15 @@
       "gene_data"
     ],
     "purpose": {
-      "en": "Validate ggchord input data before plotting",
-      "zh": "绘图前校验 ggchord 输入"
+      "zh": "绘图前校验 ggchord 输入",
+      "en": "Validate ggchord input data before plotting"
     },
     "alias_of": "",
     "case": "real-data",
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
-      "en": "validation reports, no silent input repair",
-      "zh": "显式校验/修复/成员工作流；保留源表及报告"
+      "zh": "显式校验/修复/成员工作流；保留源表及报告",
+      "en": "validation reports, no silent input repair"
     }
   },
   "validate_ggchord_hierarchy": {
@@ -2874,15 +2874,15 @@
       "strict"
     ],
     "purpose": {
-      "en": "Validate explicit genome and contig relationships",
-      "zh": "校验显式 genome 与 contig 关系"
+      "zh": "校验显式 genome 与 contig 关系",
+      "en": "Validate explicit genome and contig relationships"
     },
     "alias_of": "",
     "case": "real-data",
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
-      "en": "explicit genome/contig membership; never inferred from ID prefixes",
-      "zh": "显式校验/修复/成员工作流；保留源表及报告"
+      "zh": "显式校验/修复/成员工作流；保留源表及报告",
+      "en": "explicit genome/contig membership; never inferred from ID prefixes"
     }
   },
   "view_ggchord": {
@@ -2900,15 +2900,15 @@
       "viewer"
     ],
     "purpose": {
-      "en": "Preview a ggchord plot at its intended export size",
-      "zh": "按预期导出尺寸预览图形"
+      "zh": "按预期导出尺寸预览图形",
+      "en": "Preview a ggchord plot at its intended export size"
     },
     "alias_of": "",
     "case": "chord",
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
-      "en": "target-size preview of all supported plots; temporary path output",
-      "zh": "所有受支持图；目标尺寸临时预览"
+      "zh": "所有受支持图；目标尺寸临时预览",
+      "en": "target-size preview of all supported plots; temporary path output"
     }
   },
   "waiver": {
@@ -2919,15 +2919,15 @@
     "modes": "upstream; applies only to matching supported ggplot roles",
     "parameters": [],
     "purpose": {
-      "en": "Selected ggplot2 helpers for ggchord plots",
-      "zh": "适用于 ggchord 的部分 ggplot2 辅助函数"
+      "zh": "适用于 ggchord 的部分 ggplot2 辅助函数",
+      "en": "Selected ggplot2 helpers for ggchord plots"
     },
     "alias_of": "",
     "case": "chord",
     "scope": "inherited upstream contract",
     "modes_localized": {
-      "en": "upstream; applies only to matching supported ggplot roles",
-      "zh": "上游对象/接口；遵循 ggplot2/grid 的原始契约"
+      "zh": "上游对象/接口；遵循 ggplot2/grid 的原始契约",
+      "en": "upstream; applies only to matching supported ggplot roles"
     }
   },
   "geom_track": {
@@ -2944,15 +2944,15 @@
       "mapping"
     ],
     "purpose": {
-      "en": "Source-space statistical tracks",
-      "zh": "源空间统计轨道"
+      "zh": "源空间统计轨道",
+      "en": "Source-space statistical tracks"
     },
     "alias_of": "",
     "case": "multi-sequence",
     "scope": "Foundation first implementation",
     "modes_localized": {
-      "en": "Chord/Circular/Collinear/Sankey within the first support matrix; Radial per new-view support matrix",
-      "zh": "首批基础架构范围；详见本章支持矩阵；Radial见新增视图支持矩阵"
+      "zh": "首批基础架构范围；详见本章支持矩阵；Radial见新增视图支持矩阵",
+      "en": "Chord/Circular/Collinear/Sankey within the first support matrix; Radial per new-view support matrix"
     }
   },
   "geom_track_col": {
@@ -2967,15 +2967,15 @@
       "mapping"
     ],
     "purpose": {
-      "en": "Display supplied numerical heights",
-      "zh": "显示给定数值高度"
+      "zh": "显示给定数值高度",
+      "en": "Display supplied numerical heights"
     },
     "alias_of": "",
     "case": "multi-sequence",
     "scope": "Foundation first implementation",
     "modes_localized": {
-      "en": "Chord/Circular/Collinear/Sankey; Radial per new-view support matrix",
-      "zh": "首批基础架构范围；详见本章支持矩阵；Radial见新增视图支持矩阵"
+      "zh": "首批基础架构范围；详见本章支持矩阵；Radial见新增视图支持矩阵",
+      "en": "Chord/Circular/Collinear/Sankey; Radial per new-view support matrix"
     }
   },
   "coord_sankey": {
@@ -2989,15 +2989,15 @@
       "column_gap"
     ],
     "purpose": {
-      "en": "Mirrored query-left/subject-right interval relationships",
-      "zh": "query 左列与 subject 右列镜像区间关系"
+      "zh": "query 左列与 subject 右列镜像区间关系",
+      "en": "Mirrored query-left/subject-right interval relationships"
     },
     "alias_of": "",
     "case": "multi-sequence",
     "scope": "Foundation first implementation",
     "modes_localized": {
-      "en": "Mirrored two-column relationships",
-      "zh": "首批基础架构范围；详见本章支持矩阵"
+      "zh": "首批基础架构范围；详见本章支持矩阵",
+      "en": "Mirrored two-column relationships"
     }
   },
   "coord_dotplot": {
@@ -3008,15 +3008,15 @@
     "modes": "Dotplot",
     "parameters": [],
     "purpose": {
-      "en": "Two-axis HSP projection",
-      "zh": "HSP双轴投影"
+      "zh": "HSP双轴投影",
+      "en": "Two-axis HSP projection"
     },
     "alias_of": "",
     "case": "dotplot-start",
     "scope": "Native endpoints and per-coordinate explicit support contract",
     "modes_localized": {
-      "en": "Identity HSP segments on independent native axes",
-      "zh": "独立原生轴上的identity HSP线段"
+      "zh": "独立原生轴上的identity HSP线段",
+      "en": "Identity HSP segments on independent native axes"
     }
   },
   "geom_alignment_segment": {
@@ -3027,15 +3027,15 @@
     "modes": "Dotplot",
     "parameters": [],
     "purpose": {
-      "en": "Draw complete HSP endpoints",
-      "zh": "绘制HSP完整端点"
+      "zh": "绘制HSP完整端点",
+      "en": "Draw complete HSP endpoints"
     },
     "alias_of": "",
     "case": "dotplot-start",
     "scope": "Native endpoints and per-coordinate explicit support contract",
     "modes_localized": {
-      "en": "Identity HSP segments on independent native axes",
-      "zh": "独立原生轴上的identity HSP线段"
+      "zh": "独立原生轴上的identity HSP线段",
+      "en": "Identity HSP segments on independent native axes"
     }
   },
   "coord_radial_synteny": {
@@ -3046,15 +3046,15 @@
     "modes": "Radial synteny",
     "parameters": [],
     "purpose": {
-      "en": "Project linear sequences onto radial spokes",
-      "zh": "将线性序列投影到径向辐条"
+      "zh": "将线性序列投影到径向辐条",
+      "en": "Project linear sequences onto radial spokes"
     },
     "alias_of": "",
     "case": "radial-synteny",
     "scope": "Native endpoints and per-coordinate explicit support contract",
     "modes_localized": {
-      "en": "Proportional/equal spokes, cyclic actual HSPs and shared feature/Track frames",
-      "zh": "比例或equal辐条、真实环形邻接HSP、共享Feature与Track框架"
+      "zh": "比例或equal辐条、真实环形邻接HSP、共享Feature与Track框架",
+      "en": "Proportional/equal spokes, cyclic actual HSPs and shared feature/Track frames"
     }
   },
   "ggchord_fusion": {
@@ -3071,15 +3071,15 @@
       "center_box"
     ],
     "purpose": {
-      "en": "Compose independent genomic panels",
-      "zh": "组合独立基因组面板"
+      "zh": "组合独立基因组面板",
+      "en": "Compose independent genomic panels"
     },
     "alias_of": "",
     "case": "fusion",
     "scope": "Explicit source-aware composition, physical placement and nested leaf paths; no inferred alignments or silent statistical rebuilding",
     "modes_localized": {
-      "en": "Registered genomic/character panels; eight sides, explicit boxes and nested paths",
-      "zh": "已注册基因组/字符面板；八方位、显式区域和嵌套路径"
+      "zh": "已注册基因组/字符面板；八方位、显式区域和嵌套路径",
+      "en": "Registered genomic/character panels; eight sides, explicit boxes and nested paths"
     }
   },
   "fusion_panel": {
@@ -3098,15 +3098,15 @@
       "distance"
     ],
     "purpose": {
-      "en": "Register a panel at a physical side",
-      "zh": "注册指定方位的物理面板"
+      "zh": "注册指定方位的物理面板",
+      "en": "Register a panel at a physical side"
     },
     "alias_of": "",
     "case": "fusion",
     "scope": "Explicit source-aware composition, physical placement and nested leaf paths; no inferred alignments or silent statistical rebuilding",
     "modes_localized": {
-      "en": "Registered genomic/character panels; eight sides, explicit boxes and nested paths",
-      "zh": "已注册基因组/字符面板；八方位、显式区域和嵌套路径"
+      "zh": "已注册基因组/字符面板；八方位、显式区域和嵌套路径",
+      "en": "Registered genomic/character panels; eight sides, explicit boxes and nested paths"
     }
   },
   "fusion_ribbon": {
@@ -3117,15 +3117,15 @@
     "modes": "Registered genomic plots, nested Fusion and registered character details; explicit panel/instance routing; Dotplot excluded",
     "parameters": [],
     "purpose": {
-      "en": "Connect full source intervals",
-      "zh": "连接完整来源区间"
+      "zh": "连接完整来源区间",
+      "en": "Connect full source intervals"
     },
     "alias_of": "",
     "case": "fusion",
     "scope": "F0/F1 static composition; no F2/F3 guarantee",
     "modes_localized": {
-      "en": "Registered genomic plots, nested Fusion and registered character details; explicit panel/instance routing; Dotplot excluded",
-      "zh": "已注册基因组图、嵌套 Fusion 与已注册字符细节；显式面板/实例路由；不含 Dotplot"
+      "zh": "已注册基因组图、嵌套 Fusion 与已注册字符细节；显式面板/实例路由；不含 Dotplot",
+      "en": "Registered genomic plots, nested Fusion and registered character details; explicit panel/instance routing; Dotplot excluded"
     }
   },
   "export_ggchord_fusion": {
@@ -3136,15 +3136,15 @@
     "modes": "Registered genomic plots, nested Fusion and registered character details; explicit panel/instance routing; Dotplot excluded",
     "parameters": [],
     "purpose": {
-      "en": "Export measured composition fronts and sources",
-      "zh": "导出实测组合前缘与来源"
+      "zh": "导出实测组合前缘与来源",
+      "en": "Export measured composition fronts and sources"
     },
     "alias_of": "",
     "case": "fusion",
     "scope": "F0/F1 static composition; no F2/F3 guarantee",
     "modes_localized": {
-      "en": "Registered genomic plots, nested Fusion and registered character details; explicit panel/instance routing; Dotplot excluded",
-      "zh": "已注册基因组图、嵌套 Fusion 与已注册字符细节；显式面板/实例路由；不含 Dotplot"
+      "zh": "已注册基因组图、嵌套 Fusion 与已注册字符细节；显式面板/实例路由；不含 Dotplot",
+      "en": "Registered genomic plots, nested Fusion and registered character details; explicit panel/instance routing; Dotplot excluded"
     }
   },
   "read_bedpe": {
@@ -3155,15 +3155,15 @@
     "modes": "Input adapter",
     "parameters": [],
     "purpose": {
-      "en": "Read paired genomic intervals without inventing alignment evidence",
-      "zh": "读取双端区间，保留来源且不推断缺失比对证据"
+      "zh": "读取双端区间，保留来源且不推断缺失比对证据",
+      "en": "Read paired genomic intervals without inventing alignment evidence"
     },
     "alias_of": "",
     "case": "formats",
     "scope": "Tab-separated BEDPE; raw fields and explicit missing-anchor policy",
     "modes_localized": {
-      "en": "Canonical q/s intervals, paired-anchor direction and provenance",
-      "zh": "标准q/s区间、配对锚点方向与来源"
+      "zh": "标准q/s区间、配对锚点方向与来源",
+      "en": "Canonical q/s intervals, paired-anchor direction and provenance"
     }
   },
   "as_ggchord_alignment": {
@@ -3178,15 +3178,15 @@
       "source_data"
     ],
     "purpose": {
-      "en": "Adapt existing aligned strings with exact nullable source positions",
-      "zh": "适配已有对齐字符串，保留精确且可缺失的源位置"
+      "zh": "适配已有对齐字符串，保留精确且可缺失的源位置",
+      "en": "Adapt existing aligned strings with exact nullable source positions"
     },
     "alias_of": "",
     "case": "formats",
     "scope": "Existing alignment or local excerpt; no new alignment, macro Coord projection or CDS inference",
     "modes_localized": {
-      "en": "Existing DNA/RNA/AA columns; Cartesian local cells; explicit source mapping",
-      "zh": "已有DNA/RNA/AA对齐列；Cartesian局部单元与显式源映射"
+      "zh": "已有DNA/RNA/AA对齐列；Cartesian局部单元与显式源映射",
+      "en": "Existing DNA/RNA/AA columns; Cartesian local cells; explicit source mapping"
     }
   },
   "read_aligned_fasta": {
@@ -3201,15 +3201,15 @@
       "source_file"
     ],
     "purpose": {
-      "en": "Read existing DNA/RNA/AA alignment characters without computing a new alignment",
-      "zh": "读取已有DNA/RNA/AA对齐字符，不计算新比对"
+      "zh": "读取已有DNA/RNA/AA对齐字符，不计算新比对",
+      "en": "Read existing DNA/RNA/AA alignment characters without computing a new alignment"
     },
     "alias_of": "",
     "case": "formats",
     "scope": "Existing alignment or local excerpt; no new alignment, macro Coord projection or CDS inference",
     "modes_localized": {
-      "en": "Existing DNA/RNA/AA columns; Cartesian local cells; explicit source mapping",
-      "zh": "已有DNA/RNA/AA对齐列；Cartesian局部单元与显式源映射"
+      "zh": "已有DNA/RNA/AA对齐列；Cartesian局部单元与显式源映射",
+      "en": "Existing DNA/RNA/AA columns; Cartesian local cells; explicit source mapping"
     }
   },
   "map_alignment_position": {
@@ -3224,15 +3224,15 @@
       "inverse"
     ],
     "purpose": {
-      "en": "Look up exact alignment columns and source positions in a selected row",
-      "zh": "在选定行中精确查找对齐列与源位置"
+      "zh": "在选定行中精确查找对齐列与源位置",
+      "en": "Look up exact alignment columns and source positions in a selected row"
     },
     "alias_of": "",
     "case": "formats",
     "scope": "Existing alignment or local excerpt; no new alignment, macro Coord projection or CDS inference",
     "modes_localized": {
-      "en": "Existing DNA/RNA/AA columns; Cartesian local cells; explicit source mapping",
-      "zh": "已有DNA/RNA/AA对齐列；Cartesian局部单元与显式源映射"
+      "zh": "已有DNA/RNA/AA对齐列；Cartesian局部单元与显式源映射",
+      "en": "Existing DNA/RNA/AA columns; Cartesian local cells; explicit source mapping"
     }
   },
   "geom_residue": {
@@ -3246,15 +3246,15 @@
       "overflow"
     ],
     "purpose": {
-      "en": "Draw local characters with measured physical space and explicit tile/error policy",
-      "zh": "按实际物理空间绘制局部字符，明确选择色格或报错策略"
+      "zh": "按实际物理空间绘制局部字符，明确选择色格或报错策略",
+      "en": "Draw local characters with measured physical space and explicit tile/error policy"
     },
     "alias_of": "",
     "case": "formats",
     "scope": "Existing alignment or local excerpt; no new alignment, macro Coord projection or CDS inference",
     "modes_localized": {
-      "en": "Existing DNA/RNA/AA columns; Cartesian local cells; explicit source mapping",
-      "zh": "已有DNA/RNA/AA对齐列；Cartesian局部单元与显式源映射"
+      "zh": "已有DNA/RNA/AA对齐列；Cartesian局部单元与显式源映射",
+      "en": "Existing DNA/RNA/AA columns; Cartesian local cells; explicit source mapping"
     }
   },
   "magnify_ggchord": {
@@ -3273,15 +3273,15 @@
       "allow_overlap"
     ],
     "purpose": {
-      "en": "Connect a real source interval to an explicit independent local detail plot",
-      "zh": "连接真实源区间与显式独立构建的局部细节图"
+      "zh": "连接真实源区间与显式独立构建的局部细节图",
+      "en": "Connect a real source interval to an explicit independent local detail plot"
     },
     "alias_of": "",
     "case": "fusion",
     "scope": "Explicit source-aware composition, physical placement and nested leaf paths; no inferred alignments or silent statistical rebuilding",
     "modes_localized": {
-      "en": "Registered genomic plots, nested Fusion and registered character details; explicit panel/instance routing; Dotplot excluded",
-      "zh": "已注册基因组图、嵌套 Fusion 与已注册字符细节；显式面板/实例路由；不含 Dotplot"
+      "zh": "已注册基因组图、嵌套 Fusion 与已注册字符细节；显式面板/实例路由；不含 Dotplot",
+      "en": "Registered genomic plots, nested Fusion and registered character details; explicit panel/instance routing; Dotplot excluded"
     }
   },
   "adapt_ggchord": {
@@ -3297,15 +3297,15 @@
       "min_text_size"
     ],
     "purpose": {
-      "en": "Opt into bounded theme scaling and joint guide layout at the target size",
-      "zh": "按目标尺寸启用有界主题缩放与图例联合排布"
+      "zh": "按目标尺寸启用有界主题缩放与图例联合排布",
+      "en": "Opt into bounded theme scaling and joint guide layout at the target size"
     },
     "alias_of": "",
     "case": "styling",
     "scope": "native guides and theme defaults within individual plots and Fusion panels",
     "modes_localized": {
-      "en": "fixed/scale/adaptive; explicit settings remain authoritative; no global collision guarantee",
-      "zh": "fixed/scale/adaptive；显式设置优先，不保证全局零碰撞"
+      "zh": "fixed/scale/adaptive；显式设置优先，不保证全局零碰撞",
+      "en": "fixed/scale/adaptive; explicit settings remain authoritative; no global collision guarantee"
     }
   },
   "register_ggchord_alignment": {
@@ -3319,15 +3319,15 @@
       "data"
     ],
     "purpose": {
-      "en": "Register exact character/source positions for independent Fusion details",
-      "zh": "注册精确字符/源位置用于独立Fusion细节"
+      "zh": "注册精确字符/源位置用于独立Fusion细节",
+      "en": "Register exact character/source positions for independent Fusion details"
     },
     "alias_of": "",
     "case": "fusion",
     "scope": "Exact source characters and observed codons; no inferred alignment or missing phase",
     "modes_localized": {
-      "en": "Explicit source/column map; independent Cartesian detail; complete observed codons",
-      "zh": "显式源/对齐列映射；独立Cartesian细节；已观测完整codon"
+      "zh": "显式源/对齐列映射；独立Cartesian细节；已观测完整codon",
+      "en": "Explicit source/column map; independent Cartesian detail; complete observed codons"
     }
   },
   "translate_ggchord_cds": {
@@ -3344,15 +3344,15 @@
       "ambiguous"
     ],
     "purpose": {
-      "en": "Translate real CDS strings with codon provenance using optional Biostrings",
-      "zh": "通过可选Biostrings翻译真实CDS并保留codon来源"
+      "zh": "通过可选Biostrings翻译真实CDS并保留codon来源",
+      "en": "Translate real CDS strings with codon provenance using optional Biostrings"
     },
     "alias_of": "",
     "case": "formats",
     "scope": "Exact source characters and observed codons; no inferred alignment or missing phase",
     "modes_localized": {
-      "en": "Explicit source/column map; independent Cartesian detail; complete observed codons",
-      "zh": "显式源/对齐列映射；独立Cartesian细节；已观测完整codon"
+      "zh": "显式源/对齐列映射；独立Cartesian细节；已观测完整codon",
+      "en": "Explicit source/column map; independent Cartesian detail; complete observed codons"
     }
   },
   "read_bedgraph": {
@@ -3367,15 +3367,15 @@
       "source_file"
     ],
     "purpose": {
-      "en": "Import continuous interval signals without inferring units",
-      "zh": "导入连续区间信号，显式保留坐标及单位边界"
+      "zh": "导入连续区间信号，显式保留坐标及单位边界",
+      "en": "Import continuous interval signals without inferring units"
     },
     "alias_of": "",
     "case": "formats",
     "scope": "signal import with explicit source semantics",
     "modes_localized": {
-      "en": "quantitative Track input; BigWig optional on supported platforms",
-      "zh": "定量轨道输入；BigWig 为支持平台上的可选依赖"
+      "zh": "定量轨道输入；BigWig 为支持平台上的可选依赖",
+      "en": "quantitative Track input; BigWig optional on supported platforms"
     }
   },
   "read_bigwig": {
@@ -3391,15 +3391,15 @@
       "source_file"
     ],
     "purpose": {
-      "en": "Import continuous interval signals without inferring units",
-      "zh": "导入连续区间信号，显式保留坐标及单位边界"
+      "zh": "导入连续区间信号，显式保留坐标及单位边界",
+      "en": "Import continuous interval signals without inferring units"
     },
     "alias_of": "",
     "case": "formats",
     "scope": "signal import with explicit source semantics",
     "modes_localized": {
-      "en": "quantitative Track input; BigWig optional on supported platforms",
-      "zh": "定量轨道输入；BigWig 为支持平台上的可选依赖"
+      "zh": "定量轨道输入；BigWig 为支持平台上的可选依赖",
+      "en": "quantitative Track input; BigWig optional on supported platforms"
     }
   },
   "read_vcf": {
@@ -3416,15 +3416,15 @@
       "source_file"
     ],
     "purpose": {
-      "en": "Import variant records and explicitly decoded structural breakpoints",
-      "zh": "导入变异记录及显式解码的结构断点"
+      "zh": "导入变异记录及显式解码的结构断点",
+      "en": "Import variant records and explicitly decoded structural breakpoints"
     },
     "alias_of": "",
     "case": "formats",
     "scope": "reference allele spans and separately decoded uncertainty intervals",
     "modes_localized": {
-      "en": "VCF; BCF with explicit pysam Python; optional structural decoder",
-      "zh": "VCF；BCF 需显式 pysam Python；结构解码为可选依赖"
+      "zh": "VCF；BCF 需显式 pysam Python；结构解码为可选依赖",
+      "en": "VCF; BCF with explicit pysam Python; optional structural decoder"
     }
   },
   "read_maf": {
@@ -3441,15 +3441,15 @@
       "source_file"
     ],
     "purpose": {
-      "en": "Read existing genomic alignment blocks and source coordinates",
-      "zh": "读取已有基因组对齐块及真实源坐标"
+      "zh": "读取已有基因组对齐块及真实源坐标",
+      "en": "Read existing genomic alignment blocks and source coordinates"
     },
     "alias_of": "",
     "case": "formats",
     "scope": "existing alignment source input with explicit coordinate and identity boundaries",
     "modes_localized": {
-      "en": "optional Biopython; MAF cells and chain intervals",
-      "zh": "可选 Biopython；MAF 字符单元与 chain 区间"
+      "zh": "可选 Biopython；MAF 字符单元与 chain 区间",
+      "en": "optional Biopython; MAF cells and chain intervals"
     }
   },
   "read_chain": {
@@ -3468,15 +3468,15 @@
       "source_file"
     ],
     "purpose": {
-      "en": "Read existing genomic alignment blocks and source coordinates",
-      "zh": "读取已有基因组对齐块及真实源坐标"
+      "zh": "读取已有基因组对齐块及真实源坐标",
+      "en": "Read existing genomic alignment blocks and source coordinates"
     },
     "alias_of": "",
     "case": "formats",
     "scope": "existing alignment source input with explicit coordinate and identity boundaries",
     "modes_localized": {
-      "en": "optional Biopython; MAF cells and chain intervals",
-      "zh": "可选 Biopython；MAF 字符单元与 chain 区间"
+      "zh": "可选 Biopython；MAF 字符单元与 chain 区间",
+      "en": "optional Biopython; MAF cells and chain intervals"
     }
   },
   "read_delta": {
@@ -3494,15 +3494,15 @@
       "source_file"
     ],
     "purpose": {
-      "en": "Read existing delta alignments through an optional native decoder",
-      "zh": "通过可选原生解码器读取已有 delta 比对"
+      "zh": "通过可选原生解码器读取已有 delta 比对",
+      "en": "Read existing delta alignments through an optional native decoder"
     },
     "alias_of": "",
     "case": "formats",
     "scope": "source interval pairs and native metrics, without character reconstruction",
     "modes_localized": {
-      "en": "optional show-coords; bp coordinates and declared alignment metric unit",
-      "zh": "可选 show-coords；bp 坐标与独立声明的比对统计单位"
+      "zh": "可选 show-coords；bp 坐标与独立声明的比对统计单位",
+      "en": "optional show-coords; bp coordinates and declared alignment metric unit"
     }
   },
   "read_signature_matches": {
@@ -3518,15 +3518,15 @@
       "source_file"
     ],
     "purpose": {
-      "en": "Read existing protein signature locations and source metadata",
-      "zh": "读取已有蛋白 signature 位置及源元数据"
+      "zh": "读取已有蛋白 signature 位置及源元数据",
+      "en": "Read existing protein signature locations and source metadata"
     },
     "alias_of": "",
     "case": "formats",
     "scope": "existing annotation input, no new signature analysis",
     "modes_localized": {
-      "en": "AA features; source-native scores; JSON needs optional jsonlite",
-      "zh": "AA feature；源原生分数；JSON 需可选 jsonlite"
+      "zh": "AA feature；源原生分数；JSON 需可选 jsonlite",
+      "en": "AA features; source-native scores; JSON needs optional jsonlite"
     }
   },
   "read_feature_relations": {
@@ -3544,15 +3544,15 @@
       "source_file"
     ],
     "purpose": {
-      "en": "Read precomputed feature pairs and memberships",
-      "zh": "读取预计算 feature 对及成员关系"
+      "zh": "读取预计算 feature 对及成员关系",
+      "en": "Read precomputed feature pairs and memberships"
     },
     "alias_of": "",
     "case": "formats",
     "scope": "existing relations only; no inference or clique expansion",
     "modes_localized": {
-      "en": "Exact feature IDs; contiguous supplied anchors; no full lengths inferred",
-      "zh": "精确 feature ID；显式连续锚点；不推断完整长度"
+      "zh": "精确 feature ID；显式连续锚点；不推断完整长度",
+      "en": "Exact feature IDs; contiguous supplied anchors; no full lengths inferred"
     }
   }
 }

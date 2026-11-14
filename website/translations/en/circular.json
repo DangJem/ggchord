@@ -1,0 +1,65 @@
+{
+  "source_sha256": "216a5fec0a30972ab4351b662ddb7950897564baea76918dd96b2e2dfd06e0fa",
+  "blocks": {
+    "0": {
+      "source_sha256": "53f3d6a2361e13c60d016f1278173d17f5889690a6f34f6660b49e0318abbef7",
+      "status": "reviewed",
+      "translation": "## Task and result ⟦shared:0⟧\n"
+    },
+    "1": {
+      "source_sha256": "fe2926d88bf78cd41fc4b0f062cddab31a97d6db7e0c107dab5eb155178dbb38",
+      "status": "reviewed",
+      "translation": "Lengths and prepared annotations are sufficient to draw. Sequence characters are needed for recognition, searches or DNA-derived tracks.\n"
+    },
+    "3": {
+      "source_sha256": "75f7a24507b2ba3a38cdd5766c278490a27e79ee6bd32ae743bd2fdf734334e8",
+      "status": "reviewed",
+      "translation": "## Function index ⟦shared:0⟧\n"
+    },
+    "4": {
+      "source_sha256": "cc27bf688653ee786289f724a6e53933ebdf354d5f0f16e756d3868642acc8eb",
+      "status": "reviewed",
+      "translation": "- [Draw your first circular map](⟦shared:0⟧)\n"
+    },
+    "5": {
+      "source_sha256": "a249f76be54ecc1078429e0e2800d1eabdc58a69c28da1521cfc3992f3ce0e8f",
+      "status": "reviewed",
+      "translation": "- [Single-sequence length, DNA and annotations](⟦shared:0⟧)\n"
+    },
+    "6": {
+      "source_sha256": "fb396f8c1a9d3a1b8ae1ac36d55eff3b61ffd70c0ff7187413f17bb1b117a607",
+      "status": "reviewed",
+      "translation": "- [Circular backbones, centre text and annotation lanes](⟦shared:0⟧)\n"
+    },
+    "7": {
+      "source_sha256": "74650fba65a0f882c0ca3102cac1708a3bfa2e8b3989ecd16abf1d1a56a38e60",
+      "status": "reviewed",
+      "translation": "- [Fixed circular labels and automatic fitting](⟦shared:0⟧)\n"
+    },
+    "8": {
+      "source_sha256": "cb3ff263dd4327b8ece720cb19f3338697d8082a9b2c12fc6f6ab54928220d7d",
+      "status": "reviewed",
+      "translation": "- [Quantitative tracks](⟦shared:0⟧)\n"
+    },
+    "9": {
+      "source_sha256": "75cacfc1ca4c13019c8a4df3013e90daaddd088a5958921585821c8142ae1297",
+      "status": "reviewed",
+      "translation": "- [Complete pUC19 and pETDuet-1 cases](⟦shared:0⟧)\n"
+    },
+    "10": {
+      "source_sha256": "aa3ae1e5c150aa48eb45757c973a5d194093dfabff13cd06d5853c1e346b6e19",
+      "status": "reviewed",
+      "translation": "## Inputs and boundaries ⟦shared:0⟧\n"
+    },
+    "11": {
+      "source_sha256": "877b6ea6c51d26335d74b9558fcd0abf61303c431f640003ae548777f2941d22",
+      "status": "reviewed",
+      "translation": "Provide source IDs, complete lengths and the standard tables required by your layers. Keep native bp/aa units consistent. Check [input conventions](⟦shared:0⟧) and [compatibility](⟦shared:1⟧).\n"
+    },
+    "12": {
+      "source_sha256": "27b898ed1882113a440a57a92d1db896493993f36fc21483fc043f220e69fdb8",
+      "status": "reviewed",
+      "translation": "[pETDuet-1: dense layout](⟦shared:0⟧) · [13 complete reference maps](⟦shared:1⟧)\n"
+    }
+  }
+}

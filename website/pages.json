@@ -2,8 +2,8 @@
   {
     "slug": "index",
     "title": {
-      "en": "ggchord",
-      "zh": "ggchord"
+      "zh": "ggchord",
+      "en": "ggchord"
     },
     "group": "start",
     "id": "index",
@@ -1106,8 +1106,8 @@
   {
     "slug": "alignments",
     "title": {
-      "en": "Import nucleotide and protein alignments",
-      "zh": "导入核酸和蛋白比对"
+      "zh": "导入核酸和蛋白比对",
+      "en": "Import nucleotide and protein alignments"
     },
     "group": "article",
     "id": "alignments",
@@ -1192,8 +1192,8 @@
   {
     "slug": "annotations",
     "title": {
-      "en": "Features, stacking and genomic decoration",
-      "zh": "绘制注释与处理重叠"
+      "zh": "绘制注释与处理重叠",
+      "en": "Features, stacking and genomic decoration"
     },
     "group": "article",
     "id": "annotations",
@@ -1294,8 +1294,8 @@
   {
     "slug": "tracks",
     "title": {
-      "en": "Quantitative tracks",
-      "zh": "添加数据轨道"
+      "zh": "添加数据轨道",
+      "en": "Quantitative tracks"
     },
     "group": "guide",
     "id": "tracks",
@@ -1363,8 +1363,8 @@
   {
     "slug": "styling",
     "title": {
-      "en": "Mappings, scales, guides and themes",
-      "zh": "配置配色、图例和主题"
+      "zh": "配置配色、图例和主题",
+      "en": "Mappings, scales, guides and themes"
     },
     "group": "article",
     "id": "styling",
@@ -1532,8 +1532,8 @@
   {
     "slug": "reference",
     "title": {
-      "en": "Function reference",
-      "zh": "函数参考文档"
+      "zh": "函数参考文档",
+      "en": "Function reference"
     },
     "group": "reference",
     "id": "reference",
@@ -1556,8 +1556,8 @@
   {
     "slug": "gallery",
     "title": {
-      "en": "Reproducible gallery",
-      "zh": "示例图集"
+      "zh": "示例图集",
+      "en": "Reproducible gallery"
     },
     "group": "guide",
     "id": "gallery",
@@ -1576,8 +1576,8 @@
   {
     "slug": "faq",
     "title": {
-      "en": "Frequently asked questions",
-      "zh": "常见问题"
+      "zh": "常见问题",
+      "en": "Frequently asked questions"
     },
     "group": "guide",
     "id": "faq",
@@ -2336,8 +2336,8 @@
   {
     "slug": "foundation",
     "title": {
-      "en": "Source instances, tracks and new views",
-      "zh": "来源实例、轨道与新视图"
+      "zh": "来源实例、轨道与新视图",
+      "en": "Source instances, tracks and new views"
     },
     "group": "guide",
     "id": "foundation",
@@ -2369,8 +2369,8 @@
   {
     "slug": "view-expansion",
     "title": {
-      "en": "HSP Dotplots and radial synteny",
-      "zh": "HSP点阵图与径向共线性"
+      "zh": "HSP点阵图与径向共线性",
+      "en": "HSP Dotplots and radial synteny"
     },
     "group": "article",
     "id": "view-expansion",

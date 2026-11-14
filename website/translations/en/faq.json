@@ -1,0 +1,75 @@
+{
+  "source_sha256": "afbd517d08aac373b2141aa307e9e39b58147e829ed09eceef738ef3a587bea5",
+  "blocks": {
+    "0": {
+      "source_sha256": "d757c7b933b7c8400dc4758085bbf8544546a3510eca0ce2cf4a5c8eec0e3ddc",
+      "status": "reviewed",
+      "translation": "## Why are labels different after resizing? ⟦shared:0⟧\n"
+    },
+    "1": {
+      "source_sha256": "2d2be2e049a73d2e2da3be0a7efd3e154a71eac2045aeaecc5f38bb8fb78069e",
+      "status": "reviewed",
+      "translation": "The available physical space changed. Use [explicit-size preview and saving](⟦shared:0⟧).\nCheck hidden-label diagnostics; do not infer missing input rows from absent text.\n"
+    },
+    "2": {
+      "source_sha256": "93a63214a48312e08f66dc7129c08c812f3590752a3531b41efe761beebef837",
+      "status": "reviewed",
+      "translation": "## How do I find supported parameters? ⟦shared:0⟧\n"
+    },
+    "3": {
+      "source_sha256": "7460134b58b43ba9357f0180498ca395873f31df170fa1f8bbbe3f30475b77b0",
+      "status": "reviewed",
+      "translation": "Use the [function reference](⟦shared:0⟧) to check argument meanings and defaults. Put mappings in ⟦shared:1⟧, fixed styles on the layer, and colour rules in ⟦shared:2⟧; see [plotting concepts](⟦shared:3⟧). Functions accept both ⟦shared:4⟧ and ⟦shared:5⟧ spellings; examples use ⟦shared:4⟧.\n"
+    },
+    "4": {
+      "source_sha256": "f0d9ab3dd0e0df66a7b60d9180522f5c53f1e2860c3184f5e203dc3415686563",
+      "status": "reviewed",
+      "translation": "## Why is a feature rejected as a gene? ⟦shared:0⟧\n"
+    },
+    "5": {
+      "source_sha256": "2e44a3828122e45d113718d1bec41186ebcdb98617b8c854f460bad653cbc811",
+      "status": "reviewed",
+      "translation": "The gene shortcut requires known ⟦shared:0⟧/⟦shared:1⟧ strand. Keep unknown strand in a general\nfeature layer; do not guess ⟦shared:0⟧. Protein backbones accept native aa coordinates; CDS projection is needed to place those intervals on nucleotide backbones.\n"
+    },
+    "6": {
+      "source_sha256": "ea962069359788fed670f56c123fbf59683626ed58763d9c892026e392a3cc52",
+      "status": "reviewed",
+      "translation": "## Why is a ribbon missing in linear mode? ⟦shared:0⟧\n"
+    },
+    "7": {
+      "source_sha256": "2c5b22b10db992680de838e5b4336045bb65b3d4464fa008299da3d53d531a11",
+      "status": "reviewed",
+      "translation": "By default ribbons connect adjacent displayed sequences. Inspect pair selection,\nclipping and validation. Use explicit ⟦shared:0⟧ or ⟦shared:1⟧ deliberately.\nThis default does not remove original input records.\n"
+    },
+    "8": {
+      "source_sha256": "6114d436b2311dc1cf73706292e69d038c203cee279af530a097d02ad494e902",
+      "status": "reviewed",
+      "translation": "## Can the package compute alignments or validate primer experiments? ⟦shared:0⟧\n"
+    },
+    "9": {
+      "source_sha256": "02a7ac18daf203a348bd7f8819cb68f402528fba52ccde1e982074efbda4d479",
+      "status": "reviewed",
+      "translation": "It visualizes supplied alignments and computational search results. It does not\nrun BLAST, infer clusters from names or validate wet-lab outcomes. Search confidence\nis not a probability. See [recognition limitations](⟦shared:0⟧).\n"
+    },
+    "10": {
+      "source_sha256": "fa94cf44d886b3fc2d3a35f364f006f7f4dd921166ac2d37433e87aa3af50731",
+      "status": "reviewed",
+      "translation": "## Is a measured diagnostic a release certification? ⟦shared:0⟧\n"
+    },
+    "11": {
+      "source_sha256": "ae7b30fb0e49f03899479d039501efb49ca1151a1a49064beea2ad344ee77a38",
+      "status": "reviewed",
+      "translation": "No. It describes a requested render. Platform/device/font checks, full vignettes\nand package checks belong to an explicitly authorized release. See the release acceptance record for the actual scope of verification.\n"
+    },
+    "12": {
+      "source_sha256": "45b19ffaebec8d89773535aff796dd474d832a8f73fe64a721f8256f081774cf",
+      "status": "reviewed",
+      "translation": "## Where should I report a problem? ⟦shared:0⟧\n"
+    },
+    "13": {
+      "source_sha256": "af0884a81d9882bd0f6b9901b5bee3c22a03a0065780330624436ac12d361a09",
+      "status": "reviewed",
+      "translation": "Use the [issue tracker](⟦shared:0⟧) with a small input,\npackage/ggplot2 versions, code, intended width/height, device and diagnostic output.\nAvoid attaching private sequence data; a synthetic reproduction is usually enough.\n"
+    }
+  }
+}

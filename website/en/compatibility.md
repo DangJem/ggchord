@@ -79,3 +79,5 @@ constraints; no policy is applied by default. Facets, arbitrary custom grobs,
 outer Fusion allocations and a global label solver are outside this scope.
 
 [Magnification](fusion-details.html#multiple-details) supports independent registered details with explicit per-row targets, eight named sides, nested leaf paths and free boxes. Deliberate overlap is opt-in; global avoidance is separate.
+
+Fusion also supports Sankey/Radial, layered compositions and eight named sides or explicit boxes. Leaf-panel paths preserve independent sources, and deliberate overlaps export their paint order. Dotplot still requires independent axis registration. See [Advanced boxes and nesting](fusion-layout.html#advanced-placement).

@@ -1,0 +1,140 @@
+{
+  "source_sha256": "407ad23261e9b076af9f5b0bcd2aa1f8519f3738b159542033d4246898cff860",
+  "strings": {
+    "0/title": {
+      "source_sha256": "7bdc553adea16b48c88feea8f2e4eae8ff26241266c5971b00607c7da1c937e7",
+      "status": "reviewed",
+      "translation": "Four modules and six coordinates"
+    },
+    "1/title": {
+      "source_sha256": "9e4135fdfb8ba76a5068c82178b41e47db612349ddf56c864f477952acd5ddd3",
+      "status": "reviewed",
+      "translation": "Original-record comparisons"
+    },
+    "2/title": {
+      "source_sha256": "6693a16f4b1ca8078d89c73b7d48c955e8b5521c034c9d65a4c108efeae74f2a",
+      "status": "reviewed",
+      "translation": "Complete circular annotation"
+    },
+    "3/title": {
+      "source_sha256": "3e0e57a6ed435183710db3d7630f854b451dd398dfda2a729030af6305970b9e",
+      "status": "reviewed",
+      "translation": "Validation, cleaning and hierarchy"
+    },
+    "4/title": {
+      "source_sha256": "d47f9207d490984b803a604cfaa11ad80b18e3b74e072861ba4d84a154088546",
+      "status": "reviewed",
+      "translation": "Formats and adapters"
+    },
+    "5/title": {
+      "source_sha256": "0d1301e6c15658ac9bc3178f00475b00efb3829cf9eb245efcc85e9965063075",
+      "status": "reviewed",
+      "translation": "Link preparation and statistics"
+    },
+    "6/title": {
+      "source_sha256": "485b6f7eecbe34d9fe8a654c7d168c07d647fb3df873fb795b76b48218ff46af",
+      "status": "reviewed",
+      "translation": "Interval and point links"
+    },
+    "7/title": {
+      "source_sha256": "32a011b272fbe25aa390130d696429400ae0fb7828069d12ce9db071c641067d",
+      "status": "reviewed",
+      "translation": "Features and Position"
+    },
+    "8/title": {
+      "source_sha256": "289ebc98ab11797a336243965cc5c86b1efb005a00bcdb8087ac89ec3c9275f0",
+      "status": "reviewed",
+      "translation": "Automatic and fixed labels"
+    },
+    "9/title": {
+      "source_sha256": "a128da8351fbaa227d4abc5002b544219827542b11afb8559bb693d7983bc88b",
+      "status": "reviewed",
+      "translation": "Axes, scale bars and regions"
+    },
+    "10/title": {
+      "source_sha256": "042828703a725a3a4709a977d8226bd3b04cf4467e8b373792fc7b4bc3560dbd",
+      "status": "reviewed",
+      "translation": "Quantitative tracks and domains"
+    },
+    "11/title": {
+      "source_sha256": "209fd4dda3d70e367a93c14d3a935f504568242c8fbcb3c0f6941311c1c45386",
+      "status": "reviewed",
+      "translation": "Primers, sites and feature search"
+    },
+    "12/title": {
+      "source_sha256": "f0425fd7af4981b749b22257ba65bc2b53ba1934e0f8588c5269e60c6a4c59ad",
+      "status": "reviewed",
+      "translation": "CDS and link projection"
+    },
+    "13/title": {
+      "source_sha256": "8946212bd16dba0ebcfeac8259dd0c44b459b5a5ba4695a9be2525dc18bee8a7",
+      "status": "reviewed",
+      "translation": "Explicit clusters and loci"
+    },
+    "14/title": {
+      "source_sha256": "af407d91c012daa4b944f1a426efdc8b4cca5dfcca9d5ab0858ce7c1b918a97c",
+      "status": "reviewed",
+      "translation": "Focus, segments and source mapping"
+    },
+    "15/title": {
+      "source_sha256": "bf8df30097797c827aee0bc31e2c2d1f0fe8df5638086d500731d1e3ec6e7957",
+      "status": "reviewed",
+      "translation": "Scales, guides and themes"
+    },
+    "16/title": {
+      "source_sha256": "c9d7ee360abe33b55938870dbda99b0b22a3fcc1063e8d1195a3f09dd9579d1f",
+      "status": "reviewed",
+      "translation": "Preview, results and ordering"
+    },
+    "17/title": {
+      "source_sha256": "471ec02a157340366efd3988682c61b373d6bc3c166f9fe618d1a340ee5e1307",
+      "status": "reviewed",
+      "translation": "Collinear alignment and display orientation"
+    },
+    "18/title": {
+      "source_sha256": "8942c2d7798b122427f350a41cf2dd8bc439ea98d93c491162c7469dad076e69",
+      "status": "reviewed",
+      "translation": "Real gene arrow styles"
+    },
+    "19/title": {
+      "source_sha256": "72d04a6b3116bfdf7b1612b830254e674df3300f3cd45b7a731eb5e2e8d8e202",
+      "status": "reviewed",
+      "translation": "Shared branches and point paths"
+    },
+    "20/title": {
+      "source_sha256": "c1375709e91cd82be421fa528b0a5271f3cf4db1b1e1bc5e8453d389ea32ec90",
+      "status": "reviewed",
+      "translation": "Circular Layers"
+    },
+    "21/title": {
+      "source_sha256": "7506bc1a1419cc20494cae8422b86a230ed34f0df79362c7135fa9517251301d",
+      "status": "reviewed",
+      "translation": "Circular Labels"
+    },
+    "22/title": {
+      "source_sha256": "338357367f7e1468f7295638ad2ba18ba9d6826ffba0d0f83c1869fb11f8abf5",
+      "status": "reviewed",
+      "translation": "Primers"
+    },
+    "23/title": {
+      "source_sha256": "5a7ac2dd0120fd736454fb4f5784820c5d3957b71e74693248b1fff014eea9b3",
+      "status": "reviewed",
+      "translation": "Restriction Sites"
+    },
+    "24/title": {
+      "source_sha256": "4c393af68da2fc4bbf72fa68230c19f48fe4134f980f780dbddbdf810215ea3c",
+      "status": "reviewed",
+      "translation": "Scale Families"
+    },
+    "25/title": {
+      "source_sha256": "b695ab188f4859244ca1a3e1f8605c677a82973a6cbadada7305a67ddd4ef25e",
+      "status": "reviewed",
+      "translation": "Ribbon Statistics"
+    },
+    "26/title": {
+      "source_sha256": "22279174211dc5d7054d15eb607e337f589dac05ebea170698eaaad75f21bc2d",
+      "status": "reviewed",
+      "translation": "Workflow Tools"
+    }
+  }
+}

@@ -2,7 +2,6 @@
 Compute GC fraction in 100 bp
 windows of bundled pUC19. The final shorter window uses its actual base count.
 
-
 {{code:trackdata,frontgctable}}
 
 {{output:frontgctable}}
@@ -26,7 +25,7 @@ show interval categories, lines connect observations, `geom_track_col()` encodes
 requires explicit binwidth/breaks through the bin workflow. Sharing a domain does not require sharing a spatial band.
 
 ## Inspect retention and limits {#diagnostics}
-The export's `track_registry` and `track_diagnostics` record domains, physical
+`export_ggchord_layout()` returns `track_registry` and `track_diagnostics` record domains, physical
 sizes, native offsets and clipping. Omitted/clipped rows do not mean zero values.
 Focus tracks with `focus_ggchord_track()` using the same windows.
 
@@ -70,7 +69,7 @@ Compare with the 10 mm band above. Keep the same 9 × 8 inch device, windows, co
 {{code:comparetrackthin}}
 {{figure:comparetrackthin}}
 
-Colours still encode the same GC fractions. Only physical band width shrinks. The geom draws interval tiles and the Position controls band width; neither changes base composition. Try 6 mm while retaining export dimensions. Bar heights are separately controlled by `track_value` and its value scale; reducing band width is not numerical normalization.
+Colours still encode the same GC fractions. Only physical band width shrinks. `geom_track_tile()` draws interval tiles and the Position controls band width; neither changes base composition. Try 6 mm while retaining export dimensions. Bar heights are separately controlled by `track_value` and its value scale; reducing band width is not numerical normalization.
 
 ## Result checks {#check-result}
 GC in bins lies between 0 and 1; each row is an actual window and the last may be shorter than 100 bp. Bars and line share the same 0–1 fraction scale.

@@ -40,7 +40,7 @@ def main():
             for i,token in enumerate(field['tokens']):zh=zh.replace('⟦'+str(i)+'⟧',token)
             for parameter in field['field'][9:].split(','):values[parameter.strip()]={'en':plain(en),'zh':plain(zh)}
         contracts[path]=values
-    for lang in ('en','zh'):
+    for lang in ('zh',):
         zh=lang=='zh'
         content=[('本页按用途汇总当前完整函数参数，不替代用法说明。默认表达式来自实际 formals，说明来自同版本 Rd；NULL 可能在布局阶段解析为默认值。候选向量既可能供 match.arg 选择，也可能表示同时启用多个选项，须阅读说明。上游重导出遵循其自身帮助。' if zh else 'Browse complete current parameters by purpose. Defaults come from actual formals and descriptions from matching Rd. NULL can resolve during layout. A choice vector may mean match.arg alternatives or multiple enabled options; read its description. Upstream reexports follow their own help.'),
          ('\n优先从[功能索引](reference/index.html)进入用法，重要参数对照见对应说明，完整签名和额外参数转发见函数参考。以下按需展开；不会把上游 ... 的全部可能参数伪装成 ggchord 的独立 API。\n' if zh else '\nStart with the [function index](reference/index.html). Examples compare important parameters; references define full signatures and forwarding. Expand functions as needed; upstream dots are not presented as separate ggchord APIs.\n')]
@@ -64,7 +64,7 @@ def main():
                     default_text=default or ('无形式默认；是否必需见契约' if zh else 'No formal default; requiredness follows the contract')
                     cells=[f'`{parameter}`',f'`{default_text}`',kind(name,parameter,default,lang),description]
                     content+=['| '+' | '.join(c.replace('|','\\|').replace('\n',' ') for c in cells)+' |']
-                    if lang=='en':records.append(dict(api=name,parameter=parameter,default=default,type=kind(name,parameter,default,'en'),constraint=description,source=str(path.relative_to(ROOT)),requiredness='see API contract; not inferred from formals',type_source='explicit API override' if parameter in json.loads((WEB/'parameter-overrides.json').read_text()).get(name,{}) else 'canonical Rd argument contract',units='see canonical argument contract'))
+                    records.append(dict(api=name,parameter=parameter,default=default,type=kind(name,parameter,default,'en'),constraint=('Count bars require baseline 0; every nonzero value is rejected. Use geom_track_col() for supplied values and nonzero baselines.' if name=='geom_track_bar' and parameter=='baseline' else source.get(parameter,{}).get('en','Defined by inherited arguments and upstream contract; see full reference.')),source=str(path.relative_to(ROOT)),requiredness='see API contract; not inferred from formals',type_source='explicit API override' if parameter in json.loads((WEB/'parameter-overrides.json').read_text()).get(name,{}) else 'canonical Rd argument contract',units='see canonical argument contract'))
                 content+=['\n</details>\n']
         content += ['\n## '+('上游重导出与对象' if zh else 'Upstream reexports and objects')+' {#upstream}\n',
                     ('这些入口保留上游 ggplot2/grid 语义；它们不是新增的 ggchord 图层。after_stat/after_scale 的阶段不同，不能由 identical 结果推断可互换。\n' if zh else 'These retain upstream ggplot2/grid semantics rather than defining new ggchord layers. After_stat and after_scale differ by stage even if identical compares their R objects equal.\n')]
@@ -77,7 +77,7 @@ def main():
             for parameter,default in (entry['parameters'] or {}).items():
                 note=('遵循上游接口；具体类型、单位和允许值见其帮助。' if zh else 'Follow upstream help for types, units and accepted values.')
                 content += ['| `'+parameter+'` | `'+(default or ('无形式默认；见上游契约' if zh else 'No formal default; see upstream contract'))+'` | '+kind(name,parameter,default,lang)+'; '+note+' |']
-                if lang=='en':records.append(dict(api=name,parameter=parameter,default=default,type=kind(name,parameter,default,'en'),constraint=note,source=str(path.relative_to(ROOT)) if path else entry['owner'],requiredness='upstream contract'))
+                records.append(dict(api=name,parameter=parameter,default=default,type=kind(name,parameter,default,'en'),constraint='Follow upstream help for types, units and accepted values.',source=str(path.relative_to(ROOT)) if path else entry['owner'],requiredness='upstream contract'))
             content += ['\n</details>\n']
         result='\n'.join(content).rstrip()+'\n';target=WEB/lang/'parameter-atlas.md'
         if args.check:assert target.read_text()==result,'Stale parameter atlas: '+lang
@@ -86,4 +86,6 @@ def main():
     result=json.dumps(records,ensure_ascii=False,indent=2)+'\n'
     if args.check:assert target.read_text()==result,'Stale parameter contracts'
     else:target.write_text(result)
+    import subprocess
+    subprocess.run(['python3','tools/sync-website-languages.py',*(['--check'] if args.check else [])],cwd=ROOT,check=True)
 if __name__=='__main__':main()

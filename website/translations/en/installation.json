@@ -1,0 +1,95 @@
+{
+  "source_sha256": "a4c97633b52873f7f615ea6f4cfac645002b0930da85255c007595541089450f",
+  "blocks": {
+    "0": {
+      "source_sha256": "ad417bf7484f068adf345ae92b6ed97b430a8a061cbfeac501c0b428f04aaa93",
+      "status": "reviewed",
+      "translation": "## Install from GitHub ⟦shared:0⟧\n"
+    },
+    "1": {
+      "source_sha256": "e79f5f71abfbe6b45786f155b5f9a17cc4791cbb3478c6f48f22ba880820aebf",
+      "status": "reviewed",
+      "translation": "Install ggchord and its required dependencies from the project repository. Source installation requires a working R development environment.\n"
+    },
+    "3": {
+      "source_sha256": "22e1c71f1e3732aed3fc0f975a805bb576c57e759d6551d8464fd839538afb67",
+      "status": "reviewed",
+      "translation": "## Environment and installation checks ⟦shared:0⟧\n"
+    },
+    "4": {
+      "source_sha256": "a2b5c832c47a11cd9db2e82b19247f940b0d5703f321aa353e11e34e20822780",
+      "status": "reviewed",
+      "translation": "Requires R ≥ 4.1.0 and ggplot2 ≥ 4.0.0. Inspect the packages actually used by the current session and include this output when reporting a problem.\n"
+    },
+    "6": {
+      "source_sha256": "631e3169858ffdb8ff87f24a159995e10da22b7189bcfcb1d4e713f7f51158c0",
+      "status": "reviewed",
+      "translation": "## Load and draw ⟦shared:0⟧\n"
+    },
+    "8": {
+      "source_sha256": "5cf6fcc2a8c492b39a079bfa3761222a25b6335828cb1fb3a095796f6aa7e56b",
+      "status": "reviewed",
+      "translation": "Success produces four arcs with different lengths and sequence IDs, without a build error. For missing functions, inspect the library path and loaded package before checking the matching [function reference](⟦shared:0⟧).\n"
+    },
+    "9": {
+      "source_sha256": "e519ffe716ee1aa7acf67b146e405bc36928ec355075b0ccc54ea74cc0ccf3a4",
+      "status": "reviewed",
+      "translation": "## Optional packages and input files ⟦shared:0⟧\n"
+    },
+    "10": {
+      "source_sha256": "0a259c729f9fabffc1393c896d3bd188bd6dc8e7cb139b6f162ad2d5c7e687f2",
+      "status": "reviewed",
+      "translation": "Examples that use dplyr, Biostrings or a format decoder declare that dependency beside the code. Install it only for the corresponding workflow. Built-in data works offline; file examples use the [input archive](⟦shared:0⟧).\n"
+    },
+    "11": {
+      "source_sha256": "0d501366ceb7f571f278236855a453ccce06be50ec865552ea5c504cefc55b3b",
+      "status": "reviewed",
+      "translation": "## If installation fails ⟦shared:0⟧\n"
+    },
+    "12": {
+      "source_sha256": "b4eeb895cd89393671118ea1bde0cccf952941877dee792fd030b74d1735fbea",
+      "status": "reviewed",
+      "translation": "| Symptom | First check | Action |\n"
+    },
+    "13": {
+      "source_sha256": "a9e436d2babd638ade86791e162e7de5a6b1b3128c6ae9ed93504fbf3c53dc93",
+      "status": "reviewed",
+      "translation": "| --- | --- | --- |\n"
+    },
+    "14": {
+      "source_sha256": "aa5112661897214cac9d57907df5ef1e25826d3e35e13d0ba4aa08629c99385a",
+      "status": "reviewed",
+      "translation": "| Repository or index cannot download | First network error, proxy and GitHub access | Restore access and retry without changing data |\n"
+    },
+    "15": {
+      "source_sha256": "15e8fdf2de5cf957b99bc7566c6f89222a5c5d3db1649549bb7bda713f0598d0",
+      "status": "reviewed",
+      "translation": "| Missing or outdated dependency | Dependency named in the error and minimum R | Install/update that dependency, then retry |\n"
+    },
+    "16": {
+      "source_sha256": "34769ec66552fe9257217c30644a86ce4665e61c74ca7e294a32fdc94eb580e6",
+      "status": "reviewed",
+      "translation": "| Source compilation fails | First compiler error and platform build tools | Install the appropriate R development tools and retain the log |\n"
+    },
+    "17": {
+      "source_sha256": "44bdb17f65bf2df10918a4155203b6173e07c682ff634454c5a681716f8d35f9",
+      "status": "reviewed",
+      "translation": "| Installation succeeds but functions are missing | ⟦shared:0⟧ and the loaded library | Restart R, load the correct library and retry the minimal plot |\n"
+    },
+    "18": {
+      "source_sha256": "19c566b12e4a71fe5037776d6ee14a218dfdee28cddd55bed5f5af82dabc0998",
+      "status": "reviewed",
+      "translation": "For input and plotting problems, see [diagnostics](⟦shared:0⟧).\n"
+    },
+    "19": {
+      "source_sha256": "c7c7e01100bf1f5366994412d0abbf6b9b5a34035dba298d15ed299428f28da6",
+      "status": "reviewed",
+      "translation": "## Related sections ⟦shared:0⟧\n"
+    },
+    "20": {
+      "source_sha256": "3fa8879eea7d0202cf297fa3bd9cc43f975ead3e63f75a7b6cf0764835d38dad",
+      "status": "reviewed",
+      "translation": "[Plotting concepts](⟦shared:0⟧) · [Input tables](⟦shared:1⟧) · [Save a figure](⟦shared:2⟧)\n"
+    }
+  }
+}

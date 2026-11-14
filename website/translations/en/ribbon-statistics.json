@@ -1,0 +1,15 @@
+{
+  "source_sha256": "d856b9cbe06f9eb0b58bdf3da94f3b8ddd61599bd0f87743948185579feb19c9",
+  "blocks": {
+    "0": {
+      "source_sha256": "fad45b6109fc205e956198b3f946b29e5c060869ab50dc10cc4475b04849762d",
+      "status": "reviewed",
+      "translation": "## Statistics section merged ⟦shared:0⟧\n"
+    },
+    "1": {
+      "source_sha256": "62ecf1bcb093a2261d7661f8df4d7d900b18a4fc496c0b187432ab1d7a6d6de6",
+      "status": "reviewed",
+      "translation": "[Statistics](⟦shared:0⟧)\n"
+    }
+  }
+}

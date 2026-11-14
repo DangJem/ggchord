@@ -22,8 +22,7 @@ names or maximum feature endpoints cannot supply missing evidence.
 ## Segments, phase and partial regions {#boundaries}
 `build_ggchord_cds()` constructs a segment map; `project_ggchord_features()` then
 projects amino-acid intervals through it. Each input feature returns one row;
-its genomic pieces are retained in the `segments` list-column. Two-ended link
-projection can instead split into several paired rows. Multiplying coordinates
+its genomic pieces are retained in the `segments` list-column. `project_ggchord_links()` can instead split into several paired rows. Multiplying coordinates
 by three is insufficient. Inspect policies/reports
 for partial CDS, phase and truncation. DNA matching, interval projection and
 actual translation/alignment are distinct operations.

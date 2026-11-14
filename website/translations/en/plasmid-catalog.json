@@ -1,0 +1,115 @@
+{
+  "source_sha256": "cc3937f02e3702278f3eaad9fbedc0d1261d33ac09f4cb1665544a23e9bf942f",
+  "blocks": {
+    "0": {
+      "source_sha256": "ccf34e80d232af507f8c3aee1a2d6d732cb06337941002028e8bbd956c4aa13f",
+      "status": "reviewed",
+      "translation": "Each map retains all source features, independent reference primers and every site in its declared enzyme profile. No three-site sampling is used. Maps use their own complete sequence, the same layers and a 10 × 8 in canvas. Open the full-resolution image for annotation text.\n"
+    },
+    "1": {
+      "source_sha256": "99b6e446b8b1bcf15b6435c79ae7498788824cd2a8a6f6fddc446a1aa463425a",
+      "status": "reviewed",
+      "translation": "## Preparation and complete display policy ⟦shared:0⟧\n"
+    },
+    "4": {
+      "source_sha256": "2a510e10bcdd817b3f007f9a4844296673a59465278d6f809c72313a2e8a4781",
+      "status": "reviewed",
+      "translation": "⟦shared:0⟧, ⟦shared:1⟧ and ⟦shared:2⟧ are the complete tables submitted to the plot. ⟦shared:3⟧ retains raw matches; ⟦shared:4⟧ identifies the enzyme profile. Feature geometry is not thinned and the site profile is not sampled to a fixed count.\n"
+    },
+    "5": {
+      "source_sha256": "1eb650ffe3ef29a4305e780c00e62a66d438d08dc16d87430a8e305995f3a37f",
+      "status": "reviewed",
+      "translation": "## Inputs and recognition results ⟦shared:0⟧\n"
+    },
+    "7": {
+      "source_sha256": "37b975271a5a42891ee71398efeec66caa41d3c3ba24d42e8e0ee69383cec4f4",
+      "status": "reviewed",
+      "translation": "## pSB1C3: Small vector and basic structure ⟦shared:0⟧\n"
+    },
+    "10": {
+      "source_sha256": "66d7d98ccd357656549e010bc6cc2b19d9c8e3b2e53c8f2f2e9e6e7a9e75fe7c",
+      "status": "reviewed",
+      "translation": "## pUC19: Common features and replication origin ⟦shared:0⟧\n"
+    },
+    "13": {
+      "source_sha256": "295986c237b1dc8b02ca778d1dfe634fdd16e891d1f2894cc10aee7b450dfb00",
+      "status": "reviewed",
+      "translation": "## pBR322: Multiple resistance regions and direction ⟦shared:0⟧\n"
+    },
+    "16": {
+      "source_sha256": "6c423229bc0ad93d9b2deebd307748902f2fec6c4d1d1221dfe789a72c63ce3b",
+      "status": "reviewed",
+      "translation": "## pBluescript II SK(+): Local regulation and short features ⟦shared:0⟧\n"
+    },
+    "19": {
+      "source_sha256": "c22eead8f42b5203ff32d7dbc05143a78c315e514bcd40496ed5ff3d4472790c",
+      "status": "reviewed",
+      "translation": "## pET-28a(+): Expression regions and tags ⟦shared:0⟧\n"
+    },
+    "22": {
+      "source_sha256": "ef96826f7cae7852ab24eaa18704d7be71d2430539441b4538fc2d871361dfb7",
+      "status": "reviewed",
+      "translation": "## pETDuet-1: Dual expression units; transition to the dense case ⟦shared:0⟧\n"
+    },
+    "25": {
+      "source_sha256": "5bc79000185c5d10149f8341a45cb8f4ce3b7b2194a1eb9b07b72ce046910ab7",
+      "status": "reviewed",
+      "translation": "## pDONR221: Recombination-related architecture ⟦shared:0⟧\n"
+    },
+    "28": {
+      "source_sha256": "cb9f61a368b0ea8900df698aeb7f86b5ca6ef81a075c11e0230d97b19b296c96",
+      "status": "reviewed",
+      "translation": "## pcDNA3.1(+): Annotation hierarchy in an expression vector ⟦shared:0⟧\n"
+    },
+    "31": {
+      "source_sha256": "5377781b718b1bfe531487b0848190412fa4c95a9bc25e763495ad09b2e4b9bf",
+      "status": "reviewed",
+      "translation": "## pTRE-Tight-BI: Bidirectional regulatory structure ⟦shared:0⟧\n"
+    },
+    "34": {
+      "source_sha256": "0f9a92611231a0786d4b6886280b1ad9e65631c6cf3ef89984ea5b62179043c2",
+      "status": "reviewed",
+      "translation": "## pTRIPZ: Display density on a longer sequence ⟦shared:0⟧\n"
+    },
+    "37": {
+      "source_sha256": "0b971e7b93172b96d10cf3a15e36bc83c5c33132125e72c8ed47004171de18e2",
+      "status": "reviewed",
+      "translation": "## pCAMBIA1300: Architecture of a larger plant vector ⟦shared:0⟧\n"
+    },
+    "40": {
+      "source_sha256": "9164e27bda10d0f2f6970c412a09ba0e1786416d2b6520120a1fbdb5196563c7",
+      "status": "reviewed",
+      "translation": "## pEarleyGate 201: Category comparison with another plant vector ⟦shared:0⟧\n"
+    },
+    "43": {
+      "source_sha256": "15a55ef67df508ad77901e6d74321a8242651c9dd5b0ce683a30e48474277c05",
+      "status": "reviewed",
+      "translation": "## pSpCas9(BB)-2A-GFP (PX458): Large expression vector and label fitting ⟦shared:0⟧\n"
+    },
+    "46": {
+      "source_sha256": "e2810ff93ed7ace45979e8e5e9ead8abde11aac8a8ba512e9a78144f506900eb",
+      "status": "reviewed",
+      "translation": "## Enzyme profiles and provenance ⟦shared:0⟧\n"
+    },
+    "47": {
+      "source_sha256": "9ea770124a0eb4e061b1c60faaa780033e972cf9c6f05b43e8ad0428683f5cfb",
+      "status": "reviewed",
+      "translation": "Saved reference profiles take priority within ⟦shared:0⟧. The pETDuet-1 file saves None while its reference PNG shows sites, so ⟦shared:1⟧ is selected explicitly. This does not claim to recover the original PNG export settings. Every row of the chosen profile is retained. Complete means that declared profile, rather than every candidate from every enzyme database on one map.\n"
+    },
+    "48": {
+      "source_sha256": "a194100a40e00634294840f126935dfb0266b0ff21b8364876cc7485a94c5959",
+      "status": "reviewed",
+      "translation": "Independent primers use ⟦shared:0⟧. A source without independent reference primers has zero such rows; no records are invented. Named pieces remain in ⟦shared:1⟧ rather than becoming new top-level features. Enzymes at a shared position can share a label while their input records remain available.\n"
+    },
+    "49": {
+      "source_sha256": "dc14be33adf4236a843b0e58b31eade70bfe77fbff15019d5f577044d1e8a616",
+      "status": "reviewed",
+      "translation": "## Related views ⟦shared:0⟧\n"
+    },
+    "50": {
+      "source_sha256": "d00b7c19ccf40f2544dd05ae52f9c38f4c4c0959ec391b6753e05264cd66d28e",
+      "status": "reviewed",
+      "translation": "[pUC19 layers](⟦shared:0⟧) · [pETDuet-1 dense layout](⟦shared:1⟧) · [Labels and output size](⟦shared:2⟧)\n"
+    }
+  }
+}

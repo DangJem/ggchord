@@ -1,0 +1,100 @@
+{
+  "source_sha256": "99fd764b920d2ccf576ca29a3b0f6a26ea6c06be5d1181a373b007723d057706",
+  "blocks": {
+    "2": {
+      "source_sha256": "b890eedee2b36821550a3ffc2df09a84a5a51f387908a11514530721d2d0dfa6",
+      "status": "reviewed",
+      "translation": "Extract the [input bundle](⟦shared:0⟧) so the working directory contains examples/. Each section names its optional dependencies.\n"
+    },
+    "3": {
+      "source_sha256": "bb49e46b82a40656ffce22739c64be7362c8784a8ad64f0312f1d3d427e8001c",
+      "status": "reviewed",
+      "translation": "## Retain actual FASTA characters ⟦shared:0⟧\n"
+    },
+    "4": {
+      "source_sha256": "664c284dda983ebb4bca6efcbfaac7b7c3eb296ed669047a1a70b72d6031141b",
+      "status": "reviewed",
+      "translation": "Use ⟦shared:0⟧ to retain characters with their physical header line and optional file provenance. Only whitespace is removed; case is retained. Declare bp or aa explicitly instead of guessing the alphabet. Focusing crops the string as well as the interval; local position 1 below is original position 1001. A decreasing locus selects the same interval and does not reverse-complement it. Lengths alone cannot supply characters; HSP endpoints cannot supply mismatch or gap columns. Gapped FASTA counts gap characters and needs a separate alignment-to-source map before genomic use.\n"
+    },
+    "6": {
+      "source_sha256": "ac9538cc141f4620443e99f33bef9f07a1970fd3f0eeebd9501368685beb05ed",
+      "status": "reviewed",
+      "translation": "## Existing alignments: keep columns and source positions separate ⟦shared:0⟧\n"
+    },
+    "7": {
+      "source_sha256": "c3fae40634ca9201d70e1bb229a3b1fe853039826f62eb700fcc0b67db7430c3",
+      "status": "reviewed",
+      "translation": "These examples require the source checkout's ⟦shared:0⟧ directory. It contains unchanged Biopython DNA/protein alignment inputs, the upstream permission notice, hashes and a reproducible FASTA re-encoding rule. No aligner is run. Full record IDs and original characters remain unchanged; choose rows and columns explicitly.\n"
+    },
+    "8": {
+      "source_sha256": "0b48d0d3f491e72b7fa1dfc1577d3da3f5673db3813487d6a5c5a536db5a4043",
+      "status": "reviewed",
+      "translation": "⟦shared:0⟧ reads one existing alignment. Declare DNA, RNA or AA; equal lengths alone do not establish homology. ⟦shared:1⟧ includes ⟦shared:2⟧ and ⟦shared:3⟧ gaps, whose ⟦shared:4⟧ is NA. Default positions count the ungapped input fragment from one; they are not complete-genome coordinates. Lowercase letters consume positions, so this reader must not be used as an A3M insertion parser.\n"
+    },
+    "10": {
+      "source_sha256": "aebf7ae5b2f84d485626788304ec145aff78dd633c8aad446f6eb7b5c35b21aa",
+      "status": "reviewed",
+      "translation": "The first selected row has a gap at alignment column 343. Column lookup therefore returns ⟦shared:0⟧, ⟦shared:1⟧ and a missing source position. Inverse lookup of source position 343 finds its actual alignment column, without interpolation. Positions removed by filtering return ⟦shared:2⟧; filtering never renumbers retained columns. ⟦shared:3⟧ selects an alignment-row ID even when a separately declared source ID differs.\n"
+    },
+    "11": {
+      "source_sha256": "0bcb01b3618d2794d34f9bfce371cdbd1f58ca6cc6ca2f164db28820a257275f",
+      "status": "reviewed",
+      "translation": "⟦shared:0⟧ is a standard Cartesian ggplot layer. Styles and user scales follow ggplot2. It measures glyphs against actual cell width and height at draw time: ⟦shared:1⟧ requires readable letters; ⟦shared:2⟧ retains colour cells where text cannot fit, without shrinking fonts. Focus fewer columns or increase physical width to show letters. For example, save ⟦shared:4⟧ with ordinary ⟦shared:3⟧; simply raising DPI adds no physical room. Discrete rows, identity/reverse position scales and Cartesian coordinates are supported; this layer does not directly project characters onto backbone Coords. A Cartesian character plot with explicit source mapping can be registered using ⟦shared:5⟧ for [Fusion character details](⟦shared:6⟧).\n"
+    },
+    "12": {
+      "source_sha256": "3b45c92ffdb115c1aa749ce3b168dcfe67b9703893a90a3ecc7763eba605e8aa",
+      "status": "reviewed",
+      "translation": "### Protein excerpt ⟦shared:0⟧\n"
+    },
+    "13": {
+      "source_sha256": "cfd642c7bc3195e92b74ef1c00270e537120f08e4d89ffdd4b03a6a0006f498f",
+      "status": "reviewed",
+      "translation": "The same data contract accepts actual protein characters. This excerpt contains upstream gaps and residue differences; fill distinguishes literal symbols, not inferred functional domains.\n"
+    },
+    "15": {
+      "source_sha256": "76c60e27c14025138a5cdeeb494423857f0869127d85235375547a491867985f",
+      "status": "reviewed",
+      "translation": "### Explicit source coordinates ⟦shared:0⟧\n"
+    },
+    "16": {
+      "source_sha256": "496ac2dbf115bfd240ebbbe919f9f145580048e215f4cef940e0a8f1b9ecf724",
+      "status": "reviewed",
+      "translation": "Provide one ⟦shared:0⟧ row per aligned record with ⟦shared:1⟧, ⟦shared:2⟧ and ⟦shared:3⟧. ⟦shared:2⟧ is the first nongap source coordinate. Negative-strand positions decrease; strings must already be in alignment orientation. An optional ⟦shared:4⟧ identifies the original molecule. If you provide a full forward ⟦shared:5⟧, every nongap character is checked, using nucleotide complementation on the negative strand and order reversal only for AA. Missing source strings remain unverified; no origins or strands are guessed.\n"
+    },
+    "17": {
+      "source_sha256": "ed08ca0b7011fc2e4bf3fe1a7aa3898f84880f8379880be64df78b13599b521b",
+      "status": "reviewed",
+      "translation": "The following example checks consistency against ungapped fragments derived from the same alignment. It is deliberately **not independent genomic validation**. For a real genomic projection, supply independently known source sequences and interval metadata instead.\n"
+    },
+    "19": {
+      "source_sha256": "ee8cf5151bd658fa0d996dc8e74b87cd073aa07b532cc2e5c4c2ee07c7a0a6f3",
+      "status": "reviewed",
+      "translation": "No mismatch/gap detail can be recovered from six HSP endpoints alone. This workflow accepts existing columns, not CIGAR/A3M/Clustal/Stockholm parsing, phase inference, consensus/Logo analysis or alignment computation. Explicit CDS translation is described below; exact macro/detail registration is available in the Fusion section.\n"
+    },
+    "20": {
+      "source_sha256": "413e16ce7596c1f91071b2972bf764a69f7a7a4f6490d16c101e7b9f157c8ffd",
+      "status": "reviewed",
+      "translation": "## Source-backed CDS translation ⟦shared:0⟧\n"
+    },
+    "21": {
+      "source_sha256": "e3d725b5ff101a7e819112f1f4c812f346539617c6c5cfc266a9e53ceeb2b740",
+      "status": "reviewed",
+      "translation": "⟦shared:0⟧ defines observed coding coordinates; ⟦shared:1⟧ additionally needs actual complete forward DNA/RNA strings and optional **Biostrings**. This real EMALE negative-strand CDS has source phase 0 and an ATG start. Table 11 is an explicit choice checked against the unchanged upstream protein FASTA. Input provenance is in ⟦shared:2⟧.\n"
+    },
+    "23": {
+      "source_sha256": "7fa3b62a46e8cd194fda1fe6085c41d7f015a2e45cd18eb55e62fe27f91985c7",
+      "status": "reviewed",
+      "translation": "⟦shared:0⟧ reports coding/protein strings, genetic code, initiation/ambiguity policies, partial ends and terminal remainder. ⟦shared:1⟧ retains each genomic base; ⟦shared:2⟧ contains the three genomic positions of each codon in biological order, even across exon boundaries. Residue positions use the CDS feature ID's observed-protein namespace; they are not an inferred external protein accession. Terminal and internal stops remain ⟦shared:3⟧. The example removes only the final stop for comparison with the upstream FASTA convention.\n"
+    },
+    "24": {
+      "source_sha256": "e356b329dc0a9d3ecc1967f37afde0921bb259b9876ceeb06e7f1a41a9d9d428",
+      "status": "reviewed",
+      "translation": "The default ⟦shared:0⟧ does not recode alternative starts; ⟦shared:1⟧ requires a complete 5-prime end. ⟦shared:2⟧ rejects fuzzy codons; explicit ⟦shared:3⟧ delegates to Biostrings, using X if unresolved. Unknown codes, missing/short sources and declared translation exceptions fail. ⟦shared:4⟧ belongs to the CDS map: only the initial phase and incomplete terminal codon are excluded; later segment phases validate continuity without deleting junction bases. No missing sequence is reconstructed. RNA must be declared explicitly. Ordered ⟦shared:5⟧ support the existing spliced/origin-join contract.\n"
+    },
+    "25": {
+      "source_sha256": "13aaebf1568420b43a77788b04e39696c6b530b90377966f5a4db34c84e07e1a",
+      "status": "reviewed",
+      "translation": "A complete runnable nucleotide/codon/macro example is ⟦shared:0⟧; its negative-strand labels are centred on their three coding bases. Real spliced plus/minus controls, source hashes and original expected translations are retained in ⟦shared:1⟧. [Register the character plot](⟦shared:2⟧) to connect its exact source boundaries.\n"
+    }
+  }
+}

@@ -1,0 +1,155 @@
+{
+  "source_sha256": "32f8f57df2ff5d44147a2b296a60c5acc47834d4c0d4572bc35b73d49991eff4",
+  "blocks": {
+    "2": {
+      "source_sha256": "b890eedee2b36821550a3ffc2df09a84a5a51f387908a11514530721d2d0dfa6",
+      "status": "reviewed",
+      "translation": "Extract the [input bundle](⟦shared:0⟧) so the working directory contains examples/. Each section names its optional dependencies.\n"
+    },
+    "3": {
+      "source_sha256": "34d6608b8570effa2572b2deb4d1acccbe9c988df35a04cd0b11c6b28e3dc403",
+      "status": "reviewed",
+      "translation": "## Variant records and structural breakpoints ⟦shared:0⟧\n"
+    },
+    "4": {
+      "source_sha256": "1c1424e0d3b88849f6cfe0bd29dde73af3f5a215fab9c57ead4091f07928f972",
+      "status": "reviewed",
+      "translation": "Install optional **VariantAnnotation** for VCF and additionally **StructuralVariantAnnotation** for explicit structural decoding. These examples read the dependencies' unchanged source-backed examples: the chr22 1000 Genomes subset and a real caller VCF distributed with StructuralVariantAnnotation. Data stays in those packages; no third-party parser implementation or input is copied into ggchord. ⟦shared:0⟧ records exact package versions and source hashes.\n"
+    },
+    "6": {
+      "source_sha256": "d44cf0c64ae70bf380d9e72f9cc9d18c62baa407a83e608b98c86e427224d697",
+      "status": "reviewed",
+      "translation": "Each placed record remains one feature row with an ALT list, including multiallelic calls. Features show the reference allele span, including the padding base, rather than an inferred symbolic SV footprint. Complete INFO, sample/genotype arrays and headers remain in ⟦shared:0⟧. Inspect actual caller fields there; neither missing support nor Identity becomes zero or a fabricated count. Unknown full lengths remain NA; provide reliable reference lengths before plotting. Telomeric/out-of-bounds spans stay in ⟦shared:1⟧ and the source, without clipping.\n"
+    },
+    "7": {
+      "source_sha256": "7542173d377ce7c507112c44a53fa1506ac2331a8bc219b999640852a64a98b6",
+      "status": "reviewed",
+      "translation": "Structural decoding is opt-in, keeps confidence intervals, disables absent-mate inference, and creates one link per reciprocal pair with both original record indices. Warnings identify records not paired by the decoder, while all records remain in the report. ⟦shared:0⟧ marks breakends outside known reference bounds; affected pairs remain in ⟦shared:1⟧. Exact single-base breakpoints suit ⟦shared:2⟧ after explicitly selecting their positions; uncertainty intervals suit interval geometry. ⟦shared:3⟧ and ⟦shared:4⟧ describe the derivative sequence, not relative homology strand. Never manufacture alignment Identity to colour these links.\n"
+    },
+    "8": {
+      "source_sha256": "54af488ffb5ec2e71e45e2eb63dc8f58bc2729e4e2bba5d23860b0163a57351e",
+      "status": "reviewed",
+      "translation": "For modern BCF (⟦shared:0⟧ or ⟦shared:1⟧), supply ⟦shared:2⟧ naming an existing interpreter with optional **pysam**: ⟦shared:3⟧. Only BCF invokes it, transcodes to temporary VCF via HTSlib, and records decoder/version/messages. Virtual-environment interpreter paths retain their environment. Original record order, values and genotypes are preserved; transcoded text is not an original physical BCF line. No installation occurs. This reader loads selected local files into memory; select or subset large datasets upstream.\n"
+    },
+    "9": {
+      "source_sha256": "6128320cb39fd36520ebeb9964e70ed792fcf0792c58ab9d6ff0a14656710005",
+      "status": "reviewed",
+      "translation": "## Genomic alignment blocks: MAF and chain ⟦shared:0⟧\n"
+    },
+    "10": {
+      "source_sha256": "2afeee2f2ba64e7e611820f59df56427032d779a928515e14b28465c53de0f75",
+      "status": "reviewed",
+      "translation": "Use an existing Python environment with optional **Biopython Bio.Align** MAF/chain support (directly verified with 1.85). ⟦shared:0⟧ can select that interpreter for this section. The source checkout/input bundle must contain ⟦shared:1⟧. Its two unchanged fixed-version upstream files have hashes, permission attribution and a verification script; no aligner is run. An unavailable optional parser skips the example, not a successful import.\n"
+    },
+    "12": {
+      "source_sha256": "20fbb388be07c1c32b94fbf49f84cd9f0fbbc27b4a3e1f3caaa91c7238677c54",
+      "status": "reviewed",
+      "translation": "MAF retains the actual gapped characters and full declared source lengths. Negative components map to decreasing **forward source** coordinates. First-component anchor relationships, source blocks/files and original coordinate matrices remain explicit; a block is not automatically expanded to every possible pair. Gap cells have missing source positions, and full lengths alone do not independently verify symbols. Filter one file/block before ⟦shared:0⟧ or a character panel because columns restart per block. Original quality, context and empty-component evidence stays in the source/report. An empty first anchor never silently becomes another anchor.\n"
+    },
+    "13": {
+      "source_sha256": "0f684059026be5cfeec649659c2d3b899d45f9d3ccc6bfb7dfb28f866bd6357c",
+      "status": "reviewed",
+      "translation": "The chain example explicitly selects source block 1, the source-backed NR_046654.1/chr3 relationship; upstream ⟦shared:0⟧ format controls remain in the unchanged input and are not claimed as new biological observations. The three aligned exon blocks retain intervening gaps. Chain provides no mismatches or character cells, and a chain score is not Identity. Query maps to qaccver, target to saccver; original IDs remain separately traceable. Declare ⟦shared:1⟧ explicitly when its default bp is inappropriate.\n"
+    },
+    "14": {
+      "source_sha256": "7a46ddfd4d0b6bad31ef14f53fcdc9120de17813587f08b2668abe7f4fc85cc4",
+      "status": "reviewed",
+      "translation": "For two assemblies both named ⟦shared:0⟧, declare identities, for example ⟦shared:1⟧ and ⟦shared:2⟧. Defaults preserve IDs and reject ambiguous cross-role collisions; they never auto-prefix or merge assemblies. Full-length conflicts fail, and shared final IDs require explicit consistent declaration on both sides. This is source identity, separate from display instances. No pident, support count or complete source string is inferred from either format's endpoints.\n"
+    },
+    "15": {
+      "source_sha256": "e6bacea90b1c6faa400913ffa839ed2c2649438c8ccae728d15a88bd3f2c1658",
+      "status": "reviewed",
+      "translation": "## Existing delta alignments ⟦shared:0⟧\n"
+    },
+    "16": {
+      "source_sha256": "10a7d7587d6dc943398d31dc8be91dbedabd9007315f8663d048d05ce694f446",
+      "status": "reviewed",
+      "translation": "⟦shared:0⟧ requires an existing **show-coords** program; ⟦shared:1⟧ can select its executable for this section. It reads existing NUCMER/PROMER results, never invokes an aligner or opens the historical FASTA paths in the file preamble. The unchanged upstream Drosophila example, pinned version, original permission notice and hashes are in ⟦shared:2⟧. An absent executable skips this optional example; that is not successful decoding.\n"
+    },
+    "18": {
+      "source_sha256": "ac5beeb890919865d9811fcb1407c8f0cc16c94226db8c6b532961eadce727f6",
+      "status": "reviewed",
+      "translation": "This explicitly selected query remains the literal string ⟦shared:0⟧. Query/reference map to qaccver/saccver without shifting the original one-based directional endpoints. Every native output row is checked against its actual source header/endpoints before error counts, signed delta scripts and physical lines are attached. Full lengths come from source declarations, not the last alignment. Cross-role source-name collisions follow the explicit ID maps of ⟦shared:1⟧; no assembly identity is guessed.\n"
+    },
+    "19": {
+      "source_sha256": "e17a7eed3c4093a194e1c8df0a8a49f5abb6d51ed298eb3d7d19a7df78ac18e7",
+      "status": "reviewed",
+      "translation": "⟦shared:0⟧ is the tool's reported percentage with its printed precision, not a value reconstructed from two endpoints. In PROMER it is an **AA alignment statistic**, while interval coordinates and full sequence lengths remain **bp**. Native similarity/stop percentages and frames remain separate. qspan/sspan are genomic span widths, not alignment-column counts; a BLAST ⟦shared:1⟧, read support and sequence characters are not manufactured. Original text and native output/messages remain in ⟦shared:2⟧. If the executable has no reliable version option, its version remains unknown in the reader report; record your prepared environment's provenance separately. The directed audit records the actual fixed tool source tag and executable checksum. No third-party executable or implementation is redistributed in ggchord.\n"
+    },
+    "20": {
+      "source_sha256": "1750e7a716fcf98214ceb79f29693d8ebe634e07fc8532d55e44e2751f1a1f9d",
+      "status": "reviewed",
+      "translation": "The source bundle also includes ⟦shared:0⟧, an unchanged prefix containing the original preamble and all 39 records of the first Arabidopsis sequence-pair block. ⟦shared:1⟧ records the pinned original compressed file, decompressed hash, complete-block rule and unchanged product hash; the author's MIT permission notice is retained. This checks real nucleotide alignments independently of the translated example, without newly running alignment or certifying the remaining source blocks. Use the same existing decoder:\n"
+    },
+    "22": {
+      "source_sha256": "7394aed6a291d68b2693201d21babb481b4b451235ab698eba0ad7ee2ab3c851",
+      "status": "reviewed",
+      "translation": "## Existing protein signatures ⟦shared:0⟧\n"
+    },
+    "23": {
+      "source_sha256": "2eaec04fce69334b0342e94c706df9d1b4d8b09863f22009b7576a7e201e112b",
+      "status": "reviewed",
+      "translation": "These installed-package inputs contain existing Pfam annotations cached from the InterPro API for two human proteins. The original JSON bytes, retrieval date, URLs, CC0 attribution and hashes are in ⟦shared:0⟧. ⟦shared:1⟧ explicitly re-encodes the same observed fragments as TSV for a coordinate round trip. It does not run InterProScan: absent MD5, status, run date and integrated description remain ⟦shared:2⟧. The TSV is a derived format example, not a new analysis result.\n"
+    },
+    "25": {
+      "source_sha256": "9a0130d0f64976c809918dbf7ec1e95c06348a9a89216a1bea985502e411b645",
+      "status": "reviewed",
+      "translation": "Full lengths are declared AA lengths, not maximum feature ends. The API returns lowercase IDs (⟦shared:0⟧, ⟦shared:1⟧); these remain unchanged, as do accession versions and repeated model matches. Model/signature IDs are not unique feature-instance IDs, so ⟦shared:2⟧ stays missing. Any source identity reconciliation with another file must be explicit.\n"
+    },
+    "26": {
+      "source_sha256": "3c8290333e7394e7d3eba3f11757d0174fba6e3617a5ddf2dc95147bf6b5dc82",
+      "status": "reviewed",
+      "translation": "Each cached JSON location is one feature with actual ⟦shared:0⟧; its start/end only bound the footprint. Existing Feature geometry leaves coordinate gaps empty and retains one source match. The representative flag is metadata, never an automatic filter. Original entry/protein/location indices and per-file ⟦shared:1⟧ stay traceable; use ⟦shared:2⟧ when combining files. TSV rows lack JSON grouping evidence and are not automatically grouped by model ID. Scores remain a native list-column: JSON numbers, TSV strings and missing values retain their source type. Do not compare different libraries' score/e-value systems as a universal confidence or invent identity/read support. For a numeric scale, first select the intended library and establish its actual score meaning explicitly.\n"
+    },
+    "27": {
+      "source_sha256": "ff706ba6a7ab2ab0a77852e97e6417146e7a8d1589d8f7f1bd7070e85a56b34f",
+      "status": "reviewed",
+      "translation": "JSON needs optional **jsonlite** and reads only supplied local caches. Remaining-page URLs and declared counts stay in the report; nothing is fetched at draw time. Quality/context metadata, original fields and complete source objects remain available for auditing. These location annotations provide no complete protein characters or independent character verification. The [official format guide](⟦shared:0⟧) and [score explanation](⟦shared:1⟧) describe the underlying conventions.\n"
+    },
+    "28": {
+      "source_sha256": "f9a45b3f71d4cb616dbf653459f68d6293a04dc8346370401295d105e6f6866f",
+      "status": "reviewed",
+      "translation": "## Existing feature relationships ⟦shared:0⟧\n"
+    },
+    "29": {
+      "source_sha256": "33e35e993d2788c79b3b6bf466e288cbd7bbcb6e253e2655d1426ae010d3c7b4",
+      "status": "reviewed",
+      "translation": "⟦shared:0⟧ reads existing pairs or group memberships offline. The installed plant subsets preserve complete original MCScanX data lines from a pinned source commit. Permission, original URLs, hashes and physical subset indices are recorded in ⟦shared:1⟧; ⟦shared:2⟧ reproduces them without running an analysis.\n"
+    },
+    "31": {
+      "source_sha256": "b30885eaff0675752c5249b7885a1b9a47f36d6056fabd766a733367d2af1ea6",
+      "status": "reviewed",
+      "translation": "The caller declares ascending one-based-inclusive contiguous anchors; the file suffix does not establish the coordinate convention. The companion position tables have no full chromosome lengths, so this example inspects relationships and does not invent ⟦shared:0⟧ to draw a whole chromosome. Supply independently sourced full lengths before plotting ⟦shared:1⟧ as interval relationships. These are not basewise HSPs. Map a score only after establishing its meaning; the third input column remains an opaque string, not Identity or e-value.\n"
+    },
+    "32": {
+      "source_sha256": "b91032ef25221d1c30819f269d0249a8327b43ac712c57fb4d9c9e8f4a818de7",
+      "status": "reviewed",
+      "translation": "⟦shared:0⟧ accepts two IDs and an optional score. ⟦shared:1⟧ retains the first field as a native character group ID, including numeric-looking IDs; ⟦shared:2⟧ treats every field as a member and only records a file-local group index. Memberships never expand into all pairwise connections. Duplicates, singleton groups, member order, raw fields and physical lines stay visible.\n"
+    },
+    "33": {
+      "source_sha256": "73c3c4012b774ab7ded543cf2d8e259344008e954b32bd49dfe953a6079e1272",
+      "status": "reviewed",
+      "translation": "Optional ⟦shared:0⟧ matches exact unique ⟦shared:1⟧ values. Case, versions and prefixes are never edited; the pair example and group example have different original ID namespaces and companion tables. Missing IDs fail by default; ⟦shared:2⟧ preserves original rows and flags incomplete mappings. Ambiguous duplicate feature IDs always fail. Without positions the reader still returns all relationships, with no mapped links. Annotation strand is retained separately, without assigning alignment direction; segmented annotations require an explicit contiguous anchor table. No full lengths, Identity, support or source characters are inferred.\n"
+    },
+    "34": {
+      "source_sha256": "1c6fe37dd9a48c61547ea138a2ba4dd2cb23bfd260de1722c32e499fa0e9333f",
+      "status": "reviewed",
+      "translation": "## Graph paths: exploratory subsets ⟦shared:0⟧\n"
+    },
+    "35": {
+      "source_sha256": "c1ff79b0f71c62ea7a69741047ed50d98ecc13d86555921c2df9dc86f5dc097b",
+      "status": "reviewed",
+      "translation": "GFA graph edges describe adjacency/overlap, rather than automatically providing HSPs between whole genomes. Existing explicit path steps can be shown through ordinary sequence/feature tables when their coordinate construction is justified. Node IDs can recur within one path; retain the path, source-step index, occurrence and traversal orientation. Do not pair every occurrence or equate node/edge counts with orthology, Identity or read support.\n"
+    },
+    "36": {
+      "source_sha256": "d79db313167e4fb3469883466371016ae5b75d0cbd41e4e3269d7dd59f501829",
+      "status": "reviewed",
+      "translation": "A source-backed exploratory example uses ODGI's unchanged human LPA graph at a pinned commit, decoded by optional **gfapy**. All 5,195 original edges have zero overlap; the prototype validates every original path transition and node length, then projects 202,806 steps across 13 supplied paths. An explicit display subset keeps the first 100 steps of each of two named paths, with original traversal orientation and IDs. Complete supplied path lengths remain separate from chromosome lengths. No pair links are generated. Code, source URL/hash, original MIT notice, output tables and actual image are in ⟦shared:0⟧ and its linked prototype artifacts in the source checkout; ⟦shared:1⟧ retrieves only the two pinned originals on explicit invocation.\n"
+    },
+    "37": {
+      "source_sha256": "66aed2b56267e25e130142dac84aaee8ef85087fbcdd82e046ea5f6ae1af5f82",
+      "status": "reviewed",
+      "translation": "This is not a generic ⟦shared:0⟧ or graph Coord. Nonzero/unknown overlaps, missing source characters, GFA W/J/GFA2 and native ODGI binaries are outside this prototype. Use mature upstream tools to export an explicit path subset and retain their log/source mapping; do not infer missing coordinate or pair evidence. A documented upstream export route is distinct from a binary decoder actually validated here.\n"
+    }
+  }
+}

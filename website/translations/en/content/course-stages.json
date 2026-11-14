@@ -1,0 +1,50 @@
+{
+  "source_sha256": "4feb7e14b5b0e05015d9a92e451ec1f948ab4e00b8c0d45715d797f87bce89e1",
+  "strings": {
+    "chord/0/title": {
+      "source_sha256": "21a28d5f6fe4b8f1bf00a96f759ca06f5f494b0d5945f6af3a1b1c193132c23f",
+      "status": "reviewed",
+      "translation": "Essential foundations"
+    },
+    "chord/1/title": {
+      "source_sha256": "827b35602059d910eb402c20e45ba8efbf1cb4dd700d0983db5d21ed683a8af5",
+      "status": "reviewed",
+      "translation": "Optional techniques"
+    },
+    "chord/2/title": {
+      "source_sha256": "89436e72eb49e51d1f899631b250942fad31ceaa9082c39ac440c5c54f8e4923",
+      "status": "reviewed",
+      "translation": "Complete cases and references"
+    },
+    "collinear/0/title": {
+      "source_sha256": "21a28d5f6fe4b8f1bf00a96f759ca06f5f494b0d5945f6af3a1b1c193132c23f",
+      "status": "reviewed",
+      "translation": "Essential foundations"
+    },
+    "collinear/1/title": {
+      "source_sha256": "827b35602059d910eb402c20e45ba8efbf1cb4dd700d0983db5d21ed683a8af5",
+      "status": "reviewed",
+      "translation": "Optional techniques"
+    },
+    "collinear/2/title": {
+      "source_sha256": "89436e72eb49e51d1f899631b250942fad31ceaa9082c39ac440c5c54f8e4923",
+      "status": "reviewed",
+      "translation": "Complete cases and references"
+    },
+    "plasmid/0/title": {
+      "source_sha256": "21a28d5f6fe4b8f1bf00a96f759ca06f5f494b0d5945f6af3a1b1c193132c23f",
+      "status": "reviewed",
+      "translation": "Essential foundations"
+    },
+    "plasmid/1/title": {
+      "source_sha256": "827b35602059d910eb402c20e45ba8efbf1cb4dd700d0983db5d21ed683a8af5",
+      "status": "reviewed",
+      "translation": "Optional techniques"
+    },
+    "plasmid/2/title": {
+      "source_sha256": "89436e72eb49e51d1f899631b250942fad31ceaa9082c39ac440c5c54f8e4923",
+      "status": "reviewed",
+      "translation": "Complete cases and references"
+    }
+  }
+}

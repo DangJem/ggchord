@@ -1,0 +1,45 @@
+{
+  "source_sha256": "4c2a0383be8d241ceff3658405bd0ddb1ad1b06d302bf85343c36eb488c26904",
+  "blocks": {
+    "2": {
+      "source_sha256": "77ee932989d7f01ec7d62f80140890ce1d494f73bb48fda69b509292a27fac85",
+      "status": "reviewed",
+      "translation": "## Rotate the plot ⟦shared:0⟧\n"
+    },
+    "5": {
+      "source_sha256": "b06749a40ced5907b3908a0015989969c7c7f29c4825c714735390a8caf0d73b",
+      "status": "reviewed",
+      "translation": "⟦shared:0⟧ sets the counterclockwise angle and defaults to 0°. With ⟦shared:1⟧, the backbones and labels turn 90° from the default plot. Compare the position of the gaps with the default plot. Rotation can free space on one side for layout while preserving coordinate order within each sequence.\n"
+    },
+    "6": {
+      "source_sha256": "7b9e37cbdfc73912fa1f9208d818d843f815a1e02082d4e9663d142ed912ea63",
+      "status": "reviewed",
+      "translation": "## Increase the space between backbones ⟦shared:0⟧\n"
+    },
+    "9": {
+      "source_sha256": "35f8d27e8ce2857f8bc07e98b66f07a029110305a5bceb2b0ca9c6a83eaf8ff4",
+      "status": "reviewed",
+      "translation": "⟦shared:0⟧ controls the gap proportion between adjacent backbones. The default is ⟦shared:1⟧. This example sets only the gap after MT108731.1 to ⟦shared:2⟧. Other gaps retain ⟦shared:1⟧. The last sequence’s gap closes the ring. Compare the space between adjacent arcs, then check that the longer sequence still has the longer arc.\n"
+    },
+    "10": {
+      "source_sha256": "11df8daeabd215645c6022699933a4d997034fa1b3ad77122349f211d7d00b9c",
+      "status": "reviewed",
+      "translation": "## Radius: move one arc inward ⟦shared:0⟧\n"
+    },
+    "13": {
+      "source_sha256": "bbc6e1c2504f53377ece3f257181d3f3ef97d311adc41611837e3b9dec9a9243",
+      "status": "reviewed",
+      "translation": "The default radius is ⟦shared:0⟧. Three arcs keep it and ⟦shared:1⟧ uses ⟦shared:2⟧. Compare with the [default backbones](⟦shared:3⟧). That arc sits closer to the centre and still ends at about 32,090 bp. Radius is a layout unit. Use the ticks to read sequence length.\n"
+    },
+    "14": {
+      "source_sha256": "fe7ccc213eeb76956e3b41dfaa74332ffe262542409a1e76b4a639295386426c",
+      "status": "reviewed",
+      "translation": "## Curvature: draw a straight backbone ⟦shared:0⟧\n"
+    },
+    "17": {
+      "source_sha256": "42e6f63c6806531fdf573d5ddef2aa612b0e7a6540dfde7ee450cd39d80ad64d",
+      "status": "reviewed",
+      "translation": "⟦shared:0⟧ draws a standard arc, ⟦shared:1⟧ draws a straight backbone, and negative values bend in the opposite direction. The other three backbones keep the standard arc. To combine radius and curvature, try each setting separately before using both.\n"
+    }
+  }
+}

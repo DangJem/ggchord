@@ -1,0 +1,15 @@
+{
+  "source_sha256": "125ea1ccc826d727dcb1c9f8828bf42b1bf410a16605275c45166e718ad19f40",
+  "blocks": {
+    "0": {
+      "source_sha256": "65558b765341744300f6b1268eea89e49563657e225330407740cb387a66bc22",
+      "status": "reviewed",
+      "translation": "## Section moved ⟦shared:0⟧\n"
+    },
+    "1": {
+      "source_sha256": "29b4c8b737fb038a75a3ba317c3c374a17930209145088c8d41a730ef983c066",
+      "status": "reviewed",
+      "translation": "[Import sequences and annotations](⟦shared:0⟧)\n"
+    }
+  }
+}

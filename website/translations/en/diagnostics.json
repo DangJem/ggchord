@@ -1,0 +1,145 @@
+{
+  "source_sha256": "fe2aa17aa9b8e746ef7ec62154f2fa16a7c2db7e14d0c08fe531bd85e187a51d",
+  "blocks": {
+    "0": {
+      "source_sha256": "9079216861921220cb908612c335e338b373f0e240f6c3b90ecdcf8243c7274a",
+      "status": "reviewed",
+      "translation": "## Locate the problem by symptom ⟦shared:0⟧\n"
+    },
+    "1": {
+      "source_sha256": "97dcfc6ede0fa82b0711193366ccd14d92a2d4efdd091e65e92dc4c2f2055472",
+      "status": "reviewed",
+      "translation": "Check the input and current plot before inspecting diagnostics. These actions preserve original observations and coordinates.\n"
+    },
+    "2": {
+      "source_sha256": "e4c3564886edca2655f445c63835bf8a47fe592b6281fb688f64f7d4a3967c62",
+      "status": "reviewed",
+      "translation": "| Symptom | Minimal check | Adjustment and verification |\n"
+    },
+    "3": {
+      "source_sha256": "a9e436d2babd638ade86791e162e7de5a6b1b3128c6ae9ed93504fbf3c53dc93",
+      "status": "reviewed",
+      "translation": "| --- | --- | --- |\n"
+    },
+    "4": {
+      "source_sha256": "7b8c0b66428022344dcb495b36d2d229cdf9cdb641adccd6e80bf7beb4ff03e3",
+      "status": "reviewed",
+      "translation": "| Missing sequence or feature | Exact accver matching, valid complete lengths and units | Correct evidence-backed ID mappings and rebuild a minimal plot; see [table checks](⟦shared:0⟧) |\n"
+    },
+    "5": {
+      "source_sha256": "8b76efd7b2356cb7e4cb4bb613fa3dda305a67a1adaa66304f47a1e853ffed84",
+      "status": "reviewed",
+      "translation": "| Missing link | Endpoint IDs, intervals, explicit filters and the Coord's adjacency default | Use ⟦shared:0⟧ when all-pair selection is intended; inspect [selection rules](⟦shared:1⟧) and verify the source row in exports |\n"
+    },
+    "6": {
+      "source_sha256": "7589427298fa3a103c7288bb08fe3a40f83492164eb240cb5d98a23482b37128",
+      "status": "reviewed",
+      "translation": "| Crowded or hidden labels | Run ⟦shared:0⟧ at final dimensions; inspect visibility reasons and the plot | Adjust [label layout](⟦shared:1⟧), wrapping or canvas; recheck visibility/conflicts without treating missing counts as zero |\n"
+    },
+    "7": {
+      "source_sha256": "9dc8f20bdb93ee8c0faa3546efe61ed13359d66f9222d3d94c1b04cbdb6c03d5",
+      "status": "reviewed",
+      "translation": "| Exported positions differ or guides clip | Compare preview/save width, height, units, device, fonts and warnings | Reuse [target dimensions](⟦shared:0⟧) and inspect the saved file; dpi does not replace physical dimensions |\n"
+    },
+    "8": {
+      "source_sha256": "c429e124825e407c4c596f05116bd17c523ff0a4792636a47fd20ab87746cb7d",
+      "status": "reviewed",
+      "translation": "Requires ggchord and optional dplyr for later tables. Start with a minimal backbone at a normal size.\n"
+    },
+    "12": {
+      "source_sha256": "f46e4ad7549549350c050cb6787eafe7e8dbd87248d9b1fac54e15d71eb7bc51",
+      "status": "reviewed",
+      "translation": "Inspect failures/warnings and use the matching action above. Later sections explain export fields and measurement boundaries as needed.\n"
+    },
+    "13": {
+      "source_sha256": "344867d4c7d660caba9659426ac1eb523e8523e8fc3480fde74d7ea920eaeb0f",
+      "status": "reviewed",
+      "translation": "## Consume geometry by name ⟦shared:0⟧\n"
+    },
+    "16": {
+      "source_sha256": "9db4565f7e7154908a686e01eda92634b6e1f72c1a7024ff4868880deb6dcea0",
+      "status": "reviewed",
+      "translation": "⟦shared:0⟧ is the recommended layer-aware table interface.\n⟦shared:1⟧ retains the complete documented layout; neither is deprecated.\nSelect named fields, not fixed column positions. ⟦shared:2⟧ indexes resolved\nlayer input; IDs are build-local resources, not permanent biological identifiers.\nSee the complete [layout contract](⟦shared:3⟧).\n"
+    },
+    "17": {
+      "source_sha256": "345844e1d6acc304b9f03349effc34703561bf2fc386516366adcbba80fbb5bb",
+      "status": "reviewed",
+      "translation": "## Interpret evidence ⟦shared:0⟧\n"
+    },
+    "18": {
+      "source_sha256": "48de2d736e7364796f8d46fd33b637d787606bef0365a579a5a60729fc3072a9",
+      "status": "reviewed",
+      "translation": "⟦shared:0⟧ separates measured panel size from geometry convergence.\nA measured panel does not certify collision-free text, font embedding or all\napplications. Inspect warnings, text/guide measurements and placement reasons.\nDrawing warns when bounded physical refinement does not converge. Geometry\nmeasurements then remain estimates; diagnostics capture the warning and retain\nthe ⟦shared:1⟧ check. Try a larger canvas or revise label/guide settings,\nthen measure again.\n⟦shared:2⟧ applies documented opt-in adjustments; retain a copy\nand inspect the result. Previews and diagnostics use independent render copies.\nDirect mutation of shared ggproto layer environments retains ordinary ggplot2\nreference semantics; it is not an automatically isolated edit.\n"
+    },
+    "19": {
+      "source_sha256": "09094e5fa4f52ab36954ed30530ab408e731f0bb8bd2f658a9fbaa0be121f159",
+      "status": "reviewed",
+      "translation": "## Complete layout, tables and opt-in ordering ⟦shared:0⟧\n"
+    },
+    "20": {
+      "source_sha256": "8c2ae8c7cff7ee3961fdc01aef94e7867ad58b27757ce9b9940205804c43f94c",
+      "status": "reviewed",
+      "translation": "The preceding table identifies the backbone layer. Set ⟦shared:1⟧ in ⟦shared:0⟧ to include input rows. See the [layout contract](⟦shared:2⟧) for the full layout and [order and orientation](⟦shared:3⟧) for reordering.\n"
+    },
+    "21": {
+      "source_sha256": "40617c66d97a757c968712cede86d038986b20d77b3ee09b55020be7016c32cc",
+      "status": "reviewed",
+      "translation": "## Measure label contacts ⟦shared:0⟧\n"
+    },
+    "22": {
+      "source_sha256": "8476ea35285d40d813eed0c5df65c31d23821b6d31ba86b20b33c1c2ea24a9d6",
+      "status": "reviewed",
+      "translation": "⟦shared:0⟧ reports measured panel text objects, annotation leaders, box contacts and physical leader lengths. ⟦shared:1⟧ distinguishes source labels retained/hidden by layer policy from text objects and glyph boxes. ⟦shared:2⟧, ⟦shared:3⟧ and ⟦shared:4⟧ locate each reported contact. Its ⟦shared:5⟧ entry keeps panel measurement, geometry convergence and physical refinement passes separate. Circular refinement can test one bounded scale prediction after two measurements; ⟦shared:6⟧ records the outcome. A prediction is accepted only after rebuilding and passing the existing measured convergence gate. Rejection preserves the ordinary sequence and does not become a pass. Ordinary refinement uses a shared bounded budget across views. Glyphs within one arc string share a text-object identity; touching polyline endpoints are not counted as crossings. Inspect actual PNG output as well as the tables.\n"
+    },
+    "23": {
+      "source_sha256": "2bb3d135b652978ffdc85ddb9023bafb202c2d2e36c1d17a3da75fc4929febcb",
+      "status": "reviewed",
+      "translation": "Registered text uses the active target device for physical measurement, including ordinary labels and arc-glyph advances; a layout without an active device retains its measurement fallback. Font fallback and embedding still need separate review. Restriction labels use the same bold-name/plain-coordinate fragments and physical gap for drawing, perimeter packing and measured routing. Their effective theme or explicit type settings enter layout before placement.\n"
+    },
+    "24": {
+      "source_sha256": "2566126fdc52cf7b2570ac9ea1d9cb748fb3db0cf0a6d8daafb9ff26f57fcda8",
+      "status": "reviewed",
+      "translation": "These are oriented text envelopes, not exact ink outlines. A leader crossing a box can need visual review; whitespace and label backgrounds are not certified glyph shapes. ⟦shared:0⟧ additionally checks registered gene/feature polygon envelopes, including transparent ones. It separates proven own-source label placement (⟦shared:1⟧), contacts with other constructor records (⟦shared:2⟧), and associations without sufficient evidence (⟦shared:3⟧). Source identity is never guessed from equal contents. ⟦shared:4⟧ provides the measured vertices; ⟦shared:5⟧ lists skipped non-polygon strokes/markers. Stroke width, visibility/occlusion, outer decorations and unregistered grobs remain unchecked; a zero polygon-contact count does not certify them. Diagnostics do not improve a layout by hiding labels or changing source data. A measured panel or zero contacts in the checked categories does not establish that all layout constraints passed.\n"
+    },
+    "25": {
+      "source_sha256": "01f69940946d5a0a7f442a717d34fcafbeef2822af128996b4cb4e89d29a3c72",
+      "status": "reviewed",
+      "translation": "SnapGene serves as a visual reference for clear annotation hierarchy and orderly leaders; matched exports from that application are not required. Use controlled ggchord comparisons to assess changes in content retention, physical size, crowding and legibility.\n"
+    },
+    "26": {
+      "source_sha256": "8b5aad5c10ed519d324ae0fab3d60c6f27d3950357c960512790d2de139003ad",
+      "status": "reviewed",
+      "translation": "Automatic sequence-axis lines and major/minor ticks draw before the first gene, feature or primer layer. Opaque feature fills cover intersecting marks; a transparent feature remains transparent. Axis text keeps its measured clearance and draws in front. Your layers keep their relative addition order, including explicitly added ⟦shared:0⟧ bars; tick coordinates, lengths and source features do not change.\n"
+    },
+    "27": {
+      "source_sha256": "1deda8cb3956d58e9f3df5f1eda002c854192da614415cd68e643c0aad2d3756",
+      "status": "reviewed",
+      "translation": "With the usual overlap policy enabled, automatically positioned circular parallel labels, including seam strings such as ⟦shared:0⟧, can gain bounded inward or outward radial clearance if their text envelopes touch a feature polygon or a fixed annotation-leader root. Other text and backbone geometry remain protected; internal and exterior annotation leaders then route around the resolved axis text. Mutable leader shoulders do not feed back into axis placement. Automatic endpoint strings may use either readable side of the same tick, with a tangential gap bounded at 4 mm, to avoid fixed feature exit rays. The ⟦shared:1⟧ table records the status, signed radial shift, ⟦shared:2⟧ and ⟦shared:3⟧. Tick positions and label contents stay fixed; an explicitly supplied ⟦shared:4⟧, including a value equal to the preset, prevents this adjustment, as do explicit scale breaks. This is a local clearance rule, not a general axis-layout guarantee. Circular exterior feature and restriction-site leaders can then jointly try straight or single-elbow exits around the registered text. Source roots and label entries stay fixed; only a complete group with no text contacts or new leader crossings is accepted. Failed groups retain their existing routes and overlap appearance. Explicit straight and elbow restriction styles retain their selected routes.\n"
+    },
+    "28": {
+      "source_sha256": "b90d53e4bd29f0c92bcbec66b065e33e146c9291c51bb3e128d055c7adff7bcd",
+      "status": "reviewed",
+      "translation": "Circular exterior callouts now protect the measured origin-axis and inner feature text on their way out of the feature band. Only paths with an oriented-box contact are rerouted; the true root, final label attachment and label contents stay fixed. The bounded search verifies its candidate against all registered static text and reports ⟦shared:0⟧ as clear, detoured or unresolved. An unresolved route retains its evidence for review. Unused zero-length placeholders are removed rather than treated as real leaders or marker observations.\n"
+    },
+    "29": {
+      "source_sha256": "9a80c8057f6dbef9a43d9dfffe5cdc61e22dd227a9bdf4b0362a6bb7b00446e5",
+      "status": "reviewed",
+      "translation": "On cramped circular canvases, already-crossed exterior leaders can acquire bounded detours around measured text and other leaders. Their real roots, text-edge attachments and label positions are retained. Unresolved routes remain visible in diagnostics; zero measured crossings is not a promise about every input or exact ink.\n"
+    },
+    "30": {
+      "source_sha256": "b8d045b185f79e1240f226df39b6fa1df7ba7b7e7275e94107d7186e211ff6d6",
+      "status": "reviewed",
+      "translation": "The ⟦shared:0⟧ and ⟦shared:1⟧ policies also adjust omitted fixed linewidths in native sequence, point-link, ribbon and alignment layers. Explicit linewidth values, including values equal to the default, remain fixed; mapped linewidths keep their scales. ⟦shared:2⟧ and plots without a policy retain their styles. This does not multiply every geometry constant or native theme-derived aesthetic expression.\n"
+    },
+    "32": {
+      "source_sha256": "037658322839bc00e8c71a4513b95084a14de4d44f545d1e708cb66550f3bed7",
+      "status": "reviewed",
+      "translation": "## Target-size diagnostics and explicit ordering ⟦shared:0⟧\n"
+    },
+    "33": {
+      "source_sha256": "ad3eb15e7166a869614aa200daf8780b66dae3c51cf613073345263f961d793b",
+      "status": "reviewed",
+      "translation": "`diagnose_ggchord` inspects one PNG size and returns measurement, text and guide hints without mutating the plot. `export_ggchord_layout` returns layer tables and original_data=TRUE retains source rows. `get_chord_layout` exposes the complete public layout. `optimize_ggchord_layout` returns proposed order/directions and before/after scores; it neither edits inputs nor applies changes automatically. Readability optimization is not biological correctness.\n"
+    }
+  }
+}

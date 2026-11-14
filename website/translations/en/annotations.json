@@ -1,0 +1,105 @@
+{
+  "source_sha256": "e3e02ce273521b7e548c4160adb9affb2d0defe586a112335b0858ae5bd4cab2",
+  "blocks": {
+    "0": {
+      "source_sha256": "ab3694bd9e92517214cd8fc240e2740c01ee9c2551801b742ab0f75729aa1da3",
+      "status": "reviewed",
+      "translation": "⟦shared:0⟧⟦shared:1⟧Draw real annotations as independent layers, choose suitable shapes and share stacking positions between overlapping intervals and text.⟦shared:2⟧⟦shared:3⟧\n"
+    },
+    "2": {
+      "source_sha256": "7bc026a81c1a7fc75061ea0194031d45f0618639d65ed871a4b1ee4d84315bba",
+      "status": "reviewed",
+      "translation": "## Preserve feature semantics ⟦shared:0⟧\n"
+    },
+    "3": {
+      "source_sha256": "8bbdb261bd6b028e3cbeeb42b88f1a97acfb54657e59c0573796de1673959063",
+      "status": "reviewed",
+      "translation": "Use the first six pUC19 annotations to see how overlapping intervals share stacked positions. Source strand is retained.\n"
+    },
+    "6": {
+      "source_sha256": "d4cee1a268c6fbf5d8212f453ee450638e15c2224c8b49c39869dba84a6c0e59",
+      "status": "reviewed",
+      "translation": "⟦shared:0⟧ resolves overlapping annotation lanes. The label layer\nuses the same Position, so text anchors follow those lanes. Prefer unique\n⟦shared:1⟧ values for subset/reordered label inputs. The strict gene shortcut\nrequires known ⟦shared:2⟧; general features retain unknown/bidirectional semantics.\n"
+    },
+    "7": {
+      "source_sha256": "de8a58fa15ae1534fbfd061c4e113861449ece7575d8257150b9ecdbd2fe41f5",
+      "status": "reviewed",
+      "translation": "## Choose shapes by meaning ⟦shared:0⟧\n"
+    },
+    "8": {
+      "source_sha256": "b3f0f6e11d31d0f540ef275b7940b1ca2125f96680df8bad0c0c5a379747e2d0",
+      "status": "reviewed",
+      "translation": "| Geometry | Typical use | Important distinction |\n"
+    },
+    "9": {
+      "source_sha256": "a9e436d2babd638ade86791e162e7de5a6b1b3128c6ae9ed93504fbf3c53dc93",
+      "status": "reviewed",
+      "translation": "| --- | --- | --- |\n"
+    },
+    "10": {
+      "source_sha256": "6f6f2d446fc1fe87358da8788187e870d5f7c60da7e8a79c1faf7741cf9ecd11",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧, ⟦shared:1⟧ | Directional coding/feature interval | Known direction is evidence, not a display guess |\n"
+    },
+    "11": {
+      "source_sha256": "b764c64c4e66cd8d52983abd56922ba5d8756122873f0ff43d2e4a9c52eee660",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧, ⟦shared:1⟧ | Region or unfilled interval | Shape choice does not infer biological function |\n"
+    },
+    "12": {
+      "source_sha256": "5b850ebc02a2604f6f02bda6d3f6df38634bea985704e72e8a740706e187607e",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧, ⟦shared:1⟧, ⟦shared:2⟧ | Declared promoter/primer-style annotation | Computational matching and drawing are separate |\n"
+    },
+    "13": {
+      "source_sha256": "d6e6e928fb8fd60acd2f503e69dcbc6a4889059f07b90c37ddcaf2628ab80d12",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧, ⟦shared:1⟧, ⟦shared:2⟧ | Custom interval/point-like emphasis | Keep real interval metadata; display shape is a mapping |\n"
+    },
+    "14": {
+      "source_sha256": "7534913924cb22016482c1fc297749e8d790ad5b3f91599fb3bed08e7de32ca5",
+      "status": "reviewed",
+      "translation": "⟦shared:0⟧ and ⟦shared:1⟧ are useful presets, not aliases with\nidentical defaults. Use ⟦shared:2⟧ for signed offsets and\n⟦shared:3⟧ as a circular placement preset; the latter is not a fourth\ncoordinate mode.\n"
+    },
+    "15": {
+      "source_sha256": "2eecab6c780e6f14a0d27cb03db4cafb0c7821fd236c42c273cf3a6fe1620d97",
+      "status": "reviewed",
+      "translation": "## Highlight an interval without rewriting observations ⟦shared:0⟧\n"
+    },
+    "18": {
+      "source_sha256": "e0bc9694331d44226facfbd75f1a4ba7371d268375e0f77ce3efb2b74cc07448",
+      "status": "reviewed",
+      "translation": "The highlighted interval is the observed pUC19 replication origin. A region overlay uses its own table and ⟦shared:0⟧ scale. ⟦shared:1⟧\nnames sequences, ⟦shared:2⟧ supplies name/length in a single circle,\nand ⟦shared:3⟧ marks cropped/segmented ends. ⟦shared:4⟧ is an\nindependent sequence-position reference bar for collinear plots; it differs from\n⟦shared:5⟧, which controls genomic axes on sequences.\nAn ordinary ggplot2 annotation should use [position mapping](⟦shared:6⟧)\ninstead of treating bp as Cartesian x/y.\n"
+    },
+    "19": {
+      "source_sha256": "96d3b3403a7277d64e0e970205753ee81e2d284e9e04a56212cef8617bb26319",
+      "status": "reviewed",
+      "translation": "## Result checks ⟦shared:0⟧\n"
+    },
+    "20": {
+      "source_sha256": "c1bc3ef234fc46ca3348cea8ec82b8c71d5e5930ffe8178effd9214efdbf5e0d",
+      "status": "reviewed",
+      "translation": "Check intervals and strands before shapes and labels. Unknown strands remain in general features; stacking changes display placement, not genomic coordinates.\n"
+    },
+    "21": {
+      "source_sha256": "1e29db018545af2b1a06b18b91348fc8421f460507131a90831edd7d901edbdf",
+      "status": "reviewed",
+      "translation": "⟦shared:0⟧Continue: ⟦shared:1⟧Gene and feature arrow geometry →⟦shared:2⟧⟦shared:3⟧\n"
+    },
+    "22": {
+      "source_sha256": "a52730f5af2fb067cd3b672645fec3ff062a9b1ce0040ea05da3017951abc813",
+      "status": "reviewed",
+      "translation": "Compare shouldered/flush/triangle arrows on one observed CDS in [arrow geometry](⟦shared:0⟧).\n"
+    },
+    "23": {
+      "source_sha256": "6b28e32e52460ad05eb3951c7a80a518dc126870d2cc645fea3570f7af2c139b",
+      "status": "reviewed",
+      "translation": "## Region side, width and offset ⟦shared:0⟧\n"
+    },
+    "24": {
+      "source_sha256": "62cb17b8e9156fc8587607dac47c4a38035b0d4399eb48a5068c1be939fb5802",
+      "status": "reviewed",
+      "translation": "Keep the original query ID and interval of the first observed HSP. Defaults are width 0.08, offset 0 and inside. Each subsequent figure changes only outside placement, width or offset. These are local geometry quantities, not bp. Set fixed fill in geom parameters or map categories to region_fill with its dedicated scale. Highlighting does not establish a new functional annotation.\n"
+    }
+  }
+}

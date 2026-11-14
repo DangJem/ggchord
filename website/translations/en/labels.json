@@ -1,0 +1,75 @@
+{
+  "source_sha256": "02b89b049f0198ab08b1e57f17fcfb8cd4e7f453cd4a838330eb2325182cda57",
+  "blocks": {
+    "0": {
+      "source_sha256": "9499c96a24153f32ba75496d3d6eec8db087aba8e645ff35192b5f1b8688b41f",
+      "status": "reviewed",
+      "translation": "⟦shared:0⟧⟦shared:1⟧Arrange text while retaining annotation geometry: choose export dimensions and a label subset before choosing automatic or fixed placement.⟦shared:2⟧⟦shared:3⟧\n"
+    },
+    "2": {
+      "source_sha256": "bc1392b44859ccc547810cd8820ac7b6f8693f95db9d554f87c714249fc03d3c",
+      "status": "reviewed",
+      "translation": "## Choose a chord label layout ⟦shared:0⟧\n"
+    },
+    "3": {
+      "source_sha256": "bbffbc7dd5947b5eb7bcb7539a45cf10dba40338777f6ec93e2f8d5b32d26244",
+      "status": "reviewed",
+      "translation": "Gene labels offer ⟦shared:0⟧, ⟦shared:1⟧ and ⟦shared:2⟧ layouts. General feature\nlabels additionally support the internal-first ⟦shared:3⟧ default and external\n⟦shared:4⟧ layout. Choose the documented values for the layer you use; they are\nnot interchangeable presets.\n"
+    },
+    "6": {
+      "source_sha256": "b82f8964b6f0d053db2a225de4593e5a7f5554c9158e20ebf2d34c5777d80ab0",
+      "status": "reviewed",
+      "translation": "## Fixed and automatic placement ⟦shared:0⟧\n"
+    },
+    "7": {
+      "source_sha256": "c42ed3f6f2972364fc839c128a848f5bbf611d95fb4ab3576e57f2fbbec153d2",
+      "status": "reviewed",
+      "translation": "Use ⟦shared:1⟧ or ⟦shared:2⟧ for manual ⟦shared:0⟧,\nradial/circumferential offsets and orientation controls. Automatic layers reject\nthese manual controls: choose ⟦shared:3⟧ or remove the manual argument.\nUse ⟦shared:4⟧, ⟦shared:5⟧ and ⟦shared:6⟧ for supported fixed text styles.\n"
+    },
+    "8": {
+      "source_sha256": "f64538872c8543cd781c0ed3d1a6b9bb78d88e5c324930ae4a7591a4f8e1f0e7",
+      "status": "reviewed",
+      "translation": "⟦shared:0⟧, ⟦shared:1⟧, ⟦shared:2⟧ and ⟦shared:3⟧ control fitting\nwhere supported. Shrinking is explicit and bounded. Unresolved labels may move\nor hide; the feature geometry remains. Inspect ⟦shared:4⟧ and\n⟦shared:5⟧ at the final export size.\n"
+    },
+    "11": {
+      "source_sha256": "cd49e96927505b0be15cf0873935e448fac8ff634cf9add4a27bb5d3d97c60bb",
+      "status": "reviewed",
+      "translation": "This fixes text rotation at 30 degrees. Fixed placement does not spread neighbouring labels; unresolved text may hide. One label is visible here while all four CDS arrows remain. Compare the automatic layouts below when more names need to be displayed.\n"
+    },
+    "12": {
+      "source_sha256": "24683c7975772820cfc636b878a9c4add13958c3a9b5d1da4807833c42ed280d",
+      "status": "reviewed",
+      "translation": "## Match labels to arrows ⟦shared:0⟧\n"
+    },
+    "13": {
+      "source_sha256": "f67b92b7ca6457f5d7e2d450d6239aed2f7a8616a68d84953ad8f2cba4a83eb8",
+      "status": "reviewed",
+      "translation": "Use the same CDS records for arrows and labels, preserving identifiers, intervals and biological strands. Filter labels from that table without changing source coordinates. Fixed layouts allow radial offsets and text rotation.\n"
+    },
+    "14": {
+      "source_sha256": "847c24e80ca245257a8af08776bc328293d208a01046e4f7c7d9cacfcf254872",
+      "status": "reviewed",
+      "translation": "## Compare the three gene layouts ⟦shared:0⟧\n"
+    },
+    "19": {
+      "source_sha256": "7b849b83ab44cd2c8d1034646eaa3f7edf548bd656b33ea0bd607bbcd0131d2c",
+      "status": "reviewed",
+      "translation": "Compare the same four named CDS in each layout.\nPass ⟦shared:1⟧ or ⟦shared:2⟧ to ⟦shared:0⟧ to inspect another layout at the same size. The inputs and\nrequested font size are identical; only the layout choice changes. Auto uses\nshared columns where applicable, radial follows local contours and arc follows\nthe sequence tangent. ⟦shared:3⟧ shows the separate fixed-label route;\nits explicit rotation does not belong in an automatic repel layer.\nGeneral feature labels have additional internal-first/callout choices; see the\n[complete circular workflow](⟦shared:4⟧) for dense mixed annotation and\n[stacking](⟦shared:5⟧) for inherited or explicit Position anchors.\n"
+    },
+    "20": {
+      "source_sha256": "96d3b3403a7277d64e0e970205753ee81e2d284e9e04a56212cef8617bb26319",
+      "status": "reviewed",
+      "translation": "## Result checks ⟦shared:0⟧\n"
+    },
+    "21": {
+      "source_sha256": "378ed86eadcfcdf5db0884c257e71246a50b28a06e3489aebaa1fe7a84d7e3a1",
+      "status": "reviewed",
+      "translation": "The three layout comparisons share the same input. Assess text direction, leaders and hiding reasons together; missing text does not mean a feature was lost.\n"
+    },
+    "22": {
+      "source_sha256": "b2d26c2f0b72b2ff31ff2ea6587021496e2c28cf6161c55778989fbd93479e72",
+      "status": "reviewed",
+      "translation": "⟦shared:0⟧Continue: ⟦shared:1⟧Flexible parameter formats →⟦shared:2⟧⟦shared:3⟧\n"
+    }
+  }
+}

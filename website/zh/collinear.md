@@ -1,4 +1,4 @@
-<div class="lesson-intro">多序列关系的共线性综合结果：四条真实基因组、分链特征和向外绕行的跨行连接。</div>
+<div class="section-intro">多序列关系的共线性综合结果：四条真实基因组、分链特征和向外绕行的跨行连接。</div>
 
 
 ## 研究问题、对齐与取舍 {#question}

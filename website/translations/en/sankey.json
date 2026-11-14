@@ -1,0 +1,45 @@
+{
+  "source_sha256": "2ecd354d9bc34d8000e07676bcdcdcf5ab661fd87753095b083a1be8d3fa9928",
+  "blocks": {
+    "0": {
+      "source_sha256": "da1a274bced79f06c32ff0607fd0c47b42dc53b813a337a7afd8c4d5c3a21cc8",
+      "status": "reviewed",
+      "translation": "## Prepare real sources ⟦shared:0⟧\n"
+    },
+    "2": {
+      "source_sha256": "1579892b55b43202daa797dbc87cf5612d826be0ca04f8239b7c43e4d405532c",
+      "status": "reviewed",
+      "translation": "## Mirrored two-column relationships ⟦shared:0⟧\n"
+    },
+    "3": {
+      "source_sha256": "1fba50f93e38dd3599e8577c34cd080364a107d7b27951d60bd8033bb5ee976d",
+      "status": "reviewed",
+      "translation": "Sankey displays each source once in each column. Query endpoints connect from\nthe left to subject endpoints on the right. Reciprocal input rows stay distinct;\nsame-entity links are excluded by default (⟦shared:0⟧ opts in). Widths\ncome from both real intervals. This layout expresses relationships, not flow\nconservation. It owns its left/right copies and does not accept ⟦shared:1⟧ or\nshared branches in this first version.\n"
+    },
+    "6": {
+      "source_sha256": "22e33c57161bcbf35c3fcd306ddeebb1103f0bd3c9f618f9efa3d422dd41077e",
+      "status": "reviewed",
+      "translation": "## Change only the column gap ⟦shared:0⟧\n"
+    },
+    "8": {
+      "source_sha256": "91cbf6a80e93f9d26ff677ffd44e75395c047e79642bd0d2384c3462b1c965e9",
+      "status": "reviewed",
+      "translation": "![Change only the column gap](⟦shared:0⟧)\n"
+    },
+    "9": {
+      "source_sha256": "9f4d4ae3d73f3d54bcf9c5d5d9c854fb8fd29a85f57fcb22ba1b6b6929522a18",
+      "status": "reviewed",
+      "translation": "## Check sources and instances ⟦shared:0⟧\n"
+    },
+    "11": {
+      "source_sha256": "7b38f60bdf1cf16b5551a214cfbc9cb34d713df801460820d4f0a63f441ec188",
+      "status": "reviewed",
+      "translation": "Each of two sources appears once on each side. Do not duplicate seq_data to manufacture observations. Reciprocal records stay distinct. self_links = TRUE enables existing self records without creating any. seq_order contains each source once; between and shared branches are unsupported.\n"
+    },
+    "12": {
+      "source_sha256": "359c06aac011dfab9139c9370e613f829e6633ceb7441c6ff37235174087119e",
+      "status": "reviewed",
+      "translation": "Example: trace both ends of one ribbon back to query and subject and explain why total widths need not be conserved.\n"
+    }
+  }
+}

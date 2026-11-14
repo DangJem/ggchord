@@ -19,8 +19,7 @@ its Wallace melting-temperature estimate is a composition heuristic.
 ## Restriction interpretation {#restriction}
 `find_restriction_sites()` returns unfiltered matches and cleavage coordinates;
 `filter_restriction_sites()` selects a display set. Enzyme site counts refer to
-the full supplied sequence and remain stable after filtering. `methylation =
-"auto"` uses audited context only for exactly recognized bundled references;
+the full supplied sequence and remain stable after filtering. `methylation = "auto"` uses audited context only for exactly recognized bundled references;
 it does not claim unknown samples are unblocked. This example explicitly uses `"none"`; this is a search assumption, not a measurement
 of methylation in a physical sample. `geom_restriction_site(leader = "radial")` is the default route.
 

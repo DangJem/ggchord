@@ -1,0 +1,45 @@
+{
+  "source_sha256": "40837529b291b3e5e9e9c1605fbb1558838e86f5009e963f3e2d38e18ceb99f6",
+  "blocks": {
+    "0": {
+      "source_sha256": "1c294ed5bdfd815edc9fb37723fc37d0e667a0b8296e4cba2267daad3ad11bf9",
+      "status": "reviewed",
+      "translation": "## Length and a prepared annotation ⟦shared:0⟧\n"
+    },
+    "1": {
+      "source_sha256": "515bf4b4fb5cf3549625ae9b977182764e1573cbe02291184fe561fa826ac3c1",
+      "status": "reviewed",
+      "translation": "Only lengths and prepared tables are needed. The ori row is the verified pUC19 annotation 867–1455, matching the original inspectorigin output; no DNA recognition is run. Dependencies: ggchord and dplyr.\n"
+    },
+    "4": {
+      "source_sha256": "e803587fe072efa109b6146de3f6630312410e297e64bae81116f2e81239c262",
+      "status": "reviewed",
+      "translation": "![Circular backbone](⟦shared:0⟧)\n"
+    },
+    "5": {
+      "source_sha256": "8e278d92e5799be4b313fdcb8c4f90c2647179b84d54408dfff4f21e39da789d",
+      "status": "reviewed",
+      "translation": "## Add the feature and its label ⟦shared:0⟧\n"
+    },
+    "7": {
+      "source_sha256": "b09b1c0d76dda50278492a9f1ba8091769e60428180ad3e086c933f39d5656d7",
+      "status": "reviewed",
+      "translation": "![Circular feature and label](⟦shared:0⟧)\n"
+    },
+    "8": {
+      "source_sha256": "d11e6195f8f20a7a076c0473395ecfde774c61e305ef95837833d9572bea2760",
+      "status": "reviewed",
+      "translation": "Locate both ori endpoints on the ticks and trace the label to anno. A circular display is not evidence of molecular topology.\n"
+    },
+    "9": {
+      "source_sha256": "fe643b20ecedb395a76796870b7abc08e62456e0f593215d84f6680762184bc1",
+      "status": "reviewed",
+      "translation": "## Preview and save ⟦shared:0⟧\n"
+    },
+    "10": {
+      "source_sha256": "cc3a2175db751f1ab4437ea2e6a02b26d823a18b104d1b16ca5dc3bde6832d60",
+      "status": "reviewed",
+      "translation": "Remove the label layer and rerun; backbone and source interval stay unchanged. Replace the row with your own known annotation.\n"
+    }
+  }
+}

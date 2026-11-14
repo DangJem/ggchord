@@ -1,0 +1,130 @@
+{
+  "source_sha256": "6961c1181f25edcdcbd691d5353913582bc968938a44e99dd62d9eba95a05b1a",
+  "blocks": {
+    "0": {
+      "source_sha256": "6c62524aef110a9b95b7913779650d65d1f374f6d04f19f9b1db1281dc9e0b9e",
+      "status": "reviewed",
+      "translation": "⟦shared:0⟧⟦shared:1⟧Combine original FASTA, GFF3 and standard BLAST tables into a traceable comparison. Inspect inputs, choose a display subset, then compare chord and full-length views.⟦shared:2⟧⟦shared:3⟧\n"
+    },
+    "1": {
+      "source_sha256": "998ca599eb0b07586c7da3b6a3e93ca1e113b1a83223f469b2631190f8e0fecb",
+      "status": "reviewed",
+      "translation": "## Question, data sources and licensing ⟦shared:0⟧\n"
+    },
+    "2": {
+      "source_sha256": "f32d33ea87b96ee34d2e40da7ff47e4e065364d8c63272e316e5a4ad8346e705",
+      "status": "reviewed",
+      "translation": "Starting with original files, compare observed similarity intervals and CDS across four source genomes. FASTA/GFF3 identifiers and sources match the [four-sequence case](⟦shared:0⟧). Standard BLAST tables retain original values; conversion and physical source rows are recorded in examples/blastn-standard/provenance.csv.\n"
+    },
+    "3": {
+      "source_sha256": "b2d28461ec62c55c0ed3000fe65586b98bf1517bfaf82a9815a486565a90da97",
+      "status": "reviewed",
+      "translation": "Package code is MIT-licensed. Original database records and third-party catalogues retain their own source terms; package licensing does not automatically relicense every input. The manual archive carries unchanged files, SHA256 and provenance. The separate EMALE format examples retain gggenomes MIT source licensing in GGGENOMES-LICENSE.txt.\n"
+    },
+    "4": {
+      "source_sha256": "0fa3fbfa0a873728926e3af5e6670e13482733d3820f9266bf2ef86dfe4f9a5c",
+      "status": "reviewed",
+      "translation": "## Prepare this page ⟦shared:0⟧\n"
+    },
+    "5": {
+      "source_sha256": "3f290e50702adae2754e06b5a2d1ac35abbc86807124283c4e4be71c55e8ffdf",
+      "status": "reviewed",
+      "translation": "Extract the [input bundle](⟦shared:0⟧) so your working directory contains ⟦shared:1⟧.\n"
+    },
+    "6": {
+      "source_sha256": "06da281c9b8543e338cf6c5b3e6965428f2f994092daf9aee293976967e2c3fb",
+      "status": "reviewed",
+      "translation": "## Read and inspect original records ⟦shared:0⟧\n"
+    },
+    "9": {
+      "source_sha256": "07c7c77693aede7b7ee9cec371afdc2bbd1e5595a0e384705a1f6176b1e99b00",
+      "status": "reviewed",
+      "translation": "FASTA supplies IDs and lengths, GFF3 supplies annotation ranges and strands, and BLAST supplies observed alignments. The empty validation summary means no issues were reported for these inputs.\n"
+    },
+    "10": {
+      "source_sha256": "6f18b1516f973bda6b930d312cfc25fd7a629a4668f04842b1db5f7d095d4270",
+      "status": "reviewed",
+      "translation": "## Make the display selection explicit ⟦shared:0⟧\n"
+    },
+    "13": {
+      "source_sha256": "363a6564c5a27d7bd254522f28e1cbb078cf9b47f7179fc6a82e43b2db4af8cb",
+      "status": "reviewed",
+      "translation": "Keep alignments with at least 80% identity and an alignment length of at least 500 bp. For the chord view, show up to six of the longest CDS per sequence so the links remain readable.\n"
+    },
+    "17": {
+      "source_sha256": "4d76447f80da6ccfe24bd8c508d68986fa897fad3188f9dacc30d37a61c58169",
+      "status": "reviewed",
+      "translation": "## Build a chord comparison ⟦shared:0⟧\n"
+    },
+    "20": {
+      "source_sha256": "ee05d3f4ac8fac62074e1a5c1f729bf1d3b14d5ff6ffe5b10d276d2f1d86e8f2",
+      "status": "reviewed",
+      "translation": "Read sequence labels first, then source-strand feature arrows and interval links.\nRibbons encode existing aligned intervals and mapped identity; their crossing is\nnot itself evidence of a rearrangement. The selected features remain visibly\nseparate from the much wider alignment spans. Use the full input tables when\nscientific interpretation needs annotations outside this display subset.\n"
+    },
+    "21": {
+      "source_sha256": "c2624bfa9c01f48d03509b53416559586b25360220431c0a487efdb755a188ba",
+      "status": "reviewed",
+      "translation": "## Inspect all annotations in a linear view ⟦shared:0⟧\n"
+    },
+    "24": {
+      "source_sha256": "cc5f970ee6765a2afb8d6e2e21b2a3c62bd6df4989ac3bfdeb54bca42c12e195",
+      "status": "reviewed",
+      "translation": "This view draws all imported annotations. Ribbons connect adjacent displayed\nsequences by default; retaining every comparison is an explicit layer decision.\nThe bp scale bar belongs to collinear coordinates. See [local views](⟦shared:0⟧)\nfor cropping, source-coordinate axes and independent windows, and\n[output](⟦shared:1⟧) to preview and save at the gallery's stated dimensions.\n"
+    },
+    "25": {
+      "source_sha256": "d1b8ae033f968868fa91d2e59cb86b2a025d60cd4f826d679bbcc9d3c2f18ab1",
+      "status": "reviewed",
+      "translation": "## Keep the evidence with the figure ⟦shared:0⟧\n"
+    },
+    "26": {
+      "source_sha256": "2bacd0cc390dff61a345056208ae4244c7ec7557eb6728bfbbb31472eb85d899",
+      "status": "reviewed",
+      "translation": "The input archive contains unmodified FASTA/GFF3/BLAST files, a SHA256 manifest\nand the shared example script. The plot manifest records the code hash, PNG device,\nwidth, height and dpi. The accession names identify source records; a drawing is\nnot a replacement for the original annotations or alignment evidence.\n"
+    },
+    "27": {
+      "source_sha256": "bde2b65e015f74c7eb22b07b68f2c9931a8f9e214f04b0efadfd334b03836d2c",
+      "status": "reviewed",
+      "translation": "## Select fields before passing data ⟦shared:0⟧\n"
+    },
+    "28": {
+      "source_sha256": "6f782ef561df8dc0232f597b8963541528a7efd94ce2e4492f913538335e541c",
+      "status": "reviewed",
+      "translation": "Backbones use ⟦shared:0⟧ and ⟦shared:1⟧. Ribbons use IDs and endpoints on both sequences. This example also filters on ⟦shared:2⟧ and ⟦shared:1⟧. See [alignment inputs](⟦shared:3⟧).\n"
+    },
+    "29": {
+      "source_sha256": "96d3b3403a7277d64e0e970205753ee81e2d284e9e04a56212cef8617bb26319",
+      "status": "reviewed",
+      "translation": "## Result checks ⟦shared:0⟧\n"
+    },
+    "30": {
+      "source_sha256": "788bea29a7df23635c1dd67d2a7fe45c0842c890d48bb14cf1442b31a5deac87",
+      "status": "reviewed",
+      "translation": "Check that IDs agree across the tables, inspect filtering reports and verify that guides encode identity and strand. Use the overview to locate regions, then focus a neighbourhood to study a CDS.\n"
+    },
+    "31": {
+      "source_sha256": "9691c3342ad3d2bab44a159037ef19dd6b768d33c362ff095cdc5eb3988e759b",
+      "status": "reviewed",
+      "translation": "⟦shared:0⟧Continue: ⟦shared:1⟧Plotting concepts →⟦shared:2⟧⟦shared:3⟧\n"
+    },
+    "32": {
+      "source_sha256": "591dc8793ee0d95e2fd01b15e7bd5d3f4f9116e566c8c71a8bc4cdb92538a344",
+      "status": "reviewed",
+      "translation": "## Save this result ⟦shared:0⟧\n"
+    },
+    "33": {
+      "source_sha256": "4247b56ca5b32b5aae74aefc66b4084e55c095ba6affe490d9cdf08aaf631d90",
+      "status": "reviewed",
+      "translation": "Save the plot just created to the working directory; use matching dimensions for preview.\n"
+    },
+    "35": {
+      "source_sha256": "5ce77666e2dbcc25bfc7d20bd7d1fd62f19724f979aebf4567b59d02fe038164",
+      "status": "reviewed",
+      "translation": "## Evidence checks before saving ⟦shared:0⟧\n"
+    },
+    "36": {
+      "source_sha256": "ccda49f2bd1d1c2e56dd0816e0441f25c51a6fe72ff16153151714e99548be5a",
+      "status": "reviewed",
+      "translation": "Preview with view_ggchord at the declared width/height and save with ggsave at matching dimensions. Check IDs, source strands, endpoint directions, selection reports, legend units and hidden-label reasons. A successful PNG does not certify font portability across PDF/SVG viewers. Keep complete source tables, display subsets, parameters, version and input hashes. Download the [asset/provenance record](⟦shared:0⟧).\n"
+    }
+  }
+}

@@ -1,0 +1,95 @@
+{
+  "source_sha256": "ef80e7e311d2e8bfc0b903e8aee80ed30b3611dbc18213c24175ff0dfad7f33e",
+  "blocks": {
+    "0": {
+      "source_sha256": "37aa7df51808dedd819d382b6d30261b6c98a150357bd9eb41c0a7ca878fca97",
+      "status": "reviewed",
+      "translation": "## Choose by input and goal ⟦shared:0⟧\n"
+    },
+    "1": {
+      "source_sha256": "593930daad9ad67920f427201dd983ef9a75e0dc0b0d48e7e71c6ca95c29591f",
+      "status": "reviewed",
+      "translation": "Identify the original input and the intended plot. Every path preserves source IDs, complete lengths and coordinate units. Readers do not run alignments or generate missing relationships or annotations.\n"
+    },
+    "2": {
+      "source_sha256": "89be405df9acf3d471476d65f02e9b5e5d9c3e4c8ed641cd67006a592b920ca4",
+      "status": "reviewed",
+      "translation": "| Input available | Shortest processing path | Result and plotting entry |\n"
+    },
+    "3": {
+      "source_sha256": "a9e436d2babd638ade86791e162e7de5a6b1b3128c6ae9ed93504fbf3c53dc93",
+      "status": "reviewed",
+      "translation": "| --- | --- | --- |\n"
+    },
+    "4": {
+      "source_sha256": "d83d2e4fc15a0201a8b2c5e1d05dc291590dc3770419eb40f922dc2ce9de1c75",
+      "status": "reviewed",
+      "translation": "| Existing R tables | Organize [minimal fields](⟦shared:0⟧), check endpoint/annotation IDs and inspect [validation reports](⟦shared:1⟧) | Length, HSP and annotation tables → [shared data and layers](⟦shared:2⟧) |\n"
+    },
+    "5": {
+      "source_sha256": "a07160af02d710ff4dc6fe589acf21e671eb22af4a9ad538f5d577d8c26eabdc",
+      "status": "reviewed",
+      "translation": "| FASTA, GFF3 and BLAST/PAF | [Import sequences and annotations](⟦shared:0⟧), then [alignments](⟦shared:1⟧); check lengths, units and IDs, retaining reverse endpoints | Source tables → [relationship plot](⟦shared:2⟧) or [HSP Dotplot](⟦shared:3⟧) |\n"
+    },
+    "6": {
+      "source_sha256": "00d26fd864acb45c0ac1772ce9ba198499e6e45658cb87ace8ab444c409d0091",
+      "status": "reviewed",
+      "translation": "| One GenBank record | Use ⟦shared:1⟧ in [sequence import](⟦shared:0⟧); inspect lengths, annotation hierarchy and original segments | One sequence and annotations → [circular backbone and annotations](⟦shared:2⟧) |\n"
+    },
+    "7": {
+      "source_sha256": "57d9cbcf872a8d562a8069cd1831356a0bfa4ec4697089bd6e460c794f3c2037",
+      "status": "reviewed",
+      "translation": "| Protein BLASTp and complete lengths | [Declare aa units and read alignments](⟦shared:0⟧); verify both protein IDs; supply actual CDS/phase before projecting to DNA | Protein positions → [protein comparison](⟦shared:0⟧); DNA positions → [projection](⟦shared:1⟧) |\n"
+    },
+    "8": {
+      "source_sha256": "a9e9599f140a772e98d57bc25b083cdf4a2442a54dbe7535151efa33f05914c5",
+      "status": "reviewed",
+      "translation": "| BED/BEDPE intervals | [Read intervals or paired intervals](⟦shared:0⟧) and check the reader's one-based conversion without converting twice | Annotation intervals or paired links → [features](⟦shared:1⟧) and [links](⟦shared:2⟧) |\n"
+    },
+    "9": {
+      "source_sha256": "5aaf747adb5b32652440a2e39c1d6ecd4a89409f2e7533fc5ea1831a359bd87e",
+      "status": "reviewed",
+      "translation": "| bedGraph/BigWig signals | [Import signals](⟦shared:0⟧), retaining units, missingness and source intervals without filling unknown regions with zero | Signals → [tracks](⟦shared:1⟧); counts/bins → [track statistics](⟦shared:2⟧) |\n"
+    },
+    "10": {
+      "source_sha256": "b6fcb6ac483b91d592f30069306a5a3db53d2a04600b0da74e047877403975dd",
+      "status": "reviewed",
+      "translation": "| Existing character alignment | [Import aligned characters](⟦shared:0⟧), checking gaps, source positions and alphabet | Observed alignment columns → [magnification and character details](⟦shared:1⟧) |\n"
+    },
+    "11": {
+      "source_sha256": "29bf44bcf268ca09f51155d9d74dd62c58276a050837b321f352db8734d25ad7",
+      "status": "reviewed",
+      "translation": "## Checks before plotting ⟦shared:0⟧\n"
+    },
+    "12": {
+      "source_sha256": "6a945b33ca903e50420d02398f7d5257d448fbd02dfae0c10a97f4472ca1a828",
+      "status": "reviewed",
+      "translation": "1. Sequence ⟦shared:0⟧ values are unique and lengths come from complete sources, never the last annotation endpoint.\n"
+    },
+    "13": {
+      "source_sha256": "3ea56fbc10c7359bec931c371e2ddc8a6b000a050891a4233e3139f5b2d0cb77",
+      "status": "reviewed",
+      "translation": "2. Link ⟦shared:0⟧/⟦shared:1⟧ and annotation ⟦shared:2⟧ match the sequence table. Explicitly distinguish repeated contig names across samples; readers do not guess membership.\n"
+    },
+    "14": {
+      "source_sha256": "77e85605231ffc5733f046aa168d56bc71da0e0c801f254a7e9c26ed645eec09",
+      "status": "reviewed",
+      "translation": "3. DNA uses bp and proteins use aa; BED/PAF readers already convert coordinates. Ascending/descending link endpoints can encode direction and must not be uniformly sorted.\n"
+    },
+    "15": {
+      "source_sha256": "9d1d02db00e621f23af3e888dc6f41188267b2e65e55639c6cefed46c022fe1c",
+      "status": "reviewed",
+      "translation": "4. Draw a minimal plot before adding layers, [local settings](⟦shared:0⟧) and [target-size output](⟦shared:1⟧). Use [symptom-based diagnostics](⟦shared:2⟧) for problems.\n"
+    },
+    "16": {
+      "source_sha256": "d84ab284b700eaf5fd946e4da0ec078041839150232bfd95d3965e3b7202c437",
+      "status": "reviewed",
+      "translation": "## Complete source-backed example ⟦shared:0⟧\n"
+    },
+    "17": {
+      "source_sha256": "a944153d61ee9bdba9930a32e8564a53fa21692d6b6898fe78c06c762cdfae27",
+      "status": "reviewed",
+      "translation": "[Sequence comparison from FASTA/GFF3/BLAST](⟦shared:0⟧) retains paths, display filters, inputs and results. Obtain originals from the [input archive](⟦shared:1⟧), extract it and run downloaded scripts from a directory containing ⟦shared:2⟧.\n"
+    }
+  }
+}

@@ -1,0 +1,55 @@
+{
+  "source_sha256": "6b31234d724adf6b0adf475e5c5c2926a2b384f94fff87b52777ccc81d577f59",
+  "blocks": {
+    "0": {
+      "source_sha256": "b3faf3a3f6d6b6b6c0792168ecec6d515365bfce4a454017ec65dc33635729cd",
+      "status": "reviewed",
+      "translation": "## Dense, complete annotation inputs ⟦shared:0⟧\n"
+    },
+    "1": {
+      "source_sha256": "9521adc99afe9ac664d0f0ecfb03828ae9606837ebb8e9da432d6fbb4242cf2f",
+      "status": "reviewed",
+      "translation": "This independent pETDuet-1 example demonstrates the interaction of complete annotations, primers and enzyme labels at a normal output size. It does not depend on objects from the pUC19 page.\n"
+    },
+    "6": {
+      "source_sha256": "ec4d6f2faba1106e2ad01d5b9f40a582464216dd61451c75f2b3fed8498fd5b4",
+      "status": "reviewed",
+      "translation": "## What complete means here ⟦shared:0⟧\n"
+    },
+    "7": {
+      "source_sha256": "b4d4a7e06e2fe210acf2294303f5c4cd9b1e70308674697ab622a231eca297df",
+      "status": "reviewed",
+      "translation": "All 20 features, 5 independent reference primers and 58 site rows in the selected profile are supplied. These sites occupy 54 distinct positions. The source saves an empty enzyme profile, so the explicit policy is unique six-or-more-base commercial nonredundant cutters. Enzyme-profile selection and arbitrary display sampling are different operations.\n"
+    },
+    "8": {
+      "source_sha256": "641f80d2e71f2b04f4c00ecf7007ca77c90b6078a26b2fa00c6beda98c1cfc6d",
+      "status": "reviewed",
+      "translation": "## Label and geometry responsibilities ⟦shared:0⟧\n"
+    },
+    "9": {
+      "source_sha256": "f05a5f93b28b75e31b2ffee942eb49b616787f8e20053e9d173fb942afa47ba3",
+      "status": "reviewed",
+      "translation": "Stacking determines feature bands. The label layer first uses available internal space and can move text outside; shared source positions remain fixed. A shared enzyme label can describe several rows at one position. Do not infer source counts from the number of text strings.\n"
+    },
+    "10": {
+      "source_sha256": "555e5fe22afbc9d13fbb14f7903943adadb6af8fa662cfc0e27b8dbe4b1af8d3",
+      "status": "reviewed",
+      "translation": "## More room without deleting data ⟦shared:0⟧\n"
+    },
+    "11": {
+      "source_sha256": "f1d116ec599e50f85870fed9b8dfa2ee29e017d46a9b144f813190eab8bfd936",
+      "status": "reviewed",
+      "translation": "The same plot can be exported on a wider canvas. This changes physical space; it does not alter features, selected sites, strands or complete length. Check label diagnostics when selecting an output size.\n"
+    },
+    "13": {
+      "source_sha256": "e85385cafb6fa8d604c8f4df16bd63c6f291240a65b9dc03309a8188063987b7",
+      "status": "reviewed",
+      "translation": "## Related functions ⟦shared:0⟧\n"
+    },
+    "14": {
+      "source_sha256": "baa3a95666bafdff3b61df470fb46f6bc86d1ef3b4234504cf19a3f477eb4fc2",
+      "status": "reviewed",
+      "translation": "[Feature stacking](⟦shared:0⟧) · [Labels](⟦shared:1⟧) · [All 13 reference maps](⟦shared:2⟧)\n"
+    }
+  }
+}

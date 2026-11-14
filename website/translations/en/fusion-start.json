@@ -1,0 +1,50 @@
+{
+  "source_sha256": "45839945e1958e888f690703a4b0b938282d445040560367d83eb6cea1bcfd47",
+  "blocks": {
+    "0": {
+      "source_sha256": "b75edfae35b647dc10ed09d56c100a97f16f11a5642c176116ab5b4995429577",
+      "status": "reviewed",
+      "translation": "## Start with two independent plots ⟦shared:0⟧\n"
+    },
+    "1": {
+      "source_sha256": "e1c4fe47db2af1185a42f69b9e281ad8ecc437582ee97dd56ea11513c9ffb807",
+      "status": "reviewed",
+      "translation": "Use ggchord, dplyr and the original PAF in the [input bundle](⟦shared:0⟧). Print course_center and course_detail independently, then connect one existing relationship.\n"
+    },
+    "5": {
+      "source_sha256": "cc4a1b647ca27a67cf7ee82667974a990b2707de099178cea30b5ee462cbf8b1",
+      "status": "reviewed",
+      "translation": "![Independent center plot](⟦shared:0⟧)\n"
+    },
+    "6": {
+      "source_sha256": "699243f2ac8ad4a00015cd84fe0de9ea5e406b7a7c41e5fa5e54055c28b4a79f",
+      "status": "reviewed",
+      "translation": "![Independent detail plot](⟦shared:0⟧)\n"
+    },
+    "7": {
+      "source_sha256": "e67a000767306b54052d30edad42f35d07b7947986d19ac9879185fa3715c1a4",
+      "status": "reviewed",
+      "translation": "![Two panels and one source relationship](⟦shared:0⟧)\n"
+    },
+    "8": {
+      "source_sha256": "78943513df7b9849ed40eb4a97c43f63a790aa4b36e746198abc85dce64ed133",
+      "status": "reviewed",
+      "translation": "## Check intervals, panels and instances ⟦shared:0⟧\n"
+    },
+    "9": {
+      "source_sha256": "55491dbaa3b1106427a720b6e11e22a33cccf5fa59ba7ba7c4ed1bb26a01b1b0",
+      "status": "reviewed",
+      "translation": "Fusion is a composition, not a seventh Coord. Each panel retains its data, layers, scales and physical ratio. A side places a panel without rotating it. Endpoints must share units, be fully visible and route unambiguously; direct bp–aa links are unsupported.\n"
+    },
+    "11": {
+      "source_sha256": "45e8888c6cfdb2579f966d54effdda2be436913aa7d6e857a6ae78c00332176f",
+      "status": "reviewed",
+      "translation": "## Save at the same size ⟦shared:0⟧\n"
+    },
+    "13": {
+      "source_sha256": "b81c87d521587ae4cc39ced8270bed36698b69a1ce20cd5c98f72201d4d97b8b",
+      "status": "reviewed",
+      "translation": "Example: choose another real HSP and identify qpanel/spanel and its source row. Dotplot, facets and unregistered external plots are unsupported.\n"
+    }
+  }
+}

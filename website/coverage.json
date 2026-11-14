@@ -13,8 +13,8 @@
   {
     "id": "real",
     "title": {
-      "en": "Original-record comparisons",
-      "zh": "真实记录比较"
+      "zh": "真实记录比较",
+      "en": "Original-record comparisons"
     },
     "articles": [
       "real-data"
@@ -34,8 +34,8 @@
   {
     "id": "circular",
     "title": {
-      "en": "Complete circular annotation",
-      "zh": "完整圆图注释"
+      "zh": "完整圆图注释",
+      "en": "Complete circular annotation"
     },
     "articles": [
       "plasmid-catalog",
@@ -54,8 +54,8 @@
   {
     "id": "validation",
     "title": {
-      "en": "Validation, cleaning and hierarchy",
-      "zh": "校验、清理与层次"
+      "zh": "校验、清理与层次",
+      "en": "Validation, cleaning and hierarchy"
     },
     "articles": [
       "data"
@@ -71,8 +71,8 @@
   {
     "id": "formats",
     "title": {
-      "en": "Formats and adapters",
-      "zh": "文件格式与适配器"
+      "zh": "文件格式与适配器",
+      "en": "Formats and adapters"
     },
     "articles": [
       "alignments",
@@ -100,8 +100,8 @@
   {
     "id": "preparation",
     "title": {
-      "en": "Link preparation and statistics",
-      "zh": "连接准备与统计"
+      "zh": "连接准备与统计",
+      "en": "Link preparation and statistics"
     },
     "articles": [
       "ribbons"
@@ -117,8 +117,8 @@
   {
     "id": "pointlinks",
     "title": {
-      "en": "Interval and point links",
-      "zh": "区间与点连接"
+      "zh": "区间与点连接",
+      "en": "Interval and point links"
     },
     "articles": [
       "ribbons",
@@ -138,8 +138,8 @@
   {
     "id": "feature",
     "title": {
-      "en": "Features and Position",
-      "zh": "Feature 与 Position"
+      "zh": "Feature 与 Position",
+      "en": "Features and Position"
     },
     "articles": [
       "annotations"
@@ -155,8 +155,8 @@
   {
     "id": "labels",
     "title": {
-      "en": "Automatic and fixed labels",
-      "zh": "自动与固定标签"
+      "zh": "自动与固定标签",
+      "en": "Automatic and fixed labels"
     },
     "articles": [
       "labels"
@@ -175,8 +175,8 @@
   {
     "id": "decorations",
     "title": {
-      "en": "Axes, scale bars and regions",
-      "zh": "轴、参照条与区域"
+      "zh": "轴、参照条与区域",
+      "en": "Axes, scale bars and regions"
     },
     "articles": [
       "views",
@@ -194,8 +194,8 @@
   {
     "id": "tracks",
     "title": {
-      "en": "Quantitative tracks and domains",
-      "zh": "定量轨道与数值域"
+      "zh": "定量轨道与数值域",
+      "en": "Quantitative tracks and domains"
     },
     "articles": [
       "tracks",
@@ -217,8 +217,8 @@
   {
     "id": "recognition",
     "title": {
-      "en": "Primers, sites and feature search",
-      "zh": "引物、酶切及 feature 搜索"
+      "zh": "引物、酶切及 feature 搜索",
+      "en": "Primers, sites and feature search"
     },
     "articles": [
       "recognition",
@@ -239,8 +239,8 @@
   {
     "id": "projection",
     "title": {
-      "en": "CDS and link projection",
-      "zh": "CDS 与连接投影"
+      "zh": "CDS 与连接投影",
+      "en": "CDS and link projection"
     },
     "articles": [
       "homology",
@@ -256,8 +256,8 @@
   {
     "id": "homologs",
     "title": {
-      "en": "Explicit clusters and loci",
-      "zh": "显式 cluster 与 loci"
+      "zh": "显式 cluster 与 loci",
+      "en": "Explicit clusters and loci"
     },
     "articles": [
       "homology"
@@ -273,8 +273,8 @@
   {
     "id": "views",
     "title": {
-      "en": "Focus, segments and source mapping",
-      "zh": "局部、分段与源映射"
+      "zh": "局部、分段与源映射",
+      "en": "Focus, segments and source mapping"
     },
     "articles": [
       "views"
@@ -292,8 +292,8 @@
   {
     "id": "styles",
     "title": {
-      "en": "Scales, guides and themes",
-      "zh": "标度、图例与主题"
+      "zh": "标度、图例与主题",
+      "en": "Scales, guides and themes"
     },
     "articles": [
       "styling",
@@ -312,8 +312,8 @@
   {
     "id": "output",
     "title": {
-      "en": "Preview, results and ordering",
-      "zh": "预览、结果与排序"
+      "zh": "预览、结果与排序",
+      "en": "Preview, results and ordering"
     },
     "articles": [
       "output",
@@ -404,8 +404,8 @@
   {
     "id": "circular-layers",
     "title": {
-      "en": "Circular Layers",
-      "zh": "圆图骨架、中心文字与注释轨道"
+      "zh": "圆图骨架、中心文字与注释轨道",
+      "en": "Circular Layers"
     },
     "articles": [
       "circular-labels",
@@ -453,8 +453,8 @@
   {
     "id": "circular-labels",
     "title": {
-      "en": "Circular Labels",
-      "zh": "圆图固定标签与自动适配"
+      "zh": "圆图固定标签与自动适配",
+      "en": "Circular Labels"
     },
     "articles": [
       "circular-labels",
@@ -495,8 +495,8 @@
   {
     "id": "primers",
     "title": {
-      "en": "Primers",
-      "zh": "识别引物、弧线与文字"
+      "zh": "识别引物、弧线与文字",
+      "en": "Primers"
     },
     "articles": [
       "primers",
@@ -530,8 +530,8 @@
   {
     "id": "restriction-sites",
     "title": {
-      "en": "Restriction Sites",
-      "zh": "限制酶搜索、切点与标签"
+      "zh": "限制酶搜索、切点与标签",
+      "en": "Restriction Sites"
     },
     "articles": [
       "primers",
@@ -563,8 +563,8 @@
   {
     "id": "scale-families",
     "title": {
-      "en": "Scale Families",
-      "zh": "按角色选择标度、图例与主题"
+      "zh": "按角色选择标度、图例与主题",
+      "en": "Scale Families"
     },
     "articles": [
       "tracks",
@@ -602,8 +602,8 @@
   {
     "id": "ribbon-statistics",
     "title": {
-      "en": "Ribbon Statistics",
-      "zh": "连接密度与显式聚束"
+      "zh": "连接密度与显式聚束",
+      "en": "Ribbon Statistics"
     },
     "articles": [
       "ribbons"
@@ -625,8 +625,8 @@
   {
     "id": "workflow-tools",
     "title": {
-      "en": "Workflow Tools",
-      "zh": "按任务使用工作流与诊断工具"
+      "zh": "按任务使用工作流与诊断工具",
+      "en": "Workflow Tools"
     },
     "articles": [
       "recognition",

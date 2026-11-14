@@ -1,0 +1,90 @@
+{
+  "source_sha256": "1ef2063a6e54dbe41ead5e7348385ac5170db561a9406d46b84031049c104230",
+  "blocks": {
+    "0": {
+      "source_sha256": "abf613142433c456d6f023ea5484fcd27f6491225642327a626ff15efcbe75a1",
+      "status": "reviewed",
+      "translation": "Compare four complete proteins with two bundled tables, without downloading inputs or running BLASTp. Both backbones and alignment endpoints use amino-acid coordinates (aa).\n"
+    },
+    "1": {
+      "source_sha256": "197ef7d204248f1956870156460f30bc543224cd6dbbb4364852bb59493abcbc",
+      "status": "reviewed",
+      "translation": "## Plot BLASTp protein alignments directly ⟦shared:0⟧\n"
+    },
+    "2": {
+      "source_sha256": "656d8818a6fdfdf56cf766ec4a6e798a7826105e0cc04acacf51a746fe27d7f4",
+      "status": "reviewed",
+      "translation": "⟦shared:0⟧ contains three EMALE proteins and one Mavirus protein. Inspect identifiers, full lengths and units:\n"
+    },
+    "5": {
+      "source_sha256": "41f41872ae9eeea67aec3cf5a3a9577549414ddf1457790bc59f62ef8d097e23",
+      "status": "reviewed",
+      "translation": "The lengths are 302, 302, 306 and 310 aa, obtained from complete proteins rather than alignment endpoints. The ⟦shared:0⟧ column retains complete residues; only the three plotting columns are shown here.\n"
+    },
+    "6": {
+      "source_sha256": "de7c51c86295e7ac6dffd83d321281a67a0ed310d9e8aaa049ce32edeeed8c39",
+      "status": "reviewed",
+      "translation": "⟦shared:0⟧ contains six observed BLASTp comparisons between all four proteins. Inspect both interval endpoints and identity:\n"
+    },
+    "11": {
+      "source_sha256": "0663ffccedac88551c6e6c90be92805d21f8f721e43e8a7d329e23123ec155d9",
+      "status": "reviewed",
+      "translation": "The collinear layout connects adjacent rows by default, displaying three ribbons. Colours show identity and the scale bar spans 50 aa. The first two proteins are highly similar; the remaining adjacent comparisons are weaker. Intervals are inclusive and retain both endpoint spans of gapped alignments.\n"
+    },
+    "12": {
+      "source_sha256": "d541ab865a8f1589372dcdc8f2d998eb386ecfdb4a8ee82f4ba1f334444a4449",
+      "status": "reviewed",
+      "translation": "Switching to a chord layout displays all six pairs by default:\n"
+    },
+    "15": {
+      "source_sha256": "14b4046d196478e3c3121dae6637d601d24a78c4ab61a59a7c9872869b7448b2",
+      "status": "reviewed",
+      "translation": "Pairwise identity ranges from about 35.7% to 99.0%. The plot uses the default Identity scale without additional colour settings.\n"
+    },
+    "16": {
+      "source_sha256": "f72e84a96c0ff7f608d6fc3063f7b72437526a7e6de1388a427756d6feb4defb",
+      "status": "reviewed",
+      "translation": "Use generic layers such as ⟦shared:0⟧ for annotations at amino-acid positions, declaring ⟦shared:1⟧ for nondirectional intervals. One plot uses either aa or bp. The endpoints of ⟦shared:2⟧ and ⟦shared:3⟧ have different units and require conversion to one coordinate domain or separate displays. Gene arrows, primers and restriction sites require nucleotide input. A circular protein layout describes a visual arrangement.\n"
+    },
+    "17": {
+      "source_sha256": "139d3eb7bca059bc49bd2026201c23eae11fb3371cf2bdeee7a0d205221d9510",
+      "status": "reviewed",
+      "translation": "## Place protein hits on a nucleotide genome ⟦shared:0⟧\n"
+    },
+    "18": {
+      "source_sha256": "7b11c65c7f5671e2435534fb500787841c8e88addb726bb8b33d31716cbca231",
+      "status": "reviewed",
+      "translation": "To locate hits on a nucleotide backbone, supply known CDS mappings and project aa intervals to bp. This separate example uses a source HSP for BVI_023A_0009 with a complete CDS, then projects its query end. This subsection reads original files from the [manual input bundle](⟦shared:0⟧).\n"
+    },
+    "25": {
+      "source_sha256": "7588432a4f497cbf276777147de1f9d87cd84a5270ebf911b6a98a930d8a3dfb",
+      "status": "reviewed",
+      "translation": "Residues 50–289 project to 7,181–7,900 bp on BVI_023A, on the reverse strand. A single-end projection can retain the span of a gapped HSP. Connecting two genomes also requires the subject CDS model. See [CDS projection](⟦shared:0⟧) for a supported ungapped two-ended example.\n"
+    },
+    "26": {
+      "source_sha256": "fffb56d46cc9a269308da3ac434f464276774f5f65d9e66b765494fe4cdad181",
+      "status": "reviewed",
+      "translation": "## Data source ⟦shared:0⟧\n"
+    },
+    "27": {
+      "source_sha256": "64a28638fed6e3ace8510b5a6e07849a088a26aac6e3e74a36db6270d86e2284",
+      "status": "reviewed",
+      "translation": "The bundled identifiers are BVI_029_0020, BVI_058_0011, E4-10_023_0015 and ADZ16414.1. Complete FASTA records come from public EMALE/Mavirus data. NCBI BLASTp 2.17.0+ computed all comparisons, retaining one HSP per pair. The raw output retains self hits and both directions, for 16 rows. The example table retains one direction per unordered pair in sequence-table order, without changing endpoints or identity.\n"
+    },
+    "28": {
+      "source_sha256": "99844c39f3514d2dbc29dbbfd3c99ac56b2c9f7e3ccc7deecd4a680300ef5344",
+      "status": "reviewed",
+      "translation": "The input bundle's ⟦shared:0⟧ directory retains complete FASTA records, raw BLASTp output and ⟦shared:1⟧ hashes. Rebuild rules are in ⟦shared:2⟧ and ⟦shared:3⟧. Plotting uses bundled objects and does not require BLASTp.\n"
+    },
+    "29": {
+      "source_sha256": "96d3b3403a7277d64e0e970205753ee81e2d284e9e04a56212cef8617bb26319",
+      "status": "reviewed",
+      "translation": "## Result checks ⟦shared:0⟧\n"
+    },
+    "30": {
+      "source_sha256": "729322da14dd6152ec768224f07623d248e53d65f97d89c30792794b9a82a736",
+      "status": "reviewed",
+      "translation": "Check complete lengths, endpoints and units. Native protein plots use aa. Locating hits on a genome requires CDS projection to bp. Use ⟦shared:0⟧ to inspect the target output size.\n"
+    }
+  }
+}

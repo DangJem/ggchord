@@ -1,0 +1,470 @@
+{
+  "source_sha256": "31dfd61fde66fc3592a5b76932cc44797d79e5686d463b05d4e4a980e39887dc",
+  "strings": {
+    "0/title": {
+      "source_sha256": "46ee1bb903f9924d7fa6d2d6e6c67e6fdd7eb10ee42505dde94310eaa4b67079",
+      "status": "reviewed",
+      "translation": "ggchord"
+    },
+    "1/title": {
+      "source_sha256": "9863e8cafa6750ae82a018c960cbbeb7694aac142de14dd8f5a29f6f0fd1ec68",
+      "status": "reviewed",
+      "translation": "Download and installation"
+    },
+    "2/title": {
+      "source_sha256": "1ff5b44a33365fd1b34a4807bca5fdb01e62126339efdb801b28f76191fbcd90",
+      "status": "reviewed",
+      "translation": "Plotting concepts"
+    },
+    "3/title": {
+      "source_sha256": "e9a01ff5074d6caac11085a9db8bf9911cb94d0f65961e56c9fef57bf50c7d0e",
+      "status": "reviewed",
+      "translation": "Draw sequence backbones"
+    },
+    "4/title": {
+      "source_sha256": "c58c54d878220354bceb7f8858ac998fc5fb57313255caf4d6a9a81211165b76",
+      "status": "reviewed",
+      "translation": "Basic input tables"
+    },
+    "5/title": {
+      "source_sha256": "762b70aa35a96e7ffbdf675434901334d6883b867a2dc69bc98961c8f436affe",
+      "status": "reviewed",
+      "translation": "Import FASTA, GFF3 and BLAST"
+    },
+    "6/title": {
+      "source_sha256": "19351606aa2b05cb2a5e2170111a6baaf3426b9f830e66d97dcbed3332d73824",
+      "status": "reviewed",
+      "translation": "Add links and features"
+    },
+    "7/title": {
+      "source_sha256": "e63d191faf243bb35a419ee3d957c1a202cb17d860bc3fcd98802a6ce616d24f",
+      "status": "reviewed",
+      "translation": "Adjust rotation and gaps"
+    },
+    "8/title": {
+      "source_sha256": "d61ee3ae1341bd434c5c046fea7e3da8810ebbc7619ad896ba7269103e6d05a2",
+      "status": "reviewed",
+      "translation": "Chord: backbone geometry"
+    },
+    "9/title": {
+      "source_sha256": "c1fa695251cad0c0c231fcd10083ba3d36974d1c4a5a5ca69f29a574531bc519",
+      "status": "reviewed",
+      "translation": "Route ribbons and avoid obstacles"
+    },
+    "10/title": {
+      "source_sha256": "dbae896100f970f844057106ab69a4503283dfb7ab86e2a3cfae2ca3dcfc11f8",
+      "status": "reviewed",
+      "translation": "Place sequence and gene labels"
+    },
+    "11/title": {
+      "source_sha256": "27417c052b48eb80fc5c3c146904c3112fe933d0d05a620c6d3befb4e0a47dde",
+      "status": "reviewed",
+      "translation": "Filter, merge and bundle links"
+    },
+    "12/title": {
+      "source_sha256": "89698e9c7fc62b007ccaf977a825bf48c6dfed0a8ad026c7b3e8a164e81d988b",
+      "status": "reviewed",
+      "translation": "Sequence comparisons from source files"
+    },
+    "13/title": {
+      "source_sha256": "efdda30c76aea5fdc5519df7a75fdd4b8eb92478716dafdf8272c95a92f1b7c0",
+      "status": "reviewed",
+      "translation": "Chord example"
+    },
+    "14/title": {
+      "source_sha256": "b76e5de65c97e728cf46e5edf86fd8f830312342018fe4f4c618a5d5c866b5b3",
+      "status": "reviewed",
+      "translation": "Draw your first collinear plot"
+    },
+    "15/title": {
+      "source_sha256": "b7299c9bebc96d6bc78660c911ff999e2e8a4edef56a7806ab8db5fb0e053011",
+      "status": "reviewed",
+      "translation": "Collinear inputs and endpoint direction"
+    },
+    "16/title": {
+      "source_sha256": "44a99b8316c9f79d98aea1c64facddcf5837a229af980f82c90e8adb4da02fa4",
+      "status": "reviewed",
+      "translation": "Add comparison layers and axes"
+    },
+    "17/title": {
+      "source_sha256": "b5e2171bfa1b454ed688bf0b8b4bd7efac0440220c5075bdac6b498851370a7c",
+      "status": "reviewed",
+      "translation": "Cross-row routes, clearance and scale bars"
+    },
+    "18/title": {
+      "source_sha256": "0fd1695b47841d9cac1b0efc1ba5d97d44c247d1c77157be55c9d8523315ae70",
+      "status": "reviewed",
+      "translation": "CDS neighbourhood comparison"
+    },
+    "19/title": {
+      "source_sha256": "7ac317d92bcd0421f4c92f1dd358cc4d458e379e574ba07c1d001639670d7e39",
+      "status": "reviewed",
+      "translation": "Focus, anchor and segment"
+    },
+    "20/title": {
+      "source_sha256": "4c4ff725463257954e7bc6f6f2707e03a6a36ec9f9765490c0915d96cd259314",
+      "status": "reviewed",
+      "translation": "Collinear example"
+    },
+    "21/title": {
+      "source_sha256": "be11cf9e8e53cd31c10e8b3c36bd94ef2acbacd066d9a95ab6a890eb82795629",
+      "status": "reviewed",
+      "translation": "Draw your first circular map"
+    },
+    "22/title": {
+      "source_sha256": "bf5dd5cd18bc3baf9e1cbf39c5eb865f498d5b44541acfb43ea2ede7e5986834",
+      "status": "reviewed",
+      "translation": "Single-sequence length, DNA and annotations"
+    },
+    "23/title": {
+      "source_sha256": "625522f9fb3a7c075b516594474528ba362a840f3ee8fe049bb552489f0cf640",
+      "status": "reviewed",
+      "translation": "Add features, labels, primers and restriction sites"
+    },
+    "24/title": {
+      "source_sha256": "bfbee13c074b0d36e18db169bd4744c2c2e62e5852ad73ce83fbaa1e4837e8c1",
+      "status": "reviewed",
+      "translation": "Find features, primers and restriction sites"
+    },
+    "25/title": {
+      "source_sha256": "08e4c8d37a1e4ece11152ee874cbf2da9f65ed2e291d5f4fc383510726330aac",
+      "status": "reviewed",
+      "translation": "13 complete plasmid reference maps"
+    },
+    "26/title": {
+      "source_sha256": "dae28814438ccf75641b785872f48e17739b818a874073fdd1416dc186cf5ef0",
+      "status": "reviewed",
+      "translation": "pUC19: a complete annotated map"
+    },
+    "27/title": {
+      "source_sha256": "47337fbd554ed1e29595c46a8a35cf4bbb732f0229a83a98439af722b53b86d7",
+      "status": "reviewed",
+      "translation": "Table fields and coordinate conventions"
+    },
+    "28/title": {
+      "source_sha256": "46bdb086013b0ce0b45f2cd16781af6e7116dbed741ec5950d46c06d7e3dfbf6",
+      "status": "reviewed",
+      "translation": "Import and convert data"
+    },
+    "29/title": {
+      "source_sha256": "3ee3ed11cb8636333ec993491c0c649c89220077c59f32b270cf805c8f29a918",
+      "status": "reviewed",
+      "translation": "Import nucleotide and protein alignments"
+    },
+    "30/title": {
+      "source_sha256": "ee8a23abb5300b337e857569fe2d32a824715bb38397829956ff29f5b18772db",
+      "status": "reviewed",
+      "translation": "Protein-to-genome coordinate projection"
+    },
+    "31/title": {
+      "source_sha256": "9ad4747cc826c66049719ff9ee282859b10dc44f1eeb08a0511484b2861f9009",
+      "status": "reviewed",
+      "translation": "Features, stacking and genomic decoration"
+    },
+    "32/title": {
+      "source_sha256": "b2c69b83a2ee0006cf4a20d0a846544ec54ac0db750dcb1f410f804115d76f90",
+      "status": "reviewed",
+      "translation": "Automatic label layouts and text fitting"
+    },
+    "33/title": {
+      "source_sha256": "9960fafadd52fad492fec54b3717d6f0241dddc63397e2be14518cdeefddea27",
+      "status": "reviewed",
+      "translation": "Quantitative tracks"
+    },
+    "34/title": {
+      "source_sha256": "60afc84c68a42071740ded325735abf4d341583b135ff665e89b89ec3f4ff885",
+      "status": "reviewed",
+      "translation": "Mappings, scales, guides and themes"
+    },
+    "35/title": {
+      "source_sha256": "5f40e5e947d70c34e604d81bf7ca69e61596910617b62c5991a38df79f8a39c0",
+      "status": "reviewed",
+      "translation": "Flexible parameter formats"
+    },
+    "36/title": {
+      "source_sha256": "865484018d8be079a77cfd2df1c44b4946cc976fab486e775211373f7b34a4ae",
+      "status": "reviewed",
+      "translation": "Map identity and understand layer roles"
+    },
+    "37/title": {
+      "source_sha256": "760228ea367908457d60b70fb043cdecaf2aeec1c46bcd34cd6d112fcb55fbb3",
+      "status": "reviewed",
+      "translation": "Preview and export at publication size"
+    },
+    "38/title": {
+      "source_sha256": "0ed475628e17632d840b3b11b245f8d132816585ebd11edf739196266a16802a",
+      "status": "reviewed",
+      "translation": "Function reference"
+    },
+    "39/title": {
+      "source_sha256": "6493d214d6fe59d30aefbdd7224d0c11afaf2920afe08c7acf4127265f187898",
+      "status": "reviewed",
+      "translation": "Reproducible gallery"
+    },
+    "40/title": {
+      "source_sha256": "45a6d115fdfb29bf65d7fd24429a38776f94cf198bcf6f50130a723d5a723ade",
+      "status": "reviewed",
+      "translation": "Frequently asked questions"
+    },
+    "41/title": {
+      "source_sha256": "e48c5a3f89f170570686cf8e8c2dbb5beb8e01cb2e0dfe75b856de3845a9e6ec",
+      "status": "reviewed",
+      "translation": "Adjust row spacing and scale"
+    },
+    "42/title": {
+      "source_sha256": "5bccd9d58b0ad5ea6d61b277a7bde965c899f5dc4f626dbe0614ae39d2be2022",
+      "status": "reviewed",
+      "translation": "Adjust backbone style and rotation"
+    },
+    "43/title": {
+      "source_sha256": "95f0516c42fe0f8307bf4ec3a5d01fa68ec80ecc0f40a914301e699049e631c2",
+      "status": "reviewed",
+      "translation": "Project information and sources"
+    },
+    "44/title": {
+      "source_sha256": "3e994dbd3fc674a44d7bb096d418ce3277a11b880c03c388665621956f166c09",
+      "status": "reviewed",
+      "translation": "BLASTp protein comparisons"
+    },
+    "45/title": {
+      "source_sha256": "d8b4e72467f50ed3f716ff8e3fbfbca75407d7163daf5d2ca55644019ed76e76",
+      "status": "reviewed",
+      "translation": "Collinear: alignment and ordering"
+    },
+    "46/title": {
+      "source_sha256": "9165b5d18d6037c94382cd2733d5cbe9e35bafd8bc9f522ce495c90f56c1de0d",
+      "status": "reviewed",
+      "translation": "Find functions and parameters by task"
+    },
+    "47/title": {
+      "source_sha256": "9a6eabf30b8e117efaecc86b7cfccf52170660ea8088be28be48162d3d9c90dc",
+      "status": "reviewed",
+      "translation": "Layer and coordinate compatibility"
+    },
+    "48/title": {
+      "source_sha256": "7bbd5fc997e64cedd7a5d23b247b1e7431594118352aa854772558552a7711e4",
+      "status": "reviewed",
+      "translation": "Gene and feature arrow geometry"
+    },
+    "49/title": {
+      "source_sha256": "85308d28c446e92af9a0d36ec4715c6a8a671e0d4a59517889185c5d162c3297",
+      "status": "reviewed",
+      "translation": "Shared endpoint branches and point links"
+    },
+    "50/title": {
+      "source_sha256": "c1375709e91cd82be421fa528b0a5271f3cf4db1b1e1bc5e8453d389ea32ec90",
+      "status": "reviewed",
+      "translation": "Circular backbones, centre text and annotation lanes"
+    },
+    "51/title": {
+      "source_sha256": "c2843a8a4b5cbc41bf8720eb29182bb3f79f17e552602970c40593b85143cace",
+      "status": "reviewed",
+      "translation": "Circular labels and overlap handling"
+    },
+    "52/title": {
+      "source_sha256": "338357367f7e1468f7295638ad2ba18ba9d6826ffba0d0f83c1869fb11f8abf5",
+      "status": "reviewed",
+      "translation": "Primer recognition, arcs and labels"
+    },
+    "53/title": {
+      "source_sha256": "5a7ac2dd0120fd736454fb4f5784820c5d3957b71e74693248b1fff014eea9b3",
+      "status": "reviewed",
+      "translation": "Restriction searches, cuts and labels"
+    },
+    "54/title": {
+      "source_sha256": "bf8df30097797c827aee0bc31e2c2d1f0fe8df5638086d500731d1e3ec6e7957",
+      "status": "reviewed",
+      "translation": "Scales, guides and themes"
+    },
+    "55/title": {
+      "source_sha256": "b695ab188f4859244ca1a3e1f8605c677a82973a6cbadada7305a67ddd4ef25e",
+      "status": "reviewed",
+      "translation": "Link density and explicit bundling"
+    },
+    "56/title": {
+      "source_sha256": "20636bab46907dfc15484a62c708a1c561b582fa57e08bfa523df2062c8eef31",
+      "status": "reviewed",
+      "translation": "Complete parameters and defaults atlas"
+    },
+    "57/title": {
+      "source_sha256": "22279174211dc5d7054d15eb607e337f589dac05ebea170698eaaad75f21bc2d",
+      "status": "reviewed",
+      "translation": "Workflow and diagnostic tools by task"
+    },
+    "58/title": {
+      "source_sha256": "40e4298d4b1e1917f0401dc778c610032d5de447a614d9ad7d7c205491e3b11a",
+      "status": "reviewed",
+      "translation": "API coverage record"
+    },
+    "59/title": {
+      "source_sha256": "4c62c7447ff9c39076540a782a785c6295fd7e3255e4dc1949a18f19cd41fca2",
+      "status": "reviewed",
+      "translation": "Source instances, tracks and new views"
+    },
+    "60/title": {
+      "source_sha256": "2c87f56b3194b46b80541e292843f42cd3347530cae62788630d4a92ef05fd29",
+      "status": "reviewed",
+      "translation": "HSP Dotplots and radial synteny"
+    },
+    "61/title": {
+      "source_sha256": "f3e0d1b8bed6308bd09da265e835335b2d35a8b3745e1d13172a0222177dfdee",
+      "status": "reviewed",
+      "translation": "Module IV · Multi-view composition"
+    },
+    "62/title": {
+      "source_sha256": "26984dce74ab24ba5efa0653fb5898538e9a340db046bca55920d139d0d03f24",
+      "status": "reviewed",
+      "translation": "Module I · Multi-sequence relationships"
+    },
+    "63/title": {
+      "source_sha256": "6f7ec570bbd765e78941eb9daa63e6f1dc4f977b793fb732240bdb56239b7364",
+      "status": "reviewed",
+      "translation": "Module II · Single-sequence circular maps"
+    },
+    "64/title": {
+      "source_sha256": "49ac39c6dc8fd02a3d93ec92906284d275cca790332a00b88f616880531d6109",
+      "status": "reviewed",
+      "translation": "Module III · Sequence alignment Dotplot"
+    },
+    "65/title": {
+      "source_sha256": "7d69ea27925ee53b7890e50b1e13b8b0a20df4b70afd716f4926a1d97aacc932",
+      "status": "reviewed",
+      "translation": "Shared data and layers"
+    },
+    "66/title": {
+      "source_sha256": "e1dff32ea5aec9e27a3e3afa588b35a38bad16c9243f33d5641bbd00832040a8",
+      "status": "reviewed",
+      "translation": "Four-view comparison and flagship examples"
+    },
+    "67/title": {
+      "source_sha256": "a8518e97fdb426224d1cffafee073535e660bd04b957f502dc8d75cf90d6d182",
+      "status": "reviewed",
+      "translation": "Sankey: mirrored interval relationships"
+    },
+    "68/title": {
+      "source_sha256": "21f13d7ba05a2619fb813576b6e24f96a485baefd21c58f695e02e74048f56bd",
+      "status": "reviewed",
+      "translation": "Radial: synteny spokes"
+    },
+    "69/title": {
+      "source_sha256": "03c007879203105f50c3d2042d4d9f09d651e7d94daf5f52e7994cb9cb65c30d",
+      "status": "reviewed",
+      "translation": "Repeated displays and instance selection"
+    },
+    "70/title": {
+      "source_sha256": "656a2a71cd2f8474512272037467beaf6dfd518f047bc428e9f46136ef16cb94",
+      "status": "reviewed",
+      "translation": "Coordinates and display rules"
+    },
+    "71/title": {
+      "source_sha256": "34e17c17165618c8ffea1985b7c56ba3593011b3fc0497eb6547547459517662",
+      "status": "reviewed",
+      "translation": "Intervals, points and cross-row links"
+    },
+    "72/title": {
+      "source_sha256": "4210da926fd8528bf286315b2c91f0676843cfb94ff2cb913e00924a3009fc6e",
+      "status": "reviewed",
+      "translation": "Sequence names and feature labels"
+    },
+    "73/title": {
+      "source_sha256": "26778c8edd5937a481f9b9dfc044ce655a8c1b3eab3cf05f92d1ad506d5a3e7b",
+      "status": "reviewed",
+      "translation": "Circular backbone and annotations"
+    },
+    "74/title": {
+      "source_sha256": "7f3f883cf76a99cf53afed5ee142982b33cbb7a226391daa0436107fe386c4d7",
+      "status": "reviewed",
+      "translation": "Circular data preparation"
+    },
+    "75/title": {
+      "source_sha256": "57ad79e0db64fb08f893e7b8e4ae283b35a55da8496d4a20be7367e850057f88",
+      "status": "reviewed",
+      "translation": "Circular backbones and layout"
+    },
+    "76/title": {
+      "source_sha256": "53cbb30e6a9ec8e71523824637599e05a35450e182393a81727aad3c0430dca8",
+      "status": "reviewed",
+      "translation": "Features, primers and restriction sites"
+    },
+    "77/title": {
+      "source_sha256": "37e10f98928d1e931fa184fb4b6fd3f98621b9207c51ee836d3dbab3e5be1e84",
+      "status": "reviewed",
+      "translation": "pETDuet-1: dense annotations"
+    },
+    "78/title": {
+      "source_sha256": "121505269919b442ded9eaa0660fc6a81432f22534ab44d0b3a6debdce9e36e4",
+      "status": "reviewed",
+      "translation": "HSP axes, orientation and mapping"
+    },
+    "79/title": {
+      "source_sha256": "5e8cb9d64ab4b38a6c7ee1e3577d91a02a7a2e708fc6f30a0ab543109caa2fdd",
+      "status": "reviewed",
+      "translation": "Import sequences and annotations"
+    },
+    "80/title": {
+      "source_sha256": "24876fef54d49b6c75e61c3c8ab5256c0380020938578f1273949eac4c1db6f6",
+      "status": "reviewed",
+      "translation": "Import intervals and paired intervals"
+    },
+    "81/title": {
+      "source_sha256": "6e580dc09f893d2453498e6c76f843c017166c32ec4789e8f4e9c0c6a46393c7",
+      "status": "reviewed",
+      "translation": "Aligned characters and source coordinates"
+    },
+    "82/title": {
+      "source_sha256": "ecaf2b504f1379aa69e7d6238e333b26a0617c52b11f819f0792d52bff4a0cca",
+      "status": "reviewed",
+      "translation": "Signals and coverage data"
+    },
+    "83/title": {
+      "source_sha256": "2762e012885821ff6dc0429b685062822b403723116f4df9843551c55c683738",
+      "status": "reviewed",
+      "translation": "Relationships, variants and annotations"
+    },
+    "84/title": {
+      "source_sha256": "32ad2795a47be11305351eb0219dc3abdba2969a5c02c9e5da9dfb6717da095a",
+      "status": "reviewed",
+      "translation": "Counts, bins and track statistics"
+    },
+    "85/title": {
+      "source_sha256": "d1ea992689b17c6223fabc6205a95c6c95aa7c6d3e3b38cf53868d10e37d4d17",
+      "status": "reviewed",
+      "translation": "Data and layout diagnostics"
+    },
+    "86/title": {
+      "source_sha256": "c6d24575dca37ea1a4627731c090ad5110ea09257bba02bdb49cc57263bf621a",
+      "status": "reviewed",
+      "translation": "Data workflows"
+    },
+    "87/title": {
+      "source_sha256": "9393c32f8928e45c4f50595c9073ff01c342a4ce8c8a647cea8291a3a2369355",
+      "status": "reviewed",
+      "translation": "Cross-panel links and routing"
+    },
+    "88/title": {
+      "source_sha256": "731dfc94df6f2091e70475018bd68d46092ad5defdcea7acb086345bccf379b7",
+      "status": "reviewed",
+      "translation": "Panel placement, size and guides"
+    },
+    "89/title": {
+      "source_sha256": "facae04349adc7278b477f720c05b5c5869f89d4d3cbe8b5e0f135c4888b6c59",
+      "status": "reviewed",
+      "translation": "Local magnification and character details"
+    },
+    "90/title": {
+      "source_sha256": "3ac480b98ed9d1c89874d0e802b15c2e016c518466fda4b397ae0a630f940519",
+      "status": "reviewed",
+      "translation": "Nested composition and origin-crossing zoom"
+    },
+    "91/title": {
+      "source_sha256": "268220092d56e9c5ef8cbcc4d86d090e215dede8a033cd413dd4d1983847f489",
+      "status": "reviewed",
+      "translation": "Panels and source-interval connections"
+    },
+    "92/title": {
+      "source_sha256": "0e01c547e2adb565077770a8123696fb84c04e7fd7818d52f6bc277ba5e7428d",
+      "status": "reviewed",
+      "translation": "Documentation and API migration"
+    }
+  }
+}

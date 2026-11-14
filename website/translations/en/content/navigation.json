@@ -1,0 +1,55 @@
+{
+  "source_sha256": "aa0e1b4b77ee1d36d6a728eb982809c28507506d33ab24d7f1f823ac0634671d",
+  "strings": {
+    "0/title": {
+      "source_sha256": "715ee9dc842f34e48f267f0bf3261d7980e544b26eb3d2f0ff20e19b121c4a99",
+      "status": "reviewed",
+      "translation": "Get started"
+    },
+    "1/title": {
+      "source_sha256": "26984dce74ab24ba5efa0653fb5898538e9a340db046bca55920d139d0d03f24",
+      "status": "reviewed",
+      "translation": "Module I · Multi-sequence relationships"
+    },
+    "2/title": {
+      "source_sha256": "6f7ec570bbd765e78941eb9daa63e6f1dc4f977b793fb732240bdb56239b7364",
+      "status": "reviewed",
+      "translation": "Module II · Single-sequence circular maps"
+    },
+    "3/title": {
+      "source_sha256": "49ac39c6dc8fd02a3d93ec92906284d275cca790332a00b88f616880531d6109",
+      "status": "reviewed",
+      "translation": "Module III · Sequence alignment Dotplot"
+    },
+    "4/title": {
+      "source_sha256": "f3e0d1b8bed6308bd09da265e835335b2d35a8b3745e1d13172a0222177dfdee",
+      "status": "reviewed",
+      "translation": "Module IV · Multi-view composition"
+    },
+    "5/title": {
+      "source_sha256": "e67a8dae21f2b855050b2deaacbb3a27db68a882500b57c8783f56d392d93945",
+      "status": "reviewed",
+      "translation": "Shared techniques"
+    },
+    "6/title": {
+      "source_sha256": "26dfa22fcf450bbc0760c529cb98110502b029cca12d43de2a940374356333e2",
+      "status": "reviewed",
+      "translation": "Data and workflows"
+    },
+    "7/title": {
+      "source_sha256": "2c400ce3c2dea9394f8d06d5af230e0e84a5aed6e386bcc56f9bf34a62a14722",
+      "status": "reviewed",
+      "translation": "Gallery"
+    },
+    "8/title": {
+      "source_sha256": "63e51325a41ffa3e76da38b0e104e00727207b6b3251c38524908b16181a7cb4",
+      "status": "reviewed",
+      "translation": "API reference"
+    },
+    "9/title": {
+      "source_sha256": "46e1eb2d8785badc69fe850386f02e174f80674683fb70bc9f8f1cd1d1fb6658",
+      "status": "reviewed",
+      "translation": "Project information"
+    }
+  }
+}

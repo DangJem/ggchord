@@ -1,0 +1,35 @@
+{
+  "source_sha256": "b1a95dd2092678182807d635eafbe2d5f266e96f2470019b9a0818e026478deb",
+  "blocks": {
+    "0": {
+      "source_sha256": "25a04b83c0db956af6b35fae0db9cb32918cb9f26a893998ad0c201b9097c3bc",
+      "status": "reviewed",
+      "translation": "## Future directions\n"
+    },
+    "1": {
+      "source_sha256": "9b92c702dc0c77f5f637a5b6fcfa3f7a9f60670842390a8e1bf5e732913da5ee",
+      "status": "reviewed",
+      "translation": "Development continues around readable static figures and a consistent plotting grammar. Current functions, supported inputs and limits are documented in the tutorials and reference; the directions below describe further improvements.\n"
+    },
+    "2": {
+      "source_sha256": "58ea9def5dbe4c096410ecee48b5aeeeaca9030672b53193fe525280e05e174e",
+      "status": "reviewed",
+      "translation": "- Improve dense annotation, leader lines and legend placement at practical figure sizes, with clear diagnostics when space is insufficient.\n"
+    },
+    "3": {
+      "source_sha256": "67b9d31f8dd09016403f22ea0275895cf2b69373ada91ec79ea93d887e678c3e",
+      "status": "reviewed",
+      "translation": "- Strengthen overview-and-detail compositions while preserving original coordinates, units and the meaning of every displayed relationship.\n"
+    },
+    "4": {
+      "source_sha256": "b8dbec4aa66e0b670023a9381b15b0a4a148a9e460f0614803e4f10d24d9bdc8",
+      "status": "reviewed",
+      "translation": "- Broaden adapters for existing research outputs, using mature optional tools and retaining source records and missing information.\n"
+    },
+    "5": {
+      "source_sha256": "7f14ca729ccabaa7ebe722f10c3bd141f4437ed289cc79a37c563d45258f906b",
+      "status": "reviewed",
+      "translation": "- Refine API consistency, compatibility and reproducible teaching examples while keeping ordinary data-frame inputs simple.\n"
+    }
+  }
+}

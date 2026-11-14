@@ -1,0 +1,15 @@
+{
+  "source_sha256": "1c4c1d99f7c4220749039cdcf3d95644ffa0d45637c81dd27d595d3e9a6a9697",
+  "blocks": {
+    "0": {
+      "source_sha256": "e53aee14590d34936fdd67f3749853aab1f6640cc8fcece9bec6ce15fb84f943",
+      "status": "reviewed",
+      "translation": "## Read the reference ⟦shared:0⟧\n"
+    },
+    "1": {
+      "source_sha256": "d394bc0c9e87e8fae6cebd7fc406893a638f95e1b4616e7870ec210e75a93c73",
+      "status": "reviewed",
+      "translation": "Every current Rd topic is included below. Signatures, defaults, arguments,\nreturns and examples are generated directly from the package help source.\nEnglish R help is canonical; the Han website translates all prose sections while retaining code, signatures and source identifiers. Both paths contain the same API;\nlocalized [topics](⟦shared:0⟧), [terminology](⟦shared:1⟧) and [migration](⟦shared:2⟧)\nexplain the workflows. No functions are hidden because of language.\n"
+    }
+  }
+}

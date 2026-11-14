@@ -1,0 +1,115 @@
+{
+  "source_sha256": "3790c15528f30e01156ce6419891560a3cd6d46fef4092fd6e5c2616a38b34a0",
+  "blocks": {
+    "0": {
+      "source_sha256": "748fde975c07e6658cf56bfaac7747d433db77ad2fa827008429ab0b6fee6465",
+      "status": "reviewed",
+      "translation": "Searching cuts and choosing a display subset are separate steps. Compare leaders, text content, order and side on the same three pUC19 hits, without editing DNA or cut coordinates.\n"
+    },
+    "1": {
+      "source_sha256": "844286288fe56202d7aaa29c38c07bf5e920636a0eb174603ac2a4f745ee086f",
+      "status": "reviewed",
+      "translation": "## Retain cut coordinates and search assumptions ⟦shared:0⟧\n"
+    },
+    "2": {
+      "source_sha256": "7cb94cf15eb204a6b25bd5d0c1248ac3ec61e475936ca3c06662d85c0d2ce1b9",
+      "status": "reviewed",
+      "translation": "Run independently with explicit EcoRI, BamHI and HindIII and methylation=\"none\". This is a search assumption, not a measurement of sample methylation. enzyme_site_count refers to the complete input sequence and survives display filtering.\n"
+    },
+    "7": {
+      "source_sha256": "57c762135fe81959abefb5413889d65ec1ad29b439b801af58ad42c37bf11bf9",
+      "status": "reviewed",
+      "translation": "## Compare leaders at the same cut sites ⟦shared:0⟧\n"
+    },
+    "8": {
+      "source_sha256": "9a0774962df1dd6d573f67d1387ef856d2631523cad3e9ad8203f30a855421c9",
+      "status": "reviewed",
+      "translation": "Default radial uses text bounds and circular order, with radial stubs and fan connections where needed. Elbow uses one bend; straight connects the tick tip to the final label edge. Only leader changes across the three figures; cut sites and label grouping are fixed.\n"
+    },
+    "15": {
+      "source_sha256": "2f0e2e2de1d8a3ce2733ed2a8af14dfafe02d238eff5d4c4db8851b0f27054ee",
+      "status": "reviewed",
+      "translation": "## Change content, order and side separately ⟦shared:0⟧\n"
+    },
+    "16": {
+      "source_sha256": "15ce7b50d4473ce550ffa9674811238b072a41770163d8fcd0396e9054dbf34d",
+      "status": "reviewed",
+      "translation": "Each figure returns to the radial baseline, changing only label_style, label_order or label_side. Default bold enzyme names indicate one cut in the complete target; explicit fontface replaces that automatic distinction. Positions come from computed cleavage, not motif midpoints.\n"
+    },
+    "25": {
+      "source_sha256": "76a56b5b27f08130f63fe2e97e3543d6b0586bda649b334d64158aa4d0a7a70b",
+      "status": "reviewed",
+      "translation": "## Key parameters and filtering meaning ⟦shared:0⟧\n"
+    },
+    "26": {
+      "source_sha256": "97e4d77f2060a25bcfcdc1bef7598f6f704b79c8dbf3ec312c75d04d81e97123",
+      "status": "reviewed",
+      "translation": "| Parameter | Default | Effect |\n"
+    },
+    "27": {
+      "source_sha256": "a9e436d2babd638ade86791e162e7de5a6b1b3128c6ae9ed93504fbf3c53dc93",
+      "status": "reviewed",
+      "translation": "| --- | --- | --- |\n"
+    },
+    "28": {
+      "source_sha256": "abefaa59ffd6efc3aca403e7ae274f6dc3d956dc5b7b45ef5de3bc2dd58e9fa3",
+      "status": "reviewed",
+      "translation": "| label_style | enzyme_position | enzyme_position/enzyme/position |\n"
+    },
+    "29": {
+      "source_sha256": "4e1fa57123be505af3f4819b187b9a45f4cd4c67fde9498a761a1128decf3e9f",
+      "status": "reviewed",
+      "translation": "| label_order | auto | auto/enzyme_position/position_enzyme; automatic mirrored ordering |\n"
+    },
+    "30": {
+      "source_sha256": "891c03080147f1c0315e963875331ef95c15d6a31ac2113114fb0b2281335f37",
+      "status": "reviewed",
+      "translation": "| label_side | outside | outside/inside/auto |\n"
+    },
+    "31": {
+      "source_sha256": "537455f995fc2971deb891914f2392b73b8a56dd37a1d98da98cd282795a1b0e",
+      "status": "reviewed",
+      "translation": "| leader | radial | radial/elbow/straight; never changes cuts |\n"
+    },
+    "32": {
+      "source_sha256": "cb387c4a4e17e0dd44f70fe7a2149346cd4824cc8f60b31c7cd05ad47e3d70ac",
+      "status": "reviewed",
+      "translation": "| min_label_gap | NULL | Device-derived default; explicit genomic-fraction spacing |\n"
+    },
+    "33": {
+      "source_sha256": "f8722ebd292c204a4a4ee9d68ef79e0402d2957f3b72b833b8b77b3d64a17fb8",
+      "status": "reviewed",
+      "translation": "| tick_length | 0.04 | Local-normal tick length |\n"
+    },
+    "34": {
+      "source_sha256": "e6543254e425c1c0a6869cc704e7abb3c69e7a36aae1822e9ac081f653f6f684",
+      "status": "reviewed",
+      "translation": "| label_offset | 0.18 | Local-normal text offset |\n"
+    },
+    "35": {
+      "source_sha256": "621f13f1adcc7cf109dcfc97a20ffde525338c530687dcc509d95fdcdbb28352",
+      "status": "reviewed",
+      "translation": "| linewidth / label_size | 0.28 / 3.2 | Stroke width versus text size |\n"
+    },
+    "36": {
+      "source_sha256": "c41efafa9e70d056812f24c3af2bcbe2244f94e5ab7d50fa29390df4e09037e6",
+      "status": "reviewed",
+      "translation": "| fontface / family | NULL / NULL | Explicit fontface overrides unique-cutter bolding |\n"
+    },
+    "37": {
+      "source_sha256": "974a6a4be213a3a023ed355c4890f4d5fffab743d776378c7c7b59a6f25e2407",
+      "status": "reviewed",
+      "translation": "find_restriction_sites returns matches and cuts; filter_restriction_sites selects a display set. unique, six_plus, unique_6plus and reference have different conditions. Reference uses saved sets only for exact reference targets. methylation=auto applies audited backgrounds only to exact built-in references; state assumptions for unknown samples.\n"
+    },
+    "38": {
+      "source_sha256": "61a4a558572c34ac6b8fb3ef56ff866140d0fc8ea7cbe018e8f6c0c4f9269764",
+      "status": "reviewed",
+      "translation": "## Dense maps and usage limits ⟦shared:0⟧\n"
+    },
+    "39": {
+      "source_sha256": "b5221896e02f00c4f8d7158cae61326181adaef5549f40615c98e36cf3e8fdad",
+      "status": "reviewed",
+      "translation": "Increase only min_label_gap and inspect outward label/leader movement; then restore defaults and set label=FALSE for ticks only. Retain full search results separately from the display subset. Increase export dimensions instead of deleting source observations to fit a small image. Recheck crowding after combining features and primers in [dense pETDuet-1](⟦shared:0⟧). Computed cuts do not validate a digestion experiment.\n"
+    }
+  }
+}

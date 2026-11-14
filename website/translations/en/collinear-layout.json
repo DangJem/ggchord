@@ -1,0 +1,175 @@
+{
+  "source_sha256": "7a4cc250f58c2984e566022f18f8ec63d77aad42c6f866db99e9a86562a85d86",
+  "blocks": {
+    "2": {
+      "source_sha256": "2a07202bb4286857969e93d26258f1647bed3e7156a0a47bcf410c71be186bee",
+      "status": "reviewed",
+      "translation": "Start with [your first collinear plot](⟦shared:0⟧), then compare alignment, anchors and orientation on the same real input. No chord sections are required.\n"
+    },
+    "3": {
+      "source_sha256": "5098b026dc2bd0a454d339eadc7dcb867afd6ebe1f1eb833b949e030920832e3",
+      "status": "reviewed",
+      "translation": "## Input and default left alignment ⟦shared:0⟧\n"
+    },
+    "4": {
+      "source_sha256": "e11a0f7c14ffb2cc9fcf1128478d1264557d448779c687d8a84d0489c03938ed",
+      "status": "reviewed",
+      "translation": "This page independently loads four bundled complete sequences and their observed alignments. Sequences need `⟦shared:0⟧, ⟦shared:1⟧`; links need both IDs and query/subject endpoints in bp, one-based inclusive. Preserve reverse endpoints rather than sorting them.\n"
+    },
+    "7": {
+      "source_sha256": "28ecd7f9409d254b125559b20197e34b1aee79e7cb861291a9164979495aa007",
+      "status": "reviewed",
+      "translation": "⟦shared:0⟧ keeps the data and layers fixed. Only coordinates change below. Defaults are ⟦shared:1⟧, ⟦shared:2⟧, and ⟦shared:3⟧. All backbones share one horizontal scale; short sequences are not stretched.\n"
+    },
+    "8": {
+      "source_sha256": "55521b7ed1423183114c45124513924785029ea40fd456c783576d175f872c60",
+      "status": "reviewed",
+      "translation": "## Change alignment alone ⟦shared:0⟧\n"
+    },
+    "11": {
+      "source_sha256": "1938f743c5614c43bc841f6f13accbe86c80d9f72b087d8a2cd14dd74765f210",
+      "status": "reviewed",
+      "translation": "The complete sequence midpoints align. Each sequence translates independently, while its link positions on the backbone remain unchanged.\n"
+    },
+    "14": {
+      "source_sha256": "a572072b04f4184d2512ca0fd81d4cfb0b739ec005b5e5a3f4abe1d37c20c2dd",
+      "status": "reviewed",
+      "translation": "Right edges align. All three figures use 9 × 6 inches, identical data, layers, row order and directions. This compares translation, not newly computed alignments.\n"
+    },
+    "15": {
+      "source_sha256": "5dc8a0e5810ba676c35bc695c3666b1770666328984678037fb747c0aac4b50a",
+      "status": "reviewed",
+      "translation": "## Supply one anchor per sequence ⟦shared:0⟧\n"
+    },
+    "18": {
+      "source_sha256": "a9a03083e0fda341b70c0c01473375a6bad9835620deb8df2e023a02085c8427",
+      "status": "reviewed",
+      "translation": "Relative to the left-aligned baseline, only ⟦shared:0⟧ is added. The vector uses ⟦shared:1⟧ names and source sequence midpoints, so this example has the same effect as centering complete sequences. These are geometric demonstration anchors. Research anchors should come from explicitly justified common loci.\n"
+    },
+    "19": {
+      "source_sha256": "aabba19fb5554e1facec309ab5e60a18261aba517b23d31e36865b869466ff1c",
+      "status": "reviewed",
+      "translation": "Alternatively supply a table with ⟦shared:0⟧ or ⟦shared:1⟧. Every displayed sequence needs exactly one anchor; missing or duplicate anchors are errors. For intervals, ⟦shared:2⟧ selects the displayed left edge, midpoint or right edge after orientation. Select a specific copy before anchoring multicopy genes.\n"
+    },
+    "20": {
+      "source_sha256": "6d25cb6e1846ed71301bfaa6a674b7756fa9e8af2307e0da5e4857c08fc2f920",
+      "status": "reviewed",
+      "translation": "## Choose display directions automatically ⟦shared:0⟧\n"
+    },
+    "23": {
+      "source_sha256": "8b680d4822622192867f3a11092c647cd947566b7a09b8fa7e95f90904e9abe2",
+      "status": "reviewed",
+      "translation": "Only ⟦shared:0⟧ changes from the left-aligned baseline; ⟦shared:1⟧ explicitly restates its default. The heuristic uses existing links to earlier displayed sequences; the first sequence fixes the reference. The threshold is the absolute forward/reverse support difference divided by their total, between 0 and 1. Ties, insufficient support and disconnected sequences retain their initial direction. An unchanged plot can mean that the evidence supports the initial directions, rather than that auto was ignored. Inspect diagnostics from ⟦shared:2⟧ rather than judging correctness by visual neatness.\n"
+    },
+    "24": {
+      "source_sha256": "a48eba1a86108612501f79f1db95f7dc4d4fd21a1ae270fd89e2b8d06bf88348",
+      "status": "reviewed",
+      "translation": "| Concept | Data or setting | Meaning |\n"
+    },
+    "25": {
+      "source_sha256": "a9e436d2babd638ade86791e162e7de5a6b1b3128c6ae9ed93504fbf3c53dc93",
+      "status": "reviewed",
+      "translation": "| --- | --- | --- |\n"
+    },
+    "26": {
+      "source_sha256": "851cd86b6d67e2bd00041b1a9e6f8b3808fd81fdf377276fdc3884081c13fa09",
+      "status": "reviewed",
+      "translation": "| Source sequence direction | FASTA record order | Reference for input coordinates |\n"
+    },
+    "27": {
+      "source_sha256": "6baa4e19689336a277a65411ef4b334b209d0555613553f82813dfd216de14ff",
+      "status": "reviewed",
+      "translation": "| Biological gene strand | Annotation ⟦shared:0⟧ | Transcription direction relative to the source |\n"
+    },
+    "28": {
+      "source_sha256": "e08e5aa86343292d0c170a885bfa00eeb37564b0e3dc431c00df2af7bd56afd3",
+      "status": "reviewed",
+      "translation": "| Alignment direction | Increasing or decreasing endpoints | Relative match direction between intervals |\n"
+    },
+    "29": {
+      "source_sha256": "181354602eb22dd7897affcec1fcd1d816e8536b9a42763c8244841c990d3579",
+      "status": "reviewed",
+      "translation": "| Display direction | ⟦shared:0⟧ or automatic orientation | Placement in the plot |\n"
+    },
+    "30": {
+      "source_sha256": "32402bc88e7cc4b53f657d4bcc749adf81398745c7abf3e6b94069d5468ebd23",
+      "status": "reviewed",
+      "translation": "A display flip does not rewrite source strands or establish a biological inversion. Do not combine explicit ⟦shared:0⟧ with automatic orientation.\n"
+    },
+    "31": {
+      "source_sha256": "2652b8bd73b0dc5c39fdb55f532335129320f54d84c5550e9000a86fdde36dc3",
+      "status": "reviewed",
+      "translation": "## Parameters and combination boundaries ⟦shared:0⟧\n"
+    },
+    "32": {
+      "source_sha256": "5abefabc7a7329ae586c014e8f131550b1b17300d3186f7b989d186d40566ecc",
+      "status": "reviewed",
+      "translation": "| Parameter | Default | Type, effect and constraints |\n"
+    },
+    "33": {
+      "source_sha256": "a9e436d2babd638ade86791e162e7de5a6b1b3128c6ae9ed93504fbf3c53dc93",
+      "status": "reviewed",
+      "translation": "| --- | --- | --- |\n"
+    },
+    "34": {
+      "source_sha256": "3e52f288b99b28300258d10922073d8a4fefca7592fe3ad2317344f57752c1bb",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | ⟦shared:1⟧ | left/center/right; aligns complete sequences or anchors |\n"
+    },
+    "35": {
+      "source_sha256": "25f970bbcf1ab07ae7728a6a70989f447fc8bd0f205d0a8ac038fdc03390f179",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | ⟦shared:1⟧ | Named numeric vector or table; does not crop data |\n"
+    },
+    "36": {
+      "source_sha256": "670607569558872c0f58b6ca608d907d598dbd2bc91c20a71010835a24062ea1",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | ⟦shared:1⟧ | manual/auto; auto conflicts with explicit sequence directions |\n"
+    },
+    "37": {
+      "source_sha256": "56a637b1824e8f1e993f1ed560c218d0f2b00806b754593233a9eb2e16285253",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | ⟦shared:1⟧ | Number in 0–1; directional evidence threshold, not identity |\n"
+    },
+    "38": {
+      "source_sha256": "6ea3a814ab373f1e122fc57de8c90d59dc722e27b333ea19d4a835d0ececc4ac",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | ⟦shared:1⟧ | Explicit window table; conflicts with anchor or auto |\n"
+    },
+    "39": {
+      "source_sha256": "f6059d5c14fc84ffbae4cb01c92600ca6db1408f4068e9a0e7169d2ad0bc3843",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | ⟦shared:1⟧ | Positive display distance in bp scale units, not omitted length |\n"
+    },
+    "40": {
+      "source_sha256": "f9af8e69b3574c3215444f9343b274ccbc3de15fb7afc7dd544a0ff9a1891257",
+      "status": "reviewed",
+      "translation": "These belong to ⟦shared:0⟧, not the other coordinate systems. Window tables own orientation in [segmented views](⟦shared:1⟧). Circular radius and curvature settings cannot be converted to this mode.\n"
+    },
+    "41": {
+      "source_sha256": "af5c542ff186dd885fb6e6e94dedcf2610906d0e701ee6b303d5ce3a281cbd15",
+      "status": "reviewed",
+      "translation": "## Use your own data ⟦shared:0⟧\n"
+    },
+    "42": {
+      "source_sha256": "0724a9e35977c38a1dc0d7b30940be3d13309b37741e91b55d3ae6917917f4f3",
+      "status": "reviewed",
+      "translation": "First change only ⟦shared:0⟧ from left to right and observe short sequences against the longest backbone. Then choose a justified anchor for each sequence and explain why they can be compared. For your FASTA lengths and BLAST/PAF endpoints, check IDs, units, complete lengths and reverse endpoints; see [data import](⟦shared:1⟧).\n"
+    },
+    "43": {
+      "source_sha256": "9a3fc3dcc49c256cf4473de87dec702a9039651397842bb7a72df48795460f09",
+      "status": "reviewed",
+      "translation": "For missing links inspect endpoints and adjacent-row filtering in [cross-row connections](⟦shared:0⟧). Continue with [local windows and segments](⟦shared:1⟧); see [⟦shared:2⟧](⟦shared:3⟧) for the complete reference.\n"
+    },
+    "44": {
+      "source_sha256": "3f1ba81ae71e194e677fcd11a569018af1d545090c8ffda3e55d0c8bab497748",
+      "status": "reviewed",
+      "translation": "## Increase row spacing ⟦shared:0⟧\n"
+    },
+    "47": {
+      "source_sha256": "c128d2920870326c398f44e0c581fc826ab28c780a1cc79486a5c13739a223dd",
+      "status": "reviewed",
+      "translation": "In a collinear plot, ⟦shared:0⟧ is relative to the longest backbone width and defaults to ⟦shared:1⟧. Set the gap below MT108731.1 to ⟦shared:2⟧. The other gaps retain ⟦shared:1⟧; the final row has no following gap. The ribbon still joins the same bp intervals.\n"
+    }
+  }
+}

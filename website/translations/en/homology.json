@@ -1,0 +1,100 @@
+{
+  "source_sha256": "c22a4f64e9ca5d94e357a6f43bd69a57242aa6b7b6c5dc52fe5200abd2b0e888",
+  "blocks": {
+    "0": {
+      "source_sha256": "91e9e259f728b2c16733c8da6b53d6d8138017e39e76abbbcbc26ecd52a4bddc",
+      "status": "reviewed",
+      "translation": "⟦shared:0⟧⟦shared:1⟧Compare AmpR neighbourhoods in two plasmids. Check real coding DNA, establish correspondence, then focus to each CDS plus 200 bp on either side.⟦shared:2⟧⟦shared:3⟧\n"
+    },
+    "1": {
+      "source_sha256": "b1c4aa5f152df504b2b64d104fde5b29bfa13a8faec76dc5a44a92dcab5d9d7c",
+      "status": "reviewed",
+      "translation": "## Extract actual CDS and coding DNA ⟦shared:0⟧\n"
+    },
+    "2": {
+      "source_sha256": "85bddc8e022d8fcfaca9425dc8b8a19a1aede5a2c37bf283cc8514beccded2e5",
+      "status": "reviewed",
+      "translation": "Select AmpR annotations from bundled pUC19 and pETDuet-1, retaining IDs, coordinates, strand and text. Reverse-complement negative-strand DNA so comparisons use the same biological orientation rather than annotation names alone.\n"
+    },
+    "5": {
+      "source_sha256": "c2bec231bdf5981e652a8d4433a3d1ccaaa36b83ba9bcb908e6315f3417d630e",
+      "status": "reviewed",
+      "translation": "Read the negative-strand CDS in coding orientation, then compare the two DNA strings.\n"
+    },
+    "8": {
+      "source_sha256": "da2ca77fcdc6739c5330d7c74c422ecb904b64d79a1c1bd315faa910bd08a9a6",
+      "status": "reviewed",
+      "translation": "⟦shared:0⟧ should contain two actual CDS; ⟦shared:1⟧ retains their oriented coding sequences. This strict example checks exact DNA equality. General homology analysis can use external alignments and clustering; homologs need not be identical.\n"
+    },
+    "9": {
+      "source_sha256": "4cb128a2d539b5b0e96ea682014e0f1d8e259a111349c4114693a1c1bc5eac26",
+      "status": "reviewed",
+      "translation": "## Declare members and sequence pairs ⟦shared:0⟧\n"
+    },
+    "10": {
+      "source_sha256": "0e923afc822001cf5e96e5c7fd284ec622ea597f2c52a3fa33b303dac28ceaf4",
+      "status": "reviewed",
+      "translation": "Build membership from exact coding-DNA equality. Different DNA does not enter one group merely because both annotations say AmpR.\n"
+    },
+    "13": {
+      "source_sha256": "d4596facee03bb62703c8725596e012d57a8fe2320636de4d557262e967f1981",
+      "status": "reviewed",
+      "translation": "Inspect ⟦shared:0⟧ and ⟦shared:1⟧ and ⟦shared:2⟧. The linking utility consumes existing groups; it does not compute a new alignment. Unknown members and ambiguous paralogs are reported; only explicit ⟦shared:3⟧ requests all combinations within the documented bounds.\n"
+    },
+    "14": {
+      "source_sha256": "b52c5538836ab11ff6896cb771744477ffee1c98fab94267c86909a52a988388",
+      "status": "reviewed",
+      "translation": "## Focus on comparable neighbourhoods ⟦shared:0⟧\n"
+    },
+    "15": {
+      "source_sha256": "5e8e710e1722bb2e9a7e40dd7466f3e849986559e6d378560e5f9e4c146dc361",
+      "status": "reviewed",
+      "translation": "Full plasmid lengths would shrink the individual CDS. Construct windows from each real CDS source interval and add 200 bp on either side, retaining the original sequence and annotation tables.\n"
+    },
+    "18": {
+      "source_sha256": "c151d2afc905f25d051e95d1dbed899d171d49d4309585e18cb807182a10de79",
+      "status": "reviewed",
+      "translation": "Blue arrows show the reverse-strand AmpR CDS and the grey band connects the verified intervals. Axes use each original sequence's positions, so one horizontal location can have different source labels. Break markers indicate that only local windows remain.\n"
+    },
+    "19": {
+      "source_sha256": "fc487af1dedab6116b6cb3b3aab5f0501093e992402d524843a04efbd9ecbae3",
+      "status": "reviewed",
+      "translation": "⟦shared:0⟧ records retention and clipping. Genes outside the windows are omitted, not absent. The band represents declared interval correspondence, not a base alignment; envelopes of segmented annotations likewise do not establish exon-level correspondence.\n"
+    },
+    "20": {
+      "source_sha256": "89a786a96ab3f43b937bb066ff85f9efae35d77098bb1b9a5ed897c05008ef8b",
+      "status": "reviewed",
+      "translation": "## Project supported protein intervals to both CDS ⟦shared:0⟧\n"
+    },
+    "24": {
+      "source_sha256": "3f5c97888fc13145faa62fc0c35f93f18c63e9c9b9c9ff7a049ddac2b9c3665d",
+      "status": "reviewed",
+      "translation": "The first 20 residues of identical CDS provide sequence evidence for ⟦shared:0⟧. Equal spans alone do not justify that claim for ordinary BLASTp HSPs. The utility retains protein statistics rather than presenting them as nucleotide identity.\n"
+    },
+    "25": {
+      "source_sha256": "96d3b3403a7277d64e0e970205753ee81e2d284e9e04a56212cef8617bb26319",
+      "status": "reviewed",
+      "translation": "## Result checks ⟦shared:0⟧\n"
+    },
+    "26": {
+      "source_sha256": "bdcdb05ca9a940cfea21daf1238f8a2aaa104893e8578614fbbc97d285a86380",
+      "status": "reviewed",
+      "translation": "Both AmpR arrows show the reverse strand. Coding DNA supports correspondence; source axes and focus reports explain the local display. Save at [explicit 10 × 5 in dimensions](⟦shared:0⟧).\n"
+    },
+    "27": {
+      "source_sha256": "abe2a5a9986b16bf99a4a61b80f95ee0b59233b54d33c8602f515174152c607a",
+      "status": "reviewed",
+      "translation": "Next: [read real BLASTp query intervals](⟦shared:0⟧), understand [CDS projection and segments](⟦shared:1⟧), or create [independent local windows](⟦shared:2⟧).\n"
+    },
+    "28": {
+      "source_sha256": "591dc8793ee0d95e2fd01b15e7bd5d3f4f9116e566c8c71a8bc4cdb92538a344",
+      "status": "reviewed",
+      "translation": "## Save this result ⟦shared:0⟧\n"
+    },
+    "29": {
+      "source_sha256": "4247b56ca5b32b5aae74aefc66b4084e55c095ba6affe490d9cdf08aaf631d90",
+      "status": "reviewed",
+      "translation": "Save the plot just created to the working directory; use matching dimensions for preview.\n"
+    }
+  }
+}

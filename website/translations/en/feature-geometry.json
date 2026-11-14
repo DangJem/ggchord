@@ -1,0 +1,145 @@
+{
+  "source_sha256": "76d5295b77ef75804831f4f0d2d1c7bf1b22228228eb676f96e6b9cac7859d1c",
+  "blocks": {
+    "0": {
+      "source_sha256": "b5e8b207b62a5a88de1b84640523589c12843839ad3685519ea42266f5fa1af3",
+      "status": "reviewed",
+      "translation": "Compare arrow outlines on the same observed CDS. Choose shape before size; neither changes the interval, strand or biological function.\n"
+    },
+    "1": {
+      "source_sha256": "d0f74a68a24888a4a94d6a2ab4faff937ec5fc9f123bbfbb9c5c732542c43a66",
+      "status": "reviewed",
+      "translation": "## Prepare a real annotation and local window ⟦shared:0⟧\n"
+    },
+    "2": {
+      "source_sha256": "16bd8a9d92c88eaa6ec9a3b666dcc18020ea27f5c6428387db90f4c61fad3927",
+      "status": "reviewed",
+      "translation": "Use the bundled integrase in ⟦shared:0⟧: OQ646790.1 at 43,765–46,140 bp. Restore the original positive strand from ⟦shared:1⟧. Focus on 43,000–47,000 bp for visibility and display source coordinates on the axis.\n"
+    },
+    "4": {
+      "source_sha256": "3714243c245359052e723e4dfb836ffee82ac6df575003f978f738f3aea8ba25",
+      "status": "reviewed",
+      "translation": "⟦shared:0⟧ retains clipping and source metadata. Your CDS needs a complete sequence length, matching ⟦shared:1⟧, one-based inclusive ⟦shared:2⟧, and an evidence-backed strand. Use ⟦shared:3⟧ for unknown strands. This page runs independently in a new R session and requires the optional dplyr package.\n"
+    },
+    "5": {
+      "source_sha256": "d90c714065b09bd353db74160320df6bf0a8eada3068c7858d45042579765c47",
+      "status": "reviewed",
+      "translation": "## Select the real neighbourhood by explicit ID ⟦shared:0⟧\n"
+    },
+    "6": {
+      "source_sha256": "8af9ee0b3f0a6d238533058f74c087c2e9d7a3443548f4515d45ab6baea8b89d",
+      "status": "reviewed",
+      "translation": "Combine source accession/endpoints into a workflow target ID, not a claimed database gene ID. Find_ggchord_loci selects exact IDs and extends 100 bp upstream/downstream in biological direction. Negative-strand upstream points to larger source coordinates; unknown/bidirectional strands require symmetric extensions. Pass returned windows to focus_ggchord_data and inspect full-length boundary clipping flags.\n"
+    },
+    "9": {
+      "source_sha256": "20603d2d8114c82246ab335e851dad3f2d5ae0d0c41070c9e7cabe1778082181",
+      "status": "reviewed",
+      "translation": "## Three arrow constructions ⟦shared:0⟧\n"
+    },
+    "10": {
+      "source_sha256": "859b4985dae2974c6996d5c37468edb540d4c44db6f5aa74161458b13f43a211",
+      "status": "reviewed",
+      "translation": "All figures use 9 × 4 inches and identical input, window and layers. To expose shoulders, all three explicitly use ⟦shared:0⟧ (default 1). Only ⟦shared:1⟧ changes.\n"
+    },
+    "13": {
+      "source_sha256": "cbe5cfad595088205884ab3b21fbdf0af3f6c675cd33a577b2996b298f38e954",
+      "status": "reviewed",
+      "translation": "⟦shared:0⟧ is the default construction. A wider head creates shoulders where it joins the shaft, emphasizing direction.\n"
+    },
+    "16": {
+      "source_sha256": "3a6873d6b6ce6a5d585b167c17d7716802d2468c277b55605f9504ea32be0ea4",
+      "status": "reviewed",
+      "translation": "⟦shared:0⟧ uses a flush head-to-shaft outline. Compare the head junction while keeping the same endpoints and shaft.\n"
+    },
+    "19": {
+      "source_sha256": "bb832f7f39f2e29a21d217c096b5664e77171a2fcc0e95bd2df5199a67e0e1eb",
+      "status": "reviewed",
+      "translation": "⟦shared:0⟧ draws the entire interval as a triangular wedge rather than adding a head to a rectangular shaft. Shape differences do not imply different functions or measured values.\n"
+    },
+    "20": {
+      "source_sha256": "7e17d2999ce99fb18277cd68a35a05767b288e89a16aca2fa328580daf24325f",
+      "status": "reviewed",
+      "translation": "## When a short feature cannot fit its head ⟦shared:0⟧\n"
+    },
+    "21": {
+      "source_sha256": "2ddb1c7ebd4038f83bb85276c6505c523bb5ad871f303de18947589bdaf0c184",
+      "status": "reviewed",
+      "translation": "Keep the same observed integrase and window, requesting head length 1.5 in all three plots so the interval is short relative to its head. Change only short_feature: auto chooses a compressed directional glyph, wedge a wedge, block an undirected block. Do not lengthen source coordinates to fit a head; a block does not make the biological strand unknown.\n"
+    },
+    "28": {
+      "source_sha256": "7b8db0cf7618d21d2890b37e3c9ae58d63aed62cec40adcbb535485d46f4cf94",
+      "status": "reviewed",
+      "translation": "## Dimensions, short features and presets ⟦shared:0⟧\n"
+    },
+    "29": {
+      "source_sha256": "f333fc3c818dde22521f402e731b5f1b5b9c6db1b0858f5551384320ccd691c2",
+      "status": "reviewed",
+      "translation": "| Parameter | ⟦shared:0⟧ default | Values and choices |\n"
+    },
+    "30": {
+      "source_sha256": "a9e436d2babd638ade86791e162e7de5a6b1b3128c6ae9ed93504fbf3c53dc93",
+      "status": "reviewed",
+      "translation": "| --- | --- | --- |\n"
+    },
+    "31": {
+      "source_sha256": "c6479341b7edb28529f859295fcd69d6aaffcdcfc92c506e2c4b4ae76cd611ec",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | ⟦shared:1⟧, resolving to 0.05 | Shaft width; may vary by sequence or strand |\n"
+    },
+    "32": {
+      "source_sha256": "ed73411355c78ed674bdccbab495bf90ef8fe3580f41713ea175e895fe132e44",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | ⟦shared:1⟧ | Head length in the local frame, not bp |\n"
+    },
+    "33": {
+      "source_sha256": "607a528b4e00f2f53ee3bbc0af28baee7259086445ffc12698add2f8b7ef040d",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | ⟦shared:1⟧ | Head width relative to the shaft; 1.6 in all three figures |\n"
+    },
+    "34": {
+      "source_sha256": "017c53cba0e46b0b5c6ec5fecc572b016d9d8ac393f32be7f34d2b09aab5cadb",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | ⟦shared:1⟧ | shouldered / flush / triangle |\n"
+    },
+    "35": {
+      "source_sha256": "1cbae79999c75d88f69cdde2dc50546838848be402cef57e7e6e91d473592f0c",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | ⟦shared:1⟧ | Selects wedge or block when the head cannot fit; explicit wedge/block fixes the fallback |\n"
+    },
+    "36": {
+      "source_sha256": "d1cb0300dbd1418f0fc86d506ef7fb89159f89c2c44cd39d21f6444998aa31b6",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | ⟦shared:1⟧ | position_strand separates strands; position_feature_stack separates overlaps |\n"
+    },
+    "37": {
+      "source_sha256": "134c14780b463b326f98fff732c2e7177a9211c07937df226f9d1fb28d0e3620",
+      "status": "reviewed",
+      "translation": "Do not hide short intervals by enlarging heads. Check source length before choosing a fallback. Generic ⟦shared:0⟧ accepts fixed ⟦shared:1⟧ or mapped ⟦shared:2⟧ with a corresponding scale; see [styling](⟦shared:3⟧).\n"
+    },
+    "38": {
+      "source_sha256": "477008857cdb3ddebfeac3f765dadd6bf6c127ed12361c40ee8072023fe2ef8d",
+      "status": "reviewed",
+      "translation": "⟦shared:0⟧ is a preset with different width, head dimensions and Position defaults. Changing several defaults while comparing it to gene is not a single-parameter experiment. Segmented annotation boundaries mark segments, not different genes.\n"
+    },
+    "39": {
+      "source_sha256": "174a25e0c053c8f7a1de4a81b3c1ea901288639ee52bb180ee23df458790c665",
+      "status": "reviewed",
+      "translation": "## Modes, input adaptation and next steps ⟦shared:0⟧\n"
+    },
+    "40": {
+      "source_sha256": "61189cc1ffcb0c2e65d2f651ae685d44a3523ca6b312be89837a3d416a2e9541",
+      "status": "reviewed",
+      "translation": "Gene arrows support bp inputs in chord, collinear and single circular modes. Use generic features for aa intervals. Focusing and display reversal do not rewrite biological strand; see [compatibility](⟦shared:0⟧).\n"
+    },
+    "41": {
+      "source_sha256": "0acef6ccfa3853499ee18b2d1fca82b4a980b8b47adb0dda8464753c08082e91",
+      "status": "reviewed",
+      "translation": "First change the common head width from 1.6 back to 1 and inspect shoulder visibility. Then change only ⟦shared:0⟧ and compare shaft versus backbone width. Keep export dimensions fixed rather than editing source intervals to improve appearance.\n"
+    },
+    "42": {
+      "source_sha256": "1a00c409bb7121d4fbb36573596e5a88dc44b06da48a1cbf5b56c419e6341bec",
+      "status": "reviewed",
+      "translation": "Continue with [feature stacking](⟦shared:0⟧), [labels](⟦shared:1⟧), or add this CDS to the [four-genome example](⟦shared:2⟧). Full interfaces: [⟦shared:3⟧](⟦shared:4⟧), [⟦shared:5⟧](⟦shared:6⟧).\n"
+    }
+  }
+}

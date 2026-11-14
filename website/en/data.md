@@ -95,7 +95,7 @@ are read once in first-occurrence order. Choose one clear entry for a workflow. 
 homology data must be supplied by the analyst, not invented by the plotting layer.
 
 ## Validate, clean, prepare {#validation}
-After this page’s preparation code:
+
 
 {{code:validation}}
 

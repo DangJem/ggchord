@@ -1,0 +1,260 @@
+{
+  "source_sha256": "7af1f0ae226fc9789d6632a2b59821610f3feab9a78e5fe9c87f347c11457331",
+  "blocks": {
+    "0": {
+      "source_sha256": "83b9b2a3c5ddb4baa47a4718bf152562a2b985ef25fbcd7c7c28c1211854c2c4",
+      "status": "reviewed",
+      "translation": "Compare fixed and automatic labels on the same six source-backed pUC19 annotations. Placement, size, wrapping and device dimensions jointly affect readability; a hidden label is not a missing annotation.\n"
+    },
+    "1": {
+      "source_sha256": "75f6bbf3384cd382bd2ee0177eca597e8fa0283b7001a1dd726f7abdc1accc88",
+      "status": "reviewed",
+      "translation": "## Prepare this page independently ⟦shared:0⟧\n"
+    },
+    "2": {
+      "source_sha256": "1499ed2c8e440eaea9a045654c02338e89b9c7aa5e34d2d5dd1a8ac13350adce",
+      "status": "reviewed",
+      "translation": "Requires optional dplyr. Original names remain in finish_features; display text merely appends actual coordinates. Intervals and strands stay fixed. All layers consume the same finish_labels, with 9 × 8 inch figures.\n"
+    },
+    "4": {
+      "source_sha256": "453c99a553332ffe6597976dbe45f06a274cff53d2cdd4228c86b6c681fc49bd",
+      "status": "reviewed",
+      "translation": "## Fixed labels: orientation, side and rotation ⟦shared:0⟧\n"
+    },
+    "5": {
+      "source_sha256": "0537465ca3209621fe8d582262703ea746634254316f303ab3ad25af3a956fd4",
+      "status": "reviewed",
+      "translation": "The feature orientation follows each feature. Each subsequent plot changes only horizontal orientation, inside placement or 30-degree rotation. Return to the common baseline instead of accumulating settings. Default overlap is hide, so crowded text may be omitted.\n"
+    },
+    "14": {
+      "source_sha256": "0affb6dab19c3304c014b408ee5b84aa2b9446ef7a7b321f9e0dd2d6a27562be",
+      "status": "reviewed",
+      "translation": "## Fixed-label parameters and conflicts ⟦shared:0⟧\n"
+    },
+    "15": {
+      "source_sha256": "8bc0136a168c565c6d6aa47232204adaaf40e8cabf680a68cc8250f92b8931d7",
+      "status": "reviewed",
+      "translation": "| Parameter | Default | Meaning |\n"
+    },
+    "16": {
+      "source_sha256": "a9e436d2babd638ade86791e162e7de5a6b1b3128c6ae9ed93504fbf3c53dc93",
+      "status": "reviewed",
+      "translation": "| --- | --- | --- |\n"
+    },
+    "17": {
+      "source_sha256": "6d9d0091e90d877a621f4eca5bac92048272b6f38008e1b01cc847dd2a6ab75a",
+      "status": "reviewed",
+      "translation": "| label_orientation | feature | feature/horizontal/radial/tangent |\n"
+    },
+    "18": {
+      "source_sha256": "891c03080147f1c0315e963875331ef95c15d6a31ac2113114fb0b2281335f37",
+      "status": "reviewed",
+      "translation": "| label_side | outside | outside/inside/auto |\n"
+    },
+    "19": {
+      "source_sha256": "28288196902fdc3f1ef40cfffca510532bb09f6d528dbe7e7c5ba446f8dcf4df",
+      "status": "reviewed",
+      "translation": "| label_overlap | hide | hide/nudge/allow; allow can overlap |\n"
+    },
+    "20": {
+      "source_sha256": "3ebfcf0a9380d975729209ea8f5669a02eee0333f5575c4c22b2e7d5bc619d4a",
+      "status": "reviewed",
+      "translation": "| label_rotation | NULL | Extra degrees, resolving to 0 |\n"
+    },
+    "21": {
+      "source_sha256": "f9a76404ddd6077c403f777b53d85479fcfd7778c297fb5539391c6888ce13ff",
+      "status": "reviewed",
+      "translation": "| label_radial_offset | 0.04 | Local-normal displacement, not bp |\n"
+    },
+    "22": {
+      "source_sha256": "9d331438d862a592c0a1702f5cc1792bca1518f5d79c4b63b56cab7452160fed",
+      "status": "reviewed",
+      "translation": "| label_circum_offset | NULL | Resolves to 0 along the circumference |\n"
+    },
+    "23": {
+      "source_sha256": "09cd59155a137ea49bd22fd9784dcaa8debc5067a8d1c18facaa7c65bf7a88a6",
+      "status": "reviewed",
+      "translation": "| label_circum_limit | NULL | Resolves to TRUE for circumferential limits |\n"
+    },
+    "24": {
+      "source_sha256": "0e822e73ef12ae00acd80b4e7147b8c200be3c58565a9617575e7f95ff793270",
+      "status": "reviewed",
+      "translation": "| label_wrap | NULL | Optional character wrapping width |\n"
+    },
+    "25": {
+      "source_sha256": "ae61982ee9a6358c6747dd61e62f0170fd2f1969636e5bf82ea7caf0803c4dd6",
+      "status": "reviewed",
+      "translation": "Do not pass fixed placement controls to automatic repel layers. Match the feature Position; prefer unique feature_id values for subsets/reordering and never reuse an ID for a different interval. In linear mode radial/tangent mean vertical/horizontal rather than circular letter placement.\n"
+    },
+    "26": {
+      "source_sha256": "3246ea6c532f7d8ee5b70a9e8016c138ed22e62c576e0ea1f7b1d58114400b94",
+      "status": "reviewed",
+      "translation": "## Compare four automatic layouts on identical text ⟦shared:0⟧\n"
+    },
+    "27": {
+      "source_sha256": "56aea145509ad710bad8568cd3e4f02b5db015cc71c847974d5c5d35d43bc62a",
+      "status": "reviewed",
+      "translation": "Default feature first tries internal, then adjacent/external placement. Radial, auto and callout provide alternative placement strategies. Layout changes presentation, not source annotations. Keep identical text, requested size and dimensions across all four.\n"
+    },
+    "36": {
+      "source_sha256": "a4c44659ccb1781041bcb3c9036990473b2a33722d7e034ae215ff1a809e12f5",
+      "status": "reviewed",
+      "translation": "## Wrapping, shrinking, hiding and leaders ⟦shared:0⟧\n"
+    },
+    "37": {
+      "source_sha256": "c8b1d04575c6082eb09b2a830b7e150a5712832bd798be92b1ed5dde13a5b10c",
+      "status": "reviewed",
+      "translation": "Starting from feature, change only label_fit to shrink; then return to baseline and set only label_wrap=14. Shrink explicitly permits smaller text down to the default minimum 1.5. It does not shrink indefinitely to guarantee all names. Character wrapping width is not a fixed physical width.\n"
+    },
+    "42": {
+      "source_sha256": "5cf5891e9d3659295ae1a6dbe15a569d584b90f50bbe49e618deed3c5b40c253",
+      "status": "reviewed",
+      "translation": "From the 14-character wrap example, change only label_fit to ellipsis. Then return to default feature placement and disable only external fallback. Omission/hiding changes display, not source names or features.\n"
+    },
+    "47": {
+      "source_sha256": "c3dcb934d1ae48b661c455dad70b76f3e77abb0fa52db0a8faf2ec206d82f224",
+      "status": "reviewed",
+      "translation": "## Important automatic-label defaults ⟦shared:0⟧\n"
+    },
+    "48": {
+      "source_sha256": "39a3c527b6ec8e45060b0fd1b1687a32406cf0f3fbfd06f5db936c4f7d31cd26",
+      "status": "reviewed",
+      "translation": "| Parameter | Default | Choices and limits |\n"
+    },
+    "49": {
+      "source_sha256": "a9e436d2babd638ade86791e162e7de5a6b1b3128c6ae9ed93504fbf3c53dc93",
+      "status": "reviewed",
+      "translation": "| --- | --- | --- |\n"
+    },
+    "50": {
+      "source_sha256": "d8bc455f275bfa74f85e6de6ee541f6cadee48c67ea5e42c02e30f4d13d90d25",
+      "status": "reviewed",
+      "translation": "| label_layout | feature | feature/radial/auto/callout; gene layouts differ |\n"
+    },
+    "51": {
+      "source_sha256": "c6c26fb784a34160798911929d7470c5f33eb835b84d92f4129bbeea460ad3f8",
+      "status": "reviewed",
+      "translation": "| label_fit | wrap | wrap/none/ellipsis/auto/shrink; omission does not edit source text |\n"
+    },
+    "52": {
+      "source_sha256": "0670c7feccf9615d7aeb27eea4b5f89a4ade78d87c7ed6e9fe62f32e25f9f9a6",
+      "status": "reviewed",
+      "translation": "| label_max_lines | 2 | Inspect together with wrapping |\n"
+    },
+    "53": {
+      "source_sha256": "7b30a3c65602c43b75fd7e7719c13ab8d4cc3910e6ada501e6ba85beca885bb5",
+      "status": "reviewed",
+      "translation": "| label_min_size | 1.5 | Lower bound for shrinking |\n"
+    },
+    "54": {
+      "source_sha256": "891c03080147f1c0315e963875331ef95c15d6a31ac2113114fb0b2281335f37",
+      "status": "reviewed",
+      "translation": "| label_side | outside | outside/inside/auto |\n"
+    },
+    "55": {
+      "source_sha256": "2cd57d579e2e214201bbe92fd116b1b8829c0f35ca13fd63ca22f66d90338503",
+      "status": "reviewed",
+      "translation": "| external | TRUE | FALSE prevents exterior fallback; linear mode rejects this constraint |\n"
+    },
+    "56": {
+      "source_sha256": "c3f128adfee0971b93edcd174d5524f1ad8ea805a21a5a04f4731edbff302f4b",
+      "status": "reviewed",
+      "translation": "| max_overlaps | Inf | Does not guarantee zero collisions |\n"
+    },
+    "57": {
+      "source_sha256": "2df7111dbe89e262a19c14e4571f06bedb501bcd2ec3c7a6e6fe5e1f3d0a2885",
+      "status": "reviewed",
+      "translation": "| label_segment_overlap | fade | Appearance of conflicting leaders |\n"
+    },
+    "58": {
+      "source_sha256": "064110b1055b900d44dc6869be848235c8f6e0c32eb4ab91f1f24ae81f0dd852",
+      "status": "reviewed",
+      "translation": "| label_segment_overlap_alpha | 0.18 | Faded leader opacity |\n"
+    },
+    "59": {
+      "source_sha256": "534fb482c00171cb357920e948b93ef5347345e5af350f0f27ba52f8db066742",
+      "status": "reviewed",
+      "translation": "| label_segment_linetype | auto | Automatic leader line type |\n"
+    },
+    "60": {
+      "source_sha256": "30ec46e31540583e55ff8ab6f5cef683aac69cdedc72a9c25af19ea435bbffd8",
+      "status": "reviewed",
+      "translation": "| label_segment_layer | below | below/above; text retains the label layer position |\n"
+    },
+    "61": {
+      "source_sha256": "3ecdc4dbf482cf32961e94868a75a0b314865787a26d1e9d3f56352e16c1813d",
+      "status": "reviewed",
+      "translation": "| label_repeat | individual | bracket shares a counted label and arc bracket for consecutive matching short features |\n"
+    },
+    "62": {
+      "source_sha256": "6a30e1444c18623b4e6ecf39714822e0a4614ee57ef241d94bea1e502c1f1189",
+      "status": "reviewed",
+      "translation": "| label_segment_colour | auto | Grey for leaders from inside features to exterior labels; accepts an explicit colour |\n"
+    },
+    "63": {
+      "source_sha256": "314868fbb7ed4f04df8374bf500a10d7e1d32c385998830d46a24d6d64a10073",
+      "status": "reviewed",
+      "translation": "Read exported label placement and fit diagnostics before changing dimensions, label subsets, layout or wrapping. Keep original full names rather than retaining only truncated figure text.\n"
+    },
+    "64": {
+      "source_sha256": "3cd17aba87f56c7a48c7757f920c34fe8dd2b9db09e7cc729638ca85f7e14339",
+      "status": "reviewed",
+      "translation": "Feature layout uses direct leaders, allowing them to cross features without\nmulti-bend detours. Filled features cover leaders drawn below; transparent\nfills keep their transparency. Internal single-line names follow circular\ntracks. Wrapped sources keep one annotation and a continuous glyph on closed\ncircles; a visible coordinate gap retains separate display pieces. A shifted adjacent name receives a short attachment. To restore the\nlabel layer's drawing order:\n"
+    },
+    "66": {
+      "source_sha256": "6953ed5f36aab5b2fda8670e0a369ea774a64312b763fbd0cab4dc1559fb7adb",
+      "status": "reviewed",
+      "translation": "## Use your annotations ⟦shared:0⟧\n"
+    },
+    "67": {
+      "source_sha256": "4ec6008419a491ee9b229ff91c2cae01accaa6c07d796b2a5843b0b523dacf30",
+      "status": "reviewed",
+      "translation": "Change only label_max_lines to 3 and explain any improvement. At fixed dimensions, compare exterior fallback on/off. Fixed and automatic layers have different controls. Supply explicit label text or anno, checking IDs, intervals, strands and unique feature_id values. Continue with [primer text](⟦shared:0⟧) and the [dense pETDuet-1 case](⟦shared:1⟧).\n"
+    },
+    "68": {
+      "source_sha256": "e52c4fa94ed357f94efaa27e55afbb43709b01ba6313ab5781c62e02b456e7f6",
+      "status": "reviewed",
+      "translation": "Neighbouring names compare radial travel with angular displacement; an empty\ninner track can preserve association better than squeezing names onto the\nnearest track. Dotted arrow boundaries can come from source segments or\ncleavage markers. Inspect ⟦shared:0⟧, ⟦shared:1⟧ and ⟦shared:2⟧;\na boundary is not necessarily an independent feature. Top-level feature\nlabels do not automatically add text for every named subsegment.\n"
+    },
+    "69": {
+      "source_sha256": "1a43ff9a82676810f047928569ddcf64189aa426ae53036e0317748c2aa565f5",
+      "status": "reviewed",
+      "translation": "Dense inner annotations retain source-angle order. Candidate slots check\ntext and leaders together. Leaders may cross features, but do not acquire\nmulti-bend detours around text. With external placement enabled, compact\nrepeated annotations in outer bands can use the exterior queue as a group;\ninner bands first try inner slots before exterior fallback. This bounded\nsearch does not guarantee every density fits inside; inspect visibility,\nconvergence and conflict diagnostics at export dimensions.\n"
+    },
+    "70": {
+      "source_sha256": "71d7b281c8ae35af3e8550eb4c38ec02f60fae1f9ea72418482fce1dd2f24c2e",
+      "status": "reviewed",
+      "translation": "## Shared labels for consecutive repeats ⟦shared:0⟧\n"
+    },
+    "71": {
+      "source_sha256": "b42791886d09f79f66ca25a53d69f26ef24159595d3f554dc7accd89f73b5ab1",
+      "status": "reviewed",
+      "translation": "⟦shared:0⟧ is an explicit display style; the default\n⟦shared:1⟧ retains separate labels. Consecutive non-overlapping short\nfeatures in one band can share a counted arc label and range bracket when\nname, type, direction and resolved fill agree. An intervening annotation\nbreaks the run. Arrows, coordinates and biological rows remain independent.\nVisibility and fit exports report ⟦shared:2⟧ for the shared\nsources. This applies to the ⟦shared:3⟧ layout on a single closed circular\nsequence; other coordinates retain individual labels. The curved range marker\nis distinct from the label's simple leader.\n"
+    },
+    "73": {
+      "source_sha256": "ee0604d3ad281c2897181aa319668c00882a8f7b36986472fa03a3741500cf4c",
+      "status": "reviewed",
+      "translation": "Automatic plasmid axis text hugs the backbone; explicit offsets keep their\nplacement. Circular feature bands reserve gutters for names that cannot fit\ninside their arrows, and text tracks use measured heights and physical gaps.\nExplicit ⟦shared:0⟧ remains a minimum. This bounded search does not guarantee\nconflict-free placement at every density; inspect actual-size export diagnostics.\n"
+    },
+    "74": {
+      "source_sha256": "67469bb1a0c1aad53581371937e2ef8c203e6d414883919d5dbad9d6657f1ddc",
+      "status": "reviewed",
+      "translation": "Default grey dashed lines connect **a feature inside the sequence circle to\nan exterior feature label**. Internal neighbouring labels and restriction\nleaders retain their established style. A centred, isolated name close to its\nfeature omits an unnecessary short attachment; displaced or competing names\nretain association leaders.\n"
+    },
+    "76": {
+      "source_sha256": "81d3523074ac931c406c7684ea7de198c120d7ef96fc30d5a13ec76f486de9a8",
+      "status": "reviewed",
+      "translation": "Explicit parameters affect all feature leaders in the layer. A custom\n⟦shared:0⟧ theme also overrides the automatic palette.\nSegment boundaries clip to the actual arrow contour without editing source\nsegments. Wrapped internal labels use a separate concentric baseline for each\nline. Automatic coordinate text retains a small physical backbone gap;\nexplicit offsets keep their contract.\n"
+    },
+    "77": {
+      "source_sha256": "d35c0d5517f5f9ba65bfca72ef9719e730b4a9fcf61d093664dd48df33142a4b",
+      "status": "reviewed",
+      "translation": "Automatic coordinate text searches only a bounded channel near the backbone.\nWith ⟦shared:0⟧ enabled, an unavailable nearby slot may hide\nordinary intermediate text while retaining its tick. Origin/end and combined\nseam strings take priority and remain visible. Diagnostics report ⟦shared:1⟧ and\nkeep the original value in ⟦shared:2⟧. Hidden text uses an empty display\nstring so missing-value markers cannot appear as literal “NA”.\n"
+    },
+    "78": {
+      "source_sha256": "e8e43c8b9371f605c24701607499e58d74416a1a42e6201080cdaa0d451fa448",
+      "status": "reviewed",
+      "translation": "Unresolved endpoint clearance reports ⟦shared:0⟧ while retaining\nits text. External feature leaders also honour ⟦shared:1⟧:\nfade reduces opacity under text, clip removes covered portions, and show\nkeeps the full route. Clipping splits existing legs without adding bends.\n"
+    }
+  }
+}

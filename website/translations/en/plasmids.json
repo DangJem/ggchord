@@ -1,0 +1,50 @@
+{
+  "source_sha256": "75db6dcd00578449fc37c32df8cf7b46ca9b7ada237a860cd01251a3247efc1f",
+  "blocks": {
+    "0": {
+      "source_sha256": "25d653b084d21e2a698709a4465e1dbbdf1d7b2578516b2d294ad173c7b40d83",
+      "status": "reviewed",
+      "translation": "## Complete pUC19 inputs ⟦shared:0⟧\n"
+    },
+    "1": {
+      "source_sha256": "a55e1014b8b63a02b1fed7bd65d5127988584a93bd6e3c77799150fdb6d88db4",
+      "status": "reviewed",
+      "translation": "This page explains the composition of one complete reference map. pETDuet-1 and its dense-label choices are described [separately](⟦shared:0⟧).\n"
+    },
+    "6": {
+      "source_sha256": "5ff88b8b0abf0dd107e4031383931624b1ae7c74d1fe540fd677cf621d4fd201",
+      "status": "reviewed",
+      "translation": "## Read the layers ⟦shared:0⟧\n"
+    },
+    "7": {
+      "source_sha256": "981765b4f1b01eb28cee2fc66c93d6f944cbb09a4314283d75c0b6cde58a39c2",
+      "status": "reviewed",
+      "translation": "The double backbone carries source positions. All reference features retain their original intervals, strands and segments. Feature labels share the stacking Position; independent primers and restriction sites use their own tables and layers. The centre gives identity and complete length.\n"
+    },
+    "8": {
+      "source_sha256": "f322668c72d66d20872a25456eff448dc3253225af113945ae6ad2b52813ef31",
+      "status": "reviewed",
+      "translation": "## Inspect the complete tables ⟦shared:0⟧\n"
+    },
+    "10": {
+      "source_sha256": "dcaec36f8f10f53ec739c5b521012ab5da02918bc30288b1053536eb0f63bb90",
+      "status": "reviewed",
+      "translation": "The chosen source profile contains 9 features and 39 restriction rows at 33 distinct positions. It has no independent reference-primer rows. Raw enzyme matches remain in ⟦shared:0⟧; the declared source profile is not a three-site display subset.\n"
+    },
+    "11": {
+      "source_sha256": "545dd8ceea0b6114565253134768786685cefbfdf008c2695a46a3f47cd186c9",
+      "status": "reviewed",
+      "translation": "## Use your own annotations ⟦shared:0⟧\n"
+    },
+    "12": {
+      "source_sha256": "6ca4f826b95ee7e7fa9d09004d7bb54647f86c0283b29c7792dac7abd78f6a4c",
+      "status": "reviewed",
+      "translation": "Prepared annotation, primer and site tables can go directly to independent layers. Sequence recognition is optional when the tables already exist. Full lengths and source units must be supplied independently.\n"
+    },
+    "13": {
+      "source_sha256": "2963553451632ddd3040d15a8baea071c9cea31c5c5f64b0ae85f238b6b15e52",
+      "status": "reviewed",
+      "translation": "## Save at the same size ⟦shared:0⟧\n"
+    }
+  }
+}

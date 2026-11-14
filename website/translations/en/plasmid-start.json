@@ -1,0 +1,15 @@
+{
+  "source_sha256": "a6ddcca6d701ecc67d45540b3e7269f61e065eddf2746275f3ee5f88242a3002",
+  "blocks": {
+    "0": {
+      "source_sha256": "65558b765341744300f6b1268eea89e49563657e225330407740cb387a66bc22",
+      "status": "reviewed",
+      "translation": "## Section moved ⟦shared:0⟧\n"
+    },
+    "1": {
+      "source_sha256": "9927b8915003f3ac80710697c7953cc36c98778eca224f574df38ecb36db70d7",
+      "status": "reviewed",
+      "translation": "[First single-sequence circular map](⟦shared:0⟧)\n"
+    }
+  }
+}

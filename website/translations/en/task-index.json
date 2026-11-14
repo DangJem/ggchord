@@ -1,0 +1,15 @@
+{
+  "source_sha256": "e77a09c6f217926603409d62cda468b64b9c7fdb1494d4e3ccf0d81dec743e28",
+  "blocks": {
+    "0": {
+      "source_sha256": "a201c523f05bccb7c6969a7810d8b85d138985a3db5d60c75a185e99e122d94e",
+      "status": "reviewed",
+      "translation": "## Reading overview ⟦shared:0⟧\n"
+    },
+    "1": {
+      "source_sha256": "722c83c95ede2742779d47f793433bf77c2f678e150dd307ba78233eb237a98c",
+      "status": "reviewed",
+      "translation": "[Tasks](⟦shared:0⟧)\n"
+    }
+  }
+}

@@ -1,0 +1,270 @@
+{
+  "source_sha256": "5bb25a47002171fbe88cf8a239d5e95df957139bbfd1657273521c18f527d695",
+  "blocks": {
+    "2": {
+      "source_sha256": "da995b4d53814a203dbf86dba622444d880238c291286cc7cb8ca2a3b7bb8833",
+      "status": "reviewed",
+      "translation": "## Change where a ribbon passes ⟦shared:0⟧\n"
+    },
+    "5": {
+      "source_sha256": "c0a1484483ecac726734db2f090a2ebbe1059493ea61f0220beb8930f21225b5",
+      "status": "reviewed",
+      "translation": "The default control is at the layout origin. Set ⟦shared:0⟧ to ⟦shared:1⟧ to move the control upward in layout coordinates. Compare the path through the middle. Both ribbon ends still mark the same intervals.\n"
+    },
+    "8": {
+      "source_sha256": "669a6831006f412b3af910875d40b0d2d43db7c69cde2a17e56c7b2d56ecf703",
+      "status": "reviewed",
+      "translation": "Control points use unrotated layout coordinates. With the default rotation of 0°, (0, 0.8) pulls the ribbon upwards. Rotating the whole layout also rotates the control point. A Bézier control pulls the curve without generally lying on it.\n"
+    },
+    "9": {
+      "source_sha256": "9258463b438b5bbf7fe46e8b1168f42868a015e26a6612638a838ca27ca74fc2",
+      "status": "reviewed",
+      "translation": "## Compare clearance around a real CDS ⟦shared:0⟧\n"
+    },
+    "10": {
+      "source_sha256": "d7c51164ac3af454bbb4e87a3320cbd1151f3863f33c52c9f47e5a4dfa8b4f64",
+      "status": "reviewed",
+      "translation": "Take the CDS at 48,053–49,111 bp on ⟦shared:0⟧. It falls within the alignment's query interval. Move the plus-strand arrow inward by ⟦shared:1⟧ layout units so it sits on the ribbon side of the backbone.\n"
+    },
+    "13": {
+      "source_sha256": "cf8e2a999fe1ef7dad9022b074712dc6c653f51b98f4106d99883f8b9db6ac9c",
+      "status": "reviewed",
+      "translation": "⟦shared:0⟧ uses fixed endpoint clearance. Look near 49 kb on the ⟦shared:1⟧ backbone, where the ribbon overlaps part of the arrow.\n"
+    },
+    "16": {
+      "source_sha256": "781c0e1e3e0229159bfa81b19317e794aac594b848633052c98d90a7fb1c7227",
+      "status": "reviewed",
+      "translation": "⟦shared:0⟧ increases clearance locally near the CDS. At the same spot on the ⟦shared:1⟧ backbone, the ribbon edge recedes to leave space for the arrow. The default ⟦shared:2⟧ applies one clearance across each endpoint interval. A numeric ⟦shared:3⟧ sets the spacing directly.\n"
+    },
+    "17": {
+      "source_sha256": "5c5dc8ebcc5bf7579d41e887ad1984e5bf1c6c5124b32e3e2e251e0034f57402",
+      "status": "reviewed",
+      "translation": "## Link two positions and highlight an interval ⟦shared:0⟧\n"
+    },
+    "20": {
+      "source_sha256": "d4ca66271d4e3a2de0852934582197035bfd40031977604bc03e3e65dfa10fff",
+      "status": "reviewed",
+      "translation": "The outer band marks the full interval on the query sequence. ⟦shared:0⟧ places it outside the backbone. The straight line joins the two interval midpoints, and the ⟦shared:1⟧ points to the subject. Use a ribbon to show the full span on both sides.\n"
+    },
+    "21": {
+      "source_sha256": "7cd4e64783ab2c5075692382ac68f2c4a52fa31a68bf7adedeaff72534cc0299",
+      "status": "reviewed",
+      "translation": "Next, [place sequence and gene labels](⟦shared:0⟧).\n"
+    },
+    "22": {
+      "source_sha256": "10b082f45bbac22558058d5b6af90175ebdcc1e56c28514749ca6f950d5fcd41",
+      "status": "reviewed",
+      "translation": "## Branches, filtering and fixed-style boundaries ⟦shared:0⟧\n"
+    },
+    "23": {
+      "source_sha256": "603fb4e286fb4b43038fc213ce9ff24b64ac0ef970d7f954041aefd760cd2234",
+      "status": "reviewed",
+      "translation": "| Parameter | Current default | When to change and constraints |\n"
+    },
+    "24": {
+      "source_sha256": "a9e436d2babd638ade86791e162e7de5a6b1b3128c6ae9ed93504fbf3c53dc93",
+      "status": "reviewed",
+      "translation": "| --- | --- | --- |\n"
+    },
+    "25": {
+      "source_sha256": "c09cfc0da0f1e099c9b3d87d2fc6fb1d73de0e562bb9617827d6b053574ff536",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | ⟦shared:1⟧ | query/subject share trunks for equal endpoints; unequal endpoints do not establish homology |\n"
+    },
+    "26": {
+      "source_sha256": "e331b7fbd96acdf0540192934a7c85b84041c2bb6571477e52f1d6268d12d456",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | ⟦shared:1⟧ | Trunk length relative to the shortest member, in (0, 0.5]; only meaningful with branching |\n"
+    },
+    "27": {
+      "source_sha256": "f4be3d9917119eb9d2564a11da17acd698dca6c40bd8e1a9bb61baf6107550e3",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | ⟦shared:1⟧ | Explicit sequence-pair selection; does not create alignments |\n"
+    },
+    "28": {
+      "source_sha256": "9d30279e21adc7e2d45145e96b78a7586480ea787ae0e7cbb1eb9d21f71254d1",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | ⟦shared:1⟧ | Uses avoidance policy; an explicit number overrides automatic clearance |\n"
+    },
+    "29": {
+      "source_sha256": "4a5d9c500b0ed99ae3e69e0d65d8f2e497428c603262a380259191f5fd9cbb3f",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | ⟦shared:1⟧ | none uses fixed clearance, smooth local avoidance; text and leaders are ignored |\n"
+    },
+    "30": {
+      "source_sha256": "1a8bf840aa2ae837a75de33e10cd92cb2b1c4c46273308df1723aaa2d6dc1513",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | ⟦shared:1⟧ | Origin in chord mode; endpoint-derived in collinear mode; not bp coordinates |\n"
+    },
+    "31": {
+      "source_sha256": "6d6705c1066eadcb3e8f743e20b1da21ab42871f3f91d394772dd2d3c7df986a",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | ⟦shared:1⟧ | Only nonadjacent collinear borders; 0 reuses ordinary linewidth |\n"
+    },
+    "32": {
+      "source_sha256": "5d8799f7ecbd112b41d45721ca0e91cd3c4a5cc1106798a33d7cc231b1ecf1cf",
+      "status": "reviewed",
+      "translation": "Set fixed ⟦shared:0⟧ outside ⟦shared:1⟧. Map data differences to dedicated ribbon roles with matching scales. Explicit fixed values override matching mappings; omit fixed alpha when mapping opacity. Colour differences do not establish biological relationships. See [⟦shared:2⟧](⟦shared:3⟧) for the full signature.\n"
+    },
+    "33": {
+      "source_sha256": "6dfd18522f6049d239896a31e9586498963e301ee7c8685dcccde036eab014f9",
+      "status": "reviewed",
+      "translation": "Continue with [shared branches and point links](⟦shared:0⟧) to compare trunks, trunk fractions and curved/straight paths.\n"
+    },
+    "34": {
+      "source_sha256": "30900ce7fe56500acbab7f97199b4cd0feed980bb1d6cdf437a0aff185be7b78",
+      "status": "reviewed",
+      "translation": "## Cross-row links ⟦shared:0⟧\n"
+    },
+    "36": {
+      "source_sha256": "9ca3525a4ba51116f5b91a5234081dac61157cfb1b594e8cd6a53a7a60709e74",
+      "status": "reviewed",
+      "translation": "## Allow a cross-row link ⟦shared:0⟧\n"
+    },
+    "39": {
+      "source_sha256": "bc1a9b387f64daabba3684a18c0d37a68c6894520cb00aa73249b244c0c2de33",
+      "status": "reviewed",
+      "translation": "Only Collinear uses thin solid outlines for adjacent rows and heavier dashed outlines for cross-row ribbons. Chord, Radial and Sankey use ordinary solid outlines by default. ⟦shared:0⟧ controls the ordinary width; ⟦shared:1⟧ separately controls cross-row width and defaults to 0.4.\n"
+    },
+    "40": {
+      "source_sha256": "9a866d88222d8d44cd8f3f58af54fe732a75ae9a03c8a1f8d1e2fa62838faeab",
+      "status": "reviewed",
+      "translation": "The second ribbon layer receives one alignment between the first and third rows. Set ⟦shared:0⟧ to show it. The default dashed outline marks the skipped row. The original ribbon between rows one and two stays in its own layer.\n"
+    },
+    "41": {
+      "source_sha256": "9f45548146c803a10b2724e530ded446a25fc4b15972d3d9cd093d96635271d6",
+      "status": "reviewed",
+      "translation": "## Set the cross-row outline width ⟦shared:0⟧\n"
+    },
+    "44": {
+      "source_sha256": "3bffe355777f216bd6ec7436431d475c2cfe93ecc0d3e7c68b890363b2b12a83",
+      "status": "reviewed",
+      "translation": "⟦shared:0⟧ thickens the second layer's cross-row ribbon. The first layer's adjacent ribbon and both line types are retained.\n"
+    },
+    "47": {
+      "source_sha256": "1c8058055b36c7b9f921e283e258d67ffa3800ed8d94744d59676c258e53843c",
+      "status": "reviewed",
+      "translation": "Zero uses the layer's ordinary ⟦shared:0⟧, here 0.2. The outline remains dashed. When using ⟦shared:1⟧, the mapping and scale control the widths.\n"
+    },
+    "48": {
+      "source_sha256": "2f5ec468e85aedcb5d4fdeebb7fba34f56ab2949ff849d2e4d58d28d5397fb6c",
+      "status": "reviewed",
+      "translation": "## Shared branches and point links ⟦shared:0⟧\n"
+    },
+    "49": {
+      "source_sha256": "b684c1fe891d8b250fd4994f36aa1561827b7eece84b112c5f2a3bdc09d3b714",
+      "status": "reviewed",
+      "translation": "## Prepare an illustrative shared endpoint ⟦shared:0⟧\n"
+    },
+    "51": {
+      "source_sha256": "4bb8cd077ac683137db75998ab0d3cbaaedfd6b92bdd104fde5c429d55c5b606",
+      "status": "reviewed",
+      "translation": "Three illustrative sequences each span 1000 bp. Two links share query interval 200–600 bp and connect to different target intervals. Coordinates are one-based inclusive. Every figure uses 9 × 7 inches; endpoints stay fixed across branch settings.\n"
+    },
+    "52": {
+      "source_sha256": "f6bf1356a4ae742f8bb408f03d322c895caf2a0cba848a43492d800402ec564a",
+      "status": "reviewed",
+      "translation": "## Independent ribbons and a shared query trunk ⟦shared:0⟧\n"
+    },
+    "55": {
+      "source_sha256": "e88f9cd3516ff64ae12089ea7659b6ef678c5d97cf4236c2024f571c74b96a1e",
+      "status": "reviewed",
+      "translation": "With default ⟦shared:0⟧, the ribbons travel independently and may overlap near the query end.\n"
+    },
+    "58": {
+      "source_sha256": "816422272b059abbfb9ef4f6ee1a90aacc125e8595508012a826e1a243d60deb",
+      "status": "reviewed",
+      "translation": "Only change to ⟦shared:0⟧: equal query endpoints can share a trunk. Overlapping intervals are not necessarily equal endpoints. Real data without suitable groups may show no change when branching is enabled. ⟦shared:1⟧ groups equal subject endpoints instead.\n"
+    },
+    "59": {
+      "source_sha256": "f711481d4950631e471d4402f3a18d5b6ab5609462b4cfb11da40c31512cf0ea",
+      "status": "reviewed",
+      "translation": "## Change the trunk fraction ⟦shared:0⟧\n"
+    },
+    "62": {
+      "source_sha256": "fecedee20b7531ebfb55a790cfb7000bb438fbdb153df4099f8661a27346d90b",
+      "status": "reviewed",
+      "translation": "Relative to the query-branch figure, only ⟦shared:0⟧ changes from default 0.15 to 0.35. The shared trunk becomes longer relative to the shortest member. It is not identity, a probability or a newly measured alignment length.\n"
+    },
+    "63": {
+      "source_sha256": "3f3644bf582d53df8ceede9dc23db620d7ad420393d1fd761a82995d21bb525f",
+      "status": "reviewed",
+      "translation": "| Parameter | Default | Effect and constraints |\n"
+    },
+    "64": {
+      "source_sha256": "a9e436d2babd638ade86791e162e7de5a6b1b3128c6ae9ed93504fbf3c53dc93",
+      "status": "reviewed",
+      "translation": "| --- | --- | --- |\n"
+    },
+    "65": {
+      "source_sha256": "7c0f4930c92859bfe5aca54bb06425bfc909aa8f2919e15c5f0a63a4f64c7a40",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | ⟦shared:1⟧ | none/query/subject; selects the shared endpoint |\n"
+    },
+    "66": {
+      "source_sha256": "10838a410f31f5530ef0c05140901b7c3366aa04dc16010077adedfa4d66b892",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | ⟦shared:1⟧ | In (0, 0.5]; none does not create a shared trunk |\n"
+    },
+    "67": {
+      "source_sha256": "bf0ffd7db06d9aeb057a8656ac1eadfac93b98dfaf4e38146d77bda47c8da0dd",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | ⟦shared:1⟧ | Shapes far ends when branching; the trunk determines its junction |\n"
+    },
+    "68": {
+      "source_sha256": "40208ada3bf4585ff52b1065820a690fc9250f0da3382c36291273ccc041880f",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | ⟦shared:1⟧ | qaccver/saccver table selecting existing pairs, not generating alignments |\n"
+    },
+    "69": {
+      "source_sha256": "072428735f2dc77710c1ac8d1d25409f051a88aa726312146fe4ec0080735946",
+      "status": "reviewed",
+      "translation": "## Replace intervals with points ⟦shared:0⟧\n"
+    },
+    "70": {
+      "source_sha256": "276234235842ace1115ec03d67fcd633834a70816297858aea68bd5f86ad30df",
+      "status": "reviewed",
+      "translation": "Point links require explicit ⟦shared:0⟧; an interval table is not a point table. Here choose interval midpoints. This loses interval length encoded by ribbon width, so explain the selection rule first.\n"
+    },
+    "74": {
+      "source_sha256": "5f5a53a646fedf30a3bbf207d592c301ebfb3429fd900570c9403b3c40539cad",
+      "status": "reviewed",
+      "translation": "Default ⟦shared:0⟧ connects the selected positions with curves.\n"
+    },
+    "77": {
+      "source_sha256": "7b6c9dabe93104c3da408fa9421300350ea5c45b9c43e94ac67d22ec1ce3c202",
+      "status": "reviewed",
+      "translation": "Only change to ⟦shared:0⟧, keeping input, anchors and dimensions fixed. Add ⟦shared:1⟧ separately for direction. It represents the query-to-subject drawing convention, not independent evidence of gene strand or transcription.\n"
+    },
+    "78": {
+      "source_sha256": "d54b65e62c2fa9751fb146e1c85531923422fba1635626ece510646faf877db5",
+      "status": "reviewed",
+      "translation": "## Real inputs and coordinate choices ⟦shared:0⟧\n"
+    },
+    "79": {
+      "source_sha256": "ed86da364082aee722c4159e4902dd778c77f3b34aef3ba9d5fd26d17c9f0062",
+      "status": "reviewed",
+      "translation": "Preserve real query/subject endpoints. Do not edit unequal endpoints to manufacture shared trunks. See [link preparation](⟦shared:0⟧) for filtering and bundling; geometric branching does not perform those statistics.\n"
+    },
+    "80": {
+      "source_sha256": "c0139f8901d955290d3a2001125e4938ec57119ba728a2e6f6f4f1b166e97e5c",
+      "status": "reviewed",
+      "translation": "Chord and collinear modes accept these link layers; single circular mode rejects ribbon/link. Linear adjacency filtering still applies. Check ⟦shared:0⟧ or explicit ⟦shared:1⟧ before showing cross-row ribbons; see [cross-row links](⟦shared:2⟧).\n"
+    },
+    "81": {
+      "source_sha256": "19306284fb242316e292bd2fe5ed1fc9906edc51d4c01a39885f159ba70c32cf",
+      "status": "reviewed",
+      "translation": "Example: change only the trunk fraction to 0.25. Return to the default fraction and compare curved versus straight point links. With your own data, first decide whether interval lengths or individual positions matter, then consult [⟦shared:0⟧](⟦shared:1⟧) and [⟦shared:2⟧](⟦shared:3⟧).\n"
+    },
+    "83": {
+      "source_sha256": "a34b640d2f2cc503215289d7a417fffaeff6600210df83bc245fe0c1b0294662",
+      "status": "reviewed",
+      "translation": "## Choose interval ribbons or point links ⟦shared:0⟧\n"
+    },
+    "86": {
+      "source_sha256": "cd77b7f43d44118c961541e5ae0b3514973adb162c292152fdb2920425fb435e",
+      "status": "reviewed",
+      "translation": "These arrows join the midpoints of the first three alignments and point toward the subject. Use ribbons to show complete intervals.\n"
+    }
+  }
+}

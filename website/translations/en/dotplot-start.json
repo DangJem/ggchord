@@ -1,0 +1,90 @@
+{
+  "source_sha256": "cc3ec811d1433166bc2607ba12f505f7e2ec7be446656f9a3d1c8a7483f0bd48",
+  "blocks": {
+    "0": {
+      "source_sha256": "6bace0b99e43cac691e040ddf20e07b6661e6af3cf1d3eb72a2e1848f82be17d",
+      "status": "reviewed",
+      "translation": "Start with observed HSPs from one sequence pair, then extend to a four-sequence matrix. The minimal inputs are complete sequence lengths and four HSP endpoints; annotations are optional.\n"
+    },
+    "2": {
+      "source_sha256": "23d97d93dd90cd46e5d43963c156ece99c38e505da57d9c9830fb71eb67c2edc",
+      "status": "reviewed",
+      "translation": "## Plot original HSP endpoints ⟦shared:0⟧\n"
+    },
+    "3": {
+      "source_sha256": "d42ebbebe76275243db4c99d25a25be30d68b7421f1935d60feaa64555afa760",
+      "status": "reviewed",
+      "translation": "The source-backed EMALE PAF pair has 11 observed HSPs. Its declared sequence\nlengths supply both axes. ⟦shared:0⟧ converts zero-based half-open intervals\nto the internal one-based convention and reverses target endpoints for minus\nalignments. The files and their provenance are in the [input download](⟦shared:1⟧).\nThe following code needs the optional ⟦shared:2⟧ package for data preparation.\n"
+    },
+    "5": {
+      "source_sha256": "7b89a47d3ff40f03d877be9c2c5e743f15f451052711c04864cddd2cb9c1e4b2",
+      "status": "reviewed",
+      "translation": "Each line runs from ⟦shared:0⟧ to ⟦shared:1⟧. ⟦shared:2⟧ is not\nrequired. Use ⟦shared:3⟧ mappings and scales for colour, alpha, width and type.\nThe default Identity domain is 0–100 with ticks 0/50/80/90/95/100; an explicit\nuser scale overrides it.\n"
+    },
+    "8": {
+      "source_sha256": "dafbf525cf3141180ced1e12097c141cbd3c28db3f8689001ca3de692c2dc462",
+      "status": "reviewed",
+      "translation": "The legacy constructor may warn about descending endpoints in these valid reverse HSPs. Keep the normalized ordering; sorting each interval would erase the displayed inversion.\n"
+    },
+    "9": {
+      "source_sha256": "1e937c43e0badb492446211e225568ef1de2719835061c86d56d05507e0281b0",
+      "status": "reviewed",
+      "translation": "⟦shared:0⟧ and ⟦shared:1⟧ independently select/order accessions. ⟦shared:2⟧ is display\nspacing in native bp/aa, not omitted source sequence. Axis directions accept\n1/-1 or complete named vectors. Display reversal changes the slope without\nchanging the biological source table. Each axis starts at source position 1;\nconcatenated segments retain their own accession and local tick labels.\n"
+    },
+    "11": {
+      "source_sha256": "c6d7522f5e226a4411cd806a42987ed122b81f5459ac19cc441ba5ab34d5608c",
+      "status": "reviewed",
+      "translation": "Use ⟦shared:0⟧ for native/global conversion,\nwith ⟦shared:1⟧ to go back. Display gaps return NA. Focused source\norigins use ⟦shared:2⟧; default axis labels stay window-relative.\nUnknown directions are warned, omitted and reported; contradictory direction\nmetadata is rejected. Repeated declared HSP IDs require ⟦shared:3⟧\nin all participating layers. Unidentified duplicate/self rows remain distinct.\nWithout cg/cs/CIGAR or another alignment trace, these are HSP segments, not\nbase-level mismatches or gap paths.\n"
+    },
+    "12": {
+      "source_sha256": "ad31c98960f9eb189b616732ede3cab7a02ce49b1aff588c155def09aa44ceaa",
+      "status": "reviewed",
+      "translation": "## Multi-sequence HSP matrix ⟦shared:0⟧\n"
+    },
+    "13": {
+      "source_sha256": "2029a0bf419c9bdc8a98f7125fed8f1891ab0003c1d76f9fb9696f9384790295",
+      "status": "reviewed",
+      "translation": "These inputs come from original repository FASTA and standard BLAST tables. All 32 HSPs across four sequences are retained; self-alignments, reciprocal records and missing HSPs are not invented. The 266 CDS belong to the shared source preparation and are not submitted to the Dotplot segment layer. An empty area means no supplied HSP, not proven absence of homology.\n"
+    },
+    "14": {
+      "source_sha256": "cee2fdf873727b6fc64e66f9d91e2ccf70cf4a45e53a7f54951db49fcd7ec194",
+      "status": "reviewed",
+      "translation": "Column headers identify each query sequence and its complete 1–length range; row headers identify subject sequences and ranges. Bottom and right ticks show local positions within each sequence. Follow a column and row to locate a pair. Each outlined rectangle retains widths and heights proportional to the actual lengths. Pale backgrounds distinguish cells and do not encode similarity; spaces between rectangles are display gaps.\n"
+    },
+    "15": {
+      "source_sha256": "761340126c8c4dac200db19a99b00c042d00a8f35b8641974dba37cd9977a834",
+      "status": "reviewed",
+      "translation": "Each of the six unordered sequence pairs supplies only one query→subject direction, with no swapped records or self-alignments. HSPs therefore occupy one half of the matrix. Cells identify record counts or missing input. This is not a rendering omission, and an empty counterpart does not establish absent homology. The plot does not mirror records, add a diagonal or run new alignments. This preparation also uses optional tidyr.\n"
+    },
+    "19": {
+      "source_sha256": "4a6b64a34595185d861ac022872d7f735e3b2c1b0411e14a44c04a5c56879801",
+      "status": "reviewed",
+      "translation": "## Inspect source direction ⟦shared:0⟧\n"
+    },
+    "20": {
+      "source_sha256": "c955aa3c9ae89ccf9cedbfb746c7fd033e0e86e9ae0d6a22b68c83fa60b81b5a",
+      "status": "reviewed",
+      "translation": "Relative endpoint direction comes from the source record. Reversing a display axis changes the visible slope while leaving the source direction unchanged. Count the supplied directions per sequence pair:\n"
+    },
+    "22": {
+      "source_sha256": "ade55d66f7262c7891787dd6d4873d1b287b9097fe7c2a698f0a3c16db50564f",
+      "status": "reviewed",
+      "translation": "## Query an exact position ⟦shared:0⟧\n"
+    },
+    "23": {
+      "source_sha256": "2829442ea495920b6fbd2fb8fe45b7b44b2b9904a72a378697a5d20db7970384",
+      "status": "reviewed",
+      "translation": "Map the first HSP query start onto the concatenated x ⟦shared:1⟧. Inverse lookup uses ⟦shared:0⟧ and an explicit ⟦shared:1⟧; display gaps return NA. The four endpoints remain unchanged.\n"
+    },
+    "25": {
+      "source_sha256": "8cf8da2d78857a1e7abcbee834b3bea1ad77e624340e3be679f6c55b2a8899f2",
+      "status": "reviewed",
+      "translation": "## Boundaries and next steps ⟦shared:0⟧\n"
+    },
+    "26": {
+      "source_sha256": "33640ff65a43f3efdb49950a6df6634090c9aebba6095a283566d13b365513af",
+      "status": "reviewed",
+      "translation": "Backbone gene/feature/track/ribbon layers, facets and Fusion endpoints are unsupported. To inspect gaps or mismatches, provide actual aligned characters; see [the alignment workflow](⟦shared:0⟧). Example: trace four endpoints of one segment and explain slope and colour separately.\n"
+    }
+  }
+}

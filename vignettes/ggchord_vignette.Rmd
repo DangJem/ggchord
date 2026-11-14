@@ -184,9 +184,7 @@ This retains the ribbon, CDS and feature-name layers; Collinear selects adjacent
 
 ### Use your own sequences {#multi-sequence-start-adapt}
 
-Replace `seq_data_example` with a table containing `accver` and `length`. See [Basic input tables](https://dangjem.github.io/ggchord/en/data.html#prepare) for the column definitions.
-
-For local settings, see [Flexible parameter formats](https://dangjem.github.io/ggchord/en/parameters.html).
+Replace `seq_data_example` with a table containing `accver` and `length`. See [Basic input tables](https://dangjem.github.io/ggchord/en/data.html#prepare) for the column definitions, [Flexible parameter formats](https://dangjem.github.io/ggchord/en/parameters.html) for local settings, and [Four-view comparison](https://dangjem.github.io/ggchord/en/multi-sequence-views.html#input) for a strict coordinate comparison.
 
 
 ## Circular backbone and annotations {#circular-start}
@@ -322,6 +320,10 @@ base-level mismatches or gap paths.
 
 These inputs come from original repository FASTA and standard BLAST tables. All 32 HSPs across four sequences are retained; self-alignments, reciprocal records and missing HSPs are not invented. The 266 CDS belong to the shared source preparation and are not submitted to the Dotplot segment layer. An empty area means no supplied HSP, not proven absence of homology.
 
+Column headers identify each query sequence and its complete 1–length range; row headers identify subject sequences and ranges. Bottom and right ticks show local positions within each sequence. Follow a column and row to locate a pair. Each outlined rectangle retains widths and heights proportional to the actual lengths. Pale backgrounds distinguish cells and do not encode similarity; spaces between rectangles are display gaps.
+
+Each of the six unordered sequence pairs supplies only one query→subject direction, with no swapped records or self-alignments. HSPs therefore occupy one half of the matrix. Cells identify record counts or missing input. This is not a rendering omission, and an empty counterpart does not establish absent homology. The plot does not mirror records, add a diagonal or run new alignments. This preparation also uses optional tidyr.
+
 
 <details class="preparation"><summary>Data preparation and settings (expand)</summary>
 
@@ -351,18 +353,47 @@ flagship_theme <- theme_ggchord_publication() +
 
 
 ```{r example-19, eval=FALSE}
+dotplot_pair_counts <- flagship_hsp |>
+  count(qaccver, saccver, name = "HSP")
+dotplot_frames <- export_ggchord_layout(
+  ggchord(flagship_sequences, flagship_hsp) + geom_alignment_segment() +
+    coord_dotplot(x_seqs = flagship_sequences$accver,
+      y_seqs = flagship_sequences$accver, gap = 4000)
+)$axis_layout
+dotplot_cells <- tidyr::expand_grid(
+  qaccver = flagship_sequences$accver, saccver = flagship_sequences$accver
+) |>
+  left_join(dotplot_pair_counts, by = c("qaccver", "saccver")) |>
+  mutate(HSP = coalesce(HSP, 0L)) |>
+  left_join(dotplot_frames |> filter(axis == "x") |>
+    transmute(qaccver = accver, x = min, xmax = max), by = "qaccver") |>
+  left_join(dotplot_frames |> filter(axis == "y") |>
+    transmute(saccver = accver, y = max, ymin = min), by = "saccver") |>
+  mutate(x = x + (xmax - x) * 0.04, y = y - (y - ymin) * 0.05,
+    label = if_else(HSP > 0L, paste(HSP, "HSP"), "No input HSP"))
 flag_dotplot <- ggchord(flagship_sequences, flagship_hsp) +
   geom_alignment_segment(aes(link_colour = pident, link_linewidth = length), alpha = 0.85) +
-  scale_link_linewidth_continuous(range = c(0.45, 1.7), name = "HSP length (bp)") +
+  scale_link_linewidth_continuous(range = c(0.8, 1.8), name = "HSP length (bp)") +
   coord_dotplot(x_seqs = flagship_sequences$accver, y_seqs = flagship_sequences$accver,
     gap = 4000) +
-  labs(x = "Query position (bp)", y = "Subject position (bp)") +
+  ggplot2::geom_text(data = dotplot_cells, aes(x = x, y = y, label = label),
+    inherit.aes = FALSE, hjust = 0, vjust = 1, size = 2.8, colour = "#566E67") +
+  labs(title = "Six observed sequence pairs · 32 HSPs",
+    subtitle = "One query→subject direction per pair; empty cells contain no input records") +
   flagship_theme +
-  theme(panel.grid.major = element_line(colour = "#DFDED5", linewidth = 0.25))
+  theme(
+    panel.grid = element_blank(), legend.position = "bottom", legend.box = "horizontal",
+    axis.text = element_text(size = 9),
+    axis.text.x.top = element_text(size = 10, face = "bold", margin = margin(b = 9)),
+    axis.text.y.left = element_text(size = 10, face = "bold", margin = margin(r = 9)),
+    axis.text.y.right = element_text(size = 9),
+    axis.ticks.length = unit(1.5, "mm"),
+    plot.margin = margin(12, 16, 12, 16)
+  )
 ```
 
 
-<figure class="documentation-figure" data-figure="flagdotplot"><img src="tutorial-assets/flagdotplot.jpg" alt="Four-sequence HSP matrix" width="1440" height="1080" loading="lazy" decoding="async"><figcaption>Four-sequence HSP matrix · <a href="tutorial-assets/site-flagships.R">Complete R source</a></figcaption></figure>
+<figure class="documentation-figure" data-figure="flagdotplot"><img src="tutorial-assets/flagdotplot.jpg" alt="Four-sequence HSP matrix" width="1872" height="1728" loading="lazy" decoding="async"><figcaption>Four-sequence HSP matrix · <a href="tutorial-assets/site-flagships.R">Complete R source</a></figcaption></figure>
 
 ### Inspect source direction {#dotplot-start-direction}
 
@@ -379,7 +410,7 @@ hsp_direction
 
 ### Query an exact position {#dotplot-start-mapping}
 
-Map the first HSP query start onto the concatenated x axis. Inverse lookup uses `inverse = TRUE` and an explicit axis; display gaps return NA. The four endpoints remain unchanged.
+Map the first HSP query start onto the concatenated x `axis`. Inverse lookup uses `inverse = TRUE` and an explicit `axis`; display gaps return NA. The four endpoints remain unchanged.
 
 ```{r example-21, eval=FALSE}
 map_ggchord_position(

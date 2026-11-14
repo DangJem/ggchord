@@ -1,95 +1,95 @@
 {
   "chord": {
-    "en": "Bundled sequences and alignment intervals in a chord view",
-    "zh": "随包序列与已有比对区间的弦图"
+    "zh": "随包序列与已有比对区间的弦图",
+    "en": "Bundled sequences and alignment intervals in a chord view"
   },
   "circular": {
-    "en": "pUC19 annotations in a circular map",
-    "zh": "pUC19 注释的单序列圆图"
+    "zh": "pUC19 注释的单序列圆图",
+    "en": "pUC19 annotations in a circular map"
   },
   "collinear": {
-    "en": "Bundled records aligned to explicitly selected annotation anchors",
-    "zh": "按选定注释锚定的随包序列共线性图"
+    "zh": "按选定注释锚定的随包序列共线性图",
+    "en": "Bundled records aligned to explicitly selected annotation anchors"
   },
   "tracks": {
-    "en": "GC fractions computed from the bundled pUC19 DNA",
-    "zh": "从随包 pUC19 DNA 计算的 GC 比例"
+    "zh": "从随包 pUC19 DNA 计算的 GC 比例",
+    "en": "GC fractions computed from the bundled pUC19 DNA"
   },
   "focus": {
-    "en": "Focused sequence windows with source-coordinate axes",
-    "zh": "保留原始坐标刻度的局部序列视图"
+    "zh": "保留原始坐标刻度的局部序列视图",
+    "en": "Focused sequence windows with source-coordinate axes"
   },
   "labels": {
-    "en": "Automatic placement of informative source gene annotations",
-    "zh": "实际基因注释的自动标签布局"
+    "zh": "实际基因注释的自动标签布局",
+    "en": "Automatic placement of informative source gene annotations"
   },
   "realchord": {
-    "en": "Original sequences with explicitly selected CDS and alignment links",
-    "zh": "原始序列、选定 CDS 与已有比对的弦图"
+    "zh": "原始序列、选定 CDS 与已有比对的弦图",
+    "en": "Original sequences with explicitly selected CDS and alignment links"
   },
   "reallinear": {
-    "en": "Original sequences, all imported CDS and filtered links",
-    "zh": "原始序列、全部导入 CDS 与筛选连接的线性图"
+    "zh": "原始序列、全部导入 CDS 与筛选连接的线性图",
+    "en": "Original sequences, all imported CDS and filtered links"
   },
   "plasmid": {
-    "en": "pUC19 features, exact primer hits and three selected restriction sites",
-    "zh": "pUC19 注释、精确引物命中与三个选定酶切位点"
+    "zh": "pUC19 注释、精确引物命中与三个选定酶切位点",
+    "en": "pUC19 features, exact primer hits and three selected restriction sites"
   },
   "density": {
-    "en": "Interval density from the original alignment observations",
-    "zh": "原始比对记录的区间密度"
+    "zh": "原始比对记录的区间密度",
+    "en": "Interval density from the original alignment observations"
   },
   "pointlinks": {
-    "en": "Midpoint links derived from existing HSP intervals",
-    "zh": "从已有 HSP 区间计算中点的点连接"
+    "zh": "从已有 HSP 区间计算中点的点连接",
+    "en": "Midpoint links derived from existing HSP intervals"
   },
   "featurestack": {
-    "en": "Stacked overlapping annotations from the pUC19 reference",
-    "zh": "pUC19 中重叠注释的分层显示"
+    "zh": "pUC19 中重叠注释的分层显示",
+    "en": "Stacked overlapping annotations from the pUC19 reference"
   },
   "multitrack": {
-    "en": "pUC19 GC fractions and a three-window moving mean",
-    "zh": "pUC19 GC 比例与三窗口滑动均值"
+    "zh": "pUC19 GC 比例与三窗口滑动均值",
+    "en": "pUC19 GC fractions and a three-window moving mean"
   },
   "homologs": {
-    "en": "Blue reverse-strand AmpR arrows and a grey ribbon between identical coding intervals.",
-    "zh": "蓝色箭头标出负链 AmpR，灰色带连接两段完全一致的编码 DNA。"
+    "zh": "蓝色箭头标出负链 AmpR，灰色带连接两段完全一致的编码 DNA。",
+    "en": "Blue reverse-strand AmpR arrows and a grey ribbon between identical coding intervals."
   },
   "decorations": {
-    "en": "Highlighting the pUC19 replication-origin interval",
-    "zh": "突出显示 pUC19 复制起点的实际区间"
+    "zh": "突出显示 pUC19 复制起点的实际区间",
+    "en": "Highlighting the pUC19 replication-origin interval"
   },
   "labelauto": {
-    "en": "Informative gene annotations with automatic side placement",
-    "zh": "实际基因注释的自动侧边标签"
+    "zh": "实际基因注释的自动侧边标签",
+    "en": "Informative gene annotations with automatic side placement"
   },
   "labelradial": {
-    "en": "The same gene annotations with radial placement",
-    "zh": "同一组基因注释的径向标签"
+    "zh": "同一组基因注释的径向标签",
+    "en": "The same gene annotations with radial placement"
   },
   "labelarc": {
-    "en": "The same gene annotations with arc-oriented text",
-    "zh": "同一组基因注释的沿弧标签"
+    "zh": "同一组基因注释的沿弧标签",
+    "en": "The same gene annotations with arc-oriented text"
   },
   "styling": {
-    "en": "A query-category colour scale on four chord backbones",
-    "zh": "四条弦图骨架与查询类别的颜色标度"
+    "zh": "四条弦图骨架与查询类别的颜色标度",
+    "en": "A query-category colour scale on four chord backbones"
   },
   "paf": {
-    "en": "A real minimap2 PAF comparison between two EMALE genomes",
-    "zh": "从真实 minimap2 PAF 结果绘制的两条 EMALE 序列"
+    "zh": "从真实 minimap2 PAF 结果绘制的两条 EMALE 序列",
+    "en": "A real minimap2 PAF comparison between two EMALE genomes"
   },
   "first": {
     "zh": "第一张图：两条真实随包序列、基因箭头及已有比对区间",
     "en": "Your first plot: two bundled sequences, gene arrows and observed alignment intervals"
   },
   "showcasechord": {
-    "en": "Four original genomes with CDS sampled separately by source strand",
-    "zh": "四条原始基因组，按各序列真实链分别抽样 CDS"
+    "zh": "四条原始基因组，按各序列真实链分别抽样 CDS",
+    "en": "Four original genomes with CDS sampled separately by source strand"
   },
   "showcaseplasmid": {
-    "en": "Dense pETDuet-1 map: features, reference primers and grouped restriction sites",
-    "zh": "pETDuet-1密集质粒图：特征、参考引物与合并酶切位点"
+    "zh": "pETDuet-1密集质粒图：特征、参考引物与合并酶切位点",
+    "en": "Dense pETDuet-1 map: features, reference primers and grouped restriction sites"
   },
   "showcasecollinear": {
     "zh": "四基因组共线性图：分链特征与绕行的跨行连接",
@@ -188,20 +188,20 @@
     "en": "pSpCas9(BB)-2A-GFP (PX458): source-backed feature map"
   },
   "firstchord": {
-    "en": "Two bundled sequence backbones and their observed alignment ribbons",
-    "zh": "两条随包序列的骨架及已有比对连接带"
+    "zh": "两条随包序列的骨架及已有比对连接带",
+    "en": "Two bundled sequence backbones and their observed alignment ribbons"
   },
   "firstlinear": {
-    "en": "Two sequence rows share a base-pair scale and are joined by aligned intervals",
-    "zh": "两条序列共享碱基坐标尺度，带状连接标示对应区间"
+    "zh": "两条序列共享碱基坐标尺度，带状连接标示对应区间",
+    "en": "Two sequence rows share a base-pair scale and are joined by aligned intervals"
   },
   "firstcircle": {
-    "en": "A circular pUC19 backbone with its name and length",
-    "zh": "标有名称与长度的 pUC19 圆形骨架"
+    "zh": "标有名称与长度的 pUC19 圆形骨架",
+    "en": "A circular pUC19 backbone with its name and length"
   },
   "firstfeatures": {
-    "en": "The pUC19 replication-origin interval on the circular backbone",
-    "zh": "pUC19 圆形骨架上的复制起点注释区间"
+    "zh": "pUC19 圆形骨架上的复制起点注释区间",
+    "en": "The pUC19 replication-origin interval on the circular backbone"
   },
   "practicechord": {
     "zh": "两条序列的弦图，每条增加一个基因箭头和原始注释名",
@@ -224,8 +224,8 @@
     "en": "One alignment ribbon added"
   },
   "frontfeature": {
-    "en": "One integrase CDS added to the green backbone",
-    "zh": "在绿色骨架上加入一个 integrase CDS"
+    "zh": "在绿色骨架上加入一个 integrase CDS",
+    "en": "One integrase CDS added to the green backbone"
   },
   "frontrotation": {
     "zh": "相对默认弦图逆时针旋转 90°",
@@ -284,8 +284,8 @@
     "en": "One alignment ribbon across four rows"
   },
   "frontlinearcds": {
-    "en": "A CDS arrow on the third, green row",
-    "zh": "在第三条绿色骨架上加入 CDS 箭头"
+    "zh": "在第三条绿色骨架上加入 CDS 箭头",
+    "en": "A CDS arrow on the third, green row"
   },
   "frontlineargap": {
     "zh": "增大共线性图行距",
@@ -312,28 +312,28 @@
     "en": "Map alignment identity to ribbon colour"
   },
   "parameterexample": {
-    "en": "Set one backbone radius by sequence name",
-    "zh": "按序列名称单独设置一个骨架半径"
+    "zh": "按序列名称单独设置一个骨架半径",
+    "en": "Set one backbone radius by sequence name"
   },
   "segment": {
-    "en": "Two windows on one sequence. The right window is displayed in reverse.",
-    "zh": "同一序列的两个窗口。右窗口反向显示。"
+    "zh": "同一序列的两个窗口。右窗口反向显示。",
+    "en": "Two windows on one sequence. The right window is displayed in reverse."
   },
   "mappingposition": {
-    "en": "The dot marks 10,100 bp on the first source sequence.",
-    "zh": "黑点对应第一条序列的源坐标 10,100 bp。"
+    "zh": "黑点对应第一条序列的源坐标 10,100 bp。",
+    "en": "The dot marks 10,100 bp on the first source sequence."
   },
   "recognition": {
-    "en": "Known primer matches and selected restriction sites on pUC19.",
-    "zh": "pUC19 上的已知引物匹配和所选酶切位点。"
+    "zh": "pUC19 上的已知引物匹配和所选酶切位点。",
+    "en": "Known primer matches and selected restriction sites on pUC19."
   },
   "nativeprotein": {
-    "en": "Four complete proteins and three adjacent BLASTp ribbons, with a 50-aa scale bar",
-    "zh": "四条完整蛋白与三条相邻 BLASTp 连接，比例尺为 50 aa"
+    "zh": "四条完整蛋白与三条相邻 BLASTp 连接，比例尺为 50 aa",
+    "en": "Four complete proteins and three adjacent BLASTp ribbons, with a 50-aa scale bar"
   },
   "nativeproteinchord": {
-    "en": "Four complete proteins and all six pairwise BLASTp alignments",
-    "zh": "四条完整蛋白及六对实际 BLASTp 比对的弦图"
+    "zh": "四条完整蛋白及六对实际 BLASTp 比对的弦图",
+    "en": "Four complete proteins and all six pairwise BLASTp alignments"
   },
   "parameteruniform": {
     "zh": "统一半径：所有序列使用 1",
@@ -344,28 +344,28 @@
     "en": "Ordered radii: the second displayed sequence uses 0.72"
   },
   "parameterstrand": {
-    "en": "Opposite offsets for forward and reverse CDS",
-    "zh": "按正负链分别设置 CDS 偏移"
+    "zh": "按正负链分别设置 CDS 偏移",
+    "en": "Opposite offsets for forward and reverse CDS"
   },
   "parameterwidth": {
-    "en": "Different widths for forward and reverse CDS",
-    "zh": "按正负链分别设置 CDS 宽度"
+    "zh": "按正负链分别设置 CDS 宽度",
+    "en": "Different widths for forward and reverse CDS"
   },
   "parameterlabels": {
-    "en": "Named label radii for selected sequences",
-    "zh": "按序列名称调整标签半径"
+    "zh": "按序列名称调整标签半径",
+    "en": "Named label radii for selected sequences"
   },
   "frontcrosswidth": {
-    "en": "A dedicated width for cross-row outlines",
-    "zh": "单独加粗跨行连接带边框"
+    "zh": "单独加粗跨行连接带边框",
+    "en": "A dedicated width for cross-row outlines"
   },
   "frontcrosssame": {
-    "en": "Cross-row outlines inherit the ordinary width",
-    "zh": "跨行边框沿用普通线宽"
+    "zh": "跨行边框沿用普通线宽",
+    "en": "Cross-row outlines inherit the ordinary width"
   },
   "manualgenelabels": {
-    "en": "Manual gene labels in a chord view",
-    "zh": "弦图中的固定基因标签"
+    "zh": "弦图中的固定基因标签",
+    "en": "Manual gene labels in a chord view"
   },
   "alignleft": {
     "zh": "相同四条序列和真实比对：左端对齐。",
@@ -676,39 +676,39 @@
     "en": "Change only the colour track order, swapping bands while GC values stay fixed."
   },
   "foundationvertical": {
-    "en": "Original HSPs routed through named A–B–A display instances on vertical backbones.",
-    "zh": "原始 HSP 在命名 A–B–A 显示实例之间路由，使用纵向骨架。"
+    "zh": "原始 HSP 在命名 A–B–A 显示实例之间路由，使用纵向骨架。",
+    "en": "Original HSPs routed through named A–B–A display instances on vertical backbones."
   },
   "foundationsankey": {
-    "en": "Mirrored source sequences: query intervals on the left, subject intervals on the right.",
-    "zh": "同一组来源序列的镜像双列：query 区间在左，subject 区间在右。"
+    "zh": "同一组来源序列的镜像双列：query 区间在左，subject 区间在右。",
+    "en": "Mirrored source sequences: query intervals on the left, subject intervals on the right."
   },
   "foundationcount": {
-    "en": "Counts of actual query-start observations in source coordinates.",
-    "zh": "在源坐标统计真实 query 起点观测数。"
+    "zh": "在源坐标统计真实 query 起点观测数。",
+    "en": "Counts of actual query-start observations in source coordinates."
   },
   "foundationequal": {
-    "en": "Equal visual lengths with true local axes and explicitly selected identity fill.",
-    "zh": "等长视觉投影保留真实局部轴，并显式选择 Identity 填充。"
+    "zh": "等长视觉投影保留真实局部轴，并显式选择 Identity 填充。",
+    "en": "Equal visual lengths with true local axes and explicitly selected identity fill."
   },
   "foundationarrow": {
-    "en": "Optional subject tips: shoulders retain target endpoint spans; the tip is a decorative marker.",
-    "zh": "可选 subject 尖头：箭肩保留目标端点跨度，尖点仅作装饰标记。"
+    "zh": "可选 subject 尖头：箭肩保留目标端点跨度，尖点仅作装饰标记。",
+    "en": "Optional subject tips: shoulders retain target endpoint spans; the tip is a decorative marker."
   },
   "viewdotplot": {
-    "en": "All 11 source-backed EMALE PAF HSPs in one-based native coordinates; reverse alignments retain their negative slope.",
-    "zh": "真实EMALE PAF的全部11条HSP，一基原生坐标；反向比对保留负斜率。"
+    "zh": "真实EMALE PAF的全部11条HSP，一基原生坐标；反向比对保留负斜率。",
+    "en": "All 11 source-backed EMALE PAF HSPs in one-based native coordinates; reverse alignments retain their negative slope."
   },
   "viewradial": {
-    "en": "Four real sequences with proportional spokes, source-strand CDS, observed interval ribbons and counts of retained HSP-start observations. Cyclic adjacency selects existing relationships only.",
-    "zh": "四条真实序列的等比例辐条、原始链CDS、已观测区间Ribbon和所选HSP起点计数；环形邻接只筛选已有关系。"
+    "zh": "四条真实序列的等比例辐条、原始链CDS、已观测区间Ribbon和所选HSP起点计数；环形邻接只筛选已有关系。",
+    "en": "Four real sequences with proportional spokes, source-strand CDS, observed interval ribbons and counts of retained HSP-start observations. Cyclic adjacency selects existing relationships only."
   },
   "fusionview": {
-    "en": "Two observed EMALE HSPs connect their full source intervals across independently measured circular and vertical panels. The count track uses all 11 original HSP starts.",
-    "zh": "两条已观测EMALE HSP以完整来源区间连接独立测量的圆图与纵向面板；计数轨道按明确的2,000 bp分箱统计原始11条HSP起点。"
+    "zh": "两条已观测EMALE HSP以完整来源区间连接独立测量的圆图与纵向面板；计数轨道按明确的2,000 bp分箱统计原始11条HSP起点。",
+    "en": "Two observed EMALE HSPs connect their full source intervals across independently measured circular and vertical panels. The count track uses all 11 original HSP starts."
   },
   "fusionfour": {
-    "en": "Four-direction Fusion with explicit observed PAF rows 3, 2, 9 and 1 routed north, west, south and east. Each panel retains its own original sequence scale.",
-    "zh": "四方向Fusion：真实PAF第3、2、9、1行明确路由到上、左、下、右，各面板保持自身序列比例。"
+    "zh": "四方向Fusion：真实PAF第3、2、9、1行明确路由到上、左、下、右，各面板保持自身序列比例。",
+    "en": "Four-direction Fusion with explicit observed PAF rows 3, 2, 9 and 1 routed north, west, south and east. Each panel retains its own original sequence scale."
   }
 }

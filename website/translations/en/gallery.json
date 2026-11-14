@@ -1,0 +1,25 @@
+{
+  "source_sha256": "63575b5168086bad5901818dafbaa6cef6d5bbc74a25426d13c081fadfc5fe9b",
+  "blocks": {
+    "0": {
+      "source_sha256": "3b6c8cffbbd70461cccd4322444490f2bc31d25c7ea6f74597fd7b2e21c51301",
+      "status": "reviewed",
+      "translation": "Start with selected results, then filter by module, task, type and level. All 178 original figures, full-resolution files and IDs are retained. Opening an old figure anchor reveals its card.\n"
+    },
+    "3": {
+      "source_sha256": "edb074ba08b76770c58324476d28cee5b80ef7e97bafdbc62d24673cad658c89",
+      "status": "reviewed",
+      "translation": "## Sources, scripts and circular reference collection ⟦shared:0⟧\n"
+    },
+    "4": {
+      "source_sha256": "82096d3cfc5d450a652654e65c6597ce1b961818f9b201db0e7684608c0b380c",
+      "status": "reviewed",
+      "translation": "[13 circular reference maps](⟦shared:0⟧) · [R](⟦shared:1⟧) · [Sources](⟦shared:2⟧)\n"
+    },
+    "6": {
+      "source_sha256": "dd6513e677199ff9ae0b4fc8d7c09f13cdb133a8165c363c5a167cd6aba2a0de",
+      "status": "reviewed",
+      "translation": "[Inputs](⟦shared:0⟧) · [Manifest](⟦shared:1⟧)\n"
+    }
+  }
+}

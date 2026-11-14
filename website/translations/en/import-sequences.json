@@ -1,0 +1,90 @@
+{
+  "source_sha256": "37d69c770f4aa53b3daef8a7e0bd9f4d448c69334df79d872db35acc7a96b5ba",
+  "blocks": {
+    "2": {
+      "source_sha256": "b890eedee2b36821550a3ffc2df09a84a5a51f387908a11514530721d2d0dfa6",
+      "status": "reviewed",
+      "translation": "Extract the [input bundle](⟦shared:0⟧) so the working directory contains examples/. Each section names its optional dependencies.\n"
+    },
+    "3": {
+      "source_sha256": "e961bced57df19ac45c68a4650b7dd3f01b204b713b1c8ab2444f202a3dc810c",
+      "status": "reviewed",
+      "translation": "## Adapt an existing table ⟦shared:0⟧\n"
+    },
+    "4": {
+      "source_sha256": "b3e45b907f51cadc616ec87128c588f177a9f0174acaecc49e7fc0e4cc8c2655",
+      "status": "reviewed",
+      "translation": "The preparation above loads the input tables. These examples rename columns of\nbundled source-backed sequences, links and genes; they do not invent alignments.\n"
+    },
+    "7": {
+      "source_sha256": "9a2dc236bea023f28778a11e15a8210eea5ddc2ff124926f7e3f096cf29a0668",
+      "status": "reviewed",
+      "translation": "Adapters return ordinary frames with ⟦shared:0⟧ provenance. IDs remain\nunchanged. Supply reliable full lengths rather than using maximum feature ends.\nSee [alignment input](⟦shared:1⟧) for minimal fields and coordinate units.\n"
+    },
+    "8": {
+      "source_sha256": "3dec1ef82d1ef345d665990bd18ac85579ace08a48f1e95982320264644546cd",
+      "status": "reviewed",
+      "translation": "## GenBank: retain record identity ⟦shared:0⟧\n"
+    },
+    "11": {
+      "source_sha256": "a0b3cdecdfb1f8681eeecbdb7e82a7a4a41b4e4c06d3c5c789010eb9d00064cf",
+      "status": "reviewed",
+      "translation": "This is the original NCBI L09137.2 record, named pUC19c; do not rename it to the\nbundled pUC19. Results include ⟦shared:0⟧, ⟦shared:1⟧ and ⟦shared:2⟧,\nretaining segmented locations and record/feature provenance. The selected Python\nneeds Biopython already installed; no automatic installation occurs.\n⟦shared:3⟧ records unsupported locations rather than guessing bounds.\n"
+    },
+    "12": {
+      "source_sha256": "9c8ecc623a59e0a65c3b02ef626866af8369c24f3103281d6695a1d4355310f8",
+      "status": "reviewed",
+      "translation": "The GenBank example was rerun with Python Biopython 1.85 enabled: it returned L09137.2, length 2686 bp and one annotation row. For a separate documentation environment, install Biopython with that Python’s ⟦shared:0⟧, then put its executable on PATH before starting R. Do not treat an optional-dependency skip or NULL as successful import.\n"
+    },
+    "13": {
+      "source_sha256": "59611d98266e616bc74f4795181bacc7bedc5632bd20877c81a9e12aa5a839d7",
+      "status": "reviewed",
+      "translation": "An explicit ⟦shared:0⟧ path keeps the selected virtual environment, including interpreter symlinks; no environment is installed or modified.\n"
+    },
+    "14": {
+      "source_sha256": "3bbd232be3b9a381aafce95e7ed850e774a4fc00e300d1577cf31b9958ba7216",
+      "status": "reviewed",
+      "translation": "Extract the [manual bundle](⟦shared:0⟧) so the working directory contains ⟦shared:1⟧. Read one format at a time, inspect a few rows, then match sequence IDs.\n"
+    },
+    "15": {
+      "source_sha256": "3e6bc5079d049b42cbb1445859b937e0e40f0a6853c32792828893d3ad8c74a3",
+      "status": "reviewed",
+      "translation": "## FASTA lengths and GFF3 annotations ⟦shared:0⟧\n"
+    },
+    "18": {
+      "source_sha256": "e0520e046c287c11447d93ee72f0ec653fbee57445dd0e95bf8b74d1d006ba6e",
+      "status": "reviewed",
+      "translation": "FASTA supplies full lengths. GFF3 supplies intervals, types and source strands. Select CDS for plotting as needed.\n"
+    },
+    "21": {
+      "source_sha256": "e236ac2d9507ed6cd10b1a9954fa5fc176cf60934d652eef46ac91b9be966970",
+      "status": "reviewed",
+      "translation": "## Read a BLAST table ⟦shared:0⟧\n"
+    },
+    "24": {
+      "source_sha256": "55d1d95ba167b99d6853772a4cedc2c3b60bdc0df24eff2b3f62db8c7eeb33f3",
+      "status": "reviewed",
+      "translation": "Each row contains two intervals. Keep their endpoint order and check both sequence IDs against the FASTA records. See [alignment inputs](⟦shared:0⟧) for standard BLAST output.\n"
+    },
+    "25": {
+      "source_sha256": "3112b2244e8f46e7f63cc6ecf14d3b9e2f25b5f2c3acc21d235b04f1be692cd4",
+      "status": "reviewed",
+      "translation": "## Convert Bioconductor objects directly ⟦shared:0⟧\n"
+    },
+    "26": {
+      "source_sha256": "9680e1f71f0ec5d95542cf48e212beaa4d8720190cb0c442ade63125e5105df4",
+      "status": "reviewed",
+      "translation": "With GenomicRanges installed, convert one interval into a feature table. Known full lengths are supplied in ⟦shared:0⟧ and can be extracted with ⟦shared:1⟧.\n"
+    },
+    "29": {
+      "source_sha256": "57cfe4a3afe47a5b61f174127ad2f15307394cc227536ea3666455c268927165",
+      "status": "reviewed",
+      "translation": "The first GInteractions anchor is the query, and the second is the subject. This minimal example joins two intervals. It also requires InteractionSet.\n"
+    },
+    "32": {
+      "source_sha256": "81fa99f0ad265d09621d55d159095fc8b08866787eabe6a96407102c25781926",
+      "status": "reviewed",
+      "translation": "See [import and conversion](⟦shared:0⟧) for other inputs. Use the converted tables to [add layers](⟦shared:1⟧).\n"
+    }
+  }
+}

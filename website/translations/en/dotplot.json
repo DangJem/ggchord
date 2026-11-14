@@ -1,0 +1,70 @@
+{
+  "source_sha256": "feda3cc183fd8931929749bb0dd105a7be897b2d34d3e8a51a48ddf8f25ab781",
+  "blocks": {
+    "0": {
+      "source_sha256": "419a8cc4b7e153dc423fc1c3ae8a0220ecf96e814a011372c36372f675279cc1",
+      "status": "reviewed",
+      "translation": "## HSP relationships on two sequence axes ⟦shared:0⟧\n"
+    },
+    "1": {
+      "source_sha256": "ff383cf9567a513d3730931382fef7c9c116b6c9b63722d42bb72ce4a00c4e80",
+      "status": "reviewed",
+      "translation": "This matrix uses all 32 original HSP records across four complete sequence inputs. Both axes preserve accession identity and local positions. Identity controls colour; observed HSP length controls stroke width.\n"
+    },
+    "2": {
+      "source_sha256": "29e047b3209d9e5c94dbe212253857348d746df317fac72947f48e49b9998ccf",
+      "status": "reviewed",
+      "translation": "To read the matrix, choose a query sequence at the top and a subject sequence on the left. Their outlined intersection is the comparison region for that pair. Headers show complete ranges; bottom and right ticks use local positions. Cell sizes retain sequence-length proportions, and an empty region means only that the input contains no HSP there.\n"
+    },
+    "4": {
+      "source_sha256": "ac254812b10a9ba8422df92cf096ae0582b6e9178faa2e8f3042f37dc9f20fea",
+      "status": "reviewed",
+      "translation": "## What the module supports ⟦shared:0⟧\n"
+    },
+    "5": {
+      "source_sha256": "72ebf3b4bda7bc02f99ce1e08d00c37c7f01e23fb8c47f7afb73d73911a5eff5",
+      "status": "reviewed",
+      "translation": "- Multiple query and subject sequences, explicit axis order and native-unit gaps.\n"
+    },
+    "6": {
+      "source_sha256": "6b1c844c340dfe84cbf9ae682830b57d61eb8597543a93018564502a0caa5b44",
+      "status": "reviewed",
+      "translation": "- Forward and reverse HSP endpoints, independent display orientation on either axis.\n"
+    },
+    "7": {
+      "source_sha256": "542612cc67f7b797e488eaf9c639ed23cca18d5ff72af0216af7501b030ba1d4",
+      "status": "reviewed",
+      "translation": "- Identity and other supplied metrics mapped through link scales.\n"
+    },
+    "8": {
+      "source_sha256": "ca5b532cb463e07096bb4a9edb4821ab542e6be575c0e7a8f16e2e219f856581",
+      "status": "reviewed",
+      "translation": "- Exact source-to-display conversion, visible windows and traceable input rows.\n"
+    },
+    "9": {
+      "source_sha256": "5ce51a6802b7512a654138fcdb3872f4d9efca3618ba4fe4ab23349f360bf487",
+      "status": "reviewed",
+      "translation": "[Data, axes and mapping](⟦shared:0⟧) · [Alignment imports](⟦shared:1⟧) · [Protein coordinates](⟦shared:2⟧)\n"
+    },
+    "10": {
+      "source_sha256": "39ca55fec1b3a8ad4755fc618b43e00b0951e5f17f55e37fa36186c75776533e",
+      "status": "reviewed",
+      "translation": "## Required inputs ⟦shared:0⟧\n"
+    },
+    "11": {
+      "source_sha256": "be0cc934ec34225c7ec52175a983885deb5311124737da485f14f947a12922a1",
+      "status": "reviewed",
+      "translation": "Supply complete lengths and query/subject IDs, plus qstart/qend/sstart/send for each HSP. Axis concatenation does not fuse biological sequence identities. bp and aa need separate coordinate domains or an explicit projection.\n"
+    },
+    "12": {
+      "source_sha256": "7ed353b758f27d7cb6c8d556ace22f08a2f91e8a928c6a7df391fff316aa2d0f",
+      "status": "reviewed",
+      "translation": "## Boundaries ⟦shared:0⟧\n"
+    },
+    "13": {
+      "source_sha256": "32678ed90f5f6e452be0ec227e9848a750f7c54c61035b80bdb2ea9fd6111097",
+      "status": "reviewed",
+      "translation": "Each mark is an HSP endpoint segment, not a base-by-base reconstruction. Mismatches and gaps need observed aligned characters or an exact alignment trace. Backbone gene/feature/track layers do not apply here. Dotplot is not a registered Fusion endpoint.\n"
+    }
+  }
+}

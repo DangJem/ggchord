@@ -1,0 +1,195 @@
+{
+  "source_sha256": "77511ab5ead0290cd8c873a8802a35a2092dc4a5384892c44b810c5a59984cf0",
+  "blocks": {
+    "0": {
+      "source_sha256": "08d66efb8012ff30a20073d5b955a7b7dc3cae154de3c96475656ffc83e8c510",
+      "status": "reviewed",
+      "translation": "## Four modules and their responsibilities ⟦shared:0⟧\n"
+    },
+    "1": {
+      "source_sha256": "3ccf7ab9eaacb121fc025bda4ac9967b0c181949b231528b47297c2743035258",
+      "status": "reviewed",
+      "translation": "| Module | Purpose | Coordinate or composition |\n"
+    },
+    "2": {
+      "source_sha256": "a9e436d2babd638ade86791e162e7de5a6b1b3128c6ae9ed93504fbf3c53dc93",
+      "status": "reviewed",
+      "translation": "| --- | --- | --- |\n"
+    },
+    "3": {
+      "source_sha256": "fd23b3cb7a91da8307d89eda2283500e2db2d6cd2fb502490944fadd90cee8fe",
+      "status": "reviewed",
+      "translation": "| [I · Multi-sequence relationships](⟦shared:0⟧) | Compare sequence intervals, annotations and links | Chord, Collinear, Radial and Sankey |\n"
+    },
+    "4": {
+      "source_sha256": "b0c3285a15ac83b0b03fce84136c4119467d44fb9745a00df8ec2c7a77e43897",
+      "status": "reviewed",
+      "translation": "| [II · Single-sequence circular maps](⟦shared:0⟧) | Annotate one complete sequence | Circular |\n"
+    },
+    "5": {
+      "source_sha256": "5cb8a9a00b36638799637e24ce2f69ace4a09ce7fa3cc7513559ac0b3bf3db9e",
+      "status": "reviewed",
+      "translation": "| [III · Sequence alignment Dotplot](⟦shared:0⟧) | Display query/subject HSP endpoints on two axes | Dotplot |\n"
+    },
+    "6": {
+      "source_sha256": "9b0e52ce3e3e7adac03aef586a5b17dfdec4aad8b49200dd0f14dc15229b89f5",
+      "status": "reviewed",
+      "translation": "| [IV · Multi-view composition](⟦shared:0⟧) | Place independent registered views and connect source intervals | Fusion composition layer |\n"
+    },
+    "7": {
+      "source_sha256": "6315d9578d378e2865eb2ced39a39edd5ec850bdc72d4701e4d38d207988ef4f",
+      "status": "reviewed",
+      "translation": "There are six Coord types. Fusion combines plots; it is not a seventh coordinate system. Dotplot uses a dedicated segment layer and is not a registered Fusion endpoint.\n"
+    },
+    "8": {
+      "source_sha256": "4312c2bf020f70e005027d96272f61354da6366687382743f7aacdaba21df821",
+      "status": "reviewed",
+      "translation": "## Shared plotting grammar ⟦shared:0⟧\n"
+    },
+    "9": {
+      "source_sha256": "c5b393853274b5fb22fc0fd38d44eef16eea5024f9cc4b5077d8c853336858de",
+      "status": "reviewed",
+      "translation": "| Component | Responsibility | Entry |\n"
+    },
+    "10": {
+      "source_sha256": "a9e436d2babd638ade86791e162e7de5a6b1b3128c6ae9ed93504fbf3c53dc93",
+      "status": "reviewed",
+      "translation": "| --- | --- | --- |\n"
+    },
+    "11": {
+      "source_sha256": "2dfd750dd927fc8b18a0199ab39eb3ce6de15472cb209a7cf364fe8a5f069d0b",
+      "status": "reviewed",
+      "translation": "| Data | Source identifiers, complete lengths, intervals and units | ⟦shared:0⟧ |\n"
+    },
+    "12": {
+      "source_sha256": "26255ff119de0c459b91026b79b31322544a15d86eb2c920728b78410a9da9cd",
+      "status": "reviewed",
+      "translation": "| Geometry | Backbones, links, features, tracks and text | ⟦shared:0⟧ |\n"
+    },
+    "13": {
+      "source_sha256": "1456f08bf9bbb90da3c3eb2f19bba4e79199fa8b28aa5c086df8bece8de14608",
+      "status": "reviewed",
+      "translation": "| Mapping | Associate data with an aesthetic | ⟦shared:0⟧ |\n"
+    },
+    "14": {
+      "source_sha256": "e054db29db45270adacee3fd254715a63ea8fa551f0f8de8553fc9785bb953b9",
+      "status": "reviewed",
+      "translation": "| Scale | Define colours, ranges and guides | ⟦shared:0⟧ |\n"
+    },
+    "15": {
+      "source_sha256": "69f17afc78e0e9e0b6183a8a481831c2481a6b6bf52c7c1aa0482069148465b2",
+      "status": "reviewed",
+      "translation": "| Position | Place features and tracks locally | ⟦shared:0⟧ |\n"
+    },
+    "16": {
+      "source_sha256": "59af9e0e06b38a62ed102aef986bdd9ba6458f70fb37ed51128a5767ac311340",
+      "status": "reviewed",
+      "translation": "| Coordinate | Arrange the complete view | ⟦shared:0⟧ |\n"
+    },
+    "17": {
+      "source_sha256": "a08285db248acc6e88444373f43ffc7b71fcea5788033ce3332ac27e7b30f6ff",
+      "status": "reviewed",
+      "translation": "| Theme | Non-data appearance | ⟦shared:0⟧ |\n"
+    },
+    "18": {
+      "source_sha256": "c2abc2b522897731e842619bd46452e82a70247aef2166ba52eff33d16247ad9",
+      "status": "reviewed",
+      "translation": "## Choose a relationship view ⟦shared:0⟧\n"
+    },
+    "19": {
+      "source_sha256": "47d5b987d2e32d74feb691117e828d47ac7b50bae8755f4b848082fc59407872",
+      "status": "reviewed",
+      "translation": "### Chord ⟦shared:0⟧\n"
+    },
+    "20": {
+      "source_sha256": "0765197ad9181238db73978424c2890a37190d81e2d9532cee31d23911884c4e",
+      "status": "reviewed",
+      "translation": "An overview of relationships around curved backbones. [Geometry and curvature](⟦shared:0⟧).\n"
+    },
+    "21": {
+      "source_sha256": "d2a0c49309606c667121a50a667acc7728f050a061d7ee012174e740ffb4fb4d",
+      "status": "reviewed",
+      "translation": "### Collinear ⟦shared:0⟧\n"
+    },
+    "22": {
+      "source_sha256": "b964d47ba2ddf3a03a530a5068be1cb52eaa80f014a0ed9965e4b46f9ba0c9e6",
+      "status": "reviewed",
+      "translation": "Aligned rows for sequence order, local windows and anchor comparisons. [Alignment and arrangement](⟦shared:0⟧).\n"
+    },
+    "23": {
+      "source_sha256": "1742036c6cf13a9998ebeb53db449ab7e220310d4b097579ec53ba8bcf8bc9ca",
+      "status": "reviewed",
+      "translation": "### Radial ⟦shared:0⟧\n"
+    },
+    "24": {
+      "source_sha256": "749816d791ec65dcf8ad8b7291a25767e365965e704aedf8db807028a15e512a",
+      "status": "reviewed",
+      "translation": "Radial spokes retain sequence coordinates while showing syntenic links around the centre. [Radial settings](⟦shared:0⟧).\n"
+    },
+    "25": {
+      "source_sha256": "fa6ee4f53655ca0beb174e14530c47c7d967b874625765f61b47b0ffbc49f7de",
+      "status": "reviewed",
+      "translation": "### Sankey ⟦shared:0⟧\n"
+    },
+    "26": {
+      "source_sha256": "da10dd38c0482f72768a2053f9a53cdbc23b0442dfb4f5b4570082aa3e7891cb",
+      "status": "reviewed",
+      "translation": "Two columns repeat each source as a query and subject display instance. The bands represent observed intervals, not conserved flow. [Sankey settings](⟦shared:0⟧).\n"
+    },
+    "27": {
+      "source_sha256": "daacf5cc6902241d083a0067139a4b73bf89d421fb1203d975c192a7c3cbad5e",
+      "status": "reviewed",
+      "translation": "### Circular ⟦shared:0⟧\n"
+    },
+    "28": {
+      "source_sha256": "e6200cf555db8ebe66baa9e93f36c3428b8cbb8e7febc3fa2485eeb549f0b7fe",
+      "status": "reviewed",
+      "translation": "One sequence ring with prepared annotations, primers and restriction sites. [Circular maps](⟦shared:0⟧).\n"
+    },
+    "29": {
+      "source_sha256": "caa18fce0797a120071dc903872b978a69786202e60718fed3b1e0252755929a",
+      "status": "reviewed",
+      "translation": "### Dotplot and Fusion ⟦shared:0⟧\n"
+    },
+    "30": {
+      "source_sha256": "c3c818ff758efcbb0cb8ddcb9cce9d94e2b9331f945ff87d0d73cf1a68448688",
+      "status": "reviewed",
+      "translation": "Dotplot places HSP endpoints on two sequence axes. Fusion lays out already-valid independent plots and connects explicit source intervals. Their data and geometry contracts differ.\n"
+    },
+    "31": {
+      "source_sha256": "47f238dd2b7414fe75102d35d7bbecf208080bc39b81e68c6e7dfcb46c95b73a",
+      "status": "reviewed",
+      "translation": "## Source identity and units ⟦shared:0⟧\n"
+    },
+    "32": {
+      "source_sha256": "b74ea393185746e5ace504816ea463a577b8147479d523ae37b96efd893d99b9",
+      "status": "reviewed",
+      "translation": "Biological strand, display orientation and alignment direction are distinct. bp and aa are separate coordinate domains; cross-domain projection needs an explicit CDS map. Source lengths are never inferred from the last visible feature.\n"
+    },
+    "35": {
+      "source_sha256": "f7e8bee76fb21b293db1d9a5808c64cc9fffa7a1fb6da3abf0a27041cb92d643",
+      "status": "reviewed",
+      "translation": "## Get started ⟦shared:0⟧\n"
+    },
+    "36": {
+      "source_sha256": "2a18af7a1248a6965e9db3b6a60222a6aaa6e487b9f0fe30e5e351d78cc2210d",
+      "status": "reviewed",
+      "translation": "[Install and draw a first plot](⟦shared:0⟧), then choose inputs and layers from the four modules above. With existing tables, check [minimal fields](⟦shared:1⟧), identifiers, complete lengths and units.\n"
+    },
+    "37": {
+      "source_sha256": "efae9276d4dba45b3e9bad3697a24fdfa85572930cd6f15812e34ac86ac952dd",
+      "status": "reviewed",
+      "translation": "## Shared techniques ⟦shared:0⟧\n"
+    },
+    "38": {
+      "source_sha256": "45f1bf787132e85252bf445fb8fc24ec612c544fe6ea6d6f34b6d7c1dd1c4a27",
+      "status": "reviewed",
+      "translation": "[Flexible parameter formats](⟦shared:0⟧) distinguish shared, named, ordered and strand settings for supported geometry and Position parameters. Use aes/scales for data differences and themes for appearance; see the grammar table above.\n"
+    },
+    "39": {
+      "source_sha256": "06dd9792cc49b11959ec017962833e19320da6b27bde5a8ffab825bca4212849",
+      "status": "reviewed",
+      "translation": "[Feature shapes](⟦shared:0⟧) · [Labels](⟦shared:1⟧) · [Tracks](⟦shared:2⟧) · [Styling](⟦shared:3⟧) · [Output](⟦shared:4⟧) · [Diagnostics](⟦shared:5⟧)\n"
+    }
+  }
+}

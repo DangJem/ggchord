@@ -441,8 +441,8 @@
   },
   {
     "task": {
-      "en": "Count source-position observations",
-      "zh": "统计源位置观测数"
+      "zh": "统计源位置观测数",
+      "en": "Count source-position observations"
     },
     "api": "geom_track",
     "parameters": "geom, stat, track, position",
@@ -452,8 +452,8 @@
   },
   {
     "task": {
-      "en": "Route repeated sequence instances",
-      "zh": "为重复序列实例选择路由"
+      "zh": "为重复序列实例选择路由",
+      "en": "Route repeated sequence instances"
     },
     "api": "geom_link_ribbon",
     "parameters": "between, allow_repeated",
@@ -463,8 +463,8 @@
   },
   {
     "task": {
-      "en": "Draw mirrored interval relationships",
-      "zh": "绘制镜像区间关系"
+      "zh": "绘制镜像区间关系",
+      "en": "Draw mirrored interval relationships"
     },
     "api": "coord_sankey",
     "parameters": "column_gap, self_links",
@@ -474,8 +474,8 @@
   },
   {
     "task": {
-      "en": "Show HSPs on independent axes",
-      "zh": "用独立双轴展示HSP"
+      "zh": "用独立双轴展示HSP",
+      "en": "Show HSPs on independent axes"
     },
     "api": "coord_dotplot",
     "parameters": "x_seqs, y_seqs, x_orientation, y_orientation",
@@ -485,8 +485,8 @@
   },
   {
     "task": {
-      "en": "Retain four alignment endpoints",
-      "zh": "保留四个比对端点"
+      "zh": "保留四个比对端点",
+      "en": "Retain four alignment endpoints"
     },
     "api": "geom_alignment_segment",
     "parameters": "mapping, data, allow_repeated",
@@ -496,8 +496,8 @@
   },
   {
     "task": {
-      "en": "Draw cyclic radial synteny",
-      "zh": "绘制环形邻接的径向共线性"
+      "zh": "绘制环形邻接的径向共线性",
+      "en": "Draw cyclic radial synteny"
     },
     "api": "coord_radial_synteny",
     "parameters": "start_angle, clockwise, inner_radius",
@@ -507,8 +507,8 @@
   },
   {
     "task": {
-      "en": "Compose source-anchored views",
-      "zh": "组合有来源锚点的视图"
+      "zh": "组合有来源锚点的视图",
+      "en": "Compose source-anchored views"
     },
     "api": "ggchord_fusion",
     "parameters": "center, center_size, layout",
@@ -518,8 +518,8 @@
   },
   {
     "task": {
-      "en": "Connect real intervals across panels",
-      "zh": "跨面板连接真实区间"
+      "zh": "跨面板连接真实区间",
+      "en": "Connect real intervals across panels"
     },
     "api": "fusion_ribbon",
     "parameters": "data, qpanel, spanel, gradient, tip",
@@ -529,8 +529,8 @@
   },
   {
     "task": {
-      "en": "Audit composition sources and physical anchors",
-      "zh": "审计组合来源与物理锚点"
+      "zh": "审计组合来源与物理锚点",
+      "en": "Audit composition sources and physical anchors"
     },
     "api": "export_ggchord_fusion",
     "parameters": "width, height",
@@ -540,8 +540,8 @@
   },
   {
     "task": {
-      "en": "Import paired BED intervals",
-      "zh": "导入BED双端区间"
+      "zh": "导入BED双端区间",
+      "en": "Import paired BED intervals"
     },
     "api": "read_bedpe",
     "parameters": "file, files, source_file, unmapped",
@@ -573,8 +573,8 @@
   },
   {
     "task": {
-      "en": "Connect a genomic region to its independently rebuilt detail",
-      "zh": "连接基因组区域与独立重建的细节图"
+      "zh": "连接基因组区域与独立重建的细节图",
+      "en": "Connect a genomic region to its independently rebuilt detail"
     },
     "api": "magnify_ggchord",
     "parameters": "region, detail_plot, side, connector",

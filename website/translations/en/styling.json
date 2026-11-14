@@ -1,0 +1,250 @@
+{
+  "source_sha256": "2ba868075fad78d47863e5de76faca195d24d4e45c42a30af4df01a9695d06ac",
+  "blocks": {
+    "0": {
+      "source_sha256": "085409246dee00fdf182c27b81a20c4c4a252208e1c9dab6dda513d8de51a5d8",
+      "status": "reviewed",
+      "translation": "⟦shared:0⟧⟦shared:1⟧Give colours a clear meaning: identify categories or continuous quantities, then choose mappings, scales and guides. Website accents do not dictate data colours.⟦shared:2⟧⟦shared:3⟧\n"
+    },
+    "2": {
+      "source_sha256": "55e32bb11fed299d50f5be32a841bc03d2114250d28e89f13c00826ecb3f5a2f",
+      "status": "reviewed",
+      "translation": "## Build styles from data roles ⟦shared:0⟧\n"
+    },
+    "3": {
+      "source_sha256": "c4ed8473d8fbb0c0ef3d16f692e755ab784bb6f2be924b809b8a2e8d973933ce",
+      "status": "reviewed",
+      "translation": "Use four chord backbones and one observed alignment. Map the ribbon fill to the query ID and assign that category one named colour. Sequence colours retain their default scale.\n"
+    },
+    "6": {
+      "source_sha256": "e7b5bb43d36665aeb182afaa4a43139dd3c534553c20b69ba8705a3dd7f90d81",
+      "status": "reviewed",
+      "translation": "| Role | Mapped data | Useful scale family |\n"
+    },
+    "7": {
+      "source_sha256": "a9e436d2babd638ade86791e162e7de5a6b1b3128c6ae9ed93504fbf3c53dc93",
+      "status": "reviewed",
+      "translation": "| --- | --- | --- |\n"
+    },
+    "8": {
+      "source_sha256": "914d47d3c01833a587cdad69aeb8eb04f6a6b3ab20928cfffd69dbf2f7a080c3",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧, ⟦shared:1⟧ | Sequence/category | Sequence colour or ring manual scales |\n"
+    },
+    "9": {
+      "source_sha256": "53166ec7f7af37b599b026925cb7fe09b73b7f104e6c77768d994a5d74fcf1e5",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧, ⟦shared:1⟧, ⟦shared:2⟧, ⟦shared:3⟧ | Alignment metadata or statistics | Manual, gradient/steps/identity and alpha scales |\n"
+    },
+    "10": {
+      "source_sha256": "5f0ffdc0b295dc0502a78331dca689dc197656802c438e61fd2eed8887c1b024",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧, ⟦shared:1⟧, ⟦shared:2⟧, ⟦shared:3⟧ | Annotation category or strand | Role-specific manual/preset scales |\n"
+    },
+    "11": {
+      "source_sha256": "2d787a3adae8a3be1e22e7f52d857bb5b1c77466a424c1ecfb93d33106fc21d4",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧, ⟦shared:1⟧, ⟦shared:2⟧, ⟦shared:3⟧ | Point-link metadata | Continuous or manual link scales |\n"
+    },
+    "12": {
+      "source_sha256": "f621a2b774f07e55891053ca020fd76dbe96462882e2b9f47e19ad654b4b9fee",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧, ⟦shared:1⟧, ⟦shared:2⟧ | Values/categories in one named track | Named value domain and colour/fill scales |\n"
+    },
+    "13": {
+      "source_sha256": "c34a4847d4518487a6778dc074868c639728ed3c053b18e6461a5f0a291039c8",
+      "status": "reviewed",
+      "translation": "## Fixed styles and user scale priority ⟦shared:0⟧\n"
+    },
+    "14": {
+      "source_sha256": "880801d66f514b1e8c5fd1cf0f373d9856ba98f84c019fa236f1c5a9c7431f9d",
+      "status": "reviewed",
+      "translation": "Put a constant style outside ⟦shared:0⟧. Map variable styles inside it and supply an\nappropriate scale. An explicitly fixed geom value takes precedence; omitting that\nargument keeps mapping active. Your scale takes priority over automatic defaults.\nRepeated same-kind layers keep independent data/mapping/parameters. A geometric\nvector named by ⟦shared:1⟧ does not mean a scale also accepts per-sequence lists.\n"
+    },
+    "15": {
+      "source_sha256": "247759d29cceb5e0d0f7ad7b132c13b04188a9fbdecede5fa1c759c70b1fc46a",
+      "status": "reviewed",
+      "translation": "## Make legends readable ⟦shared:0⟧\n"
+    },
+    "16": {
+      "source_sha256": "5605f848d8237ed5790a3014bebebc47ade857212a88239e9363aad5d6dc99e3",
+      "status": "reviewed",
+      "translation": "⟦shared:0⟧ controls discrete role legends; ⟦shared:1⟧\ncontrols continuous colour guides. The colour/color spelling aliases are retained,\nwith ⟦shared:2⟧ preferred in this documentation. Use ⟦shared:3⟧ on a layer,\n⟦shared:4⟧ for guide choices and ⟦shared:5⟧ for placement.\nA wide guide may need multiple rows or a wider export, not smaller biological data.\n"
+    },
+    "17": {
+      "source_sha256": "6b9452edfa8f073adfd7906740b391f7561fdb5299e5e441509ff7083b6a4910",
+      "status": "reviewed",
+      "translation": "## Select a theme for the scene ⟦shared:0⟧\n"
+    },
+    "18": {
+      "source_sha256": "a380b3915027456c7b8b8f6a3922550c53f9e03c38d30f303b68b0f467b64f3d",
+      "status": "reviewed",
+      "translation": "This page uses the default theme. Add ⟦shared:0⟧ to adjust text, legends or background; for example, ⟦shared:1⟧ sets the base text size. ⟦shared:2⟧ provides a publication style and ⟦shared:3⟧ suits circular maps. Themes control non-data appearance without changing coordinates or mapped colours.\n"
+    },
+    "19": {
+      "source_sha256": "faa11c48cdfeb37eb42dfd0a0ef43219cacc55d33f6f4355b1b60fd4b9d28fb5",
+      "status": "reviewed",
+      "translation": "## Target-size layout ⟦shared:0⟧\n"
+    },
+    "20": {
+      "source_sha256": "58cada7286cc5a7c74881f71ece25c67665917f8f3928e6e623c4f072e4f2ab8",
+      "status": "reviewed",
+      "translation": "Add ⟦shared:0⟧ to opt into target-size layout. The bundled example uses\nrecorded sequence lengths and HSPs; the reference canvas is in inches and the\nautomatic text floor is in mm. The report describes the requested 8 × 6 inch\nPNG; use the same size with standard ⟦shared:1⟧ to reproduce that arrangement.\n"
+    },
+    "22": {
+      "source_sha256": "d2a40a33bc1b5dd893b5757abae2c480031b1e0bedc465d86c1ec35f8954ce0d",
+      "status": "reviewed",
+      "translation": "⟦shared:0⟧ holds default theme and guide furniture at reference physical sizes.\n⟦shared:1⟧ adjusts theme-driven defaults within the chosen multiplier range.\n⟦shared:2⟧ adds a bounded joint search for native guide grids, sides and\ndirections, then remeasures the result. It reuses existing label layout;\n⟦shared:3⟧ is a guide-space result, not a promise that every label is collision-free.\nNo policy preserves the existing plotting behaviour.\n"
+    },
+    "23": {
+      "source_sha256": "63e77fea9430839529e0c4427070b94134f20aa4ebb4547c84b08a534cd0a9b8",
+      "status": "reviewed",
+      "translation": "Explicit geom styles, theme sizes, guide positions/directions/grids/key sizes,\nscales and ⟦shared:0⟧ remain authoritative. Continuous/stepped bars remain\nintact; categories and source records are retained. When constraints exceed the\ncanvas budget, diagnostics report ⟦shared:1⟧ and rendering warns.\nIncrease the export size or revise the explicit guide settings. The bounded\nsearch does not guarantee a global optimum. Layout-only exports record the\npolicy but require a target device for final guide measurements.\n"
+    },
+    "24": {
+      "source_sha256": "9a5364b145ff7067a159ba43bcdf472b49a5286d7af26a0bf12e2336e640e3fd",
+      "status": "reviewed",
+      "translation": "Apply the policy to each desired Fusion panel before composing it. Each panel\nuses its allocated size; outer panel allocations and the cross-panel guide are\nseparate. Facets, arbitrary custom grobs, blanket scaling of geometric constants\nand font embedding certification are outside this policy.\n"
+    },
+    "25": {
+      "source_sha256": "96d3b3403a7277d64e0e970205753ee81e2d284e9e04a56212cef8617bb26319",
+      "status": "reviewed",
+      "translation": "## Result checks ⟦shared:0⟧\n"
+    },
+    "26": {
+      "source_sha256": "af69e867383d96da3095d10fb0bd247393d7b0905816e9b087f4416d251a8fd5",
+      "status": "reviewed",
+      "translation": "Links from the same query share a colour; continuous identity needs a continuous scale. Put fixed colours outside aes() and make each guide explain its mapping.\n"
+    },
+    "27": {
+      "source_sha256": "1577035e3fcb5f1a93b165ae7b0de70d9d07184393e731026ee27980c486bb7c",
+      "status": "reviewed",
+      "translation": "⟦shared:0⟧Continue: ⟦shared:1⟧Features, stacking and genomic decoration →⟦shared:2⟧⟦shared:3⟧\n"
+    },
+    "28": {
+      "source_sha256": "a7e37234446f41f59ccb4084318f81d1fb9aa3a346ae74cce1cba4dba9a67746",
+      "status": "reviewed",
+      "translation": "See [scale families](⟦shared:0⟧) for runnable manual/continuous/steps/identity, line type, opacity and theme examples.\n"
+    },
+    "29": {
+      "source_sha256": "60e0489958d974decc615b24384391d0016db5c59be266661a067518c0f29d9a",
+      "status": "reviewed",
+      "translation": "## Detailed appearance with standard theme syntax ⟦shared:0⟧\n"
+    },
+    "30": {
+      "source_sha256": "842ea8f76daca5a75ecad404e946bb98edc05ce0a31399e45a380fc92e89818d",
+      "status": "reviewed",
+      "translation": "⟦shared:0⟧ already supplies ⟦shared:1⟧. Choose one of the four presets only when its appearance suits the figure: Minimal reduces decoration; Publication uses compact typography; Dark changes non-data decoration for a dark background; Plasmid emphasises circular annotations. Palettes, scientific relationships and sequence directions remain independent. Use explicit data scales or fixed geom colours when a background requires different data contrast.\n"
+    },
+    "31": {
+      "source_sha256": "ba231903eb74cbdb202451aab69ba273d3552270fcfee24ea282f87a92c13d04",
+      "status": "reviewed",
+      "translation": "| Change | Component |\n"
+    },
+    "32": {
+      "source_sha256": "3491e014f5503eb5b2fca81db42f6f72765980ba5b5e48ef135b6cf69d7f92cc",
+      "status": "reviewed",
+      "translation": "| --- | --- |\n"
+    },
+    "33": {
+      "source_sha256": "0581cd74ab40b36df619cc6bcb1c0e3755cc3850128a51420254b639aa69a143",
+      "status": "reviewed",
+      "translation": "| Background, font, non-data labels/leader appearance | ⟦shared:0⟧ |\n"
+    },
+    "34": {
+      "source_sha256": "0353f580cc6f2dfe182bfab06fd63472b2681516905ba6ab0a69a2c858633388",
+      "status": "reviewed",
+      "translation": "| Sequence colours, feature fill, numerical Track range/breaks/units | ⟦shared:0⟧ and the corresponding scale |\n"
+    },
+    "35": {
+      "source_sha256": "d2efa1d8c81a533c03ebf63c983f35307f7d842e5fbbaa04896286bd2de0e046",
+      "status": "reviewed",
+      "translation": "| Backbone form, Ribbon arrow/gradient mode, fixed data styles | Geom |\n"
+    },
+    "36": {
+      "source_sha256": "9fa1260b2eb5d159764776d58ba0350906dfc0ddd8efcb3f15d131446971baac",
+      "status": "reviewed",
+      "translation": "| Track band, feature stacking and offsets | Position |\n"
+    },
+    "37": {
+      "source_sha256": "ebb0957212326b0705ac3fbb7e712e5d4aec7bccf6facaef9e55eae6eaa73ce3",
+      "status": "reviewed",
+      "translation": "| Sequence order/direction and projection | Coord / explicit data workflow |\n"
+    },
+    "38": {
+      "source_sha256": "675117ee56e25a4fd3fcd18a43a182516870d5b238e4db045afde927d645480c",
+      "status": "reviewed",
+      "translation": "| Guide rows, columns, order, direction and individual position | Guide; global placement in theme |\n"
+    },
+    "39": {
+      "source_sha256": "059dd6c04d819964ac06b800024552a37579f7178f816a9e0a0101e7f47771ba",
+      "status": "reviewed",
+      "translation": "The registered ⟦shared:0⟧ physical settings accept scalar absolute units, just like the existing short arguments in ⟦shared:1⟧. Prefer ⟦shared:2⟧ for later adjustments. Use one spelling in a theme constructor; supplying both spellings for the same setting is an error. A later ⟦shared:3⟧ merges fields in the familiar ggplot2 order. ⟦shared:4⟧, ⟦shared:5⟧, ⟦shared:6⟧ and their ⟦shared:7⟧ line elements style their actual annotation layers, while explicit geom styles/mappings remain authoritative. Ordinary Cartesian ⟦shared:8⟧ is not a substitute for the automatic genomic sequence axis; Dotplot has independent native x/y axes.\n"
+    },
+    "40": {
+      "source_sha256": "33ed42d7ad12b1031c51047519b14402d53e482204cb24fa1b55980d9845a199",
+      "status": "reviewed",
+      "translation": "### Shared Track appearance and local overrides ⟦shared:0⟧\n"
+    },
+    "41": {
+      "source_sha256": "de2e29ba5ed4791c503d9db9b0d1f835e930ccf57c915cc82343ad069210c775",
+      "status": "reviewed",
+      "translation": "The following real GC fractions come from the unchanged bundled pUC19 sequence. It needs optional dplyr. The Track's data scale owns the fraction domain and unit; its local native Guide owns axis appearance. The ordinary theme owns shared decorations. No coverage or read support is invented.\n"
+    },
+    "43": {
+      "source_sha256": "a1d5e3e73bd32f6f8666c98325bd7095a64667bde2dc5801ed1b344b5fa82163",
+      "status": "reviewed",
+      "translation": "⟦shared:0⟧ control shared numerical-axis styles; ⟦shared:1⟧ and ⟦shared:2⟧ are nonnegative absolute units. Resolved font/family/angle metrics are used when reserving plot space. The GC Guide's explicit text style wins over the later shared 9pt default. A local ⟦shared:3⟧ hides just that decoration. ⟦shared:4⟧ supports local ⟦shared:5⟧, ⟦shared:6⟧ and ⟦shared:7⟧; other options fail explicitly instead of being silently ignored.\n"
+    },
+    "44": {
+      "source_sha256": "aa4ce9b1b9c3cc502fa71dfac8e81128bd649ad4aa9cb3ec9ae5e0ea0b23155b",
+      "status": "reviewed",
+      "translation": "Layers with one Track ID share a band, value domain and one numerical reference; distinct IDs already have independent value/fill/colour scales and colour guides. Add ⟦shared:0⟧ for each ID rather than a theme element named after every track. Colour-guide appearance can use the native ⟦shared:1⟧ or ⟦shared:2⟧ supplied to the corresponding Track colour scale. Global legend fonts/background/placement remain theme concerns. Sequence order, HSP selection, statistics and units never change when switching themes. Automatic label/Guide layout is a separate policy and remeasures at the final export size.\n"
+    },
+    "45": {
+      "source_sha256": "cb97be4297e497eb0227f76a3cb542623b2fa94104da3260fe87ce9cd971c474",
+      "status": "reviewed",
+      "translation": "⟦shared:0⟧⟦shared:1⟧Put common adjustments in the appropriate ggplot2 component: mappings, geometry, positions, coordinates and themes have distinct roles.⟦shared:2⟧⟦shared:3⟧\n"
+    },
+    "47": {
+      "source_sha256": "d34f2415722582e0231b05cb04a140747377933ee9ace72bb6a42fa6303ae4a3",
+      "status": "reviewed",
+      "translation": "## Assign each responsibility ⟦shared:0⟧\n"
+    },
+    "48": {
+      "source_sha256": "2c0650e3caa06a5e6e71735095778f0f970bb6c160fae4c5af5bf80f3fe0dd85",
+      "status": "reviewed",
+      "translation": "[Plotting concepts](⟦shared:0⟧) explains layers, mappings, scales and coordinates. The example below applies that distinction to alignment identity.\n"
+    },
+    "49": {
+      "source_sha256": "29496b94873f4b0fb26f9fbf7c8d5ea94ea75d8cc267f751b1b7373c199d6f1c",
+      "status": "reviewed",
+      "translation": "## Map link identity ⟦shared:0⟧\n"
+    },
+    "52": {
+      "source_sha256": "4381a37bcde7577868714a017fbf487df81c47cf4f5501fbb56261c3092b55c0",
+      "status": "reviewed",
+      "translation": "## Place features ⟦shared:0⟧\n"
+    },
+    "53": {
+      "source_sha256": "637f9d168638837fece61b641824ca817a02c5a10f0dd25dd3771ee63a908361",
+      "status": "reviewed",
+      "translation": "Use ⟦shared:0⟧ for signed strand offsets.\n⟦shared:1⟧ handles overlapping features; ⟦shared:2⟧\nallocates a named quantitative lane. Geometric sequence parameters accept one\nvalue, a matching unnamed vector, or a vector named by ⟦shared:3⟧; named vectors\nare recommended. This syntax does not extend to scales, guides or themes.\n"
+    },
+    "54": {
+      "source_sha256": "76182cbf28626f4d784c27f642e8b406d71a959f39b2d1ea69dff0ed30417534",
+      "status": "reviewed",
+      "translation": "Each layer owns its own ⟦shared:0⟧, ⟦shared:1⟧ and parameters. Repeated feature or\nlink layers do not replace one another. Use ordinary ggplot2 ⟦shared:2⟧ and\n⟦shared:3⟧; role input mappings precede geometry, while staged visual mappings\nfollow ggplot2 evaluation. See the [API contract](⟦shared:4⟧).\n"
+    },
+    "55": {
+      "source_sha256": "508379400f5bfcf6100054514537d3bd2caf867810dde50e3d0280aaea627d60",
+      "status": "reviewed",
+      "translation": "## Result checks ⟦shared:0⟧\n"
+    },
+    "56": {
+      "source_sha256": "1b7d28acb1353e22b4e0c42fa02dbe6b2c8d95a3c3f0993c82be8753d1ad691f",
+      "status": "reviewed",
+      "translation": "Use a coordinate for global rotation, named values for per-sequence geometry, and mappings plus scales for data-dependent colour.\n"
+    }
+  }
+}

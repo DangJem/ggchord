@@ -1,0 +1,170 @@
+[
+  {
+    "id": "start",
+    "title": {
+      "zh": "开始使用"
+    },
+    "landing": "installation",
+    "pages": [
+      "installation",
+      "modes",
+      "data"
+    ],
+    "number": 0
+  },
+  {
+    "id": "multi-sequence",
+    "title": {
+      "zh": "模块一 · 多序列关系"
+    },
+    "landing": "multi-sequence",
+    "pages": [
+      "multi-sequence",
+      "multi-sequence-start",
+      "multi-sequence-views",
+      "multi-sequence-layout",
+      "multi-sequence-links",
+      "multi-sequence-labels",
+      "ribbons",
+      "instances",
+      "chord-geometry",
+      "chord",
+      "collinear-layout",
+      "collinear",
+      "radial-synteny",
+      "sankey",
+      "views",
+      "homology"
+    ],
+    "number": 1
+  },
+  {
+    "id": "circular",
+    "title": {
+      "zh": "模块二 · 单序列圆图"
+    },
+    "landing": "circular",
+    "pages": [
+      "circular",
+      "circular-start",
+      "circular-data",
+      "circular-layout",
+      "circular-features",
+      "circular-labels",
+      "recognition",
+      "primers",
+      "restriction-sites",
+      "plasmids",
+      "circular-dense-case",
+      "plasmid-catalog"
+    ],
+    "number": 2
+  },
+  {
+    "id": "dotplot",
+    "title": {
+      "zh": "模块三 · 序列比对点图"
+    },
+    "landing": "dotplot",
+    "pages": [
+      "dotplot",
+      "dotplot-start"
+    ],
+    "number": 3
+  },
+  {
+    "id": "fusion",
+    "title": {
+      "zh": "模块四 · 多视图组合"
+    },
+    "landing": "fusion",
+    "pages": [
+      "fusion",
+      "fusion-start",
+      "fusion-routing",
+      "fusion-layout",
+      "fusion-details",
+      "fusion-advanced"
+    ],
+    "number": 4
+  },
+  {
+    "id": "shared-techniques",
+    "title": {
+      "zh": "通用技巧"
+    },
+    "landing": "styling",
+    "pages": [
+      "styling",
+      "annotations",
+      "feature-geometry",
+      "labels",
+      "parameters",
+      "scale-families",
+      "tracks",
+      "tracks-statistics",
+      "output",
+      "diagnostics"
+    ],
+    "number": 5
+  },
+  {
+    "id": "data",
+    "title": {
+      "zh": "数据与工作流"
+    },
+    "landing": "formats",
+    "pages": [
+      "formats",
+      "import-sequences",
+      "import-intervals",
+      "import-signals",
+      "aligned-sequences",
+      "import-relations",
+      "alignments",
+      "protein-alignments",
+      "projection",
+      "workflows",
+      "real-data"
+    ],
+    "number": 6
+  },
+  {
+    "id": "cases",
+    "title": {
+      "zh": "案例图库"
+    },
+    "landing": "gallery",
+    "pages": [
+      "gallery"
+    ],
+    "number": 7
+  },
+  {
+    "id": "reference",
+    "title": {
+      "zh": "API 参考"
+    },
+    "landing": "reference",
+    "pages": [
+      "reference",
+      "compatibility",
+      "parameter-atlas",
+      "api-curriculum"
+    ],
+    "number": 8
+  },
+  {
+    "id": "information",
+    "title": {
+      "zh": "项目信息"
+    },
+    "landing": "about",
+    "pages": [
+      "about",
+      "faq",
+      "migration"
+    ],
+    "number": 9
+  }
+]

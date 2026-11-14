@@ -1,0 +1,255 @@
+{
+  "source_sha256": "214067f828bf59a19f30c79d00c2f2ac3482b65e3bd505d37e52a5ccc954a8ad",
+  "blocks": {
+    "0": {
+      "source_sha256": "eb2456ae93e8086f5e939ad590c3e467d0b5bd127af6b95551b2e08faf7a8a3c",
+      "status": "reviewed",
+      "translation": "Check units, layers and parameters before changing coordinates. This table combines current Rd/source contracts with actual renders. Support describes an implementation, not every parameter combination. Layouts can use native bp/aa units; genes, primers and restriction layers retain nucleotide constraints.\n"
+    },
+    "1": {
+      "source_sha256": "f736d010112ee785af1a159958041c002bb006d57b56b219cd4628052ec9985b",
+      "status": "reviewed",
+      "translation": "## Layers across six coordinate systems ⟦shared:0⟧\n"
+    },
+    "2": {
+      "source_sha256": "0308eb766be94376f42684dfdd5837ff1dfef0bed9565bd073332ebbec400172",
+      "status": "reviewed",
+      "translation": "| Layer/reference | Chord | Collinear | Single circular | Radial | Sankey | Dotplot | Conditions and boundaries |\n"
+    },
+    "3": {
+      "source_sha256": "27cffaf9bd9f75a542f8f764e14ec0c2a78ff1dbb23fbb986e9ecec42f382747",
+      "status": "reviewed",
+      "translation": "| --- | --- | --- | --- | --- | --- | --- | --- |\n"
+    },
+    "4": {
+      "source_sha256": "849ccbdaaa324cd17fc1ae35091d60202d04b3657d62d8dde8d1936289c14c88",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Supported | Conditional | Supported | Conditional | Conditional | Unsupported | Linear mode rejects explicit radius/curvature/ring |\n"
+    },
+    "5": {
+      "source_sha256": "300488f3bb53fc5bb0f84fc45036b01e9aa03ac557c2f8e88bd2c1d4b9040f08",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Supported | Conditional | Supported | Conditional | Conditional | Unsupported | No explicit radial label radius in linear mode |\n"
+    },
+    "6": {
+      "source_sha256": "e01b3a1d0cc30c560988c7bca83b7bec284a7c82171f5fff4633be9affd13e54",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Conditional | Conditional | Conditional | Conditional | Conditional | Unsupported | Nucleotide units and source strands; use generic features for aa |\n"
+    },
+    "7": {
+      "source_sha256": "d15b825a0553ef65a780f37e27068fbd269b3c4f74659246141b54dfe87ef4ed",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Supported | Supported | Supported | Conditional | Conditional | Unsupported | Valid IDs, intervals and matching native units |\n"
+    },
+    "8": {
+      "source_sha256": "690aecaf00d464d9edf2bf08b927e0a9569ad415dcb2518db3f2f6e0949664af",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Supported | Supported | Supported | Conditional | Conditional | Unsupported | Generic feature preset; circular Position defaults need review when transferred |\n"
+    },
+    "9": {
+      "source_sha256": "f4c2f6e89606d873f2946a288c9f0947710f44f3c9da552cd10c38b2b862569d",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Supported | Conditional | Supported | Conditional | Conditional | Unsupported | Share the gene Position; radial/tangent become vertical/horizontal in linear mode |\n"
+    },
+    "10": {
+      "source_sha256": "be380d551b1c0f2a368af6fec4789fcbe9c436603a94f8000f087d24e532991c",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Supported | Conditional | Supported | Conditional | Conditional | Unsupported | Share the feature Position; radial/tangent become vertical/horizontal in linear mode |\n"
+    },
+    "11": {
+      "source_sha256": "c67def6e746f3aa310b63d4a6f305673724097b9130b90a9b5788a26e748292a",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Supported | Conditional | Supported | Conditional | Conditional | Unsupported | Linear rows reject external=FALSE; inspect hiding at target size |\n"
+    },
+    "12": {
+      "source_sha256": "ed2160e347f353a8b65aa62f32fa92576ffbe7699873f31c2ac33f36cce573b5",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Supported | Conditional | Supported | Conditional | Conditional | Unsupported | Linear rows reject external=FALSE; inspect fitting and hiding |\n"
+    },
+    "13": {
+      "source_sha256": "fce079897c678cad39f4e5858e462ae2e06df9a59b79724561381f55b49ceaea",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Supported | Conditional | Unsupported | Conditional | Conditional | Unsupported | Linear adjacency follows display rows; segmented same-row ribbons are omitted and reported |\n"
+    },
+    "14": {
+      "source_sha256": "09045677b42da07e131d07eef1fe693b8525b4a6eeb6d5c12dea7a8e0938dfb3",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Supported | Conditional | Unsupported | Conditional | Conditional | Unsupported | Point coordinates required; explicit segmented same-row links unsupported |\n"
+    },
+    "15": {
+      "source_sha256": "799e46626bcf6f402d7f432dddfeaa95d5cbad952b9c46932095b07e722165ea",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Supported | Supported | Supported | Conditional | Conditional | Unsupported | Valid source intervals, IDs and local side |\n"
+    },
+    "16": {
+      "source_sha256": "71f1f868efe3e02779cc70161f81c2285fd56651eeafcb36c4b52bf76a383775",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Unsupported | Supported | Unsupported | Unsupported | Conditional | Unsupported | Straight scale bars require collinear mode |\n"
+    },
+    "17": {
+      "source_sha256": "c84d97ee530702213d7a42477885f59a15a7876e7776c68923aebb6a35a8c30a",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Unsupported | Conditional | Unsupported | Conditional | Conditional | Unsupported | Collinear window boundaries required; does not edit source sequence |\n"
+    },
+    "18": {
+      "source_sha256": "0f609730842443e15bba1fa8e6263cf03eddc1220108ecb5b8c235461f7afd6a",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Conditional | Unsupported | Conditional | Unsupported | Unsupported | Unsupported | One displayed sequence; length uses its native bp/aa unit |\n"
+    },
+    "19": {
+      "source_sha256": "4cd83f0e2f8b2ddb84f6111d8b711904e579d6bd724f72fb19048ab9e3a96184",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Conditional | Unsupported | Conditional | Unsupported | Unsupported | Unsupported | One displayed DNA sequence and valid binding coordinates |\n"
+    },
+    "20": {
+      "source_sha256": "82f7a14c940f56af42fce2be2a0f9235f5d4e21c26f12a86bddfb4c82c7615d9",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Conditional | Unsupported | Conditional | Unsupported | Unsupported | Unsupported | One displayed DNA sequence; share primer placement |\n"
+    },
+    "21": {
+      "source_sha256": "2e6246d444393ad7bf6cdfaf7a091e9810bd66ae444cc27b5e5360facfe5b350",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Conditional | Unsupported | Conditional | Unsupported | Unsupported | Unsupported | One displayed DNA sequence and actual computed cleavage sites |\n"
+    },
+    "22": {
+      "source_sha256": "3cb3b9038f8cc0e23987dd91b1686387e29da43b40c109c415921b56d7d804ab",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Supported | Supported | Supported | Conditional | Conditional | Unsupported | Source-space Stat/Position; [base matrix](⟦shared:2⟧) and [estimation combinations](⟦shared:3⟧) |\n"
+    },
+    "23": {
+      "source_sha256": "1b5e017b1b13ec03eca59d1347218ce0983a41ac3ace6853d1c7f8d4e29eb595",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Supported | Supported | Supported | Conditional | Conditional | Unsupported | Count observations; use col for supplied values |\n"
+    },
+    "24": {
+      "source_sha256": "f7975906cd94efbf5c9791f5dae272552357075fce74c16bc5dc2f5c0213806c",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Supported | Supported | Supported | Conditional | Conditional | Unsupported | Explicit position_track; numeric heights and declared domains |\n"
+    },
+    "25": {
+      "source_sha256": "475a6e0e29a4bb211e5700f71298c83fa75b1d70e64093a94ca72b62b4b96d9c",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Supported | Supported | Supported | Conditional | Conditional | Unsupported | Explicit position_track; closure must be requested and missing samples respected |\n"
+    },
+    "26": {
+      "source_sha256": "929aae6a20c53333ba3409f1567af60c18fb77a7a6cb4c47b0da7d832feb5c91",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Supported | Supported | Supported | Conditional | Conditional | Unsupported | Explicit position_track; no numeric height required |\n"
+    },
+    "27": {
+      "source_sha256": "d7e0d4000355548e71e00fa52db6a50cbc8a58e2742a79a97e0cc2602469669f",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Unsupported | Unsupported | Unsupported | Unsupported | Unsupported | Identity HSP segments | Dedicated two-axis geometry |\n"
+    },
+    "28": {
+      "source_sha256": "ebb869775b2cd2c5873525c8e57d817d50d51007f7521201e9277206087f61ff",
+      "status": "reviewed",
+      "translation": "23 representative layers were rendered in the three main modes using 69 explicitly synthetic geometry fixtures: 59 succeeded and 10 were rejected by contract, including automatic primer labels. Centre labels support bp/aa in single-sequence chord/circular views; primers and restriction layers require DNA. Help now clarifies these boundaries. This verifies mode boundaries, not all parameter combinations, biological recognition or devices. See the [complete runtime record](⟦shared:0⟧).\n"
+    },
+    "29": {
+      "source_sha256": "07ca0280f1641f2f312bfa1e21f7d96be8bbb95d3eeb18d7c439c9ead25c8cf5",
+      "status": "reviewed",
+      "translation": "## Understand conditional support ⟦shared:0⟧\n"
+    },
+    "30": {
+      "source_sha256": "ee591da6d48439867402e4a7b42c9d878fafe00fd457bb56dc9f538c6b582d69",
+      "status": "reviewed",
+      "translation": "⟦shared:1⟧ in ⟦shared:0⟧ explicitly checks circular parameters and conflicts involving automatic orientation or segments. Runtime validation also checks general data contracts and nucleotide-only restrictions. Current source files accompany the site under ⟦shared:2⟧; reference pages are generated from current roxygen/Rd.\n"
+    },
+    "31": {
+      "source_sha256": "3d7cd0bd9da977700ba77e11e6c2668942fbee7110b1884f829ec00b167920a1",
+      "status": "reviewed",
+      "translation": "A Position controls local placement; it cannot convert an unsupported layer into a different coordinate layer. Outside/inside means above/below in collinear mode and follows the outward/inward local normal in circular mode. Re-read the result when transferring settings. See [four direction concepts](⟦shared:0⟧) for display direction versus biological strand.\n"
+    },
+    "32": {
+      "source_sha256": "66389eec502dd6b797dec8eb88b64990678852e831fd30f82845126f74c87a8e",
+      "status": "reviewed",
+      "translation": "## Input units and script reuse ⟦shared:0⟧\n"
+    },
+    "33": {
+      "source_sha256": "ca71b6cc86c883a3b8d9a51dadfdd2e68383516d42947dacb8641a976780510a",
+      "status": "reviewed",
+      "translation": "See [installation](⟦shared:0⟧) for setup instructions and [migration](⟦shared:1⟧) when updating existing scripts. Single circular mode requires one displayed sequence. Circular protein layout is a display choice, not a claim of molecular circularity. Project mixed bp/aa inputs first or plot them separately.\n"
+    },
+    "34": {
+      "source_sha256": "f33940986908216e4ea4bc37e813b02204e6e59e0a75409e4ee1f4b2d23d7e53",
+      "status": "reviewed",
+      "translation": "## New coordinate systems ⟦shared:0⟧\n"
+    },
+    "35": {
+      "source_sha256": "275d24d1e7e017cd3821ed05e3a6e1b2379e94b4c115e0ea465c17c42260093b",
+      "status": "reviewed",
+      "translation": "The [Dotplot/Radial support matrix](⟦shared:0⟧) records the new contracts. Dotplot uses a dedicated identity HSP mark. Radial adapts the existing feature/Track frames with cyclic adjacency; circular-only layers, shared straight scales and branches are explicitly rejected. The current layer probes are recorded separately from the earlier three-view evidence.\n"
+    },
+    "36": {
+      "source_sha256": "f1a27951acaca98a9844198b9f30a298d14e5c3de3d9620fe722dda123af3b1b",
+      "status": "reviewed",
+      "translation": "| Layer/reference | Dotplot | Radial |\n"
+    },
+    "37": {
+      "source_sha256": "a9e436d2babd638ade86791e162e7de5a6b1b3128c6ae9ed93504fbf3c53dc93",
+      "status": "reviewed",
+      "translation": "| --- | --- | --- |\n"
+    },
+    "38": {
+      "source_sha256": "b60b654ce3884b3e491d911ef2c290ff1acea7a20ddf286d0d0ecd50a36698bc",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Supported identity HSP segment | Unsupported |\n"
+    },
+    "39": {
+      "source_sha256": "d30981ed0bcdee88ffd7868eac5831cf3f8e27b87db1c910144aa2b1b1672016",
+      "status": "reviewed",
+      "translation": "## Static cross-panel composition ⟦shared:0⟧\n"
+    },
+    "40": {
+      "source_sha256": "d01ab0fc08fe25e4d62bee176f897cbff29780606214ac86d08ea34992ff8ab6",
+      "status": "reviewed",
+      "translation": "[Fusion](⟦shared:0⟧) accepts registered Circular/Chord/Collinear/Sankey/Radial plots, nested Fusions and explicitly registered Cartesian character details. Eight named sides and explicit angle/box placements share the source-frame resolver. Each panel keeps its existing layer contract. Cross-panel interval\nfronts use one-based inclusive boundaries with continuous curve mapping;\nfully visible same-unit source intervals and unambiguous panel/instance routes\nare required. Generic Fusion scales affect cross-panel layers only. Dotplot, facets and implicit third-party coordinate adapters remain unregistered. Physical panels are remeasured at save time; this does not imply\nglobal collision avoidance or general font scaling.\n"
+    },
+    "41": {
+      "source_sha256": "87978f04e712ac7d74b386f773a6de88590914ab3d5d5ac610ce6f4f09c35021",
+      "status": "reviewed",
+      "translation": "## Local aligned-character cells ⟦shared:0⟧\n"
+    },
+    "42": {
+      "source_sha256": "75fac80c37ecbdc10d9d4416f8cb04048e9ff438cc4639c770e2bce2b5990f93",
+      "status": "reviewed",
+      "translation": "| Layer/reference | Chord / Collinear / Circular / Dotplot / Radial / Sankey | Ordinary Cartesian ggplot |\n"
+    },
+    "43": {
+      "source_sha256": "a9e436d2babd638ade86791e162e7de5a6b1b3128c6ae9ed93504fbf3c53dc93",
+      "status": "reviewed",
+      "translation": "| --- | --- | --- |\n"
+    },
+    "44": {
+      "source_sha256": "3edbfdc6febb1da09322088c28d3dad62edb85d5a88d182359a68c4ff3bb1354",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Unsupported biological backbone projection | Supported local character cells with identity/reverse position scales |\n"
+    },
+    "45": {
+      "source_sha256": "b63488c16f6d7afa034af0255d0b770d957f7924b2389ff2ab06ce15896d8212",
+      "status": "reviewed",
+      "translation": "The [aligned-character workflow](⟦shared:0⟧) uses ordinary ggplot x/y coordinates. Source positions and alignment columns are separate fields. Final physical glyph measurement selects readable text or explicit tile/error behavior; it does not change source data or shrink fonts. Explicit source registration supports Fusion/magnify details. Optional source-backed CDS translation uses Biostrings and the existing CDS map; no alignment or missing phase is inferred. See [CDS translation](⟦shared:1⟧) and [character details](⟦shared:2⟧).\n"
+    },
+    "46": {
+      "source_sha256": "0ddad5ea13d9594337a0b720c4a6597e1684b3c096d1dc16eb4bf332df2c5e9f",
+      "status": "reviewed",
+      "translation": "## Optional target-size policies ⟦shared:0⟧\n"
+    },
+    "47": {
+      "source_sha256": "db1b75ce508394cf526cd40d25b827fea13b03a3d8625d522e7947ff719562f0",
+      "status": "reviewed",
+      "translation": "[⟦shared:0⟧](⟦shared:1⟧) supports individual Chord, Circular,\nCollinear, Sankey, Radial and Dotplot plots, and opted-in Fusion panels.\nIt scales default theme styles and arranges native guides under explicit user\nconstraints; no policy is applied by default. Facets, arbitrary custom grobs,\nouter Fusion allocations and a global label solver are outside this scope.\n"
+    },
+    "48": {
+      "source_sha256": "e71a2c87e33eae6e5d25726f3cd2ef24edabdb037f2e08fd6f45e531d4d8487c",
+      "status": "reviewed",
+      "translation": "[Magnification](⟦shared:0⟧) supports independent registered details with explicit per-row targets, eight named sides, nested leaf paths and free boxes. Deliberate overlap is opt-in; global avoidance is separate.\n"
+    },
+    "49": {
+      "source_sha256": "68467698908b3fc3141464a5c850108fd42f62616d6a8d0fa5d6423669bf6b26",
+      "status": "reviewed",
+      "translation": "Fusion also supports Sankey/Radial, layered compositions and eight named sides or explicit boxes. Leaf-panel paths preserve independent sources, and deliberate overlaps export their paint order. Dotplot still requires independent axis registration. See [Advanced boxes and nesting](⟦shared:0⟧).\n"
+    }
+  }
+}

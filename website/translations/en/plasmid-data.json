@@ -1,0 +1,15 @@
+{
+  "source_sha256": "7422e15ae34a23c9a2a8740b9034b70c3f47b86c799577e08adbd05152f473d6",
+  "blocks": {
+    "0": {
+      "source_sha256": "65558b765341744300f6b1268eea89e49563657e225330407740cb387a66bc22",
+      "status": "reviewed",
+      "translation": "## Section moved ⟦shared:0⟧\n"
+    },
+    "1": {
+      "source_sha256": "5e7a0f9039ddbdfeab5c96332c9a5c43e3ff4648d1a5a76d6e4b79227c6b7338",
+      "status": "reviewed",
+      "translation": "[Circular lengths, annotations and optional DNA](⟦shared:0⟧)\n"
+    }
+  }
+}

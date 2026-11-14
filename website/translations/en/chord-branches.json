@@ -1,0 +1,15 @@
+{
+  "source_sha256": "86b300eb05f599d1d411e71e38da82675ee8303408b258892cf512bfe761174b",
+  "blocks": {
+    "0": {
+      "source_sha256": "65558b765341744300f6b1268eea89e49563657e225330407740cb387a66bc22",
+      "status": "reviewed",
+      "translation": "## Section moved ⟦shared:0⟧\n"
+    },
+    "1": {
+      "source_sha256": "826602a063a0f64085f38fd6465f614153481c2a7bd70783c645c50338acba2c",
+      "status": "reviewed",
+      "translation": "[Intervals, points and cross-row links](⟦shared:0⟧)\n"
+    }
+  }
+}

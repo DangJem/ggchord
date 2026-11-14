@@ -1,0 +1,105 @@
+{
+  "source_sha256": "ef3af2a71cc259f06c1f36dcdf0aa59f4f7f6fe4598f63844598b02627b5c818",
+  "blocks": {
+    "2": {
+      "source_sha256": "f3535d30dfe214f543570265b361c88ab504ad424ab23dcdda4b05da6710c235",
+      "status": "reviewed",
+      "translation": "## A source interval and its local detail ⟦shared:0⟧\n"
+    },
+    "3": {
+      "source_sha256": "c7e74f989d569a62937a118aa78bd886681e8ef100f029bf8661c70ec176ec89",
+      "status": "reviewed",
+      "translation": "⟦shared:0⟧ composes a Circular/Chord/Collinear source and an explicit Collinear or registered character detail plot. A source interval is biological data, not a rectangle in image pixels. The same region must be fully visible in both panels. Both rebuild at the final device size; no screenshot is stretched.\n"
+    },
+    "4": {
+      "source_sha256": "1f69b110556dfe1eecdcda0ea247851707ce632adab340c209f7fb343c72fa50",
+      "status": "reviewed",
+      "translation": "This example selects pETDuet-1 source positions 101–1900 (1800 bp). Its origin-crossing annotation at 5404→2 has no overlap with this interval; exclude it explicitly before linear focusing rather than taking its min/max as a long feature. The detail retains 10 annotations and labels the explicitly selected CDS/replication-origin subset. Reversing the detail's display orientation changes neither source coordinates nor biological strands.\n"
+    },
+    "6": {
+      "source_sha256": "04cb47ef6a75e0a3fd77a871365f45181a0777d42176e0425eac1f376af72ec6",
+      "status": "reviewed",
+      "translation": "![A local source detail](⟦shared:0⟧)\n"
+    },
+    "7": {
+      "source_sha256": "b1c82512d1e8d8867db553cace86d7b801595a73f6b550898ad4289cdd1feaad",
+      "status": "reviewed",
+      "translation": "Use ordinary ⟦shared:0⟧ at a chosen physical size, for example 12×8 inches; ⟦shared:1⟧ uses the same renderer. ⟦shared:2⟧ and ⟦shared:3⟧ are container fractions, while ⟦shared:4⟧ is physical mm. Changing the detail side or orientation can change leader crossings; global collision avoidance is not claimed. ⟦shared:5⟧ keeps only highlights.\n"
+    },
+    "8": {
+      "source_sha256": "45bf428e5b6dcff7ec3d1658c50cc3dc60ba62138c5d5eb2bb4301cf072eca94",
+      "status": "reviewed",
+      "translation": "The dashed lines are decorative focus leaders. They are exported separately from biological ⟦shared:0⟧ and ⟦shared:1⟧; adding actual ⟦shared:2⟧ layers still requires real relationship data. ⟦shared:3⟧ preserves the original selection and arbitrary metadata, while ⟦shared:4⟧ reports resolved instances, source origins and the sampled physical path-length ratio. The ratio can be below one with a small detail allocation; it is not a change to biological length.\n"
+    },
+    "9": {
+      "source_sha256": "bfb739d04f16ffda0dd77e7cd66dbe7f0220389ff8d97ee24c04e25a66c1067e",
+      "status": "reviewed",
+      "translation": "The detail plot owns its data, scales, layers and statistics. For count/bin/coverage tracks, prepare and state the intended local or global statistical population yourself; the wrapper records ⟦shared:0⟧ and never silently chooses a scope. It does not copy arbitrary source layers, infer alignments or accept unregistered Cartesian character panels. Use one ordered region, explicitly select ⟦shared:1⟧/⟦shared:2⟧ when an accession is repeated, and declare ⟦shared:3⟧ for origin-crossing selections as described below. Explicit nested/free-position allocations are described below; measured obstacle routing is described below.\n"
+    },
+    "10": {
+      "source_sha256": "66d4618005bf0de88780896997da2e385046ea6f1a0a032816d8e35c52b2fe27",
+      "status": "reviewed",
+      "translation": "## Paired source windows with real HSPs ⟦shared:0⟧\n"
+    },
+    "11": {
+      "source_sha256": "65d790f8ffc5c5942cfe58fa8719152c96608ad37dea844beea135fe55122406",
+      "status": "reviewed",
+      "translation": "In this example, each row of ⟦shared:0⟧ selects one original source interval; all rows share one explicit detail panel. The example selects the two endpoints of a real HSP from the four-sequence dataset. Gene direction and the local HSP come from the focused input tables. ⟦shared:1⟧ links each derived region, front and decorative leader to its input row; arbitrary original metadata stays in ⟦shared:2⟧.\n"
+    },
+    "13": {
+      "source_sha256": "46056e8dd58bf0999466a2534916e408d00196c0f4ca825c02d83df018938cd8",
+      "status": "reviewed",
+      "translation": "![Both HSP ends in one detail](⟦shared:0⟧)\n"
+    },
+    "14": {
+      "source_sha256": "3957580d363fb0777f991402970033ccccfcd316c2d6cbabb153043e551583f6",
+      "status": "reviewed",
+      "translation": "This does not create multiple insets or infer base-level alignments. Each interval must be fully visible in both panels. Instance selectors apply per row.\n"
+    },
+    "15": {
+      "source_sha256": "b81dd9552c65dae764b19e93b86cfe84545009e810fd59089640440c1a09b3e2",
+      "status": "reviewed",
+      "translation": "## Independent detail panels ⟦shared:0⟧\n"
+    },
+    "16": {
+      "source_sha256": "998ea5ac57847092b110fa97b2142828847cbb4bde30a70aee429bdcc2ff704f",
+      "status": "reviewed",
+      "translation": "Split the two endpoints of one real HSP into independent local views. A named\nlist supplies the detail plots, ⟦shared:0⟧ routes each source row, and a\nnamed ⟦shared:1⟧ vector assigns distinct sides. Each panel owns its data and scales.\n"
+    },
+    "18": {
+      "source_sha256": "a4aa2980313182956fd9acd9869dd6116005ec650ce1793d9eae0610d25399ff",
+      "status": "reviewed",
+      "translation": "![Two independent source detail panels](⟦shared:0⟧)\n"
+    },
+    "19": {
+      "source_sha256": "705f6ce5dd841909874c4197e03e725ee29de2a092fc19d55673430becc5bd24",
+      "status": "reviewed",
+      "translation": "This example uses four named details, one per cardinal side; diagonal sides and explicit boxes are available below. Every panel needs a region; missing\nor unknown targets fail. Source and detail instance selectors remain independent.\n⟦shared:0⟧ accepts a named list of width/height fractions; NULL uses Fusion\ndefaults. Overlaps fail rather than displacing explicit allocations. Standard\nsaving rebuilds panels and leaders at the requested size. At small sizes, inspect\nlabels and enlarge the canvas as needed. Leaders may cross the main plot or one\nanother; global avoidance is separate from the explicit nested/box allocation described below.\n"
+    },
+    "20": {
+      "source_sha256": "a358f6098d9b83e353ec357651901ffc047cbcbd2d97e88b81850392629cfac3",
+      "status": "reviewed",
+      "translation": "## Character details with exact source anchors ⟦shared:0⟧\n"
+    },
+    "21": {
+      "source_sha256": "fcf141e02b79fd44523af68f1ee1a4fd2516d168f8ab4409a76c08f684a58caf",
+      "status": "reviewed",
+      "translation": "A Cartesian character plot can be an independent detail panel after ⟦shared:0⟧. Register the actual displayed character rows: x is the original alignment/coding column, y is the alignment row ID, and label is the actual symbol. The source map remains separate from the ordinary ggplot scales. These real 60-column excerpts retain the upstream gaps and mismatches; their macro lengths refer to the **ungapped aligned fragments**, not complete genomes.\n"
+    },
+    "23": {
+      "source_sha256": "d1703c21ad6ae564d1769c55cfabdefd6cc5831023bee818dc093e732cd26da8",
+      "status": "reviewed",
+      "translation": "![Registered details from actual aligned characters](⟦shared:0⟧)\n"
+    },
+    "24": {
+      "source_sha256": "861a86db2e5ed25326c3ee689c4ea9f5f9bbb1484a4360e630aa84748a2f1c2c",
+      "status": "reviewed",
+      "translation": "The ordinary plot remains editable: local colours, layers and annotations remain independent. Identity/reverse x scales and discrete y rows are supported. Each Fusion build verifies the registered residue positions/labels after edits and remeasures the final panel in mm; half-cell boundaries attach to the exact endpoint cells. Gap cells have no source position and are never interpolated into bases. A source interval must contain every selected base in biological order; split introns into separate source rows; origin joins use the explicit wrapping declaration below. Use ⟦shared:0⟧ to select an alignment row when several rows share a source. Unregistered ggplots, facets, nonlinear/flipped coordinates and moved registered cells fail.\n"
+    },
+    "25": {
+      "source_sha256": "ee653231b76ba7107876a909b5556cf2b912f1fb3ee6f03c350f8a5a6d4d54ec",
+      "status": "reviewed",
+      "translation": "⟦shared:0⟧ nucleotide rows can be registered in the same way. Keep the translation on codon centres as in ⟦shared:1⟧; use ⟦shared:2⟧ for full codon membership across segments. AA residue rows use their own aa coordinate domain; connecting a genomic bp macro directly to aa positions still requires an explicit CDS projection. Decorative magnify leaders remain separate from biological Fusion links. Character endpoints have no backbone colour for a Fusion gradient: supply explicit cross-panel fill. Narrow panels retain ⟦shared:3⟧'s tile/error policy; enlarge the physical export instead of relying on DPI. Global leader avoidance is separate; explicit nested/free-position allocation is supported below.\n"
+    }
+  }
+}

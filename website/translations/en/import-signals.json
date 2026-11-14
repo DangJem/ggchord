@@ -1,0 +1,55 @@
+{
+  "source_sha256": "32ba2d3034f323465681ada6e63ef92499ffbce02df03cd0a61b7237616747ed",
+  "blocks": {
+    "2": {
+      "source_sha256": "b890eedee2b36821550a3ffc2df09a84a5a51f387908a11514530721d2d0dfa6",
+      "status": "reviewed",
+      "translation": "Extract the [input bundle](⟦shared:0⟧) so the working directory contains examples/. Each section names its optional dependencies.\n"
+    },
+    "3": {
+      "source_sha256": "db7056cd971c4adf7366544e1719f46dd7b949c2fb325acfb8b35ccf6e2a4160",
+      "status": "reviewed",
+      "translation": "## Continuous signals: bedGraph and BigWig ⟦shared:0⟧\n"
+    },
+    "4": {
+      "source_sha256": "eca0c1d27a390262df21bc58e98af134be1056663fcd970d29f361cbb38f735e",
+      "status": "reviewed",
+      "translation": "This installed-package example contains actual GC percentages computed from the unchanged bundled pUC19 sequence in 100 bp windows (last window 86 bp). It is sequence composition, not measured read coverage. ⟦shared:0⟧ records the calculation and ⟦shared:1⟧ records hashes and the explicit original-header mapping. Readers preserve IDs.\n"
+    },
+    "6": {
+      "source_sha256": "0cc5e68df4420703f921b940004ff1df4eecf2f95063480d26bee85bf7e8fd54",
+      "status": "reviewed",
+      "translation": "bedGraph uses four tab-separated columns, zero-based half-open coordinates and finite signed values. Import converts coordinates once; original endpoints, values, physical lines and opaque display headers remain traceable. One file represents one signal; split multiple track definitions. Literal sequence IDs ⟦shared:0⟧ and ⟦shared:1⟧ are valid. Headers never set plot styles. Overlaps remain rows, without an implicit last-wins rule.\n"
+    },
+    "7": {
+      "source_sha256": "fe2b6344c53af74289f5bf4b39356f74b5429b9977131abbb68d8ea4aa98170b",
+      "status": "reviewed",
+      "translation": "Rectangles use ⟦shared:0⟧ and ⟦shared:1⟧ as cell boundaries; no line is interpolated across absent ranges. BigWig requires optional **rtracklayer**, whose decoder does not support Windows. Use an existing bedGraph file there. Binary GRanges coordinates are already one-based inclusive. Imported runs retain binary floating-point precision; run counts are not original measurement counts. Full lengths come from the file header. Query windows form an unstranded union, results are clipped to it, and empty selection returns zero rows. Missing intervals stay absent, distinct from a stored zero; no coverage, identity, support, units or pre-clipping observation IDs are invented. Each Track's mapping, value range, units and Guide remain explicit.\n"
+    },
+    "8": {
+      "source_sha256": "fb6fa1b7943631f63d6ec19a1f5b9fef5adf4b1a1a3019d81a0810e06e16829e",
+      "status": "reviewed",
+      "translation": "## Aligned reads: an optional coverage bridge ⟦shared:0⟧\n"
+    },
+    "9": {
+      "source_sha256": "6874c1c68c75482fae6a62dd292f38ee5d611837fd0c83d3faa498e32254de4c",
+      "status": "reviewed",
+      "translation": "Use optional **GenomicAlignments**, **Rsamtools** and **GenomicRanges** for an existing BAM. Keep filtering and counting choices explicit; ggchord draws the resulting signal. This example uses the dependency's unchanged Drosophila RNA-seq subset. Its source BAM header retains the original TopHat/reference and SRR provenance; the fixed source URL and checksum are in ⟦shared:0⟧. No read alignment or variant calling occurs.\n"
+    },
+    "11": {
+      "source_sha256": "6086d5332f8698064e5d7d7ea43cfb0bfac13df4a81d6f452e547a2f68c45eec",
+      "status": "reviewed",
+      "translation": "Each retained **alignment record** contributes one over its aligned reference blocks. Skipped regions (⟦shared:0⟧) and, with this explicit choice, deletions (⟦shared:1⟧) contribute zero; supplementary alignments are retained. No base-quality threshold or overlapping-mate/molecule deduplication is applied. These values are not automatically fragment counts, unique molecules, expression, Identity or variant support. Zero runs are stored zeros for this declared computation, unlike missing experimental intervals. For large inputs use the dependency's streaming ⟦shared:2⟧ coverage method with the same explicit filters.\n"
+    },
+    "12": {
+      "source_sha256": "09a5147071d97c2e4ee673dc88f6e49968f1eb860e62c266d4baeded639d3ff3",
+      "status": "reviewed",
+      "translation": "Pass these one-based-inclusive ranges to ⟦shared:0⟧ using ⟦shared:1⟧, ⟦shared:2⟧, ⟦shared:3⟧, ⟦shared:4⟧, as in [continuous signals](⟦shared:5⟧). Full reference lengths come from ⟦shared:6⟧, not the last read end. Specify source windows explicitly before displaying a small region.\n"
+    },
+    "13": {
+      "source_sha256": "4477eb180403f490ddef14335b2eac0c65cf925bb21f47fb5f8775570d426368",
+      "status": "reviewed",
+      "translation": "For CRAM, decode using a mature installed HTSlib/pysam or samtools environment and the **actual matching reference** when required, retaining the original header, filters and conversion log. Never invent a reference, auto-download unrequested resources or claim all CRAM files are independently decodable. The directed prototype uses ⟦shared:0⟧ solely to re-encode the same real BAM records without external reference access, then verifies all record fields/tags, reference dictionary and coverage after decoding. It is a format round trip, not an original CRAM observation or universal reference-based CRAM certification. The upstream header's ⟦shared:1⟧ and absent temporary index generate retained decoder messages; sequential reading succeeds without rewriting them.\n"
+    }
+  }
+}

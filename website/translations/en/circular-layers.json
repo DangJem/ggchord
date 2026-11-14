@@ -1,0 +1,15 @@
+{
+  "source_sha256": "303ffc8945feb6b67f37763cab7dc24e5a7f826880c38182daad81feeb3f8254",
+  "blocks": {
+    "0": {
+      "source_sha256": "65558b765341744300f6b1268eea89e49563657e225330407740cb387a66bc22",
+      "status": "reviewed",
+      "translation": "## Section moved ⟦shared:0⟧\n"
+    },
+    "1": {
+      "source_sha256": "597d965a92476aa91a8cfe8f6635c17360d738c76c653e27690edd2a1f0242cd",
+      "status": "reviewed",
+      "translation": "[Circular backbones and layout](⟦shared:0⟧)\n"
+    }
+  }
+}

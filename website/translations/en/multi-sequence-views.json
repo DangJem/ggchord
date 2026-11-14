@@ -1,0 +1,185 @@
+{
+  "source_sha256": "8602655d47999e641afb683497249d25a084c59b9868e510a65b38a113a3f6c6",
+  "blocks": {
+    "0": {
+      "source_sha256": "c73adbc2723ebef1474128161c28b0ec255cf51de1ef4644efd50b25655d4923",
+      "status": "reviewed",
+      "translation": "## Prepare once ⟦shared:0⟧\n"
+    },
+    "1": {
+      "source_sha256": "962fac3095cca3491bdaa984cc859928eadb0c82f74e16460ef4e9d6b4dc6d34",
+      "status": "reviewed",
+      "translation": "The same source input need not produce the same default relation set. First explicitly select all pairs to compare geometry, then inspect each view’s default selection. Dependencies: ggchord and dplyr.\n"
+    },
+    "4": {
+      "source_sha256": "73196e38e9569d6de01381174c39ac42daf6d6c14224c8365916e6e998ae7c46",
+      "status": "reviewed",
+      "translation": "### Chord ⟦shared:0⟧\n"
+    },
+    "5": {
+      "source_sha256": "c8a7b8932e547d1ba5b759b30208ea9eff667fd538acfb4a6f2ba84c9c4eef7a",
+      "status": "reviewed",
+      "translation": "![Chord: same source tables and all-pair links](⟦shared:0⟧)\n"
+    },
+    "6": {
+      "source_sha256": "3b172629c020219a77c9f920769730420c79b4263a0d9ac1c8cfc1c07b85f423",
+      "status": "reviewed",
+      "translation": "### Linear ⟦shared:0⟧\n"
+    },
+    "7": {
+      "source_sha256": "c87ffbaa500d304560100517a470aef5004aa77375be87d865461b9634606712",
+      "status": "reviewed",
+      "translation": "![Linear: same source tables and all-pair links](⟦shared:0⟧)\n"
+    },
+    "8": {
+      "source_sha256": "f62519d49548f5a732292fed2a56ddc4c63efd344f9e411a5d508e456910f62b",
+      "status": "reviewed",
+      "translation": "### Radial ⟦shared:0⟧\n"
+    },
+    "9": {
+      "source_sha256": "aac75108ba1ae04eeea03fa53a377ed6f2bf0ea6786d1aedb411d091e5762bdb",
+      "status": "reviewed",
+      "translation": "![Radial: same source tables and all-pair links](⟦shared:0⟧)\n"
+    },
+    "10": {
+      "source_sha256": "a90fe0063f886d054b6fbc3118db80b726c4774cad09a00a1a9b3e230e0bc29f",
+      "status": "reviewed",
+      "translation": "### Sankey ⟦shared:0⟧\n"
+    },
+    "11": {
+      "source_sha256": "bf97a84c1b5503d5154c6c0b0f2fe52ea3c7f8e52521f672256a754e3b6e716c",
+      "status": "reviewed",
+      "translation": "![Sankey: same source tables and all-pair links](⟦shared:0⟧)\n"
+    },
+    "12": {
+      "source_sha256": "144339d0147c28e0f599e7e73ab09815940776d0e35a44919f7af8316b51407d",
+      "status": "reviewed",
+      "translation": "## Default selection and comparable conditions ⟦shared:0⟧\n"
+    },
+    "13": {
+      "source_sha256": "436318b8621a7d189c774a2f10931a120d83c7c32c9452ec0056d806467a0ad8",
+      "status": "reviewed",
+      "translation": "| View | Default relation selection | This comparison |\n"
+    },
+    "14": {
+      "source_sha256": "a9e436d2babd638ade86791e162e7de5a6b1b3128c6ae9ed93504fbf3c53dc93",
+      "status": "reviewed",
+      "translation": "| --- | --- | --- |\n"
+    },
+    "15": {
+      "source_sha256": "d91461f4ed53e7802b750d32f1aaafb048d80fec367879cef95254f1aebdbcb3",
+      "status": "reviewed",
+      "translation": "| Chord | All pairs | Same HSP table, explicit all pairs |\n"
+    },
+    "16": {
+      "source_sha256": "8cea008469228cdc25df0d429603ce7717df3118bebea7ceaeea7de1c3cbb89b",
+      "status": "reviewed",
+      "translation": "| Collinear | Adjacent rows | Explicit adjacent_only = FALSE |\n"
+    },
+    "17": {
+      "source_sha256": "62bcbf363070273ba7555ab9c8f5d8335348eb3c747ef866ddeddea34e7cb4a2",
+      "status": "reviewed",
+      "translation": "| Radial | Cyclic neighbors | Explicit adjacent_only = FALSE |\n"
+    },
+    "18": {
+      "source_sha256": "069536ec98d8aa2ee174a1f72cbcd2e76a5049793c1db92fc15e80dff0e53a4e",
+      "status": "reviewed",
+      "translation": "| Sankey | Excludes same-entity self links | This real input has no self links |\n"
+    },
+    "20": {
+      "source_sha256": "c602ba3563a9d2afb92a5e6089e036c4640be04aec909281193b10d919459608",
+      "status": "reviewed",
+      "translation": "## Retained flagships and derived views ⟦shared:0⟧\n"
+    },
+    "21": {
+      "source_sha256": "1fcf68959fc0eae84168c0336e40204a133860555d68047aa4cb8d39ed8ea5c5",
+      "status": "reviewed",
+      "translation": "The existing Chord and Collinear flagships are retained with their original composition, input selection, colours and layer design; the Chord image is redrawn solely for the confirmed default outline fix. Radial derives from Chord; Sankey derives from Collinear. The retained parents share source preparation but keep their original feature and cross-row HSP display selections, so the four images are not claimed to use an identical displayed subset.\n"
+    },
+    "23": {
+      "source_sha256": "e3900d525364bff406de6beeecb30cd20e640269b6310d7592e4bb3a0247d6c5",
+      "status": "reviewed",
+      "translation": "Radial removes Chord-only radii and curvature. Sankey uses each column’s native axis, replacing Collinear Cartesian controls and its shared scale bar. Complete figures retain all original CDS name candidates, Sequence guides and source records. Labels are placed near their features in final projected coordinates using measured text sizes and short leaders. Crowded names that cannot fit may still be hidden; use ⟦shared:0⟧ at the export size to inspect visibility and contacts.\n"
+    },
+    "25": {
+      "source_sha256": "1a37959fe40de8c608caea225f758012bd90c3f714f0c5de15fa0813490f2fa4",
+      "status": "reviewed",
+      "translation": "### Chord ⟦shared:0⟧\n"
+    },
+    "27": {
+      "source_sha256": "2229ad9995b0dcfd98cf8683d9039d082421d92c328de4377cac7809fe003d66",
+      "status": "reviewed",
+      "translation": "### Collinear ⟦shared:0⟧\n"
+    },
+    "29": {
+      "source_sha256": "fb764f8cffcd15b4b93bdbe60c3d08bb5fc2bbe27875fe9882c04e1ef11464f0",
+      "status": "reviewed",
+      "translation": "### Radial ⟦shared:0⟧\n"
+    },
+    "30": {
+      "source_sha256": "6b96a7dbe360b1defdc2fe986bad47edc9c92fb36d636464896b9e88c73e2bd3",
+      "status": "reviewed",
+      "translation": "Use a 12 × 10.5 inch canvas, spokes starting at 45°, and horizontal sequence IDs. All 20 original CDS geometries and name candidates remain. Local labels avoid long leaders and global side columns that shrink the sequence panel. Sequence, Strand and the numerically proportional Identity guide sit below the plot.\n"
+    },
+    "33": {
+      "source_sha256": "e735662cf0e647027623f88721903727f350a754c8ca0078dcb136e765709160",
+      "status": "reviewed",
+      "translation": "### Sankey ⟦shared:0⟧\n"
+    },
+    "34": {
+      "source_sha256": "2ded89557a1fb8b6c3e39549af1c5b1f39c2ded21551cb1cdf8908652c44a2f8",
+      "status": "reviewed",
+      "translation": "Four sequences stack in each column on a 10 × 16 inch portrait canvas. All 16 original CDS geometries and name candidates, and the 10 selected HSPs remain. Both display copies receive annotations; names are no longer sampled to one per sequence. Short connections and local collision handling keep names near their features. Complete coordinates and all three guides remain; homepage previews separately omit dense names and coordinate text.\n"
+    },
+    "37": {
+      "source_sha256": "8ab5d311cf3ef71969883e6be0e1a419fab73fb1966e9f26299e5fe37f0b7f41",
+      "status": "reviewed",
+      "translation": "## Directions, instances and display scale ⟦shared:0⟧\n"
+    },
+    "38": {
+      "source_sha256": "cc2f3b1612fd3ad6db279ff90e07cac4fd07aa31b3cd7dc06a052907952ddc53",
+      "status": "reviewed",
+      "translation": "Biological strand, HSP endpoint direction, display orientation and seq_order are separate. Sankey copies do not add observations; interval widths do not imply flow conservation. Reuse layers only within their shared support.\n"
+    },
+    "39": {
+      "source_sha256": "86ebb44c08debb58e70d0c479986305f0ad3e2edaba97a2f2feebd3972f4221a",
+      "status": "reviewed",
+      "translation": "## Visual length and connection style ⟦shared:0⟧\n"
+    },
+    "40": {
+      "source_sha256": "bce7a876ae1eccd470de835f947db374f17367dc8d4bf5d68470fe82b023138f",
+      "status": "reviewed",
+      "translation": "⟦shared:0⟧ changes angular allocation or linear span. Original lengths,\nintervals and local axes remain unchanged. ⟦shared:1⟧ exports both source\nlength and projection factor. A shared absolute scale bar is rejected for equal\nmulti-sequence displays. Default axes show 1 and the final source position;\nintermediate ticks use available physical space. Closed circular seams combine\nthe two endpoints. Explicit breaks and labels take priority.\n"
+    },
+    "44": {
+      "source_sha256": "9f9b66fc88de483223b975e7cef289038ec3e9b26fcff2023b386151eb55aad4",
+      "status": "reviewed",
+      "translation": "Default ribbons keep Identity fills and full interval fronts.\nUse ⟦shared:0⟧ to interpolate endpoint sequence colours along the curve. ⟦shared:1⟧ opts into a decorative taper; its\nshoulder retains the translated target span and its marker is not a single\nmatched base or a biological transfer direction. The source endpoints stay in layout exports.\nUse ⟦shared:2⟧ to keep full fronts. Fixed fill, mapped ribbon_fill or an explicit\nribbon fill scale overrides endpoint interpolation. Explicit pident uses a fixed\n0–100 domain, boundaries 0/50/80/90/95/100 and five numerical interval proportions\n50/30/10/5/5%. User scales and guides remain authoritative.\n"
+    },
+    "45": {
+      "source_sha256": "6d31b9f854a1ec42605c52b1ce7f99166774fbe8549697977e77eba843c1a21a",
+      "status": "reviewed",
+      "translation": "### Optional subject taper ⟦shared:0⟧\n"
+    },
+    "48": {
+      "source_sha256": "b57d6121c201e820e91d835517ea571e445869a118a752edfe5af8b588c17840",
+      "status": "reviewed",
+      "translation": "Automatic categorical guides measure text to choose rows/columns, while the\nrender loop measures guide and panel space together. Explicit guide/theme\nsettings win. Circular outer labels share a measured queue at every label count;\n⟦shared:0⟧ reports source row, visibility and available placement fields.\nAn unavailable collision count is not zero. Tiny canvases can remain crowded;\ninspect [output diagnostics](⟦shared:1⟧) at the intended export size.\n"
+    },
+    "49": {
+      "source_sha256": "89d72dcb42dcaf8ad2f942ffe692b37c1b14293be70b2ff748b13e8479d64cbe",
+      "status": "reviewed",
+      "translation": "Automatic Identity rulers reserve length from measured boundary text rather than generic legend swatch sizes. Set ⟦shared:0⟧ or ⟦shared:1⟧, or supply an explicit guide, for a manual length. In circular layouts, parallel axis labels follow the circle glyph by glyph; horizontal and numeric orientations remain straight.\n"
+    },
+    "50": {
+      "source_sha256": "832776fa8559da631b58c7ca6b25aae7d45aa00592ee64e9c593fa83638d29ac",
+      "status": "reviewed",
+      "translation": "## Preview and save ⟦shared:0⟧\n"
+    },
+    "51": {
+      "source_sha256": "c67d1c1b31adffe7a7b7b77e175f364cbbfc8ae8a1073009bc66999e7b282c4b",
+      "status": "reviewed",
+      "translation": "Choose an HSP and identify its two sources. Restore default adjacency and explain a possible omission. Save your chosen view at target size and retain the input table.\n"
+    }
+  }
+}

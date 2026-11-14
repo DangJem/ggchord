@@ -1,0 +1,621 @@
+[
+  {
+    "id": "modes",
+    "title": {
+      "zh": "四模块与六种坐标"
+    },
+    "articles": [],
+    "snippets": [],
+    "figures": [],
+    "result": null
+  },
+  {
+    "id": "real",
+    "title": {
+      "zh": "真实记录比较"
+    },
+    "articles": [
+      "real-data"
+    ],
+    "snippets": [
+      "realimport",
+      "realprepare",
+      "realchord",
+      "reallinear"
+    ],
+    "figures": [
+      "realchord",
+      "reallinear"
+    ],
+    "result": "real"
+  },
+  {
+    "id": "circular",
+    "title": {
+      "zh": "完整圆图注释"
+    },
+    "articles": [
+      "plasmid-catalog",
+      "plasmids",
+      "circular-dense-case"
+    ],
+    "snippets": [
+      "referencebuilder"
+    ],
+    "figures": [
+      "catalogpuc",
+      "catalogduet"
+    ],
+    "result": null
+  },
+  {
+    "id": "validation",
+    "title": {
+      "zh": "校验、清理与层次"
+    },
+    "articles": [
+      "data"
+    ],
+    "snippets": [
+      "validation",
+      "cleaning",
+      "hierarchy"
+    ],
+    "figures": [],
+    "result": "cleaning"
+  },
+  {
+    "id": "formats",
+    "title": {
+      "zh": "文件格式与适配器"
+    },
+    "articles": [
+      "alignments",
+      "protein-alignments",
+      "import-sequences",
+      "import-intervals"
+    ],
+    "snippets": [
+      "adapters",
+      "formats",
+      "genbank",
+      "frontimportgr",
+      "standardblast",
+      "protein",
+      "nativeproteininput",
+      "nativeproteinplot"
+    ],
+    "figures": [
+      "paf",
+      "nativeprotein",
+      "nativeproteinchord"
+    ],
+    "result": null
+  },
+  {
+    "id": "preparation",
+    "title": {
+      "zh": "连接准备与统计"
+    },
+    "articles": [
+      "ribbons"
+    ],
+    "snippets": [
+      "ribbons"
+    ],
+    "figures": [
+      "density"
+    ],
+    "result": "ribbons"
+  },
+  {
+    "id": "pointlinks",
+    "title": {
+      "zh": "区间与点连接"
+    },
+    "articles": [
+      "ribbons",
+      "multi-sequence-start",
+      "multi-sequence-links",
+      "multi-sequence-labels"
+    ],
+    "snippets": [
+      "pointlinks",
+      "frontribbon"
+    ],
+    "figures": [
+      "pointlinks"
+    ],
+    "result": null
+  },
+  {
+    "id": "feature",
+    "title": {
+      "zh": "Feature 与 Position"
+    },
+    "articles": [
+      "annotations"
+    ],
+    "snippets": [
+      "featurestack"
+    ],
+    "figures": [
+      "featurestack"
+    ],
+    "result": null
+  },
+  {
+    "id": "labels",
+    "title": {
+      "zh": "自动与固定标签"
+    },
+    "articles": [
+      "labels"
+    ],
+    "snippets": [
+      "labellayouts",
+      "labels"
+    ],
+    "figures": [
+      "labelauto",
+      "labelradial",
+      "labelarc"
+    ],
+    "result": null
+  },
+  {
+    "id": "decorations",
+    "title": {
+      "zh": "轴、参照条与区域"
+    },
+    "articles": [
+      "views",
+      "annotations"
+    ],
+    "snippets": [
+      "decorations",
+      "focus"
+    ],
+    "figures": [
+      "decorations"
+    ],
+    "result": null
+  },
+  {
+    "id": "tracks",
+    "title": {
+      "zh": "定量轨道与数值域"
+    },
+    "articles": [
+      "tracks",
+      "tracks-statistics"
+    ],
+    "snippets": [
+      "tracks",
+      "multitrack",
+      "tracktile",
+      "comparetrackthin"
+    ],
+    "figures": [
+      "multitrack",
+      "tracktile",
+      "comparetrackthin"
+    ],
+    "result": null
+  },
+  {
+    "id": "recognition",
+    "title": {
+      "zh": "引物、酶切及 feature 搜索"
+    },
+    "articles": [
+      "recognition",
+      "plasmid-catalog",
+      "plasmids",
+      "circular-dense-case"
+    ],
+    "snippets": [
+      "recognition",
+      "referencebuilder"
+    ],
+    "figures": [
+      "recognition",
+      "catalogpuc"
+    ],
+    "result": null
+  },
+  {
+    "id": "projection",
+    "title": {
+      "zh": "CDS 与连接投影"
+    },
+    "articles": [
+      "homology",
+      "projection"
+    ],
+    "snippets": [
+      "projection",
+      "linkprojection"
+    ],
+    "figures": [],
+    "result": "projection"
+  },
+  {
+    "id": "homologs",
+    "title": {
+      "zh": "显式 cluster 与 loci"
+    },
+    "articles": [
+      "homology"
+    ],
+    "snippets": [
+      "homologs"
+    ],
+    "figures": [
+      "homologs"
+    ],
+    "result": null
+  },
+  {
+    "id": "views",
+    "title": {
+      "zh": "局部、分段与源映射"
+    },
+    "articles": [
+      "views"
+    ],
+    "snippets": [
+      "focus",
+      "segment",
+      "mappingposition"
+    ],
+    "figures": [
+      "focus"
+    ],
+    "result": null
+  },
+  {
+    "id": "styles",
+    "title": {
+      "zh": "标度、图例与主题"
+    },
+    "articles": [
+      "styling",
+      "parameters"
+    ],
+    "snippets": [
+      "styling",
+      "adjustments",
+      "parameters"
+    ],
+    "figures": [
+      "styling"
+    ],
+    "result": null
+  },
+  {
+    "id": "output",
+    "title": {
+      "zh": "预览、结果与排序"
+    },
+    "articles": [
+      "output",
+      "diagnostics"
+    ],
+    "snippets": [
+      "frontpreview",
+      "frontsave",
+      "frontgeometry"
+    ],
+    "figures": [],
+    "result": null
+  },
+  {
+    "id": "linear-layout",
+    "title": {
+      "zh": "共线性对齐与显示方向"
+    },
+    "articles": [
+      "collinear-layout"
+    ],
+    "snippets": [
+      "alignbase",
+      "aligncenter",
+      "alignright",
+      "alignanchor",
+      "alignauto"
+    ],
+    "figures": [
+      "alignleft",
+      "aligncenter",
+      "alignright",
+      "alignanchor",
+      "alignauto"
+    ],
+    "result": null
+  },
+  {
+    "id": "arrow-geometry",
+    "title": {
+      "zh": "真实基因箭头样式"
+    },
+    "articles": [
+      "feature-geometry"
+    ],
+    "snippets": [
+      "comparegenedata",
+      "comparegeneshouldered",
+      "comparegeneflush",
+      "comparegenetriangle"
+    ],
+    "figures": [
+      "comparegeneshouldered",
+      "comparegeneflush",
+      "comparegenetriangle"
+    ],
+    "result": null
+  },
+  {
+    "id": "shared-branches",
+    "title": {
+      "zh": "共享分支与点路径"
+    },
+    "articles": [
+      "multi-sequence-links"
+    ],
+    "snippets": [
+      "comparebranchdata",
+      "comparebranchnone",
+      "comparebranchquery",
+      "comparebranchfraction",
+      "comparepointdata",
+      "comparelinkcurve",
+      "comparelinkstraight"
+    ],
+    "figures": [
+      "comparebranchnone",
+      "comparebranchquery",
+      "comparebranchfraction",
+      "comparelinkcurve",
+      "comparelinkstraight"
+    ],
+    "result": null
+  },
+  {
+    "id": "circular-layers",
+    "title": {
+      "zh": "圆图骨架、中心文字与注释轨道"
+    },
+    "articles": [
+      "circular-labels",
+      "circular-layout",
+      "circular-features"
+    ],
+    "snippets": [
+      "comparefinishcircle",
+      "comparebonedouble",
+      "comparebonesingle",
+      "comparebonegap",
+      "compareboneband",
+      "comparebandwidth",
+      "comparecirclecounter",
+      "comparecirclegap",
+      "comparecenter",
+      "comparecenternolength",
+      "comparecenterstyle",
+      "comparefeaturearrow",
+      "comparefeatureblock",
+      "comparefeaturepreset",
+      "comparefinishstack",
+      "comparepositionidentity",
+      "comparepositionstack"
+    ],
+    "figures": [
+      "comparebonedouble",
+      "comparebonesingle",
+      "comparebonegap",
+      "compareboneband",
+      "comparebandwidth",
+      "comparecirclecounter",
+      "comparecirclegap",
+      "comparecenter",
+      "comparecenternolength",
+      "comparecenterstyle",
+      "comparefeaturearrow",
+      "comparefeatureblock",
+      "comparefeaturepreset",
+      "comparepositionidentity",
+      "comparepositionstack"
+    ],
+    "result": null
+  },
+  {
+    "id": "circular-labels",
+    "title": {
+      "zh": "圆图固定标签与自动适配"
+    },
+    "articles": [
+      "circular-labels",
+      "circular-layout",
+      "circular-features"
+    ],
+    "snippets": [
+      "comparefinishcircle",
+      "comparefixedfeature",
+      "comparefixedhorizontal",
+      "comparefixedinside",
+      "comparefixedrotate",
+      "comparefeaturefit",
+      "compareradialfit",
+      "compareautofit",
+      "comparecalloutfit",
+      "compareshrinkfit",
+      "comparewrapfit",
+      "compareellipsisfit",
+      "compareexternaloff"
+    ],
+    "figures": [
+      "comparefixedfeature",
+      "comparefixedhorizontal",
+      "comparefixedinside",
+      "comparefixedrotate",
+      "comparefeaturefit",
+      "compareradialfit",
+      "compareautofit",
+      "comparecalloutfit",
+      "compareshrinkfit",
+      "comparewrapfit",
+      "compareellipsisfit",
+      "compareexternaloff"
+    ],
+    "result": null
+  },
+  {
+    "id": "primers",
+    "title": {
+      "zh": "识别引物、弧线与文字"
+    },
+    "articles": [
+      "primers",
+      "restriction-sites"
+    ],
+    "snippets": [
+      "comparefinishdnabase",
+      "comparefinishprimer",
+      "comparefinishprimerrows",
+      "compareprimerbetween",
+      "compareprimeroutside",
+      "compareprimeroffset",
+      "compareprimerinside",
+      "compareprimerwidth",
+      "compareprimerlabel",
+      "compareprimernolocation",
+      "compareprimerlabelinside"
+    ],
+    "figures": [
+      "compareprimerbetween",
+      "compareprimeroutside",
+      "compareprimeroffset",
+      "compareprimerinside",
+      "compareprimerwidth",
+      "compareprimerlabel",
+      "compareprimernolocation",
+      "compareprimerlabelinside"
+    ],
+    "result": null
+  },
+  {
+    "id": "restriction-sites",
+    "title": {
+      "zh": "限制酶搜索、切点与标签"
+    },
+    "articles": [
+      "primers",
+      "restriction-sites"
+    ],
+    "snippets": [
+      "comparefinishdnabase",
+      "comparefinishsites",
+      "comparefinishsiterows",
+      "comparerestrictionradial",
+      "comparerestrictionelbow",
+      "comparerestrictionstraight",
+      "comparerestrictionenzyme",
+      "comparerestrictionposition",
+      "comparerestrictionorder",
+      "comparerestrictioninside"
+    ],
+    "figures": [
+      "comparerestrictionradial",
+      "comparerestrictionelbow",
+      "comparerestrictionstraight",
+      "comparerestrictionenzyme",
+      "comparerestrictionposition",
+      "comparerestrictionorder",
+      "comparerestrictioninside"
+    ],
+    "result": null
+  },
+  {
+    "id": "scale-families",
+    "title": {
+      "zh": "按角色选择标度、图例与主题"
+    },
+    "articles": [
+      "tracks",
+      "scale-families",
+      "tracks-statistics",
+      "diagnostics"
+    ],
+    "snippets": [
+      "comparescaledata",
+      "comparescalegradient",
+      "comparescalesteps",
+      "comparescaleidentity",
+      "comparescalemanual",
+      "comparescalelinkdata",
+      "comparescalelinkmanual",
+      "comparescalelinkcontinuous",
+      "comparescalefeature",
+      "comparescalepreset",
+      "comparescalegenering",
+      "comparescaleregion",
+      "trackdata",
+      "comparescaletrack",
+      "comparescaletrackgradient",
+      "comparethemes"
+    ],
+    "figures": [
+      "comparescalegradient",
+      "comparescalesteps",
+      "comparescalelinkcontinuous",
+      "comparethememinimal",
+      "comparethemedark"
+    ],
+    "result": null
+  },
+  {
+    "id": "ribbon-statistics",
+    "title": {
+      "zh": "连接密度与显式聚束"
+    },
+    "articles": [
+      "ribbons"
+    ],
+    "snippets": [
+      "comparedensitydata",
+      "comparedensityfour",
+      "comparedensityeight",
+      "comparebundle",
+      "comparebundlesummary"
+    ],
+    "figures": [
+      "comparedensityfour",
+      "comparedensityeight",
+      "comparebundle"
+    ],
+    "result": null
+  },
+  {
+    "id": "workflow-tools",
+    "title": {
+      "zh": "按任务使用工作流与诊断工具"
+    },
+    "articles": [
+      "recognition",
+      "tracks",
+      "scale-families",
+      "tracks-statistics",
+      "diagnostics"
+    ],
+    "snippets": [
+      "comparescaledata",
+      "trackdata",
+      "comparecatalog",
+      "comparediagnostics",
+      "comparetrackfocus"
+    ],
+    "figures": [],
+    "result": null
+  }
+]

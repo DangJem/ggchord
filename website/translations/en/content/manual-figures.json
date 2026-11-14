@@ -1,0 +1,105 @@
+{
+  "source_sha256": "83c7b26792301adbedf4c7fcfe2a7f6eafde9b24c093b9a905c3d30534ab34dd",
+  "strings": {
+    "0/caption": {
+      "source_sha256": "9d651b47bd6982d7e018222cb141450952df1a5b9f28c7370889c766eb6c3b63",
+      "status": "reviewed",
+      "translation": "Chord: retained flagship"
+    },
+    "1/caption": {
+      "source_sha256": "09ecc4435f4f61940e0383f7920b2b2fc49881c6a8ff9656cb558792c6d4c434",
+      "status": "reviewed",
+      "translation": "Collinear: retained flagship"
+    },
+    "2/caption": {
+      "source_sha256": "d7e4d594e2adca56d5dee513c67e8946be007f254a98607889548fdb229d5481",
+      "status": "reviewed",
+      "translation": "Shared-source flagship: Radial"
+    },
+    "3/caption": {
+      "source_sha256": "1f5be176f23cc946159d837b4aeabc35903814646f535ad5b98c638d288fea4d",
+      "status": "reviewed",
+      "translation": "Shared-source flagship: Sankey"
+    },
+    "4/caption": {
+      "source_sha256": "cf4012af272d2bd37e2d578fab5fa1a8960b92da5533bc988be8ecee4eb23b97",
+      "status": "reviewed",
+      "translation": "Four-sequence HSP matrix"
+    },
+    "5/caption": {
+      "source_sha256": "b2d7bd09f9353692ce73dca768b96ebe517aa30fc69bbf7d81ef0efc9289678e",
+      "status": "reviewed",
+      "translation": "Global relationships, synteny and local magnification"
+    },
+    "6/caption": {
+      "source_sha256": "a744ce6bdbd595101a179e03e27536a9d911a010458ca9cddaee70f42272ae75",
+      "status": "reviewed",
+      "translation": "pETDuet-1: complete dense flagship"
+    },
+    "7/caption": {
+      "source_sha256": "eff1c7180b82b754019e6df6ee857962f081e4f07865711a30cf246e35dc938b",
+      "status": "reviewed",
+      "translation": "pSB1C3: complete reference annotations, primers and enzyme profile"
+    },
+    "8/caption": {
+      "source_sha256": "1f36b59573be519d0187384b5d0b271ae96ca080d1aeb651156fd76eb191fc96",
+      "status": "reviewed",
+      "translation": "pUC19: complete reference annotations, primers and enzyme profile"
+    },
+    "9/caption": {
+      "source_sha256": "50d4a850255f8b8cdcde24b2d5e951b7f11b75022a860b50d2b1dcbbf232bac1",
+      "status": "reviewed",
+      "translation": "pBR322: complete reference annotations, primers and enzyme profile"
+    },
+    "10/caption": {
+      "source_sha256": "f547d7e3ab304db7276a0cc881b26cc746fc2e055adc7ba992db4ac5090a774a",
+      "status": "reviewed",
+      "translation": "pBluescript_II_SK_plus: complete reference annotations, primers and enzyme profile"
+    },
+    "11/caption": {
+      "source_sha256": "7acbc7fb5d02d8dc7369bc40693b278c150046b3dd29151289b7361997e8fe0c",
+      "status": "reviewed",
+      "translation": "pET_28a_plus: complete reference annotations, primers and enzyme profile"
+    },
+    "12/caption": {
+      "source_sha256": "16bef57662d3c178792a3fcf80dc1c8dbce6eb5c50c20dc494a3dc54a4c6cff4",
+      "status": "reviewed",
+      "translation": "pETDuet_1: complete reference annotations, primers and enzyme profile"
+    },
+    "13/caption": {
+      "source_sha256": "08ad9024c1fbd88e58cef93c75b38fa058a6f688adeb02d03364c8ef2455c472",
+      "status": "reviewed",
+      "translation": "pDONR221: complete reference annotations, primers and enzyme profile"
+    },
+    "14/caption": {
+      "source_sha256": "7eecbd810ea64180697212f8d71bc5708ba790880173468390fec6994bde215e",
+      "status": "reviewed",
+      "translation": "pcDNA3_1_plus: complete reference annotations, primers and enzyme profile"
+    },
+    "15/caption": {
+      "source_sha256": "c2c4427fa22d9046033cdb6520bb863cc00fc36e769c6819ae850ec2ae39b7fd",
+      "status": "reviewed",
+      "translation": "pTRE_Tight_BI: complete reference annotations, primers and enzyme profile"
+    },
+    "16/caption": {
+      "source_sha256": "8297c7fdc26c45e8a3db08cb9f1047bb863631fe7249e56aade142a57cbf7f94",
+      "status": "reviewed",
+      "translation": "pTRIPZ: complete reference annotations, primers and enzyme profile"
+    },
+    "17/caption": {
+      "source_sha256": "f590bbb5353d3fce57cedededec300aa8aaec325e5bc4403d54e2a1c2f5d585a",
+      "status": "reviewed",
+      "translation": "pCAMBIA1300: complete reference annotations, primers and enzyme profile"
+    },
+    "18/caption": {
+      "source_sha256": "7c050930540a8464c250e462a5a229837a73522f3326b7b209d4f19233f1c69c",
+      "status": "reviewed",
+      "translation": "pEarleyGate_201: complete reference annotations, primers and enzyme profile"
+    },
+    "19/caption": {
+      "source_sha256": "b1198dc4d5f3261acfa196826755bd7c7e0028cb71b6413d7eea966ddb9a1110",
+      "status": "reviewed",
+      "translation": "pSpCas9_BB_2A_GFP_PX458: complete reference annotations, primers and enzyme profile"
+    }
+  }
+}

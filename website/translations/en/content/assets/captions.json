@@ -1,0 +1,895 @@
+{
+  "source_sha256": "92a7fdde0d76ad588ee53fdd1aa2d0a6740decf6afcfc1e701d602b30b7292c1",
+  "strings": {
+    "chord": {
+      "source_sha256": "968bd0ebade60a4b2355c51421755afc78057402bf2e86d56b7bd63b8bfafc47",
+      "status": "reviewed",
+      "translation": "Bundled sequences and alignment intervals in a chord view"
+    },
+    "circular": {
+      "source_sha256": "1d9488caaebbde03eb0404de871b9b4ab4e71bf62296b24b44794e40c36adfa5",
+      "status": "reviewed",
+      "translation": "pUC19 annotations in a circular map"
+    },
+    "collinear": {
+      "source_sha256": "8c5fba7b99f33757bd89849821928d3e929c21b13f055f7c1b4016bcfa8b4d81",
+      "status": "reviewed",
+      "translation": "Bundled records aligned to explicitly selected annotation anchors"
+    },
+    "tracks": {
+      "source_sha256": "20c5ae43d89adebf77bd8aa74720a7362a381fa0f793d9c1b94672868ed2e35f",
+      "status": "reviewed",
+      "translation": "GC fractions computed from the bundled pUC19 DNA"
+    },
+    "focus": {
+      "source_sha256": "cec6f5874e790bb8ee3066f4dd68ddde1c248c3c8b71c41c9238966acfcb3b14",
+      "status": "reviewed",
+      "translation": "Focused sequence windows with source-coordinate axes"
+    },
+    "labels": {
+      "source_sha256": "1a373e79464e6fda7f6d2b26d8bb351908d19d24f940796c4aaaa343459fafa9",
+      "status": "reviewed",
+      "translation": "Automatic placement of informative source gene annotations"
+    },
+    "realchord": {
+      "source_sha256": "30e96f1582bfb7466590d92d0377903913dbc9c3f4243d7e1008f7c096fa03b0",
+      "status": "reviewed",
+      "translation": "Original sequences with explicitly selected CDS and alignment links"
+    },
+    "reallinear": {
+      "source_sha256": "464e1707632177e4eaccb4b65416c6912eb8ad54468115df6531cdfa05c8e608",
+      "status": "reviewed",
+      "translation": "Original sequences, all imported CDS and filtered links"
+    },
+    "plasmid": {
+      "source_sha256": "f67668e9c785eb5da315e8178781fb9917feda6e11a9022d9c7be8cf5df4cd1d",
+      "status": "reviewed",
+      "translation": "pUC19 features, exact primer hits and three selected restriction sites"
+    },
+    "density": {
+      "source_sha256": "53feaea7ce66900a6d26b2137ad0d8d511b20881e811835c46822245a9d6332a",
+      "status": "reviewed",
+      "translation": "Interval density from the original alignment observations"
+    },
+    "pointlinks": {
+      "source_sha256": "1d04ad993f8f373635ca995b723cb909f77b5a9ec47fb01f72bf94f48368ea39",
+      "status": "reviewed",
+      "translation": "Midpoint links derived from existing HSP intervals"
+    },
+    "featurestack": {
+      "source_sha256": "26362f0778b884f60228e509d6e7bbfe351bfb1dbdaa618197befd6c471f9911",
+      "status": "reviewed",
+      "translation": "Stacked overlapping annotations from the pUC19 reference"
+    },
+    "multitrack": {
+      "source_sha256": "1332d144d318938e24ee7089a7b394e8f8efb6962965f081b5cd111bf351da7e",
+      "status": "reviewed",
+      "translation": "pUC19 GC fractions and a three-window moving mean"
+    },
+    "homologs": {
+      "source_sha256": "e5e4101b2dad5d2bc5be44b88c004e0c7156ca50759dbb24bde5af00e75e27fa",
+      "status": "reviewed",
+      "translation": "Blue reverse-strand AmpR arrows and a grey ribbon between identical coding intervals."
+    },
+    "decorations": {
+      "source_sha256": "005812c793231e85d235586bc4f6e5d3c4cbec91738756b623b3fd11c4624d9f",
+      "status": "reviewed",
+      "translation": "Highlighting the pUC19 replication-origin interval"
+    },
+    "labelauto": {
+      "source_sha256": "61d5124828e52dd6526bcd4c75c9ae1aea88a5f38dd4bad5a93a063725f2a619",
+      "status": "reviewed",
+      "translation": "Informative gene annotations with automatic side placement"
+    },
+    "labelradial": {
+      "source_sha256": "0f4e4591e36a1716bc42a30e06d669868cecf7b8bb0ee4b327295d2fb13ac62e",
+      "status": "reviewed",
+      "translation": "The same gene annotations with radial placement"
+    },
+    "labelarc": {
+      "source_sha256": "7c366a02f6b278e6ae6fcbd73cdcedff641b04262cf271b3a92fc67539017fd3",
+      "status": "reviewed",
+      "translation": "The same gene annotations with arc-oriented text"
+    },
+    "styling": {
+      "source_sha256": "acbb7520486eb09a43e317d14867d275f34cc74b6fcbb328ed768fd82aff3618",
+      "status": "reviewed",
+      "translation": "A query-category colour scale on four chord backbones"
+    },
+    "paf": {
+      "source_sha256": "408269cdbd9a56cac4df00c05c1894a865e5ea2d6053c160eb7e342a9fe3e1cc",
+      "status": "reviewed",
+      "translation": "A real minimap2 PAF comparison between two EMALE genomes"
+    },
+    "first": {
+      "source_sha256": "3ce4cfa5800942c43b440511024dd301db2072039e67f66b8e092d18afee052c",
+      "status": "reviewed",
+      "translation": "Your first plot: two bundled sequences, gene arrows and observed alignment intervals"
+    },
+    "showcasechord": {
+      "source_sha256": "b6909809404cc33fe4746e9074853b89aa2a5547388294582ed14b170fc34710",
+      "status": "reviewed",
+      "translation": "Four original genomes with CDS sampled separately by source strand"
+    },
+    "showcaseplasmid": {
+      "source_sha256": "6de6738858b7dd6b4caedf327c3b98cb8d938f81546b24baf444387c6a904ade",
+      "status": "reviewed",
+      "translation": "Dense pETDuet-1 map: features, reference primers and grouped restriction sites"
+    },
+    "showcasecollinear": {
+      "source_sha256": "9e147f13cd0973ebc2f7a7d47d12dac8d5c68aa0fc51fcbd94397102ee19aad5",
+      "status": "reviewed",
+      "translation": "Four-genome collinearity: strand-separated features and routed cross-row links"
+    },
+    "learnseq": {
+      "source_sha256": "87fa16e34d75015cedc3f7534fd0fb27ad8899a15bc75b9cfb2916570351ab19",
+      "status": "reviewed",
+      "translation": "Chord step1: sequence backbones"
+    },
+    "learnlinks": {
+      "source_sha256": "71346f58b28572ebd4927e2d26aa1761d6862390fb8a19cfd4992116569efe2d",
+      "status": "reviewed",
+      "translation": "Chord step2: observed comparisons"
+    },
+    "learngenes": {
+      "source_sha256": "72fa7cdf887efc08898990c3208845e9107b170ca0c2274665575aad1f564465",
+      "status": "reviewed",
+      "translation": "Chord step3: selected genes"
+    },
+    "learnlabels": {
+      "source_sha256": "70a5d9e85a58dd01943a96fe2d1e153409479915e730fca895231a64e714a1d7",
+      "status": "reviewed",
+      "translation": "Chord step4: labels for selected features"
+    },
+    "linearseq": {
+      "source_sha256": "4c4fb11445e3928553a551f731cfbda13bc10bda72a1e3e49a0b9fb58a468b41",
+      "status": "reviewed",
+      "translation": "The same backbones with linear coordinates"
+    },
+    "linearlinks": {
+      "source_sha256": "e049aac226938ce4e16633a3e55fe5b58a01bd63ab4b33e1145955ed88436aaa",
+      "status": "reviewed",
+      "translation": "The same observed links with linear coordinates"
+    },
+    "linearlabels": {
+      "source_sha256": "bb4d3197d7b77b9b9ec2275be944ab86e58749e88cc654d5768ef5cff637ad6d",
+      "status": "reviewed",
+      "translation": "The same genes and labels with linear coordinates"
+    },
+    "plasmidbackbone": {
+      "source_sha256": "32305153bf04798bc2e6c684797f8cbdcbc732349ddb0760747a72e1d844b502",
+      "status": "reviewed",
+      "translation": "pUC19 step1: double backbone"
+    },
+    "plasmidfeatures": {
+      "source_sha256": "54cc8a92e423251db298a709b449682393a63db7652f2ab2b97f380e64f9eb5e",
+      "status": "reviewed",
+      "translation": "pUC19 step2: features"
+    },
+    "plasmidtext": {
+      "source_sha256": "15dd9f7eed80430041f4815db98afda834ee2a74d6e0d96e971ad06f3c913f79",
+      "status": "reviewed",
+      "translation": "pUC19 step3: labels"
+    },
+    "catalogpsb": {
+      "source_sha256": "0d733b967760aa5fef3131a0e6ccf9972665517632aee2514100fcadd585186a",
+      "status": "reviewed",
+      "translation": "pSB1C3: source-backed feature map"
+    },
+    "catalogpuc": {
+      "source_sha256": "7aba612cbde20cc19a2a4277904d24d8af1f884d6d8745e89aa473220379d3fa",
+      "status": "reviewed",
+      "translation": "pUC19: source-backed feature map"
+    },
+    "catalogpbr": {
+      "source_sha256": "0c52476e68284fb273831bc89ab29bd1768b942d7b43806fa9b57aa43ba9b3bf",
+      "status": "reviewed",
+      "translation": "pBR322: source-backed feature map"
+    },
+    "catalogblue": {
+      "source_sha256": "61a92cf33f9e16ef55915d8bab945235dadd0178b2b760c0e6252ff4f5dd98e2",
+      "status": "reviewed",
+      "translation": "pBluescript II SK(+): source-backed feature map"
+    },
+    "catalogpet": {
+      "source_sha256": "1c20d4aa904701468583a764f2d10e640013b8e1cd0b799476edf120d867bd09",
+      "status": "reviewed",
+      "translation": "pET-28a(+): source-backed feature map"
+    },
+    "catalogduet": {
+      "source_sha256": "ef3b212b84ef90381b28fcd4c65b85a6ac2a8d0374d5704689fe0618ca980915",
+      "status": "reviewed",
+      "translation": "pETDuet-1: source-backed feature map"
+    },
+    "catalogdonr": {
+      "source_sha256": "01bf2572ed8cbc8bac59f5fd9e8bee3b051a0a01b836d58d2239d05b397591a7",
+      "status": "reviewed",
+      "translation": "pDONR221: source-backed feature map"
+    },
+    "catalogpcdna": {
+      "source_sha256": "d22e125b32bb203bc237ff041a1efb673c1e3169e2cd38311c696427e2cd0852",
+      "status": "reviewed",
+      "translation": "pcDNA3.1(+): source-backed feature map"
+    },
+    "catalogtre": {
+      "source_sha256": "efb4cee3cc7bd5a0760f8154c3bb5dac7cff3ec378c3c0a06caacfa7ea7d1e1e",
+      "status": "reviewed",
+      "translation": "pTRE-Tight-BI: source-backed feature map"
+    },
+    "catalogtripz": {
+      "source_sha256": "8fbdfcf242a856cb2719009462ed2bb94b539c74a7625e3951ff719cdafc6f0e",
+      "status": "reviewed",
+      "translation": "pTRIPZ: source-backed feature map"
+    },
+    "catalogcambia": {
+      "source_sha256": "f022f3006d96b6c2fb2959ab1c285b975b96f8ed5aed3534d58b628b1e0bae0c",
+      "status": "reviewed",
+      "translation": "pCAMBIA1300: source-backed feature map"
+    },
+    "catalogearley": {
+      "source_sha256": "0ac6ab5c451a140db37af1f1dfe7f778434bd0fff7df6664540f2450695cea36",
+      "status": "reviewed",
+      "translation": "pEarleyGate 201: source-backed feature map"
+    },
+    "catalogcas": {
+      "source_sha256": "78fde5e0015432fd8c7a6653c1ec4246013c4ecb600f31e601444ff7cdd676e5",
+      "status": "reviewed",
+      "translation": "pSpCas9(BB)-2A-GFP (PX458): source-backed feature map"
+    },
+    "firstchord": {
+      "source_sha256": "3d2f8827f2becec1a25c92a2acc8aeb0e4f4ca4000cdaa8b7fb68295cb1d7b19",
+      "status": "reviewed",
+      "translation": "Two bundled sequence backbones and their observed alignment ribbons"
+    },
+    "firstlinear": {
+      "source_sha256": "19a6dd1f8c335d1a7f93787c0c7d82acf63b868adf0ef04ebfb7594d66fb159e",
+      "status": "reviewed",
+      "translation": "Two sequence rows share a base-pair scale and are joined by aligned intervals"
+    },
+    "firstcircle": {
+      "source_sha256": "3f9a26c378665ecadf175a0a08acc08d5400edd14064aeac85d39b2f60a12d0e",
+      "status": "reviewed",
+      "translation": "A circular pUC19 backbone with its name and length"
+    },
+    "firstfeatures": {
+      "source_sha256": "9f2003f58b6a119ec95a17f7d536d833286fe77b039990f8a1ea8efd2c51f15d",
+      "status": "reviewed",
+      "translation": "The pUC19 replication-origin interval on the circular backbone"
+    },
+    "practicechord": {
+      "source_sha256": "a9b98659d491fb08021654c9d2c38595d847c950a604dfb03189d557236afb12",
+      "status": "reviewed",
+      "translation": "Two-sequence chord plot with one gene arrow and source annotation per sequence"
+    },
+    "practicelinear": {
+      "source_sha256": "263597d251120b37826ed39b3ee3f0c8df6027d13ad7ccade84c47a3039df0de",
+      "status": "reviewed",
+      "translation": "Two-row collinear plot with gene arrows, annotations and a 10 kb scale bar"
+    },
+    "practiceplasmid": {
+      "source_sha256": "0b9b7c3c6b971ce526dc91843562c6ddabecc736f676f199e75b184f48fe9d2d",
+      "status": "reviewed",
+      "translation": "pUC19 circular map with its labelled replication origin"
+    },
+    "frontbackbone": {
+      "source_sha256": "03dd2d5bc3cd61e2b4d525b8d504b60827f0943723b46219b3e1dbc3a47a0d6b",
+      "status": "reviewed",
+      "translation": "Default arc backbones for four sequences"
+    },
+    "frontribbon": {
+      "source_sha256": "a4ea0e13791488e1e54ee033f17cf0d1cc947b9ca81ad95872955dd145a2ebe8",
+      "status": "reviewed",
+      "translation": "One alignment ribbon added"
+    },
+    "frontfeature": {
+      "source_sha256": "5829c2fcc2e0f94aecf2c9e2dedee9af280bc93a2603bf99a22dd9a0f5c2a434",
+      "status": "reviewed",
+      "translation": "One integrase CDS added to the green backbone"
+    },
+    "frontrotation": {
+      "source_sha256": "a74b75525c7ca6bb9fc90c1606dd512608b3ae570955eb7d89146d52c83aba94",
+      "status": "reviewed",
+      "translation": "Chord layout rotated 90 degrees counterclockwise from the default"
+    },
+    "frontgap": {
+      "source_sha256": "44bbf055a7154143692113dd68752d4a256cc28cfb08092e32c63832dade96b7",
+      "status": "reviewed",
+      "translation": "Wider gaps between adjacent backbones"
+    },
+    "frontradius": {
+      "source_sha256": "cb37e768eff858470424509a00f5e3c9945862bb383a4558e99f0ee25cee2c43",
+      "status": "reviewed",
+      "translation": "Move the MT118296.1 backbone inward"
+    },
+    "frontcurvature": {
+      "source_sha256": "4ba48f56b75dc8b4b709e8bbe90631888bd3740b7abcb1a715cb3e8f1a1712fa",
+      "status": "reviewed",
+      "translation": "Draw MT118296.1 as a straight segment"
+    },
+    "frontorientation": {
+      "source_sha256": "96b76784c274a1a52fac153762450412dac56a8964dcd095d96e1573d779c4d5",
+      "status": "reviewed",
+      "translation": "Reverse the display direction of MT118296.1"
+    },
+    "frontroute": {
+      "source_sha256": "3f7d72a19dec7fa40496b47c79582367b6e45a7637d1390e29b12228bbe1b055",
+      "status": "reviewed",
+      "translation": "Move the ribbon control upward"
+    },
+    "frontnoavoid": {
+      "source_sha256": "6156cf8d2626972a24739b057cda1dca47c9d5e67a2f07a4aeea504fb8dee722",
+      "status": "reviewed",
+      "translation": "Fixed clearance overlaps the CDS"
+    },
+    "frontsmooth": {
+      "source_sha256": "4a51ebbdb68b99bd4cbf81025fc8a9f730801413b1e1c0fc60e7bcee32568915",
+      "status": "reviewed",
+      "translation": "The ribbon leaves smooth clearance near the CDS"
+    },
+    "frontseqlabels": {
+      "source_sha256": "31c6f0ad068b0c72cc8be399213b2b2c41252525caa861619f7f7dbd8aa0bbb9",
+      "status": "reviewed",
+      "translation": "Move sequence labels inward and set them horizontally"
+    },
+    "frontgenelabels": {
+      "source_sha256": "276d8da8b471ab191966be1e4b72a04798e37a918f7304ce32896676b01ecf58",
+      "status": "reviewed",
+      "translation": "Add the feature name while retaining backbones, ribbon and CDS"
+    },
+    "frontmarkers": {
+      "source_sha256": "ba05f8ccac123ec1ecd38d129aa06138724e1605bee479066e66450b078d73de",
+      "status": "reviewed",
+      "translation": "An interval highlight and a directed point link"
+    },
+    "frontorder": {
+      "source_sha256": "f2a2bb1f38777c54b2cf906ac5ce42d1f00cf649cc9785ca75fbeeac12fe3f91",
+      "status": "reviewed",
+      "translation": "Swap the display order of two backbones"
+    },
+    "frontlinearbase": {
+      "source_sha256": "555cbc9a8ddbc724d3f5e53e4b1db6ab4a38a8ad1974c9325e7336f60d675d6d",
+      "status": "reviewed",
+      "translation": "Four collinear backbones"
+    },
+    "frontlinearlink": {
+      "source_sha256": "9acfb5db0ef2d874224b0f6868c830644457f9a7a4c8b346c4d7e1b1d248ec6a",
+      "status": "reviewed",
+      "translation": "One alignment ribbon across four rows"
+    },
+    "frontlinearcds": {
+      "source_sha256": "2b489597e9cdbfaa82d56644fc64572ce35dc91fb5ff534bf15073546e8a5bda",
+      "status": "reviewed",
+      "translation": "A CDS arrow on the third, green row"
+    },
+    "frontlineargap": {
+      "source_sha256": "f280acdaaca3e059e6f4c5b192e57f718c9770bb356b2e31362cb5f2e31b2aef",
+      "status": "reviewed",
+      "translation": "Wider spacing between collinear rows"
+    },
+    "frontlinearscale": {
+      "source_sha256": "80fd1ad28b052ec827f5892c606f1733d5639b2f9af778253afd76c57f0968f6",
+      "status": "reviewed",
+      "translation": "A 10 kb scale bar"
+    },
+    "frontcirclestyle": {
+      "source_sha256": "0943dd1a13304d76441fdbd188736bcd4c173d5e7334d41c696757b4b394af16",
+      "status": "reviewed",
+      "translation": "A single backbone for pUC19"
+    },
+    "frontcirclerotation": {
+      "source_sha256": "1b9c555adf4f9721f4e86f227aae1b7c635a6039b08fc46d0594cc59f6a30546",
+      "status": "reviewed",
+      "translation": "pUC19 with the sequence coordinate origin at 9 o’clock"
+    },
+    "frontlinearcross": {
+      "source_sha256": "0bb3d49146cf65927bf5196cf4014ac68d88eced1b5347ce32f51a86cf976592",
+      "status": "reviewed",
+      "translation": "A ribbon crossing the second row"
+    },
+    "mappingexample": {
+      "source_sha256": "de2dc74caf80e96e018db3c752385bb478e2f79bea8b7d6f86a209d533f593c4",
+      "status": "reviewed",
+      "translation": "Map alignment identity to ribbon colour"
+    },
+    "parameterexample": {
+      "source_sha256": "36a091bf002c179702f697104352d2143a9a7f8bbd6ea2afea54d8bb33561171",
+      "status": "reviewed",
+      "translation": "Set one backbone radius by sequence name"
+    },
+    "segment": {
+      "source_sha256": "97974e66b84e46c17ce6758ff0a5fa5ef463b5e4c3b3ad0165501cdc9a82cf2f",
+      "status": "reviewed",
+      "translation": "Two windows on one sequence. The right window is displayed in reverse."
+    },
+    "mappingposition": {
+      "source_sha256": "c689f508ea0a94ddfc7be05c1f20f7860245452b7c0c3aea66dc63cd58763951",
+      "status": "reviewed",
+      "translation": "The dot marks 10,100 bp on the first source sequence."
+    },
+    "recognition": {
+      "source_sha256": "c0ff9fecc9d33a1e0deef1d211fb97536466e02b80bd706f21504002b7c28355",
+      "status": "reviewed",
+      "translation": "Known primer matches and selected restriction sites on pUC19."
+    },
+    "nativeprotein": {
+      "source_sha256": "ad923a8c047a0baa9233037dd9a94a2157d8cea6b8373b6f384e590ed46cc27e",
+      "status": "reviewed",
+      "translation": "Four complete proteins and three adjacent BLASTp ribbons, with a 50-aa scale bar"
+    },
+    "nativeproteinchord": {
+      "source_sha256": "d21fba95eb1e09672f38f7d1531bfbfc344ab66b5e9750afd901d43cf8445682",
+      "status": "reviewed",
+      "translation": "Four complete proteins and all six pairwise BLASTp alignments"
+    },
+    "parameteruniform": {
+      "source_sha256": "93e84d609d4bb4f0de8f2acc0155e7165b7cf4ee52463837617a8b4ece42e8eb",
+      "status": "reviewed",
+      "translation": "Uniform radius: every sequence uses 1"
+    },
+    "parametervector": {
+      "source_sha256": "81e57a10eb1467eff003650473307c01a96238de9dea68005f48193404899967",
+      "status": "reviewed",
+      "translation": "Ordered radii: the second displayed sequence uses 0.72"
+    },
+    "parameterstrand": {
+      "source_sha256": "a9534229872f524c1bc1adea006d5d80f08f7b4da06f13a3a22ec1640ed7af94",
+      "status": "reviewed",
+      "translation": "Opposite offsets for forward and reverse CDS"
+    },
+    "parameterwidth": {
+      "source_sha256": "9158c6df2f75a827cfe3257ffba69f9863eee7579f601a2fa640edf4c0d92d2b",
+      "status": "reviewed",
+      "translation": "Different widths for forward and reverse CDS"
+    },
+    "parameterlabels": {
+      "source_sha256": "84ad79a4f014f5c73a6998bd31b903a4ab2fcd61a4497e36da57412681a5c754",
+      "status": "reviewed",
+      "translation": "Named label radii for selected sequences"
+    },
+    "frontcrosswidth": {
+      "source_sha256": "335971ab49ab649995858cf520a68c48240b8a6a0580eccef4e562b0a0272bc1",
+      "status": "reviewed",
+      "translation": "A dedicated width for cross-row outlines"
+    },
+    "frontcrosssame": {
+      "source_sha256": "3027ed4f89b88ca72700aa8e0401528e79ad478334e3c81688753c242b12f8d3",
+      "status": "reviewed",
+      "translation": "Cross-row outlines inherit the ordinary width"
+    },
+    "manualgenelabels": {
+      "source_sha256": "ee9b0c4764d4592209f2aa56ee72ae176e9cf64c3df2dfa36316254d53fc4659",
+      "status": "reviewed",
+      "translation": "Manual gene labels in a chord view"
+    },
+    "alignleft": {
+      "source_sha256": "6cf911479c85731371949420be19eab3077d9e14c2ca7248c5d649288c2bd009",
+      "status": "reviewed",
+      "translation": "Same four sequences and observed alignments: left alignment."
+    },
+    "aligncenter": {
+      "source_sha256": "245d64d9229df6a8aa8a406531153f53e9d5c5fbc373e6e094ef0fb8ff568fe0",
+      "status": "reviewed",
+      "translation": "Only align changes to center: complete sequence midpoints align."
+    },
+    "alignright": {
+      "source_sha256": "6b274faafad13122108bb366d696171d28611e243040061b9f5ba738e6a23c10",
+      "status": "reviewed",
+      "translation": "Only align changes to right: complete sequence right edges align."
+    },
+    "alignanchor": {
+      "source_sha256": "3637acce97207c69964391da6391dbd24828f8045eba098e034eb55338d84920",
+      "status": "reviewed",
+      "translation": "Keep left alignment and add midpoint anchors; these geometric anchors do not assert homology."
+    },
+    "alignauto": {
+      "source_sha256": "c4547d8c0a0a5031b204bafd8af0b5438726eac8106cfe7878bb975d2e5d2215",
+      "status": "reviewed",
+      "translation": "Enable automatic display orientation at the default 0.1 support threshold; row order and source endpoints remain unchanged."
+    },
+    "tracktile": {
+      "source_sha256": "9d68fa359e08aa1c6a521923eafb2d53a09a15103c3443fb45e6e35d43757962",
+      "status": "reviewed",
+      "translation": "The same real GC windows: a fixed-width band encodes fraction by colour, not height."
+    },
+    "comparegeneshouldered": {
+      "source_sha256": "f400919a428314f179cb37f842ee557fd77807e459fa46e4cacb3f4241bdce6e",
+      "status": "reviewed",
+      "translation": "The same source integrase: default shouldered arrow."
+    },
+    "comparegeneflush": {
+      "source_sha256": "fa6fc8e1bc80f7b824d3eb41876b05997d8c09b4ed3f54cb6eedfcfd72006865",
+      "status": "reviewed",
+      "translation": "Only arrow_head_style changes to flush."
+    },
+    "comparegenetriangle": {
+      "source_sha256": "469fd062c5b7376f984fa868cb5d95639f82b201daa4b4896deda419e38b9bbd",
+      "status": "reviewed",
+      "translation": "Only arrow_head_style changes to triangle, a full triangular wedge."
+    },
+    "comparebranchnone": {
+      "source_sha256": "73ee0c3305c61384cdeda8dff3904aa25f83eb03c55c3a0af9d042e9222be534",
+      "status": "reviewed",
+      "translation": "Synthetic demonstration: two ribbons from the same query interval, drawn independently."
+    },
+    "comparebranchquery": {
+      "source_sha256": "bc856e2ca19ac7f6b3510c01f5148427bf61063839e140a5fd87e25078ec3382",
+      "status": "reviewed",
+      "translation": "Same synthetic input: enable query branching at the default 0.15 fraction."
+    },
+    "comparebranchfraction": {
+      "source_sha256": "364c6ab2a35aa8c452c5318a7b8106deb805493cdb52286cd846d4ef0beb3069",
+      "status": "reviewed",
+      "translation": "Keep query branching and change only the trunk fraction from 0.15 to 0.35."
+    },
+    "comparelinkcurve": {
+      "source_sha256": "fb27f22d374eb25212c7c5352516edca558cdcb7b795822d3b462765d1b1def7",
+      "status": "reviewed",
+      "translation": "Same synthetic input: curved links connect interval midpoints."
+    },
+    "comparelinkstraight": {
+      "source_sha256": "d2343720e399c529bc4317043dd84edbe3784df1b694e2857faaa2ded9bafded",
+      "status": "reviewed",
+      "translation": "Only link_type changes to straight; midpoint anchors stay fixed."
+    },
+    "comparetrackthin": {
+      "source_sha256": "c5be1cb3e7c40e371747c1170c03dcbef47d4fc64c48813221f8d11432e9aee0",
+      "status": "reviewed",
+      "translation": "Same pUC19 GC values: only tile band width changes from 10 mm to 4 mm."
+    },
+    "comparecenter": {
+      "source_sha256": "0c6858d26b0760d19eddb60860623468f85d79d7628f4c7004b884d9447a6f78",
+      "status": "reviewed",
+      "translation": "Centre name and length use independent default text styles."
+    },
+    "comparecenternolength": {
+      "source_sha256": "d76e72078876b1f179580d1117505cae8c5aa10be8af23226f6413ae73c0f059",
+      "status": "reviewed",
+      "translation": "Hide only centre length; retain the name."
+    },
+    "comparecenterstyle": {
+      "source_sha256": "1b54e1f58405cb7afc3631f197658a464e75abb76ffac67d76c105fa6520db54",
+      "status": "reviewed",
+      "translation": "Change only centre name size; length style stays fixed."
+    },
+    "comparebonedouble": {
+      "source_sha256": "060ac89785b9201057a4534b6a913bc4b1170ad1b719b80031e8b2926368800a",
+      "status": "reviewed",
+      "translation": "Double backbone on the same pUC19."
+    },
+    "comparebonesingle": {
+      "source_sha256": "cf39bf29ce345c40735401cf239edbd9357cbc16d149646dc4a8d22649b90c45",
+      "status": "reviewed",
+      "translation": "Change only to single."
+    },
+    "compareboneband": {
+      "source_sha256": "eb48cc6cef20e678738a0484ec74118d57ad0289c5d8616dd9da85c203f8a61d",
+      "status": "reviewed",
+      "translation": "Same pUC19 with only backbone style changed to band, rendered after the confirmed fix."
+    },
+    "comparebonegap": {
+      "source_sha256": "8e444f63cd058b74138530c0af73101604468573989c94f0c55018441a9a72d9",
+      "status": "reviewed",
+      "translation": "Double-line gap changes from 0.025 to 0.05."
+    },
+    "comparecirclecounter": {
+      "source_sha256": "4c0c497ca25700318aefd0db72f82733034811ec8c5de3ce283c352647493e28",
+      "status": "reviewed",
+      "translation": "Same circle, with coordinates increasing counterclockwise."
+    },
+    "comparecirclegap": {
+      "source_sha256": "74297319339f7f078a8ee9f714c7d5c1a0f66807bb8a43ff030674e5846ff2f7",
+      "status": "reviewed",
+      "translation": "Set only the circular opening to 25 degrees."
+    },
+    "comparefixedfeature": {
+      "source_sha256": "c9849a664e1bda9ccbbc221edbd05d541cea082d10ee7ce1dcfc99d2cc4b201f",
+      "status": "reviewed",
+      "translation": "Fixed labels follow feature direction."
+    },
+    "comparefixedhorizontal": {
+      "source_sha256": "629b2d07dfd0caa0adea3518522c7a36175979395f1fc00f51940c95ea87a060",
+      "status": "reviewed",
+      "translation": "Change only fixed text orientation to horizontal."
+    },
+    "comparefixedinside": {
+      "source_sha256": "3db5303fece2592bb8483ceed2827946efdc3ae33f1bdefa197da59a06044fa3",
+      "status": "reviewed",
+      "translation": "Change only fixed label side to inside."
+    },
+    "comparefixedrotate": {
+      "source_sha256": "bce6886be6b4596abbd681682a5cb592cac032ec15c6532aa62e9f9dba1d18bb",
+      "status": "reviewed",
+      "translation": "Add only a 30-degree fixed-label rotation."
+    },
+    "comparefeaturefit": {
+      "source_sha256": "81d6c08e0263aca62532bb47ec2429cf0d8c8e6c2d9ba712cc8ef2af19f9eca6",
+      "status": "reviewed",
+      "translation": "Same annotations with feature-first label placement."
+    },
+    "compareradialfit": {
+      "source_sha256": "fef2394e6ec7ea38ee19ec5100c185fb53699f2b769bbf839a67cf6177cdc27f",
+      "status": "reviewed",
+      "translation": "Change only layout to radial."
+    },
+    "compareautofit": {
+      "source_sha256": "9cbdc9c956eeed2d530b594f0028140018c9351632d31244f830a545d7f05c50",
+      "status": "reviewed",
+      "translation": "Change only layout to auto."
+    },
+    "comparecalloutfit": {
+      "source_sha256": "eeb30ac764df294db51cc4d81c6352127a93fc302691544a20fb5c41901a9499",
+      "status": "reviewed",
+      "translation": "Change only layout to callout."
+    },
+    "compareshrinkfit": {
+      "source_sha256": "cc0aff67643bf952dc98073cfa0e8b990fd646e8bf6bbeeefcb4bcddfbca3958",
+      "status": "reviewed",
+      "translation": "Change only fitting to shrink; retain the default 1.5 minimum size."
+    },
+    "comparewrapfit": {
+      "source_sha256": "1b7855f304513391e5c2e0f456df2b5684ab9eb763cf78127c0b0ce4103f8164",
+      "status": "reviewed",
+      "translation": "Set only a 14-character wrap width; text remains source names plus coordinates."
+    },
+    "comparepositionidentity": {
+      "source_sha256": "69f33879fb5b31d290453676293da1e244b5d856523c84d75089d92abeaca2ea",
+      "status": "reviewed",
+      "translation": "Actual overlapping annotations at their original common placement."
+    },
+    "comparepositionstack": {
+      "source_sha256": "99db7746b0b26fa36d5e9f22dd381ff607acc6779e4d86c861a3d7520451c516",
+      "status": "reviewed",
+      "translation": "Replace only the shared Position; features and labels follow the same lanes."
+    },
+    "compareprimerbetween": {
+      "source_sha256": "8c69d349a04fcc781d679720ff618399d1f9db1c65a89e0136c16a9a1c741c37",
+      "status": "reviewed",
+      "translation": "Same three computed bindings, with primer arcs between backbone lines."
+    },
+    "compareprimeroutside": {
+      "source_sha256": "fcf3043a940a18aefcbf64b3b6a4710c3a95cc07762fc1729ea44ebcfd58d66c",
+      "status": "reviewed",
+      "translation": "Move only primer arcs outside."
+    },
+    "compareprimerinside": {
+      "source_sha256": "2b2221a2a54cbaf4d6e2e81360679cc83265f440fdf6656b8aff7c8d1c5f2c5e",
+      "status": "reviewed",
+      "translation": "Move only primer arcs inside."
+    },
+    "compareprimerwidth": {
+      "source_sha256": "6e48a9d9e2f3aa068b96027d178fd5668a7719c9b4609bc93fdcf2a7851f7b8c",
+      "status": "reviewed",
+      "translation": "Change only primer arc width from 0.026 to 0.05."
+    },
+    "compareprimerlabel": {
+      "source_sha256": "a6760b92fdc704b052da08b9cce301bce395ecbe36bbc539bf4f6fa7761a30cd",
+      "status": "reviewed",
+      "translation": "Primer labels include actual binding ranges by default."
+    },
+    "compareprimernolocation": {
+      "source_sha256": "f02fd4bd716fa036b5b2f926b57dea6623eaadd536fc60bb3b809d2b53db871a",
+      "status": "reviewed",
+      "translation": "Hide only range text; arcs still encode complete binding intervals."
+    },
+    "compareprimerlabelinside": {
+      "source_sha256": "02730e05e00de4a4ecd5acbdc7b481b55c23a974d2d696ad8b29a14c6ac69cf9",
+      "status": "reviewed",
+      "translation": "Move only primer text inside."
+    },
+    "comparerestrictionradial": {
+      "source_sha256": "9efcd2300e9ee763b9c857a3347b8f06f0d398abab743cbce3e5f25697e8d0ec",
+      "status": "reviewed",
+      "translation": "Same computed restriction sites with default radial leaders."
+    },
+    "comparerestrictionelbow": {
+      "source_sha256": "c034e483402b997b11d973ec9679ab5f6b4bef5a24846ac4cfaa882990c4a8bc",
+      "status": "reviewed",
+      "translation": "Change only leader routing to elbow."
+    },
+    "comparerestrictionstraight": {
+      "source_sha256": "2459e96240ea469fe6c6d0a7e3d8420299567214329bd51e202278e433734cc6",
+      "status": "reviewed",
+      "translation": "Change only leader routing to straight."
+    },
+    "comparerestrictionenzyme": {
+      "source_sha256": "0db85e2363b09ff850a45b3cffd368a56b37b220bdba2017c0d0943227b34bd7",
+      "status": "reviewed",
+      "translation": "Show only enzyme names; retain cut coordinates in data."
+    },
+    "comparerestrictionposition": {
+      "source_sha256": "2d75f8ba21e4161b39095a519fcba1346636431bc683ecb44aafac89e117d24f",
+      "status": "reviewed",
+      "translation": "Show only positions; source enzyme names are retained."
+    },
+    "comparerestrictionorder": {
+      "source_sha256": "68e0d458258a43d9aef4b67bda04715c8b26ec39ea58132ad3aa62e76fd55385",
+      "status": "reviewed",
+      "translation": "Change only text order to position then enzyme."
+    },
+    "comparerestrictioninside": {
+      "source_sha256": "182b2aea14f650149e37c4cb5a252a93e2885aa90ffea97541af0f3468f21123",
+      "status": "reviewed",
+      "translation": "Move only restriction labels inside."
+    },
+    "compareshortauto": {
+      "source_sha256": "b3c851ffa7418b4a46ab1cd231975fe84a9ef63b5e0230f1c479189d6d1c1eb7",
+      "status": "reviewed",
+      "translation": "Same observed CDS with an oversized requested head to demonstrate auto fallback."
+    },
+    "compareshortwedge": {
+      "source_sha256": "eb89681bd74cc6eb76a9a1975b712fc9661641796771279593100423f7811dd1",
+      "status": "reviewed",
+      "translation": "Same observed CDS with an oversized requested head to demonstrate wedge fallback."
+    },
+    "compareshortblock": {
+      "source_sha256": "007c90dc7681a1d5308a4e61018d903a9e780e7158932565a7698b21645975eb",
+      "status": "reviewed",
+      "translation": "Same observed CDS with an oversized requested head to demonstrate block fallback."
+    },
+    "compareseqlabelarc": {
+      "source_sha256": "a5cceb81a6c19ed980529c8b22070744c4d84b266f80e2c89e78bec060f809f0",
+      "status": "reviewed",
+      "translation": "Default sequence text follows each arc."
+    },
+    "compareseqlabelhorizontal": {
+      "source_sha256": "14a665d759622ec7275297cb1f52e3870c181d9bcef9363db14135d23bae8154",
+      "status": "reviewed",
+      "translation": "Change only sequence text orientation to horizontal."
+    },
+    "compareseqlabelrotation": {
+      "source_sha256": "9ad93ce532b3f4c369dee7a3cceb0a1868a0698db3bccbc57af4f22c1f136052",
+      "status": "reviewed",
+      "translation": "Add only 30 degrees to arc-oriented sequence text."
+    },
+    "compareregioninside": {
+      "source_sha256": "a90e1cda5dec42ac025fc143f0177fed7c016703f4ce4e2211c83cd6b156b832",
+      "status": "reviewed",
+      "translation": "Highlight the observed query interval inside."
+    },
+    "compareregionoutside": {
+      "source_sha256": "48e5a771e1cf2efd2ca8444bed991beb57791f4e145edc32475c8c98afe904f6",
+      "status": "reviewed",
+      "translation": "Move only the same interval highlight outside."
+    },
+    "comparescalegradient": {
+      "source_sha256": "3be6ac7fdfd0294876c7129501725ff1f602f6b2c4eda1c48577a310ddf3e595",
+      "status": "reviewed",
+      "translation": "Continuous identity gradient for the same observed HSPs."
+    },
+    "comparescalesteps": {
+      "source_sha256": "525db0b59c63b9de6187774a46b1d72fcb3c6c74c22f4e46c0197f928e702a43",
+      "status": "reviewed",
+      "translation": "Replace only the fill scale with explicit steps; source identity stays fixed."
+    },
+    "comparescalelinkcontinuous": {
+      "source_sha256": "83c1da69990d0cf5d791f26862fb2cd1c1f3923ed1a0034abe1b8c8da46f0145",
+      "status": "reviewed",
+      "translation": "Same observed HSP midpoints with identity mapped to colour, opacity and width."
+    },
+    "comparethememinimal": {
+      "source_sha256": "e738a572da977a06fc483afbf27157b847b3b622b8ac207c91acbb8bf8b5ad36",
+      "status": "reviewed",
+      "translation": "Same backbones and default mapping; minimal theme changes non-data appearance."
+    },
+    "comparethemedark": {
+      "source_sha256": "9a59a0250bb52832950fe4dd46b7e3c4f65e09e045c4779acf98d3cb8914db4d",
+      "status": "reviewed",
+      "translation": "Change only to the dark theme, retaining sequences and mappings."
+    },
+    "comparedensityfour": {
+      "source_sha256": "5fbfd4aca0908f9d1d9bd4292a232947478fafbeba825e7288de0a32cf9e3df2",
+      "status": "reviewed",
+      "translation": "Observed HSPs with four midpoint bins per endpoint; one ribbon per input remains."
+    },
+    "comparedensityeight": {
+      "source_sha256": "b2cdc3392e1b4d063884369ff7e787643603bb16484e89b4cec6b2ee9d42df8e",
+      "status": "reviewed",
+      "translation": "Change only bins from 4 to 8, altering the grouping scale of local counts."
+    },
+    "comparebundle": {
+      "source_sha256": "d525b638e88829b8b702a5eee631b8c770b11c14dd3e9a1853de1de56408c3c2",
+      "status": "reviewed",
+      "translation": "Same observed HSPs explicitly bundled into four bins; envelopes are not new alignments."
+    },
+    "comparebandwidth": {
+      "source_sha256": "5459264eaf145489aaa9bcf7fe3f6dc8583b81473c92d1ff554a70d14463a18a",
+      "status": "reviewed",
+      "translation": "Change only actual band width from 0.035 to 0.07."
+    },
+    "comparefeaturearrow": {
+      "source_sha256": "baff5f8d8cf9e86d344f6ae9cf2e1de4b3b0501baa79330c8c91b7b3af841599",
+      "status": "reviewed",
+      "translation": "Same six source annotations with generic arrow geometry."
+    },
+    "comparefeatureblock": {
+      "source_sha256": "8e68f819826704215472cc4a8440677ab4df9ff18e1701376a12dcf0e4b81407",
+      "status": "reviewed",
+      "translation": "Change only shape to block; source strand is retained without a directional arrow."
+    },
+    "comparefeaturepreset": {
+      "source_sha256": "4ee190b423af7a966d4833d9b2873e9a6b9c08058579b749401a3394eb270eff",
+      "status": "reviewed",
+      "translation": "Plasmid preset changes head, width and placement defaults; this is a preset example, not a single-parameter contrast."
+    },
+    "compareexternaloff": {
+      "source_sha256": "8da388a121e114ef2a57c46b3541004eba014f9da9cc0809369f885d17f650c5",
+      "status": "reviewed",
+      "translation": "Disable only exterior fallback; unresolved names may hide while features remain."
+    },
+    "compareellipsisfit": {
+      "source_sha256": "beb212f6c9c4ccf1b90c8e4b3338a58f8285e91b9a27df46fffea8271713a773",
+      "status": "reviewed",
+      "translation": "Keep the 14-character width and change only fitting to ellipsis; full source names remain."
+    },
+    "compareprimeroffset": {
+      "source_sha256": "9817bd6ce9fc6580b2d19de94462195b8ae77b23a3ef66e02ad7c1e14917bb53",
+      "status": "reviewed",
+      "translation": "Relative to outside baseline, only arc_offset changes from 0.045 to 0.09."
+    },
+    "compareregionwidth": {
+      "source_sha256": "8b09c42367c6750e187f441e125eeaeca3bea3a23f46163f124eb5daa3619b03",
+      "status": "reviewed",
+      "translation": "Same observed query interval; only width changes from 0.08 to 0.14."
+    },
+    "compareregionoffset": {
+      "source_sha256": "f39dcca8949b5d208f53c3be9332cff16d1d23c59483c12a66b8f64cf8e0d1a7",
+      "status": "reviewed",
+      "translation": "Change only region_offset from 0 to 0.1, retaining the interval."
+    },
+    "comparetracktwo": {
+      "source_sha256": "6ac99251424db27e1edd07afaa9163073ec589216101800b14483d19a78bddd1",
+      "status": "reviewed",
+      "translation": "Same GC windows encoded by height and colour in two explicitly named tracks."
+    },
+    "comparetrackorder": {
+      "source_sha256": "49470eed135fdc97a6ea590f71495958b9c030a0b55dab96ed9040397ec472ae",
+      "status": "reviewed",
+      "translation": "Change only the colour track order, swapping bands while GC values stay fixed."
+    },
+    "foundationvertical": {
+      "source_sha256": "7e517af068791ec52fbb2c40ad92f2b755c8baa98133f8010684e8cf676f333f",
+      "status": "reviewed",
+      "translation": "Original HSPs routed through named A–B–A display instances on vertical backbones."
+    },
+    "foundationsankey": {
+      "source_sha256": "22e5717e358e099898ba2bb394c0430e2b20a03f7a59a0b54b872429434eea0b",
+      "status": "reviewed",
+      "translation": "Mirrored source sequences: query intervals on the left, subject intervals on the right."
+    },
+    "foundationcount": {
+      "source_sha256": "d5fa0dbb17f57fe47cf68b960f08644d888178fa721ea3b6ba4e0a8ef817fcf2",
+      "status": "reviewed",
+      "translation": "Counts of actual query-start observations in source coordinates."
+    },
+    "foundationequal": {
+      "source_sha256": "3bd31d68155048b1e9fac1e23df320be3546134a3bbad54e4d959d8e4800289f",
+      "status": "reviewed",
+      "translation": "Equal visual lengths with true local axes and explicitly selected identity fill."
+    },
+    "foundationarrow": {
+      "source_sha256": "888a454e5c5d75c52ec9e304ffcdfbac41fd4e17e9e272506eea30cc7e24041f",
+      "status": "reviewed",
+      "translation": "Optional subject tips: shoulders retain target endpoint spans; the tip is a decorative marker."
+    },
+    "viewdotplot": {
+      "source_sha256": "fd0ed26af520d85882f88a71862232a77012d83ff46e5737006e08c9f2c93426",
+      "status": "reviewed",
+      "translation": "All 11 source-backed EMALE PAF HSPs in one-based native coordinates; reverse alignments retain their negative slope."
+    },
+    "viewradial": {
+      "source_sha256": "d52e0dd179aa4878ff3de30a7d05fd3c616328c929f992c351840525b6343233",
+      "status": "reviewed",
+      "translation": "Four real sequences with proportional spokes, source-strand CDS, observed interval ribbons and counts of retained HSP-start observations. Cyclic adjacency selects existing relationships only."
+    },
+    "fusionview": {
+      "source_sha256": "631ebc9101976d99ae4470e88e81d4cbe2ce4ce557ca0756adca7d622749b936",
+      "status": "reviewed",
+      "translation": "Two observed EMALE HSPs connect their full source intervals across independently measured circular and vertical panels. The count track uses all 11 original HSP starts."
+    },
+    "fusionfour": {
+      "source_sha256": "4975868f5f13e6529325de90b22857c4aa25c01df0892a42b08751cee7425377",
+      "status": "reviewed",
+      "translation": "Four-direction Fusion with explicit observed PAF rows 3, 2, 9 and 1 routed north, west, south and east. Each panel retains its own original sequence scale."
+    }
+  }
+}

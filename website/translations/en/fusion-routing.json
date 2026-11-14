@@ -1,0 +1,105 @@
+{
+  "source_sha256": "7d0278e3dd01e0d797b36e19d0aa10d1acf828803106b77fb15b013de83ab331",
+  "blocks": {
+    "2": {
+      "source_sha256": "2d1fe741923df3eebf1a2d4b64c70e2e6a22f48521ecc8d17bf3a4116ff4f8c9",
+      "status": "reviewed",
+      "translation": "## Connect real source intervals ⟦shared:0⟧\n"
+    },
+    "3": {
+      "source_sha256": "607ff8401bfa1b8ef417149216f0d8ac027398be0a7c9fa7fe2ba7b356445b12",
+      "status": "reviewed",
+      "translation": "Fusion combines independent genomic plots and connects their real sequence\nintervals. The center and peripherals can use registered genomic Coord views; Sankey and Radial retain their explicit display instances. Nested Fusions and registered character details are supported. Each plot remains usable on its own. The composition\nrebuilds all panels at their actual physical sizes before drawing links.\n"
+    },
+    "4": {
+      "source_sha256": "f0455cb05bef27d7bb2d5842d631e7ba7c812579422e385f806716fcc8e736d9",
+      "status": "reviewed",
+      "translation": "Download the [original EMALE PAF and provenance](⟦shared:0⟧). This section\nrequires the optional ⟦shared:1⟧ package. The PAF contains 11 observed HSPs; the\nexplicit display filter below selects two with length ≥900 and identity ≥85%.\nThe count track bins all original query-start observations in explicit 2,000 bp bins, not coverage. The last display bin is explicitly clipped to the true sequence boundary; source events and counts are retained.\n"
+    },
+    "6": {
+      "source_sha256": "3bd7c1b812ec8d568f584faa8542dd4246f379242fbb5f17ad83eef90e09ddec",
+      "status": "reviewed",
+      "translation": "Keep reverse endpoints as normalized by ⟦shared:0⟧. A constructor warning\nabout descending endpoints does not mean they should be sorted. Prepare two\nindependent plots; explicit sequence colours keep their accession meanings\nconsistent. Local legends are hidden explicitly because their sequence colours\nare already visible and only the cross-panel Identity legend is needed here.\n"
+    },
+    "9": {
+      "source_sha256": "c5c55f92a03b0d12a8a5cbd03bfbd1b2493e9d66a4c0286ed034ad7427975ccc",
+      "status": "reviewed",
+      "translation": "The fixed ⟦shared:0⟧ and ⟦shared:1⟧ select the exact query and subject panels.\nThe ribbon is anchored to the matching sequence in the multi-sequence panel,\nnot its outer rectangle or center. Query/subject roles do not indicate a\nbiological flow of genetic material.\n"
+    },
+    "12": {
+      "source_sha256": "2707d505f19b38837ec63a8488dad45f85418c21797c73502fa406bb7809ff89",
+      "status": "reviewed",
+      "translation": "## Register panels and instances ⟦shared:0⟧\n"
+    },
+    "13": {
+      "source_sha256": "f1137ec74df1a0c1435c0279ade5a40f0a3350ed9a551e77a924b0ea35fcc979",
+      "status": "reviewed",
+      "translation": "The first example uses one panel per named side: ⟦shared:0⟧, ⟦shared:1⟧, ⟦shared:2⟧, ⟦shared:3⟧. Diagonal, free and automatic placement are described below. IDs must be unique;\n⟦shared:4⟧ is reserved. ⟦shared:5⟧ and ⟦shared:6⟧ are fractions of\nthe content area after native outer decoration and cross-panel Guides have been allocated. Explicit\nallocations that overlap fail rather than silently relocating a panel.\nA side specifies placement; it does not rotate a plot's text. Set the plot's\nown ⟦shared:7⟧ for a vertical sequence axis.\n"
+    },
+    "14": {
+      "source_sha256": "1ebba2c5f6d9457742bd0c54d2d7be5d2cf4830cd6eccae1efa3a19c4844f4cd",
+      "status": "reviewed",
+      "translation": "The four-direction example reuses source PAF rows 3, 2, 9 and 1, explicitly\nconnecting them north, west, south and east. These repeated views are separate\ndisplay instances, not extra observations. Different panels need not share a\nphysical bp/mm scale.\n"
+    },
+    "17": {
+      "source_sha256": "a95227a2800be0172f2cea544771d26d1044b1370f5866f329d693cb96965967",
+      "status": "reviewed",
+      "translation": "Selectors can also be columns ⟦shared:0⟧, ⟦shared:1⟧, ⟦shared:2⟧, ⟦shared:3⟧.\nDo not provide both a fixed panel argument and its column. If an accession\noccurs in several panels or repeated display instances, omission is allowed\nonly when exactly one fully visible interval matches. Ambiguity is an error;\nname the intended panel and instance. Original source coordinates also work\nfor explicitly renamed focus windows via their retained source origins.\nRepeated ⟦shared:4⟧ display requires ⟦shared:5⟧ in every\nparticipating layer. Without IDs, source rows remain layer-local; identical\nvalues are not treated as a shared biological identity.\n"
+    },
+    "18": {
+      "source_sha256": "f12571b6feb628ba2433fa91d815a42b5ddadb02307fc30263441d66d93372a8",
+      "status": "reviewed",
+      "translation": "## Export and inspect anchors ⟦shared:0⟧\n"
+    },
+    "20": {
+      "source_sha256": "8cbcabc3c4ce7af5f36c24b732dc0cff8974eb2f909cedf47b23cb06805fd4e5",
+      "status": "reviewed",
+      "translation": "⟦shared:0⟧ records actual panel/container bounds in mm. ⟦shared:1⟧ retains\noriginal relationship columns, source rows and resolved routes; unknown\ndirections are explicitly omitted and reported. ⟦shared:2⟧ contains local\ncoordinates, source interval boundaries, global mm and local tangent/normal\nvectors. ⟦shared:3⟧ adds the rendered connection geometry; ⟦shared:4⟧,\n⟦shared:5⟧ and ⟦shared:6⟧ preserve their separate provenance.\nDiagnostics include local label visibility, fit results and guide dimensions;\nunmeasured global collisions are not reported as zero.\n"
+    },
+    "21": {
+      "source_sha256": "a32a26534898174d6a1211452640df81f53793668666fc78c2f205da0ef6f0a7",
+      "status": "reviewed",
+      "translation": "Intervals are one-based inclusive, with full boundaries ⟦shared:0⟧ ordered by the original endpoint direction. A one-position\ninterval retains nonzero width. This new composition rule does not rewrite\nlegacy single-view ribbon geometry. Source positions, interval boundaries and\nmm coordinates are different quantities.\n"
+    },
+    "22": {
+      "source_sha256": "f4826ab31c7567e26d36154d961e14c8e1ac76511c099d7a1d8c409315c8595b",
+      "status": "reviewed",
+      "translation": "⟦shared:0⟧ measures on a temporary device and restores the\nprevious device. Saving rebuilds on the actual output device, so font metrics\nmay differ slightly while source coordinates remain unchanged. Use ordinary\n⟦shared:1⟧ or the shared preview; do not use ⟦shared:2⟧ on a composition.\n"
+    },
+    "24": {
+      "source_sha256": "7f990b9b8eb8aa377232caa4349c8b884423563c72d39a3d933270316e5868df",
+      "status": "reviewed",
+      "translation": "Fully visible intervals are required. Prepare partial windows or splits in\nthe source workflow explicitly. Ordinary `fusion_ribbon()` inputs require prepared continuous intervals.\nFor cross-origin selections, use the explicit `magnify_ggchord()` with region `wrap = TRUE`\nregion workflow below, with matching complete source lengths. Direct bp↔aa\nlinks, Dotplot, facets and unregistered external plots remain unsupported.\n`direct`, `avoid` and `bundle` route against their documented measured obstacles;\nthey do not guarantee a global optimum. Explicit derived views and placement are described below. Links may cross or pass through panel interiors; foreground\nannotations are retained, but arbitrary layouts are not guaranteed collision-free.\n"
+    },
+    "25": {
+      "source_sha256": "74b9097add4c79167c19889a0ca60cda45e580c1beb3923bd672eedb226254a0",
+      "status": "reviewed",
+      "translation": "## Measured routes and display corridors ⟦shared:0⟧\n"
+    },
+    "26": {
+      "source_sha256": "c1080fceddd6906fed5cbce295c1e8059be470e08298f33d65971302ca6a1781",
+      "status": "reviewed",
+      "translation": "⟦shared:0⟧ keeps both complete interval fronts and their\nphysical departure normals. It routes a narrow polygonal body around measured\nother leaf containers, native layer text, and final gtable guide/decoration\ncells. ⟦shared:1⟧ is in mm and does not encode an alignment length or count.\nThe default ⟦shared:2⟧ preserves the existing Bezier drawing and reports its\ncollisions; it does not silently filter records.\n"
+    },
+    "27": {
+      "source_sha256": "e11c6bb213a16bb8661276199c0b5326df0bd64d7e13ee807930f5945b87ec49",
+      "status": "reviewed",
+      "translation": "Use ⟦shared:0⟧ with an explicit character ⟦shared:1⟧ column to share\na corridor within one layer and ordered panel pair. Each source row still has\nits own front, colour/alpha and polygon. Shared-channel overpainting is not\nread support or another observation. Groups are user declarations; no cluster\nor relationship is inferred. Run the real three-HSP example:\n"
+    },
+    "29": {
+      "source_sha256": "f7d6a20378bb80a07a6c73e1843794dd803cbd0f9354563d8dbb2871eb4e5e8c",
+      "status": "reviewed",
+      "translation": "![Explicit display corridors and obstacles](⟦shared:0⟧)\n"
+    },
+    "30": {
+      "source_sha256": "ad075a455f331d8113a4e04c95126a898ddeb57946cb724ccf24386d2393b13e",
+      "status": "reviewed",
+      "translation": "⟦shared:0⟧ applies the same measured-space contract to\nits decorative leaders. Exported ⟦shared:1⟧ contains the final polyline\nvertices, separate from biological ⟦shared:2⟧. ⟦shared:3⟧ identifies\nshared channels and member source rows; ⟦shared:4⟧ records the\nphysical envelopes. Connections/leaders report route status and collisions.\nEach target size is rebuilt, including ancestor checks after nested allocation.\n"
+    },
+    "31": {
+      "source_sha256": "ad46e8f03fa37f0d14ceed5873b9f57781f6dc2bedeea1db760253a48f6f2bea",
+      "status": "reviewed",
+      "translation": "No clear route produces an explicit error: move/enlarge the panels, narrow a\nselection, revise a declared group, or inspect ⟦shared:0⟧. Ancestor\noverlays that obstruct an already measured child route also fail explicitly.\nRouting uses deterministic visibility paths, not a global layout optimum.\nRotated text uses conservative bounding rectangles, curved strings larger\nenvelopes, and native decoration cells their final gtable bounds. Arbitrary\ncustom grobs and every endpoint data shape are not claimed to be glyph-level\nobstacles. Theme changes affect metrics, never source coordinates or evidence.\n"
+    }
+  }
+}

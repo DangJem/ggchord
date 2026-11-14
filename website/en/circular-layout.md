@@ -44,7 +44,7 @@ The zero origin is at 12 o’clock with clockwise coordinates. Positive rotation
 | `ratio` | 1 | Global aspect ratio, not a change in units |
 | `clip` | off | Coordinate clipping can cut exterior text |
 
-Automatic fitting may change overall scale and the readable subset of tick labels at fixed device size. Inspect text and leaders before fixing xlim/ylim; clipping is not loss of source data. Circular mode owns gap/direction and rejects geom_seq seq_gap/seq_orientation.
+Automatic fitting may change overall scale and the readable subset of tick labels at fixed device size. Inspect text and leaders before fixing `xlim/ylim`; clipping is not loss of source data. Circular mode owns gap/direction and rejects geom_seq seq_gap/seq_orientation.
 
 {{code:comparecirclecounter}}
 {{figure:comparecirclecounter}}

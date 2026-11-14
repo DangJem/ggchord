@@ -178,29 +178,57 @@ ggchord_prepare_dotplot <- function(plot) {
     frame <- layout$axis_layout[layout$axis_layout$axis == axis, , drop = FALSE]
     breaks <- labels <- vector("list", nrow(frame))
     for (i in seq_len(nrow(frame))) {
-      pos <- sort(unique(c(1, pretty(c(1, frame$length[i]), n = 3), frame$length[i])))
+      pos <- sort(unique(c(1, pretty(c(1, frame$length[i]), n = if (nrow(frame) > 1L) 2 else 3), frame$length[i])))
       pos <- pos[pos >= 1 & pos <= frame$length[i]]
       breaks[[i]] <- ggchord_dotplot_project(frame, rep(frame$accver[i], length(pos)), pos)
-      labels[[i]] <- if (nrow(frame) == 1L) format(pos, trim = TRUE, scientific = FALSE) else
-        paste0(frame$accver[i], ":", format(pos, trim = TRUE, scientific = FALSE))
+      labels[[i]] <- format(pos, trim = TRUE, scientific = FALSE,
+        big.mark = if (nrow(frame) > 1L) "," else "")
     }
     scale <- if (axis == "x") ggplot2::scale_x_continuous else ggplot2::scale_y_continuous
     # Blank expansion geometry trains complete axis extents without censoring
     # additional ordinary annotation layers or changing the source HSP data.
-    plot$scales$add(scale(name = paste0(if (axis == "x") "Query" else "Subject",
-      if (nrow(frame) == 1L) paste0(": ", frame$accver) else "", " (", layout$sequence_unit, ")"),
-      breaks = unlist(breaks), labels = unlist(labels),
-      guide = ggplot2::guide_axis(check.overlap = TRUE)))
+    segment_labels <- paste0(frame$accver, "\n1–",
+      format(frame$length, trim = TRUE, scientific = FALSE, big.mark = ","), " ", layout$sequence_unit)
+    centers <- (frame$min + frame$max) / 2
+    if (nrow(frame) > 1L) {
+      # Sequence identity is a separate tier from local numeric positions.
+      # The secondary axis is an identity transform, never a new coordinate domain.
+      header <- ggplot2::dup_axis(name = NULL, breaks = centers, labels = segment_labels,
+        guide = ggplot2::guide_axis(check.overlap = FALSE))
+      if (axis == "x") {
+        plot$scales$add(scale(name = paste0("Query position (", layout$sequence_unit, ")"),
+          breaks = unlist(breaks), labels = unlist(labels), sec.axis = header,
+          guide = ggplot2::guide_axis(n.dodge = 2)))
+      } else {
+        local <- ggplot2::dup_axis(name = paste0("Subject position (", layout$sequence_unit, ")"),
+          breaks = unlist(breaks), labels = unlist(labels), guide = ggplot2::guide_axis(n.dodge = 2))
+        plot$scales$add(scale(name = "Subject sequence", breaks = centers,
+          labels = segment_labels, sec.axis = local,
+          guide = ggplot2::guide_axis(check.overlap = FALSE)))
+      }
+    } else {
+      plot$scales$add(scale(name = paste0(if (axis == "x") "Query" else "Subject",
+        ": ", frame$accver, " (", layout$sequence_unit, ")"),
+        breaks = unlist(breaks), labels = unlist(labels),
+        guide = ggplot2::guide_axis(check.overlap = TRUE)))
+    }
   }
   plot$layers[[length(plot$layers) + 1L]] <- ggplot2::geom_blank(
     data = data.frame(x = layout$xlim, y = layout$ylim), ggplot2::aes(x, y), inherit.aes = FALSE)
   frame <- layout$axis_layout
-  for (axis in c("x", "y")) {
-    f <- frame[frame$axis == axis, , drop = FALSE]
-    if (nrow(f) < 2L) next
-    at <- (head(f$max, -1L) + tail(f$min, -1L)) / 2
-    layer <- if (axis == "x") ggplot2::geom_vline(xintercept = at, colour = "#D7DCE0", linewidth = .25) else
-      ggplot2::geom_hline(yintercept = at, colour = "#D7DCE0", linewidth = .25)
+  xf <- frame[frame$axis == "x", , drop = FALSE]
+  yf <- frame[frame$axis == "y", , drop = FALSE]
+  if (nrow(xf) > 1L || nrow(yf) > 1L) {
+    cells <- expand.grid(query = seq_len(nrow(xf)), subject = seq_len(nrow(yf)))
+    cells$xmin <- xf$min[cells$query]; cells$xmax <- xf$max[cells$query]
+    cells$ymin <- yf$min[cells$subject]; cells$ymax <- yf$max[cells$subject]
+    # White gaps represent display spacing only. Each rectangle is the actual
+    # query/subject extent, so short sequences retain proportionally smaller cells.
+    layer <- ggplot2::geom_rect(data = cells,
+      ggplot2::aes(xmin = xmin, xmax = xmax, ymin = ymin, ymax = ymax),
+      inherit.aes = FALSE, show.legend = FALSE,
+      fill = ifelse((cells$query + cells$subject) %% 2 == 0, "#F0F6F3", "#FFFFFF"),
+      colour = "#A9BBB4", linewidth = .35)
     plot$layers <- c(list(layer), plot$layers)
   }
   base <- ggplot2::theme_gray()

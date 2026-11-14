@@ -1,0 +1,130 @@
+{
+  "source_sha256": "14983c8e5db4e98cd34f04077b3cf9196b0f864ce69a74d3f2efc830effce04e",
+  "blocks": {
+    "0": {
+      "source_sha256": "0a4b54e6320a5b69dc7e16a0d051ac499276c49fe89101feb90528f5290b2584",
+      "status": "reviewed",
+      "translation": "Choose the meaning of data before roles and scales. Use the same observed HSPs, annotations and GC windows for continuous values, categories, identity, opacity, widths, line types and themes, grouping related helpers on one page.\n"
+    },
+    "1": {
+      "source_sha256": "a4d2a8e4b72b04540a70aae4a43e7c39b04315a1281ceef876cfd992863aa777",
+      "status": "reviewed",
+      "translation": "## Independent input and scale responsibilities ⟦shared:0⟧\n"
+    },
+    "2": {
+      "source_sha256": "e053a9bf81523bdc59baf61fc57143d5c6bbd27ad68834f2a754f0f174ce537a",
+      "status": "reviewed",
+      "translation": "Independently load ggchord and optional dplyr. Complete lengths, HSP identity and query/subject IDs come from bundled source records. Named vectors assign display values to existing categories, not new samples or measurements. Map inside aes, fix styles in geoms, and let explicit scales override automatic defaults. Explicit fixed aesthetics override matching mappings; omit fixed alpha when mapping opacity.\n"
+    },
+    "4": {
+      "source_sha256": "5950ff006cb3b7d6aef75c4244b7aecc6ee4e80d7cc54134929a6f8c5b483e9f",
+      "status": "reviewed",
+      "translation": "## Continuous, stepped and direct colour values ⟦shared:0⟧\n"
+    },
+    "5": {
+      "source_sha256": "46ab7f82a53a8054cee8fef30bc1048d32945ff25d85218a4d4fb98c4aa596bb",
+      "status": "reviewed",
+      "translation": "Both map observed pident to ribbon_fill with fixed 0–100 domain, palette and dimensions. Gradientn interpolates continuously; stepsn uses explicit breaks. Matching colours do not establish new homology. Values place palette anchors, not source pident; breaks control ticks/steps and limits the domain. Check NA and out-of-bounds policy rather than treating missing values as zero.\n"
+    },
+    "10": {
+      "source_sha256": "24a6b3aa54c5523f0f6550a50e4f1001a5c80e308704410ca0592b430abcb39d",
+      "status": "reviewed",
+      "translation": "## Identity preserves supplied colour values ⟦shared:0⟧\n"
+    },
+    "11": {
+      "source_sha256": "24302adcaa6b0787fee0204361ca10134c90a554a6e7e60a5925225a71709247",
+      "status": "reviewed",
+      "translation": "First derive display colours from observed identity using an explicit 90% threshold, then preserve those strings with scale_ribbon_fill_identity. This is declared display classification, not a way to recover continuous identity. Use a gradient for a continuous legend. Identity normally hides its guide; provide deliberate breaks, labels and guide when one is needed.\n"
+    },
+    "13": {
+      "source_sha256": "83a8760690e583314eee5b5cd072ff6e5163744c2e78ff792f77406435d08553",
+      "status": "reviewed",
+      "translation": "## Category fill, opacity, outline and line type ⟦shared:0⟧\n"
+    },
+    "14": {
+      "source_sha256": "dc519f4e577c38c41c4246f5a271d5f504e68d071c031036adef4758fc427e28",
+      "status": "reviewed",
+      "translation": "The same qaccver receives the same display values. Name manual values by actual categories to avoid order-dependent mismatches. This combines independently trained roles rather than claiming a single-parameter visual experiment. Use ⟦shared:0⟧ for numeric opacity and ⟦shared:1⟧ for categories. Colour and linetype change outlines, not alignment direction.\n"
+    },
+    "16": {
+      "source_sha256": "b010a475f576f711b36cc4ad1614bab4419af1e7fdd237710fac56303f9d66b2",
+      "status": "reviewed",
+      "translation": "## Independent scales for point links ⟦shared:0⟧\n"
+    },
+    "17": {
+      "source_sha256": "0cd6ca5750605ac778eb1824667e3843a5766d9a9779c93c4c630d6b77688293",
+      "status": "reviewed",
+      "translation": "Explicitly calculate midpoints of observed HSPs; point links do not display full spans. Manual helpers map link_colour, link_alpha, link_linewidth and link_linetype by category; gradientn, alpha_continuous and linewidth_continuous map numeric values. Construct category and numeric combinations separately.\n"
+    },
+    "18": {
+      "source_sha256": "a2462d11fb4749d24d70f0f8a7da802572b5b8a64192be09522cd42375058390",
+      "status": "reviewed",
+      "translation": "Automatic numeric pident mappings use the 0–100 domain and six Identity ticks: 0, 50, 80, 90, 95 and 100. Explicit scales keep their own settings. The example sets the same domain, ticks and title for all three channels so their legend keys can combine.\n"
+    },
+    "23": {
+      "source_sha256": "b97e36c14d5860f2117775c7faef41b72ac54c58bcc5270b5ecbd5c764b1826a",
+      "status": "reviewed",
+      "translation": "## Feature, gene and region roles ⟦shared:0⟧\n"
+    },
+    "24": {
+      "source_sha256": "3f27c003cff4db40eb9d91801a3d8409b0e7a8e36a408cbf66da227981cb8905",
+      "status": "reviewed",
+      "translation": "Map feature_fill and feature_shape to the same type to merge their guide silhouettes; request a separate shape guide explicitly. Fixed shape overrides its mapping. Mapping all types to arrow demonstrates mapping without inventing functional shape semantics. Plasmid fill/shape presets use their documented category rules.\n"
+    },
+    "27": {
+      "source_sha256": "3067d7ac97115ab9142d9f50c1eb56ee5ee2b26e9d7674ef3f867ff21c8889b7",
+      "status": "reviewed",
+      "translation": "## Gene strand, sequence rings and regions ⟦shared:0⟧\n"
+    },
+    "28": {
+      "source_sha256": "65f159c4c8facd4c38dcc094f6bb9bd6a31e545281a00d9ab917ffc719cb9e91",
+      "status": "reviewed",
+      "translation": "Restore biological strands from source_strand. Region, gene and ribbon fill roles are independent. `seq_ring` requires explicit positive radii, never inferred track counts; it conflicts with seq_radius and collinear mode. Sequence radius mapping is distinct from quantitative position_track bands.\n"
+    },
+    "31": {
+      "source_sha256": "9d6810b2f016f84914bb55666ca10e7ce3cdc994c61421acab495bdcad372f50",
+      "status": "reviewed",
+      "translation": "## Named track domains and colours ⟦shared:0⟧\n"
+    },
+    "32": {
+      "source_sha256": "db9604423e04e50848dd7d7c0dae8e9b57504aebb89f48c2f5f7a0b5aad3212c",
+      "status": "reviewed",
+      "translation": "Compute windows from actual pUC19 DNA. `track_value` controls height; track_fill/track_colour train separate colour scales, with IDs matching position_track. The 0.5 threshold is a display choice and full fractions remain. Tiles do not average data; NA heights do not become zero. Declare scales for each ID independently.\n"
+    },
+    "36": {
+      "source_sha256": "85a133760d94ce7b1b360e9823b234db2a5101c1939eac220d0269c7a3ae1e6a",
+      "status": "reviewed",
+      "translation": "## Guides, spelling aliases and staged mapping ⟦shared:0⟧\n"
+    },
+    "37": {
+      "source_sha256": "36a08943701349d2f7c2acc5f8a9382c6a16181cb410e8cb05ed78140ed76765",
+      "status": "reviewed",
+      "translation": "`guide_ggchord_legend` manages discrete role guides and guide_ggchord_colourbar continuous colour bars. `show.legend` controls participation, guides chooses guides, and theme controls position/direction/appearance. Colour/color aliases are equivalent: guide_ggchord_colorbar, scale_seq_color_manual, scale_ribbon_color_manual, scale_link_color_manual and scale_link_color_gradientn correspond to colour versions. Do not add both synonymous scales expecting cumulative control.\n"
+    },
+    "38": {
+      "source_sha256": "e271361c6ba98747ff62c4d34003d3c56d6fb90ded771d72e03d10a52dc8e0d3",
+      "status": "reviewed",
+      "translation": "`after_stat` reads computed variables such as bundle_n in the next section; after_scale computes supported visual attributes after scaling. They come from ggplot2 and have distinct staged semantics even when their R objects compare equal. All ggplot2/grid reexports follow upstream help, with ownership explicit in the parameter atlas.\n"
+    },
+    "39": {
+      "source_sha256": "d9ea18ff1dfbe3b558f2f0cae2c91d53dc620fa34ca97921ac162508d4bcc437",
+      "status": "reviewed",
+      "translation": "## Themes style non-data appearance ⟦shared:0⟧\n"
+    },
+    "40": {
+      "source_sha256": "aa0c65933863ce0793a7aa5ffbba6caf0ca3b4d4a9d66b020d437b83f49dc96f",
+      "status": "reviewed",
+      "translation": "`theme_ggchord`, minimal, publication and dark are alternative non-data style starting points; plasmid is tailored to single circular maps. Only the theme differs below; sequence data and mappings remain. Axis gaps, tick lengths and text offsets use documented physical units. Theme fields are not accver-keyed geometry lists. Hiding text does not remove sequences.\n"
+    },
+    "44": {
+      "source_sha256": "5b4d9520ab10ac5a653b174fab2026fe8806b474e55d2c4143d9f98e447c74a3",
+      "status": "reviewed",
+      "translation": "## Selection rules ⟦shared:0⟧\n"
+    },
+    "45": {
+      "source_sha256": "9b104b25fabe35b89419fdc61501d26c83d11903d2c4ea553ce4db197f813f59",
+      "status": "reviewed",
+      "translation": "Switch pident from gradient to explicit steps, restore the gradient, then change only the alpha output range. Check that guides still represent the same data units. Give additional layers independent data/mapping and retain explicit user scales. See the [parameter atlas](⟦shared:0⟧) for complete defaults, types and forwarding, and [link statistics](⟦shared:1⟧) for aggregation.\n"
+    }
+  }
+}

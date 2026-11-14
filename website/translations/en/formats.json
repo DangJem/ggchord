@@ -1,0 +1,90 @@
+{
+  "source_sha256": "833d016a21b7e76e66da02e7c405afd6b33f1b01ebcfdf026786a61c252a5804",
+  "blocks": {
+    "0": {
+      "source_sha256": "bf63f25ebc67ab671a53b06a5f7a8d85b1695ffbdb57a79455bba3fdea5980d9",
+      "status": "reviewed",
+      "translation": "## Choose by the files you have ⟦shared:0⟧\n"
+    },
+    "1": {
+      "source_sha256": "d9f630ae1228aa7d9423f05ddf5730fea599c5ec6c57be59415d0774bc645440",
+      "status": "reviewed",
+      "translation": "| Files | Start here |\n"
+    },
+    "2": {
+      "source_sha256": "3491e014f5503eb5b2fca81db42f6f72765980ba5b5e48ef135b6cf69d7f92cc",
+      "status": "reviewed",
+      "translation": "| --- | --- |\n"
+    },
+    "3": {
+      "source_sha256": "535e1dc58e79a98f489167acfa05e9a112e87aa543f56df43bb91e5c6c52bb1f",
+      "status": "reviewed",
+      "translation": "| FASTA sequences, GFF3 annotations and BLAST alignments | [Draw a comparison from source files](⟦shared:0⟧) |\n"
+    },
+    "4": {
+      "source_sha256": "cd1f30d8f851b895096614bf0dc139fce5fd685a75ab9d26eb2bf650e5705946",
+      "status": "reviewed",
+      "translation": "| BED intervals or PAF (Pairwise mApping Format) alignments | [Check zero-based coordinates](⟦shared:0⟧) |\n"
+    },
+    "5": {
+      "source_sha256": "b7ae4c2a09f0ce24a30a43fc0bb8c98269224fdd829bf28e268150b9c67d4416",
+      "status": "reviewed",
+      "translation": "| GenBank sequence with annotations | [Preserve record IDs and segments](⟦shared:0⟧) |\n"
+    },
+    "6": {
+      "source_sha256": "dac2ecd93a401970c0910319961338780a26192b56485069d5877cb9a060c110",
+      "status": "reviewed",
+      "translation": "| bedGraph or BigWig continuous signals | [Keep values and missing ranges explicit](⟦shared:0⟧) |\n"
+    },
+    "7": {
+      "source_sha256": "dfb7d6a81cd5be679a6a91e114a4b168c9814274ae5aec063aa851513241c71f",
+      "status": "reviewed",
+      "translation": "| VCF/BCF variants and structural breakpoints | [Retain original variant evidence](⟦shared:0⟧) |\n"
+    },
+    "8": {
+      "source_sha256": "d14263c1ece266bda70fbcd68fdb251728d60b854ead2ee18b66b36851e0ac82",
+      "status": "reviewed",
+      "translation": "| Existing protein signature annotations | [Retain AA locations and source scores](⟦shared:0⟧) |\n"
+    },
+    "9": {
+      "source_sha256": "564e6619f3d2fc80eba97a6419ba84be3409f73c0c7664de0b9c32f63c081bfa",
+      "status": "reviewed",
+      "translation": "| Existing feature pairs and groups | [Retain original relationships and memberships](⟦shared:0⟧) |\n"
+    },
+    "10": {
+      "source_sha256": "61604d7b423146fe4e055e31ba6b63ffa606919e77afa592955176812200fecb",
+      "status": "reviewed",
+      "translation": "| BAM/CRAM aligned reads | [Use a mature coverage bridge](⟦shared:0⟧) |\n"
+    },
+    "11": {
+      "source_sha256": "d29a67153b491f4fff25b20973a6965b46730c803e61a93841c73ccf21b9b3d9",
+      "status": "reviewed",
+      "translation": "| Existing delta results | [Keep native metrics and coordinate units distinct](⟦shared:0⟧) |\n"
+    },
+    "12": {
+      "source_sha256": "c59c7fe84696e233dc3066998b7e24d8941337fbc9f8e11dcab2a25fc2871e32",
+      "status": "reviewed",
+      "translation": "| Existing MAF or chain genomic alignments | [Preserve blocks and source coordinates](⟦shared:0⟧) |\n"
+    },
+    "13": {
+      "source_sha256": "d921c4754ee408afa9610925663e8df64a6b34afcde05a57166313737f31e5ff",
+      "status": "reviewed",
+      "translation": "| Existing R tables | [Map required fields](⟦shared:0⟧) |\n"
+    },
+    "14": {
+      "source_sha256": "985b51eb69d16437bbe42405c4d8f207e155a00f8ef4219c1971aa2a5d83f339",
+      "status": "reviewed",
+      "translation": "| GRanges or GInteractions | [Convert interval objects](⟦shared:0⟧) |\n"
+    },
+    "15": {
+      "source_sha256": "819551bc764b5ada3d5095294c545cadd767247701d868f68d96023dd36a12cf",
+      "status": "reviewed",
+      "translation": "## Three files to a first plot ⟦shared:0⟧\n"
+    },
+    "16": {
+      "source_sha256": "fa7e9d4af615fecef5d13ba997c0bb78eae43192ebed68292f590bd440db28ba",
+      "status": "reviewed",
+      "translation": "[FASTA / GFF3 / BLAST](⟦shared:0⟧)\n"
+    }
+  }
+}

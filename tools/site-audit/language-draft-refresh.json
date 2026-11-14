@@ -1,0 +1,10 @@
+{
+  "scope": "Post-build translation-draft preparation only; preserve separate saved English phrasings for identical Han blocks. Generation/check branches and all native inputs/HTML unchanged.",
+  "changed_function": "prepare",
+  "old_sha256": "8b6627e2b4a687ebce01f60cc3fc23e450a6625077110482aa590d3e180dff7e",
+  "new_sha256": "a810aded0453175d1e9a5a956a41c29e3a2f3204f79275f399b4aadcbb7da085",
+  "other_AST_nodes_identical": true,
+  "generated_outputs_identical": true,
+  "native_HTML_unchanged": true,
+  "previous_snapshot_sha256": "c752624497de6d2dd1227700b97ff9a61297f2fbec5b4da9d6ab0cdca56be5f0"
+}

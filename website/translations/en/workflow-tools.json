@@ -1,0 +1,15 @@
+{
+  "source_sha256": "3db8f6fa337e0d7a35430af75e9d91ffec466db21419d047679c1d769151109e",
+  "blocks": {
+    "0": {
+      "source_sha256": "65558b765341744300f6b1268eea89e49563657e225330407740cb387a66bc22",
+      "status": "reviewed",
+      "translation": "## Section moved ⟦shared:0⟧\n"
+    },
+    "1": {
+      "source_sha256": "636a37b6952261038539d105646c89bb97d203d5f0ae9be623ca8377c9b3a163",
+      "status": "reviewed",
+      "translation": "[Choose a data workflow by task](⟦shared:0⟧)\n"
+    }
+  }
+}

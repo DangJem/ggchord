@@ -1,0 +1,1575 @@
+{
+  "source_sha256": "e9285c5fca4d299bc1f155dbac3cef641ece3b8fe821c8a67b9b605e985a36a5",
+  "strings": {
+    "aes/purpose": {
+      "source_sha256": "72476687defa4ed5f3795aaaddc8af6699cfebd0c00ca8da10f0e86d4e8e7dbc",
+      "status": "reviewed",
+      "translation": "Selected ggplot2 helpers for ggchord plots"
+    },
+    "aes/modes_localized": {
+      "source_sha256": "9a7d3241a50bd33fdfb3454fabd23d0d97d0d79f3d621c9485e5b2439e3320a2",
+      "status": "reviewed",
+      "translation": "upstream; applies only to matching supported ggplot roles"
+    },
+    "after_scale/purpose": {
+      "source_sha256": "72476687defa4ed5f3795aaaddc8af6699cfebd0c00ca8da10f0e86d4e8e7dbc",
+      "status": "reviewed",
+      "translation": "Selected ggplot2 helpers for ggchord plots"
+    },
+    "after_scale/modes_localized": {
+      "source_sha256": "9a7d3241a50bd33fdfb3454fabd23d0d97d0d79f3d621c9485e5b2439e3320a2",
+      "status": "reviewed",
+      "translation": "upstream; applies only to matching supported ggplot roles"
+    },
+    "after_stat/purpose": {
+      "source_sha256": "72476687defa4ed5f3795aaaddc8af6699cfebd0c00ca8da10f0e86d4e8e7dbc",
+      "status": "reviewed",
+      "translation": "Selected ggplot2 helpers for ggchord plots"
+    },
+    "after_stat/modes_localized": {
+      "source_sha256": "9a7d3241a50bd33fdfb3454fabd23d0d97d0d79f3d621c9485e5b2439e3320a2",
+      "status": "reviewed",
+      "translation": "upstream; applies only to matching supported ggplot roles"
+    },
+    "annotate/purpose": {
+      "source_sha256": "72476687defa4ed5f3795aaaddc8af6699cfebd0c00ca8da10f0e86d4e8e7dbc",
+      "status": "reviewed",
+      "translation": "Selected ggplot2 helpers for ggchord plots"
+    },
+    "annotate/modes_localized": {
+      "source_sha256": "9a7d3241a50bd33fdfb3454fabd23d0d97d0d79f3d621c9485e5b2439e3320a2",
+      "status": "reviewed",
+      "translation": "upstream; applies only to matching supported ggplot roles"
+    },
+    "arrow/purpose": {
+      "source_sha256": "f83028f2bff8bc56370907a659e30a1f3e10f8134bdde4ee64a0d52930ab74ec",
+      "status": "reviewed",
+      "translation": "Physical units and direction arrows"
+    },
+    "arrow/modes_localized": {
+      "source_sha256": "9a7d3241a50bd33fdfb3454fabd23d0d97d0d79f3d621c9485e5b2439e3320a2",
+      "status": "reviewed",
+      "translation": "upstream; applies only to matching supported ggplot roles"
+    },
+    "as_ggchord_feature/purpose": {
+      "source_sha256": "73bee45d45a06052ad241d50e155fb49fd372fd60f6742f1f66d9f579b3ca864",
+      "status": "reviewed",
+      "translation": "Convert intervals to generic ggchord features"
+    },
+    "as_ggchord_feature/modes_localized": {
+      "source_sha256": "bb09d1a1619922cd912a540f072ca3406bab8e7977c6df765846a049f4a3bfa8",
+      "status": "reviewed",
+      "translation": "table/S4 adapter; coordinates and biological direction retained"
+    },
+    "as_ggchord_link/purpose": {
+      "source_sha256": "598fbc731340e9146ecc83ffee3eb758c3c4b49dd7cfd080edc9d0a4ac095232",
+      "status": "reviewed",
+      "translation": "Convert paired genomic intervals to ggchord links"
+    },
+    "as_ggchord_link/modes_localized": {
+      "source_sha256": "bb09d1a1619922cd912a540f072ca3406bab8e7977c6df765846a049f4a3bfa8",
+      "status": "reviewed",
+      "translation": "table/GInteractions adapter; no invented alignment statistics"
+    },
+    "as_ggchord_seq/purpose": {
+      "source_sha256": "b9903c1359a2c9ae923aef7d820869ec6ace0cd6553bbbfe6e168ef6b9aebf1c",
+      "status": "reviewed",
+      "translation": "Convert sequence information to ggchord input"
+    },
+    "as_ggchord_seq/modes_localized": {
+      "source_sha256": "bb09d1a1619922cd912a540f072ca3406bab8e7977c6df765846a049f4a3bfa8",
+      "status": "reviewed",
+      "translation": "table/S4 adapter; complete lengths and explicit IDs/units"
+    },
+    "build_ggchord_cds/purpose": {
+      "source_sha256": "0086816fc31e23e2145e1064b78e6dcb856572659a74b1658471ed6b81878324",
+      "status": "reviewed",
+      "translation": "Build an explicit spliced CDS coordinate map"
+    },
+    "build_ggchord_cds/modes_localized": {
+      "source_sha256": "26c5598c4a71c3bd8c0dd826f0321ee2a9d15da2ee1b9a4e256f3f079e0c9771",
+      "status": "reviewed",
+      "translation": "known genomic CDS, phase and genetic code; no guessed correspondence"
+    },
+    "bundle_ggchord_ribbons/purpose": {
+      "source_sha256": "b0aec6ce29c6c773a7e793f30be62cde2cc8bdb47d890c9d56ff6074aebebc37",
+      "status": "reviewed",
+      "translation": "Bundle dense alignment ribbons explicitly"
+    },
+    "bundle_ggchord_ribbons/modes_localized": {
+      "source_sha256": "55ed0839524b850b0a9d5aed47a47bf2fa96db0102d688a281972afd5a17d327",
+      "status": "reviewed",
+      "translation": "explicit normalized-bin aggregation; original observations retained separately"
+    },
+    "clean_ggchord_data/purpose": {
+      "source_sha256": "178ac1726a71895f42d08974e9a5e0d3d71b7973e1dcaaa08eb923078f1067c0",
+      "status": "reviewed",
+      "translation": "Clean ggchord input data with explicit, report-driven policies"
+    },
+    "clean_ggchord_data/modes_localized": {
+      "source_sha256": "c0a15db67c7a73ab47ec2ac850c90e22b904d836959b23390557bee3a4d78838",
+      "status": "reviewed",
+      "translation": "explicit repair policies with original tables retained"
+    },
+    "coord_chord/purpose": {
+      "source_sha256": "b9215527e76bb6c91f96ca373bd2e4589808b89f50bf17e873a5f30bf78e2f13",
+      "status": "reviewed",
+      "translation": "Chord diagram coordinate system"
+    },
+    "coord_chord/modes_localized": {
+      "source_sha256": "f63555eee940580b3edb65893df9b076b0fafb242fb9dfe14e06362f0d874bef",
+      "status": "reviewed",
+      "translation": "chord"
+    },
+    "coord_circular/purpose": {
+      "source_sha256": "9c553257a9c704dbb6a5c0ee3d37e1933a38193b1f82cca0dcce72f8843a4fe9",
+      "status": "reviewed",
+      "translation": "Single-sequence circular coordinate system"
+    },
+    "coord_circular/modes_localized": {
+      "source_sha256": "699ee902c068ff62515c82cf7e48b1e09234c2e9b72e42c503ef0e8fc20ff3d9",
+      "status": "reviewed",
+      "translation": "one sequence; bp or aa; no ribbon/link layers"
+    },
+    "coord_collinear/purpose": {
+      "source_sha256": "1978f90585a8ce65f7064c49859af863a47c90c1991a95feab3896a0f0263211",
+      "status": "reviewed",
+      "translation": "Linear multi-sequence collinearity coordinates"
+    },
+    "coord_collinear/modes_localized": {
+      "source_sha256": "431e91b4296347fe7c39234a78e039f763f330744f7820f677110fa8cefa6cf3",
+      "status": "reviewed",
+      "translation": "collinear; bp or aa; circular-only local controls rejected"
+    },
+    "deduplicate_ggchord_ribbons/purpose": {
+      "source_sha256": "5f11d1d04fa509b8d9a09fddcff12656cf0e9a2a5bb2df5d8b1657ac276cb412",
+      "status": "reviewed",
+      "translation": "Deduplicate alignment ribbons"
+    },
+    "deduplicate_ggchord_ribbons/modes_localized": {
+      "source_sha256": "55ed0839524b850b0a9d5aed47a47bf2fa96db0102d688a281972afd5a17d327",
+      "status": "reviewed",
+      "translation": "select existing representatives with source membership"
+    },
+    "diagnose_ggchord/purpose": {
+      "source_sha256": "5db68093b61ed6ff25d05c2c1b02311ffeca43dc0373af68596f13157ec1e10c",
+      "status": "reviewed",
+      "translation": "Inspect one target-size render without changing the plot"
+    },
+    "diagnose_ggchord/modes_localized": {
+      "source_sha256": "04ba23dc446dfafb30558ed268c1f2cbb0eb61d030952ddb5ff6409a41972159",
+      "status": "reviewed",
+      "translation": "one target-size device; advisory, not universal quality certification"
+    },
+    "element_blank/purpose": {
+      "source_sha256": "72476687defa4ed5f3795aaaddc8af6699cfebd0c00ca8da10f0e86d4e8e7dbc",
+      "status": "reviewed",
+      "translation": "Selected ggplot2 helpers for ggchord plots"
+    },
+    "element_blank/modes_localized": {
+      "source_sha256": "9a7d3241a50bd33fdfb3454fabd23d0d97d0d79f3d621c9485e5b2439e3320a2",
+      "status": "reviewed",
+      "translation": "upstream; applies only to matching supported ggplot roles"
+    },
+    "element_line/purpose": {
+      "source_sha256": "72476687defa4ed5f3795aaaddc8af6699cfebd0c00ca8da10f0e86d4e8e7dbc",
+      "status": "reviewed",
+      "translation": "Selected ggplot2 helpers for ggchord plots"
+    },
+    "element_line/modes_localized": {
+      "source_sha256": "9a7d3241a50bd33fdfb3454fabd23d0d97d0d79f3d621c9485e5b2439e3320a2",
+      "status": "reviewed",
+      "translation": "upstream; applies only to matching supported ggplot roles"
+    },
+    "element_rect/purpose": {
+      "source_sha256": "72476687defa4ed5f3795aaaddc8af6699cfebd0c00ca8da10f0e86d4e8e7dbc",
+      "status": "reviewed",
+      "translation": "Selected ggplot2 helpers for ggchord plots"
+    },
+    "element_rect/modes_localized": {
+      "source_sha256": "9a7d3241a50bd33fdfb3454fabd23d0d97d0d79f3d621c9485e5b2439e3320a2",
+      "status": "reviewed",
+      "translation": "upstream; applies only to matching supported ggplot roles"
+    },
+    "element_text/purpose": {
+      "source_sha256": "72476687defa4ed5f3795aaaddc8af6699cfebd0c00ca8da10f0e86d4e8e7dbc",
+      "status": "reviewed",
+      "translation": "Selected ggplot2 helpers for ggchord plots"
+    },
+    "element_text/modes_localized": {
+      "source_sha256": "9a7d3241a50bd33fdfb3454fabd23d0d97d0d79f3d621c9485e5b2439e3320a2",
+      "status": "reviewed",
+      "translation": "upstream; applies only to matching supported ggplot roles"
+    },
+    "expansion/purpose": {
+      "source_sha256": "72476687defa4ed5f3795aaaddc8af6699cfebd0c00ca8da10f0e86d4e8e7dbc",
+      "status": "reviewed",
+      "translation": "Selected ggplot2 helpers for ggchord plots"
+    },
+    "expansion/modes_localized": {
+      "source_sha256": "9a7d3241a50bd33fdfb3454fabd23d0d97d0d79f3d621c9485e5b2439e3320a2",
+      "status": "reviewed",
+      "translation": "upstream; applies only to matching supported ggplot roles"
+    },
+    "export_ggchord_layout/purpose": {
+      "source_sha256": "62fbc3b4a6da3a55af44547ee7f43abe952b9c8410943aaac405dc00909b04f8",
+      "status": "reviewed",
+      "translation": "Export computed ggchord geometry"
+    },
+    "export_ggchord_layout/modes_localized": {
+      "source_sha256": "15ed48bdf99588869d5f86cb09e3cecdc4427175fa376e28fd80685d75233f8c",
+      "status": "reviewed",
+      "translation": "layer-aware public tables for all supported plots"
+    },
+    "filter_ggchord_ribbons/purpose": {
+      "source_sha256": "254cfbeb2f86103f81c13391df0181c0a06919120ca80a2c4e869fe09d821d44",
+      "status": "reviewed",
+      "translation": "Filter alignment ribbons before plotting"
+    },
+    "filter_ggchord_ribbons/modes_localized": {
+      "source_sha256": "55ed0839524b850b0a9d5aed47a47bf2fa96db0102d688a281972afd5a17d327",
+      "status": "reviewed",
+      "translation": "observed alignment filtering, not recomputation"
+    },
+    "filter_restriction_sites/purpose": {
+      "source_sha256": "ed2eb50e9672d7e2e508002f9c44bdb5ef303b089569cb639c9ccf25d6166190",
+      "status": "reviewed",
+      "translation": "Filter restriction sites for display"
+    },
+    "filter_restriction_sites/modes_localized": {
+      "source_sha256": "f575444de860ff0bd1cf458df72b757cd41b11be192b4465f00246c379705c58",
+      "status": "reviewed",
+      "translation": "display set selection preserves complete-target counts"
+    },
+    "find_common_features/purpose": {
+      "source_sha256": "8823a7669bd7178939f7fd787695544c6ec8733ea448d9614c9ca9de54834ede",
+      "status": "reviewed",
+      "translation": "Find common biological features in DNA sequences"
+    },
+    "find_common_features/modes_localized": {
+      "source_sha256": "84cb27cb643bee88f1542c2afe05debf60cb1aae0c039427a431ecb08101bfa0",
+      "status": "reviewed",
+      "translation": "DNA/reference feature recognition with method/provenance, not wet-lab validation"
+    },
+    "find_ggchord_loci/purpose": {
+      "source_sha256": "7f9c49008425d1329edd132b217fd760c54063bf44fda01193fe0de378cdf20a",
+      "status": "reviewed",
+      "translation": "Find genomic loci around explicitly identified features"
+    },
+    "find_ggchord_loci/modes_localized": {
+      "source_sha256": "45a4b79b9a187ba0f0a82a4983c8353fae968ebab2553201f616e1f4bc6fdc62",
+      "status": "reviewed",
+      "translation": "genomic workflow with explicit target IDs and source strands"
+    },
+    "find_primer_bindings/purpose": {
+      "source_sha256": "123dd692e09e97b0a2d93b24e3eed448d5372a7d12bb23994a91b70c7715f147",
+      "status": "reviewed",
+      "translation": "Find sequencing-primer binding sites"
+    },
+    "find_primer_bindings/modes_localized": {
+      "source_sha256": "de10faa0d8f9e3f879837f144789f5f82e1ea105f476303af5b02c91f0c05840",
+      "status": "reviewed",
+      "translation": "actual DNA and explicit oligonucleotides/catalogue; matches not experiments"
+    },
+    "find_restriction_sites/purpose": {
+      "source_sha256": "46bd6513882bb73931877b2de7d3f4c33d9d8c1acb113e45127332bb0e3a3331",
+      "status": "reviewed",
+      "translation": "Find restriction pattern matches and cleavage coordinates"
+    },
+    "find_restriction_sites/modes_localized": {
+      "source_sha256": "cc62c59c624e1ba0c0edee40600b235b4af84c1d9f2ad94bfeee242e04222845",
+      "status": "reviewed",
+      "translation": "actual DNA and explicit methylation assumptions; full site results"
+    },
+    "focus_ggchord_data/purpose": {
+      "source_sha256": "0f24cb12b9492fb0c9be1032e93a41989db3f63d783d886b209029903946ae2b",
+      "status": "reviewed",
+      "translation": "Focus ggchord data on one or more loci"
+    },
+    "focus_ggchord_data/modes_localized": {
+      "source_sha256": "73c181d491dd8700d245029beb565b0ec897b0843b7512cb253b0c91a6cfaf53",
+      "status": "reviewed",
+      "translation": "explicit source windows with reversible origins and clipping reports"
+    },
+    "focus_ggchord_track/purpose": {
+      "source_sha256": "87637f6c057a4dd30ed91a10091bda1e6c983aec1f2933e78c4a8f75261392d1",
+      "status": "reviewed",
+      "translation": "Focus quantitative intervals or samples without bridging omitted windows"
+    },
+    "focus_ggchord_track/modes_localized": {
+      "source_sha256": "332ddf689eb76dfc406476ce53fa8962f936caaee9f131be1fa348bd262d0357",
+      "status": "reviewed",
+      "translation": "point/interval track data; shares declared loci with focus/segment"
+    },
+    "geom_feature/purpose": {
+      "source_sha256": "ecdab72d2dde3f9d040469c2bc2bb7ccd35ac10a3e1ae9e3fa2231a3c229c5fc",
+      "status": "reviewed",
+      "translation": "Draw generic genomic features"
+    },
+    "geom_feature/modes_localized": {
+      "source_sha256": "4208c7419904d5fb5af7f163c1902bf24bd1a9a82b5875371e653406f9677e07",
+      "status": "reviewed",
+      "translation": "all three; generic annotations including unknown strand and aa; Radial per new-view support matrix"
+    },
+    "geom_feature_label/purpose": {
+      "source_sha256": "1a40ccd40ac8a09625cb8e74dd4e55a786afe1b3598b480984d78d91ba205a05",
+      "status": "reviewed",
+      "translation": "Label generic genomic features"
+    },
+    "geom_feature_label/modes_localized": {
+      "source_sha256": "10fc844858ddfa5a8565771f37461ea3b3584b2141136e1cd119594825775833",
+      "status": "reviewed",
+      "translation": "all three; linear uses vertical/horizontal rows for radial/tangent; Radial per new-view support matrix"
+    },
+    "geom_feature_label_repel/purpose": {
+      "source_sha256": "d5854391cf089be2b7379581693a6465d9e53c09bfd884fff00f1f268df4b031",
+      "status": "reviewed",
+      "translation": "Automatically arrange generic feature labels"
+    },
+    "geom_feature_label_repel/modes_localized": {
+      "source_sha256": "0d3f96878cea3e2b9b468ff89ae763b338a0cba20b527375d06c23e2ce99d837",
+      "status": "reviewed",
+      "translation": "all three; external=FALSE rejected by linear mode; Radial per new-view support matrix"
+    },
+    "geom_feature_plasmid/purpose": {
+      "source_sha256": "3c174ccd5ee99dd1a21b6fc012ce95822d47ed0a7ddb8c407dbff5aef621cd41",
+      "status": "reviewed",
+      "translation": "Draw SnapGene-style features on a circular plasmid"
+    },
+    "geom_feature_plasmid/modes_localized": {
+      "source_sha256": "05071a3987334bec8f9b64fc443287da92b0704478f1f0804afe86d537b9dc4b",
+      "status": "reviewed",
+      "translation": "generic geometry preset; intended circular; compare defaults before transfer; Radial per new-view support matrix"
+    },
+    "geom_gene/purpose": {
+      "source_sha256": "7425d22e51aae96ff4d13cc132e0be34106839769c5954fe72341d09d333d02e",
+      "status": "reviewed",
+      "translation": "Add a gene arrow layer"
+    },
+    "geom_gene/modes_localized": {
+      "source_sha256": "f4aa859f53033fa17bb626b77e31138b67f1c5454ee8d6ec2d0c7a48581a7276",
+      "status": "reviewed",
+      "translation": "all three on bp; known strand required; Radial per new-view support matrix"
+    },
+    "geom_gene_label/purpose": {
+      "source_sha256": "e67143c548aca45d6f43b7f8a90f4cc0c8ad5859cc28eb6d59990da5e6245de5",
+      "status": "reviewed",
+      "translation": "Add a gene label layer"
+    },
+    "geom_gene_label/modes_localized": {
+      "source_sha256": "56a07b6a205c83ea6b01187b84756253a92ceb1e9b9e4e1e2f137a316fdea648",
+      "status": "reviewed",
+      "translation": "bp gene labels; circular/linear orientation differs; Radial per new-view support matrix"
+    },
+    "geom_gene_label_repel/purpose": {
+      "source_sha256": "0c649a1fea6d867f642c685968312014b86a31f9f75ac4c3f0ef45f9dab90754",
+      "status": "reviewed",
+      "translation": "Add an automatically arranged gene label layer"
+    },
+    "geom_gene_label_repel/modes_localized": {
+      "source_sha256": "f5ffbb9186eb962d77cd5ab6de1df92af8039bbb5d4c0dc2a314441f2482e7a0",
+      "status": "reviewed",
+      "translation": "bp gene labels; linear shares row layout; Radial per new-view support matrix"
+    },
+    "geom_link_line/purpose": {
+      "source_sha256": "d09a521bc0402c380e889a573e56fce9523af3bb03905f6ef6d496d12f1a5dd5",
+      "status": "reviewed",
+      "translation": "Draw point-to-point sequence links"
+    },
+    "geom_link_line/modes_localized": {
+      "source_sha256": "e43f339f198fa44fc4a8b60a76b074fd838065a6fe8750c2898d5a89b18cfd1e",
+      "status": "reviewed",
+      "translation": "chord/collinear; explicit qpos/spos; circular rejected; Radial per new-view support matrix"
+    },
+    "geom_link_ribbon/purpose": {
+      "source_sha256": "c118620a2d02eeccc2d579ae505f4eb2a93ce53d931beda31e90cd6757be6fb9",
+      "status": "reviewed",
+      "translation": "Add an alignment ribbon layer"
+    },
+    "geom_link_ribbon/modes_localized": {
+      "source_sha256": "30567de964ac4f86272a081144aebcdf4292630af178ca4a4de6cfd1c996ffdd",
+      "status": "reviewed",
+      "translation": "chord/collinear; circular rejected; linear adjacency follows displayed rows; Radial per new-view support matrix"
+    },
+    "geom_primer/purpose": {
+      "source_sha256": "2ccadf4635cd5206b4c40f7f2363934064fb139d631eb7ddf13ebcac692d0543",
+      "status": "reviewed",
+      "translation": "Draw primer binding ranges on a circular sequence"
+    },
+    "geom_primer/modes_localized": {
+      "source_sha256": "c5db3c27f0ca8283ccaa887f821ea37ebed82993361b0a02a3eddbabf7dd1940",
+      "status": "reviewed",
+      "translation": "bp single circular recommended; single chord composition available; linear rejected"
+    },
+    "geom_primer_label_repel/purpose": {
+      "source_sha256": "10d05cd7ecbce44097e3a83cfe945b3cfe8a72949b12176e79cd3a2c169b4c85",
+      "status": "reviewed",
+      "translation": "Arrange primer labels and leaders"
+    },
+    "geom_primer_label_repel/modes_localized": {
+      "source_sha256": "a95d9ba52818d912366ebb94c754bd845c4832fb5825cb862ef387f7217e0c10",
+      "status": "reviewed",
+      "translation": "bp single circular recommended; linear rejected"
+    },
+    "geom_restriction_site/purpose": {
+      "source_sha256": "b694f58a6921fff71ea8858d0beb9dce16e50af104b3c3f08fc51c731999c2d9",
+      "status": "reviewed",
+      "translation": "Draw restriction sites, labels and deterministic leaders"
+    },
+    "geom_restriction_site/modes_localized": {
+      "source_sha256": "a95d9ba52818d912366ebb94c754bd845c4832fb5825cb862ef387f7217e0c10",
+      "status": "reviewed",
+      "translation": "bp single circular recommended; linear rejected"
+    },
+    "geom_seq/purpose": {
+      "source_sha256": "84d748b65a9e4d79b9c11cb1e27738b87e2a1ca166d46ca2a9e4c2f74675526f",
+      "status": "reviewed",
+      "translation": "Add a sequence arc layer"
+    },
+    "geom_seq/modes_localized": {
+      "source_sha256": "6e71e12e3c40669b742d6ebba7bc38efce721a26d666dba26f4bce4c211f37d2",
+      "status": "reviewed",
+      "translation": "all three; linear rejects radius/curvature/ring; circular owns gap/direction; Radial per new-view support matrix"
+    },
+    "geom_seq_break/purpose": {
+      "source_sha256": "fa466ed3dedb184d494377c52c28dcd156bc3b17cb129fc3d1b380f74ffb3d83",
+      "status": "reviewed",
+      "translation": "Mark cropped ends of linear sequences"
+    },
+    "geom_seq_break/modes_localized": {
+      "source_sha256": "8e9e4703023213bf472cd15aab8bc50b858075debd0a90790235eda387f3fb62",
+      "status": "reviewed",
+      "translation": "collinear only, focused/segmented truncated-end metadata required; Radial per new-view support matrix"
+    },
+    "geom_seq_center_label/purpose": {
+      "source_sha256": "91c1665e99282194faa0dd583b5424d2b1f4bd20097fb014a0ed13deb366e12b",
+      "status": "reviewed",
+      "translation": "Add a circular-sequence centre label"
+    },
+    "geom_seq_center_label/modes_localized": {
+      "source_sha256": "68a2770de61dd238cdc78eaa10a756312505bff39981ae1087192163cfa60c15",
+      "status": "reviewed",
+      "translation": "one sequence; circular recommended; linear rejected"
+    },
+    "geom_seq_label/purpose": {
+      "source_sha256": "3f1dd5f314e28f9a691629cf72aa0e3c1318ace5e87b46e64157532a6a47ae52",
+      "status": "reviewed",
+      "translation": "Add a sequence label layer"
+    },
+    "geom_seq_label/modes_localized": {
+      "source_sha256": "f1c131561d174bdcf7d0b3c2975515ebc3f5bd54dc53c11932348a2117f33cf7",
+      "status": "reviewed",
+      "translation": "all three; linear rejects explicit seq_label_radius; Radial per new-view support matrix"
+    },
+    "geom_seq_region/purpose": {
+      "source_sha256": "dd502057eb38245c7218f8354b337e54d781b8c0b9500e7c3fdc149e71c5612c",
+      "status": "reviewed",
+      "translation": "Highlight regions along sequence arcs"
+    },
+    "geom_seq_region/modes_localized": {
+      "source_sha256": "a90da433719d11184084c3fd086273bf8284034deae9f09dc6b28b486c0c2671",
+      "status": "reviewed",
+      "translation": "all three, valid source intervals and units; Radial per new-view support matrix"
+    },
+    "geom_seq_scale/purpose": {
+      "source_sha256": "9727ce7ab310aaeabb3a9bdb9e308b92e7252d8ab55519c0930de3bf2f8114cf",
+      "status": "reviewed",
+      "translation": "Add a shared sequence-position scale bar to a linear display"
+    },
+    "geom_seq_scale/modes_localized": {
+      "source_sha256": "fefe41c512e8a87402b1cc501c887037c9f3a24732e582cf98ee650ab73643c1",
+      "status": "reviewed",
+      "translation": "collinear only; native bp/aa ruler"
+    },
+    "geom_track_bar/purpose": {
+      "source_sha256": "537d28627e8fe504697cf4aca96c82310802665ee9f0f88a4d094fff2ab539c7",
+      "status": "reviewed",
+      "translation": "Count observations at source positions"
+    },
+    "geom_track_bar/modes_localized": {
+      "source_sha256": "fb67455442c430ca6b9c61e7fff10f3e7830779e00931fbdccc5d7624ec97fbc",
+      "status": "reviewed",
+      "translation": "Count observations at source positions in compatible backbone views; zero baseline; binning is a separate explicit Stat"
+    },
+    "geom_track_line/purpose": {
+      "source_sha256": "0058d76dc053b3fd0289af639d6faac1346b59abde6420c67fb41b4d14643c5e",
+      "status": "reviewed",
+      "translation": "Draw explicit quantitative tracks along sequence backbones"
+    },
+    "geom_track_line/modes_localized": {
+      "source_sha256": "ee2ea024110ab84b7fd3edacd00d17e311d0cff772a653ba461b367d597ec4be",
+      "status": "reviewed",
+      "translation": "all three; increasing positions per group; closed requires complete circular gap=0; Radial per new-view support matrix"
+    },
+    "geom_track_tile/purpose": {
+      "source_sha256": "0058d76dc053b3fd0289af639d6faac1346b59abde6420c67fb41b4d14643c5e",
+      "status": "reviewed",
+      "translation": "Draw explicit quantitative tracks along sequence backbones"
+    },
+    "geom_track_tile/modes_localized": {
+      "source_sha256": "33a356b51f53088f82835bb22d09a7ec562b997ea3ae780b378229c09e349e99",
+      "status": "reviewed",
+      "translation": "all three; explicit named track; overlapping input tiles keep drawing order; Radial per new-view support matrix"
+    },
+    "get_chord_layout/purpose": {
+      "source_sha256": "d646b0c51b6bd9e050e2fdba317e95b61a7875da59fd9daaf53c2974006a40e7",
+      "status": "reviewed",
+      "translation": "Get the chord layout from a ggchord plot"
+    },
+    "get_chord_layout/modes_localized": {
+      "source_sha256": "c1d2326cf885aa7182cc431947390fa0b3cea31b48c8d972bee27ffbfc929330",
+      "status": "reviewed",
+      "translation": "complete documented layout for all supported plots"
+    },
+    "ggchord/purpose": {
+      "source_sha256": "7c2282d06d37f80211d7b3b98b799209078091864bb0570d35674b0135800c03",
+      "status": "reviewed",
+      "translation": "Create sequence plots from tables and independent layers"
+    },
+    "ggchord/modes_localized": {
+      "source_sha256": "e5b0acd3c48757165fee91670d9c0b8911013147e68110be6522684256604a04",
+      "status": "reviewed",
+      "translation": "constructor; one declared unit per plot"
+    },
+    "ggsave/purpose": {
+      "source_sha256": "72476687defa4ed5f3795aaaddc8af6699cfebd0c00ca8da10f0e86d4e8e7dbc",
+      "status": "reviewed",
+      "translation": "Selected ggplot2 helpers for ggchord plots"
+    },
+    "ggsave/modes_localized": {
+      "source_sha256": "9a7d3241a50bd33fdfb3454fabd23d0d97d0d79f3d621c9485e5b2439e3320a2",
+      "status": "reviewed",
+      "translation": "upstream; applies only to matching supported ggplot roles"
+    },
+    "ggtitle/purpose": {
+      "source_sha256": "72476687defa4ed5f3795aaaddc8af6699cfebd0c00ca8da10f0e86d4e8e7dbc",
+      "status": "reviewed",
+      "translation": "Selected ggplot2 helpers for ggchord plots"
+    },
+    "ggtitle/modes_localized": {
+      "source_sha256": "9a7d3241a50bd33fdfb3454fabd23d0d97d0d79f3d621c9485e5b2439e3320a2",
+      "status": "reviewed",
+      "translation": "upstream; applies only to matching supported ggplot roles"
+    },
+    "guide_ggchord_colorbar/purpose": {
+      "source_sha256": "d262d345021cb5f401d46633546c37ee9f82725afba2416ebeebbd615cd2afbf",
+      "status": "reviewed",
+      "translation": "Guides for ggchord role aesthetics"
+    },
+    "guide_ggchord_colorbar/modes_localized": {
+      "source_sha256": "b67833a3f1cc1913a0a960651bbc76cf77d777b485de026601c651449f201f1f",
+      "status": "reviewed",
+      "translation": "matching discrete/continuous role guide; all supported plots"
+    },
+    "guide_ggchord_colourbar/purpose": {
+      "source_sha256": "d262d345021cb5f401d46633546c37ee9f82725afba2416ebeebbd615cd2afbf",
+      "status": "reviewed",
+      "translation": "Guides for ggchord role aesthetics"
+    },
+    "guide_ggchord_colourbar/modes_localized": {
+      "source_sha256": "b67833a3f1cc1913a0a960651bbc76cf77d777b485de026601c651449f201f1f",
+      "status": "reviewed",
+      "translation": "matching discrete/continuous role guide; all supported plots"
+    },
+    "guide_ggchord_legend/purpose": {
+      "source_sha256": "d262d345021cb5f401d46633546c37ee9f82725afba2416ebeebbd615cd2afbf",
+      "status": "reviewed",
+      "translation": "Guides for ggchord role aesthetics"
+    },
+    "guide_ggchord_legend/modes_localized": {
+      "source_sha256": "b67833a3f1cc1913a0a960651bbc76cf77d777b485de026601c651449f201f1f",
+      "status": "reviewed",
+      "translation": "matching discrete/continuous role guide; all supported plots"
+    },
+    "guides/purpose": {
+      "source_sha256": "72476687defa4ed5f3795aaaddc8af6699cfebd0c00ca8da10f0e86d4e8e7dbc",
+      "status": "reviewed",
+      "translation": "Selected ggplot2 helpers for ggchord plots"
+    },
+    "guides/modes_localized": {
+      "source_sha256": "9a7d3241a50bd33fdfb3454fabd23d0d97d0d79f3d621c9485e5b2439e3320a2",
+      "status": "reviewed",
+      "translation": "upstream; applies only to matching supported ggplot roles"
+    },
+    "labs/purpose": {
+      "source_sha256": "72476687defa4ed5f3795aaaddc8af6699cfebd0c00ca8da10f0e86d4e8e7dbc",
+      "status": "reviewed",
+      "translation": "Selected ggplot2 helpers for ggchord plots"
+    },
+    "labs/modes_localized": {
+      "source_sha256": "9a7d3241a50bd33fdfb3454fabd23d0d97d0d79f3d621c9485e5b2439e3320a2",
+      "status": "reviewed",
+      "translation": "upstream; applies only to matching supported ggplot roles"
+    },
+    "last_plot/purpose": {
+      "source_sha256": "72476687defa4ed5f3795aaaddc8af6699cfebd0c00ca8da10f0e86d4e8e7dbc",
+      "status": "reviewed",
+      "translation": "Selected ggplot2 helpers for ggchord plots"
+    },
+    "last_plot/modes_localized": {
+      "source_sha256": "9a7d3241a50bd33fdfb3454fabd23d0d97d0d79f3d621c9485e5b2439e3320a2",
+      "status": "reviewed",
+      "translation": "upstream; applies only to matching supported ggplot roles"
+    },
+    "link_ggchord_clusters/purpose": {
+      "source_sha256": "ecd5028f9be59db67a201e32d92e67760b263a740c52867f55faa6c2e00f307c",
+      "status": "reviewed",
+      "translation": "Convert explicit homology-cluster membership to feature links"
+    },
+    "link_ggchord_clusters/modes_localized": {
+      "source_sha256": "b69ce47f5770c7bc212e2d3b1e100d2a71b9bf0855a3beb8cb3b30531cce4898",
+      "status": "reviewed",
+      "translation": "explicit biological membership; matching names alone are insufficient"
+    },
+    "map_ggchord_position/purpose": {
+      "source_sha256": "dd1b638f9d0dc48b2e54bb85eac643729ec66bc0e71499fcc3f538f96aa711d5",
+      "status": "reviewed",
+      "translation": "Map source positions and display coordinates"
+    },
+    "map_ggchord_position/modes_localized": {
+      "source_sha256": "8eb2b89aff8102edca4a141f239304966af1de862f9f56d17df1cda5a4aca04e",
+      "status": "reviewed",
+      "translation": "Native/source positions; explicit Dotplot axis, or both x/y for radial inverse"
+    },
+    "margin/purpose": {
+      "source_sha256": "72476687defa4ed5f3795aaaddc8af6699cfebd0c00ca8da10f0e86d4e8e7dbc",
+      "status": "reviewed",
+      "translation": "Selected ggplot2 helpers for ggchord plots"
+    },
+    "margin/modes_localized": {
+      "source_sha256": "9a7d3241a50bd33fdfb3454fabd23d0d97d0d79f3d621c9485e5b2439e3320a2",
+      "status": "reviewed",
+      "translation": "upstream; applies only to matching supported ggplot roles"
+    },
+    "merge_ggchord_ribbons/purpose": {
+      "source_sha256": "3d1cfa3158bc6cd5c3d14d16d7b025b32537175060b99e24d4dbacb26aa5228c",
+      "status": "reviewed",
+      "translation": "Merge adjacent or overlapping alignment blocks of the same sequence pair"
+    },
+    "merge_ggchord_ribbons/modes_localized": {
+      "source_sha256": "55ed0839524b850b0a9d5aed47a47bf2fa96db0102d688a281972afd5a17d327",
+      "status": "reviewed",
+      "translation": "compatible display envelopes with estimation/provenance flags"
+    },
+    "optimize_ggchord_layout/purpose": {
+      "source_sha256": "b2a201b138d9383cb5668248ff2db4a26bdcaf75dfbdc1173af3b9fd975b7fbb",
+      "status": "reviewed",
+      "translation": "Optimize sequence order and orientation for ribbon readability"
+    },
+    "optimize_ggchord_layout/modes_localized": {
+      "source_sha256": "c5cc46d420145d774a5410fca0b544443dff843a90a4525f59d2f4cdbeb0f2fc",
+      "status": "reviewed",
+      "translation": "explicit input sequence order/orientation heuristic, not biological inference"
+    },
+    "position_feature_stack/purpose": {
+      "source_sha256": "5a07ceb1d33b9d13fa19ae2ca0e1e3081684339daedd405920b82cc02f69e8a1",
+      "status": "reviewed",
+      "translation": "Stack overlapping genes or features on local lanes"
+    },
+    "position_feature_stack/modes_localized": {
+      "source_sha256": "ecfad8f22ef5b36452a2e54517f2ea462463bb358ec820f946d2202f86fdd38b",
+      "status": "reviewed",
+      "translation": "feature lanes; base Position before overlap allocation"
+    },
+    "position_identity/purpose": {
+      "source_sha256": "72476687defa4ed5f3795aaaddc8af6699cfebd0c00ca8da10f0e86d4e8e7dbc",
+      "status": "reviewed",
+      "translation": "Selected ggplot2 helpers for ggchord plots"
+    },
+    "position_identity/modes_localized": {
+      "source_sha256": "9a7d3241a50bd33fdfb3454fabd23d0d97d0d79f3d621c9485e5b2439e3320a2",
+      "status": "reviewed",
+      "translation": "upstream; applies only to matching supported ggplot roles"
+    },
+    "position_plasmid/purpose": {
+      "source_sha256": "f4b105bd6f309db057b553c1f790f250526da09cc28fe41ec140d63936535cad",
+      "status": "reviewed",
+      "translation": "Place both feature strands on one shared band"
+    },
+    "position_plasmid/modes_localized": {
+      "source_sha256": "f4e3662e866f40be58011954904a9f4d04340e450d05357335230c2352b01889",
+      "status": "reviewed",
+      "translation": "local shared-band preset; intended circular"
+    },
+    "position_strand/purpose": {
+      "source_sha256": "b1b9b69d82232ad2a0c2c7bdbd01ddfd8d3db5cc86d95ce1acb27b2d1e27c5a0",
+      "status": "reviewed",
+      "translation": "Place features on opposite sides according to strand"
+    },
+    "position_strand/modes_localized": {
+      "source_sha256": "b3989c55aba1f7f577ebbee84bbb4a887e166930341c1014af71dc13c4488f80",
+      "status": "reviewed",
+      "translation": "local signed placement on valid feature/gene layers"
+    },
+    "position_track/purpose": {
+      "source_sha256": "a11192c75560839c3750f4168065681ac16c518883a9196f5b0ae85e8c917455",
+      "status": "reviewed",
+      "translation": "Place a quantitative layer in an explicit sequence-local band"
+    },
+    "position_track/modes_localized": {
+      "source_sha256": "f67914d398a47ee61b4f30c3edc3ed28ff31b03ffb5062b8f1f4299543409c0f",
+      "status": "reviewed",
+      "translation": "all three; same track ID shares consistent declarations"
+    },
+    "PositionIdentity/purpose": {
+      "source_sha256": "72476687defa4ed5f3795aaaddc8af6699cfebd0c00ca8da10f0e86d4e8e7dbc",
+      "status": "reviewed",
+      "translation": "Selected ggplot2 helpers for ggchord plots"
+    },
+    "PositionIdentity/modes_localized": {
+      "source_sha256": "9a7d3241a50bd33fdfb3454fabd23d0d97d0d79f3d621c9485e5b2439e3320a2",
+      "status": "reviewed",
+      "translation": "upstream; applies only to matching supported ggplot roles"
+    },
+    "prepare_ggchord_data/purpose": {
+      "source_sha256": "3d79c54a14cce24f62e6f10f7549fc11a99a2d7968447440c96ddacf4b3e286a",
+      "status": "reviewed",
+      "translation": "Prepare named ggchord tables with an explicit audit trail"
+    },
+    "prepare_ggchord_data/modes_localized": {
+      "source_sha256": "c0a15db67c7a73ab47ec2ac850c90e22b904d836959b23390557bee3a4d78838",
+      "status": "reviewed",
+      "translation": "workflow preparation; defaults differ from standalone cleaning"
+    },
+    "primer_catalog/purpose": {
+      "source_sha256": "529134ba26a2783ce3355a5686434782e9817387411c9e6b08d2f7b09bee203c",
+      "status": "reviewed",
+      "translation": "Inspect the bundled sequencing-primer catalogue"
+    },
+    "primer_catalog/modes_localized": {
+      "source_sha256": "312537b35e5c945c6da579d874ae5c6ded23ed640b03502ae238199d608a1714",
+      "status": "reviewed",
+      "translation": "catalogue metadata, not a binding search"
+    },
+    "project_ggchord_features/purpose": {
+      "source_sha256": "6164949858e72a8500974e9c2d30701099766f8c1f610c10be67c1149009d98a",
+      "status": "reviewed",
+      "translation": "Project protein domains or genomic features through a spliced CDS map"
+    },
+    "project_ggchord_features/modes_localized": {
+      "source_sha256": "26c5598c4a71c3bd8c0dd826f0321ee2a9d15da2ee1b9a4e256f3f079e0c9771",
+      "status": "reviewed",
+      "translation": "supported amino-acid intervals through explicit CDS segment maps"
+    },
+    "project_ggchord_links/purpose": {
+      "source_sha256": "2f17b9974a168d7b5bb4f8a41a3cbe5e0aebe6e225137fa40da9344af3af0892",
+      "status": "reviewed",
+      "translation": "Project explicitly ungapped protein links to genomic coding segments"
+    },
+    "project_ggchord_links/modes_localized": {
+      "source_sha256": "26c5598c4a71c3bd8c0dd826f0321ee2a9d15da2ee1b9a4e256f3f079e0c9771",
+      "status": "reviewed",
+      "translation": "known paired protein/CDS correspondence; gaps require justified handling"
+    },
+    "read_bed/purpose": {
+      "source_sha256": "979b7e7652bc918d9bbbe0c07c2267e005be93011d2b297ca77688f8982bc57a",
+      "status": "reviewed",
+      "translation": "Read BED intervals as ggchord features"
+    },
+    "read_bed/modes_localized": {
+      "source_sha256": "dcdc138cbe37cf90e037a9da1dfe97de715ece4f768986fb5a59a9ea9455c406",
+      "status": "reviewed",
+      "translation": "zero-based half-open BED converted once"
+    },
+    "read_blast/purpose": {
+      "source_sha256": "269a41140762d278b5cfb79fee9ae50d55cf7527eda134e3e00eac0867146818",
+      "status": "reviewed",
+      "translation": "Read one or more BLAST tabular output files into ribbon_data format"
+    },
+    "read_blast/modes_localized": {
+      "source_sha256": "dcdc138cbe37cf90e037a9da1dfe97de715ece4f768986fb5a59a9ea9455c406",
+      "status": "reviewed",
+      "translation": "local observed BLAST records; retain q/s coordinate meaning"
+    },
+    "read_fasta_lengths/purpose": {
+      "source_sha256": "bb19e7cb50588a945c7fbf171b6a18c905dee1c567dfe020c6d7ffa5d8be555e",
+      "status": "reviewed",
+      "translation": "Read one or more FASTA files into seq_data format"
+    },
+    "read_fasta_lengths/modes_localized": {
+      "source_sha256": "dcdc138cbe37cf90e037a9da1dfe97de715ece4f768986fb5a59a9ea9455c406",
+      "status": "reviewed",
+      "translation": "local FASTA; declared bp/aa unit and complete lengths"
+    },
+    "read_genbank/purpose": {
+      "source_sha256": "cf69e2d05cb50cd88eebc525d7aeaaff20e33d2fd86114ca1da1ac7e16554709",
+      "status": "reviewed",
+      "translation": "Import local GenBank or GBFF records using an optional mature parser"
+    },
+    "read_genbank/modes_localized": {
+      "source_sha256": "dcdc138cbe37cf90e037a9da1dfe97de715ece4f768986fb5a59a9ea9455c406",
+      "status": "reviewed",
+      "translation": "local GenBank; explicit installed Biopython parser; provenance retained"
+    },
+    "read_gff3/purpose": {
+      "source_sha256": "8005bf48f0f31d07e40983a72cc0b87a401a979ed31824eb86b3c56eb94070ee",
+      "status": "reviewed",
+      "translation": "Read one or more GFF3 files into gene_data format"
+    },
+    "read_gff3/modes_localized": {
+      "source_sha256": "dcdc138cbe37cf90e037a9da1dfe97de715ece4f768986fb5a59a9ea9455c406",
+      "status": "reviewed",
+      "translation": "local one-based inclusive genomic annotation"
+    },
+    "read_paf/purpose": {
+      "source_sha256": "14646dc8c13f661f7a6a2e3cc7ef54d01f2f91aabf27842cf17a811a8d873d01",
+      "status": "reviewed",
+      "translation": "Read PAF mappings as ggchord links"
+    },
+    "read_paf/modes_localized": {
+      "source_sha256": "dcdc138cbe37cf90e037a9da1dfe97de715ece4f768986fb5a59a9ea9455c406",
+      "status": "reviewed",
+      "translation": "PAF with complete source lengths and strand-aware endpoint conversion"
+    },
+    "rel/purpose": {
+      "source_sha256": "72476687defa4ed5f3795aaaddc8af6699cfebd0c00ca8da10f0e86d4e8e7dbc",
+      "status": "reviewed",
+      "translation": "Selected ggplot2 helpers for ggchord plots"
+    },
+    "rel/modes_localized": {
+      "source_sha256": "9a7d3241a50bd33fdfb3454fabd23d0d97d0d79f3d621c9485e5b2439e3320a2",
+      "status": "reviewed",
+      "translation": "upstream; applies only to matching supported ggplot roles"
+    },
+    "scale_feature_fill_manual/purpose": {
+      "source_sha256": "a2e243773bb9bf3c823888d6eadff46b7536bbaa5c503bb32df30fd75b23293c",
+      "status": "reviewed",
+      "translation": "Gene, feature and region fill scales"
+    },
+    "scale_feature_fill_manual/modes_localized": {
+      "source_sha256": "15c754c054e34af5641161e686a0c66d8a34f6cb33422d1e6c32da31e884aecd",
+      "status": "reviewed",
+      "translation": "all three; matching generic feature role/preset"
+    },
+    "scale_feature_fill_plasmid/purpose": {
+      "source_sha256": "8f454cbb878d3af578ca64fbe7cec493977691bef10a917b59a756fa0ed250f7",
+      "status": "reviewed",
+      "translation": "Plasmid-map feature presets"
+    },
+    "scale_feature_fill_plasmid/modes_localized": {
+      "source_sha256": "15c754c054e34af5641161e686a0c66d8a34f6cb33422d1e6c32da31e884aecd",
+      "status": "reviewed",
+      "translation": "all three; matching generic feature role/preset"
+    },
+    "scale_feature_shape_manual/purpose": {
+      "source_sha256": "914743cd6a95609c06c51daa2814d07ce0710b0d6427e671a2bc4cc80c4a86fd",
+      "status": "reviewed",
+      "translation": "Feature shape scale"
+    },
+    "scale_feature_shape_manual/modes_localized": {
+      "source_sha256": "15c754c054e34af5641161e686a0c66d8a34f6cb33422d1e6c32da31e884aecd",
+      "status": "reviewed",
+      "translation": "all three; matching generic feature role/preset"
+    },
+    "scale_feature_shape_plasmid/purpose": {
+      "source_sha256": "8f454cbb878d3af578ca64fbe7cec493977691bef10a917b59a756fa0ed250f7",
+      "status": "reviewed",
+      "translation": "Plasmid-map feature presets"
+    },
+    "scale_feature_shape_plasmid/modes_localized": {
+      "source_sha256": "15c754c054e34af5641161e686a0c66d8a34f6cb33422d1e6c32da31e884aecd",
+      "status": "reviewed",
+      "translation": "all three; matching generic feature role/preset"
+    },
+    "scale_gene_fill_manual/purpose": {
+      "source_sha256": "a2e243773bb9bf3c823888d6eadff46b7536bbaa5c503bb32df30fd75b23293c",
+      "status": "reviewed",
+      "translation": "Gene, feature and region fill scales"
+    },
+    "scale_gene_fill_manual/modes_localized": {
+      "source_sha256": "178249ec3b143e6cd03454723757cb0291a04306fdedeaddc14517d672d2875f",
+      "status": "reviewed",
+      "translation": "bp gene layers; compatible backbone coordinates"
+    },
+    "scale_link_alpha_continuous/purpose": {
+      "source_sha256": "e16845b7ef7ade7b25e6924fcf987686c4f088a5254947377c28035728d6be20",
+      "status": "reviewed",
+      "translation": "Scales for point links"
+    },
+    "scale_link_alpha_continuous/modes_localized": {
+      "source_sha256": "4a49a2b531a29ad0d94dee4aacc64a599cb123e342e757f04b98f0eac439d982",
+      "status": "reviewed",
+      "translation": "chord/collinear matching point-link roles"
+    },
+    "scale_link_alpha_manual/purpose": {
+      "source_sha256": "e16845b7ef7ade7b25e6924fcf987686c4f088a5254947377c28035728d6be20",
+      "status": "reviewed",
+      "translation": "Scales for point links"
+    },
+    "scale_link_alpha_manual/modes_localized": {
+      "source_sha256": "4a49a2b531a29ad0d94dee4aacc64a599cb123e342e757f04b98f0eac439d982",
+      "status": "reviewed",
+      "translation": "chord/collinear matching point-link roles"
+    },
+    "scale_link_color_gradientn/purpose": {
+      "source_sha256": "e16845b7ef7ade7b25e6924fcf987686c4f088a5254947377c28035728d6be20",
+      "status": "reviewed",
+      "translation": "Scales for point links"
+    },
+    "scale_link_color_gradientn/modes_localized": {
+      "source_sha256": "4a49a2b531a29ad0d94dee4aacc64a599cb123e342e757f04b98f0eac439d982",
+      "status": "reviewed",
+      "translation": "chord/collinear matching point-link roles"
+    },
+    "scale_link_color_manual/purpose": {
+      "source_sha256": "e16845b7ef7ade7b25e6924fcf987686c4f088a5254947377c28035728d6be20",
+      "status": "reviewed",
+      "translation": "Scales for point links"
+    },
+    "scale_link_color_manual/modes_localized": {
+      "source_sha256": "4a49a2b531a29ad0d94dee4aacc64a599cb123e342e757f04b98f0eac439d982",
+      "status": "reviewed",
+      "translation": "chord/collinear matching point-link roles"
+    },
+    "scale_link_colour_gradientn/purpose": {
+      "source_sha256": "e16845b7ef7ade7b25e6924fcf987686c4f088a5254947377c28035728d6be20",
+      "status": "reviewed",
+      "translation": "Scales for point links"
+    },
+    "scale_link_colour_gradientn/modes_localized": {
+      "source_sha256": "4a49a2b531a29ad0d94dee4aacc64a599cb123e342e757f04b98f0eac439d982",
+      "status": "reviewed",
+      "translation": "chord/collinear matching point-link roles"
+    },
+    "scale_link_colour_manual/purpose": {
+      "source_sha256": "e16845b7ef7ade7b25e6924fcf987686c4f088a5254947377c28035728d6be20",
+      "status": "reviewed",
+      "translation": "Scales for point links"
+    },
+    "scale_link_colour_manual/modes_localized": {
+      "source_sha256": "4a49a2b531a29ad0d94dee4aacc64a599cb123e342e757f04b98f0eac439d982",
+      "status": "reviewed",
+      "translation": "chord/collinear matching point-link roles"
+    },
+    "scale_link_linetype_manual/purpose": {
+      "source_sha256": "e16845b7ef7ade7b25e6924fcf987686c4f088a5254947377c28035728d6be20",
+      "status": "reviewed",
+      "translation": "Scales for point links"
+    },
+    "scale_link_linetype_manual/modes_localized": {
+      "source_sha256": "4a49a2b531a29ad0d94dee4aacc64a599cb123e342e757f04b98f0eac439d982",
+      "status": "reviewed",
+      "translation": "chord/collinear matching point-link roles"
+    },
+    "scale_link_linewidth_continuous/purpose": {
+      "source_sha256": "e16845b7ef7ade7b25e6924fcf987686c4f088a5254947377c28035728d6be20",
+      "status": "reviewed",
+      "translation": "Scales for point links"
+    },
+    "scale_link_linewidth_continuous/modes_localized": {
+      "source_sha256": "4a49a2b531a29ad0d94dee4aacc64a599cb123e342e757f04b98f0eac439d982",
+      "status": "reviewed",
+      "translation": "chord/collinear matching point-link roles"
+    },
+    "scale_link_linewidth_manual/purpose": {
+      "source_sha256": "e16845b7ef7ade7b25e6924fcf987686c4f088a5254947377c28035728d6be20",
+      "status": "reviewed",
+      "translation": "Scales for point links"
+    },
+    "scale_link_linewidth_manual/modes_localized": {
+      "source_sha256": "4a49a2b531a29ad0d94dee4aacc64a599cb123e342e757f04b98f0eac439d982",
+      "status": "reviewed",
+      "translation": "chord/collinear matching point-link roles"
+    },
+    "scale_region_fill_manual/purpose": {
+      "source_sha256": "a2e243773bb9bf3c823888d6eadff46b7536bbaa5c503bb32df30fd75b23293c",
+      "status": "reviewed",
+      "translation": "Gene, feature and region fill scales"
+    },
+    "scale_region_fill_manual/modes_localized": {
+      "source_sha256": "7091d073cdc82d5d8b52e8cf44495173e2af5a504d331a7d793dd390a00e5ef5",
+      "status": "reviewed",
+      "translation": "all three; matching region_fill role"
+    },
+    "scale_ribbon_alpha_continuous/purpose": {
+      "source_sha256": "b03eb39f0986a58317b1ae2f3da855b237112c5e70f77ddd30aea9e6108c6524",
+      "status": "reviewed",
+      "translation": "Ribbon alpha, outline and linetype scales"
+    },
+    "scale_ribbon_alpha_continuous/modes_localized": {
+      "source_sha256": "67e786a81ff0dba1f82c4e3b887301824a6b5860734e9e719411d0f135ff9997",
+      "status": "reviewed",
+      "translation": "chord/collinear matching ribbon roles"
+    },
+    "scale_ribbon_alpha_manual/purpose": {
+      "source_sha256": "b03eb39f0986a58317b1ae2f3da855b237112c5e70f77ddd30aea9e6108c6524",
+      "status": "reviewed",
+      "translation": "Ribbon alpha, outline and linetype scales"
+    },
+    "scale_ribbon_alpha_manual/modes_localized": {
+      "source_sha256": "67e786a81ff0dba1f82c4e3b887301824a6b5860734e9e719411d0f135ff9997",
+      "status": "reviewed",
+      "translation": "chord/collinear matching ribbon roles"
+    },
+    "scale_ribbon_color_manual/purpose": {
+      "source_sha256": "b03eb39f0986a58317b1ae2f3da855b237112c5e70f77ddd30aea9e6108c6524",
+      "status": "reviewed",
+      "translation": "Ribbon alpha, outline and linetype scales"
+    },
+    "scale_ribbon_color_manual/modes_localized": {
+      "source_sha256": "67e786a81ff0dba1f82c4e3b887301824a6b5860734e9e719411d0f135ff9997",
+      "status": "reviewed",
+      "translation": "chord/collinear matching ribbon roles"
+    },
+    "scale_ribbon_colour_manual/purpose": {
+      "source_sha256": "b03eb39f0986a58317b1ae2f3da855b237112c5e70f77ddd30aea9e6108c6524",
+      "status": "reviewed",
+      "translation": "Ribbon alpha, outline and linetype scales"
+    },
+    "scale_ribbon_colour_manual/modes_localized": {
+      "source_sha256": "67e786a81ff0dba1f82c4e3b887301824a6b5860734e9e719411d0f135ff9997",
+      "status": "reviewed",
+      "translation": "chord/collinear matching ribbon roles"
+    },
+    "scale_ribbon_fill_gradientn/purpose": {
+      "source_sha256": "464737c0cad351f28070215c8f209e08c4e3292064b385a102ef88d6a028fc23",
+      "status": "reviewed",
+      "translation": "Ribbon fill scales"
+    },
+    "scale_ribbon_fill_gradientn/modes_localized": {
+      "source_sha256": "67e786a81ff0dba1f82c4e3b887301824a6b5860734e9e719411d0f135ff9997",
+      "status": "reviewed",
+      "translation": "chord/collinear matching ribbon roles"
+    },
+    "scale_ribbon_fill_identity/purpose": {
+      "source_sha256": "464737c0cad351f28070215c8f209e08c4e3292064b385a102ef88d6a028fc23",
+      "status": "reviewed",
+      "translation": "Ribbon fill scales"
+    },
+    "scale_ribbon_fill_identity/modes_localized": {
+      "source_sha256": "67e786a81ff0dba1f82c4e3b887301824a6b5860734e9e719411d0f135ff9997",
+      "status": "reviewed",
+      "translation": "chord/collinear matching ribbon roles"
+    },
+    "scale_ribbon_fill_manual/purpose": {
+      "source_sha256": "464737c0cad351f28070215c8f209e08c4e3292064b385a102ef88d6a028fc23",
+      "status": "reviewed",
+      "translation": "Ribbon fill scales"
+    },
+    "scale_ribbon_fill_manual/modes_localized": {
+      "source_sha256": "67e786a81ff0dba1f82c4e3b887301824a6b5860734e9e719411d0f135ff9997",
+      "status": "reviewed",
+      "translation": "chord/collinear matching ribbon roles"
+    },
+    "scale_ribbon_fill_stepsn/purpose": {
+      "source_sha256": "464737c0cad351f28070215c8f209e08c4e3292064b385a102ef88d6a028fc23",
+      "status": "reviewed",
+      "translation": "Ribbon fill scales"
+    },
+    "scale_ribbon_fill_stepsn/modes_localized": {
+      "source_sha256": "67e786a81ff0dba1f82c4e3b887301824a6b5860734e9e719411d0f135ff9997",
+      "status": "reviewed",
+      "translation": "chord/collinear matching ribbon roles"
+    },
+    "scale_ribbon_linetype_manual/purpose": {
+      "source_sha256": "b03eb39f0986a58317b1ae2f3da855b237112c5e70f77ddd30aea9e6108c6524",
+      "status": "reviewed",
+      "translation": "Ribbon alpha, outline and linetype scales"
+    },
+    "scale_ribbon_linetype_manual/modes_localized": {
+      "source_sha256": "67e786a81ff0dba1f82c4e3b887301824a6b5860734e9e719411d0f135ff9997",
+      "status": "reviewed",
+      "translation": "chord/collinear matching ribbon roles"
+    },
+    "scale_seq_color_manual/purpose": {
+      "source_sha256": "16b6088d87866c863e242e8f22d6dd3a42cb88a8f26dd1fcdec7e32a6d1e138c",
+      "status": "reviewed",
+      "translation": "Sequence colour scales"
+    },
+    "scale_seq_color_manual/modes_localized": {
+      "source_sha256": "dd8c88957d80bc57c52923d369b5b0021fe5509bd61d4a5a601966e4d946aae5",
+      "status": "reviewed",
+      "translation": "all three; matching sequence colour role"
+    },
+    "scale_seq_colour_manual/purpose": {
+      "source_sha256": "16b6088d87866c863e242e8f22d6dd3a42cb88a8f26dd1fcdec7e32a6d1e138c",
+      "status": "reviewed",
+      "translation": "Sequence colour scales"
+    },
+    "scale_seq_colour_manual/modes_localized": {
+      "source_sha256": "dd8c88957d80bc57c52923d369b5b0021fe5509bd61d4a5a601966e4d946aae5",
+      "status": "reviewed",
+      "translation": "all three; matching sequence colour role"
+    },
+    "scale_seq_position_continuous/purpose": {
+      "source_sha256": "1e60b9cc44f5cf73a0840a9be6c313b299c6969a4dbf78f274df3447a50e57ef",
+      "status": "reviewed",
+      "translation": "Genomic sequence position scale"
+    },
+    "scale_seq_position_continuous/modes_localized": {
+      "source_sha256": "14bc61563b7f33654fb3ca716701a7ff6d068145f93acaffa6893a5203c031e3",
+      "status": "reviewed",
+      "translation": "all three; position axis, separate from the collinear ruler"
+    },
+    "scale_seq_ring_manual/purpose": {
+      "source_sha256": "f6a2c412762c68a78f5d7961f722fc08815ae619f68376bce88da49ad229538c",
+      "status": "reviewed",
+      "translation": "Explicit sequence ring scale"
+    },
+    "scale_seq_ring_manual/modes_localized": {
+      "source_sha256": "82a8771aea1f15b9f17f6c806d0ca48173c180575b54418b0e52b06d93e8edd0",
+      "status": "reviewed",
+      "translation": "chord/circular; positive declared radii; linear rejected"
+    },
+    "scale_track_colour_gradientn/purpose": {
+      "source_sha256": "89a71db5b7613916ee24f15372f6eaf1fef51e4ec072ac65e2b5c22ca009c65c",
+      "status": "reviewed",
+      "translation": "Set a track's fill or colour mapping"
+    },
+    "scale_track_colour_gradientn/modes_localized": {
+      "source_sha256": "4fe472eee3ecfbe8dc1bd8c0a818b45e85e73c24b87639203a112ba4db7b47d9",
+      "status": "reviewed",
+      "translation": "all three; scale ID must match position_track"
+    },
+    "scale_track_colour_manual/purpose": {
+      "source_sha256": "89a71db5b7613916ee24f15372f6eaf1fef51e4ec072ac65e2b5c22ca009c65c",
+      "status": "reviewed",
+      "translation": "Set a track's fill or colour mapping"
+    },
+    "scale_track_colour_manual/modes_localized": {
+      "source_sha256": "4fe472eee3ecfbe8dc1bd8c0a818b45e85e73c24b87639203a112ba4db7b47d9",
+      "status": "reviewed",
+      "translation": "all three; scale ID must match position_track"
+    },
+    "scale_track_fill_gradientn/purpose": {
+      "source_sha256": "89a71db5b7613916ee24f15372f6eaf1fef51e4ec072ac65e2b5c22ca009c65c",
+      "status": "reviewed",
+      "translation": "Set a track's fill or colour mapping"
+    },
+    "scale_track_fill_gradientn/modes_localized": {
+      "source_sha256": "4fe472eee3ecfbe8dc1bd8c0a818b45e85e73c24b87639203a112ba4db7b47d9",
+      "status": "reviewed",
+      "translation": "all three; scale ID must match position_track"
+    },
+    "scale_track_fill_manual/purpose": {
+      "source_sha256": "89a71db5b7613916ee24f15372f6eaf1fef51e4ec072ac65e2b5c22ca009c65c",
+      "status": "reviewed",
+      "translation": "Set a track's fill or colour mapping"
+    },
+    "scale_track_fill_manual/modes_localized": {
+      "source_sha256": "4fe472eee3ecfbe8dc1bd8c0a818b45e85e73c24b87639203a112ba4db7b47d9",
+      "status": "reviewed",
+      "translation": "all three; scale ID must match position_track"
+    },
+    "scale_track_value_continuous/purpose": {
+      "source_sha256": "45c3d11c258e396dc2af318b3457702a946021532d8a29e087f8edbbf9687131",
+      "status": "reviewed",
+      "translation": "Set a named track's numerical height scale"
+    },
+    "scale_track_value_continuous/modes_localized": {
+      "source_sha256": "4fe472eee3ecfbe8dc1bd8c0a818b45e85e73c24b87639203a112ba4db7b47d9",
+      "status": "reviewed",
+      "translation": "all three; scale ID must match position_track"
+    },
+    "segment_ggchord_data/purpose": {
+      "source_sha256": "7a07e247db6bc74f1dd240b84bb9457e18d8c6d091eccd7b83eaf5e3603bff41",
+      "status": "reviewed",
+      "translation": "Prepare independent windows for a segmented linear display"
+    },
+    "segment_ggchord_data/modes_localized": {
+      "source_sha256": "73c181d491dd8700d245029beb565b0ec897b0843b7512cb253b0c91a6cfaf53",
+      "status": "reviewed",
+      "translation": "independent windows and declared local display reversal"
+    },
+    "stat_ribbon_bundle/purpose": {
+      "source_sha256": "a4edde21b4ae774385c37aa0abc60803c222f3b80bf31eb733d3fdf143906eb6",
+      "status": "reviewed",
+      "translation": "Bundle ribbons as a ggchord stat"
+    },
+    "stat_ribbon_bundle/modes_localized": {
+      "source_sha256": "7b50969c4e418154e787e89be0cbbeb643c0f17a9dcd9a6e3e5755690e365999",
+      "status": "reviewed",
+      "translation": "chord/collinear ribbon layer; explicit aggregation"
+    },
+    "stat_ribbon_density/purpose": {
+      "source_sha256": "824fca4b54f929d8ead791c9f9956ec5e2f8cdd5a1808b3cdae12b13b90d12e2",
+      "status": "reviewed",
+      "translation": "Compute local ribbon density as a ggchord stat"
+    },
+    "stat_ribbon_density/modes_localized": {
+      "source_sha256": "a39f60896cf0c2c9d004fdb0afbdc84bf44d2c3e536f73eaf15e30adf9bd5855",
+      "status": "reviewed",
+      "translation": "chord/collinear ribbon layer; one ribbon per source observation"
+    },
+    "theme/purpose": {
+      "source_sha256": "72476687defa4ed5f3795aaaddc8af6699cfebd0c00ca8da10f0e86d4e8e7dbc",
+      "status": "reviewed",
+      "translation": "Selected ggplot2 helpers for ggchord plots"
+    },
+    "theme/modes_localized": {
+      "source_sha256": "9a7d3241a50bd33fdfb3454fabd23d0d97d0d79f3d621c9485e5b2439e3320a2",
+      "status": "reviewed",
+      "translation": "upstream; applies only to matching supported ggplot roles"
+    },
+    "theme_ggchord/purpose": {
+      "source_sha256": "d19d320697fdfd56b2aa7b14c104836ad684bb6dde5494be19b663d4cde68d42",
+      "status": "reviewed",
+      "translation": "ggchord themes"
+    },
+    "theme_ggchord/modes_localized": {
+      "source_sha256": "b67833a3f1cc1913a0a960651bbc76cf77d777b485de026601c651449f201f1f",
+      "status": "reviewed",
+      "translation": "non-data style; plasmid preset intended circular"
+    },
+    "theme_ggchord_dark/purpose": {
+      "source_sha256": "d19d320697fdfd56b2aa7b14c104836ad684bb6dde5494be19b663d4cde68d42",
+      "status": "reviewed",
+      "translation": "ggchord themes"
+    },
+    "theme_ggchord_dark/modes_localized": {
+      "source_sha256": "b67833a3f1cc1913a0a960651bbc76cf77d777b485de026601c651449f201f1f",
+      "status": "reviewed",
+      "translation": "non-data style; plasmid preset intended circular"
+    },
+    "theme_ggchord_minimal/purpose": {
+      "source_sha256": "d19d320697fdfd56b2aa7b14c104836ad684bb6dde5494be19b663d4cde68d42",
+      "status": "reviewed",
+      "translation": "ggchord themes"
+    },
+    "theme_ggchord_minimal/modes_localized": {
+      "source_sha256": "b67833a3f1cc1913a0a960651bbc76cf77d777b485de026601c651449f201f1f",
+      "status": "reviewed",
+      "translation": "non-data style; plasmid preset intended circular"
+    },
+    "theme_ggchord_plasmid/purpose": {
+      "source_sha256": "d19d320697fdfd56b2aa7b14c104836ad684bb6dde5494be19b663d4cde68d42",
+      "status": "reviewed",
+      "translation": "ggchord themes"
+    },
+    "theme_ggchord_plasmid/modes_localized": {
+      "source_sha256": "b67833a3f1cc1913a0a960651bbc76cf77d777b485de026601c651449f201f1f",
+      "status": "reviewed",
+      "translation": "non-data style; plasmid preset intended circular"
+    },
+    "theme_ggchord_publication/purpose": {
+      "source_sha256": "d19d320697fdfd56b2aa7b14c104836ad684bb6dde5494be19b663d4cde68d42",
+      "status": "reviewed",
+      "translation": "ggchord themes"
+    },
+    "theme_ggchord_publication/modes_localized": {
+      "source_sha256": "b67833a3f1cc1913a0a960651bbc76cf77d777b485de026601c651449f201f1f",
+      "status": "reviewed",
+      "translation": "non-data style; plasmid preset intended circular"
+    },
+    "unit/purpose": {
+      "source_sha256": "f83028f2bff8bc56370907a659e30a1f3e10f8134bdde4ee64a0d52930ab74ec",
+      "status": "reviewed",
+      "translation": "Physical units and direction arrows"
+    },
+    "unit/modes_localized": {
+      "source_sha256": "9a7d3241a50bd33fdfb3454fabd23d0d97d0d79f3d621c9485e5b2439e3320a2",
+      "status": "reviewed",
+      "translation": "upstream; applies only to matching supported ggplot roles"
+    },
+    "validate_ggchord_data/purpose": {
+      "source_sha256": "fb3aebcc5518c566beb96b6de7913f98cab6f3a6d4a1a32a1bdda85263b31e92",
+      "status": "reviewed",
+      "translation": "Validate ggchord input data before plotting"
+    },
+    "validate_ggchord_data/modes_localized": {
+      "source_sha256": "c0a15db67c7a73ab47ec2ac850c90e22b904d836959b23390557bee3a4d78838",
+      "status": "reviewed",
+      "translation": "validation reports, no silent input repair"
+    },
+    "validate_ggchord_hierarchy/purpose": {
+      "source_sha256": "6bab099425d7907669d415aa051537ea0b9a8698411da0481f0d561cdc2f4905",
+      "status": "reviewed",
+      "translation": "Validate explicit genome and contig relationships"
+    },
+    "validate_ggchord_hierarchy/modes_localized": {
+      "source_sha256": "c0a15db67c7a73ab47ec2ac850c90e22b904d836959b23390557bee3a4d78838",
+      "status": "reviewed",
+      "translation": "explicit genome/contig membership; never inferred from ID prefixes"
+    },
+    "view_ggchord/purpose": {
+      "source_sha256": "9ddcc24e051685a8a43f6f2a33431ee63ab930df76a1b1f7e9e86d479a72aa95",
+      "status": "reviewed",
+      "translation": "Preview a ggchord plot at its intended export size"
+    },
+    "view_ggchord/modes_localized": {
+      "source_sha256": "b90fab219367295fb42c909111541a84f2c5e2ab5abdda6154117ccfa9c07d2c",
+      "status": "reviewed",
+      "translation": "target-size preview of all supported plots; temporary path output"
+    },
+    "waiver/purpose": {
+      "source_sha256": "72476687defa4ed5f3795aaaddc8af6699cfebd0c00ca8da10f0e86d4e8e7dbc",
+      "status": "reviewed",
+      "translation": "Selected ggplot2 helpers for ggchord plots"
+    },
+    "waiver/modes_localized": {
+      "source_sha256": "9a7d3241a50bd33fdfb3454fabd23d0d97d0d79f3d621c9485e5b2439e3320a2",
+      "status": "reviewed",
+      "translation": "upstream; applies only to matching supported ggplot roles"
+    },
+    "geom_track/purpose": {
+      "source_sha256": "50131cd01bba4be82c18214fd04223ab11cb41271bf5458249b21433ea3642ad",
+      "status": "reviewed",
+      "translation": "Source-space statistical tracks"
+    },
+    "geom_track/modes_localized": {
+      "source_sha256": "bbfbdcc5ac19cce651239638e1731f4c58db8d6517b939ddac9dc5dc887697e2",
+      "status": "reviewed",
+      "translation": "Chord/Circular/Collinear/Sankey within the first support matrix; Radial per new-view support matrix"
+    },
+    "geom_track_col/purpose": {
+      "source_sha256": "912dc1474f83da5796bab6507e8a8ca9648c29b489bf9e3359c8b81f7d5bc6a2",
+      "status": "reviewed",
+      "translation": "Display supplied numerical heights"
+    },
+    "geom_track_col/modes_localized": {
+      "source_sha256": "bbfbdcc5ac19cce651239638e1731f4c58db8d6517b939ddac9dc5dc887697e2",
+      "status": "reviewed",
+      "translation": "Chord/Circular/Collinear/Sankey; Radial per new-view support matrix"
+    },
+    "coord_sankey/purpose": {
+      "source_sha256": "bfe5f77938fe813c6946bf14e843276acace79eda647217118133d9e136614b3",
+      "status": "reviewed",
+      "translation": "Mirrored query-left/subject-right interval relationships"
+    },
+    "coord_sankey/modes_localized": {
+      "source_sha256": "b02886b80e744cf9e93f11b301f49a1c3dd822720d200fe995031495b395d11b",
+      "status": "reviewed",
+      "translation": "Mirrored two-column relationships"
+    },
+    "coord_dotplot/purpose": {
+      "source_sha256": "ee4825be47636eb52b88f2b0cafeac91a78b3c1a509b0bcd095fa15f9aa474b5",
+      "status": "reviewed",
+      "translation": "Two-axis HSP projection"
+    },
+    "coord_dotplot/modes_localized": {
+      "source_sha256": "75064086605263fa4f376291e6854588c53283da38f157bec9409dd67a20f379",
+      "status": "reviewed",
+      "translation": "Identity HSP segments on independent native axes"
+    },
+    "geom_alignment_segment/purpose": {
+      "source_sha256": "da4d58abd62684ef068124eb58354e72f55f1dc06162a62b07a9595fdb528bef",
+      "status": "reviewed",
+      "translation": "Draw complete HSP endpoints"
+    },
+    "geom_alignment_segment/modes_localized": {
+      "source_sha256": "75064086605263fa4f376291e6854588c53283da38f157bec9409dd67a20f379",
+      "status": "reviewed",
+      "translation": "Identity HSP segments on independent native axes"
+    },
+    "coord_radial_synteny/purpose": {
+      "source_sha256": "e1a43bd9848db6daa8b78ea1a6e31e34b6c67903acc09922fed4be2eef11e449",
+      "status": "reviewed",
+      "translation": "Project linear sequences onto radial spokes"
+    },
+    "coord_radial_synteny/modes_localized": {
+      "source_sha256": "156e219b0f62853aff331699ff478e490095047e7b1c6f641c7bb662885fc986",
+      "status": "reviewed",
+      "translation": "Proportional/equal spokes, cyclic actual HSPs and shared feature/Track frames"
+    },
+    "ggchord_fusion/purpose": {
+      "source_sha256": "c7242bbeb57abba5a927f92971eb4d3a903fb837a0152233915ca5685cf40968",
+      "status": "reviewed",
+      "translation": "Compose independent genomic panels"
+    },
+    "ggchord_fusion/modes_localized": {
+      "source_sha256": "4eb5451201047fe05d4ed60497df8889d25a0471ddcdd2715191138021c68dbb",
+      "status": "reviewed",
+      "translation": "Registered genomic/character panels; eight sides, explicit boxes and nested paths"
+    },
+    "fusion_panel/purpose": {
+      "source_sha256": "f9ba20c33d0387b4b78133cc747e534fcd6a78a121c6c061c860f961e21836f9",
+      "status": "reviewed",
+      "translation": "Register a panel at a physical side"
+    },
+    "fusion_panel/modes_localized": {
+      "source_sha256": "4eb5451201047fe05d4ed60497df8889d25a0471ddcdd2715191138021c68dbb",
+      "status": "reviewed",
+      "translation": "Registered genomic/character panels; eight sides, explicit boxes and nested paths"
+    },
+    "fusion_ribbon/purpose": {
+      "source_sha256": "0b95fcb838f9233a93eec9a34004c5aa88b327e9afa284218f6b452e1642f87c",
+      "status": "reviewed",
+      "translation": "Connect full source intervals"
+    },
+    "fusion_ribbon/modes_localized": {
+      "source_sha256": "fae498f50e1d1947e43c5d0e148443b1e1b9842c988be04f30cac45cf591e581",
+      "status": "reviewed",
+      "translation": "Registered genomic plots, nested Fusion and registered character details; explicit panel/instance routing; Dotplot excluded"
+    },
+    "export_ggchord_fusion/purpose": {
+      "source_sha256": "fc969079699f148f5e2fc727dd7ef67d1c6bbfd8df95f746da99d938b07238b9",
+      "status": "reviewed",
+      "translation": "Export measured composition fronts and sources"
+    },
+    "export_ggchord_fusion/modes_localized": {
+      "source_sha256": "fae498f50e1d1947e43c5d0e148443b1e1b9842c988be04f30cac45cf591e581",
+      "status": "reviewed",
+      "translation": "Registered genomic plots, nested Fusion and registered character details; explicit panel/instance routing; Dotplot excluded"
+    },
+    "read_bedpe/purpose": {
+      "source_sha256": "db59afb17697bc1fe02e48564362629ed50021fccaba839d4d14198738d1657e",
+      "status": "reviewed",
+      "translation": "Read paired genomic intervals without inventing alignment evidence"
+    },
+    "read_bedpe/modes_localized": {
+      "source_sha256": "0e42b14e3ed39a7430185ac81c46b05b32ea0928dc4a4fffefdb00c14df2b84e",
+      "status": "reviewed",
+      "translation": "Canonical q/s intervals, paired-anchor direction and provenance"
+    },
+    "as_ggchord_alignment/purpose": {
+      "source_sha256": "c5feb06cd43c080034d61f7d67e7e2ecb52a98ffad25cf5a1bfd0a0a086a647a",
+      "status": "reviewed",
+      "translation": "Adapt existing aligned strings with exact nullable source positions"
+    },
+    "as_ggchord_alignment/modes_localized": {
+      "source_sha256": "3fdb878f3b714a76a58c9f96efc00399c5ce23c40003a8d4e1469dc338c2d2c9",
+      "status": "reviewed",
+      "translation": "Existing DNA/RNA/AA columns; Cartesian local cells; explicit source mapping"
+    },
+    "read_aligned_fasta/purpose": {
+      "source_sha256": "aac759c606e840cd81700a49da0cf8641b28ba031cebf7c64a3c37f7a4689d04",
+      "status": "reviewed",
+      "translation": "Read existing DNA/RNA/AA alignment characters without computing a new alignment"
+    },
+    "read_aligned_fasta/modes_localized": {
+      "source_sha256": "3fdb878f3b714a76a58c9f96efc00399c5ce23c40003a8d4e1469dc338c2d2c9",
+      "status": "reviewed",
+      "translation": "Existing DNA/RNA/AA columns; Cartesian local cells; explicit source mapping"
+    },
+    "map_alignment_position/purpose": {
+      "source_sha256": "1e1cfae8c4ff06c0ac7e86b07aeae7fb7bc2ae80bb97dc9c15c9e88139c7de76",
+      "status": "reviewed",
+      "translation": "Look up exact alignment columns and source positions in a selected row"
+    },
+    "map_alignment_position/modes_localized": {
+      "source_sha256": "3fdb878f3b714a76a58c9f96efc00399c5ce23c40003a8d4e1469dc338c2d2c9",
+      "status": "reviewed",
+      "translation": "Existing DNA/RNA/AA columns; Cartesian local cells; explicit source mapping"
+    },
+    "geom_residue/purpose": {
+      "source_sha256": "965c093b50b285b1d69945b996e09b705e86661a5be7780b4b8a3dbca2128894",
+      "status": "reviewed",
+      "translation": "Draw local characters with measured physical space and explicit tile/error policy"
+    },
+    "geom_residue/modes_localized": {
+      "source_sha256": "3fdb878f3b714a76a58c9f96efc00399c5ce23c40003a8d4e1469dc338c2d2c9",
+      "status": "reviewed",
+      "translation": "Existing DNA/RNA/AA columns; Cartesian local cells; explicit source mapping"
+    },
+    "magnify_ggchord/purpose": {
+      "source_sha256": "a1b642605ca99e9f720e93e44d46d7b420b3f0028b6e285bec246d0f0040b9a3",
+      "status": "reviewed",
+      "translation": "Connect a real source interval to an explicit independent local detail plot"
+    },
+    "magnify_ggchord/modes_localized": {
+      "source_sha256": "fae498f50e1d1947e43c5d0e148443b1e1b9842c988be04f30cac45cf591e581",
+      "status": "reviewed",
+      "translation": "Registered genomic plots, nested Fusion and registered character details; explicit panel/instance routing; Dotplot excluded"
+    },
+    "adapt_ggchord/purpose": {
+      "source_sha256": "3b5790b09eac895eb4735469b39f2e909ce8ca38e29ec3ba4a65d3b6bced3460",
+      "status": "reviewed",
+      "translation": "Opt into bounded theme scaling and joint guide layout at the target size"
+    },
+    "adapt_ggchord/modes_localized": {
+      "source_sha256": "ab436777185b122047ba4a53aa10b661b04491424dc31ce78cbb27c46f680588",
+      "status": "reviewed",
+      "translation": "fixed/scale/adaptive; explicit settings remain authoritative; no global collision guarantee"
+    },
+    "register_ggchord_alignment/purpose": {
+      "source_sha256": "16d45d57086420b45da053945a680652077ad34df8cf030635450d910a10765e",
+      "status": "reviewed",
+      "translation": "Register exact character/source positions for independent Fusion details"
+    },
+    "register_ggchord_alignment/modes_localized": {
+      "source_sha256": "ee7891251dbea2d62e3a8447520f12b87f8987fa309f25e12684ec08aac66475",
+      "status": "reviewed",
+      "translation": "Explicit source/column map; independent Cartesian detail; complete observed codons"
+    },
+    "translate_ggchord_cds/purpose": {
+      "source_sha256": "e96660bc5f7fed4314d29ab7c942b05535225641fd63da177a7dd36ad9ba8d37",
+      "status": "reviewed",
+      "translation": "Translate real CDS strings with codon provenance using optional Biostrings"
+    },
+    "translate_ggchord_cds/modes_localized": {
+      "source_sha256": "ee7891251dbea2d62e3a8447520f12b87f8987fa309f25e12684ec08aac66475",
+      "status": "reviewed",
+      "translation": "Explicit source/column map; independent Cartesian detail; complete observed codons"
+    },
+    "read_bedgraph/purpose": {
+      "source_sha256": "91cfd8a72de2cdaab379b6455c7eead8b3cb7b165f36f72c2c9628ae28198149",
+      "status": "reviewed",
+      "translation": "Import continuous interval signals without inferring units"
+    },
+    "read_bedgraph/modes_localized": {
+      "source_sha256": "e390afb0b1272787a4b5fc748c046538f7cc74714d83654bf4773d96288245fc",
+      "status": "reviewed",
+      "translation": "quantitative Track input; BigWig optional on supported platforms"
+    },
+    "read_bigwig/purpose": {
+      "source_sha256": "91cfd8a72de2cdaab379b6455c7eead8b3cb7b165f36f72c2c9628ae28198149",
+      "status": "reviewed",
+      "translation": "Import continuous interval signals without inferring units"
+    },
+    "read_bigwig/modes_localized": {
+      "source_sha256": "e390afb0b1272787a4b5fc748c046538f7cc74714d83654bf4773d96288245fc",
+      "status": "reviewed",
+      "translation": "quantitative Track input; BigWig optional on supported platforms"
+    },
+    "read_vcf/purpose": {
+      "source_sha256": "5b9569712dbf0f123dfd9c36fd915c3063a7ac71f7bc689f26b3626b8b2f6d6c",
+      "status": "reviewed",
+      "translation": "Import variant records and explicitly decoded structural breakpoints"
+    },
+    "read_vcf/modes_localized": {
+      "source_sha256": "ade108defe5527e549d008a78abf1d30463975629934e86b1ef02566bcb25041",
+      "status": "reviewed",
+      "translation": "VCF; BCF with explicit pysam Python; optional structural decoder"
+    },
+    "read_maf/purpose": {
+      "source_sha256": "6b3ab3669f2416fe8c20f3e0d69b732f7e7e5ac29c77c838d5021ffacb746005",
+      "status": "reviewed",
+      "translation": "Read existing genomic alignment blocks and source coordinates"
+    },
+    "read_maf/modes_localized": {
+      "source_sha256": "5eb65760694222adfff75b688429a55e9ac61bb4043b38207826ce297039b35a",
+      "status": "reviewed",
+      "translation": "optional Biopython; MAF cells and chain intervals"
+    },
+    "read_chain/purpose": {
+      "source_sha256": "6b3ab3669f2416fe8c20f3e0d69b732f7e7e5ac29c77c838d5021ffacb746005",
+      "status": "reviewed",
+      "translation": "Read existing genomic alignment blocks and source coordinates"
+    },
+    "read_chain/modes_localized": {
+      "source_sha256": "5eb65760694222adfff75b688429a55e9ac61bb4043b38207826ce297039b35a",
+      "status": "reviewed",
+      "translation": "optional Biopython; MAF cells and chain intervals"
+    },
+    "read_delta/purpose": {
+      "source_sha256": "661e9de8d6a8b77078cb638e30bbe98591b70e64ce5e425651c9630821c8ad42",
+      "status": "reviewed",
+      "translation": "Read existing delta alignments through an optional native decoder"
+    },
+    "read_delta/modes_localized": {
+      "source_sha256": "92ca841800aa79dad0bea86e2f759ddb6dbdb770b5229895540365cffb26da62",
+      "status": "reviewed",
+      "translation": "optional show-coords; bp coordinates and declared alignment metric unit"
+    },
+    "read_signature_matches/purpose": {
+      "source_sha256": "eb8c135401c6a19697d5ca0b012825940d5ce8db8372873dddf4e03e0ef2dd3b",
+      "status": "reviewed",
+      "translation": "Read existing protein signature locations and source metadata"
+    },
+    "read_signature_matches/modes_localized": {
+      "source_sha256": "c5e8351becbba9c61dd825f664693da9ec7a1ad4aa513dfa2ce3d850609b7e0a",
+      "status": "reviewed",
+      "translation": "AA features; source-native scores; JSON needs optional jsonlite"
+    },
+    "read_feature_relations/purpose": {
+      "source_sha256": "471cc8c00b9c895c1971fe4f3e9506901d970e171914f823f8045fe1e616a440",
+      "status": "reviewed",
+      "translation": "Read precomputed feature pairs and memberships"
+    },
+    "read_feature_relations/modes_localized": {
+      "source_sha256": "251cffb9adc7589dccb59b67d8ca64ac76c1c04dbdb598a974c429a666cffded",
+      "status": "reviewed",
+      "translation": "Exact feature IDs; contiguous supplied anchors; no full lengths inferred"
+    }
+  }
+}

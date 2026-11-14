@@ -1,0 +1,75 @@
+{
+  "source_sha256": "dcac891cd20632831cf3aab5ae50e45e4d635f988f71f551ee1cd56d67bfc363",
+  "blocks": {
+    "0": {
+      "source_sha256": "c2b2c2899f9f3322222f40961bb827a3a76449e3b76bee8358b5365f9aa359d7",
+      "status": "reviewed",
+      "translation": "⟦shared:0⟧⟦shared:1⟧Select local windows or segments while keeping source positions distinct from display transformations.⟦shared:2⟧⟦shared:3⟧\n"
+    },
+    "1": {
+      "source_sha256": "a7eff379d55a58f24320342436fd6fa1d00b8051601abead75e4110f3bbd572c",
+      "status": "reviewed",
+      "translation": "## Focus without losing origins ⟦shared:0⟧\n"
+    },
+    "4": {
+      "source_sha256": "16625d92fa9d772b5f2209a75102b457d31f3226b89cb3160af3c5112753b12f",
+      "status": "reviewed",
+      "translation": "Focus relocates retained positions to local one-based coordinates and retains\nsource origins, truncation flags and a report. ⟦shared:0⟧ can clip\nlinks by a linear display projection; it does not realign sequences. A scaled\nalignment length is flagged as estimated. ⟦shared:1⟧ restores\nsource axis labels, including after repeated focusing.\n"
+    },
+    "5": {
+      "source_sha256": "98c244bb4c0eb765673aee6ccf69c2e4abfd7dcd859705c52ad9211ff6c35cac",
+      "status": "reviewed",
+      "translation": "## Independent windows and local reversal ⟦shared:0⟧\n"
+    },
+    "8": {
+      "source_sha256": "6fc7fd8ca07f779cd581feaa0fec59e54b6761f9198e22c36e2de842f0b94ba0",
+      "status": "reviewed",
+      "translation": "The left window follows source orientation and the right window is reversed. The interval between the windows is omitted.\n"
+    },
+    "9": {
+      "source_sha256": "a219b880b0bbba7d6fb00451c7f04916be60ac7299c155aa0ae2d3a72166cb6f",
+      "status": "reviewed",
+      "translation": "Each window has a reversible source mapping; omitted gaps have no mapping.\n⟦shared:0⟧ maps explicit source positions into a plot for ordinary\nggplot2 annotations. Supply the window ID when windows share a source sequence.\nDo not interpret display orientation as a change to the original strand.\n"
+    },
+    "10": {
+      "source_sha256": "891b6b86a56d85268a24268b7f74773e846f67818a2be6a16c333772f54e536a",
+      "status": "reviewed",
+      "translation": "## Explicit biological relationships ⟦shared:0⟧\n"
+    },
+    "11": {
+      "source_sha256": "036adff30fad619ef60ceb1dc87b4fa39cd3b6eb6e62a2588069955743f7641c",
+      "status": "reviewed",
+      "translation": "⟦shared:0⟧ selects declared feature/name queries. ⟦shared:1⟧\nrequires an explicit membership table and sequence pairs; equal gene names do\nnot establish homology. ⟦shared:2⟧, ⟦shared:3⟧\nand ⟦shared:4⟧ prepare existing alignments, preserving source\nmembership and estimated-length flags. Bundle and density statistics summarize\nprovided links rather than creating new sequence alignments.\n"
+    },
+    "12": {
+      "source_sha256": "74334786fad188e8fd815f4c256db944faf74269c5c0e19aee71517fcb589f85",
+      "status": "reviewed",
+      "translation": "## Map an annotation back to source coordinates ⟦shared:0⟧\n"
+    },
+    "15": {
+      "source_sha256": "b8980e3750a9f6389a6cf0f333de22a826c8b0cc3d74df2f0d67129f1930b35f",
+      "status": "reviewed",
+      "translation": "The dot marks source position 10,100 bp on the first sequence.\n"
+    },
+    "16": {
+      "source_sha256": "dda2342d1a100d13f25290311e4069eaf38daa1db9999c995fddf4a79306d2ee",
+      "status": "reviewed",
+      "translation": "Run the [focus example](⟦shared:0⟧) first. The helper returns Cartesian x/y\nfor a source position 100 bp inside the first selected window. It does not make all ordinary ggplot2 coordinates\nbecome genomic bp. In segmented views choose the window ID, and check positions\nin omitted gaps rather than extrapolating across them. Use [explicit homologs](⟦shared:1⟧)\nwhen the locus selection comes from declared feature/cluster evidence.\n"
+    },
+    "17": {
+      "source_sha256": "96d3b3403a7277d64e0e970205753ee81e2d284e9e04a56212cef8617bb26319",
+      "status": "reviewed",
+      "translation": "## Result checks ⟦shared:0⟧\n"
+    },
+    "18": {
+      "source_sha256": "4e210bde56a9ae5201f16a7a69f9c289b62ad68d6b11dc90c927b7baf0cf2f78",
+      "status": "reviewed",
+      "translation": "Inspect cropping reports, break markers and source coordinates. Omitted gaps have no mapping; a display flip alone is not evidence of inversion.\n"
+    },
+    "19": {
+      "source_sha256": "63bd33ba96b103914fd46d76f67a5ea3d1b4e4481a7affed7c0047c4a226560e",
+      "status": "reviewed",
+      "translation": "⟦shared:0⟧Continue: ⟦shared:1⟧CDS neighbourhood comparison →⟦shared:2⟧⟦shared:3⟧\n"
+    }
+  }
+}

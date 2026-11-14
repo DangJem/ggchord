@@ -1,0 +1,60 @@
+{
+  "source_sha256": "cf2addf289a0c92c0075736df48629ad4d7a0a154021876f60f362e136c5a321",
+  "blocks": {
+    "0": {
+      "source_sha256": "0fa3fbfa0a873728926e3af5e6670e13482733d3820f9266bf2ef86dfe4f9a5c",
+      "status": "reviewed",
+      "translation": "## Prepare this page ⟦shared:0⟧\n"
+    },
+    "1": {
+      "source_sha256": "74a2837e96c36376fa64166e2a48484f83ab6044ff78eb62045d6530d4999575",
+      "status": "reviewed",
+      "translation": "In a fresh R session, run the code below, then follow this page in order. Colours and layout are optional display choices; inputs select only the fields needed.\n"
+    },
+    "4": {
+      "source_sha256": "dabd23b1692c9c3fc51c52d29c4f73a36d3250fc5e9b57b87e04cbff8192caf0",
+      "status": "reviewed",
+      "translation": "## Save the intended size ⟦shared:0⟧\n"
+    },
+    "5": {
+      "source_sha256": "00dc8fe7c3d4b443ed5e781272c73e0b710e93e7d07b7798b5d8bc55cc6352e2",
+      "status": "reviewed",
+      "translation": "The example uses ⟦shared:0⟧ from this page. If you already have a plot, use your plot object in its place.\n"
+    },
+    "7": {
+      "source_sha256": "2f96458ae92f07496f80f13610414beaf82579950f13c390278edd17a93b36ae",
+      "status": "reviewed",
+      "translation": "For circular plots, omit both dimensions to estimate the preview size. For chord and collinear plots, supply a width and use ⟦shared:0⟧ to estimate height. A webpage also scales a thumbnail to its content column, so increasing dpi alone does not enlarge its text.\n"
+    },
+    "8": {
+      "source_sha256": "4099778220adf6d3ec1d3ee4151961bdf54fc7e91a320f86c115e34e126374b0",
+      "status": "reviewed",
+      "translation": "After checking text, labels and legends, save at the same dimensions.\n"
+    },
+    "10": {
+      "source_sha256": "ca7b8b85181005e246224adc21dca203581c998bcf58e7c76d38c3374d13690a",
+      "status": "reviewed",
+      "translation": "⟦shared:0⟧ returns a temporary image path; it does not keep a final export.\nThe website, README and vignettes share PNG previews generated with\n⟦shared:0⟧ at sizes listed in the [gallery](⟦shared:1⟧). They do not capture an\ninteractively resized panel. Use your intended PDF/SVG device explicitly for\nfinal vector output; font availability and embedding remain device-dependent.\n"
+    },
+    "11": {
+      "source_sha256": "96d3b3403a7277d64e0e970205753ee81e2d284e9e04a56212cef8617bb26319",
+      "status": "reviewed",
+      "translation": "## Result checks ⟦shared:0⟧\n"
+    },
+    "12": {
+      "source_sha256": "10159a13a3b194a8dd94e245de8430407210f6813df92ab443241e42762315e0",
+      "status": "reviewed",
+      "translation": "Use matching dimensions for preview and saving. Inspect text, guides and warnings; a successful measurement does not certify fonts or release quality across devices.\n"
+    },
+    "13": {
+      "source_sha256": "6b0a881eeb87a80d404b2a3c3c2286e871f54fef9f283e0be68f574091fb2321",
+      "status": "reviewed",
+      "translation": "## Choose a file format ⟦shared:0⟧\n"
+    },
+    "14": {
+      "source_sha256": "355bef7c61e24e660b1b3aa979af6a28b6ced101d2266d0b8dfdf4cc46d73de0",
+      "status": "reviewed",
+      "translation": "PNG serves web pages and slides; PDF/SVG serve vector-output workflows. The extension selects the default device unless a device is explicitly supplied. Reuse the target dimensions above and check fonts and embedding in the final file.\n"
+    }
+  }
+}

@@ -1,302 +1,302 @@
 {
   "title": {
-    "en": "ggchord: sequences, annotations and relationships",
-    "zh": "ggchord：序列、注释与关系"
+    "zh": "ggchord：序列、注释与关系",
+    "en": "ggchord: sequences, annotations and relationships"
   },
   "intro": {
-    "en": "Build layered sequence figures in R with ggplot2: compare multiple sequences, annotate a circular map, inspect HSP alignments and connect independent views.",
-    "zh": "基于 ggplot2 的 R 可视化包：比较多序列关系、组织单序列注释、展示 HSP 比对，并组合全局与局部视图。"
+    "zh": "基于 ggplot2 的 R 可视化包：比较多序列关系、组织单序列注释、展示 HSP 比对，并组合全局与局部视图。",
+    "en": "Build layered sequence figures in R with ggplot2: compare multiple sequences, annotate a circular map, inspect HSP alignments and connect independent views."
   },
   "website": {
-    "en": "Website",
-    "zh": "网站"
+    "zh": "网站",
+    "en": "Website"
   },
   "manual": {
-    "en": "Usage guide",
-    "zh": "使用说明"
+    "zh": "使用说明",
+    "en": "Usage guide"
   },
   "gallery": {
-    "en": "Figure gallery",
-    "zh": "示例图集"
+    "zh": "示例图集",
+    "en": "Figure gallery"
   },
   "issues": {
-    "en": "Report an issue",
-    "zh": "问题反馈"
+    "zh": "问题反馈",
+    "en": "Report an issue"
   },
   "modules": {
-    "en": "Four plotting modules",
-    "zh": "四个绘图模块"
+    "zh": "四个绘图模块",
+    "en": "Four plotting modules"
   },
   "module": {
-    "en": "Module",
-    "zh": "模块"
+    "zh": "模块",
+    "en": "Module"
   },
   "purpose": {
-    "en": "Use it to",
-    "zh": "主要用途"
+    "zh": "主要用途",
+    "en": "Use it to"
   },
   "view": {
-    "en": "Views",
-    "zh": "视图"
+    "zh": "视图",
+    "en": "Views"
   },
   "multi": {
-    "en": "I · Multi-sequence relationships",
-    "zh": "I · 多序列关系"
+    "zh": "I · 多序列关系",
+    "en": "I · Multi-sequence relationships"
   },
   "multi-purpose": {
-    "en": "Compare sequence intervals, gene order and observed relationships.",
-    "zh": "比较序列区间、基因顺序与已有连接关系。"
+    "zh": "比较序列区间、基因顺序与已有连接关系。",
+    "en": "Compare sequence intervals, gene order and observed relationships."
   },
   "circular": {
-    "en": "II · Single-sequence circular maps",
-    "zh": "II · 单序列圆图"
+    "zh": "II · 单序列圆图",
+    "en": "II · Single-sequence circular maps"
   },
   "circular-purpose": {
-    "en": "Place features, primers and restriction sites on one sequence.",
-    "zh": "在一条序列上组织特征、引物和限制位点。"
+    "zh": "在一条序列上组织特征、引物和限制位点。",
+    "en": "Place features, primers and restriction sites on one sequence."
   },
   "dotplot": {
-    "en": "III · HSP Dotplot",
-    "zh": "III · HSP 点图"
+    "zh": "III · HSP 点图",
+    "en": "III · HSP Dotplot"
   },
   "dotplot-purpose": {
-    "en": "Inspect alignment intervals on query and subject axes.",
-    "zh": "在 query 与 subject 双轴上查看比对区间。"
+    "zh": "在 query 与 subject 双轴上查看比对区间。",
+    "en": "Inspect alignment intervals on query and subject axes."
   },
   "fusion": {
-    "en": "IV · Multi-view composition",
-    "zh": "IV · 多视图组合"
+    "zh": "IV · 多视图组合",
+    "en": "IV · Multi-view composition"
   },
   "fusion-purpose": {
-    "en": "Connect independent plots through explicit source intervals.",
-    "zh": "用明确的来源区间连接独立图形。"
+    "zh": "用明确的来源区间连接独立图形。",
+    "en": "Connect independent plots through explicit source intervals."
   },
   "grammar": {
-    "en": "The multi-sequence module has four Coord types. Circular and Dotplot add two more; Fusion is the composition layer. Layers, mappings, scales, positions and themes retain their ggplot2 roles.",
-    "zh": "多序列模块包含四种 Coord；Circular、Dotplot 各有专属坐标系，Fusion 负责组合独立图形。图层、映射、标度、局部位置与主题各司其职，沿用 ggplot2 的绘图语法。"
+    "zh": "多序列模块包含四种 Coord；Circular、Dotplot 各有专属坐标系，Fusion 负责组合独立图形。图层、映射、标度、局部位置与主题各司其职，沿用 ggplot2 的绘图语法。",
+    "en": "The multi-sequence module has four Coord types. Circular and Dotplot add two more; Fusion is the composition layer. Layers, mappings, scales, positions and themes retain their ggplot2 roles."
   },
   "examples": {
-    "en": "Real-data figures",
-    "zh": "真实数据综合示例"
+    "zh": "真实数据综合示例",
+    "en": "Real-data figures"
   },
   "chord-title": {
-    "en": "Chord · relationships across four genomes",
-    "zh": "Chord · 四条基因组的关系总览"
+    "zh": "Chord · 四条基因组的关系总览",
+    "en": "Chord · relationships across four genomes"
   },
   "chord-caption": {
-    "en": "Combine mixed-curvature backbones, strand-aware CDS arrows, selected source labels and Identity-coloured ribbons. Features and HSPs are display subsets of the original records.",
-    "zh": "混合曲率骨架、保留真实链方向的 CDS 箭头、来源标签与 Identity 连接带组合展示。特征与 HSP 按显示需要从原始记录中选取。"
+    "zh": "混合曲率骨架、保留真实链方向的 CDS 箭头、来源标签与 Identity 连接带组合展示。特征与 HSP 按显示需要从原始记录中选取。",
+    "en": "Combine mixed-curvature backbones, strand-aware CDS arrows, selected source labels and Identity-coloured ribbons. Features and HSPs are display subsets of the original records."
   },
   "chord-alt": {
-    "en": "Four-genome Chord flagship with labelled genes and alignment ribbons",
-    "zh": "四条基因组的弦图旗舰：基因标签与比对连接带"
+    "zh": "四条基因组的弦图旗舰：基因标签与比对连接带",
+    "en": "Four-genome Chord flagship with labelled genes and alignment ribbons"
   },
   "linear-title": {
-    "en": "Collinear · order, orientation and cross-row links",
-    "zh": "Collinear · 顺序、方向与跨行连接"
+    "zh": "Collinear · 顺序、方向与跨行连接",
+    "en": "Collinear · order, orientation and cross-row links"
   },
   "linear-caption": {
-    "en": "Compare four genomes on a shared base-pair scale. Selected CDS sit on either side of each backbone; dashed outlines distinguish links across non-adjacent rows.",
-    "zh": "在共同的 bp 标尺下比较四条基因组，骨架两侧展示精选 CDS。跨越非相邻显示行的连接带使用虚线轮廓。"
+    "zh": "在共同的 bp 标尺下比较四条基因组，骨架两侧展示精选 CDS。跨越非相邻显示行的连接带使用虚线轮廓。",
+    "en": "Compare four genomes on a shared base-pair scale. Selected CDS sit on either side of each backbone; dashed outlines distinguish links across non-adjacent rows."
   },
   "linear-alt": {
-    "en": "Four-genome Collinear flagship with strand-separated genes and cross-row ribbons",
-    "zh": "四条基因组的共线性旗舰：分链基因与跨行连接带"
+    "zh": "四条基因组的共线性旗舰：分链基因与跨行连接带",
+    "en": "Four-genome Collinear flagship with strand-separated genes and cross-row ribbons"
   },
   "circular-title": {
-    "en": "Circular · dense pETDuet-1 annotations",
-    "zh": "Circular · pETDuet-1 密集注释"
+    "zh": "Circular · pETDuet-1 密集注释",
+    "en": "Circular · dense pETDuet-1 annotations"
   },
   "circular-caption": {
-    "en": "A complete circular map with 20 features, five reference primers and 58 grouped cut positions from the declared enzyme set. Original sequence positions and annotation identities are retained.",
-    "zh": "完整圆图包含 20 个特征、5 个参考引物，以及声明酶集合中的 58 个合并切点位置。序列位置与注释身份均来自原始输入。"
+    "zh": "完整圆图包含 20 个特征、5 个参考引物，以及声明酶集合中的 58 个合并切点位置。序列位置与注释身份均来自原始输入。",
+    "en": "A complete circular map with 20 features, five reference primers and 58 grouped cut positions from the declared enzyme set. Original sequence positions and annotation identities are retained."
   },
   "circular-alt": {
-    "en": "pETDuet-1 circular flagship with features, primers and restriction sites",
-    "zh": "pETDuet-1 圆图旗舰：完整特征、引物与限制位点"
+    "zh": "pETDuet-1 圆图旗舰：完整特征、引物与限制位点",
+    "en": "pETDuet-1 circular flagship with features, primers and restriction sites"
   },
   "case": {
-    "en": "Complete example",
-    "zh": "完整案例"
+    "zh": "完整案例",
+    "en": "Complete example"
   },
   "four-views": {
-    "en": "Chord / Collinear / Radial / Sankey",
-    "zh": "四种关系视图转换"
+    "zh": "四种关系视图转换",
+    "en": "Chord / Collinear / Radial / Sankey"
   },
   "plot-source": {
-    "en": "Plot source",
-    "zh": "绘图源码"
+    "zh": "绘图源码",
+    "en": "Plot source"
   },
   "layout": {
-    "en": "Alignment and arrangement",
-    "zh": "对齐与排列"
+    "zh": "对齐与排列",
+    "en": "Alignment and arrangement"
   },
   "reference-maps": {
-    "en": "13 complete reference maps",
-    "zh": "13 个完整参考图"
+    "zh": "13 个完整参考图",
+    "en": "13 complete reference maps"
   },
   "more-views": {
-    "en": "Alignment matrices and linked views",
-    "zh": "HSP 矩阵与多视图组合"
+    "zh": "HSP 矩阵与多视图组合",
+    "en": "Alignment matrices and linked views"
   },
   "dotplot-alt": {
-    "en": "Four-sequence matrix of 32 original HSPs",
-    "zh": "四序列、32 条原始 HSP 的双轴矩阵"
+    "zh": "四序列、32 条原始 HSP 的双轴矩阵",
+    "en": "Four-sequence matrix of 32 original HSPs"
   },
   "fusion-alt": {
-    "en": "Linked Chord, Collinear, Radial and local-detail views",
-    "zh": "连接 Chord、Collinear、Radial 与局部放大的组合图"
+    "zh": "连接 Chord、Collinear、Radial 与局部放大的组合图",
+    "en": "Linked Chord, Collinear, Radial and local-detail views"
   },
   "dotplot-caption": {
-    "en": "32 original HSPs; Identity by colour, reported alignment length by line width.",
-    "zh": "32 条原始 HSP；颜色表示 Identity，线宽表示原记录中的比对长度。"
+    "zh": "32 条原始 HSP；颜色表示 Identity，线宽表示原记录中的比对长度。",
+    "en": "32 original HSPs; Identity by colour, reported alignment length by line width."
   },
   "fusion-caption": {
-    "en": "Global relationships, ordered comparisons and a magnified source interval in one composition.",
-    "zh": "在同一组合中关联全局关系、共线性比较与来源区间的局部放大。"
+    "zh": "在同一组合中关联全局关系、共线性比较与来源区间的局部放大。",
+    "en": "Global relationships, ordered comparisons and a magnified source interval in one composition."
   },
   "dotplot-guide": {
-    "en": "Axes, direction and mappings →",
-    "zh": "双轴、方向与映射 →"
+    "zh": "双轴、方向与映射 →",
+    "en": "Axes, direction and mappings →"
   },
   "fusion-guide": {
-    "en": "Local magnification and character detail →",
-    "zh": "局部放大与字符细节 →"
+    "zh": "局部放大与字符细节 →",
+    "en": "Local magnification and character detail →"
   },
   "source-note": {
-    "en": "Figures share traceable inputs and plot definitions. See the source records and reproduction notes:",
-    "zh": "图像的输入、显示选择与绘图定义均可追溯："
+    "zh": "图像的输入、显示选择与绘图定义均可追溯：",
+    "en": "Figures share traceable inputs and plot definitions. See the source records and reproduction notes:"
   },
   "source-inputs": {
-    "en": "Input files",
-    "zh": "输入文件"
+    "zh": "输入文件",
+    "en": "Input files"
   },
   "source-figures": {
-    "en": "Dotplot / Fusion source",
-    "zh": "Dotplot / Fusion 源码"
+    "zh": "Dotplot / Fusion 源码",
+    "en": "Dotplot / Fusion source"
   },
   "source-attribution": {
-    "en": "Data sources and attribution",
-    "zh": "数据来源与归属"
+    "zh": "数据来源与归属",
+    "en": "Data sources and attribution"
   },
   "installation": {
-    "en": "Installation",
-    "zh": "安装"
+    "zh": "安装",
+    "en": "Installation"
   },
   "optional-deps": {
-    "en": "The minimal example below needs only ggchord. Complete data-preparation examples declare optional dependencies such as dplyr, purrr and tidyr alongside their code.",
-    "zh": "下面的最小示例只需加载 ggchord。完整数据整理示例会在代码旁声明 dplyr、purrr、tidyr 等可选依赖。"
+    "zh": "下面的最小示例只需加载 ggchord。完整数据整理示例会在代码旁声明 dplyr、purrr、tidyr 等可选依赖。",
+    "en": "The minimal example below needs only ggchord. Complete data-preparation examples declare optional dependencies such as dplyr, purrr and tidyr alongside their code."
   },
   "quick-start": {
-    "en": "Draw a first plot",
-    "zh": "绘制第一张图"
+    "zh": "绘制第一张图",
+    "en": "Draw a first plot"
   },
   "quick-intro": {
-    "en": "Use bundled tables to draw sequence backbones, alignment ribbons and sequence names. No file download or alignment program is needed.",
-    "zh": "使用随包表格绘制序列骨架、比对连接带和序列名称，无需下载文件或运行比对程序。"
+    "zh": "使用随包表格绘制序列骨架、比对连接带和序列名称，无需下载文件或运行比对程序。",
+    "en": "Use bundled tables to draw sequence backbones, alignment ribbons and sequence names. No file download or alignment program is needed."
   },
   "quick-note": {
-    "en": "This small example shows the layer grammar. The figures above add their own source annotations, display choices and styling.",
-    "zh": "这段最小示例展示图层组合方式。上方综合图进一步加入了对应的来源注释、显示选择和样式。"
+    "zh": "这段最小示例展示图层组合方式。上方综合图进一步加入了对应的来源注释、显示选择和样式。",
+    "en": "This small example shows the layer grammar. The figures above add their own source annotations, display choices and styling."
   },
   "output": {
-    "en": "Preview and save",
-    "zh": "预览与保存"
+    "zh": "预览与保存",
+    "en": "Preview and save"
   },
   "output-intro": {
-    "en": "Preview and save at the same explicit dimensions so labels are arranged for the intended figure size.",
-    "zh": "按相同的明确宽高预览并保存，让标签按预定成图尺寸排布。"
+    "zh": "按相同的明确宽高预览并保存，让标签按预定成图尺寸排布。",
+    "en": "Preview and save at the same explicit dimensions so labels are arranged for the intended figure size."
   },
   "inspiration-grammar": {
-    "en": "Provides the layered grammar and the division of responsibilities between mappings, scales, guides, geometry, coordinates and themes. ggchord follows this model so users can compose layers and supply their own scales and styles.",
-    "zh": "提供分层绘图语法，以及映射、标度、图例、几何、坐标与主题的职责划分。ggchord 沿用这一模型，让用户组合独立图层，并使用自己的标度和样式。"
+    "zh": "提供分层绘图语法，以及映射、标度、图例、几何、坐标与主题的职责划分。ggchord 沿用这一模型，让用户组合独立图层，并使用自己的标度和样式。",
+    "en": "Provides the layered grammar and the division of responsibilities between mappings, scales, guides, geometry, coordinates and themes. ggchord follows this model so users can compose layers and supply their own scales and styles."
   },
   "inspiration-naming": {
-    "en": "Informs the compact query/subject field names used to trace alignment records, endpoints and sequence identifiers. Plotting consumes existing results rather than running an alignment program.",
-    "zh": "为紧凑的 query/subject 字段命名提供参照，便于追踪比对记录、端点与序列标识。绘图读取已有结果，不在绘图阶段运行比对程序。"
+    "zh": "为紧凑的 query/subject 字段命名提供参照，便于追踪比对记录、端点与序列标识。绘图读取已有结果，不在绘图阶段运行比对程序。",
+    "en": "Informs the compact query/subject field names used to trace alignment records, endpoints and sequence identifiers. Plotting consumes existing results rather than running an alignment program."
   },
   "inspiration-circular": {
-    "en": "Provide references for circular information hierarchy, restrained ribbon display, multi-track organization and the reading order of sequence relationships. These ideas inform the arrangement of backbones, annotations and links.",
-    "zh": "为环形信息层级、克制的连接带表达、多轨道组织及关系阅读顺序提供参照，帮助组织序列骨架、注释与连接之间的层次。"
+    "zh": "为环形信息层级、克制的连接带表达、多轨道组织及关系阅读顺序提供参照，帮助组织序列骨架、注释与连接之间的层次。",
+    "en": "Provide references for circular information hierarchy, restrained ribbon display, multi-track organization and the reading order of sequence relationships. These ideas inform the arrangement of backbones, annotations and links."
   },
   "inspiration-synteny": {
-    "en": "Offer clear examples of strand-aware gene arrows, gene-cluster comparisons and linear synteny. They inform how sequence direction, feature placement and connections are presented together.",
-    "zh": "为保留链方向的基因箭头、基因簇比较和直线共线性提供清晰范例，帮助协调序列方向、特征位置与连接关系的表达。"
+    "zh": "为保留链方向的基因箭头、基因簇比较和直线共线性提供清晰范例，帮助协调序列方向、特征位置与连接关系的表达。",
+    "en": "Offer clear examples of strand-aware gene arrows, gene-cluster comparisons and linear synteny. They inform how sequence direction, feature placement and connections are presented together."
   },
   "inspiration-features": {
-    "en": "Provides a reference for readable feature annotations, crowded-label handling and local feature layouts. It informs the emphasis on connecting labels clearly to their source intervals.",
-    "zh": "为可读的特征注释、拥挤标签处理和局部特征布局提供参照，帮助明确标签与其来源区间之间的对应关系。"
+    "zh": "为可读的特征注释、拥挤标签处理和局部特征布局提供参照，帮助明确标签与其来源区间之间的对应关系。",
+    "en": "Provides a reference for readable feature annotations, crowded-label handling and local feature layouts. It informs the emphasis on connecting labels clearly to their source intervals."
   },
   "inspiration-preview": {
-    "en": "Informs the workflow of previewing a static figure at its intended export size. ggchord uses view_ggchord() for sized preview and standard ggsave() for saving.",
-    "zh": "为按预定导出尺寸检查静态图形提供流程参照。ggchord 用 view_ggchord() 进行指定尺寸预览，用标准 ggsave() 保存。"
+    "zh": "为按预定导出尺寸检查静态图形提供流程参照。ggchord 用 view_ggchord() 进行指定尺寸预览，用标准 ggsave() 保存。",
+    "en": "Informs the workflow of previewing a static figure at its intended export size. ggchord uses view_ggchord() for sized preview and standard ggsave() for saving."
   },
   "license": {
-    "en": "license",
-    "zh": "许可证"
+    "zh": "许可证",
+    "en": "license"
   },
   "radial-title": {
-    "en": "Radial · synteny along radial spokes",
-    "zh": "Radial · 径向辐条上的共线性"
+    "zh": "Radial · 径向辐条上的共线性",
+    "en": "Radial · synteny along radial spokes"
   },
   "radial-caption": {
-    "en": "Derived from the Chord flagship, using its source preparation and selected features. Radial backbones expose interval relationships while preserving sequence identities and native positions.",
-    "zh": "从弦图旗舰复用来源准备与精选特征，改用径向辐条骨架展示区间关系；序列身份与原生位置保持可追溯。"
+    "zh": "从弦图旗舰复用来源准备与精选特征，改用径向辐条骨架展示区间关系；序列身份与原生位置保持可追溯。",
+    "en": "Derived from the Chord flagship, using its source preparation and selected features. Radial backbones expose interval relationships while preserving sequence identities and native positions."
   },
   "radial-alt": {
-    "en": "Radial flagship derived from the four-genome Chord example",
-    "zh": "从四基因组弦图派生的 Radial 旗舰"
+    "zh": "从四基因组弦图派生的 Radial 旗舰",
+    "en": "Radial flagship derived from the four-genome Chord example"
   },
   "sankey-title": {
-    "en": "Sankey · source intervals across two mirrored columns",
-    "zh": "Sankey · 镜像双列中的来源区间"
+    "zh": "Sankey · 镜像双列中的来源区间",
+    "en": "Sankey · source intervals across two mirrored columns"
   },
   "sankey-caption": {
-    "en": "Derived from the Collinear flagship, retaining its selected genes and HSPs. Mirrored sequence columns show observed interval relationships; ribbon width is not a conserved flow quantity.",
-    "zh": "从共线性旗舰派生，保留对应的精选基因与 HSP。序列镜像排列在两列中，连接带表示已有区间关系，带宽不代表守恒流量。"
+    "zh": "从共线性旗舰派生，保留对应的精选基因与 HSP。序列镜像排列在两列中，连接带表示已有区间关系，带宽不代表守恒流量。",
+    "en": "Derived from the Collinear flagship, retaining its selected genes and HSPs. Mirrored sequence columns show observed interval relationships; ribbon width is not a conserved flow quantity."
   },
   "sankey-alt": {
-    "en": "Sankey flagship derived from the four-genome Collinear example",
-    "zh": "从四基因组共线性图派生的 Sankey 旗舰"
+    "zh": "从四基因组共线性图派生的 Sankey 旗舰",
+    "en": "Sankey flagship derived from the four-genome Collinear example"
   },
   "inspiration-grammar-title": {
-    "en": "Graphical grammar and sequence relationships",
-    "zh": "绘图语法与序列关系表达"
+    "zh": "绘图语法与序列关系表达",
+    "en": "Graphical grammar and sequence relationships"
   },
   "inspiration-features-title": {
-    "en": "Gene arrows, annotation placement and local comparison",
-    "zh": "基因箭头、注释布局与局部比较"
+    "zh": "基因箭头、注释布局与局部比较",
+    "en": "Gene arrows, annotation placement and local comparison"
   },
   "inspiration-genomes": {
-    "en": "Informs tidy multi-table inputs, focus/sync workflows, feature stacking, local anchoring and local display reversal. Its approach helps keep data preparation distinct from display choices.",
-    "zh": "为 tidy 多表输入、focus/sync 工作流、特征堆叠、局部锚定与局部显示翻转提供参照，帮助区分数据整理和显示选择的职责。"
+    "zh": "为 tidy 多表输入、focus/sync 工作流、特征堆叠、局部锚定与局部显示翻转提供参照，帮助区分数据整理和显示选择的职责。",
+    "en": "Informs tidy multi-table inputs, focus/sync workflows, feature stacking, local anchoring and local display reversal. Its approach helps keep data preparation distinct from display choices."
   },
   "inspiration-detail-title": {
-    "en": "Local magnification, aligned characters and figure preview",
-    "zh": "局部放大、对齐字符与图形预览"
+    "zh": "局部放大、对齐字符与图形预览",
+    "en": "Local magnification, aligned characters and figure preview"
   },
   "inspiration-magnify": {
-    "en": "Provides a reference for connecting an overview to a magnified inset. ggchord develops this presentation idea around explicit source intervals and independently registered sequence views.",
-    "zh": "为整体图与局部放大图之间的关联表达提供参照。ggchord 围绕明确的来源区间和独立注册的序列视图发展这一表达方式。"
+    "zh": "为整体图与局部放大图之间的关联表达提供参照。ggchord 围绕明确的来源区间和独立注册的序列视图发展这一表达方式。",
+    "en": "Provides a reference for connecting an overview to a magnified inset. ggchord develops this presentation idea around explicit source intervals and independently registered sequence views."
   },
   "inspiration-alignment": {
-    "en": "Inform design studies of DNA/protein alignment displays, character colouring and composition with ggplot2 graphics, especially the relationship between alignment columns, gaps and character-level detail.",
-    "zh": "为 DNA、蛋白对齐显示、字符着色及与 ggplot2 图形组合提供设计研究参照，尤其关注对齐列、gap 与字符细节之间的对应关系。"
+    "zh": "为 DNA、蛋白对齐显示、字符着色及与 ggplot2 图形组合提供设计研究参照，尤其关注对齐列、gap 与字符细节之间的对应关系。",
+    "en": "Inform design studies of DNA/protein alignment displays, character colouring and composition with ggplot2 graphics, especially the relationship between alignment columns, gaps and character-level detail."
   },
   "inspiration-columns": {
-    "en": "Provide comparison references in character-view design studies: sequence-logo semantics, alignment-column annotations, consensus and conservation displays, and the relationship between per-column summaries and individual sequences.",
-    "zh": "在字符视图的设计研究中，用于比较序列 logo、对齐列注释、共识与保守性的表达方式，以及逐列统计与单条序列之间的关系。"
+    "zh": "在字符视图的设计研究中，用于比较序列 logo、对齐列注释、共识与保守性的表达方式，以及逐列统计与单条序列之间的关系。",
+    "en": "Provide comparison references in character-view design studies: sequence-logo semantics, alignment-column annotations, consensus and conservation displays, and the relationship between per-column summaries and individual sequences."
   },
   "inspiration-title": {
-    "en": "Design inspiration",
-    "zh": "设计灵感来源"
+    "zh": "设计灵感来源",
+    "en": "Design inspiration"
   },
   "inspiration-intro": {
-    "en": "The following projects inform ggchord’s graphical grammar, sequence layouts and detail views. Each entry describes the aspect that influenced the design.",
-    "zh": "以下项目为 ggchord 的绘图语法、序列布局与细节视图提供设计灵感，各项分别说明具体的启发方向。"
+    "zh": "以下项目为 ggchord 的绘图语法、序列布局与细节视图提供设计灵感，各项分别说明具体的启发方向。",
+    "en": "The following projects inform ggchord’s graphical grammar, sequence layouts and detail views. Each entry describes the aspect that influenced the design."
   },
   "get-started": {
-    "en": "Get started",
-    "zh": "开始使用"
+    "zh": "开始使用",
+    "en": "Get started"
   }
 }

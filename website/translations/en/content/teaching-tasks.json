@@ -1,0 +1,270 @@
+{
+  "source_sha256": "59a2e73f8f73ad8aa7b85bce8a5b1cd5e2c397c8c3df2a92369b4b969743eb6f",
+  "strings": {
+    "0/task": {
+      "source_sha256": "21ff173d1bc8cb55a8e74c69e136900acae279b9662b09d892294b0c60c0f241",
+      "status": "reviewed",
+      "translation": "Change backbone style"
+    },
+    "1/task": {
+      "source_sha256": "0ac1db8ec4d6c6311549039a31df2601ce7af639e1b329f2709a3c91abd8841d",
+      "status": "reviewed",
+      "translation": "Set radii and curvature"
+    },
+    "2/task": {
+      "source_sha256": "81998b0783f4cc500f5e0b4bd5dc80b399f3ee51bed1b2d3caf44779eb55c3bc",
+      "status": "reviewed",
+      "translation": "Order and orient sequences"
+    },
+    "3/task": {
+      "source_sha256": "e0d7448d35caa6c1d252fa2d9dec093de989a56e7cc747fdcb96feec68b601b4",
+      "status": "reviewed",
+      "translation": "Route links around features"
+    },
+    "4/task": {
+      "source_sha256": "50e079602d48a7fdf1898f0813a53370d350ae10ab5a8fc407b0783e018ef8bb",
+      "status": "reviewed",
+      "translation": "Connect points with arrows"
+    },
+    "5/task": {
+      "source_sha256": "5e4c4090f952f0fe8c2ebd4c91615f1bb60a8d3e8641471c3373202108fbe008",
+      "status": "reviewed",
+      "translation": "Change gene arrow shapes"
+    },
+    "6/task": {
+      "source_sha256": "e33de2916180eb9b8c373e8468df80b668d6830a89cfcf9fda668f3d60b15582",
+      "status": "reviewed",
+      "translation": "Highlight an interval"
+    },
+    "7/task": {
+      "source_sha256": "84b889d1438928dd210d445db075ed336dfa023622d69c6544c378a0ba486085",
+      "status": "reviewed",
+      "translation": "Colour by identity"
+    },
+    "8/task": {
+      "source_sha256": "2effc31cbb67b3c0430e3bcc83da6ac8cde1ffc33949b9d3d58584879de33993",
+      "status": "reviewed",
+      "translation": "Use categories and legends"
+    },
+    "9/task": {
+      "source_sha256": "f6b3bd751126ab856da178b774882cb4839229014eece9a737af7c90848e3617",
+      "status": "reviewed",
+      "translation": "Filter, deduplicate and merge HSPs"
+    },
+    "10/task": {
+      "source_sha256": "253143bc579fcca382bd46a9d4fe6a7f6eb4682e7e7f9ff74e81c2b80b629df1",
+      "status": "reviewed",
+      "translation": "Summarize link density"
+    },
+    "11/task": {
+      "source_sha256": "610af472c8e4f8dfdc3859d4dd6c027fab9842bcd9a1deae82412447d20008cb",
+      "status": "reviewed",
+      "translation": "Bundle existing links"
+    },
+    "12/task": {
+      "source_sha256": "258f5febc7749e8b34242bb6855aa4e2a08b4ea1f745242fc85157bcc3b7fd28",
+      "status": "reviewed",
+      "translation": "Align sequences left, center or right"
+    },
+    "13/task": {
+      "source_sha256": "6c1c001a736c32122c15d499e7d1737695c607f5ea7c7af95ba259ce6216ff1b",
+      "status": "reviewed",
+      "translation": "Anchor to common loci"
+    },
+    "14/task": {
+      "source_sha256": "c73262fd5bcb38a8bc844934910801650a0e9fb842d217aea809f7cdba04dfaa",
+      "status": "reviewed",
+      "translation": "Choose display directions automatically"
+    },
+    "15/task": {
+      "source_sha256": "19a6b9587820fde9f922b34a533aeae1e11cb7b7e613b801d483498b95b957fb",
+      "status": "reviewed",
+      "translation": "Connect nonadjacent rows"
+    },
+    "16/task": {
+      "source_sha256": "86eeab3dacaf2a09d6427c5e99537c1fa3eec3f7e0e5bd2cbeec041dc9336e61",
+      "status": "reviewed",
+      "translation": "Show local windows and breaks"
+    },
+    "17/task": {
+      "source_sha256": "4f42ddc30b60b5065ecb06a282c438e3c5fe35ffed692730acea4fb7de624983",
+      "status": "reviewed",
+      "translation": "Draw a fixed-length scale bar"
+    },
+    "18/task": {
+      "source_sha256": "618ca7f7ec0a75de3f618a6404d4bc830672e32cc2d387aa4b3479753b17c2d1",
+      "status": "reviewed",
+      "translation": "Rotate a circular view"
+    },
+    "19/task": {
+      "source_sha256": "166171975099b4425e10d613b4593863bb237767cb9dfb85cd5d84cfc03bf575",
+      "status": "reviewed",
+      "translation": "Stack feature annotations"
+    },
+    "20/task": {
+      "source_sha256": "84a6baccb5891600be27a5a9365f6e4bfa4446073bf3475f1b7c7b0c3079f9c0",
+      "status": "reviewed",
+      "translation": "Arrange feature labels automatically"
+    },
+    "21/task": {
+      "source_sha256": "2bc26c81081d3d007f95fa1724fa71e5034dc66df6c592d8b437236de0a4c4cd",
+      "status": "reviewed",
+      "translation": "Find primer bindings"
+    },
+    "22/task": {
+      "source_sha256": "f3b086efcf9e4324953a72b136aa911118788061c3b77340a53b4c6ecf581e52",
+      "status": "reviewed",
+      "translation": "Draw primers and labels"
+    },
+    "23/task": {
+      "source_sha256": "f7aeacff4fdac2d631c2f0da3d5f9ef0bae5e69b2a6c8658800e73a95067405e",
+      "status": "reviewed",
+      "translation": "Search and filter restriction sites"
+    },
+    "24/task": {
+      "source_sha256": "3d2bb46a869b4316e9919daf253618e8bcbf3d58db9bc6ff6960625bc68da097",
+      "status": "reviewed",
+      "translation": "Adjust restriction label leaders"
+    },
+    "25/task": {
+      "source_sha256": "72171d993501206907286fdd5ae2daf1cda9b9773128d0fd30bf8d402d79eb83",
+      "status": "reviewed",
+      "translation": "Draw GC bars and lines"
+    },
+    "26/task": {
+      "source_sha256": "1e472fbae99bcbf89e1ad2db95aa92e1cbe37891fa42ce449a07e187c644b537",
+      "status": "reviewed",
+      "translation": "Draw a tile colour band"
+    },
+    "27/task": {
+      "source_sha256": "0ae534fb55b87b45491340767f3e89e7078aeb22164582b95949eef88ebe6e60",
+      "status": "reviewed",
+      "translation": "Set track width and order"
+    },
+    "28/task": {
+      "source_sha256": "780190fbc2e3d4625773e1e37899dcec9433b6f66f6eff29d3df7358371d7d11",
+      "status": "reviewed",
+      "translation": "Import FASTA, GFF3 and alignments"
+    },
+    "29/task": {
+      "source_sha256": "08f5b9bb47e328772764d86e92cd3893c56284efe228d5878848f12864b0f78c",
+      "status": "reviewed",
+      "translation": "Plot native protein comparisons"
+    },
+    "30/task": {
+      "source_sha256": "f8feca456abef879bda07ac0f55dd69feb7222c8d4a746cdfe27087821c6185d",
+      "status": "reviewed",
+      "translation": "Preview and export publication figures"
+    },
+    "31/task": {
+      "source_sha256": "d8c8096beb13267e3cedd38ceffee1c80fae8bec9bdfc744dad34aa5c8dff990",
+      "status": "reviewed",
+      "translation": "Diagnose and export layout"
+    },
+    "32/task": {
+      "source_sha256": "f7200462af96b6782ab3f4585782ce4d052c1e7a5779e63e70cf4ff00cdf644e",
+      "status": "reviewed",
+      "translation": "Share a trunk at equal endpoints"
+    },
+    "33/task": {
+      "source_sha256": "d5212577baec9a0b8923b00cccbb4e0607172eb02826cecac1ccc751f1857ef1",
+      "status": "reviewed",
+      "translation": "Style centre names and lengths"
+    },
+    "34/task": {
+      "source_sha256": "9c47005b5f7c3d7fbac489dce9335a39dec157119afda1857cf1ec10227c5f15",
+      "status": "reviewed",
+      "translation": "Set fixed label direction and side"
+    },
+    "35/task": {
+      "source_sha256": "5729366d960cb030475af230741878b2e200e3c1624975d912beaa1f7b535367",
+      "status": "reviewed",
+      "translation": "Fit or abbreviate automatic labels"
+    },
+    "36/task": {
+      "source_sha256": "2dc16e7c9cd572c016b68f8c0e3d6d73b13e7309fd7d79de0d9d015beaad105c",
+      "status": "reviewed",
+      "translation": "Choose continuous and binned role scales"
+    },
+    "37/task": {
+      "source_sha256": "df57f8b979fb7b0accd5780153a1648bd8ea9a57559da97d66d0d21dfb03f9d4",
+      "status": "reviewed",
+      "translation": "Inspect windows and built-in catalogs"
+    },
+    "38/task": {
+      "source_sha256": "d95773a0df1322524a293ef1f48cf9891abb31ad06bfff45198f52a6242c2f35",
+      "status": "reviewed",
+      "translation": "Locate every API section"
+    },
+    "39/task": {
+      "source_sha256": "6c4239231c304f92481484f32da1d794dd7e2ecaa3330f194a21eb50c1226436",
+      "status": "reviewed",
+      "translation": "Find parameter types and full defaults"
+    },
+    "40/task": {
+      "source_sha256": "2542b8d320fd63371ad67abbcaf77f93e06fa303204b8583e0f30400c85cf4c6",
+      "status": "reviewed",
+      "translation": "Count source-position observations"
+    },
+    "41/task": {
+      "source_sha256": "7e18024930b5f065adca1c76792a0aca8d156126470ea67e5653aa3451ac409a",
+      "status": "reviewed",
+      "translation": "Route repeated sequence instances"
+    },
+    "42/task": {
+      "source_sha256": "f11d626c124b3ae729797af4610d5e4a82c9b1020d4f8dac3cb4ca6c7225f122",
+      "status": "reviewed",
+      "translation": "Draw mirrored interval relationships"
+    },
+    "43/task": {
+      "source_sha256": "ccb77cc99bca4071a61ecbb2562e3e9941aff899ef5ef405e83fa03ef6e6e3ef",
+      "status": "reviewed",
+      "translation": "Show HSPs on independent axes"
+    },
+    "44/task": {
+      "source_sha256": "dfea27110e8b581e0115a1d80b98b9fcacc05cca197515fd0e6ad4a428b48231",
+      "status": "reviewed",
+      "translation": "Retain four alignment endpoints"
+    },
+    "45/task": {
+      "source_sha256": "d2833434965b0e683c15caa8696ce74da658518c632b9cb16a10633e7f5f7cea",
+      "status": "reviewed",
+      "translation": "Draw cyclic radial synteny"
+    },
+    "46/task": {
+      "source_sha256": "ec80ad4c4a9ab9cc6777459722b1099971f62584bd8895c7d4d634024ecb2ff3",
+      "status": "reviewed",
+      "translation": "Compose source-anchored views"
+    },
+    "47/task": {
+      "source_sha256": "05a09d7c4000c618148256ad3164c389e26a69317055bb3bf9cf19226de194ea",
+      "status": "reviewed",
+      "translation": "Connect real intervals across panels"
+    },
+    "48/task": {
+      "source_sha256": "34ea08f84884dd93b4e9d9e8d2c6bb63f56b956d37a74a651b5851623a2ea9c6",
+      "status": "reviewed",
+      "translation": "Audit composition sources and physical anchors"
+    },
+    "49/task": {
+      "source_sha256": "f3c16b6ec8cbfb0a1982e1aa1c4b1f869f974a20c7564e2693c47acea91ad26e",
+      "status": "reviewed",
+      "translation": "Import paired BED intervals"
+    },
+    "50/task": {
+      "source_sha256": "194e6057238baa4d07941100d9511aaa0abfb79fb53fae3e46b92b5faa055eee",
+      "status": "reviewed",
+      "translation": "Show actual characters and gaps from an alignment"
+    },
+    "51/task": {
+      "source_sha256": "eab46bc0cda928268e4bac884f9f5295874e9f4dbce1947bbebbd22ffcd9852d",
+      "status": "reviewed",
+      "translation": "Look up source positions and alignment columns"
+    },
+    "52/task": {
+      "source_sha256": "d5bf9523d45818d713988b6921b933c270197d217e08a15b13bfbfc1fca4ccf4",
+      "status": "reviewed",
+      "translation": "Connect a genomic region to its independently rebuilt detail"
+    }
+  }
+}

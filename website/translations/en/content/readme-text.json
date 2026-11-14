@@ -1,0 +1,380 @@
+{
+  "source_sha256": "544da7939d528c81af79ebc1fd74924f4e6c8ec374365cd221536cac533695d3",
+  "strings": {
+    "title": {
+      "source_sha256": "543c2953291eece4e47b74bc939ba6fa50286298fb22b68e07fc1eadf250f643",
+      "status": "reviewed",
+      "translation": "ggchord: sequences, annotations and relationships"
+    },
+    "intro": {
+      "source_sha256": "4268716e22dd367873d1eb1afe68e7500d54ee52c42b0d9a9e53b924e2b3baf5",
+      "status": "reviewed",
+      "translation": "Build layered sequence figures in R with ggplot2: compare multiple sequences, annotate a circular map, inspect HSP alignments and connect independent views."
+    },
+    "website": {
+      "source_sha256": "fb8d739d08b971680e9f9c641043d6151f1966bea24f30d6798703257f21edf7",
+      "status": "reviewed",
+      "translation": "Website"
+    },
+    "manual": {
+      "source_sha256": "cb4ba40bf823511da493b4e7535ccf2e9fcba7051f945ff9793e28da79bc81bf",
+      "status": "reviewed",
+      "translation": "Usage guide"
+    },
+    "gallery": {
+      "source_sha256": "6493d214d6fe59d30aefbdd7224d0c11afaf2920afe08c7acf4127265f187898",
+      "status": "reviewed",
+      "translation": "Figure gallery"
+    },
+    "issues": {
+      "source_sha256": "55a2ce1324c183551929cfb487e45f70fe96374be44fb1ffc3c2409fdb97e5bc",
+      "status": "reviewed",
+      "translation": "Report an issue"
+    },
+    "modules": {
+      "source_sha256": "196d9f375a5fb1427bb717b4fda4ead42189bc7796aeb2bca28185b5cc2b7aa5",
+      "status": "reviewed",
+      "translation": "Four plotting modules"
+    },
+    "module": {
+      "source_sha256": "b07e5088eafa92c2f0a47848ed209011bfad97418f319c310e06524fcbf00563",
+      "status": "reviewed",
+      "translation": "Module"
+    },
+    "purpose": {
+      "source_sha256": "20b349591d3850572c7393651fa8bc3d45806d03aeddaea667a36a1d67b9b281",
+      "status": "reviewed",
+      "translation": "Use it to"
+    },
+    "view": {
+      "source_sha256": "1c5c067138704dda85efa73e3fe04a0af5baa1311a05b175a16e717864902ade",
+      "status": "reviewed",
+      "translation": "Views"
+    },
+    "multi": {
+      "source_sha256": "50519f0f01d85eddb8933d476a4053f6c44e6f49027586f276aa0d6255f955d6",
+      "status": "reviewed",
+      "translation": "I · Multi-sequence relationships"
+    },
+    "multi-purpose": {
+      "source_sha256": "d1c6691a49219bd42d17ba437ef5d9daa8729d8d26368b50b2cf3dfd4fbf6ce0",
+      "status": "reviewed",
+      "translation": "Compare sequence intervals, gene order and observed relationships."
+    },
+    "circular": {
+      "source_sha256": "bed6ecb9b0f33a9d3f2f93c54ed01778ff77bcbeb282c9078f3603e63bf3f865",
+      "status": "reviewed",
+      "translation": "II · Single-sequence circular maps"
+    },
+    "circular-purpose": {
+      "source_sha256": "68c8288707b4e02d80a4ed83a4e202e391fffa23349708ffe9fdb2420e314c6a",
+      "status": "reviewed",
+      "translation": "Place features, primers and restriction sites on one sequence."
+    },
+    "dotplot": {
+      "source_sha256": "c551a63165b4bc0637434b8cc073d5211955e88843d271bf78ce0f4a5a4d8933",
+      "status": "reviewed",
+      "translation": "III · HSP Dotplot"
+    },
+    "dotplot-purpose": {
+      "source_sha256": "66e3f1371e201fe9998dfd78380057ea550e840ba229b06f24c1effae32fab07",
+      "status": "reviewed",
+      "translation": "Inspect alignment intervals on query and subject axes."
+    },
+    "fusion": {
+      "source_sha256": "356bc8b05c060c1957619e1d623b30d8c0634d5d73562adb0c1d0c6985f3669b",
+      "status": "reviewed",
+      "translation": "IV · Multi-view composition"
+    },
+    "fusion-purpose": {
+      "source_sha256": "b44be4c132522b7bf1e3af85ca33c47d67525443c8104b72df23fbde3456c3bc",
+      "status": "reviewed",
+      "translation": "Connect independent plots through explicit source intervals."
+    },
+    "grammar": {
+      "source_sha256": "1119a45f80dea39553c8c8b053a350038995f53bb5d6cf905f0a33c78765f537",
+      "status": "reviewed",
+      "translation": "The multi-sequence module has four Coord types. Circular and Dotplot add two more; Fusion is the composition layer. Layers, mappings, scales, positions and themes retain their ggplot2 roles."
+    },
+    "examples": {
+      "source_sha256": "112004a4ee8f6ac01971f4692bab7a92bd0f6a49a6afe35e281958d31b60dd41",
+      "status": "reviewed",
+      "translation": "Real-data figures"
+    },
+    "chord-title": {
+      "source_sha256": "16cf8d7d2571efa935f406ca2aae5e4c569b6e19e9c7701a5c66aa990bad02f0",
+      "status": "reviewed",
+      "translation": "Chord · relationships across four genomes"
+    },
+    "chord-caption": {
+      "source_sha256": "968cc95c57d53df069ab4e60f8afd4a1a7a06fa79e6649d4c14fae446fed89f8",
+      "status": "reviewed",
+      "translation": "Combine mixed-curvature backbones, strand-aware CDS arrows, selected source labels and Identity-coloured ribbons. Features and HSPs are display subsets of the original records."
+    },
+    "chord-alt": {
+      "source_sha256": "e8904950c1f4d60231143786fc691ac6a65e0a16d5ee37e82b667ddca131ab5b",
+      "status": "reviewed",
+      "translation": "Four-genome Chord flagship with labelled genes and alignment ribbons"
+    },
+    "linear-title": {
+      "source_sha256": "8ac5af92162b0ed802706ec29ef746db5070b7c120c3383f7705c20ecd0d54e7",
+      "status": "reviewed",
+      "translation": "Collinear · order, orientation and cross-row links"
+    },
+    "linear-caption": {
+      "source_sha256": "c6d6cafad075a1b381a5a0c37a2f96e55faea33cbd1e0f13ad4e2b5c747f4b04",
+      "status": "reviewed",
+      "translation": "Compare four genomes on a shared base-pair scale. Selected CDS sit on either side of each backbone; dashed outlines distinguish links across non-adjacent rows."
+    },
+    "linear-alt": {
+      "source_sha256": "c59106f9ad096a7aaae109b0033a6819495bba516fa4221da8ff11ff03976d3e",
+      "status": "reviewed",
+      "translation": "Four-genome Collinear flagship with strand-separated genes and cross-row ribbons"
+    },
+    "circular-title": {
+      "source_sha256": "d20bf2feae52468afd2d395f39a08d24ec4422c776d3131a583826db94139d6a",
+      "status": "reviewed",
+      "translation": "Circular · dense pETDuet-1 annotations"
+    },
+    "circular-caption": {
+      "source_sha256": "e0e27cb271eb9a8616ac089c32c4a2e69c6cdace321c921d7f2346d5103156c0",
+      "status": "reviewed",
+      "translation": "A complete circular map with 20 features, five reference primers and 58 grouped cut positions from the declared enzyme set. Original sequence positions and annotation identities are retained."
+    },
+    "circular-alt": {
+      "source_sha256": "074e792cf01a1c34fe994336fafcec8f8acb6a51897260cbfde09e65d647b930",
+      "status": "reviewed",
+      "translation": "pETDuet-1 circular flagship with features, primers and restriction sites"
+    },
+    "case": {
+      "source_sha256": "f96482a3afdf9daf5f3d1a45c108e9081b2d2eefb37e5efbea3127d85ff25fc1",
+      "status": "reviewed",
+      "translation": "Complete example"
+    },
+    "four-views": {
+      "source_sha256": "a3b0d81cc3433422a8064d68b3c6c9f880eae09b4ec9037f0104edf45b9bdd38",
+      "status": "reviewed",
+      "translation": "Chord / Collinear / Radial / Sankey"
+    },
+    "plot-source": {
+      "source_sha256": "f67a4998c44e057494717121bd4acf78607331c90979afd68353829d9ee96bfd",
+      "status": "reviewed",
+      "translation": "Plot source"
+    },
+    "layout": {
+      "source_sha256": "90b652daf4446371ab6ff689536927bf40d21e0280cd88b11fd26dbf858ddf3b",
+      "status": "reviewed",
+      "translation": "Alignment and arrangement"
+    },
+    "reference-maps": {
+      "source_sha256": "a808cde2655f42d0d3e3d59dc55c1d2d551f3a623460eaea9797facc375961b4",
+      "status": "reviewed",
+      "translation": "13 complete reference maps"
+    },
+    "more-views": {
+      "source_sha256": "fecebb47dff1b90e56d1de53d2e0427884ef29562ce001476cd4632be24bbcfc",
+      "status": "reviewed",
+      "translation": "Alignment matrices and linked views"
+    },
+    "dotplot-alt": {
+      "source_sha256": "16d73bdf85bbf1a1563c17760423cccb27cb14e257f0ada9c18a0c9500c56078",
+      "status": "reviewed",
+      "translation": "Four-sequence matrix of 32 original HSPs"
+    },
+    "fusion-alt": {
+      "source_sha256": "0e5d14e6d7b750b85422f92c086827a7e60ee4e2fe1c4a9c38c61b1f4c5f12cb",
+      "status": "reviewed",
+      "translation": "Linked Chord, Collinear, Radial and local-detail views"
+    },
+    "dotplot-caption": {
+      "source_sha256": "0cd73541954c54d094ccdb7981eaffccbd4f18aaca3a461e4633752ead1c443c",
+      "status": "reviewed",
+      "translation": "32 original HSPs; Identity by colour, reported alignment length by line width."
+    },
+    "fusion-caption": {
+      "source_sha256": "c54951d815ba51008bf2f408e07ca402e58442fd878a131cdafe8b1b88374388",
+      "status": "reviewed",
+      "translation": "Global relationships, ordered comparisons and a magnified source interval in one composition."
+    },
+    "dotplot-guide": {
+      "source_sha256": "584cffa0dd074768359d956af714e3e75260aca74e45320dd6996cfcbd07c14e",
+      "status": "reviewed",
+      "translation": "Axes, direction and mappings →"
+    },
+    "fusion-guide": {
+      "source_sha256": "f1c3e827c4edc3aefcef3f441287b8af083614526b6bce740e616a7c59578bd9",
+      "status": "reviewed",
+      "translation": "Local magnification and character detail →"
+    },
+    "source-note": {
+      "source_sha256": "bc3979a823c850a7f7e3588d4b0940b48b1ceb362f10443725ac6ae2e0ad0c4c",
+      "status": "reviewed",
+      "translation": "Figures share traceable inputs and plot definitions. See the source records and reproduction notes:"
+    },
+    "source-inputs": {
+      "source_sha256": "0b6979fa5ddcf61537a36e38a859bd700ac9867ac7df420c1bff3a188e588a7a",
+      "status": "reviewed",
+      "translation": "Input files"
+    },
+    "source-figures": {
+      "source_sha256": "8e65bf043f7a3a8868dd4893ac5149a0dd89530665780abe0a879b10c3feda43",
+      "status": "reviewed",
+      "translation": "Dotplot / Fusion source"
+    },
+    "source-attribution": {
+      "source_sha256": "d6107c1b4b388f56ce2028dcc70b122193d301dd37732d13896c8b51ce149032",
+      "status": "reviewed",
+      "translation": "Data sources and attribution"
+    },
+    "installation": {
+      "source_sha256": "e8f88f51ccb085ea870b413bf5c4a6425690a42450cfc462ed8450a165dcc57e",
+      "status": "reviewed",
+      "translation": "Installation"
+    },
+    "optional-deps": {
+      "source_sha256": "08fce916afd90c2c940f06d9f754cf64bc9e36a63b6849dd1610170fff8355f9",
+      "status": "reviewed",
+      "translation": "The minimal example below needs only ggchord. Complete data-preparation examples declare optional dependencies such as dplyr, purrr and tidyr alongside their code."
+    },
+    "quick-start": {
+      "source_sha256": "011716b76f9bbb16d8834653945ee6666ceaff5704ddf021e102e03f67c151b8",
+      "status": "reviewed",
+      "translation": "Draw a first plot"
+    },
+    "quick-intro": {
+      "source_sha256": "5b504a393fc64f0e8c3b2196ee418ddbcde698c48bdf8eb9da15417d4a850e15",
+      "status": "reviewed",
+      "translation": "Use bundled tables to draw sequence backbones, alignment ribbons and sequence names. No file download or alignment program is needed."
+    },
+    "quick-note": {
+      "source_sha256": "f08e679f9d164fe1719c30edb7241f67afbb480cefa2f1de2884fa1a422a0ce6",
+      "status": "reviewed",
+      "translation": "This small example shows the layer grammar. The figures above add their own source annotations, display choices and styling."
+    },
+    "output": {
+      "source_sha256": "049fa45c1fba4ae0d71868e7bbba2aba7414dcf3d17201ca8bd14cda665e5c91",
+      "status": "reviewed",
+      "translation": "Preview and save"
+    },
+    "output-intro": {
+      "source_sha256": "e74b7563f298461ee6d0f9226bf619f0a3819e21cf0386b11833e960bac1b26e",
+      "status": "reviewed",
+      "translation": "Preview and save at the same explicit dimensions so labels are arranged for the intended figure size."
+    },
+    "inspiration-grammar": {
+      "source_sha256": "a4a6bcb513886fb442874b40f0dc70b0db28673e2acd0dc578db6c84e991eac0",
+      "status": "reviewed",
+      "translation": "Provides the layered grammar and the division of responsibilities between mappings, scales, guides, geometry, coordinates and themes. ggchord follows this model so users can compose layers and supply their own scales and styles."
+    },
+    "inspiration-naming": {
+      "source_sha256": "b2cd1724a3534171837bf3b79f6d4df0bbcbb1978d1a65b676fb63ba46085970",
+      "status": "reviewed",
+      "translation": "Informs the compact query/subject field names used to trace alignment records, endpoints and sequence identifiers. Plotting consumes existing results rather than running an alignment program."
+    },
+    "inspiration-circular": {
+      "source_sha256": "79b7d2021f2404b8c08ff6e1080c9d9133b2334377a8992f63b1577bda72dd17",
+      "status": "reviewed",
+      "translation": "Provide references for circular information hierarchy, restrained ribbon display, multi-track organization and the reading order of sequence relationships. These ideas inform the arrangement of backbones, annotations and links."
+    },
+    "inspiration-synteny": {
+      "source_sha256": "a9d60b1d5e41c4b0b7b2d078fca370569f26cd526eeb3d3aa0685398819f4e31",
+      "status": "reviewed",
+      "translation": "Offer clear examples of strand-aware gene arrows, gene-cluster comparisons and linear synteny. They inform how sequence direction, feature placement and connections are presented together."
+    },
+    "inspiration-features": {
+      "source_sha256": "676ed5e69950827ac671f0169def6ed12862efd9eaf00227d3e4eee374fd6940",
+      "status": "reviewed",
+      "translation": "Provides a reference for readable feature annotations, crowded-label handling and local feature layouts. It informs the emphasis on connecting labels clearly to their source intervals."
+    },
+    "inspiration-preview": {
+      "source_sha256": "5d697159926281e079d00ad4c3e43a82e9ba5be0d190e74003c3d152567cc1a3",
+      "status": "reviewed",
+      "translation": "Informs the workflow of previewing a static figure at its intended export size. ggchord uses view_ggchord() for sized preview and standard ggsave() for saving."
+    },
+    "license": {
+      "source_sha256": "1b2ad79bbbdabd3e3d57ddef3e53d7476817edb83bc818a9868b424e952dd30b",
+      "status": "reviewed",
+      "translation": "license"
+    },
+    "radial-title": {
+      "source_sha256": "d848158068dd3b5234478fce88aaa279e3913c20a5bfd264c08ea952bc6b0deb",
+      "status": "reviewed",
+      "translation": "Radial · synteny along radial spokes"
+    },
+    "radial-caption": {
+      "source_sha256": "fc5bce2418fb1672b8a4368da627731f9c612c48a81f1457d9c6d7f299464ad8",
+      "status": "reviewed",
+      "translation": "Derived from the Chord flagship, using its source preparation and selected features. Radial backbones expose interval relationships while preserving sequence identities and native positions."
+    },
+    "radial-alt": {
+      "source_sha256": "7273e088c71b36ebbb46330e020b9f4fcb625e6dde716524832e45f47646fdad",
+      "status": "reviewed",
+      "translation": "Radial flagship derived from the four-genome Chord example"
+    },
+    "sankey-title": {
+      "source_sha256": "21a3a60cfc87ff0dc9f085790b388b8ef03ee32769d29994b36e92b42f1298d9",
+      "status": "reviewed",
+      "translation": "Sankey · source intervals across two mirrored columns"
+    },
+    "sankey-caption": {
+      "source_sha256": "009511cfec232acb4cfd6eb57b587e97f8b43f336a6daf3375c404f961d4d141",
+      "status": "reviewed",
+      "translation": "Derived from the Collinear flagship, retaining its selected genes and HSPs. Mirrored sequence columns show observed interval relationships; ribbon width is not a conserved flow quantity."
+    },
+    "sankey-alt": {
+      "source_sha256": "c07d3ed396a296b23263fc5f6c165582f5d66ac68659b054c67d445ddf0c9229",
+      "status": "reviewed",
+      "translation": "Sankey flagship derived from the four-genome Collinear example"
+    },
+    "inspiration-grammar-title": {
+      "source_sha256": "827b9674dd5f5a6c108209390358c4810717606dd580c0d6dc471e75a9709558",
+      "status": "reviewed",
+      "translation": "Graphical grammar and sequence relationships"
+    },
+    "inspiration-features-title": {
+      "source_sha256": "5ac164c5432005a52265a931f556be82b596da457d58c2fc46bee2e417a4010f",
+      "status": "reviewed",
+      "translation": "Gene arrows, annotation placement and local comparison"
+    },
+    "inspiration-genomes": {
+      "source_sha256": "8e677f851ae092d57e66b24cce95426b4d33bed62abeb7961c97b34204b6feb4",
+      "status": "reviewed",
+      "translation": "Informs tidy multi-table inputs, focus/sync workflows, feature stacking, local anchoring and local display reversal. Its approach helps keep data preparation distinct from display choices."
+    },
+    "inspiration-detail-title": {
+      "source_sha256": "6f62b4f057752ad60a2349d97055b2d9c691333a8e4149c4c3641fec2b412d9f",
+      "status": "reviewed",
+      "translation": "Local magnification, aligned characters and figure preview"
+    },
+    "inspiration-magnify": {
+      "source_sha256": "d7cf3ad754dd4235c6be518d1cd2e160ea21acfdf0c1411a460ed922349ace85",
+      "status": "reviewed",
+      "translation": "Provides a reference for connecting an overview to a magnified inset. ggchord develops this presentation idea around explicit source intervals and independently registered sequence views."
+    },
+    "inspiration-alignment": {
+      "source_sha256": "cdb7be4793105ae321513365c93ffe0f8324d47661d99f522b2d7be6ea242390",
+      "status": "reviewed",
+      "translation": "Inform design studies of DNA/protein alignment displays, character colouring and composition with ggplot2 graphics, especially the relationship between alignment columns, gaps and character-level detail."
+    },
+    "inspiration-columns": {
+      "source_sha256": "11c4f80bbd969615b9fcb04d78f096fa24c99caa3365ae465750f9325bf4ab12",
+      "status": "reviewed",
+      "translation": "Provide comparison references in character-view design studies: sequence-logo semantics, alignment-column annotations, consensus and conservation displays, and the relationship between per-column summaries and individual sequences."
+    },
+    "inspiration-title": {
+      "source_sha256": "a90e2c3ba8b5d2b6906dc357716cfaba69263567d028e032c0b2f6dbce009130",
+      "status": "reviewed",
+      "translation": "Design inspiration"
+    },
+    "inspiration-intro": {
+      "source_sha256": "086355c1e3084b664556ab40f4cd9e4c4b321b3b04d1eefc39a73565404fcd2c",
+      "status": "reviewed",
+      "translation": "The following projects inform ggchord’s graphical grammar, sequence layouts and detail views. Each entry describes the aspect that influenced the design."
+    },
+    "get-started": {
+      "source_sha256": "715ee9dc842f34e48f267f0bf3261d7980e544b26eb3d2f0ff20e19b121c4a99",
+      "status": "reviewed",
+      "translation": "Get started"
+    }
+  }
+}

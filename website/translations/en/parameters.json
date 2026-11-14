@@ -1,0 +1,185 @@
+{
+  "source_sha256": "2b6b74c306b5aa1d8f56a9986ae10cefddb22ea54e6abb48f67db99680a78117",
+  "blocks": {
+    "0": {
+      "source_sha256": "9b0c4f3fdd017002152cb2a167c4a1b674d51adc55fc48a09225789e529aea83",
+      "status": "reviewed",
+      "translation": "Flexible parameter formats refine shared settings into local control for parameters that support them. These examples use the same four bundled sequences; the first three compare only ⟦shared:0⟧ on a 7 × 7 inch canvas. Requires ggchord and optional dplyr for CDS preparation.\n"
+    },
+    "2": {
+      "source_sha256": "fa179c3ed2579da8a47ed9068a759e0261bb5c973c70595ffcdb0d3d0421f740",
+      "status": "reviewed",
+      "translation": "## One value for every sequence ⟦shared:0⟧\n"
+    },
+    "5": {
+      "source_sha256": "cdd23e113d85823c9516bd3dde635e4d28e627492cf921d51f6816a4e9fe61a1",
+      "status": "reviewed",
+      "translation": "Every radius is 1. A scalar is sufficient when all sequences share a setting.\n"
+    },
+    "6": {
+      "source_sha256": "3a91330a2cc8a5d06f2b36667a1e166d7afdf3b59dcd6ef091d9fe1957626540",
+      "status": "reviewed",
+      "translation": "## Change one sequence by name ⟦shared:0⟧\n"
+    },
+    "9": {
+      "source_sha256": "89cb7e02f0698b60a2317cb5f9e173d0a33891e7171c394b4301b6e0a0c3c45a",
+      "status": "reviewed",
+      "translation": "Only ⟦shared:0⟧ uses 0.72; the rest retain this parameter's default of 1. Keys match actual ⟦shared:1⟧ values after display reordering. Keep complete named vectors when every sequence has a different setting.\n"
+    },
+    "10": {
+      "source_sha256": "941ea3436d68a0b809f6e5ddca8a7143982bd6285253f2a566099ba19b777b52",
+      "status": "reviewed",
+      "translation": "## Values in display order ⟦shared:0⟧\n"
+    },
+    "14": {
+      "source_sha256": "384dadd454f75eb5daa72119a29bcb1ed6087f24bfc100d2952484a1eb8543c3",
+      "status": "reviewed",
+      "translation": "Values match display order after ⟦shared:0⟧ and must cover all displayed sequences. The second sequence is currently ⟦shared:1⟧, making this plot equivalent to the preceding one.\n"
+    },
+    "15": {
+      "source_sha256": "126769f8ab11371c6e9ff73a48198cfa5496c975f7dc3a3c301951299f9aa607",
+      "status": "reviewed",
+      "translation": "### Matching after reordering ⟦shared:0⟧\n"
+    },
+    "16": {
+      "source_sha256": "e9cdfce1e7d56a8b4c1acb66822a26dde07e68f2567baaa9f92f3860b6c9c138",
+      "status": "reviewed",
+      "translation": "Keep the vector and change ⟦shared:0⟧. Named values still change ⟦shared:1⟧; the unnamed vector changes the second displayed sequence, now ⟦shared:2⟧.\n"
+    },
+    "19": {
+      "source_sha256": "9bcbe5d0f47dee84739da331ec4f3d21cc2fb17be47975ba88ae45481d8370ac",
+      "status": "reviewed",
+      "translation": "![Named values after reordering](⟦shared:0⟧)\n![Ordered values after reordering](⟦shared:1⟧)\n"
+    },
+    "20": {
+      "source_sha256": "1262bce331f7ac0a7f80cff61cd7fbe51db6e83c8dcf8190786b5ef2cbb820db",
+      "status": "reviewed",
+      "translation": "## Prepare observed CDS on both strands ⟦shared:0⟧\n"
+    },
+    "23": {
+      "source_sha256": "5bf2af8340ab00b19418d4d0c3eb7461de3f2be8441e6e47b9a59529e46342e9",
+      "status": "reviewed",
+      "translation": "⟦shared:0⟧ has a plus-strand record at 2624–4195 and a minus-strand record at 19246–20523; the integrase on ⟦shared:1⟧ is plus-strand. Strands come from ⟦shared:2⟧, with original coordinates retained.\n"
+    },
+    "24": {
+      "source_sha256": "827922fc467a549c37fbe08d7f3d03179f32084c7b7f263183097570ddf8b597",
+      "status": "reviewed",
+      "translation": "## Set strand positions ⟦shared:0⟧\n"
+    },
+    "27": {
+      "source_sha256": "b90c59cd1ea0e8fb9f58065e7d39662a4fc369f984c770cc6b27dc9b0b0a88e2",
+      "status": "reviewed",
+      "translation": "Explicit strand values are already signed: 0.08 for plus and −0.08 for minus, without another reversal. A scalar ⟦shared:0⟧ expands to plus 0.08 and minus −0.08.\n"
+    },
+    "28": {
+      "source_sha256": "94c291487b395ee359e597123055ed7f8a907ff6c7cfa2578db0cd0384ecff4d",
+      "status": "reviewed",
+      "translation": "### Combine sequence and strand differences ⟦shared:0⟧\n"
+    },
+    "29": {
+      "source_sha256": "4db34c2ccabc5e9059e5f8b46e52a1cd3f2e5ad250d8c84a406dcd10ce9e6804",
+      "status": "reviewed",
+      "translation": "Place the two ⟦shared:0⟧ strands asymmetrically, while the other sequence uses a smaller symmetric offset. A list expresses these two levels of variation.\n"
+    },
+    "31": {
+      "source_sha256": "e4de0eeea891ef2b9a52cf096accaf5111437db0eaa06d2291e2a1a67d486732",
+      "status": "reviewed",
+      "translation": "![Offsets by observed sequence and strand](⟦shared:0⟧)\n"
+    },
+    "32": {
+      "source_sha256": "8bfb214fdf1ead72b592dd15538c2b5c50f674d961f9597f7bf8cee26a1af068",
+      "status": "reviewed",
+      "translation": "⟦shared:0⟧ uses explicit 0.08/−0.14; the scalar 0.06 for ⟦shared:1⟧ expands symmetrically. Omitted sequences or strands become 0 in this Position family. Do not copy this mixed list directly into ⟦shared:2⟧.\n"
+    },
+    "33": {
+      "source_sha256": "0f00ce5e850e35c100e13afc82c05964ff900bcb34015f7eacb2c4b23e23ccb8",
+      "status": "reviewed",
+      "translation": "## Set strand widths ⟦shared:0⟧\n"
+    },
+    "36": {
+      "source_sha256": "82506b8742cbdeeaaecac284950ba5d629114b381287800d2ad9f4fc3965bb4d",
+      "status": "reviewed",
+      "translation": "Plus uses width 0.03 and minus 0.08. Width changes arrow thickness; start/end still determine interval length. Per-sequence width lists require elements following that family's strand-value rules; see [geometry parameters](⟦shared:0⟧).\n"
+    },
+    "37": {
+      "source_sha256": "d849822c4a926a435681311b9dd52ad6aa3e607f7d9e92fc217c702f060c6aa1",
+      "status": "reviewed",
+      "translation": "## Place names by sequence ⟦shared:0⟧\n"
+    },
+    "40": {
+      "source_sha256": "7380edcf061dff9111a2d516e4a5c821565f0e08ae4bc0d90b809c6870797e38",
+      "status": "reviewed",
+      "translation": "Text radii for ⟦shared:0⟧ and ⟦shared:1⟧ are 75% and 115% of their backbone radii. Other sequences keep their defaults. Explicit ⟦shared:2⟧ is incompatible with Collinear.\n"
+    },
+    "41": {
+      "source_sha256": "e9df6c390e87cbe1a8bafef195b71b43e0343f4c8e72d10fc77e394e0fc042c7",
+      "status": "reviewed",
+      "translation": "## Families and omitted values ⟦shared:0⟧\n"
+    },
+    "42": {
+      "source_sha256": "c6dc041781a6c1c05333ab750e61af0dcdf19e689288fbb2fb77759534e40656",
+      "status": "reviewed",
+      "translation": "| Interface | Formats and matching | Boundaries and omitted values |\n"
+    },
+    "43": {
+      "source_sha256": "a9e436d2babd638ade86791e162e7de5a6b1b3128c6ae9ed93504fbf3c53dc93",
+      "status": "reviewed",
+      "translation": "| --- | --- | --- |\n"
+    },
+    "44": {
+      "source_sha256": "0e0c6baeb28644f10db52df825788bd3b709fb3738e481bd89450b966d828045",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | Scalar, accver names, display order and corresponding scalar lists | ⟦shared:1⟧, ⟦shared:2⟧, ⟦shared:3⟧, ⟦shared:4⟧ have individual defaults and Coord support |\n"
+    },
+    "45": {
+      "source_sha256": "542d56bf41613efcee4c240a3f803660b583c5c6d344ab8e4c7ece1374fb10c9",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | ⟦shared:1⟧, radius, rotation, size and hjust/vjust by sequence | ⟦shared:2⟧ is a single mode; explicit radius is incompatible with Collinear |\n"
+    },
+    "46": {
+      "source_sha256": "61368be3e31f2beada32b6c039a4391db048769dc919715ec9c279aed9563867",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ / ⟦shared:1⟧ | ⟦shared:2⟧ by endpoint sequence | ⟦shared:3⟧ retains automatic behavior; control points are not sequence scalars |\n"
+    },
+    "47": {
+      "source_sha256": "ce7bc797a11f414a3986107d570d5dfc2cfc97f91d4a983788ffe06911bdd5b6",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ / ⟦shared:1⟧ | ⟦shared:2⟧ by sequence or strand; list elements follow strand-value rules | Omitted entries retain the parameter default; arbitrary mixed Position lists do not apply |\n"
+    },
+    "48": {
+      "source_sha256": "c3ab4a17784f8af2fb83e73640582ed21e2eb003d4d3a4c397b2fef5200a93ea",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | ⟦shared:1⟧: scalar, sequence values, explicit strand values and mixed sequence lists | Scalar x becomes +x/−x; explicit strands are not reversed; omitted sequences/strands become 0 |\n"
+    },
+    "49": {
+      "source_sha256": "70a724188586f9f3936bdd77438a56181c13632ffc3cf7ca5a26711b1abfe514",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | Scalar or per-sequence scalar ⟦shared:1⟧s | Both strands share the ⟦shared:1⟧; strand-specific values are unsupported; omitted sequences become 0 |\n"
+    },
+    "50": {
+      "source_sha256": "b05f511ef095c03c2e89aa8784d3da3f005361f2d371e2e08574501aa671f3ec",
+      "status": "reviewed",
+      "translation": "| Fixed ⟦shared:0⟧ / ⟦shared:1⟧ | ⟦shared:2⟧, ⟦shared:3⟧, ⟦shared:4⟧, ⟦shared:5⟧ by sequence or strand | Follow this family's strand rules; not every text parameter accepts lists |\n"
+    },
+    "51": {
+      "source_sha256": "9cf856db3ef7f1f9cd156dba44f39409a4d5ece2c7ad73584204342fc97a8032",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | One absolute ⟦shared:1⟧ or per-sequence numeric width/gap | Numeric settings cover every displayed sequence; absolute sizes retain their physical meaning |\n"
+    },
+    "52": {
+      "source_sha256": "6982fd8002c390a11aea3a5275f1b6b56ea66b770ed35d312d081abba2aa6d5b",
+      "status": "reviewed",
+      "translation": "⟦shared:0⟧ specifies ordering and ⟦shared:1⟧ specifies a layout mode. Automatic label layers do not accept arbitrary fixed offsets. Axes/themes, aesthetics, scales and guides retain their own interfaces. Manual colour scales match **data categories**; see [styling](⟦shared:2⟧). Consult the [parameter atlas](⟦shared:3⟧) for exact defaults and ranges.\n"
+    },
+    "53": {
+      "source_sha256": "f5d18903580cb6656d7d2fc76d0af012f68c4a7520ee5743a1b1dbd78144f1ec",
+      "status": "reviewed",
+      "translation": "## Choose a format and check results ⟦shared:0⟧\n"
+    },
+    "54": {
+      "source_sha256": "1793cff18653344bf0d1bac99c3de014f5f716f0d03d53b0b05398a936d36e0f",
+      "status": "reviewed",
+      "translation": "Use scalars for shared settings, named values for local differences, equal-length vectors for display-order settings, and supported lists when two levels of differences require them. Check IDs, order, omitted entries and actual results. Other sections use the simplest expression that serves their task; vector/list counts are not a quality measure.\n"
+    }
+  }
+}

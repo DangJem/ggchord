@@ -2,6 +2,7 @@
 
 ## Focus without losing origins {#focus}
 
+
 {{code:focus}}
 {{figure:focus}}
 

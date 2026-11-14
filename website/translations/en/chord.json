@@ -1,0 +1,150 @@
+{
+  "source_sha256": "c235ac812aafea1a8efa82d69a823b649de4ca8c63ea1c18b9e42a9ffe9afae8",
+  "blocks": {
+    "0": {
+      "source_sha256": "533fec9dbea75c3d95ccf878ec8edee46e595ef25f11d178887e4c924145c818",
+      "status": "reviewed",
+      "translation": "⟦shared:0⟧Bring four genomes into one connected view. Combine straight and curved backbones, strand-aware genes and the default stepped identity scale without hiding where the data came from.⟦shared:1⟧\n"
+    },
+    "1": {
+      "source_sha256": "2b9b0b5fc44159df6b50a170a2ee506b14e5a1b9cead941623dc7ba9199da7f7",
+      "status": "reviewed",
+      "translation": "## Research question and evidence limits ⟦shared:0⟧\n"
+    },
+    "2": {
+      "source_sha256": "9907c556a8352d8af5ec3fbbc5302b643b957ffc2789c5beed57ffd241e46605",
+      "status": "reviewed",
+      "translation": "This view asks where observed alignments lie across four complete source records and which original CDS occur near their endpoints. It is not a phylogenetic tree and does not independently establish inversions or function. Check the accession records at NCBI: [MT108731.1](⟦shared:0⟧), [MT118296.1](⟦shared:1⟧), [OQ646790.1](⟦shared:2⟧), [OR222515.1](⟦shared:3⟧).\n"
+    },
+    "3": {
+      "source_sha256": "74d20f3723a58ccad2ab97f4e2c2f4a0d28eed5b86370b33548038bc52c26835",
+      "status": "reviewed",
+      "translation": "Length/identity thresholds, at most three HSPs per pair and strand-aware CDS sampling are display choices. Original FASTA/GFF3/BLAST records stay unchanged. Rotation, curvature, radius and reversal affect display only; labels retain source names. Consult complete GFF3 before reporting gene presence or absence.\n"
+    },
+    "4": {
+      "source_sha256": "0373a35b9e4ab8fe58d880cf7b3e5923bd1b99c540d983dbbb02ede01b206dbb",
+      "status": "reviewed",
+      "translation": "## What this view shows ⟦shared:0⟧\n"
+    },
+    "6": {
+      "source_sha256": "e378da50fe6ecb9a17208aad1d5978adc43332a2f8ab871b1e1c945437aa3a43",
+      "status": "reviewed",
+      "translation": "Compare the dark blue ⟦shared:0⟧ and teal ⟦shared:1⟧ backbones first. Their radii are 0.82 and 1.18. Orange ⟦shared:2⟧ and red ⟦shared:3⟧ use 1.02 and 1.08. Radius separates backbones visually. Read sequence lengths from the bp ticks. [Compare radius on its own](⟦shared:4⟧).\n"
+    },
+    "7": {
+      "source_sha256": "597918219fc19a8b8fcf254c15ce6fd6fa4284f849a91a10d3c60965661b0c5b",
+      "status": "reviewed",
+      "translation": "CDS are sampled separately for each available source strand, without a length threshold. Neither MT record has a negative-strand CDS. The sole negative-strand CDS on OQ646790.1 is 207 bp. An explicit Position places positive-strand arrows inside and negative-strand arrows outside. Arrow direction, colour and data retain the source strands. Positive-strand sampling favours CDS that overlap displayed link endpoints so the view demonstrates local ribbon clearance. Every arrow uses its original annotation as the label, including hypothetical protein.\n"
+    },
+    "8": {
+      "source_sha256": "a2d6cd1ec0658f2b3e5e953cd4ed2c335c516aa7a2cc1df9865492079f56960d",
+      "status": "reviewed",
+      "translation": "## Prepare original records ⟦shared:0⟧\n"
+    },
+    "9": {
+      "source_sha256": "0ac632170432c62f8ab58cc2993f12e53099349661a602486892227db160aa65",
+      "status": "reviewed",
+      "translation": "Extract the [manual input bundle](⟦shared:0⟧) into the working directory, so it contains ⟦shared:1⟧. Install the optional example packages with ⟦shared:2⟧; they prepare tables, map lists and inspect endpoint columns.\n"
+    },
+    "10": {
+      "source_sha256": "1b2673345e6978506298508c6df073f96cc11cfefd8efbd52ef40b5ef2d6ce37",
+      "status": "reviewed",
+      "translation": "Put the preparation script in your working directory. It contains the input, selection and display settings.\n"
+    },
+    "12": {
+      "source_sha256": "537d46e62c92d270ac854de8b79d842429dfc0bb523234fc46e6988e16799224",
+      "status": "reviewed",
+      "translation": "The input contains four unchanged FASTA records, their GFF3 annotations and 32 original HSPs. The display keeps HSPs at least 900 bp long and at least 75% identical, with at most three per sequence pair. This reduces clutter without merging or inventing alignments.\n"
+    },
+    "13": {
+      "source_sha256": "97f1e4f7d2a2ec4c244f0b3e70f16b39033238da97217564ae71a1aa84da523f",
+      "status": "reviewed",
+      "translation": "## Compose the layers ⟦shared:0⟧\n"
+    },
+    "14": {
+      "source_sha256": "37a8eadfbb04b06ffec0bc15b676dac5addc4bf6cdf4f69b8d2b084f909e9106",
+      "status": "reviewed",
+      "translation": "The endpoint-overlap selection uses dplyr ≥ 1.1.0.\n"
+    },
+    "16": {
+      "source_sha256": "0e638878d6bc3fcd3e56d58f74382df203977f047d1197336b23a83bf0fb4543",
+      "status": "reviewed",
+      "translation": "| Setting | Purpose in this plot |\n"
+    },
+    "17": {
+      "source_sha256": "3491e014f5503eb5b2fca81db42f6f72765980ba5b5e48ef135b6cf69d7f92cc",
+      "status": "reviewed",
+      "translation": "| --- | --- |\n"
+    },
+    "18": {
+      "source_sha256": "f6c88eaf91d51b6018cc09107adac573769596d6e0f1460b1b62a3e06a992ad2",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧, ⟦shared:1⟧, ⟦shared:2⟧ | Adjust display direction, bend and radius per sequence. Zero curvature draws a straight backbone. |\n"
+    },
+    "19": {
+      "source_sha256": "da733a33d255e8d3e1d3a8d598272ccb58103f1850e81de2deb5397759e1409c",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧, ⟦shared:1⟧ | Add space between backbones and turn the whole layout to position the elements. |\n"
+    },
+    "20": {
+      "source_sha256": "2dabb9c517ccdedf7af0bfe7e39c208cfe37a91467b79d041d76779fcbc60450",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧, ⟦shared:1⟧ | Leave smooth clearance near gene arrows and show overlaps through translucent ribbons. |\n"
+    },
+    "21": {
+      "source_sha256": "dae1fb4b4e0044d0a9805056f2933b67348d8cf47162f821807adcae598cd48f",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧, ⟦shared:1⟧ | Place arrows on opposite sides by source strand with offsets of ±0.030. Narrower arrows sit close to the backbones, and labels use the same position. |\n"
+    },
+    "22": {
+      "source_sha256": "54ae0d67e0f9775cc33a4069971a94146d9e97da982ed9fadfde5e2242731919",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧, ⟦shared:1⟧ | Arrange gene labels radially and wrap longer names. |\n"
+    },
+    "23": {
+      "source_sha256": "4816709caec713a745ccb9b095f2f4c100658da746fc4ad2a2af788b41c6acb3",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ and the default stepped scale | Map percent identity to ribbon colour and show the default stepped scale. |\n"
+    },
+    "24": {
+      "source_sha256": "eb51c6efa75ebb1c8eab41be06389bd05c6458b6498728ec3042763750aac617",
+      "status": "reviewed",
+      "translation": "## Read and adapt the result ⟦shared:0⟧\n"
+    },
+    "25": {
+      "source_sha256": "c419bfdbe158efeba41343d33893951ea2a8be30a7be8f7bf2f36c5341bef721",
+      "status": "reviewed",
+      "translation": "Start with the sequence colours and gene directions, then trace the larger aligned intervals. A ribbon crossing is not evidence of a rearrangement by itself. Read alignment identity using the default stepped colour scale.\n"
+    },
+    "26": {
+      "source_sha256": "9d8c8b38577c06361c2547893a329e7de879a24dddea21fe54aeefbdf6dd2233",
+      "status": "reviewed",
+      "translation": "Use [link filtering](⟦shared:0⟧) to change the display threshold, [labels](⟦shared:1⟧) to choose annotation density, or [sequence parameters](⟦shared:2⟧) to change radius and curvature. For a file-by-file introduction, start with [original sequence comparisons](⟦shared:3⟧).\n"
+    },
+    "27": {
+      "source_sha256": "c944a120516c7c5a0628714fe33178ae781e773784d853ae0a5507c4596c6e87",
+      "status": "reviewed",
+      "translation": "## Save at its intended size ⟦shared:0⟧\n"
+    },
+    "29": {
+      "source_sha256": "5ce77666e2dbcc25bfc7d20bd7d1fd62f19724f979aebf4567b59d02fe038164",
+      "status": "reviewed",
+      "translation": "## Evidence checks before saving ⟦shared:0⟧\n"
+    },
+    "30": {
+      "source_sha256": "ccda49f2bd1d1c2e56dd0816e0441f25c51a6fe72ff16153151714e99548be5a",
+      "status": "reviewed",
+      "translation": "Preview with view_ggchord at the declared width/height and save with ggsave at matching dimensions. Check IDs, source strands, endpoint directions, selection reports, legend units and hidden-label reasons. A successful PNG does not certify font portability across PDF/SVG viewers. Keep complete source tables, display subsets, parameters, version and input hashes. Download the [asset/provenance record](⟦shared:0⟧).\n"
+    },
+    "31": {
+      "source_sha256": "54c132ec05483cb19a0661b29850ac36bfefa4e2decf3748cb1bd66b26a183d9",
+      "status": "reviewed",
+      "translation": "## Source rights and reproducibility ⟦shared:0⟧\n"
+    },
+    "32": {
+      "source_sha256": "9b85b6d1b9a1f042fd3913820e953a066b4024763c5e663e30a62d60b06100d0",
+      "status": "reviewed",
+      "translation": "The package code is MIT-licensed; source database records and reference catalogues retain their original terms. The package license does not relicense third-party data. Keep accession identities and provenance with exported figures. The [asset/source record](⟦shared:0⟧), input archive hashes and displayed preparation script document this example; algorithmic matches remain hypotheses for experimental verification.\n"
+    }
+  }
+}

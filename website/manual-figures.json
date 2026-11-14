@@ -102,11 +102,11 @@
       "flagshipdata",
       "flagshipdot"
     ],
-    "source": "Original repository FASTA, GFF3 and BLAST HSP records; no biological inputs invented",
+    "source": "All 32 original HSPs; length-proportional query/subject cell boundaries and separate sequence-range headers/local numeric axes.",
     "page": "dotplot.html",
-    "width": 12,
-    "height": 9,
-    "dpi": 120
+    "width": 13,
+    "height": 12,
+    "dpi": 144
   },
   {
     "id": "flagfusion",

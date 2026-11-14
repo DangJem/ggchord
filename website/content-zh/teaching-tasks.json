@@ -1,0 +1,532 @@
+[
+  {
+    "task": {
+      "zh": "改变骨架样式"
+    },
+    "api": "geom_seq",
+    "parameters": "seq_style, seq_backbone_gap, seq_backbone_width",
+    "modes": "A / B / C",
+    "page": "circular-layout#style",
+    "level": "basics"
+  },
+  {
+    "task": {
+      "zh": "指定半径与曲率"
+    },
+    "api": "geom_seq",
+    "parameters": "seq_radius, seq_curvature",
+    "modes": "A",
+    "page": "chord-geometry",
+    "level": "advanced"
+  },
+  {
+    "task": {
+      "zh": "改变序列顺序和方向"
+    },
+    "api": "geom_seq",
+    "parameters": "seq_order, seq_orientation",
+    "modes": "A / B",
+    "page": "chord-geometry",
+    "level": "advanced"
+  },
+  {
+    "task": {
+      "zh": "改变连接路径与避障"
+    },
+    "api": "geom_link_ribbon",
+    "parameters": "link_ctrl_point, link_gap, link_avoid",
+    "modes": "A / B",
+    "page": "multi-sequence-links#control",
+    "level": "advanced"
+  },
+  {
+    "task": {
+      "zh": "将色带改为有向点连接"
+    },
+    "api": "geom_link_line",
+    "parameters": "link_type, qpos/spos, arrow",
+    "modes": "A / B",
+    "page": "multi-sequence-links#point-links",
+    "level": "advanced"
+  },
+  {
+    "task": {
+      "zh": "调整基因箭头形状"
+    },
+    "api": "geom_gene",
+    "parameters": "arrow_head_style, short_feature",
+    "modes": "A / B / C (bp)",
+    "page": "feature-geometry#arrow-heads",
+    "level": "advanced"
+  },
+  {
+    "task": {
+      "zh": "强调一个局部区间"
+    },
+    "api": "geom_seq_region",
+    "parameters": "region_side, region_width, region_offset",
+    "modes": "A / B / C",
+    "page": "multi-sequence-links#control",
+    "level": "advanced"
+  },
+  {
+    "task": {
+      "zh": "根据相似度配色"
+    },
+    "api": "scale_ribbon_fill_stepsn",
+    "parameters": "ribbon_fill",
+    "modes": "A / B",
+    "page": "styling#roles",
+    "level": "basics"
+  },
+  {
+    "task": {
+      "zh": "分类配色与图例"
+    },
+    "api": "scale_seq_colour_manual",
+    "parameters": "values, guide",
+    "modes": "A / B / C",
+    "page": "styling",
+    "level": "advanced"
+  },
+  {
+    "task": {
+      "zh": "筛选、去重、合并比对"
+    },
+    "api": "filter_ggchord_ribbons",
+    "parameters": "min_pident, min_length",
+    "modes": "A / B",
+    "page": "ribbons",
+    "level": "advanced"
+  },
+  {
+    "task": {
+      "zh": "汇总连接密度"
+    },
+    "api": "stat_ribbon_density",
+    "parameters": "bins, weight",
+    "modes": "A / B",
+    "page": "ribbons#statistics-density",
+    "level": "advanced"
+  },
+  {
+    "task": {
+      "zh": "显式聚束连接"
+    },
+    "api": "stat_ribbon_bundle",
+    "parameters": "min_bundle, group_by",
+    "modes": "A / B",
+    "page": "ribbons#statistics-bundle",
+    "level": "advanced"
+  },
+  {
+    "task": {
+      "zh": "左中右对齐序列"
+    },
+    "api": "coord_collinear",
+    "parameters": "align",
+    "modes": "B",
+    "page": "collinear-layout#alignment",
+    "level": "basics"
+  },
+  {
+    "task": {
+      "zh": "以共同位点锚定"
+    },
+    "api": "coord_collinear",
+    "parameters": "anchor",
+    "modes": "B",
+    "page": "collinear-layout#anchor",
+    "level": "advanced"
+  },
+  {
+    "task": {
+      "zh": "自动选择显示方向"
+    },
+    "api": "coord_collinear",
+    "parameters": "orientation, min_support",
+    "modes": "B",
+    "page": "collinear-layout#orientation",
+    "level": "advanced"
+  },
+  {
+    "task": {
+      "zh": "连接非相邻行"
+    },
+    "api": "geom_link_ribbon",
+    "parameters": "adjacent_only, pairs, nonadjacent_linewidth",
+    "modes": "B",
+    "page": "multi-sequence-links#routes",
+    "level": "advanced"
+  },
+  {
+    "task": {
+      "zh": "显示局部窗口与断点"
+    },
+    "api": "segment_ggchord_data",
+    "parameters": "windows; coord_collinear: segments, segment_gap",
+    "modes": "B",
+    "page": "views#segments",
+    "level": "advanced"
+  },
+  {
+    "task": {
+      "zh": "绘制固定长度标尺"
+    },
+    "api": "geom_seq_scale",
+    "parameters": "length, location, offset",
+    "modes": "B",
+    "page": "collinear-layout#gap",
+    "level": "advanced"
+  },
+  {
+    "task": {
+      "zh": "改变圆图朝向"
+    },
+    "api": "coord_circular",
+    "parameters": "rotation, direction, gap, fit",
+    "modes": "C",
+    "page": "circular-layout#style",
+    "level": "basics"
+  },
+  {
+    "task": {
+      "zh": "堆叠特征注释"
+    },
+    "api": "position_feature_stack",
+    "parameters": "spacing, side, base_position",
+    "modes": "A / B / C",
+    "page": "annotations",
+    "level": "advanced"
+  },
+  {
+    "task": {
+      "zh": "自动排布特征文字"
+    },
+    "api": "geom_feature_label_repel",
+    "parameters": "label_layout, label_fit, label_min_size",
+    "modes": "A / B / C (conditional)",
+    "page": "labels",
+    "level": "advanced"
+  },
+  {
+    "task": {
+      "zh": "搜索引物结合位置"
+    },
+    "api": "find_primer_bindings",
+    "parameters": "set, circular",
+    "modes": "DNA",
+    "page": "primers#input",
+    "level": "advanced"
+  },
+  {
+    "task": {
+      "zh": "绘制引物及文字"
+    },
+    "api": "geom_primer",
+    "parameters": "position",
+    "modes": "C (bp)",
+    "page": "primers#primer-arcs",
+    "level": "advanced"
+  },
+  {
+    "task": {
+      "zh": "搜索和筛选酶切位点"
+    },
+    "api": "find_restriction_sites",
+    "parameters": "methylation, enzymes",
+    "modes": "DNA",
+    "page": "recognition#restriction",
+    "level": "advanced"
+  },
+  {
+    "task": {
+      "zh": "调整酶切文字引线"
+    },
+    "api": "geom_restriction_site",
+    "parameters": "leader, label_style, label_side",
+    "modes": "C (bp)",
+    "page": "restriction-sites#restriction-labels",
+    "level": "advanced"
+  },
+  {
+    "task": {
+      "zh": "绘制 GC 柱图与折线"
+    },
+    "api": "geom_track_col",
+    "parameters": "track_value, baseline",
+    "modes": "A / B / C",
+    "page": "tracks",
+    "level": "advanced"
+  },
+  {
+    "task": {
+      "zh": "绘制 tile 色带"
+    },
+    "api": "geom_track_tile",
+    "parameters": "track_fill, position",
+    "modes": "A / B / C",
+    "page": "tracks",
+    "level": "advanced"
+  },
+  {
+    "task": {
+      "zh": "设置轨道宽度和次序"
+    },
+    "api": "position_track",
+    "parameters": "track, side, order, width, gap",
+    "modes": "A / B / C",
+    "page": "tracks",
+    "level": "advanced"
+  },
+  {
+    "task": {
+      "zh": "导入 FASTA、GFF3 和比对"
+    },
+    "api": "read_fasta_lengths",
+    "parameters": "sequence_unit",
+    "modes": "general",
+    "page": "formats",
+    "level": "basics"
+  },
+  {
+    "task": {
+      "zh": "绘制原生蛋白比较"
+    },
+    "api": "ggchord",
+    "parameters": "seq_data: sequence_unit",
+    "modes": "A / B (aa)",
+    "page": "protein-alignments",
+    "level": "advanced"
+  },
+  {
+    "task": {
+      "zh": "预览并导出论文图"
+    },
+    "api": "view_ggchord",
+    "parameters": "width, height, units",
+    "modes": "general",
+    "page": "output",
+    "level": "basics"
+  },
+  {
+    "task": {
+      "zh": "诊断布局与导出坐标"
+    },
+    "api": "export_ggchord_layout",
+    "parameters": "plot",
+    "modes": "general",
+    "page": "faq",
+    "level": "advanced"
+  },
+  {
+    "task": {
+      "zh": "让相同端点的连接共享主干"
+    },
+    "api": "geom_link_ribbon",
+    "parameters": "link_branch, link_branch_fraction",
+    "modes": "A / B",
+    "page": "multi-sequence-links#branches",
+    "level": "advanced"
+  },
+  {
+    "task": {
+      "zh": "调整中心名称和长度"
+    },
+    "api": "geom_seq_center_label",
+    "parameters": "name, length, separator, name_style, length_style",
+    "modes": "C",
+    "page": "circular-layout#center",
+    "level": "advanced"
+  },
+  {
+    "task": {
+      "zh": "固定标签方向与内外侧"
+    },
+    "api": "geom_feature_label",
+    "parameters": "label_orientation, label_side, label_rotation",
+    "modes": "A / B / C",
+    "page": "circular-labels#fixed-labels",
+    "level": "advanced"
+  },
+  {
+    "task": {
+      "zh": "自动标签缩放与省略"
+    },
+    "api": "geom_feature_label_repel",
+    "parameters": "label_fit, label_max_lines, external",
+    "modes": "A / B / C",
+    "page": "circular-labels#fitting",
+    "level": "advanced"
+  },
+  {
+    "task": {
+      "zh": "选择连续与分段角色标度"
+    },
+    "api": "scale_ribbon_fill_gradientn",
+    "parameters": "colours, values, limits, guide",
+    "modes": "A / B",
+    "page": "scale-families",
+    "level": "advanced"
+  },
+  {
+    "task": {
+      "zh": "诊断窗口和查询目录"
+    },
+    "api": "diagnose_ggchord",
+    "parameters": "plot, width, height; catalog: aliases",
+    "modes": "general",
+    "page": "workflows#tools",
+    "level": "advanced"
+  },
+  {
+    "task": {
+      "zh": "查看全部接口的主讲位置"
+    },
+    "api": "ggchord",
+    "parameters": "all exported APIs",
+    "modes": "general",
+    "page": "api-curriculum",
+    "level": "advanced"
+  },
+  {
+    "task": {
+      "zh": "查找参数类型与完整默认值"
+    },
+    "api": "ggchord",
+    "parameters": "all public formals",
+    "modes": "general",
+    "page": "parameter-atlas",
+    "level": "advanced"
+  },
+  {
+    "task": {
+      "zh": "统计源位置观测数"
+    },
+    "api": "geom_track",
+    "parameters": "geom, stat, track, position",
+    "modes": "A / B / C / Sankey",
+    "page": "tracks-statistics#tracks",
+    "level": "advanced"
+  },
+  {
+    "task": {
+      "zh": "为重复序列实例选择路由"
+    },
+    "api": "geom_link_ribbon",
+    "parameters": "between, allow_repeated",
+    "modes": "A / B",
+    "page": "instances#instances",
+    "level": "advanced"
+  },
+  {
+    "task": {
+      "zh": "绘制镜像区间关系"
+    },
+    "api": "coord_sankey",
+    "parameters": "column_gap, self_links",
+    "modes": "Sankey",
+    "page": "sankey#sankey",
+    "level": "advanced"
+  },
+  {
+    "task": {
+      "zh": "用独立双轴展示HSP"
+    },
+    "api": "coord_dotplot",
+    "parameters": "x_seqs, y_seqs, x_orientation, y_orientation",
+    "modes": "Dotplot",
+    "page": "dotplot-start#dotplot",
+    "level": "advanced"
+  },
+  {
+    "task": {
+      "zh": "保留四个比对端点"
+    },
+    "api": "geom_alignment_segment",
+    "parameters": "mapping, data, allow_repeated",
+    "modes": "Dotplot",
+    "page": "dotplot-start#dotplot",
+    "level": "advanced"
+  },
+  {
+    "task": {
+      "zh": "绘制环形邻接的径向共线性"
+    },
+    "api": "coord_radial_synteny",
+    "parameters": "start_angle, clockwise, inner_radius",
+    "modes": "Radial",
+    "page": "radial-synteny#radial",
+    "level": "advanced"
+  },
+  {
+    "task": {
+      "zh": "组合有来源锚点的视图"
+    },
+    "api": "ggchord_fusion",
+    "parameters": "center, center_size, layout",
+    "modes": "Fusion",
+    "page": "fusion-routing#intervals",
+    "level": "advanced"
+  },
+  {
+    "task": {
+      "zh": "跨面板连接真实区间"
+    },
+    "api": "fusion_ribbon",
+    "parameters": "data, qpanel, spanel, gradient, tip",
+    "modes": "Fusion",
+    "page": "fusion-routing#intervals",
+    "level": "advanced"
+  },
+  {
+    "task": {
+      "zh": "审计组合来源与物理锚点"
+    },
+    "api": "export_ggchord_fusion",
+    "parameters": "width, height",
+    "modes": "Fusion",
+    "page": "fusion-routing#export",
+    "level": "advanced"
+  },
+  {
+    "task": {
+      "zh": "导入BED双端区间"
+    },
+    "api": "read_bedpe",
+    "parameters": "file, files, source_file, unmapped",
+    "modes": "Input",
+    "page": "import-intervals#bedpe",
+    "level": "advanced"
+  },
+  {
+    "task": {
+      "zh": "显示已有对齐的真实字符与gap"
+    },
+    "api": "geom_residue",
+    "parameters": "mapping, overflow, size",
+    "modes": "Cartesian aligned excerpts",
+    "page": "aligned-sequences#aligned-characters",
+    "level": "advanced"
+  },
+  {
+    "task": {
+      "zh": "精确查找源位置与对齐列"
+    },
+    "api": "map_alignment_position",
+    "parameters": "data, accver, position, inverse",
+    "modes": "DNA / RNA / AA",
+    "page": "aligned-sequences#aligned-source",
+    "level": "advanced"
+  },
+  {
+    "task": {
+      "zh": "连接基因组区域与独立重建的细节图"
+    },
+    "api": "magnify_ggchord",
+    "parameters": "region, detail_plot, side, connector",
+    "modes": "Circular / Chord + Collinear",
+    "page": "fusion-details#magnify",
+    "level": "advanced"
+  }
+]

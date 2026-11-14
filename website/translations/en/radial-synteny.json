@@ -1,0 +1,55 @@
+{
+  "source_sha256": "76ca4ea96c7db303ddc979a0d0ab5e6d5581d3c42ee668c0b1857c3366806220",
+  "blocks": {
+    "0": {
+      "source_sha256": "98c6947d28f5113c77a7b9cac36987e362aa926a32e6ee6f129e533a83ead15a",
+      "status": "reviewed",
+      "translation": "## Proportional radial spokes ⟦shared:0⟧\n"
+    },
+    "1": {
+      "source_sha256": "dcc875e942cc495eba18c9adc35d6f2856dd4a341ad9a9c1fe5409504080dc15",
+      "status": "reviewed",
+      "translation": "The bundled four-sequence data retain their original lengths and CDS strands.\nThis explicit display filter selects observed HSPs of at least 900 bp and\n75 percent identity, taking the two longest per directed pair. The count track\ncounts those selected query-start observations, not inferred depth or coverage.\n"
+    },
+    "5": {
+      "source_sha256": "7b69bc1cdb9e1bf833cf7b294431dc3e10eb0b163def84b7814c7058a64bda02",
+      "status": "reviewed",
+      "translation": "Spoke order comes from ⟦shared:0⟧. Default lengths are\nproportional; ⟦shared:1⟧ explicitly normalizes display lengths\nwhile preserving source coordinates. ⟦shared:2⟧ is measured counterclockwise\nfrom positive x; ⟦shared:3⟧ controls spoke order, not source strand. Positive\nfeature/track offsets point counterclockwise from an outward spoke. Physical\nTrack widths and source statistics reuse the shared band and Stat system.\n"
+    },
+    "6": {
+      "source_sha256": "a4c48e7263661bef97f349e7e008f4b99fab45b3e57fed10992fa32aebae96be",
+      "status": "reviewed",
+      "translation": "Cyclic neighbors include the last/first pair **only when an HSP exists**.\nWithout that relationship its channel stays empty. N=2 draws each source row\nonce; N=1 is rejected. Reverse HSPs retain full ordered interval fronts and\ntwists. New Radial fronts use inclusive interval boundaries ⟦shared:0⟧, so\na one-position HSP has nonzero width; axis positions stay one-based. Existing\nviews retain their own documented interval conventions. The hole is display\nspacing, not deleted sequence. Sequence names sit beyond the outer tips.\n"
+    },
+    "9": {
+      "source_sha256": "2e7281c5b704198d93649929f54364472840e8fd597d6ad5346e81a5066fae15",
+      "status": "reviewed",
+      "translation": "![Change only the first-spoke angle](⟦shared:0⟧)\n"
+    },
+    "10": {
+      "source_sha256": "b978f2ed548d74b6eab7f47836827b9b055020d791a56fc25915bcbf1bd85c7c",
+      "status": "reviewed",
+      "translation": "Ribbons can select nonneighbors with explicit ⟦shared:0⟧ or\n⟦shared:1⟧. Nonneighbor point links need ⟦shared:2⟧; named A–B–A\ninstances use the same unambiguous [routing contract](⟦shared:3⟧).\nUser control points use final x/y coordinates. Endpoint gradients and subject\ntips remain explicit options; default ribbons retain Identity fills.\n"
+    },
+    "11": {
+      "source_sha256": "307d2ac9fa8b0ad639ee9d4237f4cd9f6188424a0773c8c0b8f97c4f101d694f",
+      "status": "reviewed",
+      "translation": "## Export and reverse-map ⟦shared:0⟧\n"
+    },
+    "13": {
+      "source_sha256": "e207d3b86edd38f6bd0bb744a975fc4004a387fe9b45b8e09d05c04451485341",
+      "status": "reviewed",
+      "translation": "Exports retain ⟦shared:0⟧, original source intervals and projected complete\nfronts in ⟦shared:1⟧, plus connection selection, instance routing,\ntrack statistics and label visibility. Radial inverse mapping requires both\nx and y on the selected backbone. This avoids inventing a position from a\nsingle x value shared by multiple spokes. Focus/segment inputs retain source\norigins; radial display does not join multiple windows onto one spoke.\n"
+    },
+    "14": {
+      "source_sha256": "f71a7c969e135b691d0e5a6835240fd810228205826db608f182915efc7cc5dd",
+      "status": "reviewed",
+      "translation": "## Usage and boundaries ⟦shared:0⟧\n"
+    },
+    "15": {
+      "source_sha256": "a27944c62319b32ab219d362015990a824cc193fb5dfe8013f1e6dfcddab55c2",
+      "status": "reviewed",
+      "translation": "Change only start_angle and verify source coordinates and directions. N=1, shared branches, circular-only layers and stitching separate windows into one spoke are unsupported. Inverse mapping needs backbone x/y.\n"
+    }
+  }
+}

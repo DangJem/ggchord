@@ -1,0 +1,20 @@
+{
+  "source_sha256": "c2bcf4207c90f1555a272cb8f910e3f98f40a7939ede2afba895fc941785e4ce",
+  "blocks": {
+    "0": {
+      "source_sha256": "f7d7b4ef75dc7e21cf66c30b1204f171498286ad977183c4cf57e062b79959c8",
+      "status": "reviewed",
+      "translation": "## API migration ⟦shared:0⟧\n"
+    },
+    "2": {
+      "source_sha256": "680b1131aa8480ae90864107c1e59e96cdf0f681e507ae58415669e12f762bb8",
+      "status": "reviewed",
+      "translation": "## Old documentation addresses ⟦shared:0⟧\n"
+    },
+    "3": {
+      "source_sha256": "0bf96c5e0f72dec4b86b57817b8d7ec4230e1ad1937c2f00827b1f5e2277e6e2",
+      "status": "reviewed",
+      "translation": "Old pages and sections route to their matching sections, retaining figure IDs. Grouping public aliases under reference families does not remove runtime functions.\n"
+    }
+  }
+}

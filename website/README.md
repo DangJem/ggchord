@@ -6,6 +6,28 @@
 The v0.16.7 documentation uses the public API of the 0.16.6 release.
 Consult GitHub Releases/Actions for publication and deployment status. Legacy `docs/` is retained as an archive; Pages uses Actions and versioned historical redirects.
 
+## 单一正文源与翻译
+
+网站正文唯一手工源为 `website/zh/*.md`，英语文件 `website/en/*.md` 是生成物。
+页面标题、导航、首页和图注等结构化文案编辑 `website/content-zh/`；其余同名配对
+JSON由生成器输出。英语译文保存在 `website/translations/en/`，以汉语摘要绑定并
+标记校对状态。`content-policy.json` 列出完整输入/输出；不要直接编辑生成页或配对JSON。
+
+修改汉语正文后，先运行 `--prepare` 标出待翻译段，校对对应英语和保护占位符，再把状态改为 `reviewed`。摘要由准备步骤更新，未经校对的旧译文不会自动通过：
+
+```sh
+python3 tools/sync-website-languages.py --prepare
+# 校对 website/translations/en/ 中 needs_review 的译文后再生成
+python3 tools/sync-website-languages.py
+python3 tools/sync-website-languages.py --check
+```
+
+构建前强制检查：缺译、汉语摘要过期、保护的代码/链接/锚点被改动，或生成文件
+被独立修改，都会失败。翻译在 Markdown/结构化内容阶段完成，不翻译HTML。共享
+段落骨架、代码块、指令、资产和导航标识。已有英语译文迁移保存，内容差异先校对。
+参数图谱由当前API/契约生成汉语源，再走同一英语生成流程；R包英语Rd及其汉语
+函数参考仍遵循既有帮助源和摘要译文机制，不能当作可独立编辑的网站正文。
+
 ## 生成基础 / Generator
 
 唯一正式生成基础为 **pkgdown + Bootstrap 5**：顶栏、文章布局、主题切换及完整
@@ -19,11 +41,11 @@ English and modern Han pages live in `en/` and `zh/`; each page switches to its
 counterpart, preserving matching anchors, including on mobile. The root entry
 remembers the chosen language when browser storage is available.
 
-成对 Markdown 经 Pandoc 转换，展示已有代码、结果与图，不执行其中的 R。完整
+汉语正文与保存译文生成的英语 Markdown 经 Pandoc 转换，展示已有代码、结果与图，不执行其中的 R。完整
 reference 从当前 Rd 生成，不运行帮助示例。帮助正文从英语 Rd 生成，汉语函数参考逐项翻译并绑定源摘要，缺译或过期会阻止构建。首次原型的自制页面壳和
 Rd 转换器已退役，不同时维护另一套网站实现。
 
-Paired Markdown is converted by Pandoc using existing code, outputs and figures;
+Han-source Markdown and generated English are converted by Pandoc using existing code, outputs and figures;
 R chunks are not executed. Current Rd generates the complete reference without
 running examples. Canonical R help remains English; the Han website reference translates every prose section and checks source hashes. The first prototype's custom page shell/Rd renderer is retired.
 
@@ -58,7 +80,8 @@ python3 -m http.server 8765 --directory .site --bind 127.0.0.1
 | 来源 / Source | 职责 / Role |
 | --- | --- |
 | `_pkgdown.yml` | Bootstrap、导航与完整 Rd 分类 / Template, navigation and complete reference categories |
-| `website/{en,zh}/*.md`、`pages.json` | 配对文章、显式锚点和标题 / Paired articles, matching anchors and titles |
+| `website/zh/*.md`、`content-zh/` | 唯一手工正文与结构化源 / Canonical Han prose and shared structure |
+| `website/translations/en/`、`tools/sync-website-languages.py` | 校对译文、生成英语和配对JSON / Reviewed translations and generated English/paired JSON |
 | `tools/documentation-examples.R` | 唯一共享可运行代码 / Shared executable source |
 | `tools/documentation-plots.R` | 图形尺寸、结果和输入声明 / Dimensions, outputs and input declarations |
 | `man/figures/*.png`、`assets/plots.csv` | 两种语言及 README/vignette 共用的图片字节和 hash / Shared figure bytes and hashes |

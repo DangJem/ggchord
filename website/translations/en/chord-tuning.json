@@ -1,0 +1,15 @@
+{
+  "source_sha256": "a7281219142343630921dd58b5afdd495ff397cc06fdca6b14b965d118ab9474",
+  "blocks": {
+    "0": {
+      "source_sha256": "65558b765341744300f6b1268eea89e49563657e225330407740cb387a66bc22",
+      "status": "reviewed",
+      "translation": "## Section moved ⟦shared:0⟧\n"
+    },
+    "1": {
+      "source_sha256": "0883f7ef5c5ed4b1c17c9321870d1b9ddcf132b954b9d76067a2c1dc27be62a0",
+      "status": "reviewed",
+      "translation": "[Adjust individual backbones](⟦shared:0⟧)\n"
+    }
+  }
+}

@@ -18,7 +18,7 @@
 父 CDS ID 及氨基酸范围；不能通过同名注释或注释最大端点猜测。
 
 ## 分段、phase 和部分区域 {#boundaries}
-`build_ggchord_cds()` 先建立 CDS 分段映射，`project_ggchord_features()` 再将氨基酸
+`build_ggchord_cds()` 先建立 CDS 分段映射，`project_ggchord_features()` 再通过分段映射投影氨基酸区间。
 每个输入 feature 返回一行，跨剪接片段放在 `segments` 列表列；
 `project_ggchord_links()` 才按双方边界拆成配对行。不要简单把坐标乘以 3。
 不完整 CDS、phase、截断或不支持的位置必须按文档策略处理并检查报告。

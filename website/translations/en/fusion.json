@@ -1,0 +1,55 @@
+{
+  "source_sha256": "f7f55e5d69d44c857cfe452bc8e72fb9c341af3ac0688c4a99521a214067a669",
+  "blocks": {
+    "0": {
+      "source_sha256": "61fb363c7a49e9dab5d78878395d1848cdfeaf5b3d3ecc1ca60c9829a863e0a2",
+      "status": "reviewed",
+      "translation": "## Independent views, connected source intervals ⟦shared:0⟧\n"
+    },
+    "1": {
+      "source_sha256": "0dfbbe4d6295ce4f15e5ab9f1bf5cedd6e4857fff9d0c8751363027c2c1ad533",
+      "status": "reviewed",
+      "translation": "Fusion is the composition layer. This example places a Chord overview, a Collinear view, a Radial view and a local two-sequence detail into explicit panel rectangles. All links refer to observed HSPs and registered source intervals; repeated displays do not become additional observations.\n"
+    },
+    "3": {
+      "source_sha256": "1e022fdf3e1891419a11ee48fbe8e02c905ffc262d84abaac4af3a813ae79c76",
+      "status": "reviewed",
+      "translation": "## Panel composition ⟦shared:0⟧\n"
+    },
+    "4": {
+      "source_sha256": "511f5c1bb2d81294fb55cd522f55ebb8ecf7a3e3aecef8fa90eca9bd09413665",
+      "status": "reviewed",
+      "translation": "[Panels and source links](⟦shared:0⟧) · [Position, size and guides](⟦shared:1⟧) · [Cross-panel routing](⟦shared:2⟧)\n"
+    },
+    "5": {
+      "source_sha256": "b112f685b89abbed1fb5a370ed86f7352a57db28a8edbae03b1f9999f7159e61",
+      "status": "reviewed",
+      "translation": "## Local magnification ⟦shared:0⟧\n"
+    },
+    "6": {
+      "source_sha256": "5df7bb05ffd1cf6dbc780b00725f7b8c87989952e0f70bdd48e523f3e9e72a3d",
+      "status": "reviewed",
+      "translation": "Use explicit regions to connect a global view to independently constructed detail plots. Registered aligned characters can provide exact residue or nucleotide details. [Local magnification and character details](⟦shared:0⟧).\n"
+    },
+    "7": {
+      "source_sha256": "1b7159d21873f28061a9c61f29c16348a31a7d779b7da6d4828c4b50b335d95d",
+      "status": "reviewed",
+      "translation": "## Nested and circular regions ⟦shared:0⟧\n"
+    },
+    "8": {
+      "source_sha256": "837f705c7698a2e4790494c6d52b7e703bafbe0021b799c857b39233b4603c9f",
+      "status": "reviewed",
+      "translation": "Nested Fusion preserves leaf-panel paths. An origin-crossing region needs explicit wrapping and compatible complete source lengths. [Nested composition and origin-crossing zoom](⟦shared:0⟧).\n"
+    },
+    "9": {
+      "source_sha256": "f9971be411ed0e1022a42c9bfc060b63957480c6dcb040493ea2d2aba14d1c53",
+      "status": "reviewed",
+      "translation": "## Supported panel types ⟦shared:0⟧\n"
+    },
+    "10": {
+      "source_sha256": "3f079c2749f218e7efa6ac4d5d8a28db27a0daaab2cf464f09baec7604afde9c",
+      "status": "reviewed",
+      "translation": "Registered genomic views, nested compositions and registered Cartesian character details are supported according to their contracts. Dotplot, facets and unregistered external plots are not inferred or adapted automatically.\n"
+    }
+  }
+}

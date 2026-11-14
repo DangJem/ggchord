@@ -4,8 +4,7 @@
 
 ## Styles and physical layout {#styles}
 
-Cross-panel layers accept `aes(fill=..., colour=..., alpha=..., linewidth=...,
-linetype=...)` with ordinary ggplot2 scales. Panel role-specific scales remain
+Cross-panel layers accept `aes(fill=..., colour=..., alpha=..., linewidth=..., linetype=...)` with ordinary ggplot2 scales. Panel role-specific scales remain
 local. Explicit fixed styles override their mappings. Default Identity is
 0–100 with 0/50/80/90/95/100 proportional breaks. Endpoint gradients and
 subject tips are opt-in, using the same renderer as single-view ribbons.

@@ -1,0 +1,15 @@
+{
+  "source_sha256": "82b9193b7e91fa23b1852c5c0b552544bb0873e90c8e5f095872fbea51e6cb85",
+  "blocks": {
+    "0": {
+      "source_sha256": "2736b28cdadea5df6f3e3ae600d75191592801183d436bb767d65b8f7e9bcc4b",
+      "status": "reviewed",
+      "translation": "## This section has moved ⟦shared:0⟧\n"
+    },
+    "1": {
+      "source_sha256": "a8d445e8229b57c8afaa5fe69e4312f1abb44485218e4d4e696f72a6c1cfc9f7",
+      "status": "reviewed",
+      "translation": "[Table fields and coordinate conventions](⟦shared:0⟧)\n"
+    }
+  }
+}

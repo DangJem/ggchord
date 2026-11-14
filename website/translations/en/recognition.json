@@ -1,0 +1,100 @@
+{
+  "source_sha256": "f2ae9c9536888c9f4bb01b77986b143db92eca36d4cd2d7f8f654f5ca605d306",
+  "blocks": {
+    "0": {
+      "source_sha256": "38a32f633a70686cc6084d9a79b51b94b46449715cd31d1c2ff42b7d8fe7675b",
+      "status": "reviewed",
+      "translation": "⟦shared:0⟧⟦shared:1⟧Search known DNA for primers, restriction sites and common features, then choose a display. Computational matches and experimental validation are different.⟦shared:2⟧⟦shared:3⟧\n"
+    },
+    "1": {
+      "source_sha256": "0fa3fbfa0a873728926e3af5e6670e13482733d3820f9266bf2ef86dfe4f9a5c",
+      "status": "reviewed",
+      "translation": "## Prepare this page ⟦shared:0⟧\n"
+    },
+    "2": {
+      "source_sha256": "95e2a4feb4954d22c655b526b7472a44ad96118995cce42a5e606867072fd792",
+      "status": "reviewed",
+      "translation": "This example uses bundled pUC19.\n"
+    },
+    "3": {
+      "source_sha256": "11215fd15318acef0909878fcb9e919ec079b782066784c6b53ed0bc8aa45836",
+      "status": "reviewed",
+      "translation": "## Search and display are separate ⟦shared:0⟧\n"
+    },
+    "4": {
+      "source_sha256": "2104ab2616b2e336f06d7ffd99443f668268352ebe70e9bb008828d774d18c2a",
+      "status": "reviewed",
+      "translation": "Use the bundled pUC19 DNA for exact catalogue-primer and selected restriction searches:\n"
+    },
+    "5": {
+      "source_sha256": "ca5f27f8e8d7154a4b2916fac5bd3fc5a315187cccc5d4d550a9c24c11d159ae",
+      "status": "reviewed",
+      "translation": "Run ⟦shared:0⟧ to select the sequence fields.\n"
+    },
+    "8": {
+      "source_sha256": "b9d53a538844c54d91514bb6bbaf4561cf665b1f70830c207902c6b911102c26",
+      "status": "reviewed",
+      "translation": "Search supports circular-origin binding; set ⟦shared:0⟧ for a linear sequence.\nThe actual pUC19 hits shown here should be inspected in the returned table. Search hits are computational matches, not experimental validation.\nPrimer ⟦shared:1⟧ mode finds an exact suffix, with no mismatch model;\nits Wallace melting-temperature estimate is a composition heuristic.\n"
+    },
+    "9": {
+      "source_sha256": "2a2f80a17fa32cb05df3aafed4c5bad11266c80c4c06f3c0ae15ba1b2c67ca14",
+      "status": "reviewed",
+      "translation": "## Restriction interpretation ⟦shared:0⟧\n"
+    },
+    "10": {
+      "source_sha256": "9dc8ec63c3aa18f2a05e08c5436a33350acf74c177341c9a9f1c30d4e54da09a",
+      "status": "reviewed",
+      "translation": "⟦shared:0⟧ returns unfiltered matches and cleavage coordinates;\n⟦shared:1⟧ selects a display set. Enzyme site counts refer to\nthe full supplied sequence and remain stable after filtering. ⟦shared:2⟧ uses audited context only for exactly recognized bundled references;\nit does not claim unknown samples are unblocked. This example explicitly uses ⟦shared:3⟧; this is a search assumption, not a measurement\nof methylation in a physical sample. ⟦shared:4⟧ is the default route.\n"
+    },
+    "11": {
+      "source_sha256": "8eb12b76c259ec583e16ce737cb4c1b524b41be3ac86a34d163a086a594e1690",
+      "status": "reviewed",
+      "translation": "## General feature recognition ⟦shared:0⟧\n"
+    },
+    "12": {
+      "source_sha256": "fc934f0676a88c5c206da019453f5174d5e456de91a638c1ceea4cf6fe946c36",
+      "status": "reviewed",
+      "translation": "⟦shared:0⟧ supports curated exact-reference annotations, DNA and\nrecord-specific matching modes. Protein searches use standard-code six-frame\ntranslation; they do not implement splicing, alternative initiation or\norigin-crossing protein matches. Source genetic-code metadata does not select\nanother translation table. For nonstandard codes use DNA matching or external\ncode-aware analysis. Confidence is a heuristic label, not a probability.\nUse [explicit CDS projection](⟦shared:1⟧) for known protein/genome maps.\n"
+    },
+    "13": {
+      "source_sha256": "707d362d88f9e09c821142c0b6a3302fb67548954be8fdba3a8ecca8d1239d68",
+      "status": "reviewed",
+      "translation": "## Follow an annotated reference workflow ⟦shared:0⟧\n"
+    },
+    "14": {
+      "source_sha256": "1afebd98ecbe492c779e3d1ed70edbc005b16b8de39896b79c3a0ebff5dd6fda",
+      "status": "reviewed",
+      "translation": "This short workflow uses the same source-backed plasmid as the complete map. The [complete pUC19\nworkflow](⟦shared:0⟧) demonstrates catalogue annotations, exact reference\nmatching, site display filtering, primer labels and feature stacking together.\nChanging only a sequence name does not make it a recognized reference; sequence\ncontent determines source-backed recognition. Read the result methods and\nmethylation provenance instead of assigning reference claims to an unknown sample.\n"
+    },
+    "15": {
+      "source_sha256": "96d3b3403a7277d64e0e970205753ee81e2d284e9e04a56212cef8617bb26319",
+      "status": "reviewed",
+      "translation": "## Result checks ⟦shared:0⟧\n"
+    },
+    "16": {
+      "source_sha256": "b8b57f1c72c8b27b4a2d058519e03fe10609eb2f6117fe6b51f22863333f3b51",
+      "status": "reviewed",
+      "translation": "Inspect match positions, methods and provenance. Restriction filtering is a display choice; methylation search conditions are not a measurement of an unknown sample.\n"
+    },
+    "17": {
+      "source_sha256": "8c3ce96f7f6431c5d8dd347087389c759b87495d451932610d3d50ed0e08eb4b",
+      "status": "reviewed",
+      "translation": "⟦shared:0⟧Continue: ⟦shared:1⟧Primer recognition, arcs and labels →⟦shared:2⟧⟦shared:3⟧\n"
+    },
+    "18": {
+      "source_sha256": "44ad0ff98d16edb32be939aaf01b77920884bb0ff9033e2d6af768b86d3f07d3",
+      "status": "reviewed",
+      "translation": "After inspecting matches, follow [primer arcs and text](⟦shared:0⟧) and [restriction labels/leaders](⟦shared:1⟧). See [circular layers](⟦shared:2⟧) for backbones/centre/lanes and [circular labels](⟦shared:3⟧) for fixed/automatic text.\n"
+    },
+    "19": {
+      "source_sha256": "ed8bb315587811a3ea5fb878afbb23fbf3c1eb7943911f77b53e6504ab4e8244",
+      "status": "reviewed",
+      "translation": "## A catalogue is not a search result ⟦shared:0⟧\n"
+    },
+    "20": {
+      "source_sha256": "29318dc138fc6d8f11fb1c95e9bee056fda14959fb41c8e7c1e9e12e3d2f808a",
+      "status": "reviewed",
+      "translation": "`primer_catalog` returns oligonucleotide records; aliases=TRUE returns source aliases. Catalogue direction is descriptive; find_primer_bindings determines binding direction on target DNA. Multiple names for one sequence do not represent distinct oligonucleotides. Continue with [primers](⟦shared:0⟧) to search and draw.\n"
+    }
+  }
+}

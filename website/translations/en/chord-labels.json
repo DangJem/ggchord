@@ -1,0 +1,15 @@
+{
+  "source_sha256": "109e246155e1de83ad93a4f770e31f2356ad757fcd2d670b76d3ce0bf5da1dea",
+  "blocks": {
+    "0": {
+      "source_sha256": "65558b765341744300f6b1268eea89e49563657e225330407740cb387a66bc22",
+      "status": "reviewed",
+      "translation": "## Section moved ⟦shared:0⟧\n"
+    },
+    "1": {
+      "source_sha256": "ca89cf8499496d1975bd9d2db1ee2d71b26c95d5f9cc097aab0e60f739383398",
+      "status": "reviewed",
+      "translation": "[Multi-sequence names and feature labels](⟦shared:0⟧)\n"
+    }
+  }
+}

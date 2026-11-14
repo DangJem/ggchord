@@ -44,6 +44,10 @@ base-level mismatches or gap paths.
 
 These inputs come from original repository FASTA and standard BLAST tables. All 32 HSPs across four sequences are retained; self-alignments, reciprocal records and missing HSPs are not invented. The 266 CDS belong to the shared source preparation and are not submitted to the Dotplot segment layer. An empty area means no supplied HSP, not proven absence of homology.
 
+Column headers identify each query sequence and its complete 1–length range; row headers identify subject sequences and ranges. Bottom and right ticks show local positions within each sequence. Follow a column and row to locate a pair. Each outlined rectangle retains widths and heights proportional to the actual lengths. Pale backgrounds distinguish cells and do not encode similarity; spaces between rectangles are display gaps.
+
+Each of the six unordered sequence pairs supplies only one query→subject direction, with no swapped records or self-alignments. HSPs therefore occupy one half of the matrix. Cells identify record counts or missing input. This is not a rendering omission, and an empty counterpart does not establish absent homology. The plot does not mirror records, add a diagonal or run new alignments. This preparation also uses optional tidyr.
+
 {{prepare:dotplotmatrixdata}}
 
 {{code:flagshipdot}}
@@ -65,7 +69,7 @@ hsp_direction
 
 ## Query an exact position {#mapping}
 
-Map the first HSP query start onto the concatenated x axis. Inverse lookup uses `inverse = TRUE` and an explicit axis; display gaps return NA. The four endpoints remain unchanged.
+Map the first HSP query start onto the concatenated x `axis`. Inverse lookup uses `inverse = TRUE` and an explicit `axis`; display gaps return NA. The four endpoints remain unchanged.
 
 ```r
 map_ggchord_position(

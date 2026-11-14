@@ -1,0 +1,37 @@
+{
+  "map_alignment_position": {
+    "position": {
+      "type": {
+        "zh": "正整数或 NA；原始位置或对齐列"
+      }
+    }
+  },
+  "map_ggchord_position": {
+    "position": {
+      "type": {
+        "zh": "数值位置；Radial 逆映射用 x/y 矩阵或数据框"
+      }
+    }
+  },
+  "project_ggchord_features": {
+    "feature_data": {
+      "type": {
+        "zh": "data.frame；每个输入特征一行，分段存于 segments 列"
+      }
+    }
+  },
+  "segment_ggchord_data": {
+    "windows": {
+      "type": {
+        "zh": "窗口数据框；字段与坐标约束见参数契约"
+      }
+    }
+  },
+  "geom_track_bar": {
+    "baseline": {
+      "type": {
+        "zh": "数值 0；计数柱拒绝非零基线"
+      }
+    }
+  }
+}

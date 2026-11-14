@@ -6,6 +6,7 @@ and original data, recipes and PNG hashes for every retained legacy asset.
 """
 import csv,hashlib,importlib.util,json,re,subprocess,sys,tempfile
 from pathlib import Path
+from retained_provenance import validate_home_sources
 ROOT=Path(__file__).resolve().parents[2]
 sys.path.insert(0,str(ROOT/'tools'))
 spec=importlib.util.spec_from_file_location('fingerprints',ROOT/'tools/documentation-fingerprints.py')
@@ -48,26 +49,18 @@ def verify_ci_patch():
 def verify_linear_revision():
     record=json.loads((ROOT/'tools/site-audit/home-rendering.json').read_text())
     assert record['status']=='complete'
-    for path,digest in record['source_sha256'].items():
-        metadata=record.get('post_render_metadata',{})
-        current=(ROOT/path).read_bytes()
-        if path==metadata.get('file'):
-            assert hashlib.sha256(current).hexdigest()==metadata['after_sha256']
-            rewind=json.loads(current)
-            row=next(r for r in rewind if r['id']=='flaglinear')
-            assert set(metadata['previous_fields'])=={'source','sha256'}
-            row.update(metadata['previous_fields'])
-            current=(json.dumps(rewind,ensure_ascii=False,indent=2)+'\n').encode()
-        assert hashlib.sha256(current).hexdigest()==digest,'Rendering source changed: '+path
+    dot=validate_home_sources(record)
     review=record['runtime_review']
     assert review['baseline']=='a1cd31d' and review['signatures_identical'] and review['other_expressions_identical']
     assert set(review['changed_functions'])=={'compute_chord_geometry','ggchord_collinear_gene_labels','ggchord_collinear_share_labels'}
     assert review['representative_chord_circular_geometry_identical']
     previous=json.loads(subprocess.check_output(['git','show','a1cd31d:tools/site-audit/home-rendering.json'],cwd=ROOT))
     actual={str(p.relative_to(ROOT)):hashlib.sha256(p.read_bytes()).hexdigest() for p in (ROOT/'R').glob('*.R')}
-    assert actual==record['engine_sha256'],'Runtime changed after actual annotation rendering'
+    expected_engine=dict(record['engine_sha256'])
+    if dot:expected_engine['R/coord-dotplot.R']=dot['engine_sha256']['R/coord-dotplot.R']
+    assert actual==expected_engine,'Runtime changed after actual annotation rendering'
     changed={name for name,digest in actual.items() if previous['engine_sha256'].get(name)!=digest}
-    assert changed=={'R/ggchord-build.R','R/layout-collinear-annotation.R'}
+    assert changed==({'R/ggchord-build.R','R/layout-collinear-annotation.R','R/coord-dotplot.R'} if dot else {'R/ggchord-build.R','R/layout-collinear-annotation.R'})
     recipe=(ROOT/'tools/documentation-examples.R').read_bytes()
     assert recipe==subprocess.check_output(['git','show','a1cd31d:tools/documentation-examples.R'],cwd=ROOT)
     assert hashlib.sha256(recipe).hexdigest()==record['legacy_scope']['unchanged_recipes_sha256']
@@ -76,7 +69,7 @@ def verify_linear_revision():
     assert [r['id'] for r in rows]==[r['id'] for r in baseline]
     refreshed=record['legacy_figures']
     assert set(refreshed)==set(record['legacy_scope']['annotated'])=={'showcasecollinear','linearlabels','practicelinear'}
-    current=module.fingerprints()['assets'];expected={}
+    current=module.fingerprints(runtime_hashes={'R/coord-dotplot.R':hashlib.md5(subprocess.check_output(['git','show','3a56988:R/coord-dotplot.R'],cwd=ROOT)).hexdigest()} if dot else None)['assets'];expected={}
     for old,row in zip(baseline,rows):
         name=row['id'];path=ROOT/row['file']
         assert hashlib.md5(path.read_bytes()).hexdigest()==row['md5'],name
@@ -86,6 +79,10 @@ def verify_linear_revision():
             assert hashlib.sha256(path.read_bytes()).hexdigest()==item['sha256']
             assert item['md5']==row['md5'] and item['dependency_md5']==row['dependency_md5']==current[name]
             assert all(old[k]==row[k] for k in old if k not in {'md5','code_md5','dependency_md5','generator'}),name
+        elif dot and name=='viewdotplot':
+            item=dot['figures'][name]
+            assert item['sha256']==hashlib.sha256(path.read_bytes()).hexdigest()
+            assert item['dependency_md5']==row['dependency_md5']==module.fingerprints()['assets'][name]
         else:
             assert old==row,'Retained PNG provenance moved: '+name
         expected[name]=row['dependency_md5']

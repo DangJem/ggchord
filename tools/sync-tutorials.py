@@ -90,6 +90,8 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--check', action='store_true')
     args = parser.parse_args()
+    import subprocess
+    subprocess.run(["python3","tools/sync-website-languages.py","--check"],cwd=ROOT,check=True)
     for lang, name in [('en', 'ggchord_vignette.Rmd'), ('zh', 'ggchord_guide_hans.Rmd')]:
         path = ROOT/'vignettes'/name
         content = tutorial(lang)

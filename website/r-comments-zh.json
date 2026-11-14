@@ -60,5 +60,6 @@
   "A shared display label preserves all seven biological operator records.": "共享显示标签保留全部七条生物学 operator 记录。",
   "This four-column tool table is not GFF3. Explicitly declare source anchors.": "此工具的四列位置表不是 GFF3；显式声明源锚点。",
   "Requires the source checkout, dplyr and optional Biostrings.": "需要源码 checkout、dplyr 及可选 Biostrings。",
-  "Requires dplyr and the source checkout or tutorial input bundle.": "需要 dplyr 和源码 checkout 或说明输入包。"
+  "Requires dplyr and the source checkout or tutorial input bundle.": "需要 dplyr 和源码 checkout 或说明输入包。",
+  "The counts annotate the example, not a new default statistic in the Coord.": "计数属于此示例，不改变坐标系的默认统计行为。"
 }

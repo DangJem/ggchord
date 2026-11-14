@@ -1,0 +1,1625 @@
+{
+  "source_sha256": "063e73bad810e2f98a7e748c3c8a5f6c9738165bdc974a947acf3408f12d49d4",
+  "blocks": {
+    "0": {
+      "source_sha256": "84523c88e7698c4e601135877b30c7f308c5aa235da4355659d8db61dee11f25",
+      "status": "reviewed",
+      "translation": "Find purpose, primary section, modes, complete cases and full parameters by API. References define exact defaults, formats, units and constraints; maintenance levels appear at the end. Upstream reexports and spelling aliases are explained by family rather than duplicate sections.\n"
+    },
+    "1": {
+      "source_sha256": "5edddeb8f1c61501c8d86a26c1d082fc785f2de315451faef98c5bc6c6129160",
+      "status": "reviewed",
+      "translation": "## API usage index ⟦shared:0⟧\n"
+    },
+    "2": {
+      "source_sha256": "419d187a94729f6852a343829af430e2ba210419798f5f2fe31291348d24e586",
+      "status": "reviewed",
+      "translation": "| API/reference | Purpose | Usage section | Mode/input boundary | Parameter atlas | Case/workflow |\n"
+    },
+    "3": {
+      "source_sha256": "4159d839a858af6b3c228a34f72c8cc4963c5dd8da438648a71427924723b5ca",
+      "status": "reviewed",
+      "translation": "| --- | --- | --- | --- | --- | --- |\n"
+    },
+    "4": {
+      "source_sha256": "51a7120073240a0da9a6cc2115b9cb7106a2f222e4c1a8ee046b30e9f57c4168",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Opt into bounded theme scaling and joint guide layout at the target size | [Usage](⟦shared:2⟧) | fixed/scale/adaptive; explicit settings remain authoritative; no global collision guarantee | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "5": {
+      "source_sha256": "590519f6d8d6fae25dfa36c362fbf1cf3f812b72e55663a21cf6ba70052a3802",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Selected ggplot2 helpers for ggchord plots | [upstream](⟦shared:2⟧) | upstream; applies only to matching supported ggplot roles | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "6": {
+      "source_sha256": "ab4d81ea9892aadebef2d1352c1676127220a2b1ec679c61223895624bad6bb8",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Selected ggplot2 helpers for ggchord plots | [upstream](⟦shared:2⟧) | upstream; applies only to matching supported ggplot roles | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "7": {
+      "source_sha256": "85154db26450ac6f137254c8d185632daf56d3d58d9fc61af5de049ad6a43470",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Selected ggplot2 helpers for ggchord plots | [upstream](⟦shared:2⟧) | upstream; applies only to matching supported ggplot roles | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "8": {
+      "source_sha256": "a228a92875ef23adc42805b9efa6b90ae5d3ce89f4d2d6c4a7a939d46bd39c91",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Selected ggplot2 helpers for ggchord plots | [upstream](⟦shared:2⟧) | upstream; applies only to matching supported ggplot roles | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "9": {
+      "source_sha256": "e0dffbbbcba58cc17df6585652abca9319bab48ba08229a4301a9785d50d10de",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Physical units and direction arrows | [upstream](⟦shared:2⟧) | upstream; applies only to matching supported ggplot roles | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "10": {
+      "source_sha256": "74697d39e226ae15837a64c32a8ec35f04efc8713c8b5b497569b3dd324ef609",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Adapt existing aligned strings with exact nullable source positions | [Usage](⟦shared:2⟧) | Existing DNA/RNA/AA columns; Cartesian local cells; explicit source mapping | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "11": {
+      "source_sha256": "bb4d864daaafb9b6bf8f805f5350fb64e7670e1fe8e6e5520822eb48e4747585",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Convert intervals to generic ggchord features | [Usage](⟦shared:2⟧) | table/S4 adapter; coordinates and biological direction retained | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "12": {
+      "source_sha256": "6eec54f86a12c6ed8b575553e55395cde4c61393d82d65b334f7b846f532b173",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Convert paired genomic intervals to ggchord links | [Usage](⟦shared:2⟧) | table/GInteractions adapter; no invented alignment statistics | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "13": {
+      "source_sha256": "1027fe2e530017151b9cf50f53a1c3777110ef477048e210396f61bd57b186be",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Convert sequence information to ggchord input | [Usage](⟦shared:2⟧) | table/S4 adapter; complete lengths and explicit IDs/units | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "14": {
+      "source_sha256": "f35eeef59cccf90cf57e19a40a02411a6aacf9f06d229e00d7d9b244d4cbc0e9",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Build an explicit spliced CDS coordinate map | [Usage](⟦shared:2⟧) | known genomic CDS, phase and genetic code; no guessed correspondence | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "15": {
+      "source_sha256": "31dd19aab275f54b310b0499c50d295d4325ed2e2e14126680a37b8afd067f5e",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Bundle dense alignment ribbons explicitly | [Usage](⟦shared:2⟧) | explicit normalized-bin aggregation; original observations retained separately | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "16": {
+      "source_sha256": "0d6fde7ca2348547b110fb7ec07fcf30a313bb86f7ec55840a40f7fd9cbae20e",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Clean ggchord input data with explicit, report-driven policies | [Usage](⟦shared:2⟧) | explicit repair policies with original tables retained | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "17": {
+      "source_sha256": "64dae20e457be25041227f6e9b2d3dfd9ec062f18640f7c3478943c6f1e8d030",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Chord diagram coordinate system | [Usage](⟦shared:2⟧) | chord | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "18": {
+      "source_sha256": "a7a31aafa172e0e828352a5849544cd030089a7ff292eed09bd66075f640c77d",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Single-sequence circular coordinate system | [Usage](⟦shared:2⟧) | one sequence; bp or aa; no ribbon/link layers | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "19": {
+      "source_sha256": "9177362b2bb4618b2e6368fcbd8439c1348efb09a89ce06274c3f4eddb3c16c7",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Linear multi-sequence collinearity coordinates | [Usage](⟦shared:2⟧) | collinear; bp or aa; circular-only local controls rejected | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "20": {
+      "source_sha256": "bcec6b27f0ad6fac1b79e128441a018505db5b17da1eb5e2e086dece7a795519",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Two-axis HSP projection | [Usage](⟦shared:2⟧) | Identity HSP segments on independent native axes | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "21": {
+      "source_sha256": "fc06208488e28b3e9d8e076368ea28130deae03e87f463b6c500b4dbb460ae2c",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Project linear sequences onto radial spokes | [Usage](⟦shared:2⟧) | Proportional/equal spokes, cyclic actual HSPs and shared feature/Track frames | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "22": {
+      "source_sha256": "e0d5cf9a3a10bc487049468376a6a81af1c7095d7d8cb0dd77cffd4bfa234bbd",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Mirrored query-left/subject-right interval relationships | [Usage](⟦shared:2⟧) | Mirrored two-column relationships | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "23": {
+      "source_sha256": "50aa1e110cd29f7f592a89324cec012ca4e7ccbf1454463d22794ef736c1253c",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Deduplicate alignment ribbons | [Usage](⟦shared:2⟧) | select existing representatives with source membership | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "24": {
+      "source_sha256": "c4bd0838ea747b43da6920af49a47ba3b0793b1d097852c8c15e6e72990c541a",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Inspect one target-size render without changing the plot | [Usage](⟦shared:2⟧) | one target-size device; advisory, not universal quality certification | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "25": {
+      "source_sha256": "51843158ccbfab85b9d263d5e9cec34404f3e96a21d2b27d5864e2c3a6deb9bc",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Selected ggplot2 helpers for ggchord plots | [upstream](⟦shared:2⟧) | upstream; applies only to matching supported ggplot roles | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "26": {
+      "source_sha256": "d69298b60855f93a83276762efb3326a66f6a30b92579b748d006305f75457c2",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Selected ggplot2 helpers for ggchord plots | [upstream](⟦shared:2⟧) | upstream; applies only to matching supported ggplot roles | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "27": {
+      "source_sha256": "00467a6440dfbbf92d4e2ae7a3d1237453d79520da061323964b87593a790127",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Selected ggplot2 helpers for ggchord plots | [upstream](⟦shared:2⟧) | upstream; applies only to matching supported ggplot roles | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "28": {
+      "source_sha256": "3ee56740919f2c577b6a0df13bb892c504efd40214fbeacc9025557d2950763e",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Selected ggplot2 helpers for ggchord plots | [upstream](⟦shared:2⟧) | upstream; applies only to matching supported ggplot roles | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "29": {
+      "source_sha256": "68b40317cfb73e785b31fe00cb498c52defabcd715e6c1216d11cf896126bb25",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Selected ggplot2 helpers for ggchord plots | [upstream](⟦shared:2⟧) | upstream; applies only to matching supported ggplot roles | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "30": {
+      "source_sha256": "5bec881969a14c21f3131c5b0bf91a44a5528254863179d592db926d6f2f8b9a",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Export measured composition fronts and sources | [Usage](⟦shared:2⟧) | Registered genomic plots, nested Fusion and registered character details; explicit panel/instance routing; Dotplot excluded | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "31": {
+      "source_sha256": "b723d4869042cf289d24c2787ce7d9990da85a146e58b18d290c0dde8398642f",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Export computed ggchord geometry | [Usage](⟦shared:2⟧) | layer-aware public tables for all supported plots | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "32": {
+      "source_sha256": "7c6018c1eb8c5e23dec453e9d0a21a6954bd0a51bb2b51a1b7409e6a4dba1467",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Filter alignment ribbons before plotting | [Usage](⟦shared:2⟧) | observed alignment filtering, not recomputation | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "33": {
+      "source_sha256": "0c85a536d376a688e5e910421d488f3c3a4c31c1faa37d73d91ccc233c0c903a",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Filter restriction sites for display | [Usage](⟦shared:2⟧) | display set selection preserves complete-target counts | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "34": {
+      "source_sha256": "2f48afedf7dcd5a347b9426589b9641ef53151c9930717893f9d93bde926604a",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Find common biological features in DNA sequences | [Usage](⟦shared:2⟧) | DNA/reference feature recognition with method/provenance, not wet-lab validation | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "35": {
+      "source_sha256": "c15c7669e5abcb6b5aeff3db73721caaad429b69938e2fa9912fb6f76a9507cd",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Find genomic loci around explicitly identified features | [Usage](⟦shared:2⟧) | genomic workflow with explicit target IDs and source strands | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "36": {
+      "source_sha256": "43acab10c8d39bd839fd38fb829e2ef976dba805447fb54feb858b830571a40b",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Find sequencing-primer binding sites | [Usage](⟦shared:2⟧) | actual DNA and explicit oligonucleotides/catalogue; matches not experiments | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "37": {
+      "source_sha256": "841ffcf1e821e6386bd795a8cfc8aaaf94e7eb98c74480eb60cf9a35106e76ba",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Find restriction pattern matches and cleavage coordinates | [Usage](⟦shared:2⟧) | actual DNA and explicit methylation assumptions; full site results | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "38": {
+      "source_sha256": "4b72f4dda1cf8ea79a7b71f23355cd7d1fad54868fedce78a8aedcdfd86e4125",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Focus ggchord data on one or more loci | [Usage](⟦shared:2⟧) | explicit source windows with reversible origins and clipping reports | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "39": {
+      "source_sha256": "a85dfeac672781ad14c085d5760af5611c06deceea0167b45f2675c1432dac18",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Focus quantitative intervals or samples without bridging omitted windows | [Usage](⟦shared:2⟧) | point/interval track data; shares declared loci with focus/segment | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "40": {
+      "source_sha256": "c22aa3bd3e836e882d750f2ddb9f60b3b4558985b79bd8564a4c75997c3ba27d",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Register a panel at a physical side | [Usage](⟦shared:2⟧) | Registered genomic/character panels; eight sides, explicit boxes and nested paths | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "41": {
+      "source_sha256": "388471c1de4fa152a96ea01978dbe504474cdf31f0300ff7881611917f60199e",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Connect full source intervals | [Usage](⟦shared:2⟧) | Registered genomic plots, nested Fusion and registered character details; explicit panel/instance routing; Dotplot excluded | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "42": {
+      "source_sha256": "8373c5821a19dee7a1345fae02fdf730be5fc8b810bea6b16800d64cd6ba4b97",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Draw complete HSP endpoints | [Usage](⟦shared:2⟧) | Identity HSP segments on independent native axes | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "43": {
+      "source_sha256": "7eaf33b186123ce8a9c2318cf0ce91f5d7046cf0a7dc4efb744b9b8347ca3152",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Draw generic genomic features | [Usage](⟦shared:2⟧) | all three; generic annotations including unknown strand and aa; Radial per new-view support matrix | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "44": {
+      "source_sha256": "4c67814ace44ef98f8bd802875c97ea4fedd294ffea0c24eb12c966baed38f4c",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Label generic genomic features | [Usage](⟦shared:2⟧) | all three; linear uses vertical/horizontal rows for radial/tangent; Radial per new-view support matrix | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "45": {
+      "source_sha256": "69e8df8bc792e60cb0f53fb85e1f7236c39ff474dfa21b6a8e351d807da19712",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Automatically arrange generic feature labels | [Usage](⟦shared:2⟧) | all three; external=FALSE rejected by linear mode; Radial per new-view support matrix | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "46": {
+      "source_sha256": "4371ff1228f3c9f7b6a13df4ddb4c4c2aa6de3b7e0c1a64a8fc8778a3514d886",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Draw SnapGene-style features on a circular plasmid | [Usage](⟦shared:2⟧) | generic geometry preset; intended circular; compare defaults before transfer; Radial per new-view support matrix | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "47": {
+      "source_sha256": "61bdbe157ef8fb533f21ca311e0153702536ced557b544069ddf0d14d09b260e",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Add a gene arrow layer | [Usage](⟦shared:2⟧) | all three on bp; known strand required; Radial per new-view support matrix | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "48": {
+      "source_sha256": "82217e7f668c95cff9781e0afbd414d4ef4296d3e8ae0f6baf19340340243cde",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Add a gene label layer | [Usage](⟦shared:2⟧) | bp gene labels; circular/linear orientation differs; Radial per new-view support matrix | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "49": {
+      "source_sha256": "f66ddd1a787d0433a9d7822b59814b281f909c073c27d93f2a66dc44e813ca62",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Add an automatically arranged gene label layer | [Usage](⟦shared:2⟧) | bp gene labels; linear shares row layout; Radial per new-view support matrix | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "50": {
+      "source_sha256": "a1b5f1546cdfaea48f5c9f4678f47dc39f65bec40c4f972cf6d605e01f4c7ef3",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Draw point-to-point sequence links | [Usage](⟦shared:2⟧) | chord/collinear; explicit qpos/spos; circular rejected; Radial per new-view support matrix | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "51": {
+      "source_sha256": "9918cdc32053ded434c9b31ede7f07b43d70c8c118f63ffe52370232bea4e1d2",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Add an alignment ribbon layer | [Usage](⟦shared:2⟧) | chord/collinear; circular rejected; linear adjacency follows displayed rows; Radial per new-view support matrix | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "52": {
+      "source_sha256": "3d96986e987afa11ae3b58beba4346d564bbc7f07f5a4ef43850b401b2983da3",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Draw primer binding ranges on a circular sequence | [Usage](⟦shared:2⟧) | bp single circular recommended; single chord composition available; linear rejected | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "53": {
+      "source_sha256": "d11566cc8181bac2d662cfb060a7523f3cb8108e998cfec9e49b29d09c7cf96f",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Arrange primer labels and leaders | [Usage](⟦shared:2⟧) | bp single circular recommended; linear rejected | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "54": {
+      "source_sha256": "96ebbc459c64c52f68889f47dc5e22b71c98a2c6538dc0b220c199976455cceb",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Draw local characters with measured physical space and explicit tile/error policy | [Usage](⟦shared:2⟧) | Existing DNA/RNA/AA columns; Cartesian local cells; explicit source mapping | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "55": {
+      "source_sha256": "cfb1db53d2e5c03aa646abe48b2cb2d5bc42106b050514b71bc174505200bf7b",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Draw restriction sites, labels and deterministic leaders | [Usage](⟦shared:2⟧) | bp single circular recommended; linear rejected | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "56": {
+      "source_sha256": "4ffbeb731e1f97aecf374594f617cb9facc3cd4cefc9b69b5afa84a32449a11a",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Add a sequence arc layer | [Usage](⟦shared:2⟧) | all three; linear rejects radius/curvature/ring; circular owns gap/direction; Radial per new-view support matrix | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "57": {
+      "source_sha256": "daec13f4f789b90f08a3befcabce8ffad0f7973b916a8ebbb504eb20786cca76",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Mark cropped ends of linear sequences | [Usage](⟦shared:2⟧) | collinear only, focused/segmented truncated-end metadata required; Radial per new-view support matrix | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "58": {
+      "source_sha256": "e3ee7d6abca4b53da4dd16087fb727ec171916ab955793f2d02d6d18c6b616e0",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Add a circular-sequence centre label | [Usage](⟦shared:2⟧) | one sequence; circular recommended; linear rejected | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "59": {
+      "source_sha256": "b2f1065b4b7ae2e482cec0b151c9563ce4f182892913e44459f054a0ab6db7a8",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Add a sequence label layer | [Usage](⟦shared:2⟧) | all three; linear rejects explicit seq_label_radius; Radial per new-view support matrix | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "60": {
+      "source_sha256": "4fb492af047727765eca904116272df337ef366a264d9e7110ac9d484aecc02f",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Highlight regions along sequence arcs | [Usage](⟦shared:2⟧) | all three, valid source intervals and units; Radial per new-view support matrix | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "61": {
+      "source_sha256": "592be451920cd322731aec575050767609b629ebb2798821f7917ede6d236c44",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Add a shared sequence-position scale bar to a linear display | [Usage](⟦shared:2⟧) | collinear only; native bp/aa ruler | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "62": {
+      "source_sha256": "986c1987a3b126a66417a3a559b0ba60e571f52cdfa1bca2f16d97c149266949",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Source-space statistical tracks | [Usage](⟦shared:2⟧) | Chord/Circular/Collinear/Sankey within the first support matrix; Radial per new-view support matrix | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "63": {
+      "source_sha256": "428cfcd1cae0fef6e27ece1b0dc550009a8f4a6434347fa9220006a6b3412d91",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Count observations at source positions | [Usage](⟦shared:2⟧) | Count observations at source positions in compatible backbone views; zero baseline; binning is a separate explicit Stat | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "64": {
+      "source_sha256": "83bcc90c19ee83ca368c9b2580cb405b208227b2010f0dcf72de0509c1598c6b",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Display supplied numerical heights | [Usage](⟦shared:2⟧) | Chord/Circular/Collinear/Sankey; Radial per new-view support matrix | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "65": {
+      "source_sha256": "1000b41e2581738b3a252464152205895b396ff3ddb8cb76cf9b2273cce4f44c",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Draw explicit quantitative tracks along sequence backbones | [Usage](⟦shared:2⟧) | all three; increasing positions per group; closed requires complete circular gap=0; Radial per new-view support matrix | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "66": {
+      "source_sha256": "f4a50f746e9c0cdc16b123904ff681a87c97a9251d828194cabe494e91bf6581",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Draw explicit quantitative tracks along sequence backbones | [Usage](⟦shared:2⟧) | all three; explicit named track; overlapping input tiles keep drawing order; Radial per new-view support matrix | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "67": {
+      "source_sha256": "cda04dfde35e9b75d5eb9249557c6a92de508b8458ad671a2d08723370550d8f",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Get the chord layout from a ggchord plot | [Usage](⟦shared:2⟧) | complete documented layout for all supported plots | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "68": {
+      "source_sha256": "f92ba69cb4d12744bdb8dd42950ce9230a63a8c350f86911d74f955424cf75c1",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Create sequence plots from tables and independent layers | [Usage](⟦shared:2⟧) | constructor; one declared unit per plot | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "69": {
+      "source_sha256": "34598b32e1a5bf07d5a039a9b89bbc67ec4941fb0bd788b67b62bf5dd15612b3",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Compose independent genomic panels | [Usage](⟦shared:2⟧) | Registered genomic/character panels; eight sides, explicit boxes and nested paths | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "70": {
+      "source_sha256": "76cc55dc42a224b500373d99dfb81afba26b8a22ebe6a1b683a9303998e7f631",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Selected ggplot2 helpers for ggchord plots | [upstream](⟦shared:2⟧) | upstream; applies only to matching supported ggplot roles | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "71": {
+      "source_sha256": "81a8c808a19e505a9f5e0606b547b64588a5ad39511de09f58ec56dd3a311511",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Selected ggplot2 helpers for ggchord plots | [upstream](⟦shared:2⟧) | upstream; applies only to matching supported ggplot roles | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "72": {
+      "source_sha256": "3c790de0d14ca117e4bbc27d6f1347f7512a5121ad91139bddb108a78f026aaf",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Guides for ggchord role aesthetics; spelling alias of guide_ggchord_colourbar | [Usage](⟦shared:2⟧) | matching discrete/continuous role guide; all supported plots | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "73": {
+      "source_sha256": "aee98412cf75cd99bdbdacafd37b5fd968c3717085ce8e16bec5c4ba1911ba89",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Guides for ggchord role aesthetics | [Usage](⟦shared:2⟧) | matching discrete/continuous role guide; all supported plots | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "74": {
+      "source_sha256": "0623cb0d83837e4739fca2e4c524fdd236b8bf6e1dc2485292cb3ffb9da66813",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Guides for ggchord role aesthetics | [Usage](⟦shared:2⟧) | matching discrete/continuous role guide; all supported plots | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "75": {
+      "source_sha256": "2f7dae04e2d7f4c232859b410870716a41f641280ff0e5b3b02f8a9311dcf5c9",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Selected ggplot2 helpers for ggchord plots | [upstream](⟦shared:2⟧) | upstream; applies only to matching supported ggplot roles | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "76": {
+      "source_sha256": "6e8386e8aeb835327800f8323d6f9a3a8c9df8ca4178ca405c1449b5b41af9db",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Selected ggplot2 helpers for ggchord plots | [upstream](⟦shared:2⟧) | upstream; applies only to matching supported ggplot roles | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "77": {
+      "source_sha256": "eb164209472705d6a2a83609ace96030723c097713a27694882058b4b2252a59",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Selected ggplot2 helpers for ggchord plots | [upstream](⟦shared:2⟧) | upstream; applies only to matching supported ggplot roles | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "78": {
+      "source_sha256": "83af7a31f2d9d3a66e6d5e91e558dfe66b175f18fef8311d5b9fc3aa07a6c22f",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Convert explicit homology-cluster membership to feature links | [Usage](⟦shared:2⟧) | explicit biological membership; matching names alone are insufficient | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "79": {
+      "source_sha256": "6733e9cc8445743ece8ff84132cb335cee2eedc0070b4b05278f053d5b09ead5",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Connect a real source interval to an explicit independent local detail plot | [Usage](⟦shared:2⟧) | Registered genomic plots, nested Fusion and registered character details; explicit panel/instance routing; Dotplot excluded | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "80": {
+      "source_sha256": "33d41f8f572c5a3df2b5df9d075fd0a690268418fcabe3a6a08c0cf068e93c33",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Look up exact alignment columns and source positions in a selected row | [Usage](⟦shared:2⟧) | Existing DNA/RNA/AA columns; Cartesian local cells; explicit source mapping | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "81": {
+      "source_sha256": "2990f688f2ef857434e8c665d1953af831b6a83fc5f1258689a16f3cc4e9cabb",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Map source positions and display coordinates | [Usage](⟦shared:2⟧) | Native/source positions; explicit Dotplot axis, or both x/y for radial inverse | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "82": {
+      "source_sha256": "3a6eb537673c23c0ce37bec3a5a4427c80f3956caeaf7ddd02d4a4174d87bd20",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Selected ggplot2 helpers for ggchord plots | [upstream](⟦shared:2⟧) | upstream; applies only to matching supported ggplot roles | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "83": {
+      "source_sha256": "517844960ee3ec0864f42715e21a550bc7a4cf5e52aa4d28146fa2db44205bbc",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Merge adjacent or overlapping alignment blocks of the same sequence pair | [Usage](⟦shared:2⟧) | compatible display envelopes with estimation/provenance flags | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "84": {
+      "source_sha256": "f220da9446e3dc9770f800af27b56cf818a051f9c054d3107d3b754762097ef6",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Optimize sequence order and orientation for ribbon readability | [Usage](⟦shared:2⟧) | explicit input sequence order/orientation heuristic, not biological inference | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "85": {
+      "source_sha256": "7cf6f90b4778307d6c01ae27d97e73cb13156c580d545da94f93b672cda2c115",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Stack overlapping genes or features on local lanes | [Usage](⟦shared:2⟧) | feature lanes; base Position before overlap allocation | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "86": {
+      "source_sha256": "45637b6df56e6c33477f5fd3d8471d4271ca5ee6b41a0a88417e3fc1e12b0fce",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Selected ggplot2 helpers for ggchord plots | [upstream](⟦shared:2⟧) | upstream; applies only to matching supported ggplot roles | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "87": {
+      "source_sha256": "059c5a72f73a760ae0e907907ed3f85ae63d287f8688ab3a3e59375256677b35",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Place both feature strands on one shared band | [Usage](⟦shared:2⟧) | local shared-band preset; intended circular | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "88": {
+      "source_sha256": "bf46e5a805019afb7862f52a0ede1bfe9ad66d0d0b8058143817b846552c0e30",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Place features on opposite sides according to strand | [Usage](⟦shared:2⟧) | local signed placement on valid feature/gene layers | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "89": {
+      "source_sha256": "10e26d93387a21db0b9de1ed595990b8c629045028cdcff8a27e35271b9bfe97",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Place a quantitative layer in an explicit sequence-local band | [Usage](⟦shared:2⟧) | all three; same track ID shares consistent declarations | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "90": {
+      "source_sha256": "ec09c8c91746654cdb00edb8d813a955ca9c335f0c4132f91aef618c115e8d81",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Selected ggplot2 helpers for ggchord plots | [upstream](⟦shared:2⟧) | upstream; applies only to matching supported ggplot roles | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "91": {
+      "source_sha256": "fb2c0fb9c64952b2c09b8beeee95f4050e7d14725e71bfe5b51578d5cd2980e6",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Prepare named ggchord tables with an explicit audit trail | [Usage](⟦shared:2⟧) | workflow preparation; defaults differ from standalone cleaning | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "92": {
+      "source_sha256": "fc1249e922975b2d53bbed2b52a5172f67088ad0a5f663e6a4dc077652da08ab",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Inspect the bundled sequencing-primer catalogue | [Usage](⟦shared:2⟧) | catalogue metadata, not a binding search | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "93": {
+      "source_sha256": "1df237dcd16776b69eb6b39c3f9648642faa6118665f494c4c92c78f85ea074f",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Project protein domains or genomic features through a spliced CDS map | [Usage](⟦shared:2⟧) | supported amino-acid intervals through explicit CDS segment maps | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "94": {
+      "source_sha256": "0a777d7060549c3f443bd6cfe5d48ece8540708592ce214ff6864689be5db315",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Project explicitly ungapped protein links to genomic coding segments | [Usage](⟦shared:2⟧) | known paired protein/CDS correspondence; gaps require justified handling | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "95": {
+      "source_sha256": "151d95ac0c59727ff6f9b70b9fde9854de64407fc35f6b659701479e5c5d9714",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Read existing DNA/RNA/AA alignment characters without computing a new alignment | [Usage](⟦shared:2⟧) | Existing DNA/RNA/AA columns; Cartesian local cells; explicit source mapping | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "96": {
+      "source_sha256": "a4b090d992fde34c1d2c24872b82b2e4c3e4f23405d71a860ce4639845c921cd",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Read BED intervals as ggchord features | [Usage](⟦shared:2⟧) | zero-based half-open BED converted once | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "97": {
+      "source_sha256": "f6d4a1d35e70183f65c1eeb50d00e2020dbf640630990405ce9f4ee05464c965",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Import continuous interval signals without inferring units | [Usage](⟦shared:2⟧) | quantitative Track input; BigWig optional on supported platforms | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "98": {
+      "source_sha256": "618df963a1a32f065c42c4a331c9ef458a6928af4769a5be5e223c477ad62e65",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Read paired genomic intervals without inventing alignment evidence | [Usage](⟦shared:2⟧) | Canonical q/s intervals, paired-anchor direction and provenance | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "99": {
+      "source_sha256": "b9fc54d29cd9179d8854f2f5f8f7723ce11fc65169566571b0c9988f384863ad",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Import continuous interval signals without inferring units | [Usage](⟦shared:2⟧) | quantitative Track input; BigWig optional on supported platforms | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "100": {
+      "source_sha256": "666e64bd24d10eb5448f0a93ed534b430722b3c18b47f3d4076b4c424eff8894",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Read one or more BLAST tabular output files into ribbon_data format | [Usage](⟦shared:2⟧) | local observed BLAST records; retain q/s coordinate meaning | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "101": {
+      "source_sha256": "0e68e1e35021041de6fc028ec0244dac4783c6a60c01e5a9fb87943d454f5260",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Read existing genomic alignment blocks and source coordinates | [Usage](⟦shared:2⟧) | optional Biopython; MAF cells and chain intervals | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "102": {
+      "source_sha256": "f619f4b3333661110b36d628a297fb6c5da03625e210f80fa9b6000081e9d8ef",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Read existing delta alignments through an optional native decoder | [Usage](⟦shared:2⟧) | optional show-coords; bp coordinates and declared alignment metric unit | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "103": {
+      "source_sha256": "3dd7addd4189ce5c5967e3b127cdf4e475ddb7855d63feacb84f08453a9680dd",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Read one or more FASTA files into seq_data format | [Usage](⟦shared:2⟧) | local FASTA; declared bp/aa unit and complete lengths | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "104": {
+      "source_sha256": "c4b56c0f8d3aa2300529f1bf0b4c26316e97444e823f150984da389aa3322977",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Read precomputed feature pairs and memberships | [Usage](⟦shared:2⟧) | Exact feature IDs; contiguous supplied anchors; no full lengths inferred | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "105": {
+      "source_sha256": "97f338920c092b2fec2dc5646fb8fb39a1fa398159bf8ab900d6caa53a4afb78",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Import local GenBank or GBFF records using an optional mature parser | [Usage](⟦shared:2⟧) | local GenBank; explicit installed Biopython parser; provenance retained | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "106": {
+      "source_sha256": "5b0a6724b8db1efe5e7f2205d0f80694595d33d26490757f261d06af251bbc5e",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Read one or more GFF3 files into gene_data format | [Usage](⟦shared:2⟧) | local one-based inclusive genomic annotation | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "107": {
+      "source_sha256": "41922abaf49496560dcaaae9a5f8a3b410822f01d737b31a381719efcc26fe7f",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Read existing genomic alignment blocks and source coordinates | [Usage](⟦shared:2⟧) | optional Biopython; MAF cells and chain intervals | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "108": {
+      "source_sha256": "3761beac5bfbe88692003c10afbb3030dd3312e58a7ff319a9bfbf8cab78412b",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Read PAF mappings as ggchord links | [Usage](⟦shared:2⟧) | PAF with complete source lengths and strand-aware endpoint conversion | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "109": {
+      "source_sha256": "3252f1b371ec1d62cf30d075350838bd46b13cc016a5e26e690436e4c1e0d790",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Read existing protein signature locations and source metadata | [Usage](⟦shared:2⟧) | AA features; source-native scores; JSON needs optional jsonlite | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "110": {
+      "source_sha256": "fc6e4849c8da16c9933b3e8b4de746d6835c465e5b364b3caad1fad2e5a42dc0",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Import variant records and explicitly decoded structural breakpoints | [Usage](⟦shared:2⟧) | VCF; BCF with explicit pysam Python; optional structural decoder | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "111": {
+      "source_sha256": "616bf1c784ee4d9f7b865f32e091748e56040175a910a912732e0aecfc796c47",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Register exact character/source positions for independent Fusion details | [Usage](⟦shared:2⟧) | Explicit source/column map; independent Cartesian detail; complete observed codons | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "112": {
+      "source_sha256": "9ad4a1c1da4c094fce5a77f4f5c0c0db5838c32e0e99352243b60f8aac76d9f7",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Selected ggplot2 helpers for ggchord plots | [upstream](⟦shared:2⟧) | upstream; applies only to matching supported ggplot roles | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "113": {
+      "source_sha256": "ad0f598aae6e4faa196426213271ef9d93afb6a72c2a058b83ba89cae5e12cfd",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Gene, feature and region fill scales | [Usage](⟦shared:2⟧) | all three; matching generic feature role/preset | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "114": {
+      "source_sha256": "38cfffed3b87e1de671815658bc10e70feed62bd40918beaba9d95a13703b58c",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Plasmid-map feature presets | [Usage](⟦shared:2⟧) | all three; matching generic feature role/preset | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "115": {
+      "source_sha256": "7a82fee1c96b621819ebab405b1efb4dc29688fe2612aa59f78e00d186326e53",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Feature shape scale | [Usage](⟦shared:2⟧) | all three; matching generic feature role/preset | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "116": {
+      "source_sha256": "5876ec36f68a59a02f7754876d100621272ebf08e90f2503efa4f05426f713f6",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Plasmid-map feature presets | [Usage](⟦shared:2⟧) | all three; matching generic feature role/preset | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "117": {
+      "source_sha256": "38ef6a79046bfbb410f2d522b8285a66bc3d3125e6fa2d087e5e4a54dcac0842",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Gene, feature and region fill scales | [Usage](⟦shared:2⟧) | bp gene layers; compatible backbone coordinates | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "118": {
+      "source_sha256": "9f9c53990696e5430e5a353badf274779a0242c80494fa58962fee9d80b0e449",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Scales for point links | [Usage](⟦shared:2⟧) | chord/collinear matching point-link roles | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "119": {
+      "source_sha256": "27e839e6f37fae69ec8e7184a932d2d9ead7c2c2ae1ba24ad831c6e39745527f",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Scales for point links | [Usage](⟦shared:2⟧) | chord/collinear matching point-link roles | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "120": {
+      "source_sha256": "b2aa05b15fd94e7d88c19b9690790d13a2ad938b592fdc38805b2bc02792be6b",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Scales for point links; spelling alias of scale_link_colour_gradientn | [Usage](⟦shared:2⟧) | chord/collinear matching point-link roles | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "121": {
+      "source_sha256": "18b9f756e0fff54d3824a3ff6c3043aa087e7848708514e2f503222dfe0e1635",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Scales for point links; spelling alias of scale_link_colour_manual | [Usage](⟦shared:2⟧) | chord/collinear matching point-link roles | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "122": {
+      "source_sha256": "3e87fb3f3f71a5317829216a5836593ef4fa43fd680d77fec45696a88e2d8981",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Scales for point links | [Usage](⟦shared:2⟧) | chord/collinear matching point-link roles | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "123": {
+      "source_sha256": "9251aec97b207862e3376fb95c8be1afc4d31bb0cb7a85e39e53e3fe9dda63e3",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Scales for point links | [Usage](⟦shared:2⟧) | chord/collinear matching point-link roles | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "124": {
+      "source_sha256": "389323a71eb08f7d2e48ccbc850c7f46fcd17280dcc50e97ffbb2f2920f44522",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Scales for point links | [Usage](⟦shared:2⟧) | chord/collinear matching point-link roles | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "125": {
+      "source_sha256": "810d43ec582208a6037d95707c469f0a7d2c28412e9841c580877d206b54d686",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Scales for point links | [Usage](⟦shared:2⟧) | chord/collinear matching point-link roles | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "126": {
+      "source_sha256": "d76c366c9b613ee82338b151ed69c882f16a20ab66aebe2a623cced6914c2ad0",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Scales for point links | [Usage](⟦shared:2⟧) | chord/collinear matching point-link roles | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "127": {
+      "source_sha256": "d3b8900e264741bebfd41d92e76a352afdf4b383d85e1953cb999962d28bcd62",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Gene, feature and region fill scales | [Usage](⟦shared:2⟧) | all three; matching region_fill role | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "128": {
+      "source_sha256": "7795620dc430832ca2690149f66790ff06671313a529d1ab73f768d6ce0270ea",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Ribbon alpha, outline and linetype scales | [Usage](⟦shared:2⟧) | chord/collinear matching ribbon roles | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "129": {
+      "source_sha256": "72e71b6e8789d089a7818b19a3aa1cda68567e62132abd5a347833457c57e295",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Ribbon alpha, outline and linetype scales | [Usage](⟦shared:2⟧) | chord/collinear matching ribbon roles | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "130": {
+      "source_sha256": "38c72917a8572299b97f86abfacd6621c953256fc0fd6ce1d954c99db4a23afb",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Ribbon alpha, outline and linetype scales; spelling alias of scale_ribbon_colour_manual | [Usage](⟦shared:2⟧) | chord/collinear matching ribbon roles | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "131": {
+      "source_sha256": "61e77c5695c17292c57a952763c21bf00e54faf9078d3d2ef00cbc7d2618cd82",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Ribbon alpha, outline and linetype scales | [Usage](⟦shared:2⟧) | chord/collinear matching ribbon roles | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "132": {
+      "source_sha256": "b1e6f1b22418904afd2b56528e8cdbf9d14ba4a1522bc48cf9c1c77cfadad172",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Ribbon fill scales | [Usage](⟦shared:2⟧) | chord/collinear matching ribbon roles | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "133": {
+      "source_sha256": "ce255c6beefcf126c3d3392739018d842cf66fa7a9a21bc51d897ca4afdedfcd",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Ribbon fill scales | [Usage](⟦shared:2⟧) | chord/collinear matching ribbon roles | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "134": {
+      "source_sha256": "d6051338e63bbe4f86ad5bb7d74392bbc9592b7db3aeae3bc8e9733db11b7b3a",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Ribbon fill scales | [Usage](⟦shared:2⟧) | chord/collinear matching ribbon roles | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "135": {
+      "source_sha256": "f2db95d5978e525f26f2de7afe1fa29f95e9fba125896a064bb609e8bf66b944",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Ribbon fill scales | [Usage](⟦shared:2⟧) | chord/collinear matching ribbon roles | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "136": {
+      "source_sha256": "63847589c92688c2e054572c4483f1c90efd5e66403739b715f070f9b7c8894d",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Ribbon alpha, outline and linetype scales | [Usage](⟦shared:2⟧) | chord/collinear matching ribbon roles | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "137": {
+      "source_sha256": "7efd54ac527e457b51fb4ad3fb3bb2271e7ace10f6be06124d696dc03133a143",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Sequence colour scales; spelling alias of scale_seq_colour_manual | [Usage](⟦shared:2⟧) | all three; matching sequence colour role | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "138": {
+      "source_sha256": "350fa6d527a13a257cbc522c7df03a369bf5f15d5f798f48709be83547d4d706",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Sequence colour scales | [Usage](⟦shared:2⟧) | all three; matching sequence colour role | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "139": {
+      "source_sha256": "e27f8ed2827e8334bb9ddfe38607a4804f7ac0ba5330f1c386e6ef084c734819",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Genomic sequence position scale | [Usage](⟦shared:2⟧) | all three; position axis, separate from the collinear ruler | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "140": {
+      "source_sha256": "439bbccad61b1f47795e0c7b0c8b0a29102484fbfe6995abeeaf370d695c7e32",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Explicit sequence ring scale | [Usage](⟦shared:2⟧) | chord/circular; positive declared radii; linear rejected | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "141": {
+      "source_sha256": "f64c45caa0bad452edc0b766a08bce1a467c5502bf0856262bf53623ba6a37dc",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Set a track&#x27;s fill or colour mapping | [Usage](⟦shared:2⟧) | all three; scale ID must match position_track | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "142": {
+      "source_sha256": "01f55d7108ae687b20f1c83789fdb543e52d76e47a5660fe466f1d704085b385",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Set a track&#x27;s fill or colour mapping | [Usage](⟦shared:2⟧) | all three; scale ID must match position_track | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "143": {
+      "source_sha256": "3d7f86b2ea136dea63c66396f5fbeee113ace9527d24f824f2228b7ced9f4d2a",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Set a track&#x27;s fill or colour mapping | [Usage](⟦shared:2⟧) | all three; scale ID must match position_track | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "144": {
+      "source_sha256": "372976d9f9490552509aa033d0b9a48e7d64ade4900d82f61c2f20caa4891ad7",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Set a track&#x27;s fill or colour mapping | [Usage](⟦shared:2⟧) | all three; scale ID must match position_track | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "145": {
+      "source_sha256": "00957767890078caec6522136b288867f3489b4478ab3c99ab7615324166c9b6",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Set a named track&#x27;s numerical height scale | [Usage](⟦shared:2⟧) | all three; scale ID must match position_track | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "146": {
+      "source_sha256": "4a05a69b9c49c8b749e47019b2a26f5cc9470e70b9e80a5430b12cc02d000507",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Prepare independent windows for a segmented linear display | [Usage](⟦shared:2⟧) | independent windows and declared local display reversal | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "147": {
+      "source_sha256": "723bd1a2e7b275af19316892bdbc6aafd99d45825c6e3a23cacc3d679cd4f80f",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Bundle ribbons as a ggchord stat | [Usage](⟦shared:2⟧) | chord/collinear ribbon layer; explicit aggregation | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "148": {
+      "source_sha256": "e9451d3706b94bc80ca1bb61174d386f230c741b6bc4c09dda65b9dc5df78259",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Compute local ribbon density as a ggchord stat | [Usage](⟦shared:2⟧) | chord/collinear ribbon layer; one ribbon per source observation | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "149": {
+      "source_sha256": "6ff04966ae6ed2fb2ac5fb9cdb2acbec7c809a2f1c47bfceda9e9b53d9031165",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Selected ggplot2 helpers for ggchord plots | [upstream](⟦shared:2⟧) | upstream; applies only to matching supported ggplot roles | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "150": {
+      "source_sha256": "b8bf27059afba1b5a0c199840ec35346e3f268643f2e97f4cccf51ecf0ea8562",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | ggchord themes | [Usage](⟦shared:2⟧) | non-data style; plasmid preset intended circular | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "151": {
+      "source_sha256": "583211dae5fc7fc50457ab55fbfe5f0d35f33a6cd4f6697f2b001d049bf7554e",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | ggchord themes | [Usage](⟦shared:2⟧) | non-data style; plasmid preset intended circular | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "152": {
+      "source_sha256": "b900c938cb34446a408b39fca2a847950d90d81f0ea13dacf62b3bf8b9e49344",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | ggchord themes | [Usage](⟦shared:2⟧) | non-data style; plasmid preset intended circular | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "153": {
+      "source_sha256": "b4313b697f5a8f92fe03ac7d554a4dacb124a03b915eeec688f1fd284b36e0c2",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | ggchord themes | [Usage](⟦shared:2⟧) | non-data style; plasmid preset intended circular | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "154": {
+      "source_sha256": "942d2d0de362b44ab6d5a943f26836eafd5ec8ac08db2ec0796716b260e9421c",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | ggchord themes | [Usage](⟦shared:2⟧) | non-data style; plasmid preset intended circular | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "155": {
+      "source_sha256": "35f5edb91768e83f0dd4230f86d5053f943ab6c767084ab0ab31e02c26efce6b",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Translate real CDS strings with codon provenance using optional Biostrings | [Usage](⟦shared:2⟧) | Explicit source/column map; independent Cartesian detail; complete observed codons | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "156": {
+      "source_sha256": "bc38d2e4387efba9fd5b1e133499cddf530ce30336b607a26e90cc44c4718d24",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Physical units and direction arrows | [upstream](⟦shared:2⟧) | upstream; applies only to matching supported ggplot roles | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "157": {
+      "source_sha256": "07b65d9a347c881d349ba17db54b9bba2afc80acc00a99c9566ce2bd594495d3",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Validate ggchord input data before plotting | [Usage](⟦shared:2⟧) | validation reports, no silent input repair | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "158": {
+      "source_sha256": "aae8e3d3ea4bc5c57f1012aac1f8e0bf3f2631788ba34b743e348c472185b510",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Validate explicit genome and contig relationships | [Usage](⟦shared:2⟧) | explicit genome/contig membership; never inferred from ID prefixes | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "159": {
+      "source_sha256": "549021713da5883550fdbc769d97d482b2c9a2f3403766e3fb350dc50a4b75af",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Preview a ggchord plot at its intended export size | [Usage](⟦shared:2⟧) | target-size preview of all supported plots; temporary path output | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "160": {
+      "source_sha256": "920a83f4f505ca501ea16d37a72ee789c6e242de10f3f2954576645cdaaaac3b",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Selected ggplot2 helpers for ggchord plots | [upstream](⟦shared:2⟧) | upstream; applies only to matching supported ggplot roles | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "161": {
+      "source_sha256": "cb64b7300f19234c92578c1dc2bf925654078f97c118828131013fe167c1a5fd",
+      "status": "reviewed",
+      "translation": "## How to reproduce ⟦shared:0⟧\n"
+    },
+    "162": {
+      "source_sha256": "e4009e5de3dce71b9d98d51935aa4c5171a0d800e85a5ab5d2b691765764802a",
+      "status": "reviewed",
+      "translation": "Start at the preparation code in the primary section. Inspect fields in [basic tables](⟦shared:0⟧) and conversions in [formats](⟦shared:1⟧). Shared example snippets execute in independent environments and important comparisons are rendered by ggchord. Explicit synthetic geometry demonstrations are not biological evidence. Retain inputs, source and reproduction notes; see [installation](⟦shared:2⟧) for setup.\n"
+    },
+    "163": {
+      "source_sha256": "f4d27760e8a308f385342139fe489b2f72dd9e984c70464d858b59d237c87170",
+      "status": "reviewed",
+      "translation": "⟦shared:0⟧⟦shared:1⟧Maintenance coverage record⟦shared:2⟧\n"
+    },
+    "164": {
+      "source_sha256": "959c0dab5047d15e562256ceeb5178775ea4c27aa694a04703f45a8b174f06cf",
+      "status": "reviewed",
+      "translation": "L2 denotes minimal runnable use and input/output explanation; L3 adds key-parameter contrasts. Neither certifies every combination.\n"
+    },
+    "165": {
+      "source_sha256": "21fa394fd45661d7a96acac905af3e613a8ebd6b9af5ebf936f0876370113a51",
+      "status": "reviewed",
+      "translation": "| API | Level |\n"
+    },
+    "166": {
+      "source_sha256": "3491e014f5503eb5b2fca81db42f6f72765980ba5b5e48ef135b6cf69d7f92cc",
+      "status": "reviewed",
+      "translation": "| --- | --- |\n"
+    },
+    "167": {
+      "source_sha256": "907f57b9a2e73088de78fc1e3414982465e4dc03af672dd447305fb5d0281ebd",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L2 |\n"
+    },
+    "168": {
+      "source_sha256": "d5a70b7c421b2e49fb2b902c9b1b2d8b695fa1711f1f651a3158fea48b9beef3",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L1 |\n"
+    },
+    "169": {
+      "source_sha256": "221c85ce3254bb4e78edb74c7e5581086d1e7a595e67bdadd61bf41bd457d18f",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L1 |\n"
+    },
+    "170": {
+      "source_sha256": "ebc2ca419e6fd28d1e86a2a1330c745d5334d19e2c9cb4f1429f75978e7e9c38",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L1 |\n"
+    },
+    "171": {
+      "source_sha256": "cdebb05c49afbfbaa50b6b0571b9c1c85f55f763ae0dbc1affd92d2924ca8375",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L1 |\n"
+    },
+    "172": {
+      "source_sha256": "e30808ef2d91d933b9e359ba1ebda31ec14997f05f3cdbed34969aeef69abc45",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L1 |\n"
+    },
+    "173": {
+      "source_sha256": "1960495780fd6a72d70e7337e28c61b5790b9466e584c042a7adc979672a4f52",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L2 |\n"
+    },
+    "174": {
+      "source_sha256": "a5b303246209387e5b06c24db1abdb00a4c4cee085168d1d07102635a0f7c04a",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L2 |\n"
+    },
+    "175": {
+      "source_sha256": "ca6af59573e4c3c856922c534ab2d46c3d23aff9faee1dbc4ee8ce7f32a7780f",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L2 |\n"
+    },
+    "176": {
+      "source_sha256": "a328f170eb86f2fd974d3cd765e72c3f8bcead1b5603b174df196cf0f5b81324",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L2 |\n"
+    },
+    "177": {
+      "source_sha256": "953989c21cdfd8c98bb419c16784ed8ed575d230f340729bbc33a3507cddb405",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L2 |\n"
+    },
+    "178": {
+      "source_sha256": "dd0b8eb4b6843f4b4b22b5a58d073de1e694a24abddf0c49ccd9cc54ff706fc0",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L3 |\n"
+    },
+    "179": {
+      "source_sha256": "c00d4b29072a2c43b2f55538be3f42b4010d4ee91a7efa8e1fba641296b65224",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L2 |\n"
+    },
+    "180": {
+      "source_sha256": "db6f10c4ed62c708e4bc58c9e1a7492b03afe33fd02afae7316a1f9834a7657d",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L3 |\n"
+    },
+    "181": {
+      "source_sha256": "108ff85d29e97179d0eddee1d78a79f5fb4385944cc276276a727deac189f768",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L3 |\n"
+    },
+    "182": {
+      "source_sha256": "1366e6a9cd0e968b5eb192f3c403b005363110446479f55c9727e2b0e40efd1d",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L3 |\n"
+    },
+    "183": {
+      "source_sha256": "90c40d1f42724e525e9e205940bd01b9fcd44ce10b4d132e785197af4af63ff4",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L2 |\n"
+    },
+    "184": {
+      "source_sha256": "cee14850457853aaeada9679fbc61ea24ebb227bff88c6fe4efafd1ecf31863b",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L2 |\n"
+    },
+    "185": {
+      "source_sha256": "b0a22a32f96ce8f416d43e549021a59bff3fa3a374730f191791a772891c70cc",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L2 |\n"
+    },
+    "186": {
+      "source_sha256": "f1f5a5edb93ba6a86e84bcb0e6d213684f4ae0dad856825e24948af2154fa52f",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L2 |\n"
+    },
+    "187": {
+      "source_sha256": "f0066779d03a8a5e663be0230eff56ad336b0cf578a26c567fb8c33d15502a6c",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L2 |\n"
+    },
+    "188": {
+      "source_sha256": "9041c5be1782d0e7ca67aba9af65373c3823c2ad74247cc877f6fa3024693a16",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L1 |\n"
+    },
+    "189": {
+      "source_sha256": "f64ced2e0ed528491865b89a3a31ccaab69afcecdb381fcaa09b342671adc6d9",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L1 |\n"
+    },
+    "190": {
+      "source_sha256": "b2e24fa4a1221e71c9eaf215598fb3d4122364c6d2d58c2edb41b75527d29e33",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L1 |\n"
+    },
+    "191": {
+      "source_sha256": "4c1d709a485418822de635ad8c30fb4e5f8a40d2d93b453898e1aa136e58cf00",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L1 |\n"
+    },
+    "192": {
+      "source_sha256": "9a0674d5a37f5cb823d19c7e1171732ee5502789f29efd921021d015ffa2e3f9",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L1 |\n"
+    },
+    "193": {
+      "source_sha256": "244ff35997ff9eeeb6df377bd2538746fa148e811ed0e580e1372c4b999dc5bf",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L2 |\n"
+    },
+    "194": {
+      "source_sha256": "88592f4c24b085b96376fb92515208ac8da9dbb191c62eab87d3e891c5744438",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L2 |\n"
+    },
+    "195": {
+      "source_sha256": "b2eadd2b7ab8f1c22e5ffe6b5c5ee80f5d7bd3cea50820850654c68c45a3fc92",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L2 |\n"
+    },
+    "196": {
+      "source_sha256": "8957c592bdf3007d5d0c3307747613a21c59b8c41a320a0587242f34723e5162",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L2 |\n"
+    },
+    "197": {
+      "source_sha256": "3d85a9258b7c62431dc288bce28d5c00e03a326ed8d7ef449173a64a1e45cbe4",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L2 |\n"
+    },
+    "198": {
+      "source_sha256": "9e28f290c20cc7c3fe6038d4350cea51a3e8b075ed2f65f681c127cf32bdff01",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L2 |\n"
+    },
+    "199": {
+      "source_sha256": "a83a85eacbcc46814541b62a72254005e7103d13de3427f35854db328a0da106",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L2 |\n"
+    },
+    "200": {
+      "source_sha256": "8ce09db3ac5e97887036a5227be41de50a2e86797aedf2a6fedb4cb8e9fb07ec",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L2 |\n"
+    },
+    "201": {
+      "source_sha256": "e4e025cdaee4c7e44cd12071976acca038537527aab74fac330ef8444ee89566",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L2 |\n"
+    },
+    "202": {
+      "source_sha256": "0e7b65737cdbbd27fdc0d418b1ad9b812f30c4d29f33f04f2975d13371fb8656",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L2 |\n"
+    },
+    "203": {
+      "source_sha256": "0788eb42bde26f3c9f5ed9b620bfa3063b3eab578652abb919eb7e179a860d2b",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L2 |\n"
+    },
+    "204": {
+      "source_sha256": "12bfb586166a1ead6a938cb3d648aa385e1a62c374248f3a819d0f07d727b639",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L2 |\n"
+    },
+    "205": {
+      "source_sha256": "504bad30496b250a4fe2602cd6a76c640e0c273cf1f9f447ee65ca128f411ffd",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L2 |\n"
+    },
+    "206": {
+      "source_sha256": "2bc21c8a528ff5baa79839dfcb52872cf37269d117546127cfd837dcba700b25",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L3 |\n"
+    },
+    "207": {
+      "source_sha256": "d786375d8be02b0d32aa8cb24582b50c493e630e5797115c519e7bf557c664fe",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L3 |\n"
+    },
+    "208": {
+      "source_sha256": "bada6f3dc9c2a0ab2502a0d7485e5034cd6eb55568e289ba4c4af5d14b4fd6a5",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L3 |\n"
+    },
+    "209": {
+      "source_sha256": "42d89bb912688a1e869678fd529098a35f9946f06d64e7c9f1947abe8ba59bc6",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L3 |\n"
+    },
+    "210": {
+      "source_sha256": "7f951edaa27538e974b1d067c80fc27e33818a4c853ecfe28742b30d14042329",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L3 |\n"
+    },
+    "211": {
+      "source_sha256": "b032deda56e352e0a715a2314c1ac82eba7e03bb378b3fde1c6c72b4b6f3009a",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L3 |\n"
+    },
+    "212": {
+      "source_sha256": "6f627804ad2c24cd2f756eaa464307c82c3ec090613d9a532749bcecf24c81d8",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L3 |\n"
+    },
+    "213": {
+      "source_sha256": "5b5d2cac22f5b763b48678c85502d2c866260024e411aa8207cd955727bec0bf",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L3 |\n"
+    },
+    "214": {
+      "source_sha256": "793384b6abf49d7a9be83039ae5c6eb7098b4f50b3f1f8ddcdc94847ccd7cd5a",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L3 |\n"
+    },
+    "215": {
+      "source_sha256": "ffd4cd0dac832534d7b7cb43134e6913b7dd0cbb33c2ac855733ab915ba7b5cc",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L3 |\n"
+    },
+    "216": {
+      "source_sha256": "283ac4eadf7ce7d5c29121b65aceb9cfebed44e1769615fa264cd58506a32eea",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L3 |\n"
+    },
+    "217": {
+      "source_sha256": "c28161944664c8b15c177321cd3afaaccbe7630bf6576a884018e273f7dfa09b",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L2 |\n"
+    },
+    "218": {
+      "source_sha256": "4233bc519e501ded655566d829eee3ddbe5d00019b3de2fb6175c18e9e0d9a17",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L3 |\n"
+    },
+    "219": {
+      "source_sha256": "de5e2a61b350301e5209164440d7acb9aa2570c2837db7b10d3fee6a784e3ff1",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L3 |\n"
+    },
+    "220": {
+      "source_sha256": "286cd92ae5cabd6acec18f19e3aef6c58aab6198a7f6ed44d87e44ab643571c0",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L2 |\n"
+    },
+    "221": {
+      "source_sha256": "673c8e9bf27ef012b025d7b8146617f7c3f7ce3c1fad90ac3491057ebb88b9e6",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L3 |\n"
+    },
+    "222": {
+      "source_sha256": "9c13272fe61eb7d3ed15f94f9a17a2003c879d6d499dcf594e812f3c77053634",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L3 |\n"
+    },
+    "223": {
+      "source_sha256": "9fe1835ba4d43b8b8b76cea0a729ced007f3395d6d7b8f393f9bf80631f7f6ad",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L3 |\n"
+    },
+    "224": {
+      "source_sha256": "ec1a71cd560ac3842d0d6c612e8d834402e47e068c8e8211a02a2cdb0204f90e",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L3 |\n"
+    },
+    "225": {
+      "source_sha256": "3199335d822986ed8348c40b3cbdf9d0d8881d4034f5d976003cc6fea6c3bb09",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L2 |\n"
+    },
+    "226": {
+      "source_sha256": "9d7c50c129855374d7bfaef7b9c541aa064a8b41c3abf061938e2fa6a1a7e6df",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L3 |\n"
+    },
+    "227": {
+      "source_sha256": "86b4a2fb7f62487fbf49a784350b44ec75b57f8106c876f440720745188622ee",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L2 |\n"
+    },
+    "228": {
+      "source_sha256": "6d408488c7b6e33b1476e87bc866937b0091cff530b125eea37d50e0d86d6724",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L3 |\n"
+    },
+    "229": {
+      "source_sha256": "af8a071588d58c2e63ae3c69969eca1f774a692bd9e0decbe34dbad2bacb7ed5",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L3 |\n"
+    },
+    "230": {
+      "source_sha256": "b477cd462718e554a9886cd413ca02f895aca085c8e6dc8e969158a7f0d7e292",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L2 |\n"
+    },
+    "231": {
+      "source_sha256": "2b1ad1fbe23b88946d467bf2f5fb0c7d7d23883e165a48480c28f98619b7a95c",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L2 |\n"
+    },
+    "232": {
+      "source_sha256": "aab9e5023777d23c950330422fca3d9e4faccbd4e490d94e36f43a01a566c604",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L2 |\n"
+    },
+    "233": {
+      "source_sha256": "01d155f8015c11ea70de19eab4e79665cb7b1704853174bb128af7ee09bafb4e",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L1 |\n"
+    },
+    "234": {
+      "source_sha256": "4d38f676cdb0357b70dc39f87098dfc4997b4ce0733d9b1369f7fdc2b2f94cb9",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L1 |\n"
+    },
+    "235": {
+      "source_sha256": "2b51bf802da0d31af6f91b3b0942824456d597a0654be969cd2a442c4a787544",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L2 |\n"
+    },
+    "236": {
+      "source_sha256": "eaaf3d5a9af4c4a670f5c93f3713ec96523947c49613003d20d5c14dbdfd0c56",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L2 |\n"
+    },
+    "237": {
+      "source_sha256": "e6752044e37ad0e28f048d10a15b100dc78050d4cc20b379117b4f9b3d6508f2",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L2 |\n"
+    },
+    "238": {
+      "source_sha256": "329b99857b7e7c053af998690cd807d526ad58c994c4f60cae210b81b6119c8c",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L1 |\n"
+    },
+    "239": {
+      "source_sha256": "ca6ab19346cede6c64f08287cd69173859817a9cad028eb9214f6d21140878fe",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L1 |\n"
+    },
+    "240": {
+      "source_sha256": "f777a5869071ab8548164db347261eb31d657ac07a8252a9ecb1f6f95638e8c0",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L1 |\n"
+    },
+    "241": {
+      "source_sha256": "5ea677575f40f8abdb06a8789113a64b298a6769263401baeb8cafde4b049845",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L2 |\n"
+    },
+    "242": {
+      "source_sha256": "83c2e2711f5c28461ea63e1b49e5f9088a29401c100495d49deaeb4a67233082",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L2 |\n"
+    },
+    "243": {
+      "source_sha256": "c332d8eea9379b35f39d7548c6e3d5b286dc18ca9c89362f1a118438fe017f6a",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L2 |\n"
+    },
+    "244": {
+      "source_sha256": "dd3635ec43439893804c0bf5e7b90f789d923cc9508ed7aeea93ae983bbfcfb9",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L2 |\n"
+    },
+    "245": {
+      "source_sha256": "c5c7c17eb6228d7eb1d75403b39054973b0f537194aaadf3f84e97b7ac4456d3",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L1 |\n"
+    },
+    "246": {
+      "source_sha256": "3f19e1b47c2c80f1d423eb3bdb64208752d13b9251e89d0e6ddce8bf5f63dc27",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L2 |\n"
+    },
+    "247": {
+      "source_sha256": "473958b7cf1ef9bbed18eacd1888f0cc29c83d9229e4c2ce313881d7f14475ad",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L2 |\n"
+    },
+    "248": {
+      "source_sha256": "a32cbcc7eccb89530f65b671aff2158d9ea69628c9e194bd5788453905149f90",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L3 |\n"
+    },
+    "249": {
+      "source_sha256": "9a61a6b67e18b231181c1a17fb1920c33f9fd330b4f469bdd301e85cdd92109d",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L1 |\n"
+    },
+    "250": {
+      "source_sha256": "f0b130d2b81f79306159f27b1afe7a05c32daebf12baca7e49d00f9d383e1d45",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L2 |\n"
+    },
+    "251": {
+      "source_sha256": "bf25786cc53d10bfbeb749cc2c788fb299f4ff9cf40034ca55bd80e2d18c3c09",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L2 |\n"
+    },
+    "252": {
+      "source_sha256": "4d57d8c6bad269ec6f08435fb6100e8be891ebbf143b29670dac6e705f79d440",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L3 |\n"
+    },
+    "253": {
+      "source_sha256": "1f75e0a59a5594081d76ddc3a96cabbfd8a5152eac8fa7ec6a26645420494d4d",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L1 |\n"
+    },
+    "254": {
+      "source_sha256": "1f5654ede6708097adf41e368fe7fc274049bd597b5620f5393ed5b0aabd52dd",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L2 |\n"
+    },
+    "255": {
+      "source_sha256": "ebb0254f51abff43725f0d53f66b0f6153a5f1b31e37c4026acc9170baf87ca2",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L2 |\n"
+    },
+    "256": {
+      "source_sha256": "e1cd602810897edcbbf4e0e4c2d3ba1379ba14a276bd2fc93e1a61d9f9c992cd",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L2 |\n"
+    },
+    "257": {
+      "source_sha256": "944d0143af5acaee3e6bcaa32d57f7d0f71d7d2a0645aa62757e0b9eb6eb5644",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L2 |\n"
+    },
+    "258": {
+      "source_sha256": "624a38705e4e5e123aa28fd0a5932eb75bb11a377f46ad2182a21c0d79a7f1fa",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L2 |\n"
+    },
+    "259": {
+      "source_sha256": "d573bce8ffdf97dcfc99e024a0fa8b2bb3ba97d6b23eb71540b819eb757c05f8",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L2 |\n"
+    },
+    "260": {
+      "source_sha256": "3ce03d36fb6d8c13f2fefe0e855a1bcdd992bcca318992801b2a47ad6403c9ad",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L2 |\n"
+    },
+    "261": {
+      "source_sha256": "7623429d746d8fc3b3805ae84b5d003da4e6f4e9c0c469da0ee0d85844e2d8f8",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L2 |\n"
+    },
+    "262": {
+      "source_sha256": "8f77be2627e4febfa1420c009323c6599e6feb8a4a6fc8599961776849165231",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L2 |\n"
+    },
+    "263": {
+      "source_sha256": "e2fb7b459a627b91e5530fafce9989369d37a1688ecbbf46225c0aff619e8c42",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L2 |\n"
+    },
+    "264": {
+      "source_sha256": "83eb3ba848b3d7c60b1aa9d5d16bb1fb494b9da1120ae99c8e068345483e42e5",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L2 |\n"
+    },
+    "265": {
+      "source_sha256": "3a096156a731718c91c903e66cd7ac742d7d091ae9db5a67af5cc40c633a1d60",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L2 |\n"
+    },
+    "266": {
+      "source_sha256": "96b6285666d37dbc1bc364f5fb9e8d2599b21e678a68f720d507c588d9973cf2",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L2 |\n"
+    },
+    "267": {
+      "source_sha256": "1d8d3cc685d2972b3d2ae05d0a58bf7e872929395941012d588cf48b95800661",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L2 |\n"
+    },
+    "268": {
+      "source_sha256": "f77fb6b89de3765096e5b1b19da71eebf4c0e164d3e1c564f9a1a38f3fb07f90",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L2 |\n"
+    },
+    "269": {
+      "source_sha256": "d4794b72a250db86e166d93410eb3c6279a274e6149eb0a2bc3dd97c4f18c0e0",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L2 |\n"
+    },
+    "270": {
+      "source_sha256": "9fde8108e4bfbc64a146013e9c689df0f8eeeb4aa073ac3bd2b61b05ca1eb496",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L2 |\n"
+    },
+    "271": {
+      "source_sha256": "587483895b15c3b9a534b9407a61479291143f91cfc5c95440fdd2b68bc32f48",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L2 |\n"
+    },
+    "272": {
+      "source_sha256": "8e7efb3319ae6cf16db4cbe6279e192889fee0ece7775741cb54c85a1a857df3",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L2 |\n"
+    },
+    "273": {
+      "source_sha256": "516af6fb94d61e07f54939ac1ce6142c5e7095947a3b8cede47f5e6abb23af37",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L2 |\n"
+    },
+    "274": {
+      "source_sha256": "dff16fefe6cd448ca5f4c81e3b3d0a31df42546ea474db9da6e2785b26ed2d36",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L2 |\n"
+    },
+    "275": {
+      "source_sha256": "86acd2cb3583f38c5e1e7dd1450224d352088c7c70f74993b481805a9931d141",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L1 |\n"
+    },
+    "276": {
+      "source_sha256": "acf14588c41640e8703dc00b59d2d29a6781a74e1a159ff1ffe84d9500e3e177",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L2 |\n"
+    },
+    "277": {
+      "source_sha256": "b2616611738d7bea3db2e2579c2aa7ccd144d00a9600a6a1d369c3d06472d6c9",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L2 |\n"
+    },
+    "278": {
+      "source_sha256": "ff3d9279a9ebd32edd7ce6e352424a91e1696fcebab750726a853ddf36d6a56c",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L2 |\n"
+    },
+    "279": {
+      "source_sha256": "a441fb544317baeec7a1d65c565eac9f1654ead132973b13e1f3a66f4fa1a602",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L2 |\n"
+    },
+    "280": {
+      "source_sha256": "6965b06b8e28d731ec875107016c43af4460167639404f5fd420788a769d8cf4",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L2 |\n"
+    },
+    "281": {
+      "source_sha256": "ff0e41b18d40f7019652b78c91a606d7cf7c7c4e315ce84aa47e4cbc98dea9a0",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L2 |\n"
+    },
+    "282": {
+      "source_sha256": "79b671550afdbead6d741621da65310b963b8f1f622a9ce74e8579ec5a068c3a",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L2 |\n"
+    },
+    "283": {
+      "source_sha256": "7293cf4839953a0d381d9cc8eed75677d387528ca8dd9bd0cb985cb94ce16338",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L2 |\n"
+    },
+    "284": {
+      "source_sha256": "fe1483f092ef82ede8fbcc53f03ba0d48622cc5a7f7c3bc026e343f4225c1d0e",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L2 |\n"
+    },
+    "285": {
+      "source_sha256": "811f7782ead2abec9ba69698f923f18fb805b2dd397fe761aa0241e34b42c774",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L2 |\n"
+    },
+    "286": {
+      "source_sha256": "139439d0bb5dcef9c2128d8728cd3bd202ae5331522d6f132a1bc4cd146b47db",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L2 |\n"
+    },
+    "287": {
+      "source_sha256": "a08b375e369091327e1d2b20b61d90df0a75f8eb17f7bf9ae5712a2d46800b4c",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L2 |\n"
+    },
+    "288": {
+      "source_sha256": "b54b9e42cee5c37faf8a342445f7ff8acc3326a18331118202715ec15797e3f6",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L2 |\n"
+    },
+    "289": {
+      "source_sha256": "0b5689985c599990bf3354165405b32ebbd0f3c0cb7f939c12d7e6b223e2e262",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L2 |\n"
+    },
+    "290": {
+      "source_sha256": "93c8d401e3e6274f784b66125f0fde19372fe5f1009dabaa624a65dbdc5e8dee",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L2 |\n"
+    },
+    "291": {
+      "source_sha256": "4dc2536e5e5646a3e9d586d53ccd5e5aa305e5670810adea74ddafa6cd33f19d",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L2 |\n"
+    },
+    "292": {
+      "source_sha256": "a66288f9e8aa4e8d3830921407eab45ea33288b4a9123aac5c30a5034101234f",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L2 |\n"
+    },
+    "293": {
+      "source_sha256": "be7c29975a3c058719de3c2fb96313228c5484920dced8e30a703119c4cb9ed8",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L2 |\n"
+    },
+    "294": {
+      "source_sha256": "164c97f914b137d1a7e5f932de5029d4f39b742160b631542490f78626aae556",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L2 |\n"
+    },
+    "295": {
+      "source_sha256": "1d8f68ccf9ef256f4e6ef617a8a2e94fce3fe4ddc601ebb901b6c24e782333b9",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L2 |\n"
+    },
+    "296": {
+      "source_sha256": "1693fd3063c09d08d4787bb3b4380a050ddbdb8601e5061f1135e39925c1c909",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L2 |\n"
+    },
+    "297": {
+      "source_sha256": "bce3f827042e48d86772f2e894b4b2bfc7bf7fc21f6b0d972e6c1d47bc07065a",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L2 |\n"
+    },
+    "298": {
+      "source_sha256": "e2bb8a489599d710cde6ffd135b88001b1f6bfa6d6557ca423d4e3b5942b9d1f",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L2 |\n"
+    },
+    "299": {
+      "source_sha256": "c26b6522d51c477f5c354882400491205936e654f45d4543d0ed272fbc2a4070",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L2 |\n"
+    },
+    "300": {
+      "source_sha256": "b89341e70abcf1fdd0c3fbbbd8fb67fca156c6ccd6717b20ab0bdbd581f1c1cc",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L2 |\n"
+    },
+    "301": {
+      "source_sha256": "9de4fd6657307dbe350963e8bcef397f36250ed300398592c5291504c1232c80",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L2 |\n"
+    },
+    "302": {
+      "source_sha256": "0e5c132178fa97a2e985223bcf7de456c586a8362a3453b879a377b8f31b5257",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L2 |\n"
+    },
+    "303": {
+      "source_sha256": "bb614049fc19112684721bd59935afa02a95cad402c363f3c09041b868e4e7ef",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L2 |\n"
+    },
+    "304": {
+      "source_sha256": "ec3b665634d6f5f07cb0aa810d80362f1e8988c64b6a1872d3d5ed4e9b6bee41",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L2 |\n"
+    },
+    "305": {
+      "source_sha256": "42f8843e51022261ac1b711e635bc7fba1ea977e7fd1c4fa6cac0bc7b86b89d9",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L2 |\n"
+    },
+    "306": {
+      "source_sha256": "51ce33a0b6207640d906adfc1d0bd1e5d14a5e724d8892ef67f9c9009f899604",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L2 |\n"
+    },
+    "307": {
+      "source_sha256": "87f45ed6c91a0d9f375a6fab6be296674894ada6ee7ad74897b014da2ec51ec0",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L2 |\n"
+    },
+    "308": {
+      "source_sha256": "bad26e08be4eaceece32763e8711888cebb011d2ea03598811ad7e166e7edf5a",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L2 |\n"
+    },
+    "309": {
+      "source_sha256": "35ae0f6a662dbada5e3655e95d162637073cc9e7a9ccdc220dcd50dd391f2c75",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L2 |\n"
+    },
+    "310": {
+      "source_sha256": "3442f520198b576d92856dfc75c453130089a834e87d41cdac202ce2c46458d8",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L3 |\n"
+    },
+    "311": {
+      "source_sha256": "f5a828b22aed4046e49385844fe5c60dc9941168e953576eeabd11724f4d5fb6",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L3 |\n"
+    },
+    "312": {
+      "source_sha256": "f50531c12b3da3385d4d3d2a516cf8642bdd01a3c536cb8f916d730bcbc605bf",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L1 |\n"
+    },
+    "313": {
+      "source_sha256": "39c52017a601a62ce2cc30f1125c0e4e896c8b75184882a28748f5c37f917037",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L2 |\n"
+    },
+    "314": {
+      "source_sha256": "a2d3239b403fbd0763c00dfdaf5efee63b941a8466e6c5aacb527269920c742b",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L2 |\n"
+    },
+    "315": {
+      "source_sha256": "0de05ef1b651106fcf874ea0c17040e90b4898736810f623a08c57fdd00773f8",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L2 |\n"
+    },
+    "316": {
+      "source_sha256": "ba5dbb58fa094326956cd9593e2c78d071b35830e913eb68ee69cd7cd180ff1f",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L2 |\n"
+    },
+    "317": {
+      "source_sha256": "fbdd36a25684c84049a88913eb3deca933e9baed9feb38d19511090af1cc6424",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L2 |\n"
+    },
+    "318": {
+      "source_sha256": "c56d07155ef0a016c549cbcd375c2764dddf1ee9325191a07b63e04df5c8875b",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L2 |\n"
+    },
+    "319": {
+      "source_sha256": "2d887f34074678a0ccc51222f4760a55a5b6d3c340954b6fcd64fc9a17971428",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L1 |\n"
+    },
+    "320": {
+      "source_sha256": "5734b8a263e242b12ec00ae9d938793a3c220b44ab2ab8ad9195e93d505e551e",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L2 |\n"
+    },
+    "321": {
+      "source_sha256": "1a38fcd624f979caa23f202f909f204b3267c91d00f7b1bfcd59f1a7d22ede39",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L2 |\n"
+    },
+    "322": {
+      "source_sha256": "b203cffea0d1664cae3bbe584777bc83d32e1a17d94ec04ef8ffddaf526755d5",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L2 |\n"
+    },
+    "323": {
+      "source_sha256": "762ae2bc2a7cd78807a41bfdea623ab6108a733b996df1fdecb0b77c6d8bd15b",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | L1 |\n"
+    }
+  }
+}

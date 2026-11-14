@@ -1,0 +1,160 @@
+{
+  "source_sha256": "439da759e7916d936c2e7b5894d9bd209b7263f8607e4662c3992f969e73bc96",
+  "blocks": {
+    "0": {
+      "source_sha256": "df098c67f557f2de04d3abfebf6a5d205235a6fedf939ed9e1d52ece9eaf7d13",
+      "status": "reviewed",
+      "translation": "⟦shared:0⟧⟦shared:1⟧Read the default BLAST columns in observed alignments and select the six endpoint fields needed for plotting.⟦shared:2⟧⟦shared:3⟧\n"
+    },
+    "1": {
+      "source_sha256": "bd2df94c51beccb957cabad261bb008366bdb88479cad87323ef6a19a4e26926",
+      "status": "reviewed",
+      "translation": "## Why begin with BLAST input? ⟦shared:0⟧\n"
+    },
+    "2": {
+      "source_sha256": "ddc2c384459a7331dce4375b881115b41d226714bd6c222bd471df25759c0aa3",
+      "status": "reviewed",
+      "translation": "ggchord was originally designed to visualize BLASTn alignments as ribbons between nucleotide sequences. BLAST tables are its default recommended alignment input, and the link fields retain query/subject naming as the plotting tools have expanded.\n"
+    },
+    "3": {
+      "source_sha256": "3a1488214248c8388d9d30879cc8eec5192c418909309a8c62f67b03b95d1526",
+      "status": "reviewed",
+      "translation": "Plotting uses full sequence lengths and precomputed alignments. FASTA supplies backbone lengths and BLAST supplies corresponding intervals. Begin with the default BLAST table, then choose nucleotide or protein coordinates.\n"
+    },
+    "4": {
+      "source_sha256": "f7302d65a0de0613f2b5a169ca6fde055195b2321021ceae76d3488330b126bd",
+      "status": "reviewed",
+      "translation": "⟦shared:0⟧ writes tab-separated rows without a header. ⟦shared:1⟧ adds comment lines beginning with ⟦shared:2⟧. Omitting ⟦shared:3⟧ produces human-readable pairwise text. These two commands illustrate nucleotide and protein output.\n"
+    },
+    "6": {
+      "source_sha256": "7443e6b9a845566bed3c88d6ce65846f795eb4f547d2d94b54c3dd7af953ad5f",
+      "status": "reviewed",
+      "translation": "## Use the default tabular columns ⟦shared:0⟧\n"
+    },
+    "7": {
+      "source_sha256": "a89990c5f6516c8e59ab436cab5b5dbc3b9958b08f5a1a72513587a0a7765798",
+      "status": "reviewed",
+      "translation": "Both tabular formats use these 12 columns, in this order, unless you provide a field list.\n"
+    },
+    "8": {
+      "source_sha256": "722b762bd85bf7db917d35b74395799548b02d51e69b2fe3c37a5d6fc57f0101",
+      "status": "reviewed",
+      "translation": "| Order | Fields | Meaning |\n"
+    },
+    "9": {
+      "source_sha256": "a9e436d2babd638ade86791e162e7de5a6b1b3128c6ae9ed93504fbf3c53dc93",
+      "status": "reviewed",
+      "translation": "| --- | --- | --- |\n"
+    },
+    "10": {
+      "source_sha256": "121dfd881128f45b39fd9d7d085145d1a1bab3121ac2001761755d6e6b611581",
+      "status": "reviewed",
+      "translation": "| 1–2 | ⟦shared:0⟧, ⟦shared:1⟧ | Query and subject sequence IDs. The reader names these roles ⟦shared:2⟧ and ⟦shared:3⟧ and preserves the values |\n"
+    },
+    "11": {
+      "source_sha256": "d34d0157972ace8d3b5d86ad79853576fdf07fa3df0f4ed990480b57d5e5f66a",
+      "status": "reviewed",
+      "translation": "| 3–6 | ⟦shared:0⟧, ⟦shared:1⟧, ⟦shared:2⟧, ⟦shared:3⟧ | Percent identity, alignment columns, mismatches and gap openings |\n"
+    },
+    "12": {
+      "source_sha256": "4921d82ca6c14ea1191ef1d86ae8839305c1852966262d94407538d909197c54",
+      "status": "reviewed",
+      "translation": "| 7–10 | ⟦shared:0⟧, ⟦shared:1⟧, ⟦shared:2⟧, ⟦shared:3⟧ | One-based inclusive endpoints on each sequence. Descending coordinates preserve alignment direction |\n"
+    },
+    "13": {
+      "source_sha256": "eb6cb18c70e1e4c32ea8a7c95ac7fca66c1779b51e05f89c3002f831b5d04ae3",
+      "status": "reviewed",
+      "translation": "| 11–12 | ⟦shared:0⟧, ⟦shared:1⟧ | Expected count and score in bits. Lower E-values and higher bit scores generally indicate stronger hits |\n"
+    },
+    "14": {
+      "source_sha256": "b1ce7b5b5083bb7dd86a7db5e94a92d7c370380c8a3f0e9476261dd586ecf018",
+      "status": "reviewed",
+      "translation": "Extract the [input bundle](⟦shared:0⟧) and work from the directory containing ⟦shared:1⟧. The example file preserves the first 12 fields of observed HSPs.\n"
+    },
+    "17": {
+      "source_sha256": "13ed704f19447863bdfe7503c731d1bb4b38adf8273dc6cd5c1fc9877b0c5c56",
+      "status": "reviewed",
+      "translation": "The reader puts the six plotting fields first in the returned table.\n"
+    },
+    "18": {
+      "source_sha256": "1d8540c693a064c2f005e8e6fa40f6d47a7174c0c5bacb56ffaf2f5c0430858e",
+      "status": "reviewed",
+      "translation": "## Select six fields for plotting ⟦shared:0⟧\n"
+    },
+    "21": {
+      "source_sha256": "9b7eaeefd8ec48de883bd75a6c2537bf38712747521d1ca7f8e3be4402259a1e",
+      "status": "reviewed",
+      "translation": "A ribbon uses the two sequence IDs and their start and end positions. Keep ⟦shared:0⟧ to colour or filter by identity and ⟦shared:1⟧ to filter by alignment length. For a custom headerless file, pass the actual field order as ⟦shared:3⟧ to ⟦shared:2⟧. For a table already in R, see [link conversion](⟦shared:4⟧).\n"
+    },
+    "22": {
+      "source_sha256": "6b3cfecac022d5637eecff06ff699e7d9713beb6d035c1a1e506ee6b130e5b39",
+      "status": "reviewed",
+      "translation": "## Choose the coordinate unit first ⟦shared:0⟧\n"
+    },
+    "23": {
+      "source_sha256": "8d99a624d76d642beee1eb3a42af952f7164a76ef1bc79984ca758131baa5b45",
+      "status": "reviewed",
+      "translation": "| Objects being compared | Native unit | Alignment input | Next step |\n"
+    },
+    "24": {
+      "source_sha256": "e246b588984abccc6839146f115ed662307bfba56c0bb91c546a281636c81359",
+      "status": "reviewed",
+      "translation": "| --- | --- | --- | --- |\n"
+    },
+    "25": {
+      "source_sha256": "a80dfdc09aebb71645057e9e65fc8fdc083684e71505737a065eb52500d24860",
+      "status": "reviewed",
+      "translation": "| Nucleotide sequences | bp | BLASTn | Supply full FASTA lengths and a link table |\n"
+    },
+    "26": {
+      "source_sha256": "bdae45e0e2a9dae5a20f7554fe3cd1a3996d0425cbefd1325366d3ec33ee029f",
+      "status": "reviewed",
+      "translation": "| Protein sequences | aa | BLASTp | Declare sequence_unit = \"aa\" with full protein lengths |\n"
+    },
+    "27": {
+      "source_sha256": "b9992419fa88ac79b3cdada8dfbf0bf117f7bd9b9c3edd0331a2cf8f11fa80f3",
+      "status": "reviewed",
+      "translation": "| Protein hits on a nucleotide genome | bp | BLASTp + CDS models | Project protein intervals to nucleotide coordinates |\n"
+    },
+    "28": {
+      "source_sha256": "2cec17a7f2730cbc77e67da90311ce3ec41f01c9d361aaa0d4079d8631679c13",
+      "status": "reviewed",
+      "translation": "One plot uses one coordinate unit. Full sequences supply protein lengths, while HSP endpoints describe only aligned intervals. BLASTx and tBLASTn have endpoints in different units and require a chosen common display domain. Nucleotide strand and protein N→C order have distinct biological meanings.\n"
+    },
+    "29": {
+      "source_sha256": "d791f97612d819d570259686b1cc24f28c10de43744deaff40ff1d70e931deea",
+      "status": "reviewed",
+      "translation": "[Draw a native BLASTp protein comparison](⟦shared:0⟧), or continue to [the four plotting modules](⟦shared:1⟧).\n"
+    },
+    "30": {
+      "source_sha256": "e0888517aa3acd8be1884508da83b08bd97935cd93384bf7cafde3950e69fb1e",
+      "status": "reviewed",
+      "translation": "⟦shared:0⟧⟦shared:1⟧To locate protein hits on a nucleotide genome, read [CDS coordinate projection](⟦shared:2⟧).\n"
+    },
+    "31": {
+      "source_sha256": "d4f620912aee8784c7ff791295db99255ad0fb8f2d6544f42bc8452c24ef5c76",
+      "status": "reviewed",
+      "translation": "## Sources and limits ⟦shared:0⟧\n"
+    },
+    "32": {
+      "source_sha256": "a8dc53fa11c54f1172b60fa348b008d1e943d40fe613d69472fe95d65192aeca",
+      "status": "reviewed",
+      "translation": "Original EMALE records come from the public gggenomes EMALE dataset.\nOnly data records are reused; all figures are drawn with ggchord, without copying\nupstream figures or plotting code. The input bundle's ⟦shared:0⟧ records URLs,\narchive members, line ranges, hashes and selection. Parsing neither reruns\nalignments nor establishes biological function.\n"
+    },
+    "33": {
+      "source_sha256": "96d3b3403a7277d64e0e970205753ee81e2d284e9e04a56212cef8617bb26319",
+      "status": "reviewed",
+      "translation": "## Result checks ⟦shared:0⟧\n"
+    },
+    "34": {
+      "source_sha256": "c80bb858e16e4763c9e247c61d32dc2e93e93e1d91f1f21234040ab4c9faa4b2",
+      "status": "reviewed",
+      "translation": "Choose nucleotide or protein coordinates, then check table fields, full lengths and units.\n"
+    },
+    "35": {
+      "source_sha256": "54c2faa1e0b2b8ff89748311dd67f5b28ae0d7053409320323c8af5c3bffabc9",
+      "status": "reviewed",
+      "translation": "⟦shared:0⟧Continue: ⟦shared:1⟧BLASTp protein comparisons →⟦shared:2⟧⟦shared:3⟧\n"
+    }
+  }
+}

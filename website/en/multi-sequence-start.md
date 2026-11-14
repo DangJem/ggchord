@@ -60,6 +60,4 @@ This retains the ribbon, CDS and feature-name layers; Collinear selects adjacent
 
 ## Use your own sequences {#adapt}
 
-Replace `seq_data_example` with a table containing `accver` and `length`. See [Basic input tables](data.html#prepare) for the column definitions.
-
-For local settings, see [Flexible parameter formats](parameters.html).
+Replace `seq_data_example` with a table containing `accver` and `length`. See [Basic input tables](data.html#prepare) for the column definitions, [Flexible parameter formats](parameters.html) for local settings, and [Four-view comparison](multi-sequence-views.html#input) for a strict coordinate comparison.

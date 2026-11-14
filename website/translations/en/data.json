@@ -1,0 +1,275 @@
+{
+  "source_sha256": "d87b79085041598c5d70c726404e6b00556b693b9aad02e8e86f6b54db01cc33",
+  "blocks": {
+    "0": {
+      "source_sha256": "ddb3f0d17785c0a46d421f37ac2df5a5501250a6643ca20c5ed23a92a73a1af4",
+      "status": "reviewed",
+      "translation": "⟦shared:0⟧⟦shared:1⟧Turn file observations into plotting roles. Check minimal fields and coordinates, then use validation reports to decide on cleaning; do not guess missing lengths or strands.⟦shared:2⟧⟦shared:3⟧\n"
+    },
+    "1": {
+      "source_sha256": "0fa3fbfa0a873728926e3af5e6670e13482733d3820f9266bf2ef86dfe4f9a5c",
+      "status": "reviewed",
+      "translation": "## Prepare this page ⟦shared:0⟧\n"
+    },
+    "2": {
+      "source_sha256": "ad48f65565a4b1a339e01cec54a4fb9ca6a02e44f503a44a7b48d8e2b7b93e84",
+      "status": "reviewed",
+      "translation": "In a fresh R session, run the code below, then follow this page in order. Colours and layout are optional display choices; inputs select only the fields needed. For file-based examples, first extract the [input bundle](⟦shared:0⟧) so the working directory contains ⟦shared:1⟧.\n"
+    },
+    "4": {
+      "source_sha256": "4438b237355fa8c9fff029f7a83079fbac2e6d7635e0ad48e25adfcc4e085b48",
+      "status": "reviewed",
+      "translation": "## Sequence table ⟦shared:0⟧ ⟦shared:1⟧\n"
+    },
+    "7": {
+      "source_sha256": "6e89db47e4fc54b48a59b0fe9e4e443a242d66fe8a987f4afad22c4f0b0dab87",
+      "status": "reviewed",
+      "translation": "| Required column | Meaning |\n"
+    },
+    "8": {
+      "source_sha256": "3491e014f5503eb5b2fca81db42f6f72765980ba5b5e48ef135b6cf69d7f92cc",
+      "status": "reviewed",
+      "translation": "| --- | --- |\n"
+    },
+    "9": {
+      "source_sha256": "48fffff1ac8d81176e5802a02b650e8d70183a022defd08a8c21983291db81d6",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | Unique sequence ID. You can use your own contig names. Other tables match on this value. |\n"
+    },
+    "10": {
+      "source_sha256": "19676923a635f9fa0d0d356273f4ce60288c31a3c2927542ae91bf09a13fd616",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | Full sequence length in bp. |\n"
+    },
+    "11": {
+      "source_sha256": "04e75642afeb38074f2cd680e1ba4988d9c18aff9d7c0c5c831b8330149d18d2",
+      "status": "reviewed",
+      "translation": "**Optional columns** can support display or grouping, such as a separate short display name.\n"
+    },
+    "12": {
+      "source_sha256": "06e8e5fb0ffc4b095598e981aa3ea29c2252deeb6bb20338fc462b6b97da5304",
+      "status": "reviewed",
+      "translation": "## Link table ⟦shared:0⟧ ⟦shared:1⟧\n"
+    },
+    "15": {
+      "source_sha256": "6e89db47e4fc54b48a59b0fe9e4e443a242d66fe8a987f4afad22c4f0b0dab87",
+      "status": "reviewed",
+      "translation": "| Required column | Meaning |\n"
+    },
+    "16": {
+      "source_sha256": "3491e014f5503eb5b2fca81db42f6f72765980ba5b5e48ef135b6cf69d7f92cc",
+      "status": "reviewed",
+      "translation": "| --- | --- |\n"
+    },
+    "17": {
+      "source_sha256": "92e76ce9cdc5e39bdd947b0db0ed9b8eb7bf163f59c3b13c27f86de051a51b76",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧, ⟦shared:1⟧ | IDs of the query and subject sequences. Both must occur in the sequence table. |\n"
+    },
+    "18": {
+      "source_sha256": "6fcc2f32f7fb59eba7e7f23b3a1cb58954317f0622807d5bdbf29119e8501732",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧, ⟦shared:1⟧ | The two interval endpoints on the query sequence. |\n"
+    },
+    "19": {
+      "source_sha256": "770d5c10cbc62a00acf299c94ec43c332f9a10a07a795d84948b48c9fd52b8d8",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧, ⟦shared:1⟧ | The two interval endpoints on the subject sequence. |\n"
+    },
+    "20": {
+      "source_sha256": "9f4ab927c011f063b3752d5d6b1deea65d5471ee30682823e204e1b8d950eb89",
+      "status": "reviewed",
+      "translation": "**Optional column** ⟦shared:0⟧ is percent identity and can be used for filtering or colour. The first row is about 98.6%. A link table can also have a ⟦shared:1⟧ column for the alignment length.\n"
+    },
+    "21": {
+      "source_sha256": "74bb776a5ac087eba4aa3281fe1dd9f79cc828acba5651cc7b08615ceb7cfe53",
+      "status": "reviewed",
+      "translation": "## Genes and generic features ⟦shared:0⟧\n"
+    },
+    "24": {
+      "source_sha256": "909a840e04f92401bc8e9832fa3abefc0fa4ab5669bfeb24727de53a7b51bdf1",
+      "status": "reviewed",
+      "translation": "| Column | Purpose |\n"
+    },
+    "25": {
+      "source_sha256": "3491e014f5503eb5b2fca81db42f6f72765980ba5b5e48ef135b6cf69d7f92cc",
+      "status": "reviewed",
+      "translation": "| --- | --- |\n"
+    },
+    "26": {
+      "source_sha256": "c75502bfeffb5c752fd0025f86329efe452fc091e5f00f2c8c8ad19d4106da48",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | Required. ID of the sequence containing the interval. |\n"
+    },
+    "27": {
+      "source_sha256": "d7d027caa341f2d7bdaa12377957622fbaaa76d9c54abfd29aab40393813b6a6",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧, ⟦shared:1⟧ | Required. Interval start and end, with ⟦shared:2⟧. |\n"
+    },
+    "28": {
+      "source_sha256": "1b4bd4f7c957367acea24130b573c0394c1da764e20799ab90a09325a82b336e",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | Gene arrows require ⟦shared:1⟧ or ⟦shared:2⟧. Use a generic feature layer for annotations without known direction. |\n"
+    },
+    "29": {
+      "source_sha256": "36871ebd89a3874064064535946acb40d9b51525fc2d55b7d341f4b5efe14283",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | Optional. Can supply label text. |\n"
+    },
+    "30": {
+      "source_sha256": "95ef3ddb2554cacf59848781ab130f10cb3a912188518b3dab613663ff4c989d",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | Optional. Category of a generic feature, such as CDS, promoter or replication origin. |\n"
+    },
+    "31": {
+      "source_sha256": "5e67761e51da6c914039ed58185ee07e1d1757ee8d082c416c41dd1685a9b791",
+      "status": "reviewed",
+      "translation": "The bundled example stores the original annotated strand in ⟦shared:0⟧. For your own imported GFF3 records, use their ⟦shared:1⟧ directly.\n"
+    },
+    "32": {
+      "source_sha256": "516d87f81325448e509e25801479a87b590f3dc98cfea274283b73cb19c90452",
+      "status": "reviewed",
+      "translation": "## Reading coordinates ⟦shared:0⟧\n"
+    },
+    "33": {
+      "source_sha256": "11fb2664c51177a3d75a22ef6764fbb4ade91ba24ee72a5ad11586a76440d89e",
+      "status": "reviewed",
+      "translation": "Input coordinates are 1-based and inclusive. For example, 10 through 12 covers three bases. Gene intervals carry direction in ⟦shared:0⟧. Link intervals can encode direction in ascending or descending endpoint order, so preserve the order at each end after import.\n"
+    },
+    "34": {
+      "source_sha256": "b4dbd4de6ccbc069291d14ebfaf4bd709cacd9a6a8ddb080f6bd423a1334d522",
+      "status": "reviewed",
+      "translation": "Continue to [Plotting concepts](⟦shared:0⟧), or see [Input formats and conversion](⟦shared:1⟧) when reading files.\n"
+    },
+    "35": {
+      "source_sha256": "69fb1146ff6c9ce43377b962823295a4e96d3eb879ea34032b0454621a671ee9",
+      "status": "reviewed",
+      "translation": "The BLAST-style fields reflect ggchord’s origins in alignment visualization. Query and subject use q/s prefixes, and custom IDs are accepted. See [alignment inputs](⟦shared:0⟧) for actual BLAST rows.\n"
+    },
+    "36": {
+      "source_sha256": "a90478fd039c7938e2cac4d2fb59b714c685222b0b62f310b87bd642129cd3ce",
+      "status": "reviewed",
+      "translation": "## How the minimal tables connect ⟦shared:0⟧\n"
+    },
+    "37": {
+      "source_sha256": "d9768433777e3069db73da4f54148e801e1fd91953bc1e90b022457003478193",
+      "status": "reviewed",
+      "translation": "A backbone needs unique ⟦shared:0⟧ and complete ⟦shared:1⟧; DNA defaults to bp. Link ⟦shared:2⟧/⟦shared:3⟧ and feature ⟦shared:0⟧ refer to those same identifiers. Use the three small tables above for a [minimal plot](⟦shared:4⟧) before reading file import, cleaning, hierarchy or projection details.\n"
+    },
+    "38": {
+      "source_sha256": "427418361fce80955c8d77bc7a9fe42f7607a27a5058d1372e06baa079e07073",
+      "status": "reviewed",
+      "translation": "For existing files, choose a path by [input and goal](⟦shared:0⟧). Consult the following details as needed, retaining original inputs and repair copies.\n"
+    },
+    "39": {
+      "source_sha256": "21e3a98d1a62860b3c57c0c2d86f82da363328cedd178cf83b7d855a29bf617d",
+      "status": "reviewed",
+      "translation": "## Protein sequence units ⟦shared:0⟧\n"
+    },
+    "40": {
+      "source_sha256": "de621e4b749855781f0e27fe13e5c0bb074d3726e4eb342dce72cfc53607c6e2",
+      "status": "reviewed",
+      "translation": "Nucleotide tables may omit the unit column and use bp. A complete protein length table declares ⟦shared:0⟧. A plot uses one unit. See [protein alignments](⟦shared:1⟧) for full inputs and figures.\n"
+    },
+    "41": {
+      "source_sha256": "3e35ef5f66735ce769ca9aa443c156d27e06a4513f5f6b513680fb58d0477ba9",
+      "status": "reviewed",
+      "translation": "## Coordinate contract ⟦shared:0⟧\n"
+    },
+    "42": {
+      "source_sha256": "0abd312d97d751dff820baae5569dce954ced5c6354dc8589f14277ac5c3c97e",
+      "status": "reviewed",
+      "translation": "Genomic coordinates are **one-based, inclusive bp**. BED/PAF readers convert their\nsource conventions; do not convert twice. Gene endpoints are ordered with\nstrand stored separately; link endpoint order may encode direction. A one-bp\nlink without direction evidence stays unknown. Generic features retain unknown\nstrand. The legacy ⟦shared:0⟧ default is an exception: ⟦shared:1⟧\nconverts it to ⟦shared:2⟧ while retaining ⟦shared:3⟧. Use explicit\n⟦shared:4⟧ and ⟦shared:5⟧ to retain unknown strand.\n"
+    },
+    "43": {
+      "source_sha256": "cd0329b0a77f788bd390335691362695b9d85aa97f1650730e156b982d291743",
+      "status": "reviewed",
+      "translation": "Protein backbones use native aa coordinates; see [protein alignments](⟦shared:0⟧). Use [CDS projection](⟦shared:1⟧) to place protein intervals on nucleotide backbones.\nNative Cartesian layout units, genomic bp, angles in degrees, physical mm and\ntrack value units are different domains. See the full\n[data contract](⟦shared:2⟧).\n"
+    },
+    "44": {
+      "source_sha256": "69c1131d9609faaa2b083a404ac58f8d2efb10caad9ec1b8e66cf0330f058f8b",
+      "status": "reviewed",
+      "translation": "## Advanced: import original records ⟦shared:0⟧\n"
+    },
+    "45": {
+      "source_sha256": "7c0248bfddfd1409cea9a42c2e31a0000f3a9f0ccc02c70d122a5ce4f6cfc4fd",
+      "status": "reviewed",
+      "translation": "Run this repository-only example from its root. Original files are not rewritten.\n"
+    },
+    "48": {
+      "source_sha256": "dd317322b9952ac1973658738cab7da3bc464135ab24c035add213578cc2a64c",
+      "status": "reviewed",
+      "translation": "⟦shared:0⟧ retains record/feature provenance and segmented locations.\n⟦shared:1⟧ and ⟦shared:2⟧ retain their conversion metadata. ⟦shared:3⟧,\n⟦shared:4⟧ and ⟦shared:5⟧ adapt supported S4 objects; provide\nfull lengths and IDs explicitly when the object lacks them. ⟦shared:6⟧ and ⟦shared:7⟧ both accept path vectors or globs; repeated resolved paths\nare read once in first-occurrence order. Choose one clear entry for a workflow. Missing sequence or\nhomology data must be supplied by the analyst, not invented by the plotting layer.\n"
+    },
+    "49": {
+      "source_sha256": "b5fb8005dc42b11ad71c7c80c013c88e4421d6b0ef2a2ec03f445f4fa05ead13",
+      "status": "reviewed",
+      "translation": "## Validate, clean, prepare ⟦shared:0⟧\n"
+    },
+    "52": {
+      "source_sha256": "8008a8061c49eda6043780c3141b65d6861d6840e9cd9ca60d08ab8d485574f7",
+      "status": "reviewed",
+      "translation": "Validation reports issues; cleaning makes explicit repairs with a report.\nPreparation combines workflow steps without inferring biological membership.\nInspect ⟦shared:0⟧, ⟦shared:1⟧ and ⟦shared:2⟧ before plotting.\n⟦shared:3⟧ in geometry refers to the resolved layer input, while ⟦shared:4⟧\nmeans a physical file line; GenBank has separate record/feature provenance.\nAggregates may have ⟦shared:5⟧ and ⟦shared:6⟧ flags. Preserve these\nwhen filtering or merging links.\n"
+    },
+    "53": {
+      "source_sha256": "c46329c30c805bc660f8d7cd5b2d2820c37c83cab68d03f99e7369810cb2fd3a",
+      "status": "reviewed",
+      "translation": "## Inspect a problematic input and its repair report ⟦shared:0⟧\n"
+    },
+    "56": {
+      "source_sha256": "af95eb68a09cf111094f1c783e971eac4fb4db0a3481cc5d17ffb475b310208d",
+      "status": "reviewed",
+      "translation": "The demonstration intentionally includes an unknown ID and\nidentity outside 0–100 in copied source rows. These explicit repairs are not a recommendation to clip\nscientific observations silently. Inspect ⟦shared:0⟧ and ⟦shared:1⟧,\nretain the original table, and choose policies appropriate to actual evidence.\nA legitimate reverse alignment can keep endpoint order instead of being sorted.\n⟦shared:2⟧ therefore retains its workflow-specific default policy;\nstandalone cleaning and preparation should not be assumed identical.\n"
+    },
+    "57": {
+      "source_sha256": "c06a0be59354e1e30e4e06860d747e92e78573fe16132b98ef31f9b5b22bd808",
+      "status": "reviewed",
+      "translation": "## Declare genome and contig keys ⟦shared:0⟧\n"
+    },
+    "60": {
+      "source_sha256": "76fc36159c3fb4298710b806d238a0ca4d499c73c43d8e43152e2b7fc2678d97",
+      "status": "reviewed",
+      "translation": "⟦shared:0⟧ summarizes declared membership without concatenating contigs.\nNo membership is inferred from an accession prefix. Provide globally unique IDs\nwhen separate samples reuse local contig names. Use [file formats and adapters](⟦shared:1⟧)\nfor format/optional-object details, and the [real-record manual](⟦shared:2⟧)\nto carry reports into a complete figure.\n"
+    },
+    "61": {
+      "source_sha256": "14a51edc4dd7ae3728fa47aae562a8f59952c3ceab5b404481d3e6af82fd8483",
+      "status": "reviewed",
+      "translation": "## Minimal input and protein alignments ⟦shared:0⟧\n"
+    },
+    "63": {
+      "source_sha256": "b65abdbb2e1834ec4aab321f866db3ba48d95f3d9fdbe0009dc95fe06bff68ca",
+      "status": "reviewed",
+      "translation": "The second positional constructor argument is ⟦shared:0⟧, not ⟦shared:1⟧.\nUse explicit argument names as in the shared examples. Optional identity, length\nand coverage fields are needed only by operations that consume them. See\n[standard BLAST/protein input](⟦shared:2⟧) and [parameter formats](⟦shared:3⟧).\n"
+    },
+    "64": {
+      "source_sha256": "96d3b3403a7277d64e0e970205753ee81e2d284e9e04a56212cef8617bb26319",
+      "status": "reviewed",
+      "translation": "## Result checks ⟦shared:0⟧\n"
+    },
+    "65": {
+      "source_sha256": "f20103e9a8987d7ec5ab8224c17a56b77217005b44a0ee80da4eaae8c0efaa46",
+      "status": "reviewed",
+      "translation": "Input IDs must match complete sequence records. Keep original records separate from repaired copies. Decreasing endpoints can be legitimate reverse hits; warnings do not all mean rows must be removed.\n"
+    },
+    "66": {
+      "source_sha256": "9691c3342ad3d2bab44a159037ef19dd6b768d33c362ff095cdc5eb3988e759b",
+      "status": "reviewed",
+      "translation": "⟦shared:0⟧Continue: ⟦shared:1⟧Plotting concepts →⟦shared:2⟧⟦shared:3⟧\n"
+    },
+    "67": {
+      "source_sha256": "919b055b8e510696e63ac688a12060f60298f4f2aa8896ec2aab036c173d32ed",
+      "status": "reviewed",
+      "translation": "## Source tables and display copies ⟦shared:0⟧\n"
+    },
+    "68": {
+      "source_sha256": "d3e6dcb35c2f91ab8a76e390ce3c09c0b5c759112c8d4d98b426c22083eeb69b",
+      "status": "reviewed",
+      "translation": "This chapter uses bundled sequence lengths, observed HSPs and source-strand\nannotations. ⟦shared:0⟧ is a common annotation source. Generic feature layers\ninherit the whole table; default gene layers require explicit gene/CDS classes.\nAn explicit layer table or data function takes priority. Use disjoint subsets\nwhen combining the two kinds of geometry.\n"
+    },
+    "70": {
+      "source_sha256": "78a0508f92bccd033da27a859e0808f9b2ba3f7a4198cd604603964581c1072d",
+      "status": "reviewed",
+      "translation": "Prepare, clean, focus and segment helpers also accept ⟦shared:0⟧ and return\nthat member. Do not combine it with ⟦shared:1⟧. Unknown strands remain unknown;\nthe legacy gene input retains its directional semantics and positional arguments.\n"
+    }
+  }
+}

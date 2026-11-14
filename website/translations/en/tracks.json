@@ -1,0 +1,170 @@
+{
+  "source_sha256": "62614cab3255fe85086383f87e0f8269779fd3e75166721c258ed0cac54e1164",
+  "blocks": {
+    "0": {
+      "source_sha256": "c3e21d62a61053dfa8e54df7ae4e0443c47fab27bf27d861fc4293bf14966012",
+      "status": "reviewed",
+      "translation": "## Compute a track from actual DNA ⟦shared:0⟧\n"
+    },
+    "1": {
+      "source_sha256": "6c9f1ba10b293b7444b07247304b7cae156f8b240143ee042d5553350e964dd8",
+      "status": "reviewed",
+      "translation": "Compute GC fraction in 100 bp\nwindows of bundled pUC19. The final shorter window uses its actual base count.\n"
+    },
+    "4": {
+      "source_sha256": "72225eef61037244b5d4c75587e83a3858aa51dc25f927266f78e9f77a51718d",
+      "status": "reviewed",
+      "translation": "Each row of ⟦shared:0⟧ is an actual sequence window. Check its endpoints and ⟦shared:1⟧, then map values to track height and colour.\n"
+    },
+    "5": {
+      "source_sha256": "195e82c6076fda0d5cc6d0cea190a3782f1040585b9a9cb1758b79351d86b3c7",
+      "status": "reviewed",
+      "translation": "### Draw GC fractions ⟦shared:0⟧\n"
+    },
+    "8": {
+      "source_sha256": "451f27798391a294fff62cc4542a1eb647377b47e915469bb97c6037d8f7e428",
+      "status": "reviewed",
+      "translation": "The domain is 0–1, in fractions. Replace it with the actual unit/range of other\nmeasurements. ⟦shared:0⟧ controls placement/physical width;\n⟦shared:1⟧ controls numerical mapping.\n"
+    },
+    "9": {
+      "source_sha256": "f23d31ad45e2c08a793c69f59977274b592523fbd9ec300579cfec0e6a5e2f32",
+      "status": "reviewed",
+      "translation": "## Share an ID deliberately ⟦shared:0⟧\n"
+    },
+    "10": {
+      "source_sha256": "c4a6d6c71bce3000f8bc51348bda49f8d3db75bc8192d6dcdcafbc75d036ff1f",
+      "status": "reviewed",
+      "translation": "Same-ID layers share a numerical domain, including bar baselines, and must agree\non width/placement. Colour scales are scoped independently by track ID. Tiles\nshow interval categories, lines connect observations, ⟦shared:0⟧ encodes supplied interval values relative to a baseline;\n⟦shared:1⟧ counts observations at positions with baseline 0. Binning\nrequires explicit binwidth/breaks through the bin workflow. Sharing a domain does not require sharing a spatial band.\n"
+    },
+    "11": {
+      "source_sha256": "a7e9a71d16862078d985dfce2531aa6990fef6ab2f754a25dfc5fd6e92a1438f",
+      "status": "reviewed",
+      "translation": "## Inspect retention and limits ⟦shared:0⟧\n"
+    },
+    "12": {
+      "source_sha256": "e55d48d9d246947b0adae1f978903cdcec17cd239e339ad8d3d1596574082481",
+      "status": "reviewed",
+      "translation": "⟦shared:0⟧ returns ⟦shared:1⟧ and ⟦shared:2⟧ record domains, physical\nsizes, native offsets and clipping. Omitted/clipped rows do not mean zero values.\nFocus tracks with ⟦shared:3⟧ using the same windows.\n"
+    },
+    "13": {
+      "source_sha256": "a0a1622cb285dd6e79fca067f93e98c225033e0498a745836993b0cc3899b296",
+      "status": "reviewed",
+      "translation": "## Combine bars and a moving mean ⟦shared:0⟧\n"
+    },
+    "14": {
+      "source_sha256": "248a9f6eab6d22fea22eaeb1243039638d9f32a6e956407a8e82b30088d0340b",
+      "status": "reviewed",
+      "translation": "Use the same GC windows and add a three-window moving mean.\n"
+    },
+    "17": {
+      "source_sha256": "f92022aead4806ba6b982431bb7123c3691b41df29756c371ec803acab025550",
+      "status": "reviewed",
+      "translation": "Bars and line use the same actual GC measurements; the line is a three-window\nmoving mean. Incomplete end windows are omitted, not filled with invented values.\nLine positions use integer bin midpoints. Both layers use the same track ID.\n"
+    },
+    "18": {
+      "source_sha256": "92e5daea7c1417d6b47639c2a6ea17971bd12ef566581bd1d9efd43ff4b381ff",
+      "status": "reviewed",
+      "translation": "## Encode values with a tile track ⟦shared:0⟧\n"
+    },
+    "19": {
+      "source_sha256": "e52006e1e85410b76b2346d3b7bd13f9d8caf9df4920d323f5bc17c0d5d94c32",
+      "status": "reviewed",
+      "translation": "Reuse ⟦shared:0⟧ and ⟦shared:1⟧, computed from real DNA on this page. Tiles require ⟦shared:2⟧ and do not require numeric heights. Here the same ⟦shared:3⟧ values map to ⟦shared:4⟧.\n"
+    },
+    "22": {
+      "source_sha256": "e25accd86c45d08d7634bd2f83c1eba3ab1f624ccd4e0997a07c01fce2eb0b91",
+      "status": "reviewed",
+      "translation": "Use the same 9 × 8 inch dimensions and 100 bp windows as the bars. Bars encode value by height; tiles keep a fixed band width and encode GC fraction from 0 to 1 by colour. This is not another experimental observation and does not average overlapping intervals. It compares encodings, **not a single geometry parameter**.\n"
+    },
+    "23": {
+      "source_sha256": "86974735fa7b844b11da12cd7c39a401235b0e65b1d4e75004cdec36ba21666d",
+      "status": "reviewed",
+      "translation": "| Parameter or mapping | Default | Choice and constraints |\n"
+    },
+    "24": {
+      "source_sha256": "a9e436d2babd638ade86791e162e7de5a6b1b3128c6ae9ed93504fbf3c53dc93",
+      "status": "reviewed",
+      "translation": "| --- | --- | --- |\n"
+    },
+    "25": {
+      "source_sha256": "a922864f9a74054338f12df3160e14896c841e8613401436b23e19d1e75266de",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | Required | ⟦shared:1⟧ declares an independent track |\n"
+    },
+    "26": {
+      "source_sha256": "a6b72f88478d34e95b4e7c58d4a1c3e6c0a8f71460533a3f491abf0be8bb8d17",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | 4 mm in ⟦shared:1⟧ | 10 mm here; physical band width |\n"
+    },
+    "27": {
+      "source_sha256": "c6fb5d21895be3536625ac3b8318ad2873d43fce8aa3c19092889e96ca341eae",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ / ⟦shared:1⟧ | outside / 1 | Lower order places a band nearer the backbone |\n"
+    },
+    "28": {
+      "source_sha256": "e3d548bae48641c6076f8ecbdafb8b799a2e12863f5c396457f718592a38b832",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | 1 mm | Physical spacing from the preceding band, not a sequence gap |\n"
+    },
+    "29": {
+      "source_sha256": "1d3c20e2fab87e001c99f9ac0c21b252ca66c6404cb5b04082d3bb96c0c0663d",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | Never inferred | Map gc inside ⟦shared:1⟧; use ⟦shared:2⟧ for a fixed colour |\n"
+    },
+    "30": {
+      "source_sha256": "47ce3b937b8f858224b58457f0a949c0b92c543539d506579de7cab85bad5703",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ | ⟦shared:1⟧ | Out-of-range coordinates error; clip reports clipping |\n"
+    },
+    "31": {
+      "source_sha256": "dcd4a2f24ba0bc4c7ad6fd37a613e82e6313b873dc2dbff589070f155f4bf35b",
+      "status": "reviewed",
+      "translation": "| ⟦shared:0⟧ / ⟦shared:1⟧ | 1 / 0.25 | Fixed opacity and border width; border colour defaults to NA |\n"
+    },
+    "32": {
+      "source_sha256": "d91868303ad838d1910bbd84d75a2bb3e5026769f4ba387798a73616660ed583",
+      "status": "reviewed",
+      "translation": "Use ⟦shared:0⟧ for continuous colours or ⟦shared:1⟧ for categories, with the matching track ID. Do not label a fraction as a percentage. To combine with the bars, add this tile layer to ⟦shared:2⟧ and retain separate IDs for separate bands. Layers sharing an ID must agree on side/order/width/gap.\n"
+    },
+    "33": {
+      "source_sha256": "90a9700ca165b9f735111218a197a1abb069fab89a742603d0fa5bddcc512c45",
+      "status": "reviewed",
+      "translation": "Change only tile width from 10 to 4 mm: colours stay the same while physical band width changes. Your own data must declare windows, units, NA handling and overlap policy. Check coordinate errors rather than hiding them with clip. See [⟦shared:0⟧](⟦shared:1⟧) and [⟦shared:2⟧](⟦shared:3⟧).\n"
+    },
+    "34": {
+      "source_sha256": "49a3fb88aa8b778d2b066ae001e3790f8824f08d076b7e43ef8d85d2183e64c4",
+      "status": "reviewed",
+      "translation": "## Change only physical tile width ⟦shared:0⟧\n"
+    },
+    "35": {
+      "source_sha256": "2276deec4a9440bc4604edf5a694bc4cacf31b3f5c5e1dbcdfd044faa3cfd4de",
+      "status": "reviewed",
+      "translation": "Compare with the 10 mm band above. Keep the same 9 × 8 inch device, windows, colours and value domain, changing only ⟦shared:0⟧ to 4 mm:\n"
+    },
+    "38": {
+      "source_sha256": "879b840b94dd14e0fbe34f442caebe23e221409f7d0fc4f77d14ba027b419e50",
+      "status": "reviewed",
+      "translation": "Colours still encode the same GC fractions. Only physical band width shrinks. ⟦shared:0⟧ draws interval tiles and the Position controls band width; neither changes base composition. Try 6 mm while retaining export dimensions. Bar heights are separately controlled by ⟦shared:1⟧ and its value scale; reducing band width is not numerical normalization.\n"
+    },
+    "39": {
+      "source_sha256": "96d3b3403a7277d64e0e970205753ee81e2d284e9e04a56212cef8617bb26319",
+      "status": "reviewed",
+      "translation": "## Result checks ⟦shared:0⟧\n"
+    },
+    "40": {
+      "source_sha256": "55fefd3ad61836f9fbbf78bafb7aa064880615e676901a6f5a301e29e7f27345",
+      "status": "reviewed",
+      "translation": "GC in bins lies between 0 and 1; each row is an actual window and the last may be shorter than 100 bp. Bars and line share the same 0–1 fraction scale.\n"
+    },
+    "41": {
+      "source_sha256": "591dc8793ee0d95e2fd01b15e7bd5d3f4f9116e566c8c71a8bc4cdb92538a344",
+      "status": "reviewed",
+      "translation": "## Save this result ⟦shared:0⟧\n"
+    },
+    "42": {
+      "source_sha256": "4247b56ca5b32b5aae74aefc66b4084e55c095ba6affe490d9cdf08aaf631d90",
+      "status": "reviewed",
+      "translation": "Save the plot just created to the working directory; use matching dimensions for preview.\n"
+    }
+  }
+}

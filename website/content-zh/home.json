@@ -1,0 +1,103 @@
+{
+  "hero": {
+    "eyebrow": {
+      "zh": "ggchord · R / ggplot2"
+    },
+    "title": {
+      "zh": "用一致的图层语法，呈现序列与关系。"
+    },
+    "description": {
+      "zh": "比较多条序列、标注环形基因组、查看序列比对，并把独立视图组合成一张图。"
+    }
+  },
+  "capabilities": [
+    {
+      "url": "multi-sequence-views.html#input",
+      "title": {
+        "zh": "视图转换"
+      },
+      "description": {
+        "zh": "复用数据与图层，从不同角度查看同一组关系。"
+      }
+    },
+    {
+      "url": "parameters.html",
+      "title": {
+        "zh": "灵活的参数格式"
+      },
+      "description": {
+        "zh": "从统一设置到按序列、按链配置，逐步调整局部效果。"
+      }
+    },
+    {
+      "url": "fusion-start.html",
+      "title": {
+        "zh": "组合与输出"
+      },
+      "description": {
+        "zh": "连接独立面板，并按目标尺寸预览和保存。"
+      }
+    }
+  ],
+  "modules": [
+    {
+      "slug": "multi-sequence",
+      "number": "01",
+      "title": {
+        "zh": "多序列关系"
+      },
+      "purpose": {
+        "zh": "比较基因组或基因簇，查看注释位置与区间之间的连接。"
+      },
+      "figures": [
+        "homechord",
+        "homecollinear",
+        "homeradial",
+        "homesankey"
+      ],
+      "entry": "multi-sequence-start.html"
+    },
+    {
+      "slug": "circular",
+      "number": "02",
+      "title": {
+        "zh": "单序列圆图"
+      },
+      "purpose": {
+        "zh": "沿一条环形序列组织特征、名称与定量轨道。"
+      },
+      "figures": [
+        "homecircular"
+      ],
+      "entry": "circular-start.html"
+    },
+    {
+      "slug": "dotplot",
+      "number": "03",
+      "title": {
+        "zh": "序列比对点图"
+      },
+      "purpose": {
+        "zh": "在两条坐标轴上查看序列比对区段、方向与一致性。"
+      },
+      "figures": [
+        "homedotplot"
+      ],
+      "entry": "dotplot-start.html"
+    },
+    {
+      "slug": "fusion",
+      "number": "04",
+      "title": {
+        "zh": "多视图组合"
+      },
+      "purpose": {
+        "zh": "组合弦图、共线性图、径向视图和局部细节，用真实区间连接独立面板。"
+      },
+      "figures": [
+        "homefusion"
+      ],
+      "entry": "fusion-start.html"
+    }
+  ]
+}

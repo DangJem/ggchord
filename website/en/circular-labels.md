@@ -99,6 +99,7 @@ tracks. Wrapped sources keep one annotation and a continuous glyph on closed
 circles; a visible coordinate gap retains separate display pieces. A shifted adjacent name receives a short attachment. To restore the
 label layer's drawing order:
 
+
 {{code:courseblockz}}
 
 ## Use your annotations {#adapt}

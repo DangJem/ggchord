@@ -75,8 +75,7 @@ vectors. `paths` adds the rendered connection geometry; `source_layouts`,
 Diagnostics include local label visibility, fit results and guide dimensions;
 unmeasured global collisions are not reported as zero.
 
-Intervals are one-based inclusive, with full boundaries `[min(start,end)-1,
-max(start,end)]` ordered by the original endpoint direction. A one-position
+Intervals are one-based inclusive, with full boundaries `[min(start,end)-1,max(start,end)]` ordered by the original endpoint direction. A one-position
 interval retains nonzero width. This new composition rule does not rewrite
 legacy single-view ribbon geometry. Source positions, interval boundaries and
 mm coordinates are different quantities.

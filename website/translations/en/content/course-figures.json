@@ -1,0 +1,135 @@
+{
+  "source_sha256": "292be64849ab51f20c6b8bef6a29d010f2c4fdf6d87486d553be7290349d8ed9",
+  "strings": {
+    "0/caption": {
+      "source_sha256": "6afc9433dda50822080a8dbc78f227a49206cf6599f3777d7211a9c5e6b0fec5",
+      "status": "reviewed",
+      "translation": "Chord: same source tables and all-pair links"
+    },
+    "1/caption": {
+      "source_sha256": "3d5f25550ab0b9ed9e702cc66cbc6f638f9f28924f4a99b746fda96669caee76",
+      "status": "reviewed",
+      "translation": "Linear: same source tables and all-pair links"
+    },
+    "2/caption": {
+      "source_sha256": "55f1b23d6882db35b9c17df1497cf6b6d2c48a542f0c229abe78eb8f54bebe3c",
+      "status": "reviewed",
+      "translation": "Radial: same source tables and all-pair links"
+    },
+    "3/caption": {
+      "source_sha256": "c9c82edd399fe7e32aa137bbf7c7391ec48fe04a09b07e172194fab1983647d0",
+      "status": "reviewed",
+      "translation": "Sankey: same source tables and all-pair links"
+    },
+    "4/caption": {
+      "source_sha256": "f47172175707f8a1711ef58b91e3913b785d14cf8c89fbcfb58c28650b2ee2ef",
+      "status": "reviewed",
+      "translation": "Change only the column gap"
+    },
+    "5/caption": {
+      "source_sha256": "313c921577449315fca3a5a7f3328e15ffa52e2a7f0db72c3e7ad558a29e0381",
+      "status": "reviewed",
+      "translation": "Change only the first-spoke angle"
+    },
+    "6/caption": {
+      "source_sha256": "a6ccabf5efb5857e12de8716fa34ac9eb26e9644aa921532f1c13db52e3de12d",
+      "status": "reviewed",
+      "translation": "Two independent panels and one real relationship"
+    },
+    "7/caption": {
+      "source_sha256": "79e7e94882906171ced10091ddfde9a1846da88eb811350c6b7afd3ff54f5283",
+      "status": "reviewed",
+      "translation": "Length and backbone"
+    },
+    "8/caption": {
+      "source_sha256": "80124c7dc55f85f4644e248395b2637dc1f0d95d7aa3727c5c58559613cb7855",
+      "status": "reviewed",
+      "translation": "Prepared annotation and label"
+    },
+    "9/caption": {
+      "source_sha256": "b6ad6d9cce1aa53755b1aa9102d44577076e580a17605e1e1e1c9904acde3973",
+      "status": "reviewed",
+      "translation": "A local source detail"
+    },
+    "10/caption": {
+      "source_sha256": "8b98b307e7faa3036fbd4ce42f175371d4d24b8d8b154428d56df43afe3c2afd",
+      "status": "reviewed",
+      "translation": "Both HSP ends in one detail"
+    },
+    "11/caption": {
+      "source_sha256": "ffc289e59d9e4bbfa84f59cf272aac9ebe57e2b7fa476664c23ef9f0b4d318b2",
+      "status": "reviewed",
+      "translation": "Two independent source detail panels"
+    },
+    "12/caption": {
+      "source_sha256": "0a3aba4b06ce8ab152101169d7a31a13a93e0d53e02107d76889bb8ecee6d6bc",
+      "status": "reviewed",
+      "translation": "Registered details from actual aligned characters"
+    },
+    "13/caption": {
+      "source_sha256": "61b6d18f6cae4218bde15efdbae0ac7d6af5a2d39ced6b15394ff6ec96bdfc51",
+      "status": "reviewed",
+      "translation": "Explicit layout in millimeters"
+    },
+    "14/caption": {
+      "source_sha256": "8fc0510b3840d5e9b6e5407859950f33e5795c913cee031577260ec0b8a6c2b0",
+      "status": "reviewed",
+      "translation": "Multi-side guide allocation"
+    },
+    "15/caption": {
+      "source_sha256": "b2035497b2d38415e22a20506c267fec559afde941e51e3e3f7b6ac76185ec25",
+      "status": "reviewed",
+      "translation": "Twelve deliberate views of one HSP"
+    },
+    "16/caption": {
+      "source_sha256": "d594d9f9e227157fe0dfef0bdd2b98aba27008b29ade0218ccac8f8dfc6cf0d4",
+      "status": "reviewed",
+      "translation": "Outer title and caption"
+    },
+    "17/caption": {
+      "source_sha256": "3ab8ca6741d82d5aeac35b31e3ac85246c0adf2979b2c01559a808413d7e0a47",
+      "status": "reviewed",
+      "translation": "Nested details with explicit leaf paths"
+    },
+    "18/caption": {
+      "source_sha256": "c6369c4cceffbde3eadb9f5f28319a336807408ca999bf6af0e93c3803ba065f",
+      "status": "reviewed",
+      "translation": "An explicit origin-crossing selection"
+    },
+    "19/caption": {
+      "source_sha256": "96b90f15fd7c999ca3f5da1d647e13f3d65ab661ef54b867f9129bbe95a8f181",
+      "status": "reviewed",
+      "translation": "Explicit display corridors and obstacles"
+    },
+    "20/caption": {
+      "source_sha256": "f22d0f61bdc5019e51066d2bcac38b9ded7df311dd8547ec3d203d33b9bfaadd",
+      "status": "reviewed",
+      "translation": "Independent center plot"
+    },
+    "21/caption": {
+      "source_sha256": "8c7b93ffedff5f0eac8a7a30a1d2c4080b97a9bf1591967fd0adf1d43c91bcec",
+      "status": "reviewed",
+      "translation": "Independent detail plot"
+    },
+    "22/caption": {
+      "source_sha256": "a99edbd479e901417275e14cc439717fcb6445d2a990ec93d05aeb5a6c63369b",
+      "status": "reviewed",
+      "translation": "Named values still change MT118296.1 after reordering"
+    },
+    "23/caption": {
+      "source_sha256": "960f2093769cbfa5764b3b17345623feb8275a863e17d79a0b2b601f83e6273c",
+      "status": "reviewed",
+      "translation": "Ordered values change the second display, MT108731.1, after reordering"
+    },
+    "24/caption": {
+      "source_sha256": "70467db8bf8957ae7ac57b995fa03728cc0c61c6dd7a25748b53827338f4ef22",
+      "status": "reviewed",
+      "translation": "Asymmetric OR222515.1 strand offsets and a scalar rule for OQ646790.1"
+    },
+    "25/caption": {
+      "source_sha256": "aa4508e322b75bce6dd088d460b92749358dcc9a0cfcd067e12ddedd89cbe765",
+      "status": "reviewed",
+      "translation": "Collinear retains the ribbon, CDS and feature-name layers"
+    }
+  }
+}

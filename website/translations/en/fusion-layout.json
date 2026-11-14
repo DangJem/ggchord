@@ -1,0 +1,130 @@
+{
+  "source_sha256": "ab332043aa6b6a56110b2e166978b2a0c3c9cd2461b2a2438daa2567e8d72975",
+  "blocks": {
+    "2": {
+      "source_sha256": "1974f77affe0c5222e24ac1b51309dc4828194e5a324db195c8dd10dc3bf36fd",
+      "status": "reviewed",
+      "translation": "## Styles and physical layout ⟦shared:0⟧\n"
+    },
+    "3": {
+      "source_sha256": "3170546047f867f96ced46dcc282104b4250f542912085b979766dbbe9fe9a63",
+      "status": "reviewed",
+      "translation": "Cross-panel layers accept ⟦shared:0⟧ with ordinary ggplot2 scales. Panel role-specific scales remain\nlocal. Explicit fixed styles override their mappings. Default Identity is\n0–100 with 0/50/80/90/95/100 proportional breaks. Endpoint gradients and\nsubject tips are opt-in, using the same renderer as single-view ribbons.\nA tip is a decorative direction marker; full source fronts remain exported.\n"
+    },
+    "5": {
+      "source_sha256": "e594a8d73a8e4370be6d4e36b1d32c548277fb782e590fabcd633e9fcf9d3112",
+      "status": "reviewed",
+      "translation": "Default ⟦shared:0⟧ allocates panel rectangles and rebuilds their labels\nand guides at the output size. ⟦shared:1⟧ additionally fits the\ncentral rectangle to the physical aspect ratio and jointly budgets native outer Guides. Explicit font sizes remain\nfixed. This is not a general font-scaling or global collision solver. Each\npanel retains its own guides; different scale meanings are not automatically\nmerged. Use ⟦shared:2⟧ or local ⟦shared:3⟧ deliberately where appropriate.\nComposition ⟦shared:4⟧ configures cross-panel Guides; ⟦shared:3⟧ also styles the native outer plot furniture described below. Required\nguide space is measured; a canvas too small for it fails with a diagnostic.\n"
+    },
+    "6": {
+      "source_sha256": "89f34dd07271b21914a7700ebf03c14318bfcba33a74ea408c1f713eef849732",
+      "status": "reviewed",
+      "translation": "## Eight directions and independent physical placement ⟦shared:0⟧\n"
+    },
+    "7": {
+      "source_sha256": "0acf8569300c51f09a0c2d975a75ce4d43293fd7e22f48ad3fb82c3eddf286fc",
+      "status": "reviewed",
+      "translation": "⟦shared:0⟧ supports the four cardinal sides plus ⟦shared:1⟧, ⟦shared:2⟧, ⟦shared:3⟧ and ⟦shared:4⟧. Default corner layouts reserve space for all eight; side names remain unique. For other arrangements use ⟦shared:5⟧/⟦shared:6⟧ or an explicit ⟦shared:7⟧. There is no fixed panel-count limit for explicit boxes/angles: every allocation must still fit. Placement changes the container, not the child's Coord or text orientation. Angles describe physical directions on rectangular exports; distance is a fraction of half the shorter allocation dimension, measured from the centre allocation.\n"
+    },
+    "9": {
+      "source_sha256": "45f94205b7afd61b4e6bed1bda97e557689da0160ad2df5140d9b6095548396f",
+      "status": "reviewed",
+      "translation": "![Explicit layout in millimeters](⟦shared:0⟧)\n"
+    },
+    "10": {
+      "source_sha256": "01e93a91f75a55bd085a943e29de1f63f43c6277750451f5b17ad55e3cb61921",
+      "status": "reviewed",
+      "translation": "A numeric box uses xmin, xmax, ymin, ymax fractions; an absolute-unit box keeps its physical dimensions. Coordinates refer to the composition content area after native outer plot decorations and cross-panel Guides. Do not combine box with side/size/angle/distance, or center_box with center_size. Physical allocations are checked at every target size; they are never silently clamped. Explicit ⟦shared:2⟧ on ⟦shared:0⟧ or ⟦shared:1⟧ permits deliberate overlays. Later panels cover earlier panels, using vector grid clipping rather than PNG crops; translucent connections are not repainted twice in the same area. The export's ⟦shared:3⟧ table records covering order. This permits intentional masks and does not promise automatic obstacle avoidance.\n"
+    },
+    "11": {
+      "source_sha256": "fe18f5120d24c9780e70883d47a04f2ab79a03836e371c5cdeaa4914506230b3",
+      "status": "reviewed",
+      "translation": "Sankey source IDs occur in both mirrored columns. Choose an exact ⟦shared:1⟧/⟦shared:2⟧ from ⟦shared:0⟧; omission fails when ambiguous. Radial and Chord use their own registered backbone frames. All q/s intervals, units and source records remain unchanged. If a declared ⟦shared:3⟧ appears repeatedly, every participating Fusion layer must opt into ⟦shared:4⟧, including layers inside nested compositions. ⟦shared:5⟧ distinguishes explicit evidence IDs from display counts. This does not infer identity by comparing equal table values. Dotplot has independent axes and is not yet a registered Fusion endpoint.\n"
+    },
+    "12": {
+      "source_sha256": "a05a617cd550232a70089d9116cf7e62e1e9b83e6357584c5b9579d84840c3e8",
+      "status": "reviewed",
+      "translation": "## Outer Guides and the panel budget ⟦shared:0⟧\n"
+    },
+    "13": {
+      "source_sha256": "96b5c33ac3740f50f51dea6e026aabac500c879011378932361e59ea36d3334f",
+      "status": "reviewed",
+      "translation": "Keep each panel's local scales and Guides independent. Composition scales and\n⟦shared:0⟧ describe the cross-panel ribbons. Native Guides may occupy different\noutside positions, rather than all requiring one shared side:\n"
+    },
+    "15": {
+      "source_sha256": "aa1d19367847d646fef7288932558fad216bae208bc4919a99f167f334e61f77",
+      "status": "reviewed",
+      "translation": "![Multi-side guide allocation](⟦shared:0⟧)\n"
+    },
+    "16": {
+      "source_sha256": "ea1c78cfbb7643e4a37561766c47f4231028003a79872116d27f0e2d66e9b8ef",
+      "status": "reviewed",
+      "translation": "⟦shared:0⟧ keeps existing placements. ⟦shared:1⟧ reuses the native\nGuide candidate/measurement engine, jointly considers side budgets and panel\nallocations, and then rebuilds every child in the remaining physical space.\nIt may move/reflow unlocked Guides; explicit position, direction, rows/columns,\nfonts, key dimensions and absolute panel boxes remain constraints. For example,\na default Identity ruler can become horizontal on a wide, short canvas; its\nlength is remeasured for all six original labels rather than dropping 95 or 100.\n"
+    },
+    "17": {
+      "source_sha256": "45e8d4545bb8f5b7876c5eef74772a9df344eb65546536f557bfc6c4278c618c",
+      "status": "reviewed",
+      "translation": "⟦shared:0⟧ reports choices and locks. ⟦shared:1⟧ and\n⟦shared:2⟧ describe the final outer boxes, after packaging and before\npanel measurement. Nested composition Guide reports appear in ⟦shared:3⟧.\nImpossible constraints fail explicitly. ⟦shared:4⟧\nhides composition Guides using native ggplot2 semantics. Inside composition\nGuides remain unsupported; each independent panel can still own local Guides.\nThis is a bounded physical-space search, not a claim of global optimality.\n"
+    },
+    "18": {
+      "source_sha256": "e425864c1fc22d22833b119bab7e6b96a7850a7fd4f76cb5fde24216559ffe9d",
+      "status": "reviewed",
+      "translation": "## Automatic perimeter panels ⟦shared:0⟧\n"
+    },
+    "19": {
+      "source_sha256": "0de2d2cd87832104e507383f6b2b557fe08914e5e64058d3ea7bf0f73e6d97cf",
+      "status": "reviewed",
+      "translation": "Set ⟦shared:0⟧ to place more than eight independent\npanels around the center. The placement uses actual mm after the outer Guide\nbudget, clockwise in input order on rectangular canvases. Explicit sizes and\nall fixed named/angle/box allocations stay fixed. Unlocked default containers\nmay adapt down to a 15 mm floor; this does not shrink fonts or guarantee that\narbitrary text will fit. Use each child's own label/physical-size policy.\n"
+    },
+    "21": {
+      "source_sha256": "cefde9333a96035d9cd1f0806d44456742571fe79bd390fcc1da56d12883b304",
+      "status": "reviewed",
+      "translation": "![Twelve deliberate views of one HSP](⟦shared:0⟧)\n"
+    },
+    "22": {
+      "source_sha256": "bf53706b688e170ccb4630e24a5ad5a78fdc9798d6dde0d35575edce7a502445",
+      "status": "reviewed",
+      "translation": "This real example intentionally displays one observed HSP twelve times. Its\nexplicit ⟦shared:0⟧ and ⟦shared:1⟧ distinguish 12 connections\nfrom one observation. Each view still rebuilds its exact interval fronts.\n⟦shared:2⟧ records the bounded search, preserved constraints and\ncontainer adaptation; panel rows expose ⟦shared:3⟧ and ⟦shared:4⟧.\nMultiple magnify details can use repeated named ⟦shared:5⟧ sides, with explicit\n⟦shared:6⟧ selections. If no packing is feasible, the build fails with a clear diagnostic;\nno panel is discarded. The search is deterministic and conservative, not a\nglobal optimum or a promise that any count fits every canvas.\n"
+    },
+    "23": {
+      "source_sha256": "be8c7a6b715ded4b061f72c4066cf48633b486e42a2a9d3c3a0b43e77b54e026",
+      "status": "reviewed",
+      "translation": "## Native outer plot furniture ⟦shared:0⟧\n"
+    },
+    "24": {
+      "source_sha256": "e8056a32dbe8b1c72205761fb5c0327d1197024e34d6f7c835242b2338115291",
+      "status": "reviewed",
+      "translation": "Use ordinary ⟦shared:0⟧ and plot Theme elements for the composition's title,\nsubtitle, caption, tag, background and margins. These settings previously\nentered the style carrier without being drawn; they now reserve measured\nspace and appear in the final static drawing. Each child retains its own\naxes, theme and source coordinates. Fusion has no Cartesian data axes.\n"
+    },
+    "26": {
+      "source_sha256": "dd24ea2542f1dacd87db389d21b359d8fa7d38c21c1e81a9b1ae00c9df7a023d",
+      "status": "reviewed",
+      "translation": "![Outer title and caption](⟦shared:0⟧)\n"
+    },
+    "27": {
+      "source_sha256": "893f1131c73c054e9f530c45681601ee8c0409611e8a1a58de1c24efc3df7134",
+      "status": "reviewed",
+      "translation": "⟦shared:0⟧/⟦shared:1⟧ describe the actual inner\ncomposition frame; ⟦shared:2⟧ records effective labels and native\nphysical envelopes. Boxes refer to this content frame after outer decoration\nand Guide allocation. Existing fixed boxes are rechecked at target size;\nenlarge the canvas or revise explicit margins if they no longer fit. Clear\nheadings with native ⟦shared:3⟧.\nNo decoration keeps the previous rendering path.\n"
+    },
+    "28": {
+      "source_sha256": "7f4f32a5ae866c25ad40c6a4b614cefa85d5371bbf80538d5fe4d6189b05cb47",
+      "status": "reviewed",
+      "translation": "Nested compositions retain independent headings and mm registration. Native\nforeground/background separation and inherited clipping keep translucent\nconnections from accumulating repeated paints in explicit overlap mode.\nThe source tables, selected intervals and palette mappings remain unchanged.\n"
+    },
+    "29": {
+      "source_sha256": "6cf4f00c5660111ee1ae1ff3331f5af36faa1537ccb372fa9c36595dfe16ac6f",
+      "status": "reviewed",
+      "translation": "Ordinary child margins do not act as masks for composition connections. In explicit overlap mode, links traverse the full container below its foreground; later containers retain the declared covering order. Use measured ⟦shared:0⟧ for annotation clearance instead of relying on accidental margin gaps.\n"
+    },
+    "30": {
+      "source_sha256": "e5287181c05ab48c5cef0bba7787b7d3e6066d5596898a8ba9b772980b054d0b",
+      "status": "reviewed",
+      "translation": "## Integrated composition: global views and a local detail ⟦shared:0⟧\n"
+    },
+    "31": {
+      "source_sha256": "b2ba7d70c7c465874a14dd57519f44c90f318c8c1e38afb19ec713a8ceb7f711",
+      "status": "reviewed",
+      "translation": "Four independently valid views retain common sources. ⟦shared:0⟧ controls physical allocation; ⟦shared:1⟧ explicitly prepares local windows. Cross-panel ribbons reuse source HSPs, and every participating layer declares repeated display.\n"
+    }
+  }
+}

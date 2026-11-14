@@ -1,0 +1,45 @@
+{
+  "source_sha256": "799759aa0c17e0892c33b2e4229c432e81bff1fed7dcbd918ee91e69de58a1d3",
+  "blocks": {
+    "2": {
+      "source_sha256": "b18a85abf45b76fdcb1b1770665faae369b11b7db87c24a265d70a8680eefab6",
+      "status": "reviewed",
+      "translation": "Sequence names identify entire backbones. Gene names identify individual intervals. Their label layers can be adjusted separately.\n"
+    },
+    "3": {
+      "source_sha256": "765743bd73df825f5ccdf797de97eac7875627a1a227f270ed41450ea24e647c",
+      "status": "reviewed",
+      "translation": "## Move sequence names inward ⟦shared:0⟧\n"
+    },
+    "6": {
+      "source_sha256": "457d6b16d0c7a8342059f7977b9f233727b7c251e3bfd91879528f8ce0271473",
+      "status": "reviewed",
+      "translation": "⟦shared:0⟧ places each label at 70% of its backbone's radius. Compare with the [default plot](⟦shared:1⟧). The labels sit farther from the ticks. Text follows the arc by default. ⟦shared:2⟧ makes all four names horizontal. Change one setting at a time to separate their effects.\n"
+    },
+    "7": {
+      "source_sha256": "a78ca2bbb6bcc83243d7844c1c7864ce8992ce4743952bb5d2869aabf8312036",
+      "status": "reviewed",
+      "translation": "## Label one CDS ⟦shared:0⟧\n"
+    },
+    "10": {
+      "source_sha256": "58c9df7e19a63b13e1a86d8af60f832fd1b5e4ba39ba66ff0ba6c04441d1d87b",
+      "status": "reviewed",
+      "translation": "Find the red integrase arrow on the green ⟦shared:0⟧ backbone. The new label comes from ⟦shared:1⟧. Here, ⟦shared:2⟧ puts a little more radial distance between the text and arrow. When several annotations are close together, use ⟦shared:3⟧ to spread their text. See [dense labels](⟦shared:4⟧).\n"
+    },
+    "11": {
+      "source_sha256": "27b40d5990440b5fc6742cf049f6d2b8eabc24f499c2e885411cccb0d1868130",
+      "status": "reviewed",
+      "translation": "Continue to the [four-sequence case study](⟦shared:0⟧) to combine these adjustments.\n"
+    },
+    "12": {
+      "source_sha256": "29f89e3eff809af980c2d46fce6554c6017c16f38995120f60f4198cf69d851f",
+      "status": "reviewed",
+      "translation": "## Sequence text orientation, rotation and alignment ⟦shared:0⟧\n"
+    },
+    "13": {
+      "source_sha256": "c1af59c31bf6722a171d7a40a271583d3233e4b70c764c06d0cf0c943630e3db",
+      "status": "reviewed",
+      "translation": "Use the same four complete sequences, changing only orientation or extra rotation. Arc rotates whole text along the local tangent rather than placing individual letters on an arc. Horizontal keeps text horizontal with outward justification and ignores extra seq_label_rotation. Radius defaults to 1, rotation to NULL (0), hjust/vjust to NULL resolved by orientation, and check_overlap to FALSE. Explicit radius is invalid in collinear mode. Labels overrides text, not accver. Change hjust or vjust individually and inspect at fixed dimensions.\n"
+    }
+  }
+}

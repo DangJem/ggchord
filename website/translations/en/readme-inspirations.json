@@ -1,0 +1,50 @@
+{
+  "source_sha256": "dcd1802bd5cc33b4dc7ed54b95a65575939fd48500bcfb8407bd22bdabd083b6",
+  "blocks": {
+    "0": {
+      "source_sha256": "8e2c86ad492551eda91b110eba84c0a4812705e6d849978593fe5b3d7ea7fe7a",
+      "status": "reviewed",
+      "translation": "## Design references and acknowledgements\n"
+    },
+    "1": {
+      "source_sha256": "436b83bbd5e4757a4e7a31c3917d04d98c571f1d97599b747398cc6ee2890a7b",
+      "status": "reviewed",
+      "translation": "ggchord draws on these open-source projects and public tools for graphical grammar, genomic representation and figure preview:\n"
+    },
+    "2": {
+      "source_sha256": "f32583187eb2fa4d4af8ceca56cdd9256cd75f64288a95d6a475a0aa9408d93b",
+      "status": "reviewed",
+      "translation": "- [ggplot2](⟦shared:0⟧): composing layers while separating mappings, scales, geometry, coordinates and themes.\n"
+    },
+    "3": {
+      "source_sha256": "b8d42ec3f68c09035e0467d13ed410a69df27869b473aefb8f1f771b8604b6b4",
+      "status": "reviewed",
+      "translation": "- [BLAST](⟦shared:0⟧): query/subject table naming that helps trace alignment endpoints and sequence identifiers.\n"
+    },
+    "4": {
+      "source_sha256": "5f831a0f1e37a75aa595a73e2537f0748ec091db30d2b443336b641d0fe3ab53",
+      "status": "reviewed",
+      "translation": "- [Circos](⟦shared:0⟧) and [circlize](⟦shared:1⟧): circular information hierarchy, ribbons and readable ordering of multiple tracks.\n"
+    },
+    "5": {
+      "source_sha256": "9ad4d15bc1027103353f997a1b23622bdedd7efa851d3771e2d577e486e9b1b4",
+      "status": "reviewed",
+      "translation": "- [clinker](⟦shared:0⟧), [gggenes](⟦shared:1⟧) and [genoPlotR](⟦shared:2⟧): readable gene arrows, gene clusters and linear synteny comparisons.\n"
+    },
+    "6": {
+      "source_sha256": "a5e74ea43ad67296aa1c98476e89a8220e64e1be4d98ee207e7ecc19a2c12cab",
+      "status": "reviewed",
+      "translation": "- [DNA Features Viewer](⟦shared:0⟧) and [gggenomes](⟦shared:1⟧): annotation placement, multi-table input, feature stacking and local comparison workflows.\n"
+    },
+    "7": {
+      "source_sha256": "3404fb99dca35e9e63503dfd4eff8925131da95bc02a75c4ac3f30b04aec123a",
+      "status": "reviewed",
+      "translation": "- [ggview](⟦shared:0⟧): previewing figures at their intended export dimensions; ggchord previews with ⟦shared:1⟧ and saves with standard ⟦shared:2⟧.\n"
+    },
+    "8": {
+      "source_sha256": "bb50797d4dbbb9eb03138d9f39e8ad21ed66d75624be1354306448d4673a368d",
+      "status": "reviewed",
+      "translation": "These projects inform design and comparison. Consult ggchord's function documentation and ⟦shared:0⟧ for its supported features, parameters and runtime dependencies.\n"
+    }
+  }
+}
