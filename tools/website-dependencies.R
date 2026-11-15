@@ -1,4 +1,6 @@
 # Website-only dependencies. Keep cache keys tied to this explicit list.
+# --vanilla intentionally ignores the runner profile; set the mirror explicitly.
+options(repos = c(CRAN = Sys.getenv("RSPM", "https://cloud.r-project.org")))
 cran <- c("ggplot2", "rlang", "scales", "pkgload", "rmarkdown", "jsonlite",
   "pkgdown", "dplyr")
 bioconductor <- c("Biostrings", "VariantAnnotation")
