@@ -11,6 +11,8 @@
 #'   and a discrete y scale are supported. Additional independent annotations
 #'   are allowed. Facets, nonlinear scales, flipped coordinates and position
 #'   adjustments moving registered cells are rejected.
+#'   geom_residue(line_width = ...) is supported. Each selected source interval
+#'   must lie within one displayed line; split cross-line selections explicitly.
 #' @param data The displayed rows of [as_ggchord_alignment()],
 #'   [read_aligned_fasta()] or translate_ggchord_cds()$nucleotides/residues.
 #'   One cell per accver/alignment_column; source coordinates must be unique
@@ -79,23 +81,37 @@ ggchord_alignment_layout <- function(built, data) {
     ggchord_stop(caller, ": use identity/reverse x and discrete accession y scales")
   layers <- which(vapply(built$plot$layers, function(l) inherits(l$geom, "GeomResidue"), logical(1)))
   if (!length(layers)) ggchord_stop(caller, ": geom_residue is required")
+  wrapping <- lapply(built$plot$layers[layers], function(l) l$ggchord_residue_wrap)
+  wrapped <- !vapply(wrapping, is.null, logical(1))
+  data$display_column <- data$alignment_column
+  data$display_row <- as.character(data$accver)
+  if (any(wrapped)) {
+    if (!all(wrapped) || !all(vapply(wrapping, identical, logical(1), wrapping[[1L]])))
+      ggchord_stop(caller, ": registered residue layers must share the same line_width and origin")
+    specification <- wrapping[[1L]]
+    display <- ggchord_residue_wrap(data$alignment_column, data$accver,
+      specification$width, specification$origin)
+    data$display_column <- display$column
+    data$display_row <- as.character(display$row)
+  }
   observed <- do.call(rbind, lapply(built$data[layers], function(d) d[c("x", "y", "label")]))
   key <- function(x, y, label) paste(x, y, label, sep = "\r")
-  expected <- key(xs$transform(data$alignment_column), ys$map(as.character(data$accver)), data$symbol)
+  expected <- key(xs$transform(data$display_column), ys$map(data$display_row), data$symbol)
   if (any(!expected %in% key(observed$x, observed$y, observed$label)))
     ggchord_stop(caller, ": registered cells no longer match rendered residue positions/labels")
-  ids <- unique(as.character(data$accver))
+  ids <- unique(data$display_row)
   list(character = TRUE, seqs = ids, character_data = data,
-    display_instances = data.frame(instance_id = ids, accver = ids, key = ids),
+    display_instances = data.frame(instance_id = ids,
+      accver = as.character(data$accver[match(ids, data$display_row)]), key = ids),
     sequence_unit = unique(data$sequence_unit))
 }
 
 ggchord_alignment_interval <- function(panel, id, entity, start, end, instance) {
   d <- panel$layout$character_data
   candidates <- list()
-  for (row in unique(as.character(d$accver[d$source_accver == entity]))) {
+  for (row in unique(d$display_row[d$source_accver == entity])) {
     if (!is.null(instance) && row != instance) next
-    a <- d[as.character(d$accver) == row & !d$is_gap, , drop = FALSE]
+    a <- d[d$display_row == row & !d$is_gap, , drop = FALSE]
     lo <- min(start, end); hi <- max(start, end)
     a <- a[a$source_position >= lo & a$source_position <= hi, , drop = FALSE]
     if (!nrow(a) || nrow(a) != hi - lo + 1 || min(a$source_position) != lo || max(a$source_position) != hi) next
@@ -105,7 +121,7 @@ ggchord_alignment_interval <- function(panel, id, entity, start, end, instance) 
     ends <- match(c(start, end), a$source_position)
     direction <- sign * if (end >= start) 1 else -1
     # Source boundaries flank exact endpoint cells; interior gap columns are retained.
-    x <- a$alignment_column[ends] + c(-.5, .5) * direction
+    x <- a$display_column[ends] + c(-.5, .5) * direction
     candidates[[length(candidates) + 1L]] <- list(panel = id, key = row, instance = row,
       entity = entity, origin = 1, start = start, end = end, unit = a$sequence_unit[1L],
       character_x = x, character_y = row)
@@ -118,6 +134,10 @@ ggchord_alignment_front <- function(panel, endpoint) {
   xs <- built$layout$panel_scales_x[[1L]]; ys <- built$layout$panel_scales_y[[1L]]
   xy <- data.frame(x = xs$transform(endpoint$character_x), y = ys$map(endpoint$character_y))
   projected <- built$layout$coord$transform(xy, built$layout$panel_params[[1L]])
+  lower <- upper <- xy
+  lower$y <- lower$y - .5; upper$y <- upper$y + .5
+  lower <- built$layout$coord$transform(lower, built$layout$panel_params[[1L]])
+  upper <- built$layout$coord$transform(upper, built$layout$panel_params[[1L]])
   if (any(!is.finite(c(projected$x, projected$y))) ||
       any(projected$x < 0 | projected$x > 1 | projected$y < 0 | projected$y > 1))
     ggchord_stop("Registered character panel: selected source boundary is outside visible limits")
@@ -125,5 +145,6 @@ ggchord_alignment_front <- function(panel, endpoint) {
   data.frame(position_boundary = if (endpoint$end >= endpoint$start) c(endpoint$start - 1, endpoint$end) else c(endpoint$start, endpoint$end - 1),
     local_x = endpoint$character_x, local_y = as.numeric(xy$y),
     x = bounds[1] + projected$x * diff(bounds[1:2]), y = bounds[3] + projected$y * diff(bounds[3:4]),
-    normal_x = 0, normal_y = 1, tangent_x = -1, tangent_y = 0)
+    normal_x = 0, normal_y = 1, tangent_x = -1, tangent_y = 0,
+    cell_half_height_mm = abs(upper$y - lower$y) * diff(bounds[3:4]) / 2)
 }

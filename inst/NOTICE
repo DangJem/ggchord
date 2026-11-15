@@ -1,0 +1,13 @@
+Residue chemistry palette provenance
+
+The Chemistry_NT and Chemistry_AA colour values used in R/scale-residue.R
+are adapted from ggmsa's scheme_NT and scheme_AA tables:
+https://github.com/YuLab-SMU/ggmsa/blob/master/R/sysdata.rda
+Blob SHA: f84f97edfc58bacc899ffa38b186ac326157d666
+Authors: Guangchuang Yu, Lang Zhou and ggmsa contributors.
+Upstream license: Artistic License 2.0 (SPDX Artistic-2.0):
+https://opensource.org/license/artistic-2-0
+https://github.com/YuLab-SMU/ggmsa/blob/devel/DESCRIPTION
+Only colour values are adapted. Rendering and scale implementation are
+independent. Neutral ambiguous symbols, stops and lowercase handling are
+ggchord additions.

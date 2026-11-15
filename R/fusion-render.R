@@ -336,10 +336,15 @@ ggchord_build_fusion_core <- function(x) {
   }
   export <- list(panels=bind(panel_rows),instances=bind(instances),overlaps=combine(overlaps,"overlaps"),
     connections=combine(connection_rows,"connections"),fronts=combine(fronts,"fronts"),paths=combine(paths,"paths"),
-    focus_region_data=focus$input,focus_regions=focus_regions,focus_fronts=focus_fronts,leaders=leaders,leader_paths=leader_paths,
+    focus_region_data=focus$input,focus_frame_region_data=focus$frame_input,
+    focus_regions=focus_regions,focus_fronts=focus_fronts,leaders=leaders,leader_paths=leader_paths,
     nested_focus_region_data=lapply(nested_results,function(n) n$export$focus_region_data),
     focus_region_data_by_composition=c(list(root=focus$input), unlist(lapply(names(nested_results), function(id) {
       data <- nested_results[[id]]$export$focus_region_data_by_composition
+      stats::setNames(data, paste0(id, "/", names(data)))
+    }), recursive=FALSE)),
+    focus_frame_region_data_by_composition=c(list(root=focus$frame_input), unlist(lapply(names(nested_results), function(id) {
+      data <- nested_results[[id]]$export$focus_frame_region_data_by_composition
       stats::setNames(data, paste0(id, "/", names(data)))
     }), recursive=FALSE)),
     routing_obstacles=obstacles,routing_corridors=combine(corridor_rows,"routing_corridors"),diagnostics=diagnostics,source_layouts=lapply(panels,`[[`,"layout"),source_data=sources,

@@ -11,7 +11,9 @@ register_ggchord_alignment(plot, data)
 x = alignment_column, y = accver, label = symbol. Identity/reverse x scales
 and a discrete y scale are supported. Additional independent annotations
 are allowed. Facets, nonlinear scales, flipped coordinates and position
-adjustments moving registered cells are rejected.}
+adjustments moving registered cells are rejected.
+geom_residue(line_width = ...) is supported. Each selected source interval
+must lie within one displayed line; split cross-line selections explicitly.}
 
 \item{data}{The displayed rows of \code{\link[=as_ggchord_alignment]{as_ggchord_alignment()}},
 \code{\link[=read_aligned_fasta]{read_aligned_fasta()}} or translate_ggchord_cds()$nucleotides/residues.

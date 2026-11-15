@@ -9,25 +9,35 @@ geom_residue(
   data = NULL,
   overflow = c("tile", "error"),
   position = "identity",
-  show.legend = NA,
+  show.legend = FALSE,
   inherit.aes = TRUE,
+  line_width = NULL,
   ...
 )
 }
 \arguments{
 \item{mapping, data}{Standard ggplot2 layer mapping and data. Required
 aesthetics are x, y and label. Ordinary colour, fill, alpha, size, family
-and fontface mappings/scales are supported. \code{size} is in mm.}
+and fontface mappings/scales are supported. Explicit \code{size} is in mm;
+omitted size fits cells uniformly with a 3 mm readability floor.}
 
 \item{overflow}{\code{"tile"} (default) or \code{"error"} when letters do not fit.}
 
 \item{position, show.legend, inherit.aes}{Standard ggplot2 layer arguments.}
 
+\item{line_width}{Optional positive integer number of columns per displayed
+line. NULL (default) keeps one line. Lines start at the smallest displayed
+x value; gaps occupy columns. Multiple sequences share the same breaks.
+Row labels show the original column range; the x axis counts within a line.
+Wrapping changes display only, preserving original input/source coordinates.
+Registered Fusion selections must fit one displayed line; split a selection
+crossing lines into explicit source intervals.}
+
 \item{...}{Fixed text/cell aesthetics and na.rm, passed to the layer.}
 }
 \value{
-A standard ggplot2 layer. Cell width is one x unit and height one y
-unit with small internal spacing. Use discrete y rows or unit-spaced rows.
+A standard ggplot2 layer. Cells span one x unit and one y unit.
+Use discrete y rows or unit-spaced rows.
 }
 \description{
 A standard Cartesian ggplot layer for local nucleotide/protein excerpts.
@@ -44,14 +54,27 @@ coordinates are rejected rather than misrepresenting single-position cells.
 At drawing time, each cell's final physical width/height is compared with
 its actual glyph metrics. \code{overflow = "tile"} omits letters that cannot fit
 and retains their mapped fill cells; \code{"error"} requires readable letters.
-Font size is never silently reduced. The decision is remade at every target
+Explicit font sizes are never silently reduced. The decision is remade at every target
 size, including standard ggsave; DPI alone does not supply physical space.
+Cells meet at their edges to form a continuous alignment matrix. When the
+plot still uses its default Cartesian coordinate system, the layer supplies
+a fixed 1:1 aspect ratio so rows remain as compact as alignment columns.
+Explicit coordinates take priority. Without a size mapping or fixed size,
+characters grow uniformly to fit their cells, with a 3 mm readability floor;
+smaller cells use the same overflow policy rather than shrinking the text.
+When fill is not supplied, label is mapped to fill. A chemistry scale is
+inferred from the data's explicit alphabet column (DNA/RNA/AA; otherwise AA).
+Existing user fill mappings, fixed fills and scales take priority.
+See \code{\link[=scale_fill_residue]{scale_fill_residue()}} for explicit alphabet and palette control.
 }
 \examples{
 # Explicit synthetic format example; real-data workflow is in the tutorial.
 cells <- as_ggchord_alignment(c(A = "AC-G", B = "ACTG"), "DNA")
 ggplot2::ggplot(cells, aes(alignment_column, accver, label = symbol)) +
   geom_residue(aes(fill = symbol))
+long <- as_ggchord_alignment(c(A = strrep("ACGT", 25)), "DNA")
+ggplot2::ggplot(long, aes(alignment_column, accver, label = symbol)) +
+  geom_residue(line_width = 50)
 }
 \seealso{
 \code{\link[=read_aligned_fasta]{read_aligned_fasta()}}, \code{\link[=map_alignment_position]{map_alignment_position()}}

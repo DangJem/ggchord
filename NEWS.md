@@ -1,3 +1,44 @@
+# ggchord 0.28.0 (development)
+
+- `geom_residue()` now defaults to a continuous alignment matrix with a 1:1
+  cell ratio, dark bold sans-serif glyphs and chemistry-based DNA/RNA/AA fill
+  scales. The earlier unconstrained row-height backgrounds could become tall
+  bars around small letters. Default text grows uniformly to fit cells, with
+  a 3 mm readability floor; explicit sizes retain the tile/error overflow
+  contract. User mappings, fixed colours, scales and coordinates take priority.
+  Character legends are hidden by default; use `show.legend = TRUE` to show
+  them. `scale_fill_residue()` provides explicit alphabet selection; use
+  `ggplot2::scale_fill_manual()` for custom colours. Palette provenance is
+  recorded in the installed NOTICE.
+- `geom_residue(line_width = 50)` wraps 100 columns into lines 1-50 and
+  51-100, with shared breaks across sequences and labelled original ranges.
+  Original data, source positions and gaps remain intact. Wrapped character
+  plots can be registered for Fusion; split cross-line focus selections into
+  explicit source intervals.
+- `magnify_ggchord(frame_region = ...)` independently adjusts the displayed
+  source frame while retaining the real selected interval, detail data and
+  magnification ratio. Default source frames use the selected source coordinates;
+  frame height remains a separate physical setting. Exports retain frame bounds
+  and raw overrides separately from the real selection.
+- Homepage Fusion Identity guides retain proportional numeric interval widths;
+  the preview no longer forces even steps. Local zoom axes show original source
+  coordinates and use slimmer source selection frames for clearer correspondence.
+- API reference pages evaluate their examples and include actual figure or
+  text output in both languages, with runnable local-input examples for
+  previously code-only topics. Missing optional decoders are reported explicitly.
+- The registered Opuntia magnification example uses a readable 30-column
+  excerpt, short display labels and chemistry colours without altering source IDs.
+  Character focus highlights now trace unfilled cell outlines: translucent
+  focus bands no longer cover the letters or mute their residue colours.
+- Fusion's sixth panel displays 60 verified coding bases from E's lower-sequence
+  second CDS (OQ646790.1 / cds-WGH15551.1, 11006-11065 bp). Source-window and
+  nucleotide leaders retain exact registered intervals; full and homepage
+  figures share the same source data. Magnification frames include native
+  character axes so their corners do not collide with their own row labels.
+- README design attribution distinguishes documented influences from research
+  comparisons and restores the omitted SnapGene/Geneious references, with an
+  evidence audit instead of unsupported algorithm or integration claims.
+
 # ggchord 0.27.1
 
 - Post-release documentation: website Markdown links resolve to tracked repository

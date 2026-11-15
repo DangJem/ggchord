@@ -63,11 +63,21 @@
 #'   fixed; no clear route fails rather than hiding the selection.
 #' @param colour Fixed highlight/leader colour.
 #' @param alpha Highlight opacity in `[0,1]`. Leaders use the opaque colour.
+#'   Character selections use unfilled cell outlines to preserve glyph contrast
+#'   and residue colours, independently of this opacity.
 #' @param highlight_width Positive highlight band width in physical mm.
+#'   Character panels instead follow the actual cell height.
 #' @param linewidth Nonnegative leader width using the usual ggplot2 convention.
 #' @param linetype Leader line type, default dashed.
 #' @param guides Child legend placement, passed to [ggchord_fusion()].
 #'   Default `"keep"`; use `"collect"` for shared native outside legends.
+#' @param frame_region Optional data frame with one row per region, in the
+#'   same order, containing ordered positive source start/end coordinates.
+#'   It changes only the source frame and leader departure points; region,
+#'   detail data and the measured magnification ratio stay unchanged. NULL
+#'   (default) uses the exact selected interval. Optional accver must match
+#'   region. Each frame must be visible in the same source instance. Split
+#'   origin-wrapping frames/selections into explicit intervals before using it.
 #' @return A [ggchord_fusion()] object. [export_ggchord_fusion()] additionally
 #'   returns focus_regions, focus_fronts and leaders in mm, plus original
 #'   focus_region_data (without metadata-name collisions), preserving the input
@@ -81,6 +91,8 @@
 #'   detail allocation does not enlarge the region.
 #'   Envelope leaders use their group's first region_row as the export key;
 #'   focus_regions$leader_group records that key for every member selection.
+#'   frame_start/frame_end record the displayed source frame independently of
+#'   start/end; explicit overrides are retained in focus_frame_region_data.
 #' @export
 #' @examples
 #' library(dplyr)
@@ -94,10 +106,12 @@
 #' magnify_ggchord(whole, region, detail,
 #'   center_box = c(.02, .35, .2, .8), detail_box = c(.45, .98, .1, .9),
 #'   connector = "envelope")
+#' magnify_ggchord(whole, region, detail,
+#'   frame_region = tibble(start = 81, end = 1920))
 magnify_ggchord <- function(plot, region, detail_plot,
     side = c("right", "top", "left", "bottom"), center_size = NULL, detail_size = NULL,
     connector = c("leader", "none", "envelope"), colour = "#B45309", alpha = .2,
-    highlight_width = 1.5, linewidth = .35, linetype = 2, detail_box = NULL, allow_overlap = FALSE, center_box = NULL, route = c("direct", "avoid"), guides = c("keep", "collect")) {
+    highlight_width = 1.5, linewidth = .35, linetype = 2, detail_box = NULL, allow_overlap = FALSE, center_box = NULL, route = c("direct", "avoid"), guides = c("keep", "collect"), frame_region = NULL) {
   route <- match.arg(route)
   guides <- match.arg(guides)
   side_supplied <- !missing(side)
@@ -114,6 +128,22 @@ magnify_ggchord <- function(plot, region, detail_plot,
   for (name in intersect(c("instance", "detail_instance", "source_panel"), names(region)))
     if (!is.character(region[[name]]) || anyNA(region[[name]]) || any(!nzchar(region[[name]])))
       ggchord_stop(caller, ": instance selectors must be nonempty strings")
+  if (!is.null(frame_region)) {
+    ggchord_require_columns(frame_region, c("start", "end"), caller)
+    if (nrow(frame_region) != nrow(region) || any(wrap) ||
+        ("wrap" %in% names(frame_region) &&
+          (!is.logical(frame_region$wrap) || anyNA(frame_region$wrap) || any(frame_region$wrap))))
+      ggchord_stop(caller, ": frame_region needs one non-wrapping row per region; split origin wraps explicitly")
+    if (!is.numeric(frame_region$start) || !is.numeric(frame_region$end) ||
+        any(!is.finite(c(frame_region$start, frame_region$end))) ||
+        any(frame_region$start < 1 | frame_region$end < frame_region$start) ||
+        any(c(frame_region$start, frame_region$end) != floor(c(frame_region$start, frame_region$end))) ||
+        any(c(frame_region$start, frame_region$end) > 2^53 - 1))
+      ggchord_stop(caller, ": frame_region requires ordered positive integer source coordinates")
+    if ("accver" %in% names(frame_region) &&
+        (anyNA(frame_region$accver) || any(as.character(frame_region$accver) != region$accver)))
+      ggchord_stop(caller, ": frame_region accver must match each region row")
+  }
   if (!is.numeric(alpha) || length(alpha)!=1L || !is.finite(alpha) || alpha<0 || alpha>1 ||
       !is.numeric(highlight_width) || length(highlight_width)!=1L || !is.finite(highlight_width) || highlight_width<=0 ||
       !is.numeric(linewidth) || length(linewidth)!=1L || !is.finite(linewidth) || linewidth<0)
@@ -175,7 +205,7 @@ magnify_ggchord <- function(plot, region, detail_plot,
   resolved_region <- as.data.frame(region)
   resolved_region$detail_panel <- targets
   resolved_region$wrap <- wrap
-  result$focus <- list(input = region, region = resolved_region, connector = match.arg(connector),
+  result$focus <- list(input = region, frame_input = frame_region, region = resolved_region, connector = match.arg(connector),
     colour = colour, alpha = alpha, width = highlight_width, linewidth = linewidth, linetype = linetype, route = route)
   ggplot2::set_last_plot(result)
   result
@@ -183,7 +213,7 @@ magnify_ggchord <- function(plot, region, detail_plot,
 
 # Build only after the real panel sizes, position scales and Coord are final.
 ggchord_build_focus <- function(focus, panels) {
-  empty <- list(input = data.frame(), underlay = list(), overlay = list(), regions = data.frame(), fronts = data.frame(), leaders = data.frame(), leader_paths = data.frame())
+  empty <- list(input = data.frame(), frame_input = data.frame(), underlay = list(), overlay = list(), regions = data.frame(), fronts = data.frame(), leaders = data.frame(), leader_paths = data.frame())
   if (is.null(focus)) return(empty)
   pieces <- list()
   for (i in seq_len(nrow(focus$region))) {
@@ -209,7 +239,8 @@ ggchord_build_focus <- function(focus, panels) {
     for (j in seq_along(bounds)) {
       part <- region; part$start <- bounds[[j]][1L]; part$end <- bounds[[j]][2L]
       boundaries <- if (length(bounds) == 1L) c("start", "end") else if (j == 1L) "start" else "end"
-      piece <- ggchord_build_focus_region(focus, panels, part, boundaries)
+      frame <- if (is.null(focus$frame_input)) NULL else focus$frame_input[i, , drop = FALSE]
+      piece <- ggchord_build_focus_region(focus, panels, part, boundaries, frame)
       for (name in c("regions", "fronts", "leaders", "leader_paths")) {
         piece[[name]]$region_row <- rep.int(i, nrow(piece[[name]]))
         piece[[name]]$region_piece <- rep.int(j, nrow(piece[[name]]))
@@ -218,9 +249,10 @@ ggchord_build_focus <- function(focus, panels) {
       pieces[[length(pieces) + 1L]] <- piece
     }
   }
-  bind <- function(name) do.call(rbind, lapply(pieces, `[[`, name))
+  bind <- function(name) ggchord_rbind_fill(lapply(pieces, `[[`, name))
   grobs <- function(name) unlist(lapply(pieces, `[[`, name), recursive = FALSE)
-  result <- list(input = focus$input, underlay = grobs("underlay"), overlay = grobs("overlay"),
+  result <- list(input = focus$input, frame_input = focus$frame_input %||% data.frame(),
+    underlay = grobs("underlay"), overlay = grobs("overlay"),
     regions = bind("regions"), fronts = bind("fronts"), leaders = bind("leaders"), leader_paths = bind("leader_paths"))
   if (focus$connector == "envelope") result <- ggchord_focus_envelopes(result, focus)
   result
@@ -236,12 +268,13 @@ ggchord_focus_envelopes <- function(result, focus) {
     front <- result$fronts[result$fronts$region_row %in% regions$region_row[rows], ]
     q <- front[front$panel_id == region$source_panel, ]
     padding <- focus$width/2 + 1
-    band <- rbind(cbind(q$x+focus$width/2*q$normal_x,q$y+focus$width/2*q$normal_y),
-      cbind(q$x-focus$width/2*q$normal_x,q$y-focus$width/2*q$normal_y))
+    band <- ggchord_focus_band(q, focus$width)
     qb <- c(range(band[,1]),range(band[,2]))
     s <- front[front$panel_id == region$detail_panel, ]
     sb <- c(min(s$x)-padding,max(s$x)+padding,min(s$y)-padding,max(s$y)+padding)
-    text <- focus$obstacles[focus$obstacles$kind == "text" &
+    # Native character axes are part of the display envelope too. Otherwise
+    # a frame corner can land inside its own row label and be unroutable.
+    text <- focus$obstacles[focus$obstacles$kind %in% c("text", "axis") &
       focus$obstacles$panel_id == region$detail_panel, ]
     if (nrow(text)) sb <- c(min(sb[1],text$xmin-1),max(sb[2],text$xmax+1),
       min(sb[3],text$ymin-1),max(sb[4],text$ymax+1))
@@ -269,8 +302,7 @@ ggchord_focus_envelopes <- function(result, focus) {
       # For a narrow canvas, use another real edge before adding a bend.
       # With multiple selections prefer one source band for each leader.
       options <- lapply(split(q,paste(q$region_row,q$region_piece)),function(f) {
-        source_edges(rbind(cbind(f$x+focus$width/2*f$normal_x,f$y+focus$width/2*f$normal_y),
-          cbind(f$x-focus$width/2*f$normal_x,f$y-focus$width/2*f$normal_y)))
+        source_edges(ggchord_focus_band(f, focus$width))
       })
       pairs <- expand.grid(left=seq_along(options),right=seq_along(options))
       if(length(options)>1L) pairs <- pairs[pairs$left!=pairs$right,,drop=FALSE]
@@ -321,7 +353,7 @@ ggchord_focus_envelopes <- function(result, focus) {
 ggchord_focus_wrap_length <- function(panel, endpoint) {
   if (isTRUE(panel$layout$character)) {
     d <- panel$layout$character_data
-    d <- d[as.character(d$accver) == endpoint$instance, , drop = FALSE]
+    d <- d[d$display_row == endpoint$instance, , drop = FALSE]
     if (!"source_circular" %in% names(d) || !isTRUE(all(d$source_circular)) ||
         !"source_length" %in% names(d)) return(NA_real_)
     n <- unique(d$source_length)
@@ -335,14 +367,30 @@ ggchord_focus_wrap_length <- function(panel, endpoint) {
   n
 }
 
-ggchord_build_focus_region <- function(focus, panels, region, boundaries = c("start", "end")) {
+ggchord_focus_band <- function(front, width) {
+  offset <- rep(width/2, nrow(front))
+  cell <- front[["cell_half_height_mm"]]
+  if (!is.null(cell)) {
+    valid <- is.finite(cell)
+    offset[valid] <- cell[valid] + .2
+  }
+  rbind(cbind(front$x + offset * front$normal_x, front$y + offset * front$normal_y),
+    cbind(front$x - offset * front$normal_x, front$y - offset * front$normal_y))
+}
+
+ggchord_build_focus_region <- function(focus, panels, region, boundaries = c("start", "end"), frame_region = NULL) {
   resolve <- function(panel, instance) ggchord_resolve_panel_interval(panels,
     region$accver, region$start, region$end, panel, instance,
     paste0("magnify_ggchord() ",panel,": "))
   q <- resolve(region[["source_panel"]] %||% "center", region[["instance"]])
   s <- resolve(region[["detail_panel"]] %||% "detail", region[["detail_instance"]])
   if (q$unit != s$unit) ggchord_stop("magnify_ggchord(): source and detail units must agree")
-  qf <- ggchord_fusion_front(panels[[q$panel]], q)
+  selected_front <- ggchord_fusion_front(panels[[q$panel]], q)
+  frame <- q
+  if (!is.null(frame_region)) frame <- ggchord_resolve_panel_interval(panels,
+    region$accver, frame_region$start, frame_region$end, q$panel, q$instance,
+    "magnify_ggchord() frame_region: ")
+  qf <- if (is.null(frame_region)) selected_front else ggchord_fusion_front(panels[[q$panel]], frame)
   sf <- ggchord_fusion_front(panels[[s$panel]], s)
   grobs <- list()
   ends <- c(1L,nrow(qf))
@@ -374,31 +422,38 @@ ggchord_build_focus_region <- function(focus, panels, region, boundaries = c("st
         lwd = focus$linewidth * 72.27/25.4, lty = focus$linetype)))
   }
   highlight <- function(front, outline = FALSE) {
-    offset <- focus$width/2
+    band <- ggchord_focus_band(front, focus$width)
+    character <- any(is.finite(front[["cell_half_height_mm"]]))
+    n <- nrow(front)
+    at <- c(seq_len(n), rev(seq.int(n + 1L, 2L * n)))
     grid::polygonGrob(
-      c(front$x+offset*front$normal_x, rev(front$x-offset*front$normal_x)),
-      c(front$y+offset*front$normal_y, rev(front$y-offset*front$normal_y)),
-      default.units = "mm", gp = grid::gpar(col = if(outline) focus$colour else NA,
-        lwd = focus$linewidth*72.27/25.4,fill = scales::alpha(focus$colour,focus$alpha)))
+      band[at, 1L], band[at, 2L],
+      default.units = "mm", gp = grid::gpar(col = if(outline || character) focus$colour else NA,
+        lwd = focus$linewidth*72.27/25.4,
+        fill = if(character) NA else scales::alpha(focus$colour,focus$alpha)))
   }
   highlights <- stats::setNames(list(highlight(qf,focus$connector=="envelope"),highlight(sf)), c(q$panel, s$panel))
   length_mm <- function(front) sum(sqrt(diff(front$x)^2+diff(front$y)^2))
-  source_mm <- length_mm(qf); detail_mm <- length_mm(sf)
+  source_mm <- length_mm(selected_front); detail_mm <- length_mm(sf)
   if (any(!is.finite(c(source_mm,detail_mm))) || min(source_mm,detail_mm)<=0)
     ggchord_stop("magnify_ggchord(): selected interval has no measurable span at the requested scale")
   report <- region[c("accver", "start", "end")]
   report$source_panel <- q$panel; report$detail_panel <- s$panel
   report$source_instance <- q$instance; report$detail_instance <- s$instance
   report$source_origin <- q$origin; report$detail_origin <- s$origin
+  report$frame_start <- frame$start; report$frame_end <- frame$end
+  report$frame_is_custom <- !is.null(frame_region)
   report$sequence_unit <- q$unit; report$source_length_mm <- source_mm; report$detail_length_mm <- detail_mm
   report$length_ratio <- detail_mm/source_mm; report$stat_scope <- "explicit_detail_plot"
   report$collision_status <- if (nrow(leaders)) paste(unique(leaders$route_status), collapse = ";") else "no_leaders"
   report$highlight_width_mm <- focus$width; report$highlight_alpha <- focus$alpha
   report$colour <- focus$colour; report$connector <- focus$connector
-  report$source_highlight_outline <- focus$connector=="envelope"
+  report$source_highlight_outline <- focus$connector=="envelope" || any(is.finite(qf[["cell_half_height_mm"]]))
   report$source_highlight_padding_mm <- 0
   report$leader_linewidth <- focus$linewidth; report$leader_linetype <- focus$linetype
   qf$panel_id <- q$panel; qf$instance_id <- q$instance
-  sf$panel_id <- s$panel; sf$instance_id <- s$instance
-  list(input = focus$input, underlay = grobs, overlay = highlights, regions = report, fronts = rbind(qf,sf), leaders = leaders, leader_paths = leader_paths)
+  qf$front_semantic <- if (is.null(frame_region)) "selected_interval" else "source_frame"
+  sf$panel_id <- s$panel; sf$instance_id <- s$instance; sf$front_semantic <- "selected_interval"
+  list(input = focus$input, underlay = grobs, overlay = highlights, regions = report,
+    fronts = ggchord_rbind_fill(list(qf, sf)), leaders = leaders, leader_paths = leader_paths)
 }

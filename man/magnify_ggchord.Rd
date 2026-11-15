@@ -21,7 +21,8 @@ magnify_ggchord(
   allow_overlap = FALSE,
   center_box = NULL,
   route = c("direct", "avoid"),
-  guides = c("keep", "collect")
+  guides = c("keep", "collect"),
+  frame_region = NULL
 )
 }
 \arguments{
@@ -70,9 +71,12 @@ These are not biological ribbons or alignments.}
 
 \item{colour}{Fixed highlight/leader colour.}
 
-\item{alpha}{Highlight opacity in \verb{[0,1]}. Leaders use the opaque colour.}
+\item{alpha}{Highlight opacity in \verb{[0,1]}. Leaders use the opaque colour.
+Character selections use unfilled cell outlines to preserve glyph contrast
+and residue colours, independently of this opacity.}
 
-\item{highlight_width}{Positive highlight band width in physical mm.}
+\item{highlight_width}{Positive highlight band width in physical mm.
+Character panels instead follow the actual cell height.}
 
 \item{linewidth}{Nonnegative leader width using the usual ggplot2 convention.}
 
@@ -93,6 +97,14 @@ fixed; no clear route fails rather than hiding the selection.}
 
 \item{guides}{Child legend placement, passed to \code{\link[=ggchord_fusion]{ggchord_fusion()}}.
 Default \code{"keep"}; use \code{"collect"} for shared native outside legends.}
+
+\item{frame_region}{Optional data frame with one row per region, in the
+same order, containing ordered positive source start/end coordinates.
+It changes only the source frame and leader departure points; region,
+detail data and the measured magnification ratio stay unchanged. NULL
+(default) uses the exact selected interval. Optional accver must match
+region. Each frame must be visible in the same source instance. Split
+origin-wrapping frames/selections into explicit intervals before using it.}
 }
 \value{
 A \code{\link[=ggchord_fusion]{ggchord_fusion()}} object. \code{\link[=export_ggchord_fusion]{export_ggchord_fusion()}} additionally
@@ -108,6 +120,8 @@ a guarantee of globally optimal layout or automatic layer rebuilding. The measur
 detail allocation does not enlarge the region.
 Envelope leaders use their group's first region_row as the export key;
 focus_regions$leader_group records that key for every member selection.
+frame_start/frame_end record the displayed source frame independently of
+start/end; explicit overrides are retained in focus_frame_region_data.
 }
 \description{
 Marks real source intervals in registered genomic panels and connects them to
@@ -135,4 +149,6 @@ magnify_ggchord(whole, region, detail)
 magnify_ggchord(whole, region, detail,
   center_box = c(.02, .35, .2, .8), detail_box = c(.45, .98, .1, .9),
   connector = "envelope")
+magnify_ggchord(whole, region, detail,
+  frame_region = tibble(start = 81, end = 1920))
 }

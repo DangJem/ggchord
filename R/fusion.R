@@ -619,6 +619,8 @@ ggchord_fusion_path <- function(q, s, curvature) {
 #'   leaders; ordinary Fusion objects return empty tables for these fields.
 #'   Nested leaves use full paths such as detail/center. Composition-scoped
 #'   focus_region_data_by_composition preserves all original region tables;
+#'   focus_frame_region_data and focus_frame_region_data_by_composition retain
+#'   explicit source-frame overrides separately from the real selected intervals.
 #'   composition_id plus region_row identifies their derived rows. Containers
 #'   have coordinate = fusion and are not biological interval namespaces.
 #'   overlaps reports deliberate covering order. source_observations counts

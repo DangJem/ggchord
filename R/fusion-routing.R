@@ -276,7 +276,8 @@ ggchord_fusion_guide_obstacles <- function(table, id, origin) {
       hi <- grid::deviceLoc(grid::grobX(text,0),grid::grobY(text,90),valueOnly=TRUE)
       measurement <- 'native_heading_glyphs'
     }
-    data.frame(panel_id = id, kind = if (grepl('^guide-box', entry$name)) 'guide' else 'decoration', xmin = lo$x*25.4-origin[1],
+    data.frame(panel_id = id, kind = if (grepl('^guide-box', entry$name)) 'guide' else
+      if (grepl('^(axis-|xlab|ylab)', entry$name)) 'axis' else 'decoration', xmin = lo$x*25.4-origin[1],
       xmax = hi$x*25.4-origin[1], ymin = lo$y*25.4-origin[2], ymax = hi$y*25.4-origin[2],
       measurement = measurement)
   }))
