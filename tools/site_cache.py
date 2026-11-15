@@ -13,8 +13,10 @@ def key(value):
 
 def runtime():
     # Versions alone cannot detect replaced package data or native binaries.
-    script = '''paths <- unique(vapply(.libPaths(),normalizePath,"")); files <- unlist(lapply(paths,function(p) list.files(p,recursive=TRUE,full.names=TRUE,all.files=TRUE))); files <- files[file.info(files)$isdir %in% FALSE]; hashes <- tools::md5sum(files); names(hashes) <- vapply(files,function(f) {i<-which(startsWith(f,paste0(paths,"/")))[1];paste0(i,":",substring(f,nchar(paths[i])+2))},""); cat(jsonlite::toJSON(list(R=unclass(R.version),capabilities=capabilities(Xchk=FALSE),packages=as.list(hashes)),auto_unbox=TRUE))'''
+    script = '''paths <- unique(vapply(.libPaths(),normalizePath,"")); files <- unlist(lapply(paths,function(p) list.files(p,recursive=TRUE,full.names=TRUE,all.files=TRUE))); files <- files[file.info(files)$isdir %in% FALSE]; hashes <- tools::md5sum(files); names(hashes) <- vapply(files,function(f) {i<-which(startsWith(f,paste0(paths,"/")))[1];paste0(i,":",substring(f,nchar(paths[i])+2))},""); cat(jsonlite::toJSON(list(R=unclass(R.version),home=R.home(),capabilities=capabilities(Xchk=FALSE),packages=as.list(hashes)),auto_unbox=TRUE))'''
     r = json.loads(subprocess.check_output(['Rscript','--vanilla','-e',script],cwd=ROOT,text=True))
+    home=Path(r.pop('home'))
+    engine={str(p.relative_to(home)):digest(p) for name in ['bin','lib','etc'] for p in (home/name).rglob('*') if p.is_file()}
     fonts = {}
     if shutil.which('fc-list') and platform.system() != 'Darwin':
         listing = subprocess.check_output(['fc-list','--format=%{file}\\n'],text=True)
@@ -34,7 +36,7 @@ def runtime():
         if resolved and selector=='ALIGNMENT_PYTHON':
             probe="import sys,json,hashlib,importlib.metadata as m; print(json.dumps(dict(version=sys.version,files={str(d.metadata['Name'])+':'+str(f):hashlib.sha256(d.locate_file(f).read_bytes()).hexdigest() for d in m.distributions() for f in (d.files or []) if '..' not in f.parts and '__pycache__' not in f.parts and d.locate_file(f).is_file()}),sort_keys=True))"
             adapters[selector]['packages']=json.loads(subprocess.check_output([resolved,'-c',probe],text=True))
-    return dict(R=r,fonts=fonts,native=native,adapters=adapters,os=platform.platform(),year=datetime.now(timezone.utc).year,
+    return dict(R=r,engine=engine,fonts=fonts,native=native,adapters=adapters,os=platform.platform(),year=datetime.now(timezone.utc).year,
                 pandoc=subprocess.check_output(['Rscript','--vanilla','-e','cat(as.character(rmarkdown::pandoc_version()))'],text=True),
                 locale={'en':'en','zh':'zh_CN'},TZ='UTC',seed=1014,
                 environment={k:v for k,v in os.environ.items() if k in {'R_LIBS_SITE','R_DEFAULT_PACKAGES','FONTCONFIG_FILE','FONTCONFIG_PATH','LC_ALL','LC_CTYPE','LANG'}})
