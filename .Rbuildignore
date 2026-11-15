@@ -24,3 +24,5 @@
 ^\.cache$
 
 (^|/)Rplots\.pdf$
+
+^cran-comments\.md$

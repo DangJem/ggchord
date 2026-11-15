@@ -1,3 +1,12 @@
+# ggchord 0.28.2
+
+- Help examples use smaller explicit subsets of real data, restricted DNA
+  feature discovery and reference primer binding sites. Core plots remain
+  runnable; optional decoder examples and additional complete layout examples
+  are marked `\donttest{}` to reduce ordinary example-check costs.
+- DESCRIPTION now expands HSP (high-scoring segment pair). No plotting defaults
+  or public interfaces change in this maintenance revision.
+
 # ggchord 0.28.1
 
 - Fusion compositions rebuild their physical layout when recorded graphics are

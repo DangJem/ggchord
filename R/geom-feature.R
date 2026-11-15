@@ -255,7 +255,10 @@ ggchord_feature_data <- function(data, fixed_shape = "arrow",
 #' data(plasmid_example_pUC19)
 #' seqs <- plasmid_example_pUC19 |>
 #'   select(accver, length)
-#' feature_source <- find_common_features(plasmid_example_pUC19)
+#' # Restrict discovery to two named features on the real plasmid.
+#' feature_source <- find_common_features(
+#'   plasmid_example_pUC19, features = c("AmpR", "ori"), mode = "dna"
+#' )
 #' features <- feature_source |>
 #'   select(accver, start, end, strand, type, anno)
 #' # ASCII display copy for the default PDF help-example device.

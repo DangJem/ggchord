@@ -136,6 +136,7 @@ seqs <- seq_data_example |>
   select(accver, length)
 data(ribbon_data_example)
 links <- ribbon_data_example |>
+  slice_head(n = 2) |>
   select(qaccver, saccver, qstart, qend, sstart, send)
 ggchord(seq_data = seqs, ribbon_data = links) +
   geom_seq() +

@@ -63,7 +63,8 @@ Facets and arbitrary annotation grobs are outside the automatic layout contract.
 \examples{
 library(dplyr)
 seqs <- seq_data_example |> select(accver, length)
-p <- ggchord(seqs, ribbon_data_example) +
+links <- ribbon_data_example |> slice_head(n = 2)
+p <- ggchord(seqs, links) +
   geom_seq() + geom_link_ribbon() +
   adapt_ggchord(reference_size = c(8, 6))
 p

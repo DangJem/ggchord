@@ -181,6 +181,7 @@ geom_gene <- function(mapping = NULL, data = NULL,
 #'   select(accver, length)
 #' data(gene_data_example)
 #' genes <- gene_data_example |>
+#'   slice_head(n = 3) |>
 #'   transmute(accver, start, end, strand = source_strand, anno)
 #' ggchord(seq_data = seqs, gene_data = genes) +
 #'   geom_seq() +

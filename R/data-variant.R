@@ -124,10 +124,13 @@ ggchord_variant_breakends <- function(vcf, caller) {
 #' @seealso [geom_feature()], [geom_link_ribbon()], [read_bedpe()]
 #' @export
 #' @examples
+#' # Optional Bioconductor decoder loading can take several seconds.
+#' \donttest{
 #' if (requireNamespace("VariantAnnotation", quietly = TRUE)) {
 #'   path <- system.file("extdata", "chr22.vcf.gz", package = "VariantAnnotation")
 #'   variants <- read_vcf(path)
 #'   head(variants$features$variant[c("accver", "start", "end", "feature_id")])
+#' }
 #' }
 read_vcf <- function(file = NULL, files = NULL, structural = FALSE,
                      python = 'python3', source_file = FALSE) {

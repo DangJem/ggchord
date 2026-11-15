@@ -128,7 +128,10 @@ library(dplyr)
 data(plasmid_example_pUC19)
 seqs <- plasmid_example_pUC19 |>
   select(accver, length)
-feature_source <- find_common_features(plasmid_example_pUC19)
+# Restrict discovery to two named features on the real plasmid.
+feature_source <- find_common_features(
+  plasmid_example_pUC19, features = c("AmpR", "ori"), mode = "dna"
+)
 features <- feature_source |>
   slice_head(n = 4) |>
   select(accver, start, end, strand, type, anno)
@@ -141,6 +144,7 @@ ggchord(seq_data = seqs) +
   geom_feature_label_repel(data = features, position = position_plasmid(),
     label_segment_layer = "below", label_segment_colour = "grey50") +
   coord_circular()
+\donttest{
 # A shared display label preserves all seven biological operator records.
 repeated <- find_common_features(plasmid_example_pTRE_Tight_BI)
 feature_position <- position_feature_stack(base_position = position_plasmid())
@@ -152,4 +156,5 @@ ggchord(plasmid_example_pTRE_Tight_BI[c("accver", "length")],
     label_repeat = "bracket", label_fit = "shrink", label_min_size = 2.5) +
   coord_circular() +
   theme_ggchord_plasmid()
+}
 }

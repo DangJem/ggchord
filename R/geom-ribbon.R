@@ -108,6 +108,7 @@ make_ribbon_geom <- function(outline = FALSE, linetype = FALSE) {
 #'   select(accver, length)
 #' data(ribbon_data_example)
 #' links <- ribbon_data_example |>
+#'   slice_head(n = 2) |>
 #'   select(qaccver, saccver, qstart, qend, sstart, send)
 #' ggchord(seq_data = seqs, ribbon_data = links) +
 #'   geom_seq() +

@@ -102,11 +102,13 @@ ggchord_fusion <- function(center, center_size = NULL, layout = c("fixed", "adap
 #' data(seq_data_example)
 #' p <- ggchord(seq_data_example) + geom_seq()
 #' ggchord_fusion(p) + fusion_panel(p + coord_collinear(), "right")
+#' \donttest{
 #' quiet <- p + theme(legend.position = "none")
 #' ggchord_fusion(quiet) +
 #'   fusion_panel(quiet + coord_sankey(), "mirror", angle = 31, distance = .8)
 #' ggchord_fusion(quiet, center_box = c(.02, .35, .2, .8), allow_overlap = TRUE) +
 #'   fusion_panel(quiet + coord_collinear(), "inset", box = c(.25, .98, .3, .7))
+#' }
 fusion_panel <- function(plot, id, side = c("right", "top", "left", "bottom"), size = NULL,
     box = NULL, angle = NULL, distance = NULL) {
   ggchord_fusion_check_plot(plot)

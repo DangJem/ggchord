@@ -47,7 +47,8 @@ library(dplyr)
 data(plasmid_example_pUC19)
 seqs <- plasmid_example_pUC19 |>
   select(accver, length)
-primers <- find_primer_bindings(plasmid_example_pUC19, set = "universal")
+primers <- find_primer_bindings(plasmid_example_pUC19, set = "reference") |>
+  slice_head(n = 2)
 ggchord(seq_data = seqs) +
   geom_seq() +
   geom_primer(data = primers) +
