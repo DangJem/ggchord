@@ -1,0 +1,26 @@
+* using log directory ‘/private/var/folders/cg/wt2b30gj0f95nnj9l7lq9l_h0000gn/T/ggchord-cran-v0281-cwhzpc20/ggchord.Rcheck’
+* using R version 4.6.0 (2026-04-24)
+* using platform: aarch64-apple-darwin23
+* R was compiled by
+    Apple clang version 17.0.0 (clang-1700.3.19.1)
+    GNU Fortran (GCC) 14.2.0
+* running under: macOS 27.2
+* using session charset: UTF-8
+* current time: 2026-11-15 12:23:36 UTC
+* using option ‘--as-cran’
+* checking for file ‘ggchord/DESCRIPTION’ ... OK
+* this is package ‘ggchord’ version ‘0.28.1’
+* package encoding: UTF-8
+* checking CRAN incoming feasibility ...Warning: unable to access index for repository https://CRAN.R-project.org/src/contrib:
+  cannot open URL 'https://CRAN.R-project.org/src/contrib/PACKAGES'
+Warning: unable to access index for repository https://bioconductor.org/packages/3.23/bioc/src/contrib:
+  cannot open URL 'https://bioconductor.org/packages/3.23/bioc/src/contrib/PACKAGES'
+Warning: unable to access index for repository https://bioconductor.org/packages/3.23/data/annotation/src/contrib:
+  cannot open URL 'https://bioconductor.org/packages/3.23/data/annotation/src/contrib/PACKAGES'
+Warning: unable to access index for repository https://bioconductor.org/packages/3.23/data/experiment/src/contrib:
+  cannot open URL 'https://bioconductor.org/packages/3.23/data/experiment/src/contrib/PACKAGES'
+Warning in read.dcf(con) :
+  URL 'https://CRAN.R-project.org/src/contrib/PACKAGES.in': status was 'Couldn't resolve host name'
+Error in read.dcf(con) :
+  cannot open the connection to 'https://CRAN.R-project.org/src/contrib/PACKAGES.in'
+Execution halted

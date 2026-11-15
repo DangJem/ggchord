@@ -50,14 +50,39 @@ Windows or Debian incoming results.
 
 ### Validation status
 
-Direct execution of the revised help topics succeeded. Whole-topic elapsed
-times locally were 1.701 s for Ribbon, 0.955 s for Adaptive, 3.097 s for VCF
-and 2.254 s for BigWig. The two reader topics were each executed in a separate
-R process with their decoder namespace initially unloaded.
+On 2026-11-15, the current source was built with R CMD build and the resulting
+archive checked with R CMD check --as-cran on R 4.6.0, macOS 27.2 arm64.
+HTML Tidy 5.8.0 was selected from the existing local installation. No check
+settings were used to disable incoming checks, examples, donttest examples,
+tests or vignette rebuilding.
 
-This maintenance pass does not establish a new full R CMD check result.
+Result: 0 ERRORs, 0 WARNINGs, 1 NOTE. The only NOTE is the intentional minor
+version jump from 0.16.6 to 0.28.1, explained above. Both ordinary examples
+and the --run-donttest pass completed without a timing NOTE. All 34 testthat
+assertions passed, both vignette outputs rebuilt, and PDF/HTML manual checks
+passed. The final recorded full-example pass took 0.248 s for Ribbon, 0.834 s
+for Adaptive, 0.514 s for VCF and 2.277 s for BigWig; its longest help topic
+was geom_feature_label_repel at 4.874 s. These are sequential check timings;
+decoder dependencies may already be loaded and they are not cold-load benchmarks.
+
+Two vignette URLs pointing at an undeployed website chapter were found and
+fixed before the final build. Installed tutorials now refer to the bundled
+dataset help for provenance; the complete website chapter remains in its source.
+
+Existing example output still includes PDF-device substitution of an en dash
+and one physical-geometry refinement warning in the extended Fusion example.
+They did not produce an R CMD check WARNING or NOTE, and this maintenance
+revision does not claim to fix them.
+
 Updated Windows and Debian incoming results remain to be obtained before
-claiming that the timing NOTE is resolved on those machines. R CMD check
---as-cran normally also executes donttest examples unless configured otherwise;
-remaining extended-layout donttest examples are not claimed to be skipped by
-CRAN or fixed by this reader/example revision.
+claiming that the timing NOTE is resolved on those machines. No package has
+been resubmitted as part of this local validation.
+
+### Source archive size
+
+The rebuilt archive is 5,066,598 bytes (4.832 MiB), compared with 4,862,281
+bytes for the original 0.28.1 archive: an increase of 204,317 bytes (4.20%).
+The main addition is six compressed, ready-to-plot real-data files totalling
+201,736 bytes; plotting no longer requires preparing those inputs from the
+repository. Developer website sources and data-generation tools are excluded.
+The installed size reported by check is 8.7 Mb (informational, not a NOTE).

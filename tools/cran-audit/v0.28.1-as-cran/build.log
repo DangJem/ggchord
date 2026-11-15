@@ -1,0 +1,8 @@
+* checking for file ‘/Users/vutmvu/Library/CloudStorage/OneDrive-个人/R语言/ggchord/DESCRIPTION’ ... OK
+* preparing ‘ggchord’:
+* checking DESCRIPTION meta-information ... OK
+* installing the package (it is needed to build vignettes)
+* creating vignettes ... OK
+* checking for LF line-endings in source and make files and shell scripts
+* checking for empty or unneeded directories
+* building ‘ggchord_0.28.1.tar.gz’

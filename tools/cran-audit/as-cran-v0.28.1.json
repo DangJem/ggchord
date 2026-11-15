@@ -1,0 +1,528 @@
+{
+  "version": "0.28.1",
+  "source_commit": "b4a3c4206365ed0d9ea38e130ace81a10dd71419",
+  "recorded_at_utc": "2026-11-15T12:34:20.140804+00:00",
+  "environment": {
+    "R": "4.6.0 (2026-04-24)",
+    "platform": "aarch64-apple-darwin23",
+    "OS": "macOS 27.2",
+    "HTML_Tidy": "5.8.0",
+    "check_environment_overrides": [],
+    "PATH_prefix": "/opt/homebrew/opt/tidy-html5/bin",
+    "VariantAnnotation": "1.58.0",
+    "rtracklayer": "1.72.0"
+  },
+  "commands": {
+    "build": "R CMD build '/Users/vutmvu/Library/CloudStorage/OneDrive-个人/R语言/ggchord'",
+    "check": "PATH=\"/opt/homebrew/opt/tidy-html5/bin:$PATH\" R CMD check --as-cran ggchord_0.28.1.tar.gz"
+  },
+  "build_exit_code": 0,
+  "check_exit_code": 0,
+  "result": {
+    "errors": 0,
+    "warnings": 0,
+    "notes": 1,
+    "remaining_note": "Intentional minor-version jump: 0.16.6 -> 0.28.1",
+    "tests": {
+      "passed": 34,
+      "failed": 0,
+      "warnings": 0,
+      "skipped": 0
+    },
+    "ordinary_examples": "OK",
+    "run_donttest": "OK",
+    "vignette_rebuilding": "OK",
+    "pdf_manual": "OK",
+    "html_manual": "OK",
+    "example_timing_note": false
+  },
+  "artifact": {
+    "path": "tools/cran-audit/v0.28.1-as-cran/ggchord_0.28.1.tar.gz",
+    "bytes": 5066598,
+    "MiB": 4.831884384155273,
+    "sha256": "b8ac95f65c8278f285004aa2a3633a7b05c3aef869048223034b222f0b9faae8"
+  },
+  "original_archive": {
+    "bytes": 4862281,
+    "MiB": 4.637032508850098,
+    "sha256": "d11cd61152714c023635e6143007a6889f4db1cdc081f371a5c24b6508b0fc2e"
+  },
+  "size_delta": {
+    "bytes": 204317,
+    "percent": 4.202081286540205,
+    "added_data_bytes": 201736,
+    "installed_size_as_reported": "8.7 Mb (INFO)",
+    "uncompressed_file_payload_bytes": 7947293
+  },
+  "example_timings": {
+    "adapt_ggchord": {
+      "user": 0.817,
+      "system": 0.013,
+      "elapsed": 0.834
+    },
+    "as_ggchord_alignment": {
+      "user": 0.002,
+      "system": 0.001,
+      "elapsed": 0.001
+    },
+    "as_ggchord_feature": {
+      "user": 0.337,
+      "system": 0.005,
+      "elapsed": 0.342
+    },
+    "as_ggchord_link": {
+      "user": 0.003,
+      "system": 0.0,
+      "elapsed": 0.004
+    },
+    "as_ggchord_seq": {
+      "user": 0.003,
+      "system": 0.0,
+      "elapsed": 0.004
+    },
+    "build_ggchord_cds": {
+      "user": 0.31,
+      "system": 0.002,
+      "elapsed": 0.314
+    },
+    "bundle_ggchord_ribbons": {
+      "user": 0.005,
+      "system": 0.001,
+      "elapsed": 0.006
+    },
+    "clean_ggchord_data": {
+      "user": 0.005,
+      "system": 0.001,
+      "elapsed": 0.005
+    },
+    "coord_chord": {
+      "user": 0.227,
+      "system": 0.002,
+      "elapsed": 0.233
+    },
+    "coord_collinear": {
+      "user": 0.428,
+      "system": 0.003,
+      "elapsed": 0.431
+    },
+    "coord_dotplot": {
+      "user": 0.07,
+      "system": 0.001,
+      "elapsed": 0.071
+    },
+    "coord_radial_synteny": {
+      "user": 0.526,
+      "system": 0.003,
+      "elapsed": 0.53
+    },
+    "coord_sankey": {
+      "user": 0.281,
+      "system": 0.002,
+      "elapsed": 0.283
+    },
+    "deduplicate_ggchord_ribbons": {
+      "user": 0.004,
+      "system": 0.001,
+      "elapsed": 0.004
+    },
+    "diagnose_ggchord": {
+      "user": 0.255,
+      "system": 0.006,
+      "elapsed": 0.265
+    },
+    "export_ggchord_fusion": {
+      "user": 0.493,
+      "system": 0.005,
+      "elapsed": 0.5
+    },
+    "export_ggchord_layout": {
+      "user": 0.047,
+      "system": 0.001,
+      "elapsed": 0.048
+    },
+    "filter_ggchord_ribbons": {
+      "user": 0.005,
+      "system": 0.0,
+      "elapsed": 0.005
+    },
+    "filter_restriction_sites": {
+      "user": 0.024,
+      "system": 0.0,
+      "elapsed": 0.024
+    },
+    "find_ggchord_loci": {
+      "user": 0.004,
+      "system": 0.0,
+      "elapsed": 0.006
+    },
+    "find_primer_bindings": {
+      "user": 0.002,
+      "system": 0.0,
+      "elapsed": 0.002
+    },
+    "flagship_examples": {
+      "user": 0.0,
+      "system": 0.0,
+      "elapsed": 0.0
+    },
+    "focus_ggchord_track": {
+      "user": 0.02,
+      "system": 0.001,
+      "elapsed": 0.022
+    },
+    "fusion_panel": {
+      "user": 1.822,
+      "system": 0.01,
+      "elapsed": 1.833
+    },
+    "fusion_ribbon": {
+      "user": 0.817,
+      "system": 0.005,
+      "elapsed": 0.823
+    },
+    "genome_comparison_example": {
+      "user": 0.001,
+      "system": 0.001,
+      "elapsed": 0.002
+    },
+    "geom_alignment_segment": {
+      "user": 0.102,
+      "system": 0.002,
+      "elapsed": 0.103
+    },
+    "geom_feature": {
+      "user": 0.364,
+      "system": 0.004,
+      "elapsed": 0.368
+    },
+    "geom_feature_label_repel": {
+      "user": 4.827,
+      "system": 0.041,
+      "elapsed": 4.874
+    },
+    "geom_gene": {
+      "user": 0.374,
+      "system": 0.004,
+      "elapsed": 0.378
+    },
+    "geom_gene_label": {
+      "user": 0.572,
+      "system": 0.004,
+      "elapsed": 0.576
+    },
+    "geom_gene_label_repel": {
+      "user": 0.716,
+      "system": 0.005,
+      "elapsed": 0.722
+    },
+    "geom_link_line": {
+      "user": 0.253,
+      "system": 0.002,
+      "elapsed": 0.254
+    },
+    "geom_link_ribbon": {
+      "user": 0.246,
+      "system": 0.002,
+      "elapsed": 0.248
+    },
+    "geom_primer": {
+      "user": 0.336,
+      "system": 0.003,
+      "elapsed": 0.34
+    },
+    "geom_residue": {
+      "user": 0.076,
+      "system": 0.001,
+      "elapsed": 0.077
+    },
+    "geom_seq": {
+      "user": 0.224,
+      "system": 0.002,
+      "elapsed": 0.226
+    },
+    "geom_seq_break": {
+      "user": 0.245,
+      "system": 0.002,
+      "elapsed": 0.248
+    },
+    "geom_seq_label": {
+      "user": 0.246,
+      "system": 0.002,
+      "elapsed": 0.248
+    },
+    "geom_seq_region": {
+      "user": 0.253,
+      "system": 0.002,
+      "elapsed": 0.256
+    },
+    "geom_seq_scale": {
+      "user": 0.239,
+      "system": 0.002,
+      "elapsed": 0.242
+    },
+    "geom_track": {
+      "user": 0.594,
+      "system": 0.003,
+      "elapsed": 0.597
+    },
+    "geom_track_tile": {
+      "user": 0.036,
+      "system": 0.001,
+      "elapsed": 0.038
+    },
+    "get_chord_layout": {
+      "user": 0.035,
+      "system": 0.001,
+      "elapsed": 0.036
+    },
+    "ggchord": {
+      "user": 0.725,
+      "system": 0.011,
+      "elapsed": 0.736
+    },
+    "ggchord_api_contract": {
+      "user": 0.818,
+      "system": 0.006,
+      "elapsed": 0.825
+    },
+    "ggchord_fusion": {
+      "user": 0.752,
+      "system": 0.006,
+      "elapsed": 0.759
+    },
+    "ggchord_layout_contract": {
+      "user": 0.039,
+      "system": 0.001,
+      "elapsed": 0.04
+    },
+    "grid-helpers": {
+      "user": 0.0,
+      "system": 0.0,
+      "elapsed": 0.0
+    },
+    "link_ggchord_clusters": {
+      "user": 0.359,
+      "system": 0.002,
+      "elapsed": 0.361
+    },
+    "magnify_ggchord": {
+      "user": 1.199,
+      "system": 0.007,
+      "elapsed": 1.206
+    },
+    "map_alignment_position": {
+      "user": 0.001,
+      "system": 0.0,
+      "elapsed": 0.002
+    },
+    "map_ggchord_position": {
+      "user": 0.036,
+      "system": 0.0,
+      "elapsed": 0.037
+    },
+    "merge_ggchord_ribbons": {
+      "user": 0.007,
+      "system": 0.0,
+      "elapsed": 0.008
+    },
+    "optimize_ggchord_layout": {
+      "user": 0.005,
+      "system": 0.001,
+      "elapsed": 0.006
+    },
+    "position_track": {
+      "user": 0.001,
+      "system": 0.0,
+      "elapsed": 0.001
+    },
+    "prepare_ggchord_data": {
+      "user": 0.008,
+      "system": 0.002,
+      "elapsed": 0.009
+    },
+    "primer_catalog": {
+      "user": 0.001,
+      "system": 0.0,
+      "elapsed": 0.001
+    },
+    "project_ggchord_features": {
+      "user": 0.303,
+      "system": 0.002,
+      "elapsed": 0.306
+    },
+    "project_ggchord_links": {
+      "user": 0.303,
+      "system": 0.003,
+      "elapsed": 0.306
+    },
+    "read_aligned_fasta": {
+      "user": 0.0,
+      "system": 0.0,
+      "elapsed": 0.0
+    },
+    "read_bed": {
+      "user": 0.301,
+      "system": 0.003,
+      "elapsed": 0.305
+    },
+    "read_bedgraph": {
+      "user": 0.001,
+      "system": 0.001,
+      "elapsed": 0.001
+    },
+    "read_bedpe": {
+      "user": 0.005,
+      "system": 0.001,
+      "elapsed": 0.006
+    },
+    "read_bigwig": {
+      "user": 2.209,
+      "system": 0.06,
+      "elapsed": 2.277
+    },
+    "read_blast": {
+      "user": 0.0,
+      "system": 0.0,
+      "elapsed": 0.0
+    },
+    "read_chain": {
+      "user": 0.0,
+      "system": 0.0,
+      "elapsed": 0.0
+    },
+    "read_delta": {
+      "user": 0.0,
+      "system": 0.0,
+      "elapsed": 0.0
+    },
+    "read_fasta_lengths": {
+      "user": 0.0,
+      "system": 0.0,
+      "elapsed": 0.0
+    },
+    "read_feature_relations": {
+      "user": 0.002,
+      "system": 0.0,
+      "elapsed": 0.003
+    },
+    "read_genbank": {
+      "user": 0.0,
+      "system": 0.0,
+      "elapsed": 0.001
+    },
+    "read_gff3": {
+      "user": 0.0,
+      "system": 0.0,
+      "elapsed": 0.0
+    },
+    "read_maf": {
+      "user": 0.0,
+      "system": 0.0,
+      "elapsed": 0.0
+    },
+    "read_paf": {
+      "user": 0.0,
+      "system": 0.0,
+      "elapsed": 0.0
+    },
+    "read_signature_matches": {
+      "user": 0.002,
+      "system": 0.0,
+      "elapsed": 0.001
+    },
+    "read_vcf": {
+      "user": 0.488,
+      "system": 0.027,
+      "elapsed": 0.514
+    },
+    "register_ggchord_alignment": {
+      "user": 0.048,
+      "system": 0.0,
+      "elapsed": 0.048
+    },
+    "scale_fill_residue": {
+      "user": 0.029,
+      "system": 0.001,
+      "elapsed": 0.03
+    },
+    "scale_seq_position_continuous": {
+      "user": 0.217,
+      "system": 0.014,
+      "elapsed": 0.232
+    },
+    "scale_track_fill_gradientn": {
+      "user": 0.0,
+      "system": 0.0,
+      "elapsed": 0.0
+    },
+    "scale_track_value_continuous": {
+      "user": 0.002,
+      "system": 0.0,
+      "elapsed": 0.002
+    },
+    "segment_ggchord_data": {
+      "user": 0.007,
+      "system": 0.001,
+      "elapsed": 0.007
+    },
+    "sequence_detail_example": {
+      "user": 0.005,
+      "system": 0.001,
+      "elapsed": 0.005
+    },
+    "translate_ggchord_cds": {
+      "user": 0.008,
+      "system": 0.0,
+      "elapsed": 0.008
+    },
+    "validate_ggchord_data": {
+      "user": 0.006,
+      "system": 0.001,
+      "elapsed": 0.007
+    },
+    "validate_ggchord_hierarchy": {
+      "user": 0.006,
+      "system": 0.001,
+      "elapsed": 0.007
+    },
+    "view_ggchord": {
+      "user": 0.016,
+      "system": 0.0,
+      "elapsed": 0.016
+    }
+  },
+  "timing_scope": "Final recorded full-example (--run-donttest) pass; sequential package check, dependencies can be warm. Not independent cold-start timings.",
+  "example_output_warning_count": 13,
+  "example_output_warning_topics": [
+    "coord_dotplot",
+    "fusion_panel",
+    "geom_alignment_segment"
+  ],
+  "known_example_messages": "PDF device substitutes ASCII hyphen for U+2013; one extended Fusion physical-geometry refinement warning. These messages were not promoted to a check WARNING/NOTE.",
+  "earlier_attempts": [
+    {
+      "attempt": "sandbox",
+      "result": "Aborted during incoming feasibility because CRAN DNS was unavailable",
+      "log": "v0.28.1-as-cran/network-blocked-check.log"
+    },
+    {
+      "attempt": "network-enabled initial archive",
+      "artifact_bytes": 5066573,
+      "result": "0 ERROR, 0 WARNING, 2 NOTE",
+      "issues": [
+        "Version jump plus two vignette URLs returning 404",
+        "Old system HTML Tidy caused HTML validation to be skipped"
+      ],
+      "log": "v0.28.1-as-cran/initial-00check.log"
+    }
+  ],
+  "corrections": [
+    "Generated paired installed tutorials now use help(\"flagship_examples\", package=\"ggchord\") for offline provenance; website construction chapter unchanged",
+    "Selected existing HTML Tidy 5.8.0 for final check; no installation or check suppression"
+  ],
+  "limitations": [
+    "Local macOS arm64 results do not establish new Windows/Debian incoming results",
+    "No GitHub push/release/deploy or CRAN submission performed",
+    "Original release archive and tag unchanged"
+  ]
+}

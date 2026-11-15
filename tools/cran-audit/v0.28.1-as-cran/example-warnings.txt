@@ -1,0 +1,50 @@
+coord_dotplot
+Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y,  :
+  for '1–64,323 bp' in 'mbcsToSbcs': - substituted for – (U+2013)
+
+coord_dotplot
+Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y,  :
+  for '1–32,090 bp' in 'mbcsToSbcs': - substituted for – (U+2013)
+
+coord_dotplot
+Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y,  :
+  for '1–57,367 bp' in 'mbcsToSbcs': - substituted for – (U+2013)
+
+coord_dotplot
+Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y,  :
+  for '1–32,090 bp' in 'mbcsToSbcs': - substituted for – (U+2013)
+
+coord_dotplot
+Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y,  :
+  for '1–57,367 bp' in 'mbcsToSbcs': - substituted for – (U+2013)
+
+coord_dotplot
+Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y,  :
+  for '1–83,080 bp' in 'mbcsToSbcs': - substituted for – (U+2013)
+
+fusion_panel
+Warning: ggchord(): physical geometry did not converge within the bounded refinement budget; geometry measurements remain estimates. Inspect diagnose_ggchord() and consider a larger canvas or revised label/guide settings.
+
+geom_alignment_segment
+Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y,  :
+  for '1–64,323 bp' in 'mbcsToSbcs': - substituted for – (U+2013)
+
+geom_alignment_segment
+Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y,  :
+  for '1–32,090 bp' in 'mbcsToSbcs': - substituted for – (U+2013)
+
+geom_alignment_segment
+Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y,  :
+  for '1–57,367 bp' in 'mbcsToSbcs': - substituted for – (U+2013)
+
+geom_alignment_segment
+Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y,  :
+  for '1–32,090 bp' in 'mbcsToSbcs': - substituted for – (U+2013)
+
+geom_alignment_segment
+Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y,  :
+  for '1–57,367 bp' in 'mbcsToSbcs': - substituted for – (U+2013)
+
+geom_alignment_segment
+Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y,  :
+  for '1–83,080 bp' in 'mbcsToSbcs': - substituted for – (U+2013)

@@ -1,0 +1,97 @@
+* using log directory ‘/private/var/folders/cg/wt2b30gj0f95nnj9l7lq9l_h0000gn/T/ggchord-cran-v0281-cwhzpc20/ggchord.Rcheck’
+* using R version 4.6.0 (2026-04-24)
+* using platform: aarch64-apple-darwin23
+* R was compiled by
+    Apple clang version 17.0.0 (clang-1700.3.19.1)
+    GNU Fortran (GCC) 14.2.0
+* running under: macOS 27.2
+* using session charset: UTF-8
+* current time: 2026-11-15 12:24:04 UTC
+* using option ‘--as-cran’
+* checking for file ‘ggchord/DESCRIPTION’ ... OK
+* this is package ‘ggchord’ version ‘0.28.1’
+* package encoding: UTF-8
+* checking CRAN incoming feasibility ... [4s/92s] NOTE
+Maintainer: ‘Jem Dang <dangjem0730@gmail.com>’
+
+Version jumps in minor (submitted: 0.28.1, existing: 0.16.6)
+
+Found the following (possibly) invalid URLs:
+  URL: https://dangjem.github.io/ggchord/en/flagship-data.html
+    From: inst/doc/ggchord_vignette.html
+    Status: 404
+    Message: Not Found
+  URL: https://dangjem.github.io/ggchord/zh/flagship-data.html
+    From: inst/doc/ggchord_guide_hans.html
+    Status: 404
+    Message: Not Found
+* checking package namespace information ... OK
+* checking package dependencies ... OK
+* checking if this is a source package ... OK
+* checking if there is a namespace ... OK
+* checking for executable files ... OK
+* checking for hidden files and directories ... OK
+* checking for portable file names ... OK
+* checking for sufficient/correct file permissions ... OK
+* checking whether package ‘ggchord’ can be installed ... OK
+* checking installed package size ... INFO
+  installed size is  8.7Mb
+  sub-directories of 1Mb or more:
+    doc   3.7Mb
+    R     3.9Mb
+* checking package directory ... OK
+* checking for future file timestamps ... OK
+* checking ‘build’ directory ... OK
+* checking DESCRIPTION meta-information ... OK
+* checking top-level files ... OK
+* checking for left-over files ... OK
+* checking index information ... OK
+* checking package subdirectories ... OK
+* checking code files for non-ASCII characters ... OK
+* checking R files for syntax errors ... OK
+* checking whether the package can be loaded ... OK
+* checking whether the package can be loaded with stated dependencies ... OK
+* checking whether the package can be unloaded cleanly ... OK
+* checking whether the namespace can be loaded with stated dependencies ... OK
+* checking whether the namespace can be unloaded cleanly ... OK
+* checking loading without being on the library search path ... OK
+* checking whether startup messages can be suppressed ... OK
+* checking use of S3 registration ... OK
+* checking dependencies in R code ... OK
+* checking S3 generic/method consistency ... OK
+* checking replacement functions ... OK
+* checking foreign function calls ... OK
+* checking R code for possible problems ... [20s/20s] OK
+* checking Rd files ... OK
+* checking Rd metadata ... OK
+* checking Rd line widths ... OK
+* checking Rd cross-references ... OK
+* checking for missing documentation entries ... OK
+* checking for code/documentation mismatches ... OK
+* checking Rd \usage sections ... OK
+* checking Rd contents ... OK
+* checking for unstated dependencies in examples ... OK
+* checking contents of ‘data’ directory ... OK
+* checking data for non-ASCII characters ... OK
+* checking LazyData ... OK
+* checking data for ASCII and uncompressed saves ... OK
+* checking R/sysdata.rda ... OK
+* checking installed files from ‘inst/doc’ ... OK
+* checking files in ‘vignettes’ ... OK
+* checking examples ... [27s/28s] OK
+* checking examples with --run-donttest ... [33s/33s] OK
+* checking for unstated dependencies in ‘tests’ ... OK
+* checking tests ... OK
+  Running ‘testthat.R’
+* checking for unstated dependencies in vignettes ... OK
+* checking package vignettes ... OK
+* checking re-building of vignette outputs ... OK
+* checking PDF version of manual ... OK
+* checking HTML version of manual ... NOTE
+Skipping checking HTML validation: 'tidy' doesn't look like recent enough HTML Tidy.
+Please obtain a recent version of HTML Tidy by downloading a binary
+release or compiling the source code from <https://www.html-tidy.org/>.
+* checking for non-standard things in the check directory ... OK
+* checking for detritus in the temp directory ... OK
+* DONE
+Status: 2 NOTEs
