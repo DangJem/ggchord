@@ -15,6 +15,7 @@ jobs:
         with:
           r-version: devel
       - uses: r-lib/actions/setup-pandoc@v2
+      - uses: r-lib/actions/setup-tinytex@v2
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
           extra-packages: any::pkgload
@@ -33,6 +34,8 @@ jobs:
             ggchord.Rcheck/
             ggchord_*.tar.gz
   debian:
+    # Do not restart Debian's long dependency build for Windows-only runner fixes.
+    if: ${{ !contains(github.event.head_commit.message, '[windows-only]') }}
     runs-on: ubuntu-latest
     container: rocker/r-devel:latest
     env:
