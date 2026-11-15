@@ -786,8 +786,9 @@
       "data": "NULL",
       "overflow": "c(\"tile\", \"error\")",
       "position": "\"identity\"",
-      "show.legend": "NA",
+      "show.legend": "FALSE",
       "inherit.aes": "TRUE",
+      "line_width": "NULL",
       "...": ""
     }
   },
@@ -1215,7 +1216,8 @@
       "allow_overlap": "FALSE",
       "center_box": "NULL",
       "route": "c(\"direct\", \"avoid\")",
-      "guides": "c(\"keep\", \"collect\")"
+      "guides": "c(\"keep\", \"collect\")",
+      "frame_region": "NULL"
     }
   },
   {
@@ -1626,6 +1628,15 @@
       "...": "",
       "limits": "NULL",
       "guide": "\"none\""
+    }
+  },
+  {
+    "name": "scale_fill_residue",
+    "owner": "ggchord",
+    "alias": "",
+    "parameters": {
+      "alphabet": "c(\"DNA\", \"RNA\", \"AA\")",
+      "...": ""
     }
   },
   {

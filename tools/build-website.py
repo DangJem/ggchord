@@ -108,7 +108,7 @@ def main():
         build_time=datetime.now(timezone.utc).isoformat(),
         example_runtime=subprocess.check_output(['Rscript','--vanilla','-e',
           'cat(R.version.string, "; ggplot2 ", as.character(packageVersion("ggplot2")), sep="")'],cwd=ROOT,text=True).strip(),
-        deployment='local-only; not deployed')
+        deployment='prepared for authorized deployment; builder does not deploy' if args.publication else 'local preview; not deployed')
     (out/'build-metadata.json').write_text(json.dumps(metadata,indent=2)+'\n')
     for p in (WEB/'assets').iterdir():
         if p.is_file():shutil.copy2(p,assets/p.name)

@@ -1,5 +1,5 @@
 {
-  "source_sha256": "b38dd5c588c085d2170b8c56618efacdabeb62ed3fd73f76ecdff00c66d4b746",
+  "source_sha256": "9da34e95fec39f0c3c689e617ffc7c5f230324828e3fcced727239a64ddf0210",
   "strings": {
     "aes/purpose": {
       "source_sha256": "72476687defa4ed5f3795aaaddc8af6699cfebd0c00ca8da10f0e86d4e8e7dbc",
@@ -1570,6 +1570,16 @@
       "source_sha256": "251cffb9adc7589dccb59b67d8ca64ac76c1c04dbdb598a974c429a666cffded",
       "status": "reviewed",
       "translation": "Exact feature IDs; contiguous supplied anchors; no full lengths inferred"
+    },
+    "scale_fill_residue/purpose": {
+      "source_sha256": "731f476db80edade87a5e9ca3f72fe354ead385c8aa4a2a698a3d01a1d5b2742",
+      "status": "reviewed",
+      "translation": "Choose chemical-property colors for nucleotide or protein residues"
+    },
+    "scale_fill_residue/modes_localized": {
+      "source_sha256": "3fdb878f3b714a76a58c9f96efc00399c5ce23c40003a8d4e1469dc338c2d2c9",
+      "status": "reviewed",
+      "translation": "Existing DNA/RNA/AA columns; Cartesian local cells; explicit source mapping"
     }
   }
 }

@@ -99,6 +99,7 @@ if (length(selected)) execution[[selected]]$isolation <- "fresh R process, separ
 jsonlite::write_json(list(pages=execution,
   shared_code_sha256=unname(audit_session$inputs[["tools/documentation-examples.R"]]),
   engine_sha256=as.list(audit_session$engine),
+  source_sha256=as.list(audit_session$inputs),
   scope="Shared preparations and raw constructors in page order; preview/save calls do not write files. Installation commands are not executed. Actual PNG exports are recorded separately.",
   optional_genbank="Conditional optional parser; NULL is a skip, not successful GenBank import"),
   if (length(selected)) paste0("/tmp/ggchord-lesson-",selected,".json") else "tools/teaching-audit/lesson-execution.json",auto_unbox=TRUE,pretty=TRUE)

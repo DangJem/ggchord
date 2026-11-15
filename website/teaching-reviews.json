@@ -3243,7 +3243,8 @@
     "modes": "Local aligned characters",
     "parameters": [
       "mapping",
-      "overflow"
+      "overflow",
+      "line_width"
     ],
     "purpose": {
       "zh": "按实际物理空间绘制局部字符，明确选择色格或报错策略",
@@ -3553,6 +3554,27 @@
     "modes_localized": {
       "zh": "精确 feature ID；显式连续锚点；不推断完整长度",
       "en": "Exact feature IDs; contiguous supplied anchors; no full lengths inferred"
+    }
+  },
+  "scale_fill_residue": {
+    "level": "L2",
+    "page": "aligned-sequences",
+    "anchor": "aligned-characters",
+    "reason": "Runnable explicit DNA scale in the aligned-character lesson; manual scales retain priority",
+    "modes": "Local aligned characters",
+    "parameters": [
+      "alphabet"
+    ],
+    "purpose": {
+      "zh": "显式选择核酸或蛋白残基的化学性质配色",
+      "en": "Choose chemical-property colors for nucleotide or protein residues"
+    },
+    "alias_of": "",
+    "case": "formats",
+    "scope": "Existing alignment or local excerpt; no new alignment, macro Coord projection or CDS inference",
+    "modes_localized": {
+      "zh": "已有DNA/RNA/AA对齐列；Cartesian局部单元与显式源映射",
+      "en": "Existing DNA/RNA/AA columns; Cartesian local cells; explicit source mapping"
     }
   }
 }

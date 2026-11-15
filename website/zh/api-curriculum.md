@@ -119,6 +119,7 @@
 | [`scale_feature_fill_plasmid`](../../man/scale_feature_fill_plasmid.Rd) | 质粒注释预设标度 | [用法](scale-families.md#features) | 兼容骨架坐标（见支持表）；匹配通用注释角色或预设 | [↗](parameter-atlas.md#api-scale_feature_fill_plasmid) | [↗](chord.md) |
 | [`scale_feature_shape_manual`](../../man/scale_feature_shape_manual.Rd) | 注释形状标度 | [用法](scale-families.md#features) | 兼容骨架坐标（见支持表）；匹配通用注释角色或预设 | [↗](parameter-atlas.md#api-scale_feature_shape_manual) | [↗](chord.md) |
 | [`scale_feature_shape_plasmid`](../../man/scale_feature_fill_plasmid.Rd) | 质粒注释预设标度 | [用法](scale-families.md#features) | 兼容骨架坐标（见支持表）；匹配通用注释角色或预设 | [↗](parameter-atlas.md#api-scale_feature_shape_plasmid) | [↗](chord.md) |
+| [`scale_fill_residue`](../../man/scale_fill_residue.Rd) | 显式选择核酸或蛋白残基的化学性质配色 | [用法](aligned-sequences.md#aligned-characters) | 已有DNA/RNA/AA对齐列；Cartesian局部单元与显式源映射 | [↗](parameter-atlas.md#api-scale_fill_residue) | [↗](formats.md) |
 | [`scale_gene_fill_manual`](../../man/scale_gene_fill_manual.Rd) | 基因、注释及区域填色标度 | [用法](scale-families.md#rings) | 兼容骨架坐标（见支持表）的 bp 基因图层 | [↗](parameter-atlas.md#api-scale_gene_fill_manual) | [↗](chord.md) |
 | [`scale_link_alpha_continuous`](../../man/scale_link.Rd) | 点连接标度 | [用法](scale-families.md#point-links) | 弦图/共线性；匹配点连接角色 | [↗](parameter-atlas.md#api-scale_link_alpha_continuous) | [↗](chord.md) |
 | [`scale_link_alpha_manual`](../../man/scale_link.Rd) | 点连接标度 | [用法](scale-families.md#point-links) | 弦图/共线性；匹配点连接角色 | [↗](parameter-atlas.md#api-scale_link_alpha_manual) | [↗](chord.md) |
@@ -289,6 +290,7 @@ L2 表示最小示例与输入/输出说明，L3 另含关键参数对照；均�
 | `scale_feature_fill_plasmid` | L2 |
 | `scale_feature_shape_manual` | L2 |
 | `scale_feature_shape_plasmid` | L2 |
+| `scale_fill_residue` | L2 |
 | `scale_gene_fill_manual` | L2 |
 | `scale_link_alpha_continuous` | L2 |
 | `scale_link_alpha_manual` | L2 |

@@ -290,6 +290,7 @@ p_characters <- ggplot2::ggplot(
   local_dna, aes(alignment_column, accver, label = symbol)
 ) +
   geom_residue(overflow = "error") +
+  scale_fill_residue("DNA") +
   ggplot2::labs(x = "Alignment column", y = NULL) +
   ggplot2::theme_minimal()
 p_characters

@@ -476,12 +476,13 @@
 
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
 | --- | --- | --- | --- |
-| `mapping` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 标准 ggplot2 图层映射与数据。必需美学为 x、y 和 label；支持普通 colour、fill、alpha、size、family 和 fontface 映射与标度。size 的单位为 mm。 |
-| `data` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 标准 ggplot2 图层映射与数据。必需美学为 x、y 和 label；支持普通 colour、fill、alpha、size、family 和 fontface 映射与标度。size 的单位为 mm。 |
+| `mapping` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 标准 ggplot2 图层映射与数据。必需美学为 x、y 和 label；支持普通 colour、fill、alpha、size、family 和 fontface 映射与标度。显式 size 的单位为 mm；省略时字形统一适配单元格，最小为3 mm。 |
+| `data` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 标准 ggplot2 图层映射与数据。必需美学为 x、y 和 label；支持普通 colour、fill、alpha、size、family 和 fontface 映射与标度。显式 size 的单位为 mm；省略时字形统一适配单元格，最小为3 mm。 |
 | `overflow` | `c("tile", "error")` | 类型、单位及允许格式见右侧本函数参数契约 | 字母无法容纳时使用 "tile"（默认）或 "error"。 |
 | `position` | `"identity"` | 类型、单位及允许格式见右侧本函数参数契约 | 标准 ggplot2 图层参数。 |
-| `show.legend` | `NA` | 类型、单位及允许格式见右侧本函数参数契约 | 标准 ggplot2 图层参数。 |
+| `show.legend` | `FALSE` | 类型、单位及允许格式见右侧本函数参数契约 | 标准 ggplot2 图层参数。 |
 | `inherit.aes` | `TRUE` | 类型、单位及允许格式见右侧本函数参数契约 | 标准 ggplot2 图层参数。 |
+| `line_width` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 每个显示行的可选正整数列数；默认 NULL 不换行。从最小已显示 x 值开始分段，gap仍占一列，多序列共用相同边界。行标签显示原始列范围，横轴为行内列号。只改变展示，保留原始输入和源坐标。注册 Fusion 的每个选区须位于一个显示行内，跨行选区显式拆成多个源区间。 |
 | `...` | `无形式默认；是否必需见契约` | 类型、单位及允许格式见右侧本函数参数契约 | 传给图层的固定文字/色格美学及 na.rm。 |
 
 </details>
@@ -954,6 +955,20 @@
 | `...` | `无形式默认；是否必需见契约` | 类型、单位及允许格式见右侧本函数参数契约 | 其他标度参数。 |
 | `limits` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 可选注释类型顺序。 |
 | `guide` | `"none"` | 类型、单位及允许格式见右侧本函数参数契约 | 形状预设使用的图例。 |
+
+</details>
+
+<span id="api-scale_fill_residue"></span>
+<details><summary><code>scale_fill_residue()</code></summary>
+
+
+[完整参考](../../man/scale_fill_residue.Rd)
+
+
+| 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
+| --- | --- | --- | --- |
+| `alphabet` | `c("DNA", "RNA", "AA")` | 类型、单位及允许格式见右侧本函数参数契约 | 明确选择 DNA、RNA 或 AA 配色。直接调用默认为 DNA；geom_residue() 优先使用数据的 alphabet 字段，否则使用 AA。 |
+| `...` | `无形式默认；是否必需见契约` | 类型、单位及允许格式见右侧本函数参数契约 | 传给 ggplot2::scale_fill_manual() 的额外参数，包括 name、breaks 和 guide；自定义颜色使用 scale_fill_manual()。 |
 
 </details>
 
@@ -2575,8 +2590,8 @@
 | `detail_size` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 可选面板宽高比例，沿用 ggchord_fusion() 与 fusion_panel()。单细节默认保留较小源面板和较宽细节区域。多细节可用命名尺寸列表或NULL沿用Fusion默认分配，center_size同样沿用Fusion规则。超界报错，重叠必须显式allow_overlap。 |
 | `connector` | `c("leader", "none", "envelope")` | 类型、单位及允许格式见右侧本函数参数契约 | "leader" 为每行绘制两条装饰性边界引线；"none" 只保留高亮。"envelope" 按来源/细节面板对合组选区，逐个描绘精确源高亮带的边框，并为细节序列及其原生标签加框，排除子图标题和图例。两条引线从真实源高亮带的边缘连到细节框；不以带留白的合并大框包住多个源选区。细节框只表示展示范围，不代表单个基因组区间。引线不是生物学色带或比对。 |
 | `colour` | `"#B45309"` | 类型、单位及允许格式见右侧本函数参数契约 | 固定的高亮与引线颜色。 |
-| `alpha` | `0.2` | 类型、单位及允许格式见右侧本函数参数契约 | 高亮透明度，范围 [0,1]；引线使用不透明颜色。 |
-| `highlight_width` | `1.5` | 类型、单位及允许格式见右侧本函数参数契约 | 正数，以物理 mm 指定高亮带宽。 |
+| `alpha` | `0.2` | 类型、单位及允许格式见右侧本函数参数契约 | 高亮透明度，范围 [0,1]；引线使用不透明颜色。 字符选区使用无填充单元格描边，保留字形对比度和残基底色，不受此透明度影响。 |
+| `highlight_width` | `1.5` | 类型、单位及允许格式见右侧本函数参数契约 | 正数，以物理 mm 指定高亮带宽。 字符面板改为沿实际单元格高度描边。 |
 | `linewidth` | `0.35` | 类型、单位及允许格式见右侧本函数参数契约 | 非负引线宽度，采用通常的 ggplot2 约定。 |
 | `linetype` | `2` | 类型、单位及允许格式见右侧本函数参数契约 | 引线线型，默认虚线。 |
 | `detail_box` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 显式细节区域，替代side/detail_size，沿用fusion_panel()的box约定。多图须用覆盖全部面板的命名列表；物理区域按实际目标尺寸重新检查。 |
@@ -2584,6 +2599,7 @@
 | `center_box` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 显式源区域分配，替代center_size。 |
 | `route` | `c("direct", "avoid")` | 类型、单位及允许格式见右侧本函数参数契约 | 默认直接连接边界引线；avoid 绕开实测的其他容器及原生文字/图例包围框。端点固定，找不到可行路径时明确失败，不隐藏选区。 |
 | `guides` | `c("keep", "collect")` | 类型、单位及允许格式见右侧本函数参数契约 | 子图图例放置方式，传递给ggchord_fusion()。默认"keep"；使用"collect"共享原生外侧图例。 |
+| `frame_region` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 可选数据框，按 region 的相同行顺序提供每行有序正整数源坐标 start/end。只改变源图框和引线离开点，不改变 region、细节数据或实测放大倍率；默认 NULL 使用精确选区。可选 accver 必须逐行匹配 region。框必须在同一源实例中完整可见；跨原点框或选区须先显式拆分。 |
 
 </details>
 
@@ -3005,7 +3021,7 @@
 
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
 | --- | --- | --- | --- |
-| `plot` | `无形式默认；是否必需见契约` | 类型、单位及允许格式见右侧本函数参数契约 | 含 geom_residue 图层的单面板 Cartesian ggplot，映射 x = alignment_column、y = accver、label = symbol。支持 identity/reverse x 标度和离散 y 标度，可以独立叠加注释。拒绝分面、非线性标度、翻转坐标及移动已注册字符的 position 调整。 |
+| `plot` | `无形式默认；是否必需见契约` | 类型、单位及允许格式见右侧本函数参数契约 | 含 geom_residue 图层的单面板 Cartesian ggplot，映射 x = alignment_column、y = accver、label = symbol。支持 identity/reverse x 标度和离散 y 标度，可以独立叠加注释。拒绝分面、非线性标度、翻转坐标及移动已注册字符的 position 调整。 支持 geom_residue(line_width = ...) 换行；每个已选源区间须位于一个显示行内，跨行选区应显式拆分。 |
 | `data` | `无形式默认；是否必需见契约` | 类型、单位及允许格式见右侧本函数参数契约 | as_ggchord_alignment()、read_aligned_fasta() 或 translate_ggchord_cds()$nucleotides/residues 中实际显示的行。每个 accver/alignment_column 只能有一个字符，源坐标在每行中必须唯一。筛选窗口时保留原列号。必须包含全部已选源碱基；剪接选区应显式拆分。跨原点 magnify 选区需要显式环状来源元数据。gap 列可见，但没有源坐标。 |
 
 </details>

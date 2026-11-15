@@ -119,6 +119,7 @@ Find purpose, primary section, modes, complete cases and full parameters by API.
 | [`scale_feature_fill_plasmid`](../../man/scale_feature_fill_plasmid.Rd) | Plasmid-map feature presets | [Usage](scale-families.md#features) | all three; matching generic feature role/preset | [↗](parameter-atlas.md#api-scale_feature_fill_plasmid) | [↗](chord.md) |
 | [`scale_feature_shape_manual`](../../man/scale_feature_shape_manual.Rd) | Feature shape scale | [Usage](scale-families.md#features) | all three; matching generic feature role/preset | [↗](parameter-atlas.md#api-scale_feature_shape_manual) | [↗](chord.md) |
 | [`scale_feature_shape_plasmid`](../../man/scale_feature_fill_plasmid.Rd) | Plasmid-map feature presets | [Usage](scale-families.md#features) | all three; matching generic feature role/preset | [↗](parameter-atlas.md#api-scale_feature_shape_plasmid) | [↗](chord.md) |
+| [`scale_fill_residue`](../../man/scale_fill_residue.Rd) | Choose chemical-property colors for nucleotide or protein residues | [Usage](aligned-sequences.md#aligned-characters) | Existing DNA/RNA/AA columns; Cartesian local cells; explicit source mapping | [↗](parameter-atlas.md#api-scale_fill_residue) | [↗](formats.md) |
 | [`scale_gene_fill_manual`](../../man/scale_gene_fill_manual.Rd) | Gene, feature and region fill scales | [Usage](scale-families.md#rings) | bp gene layers; compatible backbone coordinates | [↗](parameter-atlas.md#api-scale_gene_fill_manual) | [↗](chord.md) |
 | [`scale_link_alpha_continuous`](../../man/scale_link.Rd) | Scales for point links | [Usage](scale-families.md#point-links) | chord/collinear matching point-link roles | [↗](parameter-atlas.md#api-scale_link_alpha_continuous) | [↗](chord.md) |
 | [`scale_link_alpha_manual`](../../man/scale_link.Rd) | Scales for point links | [Usage](scale-families.md#point-links) | chord/collinear matching point-link roles | [↗](parameter-atlas.md#api-scale_link_alpha_manual) | [↗](chord.md) |
@@ -289,6 +290,7 @@ L2 denotes minimal runnable use and input/output explanation; L3 adds key-parame
 | `scale_feature_fill_plasmid` | L2 |
 | `scale_feature_shape_manual` | L2 |
 | `scale_feature_shape_plasmid` | L2 |
+| `scale_fill_residue` | L2 |
 | `scale_gene_fill_manual` | L2 |
 | `scale_link_alpha_continuous` | L2 |
 | `scale_link_alpha_manual` | L2 |

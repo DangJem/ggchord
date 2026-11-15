@@ -476,12 +476,13 @@ Start with the [function index](../../man/). Examples compare important paramete
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `mapping` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Standard ggplot2 layer mapping and data. Required aesthetics are x, y and label. Ordinary colour, fill, alpha, size, family and fontface mappings/scales are supported. size is in mm. |
-| `data` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Standard ggplot2 layer mapping and data. Required aesthetics are x, y and label. Ordinary colour, fill, alpha, size, family and fontface mappings/scales are supported. size is in mm. |
+| `mapping` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Standard ggplot2 layer mapping and data. Required aesthetics are x, y and label; ordinary colour, fill, alpha, size, family and fontface mappings and scales are supported. Explicit size is in mm; when omitted, glyphs fit cells uniformly with a minimum of 3 mm. |
+| `data` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Standard ggplot2 layer mapping and data. Required aesthetics are x, y and label; ordinary colour, fill, alpha, size, family and fontface mappings and scales are supported. Explicit size is in mm; when omitted, glyphs fit cells uniformly with a minimum of 3 mm. |
 | `overflow` | `c("tile", "error")` | Type, units and accepted forms: see this API argument contract at right | "tile" (default) or "error" when letters do not fit. |
 | `position` | `"identity"` | Type, units and accepted forms: see this API argument contract at right | Standard ggplot2 layer arguments. |
-| `show.legend` | `NA` | Type, units and accepted forms: see this API argument contract at right | Standard ggplot2 layer arguments. |
+| `show.legend` | `FALSE` | Type, units and accepted forms: see this API argument contract at right | Standard ggplot2 layer arguments. |
 | `inherit.aes` | `TRUE` | Type, units and accepted forms: see this API argument contract at right | Standard ggplot2 layer arguments. |
+| `line_width` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional positive integer number of columns per displayed line; NULL keeps one line. Segments start at the smallest displayed x value; gaps consume columns and sequences share boundaries. Row labels retain original column ranges; x shows within-line columns. Display changes preserve input and source coordinates. Each registered Fusion selection must fit within one displayed line; split selections spanning lines into explicit source intervals. |
 | `...` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Fixed text/cell aesthetics and na.rm, passed to the layer. |
 
 </details>
@@ -954,6 +955,20 @@ Start with the [function index](../../man/). Examples compare important paramete
 | `...` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Additional scale arguments. |
 | `limits` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional feature-type order. |
 | `guide` | `"none"` | Type, units and accepted forms: see this API argument contract at right | Guide used by the shape preset. |
+
+</details>
+
+<span id="api-scale_fill_residue"></span>
+<details><summary><code>scale_fill_residue()</code></summary>
+
+
+[Full reference](../../man/scale_fill_residue.Rd)
+
+
+| Parameter | Signature default | Type/value rule | Meaning, range and constraints |
+| --- | --- | --- | --- |
+| `alphabet` | `c("DNA", "RNA", "AA")` | Type, units and accepted forms: see this API argument contract at right | Select DNA, RNA or AA colors explicitly. Direct calls default to DNA; geom_residue() uses the data alphabet field when available, otherwise AA. |
+| `...` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Additional arguments to ggplot2::scale_fill_manual(), including name, breaks and guide. Use scale_fill_manual() for custom colors. |
 
 </details>
 
@@ -2575,8 +2590,8 @@ Start with the [function index](../../man/). Examples compare important paramete
 | `detail_size` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional panel width/height fractions, following ggchord_fusion() and fusion_panel(). Defaults reserve a smaller source panel and a wider detail container for a single detail plot. With multiple details, use a named list of sizes or NULL for Fusion defaults; center_size also follows Fusion defaults. Out-of-frame allocations fail; overlap requires explicit allow_overlap. |
 | `connector` | `c("leader", "none", "envelope")` | Type, units and accepted forms: see this API argument contract at right | "leader" draws two decorative boundary leaders per row; "none" retains the highlights only. "envelope" groups selections by source/detail panel pair, outlines each exact source highlight band and frames the displayed detail sequences with their native labels (excluding plot titles and guides). Two leaders join actual source-band edges to the detail frame. Source selections are never enclosed in a padded combined rectangle. The detail frame is a display boundary, not a genomic interval. These are not biological ribbons or alignments. |
 | `colour` | `"#B45309"` | Type, units and accepted forms: see this API argument contract at right | Fixed highlight/leader colour. |
-| `alpha` | `0.2` | Type, units and accepted forms: see this API argument contract at right | Highlight opacity in [0,1]. Leaders use the opaque colour. |
-| `highlight_width` | `1.5` | Type, units and accepted forms: see this API argument contract at right | Positive highlight band width in physical mm. |
+| `alpha` | `0.2` | Type, units and accepted forms: see this API argument contract at right | Highlight opacity in [0,1]; leaders use opaque colors. Character selections use unfilled cell outlines to preserve glyph contrast and residue colors; this opacity does not apply to those outlines. |
+| `highlight_width` | `1.5` | Type, units and accepted forms: see this API argument contract at right | Positive highlight-band width in physical mm. Character panels outline the actual cell height instead. |
 | `linewidth` | `0.35` | Type, units and accepted forms: see this API argument contract at right | Nonnegative leader width using the usual ggplot2 convention. |
 | `linetype` | `2` | Type, units and accepted forms: see this API argument contract at right | Leader line type, default dashed. |
 | `detail_box` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Explicit detail allocation instead of side/detail_size, using the box convention in fusion_panel(). For multiple plots, supply a named list covering every detail. Physical boxes are rechecked at target size. |
@@ -2584,6 +2599,7 @@ Start with the [function index](../../man/). Examples compare important paramete
 | `center_box` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Explicit source allocation instead of center_size. |
 | `route` | `c("direct", "avoid")` | Type, units and accepted forms: see this API argument contract at right | Direct boundary leaders (default), or avoid to route around measured other containers and native text/guide envelopes. Endpoints stay fixed; no clear route fails rather than hiding the selection. |
 | `guides` | `c("keep", "collect")` | Type, units and accepted forms: see this API argument contract at right | Child legend placement, passed to ggchord_fusion(). Default "keep"; use "collect" for shared native outside legends. |
+| `frame_region` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional data frame of ordered positive integer source start/end coordinates, in the same row order as region. Changes only source frames and leader departure points, retaining region, detail data and measured magnification. NULL uses exact selections. Optional accver must match region row by row. Frames must be fully visible in the same source instance; split frames or selections crossing the origin explicitly. |
 
 </details>
 
@@ -3005,7 +3021,7 @@ Start with the [function index](../../man/). Examples compare important paramete
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `plot` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | A single-panel Cartesian ggplot with geom_residue layers mapping x = alignment_column, y = accver, label = symbol. Identity/reverse x scales and a discrete y scale are supported. Additional independent annotations are allowed. Facets, nonlinear scales, flipped coordinates and position adjustments moving registered cells are rejected. |
+| `plot` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Single-panel Cartesian ggplot containing geom_residue, mapping x = alignment_column, y = accver and label = symbol. Supports identity/reverse x scales and discrete y scales, with independent annotations. Rejects facets, nonlinear scales, flipped coordinates and positions moving registered characters. Supports geom_residue(line_width = ...) wrapping; each selected source interval must fit within a displayed line. Split selections spanning lines explicitly. |
 | `data` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | The displayed rows of as_ggchord_alignment(), read_aligned_fasta() or translate_ggchord_cds()$nucleotides/residues. One cell per accver/alignment_column; source coordinates must be unique within each row. Keep original columns when filtering a window. Every selected source base must be present; split spliced regions explicitly. Origin-wrapping magnify regions require explicit circular source metadata. Gap columns remain visible but have no source coordinate. |
 
 </details>
