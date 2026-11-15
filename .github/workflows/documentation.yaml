@@ -43,9 +43,13 @@ jobs:
       - uses: r-lib/actions/setup-pandoc@v2
       - name: Install documentation build dependencies only
         run: Rscript -e 'install.packages(c("ggplot2", "rlang", "scales", "pkgload", "rmarkdown", "jsonlite", "pkgdown", "dplyr"))'
-      - run: python3 tools/build-website.py ${{ inputs.deploy && '--publication' || '' }}
+      - name: Install optional dependencies used by reference examples
+        run: |
+          Rscript -e 'install.packages("BiocManager"); BiocManager::install(c("Biostrings", "VariantAnnotation"), ask = FALSE, update = FALSE, Ncpus = 2L); stopifnot(requireNamespace("Biostrings", quietly = TRUE), requireNamespace("VariantAnnotation", quietly = TRUE))'
+      - run: python3 tools/build-website.py --render-jobs 2 --render-batch-size 12 ${{ inputs.deploy && '--publication' || '' }}
       - run: python3 tools/check-documentation.py
       - uses: actions/upload-artifact@v4
+        if: always()
         with:
           name: documentation-preview
           path: .site/
