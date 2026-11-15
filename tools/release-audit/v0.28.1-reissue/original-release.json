@@ -1,0 +1,25 @@
+{
+  "release_id": 445826195,
+  "tag": "v0.28.1",
+  "tag_object": "4a52259e8d705ed5ab8946f32e327dd303863053",
+  "source_commit": "26d583fe84bc3b1c4f18560d8d620b456b51d209",
+  "backup_ref": "refs/tags/v0.28.1-original",
+  "html_url": "https://github.com/DangJem/ggchord/releases/tag/v0.28.1",
+  "published_at": "2026-11-15T05:28:10Z",
+  "assets": [
+    {
+      "id": 749910076,
+      "name": "ggchord_0.28.1.tar.gz",
+      "size": 4862281,
+      "digest": "sha256:d11cd61152714c023635e6143007a6889f4db1cdc081f371a5c24b6508b0fc2e",
+      "browser_download_url": "https://github.com/DangJem/ggchord/releases/download/v0.28.1/ggchord_0.28.1.tar.gz"
+    },
+    {
+      "id": 749910078,
+      "name": "SHA256SUMS",
+      "size": 88,
+      "digest": "sha256:2b3385078b1084a066325de41ca59d4de1a0b789b1427483003d3a7cfe9ef8ce",
+      "browser_download_url": "https://github.com/DangJem/ggchord/releases/download/v0.28.1/SHA256SUMS"
+    }
+  ]
+}

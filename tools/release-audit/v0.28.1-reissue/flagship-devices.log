@@ -1,0 +1,41 @@
+
+Attaching package: ‘dplyr’
+
+The following objects are masked from ‘package:stats’:
+
+    filter, lag
+
+The following objects are masked from ‘package:base’:
+
+    intersect, setdiff, setequal, union
+
+
+Attaching package: ‘purrr’
+
+The following object is masked from ‘package:ggchord’:
+
+    %||%
+
+ggchord(): gene_data is retained for compatibility; use feature_data in new code. For untyped legacy tables, add type = 'gene' or supply explicit geom_gene(data = ...).
+ggchord(): gene_data is retained for compatibility; use feature_data in new code. For untyped legacy tables, add type = 'gene' or supply explicit geom_gene(data = ...).
+PASS: p_show_chord png
+PASS: p_show_chord pdf
+PASS: p_show_chord svg
+PASS: p_show_collinear png
+PASS: p_show_collinear pdf
+PASS: p_show_collinear svg
+PASS: flag_radial png
+PASS: flag_radial pdf
+PASS: flag_radial svg
+PASS: flag_sankey png
+PASS: flag_sankey pdf
+PASS: flag_sankey svg
+PASS: flag_dotplot png
+PASS: flag_dotplot pdf
+PASS: flag_dotplot svg
+PASS: flag_fusion png
+PASS: flag_fusion pdf
+PASS: flag_fusion svg
+PASS: p_show_plasmid png
+PASS: p_show_plasmid pdf
+PASS: p_show_plasmid svg
