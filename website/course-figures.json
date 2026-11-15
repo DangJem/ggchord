@@ -224,7 +224,7 @@
       "courseblockbv"
     ],
     "width": 16,
-    "height": 5,
+    "height": 3.5,
     "dpi": 110,
     "file": "man/figures/coursecharacterdetail.png",
     "caption": {
@@ -478,5 +478,21 @@
       "en": "Collinear retains the ribbon, CDS and feature-name layers"
     },
     "source": "Bundled original HSP and source-strand CDS; cumulative graph object."
+  },
+  {
+    "id": "courseresiduewrap",
+    "object": "wrapped",
+    "snippets": [
+      "residuewrap"
+    ],
+    "width": 10,
+    "height": 2.5,
+    "dpi": 144,
+    "file": "man/figures/courseresiduewrap.png",
+    "caption": {
+      "zh": "100个真实碱基按每行50列换行显示",
+      "en": "100 observed bases displayed as two lines of 50 columns"
+    },
+    "source": "First 100 observed bases from the unchanged MT108731.1 FASTA, verified against its complete source string; display coordinates only."
   }
 ]

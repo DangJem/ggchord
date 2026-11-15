@@ -1,0 +1,47 @@
+{
+  "status": "complete; local only",
+  "version": "0.28.0.9000",
+  "branch": "v0.28.0",
+  "local_build": {
+    "entries_per_language": 93,
+    "api_topics_per_language": 122,
+    "localized_html_files_checked": 442,
+    "source_snapshot_status": "verified unchanged across rendering and finalization",
+    "reference_outputs": {
+      "en": {
+        "topics": 122,
+        "figure_topics": 57,
+        "text_topics": 65
+      },
+      "zh": {
+        "topics": 122,
+        "figure_topics": 57,
+        "text_topics": 65
+      }
+    },
+    "recovery": "Initial native exit retained; unchanged-input per-page retries passed"
+  },
+  "requirements": {
+    "residue_matrix": "continuous cells, bold dark glyphs, chemistry scales; exact source data retained",
+    "wrapped_residues": "line_width=50; 100 columns form two lines; gap and source-position checks passed",
+    "fusion_flagship": "six panels; verified second CDS lower E sequence, 11006-11065 bp; full and home PNGs checked",
+    "identity_legend": "numeric-width steps restored in home/full figures",
+    "magnification": "default frame source extents match real selected intervals; independent physical height; frame_region changes only the source frame",
+    "reference_outputs": "all API pages have actual figures or text in both languages; no execution errors or missing output",
+    "design_inspiration": "documented influences distinguished from research comparisons",
+    "commercial_names": "removed from current prose, help and comments; original provenance, machine IDs and history retained with explicit user confirmation",
+    "additional_alignment_layers": "evaluation and priorities recorded; not implemented or promised"
+  },
+  "verification_scope": "Requested direct R checks, normal PNG review, bilingual source sync and local static site. No package/release/browser/device-matrix checks.",
+  "boundaries": {
+    "merged": false,
+    "pushed": false,
+    "deployed": false,
+    "published": false,
+    "user_untracked_images_untouched": [
+      "comparison.png",
+      "first-comparison.png",
+      "fusion.png"
+    ]
+  }
+}

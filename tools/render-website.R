@@ -1,9 +1,8 @@
-# Native pkgdown templates and complete reference, without executing examples.
+# Native pkgdown templates and reference with real example output.
 # Article HTML is already converted from paired Markdown; no vignette is knitted.
 Sys.setenv(CI = 'true') # init_site must use the local favicon, not its optional remote service.
 options(sass.cache = FALSE)
 pkgload::load_all(quiet = TRUE)
-payload <- jsonlite::fromJSON('.site/page-content.json', simplifyVector = FALSE)
 page_index <- jsonlite::fromJSON('website/pages.json', simplifyVector = FALSE)
 arguments <- commandArgs(trailingOnly=TRUE)
 option <- function(key, default) {
@@ -11,11 +10,14 @@ option <- function(key, default) {
   if(length(value)) sub('^[^=]+=','',value[[1]]) else default
 }
 part <- match.arg(option('part','all'),c('all','reference','articles'))
+payload <- if (part == 'reference') list(en = list(), zh = list()) else
+  jsonlite::fromJSON('.site/page-content.json', simplifyVector = FALSE)
 offset <- as.integer(option('offset','0'))
 count <- as.integer(option('count','10000'))
 languages <- arguments[!startsWith(arguments,'--')]
 if(!length(languages)) languages <- c('en','zh')
 stopifnot(all(languages %in% c('en','zh')))
+reference_examples <- jsonlite::fromJSON('website/reference-examples.json')
 if('zh' %in% languages && part!='articles') {
  status <- system2('python3',c('tools/reference-translations.py','--output','.site/reference-zh'))
  if(status != 0L) stop('Han reference translations are incomplete or stale')
@@ -64,7 +66,7 @@ for (lang in languages) {
   if(is_han) pkg$meta$reference <- cfg$reference
   pkg$meta$navbar$structure <- cfg$navbar$structure
   for(key in keys) pkg$meta$navbar$components[[key]] <- components[[key]]
-  if(is_han) {
+  if(is_han && part != "articles") {
     for(i in seq_len(nrow(pkg$topics))) {
       path <- file.path('.site/reference-zh',pkg$topics$file_in[i])
       raw <- tools::parse_Rd(path)
@@ -78,7 +80,34 @@ for (lang in languages) {
       pkg$topics$title[i] <- paste(unlist(title),collapse='')
     }
   }
+  # Shared executable supplements cover topics with no runnable Rd example.
+  # Keep code and native output together through pkgdown's ordinary evaluator.
+  if (part != "articles") for (topic in names(reference_examples)) {
+    i <- match(paste0(topic, '.Rd'), pkg$topics$file_in)
+    if (is.na(i)) stop('Unknown reference example topic: ', topic)
+    input <- if (is_han) file.path('.site/reference-zh', pkg$topics$file_in[i]) else
+      file.path('man', pkg$topics$file_in[i])
+    text <- paste(readLines(input, warn = FALSE), collapse = "\n")
+    at <- regexpr("\\examples{", text, fixed = TRUE)
+    if (at[1L] > 0L) {
+      chars <- strsplit(text, "", fixed = TRUE)[[1L]]
+      cursor <- at[1L] + attr(at, "match.length")
+      depth <- 1L
+      while (depth > 0L) {
+        if (chars[cursor] == "\\") cursor <- cursor + 1L else
+          depth <- depth + (chars[cursor] == "{") - (chars[cursor] == "}")
+        cursor <- cursor + 1L
+      }
+      text <- paste0(substr(text, 1L, at[1L] - 1L), substring(text, cursor))
+    }
+    code <- paste0("\\examples{\n", reference_examples[[topic]], "\n}\n")
+    path <- tempfile(fileext = '.Rd')
+    writeLines(c(text, code), path)
+    pkg$topics$rd[[i]] <- getFromNamespace('rd_file', 'pkgdown')(path, pkg_path = '.')
+    unlink(path)
+  }
   if(part!='articles') {
+  if (part != 'reference' || offset == 0L) {
   pkgdown::init_site(pkg)
   pkgdown::build_home(pkg, preview=FALSE)
   # build_home also converts development Markdown from the repository root.
@@ -86,7 +115,17 @@ for (lang in languages) {
   auxiliary <- c('index.html','authors.html','LICENSE.html','LICENSE-text.html','404.html')
   generated <- list.files(pkg$dst_path, '\\.html$', full.names=TRUE)
   unlink(generated[!basename(generated) %in% auxiliary])
-  pkgdown::build_reference(pkg,examples=FALSE,lazy=FALSE,preview=FALSE)
+  }
+  reference_topics <- if (part == 'reference')
+    pkg$topics$name[seq.int(offset + 1L, min(nrow(pkg$topics), offset + count))] else NULL
+  # pkgdown evaluates under reference/, while source examples use the checkout's
+  # relative input paths. Expose those inputs only during evaluation.
+  input_link <- file.path(pkg$dst_path, 'reference', 'examples')
+  dir.create(dirname(input_link), recursive = TRUE, showWarnings = FALSE)
+  if (!file.symlink(normalizePath('examples'), input_link)) stop('Cannot expose local example inputs')
+  tryCatch(pkgdown::build_reference(pkg,examples=TRUE,run_dont_run=FALSE,lazy=FALSE,preview=FALSE,
+    topics = reference_topics),
+    finally = unlink(input_link))
   }
   selected <- if(part=='reference') list() else payload[[lang]]
   if(length(selected)) selected <- selected[seq.int(offset+1L,min(length(selected),offset+count))]
@@ -100,4 +139,4 @@ for (lang in languages) {
     invisible(gc())
   }
 }
-cat('pkgdown templates and reference rendered for en and zh. No examples or vignettes executed.\n')
+cat('pkgdown templates and reference rendered for en and zh. Reference examples evaluated; no vignettes executed.\n')

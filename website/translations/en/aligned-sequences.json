@@ -1,5 +1,5 @@
 {
-  "source_sha256": "a771095ba9327acaf33da68b1e8f5ac6e3134bf888e6e609ec413b2b4697c099",
+  "source_sha256": "c2807080930fb088f86c14ef6daa5b689874615ab00abf872975d07cb7d744c6",
   "blocks": {
     "2": {
       "source_sha256": "341aad4823c1f14957bc18dc03123191d1137ba7f771ec5bd086aa9236c9d56f",
@@ -41,57 +41,82 @@
       "status": "reviewed",
       "translation": "⟦shared:0⟧ is a standard Cartesian ggplot layer. Styles and user scales follow ggplot2. It measures glyphs against actual cell width and height at draw time: ⟦shared:1⟧ requires readable letters; ⟦shared:2⟧ retains colour cells where text cannot fit, without shrinking fonts. Focus fewer columns or increase physical width to show letters. For example, save ⟦shared:4⟧ with ordinary ⟦shared:3⟧; simply raising DPI adds no physical room. Discrete rows, identity/reverse position scales and Cartesian coordinates are supported; this layer does not directly project characters onto backbone Coords. A Cartesian character plot with explicit source mapping can be registered using ⟦shared:5⟧ for [Fusion character details](⟦shared:6⟧).\n"
     },
+    "14": {
+      "source_sha256": "0bac46ccfc4a9d0495b4075c8464a7d0608370450cbca0c40da472f4b7a82ac5",
+      "status": "reviewed",
+      "translation": "Default residue plots join neighbouring cells continuously and use a 1:1 cell ratio unless coordinates were explicitly supplied. Dark bold sans-serif glyphs fit the cells at a uniform size, with a default readability floor of 3 mm. Without an explicit fill, label is mapped automatically and the data alphabet selects DNA/RNA/AA chemistry colours. Use ⟦shared:0⟧ to select an alphabet or ⟦shared:1⟧ to replace the colours. Explicit sizes, mappings, fixed colours and user coordinates take priority. Character legends are hidden by default; enable them with ⟦shared:2⟧.\n"
+    },
     "15": {
+      "source_sha256": "e826a555d23f91cf9e63d331c32e6dca2f0f50d1e7d895b6f8e483d8f7625f08",
+      "status": "reviewed",
+      "translation": "### Automatic line wrapping ⟦shared:0⟧\n"
+    },
+    "16": {
+      "source_sha256": "5279b36a7fed1f8e0c29b0a8a625030ebb03b009f4882f6457075864a8d4c7a2",
+      "status": "reviewed",
+      "translation": "Pass ⟦shared:0⟧ to ⟦shared:1⟧ to display 100 bases as lines 1–50 and 51–100. This example reads the first 100 observed bases of MT108731.1. Row labels retain the original column ranges and the x axis shows the column within a line. Multiple sequences share the same breaks, and gaps still occupy columns. Original data, alignment columns and source positions are not renumbered.\n"
+    },
+    "18": {
+      "source_sha256": "aae526b9b8178a21a01220f50c744a95e0244c8f3c8800aeefac02b46d7a193a",
+      "status": "reviewed",
+      "translation": "![100 observed bases displayed as two lines of 50 columns](⟦shared:0⟧)\n"
+    },
+    "19": {
+      "source_sha256": "17d2a88b0a392eb0edd73b6434646dd7a53d26d6e512f0ba2e8e874dbe1b92fd",
+      "status": "reviewed",
+      "translation": "Wrapped character plots can also be registered for Fusion. Each focus interval must fit within one displayed line; split cross-line selections into explicit source intervals. The default ⟦shared:0⟧ is NULL, which keeps a single line.\n"
+    },
+    "21": {
       "source_sha256": "3b45c92ffdb115c1aa749ce3b168dcfe67b9703893a90a3ecc7763eba605e8aa",
       "status": "reviewed",
       "translation": "### Protein excerpt ⟦shared:0⟧\n"
     },
-    "16": {
-      "source_sha256": "cfd642c7bc3195e92b74ef1c00270e537120f08e4d89ffdd4b03a6a0006f498f",
+    "22": {
+      "source_sha256": "af2e6b26c0e7f342bd908f7784903ee1dfdc7af345ce0ce407e67c398c5bb3d3",
       "status": "reviewed",
-      "translation": "The same data contract accepts actual protein characters. This excerpt contains upstream gaps and residue differences; fill distinguishes literal symbols, not inferred functional domains.\n"
+      "translation": "The same data contract accepts observed protein characters. The excerpt retains upstream gaps and residue differences; default fill groups amino acids by side-chain chemistry, rather than inferred functional domains.\n"
     },
-    "19": {
+    "25": {
       "source_sha256": "76c60e27c14025138a5cdeeb494423857f0869127d85235375547a491867985f",
       "status": "reviewed",
       "translation": "### Explicit source coordinates ⟦shared:0⟧\n"
     },
-    "20": {
+    "26": {
       "source_sha256": "496ac2dbf115bfd240ebbbe919f9f145580048e215f4cef940e0a8f1b9ecf724",
       "status": "reviewed",
       "translation": "Provide one ⟦shared:0⟧ row per aligned record with ⟦shared:1⟧, ⟦shared:2⟧ and ⟦shared:3⟧. ⟦shared:2⟧ is the first nongap source coordinate. Negative-strand positions decrease; strings must already be in alignment orientation. An optional ⟦shared:4⟧ identifies the original molecule. If you provide a full forward ⟦shared:5⟧, every nongap character is checked, using nucleotide complementation on the negative strand and order reversal only for AA. Missing source strings remain unverified; no origins or strands are guessed.\n"
     },
-    "21": {
+    "27": {
       "source_sha256": "ed08ca0b7011fc2e4bf3fe1a7aa3898f84880f8379880be64df78b13599b521b",
       "status": "reviewed",
       "translation": "The following example checks consistency against ungapped fragments derived from the same alignment. It is deliberately **not independent genomic validation**. For a real genomic projection, supply independently known source sequences and interval metadata instead.\n"
     },
-    "23": {
+    "29": {
       "source_sha256": "ee8cf5151bd658fa0d996dc8e74b87cd073aa07b532cc2e5c4c2ee07c7a0a6f3",
       "status": "reviewed",
       "translation": "No mismatch/gap detail can be recovered from six HSP endpoints alone. This workflow accepts existing columns, not CIGAR/A3M/Clustal/Stockholm parsing, phase inference, consensus/Logo analysis or alignment computation. Explicit CDS translation is described below; exact macro/detail registration is available in the Fusion section.\n"
     },
-    "25": {
+    "31": {
       "source_sha256": "413e16ce7596c1f91071b2972bf764a69f7a7a4f6490d16c101e7b9f157c8ffd",
       "status": "reviewed",
       "translation": "## Source-backed CDS translation ⟦shared:0⟧\n"
     },
-    "26": {
+    "32": {
       "source_sha256": "e3d725b5ff101a7e819112f1f4c812f346539617c6c5cfc266a9e53ceeb2b740",
       "status": "reviewed",
       "translation": "⟦shared:0⟧ defines observed coding coordinates; ⟦shared:1⟧ additionally needs actual complete forward DNA/RNA strings and optional **Biostrings**. This real EMALE negative-strand CDS has source phase 0 and an ATG start. Table 11 is an explicit choice checked against the unchanged upstream protein FASTA. Input provenance is in ⟦shared:2⟧.\n"
     },
-    "28": {
+    "34": {
       "source_sha256": "7fa3b62a46e8cd194fda1fe6085c41d7f015a2e45cd18eb55e62fe27f91985c7",
       "status": "reviewed",
       "translation": "⟦shared:0⟧ reports coding/protein strings, genetic code, initiation/ambiguity policies, partial ends and terminal remainder. ⟦shared:1⟧ retains each genomic base; ⟦shared:2⟧ contains the three genomic positions of each codon in biological order, even across exon boundaries. Residue positions use the CDS feature ID's observed-protein namespace; they are not an inferred external protein accession. Terminal and internal stops remain ⟦shared:3⟧. The example removes only the final stop for comparison with the upstream FASTA convention.\n"
     },
-    "29": {
+    "35": {
       "source_sha256": "e356b329dc0a9d3ecc1967f37afde0921bb259b9876ceeb06e7f1a41a9d9d428",
       "status": "reviewed",
       "translation": "The default ⟦shared:0⟧ does not recode alternative starts; ⟦shared:1⟧ requires a complete 5-prime end. ⟦shared:2⟧ rejects fuzzy codons; explicit ⟦shared:3⟧ delegates to Biostrings, using X if unresolved. Unknown codes, missing/short sources and declared translation exceptions fail. ⟦shared:4⟧ belongs to the CDS map: only the initial phase and incomplete terminal codon are excluded; later segment phases validate continuity without deleting junction bases. No missing sequence is reconstructed. RNA must be declared explicitly. Ordered ⟦shared:5⟧ support the existing spliced/origin-join contract.\n"
     },
-    "30": {
+    "36": {
       "source_sha256": "490211dc62ae19e9bdcd51aebf933463cdb0da7099f2eebbaf19fbd22d196434",
       "status": "reviewed",
       "translation": "A complete runnable nucleotide/codon/macro example is ⟦shared:0⟧; its negative-strand labels are centred on their three coding bases. Real spliced plus/minus controls, source hashes and original expected translations are retained in ⟦shared:1⟧. [Register the character plot](⟦shared:2⟧) to connect its exact source boundaries.\n"

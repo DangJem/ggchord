@@ -14,7 +14,7 @@ results <- list()
 for (id in names(items)) {
   cat('Rendering:', id, '\n'); flush.console()
   path <- paste0('man/figures/', id, '.png')
-  size <- if (id == 'flagfusion') c(16, 12) else c(12, 9)
+  size <- if (id == 'flagfusion') c(16, 14) else c(12, 9)
   ggplot2::ggsave(path, items[[id]], width = size[1], height = size[2],
     units = 'in', dpi = 120, bg = flagship_paper)
   stopifnot(identical(render_source_sha,digest::digest(file='tools/site-flagships.R',algo='sha256',serialize=FALSE)))

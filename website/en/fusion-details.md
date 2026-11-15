@@ -16,6 +16,14 @@ This example selects pETDuet-1 source positions 101–1900 (1800 bp). Its origin
 
 Use ordinary `ggsave()` at a chosen physical size, for example 12×8 inches; `view_ggchord()` uses the same renderer. `center_size` and `detail_size` are container fractions, while `highlight_width` is physical mm. Changing the detail side or orientation can change leader crossings; global collision avoidance is not claimed. `connector = "none"` keeps only highlights.
 
+### Source frame and selected zoom interval {#source-frame}
+
+By default the source frame uses the exact horizontal source coordinates in `region`; construct the explicit detail plot for the same interval. `highlight_width` independently controls physical frame height in millimetres, so vertical layout need not match the detail. Use `frame_region` to change only the frame: provide one ordered start/end row per region, in matching order. The real region, detail data and measured magnification ratio retain their original values. Frames must be fully visible in the same source instance; split origin-wrapping overrides explicitly.
+
+{{code:magnifyframe}}
+
+The selected zoom interval remains 101–1900, while the source frame becomes 81–1920. Exported start/end and frame_start/frame_end distinguish them; `focus_frame_region_data` retains the original frame settings separately. Character panels use unfilled cell outlines so translucent highlights do not obscure letters or residue colours.
+
 The dashed lines are decorative focus leaders. They are exported separately from biological `connections` and `relationship_data`; adding actual `fusion_ribbon()` layers still requires real relationship data. `focus_region_data` preserves the original selection and arbitrary metadata, while `focus_regions` reports resolved instances, source origins and the sampled physical path-length ratio. The ratio can be below one with a small detail allocation; it is not a change to biological length.
 
 The detail plot owns its data, scales, layers and statistics. For count/bin/coverage tracks, prepare and state the intended local or global statistical population yourself; the wrapper records `explicit_detail_plot` and never silently chooses a scope. It does not copy arbitrary source layers, infer alignments or accept unregistered Cartesian character panels. Use one ordered region, explicitly select `instance`/`detail_instance` when an accession is repeated, and declare `wrap = TRUE` for origin-crossing selections as described below. Explicit nested/free-position allocations are described below; measured obstacle routing is described below.
@@ -56,7 +64,7 @@ another; global avoidance is separate from the explicit nested/box allocation de
 
 ## Character details with exact source anchors {#character-detail}
 
-A Cartesian character plot can be an independent detail panel after `register_ggchord_alignment()`. Register the actual displayed character rows: x is the original alignment/coding column, y is the alignment row ID, and label is the actual symbol. The source map remains separate from the ordinary ggplot scales. These real 60-column excerpts retain the upstream gaps and mismatches; their macro lengths refer to the **ungapped aligned fragments**, not complete genomes.
+An ordinary Cartesian character plot becomes an independent detail panel through `register_ggchord_alignment()`. Register the displayed cells: x is the original alignment/coding column, y is the alignment-row ID and label is the observed character. Source mapping remains independent of ordinary ggplot scales. This actual 30-column excerpt preserves upstream gaps and mismatches; macro lengths describe **ungapped alignment fragments**, not complete genomes. Short labels affect display only; original record IDs remain intact.
 
 {{code:courseblockbv}}
 

@@ -289,14 +289,7 @@ map_alignment_position(local_dna, selected_rows[1], 343, inverse = TRUE)
 p_characters <- ggplot2::ggplot(
   local_dna, aes(alignment_column, accver, label = symbol)
 ) +
-  geom_residue(aes(fill = symbol), size = 3, overflow = "error") +
-  ggplot2::scale_fill_manual(
-    values = c(
-      A = "#B8D8BA", C = "#A6CBE3", G = "#F2D28C", T = "#EAA8A8",
-      N = "#D8D8D8", "-" = "#F5F5F5", "." = "#F5F5F5"
-    ),
-    guide = "none"
-  ) +
+  geom_residue(overflow = "error") +
   ggplot2::labs(x = "Alignment column", y = NULL) +
   ggplot2::theme_minimal()
 p_characters
@@ -309,8 +302,7 @@ local_protein <- aligned_protein |>
   filter(accver %in% protein_rows, between(alignment_column, 221, 260))
 
 ggplot2::ggplot(local_protein, aes(alignment_column, accver, label = symbol)) +
-  geom_residue(aes(fill = symbol), size = 3, overflow = "tile") +
-  ggplot2::scale_fill_hue(l = 85, c = 35, guide = "none") +
+  geom_residue(overflow = "tile") +
   ggplot2::labs(x = "Alignment column", y = NULL) +
   ggplot2::theme_minimal()
 # ---- courseblockau ----
@@ -431,13 +423,7 @@ if (alignment_available) {
   local_maf <- maf$alignment |>
     filter(.source_input == 1, source_block == 1, between(alignment_column, 61, 100))
   ggplot2::ggplot(local_maf, aes(alignment_column, accver, label = symbol)) +
-    geom_residue(aes(fill = symbol), size = 3, overflow = "tile") +
-    ggplot2::scale_fill_manual(
-      values = c(
-        A = "#B8D8BA", C = "#A6CBE3", G = "#F2D28C", T = "#EAA8A8",
-        N = "#D8D8D8", "-" = "#F5F5F5"
-      ), guide = "none"
-    ) +
+    geom_residue(overflow = "tile") +
     ggplot2::labs(x = "MAF alignment column", y = NULL) +
     ggplot2::theme_minimal()
 
@@ -697,7 +683,7 @@ library(dplyr)
 cells <- read_aligned_fasta("examples/alignment/opuntia-aligned.fasta", "DNA")
 rows <- unique(cells$accver)[c(1, 3)]
 window <- cells |>
-  filter(accver %in% rows, between(alignment_column, 321, 380))
+  filter(accver %in% rows, between(alignment_column, 321, 350))
 sequences <- cells |>
   filter(accver %in% rows, !is_gap) |>
   group_by(accver) |>
@@ -708,14 +694,26 @@ regions <- window |>
   summarise(start = min(source_position), end = max(source_position), .groups = "drop") |>
   rename(accver = source_accver)
 letters <- ggplot2::ggplot(window, aes(alignment_column, accver, label = symbol)) +
-  geom_residue(aes(fill = symbol), size = 2.7, overflow = "error") +
-  ggplot2::scale_fill_hue(l = 85, c = 40, guide = "none") +
-  ggplot2::theme_minimal()
+  geom_residue(overflow = "error", show.legend = FALSE) +
+  ggplot2::scale_y_discrete(limits = rev(rows),
+    labels = setNames(c("AF191661.1", "AF191659.1"), rows),
+    expand = expansion(add = 0.6)) +
+  ggplot2::scale_x_continuous(breaks = seq(321, 350, 5), expand = expansion(add = 0.6)) +
+  labs(title = "Aligned nucleotide detail", x = "Alignment column", y = NULL) +
+  ggplot2::theme_minimal(base_size = 12) +
+  theme(panel.grid = element_blank(), plot.title = element_text(face = "bold"),
+    axis.text = element_text(colour = "#25363B"))
 letters <- register_ggchord_alignment(letters, window)
-macro <- ggchord(sequences) + geom_seq() + coord_collinear()
+macro <- ggchord(sequences) +
+  geom_seq(aes(seq_colour = accver), show.legend = FALSE) +
+  geom_seq_label(labels = setNames(c("AF191661.1", "AF191659.1"), rows), size = 3.5) +
+  coord_collinear() +
+  labs(title = "Sequence context") +
+  theme_ggchord_publication()
 character_detail <- magnify_ggchord(
   macro, regions, letters,
-  center_size = c(.22, .7), detail_size = c(.5, .8)
+  center_box = c(.01, .28, .20, .85), detail_box = c(.33, .99, .15, .85),
+  connector = "envelope", colour = "#725094", highlight_width = 3
 )
 export_ggchord_fusion(character_detail, width = 16, height = 5)$focus_regions
 # ggsave("character-detail.png", character_detail, width = 16, height = 5)
@@ -787,4 +785,22 @@ flagship_theme <- theme_ggchord_publication() +
     legend.title = element_text(size = 9),
     plot.margin = margin(12, 16, 12, 16)
   )
+# ---- residuewrap ----
+genome <- read_fasta_lengths("examples/fasta/MT108731.1.fna", keep_sequence = TRUE)
+fragment <- setNames(substr(genome$sequence, 1, 100), genome$accver)
+cells <- as_ggchord_alignment(fragment, "DNA",
+  source_data = data.frame(accver = genome$accver, start = 1, strand = "+",
+    sequence = genome$sequence))
+wrapped <- ggplot2::ggplot(cells, aes(alignment_column, accver, label = symbol)) +
+  geom_residue(line_width = 50, overflow = "error") +
+  ggplot2::theme_minimal(base_size = 12) +
+  theme(panel.grid = element_blank(), axis.text = element_text(colour = "#202020"))
+wrapped
+# ---- magnifyframe ----
+source_frame <- selected_region |>
+  mutate(start = start - 20, end = end + 20)
+framed_view <- magnify_ggchord(whole_plasmid, selected_region, local_detail,
+  frame_region = source_frame, highlight_width = 1.5)
+export_ggchord_fusion(framed_view, width = 12, height = 7)$focus_regions |>
+  select(accver, start, end, frame_start, frame_end)
 # ---- courseend ----

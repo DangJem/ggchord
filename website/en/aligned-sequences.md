@@ -26,11 +26,23 @@ The first selected row has a gap at alignment column 343. Column lookup therefor
 
 `geom_residue()` is a standard Cartesian ggplot layer. Styles and user scales follow ggplot2. It measures glyphs against actual cell width and height at draw time: `overflow = "error"` requires readable letters; `"tile"` retains colour cells where text cannot fit, without shrinking fonts. Focus fewer columns or increase physical width to show letters. For example, save `p_characters` with ordinary `ggsave(width = 12, height = 3.4, units = "in")`; simply raising DPI adds no physical room. Discrete rows, identity/reverse position scales and Cartesian coordinates are supported; this layer does not directly project characters onto backbone Coords. A Cartesian character plot with explicit source mapping can be registered using `register_ggchord_alignment()` for [Fusion character details](fusion-details.md#character-detail).
 
+Default residue plots join neighbouring cells continuously and use a 1:1 cell ratio unless coordinates were explicitly supplied. Dark bold sans-serif glyphs fit the cells at a uniform size, with a default readability floor of 3 mm. Without an explicit fill, label is mapped automatically and the data alphabet selects DNA/RNA/AA chemistry colours. Use `scale_fill_residue()` to select an alphabet or `ggplot2::scale_fill_manual()` to replace the colours. Explicit sizes, mappings, fixed colours and user coordinates take priority. Character legends are hidden by default; enable them with `show.legend = TRUE`.
+
+### Automatic line wrapping {#wrapped-residues}
+
+Pass `line_width = 50` to `geom_residue()` to display 100 bases as lines 1–50 and 51–100. This example reads the first 100 observed bases of MT108731.1. Row labels retain the original column ranges and the x axis shows the column within a line. Multiple sequences share the same breaks, and gaps still occupy columns. Original data, alignment columns and source positions are not renumbered.
+
+{{code:residuewrap}}
+
+![100 observed bases displayed as two lines of 50 columns](../../man/figures/courseresiduewrap.png)
+
+Wrapped character plots can also be registered for Fusion. Each focus interval must fit within one displayed line; split cross-line selections into explicit source intervals. The default `line_width` is NULL, which keeps a single line.
+
 <a id="aligned-protein"></a>
 
 ### Protein excerpt {#aligned-protein}
 
-The same data contract accepts actual protein characters. This excerpt contains upstream gaps and residue differences; fill distinguishes literal symbols, not inferred functional domains.
+The same data contract accepts observed protein characters. The excerpt retains upstream gaps and residue differences; default fill groups amino acids by side-chain chemistry, rather than inferred functional domains.
 
 {{code:courseblockat}}
 

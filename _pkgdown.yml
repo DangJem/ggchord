@@ -102,6 +102,7 @@ reference:
       - '`geom_link_line`'
       - '`geom_alignment_segment`'
       - '`geom_residue`'
+      - '`scale_fill_residue`'
       - '`geom_link_ribbon`'
       - '`geom_primer`'
       - '`geom_primer_label_repel`'

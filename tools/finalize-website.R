@@ -422,8 +422,7 @@ for(lang in c('en','zh')) {
    }
    seen<-c(seen,id)
   }
-  # API code is not executed, so the native search configuration is replaced by
-  # a deterministic local full-text index with Han substring support.
+  # A deterministic local full-text index also supports Han substring search.
   xml2::write_html(doc,path)
  }
 }

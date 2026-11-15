@@ -1,5 +1,5 @@
 {
-  "source_sha256": "292be64849ab51f20c6b8bef6a29d010f2c4fdf6d87486d553be7290349d8ed9",
+  "source_sha256": "f58be6f00f4a30c42460414c26b2425155996a13023c976fc53cbd4083b31638",
   "strings": {
     "0/caption": {
       "source_sha256": "6afc9433dda50822080a8dbc78f227a49206cf6599f3777d7211a9c5e6b0fec5",
@@ -130,6 +130,11 @@
       "source_sha256": "aa4508e322b75bce6dd088d460b92749358dcc9a0cfcd067e12ddedd89cbe765",
       "status": "reviewed",
       "translation": "Collinear retains the ribbon, CDS and feature-name layers"
+    },
+    "26/caption": {
+      "source_sha256": "46423a0e979ceb6d1260af2c577d9bcb945e3aff4b0f648b488d6a38ebbe3515",
+      "status": "reviewed",
+      "translation": "100 observed bases displayed as two lines of 50 columns"
     }
   }
 }

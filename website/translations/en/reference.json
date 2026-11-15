@@ -1,5 +1,5 @@
 {
-  "source_sha256": "66f9114524e870eb4a28f8b01e42b21740d689800989e675a75158c3f3a5b4e5",
+  "source_sha256": "a577692357c2aff6a63f1dd197686891467ff935f32d61d16ee116abeb6eebcd",
   "blocks": {
     "1": {
       "source_sha256": "e53aee14590d34936fdd67f3749853aab1f6640cc8fcece9bec6ce15fb84f943",
@@ -10,6 +10,11 @@
       "source_sha256": "1b070dcaa811d86f7fd28a2d59edf64f9e3c2378c91f09bf1d8ef8e42e793c42",
       "status": "reviewed",
       "translation": "Every current Rd topic is included below. Signatures, defaults, arguments,\nreturns and examples are generated directly from the package help source.\nEnglish R help is canonical; the Han website translates all prose sections while retaining code, signatures and source identifiers. Both paths contain the same API;\nlocalized [topics](⟦shared:0⟧), [terminology](⟦shared:1⟧) and [migration](⟦shared:2⟧)\nexplain the workflows. No functions are hidden because of language.\n"
+    },
+    "3": {
+      "source_sha256": "35a1e50b894943dbc9363f79967648de0eca7de6d9a3f84988454b79d48c462c",
+      "status": "reviewed",
+      "translation": "Examples include their actual rendered figures or text output. Data readers, filters and exporters show tables or reports; unavailable optional parsers explicitly report that no result was computed. Interactive previews open only in interactive sessions, while the website retains reproducible static figures.\n"
     }
   }
 }

@@ -1,5 +1,5 @@
 {
-  "source_sha256": "b93b394ba4ce0784980b744d52e50f53069bdffdf6de8e3510f87adbf08db214",
+  "source_sha256": "04abf737535dbc95ec4ea68b0965f638c1c310da4f9b1c884eb5271fdc078b8c",
   "blocks": {
     "1": {
       "source_sha256": "61fb363c7a49e9dab5d78878395d1848cdfeaf5b3d3ecc1ca60c9829a863e0a2",
@@ -7,9 +7,9 @@
       "translation": "## Independent views, connected source intervals ⟦shared:0⟧\n"
     },
     "2": {
-      "source_sha256": "cefa613b6b9f5b2bd09d27bccb70a3de064ddac11695c7ebaded64358d3fe9aa",
+      "source_sha256": "ac4b8f940105843dbbad376aabe06e302045b29f547f74f13b2565f59b8e7f31",
       "status": "reviewed",
-      "translation": "Fusion is a composition layer. The complete example places a Chord overview, Collinear view, Radial view, two-genome context and independent local magnification in explicit panel rectangles. Connections use observed HSPs and registered source intervals; repeated display does not create additional observations.\n"
+      "translation": "Fusion composes explicit panel rectangles containing a Chord overview, Collinear view, Radial view, two-sequence context, local zoom and observed nucleotide detail. Connections use existing HSPs and registered source intervals; displaying a record twice creates no new observation.\n"
     },
     "5": {
       "source_sha256": "1e022fdf3e1891419a11ee48fbe8e02c905ffc262d84abaac4af3a813ae79c76",
@@ -66,17 +66,27 @@
       "status": "reviewed",
       "translation": "D restores forward full-length sequences. E shows the corresponding HSP and source windows with 800 bp flanking context on either side, selecting two CDS per sequence. The same four CDS selected by source feature identifiers in E are retained in D; D no longer uses an independent selection inside these windows. Paired highlights in D and E are registered by ⟦shared:0⟧; actual magnification is remeasured for the device and panel allocation. Highlights are not additional HSPs and do not change source coordinates or biological strands. The flagship uses ⟦shared:1⟧: each sequence in D has its exact source highlight individually outlined, without a padded rectangle enclosing multiple selections. Two straight leaders connect actual source-band edges to E. The E frame encloses sequences, features, ticks and labels as a display boundary only; its heading and description remain outside and close to the sequence content. Full-size and homepage outputs allocate panel space separately, enlarge A, widen B and use more compact homepage legends. The C-D connection avoids E. Cross-panel colours identify correspondences; internal ribbon colours show Identity.\n"
     },
+    "20": {
+      "source_sha256": "c3085c0010a9c6140c83cc0403a9a8ce6535a84c43e751c0acca60d7cbcb5b75",
+      "status": "reviewed",
+      "translation": "F sits below C and E and shows the first 60 observed coding bases of the second CDS on E’s lower sequence: OQ646790.1, cds-WGH15551.1, forward strand, source positions 11006–11065 bp. Characters are extracted from the complete FASTA and verified against its source string; decorative leaders connect the exact short interval in E to F. Cells meet continuously with dark bold characters and chemistry colours by default. Original HSPs, all four local CDS and full genomic coordinates remain intact.\n"
+    },
     "21": {
+      "source_sha256": "44dfb0d4c2f7b628b970c2240a5edf8f099c8ed033d1a1ae18c0d133795dc015",
+      "status": "reviewed",
+      "translation": "D and E use the same original source windows by default. E labels original genomic positions: 7122–11192 for MT118296.1 and 10615–14691 for OQ646790.1. Horizontal source-frame extents match these intervals; frame height remains independent. Identity guides in both homepage and full figures preserve numeric interval widths, so 0–50 occupies half the colour bar rather than making unequal intervals appear equally wide.\n"
+    },
+    "23": {
       "source_sha256": "90eecf469b6a28c0f897a3727cde7ea9e1142c6a9b2f9120b343a23af90f50d6",
       "status": "reviewed",
       "translation": "## Shared child legends ⟦shared:0⟧\n"
     },
-    "22": {
+    "24": {
       "source_sha256": "a8e8c223f129ff8edfa0165ead35dd40215738ebb4c8c7e1ce828e95ef191da5",
       "status": "reviewed",
       "translation": "⟦shared:0⟧ collects native outside child legends at the composition edge, displaying visually identical legends once. Default ⟦shared:1⟧ retains the earlier layout. Original plots are not modified, and explicitly hidden legends remain hidden. Each panel still uses its own scales: shared semantics require matching limits, breaks and guide styles. Legends with the same title but different contents are not forcibly merged.\n"
     },
-    "23": {
+    "25": {
       "source_sha256": "c6ea5f0d0703d3f018a5b6a47f006dbf5b86da85e402e2499918b448e898794e",
       "status": "reviewed",
       "translation": "The flagship places Sequence, Strand, Identity and cross-panel Correspondence legends together at the bottom, freeing space in the children. Inside legends cannot be collected; nested cross-panel legends remain managed by their own compositions. Collected legends are measured and wrapped at the actual device size. If one legend is too wide, configure its native guide or enlarge the canvas.\n"

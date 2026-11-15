@@ -70,10 +70,10 @@
     "object": "home_fusion",
     "name": "Fusion",
     "width": 10,
-    "height": 8,
+    "height": 10,
     "dpi": 160,
     "file": "man/figures/homefusion.png",
     "full": "flagfusion",
-    "source": "Shared five-panel flagship with an output-specific layout and compact shared legends: six selected original HSPs and twelve source CDS per overview; full 32-HSP/266-CDS inputs retained; forward two-genome context, registered source-window magnification and three original cross-panel correspondences. No image cropping."
+    "source": "Shared six-panel flagship; original HSPs and CDS retained. The second CDS on E lower sequence supplies 60 verified coding bases in F; registered source-window and nucleotide magnification use exact source intervals. No image cropping."
   }
 ]

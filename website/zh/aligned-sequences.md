@@ -26,11 +26,23 @@
 
 `geom_residue()` 是普通 Cartesian ggplot 图层，样式和用户标度遵循 ggplot2。绘制时按实际单元宽高测量字形：`overflow = "error"` 要求文字可读，`"tile"` 对放不下的字母保留色格，不缩小字号。显示字母时可减少列数或增大物理宽度，例如用普通 `ggsave(width = 12, height = 3.4, units = "in")` 保存 `p_characters`；仅增加 DPI 不会增加物理空间。支持离散行、identity/reverse 位置标度与 Cartesian 坐标；该层不直接投射到骨架 Coord。具有明确来源映射的 Cartesian 字符图可经 `register_ggchord_alignment()` 注册，用于 [Fusion 字符细节](fusion-details.md#character-detail)。
 
+默认残基图将相邻色格连续拼接，在未指定坐标时采用1:1单元格比例。字形使用深色粗体无衬线字体，并以统一比例适配色格；默认不会缩到3 mm以下。未显式提供 fill 时自动映射 label，依据数据 alphabet 使用 DNA/RNA/AA 化学性质配色；`scale_fill_residue()` 可显式选择字母表，`ggplot2::scale_fill_manual()` 可替换颜色。显式字号、映射、固定颜色与用户坐标优先。默认不显示字符图例，可用 `show.legend = TRUE` 开启。
+
+### 自动换行 {#wrapped-residues}
+
+将 `line_width = 50` 传给 `geom_residue()`，可把100个碱基分成1–50、51–100两行。以下读取 MT108731.1 的前100个真实碱基；行标签保留原始列范围，横轴显示行内列号。多序列共用同一分段边界，gap仍占一列；原始数据、对齐列和源位置不会重编号。
+
+{{code:residuewrap}}
+
+![100个真实碱基按每行50列换行显示](../../man/figures/courseresiduewrap.png)
+
+换行字符图也可注册到 Fusion；每个聚焦选区必须落在单个显示行内，跨行选区须显式拆成多个源区间。`line_width` 默认 NULL，即不换行。
+
 <a id="aligned-protein"></a>
 
 ### 蛋白局部片段 {#aligned-protein}
 
-同一数据契约可接收真实蛋白字符。该窗口保留上游 gap 与残基差异；fill 区分原始字符，不代表推断的功能域。
+同一数据契约可接收真实蛋白字符。该窗口保留上游 gap 与残基差异；默认 fill 按侧链化学性质分组，不代表推断的功能域。
 
 {{code:courseblockat}}
 

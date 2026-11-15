@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build paired package-native documentation; never execute R examples/vignettes."""
+"""Build paired package-native documentation; evaluate reference examples, never knit vignettes."""
 import argparse
 import hashlib
 import html
@@ -57,6 +57,36 @@ def assert_render_source_snapshot(snapshot, input_hashes):
     if render_source_snapshot() != snapshot or current_inputs != input_hashes:
         raise RuntimeError('Website source inputs changed during the build; '
                            'retain partial files but do not mark the build complete.')
+
+
+def audit_reference_output(out):
+    """Require native output beside every topic's code, rather than code alone."""
+    records = {}
+    errors = []
+    for lang in ('en', 'zh'):
+        rows = []
+        for rd in sorted((ROOT/'man').glob('*.Rd')):
+            path = out/lang/'reference'/(rd.stem+'.html')
+            text = path.read_text() if path.exists() else ''
+            at = text.find('id="ref-examples"')
+            examples = text[at:] if at >= 0 else ''
+            figures = re.findall(r'<img\b[^>]*src="([^"]+)"', examples)
+            text_output = 'class="r-out' in examples
+            if not figures and not text_output:
+                errors.append(f'{lang}/{rd.stem}: missing evaluated output')
+            if 'class="r-err' in examples:
+                errors.append(f'{lang}/{rd.stem}: example execution error')
+            if not re.search(r'<h1\b[^>]*>\s*[^<\s]', text):
+                errors.append(f'{lang}/{rd.stem}: missing topic title')
+            for figure in figures:
+                if not (path.parent/figure).is_file():
+                    errors.append(f'{lang}/{rd.stem}: missing figure {figure}')
+            rows.append(dict(topic=rd.stem, figures=figures, text_output=text_output))
+        records[lang] = rows
+    (out/'reference-output.json').write_text(json.dumps(dict(
+        status='failed' if errors else 'passed', topics=records, errors=errors), indent=2)+'\n')
+    if errors:
+        raise RuntimeError('Reference output audit failed:\n'+'\n'.join(errors))
 
 
 def main():
@@ -158,7 +188,9 @@ def main():
     def render_locale(lang):
         # Independent bounded R workers avoid accumulating a whole site's
         # template state in one process. Every actual return code is retained.
-        jobs=[['--part=reference']]+[['--part=articles','--offset='+str(i),'--count='+str(args.render_batch_size)]
+        jobs=[['--part=reference','--offset='+str(i),'--count='+str(args.render_batch_size)]
+              for i in range(0,len(list((ROOT/'man').glob('*.Rd'))),args.render_batch_size)]
+        jobs += [['--part=articles','--offset='+str(i),'--count='+str(args.render_batch_size)]
               for i in range(0,len(payload[lang]),args.render_batch_size)]
         results=[];logs=[]
         for index, options in enumerate(jobs):
@@ -181,6 +213,7 @@ def main():
     (out/'build.log').write_text(combined)
     if any(statuses.values()):
         raise SystemExit('Native locale renderers failed: '+json.dumps(statuses)+'\n'+combined[-7000:])
+    audit_reference_output(out)
     assert_render_source_snapshot(render_snapshot, input_hashes)
     finalize(out,args,render_snapshot,input_hashes)
 
@@ -261,7 +294,7 @@ def finalize(out,args,render_snapshot,input_hashes):
     files=[p for base in [WEB,ROOT/'R',ROOT/'man',ROOT/'tools',ROOT/'vignettes'] for p in base.rglob('*') if p.is_file() and '__pycache__' not in p.parts]
     files += inputs + sorted((ROOT/'data').glob('*.rda'))
     files += [ROOT/p for p in ['DESCRIPTION','NAMESPACE','NEWS.md','README.md','README-Hans.md','MIGRATION.md','MIGRATION-Hans.md','_pkgdown.yml','.github/workflows/documentation.yaml']]
-    manifest=dict(version=re.search(r'^Version: (.+)$',(ROOT/'DESCRIPTION').read_text(),re.M)[1],api_inventory='current NAMESPACE/formals; tools/teaching-audit/teaching-summary-v'+'.'.join(re.search(r'^Version: (.+)$',(ROOT/'DESCRIPTION').read_text(),re.M)[1].split('.')[:3])+'.json',generator='pkgdown + paired Markdown + shared static assets',
+    manifest=dict(version=re.search(r'^Version: (.+)$',(ROOT/'DESCRIPTION').read_text(),re.M)[1],api_inventory='current NAMESPACE and man topics; reference-output.json records evaluated examples',generator='pkgdown + paired Markdown + shared static assets',
         commit=subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip(),
         dirty=bool(subprocess.check_output(['git','status','--porcelain'],cwd=ROOT,text=True)),
         deployment='prepared for authorized deployment; builder does not deploy' if args.publication else 'local preview; not deployed',
@@ -274,6 +307,6 @@ def finalize(out,args,render_snapshot,input_hashes):
     (out/'build-manifest.json').write_text(json.dumps(manifest,ensure_ascii=False,indent=2)+'\n')
     (out/'page-content.json').unlink()
     shutil.rmtree(out/'reference-zh')
-    print(f'Built {len(PAGES)} paired entries with pkgdown and {len(topics)} reference topics; no deployment, examples or vignette execution.')
+    print(f'Built {len(PAGES)} paired entries with pkgdown and {len(topics)} reference topics; reference examples evaluated; no deployment or vignette execution.')
 
 if __name__=='__main__':main()

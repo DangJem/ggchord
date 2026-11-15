@@ -16,6 +16,14 @@
 
 用普通 `ggsave()` 指定物理尺寸保存，例如 12×8 英寸；`view_ggchord()` 使用同一渲染器。`center_size`、`detail_size` 是容器比例，`highlight_width` 则以物理 mm 计。细节方位和显示方向会影响引线是否交叉，这里不承诺全局避让。`connector = "none"` 只保留高亮。
 
+### 原图框与真实放大范围 {#source-frame}
+
+默认源图框使用 `region` 的精确横向源坐标；细节图按同一区间显式构造。框高由 `highlight_width` 以物理毫米独立控制，纵向排版不要求与细节图相同。需要只改框时提供 `frame_region`：每个 region 行对应一行 start/end，顺序一致；真实 region、细节图数据和实测放大倍率保持原值。框必须在相同源实例中完整可见，跨原点自定义框先显式拆分。
+
+{{code:magnifyframe}}
+
+上例的真实放大区间仍是101–1900；框改为81–1920。导出表中的 start/end 与 frame_start/frame_end 分别记录两者，`focus_frame_region_data` 单独保留原始框设置。字符面板使用无填充单元格描边，避免半透明高亮遮盖字母和残基底色。
+
 虚线是装饰性的聚焦引线，与生物学 `connections`、`relationship_data` 分开导出；添加真实 `fusion_ribbon()` 仍须提供真实关系数据。`focus_region_data` 保留原始选区及任意元数据，`focus_regions` 记录解析出的实例、源原点和采样物理路径长度比。细节容器较小时，该比值可能小于 1，这不改变生物学长度。
 
 细节图拥有自己的数据、标度、图层和统计。若使用 count/bin/coverage 轨道，请自行准备并说明局部或全局统计总体；组合器只记录 `explicit_detail_plot`，不会静默选择口径。它不复制任意源图层、不推断比对，也不接收未注册的 Cartesian 字符面板。当前使用一个有序区间；同一 accession 重复时显式指定 `instance`/`detail_instance`，跨原点选区按后文显式声明 `wrap = TRUE`。下节提供独立细节；后文进一步介绍显式嵌套与自由区域分配，实测障碍路由见后文。
@@ -52,7 +60,7 @@ Fusion 默认分配；区域重叠会报错。标准保存按目标尺寸重建�
 
 ## 精确关联源坐标的字符细节 {#character-detail}
 
-普通 Cartesian 字符图通过 `register_ggchord_alignment()` 可成为独立细节面板。注册实际显示的字符行：x为原始对齐列/编码列，y为对齐行ID，label为真实字符。源映射与普通 ggplot 标度保持独立。以下真实60列片段保留上游 gap 和 mismatch；宏观长度表示**去gap后的对齐片段**，不是完整基因组。
+普通 Cartesian 字符图通过 `register_ggchord_alignment()` 可成为独立细节面板。注册实际显示的字符行：x为原始对齐列/编码列，y为对齐行ID，label为真实字符。源映射与普通 ggplot 标度保持独立。以下真实30列片段保留上游 gap 和 mismatch；宏观长度表示**去gap后的对齐片段**，不是完整基因组。短标签仅用于显示，原始记录 ID 保留。
 
 {{code:courseblockbv}}
 

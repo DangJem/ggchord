@@ -10,6 +10,7 @@ if (!exists("p_show_chord") || !exists("p_show_collinear")) {
 }
 # ---- flagshipdata ----
 library(ggchord)
+library(ggplot2)
 library(dplyr)
 flagship_paper <- "#FFFCF5"
 flagship_sequences <- read_fasta_lengths("examples/fasta/*.fna") |>
@@ -235,12 +236,52 @@ fusion_zoom_view <- ggchord(flagship_focused$seq_data, flagship_focused$ribbon_d
   geom_seq_label(size = 3.5, seq_label_orientation = "horizontal") +
   coord_collinear(ratio = 0.85, fit = "manual",
     xlim = c(-0.42, 2.08), ylim = c(-0.72, 0.22)) + fusion_shared_styles +
-  scale_seq_position_continuous(n.breaks = 3, minor_breaks = NULL) +
+  scale_seq_position_continuous(n.breaks = 3, minor_breaks = NULL, coordinates = "source") +
   labs(title = "E  |  Local zoom", subtitle = "Source windows + 800 bp flanks") +
   theme(plot.title = element_text(hjust = 0.5), plot.subtitle = element_text(hjust = 0.5))
 fusion_context_sequences <- flagship_sequences |> filter(accver %in% flagship_windows$accver)
 fusion_detail_source_features <- flagship_features |>
   semi_join(fusion_detail_features, by = c("accver", "feature_id"))
+# Select the second displayed CDS on E's lower sequence, then read its real bases.
+fusion_base_cds <- fusion_detail_source_features |>
+  filter(accver == tail(flagship_focused$seq_data$accver, 1)) |>
+  arrange(start) |>
+  slice(2)
+fusion_base_genome <- read_fasta_lengths("examples/fasta/*.fna", keep_sequence = TRUE) |>
+  filter(accver == fusion_base_cds$accver)
+fusion_base_start <- if (fusion_base_cds$strand == "+") fusion_base_cds$start else fusion_base_cds$end - 59
+fusion_base_end <- fusion_base_start + 59
+fusion_base_string <- substring(fusion_base_genome$sequence, fusion_base_start, fusion_base_end)
+if (fusion_base_cds$strand == "-") {
+  fusion_base_string <- paste0(chartr("ACGTRYMKSWBDHVN", "TGCAYRKMSWVHDBN",
+    rev(strsplit(fusion_base_string, "", fixed = TRUE)[[1]])), collapse = "")
+}
+fusion_base_cells <- as_ggchord_alignment(setNames(fusion_base_string, fusion_base_cds$feature_id),
+  "DNA", source_data = data.frame(accver = fusion_base_cds$feature_id,
+    source_accver = fusion_base_cds$accver,
+    start = if (fusion_base_cds$strand == "+") fusion_base_start else fusion_base_end,
+    strand = fusion_base_cds$strand, sequence = fusion_base_genome$sequence))
+fusion_base_view <- ggplot(fusion_base_cells, aes(alignment_column, accver, label = symbol)) +
+  geom_residue(overflow = "error", show.legend = FALSE) +
+  scale_x_continuous(breaks = seq(1, 60, 10),
+    labels = function(x) fusion_base_cells$source_position[match(x, fusion_base_cells$alignment_column)],
+    expand = expansion(add = 0.6)) +
+  scale_y_discrete(labels = setNames("DNA", fusion_base_cds$feature_id), expand = expansion(add = 0.7)) +
+  labs(title = "F  |  Nucleotide detail", x = "Source position (bp)", y = NULL,
+    subtitle = paste0(fusion_base_cds$accver, " / ", fusion_base_cds$feature_id,
+      "  |  first 60 coding bases (", fusion_base_cds$strand, ")  |  ",
+      fusion_base_start, "-", fusion_base_end, " bp")) +
+  theme_minimal(base_size = 11) +
+  theme(panel.grid = element_blank(), plot.background = element_rect(fill = flagship_paper, colour = NA),
+    axis.text = element_text(colour = "#25363B"),
+    plot.title = element_text(size = 16, face = "bold", hjust = 0.5),
+    plot.subtitle = element_text(size = 10, colour = "#52646A", hjust = 0.5), plot.margin = margin(4, 12, 4, 12))
+fusion_base_view <- register_ggchord_alignment(fusion_base_view, fusion_base_cells)
+fusion_focus_regions <- bind_rows(
+  flagship_windows |> mutate(source_panel = "center", detail_panel = "zoom"),
+  data.frame(accver = fusion_base_cds$accver, start = fusion_base_start, end = fusion_base_end,
+    source_panel = "zoom", detail_panel = "bases")
+)
 fusion_context_features <- fusion_display_features |>
   inner_join(flagship_windows, by = "accver", suffix = c("", ".window")) |>
   filter(end < start.window | start > end.window) |>
@@ -270,24 +311,25 @@ fusion_connections <- list(
 make_flagship_fusion <- function(preview = FALSE) {
   output_styles <- list(
     guides(ribbon_fill = ggplot2::guide_coloursteps(available_aes = "ribbon_fill",
-      even.steps = preview, show.limits = TRUE, position = "bottom", direction = "horizontal",
-      theme = theme(legend.key.width = grid::unit(if (preview) 64 else 85, "mm"),
+      even.steps = FALSE, show.limits = TRUE, position = "bottom", direction = "horizontal",
+      theme = theme(legend.key.width = grid::unit(if (preview) 90 else 85, "mm"),
         legend.key.height = grid::unit(3, "mm")))),
     theme(plot.title = element_text(size = if (preview) 15 else 16),
       plot.subtitle = element_text(size = if (preview) 9 else 10),
       legend.text = element_text(size = if (preview) 8 else 9))
   )
-  out <- magnify_ggchord(fusion_detail_view + output_styles, region = flagship_windows,
-    detail_plot = list(zoom = fusion_zoom_view + output_styles), guides = "collect",
-    center_box = c(0.465, 0.97, 0.385, 0.59),
-    detail_box = list(zoom = c(0.49, 0.99, 0.01, 0.36)),
-    colour = "#725094", alpha = 0.35, highlight_width = 4,
+  lift <- function(box) c(box[1:2], 0.20 + 0.80 * box[3:4])
+  out <- magnify_ggchord(fusion_detail_view + output_styles, region = fusion_focus_regions,
+    detail_plot = list(zoom = fusion_zoom_view + output_styles, bases = fusion_base_view), guides = "collect",
+    center_box = lift(c(0.465, 0.97, 0.385, 0.59)),
+    detail_box = list(zoom = lift(c(0.49, 0.99, 0.01, 0.36)), bases = c(0.025, 0.985, 0, 0.17)),
+    colour = "#725094", alpha = 0.20, highlight_width = 2.2,
     linewidth = 0.40, connector = "envelope", route = "avoid") +
     fusion_panel(fusion_chord_view + output_styles, id = "chord",
-      box = c(0.01, 0.455, if (preview) 0.52 else 0.54, 0.99)) +
-    fusion_panel(fusion_linear_view + output_styles, id = "linear", box = c(0.52, 0.995, 0.60, 0.99)) +
+      box = lift(c(0.01, 0.455, if (preview) 0.52 else 0.54, 0.99))) +
+    fusion_panel(fusion_linear_view + output_styles, id = "linear", box = lift(c(0.52, 0.995, 0.60, 0.99))) +
     fusion_panel(fusion_radial_view + output_styles, id = "radial",
-      box = c(0.01, 0.455, 0, if (preview) 0.50 else 0.52))
+      box = lift(c(0.01, 0.455, 0, if (preview) 0.50 else 0.52)))
   for (connection in fusion_connections) out <- out + connection
   out <- out + scale_fill_manual(name = if (preview) "Links" else "Correspondence", values = c("A - B" = "#527FB8",
     "A - C" = "#CE9741", "C - D" = "#9064AC")) +
@@ -300,9 +342,9 @@ make_flagship_fusion <- function(preview = FALSE) {
       plot.subtitle = element_text(size = 11, colour = "#52646A"),
       plot.caption = element_text(size = 10, colour = "#52646A", hjust = 0),
       plot.margin = margin(8, 10, 8, 10))
-  if (!preview) out <- out + labs(title = "One dataset, five linked views",
+  if (!preview) out <- out + labs(title = "One dataset, six linked views",
     subtitle = "Six selected HSPs and twelve source CDS per overview; full inputs retained separately",
-    caption = "Coloured ribbons: observed HSPs. D outlines mark exact source windows; dashed leaders point to E.")
+    caption = "Coloured ribbons: observed HSPs. Source-window leaders connect D to E; the selected CDS bases connect E to F.")
   out
 }
 flag_fusion <- make_flagship_fusion()
