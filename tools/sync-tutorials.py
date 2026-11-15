@@ -49,6 +49,10 @@ knitr::opts_chunk$set(eval = FALSE, collapse = TRUE, comment = "#>")
             lambda m: '#'+m[1]+' '+m[2]+(f' {{#{p["slug"]}-{m[3]}}}' if m[3] else ''), body, flags=re.M)
         def lesson_link(match):
             label, slug, anchor = match.groups()
+            # Installed tutorials can consult dataset provenance offline; the
+            # website keeps its separate full data-construction chapter.
+            if slug == 'flagship-data':
+                return '`help("flagship_examples", package = "ggchord")`'
             if slug in INTRO_CHAPTERS:
                 return f'[{label}](#{slug}' + (f'-{anchor}' if anchor else '') + ')'
             target = f'https://dangjem.github.io/ggchord/{lang}/{slug}.html'

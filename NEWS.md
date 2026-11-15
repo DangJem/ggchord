@@ -3,8 +3,8 @@
 - Further shorten Ribbon and Adaptive help examples. VCF examples copy three
   unchanged source records instead of parsing the complete demonstration file;
   BigWig examples show one selected read. Both readers retain optional dependency
-  and platform guards and run as ordinary examples. Complete website examples
-  remain available.
+  and platform guards and run as ordinary examples. Installed tutorials refer
+  to local dataset help for provenance; complete website examples remain available.
 
 - Add ready-to-plot datasets for all seven flagship types and the 13 complete
   reference maps. Plotting pages load prepared inputs; a dedicated bilingual

@@ -244,7 +244,7 @@ ggsave("circular-first.png", p_coursecirclefeature,
 
 ## HSP axes, orientation and mapping {#dotplot-start}
 
-See [Flagship data sources and construction](https://dangjem.github.io/ggchord/en/flagship-data.html) for provenance, display selections and rebuilding. This page loads bundled inputs directly and focuses on plotting settings.
+See `help("flagship_examples", package = "ggchord")` for provenance, display selections and rebuilding. This page loads bundled inputs directly and focuses on plotting settings.
 
 Start with observed HSPs from one sequence pair, then extend to a four-sequence matrix. The minimal inputs are complete sequence lengths and four HSP endpoints; annotations are optional.
 
