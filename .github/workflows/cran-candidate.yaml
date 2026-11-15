@@ -21,6 +21,11 @@ jobs:
         with:
           extra-packages: any::pkgload
           needs: check
+      - name: Install standard R manual fonts
+        shell: Rscript {0}
+        run: |
+          tinytex::tlmgr_install(c("courier", "times", "helvetic", "symbol", "zapfding", "ec", "cm-super", "makeindex", "amsfonts", "psnfss", "upquote", "inconsolata"))
+          stopifnot(length(system2("kpsewhich", "pcrr8t.tfm", stdout = TRUE)) > 0L)
       - name: Profile and check Windows R-devel
         shell: Rscript {0}
         env:
