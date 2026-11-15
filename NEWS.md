@@ -1,5 +1,10 @@
 # ggchord 0.28.0 (development)
 
+- Fusion compositions rebuild their physical layout when recorded graphics are
+  replayed on a different device. This fixes cropped panels and misplaced
+  cross-panel ribbons/leaders in native reference output and other recorded-plot
+  workflows; direct `ggsave()` output remains consistent at the target size.
+
 - `geom_residue()` now defaults to a continuous alignment matrix with a 1:1
   cell ratio, dark bold sans-serif glyphs and chemistry-based DNA/RNA/AA fill
   scales. The earlier unconstrained row-height backgrounds could become tall

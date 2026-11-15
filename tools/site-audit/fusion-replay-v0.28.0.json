@@ -1,0 +1,49 @@
+{
+  "status": "passed",
+  "scope": "Actual Rd examples on one capture/export device pair; no release matrix",
+  "source_sha256": "c8a72c85f87ab465af37c146717f78e819ef13eae73a759f556e50112b2c50ab",
+  "cases": {
+    "ggchord_fusion-1": {
+      "recorded_replay_matches_direct_export": true,
+      "replay_sha256": "3f0678dd4c3004eb916fcb7fc35f48355b7bbf47032a1664eb8d60985883ae09"
+    },
+    "fusion_panel-1": {
+      "recorded_replay_matches_direct_export": true,
+      "replay_sha256": "02bf81e50030527191e331f928eba0effe8cb17a999a6bf6ecc6b89f3bcbded2"
+    },
+    "fusion_panel-2": {
+      "recorded_replay_matches_direct_export": true,
+      "replay_sha256": "89992e023ed9f8c5967bd8df76e9a72db4745319069a83ab1fff7d76e258552e"
+    },
+    "fusion_panel-3": {
+      "recorded_replay_matches_direct_export": true,
+      "replay_sha256": "9f6af8cbcd19a4d65cd1d75495f9865ab77b2fa7a74fe055339d726f1767f52d"
+    },
+    "fusion_ribbon-1": {
+      "recorded_replay_matches_direct_export": true,
+      "replay_sha256": "9026f931e55aa8a71ba2e7f32bcaba5e8cace433691db8bbd22d5268d97a3943"
+    },
+    "magnify_ggchord-1": {
+      "recorded_replay_matches_direct_export": true,
+      "replay_sha256": "f3a615272c1fcaf048dfc3b00234cc79ffc3c6d4277def20d332318dabaddbdc"
+    },
+    "magnify_ggchord-2": {
+      "recorded_replay_matches_direct_export": true,
+      "replay_sha256": "857ebcd152c40a47d33629a6b6f9a66331c0575f62151371fd363f8d6e1ef8d1"
+    },
+    "magnify_ggchord-3": {
+      "recorded_replay_matches_direct_export": true,
+      "replay_sha256": "6a57ef3836570f3ddbff3c638a15d136d6801c9a077c8aad8f11962abd13c3e6"
+    }
+  },
+  "reference_visual_review": {
+    "images": 66,
+    "topics_with_images": 57,
+    "Fusion_images_affected": 8,
+    "additional_guide_overflow_topics": [
+      "ggplot2-helpers",
+      "scale_ribbon_alpha_continuous"
+    ],
+    "method": "Native-resolution PNG review and three contact sheets; no browser/device matrix"
+  }
+}

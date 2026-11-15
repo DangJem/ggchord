@@ -664,7 +664,14 @@ print.ggchord_fusion <- function(x, ...) {
 #' @export
 #' @importFrom grid grid.draw
 grid.draw.ggchord_fusion <- function(x, recording = TRUE) {
-  grid::grid.draw(ggchord_build_fusion(x)$grob, recording = recording)
+  # Keep the composition in the display list, rather than fixed-mm primitives.
+  # Recorded plots may be replayed on a device with a different size or DPI.
+  # Rebuild there so panels, interval fronts and leaders share the final metric.
+  grob <- grid::recordGrob(
+    grid::grid.draw(build(plot)$grob, recording = FALSE),
+    list(plot = x, build = ggchord_build_fusion)
+  )
+  grid::grid.draw(grob, recording = recording)
   invisible(x)
 }
 
