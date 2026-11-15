@@ -133,8 +133,8 @@ ggplot2::ggsave("ggchord.png", p, width = 10, height = 8, units = "in", dpi = 14
 ### {{inspiration-detail-title}}
 
 - [ggmagnify](https://github.com/hughjonesd/ggmagnify) — {{inspiration-magnify}}
-- [ggmsa](https://bioconductor.org/packages/ggmsa/) · [ggseqalign](https://www.bioconductor.org/packages/release/bioc/html/ggseqalign.html) — {{inspiration-alignment}}
-- [ggseqlogo](https://omarwagih.github.io/ggseqlogo/) · [Jalview](https://www.jalview.org/help/html/features/annotation.html) — {{inspiration-columns}}
+- [ggmsa](https://bioconductor.org/packages/ggmsa/) — {{inspiration-alignment}}
+{{inspiration-columns}}
 - [ggview](https://github.com/idmn/ggview) — {{inspiration-preview}}
 
 [{{issues}}](https://github.com/DangJem/ggchord/issues) · [MIT {{license}}](LICENSE)

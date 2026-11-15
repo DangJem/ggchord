@@ -1,5 +1,5 @@
 {
-  "source_sha256": "b4193c6c61f07651c56265447405d90238c3cc73acf0b0852c513bf9758df248",
+  "source_sha256": "a78211b63806220b2241d15d127bac7894aae6da90e442c8d7fa35a126470c6d",
   "blocks": {
     "1": {
       "source_sha256": "9079216861921220cb908612c335e338b373f0e240f6c3b90ecdcf8243c7274a",
@@ -102,9 +102,9 @@
       "translation": "These are oriented text envelopes, not exact ink outlines. A leader crossing a box can need visual review; whitespace and label backgrounds are not certified glyph shapes. ⟦shared:0⟧ additionally checks registered gene/feature polygon envelopes, including transparent ones. It separates proven own-source label placement (⟦shared:1⟧), contacts with other constructor records (⟦shared:2⟧), and associations without sufficient evidence (⟦shared:3⟧). Source identity is never guessed from equal contents. ⟦shared:4⟧ provides the measured vertices; ⟦shared:5⟧ lists skipped non-polygon strokes/markers. Stroke width, visibility/occlusion, outer decorations and unregistered grobs remain unchecked; a zero polygon-contact count does not certify them. Diagnostics do not improve a layout by hiding labels or changing source data. A measured panel or zero contacts in the checked categories does not establish that all layout constraints passed.\n"
     },
     "30": {
-      "source_sha256": "01f69940946d5a0a7f442a717d34fcafbeef2822af128996b4cb4e89d29a3c72",
+      "source_sha256": "c80ab959c064f99611261e32d7bff28e167c0ab18a0af212351a4f8adc015774",
       "status": "reviewed",
-      "translation": "SnapGene serves as a visual reference for clear annotation hierarchy and orderly leaders; matched exports from that application are not required. Use controlled ggchord comparisons to assess changes in content retention, physical size, crowding and legibility.\n"
+      "translation": "Use controlled ggchord comparisons to assess annotation hierarchy, leader order, content retention, physical size, crowding and legibility.\n"
     },
     "31": {
       "source_sha256": "8b5aad5c10ed519d324ae0fab3d60c6f27d3950357c960512790d2de139003ad",

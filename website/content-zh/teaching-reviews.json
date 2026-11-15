@@ -712,7 +712,7 @@
       "position"
     ],
     "purpose": {
-      "zh": "在圆形质粒上绘制 SnapGene 风格注释"
+      "zh": "在圆形质粒上绘制特征注释"
     },
     "alias_of": "",
     "case": "plasmids",

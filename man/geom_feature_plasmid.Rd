@@ -2,7 +2,7 @@
 % Please edit documentation in R/geom-feature.R
 \name{geom_feature_plasmid}
 \alias{geom_feature_plasmid}
-\title{Draw SnapGene-style features on a circular plasmid}
+\title{Draw annotated features on a circular plasmid}
 \usage{
 geom_feature_plasmid(
   mapping = NULL,

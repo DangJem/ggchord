@@ -1,5 +1,5 @@
 {
-  "source_sha256": "544da7939d528c81af79ebc1fd74924f4e6c8ec374365cd221536cac533695d3",
+  "source_sha256": "198faf33bb65a90c902e1e8163628f2c6b4aac96b6c469d63ecbf4a57ee48bab",
   "strings": {
     "title": {
       "source_sha256": "543c2953291eece4e47b74bc939ba6fa50286298fb22b68e07fc1eadf250f643",
@@ -272,9 +272,9 @@
       "translation": "Informs the compact query/subject field names used to trace alignment records, endpoints and sequence identifiers. Plotting consumes existing results rather than running an alignment program."
     },
     "inspiration-circular": {
-      "source_sha256": "79b7d2021f2404b8c08ff6e1080c9d9133b2334377a8992f63b1577bda72dd17",
+      "source_sha256": "b3fd2013d0bbe4d9fdcb47ef10d8a3fc4d081b4d07b5ea9513b28c3cf7304975",
       "status": "reviewed",
-      "translation": "Provide references for circular information hierarchy, restrained ribbon display, multi-track organization and the reading order of sequence relationships. These ideas inform the arrangement of backbones, annotations and links."
+      "translation": "Circos informs circular information hierarchy and ribbon presentation; circlize is a capability comparison for multi-track layouts and explicit track/ring contracts."
     },
     "inspiration-synteny": {
       "source_sha256": "a9d60b1d5e41c4b0b7b2d078fca370569f26cd526eeb3d3aa0685398819f4e31",
@@ -352,14 +352,14 @@
       "translation": "Provides a reference for connecting an overview to a magnified inset. ggchord develops this presentation idea around explicit source intervals and independently registered sequence views."
     },
     "inspiration-alignment": {
-      "source_sha256": "cdb7be4793105ae321513365c93ffe0f8324d47661d99f522b2d7be6ea242390",
+      "source_sha256": "84aa4ac63f78ead2bfeea4b65ea08cd48a2828f0fd53c0d691148cfc4629a6f5",
       "status": "reviewed",
-      "translation": "Inform design studies of DNA/protein alignment displays, character colouring and composition with ggplot2 graphics, especially the relationship between alignment columns, gaps and character-level detail."
+      "translation": "Listed as a character-view research reference in v0.20.0. In v0.28.0, its residue cells and chemistry palettes were inspected directly and informed geom_residue() background sizing and default fill scales. Glyph rendering, exact source registration and user-scale priority remain independently implemented."
     },
     "inspiration-columns": {
-      "source_sha256": "11c4f80bbd969615b9fcb04d78f096fa24c99caa3365ae465750f9325bf4ab12",
+      "source_sha256": "3983e5944872179763c1f01afa0634a259ed21a1d2ab1ac24be0d5099f88d787",
       "status": "reviewed",
-      "translation": "Provide comparison references in character-view design studies: sequence-logo semantics, alignment-column annotations, consensus and conservation displays, and the relationship between per-column summaries and individual sequences."
+      "translation": "[ggseqalign](https://www.bioconductor.org/packages/release/bioc/html/ggseqalign.html), [ggseqlogo](https://omarwagih.github.io/ggseqlogo/), [Jalview](https://www.jalview.org/help/html/features/annotation.html) and [ESPript](https://espript.ibcp.fr/ESPript/ESPript/) are research comparisons for aligned characters, sequence logos, column annotations or static output. Their integrations, logo, consensus and conservation layers are not implemented here. Historical records do not establish that each influenced the current layout algorithms."
     },
     "inspiration-title": {
       "source_sha256": "a90e2c3ba8b5d2b6906dc357716cfaba69263567d028e032c0b2f6dbce009130",
@@ -367,9 +367,9 @@
       "translation": "Design inspiration"
     },
     "inspiration-intro": {
-      "source_sha256": "086355c1e3084b664556ab40f4cd9e4c4b321b3b04d1eefc39a73565404fcd2c",
+      "source_sha256": "cfe707ab264a1942f5bbd58e801e6517897fc80b683856df932f9f49fdce5637",
       "status": "reviewed",
-      "translation": "The following projects inform ggchord’s graphical grammar, sequence layouts and detail views. Each entry describes the aspect that influenced the design."
+      "translation": "The entries distinguish documented design influences from projects considered only in capability research. See the [design-source audit](tools/site-audit/design-inspiration.md) for evidence."
     },
     "get-started": {
       "source_sha256": "715ee9dc842f34e48f267f0bf3261d7980e544b26eb3d2f0ff20e19b121c4a99",

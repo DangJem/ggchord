@@ -116,13 +116,13 @@ ggplot2::ggsave("ggchord.png", p, width = 10, height = 8, units = "in", dpi = 14
 <a id="design-inspiration"></a>
 ## 设计灵感来源
 
-以下项目为 ggchord 的绘图语法、序列布局与细节视图提供设计灵感，各项分别说明具体的启发方向。
+以下条目区分已记录并落实到设计的参考，以及仅用于能力调研的项目。具体依据见[设计来源核对](tools/site-audit/design-inspiration.md)。
 
 ### 绘图语法与序列关系表达
 
 - [ggplot2](https://ggplot2.tidyverse.org/) — 提供分层绘图语法，以及映射、标度、图例、几何、坐标与主题的职责划分。ggchord 沿用这一模型，让用户组合独立图层，并使用自己的标度和样式。
 - [BLAST](https://blast.ncbi.nlm.nih.gov/doc/blast-help/) — 为紧凑的 query/subject 字段命名提供参照，便于追踪比对记录、端点与序列标识。绘图读取已有结果，不在绘图阶段运行比对程序。
-- [Circos](https://circos.ca/) · [circlize](https://github.com/jokergoo/circlize) — 为环形信息层级、克制的连接带表达、多轨道组织及关系阅读顺序提供参照，帮助组织序列骨架、注释与连接之间的层次。
+- [Circos](https://circos.ca/) · [circlize](https://github.com/jokergoo/circlize) — Circos 为环形信息层级和连接带表达提供设计参照；circlize 用于多轨道与显式 track/ring 契约的能力比较。
 
 ### 基因箭头、注释布局与局部比较
 
@@ -133,8 +133,8 @@ ggplot2::ggsave("ggchord.png", p, width = 10, height = 8, units = "in", dpi = 14
 ### 局部放大、对齐字符与图形预览
 
 - [ggmagnify](https://github.com/hughjonesd/ggmagnify) — 为整体图与局部放大图之间的关联表达提供参照。ggchord 围绕明确的来源区间和独立注册的序列视图发展这一表达方式。
-- [ggmsa](https://bioconductor.org/packages/ggmsa/) · [ggseqalign](https://www.bioconductor.org/packages/release/bioc/html/ggseqalign.html) — 为 DNA、蛋白对齐显示、字符着色及与 ggplot2 图形组合提供设计研究参照，尤其关注对齐列、gap 与字符细节之间的对应关系。
-- [ggseqlogo](https://omarwagih.github.io/ggseqlogo/) · [Jalview](https://www.jalview.org/help/html/features/annotation.html) — 在字符视图的设计研究中，用于比较序列 logo、对齐列注释、共识与保守性的表达方式，以及逐列统计与单条序列之间的关系。
+- [ggmsa](https://bioconductor.org/packages/ggmsa/) — v0.20.0 将其列为字符视图调研对象；v0.28.0 进一步实际核对其残基格和化学性质配色，并用于 geom_residue() 的紧凑背景与默认颜色标度。保留独立字形绘制、真实坐标注册和用户标度优先规则。
+[ggseqalign](https://www.bioconductor.org/packages/release/bioc/html/ggseqalign.html)、[ggseqlogo](https://omarwagih.github.io/ggseqlogo/)、[Jalview](https://www.jalview.org/help/html/features/annotation.html) 和 [ESPript](https://espript.ibcp.fr/ESPript/ESPript/) 仅列为对齐字符、序列 logo、列注释或静态输出的调研比较对象；当前未实现这些工具的集成、logo、共识或保守性图层。历史记录不足以证明它们分别影响了现有布局算法。
 - [ggview](https://github.com/idmn/ggview) — 为按预定导出尺寸检查静态图形提供流程参照。ggchord 用 view_ggchord() 进行指定尺寸预览，用标准 ggsave() 保存。
 
 [问题反馈](https://github.com/DangJem/ggchord/issues) · [MIT 许可证](LICENSE)

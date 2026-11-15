@@ -36,8 +36,8 @@
   figures share the same source data. Magnification frames include native
   character axes so their corners do not collide with their own row labels.
 - README design attribution distinguishes documented influences from research
-  comparisons and restores the omitted SnapGene/Geneious references, with an
-  evidence audit instead of unsupported algorithm or integration claims.
+  comparisons, with an evidence audit instead of unsupported algorithm or
+  integration claims. Current user-facing prose omits commercial product names.
 
 # ggchord 0.27.1
 

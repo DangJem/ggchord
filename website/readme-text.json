@@ -216,8 +216,8 @@
     "en": "Informs the compact query/subject field names used to trace alignment records, endpoints and sequence identifiers. Plotting consumes existing results rather than running an alignment program."
   },
   "inspiration-circular": {
-    "zh": "为环形信息层级、克制的连接带表达、多轨道组织及关系阅读顺序提供参照，帮助组织序列骨架、注释与连接之间的层次。",
-    "en": "Provide references for circular information hierarchy, restrained ribbon display, multi-track organization and the reading order of sequence relationships. These ideas inform the arrangement of backbones, annotations and links."
+    "zh": "Circos 为环形信息层级和连接带表达提供设计参照；circlize 用于多轨道与显式 track/ring 契约的能力比较。",
+    "en": "Circos informs circular information hierarchy and ribbon presentation; circlize is a capability comparison for multi-track layouts and explicit track/ring contracts."
   },
   "inspiration-synteny": {
     "zh": "为保留链方向的基因箭头、基因簇比较和直线共线性提供清晰范例，帮助协调序列方向、特征位置与连接关系的表达。",
@@ -280,20 +280,20 @@
     "en": "Provides a reference for connecting an overview to a magnified inset. ggchord develops this presentation idea around explicit source intervals and independently registered sequence views."
   },
   "inspiration-alignment": {
-    "zh": "为 DNA、蛋白对齐显示、字符着色及与 ggplot2 图形组合提供设计研究参照，尤其关注对齐列、gap 与字符细节之间的对应关系。",
-    "en": "Inform design studies of DNA/protein alignment displays, character colouring and composition with ggplot2 graphics, especially the relationship between alignment columns, gaps and character-level detail."
+    "zh": "v0.20.0 将其列为字符视图调研对象；v0.28.0 进一步实际核对其残基格和化学性质配色，并用于 geom_residue() 的紧凑背景与默认颜色标度。保留独立字形绘制、真实坐标注册和用户标度优先规则。",
+    "en": "Listed as a character-view research reference in v0.20.0. In v0.28.0, its residue cells and chemistry palettes were inspected directly and informed geom_residue() background sizing and default fill scales. Glyph rendering, exact source registration and user-scale priority remain independently implemented."
   },
   "inspiration-columns": {
-    "zh": "在字符视图的设计研究中，用于比较序列 logo、对齐列注释、共识与保守性的表达方式，以及逐列统计与单条序列之间的关系。",
-    "en": "Provide comparison references in character-view design studies: sequence-logo semantics, alignment-column annotations, consensus and conservation displays, and the relationship between per-column summaries and individual sequences."
+    "zh": "[ggseqalign](https://www.bioconductor.org/packages/release/bioc/html/ggseqalign.html)、[ggseqlogo](https://omarwagih.github.io/ggseqlogo/)、[Jalview](https://www.jalview.org/help/html/features/annotation.html) 和 [ESPript](https://espript.ibcp.fr/ESPript/ESPript/) 仅列为对齐字符、序列 logo、列注释或静态输出的调研比较对象；当前未实现这些工具的集成、logo、共识或保守性图层。历史记录不足以证明它们分别影响了现有布局算法。",
+    "en": "[ggseqalign](https://www.bioconductor.org/packages/release/bioc/html/ggseqalign.html), [ggseqlogo](https://omarwagih.github.io/ggseqlogo/), [Jalview](https://www.jalview.org/help/html/features/annotation.html) and [ESPript](https://espript.ibcp.fr/ESPript/ESPript/) are research comparisons for aligned characters, sequence logos, column annotations or static output. Their integrations, logo, consensus and conservation layers are not implemented here. Historical records do not establish that each influenced the current layout algorithms."
   },
   "inspiration-title": {
     "zh": "设计灵感来源",
     "en": "Design inspiration"
   },
   "inspiration-intro": {
-    "zh": "以下项目为 ggchord 的绘图语法、序列布局与细节视图提供设计灵感，各项分别说明具体的启发方向。",
-    "en": "The following projects inform ggchord’s graphical grammar, sequence layouts and detail views. Each entry describes the aspect that influenced the design."
+    "zh": "以下条目区分已记录并落实到设计的参考，以及仅用于能力调研的项目。具体依据见[设计来源核对](tools/site-audit/design-inspiration.md)。",
+    "en": "The entries distinguish documented design influences from projects considered only in capability research. See the [design-source audit](tools/site-audit/design-inspiration.md) for evidence."
   },
   "get-started": {
     "zh": "开始使用",

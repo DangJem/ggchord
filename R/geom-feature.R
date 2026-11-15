@@ -423,7 +423,7 @@ geom_feature <- function(mapping = NULL, data = NULL,
   lyr
 }
 
-#' Draw SnapGene-style features on a circular plasmid
+#' Draw annotated features on a circular plasmid
 #'
 #' A concise plasmid-map preset built on [geom_feature()]. It uses the same
 #' generic feature engine, while selecting a compact circular track,

@@ -292,13 +292,6 @@ ggchord_label_layer <- function(mapping = NULL, data = NULL,
 #' \code{"auto"} aligns left/right names in columns and uses radial placement
 #' elsewhere. \code{"arc"} rotates text along the sequence tangent.
 #'
-#' The local outside/inside label organisation adapts concepts used by
-#' SnapGene and Geneious. ggchord keeps generic mode names and integrates those
-#' ideas into its own geometry system. See
-#' \href{https://support.snapgene.com/hc/en-us/articles/10383722725524-Display-Feature-Labels-Below-or-Inside-a-Map}{SnapGene feature labels}
-#' and
-#' \href{https://manual.geneious.com/en/latest/Sequences.html}{Geneious label options}.
-#'
 #' Low-level force, padding, orientation and segment arguments used by earlier
 #' releases have been removed and now produce an error. Use
 #' \code{label_layout} for automatic placement, or

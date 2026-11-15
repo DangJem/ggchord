@@ -778,8 +778,8 @@
       "position"
     ],
     "purpose": {
-      "zh": "在圆形质粒上绘制 SnapGene 风格注释",
-      "en": "Draw SnapGene-style features on a circular plasmid"
+      "zh": "在圆形质粒上绘制特征注释",
+      "en": "Draw annotated features on a circular plasmid"
     },
     "alias_of": "",
     "case": "plasmids",

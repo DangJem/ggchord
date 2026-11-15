@@ -81,9 +81,9 @@ GRanges/GInteractions教程结合了[issue #2](https://github.com/DangJem/ggchor
 
 ## 本地商业来源参考文件 / Local commercial source references
 
-REBASE 原始目录、SnapGene 特征工作簿、原始 `.dna` 文件和 SnapGene 对照图仅保留在维护者本地。包和教学网站使用随包运行库、派生序列与 ggchord 生成的图。重建 REBASE 或常见特征目录时，需要在本地恢复生成脚本声明的原始输入。Addgene 引物工作簿单独记录为引物目录来源。
+REBASE 原始目录、特征目录工作簿、原始 `.dna` 文件和 外部编辑器对照图仅保留在维护者本地。包和教学网站使用随包运行库、派生序列与 ggchord 生成的图。重建 REBASE 或常见特征目录时，需要在本地恢复生成脚本声明的原始输入。Addgene 引物工作簿单独记录为引物目录来源。
 
-The original REBASE directory, the SnapGene feature workbook, and SnapGene `.dna` files and reference images are local maintainer inputs. The package and tutorial site use the bundled runtime catalogue, derived sequences and ggchord-rendered figures. Regenerating the REBASE or common-feature catalogues requires the source inputs declared by their scripts. The Addgene primer workbook is a separate primer catalogue source.
+The original REBASE directory, the feature-catalogue workbook, and original `.dna` files and reference images are local maintainer inputs. The package and tutorial site use the bundled runtime catalogue, derived sequences and ggchord-rendered figures. Regenerating the REBASE or common-feature catalogues requires the source inputs declared by their scripts. The Addgene primer workbook is a separate primer catalogue source.
 
 原生蛋白示例保留 gggenomes 公开 EMALE 归档中的 BVI_023A_0009 与
 ADZ16414.1 完整蛋白和实际 BLASTp HSP。记录为 296、310 aa，

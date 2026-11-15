@@ -1,5 +1,5 @@
 {
-  "source_sha256": "e9285c5fca4d299bc1f155dbac3cef641ece3b8fe821c8a67b9b605e985a36a5",
+  "source_sha256": "b38dd5c588c085d2170b8c56618efacdabeb62ed3fd73f76ecdff00c66d4b746",
   "strings": {
     "aes/purpose": {
       "source_sha256": "72476687defa4ed5f3795aaaddc8af6699cfebd0c00ca8da10f0e86d4e8e7dbc",
@@ -332,9 +332,9 @@
       "translation": "all three; external=FALSE rejected by linear mode; Radial per new-view support matrix"
     },
     "geom_feature_plasmid/purpose": {
-      "source_sha256": "3c174ccd5ee99dd1a21b6fc012ce95822d47ed0a7ddb8c407dbff5aef621cd41",
+      "source_sha256": "f3c4eaa2b4c7651fec1e0883631bd148578c3395d1f1d83cc6cf8926db786060",
       "status": "reviewed",
-      "translation": "Draw SnapGene-style features on a circular plasmid"
+      "translation": "Draw annotated features on a circular plasmid"
     },
     "geom_feature_plasmid/modes_localized": {
       "source_sha256": "05071a3987334bec8f9b64fc443287da92b0704478f1f0804afe86d537b9dc4b",

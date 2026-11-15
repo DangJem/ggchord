@@ -1,4 +1,4 @@
-# Reproduce the reported pETDuet-1 map and a SnapGene-reference configuration.
+# Reproduce the reported pETDuet-1 map and a dense-annotation reference configuration.
 # Run from the repository root:
 #   Rscript tools/reproduce-petduet-preview.R [output-directory]
 # Uses the default view_ggchord() size; this is a focused visual acceptance

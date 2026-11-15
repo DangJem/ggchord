@@ -48,7 +48,7 @@
 | [`geom_feature`](../../man/geom_feature.Rd) | 绘制通用基因组注释 | [用法](circular-features.md#feature-shapes) | 兼容骨架坐标（见支持表）；通用注释可保留未知链及 aa 区间；Radial见新增视图支持矩阵 | [↗](parameter-atlas.md#api-geom_feature) | [↗](chord.md) |
 | [`geom_feature_label`](../../man/geom_feature_label.Rd) | 为通用基因组注释添加标签 | [用法](circular-labels.md#fixed-labels) | 兼容骨架坐标（见支持表）；直线图的 radial/tangent 为竖排/横排；Radial见新增视图支持矩阵 | [↗](parameter-atlas.md#api-geom_feature_label) | [↗](chord.md) |
 | [`geom_feature_label_repel`](../../man/geom_feature_label_repel.Rd) | 自动安排通用注释标签 | [用法](circular-labels.md#automatic-labels) | 兼容骨架坐标（见支持表）；直线图拒绝 external=FALSE；Radial见新增视图支持矩阵 | [↗](parameter-atlas.md#api-geom_feature_label_repel) | [↗](chord.md) |
-| [`geom_feature_plasmid`](../../man/geom_feature_plasmid.Rd) | 在圆形质粒上绘制 SnapGene 风格注释 | [用法](circular-features.md#feature-shapes) | 通用几何的组合预设；默认面向圆图；Radial见新增视图支持矩阵 | [↗](parameter-atlas.md#api-geom_feature_plasmid) | [↗](plasmids.md) |
+| [`geom_feature_plasmid`](../../man/geom_feature_plasmid.Rd) | 在圆形质粒上绘制特征注释 | [用法](circular-features.md#feature-shapes) | 通用几何的组合预设；默认面向圆图；Radial见新增视图支持矩阵 | [↗](parameter-atlas.md#api-geom_feature_plasmid) | [↗](plasmids.md) |
 | [`geom_gene`](../../man/geom_gene.Rd) | 添加基因箭头图层 | [用法](feature-geometry.md#arrow-heads) | 兼容骨架坐标（见支持表）的 bp 数据；需已知正负链；Radial见新增视图支持矩阵 | [↗](parameter-atlas.md#api-geom_gene) | [↗](chord.md) |
 | [`geom_gene_label`](../../man/geom_gene_label.Rd) | 添加固定基因标签图层 | [用法](labels.md#fixed) | bp 基因标签；各坐标的方向含义不同；Radial见新增视图支持矩阵 | [↗](parameter-atlas.md#api-geom_gene_label) | [↗](chord.md) |
 | [`geom_gene_label_repel`](../../man/geom_gene_label_repel.Rd) | 添加自动布局的基因标签图层 | [用法](labels.md#comparison) | bp 基因标签；直线图统一使用行布局；Radial见新增视图支持矩阵 | [↗](parameter-atlas.md#api-geom_gene_label_repel) | [↗](chord.md) |

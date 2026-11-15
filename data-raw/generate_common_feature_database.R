@@ -1,5 +1,5 @@
 # Build the internal normalized common-feature database from the audited
-# workbook and the audited annotations embedded in the example SnapGene files.
+# workbook and the audited annotations embedded in the example binary map files.
 # readxl, digest, and xml2 are development-only dependencies.
 
 workbook <- "examples/standardCommonFeatures_8.2.3_tables.xlsx"
@@ -510,7 +510,7 @@ read_binary_plasmid_reference <- function(path) {
     block_length <- read_uint32_be(bytes[(position + 1L):(position + 4L)])
     first <- position + 5L
     last <- first + block_length - 1L
-    if (last > length(bytes)) stop("Invalid SnapGene block in ", path,
+    if (last > length(bytes)) stop("Invalid binary map block in ", path,
       call. = FALSE)
     payload <- bytes[first:last]
     if (block_id == 0L) sequence <- rawToChar(payload[-1L])
@@ -521,7 +521,7 @@ read_binary_plasmid_reference <- function(path) {
     position <- last + 1L
   }
   if (is.null(sequence) || is.null(feature_xml)) {
-    stop("SnapGene reference lacks sequence or feature data: ", path,
+    stop("Binary map reference lacks sequence or feature data: ", path,
       call. = FALSE)
   }
   reference_id <- make.names(tools::file_path_sans_ext(basename(path)))
@@ -599,7 +599,7 @@ read_binary_plasmid_reference <- function(path) {
       primer <- primer_nodes[[i]]
       primer_attrs <- xml2::xml_attrs(primer)
       # Simplified binding sites duplicate the canonical records in these
-      # SnapGene files and are not independent biological annotations.
+      # binary map files and are not independent biological annotations.
       sites <- xml2::xml_find_all(primer,
         "./BindingSite[not(@simplified='1')]")
       lapply(seq_along(sites), function(j) {
@@ -612,7 +612,7 @@ read_binary_plasmid_reference <- function(path) {
             value_or(primer_attrs["recentID"], sprintf("%04d", i)), ":", j),
           name = unname(primer_attrs["name"]),
           sequence = toupper(unname(primer_attrs["sequence"])),
-          # SnapGene Primer binding-site locations are zero-based inclusive;
+          # Original primer binding-site locations are zero-based inclusive;
           # ggchord's public coordinate contract is one-based inclusive.
           start = bounds[1L] + 1L, end = bounds[2L] + 1L,
           strand = if (value_or(site_attrs["boundStrand"], "0") == "0")

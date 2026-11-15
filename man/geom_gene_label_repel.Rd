@@ -111,13 +111,6 @@ following each sequence; crowded names fan out along that contour.
 elsewhere. \code{"arc"} rotates text along the sequence tangent.
 }
 \details{
-The local outside/inside label organisation adapts concepts used by
-SnapGene and Geneious. ggchord keeps generic mode names and integrates those
-ideas into its own geometry system. See
-\href{https://support.snapgene.com/hc/en-us/articles/10383722725524-Display-Feature-Labels-Below-or-Inside-a-Map}{SnapGene feature labels}
-and
-\href{https://manual.geneious.com/en/latest/Sequences.html}{Geneious label options}.
-
 Low-level force, padding, orientation and segment arguments used by earlier
 releases have been removed and now produce an error. Use
 \code{label_layout} for automatic placement, or

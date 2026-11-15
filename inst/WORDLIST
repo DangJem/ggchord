@@ -57,7 +57,6 @@ gapped
 GBFF
 GC
 GenBank
-Geneious
 GenomicRanges
 geoms
 getter
@@ -126,7 +125,6 @@ saccver
 selectable
 Seqinfo
 SHA
-SnapGene
 spos
 sstart
 stylesheets

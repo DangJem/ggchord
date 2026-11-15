@@ -1,5 +1,5 @@
 {
-  "source_sha256": "3d0ac4b4561ed76c2e6ee9d05283bbe86a1b0b9afac0c67f4a9a12784031a700",
+  "source_sha256": "78234cbd4e387ddcbe0dfb1c7cb4ca0ff265aef16288daa9c719d1161c1e0318",
   "blocks": {
     "0": {
       "source_sha256": "84523c88e7698c4e601135877b30c7f308c5aa235da4355659d8db61dee11f25",
@@ -232,9 +232,9 @@
       "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Automatically arrange generic feature labels | [Usage](⟦shared:2⟧) | all three; external=FALSE rejected by linear mode; Radial per new-view support matrix | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
     },
     "47": {
-      "source_sha256": "a5665dce1bdf8bef681ad0b9d27079a1fd04b4937334d686425ead93f35e9124",
+      "source_sha256": "f8a32362a4ef715f0baa340fcdbbe4bb5d8ff46470dd77607ed19ef9c743d2be",
       "status": "reviewed",
-      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Draw SnapGene-style features on a circular plasmid | [Usage](⟦shared:2⟧) | generic geometry preset; intended circular; compare defaults before transfer; Radial per new-view support matrix | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Draw annotated features on a circular plasmid | [Usage](⟦shared:2⟧) | generic geometry preset; intended circular; compare defaults before transfer; Radial per new-view support matrix | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
     },
     "48": {
       "source_sha256": "dcd0b2309f7067c71bef83bf365a4ea9fdf9d40ee7288c9433c07f7d5bbebf91",
