@@ -1,0 +1,44 @@
+{
+  "reader": "bigwig",
+  "dependency": "rtracklayer",
+  "dependency_version": "1.73.0",
+  "R": "R Under development (unstable) (2026-11-08 r90859)",
+  "platform": "x86_64-pc-linux-gnu",
+  "namespace_initially_unloaded": true,
+  "source_package_load": {
+    "user.self": 1.357,
+    "sys.self": 0.065,
+    "elapsed": 1.422
+  },
+  "namespace_first_load": {
+    "user.self": 2.313,
+    "sys.self": 0.137,
+    "elapsed": 2.45
+  },
+  "example_preparation": {},
+  "first_read": {
+    "user.self": 0.076,
+    "sys.self": 0,
+    "elapsed": 0.076
+  },
+  "warm_read": {
+    "user.self": 0.112,
+    "sys.self": 0.005,
+    "elapsed": 0.117
+  },
+  "selected_read": {
+    "user.self": 0.055,
+    "sys.self": 0,
+    "elapsed": 0.055
+  },
+  "preview_output": {
+    "user.self": 0.001,
+    "sys.self": 0,
+    "elapsed": 0.002
+  },
+  "output_lines": 7,
+  "output_bytes": 210,
+  "records": 27,
+  "input_bytes": 19105,
+  "notes": "Independent R process per decoder; cold namespace, filesystem caches not flushed. Reader timings exclude decoder namespace and source-package loading. Output captures only the displayed preview of at most six rows."
+}

@@ -1,0 +1,8 @@
+* checking for file ‘./DESCRIPTION’ ... OK
+* preparing ‘ggchord’:
+* checking DESCRIPTION meta-information ... OK
+* installing the package (it is needed to build vignettes)
+* creating vignettes ... OK
+* checking for LF line-endings in source and make files and shell scripts
+* checking for empty or unneeded directories
+* building ‘ggchord_0.28.2.tar.gz’

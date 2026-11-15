@@ -1,0 +1,22 @@
+R Under development (unstable) (2026-11-14 r90890 ucrt)
+Platform: x86_64-w64-mingw32/x64
+Running under: Windows Server 2022 x64 (build 26100)
+
+Matrix products: default
+  LAPACK version 3.12.1
+
+locale:
+[1] LC_COLLATE=English_United States.utf8
+[2] LC_CTYPE=English_United States.utf8
+[3] LC_MONETARY=English_United States.utf8
+[4] LC_NUMERIC=C
+[5] LC_TIME=English_United States.utf8
+
+time zone: UTC
+tzcode source: internal
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base
+
+loaded via a namespace (and not attached):
+[1] compiler_4.7.0

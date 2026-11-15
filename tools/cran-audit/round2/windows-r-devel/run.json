@@ -1,0 +1,18 @@
+{
+  "run_id": 43727617245,
+  "source_commit": "1fb63921c1aa72ebda43e5d4ccb0d4dde3ca13ce",
+  "conclusion": "success",
+  "url": "https://github.com/DangJem/ggchord/actions/runs/43727617245",
+  "jobs": [
+    {
+      "name": "windows",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "name": "debian",
+      "status": "completed",
+      "conclusion": "skipped"
+    }
+  ]
+}

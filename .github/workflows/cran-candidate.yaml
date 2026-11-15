@@ -2,7 +2,7 @@ name: CRAN candidate R-devel
 on:
   push:
     branches: [v0.28.2]
-    paths: [".github/workflows/cran-candidate.yaml", "tools/cran-audit/**", "R/**", "man/**", "DESCRIPTION", ".Rbuildignore"]
+    paths: [".github/workflows/cran-candidate.yaml", "tools/cran-audit/profile-readers.R", "tools/cran-audit/run-r-devel-check.R", "R/**", "man/**", "DESCRIPTION", ".Rbuildignore"]
   workflow_dispatch:
 permissions:
   contents: read

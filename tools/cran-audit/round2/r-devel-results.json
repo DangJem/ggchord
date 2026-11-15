@@ -1,0 +1,334 @@
+{
+  "version": "0.28.2",
+  "state": "two requested R-devel platform checks passed; not published or submitted",
+  "results": {
+    "windows": {
+      "run": {
+        "run_id": 43727617245,
+        "source_commit": "1fb63921c1aa72ebda43e5d4ccb0d4dde3ca13ce",
+        "conclusion": "success",
+        "url": "https://github.com/DangJem/ggchord/actions/runs/43727617245",
+        "jobs": [
+          {
+            "name": "windows",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "debian",
+            "status": "completed",
+            "conclusion": "skipped"
+          }
+        ]
+      },
+      "errors": 0,
+      "warnings": 0,
+      "notes": 1,
+      "remaining_note": "Intentional minor-version jump from 0.16.6 to 0.28.2",
+      "tests_passed": 34,
+      "profiles": {
+        "ggchord-vcf-stream-profile": {
+          "reader": "vcf",
+          "dependency": "VariantAnnotation",
+          "dependency_version": "1.58.0",
+          "R": "R Under development (unstable) (2026-11-14 r90890 ucrt)",
+          "platform": "x86_64-w64-mingw32",
+          "namespace_initially_unloaded": true,
+          "source_package_load": {
+            "user.self": 1.64,
+            "sys.self": 0.17,
+            "elapsed": 1.87
+          },
+          "namespace_first_load": {
+            "user.self": 8.35,
+            "sys.self": 0.56,
+            "elapsed": 8.96
+          },
+          "example_preparation": {
+            "user.self": 0,
+            "sys.self": 0,
+            "elapsed": 0
+          },
+          "first_read": {
+            "user.self": 0.42,
+            "sys.self": 0.02,
+            "elapsed": 0.44
+          },
+          "warm_read": {
+            "user.self": 0.31,
+            "sys.self": 0,
+            "elapsed": 0.31
+          },
+          "selected_read": {},
+          "preview_output": {
+            "user.self": 0,
+            "sys.self": 0,
+            "elapsed": 0
+          },
+          "output_lines": 4,
+          "output_bytes": 152,
+          "records": 3,
+          "input_bytes": 3726,
+          "notes": "Independent R process per decoder; cold namespace, filesystem caches not flushed. Reader timings exclude decoder namespace and source-package loading. Output captures only the displayed preview of at most six rows."
+        },
+        "ggchord-vcf-small-profile": {
+          "reader": "vcf",
+          "dependency": "VariantAnnotation",
+          "dependency_version": "1.58.0",
+          "R": "R Under development (unstable) (2026-11-14 r90890 ucrt)",
+          "platform": "x86_64-w64-mingw32",
+          "namespace_initially_unloaded": true,
+          "source_package_load": {
+            "user.self": 1.61,
+            "sys.self": 0.18,
+            "elapsed": 1.9
+          },
+          "namespace_first_load": {
+            "user.self": 8.5,
+            "sys.self": 0.42,
+            "elapsed": 8.95
+          },
+          "example_preparation": {
+            "user.self": 0.04,
+            "sys.self": 0,
+            "elapsed": 0.03
+          },
+          "first_read": {
+            "user.self": 0.44,
+            "sys.self": 0.03,
+            "elapsed": 0.45
+          },
+          "warm_read": {
+            "user.self": 0.33,
+            "sys.self": 0,
+            "elapsed": 0.33
+          },
+          "selected_read": {},
+          "preview_output": {
+            "user.self": 0,
+            "sys.self": 0,
+            "elapsed": 0
+          },
+          "output_lines": 4,
+          "output_bytes": 152,
+          "records": 3,
+          "input_bytes": 3726,
+          "notes": "Independent R process per decoder; cold namespace, filesystem caches not flushed. Reader timings exclude decoder namespace and source-package loading. Output captures only the displayed preview of at most six rows."
+        }
+      },
+      "full_help_timings": {
+        "read_vcf": {
+          "user": 9.53,
+          "system": 0.84,
+          "elapsed": 10.36
+        },
+        "read_bigwig": {
+          "user": 0.0,
+          "system": 0.0,
+          "elapsed": 0.0
+        }
+      },
+      "archive_bytes": 4431200,
+      "archive_sha256": "064ffd2efa10d9896a3ed0e5476ccc3d14785b33a9d660111e9ec4e0ed8b9c0a"
+    },
+    "debian": {
+      "run": {
+        "run_id": 43726759756,
+        "source_commit": "7d254953058722583da0410054cd0a2d24f592b8",
+        "conclusion": "success",
+        "url": "https://github.com/DangJem/ggchord/actions/runs/43726759756",
+        "jobs": [
+          {
+            "name": "debian",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "windows",
+            "status": "completed",
+            "conclusion": "skipped"
+          }
+        ]
+      },
+      "errors": 0,
+      "warnings": 0,
+      "notes": 1,
+      "remaining_note": "Intentional minor-version jump from 0.16.6 to 0.28.2",
+      "tests_passed": 34,
+      "profiles": {
+        "ggchord-vcf-stream-profile": {
+          "reader": "vcf",
+          "dependency": "VariantAnnotation",
+          "dependency_version": "1.59.4",
+          "R": "R Under development (unstable) (2026-11-08 r90859)",
+          "platform": "x86_64-pc-linux-gnu",
+          "namespace_initially_unloaded": true,
+          "source_package_load": {
+            "user.self": 0.859,
+            "sys.self": 0.113,
+            "elapsed": 0.979
+          },
+          "namespace_first_load": {
+            "user.self": 6.958,
+            "sys.self": 0.259,
+            "elapsed": 6.924
+          },
+          "example_preparation": {
+            "user.self": 0.004,
+            "sys.self": 0.001,
+            "elapsed": 0.004
+          },
+          "first_read": {
+            "user.self": 0.265,
+            "sys.self": 0.01,
+            "elapsed": 0.284
+          },
+          "warm_read": {
+            "user.self": 0.199,
+            "sys.self": 0.009,
+            "elapsed": 0.217
+          },
+          "selected_read": {},
+          "preview_output": {
+            "user.self": 0.001,
+            "sys.self": 0,
+            "elapsed": 0.002
+          },
+          "output_lines": 4,
+          "output_bytes": 152,
+          "records": 3,
+          "input_bytes": 3695,
+          "notes": "Independent R process per decoder; cold namespace, filesystem caches not flushed. Reader timings exclude decoder namespace and source-package loading. Output captures only the displayed preview of at most six rows."
+        },
+        "ggchord-bigwig-profile": {
+          "reader": "bigwig",
+          "dependency": "rtracklayer",
+          "dependency_version": "1.73.0",
+          "R": "R Under development (unstable) (2026-11-08 r90859)",
+          "platform": "x86_64-pc-linux-gnu",
+          "namespace_initially_unloaded": true,
+          "source_package_load": {
+            "user.self": 1.357,
+            "sys.self": 0.065,
+            "elapsed": 1.422
+          },
+          "namespace_first_load": {
+            "user.self": 2.313,
+            "sys.self": 0.137,
+            "elapsed": 2.45
+          },
+          "example_preparation": {},
+          "first_read": {
+            "user.self": 0.076,
+            "sys.self": 0,
+            "elapsed": 0.076
+          },
+          "warm_read": {
+            "user.self": 0.112,
+            "sys.self": 0.005,
+            "elapsed": 0.117
+          },
+          "selected_read": {
+            "user.self": 0.055,
+            "sys.self": 0,
+            "elapsed": 0.055
+          },
+          "preview_output": {
+            "user.self": 0.001,
+            "sys.self": 0,
+            "elapsed": 0.002
+          },
+          "output_lines": 7,
+          "output_bytes": 210,
+          "records": 27,
+          "input_bytes": 19105,
+          "notes": "Independent R process per decoder; cold namespace, filesystem caches not flushed. Reader timings exclude decoder namespace and source-package loading. Output captures only the displayed preview of at most six rows."
+        },
+        "ggchord-vcf-small-profile": {
+          "reader": "vcf",
+          "dependency": "VariantAnnotation",
+          "dependency_version": "1.59.4",
+          "R": "R Under development (unstable) (2026-11-08 r90859)",
+          "platform": "x86_64-pc-linux-gnu",
+          "namespace_initially_unloaded": true,
+          "source_package_load": {
+            "user.self": 0.886,
+            "sys.self": 0.095,
+            "elapsed": 0.989
+          },
+          "namespace_first_load": {
+            "user.self": 6.912,
+            "sys.self": 0.252,
+            "elapsed": 6.866
+          },
+          "example_preparation": {
+            "user.self": 0.03,
+            "sys.self": 0,
+            "elapsed": 0.03
+          },
+          "first_read": {
+            "user.self": 0.261,
+            "sys.self": 0.011,
+            "elapsed": 0.273
+          },
+          "warm_read": {
+            "user.self": 0.197,
+            "sys.self": 0.01,
+            "elapsed": 0.206
+          },
+          "selected_read": {},
+          "preview_output": {
+            "user.self": 0.002,
+            "sys.self": 0,
+            "elapsed": 0.001
+          },
+          "output_lines": 4,
+          "output_bytes": 152,
+          "records": 3,
+          "input_bytes": 3695,
+          "notes": "Independent R process per decoder; cold namespace, filesystem caches not flushed. Reader timings exclude decoder namespace and source-package loading. Output captures only the displayed preview of at most six rows."
+        }
+      },
+      "full_help_timings": {
+        "read_vcf": {
+          "user": 4.258,
+          "system": 0.147,
+          "elapsed": 4.107
+        },
+        "read_bigwig": {
+          "user": 2.865,
+          "system": 0.107,
+          "elapsed": 2.977
+        }
+      },
+      "archive_bytes": 4423185,
+      "archive_sha256": "196f0deb9554acc07a5831e1cfe3092a9c038a685035f131f5657aeb74c2e612"
+    }
+  },
+  "fixes": [
+    "VCF sampling stops after three unchanged observed records and original headers",
+    "Both optional decoder examples use documented donttest including dependency guards; no dontrun",
+    "DESCRIPTION uses dot plots and high-scoring segment pair without HSP abbreviation; synteny retained"
+  ],
+  "limits": [
+    "GitHub R-devel runners are not the CRAN incoming service or identical hardware",
+    "Cold-load and parsing measurements use separate processes; whole help timings come from the recorded run-donttest pass and must not be summed with independent timings",
+    "Windows BigWig is unsupported and guarded; zero recorded time there is a skip",
+    "An automatic Documentation source check remains failed because website PNG dependency receipts are stale after R help changes; no website rebuild/deploy was authorized in this round"
+  ],
+  "environment_repairs": [
+    "Windows first lacked pdflatex, then Courier metrics; installed TinyTeX and standard fonts before successful full check",
+    "Debian first lacked libuv and consequently fs/pkgload; installed libuv1-dev and asserted complete dependencies before successful full check"
+  ],
+  "previous_cran_timings_from_user_email": {
+    "Windows_read_vcf": 16.06,
+    "Debian_read_bigwig": 5.915
+  },
+  "original_pretest_log_fetch": "Web tool could not retrieve the URLs and direct curl timed out; previous timings are attributed to user-supplied email, not a fresh download",
+  "boundaries": {
+    "main_merged": false,
+    "release_updated": false,
+    "CRAN_submitted": false
+  },
+  "package_source_diff_between_platform_check_commits": ""
+}

@@ -1,0 +1,44 @@
+{
+  "reader": "vcf",
+  "dependency": "VariantAnnotation",
+  "dependency_version": "1.59.4",
+  "R": "R Under development (unstable) (2026-11-08 r90859)",
+  "platform": "x86_64-pc-linux-gnu",
+  "namespace_initially_unloaded": true,
+  "source_package_load": {
+    "user.self": 0.886,
+    "sys.self": 0.095,
+    "elapsed": 0.989
+  },
+  "namespace_first_load": {
+    "user.self": 6.912,
+    "sys.self": 0.252,
+    "elapsed": 6.866
+  },
+  "example_preparation": {
+    "user.self": 0.03,
+    "sys.self": 0,
+    "elapsed": 0.03
+  },
+  "first_read": {
+    "user.self": 0.261,
+    "sys.self": 0.011,
+    "elapsed": 0.273
+  },
+  "warm_read": {
+    "user.self": 0.197,
+    "sys.self": 0.01,
+    "elapsed": 0.206
+  },
+  "selected_read": {},
+  "preview_output": {
+    "user.self": 0.002,
+    "sys.self": 0,
+    "elapsed": 0.001
+  },
+  "output_lines": 4,
+  "output_bytes": 152,
+  "records": 3,
+  "input_bytes": 3695,
+  "notes": "Independent R process per decoder; cold namespace, filesystem caches not flushed. Reader timings exclude decoder namespace and source-package loading. Output captures only the displayed preview of at most six rows."
+}
