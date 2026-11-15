@@ -2,7 +2,8 @@
 
 This is a revised submission of ggchord 0.28.1. The version number is
 retained; the help examples and DESCRIPTION have been revised since the
-previous submission.
+previous submission. Existing website input records are also bundled for
+reproducible plotting examples, retaining original values and plotting defaults.
 
 ### Version jump
 

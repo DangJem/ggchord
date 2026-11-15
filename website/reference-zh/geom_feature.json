@@ -1,5 +1,5 @@
 {
-  "source_sha256": "23f5183916e6af24465592cedc03892e08caf80b81ecaffc436f426d2e7aa542",
+  "source_sha256": "2937172f873c426909392c685443c4108d00cf7f29e127fe42dc6bb99aababe7",
   "translations": {
     "0": "绘制通用基因组注释",
     "1": "可选映射。⟦0⟧、⟦1⟧、⟦2⟧、⟦3⟧ 等角色 aesthetic 可重命名输入列；普通视觉映射在生成几何后计算。",

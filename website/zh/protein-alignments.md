@@ -34,7 +34,7 @@
 
 ## 将蛋白命中显示在基因组上 {#projection}
 
-如果需要在核酸骨架上定位命中，则提供已知 CDS 映射，将 aa 区间投影到 bp。下面另用 BVI_023A_0009 的源蛋白命中演示，先选出具有完整 CDS 的记录，再转换 query 端。此小节读取[说明输入包](formats.md)中的原始文件。
+如果需要在核酸骨架上定位命中，则提供已知 CDS 映射，将 aa 区间投影到 bp。下面另用 BVI_023A_0009 的源蛋白命中演示，先选出具有完整 CDS 的记录，再转换 query 端。此小节直接使用随包数据 `sequence_detail_example`，原始记录的来源见[说明输入包](formats.md)。
 
 ```r
 library(dplyr)

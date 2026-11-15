@@ -2,21 +2,34 @@
 
 {{prepare:setup}}
 
-Extract the [input bundle](https://github.com/DangJem/ggchord/archive/refs/heads/main.zip) so the working directory contains examples/. Each section names its optional dependencies.
+The examples use bundled data and require no input download or extraction; optional dependencies are listed in each section. Original records remain traceable through the [real input bundle](https://github.com/DangJem/ggchord/archive/refs/heads/main.zip).
 
 <a id="characters"></a>
 
 ## Retain actual FASTA characters {#characters}
 
-Use `keep_sequence = TRUE` to retain characters with their physical header line and optional file provenance. Only whitespace is removed; case is retained. Declare bp or aa explicitly instead of guessing the alphabet. Focusing crops the string as well as the interval; local position 1 below is original position 1001. A decreasing locus selects the same interval and does not reverse-complement it. Lengths alone cannot supply characters; HSP endpoints cannot supply mismatch or gap columns. Gapped FASTA counts gap characters and needs a separate alignment-to-source map before genomic use.
+Bundled `sequence_detail_example$plasmid_source` already retains real characters, physical header line numbers and source-file provenance; use `keep_sequence = TRUE` when importing your own FASTA. Import removes whitespace while retaining case; declare bp or aa explicitly rather than guessing the alphabet. Focusing clips both strings and intervals: local position 1 below corresponds to source position 1001. Descending regions select the same interval without reverse-complementing it. Lengths alone cannot recover characters, and HSP endpoints cannot recover mismatch or gap columns. Gapped FASTA lengths include gaps; genomic use needs a separate alignment-column-to-source-position mapping.
 
 {{code:courseblockar}}
+
+### Import your own existing alignment {#read-alignment}
+
+This subsection specifically demonstrates `read_aligned_fasta()`. Replace the path with an existing equal-length FASTA; the source example is available in the input bundle. Reading is skipped when the file is absent, and subsequent plots continue to use the bundled tables directly.
+
+```r
+alignment_file <- "examples/alignment/opuntia-aligned.fasta"
+if (file.exists(alignment_file)) {
+  imported_alignment <- read_aligned_fasta(
+    alignment_file, "DNA", source_file = TRUE
+  )
+}
+```
 
 <a id="aligned-characters"></a>
 
 ## Existing alignments: keep columns and source positions separate {#aligned-characters}
 
-These examples require the source checkout's `examples/alignment/` directory. It contains unchanged Biopython DNA/protein alignment inputs, the upstream permission notice, hashes and a reproducible FASTA re-encoding rule. No aligner is run. Full record IDs and original characters remain unchanged; choose rows and columns explicitly.
+The examples directly use prepared DNA/protein alignment tables in `sequence_detail_example`. Original Biopython records, upstream licenses, hashes and reproducible FASTA conversion rules remain in the source directory `examples/alignment/`. No alignment tools are run and complete record IDs and original characters are unchanged; rows and columns are selected explicitly.
 
 `read_aligned_fasta()` reads one existing alignment. Declare DNA, RNA or AA; equal lengths alone do not establish homology. `alignment_column` includes `-` and `.` gaps, whose `source_position` is NA. Default positions count the ungapped input fragment from one; they are not complete-genome coordinates. Lowercase letters consume positions, so this reader must not be used as an A3M insertion parser.
 

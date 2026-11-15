@@ -6,11 +6,9 @@ Start with observed HSPs from one sequence pair, then extend to a four-sequence 
 
 ## Plot original HSP endpoints {#dotplot}
 
-The source-backed EMALE PAF pair has 11 observed HSPs. Its declared sequence
-lengths supply both axes. `read_paf()` converts zero-based half-open intervals
-to the internal one-based convention and reverses target endpoints for minus
-alignments. The files and their provenance are in the [input download](formats.md).
-The following code needs the optional `dplyr` package for data preparation.
+Bundled `sequence_detail_example$paf` retains the 11 observed HSPs for the EMALE pair; sequence lengths declared by the source file define both axes.
+The table is already normalized to one-based coordinates; reverse-alignment target endpoints remain descending.
+Original files and provenance are available under [input downloads](formats.md). Preparation requires optional `dplyr`.
 
 {{code:dotplotdata}}
 
@@ -46,7 +44,7 @@ base-level mismatches or gap paths.
 
 ## Multi-sequence HSP matrix {#matrix}
 
-These inputs come from original repository FASTA and standard BLAST tables. All 32 HSPs across four sequences are retained; self-alignments, reciprocal records and missing HSPs are not invented. The 266 CDS belong to the shared source preparation and are not submitted to the Dotplot segment layer. An empty area means no supplied HSP, not proven absence of homology.
+The following code uses bundled `genome_comparison_example`, derived from the original FASTA and standard BLAST tables. It retains all 32 HSPs across four sequences without inventing self-alignments, symmetric records or missing HSPs. The 266 CDS belong to the shared source table but are not passed to the Dotplot segment layer. Empty regions indicate no relationship records in this input, not an absence of homology.
 
 Column headers identify each query sequence and its complete 1–length range; row headers identify subject sequences and ranges. Bottom and right ticks show local positions within each sequence. Follow a column and row to locate a pair. Each outlined rectangle retains widths and heights proportional to the actual lengths. Pale backgrounds distinguish cells and do not encode similarity; spaces between rectangles are display gaps.
 

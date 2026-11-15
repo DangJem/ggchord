@@ -1,5 +1,11 @@
 # ggchord 0.28.1
 
+- Add `genome_comparison_example` and `sequence_detail_example`, with complete
+  source tables, documented flagship display subsets and reproducible generation
+  rules. Website plotting examples now use bundled inputs; file-import lessons
+  retain explicit reader calls. Shared styles and per-view code reduce repeated
+  preparation while preserving the existing flagship appearance.
+
 - Help examples use smaller explicit subsets of real data, restricted DNA
   feature discovery and reference primer binding sites. Core plots remain
   runnable; optional decoder examples and additional complete layout examples

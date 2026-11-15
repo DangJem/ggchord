@@ -63,5 +63,12 @@
   "Requires dplyr and the source checkout or tutorial input bundle.": "需要 dplyr 和源码 checkout 或说明输入包。",
   "The counts annotate the example, not a new default statistic in the Coord.": "计数属于此示例，不改变坐标系的默认统计行为。",
   "Adjustable annular lift for non-neighbours, in layout units; longest spoke = 2.": "可调整非相邻环形连接的外拱量，单位为布局单位；最长辐条为2。",
-  "Select the second displayed CDS on E's lower sequence, then read its real bases.": "选择 E 下方序列实际展示的第二条 CDS，再读取其真实碱基。"
+  "Select the second displayed CDS on E's lower sequence, then read its real bases.": "选择 E 下方序列实际展示的第二条 CDS，再读取其真实碱基。",
+  "Restrict discovery to two named features on the real plasmid.": "仅在真实质粒中识别两个指定名称的特征。",
+  "Optional Bioconductor decoder loading can take several seconds.": "可选 Bioconductor 解码器的加载可能需要数秒。",
+  "Optional dependency: dplyr. These are real bundled HSP records.": "可选依赖为 dplyr；这里使用真实随包 HSP 记录。",
+  "Shared corridors describe drawing; they do not aggregate biological evidence.": "共用通道描述绘制方式，不合并生物学证据。",
+  "Optional dependency: dplyr. One real HSP is deliberately shown 12 times.": "可选依赖为 dplyr；同一条真实 HSP 在12个视图中显式重复展示。",
+  "Optional dependency: dplyr. Source: unchanged bundled pUC19 FASTA.": "可选依赖为 dplyr；来源是未经改动的随包 pUC19 FASTA。",
+  "Extract actual source characters, keeping their order across the origin.": "提取真实来源字符，保留跨原点的字符顺序。"
 }

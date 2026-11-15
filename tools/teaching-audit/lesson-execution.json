@@ -2,126 +2,251 @@
   "pages": {
     "chord-geometry": {
       "result": "success",
-      "chunks": ["courseblockb", "frontbackbone", "frontrotation", "frontgap", "frontradius", "frontcurvature"],
+      "chunks": [
+        "courseblockb",
+        "frontbackbone",
+        "frontrotation",
+        "frontgap",
+        "frontradius",
+        "frontcurvature"
+      ],
       "raw_blocks": 0,
       "isolation": "separate R environment; packages loaded as declared by lesson snippets",
       "exports": "raw save/preview arguments checked; actual PNG exports verified separately"
     },
     "ribbons": {
       "result": "success",
-      "chunks": ["ribboninputs", "ribbons", "ribbondensity", "comparedensitydata", "comparedensityfour", "comparedensityeight", "comparebundle", "comparebundlesummary"],
+      "chunks": [
+        "ribboninputs",
+        "ribbons",
+        "ribbondensity",
+        "comparedensitydata",
+        "comparedensityfour",
+        "comparedensityeight",
+        "comparebundle",
+        "comparebundlesummary"
+      ],
       "raw_blocks": 0,
       "isolation": "separate R environment; packages loaded as declared by lesson snippets",
       "exports": "raw save/preview arguments checked; actual PNG exports verified separately"
     },
     "real-data": {
       "result": "success",
-      "chunks": ["realimport", "realprepare", "realfeatures", "realchord", "reallinear", "courseblockc"],
+      "chunks": [
+        "realimport",
+        "realprepare",
+        "realfeatures",
+        "realchord",
+        "reallinear",
+        "courseblockc"
+      ],
       "raw_blocks": 0,
       "isolation": "separate R environment; packages loaded as declared by lesson snippets",
       "exports": "raw save/preview arguments checked; actual PNG exports verified separately"
     },
     "chord": {
       "result": "success",
-      "chunks": ["sequencepalette", "docstyle", "showcasedata", "chordshowcasegenes", "showcasechord", "courseblockd"],
+      "chunks": [
+        "sequencepalette",
+        "docstyle",
+        "showcasedata",
+        "chordshowcasegenes",
+        "showcasechord",
+        "courseblockd"
+      ],
       "raw_blocks": 0,
       "isolation": "separate R environment; packages loaded as declared by lesson snippets",
       "exports": "raw save/preview arguments checked; actual PNG exports verified separately"
     },
     "homology": {
       "result": "success",
-      "chunks": ["homologinput", "homologdna", "homologmembership", "homologs", "linkprojection", "courseblocke"],
+      "chunks": [
+        "homologinput",
+        "homologdna",
+        "homologmembership",
+        "homologs",
+        "linkprojection",
+        "courseblocke"
+      ],
       "raw_blocks": 0,
       "isolation": "separate R environment; packages loaded as declared by lesson snippets",
       "exports": "raw save/preview arguments checked; actual PNG exports verified separately"
     },
     "views": {
       "result": "success",
-      "chunks": ["focus", "segment", "mappingposition"],
+      "chunks": [
+        "focus",
+        "segment",
+        "mappingposition"
+      ],
       "raw_blocks": 0,
       "isolation": "separate R environment; packages loaded as declared by lesson snippets",
       "exports": "raw save/preview arguments checked; actual PNG exports verified separately"
     },
     "collinear": {
       "result": "success",
-      "chunks": ["sequencepalette", "docstyle", "showcasedata", "showcasecollinear", "courseblockf"],
+      "chunks": [
+        "sequencepalette",
+        "docstyle",
+        "showcasedata",
+        "chordshowcasegenes",
+        "showcasecollinear",
+        "courseblockf"
+      ],
       "raw_blocks": 0,
       "isolation": "separate R environment; packages loaded as declared by lesson snippets",
       "exports": "raw save/preview arguments checked; actual PNG exports verified separately"
     },
     "recognition": {
       "result": "success",
-      "chunks": ["recognition", "comparecatalog"],
+      "chunks": [
+        "recognition",
+        "comparecatalog"
+      ],
       "raw_blocks": 0,
       "isolation": "separate R environment; packages loaded as declared by lesson snippets",
       "exports": "raw save/preview arguments checked; actual PNG exports verified separately"
     },
     "plasmid-catalog": {
       "result": "success",
-      "chunks": ["courseblockg", "referencebuilder", "courseblockh", "courseblocki", "courseblockj", "courseblockk", "courseblockl", "courseblockm", "courseblockn", "courseblocko", "courseblockp", "courseblockq", "courseblockr", "courseblocks", "courseblockt"],
+      "chunks": [
+        "courseblockg",
+        "referencebuilder",
+        "courseblockh",
+        "courseblocki",
+        "courseblockj",
+        "courseblockk",
+        "courseblockl",
+        "courseblockm",
+        "courseblockn",
+        "courseblocko",
+        "courseblockp",
+        "courseblockq",
+        "courseblockr",
+        "courseblocks",
+        "courseblockt"
+      ],
       "raw_blocks": 0,
       "isolation": "separate R environment; packages loaded as declared by lesson snippets",
       "exports": "raw save/preview arguments checked; actual PNG exports verified separately"
     },
     "plasmids": {
       "result": "success",
-      "chunks": ["courseblockg", "referencebuilder"],
+      "chunks": [
+        "courseblockg",
+        "referencebuilder"
+      ],
       "raw_blocks": 3,
       "isolation": "separate R environment; packages loaded as declared by lesson snippets",
       "exports": "raw save/preview arguments checked; actual PNG exports verified separately"
     },
     "data": {
       "result": "success",
-      "chunks": ["setup", "frontseqtable", "frontlinktable", "frontgenetable", "imports", "validation", "cleaning", "hierarchy", "foundationdata"],
+      "chunks": [
+        "setup",
+        "frontseqtable",
+        "frontlinktable",
+        "frontgenetable",
+        "imports",
+        "validation",
+        "cleaning",
+        "hierarchy",
+        "foundationdata"
+      ],
       "raw_blocks": 0,
       "isolation": "separate R environment; packages loaded as declared by lesson snippets",
       "exports": "raw save/preview arguments checked; actual PNG exports verified separately"
     },
     "alignments": {
       "result": "success",
-      "chunks": ["standardblast", "blastendpoints"],
+      "chunks": [
+        "standardblast",
+        "blastendpoints"
+      ],
       "raw_blocks": 0,
       "isolation": "separate R environment; packages loaded as declared by lesson snippets",
       "exports": "raw save/preview arguments checked; actual PNG exports verified separately"
     },
     "projection": {
       "result": "success",
-      "chunks": ["homologinput", "homologdna", "homologmembership", "projection", "linkprojection"],
+      "chunks": [
+        "homologinput",
+        "homologdna",
+        "homologmembership",
+        "projection",
+        "linkprojection"
+      ],
       "raw_blocks": 0,
       "isolation": "separate R environment; packages loaded as declared by lesson snippets",
       "exports": "raw save/preview arguments checked; actual PNG exports verified separately"
     },
     "annotations": {
       "result": "success",
-      "chunks": ["featurestack", "decorations", "comparefinishchord", "compareregioninside", "compareregionoutside", "compareregionwidth", "compareregionoffset"],
+      "chunks": [
+        "featurestack",
+        "decorations",
+        "comparefinishchord",
+        "compareregioninside",
+        "compareregionoutside",
+        "compareregionwidth",
+        "compareregionoffset"
+      ],
       "raw_blocks": 0,
       "isolation": "separate R environment; packages loaded as declared by lesson snippets",
       "exports": "raw save/preview arguments checked; actual PNG exports verified separately"
     },
     "labels": {
       "result": "success",
-      "chunks": ["labels", "manualgenelabels", "labellayouts"],
+      "chunks": [
+        "labels",
+        "manualgenelabels",
+        "labellayouts"
+      ],
       "raw_blocks": 0,
       "isolation": "separate R environment; packages loaded as declared by lesson snippets",
       "exports": "raw save/preview arguments checked; actual PNG exports verified separately"
     },
     "tracks": {
       "result": "success",
-      "chunks": ["trackdata", "frontgctable", "tracks", "multitrack", "tracktile", "comparetrackthin", "courseblockv"],
+      "chunks": [
+        "trackdata",
+        "frontgctable",
+        "tracks",
+        "multitrack",
+        "tracktile",
+        "comparetrackthin",
+        "courseblockv"
+      ],
       "raw_blocks": 0,
       "isolation": "separate R environment; packages loaded as declared by lesson snippets",
       "exports": "raw save/preview arguments checked; actual PNG exports verified separately"
     },
     "styling": {
       "result": "success",
-      "chunks": ["styling", "courseblockw", "courseblockx", "adjustments"],
+      "chunks": [
+        "styling",
+        "courseblockw",
+        "courseblockx",
+        "adjustments"
+      ],
       "raw_blocks": 0,
       "isolation": "separate R environment; packages loaded as declared by lesson snippets",
       "exports": "raw save/preview arguments checked; actual PNG exports verified separately"
     },
     "parameters": {
       "result": "success",
-      "chunks": ["courseblockac", "parameteruniform", "parameters", "parametervector", "parameterreorder", "parametergenes", "parameterstrand", "parameterlist", "parameterwidth", "parameterlabels"],
+      "chunks": [
+        "courseblockac",
+        "parameteruniform",
+        "parameters",
+        "parametervector",
+        "parameterreorder",
+        "parametergenes",
+        "parameterstrand",
+        "parameterlist",
+        "parameterwidth",
+        "parameterlabels"
+      ],
       "raw_blocks": 1,
       "isolation": "separate R environment; packages loaded as declared by lesson snippets",
       "exports": "raw save/preview arguments checked; actual PNG exports verified separately"
@@ -135,112 +260,278 @@
     },
     "protein-alignments": {
       "result": "success",
-      "chunks": ["nativeproteininput", "nativeproteinlinks", "nativeproteinplot", "nativeproteinchord", "protein", "proteinproject"],
+      "chunks": [
+        "nativeproteininput",
+        "nativeproteinlinks",
+        "nativeproteinplot",
+        "nativeproteinchord",
+        "protein",
+        "proteinproject"
+      ],
       "raw_blocks": 1,
       "isolation": "separate R environment; packages loaded as declared by lesson snippets",
       "exports": "raw save/preview arguments checked; actual PNG exports verified separately"
     },
     "collinear-layout": {
       "result": "success",
-      "chunks": ["courseblocky", "frontlinks", "alignbase", "aligncenter", "alignright", "alignanchor", "alignauto", "frontlineargap"],
+      "chunks": [
+        "courseblocky",
+        "frontlinks",
+        "alignbase",
+        "aligncenter",
+        "alignright",
+        "alignanchor",
+        "alignauto",
+        "frontlineargap"
+      ],
       "raw_blocks": 0,
       "isolation": "separate R environment; packages loaded as declared by lesson snippets",
       "exports": "raw save/preview arguments checked; actual PNG exports verified separately"
     },
     "feature-geometry": {
       "result": "success",
-      "chunks": ["comparegenedata", "comparefindloci", "comparegeneshouldered", "comparegeneflush", "comparegenetriangle", "compareshortauto", "compareshortwedge", "compareshortblock"],
+      "chunks": [
+        "comparegenedata",
+        "comparefindloci",
+        "comparegeneshouldered",
+        "comparegeneflush",
+        "comparegenetriangle",
+        "compareshortauto",
+        "compareshortwedge",
+        "compareshortblock"
+      ],
       "raw_blocks": 0,
       "isolation": "separate R environment; packages loaded as declared by lesson snippets",
       "exports": "raw save/preview arguments checked; actual PNG exports verified separately"
     },
     "circular-labels": {
       "result": "success",
-      "chunks": ["comparefinishcircle", "comparefixedfeature", "comparefixedhorizontal", "comparefixedinside", "comparefixedrotate", "comparefeaturefit", "compareradialfit", "compareautofit", "comparecalloutfit", "compareshrinkfit", "comparewrapfit", "compareellipsisfit", "compareexternaloff", "courseblockz", "courseblockaa", "courseblockab"],
+      "chunks": [
+        "comparefinishcircle",
+        "comparefixedfeature",
+        "comparefixedhorizontal",
+        "comparefixedinside",
+        "comparefixedrotate",
+        "comparefeaturefit",
+        "compareradialfit",
+        "compareautofit",
+        "comparecalloutfit",
+        "compareshrinkfit",
+        "comparewrapfit",
+        "compareellipsisfit",
+        "compareexternaloff",
+        "courseblockz",
+        "courseblockaa",
+        "courseblockab"
+      ],
       "raw_blocks": 0,
       "isolation": "separate R environment; packages loaded as declared by lesson snippets",
       "exports": "raw save/preview arguments checked; actual PNG exports verified separately"
     },
     "primers": {
       "result": "success",
-      "chunks": ["comparefinishdnabase", "comparefinishprimer", "comparefinishprimerrows", "compareprimerbetween", "compareprimeroutside", "compareprimeroffset", "compareprimerinside", "compareprimerwidth", "compareprimerlabel", "compareprimernolocation", "compareprimerlabelinside"],
+      "chunks": [
+        "comparefinishdnabase",
+        "comparefinishprimer",
+        "comparefinishprimerrows",
+        "compareprimerbetween",
+        "compareprimeroutside",
+        "compareprimeroffset",
+        "compareprimerinside",
+        "compareprimerwidth",
+        "compareprimerlabel",
+        "compareprimernolocation",
+        "compareprimerlabelinside"
+      ],
       "raw_blocks": 0,
       "isolation": "separate R environment; packages loaded as declared by lesson snippets",
       "exports": "raw save/preview arguments checked; actual PNG exports verified separately"
     },
     "restriction-sites": {
       "result": "success",
-      "chunks": ["comparefinishdnabase", "comparefinishsites", "comparefinishsiterows", "comparerestrictionradial", "comparerestrictionelbow", "comparerestrictionstraight", "comparerestrictionenzyme", "comparerestrictionposition", "comparerestrictionorder", "comparerestrictioninside"],
+      "chunks": [
+        "comparefinishdnabase",
+        "comparefinishsites",
+        "comparefinishsiterows",
+        "comparerestrictionradial",
+        "comparerestrictionelbow",
+        "comparerestrictionstraight",
+        "comparerestrictionenzyme",
+        "comparerestrictionposition",
+        "comparerestrictionorder",
+        "comparerestrictioninside"
+      ],
       "raw_blocks": 0,
       "isolation": "separate R environment; packages loaded as declared by lesson snippets",
       "exports": "raw save/preview arguments checked; actual PNG exports verified separately"
     },
     "scale-families": {
       "result": "success",
-      "chunks": ["comparescaledata", "comparescalegradient", "comparescalesteps", "comparescaleidentity", "comparescalemanual", "comparescalelinkdata", "comparescalelinkmanual", "comparescalelinkcontinuous", "comparescalefeature", "comparescalepreset", "comparescalegenering", "comparescaleregion", "trackdata", "comparescaletrack", "comparescaletrackgradient", "comparethemes"],
+      "chunks": [
+        "comparescaledata",
+        "comparescalegradient",
+        "comparescalesteps",
+        "comparescaleidentity",
+        "comparescalemanual",
+        "comparescalelinkdata",
+        "comparescalelinkmanual",
+        "comparescalelinkcontinuous",
+        "comparescalefeature",
+        "comparescalepreset",
+        "comparescalegenering",
+        "comparescaleregion",
+        "trackdata",
+        "comparescaletrack",
+        "comparescaletrackgradient",
+        "comparethemes"
+      ],
       "raw_blocks": 0,
       "isolation": "separate R environment; packages loaded as declared by lesson snippets",
       "exports": "raw save/preview arguments checked; actual PNG exports verified separately"
     },
     "multi-sequence-start": {
       "result": "success",
-      "chunks": ["courseblockac", "frontbackbone", "frontlinks", "frontribbon", "frontgenes", "frontfeature", "frontgenelabels", "courseblockad"],
+      "chunks": [
+        "courseblockac",
+        "frontbackbone",
+        "frontlinks",
+        "frontribbon",
+        "frontgenes",
+        "frontfeature",
+        "frontgenelabels",
+        "courseblockad"
+      ],
       "raw_blocks": 0,
       "isolation": "separate R environment; packages loaded as declared by lesson snippets",
       "exports": "raw save/preview arguments checked; actual PNG exports verified separately"
     },
     "multi-sequence-views": {
       "result": "success",
-      "chunks": ["radialdata", "coursecomparison", "coursecomparisonreport", "sequencepalette", "docstyle", "showcasedata", "chordshowcasegenes", "showcasechord", "showcasecollinear", "flagshipmulti", "foundationdata", "foundationequal", "foundationarrow"],
+      "chunks": [
+        "radialdata",
+        "coursecomparison",
+        "coursecomparisonreport",
+        "sequencepalette",
+        "docstyle",
+        "showcasedata",
+        "chordshowcasegenes",
+        "showcasechord",
+        "showcasecollinear",
+        "relationshipstyle",
+        "flagshipradial",
+        "flagshipsankey",
+        "foundationdata",
+        "foundationequal",
+        "foundationarrow"
+      ],
       "raw_blocks": 2,
       "isolation": "separate R environment; packages loaded as declared by lesson snippets",
       "exports": "raw save/preview arguments checked; actual PNG exports verified separately"
     },
     "sankey": {
       "result": "success",
-      "chunks": ["foundationdata", "foundationsankey", "coursesankeygap", "courseblockae"],
+      "chunks": [
+        "foundationdata",
+        "foundationsankey",
+        "coursesankeygap",
+        "courseblockae"
+      ],
       "raw_blocks": 0,
       "isolation": "separate R environment; packages loaded as declared by lesson snippets",
       "exports": "raw save/preview arguments checked; actual PNG exports verified separately"
     },
     "radial-synteny": {
       "result": "success",
-      "chunks": ["radialdata", "radialview", "coursecomparison", "courseradialangle", "radialmap"],
+      "chunks": [
+        "radialdata",
+        "radialview",
+        "coursecomparison",
+        "courseradialangle",
+        "radialmap"
+      ],
       "raw_blocks": 1,
       "isolation": "separate R environment; packages loaded as declared by lesson snippets",
       "exports": "raw save/preview arguments checked; actual PNG exports verified separately"
     },
     "instances": {
       "result": "success",
-      "chunks": ["foundationdata", "foundationinstances"],
+      "chunks": [
+        "foundationdata",
+        "foundationinstances"
+      ],
       "raw_blocks": 0,
       "isolation": "separate R environment; packages loaded as declared by lesson snippets",
       "exports": "raw save/preview arguments checked; actual PNG exports verified separately"
     },
     "multi-sequence-layout": {
       "result": "success",
-      "chunks": ["courseblockaf", "frontbackbone", "frontorientation", "frontorder"],
+      "chunks": [
+        "courseblockaf",
+        "frontbackbone",
+        "frontorientation",
+        "frontorder"
+      ],
       "raw_blocks": 0,
       "isolation": "separate R environment; packages loaded as declared by lesson snippets",
       "exports": "raw save/preview arguments checked; actual PNG exports verified separately"
     },
     "multi-sequence-links": {
       "result": "success",
-      "chunks": ["courseblockag", "frontbackbone", "frontlinks", "frontribbon", "frontroute", "frontobstacle", "frontnoavoid", "frontsmooth", "frontmarkers", "frontlinearbase", "frontlinearlink", "frontlinearcross", "frontcrosswidth", "frontcrosssame", "comparebranchdata", "comparebranchnone", "comparebranchquery", "comparebranchfraction", "comparepointdata", "comparelinkcurve", "comparelinkstraight", "ribboninputs", "pointlinks"],
+      "chunks": [
+        "courseblockag",
+        "frontbackbone",
+        "frontlinks",
+        "frontribbon",
+        "frontroute",
+        "frontobstacle",
+        "frontnoavoid",
+        "frontsmooth",
+        "frontmarkers",
+        "frontlinearbase",
+        "frontlinearlink",
+        "frontlinearcross",
+        "frontcrosswidth",
+        "frontcrosssame",
+        "comparebranchdata",
+        "comparebranchnone",
+        "comparebranchquery",
+        "comparebranchfraction",
+        "comparepointdata",
+        "comparelinkcurve",
+        "comparelinkstraight",
+        "ribboninputs",
+        "pointlinks"
+      ],
       "raw_blocks": 0,
       "isolation": "separate R environment; packages loaded as declared by lesson snippets",
       "exports": "raw save/preview arguments checked; actual PNG exports verified separately"
     },
     "multi-sequence-labels": {
       "result": "success",
-      "chunks": ["courseblockah", "frontbackbone", "frontlinks", "frontribbon", "frontgenes", "frontfeature", "frontseqlabels", "frontgenelabels", "comparefinishchord", "compareseqlabelarc", "compareseqlabelhorizontal", "compareseqlabelrotation"],
+      "chunks": [
+        "courseblockah",
+        "frontbackbone",
+        "frontlinks",
+        "frontribbon",
+        "frontgenes",
+        "frontfeature",
+        "frontseqlabels",
+        "frontgenelabels",
+        "comparefinishchord",
+        "compareseqlabelarc",
+        "compareseqlabelhorizontal",
+        "compareseqlabelrotation"
+      ],
       "raw_blocks": 0,
       "isolation": "separate R environment; packages loaded as declared by lesson snippets",
       "exports": "raw save/preview arguments checked; actual PNG exports verified separately"
     },
     "circular-start": {
       "result": "success",
-      "chunks": ["coursecircleinput", "coursecirclefeature"],
+      "chunks": [
+        "coursecircleinput",
+        "coursecirclefeature"
+      ],
       "raw_blocks": 2,
       "isolation": "separate R environment; packages loaded as declared by lesson snippets",
       "exports": "raw save/preview arguments checked; actual PNG exports verified separately"
@@ -254,121 +545,263 @@
     },
     "circular-layout": {
       "result": "success",
-      "chunks": ["courseblockaj", "comparefinishcircle", "comparebonedouble", "comparebonesingle", "comparebonegap", "compareboneband", "comparebandwidth", "comparecirclecounter", "comparecirclegap", "comparecenter", "comparecenternolength", "comparecenterstyle", "firstcircle", "firstfeatures", "frontcirclestyle", "frontcirclerotation"],
+      "chunks": [
+        "courseblockaj",
+        "comparefinishcircle",
+        "comparebonedouble",
+        "comparebonesingle",
+        "comparebonegap",
+        "compareboneband",
+        "comparebandwidth",
+        "comparecirclecounter",
+        "comparecirclegap",
+        "comparecenter",
+        "comparecenternolength",
+        "comparecenterstyle",
+        "firstcircle",
+        "firstfeatures",
+        "frontcirclestyle",
+        "frontcirclerotation"
+      ],
       "raw_blocks": 0,
       "isolation": "separate R environment; packages loaded as declared by lesson snippets",
       "exports": "raw save/preview arguments checked; actual PNG exports verified separately"
     },
     "circular-features": {
       "result": "success",
-      "chunks": ["courseblockak", "comparefinishcircle", "comparefeaturearrow", "comparefeatureblock", "comparefeaturepreset", "comparefinishstack", "comparepositionidentity", "comparepositionstack"],
+      "chunks": [
+        "courseblockak",
+        "comparefinishcircle",
+        "comparefeaturearrow",
+        "comparefeatureblock",
+        "comparefeaturepreset",
+        "comparefinishstack",
+        "comparepositionidentity",
+        "comparepositionstack"
+      ],
       "raw_blocks": 0,
       "isolation": "separate R environment; packages loaded as declared by lesson snippets",
       "exports": "raw save/preview arguments checked; actual PNG exports verified separately"
     },
     "circular-dense-case": {
       "result": "success",
-      "chunks": ["courseblockg", "referencebuilder"],
+      "chunks": [
+        "courseblockg",
+        "referencebuilder"
+      ],
       "raw_blocks": 2,
       "isolation": "separate R environment; packages loaded as declared by lesson snippets",
       "exports": "raw save/preview arguments checked; actual PNG exports verified separately"
     },
     "dotplot-start": {
       "result": "success",
-      "chunks": ["courseblockam", "dotplotdata", "dotplotview", "dotplotreverse", "dotplotmatrixdata", "flagshipdot"],
+      "chunks": [
+        "courseblockam",
+        "dotplotdata",
+        "dotplotview",
+        "dotplotreverse",
+        "dotplotmatrixdata",
+        "flagshipdot"
+      ],
       "raw_blocks": 2,
       "isolation": "separate R environment; packages loaded as declared by lesson snippets",
       "exports": "raw save/preview arguments checked; actual PNG exports verified separately"
     },
     "import-sequences": {
       "result": "success",
-      "chunks": ["courseblockan", "setup", "adapters", "genbank", "frontimportseq", "frontimportgff", "frontimportblast", "frontimportgr", "frontimportgi"],
+      "chunks": [
+        "courseblockan",
+        "setup",
+        "adapters",
+        "genbank",
+        "frontimportseq",
+        "frontimportgff",
+        "frontimportblast",
+        "frontimportgr",
+        "frontimportgi"
+      ],
       "raw_blocks": 0,
       "isolation": "separate R environment; packages loaded as declared by lesson snippets",
       "exports": "raw save/preview arguments checked; actual PNG exports verified separately"
     },
     "import-intervals": {
       "result": "success",
-      "chunks": ["courseblockao", "setup", "formats", "formatpaf", "drawpaf", "frontimportgr", "frontimportgi", "courseblockap"],
+      "chunks": [
+        "courseblockao",
+        "setup",
+        "formats",
+        "formatpaf",
+        "drawpaf",
+        "frontimportgr",
+        "frontimportgi",
+        "courseblockap"
+      ],
       "raw_blocks": 0,
       "isolation": "separate R environment; packages loaded as declared by lesson snippets",
       "exports": "raw save/preview arguments checked; actual PNG exports verified separately"
     },
     "aligned-sequences": {
       "result": "success",
-      "chunks": ["courseblockaq", "setup", "courseblockar", "courseblockas", "residuewrap", "courseblockat", "courseblockau", "courseblockav"],
-      "raw_blocks": 0,
-      "isolation": "separate R environment; packages loaded as declared by lesson snippets",
+      "chunks": [
+        "courseblockaq",
+        "setup",
+        "courseblockar",
+        "courseblockas",
+        "residuewrap",
+        "courseblockat",
+        "courseblockau",
+        "courseblockav"
+      ],
+      "raw_blocks": 1,
+      "isolation": "fresh R process, separate documentation environment",
       "exports": "raw save/preview arguments checked; actual PNG exports verified separately"
     },
     "import-signals": {
       "result": "success",
-      "chunks": ["courseblockaw", "setup", "courseblockax", "courseblockay"],
+      "chunks": [
+        "courseblockaw",
+        "setup",
+        "courseblockax",
+        "courseblockay"
+      ],
       "raw_blocks": 0,
       "isolation": "separate R environment; packages loaded as declared by lesson snippets",
       "exports": "raw save/preview arguments checked; actual PNG exports verified separately"
     },
     "import-relations": {
       "result": "success",
-      "chunks": ["courseblockaz", "setup", "courseblockba", "courseblockbb", "courseblockbc", "courseblockbd", "courseblockbe", "courseblockbf"],
+      "chunks": [
+        "courseblockaz",
+        "setup",
+        "courseblockba",
+        "courseblockbb",
+        "courseblockbc",
+        "courseblockbd",
+        "courseblockbe",
+        "courseblockbf"
+      ],
       "raw_blocks": 0,
       "isolation": "separate R environment; packages loaded as declared by lesson snippets",
       "exports": "raw save/preview arguments checked; actual PNG exports verified separately"
     },
     "tracks-statistics": {
       "result": "success",
-      "chunks": ["courseblockbg", "trackdata", "tracks", "foundationdata", "foundationcount", "courseblockbh", "comparemultitrackdata", "comparetracktwo", "comparetrackorder", "courseblockbi", "comparetrackfocus"],
+      "chunks": [
+        "courseblockbg",
+        "trackdata",
+        "tracks",
+        "foundationdata",
+        "foundationcount",
+        "courseblockbh",
+        "comparemultitrackdata",
+        "comparetracktwo",
+        "comparetrackorder",
+        "courseblockbi",
+        "comparetrackfocus"
+      ],
       "raw_blocks": 0,
       "isolation": "separate R environment; packages loaded as declared by lesson snippets",
       "exports": "raw save/preview arguments checked; actual PNG exports verified separately"
     },
     "diagnostics": {
       "result": "success",
-      "chunks": ["courseblockbj", "frontlinearbase", "frontgeometry", "comparescaledata", "comparediagnostics"],
+      "chunks": [
+        "courseblockbj",
+        "frontlinearbase",
+        "frontgeometry",
+        "comparescaledata",
+        "comparediagnostics"
+      ],
       "raw_blocks": 1,
       "isolation": "separate R environment; packages loaded as declared by lesson snippets",
       "exports": "raw save/preview arguments checked; actual PNG exports verified separately"
     },
     "fusion-routing": {
       "result": "success",
-      "chunks": ["courseblockbk", "fusiondata", "fusionpanels", "fusionlinear", "fusionview", "fusionfour", "fusionexport", "fusionsave", "courseblockbl"],
+      "chunks": [
+        "courseblockbk",
+        "fusiondata",
+        "fusionpanels",
+        "fusionlinear",
+        "fusionview",
+        "fusionfour",
+        "fusionexport",
+        "fusionsave",
+        "courseblockbl"
+      ],
       "raw_blocks": 0,
       "isolation": "separate R environment; packages loaded as declared by lesson snippets",
       "exports": "raw save/preview arguments checked; actual PNG exports verified separately"
     },
     "fusion-layout": {
       "result": "success",
-      "chunks": ["courseblockbm", "fusiondata", "fusionpanels", "fusionlinear", "fusionview", "fusionstyle", "courseblockbn", "courseblockbo", "courseblockbp", "courseblockbq", "flagshipdata", "fusionoverview", "flagshipfusion"],
+      "chunks": [
+        "courseblockbm",
+        "fusiondata",
+        "fusionpanels",
+        "fusionlinear",
+        "fusionview",
+        "fusionstyle",
+        "courseblockbn",
+        "courseblockbo",
+        "courseblockbp",
+        "courseblockbq",
+        "flagshipdata",
+        "fusionoverview",
+        "flagshipfusion"
+      ],
       "raw_blocks": 0,
       "isolation": "separate R environment; packages loaded as declared by lesson snippets",
       "exports": "raw save/preview arguments checked; actual PNG exports verified separately"
     },
     "fusion-details": {
       "result": "success",
-      "chunks": ["courseblockbr", "fusiondata", "fusionpanels", "fusionlinear", "fusionview", "courseblockbs", "magnifyframe", "courseblockbt", "courseblockbu", "courseblockbv"],
+      "chunks": [
+        "courseblockbr",
+        "fusiondata",
+        "fusionpanels",
+        "fusionlinear",
+        "fusionview",
+        "courseblockbs",
+        "magnifyframe",
+        "courseblockbt",
+        "courseblockbu",
+        "courseblockbv"
+      ],
       "raw_blocks": 0,
       "isolation": "separate R environment; packages loaded as declared by lesson snippets",
       "exports": "raw save/preview arguments checked; actual PNG exports verified separately"
     },
     "fusion-advanced": {
       "result": "success",
-      "chunks": ["courseblockbw", "fusiondata", "fusionpanels", "fusionlinear", "fusionview", "courseblockbx", "courseblockby"],
+      "chunks": [
+        "courseblockbw",
+        "fusiondata",
+        "fusionpanels",
+        "fusionlinear",
+        "fusionview",
+        "courseblockbx",
+        "courseblockby"
+      ],
       "raw_blocks": 0,
       "isolation": "separate R environment; packages loaded as declared by lesson snippets",
       "exports": "raw save/preview arguments checked; actual PNG exports verified separately"
     },
     "fusion-start": {
       "result": "success",
-      "chunks": ["fusiondata", "coursefusion"],
+      "chunks": [
+        "fusiondata",
+        "coursefusion"
+      ],
       "raw_blocks": 3,
       "isolation": "separate R environment; packages loaded as declared by lesson snippets",
       "exports": "raw save/preview arguments checked; actual PNG exports verified separately"
     }
   },
-  "shared_code_sha256": "ad691f68020e6e343c412d6b97aeec2eb069cedd025eba71cf025f1a93fdd58a",
+  "shared_code_sha256": "06b889a2049d04c1e26fa69ec1e1c2925239dffcc7467e7d5a793732214e59c0",
   "engine_sha256": {
     "R/aaa-geom.R": "d5f96ca626a3ac478bb59b6deb363a0d5998be4f279a865242814fc319c9bad5",
-    "R/adaptive-layout.R": "deb567583f4d8fe07d973e44cba6e8e2ed73cd25e5b820b5b9493b545a41a0d5",
+    "R/adaptive-layout.R": "d5df58392856b1303d108403748a311a9a01f17dfd886513b2f97130e9685905",
     "R/alignment-direction.R": "d80476a0a8da3919cc3dbaefa1395f2b7078f36f522d38a354fc616f7b0036d3",
     "R/alignment-panel.R": "af98ec503fe41c0f0434395e251a713aa0caeae5c8f6855fd42195edda47ed3e",
     "R/annotation-exits.R": "1ba9e1c106a75391790dcd69227852607bec9d3956ed2c579e67bea496cac099",
@@ -386,7 +819,7 @@
     "R/coord-dotplot.R": "1184d36d05e27c1aefc39e4e0196303fde5f1f45ccae555348b25c369a4201cb",
     "R/coord-radial-synteny.R": "ba75434cb5a1c2f00327be1a6267ae5c8e96b37eb7faa0fcee21517e74b6d26d",
     "R/coord-sankey.R": "87738ed49a64f5ac7361feab20dfa26c17689e0e9bfe0507e36cdb9286cccb60",
-    "R/data_doc.R": "ad85662a588f9b35cfe9934af43a9a23176f1905b04b18b05abfd71d03e87e98",
+    "R/data_doc.R": "e3b3a5c49703cb68e262ce2f003550a7e2d60f512040015077b8c4b73e604173",
     "R/data-alignment.R": "cb452b1d5c683359ce1f5a945976c71811e05914154a55b64b0b2ee211909e83",
     "R/data-bedpe.R": "0f6639a6d7ee62dd06e41d1e815ec2de2c3c3f936ab8e10fac43490079f625e4",
     "R/data-contract.R": "8aebb29b0cad5965a04e62ce584f9a18dae9d4227924be983bd0ec9834bcc25e",
@@ -401,10 +834,10 @@
     "R/data-project.R": "ada3bf29ca0de165a8d6df626d06962645e9afacecd885d84ff7204ba6279fd3",
     "R/data-relations.R": "85bc1a3eb03e1f9ef666f27ef0808b7942e5c7e6042a071b01d7c8cd24ba4914",
     "R/data-segment.R": "f6597e0675ca22f2e7eaa3ed8ddf67dd2f35652f14fe450493cebeb22f5e1d6d",
-    "R/data-signal.R": "7023af5094f442a6619624433d99b4b24e4130049b2782440b39e19b1802689a",
+    "R/data-signal.R": "74fe230d50f7cad67e9a8600cfa9c9cb8208fe8b20e8ad1d478c18b09fc7dca9",
     "R/data-signatures.R": "76d2944377247505f9a94e6356c53c597df82ca345e9a891c5884ddfcfee1ade",
     "R/data-translate.R": "12ca1bf84e8dd9e71f6c6a72dbf9a52ce0eaeb20e706caf5b89d9771b063f764",
-    "R/data-variant.R": "5263e5c39ec2ffb3bb2785bbbb3daa6f76f57028515762b7bdb4906e17265351",
+    "R/data-variant.R": "abf5fa3039518718ce0f3b52359f86ba4ce485cdc0053c3d1b1c05f91371f21b",
     "R/diagnostics.R": "2ce6d2df7073b97e14a8bdbad48319a691f7380702e67fca328a6c18fb43e924",
     "R/display-instances.R": "51838c6911fbd8d6f1e6d2e5b49c5720b35ada1eaac6fd9659e9ae943339fc0a",
     "R/feature-contour-clipping.R": "2c1dc92c0235b28084e88746a5cc5aaec4043b25d0cf7c072f852b9b85dacd30",
@@ -418,16 +851,16 @@
     "R/fusion-render-events.R": "fb3a81210eabaa6e0271054ba99c6a40e8fe52751e1d1722affd091ea0280239",
     "R/fusion-render.R": "bb8c0f6dd5fbb7116d3da989bf498bc21e833ba5460640b5a85c9f5caaede0f7",
     "R/fusion-routing.R": "895efa4f3a2b3e120a7b82fbe232c2bed6c68f69d450f853760b33a22101c4f6",
-    "R/fusion.R": "8d506af4aaf4d91c4f5e231544eeddbc8ef23b5e4eff8a04c8819c2cb8b638a3",
+    "R/fusion.R": "18f30392ca8c210a910b9002f8a0dc503635ae9826914e0cf6771dfdbd739f11",
     "R/geom-alignment-segment.R": "a1f725f2722c5add53569a211d2b37a02d24d9825303e1f3d1c8f9ff6f38e3b6",
-    "R/geom-feature-label.R": "b060787e45b25f003cde5ed3c746c10505a08e3e9adc0be12a07b03d5791c15b",
-    "R/geom-feature.R": "4102abaeb4ff2a70c99026d8a52027a377d895ae07c0e952bbaf3c348a2c12ec",
-    "R/geom-gene.R": "6ca70ca6ba8b91727aecf13b55ae079fcc6b6d1910ba224d8410769b1d894691",
+    "R/geom-feature-label.R": "016ae6e8313b2885ba89ae2c968627123d19876eb3a14d6525ab7d9d17420a9d",
+    "R/geom-feature.R": "239967c2632b8230665db619c40ff3cee71aef216daf5238c5ef407f0b36ab9f",
+    "R/geom-gene.R": "c692d14f678f111c648184ec07b2a6d66b0c28d2a9836159cc7de556da052fec",
     "R/geom-link-line.R": "36942a7d4c12374c38fa78e7461685b692dac9d9cabd6c32694d41e32a8420ef",
-    "R/geom-primer.R": "b33604572f87a10a0b84a8aebe44a55b731a20f260fce9b037e527d25d38fb9a",
+    "R/geom-primer.R": "59a4919ab2f6a7afd46e13fe376c9e8d5c0f940f57a9feb7b1406953068c2f46",
     "R/geom-region.R": "a30af3000b91b5d286055b9c09139cd2df36c67ed71cad3f48efdfe164b360e2",
     "R/geom-residue.R": "051465e6587b72c72cf306b2ea18714146111b3ef06f4ebb16d4a58ba5f0a4a1",
-    "R/geom-ribbon.R": "8a3409378cc00582cfb41cd655ed54d3b525dda2ce77af108690cd8829c4f408",
+    "R/geom-ribbon.R": "a50ff5c528964a6ef9c03ac2cab2f8bf66fb4e239887d5bc1bb3677cd8da36e3",
     "R/geom-seq-break.R": "fcc71266eecb20d48152c2aea38644cd474c9dc1c73a089c6b8a8d03dcce424e",
     "R/geom-seq-center-label.R": "f973a67bdec4794b9a8f4514c151c62bfb0a6f0e7fbd35949527b65bb1e9f388",
     "R/geom-seq-label.R": "ab577a6a262a2582dae4e0c99da1987fa1ccb6e4f328f578e5d672c98f9ca6a4",
@@ -524,7 +957,7 @@
     "data/seq_data_example.rda": "5d7cf6daac87da5a61f896101b68bbe6955f80b3adef4571f5af813e8a734a95",
     "data/single_gene_example.rda": "9c409d598bd257e248b6dcedfab25efd47bc09980efb62dac6b6d7e5cc42724a",
     "data/single_genome_example.rda": "b7c79786ea40ad9b3c52d0f3fac9976550cc301962f993018352cb74598f9c89",
-    "DESCRIPTION": "a8e8b7bb72dae35de895621ac65fac1fa660486172136eaad98e98293e303d15",
+    "DESCRIPTION": "dfc0f4e4b57fd55cae9beec364ca3fc08021e3dbe9c6d5f8b53762701306256d",
     "examples/Addgene_Sequencing_Primers.xlsx": "11ea7c65ba07d3d4ab450900ece6ebc254e83dca7f54037fe6ad2f92b5ff5b09",
     "examples/alignment/BIOPYTHON-LICENSE.rst": "ce261228bf68b0239cecbc7c0a9004d315c0bc70150930a3fd6d60da6f66dd56",
     "examples/alignment/opuntia-aligned.fasta": "63d625601dce8ce591ebebc0a18f53f2a8f0ec7456668648b97e3c53cc84a8e5",
@@ -617,7 +1050,7 @@
     "examples/tracks.R": "abbd97f58356e1ffaaeaccda9676e47cb1a9a4c1ad382179581a599a5acd5476",
     "NAMESPACE": "0e18cfc3b06bf5e0f12f2c2213b9e3100cbb538582252085fb522a511a947273",
     "R/aaa-geom.R": "d5f96ca626a3ac478bb59b6deb363a0d5998be4f279a865242814fc319c9bad5",
-    "R/adaptive-layout.R": "deb567583f4d8fe07d973e44cba6e8e2ed73cd25e5b820b5b9493b545a41a0d5",
+    "R/adaptive-layout.R": "d5df58392856b1303d108403748a311a9a01f17dfd886513b2f97130e9685905",
     "R/alignment-direction.R": "d80476a0a8da3919cc3dbaefa1395f2b7078f36f522d38a354fc616f7b0036d3",
     "R/alignment-panel.R": "af98ec503fe41c0f0434395e251a713aa0caeae5c8f6855fd42195edda47ed3e",
     "R/annotation-exits.R": "1ba9e1c106a75391790dcd69227852607bec9d3956ed2c579e67bea496cac099",
@@ -635,7 +1068,7 @@
     "R/coord-dotplot.R": "1184d36d05e27c1aefc39e4e0196303fde5f1f45ccae555348b25c369a4201cb",
     "R/coord-radial-synteny.R": "ba75434cb5a1c2f00327be1a6267ae5c8e96b37eb7faa0fcee21517e74b6d26d",
     "R/coord-sankey.R": "87738ed49a64f5ac7361feab20dfa26c17689e0e9bfe0507e36cdb9286cccb60",
-    "R/data_doc.R": "ad85662a588f9b35cfe9934af43a9a23176f1905b04b18b05abfd71d03e87e98",
+    "R/data_doc.R": "e3b3a5c49703cb68e262ce2f003550a7e2d60f512040015077b8c4b73e604173",
     "R/data-alignment.R": "cb452b1d5c683359ce1f5a945976c71811e05914154a55b64b0b2ee211909e83",
     "R/data-bedpe.R": "0f6639a6d7ee62dd06e41d1e815ec2de2c3c3f936ab8e10fac43490079f625e4",
     "R/data-contract.R": "8aebb29b0cad5965a04e62ce584f9a18dae9d4227924be983bd0ec9834bcc25e",
@@ -650,10 +1083,10 @@
     "R/data-project.R": "ada3bf29ca0de165a8d6df626d06962645e9afacecd885d84ff7204ba6279fd3",
     "R/data-relations.R": "85bc1a3eb03e1f9ef666f27ef0808b7942e5c7e6042a071b01d7c8cd24ba4914",
     "R/data-segment.R": "f6597e0675ca22f2e7eaa3ed8ddf67dd2f35652f14fe450493cebeb22f5e1d6d",
-    "R/data-signal.R": "7023af5094f442a6619624433d99b4b24e4130049b2782440b39e19b1802689a",
+    "R/data-signal.R": "74fe230d50f7cad67e9a8600cfa9c9cb8208fe8b20e8ad1d478c18b09fc7dca9",
     "R/data-signatures.R": "76d2944377247505f9a94e6356c53c597df82ca345e9a891c5884ddfcfee1ade",
     "R/data-translate.R": "12ca1bf84e8dd9e71f6c6a72dbf9a52ce0eaeb20e706caf5b89d9771b063f764",
-    "R/data-variant.R": "5263e5c39ec2ffb3bb2785bbbb3daa6f76f57028515762b7bdb4906e17265351",
+    "R/data-variant.R": "abf5fa3039518718ce0f3b52359f86ba4ce485cdc0053c3d1b1c05f91371f21b",
     "R/diagnostics.R": "2ce6d2df7073b97e14a8bdbad48319a691f7380702e67fca328a6c18fb43e924",
     "R/display-instances.R": "51838c6911fbd8d6f1e6d2e5b49c5720b35ada1eaac6fd9659e9ae943339fc0a",
     "R/feature-contour-clipping.R": "2c1dc92c0235b28084e88746a5cc5aaec4043b25d0cf7c072f852b9b85dacd30",
@@ -667,16 +1100,16 @@
     "R/fusion-render-events.R": "fb3a81210eabaa6e0271054ba99c6a40e8fe52751e1d1722affd091ea0280239",
     "R/fusion-render.R": "bb8c0f6dd5fbb7116d3da989bf498bc21e833ba5460640b5a85c9f5caaede0f7",
     "R/fusion-routing.R": "895efa4f3a2b3e120a7b82fbe232c2bed6c68f69d450f853760b33a22101c4f6",
-    "R/fusion.R": "8d506af4aaf4d91c4f5e231544eeddbc8ef23b5e4eff8a04c8819c2cb8b638a3",
+    "R/fusion.R": "18f30392ca8c210a910b9002f8a0dc503635ae9826914e0cf6771dfdbd739f11",
     "R/geom-alignment-segment.R": "a1f725f2722c5add53569a211d2b37a02d24d9825303e1f3d1c8f9ff6f38e3b6",
-    "R/geom-feature-label.R": "b060787e45b25f003cde5ed3c746c10505a08e3e9adc0be12a07b03d5791c15b",
-    "R/geom-feature.R": "4102abaeb4ff2a70c99026d8a52027a377d895ae07c0e952bbaf3c348a2c12ec",
-    "R/geom-gene.R": "6ca70ca6ba8b91727aecf13b55ae079fcc6b6d1910ba224d8410769b1d894691",
+    "R/geom-feature-label.R": "016ae6e8313b2885ba89ae2c968627123d19876eb3a14d6525ab7d9d17420a9d",
+    "R/geom-feature.R": "239967c2632b8230665db619c40ff3cee71aef216daf5238c5ef407f0b36ab9f",
+    "R/geom-gene.R": "c692d14f678f111c648184ec07b2a6d66b0c28d2a9836159cc7de556da052fec",
     "R/geom-link-line.R": "36942a7d4c12374c38fa78e7461685b692dac9d9cabd6c32694d41e32a8420ef",
-    "R/geom-primer.R": "b33604572f87a10a0b84a8aebe44a55b731a20f260fce9b037e527d25d38fb9a",
+    "R/geom-primer.R": "59a4919ab2f6a7afd46e13fe376c9e8d5c0f940f57a9feb7b1406953068c2f46",
     "R/geom-region.R": "a30af3000b91b5d286055b9c09139cd2df36c67ed71cad3f48efdfe164b360e2",
     "R/geom-residue.R": "051465e6587b72c72cf306b2ea18714146111b3ef06f4ebb16d4a58ba5f0a4a1",
-    "R/geom-ribbon.R": "8a3409378cc00582cfb41cd655ed54d3b525dda2ce77af108690cd8829c4f408",
+    "R/geom-ribbon.R": "a50ff5c528964a6ef9c03ac2cab2f8bf66fb4e239887d5bc1bb3677cd8da36e3",
     "R/geom-seq-break.R": "fcc71266eecb20d48152c2aea38644cd474c9dc1c73a089c6b8a8d03dcce424e",
     "R/geom-seq-center-label.R": "f973a67bdec4794b9a8f4514c151c62bfb0a6f0e7fbd35949527b65bb1e9f388",
     "R/geom-seq-label.R": "ab577a6a262a2582dae4e0c99da1987fa1ccb6e4f328f578e5d672c98f9ca6a4",
@@ -751,14 +1184,14 @@
     "R/viewer.R": "f482af4be44c1892b2bc14616014eb237a4de4a16e341bc87e2293e6ef917960",
     "R/zzz.R": "f35f4655b8ebcd6d1f7eae29285e2a66d67265cb27fa1ec731aa2ccece90b860",
     "tools/audit-source-snapshot.R": "4470517ec5577acef2ee132d9c757167df76f53962a51d9a427e31a9d940d420",
-    "tools/check-documentation-lessons.R": "ffa8eb0609f8647b1c90bcee558fff1a0970ea5124b9e89293c3a404139ca0f3",
+    "tools/check-documentation-lessons.R": "e77b1c97db0191512679ae7750f6fab5f6330011b4ebbd59c346cb659e82e886",
     "tools/check-documentation.py": "1e65a3e932419e5d86b07fd07a32b752b9212117dba509e076665530816e6d78",
-    "tools/documentation-examples.R": "ad691f68020e6e343c412d6b97aeec2eb069cedd025eba71cf025f1a93fdd58a",
-    "tools/site-course-examples.R": "660b5d1d26bdde2a8fcc897af890b93d38c52dee42b40f9f858bf208d80def64",
-    "tools/site-flagships.R": "174c1600a75a732d910151fd982cef0ff73a6f490aa2ad6c276dc443f5083ad4",
+    "tools/documentation-examples.R": "06b889a2049d04c1e26fa69ec1e1c2925239dffcc7467e7d5a793732214e59c0",
+    "tools/site-course-examples.R": "6d43859fd031deffd1f2c42f89960401d0f5590b7fbd9ce213395981c20a4ad0",
+    "tools/site-flagships.R": "0fe432bd392a0bb1b02229a41391e90d780dc67a352a63ada777a3b386c93f86",
     "website/en/about.md": "0135a2df9f9d56538e92332a17d594e5012c89f3a8c8e1902c116cdaddfe1ea5",
     "website/en/adjustments.md": "ad33efecce5be8e54afd367e4babf90c215e5a7d17153123a5d37c33a6c8d86a",
-    "website/en/aligned-sequences.md": "b35fe380abb4bc29ef68b277a6b0fd69be238f1b8f6904268d39a17762db3ab6",
+    "website/en/aligned-sequences.md": "e15402e5c4494002b1a00a7bb551d252c43f7aae32b6add093ee4b8613e55ed5",
     "website/en/alignments.md": "6978999d9ab000917967cad0d83cb7fdaea92db73555b9a839e1e3cc43f3353e",
     "website/en/annotations.md": "71bba62ab52862915dad766eec53653aa3d3b14467d1439cd2fa69c83ee5ed81",
     "website/en/api-curriculum.md": "1a0ec0a784e855d4afd13efb783263aa6a43dbc6f91056fd2309e83171e81d80",
@@ -771,7 +1204,7 @@
     "website/en/chord-routing.md": "9bcd26c88a5591b0e359645ccc6aa8dc1b0ae15389f6ea9487636d615ce4226a",
     "website/en/chord-start.md": "5e9acbb82bc9fe271ad4c95c1e4e63be9c90d792a712776422f7e8b1e626fef9",
     "website/en/chord-tuning.md": "d81e737fb9cb6814f78b3f39f4175f24c3c9fcb7e61041634d5b70fbecf23f5d",
-    "website/en/chord.md": "4b079b8f7179671c457b687da79fe78eb2444fbbe590569d8f9e314fe98b6b72",
+    "website/en/chord.md": "ee124188eadaa063cb35ff047671e1b686c560c6e496cd629fe55ee99ad25920",
     "website/en/circular-data.md": "e420bfb464e38062e1a7033d25c5d111e804438b02b6c467f57adf98ab127412",
     "website/en/circular-dense-case.md": "e04c7a69b2d1dfb5501d32326e88b5332be6d69f9aec3e5c8aeaca4821ab3933",
     "website/en/circular-features.md": "6c1aad68866f819d1fb25e993754e31162317cf6fb430bdb26d1b31b9103bbf0",
@@ -786,11 +1219,11 @@
     "website/en/collinear-routing.md": "516185cba7e205d8f1c10c443594ae7efdff7daee2633d913f47cd044987a595",
     "website/en/collinear-start.md": "9063771c87d19d767850c87273d6a6daa19e5877c1e8be3c29cc06a6d31a8b94",
     "website/en/collinear-tuning.md": "8429663f94b82baf1a3a4baf72d101c6e2b8378a89d7008ab6d476002b7e49ac",
-    "website/en/collinear.md": "4eaffdf49cadd4b7d7b80cc6eae8ea7b5e3f2daa14a8e3a368d5031be40b4129",
+    "website/en/collinear.md": "c73080baae3aa45fe066827af0e991cd2617534f49b63b9429e31b199dbb0ab0",
     "website/en/compatibility.md": "0f0fd6b6ef8c596b23017eb16868b9f894d60a1448a82eabc84f87ed528e4dcf",
     "website/en/data.md": "28004a3df5125f08b169c2a70c9dfde22030b06d5cd0b62be6b3c544ff89d9d8",
     "website/en/diagnostics.md": "3cf620411102a38afaeb7bb6db01f78ae68ef94d949b6292c5829fc35dec31ae",
-    "website/en/dotplot-start.md": "f0ab1f283c00c93197b9d77e1783e0d72f2247e7f42a665235d61e3cad58e8e4",
+    "website/en/dotplot-start.md": "85a82d4a3ddf5f6e9ed4f67a47c70a5f511ca282f299830baabf32be0f5f38a8",
     "website/en/dotplot.md": "99570f3c9fd73f9501e32fa453eb69f68f8a0f1c7d457b0f2e7d03fbbd45f592",
     "website/en/faq.md": "403cc461181c941acbff263a72095f7879a7a74e9b008682400fe90f9387fd4e",
     "website/en/feature-geometry.md": "e72b382768f4de0d64dd7ccd5ff947b243c93de8f321c04a3ab518b21836ccd8",
@@ -799,8 +1232,8 @@
     "website/en/fusion-advanced.md": "8d17fddae9fe6550fd98993a8fd4aaa22eabfb57a545216455633c9ef3a24e1e",
     "website/en/fusion-details.md": "90596c8dd89a1d11559a27b3e4f969ec3ef846407d0cdff245e1506fd09ae2f3",
     "website/en/fusion-layout.md": "89f7e0d705f0d85b7bbd7e46637e3d81fddff7ea890f8a0917ebbbb6a326dcfa",
-    "website/en/fusion-routing.md": "b0a6623acd955ce0a3f6d82143010b2e38e70dd578510710e8456da46b6d205d",
-    "website/en/fusion-start.md": "951ae2bc8eaa32b2f26ddf1e492cf71e5007764911348b7574ec0a643cd6479b",
+    "website/en/fusion-routing.md": "37243d9cb3d221f7f8b38ca9dd29822fb83c80335d4c0ecd5cab9537256f2103",
+    "website/en/fusion-start.md": "b188351bd0a7d96105dae43b9556dcc926808725eb3f65304dfeab82b3caa33f",
     "website/en/fusion.md": "c7ff0f1f9109307d3eb44f7020d8fc1d20490930d7d9b90ca86340171cf1d5a5",
     "website/en/gallery.md": "f3ab5fabe089232ba62f418eb6915ffe717e4b2d91341863259f2ac7397bf7e5",
     "website/en/homology.md": "af8abdb4e8c84080b663caaa2576410ed3fefb0f278a22a4c5a70bbd92a6bde4",
@@ -818,7 +1251,7 @@
     "website/en/multi-sequence-layout.md": "10bd0ae340619aaee314426ade35e7fff613e13f9c141f99924eb7c757b83ed8",
     "website/en/multi-sequence-links.md": "78049e3ffdcdbdeb8a963ccb396ae321a0b253f3660a911aedc73540ebdf608f",
     "website/en/multi-sequence-start.md": "8ef2714e306bc4c8ab1950ce8c7b3b4eff6143d9a7569bf43e2a7f4870434764",
-    "website/en/multi-sequence-views.md": "9e9efc37567e7ce6297d904d67f6060b6ebcbca7d42615065a5ef4713ec5b93c",
+    "website/en/multi-sequence-views.md": "97c290391494b44a5f22410f758eb0a88ee8577ff19a2c4af1908dea6fa4dd7d",
     "website/en/multi-sequence.md": "2617bea83189bb02c2cb2acfaba569bfcd3b7a7e2d3748a89bccb3345d66f13a",
     "website/en/output.md": "eb027af92ca6e139d077db38ad2b9cd9b5b0f4fa0f8ef900f8cca1f2631e4471",
     "website/en/parameter-atlas.md": "1a4fb534ae84abf9c517c005cf9018ee4a1db3444ebd198e90ef428e47473c78",
@@ -831,7 +1264,7 @@
     "website/en/plasmids.md": "39d94971552c9e48ab365285613141bedfac8d6246ec27e78a0a4c724207607b",
     "website/en/primers.md": "0de15c8a719b1bf6528e46b4add4859287de4b6fc309ac4311774d7212223d8a",
     "website/en/projection.md": "76c5ff9adfed3ffea3c11939ff7eb2f180aa88223125b8fab32b1864a7121d08",
-    "website/en/protein-alignments.md": "0c233bda33ef0161c1ec24aaabe1d863e4bfea213a181b181340ff4fdb942a1d",
+    "website/en/protein-alignments.md": "9a00008eebadf457a001ec96258b9beab7ee8a7cceff3f6ce38e79f1feb0890d",
     "website/en/radial-synteny.md": "b26b75013b7c8709cdb28b10aa27b037095ce0b777236e1d65d2ceec16846e9f",
     "website/en/real-data.md": "5fb2109b89bf21776fe113c80f59cfd735e8e6db91499dcbc570ddfc9b1e8669",
     "website/en/recognition.md": "fab300197a532627a923634ff552f2d44bfb2b83a878fbd82e8edce907f1f2fb",
@@ -850,12 +1283,12 @@
     "website/en/workflow-tools.md": "70aa1327e9ce7854cf7e8cf625f55774066babcdf8caa405f16cbb6d07b5a6b6",
     "website/en/workflows.md": "7c52487993e6617eb533a81710da026739ba9899a1c32ac8528439ad30772715",
     "website/pages.json": "94463eb5bae9b77759ff295323df9a240954bddf0273eb808bbb33acbe47a86c",
-    "website/showcase-recipes.json": "d0b3fbf16d59800ac366ca9f4752ef3a5a28aa2b1cb692cd43ebee18cd48c8e9"
+    "website/showcase-recipes.json": "fb53bb3512c3177beb5d65964a2dc140d928b3c19c48df42bebc4a79ab69a830"
   },
   "executable_page_sha256": {
     "website/en/about.md": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
     "website/en/adjustments.md": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-    "website/en/aligned-sequences.md": "02e70526c6339b4bc435289011f961c89d655cdbe7fe073df9d4395dd1a734f0",
+    "website/en/aligned-sequences.md": "bff404e103e38bf9e200d4f8425959a9e6be01b6ae7822d553689bf55f3bfab7",
     "website/en/alignments.md": "94320cb0c7bb78ccc725a81caefb496a472daa7f4371134e6e378b6f23e5fb29",
     "website/en/annotations.md": "58927da89238b02fb731282e93edaeeba5056476ab8455e7f46b2a4f12121879",
     "website/en/api-curriculum.md": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
@@ -868,7 +1301,7 @@
     "website/en/chord-routing.md": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
     "website/en/chord-start.md": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
     "website/en/chord-tuning.md": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-    "website/en/chord.md": "cab9a1aebbe187fc5de85ce135ab6cc028a27388daf0a437a6ac173aa9f3b00f",
+    "website/en/chord.md": "ef4869e0e09c31c7e1f45d3c13a681fbd9a478c4ca56dab94cd73feec778b6e8",
     "website/en/circular-data.md": "067d157442a8c3fe22b460bad8cfc1886fcb0f3e7246c8f30a8c2fd75d285cdd",
     "website/en/circular-dense-case.md": "ce8c9def35330c548d72a3d2548a1dab583eb41a9f84392302b59e44c96f8536",
     "website/en/circular-features.md": "b978b52fbb787d043856aaba626bc6542541744e60b7448c5ad1ebef0203e47c",
@@ -883,7 +1316,7 @@
     "website/en/collinear-routing.md": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
     "website/en/collinear-start.md": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
     "website/en/collinear-tuning.md": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-    "website/en/collinear.md": "b90a78412b45d8456982466cfc9540e8b1f934cf66850e2b1f86e8772a025479",
+    "website/en/collinear.md": "e41392cc7d1b9410c7e98e50e2b56b6df31794d9016ee48ef53c1196625a679c",
     "website/en/compatibility.md": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
     "website/en/data.md": "00d0f6f3ad406a985f1a18df895f54052109bd6f0db44a426f93995af16bcd30",
     "website/en/diagnostics.md": "5414db799e22c82d7fe53cc7bda13a1b9cac3e068394b903b1a96b6194609356",
@@ -915,7 +1348,7 @@
     "website/en/multi-sequence-layout.md": "50bdb82327397de76605cd63ab58816399ddf81b4153bc6392fce67ae52a9f14",
     "website/en/multi-sequence-links.md": "bb2b367204e84e2c8c2c847cec31b9ea7b23041bc812613ba662d79bc9fbdd20",
     "website/en/multi-sequence-start.md": "0cacb3b578c1b82076cdc206b8a9ec9a386b2083c45d8b07b04c8a329bc08fe6",
-    "website/en/multi-sequence-views.md": "392d4c5ecbbdb71d9bc56b6cd0721e90cde70348a34391b3e5609e768e85a51c",
+    "website/en/multi-sequence-views.md": "954c07c70aceddb2e9277b8a8d4af632007f35fd5267568c37af999505358d63",
     "website/en/multi-sequence.md": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
     "website/en/output.md": "a050d8b85b2aa688c8658c5ad059ecad721624d22ee22c957cf117b0b53d1316",
     "website/en/parameter-atlas.md": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",

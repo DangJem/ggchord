@@ -20,19 +20,19 @@
 
 <a id="prepare"></a>
 
-## 准备原始记录 {#prepare}
-将[说明输入包](https://github.com/DangJem/ggchord/archive/refs/heads/main.zip)解压到工作目录，使其包含 `examples/`。使用 `install.packages(c("dplyr", "purrr", "tidyr"))` 安装示例可选依赖；完整流程用它们整理表格和计算 GC 轨道。
+## 准备随包数据 {#prepare}
+本例直接使用随包数据 `genome_comparison_example`，无需解压文件；原始记录仍可在[说明输入包](https://github.com/DangJem/ggchord/archive/refs/heads/main.zip)追溯。示例需要 dplyr 和 purrr。
 
-准备脚本包含原始数据读取、筛选和显示设置。将脚本放在当前工作目录。
+先取得已按原规则选择的展示子集，再准备共用配色和样式；不重新运行原始文件筛选。
 
-{{recipe:chord}}
+{{code:sequencepalette,docstyle,showcasedata,chordshowcasegenes}}
 
 输入包含四条未改写的 FASTA、对应 GFF3 注释和 32 条原始 HSP。展示保留长度至少 900 bp、相似度至少 75% 的 HSP，每对序列最多三条，以减少拥挤；没有合并或编造比对。
 
 <a id="compose"></a>
 
 ## 组合图层 {#compose}
-端点重叠抽样使用 dplyr ≥ 1.1.0。
+端点重叠抽样已在数据生成时完成，以下直接组合图层。
 
 {{code:showcasechord}}
 

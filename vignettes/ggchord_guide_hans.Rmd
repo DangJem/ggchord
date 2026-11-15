@@ -255,14 +255,14 @@ library(dplyr)
 
 ### 绘制HSP真实端点 {#dotplot-start-dotplot}
 
-有来源记录的EMALE PAF序列对包含11条已观测HSP，文件声明的序列长度提供两条轴。
-`read_paf()`将零基半开区间转换为内部一基约定，并将负向比对的target端点转为降序。
+随包数据 `sequence_detail_example$paf` 保留 EMALE 序列对的11条已观测HSP，来源文件声明的序列长度提供两条轴。
+随包表已按一基坐标规范化；反向比对的 target 端点保留降序。
 原始文件及来源见[输入下载](https://dangjem.github.io/ggchord/zh/formats.html)。以下准备代码需要可选依赖`dplyr`。
 
 
 ```{r example-15, eval=FALSE}
 library(dplyr)
-dotplot_hsp <- read_paf("examples/format-inputs/emales-pair.paf")
+dotplot_hsp <- sequence_detail_example$paf
 dotplot_seqs <- bind_rows(
   dotplot_hsp |> transmute(accver = qaccver, length = qlen),
   dotplot_hsp |> transmute(accver = saccver, length = slen)
@@ -310,7 +310,7 @@ dotplot_layout$axis_layout
 
 ### 多序列综合矩阵 {#dotplot-start-matrix}
 
-以下输入来自仓库原始 FASTA 和标准 BLAST 表。完整保留四序列的 32 条 HSP，不补造自比对、对称记录或缺失的 HSP。266 条 CDS 属于共用来源表，但不交给 Dotplot 的线段层。空白区域表示本次输入没有关系记录，不能据此认定不存在同源性。
+以下直接使用随包数据 `genome_comparison_example`；其来源为原始 FASTA 和标准 BLAST 表。完整保留四序列的 32 条 HSP，不补造自比对、对称记录或缺失的 HSP。266 条 CDS 属于共用来源表，但不交给 Dotplot 的线段层。空白区域表示本次输入没有关系记录，不能据此认定不存在同源性。
 
 上方列标题标明 query 序列及完整的 1–length 范围，左侧行标题标明 subject 序列范围；下方和右侧只显示各自序列的局部坐标。沿一列和一行的交点即可定位一对序列。每个带边框的矩形保留两条序列真实长度对应的宽高，淡色背景只帮助分区，不编码相似性。矩形间的留白是显示间隙。
 
@@ -324,10 +324,8 @@ dotplot_layout$axis_layout
 library(ggchord)
 library(dplyr)
 flagship_paper <- "#FFFCF5"
-flagship_sequences <- read_fasta_lengths("examples/fasta/*.fna") |>
-  select(accver, length)
-flagship_hsp <- read_blast(files = "examples/blastn-standard/*.tsv", source_file = TRUE) |>
-  mutate(source_hsp_id = paste0("source-HSP-", row_number()))
+flagship_sequences <- genome_comparison_example$seq_data
+flagship_hsp <- genome_comparison_example$source_alignments
 flagship_theme <- theme_ggchord_publication() +
   theme(
     plot.background = element_rect(fill = flagship_paper, colour = NA),
@@ -419,7 +417,7 @@ map_ggchord_position(
 
 ### 先独立画好两张图 {#fusion-start-panels}
 
-需要 ggchord、dplyr 和[输入包](https://dangjem.github.io/ggchord/assets/tutorial-inputs.zip)中的原始 PAF。先分别打印 course_center 和 course_detail，再组合一条已有关系。
+需要 ggchord、dplyr 和随包数据 `sequence_detail_example$paf`；原始来源可在[输入包](https://dangjem.github.io/ggchord/assets/tutorial-inputs.zip)追溯。先分别打印 course_center 和 course_detail，再组合一条已有关系。
 
 ```{r example-22, eval=FALSE}
 library(ggchord)
@@ -432,7 +430,7 @@ library(dplyr)
 
 ```{r example-23, eval=FALSE}
 library(dplyr)
-fusion_hsp <- read_paf("examples/format-inputs/emales-pair.paf")
+fusion_hsp <- sequence_detail_example$paf
 fusion_seqs <- bind_rows(
   fusion_hsp |> transmute(accver = qaccver, length = qlen),
   fusion_hsp |> transmute(accver = saccver, length = slen)

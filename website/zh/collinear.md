@@ -19,12 +19,12 @@
 
 <a id="prepare"></a>
 
-## 准备原始记录 {#prepare}
-解压[说明输入包](https://github.com/DangJem/ggchord/archive/refs/heads/main.zip)，安装dplyr、purrr、tidyr后运行：
+## 准备随包数据 {#prepare}
+直接使用随包数据 `genome_comparison_example`，无需解压文件；原始来源见[说明输入包](https://github.com/DangJem/ggchord/archive/refs/heads/main.zip)。示例需要 dplyr 和 purrr：
 
-准备脚本包含原始数据读取、筛选和显示设置。将脚本放在当前工作目录。
+先取得已按原规则选择的展示子集，再准备共用配色和样式；不重新运行原始文件筛选。
 
-{{recipe:collinear}}
+{{code:sequencepalette,docstyle,showcasedata,chordshowcasegenes}}
 
 保留四条完整FASTA、266条CDS及32条原始HSP。相邻行使用明确筛选的观测区间；非相邻每对仅保留最长一条，减轻长连接重叠。
 

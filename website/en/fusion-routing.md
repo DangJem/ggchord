@@ -10,10 +10,7 @@ Fusion combines independent genomic plots and connects their real sequence
 intervals. The center and peripherals can use registered genomic Coord views; Sankey and Radial retain their explicit display instances. Nested Fusions and registered character details are supported. Each plot remains usable on its own. The composition
 rebuilds all panels at their actual physical sizes before drawing links.
 
-Download the [original EMALE PAF and provenance](formats.md). This section
-requires the optional `dplyr` package. The PAF contains 11 observed HSPs; the
-explicit display filter below selects two with length ≥900 and identity ≥85%.
-The count track bins all original query-start observations in explicit 2,000 bp bins, not coverage. The last display bin is explicitly clipped to the true sequence boundary; source events and counts are retained.
+This example uses bundled `sequence_detail_example$paf`; provenance of the original EMALE PAF is available on the [input downloads and sources page](formats.md). Data preparation requires optional `dplyr`. The PAF contains 11 observed HSPs; below we explicitly select the two with length ≥900 and Identity ≥85% for cross-panel display. The count track bins all original query-start observations into explicit 2,000 bp intervals and does not represent coverage depth. The last display bin is clipped to the true sequence boundary; source observations and counts are retained.
 
 {{code:fusiondata}}
 

@@ -11,6 +11,14 @@ markers <- grep('^# ---- [a-z]+ ----$', lines)
 chunks <- setNames(lapply(seq_len(length(markers)-1L), function(i)
   lines[seq.int(markers[i]+1L, markers[i+1L]-1L)]),
   sub('^# ---- ([a-z]+) ----$', '\\1', lines[markers[-length(markers)]]))
+# Page excerpts reuse the same executable flagship block as native figures.
+multi <- chunks[["flagshipmulti"]]
+excerpts <- grep("^# -- [a-z]+ --$", multi)
+for (i in seq_along(excerpts)) {
+  end <- if (i < length(excerpts)) excerpts[i + 1L] - 1L else length(multi)
+  key <- sub("^# -- ([a-z]+) --$", "\\1", multi[excerpts[i]])
+  chunks[[key]] <- multi[seq.int(excerpts[i] + 1L, end)]
+}
 pages <- jsonlite::fromJSON("website/pages.json")$slug
 pages <- Filter(function(page) {
   text <- paste(readLines(paste0("website/en/", page, ".md"), warn = FALSE), collapse = "\n")

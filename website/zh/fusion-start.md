@@ -2,7 +2,7 @@
 
 ## 先独立画好两张图 {#panels}
 
-需要 ggchord、dplyr 和[输入包](https://github.com/DangJem/ggchord/archive/refs/heads/main.zip)中的原始 PAF。先分别打印 course_center 和 course_detail，再组合一条已有关系。
+需要 ggchord、dplyr 和随包数据 `sequence_detail_example$paf`；原始来源可在[输入包](https://github.com/DangJem/ggchord/archive/refs/heads/main.zip)追溯。先分别打印 course_center 和 course_detail，再组合一条已有关系。
 
 ```r
 library(ggchord)

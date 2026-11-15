@@ -14,9 +14,16 @@ def snippets():
     text = (ROOT / 'tools/documentation-examples.R').read_text()
     text += '\n' + (ROOT / 'tools/site-course-examples.R').read_text()
     text += '\n' + (ROOT / 'tools/site-flagships.R').read_text()
-    return dict((name, code.strip()) for name, code in re.findall(
+    result = dict((name, code.strip()) for name, code in re.findall(
         r'^# ---- (\w+) ----\n(.*?)(?=^# ---- \w+ ----)', text, re.M | re.S)
         if name not in {'end','courseend'})
+    # Named excerpts keep each view beside its figure while the executable
+    # flagshipmulti block remains the single source for native figure runners.
+    for name, code in re.findall(
+            r'^# -- (\w+) --\n(.*?)(?=^# -- |^# ---- |\Z)',
+            result['flagshipmulti'], re.M | re.S):
+        result[name] = code.strip()
+    return result
 
 
 def localize_r_comments(code, lang):
@@ -27,7 +34,7 @@ def localize_r_comments(code, lang):
         indent, comment = match.groups()
         if comment in translations:
             return indent + '# ' + translations[comment]
-        if comment.startswith('----') or re.match(r'^(?:ggplot2::)?ggsave\(', comment):
+        if comment.startswith('----') or re.fullmatch(r'-- \w+ --', comment) or re.match(r'^(?:ggplot2::)?ggsave\(', comment):
             return match[0]
         if re.search('[A-Za-z]{3}', comment) and not re.search('[\u3400-\u9fff]', comment):
             raise ValueError('Missing Han code comment: ' + comment)

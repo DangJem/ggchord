@@ -2,7 +2,7 @@
 
 ## Start with two independent plots {#panels}
 
-Use ggchord, dplyr and the original PAF in the [input bundle](https://github.com/DangJem/ggchord/archive/refs/heads/main.zip). Print course_center and course_detail independently, then connect one existing relationship.
+Use ggchord, dplyr and bundled `sequence_detail_example$paf`; original provenance is available in the [input bundle](https://github.com/DangJem/ggchord/archive/refs/heads/main.zip). Print course_center and course_detail separately before composing one observed relationship.
 
 ```r
 library(ggchord)

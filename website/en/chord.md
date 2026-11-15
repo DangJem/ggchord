@@ -20,19 +20,19 @@ CDS are sampled separately for each available source strand, without a length th
 
 <a id="prepare"></a>
 
-## Prepare original records {#prepare}
-Extract the [manual input bundle](https://github.com/DangJem/ggchord/archive/refs/heads/main.zip) into the working directory, so it contains `examples/`. Install the optional example packages with `install.packages(c("dplyr", "purrr", "tidyr"))`; they prepare tables, map lists and inspect endpoint columns.
+## Prepare bundled data {#prepare}
+This example uses bundled `genome_comparison_example` directly, without extracting files; original records remain traceable through the [input bundle](https://github.com/DangJem/ggchord/archive/refs/heads/main.zip). The example requires dplyr and purrr.
 
-Put the preparation script in your working directory. It contains the input, selection and display settings.
+Retrieve the display subsets selected by the original rules, then prepare shared colours and styles; source-file filtering does not need to be repeated.
 
-{{recipe:chord}}
+{{code:sequencepalette,docstyle,showcasedata,chordshowcasegenes}}
 
 The input contains four unchanged FASTA records, their GFF3 annotations and 32 original HSPs. The display keeps HSPs at least 900 bp long and at least 75% identical, with at most three per sequence pair. This reduces clutter without merging or inventing alignments.
 
 <a id="compose"></a>
 
 ## Compose the layers {#compose}
-The endpoint-overlap selection uses dplyr ≥ 1.1.0.
+Endpoint-overlap sampling was completed when generating the data; the following code directly composes the layers.
 
 {{code:showcasechord}}
 

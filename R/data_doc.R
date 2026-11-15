@@ -166,3 +166,53 @@ NULL
 #'   `examples/protein/sources.json`.
 #' @seealso [protein_seq_data_example], [geom_link_ribbon]
 "protein_ribbon_data_example"
+
+#' Complete genome comparison inputs and flagship display subsets
+#'
+#' Unchanged sequence, GFF3 and BLAST records for four genomes, together with
+#' the explicit subsets used by the website flagships. Rebuild with
+#' `data-raw/generate_website_data.R`; source checksums are recorded in
+#' `data-raw/website-data-sources.tsv`. No intervals or strands are invented.
+#' Full source tables remain separate from the display selections.
+#'
+#' @format A named list: `sequences` includes complete DNA strings; `seq_data`
+#'   contains accession and length; `annotations`, `alignments` and
+#'   `source_alignments` retain complete imported records (the latter adds
+#'   source-file and HSP identifiers). `genes` contains all CDS. `links`,
+#'   `features`, `chord_features`, `linear_features`, `adjacent_links` and
+#'   `cross_links` are the existing deterministic display selections, in their
+#'   original order. Coordinates are one-based inclusive, lengths are in bp,
+#'   and pident is a percentage. Displayed negative subject endpoints may be
+#'   descending. Import provenance is retained on the imported tables.
+#' @source Repository `examples/fasta/`, `examples/gff3/` and
+#'   `examples/blastn-standard/`; their source documentation accompanies the
+#'   original files. The generator records the exact filtering rules.
+#' @examples
+#' data(genome_comparison_example)
+#' head(genome_comparison_example$seq_data)
+"genome_comparison_example"
+
+#' Source-backed alignment and coding sequence teaching inputs
+#'
+#' Prepared inputs for sequence-detail, Dotplot and Fusion examples. File
+#' readers are demonstrated separately; these tables require no checkout or
+#' working-directory configuration. Rebuild with
+#' `data-raw/generate_website_data.R`.
+#'
+#' @format A named list: `plasmid_source` retains the complete pUC19 input;
+#'   `paf` is the complete 11-HSP EMALE pair; `dna_alignment`
+#'   and `protein_alignment` are long-form observed alignment cells;
+#'   `aligned_strings` contains the original gapped DNA strings;
+#'   `coding_genome`, `coding_features` and `coding_proteins` retain the genomic,
+#'   annotation and protein inputs for the CDS translation example.
+#'   `protein_hits` and `source_coding_features` retain the full protein
+#'   projection inputs with source-file provenance. DNA
+#'   coordinates are in bp, protein coordinates in residues. No alignment gaps
+#'   or coding relationships are inferred to improve a plot.
+#' @source Repository `examples/alignment/` and `examples/format-inputs/`,
+#'   with upstream provenance in their README files and checksums in
+#'   `data-raw/website-data-sources.tsv`.
+#' @examples
+#' data(sequence_detail_example)
+#' head(sequence_detail_example$paf)
+"sequence_detail_example"

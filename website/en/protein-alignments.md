@@ -34,7 +34,7 @@ Use generic layers such as `geom_feature()` for annotations at amino-acid positi
 
 ## Place protein hits on a nucleotide genome {#projection}
 
-To locate hits on a nucleotide backbone, supply known CDS mappings and project aa intervals to bp. This separate example uses a source HSP for BVI_023A_0009 with a complete CDS, then projects its query end. This subsection reads original files from the [manual input bundle](formats.md).
+To locate protein hits on a nucleotide backbone, provide known CDS mappings and project aa intervals into bp. This section uses source protein hits for BVI_023A_0009, selecting records with complete CDS before converting the query side. Inputs come directly from bundled `sequence_detail_example`; original provenance is available in the [input bundle](formats.md).
 
 ```r
 library(dplyr)

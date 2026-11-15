@@ -19,12 +19,12 @@ Compare four backbones on a shared base-pair scale with 16 selected CDS placed o
 
 <a id="prepare"></a>
 
-## Prepare original records {#prepare}
-Extract the [input bundle](https://github.com/DangJem/ggchord/archive/refs/heads/main.zip) and install dplyr, purrr and tidyr first:
+## Prepare bundled data {#prepare}
+Use bundled `genome_comparison_example` directly, without extracting files; original provenance remains in the [input bundle](https://github.com/DangJem/ggchord/archive/refs/heads/main.zip). The example requires dplyr and purrr:
 
-Put the preparation script in your working directory. It contains the input, selection and display settings.
+Retrieve the display subsets selected by the original rules, then prepare shared colours and styles; source-file filtering does not need to be repeated.
 
-{{recipe:collinear}}
+{{code:sequencepalette,docstyle,showcasedata,chordshowcasegenes}}
 
 Retain four full FASTA records, 266 CDS and 32 original HSPs. Adjacent rows use the explicitly selected observations; each non-neighbour pair retains only its longest HSP to reduce overlap.
 

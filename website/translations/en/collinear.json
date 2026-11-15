@@ -1,5 +1,5 @@
 {
-  "source_sha256": "bcd1355da0ba87f41a9213f8b403deb874d2542c0a5d1ca69d6277ef080b176b",
+  "source_sha256": "3dc7af81b05264dd429a993c08a1a1189702a912636cc1f3c8e3689e5aab777e",
   "blocks": {
     "0": {
       "source_sha256": "56be80fd47e44030ef7605832c34df4dc7973d0de2ce4210365920f21b96c97d",
@@ -32,19 +32,19 @@
       "translation": "Compare four backbones on a shared base-pair scale with 16 selected CDS placed on either side of the rows. Read gene positions along one row first, then follow a band to its matching interval. A solid outline marks adjacent rows, while a dashed outline marks rows with another displayed row between them. Start with the [four-backbone plot](⟦shared:0⟧) and [alignment and CDS example](⟦shared:0⟧) if you are new to the workflow.\n"
     },
     "10": {
-      "source_sha256": "a2d6cd1ec0658f2b3e5e953cd4ed2c335c516aa7a2cc1df9865492079f56960d",
+      "source_sha256": "355536aefd492a1b8ccaf9604c3cd11b043d7e2981cf73c81d97ec41eff991c3",
       "status": "reviewed",
-      "translation": "## Prepare original records ⟦shared:0⟧\n"
+      "translation": "## Prepare bundled data ⟦shared:0⟧\n"
     },
     "11": {
-      "source_sha256": "1fb57990e5af924f46fb4c9531b2bc5a82eaab2509d0a5a78eb03e759d7aba96",
+      "source_sha256": "0c6ea9ee49c8875a8e0a8912d91cd36a9c58a4c9787c7802503e574a1452f3de",
       "status": "reviewed",
-      "translation": "Extract the [input bundle](⟦shared:0⟧) and install dplyr, purrr and tidyr first:\n"
+      "translation": "Use bundled ⟦shared:0⟧ directly, without extracting files; original provenance remains in the [input bundle](⟦shared:1⟧). The example requires dplyr and purrr:\n"
     },
     "12": {
-      "source_sha256": "1b2673345e6978506298508c6df073f96cc11cfefd8efbd52ef40b5ef2d6ce37",
+      "source_sha256": "6c85fd28f0050579a8f925c33d14ee3c0ca89951788b7346399e329f62f91e3f",
       "status": "reviewed",
-      "translation": "Put the preparation script in your working directory. It contains the input, selection and display settings.\n"
+      "translation": "Retrieve the display subsets selected by the original rules, then prepare shared colours and styles; source-file filtering does not need to be repeated.\n"
     },
     "14": {
       "source_sha256": "6b4885d27b190f94248b5692ea4514bfda45873b0e4d248eb6816ec3c3bb189b",

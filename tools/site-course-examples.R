@@ -265,10 +265,7 @@ paired_links |>
 library(ggchord)
 library(dplyr)
 # ---- courseblockar ----
-character_source <- read_fasta_lengths(
-  "examples/plasmid/pUC19.fna",
-  sequence_unit = "bp", keep_sequence = TRUE, source_file = TRUE
-)
+character_source <- sequence_detail_example$plasmid_source
 character_locus <- focus_ggchord_data(
   character_source,
   loci = data.frame(accver = character_source$accver, start = 1001, end = 1060)
@@ -276,9 +273,7 @@ character_locus <- focus_ggchord_data(
 character_locus$seq_data |>
   select(accver, length, sequence, .source_origin)
 # ---- courseblockas ----
-aligned_dna <- read_aligned_fasta(
-  "examples/alignment/opuntia-aligned.fasta", "DNA", source_file = TRUE
-)
+aligned_dna <- sequence_detail_example$dna_alignment
 selected_rows <- unique(aligned_dna$accver)[c(1, 3, 7)]
 local_dna <- aligned_dna |>
   filter(accver %in% selected_rows, between(alignment_column, 321, 380))
@@ -295,9 +290,7 @@ p_characters <- ggplot2::ggplot(
   ggplot2::theme_minimal()
 p_characters
 # ---- courseblockat ----
-aligned_protein <- read_aligned_fasta(
-  "examples/alignment/protein-aligned.fasta", "AA"
-)
+aligned_protein <- sequence_detail_example$protein_alignment
 protein_rows <- unique(aligned_protein$accver)[2:4]
 local_protein <- aligned_protein |>
   filter(accver %in% protein_rows, between(alignment_column, 221, 260))
@@ -307,9 +300,7 @@ ggplot2::ggplot(local_protein, aes(alignment_column, accver, label = symbol)) +
   ggplot2::labs(x = "Alignment column", y = NULL) +
   ggplot2::theme_minimal()
 # ---- courseblockau ----
-original_strings <- read_fasta_lengths(
-  "examples/alignment/opuntia-aligned.fasta", keep_sequence = TRUE
-)
+original_strings <- sequence_detail_example$aligned_strings
 fragment_sources <- original_strings |>
   transmute(
     accver, source_accver = accver, start = 1, strand = "+",
@@ -320,17 +311,12 @@ checked_cells <- as_ggchord_alignment(
 )
 # ---- courseblockav ----
 library(dplyr)
-# Requires the source checkout, dplyr and optional Biostrings.
-genome <- read_fasta_lengths(
-  "examples/format-inputs/emales-BVI_023A.fna", keep_sequence = TRUE
-)
-coding <- read_gff3("examples/format-inputs/emales-BVI_023A.gff3", unstranded = "keep") |>
+genome <- sequence_detail_example$coding_genome
+coding <- sequence_detail_example$coding_features |>
   filter(feature_id == "BVI_023A_0009")
 cds <- build_ggchord_cds(coding, genetic_code = 11)
 observed <- translate_ggchord_cds(cds, genome, initiation = "start")
-expected <- read_fasta_lengths(
-  "examples/format-inputs/protein-pair.faa", keep_sequence = TRUE
-) |>
+expected <- sequence_detail_example$coding_proteins |>
   filter(accver == "BVI_023A_0009")
 stopifnot(sub("[*]$", "", observed$models$protein_sequence) == expected$sequence)
 observed$residues |>
@@ -542,8 +528,25 @@ library(dplyr)
 library(ggchord)
 library(dplyr)
 # ---- courseblockbl ----
-# Requires dplyr and the source checkout or tutorial input bundle.
-source("examples/fusion-routing.R")
+# Optional dependency: dplyr. These are real bundled HSP records.
+library(ggchord)
+library(dplyr)
+first_hit <- ribbon_data_example |> slice_head(n = 1)
+channel_hits <- ribbon_data_example |>
+  filter(qaccver == first_hit$qaccver, saccver == first_hit$saccver) |>
+  mutate(route_group = 'explicit-display-channel')
+# Shared corridors describe drawing; they do not aggregate biological evidence.
+panel <- ggchord(seq_data_example) +
+  geom_seq(show.legend = FALSE) +
+  geom_seq_label(size = 3, seq_label_rotation = 90) +
+  coord_collinear(seq_axis = 'vertical') +
+  theme(ggchord.axis = element_blank())
+composition <- ggchord_fusion(panel, center_box = c(.02, .28, .12, .88)) +
+  fusion_panel(panel, 'target', box = c(.72, .98, .12, .88)) +
+  fusion_panel(panel, 'obstacle', box = c(.4, .6, .22, .78))
+routed <- composition +
+  fusion_ribbon(channel_hits, qpanel = 'center', spanel = 'target',
+    route = 'bundle', route_width = .8, fill = '#548CA0', alpha = .3)
 routed
 # ---- courseblockbm ----
 library(ggchord)
@@ -575,8 +578,27 @@ guide_fusion <- ggchord_fusion(guide_source, layout = "adaptive") +
   )
 guide_fusion
 # ---- courseblockbp ----
-# Requires dplyr and the source checkout or tutorial input bundle.
-source("examples/fusion-auto.R")
+# Optional dependency: dplyr. One real HSP is deliberately shown 12 times.
+library(ggchord)
+library(dplyr)
+observed <- ribbon_data_example |> slice_head(n = 1) |>
+  mutate(source_hsp_id = 'explicit-one-HSP-twelve-views')
+source_seqs <- seq_data_example |> select(accver, length)
+target_seqs <- source_seqs |> filter(accver == observed$saccver)
+center <- ggchord(source_seqs) + geom_seq(show.legend = FALSE) +
+  geom_seq_label(size = 2.7) +
+  coord_chord() + theme(ggchord.axis = element_blank())
+auto_fusion <- ggchord_fusion(center, layout = 'adaptive')
+for (i in seq_len(12)) {
+  id <- paste0('view-', i)
+  view <- ggchord(target_seqs) + geom_seq(show.legend = FALSE) +
+    coord_collinear(seq_axis = if (i %% 2) 'horizontal' else 'vertical') +
+    theme(ggchord.axis = element_blank()) + ggplot2::labs(title = paste(id, observed$saccver, sep = '\n'))
+  auto_fusion <- auto_fusion +
+    fusion_panel(view, id, side = 'auto') +
+    fusion_ribbon(observed, qpanel = 'center', spanel = id, allow_repeated = TRUE,
+      fill = '#548CA0', alpha = .2)
+}
 auto_fusion
 # ---- courseblockbq ----
 styled_guide_fusion <- guide_fusion +
@@ -681,7 +703,7 @@ multiple <- magnify_ggchord(
 export_ggchord_fusion(multiple, width = 12, height = 8)$focus_regions
 # ---- courseblockbv ----
 library(dplyr)
-cells <- read_aligned_fasta("examples/alignment/opuntia-aligned.fasta", "DNA")
+cells <- sequence_detail_example$dna_alignment
 rows <- unique(cells$accver)[c(1, 3)]
 window <- cells |>
   filter(accver %in% rows, between(alignment_column, 321, 350))
@@ -744,8 +766,28 @@ report <- export_ggchord_fusion(outer, width = 14, height = 7)
 report$focus_regions
 report$focus_region_data_by_composition
 # ---- courseblockby ----
-# Requires dplyr and the source checkout or tutorial input bundle.
-source("examples/origin-detail.R")
+# Optional dependency: dplyr. Source: unchanged bundled pUC19 FASTA.
+library(ggchord)
+library(dplyr)
+genome <- sequence_detail_example$plasmid_source
+source_length <- genome$length[[1L]]
+region <- tibble(accver = genome$accver, start = source_length - 46,
+  end = 35, wrap = TRUE)
+# Extract actual source characters, keeping their order across the origin.
+positions <- c(seq.int(region$start, source_length), seq_len(region$end))
+fragment <- paste0(substring(genome$sequence, positions, positions), collapse = '')
+source <- tibble(accver = 'origin-window', source_accver = genome$accver,
+  start = region$start, strand = '+', sequence = genome$sequence)
+cells <- as_ggchord_alignment(c('origin-window' = fragment), 'DNA',
+  source_data = source, circular = TRUE)
+characters <- ggplot2::ggplot(cells, aes(alignment_column, accver, label = symbol)) +
+  geom_residue(aes(fill = symbol), show.legend = FALSE) +
+  ggplot2::theme_void() +
+  ggplot2::labs(title = 'pUC19: source origin within an 82-base window')
+characters <- register_ggchord_alignment(characters, cells)
+whole <- ggchord(genome) + geom_seq(show.legend = FALSE) + coord_circular()
+origin_detail <- magnify_ggchord(whole, region, characters,
+  center_box = c(.01, .28, .05, .95), detail_box = c(.32, .99, .1, .9))
 origin_detail
 # ---- parameterreorder ----
 parameter_order <- c("OQ646790.1", "MT108731.1", "MT118296.1", "OR222515.1")
@@ -772,10 +814,8 @@ p_parameter_list
 library(ggchord)
 library(dplyr)
 flagship_paper <- "#FFFCF5"
-flagship_sequences <- read_fasta_lengths("examples/fasta/*.fna") |>
-  select(accver, length)
-flagship_hsp <- read_blast(files = "examples/blastn-standard/*.tsv", source_file = TRUE) |>
-  mutate(source_hsp_id = paste0("source-HSP-", row_number()))
+flagship_sequences <- genome_comparison_example$seq_data
+flagship_hsp <- genome_comparison_example$source_alignments
 flagship_theme <- theme_ggchord_publication() +
   theme(
     plot.background = element_rect(fill = flagship_paper, colour = NA),
@@ -787,7 +827,8 @@ flagship_theme <- theme_ggchord_publication() +
     plot.margin = margin(12, 16, 12, 16)
   )
 # ---- residuewrap ----
-genome <- read_fasta_lengths("examples/fasta/MT108731.1.fna", keep_sequence = TRUE)
+genome <- genome_comparison_example$sequences |>
+  filter(accver == "MT108731.1")
 fragment <- setNames(substr(genome$sequence, 1, 100), genome$accver)
 cells <- as_ggchord_alignment(fragment, "DNA",
   source_data = data.frame(accver = genome$accver, start = 1, strand = "+",

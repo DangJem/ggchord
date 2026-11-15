@@ -387,8 +387,8 @@ p_native_chord <- ggchord(protein_seq_data_example, protein_ribbon_data_example)
   coord_chord()
 p_native_chord
 # ---- protein ----
-protein_source <- read_blast("examples/format-inputs/emales-mavirus-blastp.tsv", source_file = TRUE)
-emale_source <- read_gff3("examples/format-inputs/emales-BVI_023A.gff3", unstranded = "keep", source_file = TRUE)
+protein_source <- sequence_detail_example$protein_hits
+emale_source <- sequence_detail_example$source_coding_features
 # The source declares complete Prodigal CDS and translation table 11.
 emale_coding <- emale_source |>
   filter(grepl("partial=00", attributes)) |>
@@ -874,74 +874,27 @@ ggsave("first-comparison.png", p_first, width = 10, height = 5, units = "in", dp
 # ---- showcasedata ----
 library(dplyr)
 library(purrr)
-library(tidyr)
-# Original repository records; extract the tutorial input bundle first.
-show_sequences <- read_fasta_lengths(files = "examples/fasta/*.fna") |>
-  select(accver, length)
-show_annotations <- read_gff3(files = "examples/gff3/*.gff3", unstranded = "keep")
-show_genes <- show_annotations |>
-  filter(type == "CDS") |>
-  select(accver, start, end, strand, anno)
-show_alignments <- read_blast(files = "examples/blastn-standard/*.tsv")
-# At most three substantial observed HSPs per pair; no coordinates are invented.
-show_links <- show_alignments |>
-  filter(length >= 900, pident >= 75) |>
-  group_by(qaccver, saccver) |>
-  slice_max(length, n = 3, with_ties = FALSE) |>
-  ungroup()
-# Select up to four source CDS per sequence, spread across annotation order.
-# No feature is moved or invented; keep complete source tables separately.
-show_features <- show_genes |>
-  filter(end - start + 1 >= 500) |>
-  group_by(accver) |>
-  arrange(start, .by_group = TRUE) |>
-  mutate(display_bin = ntile(row_number(), 4), informative = !is.na(anno) & anno != "hypothetical protein") |>
-  group_by(accver, display_bin) |>
-  arrange(desc(informative), desc(end - start), .by_group = TRUE) |>
-  slice_head(n = 1) |>
-  ungroup() |>
-  select(accver, start, end, strand, anno)
-# Also retain well-separated negative-strand CDS, if not already represented.
-show_reverse <- show_genes |>
-  filter(strand == "-", end - start + 1 >= 500) |>
-  group_by(accver) |>
-  arrange(start, .by_group = TRUE) |>
-  dplyr::slice(c(1, n())) |>
-  ungroup()
-show_features <- bind_rows(show_features, show_reverse) |>
-  distinct(accver, start, end, strand, .keep_all = TRUE) |>
-  arrange(accver, start)
+data(genome_comparison_example)
+show_sequences <- genome_comparison_example$seq_data
+show_annotations <- genome_comparison_example$annotations
+show_genes <- genome_comparison_example$genes
+show_alignments <- genome_comparison_example$alignments
+show_links <- genome_comparison_example$links
+show_features <- genome_comparison_example$features
 show_labels <- show_features
 show_optimization <- optimize_ggchord_layout(
-  show_sequences, show_links,
-  optimize = "orientation", weight = "length"
+  show_sequences, show_links, optimize = "orientation", weight = "length"
 )
 # ---- chordshowcasegenes ----
-# Sample each observed strand separately across the source coordinates.
-# Keep short CDS and retain the original strand and coordinates.
-# Prefer a CDS overlapping a displayed ribbon endpoint within each positive-strand bin.
-chord_link_ends <- bind_rows(
-  transmute(show_links, accver = qaccver, lo = pmin(qstart, qend), hi = pmax(qstart, qend)),
-  transmute(show_links, accver = saccver, lo = pmin(sstart, send), hi = pmax(sstart, send))
-)
-chord_endpoint_genes <- show_genes |>
-  filter(strand == "+") |>
-  semi_join(chord_link_ends, by = join_by(accver, overlaps(start, end, lo, hi)))
-chord_genes <- show_genes |>
-  filter(strand %in% c("+", "-")) |>
-  left_join(mutate(chord_endpoint_genes, at_endpoint = TRUE),
-    by = c("accver", "start", "end", "strand", "anno")) |>
-  group_by(accver, strand) |>
-  arrange(start, .by_group = TRUE) |>
-  mutate(display_bin = ntile(row_number(), if (first(strand) == "+") 4L else 3L)) |>
-  group_by(accver, strand, display_bin) |>
-  arrange(desc(coalesce(at_endpoint, FALSE)), is.na(anno) | anno == "hypothetical protein",
-    start, .by_group = TRUE) |>
-  slice_head(n = 1) |>
-  ungroup() |>
-  select(accver, start, end, strand, anno)
+chord_genes <- genome_comparison_example$chord_features
 chord_labels <- chord_genes
 chord_position <- position_strand(c("+" = -0.030, "-" = 0.030))
+showcase_style <- list(
+  scale_seq_colour_manual(values = seq_palette, name = "Sequence", guide = sequence_guide),
+  scale_gene_fill_manual(values = gene_palette, breaks = c("+", "-"), name = "Strand"),
+  guides(gene_fill = strand_guide, ribbon_fill = identity_guide),
+  doc_axis(), doc_theme
+)
 # ---- showcasechord ----
 show_curvature <- c(
   "MT108731.1" = 0, "MT118296.1" = 1,
@@ -964,15 +917,8 @@ p_show_chord <- ggchord(seq_data = show_sequences, ribbon_data = show_links) +
     size = 2.8, label_max_lines = 3, position = chord_position
   ) +
   geom_seq_label(size = 4, seq_label_radius = 0.77, seq_label_hjust = 0.5) +
-  scale_seq_colour_manual(
-    values = seq_palette, name = "Sequence",
-    guide = sequence_guide
-  ) +
-  scale_gene_fill_manual(values = gene_palette, breaks = c("+", "-"), name = "Strand") +
-  guides(gene_fill = strand_guide, ribbon_fill = identity_guide) +
-  doc_axis() +
+  showcase_style +
   coord_chord(rotation = 50) +
-  doc_theme +
   labs(
     title = "Four genomes, one connected view",
     subtitle = "Mixed backbone geometry · CDS sampled by source strand"
@@ -1022,24 +968,9 @@ p_show_plasmid
 # Quantitative GC tracks remain in the dedicated tracks tutorial.
 # The flagship comparison reserves the space for genes and routed alignments.
 # ---- showcasecollinear ----
-# Omit two short, crowded candidates from this linear display only.
-# Both source rows remain in show_features and in the chord display.
-show_linear_features <- show_features |>
-  filter(!anno %in% c("tail assembly protein", "gp4 protein"))
-# Separate adjacent and cross-row links, retaining original endpoint values.
-show_pair_rows <- show_links |>
-  mutate(
-    query_row = match(qaccver, show_sequences$accver),
-    subject_row = match(saccver, show_sequences$accver),
-    span = abs(query_row - subject_row)
-  )
-show_adjacent <- show_pair_rows |> filter(span == 1)
-# One longest observed HSP per non-neighbour pair keeps the long routes legible.
-show_cross <- show_pair_rows |>
-  filter(span > 1) |>
-  group_by(qaccver, saccver) |>
-  slice_max(length, n = 1, with_ties = FALSE) |>
-  ungroup()
+show_linear_features <- genome_comparison_example$linear_features
+show_adjacent <- genome_comparison_example$adjacent_links
+show_cross <- genome_comparison_example$cross_links
 # Inspect a backbone-only layout using the same alignment and gap as the final view.
 show_linear_coord <- coord_collinear(align = "center", orientation = "auto", ratio = 0.7)
 show_routing_base <- ggchord(show_sequences, show_links) +
@@ -1074,15 +1005,8 @@ p_show_collinear <- ggchord(show_sequences, gene_data = show_linear_features) +
   ) +
   geom_seq_label(size = 4) +
   geom_seq_scale(length = 10000, offset = unit(c(0, 10), "mm")) +
-  scale_seq_colour_manual(
-    values = seq_palette, name = "Sequence",
-    guide = sequence_guide
-  ) +
-  scale_gene_fill_manual(values = gene_palette, breaks = c("+", "-"), name = "Strand") +
-  guides(gene_fill = strand_guide, ribbon_fill = identity_guide) +
-  doc_axis() +
+  showcase_style +
   show_linear_coord +
-  doc_theme +
   labs(
     title = "Sequence architecture, across four genomes",
     subtitle = "Selected labelled CDS · strand-separated arrows · routed cross-row comparisons"
@@ -1232,7 +1156,7 @@ if (requireNamespace("GenomicRanges", quietly = TRUE) &&
 # ---- inspectends ----
 link_endpoints <- show_links |>
   select(qaccver, saccver, qstart, qend, sstart, send) |>
-  pivot_longer(
+  tidyr::pivot_longer(
     cols = c(qstart, qend, sstart, send),
     names_to = c("side", "endpoint"), names_pattern = "([qs])(start|end)",
     values_to = "position"
@@ -1932,7 +1856,7 @@ p_foundationequal
 
 # ---- dotplotdata ----
 library(dplyr)
-dotplot_hsp <- read_paf("examples/format-inputs/emales-pair.paf")
+dotplot_hsp <- sequence_detail_example$paf
 dotplot_seqs <- bind_rows(
   dotplot_hsp |> transmute(accver = qaccver, length = qlen),
   dotplot_hsp |> transmute(accver = saccver, length = slen)
@@ -1999,7 +1923,7 @@ ggchord(seq_data_example, ribbon_data_example) +
   coord_radial_synteny()
 # ---- fusiondata ----
 library(dplyr)
-fusion_hsp <- read_paf("examples/format-inputs/emales-pair.paf")
+fusion_hsp <- sequence_detail_example$paf
 fusion_seqs <- bind_rows(
   fusion_hsp |> transmute(accver = qaccver, length = qlen),
   fusion_hsp |> transmute(accver = saccver, length = slen)

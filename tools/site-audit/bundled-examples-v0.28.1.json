@@ -1,0 +1,124 @@
+{
+  "scope": "Local website example revision; no package release checks or deployment",
+  "version": "0.28.1",
+  "baseline_revision": "281605051cb5a779adc40ebc78aa83b1eacbadbc",
+  "png_comparison": {
+    "device": "png",
+    "dpi": 96,
+    "physical_sizes_in": [
+      [
+        12,
+        10
+      ],
+      [
+        12,
+        8
+      ],
+      [
+        12,
+        10.5
+      ],
+      [
+        10,
+        16
+      ]
+    ],
+    "figures": [
+      {
+        "object": "p_show_chord",
+        "before_sha256": "29828cb022e5ad0cbaea175be979b1254a06c251aeed348626e0985344aa0474",
+        "after_sha256": "29828cb022e5ad0cbaea175be979b1254a06c251aeed348626e0985344aa0474",
+        "byte_identical": true
+      },
+      {
+        "object": "p_show_collinear",
+        "before_sha256": "fb6f8a6d84a062f4259359b699f1140aebebc388f2c945afa676070b38498f30",
+        "after_sha256": "fb6f8a6d84a062f4259359b699f1140aebebc388f2c945afa676070b38498f30",
+        "byte_identical": true
+      },
+      {
+        "object": "flag_radial",
+        "before_sha256": "13a04e99ee83e9df4abfd9f805e35f53ecaf205c2b9c482c44a76759a980cb7e",
+        "after_sha256": "13a04e99ee83e9df4abfd9f805e35f53ecaf205c2b9c482c44a76759a980cb7e",
+        "byte_identical": true
+      },
+      {
+        "object": "flag_sankey",
+        "before_sha256": "75a734295976f5e6567a22dfe893ed56b98008fbb29f03e16366972c3685474e",
+        "after_sha256": "75a734295976f5e6567a22dfe893ed56b98008fbb29f03e16366972c3685474e",
+        "byte_identical": true
+      }
+    ]
+  },
+  "source_data": {
+    "sequences": 4,
+    "observed_HSPs": 32,
+    "CDS": 266,
+    "display_HSPs": 12,
+    "chord_CDS": 20,
+    "linear_CDS": 16,
+    "tables_and_selection_order_identical": true
+  },
+  "shared_flagship_code_nonblank_noncomment_lines": {
+    "before": 270,
+    "after": 206
+  },
+  "outside_checkout_execution_passed": [
+    "dotplotdata",
+    "dotplotview",
+    "fusiondata",
+    "courseblockar",
+    "courseblockas",
+    "courseblockat",
+    "courseblockau",
+    "courseblockav",
+    "residuewrap",
+    "courseblockbv",
+    "protein",
+    "proteinproject",
+    "courseblockbl",
+    "courseblockbp",
+    "courseblockby"
+  ],
+  "remaining_checkout_inputs": {
+    "alignments": "BLAST input and field teaching",
+    "data": "file reader demonstration",
+    "import-intervals": "interval/PAF reading",
+    "import-relations": "external relationship format reading",
+    "import-sequences": "sequence and annotation reading",
+    "real-data": "complete real-file import workflow",
+    "aligned-sequences": "Explicit optional read_aligned_fasta subsection only; all plotting examples use bundled tables"
+  },
+  "bundled_files": {
+    "data/genome_comparison_example.rda": {
+      "sha256": "e37d259fc78329fc8c5539c28d680bbdd2b6e0b2414291c89d7b344fb6c6a204",
+      "bytes": 62644
+    },
+    "data/sequence_detail_example.rda": {
+      "sha256": "60b1ac476a96400e880e0fd18b32f671287c5267d5230f5c3fc7651871b5950c",
+      "bytes": 50176
+    },
+    "data-raw/generate_website_data.R": {
+      "sha256": "693dd194209c28869e07c1a5e02625eeb5a2abde3f30d01be9ac8a24f6c824bd",
+      "bytes": 6623
+    },
+    "data-raw/website-data-sources.tsv": {
+      "sha256": "5a3c2f180aa8104adca4a35fbb1dd54e13e6e686b52b26c7cfdd2a8d104e2bab",
+      "bytes": 1611
+    }
+  },
+  "page_preparations": {
+    "count": 52,
+    "result": "passed existing standalone page execution workflow"
+  },
+  "normal_website_pngs": {
+    "count": 178,
+    "result": "regenerated with current sources; all PNG bytes unchanged from the baseline revision"
+  },
+  "source_check": {
+    "result": "passed",
+    "language_pairs": 93,
+    "exports": 158,
+    "Rd_topics": 124
+  }
+}

@@ -1,5 +1,5 @@
 {
-  "source_sha256": "411c357542a2f320b401a9dcd013b57e43383266760df46c21da1e911088126c",
+  "source_sha256": "87a50df3c08e81a119bcfd78bf3595b21e319cb8b8a141ca05b91eb5c1ca7dae",
   "blocks": {
     "1": {
       "source_sha256": "b75edfae35b647dc10ed09d56c100a97f16f11a5642c176116ab5b4995429577",
@@ -7,9 +7,9 @@
       "translation": "## Start with two independent plots ⟦shared:0⟧\n"
     },
     "2": {
-      "source_sha256": "c50d313ceac5f0c2307379a2efda8fb8289ee8bbf585263ce41897bf8d97d5b9",
+      "source_sha256": "4eec0b4f67fcb8c0d8dd78724d0d0a916d0e9da898675dc73f9197af4f4a424d",
       "status": "reviewed",
-      "translation": "Use ggchord, dplyr and the original PAF in the [input bundle](⟦shared:0⟧). Print course_center and course_detail independently, then connect one existing relationship.\n"
+      "translation": "Use ggchord, dplyr and bundled ⟦shared:0⟧; original provenance is available in the [input bundle](⟦shared:1⟧). Print course_center and course_detail separately before composing one observed relationship.\n"
     },
     "6": {
       "source_sha256": "f83a33e303fa14797c697912d07963634964bb41a597b4827c647334a0323872",

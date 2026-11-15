@@ -47,19 +47,21 @@
 
 <a id="flagship"></a>
 
-## 保留旗舰与派生视图 {#flagship}
+## 四种旗舰视图 {#flagship}
 
-弦图和共线性图继续使用现有旗舰版本，保留构图、输入筛选、配色和图层设计；图像仅随本次已确认的默认线型缺陷修复而重绘。Radial 从现有弦图派生，Sankey 从现有共线性图派生。两套既有旗舰共用来源准备，但各自保留原有特征与跨行 HSP 的显示选择，因此不把四图说成完全相同的显示子集。
+四图共用随包数据 `genome_comparison_example`，安装 ggchord 后即可运行。完整来源表与展示子集分开保存；原始记录、筛选规则和重建脚本见 `data-raw/generate_website_data.R`。Chord/Radial 与 Collinear/Sankey 保留各自的 CDS 和 HSP 选择，不能视为完全相同的显示子集。
 
-{{prepare:sequencepalette,docstyle,showcasedata,chordshowcasegenes,showcasechord,showcasecollinear}}
+先准备共用数据、配色和样式；各图只设置自己的几何、标签和坐标参数。以下需要 ggplot2、dplyr 和 purrr；完整样式也在本页列出。
+
+{{code:sequencepalette,docstyle,showcasedata,chordshowcasegenes}}
 
 Radial 移除 Chord 专属的半径和曲率；Sankey 使用各列原生坐标轴，不照搬 Collinear 的 Cartesian 控制点和共享比例尺。完整图保留所有原 CDS 名称候选、序列图例和来源记录。注释在最终投影坐标中按真实文字尺寸避让，优先邻近特征的短引导线；数据密集时仍可能隐藏无法安放的名称，可用 `diagnose_ggchord()` 查看实际导出尺寸下的显示与碰撞结果。
-
-{{code:flagshipmulti}}
 
 <a id="flagship-chord"></a>
 
 ### Chord {#flagship-chord}
+
+{{code:showcasechord}}
 
 {{manualfigure:flagchord}}
 
@@ -67,11 +69,15 @@ Radial 移除 Chord 专属的半径和曲率；Sankey 使用各列原生坐标�
 
 ### Collinear {#flagship-collinear}
 
+{{code:showcasecollinear}}
+
 {{manualfigure:flaglinear}}
 
 <a id="flagship-radial"></a>
 
 ### Radial {#flagship-radial}
+
+{{code:relationshipstyle,flagshipradial}}
 
 采用 12 × 10.5 英寸画布，辐条从 45° 起排、序列名水平显示。保留全部 20 条原 CDS 几何与名称候选，名称随源特征就近安排，避免全局两侧名列和长引导线压缩序列主体。Sequence、Strand 与按数值区间比例显示的 Identity 图例集中在下方。
 
@@ -84,6 +90,8 @@ view_ggchord(flag_radial, width = 12, height = 10.5, units = "in")
 <a id="flagship-sankey"></a>
 
 ### Sankey {#flagship-sankey}
+
+{{code:flagshipsankey}}
 
 四条序列在两列中纵向排列，使用 10 × 16 英寸纵向画布。16 条原 CDS 几何与名称候选、10 条已选择 HSP 均保留；左右副本分别标注，名称不再每序列只选一条。列外的短连接与局部避让保持文字靠近对应特征；完整刻度和三组图例保留。首页预览另省略密集名称和坐标文字。
 

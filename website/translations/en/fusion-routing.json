@@ -1,5 +1,5 @@
 {
-  "source_sha256": "13cc82d2c5e5b4f992172d959ef62d783c5b87ece13dff2ab1d2f425b196ebdc",
+  "source_sha256": "a81d33d187ed22c040bc0fd24415b90553f83074a0dc30d29efba2b035bb6e25",
   "blocks": {
     "3": {
       "source_sha256": "2d1fe741923df3eebf1a2d4b64c70e2e6a22f48521ecc8d17bf3a4116ff4f8c9",
@@ -12,9 +12,9 @@
       "translation": "Fusion combines independent genomic plots and connects their real sequence\nintervals. The center and peripherals can use registered genomic Coord views; Sankey and Radial retain their explicit display instances. Nested Fusions and registered character details are supported. Each plot remains usable on its own. The composition\nrebuilds all panels at their actual physical sizes before drawing links.\n"
     },
     "5": {
-      "source_sha256": "b1122400c816f4e29b2778113898100e9d40a175519eb9c03907184516bdccc4",
+      "source_sha256": "086e64254d2dd5cf005e4f953516eeb1f018797cd1ce350bb3332771c0844f1c",
       "status": "reviewed",
-      "translation": "Download the [original EMALE PAF and provenance](⟦shared:0⟧). This section\nrequires the optional ⟦shared:1⟧ package. The PAF contains 11 observed HSPs; the\nexplicit display filter below selects two with length ≥900 and identity ≥85%.\nThe count track bins all original query-start observations in explicit 2,000 bp bins, not coverage. The last display bin is explicitly clipped to the true sequence boundary; source events and counts are retained.\n"
+      "translation": "This example uses bundled ⟦shared:0⟧; provenance of the original EMALE PAF is available on the [input downloads and sources page](⟦shared:1⟧). Data preparation requires optional ⟦shared:2⟧. The PAF contains 11 observed HSPs; below we explicitly select the two with length ≥900 and Identity ≥85% for cross-panel display. The count track bins all original query-start observations into explicit 2,000 bp intervals and does not represent coverage depth. The last display bin is clipped to the true sequence boundary; source observations and counts are retained.\n"
     },
     "7": {
       "source_sha256": "3bd7c1b812ec8d568f584faa8542dd4246f379242fbb5f17ad83eef90e09ddec",

@@ -1,5 +1,5 @@
 {
-  "source_sha256": "d145581ff8f6022a1f8c02805d083f9ca4e1d6b29d48ad46e73fc14a657a6a21",
+  "source_sha256": "4cd4f06fd4599e24adb67c12bbf004fddfaf36f7e87ee7a6db6008f91733c08e",
   "blocks": {
     "0": {
       "source_sha256": "abf613142433c456d6f023ea5484fcd27f6491225642327a626ff15efcbe75a1",
@@ -52,9 +52,9 @@
       "translation": "## Place protein hits on a nucleotide genome ⟦shared:0⟧\n"
     },
     "20": {
-      "source_sha256": "1bba923b7681d00072368b0241f5ae91e52f993a4f21d97bb9f1b68aa375f6f2",
+      "source_sha256": "5b7719b067f2ae111dcd36f0e296da83ccca4ca4447442028120ef8f767127c7",
       "status": "reviewed",
-      "translation": "To locate hits on a nucleotide backbone, supply known CDS mappings and project aa intervals to bp. This separate example uses a source HSP for BVI_023A_0009 with a complete CDS, then projects its query end. This subsection reads original files from the [manual input bundle](⟦shared:0⟧).\n"
+      "translation": "To locate protein hits on a nucleotide backbone, provide known CDS mappings and project aa intervals into bp. This section uses source protein hits for BVI_023A_0009, selecting records with complete CDS before converting the query side. Inputs come directly from bundled ⟦shared:0⟧; original provenance is available in the [input bundle](⟦shared:1⟧).\n"
     },
     "27": {
       "source_sha256": "046dee56ee9369f90ee0216c57ad34bf2d74501c1a4a939c3376276f3c4b19e9",

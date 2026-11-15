@@ -13,11 +13,9 @@ library(ggchord)
 library(ggplot2)
 library(dplyr)
 flagship_paper <- "#FFFCF5"
-flagship_sequences <- read_fasta_lengths("examples/fasta/*.fna") |>
-  select(accver, length)
-flagship_hsp <- read_blast(files = "examples/blastn-standard/*.tsv", source_file = TRUE) |>
-  mutate(source_hsp_id = paste0("source-HSP-", row_number()))
-flagship_features <- read_gff3("examples/gff3/*.gff3", unstranded = "keep") |>
+flagship_sequences <- genome_comparison_example$seq_data
+flagship_hsp <- genome_comparison_example$source_alignments
+flagship_features <- genome_comparison_example$annotations |>
   filter(type == "CDS")
 flagship_events <- flagship_hsp |>
   transmute(accver = qaccver, pos = pmin(qstart, qend))
@@ -36,6 +34,7 @@ flagship_theme <- theme_ggchord_publication() +
     plot.margin = margin(12, 16, 12, 16)
   )
 # ---- flagshipmulti ----
+# -- relationshipstyle --
 relationship_identity <- ggplot2::guide_coloursteps(
   available_aes = "ribbon_fill", even.steps = FALSE, show.limits = TRUE,
   position = "bottom", direction = "horizontal",
@@ -62,6 +61,14 @@ relationship_theme <- doc_theme + theme(
   plot.margin = margin(8, 10, 8, 10),
   plot.title = element_text(size = 17), plot.subtitle = element_text(size = 10)
 )
+relationship_style <- list(
+  scale_seq_colour_manual(values = seq_palette, name = "Sequence"),
+  scale_gene_fill_manual(values = gene_palette, breaks = c("+", "-"), name = "Strand"),
+  scale_seq_position_continuous(n.breaks = 2, minor_breaks = NULL,
+    labels = function(x) format(x, scientific = FALSE, big.mark = ",", trim = TRUE)),
+  relationship_theme, relationship_guides
+)
+# -- flagshipradial --
 radial_labels <- chord_genes
 radial_orientation <- show_optimization$seq_orientation
 radial_orientation[c("MT108731.1", "OR222515.1")] <- 1
@@ -77,14 +84,11 @@ flag_radial <- ggchord(show_sequences, show_links) +
   geom_seq_label(size = 4.4, seq_label_orientation = "horizontal",
     seq_label_vjust = c("MT108731.1" = 0.5, "MT118296.1" = 0.5,
       "OQ646790.1" = 1.5, "OR222515.1" = 0.5)) +
-  scale_seq_colour_manual(values = seq_palette, name = "Sequence") +
-  scale_gene_fill_manual(values = gene_palette, breaks = c("+", "-"), name = "Strand") +
-  scale_seq_position_continuous(n.breaks = 2, minor_breaks = NULL,
-    labels = function(x) format(x, scientific = FALSE, big.mark = ",", trim = TRUE)) +
+  relationship_style +
   coord_radial_synteny(start_angle = 45, inner_radius = 0.7,
     nonadjacent_bulge = radial_cross_bulge) +
-  relationship_theme + relationship_guides +
   labs(title = "Four genomes, a radial view", subtitle = "Original Chord sources; all 20 CDS annotations")
+# -- flagshipsankey --
 sankey_labels <- show_linear_features
 flag_sankey <- ggchord(show_sequences, gene_data = show_linear_features) +
   geom_link_ribbon(aes(ribbon_fill = pident), data = show_adjacent,
@@ -96,11 +100,8 @@ flag_sankey <- ggchord(show_sequences, gene_data = show_linear_features) +
   geom_gene_label_repel(data = sankey_labels, label_wrap = 20,
     label_max_lines = 3, position = position_strand(0.09), size = 3.1) +
   geom_seq_label(size = 4.4) +
-  scale_seq_colour_manual(values = seq_palette, name = "Sequence") +
-  scale_gene_fill_manual(values = gene_palette, breaks = c("+", "-"), name = "Strand") +
-  scale_seq_position_continuous(n.breaks = 2, minor_breaks = NULL,
-    labels = function(x) format(x, scientific = FALSE, big.mark = ",", trim = TRUE)) +
-  coord_sankey(column_gap = 4.2, ratio = 1.15) + relationship_theme + relationship_guides +
+  relationship_style +
+  coord_sankey(column_gap = 4.2, ratio = 1.15) +
   labs(title = "Four genomes, mirrored relationships", subtitle = "Original Collinear sources; independent query and subject displays")
 # ---- fusionoverview ----
 flagship_position <- position_strand(0.045)
@@ -247,7 +248,7 @@ fusion_base_cds <- fusion_detail_source_features |>
   filter(accver == tail(flagship_focused$seq_data$accver, 1)) |>
   arrange(start) |>
   slice(2)
-fusion_base_genome <- read_fasta_lengths("examples/fasta/*.fna", keep_sequence = TRUE) |>
+fusion_base_genome <- genome_comparison_example$sequences |>
   filter(accver == fusion_base_cds$accver)
 fusion_base_start <- if (fusion_base_cds$strand == "+") fusion_base_cds$start else fusion_base_cds$end - 59
 fusion_base_end <- fusion_base_start + 59

@@ -2,21 +2,34 @@
 
 {{prepare:setup}}
 
-先解压[真实输入包](https://github.com/DangJem/ggchord/archive/refs/heads/main.zip)，工作目录须含 examples/；每节单列可选依赖。
+以下使用随包数据，无需下载或解压输入文件；每节单列可选依赖。原始记录仍可从[真实输入包](https://github.com/DangJem/ggchord/archive/refs/heads/main.zip)追溯。
 
 <a id="characters"></a>
 
 ## 保留真实 FASTA 字符 {#characters}
 
-通过 `keep_sequence = TRUE` 保留真实字符、头部物理行号和可选文件来源。仅读取时去除空白，保留大小写；显式声明 bp 或 aa，不猜字母表。聚焦同时裁剪字符串与区间，下例局部位置 1 对应原始位置 1001。降序区域仍选择同一区间，不执行反向互补。只有长度不能恢复字符，只有 HSP 端点不能恢复 mismatch 或 gap 列。有 gap 的 FASTA 会将 gap 计入长度，基因组用途需要单独的比对列到源位置映射。
+随包对象 `sequence_detail_example$plasmid_source` 已保留真实字符、头部物理行号和文件来源；导入自己的 FASTA 时使用 `keep_sequence = TRUE`。仅读取时去除空白，保留大小写；显式声明 bp 或 aa，不猜字母表。聚焦同时裁剪字符串与区间，下例局部位置 1 对应原始位置 1001。降序区域仍选择同一区间，不执行反向互补。只有长度不能恢复字符，只有 HSP 端点不能恢复 mismatch 或 gap 列。有 gap 的 FASTA 会将 gap 计入长度，基因组用途需要单独的比对列到源位置映射。
 
 {{code:courseblockar}}
+
+### 导入自己的已有对齐 {#read-alignment}
+
+以下小节专门演示 `read_aligned_fasta()`。将路径换成已有的等长 FASTA；来源示例文件可在输入包中取得。文件不存在时跳过读取，后续绘图仍直接使用随包表。
+
+```r
+alignment_file <- "examples/alignment/opuntia-aligned.fasta"
+if (file.exists(alignment_file)) {
+  imported_alignment <- read_aligned_fasta(
+    alignment_file, "DNA", source_file = TRUE
+  )
+}
+```
 
 <a id="aligned-characters"></a>
 
 ## 已有字符对齐：区分对齐列与源位置 {#aligned-characters}
 
-以下示例需要源码 checkout 中的 `examples/alignment/`。该目录保留 Biopython 原始 DNA/蛋白比对输入、上游许可、哈希及可重复的 FASTA 格式转写规则。不运行比对工具，不改动完整记录 ID 或原始字符；显式选择行与列。
+以下直接使用 `sequence_detail_example` 中已准备的 DNA/蛋白对齐表。原始 Biopython 记录、上游许可、哈希及可重复的 FASTA 转写规则保留在来源目录 `examples/alignment/`。不运行比对工具，不改动完整记录 ID 或原始字符；显式选择行与列。
 
 `read_aligned_fasta()` 读取一个已有对齐，须声明 DNA、RNA 或 AA；等长本身不能证明同源性。`alignment_column` 包括 `-` 和 `.` gap，这些列的 `source_position` 为 NA。默认源位置在去 gap 输入片段中从 1 计数，不是完整基因组坐标。小写字符也消耗位置，因此不能把此读取器当作 A3M 插入语义解析器。
 

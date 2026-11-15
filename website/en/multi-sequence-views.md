@@ -47,19 +47,21 @@ The same source input need not produce the same default relation set. First expl
 
 <a id="flagship"></a>
 
-## Retained flagships and derived views {#flagship}
+## Four flagship views {#flagship}
 
-The existing Chord and Collinear flagships are retained with their original composition, input selection, colours and layer design; the Chord image is redrawn solely for the confirmed default outline fix. Radial derives from Chord; Sankey derives from Collinear. The retained parents share source preparation but keep their original feature and cross-row HSP display selections, so the four images are not claimed to use an identical displayed subset.
+All four views use the bundled `genome_comparison_example` data and run after installing ggchord. Complete source tables and display subsets are stored separately; original records, selection rules and rebuilding are documented in `data-raw/generate_website_data.R`. Chord/Radial and Collinear/Sankey retain their respective CDS and HSP selections, so their displayed subsets are not identical.
 
-{{prepare:sequencepalette,docstyle,showcasedata,chordshowcasegenes,showcasechord,showcasecollinear}}
+Prepare the shared data, palette and styles once; each view then sets its own geometry, labels and coordinates. The following code requires ggplot2, dplyr and purrr; complete styling is also shown on this page.
+
+{{code:sequencepalette,docstyle,showcasedata,chordshowcasegenes}}
 
 Radial removes Chord-only radii and curvature. Sankey uses each column’s native axis, replacing Collinear Cartesian controls and its shared scale bar. Complete figures retain all original CDS name candidates, Sequence guides and source records. Labels are placed near their features in final projected coordinates using measured text sizes and short leaders. Crowded names that cannot fit may still be hidden; use `diagnose_ggchord()` at the export size to inspect visibility and contacts.
-
-{{code:flagshipmulti}}
 
 <a id="flagship-chord"></a>
 
 ### Chord {#flagship-chord}
+
+{{code:showcasechord}}
 
 {{manualfigure:flagchord}}
 
@@ -67,11 +69,15 @@ Radial removes Chord-only radii and curvature. Sankey uses each column’s nativ
 
 ### Collinear {#flagship-collinear}
 
+{{code:showcasecollinear}}
+
 {{manualfigure:flaglinear}}
 
 <a id="flagship-radial"></a>
 
 ### Radial {#flagship-radial}
+
+{{code:relationshipstyle,flagshipradial}}
 
 Use a 12 × 10.5 inch canvas, spokes starting at 45°, and horizontal sequence IDs. All 20 original CDS geometries and name candidates remain. Local labels avoid long leaders and global side columns that shrink the sequence panel. Sequence, Strand and the numerically proportional Identity guide sit below the plot.
 
@@ -84,6 +90,8 @@ view_ggchord(flag_radial, width = 12, height = 10.5, units = "in")
 <a id="flagship-sankey"></a>
 
 ### Sankey {#flagship-sankey}
+
+{{code:flagshipsankey}}
 
 Four sequences stack in each column on a 10 × 16 inch portrait canvas. All 16 original CDS geometries and name candidates, and the 10 selected HSPs remain. Both display copies receive annotations; names are no longer sampled to one per sequence. Short connections and local collision handling keep names near their features. Complete coordinates and all three guides remain; homepage previews separately omit dense names and coordinate text.
 
