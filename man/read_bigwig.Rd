@@ -42,15 +42,12 @@ The optional decoder does not support BigWig on Windows; use an existing
 bedGraph file with read_bedgraph() there instead.
 }
 \examples{
-# Optional Bioconductor decoder loading can take several seconds.
-\donttest{
 if (.Platform$OS.type != "windows" && requireNamespace("rtracklayer", quietly = TRUE)) {
   # Packaged real GC signal, not measured read coverage.
   path <- system.file("extdata", "pUC19-gc-100.bw", package = "ggchord")
-  signal <- read_bigwig(path)
-  local <- read_bigwig(path,
+  signal <- read_bigwig(path,
     which = data.frame(accver = "pUC19", start = 50, end = 150))
-}
+  head(signal)
 }
 }
 \seealso{

@@ -68,13 +68,18 @@ Breakends outside known bounds have .plottable = FALSE; affected pairs stay
 in the report's unplaced_links instead of being clipped to exact boundaries.
 }
 \examples{
-# Optional Bioconductor decoder loading can take several seconds.
-\donttest{
 if (requireNamespace("VariantAnnotation", quietly = TRUE)) {
   path <- system.file("extdata", "chr22.vcf.gz", package = "VariantAnnotation")
-  variants <- read_vcf(path)
-  head(variants$features$variant[c("accver", "start", "end", "feature_id")])
-}
+  # Preserve the original headers and first three observed records.
+  con <- gzfile(path, "rt")
+  lines <- readLines(con)
+  close(con)
+  header <- startsWith(lines, "#")
+  input <- tempfile(fileext = ".vcf")
+  writeLines(c(lines[header], head(lines[!header], 3)), input)
+  variants <- read_vcf(input)
+  print(variants$features$variant[c("accver", "start", "end", "feature_id")])
+  unlink(input)
 }
 }
 \seealso{

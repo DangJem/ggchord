@@ -43,10 +43,12 @@
 #' @export
 #' @examples
 #' library(dplyr)
-#' seqs <- seq_data_example |> select(accver, length)
-#' links <- ribbon_data_example |> slice_head(n = 2)
-#' p <- ggchord(seqs, links) +
-#'   geom_seq() + geom_link_ribbon() +
+#' seqs <- seq_data_example |>
+#'   slice_head(n = 2) |>
+#'   select(accver, length)
+#' p <- ggchord(seqs) +
+#'   geom_seq() +
+#'   geom_seq_label() +
 #'   adapt_ggchord(reference_size = c(8, 6))
 #' p
 #' # ggplot2::ggsave("adaptive.png", p, width = 8, height = 6, units = "in")

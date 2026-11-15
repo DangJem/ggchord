@@ -1,0 +1,29 @@
+{
+  "baseline_tag": "refs/tags/v0.28.1",
+  "baseline_commit": "26d583fe84bc3b1c4f18560d8d620b456b51d209",
+  "prior_turn_commit": "2a44a966dbefedac73bf32652425dfca03aa8837",
+  "existing_archive_bytes": 4862281,
+  "existing_archive_sha256": "d11cd61152714c023635e6143007a6889f4db1cdc081f371a5c24b6508b0fc2e",
+  "existing_archive_payload_bytes": 7753215,
+  "data": {
+    "baseline_bytes": 33304,
+    "current_bytes": 235040,
+    "added_files": {
+      "data/flagship_circular_example.rda": 57556,
+      "data/flagship_comparison_example.rda": 2908,
+      "data/flagship_dotplot_example.rda": 2080,
+      "data/flagship_fusion_example.rda": 26372,
+      "data/genome_comparison_example.rda": 62644,
+      "data/sequence_detail_example.rda": 50176
+    },
+    "delta_bytes": 201736
+  },
+  "tracked_package_source_bytes": {
+    "baseline": 3906777,
+    "prior_turn": 4117286,
+    "current": 4117486,
+    "cumulative_delta": 210709,
+    "this_turn_delta": 200
+  },
+  "notes": "No new archive built. Tracked package source scope: R,data,man (excluding figures),inst (excluding generated doc),tests,vignettes and DESCRIPTION/LICENSE/NAMESPACE/NEWS. Excludes dev-only website,tools,data-raw and frozen docs per .Rbuildignore. Generated inst/doc and build metadata require an actual authorized package build to determine compressed size."
+}

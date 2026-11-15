@@ -1,5 +1,11 @@
 # ggchord 0.28.1
 
+- Further shorten Ribbon and Adaptive help examples. VCF examples copy three
+  unchanged source records instead of parsing the complete demonstration file;
+  BigWig examples show one selected read. Both readers retain optional dependency
+  and platform guards and run as ordinary examples. Complete website examples
+  remain available.
+
 - Add ready-to-plot datasets for all seven flagship types and the 13 complete
   reference maps. Plotting pages load prepared inputs; a dedicated bilingual
   chapter documents sources, selections and rebuilding. Physical geometry and
@@ -13,8 +19,8 @@
 
 - Help examples use smaller explicit subsets of real data, restricted DNA
   feature discovery and reference primer binding sites. Core plots remain
-  runnable; optional decoder examples and additional complete layout examples
-  are marked `\donttest{}` to reduce ordinary example-check costs.
+  runnable; additional complete layout examples are marked `\donttest{}`.
+  Decoder examples use dependency/platform guards and small ordinary inputs.
 - DESCRIPTION now expands HSP (high-scoring segment pair). No plotting defaults
   or public interfaces change in this maintenance revision.
 

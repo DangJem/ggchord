@@ -1,5 +1,5 @@
 {
-  "source_sha256": "bc181bba7c36c7bec040774d3096e581e7499b7d73937b17cfb507bb54cf99c4",
+  "source_sha256": "001295644d7be55bee2c44ff14b3b705ca496266cf7d9749e490fbbe5e4eb3cf",
   "translations": {
     "0": "通过可选的成熟变异解码器读取 VCF 或 BCF",
     "1": "可选本地路径向量或通配模式，在 files 之前读取。",

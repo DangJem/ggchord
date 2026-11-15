@@ -123,15 +123,12 @@ ggchord_bigwig_selection <- function(which, information, caller) {
 #' @seealso [read_bedgraph()], [geom_track()]
 #' @export
 #' @examples
-#' # Optional Bioconductor decoder loading can take several seconds.
-#' \donttest{
 #' if (.Platform$OS.type != "windows" && requireNamespace("rtracklayer", quietly = TRUE)) {
 #'   # Packaged real GC signal, not measured read coverage.
 #'   path <- system.file("extdata", "pUC19-gc-100.bw", package = "ggchord")
-#'   signal <- read_bigwig(path)
-#'   local <- read_bigwig(path,
+#'   signal <- read_bigwig(path,
 #'     which = data.frame(accver = "pUC19", start = 50, end = 150))
-#' }
+#'   head(signal)
 #' }
 read_bigwig <- function(file = NULL, files = NULL, which = NULL, source_file = FALSE) {
   caller <- 'read_bigwig()'

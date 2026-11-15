@@ -1,0 +1,149 @@
+{
+  "version": "0.28.1",
+  "profiles": {
+    "vcf_full": {
+      "reader": "vcf",
+      "dependency": "VariantAnnotation",
+      "dependency_version": "1.58.0",
+      "R": "R version 4.6.0 (2026-04-24)",
+      "platform": "aarch64-apple-darwin23",
+      "namespace_initially_unloaded": true,
+      "source_package_load": {
+        "user.self": 0.475,
+        "sys.self": 0.061,
+        "elapsed": 0.608
+      },
+      "namespace_first_load": {
+        "user.self": 2.677,
+        "sys.self": 0.129,
+        "elapsed": 2.914
+      },
+      "first_read": {
+        "user.self": 4.682,
+        "sys.self": 0.032,
+        "elapsed": 4.723
+      },
+      "warm_read": {
+        "user.self": 4.433,
+        "sys.self": 0.022,
+        "elapsed": 4.46
+      },
+      "selected_read": {},
+      "preview_output": {
+        "user.self": 0,
+        "sys.self": 0,
+        "elapsed": 0.001
+      },
+      "output_lines": 7,
+      "output_bytes": 266,
+      "records": 10376,
+      "input_bytes": 561408,
+      "notes": "Independent R process per decoder; cold namespace, filesystem caches not flushed. Reader timings exclude decoder namespace and source-package loading. Output captures only the displayed preview of at most six rows."
+    },
+    "vcf_small": {
+      "reader": "vcf",
+      "dependency": "VariantAnnotation",
+      "dependency_version": "1.58.0",
+      "R": "R version 4.6.0 (2026-04-24)",
+      "platform": "aarch64-apple-darwin23",
+      "namespace_initially_unloaded": true,
+      "source_package_load": {
+        "user.self": 0.483,
+        "sys.self": 0.063,
+        "elapsed": 0.615
+      },
+      "namespace_first_load": {
+        "user.self": 2.708,
+        "sys.self": 0.096,
+        "elapsed": 2.824
+      },
+      "example_preparation": {
+        "user.self": 0.016,
+        "sys.self": 0.001,
+        "elapsed": 0.02
+      },
+      "first_read": {
+        "user.self": 0.103,
+        "sys.self": 0.004,
+        "elapsed": 0.109
+      },
+      "warm_read": {
+        "user.self": 0.079,
+        "sys.self": 0.002,
+        "elapsed": 0.081
+      },
+      "selected_read": {},
+      "preview_output": {
+        "user.self": 0,
+        "sys.self": 0,
+        "elapsed": 0.001
+      },
+      "output_lines": 4,
+      "output_bytes": 152,
+      "records": 3,
+      "input_bytes": 3695,
+      "notes": "Independent R process per decoder; cold namespace, filesystem caches not flushed. Reader timings exclude decoder namespace and source-package loading. Output captures only the displayed preview of at most six rows."
+    },
+    "bigwig": {
+      "reader": "bigwig",
+      "dependency": "rtracklayer",
+      "dependency_version": "1.72.0",
+      "R": "R version 4.6.0 (2026-04-24)",
+      "platform": "aarch64-apple-darwin23",
+      "namespace_initially_unloaded": true,
+      "source_package_load": {
+        "user.self": 0.737,
+        "sys.self": 0.044,
+        "elapsed": 0.823
+      },
+      "namespace_first_load": {
+        "user.self": 2.049,
+        "sys.self": 0.071,
+        "elapsed": 2.183
+      },
+      "first_read": {
+        "user.self": 0.031,
+        "sys.self": 0.001,
+        "elapsed": 0.035
+      },
+      "warm_read": {
+        "user.self": 0.051,
+        "sys.self": 0.001,
+        "elapsed": 0.051
+      },
+      "selected_read": {
+        "user.self": 0.033,
+        "sys.self": 0,
+        "elapsed": 0.033
+      },
+      "preview_output": {
+        "user.self": 0,
+        "sys.self": 0,
+        "elapsed": 0
+      },
+      "output_lines": 7,
+      "output_bytes": 210,
+      "records": 27,
+      "input_bytes": 19105,
+      "notes": "Independent R process per decoder; cold namespace, filesystem caches not flushed. Reader timings exclude decoder namespace and source-package loading. Output captures only the displayed preview of at most six rows."
+    }
+  },
+  "whole_help_elapsed_seconds": {
+    "geom_link_ribbon": {
+      "before": 3.279,
+      "after": 1.701
+    },
+    "adapt_ggchord": {
+      "before": 1.766,
+      "after": 0.955
+    },
+    "read_vcf": {
+      "after": 3.097
+    },
+    "read_bigwig": {
+      "after": 2.254
+    }
+  },
+  "decision": "One minimal Ribbon plot; two Adaptive backbones and names; original VCF headers plus first three unchanged records copied to a temporary file; one regional BigWig read. Reader help restored to ordinary guarded examples. Website research examples unchanged. Remote Windows/Debian timings remain unverified.",
+  "verification": "Direct execution of four Rd examples only; no package test/build/check or full website rebuild."
+}

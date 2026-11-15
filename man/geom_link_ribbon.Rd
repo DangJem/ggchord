@@ -131,18 +131,13 @@ only at real subject fronts.
 }
 \examples{
 library(dplyr)
-data(seq_data_example)
-seqs <- seq_data_example |>
-  select(accver, length)
-data(ribbon_data_example)
 links <- ribbon_data_example |>
-  slice_head(n = 2) |>
+  slice_head(n = 1) |>
   select(qaccver, saccver, qstart, qend, sstart, send)
+seqs <- seq_data_example |>
+  filter(accver \%in\% c(links$qaccver, links$saccver)) |>
+  select(accver, length)
 ggchord(seq_data = seqs, ribbon_data = links) +
   geom_seq() +
   geom_link_ribbon()
-ggchord(seqs, links) + geom_seq() +
-  geom_link_ribbon(tip = "subject") + coord_collinear()
-ggchord(seqs, links) + geom_seq() +
-  geom_link_ribbon(gradient = TRUE)
 }
