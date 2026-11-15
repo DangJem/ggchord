@@ -1,3 +1,5 @@
+See [Flagship data sources and construction](flagship-data.md) for provenance, display selections and rebuilding. This page loads bundled inputs directly and focuses on plotting settings.
+
 <a id="input"></a>
 
 ## Complete pUC19 inputs {#input}
@@ -9,7 +11,7 @@ This page explains the composition of one complete reference map. pETDuet-1 and 
 {{code:referencebuilder}}
 
 ```r
-reference <- make_reference_map(plasmid_example_pUC19)
+reference <- make_reference_map(flagship_circular_example$references[["pUC19"]])
 p <- reference$plot
 view_ggchord(p, width = 10, height = 8, units = "in")
 ```
@@ -33,7 +35,7 @@ nrow(reference$primers)
 nrow(reference$sites)
 ```
 
-The chosen source profile contains 9 features and 39 restriction rows at 33 distinct positions. It has no independent reference-primer rows. Raw enzyme matches remain in `reference$all_sites`; the declared source profile is not a three-site display subset.
+This source profile contains 9 features and 39 restriction-site records at 33 distinct positions, without independent reference-primer rows. `reference$all_site_count` retains the original candidate count; complete search results can be rebuilt through the generator. The displayed reference set is not sampled down to three sites.
 
 <a id="adapt"></a>
 

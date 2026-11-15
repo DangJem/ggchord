@@ -189,6 +189,7 @@ reference:
       - '`ribbon_data_example`'
       - '`seq_data_example`'
       - '`genome_comparison_example`'
+      - '`flagship_examples`'
       - '`sequence_detail_example`'
       - '`protein_seq_data_example`'
       - '`protein_ribbon_data_example`'

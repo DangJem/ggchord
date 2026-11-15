@@ -70,68 +70,68 @@ ggsave("four-genome-collinear.png", p_show_collinear, width = 12, height = 8, un
 library(ggchord)
 library(dplyr)
 # ---- courseblockh ----
-sequence <- plasmid_example_pSB1C3
-reference <- make_reference_map(sequence)
+record <- flagship_circular_example$references[["pSB1C3"]]
+reference <- make_reference_map(record)
 p <- reference$plot
 view_ggchord(p, width = 10, height = 8, units = "in")
 # ---- courseblocki ----
-sequence <- plasmid_example_pUC19
-reference <- make_reference_map(sequence)
+record <- flagship_circular_example$references[["pUC19"]]
+reference <- make_reference_map(record)
 p <- reference$plot
 view_ggchord(p, width = 10, height = 8, units = "in")
 # ---- courseblockj ----
-sequence <- plasmid_example_pBR322
-reference <- make_reference_map(sequence)
+record <- flagship_circular_example$references[["pBR322"]]
+reference <- make_reference_map(record)
 p <- reference$plot
 view_ggchord(p, width = 10, height = 8, units = "in")
 # ---- courseblockk ----
-sequence <- plasmid_example_pBluescript_II_SK_plus
-reference <- make_reference_map(sequence)
+record <- flagship_circular_example$references[["pBluescript II SK(+)"]]
+reference <- make_reference_map(record)
 p <- reference$plot
 view_ggchord(p, width = 10, height = 8, units = "in")
 # ---- courseblockl ----
-sequence <- plasmid_example_pET_28a_plus
-reference <- make_reference_map(sequence)
+record <- flagship_circular_example$references[["pET-28a(+)"]]
+reference <- make_reference_map(record)
 p <- reference$plot
 view_ggchord(p, width = 10, height = 8, units = "in")
 # ---- courseblockm ----
-sequence <- plasmid_example_pETDuet_1
-reference <- make_reference_map(sequence)
+record <- flagship_circular_example$references[["pETDuet-1"]]
+reference <- make_reference_map(record)
 p <- reference$plot
 view_ggchord(p, width = 10, height = 8, units = "in")
 # ---- courseblockn ----
-sequence <- plasmid_example_pDONR221
-reference <- make_reference_map(sequence)
+record <- flagship_circular_example$references[["pDONR221"]]
+reference <- make_reference_map(record)
 p <- reference$plot
 view_ggchord(p, width = 10, height = 8, units = "in")
 # ---- courseblocko ----
-sequence <- plasmid_example_pcDNA3_1_plus
-reference <- make_reference_map(sequence)
+record <- flagship_circular_example$references[["pcDNA3.1(+)"]]
+reference <- make_reference_map(record)
 p <- reference$plot
 view_ggchord(p, width = 10, height = 8, units = "in")
 # ---- courseblockp ----
-sequence <- plasmid_example_pTRE_Tight_BI
-reference <- make_reference_map(sequence)
+record <- flagship_circular_example$references[["pTRE-Tight-BI"]]
+reference <- make_reference_map(record)
 p <- reference$plot
 view_ggchord(p, width = 10, height = 8, units = "in")
 # ---- courseblockq ----
-sequence <- plasmid_example_pTRIPZ
-reference <- make_reference_map(sequence)
+record <- flagship_circular_example$references[["pTRIPZ"]]
+reference <- make_reference_map(record)
 p <- reference$plot
 view_ggchord(p, width = 10, height = 8, units = "in")
 # ---- courseblockr ----
-sequence <- plasmid_example_pCAMBIA1300
-reference <- make_reference_map(sequence)
+record <- flagship_circular_example$references[["pCAMBIA1300"]]
+reference <- make_reference_map(record)
 p <- reference$plot
 view_ggchord(p, width = 10, height = 8, units = "in")
 # ---- courseblocks ----
-sequence <- plasmid_example_pEarleyGate_201
-reference <- make_reference_map(sequence)
+record <- flagship_circular_example$references[["pEarleyGate 201"]]
+reference <- make_reference_map(record)
 p <- reference$plot
 view_ggchord(p, width = 10, height = 8, units = "in")
 # ---- courseblockt ----
-sequence <- plasmid_example_pSpCas9_BB_2A_GFP_PX458
-reference <- make_reference_map(sequence)
+record <- flagship_circular_example$references[["pSpCas9(BB)-2A-GFP (PX458)"]]
+reference <- make_reference_map(record)
 p <- reference$plot
 view_ggchord(p, width = 10, height = 8, units = "in")
 # ---- courseblocku ----
@@ -814,8 +814,8 @@ p_parameter_list
 library(ggchord)
 library(dplyr)
 flagship_paper <- "#FFFCF5"
-flagship_sequences <- genome_comparison_example$seq_data
-flagship_hsp <- genome_comparison_example$source_alignments
+flagship_sequences <- flagship_dotplot_example$seq_data
+flagship_hsp <- flagship_dotplot_example$links
 flagship_theme <- theme_ggchord_publication() +
   theme(
     plot.background = element_rect(fill = flagship_paper, colour = NA),

@@ -1,3 +1,5 @@
+数据来源、展示子集与重建规则见[旗舰数据来源与构建](flagship-data.md)。本页直接加载随包输入，集中设置绘图参数。
+
 <a id="complex"></a>
 
 ## 密集而完整的注释输入 {#complex}
@@ -9,7 +11,7 @@
 {{code:referencebuilder}}
 
 ```r
-reference <- make_reference_map(plasmid_example_pETDuet_1)
+reference <- make_reference_map(flagship_circular_example$references[["pETDuet-1"]])
 p <- reference$plot
 view_ggchord(p, width = 10, height = 8, units = "in")
 ```

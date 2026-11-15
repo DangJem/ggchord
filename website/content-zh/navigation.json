@@ -125,7 +125,8 @@
       "protein-alignments",
       "projection",
       "workflows",
-      "real-data"
+      "real-data",
+      "flagship-data"
     ],
     "number": 6
   },

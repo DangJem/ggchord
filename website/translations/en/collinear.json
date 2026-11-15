@@ -1,107 +1,112 @@
 {
-  "source_sha256": "3dc7af81b05264dd429a993c08a1a1189702a912636cc1f3c8e3689e5aab777e",
+  "source_sha256": "139e7c1106e7fc39ee90ed3fd89a1dc545d7eb99e12645f0488f866f4cbfd9d1",
   "blocks": {
     "0": {
+      "source_sha256": "0fae5352735f690fce064b0ce64c1163f3c582825b729f52c4c1126c524d680b",
+      "status": "reviewed",
+      "translation": "See [Flagship data sources and construction](⟦shared:0⟧) for provenance, display selections and rebuilding. This page loads bundled inputs directly and focuses on plotting settings.\n"
+    },
+    "2": {
       "source_sha256": "56be80fd47e44030ef7605832c34df4dc7973d0de2ce4210365920f21b96c97d",
       "status": "reviewed",
       "translation": "⟦shared:0⟧The complete multi-sequence Collinear result: four real genomes, strand-separated features and outward-routed cross-row links.⟦shared:1⟧\n"
     },
-    "2": {
+    "4": {
       "source_sha256": "64fd3a567bd280289e772833fd1a6a59ef2a50bfbec8d80b2ff56c4317ea947b",
       "status": "reviewed",
       "translation": "## Research question, alignment and tradeoffs ⟦shared:0⟧\n"
     },
-    "3": {
+    "5": {
       "source_sha256": "60f53ec3e4aea151af812bf74096f7ca6ff2a4b3f312f51b18169cc79992dd39",
       "status": "reviewed",
       "translation": "This view asks how selected CDS and observed intervals compare on one shared bp scale across four complete sequences. FASTA, GFF3 CDS and original BLAST HSPs are the same sources as the [chord case](⟦shared:0⟧). Auto orientation is a link-supported display decision. Center aligns complete sequences without asserting homologous centres.\n"
     },
-    "4": {
+    "6": {
       "source_sha256": "0719528d12a5737ece83670d351172b2128dbe6709ce61bdeecc639b45577fdd",
       "status": "reviewed",
       "translation": "Adjacent rows use explicitly filtered observations; each cross-row pair retains only its longest HSP. Omitting two crowded features is a display decision, with complete source tables retained. Right-side controls are derived from the current layout and must be recomputed after order/direction/gap changes. Local clearance avoids arrows, not every intervening row along a long path.\n"
     },
-    "6": {
+    "8": {
       "source_sha256": "0373a35b9e4ab8fe58d880cf7b3e5923bd1b99c540d983dbbb02ede01b206dbb",
       "status": "reviewed",
       "translation": "## Complete result ⟦shared:0⟧\n"
     },
-    "8": {
+    "10": {
       "source_sha256": "798abd413cf3f220bf465172b2b2d7cc92e69e957011bfe1bdc85c1bb51ff737",
       "status": "reviewed",
       "translation": "Compare four backbones on a shared base-pair scale with 16 selected CDS placed on either side of the rows. Read gene positions along one row first, then follow a band to its matching interval. A solid outline marks adjacent rows, while a dashed outline marks rows with another displayed row between them. Start with the [four-backbone plot](⟦shared:0⟧) and [alignment and CDS example](⟦shared:0⟧) if you are new to the workflow.\n"
     },
-    "10": {
+    "12": {
       "source_sha256": "355536aefd492a1b8ccaf9604c3cd11b043d7e2981cf73c81d97ec41eff991c3",
       "status": "reviewed",
       "translation": "## Prepare bundled data ⟦shared:0⟧\n"
     },
-    "11": {
-      "source_sha256": "0c6ea9ee49c8875a8e0a8912d91cd36a9c58a4c9787c7802503e574a1452f3de",
+    "13": {
+      "source_sha256": "479afebbc5a912879cded5d0c04ddfc85c331cee0035fbaff613631e6fcfba49",
       "status": "reviewed",
-      "translation": "Use bundled ⟦shared:0⟧ directly, without extracting files; original provenance remains in the [input bundle](⟦shared:1⟧). The example requires dplyr and purrr:\n"
+      "translation": "Use bundled ⟦shared:0⟧ directly, without extracting files; original records remain traceable through the [input bundle](⟦shared:1⟧). The example requires dplyr and purrr.:\n"
     },
-    "12": {
+    "14": {
       "source_sha256": "6c85fd28f0050579a8f925c33d14ee3c0ca89951788b7346399e329f62f91e3f",
       "status": "reviewed",
       "translation": "Retrieve the display subsets selected by the original rules, then prepare shared colours and styles; source-file filtering does not need to be repeated.\n"
     },
-    "14": {
+    "16": {
       "source_sha256": "6b4885d27b190f94248b5692ea4514bfda45873b0e4d248eb6816ec3c3bb189b",
       "status": "reviewed",
       "translation": "Retain four full FASTA records, 266 CDS and 32 original HSPs. Adjacent rows use the explicitly selected observations; each non-neighbour pair retains only its longest HSP to reduce overlap.\n"
     },
-    "16": {
+    "18": {
       "source_sha256": "d94e880e568176c74c85afc001d0e5b8a9102851a9686d87b0e3b8f1c10e9de5",
       "status": "reviewed",
       "translation": "## Reserve space for connections and labels ⟦shared:0⟧\n"
     },
-    "17": {
+    "19": {
       "source_sha256": "be2c28891dd674358157ec07b56b36ababb5e762ecf36f67dc465c75a47bcd96",
       "status": "reviewed",
       "translation": "To compare sequence composition, see [tracks](⟦shared:0⟧) for a GC track example.\n"
     },
-    "19": {
+    "21": {
       "source_sha256": "97f1e4f7d2a2ec4c244f0b3e70f16b39033238da97217564ae71a1aa84da523f",
       "status": "reviewed",
       "translation": "## Compose the layers ⟦shared:0⟧\n"
     },
-    "21": {
+    "23": {
       "source_sha256": "63eb326497a32309b0cccbbbaf0489e50123219a1a1181704f70e7cead439fcd",
       "status": "reviewed",
       "translation": "Dashed outlines identify non-adjacent displayed rows, with sufficient linewidth to read. Right-side controls separate long routes; smooth local clearance retreats near arrows. Identity has the same left-side colourbar as the chord view, and the bottom strand keys use arrows. The ruler's horizontal offset is 0; its length still uses the shared bp conversion.\n"
     },
-    "23": {
+    "25": {
       "source_sha256": "1ca527edc45d354e66d718a09a9ce3b50de826ffca4826a226bb1d77647fdae3",
       "status": "reviewed",
       "translation": "## Adjustment and limits ⟦shared:0⟧\n"
     },
-    "24": {
+    "26": {
       "source_sha256": "7d250f294396c34ba35372dd31a6157097906dc914b0d265549448e08c0704fd",
       "status": "reviewed",
       "translation": "Rebuild controls when changing seq_gap, order, orientation or link selection. Local arrow clearance is not an automatic route around intervening whole sequences; ribbons may still cross legitimately. Use [focus/segments](⟦shared:0⟧) for local questions. Explicit circular radius/curvature cannot currently be passed to linear coordinates; see [conversion boundaries](⟦shared:1⟧).\n"
     },
-    "26": {
+    "28": {
       "source_sha256": "c944a120516c7c5a0628714fe33178ae781e773784d853ae0a5507c4596c6e87",
       "status": "reviewed",
       "translation": "## Save at the intended size ⟦shared:0⟧\n"
     },
-    "29": {
+    "31": {
       "source_sha256": "5ce77666e2dbcc25bfc7d20bd7d1fd62f19724f979aebf4567b59d02fe038164",
       "status": "reviewed",
       "translation": "## Evidence checks before saving ⟦shared:0⟧\n"
     },
-    "30": {
+    "32": {
       "source_sha256": "5127e9f61b2260a58198115c3c89a2e3a47db048d6cb0872f8a5f35192433943",
       "status": "reviewed",
       "translation": "Preview with view_ggchord at the declared width/height and save with ggsave at matching dimensions. Check IDs, source strands, endpoint directions, selection reports, legend units and hidden-label reasons. A successful PNG does not certify font portability across PDF/SVG viewers. Keep complete source tables, display subsets, parameters, version and input hashes. Download the [asset/provenance record](⟦shared:0⟧).\n"
     },
-    "32": {
+    "34": {
       "source_sha256": "54c132ec05483cb19a0661b29850ac36bfefa4e2decf3748cb1bd66b26a183d9",
       "status": "reviewed",
       "translation": "## Source rights and reproducibility ⟦shared:0⟧\n"
     },
-    "33": {
+    "35": {
       "source_sha256": "698bc3597847b99ec045eacfd534644167bfdec55ce59f5cee2de0df6b7477d0",
       "status": "reviewed",
       "translation": "The package code is MIT-licensed; source database records and reference catalogues retain their original terms. The package license does not relicense third-party data. Keep accession identities and provenance with exported figures. The [asset/source record](⟦shared:0⟧), input archive hashes and displayed preparation script document this example; algorithmic matches remain hypotheses for experimental verification.\n"

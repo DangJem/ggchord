@@ -1,3 +1,5 @@
+See [Flagship data sources and construction](flagship-data.md) for provenance, display selections and rebuilding. This page loads bundled inputs directly and focuses on plotting settings.
+
 Start with observed HSPs from one sequence pair, then extend to a four-sequence matrix. The minimal inputs are complete sequence lengths and four HSP endpoints; annotations are optional.
 
 {{code:courseblockam}}
@@ -44,7 +46,7 @@ base-level mismatches or gap paths.
 
 ## Multi-sequence HSP matrix {#matrix}
 
-The following code uses bundled `genome_comparison_example`, derived from the original FASTA and standard BLAST tables. It retains all 32 HSPs across four sequences without inventing self-alignments, symmetric records or missing HSPs. The 266 CDS belong to the shared source table but are not passed to the Dotplot segment layer. Empty regions indicate no relationship records in this input, not an absence of homology.
+The following code directly uses bundled `flagship_dotplot_example`, with counts and label tables already prepared. It retains all 32 HSPs across four sequences without inventing self-alignments, symmetric records or missing HSPs. The 266 CDS belong to the shared source table but are not passed to the Dotplot segment layer. Empty regions indicate no relationship records in this input, not an absence of homology.
 
 Column headers identify each query sequence and its complete 1–length range; row headers identify subject sequences and ranges. Bottom and right ticks show local positions within each sequence. Follow a column and row to locate a pair. Each outlined rectangle retains widths and heights proportional to the actual lengths. Pale backgrounds distinguish cells and do not encode similarity; spaces between rectangles are display gaps.
 

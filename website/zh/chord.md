@@ -1,3 +1,10 @@
+数据来源、展示子集与重建规则见[旗舰数据来源与构建](flagship-data.md)。本页直接加载随包输入，集中设置绘图参数。
+
+```r
+library(ggchord)
+library(ggplot2)
+```
+
 <div class="section-intro">把四条基因组放在同一张关系图中，组合直线与弧形骨架、保留真实链方向的基因、默认分段相似度标度和精选标签，同时保留数据来源。</div>
 
 
@@ -21,7 +28,7 @@
 <a id="prepare"></a>
 
 ## 准备随包数据 {#prepare}
-本例直接使用随包数据 `genome_comparison_example`，无需解压文件；原始记录仍可在[说明输入包](https://github.com/DangJem/ggchord/archive/refs/heads/main.zip)追溯。示例需要 dplyr 和 purrr。
+本例直接使用随包数据 `flagship_comparison_example`，无需解压文件；原始记录仍可在[说明输入包](https://github.com/DangJem/ggchord/archive/refs/heads/main.zip)追溯。示例需要 dplyr 和 purrr。
 
 先取得已按原规则选择的展示子集，再准备共用配色和样式；不重新运行原始文件筛选。
 

@@ -4022,5 +4022,29 @@
     "figure_ids": [],
     "translation_key": "migration",
     "aliases": []
+  },
+  {
+    "slug": "flagship-data",
+    "title": {
+      "zh": "旗舰数据来源与构建"
+    },
+    "group": "article",
+    "id": "flagship-data",
+    "kind": "tutorial",
+    "canonical_path": "flagship-data.html",
+    "parent": "formats",
+    "module": "data",
+    "prerequisites": [],
+    "next_steps": [
+      "multi-sequence-views",
+      "dotplot-start",
+      "fusion-layout",
+      "circular-dense-case"
+    ],
+    "apis": [],
+    "recipe_ids": [],
+    "figure_ids": [],
+    "translation_key": "flagship-data",
+    "aliases": []
   }
 ]

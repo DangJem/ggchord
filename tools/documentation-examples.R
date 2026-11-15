@@ -875,19 +875,17 @@ ggsave("first-comparison.png", p_first, width = 10, height = 5, units = "in", dp
 library(dplyr)
 library(purrr)
 data(genome_comparison_example)
-show_sequences <- genome_comparison_example$seq_data
+show_sequences <- flagship_comparison_example$chord$seq_data
 show_annotations <- genome_comparison_example$annotations
 show_genes <- genome_comparison_example$genes
 show_alignments <- genome_comparison_example$alignments
-show_links <- genome_comparison_example$links
+show_links <- flagship_comparison_example$chord$links
 show_features <- genome_comparison_example$features
 show_labels <- show_features
-show_optimization <- optimize_ggchord_layout(
-  show_sequences, show_links, optimize = "orientation", weight = "length"
-)
+show_optimization <- list(seq_orientation = flagship_comparison_example$chord$orientation)
 # ---- chordshowcasegenes ----
-chord_genes <- genome_comparison_example$chord_features
-chord_labels <- chord_genes
+chord_genes <- flagship_comparison_example$chord$features
+chord_labels <- flagship_comparison_example$chord$labels
 chord_position <- position_strand(c("+" = -0.030, "-" = 0.030))
 showcase_style <- list(
   scale_seq_colour_manual(values = seq_palette, name = "Sequence", guide = sequence_guide),
@@ -926,16 +924,11 @@ p_show_chord <- ggchord(seq_data = show_sequences, ribbon_data = show_links) +
 p_show_chord
 # ---- showcaseplasmiddata ----
 library(dplyr)
-data(plasmid_example_pETDuet_1)
-show_plasmid <- plasmid_example_pETDuet_1 |>
-  select(accver, length)
-show_plasmid_features <- find_common_features(plasmid_example_pETDuet_1)
-show_plasmid_primers <- find_primer_bindings(plasmid_example_pETDuet_1, set = "reference")
-show_plasmid_all_sites <- find_restriction_sites(plasmid_example_pETDuet_1)
-show_plasmid_sites <- filter_restriction_sites(
-  show_plasmid_all_sites,
-  set = "unique_6plus", parent_set = "commercial_all"
-)
+circular_data <- flagship_circular_example$dense
+show_plasmid <- circular_data$seq_data
+show_plasmid_features <- circular_data$features
+show_plasmid_primers <- circular_data$primers
+show_plasmid_sites <- circular_data$sites
 # ---- showcaseplasmid ----
 show_plasmid_position <- position_feature_stack(
   spacing = 0.085, base_position = position_plasmid()
@@ -968,22 +961,11 @@ p_show_plasmid
 # Quantitative GC tracks remain in the dedicated tracks tutorial.
 # The flagship comparison reserves the space for genes and routed alignments.
 # ---- showcasecollinear ----
-show_linear_features <- genome_comparison_example$linear_features
-show_adjacent <- genome_comparison_example$adjacent_links
-show_cross <- genome_comparison_example$cross_links
-# Inspect a backbone-only layout using the same alignment and gap as the final view.
+show_linear_features <- flagship_comparison_example$collinear$features
+show_adjacent <- flagship_comparison_example$collinear$adjacent_links
+show_cross <- flagship_comparison_example$collinear$cross_links
 show_linear_coord <- coord_collinear(align = "center", orientation = "auto", ratio = 0.7)
-show_routing_base <- ggchord(show_sequences, show_links) +
-  geom_seq(seq_gap = 0.42) + show_linear_coord
-show_reference <- get_chord_layout(show_routing_base)$sequence_reference
-# Shared controls sit just beyond the intervening backbones, rather than far away.
-show_cross_controls <- map2(show_cross$query_row, show_cross$subject_row, function(query_row, subject_row) {
-  between <- seq(min(query_row, subject_row) + 1L, max(query_row, subject_row) - 1L)
-  middle_ids <- show_sequences$accver[between]
-  right_edge <- max(show_reference$x_offset[middle_ids] + show_reference$lens[middle_ids] * show_reference$x_scale)
-  middle_y <- mean(show_reference$y[show_sequences$accver[c(query_row, subject_row)]])
-  c(right_edge + if (abs(query_row - subject_row) == 3) 0.85 else 0.65, middle_y)
-})
+show_cross_controls <- flagship_comparison_example$collinear$route_controls
 p_show_collinear <- ggchord(show_sequences, gene_data = show_linear_features) +
   geom_link_ribbon(
     aes(ribbon_fill = pident),
@@ -999,7 +981,7 @@ p_show_collinear <- ggchord(show_sequences, gene_data = show_linear_features) +
   geom_seq(seq_gap = 0.42, linewidth = 1) +
   geom_gene(position = position_strand(0.09), width = 0.045) +
   geom_gene_label_repel(
-    data = show_linear_features |> arrange(desc(nchar(anno)), accver, start),
+    data = flagship_comparison_example$collinear$labels,
     label_layout = "auto", label_wrap = 24,
     label_side = "auto", position = position_strand(0.09), size = 3.3
   ) +
@@ -1073,34 +1055,14 @@ p_plasmid_text
 # ---- catalogdata ----
 library(dplyr)
 library(purrr)
-# Thirteen unique records; the compatibility spelling pUC19c is not an extra plasmid.
-catalog_objects <- c(
-  "plasmid_example_pSB1C3", "plasmid_example_pUC19", "plasmid_example_pBR322",
-  "plasmid_example_pBluescript_II_SK_plus", "plasmid_example_pET_28a_plus",
-  "plasmid_example_pETDuet_1", "plasmid_example_pDONR221",
-  "plasmid_example_pcDNA3_1_plus", "plasmid_example_pTRE_Tight_BI",
-  "plasmid_example_pTRIPZ", "plasmid_example_pCAMBIA1300",
-  "plasmid_example_pEarleyGate_201", "plasmid_example_pSpCas9_BB_2A_GFP_PX458"
-)
-read_catalog_record <- function(object) {
-  target <- new.env(parent = emptyenv())
-  data(list = object, package = "ggchord", envir = target)
-  target[[object]]
-}
-catalog_sequences <- map(catalog_objects, read_catalog_record)
-catalog_features <- map(catalog_sequences, find_common_features)
-catalog_summary <- map2(catalog_sequences, catalog_features, function(sequence, features) {
-  tibble(accver = sequence$accver, length = sequence$length, features = nrow(features))
-}) |>
-  bind_rows()
+catalog_records <- flagship_circular_example$references
+catalog_sequences <- map(catalog_records, "source_sequence")
+catalog_features <- map(catalog_records, "features")
+catalog_summary <- flagship_circular_example$summary
 # ---- catalogplots ----
 make_catalog_plot <- function(sequence, features) {
   placement <- position_feature_stack(spacing = 0.085, base_position = position_plasmid())
-  sites <- find_restriction_sites(sequence)
-  # Pick the nearest observed cut to each of three evenly spaced targets.
-  targets <- sequence$length * c(1, 3, 5) / 6
-  nearest <- vapply(targets, function(x) which.min(abs(sites$position - x)), integer(1))
-  sites <- sites[unique(nearest), ]
+  sites <- flagship_circular_example$references[[sequence$accver]]$gallery_sites
   ggchord(seq_data = sequence |> select(accver, length)) +
     geom_seq(seq_style = "double", colour = "#252525") +
     geom_feature_plasmid(data = features, position = placement) +
@@ -1875,18 +1837,11 @@ dotplot_layout <- export_ggchord_layout(dotplot_reversed)
 dotplot_layout$axis_layout
 # ---- radialdata ----
 library(dplyr)
-radial_seqs <- seq_data_example |>
-  select(accver, length)
-radial_hsp <- ribbon_data_example |>
-  mutate(source_hsp_id = paste0("bundled:", row_number())) |>
-  filter(length >= 900, pident >= 75) |>
-  group_by(qaccver, saccver) |>
-  slice_max(length, n = 2, with_ties = FALSE) |>
-  ungroup()
-radial_features <- gene_data_example |>
-  transmute(accver, start, end, strand = source_strand, anno, type = "CDS")
-radial_events <- radial_hsp |>
-  transmute(accver = qaccver, pos = qstart)
+comparison_data <- flagship_comparison_example$comparison
+radial_seqs <- comparison_data$seq_data
+radial_hsp <- comparison_data$links
+radial_features <- comparison_data$features
+radial_events <- comparison_data$events
 # ---- radialview ----
 p_viewradial <- ggchord(radial_seqs, radial_hsp, feature_data = radial_features) +
   geom_seq() +

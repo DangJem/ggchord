@@ -1,3 +1,10 @@
+See [Flagship data sources and construction](flagship-data.md) for provenance, display selections and rebuilding. This page loads bundled inputs directly and focuses on plotting settings.
+
+```r
+library(ggchord)
+library(ggplot2)
+```
+
 <a id="input"></a>
 
 ## Prepare once {#input}
@@ -43,13 +50,11 @@ The same source input need not produce the same default relation set. First expl
 | Radial | Cyclic neighbors | Explicit adjacent_only = FALSE |
 | Sankey | Excludes same-entity self links | This real input has no self links |
 
-{{code:coursecomparisonreport}}
-
 <a id="flagship"></a>
 
 ## Four flagship views {#flagship}
 
-All four views use the bundled `genome_comparison_example` data and run after installing ggchord. Complete source tables and display subsets are stored separately; original records, selection rules and rebuilding are documented in `data-raw/generate_website_data.R`. Chord/Radial and Collinear/Sankey retain their respective CDS and HSP selections, so their displayed subsets are not identical.
+All four views use bundled `flagship_comparison_example` and run after installing ggchord. Chord/Radial and Collinear/Sankey retain their respective CDS and HSP selections, so their displayed subsets are not identical.
 
 Prepare the shared data, palette and styles once; each view then sets its own geometry, labels and coordinates. The following code requires ggplot2, dplyr and purrr; complete styling is also shown on this page.
 

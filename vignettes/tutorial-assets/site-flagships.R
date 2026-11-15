@@ -13,12 +13,10 @@ library(ggchord)
 library(ggplot2)
 library(dplyr)
 flagship_paper <- "#FFFCF5"
-flagship_sequences <- genome_comparison_example$seq_data
-flagship_hsp <- genome_comparison_example$source_alignments
-flagship_features <- genome_comparison_example$annotations |>
-  filter(type == "CDS")
-flagship_events <- flagship_hsp |>
-  transmute(accver = qaccver, pos = pmin(qstart, qend))
+flagship_sequences <- flagship_dotplot_example$seq_data
+flagship_hsp <- flagship_dotplot_example$links
+flagship_features <- flagship_fusion_example$all_features
+flagship_events <- flagship_fusion_example$events
 flagship_colours <- c(
   "MT108731.1" = "#E64B35", "MT118296.1" = "#233E4A",
   "OQ646790.1" = "#269B82", "OR222515.1" = "#D59B17"
@@ -69,9 +67,8 @@ relationship_style <- list(
   relationship_theme, relationship_guides
 )
 # -- flagshipradial --
-radial_labels <- chord_genes
-radial_orientation <- show_optimization$seq_orientation
-radial_orientation[c("MT108731.1", "OR222515.1")] <- 1
+radial_labels <- flagship_comparison_example$radial$labels
+radial_orientation <- flagship_comparison_example$radial$orientation
 # Adjustable annular lift for non-neighbours, in layout units; longest spoke = 2.
 radial_cross_bulge <- 0.20
 radial_position <- position_strand(c("+" = -0.055, "-" = 0.055))
@@ -89,7 +86,7 @@ flag_radial <- ggchord(show_sequences, show_links) +
     nonadjacent_bulge = radial_cross_bulge) +
   labs(title = "Four genomes, a radial view", subtitle = "Original Chord sources; all 20 CDS annotations")
 # -- flagshipsankey --
-sankey_labels <- show_linear_features
+sankey_labels <- flagship_comparison_example$sankey$labels
 flag_sankey <- ggchord(show_sequences, gene_data = show_linear_features) +
   geom_link_ribbon(aes(ribbon_fill = pident), data = show_adjacent,
     link_avoid = "smooth", alpha = 0.48, linewidth = 0.25) +
@@ -117,24 +114,8 @@ fusion_chord <- flagship_base + coord_chord()
 fusion_collinear <- flagship_base + coord_collinear()
 fusion_radial <- flagship_base + coord_radial_synteny()
 # ---- flagshipdot ----
-dotplot_pair_counts <- flagship_hsp |>
-  count(qaccver, saccver, name = "HSP")
-dotplot_frames <- export_ggchord_layout(
-  ggchord(flagship_sequences, flagship_hsp) + geom_alignment_segment() +
-    coord_dotplot(x_seqs = flagship_sequences$accver,
-      y_seqs = flagship_sequences$accver, gap = 4000)
-)$axis_layout
-dotplot_cells <- tidyr::expand_grid(
-  qaccver = flagship_sequences$accver, saccver = flagship_sequences$accver
-) |>
-  left_join(dotplot_pair_counts, by = c("qaccver", "saccver")) |>
-  mutate(HSP = coalesce(HSP, 0L)) |>
-  left_join(dotplot_frames |> filter(axis == "x") |>
-    transmute(qaccver = accver, x = min, xmax = max), by = "qaccver") |>
-  left_join(dotplot_frames |> filter(axis == "y") |>
-    transmute(saccver = accver, y = max, ymin = min), by = "saccver") |>
-  mutate(x = x + (xmax - x) * 0.04, y = y - (y - ymin) * 0.05,
-    label = if_else(HSP > 0L, paste(HSP, "HSP"), "No input HSP"))
+dotplot_pair_counts <- flagship_dotplot_example$pair_counts
+dotplot_cells <- flagship_dotplot_example$cell_labels
 flag_dotplot <- ggchord(flagship_sequences, flagship_hsp) +
   geom_alignment_segment(aes(link_colour = pident, link_linewidth = length), alpha = 0.85) +
   scale_link_linewidth_continuous(range = c(0.8, 1.8), name = "HSP length (bp)") +
@@ -155,38 +136,17 @@ flag_dotplot <- ggchord(flagship_sequences, flagship_hsp) +
     plot.margin = margin(12, 16, 12, 16)
   )
 # ---- flagshipfusion ----
-fusion_orientation <- setNames(rep(1, nrow(flagship_sequences)), flagship_sequences$accver)
-fusion_display_hsp <- flagship_hsp |>
-  group_by(qaccver, saccver) |>
-  arrange(abs(length - 4000), .by_group = TRUE) |>
-  slice_head(n = 1) |>
-  ungroup()
-fusion_display_features <- flagship_features |>
-  group_by(accver) |>
-  arrange(start, .by_group = TRUE) |>
-  mutate(display_bin = ntile(row_number(), 3)) |>
-  group_by(accver, display_bin) |>
-  arrange(anno == "hypothetical protein", desc(end - start), .by_group = TRUE) |>
-  slice_head(n = 1) |>
-  ungroup() |>
-  select(-display_bin)
-fusion_relation_ab <- fusion_display_hsp |> filter(qaccver == "MT108731.1", saccver == "MT118296.1")
-fusion_relation_ac <- fusion_display_hsp |> filter(qaccver == "OQ646790.1", saccver == "OR222515.1")
-flagship_selected <- fusion_display_hsp |> filter(qaccver == "MT118296.1", saccver == "OQ646790.1")
-flagship_windows <- bind_rows(
-  flagship_selected |> transmute(accver = qaccver, start = pmin(qstart, qend), end = pmax(qstart, qend)),
-  flagship_selected |> transmute(accver = saccver, start = pmin(sstart, send), end = pmax(sstart, send))
-) |>
-  left_join(flagship_sequences, by = "accver") |>
-  mutate(start = pmax(1, start - 800), end = pmin(length, end + 800)) |>
-  select(accver, start, end)
-flagship_focused <- focus_ggchord_data(flagship_sequences, ribbon_data = flagship_selected,
-  feature_data = flagship_features, loci = flagship_windows)
-fusion_detail_features <- flagship_focused$feature_data |>
-  group_by(accver) |>
-  arrange(anno == "hypothetical protein", start, .by_group = TRUE) |>
-  slice_head(n = 2) |>
-  ungroup()
+flagship_position <- position_strand(0.045)
+fusion_data <- flagship_fusion_example
+fusion_orientation <- fusion_data$orientation
+fusion_display_hsp <- fusion_data$links
+fusion_display_features <- fusion_data$features
+fusion_relation_ab <- fusion_data$relation_ab
+fusion_relation_ac <- fusion_data$relation_ac
+flagship_selected <- fusion_data$selected
+flagship_windows <- fusion_data$windows
+flagship_focused <- fusion_data$focused
+fusion_detail_features <- fusion_data$detail_features
 fusion_strand_colours <- c("+" = "#CE1536", "-" = "#346B9D")
 fusion_shared_styles <- list(
   scale_seq_colour_manual(values = flagship_colours, limits = names(flagship_colours), drop = FALSE, name = "Sequence"),
@@ -240,28 +200,11 @@ fusion_zoom_view <- ggchord(flagship_focused$seq_data, flagship_focused$ribbon_d
   scale_seq_position_continuous(n.breaks = 3, minor_breaks = NULL, coordinates = "source") +
   labs(title = "E  |  Local zoom", subtitle = "Source windows + 800 bp flanks") +
   theme(plot.title = element_text(hjust = 0.5), plot.subtitle = element_text(hjust = 0.5))
-fusion_context_sequences <- flagship_sequences |> filter(accver %in% flagship_windows$accver)
-fusion_detail_source_features <- flagship_features |>
-  semi_join(fusion_detail_features, by = c("accver", "feature_id"))
-# Select the second displayed CDS on E's lower sequence, then read its real bases.
-fusion_base_cds <- fusion_detail_source_features |>
-  filter(accver == tail(flagship_focused$seq_data$accver, 1)) |>
-  arrange(start) |>
-  slice(2)
-fusion_base_genome <- genome_comparison_example$sequences |>
-  filter(accver == fusion_base_cds$accver)
-fusion_base_start <- if (fusion_base_cds$strand == "+") fusion_base_cds$start else fusion_base_cds$end - 59
-fusion_base_end <- fusion_base_start + 59
-fusion_base_string <- substring(fusion_base_genome$sequence, fusion_base_start, fusion_base_end)
-if (fusion_base_cds$strand == "-") {
-  fusion_base_string <- paste0(chartr("ACGTRYMKSWBDHVN", "TGCAYRKMSWVHDBN",
-    rev(strsplit(fusion_base_string, "", fixed = TRUE)[[1]])), collapse = "")
-}
-fusion_base_cells <- as_ggchord_alignment(setNames(fusion_base_string, fusion_base_cds$feature_id),
-  "DNA", source_data = data.frame(accver = fusion_base_cds$feature_id,
-    source_accver = fusion_base_cds$accver,
-    start = if (fusion_base_cds$strand == "+") fusion_base_start else fusion_base_end,
-    strand = fusion_base_cds$strand, sequence = fusion_base_genome$sequence))
+fusion_context_sequences <- fusion_data$context_sequences
+fusion_base_cds <- fusion_data$base_cds
+fusion_base_start <- fusion_data$base_start
+fusion_base_end <- fusion_data$base_end
+fusion_base_cells <- fusion_data$base_cells
 fusion_base_view <- ggplot(fusion_base_cells, aes(alignment_column, accver, label = symbol)) +
   geom_residue(overflow = "error", show.legend = FALSE) +
   scale_x_continuous(breaks = seq(1, 60, 10),
@@ -278,17 +221,8 @@ fusion_base_view <- ggplot(fusion_base_cells, aes(alignment_column, accver, labe
     plot.title = element_text(size = 16, face = "bold", hjust = 0.5),
     plot.subtitle = element_text(size = 10, colour = "#52646A", hjust = 0.5), plot.margin = margin(4, 12, 4, 12))
 fusion_base_view <- register_ggchord_alignment(fusion_base_view, fusion_base_cells)
-fusion_focus_regions <- bind_rows(
-  flagship_windows |> mutate(source_panel = "center", detail_panel = "zoom"),
-  data.frame(accver = fusion_base_cds$accver, start = fusion_base_start, end = fusion_base_end,
-    source_panel = "zoom", detail_panel = "bases")
-)
-fusion_context_features <- fusion_display_features |>
-  inner_join(flagship_windows, by = "accver", suffix = c("", ".window")) |>
-  filter(end < start.window | start > end.window) |>
-  select(-start.window, -end.window) |>
-  bind_rows(fusion_detail_source_features) |>
-  distinct(accver, feature_id, .keep_all = TRUE)
+fusion_focus_regions <- fusion_data$focus_regions
+fusion_context_features <- fusion_data$context_features
 fusion_detail_view <- ggchord(fusion_context_sequences, flagship_selected, feature_data = fusion_context_features) +
   geom_link_ribbon(allow_repeated = TRUE, alpha = 0.25, linewidth = 0.10) +
   geom_seq(aes(seq_colour = accver), seq_orientation = 1, linewidth = 1.1) +
@@ -299,13 +233,13 @@ fusion_detail_view <- ggchord(fusion_context_sequences, flagship_selected, featu
   labs(title = "D  |  Two-genome context", subtitle = "Full-length sequences; outlined windows are enlarged in E")
 flagship_detail <- fusion_zoom_view
 fusion_connections <- list(
-  fusion_ribbon(fusion_relation_ab |> mutate(relation = "A - B"), aes(fill = relation),
+  fusion_ribbon(fusion_data$relation_ab, aes(fill = relation),
     qpanel = "chord", spanel = "linear", alpha = 0.65, colour = "#3E5763", linewidth = 0.35,
     curvature = 0.09, allow_repeated = TRUE),
-  fusion_ribbon(fusion_relation_ac |> mutate(relation = "A - C"), aes(fill = relation),
+  fusion_ribbon(fusion_data$relation_ac, aes(fill = relation),
     qpanel = "chord", spanel = "radial", alpha = 0.65, colour = "#3E5763", linewidth = 0.35,
     curvature = 0.2, allow_repeated = TRUE),
-  fusion_ribbon(flagship_selected |> mutate(relation = "C - D"), aes(fill = relation),
+  fusion_ribbon(fusion_data$relation_cd, aes(fill = relation),
     qpanel = "radial", spanel = "center", alpha = 0.65, colour = "#3E5763", linewidth = 0.35,
     curvature = 0.2, route = "avoid", route_width = 1.5, allow_repeated = TRUE)
 )
@@ -350,19 +284,13 @@ make_flagship_fusion <- function(preview = FALSE) {
 }
 flag_fusion <- make_flagship_fusion()
 # ---- referencebuilder ----
-make_reference_map <- function(sequence, paper = "white") {
-  features <- find_common_features(sequence)
-  all_sites <- find_restriction_sites(sequence)
-  profile <- attr(all_sites, "reference_enzyme_profiles")
-  sites <- filter_restriction_sites(all_sites, set = "reference",
-    parent_set = "commercial_nonredundant")
-  policy <- "Saved reference profile; commercial nonredundant representatives"
-  if (nrow(profile) && profile$profile_type == "none") {
-    sites <- filter_restriction_sites(all_sites, set = "unique_6plus",
-      parent_set = "commercial_nonredundant")
-    policy <- "Explicit unique 6+ profile; saved None does not reproduce the reference PNG"
-  }
-  primers <- find_primer_bindings(sequence, set = "reference")
+make_reference_map <- function(record, paper = "white") {
+  sequence <- record$seq_data
+  features <- record$features
+  sites <- record$sites
+  primers <- record$primers
+  all_site_count <- record$all_site_count
+  policy <- record$policy
   position <- position_feature_stack(spacing = 0.085, base_position = position_plasmid())
   plot <- ggchord(sequence[c("accver", "length")], feature_data = features) +
     geom_seq(seq_style = "double") +
@@ -376,9 +304,9 @@ make_reference_map <- function(sequence, paper = "white") {
     plot.background = element_rect(fill = paper, colour = NA),
     panel.background = element_rect(fill = paper, colour = NA))
   list(plot = plot, features = features, primers = primers, sites = sites,
-    all_sites = all_sites, policy = policy)
+    all_site_count = all_site_count, policy = policy)
 }
 # ---- flagshipcircle ----
-flagship_circular_source <- make_reference_map(plasmid_example_pETDuet_1, paper = flagship_paper)
+flagship_circular_source <- make_reference_map(flagship_circular_example$references[["pETDuet-1"]], paper = flagship_paper)
 flag_circular <- flagship_circular_source$plot
 # ---- flagend ----

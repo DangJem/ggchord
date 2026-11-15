@@ -1,3 +1,10 @@
+数据来源、展示子集与重建规则见[旗舰数据来源与构建](flagship-data.md)。本页直接加载随包输入，集中设置绘图参数。
+
+```r
+library(ggchord)
+library(ggplot2)
+```
+
 <a id="input"></a>
 
 ## 一次准备 {#input}
@@ -43,13 +50,11 @@
 | Radial | 环形邻居 | 显式 adjacent_only = FALSE |
 | Sankey | 排除同实体自身关系 | 本例真实表不含自身关系 |
 
-{{code:coursecomparisonreport}}
-
 <a id="flagship"></a>
 
 ## 四种旗舰视图 {#flagship}
 
-四图共用随包数据 `genome_comparison_example`，安装 ggchord 后即可运行。完整来源表与展示子集分开保存；原始记录、筛选规则和重建脚本见 `data-raw/generate_website_data.R`。Chord/Radial 与 Collinear/Sankey 保留各自的 CDS 和 HSP 选择，不能视为完全相同的显示子集。
+四图共用随包数据 `flagship_comparison_example`，安装 ggchord 后即可运行。Chord/Radial 与 Collinear/Sankey 保留各自的 CDS 和 HSP 选择，不能视为完全相同的显示子集。
 
 先准备共用数据、配色和样式；各图只设置自己的几何、标签和坐标参数。以下需要 ggplot2、dplyr 和 purrr；完整样式也在本页列出。
 

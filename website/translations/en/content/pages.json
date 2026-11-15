@@ -1,5 +1,5 @@
 {
-  "source_sha256": "31dfd61fde66fc3592a5b76932cc44797d79e5686d463b05d4e4a980e39887dc",
+  "source_sha256": "2bc4224358e33f95c54d6e9e40c7f41bd1b0d19c03a9333ab43a8cf9193312c9",
   "strings": {
     "0/title": {
       "source_sha256": "46ee1bb903f9924d7fa6d2d6e6c67e6fdd7eb10ee42505dde94310eaa4b67079",
@@ -465,6 +465,11 @@
       "source_sha256": "0e01c547e2adb565077770a8123696fb84c04e7fd7818d52f6bc277ba5e7428d",
       "status": "reviewed",
       "translation": "Documentation and API migration"
+    },
+    "93/title": {
+      "source_sha256": "6453ca0037a00fb09d57f3fdb1165d620e6001a3887fec405075a2eae62a92a2",
+      "status": "reviewed",
+      "translation": "Flagship data sources and construction"
     }
   }
 }

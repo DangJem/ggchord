@@ -244,6 +244,8 @@ ggsave("circular-first.png", p_coursecirclefeature,
 
 ## HSP 双轴、方向与映射 {#dotplot-start}
 
+数据来源、展示子集与重建规则见[旗舰数据来源与构建](https://dangjem.github.io/ggchord/zh/flagship-data.html)。本页直接加载随包输入，集中设置绘图参数。
+
 本页先用一对序列的真实 HSP 画出双轴线段，再扩展到四序列综合矩阵。最小输入是完整序列长度和 HSP 四端点；无需注释表。
 
 
@@ -310,7 +312,7 @@ dotplot_layout$axis_layout
 
 ### 多序列综合矩阵 {#dotplot-start-matrix}
 
-以下直接使用随包数据 `genome_comparison_example`；其来源为原始 FASTA 和标准 BLAST 表。完整保留四序列的 32 条 HSP，不补造自比对、对称记录或缺失的 HSP。266 条 CDS 属于共用来源表，但不交给 Dotplot 的线段层。空白区域表示本次输入没有关系记录，不能据此认定不存在同源性。
+以下直接使用随包数据 `flagship_dotplot_example`，计数与标签表已准备完成。完整保留四序列的 32 条 HSP，不补造自比对、对称记录或缺失的 HSP。266 条 CDS 属于共用来源表，但不交给 Dotplot 的线段层。空白区域表示本次输入没有关系记录，不能据此认定不存在同源性。
 
 上方列标题标明 query 序列及完整的 1–length 范围，左侧行标题标明 subject 序列范围；下方和右侧只显示各自序列的局部坐标。沿一列和一行的交点即可定位一对序列。每个带边框的矩形保留两条序列真实长度对应的宽高，淡色背景只帮助分区，不编码相似性。矩形间的留白是显示间隙。
 
@@ -324,8 +326,8 @@ dotplot_layout$axis_layout
 library(ggchord)
 library(dplyr)
 flagship_paper <- "#FFFCF5"
-flagship_sequences <- genome_comparison_example$seq_data
-flagship_hsp <- genome_comparison_example$source_alignments
+flagship_sequences <- flagship_dotplot_example$seq_data
+flagship_hsp <- flagship_dotplot_example$links
 flagship_theme <- theme_ggchord_publication() +
   theme(
     plot.background = element_rect(fill = flagship_paper, colour = NA),
@@ -343,24 +345,8 @@ flagship_theme <- theme_ggchord_publication() +
 
 
 ```{r example-19, eval=FALSE}
-dotplot_pair_counts <- flagship_hsp |>
-  count(qaccver, saccver, name = "HSP")
-dotplot_frames <- export_ggchord_layout(
-  ggchord(flagship_sequences, flagship_hsp) + geom_alignment_segment() +
-    coord_dotplot(x_seqs = flagship_sequences$accver,
-      y_seqs = flagship_sequences$accver, gap = 4000)
-)$axis_layout
-dotplot_cells <- tidyr::expand_grid(
-  qaccver = flagship_sequences$accver, saccver = flagship_sequences$accver
-) |>
-  left_join(dotplot_pair_counts, by = c("qaccver", "saccver")) |>
-  mutate(HSP = coalesce(HSP, 0L)) |>
-  left_join(dotplot_frames |> filter(axis == "x") |>
-    transmute(qaccver = accver, x = min, xmax = max), by = "qaccver") |>
-  left_join(dotplot_frames |> filter(axis == "y") |>
-    transmute(saccver = accver, y = max, ymin = min), by = "saccver") |>
-  mutate(x = x + (xmax - x) * 0.04, y = y - (y - ymin) * 0.05,
-    label = if_else(HSP > 0L, paste(HSP, "HSP"), "No input HSP"))
+dotplot_pair_counts <- flagship_dotplot_example$pair_counts
+dotplot_cells <- flagship_dotplot_example$cell_labels
 flag_dotplot <- ggchord(flagship_sequences, flagship_hsp) +
   geom_alignment_segment(aes(link_colour = pident, link_linewidth = length), alpha = 0.85) +
   scale_link_linewidth_continuous(range = c(0.8, 1.8), name = "HSP length (bp)") +

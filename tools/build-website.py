@@ -145,6 +145,9 @@ def main():
         shutil.copy2(ROOT/row['file'],assets/Path(row['file']).name)
     for name in ['documentation-examples.R','documentation-plots.R']:
         shutil.copy2(ROOT/'tools'/name,assets/name)
+    for name in ('generate_website_data.R', 'generate_flagship_data.R',
+                 'website-data-sources.tsv', 'flagship-data-sources.tsv'):
+        shutil.copy2(ROOT/'data-raw'/name, assets/name)
     shutil.copy2(ROOT/'tools/site-course-examples.R',assets/'site-course-examples.R')
     shutil.copy2(WEB/'course-figures.json',assets/'course-figures.json')
     shutil.copy2(ROOT/'tools/site-flagships.R',assets/'site-flagships.R')

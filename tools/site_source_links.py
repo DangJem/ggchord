@@ -34,6 +34,9 @@ def asset_sources():
     result.update({n: '../../'+n for n in ('NEWS.md','MIGRATION.md','MIGRATION-Hans.md')})
     result['ASSET-SOURCES.md'] = '../ASSET-SOURCES.md'
     result['documentation-examples.R'] = '../../tools/documentation-examples.R'
+    for name in ('generate_website_data.R', 'generate_flagship_data.R',
+                 'website-data-sources.tsv', 'flagship-data-sources.tsv'):
+        result[name] = '../../data-raw/' + name
     return result
 
 

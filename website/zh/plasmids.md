@@ -1,3 +1,5 @@
+数据来源、展示子集与重建规则见[旗舰数据来源与构建](flagship-data.md)。本页直接加载随包输入，集中设置绘图参数。
+
 <a id="input"></a>
 
 ## pUC19 的完整输入 {#input}
@@ -9,7 +11,7 @@
 {{code:referencebuilder}}
 
 ```r
-reference <- make_reference_map(plasmid_example_pUC19)
+reference <- make_reference_map(flagship_circular_example$references[["pUC19"]])
 p <- reference$plot
 view_ggchord(p, width = 10, height = 8, units = "in")
 ```
@@ -33,7 +35,7 @@ nrow(reference$primers)
 nrow(reference$sites)
 ```
 
-该来源 profile 包含 9 个特征、39 条限制位点记录，对应 33 个不同位置；没有独立参考引物行。原始酶匹配保留在 `reference$all_sites` 中，入图的参考集合没有再抽取三个位点。
+该来源 profile 包含 9 个特征、39 条限制位点记录，对应 33 个不同位置；没有独立参考引物行。原始候选数保留在 `reference$all_site_count` 中，完整搜索结果可按构建脚本重建，入图的参考集合没有再抽取三个位点。
 
 <a id="adapt"></a>
 

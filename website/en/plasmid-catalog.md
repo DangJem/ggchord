@@ -1,3 +1,5 @@
+See [Flagship data sources and construction](flagship-data.md) for provenance, display selections and rebuilding. This page loads bundled inputs directly and focuses on plotting settings.
+
 Each map retains all source features, independent reference primers and every site in its declared enzyme profile. No three-site sampling is used. Maps use their own complete sequence, the same layers and a 10 × 8 in canvas. Open the full-resolution image for annotation text.
 
 <a id="prepare"></a>
@@ -8,7 +10,7 @@ Each map retains all source features, independent reference primers and every si
 
 {{code:referencebuilder}}
 
-`reference$features`, `reference$primers` and `reference$sites` are the complete tables submitted to the plot. `reference$all_sites` retains raw matches; `reference$policy` identifies the enzyme profile. Feature geometry is not thinned and the site profile is not sampled to a fixed count.
+`reference$features`, `reference$primers` and `reference$sites` are the complete tables actually drawn. `reference$all_site_count` records the number of original candidates, with complete search results reproducible through the generator; `reference$policy` describes the enzyme set. Feature geometry is not reduced and site sets are not sampled to a fixed count.
 
 <a id="counts"></a>
 

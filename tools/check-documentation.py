@@ -11,7 +11,7 @@ from html.parser import HTMLParser
 from pathlib import Path
 from urllib.parse import unquote, urlsplit
 from documentation_lib import ROOT, WEB, PAGES, CAPTIONS, RECIPES, expand, snippets, localize_r_comments
-from site_source_links import check_source_links, check_repository_urls
+from site_source_links import check_source_links, check_repository_urls, asset_sources
 import importlib.util
 
 fingerprint_spec = importlib.util.spec_from_file_location('plot_fingerprints', ROOT/'tools/documentation-fingerprints.py')
@@ -246,6 +246,7 @@ def main():
                     origin = ROOT/'man/figures'/name if name.endswith(('.png','.svg')) else WEB/'assets'/name
                     if name in ['NEWS.md', 'MIGRATION.md', 'MIGRATION-Hans.md']: origin=ROOT/name
                     if name=='ASSET-SOURCES.md': origin=WEB/'ASSET-SOURCES.md'
+                    if name in asset_sources(): origin=(WEB/'en'/asset_sources()[name]).resolve()
                     if name=='documentation-examples.R': origin=ROOT/'tools/documentation-examples.R'
                     if split.path.startswith('../assets/source/tools/teaching-audit/'): origin=ROOT/'tools/teaching-audit'/name
                     if name in {f'prepare-{key}{suffix}.R' for key in RECIPES for suffix in ['', '-zh']}: origin=WEB/'showcase-recipes.json'

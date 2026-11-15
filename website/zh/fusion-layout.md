@@ -1,3 +1,5 @@
+数据来源、展示子集与重建规则见[旗舰数据来源与构建](flagship-data.md)。本页直接加载随包输入，集中设置绘图参数。
+
 {{code:courseblockbm}}
 
 {{prepare:fusiondata,fusionpanels,fusionlinear,fusionview}}
@@ -99,6 +101,6 @@ Guide。这是有界物理空间搜索，不声称全局最优。
 
 四个独立有效图共用真实来源；`box` 只决定物理分配，`focus_ggchord_data()` 显式准备局部窗口。跨面板连带重用源 HSP，所有参与层声明允许重复显示。
 
-{{code:flagshipdata,fusionoverview,flagshipfusion}}
+{{code:flagshipdata,flagshipfusion}}
 
 {{manualfigure:flagfusion}}

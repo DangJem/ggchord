@@ -1,3 +1,5 @@
+See [Flagship data sources and construction](flagship-data.md) for provenance, display selections and rebuilding. This page loads bundled inputs directly and focuses on plotting settings.
+
 {{code:courseblockbm}}
 
 {{prepare:fusiondata,fusionpanels,fusionlinear,fusionview}}
@@ -125,6 +127,6 @@ Ordinary child margins do not act as masks for composition connections. In expli
 
 Four independently valid views retain common sources. `box` controls physical allocation; `focus_ggchord_data()` explicitly prepares local windows. Cross-panel ribbons reuse source HSPs, and every participating layer declares repeated display.
 
-{{code:flagshipdata,fusionoverview,flagshipfusion}}
+{{code:flagshipdata,flagshipfusion}}
 
 {{manualfigure:flagfusion}}

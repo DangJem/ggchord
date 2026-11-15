@@ -244,6 +244,8 @@ ggsave("circular-first.png", p_coursecirclefeature,
 
 ## HSP axes, orientation and mapping {#dotplot-start}
 
+See [Flagship data sources and construction](https://dangjem.github.io/ggchord/en/flagship-data.html) for provenance, display selections and rebuilding. This page loads bundled inputs directly and focuses on plotting settings.
+
 Start with observed HSPs from one sequence pair, then extend to a four-sequence matrix. The minimal inputs are complete sequence lengths and four HSP endpoints; annotations are optional.
 
 
@@ -316,7 +318,7 @@ base-level mismatches or gap paths.
 
 ### Multi-sequence HSP matrix {#dotplot-start-matrix}
 
-The following code uses bundled `genome_comparison_example`, derived from the original FASTA and standard BLAST tables. It retains all 32 HSPs across four sequences without inventing self-alignments, symmetric records or missing HSPs. The 266 CDS belong to the shared source table but are not passed to the Dotplot segment layer. Empty regions indicate no relationship records in this input, not an absence of homology.
+The following code directly uses bundled `flagship_dotplot_example`, with counts and label tables already prepared. It retains all 32 HSPs across four sequences without inventing self-alignments, symmetric records or missing HSPs. The 266 CDS belong to the shared source table but are not passed to the Dotplot segment layer. Empty regions indicate no relationship records in this input, not an absence of homology.
 
 Column headers identify each query sequence and its complete 1–length range; row headers identify subject sequences and ranges. Bottom and right ticks show local positions within each sequence. Follow a column and row to locate a pair. Each outlined rectangle retains widths and heights proportional to the actual lengths. Pale backgrounds distinguish cells and do not encode similarity; spaces between rectangles are display gaps.
 
@@ -330,8 +332,8 @@ Each of the six unordered sequence pairs supplies only one query→subject direc
 library(ggchord)
 library(dplyr)
 flagship_paper <- "#FFFCF5"
-flagship_sequences <- genome_comparison_example$seq_data
-flagship_hsp <- genome_comparison_example$source_alignments
+flagship_sequences <- flagship_dotplot_example$seq_data
+flagship_hsp <- flagship_dotplot_example$links
 flagship_theme <- theme_ggchord_publication() +
   theme(
     plot.background = element_rect(fill = flagship_paper, colour = NA),
@@ -349,24 +351,8 @@ flagship_theme <- theme_ggchord_publication() +
 
 
 ```{r example-19, eval=FALSE}
-dotplot_pair_counts <- flagship_hsp |>
-  count(qaccver, saccver, name = "HSP")
-dotplot_frames <- export_ggchord_layout(
-  ggchord(flagship_sequences, flagship_hsp) + geom_alignment_segment() +
-    coord_dotplot(x_seqs = flagship_sequences$accver,
-      y_seqs = flagship_sequences$accver, gap = 4000)
-)$axis_layout
-dotplot_cells <- tidyr::expand_grid(
-  qaccver = flagship_sequences$accver, saccver = flagship_sequences$accver
-) |>
-  left_join(dotplot_pair_counts, by = c("qaccver", "saccver")) |>
-  mutate(HSP = coalesce(HSP, 0L)) |>
-  left_join(dotplot_frames |> filter(axis == "x") |>
-    transmute(qaccver = accver, x = min, xmax = max), by = "qaccver") |>
-  left_join(dotplot_frames |> filter(axis == "y") |>
-    transmute(saccver = accver, y = max, ymin = min), by = "saccver") |>
-  mutate(x = x + (xmax - x) * 0.04, y = y - (y - ymin) * 0.05,
-    label = if_else(HSP > 0L, paste(HSP, "HSP"), "No input HSP"))
+dotplot_pair_counts <- flagship_dotplot_example$pair_counts
+dotplot_cells <- flagship_dotplot_example$cell_labels
 flag_dotplot <- ggchord(flagship_sequences, flagship_hsp) +
   geom_alignment_segment(aes(link_colour = pident, link_linewidth = length), alpha = 0.85) +
   scale_link_linewidth_continuous(range = c(0.8, 1.8), name = "HSP length (bp)") +

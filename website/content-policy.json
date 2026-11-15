@@ -478,6 +478,11 @@
       "source": "readme-roadmap-zh.md",
       "translations": "translations/en/readme-roadmap.json",
       "output": "readme-roadmap-en.md"
+    },
+    {
+      "source": "zh/flagship-data.md",
+      "translations": "translations/en/flagship-data.json",
+      "output": "en/flagship-data.md"
     }
   ],
   "structured": [

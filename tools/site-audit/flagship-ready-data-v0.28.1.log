@@ -1,0 +1,12 @@
+PASS: Han source → reviewed English; 94 pages, 2 extra_markdown, 14 structured_files, 4104 translated_blocks, 871 translated_strings
+PASS: 618 tracked documents, 6950 links, local targets/anchors and explicit repository revisions; 216 external URLs listed separately.
+PASS: 188 paired source pages; contextual editorial lint (not browser verification).
+PASS: task-search records resolve to manual sections; removed overview stays absent
+PASS: Han source → reviewed English; 94 pages, 2 extra_markdown, 14 structured_files, 4104 translated_blocks, 871 translated_strings
+PASS: Han source → reviewed English; 94 pages, 2 extra_markdown, 14 structured_files, 4104 translated_blocks, 871 translated_strings
+PASS: 76 controlled token contrast pairs and 6 scoped static checks; not a WCAG certification
+PASS: 1172 translated prose blocks; code, identifiers and links preserved.
+PASS: Han source → reviewed English; 94 pages, 2 extra_markdown, 14 structured_files, 4104 translated_blocks, 871 translated_strings
+Paired tutorials and README sources are synchronized; no vignette rendering performed.
+PASS: 178 website PNGs match current source dependencies and recorded bytes
+PASS: 94 language pairs, equivalent executable code, assets, 158 exports / 125 Rd topics.

@@ -1,3 +1,10 @@
+数据来源、展示子集与重建规则见[旗舰数据来源与构建](flagship-data.md)。本页直接加载随包输入，集中设置绘图参数。
+
+```r
+library(ggchord)
+library(ggplot2)
+```
+
 <div class="section-intro">多序列关系的共线性综合结果：四条真实基因组、分链特征和向外绕行的跨行连接。</div>
 
 
@@ -20,7 +27,7 @@
 <a id="prepare"></a>
 
 ## 准备随包数据 {#prepare}
-直接使用随包数据 `genome_comparison_example`，无需解压文件；原始来源见[说明输入包](https://github.com/DangJem/ggchord/archive/refs/heads/main.zip)。示例需要 dplyr 和 purrr：
+直接使用随包数据 `flagship_comparison_example`，无需解压文件；原始来源见[说明输入包](https://github.com/DangJem/ggchord/archive/refs/heads/main.zip)。示例需要 dplyr 和 purrr：
 
 先取得已按原规则选择的展示子集，再准备共用配色和样式；不重新运行原始文件筛选。
 

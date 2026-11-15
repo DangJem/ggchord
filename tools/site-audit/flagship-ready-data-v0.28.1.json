@@ -1,0 +1,120 @@
+{
+  "version": "0.28.1",
+  "baseline_revision": "5f618ff2f62547f28ea76effb0315ed4881a1b1e",
+  "scope": "Ready flagship data, bilingual construction chapter and local website checks; no package release checks",
+  "flagship_pngs": [
+    {
+      "object": "p_show_chord",
+      "width": 12,
+      "height": 10,
+      "dpi": 96,
+      "before_sha256": "29828cb022e5ad0cbaea175be979b1254a06c251aeed348626e0985344aa0474",
+      "after_sha256": "29828cb022e5ad0cbaea175be979b1254a06c251aeed348626e0985344aa0474",
+      "byte_identical": true
+    },
+    {
+      "object": "p_show_collinear",
+      "width": 12,
+      "height": 8,
+      "dpi": 96,
+      "before_sha256": "fb6f8a6d84a062f4259359b699f1140aebebc388f2c945afa676070b38498f30",
+      "after_sha256": "fb6f8a6d84a062f4259359b699f1140aebebc388f2c945afa676070b38498f30",
+      "byte_identical": true
+    },
+    {
+      "object": "flag_radial",
+      "width": 12,
+      "height": 10.5,
+      "dpi": 96,
+      "before_sha256": "13a04e99ee83e9df4abfd9f805e35f53ecaf205c2b9c482c44a76759a980cb7e",
+      "after_sha256": "13a04e99ee83e9df4abfd9f805e35f53ecaf205c2b9c482c44a76759a980cb7e",
+      "byte_identical": true
+    },
+    {
+      "object": "flag_sankey",
+      "width": 10,
+      "height": 16,
+      "dpi": 96,
+      "before_sha256": "75a734295976f5e6567a22dfe893ed56b98008fbb29f03e16366972c3685474e",
+      "after_sha256": "75a734295976f5e6567a22dfe893ed56b98008fbb29f03e16366972c3685474e",
+      "byte_identical": true
+    },
+    {
+      "object": "flag_dotplot",
+      "width": 13,
+      "height": 12,
+      "dpi": 96,
+      "before_sha256": "cf91cba5de252829722f2c2cf35770ab1ad9bc33ee09289ae4ebed2d1745aa79",
+      "after_sha256": "cf91cba5de252829722f2c2cf35770ab1ad9bc33ee09289ae4ebed2d1745aa79",
+      "byte_identical": true
+    },
+    {
+      "object": "flag_fusion",
+      "width": 16,
+      "height": 14,
+      "dpi": 96,
+      "before_sha256": "d294420c9d94b77170fbabb9b3c88416d75410d4d455f90d054cbe7c432e90cc",
+      "after_sha256": "d294420c9d94b77170fbabb9b3c88416d75410d4d455f90d054cbe7c432e90cc",
+      "byte_identical": true
+    },
+    {
+      "object": "p_show_plasmid",
+      "width": 16.5,
+      "height": 8,
+      "dpi": 96,
+      "before_sha256": "96461183bfdd3c4058bd1cab2881626be40bb175d9f3a29efb5b9da01d8f507e",
+      "after_sha256": "96461183bfdd3c4058bd1cab2881626be40bb175d9f3a29efb5b9da01d8f507e",
+      "byte_identical": true
+    }
+  ],
+  "reference_maps": {
+    "count": 13,
+    "fields_identical": [
+      "features",
+      "primers",
+      "sites",
+      "policy",
+      "all_site_count"
+    ]
+  },
+  "datasets": {
+    "data/flagship_circular_example.rda": {
+      "bytes": 57556,
+      "sha256": "ca4128b5d7bb18492c9b6987c6f4dbd9015d18b2c5a3c2c9e187bcff9a32c180"
+    },
+    "data/flagship_comparison_example.rda": {
+      "bytes": 2908,
+      "sha256": "c6121636f6821d5975186c3d9888298e2373cb587c230cb2eeb8181d1dee3092"
+    },
+    "data/flagship_dotplot_example.rda": {
+      "bytes": 2080,
+      "sha256": "e4221169aeb23a81d1fc5456306d79a10e040ce335d14cfe3570a91eb5ed03ff"
+    },
+    "data/flagship_fusion_example.rda": {
+      "bytes": 26372,
+      "sha256": "5f73116686739af29e7b5be69209fb8ec07067b73fcbf28bdd39e645e2152393"
+    }
+  },
+  "plain_data_only": true,
+  "outside_checkout_loads": 4,
+  "page_preparations": {
+    "count": 53,
+    "result": "passed"
+  },
+  "source_check": {
+    "language_pairs": 94,
+    "exports": 158,
+    "Rd_topics": 125,
+    "result": "passed"
+  },
+  "normal_website_pngs": {
+    "count": 178,
+    "result": "regenerated; all bytes unchanged from baseline"
+  },
+  "construction_downloads": [
+    "generate_website_data.R",
+    "generate_flagship_data.R",
+    "website-data-sources.tsv",
+    "flagship-data-sources.tsv"
+  ]
+}

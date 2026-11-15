@@ -1,5 +1,10 @@
 # ggchord 0.28.1
 
+- Add ready-to-plot datasets for all seven flagship types and the 13 complete
+  reference maps. Plotting pages load prepared inputs; a dedicated bilingual
+  chapter documents sources, selections and rebuilding. Physical geometry and
+  label placement remain computed at drawing time.
+
 - Add `genome_comparison_example` and `sequence_detail_example`, with complete
   source tables, documented flagship display subsets and reproducible generation
   rules. Website plotting examples now use bundled inputs; file-import lessons

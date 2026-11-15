@@ -1,3 +1,5 @@
+数据来源、展示子集与重建规则见[旗舰数据来源与构建](flagship-data.md)。本页直接加载随包输入，集中设置绘图参数。
+
 这些图保留各质粒的完整来源特征、独立参考引物和所声明酶集合的全部位点。没有等距抽取三个切点。每个图使用自己的完整序列、同一套标注图层和 10 × 8 in 尺寸；点击查看高清图。
 
 <a id="prepare"></a>
@@ -8,7 +10,7 @@
 
 {{code:referencebuilder}}
 
-`reference$features`、`reference$primers`、`reference$sites` 是实际入图的完整表；`reference$all_sites` 保留原始匹配，`reference$policy` 说明使用的酶集合。特征几何不删减，位点集合不做固定数量抽样。
+`reference$features`、`reference$primers`、`reference$sites` 是实际入图的完整表；`reference$all_site_count` 记录原始候选数，完整搜索结果可按构建脚本重建，`reference$policy` 说明使用的酶集合。特征几何不删减，位点集合不做固定数量抽样。
 
 <a id="counts"></a>
 

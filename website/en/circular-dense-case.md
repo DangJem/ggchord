@@ -1,3 +1,5 @@
+See [Flagship data sources and construction](flagship-data.md) for provenance, display selections and rebuilding. This page loads bundled inputs directly and focuses on plotting settings.
+
 <a id="complex"></a>
 
 ## Dense, complete annotation inputs {#complex}
@@ -9,7 +11,7 @@ This independent pETDuet-1 example demonstrates the interaction of complete anno
 {{code:referencebuilder}}
 
 ```r
-reference <- make_reference_map(plasmid_example_pETDuet_1)
+reference <- make_reference_map(flagship_circular_example$references[["pETDuet-1"]])
 p <- reference$plot
 view_ggchord(p, width = 10, height = 8, units = "in")
 ```

@@ -216,3 +216,57 @@ NULL
 #' data(sequence_detail_example)
 #' head(sequence_detail_example$paf)
 "sequence_detail_example"
+
+#' Ready-to-plot flagship inputs
+#'
+#' Prepared data for every website flagship. These objects separate source
+#' construction from drawing: no file reading, feature discovery, selection,
+#' focusing or base extraction is needed on the plotting pages. Original
+#' genome source tables remain available in [genome_comparison_example].
+#'
+#' @name flagship_examples
+#' @aliases flagship_comparison_example flagship_dotplot_example flagship_fusion_example flagship_circular_example
+#' @docType data
+#' @format Four named lists:
+#' \describe{
+#'   \item{flagship_comparison_example}{Entries `chord`, `collinear`, `radial`
+#'     and `sankey`, each containing `seq_data`, selected links, `features`
+#'     and ordered `labels`. Chord/Radial also contain display `orientation`;
+#'     Collinear/Sankey separate `adjacent_links` and `cross_links`.
+#'     Collinear `route_controls` apply to the unchanged fixed flagship layout.
+#'     The additional `comparison` entry retains the original four-coordinate
+#'     teaching inputs as `seq_data`, `links`, `features` and `events`.}
+#'   \item{flagship_dotplot_example}{Complete `seq_data` and `links`, the
+#'     `pair_counts`, and ready `cell_labels` for all 16 sequence combinations.
+#'     Label coordinates use the declared `axis_gap` of 4000 bp.}
+#'   \item{flagship_fusion_example}{Selected overview `links`, `features` and
+#'     display `orientation`; complete `all_features`; three labelled relation
+#'     tables; source `windows`, `focused` local tables, `detail_features`,
+#'     `context_sequences` and `context_features`; `base_cds`, `base_start`,
+#'     `base_end`, registered-input `base_cells`, and `focus_regions`.
+#'     Source and local coordinates are retained separately.}
+#'   \item{flagship_circular_example}{`dense` contains the existing dense
+#'     flagship's sequence, feature, primer and restriction tables. `references`
+#'     contains 13 complete maps named by original sequence identifier, with
+#'     `seq_data`, `source_sequence`, `features`, `primers`, `sites`, `all_site_count`,
+#'     `policy` and the separate legacy `gallery_sites`. `summary` records
+#'     sequence lengths and feature counts.}
+#' }
+#' @details
+#' Nucleotide coordinates are one-based inclusive and measured in bp; pident
+#' is a percentage. Biological strands and descending reverse-HSP endpoints
+#' are unchanged. Display orientation, route controls and cell-label positions
+#' are explicit presets, not biological observations. Rebuild the applicable
+#' presets when changing sequence order, gap or alignment geometry.
+#'
+#' No compiled plot, grob, device measurement or final label placement is stored.
+#' Drawing still performs physical-size geometry and label layout. Complete
+#' source records and the actual selected display rows are kept separately.
+#' @source `data-raw/generate_flagship_data.R`, after
+#'   `data-raw/generate_website_data.R`. Input fingerprints are recorded in
+#'   `data-raw/flagship-data-sources.tsv` and `data-raw/website-data-sources.tsv`.
+#'   Original FASTA/GFF3/BLAST files and reference plasmid records are unchanged.
+#' @examples
+#' data(flagship_comparison_example)
+#' names(flagship_comparison_example$chord)
+NULL
