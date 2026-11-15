@@ -2,7 +2,6 @@
 # Article HTML is already converted from paired Markdown; no vignette is knitted.
 Sys.setenv(CI = 'true') # init_site must use the local favicon, not its optional remote service.
 options(sass.cache = FALSE)
-pkgload::load_all(quiet = TRUE)
 page_index <- jsonlite::fromJSON('website/pages.json', simplifyVector = FALSE)
 arguments <- commandArgs(trailingOnly=TRUE)
 option <- function(key, default) {
@@ -10,6 +9,8 @@ option <- function(key, default) {
   if(length(value)) sub('^[^=]+=','',value[[1]]) else default
 }
 part <- match.arg(option('part','all'),c('all','reference','articles'))
+# Article payloads are already HTML and never evaluate package code.
+if (part != "articles") pkgload::load_all(quiet = TRUE)
 payload <- if (part == 'reference') list(en = list(), zh = list()) else
   jsonlite::fromJSON('.site/page-content.json', simplifyVector = FALSE)
 offset <- as.integer(option('offset','0'))
@@ -82,7 +83,12 @@ for (lang in languages) {
   }
   # Shared executable supplements cover topics with no runnable Rd example.
   # Keep code and native output together through pkgdown's ordinary evaluator.
-  if (part != "articles") for (topic in names(reference_examples)) {
+  supplemental_topics <- names(reference_examples)
+  if (part == "reference") {
+    selected_files <- pkg$topics$file_in[seq.int(offset + 1L, min(nrow(pkg$topics), offset + count))]
+    supplemental_topics <- intersect(supplemental_topics, tools::file_path_sans_ext(selected_files))
+  }
+  if (part != "articles") for (topic in supplemental_topics) {
     i <- match(paste0(topic, '.Rd'), pkg$topics$file_in)
     if (is.na(i)) stop('Unknown reference example topic: ', topic)
     input <- if (is_han) file.path('.site/reference-zh', pkg$topics$file_in[i]) else

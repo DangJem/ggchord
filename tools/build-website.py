@@ -8,6 +8,7 @@ import os
 import re
 import shutil
 import subprocess
+import time
 import zipfile
 from datetime import datetime, timezone
 from concurrent.futures import ThreadPoolExecutor
@@ -95,14 +96,26 @@ def main():
     parser.add_argument('--render-jobs',type=int,choices=(1,2),default=1,
                         help='Maximum concurrent native locale renderers (default: 1)')
     parser.add_argument('--render-batch-size',type=int,choices=range(1,13),default=4,
-                        help='Articles per independent R worker (default: 4)')
+                        help='Topics/articles per independent R worker (default: 4)')
     args=parser.parse_args()
+    build_started = time.monotonic()
     subprocess.run(["python3", "tools/sync-website-languages.py", "--check"], cwd=ROOT, check=True)
     render_snapshot = render_source_snapshot()
     out=ROOT/'.site'
     if out.is_symlink():raise SystemExit('Refusing a symlink output directory')
     if out.exists():shutil.rmtree(out)
     out.mkdir();assets=out/'assets';assets.mkdir()
+    timings = dict(status='in_progress', phases={}, workers={})
+    def save_timings():
+        timings['elapsed_seconds'] = round(time.monotonic() - build_started, 3)
+        (out/'build-timings.json').write_text(json.dumps(timings, indent=2)+'\n')
+    def phase(name, started):
+        elapsed = round(time.monotonic() - started, 3)
+        timings['phases'][name] = elapsed
+        save_timings()
+        print(f'Completed {name}: {elapsed:.1f}s', flush=True)
+    phase('source_preflight', build_started)
+    preparation_started = time.monotonic()
     metadata=json.loads((WEB/'version.json').read_text())
     metadata.update(source_commit=subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip(),
         build_time=datetime.now(timezone.utc).isoformat(),
@@ -170,6 +183,8 @@ def main():
         status='started; completion unverified', render_inputs=render_snapshot,
         archive_inputs=input_hashes),indent=2)+'\n')
     pandoc_dir=subprocess.check_output(['Rscript','-e','cat(rmarkdown::find_pandoc()$dir)'],cwd=ROOT,text=True).strip()
+    phase('asset_preparation', preparation_started)
+    markdown_started = time.monotonic()
     payload={lang:[] for lang in ['en','zh']}
     for lang in payload:
         for page in PAGES:
@@ -183,6 +198,8 @@ def main():
             sidebar+=('<h2>项目资料</h2>' if lang=='zh' else '<h2>Project</h2>')+'<ul><li><a href="https://github.com/DangJem/ggchord">GitHub</a></li><li><a href="modes.html#modules">'+('章节索引' if lang=='zh' else 'Chapter index')+'</a></li><li>MIT</li></ul>'
             payload[lang].append(dict(slug=page['slug'],title=page['title'][lang],body=body,sidebar=sidebar))
     (out/'page-content.json').write_text(json.dumps(payload,ensure_ascii=False)+'\n')
+    phase('markdown_conversion', markdown_started)
+    rendering_started = time.monotonic()
     # Locales write separate destinations and share only immutable source files.
     languages = ['en', 'zh']
     def render_locale(lang):
@@ -194,13 +211,21 @@ def main():
               for i in range(0,len(payload[lang]),args.render_batch_size)]
         results=[];logs=[]
         for index, options in enumerate(jobs):
+            snapshot_started = time.monotonic()
             assert_render_source_snapshot(render_snapshot,input_hashes)
+            snapshot_seconds = time.monotonic() - snapshot_started
+            worker_started = time.monotonic()
+            print(f'Starting {lang} worker {index + 1}/{len(jobs)}: '+ ' '.join(options), flush=True)
             logfile=out/(lang+'-worker-'+str(index)+'.log')
             with logfile.open('w') as log:
                 result=subprocess.run(['Rscript','--vanilla','tools/render-website.R',lang,*options],cwd=ROOT,
                     stdout=log,stderr=subprocess.STDOUT)
             logs.append(logfile.read_text())
-            results.append(dict(options=options,return_code=result.returncode,log=logfile.name))
+            results.append(dict(options=options,return_code=result.returncode,log=logfile.name,
+                                elapsed_seconds=round(time.monotonic()-worker_started,3),
+                                snapshot_check_seconds=round(snapshot_seconds,3)))
+            print(f'Completed {lang} worker {index + 1}/{len(jobs)}: '
+                  f'{results[-1]["elapsed_seconds"]:.1f}s, exit {result.returncode}', flush=True)
             (out/(lang+'-workers.json')).write_text(json.dumps(results,indent=2)+'\n')
             (out/(lang+'-build.log')).write_text('\n'.join(logs))
             if result.returncode:break
@@ -209,13 +234,27 @@ def main():
         statuses=dict(pool.map(render_locale,languages))
     (out/'render-processes.json').write_text(json.dumps(dict(
         render_jobs=args.render_jobs, return_codes=statuses),indent=2)+'\n')
+    phase('native_rendering', rendering_started)
+    timings['workers'] = {lang: json.loads((out/(lang+'-workers.json')).read_text()) for lang in languages}
+    save_timings()
     combined='\n'.join((out/(lang+'-build.log')).read_text() for lang in languages)
     (out/'build.log').write_text(combined)
     if any(statuses.values()):
+        timings['status'] = 'renderers_failed'
+        save_timings()
         raise SystemExit('Native locale renderers failed: '+json.dumps(statuses)+'\n'+combined[-7000:])
-    audit_reference_output(out)
-    assert_render_source_snapshot(render_snapshot, input_hashes)
-    finalize(out,args,render_snapshot,input_hashes)
+    finishing_started = time.monotonic()
+    try:
+        audit_reference_output(out)
+        assert_render_source_snapshot(render_snapshot, input_hashes)
+        finalize(out,args,render_snapshot,input_hashes)
+    except Exception:
+        timings['status'] = 'audit_or_finalization_failed'
+        save_timings()
+        raise
+    phase('output_audit_and_finalization', finishing_started)
+    timings['status'] = 'complete'
+    save_timings()
 
 def finalize(out,args,render_snapshot,input_hashes):
     inputs=[ROOT/name for name in input_hashes]
