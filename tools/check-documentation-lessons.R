@@ -1,7 +1,7 @@
 # Verify that task pages prepare their own R objects, without building the package,
 # knitting vignettes, saving user files, opening previews or running a test suite.
 source('tools/audit-source-snapshot.R')
-audit_session <- audit_source_snapshot(additional = c('tools/check-documentation-lessons.R', 'tools/documentation-examples.R', 'tools/site-course-examples.R', 'tools/site-flagships.R', 'website/pages.json', 'website/showcase-recipes.json', list.files('website/en', '[.]md$', full.names = TRUE)))
+audit_session <- audit_source_snapshot(additional = c(system2('git', c('ls-files', 'data', 'examples', 'R/sysdata.rda'), stdout=TRUE), 'tools/check-documentation.py', 'tools/check-documentation-lessons.R', 'tools/documentation-examples.R', 'tools/site-course-examples.R', 'tools/site-flagships.R', 'website/pages.json', 'website/showcase-recipes.json', list.files('website/en', '[.]md$', full.names = TRUE)))
 pkgload::load_all(quiet = TRUE)
 audit_assert_source_snapshot(audit_session)
 lines <- c(readLines('tools/documentation-examples.R', warn = FALSE),
@@ -100,6 +100,7 @@ jsonlite::write_json(list(pages=execution,
   shared_code_sha256=unname(audit_session$inputs[["tools/documentation-examples.R"]]),
   engine_sha256=as.list(audit_session$engine),
   source_sha256=as.list(audit_session$inputs),
+  executable_page_sha256=jsonlite::fromJSON(paste(system2("python3", c("tools/check-documentation.py", "--lesson-code-snapshot"), stdout=TRUE),collapse="\n")),
   scope="Shared preparations and raw constructors in page order; preview/save calls do not write files. Installation commands are not executed. Actual PNG exports are recorded separately.",
   optional_genbank="Conditional optional parser; NULL is a skip, not successful GenBank import"),
   if (length(selected)) paste0("/tmp/ggchord-lesson-",selected,".json") else "tools/teaching-audit/lesson-execution.json",auto_unbox=TRUE,pretty=TRUE)

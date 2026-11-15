@@ -70,10 +70,23 @@ class Document(HTMLParser):
             self.codeblocks.append(''.join(self._code_parts))
             self._code_parts = None
 
+def lesson_code_snapshot():
+    result={}
+    for path in sorted((WEB/'en').glob('*.md')):
+        text=path.read_text()
+        for name,keys in RECIPES.items():
+            text=text.replace('{{recipe:'+name+'}}','{{prepare:'+','.join(keys)+'}}')
+        code=re.findall(r'\{\{(?:code|prepare|output|console):[a-z,]+\}\}|```r\n[\s\S]*?```',text)
+        result[str(path.relative_to(ROOT))]=hashlib.sha256(json.dumps(code).encode()).hexdigest()
+    return result
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--source-only', action='store_true')
+    parser.add_argument('--lesson-code-snapshot',action='store_true')
     args = parser.parse_args()
+    if args.lesson_code_snapshot:
+        print(json.dumps(lesson_code_snapshot(),sort_keys=True)); return
     subprocess.run(['python3','tools/sync-website-languages.py','--check'],cwd=ROOT,check=True)
     subprocess.run(['python3','tools/check-repository-links.py'],cwd=ROOT,check=True)
     subprocess.run(['python3', str(ROOT / 'tools/check-teaching-content.py')], cwd=ROOT, check=True)
@@ -152,8 +165,12 @@ def main():
             'Lesson execution uses stale engine: rerun tools/check-documentation-lessons.R')
     lesson_inputs = runtime_record.get('source_sha256', {})
     require(bool(lesson_inputs), 'Missing lesson input snapshot')
+    executable_inputs=lesson_code_snapshot()
     for name, digest in lesson_inputs.items():
         path = ROOT/name
+        if name in executable_inputs:
+            require(runtime_record.get('executable_page_sha256',{}).get(name)==executable_inputs[name], 'Lesson executable content changed: '+name)
+            continue
         require(path.is_file() and hashlib.sha256(path.read_bytes()).hexdigest() == digest,
                 'Lesson input changed: ' + name)
     execution=runtime_record['pages']

@@ -12,6 +12,10 @@ on:
         type: boolean
         required: true
         default: false
+      verify_incremental:
+        description: 'Verify prose reuse, source/dependency invalidation and corrupt-cache fallback'
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -66,8 +70,22 @@ jobs:
         with:
           path: ${{ env.R_LIBS_USER }}
           key: ${{ steps.doc-cache.outputs.cache-primary-key }}
+      - uses: actions/cache/restore@v4
+        with:
+          path: .cache/website
+          key: site-v1-${{ runner.os }}-${{ runner.arch }}-${{ github.sha }}-${{ github.run_id }}
+          restore-keys: |
+            site-v1-${{ runner.os }}-${{ runner.arch }}-
       - run: python3 tools/build-website.py --render-jobs 2 --render-batch-size 12 ${{ inputs.deploy && '--publication' || '' }}
-      - run: python3 tools/check-documentation.py
+      - run: python3 tools/site_cache.py --verify-and-publish
+      - name: Verify incremental behavior and restore deployment sources
+        if: inputs.verify_incremental
+        run: python3 tools/site-audit/verify-incremental.py
+      - uses: actions/cache/save@v4
+        if: github.ref == 'refs/heads/main'
+        with:
+          path: .cache/website
+          key: site-v1-${{ runner.os }}-${{ runner.arch }}-${{ github.sha }}-${{ github.run_id }}
       - uses: actions/upload-artifact@v4
         if: always()
         with:

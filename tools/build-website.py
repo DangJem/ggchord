@@ -13,6 +13,7 @@ import zipfile
 from datetime import datetime, timezone
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
+from site_cache import Cache, runtime, key as cache_key, shell_inputs, reference_inputs, reference_cache_allowed
 from site_search import complete_examples, search_records
 from documentation_lib import ROOT, WEB, PAGES, CAPTIONS, RECIPES, expand, snippets, localize_r_comments
 
@@ -43,7 +44,7 @@ def render_source_snapshot():
     files.update(ROOT/r['file'] for r in json.loads((WEB/'manual-figures.json').read_text()))
     files.update(ROOT/name for name in [
         'DESCRIPTION','NAMESPACE','LICENSE','_pkgdown.yml',
-        'tools/build-website.py','tools/documentation_lib.py','tools/site_source_links.py','tools/site_search.py','tools/site_registry.py','tools/site_components.py',
+        'tools/build-website.py','tools/site_cache.py','tools/documentation_lib.py','tools/site_source_links.py','tools/site_search.py','tools/site_registry.py','tools/site_components.py',
         'tools/render-website.R','tools/finalize-website.R','tools/site-course-examples.R','tools/site-flagships.R',
         'tools/reference-translations.py','tools/documentation-examples.R',
         'tools/documentation-plots.R','tools/audit-source-snapshot.R',
@@ -97,14 +98,23 @@ def main():
                         help='Maximum concurrent native locale renderers (default: 1)')
     parser.add_argument('--render-batch-size',type=int,choices=range(1,13),default=4,
                         help='Topics/articles per independent R worker (default: 4)')
+    parser.add_argument('--no-cache',action='store_true',help='Force fresh native rendering; do not read or stage cached results')
     args=parser.parse_args()
+    os.environ['TZ'] = 'UTC'
     build_started = time.monotonic()
-    subprocess.run(["python3", "tools/sync-website-languages.py", "--check"], cwd=ROOT, check=True)
+    subprocess.run(["python3", "tools/check-documentation.py", "--source-only"], cwd=ROOT, check=True)
     render_snapshot = render_source_snapshot()
     out=ROOT/'.site'
     if out.is_symlink():raise SystemExit('Refusing a symlink output directory')
     if out.exists():shutil.rmtree(out)
     out.mkdir();assets=out/'assets';assets.mkdir()
+    cache = Cache(out,enabled=not args.no_cache)
+    environment = runtime() if not args.no_cache else {}
+    shell_identity = dict(schema=1,runtime=cache_key(environment),inputs=shell_inputs())
+    reference_identity = dict(shell=shell_identity,inputs=reference_inputs())
+    (out/'cache-runtime.json').write_text(json.dumps(environment,sort_keys=True)+'\n')
+    (out/'cache-inputs.json').write_text(json.dumps(dict(shell=shell_identity,reference=reference_identity),sort_keys=True)+'\n')
+    cache.write()
     timings = dict(status='in_progress', phases={}, workers={})
     def save_timings():
         timings['elapsed_seconds'] = round(time.monotonic() - build_started, 3)
@@ -190,13 +200,34 @@ def main():
         for page in PAGES:
             if page['slug']=='reference' or page.get('kind')=='alias':continue
             md=expand((WEB/lang/(page['slug']+'.md')).read_text(),lang,figures='../assets')
-            body=subprocess.check_output([str(Path(pandoc_dir)/'pandoc'),'--from=markdown+pipe_tables+header_attributes',
-                '--to=html5','--wrap=none'],input=md,text=True)
+            md_identity = dict(schema=1,language=lang,slug=page['slug'],markdown=md,pandoc=environment.get('pandoc'),generator='markdown+pipe_tables+header_attributes/html5/wrap-none')
+            body_dir=out/'.native-markdown'/lang/page['slug']
+            if cache.restore('markdown',md_identity,body_dir):
+                body=(body_dir/'body.txt').read_text()
+            else:
+                body=subprocess.check_output([str(Path(pandoc_dir)/'pandoc'),'--from=markdown+pipe_tables+header_attributes',
+                    '--to=html5','--wrap=none'],input=md,text=True)
+                body_dir.mkdir(parents=True,exist_ok=True);(body_dir/'body.txt').write_text(body)
+                cache.stage('markdown',md_identity,body_dir)
             headings=re.findall(r'<h[23] id="([^"]+)"[^>]*>(.*?)</h[23]>',body,re.S)
             toc=''.join(f'<li><a href="#{a}">{re.sub("<[^>]+>","",t)}</a></li>' for a,t in headings)
             sidebar=('<h2>本页目录</h2>' if lang=='zh' else '<h2>On this page</h2>')+'<ul class="toc-list">'+toc+'</ul>'
             sidebar+=('<h2>项目资料</h2>' if lang=='zh' else '<h2>Project</h2>')+'<ul><li><a href="https://github.com/DangJem/ggchord">GitHub</a></li><li><a href="modes.html#modules">'+('章节索引' if lang=='zh' else 'Chapter index')+'</a></li><li>MIT</li></ul>'
             payload[lang].append(dict(slug=page['slug'],title=page['title'][lang],body=body,sidebar=sidebar))
+    article_identities={lang:{page['slug']:dict(shell=shell_identity,language=lang,page=page) for page in payload[lang]} for lang in payload}
+    all_payload={lang:list(rows) for lang,rows in payload.items()}
+    # Initialization refreshes legal/home/template assets before restoring raw pages.
+    for lang in payload:
+        subprocess.run(['Rscript','--vanilla','tools/render-website.R',lang,'--part=init'],cwd=ROOT,check=True,stdout=subprocess.DEVNULL)
+        missing=[]
+        for page in payload[lang]:
+            target=out/'.native-article'/lang/page['slug']
+            if cache.restore('article',article_identities[lang][page['slug']],target):
+                shutil.copy2(target/'page.txt',out/lang/(page['slug']+'.html'))
+            else:missing.append(page)
+        payload[lang]=missing
+    allow_reference_cache=reference_cache_allowed()
+    reference_hits={lang:cache.restore('reference',dict(reference_identity,language=lang),out/lang/'reference') if allow_reference_cache else False for lang in payload}
     (out/'page-content.json').write_text(json.dumps(payload,ensure_ascii=False)+'\n')
     phase('markdown_conversion', markdown_started)
     rendering_started = time.monotonic()
@@ -206,10 +237,12 @@ def main():
         # Independent bounded R workers avoid accumulating a whole site's
         # template state in one process. Every actual return code is retained.
         jobs=[['--part=reference','--offset='+str(i),'--count='+str(args.render_batch_size)]
-              for i in range(0,len(list((ROOT/'man').glob('*.Rd'))),args.render_batch_size)]
+              for i in range(0,len(list((ROOT/'man').glob('*.Rd'))),args.render_batch_size)] if not reference_hits[lang] else []
         jobs += [['--part=articles','--offset='+str(i),'--count='+str(args.render_batch_size)]
               for i in range(0,len(payload[lang]),args.render_batch_size)]
         results=[];logs=[]
+        (out/(lang+'-workers.json')).write_text('[]\n')
+        (out/(lang+'-build.log')).write_text('')
         for index, options in enumerate(jobs):
             snapshot_started = time.monotonic()
             assert_render_source_snapshot(render_snapshot,input_hashes)
@@ -243,6 +276,15 @@ def main():
         timings['status'] = 'renderers_failed'
         save_timings()
         raise SystemExit('Native locale renderers failed: '+json.dumps(statuses)+'\n'+combined[-7000:])
+    # Stage raw output before finalization mutates menus, anchors and page shells.
+    for lang in languages:
+        if allow_reference_cache and not reference_hits[lang]:cache.stage('reference',dict(reference_identity,language=lang),out/lang/'reference')
+        for page in payload[lang]:
+            folder=out/'.native-article'/lang/page['slug'];folder.mkdir(parents=True,exist_ok=True)
+            shutil.copy2(out/lang/(page['slug']+'.html'),folder/'page.txt')
+            cache.stage('article',article_identities[lang][page['slug']],folder)
+    shutil.rmtree(out/'.native-article',ignore_errors=True)
+    shutil.rmtree(out/'.native-markdown',ignore_errors=True)
     finishing_started = time.monotonic()
     try:
         audit_reference_output(out)

@@ -8,10 +8,10 @@ option <- function(key, default) {
   value <- grep(paste0('^--',key,'='),arguments,value=TRUE)
   if(length(value)) sub('^[^=]+=','',value[[1]]) else default
 }
-part <- match.arg(option('part','all'),c('all','reference','articles'))
+part <- match.arg(option('part','all'),c('all','init','reference','articles'))
 # Article payloads are already HTML and never evaluate package code.
-if (part != "articles") pkgload::load_all(quiet = TRUE)
-payload <- if (part == 'reference') list(en = list(), zh = list()) else
+if (part %in% c("all", "reference")) pkgload::load_all(quiet = TRUE)
+payload <- if (part %in% c('reference','init')) list(en = list(), zh = list()) else
   jsonlite::fromJSON('.site/page-content.json', simplifyVector = FALSE)
 offset <- as.integer(option('offset','0'))
 count <- as.integer(option('count','10000'))
@@ -88,7 +88,7 @@ for (lang in languages) {
     selected_files <- pkg$topics$file_in[seq.int(offset + 1L, min(nrow(pkg$topics), offset + count))]
     supplemental_topics <- intersect(supplemental_topics, tools::file_path_sans_ext(selected_files))
   }
-  if (part != "articles") for (topic in supplemental_topics) {
+  if (part %in% c("all","reference")) for (topic in supplemental_topics) {
     i <- match(paste0(topic, '.Rd'), pkg$topics$file_in)
     if (is.na(i)) stop('Unknown reference example topic: ', topic)
     input <- if (is_han) file.path('.site/reference-zh', pkg$topics$file_in[i]) else
@@ -113,7 +113,7 @@ for (lang in languages) {
     unlink(path)
   }
   if(part!='articles') {
-  if (part != 'reference' || offset == 0L) {
+  if (part %in% c('all','init')) {
   pkgdown::init_site(pkg)
   pkgdown::build_home(pkg, preview=FALSE)
   # build_home also converts development Markdown from the repository root.
@@ -122,6 +122,7 @@ for (lang in languages) {
   generated <- list.files(pkg$dst_path, '\\.html$', full.names=TRUE)
   unlink(generated[!basename(generated) %in% auxiliary])
   }
+  if (part != 'init') {
   reference_topics <- if (part == 'reference')
     pkg$topics$name[seq.int(offset + 1L, min(nrow(pkg$topics), offset + count))] else NULL
   # pkgdown evaluates under reference/, while source examples use the checkout's
@@ -132,8 +133,9 @@ for (lang in languages) {
   tryCatch(pkgdown::build_reference(pkg,examples=TRUE,run_dont_run=FALSE,lazy=FALSE,preview=FALSE,
     topics = reference_topics),
     finally = unlink(input_link))
+  } else pkgdown::build_reference(pkg, examples=FALSE, topics=character(), preview=FALSE)
   }
-  selected <- if(part=='reference') list() else payload[[lang]]
+  selected <- if(part %in% c('reference','init')) list() else payload[[lang]]
   if(length(selected)) selected <- selected[seq.int(offset+1L,min(length(selected),offset+count))]
   for(page in selected) {
     cat('Article:',lang,page$slug,'\n')
