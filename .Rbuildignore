@@ -20,3 +20,7 @@
 ^\.site
 ^MIGRATION.*\.md$
 ^man/figures$
+
+^\.cache$
+
+(^|/)Rplots\.pdf$

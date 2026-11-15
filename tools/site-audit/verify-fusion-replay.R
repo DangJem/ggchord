@@ -32,4 +32,5 @@ for (topic in c('ggchord_fusion','fusion_panel','fusion_ribbon','magnify_ggchord
 }
 record <- list(status='passed',scope='Actual Rd examples on one capture/export device pair; no release matrix',
   source_sha256=digest::digest(file='R/fusion.R',algo='sha256'),cases=results)
-jsonlite::write_json(record,'tools/site-audit/fusion-replay-v0.28.0.json',auto_unbox=TRUE,pretty=TRUE)
+version <- sub('[.]9000$', '', read.dcf('DESCRIPTION', fields='Version')[1])
+jsonlite::write_json(record,paste0('tools/site-audit/fusion-replay-v',version,'.json'),auto_unbox=TRUE,pretty=TRUE)

@@ -1,0 +1,24 @@
+ℹ Testing ggchord
+✔ | F W  S  OK | Context
+
+⠏ |          0 | data                                                           
+⠹ |          3 | data                                                           
+✔ |         13 | data
+
+⠏ |          0 | plot                                                           
+⠋ |          1 | plot                                                           
+⠹ |          3 | plot                                                           
+⠸ |          4 | plot                                                           
+⠼ |          5 | plot                                                           
+⠴ |          6 | plot                                                           
+⠇ |          9 | plot                                                           
+⠋ |         11 | plot                                                           
+⠹ |         13 | plot                                                           
+⠼ |         15 | plot                                                           
+⠦ |         17 | plot                                                           
+✔ |         21 | plot [4.3s]
+
+══ Results ═════════════════════════════════════════════════════════════════════
+Duration: 4.4 s
+
+[ FAIL 0 | WARN 0 | SKIP 0 | PASS 34 ]

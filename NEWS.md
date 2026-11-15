@@ -1,4 +1,4 @@
-# ggchord 0.28.0 (development)
+# ggchord 0.28.1
 
 - Fusion compositions rebuild their physical layout when recorded graphics are
   replayed on a different device. This fixes cropped panels and misplaced

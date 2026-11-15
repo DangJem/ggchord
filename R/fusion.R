@@ -668,8 +668,8 @@ grid.draw.ggchord_fusion <- function(x, recording = TRUE) {
   # Recorded plots may be replayed on a device with a different size or DPI.
   # Rebuild there so panels, interval fronts and leaders share the final metric.
   grob <- grid::recordGrob(
-    grid::grid.draw(build(plot)$grob, recording = FALSE),
-    list(plot = x, build = ggchord_build_fusion)
+    grid::grid.draw(ggchord_build_fusion(plot)$grob, recording = FALSE),
+    list(plot = x, ggchord_build_fusion = ggchord_build_fusion)
   )
   grid::grid.draw(grob, recording = recording)
   invisible(x)
