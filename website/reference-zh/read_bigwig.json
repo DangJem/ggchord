@@ -1,5 +1,5 @@
 {
-  "source_sha256": "0a4aedd9d3cafbd70987a93461ca7e2d41f2b252ee2fac11ef3678514c1c0531",
+  "source_sha256": "cfdf67f9cd444883a41968b2e004211d75deee9c42461e0a69f40d816c27ad2b",
   "translations": {
     "0": "通过可选的成熟解码器读取索引 BigWig 信号",
     "1": "可选本地输入路径向量或通配模式，在 files 之前读取。",

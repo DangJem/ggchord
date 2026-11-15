@@ -1,3 +1,13 @@
+# ggchord 0.28.2
+
+- Stop the VCF help fixture after its third observed record instead of reading
+  the complete compressed file first. Original headers and fields are unchanged.
+- Mark the two optional Bioconductor reader examples as `\donttest{}`, including
+  dependency loading, with a reason comment. Complete runnable examples and
+  platform guards remain; no parser or plotting API changes.
+- Use "dot plots" and omit the redundant HSP abbreviation in DESCRIPTION;
+  retain the scientific term synteny with an explanation for CRAN.
+
 # ggchord 0.28.1
 
 - Further shorten Ribbon and Adaptive help examples. VCF examples copy three

@@ -1,4 +1,10 @@
-## Resubmission
+## Resubmission: ggchord 0.28.2
+
+This candidate supersedes the two rejected 0.28.1 submissions. The released
+0.28.1 tags and assets are retained. The additional timing and DESCRIPTION
+changes are described in the second pre-test section below.
+
+## Earlier 0.28.1 revision (historical validation)
 
 This is a revised submission of ggchord 0.28.1. The version number is
 retained; the help examples and DESCRIPTION have been revised since the
@@ -86,3 +92,30 @@ The main addition is six compressed, ready-to-plot real-data files totalling
 201,736 bytes; plotting no longer requires preparing those inputs from the
 repository. Developer website sources and data-generation tools are excluded.
 The installed size reported by check is 8.7 Mb (informational, not a NOTE).
+
+### Second pre-test revision (candidate; R-devel checks pending)
+
+The second pre-tests reported read_vcf at 16.06 s on Windows and read_bigwig
+at 5.915 s on Debian. The VCF fixture did read the complete gzip file before
+selecting three records. It now stops after the original headers and three
+observed records; their contents were verified identical. In separate fresh
+local R 4.6 processes, preparation changed from 0.019 to 0.002 s, while decoder
+loading took 2.735-2.930 s and three-record parsing 0.104-0.110 s. BigWig decoder
+loading took 2.049 s, regional parsing 0.033 s and preview output 0.001 s.
+These local measurements identify decoder initialization as the main cost;
+they are not Windows/Debian R-devel measurements.
+
+Both optional decoder examples are now in donttest blocks with dependency
+and platform guards and an explanatory comment. Their complete runnable code
+is retained. No dontrun block or core functionality was removed. We understand
+that --as-cran can execute donttest examples and do not claim the timing NOTEs
+resolved without the new platform results. Earlier check/archive results above
+refer to the published 0.28.1, not this new revision.
+
+DESCRIPTION now uses "dot plots" and spells out "high-scoring segment pair"
+without the redundant HSP abbreviation. "Synteny" remains an intentional
+scientific term describing conserved genomic relationships/order. The minor
+version jump still reflects cumulative development since CRAN 0.16.6;
+intermediate development versions were not all submitted to CRAN. Version
+0.28.2 is used for the next submission, as confirmed by the maintainer;
+the existing released tags and assets remain unchanged.

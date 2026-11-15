@@ -1,0 +1,44 @@
+{
+  "reader": "vcf",
+  "dependency": "VariantAnnotation",
+  "dependency_version": "1.58.0",
+  "R": "R version 4.6.0 (2026-04-24)",
+  "platform": "aarch64-apple-darwin23",
+  "namespace_initially_unloaded": true,
+  "source_package_load": {
+    "user.self": 0.475,
+    "sys.self": 0.06,
+    "elapsed": 0.594
+  },
+  "namespace_first_load": {
+    "user.self": 2.641,
+    "sys.self": 0.089,
+    "elapsed": 2.735
+  },
+  "example_preparation": {
+    "user.self": 0.002,
+    "sys.self": 0,
+    "elapsed": 0.002
+  },
+  "first_read": {
+    "user.self": 0.102,
+    "sys.self": 0.003,
+    "elapsed": 0.104
+  },
+  "warm_read": {
+    "user.self": 0.078,
+    "sys.self": 0.001,
+    "elapsed": 0.08
+  },
+  "selected_read": {},
+  "preview_output": {
+    "user.self": 0.001,
+    "sys.self": 0,
+    "elapsed": 0
+  },
+  "output_lines": 4,
+  "output_bytes": 152,
+  "records": 3,
+  "input_bytes": 3695,
+  "notes": "Independent R process per decoder; cold namespace, filesystem caches not flushed. Reader timings exclude decoder namespace and source-package loading. Output captures only the displayed preview of at most six rows."
+}

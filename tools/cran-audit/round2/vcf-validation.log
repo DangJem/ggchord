@@ -1,0 +1,5 @@
+  accver    start      end  feature_id
+1     22 50300078 50300078   rs7410291
+2     22 50300086 50300086 rs147922003
+3     22 50300101 50300101 rs114143073
+PASS: exact original headers and three records; actual Rd example executed

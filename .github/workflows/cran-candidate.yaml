@@ -1,0 +1,66 @@
+name: CRAN candidate R-devel
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: devel
+      - uses: r-lib/actions/setup-pandoc@v2
+      - uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          extra-packages: any::pkgload
+          needs: check
+      - name: Profile and check Windows R-devel
+        shell: Rscript {0}
+        env:
+          GGCHORD_PROFILE_DIR: ${{ github.workspace }}/cran-results
+        run: source("tools/cran-audit/run-r-devel-check.R")
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: windows-r-devel
+          path: |
+            cran-results/
+            ggchord.Rcheck/
+            ggchord_*.tar.gz
+  debian:
+    runs-on: ubuntu-latest
+    container: rocker/r-devel:latest
+    env:
+      R_LIBS_USER: /opt/ggchord-r-devel-library
+      GGCHORD_EXPECT_DEBIAN: 'true'
+      GGCHORD_PROFILE_DIR: ${{ github.workspace }}/cran-results
+    steps:
+      - uses: actions/checkout@v4
+      - name: Record Debian and R-devel runtime
+        run: |
+          cat /etc/os-release
+          RD --version
+          mkdir -p /opt/ggchord-r-devel-library
+      - uses: actions/cache@v4
+        with:
+          path: /opt/ggchord-r-devel-library
+          key: debian-r-devel-cran-${{ hashFiles('DESCRIPTION', '.github/workflows/cran-candidate.yaml') }}
+      - name: Install system dependencies
+        run: |
+          apt-get update
+          apt-get install -y --no-install-recommends pandoc qpdf tidy texlive-latex-base texlive-fonts-recommended texlive-latex-recommended texlive-latex-extra libcurl4-openssl-dev libssl-dev libxml2-dev libgit2-dev libfontconfig1-dev libfreetype6-dev libharfbuzz-dev libfribidi-dev libpng-dev libtiff-dev libjpeg-dev libbz2-dev liblzma-dev zlib1g-dev libicu-dev libglpk-dev libgsl-dev
+      - name: Install candidate dependencies for R-devel
+        run: |
+          RD --vanilla --slave -e 'options(repos=c(CRAN="https://cloud.r-project.org"),Ncpus=2); if(!requireNamespace("BiocManager",quietly=TRUE)) install.packages("BiocManager"); BiocManager::install(version="devel",ask=FALSE,update=FALSE); d<-read.dcf("DESCRIPTION"); p<-unique(trimws(unlist(strsplit(paste(d[1,c("Imports","Suggests")],collapse=","),",")))); p<-sub(" *\\(.*$","",p); p<-setdiff(c(p,"pkgload"),rownames(installed.packages())); if(length(p)) BiocManager::install(p,ask=FALSE,update=FALSE)'
+      - name: Profile and check Debian R-devel
+        run: RD --vanilla --slave -f tools/cran-audit/run-r-devel-check.R
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: debian-r-devel
+          path: |
+            cran-results/
+            ggchord.Rcheck/
+            ggchord_*.tar.gz
