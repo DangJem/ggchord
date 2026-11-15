@@ -1,6 +1,8 @@
 ## Resubmission
 
-This is ggchord 0.28.2, a revision of the rejected 0.28.1 submission.
+This is a revised submission of ggchord 0.28.1. The version number is
+retained; the help examples and DESCRIPTION have been revised since the
+previous submission.
 
 ### Version jump
 
@@ -8,8 +10,7 @@ The last CRAN version is 0.16.6. The submitted version includes cumulative
 work developed since that CRAN release, including additional sequence views,
 input adapters, cross-panel compositions and sequence-detail displays.
 Intermediate development versions were not all submitted to CRAN. The version
-jump is intentional; 0.28.2 identifies the example/documentation revision of
-0.28.1. NEWS.md describes the cumulative changes and migration information.
+jump from 0.16.6 to 0.28.1 is intentional. NEWS.md describes the cumulative changes and migration information.
 
 ### DESCRIPTION terminology
 
@@ -40,7 +41,7 @@ CRAN may also execute donttest examples.
 ### Validation status
 
 Targeted local execution and timing of the affected examples is recorded in
-design-roadmap/versions/v0.28.2.md in the source repository. This maintenance
+design-roadmap/versions/v0.28.1.md in the source repository. This maintenance
 pass does not establish a new full R CMD check result. The revised ordinary plotting examples completed locally in 0.48-2.27
 seconds per help topic. Optional decoder and additional layout examples
 were also executed manually. The extended layouts still emit an existing
