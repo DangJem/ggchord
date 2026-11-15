@@ -26,3 +26,4 @@
 (^|/)Rplots\.pdf$
 
 ^cran-comments\.md$
+^cran-results$
