@@ -8,6 +8,7 @@ permissions:
   contents: read
 jobs:
   windows:
+    if: ${{ !contains(github.event.head_commit.message, '[debian-only]') }}
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
@@ -56,10 +57,10 @@ jobs:
       - name: Install system dependencies
         run: |
           apt-get update
-          apt-get install -y --no-install-recommends pandoc qpdf tidy texlive-latex-base texlive-fonts-recommended texlive-latex-recommended texlive-latex-extra libcurl4-openssl-dev libssl-dev libxml2-dev libgit2-dev libfontconfig1-dev libfreetype6-dev libharfbuzz-dev libfribidi-dev libpng-dev libtiff-dev libjpeg-dev libbz2-dev liblzma-dev zlib1g-dev libicu-dev libglpk-dev libgsl-dev
+          apt-get install -y --no-install-recommends pandoc qpdf tidy texlive-latex-base texlive-fonts-recommended texlive-latex-recommended texlive-latex-extra libcurl4-openssl-dev libssl-dev libxml2-dev libgit2-dev libfontconfig1-dev libfreetype6-dev libharfbuzz-dev libfribidi-dev libpng-dev libtiff-dev libjpeg-dev libbz2-dev liblzma-dev zlib1g-dev libicu-dev libglpk-dev libgsl-dev libuv1-dev
       - name: Install candidate dependencies for R-devel
         run: |
-          RD --vanilla --slave -e 'options(repos=c(CRAN="https://cloud.r-project.org"),Ncpus=2); if(!requireNamespace("BiocManager",quietly=TRUE)) install.packages("BiocManager"); BiocManager::install(version="devel",ask=FALSE,update=FALSE); d<-read.dcf("DESCRIPTION"); p<-unique(trimws(unlist(strsplit(paste(d[1,c("Imports","Suggests")],collapse=","),",")))); p<-trimws(sub("[(].*$","",p)); p<-setdiff(c(p,"pkgload"),rownames(installed.packages())); if(length(p)) BiocManager::install(p,ask=FALSE,update=FALSE)'
+          RD --vanilla --slave -e 'options(repos=c(CRAN="https://cloud.r-project.org"),Ncpus=2); if(!requireNamespace("BiocManager",quietly=TRUE)) install.packages("BiocManager"); BiocManager::install(version="devel",ask=FALSE,update=FALSE); d<-read.dcf("DESCRIPTION"); p<-unique(trimws(unlist(strsplit(paste(d[1,c("Imports","Suggests")],collapse=","),",")))); p<-trimws(sub("[(].*$","",p)); p<-setdiff(c(p,"pkgload"),rownames(installed.packages())); if(length(p)) BiocManager::install(p,ask=FALSE,update=FALSE); missing<-setdiff(p,rownames(installed.packages())); if(length(missing)) stop("Missing dependencies: ",paste(missing,collapse=", "))'
       - name: Profile and check Debian R-devel
         run: RD --vanilla --slave -f tools/cran-audit/run-r-devel-check.R
       - uses: actions/upload-artifact@v4
