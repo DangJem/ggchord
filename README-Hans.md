@@ -77,6 +77,14 @@
 
 R ≥ 4.1.0 · ggplot2 ≥ 4.0.0
 
+从 [CRAN](https://CRAN.R-project.org/package=ggchord) 安装稳定版：
+
+```r
+install.packages("ggchord")
+```
+
+如需尚未发布到 CRAN 的最新改动，可从 GitHub 安装开发版：
+
 ```r
 install.packages("remotes")
 remotes::install_github("DangJem/ggchord", dependencies = NA)

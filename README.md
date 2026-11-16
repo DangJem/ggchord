@@ -77,6 +77,14 @@ Figures share traceable inputs and plot definitions. See the source records and 
 
 R ≥ 4.1.0 · ggplot2 ≥ 4.0.0
 
+Install the stable release from [CRAN](https://CRAN.R-project.org/package=ggchord):
+
+```r
+install.packages("ggchord")
+```
+
+For the latest changes not yet released on CRAN, install the development version from GitHub:
+
 ```r
 install.packages("remotes")
 remotes::install_github("DangJem/ggchord", dependencies = NA)

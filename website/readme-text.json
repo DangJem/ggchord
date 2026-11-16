@@ -298,5 +298,13 @@
   "get-started": {
     "zh": "开始使用",
     "en": "Get started"
+  },
+  "install-cran": {
+    "zh": "从 [CRAN](https://CRAN.R-project.org/package=ggchord) 安装稳定版：",
+    "en": "Install the stable release from [CRAN](https://CRAN.R-project.org/package=ggchord):"
+  },
+  "install-development": {
+    "zh": "如需尚未发布到 CRAN 的最新改动，可从 GitHub 安装开发版：",
+    "en": "For the latest changes not yet released on CRAN, install the development version from GitHub:"
   }
 }

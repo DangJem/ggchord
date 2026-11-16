@@ -77,6 +77,14 @@
 
 R ≥ 4.1.0 · ggplot2 ≥ 4.0.0
 
+{{install-cran}}
+
+```r
+install.packages("ggchord")
+```
+
+{{install-development}}
+
 ```r
 install.packages("remotes")
 remotes::install_github("DangJem/ggchord", dependencies = NA)
