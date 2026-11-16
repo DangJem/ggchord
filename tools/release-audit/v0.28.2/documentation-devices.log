@@ -1,0 +1,60 @@
+
+Attaching package: ‘dplyr’
+
+The following objects are masked from ‘package:stats’:
+
+    filter, lag
+
+The following objects are masked from ‘package:base’:
+
+    intersect, setdiff, setequal, union
+
+ggchord(): gene_data is retained for compatibility; use feature_data in new code. For untyped legacy tables, add type = 'gene' or supply explicit geom_gene(data = ...).
+ggchord(): gene_data is retained for compatibility; use feature_data in new code. For untyped legacy tables, add type = 'gene' or supply explicit geom_gene(data = ...).
+ggchord(): gene_data is retained for compatibility; use feature_data in new code. For untyped legacy tables, add type = 'gene' or supply explicit geom_gene(data = ...).
+ggchord(): gene_data is retained for compatibility; use feature_data in new code. For untyped legacy tables, add type = 'gene' or supply explicit geom_gene(data = ...).
+
+Attaching package: ‘purrr’
+
+The following object is masked from ‘package:ggchord’:
+
+    %||%
+
+ggchord(): gene_data is retained for compatibility; use feature_data in new code. For untyped legacy tables, add type = 'gene' or supply explicit geom_gene(data = ...).
+ggchord(): gene_data is retained for compatibility; use feature_data in new code. For untyped legacy tables, add type = 'gene' or supply explicit geom_gene(data = ...).
+ggchord(): gene_data is retained for compatibility; use feature_data in new code. For untyped legacy tables, add type = 'gene' or supply explicit geom_gene(data = ...).
+PASS: chord png
+PASS: chord pdf
+PASS: chord svg
+PASS: circular png
+PASS: circular pdf
+PASS: circular svg
+PASS: collinear png
+PASS: collinear pdf
+PASS: collinear svg
+PASS: local png
+PASS: local pdf
+PASS: local svg
+PASS: tracks png
+PASS: tracks pdf
+PASS: tracks svg
+PASS: labels_auto png
+PASS: labels_auto pdf
+PASS: labels_auto svg
+PASS: labels_radial png
+PASS: labels_radial pdf
+PASS: labels_radial svg
+PASS: labels_arc png
+PASS: labels_arc pdf
+PASS: labels_arc svg
+PASS: independent_layers png
+PASS: independent_layers pdf
+PASS: independent_layers svg
+PASS: 9 source-backed cases × PNG/PDF/SVG; independent layers and mixed sequence geometry.
+Warning messages:
+1: In .merge_two_Seqinfo_objects(x, y) :
+  The 2 combined objects have no sequence levels in common. (Use
+  suppressWarnings() to suppress this warning.)
+2: ggchord(): input data has 7 validation warning(s) (e.g. "start > end in ribbon coordinates (may represent a reverse-complement hit; clean_ggchord_data() can sort them for stable drawing)"). Run validate_ggchord_data(...) for details.
+3: ggchord(): input data has 7 validation warning(s) (e.g. "start > end in ribbon coordinates (may represent a reverse-complement hit; clean_ggchord_data() can sort them for stable drawing)"). Run validate_ggchord_data(...) for details.
+4: ggchord(): input data has 7 validation warning(s) (e.g. "start > end in ribbon coordinates (may represent a reverse-complement hit; clean_ggchord_data() can sort them for stable drawing)"). Run validate_ggchord_data(...) for details.

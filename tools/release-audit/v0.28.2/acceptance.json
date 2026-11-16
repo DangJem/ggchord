@@ -1,0 +1,86 @@
+{
+  "version": "0.28.2",
+  "stage": "passed local release acceptance",
+  "archive": {
+    "name": "ggchord_0.28.2.tar.gz",
+    "bytes": 4423185,
+    "sha256": "196f0deb9554acc07a5831e1cfe3092a9c038a685035f131f5657aeb74c2e612",
+    "origin": "archive checked on Debian R-devel"
+  },
+  "R_devel_checks": {
+    "windows": {
+      "run": {
+        "run_id": 43727617245,
+        "source_commit": "1fb63921c1aa72ebda43e5d4ccb0d4dde3ca13ce",
+        "conclusion": "success",
+        "url": "https://github.com/DangJem/ggchord/actions/runs/43727617245",
+        "jobs": [
+          {
+            "name": "windows",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "debian",
+            "status": "completed",
+            "conclusion": "skipped"
+          }
+        ]
+      },
+      "errors": 0,
+      "warnings": 0,
+      "notes": 1,
+      "remaining_note": "Intentional minor-version jump from 0.16.6 to 0.28.2",
+      "tests_passed": 34
+    },
+    "debian": {
+      "run": {
+        "run_id": 43726759756,
+        "source_commit": "7d254953058722583da0410054cd0a2d24f592b8",
+        "conclusion": "success",
+        "url": "https://github.com/DangJem/ggchord/actions/runs/43726759756",
+        "jobs": [
+          {
+            "name": "debian",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "windows",
+            "status": "completed",
+            "conclusion": "skipped"
+          }
+        ]
+      },
+      "errors": 0,
+      "warnings": 0,
+      "notes": 1,
+      "remaining_note": "Intentional minor-version jump from 0.16.6 to 0.28.2",
+      "tests_passed": 34
+    }
+  },
+  "vignettes": "Both languages rebuilt and checked on both platforms",
+  "device_outputs": {
+    "documentation": 27,
+    "flagships": 21,
+    "formats": [
+      "png",
+      "pdf",
+      "svg"
+    ]
+  },
+  "website": {
+    "png_regenerated": 178,
+    "existing_png_compared": 217,
+    "byte_differences": [],
+    "source_only": "passed",
+    "lesson_pages": 53
+  },
+  "publication_plan": {
+    "replace_old_release": "v0.28.1",
+    "preserve_old_tags": true,
+    "deploy_both_languages": true,
+    "CRAN_submission": false
+  },
+  "package_source_unchanged_since_R_devel": true
+}
