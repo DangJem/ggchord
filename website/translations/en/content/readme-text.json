@@ -1,5 +1,5 @@
 {
-  "source_sha256": "198faf33bb65a90c902e1e8163628f2c6b4aac96b6c469d63ecbf4a57ee48bab",
+  "source_sha256": "43f104d2aa4ec7c95c69e717ed882cf82234381d91220e28e3ab59607e9df861",
   "strings": {
     "title": {
       "source_sha256": "543c2953291eece4e47b74bc939ba6fa50286298fb22b68e07fc1eadf250f643",
@@ -375,6 +375,16 @@
       "source_sha256": "715ee9dc842f34e48f267f0bf3261d7980e544b26eb3d2f0ff20e19b121c4a99",
       "status": "reviewed",
       "translation": "Get started"
+    },
+    "install-cran": {
+      "source_sha256": "b1e69ce4a6712761185d0d1e1af5f74fd044e5c23c45bea964f810eb27fcc5ef",
+      "status": "reviewed",
+      "translation": "Install the stable release from [CRAN](https://CRAN.R-project.org/package=ggchord):"
+    },
+    "install-development": {
+      "source_sha256": "f6b56bf9661592d6bea16623279fdc2287db641b5c7cb10e822289124fa2a68c",
+      "status": "reviewed",
+      "translation": "For the latest changes not yet released on CRAN, install the development version from GitHub:"
     }
   }
 }
