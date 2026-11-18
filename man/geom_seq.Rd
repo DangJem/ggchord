@@ -45,7 +45,7 @@ Their row order, mappings and drawing styles may differ.}
 
 \item{...}{Additional fixed path aesthetics. \code{colour} (or \code{color}) sets
 \code{seq_colour}. Explicit fixed values take precedence over matching mappings;
-omit fixed arguments to retain mapped styles.}
+omit fixed arguments to retain mapped styles. Unknown names raise an error.}
 
 \item{id}{Optional unique layer ID for layout and source exports.}
 }

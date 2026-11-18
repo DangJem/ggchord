@@ -209,6 +209,7 @@ prepare_ggchord_plot <- function(plot) {
   plot <- ggchord_prepare_geometry_inputs(plot)
   layout <- compute_chord_geometry_prepared(plot)
   new_layers <- plot$layers
+  track_axes <- list()
   needs_flow <- any(vapply(plot$layers,ggchord_ribbon_uses_flow,logical(1),plot=plot))
   sequence_colours <- if(needs_flow) ggchord_sequence_display_colours(plot,layout) else NULL
   if (needs_flow && !any(vapply(plot$layers,function(layer) identical(layer$ggchord_type,"seq"),logical(1)))) {
@@ -234,6 +235,13 @@ prepare_ggchord_plot <- function(plot) {
     lyr$ggchord_resolved_input <- ggchord_restore_instance_data(
       layout$layer_inputs[[lyr$ggchord_layer_id]][[lyr$ggchord_type]], layout$display_instances)
     geometry <- extract_ggchord_layer_data(lyr, layout)
+    if (identical(lyr$ggchord_type, "track")) {
+      axis <- geometry$.component %in% c("track_axis_line", "track_axis_text", "track_axis_title")
+      if (any(axis)) {
+        track_axes[[lyr$ggchord_layer_id]] <- geometry[axis, , drop = FALSE]
+        geometry <- geometry[!axis, , drop = FALSE]
+      }
+    }
     if (isTRUE(lyr$ggchord_params$user_feature_fill)) geometry$feature_fill_explicit <- NULL
     flow <- ggchord_ribbon_flow(lyr, geometry, layout, plot,sequence_colours)
     lyr <- flow$layer; geometry <- flow$data
@@ -241,8 +249,8 @@ prepare_ggchord_plot <- function(plot) {
     # Draw its empty build-local layer without evaluating nonexistent x/text
     # mappings. Keep the source layer and exported component unchanged.
     empty <- is.data.frame(geometry) && !nrow(geometry)
-    new_layers[[i]] <- reconstruct_layer(lyr, geometry,
-      mapping = if (empty) ggplot2::aes() else NULL)
+    new_layers[[i]] <- if (empty) reconstruct_layer(lyr, geometry, mapping = ggplot2::aes()) else
+      ggchord_draw_layer(lyr, geometry, lyr$ggchord_resolved_input)
     if (empty) new_layers[[i]]$inherit.aes <- FALSE
     # Domain geometry already owns its final panel, including explicit repeats.
     if (!is.null(layout$facet_keys)) new_layers[[i]]$layout <- NULL
@@ -312,6 +320,20 @@ prepare_ggchord_plot <- function(plot) {
   }
   plot <- set_ggchord_coord(plot, layout, axis_labels)
   plot <- ggchord_apply_theme_styles(plot)
+  # Axes use the owner's resolved theme and draw immediately above its marks.
+  # They contain no observations with which to train data scales or guides.
+  if (length(track_axes)) {
+    for (i in rev(seq_along(plot$layers))) {
+      owner <- plot$layers[[i]]
+      id <- owner$ggchord_layer_id
+      if (is.null(id) || is.null(track_axes[[id]])) next
+      axis <- ggplot2::layer(data = track_axes[[id]],
+        mapping = ggplot2::aes(x = x, y = y, group = group, label = label, .component = I(.component)),
+        geom = owner$geom, stat = "identity", position = "identity", params = owner$geom_params,
+        layout = owner$layout, inherit.aes = FALSE, show.legend = FALSE, check.aes = FALSE)
+      plot$layers <- append(plot$layers, list(axis), after = i)
+    }
+  }
   layout$render_context <- ggchord_render_context() %||% ggchord_estimated_render_context(layout)
   plot$ggchord$ref$layout <- layout
   plot

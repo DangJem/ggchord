@@ -498,7 +498,8 @@ ggchord_track_axes <- function(layout, registry, plot) {
         out[[key]][at] <- params[[name]]
       }
     }
-    # Add blank input columns so visual mappings can evaluate on axis rows.
+    # Keep the axis with its owner in the exported geometry. The renderer
+    # draws these decoration rows separately from mapped observations.
     base <- registry[[owner]]$track
     out <- ggchord_rbind_fill(list(base, out))
     registry[[owner]]$track <- out

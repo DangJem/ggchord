@@ -89,7 +89,7 @@ ggchord_seq_center_label_styles <- function(layer, plot, seq_data) {
       layer$ggchord_params)
     geometry <- ggchord_attach_input_columns(geometry, seq_data)
     style_plot <- ggplot2::ggplot()
-    style_plot$layers <- list(reconstruct_layer(layer, geometry))
+    style_plot$layers <- list(ggchord_draw_layer(layer, geometry, seq_data))
     style_plot$scales <- plot$scales$clone()
     style_plot$theme <- plot$theme
     mapped <- ggplot2::ggplot_build(style_plot)$data[[1L]]

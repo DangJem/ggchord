@@ -1,9 +1,11 @@
 ## Migrating to 0.50.0
 
-The entries in the first column were removed in 0.50.0. Later sections record earlier releases.
+The table covers removed calls and changes in behaviour in 0.50.0. Later sections identify the versions to which historical examples apply.
 
 | Former call or argument | 0.50.0 replacement |
 | --- | --- |
+| Feature colour previously followed the remapped accession in `aes(accver = ref, fill = accver)` | Each starting mapping reads the layer's source columns. Keep this expression to colour by the original accession. Use `aes(accver = ref, fill = ref)` to colour by the displayed reference. |
+| A point track uses categories for shape or needs to hide only its fill guide | Map the categories with `aes(shape = kind)` and set symbols with `scale_shape_manual(values = c(a = 21, b = 24))`. Set `show.legend = c(fill = FALSE)` on the track layer to hide its contribution to the fill guide. Other layers can still contribute to that guide. |
 | Mixing coverage fraction and mean depth on a common height axis | Give them separate named bands. Declare custom heights with `measure = "read_depth"`. To share a range across compatible plots, apply the output of `shared_track_limits(p1, p2)` to each track scale. |
 | Individual track ranges in sample panels | Use `scale_track_value_continuous("depth", facet_domain = "panel")` with a visible axis. The default uses the same height range across samples. |
 | Colour whole coverage windows | Use `geom_track_tile(aes(fill = after_stat(coverage)), stat = "coverage", binwidth = 4, data = intervals)`. The final tile uses its actual window length. |
@@ -108,6 +110,9 @@ APIs do not require changes to existing Chord, Circular or Collinear code.
 
 ## Unified annotations in 0.17.0
 
+The constructor arguments and example in this section apply to v0.17.0.
+For the v0.50.0 equivalent, see the [runnable feature and gene examples](#replacement).
+
 Prefer `ggchord(seq_data = seqs, feature_data = annotations)` for genes and
 other features. `geom_feature()` inherits the full table. Without explicit
 layer data, gene layers select `gene`/`CDS` from `feature_class`, `type`, or
@@ -177,16 +182,16 @@ Rotation is counterclockwise from this baseline: 90 places the origin at
 omit rotation retain the current development appearance. Increasing coordinates
 remain clockwise by default. The chord rotation contract stays unchanged.
 
-## Scope and timing {#scope}
-These are current candidate replacements, not a v1.0.0 compatibility promise.
-The 0.16.0–0.16.4 phases were delivered together in v0.16.5. The current installation tag is v0.16.6.
-The RC audit retains flexible parameter formats, spelling aliases, reexports and
-getter/export entry points without a new deprecation. Old calls in this
-table explain migration and must not be executed as current examples. Exact
-first-removal tags are not guessed where historical evidence gives only an upper bound.
+## Scope of the v0.16.5–v0.16.6 migration {#scope}
+The 0.16.0–0.16.4 phases were delivered together in v0.16.5. The v0.16.6
+release candidate audit retained flexible parameter formats, spelling aliases,
+reexports and the getter/export entry points. The table records the replacements
+for those releases. Where historical evidence establishes only an upper bound,
+the removal column gives that bound. For this checkout, see the opening v0.50.0
+migration table and the examples below.
 
-## Replacement table {#table}
-| Old (do not run) | Current | Removal / guard | Meaning |
+## Historical replacement table {#table}
+| Older call | Replacement in v0.16.5–v0.16.6 | Removal / guard | Meaning |
 | --- | --- | --- | --- |
 | `geom_ribbon()` | `geom_link_ribbon()` | ≤ 0.16.1 | Renamed link layer; not ggplot2::geom_ribbon(). |
 | `ggchord(..., rotation = 20)` | `ggchord(...) + coord_chord(rotation = 20)` | ≤ 0.16.1 | Global coordinates are composed with +. |
@@ -201,58 +206,56 @@ first-removal tags are not guessed where historical evidence gives only an upper
 | `geom_restriction_site(leader = "trunk")` | `geom_restriction_site(leader = "radial")` | 0.16.1 | The radial default remains. |
 | `theme_ggchord(base_size = 10)` | `theme_ggchord() + theme(text = element_text(size = 10))` | ≤ 0.16.1 | Text appearance belongs to theme elements. |
 
-## Run the replacement {#replacement}
-In a fresh session, run this preparation before the current replacements:
-
+## Run the equivalent examples in v0.50.0 {#replacement}
+Run the following in a fresh R session with ggchord v0.50.0 and dplyr.
 
 ```r
+library(ggchord)
 library(dplyr)
+
 seqs <- seq_data_example |>
   select(accver, length)
-links <- ribbon_data_example |>
-  select(qaccver, saccver, qstart, qend, sstart, send)
-# The fixture preserves biological strands separately from its old display strands.
+# The example data stores the original annotation strands in source_strand.
 genes <- gene_data_example |>
   transmute(accver, start, end, strand = source_strand)
-```
 
-
-```r
-library(dplyr)
-data(plasmid_example_pUC19)
 plasmid_seq <- plasmid_example_pUC19 |>
   select(accver, length)
 feature_source <- find_common_features(plasmid_example_pUC19)
 features <- feature_source |>
   select(accver, start, end, strand, type, anno)
-```
 
-
-
-```r
 p_migrated <- ggchord(plasmid_seq) +
   geom_seq() +
   geom_feature(data = features, shape = "block", width = .05) +
   geom_feature_label(data = features, label_rotation = 0) +
   coord_circular()
-p_offsets <- ggchord(seqs, gene_data = genes) +
+
+p_offsets <- ggchord(seqs) +
   geom_seq() +
-  geom_gene(position = position_strand(c("+" = .1, "-" = -.2)))
+  geom_feature(
+    data = genes,
+    preset = "gene",
+    position = position_strand(c("+" = .1, "-" = -.2))
+  )
+
+p_migrated
+p_offsets
 ```
 
-
 Old minus-strand offset magnitudes need a negative sign in explicit Position
-values. Mapping still uses `aes(feature_shape = type)` with a shape scale;
-the fixed parameter is `shape`. Automatic labels use `label_layout`; manual
-geometry uses the corresponding fixed-label layer. `label_layout = "aligned"`
-becomes `"auto"`. Removed names are errors, not silently retained execution paths.
+values. Map categories with `aes(feature_shape = type)` and a shape scale, or
+set `shape` for fixed geometry. Automatic label arrangement uses `label_layout`.
+For manual geometry use the corresponding fixed-label layer. Replace
+`label_layout = "aligned"` with `"auto"`.
 
-## What remains supported {#retained}
-The five colour/color spelling aliases, all upstream reexports, gene/feature/plasmid
-shortcuts and both geometry getter/export interfaces remain. Coordinate-specific
-defaults and already documented result fields are retained. See the
-API contract (`help("ggchord_api_contract", package = "ggchord")`) and current reference for
-NULL/NA/missing semantics; NULL does not universally mean disabled.
+## Interfaces retained by the v0.16.6 audit {#retained}
+The v0.16.6 audit retained the five colour/color spelling aliases, upstream
+reexports, gene/feature/plasmid shortcuts and both geometry getter/export interfaces.
+In v0.50.0, use `geom_feature(preset = "gene")` and
+`geom_feature(preset = "plasmid")` for the former shortcuts. See
+`help("ggchord_api_contract", package = "ggchord")` and the corresponding function
+help for how each current interface handles `NULL`, `NA` and omitted arguments.
 
 ## Default chord rotation in v0.16.7
 

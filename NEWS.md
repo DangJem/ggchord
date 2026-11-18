@@ -1,5 +1,16 @@
 # ggchord 0.50.0 (development)
 
+- In a feature layer, `aes(accver = ref, fill = accver)` places each
+  feature on `ref` and colours it by its original `accver`. To colour by
+  the displayed reference as well, use `aes(accver = ref, fill = ref)`.
+  Inherited and local mappings follow the same rule.
+- Point tracks share the plot's shape scale with ordinary point layers.
+  Map `aes(shape = kind)` and use `scale_shape_manual()` to choose symbols.
+  On a track, `show.legend = c(fill = FALSE)` hides that layer's fill
+  guide contribution while preserving its other guides and drawn colours.
+  Missing style observations follow the scale's missing-value settings
+  under implicit grouping. Track axes no longer add a missing category
+  to discrete guides.
 - Faceted sequence axes and exported positions follow the reference length
   and orientation of each panel. Use `map_ggchord_position(..., panel = 2)`
   to select a panel when the same position has different projections. Links

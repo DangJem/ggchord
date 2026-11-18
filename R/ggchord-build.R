@@ -47,6 +47,11 @@ ggchord_prepare_geometry_inputs <- function(plot) {
   if (any(vapply(plot$layers, function(x) identical(x$ggchord_type, "alignment"), logical(1))))
     ggchord_stop("geom_alignment_segment() requires coord_dotplot()")
   plot <- ggchord_register_layers(plot)
+  for (layer in plot$layers) {
+    if (!is.null(layer$ggchord_type) && is.null(layer$ggchord_params$native_geom) &&
+        is.null(layer$ggchord_params$ribbon_stat))
+      layer$ggchord_params$visual_source <- new.env(parent = emptyenv())
+  }
   sequences <- ggchord_sequence_reference_data(plot)
   for (layer in plot$layers) {
     type <- layer$ggchord_params$type %||% ""
@@ -371,9 +376,10 @@ compute_chord_geometry_prepared <- function(plot) {
 
   # Plot limits must see all independent layers, not only the compatibility
   # fields in the primary layout.
-  collect <- function(component) {
+  collect <- function(component, columns = NULL) {
     values <- lapply(registry, `[[`, component)
     values <- Filter(function(x) is.data.frame(x) && nrow(x) > 0, values)
+    if (!is.null(columns)) values <- lapply(values, `[`, columns)
     if (length(values)) ggchord_rbind_fill(values) else data.frame()
   }
   for (pair in list(
@@ -452,7 +458,7 @@ compute_chord_geometry_prepared <- function(plot) {
       if (isTRUE(primary$collinear) && nrow(primary$region_polys)) primary$region_polys,
       if (isTRUE(primary$collinear) && nrow(collect("seq"))) collect("seq"),
       if (isTRUE(primary$collinear) && nrow(collect("seq_break"))) collect("seq_break")
-      , if (nrow(collect("track"))) collect("track")
+      , collect("track", c("x", "y"))
       , if (nrow(collect("seq_scale"))) collect("seq_scale")
     ))),
     seqArcs = primary$seq_arcs,

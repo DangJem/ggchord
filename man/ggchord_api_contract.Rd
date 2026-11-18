@@ -60,9 +60,11 @@ placement, or choose automatic geometry with \code{label_layout}.
 The old \code{"aligned"} label request becomes \code{label_layout = "auto"};
 restriction \code{leader = "trunk"} becomes \code{leader = "radial"}.
 
-Constructor unknown arguments stop. Ordinary geom, scale, guide and theme
-extras retain their documented forwarding and upstream error/warning rules;
-there is no promise that all unknown names fail uniformly. Geometric roles
+The constructor rejects unknown arguments. In v0.50.0, ggchord geoms check
+extra names against the selected layer, geom and stat before construction.
+For example, \code{geom_seq(linewditth = 2)} reports the spelling error and
+suggests \code{linewidth}. Scale, guide and theme arguments follow the contract
+of the function that receives them. Geometric roles
 must be evaluated before layout, whereas supported visual mappings may use
 \code{after_stat()}/\code{after_scale()}. Unknown legacy label prefixes never imply
 that a similarly named replacement parameter exists.

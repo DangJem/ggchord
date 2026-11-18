@@ -270,7 +270,10 @@ export_ggchord_layout <- function(
           ncol(exported[[category]]) == 0L) {
         geometry
       } else {
-        ggchord_rbind_fill(list(exported[[category]], geometry))
+        # One track may map factor categories and another may use numeric
+        # glyphs. Preserve both in the combined geometry's shape columns.
+        fields <- if (category == "track") c("shape", ".track_shape")
+        ggchord_rbind_fill(list(exported[[category]], geometry), mixed_factor_fields = fields)
       }
 
       if (isTRUE(original_data)) {

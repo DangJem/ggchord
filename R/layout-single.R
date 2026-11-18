@@ -574,10 +574,15 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
     raw_fill <- as.character(gene_data_layout$anno)
     fill_mapping <- gene_params$feature_fill_mapping
     if (any(unresolved_fill) && !is.null(fill_mapping)) {
-      mapped_input <- tryCatch(
-        rlang::eval_tidy(ggchord_start_mapping(fill_mapping), data = gene_data_layout),
-        error = function(e) NULL
-      )
+      start <- ggchord_start_mapping(fill_mapping)
+      visual <- gene_params$visual_source
+      key <- if (isTRUE(gene_params$user_feature_fill)) "fill" else "feature_fill"
+      # Contrast uses the same source values as the visible fill. A mapping
+      # that needs projected vertices becomes available only during drawing.
+      mapped_input <- if (is.null(visual$data)) {
+        tryCatch(rlang::eval_tidy(start, gene_data_layout), error = function(e) NULL)
+      } else ggchord_visual_value(visual, key, start, gene_data_layout,
+        seq_len(nrow(gene_data_layout)), projected = FALSE)[[1L]]
       raw_fill <- NULL
       if (!is.null(mapped_input)) {
         if (length(mapped_input) == 1L) {

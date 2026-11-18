@@ -25,6 +25,14 @@
 #' style mappings. For example, `group = 1` pools the source observations.
 #' A fixed aesthetic overrides the inherited mapping before statistics and
 #' grouping. Mapping and fixing the same aesthetic in one layer is an error.
+#' Point shape categories and their factor order are shared with other point
+#' layers through the plot's shape scale. Use `scale_shape_manual()` to choose
+#' symbols by category, or set a fixed `shape` on the layer.
+#' Missing discrete styles form an implicit group and follow the visual
+#' scale's missing-value settings. An explicit group must be non-missing.
+#' When exported track geometry combines factor shape categories and fixed
+#' numeric point symbols, the combined column uses their character values.
+#' Per-layer statistics retain the factor levels of the mapped categories.
 #' An explicit sequence_unit in track data must match the reference (bp or aa).
 #' When a sequence layer supplies the backbone table, its accessions, lengths
 #' and units define the reference for tracks and coverage windows.
@@ -61,7 +69,10 @@
 #' @param baseline Numeric identity-column baseline. Nonzero baselines require
 #'   position='identity' so stacking does not change their meaning.
 #' @param fill,colour,alpha,linewidth,linetype Fixed styles for the count shortcut.
-#' @param show.legend,inherit.aes Standard layer controls.
+#' @param show.legend Standard ggplot2 layer legend selection. A named logical
+#'   vector such as `c(fill = FALSE, colour = TRUE)` controls this layer's
+#'   contribution to each guide, including guides on named track scales.
+#' @param inherit.aes Whether to inherit the plot mapping.
 #' @param ... Native geom/stat parameters and fixed styles. Coverage requires
 #'   a positive whole `binwidth` in sequence units or explicit `windows`.
 #'   A supplied parameter accepted by both an external Stat and the selected
@@ -97,6 +108,12 @@
 #' ggchord(data.frame(accver = "A", length = 1000)) +
 #'   geom_seq() +
 #'   geom_track_bar(data = events, stat = "count") +
+#'   coord_collinear()
+#' sites <- data.frame(accver = "A", pos = c(2, 7), value = c(3, 5),
+#'   kind = c("start", "end"))
+#' ggchord(data.frame(accver = "A", length = 10)) +
+#'   geom_track(aes(pos, value, shape = kind), data = sites) +
+#'   ggplot2::scale_shape_manual(values = c(start = 21, end = 24)) +
 #'   coord_collinear()
 #' intervals <- data.frame(accver = "A", start = c(3, 4), end = c(6, 5))
 #' ggchord(data.frame(accver = "A", length = 10)) +
@@ -479,9 +496,13 @@ ggchord_compute_track_input <- function(layer, plot, raw, sequences, coverage) {
       native$stat <- ggchord_track_x_stat(native$stat)
     failures <- capture %||% new.env(parent = emptyenv())
     native <- ggchord_track_source_layer(native, failures, implicit_group, interval_x, p$bounds)
+    # A normal identity scale converts factors to character in map().
+    # Keep their level order for the final plot's shared point-shape scale.
+    shape_scale <- ggplot2::scale_discrete_identity(aesthetics = "shape")
+    shape_scale$map <- identity
     q <- ggplot2::ggplot() + native + ggplot2::scale_fill_identity() +
       ggplot2::scale_colour_identity() + ggplot2::scale_alpha_identity() +
-      ggplot2::scale_size_identity() + ggplot2::scale_linewidth_identity() +
+      ggplot2::scale_size_identity() + ggplot2::scale_linewidth_identity() + shape_scale +
       ggplot2::scale_continuous_identity(aesthetics=".ggchord_stat_x")
     if (nrow(domains) > 1L)
       q <- q + ggplot2::facet_wrap(ggplot2::vars(.track_domain), scales = "free")
@@ -588,8 +609,16 @@ ggchord_compute_track_input <- function(layer, plot, raw, sequences, coverage) {
     layer$aes_params[[target]] <- params[[key]]
   }
   layer$ggchord_input_mapping <- visual
+  mapping_label <- function(q) {
+    expr <- rlang::get_expr(q)
+    if (rlang::is_call(expr, "stage")) {
+      stages <- match.call(ggplot2::stage, expr)
+      expr <- stages$after_stat %||% stages$start
+    } else if (rlang::is_call(expr, c("after_stat", "stat"))) expr <- expr[[2L]]
+    rlang::as_label(expr)
+  }
   layer$ggchord_params$track_mapping_labels <- stats::setNames(
-    vapply(mapping, rlang::as_label, character(1)),
+    vapply(mapping, mapping_label, character(1)),
     vapply(names(mapping), function(key) if (key %in% c("fill", "colour"))
       ggchord_track_aes(key, p$track_id) else key, character(1)))
   layer$ggchord_input_data <- output
@@ -633,10 +662,9 @@ ggchord_track_source_layer <- function(layer, capture, implicit_group, interval_
       if (implicit_group) {
         styles <- mapped[intersect(c("fill", "colour", "linetype", "shape"), names(mapped))]
         discrete <- Filter(function(value) !is.numeric(value), styles)
-        if (any(vapply(discrete, anyNA, logical(1))))
-          ggchord_stop("geom_track(): group values must be non-missing")
-        # Factor codes preserve level order without joining user labels with a separator.
-        codes <- lapply(discrete, function(value) as.integer(as.factor(value)))
+        # Missing style values form an implicit group. Leave the aesthetic
+        # itself untouched so the final scale controls its missing category.
+        codes <- lapply(discrete, function(value) as.integer(addNA(value, ifany = TRUE)))
         mapped$group <- if (length(codes)) as.integer(do.call(interaction,
           c(unname(codes), list(drop = TRUE, lex.order = TRUE)))) else rep(1L, nrow(mapped))
       }

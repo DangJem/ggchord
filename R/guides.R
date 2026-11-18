@@ -384,6 +384,7 @@ ggchord_guide_height_budget <- function(plot,position) {
   for(layer in plot$layers) {
     if(identical(layer$show.legend,FALSE))next
     for(aes in names(ggchord_effective_mapping(layer))) {
+      if (isFALSE(layer$show.legend[aes])) next
       role <- if(grepl("^track_(fill|colour)_",aes)) aes else switch(aes,
         seq_colour="seq",ribbon_fill="ribbon",ribbon_colour="ribbon",
         gene_fill="gene",feature_fill="feature",region_fill="region",NULL)

@@ -27,9 +27,13 @@ A single eligible table supplies the layer default. When several qualify,
 select one explicitly, e.g. \code{geom_feature(data = prepared$features$cds)}.}
 
 \item{mapping}{Default aesthetic mapping, made with \code{\link[ggplot2:aes]{ggplot2::aes()}}.
-Each inheriting layer evaluates it on its own source table. A layer
-mapping overrides the same plot aesthetic. Native ggplot2 layers inherit
-the reference table as their plot data.}
+Each inheriting layer uses its own source table for domain roles and
+starting visual mappings. With \code{aes(accver = ref, fill = accver)},
+\code{ref} selects the reference and the source \code{accver} supplies the fill.
+Generated fields such as \code{.component} are available after projection.
+\code{\link[ggplot2:after_stat]{ggplot2::after_stat()}} and \code{\link[ggplot2:after_scale]{ggplot2::after_scale()}} use their respective
+ggplot2 stages. A layer mapping overrides the same plot aesthetic.
+Native ggplot2 layers inherit the reference table as their plot data.}
 
 \item{...}{Reserved for clear migration errors from removed constructor
 arguments. Use \code{\link[=labs]{labs()}}, \code{\link[=coord_chord]{coord_chord()}} and \code{\link[=theme]{theme()}} for presentation.}

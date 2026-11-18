@@ -190,7 +190,7 @@ ggchord_sequence_display_colours <- function(plot,layout) {
   if (!".component" %in% names(geometry)) geometry$.component <- "path"
   if (!"group" %in% names(geometry)) geometry$group <- match(geometry$accver,unique(geometry$accver))
   layer$ggchord_resolved_input <- geometry
-  layer <- reconstruct_layer(layer,geometry)
+  layer <- ggchord_draw_layer(layer, geometry, layout$layer_inputs[[layer$ggchord_layer_id]][["seq"]])
   native <- ggplot2::ggplot(mapping=plot$mapping)+layer
   for (name in c("seq_colour", "colour")) {
     explicit <- plot$scales$get_scales(name)

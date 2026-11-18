@@ -53,9 +53,11 @@
 #' The old `"aligned"` label request becomes `label_layout = "auto"`;
 #' restriction `leader = "trunk"` becomes `leader = "radial"`.
 #'
-#' Constructor unknown arguments stop. Ordinary geom, scale, guide and theme
-#' extras retain their documented forwarding and upstream error/warning rules;
-#' there is no promise that all unknown names fail uniformly. Geometric roles
+#' The constructor rejects unknown arguments. In v0.50.0, ggchord geoms check
+#' extra names against the selected layer, geom and stat before construction.
+#' For example, `geom_seq(linewditth = 2)` reports the spelling error and
+#' suggests `linewidth`. Scale, guide and theme arguments follow the contract
+#' of the function that receives them. Geometric roles
 #' must be evaluated before layout, whereas supported visual mappings may use
 #' `after_stat()`/`after_scale()`. Unknown legacy label prefixes never imply
 #' that a similarly named replacement parameter exists.

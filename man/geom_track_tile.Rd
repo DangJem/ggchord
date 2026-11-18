@@ -60,7 +60,11 @@ or a fixed value for that aesthetic within a layer.}
 \item{bounds}{\code{"error"} (default) or \code{"clip"} for genomic coordinates.
 Clipping is reported and never changes source values.}
 
-\item{show.legend, inherit.aes}{Standard layer arguments.}
+\item{show.legend}{Standard ggplot2 layer legend selection. A named logical
+vector such as \code{c(fill = FALSE, colour = TRUE)} controls this layer's
+contribution to each guide, including guides on named track scales.}
+
+\item{inherit.aes}{Whether to inherit the plot mapping.}
 
 \item{...}{Extra geom parameters.}
 

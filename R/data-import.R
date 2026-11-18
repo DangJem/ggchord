@@ -56,7 +56,7 @@ ggchord_check_text_lines <- function(lines, file, caller, offset) {
 
 # Combine data.frames that may have different columns (e.g. BLAST outfmt 6 and
 # outfmt 7 files), filling missing columns with typed NA values.
-ggchord_rbind_fill <- function(xs) {
+ggchord_rbind_fill <- function(xs, mixed_factor_fields = character()) {
   xs <- Filter(function(x) !is.null(x), xs)
   if (length(xs) == 0) return(NULL)
   if (length(xs) == 1) return(xs[[1]])
@@ -73,6 +73,12 @@ ggchord_rbind_fill <- function(xs) {
     }
     d[, cols, drop = FALSE]
   })
+  for (field in intersect(mixed_factor_fields, cols)) {
+    values <- lapply(xs, `[[`, field)
+    if (any(vapply(values, is.factor, logical(1))) && any(vapply(values, is.numeric, logical(1)))) {
+      for (i in seq_along(xs)) xs[[i]][[field]] <- as.character(values[[i]])
+    }
+  }
   do.call(rbind, xs)
 }
 

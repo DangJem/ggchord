@@ -202,8 +202,11 @@ ggchord_feature_data <- function(data, fixed_shape = "arrow",
 #'
 #' @param mapping Optional aesthetic mapping. Role aesthetics such as
 #'   \code{accver}, \code{start}, \code{end} and \code{strand} may rename
-#'   input columns; ordinary visual mappings are evaluated after geometry is
-#'   generated.
+#'   input columns. Starting visual mappings read the same source rows.
+#'   A source column keeps its original value when a domain role has the
+#'   same name. Expressions that also use a generated field, such as
+#'   `.component`, combine each vertex with its source row. Staged visual
+#'   mappings can use [ggplot2::after_stat()] and [ggplot2::after_scale()].
 #' @param preset Use `"default"` for general intervals. The `"gene"` preset
 #'   selects gene/CDS rows from the default unified source, requires known
 #'   strands and uses strand-based arrows. Explicit layer data selects its own
@@ -277,6 +280,14 @@ ggchord_feature_data <- function(data, fixed_shape = "arrow",
 #'     shape = "block"
 #'   ) +
 #'   coord_circular()
+#'
+#' # Fill describes the feature source; ref selects its sequence.
+#' references <- data.frame(accver = c("A", "B"), length = 100)
+#' calls <- data.frame(accver = c("u", "v"), ref = c("A", "B"),
+#'                     start = c(10, 20), end = c(18, 35), strand = "+")
+#' ggchord(references, aes(accver = ref, fill = accver)) +
+#'   geom_feature(data = calls) +
+#'   coord_collinear()
 #'
 #' intervals <- data.frame(accver = "A", start = 10, end = 70,
 #'                         strand = "+", type = "CDS", anno = "g")

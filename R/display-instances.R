@@ -215,6 +215,7 @@ ggchord_prepare_instances <- function(plot, seqs) {
       }
       routed <- ggchord_route_instances(input, instances, p$between, layer$ggchord_layer_id, mirrored,input_rows)
       input <- routed$data
+      p$visual_source <- ggchord_visual_rows(p$visual_source, input_rows)
       field <- paste0(type, "_ctrl_point")
       p[[field]] <- ggchord_link_control_rows(p[[field]], input_rows)
       if (length(keys)) p$instance_facet_rows <- input_rows
@@ -234,6 +235,7 @@ ggchord_prepare_instances <- function(plot, seqs) {
     } else if (!is.null(input) && "accver" %in% names(input)) {
       expanded <- ggchord_instance_expand(input, instances)
       input <- expanded$data
+      p$visual_source <- ggchord_visual_rows(p$visual_source, expanded$rows)
       if (length(keys)) p$instance_facet_rows <- expanded$rows
       if (!is.null(source)) {
         source$rows <- source$rows[expanded$rows]

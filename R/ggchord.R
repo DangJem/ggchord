@@ -51,9 +51,13 @@ globalVariables(c(
 #'   A single eligible table supplies the layer default. When several qualify,
 #'   select one explicitly, e.g. `geom_feature(data = prepared$features$cds)`.
 #' @param mapping Default aesthetic mapping, made with [ggplot2::aes()].
-#'   Each inheriting layer evaluates it on its own source table. A layer
-#'   mapping overrides the same plot aesthetic. Native ggplot2 layers inherit
-#'   the reference table as their plot data.
+#'   Each inheriting layer uses its own source table for domain roles and
+#'   starting visual mappings. With `aes(accver = ref, fill = accver)`,
+#'   `ref` selects the reference and the source `accver` supplies the fill.
+#'   Generated fields such as `.component` are available after projection.
+#'   [ggplot2::after_stat()] and [ggplot2::after_scale()] use their respective
+#'   ggplot2 stages. A layer mapping overrides the same plot aesthetic.
+#'   Native ggplot2 layers inherit the reference table as their plot data.
 #' @param debug Logical. Whether to output debug information, default FALSE
 #' @param validate Character, default \code{"warn"}. How to run the structured
 #'   input-data validation (see \code{\link{validate_ggchord_data}}):

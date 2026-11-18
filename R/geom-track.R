@@ -138,7 +138,6 @@ ggplot_add.ggchord_track_band <- function(object, plot, ...) {
 #' @param closed Explicitly close a complete circular line series.
 #' @param bounds `"error"` (default) or `"clip"` for genomic coordinates.
 #'   Clipping is reported and never changes source values.
-#' @param show.legend,inherit.aes Standard layer arguments.
 #' @param ... Extra geom parameters.
 #' @return A ggplot2 layer with independent input and a shared named band.
 #' @md
@@ -441,7 +440,9 @@ ggchord_prepare_track_layers <- function(plot, sequences = ggchord_sequence_refe
       layer <- plot$layers[[i]]
       if (!identical(layer$ggchord_type, "track")) next
       input <- layer$ggchord_input_data
-      layer$ggchord_input_data <- input[input$accver %in% displayed, , drop = FALSE]
+      keep <- input$accver %in% displayed
+      layer$ggchord_params$visual_source <- ggchord_visual_rows(layer$ggchord_params$visual_source, which(keep))
+      layer$ggchord_input_data <- input[keep, , drop = FALSE]
     }
   }
   numeric_layers <- Filter(function(l) identical(l$ggchord_type, "track") &&
@@ -597,7 +598,25 @@ scale_track_colour_manual <- function(track, ..., values) {
 }
 
 ggchord_add_track_scales <- function(plot) {
+  seen <- character()
   for (layer in plot$layers) {
+    # ggplot2 takes its default labels from the first mapped layer. Use the
+    # original expression there, before projection introduced .track_* names.
+    mapped <- names(layer$mapping)
+    if (isTRUE(layer$inherit.aes)) mapped <- union(mapped, names(plot$mapping))
+    first <- setdiff(mapped, c(seen, names(layer$aes_params)))
+    seen <- union(seen, first)
+    labels <- layer$ggchord_params$track_mapping_labels
+    for (key in intersect(first, names(labels))) {
+      if (!key %in% c("shape", layer$geom_params$track_keys)) next
+      name <- labels[[key]]
+      if (is.function(plot$labels[[key]])) {
+        plot$labels[[key]] <- plot$labels[[key]](name)
+      } else if (!key %in% names(plot$labels)) {
+        dict <- plot$labels$dictionary
+        plot$labels[[key]] <- if (name %in% names(dict)) unname(dict[name]) else name
+      }
+    }
     if (!identical(layer$ggchord_type, "track")) next
     mapping <- layer$ggchord_input_mapping
     for (role in c("fill", "colour")) {
@@ -607,9 +626,12 @@ ggchord_add_track_scales <- function(plot) {
       if (is.null(ggchord_start_mapping(mapping[[key]]))) next
       values <- lapply(plot$layers, function(other) {
         if (!identical(other$ggchord_type, "track") || !key %in% names(other$ggchord_input_mapping)) return(NULL)
+        if (!NROW(other$data)) return(NULL)
+        columns <- other$ggchord_params$visual_columns
+        if (key %in% names(columns)) return(other$data[[columns[[key]]]])
         q <- ggchord_start_mapping(other$ggchord_input_mapping[[key]])
         if (is.null(q)) return(NULL)
-        rlang::eval_tidy(q, other$ggchord_resolved_input)
+        rlang::eval_tidy(q, other$data)
       })
       values <- Filter(Negate(is.null), values)
       continuous <- vapply(values, is.numeric, logical(1))
@@ -619,11 +641,9 @@ ggchord_add_track_scales <- function(plot) {
       levels <- unique(as.character(value[!is.na(value)]))
       scale <- if (is.numeric(value)) ggplot2::scale_colour_gradientn(
         colours = c("#31507D", "#65B4A8", "#F0D56A"), aesthetics = key,
-        guide = ggplot2::guide_colourbar(available_aes = key),
-        name = layer$ggchord_params$track_mapping_labels[[key]] %||% rlang::as_label(mapping[[key]])) else ggplot2::scale_colour_manual(
+        guide = ggplot2::guide_colourbar(available_aes = key)) else ggplot2::scale_colour_manual(
           values = stats::setNames(chord_default_palette(length(levels)), levels),
-          aesthetics = key, guide=ggchord_role_guide(plot,"track",labels=levels),
-          name = layer$ggchord_params$track_mapping_labels[[key]] %||% rlang::as_label(mapping[[key]]))
+          aesthetics = key, guide=ggchord_role_guide(plot,"track",labels=levels))
       plot$scales$add(scale)
     }
   }

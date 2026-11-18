@@ -46,7 +46,11 @@ input reference, including the local coordinates of a focused reference.}
 
 \item{id}{Optional unique layer ID for exported statistics and source rows.}
 
-\item{show.legend, inherit.aes}{Standard layer controls.}
+\item{show.legend}{Standard ggplot2 layer legend selection. A named logical
+vector such as \code{c(fill = FALSE, colour = TRUE)} controls this layer's
+contribution to each guide, including guides on named track scales.}
+
+\item{inherit.aes}{Whether to inherit the plot mapping.}
 }
 \value{
 A track layer. Exported statistics include \code{window_id}, local

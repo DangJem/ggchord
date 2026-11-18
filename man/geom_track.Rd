@@ -71,7 +71,11 @@ position='identity' so stacking does not change their meaning.}
 
 \item{bounds}{Coordinate error/clip policy.}
 
-\item{show.legend, inherit.aes}{Standard layer controls.}
+\item{show.legend}{Standard ggplot2 layer legend selection. A named logical
+vector such as \code{c(fill = FALSE, colour = TRUE)} controls this layer's
+contribution to each guide, including guides on named track scales.}
+
+\item{inherit.aes}{Whether to inherit the plot mapping.}
 
 \item{...}{Native geom/stat parameters and fixed styles. Coverage requires
 a positive whole \code{binwidth} in sequence units or explicit \code{windows}.
@@ -128,6 +132,14 @@ An explicit group mapping or fixed group takes priority over discrete
 style mappings. For example, \code{group = 1} pools the source observations.
 A fixed aesthetic overrides the inherited mapping before statistics and
 grouping. Mapping and fixing the same aesthetic in one layer is an error.
+Point shape categories and their factor order are shared with other point
+layers through the plot's shape scale. Use \code{scale_shape_manual()} to choose
+symbols by category, or set a fixed \code{shape} on the layer.
+Missing discrete styles form an implicit group and follow the visual
+scale's missing-value settings. An explicit group must be non-missing.
+When exported track geometry combines factor shape categories and fixed
+numeric point symbols, the combined column uses their character values.
+Per-layer statistics retain the factor levels of the mapped categories.
 An explicit sequence_unit in track data must match the reference (bp or aa).
 When a sequence layer supplies the backbone table, its accessions, lengths
 and units define the reference for tracks and coverage windows.
@@ -167,6 +179,12 @@ events <- data.frame(accver = "A", pos = c(100, 100, 400))
 ggchord(data.frame(accver = "A", length = 1000)) +
   geom_seq() +
   geom_track_bar(data = events, stat = "count") +
+  coord_collinear()
+sites <- data.frame(accver = "A", pos = c(2, 7), value = c(3, 5),
+  kind = c("start", "end"))
+ggchord(data.frame(accver = "A", length = 10)) +
+  geom_track(aes(pos, value, shape = kind), data = sites) +
+  ggplot2::scale_shape_manual(values = c(start = 21, end = 24)) +
   coord_collinear()
 intervals <- data.frame(accver = "A", start = c(3, 4), end = c(6, 5))
 ggchord(data.frame(accver = "A", length = 10)) +

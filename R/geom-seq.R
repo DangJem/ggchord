@@ -111,7 +111,7 @@ ggchord_seq_style_geometry <- function(seq_arcs, params) {
 #' @param position,show.legend,inherit.aes Standard ggplot2 layer arguments.
 #' @param ... Additional fixed path aesthetics. `colour` (or `color`) sets
 #'   `seq_colour`. Explicit fixed values take precedence over matching mappings;
-#'   omit fixed arguments to retain mapped styles.
+#'   omit fixed arguments to retain mapped styles. Unknown names raise an error.
 #'
 #' @param id Optional unique layer ID for layout and source exports.
 #' @return A ggplot2 layer.

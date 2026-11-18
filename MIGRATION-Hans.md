@@ -1,9 +1,11 @@
 ## 迁移到 0.50.0
 
-下表左列入口均在 0.50.0 移除。后续章节保留各历史版本的用法。
+下表记录 0.50.0 移除的调用和发生变化的行为。后续章节注明历史示例适用的版本。
 
 | 原调用或参数 | 0.50.0 写法 |
 | --- | --- |
+| 特征用 `aes(accver = ref, fill = accver)` 时，填色曾跟随重映射后的序列标识 | 各个起始映射都读取图层源列。保留此式可按原始序列标识着色。若要按绘制所用的参考着色，写 `aes(accver = ref, fill = ref)`。 |
+| 点轨道按类别使用不同形状，或只需隐藏填色图例 | 用 `aes(shape = kind)` 映射类别，再用 `scale_shape_manual(values = c(a = 21, b = 24))` 指定符号。在轨道层设 `show.legend = c(fill = FALSE)` 可隐藏该层对填色图例的贡献。其他图层仍可提供该图例。 |
 | 在同一高度轴混用覆盖率和平均深度 | 两种度量分带绘制。自定义高度可声明 `measure = "read_depth"`。跨图比较时将 `shared_track_limits(p1, p2)` 得出的范围设给各自的轨道标度。 |
 | 分样本观察各面板的局部数值变化 | 使用 `scale_track_value_continuous("depth", facet_domain = "panel")` 并保留局部轴。默认在各样本间使用共同的高度范围。 |
 | 按覆盖率给整窗着色 | 使用 `geom_track_tile(aes(fill = after_stat(coverage)), stat = "coverage", binwidth = 4, data = intervals)`。末窗按实际宽度绘制。 |
@@ -98,6 +100,8 @@ Alignment 样式复用 `link_*` 映射及 `scale_link_*()`。端点必须已规�
 
 ## 0.17.0 的统一注释输入
 
+本节的构造参数和示例适用于 v0.17.0。当前版本的等价调用见 [v0.50.0 特征与基因示例](#replacement)。
+
 推荐用 `ggchord(seq_data = seqs, feature_data = annotations)` 提供基因和其他特征。
 `geom_feature()` 默认使用全表；没有显式图层数据时，基因层依次从 `feature_class`、
 `type`、`role` 中选择 `gene`/`CDS`，tRNA/rRNA 使用通用特征层。缺失链按未知处理，
@@ -157,15 +161,13 @@ p <- ggchord(seq_data_example, feature_data = annotations) +
 v0.16.7 开发快照中显式指定角度的效果，将原角度减去 90 度；省略 rotation
 的调用保持当前开发版的默认绘图效果。坐标默认仍顺时针增加；弦图旋转契约不变。
 
-## 范围与时间 {#scope}
-下列写法是当前候选替代，不是 v1.0.0 长期兼容承诺。0.16.0–0.16.4 阶段成果已随 v0.16.5 交付。
-当前安装标签为 v0.16.6。RC 审计保留
-灵活参数、拼写别名、重导出及 getter/export 入口，没有新增弃用。
-表中的旧调用用于解释迁移，不应作为当前例子执行。
-历史证据只提供删除上界时，不猜测精确首删 tag。
+## v0.16.5–v0.16.6 的迁移范围 {#scope}
+0.16.0–0.16.4 阶段成果已随 v0.16.5 交付。v0.16.6 发布候选审计保留了灵活参数格式、
+拼写别名、重导出及布局查询和导出入口。下表记录这两个版本的替代写法。历史证据仅能
+确定删除上界时，删除栏只给出该上界。本地版本请参照篇首的 v0.50.0 迁移表和下方示例。
 
-## 替代表 {#table}
-| 旧写法（勿执行） | 当前写法 | 删除 / 守卫 | 含义 |
+## 历史替代表 {#table}
+| 旧写法 | v0.16.5–v0.16.6 的替代写法 | 删除 / 守卫 | 含义 |
 | --- | --- | --- | --- |
 | `geom_ribbon()` | `geom_link_ribbon()` | ≤ 0.16.1 | 连接图层改名，不影响 ggplot2::geom_ribbon()。 |
 | `ggchord(..., rotation = 20)` | `ggchord(...) + coord_chord(rotation = 20)` | ≤ 0.16.1 | 全局坐标使用 + 组合。 |
@@ -180,55 +182,53 @@ v0.16.7 开发快照中显式指定角度的效果，将原角度减去 90 度�
 | `geom_restriction_site(leader = "trunk")` | `geom_restriction_site(leader = "radial")` | 0.16.1 | radial 默认值保持。 |
 | `theme_ggchord(base_size = 10)` | `theme_ggchord() + theme(text = element_text(size = 10))` | ≤ 0.16.1 | 文字外观属于 theme 元素。 |
 
-## 运行当前替代 {#replacement}
-在新会话中运行下面的准备代码，再执行当前替代写法：
-
+## 在 v0.50.0 运行等效示例 {#replacement}
+在新 R 会话中使用 ggchord v0.50.0 和 dplyr 运行下列示例。
 
 ```r
+library(ggchord)
 library(dplyr)
+
 seqs <- seq_data_example |>
   select(accver, length)
-links <- ribbon_data_example |>
-  select(qaccver, saccver, qstart, qend, sstart, send)
 # 随包示例用 source_strand 单独保存原始注释链。
 genes <- gene_data_example |>
   transmute(accver, start, end, strand = source_strand)
-```
 
-
-```r
-library(dplyr)
-data(plasmid_example_pUC19)
 plasmid_seq <- plasmid_example_pUC19 |>
   select(accver, length)
 feature_source <- find_common_features(plasmid_example_pUC19)
 features <- feature_source |>
   select(accver, start, end, strand, type, anno)
-```
 
-
-
-```r
 p_migrated <- ggchord(plasmid_seq) +
   geom_seq() +
   geom_feature(data = features, shape = "block", width = .05) +
   geom_feature_label(data = features, label_rotation = 0) +
   coord_circular()
-p_offsets <- ggchord(seqs, gene_data = genes) +
+
+p_offsets <- ggchord(seqs) +
   geom_seq() +
-  geom_gene(position = position_strand(c("+" = .1, "-" = -.2)))
+  geom_feature(
+    data = genes,
+    preset = "gene",
+    position = position_strand(c("+" = .1, "-" = -.2))
+  )
+
+p_migrated
+p_offsets
 ```
 
+旧负链 offset 幅度在显式 Position 中需要负号。按类别控制形状时，使用
+`aes(feature_shape = type)` 配合形状标度。固定几何使用 `shape`。
+自动标签用 `label_layout` 排布，手动几何控制用相应固定标签层。
+`label_layout = "aligned"` 改为 `"auto"`。
 
-旧负链 offset 幅度在显式 Position 中需要负号。映射仍使用
-`aes(feature_shape = type)` 配合 shape 标度，固定参数则为 `shape`。
-自动标签使用 `label_layout`，手动几何控制使用相应固定标签层。
-`label_layout = "aligned"` 改为 `"auto"`。已删除名称明确报错，不保留静默执行路径。
-
-## 保留的支持 {#retained}
-五个 colour/color 拼写别名、全部上游重导出、gene/注释/plasmid 快捷入口及 getter/export
-两类几何接口均保留。各坐标默认差异和已记录结果字段保持。NULL/NA/缺参语义应查阅
-接口说明 (`help("ggchord_api_contract", package = "ggchord")`)和当前参考；NULL 不统一表示关闭。
+## v0.16.6 审计保留的接口 {#retained}
+v0.16.6 审计保留了五个 colour/color 拼写别名、上游重导出、gene/feature/plasmid
+快捷入口，以及布局查询和导出接口。v0.50.0 用 `geom_feature(preset = "gene")`
+和 `geom_feature(preset = "plasmid")` 承接原快捷入口。各入口对 `NULL`、`NA`
+及省略参数的处理见 `help("ggchord_api_contract", package = "ggchord")` 和相应函数帮助。
 
 ## v0.16.7 的弦图默认旋转
 

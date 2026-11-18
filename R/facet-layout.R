@@ -235,6 +235,7 @@ ggchord_facet_layout <- function(plot) {
       copy <- reconstruct_layer(layer, layer$data, mapping = layer$mapping)
       map <- members[[i]]
       rows <- map$.ggchord_input_index[as.integer(map$PANEL) == panel]
+      copy$ggchord_params$visual_source <- ggchord_visual_rows(layer$ggchord_params$visual_source, rows)
       panel_input <- sources[[i]][rows, , drop = FALSE]
       source <- attr(panel_input, "ggchord_source")
       if (!is.null(source)) {

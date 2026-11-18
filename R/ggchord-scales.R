@@ -235,10 +235,15 @@ ggchord_mapping_info <- function(plot, aesthetic) {
     expr <- rlang::get_expr(mapping[[aesthetic]])
     label <- rlang::as_label(expr)
     staged <- ggchord_has_stage(expr, "after_stat")
-    value <- if (staged) NULL else tryCatch(
-      rlang::eval_tidy(mapping[[aesthetic]], data = lyr$data),
-      error = function(e) NULL
-    )
+    columns <- lyr$ggchord_params$visual_columns
+    value <- if (staged) {
+      NULL
+    } else if (aesthetic %in% names(columns)) {
+      lyr$data[[columns[[aesthetic]]]]
+    } else {
+      tryCatch(rlang::eval_tidy(mapping[[aesthetic]], data = lyr$data),
+        error = function(e) NULL)
+    }
     kind <- if (staged) {
       if (aesthetic %in% c("ribbon_linetype", "feature_shape")) {
         "discrete"

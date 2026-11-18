@@ -279,6 +279,101 @@ ggchord_start_mapping <- function(q) {
   if (ggchord_has_stage(expr)) NULL else q
 }
 
+# A render owns one source table per layer. The row map follows segment
+# expansion, instance selection and faceting independently of geometry roles.
+ggchord_visual_rows <- function(visual, rows) {
+  if (is.null(visual$data)) return(visual)
+  local <- new.env(parent = emptyenv())
+  local$data <- visual$data
+  local$values <- visual$values
+  local$rows <- visual$rows[rows]
+  local
+}
+
+# Classify data references without running the mapping. A computed subscript
+# needs the combined mask because its target column is known only at runtime.
+ggchord_visual_fields <- function(expr, env) {
+  if (rlang::is_symbol(expr)) return(rlang::as_string(expr))
+  if (!is.call(expr)) return(character())
+  if (rlang::is_call(expr, c("$", "[["))) {
+    if (rlang::is_symbol(expr[[2L]], ".env")) return(character())
+    if (rlang::is_symbol(expr[[2L]], ".data")) {
+      key <- expr[[3L]]
+      if (rlang::is_call(expr, "$")) return(as.character(key))
+      if (rlang::is_symbol(key)) key <- get0(as.character(key), env, inherits = TRUE)
+      return(if (rlang::is_string(key)) key else NA_character_)
+    }
+  }
+  unique(unlist(lapply(as.list(expr)[-1L], ggchord_visual_fields, env = env), use.names = FALSE))
+}
+
+# A source expression is evaluated once per layer, before replicating its
+# values across geometry. Mixed expressions need the owning source row and
+# the generated vertex. An expression using only generated columns stays
+# with ggplot2. A list distinguishes an evaluated NULL from deferred work.
+ggchord_visual_value <- function(visual, key, start, geometry, rows, projected = TRUE) {
+  if (is.null(visual$data) || is.null(start) || !rlang::is_quosure(start)) return(NULL)
+  fields <- ggchord_visual_fields(rlang::get_expr(start), rlang::get_env(start))
+  source <- visual$data
+  external <- setdiff(fields, names(source))
+  if (!anyNA(external) && all(!external %in% names(geometry)) &&
+      all(vapply(external, exists, logical(1), envir = rlang::get_env(start), inherits = TRUE))) {
+    if (!exists(key, visual$values, inherits = FALSE)) {
+      value <- rlang::eval_tidy(start, source)
+      if (!is.null(value) && !length(value) %in% c(1L, nrow(source)))
+        ggchord_stop("Mapped ", key, " must be scalar or supply one value per input row")
+      if (length(value) == 1L) value <- rep(value, nrow(source))
+      visual$values[[key]] <- list(value)
+    }
+    return(list(visual$values[[key]][[1L]][visual$rows[rows]]))
+  }
+  columns <- if (anyNA(fields)) names(source) else intersect(fields, names(source))
+  if (!projected || !length(columns)) return(NULL)
+  for (column in columns) geometry[[column]] <- source[[column]][visual$rows[rows]]
+  list(rlang::eval_tidy(start, geometry))
+}
+
+ggchord_draw_layer <- function(layer, geometry, input = NULL) {
+  mapping <- ggchord_effective_mapping(layer)
+  visual <- layer$ggchord_params$visual_source
+  prepared <- reconstruct_layer(layer, geometry, mapping)
+  if (!nrow(geometry) || is.null(visual$data)) return(prepared)
+  rows <- geometry$source_row
+  if (is.null(rows)) {
+    key <- intersect(c("display_instance_id", "accver"), intersect(names(geometry), names(input)))[1L]
+    if (is.na(key)) return(prepared)
+    rows <- match(geometry[[key]], input[[key]])
+  }
+  keys <- intersect(setdiff(names(layer$ggchord_input_mapping), layer$ggchord_role_aes), names(mapping))
+  columns <- character()
+  for (key in keys) {
+    value <- ggchord_visual_value(visual, key, ggchord_start_mapping(mapping[[key]]), geometry, rows)
+    if (is.null(value)) next
+    if (is.null(value[[1L]])) {
+      columns[key] <- NA_character_
+      next
+    }
+    column <- tail(make.unique(c(names(geometry), paste0(".ggchord_start_", key))), 1L)
+    geometry[[column]] <- value[[1L]]
+    columns[key] <- column
+  }
+  if (!length(columns)) return(prepared)
+  prepared$data <- geometry
+  prepared$ggchord_params$visual_columns <- columns
+  # Use source values for the initial evaluation only. Keeping the declared
+  # mapping on the layer preserves guide titles and later stat/scale stages.
+  ggplot2::ggproto(NULL, prepared, compute_aesthetics = function(self, data, plot) {
+    start <- self$computed_mapping
+    for (key in names(columns)) {
+      column <- columns[[key]]
+      expr <- if (is.na(column)) NULL else rlang::sym(column)
+      start[[key]] <- rlang::new_quosure(expr, emptyenv())
+    }
+    evaluation <- ggplot2::ggproto(NULL, self, computed_mapping = start)
+    ggplot2::ggproto_parent(prepared, evaluation)$compute_aesthetics(data, plot)
+  })
+}
+
 #' Resolve a layer's input table and role mappings
 #' @noRd
 ggchord_resolve_layer_input <- function(lyr, fallback = NULL,
@@ -342,7 +437,25 @@ ggchord_resolve_layer_input <- function(lyr, fallback = NULL,
     "geom_feature(preset = 'gene'): directional genes need '+'/'-' strand; use geom_feature() for nondirectional intervals"
   )
   transform <- lyr$ggchord_input_transform
-  if (!is.null(transform)) data <- transform(data)
+  visual <- lyr$ggchord_params$visual_source
+  capture_visual <- !is.null(visual) && is.null(visual$data) &&
+    length(setdiff(names(mapping), c(roles, names(lyr$aes_params)))) > 0L
+  if (capture_visual) {
+    visual$data <- input
+    visual$values <- new.env(parent = emptyenv())
+    visual$rows <- seq_len(nrow(input))
+    if (!is.null(transform)) {
+      row_key <- tail(make.unique(c(names(data), ".ggchord_visual_row")), 1L)
+      data[[row_key]] <- visual$rows
+    }
+  }
+  if (!is.null(transform)) {
+    data <- transform(data)
+    if (capture_visual) {
+      visual$rows <- data[[row_key]]
+      data[[row_key]] <- NULL
+    }
+  }
   if (!is.null(source)) {
     if (is.null(lyr$ggchord_params$input_source) && isTRUE(lyr$ggchord_params$is_feature) && "segments" %in% names(data) &&
         ".biological_source_row" %in% names(data))
@@ -478,6 +591,16 @@ ggchord_bind_visual_mapping <- function(layer, plot) {
       names(defaults)[match(target, names(defaults))] <- names(target)
       layer$geom <- ggchord_geom_defaults(layer$geom, defaults)
       layer$geom_params$track_keys[use] <- names(target)
+    }
+    # ggplot2 matches a named legend flag to the aesthetic trained by its scale.
+    # Resolve public names after choosing between plot and track-specific scales.
+    if (!is.null(names(layer$show.legend))) {
+      flags <- ggplot2::standardise_aes_names(names(layer$show.legend))
+      for (name in names(keys)) {
+        aliases <- c(name, paste0("track_", name), keys[[name]])
+        flags[flags %in% aliases] <- layer$geom_params$track_keys[[name]]
+      }
+      names(layer$show.legend) <- flags
     }
     return(layer)
   }
