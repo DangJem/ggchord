@@ -249,6 +249,8 @@
 | `label_repeat` | `c("individual", "bracket")` | 类型、单位及允许格式见右侧本函数参数契约 | "individual"（默认）逐条标注特征；"bracket" 对同一圆形特征轨道中名称、类型、方向和最终填色相同、连续且不重叠的短特征共享计数标签及弧形括号。各条源记录及箭头仍独立。仅支持 label_layout = "feature"。 |
 | `label_segment_colour` | `"auto"` | 类型、单位及允许格式见右侧本函数参数契约 | "auto" 将从序列圆内特征连接到圈外标签的引线设为灰色，其他引线保留主题颜色；显式颜色优先。自定义特征引线主题覆盖自动配色。label_segment_linetype = "auto" 对上述内到外连接使用虚线，留在圈内的标签保持原有引线样式。 |
 | `...` | `无形式默认；是否必需见契约` | 类型、单位及允许格式见右侧本函数参数契约 | 其他文字参数。 |
+| `placement` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 可显式使用这一组参数替代 label_layout 和 label_fit。placement 可取 feature、radial、auto 或 callout，overflow 可取 wrap、none、ellipsis、auto 或 shrink。按特征长度缩小字号时须选择 feature 布局。旧参数组合沿用原语义。 |
+| `overflow` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 可显式使用这一组参数替代 label_layout 和 label_fit。placement 可取 feature、radial、auto 或 callout，overflow 可取 wrap、none、ellipsis、auto 或 shrink。按特征长度缩小字号时须选择 feature 布局。旧参数组合沿用原语义。 |
 
 </details>
 
@@ -744,7 +746,7 @@
 | --- | --- | --- | --- |
 | `mapping` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 标准 ggplot2 映射与图层输入。 |
 | `data` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 标准 ggplot2 映射与图层输入。 |
-| `position` | `无形式默认；是否必需见契约` | 类型、单位及允许格式见右侧本函数参数契约 | 每层必须提供 position_track() 声明。 |
+| `position` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 旧写法通过此参数指定物理轨道。使用原生折线映射时，可传入 ggplot2 位置调整。闭合折线使用序列上的局部位置。 |
 | `colour` | `"#387D88"` | 类型、单位及允许格式见右侧本函数参数契约 | 固定样式；填色和颜色映射使用专用轨道角色及作用域标度。 |
 | `alpha` | `1` | 类型、单位及允许格式见右侧本函数参数契约 | 固定样式；填色和颜色映射使用专用轨道角色及作用域标度。 |
 | `linewidth` | `0.4` | 类型、单位及允许格式见右侧本函数参数契约 | 固定样式；填色和颜色映射使用专用轨道角色及作用域标度。 |
@@ -754,6 +756,7 @@
 | `show.legend` | `NA` | 类型、单位及允许格式见右侧本函数参数契约 | 标准图层参数。 |
 | `inherit.aes` | `FALSE` | 类型、单位及允许格式见右侧本函数参数契约 | 标准图层参数。 |
 | `...` | `无形式默认；是否必需见契约` | 类型、单位及允许格式见右侧本函数参数契约 | 其他几何参数。 |
+| `track` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 用 position_track() 声明的物理轨道。每层指定一次。 |
 
 </details>
 
@@ -768,7 +771,7 @@
 | --- | --- | --- | --- |
 | `mapping` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 标准 ggplot2 映射与图层输入。 |
 | `data` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 标准 ggplot2 映射与图层输入。 |
-| `position` | `无形式默认；是否必需见契约` | 类型、单位及允许格式见右侧本函数参数契约 | 每层必须提供 position_track() 声明。 |
+| `position` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 旧写法通过此参数指定物理轨道。使用原生折线映射时，可传入 ggplot2 位置调整。闭合折线使用序列上的局部位置。 |
 | `fill` | `"#86AFB9"` | 类型、单位及允许格式见右侧本函数参数契约 | 固定样式；填色和颜色映射使用专用轨道角色及作用域标度。 |
 | `colour` | `NA` | 类型、单位及允许格式见右侧本函数参数契约 | 固定样式；填色和颜色映射使用专用轨道角色及作用域标度。 |
 | `alpha` | `1` | 类型、单位及允许格式见右侧本函数参数契约 | 固定样式；填色和颜色映射使用专用轨道角色及作用域标度。 |
@@ -778,6 +781,7 @@
 | `show.legend` | `NA` | 类型、单位及允许格式见右侧本函数参数契约 | 标准图层参数。 |
 | `inherit.aes` | `FALSE` | 类型、单位及允许格式见右侧本函数参数契约 | 标准图层参数。 |
 | `...` | `无形式默认；是否必需见契约` | 类型、单位及允许格式见右侧本函数参数契约 | 其他几何参数。 |
+| `track` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 用 position_track() 声明的物理轨道。每层指定一次。 |
 
 </details>
 
@@ -2299,6 +2303,7 @@
 | `plot` | `无形式默认；是否必需见契约` | 类型、单位及允许格式见右侧本函数参数契约 | 一个 ggchord 图。 |
 | `include` | `c("seq", "ribbon", "gene", "feature", "labels", "axis", "track")` | 类型、单位及允许格式见右侧本函数参数契约 | 选择组件的字符向量："seq"、"ribbon"、"gene"、"feature"、"labels"、"alignment"、"link"、"restriction"、"track"及"axis"。点连接和酶切位点须显式选择。Dotplot默认选择alignment及axis；axis_layout保留可逆轴偏移、方向和源原点。比对导出保留四端点、图层身份和源行，省略原因写入connection_report。 |
 | `original_data` | `FALSE` | 类型、单位及允许格式见右侧本函数参数契约 | 逻辑值，是否在 original_data 包含逐层解析输入表，默认 FALSE。 |
+| `data_stage` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 可选字符向量，选择 source、mapped、statistic 或 geometry。重新计算一次布局后，按图层 ID 在 layer_data 中返回所选阶段。source 为角色映射前经适配的输入表，mapped 为图层转换前的角色表。原生轨道在 ggplot2 内执行映射，单独的 mapped 表为空。geometry 按几何组件命名。对某图层不适用的阶段返回 NULL。所有图层均参与，独立于 include。 |
 
 </details>
 
@@ -2527,7 +2532,7 @@
 
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
 | --- | --- | --- | --- |
-| `seq_data` | `无形式默认；是否必需见契约` | 类型、单位及允许格式见右侧本函数参数契约 | 含 accver 和 length 的 data.frame/tibble，或已知完整长度的 GRanges、Seqinfo、GInteractions，或已命名的核酸或蛋白 Biostrings XStringSet。未命名序列先通过 as_ggchord_seq() 显式提供 ids。可选 S4 输入经 as_ggchord_seq() 适配。sequence_unit 为 "bp"（省略时的默认值）或 "aa"，同一图使用一个单位。蛋白长度来自完整序列。aa 图接受连接和通用特征；基因、引物及酶切图层需要 bp。任意字符宽度不等于生物序列长度。 |
+| `seq_data` | `无形式默认；是否必需见契约` | 类型、单位及允许格式见右侧本函数参数契约 | 含 accver 和 length 的 data.frame/tibble，或已知完整长度的 GRanges、Seqinfo、GInteractions，或已命名的核酸或蛋白 Biostrings XStringSet。未命名序列先通过 as_ggchord_seq() 显式提供 ids。可选 S4 输入经 as_ggchord_seq() 适配。sequence_unit 为 "bp"（省略时的默认值）或 "aa"，同一图使用一个单位。蛋白长度来自完整序列。aa 图接受连接和通用特征；基因、引物及酶切图层需要 bp。任意字符宽度不等于生物序列长度。还可直接传入 prepare_ggchord_data() 的结果，提供构图所需的全部表。命名集合仍可按名称选作图层数据。 |
 | `ribbon_data` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 可选比对表，包含 qaccver、saccver、qstart、qend、sstart 和 send。只有映射、筛选或统计需要时，才要求 length 和 pident。GInteractions 通过 as_ggchord_link() 转换，不编造相似度或比对长度。 |
 | `gene_data` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 兼容的旧注释输入，第三位置参数含义不变。新代码使用 feature_data；非 NULL 旧输入在构造时提示一次，渲染时不重复。无类别旧表保留有方向基因语义，未安排删除版本。两种注释输入不能同时提供。 |
 | `debug` | `FALSE` | 类型、单位及允许格式见右侧本函数参数契约 | 逻辑值，是否输出调试信息，默认 FALSE。 |
@@ -2688,7 +2693,7 @@
 | `gene_data` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | as_ggchord_feature() 接受的可选有方向基因输入；无方向区间放入 features。 |
 | `features` | `list()` | 类型、单位及允许格式见右侧本函数参数契约 | 注释或成对区间输入的命名列表。 |
 | `links` | `list()` | 类型、单位及允许格式见右侧本函数参数契约 | 注释或成对区间输入的命名列表。 |
-| `mapping` | `list()` | 类型、单位及允许格式见右侧本函数参数契约 | 命名列表，可用 seq、ribbon、gene 指定列映射（统一 feature_data 使用 gene）。features 和 links 的映射列表按各自集合中的表名命名。每个列映射均为命名字符向量。 |
+| `mapping` | `list()` | 类型、单位及允许格式见右侧本函数参数契约 | 命名列表，可用 seq、ribbon、gene 指定列映射。统一的 feature_data 使用 feature，也兼容旧键 gene。features 和 links 的映射列表按各自集合中的表名命名。每个列映射均为命名字符向量。 |
 | `steps` | `list()` | 类型、单位及允许格式见右侧本函数参数契约 | 明确辅助步骤参数的命名列表，支持 clean、filter、deduplicate、merge、bundle、optimize。数据由准备函数提供，不可覆盖。 |
 | `feature_data` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 统一注释表，与 gene_data 互斥。 |
 

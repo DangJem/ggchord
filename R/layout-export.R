@@ -19,6 +19,12 @@
 #' Dotplots default to `alignment` and `axis`; `axis_layout` contains reversible
 #' axis offsets, directions and source origins. Alignment exports retain all four
 #' endpoints, layer identity and source row; omissions appear in `connection_report`.
+#' @param data_stage Optional character vector selecting source, mapped, statistic
+#'   or geometry. A fresh layout returns these stages in `layer_data` by layer ID.
+#'   Source is the adapted input before role mappings. Mapped is the role table
+#'   before the layer transform. Native track mappings run inside ggplot2 and
+#'   have no separate mapped table. Geometry contains named components.
+#'   Inapplicable stages are NULL. All layers participate regardless of include.
 #' @param original_data Logical. Include the resolved per-layer input tables
 #'   under \code{original_data}, default \code{FALSE}.
 #'
@@ -94,10 +100,11 @@
 #'   geom_link_ribbon()
 #' exported <- export_ggchord_layout(p, include = c("seq", "ribbon"))
 #' names(exported)
+#' export_ggchord_layout(p, data_stage = c("source", "geometry"))$layer_data
 export_ggchord_layout <- function(
     plot,
     include = c("seq", "ribbon", "gene", "feature", "labels", "axis", "track"),
-    original_data = FALSE) {
+    original_data = FALSE, data_stage = NULL) {
   default_include <- missing(include)
   old_error <- ggchord_disable_debug()
   on.exit(options(error = old_error), add = TRUE)
@@ -120,9 +127,29 @@ export_ggchord_layout <- function(
     ggchord_stop("export_ggchord_layout(): original_data must be TRUE or FALSE")
   }
 
+  if (!is.null(data_stage)) {
+    choices <- c("source", "mapped", "statistic", "geometry")
+    if (!is.character(data_stage) || !length(data_stage) || anyNA(data_stage) ||
+        any(!data_stage %in% choices) || anyDuplicated(data_stage))
+      ggchord_stop("data_stage must select unique names from source, mapped, statistic, geometry")
+    if (original_data) ggchord_stop("Use data_stage or original_data, not both")
+    # All requested stages belong to the same fresh evaluation. Keep callbacks
+    # and captures isolated from both the user's layers and the last rendered layout.
+    plot <- ggchord_render_plot_copy(plot)
+    for (i in seq_along(plot$layers)) {
+      layer <- plot$layers[[i]]
+      if (is.null(layer$ggchord_type)) next
+      capture <- new.env(parent = emptyenv())
+      capture$requested <- data_stage
+      layer$ggchord_params$stage_capture <- capture
+    }
+  }
   if (isTRUE(plot$coordinates$ggchord_dotplot)) {
     if (default_include) include <- c("alignment", "axis")
-    return(ggchord_export_dotplot(plot, include, original_data))
+    exported <- ggchord_export_dotplot(plot, include, original_data)
+    if (!is.null(data_stage)) exported$layer_data <- ggchord_export_stages(
+      plot, get_chord_layout(plot, build = FALSE), data_stage)
+    return(exported)
   }
   plot <- ggchord_register_layers(plot)
   layout <- get_chord_layout(plot, build = TRUE)
@@ -163,6 +190,7 @@ export_ggchord_layout <- function(
     )
   }
 
+  capture_geometry <- "geometry" %in% data_stage
   seen_layer_ids <- character(0)
   for (layer in plot$layers) {
     layer_id <- layer$ggchord_layer_id %||% ""
@@ -182,7 +210,7 @@ export_ggchord_layout <- function(
 
     for (component in names(registry)) {
       category <- classify_component(component, layer)
-      if (is.na(category) || !category %in% include) next
+      if (is.na(category) || (!capture_geometry && !category %in% include)) next
       geometry <- registry[[component]]
       if (!is.data.frame(geometry) || nrow(geometry) == 0L) next
       geometry <- as.data.frame(geometry, stringsAsFactors = FALSE)
@@ -200,6 +228,11 @@ export_ggchord_layout <- function(
       }
       geometry$layer_id <- rep(layer_id, nrow(geometry))
       geometry$component <- rep(component, nrow(geometry))
+      if (capture_geometry) {
+        capture <- layer$ggchord_params$stage_capture
+        capture$geometry[[component]] <- ggchord_restore_instance_data(geometry, layout$display_instances)
+      }
+      if (!category %in% include) next
       exported[[category]] <- if (nrow(exported[[category]]) == 0L &&
           ncol(exported[[category]]) == 0L) {
         geometry
@@ -348,6 +381,32 @@ export_ggchord_layout <- function(
           lapply(x, ggchord_restore_instance_data, instances = instances)
       })
   }
+  if (!is.null(data_stage)) exported$layer_data <- ggchord_export_stages(plot, layout, data_stage)
   class(exported) <- c("ggchord_layout_export", "list")
   exported
+}
+
+ggchord_export_stages <- function(plot, layout, stages) {
+  groups <- list()
+  for (layer in plot$layers) {
+    id <- layer$ggchord_layer_id
+    if (is.null(id)) next
+    capture <- layer$ggchord_params$stage_capture
+    data <- list()
+    for (stage in stages) {
+      value <- switch(stage,
+        source = capture$source,
+        mapped = capture$mapped,
+        statistic = ggchord_restore_instance_data(
+          if (identical(layer$ggchord_type, "ribbon")) layout$layer_layouts[[id]]$ribbon_stat_data else
+            layout$track_statistics[[id]], layout$display_instances
+        ),
+        geometry = if (isTRUE(layout$dotplot)) list(alignment = layout$alignment[[id]]) else
+          capture$geometry
+      )
+      data[stage] <- list(value)
+    }
+    groups[[id]] <- data
+  }
+  groups
 }

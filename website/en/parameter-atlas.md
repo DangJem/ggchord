@@ -249,6 +249,8 @@ Start with the [function index](../../man/). Examples compare important paramete
 | `label_repeat` | `c("individual", "bracket")` | Type, units and accepted forms: see this API argument contract at right | "individual" (default) keeps one label per feature. "bracket" shares a counted label and an arc bracket for consecutive, non-overlapping short features with the same name, type, direction and resolved fill in one circular feature band. Source rows and individual arrows remain separate. Only supported with label_layout = "feature". |
 | `label_segment_colour` | `"auto"` | Type, units and accepted forms: see this API argument contract at right | "auto" uses muted grey for leaders from a feature inside the sequence circle to a label outside it. Other leaders retain the theme colour. Explicit colours override both. A custom feature-label segment theme overrides the automatic palette. label_segment_linetype = "auto" uses dashed lines for those inside-to-outside attachments. Labels that stay inside retain their established leader style. |
 | `...` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Additional text parameters. |
+| `placement` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Explicit alternatives to label_layout and label_fit. Placement selects feature, radial, auto or callout. Overflow selects wrap, none, ellipsis, auto or shrink. Shrinking to the feature body requires feature placement. The older argument pair keeps its historical behavior. |
+| `overflow` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Explicit alternatives to label_layout and label_fit. Placement selects feature, radial, auto or callout. Overflow selects wrap, none, ellipsis, auto or shrink. Shrinking to the feature body requires feature placement. The older argument pair keeps its historical behavior. |
 
 </details>
 
@@ -744,7 +746,7 @@ Start with the [function index](../../man/). Examples compare important paramete
 | --- | --- | --- | --- |
 | `mapping` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Standard ggplot2 mapping and layer input. |
 | `data` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Standard ggplot2 mapping and layer input. |
-| `position` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | A position_track() declaration. Every layer requires one. |
+| `position` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Legacy physical band or a ggplot2 position adjustment for native line mappings. A closed line uses the sequence-local position. |
 | `colour` | `"#387D88"` | Type, units and accepted forms: see this API argument contract at right | Fixed styles; fill and colour mappings use the dedicated track roles and scoped scales. |
 | `alpha` | `1` | Type, units and accepted forms: see this API argument contract at right | Fixed styles; fill and colour mappings use the dedicated track roles and scoped scales. |
 | `linewidth` | `0.4` | Type, units and accepted forms: see this API argument contract at right | Fixed styles; fill and colour mappings use the dedicated track roles and scoped scales. |
@@ -754,6 +756,7 @@ Start with the [function index](../../man/). Examples compare important paramete
 | `show.legend` | `NA` | Type, units and accepted forms: see this API argument contract at right | Standard layer arguments. |
 | `inherit.aes` | `FALSE` | Type, units and accepted forms: see this API argument contract at right | Standard layer arguments. |
 | `...` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Extra geom parameters. |
+| `track` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Physical band from position_track(). Supply it once per layer. |
 
 </details>
 
@@ -768,7 +771,7 @@ Start with the [function index](../../man/). Examples compare important paramete
 | --- | --- | --- | --- |
 | `mapping` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Standard ggplot2 mapping and layer input. |
 | `data` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Standard ggplot2 mapping and layer input. |
-| `position` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | A position_track() declaration. Every layer requires one. |
+| `position` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Legacy physical band or a ggplot2 position adjustment for native line mappings. A closed line uses the sequence-local position. |
 | `fill` | `"#86AFB9"` | Type, units and accepted forms: see this API argument contract at right | Fixed styles; fill and colour mappings use the dedicated track roles and scoped scales. |
 | `colour` | `NA` | Type, units and accepted forms: see this API argument contract at right | Fixed styles; fill and colour mappings use the dedicated track roles and scoped scales. |
 | `alpha` | `1` | Type, units and accepted forms: see this API argument contract at right | Fixed styles; fill and colour mappings use the dedicated track roles and scoped scales. |
@@ -778,6 +781,7 @@ Start with the [function index](../../man/). Examples compare important paramete
 | `show.legend` | `NA` | Type, units and accepted forms: see this API argument contract at right | Standard layer arguments. |
 | `inherit.aes` | `FALSE` | Type, units and accepted forms: see this API argument contract at right | Standard layer arguments. |
 | `...` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Extra geom parameters. |
+| `track` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Physical band from position_track(). Supply it once per layer. |
 
 </details>
 
@@ -2299,6 +2303,7 @@ Start with the [function index](../../man/). Examples compare important paramete
 | `plot` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | A ggchord plot. |
 | `include` | `c("seq", "ribbon", "gene", "feature", "labels", "axis", "track")` | Type, units and accepted forms: see this API argument contract at right | Character vector selecting any of "seq", "ribbon", "gene", "feature", "labels", "alignment", "link", "restriction", "track", and "axis". Point links and restriction sites require explicit selection. Dotplots default to alignment and axis; axis_layout contains reversible axis offsets, directions and source origins. Alignment exports retain all four endpoints, layer identity and source row; omissions appear in connection_report. |
 | `original_data` | `FALSE` | Type, units and accepted forms: see this API argument contract at right | Logical. Include the resolved per-layer input tables under original_data, default FALSE. |
+| `data_stage` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional character vector selecting source, mapped, statistic or geometry. A fresh layout returns these stages in layer_data by layer ID. Source is the adapted input before role mappings. Mapped is the role table before the layer transform. Native track mappings run inside ggplot2 and have no separate mapped table. Geometry contains named components. Inapplicable stages are NULL. All layers participate regardless of include. |
 
 </details>
 
@@ -2527,7 +2532,7 @@ Start with the [function index](../../man/). Examples compare important paramete
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `seq_data` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | data.frame/tibble with accver and length, or a GRanges, Seqinfo or GInteractions object with known full sequence lengths, or a named nucleotide or protein Biostrings XStringSet. Unnamed sequence objects must first use as_ggchord_seq() with explicit ids. Optional S4 inputs use as_ggchord_seq(). The sequence_unit column is "bp" (default when omitted) or "aa". All rows use the same unit. Protein lengths come from complete proteins. Native aa plots accept links and generic features; gene, primer and restriction layers require bp. Arbitrary character widths are not biological sequence lengths. |
+| `seq_data` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | data.frame/tibble with accver and length, or a GRanges, Seqinfo or GInteractions object with known full sequence lengths, or a named nucleotide or protein Biostrings XStringSet. Unnamed sequence objects must first use as_ggchord_seq() with explicit ids. Optional S4 inputs use as_ggchord_seq(). The sequence_unit column is "bp" (default when omitted) or "aa". All rows use the same unit. Protein lengths come from complete proteins. Native aa plots accept links and generic features; gene, primer and restriction layers require bp. Arbitrary character widths are not biological sequence lengths. A result from prepare_ggchord_data() supplies all constructor tables. Named collections remain available for explicit layer selection. |
 | `ribbon_data` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional alignment table with qaccver, saccver, qstart, qend, sstart and send. length and pident are optional unless requested by a mapping, filter or statistic. A GInteractions object uses as_ggchord_link() without inventing identity or alignment length. |
 | `gene_data` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Compatible legacy annotation input. The third positional argument retains its meaning. Use feature_data in new code; a non-NULL legacy input emits one message at construction, never during rendering. Untyped legacy tables retain their directional gene semantics. No removal version is scheduled. Do not supply both annotation inputs. |
 | `debug` | `FALSE` | Type, units and accepted forms: see this API argument contract at right | Logical. Whether to output debug information, default FALSE |
@@ -2688,7 +2693,7 @@ Start with the [function index](../../man/). Examples compare important paramete
 | `gene_data` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional directional gene input accepted by as_ggchord_feature(). Nondirectional intervals belong in features. |
 | `features` | `list()` | Type, units and accepted forms: see this API argument contract at right | Named lists of feature or paired-interval inputs. |
 | `links` | `list()` | Type, units and accepted forms: see this API argument contract at right | Named lists of feature or paired-interval inputs. |
-| `mapping` | `list()` | Type, units and accepted forms: see this API argument contract at right | Named list of seq, ribbon and gene column mappings. The gene mapping applies to unified feature_data. Name entries in the features and links mapping lists after their collection members. Each column mapping is a named character vector. |
+| `mapping` | `list()` | Type, units and accepted forms: see this API argument contract at right | Named list with optional seq, ribbon, gene column mappings (use feature for unified feature_data, or its legacy key gene), and features/ links lists of mappings named like the respective collections. Each column mapping is a named character vector. |
 | `steps` | `list()` | Type, units and accepted forms: see this API argument contract at right | Named list of explicit helper argument lists. Supported names: clean, filter, deduplicate, merge, bundle, optimize. Data arguments are supplied by preparation and cannot be overridden. |
 | `feature_data` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Unified annotation table, mutually exclusive with gene_data. |
 

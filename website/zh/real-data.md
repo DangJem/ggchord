@@ -99,10 +99,7 @@ prepared <- prepare_ggchord_data(
   features = list(cds = source_cds)
 )
 stopifnot(prepared$report$valid)
-p_prepared <- ggchord(
-  seq_data = prepared$seq_data,
-  ribbon_data = prepared$ribbon_data
-) +
+p_prepared <- ggchord(prepared) +
   geom_seq() +
   geom_link_ribbon() +
   geom_feature(data = prepared$features$cds) +

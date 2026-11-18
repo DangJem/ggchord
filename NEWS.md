@@ -24,6 +24,18 @@
 - Circular labels reuse exact glyph measurements within a line. Feature
   collision checks evaluate polygon edges in batches and stop at the first hit.
 
+- Pass a prepared result directly to `ggchord()`. The `feature` mapping key
+  renames columns in unified feature data. Named collections can be selected
+  with an explicit layer data argument.
+- Line and tile shortcuts accept `track = position_track(...)`. Ordinary
+  lines accept native x/y mappings. Feature labels can specify placement
+  independently from overflow handling.
+- Select `source`, `mapped`, `statistic` or `geometry` with `data_stage` in
+  `export_ggchord_layout()` to follow a record through one fresh evaluation.
+- Circular label placement reuses glyph sizes during each label search.
+  Linear leaders skip polygons outside their bounding boxes and skip route
+  checks for candidates already rejected by the collision policy.
+
 # ggchord 0.28.2
 
 - Stop the VCF help fixture after its third observed record instead of reading

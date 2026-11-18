@@ -1298,6 +1298,28 @@
     "units": "see canonical argument contract"
   },
   {
+    "api": "geom_feature_label_repel",
+    "parameter": "placement",
+    "default": "NULL",
+    "type": "Type, units and accepted forms: see this API argument contract at right",
+    "constraint": "Explicit alternatives to label_layout and label_fit. Placement selects feature, radial, auto or callout. Overflow selects wrap, none, ellipsis, auto or shrink. Shrinking to the feature body requires feature placement. The older argument pair keeps its historical behavior.",
+    "source": "man/geom_feature_label_repel.Rd",
+    "requiredness": "see API contract; not inferred from formals",
+    "type_source": "canonical Rd argument contract",
+    "units": "see canonical argument contract"
+  },
+  {
+    "api": "geom_feature_label_repel",
+    "parameter": "overflow",
+    "default": "NULL",
+    "type": "Type, units and accepted forms: see this API argument contract at right",
+    "constraint": "Explicit alternatives to label_layout and label_fit. Placement selects feature, radial, auto or callout. Overflow selects wrap, none, ellipsis, auto or shrink. Shrinking to the feature body requires feature placement. The older argument pair keeps its historical behavior.",
+    "source": "man/geom_feature_label_repel.Rd",
+    "requiredness": "see API contract; not inferred from formals",
+    "type_source": "canonical Rd argument contract",
+    "units": "see canonical argument contract"
+  },
+  {
     "api": "geom_feature_plasmid",
     "parameter": "mapping",
     "default": "NULL",
@@ -4105,9 +4127,9 @@
   {
     "api": "geom_track_line",
     "parameter": "position",
-    "default": "",
+    "default": "NULL",
     "type": "Type, units and accepted forms: see this API argument contract at right",
-    "constraint": "A position_track() declaration. Every layer requires one.",
+    "constraint": "Legacy physical band or a ggplot2 position adjustment for native line mappings. A closed line uses the sequence-local position.",
     "source": "man/geom_track_tile.Rd",
     "requiredness": "see API contract; not inferred from formals",
     "type_source": "canonical Rd argument contract",
@@ -4213,6 +4235,17 @@
     "units": "see canonical argument contract"
   },
   {
+    "api": "geom_track_line",
+    "parameter": "track",
+    "default": "NULL",
+    "type": "Type, units and accepted forms: see this API argument contract at right",
+    "constraint": "Physical band from position_track(). Supply it once per layer.",
+    "source": "man/geom_track_tile.Rd",
+    "requiredness": "see API contract; not inferred from formals",
+    "type_source": "canonical Rd argument contract",
+    "units": "see canonical argument contract"
+  },
+  {
     "api": "geom_track_tile",
     "parameter": "mapping",
     "default": "NULL",
@@ -4237,9 +4270,9 @@
   {
     "api": "geom_track_tile",
     "parameter": "position",
-    "default": "",
+    "default": "NULL",
     "type": "Type, units and accepted forms: see this API argument contract at right",
-    "constraint": "A position_track() declaration. Every layer requires one.",
+    "constraint": "Legacy physical band or a ggplot2 position adjustment for native line mappings. A closed line uses the sequence-local position.",
     "source": "man/geom_track_tile.Rd",
     "requiredness": "see API contract; not inferred from formals",
     "type_source": "canonical Rd argument contract",
@@ -4339,6 +4372,17 @@
     "default": "",
     "type": "Type, units and accepted forms: see this API argument contract at right",
     "constraint": "Extra geom parameters.",
+    "source": "man/geom_track_tile.Rd",
+    "requiredness": "see API contract; not inferred from formals",
+    "type_source": "canonical Rd argument contract",
+    "units": "see canonical argument contract"
+  },
+  {
+    "api": "geom_track_tile",
+    "parameter": "track",
+    "default": "NULL",
+    "type": "Type, units and accepted forms: see this API argument contract at right",
+    "constraint": "Physical band from position_track(). Supply it once per layer.",
     "source": "man/geom_track_tile.Rd",
     "requiredness": "see API contract; not inferred from formals",
     "type_source": "canonical Rd argument contract",
@@ -12826,6 +12870,17 @@
     "units": "see canonical argument contract"
   },
   {
+    "api": "export_ggchord_layout",
+    "parameter": "data_stage",
+    "default": "NULL",
+    "type": "Type, units and accepted forms: see this API argument contract at right",
+    "constraint": "Optional character vector selecting source, mapped, statistic or geometry. A fresh layout returns these stages in layer_data by layer ID. Source is the adapted input before role mappings. Mapped is the role table before the layer transform. Native track mappings run inside ggplot2 and have no separate mapped table. Geometry contains named components. Inapplicable stages are NULL. All layers participate regardless of include.",
+    "source": "man/export_ggchord_layout.Rd",
+    "requiredness": "see API contract; not inferred from formals",
+    "type_source": "canonical Rd argument contract",
+    "units": "see canonical argument contract"
+  },
+  {
     "api": "filter_ggchord_ribbons",
     "parameter": "ribbon_data",
     "default": "",
@@ -13754,7 +13809,7 @@
     "parameter": "seq_data",
     "default": "",
     "type": "Type, units and accepted forms: see this API argument contract at right",
-    "constraint": "data.frame/tibble with accver and length, or a GRanges, Seqinfo or GInteractions object with known full sequence lengths, or a named nucleotide or protein Biostrings XStringSet. Unnamed sequence objects must first use as_ggchord_seq() with explicit ids. Optional S4 inputs use as_ggchord_seq(). The sequence_unit column is \"bp\" (default when omitted) or \"aa\". All rows use the same unit. Protein lengths come from complete proteins. Native aa plots accept links and generic features; gene, primer and restriction layers require bp. Arbitrary character widths are not biological sequence lengths.",
+    "constraint": "data.frame/tibble with accver and length, or a GRanges, Seqinfo or GInteractions object with known full sequence lengths, or a named nucleotide or protein Biostrings XStringSet. Unnamed sequence objects must first use as_ggchord_seq() with explicit ids. Optional S4 inputs use as_ggchord_seq(). The sequence_unit column is \"bp\" (default when omitted) or \"aa\". All rows use the same unit. Protein lengths come from complete proteins. Native aa plots accept links and generic features; gene, primer and restriction layers require bp. Arbitrary character widths are not biological sequence lengths. A result from prepare_ggchord_data() supplies all constructor tables. Named collections remain available for explicit layer selection.",
     "source": "man/ggchord.Rd",
     "requiredness": "see API contract; not inferred from formals",
     "type_source": "canonical Rd argument contract",
@@ -14469,7 +14524,7 @@
     "parameter": "mapping",
     "default": "list()",
     "type": "Type, units and accepted forms: see this API argument contract at right",
-    "constraint": "Named list with optional seq, ribbon, gene column mappings (use gene for unified feature_data), and features/ links lists of mappings named like the respective collections. Each column mapping is a named character vector.",
+    "constraint": "Named list with optional seq, ribbon, gene column mappings (use feature for unified feature_data, or its legacy key gene), and features/ links lists of mappings named like the respective collections. Each column mapping is a named character vector.",
     "source": "man/prepare_ggchord_data.Rd",
     "requiredness": "see API contract; not inferred from formals",
     "type_source": "canonical Rd argument contract",

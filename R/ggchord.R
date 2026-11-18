@@ -47,6 +47,8 @@ globalVariables(c(
 #'   Protein lengths come from complete proteins. Native aa plots accept
 #'   links and generic features; gene, primer and restriction layers require bp.
 #'   Arbitrary character widths are not biological sequence lengths.
+#'   A result from [prepare_ggchord_data()] supplies all constructor tables.
+#'   Named collections remain available for explicit layer selection.
 #' @param ribbon_data Optional alignment table with qaccver, saccver, qstart,
 #'   qend, sstart and send. length and pident are optional unless requested
 #'   by a mapping, filter or statistic. A `GInteractions` object uses
@@ -113,6 +115,19 @@ ggchord <- function(
     feature_data = NULL,
     ...
 ) {
+  legacy_prepared <- is.list(seq_data) && !is.data.frame(seq_data) &&
+    identical(names(seq_data), c("seq_data", "ribbon_data", "gene_data", "feature_data",
+                                 "features", "links", "report")) &&
+    is.list(seq_data$report) && !is.null(seq_data$report$validation)
+  if (inherits(seq_data, "ggchord_prepared") || legacy_prepared) {
+    if (!missing(ribbon_data) || !missing(gene_data) || !missing(feature_data))
+      ggchord_stop("ggchord(): pass either prepared data or separate constructor tables")
+    prepared <- seq_data
+    seq_data <- prepared$seq_data
+    ribbon_data <- prepared$ribbon_data
+    gene_data <- prepared$gene_data
+    feature_data <- prepared$feature_data
+  }
   if (!is.null(gene_data) && !is.null(feature_data)) ggchord_stop(
     "ggchord(): use only one of gene_data and feature_data; merge annotations explicitly or supply layer data")
   if (inherits(seq_data, "GRanges") || inherits(seq_data, "Seqinfo") ||

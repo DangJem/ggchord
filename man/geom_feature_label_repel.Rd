@@ -24,7 +24,9 @@ geom_feature_label_repel(
   label_segment_layer = c("below", "above"),
   label_repeat = c("individual", "bracket"),
   label_segment_colour = "auto",
-  ...
+  ...,
+  placement = NULL,
+  overflow = NULL
 )
 }
 \arguments{
@@ -111,6 +113,11 @@ inside-to-outside attachments. Labels that stay inside retain their
 established leader style.}
 
 \item{...}{Additional text parameters.}
+
+\item{placement, overflow}{Explicit alternatives to label_layout and label_fit.
+Placement selects feature, radial, auto or callout. Overflow selects wrap,
+none, ellipsis, auto or shrink. Shrinking to the feature body requires
+feature placement. The older argument pair keeps its historical behavior.}
 }
 \value{
 A composite text and leader-line layer.
@@ -157,4 +164,6 @@ ggchord(plasmid_example_pTRE_Tight_BI[c("accver", "length")],
   coord_circular() +
   theme_ggchord_plasmid()
 }
+ggchord(seq_data_example, feature_data = gene_data_example) +
+  geom_feature_label_repel(placement = "callout", overflow = "ellipsis")
 }

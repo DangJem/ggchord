@@ -8,7 +8,7 @@
 geom_track_tile(
   mapping = NULL,
   data = NULL,
-  position,
+  position = NULL,
   fill = "#86AFB9",
   colour = NA,
   alpha = 1,
@@ -17,13 +17,14 @@ geom_track_tile(
   bounds = c("error", "clip"),
   show.legend = NA,
   inherit.aes = FALSE,
-  ...
+  ...,
+  track = NULL
 )
 
 geom_track_line(
   mapping = NULL,
   data = NULL,
-  position,
+  position = NULL,
   colour = "#387D88",
   alpha = 1,
   linewidth = 0.4,
@@ -32,13 +33,15 @@ geom_track_line(
   bounds = c("error", "clip"),
   show.legend = NA,
   inherit.aes = FALSE,
-  ...
+  ...,
+  track = NULL
 )
 }
 \arguments{
 \item{mapping, data}{Standard ggplot2 mapping and layer input.}
 
-\item{position}{A \code{\link[=position_track]{position_track()}} declaration. Every layer requires one.}
+\item{position}{Legacy physical band or a ggplot2 position adjustment for
+native line mappings. A closed line uses the sequence-local position.}
 
 \item{fill, colour, alpha, linewidth, linetype}{Fixed styles; fill and colour
 mappings use the dedicated track roles and scoped scales.}
@@ -49,6 +52,8 @@ Clipping is reported and never changes source values.}
 \item{show.legend, inherit.aes}{Standard layer arguments.}
 
 \item{...}{Extra geom parameters.}
+
+\item{track}{Physical band from \code{\link[=position_track]{position_track()}}. Supply it once per layer.}
 
 \item{closed}{Explicitly close a complete circular line series.}
 }
@@ -108,4 +113,6 @@ p_tracks <- ggchord(seq_data = track_seq) +
   scale_track_fill_gradientn("gc", colours = c("#EDF1EA", "#8AAE9C", "#345F58")) +
   coord_circular() +
   doc_theme
+ggchord(track_seq) + geom_track_line(aes(x = (start + end) / 2, y = gc), data = bins,
+  track = position_track("gc")) + coord_collinear()
 }

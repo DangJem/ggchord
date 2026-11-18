@@ -26,7 +26,7 @@ prepare_ggchord_data(
 \item{features, links}{Named lists of feature or paired-interval inputs.}
 
 \item{mapping}{Named list with optional \code{seq}, \code{ribbon}, \code{gene} column
-mappings (use \code{gene} for unified \code{feature_data}), and \code{features}/
+mappings (use \code{feature} for unified \code{feature_data}, or its legacy key \code{gene}), and \code{features}/
 \code{links} lists of mappings named like the respective
 collections. Each column mapping is a named character vector.}
 
@@ -90,6 +90,7 @@ genes <- gene_data_example |>
   transmute(accver, start, end, strand = source_strand)
 prepared <- prepare_ggchord_data(seqs, links, features = list(genes = genes))
 prepared$report
+ggchord(prepared) + geom_seq() + geom_link_ribbon()
 }
 \seealso{
 \code{\link{ggchord_data_contract}}

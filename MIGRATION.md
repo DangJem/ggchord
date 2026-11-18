@@ -8,6 +8,13 @@
 | Scientific examples | Use `strand = source_strand` for biological interpretation and `unstranded = "keep"` to retain unknown GFF3 strands. |
 | Feature direction | When supplying both `strand` and `directionality` (or its `direction` alias), correct the conflicting rows at the source or pass just the authoritative field to the layer. |
 | Layer data functions | Each layer reads its function once per fresh render. Orientation inference, geometry and the exported layer input use the same rows. |
+| Prepared data | Pass the default tables together as `ggchord(prepared)`. Select a named collection at its layer, for example `geom_feature(data = prepared$features$cds)`. Rename columns in `feature_data` with `mapping = list(feature = c(strand = "source_strand"))`. |
+| Quantitative tracks | Use `track = position_track("gc")` for the physical band on line and tile layers. Ordinary lines accept `aes(x = pos, y = gc)`. Set `closed = TRUE` for circular closure. Interval tiles keep their start and end positions. Choose `geom_track_bar()` for counts or `geom_track_col()` for supplied heights. |
+| Automatic labels | Set `placement = "callout", overflow = "ellipsis"` on `geom_feature_label_repel()` for external labels with truncation, or `placement = "feature", overflow = "shrink"` to fit text to a feature. Existing `label_layout` and `label_fit` calls retain their interpretation. Use one pair per call. |
+| Inspect layer data | `export_ggchord_layout(p, data_stage = c("source", "mapped", "statistic", "geometry"))$layer_data` returns the selected stages by layer ID. Source is the adapted input. Native track mappings execute inside ggplot2, so their mapped entry is NULL and their statistic is available. A data callback runs afresh for this export. |
+| Themes and guides | Use `theme(text = element_text(family = "sans"))` for plot-wide text, `labs(ribbon_fill = "Identity")` for a single ribbon legend title, and `theme(ggchord.seq.label = element_text(size = 10))` for sequence label size. |
+| Shape a ribbon | Start with `geom_link_ribbon()`. Set `link_gap` for endpoint clearance, `link_avoid = "smooth"` for local avoidance, and `link_ctrl_point` when the middle of the curve needs explicit controls. |
+| Align the origin | For twelve, three, six and nine o’clock, use 0, −90, 180 and 90 degrees respectively in `coord_circular(rotation = ...)`, or 90, 0, 270 and 180 in `coord_radial_synteny(start_angle = ...)`. Circular `direction` sets the direction of increasing positions. Radial `clockwise` orders subsequent spokes. |
 
 ## 0.19.0: static panel composition
 

@@ -91,6 +91,10 @@ geom_feature_label <- function(
 #'   truncating the text. Text size is bounded by `label_min_size`; unresolved
 #'   labels keep their requested font and use adjacent/external placement or
 #'   hiding. Other fitting modes retain their existing behavior.
+#' @param placement,overflow Explicit alternatives to label_layout and label_fit.
+#'   Placement selects feature, radial, auto or callout. Overflow selects wrap,
+#'   none, ellipsis, auto or shrink. Shrinking to the feature body requires
+#'   feature placement. The older argument pair keeps its historical behavior.
 #' @param label_min_size Minimum text size in millimetres for explicit shrink,
 #'   default 1.5. Must not exceed the requested text size. Original text,
 #'   requested/final sizes and fitting reason are exported with the label.
@@ -161,6 +165,8 @@ geom_feature_label <- function(
 #'   coord_circular() +
 #'   theme_ggchord_plasmid()
 #' }
+#' ggchord(seq_data_example, feature_data = gene_data_example) +
+#'   geom_feature_label_repel(placement = "callout", overflow = "ellipsis")
 geom_feature_label_repel <- function(
     mapping = NULL, data = NULL,
     label_layout = c("feature", "radial", "auto", "callout"),
@@ -176,7 +182,7 @@ geom_feature_label_repel <- function(
     label_segment_overlap_alpha = .18, label_segment_linetype = "auto",
     label_segment_layer = c("below", "above"),
     label_repeat = c("individual", "bracket"),
-    label_segment_colour = "auto", ...) {
+    label_segment_colour = "auto", ..., placement = NULL, overflow = NULL) {
   position_explicit <- !missing(position)
   dots <- list(...)
   ggchord_reject_label_prefix(dots, "geom_feature_label_repel()")
@@ -186,6 +192,14 @@ geom_feature_label_repel <- function(
   if (!identical(label_segment_colour,"auto")) tryCatch(
     grDevices::col2rgb(label_segment_colour), error=function(e)
       ggchord_stop("label_segment_colour must be 'auto' or one colour"))
+  if (!is.null(placement) || !is.null(overflow)) {
+    if (!missing(label_layout) || !missing(label_fit))
+      ggchord_stop("Use placement/overflow or label_layout/label_fit, not both")
+    label_layout <- match.arg(placement %||% "feature", c("feature", "radial", "auto", "callout"))
+    label_fit <- match.arg(overflow %||% "wrap", c("wrap", "none", "ellipsis", "auto", "shrink"))
+    if (label_fit == "shrink" && label_layout != "feature")
+      ggchord_stop("overflow = 'shrink' needs placement = 'feature' to define the available space")
+  }
   label_repeat <- match.arg(label_repeat)
   label_segment_layer <- match.arg(label_segment_layer)
   label_layout <- match.arg(label_layout)

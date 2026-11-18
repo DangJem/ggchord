@@ -358,7 +358,8 @@
     "parameters": {
       "plot": "",
       "include": "c(\"seq\", \"ribbon\", \"gene\", \"feature\", \"labels\", \"axis\", \"track\")",
-      "original_data": "FALSE"
+      "original_data": "FALSE",
+      "data_stage": "NULL"
     }
   },
   {
@@ -599,7 +600,9 @@
       "label_segment_layer": "c(\"below\", \"above\")",
       "label_repeat": "c(\"individual\", \"bracket\")",
       "label_segment_colour": "\"auto\"",
-      "...": ""
+      "...": "",
+      "placement": "NULL",
+      "overflow": "NULL"
     }
   },
   {
@@ -995,7 +998,7 @@
     "parameters": {
       "mapping": "NULL",
       "data": "NULL",
-      "position": "",
+      "position": "NULL",
       "colour": "\"#387D88\"",
       "alpha": "1",
       "linewidth": "0.4",
@@ -1004,7 +1007,8 @@
       "bounds": "c(\"error\", \"clip\")",
       "show.legend": "NA",
       "inherit.aes": "FALSE",
-      "...": ""
+      "...": "",
+      "track": "NULL"
     }
   },
   {
@@ -1014,7 +1018,7 @@
     "parameters": {
       "mapping": "NULL",
       "data": "NULL",
-      "position": "",
+      "position": "NULL",
       "fill": "\"#86AFB9\"",
       "colour": "NA",
       "alpha": "1",
@@ -1023,7 +1027,8 @@
       "bounds": "c(\"error\", \"clip\")",
       "show.legend": "NA",
       "inherit.aes": "FALSE",
-      "...": ""
+      "...": "",
+      "track": "NULL"
     }
   },
   {

@@ -120,6 +120,9 @@ ggchord_track_native_input <- function(layer, plot) {
   raw <- layer$ggchord_input_data %||% plot$ggchord$data$seq_data
   if (is.function(raw)) raw <- raw(plot$ggchord$data$seq_data)
   ggchord_require_columns(raw, character(), "geom_track()")
+  capture <- p$stage_capture
+  if (!is.null(capture) && "source" %in% capture$requested && is.null(capture$source))
+    capture$source <- raw
   mapping <- p$native_mapping
   if (isTRUE(p$native_inherit)) for (key in setdiff(names(plot$mapping), names(mapping)))
     mapping[[key]] <- plot$mapping[[key]]

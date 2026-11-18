@@ -8,6 +8,13 @@
 | 科学示例 | 真实数据使用 `strand = source_strand`，GFF3 可用 `unstranded = "keep"` 保留未知链。 |
 | 注释方向 | 同时提供 `strand` 和 `directionality`（或别名 `direction`）时，按报错行核对来源，或只把可信字段交给图层。 |
 | 函数形式的图层数据 | 每次重新绘制时，每个图层读取一次。方向推断、几何及随布局导出的图层输入使用同一批记录。 |
+| 准备结果 | 将原本逐项传递的默认表简写为 `ggchord(prepared)`。命名集合由图层选取，如 `geom_feature(data = prepared$features$cds)`。在 `feature_data` 上重命名列用 `mapping = list(feature = c(strand = "source_strand"))`。 |
+| 定量轨道 | 折线和瓦片均可用 `track = position_track("gc")` 指定物理轨道。普通折线支持 `aes(x = pos, y = gc)`。闭合圆形折线另设 `closed = TRUE`，区间瓦片继续使用起止位置。观察计数用 `geom_track_bar()`，已有数值高度用 `geom_track_col()`。 |
+| 自动标签 | 在 `geom_feature_label_repel()` 中用 `placement = "callout", overflow = "ellipsis"` 允许外置省略，或用 `placement = "feature", overflow = "shrink"` 按特征空间缩小字号。已有的 `label_layout`、`label_fit` 组合仍按原规则解释。一次调用只选一组。 |
+| 追溯图层数据 | `export_ggchord_layout(p, data_stage = c("source", "mapped", "statistic", "geometry"))$layer_data` 按图层 ID 返回所选阶段。source 是适配后的输入。原生轨道的映射在 ggplot2 内执行，其 mapped 为空，可查 statistic。数据函数在本次导出重新求值。 |
+| 主题与图例 | 全图字体用 `theme(text = element_text(family = "sans"))`，单个连接带图例标题用 `labs(ribbon_fill = "Identity")`，序列标签字号用 `theme(ggchord.seq.label = element_text(size = 10))`。 |
+| 调整连接带 | 先用 `geom_link_ribbon()` 查看默认几何。端点留白用 `link_gap`，局部避让用 `link_avoid = "smooth"`，需要改变中段曲线时再指定 `link_ctrl_point`。 |
+| 起始方向 | 依次对齐 12、3、6、9 点钟方向时，`coord_circular(rotation = ...)` 分别取 0、−90、180、90，`coord_radial_synteny(start_angle = ...)` 分别取 90、0、270、180 度。前者的 `direction` 控制序列坐标递增方向，后者的 `clockwise` 控制后续辐条次序。 |
 
 ## 0.19.0：静态跨面板组合
 

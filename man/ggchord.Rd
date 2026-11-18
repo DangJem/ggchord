@@ -23,7 +23,9 @@ Optional S4 inputs use \code{\link[=as_ggchord_seq]{as_ggchord_seq()}}. The \cod
 \code{"bp"} (default when omitted) or \code{"aa"}. All rows use the same unit.
 Protein lengths come from complete proteins. Native aa plots accept
 links and generic features; gene, primer and restriction layers require bp.
-Arbitrary character widths are not biological sequence lengths.}
+Arbitrary character widths are not biological sequence lengths.
+A result from \code{\link[=prepare_ggchord_data]{prepare_ggchord_data()}} supplies all constructor tables.
+Named collections remain available for explicit layer selection.}
 
 \item{ribbon_data}{Optional alignment table with qaccver, saccver, qstart,
 qend, sstart and send. length and pident are optional unless requested

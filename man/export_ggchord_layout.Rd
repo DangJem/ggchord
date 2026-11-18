@@ -7,7 +7,8 @@
 export_ggchord_layout(
   plot,
   include = c("seq", "ribbon", "gene", "feature", "labels", "axis", "track"),
-  original_data = FALSE
+  original_data = FALSE,
+  data_stage = NULL
 )
 }
 \arguments{
@@ -23,6 +24,13 @@ endpoints, layer identity and source row; omissions appear in \code{connection_r
 
 \item{original_data}{Logical. Include the resolved per-layer input tables
 under \code{original_data}, default \code{FALSE}.}
+
+\item{data_stage}{Optional character vector selecting source, mapped, statistic
+or geometry. A fresh layout returns these stages in \code{layer_data} by layer ID.
+Source is the adapted input before role mappings. Mapped is the role table
+before the layer transform. Native track mappings run inside ggplot2 and
+have no separate mapped table. Geometry contains named components.
+Inapplicable stages are NULL. All layers participate regardless of include.}
 }
 \value{
 An object of class \code{ggchord_layout_export}. Selected component
@@ -109,4 +117,5 @@ p <- ggchord(seq_data_example, ribbon_data_example) +
   geom_link_ribbon()
 exported <- export_ggchord_layout(p, include = c("seq", "ribbon"))
 names(exported)
+export_ggchord_layout(p, data_stage = c("source", "geometry"))$layer_data
 }

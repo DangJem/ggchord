@@ -122,7 +122,11 @@ ggchord_layer_source <- function(lyr, fallback) {
     ggchord_stop("ggchord layer data must be a data.frame, a supported interval object, ",
       "or a function returning supported data")
   }
-  ggchord_normalize_accver(as.data.frame(data, stringsAsFactors = FALSE))
+  data <- ggchord_normalize_accver(as.data.frame(data, stringsAsFactors = FALSE))
+  capture <- lyr$ggchord_params$stage_capture
+  if (!is.null(capture) && "source" %in% capture$requested && is.null(capture$source))
+    capture$source <- data
+  data
 }
 
 #' Resolve a layer's input table and role mappings
@@ -189,6 +193,10 @@ ggchord_resolve_layer_input <- function(lyr, fallback = NULL,
       ggchord_require_columns(data, columns, paste0("Mapping `", nm, "`"))
     }
   }
+  capture <- lyr$ggchord_params$stage_capture
+  if (!is.null(capture) && "mapped" %in% capture$requested &&
+      is.null(capture$mapped) && is.null(lyr$ggchord_params$native_geom))
+    capture$mapped <- data
   transform <- lyr$ggchord_input_transform
   if (!is.null(transform)) data <- transform(data)
   if (!is.null(source)) {

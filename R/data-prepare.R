@@ -98,7 +98,7 @@ ggchord_prepare_direction <- function(data, caller) {
 #'   [as_ggchord_feature()]. Nondirectional intervals belong in `features`.
 #' @param features,links Named lists of feature or paired-interval inputs.
 #' @param mapping Named list with optional `seq`, `ribbon`, `gene` column
-#'   mappings (use `gene` for unified `feature_data`), and `features`/
+#'   mappings (use `feature` for unified `feature_data`, or its legacy key `gene`), and `features`/
 #'   `links` lists of mappings named like the respective
 #'   collections. Each column mapping is a named character vector.
 #' @param steps Named list of explicit helper argument lists. Supported names:
@@ -128,13 +128,19 @@ ggchord_prepare_direction <- function(data, caller) {
 #'   transmute(accver, start, end, strand = source_strand)
 #' prepared <- prepare_ggchord_data(seqs, links, features = list(genes = genes))
 #' prepared$report
+#' ggchord(prepared) + geom_seq() + geom_link_ribbon()
 prepare_ggchord_data <- function(seq_data, ribbon_data = NULL, gene_data = NULL,
     features = list(), links = list(), mapping = list(), steps = list(), feature_data = NULL) {
   unified <- !is.null(feature_data)
   if (unified && !is.null(gene_data)) ggchord_stop("Supply only feature_data or gene_data")
   if (unified) gene_data <- feature_data
   caller <- "prepare_ggchord_data()"
-  mapping <- ggchord_prepare_options(mapping, c("seq", "ribbon", "gene", "features", "links"), caller)
+  mapping <- ggchord_prepare_options(mapping, c("seq", "ribbon", "feature", "gene", "features", "links"), caller)
+  if ("feature" %in% names(mapping)) {
+    if (!unified || "gene" %in% names(mapping))
+      ggchord_stop(caller, ": mapping$feature requires feature_data and cannot be combined with mapping$gene")
+    mapping$gene <- mapping[["feature"]]
+  }
   stage_order <- c("clean", "filter", "deduplicate", "merge", "bundle", "optimize")
   steps <- ggchord_prepare_options(steps, stage_order, caller)
   helpers <- list(clean = clean_ggchord_data, filter = filter_ggchord_ribbons,
@@ -228,7 +234,7 @@ prepare_ggchord_data <- function(seq_data, ribbon_data = NULL, gene_data = NULL,
     pair_counts <- stats::aggregate(list(n = rep(1L, nrow(ribbon_data))),
       ribbon_data[c("qaccver", "saccver")], sum)
   }
-  list(seq_data = seq_data, ribbon_data = ribbon_data,
+  structure(list(seq_data = seq_data, ribbon_data = ribbon_data,
     gene_data = if (!unified) gene_data else NULL,
     feature_data = if (unified) gene_data else NULL,
     features = features, links = links, report = list(
@@ -237,5 +243,6 @@ prepare_ggchord_data <- function(seq_data, ribbon_data = NULL, gene_data = NULL,
       validation = list(before = before, after = after), feature_issues = feature_issues,
       link_validation = link_validation, conversions = conversions, steps = stage_reports,
       step_arguments = steps,
-      source_rows = source_rows, pair_counts = pair_counts, layout_suggestion = suggestion))
+      source_rows = source_rows, pair_counts = pair_counts, layout_suggestion = suggestion)),
+    class = c("ggchord_prepared", "list"))
 }

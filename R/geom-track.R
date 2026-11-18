@@ -88,7 +88,9 @@ position_track <- function(track, side = c("outside", "inside"), order = 1,
 #' explicit `closed = TRUE`; missing endpoints are not joined across NA.
 #'
 #' @param mapping,data Standard ggplot2 mapping and layer input.
-#' @param position A [position_track()] declaration. Every layer requires one.
+#' @param track Physical band from [position_track()]. Supply it once per layer.
+#' @param position Legacy physical band or a ggplot2 position adjustment for
+#'   native line mappings. A closed line uses the sequence-local position.
 #' @param fill,colour,alpha,linewidth,linetype Fixed styles; fill and colour
 #'   mappings use the dedicated track roles and scoped scales.
 #' @param closed Explicitly close a complete circular line series.
@@ -133,22 +135,45 @@ position_track <- function(track, side = c("outside", "inside"), order = 1,
 #'   scale_track_fill_gradientn("gc", colours = c("#EDF1EA", "#8AAE9C", "#345F58")) +
 #'   coord_circular() +
 #'   doc_theme
-geom_track_tile <- function(mapping = NULL, data = NULL, position,
+#' ggchord(track_seq) + geom_track_line(aes(x = (start + end) / 2, y = gc), data = bins,
+#'   track = position_track("gc")) + coord_collinear()
+geom_track_tile <- function(mapping = NULL, data = NULL, position = NULL,
     fill = "#86AFB9", colour = NA, alpha = 1, linewidth = .25,
-    linetype = 1, bounds = c("error", "clip"), show.legend = NA, inherit.aes = FALSE, ...) {
+    linetype = 1, bounds = c("error", "clip"), show.legend = NA, inherit.aes = FALSE, ..., track = NULL) {
   fixed <- c(fill = !missing(fill), colour = !missing(colour), alpha = !missing(alpha),
     linewidth = !missing(linewidth), linetype = !missing(linetype))
-  ggchord_track_layer("tile", mapping, data, position, fill, colour, alpha,
+  if (!is.null(track) && !is.null(position))
+    ggchord_stop("Declare the physical track only once")
+  ggchord_track_layer("tile", mapping, data, track %||% position, fill, colour, alpha,
     linewidth, linetype, bounds, 0, FALSE, show.legend, inherit.aes, fixed, list(...))
 }
 #' @rdname geom_track_tile
 #' @export
-geom_track_line <- function(mapping = NULL, data = NULL, position,
+geom_track_line <- function(mapping = NULL, data = NULL, position = NULL,
     colour = "#387D88", alpha = 1, linewidth = .4, linetype = 1,
-    closed = FALSE, bounds = c("error", "clip"), show.legend = NA, inherit.aes = FALSE, ...) {
+    closed = FALSE, bounds = c("error", "clip"), show.legend = NA, inherit.aes = FALSE, ..., track = NULL) {
   fixed <- c(fill = FALSE, colour = !missing(colour), alpha = !missing(alpha),
     linewidth = !missing(linewidth), linetype = !missing(linetype))
-  ggchord_track_layer("line", mapping, data, position, NA, colour, alpha,
+  if (!is.logical(closed) || length(closed) != 1L || is.na(closed)) ggchord_stop("closed must be TRUE or FALSE")
+  native <- !is.null(track) || any(c("x", "y") %in% names(mapping)) ||
+    (!is.null(position) && !(inherits(position, "Position") && isTRUE(position$ggchord_track_position)))
+  if (native && !closed) {
+    dots <- list(...)
+    for (key in names(fixed)[fixed]) dots[[key]] <- get(key)
+    return(do.call(geom_track, c(list(mapping = mapping, data = data, geom = "line",
+      track = track, position = position, bounds = match.arg(bounds), show.legend = show.legend,
+      inherit.aes = inherit.aes), dots)))
+  }
+  if (closed && !is.null(mapping)) {
+    for (key in intersect(c("x", "y"), names(mapping))) {
+      role <- if (key == "x") "pos" else "track_value"
+      if (role %in% names(mapping)) ggchord_stop("Specify only one of ", key, " and ", role)
+      names(mapping)[names(mapping) == key] <- role
+    }
+  }
+  if (!is.null(track) && !is.null(position))
+    ggchord_stop("Declare the physical track only once")
+  ggchord_track_layer("line", mapping, data, track %||% position, NA, colour, alpha,
     linewidth, linetype, bounds, 0, closed, show.legend, inherit.aes, fixed, list(...))
 }
 #' @rdname geom_track
@@ -170,7 +195,6 @@ ggchord_track_layer <- function(kind, mapping, data, position, fill, colour,
     alpha, linewidth, linetype, bounds, baseline, closed, show.legend, inherit.aes, fixed, dots) {
   if (!inherits(position, "Position") || !isTRUE(position$ggchord_track_position)) ggchord_stop("Track geoms require position_track()")
   if (!is.numeric(baseline) || length(baseline) != 1L || !is.finite(baseline)) ggchord_stop("Track baseline must be finite")
-  if (!is.logical(closed) || length(closed) != 1L || is.na(closed)) ggchord_stop("closed must be TRUE or FALSE")
   mapping <- ggchord_normalize_mapping(mapping) %||% ggplot2::aes()
   mapping <- ggchord_track_stage_mapping(mapping, position$track)
   if (any(c("x", "y") %in% names(mapping))) ggchord_stop("Track geometry maps accver/pos or start/end; do not override layout x/y")
