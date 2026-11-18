@@ -4,10 +4,14 @@
 ..Rcheck/
 .DS_Store
 inst/doc
-R/.Rhistory
-/.Rhistory
-/tests/testthat/Rplots.pdf
-/Rplots.pdf
+
+# R session files and default graphics output
+.Rhistory
+.RData
+.Ruserdata
+Rplots.pdf
+/.Renviron
+
 # Local source files for third-party catalogues and visual comparison
 /examples/rebase/
 /examples/plasmid/*.dna
@@ -16,11 +20,10 @@ R/.Rhistory
 /*.tar.gz
 /*.Rcheck/
 
-# Ignore all hidden directories (e.g. .codex-tmp, .idea, .vscode)
-.*/
-!.github/
-!.github/**
-
+# Local development caches and generated output
+/.codex-tmp/
+/.cache/
 /.site/
+.Rproj.user/
 __pycache__/
 /cran-results/

@@ -1,3 +1,5 @@
-*.html
-*.R
-!tutorial-assets/site-flagships.R
+# Generated from the two vignette sources in this directory
+/ggchord_vignette.R
+/ggchord_vignette.html
+/ggchord_guide_hans.R
+/ggchord_guide_hans.html
