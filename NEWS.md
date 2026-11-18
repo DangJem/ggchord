@@ -1,5 +1,16 @@
 # ggchord 0.50.0 (development)
 
+- Faceted sequence axes and exported positions follow the reference length
+  and orientation of each panel. Use `map_ggchord_position(..., panel = 2)`
+  to select a panel when the same position has different projections. Links
+  and ribbons use the source accessions for faceting, including named display
+  instances and the left and right copies in Sankey plots.
+- Height layers selecting different panels of the same band share the range
+  of their selected observations by default. Open track lines inherit plot
+  mappings for source position and height in the same way as a local mapping.
+- Default feature colours and shape keys cover the categories drawn across
+  facets. A standard fill mapped on one layer can coexist with a ribbon
+  identity gradient or an explicit feature fill scale on another layer.
 - Height layers can declare a `measure`. Conflicting measures in one band
   identify the affected layers. Coverage and mean depth are recognised from
   their direct mappings. `shared_track_limits()` checks the measures, units

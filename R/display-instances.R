@@ -176,6 +176,8 @@ ggchord_prepare_instances <- function(plot, seqs) {
   virtual <- seqs[match(instances$accver, seqs$accver), , drop = FALSE]
   virtual$accver <- instances$key
   routes <- omissions <- list()
+  facet <- plot$facet$params
+  facet_keys <- names(c(facet$facets, facet$rows, facet$cols))
   numeric_fields <- c("seq_radius", "seq_curvature", "seq_labels",
     "seq_label_radius", "seq_label_rotation", "seq_label_size", "seq_label_hjust", "seq_label_vjust",
     "gene_width", "gene_label_radial_offset", "gene_label_circum_offset", "gene_label_circum_limit",
@@ -188,6 +190,10 @@ ggchord_prepare_instances <- function(plot, seqs) {
       if (type == "ribbon") original$ribbon_data else if (type == "seq_region") p$regions else original$seq_data
     input <- if (type == "link") ggchord_resolve_layer_input(layer) else ggchord_resolve_layer_input(layer, fallback)
     source <- attr(input, "ggchord_source")
+    # Routing rewrites accessions and can omit or replicate rows. Facets
+    # belong to the source observations, including their factor levels.
+    keys <- intersect(facet_keys, names(input))
+    if (length(keys)) p$instance_facet_source <- input[keys]
     if (type %in% c("ribbon", "link")) {
       input_rows <- seq_len(nrow(input))
       retain <- function(keep,reason) {
@@ -209,6 +215,7 @@ ggchord_prepare_instances <- function(plot, seqs) {
       }
       routed <- ggchord_route_instances(input, instances, p$between, layer$ggchord_layer_id, mirrored,input_rows)
       input <- routed$data
+      if (length(keys)) p$instance_facet_rows <- input_rows
       if (nrow(routed$report)) {
         routed$report$allow_repeated <- isTRUE(p$allow_repeated)
         routes[[length(routes)+1L]] <- routed$report
@@ -225,6 +232,7 @@ ggchord_prepare_instances <- function(plot, seqs) {
     } else if (!is.null(input) && "accver" %in% names(input)) {
       expanded <- ggchord_instance_expand(input, instances)
       input <- expanded$data
+      if (length(keys)) p$instance_facet_rows <- expanded$rows
       if (!is.null(source)) {
         source$rows <- source$rows[expanded$rows]
         p$input_source <- source
@@ -326,10 +334,10 @@ ggchord_check_displayed_hsps <- function(layout, plot) {
   layout
 }
 
-ggchord_restore_instance_data <- function(data, instances) {
+ggchord_restore_instance_data <- function(data, instances, fields = names(data)) {
   if (!is.data.frame(data) || !nrow(data) || is.null(instances)) return(data)
   for (pair in list(c("accver", "display_instance_id"), c("qaccver", "q_instance"), c("saccver", "s_instance"))) {
-    if (!pair[1] %in% names(data)) next
+    if (!pair[1] %in% fields || !pair[1] %in% names(data)) next
     at <- match(as.character(data[[pair[1]]]), instances$key)
     known <- !is.na(at)
     if (!any(known)) next

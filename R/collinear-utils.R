@@ -148,6 +148,10 @@ ggchord_match_feature_rows <- function(labels, features, same_source, strict = F
 #'   `y` columns on the specified backbone. Off-backbone positions are rejected.
 #' @param inverse Convert layout x back to native sequence positions.
 #' @param source Use original source coordinates after focusing.
+#' @param panel Optional integer panel number from the exported `facet_layout`
+#'   for a faceted sequence layout. Supply it when the requested backbones have
+#'   different coordinate transforms across panels. Dotplots use shared axes
+#'   and do not require a panel selection.
 #' @return A data frame with accver, position, x, y and sequence_unit. Dotplots
 #'   also record the selected axis; the other display coordinate is NA.
 #' @md
@@ -161,25 +165,21 @@ ggchord_match_feature_rows <- function(labels, features, same_source, strict = F
 #'   geom_seq() +
 #'   coord_collinear()
 #' map_ggchord_position(p, "A", position = lookup$source_position[1])
-map_ggchord_position <- function(plot, accver, position, inverse = FALSE, source = FALSE, axis = NULL) {
-  if (inherits(plot, "ggchord") && isTRUE(plot$coordinates$ggchord_radial))
-    return(ggchord_map_radial(plot, accver, position, inverse, source))
-  if (inherits(plot, "ggchord") && isTRUE(plot$coordinates$ggchord_dotplot))
+#' regions <- data.frame(accver = "A", start = 1, end = 2, sample = c("x", "y"))
+#' faceted <- p + geom_seq_region(data = regions) +
+#'   ggplot2::facet_wrap(ggplot2::vars(sample))
+#' map_ggchord_position(faceted, "A", position = 2, panel = 2)
+map_ggchord_position <- function(plot, accver, position, inverse = FALSE, source = FALSE,
+    axis = NULL, panel = NULL) {
+  if (inherits(plot, "ggchord") && isTRUE(plot$coordinates$ggchord_dotplot)) {
+    if (!is.null(panel)) ggchord_stop("map_ggchord_position(): Dotplot axes are shared; omit panel")
     return(ggchord_map_dotplot(plot, accver, position, inverse, source, axis))
+  }
   if (!inherits(plot, "ggchord") || !isTRUE(plot$coordinates$ggchord_collinear)) {
     ggchord_stop("map_ggchord_position(): use a ggchord plot with coord_collinear()")
   }
-  if (!is.logical(inverse) || length(inverse) != 1L || is.na(inverse) ||
-      !is.logical(source) || length(source) != 1L || is.na(source)) {
-    ggchord_stop("map_ggchord_position(): inverse/source must be TRUE or FALSE")
-  }
-  if (!is.numeric(position) || any(!is.finite(position)) ||
-      !length(accver) %in% c(1L, length(position))) {
-    ggchord_stop("map_ggchord_position(): supply finite positions and matching accessions")
-  }
   layout <- get_chord_layout(plot, build = TRUE)
-  ref <- layout$sequence_reference
-  ids <- rep_len(as.character(accver), length(position))
+  ids <- as.character(accver)
   if (!is.null(layout$display_instances)) {
     instances <- layout$display_instances
     ids <- vapply(ids, function(id) {
@@ -189,6 +189,19 @@ map_ggchord_position <- function(plot, accver, position, inverse = FALSE, source
       instances$key[at]
     }, character(1))
   }
+  layout <- ggchord_position_panel(layout, ids, panel)
+  if (isTRUE(plot$coordinates$ggchord_radial))
+    return(ggchord_map_radial(layout, ids, position, inverse, source))
+  if (!is.logical(inverse) || length(inverse) != 1L || is.na(inverse) ||
+      !is.logical(source) || length(source) != 1L || is.na(source)) {
+    ggchord_stop("map_ggchord_position(): inverse/source must be TRUE or FALSE")
+  }
+  if (!is.numeric(position) || any(!is.finite(position)) ||
+      !length(accver) %in% c(1L, length(position))) {
+    ggchord_stop("map_ggchord_position(): supply finite positions and matching accessions")
+  }
+  ref <- layout$sequence_reference
+  ids <- rep_len(ids, length(position))
   if (anyNA(ids) || any(!ids %in% layout$seqs)) ggchord_stop(
     "map_ggchord_position(): unknown displayed accession")
   origin <- layout$sequence_layout$source_origin[match(ids, layout$sequence_layout$accver)]
@@ -222,4 +235,42 @@ map_ggchord_position <- function(plot, accver, position, inverse = FALSE, source
     out$y <- frame$top - (x - frame$axis_min)
   }
   ggchord_restore_instance_data(out, layout$display_instances)
+}
+
+ggchord_position_panel <- function(layout, ids, panel) {
+  references <- layout$panel_references
+  if (!is.null(panel)) {
+    if (!is.numeric(panel) || length(panel) != 1L || !is.finite(panel) ||
+        panel != floor(panel) || panel < 1 || panel > max(1L, length(references)))
+      ggchord_stop("map_ggchord_position(): panel must be an existing panel number")
+    if (length(references)) {
+      if (!length(references[[panel]]) || !all(ids %in% references[[panel]]$seqs))
+        ggchord_stop("map_ggchord_position(): requested accession is absent from this panel")
+      return(references[[panel]])
+    }
+  }
+  if (!length(references)) return(layout)
+  ids <- unique(ids)
+  available <- Filter(function(x) length(x) && all(ids %in% x$seqs), references)
+  if (!length(available)) ggchord_stop(
+    "map_ggchord_position(): no panel displays all requested accessions")
+  # Compare only the requested backbones. Other sequences can have independent
+  # orientations without making this accession's projection ambiguous.
+  transform <- function(x) {
+    tab <- x$sequence_layout
+    fields <- intersect(c("orientation", "x_offset", "units_per_position", "y",
+      "source_origin", "source_end", "xmin", "xmax", "ymin", "ymax"), names(tab))
+    out <- tab[match(ids, tab$accver), fields, drop = FALSE]
+    for (frame in list(x$sankey_frames, x$radial_frames)) {
+      if (!is.null(frame)) out <- cbind(out, frame[match(ids, frame$key), , drop = FALSE])
+    }
+    rownames(out) <- NULL
+    out
+  }
+  if (length(available) > 1L) {
+    first <- transform(available[[1L]])
+    if (!all(vapply(available[-1L], function(x) identical(first, transform(x)), logical(1))))
+      ggchord_stop("map_ggchord_position(): different panel transforms; specify panel")
+  }
+  available[[1L]]
 }

@@ -578,7 +578,6 @@ ggchord_compute_track_input <- function(layer, plot, raw, sequences, coverage) {
     if (p$native_geom %in% c("bar", "col")) "bar" else "line"
   layer$ggchord_params$source_edges <- TRUE
   layer$ggchord_params$track_sources <- source_data
-  if (length(facet_keys)) layer$ggchord_params$track_domain_data <- output
   layer$ggchord_params$native_prepared <- TRUE
   layer$geom_params$native_draw_params <- params[intersect(names(params),c("arrow","lineend","linejoin","linemitre","parse","check_overlap","rule"))]
   layer$geom_params$track_kind <- p$native_geom

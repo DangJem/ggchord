@@ -40,7 +40,9 @@ ggchord_register_layers <- function(plot) {
   if (anyDuplicated(reserved)) ggchord_stop("Duplicate layer id '", reserved[anyDuplicated(reserved)], "'")
   plot$layers <- lapply(plot$layers, function(layer) {
     if (is.null(layer$ggchord_type)) return(layer)
-    copy <- reconstruct_layer(layer, layer$data, mapping = layer$mapping)
+    copy <- if (ggchord_uses_inherited_line_xy(layer, plot$mapping)) {
+      ggchord_native_track_line(layer)
+    } else reconstruct_layer(layer, layer$data, mapping = layer$mapping)
     next_id <<- next_id + 1L
     id <- copy$ggchord_params$id
     if (is.null(id)) {

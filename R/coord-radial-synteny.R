@@ -342,7 +342,7 @@ ggchord_project_radial_layout <- function(layout, plot) {
   layout
 }
 
-ggchord_map_radial <- function(plot, accver, position, inverse, source) {
+ggchord_map_radial <- function(layout, accver, position, inverse, source) {
   if (!is.logical(inverse) || length(inverse) != 1L || is.na(inverse) ||
       !is.logical(source) || length(source) != 1L || is.na(source))
     ggchord_stop("map_ggchord_position(): inverse/source must be TRUE or FALSE")
@@ -358,18 +358,8 @@ ggchord_map_radial <- function(plot, accver, position, inverse, source) {
     count <- length(position)
   }
   if (anyNA(accver) || !length(accver) %in% c(1L, count)) ggchord_stop("Supply matching accessions")
-  layout <- get_chord_layout(plot)
   frames <- layout$radial_frames; ref <- layout$sequence_reference
   ids <- rep_len(as.character(accver), count)
-  if (!is.null(layout$display_instances)) {
-    instances <- layout$display_instances
-    ids <- vapply(ids, function(id) {
-      if (id %in% instances$instance_id) return(instances$key[match(id, instances$instance_id)])
-      at <- which(instances$accver == id)
-      if (length(at) != 1L) ggchord_stop("Ambiguous display instance; specify a named instance ID")
-      instances$key[at]
-    }, character(1))
-  }
   at <- match(ids, frames$key)
   if (anyNA(at)) ggchord_stop("Unknown displayed Radial accession")
   origin <- layout$sequence_layout$source_origin[match(ids, layout$sequence_layout$accver)]

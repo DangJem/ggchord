@@ -125,8 +125,8 @@ ggplot_add.ggchord_track_band <- function(object, plot, ...) {
 #' @param id Optional unique layer ID used in layout and source exports.
 #' @param position ggplot2 data position. Full-band interval tiles and closed
 #'   lines use identity. For tiles with local numerical heights and data
-#'   adjustments, use `geom_track(geom = "tile")`. Open lines with x/y
-#'   mappings, an explicit stat, or a data adjustment use the native line
+#'   adjustments, use `geom_track(geom = "tile")`. Open lines with local or
+#'   inherited x/y mappings, an explicit stat, or a data adjustment use the native line
 #'   grammar. Lines with sequence-local roles and identity position preserve
 #'   input order, missing-value breaks and strict increasing positions.
 #' @param fill,colour,alpha,linewidth,linetype Fixed styles; fill and colour
@@ -233,6 +233,33 @@ geom_track_line <- function(mapping = NULL, data = NULL, position = NULL,
     linewidth, linetype, bounds, 0, closed, show.legend, inherit.aes, fixed, list(...), id = id)
   layer$ggchord_params$measure <- ggchord_measure_name(measure)
   layer
+}
+
+ggchord_uses_inherited_line_xy <- function(layer, mapping) {
+  p <- layer$ggchord_params
+  if (!isTRUE(layer$inherit.aes) || !identical(p$track_kind, "line") ||
+      !is.null(p$native_geom) || isTRUE(p$closed)) return(FALSE)
+  local <- ggchord_track_mapping_aliases(layer$ggchord_input_mapping)
+  any(!intersect(c("x", "y"), names(mapping)) %in% names(local))
+}
+
+ggchord_native_track_line <- function(layer) {
+  # The role-based line already holds the render's data callback, scoped
+  # colour names and any legend key. Reuse that configuration for source x/y.
+  keys <- layer$geom_params$track_keys
+  public <- function(aesthetics) {
+    for (role in names(keys)) names(aesthetics)[names(aesthetics) == keys[[role]]] <- role
+    aesthetics
+  }
+  p <- layer$ggchord_params
+  result <- do.call(geom_track, c(list(mapping = public(layer$ggchord_input_mapping),
+    data = layer$ggchord_input_data, geom = "line", track = p$track_id, id = p$id,
+    measure = p$measure, bounds = p$bounds, layout = layer$layout, show.legend = layer$show.legend,
+    na.rm = layer$geom_params$na.rm), public(layer$aes_params)))
+  result$name <- layer$name
+  if (exists("draw_key", layer$geom, inherits = FALSE))
+    result$geom$draw_key <- layer$geom$draw_key
+  result
 }
 #' @rdname geom_track
 #' @export
@@ -362,8 +389,8 @@ GeomGgchordTrack <- ggplot2::ggproto("GeomGgchordTrack", ggplot2::Geom,
 # refinement may rebuild geometry, but use the same observations and groups.
 ggchord_render_track_source <- function(plot) {
   pending <- vapply(plot$layers, function(layer)
-    !is.null(layer$ggchord_params$native_geom) &&
-      !isTRUE(layer$ggchord_params$native_prepared), logical(1))
+    (!is.null(layer$ggchord_params$native_geom) && !isTRUE(layer$ggchord_params$native_prepared)) ||
+      ggchord_uses_inherited_line_xy(layer, plot$mapping), logical(1))
   if (any(pending)) {
     plot <- ggchord_register_layers(plot)
     sequences <- ggchord_sequence_reference_data(plot)
@@ -428,9 +455,9 @@ ggchord_prepare_track_layers <- function(plot, sequences = ggchord_sequence_refe
 #' @param name Axis title, default the track ID.
 #' @param limits,breaks,labels,transform,oob Standard continuous-scale controls.
 #' @param unit Optional data-unit label retained in track exports.
-#' @param facet_domain Train the track height on all observed panels
-#'   (`"shared"`) or on each panel separately (`"panel"`). Panel-local
-#'   domains require a visible track axis.
+#' @param facet_domain With `"shared"`, all height layers on this band train
+#'   one domain using the panels selected by each layer. With `"panel"`,
+#'   each panel trains its own domain and requires a visible track axis.
 #' @param guide `"axis"` or `"none"` for the numerical track axis, or [guide_track_axis()]
 #'   with a local theme (axis.line/text/title), angle and
 #'   check.overlap. Other guide_axis options fail explicitly because this

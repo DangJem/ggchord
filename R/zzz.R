@@ -230,6 +230,7 @@ ggchord_axis_label_geometry <- function(layout, labels) {
 #' Combine axis components for GeomChordAxis
 #' @noRd
 ggchord_axis_geometry <- function(layout) {
+  if (!is.null(layout$axis_geometry)) return(layout$axis_geometry)
   line <- layout$axis_lines %||% data.frame()
   tick <- layout$axis_ticks %||% data.frame()
   label <- if (nrow(tick) && "label" %in% names(tick)) {

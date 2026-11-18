@@ -64,6 +64,9 @@ sequence's horizontal range, backbone y, orientation, \code{units_per_position},
 and \code{sequence_unit}. The compatibility field \code{units_per_bp} is NA for aa. It also records
 reversible x offset, anchor and source origin. \code{orientation_diagnostics}
 records directional support, confidence and unresolved cases.
+When panels compute independent layouts, axis geometry, \code{sequence_layout},
+\code{sequence_display} and \code{orientation_diagnostics} include \code{PANEL} and
+the facet keys. Use those panel numbers with \code{\link[=map_ggchord_position]{map_ggchord_position()}}.
 Position lanes remain local offsets and are not circular physical tracks.
 Their \code{label_diagnostics} records placed or hidden labels after shared
 linear collision handling, including source layer, row, reason and leader

@@ -1,3 +1,19 @@
+ggchord_uses_plasmid_feature_scale <- function(circular, levels) {
+  isTRUE(circular) && all(levels %in% c(
+    "CDS", "promoter", "rep_origin", "terminator", "protein_bind", "RBS",
+    "repeat_region", "misc_feature"
+  ))
+}
+
+ggchord_default_feature_shapes <- function(levels) {
+  shapes <- c(
+    "arrow", "compact_arrow", "promoter_arrow", "primer_arrow", "marker",
+    "block", "capped_line", "primer_arc", "chevron", "lollipop"
+  )
+  values <- if (all(levels %in% shapes)) levels else rep(shapes, length.out = length(levels))
+  stats::setNames(values, levels)
+}
+
 #' Build the list of scales for a computed layout
 #'
 #' @noRd
@@ -9,6 +25,8 @@ make_ggchord_scales <- function(layout, has_seq = FALSE, has_gene = FALSE,
                                 legend_text_size = 8,
                                 legend_title_size = 9) {
   scales <- list()
+  feature_fill_order <- layout$feature_fill_order %||% layout$final_gene_order
+  feature_fill_pal <- layout$feature_fill_pal %||% layout$gene_pal
   responsive_legend_theme <- ggplot2::theme(
     legend.text = ggplot2::element_text(
       size = legend_text_size * legend_scale
@@ -20,7 +38,7 @@ make_ggchord_scales <- function(layout, has_seq = FALSE, has_gene = FALSE,
   role_guide <- function(role, colourbar = FALSE, order = 0,
                          override.aes = list()) {
     labels <- switch(role, seq=layout$legend_seq_labels %||% layout$seq_labels,
-      gene=names(layout$gene_pal), feature=layout$final_gene_order, region=names(layout$region_pal), NULL)
+      gene=names(layout$gene_pal), feature=feature_fill_order, region=names(layout$region_pal), NULL)
     if (!is.null(plot)) {
       return(ggchord_role_guide(
         plot, role, colourbar = colourbar, order = order,
@@ -102,50 +120,38 @@ make_ggchord_scales <- function(layout, has_seq = FALSE, has_gene = FALSE,
     }
   }
 
-  # The ribbon layer always uses the internal "zfill" aesthetic (never the
-  # plain "fill" aesthetic), so that its mapping stays consistent with the
-  # ribbon geom's default aesthetics (which are renamed to avoid injecting a
-  # plain "fill" default into the ribbon data). This also keeps ggplot2's
-  # guide matching working when no gene layer is present, so the Identity(%)
-  # colourbar legend is shown even without gene data.
   feature_fill_scale <- NULL
   merge_feature_guides <- FALSE
   if (has_feature) {
     merge_feature_guides <- has_feature_shape &&
       !is.null(layout$feature_shape_pal) &&
       identical(
-        as.character(layout$final_gene_order),
+        as.character(feature_fill_order),
         as.character(layout$feature_shape_order)
       )
     feature_override <- if (merge_feature_guides) {
       list(feature_shape = unname(
-        layout$feature_shape_pal[layout$final_gene_order]
+        layout$feature_shape_pal[feature_fill_order]
       ))
     } else {
       list()
     }
-    plasmid_types <- c("CDS", "promoter", "rep_origin", "terminator",
-      "protein_bind", "RBS", "repeat_region", "misc_feature")
-    feature_fill_scale <- if (isTRUE(layout$circular) &&
-        all(layout$final_gene_order %in% plasmid_types)) {
+    feature_fill_scale <- if (ggchord_uses_plasmid_feature_scale(layout$circular, feature_fill_order)) {
       scale_feature_fill_plasmid(
-        name = "Feature", breaks = layout$final_gene_order,
+        name = "Feature", breaks = feature_fill_order,
         guide = role_guide("feature", order = 3,
           override.aes = feature_override)
       )
     } else scale_feature_fill_manual(
-        name = "Feature", breaks = layout$final_gene_order,
-        values = layout$gene_pal,
+        name = "Feature", breaks = feature_fill_order,
+        values = feature_fill_pal,
         guide = role_guide("feature", order = 3,
           override.aes = feature_override)
       )
   }
   feature_shape_scale <- NULL
   if (has_feature_shape && !is.null(layout$feature_shape_pal)) {
-    plasmid_types <- c("CDS", "promoter", "rep_origin", "terminator",
-      "protein_bind", "RBS", "repeat_region", "misc_feature")
-    feature_shape_scale <- if (isTRUE(layout$circular) &&
-        all(layout$feature_shape_order %in% plasmid_types)) {
+    feature_shape_scale <- if (ggchord_uses_plasmid_feature_scale(layout$circular, layout$feature_shape_order)) {
       scale_feature_shape_plasmid(
         name = "Feature", breaks = layout$feature_shape_order,
         guide = if (isTRUE(merge_feature_guides)) "none" else

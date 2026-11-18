@@ -47,8 +47,8 @@ geom_track_line(
 
 \item{position}{ggplot2 data position. Full-band interval tiles and closed
 lines use identity. For tiles with local numerical heights and data
-adjustments, use \code{geom_track(geom = "tile")}. Open lines with x/y
-mappings, an explicit stat, or a data adjustment use the native line
+adjustments, use \code{geom_track(geom = "tile")}. Open lines with local or
+inherited x/y mappings, an explicit stat, or a data adjustment use the native line
 grammar. Lines with sequence-local roles and identity position preserve
 input order, missing-value breaks and strict increasing positions.}
 

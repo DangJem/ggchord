@@ -35,9 +35,9 @@ guide styling overrides global ggchord.track.axis.* theme elements.}
 
 \item{...}{Additional ggplot2 continuous-scale arguments.}
 
-\item{facet_domain}{Train the track height on all observed panels
-(\code{"shared"}) or on each panel separately (\code{"panel"}). Panel-local
-domains require a visible track axis.}
+\item{facet_domain}{With \code{"shared"}, all height layers on this band train
+one domain using the panels selected by each layer. With \code{"panel"},
+each panel trains its own domain and requires a visible track axis.}
 }
 \value{
 A ggplot2 scale, scoped to this track.

@@ -10,7 +10,8 @@ map_ggchord_position(
   position,
   inverse = FALSE,
   source = FALSE,
-  axis = NULL
+  axis = NULL,
+  panel = NULL
 )
 }
 \arguments{
@@ -30,6 +31,11 @@ Radial inverse mapping instead requires a matrix/data frame with \code{x} and
 \item{axis}{Dotplot axis to map, either \code{"x"} (query) or \code{"y"} (subject).
 Required for Dotplots; omitted for linear and radial layouts. Dotplot gaps return NA
 on inverse mapping, with the chosen axis recorded in the result.}
+
+\item{panel}{Optional integer panel number from the exported \code{facet_layout}
+for a faceted sequence layout. Supply it when the requested backbones have
+different coordinate transforms across panels. Dotplots use shared axes
+and do not require a panel selection.}
 }
 \value{
 A data frame with accver, position, x, y and sequence_unit. Dotplots
@@ -51,4 +57,8 @@ p <- ggchord(data = seqs) +
   geom_seq() +
   coord_collinear()
 map_ggchord_position(p, "A", position = lookup$source_position[1])
+regions <- data.frame(accver = "A", start = 1, end = 2, sample = c("x", "y"))
+faceted <- p + geom_seq_region(data = regions) +
+  ggplot2::facet_wrap(ggplot2::vars(sample))
+map_ggchord_position(faceted, "A", position = 2, panel = 2)
 }

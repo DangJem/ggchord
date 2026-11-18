@@ -59,6 +59,9 @@
 #'   and `sequence_unit`. The compatibility field `units_per_bp` is NA for aa. It also records
 #'   reversible x offset, anchor and source origin. `orientation_diagnostics`
 #'   records directional support, confidence and unresolved cases.
+#'   When panels compute independent layouts, axis geometry, `sequence_layout`,
+#'   `sequence_display` and `orientation_diagnostics` include `PANEL` and
+#'   the facet keys. Use those panel numbers with [map_ggchord_position()].
 #'   Position lanes remain local offsets and are not circular physical tracks.
 #'   Their `label_diagnostics` records placed or hidden labels after shared
 #'   linear collision handling, including source layer, row, reason and leader
@@ -378,16 +381,7 @@ export_ggchord_layout <- function(
   }
 
   exported$metadata <- metadata
-  ref <- layout$sequence_reference
-  display <- if (isTRUE(layout$collinear)) {
-    if (all(c("axis_min", "axis_max") %in% names(layout$sequence_layout))) layout$sequence_layout$axis_max - layout$sequence_layout$axis_min else
-      layout$sequence_layout$xmax - layout$sequence_layout$xmin
-  } else abs(ref$ends[layout$seqs] - ref$starts[layout$seqs])
-  exported$sequence_display <- data.frame(accver = layout$seqs,
-    source_length = unname(ref$lens[layout$seqs]), display_length = unname(display),
-    display_scale_factor = unname(display / ref$lens[layout$seqs]),
-    length_mode = metadata$length_mode, sequence_unit = metadata$sequence_unit,
-    display_unit = if (isTRUE(layout$collinear)) "layout" else "radian")
+  exported$sequence_display <- layout$sequence_display %||% ggchord_sequence_display(layout)
   conversions <- lapply(plot$ggchord$data, attr, which = "ggchord_conversion")
   conversions <- Filter(Negate(is.null), conversions)
   for (id in names(layout$layer_inputs)) {
@@ -414,6 +408,20 @@ export_ggchord_layout <- function(
   if (!is.null(data_stage)) exported <- ggchord_export_stages(exported, plot, layout, data_stage)
   class(exported) <- c("ggchord_layout_export", "list")
   exported
+}
+
+ggchord_sequence_display <- function(layout) {
+  ids <- layout$seqs
+  ref <- layout$sequence_reference
+  length <- unname(ref$lens[ids])
+  tab <- layout$sequence_layout
+  span <- if (!isTRUE(layout$collinear)) abs(ref$ends[ids] - ref$starts[ids]) else
+    if (all(c("axis_min", "axis_max") %in% names(tab))) tab$axis_max - tab$axis_min else
+      tab$xmax - tab$xmin
+  data.frame(accver = ids, source_length = length, display_length = unname(span),
+    display_scale_factor = unname(span / length), length_mode = layout$length_mode %||% "proportional",
+    sequence_unit = layout$sequence_unit %||% "bp",
+    display_unit = if (isTRUE(layout$collinear)) "layout" else "radian")
 }
 
 ggchord_export_stages <- function(exported, plot, layout, stages) {

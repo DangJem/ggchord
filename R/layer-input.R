@@ -492,7 +492,7 @@ ggchord_bind_visual_mapping <- function(layer, plot) {
     if (role %in% names(user)) next
     mapped <- nm %in% names(user)
     fixed <- nm %in% names(layer$aes_params)
-    if (!mapped && !fixed && !(plot$scales$has_scale(nm) && role %in% names(layer$mapping))) next
+    if (!mapped && !fixed) next
     if (mapped && !is.null(layer$aes_params[[role]])) {
       if (isTRUE(unname(layer$ggchord_params$style_defaults[role]))) layer$aes_params[[role]] <- NULL else {
         if (nm %in% names(layer$ggchord_input_mapping))
@@ -506,7 +506,7 @@ ggchord_bind_visual_mapping <- function(layer, plot) {
     defaults <- layer$geom$default_aes
     names(defaults)[names(defaults) == role] <- nm
     layer$geom <- ggchord_geom_defaults(layer$geom, defaults)
-    if (!fixed) layer$mapping[[nm]] <- user[[nm]] %||% layer$mapping[[role]]
+    if (!fixed) layer$mapping[[nm]] <- user[[nm]]
     layer$mapping[[role]] <- NULL
     if (role %in% names(layer$show.legend)) names(layer$show.legend)[names(layer$show.legend) == role] <- nm
     if (identical(role, "feature_fill")) {

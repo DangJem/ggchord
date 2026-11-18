@@ -129,6 +129,41 @@ ggchord_track_polygons_overlap <- function(a, b) {
   FALSE
 }
 
+ggchord_track_domain_values <- function(data, params) {
+  c(data$track_value, data$track_ymin, data$track_ymax,
+    if (params$track_kind == "bar") params$baseline)
+}
+
+ggchord_train_track_scale <- function(plot, id, values) {
+  key <- ggchord_track_aes("value", id)
+  sc <- plot$scales$get_scales(key) %||% scale_track_value_continuous(id)
+  sc <- sc$clone()
+  finite <- values[!is.na(values)]
+  transformed <- suppressWarnings(sc$transform(finite))
+  if (any(!is.finite(transformed))) ggchord_stop("Track '", id, "' has values/baseline incompatible with its scale transform")
+  sc$train(transformed)
+  has_domain <- length(finite) > 0L || !is.null(sc$limits)
+  if (has_domain && (length(sc$get_limits()) != 2L || any(!is.finite(sc$get_limits()))))
+    ggchord_stop("Track numerical scale limits must define a finite domain")
+  list(scale = sc, has_domain = has_domain)
+}
+
+ggchord_facet_track_scales <- function(plot, sources, members, panels) {
+  values <- list()
+  for (i in seq_along(plot$layers)) {
+    layer <- plot$layers[[i]]
+    p <- layer$ggchord_params
+    if (!identical(layer$ggchord_type, "track") || p$track_kind == "tile" ||
+        (is.numeric(layer$layout) && !any(panels$PANEL %in% layer$layout))) next
+    scale <- plot$scales$get_scales(ggchord_track_aes("value", p$track_id))
+    if (identical(scale$ggchord_facet_domain, "panel")) next
+    rows <- unique(members[[i]]$.ggchord_input_index)
+    values[[p$track_id]] <- c(values[[p$track_id]],
+      ggchord_track_domain_values(sources[[i]][rows, , drop = FALSE], p))
+  }
+  Map(function(id, height) ggchord_train_track_scale(plot, id, height), names(values), values)
+}
+
 ggchord_layout_tracks <- function(plot, layout, registry, inputs) {
   layout$track_projection_axis <- plot$coordinates$collinear_seq_axis
   layers <- Filter(function(l) identical(l$ggchord_type, "track"), plot$layers)
@@ -186,28 +221,19 @@ ggchord_layout_tracks <- function(plot, layout, registry, inputs) {
     if (!length(numeric)) next
     measures <- vapply(layers[numeric], function(l) l$ggchord_params$measure %||% NA_character_, character(1))
     if (!anyNA(measures)) declarations[[id]]$measure <- measures[1L]
-    key <- ggchord_track_aes("value", id)
-    sc <- plot$scales$get_scales(key)
-    if (is.null(sc)) sc <- scale_track_value_continuous(id)
-    sc <- sc$clone()
-    values <- unlist(lapply(numeric, function(i) {
-      p <- layers[[i]]$ggchord_params
-      full <- if (identical(sc$ggchord_facet_domain, "panel")) data[[i]] else p$track_domain_data %||% data[[i]]
-      c(full$track_value, full$track_ymin, full$track_ymax, if (p$track_kind == "bar") p$baseline)
-    }), use.names = FALSE)
-    finite <- values[!is.na(values)]
-    transformed <- suppressWarnings(sc$transform(finite))
-    if (any(!is.finite(transformed))) ggchord_stop("Track '", id, "' has values/baseline incompatible with its scale transform")
-    sc$train(transformed)
-    has_domain <- length(finite) > 0L || !is.null(sc$limits)
-    if (has_domain && (length(sc$get_limits()) != 2L || any(!is.finite(sc$get_limits()))))
-      ggchord_stop("Track numerical scale limits must define a finite domain")
+    training <- plot$ggchord$shared_track_scales[[id]]
+    if (is.null(training)) {
+      values <- unlist(lapply(numeric, function(i)
+        ggchord_track_domain_values(data[[i]], layers[[i]]$ggchord_params)), use.names = FALSE)
+      training <- ggchord_train_track_scale(plot, id, values)
+    }
+    sc <- training$scale
     for (i in numeric) if (layers[[i]]$ggchord_params$track_kind == "bar" &&
         (!is.finite(sc$map(sc$transform(layers[[i]]$ggchord_params$baseline))) ||
          sc$map(sc$transform(layers[[i]]$ggchord_params$baseline)) < 0 ||
          sc$map(sc$transform(layers[[i]]$ggchord_params$baseline)) > 1))
       ggchord_stop("Track '", id, "' scale excludes its baseline; change limits or explicitly choose an oob policy")
-    scales[[id]] <- sc; trained[[id]] <- has_domain
+    scales[[id]] <- sc; trained[[id]] <- training$has_domain
   }
   # Existing entities keep their fixed placement. New bands start beyond
   # their occupied normal range, and further track IDs accumulate outward.

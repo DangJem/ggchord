@@ -528,23 +528,10 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
       shape_scale <- plot$scales$get_scales("feature_shape")
       if (!is.null(shape_scale)) {
         shape_scale <- shape_scale$clone()
-        shape_scale$train(raw_shape)
+        shape_scale$train(unique(c(chord$facet_feature_shape_order, raw_shape)))
         mapped_shape <- as.character(shape_scale$map(raw_shape))
       } else {
-        allowed_shape <- c(
-          "arrow", "compact_arrow", "promoter_arrow", "primer_arrow",
-          "marker", "block", "capped_line", "primer_arc", "chevron", "lollipop"
-        )
-        if (all(feature_shape_order %in% allowed_shape)) {
-          feature_shape_pal <- stats::setNames(
-            feature_shape_order, feature_shape_order
-          )
-        } else {
-          feature_shape_pal <- stats::setNames(
-            rep(allowed_shape, length.out = length(feature_shape_order)),
-            feature_shape_order
-          )
-        }
+        feature_shape_pal <- ggchord_default_feature_shapes(feature_shape_order)
         mapped_shape <- unname(feature_shape_pal[raw_shape])
       }
     } else {
