@@ -13,11 +13,15 @@ ggchord_track_stage_mapping <- function(mapping, track) {
     if (is.symbol(x) && staged && as.character(x) %in% names(replacements))
       return(rlang::sym(replacements[[as.character(x)]]))
     if (!is.call(x)) return(x)
-    head <- x[[1L]]
-    called <- if (is.symbol(head)) as.character(head) else if (is.call(head) &&
-      as.character(head[[1L]]) %in% c("::", ":::")) as.character(head[[3L]]) else ""
-    active <- staged || identical(called, "after_scale")
-    if (length(x) > 1L) for (i in seq.int(2L, length(x))) x[[i]] <- rewrite(x[[i]], active)
+    if (rlang::is_call(x, "stage")) {
+      x <- match.call(ggplot2::stage, x)
+      if (!is.null(x$after_scale)) x$after_scale <- rewrite(x$after_scale, TRUE)
+      return(x)
+    }
+    active <- staged || rlang::is_call(x, "after_scale")
+    if (length(x) > 1L) for (i in seq.int(2L, length(x))) {
+      if (!rlang::is_missing(x[[i]])) x[i] <- list(rewrite(x[[i]], active))
+    }
     x
   }
   for (name in names(mapping)) {
@@ -413,12 +417,11 @@ ggchord_add_track_scales <- function(plot) {
       track <- layer$ggchord_params$track_position$track
       key <- ggchord_track_aes(role, track)
       if (!key %in% names(mapping) || plot$scales$has_scale(key)) next
-      input <- layer$ggchord_resolved_input
-      if (grepl("after_stat|after_scale", rlang::as_label(mapping[[key]]))) next
+      if (is.null(ggchord_start_mapping(mapping[[key]]))) next
       values <- lapply(plot$layers, function(other) {
         if (!identical(other$ggchord_type, "track") || !key %in% names(other$ggchord_input_mapping)) return(NULL)
-        q <- other$ggchord_input_mapping[[key]]
-        if (grepl("after_stat|after_scale", rlang::as_label(q))) return(NULL)
+        q <- ggchord_start_mapping(other$ggchord_input_mapping[[key]])
+        if (is.null(q)) return(NULL)
         rlang::eval_tidy(q, other$ggchord_resolved_input)
       })
       values <- Filter(Negate(is.null), values)

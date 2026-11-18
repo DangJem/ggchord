@@ -34,7 +34,7 @@ geom_alignment_segment <- function(mapping = NULL, data = NULL,
     allow_repeated = FALSE, ...) {
   if (!is.logical(allow_repeated) || length(allow_repeated) != 1L || is.na(allow_repeated))
     ggchord_stop("allow_repeated must be TRUE or FALSE")
-  if (!identical(position, "identity") && !inherits(position, "PositionIdentity"))
+  if (!ggchord_is_data_identity(position))
     ggchord_stop("geom_alignment_segment(): only position = 'identity' is supported")
   defaults <- c(link_colour = missing(colour), link_alpha = missing(alpha),
     link_linewidth = missing(linewidth), link_linetype = missing(linetype))

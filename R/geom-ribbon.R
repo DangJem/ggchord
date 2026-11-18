@@ -2,18 +2,7 @@
 # Layer-owned inputs and parameters are resolved into ribbon polygons by the
 # plot-owned layout calculation, then drawn through the polygon geom.
 
-# ---------------------------------------------------------------------------
-# Internal helper: clone a polygon geom and expose selected aesthetics under
-# internal names.  The ribbon layer uses this so its fill / outline / linetype
-# scales are independent from the gene layer's plain "fill" scale and from the
-# sequence layer's plain "colour" scale.
-# ---------------------------------------------------------------------------
-# The geom used by the ribbon layer; fill is exposed as "zfill" so that the
-# ribbon and gene layers keep independent fill scales.
-ribbon_geom <- rename_geom_aes(
-  ggplot2::GeomPolygon, renames = c(fill = "ribbon_fill", alpha = "ribbon_alpha")
-)
-
+# Keep the ribbon scales independent of sequence and feature scales.
 make_ribbon_geom <- function(outline = FALSE, linetype = FALSE) {
   renames <- c(fill = "ribbon_fill", alpha = "ribbon_alpha")
   if (isTRUE(outline)) renames <- c(renames, colour = "ribbon_colour")
@@ -96,7 +85,13 @@ make_ribbon_geom <- function(outline = FALSE, linetype = FALSE) {
 #'   take precedence over the coordinate default. Omitted rows are reported
 #'   by [export_ggchord_layout()].
 #' @param position,show.legend,inherit.aes Standard ggplot2 layer arguments.
-#' @param ... Additional arguments passed to \code{geom_polygon()}
+#' @param stat Source-interval statistic. Use `"identity"` to retain individual
+#'   records, `"ribbon_bundle"` to aggregate them, or `"ribbon_density"` to
+#'   annotate each record with local density. The two computed statistics
+#'   have the same controls and computed variables as [stat_ribbon_bundle()]
+#'   and [stat_ribbon_density()].
+#' @param ... With a computed stat, pass `bins`, `weight`, or `group_by` here.
+#'   Only bundling accepts `min_bundle`. Other arguments go to the ribbon geom.
 #'
 #' @return A ggplot2 layer.
 #' @export
@@ -112,6 +107,9 @@ make_ribbon_geom <- function(outline = FALSE, linetype = FALSE) {
 #' ggchord(seq_data = seqs, ribbon_data = links) +
 #'   geom_seq() +
 #'   geom_link_ribbon()
+#' ggchord(seqs, links) +
+#'   geom_link_ribbon(aes(ribbon_alpha = after_stat(density)),
+#'     stat = "ribbon_density", bins = 10, weight = "count")
 geom_link_ribbon <- function(mapping = NULL, data = NULL,
                         link_ctrl_point = NULL,
                         link_gap = NULL,
@@ -130,7 +128,7 @@ geom_link_ribbon <- function(mapping = NULL, data = NULL,
                         inherit.aes = FALSE,
                         nonadjacent_linewidth = 0.4,
                         between = NULL, allow_repeated = FALSE, tip = c("none", "subject"),
-                        gradient = FALSE, ...) {
+                        gradient = FALSE, ..., stat = "identity") {
   tip <- match.arg(tip)
   if (!is.logical(gradient) || length(gradient) != 1L || is.na(gradient))
     ggchord_stop("gradient must be TRUE or FALSE")
@@ -156,6 +154,17 @@ geom_link_ribbon <- function(mapping = NULL, data = NULL,
   ggchord_check_branch_fraction(link_branch_fraction)
   mapping <- ggchord_normalize_mapping(mapping)
   dots <- list(...)
+  if (!is.character(stat) || length(stat) != 1L || !stat %in% c("identity", "ribbon_bundle", "ribbon_density"))
+    ggchord_stop("geom_link_ribbon(): stat must be identity, ribbon_bundle, or ribbon_density")
+  controls <- intersect(names(dots), c("bins", "weight", "group_by", "min_bundle"))
+  if (stat == "identity" && length(controls))
+    ggchord_stop("geom_link_ribbon(): ", controls[1L], " requires a computed ribbon stat")
+  if (stat == "ribbon_density" && "min_bundle" %in% controls)
+    ggchord_stop("geom_link_ribbon(): min_bundle applies only to ribbon_bundle")
+  if (anyDuplicated(names(dots)[names(dots) %in% controls]))
+    ggchord_stop("geom_link_ribbon(): each statistic parameter must be supplied once")
+  stat_args <- dots[controls]
+  dots[controls] <- NULL
   if ("color" %in% names(dots)) style_defaults[["colour"]] <- FALSE
   ggchord_reject_retired(dots, "geom_link_ribbon()", c(
     ribbon_gap = "link_gap", ribbon_ctrl_point = "link_ctrl_point",
@@ -239,7 +248,7 @@ geom_link_ribbon <- function(mapping = NULL, data = NULL,
                   } else show.legend,
     inherit.aes = inherit.aes,
     check.aes   = FALSE,
-    check.param = FALSE,
+    check.param = TRUE,
     key_glyph   = key_glyph_ribbon,
     params      = c(dots, fixed)
   )
@@ -282,6 +291,8 @@ geom_link_ribbon <- function(mapping = NULL, data = NULL,
     c("qaccver", "saccver", "length", "pident", "qstart", "qend",
       "sstart", "send")
   )
+  if (stat != "identity")
+    lyr <- do.call(ggchord_apply_ribbon_stat, c(list(lyr = lyr, stat = stat), stat_args))
   lyr
 }
 

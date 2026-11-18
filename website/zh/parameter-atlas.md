@@ -421,7 +421,8 @@
 | `allow_repeated` | `FALSE` | 类型、单位及允许格式见右侧本函数参数契约 | 显式允许声明的 source_hsp_id 出现在多个显示关系中。 |
 | `tip` | `c("none", "subject")` | 类型、单位及允许格式见右侧本函数参数契约 | 默认 none 保留完整区间端面；也可选择 subject 端收尖。肩部在通道 88% 处保留平移后的目标端点跨度。尖点是端面中点的装饰标记，不代表单个匹配碱基或生物转移方向。退化端面会警告并恢复完整端面。源区间保持不变。 |
 | `gradient` | `FALSE` | 类型、单位及允许格式见右侧本函数参数契约 | 逻辑值。显式启用端点序列色插值，默认 FALSE。显式 fill、映射和标度仍然优先。 |
-| `...` | `无形式默认；是否必需见契约` | 类型、单位及允许格式见右侧本函数参数契约 | 传给 geom_polygon() 的其他参数。 |
+| `...` | `无形式默认；是否必需见契约` | 类型、单位及允许格式见右侧本函数参数契约 | 使用聚合或密度统计时，可在此传递 bins、weight 或 group_by。只有合并连接带时可用 min_bundle。其余参数传给连接带几何层。 |
+| `stat` | `"identity"` | 类型、单位及允许格式见右侧本函数参数契约 | 在原始区间上计算的统计方式。"identity" 保留每条记录，"ribbon_bundle" 合并记录，"ribbon_density" 为每条记录添加局部密度。两种统计的控制参数与计算变量分别见 stat_ribbon_bundle() 和 stat_ribbon_density()。 |
 
 </details>
 
@@ -679,10 +680,10 @@
 | --- | --- | --- | --- |
 | `mapping` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 标准图层输入。提供 accver，以及 x/pos 源位置或 start/end 区间；给定数值映射到 y/track_value。 |
 | `data` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 标准图层输入。提供 accver，以及 x/pos 源位置或 start/end 区间；给定数值映射到 y/track_value。 |
-| `geom` | `"point"` | 类型、单位及允许格式见右侧本函数参数契约 | 原生几何与统计名称，bar 默认 count，col 及其他几何默认 identity。 |
-| `stat` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 原生几何与统计名称，bar 默认 count，col 及其他几何默认 identity。 |
+| `geom` | `"point"` | 类型、单位及允许格式见右侧本函数参数契约 | 原生几何与统计名称。七种受支持的统计也接受 ggplot2 的对应内置 Stat 对象，例如 ggplot2::StatBin。bar 默认使用 count，其余几何默认使用 identity。自定义 Stat 子类需要定义输出行对应的来源，当前接口只接受内置对象。 |
+| `stat` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 原生几何与统计名称。七种受支持的统计也接受 ggplot2 的对应内置 Stat 对象，例如 ggplot2::StatBin。bar 默认使用 count，其余几何默认使用 identity。自定义 Stat 子类需要定义输出行对应的来源，当前接口只接受内置对象。 |
 | `track` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 物理 position_track() 声明。 |
-| `position` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | identity、stack、dodge 等数据 Position；旧 position=position_track(...) 写法仍声明物理 band。 |
+| `position` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 在源数据上做位置调整，例如 "identity"、"stack" 或 ggplot2::position_dodge(width = 10)。x 以序列坐标为单位。特征的位置在特征图层声明。旧写法 position = position_track(...) 仍可声明物理轨道。 |
 | `bounds` | `c("error", "clip")` | 类型、单位及允许格式见右侧本函数参数契约 | 坐标报错或裁剪策略。 |
 | `baseline` | `0` | 类型、单位及允许格式见右侧本函数参数契约 | 给定数值柱的基线，非零值要求 position='identity'，避免堆叠改变其含义。 |
 | `show.legend` | `NA` | 类型、单位及允许格式见右侧本函数参数契约 | 标准图层控制参数。 |
@@ -702,7 +703,7 @@
 | --- | --- | --- | --- |
 | `mapping` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 标准图层输入。提供 accver，以及 x/pos 源位置或 start/end 区间；给定数值映射到 y/track_value。 |
 | `data` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 标准图层输入。提供 accver，以及 x/pos 源位置或 start/end 区间；给定数值映射到 y/track_value。 |
-| `position` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | identity、stack、dodge 等数据 Position；旧 position=position_track(...) 写法仍声明物理 band。 |
+| `position` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 在源数据上做位置调整，例如 "identity"、"stack" 或 ggplot2::position_dodge(width = 10)。x 以序列坐标为单位。特征的位置在特征图层声明。旧写法 position = position_track(...) 仍可声明物理轨道。 |
 | `baseline` | `0` | 数值 0；计数柱拒绝非零基线 | 计数柱仅允许 0 基线；任何非零值均报错。给定数值和非零基线使用 geom_track_col()。 |
 | `fill` | `"#86AFB9"` | 类型、单位及允许格式见右侧本函数参数契约 | 计数快捷层的固定样式。 |
 | `colour` | `NA` | 类型、单位及允许格式见右侧本函数参数契约 | 计数快捷层的固定样式。 |
@@ -727,7 +728,7 @@
 | --- | --- | --- | --- |
 | `mapping` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 标准图层输入。提供 accver，以及 x/pos 源位置或 start/end 区间；给定数值映射到 y/track_value。 |
 | `data` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 标准图层输入。提供 accver，以及 x/pos 源位置或 start/end 区间；给定数值映射到 y/track_value。 |
-| `position` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | identity、stack、dodge 等数据 Position；旧 position=position_track(...) 写法仍声明物理 band。 |
+| `position` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 在源数据上做位置调整，例如 "identity"、"stack" 或 ggplot2::position_dodge(width = 10)。x 以序列坐标为单位。特征的位置在特征图层声明。旧写法 position = position_track(...) 仍可声明物理轨道。 |
 | `track` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 物理 position_track() 声明。 |
 | `...` | `无形式默认；是否必需见契约` | 类型、单位及允许格式见右侧本函数参数契约 | 原生 geom/stat 参数和固定样式。 |
 | `show.legend` | `NA` | 类型、单位及允许格式见右侧本函数参数契约 | 标准图层控制参数。 |

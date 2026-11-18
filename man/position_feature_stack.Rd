@@ -36,3 +36,7 @@ solved before polygons and labels are generated.
 In \code{\link[=coord_collinear]{coord_collinear()}}, these local lanes become parallel horizontal bands;
 they do not represent circular physical tracks or radii.
 }
+\details{
+The default object can also be selected on a feature layer with
+\code{position = "feature_stack"}. Use the constructor to configure the lanes.
+}

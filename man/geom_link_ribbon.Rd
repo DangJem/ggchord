@@ -27,7 +27,8 @@ geom_link_ribbon(
   allow_repeated = FALSE,
   tip = c("none", "subject"),
   gradient = FALSE,
-  ...
+  ...,
+  stat = "identity"
 )
 }
 \arguments{
@@ -115,7 +116,14 @@ fall back to the full front with a warning. Source intervals are unchanged.}
 \item{gradient}{Logical. Opt into endpoint sequence-colour interpolation;
 default FALSE. Explicit fill, mapping and scales still take priority.}
 
-\item{...}{Additional arguments passed to \code{geom_polygon()}}
+\item{...}{With a computed stat, pass \code{bins}, \code{weight}, or \code{group_by} here.
+Only bundling accepts \code{min_bundle}. Other arguments go to the ribbon geom.}
+
+\item{stat}{Source-interval statistic. Use \code{"identity"} to retain individual
+records, \code{"ribbon_bundle"} to aggregate them, or \code{"ribbon_density"} to
+annotate each record with local density. The two computed statistics
+have the same controls and computed variables as \code{\link[=stat_ribbon_bundle]{stat_ribbon_bundle()}}
+and \code{\link[=stat_ribbon_density]{stat_ribbon_density()}}.}
 }
 \value{
 A ggplot2 layer.
@@ -140,4 +148,7 @@ seqs <- seq_data_example |>
 ggchord(seq_data = seqs, ribbon_data = links) +
   geom_seq() +
   geom_link_ribbon()
+ggchord(seqs, links) +
+  geom_link_ribbon(aes(ribbon_alpha = after_stat(density)),
+    stat = "ribbon_density", bins = 10, weight = "count")
 }

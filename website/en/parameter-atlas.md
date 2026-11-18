@@ -421,7 +421,8 @@ Start with the [function index](../../man/). Examples compare important paramete
 | `allow_repeated` | `FALSE` | Type, units and accepted forms: see this API argument contract at right | Explicitly allow a declared source_hsp_id in more than one displayed relation. |
 | `tip` | `c("none", "subject")` | Type, units and accepted forms: see this API argument contract at right | Full interval fronts (none, default), or an optional subject taper. The shoulder retains the translated target endpoint span at 88 percent of the channel. The tip is a decorative front-midpoint marker, not a single matched base or biological transfer direction. Degenerate fronts fall back to the full front with a warning. Source intervals are unchanged. |
 | `gradient` | `FALSE` | Type, units and accepted forms: see this API argument contract at right | Logical. Opt into endpoint sequence-colour interpolation; default FALSE. Explicit fill, mapping and scales still take priority. |
-| `...` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Additional arguments passed to geom_polygon() |
+| `...` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | With a computed stat, pass bins, weight, or group_by here. Only bundling accepts min_bundle. Other arguments go to the ribbon geom. |
+| `stat` | `"identity"` | Type, units and accepted forms: see this API argument contract at right | Source-interval statistic. Use "identity" to retain individual records, "ribbon_bundle" to aggregate them, or "ribbon_density" to annotate each record with local density. The two computed statistics have the same controls and computed variables as stat_ribbon_bundle() and stat_ribbon_density(). |
 
 </details>
 
@@ -679,10 +680,10 @@ Start with the [function index](../../man/). Examples compare important paramete
 | --- | --- | --- | --- |
 | `mapping` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Standard layer input. Supply accver and source positions through x/pos, or interval start/end. Map y/track_value for identity values. |
 | `data` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Standard layer input. Supply accver and source positions through x/pos, or interval start/end. Map y/track_value for identity values. |
-| `geom` | `"point"` | Type, units and accepted forms: see this API argument contract at right | Native geometry/statistic names. bar defaults to count; col and other geoms default to identity. |
-| `stat` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Native geometry/statistic names. bar defaults to count; col and other geoms default to identity. |
+| `geom` | `"point"` | Type, units and accepted forms: see this API argument contract at right | Native geometry and statistic names. The seven supported statistics also accept their built-in ggplot2 Stat objects, for example ggplot2::StatBin. Bar defaults to count, other geoms to identity. Custom Stat subclasses require a source-membership rule and are unsupported. |
+| `stat` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Native geometry and statistic names. The seven supported statistics also accept their built-in ggplot2 Stat objects, for example ggplot2::StatBin. Bar defaults to count, other geoms to identity. Custom Stat subclasses require a source-membership rule and are unsupported. |
 | `track` | `NULL` | Type, units and accepted forms: see this API argument contract at right | A physical position_track() declaration. |
-| `position` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Data position such as identity, stack, dodge. The legacy position=position_track(...) spelling still declares the physical band. |
+| `position` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Native data adjustment such as "identity", "stack" or ggplot2::position_dodge(width = 10). Source x uses sequence units. Feature placement belongs on feature layers. The legacy position = position_track(...) spelling still declares the physical band. |
 | `bounds` | `c("error", "clip")` | Type, units and accepted forms: see this API argument contract at right | Coordinate error/clip policy. |
 | `baseline` | `0` | Type, units and accepted forms: see this API argument contract at right | Numeric identity-column baseline. Nonzero baselines require position='identity' so stacking does not change their meaning. |
 | `show.legend` | `NA` | Type, units and accepted forms: see this API argument contract at right | Standard layer controls. |
@@ -702,7 +703,7 @@ Start with the [function index](../../man/). Examples compare important paramete
 | --- | --- | --- | --- |
 | `mapping` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Standard layer input. Supply accver and source positions through x/pos, or interval start/end. Map y/track_value for identity values. |
 | `data` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Standard layer input. Supply accver and source positions through x/pos, or interval start/end. Map y/track_value for identity values. |
-| `position` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Data position such as identity, stack, dodge. The legacy position=position_track(...) spelling still declares the physical band. |
+| `position` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Native data adjustment such as "identity", "stack" or ggplot2::position_dodge(width = 10). Source x uses sequence units. Feature placement belongs on feature layers. The legacy position = position_track(...) spelling still declares the physical band. |
 | `baseline` | `0` | Numeric 0; count bars reject nonzero baselines | Count bars require baseline 0; every nonzero value is rejected. Use geom_track_col() for supplied values and nonzero baselines. |
 | `fill` | `"#86AFB9"` | Type, units and accepted forms: see this API argument contract at right | Fixed styles for the count shortcut. |
 | `colour` | `NA` | Type, units and accepted forms: see this API argument contract at right | Fixed styles for the count shortcut. |
@@ -727,7 +728,7 @@ Start with the [function index](../../man/). Examples compare important paramete
 | --- | --- | --- | --- |
 | `mapping` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Standard layer input. Supply accver and source positions through x/pos, or interval start/end. Map y/track_value for identity values. |
 | `data` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Standard layer input. Supply accver and source positions through x/pos, or interval start/end. Map y/track_value for identity values. |
-| `position` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Data position such as identity, stack, dodge. The legacy position=position_track(...) spelling still declares the physical band. |
+| `position` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Native data adjustment such as "identity", "stack" or ggplot2::position_dodge(width = 10). Source x uses sequence units. Feature placement belongs on feature layers. The legacy position = position_track(...) spelling still declares the physical band. |
 | `track` | `NULL` | Type, units and accepted forms: see this API argument contract at right | A physical position_track() declaration. |
 | `...` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Native geom/stat parameters and fixed styles. |
 | `show.legend` | `NA` | Type, units and accepted forms: see this API argument contract at right | Standard layer controls. |

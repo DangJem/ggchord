@@ -101,8 +101,9 @@ ggchord_typed_na <- function(x) {
 #' Bundle dense alignment ribbons explicitly
 #'
 #' Aggregates nearby alignment ribbons on a normalized query/subject grid.
-#' Bundling is always explicit: \code{geom_link_ribbon()} continues to draw one
-#' ribbon per input row unless the returned data are supplied by the user.
+#' With its default identity statistic, \code{geom_link_ribbon()} draws one
+#' ribbon per input row. Supply the aggregated data to that layer or set
+#' \code{stat = "ribbon_bundle"} to aggregate during layout.
 #' Groups use relative endpoint direction, so reversing both ends can remain
 #' in the same group. The envelope follows the first row's absolute directions;
 #' length and identity are length-weighted source means (length is rounded),

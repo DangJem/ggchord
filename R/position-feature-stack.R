@@ -21,6 +21,8 @@ PositionFeatureStack <- ggplot2::ggproto(
 #' In [coord_collinear()], these local lanes become parallel horizontal bands;
 #' they do not represent circular physical tracks or radii.
 #'
+#' The default object can also be selected on a feature layer with
+#' `position = "feature_stack"`. Use the constructor to configure the lanes.
 #' @param spacing Positive minimum radial distance between adjacent feature
 #'   lanes. Circular plasmid layout enlarges the first transition into a main
 #'   label corridor and reserves at least one label track between deeper

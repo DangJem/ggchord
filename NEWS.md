@@ -36,6 +36,24 @@
   Linear leaders skip polygons outside their bounding boxes and skip route
   checks for candidates already rejected by the collision policy.
 
+- Select `stat = "ribbon_bundle"` or `"ribbon_density"` directly in
+  `geom_link_ribbon()`. The corresponding stat shortcuts use the same
+  implementation. A bundling-only parameter with another stat raises an error.
+- Feature layers accept `position = "feature_stack"`. Passing a feature
+  position or physical track band to a layer that cannot apply it raises an
+  error. Native tracks accept the seven supported built-in ggplot2 Stat objects
+  and honour `position_identity()` with a nonzero column baseline.
+- Native count and summary tracks trace each result to its contributing source
+  rows before a dodge or nudge. Missing heights excluded from summaries and
+  missing weights excluded from counts are also excluded from their row lists.
+  Native visual mappings can combine source or computed values and a final
+  colour transformation with `stage()`. Ordinary column names containing
+  `after_stat` or `after_scale` work as source mappings.
+- Continuous ribbon alpha uses the native fallback range on ggplot2 4.0.0.
+  Dense plots batch exact label collisions and leader intersections, reuse
+  radial candidate locations, and skip candidates that cannot improve the
+  selected layout.
+
 # ggchord 0.28.2
 
 - Stop the VCF help fixture after its third observed record instead of reading

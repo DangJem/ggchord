@@ -82,15 +82,10 @@ ggchord_ribbon_density <- function(ribbon_data, seq_data, bins, weight,
   )
 }
 
-ggchord_stat_ribbon_layer <- function(
-    type, mapping, data, bins, min_bundle, weight, group_by,
-    position, show.legend, inherit.aes, dots) {
-  weight <- match.arg(weight, c("length", "count", "pident"))
-  args <- c(list(
-    mapping = mapping, data = data, show.legend = show.legend,
-    inherit.aes = inherit.aes, position = position
-  ), dots)
-  lyr <- do.call(geom_link_ribbon, args)
+ggchord_apply_ribbon_stat <- function(lyr, stat, bins = 80L, min_bundle = 2L,
+                                     weight = c("length", "count", "pident"), group_by = NULL) {
+  type <- switch(stat, ribbon_bundle = "bundle", ribbon_density = "density")
+  weight <- match.arg(weight)
   # ggplot2 deliberately drops input columns that are not mapped before a Stat
   # runs. Carry the three precomputed values through private aesthetics, then
   # expose their public names from compute_panel() for after_stat().
@@ -133,10 +128,9 @@ stat_ribbon_bundle <- function(
     weight = c("length", "count", "pident"),
     group_by = NULL, position = "identity",
     show.legend = TRUE, inherit.aes = FALSE, ...) {
-  ggchord_stat_ribbon_layer(
-    "bundle", mapping, data, bins, min_bundle, weight, group_by,
-    position, show.legend, inherit.aes, list(...)
-  )
+  geom_link_ribbon(mapping = mapping, data = data, stat = "ribbon_bundle",
+    bins = bins, min_bundle = min_bundle, weight = match.arg(weight), group_by = group_by,
+    position = position, show.legend = show.legend, inherit.aes = inherit.aes, ...)
 }
 
 #' Compute local ribbon density as a ggchord stat
@@ -160,8 +154,7 @@ stat_ribbon_density <- function(
     weight = c("length", "count", "pident"),
     group_by = NULL, position = "identity",
     show.legend = TRUE, inherit.aes = FALSE, ...) {
-  ggchord_stat_ribbon_layer(
-    "density", mapping, data, bins, 2L, weight, group_by,
-    position, show.legend, inherit.aes, list(...)
-  )
+  geom_link_ribbon(mapping = mapping, data = data, stat = "ribbon_density",
+    bins = bins, weight = match.arg(weight), group_by = group_by,
+    position = position, show.legend = show.legend, inherit.aes = inherit.aes, ...)
 }

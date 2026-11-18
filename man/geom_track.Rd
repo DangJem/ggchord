@@ -50,8 +50,10 @@ geom_track_col(
 \item{mapping, data}{Standard layer input. Supply accver and source positions
 through x/pos, or interval start/end. Map y/track_value for identity values.}
 
-\item{position}{Data position such as identity, stack, dodge. The legacy
-position=position_track(...) spelling still declares the physical band.}
+\item{position}{Native data adjustment such as \code{"identity"}, \code{"stack"} or
+\code{ggplot2::position_dodge(width = 10)}. Source x uses sequence units.
+Feature placement belongs on feature layers. The legacy
+\code{position = position_track(...)} spelling still declares the physical band.}
 
 \item{baseline}{Numeric identity-column baseline. Nonzero baselines require
 position='identity' so stacking does not change their meaning.}
@@ -64,8 +66,10 @@ position='identity' so stacking does not change their meaning.}
 
 \item{...}{Native geom/stat parameters and fixed styles.}
 
-\item{geom, stat}{Native geometry/statistic names. bar defaults to count;
-col and other geoms default to identity.}
+\item{geom, stat}{Native geometry and statistic names. The seven supported
+statistics also accept their built-in ggplot2 Stat objects, for example
+\code{ggplot2::StatBin}. Bar defaults to count, other geoms to identity.
+Custom Stat subclasses require a source-membership rule and are unsupported.}
 
 \item{track}{A physical \code{\link[=position_track]{position_track()}} declaration.}
 }
@@ -82,6 +86,8 @@ in the native layer. Smooth/density/ecdf retain each estimation group's
 complete eligible source-row set, not new independent observations. These
 sets describe the group submitted to the native estimator, not per-point
 influence or a custom model's additional internal filtering decisions.
+Count and summary provenance lists the eligible input rows at each native
+group and position, before a data-position adjustment.
 Statistics operate on raw source x/y before Track numerical-scale transforms.
 ECDF requires explicit pad=FALSE because infinite anchors are not source
 positions. Density's native bounds argument is not forwarded: bounds here

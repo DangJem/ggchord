@@ -56,6 +56,7 @@
 #'   geom_residue(line_width = 50)
 geom_residue <- function(mapping = NULL, data = NULL, overflow = c("tile", "error"),
     position = "identity", show.legend = FALSE, inherit.aes = TRUE, line_width = NULL, ...) {
+  if (ggchord_local_position(position)) ggchord_stop("geom_residue(): position adjusts alignment cells; use a data position")
   if (!is.null(line_width) && (!is.numeric(line_width) || length(line_width) != 1L ||
       !is.finite(line_width) || line_width < 1 || line_width != floor(line_width) || line_width > 2^53 - 1))
     ggchord_stop("geom_residue(): line_width must be a positive integer or NULL")

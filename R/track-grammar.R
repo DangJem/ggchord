@@ -10,6 +10,8 @@
 #' complete eligible source-row set, not new independent observations. These
 #' sets describe the group submitted to the native estimator, not per-point
 #' influence or a custom model's additional internal filtering decisions.
+#' Count and summary provenance lists the eligible input rows at each native
+#' group and position, before a data-position adjustment.
 #' Statistics operate on raw source x/y before Track numerical-scale transforms.
 #' ECDF requires explicit pad=FALSE because infinite anchors are not source
 #' positions. Density's native bounds argument is not forwarded: bounds here
@@ -25,11 +27,15 @@
 #' Existing track_value/track_fill/track_colour roles remain accepted.
 #' @param mapping,data Standard layer input. Supply accver and source positions
 #'   through x/pos, or interval start/end. Map y/track_value for identity values.
-#' @param geom,stat Native geometry/statistic names. bar defaults to count;
-#'   col and other geoms default to identity.
+#' @param geom,stat Native geometry and statistic names. The seven supported
+#'   statistics also accept their built-in ggplot2 Stat objects, for example
+#'   `ggplot2::StatBin`. Bar defaults to count, other geoms to identity.
+#'   Custom Stat subclasses require a source-membership rule and are unsupported.
 #' @param track A physical [position_track()] declaration.
-#' @param position Data position such as identity, stack, dodge. The legacy
-#'   position=position_track(...) spelling still declares the physical band.
+#' @param position Native data adjustment such as `"identity"`, `"stack"` or
+#'   `ggplot2::position_dodge(width = 10)`. Source x uses sequence units.
+#'   Feature placement belongs on feature layers. The legacy
+#'   `position = position_track(...)` spelling still declares the physical band.
 #' @param bounds Coordinate error/clip policy.
 #' @param baseline Numeric identity-column baseline. Nonzero baselines require
 #'   position='identity' so stacking does not change their meaning.
@@ -63,7 +69,13 @@ geom_track <- function(mapping = NULL, data = NULL, geom = "point", stat = NULL,
   if (!is.character(geom) || length(geom) != 1L || !geom %in% geoms)
     ggchord_stop("geom_track(): unsupported geom; see the documented support matrix")
   stat <- stat %||% if (geom == "bar") "count" else "identity"
-  if (!is.character(stat) || length(stat) != 1L || !stat %in% c("identity", "count", "bin", "summary", "smooth", "density", "ecdf"))
+  stats <- c(identity = "StatIdentity", count = "StatCount", bin = "StatBin",
+    summary = "StatSummary", smooth = "StatSmooth", density = "StatDensity", ecdf = "StatEcdf")
+  if (inherits(stat, "Stat")) {
+    stat <- names(stats)[vapply(stats, function(name)
+      identical(stat, getExportedValue("ggplot2", name)), logical(1))]
+  }
+  if (!is.character(stat) || length(stat) != 1L || !stat %in% names(stats))
     ggchord_stop("geom_track(): supported stats are identity, count, bin, summary, smooth, density, ecdf")
   if (inherits(position, "Position") && isTRUE(position$ggchord_track_position)) {
     if (!is.null(track)) ggchord_stop("geom_track(): declare the physical track only once")
@@ -73,7 +85,9 @@ geom_track <- function(mapping = NULL, data = NULL, geom = "point", stat = NULL,
   position <- position %||% if (geom %in% c("bar", "col", "area")) "stack" else "identity"
   estimates <- list(smooth = c("line", "path", "point", "ribbon"),
     density = c("line", "path", "point", "area"), ecdf = c("line", "path", "point", "step"))
-  identity_position <- identical(position, "identity") || inherits(position, "PositionIdentity")
+  if (ggchord_local_position(position))
+    ggchord_stop("geom_track(): position adjusts source data; use feature placement on a feature layer")
+  identity_position <- ggchord_is_data_identity(position)
   if (stat %in% names(estimates) && (!geom %in% estimates[[stat]] || !identity_position))
     ggchord_stop("geom_track(): ", stat, " requires position='identity' and geom in ", paste(estimates[[stat]], collapse = ", "))
   dots <- ggchord_colour_dots(list(...), "geom_track()")
@@ -89,7 +103,7 @@ geom_track <- function(mapping = NULL, data = NULL, geom = "point", stat = NULL,
     ggchord_stop("geom_track(): only full polygon outlines are supported")
   mapping <- ggchord_normalize_mapping(mapping) %||% ggplot2::aes()
   if (!is.numeric(baseline) || length(baseline) != 1L || !is.finite(baseline)) ggchord_stop("Track baseline must be finite")
-  if (baseline != 0 && !(geom == "col" && stat == "identity" && identical(position, "identity")))
+  if (baseline != 0 && !(geom == "col" && stat == "identity" && identity_position))
     ggchord_stop("geom_track(): a nonzero baseline needs col/identity and position='identity'")
   l <- ggchord_track_layer("line", NULL, data, track, "#86AFB9",
     if (geom %in% c("point", "line", "path", "step", "segment", "linerange", "errorbar", "text")) "#387D88" else NA,
@@ -126,6 +140,10 @@ ggchord_track_native_input <- function(layer, plot) {
   mapping <- p$native_mapping
   if (isTRUE(p$native_inherit)) for (key in setdiff(names(plot$mapping), names(mapping)))
     mapping[[key]] <- plot$mapping[[key]]
+  for (key in intersect(c("accver", "group"), names(mapping))) {
+    if (ggchord_has_stage(mapping[[key]]))
+      ggchord_stop("geom_track(): ", key, " must be available before the source statistic")
+  }
   if ("accver" %in% names(mapping)) {
     ids <- rlang::eval_tidy(mapping$accver, raw)
     if (!length(ids) %in% c(1L, nrow(raw)))
@@ -167,17 +185,32 @@ ggchord_track_native_input <- function(layer, plot) {
   }
   if (!"y" %in% names(mapping) && "track_value" %in% names(raw)) mapping$y <- rlang::quo(track_value)
   if (p$native_stat == "count" && "y" %in% names(mapping) &&
-      !grepl("after_stat|stage\\(", rlang::as_label(mapping$y))) ggchord_stop(
+      !is.null(ggchord_start_mapping(mapping$y))) ggchord_stop(
     "geom_track_bar(): count does not accept supplied heights; use geom_track_col() or explicit stat='identity'")
   if (p$native_geom == "tile" && !"y" %in% names(mapping)) mapping$y <- rlang::quo(0.5)
-  late <- names(mapping)[vapply(mapping, function(q) grepl("after_scale", rlang::as_label(q)), logical(1))]
-  late_mapping <- mapping[late]; mapping[late] <- NULL
+  late <- names(mapping)[vapply(mapping, ggchord_has_stage, logical(1), stages = "after_scale")]
+  late_mapping <- mapping[late]
+  for (key in late) {
+    expr <- rlang::get_expr(mapping[[key]])
+    if (rlang::is_call(expr, "stage")) {
+      expr <- match.call(ggplot2::stage, expr)
+      expr$after_scale <- NULL
+      if (!is.null(expr$after_stat) || !is.null(expr$start)) {
+        mapping[[key]] <- rlang::quo_set_expr(mapping[[key]], expr)
+        next
+      }
+    }
+    mapping[[key]] <- NULL
+  }
   source_group <- if ("group" %in% names(mapping)) rlang::eval_tidy(mapping$group, raw) else rep(1L, nrow(raw))
-  group_fields <- list(source_group)
+  if (!length(source_group) %in% c(1L, nrow(raw)))
+    ggchord_stop("geom_track(): group must be scalar or supply one value per input row")
+  group_fields <- list(rep_len(source_group, nrow(raw)))
   for (key in if (!"group" %in% names(mapping))
       intersect(c("fill", "colour", "linetype", "shape"), names(mapping)) else character()) {
-    if (grepl("after_stat|stage\\(", rlang::as_label(mapping[[key]]))) next
-    value <- rlang::eval_tidy(mapping[[key]], raw)
+    start <- ggchord_start_mapping(mapping[[key]])
+    if (is.null(start)) next
+    value <- rlang::eval_tidy(start, raw)
     if (!is.numeric(value)) group_fields[[length(group_fields) + 1L]] <- rep_len(value, nrow(raw))
   }
   raw$.track_group <- as.integer(do.call(interaction, c(group_fields, list(drop = TRUE, lex.order = TRUE))))
@@ -204,16 +237,16 @@ ggchord_track_native_input <- function(layer, plot) {
       native$geom$default_aes$.ggchord_stat_x <- NA_real_
       native$mapping$.ggchord_stat_x <- ggplot2::aes(value=after_stat(x))$value
     }
-    if (p$native_stat %in% c("identity", "bin", "smooth", "density", "ecdf")) {
-      native$data$.track_input_index <- seq_len(nrow(d))
-      native$mapping$.ggchord_source_index <- rlang::quo(.track_input_index)
-      source_stat <- native$stat
-      required <- unique(c(source_stat$required_aes, ".ggchord_source_index"))
-      native$stat <- ggplot2::ggproto(NULL, source_stat, required_aes = required)
-      if (p$native_stat == "bin") native$stat <- ggchord_track_bin_stat(native$stat)
-      if (p$native_stat %in% c("smooth", "density", "ecdf"))
-        native$stat <- ggchord_track_group_stat(native$stat)
-    }
+    native$data$.track_input_index <- seq_len(nrow(d))
+    native$mapping$.ggchord_source_index <- rlang::quo(.track_input_index)
+    source_stat <- native$stat
+    required <- unique(c(source_stat$required_aes, ".ggchord_source_index"))
+    native$stat <- ggplot2::ggproto(NULL, source_stat, required_aes = required)
+    if (p$native_stat == "bin") native$stat <- ggchord_track_bin_stat(native$stat)
+    if (p$native_stat %in% c("smooth", "density", "ecdf"))
+      native$stat <- ggchord_track_group_stat(native$stat)
+    if (p$native_stat %in% c("count", "summary"))
+      native$stat <- ggchord_track_x_stat(native$stat)
     q <- ggplot2::ggplot() + native + ggplot2::scale_fill_identity() +
       ggplot2::scale_colour_identity() + ggplot2::scale_alpha_identity() +
       ggplot2::scale_size_identity() + ggplot2::scale_linewidth_identity() +
@@ -231,19 +264,13 @@ ggchord_track_native_input <- function(layer, plot) {
       computed$track_ymin <- pmin(p$baseline, computed$track_value)
       computed$track_ymax <- pmax(p$baseline, computed$track_value)
     }
-    # Native group integers are local to this sequence. Bin membership travels
-    # with the Stat result, before padding, empty-bin removal or Position moves.
-    gx <- if ("x" %in% names(mapping)) rep_len(rlang::eval_tidy(mapping$x, d), nrow(d)) else rep(NA_real_, nrow(d))
-    local_group <- match(d$.track_group, sort(unique(d$.track_group)))
-    computed$source_rows <- I(lapply(seq_len(nrow(computed)), function(j) {
-      if (p$native_stat == "identity") return(rows[computed$.ggchord_source_index[j]])
-      if (p$native_stat == "bin") return(rows[computed$.ggchord_bin_rows[[j]]])
-      if (p$native_stat %in% c("smooth", "density", "ecdf"))
-        return(rows[computed$.ggchord_group_rows[[j]]])
-      keep <- local_group == computed$group[j]
-      if (p$native_geom != "rect") keep <- keep & gx == computed$.ggchord_stat_x[j]
-      rows[which(keep)]
-    }))
+    # Stat adapters return local input indices before any data-position move.
+    members <- switch(p$native_stat,
+      identity = as.list(computed$.ggchord_source_index),
+      bin = computed$.ggchord_bin_rows,
+      computed$.ggchord_group_rows)
+    computed$source_rows <- I(lapply(members, function(local) rows[local]))
+    if (p$native_stat %in% c("count", "summary")) computed$.ggchord_source_index <- NULL
     computed$.ggchord_bin_rows <- NULL
     computed$.ggchord_group_rows <- NULL
     parts[[length(parts) + 1L]] <- computed
@@ -260,7 +287,14 @@ ggchord_track_native_input <- function(layer, plot) {
   }
   for (key in names(late_mapping)) {
     target <- if (key %in% c("fill", "colour")) ggchord_track_aes(key, p$track_position$track) else key
-    visual[[target]] <- ggchord_track_stage_mapping(late_mapping[key], p$track_position$track)[[key]]
+    q <- ggchord_track_stage_mapping(late_mapping[key], p$track_position$track)[[key]]
+    expr <- rlang::get_expr(q)
+    if (rlang::is_call(expr, "stage")) {
+      expr$after_stat <- NULL
+      expr$start <- if (key %in% names(mapping)) rlang::sym(paste0(".track_", key)) else NULL
+      q <- rlang::quo_set_expr(q, expr)
+    }
+    visual[[target]] <- q
   }
   # Fixed styles have already been interpreted by the native geom.
   for (key in intersect(c("fill", "colour", "alpha", "linewidth", "linetype", "size", "shape", "angle", "hjust", "vjust", "family", "fontface", "lineheight", "stroke"), names(params))) {
@@ -280,6 +314,27 @@ ggchord_track_native_input <- function(layer, plot) {
   layer$geom_params$native_draw_params <- params[intersect(names(params),c("arrow","lineend","linejoin","linemitre","parse","check_overlap","rule"))]
   layer$geom_params$track_kind <- p$native_geom
   layer
+}
+
+# Count and summary aggregate the eligible rows at a particular x and group.
+# Capture native input after Stat's missing-value policy, before dodge or nudge.
+ggchord_track_x_stat <- function(stat) {
+  ggplot2::ggproto(NULL, stat,
+    dropped_aes = unique(c(stat$dropped_aes, ".ggchord_source_index")),
+    parameters = function(self, extra = FALSE) stat$parameters(extra = extra),
+    compute_panel = function(data, scales, ...) {
+      inputs <- data
+      inputs$.ggchord_source_index <- NULL
+      out <- stat$compute_panel(inputs, scales, ...)
+      positions <- unique(data$x)
+      key <- function(group, x) paste(group, match(x, positions), sep = "/")
+      # Native weighted counts ignore missing weights inside rowsum().
+      if (inherits(stat, "StatCount") && !is.null(data$weight))
+        data <- data[!is.na(data$weight), , drop = FALSE]
+      members <- split(data$.ggchord_source_index, key(data$group, data$x))
+      out$.ggchord_group_rows <- I(unname(members[key(out$group, out$x)]))
+      out
+    })
 }
 
 ggchord_track_group_stat <- function(stat) {

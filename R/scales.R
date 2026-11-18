@@ -109,8 +109,10 @@ scale_ribbon_fill_identity <- function(...) {
 #' @return A ggplot2 scale.
 #' @export
 scale_ribbon_alpha_continuous <- function(..., range = NULL) {
-  if (is.null(range)) {
-    return(ggplot2::scale_alpha_continuous(..., aesthetics = "ribbon_alpha"))
+  # Older 4.0.x finds the default palette by aesthetic name, so an extension
+  # role needs the same explicit fallback range as the native alpha scale.
+  if (is.null(range) && !"fallback.palette" %in% names(formals(ggplot2::continuous_scale))) {
+    range <- c(0.1, 1)
   }
   ggplot2::scale_alpha_continuous(
     ..., range = range, aesthetics = "ribbon_alpha"

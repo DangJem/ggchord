@@ -1,6 +1,9 @@
 #' Capture user data and mappings separately from the computed placeholder
 #' @noRd
 ggchord_capture_layer_input <- function(lyr, data, mapping, roles) {
+  if (ggchord_local_position(lyr$position) && is.null(lyr$ggchord_params$feature_position) &&
+      is.null(lyr$ggchord_params$track_position))
+    ggchord_stop("Layer '", lyr$ggchord_type, "' cannot use a feature or physical track position")
   mapping <- ggchord_normalize_mapping(mapping)
   if (rlang::is_formula(data)) data <- rlang::as_function(data)
   lyr$ggchord_input_data <- ggchord_normalize_accver(data)
@@ -129,6 +132,31 @@ ggchord_layer_source <- function(lyr, fallback) {
   data
 }
 
+# Inspect calls rather than printed labels, which may contain a stage name in
+# a column, a string, or an abbreviated expression. Match positional stage()
+# arguments to the same formals as ggplot2.
+ggchord_has_stage <- function(x, stages = c("after_stat", "after_scale")) {
+  if (missing(x)) return(FALSE)
+  x <- rlang::get_expr(x)
+  if (!is.call(x)) return(FALSE)
+  if (rlang::is_call(x, "stage")) {
+    args <- as.list(match.call(ggplot2::stage, x))[-1L]
+    if (any(!vapply(args[intersect(names(args), stages)], is.null, logical(1)))) return(TRUE)
+  }
+  rlang::is_call(x, stages) || any(vapply(as.list(x)[-1L], ggchord_has_stage, logical(1), stages = stages))
+}
+
+# Starting expression available for grouping and scale training.
+ggchord_start_mapping <- function(q) {
+  expr <- rlang::get_expr(q)
+  if (rlang::is_call(expr, "stage")) {
+    first <- match.call(ggplot2::stage, expr)$start
+    if (is.null(first)) return(NULL)
+    return(rlang::new_quosure(first, rlang::get_env(q)))
+  }
+  if (ggchord_has_stage(expr)) NULL else q
+}
+
 #' Resolve a layer's input table and role mappings
 #' @noRd
 ggchord_resolve_layer_input <- function(lyr, fallback = NULL,
@@ -152,22 +180,7 @@ ggchord_resolve_layer_input <- function(lyr, fallback = NULL,
   input <- data
   for (role in roles) {
     expr <- rlang::get_expr(mapping[[role]])
-    contains_stage <- function(x) {
-      if (!is.call(x)) return(FALSE)
-      head <- x[[1L]]
-      name <- if (is.symbol(head)) as.character(head) else if (
-        is.call(head) && as.character(head[[1L]]) %in% c("::", ":::")) {
-        as.character(head[[3L]])
-      } else ""
-      if (name %in% c("after_stat", "after_scale")) return(TRUE)
-      if (identical(name, "stage")) {
-        args <- as.list(x)[-1L]
-        late <- args[intersect(names(args), c("after_stat", "after_scale"))]
-        if (any(!vapply(late, is.null, logical(1)))) return(TRUE)
-      }
-      any(vapply(as.list(x)[-1L], contains_stage, logical(1)))
-    }
-    if (contains_stage(expr)) {
+    if (ggchord_has_stage(expr)) {
       ggchord_stop(
         "Role aesthetic `", role,
         "` controls geometry and cannot use after_stat() or after_scale()"
@@ -187,8 +200,7 @@ ggchord_resolve_layer_input <- function(lyr, fallback = NULL,
   }
   for (nm in setdiff(names(mapping), c(roles, names(lyr$aes_params)))) {
     expr <- rlang::get_expr(mapping[[nm]])
-    text <- rlang::as_label(expr)
-    if (!grepl("after_stat|after_scale", text)) {
+    if (!ggchord_has_stage(expr)) {
       columns <- intersect(all.vars(expr), c("pident", "length", "anno", "type", "label"))
       ggchord_require_columns(data, columns, paste0("Mapping `", nm, "`"))
     }

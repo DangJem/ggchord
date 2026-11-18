@@ -228,7 +228,7 @@ ggchord_mapping_info <- function(plot, aesthetic) {
     if (is.null(mapping) || !aesthetic %in% names(mapping)) next
     expr <- rlang::get_expr(mapping[[aesthetic]])
     label <- rlang::as_label(expr)
-    staged <- grepl("after_stat\\s*\\(", label)
+    staged <- ggchord_has_stage(expr, "after_stat")
     value <- if (staged) NULL else tryCatch(
       rlang::eval_tidy(mapping[[aesthetic]], data = lyr$data),
       error = function(e) NULL

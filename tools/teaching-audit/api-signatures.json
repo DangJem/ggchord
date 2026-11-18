@@ -743,7 +743,8 @@
       "allow_repeated": "FALSE",
       "tip": "c(\"none\", \"subject\")",
       "gradient": "FALSE",
-      "...": ""
+      "...": "",
+      "stat": "\"identity\""
     }
   },
   {

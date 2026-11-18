@@ -42,25 +42,39 @@ position_plasmid <- function(offset = -0.1) {
   )
 }
 
+ggchord_local_position <- function(position) {
+  inherits(position, "Position") && (isTRUE(position$ggchord_feature_position) ||
+    isTRUE(position$ggchord_feature_stack) || isTRUE(position$ggchord_track_position))
+}
+
+ggchord_is_data_identity <- function(position) {
+  identical(position, "identity") ||
+    (inherits(position, "PositionIdentity") && !ggchord_local_position(position))
+}
+
 ggchord_as_feature_position <- function(position, caller = "feature layer") {
   if (is.character(position)) {
     if (length(position) != 1L || is.na(position) ||
-        !position %in% c("identity", "strand", "plasmid")) {
+        !position %in% c("identity", "strand", "plasmid", "feature_stack")) {
       ggchord_stop(
         caller, ": position must be 'identity', 'strand', 'plasmid', ",
-        "position_strand(), position_plasmid(), or position_feature_stack()"
+        "'feature_stack', or the corresponding position function"
       )
     }
     return(switch(
       position,
       identity = ggplot2::position_identity(),
       strand = position_strand(),
-      plasmid = position_plasmid()
+      plasmid = position_plasmid(),
+      feature_stack = position_feature_stack()
     ))
   }
-  if (inherits(position, "PositionIdentity") ||
-      isTRUE(position$ggchord_feature_position) ||
-      isTRUE(position$ggchord_feature_stack)) return(position)
+  if (inherits(position, "Position")) {
+    if (isTRUE(position$ggchord_track_position))
+      ggchord_stop(caller, ": position_track() declares a quantitative band; use a feature position")
+    if (inherits(position, "PositionIdentity") || isTRUE(position$ggchord_feature_position) ||
+        isTRUE(position$ggchord_feature_stack)) return(position)
+  }
   ggchord_stop(
     caller, ": only identity, strand, plasmid, and feature-stack Positions ",
     "operate in the sequence-local frame"

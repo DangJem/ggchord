@@ -15,6 +15,10 @@
 | 主题与图例 | 全图字体用 `theme(text = element_text(family = "sans"))`，单个连接带图例标题用 `labs(ribbon_fill = "Identity")`，序列标签字号用 `theme(ggchord.seq.label = element_text(size = 10))`。 |
 | 调整连接带 | 先用 `geom_link_ribbon()` 查看默认几何。端点留白用 `link_gap`，局部避让用 `link_avoid = "smooth"`，需要改变中段曲线时再指定 `link_ctrl_point`。 |
 | 起始方向 | 依次对齐 12、3、6、9 点钟方向时，`coord_circular(rotation = ...)` 分别取 0、−90、180、90，`coord_radial_synteny(start_angle = ...)` 分别取 90、0、270、180 度。前者的 `direction` 控制序列坐标递增方向，后者的 `clockwise` 控制后续辐条次序。 |
+| 连接带统计 | `geom_link_ribbon(stat = "ribbon_bundle", bins = 20, weight = "count")` 等价于原有 `stat_ribbon_bundle(bins = 20, weight = "count")`。保留单条连接并按局部密度调整透明度可用 `geom_link_ribbon(aes(ribbon_alpha = after_stat(density)), stat = "ribbon_density", bins = 20, weight = "count")`。只有 bundle 接受 `min_bundle`。 |
+| 特征与轨道位置 | 默认分道可写 `geom_feature(position = "feature_stack")`。自定义间距用 `position_feature_stack(spacing = 0.15)`。定量层用 `track = position_track("depth")` 声明物理轨道，另用 `position = ggplot2::position_dodge(width = 10)` 调整源坐标。传错对象的调用现在会报错。 |
+| 轨道统计与来源 | 例如 `geom_track(aes(x = pos), data = events, geom = "bar", stat = ggplot2::StatBin, binwidth = 10, track = position_track("events"))`。导出的 `source_rows` 在移动几何之前确定，每个汇总值和加权计数只列出相应的有效行。 |
+| 分阶段配色 | 在定量轨道上，`aes(fill = stage(start = condition, after_scale = scales::alpha(fill, 0.5)))` 先按 condition 分组并训练轨道填充标度，再调整已得到的颜色。原始列名可含 after_stat 或 after_scale。 |
 
 ## 0.19.0：静态跨面板组合
 
