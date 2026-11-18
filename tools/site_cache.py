@@ -42,7 +42,9 @@ def runtime():
                 environment={k:v for k,v in os.environ.items() if k in {'R_LIBS_SITE','R_DEFAULT_PACKAGES','FONTCONFIG_FILE','FONTCONFIG_PATH','LC_ALL','LC_CTYPE','LANG'}})
 
 def inputs(paths):
-    return {str(p.relative_to(ROOT)):digest(p) for p in sorted(set(paths)) if p.is_file() and '__pycache__' not in p.parts}
+    return {str(p.relative_to(ROOT)):digest(p) for p in sorted(set(paths))
+            if p.is_file() and '__pycache__' not in p.parts and
+            not any(part.startswith('.') for part in p.relative_to(ROOT).parts)}
 
 def shell_inputs():
     return inputs([ROOT/p for p in ['DESCRIPTION','NAMESPACE','LICENSE','LICENSE.md','_pkgdown.yml','tools/render-website.R','tools/build-website.py','tools/site_cache.py','website/pages.json','website/navigation.json']]+list((ROOT/'pkgdown').rglob('*')))

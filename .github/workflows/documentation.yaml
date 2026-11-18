@@ -91,7 +91,7 @@ jobs:
         with:
           name: documentation-preview
           path: .site/
-          include-hidden-files: true
+          include-hidden-files: false
       - uses: actions/upload-pages-artifact@v4
         if: inputs.deploy
         with:

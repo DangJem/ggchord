@@ -15,6 +15,7 @@ from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 from site_cache import Cache, runtime, key as cache_key, shell_inputs, reference_inputs, reference_cache_allowed
 from site_search import complete_examples, search_records
+from site_source_links import tracked_paths
 from documentation_lib import ROOT, WEB, PAGES, CAPTIONS, RECIPES, expand, snippets, localize_r_comments
 
 class PageText(__import__('html.parser',fromlist=['HTMLParser']).HTMLParser):
@@ -34,13 +35,36 @@ class PageText(__import__('html.parser',fromlist=['HTMLParser']).HTMLParser):
     def handle_data(self,data):
         if not self.ignored:self.parts.append(data)
 
+def public_files(paths):
+    """Select regular, repository-owned downloads without following local symlinks."""
+    tracked = tracked_paths()
+    for path in sorted(set(paths)):
+        relative = path.relative_to(ROOT)
+        if relative.as_posix() not in tracked or any(part.startswith('.') for part in relative.parts):
+            continue
+        if path.resolve() != path:
+            raise ValueError(f'Expected a regular repository file at {relative}')
+        if path.is_file():
+            yield path
+
+
+def copy_source_downloads(assets):
+    for source, target in [(ROOT/'R', assets/'source'),
+                           (ROOT/'tools/teaching-audit', assets/'source/tools/teaching-audit')]:
+        for path in public_files(source.rglob('*')):
+            destination = target / path.relative_to(source)
+            destination.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(path, destination)
+
+
 def render_source_snapshot():
     """Inputs consumed by rendering; audit outputs can still be written."""
     roots = [WEB, ROOT/'R', ROOT/'man', ROOT/'data', ROOT/'vignettes',
              ROOT/'tools/teaching-audit']
-    files = {p for root in roots for p in root.rglob('*')
-             if p.is_file() and '__pycache__' not in p.parts}
-    files.update(ROOT.glob('*.md'))
+    files = {p for root in roots for p in root.rglob('*') if p.is_file()
+             and '__pycache__' not in p.parts and
+             not any(part.startswith('.') for part in p.relative_to(ROOT).parts)}
+    files.update(public_files(ROOT.glob('*.md')))
     files.update(ROOT/r['file'] for r in json.loads((WEB/'manual-figures.json').read_text()))
     files.update(ROOT/name for name in [
         'DESCRIPTION','NAMESPACE','LICENSE','_pkgdown.yml',
@@ -112,8 +136,10 @@ def main():
     environment = runtime() if not args.no_cache else {}
     shell_identity = dict(schema=1,runtime=cache_key(environment),inputs=shell_inputs())
     reference_identity = dict(shell=shell_identity,inputs=reference_inputs())
-    (out/'cache-runtime.json').write_text(json.dumps(environment,sort_keys=True)+'\n')
-    (out/'cache-inputs.json').write_text(json.dumps(dict(shell=shell_identity,reference=reference_identity),sort_keys=True)+'\n')
+    diagnostics = ROOT/'.cache/website-diagnostics'
+    diagnostics.mkdir(parents=True, exist_ok=True)
+    (diagnostics/'cache-runtime.json').write_text(json.dumps(environment,sort_keys=True)+'\n')
+    (diagnostics/'cache-inputs.json').write_text(json.dumps(dict(shell=shell_identity,reference=reference_identity),sort_keys=True)+'\n')
     cache.write()
     timings = dict(status='in_progress', phases={}, workers={})
     def save_timings():
@@ -133,8 +159,8 @@ def main():
           'cat(R.version.string, "; ggplot2 ", as.character(packageVersion("ggplot2")), sep="")'],cwd=ROOT,text=True).strip(),
         deployment='prepared for authorized deployment; builder does not deploy' if args.publication else 'local preview; not deployed')
     (out/'build-metadata.json').write_text(json.dumps(metadata,indent=2)+'\n')
-    for p in (WEB/'assets').iterdir():
-        if p.is_file():shutil.copy2(p,assets/p.name)
+    for p in public_files((WEB/'assets').iterdir()):
+        shutil.copy2(p,assets/p.name)
     complete_examples(assets)
     # Copy the declared inventory explicitly; directory enumeration can omit an asset.
     for key in [*CAPTIONS, 'logo']:
@@ -160,8 +186,7 @@ def main():
     for name in ['MIGRATION.md', 'MIGRATION-Hans.md']:
         shutil.copy2(ROOT/name, assets/name)
     shutil.copy2(WEB/'ASSET-SOURCES.md',assets/'ASSET-SOURCES.md')
-    shutil.copytree(ROOT/'R',assets/'source')
-    shutil.copytree(ROOT/'tools/teaching-audit',assets/'source/tools/teaching-audit')
+    copy_source_downloads(assets)
     inputs=sorted([*ROOT.glob('examples/fasta/*.fna'),*ROOT.glob('examples/gff3/*.gff3'),
         *ROOT.glob('examples/blastn/*.o7'),*ROOT.glob('examples/blastn-standard/*'),
         *ROOT.glob('examples/format-inputs/*'),*ROOT.glob('examples/protein/*'),*ROOT.glob('examples/alignment/*'),*ROOT.glob('examples/plasmid/*.fna')])
@@ -176,7 +201,7 @@ def main():
     inputs += [p for p in ROOT.glob('examples/cds/*') if p.is_file()]
     for name in ['m2-detail.R', 'm3-nested.R', 'origin-detail.R', 'fusion-auto.R', 'fusion-routing.R']:
         inputs.append(ROOT/'examples'/name)
-    inputs = sorted(set(inputs))
+    inputs = list(public_files(inputs))
     input_hashes={str(p.relative_to(ROOT)):hashlib.sha256(p.read_bytes()).hexdigest() for p in inputs}
     (assets/'input-hashes.json').write_text(json.dumps(input_hashes,indent=2)+'\n')
     shared_code = snippets()
@@ -375,7 +400,7 @@ def finalize(out,args,render_snapshot,input_hashes):
         retired.append(rel)
     for name,data in [('legacy-routes',routes),('retired-routes',retired)]:
         (out/(name+'.json')).write_text(json.dumps(data,ensure_ascii=False,indent=2)+'\n')
-    files=[p for base in [WEB,ROOT/'R',ROOT/'man',ROOT/'tools',ROOT/'vignettes'] for p in base.rglob('*') if p.is_file() and '__pycache__' not in p.parts]
+    files=list(public_files(p for base in [WEB,ROOT/'R',ROOT/'man',ROOT/'tools',ROOT/'vignettes'] for p in base.rglob('*')))
     files += inputs + sorted((ROOT/'data').glob('*.rda'))
     files += [ROOT/p for p in ['DESCRIPTION','NAMESPACE','NEWS.md','README.md','README-Hans.md','MIGRATION.md','MIGRATION-Hans.md','_pkgdown.yml','.github/workflows/documentation.yaml']]
     manifest=dict(version=re.search(r'^Version: (.+)$',(ROOT/'DESCRIPTION').read_text(),re.M)[1],api_inventory='current NAMESPACE and man topics; reference-output.json records evaluated examples',generator='pkgdown + paired Markdown + shared static assets',
