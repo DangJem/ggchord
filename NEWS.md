@@ -6,6 +6,12 @@
 - All 21 sequence-layout geoms expose `id` for named exports. The native
   alignment-cell layer `geom_residue()` accepts ggplot2's `name`.
   Centre labels expose `position` and open track lines expose `stat`.
+- When `export_ggchord_layout()` is called with `data_stage`, the new
+  `layer_stage_status` table gives a status for each requested layer and
+  stage, including the reason when data are unavailable. A captured empty
+  table is available. The [external Stat example](examples/stat-window-count.R)
+  shows how to count intersecting intervals per window and recover the
+  contributing rows from both a column layer and a line layer.
 
 - Start with `ggchord(reference, aes(...))` or a prepared object. Supply annotation
   and relationship tables at their layers. A layer can inherit a unique eligible

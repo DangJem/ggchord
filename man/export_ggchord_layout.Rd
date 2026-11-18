@@ -30,7 +30,10 @@ or geometry. A fresh layout returns these stages in \code{layer_data} by layer I
 Source is the adapted input before role mappings. Mapped is the role table
 before the layer transform. Native track mappings run inside ggplot2 and
 have no separate mapped table. Geometry contains named components.
-Inapplicable stages are NULL. All layers participate regardless of include.}
+Unavailable stages are NULL. \code{layer_stage_status} lists each requested
+layer ID and stage, its status (available or unavailable), and the reason
+when unavailable. A captured zero-row table counts as available.
+All registered layers participate regardless of include.}
 }
 \value{
 An object of class \code{ggchord_layout_export}. Selected component
@@ -117,5 +120,7 @@ p <- ggchord(prepare_ggchord_data(seq_data_example, ribbon_data_example)) +
   geom_link_ribbon()
 exported <- export_ggchord_layout(p, include = c("seq", "ribbon"))
 names(exported)
-export_ggchord_layout(p, data_stage = c("source", "geometry"))$layer_data
+stages <- export_ggchord_layout(p, data_stage = c("source", "geometry"))
+stages$layer_data
+stages$layer_stage_status
 }

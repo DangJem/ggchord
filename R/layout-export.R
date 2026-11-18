@@ -24,7 +24,10 @@
 #'   Source is the adapted input before role mappings. Mapped is the role table
 #'   before the layer transform. Native track mappings run inside ggplot2 and
 #'   have no separate mapped table. Geometry contains named components.
-#'   Inapplicable stages are NULL. All layers participate regardless of include.
+#'   Unavailable stages are NULL. `layer_stage_status` lists each requested
+#'   layer ID and stage, its status (available or unavailable), and the reason
+#'   when unavailable. A captured zero-row table counts as available.
+#'   All registered layers participate regardless of include.
 #' @param original_data Logical. Include the resolved per-layer input tables
 #'   under \code{original_data}, default \code{FALSE}.
 #'
@@ -100,7 +103,9 @@
 #'   geom_link_ribbon()
 #' exported <- export_ggchord_layout(p, include = c("seq", "ribbon"))
 #' names(exported)
-#' export_ggchord_layout(p, data_stage = c("source", "geometry"))$layer_data
+#' stages <- export_ggchord_layout(p, data_stage = c("source", "geometry"))
+#' stages$layer_data
+#' stages$layer_stage_status
 export_ggchord_layout <- function(
     plot,
     include = c("seq", "ribbon", "gene", "feature", "labels", "axis", "track"),
@@ -147,8 +152,8 @@ export_ggchord_layout <- function(
   if (isTRUE(plot$coordinates$ggchord_dotplot)) {
     if (default_include) include <- c("alignment", "axis")
     exported <- ggchord_export_dotplot(plot, include, original_data)
-    if (!is.null(data_stage)) exported$layer_data <- ggchord_export_stages(
-      plot, get_chord_layout(plot, build = FALSE), data_stage)
+    if (!is.null(data_stage)) exported <- ggchord_export_stages(
+      exported, plot, get_chord_layout(plot, build = FALSE), data_stage)
     return(exported)
   }
   plot <- ggchord_register_layers(plot)
@@ -382,13 +387,14 @@ export_ggchord_layout <- function(
           lapply(x, ggchord_restore_instance_data, instances = instances)
       })
   }
-  if (!is.null(data_stage)) exported$layer_data <- ggchord_export_stages(plot, layout, data_stage)
+  if (!is.null(data_stage)) exported <- ggchord_export_stages(exported, plot, layout, data_stage)
   class(exported) <- c("ggchord_layout_export", "list")
   exported
 }
 
-ggchord_export_stages <- function(plot, layout, stages) {
+ggchord_export_stages <- function(exported, plot, layout, stages) {
   groups <- list()
+  reports <- list()
   for (layer in plot$layers) {
     id <- layer$ggchord_layer_id
     if (is.null(id)) next
@@ -408,6 +414,21 @@ ggchord_export_stages <- function(plot, layout, stages) {
       data[stage] <- list(value)
     }
     groups[[id]] <- data
+    unavailable <- vapply(data, is.null, logical(1))
+    reasons <- c(source = "No source table was captured for this layer.",
+      mapped = if (!is.null(layer$ggchord_params$native_geom))
+        "The native track evaluates its mapping inside ggplot2." else
+        "No separate role-mapped table was captured for this layer.",
+      statistic = "This layer did not produce a separate statistic table.",
+      geometry = "This layer produced no exportable geometry components.")
+    reports[[id]] <- data.frame(layer_id = id, stage = stages,
+      status = ifelse(unavailable, "unavailable", "available"),
+      reason = ifelse(unavailable, reasons[stages], NA_character_), row.names = NULL)
   }
-  groups
+  exported$layer_data <- groups
+  exported$layer_stage_status <- if (length(reports)) {
+    do.call(rbind, unname(reports))
+  } else data.frame(layer_id = character(), stage = character(),
+    status = character(), reason = character())
+  exported
 }
