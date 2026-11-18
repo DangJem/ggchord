@@ -160,6 +160,7 @@ ggchord_feature_label_lanes <- function(gl, gene_polys, seq_arcs,
     split(gene_polys[polygon_rows, , drop = FALSE],
       gene_polys$group[polygon_rows])
   } else list()
+  polygon_bounds <- ggchord_polygon_bounds(polygons)
   sequence_radius <- if (length(seq_arcs)) {
     max(vapply(seq_arcs, function(path) {
       max(sqrt(path$x^2 + path$y^2), na.rm = TRUE)
@@ -402,6 +403,8 @@ ggchord_feature_label_lanes <- function(gl, gene_polys, seq_arcs,
     chosen_radius <- NA_real_
     chosen_leader <- placed_leaders[0, , drop = FALSE]
 
+    # Moving this label changes its anchor and angle, not the type metrics.
+    line_metrics <- if (concentric_circle) new.env(parent = emptyenv()) else NULL
     for (candidate_index in if (grouped_external[i]) integer() else
         seq_len(nrow(candidates))) {
       track_index <- candidates$track[candidate_index]
@@ -444,19 +447,22 @@ ggchord_feature_label_lanes <- function(gl, gene_polys, seq_arcs,
         ggchord_feature_label_attachment(candidate, polygons, FALSE, units_per_inch)
       box <- if (concentric_circle) {
         ggchord_arc_text_layout(
-          candidate, units_per_inch = units_per_inch, box_padding = .25/25.4
+          candidate, units_per_inch = units_per_inch, box_padding = .25/25.4,
+          line_metrics = line_metrics
         )$boxes
       } else ggchord_text_boxes(
         candidate, units_per_inch = units_per_inch, box_padding = .25/25.4
       )
       label_collision <- ggchord_boxes_overlap_any(box, placed)
+      if (label_collision) next
       feature_collision <- ggchord_boxes_hit_features(
         box, polygons, source_row = gl$source_row[i],
-        allow_own = starts_inside && track_index == 0L
+        allow_own = starts_inside && track_index == 0L, bounds = polygon_bounds
       )
+      if (feature_collision) next
       if (concentric_circle && starts_inside && track_index == 0L &&
           !ggchord_feature_contains_label(ggchord_arc_text_layout(candidate,
-            units_per_inch = units_per_inch, box_padding = 0)$boxes,
+            units_per_inch = units_per_inch, box_padding = 0, line_metrics = line_metrics)$boxes,
             polygons, gl$source_row[i]))
         feature_collision <- TRUE
       corners <- ggchord_boxes_corners(box)

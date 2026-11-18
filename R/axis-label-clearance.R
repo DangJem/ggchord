@@ -51,7 +51,8 @@ ggchord_clear_circular_axis_text <- function(text, layout) {
   }, logical(1)))
   boxes_for <- function(d) ggchord_arc_text_layout(d, units_per_inch = units,
     respect_justification = TRUE)$boxes
-  feature_hit <- function(boxes) ggchord_boxes_hit_features(boxes, polygons, tol = 1e-8)
+  polygon_bounds <- ggchord_polygon_bounds(polygons)
+  feature_hit <- function(boxes) ggchord_boxes_hit_features(boxes, polygons, tol = 1e-8, bounds = polygon_bounds)
   static <- ggchord_annotation_text_obstacles(layout$layer_geometry, layout, include_axis = FALSE)
   text$.axis_clearance_mm <- 0
   text$.axis_clearance_status <- NA_character_
@@ -64,17 +65,18 @@ ggchord_clear_circular_axis_text <- function(text, layout) {
       if (min(radii)>band[2L]) min(radii)-band[2L] else -Inf
     is.finite(gap) && gap>=.5*units/25.4 && gap<=2*units/25.4
   }
+  # Glyphs on the other ticks keep their measured boxes until that tick moves.
+  tick_boxes <- lapply(seq_len(nrow(text)), function(i) boxes_for(text[i, , drop = FALSE]))
   for (i in at) {
     original <- text[i, , drop = FALSE]
     initial <- original
     active_roots <- if (critical[i]) roots[
       roots$x0==roots$x1 & roots$y0==roots$y1,,drop=FALSE] else roots
-    boxes <- boxes_for(original)
+    boxes <- tick_boxes[[i]]
     other_rows <- setdiff(seq_len(nrow(text)),i)
     if (critical[i]) other_rows <- other_rows[critical[other_rows] |
       !(text$.axis_automatic_breaks[other_rows] %in% TRUE)]
-    others <- ggchord_rbind_fill(list(static,
-      boxes_for(text[other_rows, , drop = FALSE]))) %||% data.frame()
+    others <- ggchord_rbind_fill(c(list(static), tick_boxes[other_rows])) %||% data.frame()
     text_hit <- function(candidate) nrow(others) > 0L && any(vapply(
       seq_len(nrow(candidate)), function(k) any(ggchord_oriented_box_overlaps(
         candidate[k, , drop = FALSE], others)), logical(1)))
@@ -144,6 +146,7 @@ ggchord_clear_circular_axis_text <- function(text, layout) {
         break
       }
     }
+    tick_boxes[[i]] <- boxes
     feature_collision <- feature_hit(boxes)
     anchor_collision <- !feature_collision && root_hit(boxes)
     if (!feature_collision && !anchor_collision &&
@@ -182,6 +185,7 @@ ggchord_clear_circular_axis_text <- function(text, layout) {
       hits_text <- nrow(others) > 0L && any(vapply(seq_len(nrow(moved)), function(k)
         any(ggchord_oriented_box_overlaps(moved[k, , drop = FALSE], others)), logical(1)))
       if (hits_text) next
+      tick_boxes[[i]] <- moved
       text$text_x[i] <- candidate$text_x
       text$text_y[i] <- candidate$text_y
       text$.axis_clearance_mm[i] <- text$.axis_clearance_mm[i]+amount*25.4/units
@@ -193,6 +197,7 @@ ggchord_clear_circular_axis_text <- function(text, layout) {
       text$.axis_clearance_status[i] <- "endpoint_unresolved"
     } else if (unresolved && isTRUE(layout$axis_label_hide_overlaps)) {
       text$text[i] <- NA_character_
+      tick_boxes[[i]] <- boxes_for(text[i, , drop = FALSE])
       text$.axis_clearance_status[i] <- "hidden_near_backbone"
     }
   }

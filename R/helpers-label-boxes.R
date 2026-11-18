@@ -406,7 +406,7 @@ ggchord_project_text_boxes <- function(x, y, w, h, angles, hjust, vjust,
 # text anchor. This is shared by collision detection, leader clipping and the
 # renderer so all three use the same curved baseline and local tangents.
 ggchord_arc_text_layout <- function(text, units_per_inch = .35,
-                                     box_padding = 0, respect_justification = FALSE) {
+                                     box_padding = 0, respect_justification = FALSE, line_metrics = NULL) {
   if (!nrow(text)) return(list(glyphs = data.frame(), boxes =
     ggchord_text_boxes(data.frame()), owners = integer()))
   glyphs <- list()
@@ -428,7 +428,7 @@ ggchord_arc_text_layout <- function(text, units_per_inch = .35,
         row <- text[i,,drop=FALSE];row$text <- lines[line]
         line_radius <- radius-direction*((length(lines)+1)/2-line)*pitch
         row$text_x <- line_radius*cos(centre);row$text_y <- line_radius*sin(centre)
-        part <- ggchord_arc_text_layout(row,units_per_inch,box_padding,respect_justification)
+        part <- ggchord_arc_text_layout(row,units_per_inch,box_padding,respect_justification,line_metrics)
         if (nrow(part$glyphs)) {
           part$glyphs$.arc_parent_group <- text$group[i] %||% i
           part$glyphs$.arc_line <- line
@@ -444,16 +444,21 @@ ggchord_arc_text_layout <- function(text, units_per_inch = .35,
     # All glyphs on this line inherit the same type settings and viewport.
     # Keep exact per-glyph sizes for the final rotation and obstacle boxes.
     unique_chars <- unique(chars)
-    measured <- text[rep(i, length(unique_chars)), , drop = FALSE]
-    measured$text <- unique_chars
-    measured$text_x <- 0
-    measured$text_y <- 0
-    measured$text_angle <- 0
-    measured$hjust <- .5
-    measured$vjust <- .5
-    metrics <- ggchord_text_boxes(
-      measured, units_per_inch = units_per_inch, box_padding = 0
-    )
+    key <- as.character(text$text[i])
+    metrics <- if (!is.null(line_metrics)) line_metrics$lines[[key]] else NULL
+    if (is.null(metrics)) {
+      measured <- text[rep(i, length(unique_chars)), , drop = FALSE]
+      measured$text <- unique_chars
+      measured$text_x <- 0
+      measured$text_y <- 0
+      measured$text_angle <- 0
+      measured$hjust <- .5
+      measured$vjust <- .5
+      metrics <- ggchord_text_boxes(
+        measured, units_per_inch = units_per_inch, box_padding = 0
+      )
+      if (!is.null(line_metrics)) line_metrics$lines[[key]] <- metrics[c("w", "h")]
+    }
     index <- match(chars, unique_chars)
     width <- metrics$w[index]
     height <- metrics$h[index]
@@ -513,12 +518,28 @@ ggchord_boxes_overlap_any <- function(candidate, other) {
   }, logical(1L)))
 }
 
+ggchord_polygon_bounds <- function(polygons) {
+  edges <- vapply(polygons, function(p) {
+    if (!nrow(p)) return(c(Inf, -Inf, Inf, -Inf))
+    c(range(p$x), range(p$y))
+  }, numeric(4L))
+  data.frame(xmin = edges[1L, ], xmax = edges[2L, ],
+             ymin = edges[3L, ], ymax = edges[4L, ], row.names = NULL)
+}
+
 ggchord_boxes_hit_features <- function(boxes, polygons, source_row = NA_integer_,
-                                        allow_own = FALSE, tol = .004) {
+                                        allow_own = FALSE, tol = .004, bounds = NULL) {
   if (!length(polygons)) return(FALSE)
   for (i in seq_len(nrow(boxes))) {
+    candidates <- polygons
+    if (!is.null(bounds)) {
+      possible <- boxes$xmax[i] >= bounds$xmin - tol & boxes$xmin[i] <= bounds$xmax + tol &
+        boxes$ymax[i] >= bounds$ymin - tol & boxes$ymin[i] <= bounds$ymax + tol
+      if (!any(possible)) next
+      candidates <- polygons[possible]
+    }
     if (ggchord_label_hits_features(
-      boxes[i, , drop = FALSE], polygons, source_row, allow_own, tol
+      boxes[i, , drop = FALSE], candidates, source_row, allow_own, tol
     )) return(TRUE)
   }
   FALSE

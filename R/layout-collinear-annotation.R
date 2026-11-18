@@ -525,8 +525,8 @@ ggchord_collinear_share_labels <- function(registry, layout) {
         first$start == row$start && first$end == row$end &&
         abs((first$normal_offset %||% 0) - (row$normal_offset %||% 0)) < 1e-9
     }, logical(1L))
-  geometry_hits <- function(box, row) {
-    own <- own_polygons(row) & isTRUE(row$feature_label_inside)
+  geometry_hits <- function(box, row, owner) {
+    own <- owner & isTRUE(row$feature_label_inside)
     if (ggchord_boxes_hit_features(box, polygons[!own])) return(TRUE)
     any(vapply(names(paths), function(id) {
       if (isTRUE(row$feature_label_inside) && identical(id, as.character(row$accver))) return(FALSE)
@@ -546,7 +546,8 @@ ggchord_collinear_share_labels <- function(registry, layout) {
     if (sqrt(sum((a - b)^2)) < .01 * units) return(NULL)
     list(a = a, b = b)
   }
-  route_conflicts <- function(row, box, repel) {
+  polygon_bounds <- ggchord_polygon_bounds(polygons)
+  route_conflicts <- function(row, box, repel, owner) {
     text_hits <- if (length(placed_routes)) sum(vapply(placed_routes, function(route) {
       ggchord_linear_line_hits_box(route$a, route$b, box)
     }, logical(1L))) else 0L
@@ -555,7 +556,11 @@ ggchord_collinear_share_labels <- function(registry, layout) {
     if (!is.null(placed) && nrow(placed)) text_hits <- text_hits + sum(vapply(
       seq_len(nrow(placed)), function(j) ggchord_linear_line_hits_box(
         route$a, route$b, placed[j, , drop = FALSE]), logical(1L)))
-    geometry <- sum(vapply(polygons[!own_polygons(row)], function(poly) {
+    possible <- !owner & polygon_bounds$xmax >= min(route$a[1], route$b[1]) &
+      polygon_bounds$xmin <= max(route$a[1], route$b[1]) &
+      polygon_bounds$ymax >= min(route$a[2], route$b[2]) &
+      polygon_bounds$ymin <= max(route$a[2], route$b[2])
+    geometry <- sum(vapply(polygons[possible], function(poly) {
       ggchord_linear_line_hits(route$a, route$b, poly$x, poly$y) ||
         ggchord_point_in_polygon(mean(c(route$a[1], route$b[1])),
           mean(c(route$a[2], route$b[2])), poly)
@@ -604,6 +609,7 @@ ggchord_collinear_share_labels <- function(registry, layout) {
       candidates$distance <- sqrt((candidates$lane * normal_step)^2 + (candidates$shift * tangent_step)^2) + ifelse(candidates$flip, .05 * units, 0)
       candidates <- candidates[candidates$distance <= max(.65 * units, measured$w * .8), , drop = FALSE]
       candidates <- candidates[order(candidates$distance, abs(candidates$shift), candidates$lane), , drop = FALSE]
+      owner <- own_polygons(row)
       found <- FALSE
       for (candidate in seq_len(nrow(candidates))) {
         lane <- candidates$lane[candidate]
@@ -623,8 +629,9 @@ ggchord_collinear_share_labels <- function(registry, layout) {
         for (field in c("x", "cx", "xmin", "xmax")) box[[field]] <- box[[field]] + delta[1]
         for (field in c("y", "cy", "ymin", "ymax")) box[[field]] <- box[[field]] + delta[2]
         collision <- (!is.null(placed) && nrow(placed) &&
-          any(ggchord_oriented_box_overlaps(box, placed))) || geometry_hits(box, row)
-        route_hits <- route_conflicts(row, box, repel)
+          any(ggchord_oriented_box_overlaps(box, placed))) || geometry_hits(box, row, owner)
+        if (collision && candidate < nrow(candidates) && (repel || policy != "allow")) next
+        route_hits <- route_conflicts(row, box, repel, owner)
         if ((!collision && !any(route_hits > 0)) || (!repel && identical(policy, "allow"))) {
           found <- TRUE
           break
