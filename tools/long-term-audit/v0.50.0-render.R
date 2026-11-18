@@ -87,7 +87,7 @@ write.csv(data.frame(file = inputs, md5 = unname(tools::md5sum(inputs))),
           file.path(output, paste0(mode, "-inputs.csv")), row.names = FALSE)
 writeLines(c(system2("git", c("rev-parse", "HEAD"), stdout = TRUE),
              paste("ragg", utils::packageVersion("ragg")),
-             capture.output(sessionInfo())),
+             trimws(capture.output(sessionInfo()), which = "right")),
            file.path(output, paste0(mode, "-environment.txt")))
 lines <- readLines("tools/documentation-examples.R", warn = FALSE)
 markers <- grep("^# ---- [a-z]+ ----$", lines)
