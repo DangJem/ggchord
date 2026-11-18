@@ -7,6 +7,10 @@
     "zh": "基于 ggplot2 的 R 可视化包：比较多序列关系、组织单序列注释、展示 HSP 比对，并组合全局与局部视图。",
     "en": "Build layered sequence figures in R with ggplot2: compare multiple sequences, annotate a circular map, inspect HSP alignments and connect independent views."
   },
+  "api-compatibility": {
+    "zh": "v0.29.0 是沿用旧版 API 的最后一个版本。ggchord v0.50.0 正在全面重构，升级后现有绘图代码可能需要改写。依赖旧版 API 的项目可固定使用 v0.29.0。",
+    "en": "v0.29.0 is the final release using the legacy API. A major rewrite of ggchord is underway for v0.50.0, and existing plotting code may need changes when you upgrade. Projects that rely on the legacy API can pin v0.29.0."
+  },
   "website": {
     "zh": "网站",
     "en": "Website"
@@ -304,7 +308,7 @@
     "en": "Install the stable release from [CRAN](https://CRAN.R-project.org/package=ggchord):"
   },
   "install-development": {
-    "zh": "如需尚未发布到 CRAN 的最新改动，可从 GitHub 安装开发版：",
-    "en": "For the latest changes not yet released on CRAN, install the development version from GitHub:"
+    "zh": "从 GitHub 安装指定的 v0.29.0 正式版：",
+    "en": "Install the v0.29.0 release from GitHub:"
   }
 }

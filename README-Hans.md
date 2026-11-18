@@ -9,6 +9,9 @@
 
 基于 ggplot2 的 R 可视化包：比较多序列关系、组织单序列注释、展示 HSP 比对，并组合全局与局部视图。
 
+> [!IMPORTANT]
+> v0.29.0 是沿用旧版 API 的最后一个版本。ggchord v0.50.0 正在全面重构，升级后现有绘图代码可能需要改写。依赖旧版 API 的项目可固定使用 v0.29.0。
+
 [网站](https://dangjem.github.io/ggchord/) · [使用说明](website/zh/modes.md) · [示例图集](website/zh/gallery.md) · [问题反馈](https://github.com/DangJem/ggchord/issues)
 
 <a id="modules"></a>
@@ -83,11 +86,11 @@ R ≥ 4.1.0 · ggplot2 ≥ 4.0.0
 install.packages("ggchord")
 ```
 
-如需尚未发布到 CRAN 的最新改动，可从 GitHub 安装开发版：
+从 GitHub 安装指定的 v0.29.0 正式版：
 
 ```r
 install.packages("remotes")
-remotes::install_github("DangJem/ggchord", dependencies = NA)
+remotes::install_github("DangJem/ggchord", ref = "v0.29.0", dependencies = NA)
 ```
 
 下面的最小示例只需加载 ggchord。完整数据整理示例会在代码旁声明 dplyr、purrr、tidyr 等可选依赖。
