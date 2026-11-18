@@ -38,6 +38,22 @@ Source position uses x orientation; native text size currently uses mm and polyg
 
 Native tracks currently require one panel and a ggchord coordinate system. Facets, `coord_flip()`, raster, boxplot and violin are outside this first supported set and are rejected explicitly. Use `coord_collinear(seq_axis = "vertical")` for vertical projection. Statistical source membership is preserved before dodge or other data positions. Rectangles and tiles use their supplied bounds without an artificial zero baseline.
 
+<a id="interval-coverage"></a>
+
+## Measure interval coverage in each window {#interval-coverage}
+
+`geom_track_bar(data = intervals, stat = "coverage", binwidth = 4, track = position_track("coverage"))` draws the fraction of each window covered by at least one interval. Map `aes(y = after_stat(mean_depth))` for mean depth. Coordinates start at 1 and include both endpoints. An interval that crosses a window boundary contributes its intersection to each window. Mean depth counts the length of each record’s intersection separately.
+
+Consider a synthetic sequence of length 10. Rows 1, 2 and 3 span 3–6, 4–5 and 10–10, respectively. Positions 4 and 5 are each covered twice. The last window contains just two positions, so its denominator is 2.
+
+| Window | Distinct positions covered | Coverage fraction | Mean depth | Source rows |
+| --- | --- | --- | --- | --- |
+| 1–4 | 2 | 2/4 | 3/4 | 1, 2 |
+| 5–8 | 2 | 2/4 | 3/4 | 1, 2 |
+| 9–10 | 1 | 1/2 | 1/2 | 3 |
+
+Empty windows have zero coverage, mean depth and interval count, with an empty list of source rows. Each sequence or focused window is binned independently from local position 1. When grouping, each group observed on a sequence gets its full set of bins. Out-of-bounds intervals raise an error by default. Use `bounds = "clip"` to intersect them with the sequence first. Split compound intervals and intervals that wrap around a circular origin into separate records before binning.
+
 <a id="independent-bands"></a>
 
 ## Two independent bands and display order {#independent-bands}

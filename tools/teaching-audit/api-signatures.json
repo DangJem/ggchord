@@ -1299,7 +1299,8 @@
     "parameters": {
       "spacing": "0.1",
       "side": "c(\"strand\", \"outside\", \"inside\")",
-      "base_position": "NULL"
+      "base_position": "NULL",
+      "direction": "c(\"auto\", \"outward\", \"inward\")"
     }
   },
   {

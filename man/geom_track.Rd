@@ -66,11 +66,13 @@ position='identity' so stacking does not change their meaning.}
 
 \item{show.legend, inherit.aes}{Standard layer controls.}
 
-\item{...}{Native geom/stat parameters and fixed styles.}
+\item{...}{Native geom/stat parameters and fixed styles. Coverage requires
+a positive whole \code{binwidth} in sequence units.}
 
 \item{track}{A physical \code{\link[=position_track]{position_track()}} declaration.}
 
-\item{geom, stat}{Native geometry and statistic names. The seven supported
+\item{geom, stat}{Native geometry and statistic names, or \code{stat = "coverage"}
+for interval coverage. The seven native
 statistics also accept their built-in ggplot2 Stat objects, for example
 \code{ggplot2::StatBin}. Bar defaults to count, other geoms to identity.
 Custom Stat subclasses require a source-membership rule and are unsupported.}
@@ -83,7 +85,8 @@ Statistics and data positions are calculated independently within each
 accession/window before projection into the physical track band. Supported
 geoms are point, line, path, step, col, bar, tile, rect, area, ribbon,
 segment, linerange, errorbar and text. Supported statistics are identity,
-count, bin, summary, smooth, density and ecdf; unsupported combinations fail
+count, bin, summary, smooth, density and ecdf, plus the ggchord interval
+coverage statistic; unsupported combinations fail
 in the native layer. Smooth/density/ecdf retain each estimation group's
 complete eligible source-row set, not new independent observations. These
 sets describe the group submitted to the native estimator, not per-point
@@ -104,12 +107,39 @@ and its numerical boundary tolerance, before data positions move the bars.
 Mapping x/y refers to source position/local numerical value, not screen x/y.
 Existing track_value/track_fill/track_colour roles remain accepted.
 }
+\section{Interval coverage}{
+
+Supply one inclusive interval per row with accver, start and end. Endpoint
+columns can be mapped with \code{aes(start = ..., end = ...)}. Without layer data
+the statistic uses the plot's feature table. Split compound or origin-crossing
+intervals into separate records first. Each accession or focused window
+starts at position 1. With binwidth 4, bins are 1-4, 5-8 and so on.
+The final bin uses its actual length. Cross-bin intervals contribute only
+their intersection with each bin. Missing endpoints are errors. The default
+bounds policy rejects out-of-range intervals; clip intersects them with the
+sequence first. For grouped data, compute a complete grid per observed
+group within each accession. Ungrouped data also include empty accessions.
+
+The default height \code{after_stat(coverage)} is the fraction covered by the
+union of intervals. \code{after_stat(mean_depth)} divides the sum of intersection
+lengths by bin length, counting overlaps repeatedly. Other computed variables
+are covered (distinct covered units), n_interval (intersecting input rows),
+window_start and window_end (inclusive source coordinates). Empty bins have
+zero values and an empty source_rows list element. Use bar/col for the
+full bin or point/line/step at its centre, with identity position.
+}
+
 \examples{
 # Synthetic observations illustrate counting, not biological measurements.
 events <- data.frame(accver = "A", pos = c(100, 100, 400))
 ggchord(data.frame(accver = "A", length = 1000)) +
   geom_seq() +
   geom_track_bar(data = events, track = position_track("count"), stat = "count") +
+  coord_collinear()
+intervals <- data.frame(accver = "A", start = c(3, 4), end = c(6, 5))
+ggchord(data.frame(accver = "A", length = 10)) +
+  geom_track_bar(aes(y = after_stat(mean_depth)), data = intervals,
+    stat = "coverage", binwidth = 4, track = position_track("depth")) +
   coord_collinear()
 # Fit existing GC windows in source space; estimates are not new data.
 path <- system.file("extdata", "pUC19-gc-100.bedGraph", package = "ggchord")

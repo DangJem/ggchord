@@ -406,7 +406,9 @@ ggchord_apply_feature_position <- function(data, position, seqs, lengths,
   }, numeric(1))
   lane <- integer(nrow(out)); lane_offset <- numeric(nrow(out))
   if (isTRUE(position$ggchord_feature_stack)) {
-    direction <- ifelse(base < 0, -1, 1)
+    direction <- switch(position$direction %||% "auto",
+      auto = ifelse(base < 0, -1, 1),
+      outward = rep(1, length(base)), inward = rep(-1, length(base)))
     lane <- ggchord_allocate_feature_lanes(
       out, base, direction, position$spacing %||% 0.10,
       circular = circular, lengths = lengths

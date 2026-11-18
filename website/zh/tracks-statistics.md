@@ -34,6 +34,22 @@
 
 首批原生 Track 要求单面板和 ggchord 坐标系。分面、`coord_flip()`、raster、boxplot 和 violin 尚不支持，显式请求会报错。纵向投影使用 `coord_collinear(seq_axis = "vertical")`。统计结果在 dodge 等数据位置调整前保留源成员。矩形和 tile 使用输入边界，不虚构零基线。
 
+<a id="interval-coverage"></a>
+
+## 按区间计算每个窗口的覆盖 {#interval-coverage}
+
+`geom_track_bar(data = intervals, stat = "coverage", binwidth = 4, track = position_track("coverage"))` 默认画出每个窗口内至少被一条区间覆盖的位置比例。改用 `aes(y = after_stat(mean_depth))` 可查看平均深度。端点从 1 开始，两端都计入。跨窗区间分别贡献各窗的交集，平均深度对每条输入记录的交集单独计长。
+
+以长度 10 的合成序列为例，第 1、2、3 行区间分别为 3–6、4–5、10–10。位置 4 和 5 各被两条记录覆盖。末窗只有两个位置，分母是 2。
+
+| 窗口 | 不同覆盖位置数 | 覆盖率 | 平均深度 | 来源行 |
+| --- | --- | --- | --- | --- |
+| 1–4 | 2 | 2/4 | 3/4 | 1, 2 |
+| 5–8 | 2 | 2/4 | 3/4 | 1, 2 |
+| 9–10 | 1 | 1/2 | 1/2 | 3 |
+
+空窗的覆盖率、平均深度和相交记录数均为零，来源行列表为空。每条序列或已聚焦窗口从本地位置 1 各自分箱。显式分组时，各序列内出现过的每个组都保留完整分箱。默认拒绝越界区间，`bounds = "clip"` 会先将区间裁到序列范围。跨圆形起点或多段的记录需先拆成单段区间。
+
 <a id="independent-bands"></a>
 
 ## 两条独立轨道与显示顺序 {#independent-bands}

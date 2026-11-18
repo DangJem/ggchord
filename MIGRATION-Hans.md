@@ -18,6 +18,8 @@
 | 连接带统计 | `geom_link_ribbon(stat = "ribbon_bundle", bins = 20, weight = "count")` 等价于原有 `stat_ribbon_bundle(bins = 20, weight = "count")`。保留单条连接并按局部密度调整透明度可用 `geom_link_ribbon(aes(ribbon_alpha = after_stat(density)), stat = "ribbon_density", bins = 20, weight = "count")`。只有 bundle 接受 `min_bundle`。 |
 | 特征与轨道位置 | 默认分道可写 `geom_feature(position = "feature_stack")`。自定义间距用 `position_feature_stack(spacing = 0.15)`。定量层用 `track = position_track("depth")` 声明物理轨道，另用 `position = ggplot2::position_dodge(width = 10)` 调整源坐标。传错对象的调用现在会报错。 |
 | 轨道统计与来源 | 例如 `geom_track(aes(x = pos), data = events, geom = "bar", stat = ggplot2::StatBin, binwidth = 10, track = position_track("events"))`。导出的 `source_rows` 在移动几何之前确定，每个汇总值和加权计数只列出相应的有效行。 |
+| 区间覆盖 | 用 `geom_track_bar(data = intervals, stat = "coverage", binwidth = 100, track = position_track("coverage"))` 绘制各窗口的并集覆盖比例。改用 `aes(y = after_stat(mean_depth))` 可让重叠记录分别贡献深度。 |
+| 分道方向 | `base_position` 决定第一道，`direction` 决定后续道。旧 `side = "outside"` 等价于 `base_position = position_plasmid(-0.1), direction = "inward"`，旧 `side = "inside"` 等价于 `base_position = position_plasmid(0.1), direction = "outward"`。默认按链放置，旧调用继续有效。 |
 | 分阶段配色 | 在定量轨道上，`aes(fill = stage(start = condition, after_scale = scales::alpha(fill, 0.5)))` 先按 condition 分组并训练轨道填充标度，再调整已得到的颜色。原始列名可含 after_stat 或 after_scale。 |
 
 ## 0.19.0：静态跨面板组合

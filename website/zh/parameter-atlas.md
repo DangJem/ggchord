@@ -680,15 +680,15 @@
 | --- | --- | --- | --- |
 | `mapping` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 标准图层输入。提供 accver，以及 x/pos 源位置或 start/end 区间；给定数值映射到 y/track_value。 |
 | `data` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 标准图层输入。提供 accver，以及 x/pos 源位置或 start/end 区间；给定数值映射到 y/track_value。 |
-| `geom` | `"point"` | 类型、单位及允许格式见右侧本函数参数契约 | 原生几何与统计名称。七种受支持的统计也接受 ggplot2 的对应内置 Stat 对象，例如 ggplot2::StatBin。bar 默认使用 count，其余几何默认使用 identity。自定义 Stat 子类需要定义输出行对应的来源，当前接口只接受内置对象。 |
-| `stat` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 原生几何与统计名称。七种受支持的统计也接受 ggplot2 的对应内置 Stat 对象，例如 ggplot2::StatBin。bar 默认使用 count，其余几何默认使用 identity。自定义 Stat 子类需要定义输出行对应的来源，当前接口只接受内置对象。 |
+| `geom` | `"point"` | 类型、单位及允许格式见右侧本函数参数契约 | 原生几何和统计名称，区间覆盖用 stat = "coverage"。七个原生统计也接受对应的 ggplot2 内置 Stat 对象，如 ggplot2::StatBin。bar 默认使用 count，其他几何默认使用 identity。自定义 Stat 子类需要来源归属规则，目前不支持。 |
+| `stat` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 原生几何和统计名称，区间覆盖用 stat = "coverage"。七个原生统计也接受对应的 ggplot2 内置 Stat 对象，如 ggplot2::StatBin。bar 默认使用 count，其他几何默认使用 identity。自定义 Stat 子类需要来源归属规则，目前不支持。 |
 | `track` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 物理 position_track() 声明。 |
 | `position` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 在源数据上做位置调整，例如 "identity"、"stack" 或 ggplot2::position_dodge(width = 10)。x 以序列坐标为单位。特征的位置在特征图层声明。旧写法 position = position_track(...) 仍可声明物理轨道。 |
 | `bounds` | `c("error", "clip")` | 类型、单位及允许格式见右侧本函数参数契约 | 坐标报错或裁剪策略。 |
 | `baseline` | `0` | 类型、单位及允许格式见右侧本函数参数契约 | 给定数值柱的基线，非零值要求 position='identity'，避免堆叠改变其含义。 |
 | `show.legend` | `NA` | 类型、单位及允许格式见右侧本函数参数契约 | 标准图层控制参数。 |
 | `inherit.aes` | `FALSE` | 类型、单位及允许格式见右侧本函数参数契约 | 标准图层控制参数。 |
-| `...` | `无形式默认；是否必需见契约` | 类型、单位及允许格式见右侧本函数参数契约 | 原生 geom/stat 参数和固定样式。 |
+| `...` | `无形式默认；是否必需见契约` | 类型、单位及允许格式见右侧本函数参数契约 | 原生 geom/stat 参数与固定样式。覆盖统计要求用正整数 binwidth 指定窗口包含的序列单位数。 |
 
 </details>
 
@@ -713,9 +713,9 @@
 | `bounds` | `c("error", "clip")` | 类型、单位及允许格式见右侧本函数参数契约 | 坐标报错或裁剪策略。 |
 | `show.legend` | `NA` | 类型、单位及允许格式见右侧本函数参数契约 | 标准图层控制参数。 |
 | `inherit.aes` | `FALSE` | 类型、单位及允许格式见右侧本函数参数契约 | 标准图层控制参数。 |
-| `...` | `无形式默认；是否必需见契约` | 类型、单位及允许格式见右侧本函数参数契约 | 原生 geom/stat 参数和固定样式。 |
+| `...` | `无形式默认；是否必需见契约` | 类型、单位及允许格式见右侧本函数参数契约 | 原生 geom/stat 参数与固定样式。覆盖统计要求用正整数 binwidth 指定窗口包含的序列单位数。 |
 | `track` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 物理 position_track() 声明。 |
-| `stat` | `"count"` | 类型、单位及允许格式见右侧本函数参数契约 | 原生几何与统计名称。七种受支持的统计也接受 ggplot2 的对应内置 Stat 对象，例如 ggplot2::StatBin。bar 默认使用 count，其余几何默认使用 identity。自定义 Stat 子类需要定义输出行对应的来源，当前接口只接受内置对象。 |
+| `stat` | `"count"` | 类型、单位及允许格式见右侧本函数参数契约 | 原生几何和统计名称，区间覆盖用 stat = "coverage"。七个原生统计也接受对应的 ggplot2 内置 Stat 对象，如 ggplot2::StatBin。bar 默认使用 count，其他几何默认使用 identity。自定义 Stat 子类需要来源归属规则，目前不支持。 |
 
 </details>
 
@@ -732,7 +732,7 @@
 | `data` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 标准图层输入。提供 accver，以及 x/pos 源位置或 start/end 区间；给定数值映射到 y/track_value。 |
 | `position` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 在源数据上做位置调整，例如 "identity"、"stack" 或 ggplot2::position_dodge(width = 10)。x 以序列坐标为单位。特征的位置在特征图层声明。旧写法 position = position_track(...) 仍可声明物理轨道。 |
 | `track` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 物理 position_track() 声明。 |
-| `...` | `无形式默认；是否必需见契约` | 类型、单位及允许格式见右侧本函数参数契约 | 原生 geom/stat 参数和固定样式。 |
+| `...` | `无形式默认；是否必需见契约` | 类型、单位及允许格式见右侧本函数参数契约 | 原生 geom/stat 参数与固定样式。覆盖统计要求用正整数 binwidth 指定窗口包含的序列单位数。 |
 | `show.legend` | `NA` | 类型、单位及允许格式见右侧本函数参数契约 | 标准图层控制参数。 |
 | `inherit.aes` | `FALSE` | 类型、单位及允许格式见右侧本函数参数契约 | 标准图层控制参数。 |
 
@@ -803,8 +803,9 @@
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
 | --- | --- | --- | --- |
 | `spacing` | `0.1` | 类型、单位及允许格式见右侧本函数参数契约 | 相邻注释轨道的最小正径向距离。圆形质粒布局会加宽首个过渡作为主要标签通道，在更深重叠轨道间至少保留一条标签轨道。 |
-| `side` | `c("strand", "outside", "inside")` | 类型、单位及允许格式见右侧本函数参数契约 | 为兼容保留的历史侧向选项，用于 base_position 为 NULL 时；历史名称保持原几何含义。 |
-| `base_position` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 可选 identity、strand 或 plasmid Position，在重叠检测和轨道分配前应用。 |
+| `side` | `c("strand", "outside", "inside")` | 类型、单位及允许格式见右侧本函数参数契约 | 单独提供时沿用旧版分道规则。outside 从 −0.1 起向内增长，inside 从 +0.1 起向外增长。默认 strand 在正链从 +0.1 起、负链从 −0.1 起，均向远离骨架的方向增长。 |
+| `base_position` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 在检测区间重叠与分道前确定第一道位置，可用 identity、strand 或 plasmid 位置对象。identity 使双链从骨架起步，默认起始位置按链确定。 |
+| `direction` | `c("auto", "outward", "inward")` | 类型、单位及允许格式见右侧本函数参数契约 | 后续道在各起始带内的增长方向。"outward" 沿正局部法向（水平骨架上方），"inward" 沿负法向。"auto" 跟随起始偏移的符号，偏移为零时向外。第零道留在起始位置。旧参数 side 单独使用。 |
 
 </details>
 

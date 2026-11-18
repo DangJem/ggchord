@@ -7,7 +7,8 @@
 position_feature_stack(
   spacing = 0.1,
   side = c("strand", "outside", "inside"),
-  base_position = NULL
+  base_position = NULL,
+  direction = c("auto", "outward", "inward")
 )
 }
 \arguments{
@@ -17,11 +18,19 @@ label corridor and reserves at least one label track between deeper
 overlapping feature lanes.}
 
 \item{side}{Legacy track-side selector retained for compatibility when
-\code{base_position} is \code{NULL}. Its historical names retain their existing
-geometry.}
+used alone. Historical \code{outside} starts at -0.1 and grows inward;
+\code{inside} starts at +0.1 and grows outward. The default \code{strand} starts
+at +0.1 on plus and -0.1 on minus, growing away from the backbone.}
 
 \item{base_position}{Optional identity, strand, or plasmid Position applied
-before interval-overlap detection and lane allocation.}
+before interval-overlap detection and lane allocation. Use identity to
+start both strands on the backbone. The default starting bands follow strand.}
+
+\item{direction}{Growth of successive lanes within each starting band.
+\code{"outward"} follows the positive local normal (up on a horizontal
+backbone), \code{"inward"} the negative normal. \code{"auto"} follows the sign
+of the starting offset, growing outward at zero. Lane zero stays at
+its starting offset. Supply legacy side on its own.}
 }
 \value{
 A ggplot2 Position object for \code{geom_gene()} or \code{geom_feature()}.
@@ -39,4 +48,8 @@ they do not represent circular physical tracks or radii.
 \details{
 The default object can also be selected on a feature layer with
 \code{position = "feature_stack"}. Use the constructor to configure the lanes.
+}
+\examples{
+position_feature_stack(base_position = "identity", direction = "inward")
+position_feature_stack(base_position = position_plasmid(0.1), direction = "outward")
 }

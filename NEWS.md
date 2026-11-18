@@ -1,5 +1,15 @@
 # ggchord 0.29.0 (development)
 
+- Track layers accept `stat = "coverage"` with an explicit integer `binwidth`.
+  The default height measures the fraction of each window covered by at least
+  one interval. Map `aes(y = after_stat(mean_depth))` to count overlap
+  multiplicity. Exports retain the inclusive window bounds and contributing rows.
+- In `position_feature_stack()`, `base_position` chooses the first lane and
+  `direction` chooses the growth of subsequent lanes. The default and legacy
+  `side` calls retain their geometry.
+- Dense circular labels reuse candidate boxes and tick metrics. Elbow leaders
+  are checked against accepted segments in batches.
+
 - Repeated sorting in `clean_ggchord_data()` preserves reverse orientation.
   Use `reversed_interval = "keep"` on the original records for directional plots.
   GFF3 reports the number of unknown strands displayed as plus.

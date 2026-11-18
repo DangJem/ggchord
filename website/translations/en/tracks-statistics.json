@@ -1,5 +1,5 @@
 {
-  "source_sha256": "174f947c703c318bc84eb1ceebf53faca5e478f9dcc425fdcb79fa561e5c25c6",
+  "source_sha256": "be24f613ef89a846075bba64b14b1605048cecd4f0f228e595f825177a50fdf6",
   "blocks": {
     "3": {
       "source_sha256": "915e5a9d83418695db686ead0306a42583df6b8101712048915edd5db8a2bf9f",
@@ -62,96 +62,141 @@
       "translation": "Native tracks currently require one panel and a ggchord coordinate system. Facets, ⟦shared:0⟧, raster, boxplot and violin are outside this first supported set and are rejected explicitly. Use ⟦shared:1⟧ for vertical projection. Statistical source membership is preserved before dodge or other data positions. Rectangles and tiles use their supplied bounds without an artificial zero baseline.\n"
     },
     "19": {
+      "source_sha256": "b6c9061a3e86ba841ef335a0d2c0c6ed4603f5f9dcda5ccaccb6862a21316ec7",
+      "status": "reviewed",
+      "translation": "## Measure interval coverage in each window ⟦shared:0⟧\n"
+    },
+    "20": {
+      "source_sha256": "29fbdc8ec4db099cb5919d13c7c4843bb090f3039f3a04983e0a64ffecacdc90",
+      "status": "reviewed",
+      "translation": "⟦shared:0⟧ draws the fraction of each window covered by at least one interval. Map ⟦shared:1⟧ for mean depth. Coordinates start at 1 and include both endpoints. An interval that crosses a window boundary contributes its intersection to each window. Mean depth counts the length of each record’s intersection separately.\n"
+    },
+    "21": {
+      "source_sha256": "b7223ce06f3b34b395d660a60151f6262018fe6b6393e734cd42ae844468b577",
+      "status": "reviewed",
+      "translation": "Consider a synthetic sequence of length 10. Rows 1, 2 and 3 span 3–6, 4–5 and 10–10, respectively. Positions 4 and 5 are each covered twice. The last window contains just two positions, so its denominator is 2.\n"
+    },
+    "22": {
+      "source_sha256": "c0f01bece6df803b5eeeae9c20f7ef96e72e5ad388cf39c131c8b7f22e281fac",
+      "status": "reviewed",
+      "translation": "| Window | Distinct positions covered | Coverage fraction | Mean depth | Source rows |\n"
+    },
+    "23": {
+      "source_sha256": "ef9894d869f03461d2ae95c9fa07f44b3863a55ef68482d7d771fe194c904bb5",
+      "status": "reviewed",
+      "translation": "| --- | --- | --- | --- | --- |\n"
+    },
+    "24": {
+      "source_sha256": "eaeb0bb9aba31e7f5b702d5bc7b1d556bb5fb22dae2a87a285edde86a039b974",
+      "status": "reviewed",
+      "translation": "| 1–4 | 2 | 2/4 | 3/4 | 1, 2 |\n"
+    },
+    "25": {
+      "source_sha256": "6d33ce50b493c2a5caecbbeabaf48adbaf3a327571f5b1c9085820f85135f05d",
+      "status": "reviewed",
+      "translation": "| 5–8 | 2 | 2/4 | 3/4 | 1, 2 |\n"
+    },
+    "26": {
+      "source_sha256": "9e3a0f41a8ed6f63a98efa7d6613fc3a5d5a5333086fe6ef34798befdaf778b9",
+      "status": "reviewed",
+      "translation": "| 9–10 | 1 | 1/2 | 1/2 | 3 |\n"
+    },
+    "27": {
+      "source_sha256": "9e974162d071211d5b715661ce0824a49eb8733b0febfcf6f813eb8d6e9a10a8",
+      "status": "reviewed",
+      "translation": "Empty windows have zero coverage, mean depth and interval count, with an empty list of source rows. Each sequence or focused window is binned independently from local position 1. When grouping, each group observed on a sequence gets its full set of bins. Out-of-bounds intervals raise an error by default. Use ⟦shared:0⟧ to intersect them with the sequence first. Split compound intervals and intervals that wrap around a circular origin into separate records before binning.\n"
+    },
+    "29": {
       "source_sha256": "7dc386bfff31962b56a6178af98906c3aa897394b413ca6eb1145c54274a5224",
       "status": "reviewed",
       "translation": "## Two independent bands and display order ⟦shared:0⟧\n"
     },
-    "20": {
+    "30": {
       "source_sha256": "ed2b0120329a5c321c070963322e066cfd124753d4ce5ae6faded789b1609364",
       "status": "reviewed",
       "translation": "Encode the same GC by bar height and colour using explicit gc_height/gc_colour IDs. Set height and colour domains 0–1 separately, with distinct physical widths. The second figure changes only colour order from 2 to 0, moving that band nearer the backbone. Order is a finite priority, not a measurement or required one-based index; ties use IDs. Layers sharing an ID must agree on side/order/width/gap. Lines do not implicitly bridge independent windows.\n"
     },
-    "27": {
+    "37": {
       "source_sha256": "30de0dd247a35a39403197392819b62e484df983a26417f99ecd7ef71db5ee44",
       "status": "reviewed",
       "translation": "## DNA windows and line boundaries ⟦shared:0⟧\n"
     },
-    "28": {
+    "38": {
       "source_sha256": "0af2500892a2cdbe493f50dda22b82c5903f7774dee60123d6ac9cce4efc7ffa",
       "status": "reviewed",
       "translation": "GC here is ⟦shared:0⟧: ambiguous bases remain in the denominator and contribute zero to the numerator. The final window uses its actual number of bases. This pUC19 input has no ambiguous bases; for other inputs explicitly choose and report a policy rather than assuming they are omitted. Focusing clips intervals and retains the original summary; it does not recompute GC for a shortened window. Line tracks connect the supplied samples within their grouping; ⟦shared:1⟧ explicitly controls circular closure and ⟦shared:2⟧ belongs to physical track placement. Do not use a closed line to imply continuity across omitted source windows.\n"
     },
-    "30": {
+    "40": {
       "source_sha256": "01d6253cbaa7db2174d17ff47ec7ec3feb12b331ee03dbe9a430f5e7d3ba453f",
       "status": "reviewed",
       "translation": "## Native source-space estimates ⟦shared:0⟧\n"
     },
-    "31": {
+    "41": {
       "source_sha256": "b08df703a30963f2d23ef73981810bb97e5edff39502474f53357bc92622b9bf",
       "status": "reviewed",
       "translation": "⟦shared:0⟧ also delegates ⟦shared:1⟧, ⟦shared:2⟧ and ⟦shared:3⟧ to native ggplot2 statistics **before projection**. These create estimates of supplied observations, not additional observations. They run independently by accession/window and explicit group. Estimation ⟦shared:4⟧ records the eligible group submitted to the estimator after native missing-value handling; it is not per-point influence, positive read support or a custom model's additional internal filtering report.\n"
     },
-    "32": {
+    "42": {
       "source_sha256": "c72a59f1b4fc8c5edb377a6da5c20b2324d287ac21a98038f9207936f3f08be8",
       "status": "reviewed",
       "translation": "| Statistic | Documented geometry | Input and explicit choices | Data Position |\n"
     },
-    "33": {
+    "43": {
       "source_sha256": "e246b588984abccc6839146f115ed662307bfba56c0bb91c546a281636c81359",
       "status": "reviewed",
       "translation": "| --- | --- | --- | --- |\n"
     },
-    "34": {
+    "44": {
       "source_sha256": "f4d57751457c257c079ac21e5c1a820a84f7e8a874fdb935686a3cc60de11b47",
       "status": "reviewed",
       "translation": "| ⟦shared:0⟧ | ⟦shared:1⟧, ⟦shared:2⟧, ⟦shared:3⟧, ⟦shared:4⟧ | Source ⟦shared:5⟧ and raw numerical ⟦shared:6⟧; choose method/formula; ribbon requires SE bounds | ⟦shared:7⟧ or native PositionIdentity |\n"
     },
-    "35": {
+    "45": {
       "source_sha256": "d186c9badcce14fb5bbd603805f097a87f0ea7dff89ae70431b05bf6cdfe723e",
       "status": "reviewed",
       "translation": "| ⟦shared:0⟧ | ⟦shared:1⟧, ⟦shared:2⟧, ⟦shared:3⟧, ⟦shared:4⟧ | Positions in ⟦shared:5⟧, optional weights; choose bandwidth; ⟦shared:6⟧ is density per source-position unit | ⟦shared:7⟧ or native PositionIdentity |\n"
     },
-    "36": {
+    "46": {
       "source_sha256": "b2bbdc51b583a466c14ae4882c01d42218d1c9c7baf55e3533ae00ac98c1fecc",
       "status": "reviewed",
       "translation": "| ⟦shared:0⟧ | ⟦shared:1⟧, ⟦shared:2⟧, ⟦shared:3⟧, ⟦shared:4⟧ | Positions in ⟦shared:5⟧; ⟦shared:6⟧ is cumulative fraction; explicit ⟦shared:7⟧ avoids infinite source anchors | ⟦shared:8⟧ or native PositionIdentity |\n"
     },
-    "37": {
+    "47": {
       "source_sha256": "137b18ddaf67cccc48dc053aabf75aa26f03cbec7d77b049a4ba1d99f2e7eaa4",
       "status": "reviewed",
       "translation": "Other combinations of these statistics fail explicitly. Use ⟦shared:0⟧ explicitly for density area because area otherwise defaults to stacking. ⟦shared:1⟧ remains the Track source-boundary policy and does not forward the native density boundary-correction parameter. Facets, boxplots, violins, raster and arbitrary third-party Geom/Stat objects remain unsupported; a numerical name in a function is not a projection contract.\n"
     },
-    "38": {
+    "48": {
       "source_sha256": "e286f2996259132660667f1f4f3d2677cf09c91f898a4c6d8cbb2b9e4d4bea3d",
       "status": "reviewed",
       "translation": "Reuse the real ⟦shared:0⟧ and ⟦shared:1⟧ prepared above. This explicit linear fit is a display summary of the GC fractions, with a native confidence ribbon and mean line sharing one Track:\n"
     },
-    "40": {
+    "50": {
       "source_sha256": "acae15a1524860cc0274b1e2b9075b10bb52358dad32263bf0bea6cb050e4a15",
       "status": "reviewed",
       "translation": "Statistical fitting uses raw supplied source x/y. A later transformed Track value scale maps the estimates; it does not silently refit a log-space model, unlike placing a transform before a Stat in a native ggplot. If transformed-space fitting is intended, prepare and name that transformed variable explicitly and state its unit. Kernel density of event positions is not measured sequencing depth. ECDF output is a cumulative distribution, not a basewise alignment.\n"
     },
-    "41": {
+    "51": {
       "source_sha256": "ffbd4b9bfefae81a2dec69f6e0b8d09357d3c44e883cdc8f3dd16789018e2b74",
       "status": "reviewed",
       "translation": "The directed source-backed checks compare native ggplot2 results and group membership for real pUC19 GC windows and G/C positions, plus curved/vertical projection and an explicitly missing-value control. ⟦shared:0⟧ retains the numerical report and actual CI/mean image. Finite source bounds and physical-band constraints still apply; automatic placement does not change the fitted model or manufacture observations.\n"
     },
-    "43": {
+    "53": {
       "source_sha256": "60552fb71292d4699b8681381fbdcb46d5eca2a906ebb85e6e005dc0d03f073e",
       "status": "reviewed",
       "translation": "## Tracks and windows share source coordinates ⟦shared:0⟧\n"
     },
-    "44": {
+    "54": {
       "source_sha256": "09dd2063faf98e59d469c1f3cb15490683b59ef4223ecc29af818b4e1b8d13d8",
       "status": "reviewed",
       "translation": "Focus pUC19 to 500–1500 bp and trim the same observed GC windows as intervals. `focus_ggchord_track` does not recompute averages, invent boundary samples or bridge omitted windows. Return to actual DNA and declare new windows/denominators if finer GC summaries are needed.\n"
     },
-    "47": {
+    "57": {
       "source_sha256": "0e21bd1003e5deb11b110176f3025f41e441c3ddc511830901239b95baa02ce8",
       "status": "reviewed",
       "translation": "## Compare event counts with supplied totals ⟦shared:0⟧\n"
     },
-    "48": {
+    "58": {
       "source_sha256": "9be140df522580feb9a758c71bfeb43b8b9733583ac21bbdbd42dcc398f2599a",
       "status": "reviewed",
       "translation": "The preceding ⟦shared:0⟧ counts HSPs at each query start. Here the totals are computed first and drawn with ⟦shared:1⟧. The ⟦shared:2⟧ argument names the physical band and ⟦shared:3⟧ controls how values are arranged within it.\n"

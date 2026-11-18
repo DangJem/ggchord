@@ -8,7 +8,7 @@
 globalVariables(c(
   ".flow_from", ".flow_tip", ".flow_to", ".fusion_row", ".fusion_x", ".fusion_y",
   ".q_n", ".s_n", ".track_group", ".track_input_index", ".track_width", ".track_x",
-  "pos", "track_value", "key",
+  ".coverage_start", ".coverage_end", "coverage", "pos", "track_value", "key",
   "x", "y", "group", "pident", "fill", "colour", "strand", "anno", "accver",
   "text_x", "text_y", "text", "text_angle", "hjust", "vjust",
   "x0", "y0", "x1", "y1", "xend", "yend", ".component",

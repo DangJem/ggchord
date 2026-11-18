@@ -680,15 +680,15 @@ Start with the [function index](../../man/). Examples compare important paramete
 | --- | --- | --- | --- |
 | `mapping` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Standard layer input. Supply accver and source positions through x/pos, or interval start/end. Map y/track_value for identity values. |
 | `data` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Standard layer input. Supply accver and source positions through x/pos, or interval start/end. Map y/track_value for identity values. |
-| `geom` | `"point"` | Type, units and accepted forms: see this API argument contract at right | Native geometry and statistic names. The seven supported statistics also accept their built-in ggplot2 Stat objects, for example ggplot2::StatBin. Bar defaults to count, other geoms to identity. Custom Stat subclasses require a source-membership rule and are unsupported. |
-| `stat` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Native geometry and statistic names. The seven supported statistics also accept their built-in ggplot2 Stat objects, for example ggplot2::StatBin. Bar defaults to count, other geoms to identity. Custom Stat subclasses require a source-membership rule and are unsupported. |
+| `geom` | `"point"` | Type, units and accepted forms: see this API argument contract at right | Native geometry and statistic names, or stat = "coverage" for interval coverage. The seven native statistics also accept their built-in ggplot2 Stat objects, for example ggplot2::StatBin. Bar defaults to count, other geoms to identity. Custom Stat subclasses require a source-membership rule and are unsupported. |
+| `stat` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Native geometry and statistic names, or stat = "coverage" for interval coverage. The seven native statistics also accept their built-in ggplot2 Stat objects, for example ggplot2::StatBin. Bar defaults to count, other geoms to identity. Custom Stat subclasses require a source-membership rule and are unsupported. |
 | `track` | `NULL` | Type, units and accepted forms: see this API argument contract at right | A physical position_track() declaration. |
 | `position` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Native data adjustment such as "identity", "stack" or ggplot2::position_dodge(width = 10). Source x uses sequence units. Feature placement belongs on feature layers. The legacy position = position_track(...) spelling still declares the physical band. |
 | `bounds` | `c("error", "clip")` | Type, units and accepted forms: see this API argument contract at right | Coordinate error/clip policy. |
 | `baseline` | `0` | Type, units and accepted forms: see this API argument contract at right | Numeric identity-column baseline. Nonzero baselines require position='identity' so stacking does not change their meaning. |
 | `show.legend` | `NA` | Type, units and accepted forms: see this API argument contract at right | Standard layer controls. |
 | `inherit.aes` | `FALSE` | Type, units and accepted forms: see this API argument contract at right | Standard layer controls. |
-| `...` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Native geom/stat parameters and fixed styles. |
+| `...` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Native geom/stat parameters and fixed styles. Coverage requires a positive whole binwidth in sequence units. |
 
 </details>
 
@@ -713,9 +713,9 @@ Start with the [function index](../../man/). Examples compare important paramete
 | `bounds` | `c("error", "clip")` | Type, units and accepted forms: see this API argument contract at right | Coordinate error/clip policy. |
 | `show.legend` | `NA` | Type, units and accepted forms: see this API argument contract at right | Standard layer controls. |
 | `inherit.aes` | `FALSE` | Type, units and accepted forms: see this API argument contract at right | Standard layer controls. |
-| `...` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Native geom/stat parameters and fixed styles. |
+| `...` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Native geom/stat parameters and fixed styles. Coverage requires a positive whole binwidth in sequence units. |
 | `track` | `NULL` | Type, units and accepted forms: see this API argument contract at right | A physical position_track() declaration. |
-| `stat` | `"count"` | Type, units and accepted forms: see this API argument contract at right | Native geometry and statistic names. The seven supported statistics also accept their built-in ggplot2 Stat objects, for example ggplot2::StatBin. Bar defaults to count, other geoms to identity. Custom Stat subclasses require a source-membership rule and are unsupported. |
+| `stat` | `"count"` | Type, units and accepted forms: see this API argument contract at right | Native geometry and statistic names, or stat = "coverage" for interval coverage. The seven native statistics also accept their built-in ggplot2 Stat objects, for example ggplot2::StatBin. Bar defaults to count, other geoms to identity. Custom Stat subclasses require a source-membership rule and are unsupported. |
 
 </details>
 
@@ -732,7 +732,7 @@ Start with the [function index](../../man/). Examples compare important paramete
 | `data` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Standard layer input. Supply accver and source positions through x/pos, or interval start/end. Map y/track_value for identity values. |
 | `position` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Native data adjustment such as "identity", "stack" or ggplot2::position_dodge(width = 10). Source x uses sequence units. Feature placement belongs on feature layers. The legacy position = position_track(...) spelling still declares the physical band. |
 | `track` | `NULL` | Type, units and accepted forms: see this API argument contract at right | A physical position_track() declaration. |
-| `...` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Native geom/stat parameters and fixed styles. |
+| `...` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Native geom/stat parameters and fixed styles. Coverage requires a positive whole binwidth in sequence units. |
 | `show.legend` | `NA` | Type, units and accepted forms: see this API argument contract at right | Standard layer controls. |
 | `inherit.aes` | `FALSE` | Type, units and accepted forms: see this API argument contract at right | Standard layer controls. |
 
@@ -803,8 +803,9 @@ Start with the [function index](../../man/). Examples compare important paramete
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
 | `spacing` | `0.1` | Type, units and accepted forms: see this API argument contract at right | Positive minimum radial distance between adjacent feature lanes. Circular plasmid layout enlarges the first transition into a main label corridor and reserves at least one label track between deeper overlapping feature lanes. |
-| `side` | `c("strand", "outside", "inside")` | Type, units and accepted forms: see this API argument contract at right | Legacy track-side selector retained for compatibility when base_position is NULL. Its historical names retain their existing geometry. |
-| `base_position` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional identity, strand, or plasmid Position applied before interval-overlap detection and lane allocation. |
+| `side` | `c("strand", "outside", "inside")` | Type, units and accepted forms: see this API argument contract at right | Legacy track-side selector retained for compatibility when used alone. Historical outside starts at -0.1 and grows inward; inside starts at +0.1 and grows outward. The default strand starts at +0.1 on plus and -0.1 on minus, growing away from the backbone. |
+| `base_position` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional identity, strand, or plasmid Position applied before interval-overlap detection and lane allocation. Use identity to start both strands on the backbone. The default starting bands follow strand. |
+| `direction` | `c("auto", "outward", "inward")` | Type, units and accepted forms: see this API argument contract at right | Growth of successive lanes within each starting band. "outward" follows the positive local normal (up on a horizontal backbone), "inward" the negative normal. "auto" follows the sign of the starting offset, growing outward at zero. Lane zero stays at its starting offset. Supply legacy side on its own. |
 
 </details>
 
