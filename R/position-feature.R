@@ -219,22 +219,20 @@ ggchord_allocate_feature_lanes <- function(data, base, direction, spacing,
     # cassette-continuity preference may carry them past a parent interval.
     ord <- order(-entity_priority, -entity_span, entity_start, entity_source)
     lane_intervals <- list()
-    overlaps <- function(a, occupied) {
-      any(vapply(occupied, function(b) any(
-        outer(seq_len(nrow(a)), seq_len(nrow(b)), Vectorize(function(i, j) {
-          a[i, 1] <= b[j, 2] && b[j, 1] <= a[i, 2]
-        }))
-      ), logical(1)))
+    overlaps <- function(parts, occupied) {
+      for (i in seq_len(nrow(parts))) {
+        if (any(parts[i, 1L] <= occupied[, 2L] & occupied[, 1L] <= parts[i, 2L])) return(TRUE)
+      }
+      FALSE
     }
     for (local in ord) {
       members <- entity_members[[local]]
-      candidates <- seq_len(nrow(data) + 1L)
-      chosen <- candidates[which(vapply(candidates, function(candidate) {
-        candidate > length(lane_intervals) ||
-          !overlaps(intervals[[local]], lane_intervals[[candidate]])
-      }, logical(1)))[1L]]
-      if (chosen > length(lane_intervals)) lane_intervals[[chosen]] <- list()
-      lane_intervals[[chosen]][[length(lane_intervals[[chosen]]) + 1L]] <- intervals[[local]]
+      parts <- intervals[[local]]
+      chosen <- 1L
+      while (chosen <= length(lane_intervals) && overlaps(parts, lane_intervals[[chosen]]))
+        chosen <- chosen + 1L
+      lane_intervals[[chosen]] <- if (chosen > length(lane_intervals)) parts else
+        rbind(lane_intervals[[chosen]], parts)
       lane[idx[members]] <- chosen - 1L
     }
   }

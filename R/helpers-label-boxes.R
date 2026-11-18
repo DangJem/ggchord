@@ -301,17 +301,8 @@ ggchord_text_boxes <- function(df,
                                lineheight_col = "lineheight",
                                units_per_inch = 0.35, box_padding = 0) {
   n <- nrow(df)
-  empty <- data.frame(
-    x = numeric(0), y = numeric(0),
-    cx = numeric(0), cy = numeric(0),
-    w = numeric(0), h = numeric(0),
-    ow = numeric(0), oh = numeric(0), angle = numeric(0),
-    bw = numeric(0), bh = numeric(0),
-    xmin = numeric(0), xmax = numeric(0),
-    ymin = numeric(0), ymax = numeric(0),
-    stringsAsFactors = FALSE
-  )
-  if (n == 0) return(empty)
+  if (!n) return(ggchord_project_text_boxes(numeric(), numeric(), numeric(),
+    numeric(), numeric(), numeric(), numeric(), units_per_inch, box_padding))
 
   x <- df[[x_col]]
   y <- df[[y_col]]
@@ -406,7 +397,7 @@ ggchord_project_text_boxes <- function(x, y, w, h, angles, hjust, vjust,
 # text anchor. This is shared by collision detection, leader clipping and the
 # renderer so all three use the same curved baseline and local tangents.
 ggchord_arc_text_layout <- function(text, units_per_inch = .35,
-                                     box_padding = 0, respect_justification = FALSE, line_metrics = NULL) {
+                                     box_padding = 0, respect_justification = FALSE, line_metrics = NULL, boxes_only = FALSE) {
   if (!nrow(text)) return(list(glyphs = data.frame(), boxes =
     ggchord_text_boxes(data.frame()), owners = integer()))
   glyphs <- list()
@@ -428,11 +419,13 @@ ggchord_arc_text_layout <- function(text, units_per_inch = .35,
         row <- text[i,,drop=FALSE];row$text <- lines[line]
         line_radius <- radius-direction*((length(lines)+1)/2-line)*pitch
         row$text_x <- line_radius*cos(centre);row$text_y <- line_radius*sin(centre)
-        part <- ggchord_arc_text_layout(row,units_per_inch,box_padding,respect_justification,line_metrics)
-        if (nrow(part$glyphs)) {
-          part$glyphs$.arc_parent_group <- text$group[i] %||% i
-          part$glyphs$.arc_line <- line
-          glyphs[[length(glyphs)+1L]] <- part$glyphs
+        part <- ggchord_arc_text_layout(row, units_per_inch, box_padding, respect_justification, line_metrics, boxes_only)
+        if (nrow(part$boxes)) {
+          if (!boxes_only) {
+            part$glyphs$.arc_parent_group <- text$group[i] %||% i
+            part$glyphs$.arc_line <- line
+            glyphs[[length(glyphs)+1L]] <- part$glyphs
+          }
           boxes[[length(boxes)+1L]] <- part$boxes
           owners <- c(owners,rep(i,nrow(part$boxes)))
         }
@@ -488,24 +481,24 @@ ggchord_arc_text_layout <- function(text, units_per_inch = .35,
       centre_rotation, .5
     )
     string_flip <- ((centre_upright$angle - centre_rotation + 180) %% 360) - 180
-    glyph <- text[rep(i, length(chars)), , drop = FALSE]
-    glyph$text_x <- radius * cos(glyph_angle)
-    glyph$text_y <- radius * sin(glyph_angle)
-    glyph$text_angle <- rotation + string_flip
-    glyph$hjust <- .5
-    glyph$vjust <- .5
-    glyph$text <- chars
-    glyph$.arc_parent_group <- text$group[i] %||% i
-    glyph$.arc_glyph_index <- seq_along(chars)
-    glyphs[[length(glyphs) + 1L]] <- glyph
+    x <- radius * cos(glyph_angle)
+    y <- radius * sin(glyph_angle)
+    angle <- rotation + string_flip
+    if (!boxes_only) {
+      glyph <- text[rep(i, length(chars)), , drop = FALSE]
+      glyph$text_x <- x; glyph$text_y <- y; glyph$text_angle <- angle
+      glyph$hjust <- .5; glyph$vjust <- .5; glyph$text <- chars
+      glyph$.arc_parent_group <- text$group[i] %||% i
+      glyph$.arc_glyph_index <- seq_along(chars)
+      glyphs[[length(glyphs) + 1L]] <- glyph
+    }
     boxes[[length(boxes) + 1L]] <- ggchord_project_text_boxes(
-      glyph$text_x, glyph$text_y, width, height, glyph$text_angle * pi / 180,
-      glyph$hjust, glyph$vjust, units_per_inch, box_padding)
+      x, y, width, height, angle * pi / 180, .5, .5, units_per_inch, box_padding)
     owners <- c(owners, rep(i, length(chars)))
   }
   list(
     glyphs = if (length(glyphs)) ggchord_rbind_fill(glyphs) else data.frame(),
-    boxes = if (length(boxes)) do.call(rbind, boxes) else
+    boxes = if (length(boxes) == 1L) boxes[[1L]] else if (length(boxes)) do.call(rbind, boxes) else
       ggchord_text_boxes(data.frame()),
     owners = owners
   )
@@ -513,9 +506,10 @@ ggchord_arc_text_layout <- function(text, units_per_inch = .35,
 
 ggchord_boxes_overlap_any <- function(candidate, other) {
   if (!nrow(candidate) || is.null(other) || !nrow(other)) return(FALSE)
-  any(vapply(seq_len(nrow(candidate)), function(i) {
-    any(ggchord_oriented_box_overlaps(candidate[i, , drop = FALSE], other))
-  }, logical(1L)))
+  for (i in seq_len(nrow(candidate))) {
+    if (any(ggchord_oriented_box_overlaps(candidate, other, i = i))) return(TRUE)
+  }
+  FALSE
 }
 
 ggchord_polygon_bounds <- function(polygons) {
@@ -547,60 +541,47 @@ ggchord_boxes_hit_features <- function(boxes, polygons, source_row = NA_integer_
 
 ggchord_boxes_corners <- function(boxes) {
   if (!nrow(boxes)) return(matrix(numeric(), ncol = 2L))
-  do.call(rbind, lapply(seq_len(nrow(boxes)), function(i) {
-    ggchord_box_corners(boxes[i, , drop = FALSE])
-  }))
+  row <- rep(seq_len(nrow(boxes)), each = 4L)
+  angle <- boxes$angle[row]
+  along <- c(-1, -1, 1, 1) * (boxes$ow[row] / 2)
+  across <- c(-1, 1, 1, -1) * (boxes$oh[row] / 2)
+  cbind(boxes$cx[row] + along * cos(angle) - across * sin(angle),
+        boxes$cy[row] + along * sin(angle) + across * cos(angle))
 }
 
 # Test one oriented text rectangle against zero or more oriented rectangles.
 # A cheap axis-aligned prefilter is followed by the separating-axis theorem;
 # this avoids treating a diagonal label's large empty corner triangles as
 # occupied space.
-ggchord_oriented_box_overlaps <- function(candidate, other, tol = 1e-7) {
+ggchord_oriented_box_overlaps <- function(candidate, other, tol = 1e-7, i = 1L) {
   if (is.null(other) || nrow(other) == 0) return(logical(0))
-  possible <- candidate$xmin < other$xmax - tol &
-    candidate$xmax > other$xmin + tol &
-    candidate$ymin < other$ymax - tol &
-    candidate$ymax > other$ymin + tol
+  possible <- candidate$xmin[i] < other$xmax - tol &
+    candidate$xmax[i] > other$xmin + tol &
+    candidate$ymin[i] < other$ymax - tol &
+    candidate$ymax[i] > other$ymin + tol
   out <- rep(FALSE, nrow(other))
-  rows <- which(possible)
-  if (length(rows) == 0) return(out)
-
-  candidate_angle <- candidate$angle[1] %||% 0
-  candidate_ow <- candidate$ow[1] %||% candidate$bw[1]
-  candidate_oh <- candidate$oh[1] %||% candidate$bh[1]
-  candidate_axes <- rbind(
-    c(cos(candidate_angle), sin(candidate_angle)),
-    c(-sin(candidate_angle), cos(candidate_angle))
-  )
-  for (j in rows) {
-    other_angle <- other$angle[j] %||% 0
-    other_ow <- other$ow[j] %||% other$bw[j]
-    other_oh <- other$oh[j] %||% other$bh[j]
-    other_axes <- rbind(
-      c(cos(other_angle), sin(other_angle)),
-      c(-sin(other_angle), cos(other_angle))
-    )
-    axes <- rbind(candidate_axes, other_axes)
-    centre_delta <- c(other$cx[j] - candidate$cx[1],
-                      other$cy[j] - candidate$cy[1])
-    separated <- FALSE
-    for (k in seq_len(nrow(axes))) {
-      axis <- axes[k, ]
-      candidate_extent <-
-        candidate_ow / 2 * abs(sum(axis * candidate_axes[1, ])) +
-        candidate_oh / 2 * abs(sum(axis * candidate_axes[2, ]))
-      other_extent <-
-        other_ow / 2 * abs(sum(axis * other_axes[1, ])) +
-        other_oh / 2 * abs(sum(axis * other_axes[2, ]))
-      if (abs(sum(centre_delta * axis)) >=
-          candidate_extent + other_extent - tol) {
-        separated <- TRUE
-        break
-      }
-    }
-    out[j] <- !separated
-  }
+  j <- which(possible)
+  if (!length(j)) return(out)
+  angle <- (candidate$angle[i] %||% 0)
+  other_angle <- other$angle[j] %||% 0
+  ca <- cos(angle); sa <- sin(angle)
+  cb <- cos(other_angle); sb <- sin(other_angle)
+  x <- other$cx[j] - candidate$cx[i]
+  y <- other$cy[j] - candidate$cy[i]
+  aw <- (candidate$ow[i] %||% candidate$bw[i]) / 2
+  ah <- (candidate$oh[i] %||% candidate$bh[i]) / 2
+  bw <- (other$ow[j] %||% other$bw[j]) / 2
+  bh <- (other$oh[j] %||% other$bh[j]) / 2
+  # Project both rectangles on all four local axes. Keep the same dot
+  # products (including the squared unit lengths) and boundary tolerance.
+  ac <- ca * ca + sa * sa
+  bc <- cb * cb + sb * sb
+  parallel <- abs(ca * cb + sa * sb)
+  perpendicular <- abs(sa * cb - ca * sb)
+  out[j] <- abs(x * ca + y * sa) < aw * ac + bw * parallel + bh * perpendicular - tol &
+    abs(-x * sa + y * ca) < ah * ac + bw * perpendicular + bh * parallel - tol &
+    abs(x * cb + y * sb) < aw * parallel + ah * perpendicular + bw * bc - tol &
+    abs(-x * sb + y * cb) < aw * perpendicular + ah * parallel + bh * bc - tol
   out
 }
 

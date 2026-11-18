@@ -1,12 +1,12 @@
 #' Set the fixed coordinate system from the layout extremes
 #' @noRd
-set_ggchord_coord <- function(plot, layout) {
+set_ggchord_coord <- function(plot, layout, axis_labels = NULL) {
   coord <- plot$coordinates
   if (!isTRUE(coord$ggchord_coord)) return(plot)
 
   lim <- switch(
     coord$fit %||% "labels",
-    labels = ggchord_adaptive_limits(layout),
+    labels = ggchord_adaptive_limits(layout, axis_labels),
     geometry = ggchord_geometry_limits(layout),
     manual = list(xlim = coord$user_xlim, ylim = coord$user_ylim)
   )
@@ -81,7 +81,7 @@ ggchord_geometry_limits <- function(layout) {
 #' preserves equal physical units without requiring a square data range. This
 #' lets wide or tall rendered content use the available panel more efficiently.
 #' @noRd
-ggchord_adaptive_limits <- function(layout) {
+ggchord_adaptive_limits <- function(layout, axis_labels = NULL) {
   ext <- layout$extremes
   if (is.null(ext) || !all(is.finite(c(ext$x_min, ext$x_max,
                                         ext$y_min, ext$y_max)))) {
@@ -142,10 +142,11 @@ ggchord_adaptive_limits <- function(layout) {
     }
   }
   if (isTRUE(layout$show_axis) && nrow(layout$axis_ticks) > 0) {
-    axis_labels <- layout$axis_ticks[!is.na(layout$axis_ticks$label), ,
-                                     drop = FALSE]
+    if (is.null(axis_labels)) {
+      ticks <- layout$axis_ticks
+      axis_labels <- ggchord_axis_label_geometry(layout, ticks[!is.na(ticks$label), , drop = FALSE])
+    }
     if (nrow(axis_labels) > 0) {
-      axis_labels <- ggchord_axis_label_geometry(layout, axis_labels)
       add_boxes(ggchord_text_boxes(
         axis_labels,
         x_col = "label_x", y_col = "label_y", text_col = "label",
@@ -295,25 +296,28 @@ prepare_ggchord_plot <- function(plot) {
   plot <- attach_ggchord_scales(plot, sc$scales)
   plot <- ggchord_add_link_scales(plot)
   if (exists("ggchord_add_track_scales", mode = "function")) plot <- ggchord_add_track_scales(plot)
+  axis_labels <- NULL
   if (!isTRUE(ggchord_plot_settings(plot)$axis$hidden) &&
       (nrow(layout$axis_lines %||% data.frame()) > 0L ||
        nrow(layout$axis_ticks %||% data.frame()) > 0L)) {
+    axis_data <- ggchord_axis_geometry(layout)
+    axis_labels <- axis_data[axis_data$.component %in% "text", , drop = FALSE]
     feature_layers <- which(vapply(plot$layers, function(layer)
       identical(layer$ggchord_type, "gene_poly"), logical(1)))
     if (length(feature_layers)) {
       # Automatic marks are background decoration. Keep the user's layers in
       # their declared order, but let features cover ticks that meet them.
-      marks <- ggchord_axis_layer(layout, c("line", "major_tick", "minor_tick"))
+      marks <- ggchord_axis_layer(layout, data = axis_data, components = c("line", "major_tick", "minor_tick"))
       if (nrow(marks$data)) plot$layers <- append(
         plot$layers, list(marks), after = feature_layers[1L] - 1L)
       # Text has its own measured clearance and remains in the foreground.
-      text <- ggchord_axis_layer(layout, "text")
+      text <- ggchord_axis_layer(layout, "text", data = axis_data)
       if (nrow(text$data)) plot$layers[[length(plot$layers) + 1L]] <- text
     } else {
-      plot$layers[[length(plot$layers) + 1L]] <- ggchord_axis_layer(layout)
+      plot$layers[[length(plot$layers) + 1L]] <- ggchord_axis_layer(layout, data = axis_data)
     }
   }
-  plot <- set_ggchord_coord(plot, layout)
+  plot <- set_ggchord_coord(plot, layout, axis_labels)
   plot <- ggchord_apply_theme_styles(plot)
   layout$render_context <- ggchord_render_context() %||% ggchord_estimated_render_context(layout)
   plot$ggchord$ref$layout <- layout

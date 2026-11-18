@@ -77,6 +77,33 @@ ggchord_radial_label_lanes <- function(gl, seq_arcs, side = "outside",
     shifts <- seq(0, shift_limit, by = step)
     offsets <- sort(unique(c(shifts, -shifts)))
     offsets <- offsets[order(abs(offsets), offsets)]
+    # The normal and curve point depend only on the source label and offset.
+    # Interpolate each row's allowed offsets once for all levels and orders.
+    curve_end <- tail(s, 1L)
+    slots <- lapply(preferred, function(origin) {
+      at <- unname(origin + offsets)
+      keep <- which(at >= -endpoint_padding & at <= curve_end + endpoint_padding)
+      at <- at[keep]
+      normal_x <- interpolate(nx, at)
+      normal_y <- interpolate(ny, at)
+      norm_xy <- sqrt(normal_x^2 + normal_y^2)
+      normal_x <- normal_x / norm_xy
+      normal_y <- normal_y / norm_xy
+      point_x <- interpolate(arc$x, at)
+      point_y <- interpolate(arc$y, at)
+      low <- at < 0
+      high <- at > curve_end
+      point_x[low] <- point_x[low] + at[low] * tx[1L] / norm[1L]
+      point_y[low] <- point_y[low] + at[low] * ty[1L] / norm[1L]
+      point_x[high] <- point_x[high] + (at[high] - curve_end) * tail(tx, 1L) / tail(norm, 1L)
+      point_y[high] <- point_y[high] + (at[high] - curve_end) * tail(ty, 1L) / tail(norm, 1L)
+      direction <- ifelse(abs(normal_x) > .35, ifelse(normal_x < 0, "left", "right"),
+        ifelse(normal_y < 0, "bottom", "top"))
+      list(at = at, offset = offsets[keep], nx = normal_x, ny = normal_y,
+        x = point_x, y = point_y, direction = direction,
+        hjust = unname(c(left = 1, right = 0, top = .5, bottom = .5)[direction]),
+        vjust = unname(c(left = .5, right = .5, top = 0, bottom = 1)[direction]))
+    })
     best <- NULL
     group_key <- paste(gl$accver[rows[1]], signs[rows[1]], sep = "\r")
     minimum_level <- .minimum_levels[group_key]
@@ -85,7 +112,8 @@ ggchord_radial_label_lanes <- function(gl, seq_arcs, side = "outside",
     for (level in levels[levels >= minimum_level]) {
       distance <- clearance + level * max(0.08, 0.25 * units_per_inch)
       for (reverse in c(FALSE, TRUE)) {
-        for (spread in c(1, 1.25, 1.5, 2)) {
+        spreads <- if (length(rows) == 1L) 1 else c(1, 1.25, 1.5, 2)
+        for (spread in spreads) {
           for (start_shift in c(0, 0.3)) {
             ordered <- if (reverse) rev(rows) else rows
             candidate <- gl
@@ -101,23 +129,17 @@ ggchord_radial_label_lanes <- function(gl, seq_arcs, side = "outside",
               selected <- FALSE
               bias <- (preferred[as.character(i)] - mean(preferred)) * (spread - 1)
               if (index == 1L) bias <- bias + if (reverse) start_shift else -start_shift
-              local_offsets <- offsets[order(abs(offsets - bias), offsets)]
-              for (shift in local_offsets) {
-                at <- preferred[as.character(i)] + shift
-                if (at < -endpoint_padding || at > tail(s, 1) + endpoint_padding) next
-                if ((!reverse && at <= previous + 1e-8) ||
-                    (reverse && at >= previous - 1e-8)) next
-                normal <- c(interpolate(nx, at), interpolate(ny, at))
-                normal <- normal / sqrt(sum(normal^2))
-                point <- c(interpolate(arc$x, at), interpolate(arc$y, at))
-                if (at < 0) point <- point + at * c(tx[1], ty[1]) / norm[1]
-                if (at > tail(s, 1)) point <- point + (at - tail(s, 1)) *
-                  c(tail(tx, 1), tail(ty, 1)) / tail(norm, 1)
-                direction <- if (abs(normal[1]) > 0.35) {
-                  if (normal[1] < 0) "left" else "right"
-                } else if (normal[2] < 0) "bottom" else "top"
-                hjust <- c(left = 1, right = 0, top = 0.5, bottom = 0.5)[direction]
-                vjust <- c(left = 0.5, right = 0.5, top = 0, bottom = 1)[direction]
+              slot <- slots[[as.character(i)]]
+              ranked <- order(abs(slot$offset - bias), slot$offset)
+              ordered_slots <- if (reverse) ranked[slot$at[ranked] < previous - 1e-8] else
+                ranked[slot$at[ranked] > previous + 1e-8]
+              for (j in ordered_slots) {
+                at <- slot$at[j]
+                normal <- c(slot$nx[j], slot$ny[j])
+                point <- c(slot$x[j], slot$y[j])
+                direction <- slot$direction[j]
+                hjust <- slot$hjust[j]
+                vjust <- slot$vjust[j]
                 extent <- abs(normal[1]) * boxes$w[i] / 2 +
                   abs(normal[2]) * boxes$h[i] / 2
                 centre <- (0.5 - hjust) * boxes$w[i] * normal[1] +
@@ -189,7 +211,9 @@ ggchord_radial_label_lanes <- function(gl, seq_arcs, side = "outside",
                 selected <- TRUE
                 break
               }
-              if (!selected) {
+              # Later segments add nonnegative length; equal cost keeps the
+              # earlier solution in the original deterministic search order.
+              if (!selected || (!is.null(best) && cost >= best$cost)) {
                 solved <- FALSE
                 break
               }

@@ -185,54 +185,74 @@ ggchord_perimeter_rail_crossings <- function(tasks, rows, edge_x, edge_y) {
   as.integer(crossings)
 }
 
-ggchord_perimeter_line_hits_box <- function(line, box) {
-  t_min <- 1e-5
-  t_max <- 1 - 1e-5
-  for (axis in c("x", "y")) {
-    route <- line[[paste0("route_", axis)]]
-    start <- if (length(route) && is.finite(route)) route else
-      line[[paste0("root_", axis)]]
-    delta <- line[[paste0("edge_", axis)]] - start
-    low <- box[[paste0("target_", axis)]] -
-      box[[if (axis == "x") "w" else "h"]] / 2
-    high <- box[[paste0("target_", axis)]] +
-      box[[if (axis == "x") "w" else "h"]] / 2
-    if (abs(delta) <= 1e-9) {
-      if (start <= low || start >= high) return(FALSE)
-    } else {
-      hits <- sort(c((low - start) / delta,
-        (high - start) / delta))
-      t_min <- max(t_min, hits[1L])
-      t_max <- min(t_max, hits[2L])
-    }
+# Clip a segment against an axis-aligned label box. Either argument may be
+# a column of placement candidates; parallel edges use the open box interior.
+ggchord_perimeter_line_hits_box <- function(x, y, dx, dy, box) {
+  limits <- function(start, delta, centre, size) {
+    low <- centre - size / 2
+    high <- centre + size / 2
+    parallel <- abs(delta) <= 1e-9
+    inside <- start > low & start < high
+    divisor <- ifelse(parallel, 1, delta)
+    a <- (low - start) / divisor
+    b <- (high - start) / divisor
+    lo <- pmin(a, b)
+    hi <- pmax(a, b)
+    lo[parallel] <- -Inf
+    hi[parallel] <- Inf
+    hi[parallel & !inside] <- -Inf
+    list(lo = lo, hi = hi)
   }
-  t_min + 1e-7 < t_max
+  horizontal <- limits(x, dx, box$target_x, box$w)
+  vertical <- limits(y, dy, box$target_y, box$h)
+  pmax(1e-5, horizontal$lo, vertical$lo) + 1e-7 <
+    pmin(1 - 1e-5, horizontal$hi, vertical$hi)
 }
 
 ggchord_perimeter_pair_blocked <- function(a, b, gap) {
-  boxes_meet <- abs(a$target_x - b$target_x) <
-    (a$w + b$w) / 2 + gap &&
-    abs(a$target_y - b$target_y) < (a$h + b$h) / 2 + gap
-  if (boxes_meet) return(TRUE)
-  if (ggchord_perimeter_line_hits_box(a, b) ||
-      ggchord_perimeter_line_hits_box(b, a)) return(TRUE)
-  ax <- if (length(a$route_x) && is.finite(a$route_x)) a$route_x else a$root_x
-  ay <- if (length(a$route_y) && is.finite(a$route_y)) a$route_y else a$root_y
-  bx <- if (length(b$route_x) && is.finite(b$route_x)) b$route_x else b$root_x
-  by <- if (length(b$route_y) && is.finite(b$route_y)) b$route_y else b$root_y
+  origin <- function(route, root) {
+    if (is.null(route)) return(root)
+    ifelse(is.finite(route), route, root)
+  }
+  ax <- origin(a$route_x, a$root_x)
+  ay <- origin(a$route_y, a$root_y)
+  bx <- origin(b$route_x, b$root_x)
+  by <- origin(b$route_y, b$root_y)
   rx <- a$edge_x - ax
   ry <- a$edge_y - ay
   sx <- b$edge_x - bx
   sy <- b$edge_y - by
-  denominator <- rx * sy - ry * sx
-  if (!is.finite(denominator) || abs(denominator) <= 1e-9) {
-    return(FALSE)
+  den <- rx * sy - ry * sx
+  valid <- is.finite(den) & abs(den) > 1e-9
+  divisor <- ifelse(valid, den, 1)
+  t <- ((bx - ax) * sy - (by - ay) * sx) / divisor
+  u <- ((bx - ax) * ry - (by - ay) * rx) / divisor
+  cross <- valid & t > 1e-9 & t < 1 - 1e-9 & u > 1e-9 & u < 1 - 1e-9
+  boxes_meet <- abs(a$target_x - b$target_x) < (a$w + b$w) / 2 + gap &
+    abs(a$target_y - b$target_y) < (a$h + b$h) / 2 + gap
+  boxes_meet | cross | ggchord_perimeter_line_hits_box(ax, ay, rx, ry, b) |
+    ggchord_perimeter_line_hits_box(bx, by, sx, sy, a)
+}
+
+# Test the original 101 ordered heights as vectors, retaining the first legal
+# slot. Compare only with obstacles already fixed at this point in the search.
+ggchord_perimeter_first_step <- function(row, x, start_y, step, direction, gap, obstacles) {
+  trial <- as.list(row)
+  trial$edge_x <- x
+  trial$target_x <- x + direction * row$w / 2
+  trial$edge_y <- start_y + (0:100) * step
+  trial$target_y <- trial$edge_y + row$h / 2
+  free <- rep(TRUE, length(trial$edge_y))
+  for (other in obstacles) {
+    free <- free & !ggchord_perimeter_pair_blocked(trial, other, gap)
+    if (!any(free)) return(NULL)
   }
-  dx <- bx - ax
-  dy <- by - ay
-  t <- (dx * sy - dy * sx) / denominator
-  u <- (dx * ry - dy * rx) / denominator
-  t > 1e-9 && t < 1 - 1e-9 && u > 1e-9 && u < 1 - 1e-9
+  first <- which(free)[1L]
+  row$edge_x <- x
+  row$target_x <- trial$target_x
+  row$edge_y <- trial$edge_y[first]
+  row$target_y <- trial$target_y[first]
+  row
 }
 
 # Keep a dense, nearly coincident upper cluster above its own roots. Text
@@ -255,35 +275,18 @@ ggchord_perimeter_top_steps <- function(tasks, rows, side_rows,
   )
   base <- max(backbone_outer + .13,
     max(tasks$root_y[rows], na.rm = TRUE) + .07)
+  side <- lapply(side_rows, function(j) as.list(tasks[j, , drop = FALSE]))
   placed <- list()
   fan_gap <- min(gap, .004)
   for (k in seq_along(rows)) {
     row <- rows[k]
-    found <- NULL
     start_y <- if (length(placed)) {
       previous <- placed[[length(placed)]]
       previous$target_y + previous$h / 2 + fan_gap
     } else base
     step <- max(.009, .15 * tasks$h[row])
-    for (candidate_offset in 0:100) {
-      candidate <- tasks[row, , drop = FALSE]
-      candidate$edge_x <- x[k]
-      candidate$edge_y <- start_y + candidate_offset * step
-      candidate$target_x <- candidate$edge_x - candidate$w / 2
-      candidate$target_y <- candidate$edge_y + candidate$h / 2
-      blocked_side <- any(vapply(side_rows, function(j) {
-        ggchord_perimeter_pair_blocked(
-          candidate, tasks[j, , drop = FALSE], fan_gap
-        )
-      }, logical(1L)))
-      blocked_fan <- any(vapply(placed, function(other) {
-        ggchord_perimeter_pair_blocked(candidate, other, fan_gap)
-      }, logical(1L)))
-      if (!blocked_side && !blocked_fan) {
-        found <- candidate
-        break
-      }
-    }
+    found <- ggchord_perimeter_first_step(tasks[row, , drop = FALSE], x[k],
+      start_y, step, -1, fan_gap, c(side, placed))
     if (is.null(found)) return(NULL)
     placed[[k]] <- found
   }
@@ -308,6 +311,7 @@ ggchord_perimeter_top_staircase <- function(tasks, rows, side_rows,
   base <- max(backbone_outer + .13,
     max(tasks$route_y[rows]) + .06)
   fan_gap <- min(gap, .004)
+  side <- lapply(side_rows, function(j) as.list(tasks[j, , drop = FALSE]))
   solve_split <- function(split) {
     branches <- list(rows[seq_len(split)],
       rev(rows[seq.int(split + 1L, length(rows))]))
@@ -329,26 +333,8 @@ ggchord_perimeter_top_staircase <- function(tasks, rows, side_rows,
         start_y <- if (is.null(previous)) branch_base else
           previous$target_y + previous$h / 2 + fan_gap
         step <- max(.009, .15 * tasks$h[row])
-        found <- NULL
-        for (offset in 0:100) {
-          candidate <- tasks[row, , drop = FALSE]
-          candidate$edge_x <- x[k]
-          candidate$edge_y <- start_y + offset * step
-          candidate$target_x <- candidate$edge_x +
-            direction * candidate$w / 2
-          candidate$target_y <- candidate$edge_y + candidate$h / 2
-          blocked_side <- any(vapply(side_rows, function(j) {
-            ggchord_perimeter_pair_blocked(candidate,
-              tasks[j, , drop = FALSE], fan_gap)
-          }, logical(1L)))
-          blocked_fan <- any(vapply(placed, function(other) {
-            ggchord_perimeter_pair_blocked(candidate, other, fan_gap)
-          }, logical(1L)))
-          if (!blocked_side && !blocked_fan) {
-            found <- candidate
-            break
-          }
-        }
+        found <- ggchord_perimeter_first_step(tasks[row, , drop = FALSE], x[k],
+          start_y, step, direction, fan_gap, c(side, placed))
         if (is.null(found)) return(NULL)
         placed[[length(placed) + 1L]] <- found
         selected_rows <- c(selected_rows, row)

@@ -70,36 +70,37 @@ ggchord_inner_label_preferences <- function(gl, metrics, feature_bands,
 # is also used to stop a prospective leader at its own first glyph, matching
 # the renderer's clipping rule before testing the route against other labels.
 ggchord_inner_leader_intervals <- function(route, boxes, shrink = 0) {
-  if (!nrow(boxes)) return(data.frame(start = numeric(), end = numeric()))
-  angle <- boxes$angle
-  cos_a <- cos(angle)
-  sin_a <- sin(angle)
-  rel_x <- route$x0 - boxes$cx
-  rel_y <- route$y0 - boxes$cy
-  dx <- route$x1 - route$x0
-  dy <- route$y1 - route$y0
+  spans <- ggchord_clip_glyphs(route$x0, route$y0, route$x1, route$y1,
+    boxes$cx, boxes$cy, cos(boxes$angle), sin(boxes$angle),
+    pmax(0, (boxes$ow %||% boxes$w) / 2 - shrink),
+    pmax(0, (boxes$oh %||% boxes$h) / 2 - shrink))
+  list2DF(spans)
+}
+
+# Clip one segment against many glyphs or many segments against one glyph.
+ggchord_clip_glyphs <- function(x0, y0, x1, y1, cx, cy, cos_a, sin_a, hw, hh) {
+  rel_x <- x0 - cx; rel_y <- y0 - cy
+  dx <- x1 - x0; dy <- y1 - y0
   origins <- list(rel_x * cos_a + rel_y * sin_a,
     -rel_x * sin_a + rel_y * cos_a)
   deltas <- list(dx * cos_a + dy * sin_a,
     -dx * sin_a + dy * cos_a)
-  halves <- list(pmax(0, (boxes$ow %||% boxes$w) / 2 - shrink),
-    pmax(0, (boxes$oh %||% boxes$h) / 2 - shrink))
-  start <- rep(0, nrow(boxes))
-  end <- rep(1, nrow(boxes))
+  halves <- list(hw, hh)
+  start <- numeric(length(origins[[1L]]))
+  end <- rep(1, length(start))
   for (axis in 1:2) {
     parallel <- abs(deltas[[axis]]) < 1e-10
     outside <- parallel & abs(origins[[axis]]) >= halves[[axis]]
     active <- !parallel
-    enter <- (-halves[[axis]][active] - origins[[axis]][active]) /
-      deltas[[axis]][active]
-    leave <- (halves[[axis]][active] - origins[[axis]][active]) /
-      deltas[[axis]][active]
+    den <- ifelse(parallel, 1, deltas[[axis]])
+    enter <- ((-halves[[axis]] - origins[[axis]]) / den)[active]
+    leave <- ((halves[[axis]] - origins[[axis]]) / den)[active]
     start[active] <- pmax(start[active], pmin(enter, leave))
     end[active] <- pmin(end[active], pmax(enter, leave))
     end[outside] <- -Inf
   }
   valid <- start < end - 1e-10
-  data.frame(start = start[valid], end = end[valid])
+  list(start = start[valid], end = end[valid])
 }
 
 ggchord_inner_label_leader <- function(candidate, boxes, units_per_inch,
@@ -131,10 +132,22 @@ ggchord_inner_label_leader <- function(candidate, boxes, units_per_inch,
 
 ggchord_inner_leader_hits <- function(routes, boxes) {
   if (!nrow(routes) || !nrow(boxes)) return(FALSE)
-  any(vapply(seq_len(nrow(routes)), function(i) {
-    hit <- ggchord_inner_leader_intervals(routes[i, , drop = FALSE], boxes)
-    nrow(hit) > 0L && any(hit$start < 1 - 1e-7 & hit$end > 1e-7)
-  }, logical(1L)))
+  ca <- cos(boxes$angle); sa <- sin(boxes$angle)
+  hw <- (boxes$ow %||% boxes$w) / 2
+  hh <- (boxes$oh %||% boxes$h) / 2
+  ex <- abs(ca) * hw + abs(sa) * hh
+  ey <- abs(sa) * hw + abs(ca) * hh
+  xmin <- pmin(routes$x0, routes$x1); xmax <- pmax(routes$x0, routes$x1)
+  ymin <- pmin(routes$y0, routes$y1); ymax <- pmax(routes$y0, routes$y1)
+  for (i in seq_len(nrow(routes))) {
+    j <- which(boxes$cx - ex <= xmax[i] + 1e-9 & boxes$cx + ex >= xmin[i] - 1e-9 &
+      boxes$cy - ey <= ymax[i] + 1e-9 & boxes$cy + ey >= ymin[i] - 1e-9)
+    if (!length(j)) next
+    hit <- ggchord_clip_glyphs(routes$x0[i], routes$y0[i], routes$x1[i], routes$y1[i],
+      boxes$cx[j], boxes$cy[j], ca[j], sa[j], hw[j], hh[j])
+    if (any(hit$start < 1 - 1e-7 & hit$end > 1e-7)) return(TRUE)
+  }
+  FALSE
 }
 
 ggchord_inner_leaders_cross <- function(route, placed) {
@@ -448,7 +461,7 @@ ggchord_feature_label_lanes <- function(gl, gene_polys, seq_arcs,
       box <- if (concentric_circle) {
         ggchord_arc_text_layout(
           candidate, units_per_inch = units_per_inch, box_padding = .25/25.4,
-          line_metrics = line_metrics
+          line_metrics = line_metrics, boxes_only = TRUE
         )$boxes
       } else ggchord_text_boxes(
         candidate, units_per_inch = units_per_inch, box_padding = .25/25.4
@@ -462,7 +475,7 @@ ggchord_feature_label_lanes <- function(gl, gene_polys, seq_arcs,
       if (feature_collision) next
       if (concentric_circle && starts_inside && track_index == 0L &&
           !ggchord_feature_contains_label(ggchord_arc_text_layout(candidate,
-            units_per_inch = units_per_inch, box_padding = 0, line_metrics = line_metrics)$boxes,
+            units_per_inch = units_per_inch, box_padding = 0, line_metrics = line_metrics, boxes_only = TRUE)$boxes,
             polygons, gl$source_row[i]))
         feature_collision <- TRUE
       corners <- ggchord_boxes_corners(box)

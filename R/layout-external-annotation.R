@@ -553,19 +553,32 @@ ggchord_external_route_crossing_count <- function(route, occupied,
   sum(crossed)
 }
 
-ggchord_external_leader_crosses <- function(a, b, tolerance = 1e-9) {
-  cross2 <- function(x, y) x[1L] * y[2L] - x[2L] * y[1L]
-  p <- c(a$x1, a$y1)
-  r <- c(a$x2 - a$x1, a$y2 - a$y1)
-  q <- c(b$x1, b$y1)
-  s <- c(b$x2 - b$x1, b$y2 - b$y1)
-  denominator <- cross2(r, s)
-  if (!is.finite(denominator) || abs(denominator) <= tolerance) return(FALSE)
-  t <- cross2(q - p, s) / denominator
-  u <- cross2(q - p, r) / denominator
-  # Shared roots and label attachments are intentional contacts, not crossings.
-  t > tolerance && t < 1 - tolerance &&
-    u > tolerance && u < 1 - tolerance
+# Find each pair of distinct polylines crossing in their interiors once.
+# Bounding boxes are a broad phase; shared endpoints retain the parametric
+# tolerance of the exact segment test. The source segment order is preserved.
+ggchord_crossing_leader_pairs <- function(segments, owner, tolerance = 1e-9) {
+  x <- segments$x1; y <- segments$y1
+  dx <- segments$x2 - x; dy <- segments$y2 - y
+  xmin <- pmin(x, segments$x2); xmax <- pmax(x, segments$x2)
+  ymin <- pmin(y, segments$y2); ymax <- pmax(y, segments$y2)
+  contacts <- vector("list", length(x))
+  for (i in seq_along(x)) {
+    j <- which(owner > owner[i] & xmin <= xmax[i] & xmax >= xmin[i] &
+      ymin <= ymax[i] & ymax >= ymin[i])
+    den <- dx[i] * dy[j] - dy[i] * dx[j]
+    use <- is.finite(den) & abs(den) > tolerance
+    if (!any(use)) next
+    j <- j[use]; den <- den[use]
+    qx <- x[j] - x[i]; qy <- y[j] - y[i]
+    t <- (qx * dy[j] - qy * dx[j]) / den
+    u <- (qx * dy[i] - qy * dx[i]) / den
+    hit <- t > tolerance & t < 1 - tolerance & u > tolerance & u < 1 - tolerance
+    if (any(hit)) contacts[[i]] <- cbind(owner[i], owner[j[hit]])
+  }
+  pairs <- do.call(rbind, contacts)
+  if (is.null(pairs)) return(matrix(integer(), ncol = 2L))
+  pairs <- unique(pairs)
+  pairs[order(pairs[, 1L], pairs[, 2L]), , drop = FALSE]
 }
 
 ggchord_measure_external_leader_crossings <- function(registry) {
@@ -617,22 +630,11 @@ ggchord_measure_external_leader_crossings <- function(registry) {
     }
   }
   if (length(leaders) > 1L) {
-    pairs <- utils::combn(seq_along(leaders), 2L)
-    for (column in seq_len(ncol(pairs))) {
-      i <- pairs[1L, column]
-      j <- pairs[2L, column]
-      crosses <- any(vapply(seq_len(nrow(leaders[[i]]$segments)), function(a) {
-        any(vapply(seq_len(nrow(leaders[[j]]$segments)), function(b) {
-          ggchord_external_leader_crosses(
-            leaders[[i]]$segments[a, ], leaders[[j]]$segments[b, ]
-          )
-        }, logical(1L)))
-      }, logical(1L)))
-      if (crosses) {
-        leaders[[i]]$crossings <- leaders[[i]]$crossings + 1L
-        leaders[[j]]$crossings <- leaders[[j]]$crossings + 1L
-      }
-    }
+    paths <- lapply(leaders, `[[`, "segments")
+    owner <- rep(seq_along(paths), vapply(paths, nrow, integer(1L)))
+    pairs <- ggchord_crossing_leader_pairs(do.call(rbind, paths), owner)
+    counts <- tabulate(as.integer(pairs), nbins = length(leaders))
+    for (i in seq_along(leaders)) leaders[[i]]$crossings <- counts[i]
   }
   for (leader in leaders) {
     geometry <- registry[[leader$id]][[leader$component]]

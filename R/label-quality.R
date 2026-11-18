@@ -78,14 +78,11 @@ ggchord_label_quality <- function(layout, text, built, context) {
     contact(if (features$contacts$relation[i] == 'other_source') 'text_over_feature' else
       'text_feature_unresolved', features$contacts$label_id[i], features$contacts$feature_id[i])
   ids <- unique(segments$leader_id)
-  if (length(ids) > 1L) for (i in seq_len(length(ids)-1L)) for (j in seq.int(i+1L, length(ids))) {
-    a <- segments[segments$leader_id == ids[i], , drop = FALSE]
-    b <- segments[segments$leader_id == ids[j], , drop = FALSE]
-    crosses <- any(vapply(seq_len(nrow(a)), function(k) any(vapply(seq_len(nrow(b)), function(m)
-      ggchord_external_leader_crosses(
-        data.frame(x1 = a$x0[k], y1 = a$y0[k], x2 = a$x1[k], y2 = a$y1[k]),
-        data.frame(x1 = b$x0[m], y1 = b$y0[m], x2 = b$x1[m], y2 = b$y1[m])), logical(1))), logical(1)))
-    if (crosses) contact('leader_crossing', ids[i], ids[j])
+  if (length(ids) > 1L) {
+    paths <- data.frame(x1 = segments$x0, y1 = segments$y0,
+      x2 = segments$x1, y2 = segments$y1)
+    pairs <- ggchord_crossing_leader_pairs(paths, match(segments$leader_id, ids))
+    for (i in seq_len(nrow(pairs))) contact('leader_crossing', ids[pairs[i, 1L]], ids[pairs[i, 2L]])
   }
   conflicts <- unique(ggchord_rbind_fill(conflicts) %||%
     data.frame(type = character(), first = character(), second = character()))

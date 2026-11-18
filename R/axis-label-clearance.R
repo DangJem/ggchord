@@ -50,7 +50,7 @@ ggchord_clear_circular_axis_text <- function(text, layout) {
     nearest <= band[2L] && farthest >= band[1L]
   }, logical(1)))
   boxes_for <- function(d) ggchord_arc_text_layout(d, units_per_inch = units,
-    respect_justification = TRUE)$boxes
+    respect_justification = TRUE, boxes_only = TRUE)$boxes
   polygon_bounds <- ggchord_polygon_bounds(polygons)
   feature_hit <- function(boxes) ggchord_boxes_hit_features(boxes, polygons, tol = 1e-8, bounds = polygon_bounds)
   static <- ggchord_annotation_text_obstacles(layout$layer_geometry, layout, include_axis = FALSE)
@@ -77,9 +77,7 @@ ggchord_clear_circular_axis_text <- function(text, layout) {
     if (critical[i]) other_rows <- other_rows[critical[other_rows] |
       !(text$.axis_automatic_breaks[other_rows] %in% TRUE)]
     others <- ggchord_rbind_fill(c(list(static), tick_boxes[other_rows])) %||% data.frame()
-    text_hit <- function(candidate) nrow(others) > 0L && any(vapply(
-      seq_len(nrow(candidate)), function(k) any(ggchord_oriented_box_overlaps(
-        candidate[k, , drop = FALSE], others)), logical(1)))
+    text_hit <- function(candidate) ggchord_boxes_overlap_any(candidate, others)
     # Use the narrow channel adjacent to the backbone first. Explicit offsets
     # and breaks keep their contract; glyph corners, rather than only a text
     # centre, determine clearance from the backbone.
