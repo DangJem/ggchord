@@ -28,6 +28,9 @@
 #' Existing user fill mappings, fixed fills and scales take priority.
 #' See [scale_fill_residue()] for explicit alphabet and palette control.
 #'
+#' This native alignment layer accepts the ggplot2 layer parameter `name`.
+#' Sequence-layout IDs apply to layers registered by `ggchord()`.
+#'
 #' @param mapping,data Standard ggplot2 layer mapping and data. Required
 #'   aesthetics are x, y and label. Ordinary colour, fill, alpha, size, family
 #'   and fontface mappings/scales are supported. Explicit `size` is in mm;
@@ -56,10 +59,14 @@
 #'   geom_residue(line_width = 50)
 geom_residue <- function(mapping = NULL, data = NULL, overflow = c("tile", "error"),
     position = "identity", show.legend = FALSE, inherit.aes = TRUE, line_width = NULL, ...) {
+  ggchord_check_argument_names(sys.call(), sys.function())
+  if ("id" %in% names(list(...)))
+    ggchord_stop("geom_residue() uses a native alignment layer. Use name to label the ggplot2 layer.")
   if (ggchord_local_position(position)) ggchord_stop("geom_residue(): position adjusts alignment cells; use a data position")
   if (!is.null(line_width) && (!is.numeric(line_width) || length(line_width) != 1L ||
       !is.finite(line_width) || line_width < 1 || line_width != floor(line_width) || line_width > 2^53 - 1))
     ggchord_stop("geom_residue(): line_width must be a positive integer or NULL")
+  ggchord_check_geom_params(list(...), GeomResidue, "geom_residue()", position)
   layer <- ggplot2::layer(mapping = mapping, data = data, stat = "identity", geom = GeomResidue,
     position = position, show.legend = show.legend, inherit.aes = inherit.aes,
     params = c(list(overflow = match.arg(overflow), auto_size = TRUE, line_width = line_width), list(...)))

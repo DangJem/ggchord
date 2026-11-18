@@ -66,6 +66,9 @@ When fill is not supplied, label is mapped to fill. A chemistry scale is
 inferred from the data's explicit alphabet column (DNA/RNA/AA; otherwise AA).
 Existing user fill mappings, fixed fills and scales take priority.
 See \code{\link[=scale_fill_residue]{scale_fill_residue()}} for explicit alphabet and palette control.
+
+This native alignment layer accepts the ggplot2 layer parameter \code{name}.
+Sequence-layout IDs apply to layers registered by \code{ggchord()}.
 }
 \examples{
 # Explicit synthetic format example; real-data workflow is in the tutorial.

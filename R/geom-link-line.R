@@ -66,6 +66,7 @@ geom_link_line <- function(mapping = NULL, data = NULL,
   if ("color" %in% names(list(...))) style_defaults[["link_colour"]] <- FALSE
   styles <- list(link_colour = alias$colour, link_alpha = alpha,
                  link_linewidth = linewidth, link_linetype = linetype)
+  ggchord_check_geom_params(alias$dots, GeomChordLinkLine, "geom_link_line()", position)
   lyr <- ggplot2::layer(
     data = data.frame(x = numeric(), y = numeric(), group = integer()),
     mapping = ggplot2::aes(x = x, y = y, group = group), geom = GeomChordLinkLine,

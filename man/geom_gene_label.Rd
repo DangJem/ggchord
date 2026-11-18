@@ -18,7 +18,8 @@ geom_gene_label(
   position = "identity",
   show.legend = FALSE,
   inherit.aes = TRUE,
-  ...
+  ...,
+  id = NULL
 )
 }
 \arguments{
@@ -67,6 +68,8 @@ unambiguous feature IDs.}
 \item{show.legend, inherit.aes}{Standard ggplot2 layer arguments.}
 
 \item{...}{Additional arguments passed to \code{geom_text()}}
+
+\item{id}{Optional unique layer ID used in layout and source exports.}
 }
 \value{
 A ggplot2 layer. To let the labels avoid each other and the
@@ -98,5 +101,5 @@ genes <- gene_data_example |>
 ggchord(prepare_ggchord_data(seq_data = seqs, gene_data = genes)) +
   geom_seq() +
   geom_feature(preset = "gene") +
-  geom_gene_label()
+  geom_gene_label(id = "gene-names")
 }

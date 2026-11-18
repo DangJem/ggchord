@@ -83,7 +83,7 @@
 #'   coord_collinear()
 #' intervals <- data.frame(accver = "A", start = c(3, 4), end = c(6, 5))
 #' ggchord(data.frame(accver = "A", length = 10)) +
-#'   geom_track_bar(aes(y = after_stat(mean_depth)), data = intervals,
+#'   geom_track_bar(aes(y = after_stat(mean_depth)), data = intervals, id = "depth",
 #'     stat = "coverage", binwidth = 4) +
 #'   coord_collinear()
 #' # Fit existing GC windows in source space; estimates are not new data.
@@ -125,6 +125,13 @@ geom_track <- function(mapping = NULL, data = NULL, geom = "point", stat = NULL,
   if (stat %in% names(estimates) && (!geom %in% estimates[[stat]] || !identity_position))
     ggchord_stop("geom_track(): ", stat, " requires position='identity' and geom in ", paste(estimates[[stat]], collapse = ", "))
   dots <- ggchord_colour_dots(list(...), "geom_track()")
+  if (length(dots)) {
+    # Resolve the source layer's Geom, Stat and Position just as ggplot2 will
+    # for its build. Coverage consumes its public windows before that build.
+    receiver_stat <- if (stat == "coverage") StatGgchordCoverage else custom_stat %||% stat
+    ggchord_check_geom_params(dots, geom, "geom_track()", position, receiver_stat,
+      extra = if (stat == "coverage") c("binwidth", "windows"))
+  }
   if (stat == "coverage") {
     if (!geom %in% c("bar", "col", "point", "line", "step") || !identity_position)
       ggchord_stop("Coverage requires position='identity' and geom bar, col, point, line or step")
@@ -157,7 +164,7 @@ geom_track <- function(mapping = NULL, data = NULL, geom = "point", stat = NULL,
   l <- ggchord_track_layer("line", NULL, data, track, "#86AFB9",
     if (geom %in% c("point", "line", "path", "step", "segment", "linerange", "errorbar", "text")) "#387D88" else NA,
     1, .4, 1, bounds, 0, FALSE, show.legend, FALSE,
-    c(fill = FALSE, colour = FALSE, alpha = FALSE, linewidth = FALSE, linetype = FALSE), dots[intersect("key_glyph", names(dots))])
+    c(fill = FALSE, colour = FALSE, alpha = FALSE, linewidth = FALSE, linetype = FALSE), dots[intersect(c("key_glyph", "name"), names(dots))])
   l$layout <- dots[["layout"]]
   dots$layout <- NULL
   l$ggchord_params$id <- id

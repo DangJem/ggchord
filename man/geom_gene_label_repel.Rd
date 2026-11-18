@@ -20,7 +20,8 @@ geom_gene_label_repel(
   show.legend = FALSE,
   inherit.aes = TRUE,
   label_min_size = 1.5,
-  ...
+  ...,
+  id = NULL
 )
 }
 \arguments{
@@ -99,6 +100,8 @@ own rotation, offsets, orientation and overlap policy; use
 \code{\link[=geom_gene_label]{geom_gene_label()}} for manual \code{label_rotation}, \code{label_radial_offset},
 \code{label_circum_offset}, \code{label_circum_limit}, \code{label_orientation} or
 \code{label_overlap}. These manual controls are rejected here.}
+
+\item{id}{Optional unique layer ID used in layout and source exports.}
 }
 \value{
 A ggplot2 layer that draws labels and leader lines together.
@@ -130,5 +133,5 @@ genes <- gene_data_example |>
 ggchord(prepare_ggchord_data(seq_data = seqs, gene_data = genes)) +
   geom_seq() +
   geom_feature(preset = "gene") +
-  geom_gene_label_repel(label_wrap = 20)
+  geom_gene_label_repel(label_wrap = 20, id = "gene-callouts")
 }

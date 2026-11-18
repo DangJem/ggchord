@@ -375,6 +375,7 @@ geom_feature <- function(mapping = NULL, data = NULL,
   if (shape_mapped) {
     visual_mapping[["feature_shape"]] <- as.name(".feature_shape_raw")
   }
+  ggchord_check_geom_params(dots, feature_geom, "geom_feature()", position_object)
   lyr <- ggplot2::layer(
     data = placeholder,
     mapping = ggplot2::aes(

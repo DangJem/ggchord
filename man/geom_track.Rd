@@ -21,7 +21,8 @@ geom_track_bar(
   inherit.aes = TRUE,
   ...,
   track = NULL,
-  stat = "count"
+  stat = "count",
+  id = NULL
 )
 
 geom_track(
@@ -73,6 +74,8 @@ a positive whole \code{binwidth} in sequence units or explicit \code{windows}.}
 
 \item{track}{Character ID declared with \code{\link[=track_band]{track_band()}}. Omit for the shared default band.}
 
+\item{id}{Optional unique layer ID for exported statistics and source rows.}
+
 \item{geom, stat}{Native geometry and statistic names, or \code{stat = "coverage"}
 for interval coverage. The seven native
 statistics also accept their built-in ggplot2 Stat objects, for example
@@ -84,8 +87,6 @@ column (one integer vector per result). Unreported membership is exported
 as NULL with \code{source_status = "unknown"}. An explicit empty integer vector
 denotes a known empty set. Reported members must belong to the same
 accession and facet as the result.}
-
-\item{id}{Optional unique layer ID for exported statistics and source rows.}
 }
 \value{
 A ggplot2 layer using a shared sequence-local band.
@@ -150,7 +151,7 @@ ggchord(data.frame(accver = "A", length = 1000)) +
   coord_collinear()
 intervals <- data.frame(accver = "A", start = c(3, 4), end = c(6, 5))
 ggchord(data.frame(accver = "A", length = 10)) +
-  geom_track_bar(aes(y = after_stat(mean_depth)), data = intervals,
+  geom_track_bar(aes(y = after_stat(mean_depth)), data = intervals, id = "depth",
     stat = "coverage", binwidth = 4) +
   coord_collinear()
 # Fit existing GC windows in source space; estimates are not new data.

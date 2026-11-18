@@ -42,6 +42,7 @@ geom_alignment_segment <- function(mapping = NULL, data = NULL,
     link_linewidth = missing(linewidth), link_linetype = missing(linetype))
   alias <- ggchord_colour_alias(colour, list(...), "geom_alignment_segment()", sys.call())
   if ("color" %in% names(list(...))) defaults[["link_colour"]] <- FALSE
+  ggchord_check_geom_params(alias$dots, GeomAlignmentSegment, "geom_alignment_segment()", position)
   layer <- ggplot2::layer(
     data = data.frame(x = numeric(), y = numeric(), xend = numeric(), yend = numeric()),
     mapping = ggplot2::aes(x = x, y = y, xend = xend, yend = yend),

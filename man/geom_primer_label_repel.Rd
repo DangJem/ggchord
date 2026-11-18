@@ -14,7 +14,8 @@ geom_primer_label_repel(
   position = NULL,
   show.legend = FALSE,
   inherit.aes = TRUE,
-  ...
+  ...,
+  id = NULL
 )
 }
 \arguments{
@@ -33,6 +34,8 @@ restriction or feature labels share the map. The default is \code{"outside"}.}
 \item{position, show.legend, inherit.aes}{Standard layer arguments.}
 
 \item{...}{Additional parameters passed to \code{\link[=geom_feature]{geom_feature()}}.}
+
+\item{id}{Optional unique layer ID used in layout and source exports.}
 }
 \value{
 A composite text and leader-line layer.

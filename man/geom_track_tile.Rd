@@ -36,7 +36,8 @@ geom_track_line(
   inherit.aes = TRUE,
   ...,
   track = NULL,
-  id = NULL
+  id = NULL,
+  stat = NULL
 )
 }
 \arguments{
@@ -64,6 +65,8 @@ Clipping is reported and never changes source values.}
 \item{id}{Optional unique layer ID used in layout and source exports.}
 
 \item{closed}{Explicitly close a complete circular line series.}
+
+\item{stat}{Optional source statistic for open lines. See \code{\link[=geom_track]{geom_track()}}.}
 }
 \value{
 A ggplot2 layer with independent input and a shared named band.

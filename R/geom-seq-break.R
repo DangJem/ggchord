@@ -60,6 +60,8 @@ geom_seq_break <- function(mapping = NULL, data = NULL,
   if (!linewidth_supplied && "linewidth" %in% names(mapping)) styles$linewidth <- NULL
   if (!colour_supplied && "colour" %in% names(mapping)) styles$colour <- NULL
   empty <- ggchord_empty_seq_break_geometry()
+  ggchord_check_geom_params(alias$dots, ggplot2::GeomPath, "geom_seq_break()", position,
+    stat = alias$dots[["stat"]] %||% ggplot2::StatIdentity, extra = "stat")
   layer <- do.call(ggplot2::geom_path, c(list(
     data = empty, mapping = ggplot2::aes(x = x, y = y, group = group),
     position = position, show.legend = show.legend, inherit.aes = inherit.aes

@@ -125,6 +125,7 @@ ggplot_add.ggchord_track_band <- function(object, plot, ...) {
 #'   input order, missing-value breaks and strict increasing positions.
 #' @param fill,colour,alpha,linewidth,linetype Fixed styles; fill and colour
 #'   mappings use the dedicated track roles and scoped scales.
+#' @param stat Optional source statistic for open lines. See [geom_track()].
 #' @param closed Explicitly close a complete circular line series.
 #' @param bounds `"error"` (default) or `"clip"` for genomic coordinates.
 #'   Clipping is reported and never changes source values.
@@ -184,19 +185,19 @@ geom_track_tile <- function(mapping = NULL, data = NULL, position = NULL,
 #' @export
 geom_track_line <- function(mapping = NULL, data = NULL, position = NULL,
     colour = "#387D88", alpha = 1, linewidth = .4, linetype = 1,
-    closed = FALSE, bounds = c("error", "clip"), show.legend = NA, inherit.aes = TRUE, ..., track = NULL, id = NULL) {
+    closed = FALSE, bounds = c("error", "clip"), show.legend = NA, inherit.aes = TRUE, ..., track = NULL, id = NULL, stat = NULL) {
   ggchord_check_argument_names(sys.call(), sys.function())
   fixed <- c(fill = FALSE, colour = !missing(colour), alpha = !missing(alpha),
     linewidth = !missing(linewidth), linetype = !missing(linetype))
   if (!is.logical(closed) || length(closed) != 1L || is.na(closed)) ggchord_stop("closed must be TRUE or FALSE")
   dots <- list(...)
   identity <- ggchord_is_data_identity(position %||% "identity")
-  if (closed && (!identity || !is.null(dots$stat)))
+  if (closed && (!identity || !is.null(stat)))
     ggchord_stop("Closed lines require identity position and no computed statistic")
-  native <- any(c("x", "y") %in% names(mapping)) || !identity || !is.null(dots$stat)
+  native <- any(c("x", "y") %in% names(mapping)) || !identity || !is.null(stat)
   if (native && !closed) {
     for (key in names(fixed)[fixed]) dots[[key]] <- get(key)
-    return(do.call(geom_track, c(list(mapping = mapping, data = data, geom = "line",
+    return(do.call(geom_track, c(list(mapping = mapping, data = data, geom = "line", stat = stat,
       track = track, position = position, bounds = match.arg(bounds), show.legend = show.legend,
       inherit.aes = inherit.aes, id = id), dots)))
   }
@@ -215,7 +216,7 @@ geom_track_line <- function(mapping = NULL, data = NULL, position = NULL,
 geom_track_bar <- function(mapping = NULL, data = NULL, position = NULL,
     baseline = 0, fill = "#86AFB9", colour = NA, alpha = 1,
     linewidth = .25, linetype = 1, bounds = c("error", "clip"), show.legend = NA,
-    inherit.aes = TRUE, ..., track = NULL, stat = "count") {
+    inherit.aes = TRUE, ..., track = NULL, stat = "count", id = NULL) {
   ggchord_check_argument_names(sys.call(), sys.function())
   if (!is.numeric(baseline) || length(baseline) != 1L || !is.finite(baseline))
     ggchord_stop("geom_track_bar(): baseline must be one finite number")
@@ -224,7 +225,7 @@ geom_track_bar <- function(mapping = NULL, data = NULL, position = NULL,
     linewidth = !missing(linewidth), linetype = !missing(linetype))
   dots <- list(...)
   for (key in names(fixed)[fixed]) dots[[key]] <- get(key)
-  do.call(geom_track, c(list(mapping = mapping, data = data, geom = "bar", track = track, stat = stat,
+  do.call(geom_track, c(list(mapping = mapping, data = data, geom = "bar", track = track, stat = stat, id = id,
     position = position, bounds = bounds, show.legend = show.legend, inherit.aes = inherit.aes), dots))
 }
 
@@ -254,6 +255,7 @@ ggchord_track_layer <- function(kind, mapping, data, track, fill, colour,
   styles <- defaults[fixed]
   for (role in names(keys)) names(styles)[names(styles) == role] <- keys[[role]]
   for (name in intersect(names(styles), names(mapping))) mapping[[name]] <- NULL
+  ggchord_check_geom_params(dots, geom, paste0("geom_track_", kind, "()"))
   layer <- ggplot2::layer(data = data.frame(x = numeric(), y = numeric(), group = integer()),
     mapping = ggplot2::aes(x = x, y = y, group = group, label = label,
       .component = .component), geom = geom,

@@ -116,13 +116,25 @@ GeomRestrictionSite <- ggplot2::ggproto(
 #'   explicit `fontface` disables this automatic distinction.
 #' @param label_order Automatic mirrored label order, enzyme first, or
 #'   position first.
+#' @param id Optional unique layer ID used in layout and source exports.
 #' @param position,show.legend,inherit.aes Standard layer arguments.
 #' @param ... Additional geom parameters.
 #' @return A ggplot2 layer.
 #' @seealso \code{\link{ggchord_data_contract}}
+#' @examples
+#' sites <- data.frame(accver = "A", position = 10, enzyme = "E")
+#' ggchord(data.frame(accver = "A", length = 100)) +
+#'   geom_seq() +
+#'   geom_restriction_site(data = sites, id = "sites") +
+#'   coord_circular()
 #' @export
-geom_restriction_site<-function(mapping=NULL,data=NULL,label=TRUE,label_style=c("enzyme_position","enzyme","position"),label_order=c("auto","enzyme_position","position_enzyme"),label_side=c("outside","inside","auto"),leader=c("radial","elbow","straight"),min_label_gap=NULL,tick_length=.04,label_offset=.18,colour="#202020",linewidth=.28,label_size=3.2,fontface=NULL,family=NULL,position="identity",show.legend=FALSE,inherit.aes=FALSE,...){
+geom_restriction_site<-function(mapping=NULL,data=NULL,label=TRUE,label_style=c("enzyme_position","enzyme","position"),label_order=c("auto","enzyme_position","position_enzyme"),label_side=c("outside","inside","auto"),leader=c("radial","elbow","straight"),min_label_gap=NULL,tick_length=.04,label_offset=.18,colour="#202020",linewidth=.28,label_size=3.2,fontface=NULL,family=NULL,position="identity",show.legend=FALSE,inherit.aes=FALSE,...,id=NULL){
+  ggchord_check_argument_names(sys.call(), sys.function())
   colour_supplied<-!missing(colour);linewidth_supplied<-!missing(linewidth);label_size_supplied<-!missing(label_size);fontface_supplied<-!missing(fontface)&&!is.null(fontface);family_supplied<-!missing(family)&&!is.null(family)
+  dots <- list(...)
+  colour_supplied <- colour_supplied || "color" %in% names(dots)
+  alias <- ggchord_colour_alias(colour, dots, "geom_restriction_site()", sys.call())
+  colour <- alias$colour
   if(is.null(data))ggchord_stop("geom_restriction_site(): supply restriction-site data")
   if (identical(leader, "trunk")) ggchord_stop(
     "geom_restriction_site(): leader = 'trunk' was removed in v0.16.1; use leader = 'radial'")
@@ -134,8 +146,9 @@ geom_restriction_site<-function(mapping=NULL,data=NULL,label=TRUE,label_style=c(
   if(label_size_supplied)text_params$size<-label_size
   if(fontface_supplied)text_params$fontface<-fontface
   if(family_supplied)text_params$family<-family
-  lyr<-ggplot2::layer(data=data.frame(x=numeric(),y=numeric()),mapping=ggplot2::aes(x=x,y=y,group=group,label=label,.component=I(.component),enzyme_label=I(enzyme_label),coordinate_label=I(coordinate_label),label_order=I(label_order),enzyme_fontface=I(enzyme_fontface)),stat="identity",geom=GeomRestrictionSite,position=position,show.legend=show.legend,inherit.aes=inherit.aes,check.aes=FALSE,check.param=FALSE,params=c(list(na.rm=FALSE,colour=colour,linewidth=linewidth,size=label_size,segment_params=segment_params,text_params=text_params,composite_labels=!fontface_supplied),list(...)))
+  ggchord_check_geom_params(alias$dots, GeomRestrictionSite, "geom_restriction_site()", position)
+  lyr<-ggplot2::layer(data=data.frame(x=numeric(),y=numeric()),mapping=ggplot2::aes(x=x,y=y,group=group,label=label,.component=I(.component),enzyme_label=I(enzyme_label),coordinate_label=I(coordinate_label),label_order=I(label_order),enzyme_fontface=I(enzyme_fontface)),stat="identity",geom=GeomRestrictionSite,position=position,show.legend=show.legend,inherit.aes=inherit.aes,check.aes=FALSE,check.param=FALSE,params=c(list(colour=colour,linewidth=linewidth,size=label_size,segment_params=segment_params,text_params=text_params,composite_labels=!fontface_supplied),alias$dots))
   lyr$ggchord_type<-"restriction_site";lyr$ggchord_theme_components<-c(segment_params="ggchord.restriction.label.segment",text_params="ggchord.restriction.label")
-  lyr$ggchord_params<-list(type="restriction_site",label=label,label_style=label_style,label_order=label_order,label_side=label_side,leader=leader,min_label_gap=min_label_gap,tick_length=tick_length,label_offset=label_offset,label_size=label_size)
+  lyr$ggchord_params<-list(id=id,type="restriction_site",label=label,label_style=label_style,label_order=label_order,label_side=label_side,leader=leader,min_label_gap=min_label_gap,tick_length=tick_length,label_offset=label_offset,label_size=label_size)
   ggchord_capture_layer_input(lyr,data,mapping,c("accver","position","enzyme"))
 }

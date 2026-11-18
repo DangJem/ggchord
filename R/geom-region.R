@@ -96,6 +96,7 @@ geom_seq_region <- function(mapping = NULL, data = NULL,
     stringsAsFactors = FALSE
   )
 
+  ggchord_check_geom_params(dots, region_geom, "geom_seq_region()", position)
   lyr <- ggplot2::layer(
     data        = empty_polys,
     mapping     = ggplot2::aes(x = x, y = y, group = group,

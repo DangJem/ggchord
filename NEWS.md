@@ -1,5 +1,12 @@
 # ggchord 0.50.0 (development)
 
+- All exported `geom_*()` constructors reject unknown named parameters. For
+  example, `geom_seq(linewditth = 2)` points to `linewidth`. Track layers
+  accept parameters declared by their selected Geom, Stat and Position.
+- All 21 sequence-layout geoms expose `id` for named exports. The native
+  alignment-cell layer `geom_residue()` accepts ggplot2's `name`.
+  Centre labels expose `position` and open track lines expose `stat`.
+
 - Start with `ggchord(reference, aes(...))` or a prepared object. Supply annotation
   and relationship tables at their layers. A layer can inherit a unique eligible
   table, override a global mapping, or opt out of inheritance. Native ggplot2

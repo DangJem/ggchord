@@ -14,6 +14,7 @@ reconstruct_layer <- function(lyr, data, mapping = NULL) {
     layout = lyr$layout, show.legend = lyr$show.legend,
     check.aes = FALSE
   )
+  new$name <- lyr$name
   # Preserve the ggchord custom fields on the reconstructed layer
   for (fld in c(
     "ggchord_type", "ggchord_params", "ggchord_placeholder",

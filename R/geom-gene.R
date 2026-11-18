@@ -127,6 +127,7 @@ ggchord_gene_layer <- function(mapping = NULL, data = NULL,
 #'   their accession, interval and strand agree with the geometry input.
 #'   Multiple matching geometry layers require an explicit label Position or
 #'   unambiguous feature IDs.
+#' @param id Optional unique layer ID used in layout and source exports.
 #' @param show.legend,inherit.aes Standard ggplot2 layer arguments.
 #' @param ... Additional arguments passed to \code{geom_text()}
 #'
@@ -148,13 +149,14 @@ ggchord_gene_layer <- function(mapping = NULL, data = NULL,
 #' ggchord(prepare_ggchord_data(seq_data = seqs, gene_data = genes)) +
 #'   geom_seq() +
 #'   geom_feature(preset = "gene") +
-#'   geom_gene_label()
+#'   geom_gene_label(id = "gene-names")
 geom_gene_label <- function(mapping = NULL, data = NULL,
     label_orientation = "horizontal", label_side = "outside",
     label_overlap = "hide", label_rotation = NULL,
     label_radial_offset = 0.04, label_circum_offset = NULL,
     label_circum_limit = NULL, label_wrap = NULL,
-    position = "identity", show.legend = FALSE, inherit.aes = TRUE, ...) {
+    position = "identity", show.legend = FALSE, inherit.aes = TRUE, ..., id = NULL) {
+  ggchord_check_argument_names(sys.call(), sys.function())
   dots <- list(...)
   ggchord_reject_label_prefix(dots, "geom_gene_label()")
   args <- c(list(mapping = mapping, data = data,
@@ -165,7 +167,9 @@ geom_gene_label <- function(mapping = NULL, data = NULL,
     gene_label_circum_limit = label_circum_limit, gene_label_wrap = label_wrap,
     position = position, show.legend = show.legend, inherit.aes = inherit.aes), dots)
   if (missing(position)) args$position <- NULL
-  do.call(ggchord_label_layer, args)
+  layer <- do.call(ggchord_label_layer, args)
+  layer$ggchord_params$id <- id
+  layer
 }
 
 #' @noRd
@@ -204,6 +208,8 @@ ggchord_label_layer <- function(mapping = NULL, data = NULL,
   )
 
   # Placeholder text layer (real data is injected at print time)
+  ggchord_check_geom_params(dots, ggplot2::GeomText, "geom_gene_label()", position_object,
+    stat = dots[["stat"]] %||% ggplot2::StatIdentity, extra = "stat")
   text_layer <- do.call(ggplot2::geom_text, c(list(
     data        = data.frame(x = numeric(0), y = numeric(0),
                              text_x = numeric(0), text_y = numeric(0),
@@ -315,6 +321,7 @@ ggchord_label_layer <- function(mapping = NULL, data = NULL,
 #' @param position Position adjustment. Supply the same
 #'   [position_feature_stack()] used by a gene/feature layer when labels are
 #'   drawn from separate data or without a geometry layer.
+#' @param id Optional unique layer ID used in layout and source exports.
 #' @param show.legend,inherit.aes Standard ggplot2 layer arguments.
 #' @param ... Additional text styles and drawing options. Automatic layouts
 #'   own rotation, offsets, orientation and overlap policy; use
@@ -340,13 +347,14 @@ ggchord_label_layer <- function(mapping = NULL, data = NULL,
 #' ggchord(prepare_ggchord_data(seq_data = seqs, gene_data = genes)) +
 #'   geom_seq() +
 #'   geom_feature(preset = "gene") +
-#'   geom_gene_label_repel(label_wrap = 20)
+#'   geom_gene_label_repel(label_wrap = 20, id = "gene-callouts")
 geom_gene_label_repel <- function(mapping = NULL, data = NULL,
     label_layout = "radial", label_wrap = NULL, label_fit = "wrap",
     label_max_lines = 2L, label_side = "outside", max_overlaps = Inf,
     label_segment_overlap = "fade", label_segment_overlap_alpha = 0.18,
     label_segment_linetype = "auto", position = "identity",
-    show.legend = FALSE, inherit.aes = TRUE, label_min_size = 1.5, ...) {
+    show.legend = FALSE, inherit.aes = TRUE, label_min_size = 1.5, ..., id = NULL) {
+  ggchord_check_argument_names(sys.call(), sys.function())
   dots <- list(...)
   ggchord_reject_label_prefix(dots, "geom_gene_label_repel()")
   ggchord_reject_manual_label_args(dots, "geom_gene_label_repel()")
@@ -360,7 +368,9 @@ geom_gene_label_repel <- function(mapping = NULL, data = NULL,
     position = position, show.legend = show.legend, inherit.aes = inherit.aes,
     gene_label_min_size = label_min_size), dots)
   if (missing(position)) args$position <- NULL
-  do.call(ggchord_label_repel_layer, args)
+  layer <- do.call(ggchord_label_repel_layer, args)
+  layer$ggchord_params$id <- id
+  layer
 }
 
 #' @noRd
@@ -421,6 +431,11 @@ ggchord_label_repel_layer <- function(mapping = NULL, data = NULL,
     show_legend = "show.legend"
   ))
 
+  ggchord_check_param_names(dots, c("colour", "alpha", "size", "family", "fontface",
+    "lineheight", "parse", "check_overlap", "na.rm", "name"), "geom_gene_label_repel()")
+  names(dots) <- ggplot2::standardise_aes_names(names(dots))
+  layer_name <- dots[["name"]]
+  dots$name <- NULL
   if (identical(gene_label_layout, "aligned")) {
     ggchord_stop("geom_gene_label_repel(): removed argument value 'aligned'; ",
       "use label_layout = 'auto' for side columns")
@@ -485,7 +500,7 @@ ggchord_label_repel_layer <- function(mapping = NULL, data = NULL,
     check.aes = FALSE,
     check.param = FALSE,
     params = list(
-      segment_params = list(),
+      name = layer_name, segment_params = list(),
       text_params = utils::modifyList(dots, list(
         .ggchord_resolved_size = identical(gene_label_fit, "shrink"))),
       na.rm = dots$na.rm %||% FALSE

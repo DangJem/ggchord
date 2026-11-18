@@ -14,7 +14,8 @@ geom_primer(
   position = NULL,
   show.legend = FALSE,
   inherit.aes = TRUE,
-  ...
+  ...,
+  id = NULL
 )
 }
 \arguments{
@@ -33,6 +34,8 @@ backbone centre line; \code{"outside"} and \code{"inside"} use \code{arc_offset}
 \item{position, show.legend, inherit.aes}{Standard layer arguments.}
 
 \item{...}{Additional parameters passed to \code{\link[=geom_feature]{geom_feature()}}.}
+
+\item{id}{Optional unique layer ID used in layout and source exports.}
 }
 \value{
 A ggplot2 layer.
@@ -51,7 +54,7 @@ primers <- find_primer_bindings(plasmid_example_pUC19, set = "reference") |>
   slice_head(n = 2)
 ggchord(data = seqs) +
   geom_seq() +
-  geom_primer(data = primers) +
-  geom_primer_label_repel(data = primers) +
+  geom_primer(data = primers, id = "primer-arcs") +
+  geom_primer_label_repel(data = primers, id = "primer-labels") +
   coord_circular()
 }

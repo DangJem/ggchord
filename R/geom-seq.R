@@ -187,6 +187,7 @@ geom_seq <- function(mapping = NULL, data = NULL,
   # The layout is computed at build time (ggplot_build.ggchord). The
   # parameters are attached to the layer itself so that the plot object is
   # fully self-contained.
+  ggchord_check_geom_params(dots, GeomChordSeq, "geom_seq()", position)
   lyr <- ggplot2::layer(
     data        = data.frame(x = numeric(0), y = numeric(0),
                              accver = character(0)),

@@ -7,16 +7,22 @@
 #' @param name_style,length_style Named lists of fixed text-style overrides
 #'   for the name and length grobs. Supported fields are `colour`, `size`,
 #'   `family`, `fontface`, and `lineheight`.
+#' @param position ggplot2 data position for the centre text.
 #' @param show.legend,inherit.aes Standard ggplot2 layer arguments.
-#' @param ... Additional arguments passed to `geom_text()`.
+#' @param ... Fixed aesthetics and ggplot2 layer parameters for the centre label.
 #' @param id Optional unique layer ID for layout and source exports.
 #' @return A ggplot2 layer.
+#' @examples
+#' ggchord(data.frame(accver = "A", length = 100)) +
+#'   geom_seq() +
+#'   geom_seq_center_label(position = "identity") +
+#'   coord_circular()
 #' @export
 geom_seq_center_label <- function(
     mapping = NULL, data = NULL,
     name = TRUE, length = TRUE, separator = "\n",
     name_style = list(), length_style = list(),
-    show.legend = FALSE, inherit.aes = TRUE, ..., id = NULL) {
+    show.legend = FALSE, inherit.aes = TRUE, ..., id = NULL, position = "identity") {
   ggchord_check_argument_names(sys.call(), sys.function())
   if (!(is.logical(name) && base::length(name) == 1L && !is.na(name)) &&
       !(is.character(name) && base::length(name) == 1L && !is.na(name))) {
@@ -39,15 +45,16 @@ geom_seq_center_label <- function(
       )
     }
   }
+  ggchord_check_geom_params(list(...), GeomSeqCenterLabel, "geom_seq_center_label()", position)
   lyr <- ggplot2::layer(
     data = data.frame(x = numeric(), y = numeric(), label = character()),
     mapping = ggplot2::aes(
       x = x, y = y, label = label, .component = I(.component)
     ),
-    stat = "identity", geom = GeomSeqCenterLabel, position = "identity",
+    stat = "identity", geom = GeomSeqCenterLabel, position = position,
     show.legend = show.legend, inherit.aes = inherit.aes,
     check.aes = FALSE, check.param = FALSE,
-    params = c(list(na.rm = FALSE, center_name_params = name_style,
+    params = c(list(center_name_params = name_style,
       center_length_params = length_style), list(...))
   )
   lyr$ggchord_type <- "seq_center_label"

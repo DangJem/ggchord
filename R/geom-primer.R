@@ -13,6 +13,7 @@
 #'   `"outside"` or `"inside"`.
 #' @param arc_linewidth Radial width of the primer arc.
 #' @param colour Primer arc colour.
+#' @param id Optional unique layer ID used in layout and source exports.
 #' @param position,show.legend,inherit.aes Standard layer arguments.
 #' @param ... Additional parameters passed to [geom_feature()].
 #' @return A ggplot2 layer.
@@ -27,8 +28,8 @@
 #'   slice_head(n = 2)
 #' ggchord(data = seqs) +
 #'   geom_seq() +
-#'   geom_primer(data = primers) +
-#'   geom_primer_label_repel(data = primers) +
+#'   geom_primer(data = primers, id = "primer-arcs") +
+#'   geom_primer_label_repel(data = primers, id = "primer-labels") +
 #'   coord_circular()
 geom_primer <- function(mapping = NULL, data = NULL,
                         side = c("between", "outside", "inside"),
@@ -37,7 +38,8 @@ geom_primer <- function(mapping = NULL, data = NULL,
                         colour = "#A020F0",
                         position = NULL,
                         show.legend = FALSE,
-                        inherit.aes = TRUE, ...) {
+                        inherit.aes = TRUE, ..., id = NULL) {
+  ggchord_check_argument_names(sys.call(), sys.function())
   side <- match.arg(side)
   values <- c(arc_offset, arc_linewidth)
   if (!is.numeric(values) || any(!is.finite(values)) ||
@@ -52,13 +54,14 @@ geom_primer <- function(mapping = NULL, data = NULL,
     )
     position <- position_offset(offset)
   }
-  layer <- geom_feature(
-    mapping = mapping, data = data, shape = "primer_arc",
+  alias <- ggchord_colour_alias(colour, list(...), "geom_primer()", sys.call())
+  layer <- do.call(geom_feature, c(list(
+    mapping = mapping, data = data, id = id, shape = "primer_arc",
     width = arc_linewidth, arrow_head_length = arc_linewidth,
     arrow_head_width = 1, short_feature = "auto", position = position,
     show.legend = show.legend, inherit.aes = inherit.aes,
-    feature_fill = colour, colour = colour, ...
-  )
+    feature_fill = alias$colour, colour = alias$colour
+  ), alias$dots))
   inherited_transform <- layer$ggchord_input_transform
   layer$ggchord_input_transform <- function(x) {
     if (is.data.frame(x) && !nrow(x)) return(x)
@@ -98,7 +101,8 @@ geom_primer_label_repel <- function(
     colour = "#A020F0",
     max_overlaps = Inf,
     position = NULL,
-    show.legend = FALSE, inherit.aes = TRUE, ...) {
+    show.legend = FALSE, inherit.aes = TRUE, ..., id = NULL) {
+  ggchord_check_argument_names(sys.call(), sys.function())
   side <- match.arg(side)
   if (!is.logical(show_location) || length(show_location) != 1L ||
       is.na(show_location)) {
@@ -109,12 +113,13 @@ geom_primer_label_repel <- function(
     # Keep the label's source on the primer arc between the backbone lines.
     position <- position_offset(0)
   }
-  layer <- geom_feature_label(placement = 'repel',
-    mapping = mapping, data = data, label_layout = "callout",
+  alias <- ggchord_colour_alias(colour, list(...), "geom_primer_label_repel()", sys.call())
+  layer <- do.call(geom_feature_label, c(list(placement = "repel",
+    mapping = mapping, data = data, id = id, label_layout = "callout",
     label_side = side, max_overlaps = max_overlaps, external = TRUE,
     position = position, show.legend = show.legend,
-    inherit.aes = inherit.aes, colour = colour, ...
-  )
+    inherit.aes = inherit.aes, colour = alias$colour
+  ), alias$dots))
   layer$ggchord_input_transform <- function(x) {
     if (is.data.frame(x) && !nrow(x)) return(x)
     ggchord_require_columns(

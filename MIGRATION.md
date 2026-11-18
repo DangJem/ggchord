@@ -4,6 +4,7 @@ The entries in the first column were removed in 0.50.0. Later sections record ea
 
 | Former call or argument | 0.50.0 replacement |
 | --- | --- |
+| Unrecognised arguments to `geom_*()`, such as `geom_seq(linewditth = 2)` | Use `geom_seq(linewidth = 2)`. Starting in 0.50.0, unknown names cause an error. Supply Stat-specific parameters to the selected Stat, for example `geom_track_line(stat = "coverage", binwidth = 4)` with interval data. |
 | `ggchord(seq_data = ref, gene_data = f, ribbon_data = h)` | Start with `ggchord(ref)`, then add `geom_feature(data = f, preset = "gene")` and `geom_link_ribbon(data = h)`. Alternatively pass `ggchord(prepare_ggchord_data(ref, ribbon_data = h, gene_data = f))`. When several prepared inputs are eligible, specify the layer table. |
 | Physical `position_track("depth", width = w)` | Add `track_band("depth", width = w)` and use `track = "depth"` on each layer. Omit the ID for the default band. Use the geom's `position` for stack, dodge or nudge. |
 | `seq_order`, `seq_orientation`, `seq_gap`, `length_mode` on `geom_seq()` | Add `layout_sequences(order = ids, orientation = directions, gap = gaps, length_mode = "equal")`. The geom still sets the backbone's appearance. |

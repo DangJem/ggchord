@@ -11,6 +11,46 @@ ggchord_check_argument_names <- function(call, fn) {
   }
 }
 
+# Validate the names before a discarded parameter can become a silent no-op.
+ggchord_check_param_names <- function(dots, allowed, caller) {
+  if (!length(dots)) return(invisible(NULL))
+  keys <- names(dots)
+  if (is.null(keys) || any(!nzchar(keys)))
+    ggchord_stop(caller, " needs named parameters in `...`")
+  canonical <- ggplot2::standardise_aes_names(keys)
+  if (anyDuplicated(canonical))
+    ggchord_stop(caller, " received duplicate parameter '", keys[anyDuplicated(canonical)], "'")
+  bad <- which(!canonical %in% allowed)
+  if (length(bad)) {
+    hints <- vapply(keys[bad], function(key) {
+      distance <- utils::adist(key, allowed)
+      closest <- which(distance == min(distance))
+      if (length(closest) == 1L && distance[closest] <= 2L)
+        paste0("'", key, "' (did you mean '", allowed[closest], "'?)")
+      else paste0("'", key, "'")
+    }, character(1))
+    ggchord_stop(caller, " received unknown parameter(s): ", paste(hints, collapse = ", "))
+  }
+  invisible(NULL)
+}
+
+ggchord_check_geom_params <- function(dots, geom, caller, position = "identity",
+    stat = ggplot2::StatIdentity, extra = character()) {
+  if (!length(dots)) return(invisible(NULL))
+  if (identical(position, "identity")) position <- ggplot2::PositionIdentity
+  if (!inherits(geom, "Geom") || !inherits(stat, "Stat") || !inherits(position, "Position")) {
+    # Let ggplot2 resolve named extensions before asking what they consume.
+    receiver <- ggplot2::layer(geom = geom, stat = stat, position = position)
+    geom <- receiver$geom
+    stat <- receiver$stat
+    position <- receiver$position
+  }
+  allowed <- unique(c(geom$aesthetics(), geom$parameters(TRUE),
+    stat$parameters(TRUE), position$aesthetics(),
+    if (isTRUE(geom$rename_size)) "size", "layout", "key_glyph", "name", extra))
+  ggchord_check_param_names(dots, allowed, caller)
+}
+
 #' Capture user data and mappings separately from the computed placeholder
 #' @noRd
 ggchord_capture_layer_input <- function(lyr, data, mapping, roles) {

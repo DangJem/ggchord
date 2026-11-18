@@ -108,6 +108,7 @@ geom_seq_scale <- function(mapping = NULL, data = NULL, length = NULL, label = N
   styles <- list(linewidth = linewidth, colour = alias$colour, size = size)
   for (name in names(styles)) if (!fixed[[name]] && name %in% names(mapping)) styles[[name]] <- NULL
   if (is.null(data)) data <- data.frame(.scale_row = 1L)
+  ggchord_check_geom_params(alias$dots, GeomChordAxis, "geom_seq_scale()", position)
   layer <- ggplot2::layer(geom = GeomChordAxis, stat = "identity", data = ggchord_empty_seq_scale_geometry(),
     mapping = ggplot2::aes(x = x, y = y, xend = xend, yend = yend,
       label = label, group = group, .component = .component),

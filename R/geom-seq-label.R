@@ -75,6 +75,8 @@ geom_seq_label <- function(mapping = NULL, data = NULL,
   ))
 
   seq_label_orientation <- match.arg(seq_label_orientation)
+  ggchord_check_geom_params(dots, ggplot2::GeomText, "geom_seq_label()", position,
+    stat = dots[["stat"]] %||% ggplot2::StatIdentity, extra = "stat")
   lyr <- do.call(ggplot2::geom_text, c(list(
     data = data.frame(text_x = numeric(0), text_y = numeric(0),
                       label = character(0), text_angle = numeric(0),

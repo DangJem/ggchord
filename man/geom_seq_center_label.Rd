@@ -15,7 +15,8 @@ geom_seq_center_label(
   show.legend = FALSE,
   inherit.aes = TRUE,
   ...,
-  id = NULL
+  id = NULL,
+  position = "identity"
 )
 }
 \arguments{
@@ -33,13 +34,21 @@ for the name and length grobs. Supported fields are \code{colour}, \code{size},
 
 \item{show.legend, inherit.aes}{Standard ggplot2 layer arguments.}
 
-\item{...}{Additional arguments passed to \code{geom_text()}.}
+\item{...}{Fixed aesthetics and ggplot2 layer parameters for the centre label.}
 
 \item{id}{Optional unique layer ID for layout and source exports.}
+
+\item{position}{ggplot2 data position for the centre text.}
 }
 \value{
 A ggplot2 layer.
 }
 \description{
 Add a circular-sequence centre label
+}
+\examples{
+ggchord(data.frame(accver = "A", length = 100)) +
+  geom_seq() +
+  geom_seq_center_label(position = "identity") +
+  coord_circular()
 }

@@ -23,7 +23,8 @@ geom_restriction_site(
   position = "identity",
   show.legend = FALSE,
   inherit.aes = FALSE,
-  ...
+  ...,
+  id = NULL
 )
 }
 \arguments{
@@ -64,12 +65,21 @@ explicit \code{fontface} disables this automatic distinction.}
 \item{position, show.legend, inherit.aes}{Standard layer arguments.}
 
 \item{...}{Additional geom parameters.}
+
+\item{id}{Optional unique layer ID used in layout and source exports.}
 }
 \value{
 A ggplot2 layer.
 }
 \description{
 Draw restriction sites, labels and deterministic leaders
+}
+\examples{
+sites <- data.frame(accver = "A", position = 10, enzyme = "E")
+ggchord(data.frame(accver = "A", length = 100)) +
+  geom_seq() +
+  geom_restriction_site(data = sites, id = "sites") +
+  coord_circular()
 }
 \seealso{
 \code{\link{ggchord_data_contract}}

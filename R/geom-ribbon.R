@@ -229,11 +229,13 @@ geom_link_ribbon <- function(mapping = NULL, data = NULL,
   }
   if (outline_mapped) names(style_defaults)[names(style_defaults) == "colour"] <- "ribbon_colour"
 
+  ribbon_geom <- make_ribbon_geom(outline = outline_mapped, linetype = linetype_mapped)
+  ggchord_check_geom_params(dots, ribbon_geom, "geom_link_ribbon()", position)
   lyr <- ggplot2::layer(
     data        = empty_polys,
     mapping     = mapping_base,
     stat        = "identity",
-    geom        = make_ribbon_geom(outline = outline_mapped, linetype = linetype_mapped),
+    geom        = ribbon_geom,
     position    = position,
     show.legend = if (identical(show.legend, TRUE)) {
                     c(ribbon_fill = TRUE, ribbon_colour = FALSE,

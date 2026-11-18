@@ -4,6 +4,7 @@
 
 | 原调用或参数 | 0.50.0 写法 |
 | --- | --- |
+| `geom_*()` 曾忽略的拼写，如 `geom_seq(linewditth = 2)` | v0.50.0 起会报错。改写为 `geom_seq(linewidth = 2)`。统计专用参数随所选 Stat 传入，例如区间数据使用 `geom_track_line(stat = "coverage", binwidth = 4)`。 |
 | `ggchord(seq_data = ref, gene_data = f, ribbon_data = h)` | 从 `ggchord(ref)` 开始，分别加 `geom_feature(data = f, preset = "gene")` 和 `geom_link_ribbon(data = h)`。也可写 `ggchord(prepare_ggchord_data(ref, ribbon_data = h, gene_data = f))`。有多张可用的准备表时在图层中指定数据。 |
 | 用 `position_track("depth", width = w)` 指定物理带 | 加一次 `track_band("depth", width = w)`，在同带各层写 `track = "depth"`。默认带可省略轨道 ID。堆叠、并排和微移交给各层的 `position`。 |
 | `geom_seq()` 的 `seq_order`、`seq_orientation`、`seq_gap`、`length_mode` | 添加 `layout_sequences(order = ids, orientation = directions, gap = gaps, length_mode = "equal")`。骨架线条与固定样式继续放在 `geom_seq()`。 |
