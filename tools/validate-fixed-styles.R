@@ -7,7 +7,7 @@ l <- data.frame(qaccver = "A", saccver = "B", qpos = 100, spos = 300,
   value = "mapped")
 f <- data.frame(accver = "A", start = 600, end = 800,
   strand = "+", type = "CDS", shape_value = "block")
-p <- ggchord(s, r) + geom_seq(aes(linewidth = I(.6)), colour = "#112233") +
+p <- ggchord(prepare_ggchord_data(s, r)) + geom_seq(aes(linewidth = I(.6)), colour = "#112233") +
   scale_link_colour_manual(values = c(mapped = "#112233")) +
   geom_link_line(aes(link_colour = value), data = l, colour = "#abcdef") +
   geom_link_line(aes(link_colour = value), data = l) +
@@ -17,10 +17,10 @@ p <- ggchord(s, r) + geom_seq(aes(linewidth = I(.6)), colour = "#112233") +
   scale_ribbon_colour_manual(values = c(outline = "#112233")) +
   geom_feature(aes(feature_shape = shape_value), data = f,
     shape = "arrow") +
-  geom_feature_plasmid(aes(feature_shape = shape_value), data = f) +
-  geom_feature_plasmid(aes(feature_shape = shape_value), data = f,
+  geom_feature(preset = 'plasmid', aes(feature_shape = shape_value), data = f) +
+  geom_feature(preset = 'plasmid', aes(feature_shape = shape_value), data = f,
     shape = "arrow") +
-  geom_gene(aes(colour = I("#112233"), linewidth = I(.6)),
+  geom_feature(preset = 'gene', aes(colour = I("#112233"), linewidth = I(.6)),
     data = transform(f, anno = "gene")) +
   geom_seq_region(aes(region_fill = I("#112233")), data = f,
     fill = "#abcdef", alpha = .8) + coord_collinear()

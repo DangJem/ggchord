@@ -1,5 +1,5 @@
 {
-  "source_sha256": "6999c3604e6814da52c5529de86ede627fdc01667d36f8d6b4a9da560b7c5407",
+  "source_sha256": "9da76e5d7ca3a4c87cb9b0f9b56459072ac242557c49639c9f64565b29d8b4c5",
   "blocks": {
     "0": {
       "source_sha256": "0fae5352735f690fce064b0ce64c1163f3c582825b729f52c4c1126c524d680b",
@@ -82,12 +82,12 @@
       "translation": "| --- | --- |\n"
     },
     "24": {
-      "source_sha256": "f6c88eaf91d51b6018cc09107adac573769596d6e0f1460b1b62a3e06a992ad2",
+      "source_sha256": "e8125c7ca5132556171177bdcc5f0f1561bd2b49faa87f913a581e43c8d10b76",
       "status": "reviewed",
       "translation": "| ⟦shared:0⟧, ⟦shared:1⟧, ⟦shared:2⟧ | Adjust display direction, bend and radius per sequence. Zero curvature draws a straight backbone. |\n"
     },
     "25": {
-      "source_sha256": "da733a33d255e8d3e1d3a8d598272ccb58103f1850e81de2deb5397759e1409c",
+      "source_sha256": "5e2e4b52a0c82f86d20fa30710f368e75d29d17d0c9a58b980aae353ad0a34dd",
       "status": "reviewed",
       "translation": "| ⟦shared:0⟧, ⟦shared:1⟧ | Add space between backbones and turn the whole layout to position the elements. |\n"
     },

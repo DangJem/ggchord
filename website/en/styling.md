@@ -133,7 +133,7 @@ Layers with one Track ID share a band, value domain and one numerical reference;
 
 ## Place features {#position}
 Use `position_strand(c("+" = .1, "-" = -.2))` for signed strand offsets.
-`position_feature_stack()` handles overlapping features; `position_track()`
+`position_feature_stack()` handles overlapping features; `track_band()`
 allocates a named quantitative lane. Geometric sequence parameters accept one
 value, a matching unnamed vector, or a vector named by `accver`; named vectors
 are recommended. This syntax does not extend to scales, guides or themes.

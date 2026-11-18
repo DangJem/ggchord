@@ -7,9 +7,7 @@
 ## 统计观测数或显示给定数值 {#tracks}
 
 `bar` 按源位置统计观测数，`col` 显示已提供的数值。各 accession/window 在视图投影或
-显示复制前独立计算 Stat 和数据 Position。`track=position_track(...)` 声明物理 band，
-`position` 独立选择 stack、dodge 等原生数据调整。旧的
-`position=position_track(...)` 物理 band 写法继续接受。
+显示复制前独立计算 Stat 和数据 Position。省略 `track` 时，各层使用同一默认带。用 `track_band("depth")` 声明具名带，各层通过 `track = "depth"` 引用；声明可放在引用前后。`position` 选择 stack、dodge 等源数据调整。
 
 {{code:foundationcount}}
 
@@ -27,18 +25,17 @@
 | point、line、path、step、text | identity | 源 x 与局部 y，text 还需 label |
 | tile、rect、area、ribbon、segment、linerange、errorbar | identity | 对应 ggplot2 原生范围字段 |
 
-可用统计包括 identity/count/bin/summary，以及已声明的 [smooth/density/ecdf 估计组合](tracks-statistics.md#estimates)。bin 必须显式给出 binwidth 或 breaks。
-支持原生 group 与 after_stat 映射；数值轴保留统计量单位。任意第三方 Geom/Stat 插件不在支持范围内，不支持的组合明确拒绝。既有 track line/tile 快捷层保留其原有行为。
+可用统计包括 identity/count/bin/summary、区间覆盖，以及[已声明的估计组合](tracks-statistics.md#estimates)。bin 需显式给出 binwidth 或 breaks。自定义 ggplot2 Stat 可从 source_row 读取本图层的源行号，并用 source_rows 列表返回各项结果的成员；省略成员时，导出将其标为未知。
 
 源位置使用 x orientation，原生文字字号目前使用 mm，区间几何只支持完整轮廓。其他方向、字号单位或局部轮廓会明确报错。原生文字样式和路径箭头继续转发。
 
-首批原生 Track 要求单面板和 ggchord 坐标系。分面、`coord_flip()`、raster、boxplot 和 violin 尚不支持，显式请求会报错。纵向投影使用 `coord_collinear(seq_axis = "vertical")`。统计结果在 dodge 等数据位置调整前保留源成员。矩形和 tile 使用输入边界，不虚构零基线。
+轨道使用 ggchord 坐标。固定量尺的样本分面按源表的分面列分配观测，每个样本内分别统计，共享具名带的数值域。用 `coord_collinear(seq_axis = "vertical")` 选择纵向投影。统计结果保留 dodge 等位置调整前的来源。
 
 <a id="interval-coverage"></a>
 
 ## 按区间计算每个窗口的覆盖 {#interval-coverage}
 
-`geom_track_bar(data = intervals, stat = "coverage", binwidth = 4, track = position_track("coverage"))` 默认画出每个窗口内至少被一条区间覆盖的位置比例。改用 `aes(y = after_stat(mean_depth))` 可查看平均深度。端点从 1 开始，两端都计入。跨窗区间分别贡献各窗的交集，平均深度对每条输入记录的交集单独计长。
+`stat_coverage(data = intervals, binwidth = 4)` 默认画出每个窗口内至少被一条区间覆盖的位置比例。改用 `aes(y = after_stat(mean_depth))` 可查看平均深度。端点从 1 开始，两端都计入。跨窗区间分别贡献各窗的交集，平均深度对每条输入记录的交集单独计长。
 
 以长度 10 的合成序列为例，第 1、2、3 行区间分别为 3–6、4–5、10–10。位置 4 和 5 各被两条记录覆盖。末窗只有两个位置，分母是 2。
 
@@ -48,13 +45,13 @@
 | 5–8 | 2 | 2/4 | 3/4 | 1, 2 |
 | 9–10 | 1 | 1/2 | 1/2 | 3 |
 
-空窗的覆盖率、平均深度和相交记录数均为零，来源行列表为空。每条序列或已聚焦窗口从本地位置 1 各自分箱。显式分组时，各序列内出现过的每个组都保留完整分箱。默认拒绝越界区间，`bounds = "clip"` 会先将区间裁到序列范围。跨圆形起点或多段的记录需先拆成单段区间。
+有观测组的空窗返回零覆盖、零深度和空来源列表；没有观测的序列或样本不产生统计行。每条序列或已聚焦窗口从局部位置 1 开始分箱。也可用 `windows` 提供显式窗口，各窗分别统计交集，可互相重叠。`binwidth` 与显式窗口只选一项。区间和窗口的单位应与参考一致。默认拒绝越界区间，`bounds = "clip"` 先将区间裁至参考范围。多段和跨起点记录先拆成单段。
 
 <a id="independent-bands"></a>
 
 ## 两条独立轨道与显示顺序 {#independent-bands}
 
-同一 GC 既可用柱高也可用颜色编码。这里明确声明 gc_height 和 gc_colour 两个 ID；高度值域 0–1 与颜色值域 0–1 分别设置，物理带宽不同。第二幅只把颜色轨道 order 从 2 改为 0，使其靠近骨架。order 是有限数值优先级，不是测量值，编号不必从 1 开始；同优先级按 ID 排序。相同 ID 的多层需一致的 side/order/width/gap，跨独立窗口不会隐式连接折线。
+同一 GC 既可用柱高也可用颜色编码。这里明确声明 gc_height 和 gc_colour 两个 ID；高度值域 0–1 与颜色值域 0–1 分别设置，物理带宽不同。第二幅只把颜色轨道 order 从 2 改为 0，使其靠近骨架。order 是有限数值优先级，不是测量值，编号不必从 1 开始；同优先级按 ID 排序。同一 ID 的各层沿用带的 side/order/width/gap，跨独立窗口不会隐式连接折线。
 
 {{code:comparemultitrackdata}}
 {{code:comparetracktwo}}
@@ -80,7 +77,7 @@
 | `density` | `line`、`path`、`point`、`area` | `x` 中的位置及可选权重；选择带宽，`after_stat(density)` 单位是源位置单位的倒数 | `"identity"` 或原生 PositionIdentity |
 | `ecdf` | `line`、`path`、`point`、`step` | `x` 中的位置；`after_stat(ecdf)` 是累计比例；显式 `pad = FALSE` 避免无限源锚点 | `"identity"` 或原生 PositionIdentity |
 
-这些统计的其他组合明确报错。density area 必须显式 `position = "identity"`，因为 area 否则默认堆叠。`bounds` 仍是 Track 源边界策略，不转发原生 density 的边界校正参数。facet、boxplot、violin、raster 及任意第三方 Geom/Stat 对象仍不支持；存在一个数值名称不等于具备投影契约。
+density area 需指定 `position = "identity"`，因为 area 默认堆叠。`bounds` 用于控制源序列边界的裁剪。可投影的几何见本章支持表。
 
 复用上文准备的真实 `bins` 和 `track_seq`。下面显式线性拟合作为 GC 比例的显示摘要，原生置信 ribbon 与均值线共享一个 Track：
 
@@ -106,11 +103,12 @@
 ```r
 start_totals <- foundation_events |>
   dplyr::count(accver, pos, name = "hsp_count")
-p_start_totals <- ggchord(seq_data = foundation_seqs) +
+p_start_totals <- ggchord(data = foundation_seqs) +
+  track_band("query_starts") +
   geom_seq() +
   geom_track(
     aes(x = pos, y = hsp_count), data = start_totals,
-    geom = "col", track = position_track("query_starts"),
+    geom = "col", track = "query_starts",
     position = "identity"
   ) +
   coord_collinear()

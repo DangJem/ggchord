@@ -45,8 +45,8 @@ Endpoint-overlap sampling was completed when generating the data; the following 
 
 | Setting | Purpose in this plot |
 | --- | --- |
-| `seq_orientation`, `seq_curvature`, `seq_radius` | Adjust display direction, bend and radius per sequence. Zero curvature draws a straight backbone. |
-| `seq_gap = 0.06`, `rotation = 50` | Add space between backbones and turn the whole layout to position the elements. |
+| `layout_sequences(orientation = ...)`, `seq_curvature`, `seq_radius` | Adjust display direction, bend and radius per sequence. Zero curvature draws a straight backbone. |
+| `layout_sequences(gap = 0.06)`, `rotation = 50` | Add space between backbones and turn the whole layout to position the elements. |
 | `link_avoid = "smooth"`, `alpha = 0.46` | Leave smooth clearance near gene arrows and show overlaps through translucent ribbons. |
 | `position = chord_position`, `width = 0.025` | Place arrows on opposite sides by source strand with offsets of ±0.030. Narrower arrows sit close to the backbones, and labels use the same position. |
 | `label_layout = "radial"`, `label_wrap = 24` | Arrange gene labels radially and wrap longer names. |

@@ -23,8 +23,8 @@ rc_fixtures <- function() {
     set = "unique", parent_set = "commercial_nonredundant"), 40L)
   circular <- function(side = "outside", restriction_side = "outside", dense = FALSE) {
     ggchord(s[c("accver", "length")]) + geom_seq() +
-      geom_feature(data = features, position = position_plasmid()) +
-      geom_feature_label_repel(data = features, position = position_plasmid()) +
+      geom_feature(data = features, position = position_offset(-0.1)) +
+      geom_feature_label(placement = 'repel', data = features, position = position_offset(-0.1)) +
       geom_primer(data = primers) + geom_primer_label_repel(data = primers, side = side) +
       geom_restriction_site(data = if (dense) dense_sites else sites,
         label_side = restriction_side) +
@@ -52,9 +52,9 @@ rc_fixtures <- function() {
     orientation = c(1, -1))
   view <- segment_ggchord_data(refs[c("accver", "length")], homology, cds,
     windows = windows)
-  linear <- ggchord(view$seq_data, view$ribbon_data) + geom_seq() +
+  linear <- ggchord(prepare_ggchord_data(view$seq_data, view$ribbon_data)) + geom_seq() +
     geom_link_ribbon(fill = "#8971BB") + geom_feature(data = view$gene_data) +
-    geom_feature_label_repel(data = view$gene_data) +
+    geom_feature_label(placement = 'repel', data = view$gene_data) +
     coord_collinear(segments = view$segments) +
     scale_seq_position_continuous(coordinates = "source")
   starts <- seq.int(1L, s$length, by = 100L)
@@ -64,8 +64,9 @@ rc_fixtures <- function() {
     mean(dna %in% c("G", "C"))
   }, numeric(1))
   track <- ggchord(s[c("accver", "length")]) + geom_seq() +
+    track_band("gc", width = unit(4, "mm")) +
     geom_track_col(aes(track_value = value, track_fill = value), data = bins,
-      position = position_track("gc", width = unit(4, "mm"))) +
+      track = "gc") +
     scale_track_value_continuous("gc", limits = c(0, 1), unit = "GC fraction") +
     scale_track_fill_gradientn("gc", colours = c("#DCE9FF", "#214E95")) + coord_circular()
   list(seqs = seqs, genes = genes, links = links, points = points,

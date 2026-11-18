@@ -57,7 +57,7 @@
 
 ## 尺寸、短特征与预设 {#parameters}
 
-| 参数 | `geom_gene()` 默认 | 取值与选择 |
+| 参数 | `geom_feature(preset = 'gene')` 默认 | 取值与选择 |
 | --- | --- | --- |
 | `width` | `NULL`，运行时为 0.05 | 箭身宽度；可按序列或链配置 |
 | `arrow_head_length` | `0.04` | 局部坐标中的头部长度；不按 bp 解释 |
@@ -68,7 +68,7 @@
 
 不要用放大头部长度掩盖短区间。先核查真实长度，再决定短特征策略。`geom_feature()` 的形状可用固定 `shape` 或 `aes(feature_shape = ...)` 与相应标度；固定和映射的职责见[样式](styling.md)。
 
-`geom_feature_plasmid()` 是具有不同默认宽度、头部尺寸和 Position 的预设。比较它与 gene 时若同时改变多个默认值，就不是单参数实验。分段注释的边界线用于标识分段，不表示不同基因。
+`geom_feature(preset = 'plasmid')` 是具有不同默认宽度、头部尺寸和 Position 的预设。比较它与 gene 时若同时改变多个默认值，就不是单参数实验。分段注释的边界线用于标识分段，不表示不同基因。
 
 <a id="adapt"></a>
 
@@ -78,4 +78,4 @@
 
 先只将共同头部宽度从 1.6 改回 1，比较肩部是否还明显；再仅改变 `width`，观察箭身与骨架的相对宽度。按相同设备尺寸比较，不调整源区间来改善外观。
 
-相关功能[特征堆叠](annotations.md#stack)、[标签](labels.md)，或将同一 CDS 加入[四基因组案例](collinear.md)。完整接口见 [`geom_gene()`](../../man/geom_gene.Rd)、[`geom_feature()`](../../man/geom_feature.Rd)。
+相关功能[特征堆叠](annotations.md#stack)、[标签](labels.md)，或将同一 CDS 加入[四基因组案例](collinear.md)。完整接口见 [`geom_feature(preset = 'gene')`](../../man/geom_feature.Rd)、[`geom_feature()`](../../man/geom_feature.Rd)。

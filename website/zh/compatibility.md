@@ -8,13 +8,13 @@
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | [`geom_seq()`](../../man/geom_seq.Rd) | 支持 | 条件支持 | 支持 | 条件支持 | 条件支持 | 不支持 | 共线性拒绝显式 radius、curvature、ring |
 | [`geom_seq_label()`](../../man/geom_seq_label.Rd) | 支持 | 条件支持 | 支持 | 条件支持 | 条件支持 | 不支持 | 共线性不接受显式径向标签 radius |
-| [`geom_gene()`](../../man/geom_gene.Rd) | 条件支持 | 条件支持 | 条件支持 | 条件支持 | 条件支持 | 不支持 | 要求核酸单位和源正负链，aa 用通用特征 |
+| [`geom_feature(preset = 'gene')`](../../man/geom_feature.Rd) | 条件支持 | 条件支持 | 条件支持 | 条件支持 | 条件支持 | 不支持 | 要求核酸单位和源正负链，aa 用通用特征 |
 | [`geom_feature()`](../../man/geom_feature.Rd) | 支持 | 支持 | 支持 | 条件支持 | 条件支持 | 不支持 | 要求合法 ID、区间和一致的原生单位 |
-| [`geom_feature_plasmid()`](../../man/geom_feature_plasmid.Rd) | 支持 | 支持 | 支持 | 条件支持 | 条件支持 | 不支持 | 通用特征预设；跨模式使用须重查圆图 Position 默认值 |
+| [`geom_feature(preset = 'plasmid')`](../../man/geom_feature.Rd) | 支持 | 支持 | 支持 | 条件支持 | 条件支持 | 不支持 | 通用特征预设；跨模式使用须重查圆图 Position 默认值 |
 | [`geom_gene_label()`](../../man/geom_gene_label.Rd) | 支持 | 条件支持 | 支持 | 条件支持 | 条件支持 | 不支持 | 与基因共享 Position；共线性 radial/tangent 对应竖排/横排 |
 | [`geom_feature_label()`](../../man/geom_feature_label.Rd) | 支持 | 条件支持 | 支持 | 条件支持 | 条件支持 | 不支持 | 与特征共享 Position；共线性 radial/tangent 对应竖排/横排 |
 | [`geom_gene_label_repel()`](../../man/geom_gene_label_repel.Rd) | 支持 | 条件支持 | 支持 | 条件支持 | 条件支持 | 不支持 | 共线性拒绝 external=FALSE，按目标尺寸检查隐藏结果 |
-| [`geom_feature_label_repel()`](../../man/geom_feature_label_repel.Rd) | 支持 | 条件支持 | 支持 | 条件支持 | 条件支持 | 不支持 | 共线性拒绝 external=FALSE，检查适配与隐藏 |
+| [`geom_feature_label(placement = 'repel')`](../../man/geom_feature_label.Rd) | 支持 | 条件支持 | 支持 | 条件支持 | 条件支持 | 不支持 | 共线性拒绝 external=FALSE，检查适配与隐藏 |
 | [`geom_link_ribbon()`](../../man/geom_link_ribbon.Rd) | 支持 | 条件支持 | 不支持 | 条件支持 | 条件支持 | 不支持 | 共线性按显示行判断邻接；分段同行带省略并报告 |
 | [`geom_link_line()`](../../man/geom_link_line.Rd) | 支持 | 条件支持 | 不支持 | 条件支持 | 条件支持 | 不支持 | 要求点坐标；不支持显式分段同行点连接 |
 | [`geom_seq_region()`](../../man/geom_seq_region.Rd) | 支持 | 支持 | 支持 | 条件支持 | 条件支持 | 不支持 | 要求合法源区间、ID 和局部侧向 |
@@ -26,9 +26,9 @@
 | [`geom_restriction_site()`](../../man/geom_restriction_site.Rd) | 条件支持 | 不支持 | 条件支持 | 不支持 | 不支持 | 不支持 | 仅一条显示 DNA 序列及实际计算的切割坐标 |
 | [`geom_track()`](../../man/geom_track.Rd) | 支持 | 支持 | 支持 | 条件支持 | 条件支持 | 不支持 | 源空间 Stat/Position；见[基础矩阵](tracks-statistics.md#tracks)和[估计组合](tracks-statistics.md#estimates) |
 | [`geom_track_bar()`](../../man/geom_track.Rd) | 支持 | 支持 | 支持 | 条件支持 | 条件支持 | 不支持 | 统计观测数，给定数值请使用 col |
-| [`geom_track_col()`](../../man/geom_track.Rd) | 支持 | 支持 | 支持 | 条件支持 | 条件支持 | 不支持 | 显式 position_track、数值高度与数值域 |
-| [`geom_track_line()`](../../man/geom_track.Rd) | 支持 | 支持 | 支持 | 条件支持 | 条件支持 | 不支持 | 显式 position_track；闭合须明确请求，不跨缺失样本连接 |
-| [`geom_track_tile()`](../../man/geom_track.Rd) | 支持 | 支持 | 支持 | 条件支持 | 条件支持 | 不支持 | 显式 position_track；不要求数值高度 |
+| [`geom_track_col()`](../../man/geom_track.Rd) | 支持 | 支持 | 支持 | 条件支持 | 条件支持 | 不支持 | 默认或具名轨道、数值高度与数值域 |
+| [`geom_track_line()`](../../man/geom_track.Rd) | 支持 | 支持 | 支持 | 条件支持 | 条件支持 | 不支持 | 默认或具名轨道；闭合须明确请求，不跨缺失样本连接 |
+| [`geom_track_tile()`](../../man/geom_track.Rd) | 支持 | 支持 | 支持 | 条件支持 | 条件支持 | 不支持 | 默认或具名轨道；不要求数值高度 |
 | [`geom_alignment_segment()`](../../man/geom_alignment_segment.Rd) | 不支持 | 不支持 | 不支持 | 不支持 | 不支持 | HSP identity 线段 | 专用双轴几何 |
 
 

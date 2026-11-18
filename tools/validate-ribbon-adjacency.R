@@ -13,7 +13,8 @@ base <- ggchord(seqs, validate = "none")
 make_plot <- function(coordinate, order = seqs$accver, adjacent_only = NULL) {
   base + geom_link_ribbon(data = links, adjacent_only = adjacent_only,
     fill = "#91AFC0", colour = "#3E4550", linewidth = .7, alpha = .4) +
-    geom_seq(seq_order = order) + geom_seq_label() +
+    layout_sequences(order = order) +
+    geom_seq() + geom_seq_label() +
     scale_seq_position_continuous(breaks = NULL, minor_breaks = NULL) +
     coordinate
 }

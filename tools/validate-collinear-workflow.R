@@ -11,7 +11,7 @@ expect_conflict <- function(expr, text) {
 }
 seqs <- workflow_sequences
 links <- workflow_links
-base <- ggchord(seqs, links, validate = "none") + geom_seq()
+base <- ggchord(prepare_ggchord_data(seqs, links), validate = "none") + geom_seq()
 default_plot <- base + geom_link_ribbon() + coord_collinear()
 default <- export_ggchord_layout(default_plot)
 stopifnot(setequal(unique(default$ribbon$source_row), c(1L, 3L)),
@@ -47,13 +47,14 @@ stopifnot(all(abs(mapped$x) < 1e-8),
   identical(aligned$sequence_layout$orientation, c(1, -1, 1)),
   all(aligned$orientation_diagnostics$status[-1L] == "supported"),
   all(aligned$label_diagnostics$status == "placed"))
-expect_conflict(ggchord(seqs, links, validate = "none") +
-  geom_seq(seq_orientation = -1) + coord_collinear(orientation = "auto"),
-  "cannot be combined")
+expect_conflict(ggchord(prepare_ggchord_data(seqs, links), validate = "none") +
+  layout_sequences(orientation = -1) +
+  geom_seq() + coord_collinear(orientation = "auto"),
+  "conflicts with layout_sequences")
 expect_conflict(coord_collinear(min_support = 2), "min_support")
 unknown_links <- links
 unknown_links$orientation_known <- FALSE
-unresolved <- export_ggchord_layout(ggchord(seqs, unknown_links,
+unresolved <- export_ggchord_layout(ggchord(prepare_ggchord_data(seqs, unknown_links),
   validate = "none") + geom_seq() + geom_link_ribbon() +
     coord_collinear(orientation = "auto"))
 stopifnot(all(unresolved$sequence_layout$orientation == 1),
@@ -62,16 +63,19 @@ stopifnot(all(unresolved$sequence_layout$orientation == 1),
 # A narrow, empty channel stays usable; impossible explicit clearances fail.
 narrow_seqs <- seqs[1:2, ]
 narrow_links <- links[1L, ]
-narrow <- ggchord(narrow_seqs, narrow_links, validate = "none") +
-  geom_seq(seq_gap = .01) + geom_link_ribbon() + coord_collinear()
+narrow <- ggchord(prepare_ggchord_data(narrow_seqs, narrow_links), validate = "none") +
+  layout_sequences(gap = .01) +
+  geom_seq() + geom_link_ribbon() + coord_collinear()
 channel <- export_ggchord_layout(narrow)
 stopifnot(all(channel$ribbon$y >= min(channel$sequence_layout$y)),
   all(channel$ribbon$y <= max(channel$sequence_layout$y)))
-expect_conflict(export_ggchord_layout(ggchord(narrow_seqs, narrow_links,
-  validate = "none") + geom_seq(seq_gap = .01) +
+expect_conflict(export_ggchord_layout(ggchord(prepare_ggchord_data(narrow_seqs, narrow_links),
+  validate = "none") + layout_sequences(gap = .01) +
+    geom_seq() +
     geom_link_ribbon(link_gap = .03) + coord_collinear()), "do not fit")
 expect_conflict(export_ggchord_layout(ggchord(seqs, validate = "none") +
-  geom_seq(seq_order = c("A", "A", "B")) + coord_collinear()), "non-repeated")
+  layout_sequences(order = c("A", "unknown", "B")) +
+  geom_seq() + coord_collinear()), "known sequence IDs")
 
 # Tiny arrows retain genomic extents and may share a lane without overlap.
 tiny <- data.frame(accver = "long", start = c(100, 110), end = c(102, 112),
@@ -91,7 +95,7 @@ features <- data.frame(feature_id = c("a", "b", "c"), accver = "A",
 label_plot <- ggchord(seqs, validate = "none") + geom_seq() +
   geom_feature(data = features, position = position_feature_stack(
     spacing = .2, base_position = position_strand(.2))) +
-  geom_feature_label_repel(data = features[c(2L, 1L), ]) + coord_collinear()
+  geom_feature_label(placement = 'repel', data = features[c(2L, 1L), ]) + coord_collinear()
 label_out <- export_ggchord_layout(label_plot)
 geometry <- unique(label_out$feature[c("source_row", "lane", "normal_offset")])
 labels <- unique(label_out$labels[c("source_row", "lane", "normal_offset")])
@@ -106,9 +110,9 @@ ambiguous <- ggchord(seqs, validate = "none") + geom_seq() +
   geom_feature(data = one, position = position_strand(.2)) +
   geom_feature(data = one, position = position_strand(-.2)) + coord_collinear()
 expect_conflict(export_ggchord_layout(ambiguous +
-  geom_feature_label_repel(data = one)), "Multiple geometry layers")
+  geom_feature_label(placement = 'repel', data = one)), "Multiple geometry layers")
 explicit <- export_ggchord_layout(ambiguous +
-  geom_feature_label_repel(data = one, position = position_strand(.3)))
+  geom_feature_label(placement = 'repel', data = one, position = position_strand(.3)))
 stopifnot(all(explicit$labels$normal_offset == .3))
 
 # Cropped coordinates preserve source ticks, end marks and an inverse mapping.

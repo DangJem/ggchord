@@ -10,7 +10,7 @@
 
 {{figure:frontorientation}}
 
-`seq_orientation = -1` 反转该序列的显示方向。对照默认图，这条骨架的 0 刻度和箭头端互换。输入坐标和基因的生物学链仍来自数据表。三个向量都按序列 ID 命名，修改 `seq_order` 重排时仍能找到对应序列。
+`layout_sequences(orientation = -1)` 反转该序列的显示方向。对照默认图，这条骨架的 0 刻度和箭头端互换。输入坐标和基因的生物学链仍来自数据表。三个向量都按序列 ID 命名，修改 `layout_sequences(order = ...)` 重排时仍能找到对应序列。
 
 <a id="order"></a>
 
@@ -20,7 +20,7 @@
 
 {{figure:frontorder}}
 
-`seq_order` 接收序列 ID 的排列。这里把 `OQ646790.1` 提到 `MT118296.1` 前面。重排后，连接表仍按原来的 ID 匹配。
+`layout_sequences(order = ...)` 接收序列 ID 的排列。这里把 `OQ646790.1` 提到 `MT118296.1` 前面。重排后，连接表仍按原来的 ID 匹配。
 
 接下来[改变连接带的路径与端点留白](multi-sequence-links.md#control)。
 

@@ -1,5 +1,5 @@
 {
-  "source_sha256": "cfdbf907468667f74725a72129f52af98339e30bdcc932cc2e1065e32489ecef",
+  "source_sha256": "6c78f7e07521fa151e72b3a7b8ca7e1363f65fbe4fa673205727d06eae232ace",
   "blocks": {
     "0": {
       "source_sha256": "b2a2200c82dd4558081108554d970017139bde7ea3dccb1bffa02c1b7d39b90d",
@@ -92,9 +92,9 @@
       "translation": "| ⟦shared:0⟧ | off | Coordinate clipping can cut exterior text |\n"
     },
     "34": {
-      "source_sha256": "6c6ec07d2ac3776f424d18d142c7a28ec71bf1800abd6e6d2cf22c289ea3246e",
+      "source_sha256": "b18a030250ec78e2e9e6087835548184d27630828e2aa6d2c50a19bbf05982e3",
       "status": "reviewed",
-      "translation": "Automatic fitting may change overall scale and the readable subset of tick labels at fixed device size. Inspect text and leaders before fixing ⟦shared:0⟧; clipping is not loss of source data. Circular mode owns gap/direction and rejects geom_seq seq_gap/seq_orientation.\n"
+      "translation": "Automatic fitting may change overall scale and the readable subset of tick labels at fixed device size. Inspect text and leaders before fixing ⟦shared:0⟧; clipping is not loss of source data. Circular mode owns gap/direction and rejects gap/orientation from layout_sequences().\n"
     },
     "40": {
       "source_sha256": "50fe31403b1f661f23beced02f5be61dd3fedc7a82b8ee4acb8488eaf5dd389a",

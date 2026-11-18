@@ -52,10 +52,10 @@ validate_unicode_measurement <- function() {
   data(plasmid_example_pBluescript_II_SK_plus)
   features <- find_common_features(plasmid_example_pBluescript_II_SK_plus)
   tracks <- position_feature_stack(spacing = .10,
-    base_position = position_plasmid())
+    base_position = position_offset(-0.1))
   plot <- ggchord(plasmid_example_pBluescript_II_SK_plus) + geom_seq() +
-    geom_feature_plasmid(data = features, position = tracks) +
-    geom_feature_label_repel(data = features, position = tracks) +
+    geom_feature(preset = 'plasmid', data = features, position = tracks) +
+    geom_feature_label(placement = 'repel', data = features, position = tracks) +
     coord_circular(rotation = 0)
   layout <- export_ggchord_layout(plot, include = c("feature", "labels"))
   stopifnot(any(layout$labels$label == "lacZ\u03b1", na.rm = TRUE),

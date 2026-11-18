@@ -6,10 +6,12 @@ local({
   values <- data.frame(accver = c("A", "B"), start = 100, end = 300, value = c(-2, 8))
   points <- data.frame(accver = "A", pos = seq(100, 600, 100), value = c(1, 2, NA, 4, 3, 2))
   plot <- ggchord(sequences) + geom_seq() +
+    track_band("coverage") +
     geom_track_col(aes(track_value = value), data = values,
-      position = position_track("coverage")) +
+      track = "coverage") +
+    track_band("signal", order = 2) +
     geom_track_line(aes(track_value = value), data = points,
-      position = position_track("signal", order = 2)) +
+      track = "signal") +
     scale_track_value_continuous("coverage", limits = c(-5, 10), unit = "reads") +
     coord_collinear()
   exported <- export_ggchord_layout(plot, include = c("track", "axis"))
@@ -26,14 +28,17 @@ local({
     !(any(x < 3) && any(x > 3)), logical(1))))
   for (coordinate in list(coord_circular(), coord_chord())) {
     ring <- ggchord(sequences[1L, ]) + geom_seq() +
+      track_band("kind") +
       geom_track_tile(aes(track_fill = category),
         data = transform(values[1L, ], category = "site"),
-        position = position_track("kind")) +
+        track = "kind") +
       scale_track_fill_manual("kind", values = c(site = "#334455")) +
+      track_band("coverage", order = 2) +
       geom_track_col(aes(track_value = value), data = values[1L, ],
-        position = position_track("coverage", order = 2)) +
+        track = "coverage") +
+      track_band("signal", order = 3) +
       geom_track_line(aes(track_value = value), data = points,
-        position = position_track("signal", order = 3)) + coordinate
+        track = "signal") + coordinate
     built <- ggplot2::ggplot_build(ring)
     key <- ggchord:::ggchord_track_aes("fill", "kind")
     stopifnot(all(built$data[[2L]][[key]] == "#334455"))
@@ -44,10 +49,11 @@ local({
   view <- segment_ggchord_data(sequences, windows = windows)
   focused <- focus_ggchord_track(points, sequences, windows)
   segmented <- ggchord(view$seq_data) + geom_seq() +
+    track_band("signal") +
     geom_track_line(aes(track_value = value), data = focused,
-      position = position_track("signal")) +
+      track = "signal") +
     geom_seq_scale(length = 50) +
-    scale_seq_position_continuous(sequences = "A2", coordinates = "source") +
+    scale_seq_position_continuous(guide = guide_seq_axis("A2"), coordinates = "source") +
     coord_collinear(segments = view$segments)
   out <- export_ggchord_layout(segmented)
   stopifnot(nrow(out$track) > 0L, all(out$axis_selection$selected == (out$axis_selection$accver == "A2")))
@@ -63,8 +69,9 @@ local({
   stopifnot(inherits(invalid, "error"), grepl("baseline", conditionMessage(invalid)))
   empty <- points[0, ]
   invisible(ggplot2::ggplot_build(ggchord(sequences) + geom_seq() +
+    track_band("empty") +
     geom_track_line(aes(track_value = value), data = empty,
-      position = position_track("empty")) + coord_collinear()))
+      track = "empty") + coord_collinear()))
 })
 cat("Scoped quantitative tracks, coordinate mappings, gaps and physical bandwidth passed.\n")
 
@@ -80,11 +87,10 @@ local({
   s <- data.frame(accver=c('A','B'),length=1000)
   a <- data.frame(accver='A',start=100,end=200,value=10)
   b <- data.frame(accver='B',pos=c(100,200),value=c(50,100))
-  position <- position_track('shared',width=unit(4,'mm'))
   scale <- scale_track_value_continuous('shared',unit='reads')
-  p <- ggchord(s)+geom_seq()+geom_track_col(aes(track_value=value),data=a,
-    position=position)+geom_track_line(aes(track_value=value),data=b,
-    position=position)+scale+coord_collinear()
+  p <- ggchord(s) + track_band("shared", width = unit(4, "mm")) + geom_seq() + geom_track_col(aes(track_value=value),data=a,
+    track="shared")+geom_track_line(aes(track_value=value),data=b,
+    track="shared")+scale+coord_collinear()
   original_domain <- scale$range$range
   out <- export_ggchord_layout(p,include='track',original_data=TRUE)
   stopifnot(nrow(out$track_registry)==2L,
@@ -92,13 +98,11 @@ local({
     all(lengths(out$track_registry$source_layers)==2L),
     identical(scale$range$range,original_domain),all(out$track_diagnostics$retained))
   record('same_id_domain','Bar baseline and two independent layers/sequences train one cloned numerical domain/band')
-  conflict <- p+geom_track_line(aes(track_value=value),data=b,
-    position=position_track('shared',width=unit(5,'mm')))
-  fails(export_ggchord_layout(conflict),'Conflicting placement')
+  fails(p + track_band("shared", width = unit(5, "mm")), "already declared")
   record('same_id_conflict','Inconsistent physical declarations are rejected before drawing')
   values <- data.frame(accver='A',start=c(100,200,300),end=c(150,250,350),value=c(.1,10,1000))
-  scaled <- ggchord(s[1,])+geom_seq()+geom_track_col(aes(track_value=value),
-    data=values,baseline=1,position=position_track('log'))+
+  scaled <- ggchord(s[1,])+geom_seq()+track_band('log') + geom_track_col(aes(track_value=value),
+    data=values,baseline=1,position='identity',track = 'log')+
     scale_track_value_continuous('log',limits=c(1,100),transform='log10')+coord_collinear()
   d <- export_ggchord_layout(scaled,include='track')
   stopifnot(identical(d$track_diagnostics$retained,c(FALSE,TRUE,FALSE)),
@@ -107,20 +111,21 @@ local({
     limits=c(1,100),transform='log10',oob=scales::oob_keep)),'physical band')
   record('transform_oob_baseline','Transformed limits censor outliers; an OOB policy cannot escape its band; valid baseline remains explicit')
   bins <- data.frame(accver='A',start=c(-5,150,2000),end=c(30,200,2100),value=c(1,NA,3))
-  clipped <- ggchord(s[1,])+geom_seq()+geom_track_col(aes(track_value=value),
-    data=bins,bounds='clip',position=position_track('bounds'))+coord_collinear()
+  clipped <- ggchord(s[1,])+geom_seq()+track_band('bounds') + geom_track_col(aes(track_value=value),
+    data=bins,bounds='clip',track = 'bounds')+coord_collinear()
   d <- export_ggchord_layout(clipped,include='track',original_data=TRUE)
   stopifnot(identical(d$track_diagnostics$retained,c(TRUE,FALSE,FALSE)),
     d$track_diagnostics$coordinate_clipped[1],
     d$track_diagnostics$reason[2]=='missing_value',
     identical(d$original_data[[unique(d$track$layer_id)[1]]]$track$start,bins$start))
-  fails(export_ggchord_layout(ggchord(s[1,])+geom_seq()+geom_track_col(aes(track_value=value),
-    data=bins,position=position_track('bounds'))+coord_collinear()),'outside sequence')
+  fails(export_ggchord_layout(ggchord(s[1,])+geom_seq()+track_band('bounds') + geom_track_col(aes(track_value=value),
+    data=bins,track = 'bounds')+coord_collinear()),'outside sequence')
   record('bounds_missing_source','Clipping/omission/NA are reported separately and source coordinates remain unchanged')
   points <- data.frame(accver='A',pos=c(100,300,700,900),value=c(1,2,4,3))
   ring <- function(data,closed=TRUE,gap=0) ggchord(s[1,])+geom_seq()+
+    track_band('ring') +
     geom_track_line(aes(track_value=value),data=data,closed=closed,
-      position=position_track('ring'))+coord_circular(gap=gap)
+      track = 'ring')+coord_circular(gap=gap)
   complete <- export_ggchord_layout(ring(points),include='track')$track
   complete <- complete[complete$.component=='track_line',]
   stopifnot(isTRUE(all.equal(unname(unlist(complete[1,c('x','y')])),

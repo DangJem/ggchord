@@ -94,6 +94,6 @@ cells <- as_ggchord_alignment(c(A = "AC-G", B = "ACTG"), "DNA")
 lookup <- map_alignment_position(cells, "A", c(2, 3, 5))
 lookup[c("alignment_column", "source_position", "is_gap", "matched")]
 backbones <- data.frame(accver = c("A", "B"), length = c(3, 4))
-p_cells <- ggchord(seq_data = backbones) + geom_seq() + coord_collinear()
+p_cells <- ggchord(data = backbones) + geom_seq() + coord_collinear()
 map_ggchord_position(p_cells, "A", lookup$source_position[1])
 ```

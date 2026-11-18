@@ -194,7 +194,7 @@ for (name in fixture_names) {
   message("Validating ", name, "...")
   fixture <- fixtures[[name]]
   tracks <- position_feature_stack(
-    spacing = .085, base_position = position_plasmid()
+    spacing = .085, base_position = position_offset(-0.1)
   )
   primer_layers <- if (!is.null(fixture$primers) && nrow(fixture$primers)) {
     list(
@@ -204,8 +204,8 @@ for (name in fixture_names) {
   } else NULL
   plot <- ggchord(fixture$sequence, validate = "none") +
     geom_seq(seq_style = "double") +
-    geom_feature_plasmid(data = fixture$features, position = tracks) +
-    geom_feature_label_repel(data = fixture$features, position = tracks,
+    geom_feature(preset = 'plasmid', data = fixture$features, position = tracks) +
+    geom_feature_label(placement = 'repel', data = fixture$features, position = tracks,
       external = TRUE, max_overlaps = 0) +
     (if (!is.null(fixture$sites)) {
       geom_restriction_site(data = fixture$sites)
@@ -496,7 +496,7 @@ for (name in fixture_names) {
 if (is.na(requested_map_arg) || !nzchar(requested_map_arg)) {
   stress_layout <- export_ggchord_layout(
     ggchord(stress$sequence, validate = "none") + geom_seq() +
-      geom_feature_plasmid(data = stress$features) + coord_circular(),
+      geom_feature(preset = 'plasmid', data = stress$features) + coord_circular(),
     include = "feature"
   )$feature
   stress_lanes <- unique(stress_layout[, c("anno", "lane")])

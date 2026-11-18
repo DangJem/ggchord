@@ -1,5 +1,5 @@
 {
-  "source_sha256": "ecf58e31ba1287a61d72bef58e0119f1610581c4a111005e25a6f99305a09d7e",
+  "source_sha256": "12fde571002960a5524724fdf091db14ad64f65795ba6890353a4ddce805343f",
   "blocks": {
     "0": {
       "source_sha256": "085409246dee00fdf182c27b81a20c4c4a252208e1c9dab6dda513d8de51a5d8",
@@ -227,7 +227,7 @@
       "translation": "## Place features ⟦shared:0⟧\n"
     },
     "64": {
-      "source_sha256": "637f9d168638837fece61b641824ca817a02c5a10f0dd25dd3771ee63a908361",
+      "source_sha256": "cc6a2eccbdbc7228e9fc89b27a73dbb01d639e095f91335a74d53556671338ad",
       "status": "reviewed",
       "translation": "Use ⟦shared:0⟧ for signed strand offsets.\n⟦shared:1⟧ handles overlapping features; ⟦shared:2⟧\nallocates a named quantitative lane. Geometric sequence parameters accept one\nvalue, a matching unnamed vector, or a vector named by ⟦shared:3⟧; named vectors\nare recommended. This syntax does not extend to scales, guides or themes.\n"
     },

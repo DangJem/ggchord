@@ -25,10 +25,9 @@ requires known `+/-`; general features retain unknown/bidirectional semantics.
 | `promoter_arrow`, `primer_arrow`, `primer_arc` | Declared promoter/primer-style annotation | Computational matching and drawing are separate |
 | `marker`, `chevron`, `lollipop` | Custom interval/point-like emphasis | Keep real interval metadata; display shape is a mapping |
 
-`geom_gene()` and `geom_feature_plasmid()` are useful presets, not aliases with
-identical defaults. Use `position_strand()` for signed offsets and
-`position_plasmid()` as a circular placement preset; the latter is not a fourth
-coordinate mode.
+`geom_feature(preset = 'gene')` and `geom_feature(preset = 'plasmid')` provide distinct geometry presets.
+Use `position_strand()` for signed strand offsets and `position_offset()`
+for one offset shared by both strands. Both use the local normal at the feature.
 
 <a id="decoration"></a>
 

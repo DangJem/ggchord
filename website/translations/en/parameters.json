@@ -1,5 +1,5 @@
 {
-  "source_sha256": "09d443717a40de34d3b35d359c82d5589912bf605418015856245976d30d433b",
+  "source_sha256": "e35bb525fb113a90c62c07dc763659dfce3ef282a9e9b395506a74926470f498",
   "blocks": {
     "0": {
       "source_sha256": "9b0c4f3fdd017002152cb2a167c4a1b674d51adc55fc48a09225789e529aea83",
@@ -32,7 +32,7 @@
       "translation": "## Values in display order ⟦shared:0⟧\n"
     },
     "17": {
-      "source_sha256": "384dadd454f75eb5daa72119a29bcb1ed6087f24bfc100d2952484a1eb8543c3",
+      "source_sha256": "91333eb8209ee5b2f84178b43eccf6b3346433c734825c5d0322f42a02fbbbc8",
       "status": "reviewed",
       "translation": "Values match display order after ⟦shared:0⟧ and must cover all displayed sequences. The second sequence is currently ⟦shared:1⟧, making this plot equivalent to the preceding one.\n"
     },
@@ -42,7 +42,7 @@
       "translation": "### Matching after reordering ⟦shared:0⟧\n"
     },
     "20": {
-      "source_sha256": "e9cdfce1e7d56a8b4c1acb66822a26dde07e68f2567baaa9f92f3860b6c9c138",
+      "source_sha256": "42dd5fc5658388b4ad4bc6e927794d69ab8f126d143269a88f703a1ef40471e8",
       "status": "reviewed",
       "translation": "Keep the vector and change ⟦shared:0⟧. Named values still change ⟦shared:1⟧; the unnamed vector changes the second displayed sequence, now ⟦shared:2⟧.\n"
     },
@@ -127,9 +127,9 @@
       "translation": "| --- | --- | --- |\n"
     },
     "54": {
-      "source_sha256": "0e0c6baeb28644f10db52df825788bd3b709fb3738e481bd89450b966d828045",
+      "source_sha256": "fe6dba87a63e6c589c4ba80958f5b0e21b7695dd8856947759c5f3801b539bb3",
       "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | Scalar, accver names, display order and corresponding scalar lists | ⟦shared:1⟧, ⟦shared:2⟧, ⟦shared:3⟧, ⟦shared:4⟧ have individual defaults and Coord support |\n"
+      "translation": "| ⟦shared:0⟧ and ⟦shared:1⟧ | Scalar, accver names, display order and corresponding scalar lists | ⟦shared:2⟧, ⟦shared:3⟧, ⟦shared:4⟧, ⟦shared:5⟧ have individual defaults and Coord support |\n"
     },
     "55": {
       "source_sha256": "542d56bf41613efcee4c240a3f803660b583c5c6d344ab8e4c7ece1374fb10c9",
@@ -142,7 +142,7 @@
       "translation": "| ⟦shared:0⟧ / ⟦shared:1⟧ | ⟦shared:2⟧ by endpoint sequence | ⟦shared:3⟧ retains automatic behavior; control points are not sequence scalars |\n"
     },
     "57": {
-      "source_sha256": "ce7bc797a11f414a3986107d570d5dfc2cfc97f91d4a983788ffe06911bdd5b6",
+      "source_sha256": "59d50eeb5062af48997f9ba37d94f7e46292d06e9aaf4dca7309a32938fdc3b8",
       "status": "reviewed",
       "translation": "| ⟦shared:0⟧ / ⟦shared:1⟧ | ⟦shared:2⟧ by sequence or strand; list elements follow strand-value rules | Omitted entries retain the parameter default; arbitrary mixed Position lists do not apply |\n"
     },
@@ -152,9 +152,9 @@
       "translation": "| ⟦shared:0⟧ | ⟦shared:1⟧: scalar, sequence values, explicit strand values and mixed sequence lists | Scalar x becomes +x/−x; explicit strands are not reversed; omitted sequences/strands become 0 |\n"
     },
     "59": {
-      "source_sha256": "70a724188586f9f3936bdd77438a56181c13632ffc3cf7ca5a26711b1abfe514",
+      "source_sha256": "ae283e4e005452f199159c9c23e4cb53853281a64473ee5608a935bb4a32f640",
       "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | Scalar or per-sequence scalar ⟦shared:1⟧s | Both strands share the ⟦shared:1⟧; strand-specific values are unsupported; omitted sequences become 0 |\n"
+      "translation": "| ⟦shared:0⟧ | Scalar or per-sequence scalar ⟦shared:1⟧ values | Both strands share the offset. Omitted sequences receive zero. |\n"
     },
     "60": {
       "source_sha256": "b05f511ef095c03c2e89aa8784d3da3f005361f2d371e2e08574501aa671f3ec",
@@ -162,12 +162,12 @@
       "translation": "| Fixed ⟦shared:0⟧ / ⟦shared:1⟧ | ⟦shared:2⟧, ⟦shared:3⟧, ⟦shared:4⟧, ⟦shared:5⟧ by sequence or strand | Follow this family's strand rules; not every text parameter accepts lists |\n"
     },
     "61": {
-      "source_sha256": "9cf856db3ef7f1f9cd156dba44f39409a4d5ece2c7ad73584204342fc97a8032",
+      "source_sha256": "7ebc0f46e77e5d3a4b48ab69c957f79c8c1ac72f631375bc18b2cd4bbf200a9d",
       "status": "reviewed",
       "translation": "| ⟦shared:0⟧ | One absolute ⟦shared:1⟧ or per-sequence numeric width/gap | Numeric settings cover every displayed sequence; absolute sizes retain their physical meaning |\n"
     },
     "62": {
-      "source_sha256": "bb2a184f30db8254d178c043645705ab9169083ba9cb8b61bd744d5ff161c3db",
+      "source_sha256": "30c8370777f9fb51bda8201fbdb713332c17a992c91846937ebf3f864c3e767c",
       "status": "reviewed",
       "translation": "⟦shared:0⟧ specifies ordering and ⟦shared:1⟧ specifies a layout mode. Automatic label layers do not accept arbitrary fixed offsets. Axes/themes, aesthetics, scales and guides retain their own interfaces. Manual colour scales match **data categories**; see [styling](⟦shared:2⟧). Consult the [parameter atlas](⟦shared:3⟧) for exact defaults and ranges.\n"
     },

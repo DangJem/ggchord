@@ -13,8 +13,8 @@ counts those selected query-start observations, not inferred depth or coverage.
 
 {{figure:viewradial}}
 
-Spoke order comes from `geom_seq(seq_order=...)`. Default lengths are
-proportional; `length_mode="equal"` explicitly normalizes display lengths
+Spoke order comes from `layout_sequences(order = ...)`. Default lengths are
+proportional; `layout_sequences(length_mode = "equal")` explicitly normalizes display lengths
 while preserving source coordinates. `start_angle` is measured counterclockwise
 from positive x; `clockwise` controls spoke order, not source strand. Positive
 feature/track offsets point counterclockwise from an outward spoke. Physical
@@ -69,7 +69,7 @@ In final cyclic order, neighbouring ribbons (including first/last) remain solid.
 `nonadjacent_bulge` sets outward lift for nonadjacent annular paths, default 0. Positive values also increase lift as needed to clear full intervening spokes and separate same-channel ribbon bands. The longest proportional spoke has length 2; 0.2 below is in display layout units, not bp. Endpoints, source coordinates and interval widths remain intact; crossings required by endpoint order may remain.
 
 ```r
-ggchord(radial_seqs, radial_hsp) +
+ggchord(prepare_ggchord_data(radial_seqs, radial_hsp)) +
   geom_seq() +
   geom_link_ribbon(adjacent_only = FALSE) +
   coord_radial_synteny(nonadjacent_bulge = 0.2)

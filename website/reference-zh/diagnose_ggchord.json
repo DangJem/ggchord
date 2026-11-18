@@ -1,5 +1,5 @@
 {
-  "source_sha256": "7be95299613e55cc76b633368d6f9f26c8ac32d86ca98f7af226102355e06ec2",
+  "source_sha256": "85cb19e5c1bca9c1a8bfdb63dbdf3009352b886a5c725a3f8fbc8901877dd4c9",
   "translations": {
     "0": "检查指定尺寸的一次渲染而不改变原图",
     "1": "一个 ggchord 图。",

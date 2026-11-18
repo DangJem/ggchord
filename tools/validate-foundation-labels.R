@@ -44,10 +44,10 @@ if ("--flagship-sizes" %in% commandArgs(trailingOnly=TRUE)) {
   features <- find_common_features(source)
   primers <- find_primer_bindings(source,set="reference")
   sites <- filter_restriction_sites(find_restriction_sites(source),set="unique_6plus",parent_set="commercial_all")
-  position <- position_feature_stack(spacing=.085,base_position=position_plasmid())
-  p <- ggchord(source[c("accver","length")],feature_data=features)+geom_seq(seq_style="double")+
-    geom_feature_plasmid(position=position)+geom_feature_label_repel(position=position,external=TRUE,
-      label_fit="shrink",label_min_size=2.5,max_overlaps=0)+geom_primer(data=primers)+
+  position <- position_feature_stack(spacing=.085,base_position=position_offset(-0.1))
+  p <- ggchord(prepare_ggchord_data(source[c("accver","length")],feature_data=features))+geom_seq(seq_style="double")+
+    geom_feature(preset = 'plasmid', position=position)+geom_feature_label(placement = 'repel', position=position,external=TRUE,
+      overflow="shrink",label_min_size=2.5,max_overlaps=0)+geom_primer(data=primers)+
     geom_primer_label_repel(data=primers,max_overlaps=0)+geom_restriction_site(data=sites)+
     geom_seq_center_label()+coord_circular()+theme_ggchord_plasmid()
   results <- list(input=list(features=nrow(features),primers=nrow(primers),sites=nrow(sites)),sizes=list())
@@ -83,10 +83,10 @@ for(id in objects) {
   source<-env[[paste0('plasmid_example_',id)]]
   features<-find_common_features(source);sites<-find_restriction_sites(source)
   nearest<-if(nrow(sites)) unique(vapply(source$length*c(1,3,5)/6,function(x) which.min(abs(sites$position-x)),integer(1))) else integer()
-  position<-position_feature_stack(spacing=.085,base_position=position_plasmid())
-  p<-ggchord(source[c('accver','length')],feature_data=features)+geom_seq(seq_style='double')+
-    geom_feature_plasmid(position=position)+geom_feature_label_repel(position=position,external=TRUE,
-      label_fit='shrink',label_min_size=2.5)+geom_restriction_site(data=sites[nearest,],label_size=2.5)+
+  position<-position_feature_stack(spacing=.085,base_position=position_offset(-0.1))
+  p<-ggchord(prepare_ggchord_data(source[c('accver','length')],feature_data=features))+geom_seq(seq_style='double')+
+    geom_feature(preset = 'plasmid', position=position)+geom_feature_label(placement = 'repel', position=position,external=TRUE,
+      overflow='shrink',label_min_size=2.5)+geom_restriction_site(data=sites[nearest,],label_size=2.5)+
     coord_circular()+theme_ggchord_plasmid()
   results$catalog[[id]]<-metrics(p)
   if(id=='pETDuet_1') {

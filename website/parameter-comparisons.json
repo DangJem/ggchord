@@ -156,7 +156,7 @@
   {
     "id": "comparetrackthin",
     "object": "p_comparetrackthin",
-    "parameter": "position_track.width",
+    "parameter": "track_band.width",
     "value": "4 mm",
     "snippets": [
       "trackdata",
@@ -499,7 +499,7 @@
     "id": "compareshrinkfit",
     "object": "p_compareshrinkfit",
     "parameter": "automatic label",
-    "value": "label_layout = \"feature\", label_fit = \"shrink\"",
+    "value": "label_layout = \"feature\", overflow = \"shrink\"",
     "snippets": [
       "comparefinishcircle",
       "compareshrinkfit"
@@ -1221,7 +1221,7 @@
   {
     "id": "comparefeaturepreset",
     "object": "p_comparefeaturepreset",
-    "api": "geom_feature_plasmid",
+    "api": "geom_feature",
     "parameter": "preset",
     "value": "plasmid",
     "snippets": [
@@ -1241,7 +1241,7 @@
   {
     "id": "compareexternaloff",
     "object": "p_compareexternaloff",
-    "api": "geom_feature_label_repel",
+    "api": "geom_feature_label",
     "parameter": "external",
     "value": "FALSE",
     "snippets": [
@@ -1261,8 +1261,8 @@
   {
     "id": "compareellipsisfit",
     "object": "p_compareellipsisfit",
-    "api": "geom_feature_label_repel",
-    "parameter": "label_fit",
+    "api": "geom_feature_label",
+    "parameter": "overflow",
     "value": "ellipsis",
     "snippets": [
       "comparefinishcircle",
@@ -1342,7 +1342,7 @@
   {
     "id": "comparetracktwo",
     "object": "p_comparetracktwo",
-    "api": "position_track",
+    "api": "track_band",
     "parameter": "order",
     "value": "2",
     "snippets": [
@@ -1363,7 +1363,7 @@
   {
     "id": "comparetrackorder",
     "object": "p_comparetrackorder",
-    "api": "position_track",
+    "api": "track_band",
     "parameter": "order",
     "value": "0",
     "snippets": [

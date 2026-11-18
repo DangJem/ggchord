@@ -12,7 +12,7 @@ f <- rc_fixtures()
 p <- switch(case,
   circular = f$circular(), inside = f$circular(side = "inside"),
   dense = f$circular(dense = TRUE), collinear = f$linear, track = f$track,
-  chord = ggchord(f$seqs, f$links, validate = "none") + geom_seq() + geom_link_ribbon() + geom_gene(data = f$genes))
+  chord = ggchord(prepare_ggchord_data(f$seqs, f$links), validate = "none") + geom_seq() + geom_link_ribbon() + geom_feature(preset = 'gene', data = f$genes))
 file <- file.path(out, paste0("rc-", case, "-v0.16.6.png"))
 ggplot2::ggsave(file, p + theme(text = element_text(family = "sans")),
   width = 9, height = 8, units = "in", dpi = 120, device = "png", bg = "white")

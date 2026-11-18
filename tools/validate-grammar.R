@@ -19,14 +19,14 @@ for (mode in c("chord", "circular", "collinear")) {
     collinear = coord_collinear())
   scale <- scale_gene_fill_manual(values = c(one = "#113355", two = "#775533"))
   layers <- list(
-    geom_gene(aes(gene_fill = anno), data = g1),
-    geom_gene(aes(accver = id, start = lo, end = hi, strand = direction,
+    geom_feature(preset = 'gene', aes(gene_fill = anno), data = g1),
+    geom_feature(preset = 'gene', aes(accver = id, start = lo, end = hi, strand = direction,
       anno = category, gene_fill = category), data = g2,
       position = position_strand(offset = .16)))
   p <- ggchord(seqs) + geom_seq() + scale + layers +
     geom_feature(data = features, shape = "block") +
     geom_gene_label(data = g1) + geom_feature_label(data = features) +
-    geom_feature_label_repel(data = features) + coord
+    geom_feature_label(placement = 'repel', data = features) + coord
   b <- ggplot2::ggplot_build(p)
   stopifnot(nrow(b$data[[2]]) > 0, nrow(b$data[[3]]) > 0,
     all(b$data[[2]]$gene_fill == "#113355"),
@@ -49,7 +49,7 @@ r <- data.frame(qaccver = "A", saccver = "B", qstart = c(100, 110),
   pident = c(90, 95))
 for (mode in c("chord", "collinear")) {
   coord <- if (mode == "chord") coord_chord() else coord_collinear()
-  p <- ggchord(s, r) + geom_seq() +
+  p <- ggchord(prepare_ggchord_data(s, r)) + geom_seq() +
     stat_ribbon_density(aes(ribbon_alpha = after_stat(density),
       ribbon_fill = ggplot2::stage(start = pident,
         after_scale = rep("#224466", length(ribbon_fill)))),

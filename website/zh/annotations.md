@@ -26,9 +26,8 @@
 | `promoter_arrow`, `primer_arrow`, `primer_arc` | 已声明的启动子/引物式注释 | 计算匹配与绘图分开 |
 | `marker`, `chevron`, `lollipop` | 自定义区间/类点强调 | 保留真实区间元数据，显示形状属于映射 |
 
-`geom_gene()`、`geom_feature_plasmid()` 是有用预设，默认值并不相同。
-`position_strand()` 提供带符号位移，`position_plasmid()` 提供圆图放置预设，
-后者是局部 Position，不新增 Coord。
+`geom_feature(preset = 'gene')` 与 `geom_feature(preset = 'plasmid')` 提供不同的图形预设。
+`position_strand()` 按链给出带符号位移，`position_offset()` 让两条链共用一个偏移，两种位置均按当前位置的局部法向解释。
 
 <a id="decoration"></a>
 

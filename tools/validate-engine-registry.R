@@ -9,11 +9,11 @@ local({
   s<-data.frame(accver='A',length=1000)
   a<-data.frame(accver='A',start=100,end=280,strand='+',type='CDS',label='first')
   b<-data.frame(accver='A',start=600,end=820,strand='-',type='misc',label='second')
-  position<-position_plasmid(-.1)
+  position<-position_offset(-.1)
   entities<-ggchord(s)+geom_seq()+geom_feature(data=a,position=position)+
     geom_feature(data=b,position=position)+
-    geom_feature_label_repel(data=a,position=position)+
-    geom_feature_label_repel(data=b,position=position)
+    geom_feature_label(placement = 'repel', data=a,position=position)+
+    geom_feature_label(placement = 'repel', data=b,position=position)
   circular<-export_ggchord_layout(entities+coord_circular(direction='counterclockwise',gap=15),
     include=c('feature','labels'),original_data=TRUE)
   registry<-circular$annotation_registry
@@ -35,9 +35,11 @@ local({
   genes<-data.frame(accver='A',start=100,end=300,strand='+',anno='gene')
   r<-data.frame(qaccver='A',saccver='B',qstart=100,qend=250,sstart=400,send=600)
   bands<-data.frame(accver='A',start=100,end=300,value=5)
-  base<-ggchord(pair,r)+geom_seq(seq_gap=.5)+geom_gene(data=genes)+
+  base<-ggchord(prepare_ggchord_data(pair,r))+layout_sequences(gap = .5) +
+    geom_seq()+geom_feature(preset = 'gene', data=genes)+
+    track_band('inner',side='inside',width=.03,gap=.01) +
     geom_track_col(aes(track_value=value),data=bands,
-      position=position_track('inner',side='inside',width=.03,gap=.01))+
+      track = 'inner')+
     coord_collinear()
   automatic<-export_ggchord_layout(base+geom_link_ribbon(avoid='uniform'),include='ribbon')
   explicit<-export_ggchord_layout(base+geom_link_ribbon(avoid='uniform',link_gap=.02),include='ribbon')
@@ -49,7 +51,7 @@ local({
   # Branching consumes mapped visible styles and must retain source membership.
   three<-data.frame(accver=c('A','B','C'),length=1000)
   blocks<-data.frame(qaccver='A',saccver=c('B','C'),qstart=100,qend=300,sstart=400,send=600)
-  shared<-ggchord(three,blocks)+geom_seq()+geom_link_ribbon(fill='orange',
+  shared<-ggchord(prepare_ggchord_data(three,blocks))+geom_seq()+geom_link_ribbon(fill='orange',
     link_branch='query',link_ctrl_point=c(4,4))
   invisible(ggplot2::ggplot_build(shared))
   branch<-export_ggchord_layout(shared,include='ribbon',original_data=TRUE)

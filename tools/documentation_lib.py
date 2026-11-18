@@ -215,9 +215,9 @@ def expand(text, lang, *, figures='assets', reference=''):
     return text
 
 def category(name):
-    if name.startswith(('coord_', 'ggchord_api_', 'ggchord_layout_')) or name in ['ggchord']:
+    if name.startswith(('coord_', 'ggchord_api_', 'ggchord_layout_')) or name in ('ggchord', 'layout_sequences'):
         return 'construction'
-    if name.startswith(('geom_track_', 'scale_track_', 'position_track')):
+    if name in ('geom_track', 'track_band', 'stat_coverage', 'guide_track_axis') or name.startswith(('geom_track_', 'scale_track_')):
         return 'tracks'
     if name.startswith('geom_'):
         return 'layers'

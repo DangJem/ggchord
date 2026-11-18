@@ -6,7 +6,7 @@
 
 ## Generic shapes and the plasmid preset {#feature-shapes}
 
-On the same six source annotations, change only arrow to block. A block omits the directional arrow without changing strand. The third figure shows the combined geom_feature_plasmid preset: width=0.058, arrow_head_length=0.068, arrow_head_width=1.42 and plasmid Position. It changes several defaults and is not a single-parameter contrast. See [shape choices](annotations.md#shapes) and [arrow/short-feature geometry](feature-geometry.md).
+On the same six source annotations, change only arrow to block. A block omits the directional arrow without changing strand. The third figure shows the combined geom_feature(preset = 'plasmid') preset: width=0.058, arrow_head_length=0.068, arrow_head_width=1.42 and plasmid Position. It changes several defaults and is not a single-parameter contrast. See [shape choices](annotations.md#shapes) and [arrow/short-feature geometry](feature-geometry.md).
 
 {{code:comparefeaturearrow}}
 {{figure:comparefeaturearrow}}
@@ -19,7 +19,7 @@ On the same six source annotations, change only arrow to block. A block omits th
 
 ## Share placement between overlapping features and labels {#stacking}
 
-Compare identity versus a shared feature stack on the same six annotations. Pass the Position to both geometry and labels rather than moving text alone. `position_feature_stack(spacing = 0.1, side = "strand", base_position = NULL)` applies an optional base Position before allocating overlap lanes. `position_plasmid()` is a local preset; `position_strand()` applies signed offsets by biological strand. Inside/outside is not a substitute for strand evidence.
+Compare identity and shared stacking on the same six annotations. Pass the same Position to geometry and text so their lanes agree. `position_feature_stack(spacing = 0.1, base_position = position_strand(), direction = "auto")` places the starting lane before allocating overlaps. Use `position_offset()` as a shared starting point for both strands, with the growth direction set independently. Both layouts preserve source strand.
 
 {{code:comparefinishstack}}
 {{code:comparepositionidentity}}

@@ -52,7 +52,7 @@ band 用填充多边形表示整条骨架，宽度由 seq_backbone_width 控制�
 | `ratio` | 1 | 全局纵横比，不改变长度单位 |
 | `clip` | off | 裁剪由坐标控制；打开裁剪可能截掉外侧文字 |
 
-固定尺寸下，自动适配会改变整体缩放和可读刻度标签的子集。手动限制 `xlim/ylim` 时先检查文字和引线，不把裁剪误认为数据丢失。圆图用 gap/direction，不能传入 geom_seq 的 seq_gap/seq_orientation。
+固定尺寸下，自动适配会改变整体缩放和可读刻度标签的子集。手动限制 `xlim/ylim` 时先检查文字和引线，不把裁剪误认为数据丢失。圆图用 gap/direction，不能传入 layout_sequences() 的 gap/orientation。
 
 {{code:comparecirclecounter}}
 {{figure:comparecirclecounter}}

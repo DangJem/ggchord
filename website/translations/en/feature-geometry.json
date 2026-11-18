@@ -1,5 +1,5 @@
 {
-  "source_sha256": "12d2649cd859863c47f03c9a82ead9f29e3d764dbcde24082748ff7e95463d2f",
+  "source_sha256": "93d45be4fa17426c728e041ab714bb904657e23c3d811517bfd06236c314ed11",
   "blocks": {
     "0": {
       "source_sha256": "b5e8b207b62a5a88de1b84640523589c12843839ad3685519ea42266f5fa1af3",
@@ -72,7 +72,7 @@
       "translation": "## Dimensions, short features and presets ⟦shared:0⟧\n"
     },
     "34": {
-      "source_sha256": "f333fc3c818dde22521f402e731b5f1b5b9c6db1b0858f5551384320ccd691c2",
+      "source_sha256": "78b48efaa44f032832a998338ca14ab2b6895a55034b46c447e2e3df083c5c34",
       "status": "reviewed",
       "translation": "| Parameter | ⟦shared:0⟧ default | Values and choices |\n"
     },
@@ -117,7 +117,7 @@
       "translation": "Do not hide short intervals by enlarging heads. Check source length before choosing a fallback. Generic ⟦shared:0⟧ accepts fixed ⟦shared:1⟧ or mapped ⟦shared:2⟧ with a corresponding scale; see [styling](⟦shared:3⟧).\n"
     },
     "43": {
-      "source_sha256": "477008857cdb3ddebfeac3f765dadd6bf6c127ed12361c40ee8072023fe2ef8d",
+      "source_sha256": "46618d2bb2fc647054bfa97ac4429c08986b78a503af4a59d51322386b0179e4",
       "status": "reviewed",
       "translation": "⟦shared:0⟧ is a preset with different width, head dimensions and Position defaults. Changing several defaults while comparing it to gene is not a single-parameter experiment. Segmented annotation boundaries mark segments, not different genes.\n"
     },
@@ -137,9 +137,9 @@
       "translation": "First change the common head width from 1.6 back to 1 and inspect shoulder visibility. Then change only ⟦shared:0⟧ and compare shaft versus backbone width. Keep export dimensions fixed rather than editing source intervals to improve appearance.\n"
     },
     "48": {
-      "source_sha256": "ab84db6f39a88784a2d0f6de14df8468539e5aa473105a93777cfcfa1f808ce0",
+      "source_sha256": "6ef7ed5a8d59dbaf3e6c0466a56e96ce779f704d9c32cdd276112cfcb0d221d1",
       "status": "reviewed",
-      "translation": "Continue with [feature stacking](⟦shared:0⟧), [labels](⟦shared:1⟧), or add this CDS to the [four-genome example](⟦shared:2⟧). Full interfaces: [⟦shared:3⟧](⟦shared:4⟧), [⟦shared:5⟧](⟦shared:6⟧).\n"
+      "translation": "Continue with [feature stacking](⟦shared:0⟧), [labels](⟦shared:1⟧), or add this CDS to the [four-genome example](⟦shared:2⟧). Full interfaces: [⟦shared:3⟧](⟦shared:4⟧), [⟦shared:5⟧](⟦shared:4⟧).\n"
     }
   }
 }

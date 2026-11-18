@@ -68,11 +68,11 @@ doc_axis <- function(coordinates = "relative") {
   )
 }
 # ---- chord ----
-p_chord <- ggchord(seq_data = seqs, ribbon_data = links, gene_data = genes) +
+p_chord <- ggchord(prepare_ggchord_data(seq_data = seqs, ribbon_data = links, gene_data = genes)) +
   geom_link_ribbon(aes(ribbon_fill = qaccver), alpha = .7) +
   scale_ribbon_fill_manual(values = seq_palette, guide = "none") +
   geom_seq(show.legend = FALSE) +
-  geom_gene(position = position_strand(.1), width = .04) +
+  geom_feature(preset = 'gene', position = position_strand(.1), width = .04) +
   geom_seq_label(size = 4, seq_label_radius = .84, seq_label_hjust = .5) +
   coord_chord() +
   scale_seq_colour_manual(values = seq_palette) +
@@ -90,10 +90,10 @@ features <- feature_source |>
 # ---- circular ----
 circle_features <- features |>
   filter(type %in% c("CDS", "rep_origin"))
-p_circular <- ggchord(seq_data = plasmid_seq) +
+p_circular <- ggchord(data = plasmid_seq) +
   geom_seq() +
-  geom_feature(aes(feature_fill = type), data = circle_features, position = position_plasmid()) +
-  geom_feature_label_repel(data = circle_features, position = position_plasmid(), size = 4) +
+  geom_feature(aes(feature_fill = type), data = circle_features, position = position_offset(-0.1)) +
+  geom_feature_label(placement = 'repel', data = circle_features, position = position_offset(-0.1), size = 4) +
   geom_seq_center_label() +
   scale_feature_fill_manual(values = feature_palette, breaks = unique(circle_features$type)) +
   coord_circular() +
@@ -105,11 +105,11 @@ anchors <- genes |>
   slice_max(end - start, n = 1, with_ties = FALSE) |>
   ungroup() |>
   select(accver, start, end)
-p_collinear <- ggchord(seq_data = seqs, ribbon_data = links, gene_data = genes) +
+p_collinear <- ggchord(prepare_ggchord_data(seq_data = seqs, ribbon_data = links, gene_data = genes)) +
   geom_link_ribbon(aes(ribbon_fill = qaccver), alpha = .7) +
   scale_ribbon_fill_manual(values = seq_palette, guide = "none") +
   geom_seq() +
-  geom_gene(position = position_strand(.1)) +
+  geom_feature(preset = 'gene', position = position_strand(.1)) +
   geom_seq_label(size = 4) +
   coord_collinear(anchor = anchors, align = "center", orientation = "auto") +
   doc_axis() +
@@ -128,7 +128,7 @@ label_data <- head(subset(gene_data_example, accver == "OQ646790.1"), 4)
 label_data$strand <- label_data$source_strand
 p_labels <- ggchord(seq_data_example) +
   geom_seq() +
-  geom_gene(data = label_data) +
+  geom_feature(preset = 'gene', data = label_data) +
   geom_gene_label_repel(data = label_data) +
   coord_chord()
 p_labels
@@ -146,8 +146,9 @@ head(bins)
 # ---- tracks ----
 p_tracks <- ggchord(track_seq) +
   geom_seq() +
+  track_band("gc", width = grid::unit(10, "mm")) +
   geom_track_col(aes(track_value = gc), data = bins,
-                 position = position_track("gc", width = grid::unit(10, "mm"))) +
+                 track = "gc") +
   scale_track_value_continuous("gc", limits = c(0, 1), unit = "GC fraction") +
   coord_circular()
 p_tracks
@@ -158,7 +159,7 @@ primers <- find_primer_bindings(target, set = "universal")
 sites <- find_restriction_sites(target, enzymes = c("EcoRI", "BamHI", "HindIII"), methylation = "none")
 recognition_seq <- plasmid_example_pUC19 |>
   select(accver, length)
-p_sites <- ggchord(seq_data = recognition_seq) +
+p_sites <- ggchord(data = recognition_seq) +
   geom_seq() +
   geom_primer(data = primers, colour = "#A020F0") +
   geom_restriction_site(data = sites, colour = "#29364B") +
@@ -202,7 +203,7 @@ local_homologs <- focus_ggchord_data(homolog_seq, homologs$data, cluster_feature
 p_homologs <- ggchord(local_homologs$seq_data) +
   geom_seq() +
   geom_link_ribbon(data = local_homologs$ribbon_data, fill = "grey75") +
-  geom_gene(data = local_homologs$gene_data) +
+  geom_feature(preset = 'gene', data = local_homologs$gene_data) +
   geom_seq_break() +
   coord_collinear() +
   scale_seq_position_continuous(coordinates = "source")
@@ -250,9 +251,9 @@ p_migrated <- ggchord(plasmid_seq) +
   geom_feature(data = features, shape = "block", width = .05) +
   geom_feature_label(data = features, label_rotation = 0) +
   coord_circular()
-p_offsets <- ggchord(seqs, gene_data = genes) +
+p_offsets <- ggchord(prepare_ggchord_data(seqs, gene_data = genes)) +
   geom_seq() +
-  geom_gene(position = position_strand(c("+" = .1, "-" = -.2)))
+  geom_feature(preset = 'gene', position = position_strand(c("+" = .1, "-" = -.2)))
 # ---- save ----
 ggsave("comparison.png", p_collinear, width = 8, height = 5, units = "in", dpi = 144)
 # ---- preview ----
@@ -303,12 +304,12 @@ plasmid_primers <- find_primer_bindings(plasmid_example_pUC19, set = "universal"
 plasmid_sites <- find_restriction_sites(plasmid_example_pUC19)
 display_sites <- filter_restriction_sites(plasmid_sites, enzymes = c("EcoRI", "BamHI", "HindIII"))
 # ---- plasmid ----
-plasmid_position <- position_feature_stack(base_position = position_plasmid())
+plasmid_position <- position_feature_stack(base_position = position_offset(-0.1))
 p_plasmid <- ggchord(plasmid_example_pUC19) +
   geom_seq() +
   geom_seq_center_label() +
-  geom_feature_plasmid(data = plasmid_features, position = plasmid_position) +
-  geom_feature_label_repel(data = plasmid_features, position = plasmid_position) +
+  geom_feature(preset = 'plasmid', data = plasmid_features, position = plasmid_position) +
+  geom_feature_label(placement = 'repel', data = plasmid_features, position = plasmid_position) +
   geom_primer(data = plasmid_primers) +
   geom_restriction_site(data = display_sites) +
   coord_circular()
@@ -372,7 +373,7 @@ protein_seq_data_example[c("accver", "length", "sequence_unit")]
 # ---- nativeproteinlinks ----
 protein_ribbon_data_example[c("qaccver", "saccver", "qstart", "qend", "sstart", "send", "pident")]
 # ---- nativeproteinplot ----
-p_native_protein <- ggchord(protein_seq_data_example, protein_ribbon_data_example) +
+p_native_protein <- ggchord(prepare_ggchord_data(protein_seq_data_example, protein_ribbon_data_example)) +
   geom_seq() +
   geom_seq_label() +
   geom_link_ribbon() +
@@ -380,7 +381,7 @@ p_native_protein <- ggchord(protein_seq_data_example, protein_ribbon_data_exampl
   coord_collinear()
 p_native_protein
 # ---- nativeproteinchord ----
-p_native_chord <- ggchord(protein_seq_data_example, protein_ribbon_data_example) +
+p_native_chord <- ggchord(prepare_ggchord_data(protein_seq_data_example, protein_ribbon_data_example)) +
   geom_seq() +
   geom_seq_label() +
   geom_link_ribbon() +
@@ -442,13 +443,13 @@ merged_links <- merge_ggchord_ribbons(unique_links$data, max_gap = 100,
                                       min_pident_difference = 2)
 bundled_links <- bundle_ggchord_ribbons(observed_links, ribbon_sequences, bins = 30)
 # ---- ribbondensity ----
-p_density <- ggchord(ribbon_sequences, observed_links) +
+p_density <- ggchord(prepare_ggchord_data(ribbon_sequences, observed_links)) +
   geom_seq() +
   stat_ribbon_density(aes(ribbon_alpha = after_stat(bundle_n)), bins = 4,
                       weight = "count", fill = "#007D74") +
   scale_ribbon_alpha_continuous(name = "Local alignment count", range = c(0.18, 0.95)) +
   coord_chord()
-p_bundle <- ggchord(ribbon_sequences, observed_links) +
+p_bundle <- ggchord(prepare_ggchord_data(ribbon_sequences, observed_links)) +
   geom_seq() +
   stat_ribbon_bundle(bins = 30) +
   coord_chord()
@@ -458,7 +459,7 @@ points <- transform(head(observed_links, 3),
   qpos = floor((qstart + qend) / 2),
   spos = floor((sstart + send) / 2)
 )
-p_points <- ggchord(seq_data = ribbon_sequences) +
+p_points <- ggchord(data = ribbon_sequences) +
   geom_seq() +
   geom_link_line(data = points, arrow = grid::arrow(length = grid::unit(2, "mm"))) +
   coord_chord()
@@ -466,19 +467,19 @@ p_points
 # ---- featurestack ----
 plasmid <- plasmid_example_pUC19
 stack_features <- head(find_common_features(plasmid), 6)
-stack_position <- position_feature_stack(base_position = position_plasmid())
+stack_position <- position_feature_stack(base_position = position_offset(-0.1))
 p_stack <- ggchord(plasmid) +
   geom_seq() +
   geom_seq_center_label() +
   geom_feature(data = stack_features, position = stack_position) +
-  geom_feature_label_repel(data = stack_features, position = stack_position) +
+  geom_feature_label(placement = 'repel', data = stack_features, position = stack_position) +
   coord_circular()
 p_stack
 # ---- labellayouts ----
 label_plots <- lapply(c("auto", "radial", "arc"), function(layout) {
   ggchord(seq_data_example) +
     geom_seq() +
-    geom_gene(data = label_data) +
+    geom_feature(preset = 'gene', data = label_data) +
     geom_gene_label_repel(data = label_data, label_layout = layout) +
     coord_chord()
 })
@@ -487,7 +488,7 @@ label_plots$auto
 # ---- manualgenelabels ----
 p_manual_labels <- ggchord(seq_data_example) +
   geom_seq() +
-  geom_gene(data = label_data) +
+  geom_feature(preset = 'gene', data = label_data) +
   geom_gene_label(data = label_data, label_rotation = 30) +
   coord_chord()
 p_manual_labels
@@ -505,7 +506,7 @@ line_bins$gc_mean <- as.numeric(stats::filter(bins$gc, rep(1 / 3, 3)))
 line_bins <- subset(line_bins, is.finite(gc_mean))
 p_multitrack <- p_tracks +
   geom_track_line(aes(track_value = gc_mean), data = line_bins,
-                  position = position_track("gc", width = grid::unit(10, "mm")))
+                  track = "gc")
 focused_bins <- focus_ggchord_track(bins, track_seq,
   loci = data.frame(accver = track_seq$accver, start = 500, end = 1500), type = "interval")
 p_multitrack
@@ -567,14 +568,14 @@ parameter_genes[c("accver", "start", "end", "strand", "anno")]
 # ---- parameterstrand ----
 p_parameter_strand <- ggchord(seq_data_example) +
   geom_seq() +
-  geom_gene(data = parameter_genes,
+  geom_feature(preset = 'gene', data = parameter_genes,
     position = position_strand(c("+" = 0.08, "-" = -0.08))) +
   coord_chord()
 p_parameter_strand
 # ---- parameterwidth ----
 p_parameter_width <- ggchord(seq_data_example) +
   geom_seq() +
-  geom_gene(data = parameter_genes, width = c("+" = 0.03, "-" = 0.08)) +
+  geom_feature(preset = 'gene', data = parameter_genes, width = c("+" = 0.03, "-" = 0.08)) +
   coord_chord()
 p_parameter_width
 # ---- parameterlabels ----
@@ -599,7 +600,7 @@ example_cds[c("accver", "start", "end", "strand", "anno")]
 # ---- frontselectedgene ----
 chord_genes_example[c("accver", "start", "end", "strand", "anno")]
 # ---- frontbackbone ----
-p_chord_backbone <- ggchord(seq_data = seq_data_example) +
+p_chord_backbone <- ggchord(data = seq_data_example) +
   geom_seq() +
   geom_seq_label() +
   coord_chord()
@@ -610,27 +611,28 @@ p_chord_ribbon <- p_chord_backbone +
 p_chord_ribbon
 # ---- frontfeature ----
 p_chord_feature <- p_chord_ribbon +
-  geom_gene(data = chord_genes_example)
+  geom_feature(preset = 'gene', data = chord_genes_example)
 p_chord_feature
 # ---- frontrotation ----
 p_chord_rotated <- p_chord_backbone + coord_chord(rotation = 90)
 p_chord_rotated
 # ---- frontgap ----
-p_chord_gap <- ggchord(seq_data = seq_data_example) +
-  geom_seq(seq_gap = c("MT108731.1" = 0.12)) +
+p_chord_gap <- ggchord(data = seq_data_example) +
+  layout_sequences(gap = c("MT108731.1" = 0.12)) +
+  geom_seq() +
   geom_seq_label() +
   coord_chord()
 p_chord_gap
 # ---- frontradius ----
 chord_radius <- c("MT118296.1" = 0.72)
-p_chord_radius <- ggchord(seq_data = seq_data_example) +
+p_chord_radius <- ggchord(data = seq_data_example) +
   geom_seq(seq_radius = chord_radius) +
   geom_seq_label() +
   coord_chord()
 p_chord_radius
 # ---- frontcurvature ----
 chord_curvature <- c("MT118296.1" = 0)
-p_chord_curvature <- ggchord(seq_data = seq_data_example) +
+p_chord_curvature <- ggchord(data = seq_data_example) +
   geom_seq(seq_curvature = chord_curvature) +
   geom_seq_label() +
   coord_chord()
@@ -638,8 +640,9 @@ p_chord_curvature
 # ---- frontorientation ----
 chord_orientation <- c("MT108731.1" = 1, "MT118296.1" = -1,
                        "OQ646790.1" = 1, "OR222515.1" = 1)
-p_chord_orientation <- ggchord(seq_data = seq_data_example) +
-  geom_seq(seq_orientation = chord_orientation) +
+p_chord_orientation <- ggchord(data = seq_data_example) +
+  layout_sequences(orientation = chord_orientation) +
+  geom_seq() +
   geom_seq_label() +
   coord_chord()
 p_chord_orientation
@@ -651,7 +654,7 @@ p_chord_route
 chord_obstacle <- subset(gene_data_example, accver == "MT108731.1" & start == 48053)
 chord_obstacle$strand <- chord_obstacle$source_strand
 p_chord_obstacle <- p_chord_backbone +
-  geom_gene(data = chord_obstacle, position = position_strand(c("+" = -0.05)))
+  geom_feature(preset = 'gene', data = chord_obstacle, position = position_strand(c("+" = -0.05)))
 # ---- frontnoavoid ----
 p_chord_no_avoid <- p_chord_obstacle +
   geom_link_ribbon(data = chord_links, link_avoid = "none")
@@ -661,7 +664,7 @@ p_chord_smooth <- p_chord_obstacle +
   geom_link_ribbon(data = chord_links, link_avoid = "smooth")
 p_chord_smooth
 # ---- frontseqlabels ----
-p_chord_sequence_labels <- ggchord(seq_data = seq_data_example) +
+p_chord_sequence_labels <- ggchord(data = seq_data_example) +
   geom_seq() +
   geom_seq_label(seq_label_radius = 0.7, seq_label_orientation = "horizontal") +
   coord_chord()
@@ -684,13 +687,14 @@ p_chord_markers <- p_chord_backbone +
 p_chord_markers
 # ---- frontorder ----
 chord_order <- c("MT108731.1", "OQ646790.1", "MT118296.1", "OR222515.1")
-p_chord_order <- ggchord(seq_data = seq_data_example) +
-  geom_seq(seq_order = chord_order) +
+p_chord_order <- ggchord(data = seq_data_example) +
+  layout_sequences(order = chord_order) +
+  geom_seq() +
   geom_seq_label() +
   coord_chord()
 p_chord_order
 # ---- frontlinearbase ----
-p_linear_base <- ggchord(seq_data = seq_data_example) +
+p_linear_base <- ggchord(data = seq_data_example) +
   geom_seq() +
   geom_seq_label() +
   coord_collinear()
@@ -699,11 +703,12 @@ p_linear_base
 p_linear_link <- p_linear_base + geom_link_ribbon(data = chord_links)
 p_linear_link
 # ---- frontlinearcds ----
-p_linear_cds <- p_linear_link + geom_gene(data = chord_genes_example)
+p_linear_cds <- p_linear_link + geom_feature(preset = 'gene', data = chord_genes_example)
 p_linear_cds
 # ---- frontlineargap ----
-p_linear_gap <- ggchord(seq_data = seq_data_example) +
-  geom_seq(seq_gap = c("MT108731.1" = 0.45)) +
+p_linear_gap <- ggchord(data = seq_data_example) +
+  layout_sequences(gap = c("MT108731.1" = 0.45)) +
+  geom_seq() +
   geom_seq_label() +
   coord_collinear() +
   geom_link_ribbon(data = chord_links)
@@ -758,14 +763,14 @@ lesson_ids <- c("MT108731.1", "MT118296.1")
 lesson_sequences <- subset(seq_data_example, accver %in% lesson_ids)
 lesson_links <- subset(ribbon_data_example, qaccver %in% lesson_ids & saccver %in% lesson_ids)
 # ---- firstchord ----
-p_first_chord <- ggchord(seq_data = lesson_sequences, ribbon_data = lesson_links) +
+p_first_chord <- ggchord(prepare_ggchord_data(seq_data = lesson_sequences, ribbon_data = lesson_links)) +
   geom_seq() +
   geom_link_ribbon() +
   geom_seq_label() +
   coord_chord()
 p_first_chord
 # ---- firstlinear ----
-p_first_linear <- ggchord(seq_data = lesson_sequences, ribbon_data = lesson_links) +
+p_first_linear <- ggchord(prepare_ggchord_data(seq_data = lesson_sequences, ribbon_data = lesson_links)) +
   geom_seq() +
   geom_link_ribbon() +
   geom_seq_label() +
@@ -773,7 +778,7 @@ p_first_linear <- ggchord(seq_data = lesson_sequences, ribbon_data = lesson_link
 p_first_linear
 # ---- firstcircle ----
 plasmid <- plasmid_example_pUC19
-p_first_circle <- ggchord(seq_data = plasmid) +
+p_first_circle <- ggchord(data = plasmid) +
   geom_seq() +
   geom_seq_center_label() +
   coord_circular()
@@ -782,10 +787,10 @@ p_first_circle
 features <- find_common_features(plasmid)
 origins <- subset(features, type == "rep_origin")
 p_first_features <- p_first_circle +
-  geom_feature_plasmid(data = origins)
+  geom_feature(preset = 'plasmid', data = origins)
 p_first_features
 # ---- frontcirclestyle ----
-p_circle_single <- ggchord(seq_data = plasmid) +
+p_circle_single <- ggchord(data = plasmid) +
   geom_seq(seq_style = "single") +
   geom_seq_center_label() +
   coord_circular()
@@ -807,12 +812,12 @@ lesson_genes <- lesson_genes[!duplicated(lesson_genes$accver), ]
 lesson_position <- position_strand(0.09)
 # ---- practicechord ----
 p_annotated_chord <- p_first_chord +
-  geom_gene(data = lesson_genes, position = lesson_position) +
+  geom_feature(preset = 'gene', data = lesson_genes, position = lesson_position) +
   geom_gene_label(data = lesson_genes, position = lesson_position)
 p_annotated_chord
 # ---- practicelinear ----
 p_annotated_linear <- p_first_linear +
-  geom_gene(data = lesson_genes, position = lesson_position) +
+  geom_feature(preset = 'gene', data = lesson_genes, position = lesson_position) +
   geom_gene_label(data = lesson_genes, position = lesson_position) +
   geom_seq_scale(length = 10000)
 p_annotated_linear
@@ -845,13 +850,13 @@ first_links <- ribbon_data_example |>
   select(qaccver, saccver, qstart, qend, sstart, send)
 # ---- firstplot ----
 first_colours <- setNames(c("#E64B35", "#233E4A"), ids)
-p_first <- ggchord(
+p_first <- ggchord(prepare_ggchord_data(
   seq_data = first_sequences, ribbon_data = first_links,
-  gene_data = first_genes
+  gene_data = first_genes)
 ) +
   geom_link_ribbon(fill = "#82B6AD", alpha = .55) +
   geom_seq(colour = "#233E4A", show.legend = FALSE) +
-  geom_gene(aes(gene_fill = accver), position = position_strand(.10), width = .045) +
+  geom_feature(preset = 'gene', aes(gene_fill = accver), position = position_strand(.10), width = .045) +
   geom_seq_label(size = 4) +
   coord_collinear() +
   scale_gene_fill_manual(
@@ -902,14 +907,11 @@ show_radius <- c(
   "MT108731.1" = 1.08, "MT118296.1" = 0.82,
   "OQ646790.1" = 1.18, "OR222515.1" = 1.02
 )
-p_show_chord <- ggchord(seq_data = show_sequences, ribbon_data = show_links) +
+p_show_chord <- ggchord(prepare_ggchord_data(seq_data = show_sequences, ribbon_data = show_links)) +
   geom_link_ribbon(link_avoid = "smooth", alpha = 0.46, linewidth = 0.14) +
-  geom_seq(
-    seq_orientation = show_optimization$seq_orientation,
-    seq_curvature = show_curvature, seq_radius = show_radius,
-    seq_gap = 0.06, linewidth = 1.1
-  ) +
-  geom_gene(data = chord_genes, position = chord_position, width = 0.025) +
+  layout_sequences(orientation = show_optimization$seq_orientation, gap = 0.06) +
+  geom_seq(seq_curvature = show_curvature, seq_radius = show_radius, linewidth = 1.1) +
+  geom_feature(preset = 'gene', data = chord_genes, position = chord_position, width = 0.025) +
   geom_gene_label_repel(
     data = chord_labels, label_layout = "radial", label_wrap = 24,
     size = 2.8, label_max_lines = 3, position = chord_position
@@ -929,17 +931,20 @@ show_plasmid <- circular_data$seq_data
 show_plasmid_features <- circular_data$features
 show_plasmid_primers <- circular_data$primers
 show_plasmid_sites <- circular_data$sites
+show_plasmid_prepared <- prepare_ggchord_data(
+  show_plasmid, feature_data = show_plasmid_features
+)
 # ---- showcaseplasmid ----
 show_plasmid_position <- position_feature_stack(
-  spacing = 0.085, base_position = position_plasmid()
+  spacing = 0.085, base_position = position_offset(-0.1)
 )
-p_show_plasmid <- ggchord(show_plasmid, feature_data = show_plasmid_features, validate = "none") +
+p_show_plasmid <- ggchord(show_plasmid_prepared, validate = "none") +
   geom_seq(seq_style = "double", colour = "#252525") +
-  geom_feature_plasmid(position = show_plasmid_position) +
-  geom_feature_label_repel(
+  geom_feature(preset = 'plasmid', position = show_plasmid_position) +
+  geom_feature_label(placement = 'repel',
     position = show_plasmid_position,
     external = TRUE, max_overlaps = 0,
-    label_fit = "shrink", label_min_size = 2.5
+    overflow = "shrink", label_min_size = 2.5
   ) +
   geom_primer(data = show_plasmid_primers, colour = "#A020F0") +
   geom_primer_label_repel(
@@ -966,7 +971,7 @@ show_adjacent <- flagship_comparison_example$collinear$adjacent_links
 show_cross <- flagship_comparison_example$collinear$cross_links
 show_linear_coord <- coord_collinear(align = "center", orientation = "auto", ratio = 0.7)
 show_cross_controls <- flagship_comparison_example$collinear$route_controls
-p_show_collinear <- ggchord(show_sequences, gene_data = show_linear_features) +
+p_show_collinear <- ggchord(prepare_ggchord_data(show_sequences, gene_data = show_linear_features)) +
   geom_link_ribbon(
     aes(ribbon_fill = pident),
     data = show_adjacent,
@@ -978,8 +983,9 @@ p_show_collinear <- ggchord(show_sequences, gene_data = show_linear_features) +
     adjacent_only = FALSE, link_ctrl_point = show_cross_controls,
     link_avoid = "smooth", alpha = 0.28, linewidth = 0.3
   ) +
-  geom_seq(seq_gap = 0.42, linewidth = 1) +
-  geom_gene(position = position_strand(0.09), width = 0.045) +
+  layout_sequences(gap = 0.42) +
+  geom_seq(linewidth = 1) +
+  geom_feature(preset = 'gene', position = position_strand(0.09), width = 0.045) +
   geom_gene_label_repel(
     data = flagship_comparison_example$collinear$labels,
     label_layout = "auto", label_wrap = 24,
@@ -995,7 +1001,7 @@ p_show_collinear <- ggchord(show_sequences, gene_data = show_linear_features) +
   )
 p_show_collinear
 # ---- learnseq ----
-p_learn_seq <- ggchord(seq_data = show_sequences) +
+p_learn_seq <- ggchord(data = show_sequences) +
   geom_seq() +
   geom_seq_label(size = 4) +
   scale_seq_colour_manual(
@@ -1016,7 +1022,7 @@ p_learn_links <- p_learn_seq +
 p_learn_links
 # ---- learngenes ----
 p_learn_genes <- p_learn_links +
-  geom_gene(data = show_features, position = position_strand(0.08)) +
+  geom_feature(preset = 'gene', data = show_features, position = position_strand(0.08)) +
   scale_gene_fill_manual(values = gene_palette, breaks = c("+", "-"), name = "Strand") +
   guides(gene_fill = strand_guide)
 p_learn_genes
@@ -1034,8 +1040,8 @@ p_linear_links <- p_learn_links + coord_collinear()
 p_linear_labels <- p_learn_labels + coord_collinear(ratio = 0.65)
 p_linear_labels
 # ---- learnplasmid ----
-plasmid_position <- position_feature_stack(spacing = 0.085, base_position = position_plasmid())
-p_plasmid_backbone <- ggchord(seq_data = plasmid_seq) +
+plasmid_position <- position_feature_stack(spacing = 0.085, base_position = position_offset(-0.1))
+p_plasmid_backbone <- ggchord(data = plasmid_seq) +
   geom_seq(seq_style = "double", colour = "#252525") +
   geom_seq_center_label() +
   coord_circular(rotation = 0) +
@@ -1045,11 +1051,11 @@ p_plasmid_backbone <- ggchord(seq_data = plasmid_seq) +
     plot.background = element_rect(fill = doc_background, colour = NA)
   )
 p_plasmid_features <- p_plasmid_backbone +
-  geom_feature_plasmid(data = plasmid_features, position = plasmid_position)
+  geom_feature(preset = 'plasmid', data = plasmid_features, position = plasmid_position)
 p_plasmid_text <- p_plasmid_features +
-  geom_feature_label_repel(
+  geom_feature_label(placement = 'repel',
     data = plasmid_features, position = plasmid_position,
-    external = TRUE, label_fit = "shrink", label_min_size = 2.5
+    external = TRUE, overflow = "shrink", label_min_size = 2.5
   )
 p_plasmid_text
 # ---- catalogdata ----
@@ -1061,14 +1067,14 @@ catalog_features <- map(catalog_records, "features")
 catalog_summary <- flagship_circular_example$summary
 # ---- catalogplots ----
 make_catalog_plot <- function(sequence, features) {
-  placement <- position_feature_stack(spacing = 0.085, base_position = position_plasmid())
+  placement <- position_feature_stack(spacing = 0.085, base_position = position_offset(-0.1))
   sites <- flagship_circular_example$references[[sequence$accver]]$gallery_sites
-  ggchord(seq_data = sequence |> select(accver, length)) +
+  ggchord(data = sequence |> select(accver, length)) +
     geom_seq(seq_style = "double", colour = "#252525") +
-    geom_feature_plasmid(data = features, position = placement) +
-    geom_feature_label_repel(
+    geom_feature(preset = 'plasmid', data = features, position = placement) +
+    geom_feature_label(placement = 'repel',
       data = features, position = placement, external = TRUE,
-      label_fit = "shrink", label_min_size = 2.5
+      overflow = "shrink", label_min_size = 2.5
     ) +
     geom_restriction_site(data = sites, label_side = "outside", label_size = 2.5) +
     geom_seq_center_label() +
@@ -1139,7 +1145,7 @@ data.frame(accver = names(layout_choice$seq_orientation),
 library(ggchord)
 seqs_align <- seq_data_example[c("accver", "length")]
 links_align <- ribbon_data_example[c("qaccver", "saccver", "qstart", "qend", "sstart", "send")]
-base_align <- ggchord(seqs_align, ribbon_data = links_align) +
+base_align <- ggchord(prepare_ggchord_data(seqs_align, ribbon_data = links_align)) +
   geom_seq() +
   geom_link_ribbon() +
   geom_seq_label()
@@ -1161,8 +1167,9 @@ p_alignauto
 # ---- tracktile ----
 p_tracktile <- ggchord(track_seq) +
   geom_seq() +
+  track_band("gc_colour", width = grid::unit(10, "mm")) +
   geom_track_tile(aes(track_fill = gc), data = bins,
-    position = position_track("gc_colour", width = grid::unit(10, "mm"))) +
+    track = "gc_colour") +
   scale_track_fill_gradientn("gc_colour", colours = c("#F1E51D", "#31849B"),
     limits = c(0, 1), name = "GC fraction") +
   coord_circular()
@@ -1178,18 +1185,18 @@ gene_window <- focus_ggchord_data(
   gene_data = source_gene,
   loci = data.frame(accver = "OQ646790.1", start = 43000, end = 47000)
 )
-gene_base <- ggchord(gene_window$seq_data, gene_data = gene_window$gene_data) +
+gene_base <- ggchord(prepare_ggchord_data(gene_window$seq_data, gene_data = gene_window$gene_data)) +
   geom_seq() +
   scale_seq_position_continuous(coordinates = "source") +
   coord_collinear()
 # ---- comparegeneshouldered ----
-p_comparegeneshouldered <- gene_base + geom_gene(arrow_head_width = 1.6, arrow_head_style = "shouldered")
+p_comparegeneshouldered <- gene_base + geom_feature(preset = 'gene', arrow_head_width = 1.6, arrow_head_style = "shouldered")
 p_comparegeneshouldered
 # ---- comparegeneflush ----
-p_comparegeneflush <- gene_base + geom_gene(arrow_head_width = 1.6, arrow_head_style = "flush")
+p_comparegeneflush <- gene_base + geom_feature(preset = 'gene', arrow_head_width = 1.6, arrow_head_style = "flush")
 p_comparegeneflush
 # ---- comparegenetriangle ----
-p_comparegenetriangle <- gene_base + geom_gene(arrow_head_width = 1.6, arrow_head_style = "triangle")
+p_comparegenetriangle <- gene_base + geom_feature(preset = 'gene', arrow_head_width = 1.6, arrow_head_style = "triangle")
 p_comparegenetriangle
 # ---- comparebranchdata ----
 library(ggchord)
@@ -1198,7 +1205,7 @@ branch_links <- data.frame(
   qaccver = c("query", "query"), saccver = c("target_a", "target_b"),
   qstart = 200, qend = 600, sstart = c(100, 300), send = c(500, 700)
 )
-branch_base <- ggchord(branch_seqs, ribbon_data = branch_links) +
+branch_base <- ggchord(prepare_ggchord_data(branch_seqs, ribbon_data = branch_links)) +
   geom_seq() + geom_seq_label() + coord_chord(rotation = 0)
 # ---- comparebranchnone ----
 p_comparebranchnone <- branch_base + geom_link_ribbon(link_branch = "none")
@@ -1225,8 +1232,9 @@ p_comparelinkstraight
 # ---- comparetrackthin ----
 p_comparetrackthin <- ggchord(track_seq) +
   geom_seq() +
+  track_band("gc_colour", width = grid::unit(4, "mm")) +
   geom_track_tile(aes(track_fill = gc), data = bins,
-    position = position_track("gc_colour", width = grid::unit(4, "mm"))) +
+    track = "gc_colour") +
   scale_track_fill_gradientn("gc_colour", colours = c("#F1E51D", "#31849B"),
     limits = c(0, 1), name = "GC fraction") +
   coord_circular()
@@ -1303,50 +1311,50 @@ p_comparefixedrotate
 
 # ---- comparefeaturefit ----
 p_comparefeaturefit <- finish_feature_base +
-  geom_feature_label_repel(data = finish_labels, label_layout = "feature")
+  geom_feature_label(placement = 'repel', data = finish_labels, label_layout = "feature")
 p_comparefeaturefit
 
 # ---- compareradialfit ----
 p_compareradialfit <- finish_feature_base +
-  geom_feature_label_repel(data = finish_labels, label_layout = "radial")
+  geom_feature_label(placement = 'repel', data = finish_labels, label_layout = "radial")
 p_compareradialfit
 
 # ---- compareautofit ----
 p_compareautofit <- finish_feature_base +
-  geom_feature_label_repel(data = finish_labels, label_layout = "auto")
+  geom_feature_label(placement = 'repel', data = finish_labels, label_layout = "auto")
 p_compareautofit
 
 # ---- comparecalloutfit ----
 p_comparecalloutfit <- finish_feature_base +
-  geom_feature_label_repel(data = finish_labels, label_layout = "callout")
+  geom_feature_label(placement = 'repel', data = finish_labels, label_layout = "callout")
 p_comparecalloutfit
 
 # ---- compareshrinkfit ----
 p_compareshrinkfit <- finish_feature_base +
-  geom_feature_label_repel(data = finish_labels, label_layout = "feature", label_fit = "shrink")
+  geom_feature_label(placement = 'repel', data = finish_labels, label_layout = "feature", overflow = "shrink")
 p_compareshrinkfit
 
 # ---- comparewrapfit ----
 p_comparewrapfit <- finish_feature_base +
-  geom_feature_label_repel(data = finish_labels, label_layout = "feature", label_wrap = 14)
+  geom_feature_label(placement = 'repel', data = finish_labels, label_layout = "feature", label_wrap = 14)
 p_comparewrapfit
 
 # ---- comparefinishstack ----
-finish_position <- position_feature_stack(base_position = position_plasmid(), spacing = 0.1)
+finish_position <- position_feature_stack(base_position = position_offset(-0.1), spacing = 0.1)
 finish_stack_base <- ggchord(finish_seq) + geom_seq() + coord_circular()
 
 # ---- comparepositionidentity ----
 finish_current_position <- position_identity()
 p_comparepositionidentity <- finish_stack_base +
   geom_feature(data = finish_features, position = finish_current_position) +
-  geom_feature_label_repel(data = finish_features, position = finish_current_position)
+  geom_feature_label(placement = 'repel', data = finish_features, position = finish_current_position)
 p_comparepositionidentity
 
 # ---- comparepositionstack ----
 finish_current_position <- finish_position
 p_comparepositionstack <- finish_stack_base +
   geom_feature(data = finish_features, position = finish_current_position) +
-  geom_feature_label_repel(data = finish_features, position = finish_current_position)
+  geom_feature_label(placement = 'repel', data = finish_features, position = finish_current_position)
 p_comparepositionstack
 
 # ---- comparefinishdnabase ----
@@ -1434,15 +1442,15 @@ p_comparerestrictioninside <- finish_recognition_base +
 p_comparerestrictioninside
 
 # ---- compareshortauto ----
-p_compareshortauto <- gene_base + geom_gene(arrow_head_length = 1.5, short_feature = "auto")
+p_compareshortauto <- gene_base + geom_feature(preset = 'gene', arrow_head_length = 1.5, short_feature = "auto")
 p_compareshortauto
 
 # ---- compareshortwedge ----
-p_compareshortwedge <- gene_base + geom_gene(arrow_head_length = 1.5, short_feature = "wedge")
+p_compareshortwedge <- gene_base + geom_feature(preset = 'gene', arrow_head_length = 1.5, short_feature = "wedge")
 p_compareshortwedge
 
 # ---- compareshortblock ----
-p_compareshortblock <- gene_base + geom_gene(arrow_head_length = 1.5, short_feature = "block")
+p_compareshortblock <- gene_base + geom_feature(preset = 'gene', arrow_head_length = 1.5, short_feature = "block")
 p_compareshortblock
 
 # ---- comparefinishchord ----
@@ -1486,7 +1494,7 @@ scale_ids <- scale_seqs$accver
 scale_colours <- setNames(c("#E64B35", "#233E4A", "#269B82", "#D59B17"), scale_ids)
 scale_opacity <- setNames(c(0.35, 0.55, 0.75, 0.95), scale_ids)
 scale_lines <- setNames(c("solid", "dashed", "dotted", "dotdash"), scale_ids)
-scale_base <- ggchord(scale_seqs, ribbon_data = scale_links) + geom_seq() + coord_chord()
+scale_base <- ggchord(prepare_ggchord_data(scale_seqs, ribbon_data = scale_links)) + geom_seq() + coord_chord()
 scale_numeric <- scale_base + geom_link_ribbon(aes(ribbon_fill = pident))
 
 # ---- comparescalegradient ----
@@ -1520,7 +1528,7 @@ invisible(ggplot2::ggplot_build(p_scale_manual))
 # ---- comparescaleidentity ----
 scale_identity_links <- scale_links |>
   mutate(display_colour = if_else(pident >= 90, "#269B82", "#303B71"))
-p_scale_identity <- ggchord(scale_seqs, ribbon_data = scale_identity_links) +
+p_scale_identity <- ggchord(prepare_ggchord_data(scale_seqs, ribbon_data = scale_identity_links)) +
   geom_seq() + geom_link_ribbon(aes(ribbon_fill = display_colour)) +
   scale_ribbon_fill_identity() + coord_chord()
 invisible(ggplot2::ggplot_build(p_scale_identity))
@@ -1581,8 +1589,8 @@ invisible(ggplot2::ggplot_build(p_scale_preset))
 # ---- comparescalegenering ----
 scale_gene_data <- gene_data_example |>
   transmute(accver, start, end, strand = source_strand)
-p_scale_gene <- ggchord(scale_seqs, gene_data = scale_gene_data) + geom_seq() +
-  geom_gene() + scale_gene_fill_manual(values = c("+" = "#CE1536", "-" = "#346B9D")) + coord_chord()
+p_scale_gene <- ggchord(prepare_ggchord_data(scale_seqs, gene_data = scale_gene_data)) + geom_seq() +
+  geom_feature(preset = 'gene') + scale_gene_fill_manual(values = c("+" = "#CE1536", "-" = "#346B9D")) + coord_chord()
 p_scale_ring <- ggchord(scale_seqs) + geom_seq(aes(seq_ring = accver)) +
   scale_seq_ring_manual(values = setNames(c(0.8, 1, 1.2, 1.4), scale_ids)) + coord_chord()
 invisible(ggplot2::ggplot_build(p_scale_gene))
@@ -1601,13 +1609,15 @@ invisible(ggplot2::ggplot_build(p_scale_region))
 scale_track_bins <- bins |>
   mutate(gc_class = if_else(gc >= 0.5, "GC >= 0.5", "GC < 0.5"))
 p_scale_trackfill <- ggchord(track_seq) + geom_seq() +
+  track_band("classes") +
   geom_track_tile(aes(track_fill = gc_class), data = scale_track_bins,
-    position = position_track("classes")) +
+    track = "classes") +
   scale_track_fill_manual("classes", values = c("GC >= 0.5" = "#31849B", "GC < 0.5" = "#D59B17")) +
   coord_circular()
 p_scale_trackcolour <- ggchord(track_seq) + geom_seq() +
+  track_band("classes") +
   geom_track_tile(aes(track_colour = gc_class), data = scale_track_bins,
-    position = position_track("classes"), fill = NA) +
+    track = "classes", fill = NA) +
   scale_track_colour_manual("classes", values = c("GC >= 0.5" = "#31849B", "GC < 0.5" = "#D59B17")) +
   coord_circular()
 invisible(ggplot2::ggplot_build(p_scale_trackfill))
@@ -1615,8 +1625,9 @@ invisible(ggplot2::ggplot_build(p_scale_trackcolour))
 
 # ---- comparescaletrackgradient ----
 p_scale_trackgradient <- ggchord(track_seq) + geom_seq() +
+  track_band("gc") +
   geom_track_tile(aes(track_fill = gc, track_colour = gc), data = bins,
-    position = position_track("gc")) +
+    track = "gc") +
   scale_track_fill_gradientn("gc", colours = c("#D59B17", "#31849B")) +
   scale_track_colour_gradientn("gc", colours = c("#D59B17", "#31849B")) +
   coord_circular()
@@ -1658,7 +1669,7 @@ head(focused_bins)
 library(ggchord)
 stat_sequences <- seq_data_example
 stat_links <- ribbon_data_example
-stat_base <- ggchord(stat_sequences, ribbon_data = stat_links) + geom_seq() + coord_chord()
+stat_base <- ggchord(prepare_ggchord_data(stat_sequences, ribbon_data = stat_links)) + geom_seq() + coord_chord()
 
 # ---- comparedensityfour ----
 p_comparedensityfour <- stat_base +
@@ -1695,17 +1706,17 @@ p_comparefeatureblock <- finish_circle + geom_feature(data = finish_features, sh
 p_comparefeatureblock
 
 # ---- comparefeaturepreset ----
-p_comparefeaturepreset <- finish_circle + geom_feature_plasmid(data = finish_features)
+p_comparefeaturepreset <- finish_circle + geom_feature(preset = 'plasmid', data = finish_features)
 p_comparefeaturepreset
 
 # ---- compareexternaloff ----
 p_compareexternaloff <- finish_feature_base +
-  geom_feature_label_repel(data = finish_labels, label_layout = "feature", external = FALSE)
+  geom_feature_label(placement = 'repel', data = finish_labels, label_layout = "feature", external = FALSE)
 p_compareexternaloff
 
 # ---- compareellipsisfit ----
 p_compareellipsisfit <- finish_feature_base +
-  geom_feature_label_repel(data = finish_labels, label_layout = "feature", label_wrap = 14, label_fit = "ellipsis")
+  geom_feature_label(placement = 'repel', data = finish_labels, label_layout = "feature", label_wrap = 14, overflow = "ellipsis")
 p_compareellipsisfit
 
 # ---- compareprimeroffset ----
@@ -1726,10 +1737,12 @@ p_compareregionoffset
 # ---- comparemultitrackdata ----
 make_gc_tracks <- function(colour_order) {
   ggchord(track_seq) + geom_seq() +
+    track_band("gc_height", order = 1, width = grid::unit(8, "mm")) +
     geom_track_col(aes(track_value = gc), data = bins,
-      position = position_track("gc_height", order = 1, width = grid::unit(8, "mm"))) +
+      track = "gc_height") +
+    track_band("gc_colour", order = colour_order, width = grid::unit(4, "mm")) +
     geom_track_tile(aes(track_fill = gc), data = bins,
-      position = position_track("gc_colour", order = colour_order, width = grid::unit(4, "mm"))) +
+      track = "gc_colour") +
     scale_track_value_continuous("gc_height", limits = c(0, 1), unit = "GC fraction") +
     scale_track_fill_gradientn("gc_colour", colours = c("#F1E51D", "#31849B"), limits = c(0, 1)) +
     coord_circular()
@@ -1771,8 +1784,9 @@ foundation_order <- setNames(
   c("A_high", "B", "A_low")
 )
 foundation_split <- ceiling(nrow(foundation_hsp) / 2)
-foundation_plot <- ggchord(foundation_seqs, feature_data = foundation_features) +
-  geom_seq(seq_order = foundation_order) +
+foundation_plot <- ggchord(prepare_ggchord_data(foundation_seqs, feature_data = foundation_features)) +
+  layout_sequences(order = foundation_order) +
+  geom_seq() +
   geom_seq_label() +
   geom_feature(shape = "arrow") +
   geom_link_ribbon(
@@ -1786,7 +1800,7 @@ foundation_plot <- ggchord(foundation_seqs, feature_data = foundation_features) 
 p_foundationvertical <- foundation_plot + coord_collinear(seq_axis = "vertical")
 p_foundationvertical
 # ---- foundationsankey ----
-p_foundationsankey <- ggchord(foundation_seqs, foundation_hsp) +
+p_foundationsankey <- ggchord(prepare_ggchord_data(foundation_seqs, foundation_hsp)) +
   geom_seq() +
   geom_seq_label() +
   geom_link_ribbon() +
@@ -1797,21 +1811,23 @@ foundation_events <- foundation_hsp |>
   transmute(accver = qaccver, pos = qstart)
 p_foundationcount <- ggchord(foundation_seqs) +
   geom_seq() +
+  track_band("query_starts") +
   geom_track(
     aes(x = pos), data = foundation_events,
-    geom = "bar", track = position_track("query_starts")
+    geom = "bar", track = "query_starts"
   ) +
   coord_collinear()
 p_foundationcount
 # ---- foundationarrow ----
-p_foundationarrow <- ggchord(foundation_seqs, foundation_hsp) +
+p_foundationarrow <- ggchord(prepare_ggchord_data(foundation_seqs, foundation_hsp)) +
   geom_seq() +
   geom_link_ribbon(tip = "subject") +
   coord_collinear()
 p_foundationarrow
 # ---- foundationequal ----
-p_foundationequal <- ggchord(foundation_seqs, foundation_hsp) +
-  geom_seq(length_mode = "equal") +
+p_foundationequal <- ggchord(prepare_ggchord_data(foundation_seqs, foundation_hsp)) +
+  layout_sequences(length_mode = "equal") +
+  geom_seq() +
   geom_link_ribbon(aes(ribbon_fill = pident), tip = "none") +
   coord_collinear()
 p_foundationequal
@@ -1825,12 +1841,12 @@ dotplot_seqs <- bind_rows(
 ) |>
   distinct()
 # ---- dotplotview ----
-p_viewdotplot <- ggchord(dotplot_seqs, dotplot_hsp) +
+p_viewdotplot <- ggchord(prepare_ggchord_data(dotplot_seqs, dotplot_hsp)) +
   geom_alignment_segment(aes(link_colour = pident), linewidth = 0.65) +
   coord_dotplot()
 p_viewdotplot
 # ---- dotplotreverse ----
-dotplot_reversed <- ggchord(dotplot_seqs, dotplot_hsp) +
+dotplot_reversed <- ggchord(prepare_ggchord_data(dotplot_seqs, dotplot_hsp)) +
   geom_alignment_segment(aes(link_colour = pident), linewidth = 0.65) +
   coord_dotplot(y_orientation = -1)
 dotplot_layout <- export_ggchord_layout(dotplot_reversed)
@@ -1843,14 +1859,15 @@ radial_hsp <- comparison_data$links
 radial_features <- comparison_data$features
 radial_events <- comparison_data$events
 # ---- radialview ----
-p_viewradial <- ggchord(radial_seqs, radial_hsp, feature_data = radial_features) +
+p_viewradial <- ggchord(prepare_ggchord_data(radial_seqs, radial_hsp, feature_data = radial_features)) +
   geom_seq() +
   geom_link_ribbon(link_avoid = "smooth") +
   geom_feature(shape = "arrow", width = 0.025, position = position_strand(0.05)) +
   geom_seq_label(seq_label_orientation = "horizontal") +
+  track_band("hsp-count", width = unit(3, "mm")) +
   geom_track(
     data = radial_events, geom = "bar",
-    track = position_track("hsp-count", width = unit(3, "mm"))
+    track = "hsp-count"
   ) +
   coord_radial_synteny(start_angle = 90, inner_radius = 0.7)
 p_viewradial
@@ -1867,11 +1884,11 @@ radial_rotated <- p_viewradial +
 radial_rotated
 
 # ---- expansionminimal ----
-ggchord(seq_data_example, ribbon_data_example) +
+ggchord(prepare_ggchord_data(seq_data_example, ribbon_data_example)) +
   geom_alignment_segment(aes(link_colour = pident)) +
   coord_dotplot()
 
-ggchord(seq_data_example, ribbon_data_example) +
+ggchord(prepare_ggchord_data(seq_data_example, ribbon_data_example)) +
   geom_seq() +
   geom_link_ribbon() +
   geom_seq_label() +
@@ -1892,16 +1909,17 @@ fusion_events <- fusion_hsp |>
 # ---- fusionpanels ----
 fusion_center <- ggchord(fusion_seqs |> slice(1)) +
   geom_seq(aes(seq_colour = accver), show.legend = FALSE) +
+  track_band("hsp-start-count", width = unit(6, "mm")) +
   geom_track(
     data = fusion_events, geom = "bar", stat = "bin", binwidth = 2000,
     boundary = 1, closed = "left", bounds = "clip",
-    track = position_track("hsp-start-count", width = unit(6, "mm"))
+    track = "hsp-start-count"
   ) +
   scale_track_value_continuous("hsp-start-count", name = NULL, breaks = c(0, 5)) +
   scale_seq_colour_manual(values = fusion_colours) +
   coord_circular()
 # ---- fusionlinear ----
-fusion_linear <- ggchord(fusion_seqs, fusion_hsp) +
+fusion_linear <- ggchord(prepare_ggchord_data(fusion_seqs, fusion_hsp)) +
   geom_seq(show.legend = FALSE) +
   geom_link_ribbon(show.legend = FALSE) +
   geom_seq_label() +

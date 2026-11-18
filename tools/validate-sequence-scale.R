@@ -8,7 +8,7 @@ local({
     row_id = c("A", "A", "B"), orientation = c(1, -1, 1))
   view <- segment_ggchord_data(sequences, windows = windows)
   plot <- ggchord(view$seq_data) + geom_seq() +
-    scale_seq_position_continuous(sequences = "A_right", coordinates = "source",
+    scale_seq_position_continuous(guide = guide_seq_axis("A_right"), coordinates = "source",
       breaks = c(700, 800, 900)) +
     geom_seq_scale(length = 100) +
     coord_collinear(segments = view$segments, segment_gap = 80)

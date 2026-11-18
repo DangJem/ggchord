@@ -46,7 +46,7 @@ stopifnot(again$seq_data$.source_origin[1L] == loci$start[1L] + 10,
   all(again$ribbon_data$.source_sstart == links$sstart))
 
 # The focused public rendering stays within its biological sequence interval.
-plot <- ggchord(focused$seq_data, gene_data = focused$gene_data, validate = "none") +
+plot <- ggchord(prepare_ggchord_data(focused$seq_data, gene_data = focused$gene_data), validate = "none") +
   geom_seq() + geom_feature() + coord_collinear()
 geometry <- export_ggchord_layout(plot, include = "feature")
 sequence_width <- geometry$sequence_layout$xmax[

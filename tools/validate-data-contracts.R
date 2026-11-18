@@ -47,7 +47,7 @@ local({
   distinct_points <- rbind(points[1, ], transform(points[1, ], sstrand = '+', direction = 'same'))
   stopifnot(nrow(deduplicate_ggchord_ribbons(distinct_points)$data) == 2L)
   density_input <- transform(links[c(2, 2), ], orientation_known = c(TRUE, FALSE))
-  density_build <- ggplot2::ggplot_build(ggchord(seqs, density_input, validate = 'none') +
+  density_build <- ggplot2::ggplot_build(ggchord(prepare_ggchord_data(seqs, density_input), validate = 'none') +
     geom_seq() + stat_ribbon_density(aes(ribbon_alpha = after_stat(bundle_n)),
       bins = 1, weight = 'count') + coord_collinear())
   stopifnot(all(density_build$data[[2L]]$bundle_n == 1L),

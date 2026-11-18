@@ -1,5 +1,5 @@
 {
-  "source_sha256": "3b403ce33e934180f5dfb78b235e680a4dafc76c34a8d4b03b66f7c42c6d1b4a",
+  "source_sha256": "bc8c51f9edafa896459432b7c32c30a091629d6552d1120a6ee9a6b24f3876f3",
   "strings": {
     "title": {
       "source_sha256": "543c2953291eece4e47b74bc939ba6fa50286298fb22b68e07fc1eadf250f643",
@@ -12,9 +12,9 @@
       "translation": "Build layered sequence figures in R with ggplot2: compare multiple sequences, annotate a circular map, inspect HSP alignments and connect independent views."
     },
     "api-compatibility": {
-      "source_sha256": "07f2f9dbacfe96de368f722386e63652b784ba20705e99207429642ff7e75434",
+      "source_sha256": "f932dea3e36fde755346efec415917d0918c3acad8aae5438c6cb74a862668ef",
       "status": "reviewed",
-      "translation": "v0.29.0 is the final release using the legacy API. A major rewrite of ggchord is underway for v0.50.0. Public interfaces may be renamed or removed without a transition release, and existing plotting code may need changes when you upgrade. Projects that rely on the legacy API can pin v0.29.0."
+      "translation": "v0.29.0 is the final release using the legacy API. The v0.50.0 development version changes plot construction, tracks and labels. See the [migration guide](MIGRATION.md) when upgrading."
     },
     "website": {
       "source_sha256": "fb8d739d08b971680e9f9c641043d6151f1966bea24f30d6798703257f21edf7",

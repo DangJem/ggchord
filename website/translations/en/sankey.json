@@ -1,5 +1,5 @@
 {
-  "source_sha256": "21b0b129bcdf1cc98efda574761ebc1de6050bfe9469f590371737e80a4b0c06",
+  "source_sha256": "76be76c912eb5f364984687bcb2126bcb01d01fefdf63ffe57c4da9fcfc5f7b8",
   "blocks": {
     "1": {
       "source_sha256": "da1a274bced79f06c32ff0607fd0c47b42dc53b813a337a7afd8c4d5c3a21cc8",
@@ -32,9 +32,9 @@
       "translation": "## Check sources and instances ⟦shared:0⟧\n"
     },
     "15": {
-      "source_sha256": "7b38f60bdf1cf16b5551a214cfbc9cb34d713df801460820d4f0a63f441ec188",
+      "source_sha256": "40aa0962a4e1688380193e1e70a353514ba7ba3b05e0f960f8605a379dacca9b",
       "status": "reviewed",
-      "translation": "Each of two sources appears once on each side. Do not duplicate seq_data to manufacture observations. Reciprocal records stay distinct. self_links = TRUE enables existing self records without creating any. seq_order contains each source once; between and shared branches are unsupported.\n"
+      "translation": "Each of two sources appears once on each side. Do not duplicate seq_data to manufacture observations. Reciprocal records stay distinct. self_links = TRUE enables existing self records without creating any. layout_sequences(order = ...) contains each source once; between and shared branches are unsupported.\n"
     },
     "16": {
       "source_sha256": "359c06aac011dfab9139c9370e613f829e6633ceb7441c6ff37235174087119e",

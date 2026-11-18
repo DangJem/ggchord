@@ -1,5 +1,5 @@
 {
-  "source_sha256": "6bbfa2a1bbc7c283f31f6586212a088a55b61f99d0cd05e859155b6ca620df88",
+  "source_sha256": "c14abbf46c22544d51de90f1c0889ef0cb563586959374f1f14253d95ac00e47",
   "blocks": {
     "0": {
       "source_sha256": "9499c96a24153f32ba75496d3d6eec8db087aba8e645ff35192b5f1b8688b41f",
@@ -27,9 +27,9 @@
       "translation": "Use ⟦shared:1⟧ or ⟦shared:2⟧ for manual ⟦shared:0⟧,\nradial/circumferential offsets and orientation controls. Automatic layers reject\nthese manual controls: choose ⟦shared:3⟧ or remove the manual argument.\nUse ⟦shared:4⟧, ⟦shared:5⟧ and ⟦shared:6⟧ for supported fixed text styles.\n"
     },
     "10": {
-      "source_sha256": "f64538872c8543cd781c0ed3d1a6b9bb78d88e5c324930ae4a7591a4f8e1f0e7",
+      "source_sha256": "b1bcf7d52bf6892bf5258aa00c8d883b9070969134adbc051c17ced9dd6a0f24",
       "status": "reviewed",
-      "translation": "⟦shared:0⟧, ⟦shared:1⟧, ⟦shared:2⟧ and ⟦shared:3⟧ control fitting\nwhere supported. Shrinking is explicit and bounded. Unresolved labels may move\nor hide; the feature geometry remains. Inspect ⟦shared:4⟧ and\n⟦shared:5⟧ at the final export size.\n"
+      "translation": "For automatic feature labels, ⟦shared:0⟧ selects text fitting. Automatic gene labels use ⟦shared:1⟧. Both support ⟦shared:2⟧, ⟦shared:3⟧ and ⟦shared:4⟧. Shrinking requires an explicit choice and has a lower size limit. An unresolved label may move or hide while its feature remains visible. Inspect ⟦shared:5⟧ and ⟦shared:6⟧ at the final export dimensions.\n"
     },
     "13": {
       "source_sha256": "cd49e96927505b0be15cf0873935e448fac8ff634cf9add4a27bb5d3d97c60bb",

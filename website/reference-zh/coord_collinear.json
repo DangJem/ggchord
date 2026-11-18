@@ -1,5 +1,5 @@
 {
-  "source_sha256": "d1d126f1b0cdf21e85012b80ef7dadcd58f55178572d275fc06c6648f44e5903",
+  "source_sha256": "fa042d7afd072b38041962f88f14396c04b036215d1dfd9d9ceeb5c345cb52b0",
   "translations": {
     "0": "直线型多序列共线性坐标系",
     "1": "固定 y/x 纵横比，默认 1。",

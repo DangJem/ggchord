@@ -630,7 +630,12 @@
       "width",
       "arrow_head_style",
       "short_feature",
-      "segment_boundaries"
+      "segment_boundaries",
+      "preset",
+      "arrow_head_length",
+      "arrow_head_width",
+      "position",
+      "id"
     ],
     "purpose": {
       "zh": "绘制通用基因组注释"
@@ -655,7 +660,19 @@
       "label_rotation",
       "label_radial_offset",
       "label_circum_offset",
-      "label_wrap"
+      "label_wrap",
+      "placement",
+      "label_layout",
+      "overflow",
+      "label_max_lines",
+      "label_min_size",
+      "external",
+      "max_overlaps",
+      "label_segment_layer",
+      "label_repeat",
+      "label_segment_colour",
+      "id",
+      "anchor_layer"
     ],
     "purpose": {
       "zh": "为通用基因组注释添加标签"
@@ -665,83 +682,6 @@
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
       "zh": "兼容骨架坐标（见支持表）；直线图的 radial/tangent 为竖排/横排；Radial见新增视图支持矩阵"
-    }
-  },
-  "geom_feature_label_repel": {
-    "level": "L3",
-    "page": "circular-labels",
-    "anchor": "automatic-labels",
-    "reason": "Reviewed input/output, constraints and runnable canonical section; key-parameter level applies only to listed behavior",
-    "modes": "all three; external=FALSE rejected by linear mode; Radial per view-expansion matrix",
-    "parameters": [
-      "label_layout",
-      "label_fit",
-      "label_wrap",
-      "label_max_lines",
-      "label_min_size",
-      "label_side",
-      "external",
-      "max_overlaps",
-      "label_segment_layer",
-      "label_repeat",
-      "label_segment_colour"
-    ],
-    "purpose": {
-      "zh": "自动安排通用注释标签"
-    },
-    "alias_of": "",
-    "case": "chord",
-    "scope": "documented canonical use; not all combinations",
-    "modes_localized": {
-      "zh": "兼容骨架坐标（见支持表）；直线图拒绝 external=FALSE；Radial见新增视图支持矩阵"
-    }
-  },
-  "geom_feature_plasmid": {
-    "level": "L3",
-    "page": "circular-features",
-    "anchor": "feature-shapes",
-    "reason": "Reviewed input/output, constraints and runnable canonical section; key-parameter level applies only to listed behavior",
-    "modes": "generic geometry preset; intended circular; compare defaults before transfer; Radial per view-expansion matrix",
-    "parameters": [
-      "shape",
-      "width",
-      "arrow_head_length",
-      "arrow_head_width",
-      "arrow_head_style",
-      "short_feature",
-      "position"
-    ],
-    "purpose": {
-      "zh": "在圆形质粒上绘制特征注释"
-    },
-    "alias_of": "",
-    "case": "plasmids",
-    "scope": "documented canonical use; not all combinations",
-    "modes_localized": {
-      "zh": "通用几何的组合预设；默认面向圆图；Radial见新增视图支持矩阵"
-    }
-  },
-  "geom_gene": {
-    "level": "L3",
-    "page": "feature-geometry",
-    "anchor": "arrow-heads",
-    "reason": "Reviewed input/output, constraints and runnable canonical section; key-parameter level applies only to listed behavior",
-    "modes": "all three on bp; known strand required; Radial per view-expansion matrix",
-    "parameters": [
-      "width",
-      "arrow_head_length",
-      "arrow_head_width",
-      "arrow_head_style",
-      "short_feature"
-    ],
-    "purpose": {
-      "zh": "添加基因箭头图层"
-    },
-    "alias_of": "",
-    "case": "chord",
-    "scope": "documented canonical use; not all combinations",
-    "modes_localized": {
-      "zh": "兼容骨架坐标（见支持表）的 bp 数据；需已知正负链；Radial见新增视图支持矩阵"
     }
   },
   "geom_gene_label": {
@@ -920,10 +860,7 @@
       "seq_backbone_gap",
       "seq_backbone_width",
       "seq_radius",
-      "seq_curvature",
-      "seq_gap",
-      "seq_orientation",
-      "seq_order"
+      "seq_curvature"
     ],
     "purpose": {
       "zh": "添加序列骨架图层"
@@ -1052,7 +989,7 @@
     "page": "tracks-statistics",
     "anchor": "tracks",
     "reason": "Reviewed input/output, constraints and runnable canonical section; key-parameter level applies only to listed behavior",
-    "modes": "all three; explicit position_track and valid interval bins; Radial per view-expansion matrix",
+    "modes": "all three; default or named band and valid interval bins; Radial per view-expansion matrix",
     "parameters": [
       "mapping",
       "track",
@@ -1094,7 +1031,7 @@
     "page": "tracks",
     "anchor": "tile",
     "reason": "Reviewed input/output, constraints and runnable canonical section; key-parameter level applies only to listed behavior",
-    "modes": "all three; explicit named track; overlapping input tiles keep drawing order; Radial per view-expansion matrix",
+    "modes": "all three; default or named track; overlapping input tiles keep drawing order; Radial per view-expansion matrix",
     "parameters": [
       "bounds",
       "position"
@@ -1106,7 +1043,7 @@
     "case": "tracks",
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
-      "zh": "兼容骨架坐标（见支持表）；显式轨道；重叠按输入顺序绘制；Radial见新增视图支持矩阵"
+      "zh": "兼容骨架坐标（见支持表）；默认或具名轨道；重叠按输入顺序绘制；Radial见新增视图支持矩阵"
     }
   },
   "get_chord_layout": {
@@ -1413,8 +1350,8 @@
     "modes": "feature lanes; base Position before overlap allocation",
     "parameters": [
       "spacing",
-      "side",
-      "base_position"
+      "base_position",
+      "direction"
     ],
     "purpose": {
       "zh": "将重叠基因或注释堆叠到局部轨道"
@@ -1443,12 +1380,12 @@
       "zh": "上游对象/接口；遵循 ggplot2/grid 的原始契约"
     }
   },
-  "position_plasmid": {
+  "position_offset": {
     "level": "L2",
     "page": "circular-features",
     "anchor": "stacking",
     "reason": "Reviewed input/output, constraints and runnable canonical section; key-parameter level applies only to listed behavior",
-    "modes": "local shared-band preset; intended circular",
+    "modes": "local shared offset on feature/gene layers",
     "parameters": [
       "offset"
     ],
@@ -1459,7 +1396,7 @@
     "case": "circular-features",
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
-      "zh": "共享注释带的局部预设；默认面向圆图"
+      "zh": "所有兼容骨架坐标中的共享局部偏移"
     }
   },
   "position_strand": {
@@ -1481,27 +1418,27 @@
       "zh": "合法特征/基因的带符号局部放置"
     }
   },
-  "position_track": {
+  "track_band": {
     "level": "L3",
     "page": "tracks-statistics",
     "anchor": "independent-bands",
     "reason": "Reviewed input/output, constraints and runnable canonical section; key-parameter level applies only to listed behavior",
-    "modes": "all three; same track ID shares consistent declarations",
+    "modes": "all three; one placement and numerical domain per track ID",
     "parameters": [
-      "track",
+      "id",
       "side",
       "order",
       "width",
       "gap"
     ],
     "purpose": {
-      "zh": "在显式序列局部带中放置定量图层"
+      "zh": "声明序列骨架旁的定量轨道"
     },
     "alias_of": "",
     "case": "tracks",
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
-      "zh": "兼容骨架坐标（见支持表）；同 ID 的声明和值域需一致"
+      "zh": "兼容骨架坐标（见支持表）；各 ID 统一声明放置方式并共享数值域"
     }
   },
   "PositionIdentity": {
@@ -2286,7 +2223,7 @@
     "page": "scale-families",
     "anchor": "tracks",
     "reason": "Reviewed input/output, constraints and runnable canonical section; key-parameter level applies only to listed behavior",
-    "modes": "all three; scale ID must match position_track",
+    "modes": "all three; scale ID must match track_band",
     "parameters": [
       "guide",
       "colours"
@@ -2298,7 +2235,7 @@
     "case": "tracks",
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
-      "zh": "兼容骨架坐标（见支持表）；ID 必须匹配 position_track"
+      "zh": "兼容骨架坐标（见支持表）；ID 必须匹配 track_band"
     }
   },
   "scale_track_colour_manual": {
@@ -2306,7 +2243,7 @@
     "page": "scale-families",
     "anchor": "tracks",
     "reason": "Reviewed input/output, constraints and runnable canonical section; key-parameter level applies only to listed behavior",
-    "modes": "all three; scale ID must match position_track",
+    "modes": "all three; scale ID must match track_band",
     "parameters": [
       "values"
     ],
@@ -2317,7 +2254,7 @@
     "case": "tracks",
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
-      "zh": "兼容骨架坐标（见支持表）；ID 必须匹配 position_track"
+      "zh": "兼容骨架坐标（见支持表）；ID 必须匹配 track_band"
     }
   },
   "scale_track_fill_gradientn": {
@@ -2325,7 +2262,7 @@
     "page": "scale-families",
     "anchor": "tracks",
     "reason": "Reviewed input/output, constraints and runnable canonical section; key-parameter level applies only to listed behavior",
-    "modes": "all three; scale ID must match position_track",
+    "modes": "all three; scale ID must match track_band",
     "parameters": [
       "guide",
       "colours"
@@ -2337,7 +2274,7 @@
     "case": "tracks",
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
-      "zh": "兼容骨架坐标（见支持表）；ID 必须匹配 position_track"
+      "zh": "兼容骨架坐标（见支持表）；ID 必须匹配 track_band"
     }
   },
   "scale_track_fill_manual": {
@@ -2345,7 +2282,7 @@
     "page": "scale-families",
     "anchor": "tracks",
     "reason": "Reviewed input/output, constraints and runnable canonical section; key-parameter level applies only to listed behavior",
-    "modes": "all three; scale ID must match position_track",
+    "modes": "all three; scale ID must match track_band",
     "parameters": [
       "values"
     ],
@@ -2356,7 +2293,7 @@
     "case": "tracks",
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
-      "zh": "兼容骨架坐标（见支持表）；ID 必须匹配 position_track"
+      "zh": "兼容骨架坐标（见支持表）；ID 必须匹配 track_band"
     }
   },
   "scale_track_value_continuous": {
@@ -2364,7 +2301,7 @@
     "page": "scale-families",
     "anchor": "tracks",
     "reason": "Reviewed input/output, constraints and runnable canonical section; key-parameter level applies only to listed behavior",
-    "modes": "all three; scale ID must match position_track",
+    "modes": "all three; scale ID must match track_band",
     "parameters": [
       "limits",
       "breaks",
@@ -2378,7 +2315,7 @@
     "case": "tracks",
     "scope": "documented canonical use; not all combinations",
     "modes_localized": {
-      "zh": "兼容骨架坐标（见支持表）；ID 必须匹配 position_track"
+      "zh": "兼容骨架坐标（见支持表）；ID 必须匹配 track_band"
     }
   },
   "segment_ggchord_data": {
@@ -3259,6 +3196,93 @@
     "scope": "Existing alignment or local excerpt; no new alignment, macro Coord projection or CDS inference",
     "modes_localized": {
       "zh": "已有DNA/RNA/AA对齐列；Cartesian局部单元与显式源映射"
+    }
+  },
+  "stat_coverage": {
+    "level": "L2",
+    "page": "tracks-statistics",
+    "anchor": "interval-coverage",
+    "reason": "Worked example with hand-computed fractions, depth, source rows and a short final bin",
+    "modes": "Source intervals with reference lengths and units; statistics within each observed group",
+    "parameters": [
+      "mapping",
+      "data",
+      "geom",
+      "binwidth",
+      "windows",
+      "track"
+    ],
+    "purpose": {
+      "zh": "计算一基闭区间在各窗口的并集覆盖率和平均深度"
+    },
+    "alias_of": "",
+    "case": "tracks",
+    "scope": "Interval coverage and shared-band geometry",
+    "modes_localized": {
+      "zh": "具备参考长度和单位的源区间；每个有观测的组独立统计"
+    }
+  },
+  "layout_sequences": {
+    "level": "L2",
+    "page": "multi-sequence-layout",
+    "anchor": "order",
+    "reason": "Documented examples change one layout setting at a time",
+    "modes": "Multi-sequence chord and linear layouts; instance IDs can override source directions; circular and dotplot axes own their directions",
+    "parameters": [
+      "order",
+      "orientation",
+      "gap",
+      "length_mode"
+    ],
+    "purpose": {
+      "zh": "设置共同骨架的显示顺序、方向、间距与长度分配"
+    },
+    "alias_of": "",
+    "case": "chord",
+    "scope": "Shared sequence layout",
+    "modes_localized": {
+      "zh": "多序列弦图及线性布局；具名实例可覆盖来源方向；圆图和点图由坐标系设置方向"
+    }
+  },
+  "guide_seq_axis": {
+    "level": "L2",
+    "page": "scale-families",
+    "anchor": "guides",
+    "reason": "Runnable guide declaration with a bounded set of local display options",
+    "modes": "Backbone views with sequence axes; select focused axes by window ID",
+    "parameters": [
+      "sequences",
+      "check.overlap"
+    ],
+    "purpose": {
+      "zh": "按显示 ID 选择序列轴及标签重叠策略"
+    },
+    "alias_of": "",
+    "case": "tracks",
+    "scope": "Sequence and quantitative track axis guides",
+    "modes_localized": {
+      "zh": "具有序列位置轴的骨架视图；聚焦时按窗口 ID 选择"
+    }
+  },
+  "guide_track_axis": {
+    "level": "L2",
+    "page": "scale-families",
+    "anchor": "guides",
+    "reason": "Runnable guide declaration with a bounded set of local display options",
+    "modes": "Views using a local quantitative track value scale",
+    "parameters": [
+      "angle",
+      "check.overlap",
+      "theme"
+    ],
+    "purpose": {
+      "zh": "设置定量轨道轴的刻度角度、标签避让与局部主题"
+    },
+    "alias_of": "",
+    "case": "tracks",
+    "scope": "Sequence and quantitative track axis guides",
+    "modes_localized": {
+      "zh": "使用局部定量轨道数值标度的视图"
     }
   }
 }

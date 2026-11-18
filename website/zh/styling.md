@@ -124,7 +124,7 @@
 
 ## 放置注释 {#position}
 使用 `position_strand(c("+" = .1, "-" = -.2))` 指定带符号的逐链位移。
-`position_feature_stack()` 处理重叠注释，`position_track()` 分配命名定量轨道。
+`position_feature_stack()` 处理重叠注释，`track_band()` 分配命名定量轨道。
 逐序列几何参数可用单值、等长无名向量或按 `accver` 命名的向量；推荐命名向量。
 这套语法不扩展到标度、图例或 theme。
 

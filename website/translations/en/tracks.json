@@ -1,5 +1,5 @@
 {
-  "source_sha256": "c6d0d6e0705827ea1e98be0d7bd908093ebd7c9d9be61f233eb850bd613c8225",
+  "source_sha256": "9acb03c96143ca861bf0d1cf3a148c52e8a00d8011c29730b9d1b342b1737787",
   "blocks": {
     "1": {
       "source_sha256": "c3e21d62a61053dfa8e54df7ae4e0443c47fab27bf27d861fc4293bf14966012",
@@ -22,7 +22,7 @@
       "translation": "### Draw GC fractions ⟦shared:0⟧\n"
     },
     "10": {
-      "source_sha256": "451f27798391a294fff62cc4542a1eb647377b47e915469bb97c6037d8f7e428",
+      "source_sha256": "b214cd12f9ca69a8ae52db19d75c42def36ad09700e9f7c015b5a16b39ed0b06",
       "status": "reviewed",
       "translation": "The domain is 0–1, in fractions. Replace it with the actual unit/range of other\nmeasurements. ⟦shared:0⟧ controls placement/physical width;\n⟦shared:1⟧ controls numerical mapping.\n"
     },
@@ -32,9 +32,9 @@
       "translation": "## Share an ID deliberately ⟦shared:0⟧\n"
     },
     "13": {
-      "source_sha256": "c4a6d6c71bce3000f8bc51348bda49f8d3db75bc8192d6dcdcafbc75d036ff1f",
+      "source_sha256": "ae019008cb4fd6c098aa63b8bfc894fb640ef3e6a19d4afa40b24296a13cc731",
       "status": "reviewed",
-      "translation": "Same-ID layers share a numerical domain, including bar baselines, and must agree\non width/placement. Colour scales are scoped independently by track ID. Tiles\nshow interval categories, lines connect observations, ⟦shared:0⟧ encodes supplied interval values relative to a baseline;\n⟦shared:1⟧ counts observations at positions with baseline 0. Binning\nrequires explicit binwidth/breaks through the bin workflow. Sharing a domain does not require sharing a spatial band.\n"
+      "translation": "Same-ID layers share a numerical domain, including bar baselines. Declare width and placement once for the band. Colour scales are scoped independently by track ID. Tiles\nshow interval categories, lines connect observations, ⟦shared:0⟧ encodes supplied interval values relative to a baseline;\n⟦shared:1⟧ counts observations at positions with baseline 0. Binning\nrequires explicit binwidth/breaks through the bin workflow. Sharing a domain does not require sharing a spatial band.\n"
     },
     "15": {
       "source_sha256": "a7e9a71d16862078d985dfce2531aa6990fef6ab2f754a25dfc5fd6e92a1438f",
@@ -87,12 +87,12 @@
       "translation": "| --- | --- | --- |\n"
     },
     "31": {
-      "source_sha256": "a922864f9a74054338f12df3160e14896c841e8613401436b23e19d1e75266de",
+      "source_sha256": "229248cbd2950e8216815807926b5eac2fc0201207e289338056d8a091e11ea3",
       "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | Required | ⟦shared:1⟧ declares an independent track |\n"
+      "translation": "| ⟦shared:0⟧ | Default band | ⟦shared:1⟧ selects the band declared with ⟦shared:2⟧ |\n"
     },
     "32": {
-      "source_sha256": "a6b72f88478d34e95b4e7c58d4a1c3e6c0a8f71460533a3f491abf0be8bb8d17",
+      "source_sha256": "3077e998af4c496b4ae96eef3b10f73963f29c1ec5ed35afafe3b2c7bd29d4d6",
       "status": "reviewed",
       "translation": "| ⟦shared:0⟧ | 4 mm in ⟦shared:1⟧ | 10 mm here; physical band width |\n"
     },
@@ -122,12 +122,12 @@
       "translation": "| ⟦shared:0⟧ / ⟦shared:1⟧ | 1 / 0.25 | Fixed opacity and border width; border colour defaults to NA |\n"
     },
     "38": {
-      "source_sha256": "d91868303ad838d1910bbd84d75a2bb3e5026769f4ba387798a73616660ed583",
+      "source_sha256": "2fd47fb5bfe418c10f77b958cda8d7698a99d296de8263cf0d4a6c837c467f94",
       "status": "reviewed",
-      "translation": "Use ⟦shared:0⟧ for continuous colours or ⟦shared:1⟧ for categories, with the matching track ID. Do not label a fraction as a percentage. To combine with the bars, add this tile layer to ⟦shared:2⟧ and retain separate IDs for separate bands. Layers sharing an ID must agree on side/order/width/gap.\n"
+      "translation": "Use ⟦shared:0⟧ for continuous colours or ⟦shared:1⟧ for categories, with the matching track ID. Do not label a fraction as a percentage. To combine with the bars, add this tile layer to ⟦shared:2⟧ and retain separate IDs for separate bands. Layers sharing an ID use its declared side, order, width and gap.\n"
     },
     "39": {
-      "source_sha256": "85f6ef32bd0b2f86abf9b71544458a1bb7eba082674260ce15dae416e2beed73",
+      "source_sha256": "e09375d5b0366c9453176e1c1eb94c91b44d82462abfb9f84b625e87b7782829",
       "status": "reviewed",
       "translation": "Change only tile width from 10 to 4 mm: colours stay the same while physical band width changes. Your own data must declare windows, units, NA handling and overlap policy. Check coordinate errors rather than hiding them with clip. See [⟦shared:0⟧](⟦shared:1⟧) and [⟦shared:2⟧](⟦shared:3⟧).\n"
     },
@@ -137,14 +137,14 @@
       "translation": "## Change only physical tile width ⟦shared:0⟧\n"
     },
     "42": {
-      "source_sha256": "2276deec4a9440bc4604edf5a694bc4cacf31b3f5c5e1dbcdfd044faa3cfd4de",
+      "source_sha256": "0ce89c7250ceddb36770d28117c4562e6707ca28efd2bc31ff7c098288a3d703",
       "status": "reviewed",
       "translation": "Compare with the 10 mm band above. Keep the same 9 × 8 inch device, windows, colours and value domain, changing only ⟦shared:0⟧ to 4 mm:\n"
     },
     "45": {
-      "source_sha256": "879b840b94dd14e0fbe34f442caebe23e221409f7d0fc4f77d14ba027b419e50",
+      "source_sha256": "ef21e1db5c8ad49b4680e62ba2e2be0adc50b22e99cf698eb00061efbe4667a7",
       "status": "reviewed",
-      "translation": "Colours still encode the same GC fractions. Only physical band width shrinks. ⟦shared:0⟧ draws interval tiles and the Position controls band width; neither changes base composition. Try 6 mm while retaining export dimensions. Bar heights are separately controlled by ⟦shared:1⟧ and its value scale; reducing band width is not numerical normalization.\n"
+      "translation": "Colours still encode the same GC fractions. Only physical band width shrinks. ⟦shared:0⟧ draws interval tiles and the band declaration sets its width; neither changes base composition. Try 6 mm while retaining export dimensions. Bar heights are separately controlled by ⟦shared:1⟧ and its value scale; reducing band width is not numerical normalization.\n"
     },
     "47": {
       "source_sha256": "96d3b3403a7277d64e0e970205753ee81e2d284e9e04a56212cef8617bb26319",

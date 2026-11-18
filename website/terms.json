@@ -42,7 +42,7 @@
   [
     "gene",
     "已知链的基因",
-    "geom_gene()"
+    "geom_feature(preset = 'gene')"
   ],
   [
     "strand",
@@ -72,7 +72,7 @@
   [
     "track",
     "定量轨道",
-    "position_track()"
+    "track_band()"
   ],
   [
     "genomic position",

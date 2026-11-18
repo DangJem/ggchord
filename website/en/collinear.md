@@ -50,7 +50,7 @@ Dashed outlines identify non-adjacent displayed rows, with sufficient linewidth 
 <a id="read"></a>
 
 ## Adjustment and limits {#read}
-Rebuild controls when changing seq_gap, order, orientation or link selection. Local arrow clearance is not an automatic route around intervening whole sequences; ribbons may still cross legitimately. Use [focus/segments](views.md) for local questions. Explicit circular radius/curvature cannot currently be passed to linear coordinates; see [conversion boundaries](multi-sequence-views.md#input).
+Rebuild controls when changing layout_sequences(gap = ...), order, orientation or link selection. Local arrow clearance is not an automatic route around intervening whole sequences; ribbons may still cross legitimately. Use [focus/segments](views.md) for local questions. Explicit circular radius/curvature cannot currently be passed to linear coordinates; see [conversion boundaries](multi-sequence-views.md#input).
 
 <a id="save"></a>
 

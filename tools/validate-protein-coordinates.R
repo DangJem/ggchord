@@ -8,7 +8,7 @@ stopifnot(identical(proteins$length, c(296, 310)))
 plain <- read_fasta_lengths("examples/format-inputs/protein-pair.faa")
 stopifnot(!"sequence_unit" %in% names(plain))
 
-p <- ggchord(proteins, hits) +
+p <- ggchord(prepare_ggchord_data(proteins, hits)) +
   geom_seq() +
   geom_link_ribbon() +
   coord_collinear() +
@@ -28,7 +28,7 @@ invisible(ggplot2::ggplot_build(
   p + geom_feature(data = aligned_interval, shape = "block")
 ))
 invisible(ggplot2::ggplot_build(
-  ggchord(proteins, hits) + geom_seq() + geom_link_ribbon() + coord_chord()
+  ggchord(prepare_ggchord_data(proteins, hits)) + geom_seq() + geom_link_ribbon() + coord_chord()
 ))
 circle <- ggchord(proteins[1, ]) +
   geom_seq() +
@@ -39,7 +39,7 @@ stopifnot(any(grepl("296 aa", text)))
 
 focused <- focus_ggchord_data(proteins, hits,
   loci = data.frame(accver = proteins$accver, start = 50, end = 200))
-local <- ggchord(focused$seq_data, focused$ribbon_data) +
+local <- ggchord(prepare_ggchord_data(focused$seq_data, focused$ribbon_data)) +
   geom_seq() +
   geom_link_ribbon() +
   coord_collinear()
@@ -59,9 +59,9 @@ expect_error_text <- function(expression, pattern) {
 }
 expect_error_text(ggchord(transform(proteins, sequence_unit = c("bp", "aa"))),
   "cannot share")
-expect_error_text(ggchord(proteins, transform(hits, sequence_unit = "bp")),
+expect_error_text(ggchord(prepare_ggchord_data(proteins, transform(hits, sequence_unit = "bp"))),
   "disagrees")
-expect_error_text(ggplot2::ggplot_build(p + geom_gene()), "require bp")
+expect_error_text(ggplot2::ggplot_build(p + geom_feature(preset = 'gene')), "require bp")
 expect_error_text(find_restriction_sites(transform(proteins, sequence = "ACGT")),
   "DNA sequence input")
 expect_error_text(find_primer_bindings(transform(proteins, sequence = "ACGT")),

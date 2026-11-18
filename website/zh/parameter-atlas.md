@@ -66,7 +66,7 @@
 | `fit` | `c("labels", "geometry", "manual")` | 类型、单位及允许格式见右侧本函数参数契约 | 拟合策略："labels" 包含测量后的标签框，"geometry" 只拟合几何元素，"manual" 要求显式提供 xlim 和 ylim。 |
 | `align` | `c("left", "center", "right")` | 类型、单位及允许格式见右侧本函数参数契约 | 显示对齐方式：默认 "left"，或 "center"、"right"；作用于整条序列或 anchor 指定区间。 |
 | `anchor` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 可选锚点，可为按 accver 命名的数值向量，或含 accver 与 position 或 start/end 的数据框。每条显示序列恰好一个锚点；缺失或重复会报错。多拷贝目标须先明确选择。 |
-| `orientation` | `c("manual", "auto")` | 类型、单位及允许格式见右侧本函数参数契约 | 默认 "manual" 使用 geom_seq() 提供的方向；"auto" 根据区间连接证据选择显示方向，记录支持及未解决情况。 |
+| `orientation` | `c("manual", "auto")` | 类型、单位及允许格式见右侧本函数参数契约 | 默认 "manual" 使用 layout_sequences() 提供的方向；"auto" 根据区间连接证据选择显示方向，记录支持及未解决情况。 |
 | `min_support` | `0.1` | 类型、单位及允许格式见右侧本函数参数契约 | 自动改变方向所需的最小不平衡程度，范围 [0, 1]。正反支持的差值绝对值除以总和，默认 0.1；平局始终视为未解决。 |
 | `segments` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 可选数据框，含唯一窗口 accver、row_id 及 orientation（1 或 -1），须声明全部显示 accession。每个窗口有独立局部坐标和可逆源元数据。 |
 | `segment_gap` | `100` | 类型、单位及允许格式见右侧本函数参数契约 | 提供 segments 时的正显示间隙，单位为 原生序列单位，默认 100，不表示基因组连续。 |
@@ -138,6 +138,22 @@
 
 </details>
 
+<span id="api-layout_sequences"></span>
+<details><summary><code>layout_sequences()</code></summary>
+
+
+[完整参考](../../man/layout_sequences.Rd)
+
+
+| 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
+| --- | --- | --- | --- |
+| `order` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 显示顺序中的来源 ID，重复值创建显示实例。可使用 c(A_high='A', B='B', A_low='A') 这样的名称稳定标识实例。重复实体的 HSP 要求每个连接层提供唯一 between 路由。 |
+| `orientation` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 显示方向为 1 或 −1。命名向量可按来源序列或显示实例指定；未指定的序列方向为 1。 |
+| `gap` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 可选数值，序列间隙比例；弦图默认 0.03。在 coord_collinear() 中表示相邻骨架间距相对最长骨架宽度的正比例，默认 0.3；线性布局不使用最后一条序列的 gap。分段线性图以最长显示行衡量，同一行窗口须使用相同 gap，只有行间间隙影响纵向位置。可按序列 ID 命名以指定其后的间隙，未列出的序列使用相应坐标默认值。 |
+| `length_mode` | `c("proportional", "equal")` | 类型、单位及允许格式见右侧本函数参数契约 | "proportional"（默认）保留源长度比例；"equal" 为各显示序列分配相同角度或直线跨度，不修改源长度。多序列 equal 模式不能使用共享绝对比例尺，局部轴保留源单位。 |
+
+</details>
+
 
 <a id="layers"></a>
 
@@ -160,9 +176,10 @@
 | `linetype` | `1` | 类型、单位及允许格式见右侧本函数参数契约 | 固定样式。映射样式使用link_colour、link_alpha、link_linewidth和link_linetype，配合对应的scale_link函数。显式固定值优先。 |
 | `position` | `"identity"` | 类型、单位及允许格式见右侧本函数参数契约 | 仅支持"identity"；数据位置调整会改变比对端点。 |
 | `show.legend` | `NA` | 类型、单位及允许格式见右侧本函数参数契约 | 标准ggplot2图层参数。 |
-| `inherit.aes` | `FALSE` | 类型、单位及允许格式见右侧本函数参数契约 | 标准ggplot2图层参数。 |
+| `inherit.aes` | `TRUE` | 类型、单位及允许格式见右侧本函数参数契约 | 标准ggplot2图层参数。 |
 | `allow_repeated` | `FALSE` | 类型、单位及允许格式见右侧本函数参数契约 | 是否允许显式标识的source_hsp_id记录重复展示，所有参与层均须选择允许。无声明ID的行不按值去重。 |
 | `...` | `无形式默认；是否必需见契约` | 类型、单位及允许格式见右侧本函数参数契约 | 传递给ggplot2线段几何的其他参数。 |
+| `id` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 可选的唯一图层 ID，用于导出布局和来源行。 |
 
 </details>
 
@@ -179,18 +196,20 @@
 | `data` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 含 accver、start、end、strand 的数据框，可选 type、category、label。因子列 start/end 使用数值标签而非内部级别编码；坐标必须为有限数值。可提供 display_priority 或逻辑列 prioritized_display。也可用 directionality 或 direction 代替 strand，取值为 "forward"、"reverse"、"bidirectional"、"none"。 省略时使用构造函数的完整 feature_data（或兼容的 gene_data），其他图层不会从默认输入删除记录。 |
 | `shape` | `"arrow"` | 类型、单位及允许格式见右侧本函数参数契约 | 固定注释形状。显式 shape 优先于 aes(feature_shape = ...)：支持 "arrow"、"compact_arrow"、"promoter_arrow"、"primer_arrow"、"marker"、"block"、"capped_line"、"primer_arc"、"chevron"、"lollipop"，默认 "arrow"。使用 aes(feature_shape = type) 与 scale_feature_shape_manual() 将类别映射为形状。 |
 | `width` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 可选数值、向量或列表，控制共享注释几何引擎的宽度。圆图中与标签组合时，基础宽度会在限定范围内响应最终字号。 |
-| `arrow_head_length` | `0.04` | 类型、单位及允许格式见右侧本函数参数契约 | 序列局部坐标中的箭头尺寸，与 geom_gene() 共用。arrow_head_width 大于 1 时形成凸出的块状箭头。 |
-| `arrow_head_width` | `1` | 类型、单位及允许格式见右侧本函数参数契约 | 序列局部坐标中的箭头尺寸，与 geom_gene() 共用。arrow_head_width 大于 1 时形成凸出的块状箭头。 |
+| `arrow_head_length` | `0.04` | 类型、单位及允许格式见右侧本函数参数契约 | 序列局部坐标系中的箭头尺寸。arrow_head_width 大于 1 时，箭头宽于主体。 |
+| `arrow_head_width` | `1` | 类型、单位及允许格式见右侧本函数参数契约 | 序列局部坐标系中的箭头尺寸。arrow_head_width 大于 1 时，箭头宽于主体。 |
 | `arrow_head_style` | `c("shouldered", "flush", "triangle")` | 类型、单位及允许格式见右侧本函数参数契约 | 箭头构造方式："shouldered" 保留凸出箭头，"flush" 使箭头与主体齐平，"triangle" 绘制完整三角楔形。 |
 | `short_feature` | `c("auto", "wedge", "block")` | 类型、单位及允许格式见右侧本函数参数契约 | 注释太短、容不下指定箭头时的处理：自动压缩为方向符号，或改用楔形、矩形。 |
 | `segment_boundaries` | `TRUE` | 类型、单位及允许格式见右侧本函数参数契约 | 绘制分段注释携带的内部标记。连续源分段的连接处使用点线；分段级非实线 line_style 可覆盖该样式，cleavage_arrows 坐标可添加或合并生物学切割标记。这些标记不会产生额外箭头。 |
 | `boundary_colour` | `"#666666"` | 类型、单位及允许格式见右侧本函数参数契约 | 内部分段连接处的外观。 |
 | `boundary_linewidth` | `0.25` | 类型、单位及允许格式见右侧本函数参数契约 | 内部分段连接处的外观。 |
 | `boundary_linetype` | `"22"` | 类型、单位及允许格式见右侧本函数参数契约 | 内部分段连接处的外观。 |
-| `position` | `"identity"` | 类型、单位及允许格式见右侧本函数参数契约 | 注释位置，使用 "identity"、"strand"、"plasmid"、position_strand()、position_plasmid() 或 position_feature_stack()。 |
+| `position` | `"identity"` | 类型、单位及允许格式见右侧本函数参数契约 | 可用 "identity"、"strand"、position_strand()、position_offset() 或 position_feature_stack() 为特征定位。 |
 | `show.legend` | `TRUE` | 类型、单位及允许格式见右侧本函数参数契约 | 标准 ggplot2 图层参数。 |
-| `inherit.aes` | `FALSE` | 类型、单位及允许格式见右侧本函数参数契约 | 标准 ggplot2 图层参数。 |
+| `inherit.aes` | `TRUE` | 类型、单位及允许格式见右侧本函数参数契约 | 标准 ggplot2 图层参数。 |
 | `...` | `无形式默认；是否必需见契约` | 类型、单位及允许格式见右侧本函数参数契约 | 其他固定多边形 aesthetic。 |
+| `id` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 可选的图层 ID，须在图中唯一，用于指定标签锚点和导出布局。 |
+| `preset` | `c("default", "gene", "plasmid")` | 类型、单位及允许格式见右侧本函数参数契约 | 一般区间使用 "default"。"gene" 从默认的统一输入中选取 gene 和 CDS，要求链方向已知，并据此绘制箭头；显式提供图层数据时使用其中全部行。"plasmid" 使用紧凑分道、较宽箭头和源特征配色。显式图层参数优先。 |
 
 </details>
 
@@ -213,95 +232,25 @@
 | `label_radial_offset` | `0.04` | 类型、单位及允许格式见右侧本函数参数契约 | 可选数值、向量或列表，径向偏移，默认 0.04。 |
 | `label_circum_offset` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 可选数值、向量或列表，周向偏移，默认 0。 |
 | `label_circum_limit` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 可选逻辑值、向量或列表，是否限制周向偏移，默认 TRUE。 |
-| `position` | `"identity"` | 类型、单位及允许格式见右侧本函数参数契约 | 标签锚点使用的注释 Position。在 coord_collinear() 中，省略时共享匹配注释层的轨道；显式 Position 只改变标签锚点，不移动多边形。若两组输入均有唯一 feature_id，标签可取子集或重排，但序列标识、区间和链须一致。没有 ID 时，继承要求区间行及顺序完全相同。多个匹配几何层需要显式标签 Position 或无歧义注释 ID。 |
+| `position` | `"identity"` | 类型、单位及允许格式见右侧本函数参数契约 | 显式 Position 可独立放置标签。省略时，标签按分面和显示实例跟随匹配特征的道位。子集或重排后的标签表需要稳定的 feature_id 和相符的源区间。完整输入可以共享顺序相同的源行。 |
 | `show.legend` | `FALSE` | 类型、单位及允许格式见右侧本函数参数契约 | 标准 ggplot2 图层参数。 |
-| `inherit.aes` | `FALSE` | 类型、单位及允许格式见右侧本函数参数契约 | 标准 ggplot2 图层参数。 |
+| `inherit.aes` | `TRUE` | 类型、单位及允许格式见右侧本函数参数契约 | 标准 ggplot2 图层参数。 |
 | `...` | `无形式默认；是否必需见契约` | 类型、单位及允许格式见右侧本函数参数契约 | 其他文字参数。 |
-
-</details>
-
-<span id="api-geom_feature_label_repel"></span>
-<details><summary><code>geom_feature_label_repel()</code></summary>
-
-
-[完整参考](../../man/geom_feature_label_repel.Rd)
-
-
-| 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
-| --- | --- | --- | --- |
-| `mapping` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 标准图层输入；通过 label 映射注释文字。 |
-| `data` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 标准图层输入；通过 label 映射注释文字。 |
-| `label_layout` | `c("feature", "radial", "auto", "callout")` | 类型、单位及允许格式见右侧本函数参数契约 | 布局支持 "feature"、"radial"、"auto"、"callout"。默认 "feature" 遵循质粒图习惯：先尝试内部，再放到固定半径的内部轨道。所有非外部文字均按选定轨道半径逐字排布，而不是整体旋转成直线；注释与标签之间隔着一个或多个轨道时绘制浅色引导线。需要不受限制的外部引出标签时选择其他模式。 |
-| `label_wrap` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 文字适配控制。显式 label_fit = "shrink" 优先尝试内部位置，不截断原文；字号下限由 label_min_size 决定。仍无法解决的标签保持请求字号，放在相邻/外侧或隐藏；其他模式维持已有行为。 |
-| `label_fit` | `c("wrap", "none", "ellipsis", "auto", "shrink")` | 类型、单位及允许格式见右侧本函数参数契约 | 文字适配控制。显式 label_fit = "shrink" 优先尝试内部位置，不截断原文；字号下限由 label_min_size 决定。仍无法解决的标签保持请求字号，放在相邻/外侧或隐藏；其他模式维持已有行为。 |
-| `label_max_lines` | `2L` | 类型、单位及允许格式见右侧本函数参数契约 | 文字适配控制。显式 label_fit = "shrink" 优先尝试内部位置，不截断原文；字号下限由 label_min_size 决定。仍无法解决的标签保持请求字号，放在相邻/外侧或隐藏；其他模式维持已有行为。 |
-| `label_side` | `c("outside", "inside", "auto")` | 类型、单位及允许格式见右侧本函数参数契约 | 支持 "inside"、"outside" 或 "auto"。 |
+| `id` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 可选的标签图层 ID，须在图中唯一。 |
+| `anchor_layer` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 要跟随的特征层 ID。多个图层匹配时请指定。显式绑定要求每个标签都能匹配到特征；使用独立 Position 的标签无法同时指定父层。 |
+| `placement` | `c("fixed", "repel")` | 类型、单位及允许格式见右侧本函数参数契约 | 选择固定或避让排布。选择 "repel" 时，用 label_layout 指定排布方式，用 overflow 指定文字适配方式。 |
+| `label_layout` | `"feature"` | 类型、单位及允许格式见右侧本函数参数契约 | 布局支持 "feature"、"radial"、"auto"、"callout"。默认 "feature" 遵循质粒图习惯：先尝试内部，再放到固定半径的内部轨道。所有非外部文字均按选定轨道半径逐字排布，而不是整体旋转成直线；注释与标签之间隔着一个或多个轨道时绘制浅色引导线。需要不受限制的外部引出标签时选择其他模式。 |
+| `overflow` | `"wrap"` | 类型、单位及允许格式见右侧本函数参数契约 | 文字适配控制。显式 overflow = "shrink" 优先尝试内部位置，不截断原文；字号下限由 label_min_size 决定。仍无法解决的标签保持请求字号，放在相邻/外侧或隐藏；其他模式维持已有行为。 |
+| `label_max_lines` | `2L` | 类型、单位及允许格式见右侧本函数参数契约 | 文字适配控制。显式 overflow = "shrink" 优先尝试内部位置，不截断原文；字号下限由 label_min_size 决定。仍无法解决的标签保持请求字号，放在相邻/外侧或隐藏；其他模式维持已有行为。 |
 | `max_overlaps` | `Inf` | 类型、单位及允许格式见右侧本函数参数契约 | 允许尚未解决的最大重叠数。 |
 | `external` | `TRUE` | 类型、单位及允许格式见右侧本函数参数契约 | 内部和相邻位置都无法容纳后，是否允许放到圆形骨架外。FALSE 时隐藏无法解决的标签，不无限向内推。外部标签使用注释最终填色的浅色圆角框；与圆图酶切标签共存时，各自保留布局语义，但在坐标系共同管理的外部区域登记最终框，防止占用同一空间。 |
-| `position` | `"identity"` | 类型、单位及允许格式见右侧本函数参数契约 | 标签锚点使用的注释 Position。在 coord_collinear() 中，省略时共享匹配注释层的轨道；显式 Position 只改变标签锚点，不移动多边形。若两组输入均有唯一 feature_id，标签可取子集或重排，但序列标识、区间和链须一致。没有 ID 时，继承要求区间行及顺序完全相同。多个匹配几何层需要显式标签 Position 或无歧义注释 ID。 |
-| `show.legend` | `FALSE` | 类型、单位及允许格式见右侧本函数参数契约 | 标准 ggplot2 图层参数。 |
-| `inherit.aes` | `FALSE` | 类型、单位及允许格式见右侧本函数参数契约 | 标准 ggplot2 图层参数。 |
 | `label_min_size` | `1.5` | 类型、单位及允许格式见右侧本函数参数契约 | 显式缩小模式的最小字号，单位 mm，默认 1.5，不得超过请求字号。导出标签保留原文、请求/最终字号与适配原因。 |
 | `label_segment_overlap` | `"fade"` | 类型、单位及允许格式见右侧本函数参数契约 | 引导线被其他标签覆盖部分的绘制方式，默认 "fade"。"fade" 降低透明度，"clip" 删除覆盖部分，"show" 保留完整线。不会影响换行、省略或隐藏。 |
 | `label_segment_overlap_alpha` | `0.18` | 类型、单位及允许格式见右侧本函数参数契约 | [0, 1] 内的数值，默认 0.18；仅在 label_segment_overlap = "fade" 时控制被覆盖引导线部分的相对透明度。 |
 | `label_segment_linetype` | `"auto"` | 类型、单位及允许格式见右侧本函数参数契约 | 字符或数值，默认 "auto"。"auto" 通常用实线，移到弧线另一侧的标签用虚线；其他合法 ggplot2 线型（如 "solid"、"dashed"、"dotted" 或数字虚线模式）应用于全部引导线。 |
-| `label_segment_layer` | `c("below", "above")` | 类型、单位及允许格式见右侧本函数参数契约 | 引导线默认在所有数据图层 "below" 绘制；选 "above" 则在此标签层通常的位置绘制。文字始终保留在标签层的位置。填充特征可遮盖下层引线，透明特征保持正常透明度。 |
-| `label_repeat` | `c("individual", "bracket")` | 类型、单位及允许格式见右侧本函数参数契约 | "individual"（默认）逐条标注特征；"bracket" 对同一圆形特征轨道中名称、类型、方向和最终填色相同、连续且不重叠的短特征共享计数标签及弧形括号。各条源记录及箭头仍独立。仅支持 label_layout = "feature"。 |
+| `label_segment_layer` | `"below"` | 类型、单位及允许格式见右侧本函数参数契约 | 引导线默认在所有数据图层 "below" 绘制；选 "above" 则在此标签层通常的位置绘制。文字始终保留在标签层的位置。填充特征可遮盖下层引线，透明特征保持正常透明度。 |
+| `label_repeat` | `"individual"` | 类型、单位及允许格式见右侧本函数参数契约 | "individual"（默认）逐条标注特征；"bracket" 对同一圆形特征轨道中名称、类型、方向和最终填色相同、连续且不重叠的短特征共享计数标签及弧形括号。各条源记录及箭头仍独立。仅支持 label_layout = "feature"。 |
 | `label_segment_colour` | `"auto"` | 类型、单位及允许格式见右侧本函数参数契约 | "auto" 将从序列圆内特征连接到圈外标签的引线设为灰色，其他引线保留主题颜色；显式颜色优先。自定义特征引线主题覆盖自动配色。label_segment_linetype = "auto" 对上述内到外连接使用虚线，留在圈内的标签保持原有引线样式。 |
-| `...` | `无形式默认；是否必需见契约` | 类型、单位及允许格式见右侧本函数参数契约 | 其他文字参数。 |
-| `placement` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 可显式使用这一组参数替代 label_layout 和 label_fit。placement 可取 feature、radial、auto 或 callout，overflow 可取 wrap、none、ellipsis、auto 或 shrink。按特征长度缩小字号时须选择 feature 布局。旧参数组合沿用原语义。 |
-| `overflow` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 可显式使用这一组参数替代 label_layout 和 label_fit。placement 可取 feature、radial、auto 或 callout，overflow 可取 wrap、none、ellipsis、auto 或 shrink。按特征长度缩小字号时须选择 feature 布局。旧参数组合沿用原语义。 |
-
-</details>
-
-<span id="api-geom_feature_plasmid"></span>
-<details><summary><code>geom_feature_plasmid()</code></summary>
-
-
-[完整参考](../../man/geom_feature_plasmid.Rd)
-
-
-| 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
-| --- | --- | --- | --- |
-| `mapping` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 可选映射。accver、start、end、strand 等角色 aesthetic 可重命名输入列；普通视觉映射在生成几何后计算。 |
-| `data` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 含 accver、start、end、strand 的数据框，可选 type、category、label。因子列 start/end 使用数值标签而非内部级别编码；坐标必须为有限数值。可提供 display_priority 或逻辑列 prioritized_display。也可用 directionality 或 direction 代替 strand，取值为 "forward"、"reverse"、"bidirectional"、"none"。 省略时使用构造函数的完整 feature_data（或兼容的 gene_data），其他图层不会从默认输入删除记录。 |
-| `shape` | `"arrow"` | 类型、单位及允许格式见右侧本函数参数契约 | 固定注释形状。显式 shape 优先于 aes(feature_shape = ...)：支持 "arrow"、"compact_arrow"、"promoter_arrow"、"primer_arrow"、"marker"、"block"、"capped_line"、"primer_arc"、"chevron"、"lollipop"，默认 "arrow"。使用 aes(feature_shape = type) 与 scale_feature_shape_manual() 将类别映射为形状。 |
-| `width` | `0.058` | 类型、单位及允许格式见右侧本函数参数契约 | 轨道宽度，默认对应桌面质粒编辑器常用的紧凑注释带。 |
-| `arrow_head_length` | `0.068` | 类型、单位及允许格式见右侧本函数参数契约 | 序列局部坐标中的箭头尺寸，与 geom_gene() 共用。arrow_head_width 大于 1 时形成凸出的块状箭头。 |
-| `arrow_head_width` | `1.42` | 类型、单位及允许格式见右侧本函数参数契约 | 序列局部坐标中的箭头尺寸，与 geom_gene() 共用。arrow_head_width 大于 1 时形成凸出的块状箭头。 |
-| `arrow_head_style` | `"shouldered"` | 类型、单位及允许格式见右侧本函数参数契约 | 箭头构造方式："shouldered" 保留凸出箭头，"flush" 使箭头与主体齐平，"triangle" 绘制完整三角楔形。 |
-| `short_feature` | `"auto"` | 类型、单位及允许格式见右侧本函数参数契约 | 注释太短、容不下指定箭头时的处理：自动压缩为方向符号，或改用楔形、矩形。 |
-| `segment_boundaries` | `TRUE` | 类型、单位及允许格式见右侧本函数参数契约 | 绘制分段注释携带的内部标记。连续源分段的连接处使用点线；分段级非实线 line_style 可覆盖该样式，cleavage_arrows 坐标可添加或合并生物学切割标记。这些标记不会产生额外箭头。 |
-| `boundary_colour` | `"#666666"` | 类型、单位及允许格式见右侧本函数参数契约 | 内部分段连接处的外观。 |
-| `boundary_linewidth` | `0.25` | 类型、单位及允许格式见右侧本函数参数契约 | 内部分段连接处的外观。 |
-| `boundary_linetype` | `"22"` | 类型、单位及允许格式见右侧本函数参数契约 | 内部分段连接处的外观。 |
-| `position` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 注释位置。默认 NULL 在质粒骨架内侧将重叠注释堆叠到紧凑轨道。独立标签层应复用同一个显式 position_feature_stack() 对象，使多边形与标签同轨。可选数值列 display_priority（较大优先）或逻辑列 prioritized_display 可覆盖重叠注释默认的最长优先顺序。 |
-| `show.legend` | `FALSE` | 类型、单位及允许格式见右侧本函数参数契约 | 标准 ggplot2 图层参数。 |
-| `inherit.aes` | `FALSE` | 类型、单位及允许格式见右侧本函数参数契约 | 标准 ggplot2 图层参数。 |
-| `...` | `无形式默认；是否必需见契约` | 类型、单位及允许格式见右侧本函数参数契约 | 其他固定多边形 aesthetic。 |
-
-</details>
-
-<span id="api-geom_gene"></span>
-<details><summary><code>geom_gene()</code></summary>
-
-
-[完整参考](../../man/geom_gene.Rd)
-
-
-| 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
-| --- | --- | --- | --- |
-| `mapping` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 默认 NULL，使用预计算数据。 |
-| `data` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 可选图层表或数据函数，优先于构造数据。使用统一 feature_data 时，默认只选择明确分类的 gene/CDS 记录，见 ggchord()。旧 gene_data 保留全部行。 |
-| `width` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 可选数值、向量或列表，基因箭头宽度，默认 0.05。 |
-| `arrow_head_length` | `0.04` | 类型、单位及允许格式见右侧本函数参数契约 | 序列局部坐标中的共享箭头尺寸。 |
-| `arrow_head_width` | `1` | 类型、单位及允许格式见右侧本函数参数契约 | 序列局部坐标中的共享箭头尺寸。 |
-| `arrow_head_style` | `c("shouldered", "flush", "triangle")` | 类型、单位及允许格式见右侧本函数参数契约 | 箭头形状：凸肩、齐平或完整三角楔形。 |
-| `short_feature` | `c("auto", "wedge", "block")` | 类型、单位及允许格式见右侧本函数参数契约 | 基因太短、容不下指定箭头时，自动选择楔形/矩形，或明确使用其中一种。 |
-| `position` | `"identity"` | 类型、单位及允许格式见右侧本函数参数契约 | 注释位置，使用 "identity"、"strand"、"plasmid"、position_strand()、position_plasmid() 或 position_feature_stack()。 |
-| `show.legend` | `TRUE` | 类型、单位及允许格式见右侧本函数参数契约 | 标准 ggplot2 图层参数。 |
-| `inherit.aes` | `FALSE` | 类型、单位及允许格式见右侧本函数参数契约 | 标准 ggplot2 图层参数。 |
-| `...` | `无形式默认；是否必需见契约` | 类型、单位及允许格式见右侧本函数参数契约 | 传给 geom_polygon() 的其他参数。 |
 
 </details>
 
@@ -326,7 +275,7 @@
 | `label_wrap` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 数值或 NULL，默认 NULL。按指定字符数（如 15）换行，使长注释更窄、减少重叠。 |
 | `position` | `"identity"` | 类型、单位及允许格式见右侧本函数参数契约 | 位置调整。标签使用独立数据或没有几何层时，应提供与基因/注释层相同的 position_feature_stack()。在 coord_collinear() 中，未显式提供 Position 的标签共享匹配几何层的轨道；显式标签 Position 不移动几何。唯一 feature_id 列允许取子集或重排，但标识、区间和链必须一致。多个匹配几何层需要显式标签 Position 或无歧义注释 ID。 |
 | `show.legend` | `FALSE` | 类型、单位及允许格式见右侧本函数参数契约 | 标准 ggplot2 图层参数。 |
-| `inherit.aes` | `FALSE` | 类型、单位及允许格式见右侧本函数参数契约 | 标准 ggplot2 图层参数。 |
+| `inherit.aes` | `TRUE` | 类型、单位及允许格式见右侧本函数参数契约 | 标准 ggplot2 图层参数。 |
 | `...` | `无形式默认；是否必需见契约` | 类型、单位及允许格式见右侧本函数参数契约 | 传给 geom_text() 的其他参数。 |
 
 </details>
@@ -353,7 +302,7 @@
 | `label_segment_linetype` | `"auto"` | 类型、单位及允许格式见右侧本函数参数契约 | 字符或数值，默认 "auto"。"auto" 通常用实线，移到弧线另一侧的标签用虚线；其他合法 ggplot2 线型（如 "solid"、"dashed"、"dotted" 或数字虚线模式）应用于全部引导线。 |
 | `position` | `"identity"` | 类型、单位及允许格式见右侧本函数参数契约 | 位置调整。标签使用独立数据或没有几何层时，提供与基因/注释层相同的 position_feature_stack()。 |
 | `show.legend` | `FALSE` | 类型、单位及允许格式见右侧本函数参数契约 | 标准 ggplot2 图层参数。 |
-| `inherit.aes` | `FALSE` | 类型、单位及允许格式见右侧本函数参数契约 | 标准 ggplot2 图层参数。 |
+| `inherit.aes` | `TRUE` | 类型、单位及允许格式见右侧本函数参数契约 | 标准 ggplot2 图层参数。 |
 | `label_min_size` | `1.5` | 类型、单位及允许格式见右侧本函数参数契约 | 显式 label_fit = "shrink" 的最小字号，单位 mm，默认 1.5，不得超过请求字号。导出标签几何保留原文、请求/最终字号及适配原因。 |
 | `...` | `无形式默认；是否必需见契约` | 类型、单位及允许格式见右侧本函数参数契约 | 其他文字样式及绘制选项。自动布局控制旋转、偏移、方向和碰撞策略；手动 label_rotation、label_radial_offset、label_circum_offset、label_circum_limit、label_orientation、label_overlap 应使用 geom_gene_label()，本层会拒绝这些参数。 |
 
@@ -383,10 +332,11 @@
 | `linetype` | `1` | 类型、单位及允许格式见右侧本函数参数契约 | 固定样式；映射使用 link_* aesthetic。显式固定值优先于对应映射。要保留映射请省略固定参数；inherit.aes = TRUE 时也包括继承的映射。 |
 | `position` | `"identity"` | 类型、单位及允许格式见右侧本函数参数契约 | 标准 ggplot2 图层参数。 |
 | `show.legend` | `NA` | 类型、单位及允许格式见右侧本函数参数契约 | 标准 ggplot2 图层参数。 |
-| `inherit.aes` | `FALSE` | 类型、单位及允许格式见右侧本函数参数契约 | 标准 ggplot2 图层参数。 |
+| `inherit.aes` | `TRUE` | 类型、单位及允许格式见右侧本函数参数契约 | 标准 ggplot2 图层参数。 |
 | `between` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 两个显示实例名称或声明顺序序号。 |
 | `allow_repeated` | `FALSE` | 类型、单位及允许格式见右侧本函数参数契约 | 允许显式声明的 source_hsp_id 被重复显示。 |
 | `...` | `无形式默认；是否必需见契约` | 类型、单位及允许格式见右侧本函数参数契约 | 其他路径参数。 |
+| `id` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 可选的唯一图层 ID，用于导出布局和来源行。 |
 
 </details>
 
@@ -402,7 +352,7 @@
 | `mapping` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 默认 NULL，使用预计算数据。 |
 | `data` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 默认 NULL，从布局自动获取。 |
 | `link_ctrl_point` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 可选Bezier边界控制点向量或列表。两个数指定一个共享点，四个数分别指定两条边的控制点。逐行列表可包含成对坐标向量。NULL在Chord中使用原点c(0, 0)，在线性布局中从序列端点推导控制点。在Radial中NULL使用环形曲线，显式点使用最终笛卡尔布局单位，每条边一个点。可用独立图层单独调整非相邻连接。控制点调整路径中部，link_gap只调整端点间隙。共享分支时，控制点塑造远端，汇合位置由共享主干决定。 |
-| `link_gap` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 可选数值/向量，控制序列与连接端点的间距。默认 link_avoid = "uniform" 时，NULL 为每个端点统一选择考虑障碍的间距；"smooth" 仅在 geom_gene()、geom_feature() 多边形附近局部调整，"none" 则使用固定 0.035。忽略文字与引导线。提供数值会关闭自动规则并精确使用该间距。线性布局会缩减自动基础间距以适应窄通道；无法容纳的显式间距或注释避让距离会报错。 |
+| `link_gap` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 可选数值/向量，控制序列与连接端点的间距。默认 link_avoid = "uniform" 时，NULL 为每个端点统一选择考虑障碍的间距；"smooth" 仅在 geom_feature(preset = "gene")、geom_feature() 多边形附近局部调整，"none" 则使用固定 0.035。忽略文字与引导线。提供数值会关闭自动规则并精确使用该间距。线性布局会缩减自动基础间距以适应窄通道；无法容纳的显式间距或注释避让距离会报错。 |
 | `link_avoid` | `c("uniform", "none", "smooth")` | 类型、单位及允许格式见右侧本函数参数契约 | 避障方式："uniform"（默认）、"none" 或 "smooth"。平滑方式局部调整，统一方式在整个端点采用同一间距。 |
 | `link_branch` | `c("none", "query", "subject")` | 类型、单位及允许格式见右侧本函数参数契约 | 共享相同 query 或 subject 端点："none"、"query"、"subject"。 |
 | `link_branch_fraction` | `0.15` | 类型、单位及允许格式见右侧本函数参数契约 | 共享段相对最短成员的长度比例，范围 (0, 0.5]。 |
@@ -415,13 +365,14 @@
 | `pairs` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 可选数据框，以 qaccver 和 saccver 选择无序比较对。adjacent_only = NULL 时，显式比较对优先于坐标系默认值。export_ggchord_layout() 报告省略行。 |
 | `position` | `"identity"` | 类型、单位及允许格式见右侧本函数参数契约 | 标准 ggplot2 图层参数。 |
 | `show.legend` | `TRUE` | 类型、单位及允许格式见右侧本函数参数契约 | 标准 ggplot2 图层参数。 |
-| `inherit.aes` | `FALSE` | 类型、单位及允许格式见右侧本函数参数契约 | 标准 ggplot2 图层参数。 |
+| `inherit.aes` | `TRUE` | 类型、单位及允许格式见右侧本函数参数契约 | 标准 ggplot2 图层参数。 |
 | `nonadjacent_linewidth` | `0.4` | 类型、单位及允许格式见右侧本函数参数契约 | coord_collinear()的非相邻行或coord_radial_synteny()的非相邻辐条的固定边框线宽，默认0.4 mm，默认使用虚线。设为0时全部连接使用图层普通linewidth。线宽与线型独立；显式aes(linewidth = ...)映射优先。 |
 | `between` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 两个显示实例名称或声明序号，用于确定唯一路由。 |
 | `allow_repeated` | `FALSE` | 类型、单位及允许格式见右侧本函数参数契约 | 显式允许声明的 source_hsp_id 出现在多个显示关系中。 |
 | `tip` | `c("none", "subject")` | 类型、单位及允许格式见右侧本函数参数契约 | 默认 none 保留完整区间端面；也可选择 subject 端收尖。肩部在通道 88% 处保留平移后的目标端点跨度。尖点是端面中点的装饰标记，不代表单个匹配碱基或生物转移方向。退化端面会警告并恢复完整端面。源区间保持不变。 |
 | `gradient` | `FALSE` | 类型、单位及允许格式见右侧本函数参数契约 | 逻辑值。显式启用端点序列色插值，默认 FALSE。显式 fill、映射和标度仍然优先。 |
 | `...` | `无形式默认；是否必需见契约` | 类型、单位及允许格式见右侧本函数参数契约 | 使用聚合或密度统计时，可在此传递 bins、weight 或 group_by。只有合并连接带时可用 min_bundle。其余参数传给连接带几何层。 |
+| `id` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 可选的唯一图层 ID，用于导出布局和来源行。 |
 | `stat` | `"identity"` | 类型、单位及允许格式见右侧本函数参数契约 | 在原始区间上计算的统计方式。"identity" 保留每条记录，"ribbon_bundle" 合并记录，"ribbon_density" 为每条记录添加局部密度。两种统计的控制参数与计算变量分别见 stat_ribbon_bundle() 和 stat_ribbon_density()。 |
 
 </details>
@@ -443,7 +394,7 @@
 | `colour` | `"#A020F0"` | 类型、单位及允许格式见右侧本函数参数契约 | 引物弧颜色。 |
 | `position` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 标准图层参数。 |
 | `show.legend` | `FALSE` | 类型、单位及允许格式见右侧本函数参数契约 | 标准图层参数。 |
-| `inherit.aes` | `FALSE` | 类型、单位及允许格式见右侧本函数参数契约 | 标准图层参数。 |
+| `inherit.aes` | `TRUE` | 类型、单位及允许格式见右侧本函数参数契约 | 标准图层参数。 |
 | `...` | `无形式默认；是否必需见契约` | 类型、单位及允许格式见右侧本函数参数契约 | 传给 geom_feature() 的其他参数。 |
 
 </details>
@@ -465,7 +416,7 @@
 | `max_overlaps` | `Inf` | 类型、单位及允许格式见右侧本函数参数契约 | 允许尚未解决的最大重叠数。 |
 | `position` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 标准图层参数。 |
 | `show.legend` | `FALSE` | 类型、单位及允许格式见右侧本函数参数契约 | 标准图层参数。 |
-| `inherit.aes` | `FALSE` | 类型、单位及允许格式见右侧本函数参数契约 | 标准图层参数。 |
+| `inherit.aes` | `TRUE` | 类型、单位及允许格式见右侧本函数参数契约 | 标准图层参数。 |
 | `...` | `无形式默认；是否必需见契约` | 类型、单位及允许格式见右侧本函数参数契约 | 传给 geom_feature() 的其他参数。 |
 
 </details>
@@ -532,9 +483,6 @@
 | --- | --- | --- | --- |
 | `mapping` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 默认 NULL，使用预计算数据。 |
 | `data` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 默认 NULL，从布局自动获取。 |
-| `seq_order` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 显示顺序中的来源 ID，重复值创建显示实例。可使用 c(A_high='A', B='B', A_low='A') 这样的名称稳定标识实例。重复实体的 HSP 要求每个连接层提供唯一 between 路由。 |
-| `seq_orientation` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 可选数值 1 或 -1，序列方向，默认 1。 |
-| `seq_gap` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 可选数值，序列间隙比例；弦图默认 0.03。在 coord_collinear() 中表示相邻骨架间距相对最长骨架宽度的正比例，默认 0.3；线性布局不使用最后一条序列的 gap。分段线性图以最长显示行衡量，同一行窗口须使用相同 gap，只有行间间隙影响纵向位置。可按序列 ID 命名以指定其后的间隙，未列出的序列使用相应坐标默认值。 |
 | `seq_radius` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 可选正数，序列弧半径，默认 1.0。 |
 | `seq_curvature` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 可选有符号弯曲程度：0 为直线，1 为标准弧，负值向相反方向弯曲，默认 1.0。接受有限正负值且不截断，绝对值大于 1 会增强弯曲。 |
 | `seq_style` | `c("auto", "single", "double", "band")` | 类型、单位及允许格式见右侧本函数参数契约 | 骨架形状。"auto" 在 coord_circular() 中使用双线，在 coord_chord() 中使用单线骨架。 |
@@ -543,9 +491,9 @@
 | `linewidth` | `0.9` | 类型、单位及允许格式见右侧本函数参数契约 | 骨架线宽，默认 0.9。 |
 | `position` | `"identity"` | 类型、单位及允许格式见右侧本函数参数契约 | 标准 ggplot2 图层参数。 |
 | `show.legend` | `TRUE` | 类型、单位及允许格式见右侧本函数参数契约 | 标准 ggplot2 图层参数。 |
-| `inherit.aes` | `FALSE` | 类型、单位及允许格式见右侧本函数参数契约 | 标准 ggplot2 图层参数。 |
-| `length_mode` | `c("proportional", "equal")` | 类型、单位及允许格式见右侧本函数参数契约 | "proportional"（默认）保留源长度比例；"equal" 为各显示序列分配相同角度或直线跨度，不修改源长度。多序列 equal 模式不能使用共享绝对比例尺，局部轴保留源单位。 |
+| `inherit.aes` | `TRUE` | 类型、单位及允许格式见右侧本函数参数契约 | 标准 ggplot2 图层参数。 |
 | `...` | `无形式默认；是否必需见契约` | 类型、单位及允许格式见右侧本函数参数契约 | 其他固定路径 aesthetic。colour（或 color）设置 seq_colour。显式固定值优先于对应映射；要保留映射请省略固定参数。 |
+| `id` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 可选的唯一图层 ID，用于导出布局和来源行。 |
 
 </details>
 
@@ -566,8 +514,9 @@
 | `colour` | `"#3D4348"` | 类型、单位及允许格式见右侧本函数参数契约 | 固定线外观；也可映射普通视觉 aesthetic 并使用 ggplot2 标度。 |
 | `position` | `"identity"` | 类型、单位及允许格式见右侧本函数参数契约 | 标准 ggplot2 图层参数。 |
 | `show.legend` | `FALSE` | 类型、单位及允许格式见右侧本函数参数契约 | 标准 ggplot2 图层参数。 |
-| `inherit.aes` | `FALSE` | 类型、单位及允许格式见右侧本函数参数契约 | 标准 ggplot2 图层参数。 |
+| `inherit.aes` | `TRUE` | 类型、单位及允许格式见右侧本函数参数契约 | 标准 ggplot2 图层参数。 |
 | `...` | `无形式默认；是否必需见契约` | 类型、单位及允许格式见右侧本函数参数契约 | 传给 ggplot2::geom_path() 的其他参数。 |
+| `id` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 可选的唯一图层 ID，用于导出布局和来源行。 |
 
 </details>
 
@@ -588,8 +537,9 @@
 | `name_style` | `list()` | 类型、单位及允许格式见右侧本函数参数契约 | 名称和长度 grob 的固定文字样式命名列表，支持 colour、size、family、fontface、lineheight。 |
 | `length_style` | `list()` | 类型、单位及允许格式见右侧本函数参数契约 | 名称和长度 grob 的固定文字样式命名列表，支持 colour、size、family、fontface、lineheight。 |
 | `show.legend` | `FALSE` | 类型、单位及允许格式见右侧本函数参数契约 | 标准 ggplot2 图层参数。 |
-| `inherit.aes` | `FALSE` | 类型、单位及允许格式见右侧本函数参数契约 | 标准 ggplot2 图层参数。 |
+| `inherit.aes` | `TRUE` | 类型、单位及允许格式见右侧本函数参数契约 | 标准 ggplot2 图层参数。 |
 | `...` | `无形式默认；是否必需见契约` | 类型、单位及允许格式见右侧本函数参数契约 | 传给 geom_text() 的其他参数。 |
+| `id` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 可选的唯一图层 ID，用于导出布局和来源行。 |
 
 </details>
 
@@ -613,8 +563,9 @@
 | `check_overlap` | `FALSE` | 类型、单位及允许格式见右侧本函数参数契约 | 逻辑值，默认 FALSE。TRUE 时跳过与已绘标签重叠的文字，对应 ggplot2 的 geom_text() 选项。 |
 | `position` | `"identity"` | 类型、单位及允许格式见右侧本函数参数契约 | 标准 ggplot2 图层参数。 |
 | `show.legend` | `FALSE` | 类型、单位及允许格式见右侧本函数参数契约 | 标准 ggplot2 图层参数。 |
-| `inherit.aes` | `FALSE` | 类型、单位及允许格式见右侧本函数参数契约 | 标准 ggplot2 图层参数。 |
+| `inherit.aes` | `TRUE` | 类型、单位及允许格式见右侧本函数参数契约 | 标准 ggplot2 图层参数。 |
 | `...` | `无形式默认；是否必需见契约` | 类型、单位及允许格式见右侧本函数参数契约 | 传给 geom_text() 的其他参数。 |
+| `id` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 可选的唯一图层 ID，用于导出布局和来源行。 |
 
 </details>
 
@@ -637,8 +588,9 @@
 | `region_side` | `c("inside", "outside", "auto")` | 类型、单位及允许格式见右侧本函数参数契约 | 侧向取 "inside"、"outside" 或 "auto"；"auto" 在可能时放在弦图内侧。 |
 | `position` | `"identity"` | 类型、单位及允许格式见右侧本函数参数契约 | 标准 ggplot2 图层参数。 |
 | `show.legend` | `FALSE` | 类型、单位及允许格式见右侧本函数参数契约 | 标准 ggplot2 图层参数。 |
-| `inherit.aes` | `FALSE` | 类型、单位及允许格式见右侧本函数参数契约 | 标准 ggplot2 图层参数。 |
+| `inherit.aes` | `TRUE` | 类型、单位及允许格式见右侧本函数参数契约 | 标准 ggplot2 图层参数。 |
 | `...` | `无形式默认；是否必需见契约` | 类型、单位及允许格式见右侧本函数参数契约 | 传给 geom_polygon() 的其他参数。 |
+| `id` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 可选的唯一图层 ID，用于导出布局和来源行。 |
 
 </details>
 
@@ -664,8 +616,9 @@
 | `size` | `3` | 类型、单位及允许格式见右侧本函数参数契约 | 固定线色、线宽及字号，文字使用 ggplot2 的 mm。未作为固定值提供时，也可使用普通映射和标度。 |
 | `position` | `"identity"` | 类型、单位及允许格式见右侧本函数参数契约 | 标准 ggplot2 图层参数。 |
 | `show.legend` | `FALSE` | 类型、单位及允许格式见右侧本函数参数契约 | 标准 ggplot2 图层参数。 |
-| `inherit.aes` | `FALSE` | 类型、单位及允许格式见右侧本函数参数契约 | 标准 ggplot2 图层参数。 |
+| `inherit.aes` | `TRUE` | 类型、单位及允许格式见右侧本函数参数契约 | 标准 ggplot2 图层参数。 |
 | `...` | `无形式默认；是否必需见契约` | 类型、单位及允许格式见右侧本函数参数契约 | 传给 ggplot2::layer() 的其他固定 aesthetic。 |
+| `id` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 可选的唯一图层 ID，用于导出布局和来源行。 |
 
 </details>
 
@@ -680,15 +633,16 @@
 | --- | --- | --- | --- |
 | `mapping` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 标准图层输入。提供 accver，以及 x/pos 源位置或 start/end 区间；给定数值映射到 y/track_value。 |
 | `data` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 标准图层输入。提供 accver，以及 x/pos 源位置或 start/end 区间；给定数值映射到 y/track_value。 |
-| `geom` | `"point"` | 类型、单位及允许格式见右侧本函数参数契约 | 原生几何和统计名称，区间覆盖用 stat = "coverage"。七个原生统计也接受对应的 ggplot2 内置 Stat 对象，如 ggplot2::StatBin。bar 默认使用 count，其他几何默认使用 identity。自定义 Stat 子类需要来源归属规则，目前不支持。 |
-| `stat` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 原生几何和统计名称，区间覆盖用 stat = "coverage"。七个原生统计也接受对应的 ggplot2 内置 Stat 对象，如 ggplot2::StatBin。bar 默认使用 count，其他几何默认使用 identity。自定义 Stat 子类需要来源归属规则，目前不支持。 |
-| `track` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 物理 position_track() 声明。 |
-| `position` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 在源数据上做位置调整，例如 "identity"、"stack" 或 ggplot2::position_dodge(width = 10)。x 以序列坐标为单位。特征的位置在特征图层声明。旧写法 position = position_track(...) 仍可声明物理轨道。 |
+| `geom` | `"point"` | 类型、单位及允许格式见右侧本函数参数契约 | 原生几何及统计名称，区间覆盖用 stat = "coverage"。七个原生统计也接受 ggplot2 的内置 Stat 对象，例如 ggplot2::StatBin。bar 的默认统计为 count，其余几何为 identity。ggplot2 的 Stat 对象可计算轨道的位置和数值。其输入包含 source_row，即图层源表的整数行号。可通过列表列 source_rows 返回每个结果所用的源行号向量。未报告的成员导出为 NULL，状态为 source_status = "unknown"。显式返回空整数向量表示已知没有成员。报告的成员须属于结果所在的序列和分面。 |
+| `stat` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 原生几何及统计名称，区间覆盖用 stat = "coverage"。七个原生统计也接受 ggplot2 的内置 Stat 对象，例如 ggplot2::StatBin。bar 的默认统计为 count，其余几何为 identity。ggplot2 的 Stat 对象可计算轨道的位置和数值。其输入包含 source_row，即图层源表的整数行号。可通过列表列 source_rows 返回每个结果所用的源行号向量。未报告的成员导出为 NULL，状态为 source_status = "unknown"。显式返回空整数向量表示已知没有成员。报告的成员须属于结果所在的序列和分面。 |
+| `track` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 由 track_band() 声明的字符 ID，省略时使用共享的默认轨道。 |
+| `position` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 在源数据上做位置调整，例如 "identity"、"stack" 或 ggplot2::position_dodge(width = 10)。x 以序列坐标为单位。特征的位置在特征图层声明。 |
 | `bounds` | `c("error", "clip")` | 类型、单位及允许格式见右侧本函数参数契约 | 坐标报错或裁剪策略。 |
 | `baseline` | `0` | 类型、单位及允许格式见右侧本函数参数契约 | 给定数值柱的基线，非零值要求 position='identity'，避免堆叠改变其含义。 |
 | `show.legend` | `NA` | 类型、单位及允许格式见右侧本函数参数契约 | 标准图层控制参数。 |
-| `inherit.aes` | `FALSE` | 类型、单位及允许格式见右侧本函数参数契约 | 标准图层控制参数。 |
-| `...` | `无形式默认；是否必需见契约` | 类型、单位及允许格式见右侧本函数参数契约 | 原生 geom/stat 参数与固定样式。覆盖统计要求用正整数 binwidth 指定窗口包含的序列单位数。 |
+| `inherit.aes` | `TRUE` | 类型、单位及允许格式见右侧本函数参数契约 | 标准图层控制参数。 |
+| `...` | `无形式默认；是否必需见契约` | 类型、单位及允许格式见右侧本函数参数契约 | 原生几何、统计参数及固定样式。区间覆盖接受正整数窗宽 binwidth 或显式窗口表 windows。 |
+| `id` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 可选的唯一图层 ID，用于导出统计和来源行。 |
 
 </details>
 
@@ -703,7 +657,7 @@
 | --- | --- | --- | --- |
 | `mapping` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 标准图层输入。提供 accver，以及 x/pos 源位置或 start/end 区间；给定数值映射到 y/track_value。 |
 | `data` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 标准图层输入。提供 accver，以及 x/pos 源位置或 start/end 区间；给定数值映射到 y/track_value。 |
-| `position` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 在源数据上做位置调整，例如 "identity"、"stack" 或 ggplot2::position_dodge(width = 10)。x 以序列坐标为单位。特征的位置在特征图层声明。旧写法 position = position_track(...) 仍可声明物理轨道。 |
+| `position` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 在源数据上做位置调整，例如 "identity"、"stack" 或 ggplot2::position_dodge(width = 10)。x 以序列坐标为单位。特征的位置在特征图层声明。 |
 | `baseline` | `0` | 数值 0；计数柱拒绝非零基线 | 计数柱仅允许 0 基线；任何非零值均报错。给定数值和非零基线使用 geom_track_col()。 |
 | `fill` | `"#86AFB9"` | 类型、单位及允许格式见右侧本函数参数契约 | 计数快捷层的固定样式。 |
 | `colour` | `NA` | 类型、单位及允许格式见右侧本函数参数契约 | 计数快捷层的固定样式。 |
@@ -712,10 +666,10 @@
 | `linetype` | `1` | 类型、单位及允许格式见右侧本函数参数契约 | 计数快捷层的固定样式。 |
 | `bounds` | `c("error", "clip")` | 类型、单位及允许格式见右侧本函数参数契约 | 坐标报错或裁剪策略。 |
 | `show.legend` | `NA` | 类型、单位及允许格式见右侧本函数参数契约 | 标准图层控制参数。 |
-| `inherit.aes` | `FALSE` | 类型、单位及允许格式见右侧本函数参数契约 | 标准图层控制参数。 |
-| `...` | `无形式默认；是否必需见契约` | 类型、单位及允许格式见右侧本函数参数契约 | 原生 geom/stat 参数与固定样式。覆盖统计要求用正整数 binwidth 指定窗口包含的序列单位数。 |
-| `track` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 物理 position_track() 声明。 |
-| `stat` | `"count"` | 类型、单位及允许格式见右侧本函数参数契约 | 原生几何和统计名称，区间覆盖用 stat = "coverage"。七个原生统计也接受对应的 ggplot2 内置 Stat 对象，如 ggplot2::StatBin。bar 默认使用 count，其他几何默认使用 identity。自定义 Stat 子类需要来源归属规则，目前不支持。 |
+| `inherit.aes` | `TRUE` | 类型、单位及允许格式见右侧本函数参数契约 | 标准图层控制参数。 |
+| `...` | `无形式默认；是否必需见契约` | 类型、单位及允许格式见右侧本函数参数契约 | 原生几何、统计参数及固定样式。区间覆盖接受正整数窗宽 binwidth 或显式窗口表 windows。 |
+| `track` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 由 track_band() 声明的字符 ID，省略时使用共享的默认轨道。 |
+| `stat` | `"count"` | 类型、单位及允许格式见右侧本函数参数契约 | 原生几何及统计名称，区间覆盖用 stat = "coverage"。七个原生统计也接受 ggplot2 的内置 Stat 对象，例如 ggplot2::StatBin。bar 的默认统计为 count，其余几何为 identity。ggplot2 的 Stat 对象可计算轨道的位置和数值。其输入包含 source_row，即图层源表的整数行号。可通过列表列 source_rows 返回每个结果所用的源行号向量。未报告的成员导出为 NULL，状态为 source_status = "unknown"。显式返回空整数向量表示已知没有成员。报告的成员须属于结果所在的序列和分面。 |
 
 </details>
 
@@ -730,11 +684,13 @@
 | --- | --- | --- | --- |
 | `mapping` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 标准图层输入。提供 accver，以及 x/pos 源位置或 start/end 区间；给定数值映射到 y/track_value。 |
 | `data` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 标准图层输入。提供 accver，以及 x/pos 源位置或 start/end 区间；给定数值映射到 y/track_value。 |
-| `position` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 在源数据上做位置调整，例如 "identity"、"stack" 或 ggplot2::position_dodge(width = 10)。x 以序列坐标为单位。特征的位置在特征图层声明。旧写法 position = position_track(...) 仍可声明物理轨道。 |
-| `track` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 物理 position_track() 声明。 |
-| `...` | `无形式默认；是否必需见契约` | 类型、单位及允许格式见右侧本函数参数契约 | 原生 geom/stat 参数与固定样式。覆盖统计要求用正整数 binwidth 指定窗口包含的序列单位数。 |
+| `position` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 在源数据上做位置调整，例如 "identity"、"stack" 或 ggplot2::position_dodge(width = 10)。x 以序列坐标为单位。特征的位置在特征图层声明。 |
+| `track` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 由 track_band() 声明的字符 ID，省略时使用共享的默认轨道。 |
+| `...` | `无形式默认；是否必需见契约` | 类型、单位及允许格式见右侧本函数参数契约 | 原生几何、统计参数及固定样式。区间覆盖接受正整数窗宽 binwidth 或显式窗口表 windows。 |
+| `stat` | `"identity"` | 类型、单位及允许格式见右侧本函数参数契约 | 原生几何及统计名称，区间覆盖用 stat = "coverage"。七个原生统计也接受 ggplot2 的内置 Stat 对象，例如 ggplot2::StatBin。bar 的默认统计为 count，其余几何为 identity。ggplot2 的 Stat 对象可计算轨道的位置和数值。其输入包含 source_row，即图层源表的整数行号。可通过列表列 source_rows 返回每个结果所用的源行号向量。未报告的成员导出为 NULL，状态为 source_status = "unknown"。显式返回空整数向量表示已知没有成员。报告的成员须属于结果所在的序列和分面。 |
+| `id` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 可选的唯一图层 ID，用于导出统计和来源行。 |
 | `show.legend` | `NA` | 类型、单位及允许格式见右侧本函数参数契约 | 标准图层控制参数。 |
-| `inherit.aes` | `FALSE` | 类型、单位及允许格式见右侧本函数参数契约 | 标准图层控制参数。 |
+| `inherit.aes` | `TRUE` | 类型、单位及允许格式见右侧本函数参数契约 | 标准图层控制参数。 |
 
 </details>
 
@@ -749,7 +705,7 @@
 | --- | --- | --- | --- |
 | `mapping` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 标准 ggplot2 映射与图层输入。 |
 | `data` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 标准 ggplot2 映射与图层输入。 |
-| `position` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 旧写法通过此参数指定物理轨道。使用原生折线映射时，可传入 ggplot2 位置调整。闭合折线使用序列上的局部位置。 |
+| `position` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | ggplot2 的源数据位置调整。整带区间瓦片和闭合折线使用 identity。需要局部数值高度与位置调整的瓦片使用 geom_track(geom = "tile")。有 x/y 映射、显式统计或源数据调整的开放折线采用原生折线语法。使用序列局部角色和 identity 的折线保留输入顺序和缺测断点，要求组内位置严格递增。 |
 | `colour` | `"#387D88"` | 类型、单位及允许格式见右侧本函数参数契约 | 固定样式；填色和颜色映射使用专用轨道角色及作用域标度。 |
 | `alpha` | `1` | 类型、单位及允许格式见右侧本函数参数契约 | 固定样式；填色和颜色映射使用专用轨道角色及作用域标度。 |
 | `linewidth` | `0.4` | 类型、单位及允许格式见右侧本函数参数契约 | 固定样式；填色和颜色映射使用专用轨道角色及作用域标度。 |
@@ -757,9 +713,10 @@
 | `closed` | `FALSE` | 类型、单位及允许格式见右侧本函数参数契约 | 是否显式闭合完整圆形折线。 |
 | `bounds` | `c("error", "clip")` | 类型、单位及允许格式见右侧本函数参数契约 | 基因组坐标策略为 "error"（默认）或 "clip"。裁剪会报告，不改变源值。 |
 | `show.legend` | `NA` | 类型、单位及允许格式见右侧本函数参数契约 | 标准图层参数。 |
-| `inherit.aes` | `FALSE` | 类型、单位及允许格式见右侧本函数参数契约 | 标准图层参数。 |
+| `inherit.aes` | `TRUE` | 类型、单位及允许格式见右侧本函数参数契约 | 标准图层参数。 |
 | `...` | `无形式默认；是否必需见契约` | 类型、单位及允许格式见右侧本函数参数契约 | 其他几何参数。 |
-| `track` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 用 position_track() 声明的物理轨道。每层指定一次。 |
+| `track` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 由 track_band() 声明的字符 ID，省略时使用共享的默认轨道。 |
+| `id` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 可选的唯一图层 ID，用于导出布局和来源。 |
 
 </details>
 
@@ -774,7 +731,7 @@
 | --- | --- | --- | --- |
 | `mapping` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 标准 ggplot2 映射与图层输入。 |
 | `data` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 标准 ggplot2 映射与图层输入。 |
-| `position` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 旧写法通过此参数指定物理轨道。使用原生折线映射时，可传入 ggplot2 位置调整。闭合折线使用序列上的局部位置。 |
+| `position` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | ggplot2 的源数据位置调整。整带区间瓦片和闭合折线使用 identity。需要局部数值高度与位置调整的瓦片使用 geom_track(geom = "tile")。有 x/y 映射、显式统计或源数据调整的开放折线采用原生折线语法。使用序列局部角色和 identity 的折线保留输入顺序和缺测断点，要求组内位置严格递增。 |
 | `fill` | `"#86AFB9"` | 类型、单位及允许格式见右侧本函数参数契约 | 固定样式；填色和颜色映射使用专用轨道角色及作用域标度。 |
 | `colour` | `NA` | 类型、单位及允许格式见右侧本函数参数契约 | 固定样式；填色和颜色映射使用专用轨道角色及作用域标度。 |
 | `alpha` | `1` | 类型、单位及允许格式见右侧本函数参数契约 | 固定样式；填色和颜色映射使用专用轨道角色及作用域标度。 |
@@ -782,9 +739,10 @@
 | `linetype` | `1` | 类型、单位及允许格式见右侧本函数参数契约 | 固定样式；填色和颜色映射使用专用轨道角色及作用域标度。 |
 | `bounds` | `c("error", "clip")` | 类型、单位及允许格式见右侧本函数参数契约 | 基因组坐标策略为 "error"（默认）或 "clip"。裁剪会报告，不改变源值。 |
 | `show.legend` | `NA` | 类型、单位及允许格式见右侧本函数参数契约 | 标准图层参数。 |
-| `inherit.aes` | `FALSE` | 类型、单位及允许格式见右侧本函数参数契约 | 标准图层参数。 |
+| `inherit.aes` | `TRUE` | 类型、单位及允许格式见右侧本函数参数契约 | 标准图层参数。 |
 | `...` | `无形式默认；是否必需见契约` | 类型、单位及允许格式见右侧本函数参数契约 | 其他几何参数。 |
-| `track` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 用 position_track() 声明的物理轨道。每层指定一次。 |
+| `track` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 由 track_band() 声明的字符 ID，省略时使用共享的默认轨道。 |
+| `id` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 可选的唯一图层 ID，用于导出布局和来源。 |
 
 </details>
 
@@ -803,22 +761,21 @@
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
 | --- | --- | --- | --- |
 | `spacing` | `0.1` | 类型、单位及允许格式见右侧本函数参数契约 | 相邻注释轨道的最小正径向距离。圆形质粒布局会加宽首个过渡作为主要标签通道，在更深重叠轨道间至少保留一条标签轨道。 |
-| `side` | `c("strand", "outside", "inside")` | 类型、单位及允许格式见右侧本函数参数契约 | 单独提供时沿用旧版分道规则。outside 从 −0.1 起向内增长，inside 从 +0.1 起向外增长。默认 strand 在正链从 +0.1 起、负链从 −0.1 起，均向远离骨架的方向增长。 |
-| `base_position` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 在检测区间重叠与分道前确定第一道位置，可用 identity、strand 或 plasmid 位置对象。identity 使双链从骨架起步，默认起始位置按链确定。 |
-| `direction` | `c("auto", "outward", "inward")` | 类型、单位及允许格式见右侧本函数参数契约 | 后续道在各起始带内的增长方向。"outward" 沿正局部法向（水平骨架上方），"inward" 沿负法向。"auto" 跟随起始偏移的符号，偏移为零时向外。第零道留在起始位置。旧参数 side 单独使用。 |
+| `base_position` | `position_strand()` | 类型、单位及允许格式见右侧本函数参数契约 | 在检测重叠和分道前确定起点。"identity" 让两条链从骨架起步，position_offset() 让它们共用一处偏移，position_strand() 按链给出偏移。默认正链从 +0.1 起步，负链从 −0.1 起步。 |
+| `direction` | `c("auto", "outward", "inward")` | 类型、单位及允许格式见右侧本函数参数契约 | 后续道在各起始带内的增道方向。"outward" 沿正局部法向（水平骨架上方），"inward" 沿负局部法向。"auto" 随起始偏移的符号选择方向，偏移为零时向外。第零道留在起点。 |
 
 </details>
 
-<span id="api-position_plasmid"></span>
-<details><summary><code>position_plasmid()</code></summary>
+<span id="api-position_offset"></span>
+<details><summary><code>position_offset()</code></summary>
 
 
-[完整参考](../../man/position_plasmid.Rd)
+[完整参考](../../man/position_offset.Rd)
 
 
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
 | --- | --- | --- | --- |
-| `offset` | `-0.1` | 类型、单位及允许格式见右侧本函数参数契约 | 有符号局部法线偏移，负值在圆形序列内侧，正值在外侧。 |
+| `offset` | `无形式默认；是否必需见契约` | 类型、单位及允许格式见右侧本函数参数契约 | 沿局部法向的有符号偏移。负值将共享带放到圆形序列内侧，正值放到外侧。可用一个值、按 accver 命名的向量，或等价的标量偏移列表。无名向量须与序列数等长，命名向量中未指定的序列取零。 |
 
 </details>
 
@@ -835,27 +792,50 @@
 
 </details>
 
-<span id="api-position_track"></span>
-<details><summary><code>position_track()</code></summary>
+<span id="api-track_band"></span>
+<details><summary><code>track_band()</code></summary>
 
 
-[完整参考](../../man/position_track.Rd)
+[完整参考](../../man/track_band.Rd)
 
 
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
 | --- | --- | --- | --- |
-| `track` | `无形式默认；是否必需见契约` | 类型、单位及允许格式见右侧本函数参数契约 | 一个稳定非空字符 ID。 |
-| `side` | `c("outside", "inside")` | 类型、单位及允许格式见右侧本函数参数契约 | 支持 "outside" 或 "inside"。 |
-| `order` | `1` | 类型、单位及允许格式见右侧本函数参数契约 | 有限排序优先级，靠近骨架的带优先；相同值按 ID 排序。 |
-| `width` | `grid::unit(4, "mm")` | 类型、单位及允许格式见右侧本函数参数契约 | 正带宽和非负前置间距。绝对 grid 单位（mm、cm、英寸、点）根据渲染环境换算；数值保留原生布局单位，逐序列数值向量/列表遵循常用序列参数格式。 |
-| `gap` | `grid::unit(1, "mm")` | 类型、单位及允许格式见右侧本函数参数契约 | 正带宽和非负前置间距。绝对 grid 单位（mm、cm、英寸、点）根据渲染环境换算；数值保留原生布局单位，逐序列数值向量/列表遵循常用序列参数格式。 |
+| `id` | `无形式默认；是否必需见契约` | 类型、单位及允许格式见右侧本函数参数契约 | 单个非空字符 ID。 |
+| `side` | `c("outside", "inside")` | 类型、单位及允许格式见右侧本函数参数契约 | 使用 "outside" 表示局部法向的正方向（水平直线图中向上），或使用 "inside"。 |
+| `order` | `1` | 类型、单位及允许格式见右侧本函数参数契约 | 有限数值优先级，靠近骨架的轨道优先；相同值按 ID 排序。 |
+| `width` | `grid::unit(4, "mm")` | 类型、单位及允许格式见右侧本函数参数契约 | 带宽须为正数，靠近骨架一侧的间隔可为零。可提供绝对 grid 单位（毫米、厘米、英寸或点），也可以使用原生布局单位的单值、逐序列数值向量或列表。 |
+| `gap` | `grid::unit(1, "mm")` | 类型、单位及允许格式见右侧本函数参数契约 | 带宽须为正数，靠近骨架一侧的间隔可为零。可提供绝对 grid 单位（毫米、厘米、英寸或点），也可以使用原生布局单位的单值、逐序列数值向量或列表。 |
 
 </details>
 
 
 <a id="statistics"></a>
 
-## 连接统计 {#statistics}
+## 区间和连接统计 {#statistics}
+
+<span id="api-stat_coverage"></span>
+<details><summary><code>stat_coverage()</code></summary>
+
+
+[完整参考](../../man/stat_coverage.Rd)
+
+
+| 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
+| --- | --- | --- | --- |
+| `mapping` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 标准图层输入。提供 accver，以及 x/pos 源位置或 start/end 区间；给定数值映射到 y/track_value。 |
+| `data` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 标准图层输入。提供 accver，以及 x/pos 源位置或 start/end 区间；给定数值映射到 y/track_value。 |
+| `geom` | `"track_col"` | 类型、单位及允许格式见右侧本函数参数契约 | 轨道几何，例如 "track_col" 或 "track_line"。 |
+| `position` | `"identity"` | 类型、单位及允许格式见右侧本函数参数契约 | 在源数据上做位置调整，例如 "identity"、"stack" 或 ggplot2::position_dodge(width = 10)。x 以序列坐标为单位。特征的位置在特征图层声明。 |
+| `...` | `无形式默认；是否必需见契约` | 类型、单位及允许格式见右侧本函数参数契约 | 轨道几何参数，包括固定样式。 |
+| `binwidth` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 从位置 1 开始，以正整数个序列单位分窗。binwidth 和 windows 必须且只能提供一项。 |
+| `windows` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 窗口表须含 accver、start、end，可选唯一标识 window_id 和单位 sequence_unit。窗口可以重叠，每个窗口分别记录贡献区间的来源行。坐标以输入参考为准，聚焦后的参考使用局部坐标。 |
+| `track` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 由 track_band() 声明的字符 ID，省略时使用共享的默认轨道。 |
+| `id` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 可选的唯一图层 ID，用于导出统计和来源行。 |
+| `show.legend` | `NA` | 类型、单位及允许格式见右侧本函数参数契约 | 标准图层控制参数。 |
+| `inherit.aes` | `TRUE` | 类型、单位及允许格式见右侧本函数参数契约 | 标准图层控制参数。 |
+
+</details>
 
 <span id="api-stat_ribbon_bundle"></span>
 <details><summary><code>stat_ribbon_bundle()</code></summary>
@@ -874,7 +854,7 @@
 | `group_by` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 传给 bundle_ggchord_ribbons()。 |
 | `position` | `"identity"` | 类型、单位及允许格式见右侧本函数参数契约 | 标准 ggplot2 图层参数。 |
 | `show.legend` | `TRUE` | 类型、单位及允许格式见右侧本函数参数契约 | 标准 ggplot2 图层参数。 |
-| `inherit.aes` | `FALSE` | 类型、单位及允许格式见右侧本函数参数契约 | 标准 ggplot2 图层参数。 |
+| `inherit.aes` | `TRUE` | 类型、单位及允许格式见右侧本函数参数契约 | 标准 ggplot2 图层参数。 |
 | `...` | `无形式默认；是否必需见契约` | 类型、单位及允许格式见右侧本函数参数契约 | 传给 geom_link_ribbon() 的连接几何与外观参数。 |
 
 </details>
@@ -895,7 +875,7 @@
 | `group_by` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 可选列，定义独立密度组。 |
 | `position` | `"identity"` | 类型、单位及允许格式见右侧本函数参数契约 | 标准 ggplot2 图层参数。 |
 | `show.legend` | `TRUE` | 类型、单位及允许格式见右侧本函数参数契约 | 标准 ggplot2 图层参数。 |
-| `inherit.aes` | `FALSE` | 类型、单位及允许格式见右侧本函数参数契约 | 标准 ggplot2 图层参数。 |
+| `inherit.aes` | `TRUE` | 类型、单位及允许格式见右侧本函数参数契约 | 标准 ggplot2 图层参数。 |
 | `...` | `无形式默认；是否必需见契约` | 类型、单位及允许格式见右侧本函数参数契约 | 传给 geom_link_ribbon() 的连接几何与外观参数。 |
 
 </details>
@@ -1298,7 +1278,7 @@
 
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
 | --- | --- | --- | --- |
-| `name` | `ggplot2::waiver()` | 类型、单位及允许格式见右侧本函数参数契约 | 标度名称，默认禁用位置图例。 |
+| `name` | `ggplot2::waiver()` | 类型、单位及允许格式见右侧本函数参数契约 | 可选的标度名称。 |
 | `breaks` | `ggplot2::waiver()` | 类型、单位及允许格式见右侧本函数参数契约 | 标准连续标度控制项。 |
 | `minor_breaks` | `ggplot2::waiver()` | 类型、单位及允许格式见右侧本函数参数契约 | 标准连续标度控制项。 |
 | `labels` | `ggplot2::waiver()` | 类型、单位及允许格式见右侧本函数参数契约 | 标准连续标度控制项。 |
@@ -1308,7 +1288,7 @@
 | `transform` | `"identity"` | 类型、单位及允许格式见右侧本函数参数契约 | 标准连续标度控制项。 |
 | `n.breaks` | `6` | 类型、单位及允许格式见右侧本函数参数契约 | 标准连续标度控制项。 |
 | `coordinates` | `c("relative", "source")` | 类型、单位及允许格式见右侧本函数参数契约 | 在线性图中使用局部相对坐标，或 focus_ggchord_data() 保留的源坐标。只影响轴刻度和标签，不改变几何。所有模式均将变换空间的刻度反变换回基因组位置；显式 breaks = NULL、minor_breaks = NULL 分别关闭对应刻度。 |
-| `sequences` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 可选字符向量，以显示 accver 选择序列轴。NULL 保留全部，character() 隐藏全部。局部/分段视图使用窗口 ID，不是父源 accession；未知或未显示 ID 会报错。同时控制轴线、刻度和文字，不删除序列几何。 |
+| `guide` | `guide_seq_axis()` | 类型、单位及允许格式见右侧本函数参数契约 | 使用 guide_seq_axis() 声明显示方式；使用 "none" 隐藏序列轴。 |
 | `...` | `无形式默认；是否必需见契约` | 类型、单位及允许格式见右侧本函数参数契约 | 传给 ggplot2::continuous_scale() 的其他参数。 |
 
 </details>
@@ -1401,7 +1381,7 @@
 
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
 | --- | --- | --- | --- |
-| `track` | `无形式默认；是否必需见契约` | 类型、单位及允许格式见右侧本函数参数契约 | position_track() 中的轨道 ID。 |
+| `track` | `无形式默认；是否必需见契约` | 类型、单位及允许格式见右侧本函数参数契约 | 通过 track_band() 声明的轨道 ID，或 "default"。 |
 | `name` | `track` | 类型、单位及允许格式见右侧本函数参数契约 | 轴标题，默认轨道 ID。 |
 | `limits` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 标准连续标度控制项。 |
 | `breaks` | `ggplot2::waiver()` | 类型、单位及允许格式见右侧本函数参数契约 | 标准连续标度控制项。 |
@@ -1409,7 +1389,7 @@
 | `transform` | `"identity"` | 类型、单位及允许格式见右侧本函数参数契约 | 标准连续标度控制项。 |
 | `oob` | `scales::censor` | 类型、单位及允许格式见右侧本函数参数契约 | 标准连续标度控制项。 |
 | `unit` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 可选数据单位标签，保留在轨道导出中。 |
-| `guide` | `c("axis", "none")` | 类型、单位及允许格式见右侧本函数参数契约 | 数值轨道轴可选 "axis" 或 "none"，或使用原生ggplot2::guide_axis()，支持局部theme（axis.line/text/title）、angle及check.overlap。因为该轴是序列局部数值参考而非Cartesian面板轴，其他guide_axis选项会明确报错。局部Guide外观覆盖全局ggchord.track.axis.*主题元素。 |
+| `guide` | `c("axis", "none")` | 类型、单位及允许格式见右侧本函数参数契约 | 轨道数值轴接受 "axis"、"none" 或 guide_track_axis()。局部 guide 支持 axis.line、axis.text、axis.title、angle 和 check.overlap。序列局部数值轴会对其他 guide_axis 选项报错。局部设置覆盖全局 ggchord.track.axis.* 主题元素。 |
 | `...` | `无形式默认；是否必需见契约` | 类型、单位及允许格式见右侧本函数参数契约 | 其他 ggplot2 连续标度参数。 |
 
 </details>
@@ -1493,6 +1473,35 @@
 | `order` | `0` | 类型、单位及允许格式见右侧本函数参数契约 | 图例顺序。 |
 | `size_scale` | `1` | 类型、单位及允许格式见右侧本函数参数契约 | 图例键、间距及文字的正缩放系数。自动图例由当前导出设备推导，直接调用默认 1。 |
 | `...` | `无形式默认；是否必需见契约` | 类型、单位及允许格式见右侧本函数参数契约 | 传给对应 ggplot2 图例的其他参数。 |
+
+</details>
+
+<span id="api-guide_seq_axis"></span>
+<details><summary><code>guide_seq_axis()</code></summary>
+
+
+[完整参考](../../man/guide_seq_axis.Rd)
+
+
+| 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
+| --- | --- | --- | --- |
+| `sequences` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 可选字符向量，以显示 accver 选择序列轴。NULL 保留全部，character() 隐藏全部。局部/分段视图使用窗口 ID，不是父源 accession；未知或未显示 ID 会报错。同时控制轴线、刻度和文字，不删除序列几何。 |
+| `check.overlap` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 可选逻辑值。提供时使用此刻度标签重叠策略；省略时沿用全图轴文字策略。 |
+
+</details>
+
+<span id="api-guide_track_axis"></span>
+<details><summary><code>guide_track_axis()</code></summary>
+
+
+[完整参考](../../man/guide_track_axis.Rd)
+
+
+| 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
+| --- | --- | --- | --- |
+| `angle` | `ggplot2::waiver()` | 类型、单位及允许格式见右侧本函数参数契约 | 传给 ggplot2::guide_axis() 的刻度标签角度。 |
+| `check.overlap` | `FALSE` | 类型、单位及允许格式见右侧本函数参数契约 | 是否隐藏互相重叠的刻度标签。 |
+| `theme` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 本轴的局部主题，支持 axis.line、axis.text 和 axis.title。 |
 
 </details>
 
@@ -2536,13 +2545,11 @@
 
 | 参数 | 签名默认 | 类型/取值规则 | 含义、范围与限制 |
 | --- | --- | --- | --- |
-| `seq_data` | `无形式默认；是否必需见契约` | 类型、单位及允许格式见右侧本函数参数契约 | 含 accver 和 length 的 data.frame/tibble，或已知完整长度的 GRanges、Seqinfo、GInteractions，或已命名的核酸或蛋白 Biostrings XStringSet。未命名序列先通过 as_ggchord_seq() 显式提供 ids。可选 S4 输入经 as_ggchord_seq() 适配。sequence_unit 为 "bp"（省略时的默认值）或 "aa"，同一图使用一个单位。蛋白长度来自完整序列。aa 图接受连接和通用特征；基因、引物及酶切图层需要 bp。任意字符宽度不等于生物序列长度。还可直接传入 prepare_ggchord_data() 的结果，提供构图所需的全部表。命名集合仍可按名称选作图层数据。 |
-| `ribbon_data` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 可选比对表，包含 qaccver、saccver、qstart、qend、sstart 和 send。只有映射、筛选或统计需要时，才要求 length 和 pident。GInteractions 通过 as_ggchord_link() 转换，不编造相似度或比对长度。 |
-| `gene_data` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 兼容的旧注释输入，第三位置参数含义不变。新代码使用 feature_data；非 NULL 旧输入在构造时提示一次，渲染时不重复。无类别旧表保留有方向基因语义，未安排删除版本。两种注释输入不能同时提供。 |
+| `data` | `无形式默认；是否必需见契约` | 类型、单位及允许格式见右侧本函数参数契约 | 序列参照表为含 accver 和 length 的 data.frame 或 tibble，也可使用已知完整长度的 GRanges、Seqinfo 或 GInteractions 对象，以及带名称的 Biostrings 核酸或蛋白 XStringSet。未命名的序列对象须先通过 as_ggchord_seq() 显式提供 ids。可选的 S4 输入由 as_ggchord_seq() 适配。sequence_unit 为 "bp"（省略时的默认值）或 "aa"，同一图中的各行共用一个单位。蛋白长度取自完整蛋白。原生 aa 图支持连接和通用特征，基因、引物及酶切位点图层需要 bp。序列长度应取生物序列的实际长度。prepare_ggchord_data() 的结果提供构图所需的全部表，存在唯一符合要求的表时，图层自动使用该表。存在多个候选时，须显式选择，例如 geom_feature(data = prepared$features$cds)。 |
+| `mapping` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 用 ggplot2::aes() 创建默认美学映射。继承映射的图层在自己的来源表上求值，同名图层映射优先。原生 ggplot2 图层继承参照表作为图数据。 |
+| `...` | `无形式默认；是否必需见契约` | 类型、单位及允许格式见右侧本函数参数契约 | 用于为已删除的构造器参数提供明确迁移提示。用 labs()、coord_chord() 和 theme() 调整图形呈现。 |
 | `debug` | `FALSE` | 类型、单位及允许格式见右侧本函数参数契约 | 逻辑值，是否输出调试信息，默认 FALSE。 |
 | `validate` | `c("warn", "error", "none")` | 类型、单位及允许格式见右侧本函数参数契约 | 字符值，默认 "warn"。控制结构化输入校验，见 validate_ggchord_data："warn" 在发现问题时发出一条汇总警告，并在图对象的 p$ggchord$validation 缓存完整报告；"error" 在严重问题时停止；"none" 跳过诊断性校验，但仍执行防止崩溃的基础结构检查。 |
-| `feature_data` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 可选统一注释表或 GRanges，要求 accver、start、end，缺少链时为未知（"."）。通用特征层使用全表；默认基因层按 feature_class、type、role 的优先顺序选择 gene/CDS，并要求已知链。tRNA/rRNA 保留为通用特征。图层显式 data 优先；组合 gene 与 feature 层时使用互斥子集，各图层独立保留自己的数据。 |
-| `...` | `无形式默认；是否必需见契约` | 类型、单位及允许格式见右侧本函数参数契约 | 保留用于为已删除的构造函数参数提供明确迁移错误。外观设置使用 labs()、coord_chord() 和 theme()。 |
 
 </details>
 

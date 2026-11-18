@@ -3,7 +3,7 @@ pkgload::load_all('.',quiet=TRUE,export_all=TRUE)
 s<-data.frame(accver=c('A','B'),length=1000)
 h<-data.frame(qaccver='A',saccver='B',qstart=seq(10,60,10),qend=seq(100,150,10),
  sstart=seq(200,250,10),send=seq(300,350,10),pident=c(0,50,80,90,95,100))
-p<-ggchord(s,h)+geom_seq()+geom_link_ribbon()+coord_collinear()+
+p<-ggchord(prepare_ggchord_data(s,h))+geom_seq()+geom_link_ribbon()+coord_collinear()+
  theme_ggchord_publication()+theme(legend.text=element_text(size=11),
   legend.key.height=unit(5,'mm'),legend.key.width=unit(9,'mm'))
 results<-list()
@@ -17,7 +17,7 @@ for(position in c('right','bottom')) {
  results[[position]]<-list(guides=d$guides,measurements=ruler,
   closest_boundary_distance_mm=extent*.05,label_extent_mm=text)
 }
-manual <- ggchord(s,h)+geom_seq(show.legend=FALSE)+geom_link_ribbon()+
+manual <- ggchord(prepare_ggchord_data(s,h))+geom_seq(show.legend=FALSE)+geom_link_ribbon()+
   coord_collinear()+theme_ggchord_publication()+theme(legend.position="bottom",
     legend.text=element_text(size=11),legend.key.height=unit(5,"mm"),legend.key.width=unit(9,"mm"))+
   guides(ribbon_fill=guide_ggchord_colourbar())
@@ -34,7 +34,7 @@ points <- data.frame(qaccver = h$qaccver, saccver = h$saccver,
   qpos = h$qstart, spos = h$sstart, pident = h$pident)
 features <- data.frame(accver = "A", start = h$qstart, end = h$qend,
   strand = "+", pident = h$pident)
-mapped <- ggchord(s, feature_data = features) + geom_seq() +
+mapped <- ggchord(prepare_ggchord_data(s, feature_data = features)) + geom_seq() +
   geom_feature(aes(feature_fill = pident)) +
   geom_link_line(aes(link_colour = pident, link_alpha = pident,
     link_linewidth = pident), data = points) + coord_collinear()

@@ -1,5 +1,5 @@
 {
-  "source_sha256": "7bb1051227c414934cb9afcdf1ea4e9876ba1cc2937d419f790aa1423f02fb4e",
+  "source_sha256": "b7b33ca65a9426caa0685a2eb2e5e52c7a4dc45a6ab84a01c279a0435567b247",
   "blocks": {
     "0": {
       "source_sha256": "eb2456ae93e8086f5e939ad590c3e467d0b5bd127af6b95551b2e08faf7a8a3c",
@@ -32,7 +32,7 @@
       "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Supported | Conditional | Supported | Conditional | Conditional | Unsupported | No explicit radial label radius in linear mode |\n"
     },
     "7": {
-      "source_sha256": "b9fa6e80399090f1ed56e6ff018b37d1d75e8b81dcbcfca7c87b0e6af7d96bed",
+      "source_sha256": "a87a401238eeb5b235add169ebe6e15a918bfe22ce50ac9649810b7665342463",
       "status": "reviewed",
       "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Conditional | Conditional | Conditional | Conditional | Conditional | Unsupported | Nucleotide units and source strands; use generic features for aa |\n"
     },
@@ -42,7 +42,7 @@
       "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Supported | Supported | Supported | Conditional | Conditional | Unsupported | Valid IDs, intervals and matching native units |\n"
     },
     "9": {
-      "source_sha256": "6fb3db4d74d7782fa2bdd64c027a4b61243d8c9656890c2dc1c0745b51fe528b",
+      "source_sha256": "4dea35a58dbfd617ebb207f455209b15e963412c205843d2e08920eac6c54ee8",
       "status": "reviewed",
       "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Supported | Supported | Supported | Conditional | Conditional | Unsupported | Generic feature preset; circular Position defaults need review when transferred |\n"
     },
@@ -62,7 +62,7 @@
       "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Supported | Conditional | Supported | Conditional | Conditional | Unsupported | Linear rows reject external=FALSE; inspect hiding at target size |\n"
     },
     "13": {
-      "source_sha256": "8d3f1ded19251a9c969b43193581d417a77f2b6896d5fe75bab25dba3b9ed9ec",
+      "source_sha256": "53abc4237f217e6915b1a3f2b01dc5499296545f05cb6ba1d710117e78fc03ad",
       "status": "reviewed",
       "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Supported | Conditional | Supported | Conditional | Conditional | Unsupported | Linear rows reject external=FALSE; inspect fitting and hiding |\n"
     },
@@ -122,19 +122,19 @@
       "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Supported | Supported | Supported | Conditional | Conditional | Unsupported | Count observations; use col for supplied values |\n"
     },
     "25": {
-      "source_sha256": "a009210a2d3b4723418a4f4f7734fe07589b4bee646d5a2f4906d4ceba198412",
+      "source_sha256": "ee66c38a29d55e674a715d9196becf1e1e8afcd553ba3f5cc656301cb54ce3b1",
       "status": "reviewed",
-      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Supported | Supported | Supported | Conditional | Conditional | Unsupported | Explicit position_track; numeric heights and declared domains |\n"
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Supported | Supported | Supported | Conditional | Conditional | Unsupported | Default or named band; numeric heights and declared domains |\n"
     },
     "26": {
-      "source_sha256": "bf49c184238bc710d516bc8f63f239671021dba204abb39e48ac587cb527c003",
+      "source_sha256": "0eaa7c012a1b8d8a29553285c88ff3c93a2b7c925af9378eef305bcf25c1f72b",
       "status": "reviewed",
-      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Supported | Supported | Supported | Conditional | Conditional | Unsupported | Explicit position_track; closure must be requested and missing samples respected |\n"
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Supported | Supported | Supported | Conditional | Conditional | Unsupported | Default or named band; closure must be requested and missing samples respected |\n"
     },
     "27": {
-      "source_sha256": "7b0b43f1690e1c58120ee8a901de73b9477a1d0a9a34172711fe6bde244560e9",
+      "source_sha256": "48127a925e73dbee79a278e8d3ad057f7cc9bf2a865ee9bec44be6f1c83d1f79",
       "status": "reviewed",
-      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Supported | Supported | Supported | Conditional | Conditional | Unsupported | Explicit position_track; no numeric height required |\n"
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Supported | Supported | Supported | Conditional | Conditional | Unsupported | Default or named band; no numeric height required |\n"
     },
     "28": {
       "source_sha256": "2cc8a440d761966d6de6178999853966820434e2853b3b45577e05c5bd95cf97",

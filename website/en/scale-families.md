@@ -67,7 +67,7 @@ Map feature_fill and feature_shape to the same type to merge their guide silhoue
 
 ## Gene strand, sequence rings and regions {#rings}
 
-Restore biological strands from source_strand. Region, gene and ribbon fill roles are independent. `seq_ring` requires explicit positive radii, never inferred track counts; it conflicts with seq_radius and collinear mode. Sequence radius mapping is distinct from quantitative position_track bands.
+Restore biological strands from source_strand. Region, gene and ribbon fill roles are independent. `seq_ring` requires explicit positive radii, never inferred track counts; it conflicts with seq_radius and collinear mode. Sequence radius mapping is distinct from quantitative track_band bands.
 
 {{code:comparescalegenering}}
 {{code:comparescaleregion}}
@@ -77,7 +77,7 @@ Restore biological strands from source_strand. Region, gene and ribbon fill role
 
 ## Named track domains and colours {#tracks}
 
-Compute windows from actual pUC19 DNA. `track_value` controls height; track_fill/track_colour train separate colour scales, with IDs matching position_track. The 0.5 threshold is a display choice and full fractions remain. Tiles do not average data; NA heights do not become zero. Declare scales for each ID independently.
+Compute windows from actual pUC19 DNA. `track_value` controls height; track_fill/track_colour train separate colour scales, with IDs matching track_band. The 0.5 threshold is a display choice and full fractions remain. Tiles do not average data; NA heights do not become zero. Declare scales for each ID independently.
 
 {{code:trackdata}}
 {{code:comparescaletrack}}
@@ -87,6 +87,8 @@ Compute windows from actual pUC19 DNA. `track_value` controls height; track_fill
 <a id="guides"></a>
 
 ## Guides, spelling aliases and staged mapping {#guides}
+
+Use `scale_seq_position_continuous(guide = guide_seq_axis("B", check.overlap = TRUE))` to show only the B sequence axis and hide overlapping tick labels. Use `scale_track_value_continuous("depth", guide = guide_track_axis(angle = 30))` to rotate the numeric tick labels on the depth track.
 
 `guide_ggchord_legend` manages discrete role guides and guide_ggchord_colourbar continuous colour bars. `show.legend` controls participation, guides chooses guides, and theme controls position/direction/appearance. Colour/color aliases are equivalent: guide_ggchord_colorbar, scale_seq_color_manual, scale_ribbon_color_manual, scale_link_color_manual and scale_link_color_gradientn correspond to colour versions. Do not add both synonymous scales expecting cumulative control.
 

@@ -54,9 +54,9 @@ Only `orientation = "auto"` changes from the left-aligned baseline; `min_support
 | Source sequence direction | FASTA record order | Reference for input coordinates |
 | Biological gene strand | Annotation `strand` | Transcription direction relative to the source |
 | Alignment direction | Increasing or decreasing endpoints | Relative match direction between intervals |
-| Display direction | `seq_orientation` or automatic orientation | Placement in the plot |
+| Display direction | `layout_sequences(orientation = ...)` or automatic orientation | Placement in the plot |
 
-A display flip does not rewrite source strands or establish a biological inversion. Do not combine explicit `geom_seq(seq_orientation = ...)` with automatic orientation.
+A display flip does not rewrite source strands or establish a biological inversion. Do not combine explicit `layout_sequences(orientation = ...)` with automatic orientation.
 
 <a id="parameters"></a>
 
@@ -89,4 +89,4 @@ For missing links inspect endpoints and adjacent-row filtering in [cross-row con
 
 {{figure:frontlineargap}}
 
-In a collinear plot, `seq_gap` is relative to the longest backbone width and defaults to `0.30`. Set the gap below MT108731.1 to `0.45`. The other gaps retain `0.30`; the final row has no following gap. The ribbon still joins the same bp intervals.
+In a collinear plot, `layout_sequences(gap = ...)` is relative to the longest backbone width and defaults to `0.30`. Set the gap below MT108731.1 to `0.45`. The other gaps retain `0.30`; the final row has no following gap. The ribbon still joins the same bp intervals.

@@ -10,7 +10,7 @@
 Build layered sequence figures in R with ggplot2: compare multiple sequences, annotate a circular map, inspect HSP alignments and connect independent views.
 
 > [!IMPORTANT]
-> v0.29.0 is the final release using the legacy API. A major rewrite of ggchord is underway for v0.50.0. Public interfaces may be renamed or removed without a transition release, and existing plotting code may need changes when you upgrade. Projects that rely on the legacy API can pin v0.29.0.
+> v0.29.0 is the final release using the legacy API. The v0.50.0 development version changes plot construction, tracks and labels. See the [migration guide](MIGRATION.md) when upgrading.
 
 [Website](https://dangjem.github.io/ggchord/) · [Usage guide](website/en/modes.md) · [Figure gallery](website/en/gallery.md) · [Report an issue](https://github.com/DangJem/ggchord/issues)
 
@@ -103,7 +103,7 @@ Use bundled tables to draw sequence backbones, alignment ribbons and sequence na
 ```r
 library(ggchord)
 
-p <- ggchord(seq_data_example, ribbon_data_example) +
+p <- ggchord(prepare_ggchord_data(seq_data_example, ribbon_data_example)) +
   geom_seq() +
   geom_link_ribbon() +
   geom_seq_label() +

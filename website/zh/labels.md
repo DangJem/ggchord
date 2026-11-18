@@ -21,8 +21,8 @@
 `geom_feature_label()`。自动层拒绝这些手动控制，应选择 `label_layout` 或删除手动参数。
 固定文字样式使用受支持的 `size`、`colour`、`family`。
 
-在支持的入口中，`label_fit`、`label_wrap`、`label_max_lines`、`label_min_size`
-控制适配。缩小字号须显式选择且有下限。无法放置的标签可能移位或隐藏，注释
+通用避让标签通过 `overflow` 选择适配方式，专用基因避让标签使用 `label_fit`。
+两者均可设置 `label_wrap`、`label_max_lines`、`label_min_size`。缩小字号须显式选择且有下限。无法放置的标签可能移位或隐藏，注释
 几何仍保留。应在最终导出尺寸查看 `label_fit_diagnostics`、`label_diagnostics`。
 
 {{code:manualgenelabels}}

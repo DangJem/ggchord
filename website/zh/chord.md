@@ -45,8 +45,8 @@ library(ggplot2)
 
 | 设置 | 在这张图里的作用 |
 | --- | --- |
-| `seq_orientation`、`seq_curvature`、`seq_radius` | 按序列调整显示方向、弯曲程度和半径。曲率为 0 时画直线。 |
-| `seq_gap = 0.06`、`rotation = 50` | 增加骨架间距，并旋转整体布局以摆放图中元素。 |
+| `layout_sequences(orientation = ...)`、`seq_curvature`、`seq_radius` | 按序列调整显示方向、弯曲程度和半径。曲率为 0 时画直线。 |
+| `layout_sequences(gap = 0.06)`、`rotation = 50` | 增加骨架间距，并旋转整体布局以摆放图中元素。 |
 | `link_avoid = "smooth"`、`alpha = 0.46` | 让比对带在箭头附近平滑留白，并以半透明显示交叠。 |
 | `position = chord_position`、`width = 0.025` | 按真实链把箭头放在骨架两侧，偏移为 ±0.030。较窄的箭头贴近骨架，标签使用同一位置。 |
 | `label_layout = "radial"`、`label_wrap = 24` | 沿径向排列基因名称，长名称可换行。 |

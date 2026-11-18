@@ -19,7 +19,7 @@ local({
   snapshot<-function(p) lapply(p$layers,function(l) list(data=l$data,mapping=l$mapping,
     params=l$ggchord_params,input=l$ggchord_input_data,input_mapping=l$ggchord_input_mapping,
     fixed=l$aes_params,geom=l$geom_params,legend=l$show.legend,id=l$ggchord_layer_id))
-  shared<-geom_gene(aes(gene_fill=anno),data=g)
+  shared<-geom_feature(preset = 'gene', aes(gene_fill=anno),data=g)
   p<-ggchord(s)+geom_seq()+shared+shared+scale_gene_fill_manual(values=c(one='#123456'))
   before<-snapshot(p)
   invisible(ggplot2::ggplot_build(p))
@@ -50,8 +50,8 @@ local({
   stopifnot(identical(ctx(),initial))
   record('F26_nested_error_context','Nested errors restore outer context and final exit restores the initial context')
   values<-data.frame(accver='A',start=100,end=200,value=5)
-  physical<-ggchord(s[1,])+geom_seq()+geom_track_col(aes(track_value=value),
-    data=values,position=position_track('signal'))+coord_collinear()
+  physical<-ggchord(s[1,])+geom_seq()+track_band('signal') + geom_track_col(aes(track_value=value),
+    data=values,track = 'signal')+coord_collinear()
   original<-snapshot(physical)
   baseline<-export_ggchord_layout(physical,include='track')
   cache<-get_chord_layout(physical,build=FALSE)

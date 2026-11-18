@@ -15,13 +15,13 @@ samples <- data.frame(accver = "fixture_a", pos = c(150, 350), value = c(.2, .8)
 constructors <- list(
   geom_seq = function() NULL,
   geom_seq_label = function() geom_seq_label(),
-  geom_gene = function() geom_gene(),
+  `geom_feature(preset = "gene")` = function() geom_feature(preset = 'gene'),
   geom_feature = function() geom_feature(data = features),
-  geom_feature_plasmid = function() geom_feature_plasmid(data = features),
-  geom_gene_label = function() list(geom_gene(), geom_gene_label()),
-  geom_gene_label_repel = function() list(geom_gene(), geom_gene_label_repel()),
+  `geom_feature(preset = "plasmid")` = function() geom_feature(preset = 'plasmid', data = features),
+  geom_gene_label = function() list(geom_feature(preset = 'gene'), geom_gene_label()),
+  geom_gene_label_repel = function() list(geom_feature(preset = 'gene'), geom_gene_label_repel()),
   geom_feature_label = function() list(geom_feature(data = features), geom_feature_label(data = features)),
-  geom_feature_label_repel = function() list(geom_feature(data = features), geom_feature_label_repel(data = features)),
+  `geom_feature_label(placement = "repel")` = function() list(geom_feature(data = features), geom_feature_label(placement = 'repel', data = features)),
   geom_link_ribbon = function() geom_link_ribbon(data = links),
   geom_alignment_segment = function() geom_alignment_segment(data = links),
   geom_link_line = function() geom_link_line(data = points),
@@ -32,11 +32,11 @@ constructors <- list(
   geom_primer = function() geom_primer(data = primers),
   geom_primer_label_repel = function() list(geom_primer(data = primers), geom_primer_label_repel(data = primers)),
   geom_restriction_site = function() geom_restriction_site(data = sites),
-  geom_track = function() geom_track(aes(x=pos,y=value),data=samples,geom="point",track=position_track("fixture")),
-  geom_track_bar = function() geom_track_bar(aes(x=pos),data=samples,track=position_track("fixture")),
-  geom_track_col = function() geom_track_col(aes(track_value = value), data = bins, position = position_track("fixture")),
-  geom_track_line = function() geom_track_line(aes(track_value = value), data = samples, position = position_track("fixture")),
-  geom_track_tile = function() geom_track_tile(aes(track_fill = value), data = bins, position = position_track("fixture"))
+  geom_track = function() geom_track(aes(x=pos,y=value),data=samples,geom="point"),
+  geom_track_bar = function() geom_track_bar(aes(x=pos),data=samples),
+  geom_track_col = function() geom_track_col(aes(track_value = value), data = bins),
+  geom_track_line = function() geom_track_line(aes(track_value = value), data = samples),
+  geom_track_tile = function() geom_track_tile(aes(track_fill = value), data = bins)
 )
 results <- list()
 modes <- commandArgs(trailingOnly=TRUE)
@@ -59,7 +59,7 @@ for (mode in modes) {
     }
     coord <- switch(mode, chord = coord_chord(), collinear = coord_collinear(), circular = coord_circular(),
       dotplot = coord_dotplot(), radial = coord_radial_synteny())
-    plot <- ggchord(seqs, feature_data = if (name == "geom_seq_break") NULL else features) +
+    plot <- ggchord(prepare_ggchord_data(seqs, feature_data = if (name == "geom_seq_break") NULL else features)) +
       (if (mode == "dotplot") NULL else geom_seq()) + coord
     result <- tryCatch({
       plot <- plot + if (mode == "dotplot" && name == "geom_seq") geom_seq() else constructors[[name]]()

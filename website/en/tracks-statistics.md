@@ -8,9 +8,7 @@
 
 `bar` counts observations at source positions; `col` displays supplied values.
 Each accession/window computes its Stat and data Position before view projection
-or display replication. `track=position_track(...)` selects the physical band;
-`position` independently selects a native data adjustment such as stack or dodge.
-The earlier `position=position_track(...)` band spelling remains accepted.
+or display replication. Layers share the default band when `track` is omitted. Add `track_band("depth")` before or after the layers and refer to it with `track = "depth"`. Use `position` for source-data adjustments such as stack or dodge.
 
 {{code:foundationcount}}
 
@@ -28,21 +26,17 @@ The shortcut below counts the same observations using the same physical band.
 | point, line, path, step, text | identity | source x and local y; text requires label |
 | tile, rect, area, ribbon, segment, linerange, errorbar | identity | corresponding native ggplot2 extents |
 
-Available statistics are identity/count/bin/summary, plus the documented [smooth/density/ecdf estimation combinations](tracks-statistics.md#estimates). Bin needs explicit binwidth
-or breaks. Native group and after_stat mappings are supported; numerical axes
-retain the statistic's value units. Arbitrary third-party Geom/Stat plugins and
-unsupported combinations are rejected. Existing
-track line/tile shortcuts retain their documented behaviour.
+Supported statistics include identity/count/bin/summary, interval coverage and the [documented estimation combinations](tracks-statistics.md#estimates). Bin requires explicit binwidth or breaks. A custom ggplot2 Stat can read the layer’s source indices from source_row and return the members of each result in a source_rows list column. Omitted membership is exported as unknown.
 
 Source position uses x orientation; native text size currently uses mm and polygon outlines are full. Other orientations/size units/partial outlines fail explicitly. Native text styles and path arrows are forwarded.
 
-Native tracks currently require one panel and a ggchord coordinate system. Facets, `coord_flip()`, raster, boxplot and violin are outside this first supported set and are rejected explicitly. Use `coord_collinear(seq_axis = "vertical")` for vertical projection. Statistical source membership is preserved before dodge or other data positions. Rectangles and tiles use their supplied bounds without an artificial zero baseline.
+Tracks use ggchord coordinates. Sample facets with fixed scales partition observations by facet columns in the source table. Samples compute statistics independently and share the value domain of each named band. Use `coord_collinear(seq_axis = "vertical")` for vertical projection. Source membership is recorded before data positions such as dodge.
 
 <a id="interval-coverage"></a>
 
 ## Measure interval coverage in each window {#interval-coverage}
 
-`geom_track_bar(data = intervals, stat = "coverage", binwidth = 4, track = position_track("coverage"))` draws the fraction of each window covered by at least one interval. Map `aes(y = after_stat(mean_depth))` for mean depth. Coordinates start at 1 and include both endpoints. An interval that crosses a window boundary contributes its intersection to each window. Mean depth counts the length of each record’s intersection separately.
+`stat_coverage(data = intervals, binwidth = 4)` draws the fraction of each window covered by at least one interval. Map `aes(y = after_stat(mean_depth))` for mean depth. Coordinates start at 1 and include both endpoints. An interval that crosses a window boundary contributes its intersection to each window. Mean depth counts the length of each record’s intersection separately.
 
 Consider a synthetic sequence of length 10. Rows 1, 2 and 3 span 3–6, 4–5 and 10–10, respectively. Positions 4 and 5 are each covered twice. The last window contains just two positions, so its denominator is 2.
 
@@ -52,13 +46,13 @@ Consider a synthetic sequence of length 10. Rows 1, 2 and 3 span 3–6, 4–5 an
 | 5–8 | 2 | 2/4 | 3/4 | 1, 2 |
 | 9–10 | 1 | 1/2 | 1/2 | 3 |
 
-Empty windows have zero coverage, mean depth and interval count, with an empty list of source rows. Each sequence or focused window is binned independently from local position 1. When grouping, each group observed on a sequence gets its full set of bins. Out-of-bounds intervals raise an error by default. Use `bounds = "clip"` to intersect them with the sequence first. Split compound intervals and intervals that wrap around a circular origin into separate records before binning.
+Empty windows in observed groups return zero coverage, zero depth and an empty source list. References or samples without observations produce no statistical rows. Each reference or focused window starts binning at local position 1. Alternatively, pass explicit intervals in `windows`. Each independently intersects the observations and windows may overlap. Choose either `binwidth` or explicit windows. Interval and window units must agree with the reference. By default out-of-bounds intervals raise an error. Use `bounds = "clip"` to clip intervals to the reference. Split compound intervals and origin-crossing records into single segments first.
 
 <a id="independent-bands"></a>
 
 ## Two independent bands and display order {#independent-bands}
 
-Encode the same GC by bar height and colour using explicit gc_height/gc_colour IDs. Set height and colour domains 0–1 separately, with distinct physical widths. The second figure changes only colour order from 2 to 0, moving that band nearer the backbone. Order is a finite priority, not a measurement or required one-based index; ties use IDs. Layers sharing an ID must agree on side/order/width/gap. Lines do not implicitly bridge independent windows.
+Encode the same GC by bar height and colour using explicit gc_height/gc_colour IDs. Set height and colour domains 0–1 separately, with distinct physical widths. The second figure changes only colour order from 2 to 0, moving that band nearer the backbone. Order is a finite priority, not a measurement or required one-based index; ties use IDs. Layers sharing an ID use its declared side, order, width and gap. Lines do not implicitly bridge independent windows.
 
 {{code:comparemultitrackdata}}
 {{code:comparetracktwo}}
@@ -84,7 +78,7 @@ GC here is `mean(bases %in% c("G", "C"))`: ambiguous bases remain in the denomin
 | `density` | `line`, `path`, `point`, `area` | Positions in `x`, optional weights; choose bandwidth; `after_stat(density)` is density per source-position unit | `"identity"` or native PositionIdentity |
 | `ecdf` | `line`, `path`, `point`, `step` | Positions in `x`; `after_stat(ecdf)` is cumulative fraction; explicit `pad = FALSE` avoids infinite source anchors | `"identity"` or native PositionIdentity |
 
-Other combinations of these statistics fail explicitly. Use `position = "identity"` explicitly for density area because area otherwise defaults to stacking. `bounds` remains the Track source-boundary policy and does not forward the native density boundary-correction parameter. Facets, boxplots, violins, raster and arbitrary third-party Geom/Stat objects remain unsupported; a numerical name in a function is not a projection contract.
+For a density area, use `position = "identity"` explicitly because area defaults to stacking. The `bounds` argument controls clipping at source-sequence boundaries. The table above lists geometries that can be projected.
 
 Reuse the real `bins` and `track_seq` prepared above. This explicit linear fit is a display summary of the GC fractions, with a native confidence ribbon and mean line sharing one Track:
 
@@ -110,11 +104,12 @@ The preceding `bar` counts HSPs at each query start. Here the totals are compute
 ```r
 start_totals <- foundation_events |>
   dplyr::count(accver, pos, name = "hsp_count")
-p_start_totals <- ggchord(seq_data = foundation_seqs) +
+p_start_totals <- ggchord(data = foundation_seqs) +
+  track_band("query_starts") +
   geom_seq() +
   geom_track(
     aes(x = pos, y = hsp_count), data = start_totals,
-    geom = "col", track = position_track("query_starts"),
+    geom = "col", track = "query_starts",
     position = "identity"
   ) +
   coord_collinear()

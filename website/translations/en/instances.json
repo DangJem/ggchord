@@ -1,5 +1,5 @@
 {
-  "source_sha256": "97aa5dfe5dd91994180338829ae53676b0704526ddc0f6329f2a4ca3af7c04e2",
+  "source_sha256": "9a0a9aba4b16a0670f3f45bc4b48c1509cd005f46d4a8c0e66e3ded5caaa599c",
   "blocks": {
     "1": {
       "source_sha256": "09ace860e79f78a4c4492087ed38b4680da18f47636ec3a89a54bb0cb0f138b9",
@@ -12,7 +12,7 @@
       "translation": "## Named A–B–A routes ⟦shared:0⟧\n"
     },
     "5": {
-      "source_sha256": "6f201b45f648d9b0f03dc9e3e47923fb15fea1a07903db1e52ea4c5f42dc96aa",
+      "source_sha256": "c5ae45f455684dd5ca2ab15e5c9f1b9bf4c5f2e9aa3ec324a7930196007ca48c",
       "status": "reviewed",
       "translation": "The three displayed rows refer to two biological sequences. ⟦shared:0⟧ values\nidentify sources; names identify instances. Filter each layer's original HSPs\nbefore routing. ⟦shared:1⟧ accepts two names or two declaration-order indices.\nAmbiguous routes fail. The two subsets below are disjoint and preserve every HSP.\n"
     },

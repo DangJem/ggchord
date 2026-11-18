@@ -1,5 +1,5 @@
 {
-  "source_sha256": "242dae3f6b5cb684452e9af1c7346e9ddffa8be4a3382431ffca638c00e46209",
+  "source_sha256": "62d1ceade8d85828a4a4a042f192cfd065b2b96dd7f8b31ce8536180b9fddff5",
   "blocks": {
     "2": {
       "source_sha256": "793279b55f0fcfcedb59cdee2adb5aa346150d4a9d27e57ca851e4b34ef9354d",
@@ -87,12 +87,12 @@
       "translation": "| Alignment direction | Increasing or decreasing endpoints | Relative match direction between intervals |\n"
     },
     "33": {
-      "source_sha256": "181354602eb22dd7897affcec1fcd1d816e8536b9a42763c8244841c990d3579",
+      "source_sha256": "d3f82b23a77d3f0db12b6c17453f27d70483f6d5b871d80f5b257c2887ce6319",
       "status": "reviewed",
       "translation": "| Display direction | ⟦shared:0⟧ or automatic orientation | Placement in the plot |\n"
     },
     "34": {
-      "source_sha256": "32402bc88e7cc4b53f657d4bcc749adf81398745c7abf3e6b94069d5468ebd23",
+      "source_sha256": "2507d0a3fe1bec55f85bdf4c58377145c3ca6d5f6eb3a642954e70ed29a742c2",
       "status": "reviewed",
       "translation": "A display flip does not rewrite source strands or establish a biological inversion. Do not combine explicit ⟦shared:0⟧ with automatic orientation.\n"
     },
@@ -167,7 +167,7 @@
       "translation": "## Increase row spacing ⟦shared:0⟧\n"
     },
     "54": {
-      "source_sha256": "c128d2920870326c398f44e0c581fc826ab28c780a1cc79486a5c13739a223dd",
+      "source_sha256": "cce025314f5b3065c46d0bee7ce6c6369d733519adeaa0ea547dabe1a33fce73",
       "status": "reviewed",
       "translation": "In a collinear plot, ⟦shared:0⟧ is relative to the longest backbone width and defaults to ⟦shared:1⟧. Set the gap below MT108731.1 to ⟦shared:2⟧. The other gaps retain ⟦shared:1⟧; the final row has no following gap. The ribbon still joins the same bp intervals.\n"
     }

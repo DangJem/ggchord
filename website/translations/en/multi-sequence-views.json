@@ -1,5 +1,5 @@
 {
-  "source_sha256": "0c36c7f110849db3034e297c2c63d4231df7717097e1740ab16b9e930cb922ab",
+  "source_sha256": "79a4beef946715b055b760ee6af3032d5fe0f042cb90a15f6532a5a040de7189",
   "blocks": {
     "0": {
       "source_sha256": "0fae5352735f690fce064b0ce64c1163f3c582825b729f52c4c1126c524d680b",
@@ -147,9 +147,9 @@
       "translation": "## Directions, instances and display scale ⟦shared:0⟧\n"
     },
     "55": {
-      "source_sha256": "cc2f3b1612fd3ad6db279ff90e07cac4fd07aa31b3cd7dc06a052907952ddc53",
+      "source_sha256": "983448822f492ec7d2493f9f11c2bfb01cc2eabb4d4fa260135209e9e2519070",
       "status": "reviewed",
-      "translation": "Biological strand, HSP endpoint direction, display orientation and seq_order are separate. Sankey copies do not add observations; interval widths do not imply flow conservation. Reuse layers only within their shared support.\n"
+      "translation": "Biological strand, HSP endpoint direction, display orientation and layout_sequences(order = ...) are separate. Sankey copies do not add observations; interval widths do not imply flow conservation. Reuse layers only within their shared support.\n"
     },
     "57": {
       "source_sha256": "86ebb44c08debb58e70d0c479986305f0ad3e2edaba97a2f2feebd3972f4221a",
@@ -157,7 +157,7 @@
       "translation": "## Visual length and connection style ⟦shared:0⟧\n"
     },
     "58": {
-      "source_sha256": "bce7a876ae1eccd470de835f947db374f17367dc8d4bf5d68470fe82b023138f",
+      "source_sha256": "dc89f2d58e324013f180875758492b51fe91d30febffbfaa3f4e03d7d6e76e65",
       "status": "reviewed",
       "translation": "⟦shared:0⟧ changes angular allocation or linear span. Original lengths,\nintervals and local axes remain unchanged. ⟦shared:1⟧ exports both source\nlength and projection factor. A shared absolute scale bar is rejected for equal\nmulti-sequence displays. Default axes show 1 and the final source position;\nintermediate ticks use available physical space. Closed circular seams combine\nthe two endpoints. Explicit breaks and labels take priority.\n"
     },

@@ -67,7 +67,7 @@ feature_fill 和 feature_shape 可按同一个 type 映射，形状与填色图�
 
 ## 基因链、序列 ring 与局部区域 {#rings}
 
-基因链采用原始 source_strand。region_fill 与 gene_fill、ribbon_fill 互不覆盖。seq_ring 必须有显式正半径表，不推断轨道数量；不能再同时传 seq_radius，也不能用于共线性图。它是序列半径映射，不等于定量 position_track 的命名轨道。
+基因链采用原始 source_strand。region_fill 与 gene_fill、ribbon_fill 互不覆盖。seq_ring 必须有显式正半径表，不推断轨道数量；不能再同时传 seq_radius，也不能用于共线性图。它是序列半径映射，不等于定量 track_band 的命名轨道。
 
 {{code:comparescalegenering}}
 {{code:comparescaleregion}}
@@ -77,7 +77,7 @@ feature_fill 和 feature_shape 可按同一个 type 映射，形状与填色图�
 
 ## 命名轨道的值域与颜色 {#tracks}
 
-先用真实 pUC19 DNA 计算窗口。track_value 控制数值高度，track_fill/track_colour 训练各自颜色；track ID 必须和 position_track 一致。下面的分类阈值 0.5 是显示选择，完整比例值仍保留。tile 不自动求均值，不把 NA 高度变成零。多个 ID 的颜色和数值标度分别声明。
+先用真实 pUC19 DNA 计算窗口。track_value 控制数值高度，track_fill/track_colour 训练各自颜色；track ID 必须和 track_band 一致。下面的分类阈值 0.5 是显示选择，完整比例值仍保留。tile 不自动求均值，不把 NA 高度变成零。多个 ID 的颜色和数值标度分别声明。
 
 {{code:trackdata}}
 {{code:comparescaletrack}}
@@ -87,6 +87,8 @@ feature_fill 和 feature_shape 可按同一个 type 映射，形状与填色图�
 <a id="guides"></a>
 
 ## guide、别名与 staged mapping {#guides}
+
+用 `scale_seq_position_continuous(guide = guide_seq_axis("B", check.overlap = TRUE))` 只显示 B 的序列轴并隐藏重叠刻度文字。用 `scale_track_value_continuous("depth", guide = guide_track_axis(angle = 30))` 旋转 depth 轨道的数值刻度文字。
 
 guide_ggchord_legend 管理离散角色图例；guide_ggchord_colourbar 管理连续颜色条。show.legend 控制图层是否参与，guides 选择图例，theme 控制位置、方向与外观。colour/color 拼写别名有相同语义：guide_ggchord_colorbar、scale_seq_color_manual、scale_ribbon_color_manual、scale_link_color_manual、scale_link_color_gradientn 分别对应 colour 版本，不能同时添加两种同义标度来叠加控制。
 

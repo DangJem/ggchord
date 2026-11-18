@@ -72,10 +72,11 @@ radial_orientation <- flagship_comparison_example$radial$orientation
 # Adjustable annular lift for non-neighbours, in layout units; longest spoke = 2.
 radial_cross_bulge <- 0.20
 radial_position <- position_strand(c("+" = -0.055, "-" = 0.055))
-flag_radial <- ggchord(show_sequences, show_links) +
+flag_radial <- ggchord(prepare_ggchord_data(show_sequences, show_links)) +
   geom_link_ribbon(adjacent_only = FALSE, link_avoid = "smooth", alpha = 0.46, linewidth = 0.20) +
-  geom_seq(seq_orientation = radial_orientation, seq_gap = 0.3, linewidth = 1.1) +
-  geom_gene(data = chord_genes, position = radial_position, width = 0.065) +
+  layout_sequences(orientation = radial_orientation, gap = 0.3) +
+  geom_seq(linewidth = 1.1) +
+  geom_feature(preset = 'gene', data = chord_genes, position = radial_position, width = 0.065) +
   geom_gene_label_repel(data = radial_labels, label_side = "auto", label_wrap = 20,
     label_max_lines = 3, position = radial_position, size = 3.1) +
   geom_seq_label(size = 4.4, seq_label_orientation = "horizontal",
@@ -87,13 +88,14 @@ flag_radial <- ggchord(show_sequences, show_links) +
   labs(title = "Four genomes, a radial view", subtitle = "Original Chord sources; all 20 CDS annotations")
 # -- flagshipsankey --
 sankey_labels <- flagship_comparison_example$sankey$labels
-flag_sankey <- ggchord(show_sequences, gene_data = show_linear_features) +
+flag_sankey <- ggchord(prepare_ggchord_data(show_sequences, gene_data = show_linear_features)) +
   geom_link_ribbon(aes(ribbon_fill = pident), data = show_adjacent,
     link_avoid = "smooth", alpha = 0.48, linewidth = 0.25) +
   geom_link_ribbon(aes(ribbon_fill = pident), data = show_cross,
     adjacent_only = FALSE, link_avoid = "smooth", alpha = 0.28, linewidth = 0.3) +
-  geom_seq(seq_gap = 0.30, linewidth = 1.1) +
-  geom_gene(position = position_strand(0.09), width = 0.075) +
+  layout_sequences(gap = 0.30) +
+  geom_seq(linewidth = 1.1) +
+  geom_feature(preset = 'gene', position = position_strand(0.09), width = 0.075) +
   geom_gene_label_repel(data = sankey_labels, label_wrap = 20,
     label_max_lines = 3, position = position_strand(0.09), size = 3.1) +
   geom_seq_label(size = 4.4) +
@@ -102,10 +104,10 @@ flag_sankey <- ggchord(show_sequences, gene_data = show_linear_features) +
   labs(title = "Four genomes, mirrored relationships", subtitle = "Original Collinear sources; independent query and subject displays")
 # ---- fusionoverview ----
 flagship_position <- position_strand(0.045)
-flagship_base <- ggchord(flagship_sequences, flagship_hsp, feature_data = flagship_features) +
+flagship_base <- ggchord(prepare_ggchord_data(flagship_sequences, flagship_hsp, feature_data = flagship_features)) +
   geom_link_ribbon(adjacent_only = FALSE, alpha = 0.45, linewidth = 0.12, allow_repeated = TRUE) +
   geom_seq(aes(seq_colour = accver), linewidth = 1.1) +
-  geom_gene(aes(gene_fill = strand), position = flagship_position, width = 0.025) +
+  geom_feature(preset = 'gene', aes(gene_fill = strand), position = flagship_position, width = 0.025) +
   geom_seq_label(size = 3.2) +
   scale_seq_colour_manual(values = flagship_colours, name = "Sequence") +
   scale_gene_fill_manual(values = c("+" = "#CE1536", "-" = "#346B9D", "." = "#8291A6"), name = "Biological strand") +
@@ -116,7 +118,7 @@ fusion_radial <- flagship_base + coord_radial_synteny()
 # ---- flagshipdot ----
 dotplot_pair_counts <- flagship_dotplot_example$pair_counts
 dotplot_cells <- flagship_dotplot_example$cell_labels
-flag_dotplot <- ggchord(flagship_sequences, flagship_hsp) +
+flag_dotplot <- ggchord(prepare_ggchord_data(flagship_sequences, flagship_hsp)) +
   geom_alignment_segment(aes(link_colour = pident, link_linewidth = length), alpha = 0.85) +
   scale_link_linewidth_continuous(range = c(0.8, 1.8), name = "HSP length (bp)") +
   coord_dotplot(x_seqs = flagship_sequences$accver, y_seqs = flagship_sequences$accver,
@@ -170,11 +172,12 @@ make_fusion_view <- function(coord, title, subtitle, label_radius = NULL) {
     geom_seq_label(size = 3.5, seq_label_radius = label_radius,
       seq_label_orientation = "horizontal")
   }
-  ggchord(flagship_sequences, fusion_display_hsp, feature_data = fusion_display_features) +
+  ggchord(prepare_ggchord_data(flagship_sequences, fusion_display_hsp, feature_data = fusion_display_features)) +
     geom_link_ribbon(adjacent_only = FALSE, alpha = 0.25, linewidth = 0.10,
       nonadjacent_linewidth = 0.22, allow_repeated = TRUE) +
-    geom_seq(aes(seq_colour = accver), seq_orientation = fusion_orientation, linewidth = 1.1) +
-    geom_gene(aes(gene_fill = strand), position = flagship_position, width = 0.04) +
+    layout_sequences(orientation = fusion_orientation) +
+    geom_seq(aes(seq_colour = accver), linewidth = 1.1) +
+    geom_feature(preset = 'gene', aes(gene_fill = strand), position = flagship_position, width = 0.04) +
     label_layer +
     coord + fusion_shared_styles + labs(title = title, subtitle = subtitle)
 }
@@ -188,11 +191,12 @@ fusion_linear_view <- make_fusion_view(coord_collinear(ratio = 0.78),
 fusion_radial_view <- make_fusion_view(coord_radial_synteny(start_angle = 45, inner_radius = 0.7),
   "C  |  Radial", "Shared intervals; A / D") +
   theme(ggchord.axis.text = element_blank(), ggchord.axis.ticks = element_blank())
-fusion_zoom_view <- ggchord(flagship_focused$seq_data, flagship_focused$ribbon_data,
-  feature_data = fusion_detail_features) +
+fusion_zoom_view <- ggchord(prepare_ggchord_data(flagship_focused$seq_data, flagship_focused$ribbon_data,
+  feature_data = fusion_detail_features)) +
   geom_link_ribbon(allow_repeated = TRUE, alpha = 0.25, linewidth = 0.10) +
-  geom_seq(aes(seq_colour = accver), seq_orientation = 1, linewidth = 1.1) +
-  geom_gene(aes(gene_fill = strand), position = flagship_position, width = 0.04) +
+  layout_sequences(orientation = 1) +
+  geom_seq(aes(seq_colour = accver), linewidth = 1.1) +
+  geom_feature(preset = 'gene', aes(gene_fill = strand), position = flagship_position, width = 0.04) +
   geom_gene_label_repel(size = 3.05, label_wrap = 22, label_max_lines = 2, position = flagship_position) +
   geom_seq_label(size = 3.5, seq_label_orientation = "horizontal") +
   coord_collinear(ratio = 0.85, fit = "manual",
@@ -223,10 +227,11 @@ fusion_base_view <- ggplot(fusion_base_cells, aes(alignment_column, accver, labe
 fusion_base_view <- register_ggchord_alignment(fusion_base_view, fusion_base_cells)
 fusion_focus_regions <- fusion_data$focus_regions
 fusion_context_features <- fusion_data$context_features
-fusion_detail_view <- ggchord(fusion_context_sequences, flagship_selected, feature_data = fusion_context_features) +
+fusion_detail_view <- ggchord(prepare_ggchord_data(fusion_context_sequences, flagship_selected, feature_data = fusion_context_features)) +
   geom_link_ribbon(allow_repeated = TRUE, alpha = 0.25, linewidth = 0.10) +
-  geom_seq(aes(seq_colour = accver), seq_orientation = 1, linewidth = 1.1) +
-  geom_gene(aes(gene_fill = strand), position = flagship_position, width = 0.04) +
+  layout_sequences(orientation = 1) +
+  geom_seq(aes(seq_colour = accver), linewidth = 1.1) +
+  geom_feature(preset = 'gene', aes(gene_fill = strand), position = flagship_position, width = 0.04) +
   geom_seq_label(size = 3.5, seq_label_orientation = "horizontal") +
   coord_collinear(ratio = 0.7) + fusion_shared_styles +
   scale_seq_position_continuous(n.breaks = 2, minor_breaks = NULL) +
@@ -291,11 +296,11 @@ make_reference_map <- function(record, paper = "white") {
   primers <- record$primers
   all_site_count <- record$all_site_count
   policy <- record$policy
-  position <- position_feature_stack(spacing = 0.085, base_position = position_plasmid())
-  plot <- ggchord(sequence[c("accver", "length")], feature_data = features) +
+  position <- position_feature_stack(spacing = 0.085, base_position = position_offset(-0.1))
+  plot <- ggchord(prepare_ggchord_data(sequence[c("accver", "length")], feature_data = features)) +
     geom_seq(seq_style = "double") +
-    geom_feature_plasmid(position = position) +
-    geom_feature_label_repel(position = position, label_fit = "shrink", label_min_size = 2.5) +
+    geom_feature(preset = 'plasmid', position = position) +
+    geom_feature_label(placement = 'repel', position = position, overflow = "shrink", label_min_size = 2.5) +
     geom_seq_center_label() + coord_circular() + theme_ggchord_plasmid()
   if (nrow(sites)) plot <- plot + geom_restriction_site(data = sites, label_size = 2.5)
   if (nrow(primers)) plot <- plot + geom_primer(data = primers) +

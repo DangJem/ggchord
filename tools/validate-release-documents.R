@@ -19,11 +19,11 @@ main <- function() {
   split_genes <- env$genes$accver %in% env$seqs$accver[1:2]
   split_links <- env$links$qaccver == env$seqs$accver[1]
   mixed <- ggchord(env$seqs) +
-    geom_seq(seq_radius = c(1.1,1,.9,1.2), seq_curvature = c(.8,1.2,1,.7),
-      seq_orientation = c(1,-1,1,-1), seq_gap = c(.03,.04,.06,.05)) +
-    geom_gene(data = env$genes[split_genes, ], gene_fill = '#268DAB',
+    layout_sequences(orientation = c(1,-1,1,-1), gap = c(.03,.04,.06,.05)) +
+    geom_seq(seq_radius = c(1.1,1,.9,1.2), seq_curvature = c(.8,1.2,1,.7)) +
+    geom_feature(preset = 'gene', data = env$genes[split_genes, ], gene_fill = '#268DAB',
       position = position_strand(.1)) +
-    geom_gene(data = env$genes[!split_genes, ], gene_fill = '#CA644D',
+    geom_feature(preset = 'gene', data = env$genes[!split_genes, ], gene_fill = '#CA644D',
       position = position_strand(.1)) +
     geom_link_ribbon(data = env$links[split_links, ], fill = '#5D72BA', alpha = .6) +
     geom_link_ribbon(data = env$links[!split_links, ], fill = '#D68B39', alpha = .6) +

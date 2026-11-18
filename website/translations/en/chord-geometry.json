@@ -1,5 +1,5 @@
 {
-  "source_sha256": "1511fb8c034a84951f89d4ae8c4a3cb8adcc4b336121c26cfcbe9fd6566175dc",
+  "source_sha256": "c80d98fd0d07b9a295b21d5a171c7ef80ae696227d3b5e9082d852e2cdcfc64a",
   "blocks": {
     "3": {
       "source_sha256": "77ee932989d7f01ec7d62f80140890ce1d494f73bb48fda69b509292a27fac85",
@@ -17,7 +17,7 @@
       "translation": "## Increase the space between backbones ⟦shared:0⟧\n"
     },
     "11": {
-      "source_sha256": "35f8d27e8ce2857f8bc07e98b66f07a029110305a5bceb2b0ca9c6a83eaf8ff4",
+      "source_sha256": "b9c216237d31ea23fe93dc77d2e7f890eb0090a900b0532a0deb9c7cb155360e",
       "status": "reviewed",
       "translation": "⟦shared:0⟧ controls the gap proportion between adjacent backbones. The default is ⟦shared:1⟧. This example sets only the gap after MT108731.1 to ⟦shared:2⟧. Other gaps retain ⟦shared:1⟧. The last sequence’s gap closes the ring. Compare the space between adjacent arcs, then check that the longer sequence still has the longer arc.\n"
     },

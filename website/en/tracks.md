@@ -18,14 +18,13 @@ Each row of `bins` is an actual sequence window. Check its endpoints and `gc`, t
 {{figure:tracks}}
 
 The domain is 0–1, in fractions. Replace it with the actual unit/range of other
-measurements. `position_track()` controls placement/physical width;
+measurements. `track_band()` controls placement/physical width;
 `scale_track_value_continuous()` controls numerical mapping.
 
 <a id="sharing"></a>
 
 ## Share an ID deliberately {#sharing}
-Same-ID layers share a numerical domain, including bar baselines, and must agree
-on width/placement. Colour scales are scoped independently by track ID. Tiles
+Same-ID layers share a numerical domain, including bar baselines. Declare width and placement once for the band. Colour scales are scoped independently by track ID. Tiles
 show interval categories, lines connect observations, `geom_track_col()` encodes supplied interval values relative to a baseline;
 `geom_track_bar()` counts observations at positions with baseline 0. Binning
 requires explicit binwidth/breaks through the bin workflow. Sharing a domain does not require sharing a spatial band.
@@ -62,28 +61,28 @@ Use the same 9 × 8 inch dimensions and 100 bp windows as the bars. Bars encode 
 
 | Parameter or mapping | Default | Choice and constraints |
 | --- | --- | --- |
-| `position` | Required | `position_track("gc_colour")` declares an independent track |
-| `width` | 4 mm in `position_track()` | 10 mm here; physical band width |
+| `track` | Default band | `track = "gc_colour"` selects the band declared with `track_band("gc_colour")` |
+| `width` | 4 mm in `track_band()` | 10 mm here; physical band width |
 | `side` / `order` | outside / 1 | Lower order places a band nearer the backbone |
 | `gap` | 1 mm | Physical spacing from the preceding band, not a sequence gap |
 | `track_fill` | Never inferred | Map gc inside `aes()`; use `fill` for a fixed colour |
 | `bounds` | `"error"` | Out-of-range coordinates error; clip reports clipping |
 | `alpha` / `linewidth` | 1 / 0.25 | Fixed opacity and border width; border colour defaults to NA |
 
-Use `scale_track_fill_gradientn()` for continuous colours or `scale_track_fill_manual()` for categories, with the matching track ID. Do not label a fraction as a percentage. To combine with the bars, add this tile layer to `p_tracks` and retain separate IDs for separate bands. Layers sharing an ID must agree on side/order/width/gap.
+Use `scale_track_fill_gradientn()` for continuous colours or `scale_track_fill_manual()` for categories, with the matching track ID. Do not label a fraction as a percentage. To combine with the bars, add this tile layer to `p_tracks` and retain separate IDs for separate bands. Layers sharing an ID use its declared side, order, width and gap.
 
-Change only tile width from 10 to 4 mm: colours stay the same while physical band width changes. Your own data must declare windows, units, NA handling and overlap policy. Check coordinate errors rather than hiding them with clip. See [`geom_track_tile()`](../../man/geom_track_tile.Rd) and [`position_track()`](../../man/position_track.Rd).
+Change only tile width from 10 to 4 mm: colours stay the same while physical band width changes. Your own data must declare windows, units, NA handling and overlap policy. Check coordinate errors rather than hiding them with clip. See [`geom_track_tile()`](../../man/geom_track_tile.Rd) and [`track_band()`](../../man/track_band.Rd).
 
 <a id="tile-width"></a>
 
 ## Change only physical tile width {#tile-width}
 
-Compare with the 10 mm band above. Keep the same 9 × 8 inch device, windows, colours and value domain, changing only `position_track(width)` to 4 mm:
+Compare with the 10 mm band above. Keep the same 9 × 8 inch device, windows, colours and value domain, changing only `track_band(width)` to 4 mm:
 
 {{code:comparetrackthin}}
 {{figure:comparetrackthin}}
 
-Colours still encode the same GC fractions. Only physical band width shrinks. `geom_track_tile()` draws interval tiles and the Position controls band width; neither changes base composition. Try 6 mm while retaining export dimensions. Bar heights are separately controlled by `track_value` and its value scale; reducing band width is not numerical normalization.
+Colours still encode the same GC fractions. Only physical band width shrinks. `geom_track_tile()` draws interval tiles and the band declaration sets its width; neither changes base composition. Try 6 mm while retaining export dimensions. Bar heights are separately controlled by `track_value` and its value scale; reducing band width is not numerical normalization.
 
 <a id="check-result"></a>
 

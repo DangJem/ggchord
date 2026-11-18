@@ -11,7 +11,7 @@ local({
   on.exit(grDevices::dev.off(), add = TRUE)
   f <- rc_fixtures()
   factories <- list(
-    chord = function() ggchord(f$seqs, f$links, validate = "none") + geom_seq() + geom_link_ribbon(),
+    chord = function() ggchord(prepare_ggchord_data(f$seqs, f$links), validate = "none") + geom_seq() + geom_link_ribbon(),
     circular = function() f$circular(),
     collinear = function() f$linear,
     track = function() f$track)

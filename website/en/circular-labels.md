@@ -64,14 +64,14 @@ Default feature first tries internal, then adjacent/external placement. Radial, 
 
 ## Wrapping, shrinking, hiding and leaders {#fitting}
 
-Starting from feature, change only label_fit to shrink; then return to baseline and set only label_wrap=14. Shrink explicitly permits smaller text down to the default minimum 1.5. It does not shrink indefinitely to guarantee all names. Character wrapping width is not a fixed physical width.
+Starting from feature, change only overflow to shrink; then return to baseline and set only label_wrap=14. Shrink explicitly permits smaller text down to the default minimum 1.5. It does not shrink indefinitely to guarantee all names. Character wrapping width is not a fixed physical width.
 
 {{code:compareshrinkfit}}
 {{figure:compareshrinkfit}}
 {{code:comparewrapfit}}
 {{figure:comparewrapfit}}
 
-From the 14-character wrap example, change only label_fit to ellipsis. Then return to default feature placement and disable only external fallback. Omission/hiding changes display, not source names or features.
+From the 14-character wrap example, change only overflow to ellipsis. Then return to default feature placement and disable only external fallback. Omission/hiding changes display, not source names or features.
 
 {{code:compareellipsisfit}}
 {{figure:compareellipsisfit}}
@@ -86,7 +86,7 @@ From the 14-character wrap example, change only label_fit to ellipsis. Then retu
 | Parameter | Default | Choices and limits |
 | --- | --- | --- |
 | label_layout | feature | feature/radial/auto/callout; gene layouts differ |
-| label_fit | wrap | wrap/none/ellipsis/auto/shrink; omission does not edit source text |
+| overflow | wrap | wrap/none/ellipsis/auto/shrink; omission does not edit source text |
 | label_max_lines | 2 | Inspect together with wrapping |
 | label_min_size | 1.5 | Lower bound for shrinking |
 | label_side | outside | outside/inside/auto |

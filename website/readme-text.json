@@ -8,8 +8,8 @@
     "en": "Build layered sequence figures in R with ggplot2: compare multiple sequences, annotate a circular map, inspect HSP alignments and connect independent views."
   },
   "api-compatibility": {
-    "zh": "v0.29.0 是沿用旧版 API 的最后一个版本。ggchord v0.50.0 正在全面重构，公开接口可直接改名或移除，不设过渡版本。升级后现有绘图代码可能需要改写。依赖旧版 API 的项目可固定使用 v0.29.0。",
-    "en": "v0.29.0 is the final release using the legacy API. A major rewrite of ggchord is underway for v0.50.0. Public interfaces may be renamed or removed without a transition release, and existing plotting code may need changes when you upgrade. Projects that rely on the legacy API can pin v0.29.0."
+    "zh": "v0.29.0 是沿用旧版 API 的最后一个正式版。v0.50.0 开发版已调整构图、轨道和标签接口，升级写法见[迁移指南](MIGRATION-Hans.md)。",
+    "en": "v0.29.0 is the final release using the legacy API. The v0.50.0 development version changes plot construction, tracks and labels. See the [migration guide](MIGRATION.md) when upgrading."
   },
   "website": {
     "zh": "网站",

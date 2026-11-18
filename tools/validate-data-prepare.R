@@ -57,7 +57,7 @@ converted <- prepare_ggchord_data(seqs, features = list(annotation = imported))
 stopifnot(identical(converted$report$conversions$features$annotation$source_import$files, gff),
   converted$report$conversions$features$annotation$source_import$format == "GFF3")
 unlink(gff)
-plot <- ggchord(out$seq_data, out$ribbon_data) + geom_seq() +
+plot <- ggchord(prepare_ggchord_data(out$seq_data, out$ribbon_data)) + geom_seq() +
   geom_link_ribbon() + geom_feature(data = out$features$sites) + coord_collinear()
 built <- ggplot2::ggplot_build(plot)
 stopifnot(inherits(built, "ggplot_built"), nrow(built$data[[3L]]) > 0L)

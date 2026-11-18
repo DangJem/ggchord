@@ -16,7 +16,7 @@ features <- find_common_features(sequence)
 primers <- find_primer_bindings(sequence, set = "reference")
 all_sites <- find_restriction_sites(sequence)
 tracks <- position_feature_stack(spacing = .085,
-  base_position = position_plasmid())
+  base_position = position_offset(-0.1))
 
 make_plot <- function(sites, boxed_primers) {
   primer_layers <- if (boxed_primers) {
@@ -24,16 +24,16 @@ make_plot <- function(sites, boxed_primers) {
       feature_label_mode = "external", feature_label_fill = "#ECECEC",
       feature_label_colour = "#444444")
     list(geom_primer(data = primers),
-      geom_feature_label_repel(data = primer_labels,
-        label_layout = "callout", label_fit = "none",
+      geom_feature_label(placement = 'repel', data = primer_labels,
+        label_layout = "callout", overflow = "none",
         label_max_lines = 1L, max_overlaps = 0,
-        position = position_plasmid(0)))
+        position = position_offset(0)))
   } else list(geom_primer(data = primers),
     geom_primer_label_repel(data = primers, max_overlaps = 0))
   ggchord(sequence, validate = "none") +
     geom_seq(seq_style = "double") +
-    geom_feature_plasmid(data = features, position = tracks) +
-    geom_feature_label_repel(data = features, position = tracks,
+    geom_feature(preset = 'plasmid', data = features, position = tracks) +
+    geom_feature_label(placement = 'repel', data = features, position = tracks,
       external = TRUE, max_overlaps = 0) +
     geom_restriction_site(data = sites) + primer_layers +
     geom_seq_center_label() + coord_circular(rotation = 0) +

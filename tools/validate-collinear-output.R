@@ -15,7 +15,8 @@ stopifnot(requireNamespace("svglite", quietly = TRUE),
 independent <- ggchord(workflow_sequences, validate = "none") +
   geom_link_ribbon(data = workflow_links[1L, ], fill = "#4477AA", alpha = .2) +
   geom_link_ribbon(data = workflow_links[3L, ], fill = "#CC6677", alpha = .2) +
-  geom_seq(seq_orientation = c(A = 1, B = -1, C = 1), seq_gap = .4) +
+  layout_sequences(orientation = c(A = 1, B = -1, C = 1), gap = .4) +
+  geom_seq() +
   geom_feature(data = workflow_features[1L, ], shape = "block",
     feature_fill = "#4477AA", position = position_strand(.12)) +
   geom_feature(data = workflow_features[2L, ], shape = "chevron",

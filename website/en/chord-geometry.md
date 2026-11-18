@@ -20,7 +20,7 @@
 
 {{figure:frontgap}}
 
-`seq_gap` controls the gap proportion between adjacent backbones. The default is `0.03`. This example sets only the gap after MT108731.1 to `0.12`. Other gaps retain `0.03`. The last sequence’s gap closes the ring. Compare the space between adjacent arcs, then check that the longer sequence still has the longer arc.
+`layout_sequences(gap = ...)` controls the gap proportion between adjacent backbones. The default is `0.03`. This example sets only the gap after MT108731.1 to `0.12`. Other gaps retain `0.03`. The last sequence’s gap closes the ring. Compare the space between adjacent arcs, then check that the longer sequence still has the longer arc.
 
 <a id="shape"></a>
 

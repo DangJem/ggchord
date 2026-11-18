@@ -50,7 +50,7 @@ library(ggplot2)
 <a id="read"></a>
 
 ## 调整与限制 {#read}
-修改seq_gap、行顺序、方向或连接筛选后，应同步重建控制点。局部箭头避障不是绕过中间整条序列的自动路由器；跨行ribbon之间仍可合法相交。需要局部观察时使用[focus与分段](views.md)。当前显式圆形半径/曲率不能直接传入共线性坐标，见[转换边界](multi-sequence-views.md#input)。
+修改layout_sequences(gap = ...)、行顺序、方向或连接筛选后，应同步重建控制点。局部箭头避障不是绕过中间整条序列的自动路由器；跨行ribbon之间仍可合法相交。需要局部观察时使用[focus与分段](views.md)。当前显式圆形半径/曲率不能直接传入共线性坐标，见[转换边界](multi-sequence-views.md#input)。
 
 <a id="save"></a>
 

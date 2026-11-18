@@ -23,10 +23,7 @@ radial/circumferential offsets and orientation controls. Automatic layers reject
 these manual controls: choose `label_layout` or remove the manual argument.
 Use `size`, `colour` and `family` for supported fixed text styles.
 
-`label_fit`, `label_wrap`, `label_max_lines` and `label_min_size` control fitting
-where supported. Shrinking is explicit and bounded. Unresolved labels may move
-or hide; the feature geometry remains. Inspect `label_fit_diagnostics` and
-`label_diagnostics` at the final export size.
+For automatic feature labels, `overflow` selects text fitting. Automatic gene labels use `label_fit`. Both support `label_wrap`, `label_max_lines` and `label_min_size`. Shrinking requires an explicit choice and has a lower size limit. An unresolved label may move or hide while its feature remains visible. Inspect `label_fit_diagnostics` and `label_diagnostics` at the final export dimensions.
 
 {{code:manualgenelabels}}
 {{figure:manualgenelabels}}

@@ -110,13 +110,13 @@ view_ggchord(flag_sankey, width = 10, height = 16, units = "in")
 
 ## 方向、实例与显示比例 {#direction-and-adjacency}
 
-生物学链、HSP 端点方向、显示 orientation 和 seq_order 各有独立含义。Sankey 的左右副本不增加观测，区间宽度不是流量守恒。图层仅在共同支持范围内可复用。
+生物学链、HSP 端点方向、显示 orientation 和 layout_sequences(order = ...) 各有独立含义。Sankey 的左右副本不增加观测，区间宽度不是流量守恒。图层仅在共同支持范围内可复用。
 
 <a id="projection"></a>
 
 ## 显示长度与连接样式 {#projection}
 
-`length_mode="equal"` 改变角度分配或直线跨度，保留原始长度、区间与局部轴。
+`layout_sequences(length_mode = "equal")` 改变角度分配或直线跨度，保留原始长度、区间与局部轴。
 `sequence_display` 导出源长度和投影系数。多序列等长显示不能使用共享绝对比例尺。
 默认轴显示 1 与真实末位，中间刻度按可用物理空间选择；闭圆接缝合并两端。
 显式 breaks 和 labels 优先。

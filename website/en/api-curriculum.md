@@ -47,9 +47,6 @@ Find purpose, primary section, modes, complete cases and full parameters by API.
 | [`geom_alignment_segment`](../../man/geom_alignment_segment.Rd) | Draw complete HSP endpoints | [Usage](dotplot-start.md#dotplot) | Identity HSP segments on independent native axes | [↗](parameter-atlas.md#api-geom_alignment_segment) | [↗](dotplot-start.md) |
 | [`geom_feature`](../../man/geom_feature.Rd) | Draw generic genomic features | [Usage](circular-features.md#feature-shapes) | all three; generic annotations including unknown strand and aa; Radial per new-view support matrix | [↗](parameter-atlas.md#api-geom_feature) | [↗](chord.md) |
 | [`geom_feature_label`](../../man/geom_feature_label.Rd) | Label generic genomic features | [Usage](circular-labels.md#fixed-labels) | all three; linear uses vertical/horizontal rows for radial/tangent; Radial per new-view support matrix | [↗](parameter-atlas.md#api-geom_feature_label) | [↗](chord.md) |
-| [`geom_feature_label_repel`](../../man/geom_feature_label_repel.Rd) | Automatically arrange generic feature labels | [Usage](circular-labels.md#automatic-labels) | all three; external=FALSE rejected by linear mode; Radial per new-view support matrix | [↗](parameter-atlas.md#api-geom_feature_label_repel) | [↗](chord.md) |
-| [`geom_feature_plasmid`](../../man/geom_feature_plasmid.Rd) | Draw annotated features on a circular plasmid | [Usage](circular-features.md#feature-shapes) | generic geometry preset; intended circular; compare defaults before transfer; Radial per new-view support matrix | [↗](parameter-atlas.md#api-geom_feature_plasmid) | [↗](plasmids.md) |
-| [`geom_gene`](../../man/geom_gene.Rd) | Add a gene arrow layer | [Usage](feature-geometry.md#arrow-heads) | all three on bp; known strand required; Radial per new-view support matrix | [↗](parameter-atlas.md#api-geom_gene) | [↗](chord.md) |
 | [`geom_gene_label`](../../man/geom_gene_label.Rd) | Add a gene label layer | [Usage](labels.md#fixed) | bp gene labels; circular/linear orientation differs; Radial per new-view support matrix | [↗](parameter-atlas.md#api-geom_gene_label) | [↗](chord.md) |
 | [`geom_gene_label_repel`](../../man/geom_gene_label_repel.Rd) | Add an automatically arranged gene label layer | [Usage](labels.md#comparison) | bp gene labels; linear shares row layout; Radial per new-view support matrix | [↗](parameter-atlas.md#api-geom_gene_label_repel) | [↗](chord.md) |
 | [`geom_link_line`](../../man/geom_link_line.Rd) | Draw point-to-point sequence links | [Usage](multi-sequence-links.md#point-links) | chord/collinear; explicit qpos/spos; circular rejected; Radial per new-view support matrix | [↗](parameter-atlas.md#api-geom_link_line) | [↗](chord.md) |
@@ -68,7 +65,7 @@ Find purpose, primary section, modes, complete cases and full parameters by API.
 | [`geom_track_bar`](../../man/geom_track.Rd) | Count observations at source positions | [Usage](tracks-statistics.md#tracks) | Count observations at source positions in compatible backbone views; zero baseline; binning is a separate explicit Stat | [↗](parameter-atlas.md#api-geom_track_bar) | [↗](multi-sequence.md) |
 | [`geom_track_col`](../../man/geom_track.Rd) | Display supplied numerical heights | [Usage](tracks-statistics.md#tracks) | Chord/Circular/Collinear/Sankey; Radial per new-view support matrix | [↗](parameter-atlas.md#api-geom_track_col) | [↗](multi-sequence.md) |
 | [`geom_track_line`](../../man/geom_track_tile.Rd) | Draw explicit quantitative tracks along sequence backbones | [Usage](tracks.md#multiple) | all three; increasing positions per group; closed requires complete circular gap=0; Radial per new-view support matrix | [↗](parameter-atlas.md#api-geom_track_line) | [↗](tracks.md) |
-| [`geom_track_tile`](../../man/geom_track_tile.Rd) | Draw explicit quantitative tracks along sequence backbones | [Usage](tracks.md#tile) | all three; explicit named track; overlapping input tiles keep drawing order; Radial per new-view support matrix | [↗](parameter-atlas.md#api-geom_track_tile) | [↗](tracks.md) |
+| [`geom_track_tile`](../../man/geom_track_tile.Rd) | Draw explicit quantitative tracks along sequence backbones | [Usage](tracks.md#tile) | all three; default or named track; overlapping input tiles keep drawing order; Radial per new-view support matrix | [↗](parameter-atlas.md#api-geom_track_tile) | [↗](tracks.md) |
 | [`get_chord_layout`](../../man/get_chord_layout.Rd) | Get the chord layout from a ggchord plot | [Usage](diagnostics.md#geometry) | complete documented layout for all supported plots | [↗](parameter-atlas.md#api-get_chord_layout) | [↗](chord.md) |
 | [`ggchord`](../../man/ggchord.Rd) | Create sequence plots from tables and independent layers | [Usage](modes.md#composition) | constructor; one declared unit per plot | [↗](parameter-atlas.md#api-ggchord) | [↗](real-data.md) |
 | [`ggchord_fusion`](../../man/ggchord_fusion.Rd) | Compose independent genomic panels | [Usage](fusion-routing.md#intervals) | Registered genomic/character panels; eight sides, explicit boxes and nested paths | [↗](parameter-atlas.md#api-ggchord_fusion) | [↗](fusion.md) |
@@ -77,9 +74,12 @@ Find purpose, primary section, modes, complete cases and full parameters by API.
 | [`guide_ggchord_colorbar`](../../man/guide_ggchord_legend.Rd) | Guides for ggchord role aesthetics; spelling alias of guide_ggchord_colourbar | [Usage](scale-families.md#guides) | matching discrete/continuous role guide; all supported plots | [↗](parameter-atlas.md#api-guide_ggchord_colorbar) | [↗](chord.md) |
 | [`guide_ggchord_colourbar`](../../man/guide_ggchord_legend.Rd) | Guides for ggchord role aesthetics | [Usage](scale-families.md#guides) | matching discrete/continuous role guide; all supported plots | [↗](parameter-atlas.md#api-guide_ggchord_colourbar) | [↗](chord.md) |
 | [`guide_ggchord_legend`](../../man/guide_ggchord_legend.Rd) | Guides for ggchord role aesthetics | [Usage](scale-families.md#guides) | matching discrete/continuous role guide; all supported plots | [↗](parameter-atlas.md#api-guide_ggchord_legend) | [↗](chord.md) |
+| [`guide_seq_axis`](../../man/guide_seq_axis.Rd) | Select sequence axes and control tick label overlap | [Usage](scale-families.md#guides) | Backbone views with sequence axes; select focused axes by window ID | [↗](parameter-atlas.md#api-guide_seq_axis) | [↗](tracks.md) |
+| [`guide_track_axis`](../../man/guide_track_axis.Rd) | Set tick angle, overlap policy and local theme on a quantitative track axis | [Usage](scale-families.md#guides) | Views using a local quantitative track value scale | [↗](parameter-atlas.md#api-guide_track_axis) | [↗](tracks.md) |
 | [`guides`](../../man/ggplot2-helpers.Rd) | Selected ggplot2 helpers for ggchord plots | [upstream](parameter-atlas.md#upstream) | upstream; applies only to matching supported ggplot roles | [↗](parameter-atlas.md#api-guides) | [↗](chord.md) |
 | [`labs`](../../man/ggplot2-helpers.Rd) | Selected ggplot2 helpers for ggchord plots | [upstream](parameter-atlas.md#upstream) | upstream; applies only to matching supported ggplot roles | [↗](parameter-atlas.md#api-labs) | [↗](chord.md) |
 | [`last_plot`](../../man/ggplot2-helpers.Rd) | Selected ggplot2 helpers for ggchord plots | [upstream](parameter-atlas.md#upstream) | upstream; applies only to matching supported ggplot roles | [↗](parameter-atlas.md#api-last_plot) | [↗](chord.md) |
+| [`layout_sequences`](../../man/layout_sequences.Rd) | Set backbone order, direction, spacing and relative display lengths | [Usage](multi-sequence-layout.md#order) | Multi-sequence chord and linear layouts; instance IDs can override source directions; circular and dotplot axes own their directions | [↗](parameter-atlas.md#api-layout_sequences) | [↗](chord.md) |
 | [`link_ggchord_clusters`](../../man/link_ggchord_clusters.Rd) | Convert explicit homology-cluster membership to feature links | [Usage](homology.md#links) | explicit biological membership; matching names alone are insufficient | [↗](parameter-atlas.md#api-link_ggchord_clusters) | [↗](homology.md) |
 | [`magnify_ggchord`](../../man/magnify_ggchord.Rd) | Connect a real source interval to an explicit independent local detail plot | [Usage](fusion-details.md#magnify) | Registered genomic plots, nested Fusion and registered character details; explicit panel/instance routing; Dotplot excluded | [↗](parameter-atlas.md#api-magnify_ggchord) | [↗](fusion.md) |
 | [`map_alignment_position`](../../man/map_alignment_position.Rd) | Look up exact alignment columns and source positions in a selected row | [Usage](aligned-sequences.md#aligned-characters) | Existing DNA/RNA/AA columns; Cartesian local cells; explicit source mapping | [↗](parameter-atlas.md#api-map_alignment_position) | [↗](formats.md) |
@@ -89,9 +89,8 @@ Find purpose, primary section, modes, complete cases and full parameters by API.
 | [`optimize_ggchord_layout`](../../man/optimize_ggchord_layout.Rd) | Optimize sequence order and orientation for ribbon readability | [Usage](diagnostics.md#target-size) | explicit input sequence order/orientation heuristic, not biological inference | [↗](parameter-atlas.md#api-optimize_ggchord_layout) | [↗](chord.md) |
 | [`position_feature_stack`](../../man/position_feature_stack.Rd) | Stack overlapping genes or features on local lanes | [Usage](circular-features.md#stacking) | feature lanes; base Position before overlap allocation | [↗](parameter-atlas.md#api-position_feature_stack) | [↗](chord.md) |
 | [`position_identity`](../../man/ggplot2-helpers.Rd) | Selected ggplot2 helpers for ggchord plots | [upstream](parameter-atlas.md#upstream) | upstream; applies only to matching supported ggplot roles | [↗](parameter-atlas.md#api-position_identity) | [↗](chord.md) |
-| [`position_plasmid`](../../man/position_plasmid.Rd) | Place both feature strands on one shared band | [Usage](circular-features.md#stacking) | local shared-band preset; intended circular | [↗](parameter-atlas.md#api-position_plasmid) | [↗](circular-features.md) |
+| [`position_offset`](../../man/position_offset.Rd) | Place both feature strands on one shared band | [Usage](circular-features.md#stacking) | shared local offset for compatible sequence coordinates | [↗](parameter-atlas.md#api-position_offset) | [↗](circular-features.md) |
 | [`position_strand`](../../man/position_strand.Rd) | Place features on opposite sides according to strand | [Usage](parameters.md#strand) | local signed placement on valid feature/gene layers | [↗](parameter-atlas.md#api-position_strand) | [↗](parameters.md) |
-| [`position_track`](../../man/position_track.Rd) | Place a quantitative layer in an explicit sequence-local band | [Usage](tracks-statistics.md#independent-bands) | all three; same track ID shares consistent declarations | [↗](parameter-atlas.md#api-position_track) | [↗](tracks.md) |
 | [`PositionIdentity`](../../man/ggplot2-helpers.Rd) | Selected ggplot2 helpers for ggchord plots | [upstream](parameter-atlas.md#upstream) | upstream; applies only to matching supported ggplot roles | [↗](parameter-atlas.md#api-PositionIdentity) | [↗](chord.md) |
 | [`prepare_ggchord_data`](../../man/prepare_ggchord_data.Rd) | Prepare named ggchord tables with an explicit audit trail | [Usage](data.md#validation) | workflow preparation; defaults differ from standalone cleaning | [↗](parameter-atlas.md#api-prepare_ggchord_data) | [↗](real-data.md) |
 | [`primer_catalog`](../../man/primer_catalog.Rd) | Inspect the bundled sequencing-primer catalogue | [Usage](recognition.md#catalog) | catalogue metadata, not a binding search | [↗](parameter-atlas.md#api-primer_catalog) | [↗](plasmids.md) |
@@ -144,12 +143,13 @@ Find purpose, primary section, modes, complete cases and full parameters by API.
 | [`scale_seq_colour_manual`](../../man/scale_seq_colour_manual.Rd) | Sequence colour scales | [Usage](scale-families.md#categories) | all three; matching sequence colour role | [↗](parameter-atlas.md#api-scale_seq_colour_manual) | [↗](chord.md) |
 | [`scale_seq_position_continuous`](../../man/scale_seq_position_continuous.Rd) | Genomic sequence position scale | [Usage](views.md#focus) | all three; position axis, separate from the collinear ruler | [↗](parameter-atlas.md#api-scale_seq_position_continuous) | [↗](chord.md) |
 | [`scale_seq_ring_manual`](../../man/scale_seq_ring_manual.Rd) | Explicit sequence ring scale | [Usage](scale-families.md#rings) | chord/circular; positive declared radii; linear rejected | [↗](parameter-atlas.md#api-scale_seq_ring_manual) | [↗](chord.md) |
-| [`scale_track_colour_gradientn`](../../man/scale_track_fill_gradientn.Rd) | Set a track&#x27;s fill or colour mapping | [Usage](scale-families.md#tracks) | all three; scale ID must match position_track | [↗](parameter-atlas.md#api-scale_track_colour_gradientn) | [↗](tracks.md) |
-| [`scale_track_colour_manual`](../../man/scale_track_fill_gradientn.Rd) | Set a track&#x27;s fill or colour mapping | [Usage](scale-families.md#tracks) | all three; scale ID must match position_track | [↗](parameter-atlas.md#api-scale_track_colour_manual) | [↗](tracks.md) |
-| [`scale_track_fill_gradientn`](../../man/scale_track_fill_gradientn.Rd) | Set a track&#x27;s fill or colour mapping | [Usage](scale-families.md#tracks) | all three; scale ID must match position_track | [↗](parameter-atlas.md#api-scale_track_fill_gradientn) | [↗](tracks.md) |
-| [`scale_track_fill_manual`](../../man/scale_track_fill_gradientn.Rd) | Set a track&#x27;s fill or colour mapping | [Usage](scale-families.md#tracks) | all three; scale ID must match position_track | [↗](parameter-atlas.md#api-scale_track_fill_manual) | [↗](tracks.md) |
-| [`scale_track_value_continuous`](../../man/scale_track_value_continuous.Rd) | Set a named track&#x27;s numerical height scale | [Usage](scale-families.md#tracks) | all three; scale ID must match position_track | [↗](parameter-atlas.md#api-scale_track_value_continuous) | [↗](tracks.md) |
+| [`scale_track_colour_gradientn`](../../man/scale_track_fill_gradientn.Rd) | Set a track&#x27;s fill or colour mapping | [Usage](scale-families.md#tracks) | all three; scale ID must match track_band | [↗](parameter-atlas.md#api-scale_track_colour_gradientn) | [↗](tracks.md) |
+| [`scale_track_colour_manual`](../../man/scale_track_fill_gradientn.Rd) | Set a track&#x27;s fill or colour mapping | [Usage](scale-families.md#tracks) | all three; scale ID must match track_band | [↗](parameter-atlas.md#api-scale_track_colour_manual) | [↗](tracks.md) |
+| [`scale_track_fill_gradientn`](../../man/scale_track_fill_gradientn.Rd) | Set a track&#x27;s fill or colour mapping | [Usage](scale-families.md#tracks) | all three; scale ID must match track_band | [↗](parameter-atlas.md#api-scale_track_fill_gradientn) | [↗](tracks.md) |
+| [`scale_track_fill_manual`](../../man/scale_track_fill_gradientn.Rd) | Set a track&#x27;s fill or colour mapping | [Usage](scale-families.md#tracks) | all three; scale ID must match track_band | [↗](parameter-atlas.md#api-scale_track_fill_manual) | [↗](tracks.md) |
+| [`scale_track_value_continuous`](../../man/scale_track_value_continuous.Rd) | Set a named track&#x27;s numerical height scale | [Usage](scale-families.md#tracks) | all three; scale ID must match track_band | [↗](parameter-atlas.md#api-scale_track_value_continuous) | [↗](tracks.md) |
 | [`segment_ggchord_data`](../../man/segment_ggchord_data.Rd) | Prepare independent windows for a segmented linear display | [Usage](views.md#segments) | independent windows and declared local display reversal | [↗](parameter-atlas.md#api-segment_ggchord_data) | [↗](views.md) |
+| [`stat_coverage`](../../man/stat_coverage.Rd) | Compute union coverage and mean depth for inclusive intervals in each window | [Usage](tracks-statistics.md#interval-coverage) | Source intervals with reference lengths and units; statistics within each observed group | [↗](parameter-atlas.md#api-stat_coverage) | [↗](tracks.md) |
 | [`stat_ribbon_bundle`](../../man/stat_ribbon_bundle.Rd) | Bundle ribbons as a ggchord stat | [Usage](ribbons.md#statistics-bundle) | chord/collinear ribbon layer; explicit aggregation | [↗](parameter-atlas.md#api-stat_ribbon_bundle) | [↗](chord.md) |
 | [`stat_ribbon_density`](../../man/stat_ribbon_density.Rd) | Compute local ribbon density as a ggchord stat | [Usage](ribbons.md#statistics-density) | chord/collinear ribbon layer; one ribbon per source observation | [↗](parameter-atlas.md#api-stat_ribbon_density) | [↗](chord.md) |
 | [`theme`](../../man/ggplot2-helpers.Rd) | Selected ggplot2 helpers for ggchord plots | [upstream](parameter-atlas.md#upstream) | upstream; applies only to matching supported ggplot roles | [↗](parameter-atlas.md#api-theme) | [↗](chord.md) |
@@ -158,6 +158,7 @@ Find purpose, primary section, modes, complete cases and full parameters by API.
 | [`theme_ggchord_minimal`](../../man/theme_ggchord.Rd) | ggchord themes | [Usage](scale-families.md#themes) | non-data style; plasmid preset intended circular | [↗](parameter-atlas.md#api-theme_ggchord_minimal) | [↗](chord.md) |
 | [`theme_ggchord_plasmid`](../../man/theme_ggchord.Rd) | ggchord themes | [Usage](scale-families.md#themes) | non-data style; plasmid preset intended circular | [↗](parameter-atlas.md#api-theme_ggchord_plasmid) | [↗](chord.md) |
 | [`theme_ggchord_publication`](../../man/theme_ggchord.Rd) | ggchord themes | [Usage](scale-families.md#themes) | non-data style; plasmid preset intended circular | [↗](parameter-atlas.md#api-theme_ggchord_publication) | [↗](chord.md) |
+| [`track_band`](../../man/track_band.Rd) | Declare a quantitative band along sequence backbones | [Usage](tracks-statistics.md#independent-bands) | all three; one placement and numerical domain per track ID | [↗](parameter-atlas.md#api-track_band) | [↗](tracks.md) |
 | [`translate_ggchord_cds`](../../man/translate_ggchord_cds.Rd) | Translate real CDS strings with codon provenance using optional Biostrings | [Usage](aligned-sequences.md#cds-translation) | Explicit source/column map; independent Cartesian detail; complete observed codons | [↗](parameter-atlas.md#api-translate_ggchord_cds) | [↗](formats.md) |
 | [`unit`](../../man/grid-helpers.Rd) | Physical units and direction arrows | [upstream](parameter-atlas.md#upstream) | upstream; applies only to matching supported ggplot roles | [↗](parameter-atlas.md#api-unit) | [↗](chord.md) |
 | [`validate_ggchord_data`](../../man/validate_ggchord_data.Rd) | Validate ggchord input data before plotting | [Usage](data.md#validation) | validation reports, no silent input repair | [↗](parameter-atlas.md#api-validate_ggchord_data) | [↗](real-data.md) |
@@ -218,9 +219,6 @@ L2 denotes minimal runnable use and input/output explanation; L3 adds key-parame
 | `geom_alignment_segment` | L2 |
 | `geom_feature` | L3 |
 | `geom_feature_label` | L3 |
-| `geom_feature_label_repel` | L3 |
-| `geom_feature_plasmid` | L3 |
-| `geom_gene` | L3 |
 | `geom_gene_label` | L3 |
 | `geom_gene_label_repel` | L3 |
 | `geom_link_line` | L3 |
@@ -248,9 +246,12 @@ L2 denotes minimal runnable use and input/output explanation; L3 adds key-parame
 | `guide_ggchord_colorbar` | L2 |
 | `guide_ggchord_colourbar` | L2 |
 | `guide_ggchord_legend` | L2 |
+| `guide_seq_axis` | L2 |
+| `guide_track_axis` | L2 |
 | `guides` | L1 |
 | `labs` | L1 |
 | `last_plot` | L1 |
+| `layout_sequences` | L2 |
 | `link_ggchord_clusters` | L2 |
 | `magnify_ggchord` | L2 |
 | `map_alignment_position` | L2 |
@@ -260,9 +261,8 @@ L2 denotes minimal runnable use and input/output explanation; L3 adds key-parame
 | `optimize_ggchord_layout` | L2 |
 | `position_feature_stack` | L3 |
 | `position_identity` | L1 |
-| `position_plasmid` | L2 |
+| `position_offset` | L2 |
 | `position_strand` | L2 |
-| `position_track` | L3 |
 | `PositionIdentity` | L1 |
 | `prepare_ggchord_data` | L2 |
 | `primer_catalog` | L2 |
@@ -321,6 +321,7 @@ L2 denotes minimal runnable use and input/output explanation; L3 adds key-parame
 | `scale_track_fill_manual` | L2 |
 | `scale_track_value_continuous` | L2 |
 | `segment_ggchord_data` | L2 |
+| `stat_coverage` | L2 |
 | `stat_ribbon_bundle` | L3 |
 | `stat_ribbon_density` | L3 |
 | `theme` | L1 |
@@ -329,6 +330,7 @@ L2 denotes minimal runnable use and input/output explanation; L3 adds key-parame
 | `theme_ggchord_minimal` | L2 |
 | `theme_ggchord_plasmid` | L2 |
 | `theme_ggchord_publication` | L2 |
+| `track_band` | L3 |
 | `translate_ggchord_cds` | L2 |
 | `unit` | L1 |
 | `validate_ggchord_data` | L2 |

@@ -10,8 +10,8 @@ fails<-function(expr,pattern,absent=NULL) {
  invisible(e)
 }
 fails(geom_gene_label_repel(label_rotation=90),'geom_gene_label(label_rotation')
-fails(geom_feature_label_repel(label_orientation='horizontal'),'geom_feature_label(label_orientation')
-fails(geom_feature_label_repel(gene_label_rotation=90),'geom_feature_label(label_rotation')
+fails(geom_feature_label(placement = 'repel', label_orientation='horizontal'),"placement = 'fixed'")
+fails(geom_feature_label(placement = 'repel', gene_label_rotation=90),'geom_feature_label(label_rotation')
 fails(geom_gene_label_repel(gene_label_mystery=1),'unknown label argument','-> label_mystery')
 fails(geom_gene_label_repel(gene_label_layout='aligned'),"label_layout = 'auto'")
 fails(geom_gene_label(gene_label_layout='aligned'),'unknown label argument',"-> label_layout")
@@ -20,7 +20,7 @@ record('F51_manual_and_unknown_label_controls','Ignored manual geometry now give
 s<-data.frame(accver='A',length=1000)
 g<-data.frame(accver='A',start=100,end=300,strand='+',anno='gene')
 f<-data.frame(accver='A',start=600,end=800,strand='.',type='misc',label='feature')
-p<-ggchord(s)+geom_seq()+geom_gene(data=g,width=.05)+
+p<-ggchord(s)+geom_seq()+geom_feature(preset = 'gene', data=g,width=.05)+
  geom_feature(data=f,shape='block',width=.06,position=position_strand(.1))+
  geom_gene_label(data=g,label_rotation=90)+
  geom_feature_label(data=f,label_orientation='horizontal')+coord_collinear()
@@ -36,7 +36,7 @@ old<-automatic(prior$geom_gene_label_repel(data=g,colour='#123456',size=3))
 current<-automatic(geom_gene_label_repel(data=g,colour='#123456',size=3))
 stopifnot(identical(old,current))
 record('automatic_default_preserved','Normal automatic labels and explicit supported text styles match the previous implementation')
-fails(geom_gene(gene_offset=.1),'position_strand')
+fails(geom_feature(preset = 'gene', gene_offset=.1),'position_strand')
 fails(geom_feature(feature_shape='block'),'shape')
 fails(geom_link_ribbon(ribbon_gap=.1),'link_gap')
 fails(geom_restriction_site(data=data.frame(accver='A',position=100,enzyme='e'),leader='trunk'),'radial')

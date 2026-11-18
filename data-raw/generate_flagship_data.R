@@ -18,7 +18,8 @@ radial_orientation[c("MT108731.1", "OR222515.1")] <- 1
 # Inspect a backbone-only layout using the same alignment and gap as the final view.
 show_linear_coord <- coord_collinear(align = "center", orientation = "auto", ratio = 0.7)
 show_routing_base <- ggchord(show_sequences, show_links) +
-  geom_seq(seq_gap = 0.42) + show_linear_coord
+  layout_sequences(gap = 0.42) +
+  geom_seq() + show_linear_coord
 show_reference <- get_chord_layout(show_routing_base)$sequence_reference
 # Shared controls sit just beyond the intervening backbones, rather than far away.
 show_cross_controls <- map2(show_cross$query_row, show_cross$subject_row, function(query_row, subject_row) {

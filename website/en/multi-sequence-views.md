@@ -110,13 +110,13 @@ view_ggchord(flag_sankey, width = 10, height = 16, units = "in")
 
 ## Directions, instances and display scale {#direction-and-adjacency}
 
-Biological strand, HSP endpoint direction, display orientation and seq_order are separate. Sankey copies do not add observations; interval widths do not imply flow conservation. Reuse layers only within their shared support.
+Biological strand, HSP endpoint direction, display orientation and layout_sequences(order = ...) are separate. Sankey copies do not add observations; interval widths do not imply flow conservation. Reuse layers only within their shared support.
 
 <a id="projection"></a>
 
 ## Visual length and connection style {#projection}
 
-`length_mode="equal"` changes angular allocation or linear span. Original lengths,
+`layout_sequences(length_mode = "equal")` changes angular allocation or linear span. Original lengths,
 intervals and local axes remain unchanged. `sequence_display` exports both source
 length and projection factor. A shared absolute scale bar is rejected for equal
 multi-sequence displays. Default axes show 1 and the final source position;

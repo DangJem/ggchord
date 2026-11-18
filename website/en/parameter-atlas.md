@@ -66,7 +66,7 @@ Start with the [function index](../../man/). Examples compare important paramete
 | `fit` | `c("labels", "geometry", "manual")` | Type, units and accepted forms: see this API argument contract at right | Fitting strategy: "labels" includes measured label boxes, "geometry" fits geometric elements only, and "manual" requires explicit xlim and ylim. |
 | `align` | `c("left", "center", "right")` | Type, units and accepted forms: see this API argument contract at right | Display alignment: "left" (default), "center", or "right". Applied to the full sequence or the interval supplied by anchor. |
 | `anchor` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional anchor positions as a numeric vector named by accver, or a data frame with accver and either position or start/end. Every displayed sequence must have exactly one anchor. Missing and duplicate anchors are errors; multiple-copy targets must be selected explicitly before constructing the coordinate system. |
-| `orientation` | `c("manual", "auto")` | Type, units and accepted forms: see this API argument contract at right | "manual" (default) uses sequence directions supplied by geom_seq(). "auto" derives display directions from interval-link evidence and records support and unresolved cases. |
+| `orientation` | `c("manual", "auto")` | Type, units and accepted forms: see this API argument contract at right | "manual" (default) uses sequence directions supplied by layout_sequences(). "auto" derives display directions from interval-link evidence and records support and unresolved cases. |
 | `min_support` | `0.1` | Type, units and accepted forms: see this API argument contract at right | Minimum directional imbalance in [0, 1] for an automatic change. It is the absolute difference between forward and reverse support divided by their sum, default 0.1. A tie is always unresolved. |
 | `segments` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional data frame with unique window accver, row_id and orientation (1 or -1). Every displayed accession must be declared. Each window has its own local coordinates and reversible source metadata. |
 | `segment_gap` | `100` | Type, units and accepted forms: see this API argument contract at right | Positive display gap in native sequence units when segments is supplied, default 100. It never implies genomic continuity. |
@@ -138,6 +138,22 @@ Start with the [function index](../../man/). Examples compare important paramete
 
 </details>
 
+<span id="api-layout_sequences"></span>
+<details><summary><code>layout_sequences()</code></summary>
+
+
+[Full reference](../../man/layout_sequences.Rd)
+
+
+| Parameter | Signature default | Type/value rule | Meaning, range and constraints |
+| --- | --- | --- | --- |
+| `order` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Source IDs in display order. Repeats create display instances; use names such as c(A_high='A', B='B', A_low='A') for stable instance IDs. Repeated-entity HSPs require a unique between route on each link layer. |
+| `orientation` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Direction (1 or -1). A named vector selects source or display instance IDs; unspecified sequences use 1. |
+| `gap` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional numeric. Gap proportion between sequences, default 0.03 in chord coordinates. A named vector can set the gap after each sequence; omitted IDs use the coordinate default. In coord_collinear(), a positive distance between consecutive backbones as a proportion of the longest backbone's width, default 0.3. The final sequence's gap is unused in linear layouts. Segmented linear displays measure it against the longest display row; windows in one row must request the same gap, and only gaps between rows affect vertical placement. |
+| `length_mode` | `c("proportional", "equal")` | Type, units and accepted forms: see this API argument contract at right | "proportional" (default) retains source-length ratios; "equal" gives each displayed sequence the same angular allocation or linear span without modifying source lengths. Shared absolute scale bars are unavailable in multi-sequence equal mode; local axes retain source units. |
+
+</details>
+
 
 <a id="layers"></a>
 
@@ -160,9 +176,10 @@ Start with the [function index](../../man/). Examples compare important paramete
 | `linetype` | `1` | Type, units and accepted forms: see this API argument contract at right | Fixed styles. Mapped styles use link_colour, link_alpha, link_linewidth and link_linetype, with the corresponding scale_link functions. Explicit fixed styles win. |
 | `position` | `"identity"` | Type, units and accepted forms: see this API argument contract at right | Only "identity" is supported: data adjustment would change the alignment endpoints. |
 | `show.legend` | `NA` | Type, units and accepted forms: see this API argument contract at right | Standard ggplot2 layer arguments. |
-| `inherit.aes` | `FALSE` | Type, units and accepted forms: see this API argument contract at right | Standard ggplot2 layer arguments. |
+| `inherit.aes` | `TRUE` | Type, units and accepted forms: see this API argument contract at right | Standard ggplot2 layer arguments. |
 | `allow_repeated` | `FALSE` | Type, units and accepted forms: see this API argument contract at right | Allow explicitly identified source_hsp_id records to be displayed more than once. All participating layers must opt in. Rows without declared IDs are never deduplicated by their values. |
 | `...` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Additional arguments passed to ggplot2's segment geometry. |
+| `id` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional unique layer ID for layout and source exports. |
 
 </details>
 
@@ -179,18 +196,20 @@ Start with the [function index](../../man/). Examples compare important paramete
 | `data` | `NULL` | Type, units and accepted forms: see this API argument contract at right | data.frame with accver, start, end and strand; optional type, category and label. Factor start/end columns use their numeric labels, not their internal level codes. Coordinates must resolve to finite numbers. display_priority or logical prioritized_display. As an alternative to strand, directionality or direction may contain "forward", "reverse", "bidirectional", or "none". When omitted, uses the full constructor feature_data (or compatible gene_data). Other layers never remove records from this default input. |
 | `shape` | `"arrow"` | Type, units and accepted forms: see this API argument contract at right | Fixed feature geometry. An explicitly supplied shape takes precedence over aes(feature_shape = ...): "arrow", "compact_arrow", "promoter_arrow", "primer_arrow", "marker", "block", "capped_line", "primer_arc", "chevron", or "lollipop". The default is "arrow". Use aes(feature_shape = type) together with scale_feature_shape_manual() to map categories to geometry. |
 | `width` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional numeric/vector/list controlling width in the shared feature geometry engine. In a circular feature-label composition, the base width responds to final label size within bounded limits. |
-| `arrow_head_length` | `0.04` | Type, units and accepted forms: see this API argument contract at right | Arrow-head dimensions in the sequence-local frame, shared with geom_gene(). Values above one for arrow_head_width create a protruding block-arrow head. |
-| `arrow_head_width` | `1` | Type, units and accepted forms: see this API argument contract at right | Arrow-head dimensions in the sequence-local frame, shared with geom_gene(). Values above one for arrow_head_width create a protruding block-arrow head. |
+| `arrow_head_length` | `0.04` | Type, units and accepted forms: see this API argument contract at right | Arrow-head dimensions in the sequence-local frame. Values above one for arrow_head_width create a protruding block-arrow head. |
+| `arrow_head_width` | `1` | Type, units and accepted forms: see this API argument contract at right | Arrow-head dimensions in the sequence-local frame. Values above one for arrow_head_width create a protruding block-arrow head. |
 | `arrow_head_style` | `c("shouldered", "flush", "triangle")` | Type, units and accepted forms: see this API argument contract at right | Arrowhead construction: "shouldered" keeps the requested protruding head, "flush" keeps it level with the body, and "triangle" draws a full triangular wedge. |
 | `short_feature` | `c("auto", "wedge", "block")` | Type, units and accepted forms: see this API argument contract at right | Fallback for arrows too short to hold their requested head: an automatically compressed directional glyph, a wedge, or a block. |
 | `segment_boundaries` | `TRUE` | Type, units and accepted forms: see this API argument contract at right | Draw explicit internal marks carried by a segmented feature. Contiguous source-segment joins use dotted dividers; a non-solid segment-level line_style may override them, while a cleavage_arrows coordinate adds or merges a biological cut mark. These marks never create additional arrowheads. |
 | `boundary_colour` | `"#666666"` | Type, units and accepted forms: see this API argument contract at right | Appearance of internal segment joins. |
 | `boundary_linewidth` | `0.25` | Type, units and accepted forms: see this API argument contract at right | Appearance of internal segment joins. |
 | `boundary_linetype` | `"22"` | Type, units and accepted forms: see this API argument contract at right | Appearance of internal segment joins. |
-| `position` | `"identity"` | Type, units and accepted forms: see this API argument contract at right | Feature placement. Use "identity", "strand", "plasmid", position_strand(), position_plasmid(), or position_feature_stack(). |
+| `position` | `"identity"` | Type, units and accepted forms: see this API argument contract at right | Feature placement. Use "identity", "strand", position_strand(), position_offset(), or position_feature_stack(). |
 | `show.legend` | `TRUE` | Type, units and accepted forms: see this API argument contract at right | Standard ggplot2 layer arguments. |
-| `inherit.aes` | `FALSE` | Type, units and accepted forms: see this API argument contract at right | Standard ggplot2 layer arguments. |
+| `inherit.aes` | `TRUE` | Type, units and accepted forms: see this API argument contract at right | Standard ggplot2 layer arguments. |
 | `...` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Additional fixed polygon aesthetics. |
+| `id` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional plot-unique layer ID for label anchors and layout export. |
+| `preset` | `c("default", "gene", "plasmid")` | Type, units and accepted forms: see this API argument contract at right | Use "default" for general intervals. The "gene" preset selects gene/CDS rows from the default unified source, requires known strands and uses strand-based arrows. Explicit layer data selects its own rows. The "plasmid" preset uses compact stacked bands, wider arrowheads and source feature colours. Explicit layer arguments override the preset. |
 
 </details>
 
@@ -213,95 +232,25 @@ Start with the [function index](../../man/). Examples compare important paramete
 | `label_radial_offset` | `0.04` | Type, units and accepted forms: see this API argument contract at right | Optional numeric/vector/list. Radial offset of labels, default 0.04 |
 | `label_circum_offset` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional numeric/vector/list. Circumferential offset of labels, default 0 |
 | `label_circum_limit` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional logical/vector/list. Whether to limit circumferential offset, default TRUE |
-| `position` | `"identity"` | Type, units and accepted forms: see this API argument contract at right | Feature Position used for the label anchor. In coord_collinear(), an omitted Position shares the matching feature layer's lanes; an explicit Position changes only label anchors, leaving feature polygons in their own Position. If both inputs contain unique feature_id values, label inputs may be subsets or reordered; their accession, interval and strand must still agree. Without IDs, inheritance requires the same interval rows in order. Multiple matching geometry layers require an explicit label Position or unambiguous feature IDs. |
+| `position` | `"identity"` | Type, units and accepted forms: see this API argument contract at right | An explicit Position places labels independently. Otherwise labels follow the matching feature layer's lanes, within each facet and displayed sequence. A reordered or filtered label table needs stable feature_id values and matching source intervals. Complete inputs may share the same source rows in order. |
 | `show.legend` | `FALSE` | Type, units and accepted forms: see this API argument contract at right | Standard ggplot2 layer arguments. |
-| `inherit.aes` | `FALSE` | Type, units and accepted forms: see this API argument contract at right | Standard ggplot2 layer arguments. |
+| `inherit.aes` | `TRUE` | Type, units and accepted forms: see this API argument contract at right | Standard ggplot2 layer arguments. |
 | `...` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Additional text parameters. |
-
-</details>
-
-<span id="api-geom_feature_label_repel"></span>
-<details><summary><code>geom_feature_label_repel()</code></summary>
-
-
-[Full reference](../../man/geom_feature_label_repel.Rd)
-
-
-| Parameter | Signature default | Type/value rule | Meaning, range and constraints |
-| --- | --- | --- | --- |
-| `mapping` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Standard layer inputs. Map feature text with label. |
-| `data` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Standard layer inputs. Map feature text with label. |
-| `label_layout` | `c("feature", "radial", "auto", "callout")` | Type, units and accepted forms: see this API argument contract at right | One of "feature", "radial", "auto", or "callout". The default "feature" follows plasmid-map convention: text is tried inside first, then assigned to a fixed-radius internal track. All non-external text is laid out character by character along its selected track radius rather than rotated as one straight string. A light leader appears when tracks separate the feature and its label or a visible angular displacement could obscure ownership. Circular feature layouts retain direct leaders instead of multi-bend detours. Choose another mode for unrestricted external callouts. |
-| `label_wrap` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Text fitting controls. label_fit = "shrink" explicitly uses internal-first placement without truncating the text. Text size is bounded by label_min_size; unresolved labels keep their requested font and use adjacent/external placement or hiding. Other fitting modes retain their existing behavior. |
-| `label_fit` | `c("wrap", "none", "ellipsis", "auto", "shrink")` | Type, units and accepted forms: see this API argument contract at right | Text fitting controls. label_fit = "shrink" explicitly uses internal-first placement without truncating the text. Text size is bounded by label_min_size; unresolved labels keep their requested font and use adjacent/external placement or hiding. Other fitting modes retain their existing behavior. |
-| `label_max_lines` | `2L` | Type, units and accepted forms: see this API argument contract at right | Text fitting controls. label_fit = "shrink" explicitly uses internal-first placement without truncating the text. Text size is bounded by label_min_size; unresolved labels keep their requested font and use adjacent/external placement or hiding. Other fitting modes retain their existing behavior. |
-| `label_side` | `c("outside", "inside", "auto")` | Type, units and accepted forms: see this API argument contract at right | One of "inside", "outside", or "auto". |
+| `id` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional plot-unique label layer ID. |
+| `anchor_layer` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional ID of the feature layer to follow. Supply it when multiple layers match. An explicit anchor requires a match for each label. A label with its own position cannot also request an anchor. |
+| `placement` | `c("fixed", "repel")` | Type, units and accepted forms: see this API argument contract at right | Select fixed labels or automatically arranged labels. With "repel", choose the arrangement with label_layout and text fitting with overflow. |
+| `label_layout` | `"feature"` | Type, units and accepted forms: see this API argument contract at right | One of "feature", "radial", "auto", or "callout". The default "feature" follows plasmid-map convention: text is tried inside first, then assigned to a fixed-radius internal track. All non-external text is laid out character by character along its selected track radius rather than rotated as one straight string. A light leader appears when tracks separate the feature and its label or a visible angular displacement could obscure ownership. Circular feature layouts retain direct leaders instead of multi-bend detours. Choose another mode for unrestricted external callouts. |
+| `overflow` | `"wrap"` | Type, units and accepted forms: see this API argument contract at right | Text fitting controls. overflow = "shrink" explicitly uses internal-first placement without truncating the text. Text size is bounded by label_min_size; unresolved labels keep their requested font and use adjacent/external placement or hiding. Other fitting modes retain their existing behavior. |
+| `label_max_lines` | `2L` | Type, units and accepted forms: see this API argument contract at right | Text fitting controls. overflow = "shrink" explicitly uses internal-first placement without truncating the text. Text size is bounded by label_min_size; unresolved labels keep their requested font and use adjacent/external placement or hiding. Other fitting modes retain their existing behavior. |
 | `max_overlaps` | `Inf` | Type, units and accepted forms: see this API argument contract at right | Maximum unresolved overlaps. |
 | `external` | `TRUE` | Type, units and accepted forms: see this API argument contract at right | Whether the staged feature layout may place a label outside the circular backbone after inside and adjacent placement fail. When FALSE, unresolved labels are hidden instead of pushing inward forever. External labels are rendered as rounded callouts using a lightened form of the feature's resolved fill. When restriction-site labels coexist on a circular map, both retain their own layout semantics but register final boxes in one coordinate-owned exterior track region so they cannot occupy the same space. |
-| `position` | `"identity"` | Type, units and accepted forms: see this API argument contract at right | Feature Position used for the label anchor. In coord_collinear(), an omitted Position shares the matching feature layer's lanes; an explicit Position changes only label anchors, leaving feature polygons in their own Position. If both inputs contain unique feature_id values, label inputs may be subsets or reordered; their accession, interval and strand must still agree. Without IDs, inheritance requires the same interval rows in order. Multiple matching geometry layers require an explicit label Position or unambiguous feature IDs. |
-| `show.legend` | `FALSE` | Type, units and accepted forms: see this API argument contract at right | Standard ggplot2 layer arguments. |
-| `inherit.aes` | `FALSE` | Type, units and accepted forms: see this API argument contract at right | Standard ggplot2 layer arguments. |
 | `label_min_size` | `1.5` | Type, units and accepted forms: see this API argument contract at right | Minimum text size in millimetres for explicit shrink, default 1.5. Must not exceed the requested text size. Original text, requested/final sizes and fitting reason are exported with the label. |
 | `label_segment_overlap` | `"fade"` | Type, units and accepted forms: see this API argument contract at right | Character, default "fade". How portions of a leader line covered by another label are drawn: "fade" keeps them at reduced opacity, "clip" removes them, and "show" leaves the complete leader visible. This does not affect text wrapping, ellipsis or label hiding. |
 | `label_segment_overlap_alpha` | `0.18` | Type, units and accepted forms: see this API argument contract at right | Numeric in [0, 1], default 0.18. Relative opacity applied only to covered leader-line portions when label_segment_overlap = "fade". |
 | `label_segment_linetype` | `"auto"` | Type, units and accepted forms: see this API argument contract at right | Character or numeric, default "auto". Leader-line linetype. "auto" draws solid lines, except for labels that were moved to the other side of their arc, which are drawn dashed. Any other valid ggplot2 linetype (e.g. "solid", "dashed", "dotted", or a numeric dash pattern) is used for all leader lines. |
-| `label_segment_layer` | `c("below", "above")` | Type, units and accepted forms: see this API argument contract at right | Draw leaders "below" all data layers (default), or "above" at this label layer's normal position. Text always stays at this layer's position. Filled features can cover leaders drawn below; transparent features retain their normal transparency. |
-| `label_repeat` | `c("individual", "bracket")` | Type, units and accepted forms: see this API argument contract at right | "individual" (default) keeps one label per feature. "bracket" shares a counted label and an arc bracket for consecutive, non-overlapping short features with the same name, type, direction and resolved fill in one circular feature band. Source rows and individual arrows remain separate. Only supported with label_layout = "feature". |
+| `label_segment_layer` | `"below"` | Type, units and accepted forms: see this API argument contract at right | Draw leaders "below" all data layers (default), or "above" at this label layer's normal position. Text always stays at this layer's position. Filled features can cover leaders drawn below; transparent features retain their normal transparency. |
+| `label_repeat` | `"individual"` | Type, units and accepted forms: see this API argument contract at right | "individual" (default) keeps one label per feature. "bracket" shares a counted label and an arc bracket for consecutive, non-overlapping short features with the same name, type, direction and resolved fill in one circular feature band. Source rows and individual arrows remain separate. Only supported with label_layout = "feature". |
 | `label_segment_colour` | `"auto"` | Type, units and accepted forms: see this API argument contract at right | "auto" uses muted grey for leaders from a feature inside the sequence circle to a label outside it. Other leaders retain the theme colour. Explicit colours override both. A custom feature-label segment theme overrides the automatic palette. label_segment_linetype = "auto" uses dashed lines for those inside-to-outside attachments. Labels that stay inside retain their established leader style. |
-| `...` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Additional text parameters. |
-| `placement` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Explicit alternatives to label_layout and label_fit. Placement selects feature, radial, auto or callout. Overflow selects wrap, none, ellipsis, auto or shrink. Shrinking to the feature body requires feature placement. The older argument pair keeps its historical behavior. |
-| `overflow` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Explicit alternatives to label_layout and label_fit. Placement selects feature, radial, auto or callout. Overflow selects wrap, none, ellipsis, auto or shrink. Shrinking to the feature body requires feature placement. The older argument pair keeps its historical behavior. |
-
-</details>
-
-<span id="api-geom_feature_plasmid"></span>
-<details><summary><code>geom_feature_plasmid()</code></summary>
-
-
-[Full reference](../../man/geom_feature_plasmid.Rd)
-
-
-| Parameter | Signature default | Type/value rule | Meaning, range and constraints |
-| --- | --- | --- | --- |
-| `mapping` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional aesthetic mapping. Role aesthetics such as accver, start, end and strand may rename input columns; ordinary visual mappings are evaluated after geometry is generated. |
-| `data` | `NULL` | Type, units and accepted forms: see this API argument contract at right | data.frame with accver, start, end and strand; optional type, category and label. Factor start/end columns use their numeric labels, not their internal level codes. Coordinates must resolve to finite numbers. display_priority or logical prioritized_display. As an alternative to strand, directionality or direction may contain "forward", "reverse", "bidirectional", or "none". When omitted, uses the full constructor feature_data (or compatible gene_data). Other layers never remove records from this default input. |
-| `shape` | `"arrow"` | Type, units and accepted forms: see this API argument contract at right | Fixed feature geometry. An explicitly supplied shape takes precedence over aes(feature_shape = ...): "arrow", "compact_arrow", "promoter_arrow", "primer_arrow", "marker", "block", "capped_line", "primer_arc", "chevron", or "lollipop". The default is "arrow". Use aes(feature_shape = type) together with scale_feature_shape_manual() to map categories to geometry. |
-| `width` | `0.058` | Type, units and accepted forms: see this API argument contract at right | Track width; the default matches the compact feature bands used by desktop plasmid editors. |
-| `arrow_head_length` | `0.068` | Type, units and accepted forms: see this API argument contract at right | Arrow-head dimensions in the sequence-local frame, shared with geom_gene(). Values above one for arrow_head_width create a protruding block-arrow head. |
-| `arrow_head_width` | `1.42` | Type, units and accepted forms: see this API argument contract at right | Arrow-head dimensions in the sequence-local frame, shared with geom_gene(). Values above one for arrow_head_width create a protruding block-arrow head. |
-| `arrow_head_style` | `"shouldered"` | Type, units and accepted forms: see this API argument contract at right | Arrowhead construction: "shouldered" keeps the requested protruding head, "flush" keeps it level with the body, and "triangle" draws a full triangular wedge. |
-| `short_feature` | `"auto"` | Type, units and accepted forms: see this API argument contract at right | Fallback for arrows too short to hold their requested head: an automatically compressed directional glyph, a wedge, or a block. |
-| `segment_boundaries` | `TRUE` | Type, units and accepted forms: see this API argument contract at right | Draw explicit internal marks carried by a segmented feature. Contiguous source-segment joins use dotted dividers; a non-solid segment-level line_style may override them, while a cleavage_arrows coordinate adds or merges a biological cut mark. These marks never create additional arrowheads. |
-| `boundary_colour` | `"#666666"` | Type, units and accepted forms: see this API argument contract at right | Appearance of internal segment joins. |
-| `boundary_linewidth` | `0.25` | Type, units and accepted forms: see this API argument contract at right | Appearance of internal segment joins. |
-| `boundary_linetype` | `"22"` | Type, units and accepted forms: see this API argument contract at right | Appearance of internal segment joins. |
-| `position` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Feature position. NULL (the default) automatically stacks overlapping features on compact lanes inside the plasmid backbone. Reuse the same explicit position_feature_stack() object for a separate label layer so polygons and labels share their lanes. Optional numeric display_priority (larger first) or logical prioritized_display can override the default longest-first ordering for overlapping features. |
-| `show.legend` | `FALSE` | Type, units and accepted forms: see this API argument contract at right | Standard ggplot2 layer arguments. |
-| `inherit.aes` | `FALSE` | Type, units and accepted forms: see this API argument contract at right | Standard ggplot2 layer arguments. |
-| `...` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Additional fixed polygon aesthetics. |
-
-</details>
-
-<span id="api-geom_gene"></span>
-<details><summary><code>geom_gene()</code></summary>
-
-
-[Full reference](../../man/geom_gene.Rd)
-
-
-| Parameter | Signature default | Type/value rule | Meaning, range and constraints |
-| --- | --- | --- | --- |
-| `mapping` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Default NULL (uses pre-computed data) |
-| `data` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional layer table or function, overriding constructor data. With unified feature_data, the default selects explicitly classified gene/CDS records; see ggchord(). Legacy gene_data retains all rows. |
-| `width` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional numeric/vector/list. Width of gene arrows, default 0.05 |
-| `arrow_head_length` | `0.04` | Type, units and accepted forms: see this API argument contract at right | Shared arrow-head dimensions in the sequence-local frame. |
-| `arrow_head_width` | `1` | Type, units and accepted forms: see this API argument contract at right | Shared arrow-head dimensions in the sequence-local frame. |
-| `arrow_head_style` | `c("shouldered", "flush", "triangle")` | Type, units and accepted forms: see this API argument contract at right | Arrowhead construction: shouldered, flush, or a full triangular wedge. |
-| `short_feature` | `c("auto", "wedge", "block")` | Type, units and accepted forms: see this API argument contract at right | Fallback for arrows too short to hold their requested head: automatic wedge/block selection, a wedge, or a block. |
-| `position` | `"identity"` | Type, units and accepted forms: see this API argument contract at right | Feature placement. Use "identity", "strand", "plasmid", position_strand(), position_plasmid(), or position_feature_stack(). |
-| `show.legend` | `TRUE` | Type, units and accepted forms: see this API argument contract at right | Standard ggplot2 layer arguments. |
-| `inherit.aes` | `FALSE` | Type, units and accepted forms: see this API argument contract at right | Standard ggplot2 layer arguments. |
-| `...` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Additional arguments passed to geom_polygon() |
 
 </details>
 
@@ -326,7 +275,7 @@ Start with the [function index](../../man/). Examples compare important paramete
 | `label_wrap` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Numeric or NULL, default NULL. When set, long gene annotations are wrapped at this many characters (e.g. 15), which makes the labels narrower and less prone to overlap. |
 | `position` | `"identity"` | Type, units and accepted forms: see this API argument contract at right | Position adjustment. Supply the same position_feature_stack() used by a gene/feature layer when labels are drawn from separate data or without a geometry layer. In coord_collinear(), labels without an explicit Position share a matching geometry layer's lanes; explicit label Positions do not move the geometry layer. Unique feature_id columns allow label subsets and reordered labels when their accession, interval and strand agree with the geometry input. Multiple matching geometry layers require an explicit label Position or unambiguous feature IDs. |
 | `show.legend` | `FALSE` | Type, units and accepted forms: see this API argument contract at right | Standard ggplot2 layer arguments. |
-| `inherit.aes` | `FALSE` | Type, units and accepted forms: see this API argument contract at right | Standard ggplot2 layer arguments. |
+| `inherit.aes` | `TRUE` | Type, units and accepted forms: see this API argument contract at right | Standard ggplot2 layer arguments. |
 | `...` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Additional arguments passed to geom_text() |
 
 </details>
@@ -353,7 +302,7 @@ Start with the [function index](../../man/). Examples compare important paramete
 | `label_segment_linetype` | `"auto"` | Type, units and accepted forms: see this API argument contract at right | Character or numeric, default "auto". Leader-line linetype. "auto" draws solid lines, except for labels that were moved to the other side of their arc, which are drawn dashed. Any other valid ggplot2 linetype (e.g. "solid", "dashed", "dotted", or a numeric dash pattern) is used for all leader lines. |
 | `position` | `"identity"` | Type, units and accepted forms: see this API argument contract at right | Position adjustment. Supply the same position_feature_stack() used by a gene/feature layer when labels are drawn from separate data or without a geometry layer. |
 | `show.legend` | `FALSE` | Type, units and accepted forms: see this API argument contract at right | Standard ggplot2 layer arguments. |
-| `inherit.aes` | `FALSE` | Type, units and accepted forms: see this API argument contract at right | Standard ggplot2 layer arguments. |
+| `inherit.aes` | `TRUE` | Type, units and accepted forms: see this API argument contract at right | Standard ggplot2 layer arguments. |
 | `label_min_size` | `1.5` | Type, units and accepted forms: see this API argument contract at right | Minimum text size in millimetres for explicit label_fit = "shrink", default 1.5. It must not exceed the requested text size. Source text, requested/final size and fitting reason are retained in exported label geometry. |
 | `...` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Additional text styles and drawing options. Automatic layouts own rotation, offsets, orientation and overlap policy; use geom_gene_label() for manual label_rotation, label_radial_offset, label_circum_offset, label_circum_limit, label_orientation or label_overlap. These manual controls are rejected here. |
 
@@ -383,10 +332,11 @@ Start with the [function index](../../man/). Examples compare important paramete
 | `linetype` | `1` | Type, units and accepted forms: see this API argument contract at right | Fixed styles; mappings use link_* aesthetics. An explicitly supplied fixed value takes precedence over the matching mapping. Omit the fixed argument to retain a mapped style, including an inherited mapping when inherit.aes = TRUE. |
 | `position` | `"identity"` | Type, units and accepted forms: see this API argument contract at right | Standard ggplot2 layer arguments. |
 | `show.legend` | `NA` | Type, units and accepted forms: see this API argument contract at right | Standard ggplot2 layer arguments. |
-| `inherit.aes` | `FALSE` | Type, units and accepted forms: see this API argument contract at right | Standard ggplot2 layer arguments. |
+| `inherit.aes` | `TRUE` | Type, units and accepted forms: see this API argument contract at right | Standard ggplot2 layer arguments. |
 | `between` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Two display-instance names or declared-order indices. |
 | `allow_repeated` | `FALSE` | Type, units and accepted forms: see this API argument contract at right | Allow repeated display of an explicitly declared source_hsp_id. |
 | `...` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Additional path parameters. |
+| `id` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional unique layer ID for layout and source exports. |
 
 </details>
 
@@ -402,7 +352,7 @@ Start with the [function index](../../man/). Examples compare important paramete
 | `mapping` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Default NULL (uses pre-computed data) |
 | `data` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Default NULL (retrieved automatically from the layout) |
 | `link_ctrl_point` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional vector/list of Bezier edge controls. Two numbers specify one shared control; four numbers specify controls for the two ribbon edges. A per-row list may contain pairs of coordinate vectors. NULL uses the origin c(0, 0) in chord layouts and derives controls from the sequence endpoints in collinear layouts. In Radial layouts NULL uses annular curves; explicit controls use final Cartesian layout units, one point for each edge. Use a separate layer to adjust nonadjacent links without changing adjacent curves. This controls the middle of the path; link_gap only controls clearance at the sequence endpoints. With shared branches, controls shape the far ends while the junction follows the shared trunk. |
-| `link_gap` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional numeric/vector controlling spacing between sequences and ribbon endpoints. With the default link_avoid = "uniform", NULL uses one obstacle-aware clearance across each endpoint. Use "smooth" for clearance that changes only next to geom_gene() and geom_feature() polygons, or "none" for fixed spacing 0.035. Text and leader lines are ignored. Supplying a number disables the automatic rule and uses that exact spacing. Linear layouts reduce automatic baseline clearance to fit narrow channels; an explicit gap or feature clearance that cannot fit raises an error. |
+| `link_gap` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional numeric/vector controlling spacing between sequences and ribbon endpoints. With the default link_avoid = "uniform", NULL uses one obstacle-aware clearance across each endpoint. Use "smooth" for clearance that changes only next to geom_feature(preset = "gene") and geom_feature() polygons, or "none" for fixed spacing 0.035. Text and leader lines are ignored. Supplying a number disables the automatic rule and uses that exact spacing. Linear layouts reduce automatic baseline clearance to fit narrow channels; an explicit gap or feature clearance that cannot fit raises an error. |
 | `link_avoid` | `c("uniform", "none", "smooth")` | Type, units and accepted forms: see this API argument contract at right | One of "uniform" (default), "none", or "smooth". Smooth avoidance changes clearance locally; uniform avoidance uses one clearance across an endpoint. |
 | `link_branch` | `c("none", "query", "subject")` | Type, units and accepted forms: see this API argument contract at right | Share equal query or subject endpoints: "none", "query", "subject". |
 | `link_branch_fraction` | `0.15` | Type, units and accepted forms: see this API argument contract at right | Shared length relative to the shortest member, in (0, 0.5]. |
@@ -415,13 +365,14 @@ Start with the [function index](../../man/). Examples compare important paramete
 | `pairs` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional data frame with qaccver and saccver selecting unordered comparison pairs. With adjacent_only = NULL, explicit pairs take precedence over the coordinate default. Omitted rows are reported by export_ggchord_layout(). |
 | `position` | `"identity"` | Type, units and accepted forms: see this API argument contract at right | Standard ggplot2 layer arguments. |
 | `show.legend` | `TRUE` | Type, units and accepted forms: see this API argument contract at right | Standard ggplot2 layer arguments. |
-| `inherit.aes` | `FALSE` | Type, units and accepted forms: see this API argument contract at right | Standard ggplot2 layer arguments. |
+| `inherit.aes` | `TRUE` | Type, units and accepted forms: see this API argument contract at right | Standard ggplot2 layer arguments. |
 | `nonadjacent_linewidth` | `0.4` | Type, units and accepted forms: see this API argument contract at right | Fixed outline width for non-adjacent displayed rows in coord_collinear() or nonadjacent spokes in coord_radial_synteny(), default 0.4 mm. These ribbons use dashed outlines by default. Zero uses the layer's ordinary linewidth for every ribbon. This changes width independently of line type. An explicit aes(linewidth = ...) controls widths instead of this fixed default. |
 | `between` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Two display-instance names or declared-order indices for a unique route. |
 | `allow_repeated` | `FALSE` | Type, units and accepted forms: see this API argument contract at right | Explicitly allow a declared source_hsp_id in more than one displayed relation. |
 | `tip` | `c("none", "subject")` | Type, units and accepted forms: see this API argument contract at right | Full interval fronts (none, default), or an optional subject taper. The shoulder retains the translated target endpoint span at 88 percent of the channel. The tip is a decorative front-midpoint marker, not a single matched base or biological transfer direction. Degenerate fronts fall back to the full front with a warning. Source intervals are unchanged. |
 | `gradient` | `FALSE` | Type, units and accepted forms: see this API argument contract at right | Logical. Opt into endpoint sequence-colour interpolation; default FALSE. Explicit fill, mapping and scales still take priority. |
 | `...` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | With a computed stat, pass bins, weight, or group_by here. Only bundling accepts min_bundle. Other arguments go to the ribbon geom. |
+| `id` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional unique layer ID for layout and source exports. |
 | `stat` | `"identity"` | Type, units and accepted forms: see this API argument contract at right | Source-interval statistic. Use "identity" to retain individual records, "ribbon_bundle" to aggregate them, or "ribbon_density" to annotate each record with local density. The two computed statistics have the same controls and computed variables as stat_ribbon_bundle() and stat_ribbon_density(). |
 
 </details>
@@ -443,7 +394,7 @@ Start with the [function index](../../man/). Examples compare important paramete
 | `colour` | `"#A020F0"` | Type, units and accepted forms: see this API argument contract at right | Primer arc colour. |
 | `position` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Standard layer arguments. |
 | `show.legend` | `FALSE` | Type, units and accepted forms: see this API argument contract at right | Standard layer arguments. |
-| `inherit.aes` | `FALSE` | Type, units and accepted forms: see this API argument contract at right | Standard layer arguments. |
+| `inherit.aes` | `TRUE` | Type, units and accepted forms: see this API argument contract at right | Standard layer arguments. |
 | `...` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Additional parameters passed to geom_feature(). |
 
 </details>
@@ -465,7 +416,7 @@ Start with the [function index](../../man/). Examples compare important paramete
 | `max_overlaps` | `Inf` | Type, units and accepted forms: see this API argument contract at right | Maximum unresolved overlaps. |
 | `position` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Standard layer arguments. |
 | `show.legend` | `FALSE` | Type, units and accepted forms: see this API argument contract at right | Standard layer arguments. |
-| `inherit.aes` | `FALSE` | Type, units and accepted forms: see this API argument contract at right | Standard layer arguments. |
+| `inherit.aes` | `TRUE` | Type, units and accepted forms: see this API argument contract at right | Standard layer arguments. |
 | `...` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Additional parameters passed to geom_feature(). |
 
 </details>
@@ -532,9 +483,6 @@ Start with the [function index](../../man/). Examples compare important paramete
 | --- | --- | --- | --- |
 | `mapping` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Default NULL (uses pre-computed data) |
 | `data` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Default NULL (retrieved automatically from the layout) |
-| `seq_order` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Source IDs in display order. Repeats create display instances; use names such as c(A_high='A', B='B', A_low='A') for stable instance IDs. Repeated-entity HSPs require a unique between route on each link layer. |
-| `seq_orientation` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional numeric (1 or -1). Sequence orientation, default 1 |
-| `seq_gap` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional numeric. Gap proportion between sequences, default 0.03 in chord coordinates. A named vector can set the gap after each sequence; omitted IDs use the coordinate default. In coord_collinear(), a positive distance between consecutive backbones as a proportion of the longest backbone's width, default 0.3. The final sequence's gap is unused in linear layouts. Segmented linear displays measure it against the longest display row; windows in one row must request the same gap, and only gaps between rows affect vertical placement. |
 | `seq_radius` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional numeric (> 0). Sequence arc radius, default 1.0 |
 | `seq_curvature` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional numeric. Signed arc bow (0=straight, 1=standard arc, negative=opposite bow), default 1.0. Finite positive and negative values are accepted without clipping; magnitudes above 1 amplify the bow. |
 | `seq_style` | `c("auto", "single", "double", "band")` | Type, units and accepted forms: see this API argument contract at right | Backbone geometry. "auto" uses a double backbone in coord_circular() and a single backbone in coord_chord(). |
@@ -543,9 +491,9 @@ Start with the [function index](../../man/). Examples compare important paramete
 | `linewidth` | `0.9` | Type, units and accepted forms: see this API argument contract at right | Arc line width, default 0.9 |
 | `position` | `"identity"` | Type, units and accepted forms: see this API argument contract at right | Standard ggplot2 layer arguments. |
 | `show.legend` | `TRUE` | Type, units and accepted forms: see this API argument contract at right | Standard ggplot2 layer arguments. |
-| `inherit.aes` | `FALSE` | Type, units and accepted forms: see this API argument contract at right | Standard ggplot2 layer arguments. |
-| `length_mode` | `c("proportional", "equal")` | Type, units and accepted forms: see this API argument contract at right | "proportional" (default) retains source-length ratios; "equal" gives each displayed sequence the same angular allocation or linear span without modifying source lengths. Shared absolute scale bars are unavailable in multi-sequence equal mode; local axes retain source units. |
+| `inherit.aes` | `TRUE` | Type, units and accepted forms: see this API argument contract at right | Standard ggplot2 layer arguments. |
 | `...` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Additional fixed path aesthetics. colour (or color) sets seq_colour. Explicit fixed values take precedence over matching mappings; omit fixed arguments to retain mapped styles. |
+| `id` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional unique layer ID for layout and source exports. |
 
 </details>
 
@@ -566,8 +514,9 @@ Start with the [function index](../../man/). Examples compare important paramete
 | `colour` | `"#3D4348"` | Type, units and accepted forms: see this API argument contract at right | Fixed line appearance. Ordinary visual aesthetics can also be mapped and controlled by their ggplot2 scales. |
 | `position` | `"identity"` | Type, units and accepted forms: see this API argument contract at right | Standard ggplot2 layer arguments. |
 | `show.legend` | `FALSE` | Type, units and accepted forms: see this API argument contract at right | Standard ggplot2 layer arguments. |
-| `inherit.aes` | `FALSE` | Type, units and accepted forms: see this API argument contract at right | Standard ggplot2 layer arguments. |
+| `inherit.aes` | `TRUE` | Type, units and accepted forms: see this API argument contract at right | Standard ggplot2 layer arguments. |
 | `...` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Additional parameters passed to ggplot2::geom_path(). |
+| `id` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional unique layer ID for layout and source exports. |
 
 </details>
 
@@ -588,8 +537,9 @@ Start with the [function index](../../man/). Examples compare important paramete
 | `name_style` | `list()` | Type, units and accepted forms: see this API argument contract at right | Named lists of fixed text-style overrides for the name and length grobs. Supported fields are colour, size, family, fontface, and lineheight. |
 | `length_style` | `list()` | Type, units and accepted forms: see this API argument contract at right | Named lists of fixed text-style overrides for the name and length grobs. Supported fields are colour, size, family, fontface, and lineheight. |
 | `show.legend` | `FALSE` | Type, units and accepted forms: see this API argument contract at right | Standard ggplot2 layer arguments. |
-| `inherit.aes` | `FALSE` | Type, units and accepted forms: see this API argument contract at right | Standard ggplot2 layer arguments. |
+| `inherit.aes` | `TRUE` | Type, units and accepted forms: see this API argument contract at right | Standard ggplot2 layer arguments. |
 | `...` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Additional arguments passed to geom_text() |
+| `id` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional unique layer ID for layout and source exports. |
 
 </details>
 
@@ -613,8 +563,9 @@ Start with the [function index](../../man/). Examples compare important paramete
 | `check_overlap` | `FALSE` | Type, units and accepted forms: see this API argument contract at right | Logical, default FALSE. When TRUE, labels that would overlap a previously drawn label are skipped (ggplot2's geom_text() option). |
 | `position` | `"identity"` | Type, units and accepted forms: see this API argument contract at right | Standard ggplot2 layer arguments. |
 | `show.legend` | `FALSE` | Type, units and accepted forms: see this API argument contract at right | Standard ggplot2 layer arguments. |
-| `inherit.aes` | `FALSE` | Type, units and accepted forms: see this API argument contract at right | Standard ggplot2 layer arguments. |
+| `inherit.aes` | `TRUE` | Type, units and accepted forms: see this API argument contract at right | Standard ggplot2 layer arguments. |
 | `...` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Additional arguments passed to geom_text() |
+| `id` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional unique layer ID for layout and source exports. |
 
 </details>
 
@@ -637,8 +588,9 @@ Start with the [function index](../../man/). Examples compare important paramete
 | `region_side` | `c("inside", "outside", "auto")` | Type, units and accepted forms: see this API argument contract at right | Character. "inside", "outside" or "auto"; "auto" places regions inside the chord when possible. |
 | `position` | `"identity"` | Type, units and accepted forms: see this API argument contract at right | Standard ggplot2 layer arguments. |
 | `show.legend` | `FALSE` | Type, units and accepted forms: see this API argument contract at right | Standard ggplot2 layer arguments. |
-| `inherit.aes` | `FALSE` | Type, units and accepted forms: see this API argument contract at right | Standard ggplot2 layer arguments. |
+| `inherit.aes` | `TRUE` | Type, units and accepted forms: see this API argument contract at right | Standard ggplot2 layer arguments. |
 | `...` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Additional arguments passed to geom_polygon() |
+| `id` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional unique layer ID for layout and source exports. |
 
 </details>
 
@@ -664,8 +616,9 @@ Start with the [function index](../../man/). Examples compare important paramete
 | `size` | `3` | Type, units and accepted forms: see this API argument contract at right | Fixed line colour/width and text size. Text size follows ordinary ggplot2 millimetres. These may also use normal mappings and scales when not supplied as fixed arguments. |
 | `position` | `"identity"` | Type, units and accepted forms: see this API argument contract at right | Standard ggplot2 layer arguments. |
 | `show.legend` | `FALSE` | Type, units and accepted forms: see this API argument contract at right | Standard ggplot2 layer arguments. |
-| `inherit.aes` | `FALSE` | Type, units and accepted forms: see this API argument contract at right | Standard ggplot2 layer arguments. |
+| `inherit.aes` | `TRUE` | Type, units and accepted forms: see this API argument contract at right | Standard ggplot2 layer arguments. |
 | `...` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Additional fixed aesthetics passed to ggplot2::layer(). |
+| `id` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional unique layer ID for layout and source exports. |
 
 </details>
 
@@ -680,15 +633,16 @@ Start with the [function index](../../man/). Examples compare important paramete
 | --- | --- | --- | --- |
 | `mapping` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Standard layer input. Supply accver and source positions through x/pos, or interval start/end. Map y/track_value for identity values. |
 | `data` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Standard layer input. Supply accver and source positions through x/pos, or interval start/end. Map y/track_value for identity values. |
-| `geom` | `"point"` | Type, units and accepted forms: see this API argument contract at right | Native geometry and statistic names, or stat = "coverage" for interval coverage. The seven native statistics also accept their built-in ggplot2 Stat objects, for example ggplot2::StatBin. Bar defaults to count, other geoms to identity. Custom Stat subclasses require a source-membership rule and are unsupported. |
-| `stat` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Native geometry and statistic names, or stat = "coverage" for interval coverage. The seven native statistics also accept their built-in ggplot2 Stat objects, for example ggplot2::StatBin. Bar defaults to count, other geoms to identity. Custom Stat subclasses require a source-membership rule and are unsupported. |
-| `track` | `NULL` | Type, units and accepted forms: see this API argument contract at right | A physical position_track() declaration. |
-| `position` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Native data adjustment such as "identity", "stack" or ggplot2::position_dodge(width = 10). Source x uses sequence units. Feature placement belongs on feature layers. The legacy position = position_track(...) spelling still declares the physical band. |
+| `geom` | `"point"` | Type, units and accepted forms: see this API argument contract at right | Native geometry and statistic names, or stat = "coverage" for interval coverage. The seven native statistics also accept their built-in ggplot2 Stat objects, for example ggplot2::StatBin. Bar defaults to count, other geoms to identity. A ggplot2 Stat object may also compute positions and values for a track. Its input includes source_row, an integer index into this layer's source table. It can report the contributing indices as a source_rows list column (one integer vector per result). Unreported membership is exported as NULL with source_status = "unknown". An explicit empty integer vector denotes a known empty set. Reported members must belong to the same accession and facet as the result. |
+| `stat` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Native geometry and statistic names, or stat = "coverage" for interval coverage. The seven native statistics also accept their built-in ggplot2 Stat objects, for example ggplot2::StatBin. Bar defaults to count, other geoms to identity. A ggplot2 Stat object may also compute positions and values for a track. Its input includes source_row, an integer index into this layer's source table. It can report the contributing indices as a source_rows list column (one integer vector per result). Unreported membership is exported as NULL with source_status = "unknown". An explicit empty integer vector denotes a known empty set. Reported members must belong to the same accession and facet as the result. |
+| `track` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Character ID declared with track_band(). Omit for the shared default band. |
+| `position` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Native data adjustment such as "identity", "stack" or ggplot2::position_dodge(width = 10). Source x uses sequence units. Feature placement belongs on feature layers. |
 | `bounds` | `c("error", "clip")` | Type, units and accepted forms: see this API argument contract at right | Coordinate error/clip policy. |
 | `baseline` | `0` | Type, units and accepted forms: see this API argument contract at right | Numeric identity-column baseline. Nonzero baselines require position='identity' so stacking does not change their meaning. |
 | `show.legend` | `NA` | Type, units and accepted forms: see this API argument contract at right | Standard layer controls. |
-| `inherit.aes` | `FALSE` | Type, units and accepted forms: see this API argument contract at right | Standard layer controls. |
-| `...` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Native geom/stat parameters and fixed styles. Coverage requires a positive whole binwidth in sequence units. |
+| `inherit.aes` | `TRUE` | Type, units and accepted forms: see this API argument contract at right | Standard layer controls. |
+| `...` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Native geom/stat parameters and fixed styles. Coverage requires a positive whole binwidth in sequence units or explicit windows. |
+| `id` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional unique layer ID for exported statistics and source rows. |
 
 </details>
 
@@ -703,7 +657,7 @@ Start with the [function index](../../man/). Examples compare important paramete
 | --- | --- | --- | --- |
 | `mapping` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Standard layer input. Supply accver and source positions through x/pos, or interval start/end. Map y/track_value for identity values. |
 | `data` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Standard layer input. Supply accver and source positions through x/pos, or interval start/end. Map y/track_value for identity values. |
-| `position` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Native data adjustment such as "identity", "stack" or ggplot2::position_dodge(width = 10). Source x uses sequence units. Feature placement belongs on feature layers. The legacy position = position_track(...) spelling still declares the physical band. |
+| `position` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Native data adjustment such as "identity", "stack" or ggplot2::position_dodge(width = 10). Source x uses sequence units. Feature placement belongs on feature layers. |
 | `baseline` | `0` | Numeric 0; count bars reject nonzero baselines | Count bars require baseline 0; every nonzero value is rejected. Use geom_track_col() for supplied values and nonzero baselines. |
 | `fill` | `"#86AFB9"` | Type, units and accepted forms: see this API argument contract at right | Fixed styles for the count shortcut. |
 | `colour` | `NA` | Type, units and accepted forms: see this API argument contract at right | Fixed styles for the count shortcut. |
@@ -712,10 +666,10 @@ Start with the [function index](../../man/). Examples compare important paramete
 | `linetype` | `1` | Type, units and accepted forms: see this API argument contract at right | Fixed styles for the count shortcut. |
 | `bounds` | `c("error", "clip")` | Type, units and accepted forms: see this API argument contract at right | Coordinate error/clip policy. |
 | `show.legend` | `NA` | Type, units and accepted forms: see this API argument contract at right | Standard layer controls. |
-| `inherit.aes` | `FALSE` | Type, units and accepted forms: see this API argument contract at right | Standard layer controls. |
-| `...` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Native geom/stat parameters and fixed styles. Coverage requires a positive whole binwidth in sequence units. |
-| `track` | `NULL` | Type, units and accepted forms: see this API argument contract at right | A physical position_track() declaration. |
-| `stat` | `"count"` | Type, units and accepted forms: see this API argument contract at right | Native geometry and statistic names, or stat = "coverage" for interval coverage. The seven native statistics also accept their built-in ggplot2 Stat objects, for example ggplot2::StatBin. Bar defaults to count, other geoms to identity. Custom Stat subclasses require a source-membership rule and are unsupported. |
+| `inherit.aes` | `TRUE` | Type, units and accepted forms: see this API argument contract at right | Standard layer controls. |
+| `...` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Native geom/stat parameters and fixed styles. Coverage requires a positive whole binwidth in sequence units or explicit windows. |
+| `track` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Character ID declared with track_band(). Omit for the shared default band. |
+| `stat` | `"count"` | Type, units and accepted forms: see this API argument contract at right | Native geometry and statistic names, or stat = "coverage" for interval coverage. The seven native statistics also accept their built-in ggplot2 Stat objects, for example ggplot2::StatBin. Bar defaults to count, other geoms to identity. A ggplot2 Stat object may also compute positions and values for a track. Its input includes source_row, an integer index into this layer's source table. It can report the contributing indices as a source_rows list column (one integer vector per result). Unreported membership is exported as NULL with source_status = "unknown". An explicit empty integer vector denotes a known empty set. Reported members must belong to the same accession and facet as the result. |
 
 </details>
 
@@ -730,11 +684,13 @@ Start with the [function index](../../man/). Examples compare important paramete
 | --- | --- | --- | --- |
 | `mapping` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Standard layer input. Supply accver and source positions through x/pos, or interval start/end. Map y/track_value for identity values. |
 | `data` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Standard layer input. Supply accver and source positions through x/pos, or interval start/end. Map y/track_value for identity values. |
-| `position` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Native data adjustment such as "identity", "stack" or ggplot2::position_dodge(width = 10). Source x uses sequence units. Feature placement belongs on feature layers. The legacy position = position_track(...) spelling still declares the physical band. |
-| `track` | `NULL` | Type, units and accepted forms: see this API argument contract at right | A physical position_track() declaration. |
-| `...` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Native geom/stat parameters and fixed styles. Coverage requires a positive whole binwidth in sequence units. |
+| `position` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Native data adjustment such as "identity", "stack" or ggplot2::position_dodge(width = 10). Source x uses sequence units. Feature placement belongs on feature layers. |
+| `track` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Character ID declared with track_band(). Omit for the shared default band. |
+| `...` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Native geom/stat parameters and fixed styles. Coverage requires a positive whole binwidth in sequence units or explicit windows. |
+| `stat` | `"identity"` | Type, units and accepted forms: see this API argument contract at right | Native geometry and statistic names, or stat = "coverage" for interval coverage. The seven native statistics also accept their built-in ggplot2 Stat objects, for example ggplot2::StatBin. Bar defaults to count, other geoms to identity. A ggplot2 Stat object may also compute positions and values for a track. Its input includes source_row, an integer index into this layer's source table. It can report the contributing indices as a source_rows list column (one integer vector per result). Unreported membership is exported as NULL with source_status = "unknown". An explicit empty integer vector denotes a known empty set. Reported members must belong to the same accession and facet as the result. |
+| `id` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional unique layer ID for exported statistics and source rows. |
 | `show.legend` | `NA` | Type, units and accepted forms: see this API argument contract at right | Standard layer controls. |
-| `inherit.aes` | `FALSE` | Type, units and accepted forms: see this API argument contract at right | Standard layer controls. |
+| `inherit.aes` | `TRUE` | Type, units and accepted forms: see this API argument contract at right | Standard layer controls. |
 
 </details>
 
@@ -749,7 +705,7 @@ Start with the [function index](../../man/). Examples compare important paramete
 | --- | --- | --- | --- |
 | `mapping` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Standard ggplot2 mapping and layer input. |
 | `data` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Standard ggplot2 mapping and layer input. |
-| `position` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Legacy physical band or a ggplot2 position adjustment for native line mappings. A closed line uses the sequence-local position. |
+| `position` | `NULL` | Type, units and accepted forms: see this API argument contract at right | ggplot2 data position. Full-band interval tiles and closed lines use identity. For tiles with local numerical heights and data adjustments, use geom_track(geom = "tile"). Open lines with x/y mappings, an explicit stat, or a data adjustment use the native line grammar. Lines with sequence-local roles and identity position preserve input order, missing-value breaks and strict increasing positions. |
 | `colour` | `"#387D88"` | Type, units and accepted forms: see this API argument contract at right | Fixed styles; fill and colour mappings use the dedicated track roles and scoped scales. |
 | `alpha` | `1` | Type, units and accepted forms: see this API argument contract at right | Fixed styles; fill and colour mappings use the dedicated track roles and scoped scales. |
 | `linewidth` | `0.4` | Type, units and accepted forms: see this API argument contract at right | Fixed styles; fill and colour mappings use the dedicated track roles and scoped scales. |
@@ -757,9 +713,10 @@ Start with the [function index](../../man/). Examples compare important paramete
 | `closed` | `FALSE` | Type, units and accepted forms: see this API argument contract at right | Explicitly close a complete circular line series. |
 | `bounds` | `c("error", "clip")` | Type, units and accepted forms: see this API argument contract at right | "error" (default) or "clip" for genomic coordinates. Clipping is reported and never changes source values. |
 | `show.legend` | `NA` | Type, units and accepted forms: see this API argument contract at right | Standard layer arguments. |
-| `inherit.aes` | `FALSE` | Type, units and accepted forms: see this API argument contract at right | Standard layer arguments. |
+| `inherit.aes` | `TRUE` | Type, units and accepted forms: see this API argument contract at right | Standard layer arguments. |
 | `...` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Extra geom parameters. |
-| `track` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Physical band from position_track(). Supply it once per layer. |
+| `track` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Character ID declared with track_band(). Omit for the shared default band. |
+| `id` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional unique layer ID used in layout and source exports. |
 
 </details>
 
@@ -774,7 +731,7 @@ Start with the [function index](../../man/). Examples compare important paramete
 | --- | --- | --- | --- |
 | `mapping` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Standard ggplot2 mapping and layer input. |
 | `data` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Standard ggplot2 mapping and layer input. |
-| `position` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Legacy physical band or a ggplot2 position adjustment for native line mappings. A closed line uses the sequence-local position. |
+| `position` | `NULL` | Type, units and accepted forms: see this API argument contract at right | ggplot2 data position. Full-band interval tiles and closed lines use identity. For tiles with local numerical heights and data adjustments, use geom_track(geom = "tile"). Open lines with x/y mappings, an explicit stat, or a data adjustment use the native line grammar. Lines with sequence-local roles and identity position preserve input order, missing-value breaks and strict increasing positions. |
 | `fill` | `"#86AFB9"` | Type, units and accepted forms: see this API argument contract at right | Fixed styles; fill and colour mappings use the dedicated track roles and scoped scales. |
 | `colour` | `NA` | Type, units and accepted forms: see this API argument contract at right | Fixed styles; fill and colour mappings use the dedicated track roles and scoped scales. |
 | `alpha` | `1` | Type, units and accepted forms: see this API argument contract at right | Fixed styles; fill and colour mappings use the dedicated track roles and scoped scales. |
@@ -782,9 +739,10 @@ Start with the [function index](../../man/). Examples compare important paramete
 | `linetype` | `1` | Type, units and accepted forms: see this API argument contract at right | Fixed styles; fill and colour mappings use the dedicated track roles and scoped scales. |
 | `bounds` | `c("error", "clip")` | Type, units and accepted forms: see this API argument contract at right | "error" (default) or "clip" for genomic coordinates. Clipping is reported and never changes source values. |
 | `show.legend` | `NA` | Type, units and accepted forms: see this API argument contract at right | Standard layer arguments. |
-| `inherit.aes` | `FALSE` | Type, units and accepted forms: see this API argument contract at right | Standard layer arguments. |
+| `inherit.aes` | `TRUE` | Type, units and accepted forms: see this API argument contract at right | Standard layer arguments. |
 | `...` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Extra geom parameters. |
-| `track` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Physical band from position_track(). Supply it once per layer. |
+| `track` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Character ID declared with track_band(). Omit for the shared default band. |
+| `id` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional unique layer ID used in layout and source exports. |
 
 </details>
 
@@ -803,22 +761,21 @@ Start with the [function index](../../man/). Examples compare important paramete
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
 | `spacing` | `0.1` | Type, units and accepted forms: see this API argument contract at right | Positive minimum radial distance between adjacent feature lanes. Circular plasmid layout enlarges the first transition into a main label corridor and reserves at least one label track between deeper overlapping feature lanes. |
-| `side` | `c("strand", "outside", "inside")` | Type, units and accepted forms: see this API argument contract at right | Legacy track-side selector retained for compatibility when used alone. Historical outside starts at -0.1 and grows inward; inside starts at +0.1 and grows outward. The default strand starts at +0.1 on plus and -0.1 on minus, growing away from the backbone. |
-| `base_position` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional identity, strand, or plasmid Position applied before interval-overlap detection and lane allocation. Use identity to start both strands on the backbone. The default starting bands follow strand. |
-| `direction` | `c("auto", "outward", "inward")` | Type, units and accepted forms: see this API argument contract at right | Growth of successive lanes within each starting band. "outward" follows the positive local normal (up on a horizontal backbone), "inward" the negative normal. "auto" follows the sign of the starting offset, growing outward at zero. Lane zero stays at its starting offset. Supply legacy side on its own. |
+| `base_position` | `position_strand()` | Type, units and accepted forms: see this API argument contract at right | Position applied before overlap detection and lane allocation. Use "identity" to start both strands on the backbone, position_offset() for one shared offset, or position_strand() for strand-specific offsets. The default starts at +0.1 on the plus strand and -0.1 on the minus strand. |
+| `direction` | `c("auto", "outward", "inward")` | Type, units and accepted forms: see this API argument contract at right | Growth of successive lanes within each starting band. "outward" follows the positive local normal (up on a horizontal backbone), "inward" the negative normal. "auto" follows the sign of the starting offset, growing outward at zero. Lane zero stays at its starting offset. |
 
 </details>
 
-<span id="api-position_plasmid"></span>
-<details><summary><code>position_plasmid()</code></summary>
+<span id="api-position_offset"></span>
+<details><summary><code>position_offset()</code></summary>
 
 
-[Full reference](../../man/position_plasmid.Rd)
+[Full reference](../../man/position_offset.Rd)
 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `offset` | `-0.1` | Type, units and accepted forms: see this API argument contract at right | Signed local-normal offset. Negative values place the shared band inside a circular sequence and positive values place it outside. |
+| `offset` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Signed local-normal offset. Negative values place the shared band inside a circular sequence and positive values place it outside. Use one value for all sequences, a named vector keyed by accver, or an existing equivalent list of scalar offsets. An unnamed vector must have one entry per sequence; omitted names receive zero. |
 
 </details>
 
@@ -835,27 +792,50 @@ Start with the [function index](../../man/). Examples compare important paramete
 
 </details>
 
-<span id="api-position_track"></span>
-<details><summary><code>position_track()</code></summary>
+<span id="api-track_band"></span>
+<details><summary><code>track_band()</code></summary>
 
 
-[Full reference](../../man/position_track.Rd)
+[Full reference](../../man/track_band.Rd)
 
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `track` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | One stable nonempty character ID. |
-| `side` | `c("outside", "inside")` | Type, units and accepted forms: see this API argument contract at right | "outside" or "inside". |
+| `id` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | One nonempty character ID. |
+| `side` | `c("outside", "inside")` | Type, units and accepted forms: see this API argument contract at right | "outside" (positive local normal, up in linear coordinates) or "inside". |
 | `order` | `1` | Type, units and accepted forms: see this API argument contract at right | Finite ordering priority, nearest band first. Ties use ID order. |
-| `width` | `grid::unit(4, "mm")` | Type, units and accepted forms: see this API argument contract at right | Positive band width and nonnegative preceding gap. Absolute grid units (mm, cm, inches or points) are resolved against the render context. Numeric values retain native layout units. Numeric per-sequence vectors/lists follow the usual sequence parameter formats. |
-| `gap` | `grid::unit(1, "mm")` | Type, units and accepted forms: see this API argument contract at right | Positive band width and nonnegative preceding gap. Absolute grid units (mm, cm, inches or points) are resolved against the render context. Numeric values retain native layout units. Numeric per-sequence vectors/lists follow the usual sequence parameter formats. |
+| `width` | `grid::unit(4, "mm")` | Type, units and accepted forms: see this API argument contract at right | Positive band width and nonnegative preceding gap. Supply an absolute grid unit (mm, cm, inches or points), or native layout units as a scalar or a per-sequence numeric vector/list. |
+| `gap` | `grid::unit(1, "mm")` | Type, units and accepted forms: see this API argument contract at right | Positive band width and nonnegative preceding gap. Supply an absolute grid unit (mm, cm, inches or points), or native layout units as a scalar or a per-sequence numeric vector/list. |
 
 </details>
 
 
 <a id="statistics"></a>
 
-## Link statistics {#statistics}
+## Interval and link statistics {#statistics}
+
+<span id="api-stat_coverage"></span>
+<details><summary><code>stat_coverage()</code></summary>
+
+
+[Full reference](../../man/stat_coverage.Rd)
+
+
+| Parameter | Signature default | Type/value rule | Meaning, range and constraints |
+| --- | --- | --- | --- |
+| `mapping` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Standard layer input. Supply accver and source positions through x/pos, or interval start/end. Map y/track_value for identity values. |
+| `data` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Standard layer input. Supply accver and source positions through x/pos, or interval start/end. Map y/track_value for identity values. |
+| `geom` | `"track_col"` | Type, units and accepted forms: see this API argument contract at right | Track geometry, e.g. "track_col" or "track_line". |
+| `position` | `"identity"` | Type, units and accepted forms: see this API argument contract at right | Native data adjustment such as "identity", "stack" or ggplot2::position_dodge(width = 10). Source x uses sequence units. Feature placement belongs on feature layers. |
+| `...` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Track geometry parameters, including fixed styles. |
+| `binwidth` | `NULL` | Type, units and accepted forms: see this API argument contract at right | A positive whole number of sequence units, starting at 1. Supply exactly one of binwidth and windows. |
+| `windows` | `NULL` | Type, units and accepted forms: see this API argument contract at right | A data frame of accver, start, end and optional unique window_id and sequence_unit. Windows may overlap. Each independently records its contributing interval rows. Window coordinates refer to the input reference, including the local coordinates of a focused reference. |
+| `track` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Character ID declared with track_band(). Omit for the shared default band. |
+| `id` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional unique layer ID for exported statistics and source rows. |
+| `show.legend` | `NA` | Type, units and accepted forms: see this API argument contract at right | Standard layer controls. |
+| `inherit.aes` | `TRUE` | Type, units and accepted forms: see this API argument contract at right | Standard layer controls. |
+
+</details>
 
 <span id="api-stat_ribbon_bundle"></span>
 <details><summary><code>stat_ribbon_bundle()</code></summary>
@@ -874,7 +854,7 @@ Start with the [function index](../../man/). Examples compare important paramete
 | `group_by` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Passed to bundle_ggchord_ribbons(). |
 | `position` | `"identity"` | Type, units and accepted forms: see this API argument contract at right | Standard ggplot2 layer arguments. |
 | `show.legend` | `TRUE` | Type, units and accepted forms: see this API argument contract at right | Standard ggplot2 layer arguments. |
-| `inherit.aes` | `FALSE` | Type, units and accepted forms: see this API argument contract at right | Standard ggplot2 layer arguments. |
+| `inherit.aes` | `TRUE` | Type, units and accepted forms: see this API argument contract at right | Standard ggplot2 layer arguments. |
 | `...` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Ribbon geometry and appearance arguments passed to geom_link_ribbon(). |
 
 </details>
@@ -895,7 +875,7 @@ Start with the [function index](../../man/). Examples compare important paramete
 | `group_by` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional columns that define independent density groups. |
 | `position` | `"identity"` | Type, units and accepted forms: see this API argument contract at right | Standard ggplot2 layer arguments. |
 | `show.legend` | `TRUE` | Type, units and accepted forms: see this API argument contract at right | Standard ggplot2 layer arguments. |
-| `inherit.aes` | `FALSE` | Type, units and accepted forms: see this API argument contract at right | Standard ggplot2 layer arguments. |
+| `inherit.aes` | `TRUE` | Type, units and accepted forms: see this API argument contract at right | Standard ggplot2 layer arguments. |
 | `...` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Ribbon geometry and appearance arguments passed to geom_link_ribbon(). |
 
 </details>
@@ -1298,7 +1278,7 @@ Start with the [function index](../../man/). Examples compare important paramete
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `name` | `ggplot2::waiver()` | Type, units and accepted forms: see this API argument contract at right | Scale name; position guides are disabled by default. |
+| `name` | `ggplot2::waiver()` | Type, units and accepted forms: see this API argument contract at right | Optional scale name. |
 | `breaks` | `ggplot2::waiver()` | Type, units and accepted forms: see this API argument contract at right | Standard continuous-scale controls. |
 | `minor_breaks` | `ggplot2::waiver()` | Type, units and accepted forms: see this API argument contract at right | Standard continuous-scale controls. |
 | `labels` | `ggplot2::waiver()` | Type, units and accepted forms: see this API argument contract at right | Standard continuous-scale controls. |
@@ -1308,7 +1288,7 @@ Start with the [function index](../../man/). Examples compare important paramete
 | `transform` | `"identity"` | Type, units and accepted forms: see this API argument contract at right | Standard continuous-scale controls. |
 | `n.breaks` | `6` | Type, units and accepted forms: see this API argument contract at right | Standard continuous-scale controls. |
 | `coordinates` | `c("relative", "source")` | Type, units and accepted forms: see this API argument contract at right | In linear layouts, use relative locus coordinates or original source coordinates retained by focus_ggchord_data(). This affects axis breaks and labels, not the underlying genomic geometry. Breaks returned in transformed scale space are converted back to genomic positions in every coordinate mode. Explicit breaks = NULL and minor_breaks = NULL suppress the corresponding ticks. |
-| `sequences` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional character vector selecting sequence axes by their displayed accver. NULL keeps all axes; character() hides every axis. Focused or segmented views use window IDs, not parent source accessions. Unknown or undisplayed identifiers produce an error. This controls axis lines, ticks and labels together without dropping sequence geometry. |
+| `guide` | `guide_seq_axis()` | Type, units and accepted forms: see this API argument contract at right | A guide_seq_axis() declaration, or "none" to hide the sequence axes. |
 | `...` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Additional arguments passed to ggplot2::continuous_scale(). |
 
 </details>
@@ -1401,7 +1381,7 @@ Start with the [function index](../../man/). Examples compare important paramete
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `track` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Track ID from position_track(). |
+| `track` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Track ID from track_band(), or "default". |
 | `name` | `track` | Type, units and accepted forms: see this API argument contract at right | Axis title, default the track ID. |
 | `limits` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Standard continuous-scale controls. |
 | `breaks` | `ggplot2::waiver()` | Type, units and accepted forms: see this API argument contract at right | Standard continuous-scale controls. |
@@ -1409,7 +1389,7 @@ Start with the [function index](../../man/). Examples compare important paramete
 | `transform` | `"identity"` | Type, units and accepted forms: see this API argument contract at right | Standard continuous-scale controls. |
 | `oob` | `scales::censor` | Type, units and accepted forms: see this API argument contract at right | Standard continuous-scale controls. |
 | `unit` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional data-unit label retained in track exports. |
-| `guide` | `c("axis", "none")` | Type, units and accepted forms: see this API argument contract at right | "axis" or "none" for the numerical track axis, or a native ggplot2::guide_axis() with local theme (axis.line/text/title), angle and check.overlap. Other guide_axis options fail explicitly because this sequence-local numerical reference is not a Cartesian panel axis. Local guide styling overrides global ggchord.track.axis.* theme elements. |
+| `guide` | `c("axis", "none")` | Type, units and accepted forms: see this API argument contract at right | "axis" or "none" for the numerical track axis, or guide_track_axis() with a local theme (axis.line/text/title), angle and check.overlap. Other guide_axis options fail explicitly because this sequence-local numerical reference is not a Cartesian panel axis. Local guide styling overrides global ggchord.track.axis.* theme elements. |
 | `...` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Additional ggplot2 continuous-scale arguments. |
 
 </details>
@@ -1493,6 +1473,35 @@ Start with the [function index](../../man/). Examples compare important paramete
 | `order` | `0` | Type, units and accepted forms: see this API argument contract at right | Guide order. |
 | `size_scale` | `1` | Type, units and accepted forms: see this API argument contract at right | Positive multiplier for keys, spacing and typography. ggchord's automatically generated guides derive this from the active export device; direct calls default to 1. |
 | `...` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Additional arguments passed to the corresponding ggplot2 guide. |
+
+</details>
+
+<span id="api-guide_seq_axis"></span>
+<details><summary><code>guide_seq_axis()</code></summary>
+
+
+[Full reference](../../man/guide_seq_axis.Rd)
+
+
+| Parameter | Signature default | Type/value rule | Meaning, range and constraints |
+| --- | --- | --- | --- |
+| `sequences` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional character vector selecting sequence axes by their displayed accver. NULL keeps all axes; character() hides every axis. Focused or segmented views use window IDs, not parent source accessions. Unknown or undisplayed identifiers produce an error. This controls axis lines, ticks and labels together without dropping sequence geometry. |
+| `check.overlap` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional logical. When supplied, use this overlap policy for tick labels. Otherwise use the plot's axis text policy. |
+
+</details>
+
+<span id="api-guide_track_axis"></span>
+<details><summary><code>guide_track_axis()</code></summary>
+
+
+[Full reference](../../man/guide_track_axis.Rd)
+
+
+| Parameter | Signature default | Type/value rule | Meaning, range and constraints |
+| --- | --- | --- | --- |
+| `angle` | `ggplot2::waiver()` | Type, units and accepted forms: see this API argument contract at right | Tick label angle passed to ggplot2::guide_axis(). |
+| `check.overlap` | `FALSE` | Type, units and accepted forms: see this API argument contract at right | Hide overlapping tick labels. |
+| `theme` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Local theme with axis.line, axis.text and axis.title elements. |
 
 </details>
 
@@ -2536,13 +2545,11 @@ Start with the [function index](../../man/). Examples compare important paramete
 
 | Parameter | Signature default | Type/value rule | Meaning, range and constraints |
 | --- | --- | --- | --- |
-| `seq_data` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | data.frame/tibble with accver and length, or a GRanges, Seqinfo or GInteractions object with known full sequence lengths, or a named nucleotide or protein Biostrings XStringSet. Unnamed sequence objects must first use as_ggchord_seq() with explicit ids. Optional S4 inputs use as_ggchord_seq(). The sequence_unit column is "bp" (default when omitted) or "aa". All rows use the same unit. Protein lengths come from complete proteins. Native aa plots accept links and generic features; gene, primer and restriction layers require bp. Arbitrary character widths are not biological sequence lengths. A result from prepare_ggchord_data() supplies all constructor tables. Named collections remain available for explicit layer selection. |
-| `ribbon_data` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional alignment table with qaccver, saccver, qstart, qend, sstart and send. length and pident are optional unless requested by a mapping, filter or statistic. A GInteractions object uses as_ggchord_link() without inventing identity or alignment length. |
-| `gene_data` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Compatible legacy annotation input. The third positional argument retains its meaning. Use feature_data in new code; a non-NULL legacy input emits one message at construction, never during rendering. Untyped legacy tables retain their directional gene semantics. No removal version is scheduled. Do not supply both annotation inputs. |
+| `data` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | A reference data.frame/tibble with accver and length, or a GRanges, Seqinfo or GInteractions object with known full sequence lengths, or a named nucleotide or protein Biostrings XStringSet. Unnamed sequence objects must first use as_ggchord_seq() with explicit ids. Optional S4 inputs use as_ggchord_seq(). The sequence_unit column is "bp" (default when omitted) or "aa". All rows use the same unit. Protein lengths come from complete proteins. Native aa plots accept links and generic features; gene, primer and restriction layers require bp. Arbitrary character widths are not biological sequence lengths. A result from prepare_ggchord_data() supplies all constructor tables. A single eligible table supplies the layer default. When several qualify, select one explicitly, e.g. geom_feature(data = prepared$features$cds). |
+| `mapping` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Default aesthetic mapping, made with ggplot2::aes(). Each inheriting layer evaluates it on its own source table. A layer mapping overrides the same plot aesthetic. Native ggplot2 layers inherit the reference table as their plot data. |
+| `...` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Reserved for clear migration errors from removed constructor arguments. Use labs(), coord_chord() and theme() for presentation. |
 | `debug` | `FALSE` | Type, units and accepted forms: see this API argument contract at right | Logical. Whether to output debug information, default FALSE |
 | `validate` | `c("warn", "error", "none")` | Type, units and accepted forms: see this API argument contract at right | Character, default "warn". How to run the structured input-data validation (see validate_ggchord_data): "warn" emits a single summary warning when the data has problems and caches the full report on the plot object (p$ggchord$validation); "error" stops on severe problems; "none" skips the diagnostic validation (the cheap structural checks that prevent crashes are still performed). |
-| `feature_data` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional unified annotation table or GRanges. Requires accver, start, end; absent strand becomes unknown ("."). Generic feature layers use the full table. Default gene layers select gene/CDS from feature_class, type, or role (in that priority order), and require known strands. tRNA/rRNA remain generic features. Explicit layer data overrides the constructor input. Use disjoint subsets when combining gene and feature layers; each layer keeps its own data independently. |
-| `...` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Reserved for clear migration errors from removed constructor arguments. Use labs(), coord_chord() and theme() for presentation. |
 
 </details>
 

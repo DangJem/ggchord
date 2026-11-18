@@ -1,5 +1,5 @@
 {
-  "source_sha256": "654fb553e7f6bf8e467e8379f260040dfebe175f36770ae3ca85a3ef9410f647",
+  "source_sha256": "0846c9cb6de3505eaa58d3c89cebcd85bb007eeb574b259aa9ce4b861f79977f",
   "blocks": {
     "0": {
       "source_sha256": "0a4b54e6320a5b69dc7e16a0d051ac499276c49fe89101feb90528f5290b2584",
@@ -77,9 +77,9 @@
       "translation": "## Gene strand, sequence rings and regions ⟦shared:0⟧\n"
     },
     "35": {
-      "source_sha256": "65f159c4c8facd4c38dcc094f6bb9bd6a31e545281a00d9ab917ffc719cb9e91",
+      "source_sha256": "94d186ecd5491a95e7b4b36f6154db23cef311aa90895532cbfee6e6349a5917",
       "status": "reviewed",
-      "translation": "Restore biological strands from source_strand. Region, gene and ribbon fill roles are independent. `seq_ring` requires explicit positive radii, never inferred track counts; it conflicts with seq_radius and collinear mode. Sequence radius mapping is distinct from quantitative position_track bands.\n"
+      "translation": "Restore biological strands from source_strand. Region, gene and ribbon fill roles are independent. `seq_ring` requires explicit positive radii, never inferred track counts; it conflicts with seq_radius and collinear mode. Sequence radius mapping is distinct from quantitative track_band bands.\n"
     },
     "39": {
       "source_sha256": "9d6810b2f016f84914bb55666ca10e7ce3cdc994c61421acab495bdcad372f50",
@@ -87,9 +87,9 @@
       "translation": "## Named track domains and colours ⟦shared:0⟧\n"
     },
     "40": {
-      "source_sha256": "db9604423e04e50848dd7d7c0dae8e9b57504aebb89f48c2f5f7a0b5aad3212c",
+      "source_sha256": "15984ea549da0eec9c3bc436a1c44cfb336d71b799955a915e642155a6816d96",
       "status": "reviewed",
-      "translation": "Compute windows from actual pUC19 DNA. `track_value` controls height; track_fill/track_colour train separate colour scales, with IDs matching position_track. The 0.5 threshold is a display choice and full fractions remain. Tiles do not average data; NA heights do not become zero. Declare scales for each ID independently.\n"
+      "translation": "Compute windows from actual pUC19 DNA. `track_value` controls height; track_fill/track_colour train separate colour scales, with IDs matching track_band. The 0.5 threshold is a display choice and full fractions remain. Tiles do not average data; NA heights do not become zero. Declare scales for each ID independently.\n"
     },
     "45": {
       "source_sha256": "85a133760d94ce7b1b360e9823b234db2a5101c1939eac220d0269c7a3ae1e6a",
@@ -97,31 +97,36 @@
       "translation": "## Guides, spelling aliases and staged mapping ⟦shared:0⟧\n"
     },
     "46": {
+      "source_sha256": "427d5293bb182c7484d09a21f31e1a7a6120a1af0fb63df8da582553bfe212ef",
+      "status": "reviewed",
+      "translation": "Use ⟦shared:0⟧ to show only the B sequence axis and hide overlapping tick labels. Use ⟦shared:1⟧ to rotate the numeric tick labels on the depth track.\n"
+    },
+    "47": {
       "source_sha256": "36a08943701349d2f7c2acc5f8a9382c6a16181cb410e8cb05ed78140ed76765",
       "status": "reviewed",
       "translation": "`guide_ggchord_legend` manages discrete role guides and guide_ggchord_colourbar continuous colour bars. `show.legend` controls participation, guides chooses guides, and theme controls position/direction/appearance. Colour/color aliases are equivalent: guide_ggchord_colorbar, scale_seq_color_manual, scale_ribbon_color_manual, scale_link_color_manual and scale_link_color_gradientn correspond to colour versions. Do not add both synonymous scales expecting cumulative control.\n"
     },
-    "47": {
+    "48": {
       "source_sha256": "e271361c6ba98747ff62c4d34003d3c56d6fb90ded771d72e03d10a52dc8e0d3",
       "status": "reviewed",
       "translation": "`after_stat` reads computed variables such as bundle_n in the next section; after_scale computes supported visual attributes after scaling. They come from ggplot2 and have distinct staged semantics even when their R objects compare equal. All ggplot2/grid reexports follow upstream help, with ownership explicit in the parameter atlas.\n"
     },
-    "49": {
+    "50": {
       "source_sha256": "d9ea18ff1dfbe3b558f2f0cae2c91d53dc620fa34ca97921ac162508d4bcc437",
       "status": "reviewed",
       "translation": "## Themes style non-data appearance ⟦shared:0⟧\n"
     },
-    "50": {
+    "51": {
       "source_sha256": "aa0c65933863ce0793a7aa5ffbba6caf0ca3b4d4a9d66b020d437b83f49dc96f",
       "status": "reviewed",
       "translation": "`theme_ggchord`, minimal, publication and dark are alternative non-data style starting points; plasmid is tailored to single circular maps. Only the theme differs below; sequence data and mappings remain. Axis gaps, tick lengths and text offsets use documented physical units. Theme fields are not accver-keyed geometry lists. Hiding text does not remove sequences.\n"
     },
-    "55": {
+    "56": {
       "source_sha256": "5b4d9520ab10ac5a653b174fab2026fe8806b474e55d2c4143d9f98e447c74a3",
       "status": "reviewed",
       "translation": "## Selection rules ⟦shared:0⟧\n"
     },
-    "56": {
+    "57": {
       "source_sha256": "63e53555f01c80607f8ad3acf7f9b740fc154823312ae44b005e4cdaec668c1e",
       "status": "reviewed",
       "translation": "Switch pident from gradient to explicit steps, restore the gradient, then change only the alpha output range. Check that guides still represent the same data units. Give additional layers independent data/mapping and retain explicit user scales. See the [parameter atlas](⟦shared:0⟧) for complete defaults, types and forwarding, and [link statistics](⟦shared:1⟧) for aggregation.\n"

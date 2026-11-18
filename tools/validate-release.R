@@ -66,8 +66,8 @@ label_metrics <- function(layout, expected) {
   data.frame(labels = expected, conflicts = 0, crossings = 0,
     max_track = max(labels$label_track, na.rm = TRUE))
 }
-base_plot <- function() ggchord(seq_data_example, ribbon_data_example,
-  gene_data_example, validate = "none") + geom_seq() + geom_link_ribbon() + geom_gene()
+base_plot <- function() ggchord(prepare_ggchord_data(seq_data_example, ribbon_data_example,
+  gene_data_example), validate = "none") + geom_seq() + geom_link_ribbon() + geom_feature(preset = 'gene')
 # The known feature fixtures contain Unicode. Other matrix fixtures are ASCII
 # and use standard PDF: Quartz PDF can invert raster colour bars on some R/macOS
 # builds, including native ggplot2 colour bars. Do not reverse scales to hide it.
@@ -79,10 +79,10 @@ pdf_device <- if (mode != "feature") grDevices::pdf else if (isTRUE(capabilities
 } else if (isTRUE(capabilities("cairo"))) grDevices::cairo_pdf else grDevices::pdf
 
 if (mode == "genome") {
-  p <- ggchord(single_genome_example, gene_data = single_gene_example,
+  p <- ggchord(prepare_ggchord_data(single_genome_example, gene_data = single_gene_example),
                validate = "none") +
-    geom_seq(seq_style = "double") + geom_gene(position = "plasmid") +
-    geom_gene_label_repel(position = "plasmid") +
+    geom_seq(seq_style = "double") + geom_feature(preset = 'gene', position = position_offset(-0.1)) +
+    geom_gene_label_repel(position = position_offset(-0.1)) +
     geom_restriction_site(data = restriction_site_example) +
     geom_seq_center_label() + coord_circular(gap = 10)
   layout <- with_device(get_chord_layout(p), 8, 7)
@@ -113,11 +113,11 @@ if (mode == "genome") {
     sequence <- get(objects[i])
     features <- find_common_features(sequence)
     tracks <- position_feature_stack(
-      spacing = .10, base_position = position_plasmid()
+      spacing = .10, base_position = position_offset(-0.1)
     )
     p <- ggchord(sequence) + geom_seq() +
-      geom_feature_plasmid(data = features, position = tracks) +
-      geom_feature_label_repel(data = features, position = tracks) +
+      geom_feature(preset = 'plasmid', data = features, position = tracks) +
+      geom_feature_label(placement = 'repel', data = features, position = tracks) +
       geom_seq_center_label() + scale_seq_position_continuous() +
       coord_circular(rotation = 0) + theme_ggchord_plasmid()
     layout <- with_device(get_chord_layout(p), 7, 7)
@@ -199,10 +199,10 @@ if (mode == "genome") {
     sstart = 500, send = 560, length = 61, pident = 95)
   results <- list()
   for (curvature in c(0.5, 0.8, 1, 1.2)) {
-    p <- ggchord(sequences, ribbons, genes, validate = "none") +
-      geom_seq(seq_radius = c(2.5, 1.8), seq_curvature = c(curvature, 1),
-        seq_orientation = c(1, -1), seq_gap = c(0.04, 0.08)) +
-      geom_gene(position = position_strand(0.15)) +
+    p <- ggchord(prepare_ggchord_data(sequences, ribbons, genes), validate = "none") +
+      layout_sequences(orientation = c(1, -1), gap = c(0.04, 0.08)) +
+      geom_seq(seq_radius = c(2.5, 1.8), seq_curvature = c(curvature, 1)) +
+      geom_feature(preset = 'gene', position = position_strand(0.15)) +
       geom_feature(aes(feature_shape = type), data = features,
         position = position_strand(-0.15)) +
       scale_feature_shape_manual(values = setNames(unique(features$type), unique(features$type))) +
@@ -242,16 +242,16 @@ if (mode == "genome") {
       data = transform(links, qaccver = saccver, saccver = qaccver,
         qpos = spos, spos = qpos),
       link_branch = "subject", arrow = arrow(ends = "both", length = unit(2, "mm"))),
-    ribbon_query = ggchord(sequences, ribbons, validate = "none") + geom_seq() +
+    ribbon_query = ggchord(prepare_ggchord_data(sequences, ribbons), validate = "none") + geom_seq() +
       geom_link_ribbon(fill = "#3B90B6", link_branch = "query"),
     feature_keys = base +
       geom_feature(aes(feature_shape = type), data = features) +
       scale_feature_shape_manual(values = shapes),
-    smooth = ggchord(sequences, ribbons, validate = "none") + geom_seq() +
+    smooth = ggchord(prepare_ggchord_data(sequences, ribbons), validate = "none") + geom_seq() +
       geom_feature(aes(feature_shape = type), data = features) +
       scale_feature_shape_manual(values = shapes) +
       geom_link_ribbon(fill = "#3B90B6", link_avoid = "smooth"),
-    uniform = ggchord(sequences, ribbons, validate = "none") + geom_seq() +
+    uniform = ggchord(prepare_ggchord_data(sequences, ribbons), validate = "none") + geom_seq() +
       geom_feature(aes(feature_shape = type), data = features) +
       scale_feature_shape_manual(values = shapes) +
       geom_link_ribbon(fill = "#3B90B6", link_avoid = "uniform")
@@ -272,9 +272,10 @@ if (mode == "genome") {
   results <- list()
   for (layout_mode in c("radial", "auto")) for (name in names(cases)) {
     x <- cases[[name]]
-    p <- ggchord(seq_data_example, ribbon_data_example, gene_data_example, validate = "none") +
-      geom_seq(seq_radius = x$radius, seq_curvature = x$curvature, seq_orientation = x$orientation) +
-      geom_link_ribbon() + geom_gene() + geom_gene_label_repel(label_layout = layout_mode) +
+    p <- ggchord(prepare_ggchord_data(seq_data_example, ribbon_data_example, gene_data_example), validate = "none") +
+      layout_sequences(orientation = x$orientation) +
+      geom_seq(seq_radius = x$radius, seq_curvature = x$curvature) +
+      geom_link_ribbon() + geom_feature(preset = 'gene') + geom_gene_label_repel(label_layout = layout_mode) +
       coord_chord(rotation = x$rotation)
     elapsed <- system.time(layout <- with_device(get_chord_layout(p)))[["elapsed"]]
     metrics <- label_metrics(layout, nrow(gene_data_example))
@@ -303,7 +304,7 @@ if (mode == "genome") {
     file.copy(file, file.path(out, paste0("explicit-", units, ".png")))
   }
   for (position in c("none", "top", "bottom", "left", "right")) {
-    sample <- ggchord(seq_data_example, ribbon_data_example, validate = "none") +
+    sample <- ggchord(prepare_ggchord_data(seq_data_example, ribbon_data_example), validate = "none") +
       geom_seq() + geom_link_ribbon() +
       scale_seq_colour_manual(values = setNames(c("red", "blue", "green", "orange"), seq_data_example$accver),
         labels = paste("A longer sequence description", seq_len(4))) +
@@ -324,8 +325,8 @@ if (mode == "genome") {
     starts <- seq(100, 99000, length.out = n)
     genes <- data.frame(accver = "A", start = starts, end = starts + 50,
       strand = "+", anno = paste0("gene", seq_len(n)))
-    p <- ggchord(sequences, gene_data = genes, validate = "none") + geom_seq() +
-      geom_gene() + geom_gene_label_repel(size = 2)
+    p <- ggchord(prepare_ggchord_data(sequences, gene_data = genes), validate = "none") + geom_seq() +
+      geom_feature(preset = 'gene') + geom_gene_label_repel(size = 2)
     elapsed <- system.time(layout <- with_device(get_chord_layout(p), 12, 12))[["elapsed"]]
     results[[length(results) + 1]] <- cbind(n, elapsed, label_metrics(layout, n))
     message(n, " labels: ", elapsed, "s")

@@ -8,7 +8,7 @@
 
 ## Named A–B–A routes {#instances}
 
-The three displayed rows refer to two biological sequences. `seq_order` values
+The three displayed rows refer to two biological sequences. `layout_sequences(order = ...)` values
 identify sources; names identify instances. Filter each layer's original HSPs
 before routing. `between` accepts two names or two declaration-order indices.
 Ambiguous routes fail. The two subsets below are disjoint and preserve every HSP.

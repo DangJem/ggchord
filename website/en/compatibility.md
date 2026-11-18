@@ -8,13 +8,13 @@ Check units, layers and parameters before changing coordinates. This table combi
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | [`geom_seq()`](../../man/geom_seq.Rd) | Supported | Conditional | Supported | Conditional | Conditional | Unsupported | Linear mode rejects explicit radius/curvature/ring |
 | [`geom_seq_label()`](../../man/geom_seq_label.Rd) | Supported | Conditional | Supported | Conditional | Conditional | Unsupported | No explicit radial label radius in linear mode |
-| [`geom_gene()`](../../man/geom_gene.Rd) | Conditional | Conditional | Conditional | Conditional | Conditional | Unsupported | Nucleotide units and source strands; use generic features for aa |
+| [`geom_feature(preset = 'gene')`](../../man/geom_feature.Rd) | Conditional | Conditional | Conditional | Conditional | Conditional | Unsupported | Nucleotide units and source strands; use generic features for aa |
 | [`geom_feature()`](../../man/geom_feature.Rd) | Supported | Supported | Supported | Conditional | Conditional | Unsupported | Valid IDs, intervals and matching native units |
-| [`geom_feature_plasmid()`](../../man/geom_feature_plasmid.Rd) | Supported | Supported | Supported | Conditional | Conditional | Unsupported | Generic feature preset; circular Position defaults need review when transferred |
+| [`geom_feature(preset = 'plasmid')`](../../man/geom_feature.Rd) | Supported | Supported | Supported | Conditional | Conditional | Unsupported | Generic feature preset; circular Position defaults need review when transferred |
 | [`geom_gene_label()`](../../man/geom_gene_label.Rd) | Supported | Conditional | Supported | Conditional | Conditional | Unsupported | Share the gene Position; radial/tangent become vertical/horizontal in linear mode |
 | [`geom_feature_label()`](../../man/geom_feature_label.Rd) | Supported | Conditional | Supported | Conditional | Conditional | Unsupported | Share the feature Position; radial/tangent become vertical/horizontal in linear mode |
 | [`geom_gene_label_repel()`](../../man/geom_gene_label_repel.Rd) | Supported | Conditional | Supported | Conditional | Conditional | Unsupported | Linear rows reject external=FALSE; inspect hiding at target size |
-| [`geom_feature_label_repel()`](../../man/geom_feature_label_repel.Rd) | Supported | Conditional | Supported | Conditional | Conditional | Unsupported | Linear rows reject external=FALSE; inspect fitting and hiding |
+| [`geom_feature_label(placement = 'repel')`](../../man/geom_feature_label.Rd) | Supported | Conditional | Supported | Conditional | Conditional | Unsupported | Linear rows reject external=FALSE; inspect fitting and hiding |
 | [`geom_link_ribbon()`](../../man/geom_link_ribbon.Rd) | Supported | Conditional | Unsupported | Conditional | Conditional | Unsupported | Linear adjacency follows display rows; segmented same-row ribbons are omitted and reported |
 | [`geom_link_line()`](../../man/geom_link_line.Rd) | Supported | Conditional | Unsupported | Conditional | Conditional | Unsupported | Point coordinates required; explicit segmented same-row links unsupported |
 | [`geom_seq_region()`](../../man/geom_seq_region.Rd) | Supported | Supported | Supported | Conditional | Conditional | Unsupported | Valid source intervals, IDs and local side |
@@ -26,9 +26,9 @@ Check units, layers and parameters before changing coordinates. This table combi
 | [`geom_restriction_site()`](../../man/geom_restriction_site.Rd) | Conditional | Unsupported | Conditional | Unsupported | Unsupported | Unsupported | One displayed DNA sequence and actual computed cleavage sites |
 | [`geom_track()`](../../man/geom_track.Rd) | Supported | Supported | Supported | Conditional | Conditional | Unsupported | Source-space Stat/Position; [base matrix](tracks-statistics.md#tracks) and [estimation combinations](tracks-statistics.md#estimates) |
 | [`geom_track_bar()`](../../man/geom_track.Rd) | Supported | Supported | Supported | Conditional | Conditional | Unsupported | Count observations; use col for supplied values |
-| [`geom_track_col()`](../../man/geom_track.Rd) | Supported | Supported | Supported | Conditional | Conditional | Unsupported | Explicit position_track; numeric heights and declared domains |
-| [`geom_track_line()`](../../man/geom_track.Rd) | Supported | Supported | Supported | Conditional | Conditional | Unsupported | Explicit position_track; closure must be requested and missing samples respected |
-| [`geom_track_tile()`](../../man/geom_track.Rd) | Supported | Supported | Supported | Conditional | Conditional | Unsupported | Explicit position_track; no numeric height required |
+| [`geom_track_col()`](../../man/geom_track.Rd) | Supported | Supported | Supported | Conditional | Conditional | Unsupported | Default or named band; numeric heights and declared domains |
+| [`geom_track_line()`](../../man/geom_track.Rd) | Supported | Supported | Supported | Conditional | Conditional | Unsupported | Default or named band; closure must be requested and missing samples respected |
+| [`geom_track_tile()`](../../man/geom_track.Rd) | Supported | Supported | Supported | Conditional | Conditional | Unsupported | Default or named band; no numeric height required |
 | [`geom_alignment_segment()`](../../man/geom_alignment_segment.Rd) | Unsupported | Unsupported | Unsupported | Unsupported | Unsupported | Identity HSP segments | Dedicated two-axis geometry |
 
 

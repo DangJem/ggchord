@@ -21,29 +21,32 @@ features <- data.frame(accver = c("A", "B"), start = c(100, 100), end = c(400, 4
   strand = c("+", "-"), type = "CDS", label = c("LONG GENE LABEL A", "LONG GENE LABEL B"))
 
 add_tracks <- function(plot, bars, line, tiles) {
-  plot + geom_track_col(aes(track_value = value), data = bars,
-    position = position_track("signal", width = unit(4, "mm"))) +
+  plot + track_band("signal", width = unit(4, "mm")) + geom_track_col(aes(track_value = value), data = bars,
+    track = "signal") +
     geom_track_line(aes(track_value = value), data = line, colour = "#273F61",
-      position = position_track("signal", width = unit(4, "mm"))) +
+      track = "signal") +
     scale_track_value_continuous("signal", limits = c(-2, 2), unit = "arbitrary units") +
+    track_band("sites", side = "inside", width = unit(2, "mm")) +
     geom_track_tile(aes(track_fill = kind), data = tiles,
-      position = position_track("sites", side = "inside", width = unit(2, "mm"))) +
+      track = "sites") +
     scale_track_fill_manual("sites", values = c(site = "#468C86", reference = "#D1AB59"))
 }
-linear <- ggchord(sequences) + geom_seq(seq_gap = .6) +
-  geom_feature(data = features, width = .12, position = position_plasmid(.15)) +
-  geom_feature_label_repel(data = features, label_fit = "shrink", label_min_size = 1.5,
-    position = position_plasmid(.15), size = 4)
+linear <- ggchord(sequences) + layout_sequences(gap = .6) +
+  geom_seq() +
+  geom_feature(data = features, width = .12, position = position_offset(.15)) +
+  geom_feature_label(placement = 'repel', data = features, overflow = "shrink", label_min_size = 1.5,
+    position = position_offset(.15), size = 4)
 linear <- add_tracks(linear, bins, points, sites) +
-  scale_seq_position_continuous(sequences = "B") + geom_seq_scale(length = 100) + coord_collinear()
+  scale_seq_position_continuous(guide = guide_seq_axis("B")) + geom_seq_scale(length = 100) + coord_collinear()
 curved <- function(coordinate, curvature = 1) {
   sequence_layer <- if (isTRUE(coordinate$ggchord_circular)) geom_seq(seq_radius = 1.2) else
-    geom_seq(seq_radius = 1.2, seq_curvature = curvature, seq_orientation = -1)
+    layout_sequences(orientation = -1) +
+    geom_seq(seq_radius = 1.2, seq_curvature = curvature)
   plot <- ggchord(sequences[1L, ]) +
     sequence_layer +
-    geom_feature(data = features[1L, ], width = .12, position = position_plasmid(-.2)) +
-    geom_feature_label_repel(data = features[1L, ], label_fit = "shrink",
-      position = position_plasmid(-.2), size = 4)
+    geom_feature(data = features[1L, ], width = .12, position = position_offset(-.2)) +
+    geom_feature_label(placement = 'repel', data = features[1L, ], overflow = "shrink",
+      position = position_offset(-.2), size = 4)
   add_tracks(plot, bins[bins$accver == "A", ], points[points$accver == "A", ], sites[1L, ]) + coordinate
 }
 windows <- data.frame(accver = rep(c("A", "B"), each = 2L),
@@ -51,11 +54,12 @@ windows <- data.frame(accver = rep(c("A", "B"), each = 2L),
   locus_id = c("A1", "A2", "B1", "B2"), row_id = rep(c("A", "B"), each = 2L),
   orientation = c(1, -1, 1, -1))
 view <- segment_ggchord_data(sequences, windows = windows)
-segmented <- add_tracks(ggchord(view$seq_data) + geom_seq(seq_gap = .6),
+segmented <- add_tracks(ggchord(view$seq_data) + layout_sequences(gap = .6) +
+  geom_seq(),
   focus_ggchord_track(bins, sequences, windows, type = "interval"),
   focus_ggchord_track(points, sequences, windows),
   focus_ggchord_track(sites, sequences, windows, type = "interval")) +
-  scale_seq_position_continuous(sequences = c("A2", "B2"), coordinates = "source") +
+  scale_seq_position_continuous(guide = guide_seq_axis(c("A2", "B2")), coordinates = "source") +
   geom_seq_scale(length = 100) + coord_collinear(segments = view$segments, segment_gap = 80)
 plots <- list(linear = linear, circular = curved(coord_circular(gap = 10)),
   chord = curved(coord_chord(rotation = 30), .8), segmented = segmented)

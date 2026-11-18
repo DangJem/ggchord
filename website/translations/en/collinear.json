@@ -1,5 +1,5 @@
 {
-  "source_sha256": "139e7c1106e7fc39ee90ed3fd89a1dc545d7eb99e12645f0488f866f4cbfd9d1",
+  "source_sha256": "858dcd918998a13bf70ca91ca698815903665d10944e53e6a69b52c463cbf209",
   "blocks": {
     "0": {
       "source_sha256": "0fae5352735f690fce064b0ce64c1163f3c582825b729f52c4c1126c524d680b",
@@ -82,9 +82,9 @@
       "translation": "## Adjustment and limits ⟦shared:0⟧\n"
     },
     "26": {
-      "source_sha256": "7d250f294396c34ba35372dd31a6157097906dc914b0d265549448e08c0704fd",
+      "source_sha256": "de9b85712fd21102bf97cf5fe7507e5b300b0cc9146cefacf4f2855342fa3b9f",
       "status": "reviewed",
-      "translation": "Rebuild controls when changing seq_gap, order, orientation or link selection. Local arrow clearance is not an automatic route around intervening whole sequences; ribbons may still cross legitimately. Use [focus/segments](⟦shared:0⟧) for local questions. Explicit circular radius/curvature cannot currently be passed to linear coordinates; see [conversion boundaries](⟦shared:1⟧).\n"
+      "translation": "Rebuild controls when changing layout_sequences(gap = ...), order, orientation or link selection. Local arrow clearance is not an automatic route around intervening whole sequences; ribbons may still cross legitimately. Use [focus/segments](⟦shared:0⟧) for local questions. Explicit circular radius/curvature cannot currently be passed to linear coordinates; see [conversion boundaries](⟦shared:1⟧).\n"
     },
     "28": {
       "source_sha256": "c944a120516c7c5a0628714fe33178ae781e773784d853ae0a5507c4596c6e87",

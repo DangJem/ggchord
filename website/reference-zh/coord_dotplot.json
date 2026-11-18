@@ -1,5 +1,5 @@
 {
-  "source_sha256": "fdef9b74d9dfa25677003b0008aeab79589de3efa71c5fb83ded2b2003889028",
+  "source_sha256": "70189a80bce4bff9791ffa8b8e9cbfcbe1fa11ecee2e25fcef79f416e05881bd",
   "translations": {
     "0": "HSP双轴点阵图坐标",
     "1": "可选的唯一accession向量，按轴顺序排列。默认使用比对层中出现的query/subject accession；没有比对时使用全部序列。轴集合之外的原行会省略并报告；自比对和重复HSP原行保留。",

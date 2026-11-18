@@ -1,5 +1,5 @@
 {
-  "source_sha256": "4a109086d052b313a32f42ede4506cb4c906098556fa24aba4c0777265a5bd78",
+  "source_sha256": "e9f169e12738030f311254effc6299540c41cdd190f1dbf7b8db56e9427e6461",
   "blocks": {
     "1": {
       "source_sha256": "98c6947d28f5113c77a7b9cac36987e362aa926a32e6ee6f129e533a83ead15a",
@@ -12,7 +12,7 @@
       "translation": "The bundled four-sequence data retain their original lengths and CDS strands.\nThis explicit display filter selects observed HSPs of at least 900 bp and\n75 percent identity, taking the two longest per directed pair. The count track\ncounts those selected query-start observations, not inferred depth or coverage.\n"
     },
     "6": {
-      "source_sha256": "7b69bc1cdb9e1bf833cf7b294431dc3e10eb0b163def84b7814c7058a64bda02",
+      "source_sha256": "b1d189d5140097d758761e48193be313fcd9224b6191978740a63e706e255975",
       "status": "reviewed",
       "translation": "Spoke order comes from ⟦shared:0⟧. Default lengths are\nproportional; ⟦shared:1⟧ explicitly normalizes display lengths\nwhile preserving source coordinates. ⟦shared:2⟧ is measured counterclockwise\nfrom positive x; ⟦shared:3⟧ controls spoke order, not source strand. Positive\nfeature/track offsets point counterclockwise from an outward spoke. Physical\nTrack widths and source statistics reuse the shared band and Stat system.\n"
     },

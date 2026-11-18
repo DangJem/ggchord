@@ -64,14 +64,14 @@ feature 默认先尝试内部，再尝试相邻与外部；radial、auto、callo
 
 ## 换行、缩小、隐藏和引线 {#fitting}
 
-从 feature 基线出发，先只将 label_fit 改为 shrink，再回到基线只指定 label_wrap=14。shrink 显式允许缩小，最低字号仍为默认 1.5；不能无限缩小来保证每个名称出现。wrap 的字符上限不是固定毫米宽度。
+从 feature 基线出发，先只将 overflow 改为 shrink，再回到基线只指定 label_wrap=14。shrink 显式允许缩小，最低字号仍为默认 1.5；不能无限缩小来保证每个名称出现。wrap 的字符上限不是固定毫米宽度。
 
 {{code:compareshrinkfit}}
 {{figure:compareshrinkfit}}
 {{code:comparewrapfit}}
 {{figure:comparewrapfit}}
 
-以 14 字符换行图为基线，只改 label_fit=ellipsis；随后回到 feature 默认图，只禁用 external。省略或隐藏只改变文字显示，不改源名称或特征。
+以 14 字符换行图为基线，只改 overflow=ellipsis；随后回到 feature 默认图，只禁用 external。省略或隐藏只改变文字显示，不改源名称或特征。
 
 {{code:compareellipsisfit}}
 {{figure:compareellipsisfit}}
@@ -86,7 +86,7 @@ feature 默认先尝试内部，再尝试相邻与外部；radial、auto、callo
 | 参数 | 默认 | 选择与限制 |
 | --- | --- | --- |
 | label_layout | feature | feature/radial/auto/callout；gene 布局集合另见通用标签页 |
-| label_fit | wrap | wrap/none/ellipsis/auto/shrink；省略文字不改源表 |
+| overflow | wrap | wrap/none/ellipsis/auto/shrink；省略文字不改源表 |
 | label_max_lines | 2 | 最大行数；与 wrap 一起检查 |
 | label_min_size | 1.5 | shrink 的字号下限 |
 | label_side | outside | outside/inside/auto |

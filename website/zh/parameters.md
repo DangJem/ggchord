@@ -29,13 +29,13 @@
 {{code:parametervector}}
 {{figure:parametervector}}
 
-四个值对应处理 `seq_order` 后的显示顺序，长度须与显示序列数相同。当前第二条是 `MT118296.1`，所以本图与上一张相同。
+四个值对应处理 `layout_sequences(order = ...)` 后的显示顺序，长度须与显示序列数相同。当前第二条是 `MT118296.1`，所以本图与上一张相同。
 
 <a id="reorder"></a>
 
 ### 重排时两种匹配的差异 {#reorder}
 
-保持原向量，只改变 `seq_order`。命名值仍修改 `MT118296.1`；无名向量的第二个值改为作用在第二条显示序列 `MT108731.1`。
+保持原向量，只改变 `layout_sequences(order = ...)`。命名值仍修改 `MT118296.1`；无名向量的第二个值改为作用在第二条显示序列 `MT108731.1`。
 
 {{code:parameterreorder}}
 
@@ -101,16 +101,16 @@ view_ggchord(p_parameter_ordered_values, width = 7, height = 7, units = "in")
 
 | 接口 | 可用格式与匹配 | 边界与未指定项 |
 | --- | --- | --- |
-| `geom_seq()` | 单值、按 accver、按显示顺序及相应标量列表 | `seq_radius`、`seq_curvature`、`seq_gap`、`seq_orientation` 各有默认；效果与支持范围依 Coord |
+| `geom_seq()` 与 `layout_sequences()` | 单值、按 accver、按显示顺序及相应标量列表 | `seq_radius`、`seq_curvature`、`layout_sequences(gap = ...)`、`layout_sequences(orientation = ...)` 各有默认；效果与支持范围依 Coord |
 | `geom_seq_label()` | `labels`、半径、旋转、size、hjust/vjust 按序列 | `seq_label_orientation` 是单个模式；显式半径与 Collinear 不兼容 |
 | `geom_link_ribbon()` / `geom_link_line()` | `link_gap` 按端点所在序列 | `NULL` 保留自动行为；控制点不属于逐序列标量 |
-| `geom_gene()` / `geom_feature()` | `width` 按序列或链，列表元素遵循链值规则 | 未指定项用本参数默认；不接受 Position 的任意混合列表 |
+| `geom_feature(preset = 'gene')` / `geom_feature()` | `width` 按序列或链，列表元素遵循链值规则 | 未指定项用本参数默认；不接受 Position 的任意混合列表 |
 | `position_strand()` | `offset` 可单值、按序列、显式链值、逐序列混合列表 | 单值 x 展开为 +x/−x；显式链值不反转；未指定序列或链补 0 |
-| `position_plasmid()` | `offset` 单值或逐序列标量配置 | 两链共用偏移，不支持逐链；未指定序列补 0 |
+| `position_offset()` | `offset` 单值或逐序列标量配置 | 两链共用偏移，不支持逐链；未指定序列补 0 |
 | 固定 `geom_gene_label()` / `geom_feature_label()` | `label_radial_offset`、`label_circum_offset`、`label_circum_limit`、`label_rotation` 按序列或链 | 不代表所有文本参数支持列表；按本家族链值规则解析 |
-| `position_track()` | 单个绝对 `unit()`；或原生数值的逐序列 width/gap | 数值须覆盖全部显示序列；物理尺寸保留毫米含义 |
+| `track_band()` | 单个绝对 `unit()`；或原生数值的逐序列 width/gap | 数值须覆盖全部显示序列；物理尺寸保留毫米含义 |
 
-`seq_order` 是排列，`label_layout` 是布局模式。自动避让层不接收任意固定偏移。axis/theme、aesthetic、标度与 guide 不继承这套列表规则；手工颜色标度按**数据类别**匹配，见[配色说明](styling.md)。精确默认值和取值范围见[参数图谱](parameter-atlas.md)。
+`layout_sequences(order = ...)` 是排列，`label_layout` 是布局模式。自动避让层不接收任意固定偏移。axis/theme、aesthetic、标度与 guide 不继承这套列表规则；手工颜色标度按**数据类别**匹配，见[配色说明](styling.md)。精确默认值和取值范围见[参数图谱](parameter-atlas.md)。
 
 <a id="check-result"></a>
 

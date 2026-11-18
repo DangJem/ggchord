@@ -47,9 +47,6 @@
 | [`geom_alignment_segment`](../../man/geom_alignment_segment.Rd) | 绘制HSP完整端点 | [用法](dotplot-start.md#dotplot) | 独立原生轴上的identity HSP线段 | [↗](parameter-atlas.md#api-geom_alignment_segment) | [↗](dotplot-start.md) |
 | [`geom_feature`](../../man/geom_feature.Rd) | 绘制通用基因组注释 | [用法](circular-features.md#feature-shapes) | 兼容骨架坐标（见支持表）；通用注释可保留未知链及 aa 区间；Radial见新增视图支持矩阵 | [↗](parameter-atlas.md#api-geom_feature) | [↗](chord.md) |
 | [`geom_feature_label`](../../man/geom_feature_label.Rd) | 为通用基因组注释添加标签 | [用法](circular-labels.md#fixed-labels) | 兼容骨架坐标（见支持表）；直线图的 radial/tangent 为竖排/横排；Radial见新增视图支持矩阵 | [↗](parameter-atlas.md#api-geom_feature_label) | [↗](chord.md) |
-| [`geom_feature_label_repel`](../../man/geom_feature_label_repel.Rd) | 自动安排通用注释标签 | [用法](circular-labels.md#automatic-labels) | 兼容骨架坐标（见支持表）；直线图拒绝 external=FALSE；Radial见新增视图支持矩阵 | [↗](parameter-atlas.md#api-geom_feature_label_repel) | [↗](chord.md) |
-| [`geom_feature_plasmid`](../../man/geom_feature_plasmid.Rd) | 在圆形质粒上绘制特征注释 | [用法](circular-features.md#feature-shapes) | 通用几何的组合预设；默认面向圆图；Radial见新增视图支持矩阵 | [↗](parameter-atlas.md#api-geom_feature_plasmid) | [↗](plasmids.md) |
-| [`geom_gene`](../../man/geom_gene.Rd) | 添加基因箭头图层 | [用法](feature-geometry.md#arrow-heads) | 兼容骨架坐标（见支持表）的 bp 数据；需已知正负链；Radial见新增视图支持矩阵 | [↗](parameter-atlas.md#api-geom_gene) | [↗](chord.md) |
 | [`geom_gene_label`](../../man/geom_gene_label.Rd) | 添加固定基因标签图层 | [用法](labels.md#fixed) | bp 基因标签；各坐标的方向含义不同；Radial见新增视图支持矩阵 | [↗](parameter-atlas.md#api-geom_gene_label) | [↗](chord.md) |
 | [`geom_gene_label_repel`](../../man/geom_gene_label_repel.Rd) | 添加自动布局的基因标签图层 | [用法](labels.md#comparison) | bp 基因标签；直线图统一使用行布局；Radial见新增视图支持矩阵 | [↗](parameter-atlas.md#api-geom_gene_label_repel) | [↗](chord.md) |
 | [`geom_link_line`](../../man/geom_link_line.Rd) | 绘制序列间的点连接 | [用法](multi-sequence-links.md#point-links) | 弦图/共线性；需 qpos/spos；圆图拒绝；Radial见新增视图支持矩阵 | [↗](parameter-atlas.md#api-geom_link_line) | [↗](chord.md) |
@@ -68,7 +65,7 @@
 | [`geom_track_bar`](../../man/geom_track.Rd) | 按源位置统计观测数 | [用法](tracks-statistics.md#tracks) | 兼容骨架坐标中的源位置观测计数；基线仅 0；分箱是另行声明的 Stat | [↗](parameter-atlas.md#api-geom_track_bar) | [↗](multi-sequence.md) |
 | [`geom_track_col`](../../man/geom_track.Rd) | 显示给定数值高度 | [用法](tracks-statistics.md#tracks) | 首批基础架构范围；详见本章支持矩阵；Radial见新增视图支持矩阵 | [↗](parameter-atlas.md#api-geom_track_col) | [↗](multi-sequence.md) |
 | [`geom_track_line`](../../man/geom_track_tile.Rd) | 沿序列骨架绘制定量轨道 | [用法](tracks.md#multiple) | 兼容骨架坐标（见支持表）；每组位置递增；closed 需完整闭圆；Radial见新增视图支持矩阵 | [↗](parameter-atlas.md#api-geom_track_line) | [↗](tracks.md) |
-| [`geom_track_tile`](../../man/geom_track_tile.Rd) | 沿序列骨架绘制定量轨道 | [用法](tracks.md#tile) | 兼容骨架坐标（见支持表）；显式轨道；重叠按输入顺序绘制；Radial见新增视图支持矩阵 | [↗](parameter-atlas.md#api-geom_track_tile) | [↗](tracks.md) |
+| [`geom_track_tile`](../../man/geom_track_tile.Rd) | 沿序列骨架绘制定量轨道 | [用法](tracks.md#tile) | 兼容骨架坐标（见支持表）；默认或具名轨道；重叠按输入顺序绘制；Radial见新增视图支持矩阵 | [↗](parameter-atlas.md#api-geom_track_tile) | [↗](tracks.md) |
 | [`get_chord_layout`](../../man/get_chord_layout.Rd) | 获取 ggchord 图的完整布局 | [用法](diagnostics.md#geometry) | 所有受支持图；完整文档化布局 | [↗](parameter-atlas.md#api-get_chord_layout) | [↗](chord.md) |
 | [`ggchord`](../../man/ggchord.Rd) | 用数据表和独立图层创建序列图 | [用法](modes.md#composition) | 兼容坐标（见支持表）；同一图的 bp/aa 单位必须一致 | [↗](parameter-atlas.md#api-ggchord) | [↗](real-data.md) |
 | [`ggchord_fusion`](../../man/ggchord_fusion.Rd) | 组合独立基因组面板 | [用法](fusion-routing.md#intervals) | 已注册基因组/字符面板；八方位、显式区域和嵌套路径 | [↗](parameter-atlas.md#api-ggchord_fusion) | [↗](fusion.md) |
@@ -77,9 +74,12 @@
 | [`guide_ggchord_colorbar`](../../man/guide_ggchord_legend.Rd) | ggchord 角色 aesthetic 图例；同义拼写 guide_ggchord_colourbar | [用法](scale-families.md#guides) | 受支持图的相应主题/图例；按角色及设备解释 | [↗](parameter-atlas.md#api-guide_ggchord_colorbar) | [↗](chord.md) |
 | [`guide_ggchord_colourbar`](../../man/guide_ggchord_legend.Rd) | ggchord 角色 aesthetic 图例 | [用法](scale-families.md#guides) | 受支持图的相应主题/图例；按角色及设备解释 | [↗](parameter-atlas.md#api-guide_ggchord_colourbar) | [↗](chord.md) |
 | [`guide_ggchord_legend`](../../man/guide_ggchord_legend.Rd) | ggchord 角色 aesthetic 图例 | [用法](scale-families.md#guides) | 受支持图的相应主题/图例；按角色及设备解释 | [↗](parameter-atlas.md#api-guide_ggchord_legend) | [↗](chord.md) |
+| [`guide_seq_axis`](../../man/guide_seq_axis.Rd) | 按显示 ID 选择序列轴及标签重叠策略 | [用法](scale-families.md#guides) | 具有序列位置轴的骨架视图；聚焦时按窗口 ID 选择 | [↗](parameter-atlas.md#api-guide_seq_axis) | [↗](tracks.md) |
+| [`guide_track_axis`](../../man/guide_track_axis.Rd) | 设置定量轨道轴的刻度角度、标签避让与局部主题 | [用法](scale-families.md#guides) | 使用局部定量轨道数值标度的视图 | [↗](parameter-atlas.md#api-guide_track_axis) | [↗](tracks.md) |
 | [`guides`](../../man/ggplot2-helpers.Rd) | 适用于 ggchord 的部分 ggplot2 辅助函数 | [上游](parameter-atlas.md#upstream) | 上游对象/接口；遵循 ggplot2/grid 的原始契约 | [↗](parameter-atlas.md#api-guides) | [↗](chord.md) |
 | [`labs`](../../man/ggplot2-helpers.Rd) | 适用于 ggchord 的部分 ggplot2 辅助函数 | [上游](parameter-atlas.md#upstream) | 上游对象/接口；遵循 ggplot2/grid 的原始契约 | [↗](parameter-atlas.md#api-labs) | [↗](chord.md) |
 | [`last_plot`](../../man/ggplot2-helpers.Rd) | 适用于 ggchord 的部分 ggplot2 辅助函数 | [上游](parameter-atlas.md#upstream) | 上游对象/接口；遵循 ggplot2/grid 的原始契约 | [↗](parameter-atlas.md#api-last_plot) | [↗](chord.md) |
+| [`layout_sequences`](../../man/layout_sequences.Rd) | 设置共同骨架的显示顺序、方向、间距与长度分配 | [用法](multi-sequence-layout.md#order) | 多序列弦图及线性布局；具名实例可覆盖来源方向；圆图和点图由坐标系设置方向 | [↗](parameter-atlas.md#api-layout_sequences) | [↗](chord.md) |
 | [`link_ggchord_clusters`](../../man/link_ggchord_clusters.Rd) | 将显式同源分组成员转换为注释连接 | [用法](homology.md#links) | 消费明确成员表；同名不能证明同源 | [↗](parameter-atlas.md#api-link_ggchord_clusters) | [↗](homology.md) |
 | [`magnify_ggchord`](../../man/magnify_ggchord.Rd) | 连接真实源区间与显式独立构建的局部细节图 | [用法](fusion-details.md#magnify) | 已注册基因组图、嵌套 Fusion 与已注册字符细节；显式面板/实例路由；不含 Dotplot | [↗](parameter-atlas.md#api-magnify_ggchord) | [↗](fusion.md) |
 | [`map_alignment_position`](../../man/map_alignment_position.Rd) | 在选定行中精确查找对齐列与源位置 | [用法](aligned-sequences.md#aligned-characters) | 已有DNA/RNA/AA对齐列；Cartesian局部单元与显式源映射 | [↗](parameter-atlas.md#api-map_alignment_position) | [↗](formats.md) |
@@ -89,9 +89,8 @@
 | [`optimize_ggchord_layout`](../../man/optimize_ggchord_layout.Rd) | 优化序列顺序和方向以改善连接可读性 | [用法](diagnostics.md#target-size) | 明确请求的顺序/方向启发式；不是生物学推断 | [↗](parameter-atlas.md#api-optimize_ggchord_layout) | [↗](chord.md) |
 | [`position_feature_stack`](../../man/position_feature_stack.Rd) | 将重叠基因或注释堆叠到局部轨道 | [用法](circular-features.md#stacking) | 先应用基础 Position，再分配重叠轨道 | [↗](parameter-atlas.md#api-position_feature_stack) | [↗](chord.md) |
 | [`position_identity`](../../man/ggplot2-helpers.Rd) | 适用于 ggchord 的部分 ggplot2 辅助函数 | [上游](parameter-atlas.md#upstream) | 上游对象/接口；遵循 ggplot2/grid 的原始契约 | [↗](parameter-atlas.md#api-position_identity) | [↗](chord.md) |
-| [`position_plasmid`](../../man/position_plasmid.Rd) | 将两条链的注释放在同一带上 | [用法](circular-features.md#stacking) | 共享注释带的局部预设；默认面向圆图 | [↗](parameter-atlas.md#api-position_plasmid) | [↗](circular-features.md) |
+| [`position_offset`](../../man/position_offset.Rd) | 将两条链的注释放在同一带上 | [用法](circular-features.md#stacking) | 所有兼容骨架坐标中的共享局部偏移 | [↗](parameter-atlas.md#api-position_offset) | [↗](circular-features.md) |
 | [`position_strand`](../../man/position_strand.Rd) | 按链将注释放在两侧 | [用法](parameters.md#strand) | 合法特征/基因的带符号局部放置 | [↗](parameter-atlas.md#api-position_strand) | [↗](parameters.md) |
-| [`position_track`](../../man/position_track.Rd) | 在显式序列局部带中放置定量图层 | [用法](tracks-statistics.md#independent-bands) | 兼容骨架坐标（见支持表）；同 ID 的声明和值域需一致 | [↗](parameter-atlas.md#api-position_track) | [↗](tracks.md) |
 | [`PositionIdentity`](../../man/ggplot2-helpers.Rd) | 适用于 ggchord 的部分 ggplot2 辅助函数 | [上游](parameter-atlas.md#upstream) | 上游对象/接口；遵循 ggplot2/grid 的原始契约 | [↗](parameter-atlas.md#api-PositionIdentity) | [↗](chord.md) |
 | [`prepare_ggchord_data`](../../man/prepare_ggchord_data.Rd) | 准备命名输入表并保留明确审计记录 | [用法](data.md#validation) | 显式校验/修复/成员工作流；保留源表及报告 | [↗](parameter-atlas.md#api-prepare_ggchord_data) | [↗](real-data.md) |
 | [`primer_catalog`](../../man/primer_catalog.Rd) | 查看随包测序引物目录 | [用法](recognition.md#catalog) | 目录元数据；不是目标上的结合搜索 | [↗](parameter-atlas.md#api-primer_catalog) | [↗](plasmids.md) |
@@ -144,12 +143,13 @@
 | [`scale_seq_colour_manual`](../../man/scale_seq_colour_manual.Rd) | 序列颜色标度 | [用法](scale-families.md#categories) | 兼容骨架坐标（见支持表）；匹配序列颜色角色 | [↗](parameter-atlas.md#api-scale_seq_colour_manual) | [↗](chord.md) |
 | [`scale_seq_position_continuous`](../../man/scale_seq_position_continuous.Rd) | 基因组序列位置标度 | [用法](views.md#focus) | 兼容骨架坐标（见支持表）的位置轴；与直线标尺不同 | [↗](parameter-atlas.md#api-scale_seq_position_continuous) | [↗](chord.md) |
 | [`scale_seq_ring_manual`](../../man/scale_seq_ring_manual.Rd) | 显式序列环标度 | [用法](scale-families.md#rings) | 弦图/圆图；显式正半径；共线性拒绝 | [↗](parameter-atlas.md#api-scale_seq_ring_manual) | [↗](chord.md) |
-| [`scale_track_colour_gradientn`](../../man/scale_track_fill_gradientn.Rd) | 设置轨道填色或颜色映射 | [用法](scale-families.md#tracks) | 兼容骨架坐标（见支持表）；ID 必须匹配 position_track | [↗](parameter-atlas.md#api-scale_track_colour_gradientn) | [↗](tracks.md) |
-| [`scale_track_colour_manual`](../../man/scale_track_fill_gradientn.Rd) | 设置轨道填色或颜色映射 | [用法](scale-families.md#tracks) | 兼容骨架坐标（见支持表）；ID 必须匹配 position_track | [↗](parameter-atlas.md#api-scale_track_colour_manual) | [↗](tracks.md) |
-| [`scale_track_fill_gradientn`](../../man/scale_track_fill_gradientn.Rd) | 设置轨道填色或颜色映射 | [用法](scale-families.md#tracks) | 兼容骨架坐标（见支持表）；ID 必须匹配 position_track | [↗](parameter-atlas.md#api-scale_track_fill_gradientn) | [↗](tracks.md) |
-| [`scale_track_fill_manual`](../../man/scale_track_fill_gradientn.Rd) | 设置轨道填色或颜色映射 | [用法](scale-families.md#tracks) | 兼容骨架坐标（见支持表）；ID 必须匹配 position_track | [↗](parameter-atlas.md#api-scale_track_fill_manual) | [↗](tracks.md) |
-| [`scale_track_value_continuous`](../../man/scale_track_value_continuous.Rd) | 设置命名轨道的数值高度标度 | [用法](scale-families.md#tracks) | 兼容骨架坐标（见支持表）；ID 必须匹配 position_track | [↗](parameter-atlas.md#api-scale_track_value_continuous) | [↗](tracks.md) |
+| [`scale_track_colour_gradientn`](../../man/scale_track_fill_gradientn.Rd) | 设置轨道填色或颜色映射 | [用法](scale-families.md#tracks) | 兼容骨架坐标（见支持表）；ID 必须匹配 track_band | [↗](parameter-atlas.md#api-scale_track_colour_gradientn) | [↗](tracks.md) |
+| [`scale_track_colour_manual`](../../man/scale_track_fill_gradientn.Rd) | 设置轨道填色或颜色映射 | [用法](scale-families.md#tracks) | 兼容骨架坐标（见支持表）；ID 必须匹配 track_band | [↗](parameter-atlas.md#api-scale_track_colour_manual) | [↗](tracks.md) |
+| [`scale_track_fill_gradientn`](../../man/scale_track_fill_gradientn.Rd) | 设置轨道填色或颜色映射 | [用法](scale-families.md#tracks) | 兼容骨架坐标（见支持表）；ID 必须匹配 track_band | [↗](parameter-atlas.md#api-scale_track_fill_gradientn) | [↗](tracks.md) |
+| [`scale_track_fill_manual`](../../man/scale_track_fill_gradientn.Rd) | 设置轨道填色或颜色映射 | [用法](scale-families.md#tracks) | 兼容骨架坐标（见支持表）；ID 必须匹配 track_band | [↗](parameter-atlas.md#api-scale_track_fill_manual) | [↗](tracks.md) |
+| [`scale_track_value_continuous`](../../man/scale_track_value_continuous.Rd) | 设置命名轨道的数值高度标度 | [用法](scale-families.md#tracks) | 兼容骨架坐标（见支持表）；ID 必须匹配 track_band | [↗](parameter-atlas.md#api-scale_track_value_continuous) | [↗](tracks.md) |
 | [`segment_ggchord_data`](../../man/segment_ggchord_data.Rd) | 为分段线性图准备独立窗口 | [用法](views.md#segments) | 显式输入、窗口与来源的工作流 | [↗](parameter-atlas.md#api-segment_ggchord_data) | [↗](views.md) |
+| [`stat_coverage`](../../man/stat_coverage.Rd) | 计算一基闭区间在各窗口的并集覆盖率和平均深度 | [用法](tracks-statistics.md#interval-coverage) | 具备参考长度和单位的源区间；每个有观测的组独立统计 | [↗](parameter-atlas.md#api-stat_coverage) | [↗](tracks.md) |
 | [`stat_ribbon_bundle`](../../man/stat_ribbon_bundle.Rd) | 以统计图层聚束区间连接 | [用法](ribbons.md#statistics-bundle) | 弦图/共线性；显式聚束 | [↗](parameter-atlas.md#api-stat_ribbon_bundle) | [↗](chord.md) |
 | [`stat_ribbon_density`](../../man/stat_ribbon_density.Rd) | 以统计图层计算局部连接密度 | [用法](ribbons.md#statistics-density) | 弦图/共线性；一行观测仍是一条带 | [↗](parameter-atlas.md#api-stat_ribbon_density) | [↗](chord.md) |
 | [`theme`](../../man/ggplot2-helpers.Rd) | 适用于 ggchord 的部分 ggplot2 辅助函数 | [上游](parameter-atlas.md#upstream) | 上游对象/接口；遵循 ggplot2/grid 的原始契约 | [↗](parameter-atlas.md#api-theme) | [↗](chord.md) |
@@ -158,6 +158,7 @@
 | [`theme_ggchord_minimal`](../../man/theme_ggchord.Rd) | ggchord 主题 | [用法](scale-families.md#themes) | 受支持图的相应主题/图例；按角色及设备解释 | [↗](parameter-atlas.md#api-theme_ggchord_minimal) | [↗](chord.md) |
 | [`theme_ggchord_plasmid`](../../man/theme_ggchord.Rd) | ggchord 主题 | [用法](scale-families.md#themes) | 受支持图的相应主题/图例；按角色及设备解释 | [↗](parameter-atlas.md#api-theme_ggchord_plasmid) | [↗](chord.md) |
 | [`theme_ggchord_publication`](../../man/theme_ggchord.Rd) | ggchord 主题 | [用法](scale-families.md#themes) | 受支持图的相应主题/图例；按角色及设备解释 | [↗](parameter-atlas.md#api-theme_ggchord_publication) | [↗](chord.md) |
+| [`track_band`](../../man/track_band.Rd) | 声明序列骨架旁的定量轨道 | [用法](tracks-statistics.md#independent-bands) | 兼容骨架坐标（见支持表）；各 ID 统一声明放置方式并共享数值域 | [↗](parameter-atlas.md#api-track_band) | [↗](tracks.md) |
 | [`translate_ggchord_cds`](../../man/translate_ggchord_cds.Rd) | 通过可选Biostrings翻译真实CDS并保留codon来源 | [用法](aligned-sequences.md#cds-translation) | 显式源/对齐列映射；独立Cartesian细节；已观测完整codon | [↗](parameter-atlas.md#api-translate_ggchord_cds) | [↗](formats.md) |
 | [`unit`](../../man/grid-helpers.Rd) | 物理单位与方向箭头 | [上游](parameter-atlas.md#upstream) | 上游对象/接口；遵循 ggplot2/grid 的原始契约 | [↗](parameter-atlas.md#api-unit) | [↗](chord.md) |
 | [`validate_ggchord_data`](../../man/validate_ggchord_data.Rd) | 绘图前校验 ggchord 输入 | [用法](data.md#validation) | 显式校验/修复/成员工作流；保留源表及报告 | [↗](parameter-atlas.md#api-validate_ggchord_data) | [↗](real-data.md) |
@@ -218,9 +219,6 @@ L2 表示最小示例与输入/输出说明，L3 另含关键参数对照；均�
 | `geom_alignment_segment` | L2 |
 | `geom_feature` | L3 |
 | `geom_feature_label` | L3 |
-| `geom_feature_label_repel` | L3 |
-| `geom_feature_plasmid` | L3 |
-| `geom_gene` | L3 |
 | `geom_gene_label` | L3 |
 | `geom_gene_label_repel` | L3 |
 | `geom_link_line` | L3 |
@@ -248,9 +246,12 @@ L2 表示最小示例与输入/输出说明，L3 另含关键参数对照；均�
 | `guide_ggchord_colorbar` | L2 |
 | `guide_ggchord_colourbar` | L2 |
 | `guide_ggchord_legend` | L2 |
+| `guide_seq_axis` | L2 |
+| `guide_track_axis` | L2 |
 | `guides` | L1 |
 | `labs` | L1 |
 | `last_plot` | L1 |
+| `layout_sequences` | L2 |
 | `link_ggchord_clusters` | L2 |
 | `magnify_ggchord` | L2 |
 | `map_alignment_position` | L2 |
@@ -260,9 +261,8 @@ L2 表示最小示例与输入/输出说明，L3 另含关键参数对照；均�
 | `optimize_ggchord_layout` | L2 |
 | `position_feature_stack` | L3 |
 | `position_identity` | L1 |
-| `position_plasmid` | L2 |
+| `position_offset` | L2 |
 | `position_strand` | L2 |
-| `position_track` | L3 |
 | `PositionIdentity` | L1 |
 | `prepare_ggchord_data` | L2 |
 | `primer_catalog` | L2 |
@@ -321,6 +321,7 @@ L2 表示最小示例与输入/输出说明，L3 另含关键参数对照；均�
 | `scale_track_fill_manual` | L2 |
 | `scale_track_value_continuous` | L2 |
 | `segment_ggchord_data` | L2 |
+| `stat_coverage` | L2 |
 | `stat_ribbon_bundle` | L3 |
 | `stat_ribbon_density` | L3 |
 | `theme` | L1 |
@@ -329,6 +330,7 @@ L2 表示最小示例与输入/输出说明，L3 另含关键参数对照；均�
 | `theme_ggchord_minimal` | L2 |
 | `theme_ggchord_plasmid` | L2 |
 | `theme_ggchord_publication` | L2 |
+| `track_band` | L3 |
 | `translate_ggchord_cds` | L2 |
 | `unit` | L1 |
 | `validate_ggchord_data` | L2 |

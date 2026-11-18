@@ -1,5 +1,5 @@
 {
-  "source_sha256": "9da34e95fec39f0c3c689e617ffc7c5f230324828e3fcced727239a64ddf0210",
+  "source_sha256": "69b0b15e0acc4d1dcc513a94324c893ade694479850f2faa1eadb0c56e71c66a",
   "strings": {
     "aes/purpose": {
       "source_sha256": "72476687defa4ed5f3795aaaddc8af6699cfebd0c00ca8da10f0e86d4e8e7dbc",
@@ -321,36 +321,6 @@
       "status": "reviewed",
       "translation": "all three; linear uses vertical/horizontal rows for radial/tangent; Radial per new-view support matrix"
     },
-    "geom_feature_label_repel/purpose": {
-      "source_sha256": "d5854391cf089be2b7379581693a6465d9e53c09bfd884fff00f1f268df4b031",
-      "status": "reviewed",
-      "translation": "Automatically arrange generic feature labels"
-    },
-    "geom_feature_label_repel/modes_localized": {
-      "source_sha256": "0d3f96878cea3e2b9b468ff89ae763b338a0cba20b527375d06c23e2ce99d837",
-      "status": "reviewed",
-      "translation": "all three; external=FALSE rejected by linear mode; Radial per new-view support matrix"
-    },
-    "geom_feature_plasmid/purpose": {
-      "source_sha256": "f3c4eaa2b4c7651fec1e0883631bd148578c3395d1f1d83cc6cf8926db786060",
-      "status": "reviewed",
-      "translation": "Draw annotated features on a circular plasmid"
-    },
-    "geom_feature_plasmid/modes_localized": {
-      "source_sha256": "05071a3987334bec8f9b64fc443287da92b0704478f1f0804afe86d537b9dc4b",
-      "status": "reviewed",
-      "translation": "generic geometry preset; intended circular; compare defaults before transfer; Radial per new-view support matrix"
-    },
-    "geom_gene/purpose": {
-      "source_sha256": "7425d22e51aae96ff4d13cc132e0be34106839769c5954fe72341d09d333d02e",
-      "status": "reviewed",
-      "translation": "Add a gene arrow layer"
-    },
-    "geom_gene/modes_localized": {
-      "source_sha256": "f4aa859f53033fa17bb626b77e31138b67f1c5454ee8d6ec2d0c7a48581a7276",
-      "status": "reviewed",
-      "translation": "all three on bp; known strand required; Radial per new-view support matrix"
-    },
     "geom_gene_label/purpose": {
       "source_sha256": "e67143c548aca45d6f43b7f8a90f4cc0c8ad5859cc28eb6d59990da5e6245de5",
       "status": "reviewed",
@@ -507,9 +477,9 @@
       "translation": "Draw explicit quantitative tracks along sequence backbones"
     },
     "geom_track_tile/modes_localized": {
-      "source_sha256": "33a356b51f53088f82835bb22d09a7ec562b997ea3ae780b378229c09e349e99",
+      "source_sha256": "3d10d5a04ce351eb947ab44913fe696c61343d3e1b22b065976267f524c2daa8",
       "status": "reviewed",
-      "translation": "all three; explicit named track; overlapping input tiles keep drawing order; Radial per new-view support matrix"
+      "translation": "all three; default or named track; overlapping input tiles keep drawing order; Radial per new-view support matrix"
     },
     "get_chord_layout/purpose": {
       "source_sha256": "d646b0c51b6bd9e050e2fdba317e95b61a7875da59fd9daaf53c2974006a40e7",
@@ -681,15 +651,15 @@
       "status": "reviewed",
       "translation": "upstream; applies only to matching supported ggplot roles"
     },
-    "position_plasmid/purpose": {
+    "position_offset/purpose": {
       "source_sha256": "f4b105bd6f309db057b553c1f790f250526da09cc28fe41ec140d63936535cad",
       "status": "reviewed",
       "translation": "Place both feature strands on one shared band"
     },
-    "position_plasmid/modes_localized": {
-      "source_sha256": "f4e3662e866f40be58011954904a9f4d04340e450d05357335230c2352b01889",
+    "position_offset/modes_localized": {
+      "source_sha256": "4e39fc21ec3529ae20809d6c0e3ac02fd041ecccb42a0258bc8430d2717319c4",
       "status": "reviewed",
-      "translation": "local shared-band preset; intended circular"
+      "translation": "shared local offset for compatible sequence coordinates"
     },
     "position_strand/purpose": {
       "source_sha256": "b1b9b69d82232ad2a0c2c7bdbd01ddfd8d3db5cc86d95ce1acb27b2d1e27c5a0",
@@ -701,15 +671,15 @@
       "status": "reviewed",
       "translation": "local signed placement on valid feature/gene layers"
     },
-    "position_track/purpose": {
-      "source_sha256": "a11192c75560839c3750f4168065681ac16c518883a9196f5b0ae85e8c917455",
+    "track_band/purpose": {
+      "source_sha256": "47e82ffc45d831a2c7bce23cfc7996091affce6e443c42133fd84612028804e7",
       "status": "reviewed",
-      "translation": "Place a quantitative layer in an explicit sequence-local band"
+      "translation": "Declare a quantitative band along sequence backbones"
     },
-    "position_track/modes_localized": {
-      "source_sha256": "f67914d398a47ee61b4f30c3edc3ed28ff31b03ffb5062b8f1f4299543409c0f",
+    "track_band/modes_localized": {
+      "source_sha256": "f600995abc1101beff686c0ed08f6bafc0e417f7e34689f56e943232f10ed06b",
       "status": "reviewed",
-      "translation": "all three; same track ID shares consistent declarations"
+      "translation": "all three; one placement and numerical domain per track ID"
     },
     "PositionIdentity/purpose": {
       "source_sha256": "72476687defa4ed5f3795aaaddc8af6699cfebd0c00ca8da10f0e86d4e8e7dbc",
@@ -1117,9 +1087,9 @@
       "translation": "Set a track's fill or colour mapping"
     },
     "scale_track_colour_gradientn/modes_localized": {
-      "source_sha256": "4fe472eee3ecfbe8dc1bd8c0a818b45e85e73c24b87639203a112ba4db7b47d9",
+      "source_sha256": "182f6bf197a2b29103a1e45bf7ee912e0ad2ce65685936b91a34c8848d81ffab",
       "status": "reviewed",
-      "translation": "all three; scale ID must match position_track"
+      "translation": "all three; scale ID must match track_band"
     },
     "scale_track_colour_manual/purpose": {
       "source_sha256": "89a71db5b7613916ee24f15372f6eaf1fef51e4ec072ac65e2b5c22ca009c65c",
@@ -1127,9 +1097,9 @@
       "translation": "Set a track's fill or colour mapping"
     },
     "scale_track_colour_manual/modes_localized": {
-      "source_sha256": "4fe472eee3ecfbe8dc1bd8c0a818b45e85e73c24b87639203a112ba4db7b47d9",
+      "source_sha256": "182f6bf197a2b29103a1e45bf7ee912e0ad2ce65685936b91a34c8848d81ffab",
       "status": "reviewed",
-      "translation": "all three; scale ID must match position_track"
+      "translation": "all three; scale ID must match track_band"
     },
     "scale_track_fill_gradientn/purpose": {
       "source_sha256": "89a71db5b7613916ee24f15372f6eaf1fef51e4ec072ac65e2b5c22ca009c65c",
@@ -1137,9 +1107,9 @@
       "translation": "Set a track's fill or colour mapping"
     },
     "scale_track_fill_gradientn/modes_localized": {
-      "source_sha256": "4fe472eee3ecfbe8dc1bd8c0a818b45e85e73c24b87639203a112ba4db7b47d9",
+      "source_sha256": "182f6bf197a2b29103a1e45bf7ee912e0ad2ce65685936b91a34c8848d81ffab",
       "status": "reviewed",
-      "translation": "all three; scale ID must match position_track"
+      "translation": "all three; scale ID must match track_band"
     },
     "scale_track_fill_manual/purpose": {
       "source_sha256": "89a71db5b7613916ee24f15372f6eaf1fef51e4ec072ac65e2b5c22ca009c65c",
@@ -1147,9 +1117,9 @@
       "translation": "Set a track's fill or colour mapping"
     },
     "scale_track_fill_manual/modes_localized": {
-      "source_sha256": "4fe472eee3ecfbe8dc1bd8c0a818b45e85e73c24b87639203a112ba4db7b47d9",
+      "source_sha256": "182f6bf197a2b29103a1e45bf7ee912e0ad2ce65685936b91a34c8848d81ffab",
       "status": "reviewed",
-      "translation": "all three; scale ID must match position_track"
+      "translation": "all three; scale ID must match track_band"
     },
     "scale_track_value_continuous/purpose": {
       "source_sha256": "45c3d11c258e396dc2af318b3457702a946021532d8a29e087f8edbbf9687131",
@@ -1157,9 +1127,9 @@
       "translation": "Set a named track's numerical height scale"
     },
     "scale_track_value_continuous/modes_localized": {
-      "source_sha256": "4fe472eee3ecfbe8dc1bd8c0a818b45e85e73c24b87639203a112ba4db7b47d9",
+      "source_sha256": "182f6bf197a2b29103a1e45bf7ee912e0ad2ce65685936b91a34c8848d81ffab",
       "status": "reviewed",
-      "translation": "all three; scale ID must match position_track"
+      "translation": "all three; scale ID must match track_band"
     },
     "segment_ggchord_data/purpose": {
       "source_sha256": "7a07e247db6bc74f1dd240b84bb9457e18d8c6d091eccd7b83eaf5e3603bff41",
@@ -1580,6 +1550,46 @@
       "source_sha256": "3fdb878f3b714a76a58c9f96efc00399c5ce23c40003a8d4e1469dc338c2d2c9",
       "status": "reviewed",
       "translation": "Existing DNA/RNA/AA columns; Cartesian local cells; explicit source mapping"
+    },
+    "stat_coverage/purpose": {
+      "source_sha256": "9887a4260b44d7ad7a817618b008e4d312759b4929547f64d08c8400cee4fcc5",
+      "status": "reviewed",
+      "translation": "Compute union coverage and mean depth for inclusive intervals in each window"
+    },
+    "stat_coverage/modes_localized": {
+      "source_sha256": "3130c400bf122189dde11d717ef6e7cfe38fc6606975ab2aa934ebf3b1385d71",
+      "status": "reviewed",
+      "translation": "Source intervals with reference lengths and units; statistics within each observed group"
+    },
+    "layout_sequences/purpose": {
+      "source_sha256": "ec9de2b3e9e6df60faafa469eb5a2f16eb9040d9912caad948e931c9903c7a1b",
+      "status": "reviewed",
+      "translation": "Set backbone order, direction, spacing and relative display lengths"
+    },
+    "layout_sequences/modes_localized": {
+      "source_sha256": "5e86b46e4a51aad43af7e32f696bd16b779e0378a666a0520826668ff26d6492",
+      "status": "reviewed",
+      "translation": "Multi-sequence chord and linear layouts; instance IDs can override source directions; circular and dotplot axes own their directions"
+    },
+    "guide_seq_axis/purpose": {
+      "source_sha256": "c26bc1a52fafd163ace8ae2e61b5b94611b8dec58faf6e8121e870f77b448ad1",
+      "status": "reviewed",
+      "translation": "Select sequence axes and control tick label overlap"
+    },
+    "guide_seq_axis/modes_localized": {
+      "source_sha256": "95b3a78c10aedd48a208d3dda3ec81b4a05ffb2ccc7187cb248ba0e67111c769",
+      "status": "reviewed",
+      "translation": "Backbone views with sequence axes; select focused axes by window ID"
+    },
+    "guide_track_axis/purpose": {
+      "source_sha256": "a901449d9c7f2b2fcf78e1cedcf803c3cd03ef152ac270c341681aaaf8aecafe",
+      "status": "reviewed",
+      "translation": "Set tick angle, overlap policy and local theme on a quantitative track axis"
+    },
+    "guide_track_axis/modes_localized": {
+      "source_sha256": "d58ac449d62ddd5845d7082980653e6ca55532a2c83985ea3d2ba3e0dd47ec7f",
+      "status": "reviewed",
+      "translation": "Views using a local quantitative track value scale"
     }
   }
 }

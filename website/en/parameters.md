@@ -29,13 +29,13 @@ Only `MT118296.1` uses 0.72; the rest retain this parameter's default of 1. Keys
 {{code:parametervector}}
 {{figure:parametervector}}
 
-Values match display order after `seq_order` and must cover all displayed sequences. The second sequence is currently `MT118296.1`, making this plot equivalent to the preceding one.
+Values match display order after `layout_sequences(order = ...)` and must cover all displayed sequences. The second sequence is currently `MT118296.1`, making this plot equivalent to the preceding one.
 
 <a id="reorder"></a>
 
 ### Matching after reordering {#reorder}
 
-Keep the vector and change `seq_order`. Named values still change `MT118296.1`; the unnamed vector changes the second displayed sequence, now `MT108731.1`.
+Keep the vector and change `layout_sequences(order = ...)`. Named values still change `MT118296.1`; the unnamed vector changes the second displayed sequence, now `MT108731.1`.
 
 {{code:parameterreorder}}
 
@@ -101,16 +101,16 @@ Text radii for `MT108731.1` and `OQ646790.1` are 75% and 115% of their backbone 
 
 | Interface | Formats and matching | Boundaries and omitted values |
 | --- | --- | --- |
-| `geom_seq()` | Scalar, accver names, display order and corresponding scalar lists | `seq_radius`, `seq_curvature`, `seq_gap`, `seq_orientation` have individual defaults and Coord support |
+| `geom_seq()` and `layout_sequences()` | Scalar, accver names, display order and corresponding scalar lists | `seq_radius`, `seq_curvature`, `layout_sequences(gap = ...)`, `layout_sequences(orientation = ...)` have individual defaults and Coord support |
 | `geom_seq_label()` | `labels`, radius, rotation, size and hjust/vjust by sequence | `seq_label_orientation` is a single mode; explicit radius is incompatible with Collinear |
 | `geom_link_ribbon()` / `geom_link_line()` | `link_gap` by endpoint sequence | `NULL` retains automatic behavior; control points are not sequence scalars |
-| `geom_gene()` / `geom_feature()` | `width` by sequence or strand; list elements follow strand-value rules | Omitted entries retain the parameter default; arbitrary mixed Position lists do not apply |
+| `geom_feature(preset = 'gene')` / `geom_feature()` | `width` by sequence or strand; list elements follow strand-value rules | Omitted entries retain the parameter default; arbitrary mixed Position lists do not apply |
 | `position_strand()` | `offset`: scalar, sequence values, explicit strand values and mixed sequence lists | Scalar x becomes +x/−x; explicit strands are not reversed; omitted sequences/strands become 0 |
-| `position_plasmid()` | Scalar or per-sequence scalar `offset`s | Both strands share the `offset`; strand-specific values are unsupported; omitted sequences become 0 |
+| `position_offset()` | Scalar or per-sequence scalar `offset` values | Both strands share the offset. Omitted sequences receive zero. |
 | Fixed `geom_gene_label()` / `geom_feature_label()` | `label_radial_offset`, `label_circum_offset`, `label_circum_limit`, `label_rotation` by sequence or strand | Follow this family's strand rules; not every text parameter accepts lists |
-| `position_track()` | One absolute `unit()` or per-sequence numeric width/gap | Numeric settings cover every displayed sequence; absolute sizes retain their physical meaning |
+| `track_band()` | One absolute `unit()` or per-sequence numeric width/gap | Numeric settings cover every displayed sequence; absolute sizes retain their physical meaning |
 
-`seq_order` specifies ordering and `label_layout` specifies a layout mode. Automatic label layers do not accept arbitrary fixed offsets. Axes/themes, aesthetics, scales and guides retain their own interfaces. Manual colour scales match **data categories**; see [styling](styling.md). Consult the [parameter atlas](parameter-atlas.md) for exact defaults and ranges.
+`layout_sequences(order = ...)` specifies ordering and `label_layout` specifies a layout mode. Automatic label layers do not accept arbitrary fixed offsets. Axes/themes, aesthetics, scales and guides retain their own interfaces. Manual colour scales match **data categories**; see [styling](styling.md). Consult the [parameter atlas](parameter-atlas.md) for exact defaults and ranges.
 
 <a id="check-result"></a>
 

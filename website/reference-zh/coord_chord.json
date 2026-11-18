@@ -1,5 +1,5 @@
 {
-  "source_sha256": "f8510002649d41a5bc05c478be2d0a8bc4b795eedcc509ee53dbfdaff972d3db",
+  "source_sha256": "1daacc1b205e49711dfe8af9dd0666cf803e32a8fe4c24549bfe5f0f1f040e1f",
   "translations": {
     "0": "弦图坐标系",
     "1": "全局布局相对 x 轴正方向逆时针旋转的角度，单位为度，默认 0。旋转整个布局，不改变生物学链或序列方向。",

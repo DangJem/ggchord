@@ -33,10 +33,10 @@ local({
     layers = function() {
       g <- f$genes[c("accver", "start", "end", "strand")]
       a <- g[g$accver %in% f$seqs$accver[1:2], ]; b <- g[!g$accver %in% f$seqs$accver[1:2], ]
-      shared <- geom_gene(data = a, width = .04)
-      p <- ggchord(f$seqs, f$links) + geom_seq(seq_radius = c(1, 1.1, 1, .95),
-        seq_curvature = c(.8, 1, -.6, 1), seq_gap = .05, seq_orientation = c(1, -1, 1, -1)) +
-        shared + geom_gene(data = b, width = .07) +
+      shared <- geom_feature(preset = 'gene', data = a, width = .04)
+      p <- ggchord(prepare_ggchord_data(f$seqs, f$links)) + layout_sequences(gap = .05, orientation = c(1, -1, 1, -1)) +
+        geom_seq(seq_radius = c(1, 1.1, 1, .95), seq_curvature = c(.8, 1, -.6, 1)) +
+        shared + geom_feature(preset = 'gene', data = b, width = .07) +
         geom_feature(data = a, shape = "block", position = position_strand(.15), feature_fill = "#578B74") +
         geom_feature(data = b, shape = "marker", position = position_strand(-.15), feature_fill = "#9774A0") +
         geom_link_ribbon(data = f$links[1:6, ], alpha = .4) +
@@ -103,7 +103,7 @@ local({
       g <- f$genes[c(1, 4, 9, 17), ]; g$anno[1] <- NA_character_
       s <- f$seqs[f$seqs$accver %in% g$accver, ]
       for (mode in c("auto", "radial", "arc")) {
-        p <- ggchord(s) + geom_seq() + geom_gene(data = g) +
+        p <- ggchord(s) + geom_seq() + geom_feature(preset = 'gene', data = g) +
           geom_gene_label_repel(data = g, label_layout = mode, label_wrap = NULL)
         l <- get_chord_layout(p)
         normalize <- function(x) gsub("[[:space:]]+", " ", trimws(gsub("\\n", " ", x, fixed = TRUE)))
@@ -155,7 +155,7 @@ local({
       projected <- project_ggchord_features(residues, model)
       back <- project_ggchord_features(projected, model, from = "genome")
       stopifnot(back$start == 2, back$end == 20, projected$strand == f$cds$strand[1])
-      fails(geom_gene(gene_offset = .1), "position_strand")
+      fails(geom_feature(preset = 'gene', gene_offset = .1), "position_strand")
       fails(geom_feature(feature_shape = "block"), "shape")
       fails(geom_gene_label_repel(label_rotation = 90), "geom_gene_label(label_rotation")
       "Existing standard BLAST import, explicitly renamed six-column non-BLAST roles, true CDS residue projection round-trip and representative migration errors; no native aa axis claim"

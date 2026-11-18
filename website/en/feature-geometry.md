@@ -57,7 +57,7 @@ Keep the same observed integrase and window, requesting head length 1.5 in all t
 
 ## Dimensions, short features and presets {#parameters}
 
-| Parameter | `geom_gene()` default | Values and choices |
+| Parameter | `geom_feature(preset = 'gene')` default | Values and choices |
 | --- | --- | --- |
 | `width` | `NULL`, resolving to 0.05 | Shaft width; may vary by sequence or strand |
 | `arrow_head_length` | `0.04` | Head length in the local frame, not bp |
@@ -68,7 +68,7 @@ Keep the same observed integrase and window, requesting head length 1.5 in all t
 
 Do not hide short intervals by enlarging heads. Check source length before choosing a fallback. Generic `geom_feature()` accepts fixed `shape` or mapped `aes(feature_shape = ...)` with a corresponding scale; see [styling](styling.md).
 
-`geom_feature_plasmid()` is a preset with different width, head dimensions and Position defaults. Changing several defaults while comparing it to gene is not a single-parameter experiment. Segmented annotation boundaries mark segments, not different genes.
+`geom_feature(preset = 'plasmid')` is a preset with different width, head dimensions and Position defaults. Changing several defaults while comparing it to gene is not a single-parameter experiment. Segmented annotation boundaries mark segments, not different genes.
 
 <a id="adapt"></a>
 
@@ -78,4 +78,4 @@ Gene arrows support bp inputs in chord, collinear and single circular modes. Use
 
 First change the common head width from 1.6 back to 1 and inspect shoulder visibility. Then change only `width` and compare shaft versus backbone width. Keep export dimensions fixed rather than editing source intervals to improve appearance.
 
-Continue with [feature stacking](annotations.md#stack), [labels](labels.md), or add this CDS to the [four-genome example](collinear.md). Full interfaces: [`geom_gene()`](../../man/geom_gene.Rd), [`geom_feature()`](../../man/geom_feature.Rd).
+Continue with [feature stacking](annotations.md#stack), [labels](labels.md), or add this CDS to the [four-genome example](collinear.md). Full interfaces: [`geom_feature(preset = 'gene')`](../../man/geom_feature.Rd), [`geom_feature()`](../../man/geom_feature.Rd).

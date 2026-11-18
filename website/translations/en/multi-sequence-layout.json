@@ -1,5 +1,5 @@
 {
-  "source_sha256": "f6c4f7cd6989aa05ab461586556396a4587cd054c03947b6e942ac6bbd5b2d79",
+  "source_sha256": "5c0c7663cf7192684d64e8c3f5b43a2f44018aa507fd5fa96c1043d34f297f0e",
   "blocks": {
     "3": {
       "source_sha256": "386b067b7c4321ac44d0cd8f6643d6baf9571ebecf34be7437070eef385334d8",
@@ -7,7 +7,7 @@
       "translation": "## Orientation: start the coordinates at the other end ⟦shared:0⟧\n"
     },
     "6": {
-      "source_sha256": "f6b8542759ddfca30a4c84e425cad0ead7007c93600829d471f066f57a9fe5df",
+      "source_sha256": "49ad1f9f3c5874d21a54a81c6fecdf85430b9f8b92487c6d0fda9fc7b866e081",
       "status": "reviewed",
       "translation": "⟦shared:0⟧ reverses the sequence's display direction. Compared with the default, this backbone’s zero tick and arrow swap ends. Input coordinates and biological strands still come from the tables. The three vectors are named by sequence ID, so they still match if you reorder the sequences with ⟦shared:1⟧.\n"
     },
@@ -17,7 +17,7 @@
       "translation": "## Order: arrange the backbones ⟦shared:0⟧\n"
     },
     "11": {
-      "source_sha256": "11b694339d3c6c78cc136e2cee916d3199661bb1140bcc82a0827ba859f0aa6d",
+      "source_sha256": "fdf8a51efe7d3abde2fa00c4322fd0b1635c773a234094815ed1c6242c8b8afd",
       "status": "reviewed",
       "translation": "⟦shared:0⟧ takes the sequence IDs in display order. Here ⟦shared:1⟧ moves ahead of ⟦shared:2⟧. Link rows still match the same IDs after reordering.\n"
     },

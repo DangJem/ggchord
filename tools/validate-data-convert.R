@@ -33,7 +33,7 @@ stopifnot(links$qaccver == "host", links$metadata_qaccver == "source metadata",
   links$sstart > links$send, links$score == 12,
   !any(c("pident", "length") %in% names(links)),
   identical(attr(links, "ggchord_conversion")$coordinate_system, "1-based-inclusive"))
-plot <- ggchord(seqs, links, validate = "none") + geom_seq() + geom_link_ribbon() +
+plot <- ggchord(prepare_ggchord_data(seqs, links), validate = "none") + geom_seq() + geom_link_ribbon() +
   geom_feature(data = features) + coord_collinear()
 out <- export_ggchord_layout(plot, include = c("seq", "ribbon", "feature"))
 stopifnot(nrow(out$feature) > 0L, nrow(out$ribbon) > 0L)
@@ -66,9 +66,9 @@ if (requireNamespace("GenomicRanges", quietly = TRUE) &&
     gl$metadata_qaccver == "interaction metadata",
     !any(c("pident", "length") %in% names(gl)))
   # Optional S4 inputs also work directly through the constructor and layers.
-  direct <- ggchord(GenomicRanges::seqinfo(gr), gi, validate = "none") +
+  direct <- ggchord(prepare_ggchord_data(GenomicRanges::seqinfo(gr), gi), validate = "none") +
     geom_seq() + geom_link_ribbon() + geom_feature(data = gr) +
-    geom_feature_label_repel(data = gr) + geom_link_line(data = gi) +
+    geom_feature_label(placement = 'repel', data = gr) + geom_link_line(data = gi) +
     coord_collinear(orientation = "auto")
   exported <- export_ggchord_layout(direct,
     include = c("seq", "ribbon", "feature", "labels", "link"), original_data = TRUE)

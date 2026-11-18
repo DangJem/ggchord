@@ -1,5 +1,5 @@
 {
-  "source_sha256": "be24f613ef89a846075bba64b14b1605048cecd4f0f228e595f825177a50fdf6",
+  "source_sha256": "a0da3508932d17d47ff5f72ac9d9e3f219a70ea82b458b9c0cffa2fcc6e4afe0",
   "blocks": {
     "3": {
       "source_sha256": "915e5a9d83418695db686ead0306a42583df6b8101712048915edd5db8a2bf9f",
@@ -7,9 +7,9 @@
       "translation": "## Count observations or display supplied values ⟦shared:0⟧\n"
     },
     "4": {
-      "source_sha256": "d519229903a950d6c6aa0e51c62d552722f5ff58428a41facff3176dc47b3d71",
+      "source_sha256": "394d3937b58e777f5b9029a47c5f00ab0d5516c036f2385b071752c72531c15d",
       "status": "reviewed",
-      "translation": "⟦shared:0⟧ counts observations at source positions; ⟦shared:1⟧ displays supplied values.\nEach accession/window computes its Stat and data Position before view projection\nor display replication. ⟦shared:2⟧ selects the physical band;\n⟦shared:3⟧ independently selects a native data adjustment such as stack or dodge.\nThe earlier ⟦shared:4⟧ band spelling remains accepted.\n"
+      "translation": "⟦shared:0⟧ counts observations at source positions; ⟦shared:1⟧ displays supplied values.\nEach accession/window computes its Stat and data Position before view projection\nor display replication. Layers share the default band when ⟦shared:2⟧ is omitted. Add ⟦shared:3⟧ before or after the layers and refer to it with ⟦shared:4⟧. Use ⟦shared:5⟧ for source-data adjustments such as stack or dodge.\n"
     },
     "7": {
       "source_sha256": "40cc0352df51ebbcc34c41af00ceaff94d30c08e44d4a454a3bf4bb481215487",
@@ -47,9 +47,9 @@
       "translation": "| tile, rect, area, ribbon, segment, linerange, errorbar | identity | corresponding native ggplot2 extents |\n"
     },
     "15": {
-      "source_sha256": "fea4f2a4b242cbb0ddae3678ddfa3dc0f90f06a78fa400312dc525135d9a27b7",
+      "source_sha256": "3906704a572f1c63b11b617e9d34f9f172ca270596795bfcbdb203850ac6e643",
       "status": "reviewed",
-      "translation": "Available statistics are identity/count/bin/summary, plus the documented [smooth/density/ecdf estimation combinations](⟦shared:0⟧). Bin needs explicit binwidth\nor breaks. Native group and after_stat mappings are supported; numerical axes\nretain the statistic's value units. Arbitrary third-party Geom/Stat plugins and\nunsupported combinations are rejected. Existing\ntrack line/tile shortcuts retain their documented behaviour.\n"
+      "translation": "Supported statistics include identity/count/bin/summary, interval coverage and the [documented estimation combinations](⟦shared:0⟧). Bin requires explicit binwidth or breaks. A custom ggplot2 Stat can read the layer’s source indices from source_row and return the members of each result in a source_rows list column. Omitted membership is exported as unknown.\n"
     },
     "16": {
       "source_sha256": "138fd4752c35a0c3a95a07e11034eb8d98872e26f19dd38f229a254ec8c1f72f",
@@ -57,9 +57,9 @@
       "translation": "Source position uses x orientation; native text size currently uses mm and polygon outlines are full. Other orientations/size units/partial outlines fail explicitly. Native text styles and path arrows are forwarded.\n"
     },
     "17": {
-      "source_sha256": "1cc715a762593ac46c5eab1318c4dec3f3883d41ec78b916f08ac93a94fb958b",
+      "source_sha256": "f2f920e751e131c1db2efc7a749654c8683c6daf718d60264b935bc0251defae",
       "status": "reviewed",
-      "translation": "Native tracks currently require one panel and a ggchord coordinate system. Facets, ⟦shared:0⟧, raster, boxplot and violin are outside this first supported set and are rejected explicitly. Use ⟦shared:1⟧ for vertical projection. Statistical source membership is preserved before dodge or other data positions. Rectangles and tiles use their supplied bounds without an artificial zero baseline.\n"
+      "translation": "Tracks use ggchord coordinates. Sample facets with fixed scales partition observations by facet columns in the source table. Samples compute statistics independently and share the value domain of each named band. Use ⟦shared:0⟧ for vertical projection. Source membership is recorded before data positions such as dodge.\n"
     },
     "19": {
       "source_sha256": "b6c9061a3e86ba841ef335a0d2c0c6ed4603f5f9dcda5ccaccb6862a21316ec7",
@@ -67,7 +67,7 @@
       "translation": "## Measure interval coverage in each window ⟦shared:0⟧\n"
     },
     "20": {
-      "source_sha256": "29fbdc8ec4db099cb5919d13c7c4843bb090f3039f3a04983e0a64ffecacdc90",
+      "source_sha256": "1b5dc67c43f7d166d2bfdcae692bbf858bb0c7a4bb030c40812c9137e36a3fa1",
       "status": "reviewed",
       "translation": "⟦shared:0⟧ draws the fraction of each window covered by at least one interval. Map ⟦shared:1⟧ for mean depth. Coordinates start at 1 and include both endpoints. An interval that crosses a window boundary contributes its intersection to each window. Mean depth counts the length of each record’s intersection separately.\n"
     },
@@ -102,9 +102,9 @@
       "translation": "| 9–10 | 1 | 1/2 | 1/2 | 3 |\n"
     },
     "27": {
-      "source_sha256": "9e974162d071211d5b715661ce0824a49eb8733b0febfcf6f813eb8d6e9a10a8",
+      "source_sha256": "f145b4f2e7f6efc6458169331552a5654c013df954cd9f2b32162b8dd1bbfedc",
       "status": "reviewed",
-      "translation": "Empty windows have zero coverage, mean depth and interval count, with an empty list of source rows. Each sequence or focused window is binned independently from local position 1. When grouping, each group observed on a sequence gets its full set of bins. Out-of-bounds intervals raise an error by default. Use ⟦shared:0⟧ to intersect them with the sequence first. Split compound intervals and intervals that wrap around a circular origin into separate records before binning.\n"
+      "translation": "Empty windows in observed groups return zero coverage, zero depth and an empty source list. References or samples without observations produce no statistical rows. Each reference or focused window starts binning at local position 1. Alternatively, pass explicit intervals in ⟦shared:0⟧. Each independently intersects the observations and windows may overlap. Choose either ⟦shared:1⟧ or explicit windows. Interval and window units must agree with the reference. By default out-of-bounds intervals raise an error. Use ⟦shared:2⟧ to clip intervals to the reference. Split compound intervals and origin-crossing records into single segments first.\n"
     },
     "29": {
       "source_sha256": "7dc386bfff31962b56a6178af98906c3aa897394b413ca6eb1145c54274a5224",
@@ -112,9 +112,9 @@
       "translation": "## Two independent bands and display order ⟦shared:0⟧\n"
     },
     "30": {
-      "source_sha256": "ed2b0120329a5c321c070963322e066cfd124753d4ce5ae6faded789b1609364",
+      "source_sha256": "2ec8653e1db99427b7415e656883e079fe82530b2051fd1656e2d0cd9c7eecd2",
       "status": "reviewed",
-      "translation": "Encode the same GC by bar height and colour using explicit gc_height/gc_colour IDs. Set height and colour domains 0–1 separately, with distinct physical widths. The second figure changes only colour order from 2 to 0, moving that band nearer the backbone. Order is a finite priority, not a measurement or required one-based index; ties use IDs. Layers sharing an ID must agree on side/order/width/gap. Lines do not implicitly bridge independent windows.\n"
+      "translation": "Encode the same GC by bar height and colour using explicit gc_height/gc_colour IDs. Set height and colour domains 0–1 separately, with distinct physical widths. The second figure changes only colour order from 2 to 0, moving that band nearer the backbone. Order is a finite priority, not a measurement or required one-based index; ties use IDs. Layers sharing an ID use its declared side, order, width and gap. Lines do not implicitly bridge independent windows.\n"
     },
     "37": {
       "source_sha256": "30de0dd247a35a39403197392819b62e484df983a26417f99ecd7ef71db5ee44",
@@ -162,9 +162,9 @@
       "translation": "| ⟦shared:0⟧ | ⟦shared:1⟧, ⟦shared:2⟧, ⟦shared:3⟧, ⟦shared:4⟧ | Positions in ⟦shared:5⟧; ⟦shared:6⟧ is cumulative fraction; explicit ⟦shared:7⟧ avoids infinite source anchors | ⟦shared:8⟧ or native PositionIdentity |\n"
     },
     "47": {
-      "source_sha256": "137b18ddaf67cccc48dc053aabf75aa26f03cbec7d77b049a4ba1d99f2e7eaa4",
+      "source_sha256": "63bc19de644c0560f5c467500495db1180de13cc0c29d144416b7fef7be8b650",
       "status": "reviewed",
-      "translation": "Other combinations of these statistics fail explicitly. Use ⟦shared:0⟧ explicitly for density area because area otherwise defaults to stacking. ⟦shared:1⟧ remains the Track source-boundary policy and does not forward the native density boundary-correction parameter. Facets, boxplots, violins, raster and arbitrary third-party Geom/Stat objects remain unsupported; a numerical name in a function is not a projection contract.\n"
+      "translation": "For a density area, use ⟦shared:0⟧ explicitly because area defaults to stacking. The ⟦shared:1⟧ argument controls clipping at source-sequence boundaries. The table above lists geometries that can be projected.\n"
     },
     "48": {
       "source_sha256": "e286f2996259132660667f1f4f3d2677cf09c91f898a4c6d8cbb2b9e4d4bea3d",

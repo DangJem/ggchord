@@ -94,9 +94,6 @@ reference:
     contents:
       - '`geom_feature`'
       - '`geom_feature_label`'
-      - '`geom_feature_label_repel`'
-      - '`geom_feature_plasmid`'
-      - '`geom_gene`'
       - '`geom_gene_label`'
       - '`geom_gene_label_repel`'
       - '`geom_link_line`'
@@ -116,6 +113,9 @@ reference:
   - title: Positions, scales, themes and guides
     contents:
       - '`guide_ggchord_legend`'
+      - '`guide_seq_axis`'
+      - '`guide_track_axis`'
+      - '`layout_sequences`'
       - '`position_feature_stack`'
       - '`position_plasmid`'
       - '`position_strand`'
@@ -133,7 +133,8 @@ reference:
     contents:
       - '`geom_track_tile`'
       - '`geom_track_bar`'
-      - '`position_track`'
+      - '`track_band`'
+      - '`stat_coverage`'
       - '`scale_track_fill_gradientn`'
       - '`scale_track_value_continuous`'
   - title: Sequence recognition

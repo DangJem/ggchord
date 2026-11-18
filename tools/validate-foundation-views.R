@@ -5,8 +5,9 @@ s <- data.frame(accver=c('A','B','C'),length=c(1000,600,400))
 h <- data.frame(qaccver=c('A','B'),saccver=c('B','A'),qstart=c(100,200),qend=c(400,400),
   sstart=c(400,500),send=c(100,800),pident=c(95,80),source_hsp_id=c('h1','h2'))
 f <- data.frame(accver=c('A','B','C'),start=50,end=100,type=c('CDS','misc_feature','tRNA'),strand=c('+','.','-'))
-p <- suppressWarnings(ggchord(s,h,feature_data=f)) +
-  geom_seq(seq_order=c(A_high='A',B='B',A_low='A'),seq_orientation=c(A=1,B=1,A_low=-1)) +
+p <- suppressWarnings(ggchord(prepare_ggchord_data(s,h,feature_data=f))) +
+  layout_sequences(order = c(A_high='A',B='B',A_low='A'), orientation = c(A=1,B=1,A_low=-1)) +
+  geom_seq() +
   geom_feature(shape='block') +
   geom_link_ribbon(data=h[1,],between=c('A_high','B')) +
   geom_link_ribbon(data=h[2,],between=c(2,3))
@@ -20,7 +21,8 @@ for (coord in list(coord_chord(),coord_collinear(),coord_collinear(seq_axis='ver
 }
 results$instances <- 'A–B–A routes and source identities persist across Chord and both Collinear axes; omitted source annotation is permitted'
 for (coord in list(coord_chord(),coord_collinear(),coord_collinear(seq_axis='vertical'))) {
-  q <- ggchord(s)+geom_seq(length_mode='equal')+coord
+  q <- ggchord(s)+layout_sequences(length_mode = 'equal') +
+    geom_seq()+coord
   lay <- get_chord_layout(q,build=TRUE)
   stopifnot(identical(unname(export_ggchord_layout(q,include="seq")$sequence_display$source_length),s$length))
   if (isTRUE(coord$ggchord_collinear)) {
@@ -31,7 +33,7 @@ for (coord in list(coord_chord(),coord_collinear(),coord_collinear(seq_axis='ver
 }
 results$equal <- 'source lengths retained; forward and inverse positions round-trip in both axes'
 r <- rbind(h,transform(h[1,],qaccver='A',saccver='A',source_hsp_id='self'))
-q <- suppressWarnings(ggchord(s,r))+geom_seq()+geom_link_ribbon()+coord_sankey()
+q <- suppressWarnings(ggchord(prepare_ggchord_data(s,r)))+geom_seq()+geom_link_ribbon()+coord_sankey()
 e <- export_ggchord_layout(q,include=c('seq','ribbon'))
 stopifnot(nrow(e$display_instances)==6,nrow(e$instance_routing)==2,
   all(grepl('^left:',e$instance_routing$q_instance)),all(grepl('^right:',e$instance_routing$s_instance)))
@@ -70,7 +72,8 @@ stopifnot(nrow(focus_ggchord_data(s,feature_data=f,loci=loci)$feature_data)==1,
   nrow(prepare_ggchord_data(s,feature_data=f,steps=list(clean=list()))$feature_data)==3)
 results$workflow <- 'unified mixed/unknown-strand features survive focus, segment, clean, prepare'
 point_links <- data.frame(qaccver='A',saccver='B',qpos=100,spos=200)
-base <- ggchord(s)+geom_seq(seq_order=c(A_high='A',B='B',A_low='A'))+
+base <- ggchord(s)+layout_sequences(order = c(A_high='A',B='B',A_low='A')) +
+  geom_seq()+
   geom_link_line(data=point_links,between=c(1,2),link_gap=c(A=.04,B=.05))+coord_collinear()
 invisible(ggplot2::ggplotGrob(base))
 mirrored <- ggchord(s)+geom_seq()+geom_link_line(data=point_links,link_gap=c(A=.04,B=.05))+coord_sankey()

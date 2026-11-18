@@ -26,8 +26,8 @@
       "zh": "改变序列顺序和方向",
       "en": "Order and orient sequences"
     },
-    "api": "geom_seq",
-    "parameters": "seq_order, seq_orientation",
+    "api": "layout_sequences",
+    "parameters": "order, orientation",
     "modes": "A / B",
     "page": "chord-geometry",
     "level": "advanced"
@@ -59,8 +59,8 @@
       "zh": "调整基因箭头形状",
       "en": "Change gene arrow shapes"
     },
-    "api": "geom_gene",
-    "parameters": "arrow_head_style, short_feature",
+    "api": "geom_feature",
+    "parameters": "preset = gene, arrow_head_style, short_feature",
     "modes": "A / B / C (bp)",
     "page": "feature-geometry#arrow-heads",
     "level": "advanced"
@@ -224,8 +224,8 @@
       "zh": "自动排布特征文字",
       "en": "Arrange feature labels automatically"
     },
-    "api": "geom_feature_label_repel",
-    "parameters": "label_layout, label_fit, label_min_size",
+    "api": "geom_feature_label",
+    "parameters": "placement = repel, label_layout, overflow, label_min_size",
     "modes": "A / B / C (conditional)",
     "page": "labels",
     "level": "advanced"
@@ -301,8 +301,8 @@
       "zh": "设置轨道宽度和次序",
       "en": "Set track width and order"
     },
-    "api": "position_track",
-    "parameters": "track, side, order, width, gap",
+    "api": "track_band",
+    "parameters": "id, side, order, width, gap",
     "modes": "A / B / C",
     "page": "tracks",
     "level": "advanced"
@@ -389,8 +389,8 @@
       "zh": "自动标签缩放与省略",
       "en": "Fit or abbreviate automatic labels"
     },
-    "api": "geom_feature_label_repel",
-    "parameters": "label_fit, label_max_lines, external",
+    "api": "geom_feature_label",
+    "parameters": "placement = repel, overflow, label_max_lines, external",
     "modes": "A / B / C",
     "page": "circular-labels#fitting",
     "level": "advanced"

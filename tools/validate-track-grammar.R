@@ -12,16 +12,16 @@ for (geom in c("point", "line", "path", "step", "col", "bar", "tile", "area",
   if (geom == "segment") mapping <- aes(x = pos, y = value, xend = pos + 40, yend = high)
   if (geom == "text") mapping <- aes(x = pos, y = value, label = label)
   if (geom == "rect") mapping <- aes(xmin = pos - 20, xmax = pos + 20, ymin = low, ymax = high)
-  p <- ggchord(s) + geom_seq() + geom_track(mapping, data = d, geom = geom,
-    track = position_track("signal"), position = "identity") + coord_collinear()
+  p <- ggchord(s) + geom_seq() + track_band("signal") + geom_track(mapping, data = d, geom = geom,
+    track = "signal", position = "identity") + coord_collinear()
   ggplot2::ggplotGrob(p)
   results[[geom]] <- "built and rendered to grob in collinear source frame"
 }
 events <- data.frame(accver = c("A", "A", "A", "B"), pos = c(100, 100, 300, 100), weight = c(2, 3, 1, 7))
 seqs <- data.frame(accver = c("A", "B"), length = 1000)
-p <- ggchord(seqs) + geom_seq() + geom_track(aes(x = pos, weight = weight,
+p <- ggchord(seqs) + geom_seq() + track_band("count") + geom_track(aes(x = pos, weight = weight,
   y = after_stat(count), fill = after_stat(count)), data = events,
-  geom = "bar", track = position_track("count")) + coord_collinear()
+  geom = "bar", track = "count") + coord_collinear()
 e <- export_ggchord_layout(p, include = "track", original_data = TRUE)
 computed <- e$track_statistics[[1]]
 stopifnot(identical(computed$count, c(5, 1, 7)),
@@ -30,8 +30,9 @@ invisible(ggplot2::ggplotGrob(p))
 results$count <- "weighted counts match supplied source groups without crossing accessions"
 
 overlay <- ggchord(s) + geom_seq() +
-  geom_track(aes(x = pos, y = value), data = d, geom = "line", track = position_track("signal")) +
-  geom_track(aes(x = pos, y = value), data = d, geom = "point", track = position_track("signal")) +
+  track_band("signal") +
+  geom_track(aes(x = pos, y = value), data = d, geom = "line", track = "signal") +
+  geom_track(aes(x = pos, y = value), data = d, geom = "point", track = "signal") +
   coord_circular()
 e <- export_ggchord_layout(overlay, include = "track")
 stopifnot(nrow(e$track_registry) == 1L)
@@ -39,38 +40,38 @@ invisible(ggplot2::ggplotGrob(overlay))
 results$overlay <- "line and point share one circular band/domain"
 
 columns <- data.frame(accver = "A", start = c(1, 101), end = c(100, 200), value = c(.3, .7))
-p <- ggchord(s) + geom_seq() + geom_track_col(aes(track_value = value), data = columns,
-  position = position_track("signal")) + coord_chord()
+p <- ggchord(s) + geom_seq() + track_band("signal") + geom_track_col(aes(track_value = value), data = columns,
+  track = "signal") + coord_chord()
 e <- export_ggchord_layout(p, include = "track", original_data = TRUE)
 stopifnot(identical(e$track_statistics[[1]]$track_value, columns$value),
   identical(e$track_statistics[[1]]$source_rows, I(list(1L, 2L))))
 results$col <- "supplied values and full interval widths retain identity semantics"
 
-p <- ggchord(s) + geom_seq() + geom_track(aes(x = pos, y = after_stat(count)),
+p <- ggchord(s) + geom_seq() + track_band("bins") + geom_track(aes(x = pos, y = after_stat(count)),
   data = events[1:3, ], geom = "col", stat = "bin", binwidth = 100,
-  track = position_track("bins"), bounds = "clip") + coord_collinear()
+  track = "bins", bounds = "clip") + coord_collinear()
 e <- export_ggchord_layout(p, include = "track")
 stopifnot(identical(e$track_statistics[[1]]$count, c(2, 0, 1)))
 results$bin <- "explicit binwidth; empty bin retained and membership recorded"
-p <- ggchord(s) + geom_seq() + geom_track(aes(x = pos, y = weight),
+p <- ggchord(s) + geom_seq() + track_band("mean") + geom_track(aes(x = pos, y = weight),
   data = events[1:3, ], geom = "point", stat = "summary", fun = mean,
-  track = position_track("mean")) + coord_collinear()
+  track = "mean") + coord_collinear()
 e <- export_ggchord_layout(p, include = "track")
 stopifnot(identical(e$track_statistics[[1]]$track_value, c(2.5, 1)))
 results$summary <- "native summary operates in source positions and value units"
 dodged <- data.frame(accver='A',pos=100,category=c('a','b'),weight=c(2,3))
-p <- ggchord(s)+geom_seq()+geom_track(aes(x=pos,weight=weight,fill=category),data=dodged,
-  geom='bar',position='dodge',track=position_track('dodged'))+coord_collinear()
+p <- ggchord(s)+geom_seq()+track_band('dodged') + geom_track(aes(x=pos,weight=weight,fill=category),data=dodged,
+  geom='bar',position='dodge',track = 'dodged')+coord_collinear()
 stat <- export_ggchord_layout(p,include='track')$track_statistics[[1]]
 stopifnot(setequal(unlist(stat$source_rows),1:2),sum(stat$count)==5)
 results$dodge <- 'count provenance retains source observations before display displacement'
 global <- data.frame(accver='A',length=1000,pos=100,value=2)
-p <- ggchord(global)+geom_seq()+geom_track(aes(x=pos,y=value),geom='point',track=position_track('global'))+coord_collinear()
+p <- ggchord(global)+geom_seq()+track_band('global') + geom_track(aes(x=pos,y=value),geom='point',track = 'global')+coord_collinear()
 stopifnot(export_ggchord_layout(p,include='track')$track_statistics[[1]]$track_value==2)
 results$global_data <- 'NULL data inherits the constructor sequence table like data functions'
 rectangle <- data.frame(accver='A',left=100,right=200,low=1,high=10)
-p <- ggchord(s)+geom_seq()+geom_track(aes(xmin=left,xmax=right,ymin=low,ymax=high),
-  data=rectangle,geom='rect',track=position_track('rectangle'))+
+p <- ggchord(s)+geom_seq()+track_band('rectangle') + geom_track(aes(xmin=left,xmax=right,ymin=low,ymax=high),
+  data=rectangle,geom='rect',track = 'rectangle')+
   scale_track_value_continuous('rectangle',transform='log10')+coord_collinear()
 invisible(ggplot2::ggplotGrob(p))
 results$rectangle_domain <- 'rectangles have no invented zero baseline and support a positive log domain'

@@ -23,7 +23,7 @@ seq_data <- data.frame(
 
 for (n in c(1000L, 5000L)) {
   ribbons <- make_ribbons(n)
-  plot <- ggchord(seq_data, ribbons, validate = "none") +
+  plot <- ggchord(prepare_ggchord_data(seq_data, ribbons), validate = "none") +
     geom_seq() + geom_link_ribbon()
   raw_elapsed <- system.time(
     invisible(ggplot2::ggplot_build(plot))
@@ -36,11 +36,9 @@ for (n in c(1000L, 5000L)) {
     optimized <- optimize_ggchord_layout(seq_data, ribbons)
   )[["elapsed"]]
 
-  bundled_plot <- ggchord(seq_data, bundled$data, validate = "none") +
-    geom_seq(
-      seq_order = optimized$seq_order,
-      seq_orientation = optimized$seq_orientation
-    ) +
+  bundled_plot <- ggchord(prepare_ggchord_data(seq_data, bundled$data), validate = "none") +
+    layout_sequences(order = optimized$seq_order, orientation = optimized$seq_orientation) +
+    geom_seq() +
     geom_link_ribbon(aes(ribbon_alpha = .bundle_density)) +
     scale_ribbon_alpha_continuous()
   bundled_build_elapsed <- system.time(

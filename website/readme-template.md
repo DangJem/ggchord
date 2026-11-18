@@ -103,7 +103,7 @@ remotes::install_github("DangJem/ggchord", ref = "v0.29.0", dependencies = NA)
 ```r
 library(ggchord)
 
-p <- ggchord(seq_data_example, ribbon_data_example) +
+p <- ggchord(prepare_ggchord_data(seq_data_example, ribbon_data_example)) +
   geom_seq() +
   geom_link_ribbon() +
   geom_seq_label() +

@@ -96,7 +96,7 @@ feature_base <- ggchord(collinear_sequences, validate = "none") + geom_seq() +
   geom_feature(data = label_features, position = feature_position) + coord_collinear()
 feature_before <- export_ggchord_layout(feature_base, include = "feature")
 feature_after <- export_ggchord_layout(feature_base +
-  geom_feature_label_repel(data = label_features, label_side = "outside"),
+  geom_feature_label(placement = 'repel', data = label_features, label_side = "outside"),
   include = c("feature", "labels"))
 placement_columns <- c("source_row", "lane", "normal_offset")
 stopifnot(identical(unique(feature_before$feature[placement_columns]),
@@ -122,14 +122,14 @@ leader_out <- export_ggchord_layout(ggchord(collinear_sequences, validate = "non
     position = leader_position) +
   geom_feature_label(data = leader_feature, position = leader_position,
     label_overlap = "allow") +
-  geom_feature_label_repel(data = leader_feature, position = leader_position,
+  geom_feature_label(placement = 'repel', data = leader_feature, position = leader_position,
     label_segment_linetype = "dotted") + coord_collinear(), include = "labels")
 leader_segments <- leader_out$labels[leader_out$labels$.component %in% "segment", , drop = FALSE]
 stopifnot(nrow(leader_segments) > 0L, all(leader_segments$linetype == "dotted"))
 
 # The same source tables also remain valid in the default chord coordinate.
-chord <- ggchord(collinear_sequences, collinear_alignments, collinear_genes,
-  validate = "none") + geom_seq() + geom_link_ribbon() + geom_gene()
+chord <- ggchord(prepare_ggchord_data(collinear_sequences, collinear_alignments, collinear_genes),
+  validate = "none") + geom_seq() + geom_link_ribbon() + geom_feature(preset = 'gene')
 assert_finite_geometry(export_ggchord_layout(chord,
   include = c("seq", "ribbon", "gene")))
 
@@ -137,9 +137,9 @@ assert_finite_geometry(export_ggchord_layout(chord,
 focused <- focus_ggchord_data(collinear_sequences, collinear_alignments,
   collinear_genes, loci = data.frame(accver = collinear_sequences$accver,
     start = c(80, 90, 100), end = c(800, 800, 900)))
-focused_plot <- ggchord(focused$seq_data, focused$ribbon_data,
-  focused$gene_data, validate = "none") + geom_seq() +
-  geom_link_ribbon() + geom_gene() + coord_collinear()
+focused_plot <- ggchord(prepare_ggchord_data(focused$seq_data, focused$ribbon_data,
+  focused$gene_data), validate = "none") + geom_seq() +
+  geom_link_ribbon() + geom_feature(preset = 'gene') + coord_collinear()
 focused_out <- export_ggchord_layout(focused_plot,
   include = c("seq", "ribbon", "gene"), original_data = TRUE)
 assert_finite_geometry(focused_out)
@@ -159,11 +159,12 @@ expect_conflict(base + geom_seq_label(seq_label_radius = 1) +
 expect_conflict(base + coord_collinear() + geom_seq_center_label(),
   "coord_collinear")
 expect_conflict(base + coord_collinear() +
-  geom_feature_label_repel(data = collinear_features, external = FALSE),
+  geom_feature_label(placement = 'repel', data = collinear_features, external = FALSE),
   "external = FALSE")
 
 # Explicit gaps above the chord limit are legal linear track spacing.
-wide <- base + geom_seq(seq_gap = 0.8) + coord_collinear()
+wide <- base + layout_sequences(gap = 0.8) +
+  geom_seq() + coord_collinear()
 wide_out <- export_ggchord_layout(wide, include = "seq")
 stopifnot(all(diff(wide_out$sequence_layout$y) < 0))
 

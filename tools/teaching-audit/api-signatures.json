@@ -527,9 +527,10 @@
       "linetype": "1",
       "position": "\"identity\"",
       "show.legend": "NA",
-      "inherit.aes": "FALSE",
+      "inherit.aes": "TRUE",
       "allow_repeated": "FALSE",
-      "...": ""
+      "...": "",
+      "id": "NULL"
     }
   },
   {
@@ -551,8 +552,10 @@
       "boundary_linetype": "\"22\"",
       "position": "\"identity\"",
       "show.legend": "TRUE",
-      "inherit.aes": "FALSE",
-      "...": ""
+      "inherit.aes": "TRUE",
+      "...": "",
+      "id": "NULL",
+      "preset": "c(\"default\", \"gene\", \"plasmid\")"
     }
   },
   {
@@ -572,78 +575,23 @@
       "label_circum_limit": "NULL",
       "position": "\"identity\"",
       "show.legend": "FALSE",
-      "inherit.aes": "FALSE",
-      "...": ""
-    }
-  },
-  {
-    "name": "geom_feature_label_repel",
-    "owner": "ggchord",
-    "alias": "",
-    "parameters": {
-      "mapping": "NULL",
-      "data": "NULL",
-      "label_layout": "c(\"feature\", \"radial\", \"auto\", \"callout\")",
-      "label_wrap": "NULL",
-      "label_fit": "c(\"wrap\", \"none\", \"ellipsis\", \"auto\", \"shrink\")",
+      "inherit.aes": "TRUE",
+      "...": "",
+      "id": "NULL",
+      "anchor_layer": "NULL",
+      "placement": "c(\"fixed\", \"repel\")",
+      "label_layout": "\"feature\"",
+      "overflow": "\"wrap\"",
       "label_max_lines": "2L",
-      "label_side": "c(\"outside\", \"inside\", \"auto\")",
       "max_overlaps": "Inf",
       "external": "TRUE",
-      "position": "\"identity\"",
-      "show.legend": "FALSE",
-      "inherit.aes": "FALSE",
       "label_min_size": "1.5",
       "label_segment_overlap": "\"fade\"",
       "label_segment_overlap_alpha": "0.18",
       "label_segment_linetype": "\"auto\"",
-      "label_segment_layer": "c(\"below\", \"above\")",
-      "label_repeat": "c(\"individual\", \"bracket\")",
-      "label_segment_colour": "\"auto\"",
-      "...": "",
-      "placement": "NULL",
-      "overflow": "NULL"
-    }
-  },
-  {
-    "name": "geom_feature_plasmid",
-    "owner": "ggchord",
-    "alias": "",
-    "parameters": {
-      "mapping": "NULL",
-      "data": "NULL",
-      "shape": "\"arrow\"",
-      "width": "0.058",
-      "arrow_head_length": "0.068",
-      "arrow_head_width": "1.42",
-      "arrow_head_style": "\"shouldered\"",
-      "short_feature": "\"auto\"",
-      "segment_boundaries": "TRUE",
-      "boundary_colour": "\"#666666\"",
-      "boundary_linewidth": "0.25",
-      "boundary_linetype": "\"22\"",
-      "position": "NULL",
-      "show.legend": "FALSE",
-      "inherit.aes": "FALSE",
-      "...": ""
-    }
-  },
-  {
-    "name": "geom_gene",
-    "owner": "ggchord",
-    "alias": "",
-    "parameters": {
-      "mapping": "NULL",
-      "data": "NULL",
-      "width": "NULL",
-      "arrow_head_length": "0.04",
-      "arrow_head_width": "1",
-      "arrow_head_style": "c(\"shouldered\", \"flush\", \"triangle\")",
-      "short_feature": "c(\"auto\", \"wedge\", \"block\")",
-      "position": "\"identity\"",
-      "show.legend": "TRUE",
-      "inherit.aes": "FALSE",
-      "...": ""
+      "label_segment_layer": "\"below\"",
+      "label_repeat": "\"individual\"",
+      "label_segment_colour": "\"auto\""
     }
   },
   {
@@ -663,7 +611,7 @@
       "label_wrap": "NULL",
       "position": "\"identity\"",
       "show.legend": "FALSE",
-      "inherit.aes": "FALSE",
+      "inherit.aes": "TRUE",
       "...": ""
     }
   },
@@ -685,7 +633,7 @@
       "label_segment_linetype": "\"auto\"",
       "position": "\"identity\"",
       "show.legend": "FALSE",
-      "inherit.aes": "FALSE",
+      "inherit.aes": "TRUE",
       "label_min_size": "1.5",
       "...": ""
     }
@@ -710,10 +658,11 @@
       "linetype": "1",
       "position": "\"identity\"",
       "show.legend": "NA",
-      "inherit.aes": "FALSE",
+      "inherit.aes": "TRUE",
       "between": "NULL",
       "allow_repeated": "FALSE",
-      "...": ""
+      "...": "",
+      "id": "NULL"
     }
   },
   {
@@ -737,13 +686,14 @@
       "pairs": "NULL",
       "position": "\"identity\"",
       "show.legend": "TRUE",
-      "inherit.aes": "FALSE",
+      "inherit.aes": "TRUE",
       "nonadjacent_linewidth": "0.4",
       "between": "NULL",
       "allow_repeated": "FALSE",
       "tip": "c(\"none\", \"subject\")",
       "gradient": "FALSE",
       "...": "",
+      "id": "NULL",
       "stat": "\"identity\""
     }
   },
@@ -760,7 +710,7 @@
       "colour": "\"#A020F0\"",
       "position": "NULL",
       "show.legend": "FALSE",
-      "inherit.aes": "FALSE",
+      "inherit.aes": "TRUE",
       "...": ""
     }
   },
@@ -777,7 +727,7 @@
       "max_overlaps": "Inf",
       "position": "NULL",
       "show.legend": "FALSE",
-      "inherit.aes": "FALSE",
+      "inherit.aes": "TRUE",
       "...": ""
     }
   },
@@ -829,9 +779,6 @@
     "parameters": {
       "mapping": "NULL",
       "data": "NULL",
-      "seq_order": "NULL",
-      "seq_orientation": "NULL",
-      "seq_gap": "NULL",
       "seq_radius": "NULL",
       "seq_curvature": "NULL",
       "seq_style": "c(\"auto\", \"single\", \"double\", \"band\")",
@@ -840,9 +787,9 @@
       "linewidth": "0.9",
       "position": "\"identity\"",
       "show.legend": "TRUE",
-      "inherit.aes": "FALSE",
-      "length_mode": "c(\"proportional\", \"equal\")",
-      "...": ""
+      "inherit.aes": "TRUE",
+      "...": "",
+      "id": "NULL"
     }
   },
   {
@@ -858,8 +805,9 @@
       "colour": "\"#3D4348\"",
       "position": "\"identity\"",
       "show.legend": "FALSE",
-      "inherit.aes": "FALSE",
-      "...": ""
+      "inherit.aes": "TRUE",
+      "...": "",
+      "id": "NULL"
     }
   },
   {
@@ -875,8 +823,9 @@
       "name_style": "list()",
       "length_style": "list()",
       "show.legend": "FALSE",
-      "inherit.aes": "FALSE",
-      "...": ""
+      "inherit.aes": "TRUE",
+      "...": "",
+      "id": "NULL"
     }
   },
   {
@@ -895,8 +844,9 @@
       "check_overlap": "FALSE",
       "position": "\"identity\"",
       "show.legend": "FALSE",
-      "inherit.aes": "FALSE",
-      "...": ""
+      "inherit.aes": "TRUE",
+      "...": "",
+      "id": "NULL"
     }
   },
   {
@@ -914,8 +864,9 @@
       "region_side": "c(\"inside\", \"outside\", \"auto\")",
       "position": "\"identity\"",
       "show.legend": "FALSE",
-      "inherit.aes": "FALSE",
-      "...": ""
+      "inherit.aes": "TRUE",
+      "...": "",
+      "id": "NULL"
     }
   },
   {
@@ -936,8 +887,9 @@
       "size": "3",
       "position": "\"identity\"",
       "show.legend": "FALSE",
-      "inherit.aes": "FALSE",
-      "...": ""
+      "inherit.aes": "TRUE",
+      "...": "",
+      "id": "NULL"
     }
   },
   {
@@ -954,8 +906,9 @@
       "bounds": "c(\"error\", \"clip\")",
       "baseline": "0",
       "show.legend": "NA",
-      "inherit.aes": "FALSE",
-      "...": ""
+      "inherit.aes": "TRUE",
+      "...": "",
+      "id": "NULL"
     }
   },
   {
@@ -974,7 +927,7 @@
       "linetype": "1",
       "bounds": "c(\"error\", \"clip\")",
       "show.legend": "NA",
-      "inherit.aes": "FALSE",
+      "inherit.aes": "TRUE",
       "...": "",
       "track": "NULL",
       "stat": "\"count\""
@@ -990,8 +943,10 @@
       "position": "NULL",
       "track": "NULL",
       "...": "",
+      "stat": "\"identity\"",
+      "id": "NULL",
       "show.legend": "NA",
-      "inherit.aes": "FALSE"
+      "inherit.aes": "TRUE"
     }
   },
   {
@@ -1009,9 +964,10 @@
       "closed": "FALSE",
       "bounds": "c(\"error\", \"clip\")",
       "show.legend": "NA",
-      "inherit.aes": "FALSE",
+      "inherit.aes": "TRUE",
       "...": "",
-      "track": "NULL"
+      "track": "NULL",
+      "id": "NULL"
     }
   },
   {
@@ -1029,9 +985,10 @@
       "linetype": "1",
       "bounds": "c(\"error\", \"clip\")",
       "show.legend": "NA",
-      "inherit.aes": "FALSE",
+      "inherit.aes": "TRUE",
       "...": "",
-      "track": "NULL"
+      "track": "NULL",
+      "id": "NULL"
     }
   },
   {
@@ -1048,13 +1005,11 @@
     "owner": "ggchord",
     "alias": "",
     "parameters": {
-      "seq_data": "",
-      "ribbon_data": "NULL",
-      "gene_data": "NULL",
+      "data": "",
+      "mapping": "NULL",
+      "...": "",
       "debug": "FALSE",
-      "validate": "c(\"warn\", \"error\", \"none\")",
-      "feature_data": "NULL",
-      "...": ""
+      "validate": "c(\"warn\", \"error\", \"none\")"
     }
   },
   {
@@ -1162,6 +1117,25 @@
     }
   },
   {
+    "name": "guide_seq_axis",
+    "owner": "ggchord",
+    "alias": "",
+    "parameters": {
+      "sequences": "NULL",
+      "check.overlap": "NULL"
+    }
+  },
+  {
+    "name": "guide_track_axis",
+    "owner": "ggchord",
+    "alias": "",
+    "parameters": {
+      "angle": "ggplot2::waiver()",
+      "check.overlap": "FALSE",
+      "theme": "NULL"
+    }
+  },
+  {
     "name": "guides",
     "owner": "ggplot2",
     "alias": "",
@@ -1189,6 +1163,17 @@
     "owner": "ggplot2",
     "alias": "",
     "parameters": []
+  },
+  {
+    "name": "layout_sequences",
+    "owner": "ggchord",
+    "alias": "",
+    "parameters": {
+      "order": "NULL",
+      "orientation": "NULL",
+      "gap": "NULL",
+      "length_mode": "c(\"proportional\", \"equal\")"
+    }
   },
   {
     "name": "link_ggchord_clusters",
@@ -1298,8 +1283,7 @@
     "alias": "",
     "parameters": {
       "spacing": "0.1",
-      "side": "c(\"strand\", \"outside\", \"inside\")",
-      "base_position": "NULL",
+      "base_position": "position_strand()",
       "direction": "c(\"auto\", \"outward\", \"inward\")"
     }
   },
@@ -1310,11 +1294,11 @@
     "parameters": []
   },
   {
-    "name": "position_plasmid",
+    "name": "position_offset",
     "owner": "ggchord",
     "alias": "",
     "parameters": {
-      "offset": "-0.1"
+      "offset": ""
     }
   },
   {
@@ -1323,18 +1307,6 @@
     "alias": "",
     "parameters": {
       "offset": "0.1"
-    }
-  },
-  {
-    "name": "position_track",
-    "owner": "ggchord",
-    "alias": "",
-    "parameters": {
-      "track": "",
-      "side": "c(\"outside\", \"inside\")",
-      "order": "1",
-      "width": "grid::unit(4, \"mm\")",
-      "gap": "grid::unit(1, \"mm\")"
     }
   },
   {
@@ -1862,7 +1834,7 @@
       "transform": "\"identity\"",
       "n.breaks": "6",
       "coordinates": "c(\"relative\", \"source\")",
-      "sequences": "NULL",
+      "guide": "guide_seq_axis()",
       "...": ""
     }
   },
@@ -1953,6 +1925,24 @@
     }
   },
   {
+    "name": "stat_coverage",
+    "owner": "ggchord",
+    "alias": "",
+    "parameters": {
+      "mapping": "NULL",
+      "data": "NULL",
+      "geom": "\"track_col\"",
+      "position": "\"identity\"",
+      "...": "",
+      "binwidth": "NULL",
+      "windows": "NULL",
+      "track": "NULL",
+      "id": "NULL",
+      "show.legend": "NA",
+      "inherit.aes": "TRUE"
+    }
+  },
+  {
     "name": "stat_ribbon_bundle",
     "owner": "ggchord",
     "alias": "",
@@ -1965,7 +1955,7 @@
       "group_by": "NULL",
       "position": "\"identity\"",
       "show.legend": "TRUE",
-      "inherit.aes": "FALSE",
+      "inherit.aes": "TRUE",
       "...": ""
     }
   },
@@ -1981,7 +1971,7 @@
       "group_by": "NULL",
       "position": "\"identity\"",
       "show.legend": "TRUE",
-      "inherit.aes": "FALSE",
+      "inherit.aes": "TRUE",
       "...": ""
     }
   },
@@ -2717,6 +2707,18 @@
       "legend.region.margin": "NULL",
       "legend.region.spacing": "NULL",
       "...": ""
+    }
+  },
+  {
+    "name": "track_band",
+    "owner": "ggchord",
+    "alias": "",
+    "parameters": {
+      "id": "",
+      "side": "c(\"outside\", \"inside\")",
+      "order": "1",
+      "width": "grid::unit(4, \"mm\")",
+      "gap": "grid::unit(1, \"mm\")"
     }
   },
   {

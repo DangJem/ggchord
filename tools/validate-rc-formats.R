@@ -8,8 +8,9 @@ local({
   radii <- setNames(c(.9, 1.1, 1, 1.2), seqs$accver)
   widths <- setNames(list(c("+" = .04, "-" = .06)), seqs$accver[1L])
   offsets <- setNames(list(c("+" = .1, "-" = -.2)), seqs$accver[1L])
-  plot <- ggchord(seqs) + geom_seq(seq_order = rev(seqs$accver), seq_radius = radii) +
-    geom_gene(data = genes, width = widths, position = position_strand(offsets))
+  plot <- ggchord(seqs) + layout_sequences(order = rev(seqs$accver)) +
+    geom_seq(seq_radius = radii) +
+    geom_feature(preset = 'gene', data = genes, width = widths, position = position_strand(offsets))
   layout <- get_chord_layout(plot)
   stopifnot(identical(layout$seqs, rev(seqs$accver)),
     identical(unname(layout$seqRadius[seqs$accver]), unname(radii)))

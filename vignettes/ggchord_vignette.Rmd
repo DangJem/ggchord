@@ -96,7 +96,7 @@ library(ggchord)
 
 
 ```{r example-5, eval=FALSE}
-p_chord_backbone <- ggchord(seq_data = seq_data_example) +
+p_chord_backbone <- ggchord(data = seq_data_example) +
   geom_seq() +
   geom_seq_label() +
   coord_chord()
@@ -146,7 +146,7 @@ chord_genes_example <- subset(gene_data_example, accver == "OQ646790.1" & start 
 chord_genes_example$strand <- chord_genes_example$source_strand
 
 p_chord_feature <- p_chord_ribbon +
-  geom_gene(data = chord_genes_example)
+  geom_feature(preset = 'gene', data = chord_genes_example)
 view_ggchord(p_chord_feature, width = 7, height = 7, units = "in")
 ```
 
@@ -217,7 +217,7 @@ p_coursecircle <- ggchord(circle_seqs) +
 
 ```{r example-12, eval=FALSE}
 p_coursecirclefeature <- p_coursecircle +
-  geom_feature_plasmid(data = circle_origins) +
+  geom_feature(preset = 'plasmid', data = circle_origins) +
   geom_feature_label(data = circle_origins,
     label_side = "inside", label_radial_offset = 0.12, size = 4)
 view_ggchord(p_coursecirclefeature, width = 10, height = 8, units = "in")
@@ -280,7 +280,7 @@ user scale overrides it.
 
 
 ```{r example-16, eval=FALSE}
-p_viewdotplot <- ggchord(dotplot_seqs, dotplot_hsp) +
+p_viewdotplot <- ggchord(prepare_ggchord_data(dotplot_seqs, dotplot_hsp)) +
   geom_alignment_segment(aes(link_colour = pident), linewidth = 0.65) +
   coord_dotplot()
 view_ggchord(p_viewdotplot, width = 8, height = 7, units = "in")
@@ -299,7 +299,7 @@ concatenated segments retain their own accession and local tick labels.
 
 
 ```{r example-17, eval=FALSE}
-dotplot_reversed <- ggchord(dotplot_seqs, dotplot_hsp) +
+dotplot_reversed <- ggchord(prepare_ggchord_data(dotplot_seqs, dotplot_hsp)) +
   geom_alignment_segment(aes(link_colour = pident), linewidth = 0.65) +
   coord_dotplot(y_orientation = -1)
 dotplot_layout <- export_ggchord_layout(dotplot_reversed)
@@ -353,7 +353,7 @@ flagship_theme <- theme_ggchord_publication() +
 ```{r example-19, eval=FALSE}
 dotplot_pair_counts <- flagship_dotplot_example$pair_counts
 dotplot_cells <- flagship_dotplot_example$cell_labels
-flag_dotplot <- ggchord(flagship_sequences, flagship_hsp) +
+flag_dotplot <- ggchord(prepare_ggchord_data(flagship_sequences, flagship_hsp)) +
   geom_alignment_segment(aes(link_colour = pident, link_linewidth = length), alpha = 0.85) +
   scale_link_linewidth_continuous(range = c(0.8, 1.8), name = "HSP length (bp)") +
   coord_dotplot(x_seqs = flagship_sequences$accver, y_seqs = flagship_sequences$accver,
@@ -493,11 +493,11 @@ Example: choose another real HSP and identify qpanel/spanel and its source row. 
 Use the existing source tables; no extra alignment table is required. Dotplot segments retain all four HSP endpoints. Radial spokes use cyclic existing relationships and proportional lengths. See the website view-expansion chapter for source preparation, supported layers and inverse mapping.
 
 ```{r example-27, eval=FALSE}
-ggchord(seq_data_example, ribbon_data_example) +
+ggchord(prepare_ggchord_data(seq_data_example, ribbon_data_example)) +
   geom_alignment_segment(aes(link_colour = pident)) +
   coord_dotplot()
 
-ggchord(seq_data_example, ribbon_data_example) +
+ggchord(prepare_ggchord_data(seq_data_example, ribbon_data_example)) +
   geom_seq() +
   geom_link_ribbon() +
   geom_seq_label() +

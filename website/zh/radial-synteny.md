@@ -12,8 +12,8 @@
 
 {{figure:viewradial}}
 
-辐条顺序来自`geom_seq(seq_order=...)`。默认按真实长度比例展示；只有显式
-`length_mode="equal"`才归一显示长度，源坐标保持不变。`start_angle`从正x轴逆时针计角，
+辐条顺序来自`layout_sequences(order = ...)`。默认按真实长度比例展示；只有显式
+`layout_sequences(length_mode = "equal")`才归一显示长度，源坐标保持不变。`start_angle`从正x轴逆时针计角，
 `clockwise`控制辐条顺序，不改生物链。特征和轨道的正偏移指向辐条逆时针法向。
 物理Track宽度和源统计复用共享band与Stat系统。
 
@@ -59,7 +59,7 @@ Ribbon可用显式`pairs`或`adjacent_only=FALSE`选择非邻接关系；非邻�
 `nonadjacent_bulge`调整非相邻环形路径的外拱量，默认0；正值还会按完整中间辐条及同通道连接的带宽增加必要外拱。最长比例辐条长2，以下0.2是显示布局单位，不是bp。端点、源坐标和区间宽度保留，端点顺序要求的交叉仍可能存在。
 
 ```r
-ggchord(radial_seqs, radial_hsp) +
+ggchord(prepare_ggchord_data(radial_seqs, radial_hsp)) +
   geom_seq() +
   geom_link_ribbon(adjacent_only = FALSE) +
   coord_radial_synteny(nonadjacent_bulge = 0.2)

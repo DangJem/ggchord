@@ -1,5 +1,5 @@
 {
-  "source_sha256": "3a309b095350468ba55f80e0c1946ad20aa174862f696d3d494435817b900e8b",
+  "source_sha256": "3b26a036d97d51eb3a3fc4da4e060bc50208471d550abdafcca0a67acb192079",
   "blocks": {
     "0": {
       "source_sha256": "83b9b2a3c5ddb4baa47a4718bf152562a2b985ef25fbcd7c7c28c1211854c2c4",
@@ -102,14 +102,14 @@
       "translation": "## Wrapping, shrinking, hiding and leaders ⟦shared:0⟧\n"
     },
     "42": {
-      "source_sha256": "c8b1d04575c6082eb09b2a830b7e150a5712832bd798be92b1ed5dde13a5b10c",
+      "source_sha256": "c68b5c48e2aca132d95ba56449fb247016781a388c5e057b4afdb040105b5f56",
       "status": "reviewed",
-      "translation": "Starting from feature, change only label_fit to shrink; then return to baseline and set only label_wrap=14. Shrink explicitly permits smaller text down to the default minimum 1.5. It does not shrink indefinitely to guarantee all names. Character wrapping width is not a fixed physical width.\n"
+      "translation": "Starting from feature, change only overflow to shrink; then return to baseline and set only label_wrap=14. Shrink explicitly permits smaller text down to the default minimum 1.5. It does not shrink indefinitely to guarantee all names. Character wrapping width is not a fixed physical width.\n"
     },
     "47": {
-      "source_sha256": "5cf5891e9d3659295ae1a6dbe15a569d584b90f50bbe49e618deed3c5b40c253",
+      "source_sha256": "826295ecd24d501d632b392e4fb421aeb5f3e4fb0dcdbd5af357305c1ca09f32",
       "status": "reviewed",
-      "translation": "From the 14-character wrap example, change only label_fit to ellipsis. Then return to default feature placement and disable only external fallback. Omission/hiding changes display, not source names or features.\n"
+      "translation": "From the 14-character wrap example, change only overflow to ellipsis. Then return to default feature placement and disable only external fallback. Omission/hiding changes display, not source names or features.\n"
     },
     "53": {
       "source_sha256": "c3dcb934d1ae48b661c455dad70b76f3e77abb0fa52db0a8faf2ec206d82f224",
@@ -132,9 +132,9 @@
       "translation": "| label_layout | feature | feature/radial/auto/callout; gene layouts differ |\n"
     },
     "57": {
-      "source_sha256": "c6c26fb784a34160798911929d7470c5f33eb835b84d92f4129bbeea460ad3f8",
+      "source_sha256": "5f8a8c5d50d24c3b0d463057edc73c0c968eefc07b39d53225dfb1802b2d9c0d",
       "status": "reviewed",
-      "translation": "| label_fit | wrap | wrap/none/ellipsis/auto/shrink; omission does not edit source text |\n"
+      "translation": "| overflow | wrap | wrap/none/ellipsis/auto/shrink; omission does not edit source text |\n"
     },
     "58": {
       "source_sha256": "0670c7feccf9615d7aeb27eea4b5f89a4ade78d87c7ed6e9fe62f32e25f9f9a6",

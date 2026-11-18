@@ -1,5 +1,5 @@
 {
-  "source_sha256": "a007701827689686f24e130c59422c972139890a28c984fdcec12d55a5b17a2f",
+  "source_sha256": "19d4cf21253e01a573abcf835041f074c9cc41929d39db9c86fca044664b1b47",
   "translations": {
     "0": "将已有蛋白 signature 命中读为 AA feature",
     "1": "可选本地路径向量或通配模式，在 files 之前读取。",

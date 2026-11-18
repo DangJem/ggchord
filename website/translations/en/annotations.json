@@ -1,5 +1,5 @@
 {
-  "source_sha256": "25383c6b3059cc9832f37a023e5fcc698dd78b5f75b2ecc1df82c96573f8ea83",
+  "source_sha256": "0cb0fa18afa85586763b7ff691ee3cdf315d5577df2a410e20476a649f97ece7",
   "blocks": {
     "0": {
       "source_sha256": "ab3694bd9e92517214cd8fc240e2740c01ee9c2551801b742ab0f75729aa1da3",
@@ -57,9 +57,9 @@
       "translation": "| ⟦shared:0⟧, ⟦shared:1⟧, ⟦shared:2⟧ | Custom interval/point-like emphasis | Keep real interval metadata; display shape is a mapping |\n"
     },
     "16": {
-      "source_sha256": "7534913924cb22016482c1fc297749e8d790ad5b3f91599fb3bed08e7de32ca5",
+      "source_sha256": "613085cf4f68947fb937d7749e9d4c201edc83d0b02c4ad0af9fd0ab8577f430",
       "status": "reviewed",
-      "translation": "⟦shared:0⟧ and ⟦shared:1⟧ are useful presets, not aliases with\nidentical defaults. Use ⟦shared:2⟧ for signed offsets and\n⟦shared:3⟧ as a circular placement preset; the latter is not a fourth\ncoordinate mode.\n"
+      "translation": "⟦shared:0⟧ and ⟦shared:1⟧ provide distinct geometry presets.\nUse ⟦shared:2⟧ for signed strand offsets and ⟦shared:3⟧\nfor one offset shared by both strands. Both use the local normal at the feature.\n"
     },
     "18": {
       "source_sha256": "2eecab6c780e6f14a0d27cb03db4cafb0c7821fd236c42c273cf3a6fe1620d97",
