@@ -18,7 +18,7 @@ reconstruct_layer <- function(lyr, data, mapping = NULL) {
   # Preserve the ggchord custom fields on the reconstructed layer
   for (fld in c(
     "ggchord_type", "ggchord_params", "ggchord_placeholder",
-    "ggchord_layer_id", "ggchord_input_data", "ggchord_input_mapping",
+    "ggchord_layer_id", "ggchord_input_data", "ggchord_input_mapping", "ggchord_annotation_origin",
     "ggchord_role_aes", "ggchord_resolved_input", "ggchord_theme_element",
     "ggchord_theme_components", "ggchord_input_transform", "ggchord_obstacle_provider"
   )) {
@@ -55,6 +55,13 @@ ggchord_register_layers <- function(plot) {
     kind <- if (type %in% c("ribbon", "alignment")) "links" else
       if (type %in% c("gene", "gene_label", "gene_label_repel") ||
           identical(copy$ggchord_params$native_stat, "coverage")) "features"
+    if (is.null(copy$ggchord_params$input_description)) {
+      input <- copy$ggchord_input_data
+      copy$ggchord_params$input_description <- if (is.function(input)) "layer data callback" else
+        if (!is.null(input)) paste0("layer data (", class(input)[1L], ")") else
+        if (length(kind)) paste(plot$ggchord$candidates[[kind]], collapse = ", ") else
+        if (type == "seq_region") "region data" else "reference data"
+    }
     if (length(kind) && (is.null(copy$ggchord_input_data) || is.function(copy$ggchord_input_data))) {
       candidates <- plot$ggchord$candidates[[kind]]
       if (length(candidates) > 1L)

@@ -25,10 +25,14 @@
 #'   before the layer transform. Native track mappings run inside ggplot2 and
 #'   have no separate mapped table. Geometry contains named components.
 #'   `layer_stage_status` lists each requested layer ID and stage. A successful
-#'   zero-row statistic is `available`. A stage with no separate data is
+#'   zero-row statistic is `available`. Built-in track statistics retain their
+#'   known computed variables, e.g. zero-length numeric `count` and `prop`.
+#'   A stage with no separate data is
 #'   `unavailable` with a reason and a NULL entry. A track Stat error marks
 #'   its statistic and derived geometry as `failed`, with the error message
 #'   in `reason`. Successful panels can still contribute rows to these entries.
+#'   An ordinary build stops on a failed track Stat and preserves the last
+#'   successful layout for [get_chord_layout()].
 #'   An error in a registered layer's data callback stops the export and reports
 #'   the layer ID together with the original cause.
 #'   All registered layers participate regardless of include.

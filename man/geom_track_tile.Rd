@@ -51,7 +51,9 @@ grammar. Lines with sequence-local roles and identity position preserve
 input order, missing-value breaks and strict increasing positions.}
 
 \item{fill, colour, alpha, linewidth, linetype}{Fixed styles; fill and colour
-mappings use the dedicated track roles and scoped scales.}
+mappings use the dedicated track roles and scoped scales.
+A fixed style overrides its inherited mapping. Choose either a mapping
+or a fixed value for that aesthetic within a layer.}
 
 \item{bounds}{\code{"error"} (default) or \code{"clip"} for genomic coordinates.
 Clipping is reported and never changes source values.}

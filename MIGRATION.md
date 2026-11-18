@@ -4,6 +4,9 @@ The entries in the first column were removed in 0.50.0. Later sections record ea
 
 | Former call or argument | 0.50.0 replacement |
 | --- | --- |
+| Track data declared in bp on an aa reference, or vice versa | Supply coordinates in the reference unit. For DNA intervals on a protein reference, project through the relevant CDS or draw separate tracks on the appropriate references. |
+| `geom_track_col(aes(fill = kind), fill = "red", stat = "coverage", binwidth = 10)` | Remove the fill mapping to pool intervals. For separate estimates in the same colour, use `aes(group = kind)` and `fill = "red"`. |
+| Relying on identical row contents to attach labels to a separately created feature table | Pass the same table to both layers, or supply matching `feature_id` and source intervals. Reordered subsets use the key. |
 | Unrecognised arguments to `geom_*()`, such as `geom_seq(linewditth = 2)` | Use `geom_seq(linewidth = 2)`. Starting in 0.50.0, unknown names cause an error. Supply Stat-specific parameters to the selected Stat, for example `geom_track_line(stat = "coverage", binwidth = 4)` with interval data. |
 | Partial argument names such as `position_offset(offse = .1)` or `guide_seq_axis(sequence = "A")` | Use `position_offset(offset = .1)` and `guide_seq_axis(sequences = "A")`. Spell out names in refactored calls, including arguments forwarded through `...`. Positional calls such as `position_offset(.1)` still work. |
 | One explicit `width` for an external Stat's neighbourhood and the column Geom | Name the Stat argument `radius` and pass both controls, for example `geom_track_col(stat = MyStat, radius = 4, width = 2)`. |
@@ -19,6 +22,9 @@ When inspecting a staged export, check `layer_stage_status$status` before using
 track statistics. A successful zero-row statistic is `available`. A failed Stat
 sets `status = "failed"` for its statistic and geometry. Read `reason` for the
 cause, including when some panels still return rows.
+An ordinary build stops on a track Stat error. Use `get_chord_layout(p, build = FALSE)`
+to inspect the last successful layout, then rebuild after correcting the input.
+For zero input rows, built-in computed fields such as `count` and `prop` remain available for selection.
 
 Run the [migration example](examples/migrate-v0.50.0.R) to draw a two-sample comparison and inspect each window's contributing rows. Each panel uses the same 10 bp reference and numerical scale. A second plot labels selected features in the lanes assigned to the full input.
 

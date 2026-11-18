@@ -4,6 +4,7 @@
 #' bp or aa units. Omitted interval/window units inherit that reference. A
 #' discrete input style can form groups; use `aes(group = ...)` to choose them
 #' explicitly or `aes(fill = after_stat(coverage))` to colour the pooled result.
+#' Fixing a layer's fill also removes its inherited fill mapping before grouping.
 #' Fixed-scale sample facets compute each observed series independently.
 #' `after_stat()` expressions then see all statistical rows in the layer.
 #' @inheritParams geom_track
@@ -58,21 +59,23 @@ ggchord_coverage_grid <- function(sequences, binwidth, windows, observed) {
   ggchord_require_columns(windows, c("accver", "start", "end"), "Coverage windows")
   ggchord_check_interval_unit(windows, unit, "Coverage windows")
   index <- match(windows$accver, sequences$accver)
-  if (anyNA(index)) ggchord_stop("Coverage windows contain an unknown reference accession")
+  if (anyNA(index)) ggchord_stop("Coverage windows contain an unknown reference accession in accver",
+    ggchord_input_rows(is.na(index)))
   for (key in c("start", "end")) {
     value <- windows[[key]]
-    if (!is.numeric(value) || any(!is.finite(value) | value != floor(value)))
-      ggchord_stop("Coverage windows require finite whole ", key, " coordinates")
+    bad <- if (is.numeric(value)) !is.finite(value) | value != floor(value) else rep(TRUE, nrow(windows))
+    if (!is.numeric(value) || any(bad))
+      ggchord_stop("Coverage windows require finite whole ", key, " coordinates", ggchord_input_rows(bad))
   }
-  if (any(windows$start < 1 | windows$start > windows$end | windows$end > sequences$length[index]))
-    ggchord_stop("Coverage windows require 1 <= start <= end <= reference length")
+  bad <- windows$start < 1 | windows$start > windows$end | windows$end > sequences$length[index]
+  if (any(bad)) ggchord_stop("Coverage windows require 1 <= start <= end <= reference length", ggchord_input_rows(bad))
   start <- as.double(windows$start)
   end <- as.double(windows$end)
   source <- ggchord_focus_source(sequences)
   id <- if (!is.null(windows$window_id)) as.character(windows$window_id) else
     if (length(start)) paste(windows$accver, start, end, sep = ":") else character()
-  if (anyNA(id) || any(!nzchar(id)) || anyDuplicated(id))
-    ggchord_stop("Coverage windows need unique non-missing window_id values")
+  bad <- is.na(id) | !nzchar(id) | duplicated(id) | duplicated(id, fromLast = TRUE)
+  if (any(bad)) ggchord_stop("Coverage windows need unique non-missing window_id values", ggchord_input_rows(bad))
   grid <- data.frame(window_id = id, window_start = start, window_end = end,
     source_accver = source$accver[index], source_start = source$origin[index] + start - 1,
     source_end = source$origin[index] + end - 1, sequence_unit = rep(unit, length(start)),
@@ -130,26 +133,31 @@ StatGgchordCoverage <- ggplot2::ggproto("StatGgchordCoverage", ggplot2::Stat,
   })
 
 ggchord_coverage_input <- function(raw, mapping, sequences, bounds) {
-  ggchord_check_interval_unit(raw, ggchord_sequence_unit(sequences), "Coverage intervals")
   ids <- as.character(raw$accver)
   index <- match(ids, sequences$accver)
-  if (anyNA(index)) ggchord_stop("Coverage needs a known accession for each interval")
-  if (any(!is.finite(sequences$length) | sequences$length < 1 |
-      sequences$length != floor(sequences$length)))
-    ggchord_stop("Coverage requires positive whole sequence lengths")
+  if (anyNA(index)) ggchord_stop("Coverage needs a known accession for each interval in accver",
+    ggchord_input_rows(is.na(index)))
+  bad <- !is.finite(sequences$length) | sequences$length < 1 | sequences$length != floor(sequences$length)
+  if (any(bad)) ggchord_stop("Coverage requires positive whole sequence lengths in the reference table",
+    ggchord_input_rows(bad))
   for (name in c("start", "end")) {
     q <- mapping[[name]]
     if (is.null(q)) ggchord_require_columns(raw, name, "geom_track(stat='coverage')")
     if (ggchord_has_stage(q)) ggchord_stop("Coverage endpoints must be available before statistics")
-    value <- if (is.null(q)) raw[[name]] else rlang::eval_tidy(q, raw)
+    value <- if (is.null(q)) raw[[name]] else ggchord_eval_input_mapping(name, q, raw, "Coverage intervals")
     if (is.character(value) || is.factor(value)) value <- suppressWarnings(as.numeric(as.character(value)))
-    if (!is.numeric(value) || !length(value) %in% c(1L, nrow(raw)) ||
-        any(!is.finite(value) | value != floor(value)))
-      ggchord_stop("Coverage ", name, " must supply finite whole coordinates for each interval")
-    raw[[paste0(".coverage_", name)]] <- rep_len(as.double(value), nrow(raw))
+    if (!length(value) %in% c(1L, nrow(raw)))
+      ggchord_stop("Coverage ", name, " must supply one coordinate per interval (got ",
+        length(value), " for ", nrow(raw), " rows)")
+    value <- rep_len(value, nrow(raw))
+    bad <- if (is.numeric(value)) !is.finite(value) | value != floor(value) else rep(TRUE, nrow(raw))
+    if (!is.numeric(value) || any(bad)) ggchord_stop("Coverage ", name,
+      " must supply finite whole coordinates for each interval", ggchord_input_rows(bad))
+    raw[[paste0(".coverage_", name)]] <- as.double(value)
   }
-  if (any(raw$.coverage_start > raw$.coverage_end))
-    ggchord_stop("Coverage requires start <= end; split origin-crossing intervals before aggregation")
+  bad <- raw$.coverage_start > raw$.coverage_end
+  if (any(bad)) ggchord_stop("Coverage requires start <= end; split origin-crossing intervals before aggregation",
+    ggchord_input_rows(bad))
   parts <- raw[["segments"]]
   if (!is.null(parts)) {
     if (!is.list(parts) || is.data.frame(parts) || length(parts) != nrow(raw))
@@ -163,9 +171,12 @@ ggchord_coverage_input <- function(raw, mapping, sequences, bounds) {
         isTRUE(s$start == raw$.coverage_start[i]) && isTRUE(s$end == raw$.coverage_end[i]) &&
         (is.null(s$segment_type) || isTRUE(s$segment_type != "gap"))
     }, logical(1))
-    if (any(!simple)) ggchord_stop("Coverage needs one interval per row; expand the segments column before aggregation")
+    if (any(!simple)) ggchord_stop("Coverage needs one interval per row; expand the segments column before aggregation",
+      ggchord_input_rows(!simple))
   }
-  if (bounds == "error" && any(raw$.coverage_start < 1 | raw$.coverage_end > sequences$length[index]))
-    ggchord_stop("Coverage interval outside sequence length; use bounds='clip' to intersect it with the sequence")
+  bad <- raw$.coverage_start < 1 | raw$.coverage_end > sequences$length[index]
+  if (bounds == "error" && any(bad))
+    ggchord_stop("Coverage interval outside sequence length in start/end; use bounds='clip' to intersect it with the sequence",
+      ggchord_input_rows(bad))
   raw
 }

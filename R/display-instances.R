@@ -177,6 +177,8 @@ ggchord_prepare_instances <- function(plot) {
         p$input_source <- source
       }
     }
+    if (type %in% c("gene", "gene_label", "gene_label_repel"))
+      layer$ggchord_annotation_origin <- layer$ggchord_input_data
     layer$ggchord_input_data <- input
     layer$ggchord_input_transform <- NULL
     for (role in intersect(layer$ggchord_role_aes, names(layer$ggchord_input_mapping)))

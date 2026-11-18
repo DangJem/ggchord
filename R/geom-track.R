@@ -125,6 +125,8 @@ ggplot_add.ggchord_track_band <- function(object, plot, ...) {
 #'   input order, missing-value breaks and strict increasing positions.
 #' @param fill,colour,alpha,linewidth,linetype Fixed styles; fill and colour
 #'   mappings use the dedicated track roles and scoped scales.
+#'   A fixed style overrides its inherited mapping. Choose either a mapping
+#'   or a fixed value for that aesthetic within a layer.
 #' @param stat Optional source statistic for open lines. See [geom_track()].
 #' @param closed Explicitly close a complete circular line series.
 #' @param bounds `"error"` (default) or `"clip"` for genomic coordinates.
@@ -253,8 +255,12 @@ ggchord_track_layer <- function(kind, mapping, data, track, fill, colour,
     geom$default_aes[[aesthetic]] <- defaults[[name]]
   }
   styles <- defaults[fixed]
+  fixed_names <- intersect(ggplot2::standardise_aes_names(names(dots)), geom$aesthetics())
   for (role in names(keys)) names(styles)[names(styles) == role] <- keys[[role]]
-  for (name in intersect(names(styles), names(mapping))) mapping[[name]] <- NULL
+  local_styles <- names(mapping)
+  for (role in names(keys)) local_styles[local_styles == keys[[role]]] <- role
+  ggchord_check_track_styles(local_styles, c(names(defaults)[fixed], fixed_names),
+    id %||% paste0("geom_track_", kind, "()"))
   ggchord_check_geom_params(dots, geom, paste0("geom_track_", kind, "()"))
   layer <- ggplot2::layer(data = data.frame(x = numeric(), y = numeric(), group = integer()),
     mapping = ggplot2::aes(x = x, y = y, group = group, label = label,
@@ -347,9 +353,15 @@ ggchord_render_track_source <- function(plot) {
 
 ggchord_prepare_track_layers <- function(plot) {
   plot$layers <- lapply(plot$layers, function(layer) {
-    if (!is.null(layer$ggchord_params$native_geom) &&
-        !isTRUE(layer$ggchord_params$native_prepared)) return(ggchord_track_native_input(layer, plot))
-    if (!identical(layer$ggchord_type, "track") || !isTRUE(layer$inherit.aes)) return(layer)
+    if (!identical(layer$ggchord_type, "track")) return(layer)
+    if (!is.null(layer$ggchord_params$native_geom)) {
+      if (!isTRUE(layer$ggchord_params$native_prepared)) return(ggchord_track_native_input(layer, plot))
+      return(layer)
+    }
+    sequences <- plot$ggchord$data$seq_data
+    ggchord_check_interval_unit(ggchord_layer_source(layer, sequences), ggchord_sequence_unit(sequences),
+      paste0("Track input (layer '", layer$ggchord_layer_id, "')"))
+    if (!isTRUE(layer$inherit.aes)) return(layer)
     mapping <- layer$ggchord_input_mapping
     inherited <- ggchord_normalize_mapping(plot$mapping)
     for (name in setdiff(names(inherited), c("x", "y"))) if (!name %in% names(mapping)) mapping[[name]] <- inherited[[name]]

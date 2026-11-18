@@ -60,8 +60,9 @@ tangent to the feature direction; compact labels move beside the feature.}
 \item{position}{An explicit Position places labels independently. Otherwise
 labels follow the matching feature layer's lanes, within each facet and
 displayed sequence. A reordered or filtered label table needs stable
-\code{feature_id} values and matching source intervals. Complete inputs may
-share the same source rows in order.}
+\code{feature_id} values and matching source intervals. Without an entity key,
+both layers must use the same table object or the same registered source
+rows in order for labels to inherit the feature lanes.}
 
 \item{show.legend, inherit.aes}{Standard ggplot2 layer arguments.}
 

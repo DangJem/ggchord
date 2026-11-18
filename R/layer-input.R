@@ -58,6 +58,7 @@ ggchord_check_geom_params <- function(dots, geom, caller, position = "identity",
       class(stat)[1L], " (Stat) and ", class(geom)[1L], " (Geom). ",
       "Give the Stat parameter a distinct name.")
   }
+  invisible(geom$aesthetics())
 }
 
 #' Capture user data and mappings separately from the computed placeholder
@@ -174,6 +175,24 @@ ggchord_layer_input_data <- function(layer, fallback) {
     parent = e, call = NULL))
 }
 
+ggchord_layer_input_context <- function(layer) {
+  paste0("Layer '", layer$ggchord_layer_id, "', ", layer$ggchord_params$input_description)
+}
+
+ggchord_eval_input_mapping <- function(role, mapping, data, caller) {
+  tryCatch(rlang::eval_tidy(mapping, data = data),
+    error = function(e) rlang::abort(paste0(caller, ": cannot evaluate `", role, " = ",
+      rlang::as_label(mapping), "`."), parent = e, call = NULL))
+}
+
+# Row numbers refer to the supplied table, before panels and display instances.
+ggchord_input_rows <- function(bad) {
+  rows <- which(bad)
+  if (!length(rows)) return("")
+  paste0(" (input rows: ", paste(utils::head(rows, 8L), collapse = ", "),
+    if (length(rows) > 8L) paste0(", +", length(rows) - 8L, " more"), ")")
+}
+
 #' Read and adapt a layer's input before evaluating mappings
 #' @noRd
 ggchord_layer_source <- function(lyr, fallback) {
@@ -256,19 +275,16 @@ ggchord_resolve_layer_input <- function(lyr, fallback = NULL,
     expr <- rlang::get_expr(mapping[[role]])
     if (ggchord_has_stage(expr)) {
       ggchord_stop(
-        "Role aesthetic `", role,
+        ggchord_layer_input_context(lyr), ": role aesthetic `", role,
         "` controls geometry and cannot use after_stat() or after_scale()"
       )
     }
-    value <- tryCatch(
-      rlang::eval_tidy(mapping[[role]], data = input),
-      error = function(e) ggchord_stop(
-        "Cannot evaluate `", role, "` in layer mapping: ", conditionMessage(e)
-      )
-    )
+    value <- ggchord_eval_input_mapping(role, mapping[[role]], input, ggchord_layer_input_context(lyr))
     if (length(value) == 1 && nrow(data) != 1) value <- rep(value, nrow(data))
     if (length(value) != nrow(data)) {
-      ggchord_stop("Mapped `", role, "` must return one value per input row")
+      ggchord_stop(ggchord_layer_input_context(lyr), ": mapped `", role, " = ",
+        rlang::as_label(mapping[[role]]), "` must return one value per input row (got ",
+        length(value), " for ", nrow(data), " rows)")
     }
     data[[role]] <- value
   }
@@ -276,7 +292,8 @@ ggchord_resolve_layer_input <- function(lyr, fallback = NULL,
     expr <- rlang::get_expr(mapping[[nm]])
     if (!ggchord_has_stage(expr)) {
       columns <- intersect(all.vars(expr), c("pident", "length", "anno", "type", "label"))
-      ggchord_require_columns(data, columns, paste0("Mapping `", nm, "`"))
+      ggchord_require_columns(data, columns, paste0(ggchord_layer_input_context(lyr),
+        ": mapping `", nm, " = ", rlang::as_label(mapping[[nm]]), "`"))
     }
   }
   capture <- lyr$ggchord_params$stage_capture

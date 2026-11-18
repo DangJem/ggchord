@@ -22,6 +22,9 @@
 #' line/path/point/step. Other combinations are explicitly rejected.
 #' Count counts identical positions; bin requires explicit binwidth or breaks.
 #' An explicit group mapping takes priority over discrete style mappings.
+#' A fixed aesthetic overrides the inherited mapping before statistics and
+#' grouping. Mapping and fixing the same aesthetic in one layer is an error.
+#' An explicit sequence_unit in track data must match the reference (bp or aa).
 #' Bin source membership follows the native statistic, including outer edges
 #' and its numerical boundary tolerance, before data positions move the bars.
 #' Mapping x/y refers to source position/local numerical value, not screen x/y.
@@ -128,12 +131,15 @@ geom_track <- function(mapping = NULL, data = NULL, geom = "point", stat = NULL,
   if (stat %in% names(estimates) && (!geom %in% estimates[[stat]] || !identity_position))
     ggchord_stop("geom_track(): ", stat, " requires position='identity' and geom in ", paste(estimates[[stat]], collapse = ", "))
   dots <- ggchord_colour_dots(list(...), "geom_track()")
+  fixed <- character()
   if (length(dots)) {
     # Resolve the source layer's Geom, Stat and Position just as ggplot2 will
     # for its build. Coverage consumes its public windows before that build.
     receiver_stat <- if (stat == "coverage") StatGgchordCoverage else custom_stat %||% stat
-    ggchord_check_geom_params(dots, geom, "geom_track()", position, receiver_stat,
+    geom_aesthetics <- ggchord_check_geom_params(dots, geom, "geom_track()", position, receiver_stat,
       extra = if (stat == "coverage") c("binwidth", "windows"))
+    names(dots) <- ggplot2::standardise_aes_names(names(dots))
+    fixed <- intersect(names(dots), geom_aesthetics)
   }
   if (stat == "coverage") {
     if (!geom %in% c("bar", "col", "point", "line", "step") || !identity_position)
@@ -161,6 +167,8 @@ geom_track <- function(mapping = NULL, data = NULL, geom = "point", stat = NULL,
   if (!is.null(dots$outline.type) && !identical(dots$outline.type,"full"))
     ggchord_stop("geom_track(): only full polygon outlines are supported")
   mapping <- ggchord_normalize_mapping(mapping) %||% ggplot2::aes()
+  mapping <- ggchord_track_mapping_aliases(mapping)
+  ggchord_check_track_styles(names(mapping), fixed, id %||% paste0("geom_track(", geom, ")"))
   if (!is.numeric(baseline) || length(baseline) != 1L || !is.finite(baseline)) ggchord_stop("Track baseline must be finite")
   if (baseline != 0 && !(geom == "col" && stat == "identity" && identity_position))
     ggchord_stop("geom_track(): a nonzero baseline needs col/identity and position='identity'")
@@ -177,6 +185,7 @@ geom_track <- function(mapping = NULL, data = NULL, geom = "point", stat = NULL,
   l$ggchord_params$native_position <- position
   l$ggchord_params$native_mapping <- mapping
   l$ggchord_params$native_params <- dots
+  l$ggchord_params$fixed_aesthetics <- fixed
   l$ggchord_params$native_inherit <- inherit.aes
   l$ggchord_params$baseline <- baseline
   l
@@ -191,14 +200,34 @@ geom_track_col <- function(mapping = NULL, data = NULL, position = NULL,
     position = position, ..., show.legend = show.legend, inherit.aes = inherit.aes)
 }
 
+ggchord_track_mapping_aliases <- function(mapping) {
+  aliases <- c(pos = "x", track_value = "y", track_fill = "fill", track_colour = "colour")
+  for (key in intersect(names(aliases), names(mapping))) {
+    target <- aliases[[key]]
+    if (target %in% names(mapping)) ggchord_stop("geom_track(): use only one of ", key, " and ", target)
+    names(mapping)[names(mapping) == key] <- target
+  }
+  mapping
+}
+
+ggchord_check_track_styles <- function(mapped, fixed, id) {
+  both <- intersect(mapped, fixed)
+  if (length(both)) ggchord_stop("Layer '", id, "' both maps and fixes ", paste(both, collapse = ", "))
+}
+
 ggchord_track_native_input <- function(layer, plot) {
-  p <- layer$ggchord_params
-  facet_keys <- ggchord_facet_vars(plot)
-  if(!isTRUE(plot$coordinates$ggchord_coord))ggchord_stop("geom_track(): use a ggchord coordinate; for vertical backbones use coord_collinear(seq_axis='vertical') instead of coord_flip()")
-  coverage <- identical(p$native_stat, "coverage")
+  coverage <- identical(layer$ggchord_params$native_stat, "coverage")
   sequences <- plot$ggchord$data$seq_data
   fallback <- if (coverage) plot$ggchord$data$feature_data %||% plot$ggchord$data$gene_data else sequences
   raw <- ggchord_layer_input_data(layer, fallback)
+  tryCatch(ggchord_compute_track_input(layer, plot, raw, sequences, coverage),
+    error = function(e) rlang::abort(ggchord_layer_input_context(layer), parent = e, call = NULL))
+}
+
+ggchord_compute_track_input <- function(layer, plot, raw, sequences, coverage) {
+  p <- layer$ggchord_params
+  facet_keys <- ggchord_facet_vars(plot)
+  if(!isTRUE(plot$coordinates$ggchord_coord))ggchord_stop("geom_track(): use a ggchord coordinate; for vertical backbones use coord_collinear(seq_axis='vertical') instead of coord_flip()")
   if (coverage && is.null(raw)) ggchord_stop("Coverage needs interval data or a plot feature table")
   ggchord_require_columns(raw, character(), "geom_track()")
   ggchord_require_columns(raw, facet_keys, "Faceted track observations")
@@ -206,27 +235,38 @@ ggchord_track_native_input <- function(layer, plot) {
   capture <- p$stage_capture
   if (!is.null(capture) && "source" %in% capture$requested && is.null(capture$source))
     capture$source <- raw
+  caller <- if (coverage) "Coverage intervals" else "Track input"
+  ggchord_check_interval_unit(raw, ggchord_sequence_unit(sequences), caller)
   mapping <- p$native_mapping
-  if (isTRUE(p$native_inherit)) for (key in setdiff(names(plot$mapping), names(mapping)))
-    mapping[[key]] <- plot$mapping[[key]]
+  fixed <- p$fixed_aesthetics
+  if (is.null(fixed)) {
+    # Layers saved before fixed styles were recorded still have their original
+    # public mapping and named parameters.
+    mapping <- ggchord_track_mapping_aliases(mapping)
+    if (length(p$native_params)) {
+      geom <- ggplot2::layer(geom = p$native_geom, stat = "identity", position = "identity")$geom
+      names(p$native_params) <- ggplot2::standardise_aes_names(names(p$native_params))
+      fixed <- intersect(names(p$native_params), geom$aesthetics())
+      ggchord_check_track_styles(names(mapping), fixed, layer$ggchord_layer_id)
+    }
+  }
+  if (isTRUE(p$native_inherit)) {
+    inherited <- ggchord_track_mapping_aliases(plot$mapping)
+    for (key in setdiff(names(inherited), c(names(mapping), fixed)))
+      mapping[[key]] <- inherited[[key]]
+  }
   for (key in intersect(c("accver", "group"), names(mapping))) {
     if (ggchord_has_stage(mapping[[key]]))
       ggchord_stop("geom_track(): ", key, " must be available before the source statistic")
   }
   if ("accver" %in% names(mapping)) {
-    ids <- rlang::eval_tidy(mapping$accver, raw)
+    ids <- ggchord_eval_input_mapping("accver", mapping$accver, raw, caller)
     if (!length(ids) %in% c(1L, nrow(raw)))
       ggchord_stop("geom_track(): mapped accver must be scalar or supply one accession per input row")
     raw$accver <- rep_len(ids, nrow(raw))
     mapping$accver <- NULL
   }
   ggchord_require_columns(raw, "accver", "geom_track()")
-  aliases <- c(pos = "x", track_value = "y", track_fill = "fill", track_colour = "colour")
-  for (key in names(aliases)) if (key %in% names(mapping)) {
-    target <- aliases[[key]]
-    if (target %in% names(mapping)) ggchord_stop("geom_track(): use only one of ", key, " and ", target)
-    mapping[[target]] <- mapping[[key]]; mapping[[key]] <- NULL
-  }
   if (coverage) {
     forbidden <- intersect(names(mapping), c("x", "xmin", "xmax", "ymin", "ymax", "width", "weight"))
     if (length(forbidden) || ("y" %in% names(mapping) &&
@@ -281,7 +321,8 @@ ggchord_track_native_input <- function(layer, plot) {
     }
     mapping[[key]] <- NULL
   }
-  source_group <- if ("group" %in% names(mapping)) rlang::eval_tidy(mapping$group, raw) else rep(1L, nrow(raw))
+  source_group <- if ("group" %in% names(mapping))
+    ggchord_eval_input_mapping("group", mapping$group, raw, caller) else rep(1L, nrow(raw))
   if (!length(source_group) %in% c(1L, nrow(raw)))
     ggchord_stop("geom_track(): group must be scalar or supply one value per input row")
   group_fields <- list(rep_len(source_group, nrow(raw)))
@@ -289,7 +330,7 @@ ggchord_track_native_input <- function(layer, plot) {
       intersect(c("fill", "colour", "linetype", "shape"), names(mapping)) else character()) {
     start <- ggchord_start_mapping(mapping[[key]])
     if (is.null(start)) next
-    value <- rlang::eval_tidy(start, raw)
+    value <- ggchord_eval_input_mapping(key, start, raw, caller)
     if (!is.numeric(value)) group_fields[[length(group_fields) + 1L]] <- rep_len(value, nrow(raw))
   }
   raw$.track_group <- as.integer(do.call(interaction, c(group_fields, list(drop = TRUE, lex.order = TRUE))))
@@ -353,8 +394,8 @@ ggchord_track_native_input <- function(layer, plot) {
       native$stat <- ggchord_track_group_stat(native$stat)
     if (p$native_stat %in% c("count", "summary"))
       native$stat <- ggchord_track_x_stat(native$stat)
-    if (any(c("statistic", "geometry") %in% capture$requested))
-      native <- ggchord_capture_track_stat(native, capture)
+    failures <- capture %||% new.env(parent = emptyenv())
+    native <- ggchord_capture_track_stat(native, failures)
     q <- ggplot2::ggplot() + native + ggplot2::scale_fill_identity() +
       ggplot2::scale_colour_identity() + ggplot2::scale_alpha_identity() +
       ggplot2::scale_size_identity() + ggplot2::scale_linewidth_identity() +
@@ -362,6 +403,8 @@ ggchord_track_native_input <- function(layer, plot) {
     if (nrow(domains) > 1L)
       q <- q + ggplot2::facet_wrap(ggplot2::vars(.track_domain), scales = "free")
     built <- ggplot2::ggplot_build(q)
+    if (is.null(capture) && length(failures$statistic_errors))
+      ggchord_stop("Statistic failed: ", paste(failures$statistic_errors, collapse = "\n"))
     computed <- built$data[[1L]]
     panel <- built$layout$layout
     domain <- if (nrow(domains) > 1L) panel$.track_domain[match(computed$PANEL, panel$PANEL)] else
@@ -402,7 +445,27 @@ ggchord_track_native_input <- function(layer, plot) {
     output <- computed
   } else output <- NULL
   if (is.null(output) || !nrow(output)) {
-    output <- raw[FALSE, domain_keys, drop = FALSE]
+    if (is.null(output)) output <- raw[FALSE, domain_keys, drop = FALSE]
+    # ggplot2 skips a Stat with no input. Supply its documented variables
+    # without invoking an estimator or guessing extension-specific columns.
+    numeric_fields <- switch(p$native_stat,
+      count = c("x", "y", "count", "prop", "width"),
+      bin = c("x", "y", "xmin", "xmax", "width", "count", "density", "ncount", "ndensity"),
+      density = c("x", "y", "density", "scaled", "ndensity", "count", "wdensity"),
+      ecdf = c("x", "y", "ecdf"),
+      smooth = c("x", "y", if (!identical(params$se, FALSE)) c("ymin", "ymax", "se")),
+      summary = c("x", "y", if (is.null(params$fun.data)) c("ymin", "ymax")),
+      identity = intersect(names(mapping), c("x", "y", "xmin", "xmax", "ymin", "ymax", "xend", "yend")),
+      coverage = c("x", "y", "xmin", "xmax"))
+    if (p$native_stat == "count" && !"count" %in% names(output)) {
+      # StatCount sums integer weights as integers. A mapped source column
+      # carries that type even when every observation has been filtered out.
+      weight <- rlang::get_expr(ggchord_start_mapping(mapping$weight))
+      if (rlang::is_symbol(weight)) weight <- raw[[rlang::as_string(weight)]]
+      if (is.integer(weight)) output$count <- integer()
+    }
+    for (key in setdiff(numeric_fields, names(output))) output[[key]] <- numeric()
+    if (p$native_stat == "density" && !"n" %in% names(output)) output$n <- integer()
     output$pos <- output$start <- output$end <- numeric()
     output$track_value <- output$track_ymin <- output$track_ymax <- numeric()
     output$group <- integer()

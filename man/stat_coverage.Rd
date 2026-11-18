@@ -58,6 +58,7 @@ Each window uses inclusive, one-based endpoints in the reference sequence's
 bp or aa units. Omitted interval/window units inherit that reference. A
 discrete input style can form groups; use \code{aes(group = ...)} to choose them
 explicitly or \code{aes(fill = after_stat(coverage))} to colour the pooled result.
+Fixing a layer's fill also removes its inherited fill mapping before grouping.
 Fixed-scale sample facets compute each observed series independently.
 \code{after_stat()} expressions then see all statistical rows in the layer.
 }

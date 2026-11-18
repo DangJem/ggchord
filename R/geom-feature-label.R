@@ -14,8 +14,9 @@
 #' @param position An explicit Position places labels independently. Otherwise
 #'   labels follow the matching feature layer's lanes, within each facet and
 #'   displayed sequence. A reordered or filtered label table needs stable
-#'   `feature_id` values and matching source intervals. Complete inputs may
-#'   share the same source rows in order.
+#'   `feature_id` values and matching source intervals. Without an entity key,
+#'   both layers must use the same table object or the same registered source
+#'   rows in order for labels to inherit the feature lanes.
 #' @param id Optional plot-unique label layer ID.
 #' @param anchor_layer Optional ID of the feature layer to follow. Supply it
 #'   when multiple layers match. An explicit anchor requires a match for each

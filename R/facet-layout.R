@@ -112,7 +112,13 @@ ggchord_facet_layout <- function(plot) {
       copy <- reconstruct_layer(layer, layer$data, mapping = layer$mapping)
       map <- members[[i]]
       rows <- map$.ggchord_input_index[as.integer(map$PANEL) == panel]
-      copy$ggchord_params$panel_input <- sources[[i]][rows, , drop = FALSE]
+      panel_input <- sources[[i]][rows, , drop = FALSE]
+      source <- attr(panel_input, "ggchord_source")
+      if (!is.null(source)) {
+        source$rows <- source$rows[rows]
+        attr(panel_input, "ggchord_source") <- source
+      }
+      copy$ggchord_params$panel_input <- panel_input
       if (identical(layer$ggchord_type, "track"))
         copy$ggchord_params$track_domain_data <- if (is.numeric(layer$layout))
           sources[[i]][unique(map$.ggchord_input_index), , drop = FALSE] else sources[[i]]

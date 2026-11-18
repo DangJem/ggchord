@@ -116,6 +116,9 @@ line/path/point/ribbon, density with line/path/point/area, and ecdf with
 line/path/point/step. Other combinations are explicitly rejected.
 Count counts identical positions; bin requires explicit binwidth or breaks.
 An explicit group mapping takes priority over discrete style mappings.
+A fixed aesthetic overrides the inherited mapping before statistics and
+grouping. Mapping and fixing the same aesthetic in one layer is an error.
+An explicit sequence_unit in track data must match the reference (bp or aa).
 Bin source membership follows the native statistic, including outer edges
 and its numerical boundary tolerance, before data positions move the bars.
 Mapping x/y refers to source position/local numerical value, not screen x/y.

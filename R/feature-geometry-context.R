@@ -37,7 +37,9 @@ ggchord_resolve_feature_geometry_context <- function(plot) {
       geom_source <- attr(ref, "ggchord_source")
       if (!is.null(label_source) && !is.null(geom_source) &&
           !identical(label_source$table, geom_source$table)) next
-      shared <- identical(layer$ggchord_input_data, feature$ggchord_input_data) ||
+      origin <- layer$ggchord_annotation_origin %||% layer$ggchord_input_data
+      feature_origin <- feature$ggchord_annotation_origin %||% feature$ggchord_input_data
+      shared <- (!is.null(origin) && !is.function(origin) && rlang::is_reference(origin, feature_origin)) ||
         (!is.null(label_source) && identical(label_source, geom_source))
       if (independent && (!shared || NROW(input) != NROW(ref))) next
       rows <- ggchord_match_feature_rows(input, ref, shared, strict = !is.null(anchor))

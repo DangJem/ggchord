@@ -31,10 +31,14 @@ Source is the adapted input before role mappings. Mapped is the role table
 before the layer transform. Native track mappings run inside ggplot2 and
 have no separate mapped table. Geometry contains named components.
 \code{layer_stage_status} lists each requested layer ID and stage. A successful
-zero-row statistic is \code{available}. A stage with no separate data is
+zero-row statistic is \code{available}. Built-in track statistics retain their
+known computed variables, e.g. zero-length numeric \code{count} and \code{prop}.
+A stage with no separate data is
 \code{unavailable} with a reason and a NULL entry. A track Stat error marks
 its statistic and derived geometry as \code{failed}, with the error message
 in \code{reason}. Successful panels can still contribute rows to these entries.
+An ordinary build stops on a failed track Stat and preserves the last
+successful layout for \code{\link[=get_chord_layout]{get_chord_layout()}}.
 An error in a registered layer's data callback stops the export and reports
 the layer ID together with the original cause.
 All registered layers participate regardless of include.}

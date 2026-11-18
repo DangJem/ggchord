@@ -1,5 +1,17 @@
 # ggchord 0.50.0 (development)
 
+- All track inputs check an explicit `sequence_unit` against the reference
+  before statistics or projection. Missing unit declarations inherit the
+  reference. A track's fixed style overrides its inherited mapping before
+  grouping. Use `aes(group = kind)` for separate coverage estimates with one
+  fixed fill. Mapping and fixing the same aesthetic in one layer raises an error.
+- Feature labels without `feature_id` follow rows from a shared source in order.
+  Independently created tables with identical values keep independent positions.
+- A failed track Stat stops an ordinary build and preserves the last successful
+  cached layout. Empty built-in statistics retain known computed columns and their
+  types. Role-mapping errors identify the layer and source. Coverage diagnostics
+  identify invalid interval or window rows.
+
 - All exported `geom_*()` constructors reject unknown named parameters. For
   example, `geom_seq(linewditth = 2)` points to `linewidth`. Track layers
   accept parameters declared by their selected Geom, Stat and Position.
