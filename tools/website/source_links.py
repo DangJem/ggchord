@@ -7,7 +7,7 @@ from functools import lru_cache
 from pathlib import Path
 from urllib.parse import unquote, urlsplit
 
-ROOT = Path(__file__).resolve().parents[1]
+from . import ROOT
 WEB = ROOT / 'website'
 INPUT_ARCHIVE = 'https://github.com/DangJem/ggchord/archive/refs/heads/main.zip'
 LINK = re.compile(r'(?<=\]\()[^\s)]+(?=\))')

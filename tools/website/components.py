@@ -1,8 +1,7 @@
 """Shared bilingual presentation components; no scientific data transformations."""
 import html,json,re,csv,struct
 from functools import lru_cache
-from pathlib import Path
-ROOT=Path(__file__).resolve().parent.parent
+from . import ROOT
 
 @lru_cache(maxsize=1)
 def assets():

@@ -3,7 +3,7 @@
 """Current signatures plus canonical, already-translated Rd argument contracts."""
 import argparse,html,importlib.util,json,re
 from documentation_lib import ROOT,WEB
-from site_source_links import source_document
+from website.source_links import source_document
 spec=importlib.util.spec_from_file_location('translations',ROOT/'tools/reference-translations.py')
 ref=importlib.util.module_from_spec(spec);spec.loader.exec_module(ref)
 

@@ -1,7 +1,6 @@
 """Canonical page/section resolution shared by generation, search and migration checks."""
 import json
-from pathlib import Path
-ROOT=Path(__file__).resolve().parent.parent
+from . import ROOT
 WEB=ROOT/'website'
 
 def pages():return json.loads((WEB/'pages.json').read_text())

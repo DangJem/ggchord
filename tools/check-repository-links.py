@@ -9,7 +9,7 @@ import unicodedata
 from html.parser import HTMLParser
 from pathlib import Path
 from urllib.parse import unquote, urlsplit
-from site_source_links import ROOT, check_repository_urls
+from website.source_links import ROOT, check_repository_urls
 
 
 class Links(HTMLParser):

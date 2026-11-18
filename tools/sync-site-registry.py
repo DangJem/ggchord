@@ -3,7 +3,7 @@
 import json,re
 from pathlib import Path
 from documentation_lib import ROOT,WEB,snippets
-from site_registry import canonical
+from website.registry import canonical
 
 def save(path,data):
     canonical=WEB/'content-zh'/path.relative_to(WEB)

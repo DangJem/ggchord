@@ -3,7 +3,7 @@ import html,json,re,hashlib
 from pathlib import Path
 from urllib.parse import quote
 from documentation_lib import ROOT,WEB,PAGES,RECIPES,snippets,expand
-from site_registry import page_kind
+from website.registry import page_kind
 
 def complete_examples(assets):
     folder=assets/'examples';folder.mkdir(exist_ok=True)

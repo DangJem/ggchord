@@ -63,7 +63,7 @@ for name, data, fields in [
         writer = csv.DictWriter(stream, fieldnames=fields, lineterminator='\n')
         writer.writeheader()
         writer.writerows(data)
-templates = ['tools/site_components.py', 'tools/finalize-website.R']
+templates = ['tools/website/components.py', 'tools/finalize-website.R']
 for name in templates:
     text = (ROOT / name).read_text()
     for category, pattern in PATTERNS.items():

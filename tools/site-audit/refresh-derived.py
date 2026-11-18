@@ -4,7 +4,7 @@ import hashlib,json,re,shutil,sys
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[2]
 sys.path.insert(0,str(ROOT/'tools'))
-from site_search import search_records
+from website.search import search_records
 
 def sha(path):return hashlib.sha256(path.read_bytes()).hexdigest()
 
@@ -12,7 +12,7 @@ def main():
     site=ROOT/'.site';snapshot_path=site/'source-snapshot.json'
     snapshot=json.loads(snapshot_path.read_text());old_snapshot=sha(snapshot_path)
     assert snapshot['status']=='verified unchanged across rendering and finalization'
-    allowed={'website/assets/site.css','website/assets/site.js','tools/site_search.py','website/version.json'}
+    allowed={'website/assets/site.css','website/assets/site.js','tools/website/search.py','website/version.json'}
     changed={name for name,value in snapshot['render_inputs'].items() if sha(ROOT/name)!=value}
     assert changed and changed<=allowed,'Only derived presentation/search inputs may change: '+str(changed)
     manifest_path=site/'build-manifest.json';manifest=json.loads(manifest_path.read_text())
@@ -30,7 +30,7 @@ def main():
             metadata.update(values)
             target.write_text(json.dumps(metadata,indent=2)+'\n')
             assert html_before=={str(p):sha(p) for p in site.rglob('*.html')}
-        elif name=='tools/site_search.py':
+        elif name=='tools/website/search.py':
             before={str(p):sha(p) for p in site.rglob('*.html')}
             for lang in ['en','zh']:
                 target=site/lang/'search.json';old=json.loads(target.read_text())

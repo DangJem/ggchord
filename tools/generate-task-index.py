@@ -2,7 +2,7 @@
 """Validate task-search destinations without recreating the removed overview page."""
 import json,re
 from documentation_lib import ROOT, WEB
-from site_registry import canonical
+from website.registry import canonical
 
 def main():
     tasks=json.loads((WEB/'teaching-tasks.json').read_text())

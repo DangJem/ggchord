@@ -11,7 +11,7 @@ from html.parser import HTMLParser
 from pathlib import Path
 from urllib.parse import unquote, urlsplit
 from documentation_lib import ROOT, WEB, PAGES, CAPTIONS, RECIPES, expand, snippets, localize_r_comments
-from site_source_links import check_source_links, check_repository_urls, asset_sources
+from website.source_links import check_source_links, check_repository_urls, asset_sources
 import importlib.util
 
 fingerprint_spec = importlib.util.spec_from_file_location('plot_fingerprints', ROOT/'tools/documentation-fingerprints.py')

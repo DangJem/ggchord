@@ -14,8 +14,8 @@ from datetime import datetime, timezone
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 from site_cache import Cache, runtime, key as cache_key, shell_inputs, reference_inputs, reference_cache_allowed
-from site_search import complete_examples, search_records
-from site_source_links import tracked_paths
+from website.search import complete_examples, search_records
+from website.source_links import tracked_paths
 from documentation_lib import ROOT, WEB, PAGES, CAPTIONS, RECIPES, expand, snippets, localize_r_comments
 
 class PageText(__import__('html.parser',fromlist=['HTMLParser']).HTMLParser):
@@ -49,18 +49,25 @@ def public_files(paths):
 
 
 def copy_source_downloads(assets):
-    for source, target in [(ROOT/'R', assets/'source'),
-                           (ROOT/'tools/teaching-audit', assets/'source/tools/teaching-audit')]:
-        for path in public_files(source.rglob('*')):
-            destination = target / path.relative_to(source)
-            destination.parent.mkdir(parents=True, exist_ok=True)
-            shutil.copy2(path, destination)
+    source = ROOT/'R'
+    for path in public_files(source.rglob('*')):
+        target = assets/'source'/path.relative_to(source)
+        target.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(path, target)
+    # The paired compatibility pages link this evidence table. The remaining
+    # teaching inventory is consumed by the builder, not downloaded by readers.
+    evidence = ROOT/'tools/teaching-audit/layer-compatibility.csv'
+    target = assets/'source'/evidence.relative_to(ROOT)
+    target.parent.mkdir(parents=True, exist_ok=True)
+    files = list(public_files([evidence]))
+    if not files:
+        raise ValueError(f"Missing tracked teaching download: {evidence.name}")
+    shutil.copy2(files[0], target)
 
 
 def render_source_snapshot():
     """Inputs consumed by rendering; audit outputs can still be written."""
-    roots = [WEB, ROOT/'R', ROOT/'man', ROOT/'data', ROOT/'vignettes',
-             ROOT/'tools/teaching-audit']
+    roots = [WEB, ROOT/'R', ROOT/'man', ROOT/'data', ROOT/'vignettes']
     files = {p for root in roots for p in root.rglob('*') if p.is_file()
              and '__pycache__' not in p.parts and
              not any(part.startswith('.') for part in p.relative_to(ROOT).parts)}
@@ -68,7 +75,8 @@ def render_source_snapshot():
     files.update(ROOT/r['file'] for r in json.loads((WEB/'manual-figures.json').read_text()))
     files.update(ROOT/name for name in [
         'DESCRIPTION','NAMESPACE','LICENSE','_pkgdown.yml',
-        'tools/build-website.py','tools/site_cache.py','tools/documentation_lib.py','tools/site_source_links.py','tools/site_search.py','tools/site_registry.py','tools/site_components.py',
+        'tools/teaching-audit/layer-compatibility.csv','tools/teaching-audit/parameter-contracts.json',
+        'tools/website/__init__.py','tools/build-website.py','tools/site_cache.py','tools/documentation_lib.py','tools/website/source_links.py','tools/website/search.py','tools/website/registry.py','tools/website/components.py',
         'tools/render-website.R','tools/finalize-website.R','tools/site-course-examples.R','tools/site-flagships.R',
         'tools/reference-translations.py','tools/documentation-examples.R',
         'tools/documentation-plots.R','tools/audit-source-snapshot.R',
@@ -400,7 +408,12 @@ def finalize(out,args,render_snapshot,input_hashes):
         retired.append(rel)
     for name,data in [('legacy-routes',routes),('retired-routes',retired)]:
         (out/(name+'.json')).write_text(json.dumps(data,ensure_ascii=False,indent=2)+'\n')
-    files=list(public_files(p for base in [WEB,ROOT/'R',ROOT/'man',ROOT/'tools',ROOT/'vignettes'] for p in base.rglob('*')))
+    files = list(public_files(p for base in [WEB, ROOT/'R', ROOT/'man', ROOT/'vignettes']
+                              for p in base.rglob('*')))
+    files += list(public_files((ROOT/'tools').glob('*')))
+    files += list(public_files((ROOT/'tools/site-audit').glob('*.py')))
+    files += list(public_files((ROOT/'tools/site-audit').glob('*.R')))
+    files += [ROOT/name for name in render_snapshot]
     files += inputs + sorted((ROOT/'data').glob('*.rda'))
     files += [ROOT/p for p in ['DESCRIPTION','NAMESPACE','NEWS.md','README.md','README-Hans.md','MIGRATION.md','MIGRATION-Hans.md','_pkgdown.yml','.github/workflows/documentation.yaml']]
     manifest=dict(version=re.search(r'^Version: (.+)$',(ROOT/'DESCRIPTION').read_text(),re.M)[1],api_inventory='current NAMESPACE and man topics; reference-output.json records evaluated examples',generator='pkgdown + paired Markdown + shared static assets',

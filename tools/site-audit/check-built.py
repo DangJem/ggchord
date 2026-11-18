@@ -4,7 +4,7 @@ import hashlib,html,json,re,subprocess,sys,zipfile
 from pathlib import Path
 from urllib.parse import unquote,urlsplit
 ROOT=Path(__file__).resolve().parents[2];sys.path.insert(0,str(ROOT/'tools'))
-from site_registry import canonical
+from website.registry import canonical
 from documentation_lib import snippets
 
 def main():

@@ -2,9 +2,53 @@ name: Documentation
 
 on:
   push:
-    paths: ['website/**', 'tools/**', 'data-raw/**', 'examples/**', 'inst/**', 'data/**', 'R/**', 'man/**', 'vignettes/**', 'README*', 'MIGRATION*.md', 'LICENSE*', 'DESCRIPTION', 'NAMESPACE', '_pkgdown.yml', 'NEWS.md', '.github/workflows/documentation.yaml']
+    paths:
+      - 'website/**'
+      - 'tools/**'
+      - '!tools/long-term-audit/**'
+      - 'tools/long-term-audit/v0.27.0-normal-layout-verification.json'
+      - 'tools/long-term-audit/v0.27.0-compact-final-*.png'
+      - 'tools/long-term-audit/v0.27.0-endpoint-slot-*.png'
+      - 'tools/long-term-audit/v0.27.0-exit-final-a-*.png'
+      - 'data-raw/**'
+      - 'examples/**'
+      - 'inst/**'
+      - 'data/**'
+      - 'R/**'
+      - 'man/**'
+      - 'vignettes/**'
+      - 'README*'
+      - 'MIGRATION*.md'
+      - 'LICENSE*'
+      - 'DESCRIPTION'
+      - 'NAMESPACE'
+      - '_pkgdown.yml'
+      - 'NEWS.md'
+      - '.github/workflows/documentation.yaml'
   pull_request:
-    paths: ['website/**', 'tools/**', 'data-raw/**', 'examples/**', 'inst/**', 'data/**', 'R/**', 'man/**', 'vignettes/**', 'README*', 'MIGRATION*.md', 'LICENSE*', 'DESCRIPTION', 'NAMESPACE', '_pkgdown.yml', 'NEWS.md', '.github/workflows/documentation.yaml']
+    paths:
+      - 'website/**'
+      - 'tools/**'
+      - '!tools/long-term-audit/**'
+      - 'tools/long-term-audit/v0.27.0-normal-layout-verification.json'
+      - 'tools/long-term-audit/v0.27.0-compact-final-*.png'
+      - 'tools/long-term-audit/v0.27.0-endpoint-slot-*.png'
+      - 'tools/long-term-audit/v0.27.0-exit-final-a-*.png'
+      - 'data-raw/**'
+      - 'examples/**'
+      - 'inst/**'
+      - 'data/**'
+      - 'R/**'
+      - 'man/**'
+      - 'vignettes/**'
+      - 'README*'
+      - 'MIGRATION*.md'
+      - 'LICENSE*'
+      - 'DESCRIPTION'
+      - 'NAMESPACE'
+      - '_pkgdown.yml'
+      - 'NEWS.md'
+      - '.github/workflows/documentation.yaml'
   workflow_dispatch:
     inputs:
       deploy:

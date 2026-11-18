@@ -3,7 +3,7 @@
 """Render the explicit API curriculum decisions; do not infer teaching depth."""
 import argparse,html,json,re
 from documentation_lib import ROOT,WEB
-from site_source_links import source_document
+from website.source_links import source_document
 
 def main():
     ap=argparse.ArgumentParser();ap.add_argument('--check',action='store_true');args=ap.parse_args()
