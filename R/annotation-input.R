@@ -7,6 +7,12 @@ ggchord_feature_source_palette <- function(data) {
   colours[!duplicated(names(colours), fromLast = TRUE)]
 }
 
+ggchord_direction_strand <- function(value) {
+  map <- c(forward = "+", reverse = "-", bidirectional = "+/-",
+           none = ".", nondirectional = ".")
+  unname(map[tolower(as.character(value))])
+}
+
 ggchord_normalize_feature_input <- function(data) {
   if (is.null(data)) return(NULL)
   if (inherits(data, "GRanges")) data <- as_ggchord_feature(data)
@@ -16,9 +22,7 @@ ggchord_normalize_feature_input <- function(data) {
     data$strand <- rep(".", nrow(data))
     direction_column <- intersect(c("directionality", "direction"), names(data))[1L]
     if (!is.na(direction_column)) {
-      map <- c(forward = "+", reverse = "-", bidirectional = "+/-",
-        none = ".", nondirectional = ".")
-      data$strand <- unname(map[tolower(as.character(data[[direction_column]]))])
+      data$strand <- ggchord_direction_strand(data[[direction_column]])
     }
   }
   data
@@ -67,12 +71,13 @@ validate_feature_data <- function(data, seq_data, col, check_coordinates, check_
   local$errors <- Filter(function(x) !identical(x$category[1L], "invalid_strand"), local$errors)
   local$warnings <- Filter(function(x) !x$category[1L] %in% c("missing_anno", "overlapping"), local$warnings)
   if (is.data.frame(data) && "strand" %in% names(data)) {
-    if ("directionality" %in% names(data)) {
-      directions <- c(forward = "+", reverse = "-", bidirectional = "+/-", none = ".", nondirectional = ".")
-      expected <- unname(directions[as.character(data$directionality)])
+    direction_column <- intersect(c("directionality", "direction"), names(data))[1L]
+    if (!is.na(direction_column)) {
+      expected <- ggchord_direction_strand(data[[direction_column]])
       conflicts <- which(is.na(expected) | (!is.na(data$strand) & data$strand != expected))
       if (length(conflicts)) local <- add_validation_issue(local, "gene", "direction_conflict",
-        conflicts, "directionality", "feature_data strand and directionality disagree or directionality is invalid", "error")
+        conflicts, direction_column, paste("feature_data strand and", direction_column,
+          "disagree or direction is invalid"), "error")
     }
     invalid <- which(is.na(data$strand) | !data$strand %in% c("+", "-", ".", "+/-"))
     if (length(invalid)) local <- add_validation_issue(local, "gene", "invalid_strand",

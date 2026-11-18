@@ -317,18 +317,19 @@ ggchord_convert_feature <- function(x, mapping, unified = FALSE) {
   ggchord_conversion_coordinates(out, c("start", "end"), caller)
   if (unified) out <- ggchord_normalize_feature_input(out)
   strand <- if ("strand" %in% names(out)) as.character(out$strand) else NULL
-  direction <- if ("directionality" %in% names(out)) as.character(out$directionality) else NULL
-  direction_map <- c(forward = "+", reverse = "-", bidirectional = "+/-", none = ".", nondirectional = ".")
-  if (!is.null(direction) && (anyNA(direction) || any(!direction %in% names(direction_map)))) {
+  direction_roles <- if (unified) c("directionality", "direction") else "directionality"
+  direction_column <- intersect(direction_roles, names(out))[1L]
+  expected <- if (!is.na(direction_column)) ggchord_direction_strand(out[[direction_column]]) else NULL
+  if (anyNA(expected)) {
     ggchord_stop(caller, ": directionality must be forward, reverse, bidirectional or none")
   }
-  if (is.null(strand)) strand <- if (is.null(direction)) rep(".", nrow(out)) else unname(direction_map[direction])
+  if (is.null(strand)) strand <- expected %||% rep(".", nrow(out))
   if (anyNA(strand) || any(!strand %in% c("+", "-", "*", ".", "+/-"))) {
     ggchord_stop(caller, ": strand must be '+', '-', '*', '.', or '+/-'")
   }
   source_strand <- strand
   strand[strand == "*"] <- "."
-  if (!is.null(direction) && any(strand != unname(direction_map[direction]))) {
+  if (!is.null(expected) && any(strand != expected)) {
     ggchord_stop(caller, ": strand and directionality describe conflicting directions")
   }
   out$strand <- strand

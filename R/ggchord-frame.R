@@ -329,7 +329,7 @@ ggplot_build.ggchord <- function(plot, ...) {
     ggchord_stop("Not a valid ggchord object: no data stored on the plot. ",
          "Please build the plot with ggchord().")
   }
-  source <- ggchord_render_track_source(plot)
+  source <- ggchord_render_track_source(ggchord_render_inputs(plot))
   plot <- ggchord_apply_adaptive_styles(source)
   plot <- prepare_ggchord_plot(plot)
   plot$ggchord$ref$layout$adaptive_layout <- plot$ggchord$adaptive_report

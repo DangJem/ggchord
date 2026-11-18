@@ -1100,6 +1100,7 @@ ggchord_layout_component <- function(layout, type, fallback = data.frame()) {
 #' Compute a plot-owned, per-layer geometry registry
 #' @noRd
 compute_chord_geometry <- function(plot) {
+  plot <- ggchord_render_inputs(plot)
   if (isTRUE(plot$coordinates$ggchord_dotplot))
     return(ggchord_cache_layout(plot, ggchord_dotplot_geometry(ggchord_register_layers(plot))))
   if (any(vapply(plot$layers, function(x) identical(x$ggchord_type, "alignment"), logical(1))))

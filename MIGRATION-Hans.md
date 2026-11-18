@@ -6,6 +6,8 @@
 | 自定义 BLAST 列 | 未指定类型的自定义元数据保留文本。可用 `colClasses = c(score_custom = "numeric")` 读入数值测量，也可在读入后用 `mutate(score_custom = as.numeric(score_custom))` 转换。其他自定义标识保留原拼写。 |
 | 轨道身份 | `aes(accver = id)` 的结果须为单值或逐行等长。原先较短的向量会循环补齐，现在报错。 |
 | 科学示例 | 真实数据使用 `strand = source_strand`，GFF3 可用 `unstranded = "keep"` 保留未知链。 |
+| 注释方向 | 同时提供 `strand` 和 `directionality`（或别名 `direction`）时，按报错行核对来源，或只把可信字段交给图层。 |
+| 函数形式的图层数据 | 每次重新绘制时，每个图层读取一次。方向推断、几何及随布局导出的图层输入使用同一批记录。 |
 
 ## 0.19.0：静态跨面板组合
 

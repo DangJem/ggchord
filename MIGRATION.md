@@ -6,6 +6,8 @@
 | Custom BLAST fields | Untyped custom metadata retains text. Use `colClasses = c(score_custom = "numeric")` to read a measurement, or convert it afterward with `mutate(score_custom = as.numeric(score_custom))`. Other custom identifiers keep their spelling. |
 | Track accessions | `aes(accver = id)` must return a scalar or one accession per row. Shorter vectors that were previously recycled now raise an error. |
 | Scientific examples | Use `strand = source_strand` for biological interpretation and `unstranded = "keep"` to retain unknown GFF3 strands. |
+| Feature direction | When supplying both `strand` and `directionality` (or its `direction` alias), correct the conflicting rows at the source or pass just the authoritative field to the layer. |
+| Layer data functions | Each layer reads its function once per fresh render. Orientation inference, geometry and the exported layer input use the same rows. |
 
 ## 0.19.0: static panel composition
 

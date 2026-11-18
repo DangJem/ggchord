@@ -90,18 +90,19 @@ ggchord_feature_data <- function(data, fixed_shape = "arrow",
                                  expand_segments = TRUE) {
   direction_column <- intersect(c("directionality", "direction"), names(data))[1L]
   if (!is.na(direction_column)) {
-    direction <- tolower(as.character(data[[direction_column]]))
-    direction_map <- c(
-      forward = "+", reverse = "-", bidirectional = "+/-", none = ".",
-      nondirectional = "."
-    )
-    if (anyNA(direction) || any(!direction %in% names(direction_map))) {
+    strand <- ggchord_direction_strand(data[[direction_column]])
+    if (anyNA(strand)) {
       ggchord_stop(
         "geom_feature(): direction must be forward, reverse, ",
         "bidirectional, none, or nondirectional"
       )
     }
-    data$strand <- unname(direction_map[direction])
+    if ("strand" %in% names(data)) {
+      conflicts <- which(is.na(data$strand) | as.character(data$strand) != strand)
+      if (length(conflicts)) ggchord_stop("geom_feature(): strand and ", direction_column,
+        " disagree at row(s) ", paste(utils::head(conflicts, 10L), collapse = ", "))
+    }
+    data$strand <- strand
   }
   # Factor levels are labels for genomic coordinates, never integer codes.
   # Normalize them before segment expansion also examines the parent interval.

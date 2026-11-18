@@ -9,6 +9,35 @@ ggchord_capture_layer_input <- function(lyr, data, mapping, roles) {
   lyr
 }
 
+# Capture the first source result on the render-owned layer. Input projection
+# and display-instance expansion still run in their respective contexts.
+ggchord_render_data_once <- function(callback) {
+  force(callback)
+  resolved <- FALSE
+  value <- NULL
+  reader <- function(input) {
+    if (!resolved) {
+      value <<- callback(input)
+      resolved <<- TRUE
+    }
+    value
+  }
+  attr(reader, "ggchord_render_source") <- TRUE
+  reader
+}
+
+ggchord_render_inputs <- function(plot) {
+  for (i in seq_along(plot$layers)) {
+    layer <- plot$layers[[i]]
+    reader <- layer$ggchord_input_data
+    if (!is.function(reader) || isTRUE(attr(reader, "ggchord_render_source"))) next
+    copy <- reconstruct_layer(layer, layer$data, mapping = layer$mapping)
+    copy$ggchord_input_data <- ggchord_render_data_once(reader)
+    plot$layers[[i]] <- copy
+  }
+  plot
+}
+
 #' Normalise public US spelling aliases before geometry or scale inference
 #' @noRd
 ggchord_normalize_mapping <- function(mapping) {
