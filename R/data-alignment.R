@@ -202,7 +202,7 @@ read_aligned_fasta <- function(file, alphabet, source_data = NULL, source_file =
 #' @examples
 #' # Explicit synthetic format example.
 #' aligned <- as_ggchord_alignment(c(A = "AC-G", B = "ACTG"), "DNA")
-#' map_alignment_position(aligned, "A", c(2, 3))
+#' map_alignment_position(aligned, "A", c(2, 3, 5))
 #' map_alignment_position(aligned, "A", 3, inverse = TRUE)
 map_alignment_position <- function(data, accver, position, inverse = FALSE) {
   caller <- "map_alignment_position()"

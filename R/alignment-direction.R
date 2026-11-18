@@ -16,7 +16,7 @@ ggchord_alignment_unknown <- function(input, caller) {
     reverse <- value %in% c("reverse", "-", "-1")
     same <- value %in% c("same", "forward", "+", "1")
     if (any(!unknown & ((reverse & slope > 0) | (same & slope < 0))))
-      ggchord_stop(caller, ": direction conflicts with endpoints; normalize reverse endpoints first (read_paf() does this)")
+      ggchord_stop(caller, ": direction conflicts with endpoints; use the original directional endpoints. When cleaning those records, set reversed_interval = 'keep'.")
   }
   unknown
 }

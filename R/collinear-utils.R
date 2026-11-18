@@ -140,14 +140,14 @@ ggchord_match_feature_rows <- function(labels, features) {
 #' @md
 #' @export
 #' @examples
-#' library(dplyr)
-#' data(seq_data_example)
-#' seqs <- seq_data_example |>
-#'   select(accver, length)
+#' # Explicit synthetic format example.
+#' aligned <- as_ggchord_alignment(c(A = "AC-G", B = "ACTG"), "DNA")
+#' lookup <- map_alignment_position(aligned, "A", c(2, 3, 5))
+#' seqs <- data.frame(accver = c("A", "B"), length = c(3, 4))
 #' p <- ggchord(seq_data = seqs) +
 #'   geom_seq() +
 #'   coord_collinear()
-#' map_ggchord_position(p, seqs$accver[1], position = 100)
+#' map_ggchord_position(p, "A", position = lookup$source_position[1])
 map_ggchord_position <- function(plot, accver, position, inverse = FALSE, source = FALSE, axis = NULL) {
   if (inherits(plot, "ggchord") && isTRUE(plot$coordinates$ggchord_radial))
     return(ggchord_map_radial(plot, accver, position, inverse, source))

@@ -43,12 +43,12 @@ source accession. Positions outside that window, including display gaps,
 produce an error instead of being extrapolated into omitted sequence.
 }
 \examples{
-library(dplyr)
-data(seq_data_example)
-seqs <- seq_data_example |>
-  select(accver, length)
+# Explicit synthetic format example.
+aligned <- as_ggchord_alignment(c(A = "AC-G", B = "ACTG"), "DNA")
+lookup <- map_alignment_position(aligned, "A", c(2, 3, 5))
+seqs <- data.frame(accver = c("A", "B"), length = c(3, 4))
 p <- ggchord(seq_data = seqs) +
   geom_seq() +
   coord_collinear()
-map_ggchord_position(p, seqs$accver[1], position = 100)
+map_ggchord_position(p, "A", position = lookup$source_position[1])
 }

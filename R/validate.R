@@ -237,7 +237,7 @@ validate_ribbon_data <- function(ribbon_data, seq_data, col,
       rows <- which(rev)
       col <- add_validation_issue(
         col, "ribbon", "reversed_interval", rows, "qstart/qend/sstart/send",
-        "start > end in ribbon coordinates (may represent a reverse-complement hit; clean_ggchord_data() can sort them for stable drawing)",
+        "start > end in ribbon coordinates may encode orientation; keep original endpoint order for directional plots (reversed_interval = 'keep' when cleaning)",
         "warning")
     }
   }
