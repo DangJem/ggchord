@@ -85,3 +85,26 @@ FASTA 提供序列 ID 和长度，GFF3 提供注释范围与链，BLAST 提供�
 ## 保存前的证据检查 {#evidence-check}
 
 按图中已声明的宽高调用 view_ggchord，再用相同尺寸 ggsave 保存。核查 ID、源链、比对端点方向、筛选报告、图例单位及标签隐藏原因；PNG 能渲染不代表字体在所有 PDF/SVG 阅读器中一致。保留完整源表、显示子集、参数、软件版本和输入哈希，使图可以追溯到记录。数据来源说明可下载自[资产与来源记录](../ASSET-SOURCES.md)。
+
+## 把读取结果交给图层 {#prepared-layers}
+
+继续使用本页读入的长度、连接和 CDS。将 `source_strand` 明确写入绘图列可保留原记录的方向。查看准备报告后，把命名集合中的 CDS 交给注释层。
+
+```r
+source_cds <- feature_real |>
+  dplyr::mutate(strand = source_strand)
+prepared <- prepare_ggchord_data(
+  seq_data = seq_real,
+  ribbon_data = real_filtered$data,
+  features = list(cds = source_cds)
+)
+stopifnot(prepared$report$valid)
+p_prepared <- ggchord(
+  seq_data = prepared$seq_data,
+  ribbon_data = prepared$ribbon_data
+) +
+  geom_seq() +
+  geom_link_ribbon() +
+  geom_feature(data = prepared$features$cds) +
+  coord_collinear()
+```

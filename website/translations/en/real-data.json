@@ -1,5 +1,5 @@
 {
-  "source_sha256": "495f8e696289811f26feaa1de7c491e316e05a0f158029a3383a278eca018802",
+  "source_sha256": "d455e351c011805230f83037cdff0b9bbe3b3d65b645a19c6d46a46613371345",
   "blocks": {
     "0": {
       "source_sha256": "6c62524aef110a9b95b7913779650d65d1f374f6d04f19f9b1db1281dc9e0b9e",
@@ -125,6 +125,16 @@
       "source_sha256": "5127e9f61b2260a58198115c3c89a2e3a47db048d6cb0872f8a5f35192433943",
       "status": "reviewed",
       "translation": "Preview with view_ggchord at the declared width/height and save with ggsave at matching dimensions. Check IDs, source strands, endpoint directions, selection reports, legend units and hidden-label reasons. A successful PNG does not certify font portability across PDF/SVG viewers. Keep complete source tables, display subsets, parameters, version and input hashes. Download the [asset/provenance record](⟦shared:0⟧).\n"
+    },
+    "48": {
+      "source_sha256": "9b7f5fba5f5e91694624a25734d5796c2e0c0c630c879773b24c8b44b7c22f06",
+      "status": "reviewed",
+      "translation": "## Pass imported records to layers ⟦shared:0⟧\n"
+    },
+    "49": {
+      "source_sha256": "e9f32dd66f98f9de3f138a5cb8fd9e189d3ba2e6267820b4718624e491c51a21",
+      "status": "reviewed",
+      "translation": "Continue with the lengths, links and CDS records imported above. Assign ⟦shared:0⟧ to the plotting column to retain the direction in each source record. Inspect the preparation report, then pass the named CDS collection to its layer.\n"
     }
   }
 }

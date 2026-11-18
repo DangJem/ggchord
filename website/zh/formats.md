@@ -22,3 +22,16 @@
 ## 三文件到首图 {#files}
 
 [FASTA / GFF3 / BLAST](import-sequences.md#files)
+
+## 导入结果怎样接到图层 {#reader-results}
+
+| 格式与返回对象 | 坐标与下游入口 | 额外解码依赖 |
+| --- | --- | --- |
+| FASTA 长度表，GFF3 注释表，BLAST 连接表 | FASTA 声明 bp 或 aa。GFF3 使用一基闭区间，绘方向时核对来源链。BLAST 保留两端顺序与原单位。分别传入 `seq_data`、`feature_data`、`ribbon_data`。 | 包内读取 |
+| BED、BEDPE、PAF、bedGraph 均返回表 | 原始零基半开区间转为一基闭区间。依次用于特征、成对连接、局部比对、数值轨道。 | 包内读取 |
+| BigWig 数值表 | 解码结果已是一基闭区间，`value` 用于数值轨道。 | `rtracklayer`，Windows 可使用已有 bedGraph |
+| GenBank 列表 | 全长表和 `features$annotation` 可交给准备函数。一基特征保留分段来源。 | Python 与 Biopython |
+| 对齐 FASTA 长表，MAF 或 chain 列表 | 前者保留比对列和来源位置。后两者提供全长与配对区间，MAF 另含字符。报告保留解码信息和原文，大文件导入时这些对象会同时占用内存。 | 对齐 FASTA 由包内读取，MAF 与 chain 使用 Python、Biopython |
+| delta 列表 | 全长与连接按解码器坐标和声明单位交给准备函数。 | 已安装的 `show-coords` |
+| VCF 或 BCF 列表 | 使用一基参考等位区间 `features$variant`，显式解析的断点和连接单独取用。 | `VariantAnnotation`，BCF 另需 pysam，结构变异扩展依赖见[变异输入](import-relations.md#variants) |
+| signature 或 feature 关系列表 | 前者按蛋白 aa 坐标给出 `features$signature`。后者保留原始 pair 或组成员，只有完整定位的原始 pair 才有可绘连接。 | signature JSON 需 `jsonlite`，本地表格可直接读取 |

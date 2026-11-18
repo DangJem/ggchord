@@ -14469,7 +14469,7 @@
     "parameter": "mapping",
     "default": "list()",
     "type": "Type, units and accepted forms: see this API argument contract at right",
-    "constraint": "Named list with optional seq, ribbon, gene column mappings, and features/links lists of mappings named like the respective collections. Each column mapping is a named character vector.",
+    "constraint": "Named list with optional seq, ribbon, gene column mappings (use gene for unified feature_data), and features/ links lists of mappings named like the respective collections. Each column mapping is a named character vector.",
     "source": "man/prepare_ggchord_data.Rd",
     "requiredness": "see API contract; not inferred from formals",
     "type_source": "canonical Rd argument contract",

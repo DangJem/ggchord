@@ -84,3 +84,16 @@ No mismatch/gap detail can be recovered from six HSP endpoints alone. This workf
 The default `initiation = "literal"` does not recode alternative starts; `"start"` requires a complete 5-prime end. `ambiguous = "error"` rejects fuzzy codons; explicit `"solve"` delegates to Biostrings, using X if unresolved. Unknown codes, missing/short sources and declared translation exceptions fail. `partial = "trim"` belongs to the CDS map: only the initial phase and incomplete terminal codon are excluded; later segment phases validate continuity without deleting junction bases. No missing sequence is reconstructed. RNA must be declared explicitly. Ordered `segments` support the existing spliced/origin-join contract.
 
 A complete runnable nucleotide/codon/macro example is `examples/m2-detail.R`; its negative-strand labels are centred on their three coding bases. Real spliced plus/minus controls, source hashes and original expected translations are retained in `examples/cds/`. [Register the character plot](fusion-details.md#character-detail) to connect its exact source boundaries.
+
+## Trace an alignment column to the plot {#gap-to-display}
+
+In this small synthetic example, column three of A is a gap. A known gap has a true `matched` flag and a missing `source_position`. The absent fifth column returns false. Only observed source positions can be passed to the display lookup.
+
+```r
+cells <- as_ggchord_alignment(c(A = "AC-G", B = "ACTG"), "DNA")
+lookup <- map_alignment_position(cells, "A", c(2, 3, 5))
+lookup[c("alignment_column", "source_position", "is_gap", "matched")]
+backbones <- data.frame(accver = c("A", "B"), length = c(3, 4))
+p_cells <- ggchord(seq_data = backbones) + geom_seq() + coord_collinear()
+map_ggchord_position(p_cells, "A", lookup$source_position[1])
+```

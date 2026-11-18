@@ -2688,7 +2688,7 @@ Start with the [function index](../../man/). Examples compare important paramete
 | `gene_data` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Optional directional gene input accepted by as_ggchord_feature(). Nondirectional intervals belong in features. |
 | `features` | `list()` | Type, units and accepted forms: see this API argument contract at right | Named lists of feature or paired-interval inputs. |
 | `links` | `list()` | Type, units and accepted forms: see this API argument contract at right | Named lists of feature or paired-interval inputs. |
-| `mapping` | `list()` | Type, units and accepted forms: see this API argument contract at right | Named list with optional seq, ribbon, gene column mappings, and features/links lists of mappings named like the respective collections. Each column mapping is a named character vector. |
+| `mapping` | `list()` | Type, units and accepted forms: see this API argument contract at right | Named list of seq, ribbon and gene column mappings. The gene mapping applies to unified feature_data. Name entries in the features and links mapping lists after their collection members. Each column mapping is a named character vector. |
 | `steps` | `list()` | Type, units and accepted forms: see this API argument contract at right | Named list of explicit helper argument lists. Supported names: clean, filter, deduplicate, merge, bundle, optimize. Data arguments are supplied by preparation and cannot be overridden. |
 | `feature_data` | `NULL` | Type, units and accepted forms: see this API argument contract at right | Unified annotation table, mutually exclusive with gene_data. |
 

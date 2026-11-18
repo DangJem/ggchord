@@ -1,5 +1,5 @@
 {
-  "source_sha256": "f78324f055873cbd64e61859659dd6014c336e76fa6ba29cd2e17a86e5934df7",
+  "source_sha256": "754154e56564bc0442f8ef2b0bde6d7c38acce179f5099e1730a4d22bbdd9829",
   "blocks": {
     "0": {
       "source_sha256": "b65042735ad0aed85715a6b9cf15b4240d2c51e05524a13db0eed5c62d2d0739",
@@ -8852,9 +8852,9 @@
       "translation": "| ⟦shared:0⟧ | ⟦shared:1⟧ | Type, units and accepted forms: see this API argument contract at right | Named lists of feature or paired-interval inputs. |\n"
     },
     "1999": {
-      "source_sha256": "5190fa10c2926bd27e481254c26cf2426e04ba859d10bb88c763281052c65382",
+      "source_sha256": "44c5605a8af4664e65ebe143aa326ceb41ed26c76c87d1ceeab8482ab64f1495",
       "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | ⟦shared:1⟧ | Type, units and accepted forms: see this API argument contract at right | Named list with optional seq, ribbon, gene column mappings, and features/links lists of mappings named like the respective collections. Each column mapping is a named character vector. |\n"
+      "translation": "| ⟦shared:0⟧ | ⟦shared:1⟧ | Type, units and accepted forms: see this API argument contract at right | Named list of seq, ribbon and gene column mappings. The gene mapping applies to unified feature_data. Name entries in the features and links mapping lists after their collection members. Each column mapping is a named character vector. |\n"
     },
     "2000": {
       "source_sha256": "711209ffb079f790b959b26e279a3d3cb53ced2a2ef51d7a548ad28cb7a8cf03",

@@ -90,3 +90,26 @@ Save the plot just created to the working directory; use matching dimensions for
 ## Evidence checks before saving {#evidence-check}
 
 Preview with view_ggchord at the declared width/height and save with ggsave at matching dimensions. Check IDs, source strands, endpoint directions, selection reports, legend units and hidden-label reasons. A successful PNG does not certify font portability across PDF/SVG viewers. Keep complete source tables, display subsets, parameters, version and input hashes. Download the [asset/provenance record](../ASSET-SOURCES.md).
+
+## Pass imported records to layers {#prepared-layers}
+
+Continue with the lengths, links and CDS records imported above. Assign `source_strand` to the plotting column to retain the direction in each source record. Inspect the preparation report, then pass the named CDS collection to its layer.
+
+```r
+source_cds <- feature_real |>
+  dplyr::mutate(strand = source_strand)
+prepared <- prepare_ggchord_data(
+  seq_data = seq_real,
+  ribbon_data = real_filtered$data,
+  features = list(cds = source_cds)
+)
+stopifnot(prepared$report$valid)
+p_prepared <- ggchord(
+  seq_data = prepared$seq_data,
+  ribbon_data = prepared$ribbon_data
+) +
+  geom_seq() +
+  geom_link_ribbon() +
+  geom_feature(data = prepared$features$cds) +
+  coord_collinear()
+```

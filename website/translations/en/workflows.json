@@ -1,5 +1,5 @@
 {
-  "source_sha256": "c40c29a06b246199e85a1ff2e7af2706b323cbc588d7492c70020a4f06418814",
+  "source_sha256": "00dd3ea5a73f0562172df4dae24acebaded903d99931718e8c057160bf91b276",
   "blocks": {
     "1": {
       "source_sha256": "37aa7df51808dedd819d382b6d30261b6c98a150357bd9eb41c0a7ca878fca97",
@@ -90,6 +90,36 @@
       "source_sha256": "53e7312b9da1fbab91ac51733ab3389ab6ff183f6e17da48276c8956438c69d2",
       "status": "reviewed",
       "translation": "[Sequence comparison from FASTA/GFF3/BLAST](⟦shared:0⟧) retains paths, display filters, inputs and results. Obtain originals from the [input archive](⟦shared:1⟧), extract it and run downloaded scripts from a directory containing ⟦shared:2⟧.\n"
+    },
+    "21": {
+      "source_sha256": "ac824c41ca58ec8a63d3c82740aa29d5501404e6f40d5dadda5f423956cd494f",
+      "status": "reviewed",
+      "translation": "## Choose the operation by its output ⟦shared:0⟧\n"
+    },
+    "22": {
+      "source_sha256": "ad14659404dbfa584bd377895bbb7166f8968f22d0f1f50c360279add50871a6",
+      "status": "reviewed",
+      "translation": "| Desired result | Entry point and interpretation |\n"
+    },
+    "23": {
+      "source_sha256": "3491e014f5503eb5b2fca81db42f6f72765980ba5b5e48ef135b6cf69d7f92cc",
+      "status": "reviewed",
+      "translation": "| --- | --- |\n"
+    },
+    "24": {
+      "source_sha256": "c12d6199294ad6cf2494b6f348f5d558ea38772de0e4564a9f38c5850f6f9ec5",
+      "status": "reviewed",
+      "translation": "| Local tables, several windows, or an overview with details | ⟦shared:0⟧ clips to a local interval. ⟦shared:1⟧ prepares windows, which can represent one source row more than once when they overlap. ⟦shared:2⟧ returns an overview and detail composition. A clipped HSP length estimates the displayed span. See [local views](⟦shared:3⟧). |\n"
+    },
+    "25": {
+      "source_sha256": "0627378c65ce4f1df22e79162f9981b2e12d5ac6714d7948d21356ecd3ec0887",
+      "status": "reviewed",
+      "translation": "| Move a feature or its text | ⟦shared:0⟧ allocates lanes to overlapping features. See [label layout](⟦shared:1⟧) for placing an individual label and for automatic placement of a group. |\n"
+    },
+    "26": {
+      "source_sha256": "80b276b94d95c4ea57eda707abc60d3420a225b3e427c3b9962369d96d728b09",
+      "status": "reviewed",
+      "translation": "| Select or summarize links | Filtering keeps qualifying rows, deduplication selects representatives, interval merging produces new boundaries, and bundling records bin members. In plots, ⟦shared:0⟧ is normalized by the largest bin weight within the sequence pair and expresses relative density. See [ribbon statistics](⟦shared:1⟧). |\n"
     }
   }
 }

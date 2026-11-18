@@ -1,5 +1,5 @@
 {
-  "source_sha256": "c3aa211caa92ffff1297e2d0e6c53df7da00e3444d31216e27c316f9cfe881d5",
+  "source_sha256": "6975f221d7b9745de5906b5ead8add86b4f5daf9f68fb36e863de83d563709fd",
   "blocks": {
     "1": {
       "source_sha256": "bf63f25ebc67ab671a53b06a5f7a8d85b1695ffbdb57a79455bba3fdea5980d9",
@@ -85,6 +85,61 @@
       "source_sha256": "db7015658d0d5976510c35a716e258f13a01e941aa34a95c40635f186afd6370",
       "status": "reviewed",
       "translation": "[FASTA / GFF3 / BLAST](⟦shared:0⟧)\n"
+    },
+    "19": {
+      "source_sha256": "a22c2aadd2a67d481a16c9e6cbc3b741fdd3bf6a945c4d4f74bb01a45ab5a419",
+      "status": "reviewed",
+      "translation": "## Connect reader results to layers ⟦shared:0⟧\n"
+    },
+    "20": {
+      "source_sha256": "7fa10838cee2e8aea3b26388baed492a9dacbe108f8def4f132262622e2979d9",
+      "status": "reviewed",
+      "translation": "| Format and result | Coordinates and next step | Additional decoder |\n"
+    },
+    "21": {
+      "source_sha256": "a9e436d2babd638ade86791e162e7de5a6b1b3128c6ae9ed93504fbf3c53dc93",
+      "status": "reviewed",
+      "translation": "| --- | --- | --- |\n"
+    },
+    "22": {
+      "source_sha256": "f043c7f3e47eda96fcc5b8d5b7a98608fb5867464f0dee1c0baa73c2fc1bff14",
+      "status": "reviewed",
+      "translation": "| FASTA length table, GFF3 annotation table, BLAST link table | Declare bp or aa for FASTA. GFF3 uses one-based inclusive intervals. Check the source strand before drawing arrows. BLAST retains endpoint order and input units. Pass the tables to ⟦shared:0⟧, ⟦shared:1⟧ and ⟦shared:2⟧, respectively. | Built in |\n"
+    },
+    "23": {
+      "source_sha256": "a820e958bacfd0d712644a28873fefd53ff54c7f28147f9bcb58ae355a7ac315",
+      "status": "reviewed",
+      "translation": "| BED, BEDPE, PAF and bedGraph each return a table | Zero-based half-open intervals become one-based inclusive intervals for features, paired links, local alignments and quantitative tracks, respectively. | Built in |\n"
+    },
+    "24": {
+      "source_sha256": "536e35535931d3069fb9298d908b63b2f4908bd6a95c46070633e117e1f93010",
+      "status": "reviewed",
+      "translation": "| BigWig signal table | Decoded intervals are already one-based and inclusive. Map ⟦shared:0⟧ in a quantitative track. | ⟦shared:1⟧, with existing bedGraph as an option on Windows |\n"
+    },
+    "25": {
+      "source_sha256": "0db8283b54ec06c61556b2c4c4fe4cb70932d28aa6028b5042592f4bf4597e0c",
+      "status": "reviewed",
+      "translation": "| GenBank list | Pass the full-length table and ⟦shared:0⟧ to the preparation function. One-based features retain their source parts. | Python and Biopython |\n"
+    },
+    "26": {
+      "source_sha256": "cf4bcff00dd22829fd3145995d892dfb4f1f0ab631699d00a44ae4e7dabea055",
+      "status": "reviewed",
+      "translation": "| Aligned FASTA long table, or MAF and chain lists | The alignment table records columns and source positions. MAF and chain provide full lengths and paired intervals. MAF also includes characters. Reports retain decoded information and original text, which coexist in memory for large imports. | Aligned FASTA is built in. MAF and chain use Python and Biopython |\n"
+    },
+    "27": {
+      "source_sha256": "74d92d3781444f47e40b10629dfdfb8aa62bff482ab84fc1c399290f947169fe",
+      "status": "reviewed",
+      "translation": "| Delta list | Pass full lengths and links to preparation using decoder coordinates and the declared units. | Installed ⟦shared:0⟧ executable |\n"
+    },
+    "28": {
+      "source_sha256": "090adbe917859bd692d296982b6438646502d48bea9ad42555480e43555072aa",
+      "status": "reviewed",
+      "translation": "| VCF or BCF list | Use one-based reference allele spans in ⟦shared:0⟧. Extract explicitly decoded breakends and links separately. | ⟦shared:1⟧, plus pysam for BCF. See [variant inputs](⟦shared:2⟧) for the structural variant extension |\n"
+    },
+    "29": {
+      "source_sha256": "2606f019196f60214dca9e7ed76ec836c1f1c2db9959448b9b4b4c2ae7f3bbf0",
+      "status": "reviewed",
+      "translation": "| Signature or feature relation lists | Signatures provide ⟦shared:0⟧ in protein aa coordinates. Relations retain original pairs or group members. Only complete mapped original pairs produce drawable links. | Signature JSON requires ⟦shared:1⟧. Local tabular files are read directly |\n"
     }
   }
 }

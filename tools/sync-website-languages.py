@@ -143,29 +143,44 @@ def resolve_content(source, saved, path=()):
     return result
 
 
+def sources_for(row):
+    return f"website/{row['source']} + website/{row['translations']} → website/{row['output']}"
+
+
+def generate_item(row, kind):
+    try:
+        source = (WEB / row['source']).read_text()
+        saved = json.loads((WEB / row['translations']).read_text())
+        if kind == 'markdown':
+            return translated_page(source, saved), len(saved['blocks'])
+        content = resolve_content(json.loads(source), saved)
+        return json.dumps(content, ensure_ascii=False, indent=2) + '\n', len(saved['strings'])
+    except (OSError, ValueError, KeyError) as error:
+        raise ValueError(f"{sources_for(row)}: {error}") from error
+
+
 def generated_outputs():
     policy=json.loads(CONFIG.read_text())
     if policy['source_language']!='zh' or policy['generated_language']!='en':raise ValueError('Unsupported content policy')
     outputs={}; counts={'pages':0,'extra_markdown':0,'structured_files':0,'translated_blocks':0,'translated_strings':0}
     for row in policy['markdown']:
-        source=(WEB/row['source']).read_text()
-        saved=json.loads((WEB/row['translations']).read_text())
-        outputs[WEB/row['output']]=translated_page(source,saved)
+        outputs[WEB/row['output']], blocks_count = generate_item(row, 'markdown')
         counts['pages' if row['source'].startswith('zh/') else 'extra_markdown']+=1
-        counts['translated_blocks']+=len(saved['blocks'])
+        counts['translated_blocks']+=blocks_count
     for row in policy['structured']:
-        source=json.loads((WEB/row['source']).read_text())
-        saved=json.loads((WEB/row['translations']).read_text())
-        result=resolve_content(source,saved)
-        outputs[WEB/row['output']]=json.dumps(result,ensure_ascii=False,indent=2)+'\n'
-        counts['structured_files']+=1;counts['translated_strings']+=len(saved['strings'])
+        outputs[WEB/row['output']], strings_count = generate_item(row, 'structured')
+        counts['structured_files']+=1;counts['translated_strings']+=strings_count
     return outputs,counts
 
 
 def sync(check=True):
     outputs,counts=generated_outputs()
-    stale=[str(path.relative_to(ROOT)) for path,text in outputs.items() if not path.exists() or path.read_text()!=text]
-    if check and stale:raise ValueError('Generated language content was edited or is stale; regenerate from Han source and reviewed translations: '+', '.join(stale))
+    if check:
+        policy = json.loads(CONFIG.read_text())
+        for row in policy['markdown'] + policy['structured']:
+            path = WEB / row['output']
+            if not path.exists() or path.read_text() != outputs[path]:
+                raise ValueError(f"Regenerate stale content with tools/sync-website-languages.py: {sources_for(row)}")
     if not check:
         for path,text in outputs.items():
             path.parent.mkdir(parents=True,exist_ok=True)

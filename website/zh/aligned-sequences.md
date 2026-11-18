@@ -84,3 +84,16 @@ if (file.exists(alignment_file)) {
 默认 `initiation = "literal"` 不改写替代起始密码子；`"start"` 要求完整5′端。`ambiguous = "error"` 拒绝模糊 codon，显式 `"solve"` 交由 Biostrings 解析，不能唯一确定时输出X。未知翻译表、缺失/过短源序列及已声明的翻译例外均报错。`partial = "trim"` 在构建 CDS map 时声明：只排除首段 phase 与末端不完整 codon，后续 phase 用于校验连续性，不删除跨段 codon 的碱基。缺失序列不会被补造。RNA 必须显式声明；有序 `segments` 沿用既有分段/跨原点契约。
 
 完整的碱基、codon 和宏观关联可运行示例在 `examples/m2-detail.R`，负链氨基酸标在其三个编码碱基中心。真实正/负链分段对照、源hash和原始预期翻译保存在 `examples/cds/`。[注册字符图](fusion-details.md#character-detail)后可连接精确源边界。
+
+## 从比对列追溯到画布位置 {#gap-to-display}
+
+在这个合成的小例子中，A 的第三列为 gap。已知 gap 的 `matched` 为真且 `source_position` 缺失，缺少的第五列则返回假。只有真实来源位置才能交给布局查询。
+
+```r
+cells <- as_ggchord_alignment(c(A = "AC-G", B = "ACTG"), "DNA")
+lookup <- map_alignment_position(cells, "A", c(2, 3, 5))
+lookup[c("alignment_column", "source_position", "is_gap", "matched")]
+backbones <- data.frame(accver = c("A", "B"), length = c(3, 4))
+p_cells <- ggchord(seq_data = backbones) + geom_seq() + coord_collinear()
+map_ggchord_position(p_cells, "A", lookup$source_position[1])
+```

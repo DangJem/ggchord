@@ -86,3 +86,20 @@ Focus pUC19 to 500–1500 bp and trim the same observed GC windows as intervals.
 
 {{code:comparetrackfocus}}
 {{console:comparetrackfocus}}
+
+## Compare event counts with supplied totals {#count-and-col}
+
+The preceding `bar` counts HSPs at each query start. Here the totals are computed first and drawn with `col`. The `track` argument names the physical band and `position` controls how values are arranged within it.
+
+```r
+start_totals <- foundation_events |>
+  dplyr::count(accver, pos, name = "hsp_count")
+p_start_totals <- ggchord(seq_data = foundation_seqs) +
+  geom_seq() +
+  geom_track(
+    aes(x = pos, y = hsp_count), data = start_totals,
+    geom = "col", track = position_track("query_starts"),
+    position = "identity"
+  ) +
+  coord_collinear()
+```

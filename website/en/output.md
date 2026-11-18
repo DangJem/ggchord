@@ -40,3 +40,12 @@ PNG serves web pages and slides; PDF/SVG serve vector-output workflows. The exte
 ggsave("comparison.pdf", p_linear_base,
   width = output_width, height = output_height, units = "in")
 ```
+
+## Choose an output by question {#layout-results}
+
+| Question | Call and result | Rows and units |
+| --- | --- | --- |
+| Where did an input link go? | `connection_report` and `original_data` from `export_ggchord_layout(p, original_data = TRUE)` | Look up the row in its layer input. A statistic can have several members in `source_rows`. Polygon rows describe vertices. Count observations in the source table. |
+| Where is a base or residue drawn? | `map_ggchord_position()` returns `position`, `x`, `y` and `sequence_unit` | Source positions are in bp or aa. Display coordinates use layout units. Select an axis for a dot plot. |
+| Is the plot legible at the intended size? | `measurement` and diagnostics from `diagnose_ggchord()` | Check panel measurement status on the target device before reading bounds in mm. In ordinary exports, `render_context` identifies layout estimates or existing measurements. |
+| How do the panels line up? | `panels` and child layouts from `export_ggchord_fusion()` | Global composition geometry uses mm. Look up source positions in the corresponding child panel. |

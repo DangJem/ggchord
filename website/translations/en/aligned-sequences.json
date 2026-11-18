@@ -1,5 +1,5 @@
 {
-  "source_sha256": "07e6a1ecdeeb04d785c5a418795b35c733166cbdda56406971a446b5be52d2eb",
+  "source_sha256": "69dc9f7f4aca4012bb2d284af33447af92c6f8ff9fc52d750063effc3ba1118f",
   "blocks": {
     "2": {
       "source_sha256": "1dcf4ba858b3e81a1ba6123be80694d45b45cc4b5dda311851299fa19329a391",
@@ -130,6 +130,16 @@
       "source_sha256": "490211dc62ae19e9bdcd51aebf933463cdb0da7099f2eebbaf19fbd22d196434",
       "status": "reviewed",
       "translation": "A complete runnable nucleotide/codon/macro example is ⟦shared:0⟧; its negative-strand labels are centred on their three coding bases. Real spliced plus/minus controls, source hashes and original expected translations are retained in ⟦shared:1⟧. [Register the character plot](⟦shared:2⟧) to connect its exact source boundaries.\n"
+    },
+    "40": {
+      "source_sha256": "74d2f4250d9f64a8002641910d617d06ff6602a8a41d675aeada9a84f3546a41",
+      "status": "reviewed",
+      "translation": "## Trace an alignment column to the plot ⟦shared:0⟧\n"
+    },
+    "41": {
+      "source_sha256": "3021af5a413ffb872030b44f3c794191a9a57abb3bc85cb2e089d84523017d76",
+      "status": "reviewed",
+      "translation": "In this small synthetic example, column three of A is a gap. A known gap has a true ⟦shared:0⟧ flag and a missing ⟦shared:1⟧. The absent fifth column returns false. Only observed source positions can be passed to the display lookup.\n"
     }
   }
 }

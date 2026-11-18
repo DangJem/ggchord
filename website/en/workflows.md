@@ -28,3 +28,11 @@ Identify the original input and the intended plot. Every path preserves source I
 ## Complete source-backed example {#examples}
 
 [Sequence comparison from FASTA/GFF3/BLAST](real-data.md) retains paths, display filters, inputs and results. Obtain originals from the [input archive](formats.md), extract it and run downloaded scripts from a directory containing `examples/`.
+
+## Choose the operation by its output {#choose-operation}
+
+| Desired result | Entry point and interpretation |
+| --- | --- |
+| Local tables, several windows, or an overview with details | `focus_ggchord_data()` clips to a local interval. `segment_ggchord_data()` prepares windows, which can represent one source row more than once when they overlap. `magnify_ggchord()` returns an overview and detail composition. A clipped HSP length estimates the displayed span. See [local views](views.md). |
+| Move a feature or its text | `position_feature_stack()` allocates lanes to overlapping features. See [label layout](labels.md) for placing an individual label and for automatic placement of a group. |
+| Select or summarize links | Filtering keeps qualifying rows, deduplication selects representatives, interval merging produces new boundaries, and bundling records bin members. In plots, `after_stat(density)` is normalized by the largest bin weight within the sequence pair and expresses relative density. See [ribbon statistics](ribbons.md#statistics). |

@@ -1,5 +1,5 @@
 {
-  "source_sha256": "17bab74e3a6f4347808f9309b51de1ac7c7e383d28304b1a509f65bf1808c317",
+  "source_sha256": "174f947c703c318bc84eb1ceebf53faca5e478f9dcc425fdcb79fa561e5c25c6",
   "blocks": {
     "3": {
       "source_sha256": "915e5a9d83418695db686ead0306a42583df6b8101712048915edd5db8a2bf9f",
@@ -145,6 +145,16 @@
       "source_sha256": "09dd2063faf98e59d469c1f3cb15490683b59ef4223ecc29af818b4e1b8d13d8",
       "status": "reviewed",
       "translation": "Focus pUC19 to 500–1500 bp and trim the same observed GC windows as intervals. `focus_ggchord_track` does not recompute averages, invent boundary samples or bridge omitted windows. Return to actual DNA and declare new windows/denominators if finer GC summaries are needed.\n"
+    },
+    "47": {
+      "source_sha256": "0e21bd1003e5deb11b110176f3025f41e441c3ddc511830901239b95baa02ce8",
+      "status": "reviewed",
+      "translation": "## Compare event counts with supplied totals ⟦shared:0⟧\n"
+    },
+    "48": {
+      "source_sha256": "9be140df522580feb9a758c71bfeb43b8b9733583ac21bbdbd42dcc398f2599a",
+      "status": "reviewed",
+      "translation": "The preceding ⟦shared:0⟧ counts HSPs at each query start. Here the totals are computed first and drawn with ⟦shared:1⟧. The ⟦shared:2⟧ argument names the physical band and ⟦shared:3⟧ controls how values are arranged within it.\n"
     }
   }
 }

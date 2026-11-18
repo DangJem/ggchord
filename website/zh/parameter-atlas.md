@@ -2688,7 +2688,7 @@
 | `gene_data` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | as_ggchord_feature() 接受的可选有方向基因输入；无方向区间放入 features。 |
 | `features` | `list()` | 类型、单位及允许格式见右侧本函数参数契约 | 注释或成对区间输入的命名列表。 |
 | `links` | `list()` | 类型、单位及允许格式见右侧本函数参数契约 | 注释或成对区间输入的命名列表。 |
-| `mapping` | `list()` | 类型、单位及允许格式见右侧本函数参数契约 | 命名列表，可含 seq、ribbon、gene 列映射，以及与集合同名的 features/links 映射列表；每项列映射为命名字符向量。 |
+| `mapping` | `list()` | 类型、单位及允许格式见右侧本函数参数契约 | 命名列表，可用 seq、ribbon、gene 指定列映射（统一 feature_data 使用 gene）。features 和 links 的映射列表按各自集合中的表名命名。每个列映射均为命名字符向量。 |
 | `steps` | `list()` | 类型、单位及允许格式见右侧本函数参数契约 | 明确辅助步骤参数的命名列表，支持 clean、filter、deduplicate、merge、bundle、optimize。数据由准备函数提供，不可覆盖。 |
 | `feature_data` | `NULL` | 类型、单位及允许格式见右侧本函数参数契约 | 统一注释表，与 gene_data 互斥。 |
 

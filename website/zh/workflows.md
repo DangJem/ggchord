@@ -28,3 +28,11 @@
 ## 完整来源实例 {#examples}
 
 [从原始 FASTA/GFF3/BLAST 到序列比较图](real-data.md)保留文件路径、显示筛选、输入与结果。原始文件可从[输入归档](formats.md)下载；下载脚本在解压后、以包含 `examples/` 的目录为工作目录运行。
+
+## 按所需产物选择操作 {#choose-operation}
+
+| 所需产物 | 入口与解释 |
+| --- | --- |
+| 一个局部表、多个窗口或一张总览加细节图 | `focus_ggchord_data()` 裁切到局部区间，`segment_ggchord_data()` 准备多个窗口，同一源行可出现在重叠窗口中。`magnify_ggchord()` 返回总览与细节的组合。裁切后的 HSP 长度是显示区间的估计。见[局部视图](views.md)。 |
+| 修改特征位置或文字位置 | `position_feature_stack()` 为重叠特征分配轨道。单个标签的固定位置和整组标签的自动避让分别见[标签排版](labels.md)。 |
+| 选择或汇总连接 | 筛选保留符合阈值的原始行，去重选择代表行，区间合并产生新边界，分箱汇总保存成员。绘图时的 `after_stat(density)` 按序列对中的最大箱权重归一化，表示相对密度。见[连接统计](ribbons.md#statistics)。 |

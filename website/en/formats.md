@@ -22,3 +22,16 @@
 ## Three files to a first plot {#files}
 
 [FASTA / GFF3 / BLAST](import-sequences.md#files)
+
+## Connect reader results to layers {#reader-results}
+
+| Format and result | Coordinates and next step | Additional decoder |
+| --- | --- | --- |
+| FASTA length table, GFF3 annotation table, BLAST link table | Declare bp or aa for FASTA. GFF3 uses one-based inclusive intervals. Check the source strand before drawing arrows. BLAST retains endpoint order and input units. Pass the tables to `seq_data`, `feature_data` and `ribbon_data`, respectively. | Built in |
+| BED, BEDPE, PAF and bedGraph each return a table | Zero-based half-open intervals become one-based inclusive intervals for features, paired links, local alignments and quantitative tracks, respectively. | Built in |
+| BigWig signal table | Decoded intervals are already one-based and inclusive. Map `value` in a quantitative track. | `rtracklayer`, with existing bedGraph as an option on Windows |
+| GenBank list | Pass the full-length table and `features$annotation` to the preparation function. One-based features retain their source parts. | Python and Biopython |
+| Aligned FASTA long table, or MAF and chain lists | The alignment table records columns and source positions. MAF and chain provide full lengths and paired intervals. MAF also includes characters. Reports retain decoded information and original text, which coexist in memory for large imports. | Aligned FASTA is built in. MAF and chain use Python and Biopython |
+| Delta list | Pass full lengths and links to preparation using decoder coordinates and the declared units. | Installed `show-coords` executable |
+| VCF or BCF list | Use one-based reference allele spans in `features$variant`. Extract explicitly decoded breakends and links separately. | `VariantAnnotation`, plus pysam for BCF. See [variant inputs](import-relations.md#variants) for the structural variant extension |
+| Signature or feature relation lists | Signatures provide `features$signature` in protein aa coordinates. Relations retain original pairs or group members. Only complete mapped original pairs produce drawable links. | Signature JSON requires `jsonlite`. Local tabular files are read directly |

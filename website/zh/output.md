@@ -39,3 +39,12 @@ PNG 适合网页与幻灯片；PDF/SVG 用于需要矢量输出的工作流。�
 ggsave("comparison.pdf", p_linear_base,
   width = output_width, height = output_height, units = "in")
 ```
+
+## 按问题查找布局结果 {#layout-results}
+
+| 想知道什么 | 调用与返回项 | 行与单位 |
+| --- | --- | --- |
+| 输入连接去了哪里？ | `export_ggchord_layout(p, original_data = TRUE)` 的 `connection_report` 与 `original_data` | 在相应图层的数据表中查来源行。统计的 `source_rows` 可有多个成员。多边形的顶点行属于绘图几何，计数时应回到来源表。 |
+| 某个碱基或残基画在哪里？ | `map_ggchord_position()` 返回 `position`、`x`、`y` 和 `sequence_unit` | 源位置用 bp 或 aa，显示坐标用布局单位。点图还要选轴。 |
+| 指定纸张尺寸后还能读清吗？ | `diagnose_ggchord()` 的 `measurement` 和诊断结果 | 检查目标设备的面板测量状态，再读以 mm 表示的边界。普通导出的 `render_context` 标记布局估算或已有实测。 |
+| 组合图的面板如何对齐？ | `export_ggchord_fusion()` 的 `panels` 与子图布局 | 组合画布的全局几何使用 mm。源位置在对应子图中查询。 |

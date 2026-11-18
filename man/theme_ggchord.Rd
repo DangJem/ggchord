@@ -702,4 +702,3 @@ Only ggchord-specific settings appear as explicit formals for IDE argument
 completion. An IDE that additionally expands upstream dots may still offer
 upstream suggestions; this package controls its own function signature.
 }
-

@@ -1,9 +1,9 @@
 # ggchord 文档网站源 / Documentation source
 
-当前文档源为 v0.16.7 本地维护版，教程使用 0.16.6 正式接口。发布与部署状态以 CRAN、GitHub Release 和 Actions 为准。
+本分支文档对应的包版本见 [DESCRIPTION](../DESCRIPTION)，稳定版和开发通道见 [version.json](version.json)。正式发布与部署记录分别见 GitHub Releases 和 Actions。
 旧 `docs/` 保留为历史归档，不再作为 Pages 部署源；历史地址由版本化清单生成跳转。网站生成物不作为当前 R 接口的事实来源。
 
-The v0.16.7 documentation uses the public API of the 0.16.6 release.
+The tutorials use the public API in this checkout. DESCRIPTION identifies the package version and version.json records the documentation channel and stable release.
 Consult GitHub Releases/Actions for publication and deployment status. Legacy `docs/` is retained as an archive; Pages uses Actions and versioned historical redirects.
 
 ## 单一正文源与翻译
@@ -11,7 +11,7 @@ Consult GitHub Releases/Actions for publication and deployment status. Legacy `d
 网站正文唯一手工源为 `website/zh/*.md`，英语文件 `website/en/*.md` 是生成物。
 页面标题、导航、首页和图注等结构化文案编辑 `website/content-zh/`；其余同名配对
 JSON由生成器输出。英语译文保存在 `website/translations/en/`，以汉语摘要绑定并
-标记校对状态。`content-policy.json` 列出完整输入/输出；不要直接编辑生成页或配对JSON。
+标记校对状态。[生成清单](content-policy.json)按 `source`、`translations`、`output` 列出每组路径。例如更新首页应编辑 `website/content-zh/home.json` 和 `website/translations/en/content/home.json`，随后由同步命令写入 `website/home.json`。
 
 修改汉语正文后，先运行 `--prepare` 标出待翻译段，校对对应英语和保护占位符，再把状态改为 `reviewed`。摘要由准备步骤更新，未经校对的旧译文不会自动通过：
 
@@ -217,11 +217,11 @@ long runnable code in disclosures. First-plot lessons remain minimal. The left
 outline describes the current page; the right guide covers the whole site.
 They become separate disclosures on compact screens.
 
-website/navigation.json是全站任务分类的单一来源。顶部“可视化”菜单读取其中的
+全站任务分类编辑于 website/content-zh/navigation.json，顶部“可视化”菜单读取生成的 website/navigation.json 中的
 弦图/共线性/质粒模块，其他顶栏链接为首页、入门、教程总览和函数参考。全站目录
 列出各模块下的具体流程和通用技巧，不在顶栏重复全部页面。
 
-website/navigation.json owns the task taxonomy. The top Visualizations menu
+The task taxonomy is authored in website/content-zh/navigation.json and rendered into website/navigation.json. The top Visualizations menu
 uses its chord/collinear/plasmid modules; Home, Get started, All guides and
 Reference are primary entry points. The right guide expands these paths into
 workflows and shared techniques rather than repeating every page in the header.

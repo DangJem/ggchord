@@ -82,3 +82,20 @@
 
 {{code:comparetrackfocus}}
 {{console:comparetrackfocus}}
+
+## 对照同一组位置的计数与已汇总数值 {#count-and-col}
+
+前例的 `bar` 统计每个 query 起点上的 HSP。下面先按位置计数，再用 `col` 画出相同的总数。`track` 命名物理轨道，`position` 决定数值在轨道内的排列。
+
+```r
+start_totals <- foundation_events |>
+  dplyr::count(accver, pos, name = "hsp_count")
+p_start_totals <- ggchord(seq_data = foundation_seqs) +
+  geom_seq() +
+  geom_track(
+    aes(x = pos, y = hsp_count), data = start_totals,
+    geom = "col", track = position_track("query_starts"),
+    position = "identity"
+  ) +
+  coord_collinear()
+```
