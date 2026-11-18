@@ -46,9 +46,6 @@ StatGgchordCoverage <- ggplot2::ggproto("StatGgchordCoverage", ggplot2::Stat,
   })
 
 ggchord_coverage_input <- function(raw, mapping, sequences, bounds) {
-  if (is.list(raw[["segments"]]) && any(vapply(raw[["segments"]], function(x)
-      is.data.frame(x) && nrow(x) > 0L, logical(1))))
-    ggchord_stop("Coverage needs one interval per row; expand the segments column before aggregation")
   ids <- as.character(raw$accver)
   index <- match(ids, sequences$accver)
   if (anyNA(index)) ggchord_stop("Coverage needs a known accession for each interval")
@@ -68,6 +65,21 @@ ggchord_coverage_input <- function(raw, mapping, sequences, bounds) {
   }
   if (any(raw$.coverage_start > raw$.coverage_end))
     ggchord_stop("Coverage requires start <= end; split origin-crossing intervals before aggregation")
+  parts <- raw[["segments"]]
+  if (!is.null(parts)) {
+    if (!is.list(parts) || is.data.frame(parts) || length(parts) != nrow(raw))
+      ggchord_stop("Coverage expects segments to be a list-column of intervals")
+    # Readers such as read_genbank() keep a segment table even for a single
+    # ordinary interval. A compound envelope, in contrast, can include gaps.
+    simple <- vapply(seq_along(parts), function(i) {
+      s <- parts[[i]]
+      if (is.null(s) || (is.data.frame(s) && !nrow(s))) return(TRUE)
+      is.data.frame(s) && nrow(s) == 1L && all(c("start", "end") %in% names(s)) &&
+        isTRUE(s$start == raw$.coverage_start[i]) && isTRUE(s$end == raw$.coverage_end[i]) &&
+        (is.null(s$segment_type) || isTRUE(s$segment_type != "gap"))
+    }, logical(1))
+    if (any(!simple)) ggchord_stop("Coverage needs one interval per row; expand the segments column before aggregation")
+  }
   if (bounds == "error" && any(raw$.coverage_start < 1 | raw$.coverage_end > sequences$length[index]))
     ggchord_stop("Coverage interval outside sequence length; use bounds='clip' to intersect it with the sequence")
   raw
