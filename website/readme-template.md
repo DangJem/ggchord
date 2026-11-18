@@ -9,7 +9,8 @@
 
 {{intro}}
 
-{{api-compatibility}}
+> [!IMPORTANT]
+> {{api-compatibility}}
 
 [{{website}}](https://dangjem.github.io/ggchord/) · [{{manual}}](website/{{lang}}/modes.md) · [{{gallery}}](website/{{lang}}/gallery.md) · [{{issues}}](https://github.com/DangJem/ggchord/issues)
 
@@ -89,7 +90,7 @@ install.packages("ggchord")
 
 ```r
 install.packages("remotes")
-remotes::install_github("DangJem/ggchord", dependencies = NA)
+remotes::install_github("DangJem/ggchord", ref = "v0.29.0", dependencies = NA)
 ```
 
 {{optional-deps}}

@@ -1,4 +1,4 @@
-# ggchord 0.29.0 (development)
+# ggchord 0.29.0
 
 - Track layers accept `stat = "coverage"` with an explicit integer `binwidth`.
   The default height measures the fraction of each window covered by at least

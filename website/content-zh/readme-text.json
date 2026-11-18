@@ -6,7 +6,7 @@
     "zh": "基于 ggplot2 的 R 可视化包：比较多序列关系、组织单序列注释、展示 HSP 比对，并组合全局与局部视图。"
   },
   "api-compatibility": {
-    "zh": "自 v0.50.0 起，公开 API 可直接改名或移除，不设过渡版本，升级时可能需要重写绘图代码。"
+    "zh": "v0.29.0 是沿用旧版 API 的最后一个版本。ggchord v0.50.0 正在全面重构，公开接口可直接改名或移除，不设过渡版本。升级后现有绘图代码可能需要改写。依赖旧版 API 的项目可固定使用 v0.29.0。"
   },
   "website": {
     "zh": "网站"
@@ -231,6 +231,6 @@
     "zh": "从 [CRAN](https://CRAN.R-project.org/package=ggchord) 安装稳定版："
   },
   "install-development": {
-    "zh": "如需尚未发布到 CRAN 的最新改动，可从 GitHub 安装开发版："
+    "zh": "从 GitHub 安装指定的 v0.29.0 正式版："
   }
 }

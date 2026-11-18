@@ -1,5 +1,5 @@
 {
-  "source_sha256": "6eaa1b29117b4de0cc57192b6649162898789ccf5026dd40153cb0f982a0e3f2",
+  "source_sha256": "3b403ce33e934180f5dfb78b235e680a4dafc76c34a8d4b03b66f7c42c6d1b4a",
   "strings": {
     "title": {
       "source_sha256": "543c2953291eece4e47b74bc939ba6fa50286298fb22b68e07fc1eadf250f643",
@@ -12,9 +12,9 @@
       "translation": "Build layered sequence figures in R with ggplot2: compare multiple sequences, annotate a circular map, inspect HSP alignments and connect independent views."
     },
     "api-compatibility": {
-      "source_sha256": "349837821ebf3cd98136b6dc09eaa6b0825e5f3af3ee2b2dcfd3c9ae233d096c",
+      "source_sha256": "07f2f9dbacfe96de368f722386e63652b784ba20705e99207429642ff7e75434",
       "status": "reviewed",
-      "translation": "From v0.50.0 onward, public APIs may be renamed or removed without a transition release, and upgrading may require rewriting plotting code."
+      "translation": "v0.29.0 is the final release using the legacy API. A major rewrite of ggchord is underway for v0.50.0. Public interfaces may be renamed or removed without a transition release, and existing plotting code may need changes when you upgrade. Projects that rely on the legacy API can pin v0.29.0."
     },
     "website": {
       "source_sha256": "fb8d739d08b971680e9f9c641043d6151f1966bea24f30d6798703257f21edf7",
@@ -387,9 +387,9 @@
       "translation": "Install the stable release from [CRAN](https://CRAN.R-project.org/package=ggchord):"
     },
     "install-development": {
-      "source_sha256": "f6b56bf9661592d6bea16623279fdc2287db641b5c7cb10e822289124fa2a68c",
+      "source_sha256": "391aad12c17974af645f70769b9e1c03b25073a6edf95c962ad4730098bc38b1",
       "status": "reviewed",
-      "translation": "For the latest changes not yet released on CRAN, install the development version from GitHub:"
+      "translation": "Install the v0.29.0 release from GitHub:"
     }
   }
 }

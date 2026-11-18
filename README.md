@@ -9,7 +9,8 @@
 
 Build layered sequence figures in R with ggplot2: compare multiple sequences, annotate a circular map, inspect HSP alignments and connect independent views.
 
-From v0.50.0 onward, public APIs may be renamed or removed without a transition release, and upgrading may require rewriting plotting code.
+> [!IMPORTANT]
+> v0.29.0 is the final release using the legacy API. A major rewrite of ggchord is underway for v0.50.0. Public interfaces may be renamed or removed without a transition release, and existing plotting code may need changes when you upgrade. Projects that rely on the legacy API can pin v0.29.0.
 
 [Website](https://dangjem.github.io/ggchord/) · [Usage guide](website/en/modes.md) · [Figure gallery](website/en/gallery.md) · [Report an issue](https://github.com/DangJem/ggchord/issues)
 
@@ -85,11 +86,11 @@ Install the stable release from [CRAN](https://CRAN.R-project.org/package=ggchor
 install.packages("ggchord")
 ```
 
-For the latest changes not yet released on CRAN, install the development version from GitHub:
+Install the v0.29.0 release from GitHub:
 
 ```r
 install.packages("remotes")
-remotes::install_github("DangJem/ggchord", dependencies = NA)
+remotes::install_github("DangJem/ggchord", ref = "v0.29.0", dependencies = NA)
 ```
 
 The minimal example below needs only ggchord. Complete data-preparation examples declare optional dependencies such as dplyr, purrr and tidyr alongside their code.
