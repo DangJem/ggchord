@@ -9,6 +9,8 @@
 
 Build layered sequence figures in R with ggplot2: compare multiple sequences, annotate a circular map, inspect HSP alignments and connect independent views.
 
+Starting with v0.50.0, the public API may be entirely incompatible with earlier versions, and upgrading may require rewriting plotting code.
+
 [Website](https://dangjem.github.io/ggchord/) · [Usage guide](website/en/modes.md) · [Figure gallery](website/en/gallery.md) · [Report an issue](https://github.com/DangJem/ggchord/issues)
 
 <a id="modules"></a>

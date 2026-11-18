@@ -7,6 +7,10 @@
     "zh": "基于 ggplot2 的 R 可视化包：比较多序列关系、组织单序列注释、展示 HSP 比对，并组合全局与局部视图。",
     "en": "Build layered sequence figures in R with ggplot2: compare multiple sequences, annotate a circular map, inspect HSP alignments and connect independent views."
   },
+  "api-compatibility": {
+    "zh": "自 v0.50.0 起，公开 API 可能与旧版完全不兼容，升级时可能需要改写绘图代码。",
+    "en": "Starting with v0.50.0, the public API may be entirely incompatible with earlier versions, and upgrading may require rewriting plotting code."
+  },
   "website": {
     "zh": "网站",
     "en": "Website"

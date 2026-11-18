@@ -9,6 +9,8 @@
 
 {{intro}}
 
+{{api-compatibility}}
+
 [{{website}}](https://dangjem.github.io/ggchord/) · [{{manual}}](website/{{lang}}/modes.md) · [{{gallery}}](website/{{lang}}/gallery.md) · [{{issues}}](https://github.com/DangJem/ggchord/issues)
 
 <a id="modules"></a>

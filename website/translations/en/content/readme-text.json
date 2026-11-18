@@ -1,5 +1,5 @@
 {
-  "source_sha256": "43f104d2aa4ec7c95c69e717ed882cf82234381d91220e28e3ab59607e9df861",
+  "source_sha256": "50c032c7ed3c012f1c6f7af4afeeba61fa349b768167f04e94dbc2c8a5c9d7cb",
   "strings": {
     "title": {
       "source_sha256": "543c2953291eece4e47b74bc939ba6fa50286298fb22b68e07fc1eadf250f643",
@@ -10,6 +10,11 @@
       "source_sha256": "4268716e22dd367873d1eb1afe68e7500d54ee52c42b0d9a9e53b924e2b3baf5",
       "status": "reviewed",
       "translation": "Build layered sequence figures in R with ggplot2: compare multiple sequences, annotate a circular map, inspect HSP alignments and connect independent views."
+    },
+    "api-compatibility": {
+      "source_sha256": "a593f9f9c5401eddd2e508b82c4108d1855f9a6d8f4c0037200f718294b594ca",
+      "status": "reviewed",
+      "translation": "Starting with v0.50.0, the public API may be entirely incompatible with earlier versions, and upgrading may require rewriting plotting code."
     },
     "website": {
       "source_sha256": "fb8d739d08b971680e9f9c641043d6151f1966bea24f30d6798703257f21edf7",
