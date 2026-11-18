@@ -6,7 +6,7 @@
 | --- | --- |
 | `ggchord(seq_data = ref, gene_data = f, ribbon_data = h)` | 从 `ggchord(ref)` 开始，分别加 `geom_feature(data = f, preset = "gene")` 和 `geom_link_ribbon(data = h)`。也可写 `ggchord(prepare_ggchord_data(ref, ribbon_data = h, gene_data = f))`。有多张可用的准备表时在图层中指定数据。 |
 | 用 `position_track("depth", width = w)` 指定物理带 | 加一次 `track_band("depth", width = w)`，在同带各层写 `track = "depth"`。默认带可省略轨道 ID。堆叠、并排和微移交给各层的 `position`。 |
-| 在 `geom_seq()` 指定全图次序、方向、间距和长度模式 | 添加 `layout_sequences(order = ids, orientation = directions, gap = gaps, length_mode = "equal")`。骨架线条与固定样式继续放在 `geom_seq()`。 |
+| `geom_seq()` 的 `seq_order`、`seq_orientation`、`seq_gap`、`length_mode` | 添加 `layout_sequences(order = ids, orientation = directions, gap = gaps, length_mode = "equal")`。骨架线条与固定样式继续放在 `geom_seq()`。 |
 | `position_plasmid(offset)` 和 `position_feature_stack(side = ...)` | 偏移改用 `position_offset(offset)`。原 `side = "outside"` 用 `base_position = position_offset(-0.1), direction = "inward"`。原 `"inside"` 用 `position_offset(0.1)` 及 `"outward"`。原 `"strand"` 对应默认分道。 |
 | `geom_gene()`、`geom_feature_plasmid()` | 使用 `geom_feature(preset = "gene")` 或 `geom_feature(preset = "plasmid")`，传入相同图层数据。 |
 | `geom_feature_label_repel()` | 使用 `geom_feature_label(placement = "repel")`。原先的放置策略交给 `label_layout`，原 `label_fit` 改为 `overflow`。多个实体层均可匹配时用 `anchor_layer = "features"` 指定目标。 |

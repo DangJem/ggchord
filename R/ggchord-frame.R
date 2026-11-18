@@ -244,6 +244,8 @@ prepare_ggchord_plot <- function(plot) {
     new_layers[[i]] <- reconstruct_layer(lyr, geometry,
       mapping = if (empty) ggplot2::aes() else NULL)
     if (empty) new_layers[[i]]$inherit.aes <- FALSE
+    # Domain geometry already owns its final panel, including explicit repeats.
+    if (!is.null(layout$facet_keys)) new_layers[[i]]$layout <- NULL
     built <- new_layers[[i]]
     cross_width <- lyr$ggchord_params$nonadjacent_linewidth %||% 0.4
     if ((ggchord_collinear_row_styles(plot$coordinates) || isTRUE(plot$coordinates$ggchord_radial)) &&
@@ -258,6 +260,12 @@ prepare_ggchord_plot <- function(plot) {
     }
   }
   plot$layers <- new_layers
+  if (!is.null(layout$facet_keys)) {
+    # ggplot2 trains facet levels on all inputs before applying layer layout.
+    # Keep even panels in which every selected domain layer has zero geometry.
+    plot$layers[[length(plot$layers) + 1L]] <- ggplot2::geom_blank(
+      data = layout$facet_layout[layout$facet_keys], inherit.aes = FALSE)
+  }
   has_feature <- any(vapply(plot$layers, function(x) {
     "feature_fill" %in% names(x$mapping)
   }, logical(1)))

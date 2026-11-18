@@ -414,6 +414,7 @@ ggchord_bind_visual_mapping <- function(layer, plot) {
     if (role %in% names(layer$show.legend)) names(layer$show.legend)[names(layer$show.legend) == role] <- nm
     if (identical(role, "feature_fill")) {
       layer$ggchord_params$user_feature_fill <- TRUE
+      layer$ggchord_params$gene_colors <- NULL
       layer$ggchord_params$feature_fill_mapping <- layer$mapping[[nm]]
       layer$ggchord_params$feature_fill_fixed <- layer$aes_params[[nm]]
     }

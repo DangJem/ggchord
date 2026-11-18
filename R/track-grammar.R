@@ -158,6 +158,8 @@ geom_track <- function(mapping = NULL, data = NULL, geom = "point", stat = NULL,
     if (geom %in% c("point", "line", "path", "step", "segment", "linerange", "errorbar", "text")) "#387D88" else NA,
     1, .4, 1, bounds, 0, FALSE, show.legend, FALSE,
     c(fill = FALSE, colour = FALSE, alpha = FALSE, linewidth = FALSE, linetype = FALSE), dots[intersect("key_glyph", names(dots))])
+  l$layout <- dots[["layout"]]
+  dots$layout <- NULL
   l$ggchord_params$id <- id
   l$ggchord_params$native_geom <- geom
   l$ggchord_params$native_stat <- stat
@@ -294,6 +296,17 @@ ggchord_track_native_input <- function(layer, plot) {
   domain_id <- do.call(interaction, c(unname(lapply(raw[domain_keys], function(x)
     match(x, unique(x)))), list(drop = TRUE, lex.order = TRUE)))
   raw$.track_domain <- as.integer(domain_id)
+  input_domain <- raw$.track_domain
+  raw$.track_input_index <- seq_len(nrow(raw))
+  if (length(facet_keys) && !is.null(layer$layout)) {
+    ggchord_check_panel_layout(layer)
+    panel_map <- ggchord_facet_panels(plot, ggchord_facet_frames(plot))
+    rows <- raw[facet_keys]
+    attr(rows, "layout") <- layer$layout
+    rows$.input <- raw$.track_input_index
+    kept <- plot$facet$map_data(rows, panel_map$panels, panel_map$params)$.input
+    raw <- raw[kept, , drop = FALSE]
+  }
   domains <- raw[!duplicated(raw$.track_domain), c(domain_keys, ".track_domain"), drop = FALSE]
   stat <- p$custom_stat %||% p$native_stat
   if (!is.null(p$custom_stat) && any(c("source_row", "source_rows") %in% names(mapping)))
@@ -320,7 +333,6 @@ ggchord_track_native_input <- function(layer, plot) {
       native$geom$default_aes$.ggchord_stat_x <- NA_real_
       native$mapping$.ggchord_stat_x <- ggplot2::aes(value=after_stat(x))$value
     }
-    native$data$.track_input_index <- seq_len(nrow(raw))
     lineage_key <- if (is.null(p$custom_stat)) ".ggchord_source_index" else "source_row"
     native$mapping[[lineage_key]] <- rlang::quo(.track_input_index)
     source_stat <- native$stat
@@ -360,7 +372,7 @@ ggchord_track_native_input <- function(layer, plot) {
     members <- switch(p$native_stat,
       identity = as.list(computed$.ggchord_source_index),
       bin = computed$.ggchord_bin_rows,
-      custom = ggchord_track_custom_members(computed$source_rows, domain, raw$.track_domain),
+      custom = ggchord_track_custom_members(computed$source_rows, domain, input_domain),
       computed$.ggchord_group_rows)
     if (is.null(p$custom_stat)) members <- lapply(members, as.integer)
     computed$source_rows <- I(members)

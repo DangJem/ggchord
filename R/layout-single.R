@@ -385,11 +385,13 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
   gene_w    <- gene_params$gene_width %||% 0.05
   gene_cs   <- gene_params$gene_color_scheme %||% "strand"
   gene_cols <- gene_params$gene_colors
-  if (isTRUE(gene_params$is_feature) && is.null(gene_cols) &&
+  if (isTRUE(gene_params$is_feature) && !isTRUE(gene_params$user_feature_fill) && is.null(gene_cols) &&
       is.null(gene_params$feature_fill_mapping)) {
     gene_cols <- ggchord_feature_source_palette(
       gene_data_override %||% ggchord_annotation_fallback(data_list))
   }
+  if (isTRUE(gene_params$is_feature) && !is.null(names(gene_cols)) && !is.null(gene_data_override$anno))
+    gene_cols <- gene_cols[names(gene_cols) %in% gene_data_override$anno]
   ggchord_check_interval_unit(gene_data_override %||% ggchord_annotation_fallback(data_list), sequence_unit, "Feature layer")
   gene_ord  <- gene_params$gene_order
   # Gene label settings come from the dedicated geom_gene_label() layer, with

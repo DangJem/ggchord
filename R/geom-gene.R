@@ -387,6 +387,10 @@ ggchord_label_repel_layer <- function(mapping = NULL, data = NULL,
   # the removed `gene_label_segment` into `gene_label_segment_linetype`.
   raw_argument_names <- names(as.list(sys.call())[-1L])
   dots <- list(...)
+  key_glyph <- dots[["key_glyph"]]
+  dots$key_glyph <- NULL
+  panel_layout <- dots[["layout"]]
+  dots$layout <- NULL
   position_object <- ggchord_as_feature_position(position, "geom_gene_label_repel()")
   dots <- ggchord_colour_dots(dots, "geom_gene_label_repel()")
   removed <- c(
@@ -474,6 +478,7 @@ ggchord_label_repel_layer <- function(mapping = NULL, data = NULL,
     ),
     stat = "identity",
     geom = GeomChordGeneLabelRepel,
+    layout = panel_layout, key_glyph = key_glyph,
     position = position_object,
     show.legend = show.legend,
     inherit.aes = inherit.aes,

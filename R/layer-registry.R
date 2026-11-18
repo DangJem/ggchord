@@ -11,7 +11,7 @@ reconstruct_layer <- function(lyr, data, mapping = NULL) {
     mapping = mapping %||% ggchord_effective_mapping(lyr), position = lyr$position,
     params = params,
     inherit.aes = lyr$inherit.aes,
-    show.legend = lyr$show.legend,
+    layout = lyr$layout, show.legend = lyr$show.legend,
     check.aes = FALSE
   )
   # Preserve the ggchord custom fields on the reconstructed layer
