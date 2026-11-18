@@ -47,7 +47,9 @@ independently ordered sequence segments, optionally reversed for display.
 Coordinates are one-based positions in native sequence units (bp or aa).
 Concatenation gaps are display spacing, not omitted biological sequence.
 No sequence backbone layer is required. Use \code{\link[=geom_alignment_segment]{geom_alignment_segment()}} to
-display HSPs; other ggchord geometries and facets are not yet supported.
+display HSPs. Fixed-scale facets on both qaccver and saccver show ordered
+sequence pairs with the same coordinate axes. Use facet_wrap for observed
+pairs or facet_grid to also show empty combinations.
 Standard ggplot2 annotations and explicit position scales remain available.
 }
 \examples{
@@ -55,5 +57,6 @@ data(seq_data_example)
 data(ribbon_data_example)
 ggchord(prepare_ggchord_data(seq_data_example, ribbon_data_example)) +
   geom_alignment_segment() +
+  ggplot2::facet_wrap(ggplot2::vars(qaccver, saccver)) +
   coord_dotplot()
 }

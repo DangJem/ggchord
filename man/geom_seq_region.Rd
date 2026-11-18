@@ -28,7 +28,8 @@ geom_seq_region(
 Factor start/end columns use their numeric labels, not level codes.
 An explicit \code{sequence_unit} must match the backbone (bp or aa). The closed
 interval from start to end fills the display edges start - 1 to end.
-A single base or residue occupies one unit.}
+A single base or residue occupies one unit.
+A data callback receives the plot's reference table.}
 
 \item{fill}{Character. Default fill colour for regions, default
 \code{"#F59E0B"}.}

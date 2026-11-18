@@ -37,7 +37,8 @@ geom_track(
   show.legend = NA,
   inherit.aes = TRUE,
   ...,
-  id = NULL
+  id = NULL,
+  measure = NULL
 )
 
 geom_track_col(
@@ -93,6 +94,10 @@ column (one integer vector per result). Unreported membership is exported
 as NULL with \code{source_status = "unknown"}. An explicit empty integer vector
 denotes a known empty set. Reported members must belong to the same
 accession and facet as the result.}
+
+\item{measure}{Optional name of the quantity represented by height, e.g.
+\code{"read_depth"}. Layers with different declared measures need separate
+bands. Unmodified coverage and mean_depth outputs identify themselves.}
 }
 \value{
 A ggplot2 layer using a shared sequence-local band.
@@ -150,8 +155,9 @@ lengths by bin length, counting overlaps repeatedly. Other computed variables
 are covered (distinct covered units), denominator (actual window length),
 depth_sum (sum of intersection lengths), n_interval (intersecting input rows),
 window_start and window_end (inclusive source coordinates). Empty bins have
-zero values and an empty source_rows list element. Use bar/col for the
-full bin or point/line/step at its centre, with identity position.
+zero values and an empty source_rows list element. Bars span the bin,
+points/lines/steps use its centre, and tiles fill its full band and
+interval. Coverage layers use identity position.
 }
 
 \examples{

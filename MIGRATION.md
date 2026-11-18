@@ -4,6 +4,10 @@ The entries in the first column were removed in 0.50.0. Later sections record ea
 
 | Former call or argument | 0.50.0 replacement |
 | --- | --- |
+| Mixing coverage fraction and mean depth on a common height axis | Give them separate named bands. Declare custom heights with `measure = "read_depth"`. To share a range across compatible plots, apply the output of `shared_track_limits(p1, p2)` to each track scale. |
+| Individual track ranges in sample panels | Use `scale_track_value_continuous("depth", facet_domain = "panel")` with a visible axis. The default uses the same height range across samples. |
+| Colour whole coverage windows | Use `geom_track_tile(aes(fill = after_stat(coverage)), stat = "coverage", binwidth = 4, data = intervals)`. The final tile uses its actual window length. |
+| Assign pairwise observations to panels | Facet original ribbons or point links by a source column, e.g. `facet_wrap(vars(saccver))`. On a Dotplot specify both endpoints, e.g. `facet_grid(rows = vars(qaccver), cols = vars(saccver))`. |
 | Repeated keys or two different focused intervals called W | Keep one row per reference ID. Give different intervals distinct `locus_id` values. Use `layout_sequences(order = c(left = "A", right = "A"))` for two displays of one reference. |
 | A sample key called `count` in a count track | Copy it to `sample` before using `facet_wrap(vars(sample))`. Computed columns keep their statistical meaning. |
 | Source-stage exports that also used default geometry | Pass `include = "track"` alongside `data_stage = "source"` for track geometry, or request both stages. |

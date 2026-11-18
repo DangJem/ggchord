@@ -70,13 +70,17 @@ ggchord_panel_context <- function(table, built) {
       table, entries[slots[i], ], built$layout$panel_params[[as.integer(grid$PANEL[i])]], unavailable))
     if (any(vapply(contexts, function(x) x$status != "measured", logical(1)))) return(unavailable)
     sizes <- do.call(rbind, lapply(contexts, `[[`, "units_per_mm"))
-    # One physical correction applies only to equal-scale facet panels.
-    if (max(abs(sweep(sizes, 2L, sizes[1L, ], "/") - 1)) > 1e-6) {
-      unavailable$basis <- "Facet panels have different physical scales"
+    bounds <- cbind(grid, do.call(rbind, lapply(contexts, `[[`, "panel_bounds_mm")))
+    if (is.null(built$plot$ggchord$ref$layout$facet_layout) &&
+        max(abs(sweep(sizes, 2L, sizes[1L, ], "/") - 1)) > 1e-6) {
+      unavailable$facet_panels_mm <- bounds
+      unavailable$basis <- "The shared geometry has distinct physical panel scales"
       return(unavailable)
     }
     common <- contexts[[1L]]
-    common$facet_panels_mm <- cbind(grid, do.call(rbind, lapply(contexts, `[[`, "panel_bounds_mm")))
+    common$facet_contexts <- contexts
+    common$facet_units_per_mm <- sizes
+    common$facet_panels_mm <- bounds
     common$panel_bounds_mm <- NULL
     return(common)
   }
@@ -168,7 +172,7 @@ ggchord_render_table <- function(built, force = FALSE) {
     passes_allowed <- 10L
     for (pass in seq_len(passes_allowed)) {
       # Try one scalar extrapolation only for an observed circular contraction.
-      if (isTRUE(source$coordinates$ggchord_circular) && !acceleration$attempted &&
+      if (isTRUE(source$coordinates$ggchord_circular) && is.null(context$facet_contexts) && !acceleration$attempted &&
           length(history) >= 2L && length(context$units_per_mm) == 2L &&
           all(is.finite(context$units_per_mm)) && all(context$units_per_mm > 0) &&
           abs(diff(context$units_per_mm))/max(context$units_per_mm) < 1e-6) {
@@ -223,9 +227,18 @@ ggchord_render_table <- function(built, force = FALSE) {
       evaluations <- evaluations+1L
       passes <- evaluations
       if (!identical(context$status, "measured")) break
-      relative <- max(abs(context$units_per_mm / input$units_per_mm - 1))
+      metric <- context$facet_units_per_mm %||% context$units_per_mm
+      previous <- input$facet_units_per_mm %||% input$units_per_mm
+      relative <- if (identical(dim(metric), dim(previous))) max(abs(metric / previous - 1)) else Inf
       context$converged <- is.finite(relative) && relative <= .005
       context$geometry_metric_status <- if (isTRUE(context$converged)) "measured" else "estimated"
+      if (length(context$facet_contexts)) {
+        for (i in seq_along(context$facet_contexts)) {
+          ok <- identical(dim(metric), dim(previous)) && all(abs(metric[i, ] / previous[i, ] - 1) <= .005)
+          context$facet_contexts[[i]]$converged <- ok
+          context$facet_contexts[[i]]$geometry_metric_status <- if (ok) "measured" else "estimated"
+        }
+      }
       history <- c(history, list(c(input = max(input$units_per_mm), output = max(context$units_per_mm))))
       if (isTRUE(context$converged)) break
     }
@@ -244,8 +257,12 @@ ggchord_render_table <- function(built, force = FALSE) {
     layout$render_context <- context
     layout$adaptive_layout <- context$adaptive_layout
     layout$guide_layout <- context$guide_layout
-    if (is.data.frame(layout$track_registry) && nrow(layout$track_registry))
+    if (is.data.frame(layout$track_registry) && nrow(layout$track_registry)) {
       layout$track_registry$measurement_status <- context$geometry_metric_status
+      if (length(context$facet_contexts) && !is.null(layout$track_registry$PANEL))
+        layout$track_registry$measurement_status <- vapply(context$facet_contexts,
+          `[[`, character(1), "geometry_metric_status")[layout$track_registry$PANEL]
+    }
   }
   attr(table, "ggchord_render_context") <- context
   attr(table, "ggchord_render_layout") <- layout

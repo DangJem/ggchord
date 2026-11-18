@@ -53,7 +53,7 @@ ggchord_prepare_geometry_inputs <- function(plot) {
     if (type %in% c("seq_region", "link", "ribbon", "gene", "gene_label", "gene_label_repel", "restriction_site"))
       layer$ggchord_params$reference_ids <- sequences$accver
     if (type %in% c("seq_region", "link", "restriction_site")) {
-      input <- ggchord_layer_source(layer, layer$ggchord_params$regions)
+      input <- ggchord_layer_source(layer, ggchord_layer_fallback(layer, plot$ggchord$data))
       unit <- ggchord_sequence_unit(sequences)
       caller <- ggchord_layer_input_context(layer)
       ggchord_check_interval_unit(input, unit, caller)

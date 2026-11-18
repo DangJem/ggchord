@@ -14,7 +14,8 @@ scale_track_value_continuous(
   oob = scales::censor,
   unit = NULL,
   guide = c("axis", "none"),
-  ...
+  ...,
+  facet_domain = c("shared", "panel")
 )
 }
 \arguments{
@@ -33,6 +34,10 @@ sequence-local numerical reference is not a Cartesian panel axis. Local
 guide styling overrides global ggchord.track.axis.* theme elements.}
 
 \item{...}{Additional ggplot2 continuous-scale arguments.}
+
+\item{facet_domain}{Train the track height on all observed panels
+(\code{"shared"}) or on each panel separately (\code{"panel"}). Panel-local
+domains require a visible track axis.}
 }
 \value{
 A ggplot2 scale, scoped to this track.
@@ -44,6 +49,7 @@ not colour. A numerical axis is drawn by default; \code{guide = "none"} hides it
 }
 \examples{
 scale_track_value_continuous("coverage", limits = c(0, 100), unit = "reads")
+scale_track_value_continuous("depth", facet_domain = "panel", unit = "reads")
 scale_track_value_continuous("gc", limits = c(0, 1),
   guide = guide_track_axis(theme = ggplot2::theme(
     axis.text = ggplot2::element_text(size = 9, colour = "#345F58"))))

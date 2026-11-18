@@ -5,7 +5,9 @@
 #' Coordinates are one-based positions in native sequence units (bp or aa).
 #' Concatenation gaps are display spacing, not omitted biological sequence.
 #' No sequence backbone layer is required. Use [geom_alignment_segment()] to
-#' display HSPs; other ggchord geometries and facets are not yet supported.
+#' display HSPs. Fixed-scale facets on both qaccver and saccver show ordered
+#' sequence pairs with the same coordinate axes. Use facet_wrap for observed
+#' pairs or facet_grid to also show empty combinations.
 #' Standard ggplot2 annotations and explicit position scales remain available.
 #'
 #' @param x_seqs,y_seqs Optional unique accession vectors in axis order.
@@ -28,6 +30,7 @@
 #' data(ribbon_data_example)
 #' ggchord(prepare_ggchord_data(seq_data_example, ribbon_data_example)) +
 #'   geom_alignment_segment() +
+#'   ggplot2::facet_wrap(ggplot2::vars(qaccver, saccver)) +
 #'   coord_dotplot()
 coord_dotplot <- function(x_seqs = NULL, y_seqs = NULL,
     x_orientation = 1, y_orientation = 1, gap = NULL,
@@ -89,7 +92,9 @@ ggchord_dotplot_project <- function(frame, accver, position, inverse = FALSE) {
 
 ggchord_dotplot_geometry <- function(plot, for_drawing = FALSE) {
   ggchord_validate_coord_contract(plot)
-  if (!inherits(plot$facet, "FacetNull")) ggchord_stop("coord_dotplot(): facets are not supported")
+  keys <- ggchord_facet_vars(plot)
+  if (length(keys) && !setequal(keys, c("qaccver", "saccver")))
+    ggchord_stop("Dotplot facets require both endpoints: facet_wrap(vars(qaccver, saccver))")
   seqs <- plot$ggchord$data$seq_data
   if (anyNA(seqs$accver) || anyDuplicated(seqs$accver) || !is.numeric(seqs$length) ||
       any(!is.finite(seqs$length)) || any(seqs$length < 1))
@@ -106,6 +111,11 @@ ggchord_dotplot_geometry <- function(plot, for_drawing = FALSE) {
     if (is.null(input)) input <- data.frame(qaccver = character(), saccver = character(),
       qstart = numeric(), qend = numeric(), sstart = numeric(), send = numeric())
     ggchord_require_columns(input, c("qaccver", "saccver", "qstart", "qend", "sstart", "send"), "geom_alignment_segment()")
+    if (length(keys)) {
+      ggchord_check_panel_layout(layer)
+      for (key in intersect(keys, names(source))) if (!identical(as.character(input[[key]]), as.character(source[[key]])))
+        ggchord_stop(ggchord_layer_input_context(layer), ": prepare canonical ", key, " values before faceting")
+    }
     ggchord_check_interval_unit(input, unit, "geom_alignment_segment()")
     ggchord_check_reference_ids(input, c("qaccver", "saccver"), seqs$accver,
       ggchord_layer_input_context(layer))
@@ -122,11 +132,18 @@ ggchord_dotplot_geometry <- function(plot, for_drawing = FALSE) {
     query <- union(query, as.character(input$qaccver)); subject <- union(subject, as.character(input$saccver))
   }
   config <- plot$coordinates$dotplot
+  facet <- if (length(keys)) {
+    frames <- lapply(inputs, `[[`, "alignment")
+    native <- Filter(function(l) is.null(l$ggchord_type), plot$layers)
+    frames <- c(frames, lapply(native, function(l) l$layer_data(plot$data)))
+    ggchord_facet_panels(plot, frames)
+  }
   gap <- config$gap %||% (max(seqs$length) * .05)
   x <- ggchord_dotplot_axis(seqs, config$x_seqs %||% if (length(query)) query else as.character(seqs$accver), config$x_orientation, gap, "x")
   y <- ggchord_dotplot_axis(seqs, config$y_seqs %||% if (length(subject)) subject else as.character(seqs$accver), config$y_orientation, gap, "y")
-  permissions <- stats::setNames(lapply(Filter(function(x) identical(x$ggchord_type, "alignment"), plot$layers),
-    function(x) isTRUE(x$ggchord_params$allow_repeated)), names(inputs))
+  alignment_layers <- stats::setNames(Filter(function(x) identical(x$ggchord_type, "alignment"),
+    plot$layers), names(inputs))
+  permissions <- lapply(alignment_layers, function(x) isTRUE(x$ggchord_params$allow_repeated))
   geometries <- list(); reports <- list()
   for (id in names(inputs)) {
     input <- inputs[[id]]$alignment
@@ -134,6 +151,12 @@ ggchord_dotplot_geometry <- function(plot, for_drawing = FALSE) {
         (anyNA(input$source_hsp_id) || any(!nzchar(as.character(input$source_hsp_id)))))
       ggchord_stop("source_hsp_id must be nonempty when supplied")
     reason <- rep("retained", nrow(input))
+    panel <- NULL
+    if (length(keys) && nrow(input)) {
+      panel <- plot$facet$map_data(input[keys], facet$panels, facet$params)$PANEL
+      selected <- alignment_layers[[id]]$layout
+      if (!is.null(selected)) reason[!as.integer(panel) %in% selected] <- "outside_panel_selection"
+    }
     reason[!input$qaccver %in% x$accver | !input$saccver %in% y$accver] <- "outside_axis_selection"
     unknown <- ggchord_alignment_unknown(input, "geom_alignment_segment()")
     reason[unknown] <- "unknown_direction"
@@ -145,10 +168,15 @@ ggchord_dotplot_geometry <- function(plot, for_drawing = FALSE) {
     d$y <- ggchord_dotplot_project(y, d$saccver, d$sstart)
     d$yend <- ggchord_dotplot_project(y, d$saccver, d$send)
     d$source_row <- rows; d$layer_id <- rep(id, nrow(d)); d$component <- rep("alignment", nrow(d))
+    if (length(keys)) d$PANEL <- as.integer(panel[rows])
     geometries[[id]] <- d
     reports[[id]] <- data.frame(layer_id = rep(id, nrow(input)), source_row = seq_len(nrow(input)),
       retained = reason == "retained", reason = reason,
       source_hsp_id = if ("source_hsp_id" %in% names(input)) as.character(input$source_hsp_id) else rep(NA_character_, nrow(input)))
+    if (length(keys)) {
+      reports[[id]][keys] <- input[keys]
+      reports[[id]]$PANEL <- as.integer(panel)
+    }
   }
   report <- if (length(reports)) do.call(rbind, reports) else data.frame()
   if (nrow(report)) {
@@ -160,7 +188,7 @@ ggchord_dotplot_geometry <- function(plot, for_drawing = FALSE) {
   }
   axis <- rbind(x, y); axis$sequence_unit <- unit
   list(dotplot = TRUE, axis_layout = axis, alignment = geometries,
-    layer_inputs = inputs, connection_report = report,
+    layer_inputs = inputs, connection_report = report, facet_layout = facet$panels,
     sequence_unit = unit, seqs = as.character(seqs$accver),
     xlim = c(1, max(x$max)), ylim = c(1, max(y$max)), rotation = 0, ratio = plot$coordinates$ratio)
 }
@@ -190,6 +218,7 @@ ggchord_prepare_dotplot <- function(plot) {
       mapping[[axis]] <- rlang::new_quosure(rlang::sym(field), emptyenv())
     }
     plot$layers[[i]] <- reconstruct_layer(layer, drawing, mapping)
+    if (!is.null(layout$facet_layout)) plot$layers[[i]]$layout <- NULL
   }
   plot <- ggchord_add_link_scales(plot)
   for (axis in c("x", "y")) {
@@ -234,6 +263,8 @@ ggchord_prepare_dotplot <- function(plot) {
   }
   plot$layers[[length(plot$layers) + 1L]] <- ggplot2::geom_blank(
     data = data.frame(x = layout$xlim, y = layout$ylim), ggplot2::aes(x, y), inherit.aes = FALSE)
+  if (!is.null(layout$facet_layout)) plot$layers[[length(plot$layers) + 1L]] <- ggplot2::geom_blank(
+    data = layout$facet_layout[c("qaccver", "saccver")], inherit.aes = FALSE)
   frame <- layout$axis_layout
   xf <- frame[frame$axis == "x", , drop = FALSE]
   yf <- frame[frame$axis == "y", , drop = FALSE]
@@ -243,11 +274,12 @@ ggchord_prepare_dotplot <- function(plot) {
     cells$ymin <- yf$min[cells$subject]; cells$ymax <- yf$max[cells$subject]
     # White gaps represent display spacing only. Each rectangle is the actual
     # query/subject extent, so short sequences retain proportionally smaller cells.
+    cells$background <- ifelse((cells$query + cells$subject) %% 2 == 0, "#F0F6F3", "#FFFFFF")
     layer <- ggplot2::geom_rect(data = cells,
       ggplot2::aes(xmin = !!rlang::sym("xmin"), xmax = !!rlang::sym("xmax"),
-                   ymin = !!rlang::sym("ymin"), ymax = !!rlang::sym("ymax")),
+                   ymin = !!rlang::sym("ymin"), ymax = !!rlang::sym("ymax"),
+                   fill = I(!!rlang::sym("background"))),
       inherit.aes = FALSE, show.legend = FALSE,
-      fill = ifelse((cells$query + cells$subject) %% 2 == 0, "#F0F6F3", "#FFFFFF"),
       colour = "#A9BBB4", linewidth = .35)
     plot$layers <- c(list(layer), plot$layers)
   }
@@ -274,6 +306,7 @@ ggchord_export_dotplot <- function(plot, include, original_data) {
   }
   if ("axis" %in% include) out$axis <- layout$axis_layout
   out$axis_layout <- layout$axis_layout
+  if (!is.null(layout$facet_layout)) out$facet_layout <- layout$facet_layout
   out$connection_report <- layout$connection_report
   out$metadata <- list(coordinate_system = "dotplot", sequence_unit = layout$sequence_unit,
     position_convention = "one-based positions", xlim = plot$coordinates$limits$x %||% layout$xlim,

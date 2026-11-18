@@ -4,6 +4,10 @@
 
 | 原调用或参数 | 0.50.0 写法 |
 | --- | --- |
+| 在同一高度轴混用覆盖率和平均深度 | 两种度量分带绘制。自定义高度可声明 `measure = "read_depth"`。跨图比较时将 `shared_track_limits(p1, p2)` 得出的范围设给各自的轨道标度。 |
+| 分样本观察各面板的局部数值变化 | 使用 `scale_track_value_continuous("depth", facet_domain = "panel")` 并保留局部轴。默认在各样本间使用共同的高度范围。 |
+| 按覆盖率给整窗着色 | 使用 `geom_track_tile(aes(fill = after_stat(coverage)), stat = "coverage", binwidth = 4, data = intervals)`。末窗按实际宽度绘制。 |
+| 将双端记录分派到面板 | 原始连接带或点连接可选择源列，例如 `facet_wrap(vars(saccver))`。Dotplot 写明两端，例如 `facet_grid(rows = vars(qaccver), cols = vars(saccver))`。 |
 | 替换骨架表中有重复键，或把两个不同的聚焦区间都命名为 W | 每个参考 ID 保留一行，不同窗口给不同的 `locus_id`。重复显示同一序列用 `layout_sequences(order = c(left = "A", right = "A"))`。 |
 | 计数轨道的样本列也叫 `count` | 把样本键复制到 `sample`，再用 `facet_wrap(vars(sample))`；导出的 `count` 保留计数含义。 |
 | 查询源阶段时也读取默认几何 | 需要轨道几何时同时给 `include = "track"` 和 `data_stage = "source"`，也可请求源和几何两个阶段。 |

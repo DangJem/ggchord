@@ -25,7 +25,8 @@ Start-stage expressions read the layer's source columns, including the
 original accession when \code{accver} is mapped. A zero-row input must still
 provide the columns used by these expressions.}
 
-\item{geom}{Track geometry, e.g. \code{"track_col"} or \code{"track_line"}.}
+\item{geom}{Track geometry, e.g. \code{"track_col"}, \code{"track_line"}, or
+\code{"track_tile"} for a full-band interval coloured by a window statistic.}
 
 \item{position}{Native data adjustment such as \code{"identity"}, \code{"stack"} or
 \code{ggplot2::position_dodge(width = 10)}. Source x uses sequence units.

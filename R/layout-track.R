@@ -147,7 +147,8 @@ ggchord_layout_tracks <- function(plot, layout, registry, inputs) {
     if (p$track_kind != "tile") {
       ggchord_require_columns(d, "track_value", "quantitative track")
       if (!is.numeric(d$track_value) || any(is.infinite(d$track_value))) ggchord_stop("Track values must be numeric; NA is allowed but Inf is not")
-    } else if ("track_value" %in% names(d)) ggchord_stop("Tile tracks use track_fill, not numerical height track_value")
+    } else if (is.null(p$native_geom) && "track_value" %in% names(d))
+      ggchord_stop("Tile tracks use track_fill, not numerical height track_value")
     if (!"group" %in% names(d)) d$group <- rep(1L, nrow(d))
     if (anyNA(d$group)) ggchord_stop("Track series group IDs must be non-missing")
     if (isTRUE(p$closed) && (!isTRUE(layout$circular) || (plot$coordinates$circular_gap %||% 0) != 0))
@@ -183,13 +184,15 @@ ggchord_layout_tracks <- function(plot, layout, registry, inputs) {
       layers = vapply(layers[members], function(l) l$ggchord_layer_id, character(1)))
     numeric <- members[vapply(members, function(i) layers[[i]]$ggchord_params$track_kind != "tile", logical(1))]
     if (!length(numeric)) next
+    measures <- vapply(layers[numeric], function(l) l$ggchord_params$measure %||% NA_character_, character(1))
+    if (!anyNA(measures)) declarations[[id]]$measure <- measures[1L]
     key <- ggchord_track_aes("value", id)
     sc <- plot$scales$get_scales(key)
     if (is.null(sc)) sc <- scale_track_value_continuous(id)
     sc <- sc$clone()
     values <- unlist(lapply(numeric, function(i) {
       p <- layers[[i]]$ggchord_params
-      full <- p$track_domain_data %||% data[[i]]
+      full <- if (identical(sc$ggchord_facet_domain, "panel")) data[[i]] else p$track_domain_data %||% data[[i]]
       c(full$track_value, full$track_ymin, full$track_ymax, if (p$track_kind == "bar") p$baseline)
     }), use.names = FALSE)
     finite <- values[!is.na(values)]
@@ -246,6 +249,7 @@ ggchord_layout_tracks <- function(plot, layout, registry, inputs) {
         normal_min = min(offsets), normal_max = max(offsets), mapper_sign = frame$mapper_sign,
         measurement_status = (ggchord_render_context()$status %||% "estimated"),
         domain_status = if (is.null(scales[[id]])) "categorical_or_fixed" else if (isTRUE(trained[[id]])) "trained" else "untrained",
+        measure = declaration$measure %||% NA_character_,
         unit = scales[[id]]$ggchord_track_unit %||% NA_character_, stringsAsFactors = FALSE)
       row$source_layers <- I(list(declaration$layers))
       row$limits <- I(list(if (isTRUE(trained[[id]])) scales[[id]]$get_transformation()$inverse(scales[[id]]$get_limits()) else numeric()))
@@ -313,7 +317,7 @@ ggchord_layout_tracks <- function(plot, layout, registry, inputs) {
         group = group, source_row = rep_len(source, nrow(xy)), accver = unname(seq),
         track_id = id, label = NA_character_, .component = component, stringsAsFactors = FALSE)
     }
-    if (!is.null(p$native_geom)) {
+    if (!is.null(p$native_geom) && p$track_kind != "tile") {
       geometry <- list(ggchord_track_native_geometry(d, p, layout, sc, at_value))
     } else if (p$track_kind == "line") {
       usable <- !is.na(mapped)
@@ -346,7 +350,9 @@ ggchord_layout_tracks <- function(plot, layout, registry, inputs) {
       }
     } else for (j in seq_len(nrow(d))) {
       if (is.na(mapped[j])) next
-      seq <- d$accver[j]; a <- d$start[j]; z <- d$end[j]; len <- ref$lens[[seq]]
+      seq <- d$accver[j]; len <- ref$lens[[seq]]
+      a <- if (identical(p$native_stat, "coverage")) d$window_start[j] else d$start[j]
+      z <- if (identical(p$native_stat, "coverage")) d$window_end[j] else d$end[j]
       if ((min(a, z) < 1 || max(a, z) > len) && p$bounds == "error") ggchord_stop("Track interval outside sequence length")
       if (max(a, z) < 1 || min(a, z) > len) { reason[j] <- "outside_window"; next }
       if (min(a, z) < 1 || max(a, z) > len) { a <- max(1, min(a, len)); z <- max(1, min(z, len)); clipped[j] <- TRUE }

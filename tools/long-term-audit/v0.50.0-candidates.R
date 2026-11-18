@@ -124,9 +124,9 @@ grouped <- base_tracks + track_band("coverage") +
   stat_coverage(aes(group = comparison, colour = comparison), data = intervals,
     binwidth = bin_width, geom = "track_line", track = "coverage", id = "grouped") +
   scale_track_value_continuous("coverage", limits = c(0, 1))
-fixed <- base_tracks + facet_wrap(vars(comparison)) + track_band("coverage") +
-  stat_coverage(data = intervals, binwidth = bin_width, id = "faceted", track = "coverage") +
-  scale_track_value_continuous("coverage", limits = c(0, 1))
+faceted <- base_tracks + facet_wrap(vars(comparison)) + track_band("coverage") +
+  stat_coverage(data = intervals, binwidth = bin_width, id = "faceted", track = "coverage")
+fixed <- faceted + scale_track_value_continuous("coverage", limits = c(0, 1))
 
 window_fields <- c("comparison", "window_start", "window_end", "denominator", "covered", "depth_sum")
 check_coverage <- function(p, comparison) {
@@ -151,7 +151,15 @@ check_coverage <- function(p, comparison) {
 check_coverage(separate_tracks(groups, 5), function(data, id) id)
 check_coverage(separate_tracks(rev(groups), 8), function(data, id) id)
 check_coverage(grouped, function(data, id) data$colour)
-check_coverage(fixed, function(data, id) data$comparison)
+fixed_result <- check_coverage(fixed, function(data, id) data$comparison)
+local_result <- export_ggchord_layout(faceted +
+  scale_track_value_continuous("coverage", facet_domain = "panel"))
+panel_domains <- local_result$track_registry |>
+  transmute(comparison, lower = vapply(limits, min, numeric(1)),
+    upper = vapply(limits, max, numeric(1)))
+expected_upper <- tapply(coverage_rows$covered / coverage_rows$denominator, coverage_rows$comparison, max)
+stopifnot(identical(local_result$track_statistics$faceted, fixed_result$track_statistics$faceted),
+  all(panel_domains$lower == 0), all(panel_domains$upper == expected_upper[panel_domains$comparison]))
 
 first_last <- coverage_rows |>
   filter(window_start == 1 | window_end == reference$length) |>
@@ -173,7 +181,8 @@ stopifnot(nrow(boxes) == 39L, all(boxes$ymin == boxes$lower & boxes$lower == box
 source_manifest <- tools::md5sum("data/flagship_dotplot_example.rda")
 result <- list(source_manifest = source_manifest, midpoints = midpoints, cells = cells,
   first_endpoint_cells = first_cells, point_check = point_check, last_cells = last_cells,
-  axes = projected, first_last = first_last, coverage = coverage_rows, free_error = free,
+  axes = projected, first_last = first_last, coverage = coverage_rows, panel_domains = panel_domains,
+  free_error = free,
   source_hsp = links[c(source_fields, ".source_file", ".source_line")])
 if (length(args)) saveRDS(result, args[[1L]])
 cat(nrow(links), "HSPs;", nrow(cells), "midpoint cells;", nrow(first_cells), "first-endpoint cells.\n")
@@ -181,5 +190,6 @@ print(point_check, row.names = FALSE)
 print(last_cells, row.names = FALSE)
 print(peak)
 print(first_last)
+print(panel_domains)
 cat(free, "\n")
 cat(nrow(boxes), "singleton boxplots with coincident whiskers and quartiles.\n")

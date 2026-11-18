@@ -179,7 +179,7 @@ ggchord_diagnostic_colours <- function(built, colour_vision) {
 #' Inspect one target-size render without changing the plot
 #'
 #' Builds on a temporary device of the requested kind and measures the actual
-#' single panel after gtable layout, then refines physical geometry within a
+#' panel bounds after gtable layout, then refines physical geometry within a
 #' bounded render-local context. The original plot and its layout cache are
 #' left unchanged. Standard saving continues to use [ggplot2::ggsave()].
 #'
@@ -212,6 +212,8 @@ ggchord_diagnostic_colours <- function(built, colour_vision) {
 #'   device warnings. Field units and provenance are described in
 #'   [ggchord_layout_contract]. `measurement$status` concerns panel measurement only;
 #'   it never means that all quality or portability checks passed.
+#'   For facet layouts with independent geometry, `facet_panels_mm` records
+#'   measured bounds and `facet_contexts` records each panel's convergence.
 #' @section Label quality:
 #' `label_quality` reports summary counts, text-object conflicts, registered
 #' annotation polylines and measured oriented text boxes in millimetres. Its
@@ -337,29 +339,38 @@ diagnose_ggchord <- function(plot, width = 7, height = 5,
       data$source_row <- source_row %||% rep(NA_integer_, nrow(data))
     }
     id <- layer$ggchord_layer_id %||% paste0("ggplot-layer-", i)
-    panel <- built$layout$panel_params[[1L]]
-    coordinate <- built$plot$coordinates
-    if (all(c("x", "y") %in% names(data))) {
-      xy <- coordinate$transform(data, panel)
-      x <- context$panel_bounds_mm[["xmin"]] + xy$x * context$panel_mm[["width"]]
-      y <- context$panel_bounds_mm[["ymin"]] + xy$y * context$panel_mm[["height"]]
-      outside <- is.finite(x) & is.finite(y) & (x < 0 | x > canvas[["width"]] |
-        y < 0 | y > canvas[["height"]])
-      if (any(outside)) add("canvas_geometry_bounds", "warning",
-        "Registered geometry vertices extend beyond the canvas", id)
+    rows_by_panel <- split(seq_len(nrow(data)), as.integer(data$PANEL))
+    full <- data
+    for (rows in rows_by_panel) {
+      data <- full[rows, , drop = FALSE]
+      number <- as.integer(data$PANEL[1L])
+      metric <- context$facet_contexts[[number]] %||% context
+      panel <- built$layout$panel_params[[number]]
+      coordinate <- built$plot$coordinates
+      if (all(c("x", "y") %in% names(data))) {
+        xy <- coordinate$transform(data, panel)
+        x <- metric$panel_bounds_mm[["xmin"]] + xy$x * metric$panel_mm[["width"]]
+        y <- metric$panel_bounds_mm[["ymin"]] + xy$y * metric$panel_mm[["height"]]
+        outside <- is.finite(x) & is.finite(y) & (x < 0 | x > canvas[["width"]] |
+          y < 0 | y > canvas[["height"]])
+        if (any(outside)) add("canvas_geometry_bounds", "warning",
+          "Registered geometry vertices extend beyond the canvas", id)
+      }
+      styled <- ggchord_diagnostic_text_styles(data, layer)
+      txt <- ggchord_diagnostic_text(styled, coordinate, panel, metric,
+        parse = layer$geom_params$parse %||% FALSE, size_unit = layer$geom_params$size.unit %||% 'mm')
+      if (nrow(txt)) {
+        if (length(context$facet_contexts)) txt$PANEL <- number
+        txt$layer_id <- id; text[[length(text) + 1L]] <- txt
+        for (row in which(txt$size_mm < min_size)) add("small_text", "suggestion",
+          paste0("Text size is ", signif(txt$size_mm[row], 3), " mm; advisory minimum is ", min_size), id, txt$source_row[row])
+        outside <- txt$xmin_mm < 0 | txt$xmax_mm > canvas[["width"]] |
+          txt$ymin_mm < 0 | txt$ymax_mm > canvas[["height"]]
+        for (row in which(outside)) add("canvas_text_bounds", "warning",
+          "Measured text box extends beyond the canvas", id, txt$source_row[row])
+      }
     }
-    styled <- ggchord_diagnostic_text_styles(data, layer)
-    txt <- ggchord_diagnostic_text(styled, coordinate, panel, context,
-      parse = layer$geom_params$parse %||% FALSE, size_unit = layer$geom_params$size.unit %||% 'mm')
-    if (nrow(txt)) {
-      txt$layer_id <- id; text[[length(text) + 1L]] <- txt
-      for (row in which(txt$size_mm < min_size)) add("small_text", "suggestion",
-        paste0("Text size is ", signif(txt$size_mm[row], 3), " mm; advisory minimum is ", min_size), id, txt$source_row[row])
-      outside <- txt$xmin_mm < 0 | txt$xmax_mm > canvas[["width"]] |
-        txt$ymin_mm < 0 | txt$ymax_mm > canvas[["height"]]
-      for (row in which(outside)) add("canvas_text_bounds", "warning",
-        "Measured text box extends beyond the canvas", id, txt$source_row[row])
-    }
+    data <- full
     for (column in intersect(c("linewidth", "link_linewidth", "track_linewidth"), names(data))) {
       values <- data[[column]]
       small <- which(is.finite(values) & values > 0 & values < min_linewidth)

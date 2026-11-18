@@ -19,7 +19,8 @@ geom_track_tile(
   inherit.aes = TRUE,
   ...,
   track = NULL,
-  id = NULL
+  id = NULL,
+  stat = "identity"
 )
 
 geom_track_line(
@@ -37,7 +38,8 @@ geom_track_line(
   ...,
   track = NULL,
   id = NULL,
-  stat = NULL
+  stat = NULL,
+  measure = NULL
 )
 }
 \arguments{
@@ -66,9 +68,13 @@ Clipping is reported and never changes source values.}
 
 \item{id}{Optional unique layer ID used in layout and source exports.}
 
+\item{stat}{Optional source statistic for open lines, or \code{"coverage"} for full-band tiles.}
+
 \item{closed}{Explicitly close a complete circular line series.}
 
-\item{stat}{Optional source statistic for open lines. See \code{\link[=geom_track]{geom_track()}}.}
+\item{measure}{Optional name of the quantity represented by height, e.g.
+\code{"read_depth"}. Layers with different declared measures need separate
+bands. Unmodified coverage and mean_depth outputs identify themselves.}
 }
 \value{
 A ggplot2 layer with independent input and a shared named band.
@@ -128,4 +134,8 @@ p_tracks <- ggchord(data = track_seq) +
   coord_circular() +
   doc_theme
 ggchord(track_seq) + geom_track_line(aes(x = (start + end) / 2, y = gc), data = bins) + coord_collinear()
+ggchord(track_seq) +
+  geom_track_tile(aes(fill = after_stat(coverage)), data = bins,
+    stat = "coverage", binwidth = 250) +
+  coord_collinear()
 }

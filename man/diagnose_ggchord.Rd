@@ -40,10 +40,12 @@ guide measurements, colour suggestions, existing \code{label_diagnostics},
 device warnings. Field units and provenance are described in
 \link{ggchord_layout_contract}. \code{measurement$status} concerns panel measurement only;
 it never means that all quality or portability checks passed.
+For facet layouts with independent geometry, \code{facet_panels_mm} records
+measured bounds and \code{facet_contexts} records each panel's convergence.
 }
 \description{
 Builds on a temporary device of the requested kind and measures the actual
-single panel after gtable layout, then refines physical geometry within a
+panel bounds after gtable layout, then refines physical geometry within a
 bounded render-local context. The original plot and its layout cache are
 left unchanged. Standard saving continues to use \code{\link[ggplot2:ggsave]{ggplot2::ggsave()}}.
 }

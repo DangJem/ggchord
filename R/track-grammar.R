@@ -53,6 +53,9 @@
 #'   `ggplot2::position_dodge(width = 10)`. Source x uses sequence units.
 #'   Feature placement belongs on feature layers.
 #' @param id Optional unique layer ID for exported statistics and source rows.
+#' @param measure Optional name of the quantity represented by height, e.g.
+#'   `"read_depth"`. Layers with different declared measures need separate
+#'   bands. Unmodified coverage and mean_depth outputs identify themselves.
 #' @param bounds Coordinate error/clip policy.
 #' @param baseline Numeric identity-column baseline. Nonzero baselines require
 #'   position='identity' so stacking does not change their meaning.
@@ -82,8 +85,9 @@
 #' are covered (distinct covered units), denominator (actual window length),
 #' depth_sum (sum of intersection lengths), n_interval (intersecting input rows),
 #' window_start and window_end (inclusive source coordinates). Empty bins have
-#' zero values and an empty source_rows list element. Use bar/col for the
-#' full bin or point/line/step at its centre, with identity position.
+#' zero values and an empty source_rows list element. Bars span the bin,
+#' points/lines/steps use its centre, and tiles fill its full band and
+#' interval. Coverage layers use identity position.
 #' @return A ggplot2 layer using a shared sequence-local band.
 #' @export
 #' @examples
@@ -109,7 +113,7 @@
 #'   coord_collinear()
 geom_track <- function(mapping = NULL, data = NULL, geom = "point", stat = NULL,
     track = NULL, position = NULL, bounds = c("error", "clip"), baseline = 0,
-    show.legend = NA, inherit.aes = TRUE, ..., id = NULL) {
+    show.legend = NA, inherit.aes = TRUE, ..., id = NULL, measure = NULL) {
   ggchord_check_argument_names(sys.call(), sys.function())
   geoms <- c("point", "line", "path", "step", "col", "bar", "tile", "rect", "area",
     "ribbon", "segment", "linerange", "errorbar", "text")
@@ -148,8 +152,8 @@ geom_track <- function(mapping = NULL, data = NULL, geom = "point", stat = NULL,
     fixed <- intersect(names(dots), geom_aesthetics)
   }
   if (stat == "coverage") {
-    if (!geom %in% c("bar", "col", "point", "line", "step") || !identity_position)
-      ggchord_stop("Coverage requires position='identity' and geom bar, col, point, line or step")
+    if (!geom %in% c("bar", "col", "point", "line", "step", "tile") || !identity_position)
+      ggchord_stop("Coverage requires position='identity' and geom bar, col, point, line, step or tile")
     width <- dots[["binwidth"]]
     windows <- dots[["windows"]]
     if (is.null(width) == is.null(windows))
@@ -188,6 +192,7 @@ geom_track <- function(mapping = NULL, data = NULL, geom = "point", stat = NULL,
   l$ggchord_params$native_geom <- geom
   l$ggchord_params$native_stat <- stat
   l$ggchord_params$custom_stat <- custom_stat
+  l$ggchord_params$measure <- ggchord_measure_name(measure)
   l$ggchord_params$native_position <- position
   l$ggchord_params$native_mapping <- mapping
   l$ggchord_params$native_params <- dots
@@ -323,6 +328,17 @@ ggchord_compute_track_input <- function(layer, plot, raw, sequences, coverage) {
   }
   reference_index <- ggchord_track_reference_index(reference_data, sequences, caller)
   if (coverage) {
+    height <- rlang::get_expr(mapping$y)
+    computed <- if (rlang::is_call(height, "stage")) match.call(ggplot2::stage, height)$after_stat else
+      if (rlang::is_call(height, c("after_stat", "stat")) && length(height) == 2L) height[[2L]]
+    if (rlang::is_call(computed, "$") && identical(computed[[2L]], quote(.data))) computed <- computed[[3L]]
+    known <- if (is.null(height)) "coverage" else if (rlang::is_symbol(computed) &&
+        as.character(computed) %in% c("coverage", "mean_depth")) as.character(computed)
+    if (p$native_geom == "tile" && (!is.null(height) || "height" %in% c(names(mapping), names(p$native_params))))
+      ggchord_stop("Coverage tiles fill the whole band; map fill to after_stat(coverage) or after_stat(mean_depth)")
+    if (!is.null(known) && !is.null(p$measure) && !identical(known, p$measure))
+      ggchord_stop("The mapped height represents ", known, "; the declared measure is ", p$measure)
+    layer$ggchord_params$measure <- p$measure %||% known
     forbidden <- intersect(names(mapping), c("x", "xmin", "xmax", "ymin", "ymax", "width", "weight"))
     if (length(forbidden) || ("y" %in% names(mapping) &&
         (!is.null(ggchord_start_mapping(mapping$y)) || ggchord_has_stage(mapping$y, "after_scale"))))
@@ -353,7 +369,7 @@ ggchord_compute_track_input <- function(layer, plot, raw, sequences, coverage) {
   if (p$native_stat == "count" && "y" %in% names(mapping) &&
       !is.null(ggchord_start_mapping(mapping$y))) ggchord_stop(
     "geom_track_bar(): count does not accept supplied heights; use geom_track_col() or explicit stat='identity'")
-  if (p$native_geom == "tile" && !"y" %in% names(mapping)) mapping$y <- rlang::quo(0.5)
+  if (p$native_geom == "tile" && !coverage && !"y" %in% names(mapping)) mapping$y <- rlang::quo(0.5)
   late <- names(mapping)[vapply(mapping, ggchord_has_stage, logical(1), stages = "after_scale")]
   late_mapping <- mapping[late]
   for (key in late) {
@@ -558,7 +574,8 @@ ggchord_compute_track_input <- function(layer, plot, raw, sequences, coverage) {
     vapply(names(mapping), function(key) if (key %in% c("fill", "colour"))
       ggchord_track_aes(key, p$track_id) else key, character(1)))
   layer$ggchord_input_data <- output
-  layer$ggchord_params$track_kind <- if (p$native_geom %in% c("bar", "col")) "bar" else "line"
+  layer$ggchord_params$track_kind <- if (coverage && p$native_geom == "tile") "tile" else
+    if (p$native_geom %in% c("bar", "col")) "bar" else "line"
   layer$ggchord_params$source_edges <- TRUE
   layer$ggchord_params$track_sources <- source_data
   if (length(facet_keys)) layer$ggchord_params$track_domain_data <- output

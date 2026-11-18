@@ -9,7 +9,8 @@
 #' Give sample columns names distinct from statistical and geometry fields.
 #' `after_stat()` expressions then see all statistical rows in the layer.
 #' @inheritParams geom_track
-#' @param geom Track geometry, e.g. `"track_col"` or `"track_line"`.
+#' @param geom Track geometry, e.g. `"track_col"`, `"track_line"`, or
+#'   `"track_tile"` for a full-band interval coloured by a window statistic.
 #' @param windows A data frame of `accver`, `start`, `end` and optional unique
 #'   `window_id` and `sequence_unit`. Windows may overlap. Each independently
 #'   records its contributing interval rows. Window coordinates refer to the

@@ -2,14 +2,15 @@
 ggchord_label_quality <- function(layout, text, built, context) {
   segments <- list()
   coordinate <- built$plot$coordinates
-  panel <- built$layout$panel_params[[1L]]
-  to_mm <- function(x, y) {
+  to_mm <- function(x, y, number = 1L) {
+    panel <- built$layout$panel_params[[number]]
+    metric <- context$facet_contexts[[number]] %||% context
     xy <- coordinate$transform(data.frame(x = x, y = y), panel)
-    data.frame(x = context$panel_bounds_mm[['xmin']] + xy$x * context$panel_mm[['width']],
-      y = context$panel_bounds_mm[['ymin']] + xy$y * context$panel_mm[['height']])
+    data.frame(x = metric$panel_bounds_mm[['xmin']] + xy$x * metric$panel_mm[['width']],
+      y = metric$panel_bounds_mm[['ymin']] + xy$y * metric$panel_mm[['height']])
   }
-  add <- function(id, component, source, part, x, y, xend, yend) {
-    a <- to_mm(x, y); b <- to_mm(xend, yend)
+  add <- function(id, component, source, part, x, y, xend, yend, number = 1L) {
+    a <- to_mm(x, y, number); b <- to_mm(xend, yend, number)
     if (!nrow(a)) return()
     out <- data.frame(leader_id = paste(id, component, source, part, sep = '/'),
       layer_id = id, source_row = source, x0 = a$x, y0 = a$y, x1 = b$x, y1 = b$y)
@@ -23,10 +24,10 @@ ggchord_label_quality <- function(layout, text, built, context) {
       at <- which(labels$.component %in% 'segment')
       if (length(at)) {
         part <- labels$accver %||% rep('', nrow(labels))
-        for (key in unique(paste(labels$source_row[at], part[at], sep = '\r'))) {
-          index <- at[paste(labels$source_row[at], part[at], sep = '\r') == key]
+        if (!is.null(labels$PANEL)) part <- paste(labels$PANEL, part, sep = "/")
+        for (index in split(at, interaction(labels$source_row[at], part[at], drop = TRUE))) {
           add(id, 'gene_label_repel', labels$source_row[index[1L]], part[index[1L]],
-            labels$x[index], labels$y[index], labels$xend[index], labels$yend[index])
+            labels$x[index], labels$y[index], labels$xend[index], labels$yend[index], labels$PANEL[index[1L]] %||% 1L)
         }
       }
     }
@@ -52,6 +53,7 @@ ggchord_label_quality <- function(layout, text, built, context) {
   if (nrow(text)) {
     text$text_id <- paste0('text-', seq_len(nrow(text)))
     text$label_id <- paste(text$layer_id, text$text_object, sep = '/')
+    if (!is.null(text$PANEL)) text$label_id <- paste(text$PANEL, text$label_id, sep = '/')
     boxes <- data.frame(cx = text$centre_x_mm, cy = text$centre_y_mm,
       ow = text$width_mm, oh = text$height_mm, angle = text$angle_radians,
       xmin = text$xmin_mm, xmax = text$xmax_mm, ymin = text$ymin_mm, ymax = text$ymax_mm)

@@ -11,8 +11,11 @@ ggchord_label_feature_quality <- function(layout, text, boxes, to_mm) {
   for (id in names(layout$layer_geometry)) {
     data <- layout$layer_geometry[[id]]$gene_poly
     if (!is.data.frame(data) || !nrow(data)) next
-    for (group in unique(data$group)) {
-      part <- data[data$group == group, , drop = FALSE]
+    groups <- data$group
+    if (!is.null(data$PANEL)) groups <- interaction(data$PANEL, groups, drop = TRUE)
+    groups <- as.character(groups)
+    for (group in unique(groups)) {
+      part <- data[groups == group, , drop = FALSE]
       source <- unique(part$source_row)
       source <- if (length(source) == 1L) source else NA_integer_
       key <- paste(id, group, sep = '/')
@@ -26,7 +29,7 @@ ggchord_label_feature_quality <- function(layout, text, boxes, to_mm) {
           source_row = source, reason = 'not_a_finite_polygon')
         next
       }
-      xy <- to_mm(part$x, part$y)
+      xy <- to_mm(part$x, part$y, part$PANEL[1L] %||% 1L)
       source_id <- identity(id, source, 'gene_poly')
       polygons[[length(polygons)+1L]] <- data.frame(polygon_id = key, layer_id = id,
         source_row = source, source_id = source_id, x_mm = xy$x, y_mm = xy$y)

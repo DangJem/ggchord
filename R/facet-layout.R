@@ -27,14 +27,10 @@ ggchord_facet_frames <- function(plot) {
     if (is.null(type)) return(if (is.function(layer$data)) layer$data(plot$data) else layer$data)
     if (identical(type, "track") && !is.null(layer$ggchord_params$track_sources))
       return(layer$ggchord_params$track_sources)
-    data <- plot$ggchord$data
+    fallback <- ggchord_layer_fallback(layer, plot$ggchord$data)
     if (!is.null(layer$ggchord_params$native_geom)) {
-      fallback <- if (identical(layer$ggchord_params$native_stat, "coverage"))
-        data$feature_data %||% data$gene_data else data$seq_data
       return(ggchord_layer_source(layer, fallback))
     }
-    fallback <- if (type %in% c("gene", "gene_label", "gene_label_repel"))
-      ggchord_annotation_fallback(data) else data$seq_data
     ggchord_resolve_layer_input(layer, fallback)
   })
 }
@@ -75,10 +71,11 @@ ggchord_facet_layout <- function(plot) {
       return(if (is.data.frame(input)) input else data.frame())
     }
     ggchord_check_panel_layout(layer, reference = type %in% shared)
-    fallback <- if (type %in% shared || type == "track") plot$ggchord$data$seq_data else
-      if (type %in% c("gene", "gene_label", "gene_label_repel"))
-        ggchord_annotation_fallback(plot$ggchord$data) else
-          ggchord_stop("Faceting this layer requires a panel ownership rule: ", type)
+    if (!type %in% c(shared, "track", "gene", "gene_label", "gene_label_repel", "link", "ribbon", "seq_region"))
+      ggchord_stop("Faceting this layer requires a panel ownership rule: ", type)
+    if (type == "ribbon" && !is.null(layer$ggchord_params$ribbon_stat))
+      ggchord_stop("Facet source ribbons directly; for aggregated ribbons compute each panel's table and retain its source members")
+    fallback <- ggchord_layer_fallback(layer, plot$ggchord$data)
     input <- ggchord_resolve_layer_input(layer, fallback)
     absent <- setdiff(keys, names(input))
     if (!type %in% shared && length(absent) && NROW(input) > 0L)
@@ -98,7 +95,16 @@ ggchord_facet_layout <- function(plot) {
     plot$facet$map_data(rows, panels, params)
   }, sources, plot$layers)
   with_panel <- function(data, panel) {
-    if (is.data.frame(data)) for (key in keys) data[[key]] <- rep(panels[[key]][panel], nrow(data))
+    if (is.data.frame(data)) {
+      for (key in keys) {
+        value <- rep(panels[[key]][panel], nrow(data))
+        present <- !is.na(data[[key]])
+        if (any(present) && !identical(as.character(data[[key]][present]), as.character(value[present])))
+          ggchord_stop("Facet column conflicts with layout output: ", key, ". Copy the facet key to a sample column.")
+        data[[key]] <- value
+      }
+      data$PANEL <- rep.int(panel, nrow(data))
+    }
     data
   }
   layouts <- lapply(seq_len(nrow(panels)), function(panel) {
@@ -124,7 +130,9 @@ ggchord_facet_layout <- function(plot) {
           sources[[i]][unique(map$.ggchord_input_index), , drop = FALSE] else sources[[i]]
       copy
     })
-    layout <- compute_chord_geometry_prepared(sub)
+    metrics <- ggchord_render_context()$facet_contexts
+    layout <- if (is.null(metrics)) compute_chord_geometry_prepared(sub) else
+      ggchord_with_render_context(metrics[[panel]], compute_chord_geometry_prepared(sub))
     for (i in seq_along(sub$layers)) {
       layer <- sub$layers[[i]]
       id <- layer$ggchord_layer_id
@@ -133,10 +141,11 @@ ggchord_facet_layout <- function(plot) {
       rows <- map$.ggchord_input_index[as.integer(map$PANEL) == panel]
       component <- layer$ggchord_type
       geom <- layout$layer_geometry[[id]][[component]]
-      if (!is.data.frame(geom)) next
-      if ("source_row" %in% names(geom)) geom$source_row <- rows[geom$source_row]
-      layout$layer_geometry[[id]][[component]] <- with_panel(geom, panel)
-      for (field in c("track_diagnostics", "collinear_label_diagnostics", "circular_annotation_registry")) {
+      if (is.data.frame(geom)) {
+        if ("source_row" %in% names(geom)) geom$source_row <- rows[geom$source_row]
+        layout$layer_geometry[[id]][[component]] <- with_panel(geom, panel)
+      }
+      for (field in c("connection_report", "track_diagnostics", "collinear_label_diagnostics", "circular_annotation_registry")) {
         table <- layout[[field]]
         if (!is.data.frame(table) || !"source_row" %in% names(table)) next
         owner <- table$layer_id %||% table$owner
@@ -150,6 +159,10 @@ ggchord_facet_layout <- function(plot) {
     layout
   })
   result <- layouts[[1L]]
+  for (layout in layouts) {
+    extra <- setdiff(names(layout$track_scales), names(result$track_scales))
+    if (length(extra)) result$track_scales[extra] <- layout$track_scales[extra]
+  }
   for (i in seq_along(plot$layers)) {
     layer <- plot$layers[[i]]
     id <- layer$ggchord_layer_id
@@ -164,8 +177,19 @@ ggchord_facet_layout <- function(plot) {
       result$track_source_data[[id]] <- layer$ggchord_params$track_sources %||% sources[[i]]
     }
   }
+  components <- c(ribbon_polys = "ribbon", link_lines = "link", region_polys = "seq_region")
+  for (field in names(components)) {
+    tables <- lapply(result$layer_geometry, `[[`, components[[field]])
+    result[[field]] <- ggchord_rbind_fill(Filter(function(x) NROW(x) > 0L, tables))
+  }
+  if (NROW(result$ribbon_polys) && !NROW(layouts[[1L]]$ribbon_polys)) {
+    drawn <- Find(function(x) NROW(x$ribbon_polys) > 0L, layouts)
+    fields <- intersect(c("ribbon_color_scheme", "ribbon_colors", "ribbon_color_name",
+      "ribbon_color_limits", "ribbon_color_breaks"), names(drawn))
+    result[fields] <- drawn[fields]
+  }
   for (field in c("gene_polys", "gene_labels", "gene_label_segments", "track_registry",
-      "track_axes", "track_diagnostics", "circular_annotation_registry", "collinear_label_diagnostics")) {
+      "connection_report", "track_axes", "track_diagnostics", "circular_annotation_registry", "collinear_label_diagnostics")) {
     tables <- lapply(seq_along(layouts), function(i) with_panel(layouts[[i]][[field]], i))
     if (any(vapply(tables, is.data.frame, logical(1)))) result[[field]] <- ggchord_rbind_fill(tables)
   }
@@ -176,5 +200,5 @@ ggchord_facet_layout <- function(plot) {
   }
   result$facet_layout <- panels
   if (has_layout) result$facet_keys <- keys
-  result
+  ggchord_check_displayed_hsps(result, plot)
 }

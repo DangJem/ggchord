@@ -42,3 +42,24 @@ feature_plot <- ggchord(reference) +
 print(window_data)
 print(coverage_plot)
 print(feature_plot)
+
+# A site occupies one base. A threshold belongs to the same numerical scale
+# as the observed coverage and spans only the supplied source positions.
+samples <- distinct(intervals, accver, sample)
+sites <- mutate(samples, start = 4L, end = 4L)
+threshold <- bind_rows(mutate(samples, pos = 1L), mutate(samples, pos = 10L)) |>
+  mutate(fraction = 0.5)
+marked_plot <- coverage_plot +
+  geom_seq_region(data = sites) +
+  geom_track_line(aes(x = pos, y = fraction), data = threshold,
+    measure = "coverage", track = "coverage", linetype = "dashed")
+print(marked_plot)
+
+# Independent samples can also be compared by the colour of each whole window.
+tile_plot <- ggchord(reference) +
+  geom_seq() +
+  stat_coverage(aes(fill = after_stat(coverage)), data = intervals,
+    binwidth = 4, geom = "track_tile", id = "tiles") +
+  facet_wrap(vars(sample)) +
+  coord_collinear()
+print(tile_plot)

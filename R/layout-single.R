@@ -76,7 +76,7 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
       seq_label         = seq_label_params <- pp,
       seq_region        = {
         seq_region_params <- pp
-        region_data_override <- ggchord_resolve_layer_input(lyr, pp$regions)
+        region_data_override <- ggchord_resolve_layer_input(lyr, ggchord_layer_fallback(lyr, data_list))
       }
 
     )

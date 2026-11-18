@@ -1,5 +1,18 @@
 # ggchord 0.50.0 (development)
 
+- Height layers can declare a `measure`. Conflicting measures in one band
+  identify the affected layers. Coverage and mean depth are recognised from
+  their direct mappings. `shared_track_limits()` checks the measures, units
+  and scale policies of selected tracks before returning common limits.
+- Track heights use a common domain across facets by default. Use
+  `scale_track_value_continuous(..., facet_domain = "panel")` for a visible
+  per-panel axis. Coverage tiles use actual window extents, including the
+  shorter final window. Named track fills retain alpha set by `after_scale()`.
+- Source-keyed point links, original ribbons and highlights can be faceted.
+  Fixed-scale Dotplots support ordered query/subject pairs with
+  `facet_wrap(vars(qaccver, saccver))` and `facet_grid()`; exports record the
+  panel and source row. Independent facet layouts use each panel's measured
+  dimensions to refine millimetre geometry and report its convergence.
 - Backbone accessions must be unique within each layer. Overlaid focused
   backbones must identify the same original sequence and interval.
   Track facets diagnose sample keys that collide with computed columns.
