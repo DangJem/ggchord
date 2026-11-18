@@ -96,7 +96,9 @@
 #'
 #' Plotting uses a continuous display axis, not a base-cell raster: feature/axis
 #' chord anchors use pos/length, point-link anchors use (pos-1)/length. These
-#' historical graphical offsets do not change stored coordinates. Single-base
+#' historical graphical offsets do not change stored coordinates. Region highlights
+#' use closed intervals with display edges at the lower endpoint minus one and
+#' the upper endpoint. Single-base
 #' features can use a point or widened glyph. No new endpoint convention is
 #' imposed on plots in this data-workflow revision.
 #'

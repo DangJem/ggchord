@@ -107,9 +107,10 @@ ggchord_dotplot_geometry <- function(plot, for_drawing = FALSE) {
       qstart = numeric(), qend = numeric(), sstart = numeric(), send = numeric())
     ggchord_require_columns(input, c("qaccver", "saccver", "qstart", "qend", "sstart", "send"), "geom_alignment_segment()")
     ggchord_check_interval_unit(input, unit, "geom_alignment_segment()")
+    ggchord_check_reference_ids(input, c("qaccver", "saccver"), seqs$accver,
+      ggchord_layer_input_context(layer))
     for (side in c("q", "s")) {
       ids <- as.character(input[[paste0(side, "accver")]])
-      if (anyNA(ids) || any(!ids %in% seqs$accver)) ggchord_stop("geom_alignment_segment(): unknown accession")
       for (end in c("start", "end")) {
         pos <- input[[paste0(side, end)]]
         if (!is.numeric(pos) || any(!is.finite(pos)) || any(pos < 1 | pos > seqs$length[match(ids, seqs$accver)]))

@@ -63,6 +63,7 @@ discrete input style can form groups; use \code{aes(group = ...)} to choose them
 explicitly or \code{aes(fill = after_stat(coverage))} to colour the pooled result.
 Fixing a layer's fill also removes its inherited fill mapping before grouping.
 Fixed-scale sample facets compute each observed series independently.
+Give sample columns names distinct from statistical and geometry fields.
 \code{after_stat()} expressions then see all statistical rows in the layer.
 }
 \examples{

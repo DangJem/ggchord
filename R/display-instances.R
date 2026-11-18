@@ -89,6 +89,12 @@ ggchord_sequence_reference_data <- function(plot) {
     input <- ggchord_resolve_layer_input(layer, reference) %||% reference
     caller <- ggchord_layer_input_context(layer)
     ggchord_require_columns(input, c("accver", "length"), caller)
+    ids <- as.character(input$accver)
+    missing <- is.na(ids) | !nzchar(trimws(ids))
+    if (any(missing)) ggchord_stop(caller, ": missing backbone accver", ggchord_input_rows(missing))
+    duplicate <- duplicated(ids) | duplicated(ids, fromLast = TRUE)
+    if (any(duplicate)) ggchord_stop(caller, ": duplicate backbone accver ",
+      paste(unique(ids[duplicate]), collapse = ", "), ggchord_input_rows(duplicate))
     if (!is.numeric(input$length) || any(!is.finite(input$length) | input$length <= 0))
       ggchord_stop(caller, ": backbone lengths must be finite positive numbers")
     # Registered layers belong to this render. Geometry must consume the
@@ -98,6 +104,7 @@ ggchord_sequence_reference_data <- function(plot) {
   }
   owner <- plot$layers[[tail(skeleton, 1L)]]
   sequences <- resolve(owner)
+  source <- ggchord_focus_source(sequences)
   for (i in utils::head(skeleton, -1L)) {
     layer <- plot$layers[[i]]
     other <- resolve(layer)
@@ -114,6 +121,17 @@ ggchord_sequence_reference_data <- function(plot) {
       j <- different[1L]
       conflict("length of '", other$accver[j], "' is ", sequences$length[at[j]],
         " versus ", other$length[j], " ", unit)
+    }
+    other_source <- ggchord_focus_source(other)
+    window <- function(s, i, length) paste0(s$accver[i], ":", s$origin[i],
+      "-", s$origin[i] + length - 1)
+    left <- window(source, at, other$length)
+    right <- window(other_source, seq_along(at), other$length)
+    different <- which(is.na(source$accver[at]) | is.na(other_source$accver) |
+      source$accver[at] != other_source$accver | source$origin[at] != other_source$origin)
+    if (length(different)) {
+      j <- different[1L]
+      conflict("source window for '", other$accver[j], "' is ", left[j], " versus ", right[j])
     }
   }
   sequences
@@ -215,6 +233,7 @@ ggchord_prepare_instances <- function(plot, seqs) {
     if (type %in% c("gene", "gene_label", "gene_label_repel"))
       layer$ggchord_annotation_origin <- layer$ggchord_input_data
     layer$ggchord_input_data <- input
+    p$reference_ids <- NULL  # validated before replacing accessions with instance keys
     layer$ggchord_input_transform <- NULL
     for (role in intersect(layer$ggchord_role_aes, names(layer$ggchord_input_mapping)))
       layer$ggchord_input_mapping[[role]] <- rlang::new_quosure(rlang::sym(role), emptyenv())

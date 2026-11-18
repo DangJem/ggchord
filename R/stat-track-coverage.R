@@ -6,6 +6,7 @@
 #' explicitly or `aes(fill = after_stat(coverage))` to colour the pooled result.
 #' Fixing a layer's fill also removes its inherited fill mapping before grouping.
 #' Fixed-scale sample facets compute each observed series independently.
+#' Give sample columns names distinct from statistical and geometry fields.
 #' `after_stat()` expressions then see all statistical rows in the layer.
 #' @inheritParams geom_track
 #' @param geom Track geometry, e.g. `"track_col"` or `"track_line"`.

@@ -610,14 +610,11 @@ ggchord_restriction_text_metrics <- function(text, size, units_per_inch,
   data.frame(width = width, height = height)
 }
 
-ggchord_restriction_geometry <- function(data, params, layout, seq_data) {
+ggchord_restriction_geometry <- function(data, params, layout) {
   ggchord_require_columns(
     data, c("accver", "position", "enzyme"), "geom_restriction_site()"
   )
-  lens <- stats::setNames(seq_data$length, seq_data$accver)
-  if (any(!data$accver %in% names(lens))) {
-    ggchord_stop("geom_restriction_site(): unknown accver")
-  }
+  lens <- layout$sequence_reference$lens
   if (!is.numeric(data$position) || any(!is.finite(data$position))) {
     ggchord_stop("geom_restriction_site(): position must contain finite numbers")
   }
@@ -647,7 +644,7 @@ ggchord_restriction_geometry <- function(data, params, layout, seq_data) {
     output[[length(output) + 1L]] <<- points
   }
 
-  for (id in unique(as.character(data$accver))) {
+  for (id in intersect(as.character(data$accver), names(lens))) {
     idx <- which(as.character(data$accver) == id)
     pattern_order <- if ("pattern_id" %in% names(data)) {
       as.character(data$pattern_id[idx])

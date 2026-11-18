@@ -49,9 +49,15 @@ ggchord_prepare_geometry_inputs <- function(plot) {
   plot <- ggchord_register_layers(plot)
   sequences <- ggchord_sequence_reference_data(plot)
   for (layer in plot$layers) {
-    if ((layer$ggchord_type %||% "") %in% c("seq_region", "link")) {
+    type <- layer$ggchord_params$type %||% ""
+    if (type %in% c("seq_region", "link", "ribbon", "gene", "gene_label", "gene_label_repel", "restriction_site"))
+      layer$ggchord_params$reference_ids <- sequences$accver
+    if (type %in% c("seq_region", "link", "restriction_site")) {
       input <- ggchord_layer_source(layer, layer$ggchord_params$regions)
-      ggchord_check_interval_unit(input, ggchord_sequence_unit(sequences), ggchord_layer_input_context(layer))
+      unit <- ggchord_sequence_unit(sequences)
+      caller <- ggchord_layer_input_context(layer)
+      ggchord_check_interval_unit(input, unit, caller)
+      if (type == "restriction_site" && unit != "bp") ggchord_stop(caller, ": restriction sites require bp coordinates")
     }
   }
   plot <- ggchord_prepare_track_layers(plot, sequences)
@@ -210,7 +216,7 @@ compute_chord_geometry_prepared <- function(plot) {
       site_params$composite_labels <- isTRUE(site_layer$geom_params$composite_labels)
       site_params$backbone_outer_offset <- backbone_outer
       sub_layout$restriction_sites <- ggchord_restriction_geometry(
-        site_input, site_params, primary, chord$data$seq_data
+        site_input, site_params, primary
       )
     }
     if (main_type == "seq_center_label") {
@@ -249,26 +255,7 @@ compute_chord_geometry_prepared <- function(plot) {
           sub_layout, component, lyr$ggchord_placeholder %||% data.frame()
         )
       }
-      fallback <- switch(component,
-        seq = chord$data$seq_data,
-        axis_line = chord$data$seq_data,
-        axis_seg = chord$data$seq_data,
-        axis_text = chord$data$seq_data,
-        axis = chord$data$seq_data,
-        seq_label = chord$data$seq_data,
-        seq_break = chord$data$seq_data,
-        seq_scale = chord$data$seq_data,
-        ribbon = chord$data$ribbon_data,
-        gene_poly = ggchord_annotation_fallback(chord$data),
-        gene_text = ggchord_annotation_fallback(chord$data),
-        gene_text_repel = ggchord_annotation_fallback(chord$data),
-        gene_label_segment = ggchord_annotation_fallback(chord$data),
-        gene_label_repel = ggchord_annotation_fallback(chord$data),
-        seq_region = lyr$ggchord_params$regions,
-        restriction_site = lyr$ggchord_input_data,
-        seq_center_label = chord$data$seq_data,
-        NULL
-      )
+      fallback <- ggchord_layer_fallback(lyr, chord$data)
       inputs[[id]][[component]] <- if (
           component == "ribbon" && !is.null(sub_layout$ribbon_stat_data)) {
         sub_layout$ribbon_stat_data

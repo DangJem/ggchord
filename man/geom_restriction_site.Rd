@@ -28,7 +28,8 @@ geom_restriction_site(
 )
 }
 \arguments{
-\item{mapping, data}{Standard layer inputs.}
+\item{mapping, data}{Standard layer inputs. Positions refer to the displayed
+nucleotide backbone. An explicit \code{sequence_unit} must be \code{"bp"}.}
 
 \item{label}{Draw labels.}
 

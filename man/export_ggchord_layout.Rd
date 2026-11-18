@@ -41,7 +41,11 @@ An ordinary build stops on a failed track Stat and preserves the last
 successful layout for \code{\link[=get_chord_layout]{get_chord_layout()}}.
 An error in a registered layer's data callback stops the export and reports
 the layer ID together with the original cause.
-All registered layers participate regardless of include.}
+All registered layers participate regardless of include.
+Requesting only \code{"source"} with omitted or empty \code{include} returns just
+\code{layer_data} and \code{layer_stage_status}. This reads each source without
+evaluating mappings, statistics or geometry. Supply a nonempty
+\code{include} to request layout components alongside these source tables.}
 }
 \value{
 An object of class \code{ggchord_layout_export}. Selected component

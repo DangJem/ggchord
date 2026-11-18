@@ -98,7 +98,8 @@ ggchord_seq_style_geometry <- function(seq_arcs, params) {
 #'
 #' @param mapping Default NULL (uses pre-computed data)
 #' @param data A backbone reference table, defaulting to the plot reference.
-#'   Overlaid backbones must agree on accessions, lengths and coordinate unit.
+#'   Accessions must be unique. Overlaid backbones must agree on accessions,
+#'   lengths, coordinate unit and original sequence windows.
 #'   Their row order, mappings and drawing styles may differ.
 #' @param seq_radius Optional numeric (> 0). Sequence arc radius, default 1.0
 #' @param seq_curvature Optional numeric. Signed arc bow (0=straight, 1=standard arc, negative=opposite bow), default 1.0. Finite positive and negative values are accepted without clipping; magnitudes above 1 amplify the bow.

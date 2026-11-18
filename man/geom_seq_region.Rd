@@ -26,7 +26,9 @@ geom_seq_region(
 \item{data}{data.frame with at least \code{accver}, \code{start},
 \code{end}; optional \code{label}, \code{category} and \code{color}.
 Factor start/end columns use their numeric labels, not level codes.
-An explicit \code{sequence_unit} must match the backbone (bp or aa).}
+An explicit \code{sequence_unit} must match the backbone (bp or aa). The closed
+interval from start to end fills the display edges start - 1 to end.
+A single base or residue occupies one unit.}
 
 \item{fill}{Character. Default fill colour for regions, default
 \code{"#F59E0B"}.}

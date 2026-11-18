@@ -4,6 +4,10 @@ The entries in the first column were removed in 0.50.0. Later sections record ea
 
 | Former call or argument | 0.50.0 replacement |
 | --- | --- |
+| Repeated keys or two different focused intervals called W | Keep one row per reference ID. Give different intervals distinct `locus_id` values. Use `layout_sequences(order = c(left = "A", right = "A"))` for two displays of one reference. |
+| A sample key called `count` in a count track | Copy it to `sample` before using `facet_wrap(vars(sample))`. Computed columns keep their statistical meaning. |
+| Source-stage exports that also used default geometry | Pass `include = "track"` alongside `data_stage = "source"` for track geometry, or request both stages. |
+| Region highlights specified as display edges | Supply one-based inclusive endpoints. A single-position highlight now occupies one sequence unit. Restriction site coordinates must be in bp on a known reference. |
 | Overlaid `geom_seq()` layers give different lengths or units for the same accession | Use one reference table for the layers and set styles separately. Draw separate plots for incompatible references. |
 | Track, region or point-link data declared in bp on an aa reference, or vice versa | Supply coordinates in the backbone unit. For DNA intervals on a protein reference, project through the relevant CDS or draw separate plots on the appropriate references. |
 | A track expression needs the newly mapped accession, or a filtered input lacks a mapped column | Compute the new accession in a source column first and refer to that column in each mapping. For empty layers, filter a complete input table to zero rows to retain its columns and types. |

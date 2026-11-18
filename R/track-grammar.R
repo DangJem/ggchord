@@ -317,6 +317,8 @@ ggchord_compute_track_input <- function(layer, plot, raw, sequences, coverage) {
     if (!length(ids) %in% c(1L, nrow(raw)))
       ggchord_stop("geom_track(): mapped accver must be scalar or supply one accession per input row")
     reference_data$accver <- rep_len(ids, nrow(raw))
+    if ("accver" %in% facet_keys && !identical(as.character(reference_data$accver), as.character(raw$accver)))
+      ggchord_stop("Facet accver conflicts with the mapped reference. Copy the source facet to a sample column.")
     mapping$accver <- NULL
   }
   reference_index <- ggchord_track_reference_index(reference_data, sequences, caller)
@@ -456,7 +458,7 @@ ggchord_compute_track_input <- function(layer, plot, raw, sequences, coverage) {
     domain <- if (nrow(domains) > 1L) panel$.track_domain[match(computed$PANEL, panel$PANEL)] else
       rep(domains$.track_domain[1L], nrow(computed))
     at <- match(domain, domains$.track_domain)
-    for (key in domain_keys) computed[[key]] <- domains[[key]][at]
+    computed$accver <- domains$accver[at]
     computed$PANEL <- NULL
     computed$pos <- computed$x %||% ((computed$xmin + computed$xmax) / 2)
     computed$track_value <- computed$y %||% computed$ymax
@@ -491,7 +493,7 @@ ggchord_compute_track_input <- function(layer, plot, raw, sequences, coverage) {
     output <- computed
   } else output <- NULL
   if (is.null(output) || !nrow(output)) {
-    if (is.null(output)) output <- domains[FALSE, domain_keys, drop = FALSE]
+    if (is.null(output)) output <- domains[FALSE, "accver", drop = FALSE]
     # ggplot2 skips a Stat with no input. Supply its documented variables
     # without invoking an estimator or guessing extension-specific columns.
     numeric_fields <- switch(p$native_stat,
@@ -521,6 +523,12 @@ ggchord_compute_track_input <- function(layer, plot, raw, sequences, coverage) {
     if (!is.null(p$custom_stat)) output$source_status <- character()
     mapping <- late_mapping <- ggplot2::aes()
   }
+  facet_fields <- setdiff(facet_keys, "accver")
+  conflicts <- intersect(facet_fields, c(names(output), ".track_domain", ".track_input_index"))
+  if (length(conflicts)) ggchord_stop("Facet column conflicts with track output: ",
+    paste(conflicts, collapse = ", "), ". Copy it to a sample column before faceting.")
+  for (key in facet_fields)
+    output[[key]] <- if (nrow(output)) domains[[key]][at] else domains[[key]][FALSE]
   visual <- ggplot2::aes()
   for (key in intersect(c("fill", "colour", "alpha", "linewidth", "linetype", "size", "shape", "label", "angle", "hjust", "vjust", "family", "fontface", "lineheight", "stroke"), names(mapping))) {
     column <- paste0(".track_", key)

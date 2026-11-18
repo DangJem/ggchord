@@ -29,10 +29,8 @@ ggchord_layout_annotation_step <- function(
         row <- region_data[i, ]
         sid <- as.character(row$accver)
         len <- lens[sid]
-        sp <- min(row$start, row$end)
-        ep <- max(row$start, row$end)
-        if (sp < 1) sp <- 1
-        if (ep > len) ep <- len
+        sp <- max(0, min(row$start, row$end) - 1)
+        ep <- min(len, max(row$start, row$end))
         if (ep <= sp) return(NULL)
 
         frac_sp <- if (orientation[sid] == 1) sp / len else 1 - sp / len

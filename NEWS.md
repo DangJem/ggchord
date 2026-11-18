@@ -1,5 +1,15 @@
 # ggchord 0.50.0 (development)
 
+- Backbone accessions must be unique within each layer. Overlaid focused
+  backbones must identify the same original sequence and interval.
+  Track facets diagnose sample keys that collide with computed columns.
+- Restriction sites validate their nucleotide coordinates against the displayed
+  reference. Unknown accessions in annotations and connections identify the
+  layer, field, value and input rows. Region highlights draw inclusive cell
+  edges, including a single base or residue.
+- Source-only exports read layer inputs directly. To request geometry as well,
+  supply a nonempty `include` or request the geometry stage.
+
 - Overlaying sequence backbones with conflicting reference lengths, accessions
   or units now reports both layer IDs before coverage is computed. Region
   highlights and point-to-point links also check explicit bp/aa units against

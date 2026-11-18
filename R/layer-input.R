@@ -175,6 +175,17 @@ ggchord_layer_input_data <- function(layer, fallback) {
     parent = e, call = NULL))
 }
 
+ggchord_layer_fallback <- function(layer, data) {
+  p <- layer$ggchord_params
+  if (p$type %in% c("ribbon", "alignment")) return(data$ribbon_data)
+  if (p$type %in% c("gene", "gene_label", "gene_label_repel"))
+    return(ggchord_annotation_fallback(data))
+  if (identical(p$native_stat, "coverage")) return(data$feature_data %||% data$gene_data)
+  if (p$type == "seq_region") return(p$regions)
+  if (p$type %in% c("link", "restriction_site")) return(NULL)
+  data$seq_data
+}
+
 ggchord_layer_input_context <- function(layer) {
   paste0("Layer '", layer$ggchord_layer_id, "', ", layer$ggchord_params$input_description)
 }
@@ -191,6 +202,16 @@ ggchord_input_rows <- function(bad) {
   if (!length(rows)) return("")
   paste0(" (input rows: ", paste(utils::head(rows, 8L), collapse = ", "),
     if (length(rows) > 8L) paste0(", +", length(rows) - 8L, " more"), ")")
+}
+
+ggchord_check_reference_ids <- function(data, fields, ids, caller) {
+  ggchord_require_columns(data, fields, caller)
+  for (field in fields) {
+    values <- as.character(data[[field]])
+    bad <- is.na(values) | !values %in% ids
+    if (any(bad)) ggchord_stop(caller, ": unknown reference accession in ", field, " ",
+      paste(unique(values[bad]), collapse = ", "), ggchord_input_rows(bad))
+  }
 }
 
 #' Read and adapt a layer's input before evaluating mappings
@@ -293,6 +314,11 @@ ggchord_resolve_layer_input <- function(lyr, fallback = NULL,
         length(value), " for ", nrow(data), " rows)")
     }
     data[[role]] <- value
+  }
+  reference_ids <- lyr$ggchord_params$reference_ids
+  if (!is.null(reference_ids)) {
+    fields <- if (type %in% c("link", "ribbon")) c("qaccver", "saccver") else "accver"
+    ggchord_check_reference_ids(data, fields, reference_ids, ggchord_layer_input_context(lyr))
   }
   for (nm in setdiff(names(mapping), c(roles, names(lyr$aes_params)))) {
     expr <- rlang::get_expr(mapping[[nm]])

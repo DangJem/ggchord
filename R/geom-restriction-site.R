@@ -91,7 +91,8 @@ GeomRestrictionSite <- ggplot2::ggproto(
 )
 
 #' Draw restriction sites, labels and deterministic leaders
-#' @param mapping,data Standard layer inputs.
+#' @param mapping,data Standard layer inputs. Positions refer to the displayed
+#'   nucleotide backbone. An explicit `sequence_unit` must be `"bp"`.
 #' @param label Draw labels.
 #' @param label_style Label enzyme and position, enzyme only, or position only.
 #' @param label_side Draw labels outside, inside, or automatically.

@@ -151,7 +151,8 @@ ggchord_collinear_region_geometry <- function(p, layout) {
     if (!id %in% p$seqs) return(NULL)
     positions <- as.numeric(c(row$start, row$end))
     if (any(!is.finite(positions))) return(NULL)
-    positions <- pmax(1, pmin(ref$lens[id], positions))
+    positions <- c(max(0, min(positions) - 1), min(ref$lens[id], max(positions)))
+    if (positions[2L] <= positions[1L]) return(NULL)
     x <- sort(ggchord_collinear_x(positions, id, ref))
     center <- unname(ref$y[id]) +
       if (identical(p$region_side, "outside")) p$region_offset else -p$region_offset

@@ -131,18 +131,16 @@ ggchord_link_controls <- function(control, row, fallback) {
 }
 
 ggchord_link_geometry <- function(data, params, layout) {
-  if (isTRUE(layout$collinear)) {
-    return(ggchord_collinear_link_geometry(data, params, layout))
-  }
   if (is.null(data)) ggchord_stop("geom_link_line(): supply data with qaccver/saccver/qpos/spos")
   ggchord_require_columns(data, c("qaccver", "saccver", "qpos", "spos"), "geom_link_line()")
   ref <- layout$sequence_reference
+  rows <- which(data$qaccver %in% names(ref$lens) & data$saccver %in% names(ref$lens))
   for (pair in list(c("qaccver", "qpos"), c("saccver", "spos"))) {
-    ids <- as.character(data[[pair[1]]]); pos <- data[[pair[2]]]
-    if (anyNA(ids) || any(!ids %in% names(ref$lens))) ggchord_stop("geom_link_line(): unknown sequence accession")
+    ids <- as.character(data[[pair[1]]][rows]); pos <- data[[pair[2]]][rows]
     if (!is.numeric(pos) || any(!is.finite(pos)) || any(pos < 1 | pos > ref$lens[ids]))
       ggchord_stop("geom_link_line(): positions must be finite and within sequence length")
   }
+  if (isTRUE(layout$collinear)) return(ggchord_collinear_link_geometry(data, params, layout, rows))
   gaps <- process_sequence_param(params$link_gap %||% 0.035, layout$seqs, "link_gap", 0.035)
   if (any(!is.finite(unlist(gaps)))) ggchord_stop("link_gap must contain finite numbers")
   endpoint <- function(id, pos) {
@@ -155,7 +153,7 @@ ggchord_link_geometry <- function(data, params, layout) {
     }
     map_to_curve(a, ref$radius[id] + gap, ref$refs[[id]])
   }
-  out <- lapply(seq_len(nrow(data)), function(i) {
+  out <- lapply(rows, function(i) {
     q <- endpoint(as.character(data$qaccver[i]), data$qpos[i])
     s <- endpoint(as.character(data$saccver[i]), data$spos[i])
     cp <- ggchord_link_controls(params$link_ctrl_point, i, (q + s) / 4)

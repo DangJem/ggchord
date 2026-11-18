@@ -36,6 +36,10 @@
 #'   An error in a registered layer's data callback stops the export and reports
 #'   the layer ID together with the original cause.
 #'   All registered layers participate regardless of include.
+#'   Requesting only `"source"` with omitted or empty `include` returns just
+#'   `layer_data` and `layer_stage_status`. This reads each source without
+#'   evaluating mappings, statistics or geometry. Supply a nonempty
+#'   `include` to request layout components alongside these source tables.
 #' @param original_data Logical. Include the resolved per-layer input tables
 #'   under \code{original_data}, default \code{FALSE}.
 #'
@@ -156,6 +160,17 @@ export_ggchord_layout <- function(
       capture <- new.env(parent = emptyenv())
       capture$requested <- data_stage
       layer$ggchord_params$stage_capture <- capture
+    }
+    if (identical(unname(data_stage), "source") && (default_include || !length(include))) {
+      for (layer in plot$layers) {
+        if (is.null(layer$ggchord_type)) next
+        fallback <- ggchord_layer_fallback(layer, plot$ggchord$data)
+        capture <- layer$ggchord_params$stage_capture
+        capture$source <- if (is.null(layer$ggchord_params$native_geom))
+          ggchord_layer_source(layer, fallback) else ggchord_layer_input_data(layer, fallback)
+      }
+      result <- ggchord_export_stages(list(), plot, NULL, data_stage)
+      return(structure(result, class = c("ggchord_layout_export", "list")))
     }
   }
   if (isTRUE(plot$coordinates$ggchord_dotplot)) {
