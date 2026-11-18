@@ -27,6 +27,8 @@
 #'   Unavailable stages are NULL. `layer_stage_status` lists each requested
 #'   layer ID and stage, its status (available or unavailable), and the reason
 #'   when unavailable. A captured zero-row table counts as available.
+#'   ggplot2 may return an empty table after a Stat computation warning.
+#'   In that case, consult the warning for the underlying error.
 #'   All registered layers participate regardless of include.
 #' @param original_data Logical. Include the resolved per-layer input tables
 #'   under \code{original_data}, default \code{FALSE}.
