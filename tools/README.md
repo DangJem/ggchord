@@ -8,8 +8,8 @@
 | 检查文档来源和链接 | `python3 tools/check-documentation.py --source-only`，单查仓库链接用 `check-repository-links.py` | 更新网站源、函数帮助或迁移说明后。输入与生成顺序见[网站维护说明](../website/README.md) |
 | 更新双语说明 | `sync-website-languages.py`、`sync-tutorials.py`、`reference-translations.py`、`generate-parameter-atlas.py`；其他 `generate-*.py` 生成相应教学索引 | 对照[双语维护说明](BILINGUAL-MAINTENANCE.md)更新汉语源和保存的译文。Rd 来自 `R/` 中的 roxygen |
 | 复核教学示例或图片 | `check-documentation-lessons.R` 执行示例，`documentation-plots.R` 绘制常规网站 PNG。共享示例、课程与综合案例分别见 `documentation-examples.R`、`site-course-examples.R`、`site-flagships.R` | 教学执行回执在 `teaching-audit/`，图片输入与哈希在 `website/assets/plots.csv`。示例输出与真实图片分别核对 |
-| 本地构建网站 | `build-website.py`。它使用 `site_*.py`、`render-website.R`、`finalize-website.R` 和专题渲染器。CI 的本地构建依赖见 `website-dependencies.R` | 需要网页预览时，生成目录为 `.site/` |
-| 查看设备、几何或耗时证据 | `benchmark-layout.R`、`profile-foundation-ribbons.R` 和相应主题的 `validate-*.R` | 选定图、设备与尺寸后再比较。新过程图和布局先写临时目录，留存规则见[本地存储说明](LOCAL-STORAGE.md) |
+| 本地构建网站 | `build-website.py`。它使用 `site_*.py`、`render-website.R`、`finalize-website.R` 和专题渲染器。CI 的本地构建依赖见 `website-dependencies.R` | 网页预览在 `.site/`。下载源码须受 Git 跟踪。运行时及缓存输入明细在 `.cache/website-diagnostics/` |
+| 查看设备、几何或耗时证据 | [profile-showcase-render.R](profile-showcase-render.R) 分开测量完整出图的构造、build、gtable 和写图时间。`benchmark-layout.R` 和 `profile-foundation-ribbons.R` 用于连接布局 | 选定图、设备与尺寸后再比较。测量结果见[二次审计](long-term-audit/v0.29.0-second-review.md)。新过程图和布局先写临时目录，留存规则见[本地存储说明](LOCAL-STORAGE.md) |
 | 正式发布 | `validate-release*.R`、`validate-rc*.R`、`render-rc.R`、`benchmark-rc.R`、`check-vignette-resources.py`，以及 `release-audit/`、`cran-audit/` | 按该版本的发布授权与验收清单调用。[默认测试范围](TESTING.md) |
 | 调查历史接口或实验 | `audit-*.R`、`freeze-api.R`、`catalog-api-migrations.R` 和相应时期的 `validate-api*.R`。版本结论、脚本、测量与图像可从[历史资产索引](long-term-audit/archive-index.tsv)按用途检索 | 历史结论适用于记录的提交与输入。当前开发结果见 [v0.29.0 审计整改记录](long-term-audit/v0.29.0-review.md) |
 
