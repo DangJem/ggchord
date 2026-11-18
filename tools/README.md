@@ -11,7 +11,7 @@
 | 本地构建网站 | `build-website.py`。它使用 `site_*.py`、`render-website.R`、`finalize-website.R` 和专题渲染器。CI 的本地构建依赖见 `website-dependencies.R` | 网页预览在 `.site/`。下载源码须受 Git 跟踪。运行时及缓存输入明细在 `.cache/website-diagnostics/` |
 | 查看设备、几何或耗时证据 | [profile-showcase-render.R](profile-showcase-render.R) 分开测量完整出图的构造、build、gtable 和写图时间。`benchmark-layout.R` 和 `profile-foundation-ribbons.R` 用于连接布局 | 选定图、设备与尺寸后再比较。测量结果见[图层接口与性能复审](long-term-audit/v0.29.0-layer-grammar.md)和[二次审计](long-term-audit/v0.29.0-second-review.md)。新过程图和布局先写临时目录，留存规则见[本地存储说明](LOCAL-STORAGE.md) |
 | 正式发布 | `validate-release*.R`、`validate-rc*.R`、`render-rc.R`、`benchmark-rc.R`、`check-vignette-resources.py`，以及 `release-audit/`、`cran-audit/` | 按该版本的发布授权与验收清单调用。[默认测试范围](TESTING.md) |
-| 继续 v0.50.0 架构重构 | 从[设计总表](long-term-audit/v0.50.0-design.md)进入导出去向、六个使用场景和基线引擎探针 | 先读已确认的直接切换政策及待评审接口，再按阶段记录实现证据 |
+| 继续 v0.50.0 架构重构 | 从[最近四轮评审](long-term-audit/v0.50.0-design.md#最近四轮评审)进入最小圆图、六个真实工作流、API 去向与实测证据 | 核对已确认的直接切换政策、尚待选择的默认值和首批双样本分面建议 |
 | 调查历史接口或实验 | `audit-*.R`、`freeze-api.R`、`catalog-api-migrations.R` 和相应时期的 `validate-api*.R`。版本结论、脚本、测量与图像可从[历史资产索引](long-term-audit/archive-index.tsv)按用途检索 | 历史结论适用于记录的提交与输入。当前开发结果见 [v0.29.0 审计整改记录](long-term-audit/v0.29.0-review.md) |
 
 ## 历史证据与依赖
