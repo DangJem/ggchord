@@ -1,0 +1,7 @@
+"case","png","width","height","dpi","setup","build","gtable","draw_close","total","refinements","md5","phase"
+"circular","circular-timing-1.png",16.5,8,144,0.228,3.308,11.909,0.120000000000001,15.565,4,"afa831b9c6b5063a9ec4e854fec154a4","baseline"
+"circular","circular-timing-2.png",16.5,8,144,0.0769999999999982,2.084,10.971,0.122,13.254,4,"afa831b9c6b5063a9ec4e854fec154a4","baseline"
+"circular","circular-timing-3.png",16.5,8,144,0.0430000000000064,2.125,11.231,0.124000000000002,13.523,4,"afa831b9c6b5063a9ec4e854fec154a4","baseline"
+"radial","radial-views-1.png",12,9,120,0,1.32599999999999,2.54300000000001,0.0579999999999927,3.92699999999999,2,"dd5bf069213d9919c24b9df293dee1bc","baseline"
+"sankey","sankey-views-2.png",12,9,120,0,2.19500000000001,4.536,0.0559999999999974,6.78700000000001,2,"83e9855f91377554e33f0f42280fec88","baseline"
+"fusion","fusion-views-3.png",16,14,120,0,6.384,0,0.182000000000002,6.566,NA,"e857965b2b5a945eede514fcd229fa91","baseline"

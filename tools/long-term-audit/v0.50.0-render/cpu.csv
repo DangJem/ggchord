@@ -1,0 +1,13 @@
+"phase","function_name","total.time","total.pct","self.time","self.pct"
+"baseline","ggchord_render_table",10.66,76.47,0,0
+"baseline","ggchord_feature_label_lanes",3.26,23.39,0.06,0.43
+"baseline","ggchord_text_boxes",1.94,13.92,0.01,0.07
+"baseline","ggchord_boxes_overlap_any",0.57,4.09,0.02,0.14
+"baseline","ggchord_feature_label_attachment",0.34,2.44,0.22,1.58
+"baseline","ggchord_site_label_metrics",0.67,4.81,0.01,0.07
+"candidate","ggchord_render_table",10.07,75.54,0,0
+"candidate","ggchord_feature_label_lanes",2.96,22.21,0.06,0.45
+"candidate","ggchord_text_boxes",1.7,12.75,0,0
+"candidate","ggchord_boxes_overlap_any",0.33,2.48,0.04,0.3
+"candidate","ggchord_feature_label_attachment",NA,NA,NA,NA
+"candidate","ggchord_site_label_metrics",0.78,5.85,0.01,0.08
