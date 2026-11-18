@@ -4037,6 +4037,28 @@
     "units": "see canonical argument contract"
   },
   {
+    "api": "geom_track_bar",
+    "parameter": "track",
+    "default": "NULL",
+    "type": "Type, units and accepted forms: see this API argument contract at right",
+    "constraint": "A physical position_track() declaration.",
+    "source": "man/geom_track.Rd",
+    "requiredness": "see API contract; not inferred from formals",
+    "type_source": "canonical Rd argument contract",
+    "units": "see canonical argument contract"
+  },
+  {
+    "api": "geom_track_bar",
+    "parameter": "stat",
+    "default": "\"count\"",
+    "type": "Type, units and accepted forms: see this API argument contract at right",
+    "constraint": "Native geometry and statistic names. The seven supported statistics also accept their built-in ggplot2 Stat objects, for example ggplot2::StatBin. Bar defaults to count, other geoms to identity. Custom Stat subclasses require a source-membership rule and are unsupported.",
+    "source": "man/geom_track.Rd",
+    "requiredness": "see API contract; not inferred from formals",
+    "type_source": "canonical Rd argument contract",
+    "units": "see canonical argument contract"
+  },
+  {
     "api": "geom_track_col",
     "parameter": "mapping",
     "default": "NULL",

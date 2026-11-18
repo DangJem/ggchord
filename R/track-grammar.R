@@ -49,7 +49,7 @@
 #' events <- data.frame(accver = "A", pos = c(100, 100, 400))
 #' ggchord(data.frame(accver = "A", length = 1000)) +
 #'   geom_seq() +
-#'   geom_track(data = events, geom = "bar", track = position_track("count")) +
+#'   geom_track_bar(data = events, track = position_track("count"), stat = "count") +
 #'   coord_collinear()
 #' # Fit existing GC windows in source space; estimates are not new data.
 #' path <- system.file("extdata", "pUC19-gc-100.bedGraph", package = "ggchord")

@@ -185,13 +185,15 @@ geom_track_line <- function(mapping = NULL, data = NULL, position = NULL,
 geom_track_bar <- function(mapping = NULL, data = NULL, position = NULL,
     baseline = 0, fill = "#86AFB9", colour = NA, alpha = 1,
     linewidth = .25, linetype = 1, bounds = c("error", "clip"), show.legend = NA,
-    inherit.aes = FALSE, ...) {
+    inherit.aes = FALSE, ..., track = NULL, stat = "count") {
+  if (!is.numeric(baseline) || length(baseline) != 1L || !is.finite(baseline))
+    ggchord_stop("geom_track_bar(): baseline must be one finite number")
   if (baseline != 0) ggchord_stop("geom_track_bar(): count uses a zero baseline; use geom_track_col() for supplied values")
   fixed <- c(fill = !missing(fill), colour = !missing(colour), alpha = !missing(alpha),
     linewidth = !missing(linewidth), linetype = !missing(linetype))
   dots <- list(...)
   for (key in names(fixed)[fixed]) dots[[key]] <- get(key)
-  do.call(geom_track, c(list(mapping = mapping, data = data, geom = "bar",
+  do.call(geom_track, c(list(mapping = mapping, data = data, geom = "bar", track = track, stat = stat,
     position = position, bounds = bounds, show.legend = show.legend, inherit.aes = inherit.aes), dots))
 }
 

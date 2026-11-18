@@ -975,7 +975,9 @@
       "bounds": "c(\"error\", \"clip\")",
       "show.legend": "NA",
       "inherit.aes": "FALSE",
-      "...": ""
+      "...": "",
+      "track": "NULL",
+      "stat": "\"count\""
     }
   },
   {

@@ -19,7 +19,9 @@ geom_track_bar(
   bounds = c("error", "clip"),
   show.legend = NA,
   inherit.aes = FALSE,
-  ...
+  ...,
+  track = NULL,
+  stat = "count"
 )
 
 geom_track(
@@ -66,12 +68,12 @@ position='identity' so stacking does not change their meaning.}
 
 \item{...}{Native geom/stat parameters and fixed styles.}
 
+\item{track}{A physical \code{\link[=position_track]{position_track()}} declaration.}
+
 \item{geom, stat}{Native geometry and statistic names. The seven supported
 statistics also accept their built-in ggplot2 Stat objects, for example
 \code{ggplot2::StatBin}. Bar defaults to count, other geoms to identity.
 Custom Stat subclasses require a source-membership rule and are unsupported.}
-
-\item{track}{A physical \code{\link[=position_track]{position_track()}} declaration.}
 }
 \value{
 A ggplot2 layer using a shared sequence-local band.
@@ -107,7 +109,7 @@ Existing track_value/track_fill/track_colour roles remain accepted.
 events <- data.frame(accver = "A", pos = c(100, 100, 400))
 ggchord(data.frame(accver = "A", length = 1000)) +
   geom_seq() +
-  geom_track(data = events, geom = "bar", track = position_track("count")) +
+  geom_track_bar(data = events, track = position_track("count"), stat = "count") +
   coord_collinear()
 # Fit existing GC windows in source space; estimates are not new data.
 path <- system.file("extdata", "pUC19-gc-100.bedGraph", package = "ggchord")

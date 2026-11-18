@@ -714,6 +714,8 @@ Start with the [function index](../../man/). Examples compare important paramete
 | `show.legend` | `NA` | Type, units and accepted forms: see this API argument contract at right | Standard layer controls. |
 | `inherit.aes` | `FALSE` | Type, units and accepted forms: see this API argument contract at right | Standard layer controls. |
 | `...` | `No formal default; requiredness follows the contract` | Type, units and accepted forms: see this API argument contract at right | Native geom/stat parameters and fixed styles. |
+| `track` | `NULL` | Type, units and accepted forms: see this API argument contract at right | A physical position_track() declaration. |
+| `stat` | `"count"` | Type, units and accepted forms: see this API argument contract at right | Native geometry and statistic names. The seven supported statistics also accept their built-in ggplot2 Stat objects, for example ggplot2::StatBin. Bar defaults to count, other geoms to identity. Custom Stat subclasses require a source-membership rule and are unsupported. |
 
 </details>
 

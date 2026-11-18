@@ -43,6 +43,7 @@
   position or physical track band to a layer that cannot apply it raises an
   error. Native tracks accept the seven supported built-in ggplot2 Stat objects
   and honour `position_identity()` with a nonzero column baseline.
+  `geom_track_bar()` lists `track` and `stat` as named arguments.
 - Native count and summary tracks trace each result to its contributing source
   rows before a dodge or nudge. Missing heights excluded from summaries and
   missing weights excluded from counts are also excluded from their row lists.
