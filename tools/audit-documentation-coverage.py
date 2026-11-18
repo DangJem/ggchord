@@ -12,7 +12,11 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 
 def main():
-    entries = list(csv.DictReader((ROOT/'design-roadmap/audit-generated/candidate-exports-v0.16.4.csv').open()))
+    inventory = ROOT/'design-roadmap/audit-generated/candidate-exports-v0.16.4.csv'
+    if not inventory.is_file():
+        raise SystemExit(f'This historical audit requires the local v0.16.4 inventory: {inventory}. See tools/README.md for current documentation checks.')
+    with inventory.open() as source:
+        entries = list(csv.DictReader(source))
     # Parse actual calls, so prose mentions and commented calls are not examples.
     program = r'''
     expressions <- parse('tools/documentation-examples.R', keep.source=FALSE)
