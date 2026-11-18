@@ -19,4 +19,6 @@
 
 部分时期的工具依赖维护者本地的 `design-roadmap/`，该目录未随普通 clone 分发。例如 `audit-documentation-coverage.py` 需要 `design-roadmap/audit-generated/candidate-exports-v0.16.4.csv`。需要复现当期结果时，使用与该脚本版本匹配的本地输入。要查看当前导出和参数，可直接运行 `Rscript tools/teaching-inventory.R`。随包数据的再生成输入见[生成器索引](../data-raw/README.md)。
 
-包声明 R ≥ 4.1.0、ggplot2 ≥ 4.0.0。现有常规 CI 在 macOS、Windows 的 R release 以及 Linux 的 release 和 devel 上运行。本次本地探针使用 R 4.6.0 与 ggplot2 4.0.3。R 4.1.x 与最低可安装依赖组合仍缺少实机验证记录。
+网站命令保留在 `tools/`。搜索、导航、页面组件和链接转换的共享 Python 实现集中在 `tools/website/`。网站下载的教学证据表由双语兼容页引用，其余教学清单供开发工具读取。
+
+包声明 R ≥ 4.1.0、ggplot2 ≥ 4.0.0。现有常规 CI 在 macOS、Windows 的 R release 以及 Linux 的 release 和 devel 上运行。本次使用 R 4.6.0，在独立库核对 ggplot2 4.0.0、4.0.3 和 3.5.2，具体行为见[依赖下限与绘图核验](long-term-audit/v0.29.0-second-review.md#dependency-floor)。R 4.1.x 与最低可安装依赖组合仍缺少实机验证记录。
