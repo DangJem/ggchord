@@ -612,7 +612,8 @@
       "position": "\"identity\"",
       "show.legend": "FALSE",
       "inherit.aes": "TRUE",
-      "...": ""
+      "...": "",
+      "id": "NULL"
     }
   },
   {
@@ -635,7 +636,8 @@
       "show.legend": "FALSE",
       "inherit.aes": "TRUE",
       "label_min_size": "1.5",
-      "...": ""
+      "...": "",
+      "id": "NULL"
     }
   },
   {
@@ -711,7 +713,8 @@
       "position": "NULL",
       "show.legend": "FALSE",
       "inherit.aes": "TRUE",
-      "...": ""
+      "...": "",
+      "id": "NULL"
     }
   },
   {
@@ -728,7 +731,8 @@
       "position": "NULL",
       "show.legend": "FALSE",
       "inherit.aes": "TRUE",
-      "...": ""
+      "...": "",
+      "id": "NULL"
     }
   },
   {
@@ -769,7 +773,8 @@
       "position": "\"identity\"",
       "show.legend": "FALSE",
       "inherit.aes": "FALSE",
-      "...": ""
+      "...": "",
+      "id": "NULL"
     }
   },
   {
@@ -825,7 +830,8 @@
       "show.legend": "FALSE",
       "inherit.aes": "TRUE",
       "...": "",
-      "id": "NULL"
+      "id": "NULL",
+      "position": "\"identity\""
     }
   },
   {
@@ -908,7 +914,8 @@
       "show.legend": "NA",
       "inherit.aes": "TRUE",
       "...": "",
-      "id": "NULL"
+      "id": "NULL",
+      "measure": "NULL"
     }
   },
   {
@@ -930,7 +937,8 @@
       "inherit.aes": "TRUE",
       "...": "",
       "track": "NULL",
-      "stat": "\"count\""
+      "stat": "\"count\"",
+      "id": "NULL"
     }
   },
   {
@@ -967,7 +975,9 @@
       "inherit.aes": "TRUE",
       "...": "",
       "track": "NULL",
-      "id": "NULL"
+      "id": "NULL",
+      "stat": "NULL",
+      "measure": "NULL"
     }
   },
   {
@@ -988,7 +998,8 @@
       "inherit.aes": "TRUE",
       "...": "",
       "track": "NULL",
-      "id": "NULL"
+      "id": "NULL",
+      "stat": "\"identity\""
     }
   },
   {
@@ -1234,7 +1245,8 @@
       "position": "",
       "inverse": "FALSE",
       "source": "FALSE",
-      "axis": "NULL"
+      "axis": "NULL",
+      "panel": "NULL"
     }
   },
   {
@@ -1906,7 +1918,8 @@
       "oob": "scales::censor",
       "unit": "NULL",
       "guide": "c(\"axis\", \"none\")",
-      "...": ""
+      "...": "",
+      "facet_domain": "c(\"shared\", \"panel\")"
     }
   },
   {
@@ -1922,6 +1935,15 @@
       "cross_gap": "c(\"split\", \"drop\")",
       "max_links": "10000",
       "feature_data": "NULL"
+    }
+  },
+  {
+    "name": "shared_track_limits",
+    "owner": "ggchord",
+    "alias": "",
+    "parameters": {
+      "...": "",
+      "tracks": "\"default\""
     }
   },
   {

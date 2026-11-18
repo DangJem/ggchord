@@ -1,5 +1,7 @@
-# Current public surface only. Never rewrite historical frozen candidates or
-# infer semantic aliases just because two R objects compare identical.
+# v0.27.0-only snapshot, including that version's constructor and theme checks.
+# Use tools/teaching-inventory.R to inspect the current checkout instead.
+if (read.dcf("DESCRIPTION", fields = "Version")[[1L]] != "0.27.0")
+  stop("This snapshot validates v0.27.0. Run tools/teaching-inventory.R for the current API.")
 pkgload::load_all(quiet = TRUE)
 listed <- jsonlite::read_json('tools/teaching-audit/api-signatures.json')
 exports <- getNamespaceExports('ggchord')

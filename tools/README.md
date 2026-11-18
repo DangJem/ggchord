@@ -5,6 +5,7 @@
 | 任务 | 入口 | 使用时机 |
 | --- | --- | --- |
 | 检查一处数据或图层修改 | 直接在 R 中加载当前源码，调用受影响的公开函数。按主题查找 `validate-data-*.R`、`validate-clean-intervals.R`、`validate-collinear*.R` 等已有脚本 | 默认使用最小输入。部分旧脚本有独立的样本、版本或存储要求，先读其开头 |
+| 核对当前 API 和参数契约 | `Rscript tools/teaching-inventory.R` 读取现行导出，`Rscript tools/check-teaching-defaults.R` 对照 Rd 与实际形参 | 更新开发清单时按下文执行 |
 | 检查文档来源和链接 | `python3 tools/check-documentation.py --source-only`，单查仓库链接用 `check-repository-links.py` | 更新网站源、函数帮助或迁移说明后。输入与生成顺序见[网站维护说明](../website/README.md) |
 | 更新双语说明 | `sync-website-languages.py`、`sync-tutorials.py`、`reference-translations.py`、`generate-parameter-atlas.py`；其他 `generate-*.py` 生成相应教学索引 | 对照[双语维护说明](BILINGUAL-MAINTENANCE.md)更新汉语源和保存的译文。Rd 来自 `R/` 中的 roxygen |
 | 复核教学示例或图片 | `check-documentation-lessons.R` 执行示例，`documentation-plots.R` 绘制常规网站 PNG。共享示例、课程与综合案例分别见 `documentation-examples.R`、`site-course-examples.R`、`site-flagships.R` | 教学执行回执在 `teaching-audit/`，图片输入与哈希在 `website/assets/plots.csv`。示例输出与真实图片分别核对 |
@@ -18,7 +19,18 @@
 
 历史索引记录 `main@ab415637` 的 918 个原始路径、文件用途、字节数、SHA-256 和恢复路径。`storage` 标示当前 checkout 或历史 Git 提交。路径以 `tools/long-term-audit/` 为基准。检索某次实验时，先找其报告或测量，再沿文件名核对图片。对字节相同的独立实验保留原名映射。需要完整还原旧工作树时，可以从该基线提交提取原文件。从旧提交恢复一份文件到临时目录可运行 `git show 8e805060:tools/long-term-audit/<文件名> > /tmp/<文件名>`。本轮逐个核对 420 个移出文件的 Git 对象，保留了 496 个有引用或承担来源、许可及索引用途的文件。重新运行实验产生的过程输出请使用临时目录。
 
-部分时期的工具依赖维护者本地的 `design-roadmap/`，该目录未随普通 clone 分发。例如 `audit-documentation-coverage.py` 需要 `design-roadmap/audit-generated/candidate-exports-v0.16.4.csv`。需要复现当期结果时，使用与该脚本版本匹配的本地输入。要查看当前导出和参数，可直接运行 `Rscript tools/teaching-inventory.R`。随包数据的再生成输入见[生成器索引](../data-raw/README.md)。
+部分时期的工具依赖维护者本地的 `design-roadmap/`，该目录未随普通 clone 分发。例如 `audit-documentation-coverage.py` 需要 `design-roadmap/audit-generated/candidate-exports-v0.16.4.csv`。需要复现当期结果时，使用与该脚本版本匹配的本地输入。`audit-public-contracts.R` 用于 v0.27.0 专用快照。`validate-api-candidate.R`、`validate-tracks.R` 和 `check-teaching-defaults.R` 在当前 checkout 默认打印结果，给出路径时可另存报告。随包数据的再生成输入见[生成器索引](../data-raw/README.md)。
+
+## 刷新开发侧 API 清单
+
+```sh
+Rscript tools/teaching-inventory.R tools/teaching-audit/api-signatures.json
+python3 tools/generate-parameter-atlas.py --contracts-only
+python3 tools/generate-parameter-atlas.py --contracts-only --check
+Rscript tools/check-teaching-defaults.R
+```
+
+签名来自本地开发命名空间。`--contracts-only` 使用当前 Rd 和已保存的类型信息，只刷新开发侧 `parameter-contracts.json`。
 
 网站命令保留在 `tools/`。搜索、导航、页面组件和链接转换的共享 Python 实现集中在 `tools/website/`。网站下载的教学证据表由双语兼容页引用，其余教学清单供开发工具读取。
 

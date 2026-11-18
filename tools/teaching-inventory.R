@@ -1,5 +1,7 @@
 # Inspect current exports and signatures without installing or checking the package.
 pkgload::load_all(quiet = TRUE)
+output <- commandArgs(trailingOnly = TRUE)
+if (length(output) > 1L) stop("Usage: Rscript tools/teaching-inventory.R [inventory.json]")
 ns <- asNamespace("ggchord")
 exports <- sort(getNamespaceExports(ns))
 objects <- lapply(exports, function(name) getExportedValue("ggchord", name))
@@ -13,4 +15,5 @@ rows <- lapply(seq_along(exports), function(index) {
   aliases <- setdiff(exports[same], name)
   list(name = name, owner = owner, alias = paste(aliases, collapse = ";"), parameters = defaults)
 })
-cat(jsonlite::toJSON(rows, auto_unbox = TRUE, pretty = TRUE))
+json <- jsonlite::toJSON(rows, auto_unbox = TRUE, pretty = TRUE)
+if (length(output)) writeLines(json, output) else cat(json, "\n", sep = "")

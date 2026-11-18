@@ -1,5 +1,8 @@
 # Direct checks of the new public workflows, not a testthat/release run.
+# Supply a CSV path to save a new result without replacing the v0.16.3 record.
 pkgload::load_all(quiet = TRUE)
+output <- commandArgs(trailingOnly = TRUE)
+if (length(output) > 1L) stop("Usage: Rscript tools/validate-tracks.R [report.csv]")
 local({
   old <- getwd(); setwd(tempdir()); on.exit(setwd(old), add = TRUE)
   sequences <- data.frame(accver = c("A", "B"), length = c(1000, 1000))
@@ -139,6 +142,6 @@ local({
   fails(export_ggchord_layout(ring(points,gap=10)),'closed=TRUE')
   record('closed_na_seam','Complete circular series explicitly close; NA prevents seam closure; gapped circles reject closed')
   result <- do.call(rbind,results)
-  write.csv(result,'design-roadmap/audit-generated/engine-track-validation-v0.16.3.csv',row.names=FALSE)
+  if (length(output)) write.csv(result, output, row.names = FALSE)
   print(result,row.names=FALSE)
 })

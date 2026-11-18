@@ -1,5 +1,8 @@
 # Compare documented usages with current public function formals, without tests/checks.
+# Supply a JSON path to save the check for this checkout.
 pkgload::load_all(quiet = TRUE)
+output <- commandArgs(trailingOnly = TRUE)
+if (length(output) > 1L) stop("Usage: Rscript tools/check-teaching-defaults.R [report.json]")
 ns <- asNamespace("ggchord")
 exports <- getNamespaceExports(ns)
 results <- list()
@@ -28,8 +31,7 @@ for (path in list.files("man", "\\.Rd$", full.names = TRUE)) {
     results[[name]] <- list(rd = path, matches = identical(formals(object), documented))
   }
 }
-writeLines(jsonlite::toJSON(results, auto_unbox = TRUE, pretty = TRUE),
-  "tools/teaching-audit/defaults-check.json")
+if (length(output)) writeLines(jsonlite::toJSON(results, auto_unbox = TRUE, pretty = TRUE), output)
 failed <- names(Filter(function(x) !isTRUE(x$matches), results))
 if (length(failed)) stop("Usage/formal mismatch: ", paste(failed, collapse = ", "))
 cat(length(results), "documented exported function usages match current formals.\n")
