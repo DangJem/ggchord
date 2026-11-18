@@ -137,17 +137,37 @@ read_blast_single <- function(file, format = c("auto", "outfmt6", "outfmt7", "cu
   dots <- list(...)
   if (!is.character(comment) || length(comment) != 1L || is.na(comment) || nchar(comment) > 1L)
     ggchord_stop("read_blast(): comment must be one character or an empty string")
-  content <- if (nzchar(comment)) vapply(strsplit(paste0(lines, "\t"), comment, fixed = TRUE),
-    `[`, character(1), 1L) else lines
+  content <- lines
+  if (nzchar(comment)) {
+    at <- regexpr(comment, lines, fixed = TRUE)
+    has_comment <- at > 0L
+    content[has_comment] <- substr(lines[has_comment], 1L, at[has_comment] - 1L)
+  }
   source_line <- which(nzchar(trimws(content)))
   if (!is.null(dots$skip)) source_line <- source_line[source_line > dots$skip]
   if (!is.null(dots$nrows) && dots$nrows >= 0) source_line <- utils::head(source_line, dots$nrows)
   if (!length(source_line)) ggchord_stop("read_blast(): no data rows parsed from ", file)
-  widths <- lengths(strsplit(content[source_line], "\t", fixed = TRUE))
+  widths <- lengths(strsplit(paste0(content[source_line], "\t"), "\t", fixed = TRUE))
   if (length(unique(widths)) != 1L) ggchord_stop(
     "read_blast(): inconsistent field counts in ", file, " at source lines ",
     paste(source_line[widths != widths[1L]], collapse = ", "))
+  std12 <- c("qaccver", "saccver", "pident", "length", "mismatch", "gapopen",
+             "qstart", "qend", "sstart", "send", "evalue", "bitscore")
+  ext17 <- c(std12, "qcovs", "qlen", "slen", "sstrand", "stitle")
   classes <- dots$colClasses %||% "character"
+  if (!is.null(names(classes))) {
+    fields <- col_names %||% header_names %||% switch(as.character(widths[1L]),
+      "12" = std12, "17" = ext17)
+    index <- match(names(classes), fields)
+    unspecified <- is.na(index)
+    table_names <- dots$col.names %||% paste0("V", seq_len(widths[1L]))
+    index[unspecified] <- match(names(classes)[unspecified], table_names)
+    if (anyNA(index) || anyDuplicated(index))
+      ggchord_stop("read_blast(): named colClasses must identify distinct input fields")
+    selected <- classes
+    classes <- rep("character", widths[1L])
+    classes[index] <- unname(selected)
+  }
   dots$colClasses <- NULL
   missing_values <- dots$na.strings %||% character()
   dots$na.strings <- NULL
@@ -158,10 +178,6 @@ read_blast_single <- function(file, format = c("auto", "outfmt6", "outfmt7", "cu
   if (ncol(raw) == 0 || nrow(raw) == 0) {
     ggchord_stop("read_blast(): no data rows parsed from ", file, call. = FALSE)
   }
-
-  std12 <- c("qaccver", "saccver", "pident", "length", "mismatch", "gapopen",
-             "qstart", "qend", "sstart", "send", "evalue", "bitscore")
-  ext17 <- c(std12, "qcovs", "qlen", "slen", "sstrand", "stitle")
 
   if (is.null(col_names)) {
     col_names <- if (format == "custom") {

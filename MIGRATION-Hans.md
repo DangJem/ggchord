@@ -3,7 +3,7 @@
 | 工作流 | 当前写法 |
 | --- | --- |
 | 独立清洗与反向连接 | 默认排序保留相对方向；需要方向端点时对原表使用 `reversed_interval = "keep"`。 |
-| 自定义 BLAST 列 | 未指定类型的自定义元数据保留文本。数值测量可用 `mutate(score_custom = as.numeric(score_custom))` 显式转换；标识保持文本。 |
+| 自定义 BLAST 列 | 未指定类型的自定义元数据保留文本。可用 `colClasses = c(score_custom = "numeric")` 读入数值测量，也可在读入后用 `mutate(score_custom = as.numeric(score_custom))` 转换。其他自定义标识保留原拼写。 |
 | 轨道身份 | `aes(accver = id)` 的结果须为单值或逐行等长。原先较短的向量会循环补齐，现在报错。 |
 | 科学示例 | 真实数据使用 `strand = source_strand`，GFF3 可用 `unstranded = "keep"` 保留未知链。 |
 

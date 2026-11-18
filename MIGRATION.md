@@ -3,7 +3,7 @@
 | Workflow | Current usage |
 | --- | --- |
 | Standalone cleaning and reverse hits | Default sorting preserves relative direction. Use `reversed_interval = "keep"` on the original table when directional endpoints are required. |
-| Custom BLAST fields | Untyped custom metadata retains text. Convert numeric measurements explicitly with `mutate(score_custom = as.numeric(score_custom))`; keep identifiers as text. |
+| Custom BLAST fields | Untyped custom metadata retains text. Use `colClasses = c(score_custom = "numeric")` to read a measurement, or convert it afterward with `mutate(score_custom = as.numeric(score_custom))`. Other custom identifiers keep their spelling. |
 | Track accessions | `aes(accver = id)` must return a scalar or one accession per row. Shorter vectors that were previously recycled now raise an error. |
 | Scientific examples | Use `strand = source_strand` for biological interpretation and `unstranded = "keep"` to retain unknown GFF3 strands. |
 
