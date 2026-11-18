@@ -324,14 +324,22 @@ ggchord_text_boxes <- function(df,
   w <- numeric(n)
   h <- numeric(n)
   valid <- !is.na(texts) & nzchar(texts)
+  composite <- if ('.ggchord_composite_label' %in% names(df) &&
+      all(c('enzyme_label', 'coordinate_label', 'enzyme_fontface') %in% names(df)))
+    which(df$.ggchord_composite_label %in% TRUE & valid) else integer()
+  uniform_sites <- if ('.ggchord_composite_label' %in% names(df))
+    which(df$.ggchord_composite_label %in% FALSE & valid) else integer()
   if (any(valid)) {
     legacy_device <- names(grDevices::dev.cur()) %in% c("pdf", "postscript")
     unicode <- any(utf8ToInt(paste(texts[valid], collapse = "")) > 127L)
     close_device <- if (grDevices::dev.cur() > 1L && !(legacy_device && unicode))
       function() invisible(NULL) else ggchord_measurement_device(text = texts[valid])
     on.exit(close_device())
-    valid_rows <- which(valid)
-    for (i in valid_rows) {
+    # Site labels are measured below using the same fragments as their
+    # renderer. A generic flat label measurement would be discarded.
+    regular <- valid
+    regular[c(composite, uniform_sites)] <- FALSE
+    for (i in which(regular)) {
       grob <- grid::textGrob(
         texts[i], gp = grid::gpar(
           fontsize = sizes[i] * (72.27 / 25.4),
@@ -349,9 +357,6 @@ ggchord_text_boxes <- function(df,
     close_device()
   }
 
-  composite <- if ('.ggchord_composite_label' %in% names(df) &&
-      all(c('enzyme_label', 'coordinate_label', 'enzyme_fontface') %in% names(df)))
-    which(df$.ggchord_composite_label %in% TRUE & valid) else integer()
   if (length(composite)) {
     exact <- ggchord_site_label_metrics(df$enzyme_label[composite], df$coordinate_label[composite],
       sizes[composite], families[composite], df$enzyme_fontface[composite],
@@ -359,8 +364,6 @@ ggchord_text_boxes <- function(df,
     w[composite] <- exact$width; h[composite] <- exact$height
     hjust[composite] <- .5
   }
-  uniform_sites <- if ('.ggchord_composite_label' %in% names(df))
-    which(df$.ggchord_composite_label %in% FALSE & valid) else integer()
   if (length(uniform_sites)) {
     exact <- ggchord_restriction_text_metrics(texts[uniform_sites], sizes[uniform_sites],
       units_per_inch, parse = FALSE, fontface = fontfaces[uniform_sites],
@@ -511,8 +514,21 @@ ggchord_arc_text_layout <- function(text, units_per_inch = .35,
 
 ggchord_boxes_overlap_any <- function(candidate, other) {
   if (!nrow(candidate) || is.null(other) || !nrow(other)) return(FALSE)
+  # Discard boxes that cannot intersect any glyph in this candidate before
+  # testing each glyph individually. Use the same tolerance in both checks.
+  tol <- 1e-7
+  if (nrow(candidate) > 1L) {
+    bounds <- c(min(candidate$xmin), max(candidate$xmax),
+      min(candidate$ymin), max(candidate$ymax))
+    if (!anyNA(bounds)) {
+      possible <- which(bounds[1L] < other$xmax - tol & bounds[2L] > other$xmin + tol &
+        bounds[3L] < other$ymax - tol & bounds[4L] > other$ymin + tol)
+      if (!length(possible)) return(FALSE)
+      if (length(possible) < nrow(other)) other <- other[possible, , drop = FALSE]
+    }
+  }
   for (i in seq_len(nrow(candidate))) {
-    if (any(ggchord_oriented_box_overlaps(candidate, other, i = i))) return(TRUE)
+    if (any(ggchord_oriented_box_overlaps(candidate, other, tol = tol, i = i))) return(TRUE)
   }
   FALSE
 }

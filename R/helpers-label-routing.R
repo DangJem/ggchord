@@ -418,6 +418,7 @@ ggchord_feature_label_lanes <- function(gl, gene_polys, seq_arcs,
 
     # Moving this label changes its anchor and angle, not the type metrics.
     line_metrics <- if (concentric_circle) new.env(parent = emptyenv()) else NULL
+    inner_anchor <- NULL
     for (candidate_index in if (grouped_external[i]) integer() else
         seq_len(nrow(candidates))) {
       track_index <- candidates$track[candidate_index]
@@ -456,8 +457,6 @@ ggchord_feature_label_lanes <- function(gl, gene_polys, seq_arcs,
             tangent[2] * tangent_index * tangent_step
         }
       }
-      if (concentric_circle && track_index > 0L) candidate <-
-        ggchord_feature_label_attachment(candidate, polygons, FALSE, units_per_inch)
       box <- if (concentric_circle) {
         ggchord_arc_text_layout(
           candidate, units_per_inch = units_per_inch, box_padding = .25/25.4,
@@ -489,7 +488,17 @@ ggchord_feature_label_lanes <- function(gl, gene_polys, seq_arcs,
       leader <- placed_leaders[0, , drop = FALSE]
       leader_collision <- FALSE
       if (concentric_circle) {
-        if (track_index > 0L) leader <- ggchord_inner_label_leader(candidate, box, units_per_inch)
+        if (track_index > 0L) {
+          # The source-angle ray is the same for every text position.
+          # Intersect its contour only when a candidate needs a leader.
+          if (is.null(inner_anchor)) {
+            attached <- ggchord_feature_label_attachment(candidate, polygons, FALSE, units_per_inch)
+            inner_anchor <- c(attached$anchor_x, attached$anchor_y)
+          }
+          candidate$anchor_x <- inner_anchor[1L]
+          candidate$anchor_y <- inner_anchor[2L]
+          leader <- ggchord_inner_label_leader(candidate, box, units_per_inch)
+        }
         leader_collision <- ggchord_inner_leader_hits(leader, placed) ||
           ggchord_inner_leader_hits(placed_leaders, box) ||
           ggchord_inner_leaders_cross(leader, placed_leaders)
