@@ -654,6 +654,12 @@ elements, these functions control automatic sequence axes, chord labels and
 the appearance and placement of guides belonging to each ggchord role.
 Palettes, breaks, labels and guide ordering remain scale/guide concerns.
 }
+\details{
+For plot-wide text, add \code{theme(text = element_text(family = "sans"))}.
+Set an individual ribbon legend title with \code{labs(ribbon_fill = "Identity")}
+and configure its guide with \code{\link[=guide_ggchord_colourbar]{guide_ggchord_colourbar()}}. For sequence
+labels alone, set \code{seq.label = element_text(size = 10)} in this theme.
+}
 \section{Appearance settings}{
 
 Ordinary text, panel, title and shared legend settings follow ggplot2.
@@ -696,3 +702,4 @@ Only ggchord-specific settings appear as explicit formals for IDE argument
 completion. An IDE that additionally expands upstream dots may still offer
 upstream suggestions; this package controls its own function signature.
 }
+

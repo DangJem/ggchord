@@ -1,3 +1,24 @@
+# ggchord 0.29.0 (development)
+
+- Repeated sorting in `clean_ggchord_data()` preserves reverse orientation.
+  Use `reversed_interval = "keep"` on the original records for directional plots.
+  GFF3 reports the number of unknown strands displayed as plus.
+- Layer role mappings use the same input for every expression. Dotplot draws
+  projected positions while visual mappings see the source columns, accepts
+  formula data and shares device-aware layout caching. Radial layout export
+  reports spoke length independent of rotation.
+- BLAST custom metadata retains text by default. For numeric measurements
+  in custom columns, set their class or convert the column explicitly.
+  Native track accession mappings now reject lengths other than one or the
+  number of observations; supply an explicit accession per observation.
+- Validation reports conflicting units and feature directions. Preparation
+  applies feature column mappings before filling strand defaults. Unified
+  annotations are identified as features in cleaning reports. Empty BigWig
+  selections support file provenance.
+- FASTA input is read in blocks. Generic features skip unused overlap checks.
+  Physical layout refinement and collected panel guides reuse the native track
+  statistic for the duration of a render.
+
 # ggchord 0.28.2
 
 - Stop the VCF help fixture after its third observed record instead of reading

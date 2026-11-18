@@ -461,7 +461,7 @@ interval_recip_overlap <- function(a1, a2, b1, b2) {
 }
 
 validate_gene_data <- function(gene_data, seq_data, col,
-                               check_coordinates, check_duplicates) {
+                               check_coordinates, check_duplicates, check_overlap = TRUE) {
   if (is.null(gene_data)) return(col)
   if (!is.data.frame(gene_data)) {
     return(add_validation_issue(
@@ -588,7 +588,7 @@ validate_gene_data <- function(gene_data, seq_data, col,
     # Highly overlapping features require valid numeric coordinates. Exact
     # duplicate reporting above remains useful even when coordinates are bad.
     ov_rows <- integer(0)
-    if (coords_ok) {
+    if (check_overlap && coords_ok) {
       # Reversed feature bounds can mean a circular origin join. Without a
       # coordinate context there is no safe linear overlap interpretation.
       ordered <- which(gene_data$start <= gene_data$end)
@@ -788,6 +788,17 @@ validate_ggchord_data <- function(seq_data,
 
   col <- new_validation_collector()
   col <- validate_seq_data(seq_data, col)
+  unit <- tryCatch(ggchord_sequence_unit(seq_data), error = function(e) NULL)
+  intervals <- list(ribbon = ribbon_data, gene = gene_data, feature = feature_data)
+  if (!is.null(unit)) for (name in names(intervals)) {
+    problem <- tryCatch({
+      ggchord_check_interval_unit(intervals[[name]], unit, name)
+      if (name == "gene" && !is.null(gene_data) && unit == "aa")
+        "gene_data requires bp coordinates" else NULL
+    }, error = conditionMessage)
+    if (!is.null(problem)) col <- add_validation_issue(col, name, "invalid_unit",
+      NA_integer_, "sequence_unit", problem, "error")
+  }
   col <- validate_ribbon_data(ribbon_data, seq_data, col,
                               check_coordinates, check_duplicates,
                               check_self_links)
@@ -873,12 +884,12 @@ ggchord_structural_validation_errors <- function(validation) {
       "missing_id", "empty_id", "invalid_strand"
     ),
     feature = c(
-      "not_dataframe", "missing_columns", "non_numeric", "non_finite",
+      "direction_conflict", "not_dataframe", "missing_columns", "non_numeric", "non_finite",
       "missing_id", "empty_id", "invalid_strand"
     )
   )
   keep <- vapply(seq_len(nrow(errors)), function(i) {
-    errors$category[i] %in% (structural[[errors$table[i]]] %||% character(0))
+    errors$category[i] == "invalid_unit" || errors$category[i] %in% (structural[[errors$table[i]]] %||% character(0))
   }, logical(1))
   errors[keep, , drop = FALSE]
 }

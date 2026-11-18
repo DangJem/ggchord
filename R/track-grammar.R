@@ -124,7 +124,10 @@ ggchord_track_native_input <- function(layer, plot) {
   if (isTRUE(p$native_inherit)) for (key in setdiff(names(plot$mapping), names(mapping)))
     mapping[[key]] <- plot$mapping[[key]]
   if ("accver" %in% names(mapping)) {
-    raw$accver <- rep_len(rlang::eval_tidy(mapping$accver, raw), nrow(raw))
+    ids <- rlang::eval_tidy(mapping$accver, raw)
+    if (!length(ids) %in% c(1L, nrow(raw)))
+      ggchord_stop("geom_track(): mapped accver must be scalar or supply one accession per input row")
+    raw$accver <- rep_len(ids, nrow(raw))
     mapping$accver <- NULL
   }
   ggchord_require_columns(raw, "accver", "geom_track()")

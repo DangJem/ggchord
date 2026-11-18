@@ -170,7 +170,17 @@ ggchord_prepare_dotplot <- function(plot) {
     if (is.null(layer$ggchord_type)) next
     layer <- ggchord_resolve_style_defaults(layer, plot$mapping)
     layer$ggchord_resolved_input <- layout$layer_inputs[[layer$ggchord_layer_id]]$alignment
-    plot$layers[[i]] <- reconstruct_layer(layer, layout$alignment[[layer$ggchord_layer_id]])
+    geometry <- layout$alignment[[layer$ggchord_layer_id]]
+    drawing <- layer$ggchord_resolved_input[geometry$source_row, , drop = FALSE]
+    mapping <- ggchord_effective_mapping(layer)
+    # Keep user columns (including x, y or source_row) visible to visual
+    # mappings. Only the geom's four position aesthetics use projected data.
+    for (axis in c("x", "y", "xend", "yend")) {
+      field <- tail(make.unique(c(names(drawing), paste0(".ggchord_", axis))), 1L)
+      drawing[[field]] <- geometry[[axis]]
+      mapping[[axis]] <- rlang::new_quosure(rlang::sym(field), emptyenv())
+    }
+    plot$layers[[i]] <- reconstruct_layer(layer, drawing, mapping)
   }
   plot <- ggchord_add_link_scales(plot)
   for (axis in c("x", "y")) {
@@ -242,7 +252,7 @@ ggchord_prepare_dotplot <- function(plot) {
     plot$theme <- plot$theme + ggplot2::theme(axis.line = ggplot2::element_blank(),
       axis.text = ggplot2::element_blank(), axis.ticks = ggplot2::element_blank())
   if (!is.null(plot$ggchord$native_theme)) plot$theme <- plot$theme + plot$ggchord$native_theme
-  plot$ggchord$ref$layout <- layout
+  ggchord_cache_layout(plot, layout)
   plot
 }
 

@@ -280,6 +280,7 @@ ggchord_fusion_collect_guides <- function(x) {
       for (id in names(plot$panels)) plot$panels[[id]]$plot <- walk(plot$panels[[id]]$plot, paste(path,id,sep="/"))
       return(plot)
     }
+    if (inherits(plot, "ggchord")) plot <- ggchord_render_track_source(plot)
     table <- ggplot2::ggplotGrob(plot)
     at <- which(grepl("^guide-box",table$layout$name) &
       !vapply(table$grobs,inherits,logical(1),"zeroGrob"))

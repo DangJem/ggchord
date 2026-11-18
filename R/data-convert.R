@@ -296,6 +296,10 @@ as_ggchord_seq <- function(x, mapping = NULL, lengths = NULL, ids = NULL) {
 #'   geom_seq() +
 #'   geom_feature(data = features)
 as_ggchord_feature <- function(x, mapping = NULL) {
+  ggchord_convert_feature(x, mapping)
+}
+
+ggchord_convert_feature <- function(x, mapping, unified = FALSE) {
   caller <- "as_ggchord_feature()"
   metadata <- NULL
   if (is.data.frame(x)) {
@@ -311,6 +315,7 @@ as_ggchord_feature <- function(x, mapping = NULL) {
   ggchord_require_columns(out, c("accver", "start", "end"), caller)
   out$accver <- ggchord_conversion_ids(out$accver, caller)
   ggchord_conversion_coordinates(out, c("start", "end"), caller)
+  if (unified) out <- ggchord_normalize_feature_input(out)
   strand <- if ("strand" %in% names(out)) as.character(out$strand) else NULL
   direction <- if ("directionality" %in% names(out)) as.character(out$directionality) else NULL
   direction_map <- c(forward = "+", reverse = "-", bidirectional = "+/-", none = ".", nondirectional = ".")

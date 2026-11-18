@@ -26,7 +26,8 @@ prepare_ggchord_data(
 \item{features, links}{Named lists of feature or paired-interval inputs.}
 
 \item{mapping}{Named list with optional \code{seq}, \code{ribbon}, \code{gene} column
-mappings, and \code{features}/\code{links} lists of mappings named like the respective
+mappings (use \code{gene} for unified \code{feature_data}), and \code{features}/
+\code{links} lists of mappings named like the respective
 collections. Each column mapping is a named character vector.}
 
 \item{steps}{Named list of explicit helper argument lists. Supported names:
@@ -36,7 +37,7 @@ Data arguments are supplied by preparation and cannot be overridden.}
 \item{feature_data}{Unified annotation table, mutually exclusive with gene_data.}
 }
 \value{
-A list with \code{seq_data}, \code{ribbon_data}, \code{gene_data}, \code{features},
+A list with \code{seq_data}, \code{ribbon_data}, \code{gene_data}, \code{feature_data}, \code{features},
 \code{links} and \code{report}. \code{report$valid} describes final validity, with
 \code{validation} before/after, \code{feature_issues}, per-link validations,
 \code{conversions}, \code{steps}, effective \code{step_arguments}, a ribbon \code{source_rows} list (original input rows
@@ -47,7 +48,7 @@ default. Helper stage reports number rows in that stage's input.
 }
 \description{
 Converts inputs using the existing \verb{as_ggchord_*()} adapters and returns
-named feature/link collections alongside the constructor's three tables.
+named feature/link collections alongside the constructor tables.
 Collections are passed explicitly to layers, for example
 \code{geom_feature(data = result$features$sites)}; preparation never adds layers.
 Import files first with the appropriate reader. No file format, alignment,

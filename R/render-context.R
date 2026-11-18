@@ -11,6 +11,12 @@ ggchord_render_cache_key <- function() {
     canvas_mm = ggchord_render_dimensions(), device = grDevices::dev.cur())
 }
 
+ggchord_cache_layout <- function(plot, layout) {
+  plot$ggchord$ref$layout <- layout
+  plot$ggchord$ref$context_key <- ggchord_render_cache_key()
+  layout
+}
+
 ggchord_with_render_context <- function(context, expr) {
   previous <- .ggchord_render_state$context
   .ggchord_render_state$context <- context

@@ -1,3 +1,12 @@
+## 0.29.0 data and mappings
+
+| Workflow | Current usage |
+| --- | --- |
+| Standalone cleaning and reverse hits | Default sorting preserves relative direction. Use `reversed_interval = "keep"` on the original table when directional endpoints are required. |
+| Custom BLAST fields | Untyped custom metadata retains text. Convert numeric measurements explicitly with `mutate(score_custom = as.numeric(score_custom))`; keep identifiers as text. |
+| Track accessions | `aes(accver = id)` must return a scalar or one accession per row. Shorter vectors that were previously recycled now raise an error. |
+| Scientific examples | Use `strand = source_strand` for biological interpretation and `unstranded = "keep"` to retain unknown GFF3 strands. |
+
 ## 0.19.0: static panel composition
 
 Existing single-view calls keep their defaults. Build independent plots, then

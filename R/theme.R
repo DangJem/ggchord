@@ -7,6 +7,11 @@
 #' the appearance and placement of guides belonging to each ggchord role.
 #' Palettes, breaks, labels and guide ordering remain scale/guide concerns.
 #'
+#' For plot-wide text, add `theme(text = element_text(family = "sans"))`.
+#' Set an individual ribbon legend title with `labs(ribbon_fill = "Identity")`
+#' and configure its guide with [guide_ggchord_colourbar()]. For sequence
+#' labels alone, set `seq.label = element_text(size = 10)` in this theme.
+#'
 #' @section Appearance settings:
 #' Ordinary text, panel, title and shared legend settings follow ggplot2.
 #' Sequence-axis settings control automatic axis decoration, not genomic

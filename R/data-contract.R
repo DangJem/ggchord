@@ -177,7 +177,8 @@ ggchord_sequence_unit <- function(seq_data, caller = "ggchord") {
 ggchord_check_interval_unit <- function(data, unit, caller) {
   if (is.data.frame(data) && nrow(data) && "sequence_unit" %in% names(data) &&
       !identical(ggchord_sequence_unit(data, caller), unit)) {
-    ggchord_stop(caller, ": interval sequence_unit disagrees with the sequence table")
+    ggchord_stop(caller, ": interval sequence_unit (", ggchord_sequence_unit(data, caller),
+      ") disagrees with the sequence table (", unit, ")")
   }
   invisible(NULL)
 }

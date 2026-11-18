@@ -29,6 +29,11 @@ ggchord_prepare_feature_issues <- function(features, seq_data) {
   }
   for (name in names(features)) {
     data <- features[[name]]
+    problem <- tryCatch({
+      ggchord_check_interval_unit(data, ggchord_sequence_unit(seq_data), name)
+      NULL
+    }, error = conditionMessage)
+    if (!is.null(problem)) add(name, "invalid_unit", seq_len(nrow(data)), "sequence_unit", problem, "error")
     index <- match(data$accver, seq_data$accver)
     add(name, "unknown_id", which(is.na(index)), "accver", "Unknown sequence ID", "error")
     bad <- data$start > seq_data$length[index] | data$end > seq_data$length[index]
@@ -58,7 +63,7 @@ ggchord_prepare_direction <- function(data, caller) {
 #' Prepare named ggchord tables with an explicit audit trail
 #'
 #' Converts inputs using the existing `as_ggchord_*()` adapters and returns
-#' named feature/link collections alongside the constructor's three tables.
+#' named feature/link collections alongside the constructor tables.
 #' Collections are passed explicitly to layers, for example
 #' `geom_feature(data = result$features$sites)`; preparation never adds layers.
 #' Import files first with the appropriate reader. No file format, alignment,
@@ -93,12 +98,13 @@ ggchord_prepare_direction <- function(data, caller) {
 #'   [as_ggchord_feature()]. Nondirectional intervals belong in `features`.
 #' @param features,links Named lists of feature or paired-interval inputs.
 #' @param mapping Named list with optional `seq`, `ribbon`, `gene` column
-#'   mappings, and `features`/`links` lists of mappings named like the respective
+#'   mappings (use `gene` for unified `feature_data`), and `features`/
+#'   `links` lists of mappings named like the respective
 #'   collections. Each column mapping is a named character vector.
 #' @param steps Named list of explicit helper argument lists. Supported names:
 #'   `clean`, `filter`, `deduplicate`, `merge`, `bundle`, `optimize`.
 #'   Data arguments are supplied by preparation and cannot be overridden.
-#' @return A list with `seq_data`, `ribbon_data`, `gene_data`, `features`,
+#' @return A list with `seq_data`, `ribbon_data`, `gene_data`, `feature_data`, `features`,
 #'   `links` and `report`. `report$valid` describes final validity, with
 #'   `validation` before/after, `feature_issues`, per-link validations,
 #'   `conversions`, `steps`, effective `step_arguments`, a ribbon `source_rows` list (original input rows
@@ -126,7 +132,7 @@ prepare_ggchord_data <- function(seq_data, ribbon_data = NULL, gene_data = NULL,
     features = list(), links = list(), mapping = list(), steps = list(), feature_data = NULL) {
   unified <- !is.null(feature_data)
   if (unified && !is.null(gene_data)) ggchord_stop("Supply only feature_data or gene_data")
-  if (unified) gene_data <- ggchord_normalize_feature_input(feature_data)
+  if (unified) gene_data <- feature_data
   caller <- "prepare_ggchord_data()"
   mapping <- ggchord_prepare_options(mapping, c("seq", "ribbon", "gene", "features", "links"), caller)
   stage_order <- c("clean", "filter", "deduplicate", "merge", "bundle", "optimize")
@@ -156,7 +162,7 @@ prepare_ggchord_data <- function(seq_data, ribbon_data = NULL, gene_data = NULL,
     ggchord_stop(caller, ": supplied genome membership must be non-missing and non-empty")
   }
   if (!is.null(ribbon_data)) ribbon_data <- as_ggchord_link(ribbon_data, mapping$ribbon)
-  if (!is.null(gene_data)) gene_data <- as_ggchord_feature(gene_data, mapping$gene)
+  if (!is.null(gene_data)) gene_data <- ggchord_convert_feature(gene_data, mapping$gene, unified)
   features <- ggchord_prepare_collection(features, mapping$features, as_ggchord_feature, caller)
   links <- ggchord_prepare_collection(links, mapping$links, as_ggchord_link, caller)
   # Cleaning can overwrite a stored direction, so check its input as well.
@@ -194,6 +200,7 @@ prepare_ggchord_data <- function(seq_data, ribbon_data = NULL, gene_data = NULL,
       next
     }
     if (stage == "clean") {
+      if (unified) result$report$table[result$report$table == "gene"] <- "feature"
       seq_data <- result$seq_data; gene_data <- result$gene_data
       ribbon_data <- result$ribbon_data
       if (!is.null(ribbon_data)) source_rows <- source_rows[ribbon_data$.source_row]

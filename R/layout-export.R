@@ -317,7 +317,7 @@ export_ggchord_layout <- function(
   exported$metadata <- metadata
   ref <- layout$sequence_reference
   display <- if (isTRUE(layout$collinear)) {
-    if (identical(layout$seq_axis, "vertical")) layout$sequence_layout$axis_max - layout$sequence_layout$axis_min else
+    if (all(c("axis_min", "axis_max") %in% names(layout$sequence_layout))) layout$sequence_layout$axis_max - layout$sequence_layout$axis_min else
       layout$sequence_layout$xmax - layout$sequence_layout$xmin
   } else abs(ref$ends[layout$seqs] - ref$starts[layout$seqs])
   exported$sequence_display <- data.frame(accver = layout$seqs,

@@ -4,7 +4,7 @@ test_that("validation and cleaning preserve usable input", {
     qstart = 100, qend = 200, sstart = 400, send = 300)
   expect_true(validate_ggchord_data(seqs, links)$valid)
   cleaned <- clean_ggchord_data(seqs, links)
-  expect_equal(cleaned$ribbon_data$direction, "reverse")
+  expect_equal(clean_ggchord_data(seqs, cleaned$ribbon_data)$ribbon_data$direction, "reverse")
   expect_error(ggchord(transform(seqs, length = "bad")), "numeric")
 })
 

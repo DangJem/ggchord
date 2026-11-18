@@ -43,10 +43,14 @@ ggchord_resolve_files <- function(file, files, fun) {
 # All text readers use UTF-8; reject invalid bytes instead of rewriting IDs.
 ggchord_read_text <- function(file, caller) {
   lines <- readLines(file, warn = FALSE, encoding = "UTF-8")
+  ggchord_check_text_lines(lines, file, caller, 0)
+}
+
+ggchord_check_text_lines <- function(lines, file, caller, offset) {
   invalid <- which(is.na(iconv(lines, from = "UTF-8", to = "UTF-8", sub = NA)))
   if (length(invalid)) ggchord_stop(caller, ": invalid UTF-8 in ", file,
-    " at line ", invalid[1L], "; convert the file to UTF-8 explicitly")
-  if (length(lines)) lines[1L] <- sub("^\ufeff", "", lines[1L])
+    " at line ", offset + invalid[1L], "; convert the file to UTF-8 explicitly")
+  if (!offset && length(lines)) lines[1L] <- sub("^\ufeff", "", lines[1L])
   lines
 }
 
@@ -111,7 +115,7 @@ ggchord_add_source_file <- function(data, file, source_file) {
   if (!is.logical(source_file) || length(source_file) != 1 || is.na(source_file)) {
     ggchord_stop("source_file must be TRUE or FALSE")
   }
-  if (isTRUE(source_file)) data$.source_file <- as.character(file)
+  if (isTRUE(source_file)) data$.source_file <- rep(as.character(file), nrow(data))
   data
 }
 
@@ -212,7 +216,8 @@ read_blast_single <- function(file, format = c("auto", "outfmt6", "outfmt7", "cu
 
   num_cols <- intersect(c("pident", "length", "mismatch", "gapopen",
                           "qstart", "qend", "sstart", "send",
-                          "evalue", "bitscore", "qcovs", "qlen", "slen"),
+                          "evalue", "bitscore", "ppos", "qcovs", "qcovhsp", "qlen", "slen",
+                          "score", "nident", "positive", "gaps", "qframe", "sframe"),
                         col_names)
   for (nm in num_cols) {
     if (!is.numeric(raw[[nm]])) {
@@ -225,10 +230,6 @@ read_blast_single <- function(file, format = c("auto", "outfmt6", "outfmt7", "cu
       raw[[nm]] <- converted
     }
   }
-  for (nm in setdiff(col_names, c(num_cols, "qaccver", "saccver"))) {
-    if (is.character(raw[[nm]])) raw[[nm]] <- utils::type.convert(raw[[nm]], as.is = TRUE,
-      na.strings = character())
-  }
 
   extra <- setdiff(names(raw), req)
   raw[, c(req, extra), drop = FALSE]
@@ -237,7 +238,9 @@ read_blast_single <- function(file, format = c("auto", "outfmt6", "outfmt7", "cu
 #' Read one or more BLAST tabular output files into ribbon_data format
 #'
 #' Both `file` and `files` accept literal path vectors or wildcard patterns.
-#' Repeated resolved paths are read once, in first-occurrence order.
+#' Repeated resolved paths are read once, in first-occurrence order. Known numeric
+#' fields are converted; custom metadata and identifiers retain their spelling
+#' unless an explicit column class is supplied.
 #' Standard `-outfmt 6` and `-outfmt 7` use the default 12 tabular fields.
 #' Omitting `-outfmt`
 #' entirely produces pairwise text, which this tabular reader does not parse.
@@ -360,7 +363,11 @@ read_gff3_single <- function(file, feature_types = "CDS",
 
   source_strand <- sub$strand
   if (unstranded == "plus") {
-    sub$strand[!sub$strand %in% c("+", "-")] <- "+"
+    unknown <- !sub$strand %in% c("+", "-")
+    if (any(unknown)) message("read_gff3(): ", sum(unknown),
+      " selected row(s) with unknown strand displayed as + in ", basename(file),
+      "; source_strand retains the input. Use unstranded = 'keep' to retain unknown strands.")
+    sub$strand[unknown] <- "+"
   } else if (unstranded == "drop") {
     keep <- sub$strand %in% c("+", "-")
     sub <- sub[keep, , drop = FALSE]
@@ -492,50 +499,44 @@ read_fasta_lengths_single <- function(file, header_delim = NULL, keep_sequence =
   if (is.character(file) && length(file) == 1 && !file.exists(file)) {
     ggchord_stop("read_fasta_lengths(): file not found: ", file, call. = FALSE)
   }
-  lines <- ggchord_read_text(file, "read_fasta_lengths()")
-  if (length(lines) == 0) {
-    ggchord_stop("read_fasta_lengths(): file is empty", call. = FALSE)
+  connection <- file(file, open = "rt")
+  on.exit(close(connection), add = TRUE)
+  chunks <- list()
+  record <- 0L
+  offset <- 0
+  repeat {
+    lines <- readLines(connection, n = 8192L, warn = FALSE, encoding = "UTF-8")
+    if (!length(lines)) break
+    lines <- ggchord_check_text_lines(lines, file, "read_fasta_lengths()", offset)
+    header <- startsWith(lines, ">")
+    index <- record + cumsum(header)
+    if (any(index == 0L & nzchar(trimws(lines))))
+      ggchord_stop("read_fasta_lengths(): sequence text before the first FASTA header in ", file)
+    ids <- trimws(substring(lines[header], 2L))
+    parts <- if (is.null(header_delim)) strsplit(ids, "[[:space:]]+") else
+      strsplit(ids, header_delim, fixed = TRUE)
+    ids <- vapply(parts, `[`, character(1), 1L)
+    if (anyNA(ids) || any(!nzchar(ids))) ggchord_stop("read_fasta_lengths(): empty sequence identifier in ", file)
+    rows <- which(!header & index > 0L)
+    symbols <- gsub("[[:space:]]+", "", lines[rows])
+    runs <- split(symbols, factor(index[rows], levels = unique(index[rows])))
+    chunks[[length(chunks) + 1L]] <- list(ids = ids, line = offset + which(header),
+      index = unique(index[rows]), length = vapply(runs, function(x) sum(as.double(nchar(x))), numeric(1)),
+      sequence = if (keep_sequence) vapply(runs, paste0, collapse = "", FUN.VALUE = character(1)))
+    record <- tail(index, 1L)
+    offset <- offset + length(lines)
   }
-  is_header <- grepl("^>", lines)
-  if (!any(is_header)) {
-    ggchord_stop("read_fasta_lengths(): no FASTA headers (lines starting with '>') found",
-         call. = FALSE)
-  }
-  if (any(nzchar(trimws(lines[seq_len(which(is_header)[1L] - 1L)]))))
-    ggchord_stop("read_fasta_lengths(): sequence text before the first FASTA header in ", file)
-  ids <- sub("^>", "", lines[is_header])
-  ids <- trimws(ids)
-  if (!is.null(header_delim)) {
-    ids <- vapply(strsplit(ids, header_delim, fixed = TRUE),
-                  function(x) x[1], character(1))
-  } else {
-    ids <- vapply(strsplit(ids, "[[:space:]]+"),
-                  function(x) x[1], character(1))
-  }
-  if (anyNA(ids) || any(!nzchar(ids))) ggchord_stop(
-    "read_fasta_lengths(): empty sequence identifier in ", file)
-
-  header_pos <- which(is_header)
-  starts <- header_pos + 1L
-  ends <- c(header_pos[-1] - 1L, length(lines))
-  lens <- vapply(seq_along(header_pos), function(i) {
-    if (starts[i] > ends[i]) return(0L)
-    sum(nchar(gsub("[[:space:]]+", "", lines[starts[i]:ends[i]])))
-  }, integer(1))
-
-  out <- data.frame(accver = ids, length = as.numeric(lens),
-                    .source_line = header_pos,
-                    stringsAsFactors = FALSE)
+  if (!record) ggchord_stop("read_fasta_lengths(): no FASTA headers in ", file)
+  collect <- function(name) unlist(lapply(chunks, `[[`, name), use.names = FALSE)
+  index <- collect("index")
+  lens <- numeric(record)
+  if (length(index)) lens[unique(index)] <- rowsum(collect("length"), index, reorder = FALSE)[, 1L]
+  out <- data.frame(accver = collect("ids"), length = lens, .source_line = collect("line"))
   if (keep_sequence) {
-    out$sequence <- vapply(seq_along(header_pos), function(i) {
-      if (starts[i] > ends[i]) return("")
-      paste0(gsub("[[:space:]]+", "", lines[starts[i]:ends[i]]), collapse = "")
-    }, character(1))
-  }
-  dup <- unique(ids[duplicated(ids)])
-  if (length(dup) > 0) {
-    warning("read_fasta_lengths(): duplicate sequence IDs found: ",
-            paste(dup, collapse = ", "), call. = FALSE)
+    sequence <- character(record)
+    if (length(index)) sequence[unique(index)] <- vapply(
+      split(collect("sequence"), factor(index, levels = unique(index))), paste0, collapse = "", FUN.VALUE = character(1))
+    out$sequence <- sequence
   }
   out
 }

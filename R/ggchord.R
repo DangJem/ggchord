@@ -28,12 +28,12 @@ globalVariables(c(
   "primer_end", "primer_show_location"
 ))
 
-#' Layered chord, circular and collinear sequence plots
+#' Layered sequence comparisons, circular maps and dot plots
 #'
-#' Visualize multi-sequence alignments, a single circular sequence or linear
-#' collinearity using ggplot2's layered grammar. The constructor supplies data
-#' and validation. Add geometry with `geom_*()`, select a global view with
-#' [coord_chord()], [coord_circular()] or [coord_collinear()], and use
+#' Compare multiple sequences with [coord_chord()], [coord_collinear()],
+#' [coord_radial_synteny()] or [coord_sankey()]. Use [coord_circular()] for
+#' one sequence, [coord_dotplot()] for alignment segments and [ggchord_fusion()]
+#' to compose independent panels. Add geometry with `geom_*()`, and use
 #' mappings/scales for data-driven styles and themes for non-data appearance.
 #' The layout is computed lazily when the plot is built (e.g. via \code{print()},
 #' \code{ggsave()}, or \code{ggplot_build()}).
@@ -128,14 +128,6 @@ ggchord <- function(
   seq_data <- ggchord_normalize_accver(seq_data)
   gene_data <- ggchord_normalize_accver(gene_data)
   feature_data <- ggchord_normalize_feature_input(feature_data)
-  sequence_unit <- ggchord_sequence_unit(seq_data, "ggchord()")
-  ggchord_check_interval_unit(ribbon_data, sequence_unit, "ggchord()")
-  ggchord_check_interval_unit(gene_data, sequence_unit, "ggchord()")
-  ggchord_check_interval_unit(feature_data, sequence_unit, "ggchord()")
-  if (identical(sequence_unit, "aa") && !is.null(gene_data)) ggchord_stop(
-    "ggchord(): gene_data requires bp coordinates; use geom_feature() for protein domains")
-
-
   old_error <- ggchord_disable_debug()
   on.exit(options(error = old_error), add = TRUE)
   dots <- list(...)

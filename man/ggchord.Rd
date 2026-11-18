@@ -2,7 +2,7 @@
 % Please edit documentation in R/ggchord.R
 \name{ggchord}
 \alias{ggchord}
-\title{Layered chord, circular and collinear sequence plots}
+\title{Layered sequence comparisons, circular maps and dot plots}
 \usage{
 ggchord(
   seq_data,
@@ -61,10 +61,10 @@ arguments. Use \code{\link[=labs]{labs()}}, \code{\link[=coord_chord]{coord_chor
 A ggchord object (inherits from ggplot) to which geom_* layers can be added with +
 }
 \description{
-Visualize multi-sequence alignments, a single circular sequence or linear
-collinearity using ggplot2's layered grammar. The constructor supplies data
-and validation. Add geometry with \verb{geom_*()}, select a global view with
-\code{\link[=coord_chord]{coord_chord()}}, \code{\link[=coord_circular]{coord_circular()}} or \code{\link[=coord_collinear]{coord_collinear()}}, and use
+Compare multiple sequences with \code{\link[=coord_chord]{coord_chord()}}, \code{\link[=coord_collinear]{coord_collinear()}},
+\code{\link[=coord_radial_synteny]{coord_radial_synteny()}} or \code{\link[=coord_sankey]{coord_sankey()}}. Use \code{\link[=coord_circular]{coord_circular()}} for
+one sequence, \code{\link[=coord_dotplot]{coord_dotplot()}} for alignment segments and \code{\link[=ggchord_fusion]{ggchord_fusion()}}
+to compose independent panels. Add geometry with \verb{geom_*()}, and use
 mappings/scales for data-driven styles and themes for non-data appearance.
 The layout is computed lazily when the plot is built (e.g. via \code{print()},
 \code{ggsave()}, or \code{ggplot_build()}).

@@ -63,10 +63,17 @@ ggchord_source_registry <- function(data) {
 validate_feature_data <- function(data, seq_data, col, check_coordinates, check_duplicates) {
   if (is.null(data)) return(col)
   local <- validate_gene_data(data, seq_data, new_validation_collector(),
-    check_coordinates, check_duplicates)
+    check_coordinates, check_duplicates, check_overlap = FALSE)
   local$errors <- Filter(function(x) !identical(x$category[1L], "invalid_strand"), local$errors)
   local$warnings <- Filter(function(x) !x$category[1L] %in% c("missing_anno", "overlapping"), local$warnings)
   if (is.data.frame(data) && "strand" %in% names(data)) {
+    if ("directionality" %in% names(data)) {
+      directions <- c(forward = "+", reverse = "-", bidirectional = "+/-", none = ".", nondirectional = ".")
+      expected <- unname(directions[as.character(data$directionality)])
+      conflicts <- which(is.na(expected) | (!is.na(data$strand) & data$strand != expected))
+      if (length(conflicts)) local <- add_validation_issue(local, "gene", "direction_conflict",
+        conflicts, "directionality", "feature_data strand and directionality disagree or directionality is invalid", "error")
+    }
     invalid <- which(is.na(data$strand) | !data$strand %in% c("+", "-", ".", "+/-"))
     if (length(invalid)) local <- add_validation_issue(local, "gene", "invalid_strand",
       invalid, "strand", "feature_data$strand must be '+', '-', '.' or '+/-'", "error")

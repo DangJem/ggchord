@@ -96,8 +96,7 @@ clean_ggchord_data <- function(
     result <- clean_ggchord_data(seq_data, ribbon_data, features, unknown_id, out_of_range, reversed_interval, invalid_pident, empty_annotation, replacement_annotation)
     result$feature_data <- result$gene_data
     result$gene_data <- NULL
-    if (is.data.frame(result$report) && "component" %in% names(result$report))
-      result$report$component[result$report$component == "gene"] <- "feature"
+    result$report$table[result$report$table == "gene"] <- "feature"
     return(result)
   }
 
@@ -196,6 +195,19 @@ clean_ggchord_data <- function(
     drop <- rep(FALSE, nrow(ribbon_out))
     n <- nrow(ribbon_out)
     input_direction <- ggchord_ribbon_direction(ribbon_out)
+    if ("direction" %in% names(ribbon_out)) {
+      # Sorted bounds have lost absolute orientation. A stored reverse
+      # declaration survives repeated sorting, including legacy clean tables.
+      reverse <- ribbon_out$direction %in% c("reverse", "opposite")
+      ordered <- ribbon_out$qstart <= ribbon_out$qend & ribbon_out$sstart <= ribbon_out$send
+      known <- input_direction != "unknown"
+      if (reversed_interval == "sort") input_direction[ordered & reverse & known] <- "opposite"
+      conflict <- (reverse & input_direction == "same") |
+        (ribbon_out$direction %in% "same" & input_direction == "opposite")
+      if (any(conflict)) ggchord_stop("clean_ggchord_data(): direction conflicts with endpoint order at row ",
+        which(conflict)[1L], "; supply the original directional endpoints")
+      ribbon_out$direction <- as.character(ribbon_out$direction)
+    }
 
     for (colname in c("qaccver", "saccver")) {
       raw_id <- ribbon_out[[colname]]
@@ -577,9 +589,9 @@ print.ggchord_clean <- function(x, ...) {
   cat(sprintf("ribbon_data: %s row(s)
 ",
               if (is.null(x$ribbon_data)) "NULL" else nrow(x$ribbon_data)))
-  cat(sprintf("gene_data: %s row(s)
-",
-              if (is.null(x$gene_data)) "NULL" else nrow(x$gene_data)))
+  field <- if ("feature_data" %in% names(x)) "feature_data" else "gene_data"
+  cat(sprintf("%s: %s row(s)\n", field,
+              if (is.null(x[[field]])) "NULL" else nrow(x[[field]])))
   cat(sprintf("report: %s change(s)
 ", nrow(x$report)))
   if (nrow(x$report) > 0) {

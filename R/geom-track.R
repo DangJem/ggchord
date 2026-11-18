@@ -268,6 +268,20 @@ GeomGgchordTrack <- ggplot2::ggproto("GeomGgchordTrack", ggplot2::Geom,
         if (params$track_kind == "text") ggplot2::draw_key_text(data, params, size) else ggplot2::draw_key_polygon(data, params, size)
   })
 
+# A single render owns the source-domain statistic. Guides and panel-size
+# refinement may rebuild geometry, but use the same observations and groups.
+ggchord_render_track_source <- function(plot) {
+  pending <- vapply(plot$layers, function(layer)
+    !is.null(layer$ggchord_params$native_geom) &&
+      !isTRUE(layer$ggchord_params$native_prepared), logical(1))
+  if (any(pending)) {
+    plot <- ggchord_register_layers(plot)
+    for (i in which(pending))
+      plot$layers[[i]] <- ggchord_track_native_input(plot$layers[[i]], plot)
+  }
+  plot
+}
+
 ggchord_prepare_track_layers <- function(plot) {
   plot$layers <- lapply(plot$layers, function(layer) {
     if (!is.null(layer$ggchord_params$native_geom) &&

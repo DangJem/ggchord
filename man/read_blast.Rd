@@ -46,7 +46,9 @@ the one-based inclusive coordinate convention.
 }
 \description{
 Both \code{file} and \code{files} accept literal path vectors or wildcard patterns.
-Repeated resolved paths are read once, in first-occurrence order.
+Repeated resolved paths are read once, in first-occurrence order. Known numeric
+fields are converted; custom metadata and identifiers retain their spelling
+unless an explicit column class is supplied.
 Standard \verb{-outfmt 6} and \verb{-outfmt 7} use the default 12 tabular fields.
 Omitting \code{-outfmt}
 entirely produces pairwise text, which this tabular reader does not parse.
