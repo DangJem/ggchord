@@ -5,6 +5,8 @@
 | 原调用或参数 | 0.50.0 写法 |
 | --- | --- |
 | `geom_*()` 曾忽略的拼写，如 `geom_seq(linewditth = 2)` | v0.50.0 起会报错。改写为 `geom_seq(linewidth = 2)`。统计专用参数随所选 Stat 传入，例如区间数据使用 `geom_track_line(stat = "coverage", binwidth = 4)`。 |
+| 缩写形参，如 `position_offset(offse = .1)` 或 `guide_seq_axis(sequence = "A")` | 改用 `position_offset(offset = .1)` 和 `guide_seq_axis(sequences = "A")`。本次重构的入口要求写全具名参数，经 `...` 转发也适用。按位置传值仍可写 `position_offset(.1)`。 |
+| 显式传入一个 `width` 同时设置外部 Stat 的邻域半径和 Geom 的柱宽 | 将 Stat 的半径参数改名为 `radius`，分别设置两项，例如 `geom_track_col(stat = MyStat, radius = 4, width = 2)`。 |
 | `ggchord(seq_data = ref, gene_data = f, ribbon_data = h)` | 从 `ggchord(ref)` 开始，分别加 `geom_feature(data = f, preset = "gene")` 和 `geom_link_ribbon(data = h)`。也可写 `ggchord(prepare_ggchord_data(ref, ribbon_data = h, gene_data = f))`。有多张可用的准备表时在图层中指定数据。 |
 | 用 `position_track("depth", width = w)` 指定物理带 | 加一次 `track_band("depth", width = w)`，在同带各层写 `track = "depth"`。默认带可省略轨道 ID。堆叠、并排和微移交给各层的 `position`。 |
 | `geom_seq()` 的 `seq_order`、`seq_orientation`、`seq_gap`、`length_mode` | 添加 `layout_sequences(order = ids, orientation = directions, gap = gaps, length_mode = "equal")`。骨架线条与固定样式继续放在 `geom_seq()`。 |
@@ -12,6 +14,10 @@
 | `geom_gene()`、`geom_feature_plasmid()` | 使用 `geom_feature(preset = "gene")` 或 `geom_feature(preset = "plasmid")`，传入相同图层数据。 |
 | `geom_feature_label_repel()` | 使用 `geom_feature_label(placement = "repel")`。原先的放置策略交给 `label_layout`，原 `label_fit` 改为 `overflow`。多个实体层均可匹配时用 `anchor_layer = "features"` 指定目标。 |
 | `scale_seq_position_continuous(sequences = ids)` | 改用 `scale_seq_position_continuous(guide = guide_seq_axis(sequences = ids))`。 |
+
+使用阶段导出的轨道统计前，先检查 `layer_stage_status$status`。统计成功并返回零行时为
+`available`。Stat 失败时，统计及几何阶段均标为 `failed`，`reason` 保留原因。
+部分面板失败时，结果仍可包含成功面板的行。
 
 运行[迁移示例](examples/migrate-v0.50.0.R)可绘制双样本比较，并在结果表中检查每个窗口的来源行。两面板共用 10 bp 参考和数值域。第二张图先按完整特征表分道，再对选中的特征加标签。
 

@@ -30,11 +30,13 @@ or geometry. A fresh layout returns these stages in \code{layer_data} by layer I
 Source is the adapted input before role mappings. Mapped is the role table
 before the layer transform. Native track mappings run inside ggplot2 and
 have no separate mapped table. Geometry contains named components.
-Unavailable stages are NULL. \code{layer_stage_status} lists each requested
-layer ID and stage, its status (available or unavailable), and the reason
-when unavailable. A captured zero-row table counts as available.
-ggplot2 may return an empty table after a Stat computation warning.
-In that case, consult the warning for the underlying error.
+\code{layer_stage_status} lists each requested layer ID and stage. A successful
+zero-row statistic is \code{available}. A stage with no separate data is
+\code{unavailable} with a reason and a NULL entry. A track Stat error marks
+its statistic and derived geometry as \code{failed}, with the error message
+in \code{reason}. Successful panels can still contribute rows to these entries.
+An error in a registered layer's data callback stops the export and reports
+the layer ID together with the original cause.
 All registered layers participate regardless of include.}
 }
 \value{

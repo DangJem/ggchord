@@ -44,6 +44,7 @@ PositionFeatureStack <- ggplot2::ggproto(
 position_feature_stack <- function(
     spacing = 0.10,
     base_position = position_strand(), direction = c("auto", "outward", "inward")) {
+  ggchord_check_argument_names(sys.call(), sys.function())
   direction <- match.arg(direction)
   if (!is.numeric(spacing) || length(spacing) != 1L ||
       !is.finite(spacing) || spacing <= 0) {

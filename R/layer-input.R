@@ -1,8 +1,9 @@
 # R partially matches named arguments before the function sees its dots.
 # Inspect the original call without evaluating mappings or data callbacks.
-ggchord_check_argument_names <- function(call, fn) {
-  supplied <- names(as.list(call)[-1L])
-  formal <- setdiff(names(formals(fn)), "...")
+ggchord_check_argument_names <- function(call, fn, forwarded = NULL) {
+  # A dots-only signature expands a caller's ... without matching or forcing it.
+  supplied <- names(match.call(function(...) NULL, call, envir = parent.frame(2L))[-1L])
+  formal <- setdiff(c(names(formals(fn)), if (!is.null(forwarded)) names(formals(forwarded))), "...")
   unknown <- setdiff(supplied[nzchar(supplied)], formal)
   for (key in unknown) {
     matches <- formal[startsWith(formal, key)]
@@ -45,10 +46,18 @@ ggchord_check_geom_params <- function(dots, geom, caller, position = "identity",
     stat <- receiver$stat
     position <- receiver$position
   }
-  allowed <- unique(c(geom$aesthetics(), geom$parameters(TRUE),
-    stat$parameters(TRUE), position$aesthetics(),
+  geom_names <- union(geom$aesthetics(), geom$parameters(TRUE))
+  stat_names <- stat$parameters(TRUE)
+  allowed <- unique(c(geom_names, stat_names, position$aesthetics(),
     if (isTRUE(geom$rename_size)) "size", "layout", "key_glyph", "name", extra))
   ggchord_check_param_names(dots, allowed, caller)
+  shared <- intersect(ggplot2::standardise_aes_names(names(dots)), intersect(geom_names, stat_names))
+  if (length(shared) && !identical(stat, StatGgchordCoverage) &&
+      !identical(stat, get0(class(stat)[1L], asNamespace("ggplot2"), inherits = FALSE))) {
+    ggchord_stop(caller, ": ambiguous parameter '", shared[1L], "' is accepted by both ",
+      class(stat)[1L], " (Stat) and ", class(geom)[1L], " (Geom). ",
+      "Give the Stat parameter a distinct name.")
+  }
 }
 
 #' Capture user data and mappings separately from the computed placeholder
@@ -157,20 +166,19 @@ ggchord_colour_dots <- function(dots, caller) {
   dots
 }
 
+ggchord_layer_input_data <- function(layer, fallback) {
+  input <- layer$ggchord_input_data %||% fallback
+  if (!is.function(input)) return(input)
+  tryCatch(input(fallback), error = function(e) rlang::abort(
+    paste0("Data callback for layer '", layer$ggchord_layer_id, "' failed."),
+    parent = e, call = NULL))
+}
+
 #' Read and adapt a layer's input before evaluating mappings
 #' @noRd
 ggchord_layer_source <- function(lyr, fallback) {
-  data <- lyr$ggchord_input_data %||% fallback
+  data <- ggchord_layer_input_data(lyr, fallback)
   if (is.null(data)) return(NULL)
-  if (is.function(data)) {
-    data_function <- data
-    data <- tryCatch(
-      data_function(fallback),
-      error = function(e) ggchord_stop(
-        "ggchord layer data function failed: ", conditionMessage(e)
-      )
-    )
-  }
   type <- lyr$ggchord_params$type %||% ""
   if (inherits(data, "GRanges") || inherits(data, "Seqinfo")) {
     data <- if (type %in% c("seq", "seq_label", "seq_break", "seq_center_label")) {

@@ -24,11 +24,13 @@
 #'   Source is the adapted input before role mappings. Mapped is the role table
 #'   before the layer transform. Native track mappings run inside ggplot2 and
 #'   have no separate mapped table. Geometry contains named components.
-#'   Unavailable stages are NULL. `layer_stage_status` lists each requested
-#'   layer ID and stage, its status (available or unavailable), and the reason
-#'   when unavailable. A captured zero-row table counts as available.
-#'   ggplot2 may return an empty table after a Stat computation warning.
-#'   In that case, consult the warning for the underlying error.
+#'   `layer_stage_status` lists each requested layer ID and stage. A successful
+#'   zero-row statistic is `available`. A stage with no separate data is
+#'   `unavailable` with a reason and a NULL entry. A track Stat error marks
+#'   its statistic and derived geometry as `failed`, with the error message
+#'   in `reason`. Successful panels can still contribute rows to these entries.
+#'   An error in a registered layer's data callback stops the export and reports
+#'   the layer ID together with the original cause.
 #'   All registered layers participate regardless of include.
 #' @param original_data Logical. Include the resolved per-layer input tables
 #'   under \code{original_data}, default \code{FALSE}.
@@ -112,6 +114,7 @@ export_ggchord_layout <- function(
     plot,
     include = c("seq", "ribbon", "gene", "feature", "labels", "axis", "track"),
     original_data = FALSE, data_stage = NULL) {
+  ggchord_check_argument_names(sys.call(), sys.function())
   default_include <- missing(include)
   old_error <- ggchord_disable_debug()
   on.exit(options(error = old_error), add = TRUE)
@@ -423,9 +426,15 @@ ggchord_export_stages <- function(exported, plot, layout, stages) {
         "No separate role-mapped table was captured for this layer.",
       statistic = "This layer did not produce a separate statistic table.",
       geometry = "This layer produced no exportable geometry components.")
-    reports[[id]] <- data.frame(layer_id = id, stage = stages,
-      status = ifelse(unavailable, "unavailable", "available"),
-      reason = ifelse(unavailable, reasons[stages], NA_character_), row.names = NULL)
+    status <- ifelse(unavailable, "unavailable", "available")
+    reason <- ifelse(unavailable, reasons[stages], NA_character_)
+    if (length(capture$statistic_errors)) {
+      failed <- stages %in% c("statistic", "geometry")
+      status[failed] <- "failed"
+      reason[failed] <- paste(capture$statistic_errors, collapse = "\n")
+    }
+    reports[[id]] <- data.frame(layer_id = id, stage = stages, status = status,
+      reason = reason, row.names = NULL)
   }
   exported$layer_data <- groups
   exported$layer_stage_status <- if (length(reports)) {

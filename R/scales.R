@@ -346,6 +346,7 @@ scale_seq_position_continuous <- function(
     limits = NULL, expand = ggplot2::waiver(), oob = scales::censor,
     transform = "identity", n.breaks = 6,
     coordinates = c("relative", "source"), guide = guide_seq_axis(), ...) {
+  ggchord_check_argument_names(sys.call(), sys.function(), ggplot2::continuous_scale)
   coordinates <- match.arg(coordinates)
   if ("sequences" %in% names(list(...)))
     ggchord_stop("Use guide = guide_seq_axis(sequences = ...) to select displayed axes")
@@ -380,6 +381,7 @@ scale_seq_position_continuous <- function(
 #'   geom_seq() + coord_collinear() +
 #'   scale_seq_position_continuous(guide = guide_seq_axis("B", check.overlap = TRUE))
 guide_seq_axis <- function(sequences = NULL, check.overlap = NULL) {
+  ggchord_check_argument_names(sys.call(), sys.function())
   if (!is.null(sequences) && (!is.character(sequences) || anyNA(sequences) ||
       any(!nzchar(sequences)) || anyDuplicated(sequences)))
     ggchord_stop("guide_seq_axis(): sequences must be distinct, nonempty displayed IDs")

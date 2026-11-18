@@ -23,6 +23,7 @@ PositionGgchordFeature <- ggplot2::ggproto(
 #' @return A ggplot2 Position object.
 #' @export
 position_strand <- function(offset = 0.1) {
+  ggchord_check_argument_names(sys.call(), sys.function())
   ggplot2::ggproto(
     NULL, PositionGgchordFeature,
     placement = "strand", offset = offset
@@ -46,6 +47,7 @@ position_strand <- function(offset = 0.1) {
 #'   geom_feature(data = intervals, position = position_offset(-0.1)) +
 #'   coord_circular()
 position_offset <- function(offset) {
+  ggchord_check_argument_names(sys.call(), sys.function())
   ggplot2::ggproto(
     NULL, PositionGgchordFeature,
     placement = "offset", offset = offset

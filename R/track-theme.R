@@ -8,6 +8,7 @@
 #' @examples
 #' scale_track_value_continuous("depth", guide = guide_track_axis(angle = 30))
 guide_track_axis <- function(angle = ggplot2::waiver(), check.overlap = FALSE, theme = NULL) {
+  ggchord_check_argument_names(sys.call(), sys.function())
   guide <- ggplot2::guide_axis(angle = angle, check.overlap = check.overlap, theme = theme)
   ggchord_track_axis_guide(guide)$guide
 }

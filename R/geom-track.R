@@ -396,6 +396,7 @@ ggchord_prepare_track_layers <- function(plot) {
 scale_track_value_continuous <- function(track, name = track, limits = NULL,
     breaks = ggplot2::waiver(), labels = ggplot2::waiver(), transform = "identity",
     oob = scales::censor, unit = NULL, guide = c("axis", "none"), ...) {
+  ggchord_check_argument_names(sys.call(), sys.function(), ggplot2::continuous_scale)
   if (!is.null(unit) && (!is.character(unit) || length(unit) != 1L || is.na(unit)))
     ggchord_stop("Track scale unit must be one character label or NULL")
   sc <- ggplot2::continuous_scale(ggchord_track_aes("value", track), palette = identity,

@@ -131,6 +131,7 @@ ggchord_prepare_direction <- function(data, caller) {
 #' ggchord(prepared) + geom_seq() + geom_link_ribbon()
 prepare_ggchord_data <- function(seq_data, ribbon_data = NULL, gene_data = NULL,
     features = list(), links = list(), mapping = list(), steps = list(), feature_data = NULL) {
+  ggchord_check_argument_names(sys.call(), sys.function())
   unified <- !is.null(feature_data)
   if (unified && !is.null(gene_data)) ggchord_stop("Supply only feature_data or gene_data")
   if (unified) gene_data <- feature_data

@@ -3,13 +3,21 @@
 - All exported `geom_*()` constructors reject unknown named parameters. For
   example, `geom_seq(linewditth = 2)` points to `linewidth`. Track layers
   accept parameters declared by their selected Geom, Stat and Position.
+  A parameter supplied to both an external Stat and its Geom raises an error
+  naming both recipients. Give the statistical control a distinct name, such
+  as `radius` alongside column `width`.
+- Spell out named arguments in the refactored positions, axis guides and
+  position/value scales, including calls forwarded through `...`.
 - All 21 sequence-layout geoms expose `id` for named exports. The native
   alignment-cell layer `geom_residue()` accepts ggplot2's `name`.
   Centre labels expose `position` and open track lines expose `stat`.
 - When `export_ggchord_layout()` is called with `data_stage`, the new
   `layer_stage_status` table gives a status for each requested layer and
-  stage, including the reason when data are unavailable. A captured empty
-  table is available. The [external Stat example](examples/stat-window-count.R)
+  stage. A successful empty statistic is `available`. A track Stat error
+  marks its statistic and geometry as `failed` and supplies the cause.
+  Successful panels retain their rows. Errors in registered layer data
+  callbacks report the layer ID and the underlying error.
+  The [external Stat example](examples/stat-window-count.R)
   shows how to count intersecting intervals per window and recover the
   contributing rows from both a column layer and a line layer.
 

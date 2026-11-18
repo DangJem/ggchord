@@ -5,6 +5,8 @@ The entries in the first column were removed in 0.50.0. Later sections record ea
 | Former call or argument | 0.50.0 replacement |
 | --- | --- |
 | Unrecognised arguments to `geom_*()`, such as `geom_seq(linewditth = 2)` | Use `geom_seq(linewidth = 2)`. Starting in 0.50.0, unknown names cause an error. Supply Stat-specific parameters to the selected Stat, for example `geom_track_line(stat = "coverage", binwidth = 4)` with interval data. |
+| Partial argument names such as `position_offset(offse = .1)` or `guide_seq_axis(sequence = "A")` | Use `position_offset(offset = .1)` and `guide_seq_axis(sequences = "A")`. Spell out names in refactored calls, including arguments forwarded through `...`. Positional calls such as `position_offset(.1)` still work. |
+| One explicit `width` for an external Stat's neighbourhood and the column Geom | Name the Stat argument `radius` and pass both controls, for example `geom_track_col(stat = MyStat, radius = 4, width = 2)`. |
 | `ggchord(seq_data = ref, gene_data = f, ribbon_data = h)` | Start with `ggchord(ref)`, then add `geom_feature(data = f, preset = "gene")` and `geom_link_ribbon(data = h)`. Alternatively pass `ggchord(prepare_ggchord_data(ref, ribbon_data = h, gene_data = f))`. When several prepared inputs are eligible, specify the layer table. |
 | Physical `position_track("depth", width = w)` | Add `track_band("depth", width = w)` and use `track = "depth"` on each layer. Omit the ID for the default band. Use the geom's `position` for stack, dodge or nudge. |
 | `seq_order`, `seq_orientation`, `seq_gap`, `length_mode` on `geom_seq()` | Add `layout_sequences(order = ids, orientation = directions, gap = gaps, length_mode = "equal")`. The geom still sets the backbone's appearance. |
@@ -12,6 +14,11 @@ The entries in the first column were removed in 0.50.0. Later sections record ea
 | `geom_gene()`, `geom_feature_plasmid()` | Use `geom_feature(preset = "gene")` or `geom_feature(preset = "plasmid")`, with the original layer data. |
 | `geom_feature_label_repel()` | Use `geom_feature_label(placement = "repel")`. Move the old placement policy to `label_layout` and the old `label_fit` to `overflow`. Supply `anchor_layer = "features"` when several feature layers could own the labels. |
 | `scale_seq_position_continuous(sequences = ids)` | Use `scale_seq_position_continuous(guide = guide_seq_axis(sequences = ids))`. |
+
+When inspecting a staged export, check `layer_stage_status$status` before using
+track statistics. A successful zero-row statistic is `available`. A failed Stat
+sets `status = "failed"` for its statistic and geometry. Read `reason` for the
+cause, including when some panels still return rows.
 
 Run the [migration example](examples/migrate-v0.50.0.R) to draw a two-sample comparison and inspect each window's contributing rows. Each panel uses the same 10 bp reference and numerical scale. A second plot labels selected features in the lanes assigned to the full input.
 

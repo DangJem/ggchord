@@ -51,6 +51,9 @@
 #' @param show.legend,inherit.aes Standard layer controls.
 #' @param ... Native geom/stat parameters and fixed styles. Coverage requires
 #'   a positive whole `binwidth` in sequence units or explicit `windows`.
+#'   A supplied parameter accepted by both an external Stat and the selected
+#'   Geom raises an error. For example, name a custom Stat's search radius
+#'   `radius` to use it alongside a column Geom's `width`.
 #' @section Interval coverage:
 #' Supply one inclusive interval per row with accver, start and end. Endpoint
 #' columns can be mapped with `aes(start = ..., end = ...)`. Without layer data
@@ -195,8 +198,7 @@ ggchord_track_native_input <- function(layer, plot) {
   coverage <- identical(p$native_stat, "coverage")
   sequences <- plot$ggchord$data$seq_data
   fallback <- if (coverage) plot$ggchord$data$feature_data %||% plot$ggchord$data$gene_data else sequences
-  raw <- layer$ggchord_input_data %||% fallback
-  if (is.function(raw)) raw <- raw(fallback)
+  raw <- ggchord_layer_input_data(layer, fallback)
   if (coverage && is.null(raw)) ggchord_stop("Coverage needs interval data or a plot feature table")
   ggchord_require_columns(raw, character(), "geom_track()")
   ggchord_require_columns(raw, facet_keys, "Faceted track observations")
@@ -351,6 +353,8 @@ ggchord_track_native_input <- function(layer, plot) {
       native$stat <- ggchord_track_group_stat(native$stat)
     if (p$native_stat %in% c("count", "summary"))
       native$stat <- ggchord_track_x_stat(native$stat)
+    if (any(c("statistic", "geometry") %in% capture$requested))
+      native <- ggchord_capture_track_stat(native, capture)
     q <- ggplot2::ggplot() + native + ggplot2::scale_fill_identity() +
       ggplot2::scale_colour_identity() + ggplot2::scale_alpha_identity() +
       ggplot2::scale_size_identity() + ggplot2::scale_linewidth_identity() +
@@ -450,6 +454,38 @@ ggchord_track_native_input <- function(layer, plot) {
   layer$geom_params$native_draw_params <- params[intersect(names(params),c("arrow","lineend","linejoin","linemitre","parse","check_overlap","rule"))]
   layer$geom_params$track_kind <- p$native_geom
   layer
+}
+
+# Record errors at their source. ggplot2 handles a failing compute_panel()
+# with a warning and continues with other panels. A successful but empty
+# result and a warning emitted within a successful Stat take the normal path.
+ggchord_capture_track_stat <- function(layer, capture) {
+  record <- function(error) {
+    capture$statistic_errors <- union(capture$statistic_errors, conditionMessage(error))
+  }
+  panel_error <- NULL
+  stat <- layer$stat
+  layer$stat <- ggplot2::ggproto(NULL, stat,
+    parameters = function(extra = FALSE) stat$parameters(extra),
+    compute_panel = function(self, data, scales, ...) {
+      panel_error <<- NULL
+      withCallingHandlers(ggplot2::ggproto_parent(stat, self)$compute_panel(data, scales, ...),
+        error = function(e) panel_error <<- e)
+    })
+  # ggplot2 attaches the escaping panel error as its warning's parent. An
+  # extension may instead recover in compute_layer() and return valid data.
+  ggplot2::ggproto(NULL, layer,
+    compute_statistic = function(self, data, layout) {
+      tryCatch(withCallingHandlers(
+        ggplot2::ggproto_parent(layer, self)$compute_statistic(data, layout),
+        warning = function(w) {
+          if (!is.null(panel_error) && identical(w$parent, panel_error)) record(panel_error)
+        }),
+        error = function(e) {
+          record(e)
+          data.frame()
+        })
+    })
 }
 
 ggchord_track_custom_members <- function(members, domain, input_domain) {

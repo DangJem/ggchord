@@ -70,7 +70,10 @@ position='identity' so stacking does not change their meaning.}
 \item{show.legend, inherit.aes}{Standard layer controls.}
 
 \item{...}{Native geom/stat parameters and fixed styles. Coverage requires
-a positive whole \code{binwidth} in sequence units or explicit \code{windows}.}
+a positive whole \code{binwidth} in sequence units or explicit \code{windows}.
+A supplied parameter accepted by both an external Stat and the selected
+Geom raises an error. For example, name a custom Stat's search radius
+\code{radius} to use it alongside a column Geom's \code{width}.}
 
 \item{track}{Character ID declared with \code{\link[=track_band]{track_band()}}. Omit for the shared default band.}
 
