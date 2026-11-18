@@ -175,19 +175,25 @@ ggchord_collinear_axis <- function(p, layout) {
   layout$axis_lines <- layout$axis_ticks <- data.frame()
   if (!isTRUE(p$show_axis)) return(layout)
   ref <- layout$sequence_reference
-  units <- layout$text_units_per_inch
+  text_units <- layout$text_units_per_inch
+  metric <- ggchord_render_context()$units_per_mm
+  vertical <- isTRUE(p$collinear_vertical)
+  along_axis <- if (vertical) "y" else "x"
+  normal_axis <- if (vertical) "x" else "y"
+  along_units <- unname(metric[along_axis])
+  normal_units <- unname(metric[normal_axis])
+  has_normal_metric <- length(normal_units) == 1L && is.finite(normal_units) && normal_units > 0
+  axis_units <- if (has_normal_metric && !isTRUE(p$collinear_radial)) normal_units * 25.4 else text_units
   lines <- ticks <- list()
   for (id in p$seqs) {
-    gap <- unname(p$axisGap[id]) * units
+    gap <- unname(p$axisGap[id]) * axis_units
     y <- unname(ref$y[id]) - gap
     lines[[id]] <- data.frame(
       x = ggchord_collinear_x(c(0, ref$lens[id]), id, ref),
       y = rep(y, 2L), accver = id
     )
-    metric <- ggchord_render_context()$units_per_mm
-    axis_name <- if (isTRUE(p$collinear_vertical)) "y" else "x"
-    available <- if (!is.null(metric) && is.finite(metric[[axis_name]]))
-      unname(ref$lens[id])*ggchord_collinear_scale(id,ref)/metric[[axis_name]] else NULL
+    available <- if (length(along_units) == 1L && is.finite(along_units) && along_units > 0)
+      unname(ref$lens[id]) * ggchord_collinear_scale(id, ref) / along_units else NULL
     majors <- p$axis_breaks[[id]] %||% breakPointsFunc(ref$lens[id], p$axisMaj[id],available_mm=available)
     major_labels <- p$axis_labels[[id]] %||% as.character(majors)
     minors <- p$axis_minor_breaks[[id]]
@@ -205,15 +211,15 @@ ggchord_collinear_axis <- function(p, layout) {
     keep <- is.finite(pos) & pos >= 0 & pos <= ref$lens[id]
     pos <- pos[keep]; major <- major[keep]; labels <- labels[keep]
     if (!length(pos)) next
-    len <- ifelse(major, p$axisMajLen[id], p$axisMinLen[id]) * units
+    len <- ifelse(major, p$axisMajLen[id], p$axisMinLen[id]) * axis_units
     direction <- if (gap >= 0) -1 else 1
     angle <- p$axisLabelOrientation[[id]]
     angle <- if (is.character(angle)) {
       if (identical(tolower(angle), "perpendicular")) 90 else 0
     } else as.numeric(angle)
-    if (isTRUE(p$collinear_vertical) && (is.numeric(p$axisLabelOrientation[[id]]) ||
+    if (vertical && (is.numeric(p$axisLabelOrientation[[id]]) ||
         identical(tolower(p$axisLabelOrientation[[id]]), "horizontal"))) angle <- angle - 90
-    label_y <- y + direction * (len + p$labelOffset[id] * units)
+    label_y <- y + direction * (len + p$labelOffset[id] * axis_units)
     ticks[[id]] <- data.frame(
       x0 = ggchord_collinear_x(pos, id, ref), y0 = y,
       x1 = ggchord_collinear_x(pos, id, ref), y1 = y + direction * len,
@@ -223,7 +229,7 @@ ggchord_collinear_axis <- function(p, layout) {
       fontface = p$axis_text_style$fontface %||% "plain",
       lineheight = p$axis_text_style$lineheight %||% 1.2,
       label_angle = angle, label_angle_relative = FALSE,
-      label_along_axis = FALSE, label_gap = unname(p$labelOffset[id]) * units,
+      label_along_axis = FALSE, label_gap = unname(p$labelOffset[id]) * axis_units,
       label_hjust = .5, label_vjust = if (direction < 0) 1 else 0,
       is_major = major, is_origin = pos == 0,
       is_endpoint = major & pos %in% c(1, ref$lens[id]), accver = id,
@@ -236,7 +242,7 @@ ggchord_collinear_axis <- function(p, layout) {
     layout$axis_ticks <- ggchord_hide_text_overlaps(layout$axis_ticks,
       ggchord_repel_points(layout$seq_arcs, layout$gene_polys,
         data.frame(x = numeric(), y = numeric()), data.frame(), show_axis = FALSE),
-      units_per_inch = units)
+      units_per_inch = text_units)
   }
   layout
 }

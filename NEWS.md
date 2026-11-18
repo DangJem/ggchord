@@ -11,6 +11,20 @@
 - Default feature colours and shape keys cover the categories drawn across
   facets. A standard fill mapped on one layer can coexist with a ribbon
   identity gradient or an explicit feature fill scale on another layer.
+- Feature layers inherit a plot-level `feature_shape` mapping when the layer
+  has no shape of its own. Facets keep the sample panels trained on source
+  observations, including samples left empty by sequence selection. Native
+  ggplot2 layers contribute the data returned by their `layer_data()` method.
+- Dotplot panel numbers follow the mapped query and subject factor levels
+  in both the drawing and the export. Links and ribbons retain the control
+  points assigned to each source row through panel and sequence selection.
+  Major and minor collinear sequence ticks use the perpendicular millimetre
+  scale of each panel, including on vertical backbones.
+- Native tracks adapt interval objects before source export or statistics.
+  Direct coverage and mean-depth references through `.data[["column"]]`
+  participate in band measure checks. Naming a display instance preserves
+  the track selection for the same accession. Partly visible columns report
+  clipping, and columns wholly outside the reference report `outside_window`.
 - Height layers can declare a `measure`. Conflicting measures in one band
   identify the affected layers. Coverage and mean depth are recognised from
   their direct mappings. `shared_track_limits()` checks the measures, units

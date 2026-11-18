@@ -130,6 +130,13 @@ ggchord_link_controls <- function(control, row, fallback) {
   list(cp[1:2], if (length(cp) == 2L) cp else cp[3:4])
 }
 
+# A vector or a one-element list applies to every row. A shorter list extends
+# its last entry, as it does when rendering the unsliced layer.
+ggchord_link_control_rows <- function(control, rows) {
+  if (is.list(control) && length(control) > 1L) control[pmin(rows, length(control))]
+  else control
+}
+
 ggchord_link_geometry <- function(data, params, layout) {
   if (is.null(data)) ggchord_stop("geom_link_line(): supply data with qaccver/saccver/qpos/spos")
   ggchord_require_columns(data, c("qaccver", "saccver", "qpos", "spos"), "geom_link_line()")

@@ -2,7 +2,7 @@
 #' @noRd
 set_ggchord_coord <- function(plot, layout, axis_labels = NULL) {
   coord <- plot$coordinates
-  if (!isTRUE(coord$ggchord_coord)) return(plot)
+  if (!isTRUE(coord$ggchord_coord) || !length(layout$seqs)) return(plot)
 
   lim <- switch(
     coord$fit %||% "labels",
@@ -261,10 +261,7 @@ prepare_ggchord_plot <- function(plot) {
   }
   plot$layers <- new_layers
   if (!is.null(layout$facet_keys)) {
-    # ggplot2 trains facet levels on all inputs before applying layer layout.
-    # Keep even panels in which every selected domain layer has zero geometry.
-    plot$layers[[length(plot$layers) + 1L]] <- ggplot2::geom_blank(
-      data = layout$facet_layout[layout$facet_keys], inherit.aes = FALSE)
+    plot$facet <- ggchord_precomputed_facet(plot$facet, layout$facet_layout)
   }
   has_feature <- any(vapply(plot$layers, function(x) {
     "feature_fill" %in% names(x$mapping)

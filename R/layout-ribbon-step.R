@@ -193,14 +193,9 @@ ggchord_layout_ribbon_step <- function(
       # Bezier control points
       if (!is.null(ribbon_ctrl_point)) {
         if (is.list(ribbon_ctrl_point)) {
-          cp_idx <- ifelse(i > length(ribbon_ctrl_point), length(ribbon_ctrl_point), i)
-          cp <- ribbon_ctrl_point[[cp_idx]]
-          if (length(cp) >= 2) {
-            c1 <- cp[[1]]
-            c2 <- cp[[2]]
-          } else {
-            c1 <- c2 <- if (length(cp) == 1) cp[[1]] else c(0, 0)
-          }
+          cp <- ggchord_link_controls(ribbon_ctrl_point, i, c(0, 0))
+          c1 <- cp[[1L]]
+          c2 <- cp[[2L]]
         } else {
           if (length(ribbon_ctrl_point) == 2) {
             c1 <- c2 <- ribbon_ctrl_point

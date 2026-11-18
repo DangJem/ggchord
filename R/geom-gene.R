@@ -37,6 +37,7 @@ ggchord_gene_layer <- function(mapping = NULL, data = NULL,
     "Removed geom_feature(preset = 'gene') label arguments: ", paste(labels, collapse = ", "),
     ". Add geom_gene_label() or geom_gene_label_repel().")
   mapping <- ggchord_normalize_mapping(mapping)
+  if (!missing(shape)) mapping$feature_shape <- NULL
   feature_mapping <- mapping
   if ("gene_fill" %in% names(feature_mapping)) {
     names(feature_mapping)[names(feature_mapping) == "gene_fill"] <- "feature_fill"

@@ -75,16 +75,22 @@ ggchord_register_layers <- function(plot) {
         ggchord_stop("Layer '", id, "' requires ", kind, ". Supply a layer data table or prepare_ggchord_data().")
     }
     if (isTRUE(copy$inherit.aes) && length(plot$mapping) && !identical(type, "track")) {
+      if ("feature_shape" %in% names(plot$mapping)) copy <- ggchord_restore_feature_shape_defaults(copy)
       copy <- ggchord_inherit_ribbon_linetype(copy, plot$mapping)
       local <- copy$ggchord_input_mapping %||% ggplot2::aes()
       fixed <- names(copy$aes_params)
       defaults <- copy$ggchord_params$style_defaults
       fixed <- setdiff(fixed, names(defaults)[defaults])
+      if (identical(unname(defaults["feature_shape"]), FALSE)) {
+        fixed <- c(fixed, "feature_shape")
+        local$feature_shape <- NULL
+      }
       if ("seq_colour" %in% fixed) fixed <- c(fixed, "colour")
       if (any(c("ribbon_fill", "feature_fill", "gene_fill") %in% fixed)) fixed <- c(fixed, "fill")
       for (nm in setdiff(names(plot$mapping), c(names(local), fixed))) local[[nm]] <- plot$mapping[[nm]]
       copy$ggchord_input_mapping <- local
       copy$inherit.aes <- FALSE
+      copy <- ggchord_inherit_feature_shape(copy)
     }
     copy
   })

@@ -47,7 +47,8 @@ precedence over \code{aes(feature_shape = ...)}: \code{"arrow"},
 \code{"compact_arrow"}, \code{"promoter_arrow"},
 \code{"primer_arrow"}, \code{"marker"}, \code{"block"},
 \code{"capped_line"}, \code{"primer_arc"}, \code{"chevron"}, or
-\code{"lollipop"}. The default is \code{"arrow"}.
+\code{"lollipop"}. When omitted, use the layer's or inherited
+\code{feature_shape} mapping if present, with \code{"arrow"} as the default.
 Use \code{aes(feature_shape = type)} together with
 \code{scale_feature_shape_manual()} to map categories to geometry.}
 

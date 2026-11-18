@@ -55,7 +55,8 @@
 #' @param id Optional unique layer ID for exported statistics and source rows.
 #' @param measure Optional name of the quantity represented by height, e.g.
 #'   `"read_depth"`. Layers with different declared measures need separate
-#'   bands. Unmodified coverage and mean_depth outputs identify themselves.
+#'   bands. Unmodified coverage and mean_depth outputs identify themselves,
+#'   including direct references such as `after_stat(.data[["mean_depth"]])`.
 #' @param bounds Coordinate error/clip policy.
 #' @param baseline Numeric identity-column baseline. Nonzero baselines require
 #'   position='identity' so stacking does not change their meaning.
@@ -274,10 +275,34 @@ ggchord_track_start_aesthetics <- function(mapping, roles, source, data, caller)
 
 ggchord_track_native_input <- function(layer, plot, sequences) {
   coverage <- identical(layer$ggchord_params$native_stat, "coverage")
-  fallback <- if (coverage) plot$ggchord$data$feature_data %||% plot$ggchord$data$gene_data else plot$ggchord$data$seq_data
-  raw <- ggchord_layer_input_data(layer, fallback)
+  fallback <- ggchord_layer_fallback(layer, plot$ggchord$data)
+  raw <- ggchord_layer_source(layer, fallback)
   tryCatch(ggchord_compute_track_input(layer, plot, raw, sequences, coverage),
     error = function(e) rlang::abort(ggchord_layer_input_context(layer), parent = e, call = NULL))
+}
+
+# Only an unmodified computed column identifies the units of a height.
+ggchord_coverage_measure <- function(height) {
+  if (is.null(height)) return("coverage")
+  measures <- c("coverage", "mean_depth")
+  if (rlang::is_symbol(height)) {
+    legacy <- paste0("..", measures, "..")
+    key <- rlang::as_string(height)
+    if (key %in% legacy) return(measures[match(key, legacy)])
+    return(NULL)
+  }
+  column <- if (rlang::is_call(height, "stage")) match.call(ggplot2::stage, height)$after_stat else
+    if (rlang::is_call(height, c("after_stat", "stat"), n = 1L)) height[[2L]]
+  while (rlang::is_call(column, "(", n = 1L)) column <- column[[2L]]
+  if (rlang::is_call(column, c("$", "[["), n = 2L) && identical(column[[2L]], quote(.data))) {
+    if (rlang::is_call(column, "[[") && !rlang::is_string(column[[3L]])) return(NULL)
+    key <- column[[3L]]
+  } else {
+    if (!rlang::is_symbol(column)) return(NULL)
+    key <- column
+  }
+  if (rlang::is_symbol(key)) key <- rlang::as_string(key)
+  if (rlang::is_string(key) && key %in% measures) key
 }
 
 ggchord_compute_track_input <- function(layer, plot, raw, sequences, coverage) {
@@ -289,8 +314,6 @@ ggchord_compute_track_input <- function(layer, plot, raw, sequences, coverage) {
   ggchord_require_columns(raw, facet_keys, "Faceted track observations")
   source_data <- raw
   capture <- p$stage_capture
-  if (!is.null(capture) && "source" %in% capture$requested && is.null(capture$source))
-    capture$source <- raw
   caller <- if (coverage) "Coverage intervals" else "Track input"
   ggchord_check_interval_unit(raw, ggchord_sequence_unit(sequences), caller)
   mapping <- p$native_mapping
@@ -329,11 +352,7 @@ ggchord_compute_track_input <- function(layer, plot, raw, sequences, coverage) {
   reference_index <- ggchord_track_reference_index(reference_data, sequences, caller)
   if (coverage) {
     height <- rlang::get_expr(mapping$y)
-    computed <- if (rlang::is_call(height, "stage")) match.call(ggplot2::stage, height)$after_stat else
-      if (rlang::is_call(height, c("after_stat", "stat")) && length(height) == 2L) height[[2L]]
-    if (rlang::is_call(computed, "$") && identical(computed[[2L]], quote(.data))) computed <- computed[[3L]]
-    known <- if (is.null(height)) "coverage" else if (rlang::is_symbol(computed) &&
-        as.character(computed) %in% c("coverage", "mean_depth")) as.character(computed)
+    known <- ggchord_coverage_measure(height)
     if (p$native_geom == "tile" && (!is.null(height) || "height" %in% c(names(mapping), names(p$native_params))))
       ggchord_stop("Coverage tiles fill the whole band; map fill to after_stat(coverage) or after_stat(mean_depth)")
     if (!is.null(known) && !is.null(p$measure) && !identical(known, p$measure))
@@ -715,7 +734,7 @@ ggchord_track_bin_stat <- function(stat) {
     })
 }
 
-ggchord_track_native_geometry <- function(d, p, layout, sc, at_value) {
+ggchord_track_native_geometry <- function(d, p, layout, sc, at_value, draw_rows) {
   pieces <- list(); group <- 0L
   map_value <- function(x) sc$map(suppressWarnings(sc$transform(x)))
   add <- function(pos, value, rows, component) {
@@ -778,7 +797,7 @@ ggchord_track_native_geometry <- function(d, p, layout, sc, at_value) {
         } else add(top$x, top$y, top$rows, "track_line")
       }
     }
-  } else for (i in seq_len(nrow(d))) {
+  } else for (i in draw_rows) {
     if (geom %in% c("point", "text")) add(d$pos[i], d$track_value[i], i,
       if (geom == "point") "track_point" else "track_text") else if (geom %in% c("bar", "col", "rect", "tile")) {
       n <- if (isTRUE(layout$collinear)) 2L else 32L

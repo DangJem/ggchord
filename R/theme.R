@@ -53,7 +53,9 @@
 #' @param axis.line,axis.ticks,axis.minor.ticks Axis line elements.
 #' @param axis.text Axis text element.
 #' @param axis.gap,axis.ticks.length,axis.minor.ticks.length,axis.text.offset
-#'   Scalar [grid::unit()] objects controlling physical axis spacing. A
+#'   Scalar [grid::unit()] objects controlling physical axis spacing. For
+#'   horizontal or vertical collinear layouts with measured panels these
+#'   distances use the physical scale perpendicular to each backbone. A
 #'   negative `axis.gap` places the circular axis inside the backbone; a
 #'   positive value places it outside. Zero attaches ticks to the inner
 #'   backbone edge and is the circular default, including the plasmid preset.

@@ -92,18 +92,22 @@ ggchord_render_data_once <- function(callback) {
 }
 
 ggchord_native_facet_input <- function(layer) {
-  force(layer)
-  ggplot2::ggproto(NULL, layer, data = ggchord_render_data_once(layer$data))
+  copy <- ggplot2::ggproto(NULL, layer)
+  # Materialize the subclass method on this render's clone, including any
+  # transformation it applies after reading data or running a data callback.
+  read <- ggchord_render_data_once(copy$layer_data)
+  copy$layer_data <- function(plot_data) read(plot_data)
+  copy$ggchord_facet_input_cached <- TRUE
+  copy
 }
 
 ggchord_render_inputs <- function(plot) {
   for (i in seq_along(plot$layers)) {
     layer <- plot$layers[[i]]
-    # A native data callback can introduce a panel that has only reference
-    # geometry. Share its result with ggplot2 for this render, preserving the
-    # native layer subclass and leaving its original callback untouched.
+    # A native layer may introduce or rename samples. Facet selection and
+    # ggplot2 drawing must see the same result from its layer_data() method.
     if (is.null(layer$ggchord_type) && !inherits(plot$facet, "FacetNull") &&
-        is.function(layer$data) && !isTRUE(attr(layer$data, "ggchord_render_source"))) {
+        !isTRUE(layer$ggchord_facet_input_cached)) {
       plot$layers[[i]] <- ggchord_native_facet_input(layer)
       next
     }

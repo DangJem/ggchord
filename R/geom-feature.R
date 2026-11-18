@@ -225,7 +225,8 @@ ggchord_feature_data <- function(data, fixed_shape = "arrow",
 #'   \code{"compact_arrow"}, \code{"promoter_arrow"},
 #'   \code{"primer_arrow"}, \code{"marker"}, \code{"block"},
 #'   \code{"capped_line"}, \code{"primer_arc"}, \code{"chevron"}, or
-#'   \code{"lollipop"}. The default is \code{"arrow"}.
+#'   \code{"lollipop"}. When omitted, use the layer's or inherited
+#'   \code{feature_shape} mapping if present, with \code{"arrow"} as the default.
 #'   Use \code{aes(feature_shape = type)} together with
 #'   \code{scale_feature_shape_manual()} to map categories to geometry.
 #' @param width Optional numeric/vector/list controlling width in the
@@ -407,7 +408,7 @@ geom_feature <- function(mapping = NULL, data = NULL,
   lyr$ggchord_params <- list(
     type = "gene", id = id,
     style_defaults = c(colour = !"colour" %in% names(dots),
-      linewidth = !"linewidth" %in% names(dots)),
+      linewidth = !"linewidth" %in% names(dots), feature_shape = !shape_explicit),
     gene_width = feature_width,
     arrow_head_length = as.numeric(arrow_head_length),
     arrow_head_width = as.numeric(arrow_head_width),
@@ -419,6 +420,7 @@ geom_feature <- function(mapping = NULL, data = NULL,
     gene_colors = NULL, gene_order = NULL,
     is_feature = TRUE,
     feature_shape_mapped = shape_mapped,
+    feature_shape_default_legend = identical(show.legend, TRUE),
     feature_shape = feature_shape,
     feature_fill_mapping = visual_mapping[["feature_fill"]],
     feature_fill_fixed = dots$feature_fill %||% NULL
@@ -445,6 +447,59 @@ geom_feature <- function(mapping = NULL, data = NULL,
   if (!shape_mapped) lyr$aes_params$feature_shape <- feature_shape
   lyr$ggchord_obstacle_provider <- ggchord_entity_obstacles
   lyr
+}
+
+# Saved layers from before the shape flag keep the constructor's checked
+# `shape_explicit` in the input transform's own environment. The gene preset
+# drops that transform only when it records no shape override.
+ggchord_restore_feature_shape_defaults <- function(layer) {
+  params <- layer$ggchord_params
+  if (!identical(layer$ggchord_type, "gene_poly") ||
+      "feature_shape" %in% names(params$style_defaults)) return(layer)
+  transform <- layer$ggchord_input_transform
+  # Saved layer copies can already have a ggproto wrapper around the closure.
+  while (is.function(transform) && inherits(transform, "ggproto_method")) {
+    inner <- get0("f", envir = environment(transform), inherits = FALSE)
+    if (identical(inner, transform)) break
+    transform <- inner
+  }
+  frame <- if (is.function(transform)) environment(transform)
+  explicit <- if (isTRUE(params$is_primer)) {
+    TRUE
+  } else if (identical(params$gene_shape_override, FALSE)) {
+    FALSE
+  } else if (is.environment(frame)) {
+    get0("shape_explicit", envir = frame, inherits = FALSE)
+  }
+  if (!is.logical(explicit) || length(explicit) != 1L || is.na(explicit)) return(layer)
+  layer$ggchord_params$style_defaults["feature_shape"] <- !explicit
+  if (!explicit && isTRUE(params$is_feature) && is.environment(frame)) {
+    legend <- get0("show.legend", envir = frame, inherits = FALSE)
+    layer$ggchord_params$feature_shape_default_legend <- identical(legend, TRUE)
+  }
+  layer
+}
+
+# A plot mapping becomes known at registration, after the constructor has
+# provisionally set a fixed arrow for layers without a local shape mapping.
+ggchord_inherit_feature_shape <- function(layer) {
+  params <- layer$ggchord_params
+  if (!identical(layer$ggchord_type, "gene_poly") ||
+      !isTRUE(params$style_defaults["feature_shape"]) ||
+      isTRUE(params$feature_shape_mapped) ||
+      is.null(layer$ggchord_input_mapping$feature_shape)) return(layer)
+  layer$ggchord_params$feature_shape_mapped <- TRUE
+  layer$ggchord_input_transform <- function(data) ggchord_feature_data(data, fixed_shape = NULL)
+  if (!isTRUE(params$is_feature)) {
+    layer$ggchord_params$gene_shape_override <- TRUE
+    return(layer)
+  }
+  layer$aes_params$feature_shape <- NULL
+  layer$mapping$feature_shape <- as.name(".feature_shape_raw")
+  if (is.null(layer$ggchord_input_mapping$feature_fill))
+    layer$mapping$feature_fill <- as.name(".feature_shape_raw")
+  if (isTRUE(params$feature_shape_default_legend)) layer$show.legend[["feature_shape"]] <- TRUE
+  layer
 }
 
 ggchord_plasmid_layer <- function(mapping = NULL, data = NULL,

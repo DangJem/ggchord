@@ -117,7 +117,7 @@ local({
   stopifnot(identical(d$track_diagnostics$retained,c(TRUE,FALSE,FALSE)),
     d$track_diagnostics$coordinate_clipped[1],
     d$track_diagnostics$reason[2]=='missing_value',
-    identical(d$original_data[[unique(d$track$layer_id)[1]]]$track$start,bins$start))
+    identical(d$track_source_data[[unique(d$track$layer_id)[1]]]$start,bins$start))
   fails(export_ggchord_layout(ggchord(s[1,])+geom_seq()+track_band('bounds') + geom_track_col(aes(track_value=value),
     data=bins,track = 'bounds')+coord_collinear()),'outside sequence')
   record('bounds_missing_source','Clipping/omission/NA are reported separately and source coordinates remain unchanged')

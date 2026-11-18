@@ -74,7 +74,8 @@ Clipping is reported and never changes source values.}
 
 \item{measure}{Optional name of the quantity represented by height, e.g.
 \code{"read_depth"}. Layers with different declared measures need separate
-bands. Unmodified coverage and mean_depth outputs identify themselves.}
+bands. Unmodified coverage and mean_depth outputs identify themselves,
+including direct references such as \code{after_stat(.data[["mean_depth"]])}.}
 }
 \value{
 A ggplot2 layer with independent input and a shared named band.

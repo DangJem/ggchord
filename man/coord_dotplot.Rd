@@ -49,7 +49,8 @@ Concatenation gaps are display spacing, not omitted biological sequence.
 No sequence backbone layer is required. Use \code{\link[=geom_alignment_segment]{geom_alignment_segment()}} to
 display HSPs. Fixed-scale facets on both qaccver and saccver show ordered
 sequence pairs with the same coordinate axes. Use facet_wrap for observed
-pairs or facet_grid to also show empty combinations.
+pairs or facet_grid to also show empty combinations. Factor levels in the
+mapped accessions determine panel order and numeric layer selections.
 Standard ggplot2 annotations and explicit position scales remain available.
 }
 \examples{

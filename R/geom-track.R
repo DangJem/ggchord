@@ -401,6 +401,8 @@ ggchord_render_track_source <- function(plot) {
 }
 
 ggchord_prepare_track_layers <- function(plot, sequences = ggchord_sequence_reference_data(plot)) {
+  displayed <- plot$ggchord$sequence_layout$order
+  subset <- !is.null(displayed) && !all(sequences$accver %in% displayed)
   plot$layers <- lapply(plot$layers, function(layer) {
     if (!identical(layer$ggchord_type, "track")) return(layer)
     if (!is.null(layer$ggchord_params$native_geom)) {
@@ -428,9 +430,20 @@ ggchord_prepare_track_layers <- function(plot, sequences = ggchord_sequence_refe
     input <- ggchord_resolve_layer_input(layer, plot$ggchord$data$seq_data, data = source)
     ggchord_track_reference_index(input, sequences, caller)
     layer$ggchord_input_data <- input
+    if (subset) layer$ggchord_params$track_sources <- source
     for (role in intersect(layer$ggchord_role_aes, names(mapping))) layer$ggchord_input_mapping[[role]] <- NULL
     layer
   })
+  if (subset) {
+    # Source mapping and statistics have already used the complete reference.
+    # Only the displayed results feed instance expansion, facets and scales.
+    for (i in seq_along(plot$layers)) {
+      layer <- plot$layers[[i]]
+      if (!identical(layer$ggchord_type, "track")) next
+      input <- layer$ggchord_input_data
+      layer$ggchord_input_data <- input[input$accver %in% displayed, , drop = FALSE]
+    }
+  }
   numeric_layers <- Filter(function(l) identical(l$ggchord_type, "track") &&
     !identical(l$ggchord_params$track_kind, "tile"), plot$layers)
   ids <- vapply(numeric_layers, function(l) l$ggchord_params$track_id, character(1))

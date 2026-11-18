@@ -313,6 +313,7 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
   ribbon_selection <- ggchord_select_ribbons(ribbon_data, seqs, ribbon_params, collinear, display_rows,
     cyclic = isTRUE(plot$coordinates$ggchord_radial))
   ribbon_data <- ribbon_selection$data
+  ribbon_ctrl_pt <- ggchord_link_control_rows(ribbon_ctrl_pt, ribbon_data$.ggchord_source_row)
   has_ribbon_data <- !is.null(ribbon_data) && nrow(ribbon_data) > 0
 
   if (has_ribbon_data) {
@@ -889,6 +890,7 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
       seq_label_vjust_explicit = !is.null(seq_label_params$seq_label_vjust),
       collinear_transform = collinear_transform,
       collinear_crossrow_styles = ggchord_collinear_row_styles(plot$coordinates),
+      collinear_radial = isTRUE(plot$coordinates$ggchord_radial),
       collinear_vertical = isTRUE(plot$coordinates$ggchord_sankey) ||
         identical(plot$coordinates$collinear_seq_axis, "vertical"))
   } else compute_chord_layout

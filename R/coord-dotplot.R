@@ -7,7 +7,8 @@
 #' No sequence backbone layer is required. Use [geom_alignment_segment()] to
 #' display HSPs. Fixed-scale facets on both qaccver and saccver show ordered
 #' sequence pairs with the same coordinate axes. Use facet_wrap for observed
-#' pairs or facet_grid to also show empty combinations.
+#' pairs or facet_grid to also show empty combinations. Factor levels in the
+#' mapped accessions determine panel order and numeric layer selections.
 #' Standard ggplot2 annotations and explicit position scales remain available.
 #'
 #' @param x_seqs,y_seqs Optional unique accession vectors in axis order.
@@ -263,8 +264,8 @@ ggchord_prepare_dotplot <- function(plot) {
   }
   plot$layers[[length(plot$layers) + 1L]] <- ggplot2::geom_blank(
     data = data.frame(x = layout$xlim, y = layout$ylim), ggplot2::aes(x, y), inherit.aes = FALSE)
-  if (!is.null(layout$facet_layout)) plot$layers[[length(plot$layers) + 1L]] <- ggplot2::geom_blank(
-    data = layout$facet_layout[c("qaccver", "saccver")], inherit.aes = FALSE)
+  if (!is.null(layout$facet_layout))
+    plot$facet <- ggchord_precomputed_facet(plot$facet, layout$facet_layout)
   frame <- layout$axis_layout
   xf <- frame[frame$axis == "x", , drop = FALSE]
   yf <- frame[frame$axis == "y", , drop = FALSE]

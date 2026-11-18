@@ -27,7 +27,9 @@ under \code{original_data}, default \code{FALSE}.}
 
 \item{data_stage}{Optional character vector selecting source, mapped, statistic
 or geometry. A fresh layout returns these stages in \code{layer_data} by layer ID.
-Source is the adapted input before role mappings. Mapped is the role table
+Source is the adapted input before role mappings. For example, a coverage
+track supplied with a GRanges returns its adapted interval data frame.
+Mapped is the role table
 before the layer transform. Native track mappings run inside ggplot2 and
 have no separate mapped table. Geometry contains named components.
 \code{layer_stage_status} lists each requested layer ID and stage. A successful

@@ -344,7 +344,21 @@ ggchord_layout_tracks <- function(plot, layout, registry, inputs) {
         track_id = id, label = NA_character_, .component = component, stringsAsFactors = FALSE)
     }
     if (!is.null(p$native_geom) && p$track_kind != "tile") {
-      geometry <- list(ggchord_track_native_geometry(d, p, layout, sc, at_value))
+      draw_data <- d
+      draw_rows <- seq_len(nrow(d))
+      if (p$track_kind == "bar" && p$bounds == "clip") {
+        # Native columns already carry edge coordinates: base 1 spans [0, 1].
+        # Touching the frame at a single edge adds no visible interval width.
+        sequence_length <- unname(ref$lens[d$accver])
+        exceeds <- d$start < 0 | d$end > sequence_length
+        outside <- exceeds & (d$end <= 0 | d$start >= sequence_length)
+        clipped <- exceeds & !outside
+        reason[outside] <- "outside_window"
+        draw_rows <- which(!outside)
+        draw_data$start <- pmax(0, d$start)
+        draw_data$end <- pmin(sequence_length, d$end)
+      }
+      geometry <- list(ggchord_track_native_geometry(draw_data, p, layout, sc, at_value, draw_rows))
     } else if (p$track_kind == "line") {
       usable <- !is.na(mapped)
       outside <- d$pos < 1 | d$pos > unname(ref$lens[d$accver])

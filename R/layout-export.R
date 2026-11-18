@@ -21,7 +21,9 @@
 #' endpoints, layer identity and source row; omissions appear in `connection_report`.
 #' @param data_stage Optional character vector selecting source, mapped, statistic
 #'   or geometry. A fresh layout returns these stages in `layer_data` by layer ID.
-#'   Source is the adapted input before role mappings. Mapped is the role table
+#'   Source is the adapted input before role mappings. For example, a coverage
+#'   track supplied with a GRanges returns its adapted interval data frame.
+#'   Mapped is the role table
 #'   before the layer transform. Native track mappings run inside ggplot2 and
 #'   have no separate mapped table. Geometry contains named components.
 #'   `layer_stage_status` lists each requested layer ID and stage. A successful
@@ -169,8 +171,7 @@ export_ggchord_layout <- function(
         if (is.null(layer$ggchord_type)) next
         fallback <- ggchord_layer_fallback(layer, plot$ggchord$data)
         capture <- layer$ggchord_params$stage_capture
-        capture$source <- if (is.null(layer$ggchord_params$native_geom))
-          ggchord_layer_source(layer, fallback) else ggchord_layer_input_data(layer, fallback)
+        capture$source <- ggchord_layer_source(layer, fallback)
       }
       result <- ggchord_export_stages(list(), plot, NULL, data_stage)
       return(structure(result, class = c("ggchord_layout_export", "list")))
@@ -369,9 +370,9 @@ export_ggchord_layout <- function(
     }
     exported$sequence_layout <- layout$sequence_layout
     if (identical(layout$sequence_unit, "aa")) {
-      exported$sequence_layout$units_per_bp <- NA_real_
+      exported$sequence_layout$units_per_bp <- rep(NA_real_, nrow(exported$sequence_layout))
       if ("gap_bp" %in% names(exported$sequence_layout)) {
-        exported$sequence_layout$gap_bp <- NA_real_
+        exported$sequence_layout$gap_bp <- rep(NA_real_, nrow(exported$sequence_layout))
       }
     }
     exported$label_diagnostics <- layout$collinear_label_diagnostics %||% data.frame()
