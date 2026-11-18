@@ -15,7 +15,7 @@
 
 ## 历史证据与依赖
 
-历史索引记录 `main@ab415637` 的 918 个原始路径、文件用途、字节数、SHA-256 和当前保留路径。路径以 `tools/long-term-audit/` 为基准。检索某次实验时，先找其报告或测量，再沿文件名核对图片。对字节相同的独立实验保留原名映射。需要完整还原旧工作树时，可以从该基线提交提取原文件。重新运行实验产生的过程输出请使用临时目录。
+历史索引记录 `main@ab415637` 的 918 个原始路径、文件用途、字节数、SHA-256 和恢复路径。`storage` 标示当前 checkout 或历史 Git 提交。路径以 `tools/long-term-audit/` 为基准。检索某次实验时，先找其报告或测量，再沿文件名核对图片。对字节相同的独立实验保留原名映射。需要完整还原旧工作树时，可以从该基线提交提取原文件。从旧提交恢复一份文件到临时目录可运行 `git show 8e805060:tools/long-term-audit/<文件名> > /tmp/<文件名>`。本轮逐个核对 420 个移出文件的 Git 对象，保留了 496 个有引用或承担来源、许可及索引用途的文件。重新运行实验产生的过程输出请使用临时目录。
 
 部分时期的工具依赖维护者本地的 `design-roadmap/`，该目录未随普通 clone 分发。例如 `audit-documentation-coverage.py` 需要 `design-roadmap/audit-generated/candidate-exports-v0.16.4.csv`。需要复现当期结果时，使用与该脚本版本匹配的本地输入。要查看当前导出和参数，可直接运行 `Rscript tools/teaching-inventory.R`。随包数据的再生成输入见[生成器索引](../data-raw/README.md)。
 

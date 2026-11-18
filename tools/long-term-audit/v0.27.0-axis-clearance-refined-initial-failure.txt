@@ -1,2 +1,0 @@
-Error: setequal(manual_breaks$axis_all$.axis_label, c("1", "1000", "2000",  .... is not TRUE
-Execution halted
