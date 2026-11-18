@@ -9,7 +9,7 @@
 
 基于 ggplot2 的 R 可视化包：比较多序列关系、组织单序列注释、展示 HSP 比对，并组合全局与局部视图。
 
-自 v0.50.0 起，公开 API 可能与旧版完全不兼容，升级时可能需要改写绘图代码。
+自 v0.50.0 起，公开 API 可直接改名或移除，不设过渡版本，升级时可能需要重写绘图代码。
 
 [网站](https://dangjem.github.io/ggchord/) · [使用说明](website/zh/modes.md) · [示例图集](website/zh/gallery.md) · [问题反馈](https://github.com/DangJem/ggchord/issues)
 
