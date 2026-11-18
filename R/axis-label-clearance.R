@@ -39,18 +39,23 @@ ggchord_clear_circular_axis_text <- function(text, layout) {
   }), use.names = FALSE)
   backbone_radii <- backbone_radii[is.finite(backbone_radii)]
   band <- if (length(backbone_radii)) range(backbone_radii) + c(-1, 1)*.15*units/25.4 else numeric()
-  backbone_hit <- function(boxes) length(band) > 0L && any(vapply(seq_len(nrow(boxes)), function(i) {
-    b <- boxes[i, , drop = FALSE]
-    # A rotated rectangle has a continuous radial range. Its closest point to
-    # the centre is obtained by clamping the centre in its local frame.
-    x <- -b$cx*cos(b$angle)-b$cy*sin(b$angle)
-    y <- b$cx*sin(b$angle)-b$cy*cos(b$angle)
-    nearest <- sqrt(max(abs(x)-b$ow/2, 0)^2+max(abs(y)-b$oh/2, 0)^2)
-    farthest <- max(sqrt(rowSums(ggchord_box_corners(b)^2)))
-    nearest <= band[2L] && farthest >= band[1L]
-  }, logical(1)))
-  boxes_for <- function(d) ggchord_arc_text_layout(d, units_per_inch = units,
-    respect_justification = TRUE, boxes_only = TRUE)$boxes
+  backbone_hit <- function(boxes) {
+    if (!length(band) || !nrow(boxes)) return(FALSE)
+    # Clamp the origin in each glyph's local frame for the nearest radius.
+    ca <- cos(boxes$angle)
+    sa <- sin(boxes$angle)
+    x <- -boxes$cx * ca - boxes$cy * sa
+    y <- boxes$cx * sa - boxes$cy * ca
+    nearest <- sqrt(pmax(abs(x) - boxes$ow / 2, 0)^2 +
+      pmax(abs(y) - boxes$oh / 2, 0)^2)
+    corners <- matrix(sqrt(rowSums(ggchord_boxes_corners(boxes)^2)), nrow = 4L)
+    farthest <- pmax(corners[1, ], corners[2, ], corners[3, ], corners[4, ])
+    any(nearest <= band[2L] & farthest >= band[1L])
+  }
+  # One tick keeps the same text style and device at all candidate positions.
+  metrics <- lapply(seq_len(nrow(text)), function(i) new.env(parent = emptyenv()))
+  boxes_for <- function(d, i) ggchord_arc_text_layout(d, units_per_inch = units,
+    respect_justification = TRUE, line_metrics = metrics[[i]], boxes_only = TRUE)$boxes
   polygon_bounds <- ggchord_polygon_bounds(polygons)
   feature_hit <- function(boxes) ggchord_boxes_hit_features(boxes, polygons, tol = 1e-8, bounds = polygon_bounds)
   static <- ggchord_annotation_text_obstacles(layout$layer_geometry, layout, include_axis = FALSE)
@@ -66,7 +71,7 @@ ggchord_clear_circular_axis_text <- function(text, layout) {
     is.finite(gap) && gap>=.5*units/25.4 && gap<=2*units/25.4
   }
   # Glyphs on the other ticks keep their measured boxes until that tick moves.
-  tick_boxes <- lapply(seq_len(nrow(text)), function(i) boxes_for(text[i, , drop = FALSE]))
+  tick_boxes <- lapply(seq_len(nrow(text)), function(i) boxes_for(text[i, , drop = FALSE], i))
   for (i in at) {
     original <- text[i, , drop = FALSE]
     initial <- original
@@ -89,7 +94,7 @@ ggchord_clear_circular_axis_text <- function(text, layout) {
       candidate <- original
       candidate$text_x <- original$text_x*(radius+shift)/radius
       candidate$text_y <- original$text_y*(radius+shift)/radius
-      close_boxes <- boxes_for(candidate)
+      close_boxes <- boxes_for(candidate, i)
       if (!feature_hit(close_boxes) && !backbone_hit(close_boxes) && !root_hit(close_boxes) &&
           !text_hit(close_boxes)) {
         original <- candidate
@@ -125,12 +130,12 @@ ggchord_clear_circular_axis_text <- function(text, layout) {
         radius <- sqrt(sum(point^2))
         if (!is.finite(radius) || radius <= 0) next
         candidate$text_x <- point[1L]; candidate$text_y <- point[2L]
-        moved <- boxes_for(candidate)
+        moved <- boxes_for(candidate, i)
         shift <- band[1L]-option$radial*units/25.4 -
           max(sqrt(rowSums(ggchord_boxes_corners(moved)^2)))
         candidate$text_x <- point[1L]*(radius+shift)/radius
         candidate$text_y <- point[2L]*(radius+shift)/radius
-        moved <- boxes_for(candidate)
+        moved <- boxes_for(candidate, i)
         if (feature_hit(moved) || backbone_hit(moved) || exit_hit(moved) ||
             text_hit(moved) || !near_backbone(moved)) next
         original <- candidate
@@ -177,7 +182,7 @@ ggchord_clear_circular_axis_text <- function(text, layout) {
       candidate <- original
       candidate$text_x <- original$text_x*(radius+amount)/radius
       candidate$text_y <- original$text_y*(radius+amount)/radius
-      moved <- boxes_for(candidate)
+      moved <- boxes_for(candidate, i)
       if (feature_hit(moved) || backbone_hit(moved) || root_hit(moved) ||
           !near_backbone(moved)) next
       hits_text <- nrow(others) > 0L && any(vapply(seq_len(nrow(moved)), function(k)
@@ -195,7 +200,7 @@ ggchord_clear_circular_axis_text <- function(text, layout) {
       text$.axis_clearance_status[i] <- "endpoint_unresolved"
     } else if (unresolved && isTRUE(layout$axis_label_hide_overlaps)) {
       text$text[i] <- NA_character_
-      tick_boxes[[i]] <- boxes_for(text[i, , drop = FALSE])
+      tick_boxes[[i]] <- boxes_for(text[i, , drop = FALSE], i)
       text$.axis_clearance_status[i] <- "hidden_near_backbone"
     }
   }

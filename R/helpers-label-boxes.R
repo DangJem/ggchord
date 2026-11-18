@@ -379,7 +379,7 @@ ggchord_project_text_boxes <- function(x, y, w, h, angles, hjust, vjust,
   bw <- abs(cos_a) * w + abs(sin_a) * h + 2 * box_padding * units_per_inch
   bh <- abs(sin_a) * w + abs(cos_a) * h + 2 * box_padding * units_per_inch
 
-  data.frame(
+  columns <- list(
     x = x, y = y,
     cx = x + cx_off, cy = y + cy_off,
     w = w, h = h,
@@ -388,9 +388,14 @@ ggchord_project_text_boxes <- function(x, y, w, h, angles, hjust, vjust,
     angle = angles,
     bw = bw, bh = bh,
     xmin = x + cx_off - bw / 2, xmax = x + cx_off + bw / 2,
-    ymin = y + cy_off - bh / 2, ymax = y + cy_off + bh / 2,
-    stringsAsFactors = FALSE
+    ymin = y + cy_off - bh / 2, ymax = y + cy_off + bh / 2
   )
+  # Glyph vectors usually already have equal lengths and automatic row names.
+  # Keep normal data.frame recycling and named row semantics for other inputs.
+  if (all(lengths(columns) == length(x)) && all(vapply(columns,
+      function(v) is.null(names(v)) && !is.object(v), logical(1))))
+    return(list2DF(columns))
+  do.call(data.frame, columns)
 }
 
 # Lay one or more labels out glyph by glyph on the circle selected by their

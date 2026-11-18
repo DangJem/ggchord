@@ -1082,32 +1082,26 @@ ggchord_restriction_geometry <- function(data, params, layout, seq_data) {
         x2 = path$x[-1L], y2 = path$y[-1L]
       )
     }
-    segments_cross <- function(a, b, tolerance = 1e-9) {
-      cross2 <- function(x, y) x[1L] * y[2L] - x[2L] * y[1L]
-      p <- c(a$x1, a$y1)
-      r <- c(a$x2 - a$x1, a$y2 - a$y1)
-      q <- c(b$x1, b$y1)
-      s <- c(b$x2 - b$x1, b$y2 - b$y1)
-      denominator <- cross2(r, s)
-      if (!is.finite(denominator) || abs(denominator) <= tolerance) return(FALSE)
-      t <- cross2(q - p, s) / denominator
-      u <- cross2(q - p, r) / denominator
-      t > tolerance && t < 1 - tolerance &&
-        u > tolerance && u < 1 - tolerance
-    }
+    # Accepted segments stay fixed as later elbows are tried. Test a whole
+    # column of them at once using the original open-intersection tolerance.
     path_crosses <- function(path, accepted) {
-      candidate_segments <- path_segments(path)
-      if (!nrow(candidate_segments) || !length(accepted)) return(FALSE)
-      any(vapply(accepted, function(other) {
-        other_segments <- path_segments(other)
-        any(vapply(seq_len(nrow(candidate_segments)), function(i) {
-          any(vapply(seq_len(nrow(other_segments)), function(j) {
-            segments_cross(candidate_segments[i, ], other_segments[j, ])
-          }, logical(1L)))
-        }, logical(1L)))
-      }, logical(1L)))
+      if (!nrow(accepted)) return(FALSE)
+      sx <- accepted$x2 - accepted$x1
+      sy <- accepted$y2 - accepted$y1
+      for (k in seq_len(nrow(path) - 1L)) {
+        rx <- path$x[k + 1L] - path$x[k]
+        ry <- path$y[k + 1L] - path$y[k]
+        den <- rx * sy - ry * sx
+        at <- which(is.finite(den) & abs(den) > 1e-9)
+        qx <- accepted$x1[at] - path$x[k]
+        qy <- accepted$y1[at] - path$y[k]
+        t <- (qx * sy[at] - qy * sx[at]) / den[at]
+        u <- (qx * ry - qy * rx) / den[at]
+        if (any(t > 1e-9 & t < 1-1e-9 & u > 1e-9 & u < 1-1e-9)) return(TRUE)
+      }
+      FALSE
     }
-    accepted <- list()
+    accepted <- data.frame()
     for (member in seq_along(leader_paths)) {
       current <- leader_paths[[member]]
       if (!identical(params$leader, "straight") &&
@@ -1149,7 +1143,7 @@ ggchord_restriction_geometry <- function(data, params, layout, seq_data) {
           leader_paths[[member]] <- current
         }
       }
-      accepted[[length(accepted) + 1L]] <- current
+      accepted <- rbind(accepted, path_segments(current))
     }
     for (member in seq_along(leader_paths)) {
       row <- idx[member]

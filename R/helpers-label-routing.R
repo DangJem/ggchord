@@ -489,28 +489,10 @@ ggchord_feature_label_lanes <- function(gl, gene_polys, seq_arcs,
       leader <- placed_leaders[0, , drop = FALSE]
       leader_collision <- FALSE
       if (concentric_circle) {
-        sid <- as.character(gl$accver[i])
-        source_track <- unname(feature_track_ids[[sid]][
-          as.character(gl$lane[i])])
-        target_track <- if (track_index > 0L) {
-          label_track_ids[[sid]][match(target_radius, sid_tracks)]
-        } else source_track
-        if (length(source_track) && length(target_track) &&
-            (target_track > source_track + 1L ||
-              (track_index > 0L && ggchord_feature_label_shifted(candidate, measured$h)))) {
-          leader <- ggchord_inner_label_leader(candidate, box,
-            units_per_inch)
-        }
-        # Choose another legal text slot rather than bending the line around
-        # a previous name. Check both directions so late words cannot cover
-        # an already accepted leader. Feature crossings remain allowed.
-        probe <- if (track_index > 0L) ggchord_inner_label_leader(candidate,
-          box, units_per_inch) else leader
-        if (track_index > 0L) leader <- probe
-        leader_collision <- ggchord_inner_leader_hits(probe, placed) ||
+        if (track_index > 0L) leader <- ggchord_inner_label_leader(candidate, box, units_per_inch)
+        leader_collision <- ggchord_inner_leader_hits(leader, placed) ||
           ggchord_inner_leader_hits(placed_leaders, box) ||
-          ggchord_inner_leaders_cross(probe, placed_leaders)
-
+          ggchord_inner_leaders_cross(leader, placed_leaders)
       }
       if (!label_collision && !feature_collision && !central_collision &&
           !backbone_collision && !leader_collision) {
