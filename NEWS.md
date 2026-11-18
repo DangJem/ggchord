@@ -1,5 +1,13 @@
 # ggchord 0.50.0 (development)
 
+- Overlaying sequence backbones with conflicting reference lengths, accessions
+  or units now reports both layer IDs before coverage is computed. Region
+  highlights and point-to-point links also check explicit bp/aa units against
+  the displayed backbone before projection.
+- Track mappings read the original source columns even when another role
+  remaps the accession. Interval columns use their inferred width by default
+  and honour an explicit width mapping. Start-stage mappings report missing
+  columns on zero-row inputs. Valid empty inputs still return a typed empty statistic.
 - Track coordinates and coverage denominators use the displayed backbone's
   reference table, including a reference supplied to `geom_seq(data = ...)`.
   An unknown accession reports its layer and source rows before statistics or

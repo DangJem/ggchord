@@ -230,6 +230,11 @@ ggchord_layer_source <- function(lyr, fallback) {
 ggchord_has_stage <- function(x, stages = c("after_stat", "after_scale")) {
   if (missing(x)) return(FALSE)
   x <- rlang::get_expr(x)
+  # ggplot2 still recognises these older spellings of computed aesthetics.
+  if ("after_stat" %in% stages) {
+    if (rlang::is_symbol(x)) return(grepl("^\\.\\.[A-Za-z._]+\\.\\.$", rlang::as_string(x)))
+    if (rlang::is_call(x, "stat")) return(TRUE)
+  }
   if (!is.call(x)) return(FALSE)
   if (rlang::is_call(x, "stage")) {
     args <- as.list(match.call(ggplot2::stage, x))[-1L]
@@ -254,6 +259,7 @@ ggchord_start_mapping <- function(q) {
 ggchord_resolve_layer_input <- function(lyr, fallback = NULL,
                                         data = ggchord_layer_source(lyr, fallback)) {
   if (!is.null(lyr$ggchord_params$panel_input)) return(lyr$ggchord_params$panel_input)
+  if (!is.null(lyr$ggchord_params$backbone_input)) return(lyr$ggchord_params$backbone_input)
   if (is.null(data)) return(NULL)
   type <- lyr$ggchord_params$type %||% ""
   source <- lyr$ggchord_params$input_source %||%

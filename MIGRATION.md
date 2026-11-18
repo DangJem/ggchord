@@ -4,7 +4,9 @@ The entries in the first column were removed in 0.50.0. Later sections record ea
 
 | Former call or argument | 0.50.0 replacement |
 | --- | --- |
-| Track data declared in bp on an aa reference, or vice versa | Supply coordinates in the reference unit. For DNA intervals on a protein reference, project through the relevant CDS or draw separate tracks on the appropriate references. |
+| Overlaid `geom_seq()` layers give different lengths or units for the same accession | Use one reference table for the layers and set styles separately. Draw separate plots for incompatible references. |
+| Track, region or point-link data declared in bp on an aa reference, or vice versa | Supply coordinates in the backbone unit. For DNA intervals on a protein reference, project through the relevant CDS or draw separate plots on the appropriate references. |
+| A track expression needs the newly mapped accession, or a filtered input lacks a mapped column | Compute the new accession in a source column first and refer to that column in each mapping. For empty layers, filter a complete input table to zero rows to retain its columns and types. |
 | `geom_track_col(aes(fill = kind), fill = "red", stat = "coverage", binwidth = 10)` | Remove the fill mapping to pool intervals. For separate estimates in the same colour, use `aes(group = kind)` and `fill = "red"`. |
 | Relying on identical row contents to attach labels to a separately created feature table | Pass the same table to both layers, or supply matching `feature_id` and source intervals. Reordered subsets use the key. |
 | Unrecognised arguments to `geom_*()`, such as `geom_seq(linewditth = 2)` | Use `geom_seq(linewidth = 2)`. Starting in 0.50.0, unknown names cause an error. Supply Stat-specific parameters to the selected Stat, for example `geom_track_line(stat = "coverage", binwidth = 4)` with interval data. |

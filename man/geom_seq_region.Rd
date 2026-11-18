@@ -25,7 +25,8 @@ geom_seq_region(
 
 \item{data}{data.frame with at least \code{accver}, \code{start},
 \code{end}; optional \code{label}, \code{category} and \code{color}.
-Factor start/end columns use their numeric labels, not level codes.}
+Factor start/end columns use their numeric labels, not level codes.
+An explicit \code{sequence_unit} must match the backbone (bp or aa).}
 
 \item{fill}{Character. Default fill colour for regions, default
 \code{"#F59E0B"}.}

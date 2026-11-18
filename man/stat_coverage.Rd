@@ -20,7 +20,10 @@ stat_coverage(
 }
 \arguments{
 \item{mapping, data}{Standard layer input. Supply accver and source positions
-through x/pos, or interval start/end. Map y/track_value for identity values.}
+through x/pos, or interval start/end. Map y/track_value for identity values.
+Start-stage expressions read the layer's source columns, including the
+original accession when \code{accver} is mapped. A zero-row input must still
+provide the columns used by these expressions.}
 
 \item{geom}{Track geometry, e.g. \code{"track_col"} or \code{"track_line"}.}
 

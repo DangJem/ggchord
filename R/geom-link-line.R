@@ -4,6 +4,7 @@
 #' coordinates as sequence tracks. Curves run from query to subject; an arrow
 #' supplied by [arrow()] therefore points to the subject by default.
 #' @param mapping,data Standard ggplot2 mapping and layer data, including data functions.
+#'   Both endpoints use the backbone unit. An explicit `sequence_unit` must match it.
 #' @param link_type Either "curve" (default) or "straight".
 #' @param link_gap Explicit endpoint spacing. With the default
 #'   \code{link_avoid = "none"}, \code{NULL} uses a fixed spacing of 0.035.

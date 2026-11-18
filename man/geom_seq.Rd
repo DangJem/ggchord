@@ -23,7 +23,9 @@ geom_seq(
 \arguments{
 \item{mapping}{Default NULL (uses pre-computed data)}
 
-\item{data}{Default NULL (retrieved automatically from the layout)}
+\item{data}{A backbone reference table, defaulting to the plot reference.
+Overlaid backbones must agree on accessions, lengths and coordinate unit.
+Their row order, mappings and drawing styles may differ.}
 
 \item{seq_radius}{Optional numeric (> 0). Sequence arc radius, default 1.0}
 

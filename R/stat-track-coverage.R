@@ -132,7 +132,8 @@ StatGgchordCoverage <- ggplot2::ggproto("StatGgchordCoverage", ggplot2::Stat,
     ggchord_coverage_windows(data, window_grid[[data$.ggchord_reference[1L]]])
   })
 
-ggchord_coverage_input <- function(raw, mapping, sequences, bounds, index) {
+ggchord_coverage_input <- function(input, mapping, sequences, bounds, index) {
+  raw <- input
   bad <- !is.finite(sequences$length) | sequences$length < 1 | sequences$length != floor(sequences$length)
   if (any(bad)) ggchord_stop("Coverage requires positive whole sequence lengths in the reference table",
     ggchord_input_rows(bad))
@@ -140,7 +141,7 @@ ggchord_coverage_input <- function(raw, mapping, sequences, bounds, index) {
     q <- mapping[[name]]
     if (is.null(q)) ggchord_require_columns(raw, name, "geom_track(stat='coverage')")
     if (ggchord_has_stage(q)) ggchord_stop("Coverage endpoints must be available before statistics")
-    value <- if (is.null(q)) raw[[name]] else ggchord_eval_input_mapping(name, q, raw, "Coverage intervals")
+    value <- if (is.null(q)) input[[name]] else ggchord_eval_input_mapping(name, q, input, "Coverage intervals")
     if (is.character(value) || is.factor(value)) value <- suppressWarnings(as.numeric(as.character(value)))
     if (!length(value) %in% c(1L, nrow(raw)))
       ggchord_stop("Coverage ", name, " must supply one coordinate per interval (got ",

@@ -34,6 +34,9 @@
 #' Existing track_value/track_fill/track_colour roles remain accepted.
 #' @param mapping,data Standard layer input. Supply accver and source positions
 #'   through x/pos, or interval start/end. Map y/track_value for identity values.
+#'   Start-stage expressions read the layer's source columns, including the
+#'   original accession when `accver` is mapped. A zero-row input must still
+#'   provide the columns used by these expressions.
 #' @param geom,stat Native geometry and statistic names, or `stat = "coverage"`
 #'   for interval coverage. The seven native
 #'   statistics also accept their built-in ggplot2 Stat objects, for example
@@ -229,6 +232,41 @@ ggchord_track_reference_index <- function(input, sequences, caller) {
   index
 }
 
+# Evaluate user start stages against the source rows once, including on
+# empty input. Pass the values to ggplot2 in columns so they travel with
+# their rows through faceting. Stat and scale expressions keep their masks.
+ggchord_track_start_aesthetics <- function(mapping, roles, source, data, caller) {
+  native_mapping <- mapping
+  integer_weight <- FALSE
+  for (key in intersect(roles, names(mapping))) {
+    start <- ggchord_start_mapping(mapping[[key]])
+    if (is.null(start)) next
+    value <- ggchord_eval_input_mapping(key, start, source, caller)
+    if (!is.null(value) && !NROW(value) %in% c(1L, nrow(source)))
+      ggchord_stop(caller, ": mapped ", key, " must be scalar or supply one value per input row")
+    # Direct positional mappings to the standard coordinate columns keep
+    # their numeric-label conversion. Other expressions see the source type.
+    if ((is.character(value) || is.factor(value)) &&
+        key %in% c("x", "xmin", "xmax", "xend") &&
+        rlang::as_label(start) %in% c("pos", "start", "end"))
+      value <- as.numeric(as.character(value))
+    if (key == "weight") integer_weight <- is.integer(value)
+    column <- paste0(".ggchord_start_", key)
+    replacement <- NULL
+    if (!is.null(value)) {
+      data[[column]] <- if (!nrow(data)) utils::head(value, 0L) else value
+      replacement <- rlang::sym(column)
+    }
+    expr <- rlang::get_expr(mapping[[key]])
+    if (rlang::is_call(expr, "stage")) {
+      expr <- match.call(ggplot2::stage, expr)
+      expr["start"] <- list(replacement)
+      native_mapping[[key]] <- rlang::quo_set_expr(mapping[[key]], expr)
+    } else native_mapping[[key]] <- rlang::new_quosure(replacement, emptyenv())
+  }
+  list(data = data, mapping = native_mapping, integer_weight = integer_weight)
+}
+
 ggchord_track_native_input <- function(layer, plot, sequences) {
   coverage <- identical(layer$ggchord_params$native_stat, "coverage")
   fallback <- if (coverage) plot$ggchord$data$feature_data %||% plot$ggchord$data$gene_data else plot$ggchord$data$seq_data
@@ -272,14 +310,16 @@ ggchord_compute_track_input <- function(layer, plot, raw, sequences, coverage) {
     if (ggchord_has_stage(mapping[[key]]))
       ggchord_stop("geom_track(): ", key, " must be available before the source statistic")
   }
+  native_roles <- setdiff(names(mapping), c("accver", "group", if (coverage) c("start", "end")))
+  reference_data <- raw
   if ("accver" %in% names(mapping)) {
     ids <- ggchord_eval_input_mapping("accver", mapping$accver, raw, caller)
     if (!length(ids) %in% c(1L, nrow(raw)))
       ggchord_stop("geom_track(): mapped accver must be scalar or supply one accession per input row")
-    raw$accver <- rep_len(ids, nrow(raw))
+    reference_data$accver <- rep_len(ids, nrow(raw))
     mapping$accver <- NULL
   }
-  reference_index <- ggchord_track_reference_index(raw, sequences, caller)
+  reference_index <- ggchord_track_reference_index(reference_data, sequences, caller)
   if (coverage) {
     forbidden <- intersect(names(mapping), c("x", "xmin", "xmax", "ymin", "ymax", "width", "weight"))
     if (length(forbidden) || ("y" %in% names(mapping) &&
@@ -330,7 +370,7 @@ ggchord_compute_track_input <- function(layer, plot, raw, sequences, coverage) {
   fixed_group <- params[["group"]]
   implicit_group <- !"group" %in% names(mapping) && is.null(fixed_group)
   if (!implicit_group) {
-    source_group <- fixed_group %||% ggchord_eval_input_mapping("group", mapping$group, raw, caller)
+    source_group <- fixed_group %||% ggchord_eval_input_mapping("group", mapping$group, source_data, caller)
     if (!length(source_group) %in% c(1L, nrow(raw)))
       ggchord_stop("geom_track(): group must be scalar or supply one value per input row")
     if (anyNA(source_group)) ggchord_stop("geom_track(): group values must be non-missing")
@@ -338,13 +378,14 @@ ggchord_compute_track_input <- function(layer, plot, raw, sequences, coverage) {
     mapping$group <- rlang::quo(.track_group)
     params$group <- NULL
   }
-  if (!coverage && !is.null(raw[[".track_width"]]) && is.null(params$width) && p$native_geom %in% c("bar", "col", "tile")) {
+  if (!coverage && !is.null(raw[[".track_width"]]) && is.null(params$width) &&
+      is.null(mapping$width) && p$native_geom %in% c("bar", "col", "tile")) {
     mapping$width <- rlang::quo(.track_width)
   }
   # Partition source statistics by accession and facet values in ONE native
   # layer. ggplot2 evaluates after_stat() after all panels have been combined.
   domain_keys <- unique(c("accver", facet_keys))
-  domain_id <- do.call(interaction, c(unname(lapply(raw[domain_keys], function(x)
+  domain_id <- do.call(interaction, c(unname(lapply(reference_data[domain_keys], function(x)
     match(x, unique(x)))), list(drop = TRUE, lex.order = TRUE)))
   raw$.track_domain <- as.integer(domain_id)
   input_domain <- raw$.track_domain
@@ -358,7 +399,9 @@ ggchord_compute_track_input <- function(layer, plot, raw, sequences, coverage) {
     kept <- plot$facet$map_data(rows, panel_map$panels, panel_map$params)$.input
     raw <- raw[kept, , drop = FALSE]
   }
-  domains <- raw[!duplicated(raw$.track_domain), c(domain_keys, ".track_domain"), drop = FALSE]
+  domains <- reference_data[raw$.track_input_index, domain_keys, drop = FALSE]
+  domains$.track_domain <- raw$.track_domain
+  domains <- domains[!duplicated(domains$.track_domain), , drop = FALSE]
   stat <- p$custom_stat %||% p$native_stat
   if (!is.null(p$custom_stat) && any(c("source_row", "source_rows") %in% names(mapping)))
     ggchord_stop("Custom track statistics reserve source_row and source_rows for provenance")
@@ -369,11 +412,14 @@ ggchord_compute_track_input <- function(layer, plot, raw, sequences, coverage) {
     params$binwidth <- params$windows <- NULL
     mapping$.ggchord_reference <- rlang::quo(.track_reference)
   }
+  source <- if (length(facet_keys) && !is.null(layer$layout))
+    source_data[raw$.track_input_index, , drop = FALSE] else source_data
+  start_aes <- ggchord_track_start_aesthetics(mapping, native_roles, source, raw, caller)
   if (nrow(raw)) {
     # Identity scales retain source aesthetic values; final role scales train
     # only after projection. No device geometry enters these statistics.
     native <- do.call(getExportedValue("ggplot2", paste0("geom_", p$native_geom)),
-      c(list(mapping = mapping, data = raw, stat = stat,
+      c(list(mapping = start_aes$mapping, data = start_aes$data, stat = stat,
         position = p$native_position, inherit.aes = FALSE), params))
     if (p$native_stat != "identity") {
       # Preserve Stat coordinates before a data Position moves the display
@@ -445,7 +491,7 @@ ggchord_compute_track_input <- function(layer, plot, raw, sequences, coverage) {
     output <- computed
   } else output <- NULL
   if (is.null(output) || !nrow(output)) {
-    if (is.null(output)) output <- raw[FALSE, domain_keys, drop = FALSE]
+    if (is.null(output)) output <- domains[FALSE, domain_keys, drop = FALSE]
     # ggplot2 skips a Stat with no input. Supply its documented variables
     # without invoking an estimator or guessing extension-specific columns.
     numeric_fields <- switch(p$native_stat,
@@ -457,15 +503,8 @@ ggchord_compute_track_input <- function(layer, plot, raw, sequences, coverage) {
       summary = c("x", "y", if (is.null(params$fun.data)) c("ymin", "ymax")),
       identity = intersect(names(mapping), c("x", "y", "xmin", "xmax", "ymin", "ymax", "xend", "yend")),
       coverage = c("x", "y", "xmin", "xmax"))
-    if (p$native_stat == "count" && !"count" %in% names(output)) {
-      # With observations the source layer already evaluated the weights.
-      # For empty input resolve the same mapping in its original data mask.
-      integer_weight <- if (nrow(raw)) failures$integer_weight else {
-        weight <- ggchord_start_mapping(mapping$weight)
-        !is.null(weight) && is.integer(ggchord_eval_input_mapping("weight", weight, raw, caller))
-      }
-      if (isTRUE(integer_weight)) output$count <- integer()
-    }
+    if (p$native_stat == "count" && !"count" %in% names(output) && start_aes$integer_weight)
+      output$count <- integer()
     for (key in setdiff(numeric_fields, names(output))) output[[key]] <- numeric()
     if (p$native_stat == "density" && !"n" %in% names(output)) output$n <- integer()
     output$pos <- output$start <- output$end <- numeric()
@@ -558,7 +597,6 @@ ggchord_track_source_layer <- function(layer, capture, implicit_group, interval_
         mapped$group <- if (length(codes)) as.integer(do.call(interaction,
           c(unname(codes), list(drop = TRUE, lex.order = TRUE)))) else rep(1L, nrow(mapped))
       }
-      capture$integer_weight <- is.integer(mapped$weight)
       mapped
     },
     compute_statistic = function(self, data, layout) {

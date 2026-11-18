@@ -85,10 +85,41 @@ ggchord_sequence_reference_data <- function(plot) {
   reference <- plot$ggchord$data$seq_data
   skeleton <- which(vapply(plot$layers, function(l) identical(l$ggchord_params$type, "seq"), logical(1)))
   if (!length(skeleton)) return(reference)
-  ggchord_resolve_layer_input(plot$layers[[tail(skeleton, 1L)]], reference) %||% reference
+  resolve <- function(layer) {
+    input <- ggchord_resolve_layer_input(layer, reference) %||% reference
+    caller <- ggchord_layer_input_context(layer)
+    ggchord_require_columns(input, c("accver", "length"), caller)
+    if (!is.numeric(input$length) || any(!is.finite(input$length) | input$length <= 0))
+      ggchord_stop(caller, ": backbone lengths must be finite positive numbers")
+    # Registered layers belong to this render. Geometry must consume the
+    # same mapped reference that was used to check and calculate statistics.
+    layer$ggchord_params$backbone_input <- input
+    input
+  }
+  owner <- plot$layers[[tail(skeleton, 1L)]]
+  sequences <- resolve(owner)
+  for (i in utils::head(skeleton, -1L)) {
+    layer <- plot$layers[[i]]
+    other <- resolve(layer)
+    conflict <- function(...) ggchord_stop("Conflicting backbone layers '",
+      owner$ggchord_layer_id, "' and '", layer$ggchord_layer_id, "': ", ...)
+    if (!setequal(sequences$accver, other$accver))
+      conflict("the reference accession sets differ")
+    unit <- ggchord_sequence_unit(sequences, ggchord_layer_input_context(owner))
+    other_unit <- ggchord_sequence_unit(other, ggchord_layer_input_context(layer))
+    if (unit != other_unit) conflict("sequence_unit is ", unit, " versus ", other_unit)
+    at <- match(other$accver, sequences$accver)
+    different <- which(other$length != sequences$length[at])
+    if (length(different)) {
+      j <- different[1L]
+      conflict("length of '", other$accver[j], "' is ", sequences$length[at[j]],
+        " versus ", other$length[j], " ", unit)
+    }
+  }
+  sequences
 }
 
-ggchord_prepare_instances <- function(plot) {
+ggchord_prepare_instances <- function(plot, seqs) {
   if (isTRUE(plot$ggchord$instances_prepared)) return(plot)
   order <- plot$ggchord$sequence_layout$order
   configured <- any(vapply(plot$layers, function(l) !is.null(l$ggchord_params$between), logical(1)))
@@ -97,7 +128,6 @@ ggchord_prepare_instances <- function(plot) {
     (!is.null(names(order)) && any(names(order) != unname(order)))))
   if (!activate) return(plot)
   if (isTRUE(plot$coordinates$ggchord_circular)) ggchord_stop("coord_circular() does not support repeated display instances")
-  seqs <- ggchord_sequence_reference_data(plot)
   order <- order %||% seqs$accver
   if (!is.character(order) || !length(order) || anyNA(order) || any(!order %in% seqs$accver))
     ggchord_stop("layout_sequences(): order must contain known source sequence IDs")
@@ -192,6 +222,7 @@ ggchord_prepare_instances <- function(plot) {
     if (!is.null(p$feature_position))
       p$feature_position <- ggchord_instance_position(p$feature_position, instances)
     if (type == "seq") {
+      p$backbone_input <- NULL
       p$seq_labels <- p$seq_labels %||% stats::setNames(instances$accver, instances$key)
       entities <- unique(instances$accver)
       colours <- stats::setNames(chord_default_palette(length(entities)), entities)

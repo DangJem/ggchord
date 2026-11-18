@@ -47,8 +47,15 @@ ggchord_prepare_geometry_inputs <- function(plot) {
   if (any(vapply(plot$layers, function(x) identical(x$ggchord_type, "alignment"), logical(1))))
     ggchord_stop("geom_alignment_segment() requires coord_dotplot()")
   plot <- ggchord_register_layers(plot)
-  plot <- ggchord_prepare_track_layers(plot)
-  plot <- ggchord_prepare_instances(plot)
+  sequences <- ggchord_sequence_reference_data(plot)
+  for (layer in plot$layers) {
+    if ((layer$ggchord_type %||% "") %in% c("seq_region", "link")) {
+      input <- ggchord_layer_source(layer, layer$ggchord_params$regions)
+      ggchord_check_interval_unit(input, ggchord_sequence_unit(sequences), ggchord_layer_input_context(layer))
+    }
+  }
+  plot <- ggchord_prepare_track_layers(plot, sequences)
+  plot <- ggchord_prepare_instances(plot, sequences)
   plot$scales <- plot$scales$clone()
   plot$scales$scales <- Filter(function(s) is.null(s$ggchord_managed),
                                plot$scales$scales)

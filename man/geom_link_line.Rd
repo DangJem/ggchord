@@ -28,7 +28,8 @@ geom_link_line(
 )
 }
 \arguments{
-\item{mapping, data}{Standard ggplot2 mapping and layer data, including data functions.}
+\item{mapping, data}{Standard ggplot2 mapping and layer data, including data functions.
+Both endpoints use the backbone unit. An explicit \code{sequence_unit} must match it.}
 
 \item{link_type}{Either "curve" (default) or "straight".}
 
