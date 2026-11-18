@@ -1101,7 +1101,7 @@ ggchord_layout_component <- function(layout, type, fallback = data.frame()) {
 #' @noRd
 compute_chord_geometry <- function(plot) {
   if (isTRUE(plot$coordinates$ggchord_dotplot))
-    return(ggchord_cache_layout(plot, ggchord_dotplot_geometry(plot)))
+    return(ggchord_cache_layout(plot, ggchord_dotplot_geometry(ggchord_register_layers(plot))))
   if (any(vapply(plot$layers, function(x) identical(x$ggchord_type, "alignment"), logical(1))))
     ggchord_stop("geom_alignment_segment() requires coord_dotplot()")
   plot <- ggchord_register_layers(plot)

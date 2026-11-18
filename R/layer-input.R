@@ -60,9 +60,9 @@ ggchord_colour_dots <- function(dots, caller) {
   dots
 }
 
-#' Resolve a layer's input table and role mappings
+#' Read and adapt a layer's input before evaluating mappings
 #' @noRd
-ggchord_resolve_layer_input <- function(lyr, fallback = NULL) {
+ggchord_layer_source <- function(lyr, fallback) {
   data <- lyr$ggchord_input_data %||% fallback
   if (is.null(data)) return(NULL)
   if (is.function(data)) {
@@ -93,7 +93,15 @@ ggchord_resolve_layer_input <- function(lyr, fallback = NULL) {
     ggchord_stop("ggchord layer data must be a data.frame, a supported interval object, ",
       "or a function returning supported data")
   }
-  data <- ggchord_normalize_accver(as.data.frame(data, stringsAsFactors = FALSE))
+  ggchord_normalize_accver(as.data.frame(data, stringsAsFactors = FALSE))
+}
+
+#' Resolve a layer's input table and role mappings
+#' @noRd
+ggchord_resolve_layer_input <- function(lyr, fallback = NULL,
+                                        data = ggchord_layer_source(lyr, fallback)) {
+  if (is.null(data)) return(NULL)
+  type <- lyr$ggchord_params$type %||% ""
   source <- lyr$ggchord_params$input_source %||%
     if (is.null(lyr$ggchord_input_data)) attr(fallback, "ggchord_source") else NULL
   # A data function may subset while retaining arbitrary data-frame attributes.

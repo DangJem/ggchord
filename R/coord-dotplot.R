@@ -87,8 +87,7 @@ ggchord_dotplot_project <- function(frame, accver, position, inverse = FALSE) {
   unname(result)
 }
 
-ggchord_dotplot_geometry <- function(plot) {
-  plot <- ggchord_register_layers(plot)
+ggchord_dotplot_geometry <- function(plot, for_drawing = FALSE) {
   if (!inherits(plot$facet, "FacetNull")) ggchord_stop("coord_dotplot(): facets are not supported")
   seqs <- plot$ggchord$data$seq_data
   if (anyNA(seqs$accver) || anyDuplicated(seqs$accver) || !is.numeric(seqs$length) ||
@@ -100,7 +99,9 @@ ggchord_dotplot_geometry <- function(plot) {
     if (is.null(layer$ggchord_type)) next
     if (!identical(layer$ggchord_type, "alignment"))
       ggchord_stop("coord_dotplot(): use geom_alignment_segment(); unsupported layer: ", layer$ggchord_type)
-    input <- ggchord_resolve_layer_input(layer, plot$ggchord$data$ribbon_data)
+    fallback <- plot$ggchord$data$ribbon_data
+    source <- ggchord_layer_source(layer, fallback)
+    input <- ggchord_resolve_layer_input(layer, fallback, data = source)
     if (is.null(input)) input <- data.frame(qaccver = character(), saccver = character(),
       qstart = numeric(), qend = numeric(), sstart = numeric(), send = numeric())
     ggchord_require_columns(input, c("qaccver", "saccver", "qstart", "qend", "sstart", "send"), "geom_alignment_segment()")
@@ -115,6 +116,7 @@ ggchord_dotplot_geometry <- function(plot) {
       }
     }
     inputs[[layer$ggchord_layer_id]] <- list(alignment = input)
+    if (for_drawing) inputs[[layer$ggchord_layer_id]]$source <- source
     query <- union(query, as.character(input$qaccver)); subject <- union(subject, as.character(input$saccver))
   }
   config <- plot$coordinates$dotplot
@@ -164,14 +166,18 @@ ggchord_dotplot_geometry <- function(plot) {
 ggchord_prepare_dotplot <- function(plot) {
   plot <- ggchord_register_layers(plot)
   plot$scales <- plot$scales$clone()
-  layout <- ggchord_dotplot_geometry(plot)
+  layout <- ggchord_dotplot_geometry(plot, for_drawing = TRUE)
   for (i in seq_along(plot$layers)) {
     layer <- plot$layers[[i]]
     if (is.null(layer$ggchord_type)) next
     layer <- ggchord_resolve_style_defaults(layer, plot$mapping)
-    layer$ggchord_resolved_input <- layout$layer_inputs[[layer$ggchord_layer_id]]$alignment
+    inputs <- layout$layer_inputs[[layer$ggchord_layer_id]]
+    layout$layer_inputs[[layer$ggchord_layer_id]]$source <- NULL
+    layer$ggchord_resolved_input <- inputs$alignment
     geometry <- layout$alignment[[layer$ggchord_layer_id]]
-    drawing <- layer$ggchord_resolved_input[geometry$source_row, , drop = FALSE]
+    drawing <- inputs$alignment[geometry$source_row, , drop = FALSE]
+    roles <- intersect(layer$ggchord_role_aes, names(inputs$source))
+    drawing[roles] <- inputs$source[geometry$source_row, roles, drop = FALSE]
     mapping <- ggchord_effective_mapping(layer)
     # Keep user columns (including x, y or source_row) visible to visual
     # mappings. Only the geom's four position aesthetics use projected data.
