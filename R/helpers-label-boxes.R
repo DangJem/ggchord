@@ -376,6 +376,11 @@ ggchord_text_boxes <- function(df,
       family = families[uniform_sites], lineheight = lineheights[uniform_sites])
     w[uniform_sites] <- exact$width; h[uniform_sites] <- exact$height
   }
+  ggchord_project_text_boxes(x, y, w, h, angles, hjust, vjust, units_per_inch, box_padding)
+}
+
+ggchord_project_text_boxes <- function(x, y, w, h, angles, hjust, vjust,
+                                       units_per_inch, box_padding) {
   cos_a <- cos(angles)
   sin_a <- sin(angles)
   cx_off <- (0.5 - hjust) * w * cos_a - (0.5 - vjust) * h * sin_a
@@ -436,8 +441,11 @@ ggchord_arc_text_layout <- function(text, units_per_inch = .35,
     }
     chars <- strsplit(enc2utf8(as.character(text$text[i])), "", fixed = TRUE)[[1L]]
     if (!length(chars) || is.na(text$text[i]) || !nzchar(text$text[i])) next
-    measured <- text[rep(i, length(chars)), , drop = FALSE]
-    measured$text <- chars
+    # All glyphs on this line inherit the same type settings and viewport.
+    # Keep exact per-glyph sizes for the final rotation and obstacle boxes.
+    unique_chars <- unique(chars)
+    measured <- text[rep(i, length(unique_chars)), , drop = FALSE]
+    measured$text <- unique_chars
     measured$text_x <- 0
     measured$text_y <- 0
     measured$text_angle <- 0
@@ -446,10 +454,13 @@ ggchord_arc_text_layout <- function(text, units_per_inch = .35,
     metrics <- ggchord_text_boxes(
       measured, units_per_inch = units_per_inch, box_padding = 0
     )
-    advance <- metrics$w
-    fallback <- max(metrics$h, na.rm = TRUE) * .34
+    index <- match(chars, unique_chars)
+    width <- metrics$w[index]
+    height <- metrics$h[index]
+    advance <- width
+    fallback <- max(height, na.rm = TRUE) * .34
     advance[!is.finite(advance) | advance <= 0] <- fallback
-    tracking <- max(.0008, median(metrics$h, na.rm = TRUE) * .018)
+    tracking <- max(.0008, median(height, na.rm = TRUE) * .018)
     total <- sum(advance) + tracking * max(0, length(chars) - 1L)
     along <- cumsum(c(0, utils::head(advance + tracking, -1L))) + advance / 2 -
       total / 2
@@ -482,9 +493,9 @@ ggchord_arc_text_layout <- function(text, units_per_inch = .35,
     glyph$.arc_parent_group <- text$group[i] %||% i
     glyph$.arc_glyph_index <- seq_along(chars)
     glyphs[[length(glyphs) + 1L]] <- glyph
-    boxes[[length(boxes) + 1L]] <- ggchord_text_boxes(
-      glyph, units_per_inch = units_per_inch, box_padding = box_padding
-    )
+    boxes[[length(boxes) + 1L]] <- ggchord_project_text_boxes(
+      glyph$text_x, glyph$text_y, width, height, glyph$text_angle * pi / 180,
+      glyph$hjust, glyph$vjust, units_per_inch, box_padding)
     owners <- c(owners, rep(i, length(chars)))
   }
   list(
@@ -503,13 +514,14 @@ ggchord_boxes_overlap_any <- function(candidate, other) {
 }
 
 ggchord_boxes_hit_features <- function(boxes, polygons, source_row = NA_integer_,
-                                        allow_own = FALSE) {
-  if (!nrow(boxes)) return(FALSE)
-  any(vapply(seq_len(nrow(boxes)), function(i) {
-    ggchord_label_hits_features(
-      boxes[i, , drop = FALSE], polygons, source_row, allow_own
-    )
-  }, logical(1L)))
+                                        allow_own = FALSE, tol = .004) {
+  if (!length(polygons)) return(FALSE)
+  for (i in seq_len(nrow(boxes))) {
+    if (ggchord_label_hits_features(
+      boxes[i, , drop = FALSE], polygons, source_row, allow_own, tol
+    )) return(TRUE)
+  }
+  FALSE
 }
 
 ggchord_boxes_corners <- function(boxes) {
@@ -576,18 +588,12 @@ ggchord_point_in_polygon <- function(x, y, polygon) {
   py <- polygon$y
   n <- length(px)
   if (n < 3L) return(FALSE)
-  j <- n
-  inside <- FALSE
-  for (i in seq_len(n)) {
-    crosses <- (py[i] > y) != (py[j] > y)
-    if (crosses) {
-      edge_x <- (px[j] - px[i]) * (y - py[i]) /
-        (py[j] - py[i]) + px[i]
-      if (x < edge_x) inside <- !inside
-    }
-    j <- i
-  }
-  inside
+  previous <- c(n, seq_len(n - 1L))
+  crosses <- which((py > y) != (py[previous] > y))
+  from <- previous[crosses]
+  edge_x <- (px[from] - px[crosses]) * (y - py[crosses]) /
+    (py[from] - py[crosses]) + px[crosses]
+  sum(x < edge_x) %% 2L == 1L
 }
 
 ggchord_box_corners <- function(box) {
@@ -626,14 +632,24 @@ ggchord_box_overlaps_feature <- function(box, polygon, tol = .004) {
   }, logical(1)))) return(TRUE)
   if (ggchord_point_in_polygon(box$cx[1], box$cy[1], polygon)) return(TRUE)
   closed_corners <- rbind(corners, corners[1L, , drop = FALSE])
-  polygon_xy <- cbind(polygon$x, polygon$y)
-  polygon_xy <- rbind(polygon_xy, polygon_xy[1L, , drop = FALSE])
+  # Test one box edge against all polygon edges using the same intersection
+  # parameters and tolerance as ggchord_segment_intersects().
+  px <- polygon$x
+  py <- polygon$y
+  following <- c(seq.int(2L, length(px)), 1L)
+  edge_x <- px[following] - px
+  edge_y <- py[following] - py
   for (i in seq_len(nrow(closed_corners) - 1L)) {
-    for (j in seq_len(nrow(polygon_xy) - 1L)) {
-      if (ggchord_segment_intersects(
-          closed_corners[i, ], closed_corners[i + 1L, ],
-          polygon_xy[j, ], polygon_xy[j + 1L, ], tol = tol)) return(TRUE)
-    }
+    start <- closed_corners[i, ]
+    step <- closed_corners[i + 1L, ] - start
+    denominator <- step[1] * edge_y - step[2] * edge_x
+    use <- which(abs(denominator) > tol)
+    dx <- px[use] - start[1]
+    dy <- py[use] - start[2]
+    along_box <- (dx * edge_y[use] - dy * edge_x[use]) / denominator[use]
+    along_polygon <- (dx * step[2] - dy * step[1]) / denominator[use]
+    if (any(along_box >= -tol & along_box <= 1 + tol &
+            along_polygon >= -tol & along_polygon <= 1 + tol)) return(TRUE)
   }
   # Dense feature paths make a vertex-in-box check an inexpensive and robust
   # boundary-intersection test for the curved polygons produced by ggchord.
@@ -646,14 +662,13 @@ ggchord_box_overlaps_feature <- function(box, polygon, tol = .004) {
 }
 
 ggchord_label_hits_features <- function(box, polygons, source_row = NA_integer_,
-                                         allow_own = FALSE) {
-  if (!length(polygons)) return(FALSE)
-  any(vapply(polygons, function(polygon) {
-    own <- isTRUE(!is.na(source_row) &&
-      unique(polygon$source_row)[1L] == source_row)
-    if (allow_own && own) return(FALSE)
-    ggchord_box_overlaps_feature(box, polygon)
-  }, logical(1)))
+                                         allow_own = FALSE, tol = .004) {
+  for (polygon in polygons) {
+    if (allow_own && !is.na(source_row) &&
+        isTRUE(polygon$source_row[1L] == source_row)) next
+    if (ggchord_box_overlaps_feature(box, polygon, tol = tol)) return(TRUE)
+  }
+  FALSE
 }
 
 #' Convert physical text dimensions to the current fixed-aspect plot scale.

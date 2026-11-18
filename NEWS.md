@@ -18,6 +18,11 @@
 - FASTA input is read in blocks. Generic features skip unused overlap checks.
   Physical layout refinement and collected panel guides reuse the native track
   statistic for the duration of a render.
+- A ggchord layer reads its data function once per fresh render. Orientation
+  evidence, geometry and the exported layer input now use the same rows.
+  Feature layers report conflicting strand and direction declarations by row.
+- Circular labels reuse exact glyph measurements within a line. Feature
+  collision checks evaluate polygon edges in batches and stop at the first hit.
 
 # ggchord 0.28.2
 

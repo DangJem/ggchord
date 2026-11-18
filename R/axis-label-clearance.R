@@ -51,9 +51,7 @@ ggchord_clear_circular_axis_text <- function(text, layout) {
   }, logical(1)))
   boxes_for <- function(d) ggchord_arc_text_layout(d, units_per_inch = units,
     respect_justification = TRUE)$boxes
-  feature_hit <- function(boxes) any(vapply(seq_len(nrow(boxes)), function(i)
-    any(vapply(polygons, function(p) ggchord_box_overlaps_feature(
-      boxes[i, , drop = FALSE], p, tol = 1e-8), logical(1))), logical(1)))
+  feature_hit <- function(boxes) ggchord_boxes_hit_features(boxes, polygons, tol = 1e-8)
   static <- ggchord_annotation_text_obstacles(layout$layer_geometry, layout, include_axis = FALSE)
   text$.axis_clearance_mm <- 0
   text$.axis_clearance_status <- NA_character_
