@@ -34,21 +34,22 @@ collinear_lanes <- position_feature_stack(
   spacing = 0.09, base_position = position_strand(0.18)
 )
 
-collinear_example <- ggchord(
-  collinear_sequences, collinear_alignments, collinear_genes,
+collinear_example <- ggchord(prepare_ggchord_data(
+  collinear_sequences, collinear_alignments, collinear_genes),
   validate = "none"
 ) +
   geom_link_ribbon(alpha = 0.24, adjacent_only = FALSE) +
-  geom_seq(
-    seq_order = c("cluster_C", "cluster_A", "cluster_B"),
-    seq_orientation = c(cluster_A = 1, cluster_B = -1, cluster_C = 1),
-    seq_gap = 0.38
+  layout_sequences(
+    order = c("cluster_C", "cluster_A", "cluster_B"),
+    orientation = c(cluster_A = 1, cluster_B = -1, cluster_C = 1),
+    gap = 0.38
   ) +
+  geom_seq() +
   geom_seq_region(
     data = tibble(accver = "cluster_C", start = 700, end = 900),
     region_offset = 0.10, region_side = "inside"
   ) +
-  geom_gene(aes(gene_fill = anno), position = position_strand(0.08)) +
+  geom_feature(preset = 'gene', aes(gene_fill = anno), position = position_strand(0.08)) +
   geom_gene_label(
     position = position_strand(0.08),
     label_orientation = "horizontal", label_side = "auto",
@@ -59,7 +60,7 @@ collinear_example <- ggchord(
     data = collinear_features, position = collinear_lanes,
     width = 0.045
   ) +
-  geom_feature_label_repel(
+  geom_feature_label(placement = 'repel',
     data = collinear_features, position = collinear_lanes
   ) +
   geom_link_line(

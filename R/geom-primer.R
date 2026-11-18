@@ -25,7 +25,7 @@
 #'   select(accver, length)
 #' primers <- find_primer_bindings(plasmid_example_pUC19, set = "reference") |>
 #'   slice_head(n = 2)
-#' ggchord(seq_data = seqs) +
+#' ggchord(data = seqs) +
 #'   geom_seq() +
 #'   geom_primer(data = primers) +
 #'   geom_primer_label_repel(data = primers) +
@@ -37,7 +37,7 @@ geom_primer <- function(mapping = NULL, data = NULL,
                         colour = "#A020F0",
                         position = NULL,
                         show.legend = FALSE,
-                        inherit.aes = FALSE, ...) {
+                        inherit.aes = TRUE, ...) {
   side <- match.arg(side)
   values <- c(arc_offset, arc_linewidth)
   if (!is.numeric(values) || any(!is.finite(values)) ||
@@ -50,7 +50,7 @@ geom_primer <- function(mapping = NULL, data = NULL,
       outside = arc_offset,
       inside = -arc_offset
     )
-    position <- position_plasmid(offset)
+    position <- position_offset(offset)
   }
   layer <- geom_feature(
     mapping = mapping, data = data, shape = "primer_arc",
@@ -98,7 +98,7 @@ geom_primer_label_repel <- function(
     colour = "#A020F0",
     max_overlaps = Inf,
     position = NULL,
-    show.legend = FALSE, inherit.aes = FALSE, ...) {
+    show.legend = FALSE, inherit.aes = TRUE, ...) {
   side <- match.arg(side)
   if (!is.logical(show_location) || length(show_location) != 1L ||
       is.na(show_location)) {
@@ -107,9 +107,9 @@ geom_primer_label_repel <- function(
   if (is.null(position)) {
     # `side` selects the exterior label field, not a second biological anchor.
     # Keep the label's source on the primer arc between the backbone lines.
-    position <- position_plasmid(0)
+    position <- position_offset(0)
   }
-  layer <- geom_feature_label_repel(
+  layer <- geom_feature_label(placement = 'repel',
     mapping = mapping, data = data, label_layout = "callout",
     label_side = side, max_overlaps = max_overlaps, external = TRUE,
     position = position, show.legend = show.legend,

@@ -17,18 +17,20 @@ sites <- tibble(
 )
 track_plot <- ggchord(sequences) +
   geom_seq() +
+  track_band("signal", width = unit(5, "mm")) +
   geom_track_col(aes(track_value = signal, track_fill = signal),
     data = bins,
-    position = position_track("signal", width = unit(5, "mm"))
+    track = "signal"
   ) +
   scale_track_value_continuous("signal", limits = c(-1, 1), unit = "arbitrary units") +
   scale_track_fill_gradientn("signal", colours = c("#31537D", "#F3F4EE", "#D26B38")) +
+  track_band("sites", side = "inside", width = unit(2.5, "mm")) +
   geom_track_tile(aes(track_fill = category),
     data = sites,
-    position = position_track("sites", side = "inside", width = unit(2.5, "mm"))
+    track = "sites"
   ) +
   scale_track_fill_manual("sites", values = c(site = "#468C86", reference = "#D1AB59")) +
-  scale_seq_position_continuous(sequences = "B") +
+  scale_seq_position_continuous(guide = guide_seq_axis("B")) +
   geom_seq_scale(length = 100) +
   coord_collinear() +
   labs(title = "Explicit tracks with shared numerical domains")

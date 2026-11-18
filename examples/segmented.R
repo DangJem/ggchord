@@ -18,10 +18,10 @@ features <- tibble(
   strand = c("+", "+", "+", "+"), anno = c("A left", "A reversed", "B left", "B right")
 )
 view <- segment_ggchord_data(sequences, links, features, windows)
-segmented_plot <- ggchord(view$seq_data, view$ribbon_data, view$gene_data) +
+segmented_plot <- ggchord(prepare_ggchord_data(view$seq_data, view$ribbon_data, view$gene_data)) +
   geom_seq() +
   geom_link_ribbon(fill = "#83AEB8") +
-  geom_gene() +
+  geom_feature(preset = 'gene') +
   geom_gene_label_repel() +
   scale_seq_position_continuous(coordinates = "source", breaks = c(100, 200, 300, 700, 800, 900)) +
   coord_collinear(segments = view$segments, segment_gap = 80) +

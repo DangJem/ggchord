@@ -12,7 +12,7 @@ stat_ribbon_density(
   group_by = NULL,
   position = "identity",
   show.legend = TRUE,
-  inherit.aes = FALSE,
+  inherit.aes = TRUE,
   ...
 )
 }

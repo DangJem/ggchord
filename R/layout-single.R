@@ -82,6 +82,7 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
     )
   }
 
+  arrangement <- chord$sequence_layout
   # --- Process sequences ---
   seq_data <- seq_data_override %||% data_list$seq_data
   sequence_unit <- ggchord_sequence_unit(seq_data, "ggchord layout")
@@ -103,26 +104,30 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
   seqs     <- seq_data$accver
   lens     <- setNames(seq_data$length, seqs)
 
-  if (!is.null(seq_params$seq_order)) {
-    if (!is.character(seq_params$seq_order) || !length(seq_params$seq_order) ||
-        anyNA(seq_params$seq_order) || anyDuplicated(seq_params$seq_order) ||
-        !all(seq_params$seq_order %in% seqs)) {
-      ggchord_stop("seq_order must contain non-repeated known sequence IDs")
+  if (!is.null(arrangement$order)) {
+    if (!is.character(arrangement$order) || !length(arrangement$order) ||
+        anyNA(arrangement$order) || anyDuplicated(arrangement$order) ||
+        !all(arrangement$order %in% seqs)) {
+      ggchord_stop("layout_sequences(): order must contain known sequence IDs from the displayed reference")
     }
-    seqs <- seq_params$seq_order
-    lens <- lens[seqs]
+    seqs <- arrangement$order
+  } else if (!is.null(seq_data_override)) {
+    # A layer may reorder its own input rows without reordering the reference.
+    reference <- data_list$seq_data$accver
+    seqs <- c(intersect(reference, seqs), setdiff(seqs, reference))
   }
+  lens <- lens[seqs]
   n <- length(seqs)
 
   seq_labels    <- process_sequence_param(seq_params$seq_labels, seqs,
                                           "seq_labels", default_value = seqs)
   seqRadius     <- process_sequence_param(seq_params$seq_radius, seqs,
                                           "seq_radius", 1.0)
-  orientation   <- process_sequence_param(seq_params$seq_orientation, seqs,
-                                          "seq_orientation", 1)
+  orientation   <- process_sequence_param(arrangement$orientation, seqs,
+                                          "layout_sequences(orientation)", 1)
   collinear <- isTRUE(plot$coordinates$ggchord_collinear)
-  seq_gap       <- process_sequence_param(seq_params$seq_gap, seqs,
-                                          "seq_gap", if (collinear) 0.3 else 0.03)
+  seq_gap       <- process_sequence_param(arrangement$gap, seqs,
+                                          "layout_sequences(gap)", if (collinear) 0.3 else 0.03)
   seq_curvature <- process_sequence_param(seq_params$seq_curvature, seqs,
                                           "seq_curvature", 1.0)
 
@@ -136,11 +141,11 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
     if (any(incompatible)) {
       ggchord_stop("coord_circular() does not support ribbon or link layers")
     }
-    if (!is.null(seq_params$seq_gap)) {
-      ggchord_stop("coord_circular() owns the opening; use its `gap` argument instead of geom_seq(seq_gap = ...)")
+    if (!is.null(arrangement$gap)) {
+      ggchord_stop("coord_circular() owns the opening; use its `gap` argument instead of layout_sequences(gap = ...)")
     }
-    if (!is.null(seq_params$seq_orientation)) {
-      ggchord_stop("coord_circular() owns genomic direction; use its `direction` argument instead of geom_seq(seq_orientation = ...)")
+    if (!is.null(arrangement$orientation)) {
+      ggchord_stop("coord_circular() owns genomic direction; use its `direction` argument instead of layout_sequences(orientation = ...)")
     }
     seq_gap[] <- plot$coordinates$circular_gap / 360
     orientation[] <- if (identical(plot$coordinates$circular_direction, "clockwise")) -1 else 1
@@ -188,7 +193,7 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
   }
   if (!is.numeric(orientation) || any(!is.finite(orientation)) ||
       any(!orientation %in% c(-1, 1))) {
-    ggchord_stop("seq_orientation can only be 1 or -1")
+    ggchord_stop("layout_sequences(): orientation can only be 1 or -1")
   }
   gap_limit <- if (isTRUE(plot$coordinates$ggchord_circular)) 1 else 0.5
   invalid_gap <- !is.numeric(seq_gap) || any(!is.finite(seq_gap))
@@ -199,8 +204,8 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
       if (isTRUE(plot$coordinates$ggchord_circular)) {
         "coord_circular() gap must leave some drawable circumference"
       } else if (collinear) {
-        "coord_collinear(): seq_gap must contain finite positive track spacings"
-      } else "seq_gap must be in the [0, 0.5) range"
+        "coord_collinear(): layout_sequences(gap) must contain finite positive spacings"
+      } else "layout_sequences(gap) must be in the [0, 0.5) range"
     )
   }
   if (!is.numeric(seq_curvature) || any(!is.finite(seq_curvature))) {
@@ -282,37 +287,15 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
   collinear_transform <- if (collinear) ggchord_collinear_transform(
     seqs, lens, orientation, chord$collinear_evidence %||% ribbon_data %||%
       data_list$ribbon_data, plot$coordinates,
-    length_mode = seq_params$length_mode %||% "proportional"
+    length_mode = arrangement$length_mode %||% "proportional"
   ) else NULL
   if (collinear) orientation <- collinear_transform$orientation
   ribbon_stat_report <- NULL
   ribbon_stat_data <- NULL
   ribbon_stat <- ribbon_params$ribbon_stat
   if (!is.null(ribbon_stat) && !is.null(ribbon_data)) {
-    if (identical(ribbon_stat$type, "bundle")) {
-      computed <- bundle_ggchord_ribbons(
-        ribbon_data = ribbon_data,
-        seq_data = seq_data,
-        bins = ribbon_stat$bins,
-        min_bundle = ribbon_stat$min_bundle,
-        weight = ribbon_stat$weight,
-        group_by = ribbon_stat$group_by
-      )
-      computed$data$bundle_n <- computed$data$.bundle_n
-      computed$data$bundle_weight <- computed$data$.bundle_weight
-      computed$data$density <- computed$data$.bundle_density
-    } else if (identical(ribbon_stat$type, "density")) {
-      computed <- ggchord_ribbon_density(
-        ribbon_data = ribbon_data,
-        seq_data = seq_data,
-        bins = ribbon_stat$bins,
-        weight = ribbon_stat$weight,
-        group_by = ribbon_stat$group_by,
-        caller = "stat_ribbon_density()"
-      )
-    } else {
-      ggchord_stop("Unknown ggchord ribbon stat: ", ribbon_stat$type)
-    }
+    computed <- do.call(ribbon_stat$compute, c(list(
+      ribbon_data = ribbon_data, seq_data = seq_data), ribbon_stat$arguments))
     ribbon_data <- computed$data
     ribbon_stat_data <- computed$data
     ribbon_stat_report <- computed$report
@@ -410,10 +393,10 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
   ggchord_check_interval_unit(gene_data_override %||% ggchord_annotation_fallback(data_list), sequence_unit, "Feature layer")
   gene_ord  <- gene_params$gene_order
   # Gene label settings come from the dedicated geom_gene_label() layer, with
-  # the legacy geom_gene() arguments as fallback.
+  # the legacy geom_feature(preset = 'gene') arguments as fallback.
   # The repel layer takes priority over the fixed label layer
   lbl <- if (gene_repel_layer) gene_repel_params else gene_label_params
-  if (collinear && !is.null(lbl$position_explicit)) {
+  if (!is.null(lbl$position_explicit)) {
     lbl$position_supplied <- lbl$position_explicit
   }
   gene_ls   <- gene_label_layer || gene_repel_layer ||
@@ -531,7 +514,8 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
   }
   feature_shape_pal <- NULL
   feature_shape_order <- NULL
-  if (isTRUE(gene_params$is_feature) && !is.null(gene_data_layout) &&
+  if ((isTRUE(gene_params$is_feature) || isTRUE(gene_params$gene_shape_override)) &&
+      !is.null(gene_data_layout) &&
       nrow(gene_data_layout) > 0L) {
     raw_shape <- as.character(
       gene_data_layout$.feature_shape_raw %||%
@@ -588,7 +572,7 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
     # Resolve the visible feature fill once so polygon text contrast and the
     # pastel background of an external callout share exactly the same semantic
     # colour. Explicit source colours and user scales remain authoritative.
-    fill_values <- if ("feature_color" %in% names(gene_data_layout)) {
+    fill_values <- if (!isTRUE(gene_params$user_feature_fill) && "feature_color" %in% names(gene_data_layout)) {
       as.character(gene_data_layout$feature_color)
     } else rep(NA_character_, nrow(gene_data_layout))
     unresolved_fill <- is.na(fill_values) | !nzchar(fill_values)
@@ -601,20 +585,21 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
     fill_mapping <- gene_params$feature_fill_mapping
     if (any(unresolved_fill) && !is.null(fill_mapping)) {
       mapped_input <- tryCatch(
-        rlang::eval_tidy(fill_mapping, data = gene_data_layout),
+        rlang::eval_tidy(ggchord_start_mapping(fill_mapping), data = gene_data_layout),
         error = function(e) NULL
       )
+      raw_fill <- NULL
       if (!is.null(mapped_input)) {
         if (length(mapped_input) == 1L) {
           mapped_input <- rep(mapped_input, nrow(gene_data_layout))
         }
         if (length(mapped_input) == nrow(gene_data_layout)) {
-          raw_fill <- as.character(mapped_input)
+          raw_fill <- mapped_input
         }
       }
     }
-    fill_scale <- plot$scales$get_scales("feature_fill")
-    if (any(unresolved_fill) && !is.null(fill_scale)) {
+    fill_scale <- plot$scales$get_scales(if (isTRUE(gene_params$user_feature_fill)) "fill" else "feature_fill")
+    if (any(unresolved_fill) && !is.null(fill_scale) && !is.null(raw_fill)) {
       trained_fill <- fill_scale$clone()
       trained_fill$train(raw_fill)
       fill_values[unresolved_fill] <- as.character(trained_fill$map(
@@ -676,12 +661,17 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
       seqs = seqs, lengths = lens,
       circular = isTRUE(plot$coordinates$ggchord_circular),
       label_size = geometry_label_size,
-      caller = if (isTRUE(gene_params$is_feature)) "geom_feature()" else "geom_gene()"
+      caller = if (isTRUE(gene_params$is_feature)) "geom_feature()" else "geom_feature(preset = 'gene')"
     )
     # Allocate on the complete entity table before selecting/reordering labels;
     # a label subset must not cause the remaining entities to change lanes.
-    if (collinear && !is.null(chord$matched_feature_rows)) {
+    if (!is.null(chord$matched_feature_rows)) {
       gene_data_layout <- gene_data_layout[chord$matched_feature_rows$rows, , drop = FALSE]
+      # Keep the geometry-derived lane, width, shape and label contrast while
+      # measuring and drawing the text supplied by this label layer.
+      gene_data_layout$.anchor_label_text <- lbl$label_text
+      if (!is.null(names(gene_cols)))
+        gene_cols <- gene_cols[names(gene_cols) %in% gene_data_layout$anno]
       rownames(gene_data_layout) <- NULL
     }
   }
@@ -721,7 +711,8 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
   )
   labelOffset <- process_sequence_param(axis_unit_data(axis_theme$text.offset),
                                         seqs, "axis.text.offset", 0.02)
-  axisLabelHide <- isTRUE(axis_theme$text.check.overlap)
+  position_scale <- plot$scales$get_scales("seq_position")
+  axisLabelHide <- position_scale$ggchord_check_overlap %||% isTRUE(axis_theme$text.check.overlap)
   axisLabelOri <- process_axis_orientation(
     axis_theme$text.orientation, seqs
   )
@@ -760,7 +751,6 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
     ggchord_stop("axis_tick_minor_number must contain non-negative integers")
   }
   axis_breaks <- axis_minor_breaks <- axis_labels <- NULL
-  position_scale <- plot$scales$get_scales("seq_position")
   if (!collinear && !is.null(position_scale) &&
       identical(position_scale$ggchord_position_coordinates, "source")) ggchord_stop(
     "scale_seq_position_continuous(coordinates = 'source') requires coord_collinear()"
@@ -915,7 +905,7 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
   } else compute_chord_layout
   layout <- layout_strategy(
     seqs = seqs, lens = lens, seq_labels = seq_labels,
-    length_mode = seq_params$length_mode %||% "proportional",
+    length_mode = arrangement$length_mode %||% "proportional",
     seq_colors = seq_colors, seqRadius = seqRadius,
     seq_curvature = seq_curvature, orientation = orientation,
     seq_gap = seq_gap,
@@ -996,7 +986,7 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
       text_style <- if(inherits(style,"element_text")) list(family=style@family,
         fontface=style@face,lineheight=style@lineheight) else list()
       c(text_style, list(offset_explicit = isTRUE(axis_theme$text.offset.explicit),
-        allow_clearance = isTRUE(axis_theme$text.check.overlap)))
+        allow_clearance = axisLabelHide))
     },
     axisLabelOrientation = axisLabelOri,
     seqBackboneOuter = seqBackboneOuter,
@@ -1010,7 +1000,7 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
   )
 
   layout$seq_ring <- seq_ring
-  layout$length_mode <- seq_params$length_mode %||% "proportional"
+  layout$length_mode <- arrangement$length_mode %||% "proportional"
   layout$seq_ring_radius <- if (is.null(seq_ring)) NULL else seqRadius
   layout$ribbon_stat_data <- ribbon_stat_data
   layout$ribbon_stat_report <- ribbon_stat_report

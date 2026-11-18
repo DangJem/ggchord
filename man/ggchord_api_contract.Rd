@@ -19,10 +19,9 @@ control non-data appearance. Explicit fixed styles take precedence over
 matching mappings; omit a fixed argument to retain its mapping. User scales
 take precedence over automatically inferred defaults.
 
-\code{\link[=geom_gene]{geom_gene()}} remains the strictly directed gene shortcut over the generic
-\code{\link[=geom_feature]{geom_feature()}} constructor. Unknown-strand features remain unknown and
-use the generic feature entrance. The plasmid shortcut retains its distinct
-defaults. Fixed feature shape is \code{shape}; mapped shape is \code{feature_shape}.
+\code{geom_feature(preset = "gene")} draws strictly directed genes. Use the
+generic \code{\link[=geom_feature]{geom_feature()}} constructor for unknown-strand features. The plasmid
+preset retains its compact placement and styling defaults. Fixed feature shape is \code{shape}; mapped shape is \code{feature_shape}.
 Gene/feature widths use \code{width}, label controls use \verb{label_*}, and point/area
 links use \code{link_gap} and \code{link_ctrl_point}. These names do not merge the
 distinct geometries or their defaults.
@@ -103,7 +102,7 @@ features <- feature_source |>
 # ASCII display copy for the default PDF help-example device.
 features <- features |>
   mutate(anno = gsub("\u03b1", "alpha", anno, fixed = TRUE))
-p <- ggchord(seq_data = seqs) +
+p <- ggchord(data = seqs) +
   geom_seq() +
   geom_feature(data = features) +
   coord_circular()

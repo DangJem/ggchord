@@ -25,7 +25,7 @@ if (!requireNamespace("GenomicRanges", quietly = TRUE) ||
   # Direct S4 inputs follow the same conversion contract.
   # The supplied negative-strand anchor is intentional; its decreasing link
   # endpoints preserve direction, so avoid the generic reversed-interval hint.
-  bioc_example <- ggchord(GenomicRanges::seqinfo(intervals), interactions,
+  bioc_example <- ggchord(prepare_ggchord_data(GenomicRanges::seqinfo(intervals), interactions),
     validate = "none"
   ) +
     geom_link_ribbon(aes(ribbon_alpha = support)) +
@@ -33,7 +33,7 @@ if (!requireNamespace("GenomicRanges", quietly = TRUE) ||
     geom_seq() +
     geom_seq_label() +
     geom_feature(data = intervals) +
-    geom_feature_label_repel(data = intervals) +
+    geom_feature_label(placement = 'repel', data = intervals) +
     coord_collinear()
   if (interactive()) print(bioc_example)
 

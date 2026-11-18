@@ -1,3 +1,17 @@
+#' Set the guide for a quantitative track axis
+#'
+#' @param angle Tick label angle passed to [ggplot2::guide_axis()].
+#' @param check.overlap Hide overlapping tick labels.
+#' @param theme Local theme with axis.line, axis.text and axis.title elements.
+#' @return A local numeric axis guide for [scale_track_value_continuous()].
+#' @export
+#' @examples
+#' scale_track_value_continuous("depth", guide = guide_track_axis(angle = 30))
+guide_track_axis <- function(angle = ggplot2::waiver(), check.overlap = FALSE, theme = NULL) {
+  guide <- ggplot2::guide_axis(angle = angle, check.overlap = check.overlap, theme = theme)
+  ggchord_track_axis_guide(guide)$guide
+}
+
 # Track value scales own their own axis Guide declaration. Theme affects only
 # decorations; the named scale and physical position retain their old domains.
 ggchord_track_axis_guide <- function(guide) {

@@ -58,7 +58,7 @@ new_coord_chord <- function(rotation, ratio, xlim, ylim, expand, clip, fit,
 #' data(seq_data_example)
 #' seqs <- seq_data_example |>
 #'   select(accver, length)
-#' ggchord(seq_data = seqs) +
+#' ggchord(data = seqs) +
 #'   geom_seq() +
 #'   coord_chord(rotation = 20)
 coord_chord <- function(rotation = 0, ratio = 1,

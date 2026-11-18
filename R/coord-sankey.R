@@ -14,7 +14,7 @@
 #' s <- data.frame(accver = c("A", "B"), length = c(1000, 600))
 #' h <- data.frame(qaccver = "A", saccver = "B",
 #'   qstart = 100, qend = 300, sstart = 50, send = 250)
-#' ggchord(s, h) + geom_seq() + geom_link_ribbon() +
+#' ggchord(prepare_ggchord_data(s, h)) + geom_seq() + geom_link_ribbon() +
 #'   geom_seq_label() + coord_sankey()
 coord_sankey <- function(column_gap = 3, self_links = FALSE, ratio = 1,
     xlim = NULL, ylim = NULL, expand = FALSE, clip = "off",

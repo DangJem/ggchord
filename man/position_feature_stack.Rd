@@ -6,8 +6,7 @@
 \usage{
 position_feature_stack(
   spacing = 0.1,
-  side = c("strand", "outside", "inside"),
-  base_position = NULL,
+  base_position = position_strand(),
   direction = c("auto", "outward", "inward")
 )
 }
@@ -17,23 +16,20 @@ lanes. Circular plasmid layout enlarges the first transition into a main
 label corridor and reserves at least one label track between deeper
 overlapping feature lanes.}
 
-\item{side}{Legacy track-side selector retained for compatibility when
-used alone. Historical \code{outside} starts at -0.1 and grows inward;
-\code{inside} starts at +0.1 and grows outward. The default \code{strand} starts
-at +0.1 on plus and -0.1 on minus, growing away from the backbone.}
-
-\item{base_position}{Optional identity, strand, or plasmid Position applied
-before interval-overlap detection and lane allocation. Use identity to
-start both strands on the backbone. The default starting bands follow strand.}
+\item{base_position}{Position applied before overlap detection and lane
+allocation. Use \code{"identity"} to start both strands on the backbone,
+\code{\link[=position_offset]{position_offset()}} for one shared offset, or \code{\link[=position_strand]{position_strand()}} for
+strand-specific offsets. The default starts at +0.1 on the plus strand
+and -0.1 on the minus strand.}
 
 \item{direction}{Growth of successive lanes within each starting band.
 \code{"outward"} follows the positive local normal (up on a horizontal
 backbone), \code{"inward"} the negative normal. \code{"auto"} follows the sign
 of the starting offset, growing outward at zero. Lane zero stays at
-its starting offset. Supply legacy side on its own.}
+its starting offset.}
 }
 \value{
-A ggplot2 Position object for \code{geom_gene()} or \code{geom_feature()}.
+A ggplot2 Position object for \code{geom_feature(preset = "gene")} or \code{geom_feature()}.
 }
 \description{
 Assigns overlapping intervals on the same sequence and side to radial lanes.
@@ -51,5 +47,5 @@ The default object can also be selected on a feature layer with
 }
 \examples{
 position_feature_stack(base_position = "identity", direction = "inward")
-position_feature_stack(base_position = position_plasmid(0.1), direction = "outward")
+position_feature_stack(base_position = position_offset(0.1), direction = "outward")
 }

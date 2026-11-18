@@ -58,12 +58,32 @@ ggchord_panel_context <- function(table, built) {
   unavailable <- ggchord_estimated_render_context(built$plot$ggchord$ref$layout)
   if (grDevices::dev.cur() == 1L) return(unavailable)
   panel <- which(grepl("^panel($|[-.])", table$layout$name))
-  if (length(panel) != 1L) {
-    unavailable$basis <- "Actual-panel measurement currently supports one panel"
-    return(unavailable)
+  if (!length(panel)) return(unavailable)
+  if (length(panel) > 1L) {
+    grid <- built$layout$layout
+    entries <- table$layout[panel, , drop = FALSE]
+    rows <- match(entries$t, sort(unique(entries$t)))
+    cols <- match(entries$l, sort(unique(entries$l)))
+    slots <- match(paste(grid$ROW, grid$COL), paste(rows, cols))
+    if (anyNA(slots)) return(unavailable)
+    contexts <- lapply(seq_len(nrow(grid)), function(i) ggchord_measure_panel(
+      table, entries[slots[i], ], built$layout$panel_params[[as.integer(grid$PANEL[i])]], unavailable))
+    if (any(vapply(contexts, function(x) x$status != "measured", logical(1)))) return(unavailable)
+    sizes <- do.call(rbind, lapply(contexts, `[[`, "units_per_mm"))
+    # One physical correction applies only to equal-scale facet panels.
+    if (max(abs(sweep(sizes, 2L, sizes[1L, ], "/") - 1)) > 1e-6) {
+      unavailable$basis <- "Facet panels have different physical scales"
+      return(unavailable)
+    }
+    common <- contexts[[1L]]
+    common$facet_panels_mm <- cbind(grid, do.call(rbind, lapply(contexts, `[[`, "panel_bounds_mm")))
+    common$panel_bounds_mm <- NULL
+    return(common)
   }
-  entry <- table$layout[panel, , drop = FALSE]
-  range <- built$layout$panel_params[[1L]]
+  ggchord_measure_panel(table, table$layout[panel, ], built$layout$panel_params[[1L]], unavailable)
+}
+
+ggchord_measure_panel <- function(table, entry, range, unavailable) {
   xr <- range$x.range %||% range$x$continuous_range
   yr <- range$y.range %||% range$y$continuous_range
   if (length(xr) != 2L || length(yr) != 2L || any(!is.finite(c(xr, yr)))) return(unavailable)

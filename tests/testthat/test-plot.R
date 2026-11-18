@@ -7,8 +7,8 @@ genes <- data.frame(accver = c("A", "B"), start = c(100, 400),
 
 test_that("core layers build and keep manual gene colours", {
   colours <- c("+" = "#56887C", "-" = "#B58169")
-  p <- ggchord(seqs, links, genes[c("accver", "start", "end", "strand")]) +
-    geom_seq() + geom_link_ribbon() + geom_gene() + geom_seq_label() +
+  p <- ggchord(prepare_ggchord_data(seqs, links, genes[c("accver", "start", "end", "strand")])) +
+    geom_seq() + geom_link_ribbon() + geom_feature(preset = 'gene') + geom_seq_label() +
     scale_gene_fill_manual(values = colours)
   built <- ggplot2::ggplot_build(p)
   expect_s3_class(built, "ggplot_built")
@@ -18,7 +18,7 @@ test_that("core layers build and keep manual gene colours", {
 })
 
 test_that("three label layouts retain representative annotations", {
-  p <- ggchord(seqs, gene_data = genes) + geom_seq() + geom_gene()
+  p <- ggchord(prepare_ggchord_data(seqs, gene_data = genes)) + geom_seq() + geom_feature(preset = 'gene')
   for (mode in c("radial", "auto", "arc")) {
     labels <- get_chord_layout(p + geom_gene_label_repel(label_layout = mode))$gene_labels
     expect_setequal(labels$label, genes$anno)
@@ -41,7 +41,7 @@ test_that("automatic ribbon styles follow each coordinate's adjacency", {
     qstart = 100, qend = 200, sstart = 300, send = 400)
   coords <- list(coord_chord(), coord_collinear(), coord_radial_synteny(), coord_sankey())
   for (i in seq_along(coords)) {
-    p <- ggchord(s, h) + geom_seq() +
+    p <- ggchord(prepare_ggchord_data(s, h)) + geom_seq() +
       geom_link_ribbon(adjacent_only = FALSE) +
       geom_link_ribbon(adjacent_only = FALSE, linetype = "dotted") + coords[[i]]
     built <- ggplot2::ggplot_build(p)

@@ -160,21 +160,25 @@ ggchord_layout_tracks <- function(plot, layout, registry, inputs) {
     }
     data[[i]] <- d
   }
-  ids <- vapply(layers, function(l) l$ggchord_params$track_position$track, character(1))
+  ids <- vapply(layers, function(l) l$ggchord_params$track_id, character(1))
   unique_ids <- unique(ids)
   declarations <- list(); scales <- list(); trained <- list()
   for (id in unique_ids) {
     members <- which(ids == id)
-    pos <- layers[[members[1L]]]$ggchord_params$track_position
+    pos <- plot$ggchord$track_bands[[id]]
+    if (is.null(pos) && id == "default") pos <- track_band("default")
+    if (is.null(pos)) {
+      known <- c("default", names(plot$ggchord$track_bands))
+      ggchord_stop("Unknown track '", id, "'. Available bands: ", paste(unique(known), collapse = ", "),
+        ". Add track_band('", id, "') to declare a new band.")
+    }
+    instances <- plot$ggchord$display_instances
+    if (!is.null(instances)) {
+      pos$width <- ggchord_instance_param(pos$width, instances)
+      pos$gap <- ggchord_instance_param(pos$gap, instances)
+    }
     width <- ggchord_track_dimension(pos$width, seqs, "width")
     gap <- ggchord_track_dimension(pos$gap, seqs, "gap")
-    for (i in members) {
-      other <- layers[[i]]$ggchord_params$track_position
-      if (other$side != pos$side || other$track_order != pos$track_order ||
-          !isTRUE(all.equal(width, ggchord_track_dimension(other$width, seqs, "width"))) ||
-          !isTRUE(all.equal(gap, ggchord_track_dimension(other$gap, seqs, "gap"))))
-        ggchord_stop("Conflicting placement declarations for track '", id, "'")
-    }
     declarations[[id]] <- list(position = pos, width = width, gap = gap,
       layers = vapply(layers[members], function(l) l$ggchord_layer_id, character(1)))
     numeric <- members[vapply(members, function(i) layers[[i]]$ggchord_params$track_kind != "tile", logical(1))]
@@ -183,9 +187,11 @@ ggchord_layout_tracks <- function(plot, layout, registry, inputs) {
     sc <- plot$scales$get_scales(key)
     if (is.null(sc)) sc <- scale_track_value_continuous(id)
     sc <- sc$clone()
-    values <- unlist(lapply(numeric, function(i) c(data[[i]]$track_value,
-      data[[i]]$track_ymin, data[[i]]$track_ymax,
-      if (layers[[i]]$ggchord_params$track_kind == "bar") layers[[i]]$ggchord_params$baseline)), use.names = FALSE)
+    values <- unlist(lapply(numeric, function(i) {
+      p <- layers[[i]]$ggchord_params
+      full <- p$track_domain_data %||% data[[i]]
+      c(full$track_value, full$track_ymin, full$track_ymax, if (p$track_kind == "bar") p$baseline)
+    }), use.names = FALSE)
     finite <- values[!is.na(values)]
     transformed <- suppressWarnings(sc$transform(finite))
     if (any(!is.finite(transformed))) ggchord_stop("Track '", id, "' has values/baseline incompatible with its scale transform")
@@ -272,7 +278,7 @@ ggchord_layout_tracks <- function(plot, layout, registry, inputs) {
       lo <- bounds$y[at] + b$normal_min; hi <- bounds$y[at] + b$normal_max
       others <- which(bounds$y != bounds$y[at] & bounds$xmax >= bounds$xmin[at] & bounds$xmin <= bounds$xmax[at])
       if (any(bounds$y[others] >= lo & bounds$y[others] <= hi))
-        ggchord_stop("Track band reaches another backbone; increase seq_gap or reduce track widths")
+        ggchord_stop("Track band reaches another backbone; increase layout_sequences(gap) or reduce track widths")
     }
     if (nrow(band_table) > 1L) for (i in seq_len(nrow(band_table) - 1L)) for (j in seq.int(i + 1L, nrow(band_table))) {
       a <- band_table[i, ]; b <- band_table[j, ]
@@ -280,7 +286,7 @@ ggchord_layout_tracks <- function(plot, layout, registry, inputs) {
       if (bounds$y[ai] == bounds$y[bi] || bounds$xmax[ai] < bounds$xmin[bi] || bounds$xmax[bi] < bounds$xmin[ai]) next
       if (min(bounds$y[ai] + a$normal_max, bounds$y[bi] + b$normal_max) >
           max(bounds$y[ai] + a$normal_min, bounds$y[bi] + b$normal_min))
-        ggchord_stop("Tracks on different display rows overlap; increase seq_gap or reduce track widths")
+        ggchord_stop("Tracks on different display rows overlap; increase layout_sequences(gap) or reduce track widths")
     }
   }
   diagnostics <- list()

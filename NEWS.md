@@ -1,3 +1,32 @@
+# ggchord 0.50.0 (development)
+
+- Start with `ggchord(reference, aes(...))` or a prepared object. Supply annotation
+  and relationship tables at their layers. A layer can inherit a unique eligible
+  table, override a global mapping, or opt out of inheritance. Native ggplot2
+  Layer subclasses retain their own build methods.
+- Declare a physical band with `track_band("depth", width = grid::unit(8, "mm"))`.
+  Layers with `track = "depth"` share its space and numerical range. Layers
+  with no track ID share the default band. Stack and dodge operate in source coordinates.
+- `stat_coverage()` and track geoms with `stat = "coverage"` accept a bin width
+  or explicit, possibly overlapping windows. Results expose source intervals,
+  units, actual denominators and contributing rows. Fixed-scale sample facets
+  compute statistics and feature lanes per panel. Custom track Stats can report
+  source members. Unreported membership is recorded as unknown.
+- Use `geom_feature(preset = "gene")` and `geom_feature(preset = "plasmid")`
+  for the previous geometries. `geom_feature_label(placement = "repel")`
+  follows a subset of a named entity layer through `anchor_layer`.
+  Use `layout_sequences()` for sequence order, orientation, gap and length
+  mode, and `position_offset()` for the starting offset.
+- Standard colour and fill mappings reach the rendered geoms and legend keys.
+  `guide_seq_axis()` selects the sequences to annotate, and
+  `guide_track_axis()` configures a quantitative track's axis text.
+- Dense circular labels reuse measured glyph bounds and leader anchors.
+  Four representative images were compared with the previous implementation
+  on the same device. Dotplots retain their original alignment segments.
+
+For the names removed in 0.50.0, see the [migration table](MIGRATION.md) and
+[executable example](examples/migrate-v0.50.0.R).
+
 # ggchord 0.29.0
 
 - Track layers accept `stat = "coverage"` with an explicit integer `binwidth`.

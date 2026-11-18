@@ -18,6 +18,7 @@
 #'   can also be mapped and controlled by their ggplot2 scales.
 #' @param position,show.legend,inherit.aes Standard ggplot2 layer arguments.
 #' @param ... Additional parameters passed to \code{ggplot2::geom_path()}.
+#' @param id Optional unique layer ID for layout and source exports.
 #' @return A ggplot2 layer. Other ggchord coordinate systems are unsupported.
 #' @export
 #' @examples
@@ -30,7 +31,7 @@
 #'   end = floor(seqs$length * .75)
 #' )
 #' focused <- focus_ggchord_data(seqs, loci = loci)
-#' ggchord(seq_data = focused$seq_data) +
+#' ggchord(data = focused$seq_data) +
 #'   geom_seq() +
 #'   geom_seq_break() +
 #'   coord_collinear()
@@ -38,7 +39,8 @@ geom_seq_break <- function(mapping = NULL, data = NULL,
                            break_width = .02, break_height = .04,
                            linewidth = .4, colour = "#3D4348",
                            position = "identity", show.legend = FALSE,
-                           inherit.aes = FALSE, ...) {
+                           inherit.aes = TRUE, ..., id = NULL) {
+  ggchord_check_argument_names(sys.call(), sys.function())
   linewidth_supplied <- !missing(linewidth)
   colour_supplied <- !missing(colour)
   old_error <- ggchord_disable_debug()
@@ -63,7 +65,7 @@ geom_seq_break <- function(mapping = NULL, data = NULL,
     position = position, show.legend = show.legend, inherit.aes = inherit.aes
   ), styles, alias$dots))
   layer$ggchord_type <- "seq_break"
-  layer$ggchord_params <- list(type = "seq_break",
+  layer$ggchord_params <- list(id = id, type = "seq_break",
     break_width = as.numeric(break_width), break_height = as.numeric(break_height))
   ggchord_capture_layer_input(layer, data, mapping,
     c("accver", "length", ".truncated_left", ".truncated_right"))

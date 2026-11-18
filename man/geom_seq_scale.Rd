@@ -18,8 +18,9 @@ geom_seq_scale(
   size = 3,
   position = "identity",
   show.legend = FALSE,
-  inherit.aes = FALSE,
-  ...
+  inherit.aes = TRUE,
+  ...,
+  id = NULL
 )
 }
 \arguments{
@@ -53,6 +54,8 @@ and scales when not supplied as fixed arguments.}
 \item{position, show.legend, inherit.aes}{Standard ggplot2 layer arguments.}
 
 \item{...}{Additional fixed aesthetics passed to \code{\link[ggplot2:layer]{ggplot2::layer()}}.}
+
+\item{id}{Optional unique layer ID for layout and source exports.}
 }
 \value{
 One independent ggplot2 layer. Exported axis geometry retains the
@@ -83,7 +86,7 @@ library(dplyr)
 data(seq_data_example)
 seqs <- seq_data_example |>
   select(accver, length)
-ggchord(seq_data = seqs) +
+ggchord(data = seqs) +
   geom_seq() +
   coord_collinear() +
   geom_seq_scale(length = 10000)

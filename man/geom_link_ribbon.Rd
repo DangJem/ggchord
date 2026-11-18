@@ -21,13 +21,14 @@ geom_link_ribbon(
   pairs = NULL,
   position = "identity",
   show.legend = TRUE,
-  inherit.aes = FALSE,
+  inherit.aes = TRUE,
   nonadjacent_linewidth = 0.4,
   between = NULL,
   allow_repeated = FALSE,
   tip = c("none", "subject"),
   gradient = FALSE,
   ...,
+  id = NULL,
   stat = "identity"
 )
 }
@@ -51,7 +52,7 @@ controls shape the far ends while the junction follows the shared trunk.}
 sequences and ribbon endpoints. With the default
 \code{link_avoid = "uniform"}, \code{NULL} uses one obstacle-aware
 clearance across each endpoint. Use \code{"smooth"} for clearance that
-changes only next to \code{geom_gene()} and \code{geom_feature()} polygons,
+changes only next to \code{geom_feature(preset = "gene")} and \code{geom_feature()} polygons,
 or \code{"none"} for fixed spacing 0.035. Text and leader lines are ignored.
 Supplying a number disables the automatic rule and uses that exact spacing.
 Linear layouts reduce automatic baseline clearance to fit narrow channels;
@@ -119,6 +120,8 @@ default FALSE. Explicit fill, mapping and scales still take priority.}
 \item{...}{With a computed stat, pass \code{bins}, \code{weight}, or \code{group_by} here.
 Only bundling accepts \code{min_bundle}. Other arguments go to the ribbon geom.}
 
+\item{id}{Optional unique layer ID for layout and source exports.}
+
 \item{stat}{Source-interval statistic. Use \code{"identity"} to retain individual
 records, \code{"ribbon_bundle"} to aggregate them, or \code{"ribbon_density"} to
 annotate each record with local density. The two computed statistics
@@ -145,10 +148,10 @@ links <- ribbon_data_example |>
 seqs <- seq_data_example |>
   filter(accver \%in\% c(links$qaccver, links$saccver)) |>
   select(accver, length)
-ggchord(seq_data = seqs, ribbon_data = links) +
+ggchord(prepare_ggchord_data(seq_data = seqs, ribbon_data = links)) +
   geom_seq() +
   geom_link_ribbon()
-ggchord(seqs, links) +
+ggchord(prepare_ggchord_data(seqs, links)) +
   geom_link_ribbon(aes(ribbon_alpha = after_stat(density)),
     stat = "ribbon_density", bins = 10, weight = "count")
 }

@@ -150,7 +150,7 @@ ggchord_signature_json <- function(parsed, caller) {
 #'   Known length or declared MD5 conflicts for the same accession fail, rather
 #'   than silently merging different sources. A declared MD5 is retained, not
 #'   independently verified without actual source characters.
-#' @seealso [geom_feature()], [geom_feature_label_repel()]
+#' @seealso [geom_feature()], [geom_feature_label()]
 #' @export
 #' @examples
 #' # Explicit re-encoding of cached AA annotations, not a new analysis run.

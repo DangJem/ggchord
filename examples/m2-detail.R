@@ -40,9 +40,9 @@ character_plot <- register_ggchord_alignment(character_plot, letters)
 region <- letters |>
   summarise(accver = first(source_accver),
     start = min(source_position), end = max(source_position))
-whole <- ggchord(genome |> select(accver, length), feature_data = coding) +
+whole <- ggchord(prepare_ggchord_data(genome |> select(accver, length), feature_data = coding)) +
   geom_seq() +
-  geom_gene() +
+  geom_feature(preset = 'gene') +
   coord_collinear()
 result <- magnify_ggchord(
   whole, region, character_plot,

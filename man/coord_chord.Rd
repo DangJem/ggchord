@@ -46,7 +46,7 @@ library(dplyr)
 data(seq_data_example)
 seqs <- seq_data_example |>
   select(accver, length)
-ggchord(seq_data = seqs) +
+ggchord(data = seqs) +
   geom_seq() +
   coord_chord(rotation = 20)
 }

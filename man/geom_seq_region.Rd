@@ -15,8 +15,9 @@ geom_seq_region(
   region_side = c("inside", "outside", "auto"),
   position = "identity",
   show.legend = FALSE,
-  inherit.aes = FALSE,
-  ...
+  inherit.aes = TRUE,
+  ...,
+  id = NULL
 )
 }
 \arguments{
@@ -43,6 +44,8 @@ Factor start/end columns use their numeric labels, not level codes.}
 \item{position, show.legend, inherit.aes}{Standard ggplot2 layer arguments.}
 
 \item{...}{Additional arguments passed to \code{geom_polygon()}}
+
+\item{id}{Optional unique layer ID for layout and source exports.}
 }
 \value{
 A ggplot2 layer.
@@ -64,7 +67,7 @@ region <- tibble(
   accver = links$qaccver[1], start = min(links$qstart[1], links$qend[1]),
   end = max(links$qstart[1], links$qend[1])
 )
-ggchord(seq_data = seqs) +
+ggchord(data = seqs) +
   geom_seq() +
   geom_seq_region(data = region)
 }

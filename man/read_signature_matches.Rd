@@ -62,5 +62,5 @@ matches <- read_signature_matches(path)
 matches$features$signature[c("accver", "start", "end", "signature_id")]
 }
 \seealso{
-\code{\link[=geom_feature]{geom_feature()}}, \code{\link[=geom_feature_label_repel]{geom_feature_label_repel()}}
+\code{\link[=geom_feature]{geom_feature()}}, \code{\link[=geom_feature_label]{geom_feature_label()}}
 }

@@ -130,7 +130,7 @@ ggchord_reject_retired <- function(dots, caller, migrations,
 #' data(seq_data_example)
 #' seqs <- seq_data_example |>
 #'   select(accver, length)
-#' p <- ggchord(seq_data = seqs) +
+#' p <- ggchord(data = seqs) +
 #'   geom_seq()
 #' get_chord_layout(p)$seqs
 get_chord_layout <- function(plot, build = TRUE) {
@@ -169,6 +169,7 @@ extract_ggchord_layer_data <- function(lyr, layout) {
   registry <- layout$layer_geometry[[lyr$ggchord_layer_id %||% ""]]
   if (!is.null(registry) && !is.null(registry[[lyr$ggchord_type]])) {
     geometry <- registry[[lyr$ggchord_type]]
+    if (!is.null(layout$facet_layout)) return(ggchord_restore_instance_data(geometry, layout$display_instances))
   } else {
     geometry <- switch(lyr$ggchord_type %||% "",
     seq       = if (length(layout$seq_arcs) > 0) do.call(rbind, layout$seq_arcs) else fallback,

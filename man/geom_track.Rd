@@ -18,7 +18,7 @@ geom_track_bar(
   linetype = 1,
   bounds = c("error", "clip"),
   show.legend = NA,
-  inherit.aes = FALSE,
+  inherit.aes = TRUE,
   ...,
   track = NULL,
   stat = "count"
@@ -34,8 +34,9 @@ geom_track(
   bounds = c("error", "clip"),
   baseline = 0,
   show.legend = NA,
-  inherit.aes = FALSE,
-  ...
+  inherit.aes = TRUE,
+  ...,
+  id = NULL
 )
 
 geom_track_col(
@@ -44,8 +45,10 @@ geom_track_col(
   position = NULL,
   track = NULL,
   ...,
+  stat = "identity",
+  id = NULL,
   show.legend = NA,
-  inherit.aes = FALSE
+  inherit.aes = TRUE
 )
 }
 \arguments{
@@ -54,8 +57,7 @@ through x/pos, or interval start/end. Map y/track_value for identity values.}
 
 \item{position}{Native data adjustment such as \code{"identity"}, \code{"stack"} or
 \code{ggplot2::position_dodge(width = 10)}. Source x uses sequence units.
-Feature placement belongs on feature layers. The legacy
-\code{position = position_track(...)} spelling still declares the physical band.}
+Feature placement belongs on feature layers.}
 
 \item{baseline}{Numeric identity-column baseline. Nonzero baselines require
 position='identity' so stacking does not change their meaning.}
@@ -67,15 +69,23 @@ position='identity' so stacking does not change their meaning.}
 \item{show.legend, inherit.aes}{Standard layer controls.}
 
 \item{...}{Native geom/stat parameters and fixed styles. Coverage requires
-a positive whole \code{binwidth} in sequence units.}
+a positive whole \code{binwidth} in sequence units or explicit \code{windows}.}
 
-\item{track}{A physical \code{\link[=position_track]{position_track()}} declaration.}
+\item{track}{Character ID declared with \code{\link[=track_band]{track_band()}}. Omit for the shared default band.}
 
 \item{geom, stat}{Native geometry and statistic names, or \code{stat = "coverage"}
 for interval coverage. The seven native
 statistics also accept their built-in ggplot2 Stat objects, for example
 \code{ggplot2::StatBin}. Bar defaults to count, other geoms to identity.
-Custom Stat subclasses require a source-membership rule and are unsupported.}
+A ggplot2 Stat object may also compute positions and values for a track.
+Its input includes \code{source_row}, an integer index into this layer's source
+table. It can report the contributing indices as a \code{source_rows} list
+column (one integer vector per result). Unreported membership is exported
+as NULL with \code{source_status = "unknown"}. An explicit empty integer vector
+denotes a known empty set. Reported members must belong to the same
+accession and facet as the result.}
+
+\item{id}{Optional unique layer ID for exported statistics and source rows.}
 }
 \value{
 A ggplot2 layer using a shared sequence-local band.
@@ -118,12 +128,14 @@ The final bin uses its actual length. Cross-bin intervals contribute only
 their intersection with each bin. Missing endpoints are errors. The default
 bounds policy rejects out-of-range intervals; clip intersects them with the
 sequence first. For grouped data, compute a complete grid per observed
-group within each accession. Ungrouped data also include empty accessions.
+group within each accession. An accession/sample without observations
+has no statistical rows. Explicit windows may overlap; see \code{\link[=stat_coverage]{stat_coverage()}}.
 
 The default height \code{after_stat(coverage)} is the fraction covered by the
 union of intervals. \code{after_stat(mean_depth)} divides the sum of intersection
 lengths by bin length, counting overlaps repeatedly. Other computed variables
-are covered (distinct covered units), n_interval (intersecting input rows),
+are covered (distinct covered units), denominator (actual window length),
+depth_sum (sum of intersection lengths), n_interval (intersecting input rows),
 window_start and window_end (inclusive source coordinates). Empty bins have
 zero values and an empty source_rows list element. Use bar/col for the
 full bin or point/line/step at its centre, with identity position.
@@ -134,12 +146,12 @@ full bin or point/line/step at its centre, with identity position.
 events <- data.frame(accver = "A", pos = c(100, 100, 400))
 ggchord(data.frame(accver = "A", length = 1000)) +
   geom_seq() +
-  geom_track_bar(data = events, track = position_track("count"), stat = "count") +
+  geom_track_bar(data = events, stat = "count") +
   coord_collinear()
 intervals <- data.frame(accver = "A", start = c(3, 4), end = c(6, 5))
 ggchord(data.frame(accver = "A", length = 10)) +
   geom_track_bar(aes(y = after_stat(mean_depth)), data = intervals,
-    stat = "coverage", binwidth = 4, track = position_track("depth")) +
+    stat = "coverage", binwidth = 4) +
   coord_collinear()
 # Fit existing GC windows in source space; estimates are not new data.
 path <- system.file("extdata", "pUC19-gc-100.bedGraph", package = "ggchord")
@@ -148,7 +160,6 @@ signal$pos <- (signal$start + signal$end) / 2
 ggchord(data.frame(accver = "pUC19", length = 2686)) +
   geom_seq() +
   geom_track(aes(x = pos, y = value), data = signal, geom = "line",
-    stat = "smooth", method = "lm", formula = y ~ x, se = FALSE,
-    track = position_track("GC")) +
+    stat = "smooth", method = "lm", formula = y ~ x, se = FALSE) +
   coord_collinear()
 }

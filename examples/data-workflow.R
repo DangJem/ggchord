@@ -27,7 +27,7 @@ prepared$report$pair_counts
 # geom_link_ribbon(data = homologs$data) uses interval homology anchors;
 # it does not represent a newly computed nucleotide alignment.
 
-ggchord(prepared$seq_data, prepared$ribbon_data) +
+ggchord(prepare_ggchord_data(prepared$seq_data, prepared$ribbon_data)) +
   geom_seq() +
   geom_link_ribbon() +
   geom_feature(data = prepared$features$genes) +

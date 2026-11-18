@@ -123,7 +123,7 @@ ggchord_layout_annotation_step <- function(
       final_gene_order <- character(0)
     }
 
-    # Generate feature polygons only when a geom_gene()/geom_feature() layer
+    # Generate feature polygons only when a geom_feature(preset = 'gene')/geom_feature() layer
     # is present. Label-only plots still use valid_genes below, without paying
     # for polygons that will never be drawn.
     gene_poly_list <- list()
@@ -420,7 +420,8 @@ ggchord_layout_annotation_step <- function(
         feature_label_inside <- NA
         label_size_resolved <- gene_label_size
         label_fit_reason <- "unchanged"
-        label_text_resolved <- as.character(gene$anno)
+        label_text_original <- as.character(gene$.anchor_label_text %||% gene$anno)
+        label_text_resolved <- label_text_original
         if (identical(gene_label_fit, "shrink") && !is.null(gene_label_wrap)) {
           label_text_resolved <- ggchord_label_wrap_text(label_text_resolved,
             gene_label_wrap)
@@ -567,7 +568,7 @@ ggchord_layout_annotation_step <- function(
           hjust = hjust,
           vjust = vjust,
           size = label_size_resolved,
-          label_text_original = as.character(gene$anno),
+          label_text_original = label_text_original,
           label_repeat = as.character(gene$.feature_label_repeat %||% "individual"),
           repeat_type = as.character(gene$type %||% ""),
           repeat_direction = as.character(gene$.feature_biological_strand %||% strand),

@@ -269,7 +269,7 @@ compute_collinear_layout <- function(...) {
     for (i in unique(segment_table$row_index)) {
       values <- p$seq_gap[segment_table$row_index == i]
       if (length(unique(values)) > 1L) ggchord_stop(
-        "coord_collinear(): windows in one display row require the same seq_gap")
+        "coord_collinear(): windows in one display row require the same layout_sequences(gap)")
     }
     row_y <- if (rows > 1L) c(0, -2 * cumsum(gap[-rows])) else 0
     y <- stats::setNames(row_y[segment_table$row_index], seqs)

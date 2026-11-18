@@ -25,6 +25,7 @@ region_geom <- rename_geom_aes(
 #' @param position,show.legend,inherit.aes Standard ggplot2 layer arguments.
 #' @param ... Additional arguments passed to \code{geom_polygon()}
 #'
+#' @param id Optional unique layer ID for layout and source exports.
 #' @return A ggplot2 layer.
 #' @export
 #'
@@ -40,7 +41,7 @@ region_geom <- rename_geom_aes(
 #'   accver = links$qaccver[1], start = min(links$qstart[1], links$qend[1]),
 #'   end = max(links$qstart[1], links$qend[1])
 #' )
-#' ggchord(seq_data = seqs) +
+#' ggchord(data = seqs) +
 #'   geom_seq() +
 #'   geom_seq_region(data = region)
 geom_seq_region <- function(mapping = NULL, data = NULL,
@@ -52,8 +53,9 @@ geom_seq_region <- function(mapping = NULL, data = NULL,
                             region_side = c("inside", "outside", "auto"),
                             position = "identity",
                             show.legend = FALSE,
-                            inherit.aes = FALSE,
-                            ...) {
+                            inherit.aes = TRUE,
+                            ..., id = NULL) {
+  ggchord_check_argument_names(sys.call(), sys.function())
   supplied <- c(region_fill = !missing(fill), colour = !missing(colour),
     alpha = !missing(alpha))
   old_error <- ggchord_disable_debug()
@@ -111,7 +113,7 @@ geom_seq_region <- function(mapping = NULL, data = NULL,
   )
   lyr$ggchord_type <- "seq_region"
   lyr$ggchord_params <- list(
-    type           = "seq_region",
+    id = id, type           = "seq_region",
     regions        = data,
     region_fill    = fill,
     region_color   = colour,

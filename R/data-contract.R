@@ -49,10 +49,11 @@
 #' }
 #'
 #' @section Coordinates and direction:
-#' `ggchord(feature_data = ...)` supplies default data for generic annotation
-#' layers. Gene layers select explicitly classified gene/CDS records; tRNA/rRNA
-#' and unclassified annotations remain generic features. Untyped legacy
-#' `gene_data` retains its directional semantics. Do not provide both inputs.
+#' Pass `feature_data` to [prepare_ggchord_data()] and give the prepared object
+#' to [ggchord()] to supply default data for generic annotation layers. Gene
+#' layers select explicitly classified gene/CDS records; tRNA/rRNA and
+#' unclassified annotations remain generic features. Prepare can also accept
+#' an untyped directional table as `gene_data`. Supply one annotation input.
 #' Explicit layer data takes priority; mixed gene/feature compositions should
 #' use disjoint data subsets. Independent layers do not remove each other's rows.
 #'

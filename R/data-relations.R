@@ -211,10 +211,10 @@ validate_ggchord_hierarchy <- function(seq_data, genomes, strict = FALSE) {
 #'   axis.text = element_text(size = 9), axis.text.check.overlap = TRUE
 #' ) +
 #'   theme(legend.position = "bottom")
-#' p_homologs <- ggchord(seq_data = homolog_seq) +
+#' p_homologs <- ggchord(data = homolog_seq) +
 #'   geom_link_ribbon(data = homologs$data, fill = "#ADC5B9", alpha = .6) +
 #'   geom_seq() +
-#'   geom_gene(data = cluster_features) +
+#'   geom_feature(preset = "gene", data = cluster_features) +
 #'   geom_seq_label(size = 4) +
 #'   coord_collinear() +
 #'   scale_gene_fill_manual(values = gene_palette) +

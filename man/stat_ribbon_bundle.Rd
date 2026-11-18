@@ -13,7 +13,7 @@ stat_ribbon_bundle(
   group_by = NULL,
   position = "identity",
   show.legend = TRUE,
-  inherit.aes = FALSE,
+  inherit.aes = TRUE,
   ...
 )
 }

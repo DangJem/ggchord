@@ -1,6 +1,6 @@
 # geom-seq.R - sequence arc layer
 # Fetches pre-computed sequence arc data from the package environment and renders it with geom_path
-# Sequence layout parameters are specified in this layer and stored for use at print time
+# Backbone appearance is owned by each sequence layer.
 
 GeomChordSeq <- ggplot2::ggproto(
   "GeomChordSeq", ggplot2::Geom,
@@ -9,9 +9,11 @@ GeomChordSeq <- ggplot2::ggproto(
     seq_colour = "#3D4348", alpha = 1, linewidth = 0.9,
     linetype = 1, .component = "path"
   ),
+  optional_aes = "colour",
   draw_key = ggplot2::draw_key_path,
   draw_panel = function(data, panel_params, coord, na.rm = FALSE,
                         arrow = NULL) {
+    data$seq_colour <- data$colour %||% data$seq_colour
     grobs <- list()
     paths <- data[data$.component == "path", , drop = FALSE]
     bands <- data[data$.component == "band", , drop = FALSE]
@@ -92,28 +94,12 @@ ggchord_seq_style_geometry <- function(seq_arcs, params) {
 #' Add a sequence arc layer
 #'
 #' Draws arcs (or straight lines, depending on the curvature setting) representing sequences in the chord diagram.
-#' Sequence layout parameters (order, orientation, radius, curvature, colors, etc.) are specified here.
+#' Use [layout_sequences()] to change the sequence order, orientation, spacing or length allocation.
 #'
 #' @param mapping Default NULL (uses pre-computed data)
 #' @param data Default NULL (retrieved automatically from the layout)
-#' @param seq_order Source IDs in display order. Repeats create display instances;
-#'   use names such as c(A_high='A', B='B', A_low='A') for stable instance IDs.
-#'   Repeated-entity HSPs require a unique between route on each link layer.
-#' @param seq_orientation Optional numeric (1 or -1). Sequence orientation, default 1
-#' @param seq_gap Optional numeric. Gap proportion between sequences, default
-#'   0.03 in chord coordinates. A named vector can set the gap after each
-#'   sequence; omitted IDs use the coordinate default. In [coord_collinear()], a positive distance
-#'   between consecutive backbones as a proportion of the longest backbone's
-#'   width, default 0.3. The final sequence's gap is unused in linear layouts.
-#'   Segmented linear displays measure it against the longest display row;
-#'   windows in one row must request the same gap, and only gaps between rows
-#'   affect vertical placement.
 #' @param seq_radius Optional numeric (> 0). Sequence arc radius, default 1.0
 #' @param seq_curvature Optional numeric. Signed arc bow (0=straight, 1=standard arc, negative=opposite bow), default 1.0. Finite positive and negative values are accepted without clipping; magnitudes above 1 amplify the bow.
-#' @param length_mode `"proportional"` (default) retains source-length ratios;
-#'   `"equal"` gives each displayed sequence the same angular allocation or
-#'   linear span without modifying source lengths. Shared absolute scale bars
-#'   are unavailable in multi-sequence equal mode; local axes retain source units.
 #' @param seq_style Backbone geometry. `"auto"` uses a double backbone in
 #'   [coord_circular()] and a single backbone in [coord_chord()].
 #' @param seq_backbone_gap Gap between double backbone lines.
@@ -124,6 +110,7 @@ ggchord_seq_style_geometry <- function(seq_arcs, params) {
 #'   `seq_colour`. Explicit fixed values take precedence over matching mappings;
 #'   omit fixed arguments to retain mapped styles.
 #'
+#' @param id Optional unique layer ID for layout and source exports.
 #' @return A ggplot2 layer.
 #' @export
 #'
@@ -132,12 +119,9 @@ ggchord_seq_style_geometry <- function(seq_arcs, params) {
 #' data(seq_data_example)
 #' seqs <- seq_data_example |>
 #'   select(accver, length)
-#' ggchord(seq_data = seqs) +
+#' ggchord(data = seqs) +
 #'   geom_seq()
 geom_seq <- function(mapping = NULL, data = NULL,
-                     seq_order = NULL,
-                     seq_orientation = NULL,
-                     seq_gap = NULL,
                      seq_radius = NULL,
                      seq_curvature = NULL,
                      seq_style = c("auto", "single", "double", "band"),
@@ -146,11 +130,10 @@ geom_seq <- function(mapping = NULL, data = NULL,
                      linewidth = 0.9,
                      position = "identity",
                      show.legend = TRUE,
-                     inherit.aes = FALSE,
-                     length_mode = c("proportional", "equal"),
-                     ...) {
+                     inherit.aes = TRUE,
+                     ..., id = NULL) {
+  ggchord_check_argument_names(sys.call(), sys.function())
   show_legend_supplied <- !missing(show.legend)
-  length_mode <- match.arg(length_mode)
   linewidth_default <- missing(linewidth)
   old_error <- ggchord_disable_debug()
   on.exit(options(error = old_error), add = TRUE)
@@ -171,6 +154,10 @@ geom_seq <- function(mapping = NULL, data = NULL,
     dots$colour <- NULL
   }
   ggchord_reject_retired(dots, "geom_seq()", c(
+    seq_order = "layout_sequences(order = ...)",
+    seq_orientation = "layout_sequences(orientation = ...)",
+    seq_gap = "layout_sequences(gap = ...)",
+    length_mode = "layout_sequences(length_mode = ...)",
     seq_labels = "geom_seq_label(labels = ...) or a label scale",
     seq_colors = "scale_seq_colour_manual(values = ...)",
     show_legend = "show.legend",
@@ -215,7 +202,7 @@ geom_seq <- function(mapping = NULL, data = NULL,
                   } else show.legend,
     inherit.aes = inherit.aes,
     check.param = FALSE,
-    key_glyph   = key_glyph_seq,
+    key_glyph   = dots$key_glyph %||% key_glyph_seq,
     params      = c(
       list(linewidth = linewidth),
       if (!arrow_supplied) list(
@@ -226,15 +213,11 @@ geom_seq <- function(mapping = NULL, data = NULL,
   )
   lyr$ggchord_type <- "seq"
   lyr$ggchord_params <- list(
-    type                  = "seq",
+    id = id, type                  = "seq",
     style_defaults = c(linewidth = linewidth_default),
-    seq_order             = seq_order,
     seq_labels            = NULL,
-    seq_orientation       = seq_orientation,
-    seq_gap               = seq_gap,
     seq_radius            = seq_radius,
     seq_curvature         = seq_curvature,
-    length_mode           = length_mode,
     seq_style             = seq_style,
     seq_backbone_gap      = as.numeric(seq_backbone_gap),
     seq_backbone_width    = as.numeric(seq_backbone_width),

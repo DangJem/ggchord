@@ -317,7 +317,7 @@ scale_region_fill_manual <- function(..., values) {
 #' This scale configures sequence axes across supported coordinate modes. To add
 #' an independent bp reference bar in a linear display, use [geom_seq_scale()].
 #'
-#' @param name Scale name; position guides are disabled by default.
+#' @param name Optional scale name.
 #' @param breaks,minor_breaks,labels,limits,expand,oob,transform,n.breaks Standard
 #'   continuous-scale controls.
 #' @param ... Additional arguments passed to [ggplot2::continuous_scale()].
@@ -327,11 +327,7 @@ scale_region_fill_manual <- function(..., values) {
 #'   Breaks returned in transformed scale space are converted back to genomic
 #'   positions in every coordinate mode. Explicit `breaks = NULL` and
 #'   `minor_breaks = NULL` suppress the corresponding ticks.
-#' @param sequences Optional character vector selecting sequence axes by their
-#'   displayed `accver`. `NULL` keeps all axes; `character()` hides every axis.
-#'   Focused or segmented views use window IDs, not parent source accessions.
-#'   Unknown or undisplayed identifiers produce an error. This controls axis
-#'   lines, ticks and labels together without dropping sequence geometry.
+#' @param guide A [guide_seq_axis()] declaration, or `"none"` to hide the sequence axes.
 #' @return A ggplot2 continuous scale for the `seq_position` role.
 #' @md
 #' @export
@@ -340,7 +336,7 @@ scale_region_fill_manual <- function(..., values) {
 #' data(seq_data_example)
 #' seqs <- seq_data_example |>
 #'   select(accver, length)
-#' ggchord(seq_data = seqs) +
+#' ggchord(data = seqs) +
 #'   geom_seq() +
 #'   coord_collinear() +
 #'   scale_seq_position_continuous(n.breaks = 4)
@@ -349,11 +345,12 @@ scale_seq_position_continuous <- function(
     minor_breaks = ggplot2::waiver(), labels = ggplot2::waiver(),
     limits = NULL, expand = ggplot2::waiver(), oob = scales::censor,
     transform = "identity", n.breaks = 6,
-    coordinates = c("relative", "source"), sequences = NULL, ...) {
+    coordinates = c("relative", "source"), guide = guide_seq_axis(), ...) {
   coordinates <- match.arg(coordinates)
-  if (!is.null(sequences) && (!is.character(sequences) || anyNA(sequences) ||
-      any(!nzchar(sequences)) || anyDuplicated(sequences))) ggchord_stop(
-    "scale_seq_position_continuous(): sequences must be NULL or distinct nonempty displayed sequence IDs")
+  if ("sequences" %in% names(list(...)))
+    ggchord_stop("Use guide = guide_seq_axis(sequences = ...) to select displayed axes")
+  if (identical(guide, "none")) guide <- guide_seq_axis(character())
+  if (!inherits(guide, "ggchord_seq_axis")) ggchord_stop("Use guide_seq_axis() or 'none'")
   sc <- ggplot2::continuous_scale(
     aesthetics = "seq_position",
     palette = function(x) x,
@@ -362,8 +359,33 @@ scale_seq_position_continuous <- function(
     transform = transform, n.breaks = n.breaks, guide = "none", ...
   )
   sc$ggchord_position_coordinates <- coordinates
-  sc$ggchord_axis_sequences <- sequences
+  sc$ggchord_axis_sequences <- guide$sequences
+  sc$ggchord_check_overlap <- guide$check.overlap
   sc
+}
+
+#' Select local sequence axes and their label overlap policy
+#'
+#' @param sequences Optional character vector selecting sequence axes by their
+#'   displayed `accver`. `NULL` keeps all axes; `character()` hides every axis.
+#'   Focused or segmented views use window IDs, not parent source accessions.
+#'   Unknown or undisplayed identifiers produce an error. This controls axis
+#'   lines, ticks and labels together without dropping sequence geometry.
+#' @param check.overlap Optional logical. When supplied, use this overlap
+#'   policy for tick labels. Otherwise use the plot's axis text policy.
+#' @return A guide for [scale_seq_position_continuous()].
+#' @export
+#' @examples
+#' ggchord(data.frame(accver = c("A", "B"), length = c(100, 80))) +
+#'   geom_seq() + coord_collinear() +
+#'   scale_seq_position_continuous(guide = guide_seq_axis("B", check.overlap = TRUE))
+guide_seq_axis <- function(sequences = NULL, check.overlap = NULL) {
+  if (!is.null(sequences) && (!is.character(sequences) || anyNA(sequences) ||
+      any(!nzchar(sequences)) || anyDuplicated(sequences)))
+    ggchord_stop("guide_seq_axis(): sequences must be distinct, nonempty displayed IDs")
+  if (!is.null(check.overlap) && (!is.logical(check.overlap) || length(check.overlap) != 1L || is.na(check.overlap)))
+    ggchord_stop("guide_seq_axis(): check.overlap must be TRUE or FALSE")
+  structure(list(sequences = sequences, check.overlap = check.overlap), class = "ggchord_seq_axis")
 }
 
 # Axis selection changes decorations, never source sequence membership.

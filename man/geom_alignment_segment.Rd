@@ -13,9 +13,10 @@ geom_alignment_segment(
   linetype = 1,
   position = "identity",
   show.legend = NA,
-  inherit.aes = FALSE,
+  inherit.aes = TRUE,
   allow_repeated = FALSE,
-  ...
+  ...,
+  id = NULL
 )
 }
 \arguments{
@@ -37,6 +38,8 @@ be displayed more than once. All participating layers must opt in. Rows
 without declared IDs are never deduplicated by their values.}
 
 \item{...}{Additional arguments passed to ggplot2's segment geometry.}
+
+\item{id}{Optional unique layer ID for layout and source exports.}
 }
 \value{
 A ggplot2 layer for a ggchord Dotplot.
@@ -52,7 +55,7 @@ This is an HSP-level view, not a reconstruction of mismatches or gaps.
 \examples{
 data(seq_data_example)
 data(ribbon_data_example)
-ggchord(seq_data_example, ribbon_data_example) +
+ggchord(prepare_ggchord_data(seq_data_example, ribbon_data_example)) +
   geom_alignment_segment(aes(link_colour = pident)) +
   coord_dotplot()
 }

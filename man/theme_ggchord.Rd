@@ -686,10 +686,10 @@ Quantitative axis decoration uses ggchord.track.axis.line,
 ggchord.track.axis.text and ggchord.track.axis.title, plus absolute
 ggchord.track.axis.text.offset and ggchord.track.axis.title.offset.
 These inherit sequence-axis/text styling; each track may override its own
-decoration through guide_axis(theme = theme(axis.text = ..., axis.title = ...,
+decoration through guide_track_axis(theme = theme(axis.text = ..., axis.title = ...,
 axis.line = ...)) in scale_track_value_continuous(). Numerical domains,
 units, breaks and labels still belong to that scale; colours to scoped
-fill/colour scales; physical bands to position_track().
+fill/colour scales; physical bands to track_band().
 Theme changes never filter data, alter HSPs or choose sequence directions.
 }
 
@@ -701,4 +701,8 @@ legend settings remain available through \code{...}, for example
 Only ggchord-specific settings appear as explicit formals for IDE argument
 completion. An IDE that additionally expands upstream dots may still offer
 upstream suggestions; this package controls its own function signature.
+}
+
+\examples{
+theme_ggchord(ggchord.track.axis.text = ggplot2::element_text(size = 9))
 }

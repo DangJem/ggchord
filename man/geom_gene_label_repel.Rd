@@ -18,7 +18,7 @@ geom_gene_label_repel(
   label_segment_linetype = "auto",
   position = "identity",
   show.legend = FALSE,
-  inherit.aes = FALSE,
+  inherit.aes = TRUE,
   label_min_size = 1.5,
   ...
 )
@@ -127,8 +127,8 @@ genes <- gene_data_example |>
   slice_head(n = 2) |>
   ungroup() |>
   transmute(accver, start, end, strand = source_strand, anno)
-ggchord(seq_data = seqs, gene_data = genes) +
+ggchord(prepare_ggchord_data(seq_data = seqs, gene_data = genes)) +
   geom_seq() +
-  geom_gene() +
+  geom_feature(preset = "gene") +
   geom_gene_label_repel(label_wrap = 20)
 }

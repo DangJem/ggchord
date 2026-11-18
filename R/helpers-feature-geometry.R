@@ -1,4 +1,4 @@
-# Shared interval and shape helpers for geom_gene() and geom_feature().
+# Shared interval and shape helpers for geom_feature(preset = 'gene') and geom_feature().
 
 ggchord_feature_classes <- function(type) {
   key <- tolower(trimws(as.character(type)))

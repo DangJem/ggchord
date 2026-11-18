@@ -9,13 +9,15 @@
 #'   `family`, `fontface`, and `lineheight`.
 #' @param show.legend,inherit.aes Standard ggplot2 layer arguments.
 #' @param ... Additional arguments passed to `geom_text()`.
+#' @param id Optional unique layer ID for layout and source exports.
 #' @return A ggplot2 layer.
 #' @export
 geom_seq_center_label <- function(
     mapping = NULL, data = NULL,
     name = TRUE, length = TRUE, separator = "\n",
     name_style = list(), length_style = list(),
-    show.legend = FALSE, inherit.aes = FALSE, ...) {
+    show.legend = FALSE, inherit.aes = TRUE, ..., id = NULL) {
+  ggchord_check_argument_names(sys.call(), sys.function())
   if (!(is.logical(name) && base::length(name) == 1L && !is.na(name)) &&
       !(is.character(name) && base::length(name) == 1L && !is.na(name))) {
     ggchord_stop("geom_seq_center_label(): name must be TRUE/FALSE or one character value")
@@ -54,7 +56,7 @@ geom_seq_center_label <- function(
     center_length_params = "ggchord.seq.center.length"
   )
   lyr$ggchord_params <- list(
-    type = "seq_center_label", name = name,
+    id = id, type = "seq_center_label", name = name,
     length = length, separator = separator
   )
   ggchord_capture_layer_input(

@@ -115,7 +115,7 @@ library(dplyr)
 data(seq_data_example)
 seqs <- seq_data_example |>
   select(accver, length)
-p <- ggchord(seq_data = seqs) +
+p <- ggchord(data = seqs) +
   geom_seq()
 diagnose_ggchord(p, width = 8, height = 6, units = "in", device = "png")
 }

@@ -32,19 +32,29 @@ position_strand <- function(offset = 0.1) {
 #' Place both feature strands on one shared band
 #'
 #' @param offset Signed local-normal offset. Negative values place the shared
-#'   band inside a circular sequence and positive values place it outside.
+#'   band inside a circular sequence and positive values place it outside. Use
+#'   one value for all sequences, a named vector keyed by `accver`, or an
+#'   existing equivalent list of scalar offsets. An unnamed vector must have
+#'   one entry per sequence; omitted names receive zero.
 #' @return A ggplot2 Position object.
 #' @export
-position_plasmid <- function(offset = -0.1) {
+#' @examples
+#' seqs <- data.frame(accver = "A", length = 100L)
+#' intervals <- data.frame(accver = "A", start = c(8L, 55L),
+#'   end = c(35L, 80L), strand = c("+", "-"))
+#' ggchord(seqs) + geom_seq() +
+#'   geom_feature(data = intervals, position = position_offset(-0.1)) +
+#'   coord_circular()
+position_offset <- function(offset) {
   ggplot2::ggproto(
     NULL, PositionGgchordFeature,
-    placement = "plasmid", offset = offset
+    placement = "offset", offset = offset
   )
 }
 
 ggchord_local_position <- function(position) {
   inherits(position, "Position") && (isTRUE(position$ggchord_feature_position) ||
-    isTRUE(position$ggchord_feature_stack) || isTRUE(position$ggchord_track_position))
+    isTRUE(position$ggchord_feature_stack))
 }
 
 ggchord_is_data_identity <- function(position) {
@@ -54,29 +64,28 @@ ggchord_is_data_identity <- function(position) {
 
 ggchord_as_feature_position <- function(position, caller = "feature layer") {
   if (is.character(position)) {
+    if (identical(position, "plasmid")) ggchord_stop(
+      caller, ": replace position = 'plasmid' with position_offset(-0.1)")
     if (length(position) != 1L || is.na(position) ||
-        !position %in% c("identity", "strand", "plasmid", "feature_stack")) {
+        !position %in% c("identity", "strand", "feature_stack")) {
       ggchord_stop(
-        caller, ": position must be 'identity', 'strand', 'plasmid', ",
-        "'feature_stack', or the corresponding position function"
+        caller, ": use 'identity', 'strand', 'feature_stack', or a ",
+        "sequence-local Position such as position_offset()"
       )
     }
     return(switch(
       position,
       identity = ggplot2::position_identity(),
       strand = position_strand(),
-      plasmid = position_plasmid(),
       feature_stack = position_feature_stack()
     ))
   }
   if (inherits(position, "Position")) {
-    if (isTRUE(position$ggchord_track_position))
-      ggchord_stop(caller, ": position_track() declares a quantitative band; use a feature position")
     if (inherits(position, "PositionIdentity") || isTRUE(position$ggchord_feature_position) ||
         isTRUE(position$ggchord_feature_stack)) return(position)
   }
   ggchord_stop(
-    caller, ": only identity, strand, plasmid, and feature-stack Positions ",
+    caller, ": only identity, strand, offset and feature-stack Positions ",
     "operate in the sequence-local frame"
   )
 }
@@ -103,8 +112,8 @@ ggchord_resolve_position_offset <- function(offset, seqs, placement,
         any(!names(x) %in% c("+", "-")) || anyDuplicated(names(x))) {
       ggchord_stop(caller, ": strand offsets must be uniquely named '+' and/or '-'")
     }
-    if (identical(placement, "plasmid")) {
-      ggchord_stop(caller, ": position_plasmid() accepts shared offsets, not strand-specific offsets")
+    if (identical(placement, "offset")) {
+      ggchord_stop(caller, ": for strand-specific offsets, use position_strand()")
     }
     out <- c("+" = 0, "-" = 0)
     for (st in names(x)) out[st] <- ggchord_validate_offset_value(x[[st]], caller)
@@ -373,22 +382,11 @@ ggchord_apply_feature_position <- function(data, position, seqs, lengths,
   position <- position %||% ggplot2::position_identity()
   if (isTRUE(position$ggchord_feature_stack)) {
     base_position <- position$base_position
-    if (is.null(base_position)) {
-      side <- position$side %||% "strand"
-      resolved <- switch(
-        side,
-        strand = ggchord_resolve_position_offset(0.1, seqs, "strand"),
-        outside = ggchord_resolve_position_offset(-0.1, seqs, "plasmid"),
-        inside = ggchord_resolve_position_offset(0.1, seqs, "plasmid")
-      )
-      position_name <- "feature_stack_legacy"
-    } else {
-      resolved <- ggchord_resolve_position_offset(
-        base_position$offset %||% 0, seqs,
-        base_position$placement %||% "plasmid", "position_feature_stack(base_position)"
-      )
-      position_name <- paste0("feature_stack_", base_position$placement %||% "identity")
-    }
+    placement <- base_position$placement %||% "identity"
+    resolved <- ggchord_resolve_position_offset(
+      base_position$offset %||% 0, seqs, placement, "position_feature_stack(base_position)"
+    )
+    position_name <- paste0("feature_stack_", placement)
   } else if (isTRUE(position$ggchord_feature_position)) {
     resolved <- ggchord_resolve_position_offset(
       position$offset, seqs, position$placement,

@@ -6,9 +6,9 @@
 #' input HSP once; one spoke is not a multi-sequence synteny view.
 #'
 #' Uses the same sequence, feature, track, label and link layers as
-#' [coord_collinear()]. `geom_seq(seq_order = ...)` orders spokes and declares
+#' [coord_collinear()]. `layout_sequences(order = ...)` orders spokes and declares
 #' named repeated display instances; ambiguous relationships require `between`.
-#' Lengths are proportional by default; `geom_seq(length_mode = "equal")`
+#' Lengths are proportional by default; `layout_sequences(length_mode = "equal")`
 #' explicitly normalizes display lengths while retaining native positions.
 #' Positive feature/track offsets point counterclockwise from each outward
 #' spoke, independently of biological direction and display order. Sequence
@@ -49,7 +49,7 @@
 #' @examples
 #' data(seq_data_example)
 #' data(ribbon_data_example)
-#' ggchord(seq_data_example, ribbon_data_example) +
+#' ggchord(prepare_ggchord_data(seq_data_example, ribbon_data_example)) +
 #'   geom_seq() +
 #'   geom_link_ribbon() +
 #'   geom_seq_label() +

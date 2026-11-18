@@ -38,6 +38,7 @@
 #' @param position,show.legend,inherit.aes Standard ggplot2 layer arguments.
 #' @param ... Additional arguments passed to \code{geom_text()}
 #'
+#' @param id Optional unique layer ID for layout and source exports.
 #' @return A ggplot2 layer.
 #' @export
 #'
@@ -46,7 +47,7 @@
 #' data(seq_data_example)
 #' seqs <- seq_data_example |>
 #'   select(accver, length)
-#' ggchord(seq_data = seqs) +
+#' ggchord(data = seqs) +
 #'   geom_seq() +
 #'   geom_seq_label()
 geom_seq_label <- function(mapping = NULL, data = NULL,
@@ -59,8 +60,9 @@ geom_seq_label <- function(mapping = NULL, data = NULL,
                            check_overlap = FALSE,
                            position = "identity",
                            show.legend = FALSE,
-                           inherit.aes = FALSE,
-                           ...) {
+                           inherit.aes = TRUE,
+                           ..., id = NULL) {
+  ggchord_check_argument_names(sys.call(), sys.function())
   old_error <- ggchord_disable_debug()
   on.exit(options(error = old_error), add = TRUE)
 
@@ -89,7 +91,7 @@ geom_seq_label <- function(mapping = NULL, data = NULL,
   lyr$ggchord_type <- "seq_label"
   lyr$ggchord_theme_element <- "ggchord.seq.label"
   lyr$ggchord_params <- list(
-    type              = "seq_label",
+    id = id, type              = "seq_label",
     seq_label_radius  = seq_label_radius,
     seq_label_radius_supplied = !missing(seq_label_radius),
     seq_label_rotation = seq_label_rotation,

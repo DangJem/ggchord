@@ -12,18 +12,27 @@ rename_geom_aes <- function(geom = ggplot2::GeomPolygon, renames) {
     aes_names[aes_names == old] <- renames[[old]]
   }
   names(new_geom$default_aes) <- aes_names
+  new_geom$optional_aes <- union(geom$optional_aes, names(renames))
 
   old_handle_na <- geom$handle_na
   new_geom$handle_na <- function(self, data, params) {
     for (old in names(renames)) {
-      colnames(data)[colnames(data) == renames[[old]]] <- old
+      role <- renames[[old]]
+      if (role %in% names(data)) {
+        if (!old %in% names(data)) data[[old]] <- data[[role]]
+        data[[role]] <- NULL
+      }
     }
     old_handle_na(data, params)
   }
   old_draw_key <- geom$draw_key
   new_geom$draw_key <- function(data, params, size) {
     for (old in names(renames)) {
-      colnames(data)[colnames(data) == renames[[old]]] <- old
+      role <- renames[[old]]
+      if (role %in% names(data)) {
+        if (!old %in% names(data)) data[[old]] <- data[[role]]
+        data[[role]] <- NULL
+      }
     }
     old_draw_key(data, params, size)
   }

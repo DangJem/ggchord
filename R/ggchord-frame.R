@@ -206,20 +206,8 @@ ggchord_adaptive_limits <- function(layout, axis_labels = NULL) {
 #' @noRd
 prepare_ggchord_plot <- function(plot) {
   if (isTRUE(plot$coordinates$ggchord_dotplot)) return(ggchord_prepare_dotplot(plot))
-  if (any(vapply(plot$layers, function(x) identical(x$ggchord_type, "alignment"), logical(1))))
-    ggchord_stop("geom_alignment_segment() requires coord_dotplot()")
-  plot <- ggchord_register_layers(plot)
-  plot$scales <- plot$scales$clone()
-  if (exists("ggchord_prepare_track_layers", mode = "function")) plot <- ggchord_prepare_track_layers(plot)
-  plot <- ggchord_prepare_instances(plot)
-  plot$scales$scales <- Filter(function(s) is.null(s$ggchord_managed),
-                               plot$scales$scales)
-  plot$layers <- lapply(plot$layers, ggchord_inherit_ribbon_linetype,
-    mapping = plot$mapping)
-  plot$layers <- lapply(plot$layers, ggchord_resolve_style_defaults,
-    mapping = plot$mapping)
-  layout <- compute_chord_geometry(plot)
-  cls <- classify_ggchord_layers(plot)
+  plot <- ggchord_prepare_geometry_inputs(plot)
+  layout <- compute_chord_geometry_prepared(plot)
   new_layers <- plot$layers
   needs_flow <- any(vapply(plot$layers,ggchord_ribbon_uses_flow,logical(1),plot=plot))
   sequence_colours <- if(needs_flow) ggchord_sequence_display_colours(plot,layout) else NULL
@@ -246,6 +234,7 @@ prepare_ggchord_plot <- function(plot) {
     lyr$ggchord_resolved_input <- ggchord_restore_instance_data(
       layout$layer_inputs[[lyr$ggchord_layer_id]][[lyr$ggchord_type]], layout$display_instances)
     geometry <- extract_ggchord_layer_data(lyr, layout)
+    if (isTRUE(lyr$ggchord_params$user_feature_fill)) geometry$feature_fill_explicit <- NULL
     flow <- ggchord_ribbon_flow(lyr, geometry, layout, plot,sequence_colours)
     lyr <- flow$layer; geometry <- flow$data
     # An absent component can have no column prototype in the public layout.
@@ -292,7 +281,6 @@ prepare_ggchord_plot <- function(plot) {
                               plot, "legend.title", 9
                             ))
   sc$scales <- ggchord_infer_visual_scales(plot, layout, sc$scales)
-  plot <- rename_ribbon_layers(plot, cls$ribbon, sc$ribbon_aes, layout)
   plot <- attach_ggchord_scales(plot, sc$scales)
   plot <- ggchord_add_link_scales(plot)
   if (exists("ggchord_add_track_scales", mode = "function")) plot <- ggchord_add_track_scales(plot)
@@ -335,10 +323,12 @@ ggplot_build.ggchord <- function(plot, ...) {
   }
   source <- ggchord_render_track_source(ggchord_render_inputs(plot))
   plot <- ggchord_apply_adaptive_styles(source)
+  plot$ggchord$ref <- new.env(parent = emptyenv())
   plot <- prepare_ggchord_plot(plot)
   plot$ggchord$ref$layout$adaptive_layout <- plot$ggchord$adaptive_report
   class(plot) <- setdiff(class(plot), "ggchord")
   built <- ggchord_branch_built(ggplot2::ggplot_build(plot))
+  ggchord_cache_layout(source, built$plot$ggchord$ref$layout)
   attr(built, "ggchord_source_plot") <- source
   class(built) <- unique(c("ggchord_built", class(built)))
   built

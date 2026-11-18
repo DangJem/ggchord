@@ -39,11 +39,29 @@ compute_chord_geometry <- function(plot) {
   plot <- ggchord_render_inputs(plot)
   if (isTRUE(plot$coordinates$ggchord_dotplot))
     return(ggchord_cache_layout(plot, ggchord_dotplot_geometry(ggchord_register_layers(plot))))
+  plot <- ggchord_prepare_geometry_inputs(plot)
+  ggchord_cache_layout(plot, compute_chord_geometry_prepared(plot))
+}
+
+ggchord_prepare_geometry_inputs <- function(plot) {
   if (any(vapply(plot$layers, function(x) identical(x$ggchord_type, "alignment"), logical(1))))
     ggchord_stop("geom_alignment_segment() requires coord_dotplot()")
   plot <- ggchord_register_layers(plot)
   plot <- ggchord_prepare_track_layers(plot)
   plot <- ggchord_prepare_instances(plot)
+  plot$scales <- plot$scales$clone()
+  plot$scales$scales <- Filter(function(s) is.null(s$ggchord_managed),
+                               plot$scales$scales)
+  plot$layers <- lapply(plot$layers, ggchord_inherit_ribbon_linetype,
+    mapping = plot$mapping)
+  plot$layers <- lapply(plot$layers, ggchord_resolve_style_defaults,
+    mapping = plot$mapping)
+  plot$layers <- lapply(plot$layers, ggchord_bind_visual_mapping, plot = plot)
+  plot
+}
+
+compute_chord_geometry_prepared <- function(plot) {
+  if (!inherits(plot$facet, "FacetNull")) return(ggchord_facet_layout(plot))
   ggchord_validate_coord_contract(plot)
   chord <- plot$ggchord
   if (is.null(chord)) {
@@ -127,67 +145,16 @@ compute_chord_geometry <- function(plot) {
       main_type %in% c("gene_label", "gene_label_repel"))
     # A label layer owns its Position independently of the entity polygons.
     # Do not reuse a primary layout whose active Position came from a label.
-    if (isTRUE(primary$collinear) && main_type == "gene" &&
+    if (main_type == "gene" &&
         any(group_type %in% c("gene_label", "gene_label_repel"))) needs_own <- TRUE
     sub_layout <- primary
     if (isTRUE(needs_own)) {
       deps <- seq_dep
       matched_feature_rows <- NULL
       if (main_type %in% c("gene_label", "gene_label_repel")) {
-        label_rows <- idx[vapply(idx, function(j) {
-          isTRUE(primary$collinear) ||
-            isTRUE(plot$layers[[j]]$ggchord_params$is_feature_label)
-        }, logical(1))]
-        if (length(label_rows)) {
-          label_layer <- plot$layers[[label_rows[length(label_rows)]]]
-          label_input <- ggchord_resolve_layer_input(
-            label_layer, ggchord_annotation_fallback(chord$data)
-          )
-          for (gene_row in gene_geometry_dep) {
-            if (isTRUE(primary$collinear) && isTRUE(
-                label_layer$ggchord_params$position_explicit %||%
-                  label_layer$ggchord_params$position_supplied)) break
-            feature_layer <- plot$layers[[gene_row]]
-            if (isTRUE(primary$collinear)) {
-              if (isTRUE(feature_layer$ggchord_params$is_feature) !=
-                  isTRUE(label_layer$ggchord_params$is_feature_label)) next
-            } else if (!isTRUE(feature_layer$ggchord_params$is_feature)) next
-            feature_input <- ggchord_resolve_layer_input(
-              feature_layer, ggchord_annotation_fallback(chord$data)
-            )
-            compare <- intersect(
-              if (isTRUE(primary$collinear)) c("accver", "start", "end", "strand") else
-                c("accver", "start", "end", "strand", "anno", "label"),
-              intersect(names(label_input), names(feature_input))
-            )
-            same_input <- nrow(label_input) == nrow(feature_input) &&
-              all(c("accver", "start", "end", "strand") %in% compare) &&
-              identical(label_input[compare], feature_input[compare])
-            matched_rows <- if (isTRUE(primary$collinear)) {
-              ggchord_match_feature_rows(label_input, feature_input)
-            } else NULL
-            if (isTRUE(primary$collinear)) same_input <- !is.null(matched_rows)
-            label_position <- label_layer$ggchord_params$feature_position
-            feature_position <- feature_layer$ggchord_params$feature_position
-            position_supplied <- if (isTRUE(primary$collinear)) {
-              label_layer$ggchord_params$position_explicit %||%
-                label_layer$ggchord_params$position_supplied
-            } else label_layer$ggchord_params$position_supplied
-            same_position <- !isTRUE(
-              position_supplied
-            ) || identical(label_position, feature_position)
-            if (same_input && same_position) {
-              if (isTRUE(primary$collinear) && !is.null(matched_feature_rows)) ggchord_stop(
-                "Multiple geometry layers match these labels; supply an explicit label Position ",
-                "or unambiguous feature_id values"
-              )
-              deps <- c(deps, gene_row)
-              if (isTRUE(primary$collinear)) matched_feature_rows <- list(
-                layer_id = feature_layer$ggchord_layer_id, rows = matched_rows)
-              if (!isTRUE(primary$collinear)) break
-            }
-          }
-        }
+        matched_feature_rows <- plot$layers[[tail(idx, 1L)]]$ggchord_params$matched_feature
+        if (!is.null(matched_feature_rows))
+          deps <- c(deps, groups[[matched_feature_rows$layer_id]])
       }
       if (main_type == "ribbon") deps <- c(deps, gene_geometry_dep)
       sub_plot <- plot
@@ -304,6 +271,9 @@ compute_chord_geometry <- function(plot) {
       registry[[id]][[component]] <- ggchord_attach_input_columns(
         registry[[id]][[component]], inputs[[id]][[component]]
       )
+      anchor <- lyr$ggchord_params$matched_feature$layer_id
+      if (!is.null(anchor) && is.data.frame(registry[[id]][[component]]))
+        registry[[id]][[component]]$anchor_layer <- rep(anchor, nrow(registry[[id]][[component]]))
       if (identical(component, "gene_label_repel") &&
           isTRUE(lyr$ggchord_params$is_primer_label) &&
           identical(lyr$ggchord_params$gene_label_side, "inside") &&
@@ -548,7 +518,7 @@ compute_chord_geometry <- function(plot) {
       y_min = min(yy, na.rm = TRUE), y_max = max(yy, na.rm = TRUE))
   }
   primary <- ggchord_check_displayed_hsps(primary, plot)
-  ggchord_cache_layout(plot, primary)
+  primary
 }
 
 

@@ -38,7 +38,7 @@ globalVariables(c(
 #' The layout is computed lazily when the plot is built (e.g. via \code{print()},
 #' \code{ggsave()}, or \code{ggplot_build()}).
 #'
-#' @param seq_data data.frame/tibble with accver and length, or a `GRanges`,
+#' @param data A reference data.frame/tibble with accver and length, or a `GRanges`,
 #'   `Seqinfo` or `GInteractions` object with known full sequence lengths,
 #'   or a named nucleotide or protein Biostrings `XStringSet`. Unnamed sequence
 #'   objects must first use [as_ggchord_seq()] with explicit `ids`.
@@ -48,23 +48,12 @@ globalVariables(c(
 #'   links and generic features; gene, primer and restriction layers require bp.
 #'   Arbitrary character widths are not biological sequence lengths.
 #'   A result from [prepare_ggchord_data()] supplies all constructor tables.
-#'   Named collections remain available for explicit layer selection.
-#' @param ribbon_data Optional alignment table with qaccver, saccver, qstart,
-#'   qend, sstart and send. length and pident are optional unless requested
-#'   by a mapping, filter or statistic. A `GInteractions` object uses
-#'   [as_ggchord_link()] without inventing identity or alignment length.
-#' @param gene_data Compatible legacy annotation input. The third positional
-#'   argument retains its meaning. Use `feature_data` in new code; a non-NULL
-#'   legacy input emits one message at construction, never during rendering.
-#'   Untyped legacy tables retain their directional gene semantics. No removal
-#'   version is scheduled. Do not supply both annotation inputs.
-#' @param feature_data Optional unified annotation table or `GRanges`. Requires
-#'   `accver`, `start`, `end`; absent strand becomes unknown (`"."`). Generic
-#'   feature layers use the full table. Default gene layers select `gene`/`CDS`
-#'   from `feature_class`, `type`, or `role` (in that priority order), and require
-#'   known strands. tRNA/rRNA remain generic features. Explicit layer `data`
-#'   overrides the constructor input. Use disjoint subsets when combining
-#'   gene and feature layers; each layer keeps its own data independently.
+#'   A single eligible table supplies the layer default. When several qualify,
+#'   select one explicitly, e.g. `geom_feature(data = prepared$features$cds)`.
+#' @param mapping Default aesthetic mapping, made with [ggplot2::aes()].
+#'   Each inheriting layer evaluates it on its own source table. A layer
+#'   mapping overrides the same plot aesthetic. Native ggplot2 layers inherit
+#'   the reference table as their plot data.
 #' @param debug Logical. Whether to output debug information, default FALSE
 #' @param validate Character, default \code{"warn"}. How to run the structured
 #'   input-data validation (see \code{\link{validate_ggchord_data}}):
@@ -96,40 +85,24 @@ globalVariables(c(
 #'   select(qaccver, saccver, qstart, qend, sstart, send)
 #' genes <- gene_data_example |>
 #'   transmute(accver, start, end, strand = source_strand, type = "CDS")
-#' p <- ggchord(
-#'   seq_data = seqs,
-#'   ribbon_data = links,
-#'   feature_data = genes
-#' ) +
+#' p <- ggchord(seqs) +
 #'   geom_seq() +
-#'   geom_link_ribbon() +
-#'   geom_gene()
+#'   geom_link_ribbon(data = links) +
+#'   geom_feature(data = genes)
 #' print(p)
 #' @importFrom ggplot2 ggplot_build
-ggchord <- function(
-    seq_data,
-    ribbon_data = NULL,
-    gene_data = NULL,
-    debug = FALSE,
-    validate = c("warn", "error", "none"),
-    feature_data = NULL,
-    ...
-) {
-  legacy_prepared <- is.list(seq_data) && !is.data.frame(seq_data) &&
-    identical(names(seq_data), c("seq_data", "ribbon_data", "gene_data", "feature_data",
-                                 "features", "links", "report")) &&
-    is.list(seq_data$report) && !is.null(seq_data$report$validation)
-  if (inherits(seq_data, "ggchord_prepared") || legacy_prepared) {
-    if (!missing(ribbon_data) || !missing(gene_data) || !missing(feature_data))
-      ggchord_stop("ggchord(): pass either prepared data or separate constructor tables")
-    prepared <- seq_data
-    seq_data <- prepared$seq_data
-    ribbon_data <- prepared$ribbon_data
-    gene_data <- prepared$gene_data
-    feature_data <- prepared$feature_data
-  }
-  if (!is.null(gene_data) && !is.null(feature_data)) ggchord_stop(
-    "ggchord(): use only one of gene_data and feature_data; merge annotations explicitly or supply layer data")
+ggchord <- function(data, mapping = NULL, ..., debug = FALSE,
+                    validate = c("warn", "error", "none")) {
+  ggchord_check_argument_names(sys.call(), sys.function())
+  if (missing(data)) ggchord_stop("ggchord() needs data = a sequence reference or prepared tables")
+  if (!is.null(mapping) && !ggplot2::is_mapping(mapping)) ggchord_stop(
+    "ggchord(): mapping must be aes(). Put extra tables in layer data or prepare_ggchord_data().")
+  mapping <- ggchord_normalize_mapping(mapping)
+  prepared <- if (inherits(data, "ggchord_prepared")) data else NULL
+  seq_data <- if (is.null(prepared)) data else prepared$seq_data
+  ribbon_data <- prepared$ribbon_data
+  gene_data <- prepared$gene_data
+  feature_data <- prepared$feature_data
   if (inherits(seq_data, "GRanges") || inherits(seq_data, "Seqinfo") ||
       inherits(seq_data, "GInteractions") || inherits(seq_data, "XStringSet") ||
       inherits(seq_data, "XString")) seq_data <- as_ggchord_seq(seq_data)
@@ -146,6 +119,9 @@ ggchord <- function(
   old_error <- ggchord_disable_debug()
   on.exit(options(error = old_error), add = TRUE)
   dots <- list(...)
+  retired <- intersect(names(dots), c("seq_data", "gene_data", "feature_data", "ribbon_data"))
+  if (length(retired)) ggchord_stop("ggchord(): move ", paste(retired, collapse = ", "),
+    " into prepare_ggchord_data() or an explicit layer data argument.")
   ggchord_reject_retired(dots, "ggchord()", c(
     title = "labs(title = ...)",
     rotation = "coord_chord(rotation = ...)",
@@ -214,13 +190,14 @@ ggchord <- function(
   # 2. Build the base ggplot object and store data + global parameters
   #    on the plot itself so the object is fully self-contained.
   # ====================================================================
-  p <- ggplot2::ggplot() +
+  p <- ggplot2::ggplot(data = seq_data, mapping = mapping %||% ggplot2::aes()) +
     coord_chord(rotation = 0) +
     theme_ggchord()
 
   p$ggchord <- list(
     data   = list(seq_data = seq_data, ribbon_data = ribbon_data,
                   gene_data = gene_data, feature_data = feature_data),
+    collections = list(features = prepared$features, links = prepared$links),
     sources = list(sequence = seq_data, relationship = ribbon_data,
       gene = gene_data, feature = feature_data),
     global = list(rotation = 0, debug = debug, validate = validate),
@@ -229,10 +206,18 @@ ggchord <- function(
     ref    = new.env(),
     layout = NULL
   )
+  for (kind in c("features", "links")) {
+    named <- p$ggchord$collections[[kind]]
+    primary <- if (kind == "features") c("feature_data", "gene_data") else "ribbon_data"
+    present <- primary[!vapply(p$ggchord$data[primary], is.null, logical(1))]
+    p$ggchord$candidates[[kind]] <- c(present, if (length(named)) paste0(kind, "$", names(named)))
+    if (!length(present) && length(named) == 1L) {
+      p$ggchord$data[[primary[1L]]] <- named[[1L]]
+      p$ggchord$sources[[if (kind == "features") "feature" else "relationship"]] <- named[[1L]]
+    }
+  }
   class(p) <- c("ggchord", class(p))
-  if (!is.null(gene_data)) message(
-    "ggchord(): gene_data is retained for compatibility; use feature_data in new code. ",
-    "For untyped legacy tables, add type = 'gene' or supply explicit geom_gene(data = ...).")
+
   p
 }
 # ====================================================================

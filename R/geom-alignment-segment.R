@@ -20,18 +20,20 @@
 #'   change the alignment endpoints.
 #' @param show.legend,inherit.aes Standard ggplot2 layer arguments.
 #' @param ... Additional arguments passed to ggplot2's segment geometry.
+#' @param id Optional unique layer ID for layout and source exports.
 #' @return A ggplot2 layer for a ggchord Dotplot.
 #' @export
 #' @examples
 #' data(seq_data_example)
 #' data(ribbon_data_example)
-#' ggchord(seq_data_example, ribbon_data_example) +
+#' ggchord(prepare_ggchord_data(seq_data_example, ribbon_data_example)) +
 #'   geom_alignment_segment(aes(link_colour = pident)) +
 #'   coord_dotplot()
 geom_alignment_segment <- function(mapping = NULL, data = NULL,
     colour = "#59636D", alpha = 0.6, linewidth = 0.4, linetype = 1,
-    position = "identity", show.legend = NA, inherit.aes = FALSE,
-    allow_repeated = FALSE, ...) {
+    position = "identity", show.legend = NA, inherit.aes = TRUE,
+    allow_repeated = FALSE, ..., id = NULL) {
+  ggchord_check_argument_names(sys.call(), sys.function())
   if (!is.logical(allow_repeated) || length(allow_repeated) != 1L || is.na(allow_repeated))
     ggchord_stop("allow_repeated must be TRUE or FALSE")
   if (!ggchord_is_data_identity(position))
@@ -48,7 +50,7 @@ geom_alignment_segment <- function(mapping = NULL, data = NULL,
     params = c(list(link_colour = alias$colour, link_alpha = alpha,
       link_linewidth = linewidth, link_linetype = linetype), alias$dots))
   layer$ggchord_type <- "alignment"
-  layer$ggchord_params <- list(type = "alignment", style_defaults = defaults, allow_repeated = allow_repeated)
+  layer$ggchord_params <- list(id = id, type = "alignment", style_defaults = defaults, allow_repeated = allow_repeated)
   ggchord_capture_layer_input(layer, data, mapping,
     c("qaccver", "saccver", "qstart", "qend", "sstart", "send"))
 }
@@ -60,13 +62,13 @@ GeomAlignmentSegment <- ggplot2::ggproto("GeomAlignmentSegment", ggplot2::GeomSe
   draw_panel = function(data, panel_params, coord, arrow = NULL,
       arrow.fill = NULL, lineend = "butt", linejoin = "round", na.rm = FALSE) {
     for (name in c("colour", "alpha", "linewidth", "linetype"))
-      data[[name]] <- data[[paste0("link_", name)]]
+      data[[name]] <- data[[name]] %||% data[[paste0("link_", name)]]
     ggplot2::GeomSegment$draw_panel(data, panel_params, coord,
       arrow = arrow, arrow.fill = arrow.fill, lineend = lineend,
       linejoin = linejoin, na.rm = na.rm)
   },
   draw_key = function(data, params, size) {
     for (name in c("colour", "alpha", "linewidth", "linetype"))
-      data[[name]] <- data[[paste0("link_", name)]]
+      data[[name]] <- data[[name]] %||% data[[paste0("link_", name)]]
     ggplot2::draw_key_path(data, params, size)
   })

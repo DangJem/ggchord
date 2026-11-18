@@ -3,67 +3,26 @@
 # parameters are resolved by the plot-owned layout calculation at build time.
 
 # ---------------------------------------------------------------------------
-# geom_gene(): gene arrow polygons
+# geom_feature(preset = 'gene'): gene arrow polygons
 # ---------------------------------------------------------------------------
 
 gene_geom <- ggplot2::ggproto(
   "GeomChordGene", rename_geom_aes(GeomChordFeatureBase, renames = c(fill = "gene_fill")),
   draw_key = function(data, params, size) {
-    data$fill <- data$gene_fill %||% data$fill
+    data$fill <- data$fill %||% data$gene_fill
     draw_key_gene_arrow(data, params, size)
   }
 )
 
-#' Add a gene arrow layer
-#'
-#' A directed-gene shortcut using the generic \code{\link{geom_feature}()}
-#' constructor with arrow geometry and the independent \code{gene_fill} role.
-#' Gene input still requires a known \code{+} or \code{-} strand; use
-#' \code{\link{geom_feature}()} for unknown strands.
-#' The gene fill scale is kept independent from the ribbon's fill scale via a
-#' separate internal aesthetic used by the ribbon layer.
-#'
-#' @param mapping Default NULL (uses pre-computed data)
-#' @param data Optional layer table or function, overriding constructor data.
-#'   With unified `feature_data`, the default selects explicitly classified
-#'   gene/CDS records; see [ggchord()]. Legacy `gene_data` retains all rows.
-#' @param width Optional numeric/vector/list. Width of gene arrows, default 0.05
-#' @param arrow_head_length,arrow_head_width Shared arrow-head dimensions in
-#'   the sequence-local frame.
-#' @param arrow_head_style Arrowhead construction: shouldered, flush, or a
-#'   full triangular wedge.
-#' @param short_feature Fallback for arrows too short to hold their requested
-#'   head: automatic wedge/block selection, a wedge, or a block.
-#' @param position Feature placement. Use `"identity"`, `"strand"`,
-#'   `"plasmid"`, [position_strand()], [position_plasmid()], or
-#'   [position_feature_stack()].
-#' @param show.legend,inherit.aes Standard ggplot2 layer arguments.
-#' @param ... Additional arguments passed to \code{geom_polygon()}
-#'
-#' @return A ggplot2 layer. To annotate the genes with their labels,
-#'   add a \code{\link{geom_gene_label}()} layer.
-#' @export
-#'
-#' @examples
-#' library(dplyr)
-#' data(seq_data_example)
-#' seqs <- seq_data_example |>
-#'   select(accver, length)
-#' data(gene_data_example)
-#' genes <- gene_data_example |>
-#'   transmute(accver, start, end, strand = source_strand)
-#' ggchord(seq_data = seqs, gene_data = genes) +
-#'   geom_seq() +
-#'   geom_gene()
-geom_gene <- function(mapping = NULL, data = NULL,
-                      width = NULL,
+ggchord_gene_layer <- function(mapping = NULL, data = NULL,
+                      width = NULL, shape = "arrow",
                       arrow_head_length = 0.04, arrow_head_width = 1,
                       arrow_head_style = c("shouldered", "flush", "triangle"),
                       short_feature = c("auto", "wedge", "block"),
                       position = "identity", show.legend = TRUE,
-                      inherit.aes = FALSE, ...) {
-  dots <- ggchord_colour_dots(list(...), "geom_gene()")
-  ggchord_reject_retired(dots, "geom_gene()", c(
+                      inherit.aes = TRUE, ...) {
+  dots <- ggchord_colour_dots(list(...), "geom_feature(preset = 'gene')")
+  ggchord_reject_retired(dots, "geom_feature(preset = 'gene')", c(
     gene_width = "width",
     gene_offset = "position = position_strand(offset = ...)",
     gene_color_scheme = "aes(gene_fill = ...) and scale_gene_fill_manual()",
@@ -75,7 +34,7 @@ geom_gene <- function(mapping = NULL, data = NULL,
   labels <- names(dots)[grepl("^gene_label_|^label_", names(dots)) |
     names(dots) == "show_label"]
   if (length(labels)) ggchord_stop(
-    "Removed geom_gene() label arguments: ", paste(labels, collapse = ", "),
+    "Removed geom_feature(preset = 'gene') label arguments: ", paste(labels, collapse = ", "),
     ". Add geom_gene_label() or geom_gene_label_repel().")
   mapping <- ggchord_normalize_mapping(mapping)
   feature_mapping <- mapping
@@ -85,12 +44,14 @@ geom_gene <- function(mapping = NULL, data = NULL,
   if ("gene_fill" %in% names(dots)) {
     names(dots)[names(dots) == "gene_fill"] <- "feature_fill"
   }
+  shape_override <- !missing(shape) || "feature_shape" %in% names(feature_mapping)
+  shape_arg <- if (missing(shape)) list() else list(shape = shape)
   layer <- do.call(geom_feature, c(list(
-    mapping = feature_mapping, data = data, shape = "arrow", width = width,
+    mapping = feature_mapping, data = data, width = width,
     arrow_head_length = arrow_head_length,
     arrow_head_width = arrow_head_width, arrow_head_style = match.arg(arrow_head_style),
     short_feature = match.arg(short_feature), position = position,
-    show.legend = show.legend, inherit.aes = inherit.aes), dots))
+    show.legend = show.legend, inherit.aes = inherit.aes), shape_arg, dots))
   # A directed-gene shortcut retains its independent role scale and strict
   # biological input contract while sharing the generic feature constructor.
   layer$geom <- gene_geom
@@ -112,9 +73,10 @@ geom_gene <- function(mapping = NULL, data = NULL,
   layer$ggchord_params$gene_color_scheme <- if (mapped) "manual" else "strand"
   # Recognized features can carry annotation colours, keyed by name.
   if (!mapped) layer$ggchord_params$gene_colors <- NULL
-  layer$ggchord_input_transform <- NULL
+  layer$ggchord_params$gene_shape_override <- shape_override
+  if (!shape_override) layer$ggchord_input_transform <- NULL
   ggchord_capture_layer_input(layer, data, mapping,
-    c("accver", "start", "end", "strand", "anno"))
+    c("accver", "start", "end", "strand", "anno", "feature_shape"))
 }
 
 # ---------------------------------------------------------------------------
@@ -124,7 +86,7 @@ geom_gene <- function(mapping = NULL, data = NULL,
 #' Add a gene label layer
 #'
 #' Draws the gene annotation labels on a chord diagram. This layer is
-#' independent from \code{\link{geom_gene}()}: add it after \code{geom_gene()}
+#' independent from \code{\link{geom_feature}()}: add it after \code{geom_feature(preset = "gene")}
 #' to annotate the gene arrows with their texts.
 #'
 #' This is the deterministic, fixed-position label layer. By default labels
@@ -183,16 +145,16 @@ geom_gene <- function(mapping = NULL, data = NULL,
 #' genes <- gene_data_example |>
 #'   slice_head(n = 3) |>
 #'   transmute(accver, start, end, strand = source_strand, anno)
-#' ggchord(seq_data = seqs, gene_data = genes) +
+#' ggchord(prepare_ggchord_data(seq_data = seqs, gene_data = genes)) +
 #'   geom_seq() +
-#'   geom_gene() +
+#'   geom_feature(preset = "gene") +
 #'   geom_gene_label()
 geom_gene_label <- function(mapping = NULL, data = NULL,
     label_orientation = "horizontal", label_side = "outside",
     label_overlap = "hide", label_rotation = NULL,
     label_radial_offset = 0.04, label_circum_offset = NULL,
     label_circum_limit = NULL, label_wrap = NULL,
-    position = "identity", show.legend = FALSE, inherit.aes = FALSE, ...) {
+    position = "identity", show.legend = FALSE, inherit.aes = TRUE, ...) {
   dots <- list(...)
   ggchord_reject_label_prefix(dots, "geom_gene_label()")
   args <- c(list(mapping = mapping, data = data,
@@ -375,16 +337,16 @@ ggchord_label_layer <- function(mapping = NULL, data = NULL,
 #'   slice_head(n = 2) |>
 #'   ungroup() |>
 #'   transmute(accver, start, end, strand = source_strand, anno)
-#' ggchord(seq_data = seqs, gene_data = genes) +
+#' ggchord(prepare_ggchord_data(seq_data = seqs, gene_data = genes)) +
 #'   geom_seq() +
-#'   geom_gene() +
+#'   geom_feature(preset = "gene") +
 #'   geom_gene_label_repel(label_wrap = 20)
 geom_gene_label_repel <- function(mapping = NULL, data = NULL,
     label_layout = "radial", label_wrap = NULL, label_fit = "wrap",
     label_max_lines = 2L, label_side = "outside", max_overlaps = Inf,
     label_segment_overlap = "fade", label_segment_overlap_alpha = 0.18,
     label_segment_linetype = "auto", position = "identity",
-    show.legend = FALSE, inherit.aes = FALSE, label_min_size = 1.5, ...) {
+    show.legend = FALSE, inherit.aes = TRUE, label_min_size = 1.5, ...) {
   dots <- list(...)
   ggchord_reject_label_prefix(dots, "geom_gene_label_repel()")
   ggchord_reject_manual_label_args(dots, "geom_gene_label_repel()")
@@ -572,7 +534,7 @@ ggchord_reject_label_prefix <- function(dots, caller) {
   manual <- old %in% c("gene_label_rotation", "gene_label_radial_offset",
     "gene_label_circum_offset", "gene_label_circum_limit", "gene_label_orientation")
   fixed <- if (grepl("feature", caller)) "geom_feature_label" else "geom_gene_label"
-  target <- get(sub("\\(\\)$", "", caller), mode = "function")
+  target <- get(sub("\\(.*$", "", caller), mode = "function")
   recognized <- replacements %in% c(names(formals(target)), "size") |
     (grepl("repel", caller) & manual) | aligned
   if (grepl("repel", caller)) replacements[manual] <- paste0(

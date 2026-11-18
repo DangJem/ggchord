@@ -20,10 +20,11 @@ geom_link_line(
   linetype = 1,
   position = "identity",
   show.legend = NA,
-  inherit.aes = FALSE,
+  inherit.aes = TRUE,
   between = NULL,
   allow_repeated = FALSE,
-  ...
+  ...,
+  id = NULL
 )
 }
 \arguments{
@@ -59,6 +60,8 @@ inherited mapping when \code{inherit.aes = TRUE}.}
 \item{allow_repeated}{Allow repeated display of an explicitly declared source_hsp_id.}
 
 \item{...}{Additional path parameters.}
+
+\item{id}{Optional unique layer ID for layout and source exports.}
 }
 \value{
 A ggplot2 layer.
@@ -81,7 +84,7 @@ points <- links |>
     qpos = floor((qstart + qend) / 2),
     spos = floor((sstart + send) / 2)
   )
-ggchord(seq_data = seqs) +
+ggchord(data = seqs) +
   geom_seq() +
   geom_link_line(data = points)
 }

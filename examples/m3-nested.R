@@ -41,11 +41,11 @@ inner <- magnify_ggchord(
   local, region, character,
   center_box = c(.02, .2, .2, .8), detail_box = c(.27, .99, .15, .85)
 )
-whole <- ggchord(
-  genome |> select(accver, length), feature_data = coding
+whole <- ggchord(prepare_ggchord_data(
+  genome |> select(accver, length), feature_data = coding)
 ) +
   geom_seq(show.legend = FALSE) +
-  geom_gene() +
+  geom_feature(preset = 'gene') +
   coord_collinear()
 outer_region <- local_region |>
   mutate(detail_panel = 'detail/center', purpose = 'Complete source CDS')

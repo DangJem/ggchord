@@ -69,6 +69,7 @@ ggchord_empty_seq_scale_geometry <- function() data.frame(
 #'   and scales when not supplied as fixed arguments.
 #' @param position,show.legend,inherit.aes Standard ggplot2 layer arguments.
 #' @param ... Additional fixed aesthetics passed to [ggplot2::layer()].
+#' @param id Optional unique layer ID for layout and source exports.
 #' @return One independent ggplot2 layer. Exported axis geometry retains the
 #'   length, sequence unit, input row and measurement status for each bar.
 #'   The compatibility field `bp_length` is NA for protein plots.
@@ -79,7 +80,7 @@ ggchord_empty_seq_scale_geometry <- function() data.frame(
 #' data(seq_data_example)
 #' seqs <- seq_data_example |>
 #'   select(accver, length)
-#' ggchord(seq_data = seqs) +
+#' ggchord(data = seqs) +
 #'   geom_seq() +
 #'   coord_collinear() +
 #'   geom_seq_scale(length = 10000)
@@ -87,7 +88,8 @@ geom_seq_scale <- function(mapping = NULL, data = NULL, length = NULL, label = N
     location = c("bottomleft", "bottomright", "topleft", "topright"),
     offset = grid::unit(c(0, 6), "mm"), tick_height = grid::unit(1.5, "mm"),
     label_gap = grid::unit(1.5, "mm"), linewidth = .4, colour = "#3D4348", size = 3,
-    position = "identity", show.legend = FALSE, inherit.aes = FALSE, ...) {
+    position = "identity", show.legend = FALSE, inherit.aes = TRUE, ..., id = NULL) {
+  ggchord_check_argument_names(sys.call(), sys.function())
   fixed <- c(linewidth = !missing(linewidth), colour = !missing(colour), size = !missing(size))
   location <- match.arg(location)
   mapping <- ggchord_normalize_mapping(mapping)
@@ -112,7 +114,7 @@ geom_seq_scale <- function(mapping = NULL, data = NULL, length = NULL, label = N
     position = position, show.legend = show.legend, inherit.aes = inherit.aes,
     params = c(styles, alias$dots))
   layer$ggchord_type <- "seq_scale"
-  layer$ggchord_params <- list(type = "seq_scale", physical_layout = TRUE, length = length, label = label,
+  layer$ggchord_params <- list(id = id, type = "seq_scale", physical_layout = TRUE, length = length, label = label,
     location = location, offset = offset, tick_height = tick_height, label_gap = label_gap)
   ggchord_capture_layer_input(layer, data, mapping, c("scale_length", "label", "x", "y"))
 }

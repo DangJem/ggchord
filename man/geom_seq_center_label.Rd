@@ -13,8 +13,9 @@ geom_seq_center_label(
   name_style = list(),
   length_style = list(),
   show.legend = FALSE,
-  inherit.aes = FALSE,
-  ...
+  inherit.aes = TRUE,
+  ...,
+  id = NULL
 )
 }
 \arguments{
@@ -33,6 +34,8 @@ for the name and length grobs. Supported fields are \code{colour}, \code{size},
 \item{show.legend, inherit.aes}{Standard ggplot2 layer arguments.}
 
 \item{...}{Additional arguments passed to \code{geom_text()}.}
+
+\item{id}{Optional unique layer ID for layout and source exports.}
 }
 \value{
 A ggplot2 layer.

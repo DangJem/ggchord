@@ -16,8 +16,9 @@ geom_seq_label(
   check_overlap = FALSE,
   position = "identity",
   show.legend = FALSE,
-  inherit.aes = FALSE,
-  ...
+  inherit.aes = TRUE,
+  ...,
+  id = NULL
 )
 }
 \arguments{
@@ -60,6 +61,8 @@ overlap a previously drawn label are skipped (ggplot2's
 \item{position, show.legend, inherit.aes}{Standard ggplot2 layer arguments.}
 
 \item{...}{Additional arguments passed to \code{geom_text()}}
+
+\item{id}{Optional unique layer ID for layout and source exports.}
 }
 \value{
 A ggplot2 layer.
@@ -74,7 +77,7 @@ library(dplyr)
 data(seq_data_example)
 seqs <- seq_data_example |>
   select(accver, length)
-ggchord(seq_data = seqs) +
+ggchord(data = seqs) +
   geom_seq() +
   geom_seq_label()
 }

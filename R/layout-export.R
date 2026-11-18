@@ -95,7 +95,7 @@
 #' library(ggchord)
 #' data(seq_data_example)
 #' data(ribbon_data_example)
-#' p <- ggchord(seq_data_example, ribbon_data_example) +
+#' p <- ggchord(prepare_ggchord_data(seq_data_example, ribbon_data_example)) +
 #'   geom_seq() +
 #'   geom_link_ribbon()
 #' exported <- export_ggchord_layout(p, include = c("seq", "ribbon"))
@@ -267,6 +267,7 @@ export_ggchord_layout <- function(
     d$layer_id <- ".track-axes"; d$component <- "track_axis"
     exported$axis <- ggchord_rbind_fill(list(exported$axis, d))
   }
+  if (!is.null(layout$facet_layout)) exported$facet_layout <- layout$facet_layout
   exported$track_registry <- layout$track_registry %||% data.frame()
   exported$track_diagnostics <- layout$track_diagnostics %||% data.frame()
   exported$track_statistics <- layout$track_statistics %||% list()

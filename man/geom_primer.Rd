@@ -13,7 +13,7 @@ geom_primer(
   colour = "#A020F0",
   position = NULL,
   show.legend = FALSE,
-  inherit.aes = FALSE,
+  inherit.aes = TRUE,
   ...
 )
 }
@@ -49,7 +49,7 @@ seqs <- plasmid_example_pUC19 |>
   select(accver, length)
 primers <- find_primer_bindings(plasmid_example_pUC19, set = "reference") |>
   slice_head(n = 2)
-ggchord(seq_data = seqs) +
+ggchord(data = seqs) +
   geom_seq() +
   geom_primer(data = primers) +
   geom_primer_label_repel(data = primers) +

@@ -702,7 +702,7 @@ ggchord_empty_common_features <- function() {
 #'   thresholds, each one finite number in `[0, 1]`.
 #' @param resolve Return deterministic best annotations or every candidate.
 #' @return A data frame directly usable by [geom_feature()] and
-#'   [geom_feature_label_repel()]. `feature_class` and `feature_shape` provide
+#'   [geom_feature_label()]. `feature_class` and `feature_shape` provide
 #'   semantic metadata and a geometry hint; neither affects radial stacking.
 #'   Explicit user aesthetics and scales still take priority. Its `segments` list-column
 #'   preserves the biological feature's segment structure.

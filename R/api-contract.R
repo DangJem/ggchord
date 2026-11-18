@@ -14,10 +14,9 @@
 #' matching mappings; omit a fixed argument to retain its mapping. User scales
 #' take precedence over automatically inferred defaults.
 #'
-#' [geom_gene()] remains the strictly directed gene shortcut over the generic
-#' [geom_feature()] constructor. Unknown-strand features remain unknown and
-#' use the generic feature entrance. The plasmid shortcut retains its distinct
-#' defaults. Fixed feature shape is `shape`; mapped shape is `feature_shape`.
+#' `geom_feature(preset = "gene")` draws strictly directed genes. Use the
+#' generic [geom_feature()] constructor for unknown-strand features. The plasmid
+#' preset retains its compact placement and styling defaults. Fixed feature shape is `shape`; mapped shape is `feature_shape`.
 #' Gene/feature widths use `width`, label controls use `label_*`, and point/area
 #' links use `link_gap` and `link_ctrl_point`. These names do not merge the
 #' distinct geometries or their defaults.
@@ -96,7 +95,7 @@
 #' # ASCII display copy for the default PDF help-example device.
 #' features <- features |>
 #'   mutate(anno = gsub("\u03b1", "alpha", anno, fixed = TRUE))
-#' p <- ggchord(seq_data = seqs) +
+#' p <- ggchord(data = seqs) +
 #'   geom_seq() +
 #'   geom_feature(data = features) +
 #'   coord_circular()

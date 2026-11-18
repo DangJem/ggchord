@@ -23,6 +23,7 @@
 #'   inherited mapping when `inherit.aes = TRUE`.
 #' @param position,show.legend,inherit.aes Standard ggplot2 layer arguments.
 #' @param ... Additional path parameters.
+#' @param id Optional unique layer ID for layout and source exports.
 #' @return A ggplot2 layer.
 #' @export
 #' @examples
@@ -38,7 +39,7 @@
 #'     qpos = floor((qstart + qend) / 2),
 #'     spos = floor((sstart + send) / 2)
 #'   )
-#' ggchord(seq_data = seqs) +
+#' ggchord(data = seqs) +
 #'   geom_seq() +
 #'   geom_link_line(data = points)
 geom_link_line <- function(mapping = NULL, data = NULL,
@@ -46,8 +47,9 @@ geom_link_line <- function(mapping = NULL, data = NULL,
     link_avoid = c("none", "smooth", "uniform"),
     link_branch = c("none", "query", "subject"), link_branch_fraction = 0.15,
     arrow = NULL, colour = "#59636D", alpha = 0.6, linewidth = 0.4,
-    linetype = 1, position = "identity", show.legend = NA, inherit.aes = FALSE,
-    between = NULL, allow_repeated = FALSE, ...) {
+    linetype = 1, position = "identity", show.legend = NA, inherit.aes = TRUE,
+    between = NULL, allow_repeated = FALSE, ..., id = NULL) {
+  ggchord_check_argument_names(sys.call(), sys.function())
   if (!is.logical(allow_repeated) || length(allow_repeated) != 1L || is.na(allow_repeated))
     ggchord_stop("allow_repeated must be TRUE or FALSE")
   style_defaults <- c(link_colour = missing(colour), link_alpha = missing(alpha),
@@ -71,7 +73,7 @@ geom_link_line <- function(mapping = NULL, data = NULL,
     show.legend = show.legend, check.aes = FALSE,
     params = c(styles, list(arrow = arrow), alias$dots))
   lyr$ggchord_type <- "link"
-  lyr$ggchord_params <- list(type = "link", style_defaults = style_defaults,
+  lyr$ggchord_params <- list(id = id, type = "link", style_defaults = style_defaults,
     between = between, allow_repeated = allow_repeated,
     link_type = link_type, link_gap = link_gap,
     link_ctrl_point = link_ctrl_point, link_avoid = link_avoid,
@@ -85,7 +87,7 @@ GeomChordLinkLine <- ggplot2::ggproto("GeomChordLinkLine", ggplot2::GeomPath,
     link_linewidth = 0.4, link_linetype = 1),
   draw_panel = function(data, panel_params, coord, arrow = NULL, lineend = "round",
                         linejoin = "round", linemitre = 10, na.rm = FALSE) {
-    for (nm in c("colour", "alpha", "linewidth", "linetype")) data[[nm]] <- data[[paste0("link_", nm)]]
+    for (nm in c("colour", "alpha", "linewidth", "linetype")) data[[nm]] <- data[[nm]] %||% data[[paste0("link_", nm)]]
     if (".arrow_first" %in% names(data)) {
       pieces <- lapply(split(data, data$group), function(d) {
         ar <- arrow
@@ -103,7 +105,7 @@ GeomChordLinkLine <- ggplot2::ggproto("GeomChordLinkLine", ggplot2::GeomPath,
       lineend = lineend, linejoin = linejoin, linemitre = linemitre, na.rm = na.rm)
   },
   draw_key = function(data, params, size) {
-    for (nm in c("colour", "alpha", "linewidth", "linetype")) data[[nm]] <- data[[paste0("link_", nm)]]
+    for (nm in c("colour", "alpha", "linewidth", "linetype")) data[[nm]] <- data[[nm]] %||% data[[paste0("link_", nm)]]
     ggplot2::draw_key_path(data, params, size)
   })
 

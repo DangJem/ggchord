@@ -40,9 +40,7 @@ feature_geom <- ggplot2::ggproto(
       if ("feature_fill_explicit" %in% names(polygons)) {
         explicit <- !is.na(polygons$feature_fill_explicit) &
           nzchar(polygons$feature_fill_explicit)
-        polygons$feature_fill[explicit] <-
-          polygons$feature_fill_explicit[explicit]
-        polygons$fill <- polygons$feature_fill
+        polygons$fill[explicit] <- polygons$feature_fill_explicit[explicit]
       }
       if ("feature_shape" %in% names(polygons)) {
         line_only <- polygons$feature_shape %in% "capped_line"
@@ -181,7 +179,7 @@ ggchord_feature_data <- function(data, fixed_shape = "arrow",
       "geom_feature(): unknown feature shape"
     )
   }
-  out$type <- out$anno
+  if (!"type" %in% names(out)) out$type <- out$anno
   if ("display_priority" %in% names(out)) {
     if (!is.numeric(out$display_priority) || anyNA(out$display_priority) ||
         any(!is.finite(out$display_priority))) {
@@ -206,6 +204,12 @@ ggchord_feature_data <- function(data, fixed_shape = "arrow",
 #'   \code{accver}, \code{start}, \code{end} and \code{strand} may rename
 #'   input columns; ordinary visual mappings are evaluated after geometry is
 #'   generated.
+#' @param preset Use `"default"` for general intervals. The `"gene"` preset
+#'   selects gene/CDS rows from the default unified source, requires known
+#'   strands and uses strand-based arrows. Explicit layer data selects its own
+#'   rows. The `"plasmid"` preset uses compact stacked bands, wider arrowheads
+#'   and source feature colours. Explicit layer arguments override the preset.
+#' @param id Optional plot-unique layer ID for label anchors and layout export.
 #' @param data data.frame with \code{accver}, \code{start}, \code{end} and
 #'   \code{strand}; optional \code{type}, \code{category} and \code{label}.
 #'   Factor \code{start}/\code{end} columns use their numeric labels, not
@@ -228,7 +232,7 @@ ggchord_feature_data <- function(data, fixed_shape = "arrow",
 #'   shared feature geometry engine. In a circular feature-label composition,
 #'   the base width responds to final label size within bounded limits.
 #' @param arrow_head_length,arrow_head_width Arrow-head dimensions in the
-#'   sequence-local frame, shared with [geom_gene()]. Values above one for
+#'   sequence-local frame. Values above one for
 #'   `arrow_head_width` create a protruding block-arrow head.
 #' @param arrow_head_style Arrowhead construction: `"shouldered"` keeps the
 #'   requested protruding head, `"flush"` keeps it level with the body, and
@@ -243,7 +247,7 @@ ggchord_feature_data <- function(data, fixed_shape = "arrow",
 #' @param boundary_colour,boundary_linewidth,boundary_linetype Appearance of
 #'   internal segment joins.
 #' @param position Feature placement. Use `"identity"`, `"strand"`,
-#'   `"plasmid"`, [position_strand()], [position_plasmid()], or
+#'   [position_strand()], [position_offset()], or
 #'   [position_feature_stack()].
 #' @param show.legend,inherit.aes Standard ggplot2 layer arguments.
 #' @param ... Additional fixed polygon aesthetics.
@@ -265,13 +269,20 @@ ggchord_feature_data <- function(data, fixed_shape = "arrow",
 #' # ASCII display copy for the default PDF help-example device.
 #' features <- features |>
 #'   mutate(anno = gsub("\u03b1", "alpha", anno, fixed = TRUE))
-#' ggchord(seq_data = seqs) +
+#' ggchord(data = seqs) +
 #'   geom_seq() +
 #'   geom_feature(
 #'     data = features,
 #'     shape = "block"
 #'   ) +
 #'   coord_circular()
+#'
+#' intervals <- data.frame(accver = "A", start = 10, end = 70,
+#'                         strand = "+", type = "CDS", anno = "g")
+#' p <- ggchord(data.frame(accver = "A", length = 100)) + geom_seq()
+#' p + geom_feature(data = intervals, preset = "gene", width = .06) +
+#'   coord_collinear()
+#' p + geom_feature(data = intervals, preset = "plasmid") + coord_circular()
 geom_feature <- function(mapping = NULL, data = NULL,
                          shape = "arrow",
                          width = NULL,
@@ -285,8 +296,16 @@ geom_feature <- function(mapping = NULL, data = NULL,
                          boundary_linetype = "22",
                          position = "identity",
                          show.legend = TRUE,
-                         inherit.aes = FALSE,
-                         ...) {
+                         inherit.aes = TRUE,
+                         ..., id = NULL, preset = c("default", "gene", "plasmid")) {
+  ggchord_check_argument_names(sys.call(), sys.function())
+  preset <- match.arg(preset)
+  if (preset != "default") {
+    call <- match.call()
+    call[[1L]] <- if (preset == "gene") ggchord_gene_layer else ggchord_plasmid_layer
+    call$preset <- NULL
+    return(eval(call, parent.frame()))
+  }
   old_error <- ggchord_disable_debug()
   on.exit(options(error = old_error), add = TRUE)
   shape_explicit <- !missing(shape)
@@ -368,7 +387,7 @@ geom_feature <- function(mapping = NULL, data = NULL,
       c(feature_fill = TRUE, feature_shape = shape_mapped, colour = FALSE)
     } else show.legend,
     inherit.aes = inherit.aes, check.param = FALSE,
-    key_glyph = key_glyph_feature,
+    key_glyph = dots$key_glyph %||% key_glyph_feature,
     params = c(
       if (!("colour" %in% names(dots))) list(colour = "#353A3E") else list(),
       if (!("linewidth" %in% names(dots))) list(linewidth = 0.25) else list(),
@@ -385,7 +404,7 @@ geom_feature <- function(mapping = NULL, data = NULL,
   )
   lyr$ggchord_type <- "gene_poly"
   lyr$ggchord_params <- list(
-    type = "gene",
+    type = "gene", id = id,
     style_defaults = c(colour = !"colour" %in% names(dots),
       linewidth = !"linewidth" %in% names(dots)),
     gene_width = feature_width,
@@ -427,24 +446,7 @@ geom_feature <- function(mapping = NULL, data = NULL,
   lyr
 }
 
-#' Draw annotated features on a circular plasmid
-#'
-#' A concise plasmid-map preset built on [geom_feature()]. It uses the same
-#' generic feature engine, while selecting a compact circular track,
-#' protruding shouldered block arrows, and dashed internal segment joins.
-#'
-#' @inheritParams geom_feature
-#' @param width Track width; the default matches the compact feature
-#'   bands used by desktop plasmid editors.
-#' @param position Feature position. `NULL` (the default) automatically stacks
-#'   overlapping features on compact lanes inside the plasmid backbone. Reuse
-#'   the same explicit [position_feature_stack()] object for a separate label
-#'   layer so polygons and labels share their lanes. Optional numeric
-#'   `display_priority` (larger first) or logical `prioritized_display` can
-#'   override the default longest-first ordering for overlapping features.
-#' @return A ggplot2 layer.
-#' @export
-geom_feature_plasmid <- function(mapping = NULL, data = NULL,
+ggchord_plasmid_layer <- function(mapping = NULL, data = NULL,
                                  shape = "arrow",
                                  width = .058,
                                  arrow_head_length = .068,
@@ -457,10 +459,10 @@ geom_feature_plasmid <- function(mapping = NULL, data = NULL,
                                  boundary_linetype = "22",
                                  position = NULL,
                                  show.legend = FALSE,
-                                 inherit.aes = FALSE, ...) {
+                                 inherit.aes = TRUE, ...) {
   if (is.null(position)) {
     position <- position_feature_stack(
-      spacing = .10, base_position = position_plasmid()
+      spacing = .10, base_position = position_offset(-0.1)
     )
   }
   args <- list(

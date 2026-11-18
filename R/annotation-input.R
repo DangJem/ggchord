@@ -42,7 +42,7 @@ ggchord_annotation_gene_rows <- function(data) {
   if (!nrow(data)) return(integer())
   field <- intersect(c("feature_class", "type", "role"), names(data))[1L]
   if (is.na(field)) ggchord_stop(
-    "geom_gene(): feature_data needs feature_class, type or role to select gene/CDS; ",
+    "geom_feature(preset = 'gene'): feature_data needs feature_class, type or role to select gene/CDS; ",
     "supply an explicit gene layer data table, or use geom_feature()")
   key <- tolower(trimws(as.character(data[[field]])))
   which(!is.na(key) & key %in% c("gene", "cds"))

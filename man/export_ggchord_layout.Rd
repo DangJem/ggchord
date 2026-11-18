@@ -112,7 +112,7 @@ library(dplyr)
 library(ggchord)
 data(seq_data_example)
 data(ribbon_data_example)
-p <- ggchord(seq_data_example, ribbon_data_example) +
+p <- ggchord(prepare_ggchord_data(seq_data_example, ribbon_data_example)) +
   geom_seq() +
   geom_link_ribbon()
 exported <- export_ggchord_layout(p, include = c("seq", "ribbon"))

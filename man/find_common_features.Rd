@@ -39,7 +39,7 @@ thresholds, each one finite number in \verb{[0, 1]}.}
 }
 \value{
 A data frame directly usable by \code{\link[=geom_feature]{geom_feature()}} and
-\code{\link[=geom_feature_label_repel]{geom_feature_label_repel()}}. \code{feature_class} and \code{feature_shape} provide
+\code{\link[=geom_feature_label]{geom_feature_label()}}. \code{feature_class} and \code{feature_shape} provide
 semantic metadata and a geometry hint; neither affects radial stacking.
 Explicit user aesthetics and scales still take priority. Its \code{segments} list-column
 preserves the biological feature's segment structure.

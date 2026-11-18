@@ -5,17 +5,15 @@
 \title{Layered sequence comparisons, circular maps and dot plots}
 \usage{
 ggchord(
-  seq_data,
-  ribbon_data = NULL,
-  gene_data = NULL,
+  data,
+  mapping = NULL,
+  ...,
   debug = FALSE,
-  validate = c("warn", "error", "none"),
-  feature_data = NULL,
-  ...
+  validate = c("warn", "error", "none")
 )
 }
 \arguments{
-\item{seq_data}{data.frame/tibble with accver and length, or a \code{GRanges},
+\item{data}{A reference data.frame/tibble with accver and length, or a \code{GRanges},
 \code{Seqinfo} or \code{GInteractions} object with known full sequence lengths,
 or a named nucleotide or protein Biostrings \code{XStringSet}. Unnamed sequence
 objects must first use \code{\link[=as_ggchord_seq]{as_ggchord_seq()}} with explicit \code{ids}.
@@ -25,18 +23,16 @@ Protein lengths come from complete proteins. Native aa plots accept
 links and generic features; gene, primer and restriction layers require bp.
 Arbitrary character widths are not biological sequence lengths.
 A result from \code{\link[=prepare_ggchord_data]{prepare_ggchord_data()}} supplies all constructor tables.
-Named collections remain available for explicit layer selection.}
+A single eligible table supplies the layer default. When several qualify,
+select one explicitly, e.g. \code{geom_feature(data = prepared$features$cds)}.}
 
-\item{ribbon_data}{Optional alignment table with qaccver, saccver, qstart,
-qend, sstart and send. length and pident are optional unless requested
-by a mapping, filter or statistic. A \code{GInteractions} object uses
-\code{\link[=as_ggchord_link]{as_ggchord_link()}} without inventing identity or alignment length.}
+\item{mapping}{Default aesthetic mapping, made with \code{\link[ggplot2:aes]{ggplot2::aes()}}.
+Each inheriting layer evaluates it on its own source table. A layer
+mapping overrides the same plot aesthetic. Native ggplot2 layers inherit
+the reference table as their plot data.}
 
-\item{gene_data}{Compatible legacy annotation input. The third positional
-argument retains its meaning. Use \code{feature_data} in new code; a non-NULL
-legacy input emits one message at construction, never during rendering.
-Untyped legacy tables retain their directional gene semantics. No removal
-version is scheduled. Do not supply both annotation inputs.}
+\item{...}{Reserved for clear migration errors from removed constructor
+arguments. Use \code{\link[=labs]{labs()}}, \code{\link[=coord_chord]{coord_chord()}} and \code{\link[=theme]{theme()}} for presentation.}
 
 \item{debug}{Logical. Whether to output debug information, default FALSE}
 
@@ -47,17 +43,6 @@ and caches the full report on the plot object
 (\code{p$ggchord$validation}); \code{"error"} stops on severe problems;
 \code{"none"} skips the diagnostic validation (the cheap structural
 checks that prevent crashes are still performed).}
-
-\item{feature_data}{Optional unified annotation table or \code{GRanges}. Requires
-\code{accver}, \code{start}, \code{end}; absent strand becomes unknown (\code{"."}). Generic
-feature layers use the full table. Default gene layers select \code{gene}/\code{CDS}
-from \code{feature_class}, \code{type}, or \code{role} (in that priority order), and require
-known strands. tRNA/rRNA remain generic features. Explicit layer \code{data}
-overrides the constructor input. Use disjoint subsets when combining
-gene and feature layers; each layer keeps its own data independently.}
-
-\item{...}{Reserved for clear migration errors from removed constructor
-arguments. Use \code{\link[=labs]{labs()}}, \code{\link[=coord_chord]{coord_chord()}} and \code{\link[=theme]{theme()}} for presentation.}
 }
 \value{
 A ggchord object (inherits from ggplot) to which geom_* layers can be added with +
@@ -84,14 +69,10 @@ links <- ribbon_data_example |>
   select(qaccver, saccver, qstart, qend, sstart, send)
 genes <- gene_data_example |>
   transmute(accver, start, end, strand = source_strand, type = "CDS")
-p <- ggchord(
-  seq_data = seqs,
-  ribbon_data = links,
-  feature_data = genes
-) +
+p <- ggchord(seqs) +
   geom_seq() +
-  geom_link_ribbon() +
-  geom_gene()
+  geom_link_ribbon(data = links) +
+  geom_feature(data = genes)
 print(p)
 }
 \seealso{

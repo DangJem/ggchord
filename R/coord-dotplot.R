@@ -26,7 +26,7 @@
 #' @examples
 #' data(seq_data_example)
 #' data(ribbon_data_example)
-#' ggchord(seq_data_example, ribbon_data_example) +
+#' ggchord(prepare_ggchord_data(seq_data_example, ribbon_data_example)) +
 #'   geom_alignment_segment() +
 #'   coord_dotplot()
 coord_dotplot <- function(x_seqs = NULL, y_seqs = NULL,
@@ -88,6 +88,7 @@ ggchord_dotplot_project <- function(frame, accver, position, inverse = FALSE) {
 }
 
 ggchord_dotplot_geometry <- function(plot, for_drawing = FALSE) {
+  ggchord_validate_coord_contract(plot)
   if (!inherits(plot$facet, "FacetNull")) ggchord_stop("coord_dotplot(): facets are not supported")
   seqs <- plot$ggchord$data$seq_data
   if (anyNA(seqs$accver) || anyDuplicated(seqs$accver) || !is.numeric(seqs$length) ||
@@ -171,6 +172,7 @@ ggchord_prepare_dotplot <- function(plot) {
     layer <- plot$layers[[i]]
     if (is.null(layer$ggchord_type)) next
     layer <- ggchord_resolve_style_defaults(layer, plot$mapping)
+    layer <- ggchord_bind_visual_mapping(layer, plot)
     inputs <- layout$layer_inputs[[layer$ggchord_layer_id]]
     layout$layer_inputs[[layer$ggchord_layer_id]]$source <- NULL
     layer$ggchord_resolved_input <- inputs$alignment

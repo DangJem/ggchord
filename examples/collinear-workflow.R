@@ -19,7 +19,7 @@ workflow_features <- tibble(
 
 # Direction and anchor alignment are coordinate settings, composed with +.
 # The non-adjacent A/C ribbon is omitted by default; input records stay intact.
-workflow_aligned <- ggchord(workflow_sequences, workflow_links,
+workflow_aligned <- ggchord(prepare_ggchord_data(workflow_sequences, workflow_links),
   validate = "none"
 ) +
   geom_link_ribbon(alpha = .25) +
@@ -29,7 +29,7 @@ workflow_aligned <- ggchord(workflow_sequences, workflow_links,
     data = workflow_features,
     position = position_strand(.12)
   ) +
-  geom_feature_label_repel(data = workflow_features, label_side = "auto") +
+  geom_feature_label(placement = 'repel', data = workflow_features, label_side = "auto") +
   coord_collinear(
     anchor = workflow_features |>
       select(accver, start, end),
@@ -49,15 +49,15 @@ workflow_focused <- focus_ggchord_data(workflow_sequences,
     start = c(50, 150, 250), end = c(600, 650, 900)
   )
 )
-workflow_source_axis <- ggchord(workflow_focused$seq_data,
-  workflow_focused$ribbon_data, workflow_focused$gene_data,
+workflow_source_axis <- ggchord(prepare_ggchord_data(workflow_focused$seq_data,
+  workflow_focused$ribbon_data, workflow_focused$gene_data),
   validate = "none"
 ) +
   geom_link_ribbon(alpha = .25) +
   geom_seq() +
   geom_seq_break() +
   geom_seq_label() +
-  geom_gene(position = position_strand(.12)) +
+  geom_feature(preset = 'gene', position = position_strand(.12)) +
   scale_seq_position_continuous(coordinates = "source") +
   coord_collinear(orientation = "auto")
 

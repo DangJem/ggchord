@@ -35,10 +35,10 @@
 #' ggchord.track.axis.text and ggchord.track.axis.title, plus absolute
 #' ggchord.track.axis.text.offset and ggchord.track.axis.title.offset.
 #' These inherit sequence-axis/text styling; each track may override its own
-#' decoration through guide_axis(theme = theme(axis.text = ..., axis.title = ...,
+#' decoration through guide_track_axis(theme = theme(axis.text = ..., axis.title = ...,
 #' axis.line = ...)) in scale_track_value_continuous(). Numerical domains,
 #' units, breaks and labels still belong to that scale; colours to scoped
-#' fill/colour scales; physical bands to position_track().
+#' fill/colour scales; physical bands to track_band().
 #' Theme changes never filter data, alter HSPs or choose sequence directions.
 #'
 #' @section Standard ggplot2 settings:
@@ -106,6 +106,8 @@
 #'   Removed underscore-style arguments produce a migration error.
 #' @return A complete ggplot2 theme carrying ggchord appearance settings.
 #' @export
+#' @examples
+#' theme_ggchord(ggchord.track.axis.text = ggplot2::element_text(size = 9))
 theme_ggchord <- function(
     axis = NULL, axis.line = NULL, axis.ticks = NULL,
     axis.minor.ticks = NULL, axis.text = NULL,
@@ -522,7 +524,7 @@ ggchord_apply_theme_styles <- function(plot) {
   for (i in seq_along(plot$layers)) {
     lyr <- plot$layers[[i]]
     if (identical(lyr$ggchord_type, "track")) {
-      style <- ggchord_track_axis_style(plot, lyr$ggchord_params$track_position$track)
+      style <- ggchord_track_axis_style(plot, lyr$ggchord_params$track_id)
       for (name in c("axis_line_params", "axis_text_params", "axis_title_params", "axis_check_overlap"))
         if (is.null(lyr$geom_params[[name]])) lyr$geom_params[[name]] <- style[[name]]
       plot$layers[[i]] <- lyr

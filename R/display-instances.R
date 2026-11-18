@@ -84,7 +84,7 @@ ggchord_route_instances <- function(input, instances, between, layer_id, mirrore
 ggchord_prepare_instances <- function(plot) {
   if (isTRUE(plot$ggchord$instances_prepared)) return(plot)
   skeleton <- which(vapply(plot$layers, function(l) identical(l$ggchord_params$type, "seq"), logical(1)))
-  order <- if (length(skeleton)) plot$layers[[tail(skeleton, 1)]]$ggchord_params$seq_order else NULL
+  order <- plot$ggchord$sequence_layout$order
   configured <- any(vapply(plot$layers, function(l) !is.null(l$ggchord_params$between), logical(1)))
   mirrored <- isTRUE(plot$coordinates$ggchord_sankey)
   activate <- mirrored || configured || (!is.null(order) && (anyDuplicated(order) ||
@@ -95,9 +95,9 @@ ggchord_prepare_instances <- function(plot) {
     plot$ggchord$data$seq_data) else plot$ggchord$data$seq_data
   order <- order %||% seqs$accver
   if (!is.character(order) || !length(order) || anyNA(order) || any(!order %in% seqs$accver))
-    ggchord_stop("seq_order must contain known source sequence IDs")
+    ggchord_stop("layout_sequences(): order must contain known source sequence IDs")
   if (mirrored) {
-    if (anyDuplicated(order)) ggchord_stop("coord_sankey() owns left/right copies; use each source once in seq_order")
+    if (anyDuplicated(order)) ggchord_stop("coord_sankey() owns left/right copies; use each source once in layout_sequences(order = ...)")
     if (configured) ggchord_stop("coord_sankey() routes query left and subject right; between is for repeated Chord/Collinear views")
     labels <- names(order) %||% unname(order)
     prefix <- ""
@@ -123,7 +123,7 @@ ggchord_prepare_instances <- function(plot) {
   virtual <- seqs[match(instances$accver, seqs$accver), , drop = FALSE]
   virtual$accver <- instances$key
   routes <- omissions <- list()
-  numeric_fields <- c("seq_orientation", "seq_gap", "seq_radius", "seq_curvature", "seq_labels",
+  numeric_fields <- c("seq_radius", "seq_curvature", "seq_labels",
     "seq_label_radius", "seq_label_rotation", "seq_label_size", "seq_label_hjust", "seq_label_vjust",
     "gene_width", "gene_label_radial_offset", "gene_label_circum_offset", "gene_label_circum_limit",
     "gene_label_rotation", "ribbon_gap", "link_gap", "label_size", "label_offset")
@@ -182,10 +182,9 @@ ggchord_prepare_instances <- function(plot) {
     for (role in intersect(layer$ggchord_role_aes, names(layer$ggchord_input_mapping)))
       layer$ggchord_input_mapping[[role]] <- rlang::new_quosure(rlang::sym(role), emptyenv())
     for (field in intersect(names(p), numeric_fields)) p[[field]] <- ggchord_instance_param(p[[field]], instances)
-    for (field in c("feature_position", "track_position")) if (!is.null(p[[field]]))
-      p[[field]] <- ggchord_instance_position(p[[field]], instances)
+    if (!is.null(p$feature_position))
+      p$feature_position <- ggchord_instance_position(p$feature_position, instances)
     if (type == "seq") {
-      p$seq_order <- instances$key
       p$seq_labels <- p$seq_labels %||% stats::setNames(instances$accver, instances$key)
       entities <- unique(instances$accver)
       colours <- stats::setNames(chord_default_palette(length(entities)), entities)
@@ -211,6 +210,11 @@ ggchord_prepare_instances <- function(plot) {
     chosen <- axis$ggchord_axis_sequences
     axis$ggchord_axis_sequences <- instances$key[instances$accver %in% chosen | instances$instance_id %in% chosen]
   }
+  arrangement <- plot$ggchord$sequence_layout %||% layout_sequences()
+  arrangement$order <- instances$key
+  for (field in c("orientation", "gap"))
+    arrangement[field] <- list(ggchord_instance_param(arrangement[[field]], instances))
+  plot$ggchord$sequence_layout <- arrangement
   plot$ggchord$data$seq_data <- virtual
   plot$ggchord$display_instances <- instances
   plot$ggchord$instance_routing <- report

@@ -18,7 +18,7 @@ scale_track_value_continuous(
 )
 }
 \arguments{
-\item{track}{Track ID from \code{\link[=position_track]{position_track()}}.}
+\item{track}{Track ID from \code{\link[=track_band]{track_band()}}, or \code{"default"}.}
 
 \item{name}{Axis title, default the track ID.}
 
@@ -26,8 +26,8 @@ scale_track_value_continuous(
 
 \item{unit}{Optional data-unit label retained in track exports.}
 
-\item{guide}{\code{"axis"} or \code{"none"} for the numerical track axis, or a native
-ggplot2::guide_axis() with local theme (axis.line/text/title), angle and
+\item{guide}{\code{"axis"} or \code{"none"} for the numerical track axis, or \code{\link[=guide_track_axis]{guide_track_axis()}}
+with a local theme (axis.line/text/title), angle and
 check.overlap. Other guide_axis options fail explicitly because this
 sequence-local numerical reference is not a Cartesian panel axis. Local
 guide styling overrides global ggchord.track.axis.* theme elements.}
@@ -45,6 +45,6 @@ not colour. A numerical axis is drawn by default; \code{guide = "none"} hides it
 \examples{
 scale_track_value_continuous("coverage", limits = c(0, 100), unit = "reads")
 scale_track_value_continuous("gc", limits = c(0, 1),
-  guide = ggplot2::guide_axis(theme = ggplot2::theme(
+  guide = guide_track_axis(theme = ggplot2::theme(
     axis.text = ggplot2::element_text(size = 9, colour = "#345F58"))))
 }

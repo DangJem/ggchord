@@ -1,9 +1,21 @@
+# R partially matches named arguments before the function sees its dots.
+# Inspect the original call without evaluating mappings or data callbacks.
+ggchord_check_argument_names <- function(call, fn) {
+  supplied <- names(as.list(call)[-1L])
+  formal <- setdiff(names(formals(fn)), "...")
+  unknown <- setdiff(supplied[nzchar(supplied)], formal)
+  for (key in unknown) {
+    matches <- formal[startsWith(formal, key)]
+    if (length(matches)) ggchord_stop("Spell out argument '", key,
+      "'. Matching names: ", paste(matches, collapse = ", "))
+  }
+}
+
 #' Capture user data and mappings separately from the computed placeholder
 #' @noRd
 ggchord_capture_layer_input <- function(lyr, data, mapping, roles) {
-  if (ggchord_local_position(lyr$position) && is.null(lyr$ggchord_params$feature_position) &&
-      is.null(lyr$ggchord_params$track_position))
-    ggchord_stop("Layer '", lyr$ggchord_type, "' cannot use a feature or physical track position")
+  if (ggchord_local_position(lyr$position) && is.null(lyr$ggchord_params$feature_position))
+    ggchord_stop("Layer '", lyr$ggchord_type, "' cannot use a feature position")
   mapping <- ggchord_normalize_mapping(mapping)
   if (rlang::is_formula(data)) data <- rlang::as_function(data)
   lyr$ggchord_input_data <- ggchord_normalize_accver(data)
@@ -29,9 +41,22 @@ ggchord_render_data_once <- function(callback) {
   reader
 }
 
+ggchord_native_facet_input <- function(layer) {
+  force(layer)
+  ggplot2::ggproto(NULL, layer, data = ggchord_render_data_once(layer$data))
+}
+
 ggchord_render_inputs <- function(plot) {
   for (i in seq_along(plot$layers)) {
     layer <- plot$layers[[i]]
+    # A native data callback can introduce a panel that has only reference
+    # geometry. Share its result with ggplot2 for this render, preserving the
+    # native layer subclass and leaving its original callback untouched.
+    if (is.null(layer$ggchord_type) && !inherits(plot$facet, "FacetNull") &&
+        is.function(layer$data) && !isTRUE(attr(layer$data, "ggchord_render_source"))) {
+      plot$layers[[i]] <- ggchord_native_facet_input(layer)
+      next
+    }
     reader <- layer$ggchord_input_data
     if (!is.function(reader) || isTRUE(attr(reader, "ggchord_render_source"))) next
     copy <- reconstruct_layer(layer, layer$data, mapping = layer$mapping)
@@ -161,6 +186,7 @@ ggchord_start_mapping <- function(q) {
 #' @noRd
 ggchord_resolve_layer_input <- function(lyr, fallback = NULL,
                                         data = ggchord_layer_source(lyr, fallback)) {
+  if (!is.null(lyr$ggchord_params$panel_input)) return(lyr$ggchord_params$panel_input)
   if (is.null(data)) return(NULL)
   type <- lyr$ggchord_params$type %||% ""
   source <- lyr$ggchord_params$input_source %||%
@@ -209,6 +235,11 @@ ggchord_resolve_layer_input <- function(lyr, fallback = NULL,
   if (!is.null(capture) && "mapped" %in% capture$requested &&
       is.null(capture$mapped) && is.null(lyr$ggchord_params$native_geom))
     capture$mapped <- data
+  if (type %in% c("gene", "gene_label", "gene_label_repel") &&
+      !isTRUE(lyr$ggchord_params$is_feature) && !isTRUE(lyr$ggchord_params$is_feature_label) &&
+      (is.null(data$strand) || anyNA(data$strand) || any(!data$strand %in% c("+", "-")))) ggchord_stop(
+    "geom_feature(preset = 'gene'): directional genes need '+'/'-' strand; use geom_feature() for nondirectional intervals"
+  )
   transform <- lyr$ggchord_input_transform
   if (!is.null(transform)) data <- transform(data)
   if (!is.null(source)) {
@@ -217,11 +248,7 @@ ggchord_resolve_layer_input <- function(lyr, fallback = NULL,
       source$rows <- source$rows[data$.biological_source_row]
     attr(data, "ggchord_source") <- source
   }
-  if (type %in% c("gene", "gene_label", "gene_label_repel") &&
-      !isTRUE(lyr$ggchord_params$is_feature) && !isTRUE(lyr$ggchord_params$is_feature_label) &&
-      (is.null(data$strand) || anyNA(data$strand) || any(!data$strand %in% c("+", "-")))) ggchord_stop(
-    "geom_gene(): directional genes need '+'/'-' strand; use geom_feature() for nondirectional intervals"
-  )
+
   data
 }
 
@@ -327,4 +354,75 @@ ggchord_attach_input_columns <- function(geometry, input) {
     geometry[[nm]] <- value
   }
   geometry
+}
+
+# Bind an explicitly used ggplot2 aesthetic to its standard scale and guide.
+# Domain-specific aesthetics still supply independently trained default styles.
+ggchord_bind_visual_mapping <- function(layer, plot) {
+  if (is.null(layer$ggchord_type)) return(layer)
+  if (identical(layer$ggchord_type, "track")) {
+    keys <- layer$geom_params$track_keys
+    user <- layer$ggchord_input_mapping
+    use <- vapply(names(keys), function(name) {
+      key <- keys[[name]]
+      key %in% names(user) && plot$scales$has_scale(name) && !plot$scales$has_scale(key)
+    }, logical(1))
+    if (any(use)) {
+      target <- keys[use]
+      to_standard <- stats::setNames(names(target), unname(target))
+      names(user)[match(target, names(user))] <- names(target)
+      layer$ggchord_input_mapping <- ggchord_track_stage_mapping(user,
+        layer$ggchord_params$track_id, replacements = to_standard)
+      defaults <- layer$geom$default_aes
+      names(defaults)[match(target, names(defaults))] <- names(target)
+      layer$geom <- ggchord_geom_defaults(layer$geom, defaults)
+      layer$geom_params$track_keys[use] <- names(target)
+    }
+    return(layer)
+  }
+  line_roles <- c(colour = "link_colour", alpha = "link_alpha",
+    linewidth = "link_linewidth", linetype = "link_linetype")
+  roles <- switch(layer$ggchord_type,
+    alignment = line_roles, link = line_roles,
+    gene_poly = c(fill = if (isTRUE(layer$ggchord_params$is_feature)) "feature_fill" else "gene_fill"),
+    seq = c(colour = "seq_colour"), ribbon = c(fill = "ribbon_fill", alpha = "ribbon_alpha"),
+    seq_region = c(fill = "region_fill"), NULL)
+  user <- layer$ggchord_input_mapping
+  if (isTRUE(layer$inherit.aes)) for (nm in setdiff(names(plot$mapping), names(user)))
+    user[[nm]] <- plot$mapping[[nm]]
+  for (nm in names(roles)) {
+    role <- roles[[nm]]
+    if (role %in% names(user)) next
+    mapped <- nm %in% names(user)
+    fixed <- nm %in% names(layer$aes_params)
+    if (!mapped && !fixed && !(plot$scales$has_scale(nm) && role %in% names(layer$mapping))) next
+    if (mapped && !is.null(layer$aes_params[[role]])) {
+      if (isTRUE(unname(layer$ggchord_params$style_defaults[role]))) layer$aes_params[[role]] <- NULL else {
+        if (nm %in% names(layer$ggchord_input_mapping))
+          ggchord_stop("Layer '", layer$ggchord_layer_id, "' both maps and fixes ", nm)
+        layer$ggchord_input_mapping[[nm]] <- NULL
+        next
+      }
+    }
+    if (mapped && fixed && nm %in% names(layer$ggchord_input_mapping))
+      ggchord_stop("Layer '", layer$ggchord_layer_id, "' both maps and fixes ", nm)
+    defaults <- layer$geom$default_aes
+    names(defaults)[names(defaults) == role] <- nm
+    layer$geom <- ggchord_geom_defaults(layer$geom, defaults)
+    if (!fixed) layer$mapping[[nm]] <- user[[nm]] %||% layer$mapping[[role]]
+    layer$mapping[[role]] <- NULL
+    if (role %in% names(layer$show.legend)) names(layer$show.legend)[names(layer$show.legend) == role] <- nm
+    if (identical(role, "feature_fill")) {
+      layer$ggchord_params$user_feature_fill <- TRUE
+      layer$ggchord_params$feature_fill_mapping <- layer$mapping[[nm]]
+      layer$ggchord_params$feature_fill_fixed <- layer$aes_params[[nm]]
+    }
+  }
+  layer
+}
+
+# ggproto retains the parent expression. Force it before replacing layer$geom.
+ggchord_geom_defaults <- function(parent, defaults) {
+  force(parent)
+  ggplot2::ggproto(NULL, parent, default_aes = defaults)
 }

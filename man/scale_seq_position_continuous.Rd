@@ -15,12 +15,12 @@ scale_seq_position_continuous(
   transform = "identity",
   n.breaks = 6,
   coordinates = c("relative", "source"),
-  sequences = NULL,
+  guide = guide_seq_axis(),
   ...
 )
 }
 \arguments{
-\item{name}{Scale name; position guides are disabled by default.}
+\item{name}{Optional scale name.}
 
 \item{breaks, minor_breaks, labels, limits, expand, oob, transform, n.breaks}{Standard
 continuous-scale controls.}
@@ -32,11 +32,7 @@ Breaks returned in transformed scale space are converted back to genomic
 positions in every coordinate mode. Explicit \code{breaks = NULL} and
 \code{minor_breaks = NULL} suppress the corresponding ticks.}
 
-\item{sequences}{Optional character vector selecting sequence axes by their
-displayed \code{accver}. \code{NULL} keeps all axes; \code{character()} hides every axis.
-Focused or segmented views use window IDs, not parent source accessions.
-Unknown or undisplayed identifiers produce an error. This controls axis
-lines, ticks and labels together without dropping sequence geometry.}
+\item{guide}{A \code{\link[=guide_seq_axis]{guide_seq_axis()}} declaration, or \code{"none"} to hide the sequence axes.}
 
 \item{...}{Additional arguments passed to \code{\link[ggplot2:continuous_scale]{ggplot2::continuous_scale()}}.}
 }
@@ -55,7 +51,7 @@ library(dplyr)
 data(seq_data_example)
 seqs <- seq_data_example |>
   select(accver, length)
-ggchord(seq_data = seqs) +
+ggchord(data = seqs) +
   geom_seq() +
   coord_collinear() +
   scale_seq_position_continuous(n.breaks = 4)

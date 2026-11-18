@@ -19,8 +19,10 @@ geom_feature(
   boundary_linetype = "22",
   position = "identity",
   show.legend = TRUE,
-  inherit.aes = FALSE,
-  ...
+  inherit.aes = TRUE,
+  ...,
+  id = NULL,
+  preset = c("default", "gene", "plasmid")
 )
 }
 \arguments{
@@ -54,7 +56,7 @@ shared feature geometry engine. In a circular feature-label composition,
 the base width responds to final label size within bounded limits.}
 
 \item{arrow_head_length, arrow_head_width}{Arrow-head dimensions in the
-sequence-local frame, shared with \code{\link[=geom_gene]{geom_gene()}}. Values above one for
+sequence-local frame. Values above one for
 \code{arrow_head_width} create a protruding block-arrow head.}
 
 \item{arrow_head_style}{Arrowhead construction: \code{"shouldered"} keeps the
@@ -74,12 +76,20 @@ marks never create additional arrowheads.}
 internal segment joins.}
 
 \item{position}{Feature placement. Use \code{"identity"}, \code{"strand"},
-\code{"plasmid"}, \code{\link[=position_strand]{position_strand()}}, \code{\link[=position_plasmid]{position_plasmid()}}, or
+\code{\link[=position_strand]{position_strand()}}, \code{\link[=position_offset]{position_offset()}}, or
 \code{\link[=position_feature_stack]{position_feature_stack()}}.}
 
 \item{show.legend, inherit.aes}{Standard ggplot2 layer arguments.}
 
 \item{...}{Additional fixed polygon aesthetics.}
+
+\item{id}{Optional plot-unique layer ID for label anchors and layout export.}
+
+\item{preset}{Use \code{"default"} for general intervals. The \code{"gene"} preset
+selects gene/CDS rows from the default unified source, requires known
+strands and uses strand-based arrows. Explicit layer data selects its own
+rows. The \code{"plasmid"} preset uses compact stacked bands, wider arrowheads
+and source feature colours. Explicit layer arguments override the preset.}
 }
 \value{
 A ggplot2 layer.
@@ -104,11 +114,18 @@ features <- feature_source |>
 # ASCII display copy for the default PDF help-example device.
 features <- features |>
   mutate(anno = gsub("\u03b1", "alpha", anno, fixed = TRUE))
-ggchord(seq_data = seqs) +
+ggchord(data = seqs) +
   geom_seq() +
   geom_feature(
     data = features,
     shape = "block"
   ) +
   coord_circular()
+
+intervals <- data.frame(accver = "A", start = 10, end = 70,
+                        strand = "+", type = "CDS", anno = "g")
+p <- ggchord(data.frame(accver = "A", length = 100)) + geom_seq()
+p + geom_feature(data = intervals, preset = "gene", width = .06) +
+  coord_collinear()
+p + geom_feature(data = intervals, preset = "plasmid") + coord_circular()
 }

@@ -4,11 +4,11 @@ CoordCollinear <- ggplot2::ggproto("CoordCollinear", CoordGgchord)
 #' Linear multi-sequence collinearity coordinates
 #'
 #' Draws sequences as left-aligned horizontal backbones, ordered from top to
-#' bottom by `geom_seq(seq_order = ...)`. All sequences share one linear sequence-unit
-#' scale. `seq_orientation = -1` reverses a sequence together with its features,
+#' bottom by `layout_sequences(order = ...)`. All sequences share one linear sequence-unit
+#' scale. `layout_sequences(orientation = -1)` reverses a sequence together with its features,
 #' links and axis without modifying the input data.
 #'
-#' In this coordinate system, `geom_seq(seq_gap = ...)` specifies the distance
+#' In this coordinate system, `layout_sequences(gap = ...)` specifies the distance
 #' between consecutive backbones as a proportion of the longest backbone's
 #' width (default 0.3). Positive Position offsets point upward and negative
 #' offsets downward, independently of sequence orientation. Sequence labels
@@ -43,7 +43,7 @@ CoordCollinear <- ggplot2::ggproto("CoordCollinear", CoordGgchord)
 #' direction, with evidence recorded in the exported layout diagnostics. This
 #' is a display heuristic, not a biological strand assignment or a guarantee
 #' of a global optimum. It cannot be combined with an explicit
-#' `geom_seq(seq_orientation = ...)`.
+#' `layout_sequences(orientation = ...)`.
 #'
 #' With `segments`, each accession remains an independent window but windows
 #' sharing `row_id` occupy one display row. Their table order is left to right;
@@ -67,7 +67,7 @@ CoordCollinear <- ggplot2::ggproto("CoordCollinear", CoordGgchord)
 #'   Missing and duplicate anchors are errors; multiple-copy targets must be
 #'   selected explicitly before constructing the coordinate system.
 #' @param orientation `"manual"` (default) uses sequence directions supplied
-#'   by `geom_seq()`. `"auto"` derives display directions from interval-link
+#'   by `layout_sequences()`. `"auto"` derives display directions from interval-link
 #'   evidence and records support and unresolved cases.
 #' @param min_support Minimum directional imbalance in `[0, 1]` for an automatic
 #'   change. It is the absolute difference between forward and reverse
@@ -89,7 +89,7 @@ CoordCollinear <- ggplot2::ggproto("CoordCollinear", CoordGgchord)
 #' data(ribbon_data_example)
 #' links <- ribbon_data_example |>
 #'   select(qaccver, saccver, qstart, qend, sstart, send)
-#' ggchord(seq_data = seqs, ribbon_data = links) +
+#' ggchord(prepare_ggchord_data(seq_data = seqs, ribbon_data = links)) +
 #'   geom_seq() +
 #'   geom_link_ribbon() +
 #'   geom_seq_label() +
@@ -140,9 +140,18 @@ coord_collinear <- function(
 }
 
 ggchord_validate_coord_contract <- function(plot) {
+  layout <- plot$ggchord$sequence_layout
+  if (!is.null(layout) && isTRUE(plot$coordinates$ggchord_dotplot))
+    ggchord_stop("coord_dotplot() owns both axes; use its x_seqs, y_seqs and orientation parameters")
   if (!isTRUE(plot$coordinates$ggchord_collinear)) return(invisible(plot))
   if (isTRUE(plot$coordinates$ggchord_radial) && !inherits(plot$facet, "FacetNull"))
     ggchord_stop("coord_radial_synteny(): facets are unsupported")
+  if (!is.null(layout$orientation)) {
+    if (!is.null(plot$coordinates$collinear_segments))
+      ggchord_stop("coord_collinear(): segments owns window orientation; remove layout_sequences(orientation = ...)")
+    if (identical(plot$coordinates$collinear_orientation, "auto"))
+      ggchord_stop("coord_collinear(): orientation = 'auto' conflicts with layout_sequences(orientation = ...)")
+  }
   for (layer in plot$layers) {
     params <- layer$ggchord_params
     if (is.null(params)) next
@@ -152,24 +161,15 @@ ggchord_validate_coord_contract <- function(plot) {
         !identical(params$link_branch %||% "none", "none"))
       ggchord_stop("coord_radial_synteny(): shared branches are unsupported; use link_branch='none'")
     if (identical(params$type, "seq")) {
-      if (!is.null(plot$coordinates$collinear_segments) &&
-          !is.null(params$seq_orientation)) ggchord_stop(
-        "coord_collinear(): segments owns window orientation; remove geom_seq(seq_orientation = ...)")
-      if (identical(plot$coordinates$collinear_orientation, "auto") &&
-          !is.null(params$seq_orientation)) ggchord_stop(
-        "coord_collinear(): orientation = 'auto' cannot be combined with ",
-        "geom_seq(seq_orientation = ...); remove the manual direction or ",
-        "use orientation = 'manual'"
-      )
       for (name in c("seq_radius", "seq_curvature")) {
         if (!is.null(params[[name]])) ggchord_stop(
           "coord_collinear(): explicit `", name, "` cannot be converted; ",
-          "remove it from geom_seq() and use seq_gap for track spacing"
+          "remove it from geom_seq() and use layout_sequences(gap = ...) for track spacing"
         )
       }
       if ("seq_ring" %in% names(layer$ggchord_input_mapping)) ggchord_stop(
         "coord_collinear(): `seq_ring` is circular; remove the mapping and ",
-        "scale_seq_ring_manual(), and use seq_order/seq_gap for linear tracks"
+        "scale_seq_ring_manual(), and use layout_sequences() for linear tracks"
       )
     }
     if (isTRUE(params$seq_label_radius_supplied)) ggchord_stop(
@@ -190,7 +190,7 @@ ggchord_validate_coord_contract <- function(plot) {
   }
   if (!is.null(plot$scales$get_scales("seq_ring"))) ggchord_stop(
     "coord_collinear(): scale_seq_ring_manual() controls circular radii; ",
-    "remove it and use geom_seq(seq_gap = ...) for linear track spacing"
+    "remove it and use layout_sequences(gap = ...) for linear track spacing"
   )
   invisible(plot)
 }

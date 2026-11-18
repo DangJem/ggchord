@@ -13,7 +13,7 @@ geom_primer_label_repel(
   max_overlaps = Inf,
   position = NULL,
   show.legend = FALSE,
-  inherit.aes = FALSE,
+  inherit.aes = TRUE,
   ...
 )
 }

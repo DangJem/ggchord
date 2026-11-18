@@ -356,20 +356,3 @@ ggchord_infer_visual_scales <- function(plot, layout, scales) {
   }
   scales
 }
-
-#' Rename the ribbon layers' fill mapping to the internal ribbon aesthetic
-#' @noRd
-rename_ribbon_layers <- function(plot, ribbon_indices, ribbon_aes, layout) {
-  if (ribbon_aes != "fill" && length(ribbon_indices) > 0 &&
-      !is.null(layout$ribbon_polys)) {
-    for (idx in ribbon_indices) {
-      lyr <- plot$layers[[idx]]
-      mp <- lyr$mapping
-      mp_names <- names(mp)
-      mp_names[mp_names == "fill"] <- ribbon_aes
-      names(mp) <- mp_names
-      plot$layers[[idx]] <- reconstruct_layer(lyr, lyr$data, mapping = mp)
-    }
-  }
-  plot
-}

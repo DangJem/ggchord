@@ -1,3 +1,63 @@
+#' Declare the arrangement of sequence backbones
+#'
+#' A plot has one sequence layout, independent of its drawing layers. Add the
+#' declaration before or after the layers. It also applies when the backbone
+#' is hidden. A named instance inherits its source orientation and gap unless
+#' overridden by instance ID. A single circular map uses the opening and
+#' direction in [coord_circular()]; [coord_dotplot()] owns both of its axes.
+#' @param order Source IDs in display order. Repeats create display instances;
+#'   use names such as c(A_high='A', B='B', A_low='A') for stable instance IDs.
+#'   Repeated-entity HSPs require a unique between route on each link layer.
+#' @param orientation Direction (1 or -1). A named vector selects source or display instance IDs; unspecified sequences use 1.
+#' @param gap Optional numeric. Gap proportion between sequences, default
+#'   0.03 in chord coordinates. A named vector can set the gap after each
+#'   sequence; omitted IDs use the coordinate default. In [coord_collinear()], a positive distance
+#'   between consecutive backbones as a proportion of the longest backbone's
+#'   width, default 0.3. The final sequence's gap is unused in linear layouts.
+#'   Segmented linear displays measure it against the longest display row;
+#'   windows in one row must request the same gap, and only gaps between rows
+#'   affect vertical placement.
+#' @param length_mode `"proportional"` (default) retains source-length ratios;
+#'   `"equal"` gives each displayed sequence the same angular allocation or
+#'   linear span without modifying source lengths. Shared absolute scale bars
+#'   are unavailable in multi-sequence equal mode; local axes retain source units.
+#' @return A layout declaration to add to a ggchord plot with `+`.
+#' @export
+#' @examples
+#' reference <- data.frame(accver = c("A", "B"), length = c(100, 200))
+#' ggchord(reference) +
+#'   geom_seq() +
+#'   layout_sequences(order = c("B", "A"), orientation = c(B = -1), gap = 0.2,
+#'                    length_mode = "equal") +
+#'   coord_collinear()
+layout_sequences <- function(order = NULL, orientation = NULL, gap = NULL,
+    length_mode = c("proportional", "equal")) {
+  ggchord_check_argument_names(sys.call(), sys.function())
+  if (!is.null(order) && (!is.character(order) || !length(order) || anyNA(order) || any(!nzchar(order))))
+    ggchord_stop("layout_sequences(): order must contain nonempty sequence IDs")
+  if (!is.null(names(order)) && (anyNA(names(order)) || any(!nzchar(names(order))) ||
+      anyDuplicated(names(order))))
+    ggchord_stop("layout_sequences(): display instance names must be nonempty and unique")
+  for (value in list(orientation, gap)) {
+    if (anyDuplicated(names(value)))
+      ggchord_stop("layout_sequences(): a sequence or instance cannot be configured twice")
+  }
+  structure(list(order = order, orientation = orientation, gap = gap,
+    length_mode = match.arg(length_mode)), class = "ggchord_sequence_layout")
+}
+
+#' @export
+#' @importFrom ggplot2 ggplot_add
+ggplot_add.ggchord_sequence_layout <- function(object, plot, ...) {
+  if (!inherits(plot, "ggchord")) ggchord_stop("Add layout_sequences() to a ggchord plot")
+  if (!is.null(plot$ggchord$sequence_layout))
+    ggchord_stop("Sequence layout already declared; supply one layout_sequences() per plot")
+  plot$ggchord$sequence_layout <- object
+  plot$ggchord$ref <- new.env(parent = emptyenv())
+  plot$ggchord$layout <- NULL
+  plot
+}
+
 # Sequence allocation, references and track geometry.
 ggchord_layout_sequence_step <- function(
     axisGap, axisMajLen, axisMinLen, circular, geometry_cache, labelOffset, lens, orientation,
@@ -12,7 +72,7 @@ ggchord_layout_sequence_step <- function(
   total_gap_prop <- sum(seq_gap)
 
   if (total_gap_prop >= 1) {
-    ggchord_stop("The sum of seq_gap cannot exceed 1 (no space left for sequences)")
+    ggchord_stop("The sum of layout_sequences(gap) cannot exceed 1 (no space left for sequences)")
   }
 
   seq_total_prop <- 1 - total_gap_prop

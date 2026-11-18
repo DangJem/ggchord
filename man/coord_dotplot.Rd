@@ -53,7 +53,7 @@ Standard ggplot2 annotations and explicit position scales remain available.
 \examples{
 data(seq_data_example)
 data(ribbon_data_example)
-ggchord(seq_data_example, ribbon_data_example) +
+ggchord(prepare_ggchord_data(seq_data_example, ribbon_data_example)) +
   geom_alignment_segment() +
   coord_dotplot()
 }

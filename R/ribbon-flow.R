@@ -192,20 +192,22 @@ ggchord_sequence_display_colours <- function(plot,layout) {
   layer$ggchord_resolved_input <- geometry
   layer <- reconstruct_layer(layer,geometry)
   native <- ggplot2::ggplot(mapping=plot$mapping)+layer
-  explicit <- plot$scales$get_scales("seq_colour")
-  if(!is.null(explicit))native$scales$add(explicit$clone())
+  for (name in c("seq_colour", "colour")) {
+    explicit <- plot$scales$get_scales(name)
+    if (!is.null(explicit)) native$scales$add(explicit$clone())
+  }
   defaults <- list(scale_seq_colour_manual(values=layout$legend_seq_colors %||% layout$seq_colors,guide="none"))
   defaults <- ggchord_infer_visual_scales(native,layout,defaults)
   native <- attach_ggchord_scales(native,defaults)
   built <- ggplot2::ggplot_build(native)$data[[1]]
   data.frame(instance=if(is.null(layout$display_instances)) as.character(geometry$accver) else geometry$display_instance_id,
-    x=geometry$x,y=geometry$y,colour=built$seq_colour,stringsAsFactors=FALSE)
+    x=geometry$x,y=geometry$y,colour=built$colour %||% built$seq_colour,stringsAsFactors=FALSE)
 }
 
 ggchord_ribbon_uses_flow <- function(layer,plot) {
   if(!identical(layer$ggchord_type,"ribbon") || !isTRUE(layer$ggchord_params$gradient))return(FALSE)
   user <- layer$ggchord_input_mapping
   if(isTRUE(layer$inherit.aes))user <- c(user,plot$mapping[setdiff(names(plot$mapping),names(user))])
-  is.null(layer$aes_params$ribbon_fill) && !"ribbon_fill" %in% names(user) &&
-    is.null(plot$scales$get_scales("ribbon_fill"))
+  is.null(layer$aes_params$ribbon_fill) && !any(c("ribbon_fill", "fill") %in% names(user)) &&
+    !plot$scales$has_scale("ribbon_fill") && !plot$scales$has_scale("fill")
 }

@@ -7,9 +7,6 @@
 geom_seq(
   mapping = NULL,
   data = NULL,
-  seq_order = NULL,
-  seq_orientation = NULL,
-  seq_gap = NULL,
   seq_radius = NULL,
   seq_curvature = NULL,
   seq_style = c("auto", "single", "double", "band"),
@@ -18,30 +15,15 @@ geom_seq(
   linewidth = 0.9,
   position = "identity",
   show.legend = TRUE,
-  inherit.aes = FALSE,
-  length_mode = c("proportional", "equal"),
-  ...
+  inherit.aes = TRUE,
+  ...,
+  id = NULL
 )
 }
 \arguments{
 \item{mapping}{Default NULL (uses pre-computed data)}
 
 \item{data}{Default NULL (retrieved automatically from the layout)}
-
-\item{seq_order}{Source IDs in display order. Repeats create display instances;
-use names such as c(A_high='A', B='B', A_low='A') for stable instance IDs.
-Repeated-entity HSPs require a unique between route on each link layer.}
-
-\item{seq_orientation}{Optional numeric (1 or -1). Sequence orientation, default 1}
-
-\item{seq_gap}{Optional numeric. Gap proportion between sequences, default
-0.03 in chord coordinates. A named vector can set the gap after each
-sequence; omitted IDs use the coordinate default. In \code{\link[=coord_collinear]{coord_collinear()}}, a positive distance
-between consecutive backbones as a proportion of the longest backbone's
-width, default 0.3. The final sequence's gap is unused in linear layouts.
-Segmented linear displays measure it against the longest display row;
-windows in one row must request the same gap, and only gaps between rows
-affect vertical placement.}
 
 \item{seq_radius}{Optional numeric (> 0). Sequence arc radius, default 1.0}
 
@@ -58,27 +40,24 @@ affect vertical placement.}
 
 \item{position, show.legend, inherit.aes}{Standard ggplot2 layer arguments.}
 
-\item{length_mode}{\code{"proportional"} (default) retains source-length ratios;
-\code{"equal"} gives each displayed sequence the same angular allocation or
-linear span without modifying source lengths. Shared absolute scale bars
-are unavailable in multi-sequence equal mode; local axes retain source units.}
-
 \item{...}{Additional fixed path aesthetics. \code{colour} (or \code{color}) sets
 \code{seq_colour}. Explicit fixed values take precedence over matching mappings;
 omit fixed arguments to retain mapped styles.}
+
+\item{id}{Optional unique layer ID for layout and source exports.}
 }
 \value{
 A ggplot2 layer.
 }
 \description{
 Draws arcs (or straight lines, depending on the curvature setting) representing sequences in the chord diagram.
-Sequence layout parameters (order, orientation, radius, curvature, colors, etc.) are specified here.
+Use \code{\link[=layout_sequences]{layout_sequences()}} to change the sequence order, orientation, spacing or length allocation.
 }
 \examples{
 library(dplyr)
 data(seq_data_example)
 seqs <- seq_data_example |>
   select(accver, length)
-ggchord(seq_data = seqs) +
+ggchord(data = seqs) +
   geom_seq()
 }

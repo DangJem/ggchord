@@ -47,7 +47,7 @@ Missing and duplicate anchors are errors; multiple-copy targets must be
 selected explicitly before constructing the coordinate system.}
 
 \item{orientation}{\code{"manual"} (default) uses sequence directions supplied
-by \code{geom_seq()}. \code{"auto"} derives display directions from interval-link
+by \code{layout_sequences()}. \code{"auto"} derives display directions from interval-link
 evidence and records support and unresolved cases.}
 
 \item{min_support}{Minimum directional imbalance in \verb{[0, 1]} for an automatic
@@ -70,12 +70,12 @@ A ggplot2 Coord object for composition with a ggchord plot.
 }
 \description{
 Draws sequences as left-aligned horizontal backbones, ordered from top to
-bottom by \code{geom_seq(seq_order = ...)}. All sequences share one linear sequence-unit
-scale. \code{seq_orientation = -1} reverses a sequence together with its features,
+bottom by \code{layout_sequences(order = ...)}. All sequences share one linear sequence-unit
+scale. \code{layout_sequences(orientation = -1)} reverses a sequence together with its features,
 links and axis without modifying the input data.
 }
 \details{
-In this coordinate system, \code{geom_seq(seq_gap = ...)} specifies the distance
+In this coordinate system, \code{layout_sequences(gap = ...)} specifies the distance
 between consecutive backbones as a proportion of the longest backbone's
 width (default 0.3). Positive Position offsets point upward and negative
 offsets downward, independently of sequence orientation. Sequence labels
@@ -110,7 +110,7 @@ insufficiently supported and unconnected sequences retain their initial
 direction, with evidence recorded in the exported layout diagnostics. This
 is a display heuristic, not a biological strand assignment or a guarantee
 of a global optimum. It cannot be combined with an explicit
-\code{geom_seq(seq_orientation = ...)}.
+\code{layout_sequences(orientation = ...)}.
 
 With \code{segments}, each accession remains an independent window but windows
 sharing \code{row_id} occupy one display row. Their table order is left to right;
@@ -130,7 +130,7 @@ seqs <- seq_data_example |>
 data(ribbon_data_example)
 links <- ribbon_data_example |>
   select(qaccver, saccver, qstart, qend, sstart, send)
-ggchord(seq_data = seqs, ribbon_data = links) +
+ggchord(prepare_ggchord_data(seq_data = seqs, ribbon_data = links)) +
   geom_seq() +
   geom_link_ribbon() +
   geom_seq_label() +

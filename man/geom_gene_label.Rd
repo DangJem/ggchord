@@ -17,7 +17,7 @@ geom_gene_label(
   label_wrap = NULL,
   position = "identity",
   show.legend = FALSE,
-  inherit.aes = FALSE,
+  inherit.aes = TRUE,
   ...
 )
 }
@@ -75,7 +75,7 @@ instead.
 }
 \description{
 Draws the gene annotation labels on a chord diagram. This layer is
-independent from \code{\link{geom_gene}()}: add it after \code{geom_gene()}
+independent from \code{\link{geom_feature}()}: add it after \code{geom_feature(preset = "gene")}
 to annotate the gene arrows with their texts.
 }
 \details{
@@ -95,8 +95,8 @@ data(gene_data_example)
 genes <- gene_data_example |>
   slice_head(n = 3) |>
   transmute(accver, start, end, strand = source_strand, anno)
-ggchord(seq_data = seqs, gene_data = genes) +
+ggchord(prepare_ggchord_data(seq_data = seqs, gene_data = genes)) +
   geom_seq() +
-  geom_gene() +
+  geom_feature(preset = "gene") +
   geom_gene_label()
 }

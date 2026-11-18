@@ -1,12 +1,11 @@
 # Explicit annotation tracks: scale values are independent of physical bands.
 ggchord_track_aes <- function(role, track) {
-  if (!is.character(track) || length(track) != 1L || is.na(track) || !nzchar(track))
-    ggchord_stop("Track scales require one nonempty track ID")
+  track <- ggchord_track_id(track)
   paste0("track_", role, "_", paste(format(charToRaw(enc2utf8(track))), collapse = ""))
 }
 
-ggchord_track_stage_mapping <- function(mapping, track) {
-  replacements <- c(fill = ggchord_track_aes("fill", track),
+ggchord_track_stage_mapping <- function(mapping, track, replacements = NULL) {
+  if (is.null(replacements)) replacements <- c(fill = ggchord_track_aes("fill", track),
     colour = ggchord_track_aes("colour", track), color = ggchord_track_aes("colour", track),
     track_fill = ggchord_track_aes("fill", track), track_colour = ggchord_track_aes("colour", track))
   rewrite <- function(x, staged = FALSE) {
@@ -31,45 +30,69 @@ ggchord_track_stage_mapping <- function(mapping, track) {
   mapping
 }
 
-#' Place a quantitative layer in an explicit sequence-local band
+ggchord_track_id <- function(id) {
+  if (!is.character(id) || length(id) != 1L || is.na(id) || !nzchar(trimws(id)))
+    ggchord_stop("Supply one nonempty track ID, for example track = 'depth'")
+  id
+}
+
+#' Declare a quantitative band along sequence backbones
 #'
-#' Layers with the same track ID share a band and numerical scale across all
-#' displayed sequences and windows. Their declarations must agree. Outside
-#' means positive local normal (up in linear coordinates), inside negative.
-#' The coordinate system resolves physical placement; feature-stack lanes and
-#' sequence ring radii are unrelated to track IDs.
-#' @param track One stable nonempty character ID.
-#' @param side `"outside"` or `"inside"`.
+#' Add a band to a ggchord plot and reference its ID from any number of
+#' quantitative layers, before or after its declaration. Omit `track` on a
+#' layer to use the shared `"default"` band. Declare that ID explicitly to
+#' change its placement. Layers on the same band share a numerical scale
+#' across displayed sequences and windows. Use separate IDs for different units.
+#' @param id One nonempty character ID.
+#' @param side `"outside"` (positive local normal, up in linear coordinates)
+#'   or `"inside"`.
 #' @param order Finite ordering priority, nearest band first. Ties use ID order.
-#' @param width,gap Positive band width and nonnegative preceding gap. Absolute
-#'   grid units (mm, cm, inches or points) are resolved against the render
-#'   context. Numeric values retain native layout units. Numeric per-sequence
-#'   vectors/lists follow the usual sequence parameter formats.
-#' @return A ggplot2 Position object for the three track geoms.
+#' @param width,gap Positive band width and nonnegative preceding gap. Supply
+#'   an absolute grid unit (mm, cm, inches or points), or native layout units
+#'   as a scalar or a per-sequence numeric vector/list.
+#' @return A band declaration to add with `+`.
 #' @md
 #' @export
 #' @examples
-#' position_track("depth", width = unit(4, "mm"))
-position_track <- function(track, side = c("outside", "inside"), order = 1,
+#' observations <- data.frame(accver = "A", pos = c(25, 75), depth = c(3, 5))
+#' ggchord(data.frame(accver = "A", length = 100)) +
+#'   track_band("depth", width = grid::unit(8, "mm")) +
+#'   geom_track_col(aes(pos, depth), data = observations, track = "depth", width = 10) +
+#'   geom_track(aes(pos, depth), data = observations, geom = "point", track = "depth") +
+#'   coord_collinear()
+track_band <- function(id, side = c("outside", "inside"), order = 1,
     width = grid::unit(4, "mm"), gap = grid::unit(1, "mm")) {
-  if (!is.character(track) || length(track) != 1L || is.na(track) || !nzchar(track))
-    ggchord_stop("position_track(): track must be one nonempty ID")
+  ggchord_check_argument_names(sys.call(), sys.function())
+  id <- ggchord_track_id(id)
   side <- match.arg(side)
-  if (!is.numeric(order) || length(order) != 1L || !is.finite(order)) ggchord_stop("position_track(): order must be finite")
+  if (!is.numeric(order) || length(order) != 1L || !is.finite(order)) ggchord_stop("track_band(): order must be finite")
   for (name in c("width", "gap")) {
     value <- if (name == "width") width else gap
     if (grid::is.unit(value)) {
       if (length(value) != 1L || !grid::unitType(value) %in% c("mm", "cm", "inches", "points", "bigpts"))
-        ggchord_stop("position_track(): use one absolute physical unit, not npc/native units")
-      number <- as.numeric(value)
-      if (!is.finite(number) || number < 0 || (name == "width" && number == 0))
-        ggchord_stop("position_track(): width must be positive and gap nonnegative")
-    } else if (!is.numeric(unlist(value)) || any(!is.finite(unlist(value))) ||
-        any(unlist(value) < 0) || (name == "width" && any(unlist(value) == 0)))
-      ggchord_stop("position_track(): width must be positive and gap nonnegative")
+        ggchord_stop("track_band(): use one absolute physical unit for ", name)
+      numbers <- as.numeric(value)
+    } else {
+      numbers <- unlist(value, use.names = FALSE)
+    }
+    if (!length(numbers) || !is.numeric(numbers) || any(!is.finite(numbers)) ||
+        any(numbers < 0) || (name == "width" && any(numbers == 0)))
+      ggchord_stop("track_band(): width must be positive and gap nonnegative")
   }
-  ggplot2::ggproto(NULL, ggplot2::PositionIdentity, ggchord_track_position = TRUE,
-    track = track, side = side, track_order = order, width = width, gap = gap)
+  structure(list(id = id, side = side, track_order = order, width = width, gap = gap),
+    class = "ggchord_track_band")
+}
+
+#' @export
+#' @importFrom ggplot2 ggplot_add
+ggplot_add.ggchord_track_band <- function(object, plot, ...) {
+  if (!inherits(plot, "ggchord")) ggchord_stop("Add track_band() to a ggchord plot")
+  if (!is.null(plot$ggchord$track_bands[[object$id]]))
+    ggchord_stop("Track band '", object$id, "' was already declared; declare each ID once")
+  plot$ggchord$track_bands[[object$id]] <- object
+  plot$ggchord$ref <- new.env(parent = emptyenv())
+  plot$ggchord$layout <- NULL
+  plot
 }
 
 #' Draw explicit quantitative tracks along sequence backbones
@@ -92,9 +115,14 @@ position_track <- function(track, side = c("outside", "inside"), order = 1,
 #' explicit `closed = TRUE`; missing endpoints are not joined across NA.
 #'
 #' @param mapping,data Standard ggplot2 mapping and layer input.
-#' @param track Physical band from [position_track()]. Supply it once per layer.
-#' @param position Legacy physical band or a ggplot2 position adjustment for
-#'   native line mappings. A closed line uses the sequence-local position.
+#' @param track Character ID declared with [track_band()]. Omit for the default band.
+#' @param id Optional unique layer ID used in layout and source exports.
+#' @param position ggplot2 data position. Full-band interval tiles and closed
+#'   lines use identity. For tiles with local numerical heights and data
+#'   adjustments, use `geom_track(geom = "tile")`. Open lines with x/y
+#'   mappings, an explicit stat, or a data adjustment use the native line
+#'   grammar. Lines with sequence-local roles and identity position preserve
+#'   input order, missing-value breaks and strict increasing positions.
 #' @param fill,colour,alpha,linewidth,linetype Fixed styles; fill and colour
 #'   mappings use the dedicated track roles and scoped scales.
 #' @param closed Explicitly close a complete circular line series.
@@ -128,45 +156,49 @@ position_track <- function(track, side = c("outside", "inside"), order = 1,
 #'   axis.text = element_text(size = 9), axis.text.check.overlap = TRUE
 #' ) +
 #'   theme(legend.position = "bottom")
-#' p_tracks <- ggchord(seq_data = track_seq) +
+#' p_tracks <- ggchord(data = track_seq) +
 #'   geom_seq() +
 #'   geom_seq_center_label() +
+#'   track_band("gc", width = unit(6, "mm")) +
 #'   geom_track_col(aes(track_value = gc, track_fill = gc),
 #'     data = bins,
-#'     position = position_track("gc", width = unit(6, "mm"))
+#'     track = "gc"
 #'   ) +
 #'   scale_track_value_continuous("gc", limits = c(0, 1), unit = "GC fraction") +
 #'   scale_track_fill_gradientn("gc", colours = c("#EDF1EA", "#8AAE9C", "#345F58")) +
 #'   coord_circular() +
 #'   doc_theme
-#' ggchord(track_seq) + geom_track_line(aes(x = (start + end) / 2, y = gc), data = bins,
-#'   track = position_track("gc")) + coord_collinear()
+#' ggchord(track_seq) + geom_track_line(aes(x = (start + end) / 2, y = gc), data = bins) + coord_collinear()
 geom_track_tile <- function(mapping = NULL, data = NULL, position = NULL,
     fill = "#86AFB9", colour = NA, alpha = 1, linewidth = .25,
-    linetype = 1, bounds = c("error", "clip"), show.legend = NA, inherit.aes = FALSE, ..., track = NULL) {
+    linetype = 1, bounds = c("error", "clip"), show.legend = NA, inherit.aes = TRUE, ..., track = NULL, id = NULL) {
+  ggchord_check_argument_names(sys.call(), sys.function())
   fixed <- c(fill = !missing(fill), colour = !missing(colour), alpha = !missing(alpha),
     linewidth = !missing(linewidth), linetype = !missing(linetype))
-  if (!is.null(track) && !is.null(position))
-    ggchord_stop("Declare the physical track only once")
-  ggchord_track_layer("tile", mapping, data, track %||% position, fill, colour, alpha,
-    linewidth, linetype, bounds, 0, FALSE, show.legend, inherit.aes, fixed, list(...))
+  if (!ggchord_is_data_identity(position %||% "identity"))
+    ggchord_stop("Full-band tiles require identity position; use geom_track(geom = 'tile') for data adjustments")
+  ggchord_track_layer("tile", mapping, data, track, fill, colour, alpha,
+    linewidth, linetype, bounds, 0, FALSE, show.legend, inherit.aes, fixed, list(...), id = id)
 }
 #' @rdname geom_track_tile
 #' @export
 geom_track_line <- function(mapping = NULL, data = NULL, position = NULL,
     colour = "#387D88", alpha = 1, linewidth = .4, linetype = 1,
-    closed = FALSE, bounds = c("error", "clip"), show.legend = NA, inherit.aes = FALSE, ..., track = NULL) {
+    closed = FALSE, bounds = c("error", "clip"), show.legend = NA, inherit.aes = TRUE, ..., track = NULL, id = NULL) {
+  ggchord_check_argument_names(sys.call(), sys.function())
   fixed <- c(fill = FALSE, colour = !missing(colour), alpha = !missing(alpha),
     linewidth = !missing(linewidth), linetype = !missing(linetype))
   if (!is.logical(closed) || length(closed) != 1L || is.na(closed)) ggchord_stop("closed must be TRUE or FALSE")
-  native <- !is.null(track) || any(c("x", "y") %in% names(mapping)) ||
-    (!is.null(position) && !(inherits(position, "Position") && isTRUE(position$ggchord_track_position)))
+  dots <- list(...)
+  identity <- ggchord_is_data_identity(position %||% "identity")
+  if (closed && (!identity || !is.null(dots$stat)))
+    ggchord_stop("Closed lines require identity position and no computed statistic")
+  native <- any(c("x", "y") %in% names(mapping)) || !identity || !is.null(dots$stat)
   if (native && !closed) {
-    dots <- list(...)
     for (key in names(fixed)[fixed]) dots[[key]] <- get(key)
     return(do.call(geom_track, c(list(mapping = mapping, data = data, geom = "line",
       track = track, position = position, bounds = match.arg(bounds), show.legend = show.legend,
-      inherit.aes = inherit.aes), dots)))
+      inherit.aes = inherit.aes, id = id), dots)))
   }
   if (closed && !is.null(mapping)) {
     for (key in intersect(c("x", "y"), names(mapping))) {
@@ -175,17 +207,16 @@ geom_track_line <- function(mapping = NULL, data = NULL, position = NULL,
       names(mapping)[names(mapping) == key] <- role
     }
   }
-  if (!is.null(track) && !is.null(position))
-    ggchord_stop("Declare the physical track only once")
-  ggchord_track_layer("line", mapping, data, track %||% position, NA, colour, alpha,
-    linewidth, linetype, bounds, 0, closed, show.legend, inherit.aes, fixed, list(...))
+  ggchord_track_layer("line", mapping, data, track, NA, colour, alpha,
+    linewidth, linetype, bounds, 0, closed, show.legend, inherit.aes, fixed, list(...), id = id)
 }
 #' @rdname geom_track
 #' @export
 geom_track_bar <- function(mapping = NULL, data = NULL, position = NULL,
     baseline = 0, fill = "#86AFB9", colour = NA, alpha = 1,
     linewidth = .25, linetype = 1, bounds = c("error", "clip"), show.legend = NA,
-    inherit.aes = FALSE, ..., track = NULL, stat = "count") {
+    inherit.aes = TRUE, ..., track = NULL, stat = "count") {
+  ggchord_check_argument_names(sys.call(), sys.function())
   if (!is.numeric(baseline) || length(baseline) != 1L || !is.finite(baseline))
     ggchord_stop("geom_track_bar(): baseline must be one finite number")
   if (baseline != 0) ggchord_stop("geom_track_bar(): count uses a zero baseline; use geom_track_col() for supplied values")
@@ -197,19 +228,19 @@ geom_track_bar <- function(mapping = NULL, data = NULL, position = NULL,
     position = position, bounds = bounds, show.legend = show.legend, inherit.aes = inherit.aes), dots))
 }
 
-ggchord_track_layer <- function(kind, mapping, data, position, fill, colour,
-    alpha, linewidth, linetype, bounds, baseline, closed, show.legend, inherit.aes, fixed, dots) {
-  if (!inherits(position, "Position") || !isTRUE(position$ggchord_track_position)) ggchord_stop("Track geoms require position_track()")
+ggchord_track_layer <- function(kind, mapping, data, track, fill, colour,
+    alpha, linewidth, linetype, bounds, baseline, closed, show.legend, inherit.aes, fixed, dots, id = NULL) {
+  track <- ggchord_track_id(track %||% "default")
   if (!is.numeric(baseline) || length(baseline) != 1L || !is.finite(baseline)) ggchord_stop("Track baseline must be finite")
   mapping <- ggchord_normalize_mapping(mapping) %||% ggplot2::aes()
-  mapping <- ggchord_track_stage_mapping(mapping, position$track)
+  mapping <- ggchord_track_stage_mapping(mapping, track)
   if (any(c("x", "y") %in% names(mapping))) ggchord_stop("Track geometry maps accver/pos or start/end; do not override layout x/y")
   fixed[["colour"]] <- fixed[["colour"]] || "color" %in% names(dots)
   alias <- ggchord_colour_alias(colour, dots, "track geom", sys.call(-1L))
   colour <- alias$colour; dots <- alias$dots
   if ("fill" %in% names(mapping)) names(mapping)[names(mapping) == "fill"] <- "track_fill"
   if ("colour" %in% names(mapping)) names(mapping)[names(mapping) == "colour"] <- "track_colour"
-  keys <- c(fill = ggchord_track_aes("fill", position$track), colour = ggchord_track_aes("colour", position$track))
+  keys <- c(fill = ggchord_track_aes("fill", track), colour = ggchord_track_aes("colour", track))
   for (role in names(keys)) names(mapping)[names(mapping) == paste0("track_", role)] <- keys[[role]]
   geom <- ggplot2::ggproto(NULL, GeomGgchordTrack)
   names(geom$default_aes)[names(geom$default_aes) == "fill"] <- keys[["fill"]]
@@ -226,11 +257,11 @@ ggchord_track_layer <- function(kind, mapping, data, position, fill, colour,
   layer <- ggplot2::layer(data = data.frame(x = numeric(), y = numeric(), group = integer()),
     mapping = ggplot2::aes(x = x, y = y, group = group, label = label,
       .component = .component), geom = geom,
-    stat = "identity", position = position, show.legend = show.legend,
+    stat = "identity", position = "identity", show.legend = show.legend,
     inherit.aes = inherit.aes, check.aes = FALSE,
     params = c(styles, list(track_keys = keys, track_kind = kind), dots))
   layer$ggchord_type <- "track"
-  layer$ggchord_params <- list(type = "track", track_kind = kind, track_position = position,
+  layer$ggchord_params <- list(type = "track", id = id, track_kind = kind, track_id = track,
     baseline = baseline, closed = closed, bounds = match.arg(bounds, c("error", "clip")), physical_layout = TRUE)
   ggchord_capture_layer_input(layer, data, mapping, c("accver", "start", "end", "pos", "track_value", "group"))
 }
@@ -321,7 +352,7 @@ ggchord_prepare_track_layers <- function(plot) {
     inherited <- ggchord_normalize_mapping(plot$mapping)
     for (name in setdiff(names(inherited), c("x", "y"))) if (!name %in% names(mapping)) mapping[[name]] <- inherited[[name]]
     for (role in c("fill", "colour")) {
-      key <- ggchord_track_aes(role, layer$ggchord_params$track_position$track)
+      key <- ggchord_track_aes(role, layer$ggchord_params$track_id)
       public <- paste0("track_", role)
       for (name in c(role, public)) if (name %in% names(mapping)) {
         if (!key %in% names(mapping)) mapping[[key]] <- mapping[[name]]
@@ -330,7 +361,7 @@ ggchord_prepare_track_layers <- function(plot) {
     }
     for (name in intersect(names(layer$aes_params), names(mapping))) mapping[[name]] <- NULL
     layer <- reconstruct_layer(layer, layer$data, mapping = layer$mapping)
-    layer$ggchord_input_mapping <- ggchord_track_stage_mapping(mapping, layer$ggchord_params$track_position$track)
+    layer$ggchord_input_mapping <- ggchord_track_stage_mapping(mapping, layer$ggchord_params$track_id)
     layer$inherit.aes <- FALSE
     layer
   })
@@ -342,12 +373,12 @@ ggchord_prepare_track_layers <- function(plot) {
 #' Uses an independent continuous scale for each track ID. The same ID shares
 #' its domain across sequences, windows and layers. The scale controls height,
 #' not colour. A numerical axis is drawn by default; `guide = "none"` hides it.
-#' @param track Track ID from [position_track()].
+#' @param track Track ID from [track_band()], or `"default"`.
 #' @param name Axis title, default the track ID.
 #' @param limits,breaks,labels,transform,oob Standard continuous-scale controls.
 #' @param unit Optional data-unit label retained in track exports.
-#' @param guide `"axis"` or `"none"` for the numerical track axis, or a native
-#'   ggplot2::guide_axis() with local theme (axis.line/text/title), angle and
+#' @param guide `"axis"` or `"none"` for the numerical track axis, or [guide_track_axis()]
+#'   with a local theme (axis.line/text/title), angle and
 #'   check.overlap. Other guide_axis options fail explicitly because this
 #'   sequence-local numerical reference is not a Cartesian panel axis. Local
 #'   guide styling overrides global ggchord.track.axis.* theme elements.
@@ -358,12 +389,11 @@ ggchord_prepare_track_layers <- function(plot) {
 #' @examples
 #' scale_track_value_continuous("coverage", limits = c(0, 100), unit = "reads")
 #' scale_track_value_continuous("gc", limits = c(0, 1),
-#'   guide = ggplot2::guide_axis(theme = ggplot2::theme(
+#'   guide = guide_track_axis(theme = ggplot2::theme(
 #'     axis.text = ggplot2::element_text(size = 9, colour = "#345F58"))))
 scale_track_value_continuous <- function(track, name = track, limits = NULL,
     breaks = ggplot2::waiver(), labels = ggplot2::waiver(), transform = "identity",
     oob = scales::censor, unit = NULL, guide = c("axis", "none"), ...) {
-  position_track(track)
   if (!is.null(unit) && (!is.character(unit) || length(unit) != 1L || is.na(unit)))
     ggchord_stop("Track scale unit must be one character label or NULL")
   sc <- ggplot2::continuous_scale(ggchord_track_aes("value", track), palette = identity,
@@ -416,7 +446,7 @@ ggchord_add_track_scales <- function(plot) {
     if (!identical(layer$ggchord_type, "track")) next
     mapping <- layer$ggchord_input_mapping
     for (role in c("fill", "colour")) {
-      track <- layer$ggchord_params$track_position$track
+      track <- layer$ggchord_params$track_id
       key <- ggchord_track_aes(role, track)
       if (!key %in% names(mapping) || plot$scales$has_scale(key)) next
       if (is.null(ggchord_start_mapping(mapping[[key]]))) next

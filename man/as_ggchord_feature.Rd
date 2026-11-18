@@ -22,7 +22,7 @@ Conflicting metadata names receive a \code{metadata_} prefix; the attribute's
 \code{GRanges} coordinates are already one-based inclusive and are not shifted.
 Strand \code{*} is retained as \code{source_strand}, while the output uses
 \code{strand = "."} and \code{directionality = "none"}. Use the returned table in
-\code{geom_feature(data = ...)} to preserve nondirectional intervals; \code{geom_gene()}
+\code{geom_feature(data = ...)} to preserve nondirectional intervals; \code{geom_feature(preset = "gene")}
 requires directional gene input. No unknown strand is invented as \code{+}.
 }
 \examples{
@@ -38,7 +38,7 @@ renamed <- genes |>
 features <- as_ggchord_feature(renamed,
   mapping = c(accver = "chrom", start = "left", end = "right")
 )
-ggchord(seq_data = seqs) +
+ggchord(data = seqs) +
   geom_seq() +
   geom_feature(data = features)
 }

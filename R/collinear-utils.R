@@ -78,43 +78,56 @@ ggchord_collinear_check_gap <- function(q, s, qgap, sgap, ref, caller) {
   if (any(!is.finite(c(qgap, sgap))) || any(c(qgap, sgap) < 0) ||
       max(qgap) + max(sgap) >= distance) ggchord_stop(
     caller, ": endpoint clearances do not fit between ", q, " and ", s,
-    "; increase geom_seq(seq_gap = ...), reduce an explicit gap, or move feature bands"
+    "; increase layout_sequences(gap = ...), reduce an explicit gap, or move feature bands"
   )
   invisible(NULL)
 }
 
-ggchord_match_feature_rows <- function(labels, features) {
-  if (is.null(labels) || is.null(features)) return(NULL)
+ggchord_match_feature_rows <- function(labels, features, same_source, strict = FALSE) {
+  coordinates <- c("accver", "start", "end", "strand")
+  if (is.null(labels) || is.null(features) ||
+      !all(coordinates %in% intersect(names(labels), names(features)))) return(NULL)
+  if (!nrow(labels)) return(integer())
+  if (!nrow(features)) return(NULL)
+  index <- NULL
   if ("feature_id" %in% names(labels) && "feature_id" %in% names(features)) {
-    a <- as.character(labels$feature_id); b <- as.character(features$feature_id)
-    complete_ids <- !anyNA(a) && !anyNA(b) && all(nzchar(a)) && all(nzchar(b))
-    if (complete_ids) {
-      # One source feature may occur in several explicitly focused windows.
-      # Identity for label placement is local to the displayed accession.
-      if ("accver" %in% names(labels) && "accver" %in% names(features)) {
-        a <- paste(nchar(as.character(labels$accver)), labels$accver, a, sep = ":")
-        b <- paste(nchar(as.character(features$accver)), features$accver, b, sep = ":")
-      }
-      if (anyNA(a) || anyNA(b) || any(!nzchar(a)) || any(!nzchar(b)) ||
-          anyDuplicated(a) || anyDuplicated(b)) ggchord_stop(
-        "Linear label inheritance requires unique, non-missing feature_id values within each displayed accession"
-      )
+    key <- function(d) {
+      id <- as.character(d$feature_id)
+      # Repeated accessions have distinct internal display keys at this stage.
+      ifelse(is.na(id) | !nzchar(id), NA_character_,
+        paste(nchar(d$accver), d$accver, id, sep = ":"))
+    }
+    a <- key(labels)
+    b <- key(features)
+    if (!anyNA(a)) {
       index <- match(a, b)
-      if (anyNA(index)) return(NULL)
-      for (column in c("accver", "start", "end", "strand")) {
-        if (!all(as.character(labels[[column]]) == as.character(features[[column]][index]))) {
-          ggchord_stop("Matching feature_id has conflicting ", column,
-            "; keep label/source intervals consistent or use distinct feature IDs")
-        }
+      if (anyNA(index)) {
+        if (strict) ggchord_stop("No matching feature anchor for label feature_id: ",
+          paste(unique(labels$feature_id[is.na(index)]), collapse = ", "))
+        return(NULL)
       }
-      return(index)
+      if (anyDuplicated(b[b %in% a])) ggchord_stop(
+        "Feature anchor has multiple rows for a requested feature_id in one displayed accession")
     }
   }
-  columns <- c("accver", "start", "end", "strand")
-  if (nrow(labels) == nrow(features) && all(columns %in% names(labels)) &&
-      all(columns %in% names(features)) &&
-      identical(labels[columns], features[columns])) return(seq_len(nrow(labels)))
-  NULL
+  if (is.null(index)) {
+    if (!same_source || nrow(labels) != nrow(features)) return(NULL)
+    index <- seq_len(nrow(labels))
+  }
+  fields <- c(coordinates, intersect(c(".source_file", ".source_accver", ".source_input",
+    "source_sha256", "sequence_unit", ".feature_biological_strand"),
+    intersect(names(features), names(labels))))
+  for (field in fields) {
+    a <- as.character(labels[[field]])
+    b <- as.character(features[[field]][index])
+    if (!identical(a, b)) {
+      mismatch <- which(is.na(a) != is.na(b) | (!is.na(a) & !is.na(b) & a != b))
+      if (strict) ggchord_stop("Feature anchor conflicts with ", field,
+        " for label input row(s) ", paste(utils::head(mismatch, 5L), collapse = ", "))
+      return(NULL)
+    }
+  }
+  index
 }
 
 #' Map native sequence positions and display coordinates
@@ -144,7 +157,7 @@ ggchord_match_feature_rows <- function(labels, features) {
 #' aligned <- as_ggchord_alignment(c(A = "AC-G", B = "ACTG"), "DNA")
 #' lookup <- map_alignment_position(aligned, "A", c(2, 3, 5))
 #' seqs <- data.frame(accver = c("A", "B"), length = c(3, 4))
-#' p <- ggchord(seq_data = seqs) +
+#' p <- ggchord(data = seqs) +
 #'   geom_seq() +
 #'   coord_collinear()
 #' map_ggchord_position(p, "A", position = lookup$source_position[1])

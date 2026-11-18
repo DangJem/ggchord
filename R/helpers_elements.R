@@ -100,7 +100,7 @@ breakPointsFunc <- function(max_value, n = 5, tol = 0.5, available_mm = NULL) {
 #' @keywords internal
 #' @noRd
 draw_key_gene_arrow <- function(data, params, size) {
-  # Match geom_gene(): a constant-width body followed by a linearly tapered
+  # Match geom_feature(preset = 'gene'): a constant-width body followed by a linearly tapered
   # head, without the wider shoulder used by a conventional block arrow.
   # Strand overrides mirror the same polygon horizontally.
   x <- c(0.10, 0.62, 0.90, 0.62, 0.10)
@@ -125,7 +125,7 @@ draw_key_gene_arrow <- function(data, params, size) {
 #' @keywords internal
 #' @noRd
 key_glyph_seq <- function(data, params, size) {
-  data$colour <- data$seq_colour %||% data$colour
+  data$colour <- data$colour %||% data$seq_colour
   if (is.null(data$colour)) return(ggplot2::zeroGrob())
   col <- ggplot2::alpha(data$colour, data$alpha %||% 1)
   lwd <- (data$linewidth %||% data$size %||% 0.8) * ggplot2::.pt
@@ -149,10 +149,10 @@ key_glyph_seq <- function(data, params, size) {
 #' @keywords internal
 #' @noRd
 key_glyph_ribbon <- function(data, params, size) {
-  data$fill <- data$ribbon_fill %||% data$fill
-  data$colour <- data$ribbon_colour %||% data$colour
-  data$alpha <- data$ribbon_alpha %||% data$alpha
-  data$linetype <- data$ribbon_linetype %||% data$linetype
+  data$fill <- data$fill %||% data$ribbon_fill
+  data$colour <- data$colour %||% data$ribbon_colour
+  data$alpha <- data$alpha %||% data$ribbon_alpha
+  data$linetype <- data$linetype %||% data$ribbon_linetype
   if (is.null(data$fill)) return(ggplot2::zeroGrob())
   ggplot2::draw_key_polygon(data, params, size)
 }
@@ -161,7 +161,7 @@ key_glyph_ribbon <- function(data, params, size) {
 #' @keywords internal
 #' @noRd
 key_glyph_feature <- function(data, params, size) {
-  data$fill <- data$feature_fill %||% data$fill
+  data$fill <- data$fill %||% data$feature_fill
   if (is.null(data$fill)) return(ggplot2::zeroGrob())
 
   shape <- as.character(data$feature_shape %||% "arrow")[1]

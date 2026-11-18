@@ -13,8 +13,9 @@ geom_seq_break(
   colour = "#3D4348",
   position = "identity",
   show.legend = FALSE,
-  inherit.aes = FALSE,
-  ...
+  inherit.aes = TRUE,
+  ...,
+  id = NULL
 )
 }
 \arguments{
@@ -32,6 +33,8 @@ can also be mapped and controlled by their ggplot2 scales.}
 \item{position, show.legend, inherit.aes}{Standard ggplot2 layer arguments.}
 
 \item{...}{Additional parameters passed to \code{ggplot2::geom_path()}.}
+
+\item{id}{Optional unique layer ID for layout and source exports.}
 }
 \value{
 A ggplot2 layer. Other ggchord coordinate systems are unsupported.
@@ -53,7 +56,7 @@ loci <- tibble(
   end = floor(seqs$length * .75)
 )
 focused <- focus_ggchord_data(seqs, loci = loci)
-ggchord(seq_data = focused$seq_data) +
+ggchord(data = focused$seq_data) +
   geom_seq() +
   geom_seq_break() +
   coord_collinear()

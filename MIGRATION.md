@@ -1,3 +1,19 @@
+## Migrating to 0.50.0
+
+The entries in the first column were removed in 0.50.0. Later sections record earlier releases.
+
+| Former call or argument | 0.50.0 replacement |
+| --- | --- |
+| `ggchord(seq_data = ref, gene_data = f, ribbon_data = h)` | Start with `ggchord(ref)`, then add `geom_feature(data = f, preset = "gene")` and `geom_link_ribbon(data = h)`. Alternatively pass `ggchord(prepare_ggchord_data(ref, ribbon_data = h, gene_data = f))`. When several prepared inputs are eligible, specify the layer table. |
+| Physical `position_track("depth", width = w)` | Add `track_band("depth", width = w)` and use `track = "depth"` on each layer. Omit the ID for the default band. Use the geom's `position` for stack, dodge or nudge. |
+| Order, orientation, gap or length mode on `geom_seq()` | Add `layout_sequences(order = ids, orientation = directions, gap = gaps, length_mode = "equal")`. The geom still sets the backbone's appearance. |
+| `position_plasmid(offset)` and `position_feature_stack(side = ...)` | Use `position_offset(offset)`. For old `side = "outside"`, use `base_position = position_offset(-0.1), direction = "inward"`. For old `"inside"`, use `position_offset(0.1)` and `"outward"`. The former `"strand"` setting is the default. |
+| `geom_gene()`, `geom_feature_plasmid()` | Use `geom_feature(preset = "gene")` or `geom_feature(preset = "plasmid")`, with the original layer data. |
+| `geom_feature_label_repel()` | Use `geom_feature_label(placement = "repel")`. Move the old placement policy to `label_layout` and the old `label_fit` to `overflow`. Supply `anchor_layer = "features"` when several feature layers could own the labels. |
+| `scale_seq_position_continuous(sequences = ids)` | Use `scale_seq_position_continuous(guide = guide_seq_axis(sequences = ids))`. |
+
+Run the [migration example](examples/migrate-v0.50.0.R) to draw a two-sample comparison and inspect each window's contributing rows. Each panel uses the same 10 bp reference and numerical scale. A second plot labels selected features in the lanes assigned to the full input.
+
 ## 0.29.0 data and mappings
 
 | Workflow | Current usage |

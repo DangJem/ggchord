@@ -18,11 +18,26 @@ StatGgchordRibbon <- ggplot2::ggproto(
 )
 
 StatGgchordRibbonBundle <- ggplot2::ggproto(
-  "StatGgchordRibbonBundle", StatGgchordRibbon
+  "StatGgchordRibbonBundle", StatGgchordRibbon,
+  source_type = "bundle",
+  source_parameters = c("bins", "min_bundle", "weight", "group_by"),
+  compute_source = function(ribbon_data, seq_data, ...) {
+    result <- bundle_ggchord_ribbons(ribbon_data, seq_data, ...)
+    result$data$bundle_n <- result$data$.bundle_n
+    result$data$bundle_weight <- result$data$.bundle_weight
+    result$data$density <- result$data$.bundle_density
+    result
+  }
 )
 
 StatGgchordRibbonDensity <- ggplot2::ggproto(
-  "StatGgchordRibbonDensity", StatGgchordRibbon
+  "StatGgchordRibbonDensity", StatGgchordRibbon,
+  source_type = "density",
+  source_parameters = c("bins", "weight", "group_by"),
+  compute_source = function(ribbon_data, seq_data, bins = 80L, weight = "length", group_by = NULL) {
+    ggchord_ribbon_density(ribbon_data, seq_data, bins, match.arg(weight, c("length", "count", "pident")),
+      group_by, "stat_ribbon_density()")
+  }
 )
 
 ggchord_ribbon_density <- function(ribbon_data, seq_data, bins, weight,
@@ -82,28 +97,31 @@ ggchord_ribbon_density <- function(ribbon_data, seq_data, bins, weight,
   )
 }
 
-ggchord_apply_ribbon_stat <- function(lyr, stat, bins = 80L, min_bundle = 2L,
-                                     weight = c("length", "count", "pident"), group_by = NULL) {
-  type <- switch(stat, ribbon_bundle = "bundle", ribbon_density = "density")
-  weight <- match.arg(weight)
+ggchord_ribbon_stat <- function(name, dots) {
+  stats <- list(ribbon_bundle = StatGgchordRibbonBundle, ribbon_density = StatGgchordRibbonDensity)
+  if (!is.character(name) || length(name) != 1L || !name %in% c("identity", names(stats)))
+    ggchord_stop("Choose ribbon stat from: identity, ", paste(names(stats), collapse = ", "))
+  if (length(dots) && (is.null(names(dots)) || any(!nzchar(names(dots))) || anyDuplicated(names(dots))))
+    ggchord_stop("Supply each ribbon geometry or statistic parameter once, by name")
+  stat <- stats[[name]]
+  controls <- unique(unlist(lapply(stats, function(s) s$source_parameters)))
+  arguments <- dots[intersect(names(dots), controls)]
+  if (length(setdiff(names(arguments), stat$source_parameters)))
+    ggchord_stop("Unsupported parameter for ribbon stat '", name, "': ",
+      paste(setdiff(names(arguments), stat$source_parameters), collapse = ", "))
+  list(stat = stat, arguments = arguments, geom_parameters = dots[!names(dots) %in% controls])
+}
+
+ggchord_apply_ribbon_stat <- function(lyr, specification) {
   # ggplot2 deliberately drops input columns that are not mapped before a Stat
   # runs. Carry the three precomputed values through private aesthetics, then
   # expose their public names from compute_panel() for after_stat().
   lyr$mapping[[".ggchord_bundle_n"]] <- as.name("bundle_n")
   lyr$mapping[[".ggchord_bundle_weight"]] <- as.name("bundle_weight")
   lyr$mapping[[".ggchord_density"]] <- as.name("density")
-  lyr$stat <- if (type == "bundle") {
-    StatGgchordRibbonBundle
-  } else {
-    StatGgchordRibbonDensity
-  }
-  lyr$ggchord_params$ribbon_stat <- list(
-    type = type,
-    bins = bins,
-    min_bundle = min_bundle,
-    weight = weight,
-    group_by = group_by
-  )
+  lyr$stat <- specification$stat
+  lyr$ggchord_params$ribbon_stat <- list(type = specification$stat$source_type,
+    compute = specification$stat$compute_source, arguments = specification$arguments)
   lyr
 }
 
@@ -127,7 +145,8 @@ stat_ribbon_bundle <- function(
     bins = 80L, min_bundle = 2L,
     weight = c("length", "count", "pident"),
     group_by = NULL, position = "identity",
-    show.legend = TRUE, inherit.aes = FALSE, ...) {
+    show.legend = TRUE, inherit.aes = TRUE, ...) {
+  ggchord_check_argument_names(sys.call(), sys.function())
   geom_link_ribbon(mapping = mapping, data = data, stat = "ribbon_bundle",
     bins = bins, min_bundle = min_bundle, weight = match.arg(weight), group_by = group_by,
     position = position, show.legend = show.legend, inherit.aes = inherit.aes, ...)
@@ -153,7 +172,8 @@ stat_ribbon_density <- function(
     bins = 80L,
     weight = c("length", "count", "pident"),
     group_by = NULL, position = "identity",
-    show.legend = TRUE, inherit.aes = FALSE, ...) {
+    show.legend = TRUE, inherit.aes = TRUE, ...) {
+  ggchord_check_argument_names(sys.call(), sys.function())
   geom_link_ribbon(mapping = mapping, data = data, stat = "ribbon_density",
     bins = bins, weight = match.arg(weight), group_by = group_by,
     position = position, show.legend = show.legend, inherit.aes = inherit.aes, ...)

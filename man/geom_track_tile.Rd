@@ -16,9 +16,10 @@ geom_track_tile(
   linetype = 1,
   bounds = c("error", "clip"),
   show.legend = NA,
-  inherit.aes = FALSE,
+  inherit.aes = TRUE,
   ...,
-  track = NULL
+  track = NULL,
+  id = NULL
 )
 
 geom_track_line(
@@ -32,16 +33,21 @@ geom_track_line(
   closed = FALSE,
   bounds = c("error", "clip"),
   show.legend = NA,
-  inherit.aes = FALSE,
+  inherit.aes = TRUE,
   ...,
-  track = NULL
+  track = NULL,
+  id = NULL
 )
 }
 \arguments{
 \item{mapping, data}{Standard ggplot2 mapping and layer input.}
 
-\item{position}{Legacy physical band or a ggplot2 position adjustment for
-native line mappings. A closed line uses the sequence-local position.}
+\item{position}{ggplot2 data position. Full-band interval tiles and closed
+lines use identity. For tiles with local numerical heights and data
+adjustments, use \code{geom_track(geom = "tile")}. Open lines with x/y
+mappings, an explicit stat, or a data adjustment use the native line
+grammar. Lines with sequence-local roles and identity position preserve
+input order, missing-value breaks and strict increasing positions.}
 
 \item{fill, colour, alpha, linewidth, linetype}{Fixed styles; fill and colour
 mappings use the dedicated track roles and scoped scales.}
@@ -53,7 +59,9 @@ Clipping is reported and never changes source values.}
 
 \item{...}{Extra geom parameters.}
 
-\item{track}{Physical band from \code{\link[=position_track]{position_track()}}. Supply it once per layer.}
+\item{track}{Character ID declared with \code{\link[=track_band]{track_band()}}. Omit for the default band.}
+
+\item{id}{Optional unique layer ID used in layout and source exports.}
 
 \item{closed}{Explicitly close a complete circular line series.}
 }
@@ -102,17 +110,17 @@ doc_theme <- theme_ggchord_publication(
   axis.text = element_text(size = 9), axis.text.check.overlap = TRUE
 ) +
   theme(legend.position = "bottom")
-p_tracks <- ggchord(seq_data = track_seq) +
+p_tracks <- ggchord(data = track_seq) +
   geom_seq() +
   geom_seq_center_label() +
+  track_band("gc", width = unit(6, "mm")) +
   geom_track_col(aes(track_value = gc, track_fill = gc),
     data = bins,
-    position = position_track("gc", width = unit(6, "mm"))
+    track = "gc"
   ) +
   scale_track_value_continuous("gc", limits = c(0, 1), unit = "GC fraction") +
   scale_track_fill_gradientn("gc", colours = c("#EDF1EA", "#8AAE9C", "#345F58")) +
   coord_circular() +
   doc_theme
-ggchord(track_seq) + geom_track_line(aes(x = (start + end) / 2, y = gc), data = bins,
-  track = position_track("gc")) + coord_collinear()
+ggchord(track_seq) + geom_track_line(aes(x = (start + end) / 2, y = gc), data = bins) + coord_collinear()
 }
