@@ -17,6 +17,7 @@
 #'   `feature_id` values and matching source intervals. Without an entity key,
 #'   both layers must use the same table object or the same registered source
 #'   rows in order for labels to inherit the feature lanes.
+#'   A plot saved with [base::saveRDS()] retains these shared-source anchors.
 #' @param id Optional plot-unique label layer ID.
 #' @param anchor_layer Optional ID of the feature layer to follow. Supply it
 #'   when multiple layers match. An explicit anchor requires a match for each

@@ -132,11 +132,7 @@ StatGgchordCoverage <- ggplot2::ggproto("StatGgchordCoverage", ggplot2::Stat,
     ggchord_coverage_windows(data, window_grid[[data$.ggchord_reference[1L]]])
   })
 
-ggchord_coverage_input <- function(raw, mapping, sequences, bounds) {
-  ids <- as.character(raw$accver)
-  index <- match(ids, sequences$accver)
-  if (anyNA(index)) ggchord_stop("Coverage needs a known accession for each interval in accver",
-    ggchord_input_rows(is.na(index)))
+ggchord_coverage_input <- function(raw, mapping, sequences, bounds, index) {
   bad <- !is.finite(sequences$length) | sequences$length < 1 | sequences$length != floor(sequences$length)
   if (any(bad)) ggchord_stop("Coverage requires positive whole sequence lengths in the reference table",
     ggchord_input_rows(bad))

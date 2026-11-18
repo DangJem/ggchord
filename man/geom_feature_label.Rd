@@ -62,7 +62,8 @@ labels follow the matching feature layer's lanes, within each facet and
 displayed sequence. A reordered or filtered label table needs stable
 \code{feature_id} values and matching source intervals. Without an entity key,
 both layers must use the same table object or the same registered source
-rows in order for labels to inherit the feature lanes.}
+rows in order for labels to inherit the feature lanes.
+A plot saved with \code{\link[base:saveRDS]{base::saveRDS()}} retains these shared-source anchors.}
 
 \item{show.legend, inherit.aes}{Standard ggplot2 layer arguments.}
 

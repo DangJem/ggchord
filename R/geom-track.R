@@ -345,25 +345,25 @@ ggchord_render_track_source <- function(plot) {
       !isTRUE(layer$ggchord_params$native_prepared), logical(1))
   if (any(pending)) {
     plot <- ggchord_register_layers(plot)
+    sequences <- ggchord_sequence_reference_data(plot)
     for (i in which(pending))
-      plot$layers[[i]] <- ggchord_track_native_input(plot$layers[[i]], plot)
+      plot$layers[[i]] <- ggchord_track_native_input(plot$layers[[i]], plot, sequences)
   }
   plot
 }
 
-ggchord_prepare_track_layers <- function(plot) {
+ggchord_prepare_track_layers <- function(plot, sequences = ggchord_sequence_reference_data(plot)) {
   plot$layers <- lapply(plot$layers, function(layer) {
     if (!identical(layer$ggchord_type, "track")) return(layer)
     if (!is.null(layer$ggchord_params$native_geom)) {
-      if (!isTRUE(layer$ggchord_params$native_prepared)) return(ggchord_track_native_input(layer, plot))
+      if (!isTRUE(layer$ggchord_params$native_prepared)) return(ggchord_track_native_input(layer, plot, sequences))
       return(layer)
     }
-    sequences <- plot$ggchord$data$seq_data
-    ggchord_check_interval_unit(ggchord_layer_source(layer, sequences), ggchord_sequence_unit(sequences),
-      paste0("Track input (layer '", layer$ggchord_layer_id, "')"))
-    if (!isTRUE(layer$inherit.aes)) return(layer)
+    source <- ggchord_layer_source(layer, plot$ggchord$data$seq_data)
+    caller <- ggchord_layer_input_context(layer)
+    ggchord_check_interval_unit(source, ggchord_sequence_unit(sequences), caller)
     mapping <- layer$ggchord_input_mapping
-    inherited <- ggchord_normalize_mapping(plot$mapping)
+    inherited <- if (isTRUE(layer$inherit.aes)) ggchord_normalize_mapping(plot$mapping)
     for (name in setdiff(names(inherited), c("x", "y"))) if (!name %in% names(mapping)) mapping[[name]] <- inherited[[name]]
     for (role in c("fill", "colour")) {
       key <- ggchord_track_aes(role, layer$ggchord_params$track_id)
@@ -377,6 +377,10 @@ ggchord_prepare_track_layers <- function(plot) {
     layer <- reconstruct_layer(layer, layer$data, mapping = layer$mapping)
     layer$ggchord_input_mapping <- ggchord_track_stage_mapping(mapping, layer$ggchord_params$track_id)
     layer$inherit.aes <- FALSE
+    input <- ggchord_resolve_layer_input(layer, plot$ggchord$data$seq_data, data = source)
+    ggchord_track_reference_index(input, sequences, caller)
+    layer$ggchord_input_data <- input
+    for (role in intersect(layer$ggchord_role_aes, names(mapping))) layer$ggchord_input_mapping[[role]] <- NULL
     layer
   })
   plot

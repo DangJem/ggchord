@@ -292,6 +292,8 @@ ggchord <- function(data, mapping = NULL, ..., debug = FALSE,
   } else {
     p <- NextMethod()
   }
+  if (length(p$layers) > length(e1$layers))
+    p <- ggchord_register_annotation_sources(p, length(e1$layers))
   if (inherits(e2, "theme")) {
     incoming <- attr(e2, "ggchord.explicit_theme") %||% as.list(e2)
     p$ggchord$theme_explicit <- ggchord_merge_theme_constraints(

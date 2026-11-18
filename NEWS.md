@@ -1,5 +1,16 @@
 # ggchord 0.50.0 (development)
 
+- Track coordinates and coverage denominators use the displayed backbone's
+  reference table, including a reference supplied to `geom_seq(data = ...)`.
+  An unknown accession reports its layer and source rows before statistics or
+  expansion into repeated display instances.
+- Track statistics use the evaluated source aesthetics once per build. Discrete
+  style combinations remain distinct when labels contain punctuation. A fixed
+  `group = 1` pools coverage across styles. Empty weighted counts preserve the
+  integer or double type of the weight mapping, including expressions.
+- Feature labels keep a verified shared-table anchor when the plot is saved and
+  reopened with `saveRDS()` and `readRDS()`. A layer that explicitly selects a
+  prepared table can share its source with a layer inheriting that same table.
 - All track inputs check an explicit `sequence_unit` against the reference
   before statistics or projection. Missing unit declarations inherit the
   reference. A track's fixed style overrides its inherited mapping before

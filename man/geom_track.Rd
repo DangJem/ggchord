@@ -115,10 +115,13 @@ New estimation combinations use position="identity": smooth with
 line/path/point/ribbon, density with line/path/point/area, and ecdf with
 line/path/point/step. Other combinations are explicitly rejected.
 Count counts identical positions; bin requires explicit binwidth or breaks.
-An explicit group mapping takes priority over discrete style mappings.
+An explicit group mapping or fixed group takes priority over discrete
+style mappings. For example, \code{group = 1} pools the source observations.
 A fixed aesthetic overrides the inherited mapping before statistics and
 grouping. Mapping and fixing the same aesthetic in one layer is an error.
 An explicit sequence_unit in track data must match the reference (bp or aa).
+When a sequence layer supplies the backbone table, its accessions, lengths
+and units define the reference for tracks and coverage windows.
 Bin source membership follows the native statistic, including outer edges
 and its numerical boundary tolerance, before data positions move the bars.
 Mapping x/y refers to source position/local numerical value, not screen x/y.

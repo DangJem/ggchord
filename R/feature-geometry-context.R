@@ -1,3 +1,38 @@
+# Data frames lose shared object identity on an RDS round trip. Record verified
+# sharing on plot-owned layers while the caller's original tables are available.
+ggchord_register_annotation_sources <- function(plot, old_count) {
+  inherited <- if (length(plot$ggchord$candidates$features) == 1L)
+    plot$ggchord$data$feature_data %||% plot$ggchord$data$gene_data
+  annotation_data <- function(layer) {
+    if (isTRUE(layer$ggchord_params$type %in% c("gene", "gene_label", "gene_label_repel")))
+      layer$ggchord_input_data %||% inherited
+  }
+  for (i in seq.int(old_count + 1L, length(plot$layers))) {
+    layer <- plot$layers[[i]]
+    data <- annotation_data(layer)
+    if (is.null(data) || is.function(data)) next
+    key <- NULL
+    previous <- which(vapply(plot$layers[seq_len(i - 1L)], function(other)
+      rlang::is_reference(data, annotation_data(other)), logical(1)))
+    if (length(previous)) {
+      j <- previous[1L]
+      owner <- plot$layers[[j]]
+      key <- owner$ggchord_params$annotation_source_key
+      if (is.null(key)) {
+        key <- new.env(parent = emptyenv())
+        owner <- reconstruct_layer(owner, owner$data, mapping = owner$mapping)
+        owner$ggchord_params$annotation_source_key <- key
+        plot$layers[[j]] <- owner
+      }
+    }
+    if (identical(key, layer$ggchord_params$annotation_source_key)) next
+    layer <- reconstruct_layer(layer, layer$data, mapping = layer$mapping)
+    layer$ggchord_params$annotation_source_key <- key
+    plot$layers[[i]] <- layer
+  }
+  plot
+}
+
 # Matching text owners may request different sizes, but their shared feature
 # geometry must use one measurement recipe, including in dependency subplots.
 ggchord_resolve_feature_geometry_context <- function(plot) {
@@ -39,8 +74,9 @@ ggchord_resolve_feature_geometry_context <- function(plot) {
           !identical(label_source$table, geom_source$table)) next
       origin <- layer$ggchord_annotation_origin %||% layer$ggchord_input_data
       feature_origin <- feature$ggchord_annotation_origin %||% feature$ggchord_input_data
-      shared <- (!is.null(origin) && !is.function(origin) && rlang::is_reference(origin, feature_origin)) ||
-        (!is.null(label_source) && identical(label_source, geom_source))
+      shared <- if (!is.null(label_source) && !is.null(geom_source)) identical(label_source, geom_source) else
+        (!is.null(origin) && !is.function(origin) && rlang::is_reference(origin, feature_origin)) ||
+        (!is.null(p$annotation_source_key) && identical(p$annotation_source_key, feature$ggchord_params$annotation_source_key))
       if (independent && (!shared || NROW(input) != NROW(ref))) next
       rows <- ggchord_match_feature_rows(input, ref, shared, strict = !is.null(anchor))
       if (!is.null(rows)) found[[feature$ggchord_layer_id]] <- list(index = i, rows = rows)

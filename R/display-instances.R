@@ -81,9 +81,15 @@ ggchord_route_instances <- function(input, instances, between, layer_id, mirrore
   list(data = out, report = ggchord_rbind_fill(report) %||% data.frame())
 }
 
+ggchord_sequence_reference_data <- function(plot) {
+  reference <- plot$ggchord$data$seq_data
+  skeleton <- which(vapply(plot$layers, function(l) identical(l$ggchord_params$type, "seq"), logical(1)))
+  if (!length(skeleton)) return(reference)
+  ggchord_resolve_layer_input(plot$layers[[tail(skeleton, 1L)]], reference) %||% reference
+}
+
 ggchord_prepare_instances <- function(plot) {
   if (isTRUE(plot$ggchord$instances_prepared)) return(plot)
-  skeleton <- which(vapply(plot$layers, function(l) identical(l$ggchord_params$type, "seq"), logical(1)))
   order <- plot$ggchord$sequence_layout$order
   configured <- any(vapply(plot$layers, function(l) !is.null(l$ggchord_params$between), logical(1)))
   mirrored <- isTRUE(plot$coordinates$ggchord_sankey)
@@ -91,8 +97,7 @@ ggchord_prepare_instances <- function(plot) {
     (!is.null(names(order)) && any(names(order) != unname(order)))))
   if (!activate) return(plot)
   if (isTRUE(plot$coordinates$ggchord_circular)) ggchord_stop("coord_circular() does not support repeated display instances")
-  seqs <- if (length(skeleton)) ggchord_resolve_layer_input(plot$layers[[tail(skeleton,1)]],
-    plot$ggchord$data$seq_data) else plot$ggchord$data$seq_data
+  seqs <- ggchord_sequence_reference_data(plot)
   order <- order %||% seqs$accver
   if (!is.character(order) || !length(order) || anyNA(order) || any(!order %in% seqs$accver))
     ggchord_stop("layout_sequences(): order must contain known source sequence IDs")
