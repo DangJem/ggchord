@@ -1,5 +1,5 @@
 {
-  "source_sha256": "356d44b95f54c1c7dc8788440beddabd4635c2a84982d4cfa8eb4c0bb46b6425",
+  "source_sha256": "ca1474a45bb792c5f34d5afb1bbeb09472a9526d0e34b00ecd7e98ef531ca8e0",
   "strings": {
     "0/title": {
       "source_sha256": "46ee1bb903f9924d7fa6d2d6e6c67e6fdd7eb10ee42505dde94310eaa4b67079",
@@ -7,14 +7,14 @@
       "translation": "ggchord"
     },
     "1/title": {
-      "source_sha256": "9863e8cafa6750ae82a018c960cbbeb7694aac142de14dd8f5a29f6f0fd1ec68",
+      "source_sha256": "715ee9dc842f34e48f267f0bf3261d7980e544b26eb3d2f0ff20e19b121c4a99",
       "status": "reviewed",
-      "translation": "Download and installation"
+      "translation": "Get started"
     },
     "2/title": {
-      "source_sha256": "1ff5b44a33365fd1b34a4807bca5fdb01e62126339efdb801b28f76191fbcd90",
+      "source_sha256": "6786aadb96b18f1aa20d7ce625f4664eb20357f92113efc1e70dc055e2700b20",
       "status": "reviewed",
-      "translation": "Plotting concepts"
+      "translation": "Plotting guide"
     },
     "3/title": {
       "source_sha256": "e9a01ff5074d6caac11085a9db8bf9911cb94d0f65961e56c9fef57bf50c7d0e",
@@ -142,9 +142,9 @@
       "translation": "Table fields and coordinate conventions"
     },
     "28/title": {
-      "source_sha256": "46bdb086013b0ce0b45f2cd16781af6e7116dbed741ec5950d46c06d7e3dfbf6",
+      "source_sha256": "4db455e1da936d60bc13c26d2bc2b1681d2b64ab820cc8b7082e585a1f4fb61c",
       "status": "reviewed",
-      "translation": "Import and convert data"
+      "translation": "Data and workflows"
     },
     "29/title": {
       "source_sha256": "3ee3ed11cb8636333ec993491c0c649c89220077c59f32b270cf805c8f29a918",
@@ -177,9 +177,9 @@
       "translation": "Mappings, scales, guides and themes"
     },
     "35/title": {
-      "source_sha256": "5f40e5e947d70c34e604d81bf7ca69e61596910617b62c5991a38df79f8a39c0",
+      "source_sha256": "8d2c98a64815e5e8c057aba6ac0c17ae5e59e4f05209a419254bf292b840a3e8",
       "status": "reviewed",
-      "translation": "Flexible parameter formats"
+      "translation": "Set geometry and position parameters"
     },
     "36/title": {
       "source_sha256": "865484018d8be079a77cfd2df1c44b4946cc976fab486e775211373f7b34a4ae",
@@ -192,14 +192,14 @@
       "translation": "Preview and export at publication size"
     },
     "38/title": {
-      "source_sha256": "0ed475628e17632d840b3b11b245f8d132816585ebd11edf739196266a16802a",
+      "source_sha256": "63e51325a41ffa3e76da38b0e104e00727207b6b3251c38524908b16181a7cb4",
       "status": "reviewed",
-      "translation": "Function reference"
+      "translation": "API reference"
     },
     "39/title": {
-      "source_sha256": "6493d214d6fe59d30aefbdd7224d0c11afaf2920afe08c7acf4127265f187898",
+      "source_sha256": "2c400ce3c2dea9394f8d06d5af230e0e84a5aed6e386bcc56f9bf34a62a14722",
       "status": "reviewed",
-      "translation": "Reproducible gallery"
+      "translation": "Example gallery"
     },
     "40/title": {
       "source_sha256": "45a6d115fdfb29bf65d7fd24429a38776f94cf198bcf6f50130a723d5a723ade",
@@ -307,34 +307,34 @@
       "translation": "HSP Dotplots and radial synteny"
     },
     "61/title": {
-      "source_sha256": "f3e0d1b8bed6308bd09da265e835335b2d35a8b3745e1d13172a0222177dfdee",
+      "source_sha256": "e663b1ecece03f85064b528f6c06e4ef1b5d940c458ab6f41dd2295d601a6aae",
       "status": "reviewed",
-      "translation": "Module IV · Multi-view composition"
+      "translation": "Multi-view composition"
     },
     "62/title": {
-      "source_sha256": "26984dce74ab24ba5efa0653fb5898538e9a340db046bca55920d139d0d03f24",
+      "source_sha256": "6ee7675f0e2e418db2b51921533d7672ffd4e549ba0232464efbb17c5f405367",
       "status": "reviewed",
-      "translation": "Module I · Multi-sequence relationships"
+      "translation": "Multi-sequence relationships"
     },
     "63/title": {
-      "source_sha256": "6f7ec570bbd765e78941eb9daa63e6f1dc4f977b793fb732240bdb56239b7364",
+      "source_sha256": "7492978c0f12187f83f9bdfe6272f3e5b9a64368227b35f88959f8e97a18ac9c",
       "status": "reviewed",
-      "translation": "Module II · Single-sequence circular maps"
+      "translation": "Single-sequence circular maps"
     },
     "64/title": {
-      "source_sha256": "49ac39c6dc8fd02a3d93ec92906284d275cca790332a00b88f616880531d6109",
+      "source_sha256": "634b698059b9449b58c5f0e0a77517837e1c64840a17d06f3d0480dd4ea4dad7",
       "status": "reviewed",
-      "translation": "Module III · Sequence alignment Dotplot"
+      "translation": "Alignment dot plots"
     },
     "65/title": {
-      "source_sha256": "7d69ea27925ee53b7890e50b1e13b8b0a20df4b70afd716f4926a1d97aacc932",
+      "source_sha256": "79aff8775f9d9c4f6f43c847b8d7b0dd0b33d93196eeff2fac1778b89b1cb430",
       "status": "reviewed",
-      "translation": "Shared data and layers"
+      "translation": "Draw sequence backbones, links and annotations"
     },
     "66/title": {
-      "source_sha256": "e1dff32ea5aec9e27a3e3afa588b35a38bad16c9243f33d5641bbd00832040a8",
+      "source_sha256": "8f19a2d48947763e60b7da1690580c4c383058bab434991c3415ec180886180e",
       "status": "reviewed",
-      "translation": "Four-view comparison and flagship examples"
+      "translation": "Compare four layouts with the same inputs"
     },
     "67/title": {
       "source_sha256": "a8518e97fdb426224d1cffafee073535e660bd04b957f502dc8d75cf90d6d182",
@@ -352,24 +352,24 @@
       "translation": "Repeated displays and instance selection"
     },
     "70/title": {
-      "source_sha256": "656a2a71cd2f8474512272037467beaf6dfd518f047bc428e9f46136ef16cb94",
+      "source_sha256": "c75eb6c985c137e42701b71165e010c2c85ab247f9d700cf6ff7c947cfa55e4c",
       "status": "reviewed",
-      "translation": "Coordinates and display rules"
+      "translation": "Arrange sequences and set display direction"
     },
     "71/title": {
-      "source_sha256": "34e17c17165618c8ffea1985b7c56ba3593011b3fc0497eb6547547459517662",
+      "source_sha256": "1aec629876f12aa8b9cee34a18bf9e5ed063c366b8cd0c69c70182f01f570c7a",
       "status": "reviewed",
-      "translation": "Intervals, points and cross-row links"
+      "translation": "Draw and adjust sequence links"
     },
     "72/title": {
-      "source_sha256": "4210da926fd8528bf286315b2c91f0676843cfb94ff2cb913e00924a3009fc6e",
+      "source_sha256": "d5357686c1613bdf391bd411157966e74274f2bc2792d70987b32436d5137286",
       "status": "reviewed",
-      "translation": "Sequence names and feature labels"
+      "translation": "Label sequences and features"
     },
     "73/title": {
-      "source_sha256": "26778c8edd5937a481f9b9dfc044ce655a8c1b3eab3cf05f92d1ad506d5a3e7b",
+      "source_sha256": "8de004719332093b7836ef7b6f71467dc4edd4a52d30bfadb04d1512e05254ef",
       "status": "reviewed",
-      "translation": "Circular backbone and annotations"
+      "translation": "Draw a circular map from lengths and annotations"
     },
     "74/title": {
       "source_sha256": "7f3f883cf76a99cf53afed5ee142982b33cbb7a226391daa0436107fe386c4d7",
@@ -392,9 +392,9 @@
       "translation": "pETDuet-1: dense annotations"
     },
     "78/title": {
-      "source_sha256": "121505269919b442ded9eaa0660fc6a81432f22534ab44d0b3a6debdce9e36e4",
+      "source_sha256": "27e0f7040b2e81cd6ef7fecab9dfa1532d460ddc4ab581882f889162f1f55336",
       "status": "reviewed",
-      "translation": "HSP axes, orientation and mapping"
+      "translation": "Draw an HSP alignment dot plot"
     },
     "79/title": {
       "source_sha256": "5e8cb9d64ab4b38a6c7ee1e3577d91a02a7a2e708fc6f30a0ab543109caa2fdd",
@@ -457,9 +457,9 @@
       "translation": "Nested composition and origin-crossing zoom"
     },
     "91/title": {
-      "source_sha256": "268220092d56e9c5ef8cbcc4d86d090e215dede8a033cd413dd4d1983847f489",
+      "source_sha256": "e5df1a1e020dc0e32a27e8e74d17608480c90e77c2ddf790b76bb65a3115eeba",
       "status": "reviewed",
-      "translation": "Panels and source-interval connections"
+      "translation": "Compose panels and connect source intervals"
     },
     "92/title": {
       "source_sha256": "0e01c547e2adb565077770a8123696fb84c04e7fd7818d52f6bc277ba5e7428d",

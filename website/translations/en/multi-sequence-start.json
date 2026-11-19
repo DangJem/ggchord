@@ -1,10 +1,10 @@
 {
-  "source_sha256": "16c656313759ff1022391e0ef883ff8be1d405d330af2649201c01b2392fe1de",
+  "source_sha256": "52ae5356830457e7fe9763411c06320694d5c71792b52ab7e1522c0e84ce2d04",
   "blocks": {
     "0": {
-      "source_sha256": "6f150531a9654cdf7dc6c33c55e2c4166b13239790ea20fda242ef569331f931",
+      "source_sha256": "a170334af6077500cfec0357b69c6d1ea5ceff5cf592991eb99966e53f21c3ca",
       "status": "reviewed",
-      "translation": "Build backbones, a link, a feature and labels in one section using bundled source records. Run in order; this section uses ggchord and optional dplyr.\n"
+      "translation": "Start with the lengths of four real sequences, then inspect the backbones, links and CDS annotations. Each code block can be copied independently.\n"
     },
     "2": {
       "source_sha256": "34db05dfcc3cefdc067444eaab49752dee6643569981970c5c18e547ac357903",

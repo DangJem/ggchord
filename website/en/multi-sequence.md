@@ -8,9 +8,13 @@ Complete sequence lengths, observed HSPs and real CDS can share four relationshi
 
 <a id="path"></a>
 
-## Common inputs and layers {#path}
+## What do you want to draw or adjust? {#path}
 
-[Data and layers](multi-sequence-start.md) · [Four-view comparison](multi-sequence-views.md) · [Display rules](multi-sequence-layout.md) · [Links](multi-sequence-links.md) · [Labels](multi-sequence-labels.md)
+- [Draw backbones, links and annotations](multi-sequence-start.md#draw)
+- [Compare four layouts with the same inputs](multi-sequence-views.md#input)
+- [Change sequence order and display orientation](multi-sequence-layout.md)
+- [Adjust link endpoints and routes](multi-sequence-links.md)
+- [Show sequence names and feature labels](multi-sequence-labels.md)
 
 <a id="chord"></a>
 

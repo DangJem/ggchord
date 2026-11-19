@@ -118,7 +118,14 @@ def main():
 def write_atlas(groups, upstream, aliases, contracts, overrides, check):
     from website.source_links import source_document
 
-    for lang in ('zh',):
+    migrations = json.loads((WEB/'page-migrations.json').read_text()).get('parameter-atlas.html', {})
+    active_ids = {'api-'+entry['name'] for group in groups.values() for entry in group}
+    active_ids.update('api-'+entry['name'] for entry in upstream)
+    retired_anchors = {anchor: url for anchor, url in migrations.items()
+                       if anchor.startswith('api-') and anchor not in active_ids}
+
+    bodies = {}
+    for lang in ('zh', 'en'):
         zh=lang=='zh'
         content=[('本页按用途汇总当前完整函数参数，不替代用法说明。默认表达式来自实际 formals，说明来自同版本 Rd；NULL 可能在布局阶段解析为默认值。候选向量既可能供 match.arg 选择，也可能表示同时启用多个选项，须阅读说明。上游重导出遵循其自身帮助。' if zh else 'Browse complete current parameters by purpose. Defaults come from actual formals and descriptions from matching Rd. NULL can resolve during layout. A choice vector may mean match.arg alternatives or multiple enabled options; read its description. Upstream reexports follow their own help.'),
          ('\n优先从[功能索引](reference/index.html)进入用法，重要参数对照见对应说明，完整签名和额外参数转发见函数参考。以下按需展开；不会把上游 ... 的全部可能参数伪装成 ggchord 的独立 API。\n' if zh else '\nStart with the [function index](reference/index.html). Examples compare important parameters; references define full signatures and forwarding. Expand functions as needed; upstream dots are not presented as separate ggchord APIs.\n')]
@@ -148,7 +155,18 @@ def write_atlas(groups, upstream, aliases, contracts, overrides, check):
                 note=('遵循上游接口；具体类型、单位和允许值见其帮助。' if zh else 'Follow upstream help for types, units and accepted values.')
                 content += ['| `'+parameter+'` | `'+(default or ('无形式默认；见上游契约' if zh else 'No formal default; see upstream contract'))+'` | '+kind(name,parameter,lang,overrides)+'; '+note+' |']
             content += ['\n</details>\n']
-        result=source_document('\n'.join(content).rstrip()+'\n');target=WEB/lang/'parameter-atlas.md'
-        if check:assert target.read_text()==result,'Stale parameter atlas: '+lang
-        else:target.write_text(result)
+        if retired_anchors:
+            title = '旧参数地址的替代条目' if zh else 'Current entries for old parameter links'
+            label = '查看当前用法' if zh else 'View current usage'
+            content.extend(['<noscript>', '<nav aria-labelledby="retired-parameter-links">',
+                            '<p id="retired-parameter-links">'+title+'</p>', '<ul>'])
+            for anchor, url in retired_anchors.items():
+                identity = html.escape(anchor, quote=True)
+                name = html.escape(anchor.removeprefix('api-'))
+                href = html.escape(url, quote=True)
+                content.append(f'<li id="{identity}"><code>{name}()</code> · <a href="{href}">{label}</a></li>')
+            content.extend(['</ul>', '</nav>', '</noscript>'])
+        bodies[lang] = source_document('\n'.join(content).rstrip()+'\n')
+    from website.generated_manual import write_page
+    write_page('parameter-atlas', bodies, check)
 if __name__=='__main__':main()

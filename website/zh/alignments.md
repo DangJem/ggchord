@@ -28,7 +28,7 @@ blastp -query proteins.faa -subject reference.faa -outfmt 7 -out hits-protein.ts
 | 7–10 | `qstart`、`qend`、`sstart`、`send` | 两端的起止坐标，从 1 开始并包含两端。递减端点保留比对方向 |
 | 11–12 | `evalue`、`bitscore` | 期望值和以 bit 为单位的得分，通常前者越小、后者越大，命中证据越强 |
 
-解压[说明输入](https://github.com/DangJem/ggchord/archive/refs/heads/main.zip)后，从包含 `examples/` 的目录运行。示例文件保存了实际 HSP 的前 12 列。
+示例使用随包表或随安装提供的小文件。每段代码列出所用的依赖。
 
 {{code:standardblast}}
 {{output:standardblast}}

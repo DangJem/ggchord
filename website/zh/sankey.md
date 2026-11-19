@@ -2,7 +2,6 @@
 
 ## 先准备真实来源 {#input}
 
-{{prepare:foundationdata}}
 
 <a id="sankey"></a>
 

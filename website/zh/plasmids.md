@@ -1,4 +1,12 @@
-数据来源、展示子集与重建规则见[旗舰数据来源与构建](flagship-data.md)。本页直接加载随包输入，集中设置绘图参数。
+<a id="features"></a>
+
+## 绘制 pUC19 的九条特征 {#features}
+
+随包 pUC19 记录提供全长和九条参考特征。每个有方向的箭头保留原注释的链与范围。
+
+{{code:pucfeatures}}
+
+![pUC19 骨架与九条参考特征](../../man/figures/pucfeatures.png)
 
 <a id="input"></a>
 
@@ -6,15 +14,7 @@
 
 本页说明一张完整参考图的图层构成。pETDuet-1 的密集标注与尺寸选择见[独立页面](circular-dense-case.md)。
 
-{{code:courseblockg}}
-
-{{code:referencebuilder}}
-
-```r
-reference <- make_reference_map(flagship_circular_example$references[["pUC19"]])
-p <- reference$plot
-view_ggchord(p, width = 10, height = 8, units = "in")
-```
+{{code:courseblocki,catalogmap}}
 
 {{figure:catalogpuc}}
 

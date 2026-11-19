@@ -1,53 +1,50 @@
-<div class="task-intro"><p>Project known protein intervals to genomic positions through real CDS, retaining phase, strand and segmentation explicitly.</p></div>
-
 <a id="prepare"></a>
 
-## Prepare this page {#prepare}
-Use the [verified AmpR input](homology.md) or save and run the preparation script below.
+## Choose the input {#prepare}
 
-{{recipe:ampr}}
+Start with a CDS table and a known amino-acid interval. A complete CDS supplies source coordinates, strand and reading frame.
 
 <a id="cds"></a>
 
-## Start with source-backed CDS {#cds}
-Run the [identical-CDS comparison](homology.md#membership) first. It uses real
-bundled plasmid annotations and DNA. Complete CDS use explicit phase 0 and
-translation table 11.
+## Locate an amino-acid interval on the nucleotide axis {#cds}
 
-{{code:projection}}
+The bundled pUC19 annotation supplies the complete lacZα CDS. Residues 2–5 map to 455–466 bp on the original negative strand.
 
-{{console:projection}}
-
-This example selects residues 2–20 for display; it does not claim a detected
-protein domain. Projection returns genomic intervals with strand/segment context.
-Actual domains require exact parent CDS IDs and amino-acid ranges; annotation
-names or maximum feature endpoints cannot supply missing evidence.
+```r
+record <- flagship_circular_example$references[["pUC19"]]
+coding <- record$features |>
+  dplyr::filter(anno == "lacZα", type == "CDS") |>
+  dplyr::transmute(accver, start, end, strand, feature_id = "lacZ_alpha", phase = 0L)
+cds <- build_ggchord_cds(coding, genetic_code = 11)
+span <- data.frame(feature_id = "display", parent_id = "lacZ_alpha", start = 2, end = 5)
+mapped <- project_ggchord_features(span, cds)
+mapped[c("accver", "start", "end", "strand")]
+```
 
 <a id="boundaries"></a>
 
-## Segments, phase and partial regions {#boundaries}
-`build_ggchord_cds()` constructs a segment map; `project_ggchord_features()` then
-projects amino-acid intervals through it. Each input feature returns one row;
-its genomic pieces are retained in the `segments` list-column. `project_ggchord_links()` can instead split into several paired rows. Multiplying coordinates
-by three is insufficient. Inspect policies/reports
-for partial CDS, phase and truncation. DNA matching, interval projection and
-actual translation/alignment are distinct operations.
+## Segment boundaries and phase {#boundaries}
+
+Several CDS segments can share one parent ID. Projection orders them in transcription direction. The returned segments column preserves intron gaps that the outer interval spans.
 
 <a id="links"></a>
 
-## BLASTp query spans and two-ended links {#links}
-{{code:linkprojection}}
+## Project a known pair of intervals {#links}
 
-{{console:linkprojection}}
+Each schematic axis below contains ten codons. The example specifies a one-to-one correspondence between three residues and shows endpoint order on both strands. Real data require their own evidence for that correspondence.
 
-This ungapped case relies on [verified identical coding DNA](homology.md).
-Real BLASTp HSPs may contain gaps: query spans can still be projected, but paired
-links need the subject CDS and justified ungapped correspondence. See
-[real BLASTp import/projection](protein-alignments.md#projection). Genomic plots use the projected bp coordinates.
+```r
+models <- data.frame(
+  feature_id = c("A", "B"), accver = c("row1", "row2"),
+  start = c(101, 301), end = c(130, 330), strand = c("+", "-"), phase = 0L
+)
+pair <- data.frame(qfeature_id = "A", sfeature_id = "B",
+  qstart = 2, qend = 4, sstart = 5, send = 7)
+project_ggchord_links(pair, build_ggchord_cds(models), ungapped = TRUE)
+```
 
 <a id="check-result"></a>
 
-## Result checks {#check-result}
-Check parent CDS IDs, projection reports and returned segments. The selected residue range is a display example, not a detected domain.
+## Check the projection {#check-result}
 
-<div class="next-step">Continue: <a href="workflows.md">Data workflows →</a></div>
+Check parent CDS IDs, native units and the full segment list. For a gapped BLASTp hit, determine whether the evidence supports a single query span or a residue correspondence at both ends.

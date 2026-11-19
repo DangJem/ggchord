@@ -1,6 +1,5 @@
 {{code:courseblockbk}}
 
-{{prepare:fusiondata,fusionpanels,fusionlinear,fusionview}}
 
 <a id="intervals"></a>
 

@@ -1,8 +1,7 @@
 {{code:courseblockaq}}
 
-{{prepare:setup}}
 
-以下使用随包数据，无需下载或解压输入文件；每节单列可选依赖。原始记录仍可从[真实输入包](https://github.com/DangJem/ggchord/archive/refs/heads/main.zip)追溯。
+示例使用随包表或随安装提供的小文件。每段代码列出所用的依赖。
 
 <a id="characters"></a>
 
@@ -14,15 +13,11 @@
 
 ### 导入自己的已有对齐 {#read-alignment}
 
-以下小节专门演示 `read_aligned_fasta()`。将路径换成已有的等长 FASTA；来源示例文件可在输入包中取得。文件不存在时跳过读取，后续绘图仍直接使用随包表。
+随包仙人掌 FASTA 保留等长的已对齐记录。要读取自己的已有对齐，请替换文件路径。
 
 ```r
-alignment_file <- "examples/alignment/opuntia-aligned.fasta"
-if (file.exists(alignment_file)) {
-  imported_alignment <- read_aligned_fasta(
-    alignment_file, "DNA", source_file = TRUE
-  )
-}
+alignment_file <- system.file("extdata", "tutorial", "opuntia-aligned.fasta", package = "ggchord", mustWork = TRUE)
+imported_alignment <- read_aligned_fasta(alignment_file, "DNA", source_file = TRUE)
 ```
 
 <a id="aligned-characters"></a>

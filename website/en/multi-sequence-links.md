@@ -1,6 +1,5 @@
 {{code:courseblockag}}
 
-{{prepare:frontbackbone,frontlinks}}
 
 <a id="control"></a>
 
@@ -70,7 +69,6 @@ Continue with [shared branches and point links](multi-sequence-links.md#input) t
 
 ## Cross-row links {#cross-row}
 
-{{prepare:frontlinearbase,frontlinks,frontlinearlink}}
 
 <a id="routes"></a>
 
@@ -167,7 +165,6 @@ Chord and collinear modes accept these link layers; single circular mode rejects
 
 Example: change only the trunk fraction to 0.25. Return to the default fraction and compare curved versus straight point links. With your own data, first decide whether interval lengths or individual positions matter, then consult [`geom_link_ribbon()`](../../man/geom_link_ribbon.Rd) and [`geom_link_line()`](../../man/geom_link_line.Rd).
 
-{{prepare:ribboninputs}}
 
 <a id="interval-points"></a>
 

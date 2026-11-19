@@ -2,20 +2,29 @@
 
 ## Start with two independent plots {#panels}
 
-Use ggchord, dplyr and bundled `sequence_detail_example$paf`; original provenance is available in the [input bundle](https://github.com/DangJem/ggchord/archive/refs/heads/main.zip). Print course_center and course_detail separately before composing one observed relationship.
+Draw two panels from the bundled PAF table and connect them with one observed alignment.
 
 ```r
 library(ggchord)
 library(dplyr)
 ```
 
-{{prepare:fusiondata}}
 
-{{code:coursefusion}}
+```r
+course_center
+```
 
 ![Independent center plot](../../man/figures/coursefusioncenter.png)
 
+```r
+course_detail
+```
+
 ![Independent detail plot](../../man/figures/coursefusiondetail.png)
+
+```r
+p_coursefusion
+```
 
 ![Two panels and one source relationship](../../man/figures/coursefusion.png)
 

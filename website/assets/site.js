@@ -29,16 +29,19 @@
   document.querySelectorAll('details.code-disclosure').forEach(details=>{
     const code=details.querySelector('pre code')||details.querySelector('pre');if(!code)return;
     const button=document.createElement('button');button.type='button';button.className='copy-code';
-    const label=details.dataset.codeKind==='output'?(zh?'复制输出':'Copy output'):(zh?'复制代码':'Copy code');button.textContent=label;button.setAttribute('aria-live','polite');
-    details.querySelector('summary').after(button);button.addEventListener('click',()=>copy(button,code.textContent,label));
-  });
-  document.querySelectorAll('.copy-full-example').forEach(button=>{
-    const label=button.textContent;button.setAttribute('aria-live','polite');
-    button.addEventListener('click',async()=>{
-      try {const response=await fetch(button.dataset.source);if(!response.ok)throw Error('unavailable');await copy(button,await response.text(),label);}
-      catch (_) {button.textContent=zh?'脚本暂不可用，请使用下载链接':'Script unavailable; use the download link';}
+    const kind = details.closest('[data-example-kind]')?.dataset.exampleKind;
+    const label = kind === 'plot' ? (zh ? '复制绘图代码' : 'Copy plot code') :
+      details.dataset.codeKind === 'signature' ? (zh ? '复制调用格式' : 'Copy usage syntax') :
+      details.dataset.codeKind === 'output' ? (zh ? '复制输出' : 'Copy output') : (zh ? '复制代码' : 'Copy code');
+    button.textContent=label;button.setAttribute('aria-live','polite');
+    details.querySelector('summary').after(button);
+    button.addEventListener('click', () => {
+      const inputLines = [...code.querySelectorAll('span.r-in')];
+      const text = inputLines.length ? inputLines.map(line => line.textContent).join('\n') : code.textContent;
+      copy(button, text, label);
     });
   });
+
   // Filter exact API/parameter names without replacing the full reference.
   const parameterFilter=document.querySelector('#parameter-filter');
   if(parameterFilter){
@@ -65,7 +68,7 @@
   if(shortcut)shortcut.textContent=/Mac|iPhone|iPad/.test(navigator.platform)?'⌘ K':'Ctrl K';
   const input=document.querySelector('#site-search'),results=document.querySelector('#site-results'),status=document.querySelector('#search-status');
   if(dialog&&trigger&&input&&results) {
-    const labels=zh?{all:'全部',course:'说明',function:'函数',parameter:'参数',task:'任务',tool:'查询工具',faq:'排错'}:{all:'All',course:'Sections',function:'Functions',parameter:'Parameters',task:'Tasks',tool:'Tools',faq:'FAQ'};
+    const labels=zh?{all:'全部',guide:'指南',function:'函数',parameter:'参数',task:'任务',tool:'查询工具',faq:'排错'}:{all:'All',guide:'Guides',function:'Functions',parameter:'Parameters',task:'Tasks',tool:'Tools',faq:'FAQ'};
     const indexURL=new URL(document.body.dataset.search,location.href);
     let records,loading,filter='all',selected=-1,items=[],invoker;
     const tokens=q=>q.match(/[a-z_][a-z0-9_.]*|[\p{Script=Han}]+/giu)?.flatMap(s=>/^[\p{Script=Han}]{3,}$/u.test(s)?(s.match(/.{1,2}/gu)||[]):[s])||[];
@@ -82,18 +85,18 @@
     };
     const render=async()=>{
       const query=input.value.trim().toLocaleLowerCase();results.replaceChildren();items=[];selected=-1;input.removeAttribute('aria-activedescendant');
-      if(!query){status.textContent=zh?'输入任务、函数或参数。试试“酶切引线”或 link_branch。':'Search a task, function or parameter. Try “primer labels” or link_branch.';input.setAttribute('aria-expanded','false');return;}
+      if(!query){status.textContent=zh?'输入任务、函数或参数，例如「覆盖度」或 geom_feature。':'Search for a task, function or parameter, such as coverage or geom_feature.';input.setAttribute('aria-expanded','false');return;}
       status.textContent=zh?'正在读取本地索引…':'Loading the local index…';
       try {
         loading ||= fetch(indexURL).then(r=>{if(!r.ok)throw Error('unavailable');return r.json();});records ||= await loading;
         if(input.value.trim().toLocaleLowerCase()!==query)return;
         const terms=tokens(query);
-        const ranked=records.filter(r=>filter==='all'||(r.kind||'course')===filter).map(r=>{
+        const ranked=records.filter(r=>filter==='all'||(r.kind||'guide')===filter).map(r=>{
           const title=r.title.toLocaleLowerCase(),keywords=(r.keywords||'').toLocaleLowerCase(),body=(r.text||'').toLocaleLowerCase();
           if(!terms.every(t=>(title+' '+keywords+' '+body).includes(t)))return null;
           let score=title===query?1000:title.includes(query)?150:0;
           score+=terms.reduce((n,t)=>n+(title.includes(t)?20:0)+(keywords.includes(t)?15:0),0);
-          if(r.kind==='course')score+=100;
+          if(r.kind==='guide')score+=100;
           if(r.kind==='parameter')score-=40;
           if(r.kind==='function'&&title===query)score+=1800;
           if(r.kind==='parameter'&&title.split(' · ').at(-1)===query)score+=1200;
@@ -107,12 +110,12 @@
         for(const {r} of grouped.slice(0,20)) {
           const li=document.createElement('li');li.setAttribute('role','presentation');
           const a=document.createElement('a');a.href=new URL(r.url,indexURL).href;a.id='search-result-'+items.length;a.setAttribute('role','option');a.tabIndex=-1;a.setAttribute('aria-selected','false');
-          const kind=document.createElement('span');kind.className='search-kind';kind.textContent=labels[r.kind||'course']+(r.section?' · '+r.section:'');
+          const kind=document.createElement('span');kind.className='search-kind';kind.textContent=labels[r.kind||'guide']+(r.section?' · '+r.section:'');
           const title=document.createElement('strong');highlight(title,r.title,terms);
           const excerpt=document.createElement('small');const text=(r.summary||r.text||'').replace(/\s+/g,' ');const pos=Math.max(0,text.toLocaleLowerCase().indexOf(terms.find(t=>text.toLocaleLowerCase().includes(t))||'')-45);highlight(excerpt,(pos?'…':'')+text.slice(pos,pos+180)+(text.length>pos+180?'…':''),terms);
           a.append(kind,title,excerpt);li.append(a);results.append(li);items.push(a);
         }
-      } catch (_) {loading=undefined;status.textContent=zh?'搜索暂不可用，请使用任务索引。':'Search unavailable; use the task index.';}
+      } catch (_) {loading=undefined;status.textContent=zh?'搜索暂不可用，请使用绘图指南。':'Search unavailable. Use the plotting guide.';}
     };
     const filters=dialog.querySelector('.search-filters');
     Object.entries(labels).forEach(([key,label])=>{const b=document.createElement('button');b.type='button';b.textContent=label;b.setAttribute('aria-pressed',String(key===filter));filters.append(b);b.addEventListener('click',()=>{filter=key;[...filters.children].forEach(x=>x.setAttribute('aria-pressed',String(x===b)));render();});});
@@ -127,25 +130,46 @@
     document.addEventListener('keydown',e=>{const editable=/INPUT|TEXTAREA|SELECT/.test(e.target.tagName)||e.target.isContentEditable;if(((e.metaKey||e.ctrlKey)&&e.key.toLowerCase()==='k')||(!editable&&e.key==='/')){e.preventDefault();if(!document.querySelector('dialog[open]'))open();}});
     trigger.setAttribute('aria-label',zh?'搜索任务、函数和参数，快捷键 Control 或 Command K':'Search tasks, functions and parameters, Control or Command K');
   }
-  const galleryControls=document.querySelector('.gallery-controls');
-  if(galleryControls) {
-    const cards=[...document.querySelectorAll('.gallery-card')];
-    const selectors=[...galleryControls.querySelectorAll('select')];
-    const applyGallery=()=>{
-      let visible=0;
-      cards.forEach(card=>{
-        const keep=selectors.every(select=>select.value==='all'||(select.dataset.galleryFilter==='featured'?card.dataset.featured==='true':card.dataset['gallery'+select.dataset.galleryFilter[0].toUpperCase()+select.dataset.galleryFilter.slice(1)]===select.value));
-        card.hidden=!keep;if(keep)visible++;
+  const galleryControls = document.querySelector('.gallery-controls');
+  if (galleryControls) {
+    const groups = [...document.querySelectorAll('.gallery-family')];
+    const family = galleryControls.querySelector('[name="family"]');
+    const scope = galleryControls.querySelector('[name="scope"]');
+    const status = galleryControls.querySelector('[role="status"]');
+    function report() {
+      const shown = groups.filter(group => !group.hidden).reduce((total, group) =>
+        total + [...group.querySelectorAll('.gallery-card')].filter(card =>
+          !card.hidden && !card.closest('details:not([open])')).length, 0);
+      status.textContent = shown ? (zh ? `显示 ${shown} 张图` : `Showing ${shown} figures`) :
+        (zh ? '此分类没有参数对照图。' : 'No parameter comparisons in this category.');
+    }
+    function apply() {
+      groups.forEach(group => {
+        const cards = [...group.querySelectorAll('.gallery-card')];
+        cards.forEach(card => {card.hidden = scope.value === 'comparison' && card.dataset.comparison !== 'true';});
+        group.hidden = (family.value !== 'all' && group.dataset.family !== family.value) ||
+          cards.every(card => card.hidden);
+        const more = group.querySelector('details');
+        if (more) more.open = scope.value !== 'featured';
       });
-      galleryControls.querySelector('.gallery-count').textContent=zh?`显示 ${visible} / ${cards.length} 张图`:`Showing ${visible} / ${cards.length} figures`;
-    };
-    const revealHash=()=>{
-      const id=decodeURIComponent(location.hash.slice(1));
-      const target=document.getElementById(id);
-      if(target?.closest('.gallery-card')) {selectors.forEach(s=>s.value='all');applyGallery();target.scrollIntoView({block:'start'});}
-    };
-    selectors.forEach(s=>s.addEventListener('change',applyGallery));
-    applyGallery();revealHash();addEventListener('hashchange',revealHash);
+      report();
+    }
+    function revealHash() {
+      let id;
+      try {id = decodeURIComponent(location.hash.slice(1));} catch (_) {return;}
+      const target = document.getElementById(id);
+      if (!target?.closest('.gallery-family')) return;
+      family.value = 'all';
+      scope.value = target.closest('.gallery-more') ? 'all' : 'featured';
+      apply();
+      target.scrollIntoView({block: 'start'});
+    }
+    groups.forEach(group => group.querySelector('details')?.addEventListener('toggle', report));
+    galleryControls.hidden = false;
+    galleryControls.addEventListener('change', apply);
+    apply();
+    revealHash();
+    addEventListener('hashchange', revealHash);
   }
   // Native dialog isolates the background; full-resolution PNG pixels are unchanged.
   const figures=[...document.querySelectorAll('a.figure-link')];
@@ -179,4 +203,40 @@
     if(section&&!section.open){section.open=true;target.scrollIntoView();}
   }
   openLinkedSection();addEventListener('hashchange',openLinkedSection);
+})();
+
+// Filter the reference index locally; the unfiltered lists work without JavaScript.
+(() => {
+  const input = document.getElementById('reference-filter');
+  if (!input) return;
+  input.closest('.reference-filter').hidden = false;
+  const groups = [...document.querySelectorAll('.reference-group')];
+  const count = document.getElementById('reference-filter-count');
+  function filter() {
+    const query = input.value.trim().toLocaleLowerCase();
+    let total = 0;
+    for (const group of groups) {
+      const heading = group.querySelector('h2').textContent.toLocaleLowerCase();
+      let matches = 0;
+      for (const term of group.querySelectorAll('dt')) {
+        const definition = term.nextElementSibling;
+        const text = (term.textContent + ' ' + definition.textContent).toLocaleLowerCase();
+        const visible = heading.includes(query) || text.includes(query);
+        term.hidden = definition.hidden = !visible;
+        if (visible) matches++;
+      }
+      group.hidden = !matches;
+      total += matches;
+    }
+    count.textContent = !query ? '' : document.documentElement.lang.startsWith('zh')
+      ? '匹配 ' + total + ' 个主题' : total + (total === 1 ? ' matching topic' : ' matching topics');
+  }
+  input.addEventListener('input', filter);
+  window.addEventListener('hashchange', () => {
+    if (groups.some(group => group.hidden && location.hash.slice(1) === group.querySelector('h2').id)) {
+      input.value = '';
+      filter();
+      document.getElementById(location.hash.slice(1)).scrollIntoView();
+    }
+  });
 })();

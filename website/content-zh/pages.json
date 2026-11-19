@@ -10,10 +10,6 @@
     "canonical_path": "index.html",
     "parent": null,
     "module": "start",
-    "prerequisites": [],
-    "next_steps": [
-      "installation"
-    ],
     "apis": [],
     "recipe_ids": [],
     "figure_ids": [
@@ -27,7 +23,7 @@
   {
     "slug": "installation",
     "title": {
-      "zh": "下载与安装"
+      "zh": "开始使用"
     },
     "group": "start",
     "id": "installation",
@@ -35,10 +31,6 @@
     "canonical_path": "installation.html",
     "parent": "index",
     "module": "start",
-    "prerequisites": [],
-    "next_steps": [
-      "modes"
-    ],
     "apis": [],
     "recipe_ids": [],
     "figure_ids": [],
@@ -48,25 +40,17 @@
   {
     "slug": "modes",
     "title": {
-      "zh": "绘图基本概念"
+      "zh": "绘图指南"
     },
-    "group": "start",
+    "group": "guide",
     "id": "modes",
-    "kind": "tutorial",
+    "kind": "index",
     "canonical_path": "modes.html",
-    "parent": "installation",
-    "module": "start",
-    "prerequisites": [],
-    "next_steps": [
-      "data"
-    ],
+    "parent": "index",
+    "module": "plots",
     "apis": [],
     "recipe_ids": [],
-    "figure_ids": [
-      "frontbackbone",
-      "frontlinearbase",
-      "firstcircle"
-    ],
+    "figure_ids": [],
     "translation_key": "modes",
     "aliases": []
   },
@@ -81,8 +65,6 @@
     "canonical_path": "multi-sequence-start.html",
     "parent": "multi-sequence",
     "module": "multi-sequence",
-    "prerequisites": [],
-    "next_steps": [],
     "apis": [
       "geom_seq",
       "geom_seq_label",
@@ -106,8 +88,6 @@
     "canonical_path": "data.html",
     "parent": "formats",
     "module": "data",
-    "prerequisites": [],
-    "next_steps": [],
     "apis": [
       "ggchord"
     ],
@@ -127,8 +107,6 @@
     "canonical_path": "import-sequences.html",
     "parent": "formats",
     "module": "data",
-    "prerequisites": [],
-    "next_steps": [],
     "apis": [],
     "recipe_ids": [],
     "figure_ids": [],
@@ -146,8 +124,6 @@
     "canonical_path": "multi-sequence-start.html",
     "parent": "multi-sequence",
     "module": "multi-sequence",
-    "prerequisites": [],
-    "next_steps": [],
     "apis": [
       "geom_link_ribbon",
       "geom_gene_label"
@@ -172,8 +148,6 @@
     "canonical_path": "chord-geometry.html",
     "parent": "multi-sequence",
     "module": "multi-sequence",
-    "prerequisites": [],
-    "next_steps": [],
     "apis": [],
     "recipe_ids": [],
     "figure_ids": [
@@ -195,10 +169,6 @@
     "canonical_path": "chord-geometry.html",
     "parent": "multi-sequence",
     "module": "multi-sequence",
-    "prerequisites": [],
-    "next_steps": [
-      "chord"
-    ],
     "apis": [
       "library",
       "ggchord",
@@ -236,8 +206,6 @@
     "canonical_path": "multi-sequence-links.html",
     "parent": "multi-sequence",
     "module": "multi-sequence",
-    "prerequisites": [],
-    "next_steps": [],
     "apis": [
       "geom_link_ribbon"
     ],
@@ -267,8 +235,6 @@
     "canonical_path": "multi-sequence-labels.html",
     "parent": "multi-sequence",
     "module": "multi-sequence",
-    "prerequisites": [],
-    "next_steps": [],
     "apis": [
       "geom_gene_label_repel"
     ],
@@ -294,10 +260,6 @@
     "canonical_path": "ribbons.html",
     "parent": "multi-sequence",
     "module": "multi-sequence",
-    "prerequisites": [],
-    "next_steps": [
-      "instances"
-    ],
     "apis": [
       "filter_ggchord_ribbons",
       "deduplicate_ggchord_ribbons",
@@ -345,8 +307,6 @@
     "canonical_path": "real-data.html",
     "parent": "formats",
     "module": "data",
-    "prerequisites": [],
-    "next_steps": [],
     "apis": [
       "library",
       "read_fasta_lengths",
@@ -396,10 +356,6 @@
     "canonical_path": "chord.html",
     "parent": "multi-sequence",
     "module": "multi-sequence",
-    "prerequisites": [],
-    "next_steps": [
-      "collinear-layout"
-    ],
     "apis": [
       "c",
       "ggchord",
@@ -489,8 +445,6 @@
     "canonical_path": "multi-sequence-start.html",
     "parent": "multi-sequence",
     "module": "multi-sequence",
-    "prerequisites": [],
-    "next_steps": [],
     "apis": [
       "geom_seq_label"
     ],
@@ -512,8 +466,6 @@
     "canonical_path": "multi-sequence-views.html",
     "parent": "multi-sequence",
     "module": "multi-sequence",
-    "prerequisites": [],
-    "next_steps": [],
     "apis": [],
     "recipe_ids": [],
     "figure_ids": [],
@@ -531,8 +483,6 @@
     "canonical_path": "multi-sequence-start.html",
     "parent": "multi-sequence",
     "module": "multi-sequence",
-    "prerequisites": [],
-    "next_steps": [],
     "apis": [
       "geom_gene_label"
     ],
@@ -556,8 +506,6 @@
     "canonical_path": "multi-sequence-links.html",
     "parent": "multi-sequence",
     "module": "multi-sequence",
-    "prerequisites": [],
-    "next_steps": [],
     "apis": [],
     "recipe_ids": [],
     "figure_ids": [
@@ -580,8 +528,6 @@
     "canonical_path": "homology.html",
     "parent": "multi-sequence",
     "module": "multi-sequence",
-    "prerequisites": [],
-    "next_steps": [],
     "apis": [
       "library",
       "bind_rows",
@@ -645,10 +591,6 @@
     "canonical_path": "views.html",
     "parent": "multi-sequence",
     "module": "multi-sequence",
-    "prerequisites": [],
-    "next_steps": [
-      "homology"
-    ],
     "apis": [
       "data.frame",
       "pmin",
@@ -689,10 +631,6 @@
     "canonical_path": "collinear.html",
     "parent": "multi-sequence",
     "module": "multi-sequence",
-    "prerequisites": [],
-    "next_steps": [
-      "radial-synteny"
-    ],
     "apis": [
       "filter",
       "c",
@@ -783,8 +721,6 @@
     "canonical_path": "circular-start.html",
     "parent": "circular",
     "module": "circular",
-    "prerequisites": [],
-    "next_steps": [],
     "apis": [
       "coord_circular"
     ],
@@ -806,8 +742,6 @@
     "canonical_path": "circular-data.html",
     "parent": "circular",
     "module": "circular",
-    "prerequisites": [],
-    "next_steps": [],
     "apis": [
       "read_fasta_lengths",
       "readDNAStringSet"
@@ -828,8 +762,6 @@
     "canonical_path": "circular-start.html",
     "parent": "circular",
     "module": "circular",
-    "prerequisites": [],
-    "next_steps": [],
     "apis": [],
     "recipe_ids": [],
     "figure_ids": [
@@ -851,10 +783,6 @@
     "canonical_path": "recognition.html",
     "parent": "circular",
     "module": "circular",
-    "prerequisites": [],
-    "next_steps": [
-      "primers"
-    ],
     "apis": [
       "data",
       "setNames",
@@ -891,8 +819,6 @@
     "canonical_path": "plasmid-catalog.html",
     "parent": "circular",
     "module": "circular",
-    "prerequisites": [],
-    "next_steps": [],
     "apis": [
       "library",
       "function",
@@ -969,10 +895,6 @@
     "canonical_path": "plasmids.html",
     "parent": "circular",
     "module": "circular",
-    "prerequisites": [],
-    "next_steps": [
-      "circular-dense-case"
-    ],
     "apis": [
       "library",
       "function",
@@ -1020,10 +942,8 @@
     "id": "data",
     "kind": "tutorial",
     "canonical_path": "data.html",
-    "parent": "installation",
-    "module": "start",
-    "prerequisites": [],
-    "next_steps": [],
+    "parent": "formats",
+    "module": "data",
     "apis": [
       "library",
       "select",
@@ -1064,7 +984,7 @@
   {
     "slug": "formats",
     "title": {
-      "zh": "导入和转换数据"
+      "zh": "数据与操作"
     },
     "group": "article",
     "id": "formats",
@@ -1072,10 +992,6 @@
     "canonical_path": "formats.html",
     "parent": "index",
     "module": "data",
-    "prerequisites": [],
-    "next_steps": [
-      "import-sequences"
-    ],
     "apis": [],
     "recipe_ids": [],
     "figure_ids": [],
@@ -1093,10 +1009,6 @@
     "canonical_path": "alignments.html",
     "parent": "formats",
     "module": "data",
-    "prerequisites": [],
-    "next_steps": [
-      "protein-alignments"
-    ],
     "apis": [
       "read_blast",
       "head",
@@ -1121,10 +1033,6 @@
     "canonical_path": "projection.html",
     "parent": "formats",
     "module": "data",
-    "prerequisites": [],
-    "next_steps": [
-      "workflows"
-    ],
     "apis": [
       "mutate",
       "build_ggchord_cds",
@@ -1177,10 +1085,6 @@
     "canonical_path": "annotations.html",
     "parent": "styling",
     "module": "shared-techniques",
-    "prerequisites": [],
-    "next_steps": [
-      "feature-geometry"
-    ],
     "apis": [
       "head",
       "find_common_features",
@@ -1233,10 +1137,6 @@
     "canonical_path": "labels.html",
     "parent": "styling",
     "module": "shared-techniques",
-    "prerequisites": [],
-    "next_steps": [
-      "parameters"
-    ],
     "apis": [
       "head",
       "subset",
@@ -1277,10 +1177,6 @@
     "canonical_path": "tracks.html",
     "parent": "styling",
     "module": "shared-techniques",
-    "prerequisites": [],
-    "next_steps": [
-      "tracks-statistics"
-    ],
     "apis": [
       "c",
       "seq.int",
@@ -1345,10 +1241,6 @@
     "canonical_path": "styling.html",
     "parent": "modes",
     "module": "shared-techniques",
-    "prerequisites": [],
-    "next_steps": [
-      "annotations"
-    ],
     "apis": [
       "ggchord",
       "geom_seq",
@@ -1399,18 +1291,14 @@
   {
     "slug": "parameters",
     "title": {
-      "zh": "灵活的参数格式"
+      "zh": "填写几何与位置参数"
     },
     "group": "article",
     "id": "parameters",
     "kind": "tutorial",
     "canonical_path": "parameters.html",
-    "parent": "modes",
+    "parent": "styling",
     "module": "shared-techniques",
-    "prerequisites": [],
-    "next_steps": [
-      "scale-families"
-    ],
     "apis": [
       "ggchord",
       "geom_seq",
@@ -1452,8 +1340,6 @@
     "canonical_path": "styling.html",
     "parent": "styling",
     "module": "shared-techniques",
-    "prerequisites": [],
-    "next_steps": [],
     "apis": [
       "position_strand",
       "position_feature_stack",
@@ -1477,10 +1363,6 @@
     "canonical_path": "output.html",
     "parent": "styling",
     "module": "shared-techniques",
-    "prerequisites": [],
-    "next_steps": [
-      "diagnostics"
-    ],
     "apis": [
       "ggchord",
       "geom_seq",
@@ -1503,7 +1385,7 @@
   {
     "slug": "reference",
     "title": {
-      "zh": "函数参考文档"
+      "zh": "API 参考"
     },
     "group": "reference",
     "id": "reference",
@@ -1511,10 +1393,6 @@
     "canonical_path": "reference/index.html",
     "parent": "index",
     "module": "reference",
-    "prerequisites": [],
-    "next_steps": [
-      "compatibility"
-    ],
     "apis": [],
     "recipe_ids": [],
     "figure_ids": [],
@@ -1526,7 +1404,7 @@
   {
     "slug": "gallery",
     "title": {
-      "zh": "示例图集"
+      "zh": "案例图库"
     },
     "group": "guide",
     "id": "gallery",
@@ -1534,8 +1412,6 @@
     "canonical_path": "gallery.html",
     "parent": "index",
     "module": "cases",
-    "prerequisites": [],
-    "next_steps": [],
     "apis": [],
     "recipe_ids": [],
     "figure_ids": [],
@@ -1553,10 +1429,6 @@
     "canonical_path": "faq.html",
     "parent": "about",
     "module": "information",
-    "prerequisites": [],
-    "next_steps": [
-      "migration"
-    ],
     "apis": [],
     "recipe_ids": [],
     "figure_ids": [],
@@ -1574,8 +1446,6 @@
     "canonical_path": "collinear-layout.html",
     "parent": "multi-sequence",
     "module": "multi-sequence",
-    "prerequisites": [],
-    "next_steps": [],
     "apis": [],
     "recipe_ids": [],
     "figure_ids": [
@@ -1597,8 +1467,6 @@
     "canonical_path": "circular-layout.html",
     "parent": "circular",
     "module": "circular",
-    "prerequisites": [],
-    "next_steps": [],
     "apis": [],
     "recipe_ids": [],
     "figure_ids": [
@@ -1620,10 +1488,6 @@
     "canonical_path": "about.html",
     "parent": "index",
     "module": "information",
-    "prerequisites": [],
-    "next_steps": [
-      "faq"
-    ],
     "apis": [],
     "recipe_ids": [],
     "figure_ids": [],
@@ -1641,10 +1505,6 @@
     "canonical_path": "protein-alignments.html",
     "parent": "formats",
     "module": "data",
-    "prerequisites": [],
-    "next_steps": [
-      "projection"
-    ],
     "apis": [
       "c",
       "ggchord",
@@ -1694,10 +1554,6 @@
     "canonical_path": "collinear-layout.html",
     "parent": "multi-sequence",
     "module": "multi-sequence",
-    "prerequisites": [],
-    "next_steps": [
-      "collinear"
-    ],
     "apis": [
       "library",
       "head",
@@ -1743,8 +1599,6 @@
     "canonical_path": "installation.html",
     "parent": "about",
     "module": "information",
-    "prerequisites": [],
-    "next_steps": [],
     "apis": [],
     "recipe_ids": [],
     "figure_ids": [],
@@ -1762,10 +1616,6 @@
     "canonical_path": "compatibility.html",
     "parent": "reference",
     "module": "reference",
-    "prerequisites": [],
-    "next_steps": [
-      "parameter-atlas"
-    ],
     "apis": [],
     "recipe_ids": [],
     "figure_ids": [],
@@ -1783,10 +1633,6 @@
     "canonical_path": "feature-geometry.html",
     "parent": "styling",
     "module": "shared-techniques",
-    "prerequisites": [],
-    "next_steps": [
-      "labels"
-    ],
     "apis": [
       "library",
       "filter",
@@ -1835,8 +1681,6 @@
     "canonical_path": "multi-sequence-links.html",
     "parent": "multi-sequence",
     "module": "multi-sequence",
-    "prerequisites": [],
-    "next_steps": [],
     "apis": [
       "geom_link_ribbon",
       "geom_link_line"
@@ -1863,8 +1707,6 @@
     "canonical_path": "circular-layout.html",
     "parent": "circular",
     "module": "circular",
-    "prerequisites": [],
-    "next_steps": [],
     "apis": [
       "position_feature_stack",
       "position_offset",
@@ -1902,10 +1744,6 @@
     "canonical_path": "circular-labels.html",
     "parent": "circular",
     "module": "circular",
-    "prerequisites": [],
-    "next_steps": [
-      "recognition"
-    ],
     "apis": [
       "library",
       "c",
@@ -1969,10 +1807,6 @@
     "canonical_path": "primers.html",
     "parent": "circular",
     "module": "circular",
-    "prerequisites": [],
-    "next_steps": [
-      "restriction-sites"
-    ],
     "apis": [
       "library",
       "c",
@@ -2022,10 +1856,6 @@
     "canonical_path": "restriction-sites.html",
     "parent": "circular",
     "module": "circular",
-    "prerequisites": [],
-    "next_steps": [
-      "plasmids"
-    ],
     "apis": [
       "library",
       "c",
@@ -2071,10 +1901,6 @@
     "canonical_path": "scale-families.html",
     "parent": "styling",
     "module": "shared-techniques",
-    "prerequisites": [],
-    "next_steps": [
-      "tracks"
-    ],
     "apis": [
       "library",
       "c",
@@ -2195,8 +2021,6 @@
     "canonical_path": "ribbons.html",
     "parent": "multi-sequence",
     "module": "multi-sequence",
-    "prerequisites": [],
-    "next_steps": [],
     "apis": [
       "library",
       "ggchord",
@@ -2238,10 +2062,6 @@
     "canonical_path": "parameter-atlas.html",
     "parent": "reference",
     "module": "reference",
-    "prerequisites": [],
-    "next_steps": [
-      "api-curriculum"
-    ],
     "apis": [],
     "recipe_ids": [],
     "figure_ids": [],
@@ -2259,8 +2079,6 @@
     "canonical_path": "workflows.html",
     "parent": "formats",
     "module": "data",
-    "prerequisites": [],
-    "next_steps": [],
     "apis": [],
     "recipe_ids": [],
     "figure_ids": [],
@@ -2278,8 +2096,6 @@
     "canonical_path": "api-curriculum.html",
     "parent": "reference",
     "module": "reference",
-    "prerequisites": [],
-    "next_steps": [],
     "apis": [],
     "recipe_ids": [],
     "figure_ids": [],
@@ -2297,8 +2113,6 @@
     "canonical_path": "multi-sequence.html",
     "parent": "styling",
     "module": "shared-techniques",
-    "prerequisites": [],
-    "next_steps": [],
     "apis": [
       "coord_chord",
       "coord_collinear",
@@ -2329,8 +2143,6 @@
     "canonical_path": "dotplot-start.html",
     "parent": "dotplot",
     "module": "dotplot",
-    "prerequisites": [],
-    "next_steps": [],
     "apis": [
       "read_paf",
       "geom_seq",
@@ -2349,18 +2161,14 @@
   {
     "slug": "fusion",
     "title": {
-      "zh": "模块四 · 多视图组合"
+      "zh": "多视图组合"
     },
     "group": "article",
     "id": "fusion",
-    "kind": "module",
+    "kind": "guide",
     "canonical_path": "fusion.html",
     "parent": "modes",
     "module": "fusion",
-    "prerequisites": [],
-    "next_steps": [
-      "fusion-start"
-    ],
     "apis": [],
     "recipe_ids": [],
     "figure_ids": [
@@ -2372,18 +2180,14 @@
   {
     "slug": "multi-sequence",
     "title": {
-      "zh": "模块一 · 多序列关系"
+      "zh": "多序列关系"
     },
     "group": "guide",
     "id": "multi-sequence",
-    "kind": "module",
+    "kind": "guide",
     "canonical_path": "multi-sequence.html",
     "parent": "modes",
     "module": "multi-sequence",
-    "prerequisites": [],
-    "next_steps": [
-      "multi-sequence-start"
-    ],
     "apis": [],
     "recipe_ids": [],
     "figure_ids": [
@@ -2395,18 +2199,14 @@
   {
     "slug": "circular",
     "title": {
-      "zh": "模块二 · 单序列圆图"
+      "zh": "单序列圆图"
     },
     "group": "guide",
     "id": "circular",
-    "kind": "module",
+    "kind": "guide",
     "canonical_path": "circular.html",
     "parent": "modes",
     "module": "circular",
-    "prerequisites": [],
-    "next_steps": [
-      "circular-start"
-    ],
     "apis": [],
     "recipe_ids": [],
     "figure_ids": [
@@ -2418,18 +2218,14 @@
   {
     "slug": "dotplot",
     "title": {
-      "zh": "模块三 · 序列比对点图"
+      "zh": "序列比对点图"
     },
     "group": "guide",
     "id": "dotplot",
-    "kind": "module",
+    "kind": "guide",
     "canonical_path": "dotplot.html",
     "parent": "modes",
     "module": "dotplot",
-    "prerequisites": [],
-    "next_steps": [
-      "dotplot-start"
-    ],
     "apis": [],
     "recipe_ids": [],
     "figure_ids": [
@@ -2441,7 +2237,7 @@
   {
     "slug": "multi-sequence-start",
     "title": {
-      "zh": "共用数据与图层"
+      "zh": "绘制多序列骨架、连接与注释"
     },
     "group": "article",
     "id": "multi-sequence-start",
@@ -2449,12 +2245,6 @@
     "canonical_path": "multi-sequence-start.html",
     "parent": "multi-sequence",
     "module": "multi-sequence",
-    "prerequisites": [
-      "installation"
-    ],
-    "next_steps": [
-      "multi-sequence-views"
-    ],
     "apis": [
       "library",
       "ggchord",
@@ -2490,7 +2280,7 @@
   {
     "slug": "multi-sequence-views",
     "title": {
-      "zh": "四视图对照与旗舰实例"
+      "zh": "用同一输入比较四种布局"
     },
     "group": "article",
     "id": "multi-sequence-views",
@@ -2498,12 +2288,6 @@
     "canonical_path": "multi-sequence-views.html",
     "parent": "multi-sequence",
     "module": "multi-sequence",
-    "prerequisites": [
-      "multi-sequence-start"
-    ],
-    "next_steps": [
-      "multi-sequence-layout"
-    ],
     "apis": [
       "setNames",
       "c",
@@ -2624,12 +2408,6 @@
     "canonical_path": "sankey.html",
     "parent": "multi-sequence",
     "module": "multi-sequence",
-    "prerequisites": [
-      "multi-sequence-start"
-    ],
-    "next_steps": [
-      "views"
-    ],
     "apis": [
       "library",
       "mutate",
@@ -2672,12 +2450,6 @@
     "canonical_path": "radial-synteny.html",
     "parent": "multi-sequence",
     "module": "multi-sequence",
-    "prerequisites": [
-      "multi-sequence-start"
-    ],
-    "next_steps": [
-      "sankey"
-    ],
     "apis": [
       "library",
       "select",
@@ -2732,10 +2504,6 @@
     "canonical_path": "instances.html",
     "parent": "multi-sequence",
     "module": "multi-sequence",
-    "prerequisites": [],
-    "next_steps": [
-      "chord-geometry"
-    ],
     "apis": [
       "library",
       "mutate",
@@ -2772,7 +2540,7 @@
   {
     "slug": "multi-sequence-layout",
     "title": {
-      "zh": "坐标与显示规则"
+      "zh": "调整序列顺序与显示方向"
     },
     "group": "article",
     "id": "multi-sequence-layout",
@@ -2780,10 +2548,6 @@
     "canonical_path": "multi-sequence-layout.html",
     "parent": "multi-sequence",
     "module": "multi-sequence",
-    "prerequisites": [],
-    "next_steps": [
-      "multi-sequence-links"
-    ],
     "apis": [
       "library",
       "ggchord",
@@ -2809,7 +2573,7 @@
   {
     "slug": "multi-sequence-links",
     "title": {
-      "zh": "区间、点与跨行连接"
+      "zh": "绘制和调整序列连接"
     },
     "group": "article",
     "id": "multi-sequence-links",
@@ -2817,10 +2581,6 @@
     "canonical_path": "multi-sequence-links.html",
     "parent": "multi-sequence",
     "module": "multi-sequence",
-    "prerequisites": [],
-    "next_steps": [
-      "multi-sequence-labels"
-    ],
     "apis": [
       "library",
       "ggchord",
@@ -2889,7 +2649,7 @@
   {
     "slug": "multi-sequence-labels",
     "title": {
-      "zh": "序列名与特征标签"
+      "zh": "标注序列与特征"
     },
     "group": "article",
     "id": "multi-sequence-labels",
@@ -2897,10 +2657,6 @@
     "canonical_path": "multi-sequence-labels.html",
     "parent": "multi-sequence",
     "module": "multi-sequence",
-    "prerequisites": [],
-    "next_steps": [
-      "ribbons"
-    ],
     "apis": [
       "library",
       "ggchord",
@@ -2945,7 +2701,7 @@
   {
     "slug": "circular-start",
     "title": {
-      "zh": "圆形骨架与已有注释"
+      "zh": "从长度和注释绘制圆图"
     },
     "group": "article",
     "id": "circular-start",
@@ -2953,10 +2709,6 @@
     "canonical_path": "circular-start.html",
     "parent": "circular",
     "module": "circular",
-    "prerequisites": [],
-    "next_steps": [
-      "circular-data"
-    ],
     "apis": [
       "library",
       "select",
@@ -2990,10 +2742,6 @@
     "canonical_path": "circular-data.html",
     "parent": "circular",
     "module": "circular",
-    "prerequisites": [],
-    "next_steps": [
-      "circular-layout"
-    ],
     "apis": [
       "library",
       "select",
@@ -3018,10 +2766,6 @@
     "canonical_path": "circular-layout.html",
     "parent": "circular",
     "module": "circular",
-    "prerequisites": [],
-    "next_steps": [
-      "circular-features"
-    ],
     "apis": [
       "library",
       "c",
@@ -3083,10 +2827,6 @@
     "canonical_path": "circular-features.html",
     "parent": "circular",
     "module": "circular",
-    "prerequisites": [],
-    "next_steps": [
-      "circular-labels"
-    ],
     "apis": [
       "library",
       "c",
@@ -3134,10 +2874,6 @@
     "canonical_path": "circular-dense-case.html",
     "parent": "circular",
     "module": "circular",
-    "prerequisites": [],
-    "next_steps": [
-      "plasmid-catalog"
-    ],
     "apis": [
       "library",
       "function",
@@ -3179,7 +2915,7 @@
   {
     "slug": "dotplot-start",
     "title": {
-      "zh": "HSP 双轴、方向与映射"
+      "zh": "绘制 HSP 比对点图"
     },
     "group": "article",
     "id": "dotplot-start",
@@ -3187,8 +2923,6 @@
     "canonical_path": "dotplot-start.html",
     "parent": "dotplot",
     "module": "dotplot",
-    "prerequisites": [],
-    "next_steps": [],
     "apis": [
       "library",
       "read_fasta_lengths",
@@ -3247,10 +2981,6 @@
     "canonical_path": "import-sequences.html",
     "parent": "formats",
     "module": "data",
-    "prerequisites": [],
-    "next_steps": [
-      "import-intervals"
-    ],
     "apis": [
       "library",
       "select",
@@ -3302,10 +3032,6 @@
     "canonical_path": "import-intervals.html",
     "parent": "formats",
     "module": "data",
-    "prerequisites": [],
-    "next_steps": [
-      "import-signals"
-    ],
     "apis": [
       "library",
       "select",
@@ -3364,10 +3090,6 @@
     "canonical_path": "aligned-sequences.html",
     "parent": "formats",
     "module": "data",
-    "prerequisites": [],
-    "next_steps": [
-      "import-relations"
-    ],
     "apis": [
       "library",
       "select",
@@ -3421,10 +3143,6 @@
     "canonical_path": "import-signals.html",
     "parent": "formats",
     "module": "data",
-    "prerequisites": [],
-    "next_steps": [
-      "aligned-sequences"
-    ],
     "apis": [
       "library",
       "select",
@@ -3481,10 +3199,6 @@
     "canonical_path": "import-relations.html",
     "parent": "formats",
     "module": "data",
-    "prerequisites": [],
-    "next_steps": [
-      "alignments"
-    ],
     "apis": [
       "library",
       "select",
@@ -3552,10 +3266,6 @@
     "canonical_path": "tracks-statistics.html",
     "parent": "styling",
     "module": "shared-techniques",
-    "prerequisites": [],
-    "next_steps": [
-      "output"
-    ],
     "apis": [
       "library",
       "c",
@@ -3626,8 +3336,6 @@
     "canonical_path": "diagnostics.html",
     "parent": "styling",
     "module": "shared-techniques",
-    "prerequisites": [],
-    "next_steps": [],
     "apis": [
       "library",
       "ggchord",
@@ -3670,10 +3378,6 @@
     "canonical_path": "workflows.html",
     "parent": "formats",
     "module": "data",
-    "prerequisites": [],
-    "next_steps": [
-      "real-data"
-    ],
     "apis": [],
     "recipe_ids": [],
     "figure_ids": [],
@@ -3691,10 +3395,6 @@
     "canonical_path": "fusion-routing.html",
     "parent": "fusion",
     "module": "fusion",
-    "prerequisites": [],
-    "next_steps": [
-      "fusion-layout"
-    ],
     "apis": [
       "library",
       "read_paf",
@@ -3757,10 +3457,6 @@
     "canonical_path": "fusion-layout.html",
     "parent": "fusion",
     "module": "fusion",
-    "prerequisites": [],
-    "next_steps": [
-      "fusion-details"
-    ],
     "apis": [
       "library",
       "read_paf",
@@ -3847,10 +3543,6 @@
     "canonical_path": "fusion-details.html",
     "parent": "fusion",
     "module": "fusion",
-    "prerequisites": [],
-    "next_steps": [
-      "fusion-advanced"
-    ],
     "apis": [
       "library",
       "read_paf",
@@ -3936,8 +3628,6 @@
     "canonical_path": "fusion-advanced.html",
     "parent": "fusion",
     "module": "fusion",
-    "prerequisites": [],
-    "next_steps": [],
     "apis": [
       "library",
       "read_paf",
@@ -3988,7 +3678,7 @@
   {
     "slug": "fusion-start",
     "title": {
-      "zh": "组合面板与真实区间连接"
+      "zh": "组合面板并连接真实区间"
     },
     "group": "article",
     "id": "fusion-start",
@@ -3996,10 +3686,6 @@
     "canonical_path": "fusion-start.html",
     "parent": "fusion",
     "module": "fusion",
-    "prerequisites": [],
-    "next_steps": [
-      "fusion-routing"
-    ],
     "apis": [
       "library",
       "read_paf",
@@ -4040,8 +3726,6 @@
     "canonical_path": "migration.html",
     "parent": "about",
     "module": "information",
-    "prerequisites": [],
-    "next_steps": [],
     "apis": [],
     "recipe_ids": [],
     "figure_ids": [],
@@ -4059,13 +3743,6 @@
     "canonical_path": "flagship-data.html",
     "parent": "formats",
     "module": "data",
-    "prerequisites": [],
-    "next_steps": [
-      "multi-sequence-views",
-      "dotplot-start",
-      "fusion-layout",
-      "circular-dense-case"
-    ],
     "apis": [],
     "recipe_ids": [],
     "figure_ids": [],

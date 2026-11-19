@@ -1,8 +1,8 @@
-按 API 查找用途、主讲说明、模式、综合案例和完整参数。精确默认值、格式、单位和限制见函数参考；覆盖等级保留在页末维护记录。上游重导出及纯拼写别名按家族说明，不重复制造说明。
+按函数名查找用途、适用输入和示例。函数名链接到签名和参数说明。
 
 <a id="apis"></a>
 
-## API 功能索引 {#apis}
+## 按函数名查找 {#apis}
 
 | API 与参考 | 用途 | 用法说明 | 模式/输入边界 | 参数图谱 | 综合案例/工作流 |
 | --- | --- | --- | --- | --- | --- |
@@ -149,6 +149,7 @@
 | [`scale_track_fill_manual`](../../man/scale_track_fill_gradientn.Rd) | 设置轨道填色或颜色映射 | [用法](scale-families.md#tracks) | 兼容骨架坐标（见支持表）；ID 必须匹配 track_band | [↗](parameter-atlas.md#api-scale_track_fill_manual) | [↗](tracks.md) |
 | [`scale_track_value_continuous`](../../man/scale_track_value_continuous.Rd) | 设置命名轨道的数值高度标度 | [用法](scale-families.md#tracks) | 兼容骨架坐标（见支持表）；ID 必须匹配 track_band | [↗](parameter-atlas.md#api-scale_track_value_continuous) | [↗](tracks.md) |
 | [`segment_ggchord_data`](../../man/segment_ggchord_data.Rd) | 为分段线性图准备独立窗口 | [用法](views.md#segments) | 显式输入、窗口与来源的工作流 | [↗](parameter-atlas.md#api-segment_ggchord_data) | [↗](views.md) |
+| [`shared_track_limits`](../../man/shared_track_limits.Rd) | 为多个图的指定轨道计算共同数值范围 | [用法](tracks-statistics.md#independent-bands) | 具有数值轨道的独立图，可按轨道 ID 选择范围 | [↗](parameter-atlas.md#api-shared_track_limits) | [↗](tracks.md) |
 | [`stat_coverage`](../../man/stat_coverage.Rd) | 计算一基闭区间在各窗口的并集覆盖率和平均深度 | [用法](tracks-statistics.md#interval-coverage) | 具备参考长度和单位的源区间；每个有观测的组独立统计 | [↗](parameter-atlas.md#api-stat_coverage) | [↗](tracks.md) |
 | [`stat_ribbon_bundle`](../../man/stat_ribbon_bundle.Rd) | 以统计图层聚束区间连接 | [用法](ribbons.md#statistics-bundle) | 弦图/共线性；显式聚束 | [↗](parameter-atlas.md#api-stat_ribbon_bundle) | [↗](chord.md) |
 | [`stat_ribbon_density`](../../man/stat_ribbon_density.Rd) | 以统计图层计算局部连接密度 | [用法](ribbons.md#statistics-density) | 弦图/共线性；一行观测仍是一条带 | [↗](parameter-atlas.md#api-stat_ribbon_density) | [↗](chord.md) |
@@ -168,174 +169,6 @@
 
 <a id="reproduce"></a>
 
-## 怎样复现 {#reproduce}
+## 运行示例 {#reproduce}
 
-按主讲页从准备代码开始运行；字段含义在[基础表](data.md)，实际格式转换在[导入](formats.md)。所有主讲页的共享片段在独立环境执行，重要对照图来自真实 ggchord 渲染。已标明的简化几何示意不作为生物学证据。原始输入、完整源码和复现说明随对应页面保留；安装方法见[安装页](installation.md)。
-
-<details class="maintenance-record"><summary>维护覆盖记录</summary>
-
-L2 表示最小示例与输入/输出说明，L3 另含关键参数对照；均不保证所有参数组合。
-
-| API | 等级 |
-| --- | --- |
-| `adapt_ggchord` | L2 |
-| `aes` | L1 |
-| `after_scale` | L1 |
-| `after_stat` | L1 |
-| `annotate` | L1 |
-| `arrow` | L1 |
-| `as_ggchord_alignment` | L2 |
-| `as_ggchord_feature` | L2 |
-| `as_ggchord_link` | L2 |
-| `as_ggchord_seq` | L2 |
-| `build_ggchord_cds` | L2 |
-| `bundle_ggchord_ribbons` | L3 |
-| `clean_ggchord_data` | L2 |
-| `coord_chord` | L3 |
-| `coord_circular` | L3 |
-| `coord_collinear` | L3 |
-| `coord_dotplot` | L2 |
-| `coord_radial_synteny` | L2 |
-| `coord_sankey` | L2 |
-| `deduplicate_ggchord_ribbons` | L2 |
-| `diagnose_ggchord` | L2 |
-| `element_blank` | L1 |
-| `element_line` | L1 |
-| `element_rect` | L1 |
-| `element_text` | L1 |
-| `expansion` | L1 |
-| `export_ggchord_fusion` | L2 |
-| `export_ggchord_layout` | L2 |
-| `filter_ggchord_ribbons` | L2 |
-| `filter_restriction_sites` | L2 |
-| `find_common_features` | L2 |
-| `find_ggchord_loci` | L2 |
-| `find_primer_bindings` | L2 |
-| `find_restriction_sites` | L2 |
-| `focus_ggchord_data` | L2 |
-| `focus_ggchord_track` | L2 |
-| `fusion_panel` | L2 |
-| `fusion_ribbon` | L2 |
-| `geom_alignment_segment` | L2 |
-| `geom_feature` | L3 |
-| `geom_feature_label` | L3 |
-| `geom_gene_label` | L3 |
-| `geom_gene_label_repel` | L3 |
-| `geom_link_line` | L3 |
-| `geom_link_ribbon` | L3 |
-| `geom_primer` | L3 |
-| `geom_primer_label_repel` | L3 |
-| `geom_residue` | L2 |
-| `geom_restriction_site` | L3 |
-| `geom_seq` | L3 |
-| `geom_seq_break` | L2 |
-| `geom_seq_center_label` | L3 |
-| `geom_seq_label` | L3 |
-| `geom_seq_region` | L3 |
-| `geom_seq_scale` | L3 |
-| `geom_track` | L2 |
-| `geom_track_bar` | L3 |
-| `geom_track_col` | L2 |
-| `geom_track_line` | L3 |
-| `geom_track_tile` | L3 |
-| `get_chord_layout` | L2 |
-| `ggchord` | L2 |
-| `ggchord_fusion` | L2 |
-| `ggsave` | L1 |
-| `ggtitle` | L1 |
-| `guide_ggchord_colorbar` | L2 |
-| `guide_ggchord_colourbar` | L2 |
-| `guide_ggchord_legend` | L2 |
-| `guide_seq_axis` | L2 |
-| `guide_track_axis` | L2 |
-| `guides` | L1 |
-| `labs` | L1 |
-| `last_plot` | L1 |
-| `layout_sequences` | L2 |
-| `link_ggchord_clusters` | L2 |
-| `magnify_ggchord` | L2 |
-| `map_alignment_position` | L2 |
-| `map_ggchord_position` | L2 |
-| `margin` | L1 |
-| `merge_ggchord_ribbons` | L2 |
-| `optimize_ggchord_layout` | L2 |
-| `position_feature_stack` | L3 |
-| `position_identity` | L1 |
-| `position_offset` | L2 |
-| `position_strand` | L2 |
-| `PositionIdentity` | L1 |
-| `prepare_ggchord_data` | L2 |
-| `primer_catalog` | L2 |
-| `project_ggchord_features` | L2 |
-| `project_ggchord_links` | L2 |
-| `read_aligned_fasta` | L2 |
-| `read_bed` | L2 |
-| `read_bedgraph` | L2 |
-| `read_bedpe` | L2 |
-| `read_bigwig` | L2 |
-| `read_blast` | L2 |
-| `read_chain` | L2 |
-| `read_delta` | L2 |
-| `read_fasta_lengths` | L2 |
-| `read_feature_relations` | L2 |
-| `read_genbank` | L2 |
-| `read_gff3` | L2 |
-| `read_maf` | L2 |
-| `read_paf` | L2 |
-| `read_signature_matches` | L2 |
-| `read_vcf` | L2 |
-| `register_ggchord_alignment` | L2 |
-| `rel` | L1 |
-| `scale_feature_fill_manual` | L2 |
-| `scale_feature_fill_plasmid` | L2 |
-| `scale_feature_shape_manual` | L2 |
-| `scale_feature_shape_plasmid` | L2 |
-| `scale_fill_residue` | L2 |
-| `scale_gene_fill_manual` | L2 |
-| `scale_link_alpha_continuous` | L2 |
-| `scale_link_alpha_manual` | L2 |
-| `scale_link_color_gradientn` | L2 |
-| `scale_link_color_manual` | L2 |
-| `scale_link_colour_gradientn` | L2 |
-| `scale_link_colour_manual` | L2 |
-| `scale_link_linetype_manual` | L2 |
-| `scale_link_linewidth_continuous` | L2 |
-| `scale_link_linewidth_manual` | L2 |
-| `scale_region_fill_manual` | L2 |
-| `scale_ribbon_alpha_continuous` | L2 |
-| `scale_ribbon_alpha_manual` | L2 |
-| `scale_ribbon_color_manual` | L2 |
-| `scale_ribbon_colour_manual` | L2 |
-| `scale_ribbon_fill_gradientn` | L2 |
-| `scale_ribbon_fill_identity` | L2 |
-| `scale_ribbon_fill_manual` | L2 |
-| `scale_ribbon_fill_stepsn` | L2 |
-| `scale_ribbon_linetype_manual` | L2 |
-| `scale_seq_color_manual` | L2 |
-| `scale_seq_colour_manual` | L2 |
-| `scale_seq_position_continuous` | L2 |
-| `scale_seq_ring_manual` | L2 |
-| `scale_track_colour_gradientn` | L2 |
-| `scale_track_colour_manual` | L2 |
-| `scale_track_fill_gradientn` | L2 |
-| `scale_track_fill_manual` | L2 |
-| `scale_track_value_continuous` | L2 |
-| `segment_ggchord_data` | L2 |
-| `stat_coverage` | L2 |
-| `stat_ribbon_bundle` | L3 |
-| `stat_ribbon_density` | L3 |
-| `theme` | L1 |
-| `theme_ggchord` | L2 |
-| `theme_ggchord_dark` | L2 |
-| `theme_ggchord_minimal` | L2 |
-| `theme_ggchord_plasmid` | L2 |
-| `theme_ggchord_publication` | L2 |
-| `track_band` | L3 |
-| `translate_ggchord_cds` | L2 |
-| `unit` | L1 |
-| `validate_ggchord_data` | L2 |
-| `validate_ggchord_hierarchy` | L2 |
-| `view_ggchord` | L2 |
-| `waiver` | L1 |
-
-</details>
+打开对应条目，复制要绘制的图或要执行的操作。[查看数据格式](formats.md)。

@@ -1,8 +1,7 @@
 {{code:courseblockao}}
 
-{{prepare:setup}}
 
-先解压[真实输入包](https://github.com/DangJem/ggchord/archive/refs/heads/main.zip)，工作目录须含 examples/；每节单列可选依赖。
+示例使用随包表或随安装提供的小文件。每段代码列出所用的依赖。
 
 <a id="zero-based"></a>
 

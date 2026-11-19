@@ -1,5 +1,5 @@
 {
-  "source_sha256": "63586b5442446a42cf49186d6981d20b985be8cdcad923029b72984be2b9588f",
+  "source_sha256": "5aef4d231162580f5de63e7408bee6dbef39c0867ce9799bfce10e859b45be9a",
   "blocks": {
     "1": {
       "source_sha256": "0fa3fbfa0a873728926e3af5e6670e13482733d3820f9266bf2ef86dfe4f9a5c",
@@ -56,37 +56,37 @@
       "status": "reviewed",
       "translation": "PNG serves web pages and slides; PDF/SVG serve vector-output workflows. The extension selects the default device unless a device is explicitly supplied. Reuse the target dimensions above and check fonts and embedding in the final file.\n"
     },
-    "20": {
+    "21": {
       "source_sha256": "2eabbea645f528a9827f2c0da3bc40637cc3e8fcaa950e188ef9872696f4fb12",
       "status": "reviewed",
       "translation": "## Choose an output by question ⟦shared:0⟧\n"
     },
-    "21": {
+    "22": {
       "source_sha256": "b7e8a3226352d7423ca0ac94f70a9debf79794fbece5522933df304356a84d56",
       "status": "reviewed",
       "translation": "| Question | Call and result | Rows and units |\n"
     },
-    "22": {
+    "23": {
       "source_sha256": "a9e436d2babd638ade86791e162e7de5a6b1b3128c6ae9ed93504fbf3c53dc93",
       "status": "reviewed",
       "translation": "| --- | --- | --- |\n"
     },
-    "23": {
+    "24": {
       "source_sha256": "234f426099bf4ff03b0ba6e5a59f7fb017effdca0473a1885c29607a00cbe4f3",
       "status": "reviewed",
       "translation": "| Where did an input link go? | ⟦shared:1⟧ and ⟦shared:2⟧ from ⟦shared:0⟧ | Look up the row in its layer input. A statistic can have several members in ⟦shared:3⟧. Polygon rows describe vertices. Count observations in the source table. |\n"
     },
-    "24": {
+    "25": {
       "source_sha256": "e2408e4d53a22602f9d790d9c68603c10a31721c363d6058c679de88d521aa86",
       "status": "reviewed",
       "translation": "| Where is a base or residue drawn? | ⟦shared:0⟧ returns ⟦shared:1⟧, ⟦shared:2⟧, ⟦shared:3⟧ and ⟦shared:4⟧ | Source positions are in bp or aa. Display coordinates use layout units. Select an axis for a dot plot. |\n"
     },
-    "25": {
+    "26": {
       "source_sha256": "25edbe14cd2cf534538faf9aa0d31fcd1e3297a0a0e0ff626e65a9ebf7023871",
       "status": "reviewed",
       "translation": "| Is the plot legible at the intended size? | ⟦shared:1⟧ and diagnostics from ⟦shared:0⟧ | Check panel measurement status on the target device before reading bounds in mm. In ordinary exports, ⟦shared:2⟧ identifies layout estimates or existing measurements. |\n"
     },
-    "26": {
+    "27": {
       "source_sha256": "82b627953d97dc1fe899e2a51cef145cbc4c58e8dd5a3775efa80d3e4ef0dd0b",
       "status": "reviewed",
       "translation": "| How do the panels line up? | ⟦shared:1⟧ and child layouts from ⟦shared:0⟧ | Global composition geometry uses mm. Look up source positions in the corresponding child panel. |\n"

@@ -1,6 +1,5 @@
 {{code:courseblockbg}}
 
-{{prepare:trackdata,tracks,foundationdata}}
 
 <a id="tracks"></a>
 
@@ -10,13 +9,24 @@
 Each accession/window computes its Stat and data Position before view projection
 or display replication. Layers share the default band when `track` is omitted. Add `track_band("depth")` before or after the layers and refer to it with `track = "depth"`. Use `position` for source-data adjustments such as stack or dodge.
 
-{{code:foundationcount}}
+Select two references from the bundled alignments and count observations at each query start. Hits starting at the same position add to the count.
+
+```r
+ids <- c("MT108731.1", "MT118296.1")
+seqs <- subset(seq_data_example, accver %in% ids)
+hits <- subset(ribbon_data_example,
+  qaccver %in% ids & saccver %in% ids & qaccver != saccver
+)
+ggchord(seqs) +
+  geom_seq() +
+  track_band("query_starts") +
+  geom_track_bar(aes(x = qstart, accver = qaccver), data = hits, track = "query_starts") +
+  coord_collinear()
+```
 
 {{figure:foundationcount}}
 
-The shortcut below counts the same observations using the same physical band.
-
-{{code:courseblockbh}}
+You can also write `geom_track_bar()` as `geom_track(geom = "bar")`. Both use the same start positions and counting rule.
 
 
 | Geometry | Default Stat | Input meaning |
@@ -59,6 +69,8 @@ Encode the same GC by bar height and colour using explicit gc_height/gc_colour I
 {{figure:comparetracktwo}}
 {{code:comparetrackorder}}
 {{figure:comparetrackorder}}
+
+To compare the same measure across plots, use [shared_track_limits()](../../man/shared_track_limits.Rd) to obtain one range from both plots and set it on each track scale.
 
 <a id="window-policy"></a>
 

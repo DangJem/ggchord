@@ -6,10 +6,6 @@
 
 ## 准备与完整显示规则 {#prepare}
 
-{{code:courseblockg}}
-
-{{code:referencebuilder}}
-
 `reference$features`、`reference$primers`、`reference$sites` 是实际入图的完整表；`reference$all_site_count` 记录原始候选数，完整搜索结果可按构建脚本重建，`reference$policy` 说明使用的酶集合。特征几何不删减，位点集合不做固定数量抽样。
 
 <a id="counts"></a>
@@ -20,91 +16,91 @@
 <a id="catalogpsb"></a>
 
 ## pSB1C3：小载体与基本骨架 {#catalogpsb}
-{{code:courseblockh}}
+{{code:courseblockh,catalogmap}}
 
 {{figure:catalogpsb}}
 
 <a id="catalogpuc"></a>
 
 ## pUC19：常见注释与复制起点 {#catalogpuc}
-{{code:courseblocki}}
+{{code:courseblocki,catalogmap}}
 
 {{figure:catalogpuc}}
 
 <a id="catalogpbr"></a>
 
 ## pBR322：多个抗性区与方向 {#catalogpbr}
-{{code:courseblockj}}
+{{code:courseblockj,catalogmap}}
 
 {{figure:catalogpbr}}
 
 <a id="catalogblue"></a>
 
 ## pBluescript II SK(+)：局部调控与短特征 {#catalogblue}
-{{code:courseblockk}}
+{{code:courseblockk,catalogmap}}
 
 {{figure:catalogblue}}
 
 <a id="catalogpet"></a>
 
 ## pET-28a(+)：表达区与标签 {#catalogpet}
-{{code:courseblockl}}
+{{code:courseblockl,catalogmap}}
 
 {{figure:catalogpet}}
 
 <a id="catalogduet"></a>
 
 ## pETDuet-1：双表达单元，进入密集案例 {#catalogduet}
-{{code:courseblockm}}
+{{code:courseblockm,catalogmap}}
 
 {{figure:catalogduet}}
 
 <a id="catalogdonr"></a>
 
 ## pDONR221：重组相关结构 {#catalogdonr}
-{{code:courseblockn}}
+{{code:courseblockn,catalogmap}}
 
 {{figure:catalogdonr}}
 
 <a id="catalogpcdna"></a>
 
 ## pcDNA3.1(+)：表达载体的注释层级 {#catalogpcdna}
-{{code:courseblocko}}
+{{code:courseblocko,catalogmap}}
 
 {{figure:catalogpcdna}}
 
 <a id="catalogtre"></a>
 
 ## pTRE-Tight-BI：双向调控布局 {#catalogtre}
-{{code:courseblockp}}
+{{code:courseblockp,catalogmap}}
 
 {{figure:catalogtre}}
 
 <a id="catalogtripz"></a>
 
 ## pTRIPZ：更长序列的显示密度 {#catalogtripz}
-{{code:courseblockq}}
+{{code:courseblockq,catalogmap}}
 
 {{figure:catalogtripz}}
 
 <a id="catalogcambia"></a>
 
 ## pCAMBIA1300：较大植物载体的结构 {#catalogcambia}
-{{code:courseblockr}}
+{{code:courseblockr,catalogmap}}
 
 {{figure:catalogcambia}}
 
 <a id="catalogearley"></a>
 
 ## pEarleyGate 201：另一植物载体的类别对照 {#catalogearley}
-{{code:courseblocks}}
+{{code:courseblocks,catalogmap}}
 
 {{figure:catalogearley}}
 
 <a id="catalogcas"></a>
 
 ## pSpCas9(BB)-2A-GFP (PX458)：大型表达载体与文字适配 {#catalogcas}
-{{code:courseblockt}}
+{{code:courseblockt,catalogmap}}
 
 {{figure:catalogcas}}
 

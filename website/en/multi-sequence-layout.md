@@ -1,6 +1,5 @@
 {{code:courseblockaf}}
 
-{{prepare:frontbackbone}}
 
 <a id="direction"></a>
 

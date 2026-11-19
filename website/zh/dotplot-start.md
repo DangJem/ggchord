@@ -8,11 +8,8 @@
 
 ## 绘制HSP真实端点 {#dotplot}
 
-随包数据 `sequence_detail_example$paf` 保留 EMALE 序列对的11条已观测HSP，来源文件声明的序列长度提供两条轴。
-随包表已按一基坐标规范化；反向比对的 target 端点保留降序。
-原始文件及来源见[输入下载](formats.md)。以下准备代码需要可选依赖`dplyr`。
+随包 PAF 表保留一对序列的 11 条已观测 HSP。两条原始长度决定坐标轴；规范化后的反向 target 区间保留降序。
 
-{{code:dotplotdata}}
 
 每条线从`(qstart, sstart)`连接到`(qend, send)`，无需`geom_seq()`。
 颜色、透明度、线宽和线型复用`link_*`映射与标度。默认Identity范围为0–100，
@@ -22,7 +19,7 @@
 
 {{figure:viewdotplot}}
 
-旧构造验证器可能对这些合法反向HSP的降序端点给出警告。应保留已规范化的端点顺序；逐区间升序排序会抹去显示倒位。
+保留反向 HSP 的降序端点。逐区间排序会改变原始线段方向。
 
 `x_seqs`和`y_seqs`分别选择和排列accession。`gap`使用原生bp/aa单位表示显示留白，
 不代表省略源序列。轴方向接受1/-1或完整命名向量。显示翻转改变斜率，但不改来源表。
@@ -44,9 +41,8 @@
 
 上方列标题标明 query 序列及完整的 1–length 范围，左侧行标题标明 subject 序列范围；下方和右侧只显示各自序列的局部坐标。沿一列和一行的交点即可定位一对序列。每个带边框的矩形保留两条序列真实长度对应的宽高，淡色背景只帮助分区，不编码相似性。矩形间的留白是显示间隙。
 
-这份输入的 6 个无序序列组合各只提供一个 query→subject 方向，没有反向互换记录，也没有自身比对。因此有 HSP 的区域只占半边；矩阵内标明每对记录数和无输入区域。不是渲染遗漏，也不把另一半留空解释为没有同源性。这里不自动镜像、补对角线或运行新的比对。此准备还使用可选依赖 tidyr。
+该例的每个无序序列组合只记录一个 query→subject 方向。空格表示没有输入记录；轴标题、分区和每格计数直接使用随包数据。
 
-{{prepare:dotplotmatrixdata}}
 
 {{code:flagshipdot}}
 
@@ -83,4 +79,4 @@ map_ggchord_position(
 
 ## 边界与下一步 {#support}
 
-不支持骨架 gene/feature/track/ribbon 层、facet 或作为 Fusion 端点。需要 gap/mismatch 时，提供真实字符对齐，见[字符工作流](aligned-sequences.md)。操作示例：选一条线，找回四端点，分别解释斜率和配色。
+按有向序列对分面时，用 ggplot2 的行列分面分别指定两端 ID。需要逐位置 gap 或 mismatch 时，见[字符对齐](aligned-sequences.md)。

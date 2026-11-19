@@ -1,4 +1,4 @@
-"""Shared, dependency-free source expansion for the site and paired tutorials."""
+"""Expand the shared sources for the website and paired tutorials."""
 import csv
 import html
 import json
@@ -68,7 +68,8 @@ def expand(text, lang, *, figures='assets', reference=''):
         label='准备数据与配置（展开）' if lang=='zh' else 'Data preparation and settings (expand)'
         return '\n<details class="preparation"><summary>'+label+'</summary>\n\n'+code+'\n</details>\n'
 
-    text=re.sub(r'\{\{prepare:([\w,]+)\}\}',preparation,text)
+    if figures != '../assets':
+        text=re.sub(r'\{\{prepare:([\w,]+)\}\}',preparation,text)
     def recipe(match):
         key = match[1]
         if key not in RECIPES:
@@ -117,7 +118,11 @@ def expand(text, lang, *, figures='assets', reference=''):
                 code = preview_code(code)
             parts.append(code)
         return '\n```r\n' + '\n\n'.join(parts) + '\n```\n'
-    text = re.sub(r'\{\{code:([\w,]+)\}\}', render_code, text)
+    if figures == '../assets':
+        from website.examples import independent_examples
+        text = independent_examples(text, lambda code: localize_r_comments(code, lang), preview_code)
+    else:
+        text = re.sub(r'\{\{code:([\w,]+)\}\}', render_code, text)
     text = re.sub(r'\{\{figure:(\w+)\}\}', lambda m: figure(m[1]), text)
     modes = '<div class="mode-grid">' + ''.join(
         f'<section class="mode-card"><h3 id="preview-{k}">{html.escape(CAPTIONS[k][lang])}</h3>'
@@ -148,38 +153,6 @@ def expand(text, lang, *, figures='assets', reference=''):
         ['旧写法（勿执行）', '当前写法', '删除 / 守卫', '含义'], rows))
     text = text.replace('{{terms}}', table(['English', '现代汉语', 'API / units'],
         json.loads((WEB / 'terms.json').read_text())))
-    gallery = []
-    destinations=json.loads((WEB/'figure-lessons.json').read_text())
-    page_records={p['slug']:p for p in PAGES}
-    featured={'showcasechord','showcasecollinear','showcaseplasmid','viewdotplot','viewradial','foundationsankey','fusionview','plasmid'}
-    comparisons=json.loads((WEB/'parameter-comparisons.json').read_text())
-    comparison_ids={r['id'] for r in comparisons}
-    for asset in assets:
-        key = asset['id']
-        page,_,anchor=destinations[key].partition('#')
-        label='Related section →' if lang=='en' else '相关说明 →'
-        source_label='Shared R source' if lang=='en' else '共享 R 源码'
-        source_url=f'{figures}/'+('site-flagships.R' if any(r.get('replaces')==key for r in manual_figures().values()) else 'documentation-examples.R') if figures=='../assets' else None
-        source_link=f' · <a href="{source_url}">{source_label}</a>' if source_url else ''
-        lesson=page+'.html'+('#'+anchor if anchor else '')
-        module={'chord':'multi-sequence','collinear':'multi-sequence','radial':'multi-sequence','sankey':'multi-sequence','circular':'circular','dotplot':'dotplot','fusion':'fusion'}.get(asset['coordinate'],page_records.get(page,{}).get('module','shared'))
-        kind='contrast' if key in comparison_ids else 'case' if key in featured or key.startswith(('showcase','catalog','real')) else 'step'
-        task='labels' if any(word in key for word in ['label','text','fit']) else 'tracks' if any(word in key for word in ['track','gc','count']) else 'links' if any(word in key for word in ['ribbon','link','route','fusion']) else 'layout'
-        difficulty='advanced' if kind=='contrast' or module=='fusion' else 'beginner' if kind=='step' else 'intermediate'
-        featured_titles={
-          'showcasechord':('四基因组 Chord 关系图','Four-genome Chord comparison'),
-          'showcasecollinear':('四基因组共线性图','Four-genome collinearity'),
-          'showcaseplasmid':('pETDuet-1 密集注释','Dense pETDuet-1 annotations'),
-          'viewdotplot':('真实 HSP 双轴点图','Observed HSP Dotplot'),
-          'viewradial':('径向辐条与注释轨道','Radial spokes and annotation tracks'),
-          'foundationsankey':('镜像双列区间关系','Mirrored interval relationships'),
-          'fusionview':('圆图与线性面板连接','Circular-to-linear composition'),
-          'plasmid':('pUC19 注释与位点','pUC19 annotations and sites')}
-        title=featured_titles[key][0 if lang=='zh' else 1] if key in featured_titles else re.split(r'[:：，；。]| · |; |[.] ',CAPTIONS[key][lang],maxsplit=1)[0]
-        gallery.append(f'<section class="gallery-card" data-gallery-module="{module}" data-gallery-kind="{kind}" data-gallery-task="{task}" data-gallery-level="{difficulty}" data-featured="{str(key in featured).lower()}"><h3 id="{key}">{html.escape(title)}</h3>'
-            f'<p class="gallery-description">{html.escape(CAPTIONS[key][lang])}</p>{figure(key,source_url)}<p><a href="{lesson}">{label}</a>{source_link}</p>'
-            f'<p class="asset-size"><code>{asset["object"]}</code> · {asset["width"]} × {asset["height"]} in · '
-            f'{asset["dpi"]} dpi</p></section>')
     results_path = WEB/'assets/example-results.json'
     if results_path.is_file():
         results = json.loads(results_path.read_text())
@@ -208,10 +181,10 @@ def expand(text, lang, *, figures='assets', reference=''):
         ['Capability','Read','Executable source / output'] if lang=='en' else ['功能','用法说明','代码与结果'],
         [[c['title'][lang],', '.join(f'[{titles[k]}]({k}.html)' for k in c['articles']),
           ', '.join('`'+k+'`' for k in c['snippets'])+(' · '+', '.join(c['figures']) if c['figures'] else '')] for c in coverage]))
-    def selector(name,label,options):
-        return '<label>'+label+'<select data-gallery-filter="'+name+'">'+''.join('<option value="'+v+'">'+t+'</option>' for v,t in options)+'</select></label>'
-    controls='<div class="gallery-controls">'+selector('featured','选择范围' if lang=='zh' else 'Selection',[('featured','精选' if lang=='zh' else 'Featured'),('all','全部' if lang=='zh' else 'All')])+selector('module','模块' if lang=='zh' else 'Module',[('all','全部' if lang=='zh' else 'All'),('multi-sequence','多序列关系' if lang=='zh' else 'Multi-sequence'),('circular','单序列圆图' if lang=='zh' else 'Circular'),('dotplot','Dotplot'),('fusion','Fusion')])+selector('kind','类型' if lang=='zh' else 'Type',[('all','全部' if lang=='zh' else 'All'),('case','完整案例' if lang=='zh' else 'Case'),('step','步骤' if lang=='zh' else 'Step'),('contrast','参数对照' if lang=='zh' else 'Contrast')])+selector('task','任务' if lang=='zh' else 'Task',[('all','全部' if lang=='zh' else 'All'),('layout','布局' if lang=='zh' else 'Layout'),('labels','标签' if lang=='zh' else 'Labels'),('tracks','轨道' if lang=='zh' else 'Tracks'),('links','连接' if lang=='zh' else 'Links')])+selector('level','难度' if lang=='zh' else 'Level',[('all','全部' if lang=='zh' else 'All'),('beginner','基础' if lang=='zh' else 'Beginner'),('intermediate','进阶' if lang=='zh' else 'Intermediate'),('advanced','高级' if lang=='zh' else 'Advanced')])+'<p class="gallery-count" role="status"></p></div>'
-    text = text.replace('{{gallery}}', controls+'<div class="gallery-grid">'+''.join(gallery)+'</div>').replace('{{reference}}', reference)
+    if '{{gallery}}' in text:
+        from website.gallery import gallery
+        text = text.replace('{{gallery}}', gallery(assets, lang, figure))
+    text = text.replace('{{reference}}', reference)
     return text
 
 def category(name):

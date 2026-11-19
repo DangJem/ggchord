@@ -1,8 +1,7 @@
 {{code:courseblockaw}}
 
-{{prepare:setup}}
 
-先解压[真实输入包](https://github.com/DangJem/ggchord/archive/refs/heads/main.zip)，工作目录须含 examples/；每节单列可选依赖。
+示例使用随包表或随安装提供的小文件。每段代码列出所用的依赖。
 
 <a id="signals"></a>
 
@@ -20,7 +19,7 @@ bedGraph 为四列制表符分隔数据，使用零基半开坐标及有限的�
 
 ## 已比对 reads：可选覆盖度桥接 {#aligned-reads}
 
-使用可选 **GenomicAlignments**、**Rsamtools** 和 **GenomicRanges** 读取已有 BAM，显式选择过滤与计数口径，再由 ggchord 绘制信号。本例使用依赖包中未改动的果蝇 RNA-seq 子集，原 BAM header 保留 TopHat、参考及 SRR 来源；固定源 URL 和校验和见 `tools/long-term-audit/v0.27.0-read-coverage-results.json`。不运行 read 比对或变异检测。
+使用可选 GenomicAlignments、Rsamtools 和 GenomicRanges 读取已比对的果蝇 RNA-seq 子集。选择过滤与计数口径后，将信号交给轨道层。BAM 文件及原始头信息来自依赖包。
 
 {{code:courseblockay}}
 

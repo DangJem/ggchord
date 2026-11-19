@@ -1,5 +1,5 @@
 {
-  "source_sha256": "3b585e22028b81765755476b4828e18bb96432e07218609398fe1831789cfb81",
+  "source_sha256": "259cb435d1ba695f429793c35e9fa2b1d82a59491b3f900240999559e634590f",
   "blocks": {
     "0": {
       "source_sha256": "6c62524aef110a9b95b7913779650d65d1f374f6d04f19f9b1db1281dc9e0b9e",
@@ -27,9 +27,9 @@
       "translation": "## Prepare this page ⟦shared:0⟧\n"
     },
     "7": {
-      "source_sha256": "064d1d524fca1d87bbdd92b7661ab1566d3eab45505dcc5c69e04fee05282bd4",
+      "source_sha256": "821bb47548fc9f021427724cf49ebad945e9bd0b3ab7338147353e2024b6a6c5",
       "status": "reviewed",
-      "translation": "Extract the [input bundle](⟦shared:0⟧) so your working directory contains ⟦shared:1⟧.\n"
+      "translation": "The following examples use bundled tables derived from the original records. For standalone file-reading examples, see [sequence and annotation import](⟦shared:0⟧).\n"
     },
     "9": {
       "source_sha256": "06da281c9b8543e338cf6c5b3e6965428f2f994092daf9aee293976967e2c3fb",

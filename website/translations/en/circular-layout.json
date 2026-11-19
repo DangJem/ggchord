@@ -1,5 +1,5 @@
 {
-  "source_sha256": "6c78f7e07521fa151e72b3a7b8ca7e1363f65fbe4fa673205727d06eae232ace",
+  "source_sha256": "79aa2e98483ff4f5c8445863a7a1579e5a9aee8d8d2748cb403670df343bb828",
   "blocks": {
     "0": {
       "source_sha256": "b2a2200c82dd4558081108554d970017139bde7ea3dccb1bffa02c1b7d39b90d",
@@ -111,17 +111,17 @@
       "status": "reviewed",
       "translation": "## Switch to a single backbone ⟦shared:0⟧\n"
     },
-    "53": {
+    "52": {
       "source_sha256": "64b415861ffefd43a061b453cd62f0d8135153ca4796e564e010947590cee859",
       "status": "reviewed",
       "translation": "⟦shared:0⟧ replaces the double backbone with one line. The centre label and bp ticks remain visible.\n"
     },
-    "55": {
+    "54": {
       "source_sha256": "59864adb7764a3b3524c3032f621d5a4adcb7acfa5a3cdf18b8e4c7301c4cde7",
       "status": "reviewed",
       "translation": "## Rotate the map ⟦shared:0⟧\n"
     },
-    "58": {
+    "57": {
       "source_sha256": "613257c6d3089e1d5036bf4305bf1c687bcb41f572dc3422ca3a1b3cb745a5de",
       "status": "reviewed",
       "translation": "The default ⟦shared:0⟧ places the sequence origin at 12 o’clock, with coordinates increasing clockwise. Here ⟦shared:1⟧ moves it to 9 o’clock, rotating the ticks and replication origin together. The annotation still covers the same source bp interval. Next, [prepare your own sequence and annotations](⟦shared:2⟧).\n"

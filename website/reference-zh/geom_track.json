@@ -1,20 +1,22 @@
 {
-  "source_sha256": "cadd35bff3cf1511691c77f173f36423a4809d8a96a9d404ae49e3e7788aab5e",
+  "source_sha256": "a272ca2e76487fdbfa1bd36acab929ae7c1e1332eb053ab1e241addfc5fd1065",
   "translations": {
     "0": "用 ggplot2 语法绘制序列局部数据层",
-    "1": "标准图层输入。提供 accver，以及 x/pos 源位置或 start/end 区间；给定数值映射到 y/track_value。",
+    "1": "标准图层输入。提供 accver，使用 x/pos 表示点位，或 start/end 表示区间。直接绘制已有数值时，映射 y/track_value。初始映射表达式读取图层源列，即便映射 ⟦0⟧，仍可读取原始序列标识。零行表也须包含表达式使用的列。",
     "2": "在源数据上做位置调整，例如 ⟦0⟧、⟦1⟧ 或 ⟦2⟧。x 以序列坐标为单位。特征的位置在特征图层声明。",
     "3": "给定数值柱的基线，非零值要求 position='identity'，避免堆叠改变其含义。",
     "4": "计数快捷层的固定样式。",
     "5": "坐标报错或裁剪策略。",
-    "6": "标准图层控制参数。",
-    "7": "原生几何、统计参数及固定样式。区间覆盖接受正整数窗宽 ⟦0⟧ 或显式窗口表 ⟦1⟧。",
-    "8": "由 ⟦0⟧ 声明的字符 ID，省略时使用共享的默认轨道。",
-    "9": "原生几何及统计名称，区间覆盖用 ⟦0⟧。七个原生统计也接受 ggplot2 的内置 Stat 对象，例如 ⟦1⟧。bar 的默认统计为 count，其余几何为 identity。ggplot2 的 Stat 对象可计算轨道的位置和数值。其输入包含 ⟦2⟧，即图层源表的整数行号。可通过列表列 ⟦3⟧ 返回每个结果所用的源行号向量。未报告的成员导出为 NULL，状态为 ⟦4⟧。显式返回空整数向量表示已知没有成员。报告的成员须属于结果所在的序列和分面。",
+    "6": "标准 ggplot2 图层图例选择。⟦0⟧ 等具名逻辑向量控制本图层对各图例的贡献，包括具名轨道标度的图例。",
+    "7": "是否继承图级映射。",
+    "8": "原生 geom/stat 参数与固定样式。覆盖统计要求以序列单位给出正整数 ⟦0⟧，或提供显式 ⟦1⟧。所传参数若同时由外部 Stat 和所选 Geom 接收，会报错。例如，可将自定义 Stat 的搜索半径命名为 ⟦2⟧，与柱形 Geom 的 ⟦3⟧ 同时使用。",
+    "9": "由 ⟦0⟧ 声明的字符 ID，省略时使用共享的默认轨道。",
     "10": "可选的唯一图层 ID，用于导出统计和来源行。",
-    "11": "使用共享序列局部 band 的 ggplot2 图层。",
-    "12": "每个 accession/窗口内独立计算统计与数据 Position，再投影到物理轨道带。支持 point、line、path、step、col、bar、tile、rect、area、ribbon、segment、linerange、errorbar 和 text；支持 identity、count、bin、summary、smooth、density 和 ecdf 统计，另支持 ggchord 的区间覆盖统计，不支持的组合在原生层报错。smooth/density/ecdf 保留提交给原生估计器的完整有效组源行集合，不是新观测；该集合不表示每点影响或自定义模型内部进一步过滤的结果。统计使用原始源 x/y，在 Track 数值标度变换前执行。ECDF 必须显式 pad=FALSE，无限锚点不是源位置。bounds 是 Track 坐标裁剪策略，不转发原生 density 边界校正参数。新估计组合使用 position=\"identity\"：smooth 搭配 line/path/point/ribbon，density 搭配 line/path/point/area，ecdf 搭配 line/path/point/step，其他组合明确拒绝。count 对相同位置计数，bin 必须显式提供 binwidth 或 breaks。显式 group 映射优先于离散样式映射。分箱来源成员遵循原生统计的外边界及数值容差，在数据 Position 移动柱之前确定。x/y 表示源位置/局部数值，不是屏幕坐标；仍接受 track_value/track_fill/track_colour 角色。 count 和 summary 按原生统计的组及位置记录通过缺失值筛选的输入行，在数据位置调整前确定来源。",
-    "13": "区间覆盖",
-    "14": "每行提供一个闭区间，包含 accver、start 和 end。端点列可用 ⟦0⟧ 映射。省略图层数据时使用图的特征表。多段或跨圆形起点的区间先拆行。每条序列或已聚焦窗口从位置 1 开始，窗宽 4 时分为 1–4、5–8 等，末窗使用实际长度。跨窗区间只贡献与各窗相交的部分。缺失端点时报错。默认拒绝越界区间，clip 先裁至序列边界。每条序列内有观测的组保留完整窗口，无观测的序列或样本没有统计行。显式窗口可重叠，详见 ⟦1⟧。默认高度 ⟦2⟧ 为区间并集占窗口的比例。⟦3⟧ 将各区间交集长度之和除以窗长，重叠部分重复计入。其他统计列包括 covered（覆盖的位置数）、denominator（实际窗长）、depth_sum（交集长度之和）、n_interval（相交记录数）、window_start 和 window_end（含两端的源坐标）。无命中的窗对应零计数与空的 source_rows。bar/col 占整个窗口，point/line/step 位于窗口中心，数据位置为 identity。"
+    "11": "原生几何及统计名称，区间覆盖用 ⟦0⟧。七个原生统计也接受 ggplot2 的内置 Stat 对象，例如 ⟦1⟧。bar 的默认统计为 count，其余几何为 identity。ggplot2 的 Stat 对象可计算轨道的位置和数值。其输入包含 ⟦2⟧，即图层源表的整数行号。可通过列表列 ⟦3⟧ 返回每个结果所用的源行号向量。未报告的成员导出为 NULL，状态为 ⟦4⟧。显式返回空整数向量表示已知没有成员。报告的成员须属于结果所在的序列和分面。",
+    "12": "可选的轨道高度所代表的量，例如 ⟦0⟧。声明不同测量量的图层须放在不同轨带。未经变换的 coverage 与 mean_depth 可自动识别，也支持 ⟦1⟧ 等直接引用。",
+    "13": "使用共享序列局部 band 的 ggplot2 图层。",
+    "14": "先在每个 accession 或窗口内独立计算统计量和数据位置，再投影到物理轨带。可用几何包括 point、line、path、step、col、bar、tile、rect、area、ribbon、segment、linerange、errorbar 和 text。可用统计包括 identity、count、bin、summary、smooth、density、ecdf，以及 ggchord 区间覆盖统计。原生图层会拒绝不支持的组合。smooth、density 和 ecdf 保留提交给估计器的每组全部合格源行；估计点不增加独立观测，也不记录各点影响或自定义模型的内部筛选。count 与 summary 在数据位置调整前按原生分组和位置记录合格源行。统计使用轨道数值变换前的原始源 x/y。ecdf 须显式设置 pad=FALSE，以免引入无穷远端点。bounds 控制源坐标裁剪，不会传给 density 做边界校正。smooth 支持 line/path/point/ribbon，density 支持 line/path/point/area，ecdf 支持 line/path/point/step；这些组合均使用 position=\"identity\"。count 统计相同位置的记录数，bin 须显式提供 binwidth 或 breaks。显式 group 映射或固定 group 优先于离散样式分组，例如 ⟦0⟧ 将源观测合并统计。固定样式在分组和统计前覆盖继承映射，在同一层同时映射并固定同一属性会报错。轨道点与其他点图层通过全图 shape 标度共享类别和因子顺序。使用 ⟦1⟧ 按类别选符号，也可在图层固定 ⟦2⟧。缺失的离散样式形成隐含分组，按视觉标度处理缺失值；显式 group 则不得缺失。若导出几何混合了形状因子和固定数字符号，合并列采用字符值，各层统计仍保留映射类别的因子水平。轨道显式 sequence_unit 须匹配参考表的 bp 或 aa。骨架由序列图层提供时，其序列、长度和单位决定轨道及覆盖窗口的参考范围。bin 在位置调整移动柱之前按原生统计的外缘与数值容差确定源行归属。x/y 映射表示源位置和轨内数值，亦可使用 track_value、track_fill 和 track_colour。",
+    "15": "区间覆盖",
+    "16": "每行提供一个闭区间，包含 accver、start 和 end。端点列可用 ⟦0⟧ 映射。省略图层数据时使用图的特征表。多段或跨圆形起点的区间先拆行。每条序列或已聚焦窗口从位置 1 开始，窗宽 4 时分为 1–4、5–8 等，末窗使用实际长度。跨窗区间只贡献与各窗相交的部分。缺失端点时报错。默认拒绝越界区间，clip 先裁至序列边界。每条序列内有观测的组保留完整窗口，无观测的序列或样本没有统计行。显式窗口可重叠，详见 ⟦1⟧。默认高度 ⟦2⟧ 为区间并集占窗口的比例。⟦3⟧ 将各区间交集长度之和除以窗长，重叠部分重复计入。其他统计列包括 covered（覆盖的位置数）、denominator（实际窗长）、depth_sum（交集长度之和）、n_interval（相交记录数）、window_start 和 window_end（含两端的源坐标）。无命中的窗对应零计数与空的 source_rows。bar/col 占整个窗口，point/line/step 位于窗口中心，色块充满整个轨带与窗口。覆盖图层使用 identity 位置。"
   }
 }

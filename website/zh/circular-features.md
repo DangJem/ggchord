@@ -1,6 +1,5 @@
 {{code:courseblockak}}
 
-{{prepare:comparefinishcircle}}
 
 <a id="feature-shapes"></a>
 

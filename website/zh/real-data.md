@@ -12,7 +12,7 @@
 <a id="prepare"></a>
 
 ## 本页准备 {#prepare}
-解压[说明输入](https://github.com/DangJem/ggchord/archive/refs/heads/main.zip)，使工作目录包含 `examples/`。
+以下直接使用由原始记录生成的随包表。读取文件的独立示例见[序列与注释导入](import-sequences.md)。
 
 <a id="read"></a>
 

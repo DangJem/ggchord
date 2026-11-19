@@ -1,95 +1,105 @@
 {
-  "source_sha256": "5596120cc0c5f01035f7a41aa9291657bd68b6ea96256b53ea52c34a5b02165a",
+  "source_sha256": "9caf4c968c66264d06f4643bee4ca8b4d8103c32f8e5ca4258875db1a6d0c988",
   "strings": {
-    "multi-sequence/0/title": {
-      "source_sha256": "71f451cf89230d8edc8b662e64880ff923f3c42ae7a92b250b52dc5bb7ed6f18",
+    "plots/0/title": {
+      "source_sha256": "3f90a74aa6917a1a050fccaa47484879e04f1101ec9e73cf77450760ae57529b",
       "status": "reviewed",
-      "translation": "Shared inputs and display rules"
+      "translation": "What do you want to plot?"
+    },
+    "plots/1/title": {
+      "source_sha256": "63f5be35b0ec8ea62b162cbce36c5b85c01a44e3ed2b1fe084b1bddf14676d05",
+      "status": "reviewed",
+      "translation": "What do you want to adjust?"
+    },
+    "multi-sequence/0/title": {
+      "source_sha256": "0a6249de3a1984114cd85bf15188402db82d03859c775aff5d72f38cbc2fc37e",
+      "status": "reviewed",
+      "translation": "How do I choose or switch layouts?"
     },
     "multi-sequence/1/title": {
-      "source_sha256": "456bb0100878d4840d9afc2a296736fdb8e6eddb7641902a990da60ebe248977",
+      "source_sha256": "d16ff6ef8d212098740af8d7d8707669e5daeedea18c2aea649f3025a4822700",
       "status": "reviewed",
-      "translation": "Chord"
+      "translation": "How do I arrange sequences and links?"
     },
     "multi-sequence/2/title": {
-      "source_sha256": "8f9e4cc91dde749a8df1c472eb3737da1a14881a6e3f76800ea934ccc421c0f3",
+      "source_sha256": "5a6559d1cf145912cb74fa88a8343febcea478b5352d05492895c69bf9b9ddcd",
       "status": "reviewed",
-      "translation": "Collinear"
+      "translation": "How do I label or compare selected regions?"
     },
     "multi-sequence/3/title": {
-      "source_sha256": "02693d5af96479f14f504da89bf94efd593d4349794996af1cb7fb65ab0e5e9b",
+      "source_sha256": "8b31eba049a08a8ae2da2b86f8613e5151e9de176a3f66dcd969ad10721c5800",
       "status": "reviewed",
-      "translation": "Radial"
-    },
-    "multi-sequence/4/title": {
-      "source_sha256": "362c638c72a060cda5e08c29c6c957acae71da857d23eb85f35c78f9d2577638",
-      "status": "reviewed",
-      "translation": "Sankey"
-    },
-    "multi-sequence/5/title": {
-      "source_sha256": "d96197829261bd2999d1266da733205d7675b75495d99c6eb780fca9a4deac9f",
-      "status": "reviewed",
-      "translation": "Relationships and local comparisons"
+      "translation": "Complete examples"
     },
     "circular/0/title": {
-      "source_sha256": "931557099d7b1de282cdcead5490bb778aa02951a801694e854291b51369f14b",
+      "source_sha256": "dc415474932919a3fbd841738fcb81843ac5ae116509aeb0b16f6496d0c7302c",
       "status": "reviewed",
-      "translation": "Backbone and data"
+      "translation": "How do I draw the backbone and known annotations?"
     },
     "circular/1/title": {
-      "source_sha256": "b048eaa1dd0db81079a7a02e9ff6754deec80b735a3d1bf418072d7b7edd9db3",
+      "source_sha256": "ff80270f14965a4c23bbf329580878b715fe00739b135e988a4ff2a4d91f660b",
       "status": "reviewed",
-      "translation": "Annotations and labels"
+      "translation": "How do I label, search and add tracks?"
     },
     "circular/2/title": {
-      "source_sha256": "851fae7a83f2f1bae3597186801c4471b611f52078a277fa97204c836cd1b1eb",
+      "source_sha256": "8b31eba049a08a8ae2da2b86f8613e5151e9de176a3f66dcd969ad10721c5800",
       "status": "reviewed",
-      "translation": "Complete reference maps"
+      "translation": "Complete examples"
     },
     "dotplot/0/title": {
-      "source_sha256": "634b698059b9449b58c5f0e0a77517837e1c64840a17d06f3d0480dd4ea4dad7",
+      "source_sha256": "68bbc5d72c7920e9f26ee1a1aa95b17801bd31b048a27c90f3bff663a5449d6d",
       "status": "reviewed",
-      "translation": "Sequence alignment Dotplot"
+      "translation": "How do I plot alignments on two axes?"
     },
     "fusion/0/title": {
-      "source_sha256": "9311165efd0f27be828c089e14189021da085eb287501bfd987ea87fca9ccb43",
+      "source_sha256": "6e1d3b27da24ed113fce3e9311041ec3398bfddb641c40f9fdc6efbe0a6f6f23",
       "status": "reviewed",
-      "translation": "Composition and layout"
+      "translation": "How do I compose and connect panels?"
     },
     "fusion/1/title": {
-      "source_sha256": "fea25f6567e4db3cddf0c84428d0714f3bfd0783bf264c26d432baf296f5eccf",
+      "source_sha256": "362f7d07f92a499f7fd1ff6c68e79bff9dead6bf1c48d87f6eee9485d675c2ad",
       "status": "reviewed",
-      "translation": "Links and magnification"
-    },
-    "start/0/title": {
-      "source_sha256": "715ee9dc842f34e48f267f0bf3261d7980e544b26eb3d2f0ff20e19b121c4a99",
-      "status": "reviewed",
-      "translation": "Get started"
+      "translation": "How do I magnify or compose detailed views?"
     },
     "shared-techniques/0/title": {
-      "source_sha256": "e67a8dae21f2b855050b2deaacbb3a27db68a882500b57c8783f56d392d93945",
+      "source_sha256": "353dc8d4c3a547619d3d0296111d6f94455a3d1be0e63d57f61cf5b2ce941397",
       "status": "reviewed",
-      "translation": "Shared techniques"
+      "translation": "How do I adjust appearance and layers?"
+    },
+    "shared-techniques/1/title": {
+      "source_sha256": "4a40c8cb8fc145f3afc77b767b1450c1ce6da5eeb3ea2e98c01ffc13259f0c15",
+      "status": "reviewed",
+      "translation": "How do I draw quantitative tracks?"
+    },
+    "shared-techniques/2/title": {
+      "source_sha256": "b07ff527d25b819c33e58312efad00ee688bf1d80e37eda2a67327831cd2f3e5",
+      "status": "reviewed",
+      "translation": "How do I check and save a plot?"
     },
     "data/0/title": {
-      "source_sha256": "26dfa22fcf450bbc0760c529cb98110502b029cca12d43de2a940374356333e2",
+      "source_sha256": "4c8efb96bede9e69b334632896da1cd02e7c668faa74fa977318b1a9d00f8347",
       "status": "reviewed",
-      "translation": "Data and workflows"
+      "translation": "How do I read my files?"
     },
-    "cases/0/title": {
-      "source_sha256": "2c400ce3c2dea9394f8d06d5af230e0e84a5aed6e386bcc56f9bf34a62a14722",
+    "data/1/title": {
+      "source_sha256": "716656af3f07bd3c2c3bd056e3533e5f55e2a8f6df1028d3b2b5dcbbcb15e64d",
       "status": "reviewed",
-      "translation": "Gallery"
+      "translation": "How do I use layers or transform coordinates?"
+    },
+    "data/2/title": {
+      "source_sha256": "67c44def4186a34c781fa60ef819577e82dd3b135a5562153448b49e1ff18044",
+      "status": "reviewed",
+      "translation": "Where can I find complete inputs to reproduce?"
     },
     "reference/0/title": {
-      "source_sha256": "63e51325a41ffa3e76da38b0e104e00727207b6b3251c38524908b16181a7cb4",
+      "source_sha256": "84330d293d2c3df5df292a91fd83d4f895d6466b4ca811507784087dfbfdee68",
       "status": "reviewed",
-      "translation": "API reference"
+      "translation": "How do I look up functions and arguments?"
     },
     "information/0/title": {
-      "source_sha256": "46e1eb2d8785badc69fe850386f02e174f80674683fb70bc9f8f1cd1d1fb6658",
+      "source_sha256": "8d612bf8c45052f5282a480ca4d340e82088658ce4e1321c58c39c4928cd06dd",
       "status": "reviewed",
-      "translation": "Project information"
+      "translation": "Project maintenance"
     }
   }
 }

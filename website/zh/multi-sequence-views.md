@@ -11,7 +11,6 @@ library(ggplot2)
 
 相同来源输入不代表默认展示完全相同的关系。本例先明确全对选择再比较几何；随后核对各视图默认筛选。依赖：ggchord、dplyr。
 
-{{prepare:radialdata}}
 
 {{code:coursecomparison}}
 
@@ -121,7 +120,6 @@ view_ggchord(flag_sankey, width = 10, height = 16, units = "in")
 默认轴显示 1 与真实末位，中间刻度按可用物理空间选择；闭圆接缝合并两端。
 显式 breaks 和 labels 优先。
 
-{{prepare:foundationdata}}
 
 {{code:foundationequal}}
 

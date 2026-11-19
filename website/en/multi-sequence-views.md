@@ -11,7 +11,6 @@ library(ggplot2)
 
 The same source input need not produce the same default relation set. First explicitly select all pairs to compare geometry, then inspect each view’s default selection. Dependencies: ggchord and dplyr.
 
-{{prepare:radialdata}}
 
 {{code:coursecomparison}}
 
@@ -123,7 +122,6 @@ multi-sequence displays. Default axes show 1 and the final source position;
 intermediate ticks use available physical space. Closed circular seams combine
 the two endpoints. Explicit breaks and labels take priority.
 
-{{prepare:foundationdata}}
 
 {{code:foundationequal}}
 

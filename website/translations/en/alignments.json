@@ -1,5 +1,5 @@
 {
-  "source_sha256": "4a983e82a740cd32f7add087a3db3828ddcc637ff54df6b81cce5b39f5af2ac2",
+  "source_sha256": "fb7e40f8e25152121dac36dc435f04a18d6370466018c56e3ec2d3c9e3071350",
   "blocks": {
     "0": {
       "source_sha256": "df098c67f557f2de04d3abfebf6a5d205235a6fedf939ed9e1d52ece9eaf7d13",
@@ -67,9 +67,9 @@
       "translation": "| 11–12 | ⟦shared:0⟧, ⟦shared:1⟧ | Expected count and score in bits. Lower E-values and higher bit scores generally indicate stronger hits |\n"
     },
     "16": {
-      "source_sha256": "7bcde118b9661725c854a36442d2390770463c0c1b456a8783bdf0ef90e2715c",
+      "source_sha256": "b62427df1227da1bf7793355aeeed72b515aa4c9e3124719ccba8065bde4acdf",
       "status": "reviewed",
-      "translation": "Extract the [input bundle](⟦shared:0⟧) and work from the directory containing ⟦shared:1⟧. The example file preserves the first 12 fields of observed HSPs.\n"
+      "translation": "Examples use bundled tables or small installed files. Each block identifies the packages it uses.\n"
     },
     "19": {
       "source_sha256": "13ed704f19447863bdfe7503c731d1bb4b38adf8273dc6cd5c1fc9877b0c5c56",

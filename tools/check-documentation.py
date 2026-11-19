@@ -9,7 +9,7 @@ import subprocess
 from collections import Counter
 from html.parser import HTMLParser
 from pathlib import Path
-from urllib.parse import unquote, urlsplit
+from urllib.parse import unquote, urljoin, urlsplit
 from documentation_lib import ROOT, WEB, PAGES, CAPTIONS, RECIPES, expand, snippets, localize_r_comments
 from website.source_links import check_source_links, check_repository_urls, asset_sources
 import importlib.util
@@ -31,18 +31,26 @@ class Document(HTMLParser):
         self.lang = None
         self.classes = set()
         self.headings = []
+        self.home_actions = []
+        self.figure_code_targets = []
         self._heading = None
         self._heading_parts = []
         self.navbar_links = []
         self.navbar_text = []
         self._navbar_depth = 0
+        self._navbar_link = False
         self.feed(path.read_text())
     def handle_starttag(self, tag, attrs):
         a = dict(attrs)
         if tag == 'div' and (a.get('id') == 'navbar' or self._navbar_depth):
             self._navbar_depth += 1
-        if self._navbar_depth and tag == 'a' and a.get('href'):
+        if self._navbar_depth and tag == 'a' and a.get('href') and 'nav-link' in a.get('class','').split():
             self.navbar_links.append(a['href'])
+            self._navbar_link = True
+        if tag == 'a' and {'module-entry','home-source'} & set(a.get('class','').split()):
+            self.home_actions.append(a.get('href'))
+        if tag == 'a' and a.get('data-code-url'):
+            self.figure_code_targets.append(a['data-code-url'])
         self.classes.update(a.get('class','').split())
         if tag in ['h1','h2','h3']:
             self._heading = tag
@@ -56,11 +64,13 @@ class Document(HTMLParser):
                 if a.get(key): self.links.append(a[key])
         if tag == 'img': self.images.append(a)
     def handle_data(self, data):
-        if self._navbar_depth and data.strip(): self.navbar_text.append(data.strip())
+        if self._navbar_link and data.strip(): self.navbar_text.append(data.strip())
         if self._heading is not None: self._heading_parts.append(data)
         if self._in_main: self.main_text.append(data)
         if self._code_parts is not None: self._code_parts.append(data)
     def handle_endtag(self, tag):
+        if tag == 'a':
+            self._navbar_link = False
         if tag == 'div' and self._navbar_depth: self._navbar_depth -= 1
         if tag == self._heading:
             self.headings.append(''.join(self._heading_parts).strip())
@@ -69,6 +79,110 @@ class Document(HTMLParser):
         if tag == 'pre' and self._code_parts is not None:
             self.codeblocks.append(''.join(self._code_parts))
             self._code_parts = None
+
+class RedirectLinks(HTMLParser):
+    """Collect the links a reader can follow when scripts are disabled."""
+    def __init__(self, markup):
+        super().__init__()
+        self.links = {}
+        self.refresh = False
+        self.active = None
+        self.feed(markup)
+
+    def handle_starttag(self, tag, attrs):
+        attrs = dict(attrs)
+        if tag == 'a' and attrs.get('href'):
+            self.active = (attrs['href'], attrs.get('hreflang'))
+            self.links[self.active] = ''
+        if tag == 'meta' and attrs.get('http-equiv', '').lower() == 'refresh':
+            self.refresh = True
+
+    def handle_data(self, text):
+        if self.active:
+            self.links[self.active] += text
+
+    def handle_endtag(self, tag):
+        if tag == 'a':
+            self.active = None
+
+
+def check_retired_reference_routes(out, docs, require):
+    replacements = {
+        'geom_gene': 'geom_feature',
+        'geom_feature_plasmid': 'geom_feature',
+        'geom_feature_label_repel': 'geom_feature_label',
+        'position_plasmid': 'position_offset',
+        'position_track': 'track_band',
+    }
+    scripts = {}
+    cases = {}
+    for old, new in replacements.items():
+        for prefix in ('', 'en/', 'zh/'):
+            entry = prefix + 'reference/' + old + '.html'
+            path = out / entry
+            require(path.is_file(), 'Missing retired reference entry: ' + entry)
+            if not path.is_file():
+                continue
+            markup = path.read_text()
+            fallback = RedirectLinks(markup)
+            require(not fallback.refresh, 'Automatic refresh prevents manual selection: ' + entry)
+            actual = {(urljoin(entry, href), tag): text.strip()
+                      for (href, tag), text in fallback.links.items()}
+            expected_links = {}
+            for lang in ([prefix.rstrip('/')] if prefix else ['en', 'zh']):
+                tag = 'en' if lang == 'en' else 'zh-Hans'
+                expected_links[(lang + '/migration.html#removed-layers', tag)] = (
+                    'API migration' if lang == 'en' else '接口迁移说明')
+                expected_links[(lang + '/reference/' + new + '.html#ref-examples', tag)] = (
+                    'Replacement example' if lang == 'en' else '替代用法示例')
+            require(actual == expected_links, 'Incorrect manual migration links or labels: ' + entry)
+            script = re.search(r'<script\b[^>]*>(.*?)</script>', markup, re.S)
+            require(bool(script), 'Missing redirect script: ' + entry)
+            if not script:
+                continue
+            scripts[entry] = script[1]
+            language = prefix or 'en/'
+            for fragment, destination in (
+                ('', 'migration.html#removed-layers'),
+                ('#ref-examples', 'reference/' + new + '.html#ref-examples'),
+            ):
+                target = language + destination
+                page, anchor = target.split('#')
+                document = docs.get((out / page).resolve())
+                require(document is not None and anchor in document.ids,
+                        'Missing migration destination: ' + target)
+                cases[entry + fragment] = target
+    # Execute only the generated redirect scripts. Capture location.replace and
+    # resolve its argument as a URL relative to the page that issued it.
+    runner = """
+const fs = require('node:fs');
+const vm = require('node:vm');
+const { scripts, cases } = JSON.parse(fs.readFileSync(0, 'utf8'));
+const base = 'https://docs.invalid/ggchord/';
+const errors = [];
+for (const [entry, expected] of Object.entries(cases)) {
+  let current = new URL(entry, base);
+  try {
+    for (let hop = 0; hop < 3; hop++) {
+      const script = scripts[current.href.slice(base.length).split('#')[0]];
+      if (!script) break;
+      const location = { hash: current.hash, replace: dest => { current = new URL(dest, current); } };
+      vm.runInNewContext(script, { location }, { timeout: 500 });
+    }
+    if (current.href !== new URL(expected, base).href) {
+      errors.push(entry + ' -> ' + current.href + ' (expected ' + expected + ')');
+    }
+  } catch (error) {
+    errors.push(entry + ': ' + error.message);
+  }
+}
+process.stdout.write(JSON.stringify(errors));
+"""
+    errors = json.loads(subprocess.check_output(['node', '-e', runner],
+                        input=json.dumps(dict(scripts=scripts, cases=cases)), text=True))
+    for error in errors:
+        require(False, 'Retired reference redirect: ' + error)
+
 
 def lesson_code_snapshot():
     result={}
@@ -96,11 +210,27 @@ def main():
     slugs = [p['slug'] for p in PAGES]
     require(len(slugs) == len(set(slugs)), 'Duplicate page slug')
     navigation = json.loads((WEB/'navigation.json').read_text())
+    topics = json.loads((WEB/'manual-sections.json').read_text())
+    page_by_slug = {page['slug']: page for page in PAGES}
+    primary = [group for group in navigation if 'navbar' in group]
+    require([group['navbar'] for group in primary] == ['start','plots','data','gallery','reference'],
+            'The five document destinations must appear in the expected header order')
     entries = [slug for group in navigation for slug in group['pages']]
     require(set(entries) == {p['slug'] for p in PAGES if p.get('kind')!='alias'} - {'index'} and len(entries) == len(set(entries)),
-            'Site guide must cover every current learning page once and exclude the home page')
-    require({'multi-sequence','circular','dotplot','fusion'} <= {group['id'] for group in navigation},
-            'Missing visualization task module')
+            'The topic groups must cover every current article once')
+    for group in navigation:
+        slug = group['id']
+        require(group['landing'] in group['pages'] and
+                all(page_by_slug[key]['module'] == slug for key in group['pages']),
+                f'{slug}: page categories must match the topic group')
+        require(group.get('parent') in {None, *(g['id'] for g in primary)},
+                f'{slug}: invalid parent group')
+        links = [key for section in topics.get(slug, []) for key in section['pages']]
+        require(set(group['pages']) - {group['landing']} <= set(links) and
+                set(links) <= set(entries),
+                f'{slug}: related topics must cover its pages and link to current articles')
+    require(all('prerequisites' not in p and 'next_steps' not in p for p in PAGES),
+            'Topic navigation should not prescribe an article order')
     def blocks(text):
         return re.findall(r'```[^\n]*\n(.*?)\n```', text, re.S)
     def executable_text(block):
@@ -155,38 +285,17 @@ def main():
     contracts=json.loads((ROOT/'tools/teaching-audit/parameter-contracts.json').read_text())
     require({(r['api'],r['parameter']) for r in contracts} ==
             {(e['name'],p) for e in inventory for p in (e['parameters'] or {})}, 'Incomplete parameter contracts')
-    runtime_record=json.loads((ROOT/'tools/teaching-audit/lesson-execution.json').read_text())
-    require(runtime_record.get('shared_code_sha256')==hashlib.sha256((ROOT/'tools/documentation-examples.R').read_bytes()).hexdigest(),'Lesson execution uses stale shared R source')
-    # Current lesson receipts are generated by the website-only R runner.
-    # Historical equivalence records remain historical; never rewrite their hashes.
-    current_engine = {str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest()
-                      for p in (ROOT/'R').glob('*.R')}
-    require(runtime_record.get('engine_sha256') == current_engine,
-            'Lesson execution uses stale engine: rerun tools/check-documentation-lessons.R')
-    lesson_inputs = runtime_record.get('source_sha256', {})
-    require(bool(lesson_inputs), 'Missing lesson input snapshot')
-    executable_inputs=lesson_code_snapshot()
-    for name, digest in lesson_inputs.items():
-        path = ROOT/name
-        if name in executable_inputs:
-            require(runtime_record.get('executable_page_sha256',{}).get(name)==executable_inputs[name], 'Lesson executable content changed: '+name)
-            continue
-        require(path.is_file() and hashlib.sha256(path.read_bytes()).hexdigest() == digest,
-                'Lesson input changed: ' + name)
-    execution=runtime_record['pages']
-    expanded_for_validation={p['slug']:expand((WEB/'en'/(p['slug']+'.md')).read_text(),'en') for p in PAGES}
-    all_code='\n'.join('\n'.join(re.findall(r'```r\n(.*?)```',text,re.S)) for text in expanded_for_validation.values())
+    # Public task entries and native reference examples serve different purposes.
+    # The rendered clipboard runner checks self-contained plotting and data blocks.
     for entry in inventory:
-        name=entry['name']; review=reviews[name]
-        require(all(review.get(k) for k in ['purpose','reason','page','anchor','modes','scope']), name+': incomplete semantic review')
-        if entry['owner']=='ggchord' and not review.get('alias_of'):
-            require(bool(re.search(r'(?<![\w.])'+re.escape(name)+r'\s*\(',all_code)),name+': missing canonical lesson call')
-            runtime_pages=[slug for slug, result in execution.items() if result['result']=='success' and re.search(r'(?<![\w.])'+re.escape(name)+r'\s*\(',expanded_for_validation[slug])]
-            require(bool(runtime_pages),name+': no executed lesson call')
-    # Occurrence and execution are prerequisites, never automatic depth upgrades.
+        name = entry['name']
+        review = reviews[name]
+        require(all(review.get(key) for key in ('purpose', 'page', 'anchor', 'modes', 'scope')),
+                name + ': incomplete function entry')
+        page = WEB/'zh'/(review['page']+'.md')
+        require(page.is_file() and review['anchor'] in page.read_text(), name + ': unresolved task entry')
     subprocess.run(['python3','tools/check-site-design.py'],cwd=ROOT,check=True)
     subprocess.run(['python3','tools/reference-translations.py','--check'],cwd=ROOT,check=True)
-    subprocess.run(['python3','tools/sync-tutorials.py','--check'],cwd=ROOT,check=True)
     with (WEB/'assets/plots.csv').open() as f:
         assets = list(csv.DictReader(f))
     require({a['id'] for a in assets} == set(CAPTIONS), 'Figure manifest/captions mismatch')
@@ -197,14 +306,6 @@ def main():
                 row['id'] + ': comparison object or mode differs from rendered asset')
         require(all(float(asset.get(key, 0)) == float(row[key]) for key in ['width', 'height']),
                 row['id'] + ': comparison dimensions differ from rendered asset')
-    for group in navigation:
-        expected = {'chord': 'chord', 'collinear': 'collinear', 'plasmid': 'circular'}.get(group['id'])
-        if not expected: continue
-        for slug in group['pages']:
-            source = (WEB/'en'/(slug+'.md')).read_text()
-            for figure in re.findall(r'\{\{figure:([a-z]+)\}\}', source):
-                require(by_id.get(figure, {}).get('coordinate') == expected,
-                        f'{slug}: figure {figure} must use {expected} coordinates')
     for page in PAGES:
         source = (WEB/'en'/(page['slug']+'.md')).read_text()
         for keys in re.findall(r'\{\{code:([a-z,]+)\}\}', source):
@@ -259,8 +360,10 @@ def main():
         path=ROOT/record['file']
         require(path.is_file() and hashlib.sha256(path.read_bytes()).hexdigest()==record['sha256'],f'Icon hash mismatch: {path}')
     config = (ROOT/'_pkgdown.yml').read_text()
-    names = [re.search(r'\\name\{([^}]+)\}',p.read_text())[1] for p in (ROOT/'man').glob('*.Rd')]
-    require(all('`'+name+'`' in config for name in names), 'Native pkgdown reference omits Rd topics')
+    indexed_names = set(re.findall(r"`([^`]+)`", config))
+    for rd in (ROOT/'man').glob('*.Rd'):
+        names = set(re.findall(r'\\alias\{([^}]+)\}', rd.read_text()))
+        require(bool(names & indexed_names), 'Native reference omits ' + rd.stem)
     coverage=json.loads((WEB/'coverage.json').read_text())
     code=snippets()
     require(len({f['id'] for f in coverage})==len(coverage),'Duplicate capability family')
@@ -271,6 +374,8 @@ def main():
             prose='\n'.join((WEB/lang/(slug+'.md')).read_text() for slug in family['articles'])
             article_code = {key for marker in re.findall(r'\{\{(?:code|prepare):([a-z,]+)\}\}', prose) for key in marker.split(',')}
             require(all(key in code and key in article_code for key in family['snippets']),f'{family["id"]}: missing shared example in {lang}')
+            for function in family.get('calls', []):
+                require(function+'(' in prose, f'{family["id"]}: missing {function} example in {lang}')
             require(all(key in CAPTIONS and '{{figure:'+key+'}}' in prose for key in family['figures']),f'{family["id"]}: missing output in {lang}')
     # README/vignette resources and links are source paths, not the frozen site.
     for path in [ROOT/'README.md',ROOT/'README-Hans.md',ROOT/'MIGRATION.md',ROOT/'MIGRATION-Hans.md',*(ROOT/'vignettes').glob('*.Rmd')]:
@@ -314,18 +419,37 @@ def main():
                 if Path(rel).name!='reference.html' and str(Path(rel).relative_to(Path(rel).parts[0])) not in alias_paths|extra_aliases:
                     require('main' in doc.ids,f'{rel}: missing skip target')
                     require('site-language' in doc.ids and 'site-search' in doc.ids,f'{rel}: missing language/search navigation')
-                    require({'chapter-nav','chapter-drawer','language-control'} <= doc.classes,
-                            f'{rel}: missing site guide or language dropdown')
-                    titles = ('开始使用','绘图模块','通用技巧','数据与工作流','案例图库','API 参考') if rel.startswith('zh/') else (
-                        'Get started','Plotting modules','Shared techniques','Data & workflows','Gallery','API reference')
-                    require(set(titles) <= set(doc.navbar_text), f'{rel}: missing task-oriented primary menu')
-                    require({'site-visualizations','site-techniques','site-data'} <= set(doc.ids),
-                            f'{rel}: missing direct tutorial menus')
-                    targets = {urlsplit(url).path.rsplit('/',1)[-1] for url in doc.navbar_links}
-                    require({'installation.html','gallery.html','index.html','styling.html','parameters.html',
-                             'output.html','formats.html','multi-sequence.html','circular.html','dotplot.html','fusion.html'} <= targets,
-                            f'{rel}: primary menus must link directly to teaching pages')
-                    require('about.html' not in targets, f'{rel}: primary menu uses project page as an intermediate index')
+                    require('language-control' in doc.classes, f'{rel}: missing language selector')
+                    lang, local = rel.split('/',1)
+                    key = 'reference' if local.startswith('reference/') else Path(local).stem
+                    module = page_by_slug.get(key, {}).get('module', 'information')
+                    topic_nav = {'chapter-nav','chapter-drawer'}
+                    require((topic_nav <= doc.classes) == bool(topics.get(module)),
+                            f'{rel}: related topics must match the page category')
+                    require(not {'section-number','lesson-pagination','lesson-stage'} & doc.classes,
+                            f'{rel}: article numbering or sequential navigation returned')
+                    titles = [group['title'][lang] for group in primary]
+                    require([label for label in doc.navbar_text if label in titles] == titles,
+                            f'{rel}: missing or misordered primary navigation')
+                    hrefs = [urlsplit(url) for url in doc.navbar_links]
+                    targets = [str((path.parent / unquote(url.path)).resolve().relative_to(out/lang))
+                               for url in hrefs if not url.scheme and not url.netloc and url.path]
+                    expected_nav = [page_by_slug[group['landing']]['canonical_path'] for group in primary]
+                    require(targets == expected_nav, f'{rel}: primary navigation must use direct destinations')
+                    if local == 'index.html':
+                        home = json.loads((WEB/'home.json').read_text())['modules']
+                        figures = {Path(img.get('src','')).stem for img in doc.images}
+                        expected_figures = {key for group in home for key in group['figures']}
+                        require(len(home) == 4 and len(expected_figures) == 7 and expected_figures <= figures,
+                                f'{rel}: missing homepage group or preview figure')
+                        require(doc.home_actions == [item for group in home for item in (group['entry'],group['case'])],
+                                f'{rel}: missing try-it or complete-example link')
+                        full_figures = {item['id']: item['page'] for item in
+                                        json.loads((WEB/'manual-figures.json').read_text())}
+                        previews = {item['id']: full_figures[item['full']] for item in
+                                    json.loads((WEB/'home-previews.json').read_text())}
+                        require(doc.figure_code_targets == [previews[key] for group in home for key in group['figures']],
+                                f'{rel}: each preview must lead to the corresponding plotting example')
                     if Path(rel).parent == Path('zh/reference'):
                         for heading in doc.headings:
                             if heading in aliases: continue
@@ -353,24 +477,48 @@ def main():
             index = json.loads((out/lang/'search.json').read_text())
             require({p['url'].split('#')[0] for p in index} == expected-{'reference.html'}-extra_aliases-{p['slug']+'.html' for p in PAGES if p.get('kind')=='alias'},f'{lang}: incomplete canonical search coverage')
             require(any('track' in p['text'] for p in index),f'{lang}: empty search content')
-            require({'course','function','parameter','task','faq'} <= {p.get('kind') for p in index},f'{lang}: missing structured search categories')
+            require({'guide','function','parameter','task','faq'} <= {p.get('kind') for p in index},f'{lang}: missing structured search categories')
             for result in index:
                 url=urlsplit(result['url']);target=(out/lang/unquote(url.path)).resolve()
                 require(target in docs,f'{lang}: search target missing: '+result['url'])
                 if url.fragment: require(unquote(url.fragment) in docs[target].ids,f'{lang}: search section missing: '+result['url'])
-        for example in json.loads((out/'assets/examples.json').read_text()):
-            script=out/example['file']
-            require(script.is_file() and hashlib.sha256(script.read_bytes()).hexdigest()==example['sha256'],'Complete script hash mismatch: '+example['file'])
-            require(script.read_text().startswith('library(ggchord)'), 'Complete example must load ggchord: '+example['file'])
+        from website.copy_examples import CopiedBlocks
+        from website.gallery import GROUPS
+        downloads = json.loads((out/'assets/examples.json').read_text())
+        gathered = {}
+        for lang in ('en', 'zh'):
+            gallery = docs[(out/lang/'gallery.html').resolve()]
+            require(all('gallery-'+key in gallery.ids for key in GROUPS),
+                    lang + ': missing gallery plot family')
+            require(all(row['id'] in gallery.ids for row in assets),
+                    lang + ': gallery lost an existing figure anchor')
+            for page in PAGES:
+                url = out/lang/(page['slug']+'.html')
+                if not url.exists():
+                    continue
+                reader = CopiedBlocks()
+                reader.feed(url.read_text())
+                for index, (_, block) in enumerate(reader.blocks, 1):
+                    gathered[(lang, page['slug'], index)] = block
+        require(set(gathered) == {(r['language'],r['page'],r['index']) for r in downloads},
+                'Every marked example must have a matching R download')
+        for example in downloads:
+            script = out/example['file']
+            require(script.is_file() and hashlib.sha256(script.read_bytes()).hexdigest() == example['sha256'],
+                    'Example script hash mismatch: '+example['file'])
+            code = gathered.get((example['language'],example['page'],example['index']))
+            require(script.is_file() and script.read_text().rstrip('\n') == code,
+                    'Downloaded R differs from the code copied on the page: '+example['file'])
 
         for path,doc in docs.items():
             if path.is_relative_to(out/'en') and path.name!='reference.html':
                 partner=(out/'zh'/path.relative_to(out/'en')).resolve()
                 require(partner in docs and set(doc.ids)==set(docs[partner].ids),f'{path.relative_to(out)}: counterpart anchors differ')
-                if path.parent.name=='reference' and path.name!='index.html' and partner in docs:
+                if path.parent.name=='reference' and path.stem in rd_topics and partner in docs:
                     require([normalize(executable_text(code)) for code in doc.codeblocks]==[normalize(executable_text(code)) for code in docs[partner].codeblocks],f'{path.name}: reference usage/examples differ by language')
                     require(len(re.findall('[\u3400-\u9fff]', ''.join(docs[partner].main_text)))>=10,f'{path.name}: translated reference body is missing')
                     require(bool(doc.codeblocks) or 'usage' not in doc.ids,f'{path.name}: missing usage code')
+        check_retired_reference_routes(out, docs, require)
         require(any('标签' in p['text'] for p in json.loads((out/'zh/search.json').read_text())), 'Han search content absent')
     if errors:
         raise SystemExit('\n'.join(errors))

@@ -6,15 +6,7 @@
 
 本页独立使用 pETDuet-1，说明完整注释、引物和酶切文字在正常导出尺寸下如何组织；不依赖 pUC19 页的中间对象。
 
-{{code:courseblockg}}
-
-{{code:referencebuilder}}
-
-```r
-reference <- make_reference_map(flagship_circular_example$references[["pETDuet-1"]])
-p <- reference$plot
-view_ggchord(p, width = 10, height = 8, units = "in")
-```
+{{code:courseblockm,catalogmap}}
 
 {{figure:catalogduet}}
 

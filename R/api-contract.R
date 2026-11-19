@@ -1,9 +1,7 @@
-#' Current API and migration contract
+#' Plotting, data and output contracts
 #'
-#' The current development API defines plotting, data and output contracts.
-#' The v0.16.4 candidate freeze is a historical development baseline,
-#' not a claim of v1.0.0 compatibility or complete platform/device validation.
-#' Correctness fixes remain possible with documented evidence and migration.
+#' Use this guide to choose where a plotting parameter belongs, how to specify
+#' source coordinates and where to retrieve layout measurements.
 #'
 #' @section Plotting responsibilities:
 #' [ggchord()] supplies reference sequences and optional default input tables.
@@ -37,12 +35,11 @@
 #' Their internals and future upstream signatures are not frozen by ggchord.
 #'
 #' Retired arguments remain errors with replacement guidance; they do not
-#' execute compatibility code. In v0.16.1, fixed `feature_shape`, old width,
+#' execute compatibility code. Fixed `feature_shape`, old width,
 #' label and ribbon endpoint names were removed in favour of the names above.
-#' `gene_offset`/`feature_offset` were also removed then; use
+#' `gene_offset`/`feature_offset` were also removed; use
 #' `position = position_strand(offset = ...)`. Explicit strand-named offsets
 #' are signed, so negate the former minus-strand magnitude when migrating it.
-#' The old v1.0.0 removal deadline no longer applies.
 #'
 #' Automatic gene/feature labels own their rotation, offsets, orientation and
 #' overlap policy. Manual `label_rotation`, `label_radial_offset`,
@@ -53,7 +50,7 @@
 #' The old `"aligned"` label request becomes `label_layout = "auto"`;
 #' restriction `leader = "trunk"` becomes `leader = "radial"`.
 #'
-#' The constructor rejects unknown arguments. In v0.50.0, ggchord geoms check
+#' The constructor rejects unknown arguments. ggchord geoms check
 #' extra names against the selected layer, geom and stat before construction.
 #' For example, `geom_seq(linewditth = 2)` reports the spelling error and
 #' suggests `linewidth`. Scale, guide and theme arguments follow the contract

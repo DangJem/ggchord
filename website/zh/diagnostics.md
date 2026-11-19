@@ -15,7 +15,6 @@
 
 {{code:courseblockbj}}
 
-{{prepare:frontlinearbase}}
 
 ```r
 report <- diagnose_ggchord(p_linear_base, width = 8, height = 5, device = "png")
@@ -76,7 +75,6 @@ report$checks
 
 `scale` 与 `adaptive` 策略也会调整原生序列、点链接、ribbon 和 alignment 图层中省略的固定线宽。显式线宽（包括与默认值相等的值）保持固定，映射线宽保留其标度规则；`fixed` 和未添加策略的图保持既有样式。这不表示所有几何常量或原生主题派生的美学表达式都统一相乘。
 
-{{prepare:comparescaledata}}
 
 <a id="target-size"></a>
 

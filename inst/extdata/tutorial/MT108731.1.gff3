@@ -1,0 +1,15 @@
+##gff-version 3
+#!gff-spec-version 1.21
+#!processor NCBI annotwriter
+##sequence-region MT108731.1 1 64323
+##species https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=2719574
+MT108731.1	Genbank	region	1	64323	.	+	.	ID=MT108731.1:1..64323;Dbxref=taxon:2719574;gbkey=Src;genome=genomic;mol_type=genomic DNA;nat-host=Pseudomonas sp.
+MT108731.1	Genbank	CDS	13064	14554	.	+	0	ID=cds-QIQ63803.1;Dbxref=NCBI_GP:QIQ63803.1;Name=QIQ63803.1;Note=ORF46;gbkey=CDS;product=hypothetical protein;protein_id=QIQ63803.1;transl_table=11
+MT108731.1	Genbank	CDS	22920	23705	.	+	0	ID=cds-QIQ63807.1;Dbxref=NCBI_GP:QIQ63807.1;Name=QIQ63807.1;Note=ORF53;gbkey=CDS;product=hypothetical protein;protein_id=QIQ63807.1;transl_table=11
+MT108731.1	Genbank	CDS	23894	24814	.	+	0	ID=cds-QIQ63806.1;Dbxref=NCBI_GP:QIQ63806.1;Name=QIQ63806.1;Note=ORF54;gbkey=CDS;product=hypothetical protein;protein_id=QIQ63806.1;transl_table=11
+MT108731.1	Genbank	CDS	27115	28053	.	+	0	ID=cds-QIQ63805.1;Dbxref=NCBI_GP:QIQ63805.1;Name=QIQ63805.1;Note=ORF61;gbkey=CDS;product=hypothetical protein;protein_id=QIQ63805.1;transl_table=11
+MT108731.1	Genbank	CDS	48053	49111	.	+	0	ID=cds-QIQ63804.1;Dbxref=NCBI_GP:QIQ63804.1;Name=QIQ63804.1;Note=ORF06;gbkey=CDS;product=hypothetical protein;protein_id=QIQ63804.1;transl_table=11
+MT108731.1	Genbank	CDS	49101	50831	.	+	0	ID=cds-QIQ63802.1;Dbxref=NCBI_GP:QIQ63802.1;Name=QIQ63802.1;Note=ORF07;gbkey=CDS;product=hypothetical protein;protein_id=QIQ63802.1;transl_table=11
+MT108731.1	Genbank	CDS	57550	59490	.	+	0	ID=cds-QIQ63801.1;Dbxref=NCBI_GP:QIQ63801.1;Name=QIQ63801.1;Note=ORF18;gbkey=CDS;product=hypothetical protein;protein_id=QIQ63801.1;transl_table=11
+MT108731.1	Genbank	CDS	60709	63087	.	+	0	ID=cds-QIQ63800.1;Dbxref=NCBI_GP:QIQ63800.1;Name=QIQ63800.1;Note=ORF22;gbkey=CDS;product=hypothetical protein;protein_id=QIQ63800.1;transl_table=11
+

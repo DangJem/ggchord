@@ -71,5 +71,6 @@
   "Optional dependency: dplyr. One real HSP is deliberately shown 12 times.": "可选依赖为 dplyr；同一条真实 HSP 在12个视图中显式重复展示。",
   "Optional dependency: dplyr. Source: unchanged bundled pUC19 FASTA.": "可选依赖为 dplyr；来源是未经改动的随包 pUC19 FASTA。",
   "Extract actual source characters, keeping their order across the origin.": "提取真实来源字符，保留跨原点的字符顺序。",
-  "Preserve the original headers and first three observed records.": "保留原始头部和前三条真实记录，不改写字段。"
+  "Preserve the original headers and first three observed records.": "保留原始头部和前三条真实记录，不改写字段。",
+  "Fill describes the feature source; ref selects its sequence.": "填色取自特征源表，ref 选择显示该特征的参考序列。"
 }

@@ -2,7 +2,7 @@
 
 ## Length and a prepared annotation {#input}
 
-Only lengths and prepared tables are needed. The ori row is the verified pUC19 annotation 867–1455, matching the original inspectorigin output; no DNA recognition is run. Dependencies: ggchord and dplyr.
+This example reads the full length and existing annotations from the bundled pUC19 record. Copy either plotting block to draw that stage.
 
 ```r
 library(ggchord)

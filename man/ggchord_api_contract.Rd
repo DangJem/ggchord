@@ -2,12 +2,10 @@
 % Please edit documentation in R/api-contract.R
 \name{ggchord_api_contract}
 \alias{ggchord_api_contract}
-\title{Current API and migration contract}
+\title{Plotting, data and output contracts}
 \description{
-The current development API defines plotting, data and output contracts.
-The v0.16.4 candidate freeze is a historical development baseline,
-not a claim of v1.0.0 compatibility or complete platform/device validation.
-Correctness fixes remain possible with documented evidence and migration.
+Use this guide to choose where a plotting parameter belongs, how to specify
+source coordinates and where to retrieve layout measurements.
 }
 \section{Plotting responsibilities}{
 
@@ -44,12 +42,11 @@ the original upstream object and follow that dependency's public contract.
 Their internals and future upstream signatures are not frozen by ggchord.
 
 Retired arguments remain errors with replacement guidance; they do not
-execute compatibility code. In v0.16.1, fixed \code{feature_shape}, old width,
+execute compatibility code. Fixed \code{feature_shape}, old width,
 label and ribbon endpoint names were removed in favour of the names above.
-\code{gene_offset}/\code{feature_offset} were also removed then; use
+\code{gene_offset}/\code{feature_offset} were also removed; use
 \code{position = position_strand(offset = ...)}. Explicit strand-named offsets
 are signed, so negate the former minus-strand magnitude when migrating it.
-The old v1.0.0 removal deadline no longer applies.
 
 Automatic gene/feature labels own their rotation, offsets, orientation and
 overlap policy. Manual \code{label_rotation}, \code{label_radial_offset},
@@ -60,7 +57,7 @@ placement, or choose automatic geometry with \code{label_layout}.
 The old \code{"aligned"} label request becomes \code{label_layout = "auto"};
 restriction \code{leader = "trunk"} becomes \code{leader = "radial"}.
 
-The constructor rejects unknown arguments. In v0.50.0, ggchord geoms check
+The constructor rejects unknown arguments. ggchord geoms check
 extra names against the selected layer, geom and stat before construction.
 For example, \code{geom_seq(linewditth = 2)} reports the spelling error and
 suggests \code{linewidth}. Scale, guide and theme arguments follow the contract

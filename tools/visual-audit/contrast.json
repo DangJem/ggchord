@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "source": "website/assets/site.css",
-  "source_sha256": "e0fac3c28d2935eb70b07b6a5e72cf130eda33af5c4976ac6fc0f75952625770",
+  "source_sha256": "5b58b0462b0ad67937bfbe6a0c8bd98f331a7ca849a721d1b95396c856fd1fc7",
   "method": {
     "reference": "https://www.w3.org/TR/WCAG22/#contrast-minimum",
     "non_text_reference": "https://www.w3.org/TR/WCAG22/#non-text-contrast",
@@ -46,7 +46,7 @@
       "--shadow-dialog": "0 16px 60px #0e282d40",
       "--content-reading": "76ch",
       "--content-wide": "100%",
-      "--course-width": "248px",
+      "--topics-width": "248px",
       "--toc-width": "188px",
       "--header-height": "76px",
       "--header-min": "76px",
@@ -916,6 +916,7 @@
     "no_scientific_image_inversion": true,
     "reduced_motion_rule": true,
     "visible_focus_rule": true,
+    "current_navigation_labeled_visually": true,
     "no_external_font_or_stylesheet_import": true,
     "reading_width_separate_from_wide_content": true,
     "legacy_palette_removed": true

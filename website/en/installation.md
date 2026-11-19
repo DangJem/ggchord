@@ -1,19 +1,52 @@
 <a id="requirements"></a>
 
-## Install from GitHub {#requirements}
+## Install ggchord {#requirements}
 
-Install ggchord and its required dependencies from the project repository. Source installation requires a working R development environment.
+Already installed ggchord? [Try the bundled example](#first-plot).
+
+ggchord requires R ≥ 4.1.0 and ggplot2 ≥ 4.0.0. For a development preview, use the checkout used to build it. For a released version, select the version matching the documentation from [GitHub Releases](https://github.com/DangJem/ggchord/releases), then download and extract the source.
+
+Set your R working directory to the ggchord source directory containing `DESCRIPTION`, then run:
+
+```{.r}
+if (!requireNamespace("remotes", quietly = TRUE)) {
+  install.packages("remotes")
+}
+remotes::install_local(".", dependencies = NA, upgrade = "never", build = FALSE)
+```
+
+For scripts from an earlier version, see the [API migration guide](migration.md).
+
+<a id="first-plot"></a>
+
+## Draw a chord diagram with bundled data {#first-plot}
+
+Copy the whole block into R and run it. The data are included with the package.
 
 ```r
-install.packages("remotes")
-remotes::install_github("DangJem/ggchord", dependencies = NA)
+library(ggchord)
+
+p <- ggchord(data = seq_data_example) +
+  geom_seq() +
+  geom_seq_label() +
+  coord_chord()
+p
 ```
+
+You will see four labelled arcs. Each arc represents a sequence, and its span reflects the full sequence length. Use `geom_seq()` to draw the backbones, `geom_seq_label()` to label them, and `coord_chord()` to select the circular arrangement.
+
+<a id="first-steps"></a>
+
+## Continue with your own data {#first-steps}
+
+- [Add links and annotations](multi-sequence-start.md#links)
+- [Choose another plot type](modes.md#modules)
+- [Work with your own files](formats.md#choose-format)
+- [Preview and save a plot](output.md#size)
 
 <a id="environment"></a>
 
-## Environment and installation checks {#environment}
-
-Requires R ≥ 4.1.0 and ggplot2 ≥ 4.0.0. Inspect the packages actually used by the current session and include this output when reporting a problem.
+## Check the installed version {#environment}
 
 ```r
 getRversion()
@@ -22,46 +55,16 @@ packageVersion("ggchord")
 find.package("ggchord")
 ```
 
-<a id="first-plot"></a>
-
-## Load and draw {#first-plot}
-
-```r
-library(ggchord)
-
-p <- ggchord(seq_data_example) +
-  geom_seq() +
-  geom_seq_label() +
-  coord_chord()
-p
-```
-
-Success produces four arcs with different lengths and sequence IDs, without a build error. For missing functions, inspect the library path and loaded package before checking the matching [function reference](../../man/).
-
 <a id="support-evidence"></a>
 
-## Optional packages and input files {#support-evidence}
+## Which additional dependencies do examples use? {#support-evidence}
 
-Examples that use dplyr, Biostrings or a format decoder declare that dependency beside the code. Install it only for the corresponding workflow. Built-in data works offline; file examples use the [input archive](formats.md).
+Each example lists any extra R packages or file decoders it needs. To read your own files, check the [supported formats](formats.md#choose-format).
 
 <a id="troubleshooting"></a>
 
-## If installation fails {#troubleshooting}
+## Installation or plotting problems {#troubleshooting}
 
-| Symptom | First check | Action |
-| --- | --- | --- |
-| Repository or index cannot download | First network error, proxy and GitHub access | Restore access and retry without changing data |
-| Missing or outdated dependency | Dependency named in the error and minimum R | Install/update that dependency, then retry |
-| Source compilation fails | First compiler error and platform build tools | Install the appropriate R development tools and retain the log |
-| Installation succeeds but functions are missing | `find.package()` and the loaded library | Restart R, load the correct library and retry the minimal plot |
-
-For input and plotting problems, see [diagnostics](diagnostics.md).
-
-<a id="first-steps"></a>
-
-## Related sections {#first-steps}
-
-[Plotting concepts](modes.md) · [Input tables](data.md) · [Save a figure](output.md)
-
+Check that the dependency named in the error is available and that R loads ggchord from the intended library. If a source install fails, keep the first compiler error. Use [Diagnostics and troubleshooting](diagnostics.md) to investigate plotting warnings and errors.
 
 <span id="input"></span><span id="read"></span><span id="save"></span><span id="source"></span><span id="stable"></span><span id="verified-versions"></span>

@@ -28,7 +28,6 @@ a one-position HSP has nonzero width; axis positions stay one-based. Existing
 views retain their own documented interval conventions. The hole is display
 spacing, not deleted sequence. Sequence names sit beyond the outer tips.
 
-{{prepare:coursecomparison}}
 
 {{code:courseradialangle}}
 

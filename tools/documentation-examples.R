@@ -260,14 +260,13 @@ ggsave("comparison.png", p_collinear, width = 8, height = 5, units = "in", dpi =
 view_ggchord(p_collinear, width = 8, height = 5, units = "in")
 diagnosis <- diagnose_ggchord(p_collinear, width = 8, height = 5, units = "in")
 # ---- imports ----
-seq_files <- read_fasta_lengths(files = "examples/fasta/*.fna", source_file = TRUE)
-link_files <- read_blast(files = "examples/blastn-standard/*.tsv", source_file = TRUE)
-feature_files <- read_gff3(files = "examples/gff3/*.gff3", unstranded = "keep", source_file = TRUE)
+seq_files <- read_fasta_lengths(files = system.file("extdata", "tutorial", "pUC19.fna", package = "ggchord", mustWork = TRUE), source_file = TRUE)
+link_files <- read_blast(files = system.file("extdata", "tutorial", "MT108731.1__MT118296.1.tsv", package = "ggchord", mustWork = TRUE), source_file = TRUE)
+feature_files <- read_gff3(files = system.file("extdata", "tutorial", "MT108731.1.gff3", package = "ggchord", mustWork = TRUE), unstranded = "keep", source_file = TRUE)
 # ---- realimport ----
-library(dplyr)
-seq_real <- read_fasta_lengths("examples/fasta/*.fna")
-feature_real <- read_gff3("examples/gff3/*.gff3", unstranded = "keep")
-link_real <- read_blast("examples/blastn-standard/*.tsv")
+seq_real <- genome_comparison_example$seq_data
+feature_real <- genome_comparison_example$annotations
+link_real <- genome_comparison_example$alignments
 validate_ggchord_data(seq_real, link_real)$summary
 # ---- realprepare ----
 real_filtered <- filter_ggchord_ribbons(link_real, min_pident = 80, min_length = 500)
@@ -348,7 +347,7 @@ bed_features <- read_bed(bed_path)
 unlink(bed_path)
 bed_features
 # ---- formatpaf ----
-paf_source <- read_paf("examples/format-inputs/emales-pair.paf")
+paf_source <- read_paf(system.file("extdata", "tutorial", "emales-pair.paf", package = "ggchord", mustWork = TRUE))
 paf_links <- filter(paf_source, !is.na(mapq), mapq >= 30)
 paf_seqs <- bind_rows(
   transmute(paf_source, accver = qaccver, length = qlen),
@@ -363,7 +362,7 @@ p_paf <- ggchord(paf_seqs) +
   coord_collinear()
 p_paf
 # ---- standardblast ----
-blast_source <- read_blast("examples/blastn-standard/MT108731.1__MT118296.1.tsv")
+blast_source <- read_blast(system.file("extdata", "tutorial", "MT108731.1__MT118296.1.tsv", package = "ggchord", mustWork = TRUE))
 head(blast_source[1:12], 3)
 # ---- blastendpoints ----
 blast_links <- blast_source[c("qaccver", "saccver", "qstart", "qend", "sstart", "send")]
@@ -417,7 +416,7 @@ if (nzchar(Sys.which("python3")) && identical(suppressWarnings(system2("python3"
   c("-c", shQuote("from Bio import SeqIO")),
   stdout = FALSE, stderr = FALSE
 )), 0L)) {
-  genbank_result <- read_genbank("examples/format-inputs/pUC19c-L09137.2.gb")
+  genbank_result <- read_genbank(system.file("extdata", "tutorial", "pUC19c-L09137.2.gb", package = "ggchord", mustWork = TRUE))
 }
 # ---- optionalranges ----
 range_inputs <- NULL
@@ -733,12 +732,12 @@ p_cross_same <- p_linear_link +
     linewidth = 0.2, nonadjacent_linewidth = 0)
 p_cross_same
 # ---- frontimportseq ----
-head(read_fasta_lengths(files = "examples/fasta/*.fna"), 4)
+head(read_fasta_lengths(files = system.file("extdata", "tutorial", "pUC19.fna", package = "ggchord", mustWork = TRUE)), 4)
 # ---- frontimportgff ----
-gff <- read_gff3(files = "examples/gff3/*.gff3", unstranded = "keep")
+gff <- read_gff3(files = system.file("extdata", "tutorial", "MT108731.1.gff3", package = "ggchord", mustWork = TRUE), unstranded = "keep")
 head(gff[c("accver", "start", "end", "strand", "type")], 4)
 # ---- frontimportblast ----
-hits <- read_blast(file = "examples/blastn-standard/MT108731.1__MT118296.1.tsv")
+hits <- read_blast(file = system.file("extdata", "tutorial", "MT108731.1__MT118296.1.tsv", package = "ggchord", mustWork = TRUE))
 head(hits[c("qaccver", "saccver", "qstart", "qend", "sstart", "send")], 3)
 # ---- frontimportgr ----
 gr <- GenomicRanges::GRanges("a", IRanges::IRanges(10, 30), strand = "+", seqlengths = c(a = 100))
@@ -1833,21 +1832,19 @@ p_foundationequal <- ggchord(prepare_ggchord_data(foundation_seqs, foundation_hs
 p_foundationequal
 
 # ---- dotplotdata ----
-library(dplyr)
 dotplot_hsp <- sequence_detail_example$paf
-dotplot_seqs <- bind_rows(
-  dotplot_hsp |> transmute(accver = qaccver, length = qlen),
-  dotplot_hsp |> transmute(accver = saccver, length = slen)
-) |>
-  distinct()
+pair <- dotplot_hsp[1, ]
+dotplot_seqs <- data.frame(
+  accver = c(pair$qaccver, pair$saccver), length = c(pair$qlen, pair$slen)
+)
 # ---- dotplotview ----
-p_viewdotplot <- ggchord(prepare_ggchord_data(dotplot_seqs, dotplot_hsp)) +
-  geom_alignment_segment(aes(link_colour = pident), linewidth = 0.65) +
+p_viewdotplot <- ggchord(dotplot_seqs) +
+  geom_alignment_segment(aes(link_colour = pident), data = dotplot_hsp, linewidth = 0.65) +
   coord_dotplot()
 p_viewdotplot
 # ---- dotplotreverse ----
-dotplot_reversed <- ggchord(prepare_ggchord_data(dotplot_seqs, dotplot_hsp)) +
-  geom_alignment_segment(aes(link_colour = pident), linewidth = 0.65) +
+dotplot_reversed <- ggchord(dotplot_seqs) +
+  geom_alignment_segment(aes(link_colour = pident), data = dotplot_hsp, linewidth = 0.65) +
   coord_dotplot(y_orientation = -1)
 dotplot_layout <- export_ggchord_layout(dotplot_reversed)
 dotplot_layout$axis_layout

@@ -43,7 +43,7 @@
       "circular-dense-case"
     ],
     "snippets": [
-      "referencebuilder"
+      "catalogmap"
     ],
     "figures": [
       "catalogpuc",
@@ -86,7 +86,6 @@
       "genbank",
       "frontimportgr",
       "standardblast",
-      "protein",
       "nativeproteininput",
       "nativeproteinplot"
     ],
@@ -228,7 +227,7 @@
     ],
     "snippets": [
       "recognition",
-      "referencebuilder"
+      "catalogmap"
     ],
     "figures": [
       "recognition",
@@ -246,12 +245,14 @@
       "homology",
       "projection"
     ],
-    "snippets": [
-      "projection",
-      "linkprojection"
-    ],
+    "snippets": [],
     "figures": [],
-    "result": "projection"
+    "result": null,
+    "calls": [
+      "build_ggchord_cds",
+      "project_ggchord_features",
+      "project_ggchord_links"
+    ]
   },
   {
     "id": "homologs",
@@ -262,13 +263,12 @@
     "articles": [
       "homology"
     ],
-    "snippets": [
-      "homologs"
-    ],
-    "figures": [
-      "homologs"
-    ],
-    "result": null
+    "snippets": [],
+    "figures": [],
+    "result": null,
+    "calls": [
+      "read_feature_relations"
+    ]
   },
   {
     "id": "views",

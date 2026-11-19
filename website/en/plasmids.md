@@ -1,4 +1,12 @@
-See [Flagship data sources and construction](flagship-data.md) for provenance, display selections and rebuilding. This page loads bundled inputs directly and focuses on plotting settings.
+<a id="features"></a>
+
+## Draw the nine pUC19 features {#features}
+
+The bundled pUC19 record supplies its full length and nine reference features. Each directional arrow preserves its annotated strand and interval.
+
+{{code:pucfeatures}}
+
+![pUC19 backbone and nine reference features](../../man/figures/pucfeatures.png)
 
 <a id="input"></a>
 
@@ -6,15 +14,7 @@ See [Flagship data sources and construction](flagship-data.md) for provenance, d
 
 This page explains the composition of one complete reference map. pETDuet-1 and its dense-label choices are described [separately](circular-dense-case.md).
 
-{{code:courseblockg}}
-
-{{code:referencebuilder}}
-
-```r
-reference <- make_reference_map(flagship_circular_example$references[["pUC19"]])
-p <- reference$plot
-view_ggchord(p, width = 10, height = 8, units = "in")
-```
+{{code:courseblocki,catalogmap}}
 
 {{figure:catalogpuc}}
 

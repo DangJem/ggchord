@@ -1,120 +1,130 @@
 {
-  "source_sha256": "a0da3508932d17d47ff5f72ac9d9e3f219a70ea82b458b9c0cffa2fcc6e4afe0",
+  "source_sha256": "ebb45395cd02a12822960856c5f7e71bafaa1932eabbf2187d55ab0c56a2154f",
   "blocks": {
-    "3": {
+    "2": {
       "source_sha256": "915e5a9d83418695db686ead0306a42583df6b8101712048915edd5db8a2bf9f",
       "status": "reviewed",
       "translation": "## Count observations or display supplied values ⟦shared:0⟧\n"
     },
-    "4": {
+    "3": {
       "source_sha256": "394d3937b58e777f5b9029a47c5f00ab0d5516c036f2385b071752c72531c15d",
       "status": "reviewed",
       "translation": "⟦shared:0⟧ counts observations at source positions; ⟦shared:1⟧ displays supplied values.\nEach accession/window computes its Stat and data Position before view projection\nor display replication. Layers share the default band when ⟦shared:2⟧ is omitted. Add ⟦shared:3⟧ before or after the layers and refer to it with ⟦shared:4⟧. Use ⟦shared:5⟧ for source-data adjustments such as stack or dodge.\n"
     },
-    "7": {
-      "source_sha256": "40cc0352df51ebbcc34c41af00ceaff94d30c08e44d4a454a3bf4bb481215487",
+    "4": {
+      "source_sha256": "d2c6baea489e7769d588331ee1cef59bad303eac75bd85e451780f5a84ba186a",
       "status": "reviewed",
-      "translation": "The shortcut below counts the same observations using the same physical band.\n"
+      "translation": "Select two references from the bundled alignments and count observations at each query start. Hits starting at the same position add to the count.\n"
     },
-    "9": {
+    "7": {
+      "source_sha256": "591e7dcc7ce7db1e9ec02c4bc62dd39565fbc9ec80ba56b2e5089c1823381dc9",
+      "status": "reviewed",
+      "translation": "You can also write ⟦shared:0⟧ as ⟦shared:1⟧. Both use the same start positions and counting rule.\n"
+    },
+    "8": {
       "source_sha256": "7904d528be683501ee240489b8e51a681a63155ea61662e0cf6b420c218746c5",
       "status": "reviewed",
       "translation": "| Geometry | Default Stat | Input meaning |\n"
     },
-    "10": {
+    "9": {
       "source_sha256": "a9e436d2babd638ade86791e162e7de5a6b1b3128c6ae9ed93504fbf3c53dc93",
       "status": "reviewed",
       "translation": "| --- | --- | --- |\n"
     },
-    "11": {
+    "10": {
       "source_sha256": "777d2cb881714912afbdff72efb1e552750eb2703bb2bed97e2a25746bfe4cb2",
       "status": "reviewed",
       "translation": "| bar | count | x/pos observations, optional weight |\n"
     },
-    "12": {
+    "11": {
       "source_sha256": "94775eb02817878c79e3ecf29152d0d4ffceac918ca183a7c3796b77ff1371f5",
       "status": "reviewed",
       "translation": "| col | identity | supplied y/track_value; interval or position |\n"
     },
-    "13": {
+    "12": {
       "source_sha256": "045d16b94dd8a03e0e96dbaaa701a91a5979a27a810213e8294b575eaf0cdb02",
       "status": "reviewed",
       "translation": "| point, line, path, step, text | identity | source x and local y; text requires label |\n"
     },
-    "14": {
+    "13": {
       "source_sha256": "4a10a9dc6076b1ef5010431029aa4bc743c51eb986fc812ece4b6c77e85fa8ff",
       "status": "reviewed",
       "translation": "| tile, rect, area, ribbon, segment, linerange, errorbar | identity | corresponding native ggplot2 extents |\n"
     },
-    "15": {
+    "14": {
       "source_sha256": "3906704a572f1c63b11b617e9d34f9f172ca270596795bfcbdb203850ac6e643",
       "status": "reviewed",
       "translation": "Supported statistics include identity/count/bin/summary, interval coverage and the [documented estimation combinations](⟦shared:0⟧). Bin requires explicit binwidth or breaks. A custom ggplot2 Stat can read the layer’s source indices from source_row and return the members of each result in a source_rows list column. Omitted membership is exported as unknown.\n"
     },
-    "16": {
+    "15": {
       "source_sha256": "138fd4752c35a0c3a95a07e11034eb8d98872e26f19dd38f229a254ec8c1f72f",
       "status": "reviewed",
       "translation": "Source position uses x orientation; native text size currently uses mm and polygon outlines are full. Other orientations/size units/partial outlines fail explicitly. Native text styles and path arrows are forwarded.\n"
     },
-    "17": {
+    "16": {
       "source_sha256": "f2f920e751e131c1db2efc7a749654c8683c6daf718d60264b935bc0251defae",
       "status": "reviewed",
       "translation": "Tracks use ggchord coordinates. Sample facets with fixed scales partition observations by facet columns in the source table. Samples compute statistics independently and share the value domain of each named band. Use ⟦shared:0⟧ for vertical projection. Source membership is recorded before data positions such as dodge.\n"
     },
-    "19": {
+    "18": {
       "source_sha256": "b6c9061a3e86ba841ef335a0d2c0c6ed4603f5f9dcda5ccaccb6862a21316ec7",
       "status": "reviewed",
       "translation": "## Measure interval coverage in each window ⟦shared:0⟧\n"
     },
-    "20": {
+    "19": {
       "source_sha256": "1b5dc67c43f7d166d2bfdcae692bbf858bb0c7a4bb030c40812c9137e36a3fa1",
       "status": "reviewed",
       "translation": "⟦shared:0⟧ draws the fraction of each window covered by at least one interval. Map ⟦shared:1⟧ for mean depth. Coordinates start at 1 and include both endpoints. An interval that crosses a window boundary contributes its intersection to each window. Mean depth counts the length of each record’s intersection separately.\n"
     },
-    "21": {
+    "20": {
       "source_sha256": "b7223ce06f3b34b395d660a60151f6262018fe6b6393e734cd42ae844468b577",
       "status": "reviewed",
       "translation": "Consider a synthetic sequence of length 10. Rows 1, 2 and 3 span 3–6, 4–5 and 10–10, respectively. Positions 4 and 5 are each covered twice. The last window contains just two positions, so its denominator is 2.\n"
     },
-    "22": {
+    "21": {
       "source_sha256": "c0f01bece6df803b5eeeae9c20f7ef96e72e5ad388cf39c131c8b7f22e281fac",
       "status": "reviewed",
       "translation": "| Window | Distinct positions covered | Coverage fraction | Mean depth | Source rows |\n"
     },
-    "23": {
+    "22": {
       "source_sha256": "ef9894d869f03461d2ae95c9fa07f44b3863a55ef68482d7d771fe194c904bb5",
       "status": "reviewed",
       "translation": "| --- | --- | --- | --- | --- |\n"
     },
-    "24": {
+    "23": {
       "source_sha256": "eaeb0bb9aba31e7f5b702d5bc7b1d556bb5fb22dae2a87a285edde86a039b974",
       "status": "reviewed",
       "translation": "| 1–4 | 2 | 2/4 | 3/4 | 1, 2 |\n"
     },
-    "25": {
+    "24": {
       "source_sha256": "6d33ce50b493c2a5caecbbeabaf48adbaf3a327571f5b1c9085820f85135f05d",
       "status": "reviewed",
       "translation": "| 5–8 | 2 | 2/4 | 3/4 | 1, 2 |\n"
     },
-    "26": {
+    "25": {
       "source_sha256": "9e3a0f41a8ed6f63a98efa7d6613fc3a5d5a5333086fe6ef34798befdaf778b9",
       "status": "reviewed",
       "translation": "| 9–10 | 1 | 1/2 | 1/2 | 3 |\n"
     },
-    "27": {
+    "26": {
       "source_sha256": "f145b4f2e7f6efc6458169331552a5654c013df954cd9f2b32162b8dd1bbfedc",
       "status": "reviewed",
       "translation": "Empty windows in observed groups return zero coverage, zero depth and an empty source list. References or samples without observations produce no statistical rows. Each reference or focused window starts binning at local position 1. Alternatively, pass explicit intervals in ⟦shared:0⟧. Each independently intersects the observations and windows may overlap. Choose either ⟦shared:1⟧ or explicit windows. Interval and window units must agree with the reference. By default out-of-bounds intervals raise an error. Use ⟦shared:2⟧ to clip intervals to the reference. Split compound intervals and origin-crossing records into single segments first.\n"
     },
-    "29": {
+    "28": {
       "source_sha256": "7dc386bfff31962b56a6178af98906c3aa897394b413ca6eb1145c54274a5224",
       "status": "reviewed",
       "translation": "## Two independent bands and display order ⟦shared:0⟧\n"
     },
-    "30": {
+    "29": {
       "source_sha256": "2ec8653e1db99427b7415e656883e079fe82530b2051fd1656e2d0cd9c7eecd2",
       "status": "reviewed",
       "translation": "Encode the same GC by bar height and colour using explicit gc_height/gc_colour IDs. Set height and colour domains 0–1 separately, with distinct physical widths. The second figure changes only colour order from 2 to 0, moving that band nearer the backbone. Order is a finite priority, not a measurement or required one-based index; ties use IDs. Layers sharing an ID use its declared side, order, width and gap. Lines do not implicitly bridge independent windows.\n"
+    },
+    "35": {
+      "source_sha256": "cff449c819f814570d0111fda792234949b16d3ee2ce862d181918721740995e",
+      "status": "reviewed",
+      "translation": "To compare the same measure across plots, use [shared_track_limits()](⟦shared:0⟧) to obtain one range from both plots and set it on each track scale.\n"
     },
     "37": {
       "source_sha256": "30de0dd247a35a39403197392819b62e484df983a26417f99ecd7ef71db5ee44",

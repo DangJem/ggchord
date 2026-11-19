@@ -2,20 +2,29 @@
 
 ## 先独立画好两张图 {#panels}
 
-需要 ggchord、dplyr 和随包数据 `sequence_detail_example$paf`；原始来源可在[输入包](https://github.com/DangJem/ggchord/archive/refs/heads/main.zip)追溯。先分别打印 course_center 和 course_detail，再组合一条已有关系。
+用随包 PAF 表画两个面板，再用一条已观测的比对连接它们。
 
 ```r
 library(ggchord)
 library(dplyr)
 ```
 
-{{prepare:fusiondata}}
 
-{{code:coursefusion}}
+```r
+course_center
+```
 
 ![独立中心图](../../man/figures/coursefusioncenter.png)
 
+```r
+course_detail
+```
+
 ![独立细节图](../../man/figures/coursefusiondetail.png)
+
+```r
+p_coursefusion
+```
 
 ![Two panels and one source relationship](../../man/figures/coursefusion.png)
 

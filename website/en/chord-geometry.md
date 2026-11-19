@@ -1,6 +1,5 @@
 {{code:courseblockb}}
 
-{{prepare:frontbackbone}}
 
 <a id="orientation"></a>
 

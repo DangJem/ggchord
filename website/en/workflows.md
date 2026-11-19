@@ -27,7 +27,7 @@ Identify the original input and the intended plot. Every path preserves source I
 
 ## Complete source-backed example {#examples}
 
-[Sequence comparison from FASTA/GFF3/BLAST](real-data.md) retains paths, display filters, inputs and results. Obtain originals from the [input archive](formats.md), extract it and run downloaded scripts from a directory containing `examples/`.
+The [four-sequence comparison](real-data.md) shows the original sources, filters and resulting plots.
 
 ## Choose the operation by its output {#choose-operation}
 

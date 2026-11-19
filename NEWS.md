@@ -1,5 +1,9 @@
 # ggchord 0.50.0 (development)
 
+- The bilingual website now groups figures by plot type and functions by task.
+  Plot examples include their inputs and can be copied or downloaded individually.
+  The homepage retains the flagship previews and links to their complete figures.
+
 - In a feature layer, `aes(accver = ref, fill = accver)` places each
   feature on `ref` and colours it by its original `accver`. To colour by
   the displayed reference as well, use `aes(accver = ref, fill = ref)`.

@@ -2,7 +2,6 @@
 
 ## Prepare real sources {#input}
 
-{{prepare:foundationdata}}
 
 <a id="sankey"></a>
 

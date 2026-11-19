@@ -56,32 +56,49 @@ def manual_figures():
 def manual_figure(key,lang,base='../assets'):
     r=manual_figures()[key];caption=html.escape(r['caption'][lang])
     target=base+'/'+key+'.png'
-    return (f'<figure class="documentation-figure" data-figure="{key}"><a class="figure-link" href="{target}" data-code-url="{r["page"]}">'
+    code=html.escape(r['page'],quote=True)
+    return (f'<figure class="documentation-figure" data-figure="{key}"><a class="figure-link" href="{target}" data-code-url="{code}">'
       f'<img src="{target}" alt="{caption}" width="{round(r["width"]*r["dpi"])}" height="{round(r["height"]*r["dpi"])}" loading="lazy" decoding="async"></a>'
-      f'<figcaption>{caption} · <a href="{base}/site-flagships.R">'+('完整 R 源码' if lang=='zh' else 'Complete R source')+'</a></figcaption></figure>')
+      f'<figcaption>{caption} · <a href="{code}">'+('完整 R 源码' if lang=='zh' else 'Complete R source')+'</a></figcaption></figure>')
 
 def manual_home(lang,base):
     zh=lang=='zh'
     content=json.loads((ROOT/'website/home.json').read_text())
     previews={row['id']:row for row in json.loads((ROOT/'website/home-previews.json').read_text())}
-    full=manual_figures()
+    complete_figures=manual_figures()
     escape=lambda value:html.escape(value,quote=True)
-    def picture(key):
-        row=previews[key];original=full.get(row['full'],{'page':row.get('page')})
+    def picture(key, title):
+        row=previews[key]
         complete=row.get('full_file',row['full']+'.png')
-        text=(content['modules'][next(i for i,m in enumerate(content['modules']) if key in m['figures'])]['title'][lang]+' · '+row['name'])
-        return (f'<figure class="home-preview"><a class="figure-link" href="{base}/{complete}" data-code-url="{original["page"]}" aria-label="'+
-          escape(('查看完整图：' if zh else 'View complete figure: ')+row['name'])+f'"><img src="{base}/{key}.png" alt="{escape(text)}" '
+        code=escape(complete_figures[row['full']]['page'])
+        name=escape(row['name'])
+        text=escape(title+' · '+row['name'])
+        label=escape(('查看完整图 ' if zh else 'View complete figure for ')+row['name'])
+        return (f'<figure class="home-preview"><a class="figure-link" href="{base}/{complete}" '
+          f'data-code-url="{code}" aria-label="{label}"><img src="{base}/{key}.png" alt="{text}" '
           f'width="{round(row["width"]*row["dpi"])}" height="{round(row["height"]*row["dpi"])}" loading="lazy" decoding="async"></a>'
-          f'<figcaption>{row["name"]}</figcaption></figure>')
+          f'<figcaption><a href="{code}">{name}</a></figcaption></figure>')
     cards=[]
     for module in content['modules']:
-        title=escape(module['title'][lang]);purpose=escape(module['purpose'][lang])
+        title=module['title'][lang]
+        purpose=escape(module['purpose'][lang])
+        entry=escape(module['entry'])
+        case=escape(module['case'])
+        slug=escape(module['slug'])
         grid=' home-four' if len(module['figures'])==4 else ''
-        cards.append(f'<section class="home-module" aria-labelledby="home-{module["slug"]}"><h2 id="home-{module["slug"]}"><span class="module-index">{module["number"]}</span>{title}</h2>'
-          f'<p class="home-purpose">{purpose}</p><div class="home-module-art{grid}">'+''.join(picture(key) for key in module['figures'])+'</div>'
-          f'<div class="home-module-actions"><a class="module-entry" href="{module["entry"]}">'+('进入教程' if zh else 'Open guide')+' →</a>'
-          f'<a class="home-source" href="{base}/home-previews.R">'+('预览源码' if zh else 'Preview source')+'</a></div></section>')
+        art=''.join(picture(key, title) for key in module['figures'])
+        cards.append(f'<section class="home-module" aria-labelledby="home-{slug}"><h2 id="home-{slug}">{escape(title)}</h2>'
+          f'<p class="home-purpose">{purpose}</p><div class="home-module-art{grid}">{art}</div>'
+          f'<div class="home-module-actions"><a class="module-entry" href="{entry}">'+('试画' if zh else 'Try it')+'</a>'
+          f'<a class="home-source" href="{case}">'+('完整示例和代码' if zh else 'Full example and code')+'</a></div></section>')
     features=''.join('<a href="'+item['url']+'"><strong>'+escape(item['title'][lang])+'</strong><span>'+escape(item['description'][lang])+'</span></a>' for item in content['capabilities'])
     hero=content['hero']
-    return ('<div class="home-shell"><section class="home-introduction"><div class="home-intro-copy"><p class="eyebrow">'+escape(hero['eyebrow'][lang])+'</p><h1>'+escape(hero['title'][lang])+'</h1><p class="home-description">'+escape(hero['description'][lang])+'</p><div class="home-actions"><a class="primary-action" href="multi-sequence-start.html">'+('绘制第一张图' if zh else 'Draw a first plot')+'</a><a class="secondary-action" href="#modules">'+('选择绘图任务' if zh else 'Choose a plotting task')+' →</a></div><nav class="home-features" aria-label="'+('核心能力' if zh else 'Core capabilities')+'">'+features+'</nav></div>'+responsive_image('logo',lang,base,eager=True,css='home-logo')+'</section><div class="home-capabilities" id="modules">'+''.join(cards)+'</div><p class="home-image-note">'+('首页预览为现有真实示例的简化显示，点击图像可查看完整图；各页保留完整输入和代码。' if zh else 'Homepage previews simplify the display of existing source-backed examples. Open each image for the complete figure; its page retains full inputs and code.')+'</p></div>')
+    return ('<div class="home-shell"><section class="home-introduction"><div class="home-intro-copy"><h1>'+
+        escape(hero['title'][lang])+'</h1><p class="home-description">'+escape(hero['description'][lang])+
+        '</p><div class="home-actions"><a class="primary-action" href="installation.html">'+
+        ('开始使用' if zh else 'Get started')+'</a><a class="secondary-action" href="gallery.html">'+
+        ('浏览案例' if zh else 'Browse examples')+'</a></div><nav class="home-features" aria-label="'+
+        ('文档入口' if zh else 'Documentation')+'">'+features+'</nav></div>'+
+        responsive_image('logo',lang,base,eager=True,css='home-logo')+
+        '</section><div class="home-capabilities" id="modules">'+''.join(cards)+'</div><p class="home-image-note">'+
+        ('点击预览图可查看完整图。' if zh else 'Select a preview to open the complete figure.')+'</p></div>')

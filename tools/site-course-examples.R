@@ -1,10 +1,10 @@
 # Shared website course snippets; original figure recipes remain unchanged.
 # ---- coursecomparison ----
-comparison <- ggchord(prepare_ggchord_data(radial_seqs, radial_hsp, feature_data = radial_features)) +
+comparison <- ggchord(radial_seqs) +
   geom_seq() +
   geom_seq_label() +
-  geom_link_ribbon(adjacent_only = FALSE) +
-  geom_feature(shape = "arrow", width = 0.025)
+  geom_link_ribbon(data = radial_hsp, adjacent_only = FALSE) +
+  geom_feature(data = radial_features, shape = "arrow", width = 0.025)
 p_coursechord <- comparison + coord_chord()
 p_courselinear <- comparison + coord_collinear()
 p_courseradial <- comparison + coord_radial_synteny()
@@ -26,32 +26,37 @@ p_courseradialangle <- p_courseradial +
   coord_radial_synteny(start_angle = 45)
 p_courseradialangle
 # ---- coursefusion ----
-course_center <- ggchord(fusion_seqs |> slice(1)) +
+pair_hsp <- head(sequence_detail_example$paf, 1)
+pair_seqs <- data.frame(
+  accver = c(pair_hsp$qaccver, pair_hsp$saccver),
+  length = c(pair_hsp$qlen, pair_hsp$slen)
+)
+course_center <- ggchord(pair_seqs[1, ]) +
   geom_seq(show.legend = FALSE) +
   coord_circular()
-course_detail <- ggchord(fusion_seqs) +
+course_detail <- ggchord(pair_seqs) +
   geom_seq(show.legend = FALSE) +
   geom_seq_label() +
   coord_collinear(seq_axis = "vertical")
 p_coursefusion <- ggchord_fusion(course_center) +
   fusion_panel(course_detail, id = "detail", side = "right") +
   fusion_ribbon(
-    fusion_links |> slice(1), qpanel = "center", spanel = "detail",
+    pair_hsp, qpanel = "center", spanel = "detail",
     fill = "#269B82", alpha = 0.35
   )
 p_coursefusion
 # ---- coursecircleinput ----
-library(dplyr)
-circle_seqs <- plasmid_example_pUC19 |> select(accver, length)
-circle_origins <- tibble(
-  accver = "pUC19", start = 867, end = 1455,
-  strand = "-", type = "rep_origin", anno = "ori"
-)
+circle_seqs <- flagship_circular_example$references[["pUC19"]]$seq_data
 p_coursecircle <- ggchord(circle_seqs) +
-  geom_seq() + geom_seq_center_label() + coord_circular()
+  geom_seq() +
+  geom_seq_center_label() +
+  coord_circular()
+p_coursecircle
 # ---- coursecirclefeature ----
+circle_origins <- flagship_circular_example$references[["pUC19"]]$features |>
+  dplyr::filter(type == "rep_origin")
 p_coursecirclefeature <- p_coursecircle +
-  geom_feature(preset = 'plasmid', data = circle_origins) +
+  geom_feature(preset = "plasmid", data = circle_origins) +
   geom_feature_label(data = circle_origins,
     label_side = "inside", label_radial_offset = 0.12, size = 4)
 p_coursecirclefeature
@@ -70,69 +75,47 @@ ggsave("four-genome-collinear.png", p_show_collinear, width = 12, height = 8, un
 library(ggchord)
 library(dplyr)
 # ---- courseblockh ----
-record <- flagship_circular_example$references[["pSB1C3"]]
-reference <- make_reference_map(record)
-p <- reference$plot
-view_ggchord(p, width = 10, height = 8, units = "in")
+reference <- flagship_circular_example$references[["pSB1C3"]]
 # ---- courseblocki ----
-record <- flagship_circular_example$references[["pUC19"]]
-reference <- make_reference_map(record)
-p <- reference$plot
-view_ggchord(p, width = 10, height = 8, units = "in")
+reference <- flagship_circular_example$references[["pUC19"]]
 # ---- courseblockj ----
-record <- flagship_circular_example$references[["pBR322"]]
-reference <- make_reference_map(record)
-p <- reference$plot
-view_ggchord(p, width = 10, height = 8, units = "in")
+reference <- flagship_circular_example$references[["pBR322"]]
 # ---- courseblockk ----
-record <- flagship_circular_example$references[["pBluescript II SK(+)"]]
-reference <- make_reference_map(record)
-p <- reference$plot
-view_ggchord(p, width = 10, height = 8, units = "in")
+reference <- flagship_circular_example$references[["pBluescript II SK(+)"]]
 # ---- courseblockl ----
-record <- flagship_circular_example$references[["pET-28a(+)"]]
-reference <- make_reference_map(record)
-p <- reference$plot
-view_ggchord(p, width = 10, height = 8, units = "in")
+reference <- flagship_circular_example$references[["pET-28a(+)"]]
 # ---- courseblockm ----
-record <- flagship_circular_example$references[["pETDuet-1"]]
-reference <- make_reference_map(record)
-p <- reference$plot
-view_ggchord(p, width = 10, height = 8, units = "in")
+reference <- flagship_circular_example$references[["pETDuet-1"]]
 # ---- courseblockn ----
-record <- flagship_circular_example$references[["pDONR221"]]
-reference <- make_reference_map(record)
-p <- reference$plot
-view_ggchord(p, width = 10, height = 8, units = "in")
+reference <- flagship_circular_example$references[["pDONR221"]]
 # ---- courseblocko ----
-record <- flagship_circular_example$references[["pcDNA3.1(+)"]]
-reference <- make_reference_map(record)
-p <- reference$plot
-view_ggchord(p, width = 10, height = 8, units = "in")
+reference <- flagship_circular_example$references[["pcDNA3.1(+)"]]
 # ---- courseblockp ----
-record <- flagship_circular_example$references[["pTRE-Tight-BI"]]
-reference <- make_reference_map(record)
-p <- reference$plot
-view_ggchord(p, width = 10, height = 8, units = "in")
+reference <- flagship_circular_example$references[["pTRE-Tight-BI"]]
 # ---- courseblockq ----
-record <- flagship_circular_example$references[["pTRIPZ"]]
-reference <- make_reference_map(record)
-p <- reference$plot
-view_ggchord(p, width = 10, height = 8, units = "in")
+reference <- flagship_circular_example$references[["pTRIPZ"]]
 # ---- courseblockr ----
-record <- flagship_circular_example$references[["pCAMBIA1300"]]
-reference <- make_reference_map(record)
-p <- reference$plot
-view_ggchord(p, width = 10, height = 8, units = "in")
+reference <- flagship_circular_example$references[["pCAMBIA1300"]]
 # ---- courseblocks ----
-record <- flagship_circular_example$references[["pEarleyGate 201"]]
-reference <- make_reference_map(record)
-p <- reference$plot
-view_ggchord(p, width = 10, height = 8, units = "in")
+reference <- flagship_circular_example$references[["pEarleyGate 201"]]
 # ---- courseblockt ----
-record <- flagship_circular_example$references[["pSpCas9(BB)-2A-GFP (PX458)"]]
-reference <- make_reference_map(record)
-p <- reference$plot
+reference <- flagship_circular_example$references[["pSpCas9(BB)-2A-GFP (PX458)"]]
+# ---- catalogmap ----
+lanes <- position_feature_stack(spacing = 0.085, base_position = position_offset(-0.1))
+p <- ggchord(reference$seq_data) +
+  geom_seq(seq_style = "double") +
+  geom_feature(data = reference$features, preset = "plasmid", position = lanes) +
+  geom_feature_label(data = reference$features, placement = "repel", position = lanes,
+    overflow = "shrink", label_min_size = 2.5) +
+  geom_seq_center_label() +
+  coord_circular() +
+  theme_ggchord_plasmid() +
+  geom_restriction_site(data = reference$sites, label_size = 2.5)
+if (nrow(reference$primers) > 0) {
+  p <- p +
+    geom_primer(data = reference$primers) +
+    geom_primer_label_repel(data = reference$primers, size = 2.5)
+}
 view_ggchord(p, width = 10, height = 8, units = "in")
 # ---- courseblocku ----
 ggsave("pUC19-map.png", p_plasmid, width = 10, height = 9, units = "in", dpi = 144)
@@ -405,7 +388,7 @@ alignment_available <- nzchar(Sys.which(alignment_python)) &&
   )), 0L)
 if (alignment_available) {
   maf <- read_maf(
-    "examples/genome-alignments/ucsc_mm9_chr10.maf",
+    system.file("extdata", "tutorial", "ucsc_mm9_chr10.maf", package = "ggchord", mustWork = TRUE),
     alphabet = "DNA", python = alignment_python, source_file = TRUE
   )
   local_maf <- maf$alignment |>
@@ -416,7 +399,7 @@ if (alignment_available) {
     ggplot2::theme_minimal()
 
   chains <- read_chain(
-    "examples/genome-alignments/dna_rna.chain", python = alignment_python
+    system.file("extdata", "tutorial", "dna_rna.chain", package = "ggchord", mustWork = TRUE), python = alignment_python
   )
   observed_chain <- chains$ribbon_data |>
     filter(source_block == 1)
@@ -427,7 +410,7 @@ if (alignment_available) {
 delta_decoder <- Sys.getenv("DELTA_DECODER", "show-coords")
 if (nzchar(Sys.which(delta_decoder))) {
   delta <- read_delta(
-    "examples/genome-alignments/promer.delta",
+    system.file("extdata", "tutorial", "promer.delta", package = "ggchord", mustWork = TRUE),
     executable = delta_decoder, source_file = TRUE
   )
   observed_intervals <- delta$ribbon_data |>
@@ -449,7 +432,7 @@ if (nzchar(Sys.which(delta_decoder))) {
 # ---- courseblockbd ----
 if (nzchar(Sys.which(delta_decoder))) {
   plant_delta <- read_delta(
-    "examples/genome-alignments/arabidopsis-first-pair.delta",
+    system.file("extdata", "tutorial", "arabidopsis-first-pair.delta", package = "ggchord", mustWork = TRUE),
     executable = delta_decoder, source_file = TRUE
   )
   plant_delta$ribbon_data |>
@@ -850,4 +833,11 @@ framed_view <- magnify_ggchord(whole_plasmid, selected_region, local_detail,
   frame_region = source_frame, highlight_width = 1.5)
 export_ggchord_fusion(framed_view, width = 12, height = 7)$focus_regions |>
   select(accver, start, end, frame_start, frame_end)
+# ---- pucfeatures ----
+puc <- flagship_circular_example$references[["pUC19"]]
+p_pucfeatures <- ggchord(puc$seq_data) +
+  geom_seq() +
+  geom_feature(data = puc$features, preset = "plasmid") +
+  coord_circular()
+p_pucfeatures
 # ---- courseend ----

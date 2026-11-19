@@ -1,6 +1,5 @@
 {{code:courseblockbg}}
 
-{{prepare:trackdata,tracks,foundationdata}}
 
 <a id="tracks"></a>
 
@@ -9,13 +8,24 @@
 `bar` 按源位置统计观测数，`col` 显示已提供的数值。各 accession/window 在视图投影或
 显示复制前独立计算 Stat 和数据 Position。省略 `track` 时，各层使用同一默认带。用 `track_band("depth")` 声明具名带，各层通过 `track = "depth"` 引用；声明可放在引用前后。`position` 选择 stack、dodge 等源数据调整。
 
-{{code:foundationcount}}
+从随包比对中选取两个参考，按 query 起点统计观测数。同一位置的多条记录会累加。
+
+```r
+ids <- c("MT108731.1", "MT118296.1")
+seqs <- subset(seq_data_example, accver %in% ids)
+hits <- subset(ribbon_data_example,
+  qaccver %in% ids & saccver %in% ids & qaccver != saccver
+)
+ggchord(seqs) +
+  geom_seq() +
+  track_band("query_starts") +
+  geom_track_bar(aes(x = qstart, accver = qaccver), data = hits, track = "query_starts") +
+  coord_collinear()
+```
 
 {{figure:foundationcount}}
 
-下面的快捷入口在相同物理轨道中统计同一组观测。
-
-{{code:courseblockbh}}
+这里的 `geom_track_bar()` 也可以写作 `geom_track(geom = "bar")`，两种写法使用相同的起点和计数规则。
 
 
 | 几何 | 默认 Stat | 输入含义 |
@@ -58,6 +68,8 @@
 {{figure:comparetracktwo}}
 {{code:comparetrackorder}}
 {{figure:comparetrackorder}}
+
+跨图比较同一测量值时，先用 [shared_track_limits()](../../man/shared_track_limits.Rd) 从两个图取得共同范围，再把该范围传给两边的轨道标度。
 
 <a id="window-policy"></a>
 

@@ -90,6 +90,8 @@ def report():
         no_scientific_image_inversion=not bool(re.search(r'filter\s*:[^;}]*invert\s*\(', css, re.I)),
         reduced_motion_rule='prefers-reduced-motion:reduce' in css.replace(' ', ''),
         visible_focus_rule=':focus-visible' in css,
+        current_navigation_labeled_visually=all(selector in css for selector in (
+            '.navbar .nav-link[aria-current]', '.manual-section-pages a[aria-current=page]')),
         no_external_font_or_stylesheet_import=not bool(re.search(r'@import|@font-face|https?://', css, re.I)),
         reading_width_separate_from_wide_content='--content-reading' in css and '--content-wide' in css,
         legacy_palette_removed=not bool(re.search(r'--(?:accent|ink|body-ink|paper|canvas|gg-soft|gg-muted)\s*:', css)))

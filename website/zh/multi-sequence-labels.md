@@ -1,6 +1,5 @@
 {{code:courseblockah}}
 
-{{prepare:frontbackbone,frontlinks,frontribbon,frontgenes,frontfeature}}
 
 序列名用来识别整条骨架，基因名用来识别一个区间。两个标签层可以分别调整。
 

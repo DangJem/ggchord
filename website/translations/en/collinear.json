@@ -1,5 +1,5 @@
 {
-  "source_sha256": "858dcd918998a13bf70ca91ca698815903665d10944e53e6a69b52c463cbf209",
+  "source_sha256": "c5c51daf141d87e6e938e54d9f5e8772d8f5e5a4e8d21d161092a02e5a2b5ff1",
   "blocks": {
     "0": {
       "source_sha256": "0fae5352735f690fce064b0ce64c1163f3c582825b729f52c4c1126c524d680b",
@@ -42,9 +42,9 @@
       "translation": "## Prepare bundled data ⟦shared:0⟧\n"
     },
     "13": {
-      "source_sha256": "479afebbc5a912879cded5d0c04ddfc85c331cee0035fbaff613631e6fcfba49",
+      "source_sha256": "e68a8fcbce29b483b0845de94aeefc27f60a94126fe9d26f841b4d9a1c3cf42c",
       "status": "reviewed",
-      "translation": "Use bundled ⟦shared:0⟧ directly, without extracting files; original records remain traceable through the [input bundle](⟦shared:1⟧). The example requires dplyr and purrr.:\n"
+      "translation": "This example uses bundled data. Each link retains its original HSP endpoints.\n"
     },
     "14": {
       "source_sha256": "6c85fd28f0050579a8f925c33d14ee3c0ca89951788b7346399e329f62f91e3f",

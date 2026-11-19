@@ -76,7 +76,6 @@ Centre text is separate from labels along the backbone. `name = TRUE` and `lengt
 
 ## Switch to a single backbone {#style}
 
-{{prepare:firstcircle,firstfeatures}}
 
 {{code:frontcirclestyle}}
 

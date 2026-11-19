@@ -1,6 +1,5 @@
 {{code:courseblockah}}
 
-{{prepare:frontbackbone,frontlinks,frontribbon,frontgenes,frontfeature}}
 
 Sequence names identify entire backbones. Gene names identify individual intervals. Their label layers can be adjusted separately.
 

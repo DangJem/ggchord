@@ -41,6 +41,8 @@ ggsave("comparison.pdf", p_linear_base,
   width = output_width, height = output_height, units = "in")
 ```
 
+<a id="layout-results"></a>
+
 ## Choose an output by question {#layout-results}
 
 | Question | Call and result | Rows and units |

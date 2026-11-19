@@ -1,8 +1,7 @@
 {{code:courseblockaq}}
 
-{{prepare:setup}}
 
-The examples use bundled data and require no input download or extraction; optional dependencies are listed in each section. Original records remain traceable through the [real input bundle](https://github.com/DangJem/ggchord/archive/refs/heads/main.zip).
+Examples use bundled tables or small installed files. Each block identifies the packages it uses.
 
 <a id="characters"></a>
 
@@ -14,15 +13,11 @@ Bundled `sequence_detail_example$plasmid_source` already retains real characters
 
 ### Import your own existing alignment {#read-alignment}
 
-This subsection specifically demonstrates `read_aligned_fasta()`. Replace the path with an existing equal-length FASTA; the source example is available in the input bundle. Reading is skipped when the file is absent, and subsequent plots continue to use the bundled tables directly.
+The bundled cactus FASTA contains equal-length aligned records. Replace the file path to read your own alignment.
 
 ```r
-alignment_file <- "examples/alignment/opuntia-aligned.fasta"
-if (file.exists(alignment_file)) {
-  imported_alignment <- read_aligned_fasta(
-    alignment_file, "DNA", source_file = TRUE
-  )
-}
+alignment_file <- system.file("extdata", "tutorial", "opuntia-aligned.fasta", package = "ggchord", mustWork = TRUE)
+imported_alignment <- read_aligned_fasta(alignment_file, "DNA", source_file = TRUE)
 ```
 
 <a id="aligned-characters"></a>

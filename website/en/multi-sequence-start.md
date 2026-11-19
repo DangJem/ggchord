@@ -1,4 +1,4 @@
-Build backbones, a link, a feature and labels in one section using bundled source records. Run in order; this section uses ggchord and optional dplyr.
+Start with the lengths of four real sequences, then inspect the backbones, links and CDS annotations. Each code block can be copied independently.
 
 <a id="draw"></a>
 

@@ -1,20 +1,55 @@
 {
-  "source_sha256": "69e91a117c6034efe1bdd117765970dcfff3340ec90c34721a7dd767cbded250",
+  "source_sha256": "3b5b8f5d6744e6cbdac111bcafab87513df56c0a05440406f58709b1c3c9ae8e",
   "blocks": {
     "1": {
       "source_sha256": "f7d7b4ef75dc7e21cf66c30b1204f171498286ad977183c4cf57e062b79959c8",
       "status": "reviewed",
       "translation": "## API migration ⟦shared:0⟧\n"
     },
-    "4": {
-      "source_sha256": "680b1131aa8480ae90864107c1e59e96cdf0f681e507ae58415669e12f762bb8",
+    "2": {
+      "source_sha256": "c2d5d27114a2f7c84641664cde384ea1a2a02314d72c9868226b6aa26872904c",
       "status": "reviewed",
-      "translation": "## Old documentation addresses ⟦shared:0⟧\n"
+      "translation": "Since v0.50.0, sequence layout, feature lanes, tracks and guides use the revised API. Update existing scripts one layer at a time. Use ⟦shared:0⟧ for sequence order and orientation, ⟦shared:1⟧ for feature lanes and ⟦shared:2⟧ to share a band across quantitative layers.\n"
+    },
+    "3": {
+      "source_sha256": "1c591ff23510dd3cfaecfffefb1bb1e608506ff6cc017c8ffab23985d6acf82c",
+      "status": "reviewed",
+      "translation": "[Full migration table and replacement calls](⟦shared:0⟧) · [Browse functions by purpose](⟦shared:1⟧)\n"
     },
     "5": {
-      "source_sha256": "0bf96c5e0f72dec4b86b57817b8d7ec4230e1ad1937c2f00827b1f5e2277e6e2",
+      "source_sha256": "680b1131aa8480ae90864107c1e59e96cdf0f681e507ae58415669e12f762bb8",
       "status": "reviewed",
-      "translation": "Old pages and sections route to their matching sections, retaining figure IDs. Grouping public aliases under reference families does not remove runtime functions.\n"
+      "translation": "## Previous documentation addresses ⟦shared:0⟧\n"
+    },
+    "6": {
+      "source_sha256": "3261d0bad737fa25000c01d3dc16f54aff1ef7fff5d729d3b1b616aaa862bba4",
+      "status": "reviewed",
+      "translation": "Bookmarks for plotting entries, cases and figure anchors remain usable. Browse the [plotting guide](⟦shared:0⟧) by figure or [data and operations](⟦shared:1⟧) by task.\n"
+    },
+    "7": {
+      "source_sha256": "c21b844ff2804d5bfc40f592615cfe13bc5eaf554611a46d58a14571ed42a2ed",
+      "status": "reviewed",
+      "translation": "## Removed layers and positions ⟦shared:0⟧\n"
+    },
+    "8": {
+      "source_sha256": "0a50d641e2828a12cf68a7759c3ddf10cac2c83744acf42e8fcfa92994dfddc4",
+      "status": "reviewed",
+      "translation": "- Replace ⟦shared:0⟧ and ⟦shared:1⟧ with ⟦shared:2⟧ and ⟦shared:3⟧ respectively. Pass the same layer data. [Feature presets](⟦shared:4⟧)\n"
+    },
+    "9": {
+      "source_sha256": "ea973f5c524b7f34f4695b92c78e3b6138a2a9bd220f1d819a1c1de4e4b2c569",
+      "status": "reviewed",
+      "translation": "- Replace ⟦shared:0⟧ with ⟦shared:1⟧. Set the placement policy with ⟦shared:2⟧, control long labels with ⟦shared:3⟧, and select the feature layer with ⟦shared:4⟧ when needed. [Feature labels](⟦shared:5⟧)\n"
+    },
+    "10": {
+      "source_sha256": "26a64a2fdd234343dd8932175dea7c26092815c13a84454603da951308c92a7a",
+      "status": "reviewed",
+      "translation": "- Replace ⟦shared:0⟧ with ⟦shared:1⟧. For lanes, use ⟦shared:2⟧ to set the starting position and direction. [Offsets](⟦shared:3⟧) · [Feature lanes](⟦shared:4⟧)\n"
+    },
+    "11": {
+      "source_sha256": "6fa554d8512dd3615fc37c73d3138ff36870fd902ab578ab23ff5fe48701fc73",
+      "status": "reviewed",
+      "translation": "- Declare the physical band with ⟦shared:0⟧ and pass ⟦shared:1⟧ on each quantitative layer. The former ⟦shared:2⟧ placed the band. The layer’s ⟦shared:3⟧ now adjusts its data by stacking, dodging or nudging. [Track bands](⟦shared:4⟧) · [Quantitative layers](⟦shared:5⟧)\n"
     }
   }
 }

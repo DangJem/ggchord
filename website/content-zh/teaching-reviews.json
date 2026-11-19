@@ -3284,5 +3284,25 @@
     "modes_localized": {
       "zh": "使用局部定量轨道数值标度的视图"
     }
+  },
+  "shared_track_limits": {
+    "level": "L2",
+    "page": "tracks-statistics",
+    "anchor": "independent-bands",
+    "reason": "A common value range for tracks in independent plots",
+    "modes": "numeric source scales in independent plots",
+    "parameters": [
+      "...",
+      "tracks"
+    ],
+    "purpose": {
+      "zh": "为多个图的指定轨道计算共同数值范围"
+    },
+    "alias_of": "",
+    "case": "tracks",
+    "scope": "documented canonical use; not all combinations",
+    "modes_localized": {
+      "zh": "具有数值轨道的独立图，可按轨道 ID 选择范围"
+    }
   }
 }

@@ -4,8 +4,8 @@
     "file": "man/figures/showcasechord.png",
     "object": "p_show_chord",
     "caption": {
-      "zh": "弦图：保留现有旗舰",
-      "en": "Chord: retained flagship"
+      "zh": "四条序列的区间连接",
+      "en": "Interval links between four sequences"
     },
     "snippets": [
       "sequencepalette",
@@ -15,8 +15,8 @@
       "showcasechord",
       "showcasecollinear"
     ],
-    "source": "Retained flagship design, source code and display choices; PNG refreshed only for the Collinear-only cross-row style fix",
-    "page": "multi-sequence-views.html",
+    "source": "tools/documentation-plots.R",
+    "page": "multi-sequence-views.html#flagship-chord",
     "width": 12.0,
     "height": 10.0,
     "dpi": 144.0,
@@ -27,8 +27,8 @@
     "file": "man/figures/showcasecollinear.png",
     "object": "p_show_collinear",
     "caption": {
-      "zh": "共线性图：保留现有旗舰",
-      "en": "Collinear: retained flagship"
+      "zh": "四条序列的共线性与基因方向",
+      "en": "Collinearity and gene orientation across four sequences"
     },
     "snippets": [
       "sequencepalette",
@@ -38,19 +38,20 @@
       "showcasechord",
       "showcasecollinear"
     ],
-    "source": "Existing source-backed Collinear flagship; preparation, HSP/CDS inputs and palette retained; annotations resolved by the current layout engine.",
-    "page": "multi-sequence-views.html",
+    "source": "tools/documentation-plots.R",
+    "page": "multi-sequence-views.html#flagship-collinear",
     "width": 12.0,
     "height": 8.0,
-    "dpi": 144.0
+    "dpi": 144.0,
+    "sha256": "a0d6961cdae6c004ecb1327206e2f48fe755f3105e630398e057f23516dca4a3"
   },
   {
     "id": "flagradial",
     "file": "man/figures/flagradial.png",
     "object": "flag_radial",
     "caption": {
-      "zh": "同源旗舰：Radial",
-      "en": "Shared-source flagship: Radial"
+      "zh": "径向共线性与注释",
+      "en": "Radial synteny and annotations"
     },
     "snippets": [
       "sequencepalette",
@@ -61,19 +62,20 @@
       "showcasecollinear",
       "flagshipmulti"
     ],
-    "source": "Original 12 HSPs and 20 CDS; all source-name candidates, local post-projection label placement, restored Sequence guide; 12x10.5 inch canvas.",
-    "page": "multi-sequence-views.html",
+    "source": "tools/render-site-flagships.R",
+    "page": "multi-sequence-views.html#flagship-radial",
     "width": 12,
     "height": 10.5,
-    "dpi": 144
+    "dpi": 144,
+    "sha256": "7122363a4099d95300a196b028234a3c458aef3755346c73554b2d7e29a86645"
   },
   {
     "id": "flagsankey",
     "file": "man/figures/flagsankey.png",
     "object": "flag_sankey",
     "caption": {
-      "zh": "同源旗舰：Sankey",
-      "en": "Shared-source flagship: Sankey"
+      "zh": "两列序列间的区间连接",
+      "en": "Interval links between two columns of sequences"
     },
     "snippets": [
       "sequencepalette",
@@ -84,29 +86,31 @@
       "showcasecollinear",
       "flagshipmulti"
     ],
-    "source": "Original 10 HSPs and 16 CDS; complete mirrored annotation candidates, local post-projection label placement and restored Sequence guide; 10x16 inch canvas.",
-    "page": "multi-sequence-views.html",
+    "source": "tools/render-site-flagships.R",
+    "page": "multi-sequence-views.html#flagship-sankey",
     "width": 10,
     "height": 16,
-    "dpi": 144
+    "dpi": 144,
+    "sha256": "1c133d8ab9f53c6ad0539a29b95ddae9fa39d376ba8f74bac0a31f9a67850d70"
   },
   {
     "id": "flagdotplot",
     "file": "man/figures/flagdotplot.png",
     "object": "flag_dotplot",
     "caption": {
-      "zh": "四序列 HSP 双轴总览",
-      "en": "Four-sequence HSP matrix"
+      "zh": "四条序列的比对点图",
+      "en": "Alignment dotplot for four sequences"
     },
     "snippets": [
       "flagshipdata",
       "flagshipdot"
     ],
-    "source": "All 32 original HSPs; length-proportional query/subject cell boundaries and separate sequence-range headers/local numeric axes.",
-    "page": "dotplot.html",
+    "source": "tools/render-site-flagships.R",
+    "page": "dotplot-start.html#matrix",
     "width": 13,
     "height": 12,
-    "dpi": 144
+    "dpi": 144,
+    "sha256": "9604c0e99f8e1a21aa303a5772eb8de5e78841b15be0e4cfa82a203f84daa4c0"
   },
   {
     "id": "flagfusion",
@@ -114,34 +118,35 @@
     "object": "flag_fusion",
     "caption": {
       "zh": "全局关系、共线性与局部放大",
-      "en": "Global relationships, synteny and local magnification"
+      "en": "Overview, collinearity and local detail"
     },
     "snippets": [
       "flagshipdata",
       "fusionoverview",
       "flagshipfusion"
     ],
-    "source": "Original repository FASTA, GFF3 and BLAST HSP records; no biological inputs invented",
-    "page": "fusion.html",
+    "source": "tools/render-site-flagships.R",
+    "page": "fusion-layout.html#flagship",
     "width": 16,
     "height": 14,
-    "dpi": 120
+    "dpi": 120,
+    "sha256": "b64c141570b22484ae3141aa91edeebb66311cbcb14ba74b76a11b5293afebe2"
   },
   {
     "id": "flagcircular",
     "file": "man/figures/showcaseplasmid.png",
     "object": "p_show_plasmid",
     "caption": {
-      "zh": "pETDuet-1：完整密集旗舰",
-      "en": "pETDuet-1: complete dense flagship"
+      "zh": "pETDuet-1 的密集注释",
+      "en": "Dense annotations on pETDuet-1"
     },
     "snippets": [
       "docstyle",
       "showcaseplasmiddata",
       "showcaseplasmid"
     ],
-    "source": "Retained existing flagship; original code, image bytes and display choices unchanged",
-    "page": "circular-dense-case.html",
+    "source": "tools/documentation-plots.R",
+    "page": "circular-dense-case.html#complex",
     "width": 16.5,
     "height": 8.0,
     "dpi": 144.0,
@@ -150,222 +155,209 @@
   {
     "id": "completepsb",
     "replaces": "catalogpsb",
-    "file": "tools/long-term-audit/v0.27.0-exit-final-a-pSB1C3.png",
+    "file": "man/figures/completepsb.png",
     "object": "reference_pSB1C3",
     "caption": {
-      "zh": "pSB1C3：完整参考注释、引物与酶集合",
-      "en": "pSB1C3: complete reference annotations, primers and enzyme profile"
+      "zh": "pSB1C3 · 7 个特征，33 个酶切位置",
+      "en": "pSB1C3 · 7 features and 33 restriction positions"
     },
-    "source": "Existing source-preserving 10x8in PNG, verified by v0.27.0-normal-layout-verification.json; not claimed freshly redrawn",
-    "sha256": "41d877935e2c46869c23b95ceb4b1e385e4959cec7210651a7c4f26a82bd8597",
+    "source": "tools/website/render-handbook-art.R",
+    "sha256": "4cb85e25cd6bb0128ce2a8f4462f805428824ace830b78e1ae176235ee903192",
     "page": "plasmid-catalog.html#catalogpsb",
     "width": 10,
     "height": 8,
-    "dpi": 110,
-    "source_labels": 47
+    "dpi": 110
   },
   {
     "id": "completepuc",
     "replaces": "catalogpuc",
-    "file": "tools/long-term-audit/v0.27.0-compact-final-pUC19.png",
+    "file": "man/figures/completepuc.png",
     "object": "reference_pUC19",
     "caption": {
-      "zh": "pUC19：完整参考注释、引物与酶集合",
-      "en": "pUC19: complete reference annotations, primers and enzyme profile"
+      "zh": "pUC19 · 9 个特征，33 个酶切位置",
+      "en": "pUC19 · 9 features and 33 restriction positions"
     },
-    "source": "Existing source-preserving 10x8in PNG, verified by v0.27.0-normal-layout-verification.json; not claimed freshly redrawn",
-    "sha256": "d8a1bc110476fb3989dbee4d0f40e471727de61cb0507616b8f8e1fe82b0026d",
+    "source": "tools/website/render-handbook-art.R",
+    "sha256": "4d4e64c818e899f8d3eef22301cbd292f258a728557d26e6549196bf8c9a2700",
     "page": "plasmid-catalog.html#catalogpuc",
     "width": 10,
     "height": 8,
-    "dpi": 110,
-    "source_labels": 48
+    "dpi": 110
   },
   {
     "id": "completepbr",
     "replaces": "catalogpbr",
-    "file": "tools/long-term-audit/v0.27.0-compact-final-pBR322.png",
+    "file": "man/figures/completepbr.png",
     "object": "reference_pBR322",
     "caption": {
-      "zh": "pBR322：完整参考注释、引物与酶集合",
-      "en": "pBR322: complete reference annotations, primers and enzyme profile"
+      "zh": "pBR322 · 6 个特征，42 个酶切位置",
+      "en": "pBR322 · 6 features and 42 restriction positions"
     },
-    "source": "Existing source-preserving 10x8in PNG, verified by v0.27.0-normal-layout-verification.json; not claimed freshly redrawn",
-    "sha256": "e57f81acc123d49e6cfe9e6856bd987b078ee1008879897aea1172b0c2d7c4b9",
+    "source": "tools/website/render-handbook-art.R",
+    "sha256": "9c83a69e1d06ed31a056bbc08e05a7c7c3af3efc796ddbd369ef42048bb3c6a1",
     "page": "plasmid-catalog.html#catalogpbr",
     "width": 10,
     "height": 8,
-    "dpi": 110,
-    "source_labels": 53
+    "dpi": 110
   },
   {
     "id": "completeblue",
     "replaces": "catalogblue",
-    "file": "tools/long-term-audit/v0.27.0-compact-final-pBluescript_II_SK_plus.png",
+    "file": "man/figures/completeblue.png",
     "object": "reference_pBluescript_II_SK_plus",
     "caption": {
-      "zh": "pBluescript_II_SK_plus：完整参考注释、引物与酶集合",
-      "en": "pBluescript_II_SK_plus: complete reference annotations, primers and enzyme profile"
+      "zh": "pBluescript II SK(+) · 14 个特征，42 个酶切位置",
+      "en": "pBluescript II SK(+) · 14 features and 42 restriction positions"
     },
-    "source": "Existing source-preserving 10x8in PNG, verified by v0.27.0-normal-layout-verification.json; not claimed freshly redrawn",
-    "sha256": "a06cdb74f4c16b1cb24f1846302d50ad3908da8260d0182c93ff8c3c469b3d0c",
+    "source": "tools/website/render-handbook-art.R",
+    "sha256": "55fc0da01f04181e2e5835a98620d139ab830f6fb87378c2c07eae649f1aa48e",
     "page": "plasmid-catalog.html#catalogblue",
     "width": 10,
     "height": 8,
-    "dpi": 110,
-    "source_labels": 62
+    "dpi": 110
   },
   {
     "id": "completepet",
     "replaces": "catalogpet",
-    "file": "tools/long-term-audit/v0.27.0-endpoint-slot-pET_28a_plus.png",
+    "file": "man/figures/completepet.png",
     "object": "reference_pET_28a_plus",
     "caption": {
-      "zh": "pET_28a_plus：完整参考注释、引物与酶集合",
-      "en": "pET_28a_plus: complete reference annotations, primers and enzyme profile"
+      "zh": "pET-28a(+) · 16 个特征，45 个酶切位置",
+      "en": "pET-28a(+) · 16 features and 45 restriction positions"
     },
-    "source": "Existing source-preserving 10x8in PNG, verified by v0.27.0-normal-layout-verification.json; not claimed freshly redrawn",
-    "sha256": "5798ef843f179622aa9e5abc001fa578b04a91e12b11ab79d2456afa4ff46251",
+    "source": "tools/website/render-handbook-art.R",
+    "sha256": "4b165fbf9ada6c6480ef589a8ae3aa8d59b5bc4ca022e108cfd618b89a872b12",
     "page": "plasmid-catalog.html#catalogpet",
     "width": 10,
     "height": 8,
-    "dpi": 110,
-    "source_labels": 67
+    "dpi": 110
   },
   {
     "id": "completeduet",
     "replaces": "catalogduet",
-    "file": "tools/long-term-audit/v0.27.0-exit-final-a-pETDuet_1.png",
+    "file": "man/figures/completeduet.png",
     "object": "reference_pETDuet_1",
     "caption": {
-      "zh": "pETDuet_1：完整参考注释、引物与酶集合",
-      "en": "pETDuet_1: complete reference annotations, primers and enzyme profile"
+      "zh": "pETDuet-1 · 20 个特征，54 个酶切位置",
+      "en": "pETDuet-1 · 20 features and 54 restriction positions"
     },
-    "source": "Existing source-preserving 10x8in PNG, verified by v0.27.0-normal-layout-verification.json; not claimed freshly redrawn",
-    "sha256": "2ecf6ccccc3053321ad699937abdd8649f7552753e31d464c1ea96cf7010902b",
+    "source": "tools/website/render-handbook-art.R",
+    "sha256": "d3e7897b2f84c1ad549f68dd5f39abdd695dae486dee1e73c365cf85f8958ebf",
     "page": "plasmid-catalog.html#catalogduet",
     "width": 10,
     "height": 8,
-    "dpi": 110,
-    "source_labels": 83
+    "dpi": 110
   },
   {
     "id": "completedonr",
     "replaces": "catalogdonr",
-    "file": "tools/long-term-audit/v0.27.0-compact-final-pDONR221.png",
+    "file": "man/figures/completedonr.png",
     "object": "reference_pDONR221",
     "caption": {
-      "zh": "pDONR221：完整参考注释、引物与酶集合",
-      "en": "pDONR221: complete reference annotations, primers and enzyme profile"
+      "zh": "pDONR221 · 11 个特征，42 个酶切位置",
+      "en": "pDONR221 · 11 features and 42 restriction positions"
     },
-    "source": "Existing source-preserving 10x8in PNG, verified by v0.27.0-normal-layout-verification.json; not claimed freshly redrawn",
-    "sha256": "0db9c40e11d01b37df1c196aba708f6a5b67df323acbdb3537ccd54b639fb8b6",
+    "source": "tools/website/render-handbook-art.R",
+    "sha256": "4bd7baae8dce262709653d6c969b14260d3dfc0fab344f0d848ccbd47ff5b6ca",
     "page": "plasmid-catalog.html#catalogdonr",
     "width": 10,
     "height": 8,
-    "dpi": 110,
-    "source_labels": 58
+    "dpi": 110
   },
   {
     "id": "completepcdna",
     "replaces": "catalogpcdna",
-    "file": "tools/long-term-audit/v0.27.0-compact-final-pcDNA3_1_plus.png",
+    "file": "man/figures/completepcdna.png",
     "object": "reference_pcDNA3_1_plus",
     "caption": {
-      "zh": "pcDNA3_1_plus：完整参考注释、引物与酶集合",
-      "en": "pcDNA3_1_plus: complete reference annotations, primers and enzyme profile"
+      "zh": "pcDNA3.1(+) · 13 个特征，47 个酶切位置",
+      "en": "pcDNA3.1(+) · 13 features and 47 restriction positions"
     },
-    "source": "Existing source-preserving 10x8in PNG, verified by v0.27.0-normal-layout-verification.json; not claimed freshly redrawn",
-    "sha256": "86d3dd192dd466f34ba24667e9d7430648dce659db94afd6633fe6d4d98b7a50",
+    "source": "tools/website/render-handbook-art.R",
+    "sha256": "5b6d66c0e2193c009e7ae77b5285346c1a80831295f2518cd2eba1c04b8a1539",
     "page": "plasmid-catalog.html#catalogpcdna",
     "width": 10,
     "height": 8,
-    "dpi": 110,
-    "source_labels": 64
+    "dpi": 110
   },
   {
     "id": "completetre",
     "replaces": "catalogtre",
-    "file": "tools/long-term-audit/v0.27.0-exit-final-a-pTRE_Tight_BI.png",
+    "file": "man/figures/completetre.png",
     "object": "reference_pTRE_Tight_BI",
     "caption": {
-      "zh": "pTRE_Tight_BI：完整参考注释、引物与酶集合",
-      "en": "pTRE_Tight_BI: complete reference annotations, primers and enzyme profile"
+      "zh": "pTRE-Tight-BI · 15 个特征，44 个酶切位置",
+      "en": "pTRE-Tight-BI · 15 features and 44 restriction positions"
     },
-    "source": "Existing source-preserving 10x8in PNG, verified by v0.27.0-normal-layout-verification.json; not claimed freshly redrawn",
-    "sha256": "060ad2927d82f86ee8c6d3b2776800426314ad169a4d6f8c65d28c1d977b561f",
+    "source": "tools/website/render-handbook-art.R",
+    "sha256": "53b323f5c271bf41d5f69f81c4452d0c4a9c82979f430b92303bf8c44ce67af8",
     "page": "plasmid-catalog.html#catalogtre",
     "width": 10,
     "height": 8,
-    "dpi": 110,
-    "source_labels": 62
+    "dpi": 110
   },
   {
     "id": "completetripz",
     "replaces": "catalogtripz",
-    "file": "tools/long-term-audit/v0.27.0-compact-final-pTRIPZ.png",
+    "file": "man/figures/completetripz.png",
     "object": "reference_pTRIPZ",
     "caption": {
-      "zh": "pTRIPZ：完整参考注释、引物与酶集合",
-      "en": "pTRIPZ: complete reference annotations, primers and enzyme profile"
+      "zh": "pTRIPZ · 33 个特征，35 个酶切位置",
+      "en": "pTRIPZ · 33 features and 35 restriction positions"
     },
-    "source": "Existing source-preserving 10x8in PNG, verified by v0.27.0-normal-layout-verification.json; not claimed freshly redrawn",
-    "sha256": "0cb1a447024cc85119306e02a3488ddc925cc442ad7b6213046abd46afc9df84",
+    "source": "tools/website/render-handbook-art.R",
+    "sha256": "fbf821ef12176d7b5396fafcedfad6e121cbfa4828334249e339a182c57d1e81",
     "page": "plasmid-catalog.html#catalogtripz",
     "width": 10,
     "height": 8,
-    "dpi": 110,
-    "source_labels": 71
+    "dpi": 110
   },
   {
     "id": "completecambia",
     "replaces": "catalogcambia",
-    "file": "tools/long-term-audit/v0.27.0-endpoint-slot-pCAMBIA1300.png",
+    "file": "man/figures/completecambia.png",
     "object": "reference_pCAMBIA1300",
     "caption": {
-      "zh": "pCAMBIA1300：完整参考注释、引物与酶集合",
-      "en": "pCAMBIA1300: complete reference annotations, primers and enzyme profile"
+      "zh": "pCAMBIA1300 · 17 个特征，37 个酶切位置",
+      "en": "pCAMBIA1300 · 17 features and 37 restriction positions"
     },
-    "source": "Existing source-preserving 10x8in PNG, verified by v0.27.0-normal-layout-verification.json; not claimed freshly redrawn",
-    "sha256": "cc59bd8e5bce8ba591a0699b5708c054baa966afeb96b43bea7361c9ae3373e4",
+    "source": "tools/website/render-handbook-art.R",
+    "sha256": "147bfaa4477707dd2d4504af951b956a1b909d2a9875bf0f532dc8464593677f",
     "page": "plasmid-catalog.html#catalogcambia",
     "width": 10,
     "height": 8,
-    "dpi": 110,
-    "source_labels": 59
+    "dpi": 110
   },
   {
     "id": "completeearley",
     "replaces": "catalogearley",
-    "file": "tools/long-term-audit/v0.27.0-compact-final-pEarleyGate_201.png",
+    "file": "man/figures/completeearley.png",
     "object": "reference_pEarleyGate_201",
     "caption": {
-      "zh": "pEarleyGate_201：完整参考注释、引物与酶集合",
-      "en": "pEarleyGate_201: complete reference annotations, primers and enzyme profile"
+      "zh": "pEarleyGate 201 · 21 个特征，37 个酶切位置",
+      "en": "pEarleyGate 201 · 21 features and 37 restriction positions"
     },
-    "source": "Existing source-preserving 10x8in PNG, verified by v0.27.0-normal-layout-verification.json; not claimed freshly redrawn",
-    "sha256": "e7f4141291aff84e55f773bf360cbcea19aec487a35b0507640a670616540db6",
+    "source": "tools/website/render-handbook-art.R",
+    "sha256": "e1ddfd15c6e01569fcd260cca15db519843880ce9ab8969efec67734b6c84f30",
     "page": "plasmid-catalog.html#catalogearley",
     "width": 10,
     "height": 8,
-    "dpi": 110,
-    "source_labels": 60
+    "dpi": 110
   },
   {
     "id": "completecas",
     "replaces": "catalogcas",
-    "file": "tools/long-term-audit/v0.27.0-exit-final-a-pSpCas9_BB_2A_GFP_PX458.png",
+    "file": "man/figures/completecas.png",
     "object": "reference_pSpCas9_BB_2A_GFP_PX458",
     "caption": {
-      "zh": "pSpCas9_BB_2A_GFP_PX458：完整参考注释、引物与酶集合",
-      "en": "pSpCas9_BB_2A_GFP_PX458: complete reference annotations, primers and enzyme profile"
+      "zh": "pSpCas9(BB)-2A-GFP (PX458) · 19 个特征，4 个酶切位置",
+      "en": "pSpCas9(BB)-2A-GFP (PX458) · 19 features and 4 restriction positions"
     },
-    "source": "Existing source-preserving 10x8in PNG, verified by v0.27.0-normal-layout-verification.json; not claimed freshly redrawn",
-    "sha256": "0dfa016feac2e366dfc1fb09125d3dfe27c5c6df4092c7115d48739a0e6b528b",
+    "source": "tools/website/render-handbook-art.R",
+    "sha256": "7f239d3d4a6703ded45845a9c6bad9d09945264f650a06a9d11228cad4b9f812",
     "page": "plasmid-catalog.html#catalogcas",
     "width": 10,
     "height": 8,
-    "dpi": 110,
-    "source_labels": 23
+    "dpi": 110
   }
 ]

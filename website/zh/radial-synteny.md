@@ -22,7 +22,6 @@ N=2每条原始HSP只绘一次，N=1报错。反向HSP保留完整、有顺序�
 新Radial采用闭区间边界`[min-1,max]`，所以单位置HSP仍有宽度；轴位置仍是一基。
 已有视图继续采用各自文档约定。中心孔只是显示留白，不删除序列；序列名位于辐条外端。
 
-{{prepare:coursecomparison}}
 
 {{code:courseradialangle}}
 

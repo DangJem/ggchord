@@ -494,5 +494,21 @@
       "en": "100 observed bases displayed as two lines of 50 columns"
     },
     "source": "First 100 observed bases from the unchanged MT108731.1 FASTA, verified against its complete source string; display coordinates only."
+  },
+  {
+    "id": "pucfeatures",
+    "object": "p_pucfeatures",
+    "snippets": [
+      "pucfeatures"
+    ],
+    "width": 7,
+    "height": 6,
+    "dpi": 110,
+    "file": "man/figures/pucfeatures.png",
+    "caption": {
+      "zh": "pUC19 骨架与九条参考特征",
+      "en": "pUC19 backbone and nine reference features"
+    },
+    "source": "All nine bundled reference features and the full pUC19 length."
   }
 ]

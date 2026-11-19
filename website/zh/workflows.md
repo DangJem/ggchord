@@ -27,7 +27,7 @@
 
 ## 完整来源实例 {#examples}
 
-[从原始 FASTA/GFF3/BLAST 到序列比较图](real-data.md)保留文件路径、显示筛选、输入与结果。原始文件可从[输入归档](formats.md)下载；下载脚本在解压后、以包含 `examples/` 的目录为工作目录运行。
+[四序列比较](real-data.md)展示原始来源、筛选条件和绘图结果。
 
 ## 按所需产物选择操作 {#choose-operation}
 

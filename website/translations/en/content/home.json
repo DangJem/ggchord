@@ -1,50 +1,45 @@
 {
-  "source_sha256": "7eed79c682750562ca030c40569c5b2bad8daceb440c5acef6592e51c9106f68",
+  "source_sha256": "c8bc1a9482c414a6fb9c254c55ace223c35aa00e32f5ba00f8761df9418465a0",
   "strings": {
-    "hero/eyebrow": {
-      "source_sha256": "e35094efa05f697f0df6b248d518549b4e7e77ff84ade7bc66bc581c4b7e3b24",
-      "status": "reviewed",
-      "translation": "ggchord · R / ggplot2"
-    },
     "hero/title": {
-      "source_sha256": "6d708da7e3c018afa55f757a638f155bbd6999a6c808bf3aa982d48d120ca5ed",
+      "source_sha256": "8bcdfcf2981ccca55a24f20d7a2bfa520ab2e25cb538da7c2e4428a9102115d8",
       "status": "reviewed",
-      "translation": "Sequence plots built with consistent layer grammar."
+      "translation": "Plot genomes and sequence relationships with ggplot2"
     },
     "hero/description": {
-      "source_sha256": "7b1bf60c6317f38c73a90c3411262f61cab9dc3b7aeafb7db5e4dac7fcdc1651",
+      "source_sha256": "02d7e51f8bc66e82e5d4d72ece3040a8a6b34a59dffd577bb85f67d46f823c9d",
       "status": "reviewed",
-      "translation": "Compare sequences, annotate circular genomes, inspect alignments, and connect independent views in one figure."
+      "translation": "Compare sequences, annotate circular maps, inspect local alignments or connect multiple plots in one view."
     },
     "capabilities/0/title": {
-      "source_sha256": "5d8d0ef686b0e017907014798f092e245061b34cfa3cc0692ab4357003817dea",
+      "source_sha256": "6786aadb96b18f1aa20d7ce625f4664eb20357f92113efc1e70dc055e2700b20",
       "status": "reviewed",
-      "translation": "Switch views"
+      "translation": "Plotting guide"
     },
     "capabilities/0/description": {
-      "source_sha256": "39d44362a21f2b7942f53fcfff372eed8a6798e42f7fd3495c7289ceda481f81",
+      "source_sha256": "e67a3ba4b7a2f3d1e8eb3b2f4c13fa0f054fb9a3225b48466fa5457ce74f9095",
       "status": "reviewed",
-      "translation": "Reuse data and layers to inspect relationships from different perspectives."
+      "translation": "Find a plot type or learn how to adjust a layer."
     },
     "capabilities/1/title": {
-      "source_sha256": "5f40e5e947d70c34e604d81bf7ca69e61596910617b62c5991a38df79f8a39c0",
+      "source_sha256": "4db455e1da936d60bc13c26d2bc2b1681d2b64ab820cc8b7082e585a1f4fb61c",
       "status": "reviewed",
-      "translation": "Flexible parameter formats"
+      "translation": "Data and workflows"
     },
     "capabilities/1/description": {
-      "source_sha256": "52edb1ede28d0c0c2f49ab050fea5aef643a24928ca3d528367d742f0e5c5086",
+      "source_sha256": "478bf6c694ed835b528c3ce84c967d33591e384b0c2d9185bfa0d06f2fe2e8ba",
       "status": "reviewed",
-      "translation": "Refine shared settings into local changes by sequence or strand."
+      "translation": "Read files, transform coordinates and check output."
     },
     "capabilities/2/title": {
-      "source_sha256": "92d769d2de67234a68c269c9403dd5a8283b0fd305a4474f5d473ee88a475658",
+      "source_sha256": "63e51325a41ffa3e76da38b0e104e00727207b6b3251c38524908b16181a7cb4",
       "status": "reviewed",
-      "translation": "Composition and output"
+      "translation": "API reference"
     },
     "capabilities/2/description": {
-      "source_sha256": "c53fff3abdec87873f33a3c958aeef7a9551a9abc7ecb8b0e1287357cd8b3c2f",
+      "source_sha256": "e3520ac126664d92de5ae8dfb2c8701e2befecd3b4dd443603f054c2e67a6b1a",
       "status": "reviewed",
-      "translation": "Connect independent panels, then preview and save at the intended size."
+      "translation": "Look up function usage, arguments and return values."
     },
     "modules/0/title": {
       "source_sha256": "6ee7675f0e2e418db2b51921533d7672ffd4e549ba0232464efbb17c5f405367",
@@ -69,7 +64,7 @@
     "modules/2/title": {
       "source_sha256": "634b698059b9449b58c5f0e0a77517837e1c64840a17d06f3d0480dd4ea4dad7",
       "status": "reviewed",
-      "translation": "Sequence alignment Dotplot"
+      "translation": "Alignment dot plots"
     },
     "modules/2/purpose": {
       "source_sha256": "8baf42ebbb04be4748fa184452875e22001d72e86d8522fd2c9a7c7a4deb718d",

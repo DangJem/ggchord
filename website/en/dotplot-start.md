@@ -8,11 +8,8 @@ Start with observed HSPs from one sequence pair, then extend to a four-sequence 
 
 ## Plot original HSP endpoints {#dotplot}
 
-Bundled `sequence_detail_example$paf` retains the 11 observed HSPs for the EMALE pair; sequence lengths declared by the source file define both axes.
-The table is already normalized to one-based coordinates; reverse-alignment target endpoints remain descending.
-Original files and provenance are available under [input downloads](formats.md). Preparation requires optional `dplyr`.
+The bundled PAF table retains 11 observed HSPs for one pair. The recorded full lengths determine the axes. Normalized reverse target intervals retain descending coordinates.
 
-{{code:dotplotdata}}
 
 Each line runs from `(qstart, sstart)` to `(qend, send)`. `geom_seq()` is not
 required. Use `link_*` mappings and scales for colour, alpha, width and type.
@@ -23,7 +20,7 @@ user scale overrides it.
 
 {{figure:viewdotplot}}
 
-The legacy constructor may warn about descending endpoints in these valid reverse HSPs. Keep the normalized ordering; sorting each interval would erase the displayed inversion.
+Keep the descending endpoints of reverse HSPs. Sorting each interval would change the direction of the original segment.
 
 `x_seqs` and `y_seqs` independently select/order accessions. `gap` is display
 spacing in native bp/aa, not omitted source sequence. Axis directions accept
@@ -50,9 +47,8 @@ The following code directly uses bundled `flagship_dotplot_example`, with counts
 
 Column headers identify each query sequence and its complete 1–length range; row headers identify subject sequences and ranges. Bottom and right ticks show local positions within each sequence. Follow a column and row to locate a pair. Each outlined rectangle retains widths and heights proportional to the actual lengths. Pale backgrounds distinguish cells and do not encode similarity; spaces between rectangles are display gaps.
 
-Each of the six unordered sequence pairs supplies only one query→subject direction, with no swapped records or self-alignments. HSPs therefore occupy one half of the matrix. Cells identify record counts or missing input. This is not a rendering omission, and an empty counterpart does not establish absent homology. The plot does not mirror records, add a diagonal or run new alignments. This preparation also uses optional tidyr.
+The input records one query-to-subject direction per unordered pair. An empty cell has no input records. Axis labels, cell boundaries and counts use the bundled data.
 
-{{prepare:dotplotmatrixdata}}
 
 {{code:flagshipdot}}
 
@@ -89,4 +85,4 @@ map_ggchord_position(
 
 ## Boundaries and next steps {#support}
 
-Backbone gene/feature/track/ribbon layers, facets and Fusion endpoints are unsupported. To inspect gaps or mismatches, provide actual aligned characters; see [the alignment workflow](aligned-sequences.md). Example: trace four endpoints of one segment and explain slope and colour separately.
+To facet by directed sequence pair, use ggplot2 row and column facets for the two endpoint IDs. For gap or mismatch information at individual positions, see [character alignments](aligned-sequences.md).

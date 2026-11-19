@@ -10,21 +10,17 @@ alias_topics<-unlist(lapply(topic_files,function(path) {
   function(x) paste(unlist(x),collapse=''),'')
  setNames(rep(sub('\\.Rd$','',basename(path)),length(aliases)),aliases)
 }))
+source('tools/website/reference.R')
 navigation <- jsonlite::fromJSON('website/navigation.json', simplifyVector=FALSE)
 page_index <- jsonlite::fromJSON('website/pages.json', simplifyVector=FALSE)
+page_migrations <- jsonlite::fromJSON('website/page-migrations.json', simplifyVector=FALSE)
 page_record <- function(key) {
   found <- Filter(function(x) identical(x$slug,key),page_index)
   if(length(found)) found[[1]] else NULL
 }
 figure_lessons <- jsonlite::fromJSON('website/figure-lessons.json')
-module_motifs <- jsonlite::fromJSON('website/module-motifs.json')
 manual_sections <- jsonlite::fromJSON('website/manual-sections.json', simplifyVector=FALSE)
-section_numbers <- unlist(lapply(navigation, function(group) {
-  keys <- unlist(group$pages)
-  codes <- paste0(group$number, '.', seq_along(keys)-1L)
-  codes[keys == group$landing] <- as.character(group$number)
-  setNames(codes, keys)
-}), use.names = TRUE)
+navigation <- setNames(navigation, vapply(navigation, function(group) group$id, ''))
 for(lang in c('en','zh')) {
  root<-file.path('.site',lang)
  for(path in list.files(root,'\\.html$',recursive=TRUE,full.names=TRUE)) {
@@ -33,138 +29,97 @@ for(lang in c('en','zh')) {
   base<-paste0(paste(rep('../',deep+1L),collapse=''),'assets/')
   partner<-paste0(paste(rep('../',deep+1L),collapse=''),if(lang=='en')'zh/' else 'en/',relative)
   doc<-xml2::read_html(path)
+  if(relative=='404.html') {
+    locale_url <- paste0('https://dangjem.github.io/ggchord/',lang,'/')
+    for(attribute in c('href','src')) {
+      nodes <- xml2::xml_find_all(doc,paste0('//*[@',attribute,']'))
+      links <- xml2::xml_attr(nodes,attribute)
+      local <- startsWith(links,locale_url)
+      xml2::xml_set_attr(nodes[local],attribute,substring(links[local],nchar(locale_url)+1L))
+    }
+  }
   xml2::xml_set_attr(xml2::xml_find_first(doc,'//html'),'lang',if(lang=='zh')'zh-Hans' else 'en')
   og<-xml2::xml_find_first(doc,'//meta[@property="og:image"]')
   if(!inherits(og,'xml_missing')) xml2::xml_set_attr(og,'content','https://dangjem.github.io/ggchord/assets/logo.png')
-  # Native dropdown IDs derive from translated text; keep paired URLs/ARIA stable.
-  for(menu in xml2::xml_find_all(doc,'//*[@data-bs-toggle="dropdown"]')) {
-    title <- trimws(xml2::xml_text(menu))
-    id <- if(title %in% c('开始使用', 'Get started')) 'site-start'
-      else if(title %in% c('绘图模块', 'Plotting modules')) 'site-visualizations'
-      else if(title %in% c('通用技巧', 'Shared techniques')) 'site-techniques'
-      else if(title %in% c('数据与工作流', 'Data & workflows')) 'site-data' else NULL
-    if(is.null(id)) next
-    old_id <- xml2::xml_attr(menu,'id')
-    xml2::xml_set_attr(menu,'id',id)
-    labelled <- xml2::xml_find_all(xml2::xml_parent(menu),'.//*[@aria-labelledby]')
-    for(node in labelled) if(identical(xml2::xml_attr(node,'aria-labelledby'),old_id))
-      xml2::xml_set_attr(node,'aria-labelledby',id)
-  }
   for(navbar in xml2::xml_find_all(doc,'//nav[contains(@class,"navbar-expand-lg")]'))
     xml2::xml_set_attr(navbar,'class',sub('navbar-expand-lg','navbar-expand-xl',xml2::xml_attr(navbar,'class'),fixed=TRUE))
   main<-xml2::xml_find_first(doc,'//main')
   xml2::xml_set_attr(main,'tabindex','-1')
   slug <- sub('\\.html$','',basename(relative))
+  if(startsWith(relative, 'reference/')) add_reference_navigation(doc, main, slug, lang)
   if(slug=='LICENSE') {
     label <- if(lang=='zh') 'MIT 许可' else 'MIT License'
     xml2::xml_set_text(xml2::xml_find_first(main,'.//h1'),label)
     xml2::xml_set_text(xml2::xml_find_first(doc,'//title'),paste(label,'• ggchord'))
   }
   if(slug=='404' && lang=='zh') for(node in xml2::xml_find_all(main,'.//p'))
-    xml2::xml_set_text(node,'未找到页面。请从首页、功能模块或搜索找回所需内容。')
+    xml2::xml_set_text(node,'未找到页面。请从首页、绘图指南或搜索找回所需内容。')
   xml2::xml_set_attr(xml2::xml_find_first(doc,'//body'),'data-page',if(startsWith(relative,'reference/')) 'reference' else slug)
   if(slug=='index' && length(xml2::xml_find_all(main,'.//h1'))>1L) xml2::xml_remove(xml2::xml_find_first(main,'./h1'))
   layout <- xml2::xml_parent(main)
   xml2::xml_set_attr(layout,'class',paste(xml2::xml_attr(layout,'class'),'doc-layout'))
   prefix <- paste(rep('../',deep),collapse='')
   current_page <- if(startsWith(relative, 'reference/')) 'reference' else slug
-  page_link <- function(key, label = NULL) {
-    page <- Filter(function(x) identical(x$slug, key), page_index)[[1]]
-    target <- page$canonical_path
-    if(is.null(label)) label <- page$title[[lang]]
-    paste0('<a ', if(key == current_page) 'aria-current="page" ' else '',
-      'href="', prefix, target, '">', htmltools::htmlEscape(label), '</a>')
-  }
-  selected_groups <- Filter(function(group) current_page %in% group$pages, navigation)
-  if(!length(selected_groups)) selected_groups <- Filter(function(group) group$id=='information',navigation)
-  chapter_links <- paste(vapply(selected_groups, function(group) {
-    sections <- manual_sections[[group$id]]
-    links <- paste(vapply(sections, function(section) {
-      items <- paste(vapply(unlist(section$pages), function(key) {
-        if(key == group$landing) return('')
-        link <- page_link(key)
-        numbered <- sub('>',paste0('><span class="chapter-number">',section_numbers[[key]],'</span>'),link,fixed=TRUE)
-        paste0('<li>',numbered,'</li>')
-      },''),collapse='')
-      if(!nzchar(items)) return('')
-      paste0('<div class="manual-section"><span class="manual-section-title">',
-        htmltools::htmlEscape(section$title[[lang]]),'</span><ul class="manual-section-pages">',items,'</ul></div>')
-    },''),collapse='')
-    paste0('<a class="module-home" href="',prefix,page_record(group$landing)$canonical_path,'">',
-      htmltools::htmlEscape(group$title[[lang]]),'</a>',links,
-      '<a class="other-courses" href="',prefix,'modes.html#modules">',
-      if(lang=='zh')'四大模块与基本概念 →' else 'Four modules and concepts →','</a>')
-  }, ''), collapse = '')
-  nav_fragment <- function(html) xml2::xml_find_first(xml2::read_html(paste0('<html><body>',html,'</body></html>')),'//body/*')
-  xml2::xml_add_sibling(main,nav_fragment(paste0('<nav class="chapter-nav" aria-label="',
-    if(lang=='zh')'章节与参考' else 'Chapters and reference','"><p class="navigation-title">',
-    if(lang=='zh')'章节与参考' else 'Chapters and reference','</p>',chapter_links,'</nav>')),.where='before')
-  xml2::xml_add_child(main,nav_fragment(paste0('<details class="chapter-drawer"><summary>',
-    if(lang=='zh')'章节与参考' else 'Chapters and reference','</summary><nav>',chapter_links,'</nav></details>')),.where=0L)
-
-  current_group <- Filter(function(group) current_page %in% group$pages, navigation)
-  group <- selected_groups[[1]]
   record <- page_record(current_page)
-  module <- if(!is.null(record)) record$module else 'information'
+  is_known_page <- !is.null(record)
+  group <- if(is_known_page) navigation[[record$module]] else navigation$information
+  module <- group$id
+  primary <- if(is.null(group$parent)) group else navigation[[group$parent]]
   xml2::xml_set_attr(xml2::xml_find_first(doc,'//body'),'data-module',module)
-  # The same canonical group order supplies section numbers, previous and next.
-  # Alias fragments are resolved before choosing a page; they cannot add steps.
-  canonical_page <- function(key) {
-    seen <- character()
-    repeat {
-      if(key %in% seen) stop('Navigation alias cycle: ', key)
-      seen <- c(seen,key)
-      item <- page_record(key)
-      if(is.null(item)) stop('Unknown navigation page: ',key)
-      if(!identical(item$kind,'alias')) return(key)
-      target <- sub('#.*$','',item$canonical_path)
-      resolved <- Filter(function(x) !identical(x$kind,'alias') && identical(x$canonical_path,target),page_index)
-      if(length(resolved)!=1L) stop('Alias has no unique canonical page: ',key)
-      key <- resolved[[1L]]$slug
+  nav_fragment <- function(html) xml2::xml_find_first(xml2::read_html(paste0('<html><body>',html,'</body></html>')),'//body/*')
+  escape <- htmltools::htmlEscape
+  page_link <- function(key, label = NULL, class = NULL) {
+    page <- page_record(key)
+    if(is.null(label)) label <- page$title[[lang]]
+    paste0('<a ',
+      if(!is.null(class)) paste0('class="',class,'" '),
+      if(identical(relative,page$canonical_path)) 'aria-current="page" ',
+      'href="',prefix,escape(page$canonical_path,attribute=TRUE),'">',escape(label),'</a>')
+  }
+
+  if(current_page!='index' && !is.null(primary$navbar)) {
+    target_path <- paste0(prefix,page_record(primary$landing)$canonical_path)
+    for(link in xml2::xml_find_all(doc,'//div[@id="navbar"]//a[contains(@class,"nav-link")][@href]')) {
+      if(!identical(xml2::xml_attr(link,'href'),target_path)) next
+      current <- if(identical(relative,page_record(primary$landing)$canonical_path)) 'page' else 'location'
+      xml2::xml_set_attr(link,'aria-current',current)
+      xml2::xml_set_attr(link,'class',paste(xml2::xml_attr(link,'class'),'active'))
     }
   }
-  path_keys <- unique(vapply(unlist(group$pages),canonical_page,''))
-  step <- match(current_page,path_keys)
-  category_title <- group$title[[lang]]
-  category_path <- page_record(group$landing)$canonical_path
-  if(group$id=='start') category_path <- 'modes.html#getting-started'
-  if(group$id=='shared-techniques') category_path <- 'modes.html#shared-techniques'
-  if(group$id=='data') category_path <- 'workflows.html#tools'
-  if(current_page %in% c('multi-sequence','circular','dotplot','fusion')) {
-    category_title <- if(lang=='zh') '绘图模块' else 'Plotting modules'
-    category_path <- 'modes.html#modules'
+
+  sections <- manual_sections[[module]]
+  if(length(sections)) {
+    topic_label <- if(lang=='zh') '相关主题' else 'Related topics'
+    links <- vapply(sections,function(section) {
+      items <- vapply(unlist(section$pages),function(key) paste0('<li>',page_link(key),'</li>'),'')
+      paste0('<div class="manual-section"><span class="manual-section-title">',
+        escape(section$title[[lang]]),'</span><ul class="manual-section-pages">',
+        paste(items,collapse=''),'</ul></div>')
+    },'')
+    topics <- paste0(page_link(group$landing,group$title[[lang]],'module-home'),
+      paste(links,collapse=''),
+      if(!is.null(group$parent)) page_link(primary$landing,primary$title[[lang]],'topic-overview'))
+    xml2::xml_add_sibling(main,nav_fragment(paste0('<nav class="chapter-nav" aria-label="',
+      topic_label,'"><p class="navigation-title">',topic_label,'</p>',topics,'</nav>')),.where='before')
+    xml2::xml_add_child(main,nav_fragment(paste0('<details class="chapter-drawer"><summary>',
+      topic_label,'</summary><nav aria-label="',topic_label,'">',topics,'</nav></details>')),.where=0L)
   }
-  crumb <- paste0('<nav class="breadcrumb" aria-label="',if(lang=='zh')'位置导航' else 'Breadcrumb','">',
-    '<a href="',prefix,'index.html">',if(lang=='zh')'首页' else 'Home','</a><span aria-hidden="true">/</span>',
-    if(!identical(category_path,relative)) paste0('<a href="',prefix,category_path,'">',
-      htmltools::htmlEscape(category_title),'</a><span aria-hidden="true">/</span>') else '',
-    '<span aria-current="page">',htmltools::htmlEscape(xml2::xml_text(xml2::xml_find_first(main,'.//h1'))),'</span></nav>')
-  if(current_page!='index') xml2::xml_add_sibling(xml2::xml_find_first(main,'.//h1'),nav_fragment(crumb),.where='before')
-  if(length(current_group) && current_page != 'index' && !startsWith(relative,'reference/')) {
-    stage <- htmltools::htmlEscape(category_title)
-    if(length(path_keys)>1L && !is.na(step)) {
-      stage <- paste(stage,'·',if(lang=='zh') sprintf('第 %d 节，共 %d 节',step,length(path_keys)) else sprintf('Section %d of %d',step,length(path_keys)))
-      prev <- if(step>1L) page_link(path_keys[[step-1L]],if(lang=='zh')'← 上一节' else '← Previous section') else ''
-      next_link <- if(step<length(path_keys)) page_link(path_keys[[step+1L]],if(lang=='zh')'下一节 →' else 'Next section →') else page_link('modes',if(lang=='zh')'其他绘图任务 →' else 'Other plotting tasks →')
-      xml2::xml_add_child(main,nav_fragment(paste0('<nav class="lesson-pagination" aria-label="',
-        if(lang=='zh')'章节导航' else 'Section navigation','">',prev,next_link,'</nav>')))
-    }
-    xml2::xml_add_sibling(xml2::xml_find_first(main,'.//h1'),nav_fragment(paste0('<p class="lesson-stage">',stage,'</p>')),.where='before')
+
+  if(current_page!='index') {
+    heading <- xml2::xml_find_first(main,'.//h1')
+    ancestors <- unique(c(primary$landing,group$landing))
+    ancestors <- Filter(function(key) !identical(page_record(key)$canonical_path,relative), ancestors)
+    crumbs <- c(page_link('index',if(lang=='zh') '首页' else 'Home'),
+      vapply(ancestors,page_link,''),
+      paste0('<span aria-current="page">',escape(xml2::xml_text(heading)),'</span>'))
+    crumb <- paste0('<nav class="breadcrumb" aria-label="',if(lang=='zh') '位置导航' else 'Breadcrumb',
+      '">',paste(crumbs,collapse='<span aria-hidden="true">/</span>'),'</nav>')
+    xml2::xml_add_sibling(heading,nav_fragment(crumb),.where='before')
   }
-  if (current_page != "index" && length(current_group) && !startsWith(relative, "reference/")) {
-    chapter_number <- if (current_page == "index") integer() else section_numbers[[current_page]]
-    add_number <- function(node, number) {
-      xml2::xml_add_sibling(xml2::xml_contents(node)[[1]], nav_fragment(paste0('<span class="section-number">',
-        number, ' </span>')), .where = 'before')
-    }
-    if (length(chapter_number) && record$kind %in% c('tutorial','case')) add_number(xml2::xml_find_first(main, './/h1'), chapter_number)
-    counts <- integer(3)
-    for (heading in xml2::xml_find_all(main, './/*[self::h2 or self::h3 or self::h4][@id]')) {
-      level <- as.integer(sub('h', '', xml2::xml_name(heading))) - 1L
-      counts[level] <- counts[level] + 1L
-      counts[seq_along(counts) > level] <- 0L
-      if(record$kind %in% c('tutorial','case')) add_number(heading, paste(counts[seq_len(level)], collapse = '.'))
-    }
+  footer <- xml2::xml_find_first(doc,'//footer')
+  if(!inherits(footer,'xml_missing')) {
+    project <- page_link('about',class='project-link')
+    xml2::xml_add_child(footer,nav_fragment(paste0('<p>',project,'</p>')))
   }
   if(lang=='zh') {
    # Finalize native interface prose independently of runner gettext locales.
@@ -193,10 +148,6 @@ for(lang in c('en','zh')) {
      if(text %in% names(translations)) xml2::xml_set_text(t,translations[[text]])
     }
    }
-  }
-  if(module %in% names(module_motifs)) {
-    symbol <- nav_fragment(paste0('<span class="course-symbol"><svg viewBox="0 0 96 48" aria-hidden="true" focusable="false">',module_motifs[[module]],'</svg></span>'))
-    xml2::xml_add_child(xml2::xml_find_first(main,'.//h1'),symbol,.where=0L)
   }
   # Native reference TOCs are populated later by JavaScript. Build the compact
   # outline from actual headings, rather than cloning their initially empty nav.
@@ -235,6 +186,14 @@ for(lang in c('en','zh')) {
   # Add style and script separately so neither can be lost by first-node extraction.
   xml2::xml_add_child(head,fragment(paste0('<link rel="stylesheet" href="',base,'site.css?v=',unname(tools::md5sum('website/assets/site.css')),'">')))
   xml2::xml_add_child(head,fragment(paste0('<script src="',base,'site.js?v=',unname(tools::md5sum('website/assets/site.js')),'" defer></script>')))
+  no_script <- xml2::xml_add_child(head,'noscript')
+  xml2::xml_add_child(no_script,'style',paste0(
+    '.navbar .navbar-toggler,.navbar .local-search,.navbar #dropdown-lightswitch{display:none}',
+    '@media(max-width:1199.98px){',
+    'body{padding-top:0}.navbar.fixed-top{position:static}',
+    '.navbar .navbar-collapse.collapse{display:flex}',
+    '.navbar .navbar-collapse>.navbar-nav:first-child{flex-direction:row;flex-wrap:wrap;gap:0 .35rem}',
+    '}'))
   toggle<-xml2::xml_find_first(doc,'//button[contains(@class,"navbar-toggler")]')
   language<-fragment(paste0('<details class="language-control"><summary><span aria-hidden="true">🌐</span> ',
    if(lang=='zh')'现代汉语' else 'English',' <span aria-hidden="true">▾</span></summary>',
@@ -250,8 +209,7 @@ for(lang in c('en','zh')) {
   target<-xml2::xml_find_first(doc,'(//div[@id="navbar"]/ul[contains(@class,"navbar-nav")])[last()]')
   label<-if(lang=='zh')'搜索说明' else 'Search documentation'
   search<-fragment(paste0('<li class="nav-item local-search"><button type="button" class="search-trigger" id="site-search-trigger" aria-haspopup="dialog"><span aria-hidden="true">⌕</span><span class="search-trigger-label">',
-   if(lang=='zh')'搜索文档' else 'Search docs','</span><kbd aria-hidden="true">⌘ K</kbd></button>',
-   '<noscript><a href="',prefix,'task-index.html">',label,'</a></noscript></li>'))
+   if(lang=='zh')'搜索文档' else 'Search docs','</span><kbd aria-hidden="true">⌘ K</kbd></button></li>'))
   xml2::xml_add_child(target,search)
   body<-xml2::xml_find_first(doc,'//body')
   xml2::xml_set_attr(body,'data-kind',if(startsWith(relative,'reference/')) 'api' else if(!is.null(record)) record$kind else 'utility')
@@ -260,22 +218,13 @@ for(lang in c('en','zh')) {
   xml2::xml_add_child(body,fragment(paste0('<dialog class="search-dialog" id="site-search-dialog" aria-labelledby="site-search-title"><div class="search-heading"><h2 id="site-search-title">',label,
    '</h2><button type="button" class="search-close" aria-label="',if(lang=='zh')'关闭搜索' else 'Close search','">×</button></div>',
    '<label class="search-field" for="site-search"><span class="visually-hidden">',label,'</span><input id="site-search" type="search" role="combobox" aria-autocomplete="list" aria-controls="site-results" aria-expanded="false" autocomplete="off" placeholder="',
-   if(lang=='zh')'试试：酶切引线、link_branch、图例' else 'Try: primer labels, link_branch, guides','"></label><div class="search-filters" aria-label="',
+   if(lang=='zh')'例如：覆盖度、geom_feature、图例' else 'Examples: coverage, geom_feature, legends','"></label><div class="search-filters" aria-label="',
    if(lang=='zh')'筛选结果类型' else 'Filter result types','"></div><p class="search-count" id="search-status" role="status"></p><ul id="site-results" class="search-results" role="listbox" aria-label="',
    if(lang=='zh')'搜索结果' else 'Search results','"></ul><div class="search-help">',
    if(lang=='zh')'↑ ↓ 选择 · Enter 打开 · Esc 关闭；也可按任务查找。' else '↑ ↓ select · Enter open · Esc close; or browse by task.',
-   ' <a href="',prefix,'task-index.html">',if(lang=='zh')'API 与功能' else 'API and functions','</a></div></dialog>')))
+   ' <a href="',prefix,'modes.html#modules">',if(lang=='zh')'绘图指南' else 'Plotting guide','</a></div></dialog>')))
   xml2::xml_set_attr(body,'data-lang',lang)
   xml2::xml_set_attr(body,'data-search',paste0(paste(rep('../',deep),collapse=''),'search.json'))
-  if(startsWith(relative,'reference/')) {
-   info<-if(lang=='zh') '本页完整说明已译为现代汉语；函数、参数、代码和原始数据标识保留原样。' else 'Complete canonical API text; task articles explain the workflows.'
-   reviews <- jsonlite::fromJSON('website/teaching-reviews.json',simplifyVector=FALSE)
-   matching <- Filter(function(name) identical(alias_topics[[name]],slug),names(reviews))
-   lesson <- if(length(matching)) reviews[[matching[[1]]]] else NULL
-   target_page <- if(!is.null(lesson)) paste0(lesson$page,'.html#',lesson$anchor) else 'modes.html'
-   link<-paste0(paste(rep('../',deep),collapse=''),target_page)
-   xml2::xml_add_child(main,fragment(paste0('<p class="reference-language-note">',info,' <a href="',link,'">',if(lang=='zh')'用法说明' else 'Usage guide','</a></p>')),.where=1L)
-  }
   # Native locale messages add a translated S3 preamble to usage code. Keep
   # this generated comment canonical too, while translating surrounding prose.
   if(lang=='zh') for(comment in xml2::xml_find_all(main,'.//pre//span[@class="co"]')) {
@@ -285,21 +234,24 @@ for(lang in c('en','zh')) {
     xml2::xml_set_text(comment,paste0("# S3 method for class '",class_name,"'"))
    }
   }
-  if(file.exists(file.path('.site/assets/examples',paste0(current_page,'-',lang,'.R'))) && !startsWith(relative,'reference/')) {
-    file_url <- paste0(base,'examples/',current_page,'-',lang,'.R')
-    action <- paste0('<div class="example-actions"><button type="button" class="copy-full-example" data-source="',file_url,'">',
-      if(lang=='zh')'复制本页完整 R 代码' else 'Copy complete page R code','</button><a download href="',file_url,'">',
-      if(lang=='zh')'下载 R 脚本' else 'Download R script','</a><small>',
-      if(lang=='zh')'包含本页准备与全部步骤。文件示例须先下载输入；预览和保存调用保留。' else 'Includes preparation and every page step. File examples need the input bundle; preview and save calls are retained.','</small></div>')
-    if(current_page=='index') xml2::xml_add_sibling(xml2::xml_find_first(main,'.//pre'),fragment(action),.where='before')
-    else xml2::xml_add_sibling(xml2::xml_find_first(main,'.//h1'),fragment(action),.where='after')
+  examples <- xml2::xml_find_all(main, './/*[@data-example-kind]')
+  for (i in seq_along(examples)) {
+    name <- sprintf('%s-%d-%s.R', current_page, i, lang)
+    if (!file.exists(file.path('.site/assets/examples', name))) stop('Missing example script: ',name)
+    xml2::xml_add_sibling(examples[[i]], fragment(paste0('<a class="example-download" download href="',
+      base,'examples/', name,'">',if(lang=='zh')'下载这段 R 代码' else 'Download this R example','</a>')), .where='after')
   }
   for(pre in xml2::xml_find_all(main,'.//pre')) {
    parent<-xml2::xml_parent(pre)
    if(xml2::xml_name(parent)=='details')next
    is_r <- grepl('sourceCode|r-output|usage',paste(xml2::xml_attr(pre,'class'),xml2::xml_attr(parent,'class')))
-   label <- if(is_r) if(lang=='zh')'R · 示例代码' else 'R · Example code' else if(lang=='zh')'输出 / 文本' else 'Output / text'
-   details<-fragment(paste0('<details class="code-disclosure" data-code-kind="',if(is_r)'r' else 'output','" open><summary>',label,'</summary>',as.character(pre),'</details>'))
+   usage <- length(xml2::xml_find_all(pre, "ancestor::div[h2[@id='ref-usage']]")) > 0L
+   code_kind <- if (usage) 'signature' else if (is_r) 'r' else 'output'
+   label <- switch(code_kind,
+     signature = if(lang=='zh') '调用格式' else 'Usage syntax',
+     r = if(lang=='zh') 'R · 示例代码' else 'R · Example code',
+     output = if(lang=='zh') '输出 / 文本' else 'Output / text')
+   details<-fragment(paste0('<details class="code-disclosure" data-code-kind="',code_kind,'" open><summary>',label,'</summary>',as.character(pre),'</details>'))
    xml2::xml_add_sibling(pre,details,.where='before')
    xml2::xml_remove(pre)
   }
@@ -365,7 +317,7 @@ for(lang in c('en','zh')) {
   for(figure in xml2::xml_find_all(main,'.//figure[@data-figure]')) {
     key <- xml2::xml_attr(figure,'data-figure')
     if(!key %in% names(figure_lessons)) next
-    code_url <- if(current_page=='gallery') paste0(base,'documentation-examples.R') else
+    code_url <- if(current_page=='gallery') xml2::xml_attr(xml2::xml_find_first(figure,'./a'),'data-code-url') else
       paste0(prefix,if(grepl('#',figure_lessons[[key]],fixed=TRUE)) sub('#','.html#',figure_lessons[[key]],fixed=TRUE) else paste0(figure_lessons[[key]],'.html'))
     xml2::xml_set_attr(xml2::xml_find_first(figure,'./a'),'data-code-url',code_url)
   }
@@ -383,9 +335,17 @@ for(lang in c('en','zh')) {
     name<-utils::URLdecode(sub('\\.html.*$','',sub('^.*/man/','',href)))
     topic<-if(name %in% names(alias_topics)) alias_topics[[name]] else
      if(name %in% sub('\\.Rd$','',basename(topic_files))) name else NA_character_
-    if(is.na(topic)) stop('Unresolved current-package autolink: ',href)
     fragment<-if(grepl('#',href,fixed=TRUE)) sub('^[^#]+','',href) else ''
-    xml2::xml_set_attr(a,'href',paste0(paste(rep('../',deep),collapse=''),'reference/',topic,'.html',fragment))
+    if(is.na(topic)) {
+     routes <- page_migrations[[paste0('reference/',name,'.html')]]
+     if(is.null(routes)) stop('Unresolved current-package autolink: ',href)
+     key <- sub('^#','',fragment)
+     position <- match(key, names(routes), nomatch=match('',names(routes)))
+     destination <- routes[[position]]
+    } else {
+     destination <- paste0('reference/',topic,'.html',fragment)
+    }
+    xml2::xml_set_attr(a,'href',paste0(prefix,destination))
    }
   }
 

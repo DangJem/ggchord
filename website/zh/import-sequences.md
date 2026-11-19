@@ -1,8 +1,7 @@
 {{code:courseblockan}}
 
-{{prepare:setup}}
 
-先解压[真实输入包](https://github.com/DangJem/ggchord/archive/refs/heads/main.zip)，工作目录须含 examples/；每节单列可选依赖。
+示例使用随包表或随安装提供的小文件。每段代码列出所用的依赖。
 
 <a id="adapters"></a>
 
@@ -22,26 +21,26 @@
 
 ## GenBank：保留记录身份 {#genbank}
 {{code:genbank}}
-{{console:genbank}}
 
 这个文件是 NCBI 的原始 L09137.2 记录，名称是 pUC19c；不要把它强行改成随包 pUC19。
 返回值包括 `seq_data`、`features$annotation` 与 `report`，分段位置及记录/注释来源
 保留。这里需要所选 Python 已安装 Biopython；函数不自动安装依赖。
 `unsupported = "report"` 将不支持的位置记入报告，不把远端或复杂位置猜成区间。
 
-本例已在启用 Python Biopython 1.85 的环境重跑，实际返回 L09137.2、2686 bp 及一行注释。可在独立文档环境使用对应 Python 的 `python3 -m pip install biopython` 安装，并在启动 R 前将其可执行文件加入 PATH。可选依赖导致跳过或返回 NULL 时，不应记作导入成功。
+本节需要可用的 Python Biopython。成功读取后，序列表含一条记录 L09137.2，完整长度为 2,686 bp。
 
 显式 `python` 路径保留选定虚拟环境，包括解释器符号链接；不安装或改动环境。
 
-解压[说明输入包](https://github.com/DangJem/ggchord/archive/refs/heads/main.zip)，使工作目录包含 `examples/`。每次先读一种文件并检查返回的几行，再按序列 ID 对齐输入。
+
 
 <a id="files"></a>
 
 ## FASTA 长度与 GFF3 注释 {#files}
 
 {{code:frontimportseq}}
-
 {{output:frontimportseq}}
+
+
 
 FASTA 给出完整长度。GFF3 返回区间、类型和原始链，绘图前可按需保留 CDS。
 
@@ -57,7 +56,7 @@ FASTA 给出完整长度。GFF3 返回区间、类型和原始链，绘图前可
 
 {{output:frontimportblast}}
 
-每一行是一对区间。保留两端坐标顺序，核对两列序列 ID 能在 FASTA 中找到。如何生成标准 BLAST 文件见[比对输入](alignments.md)。
+每一行是一对区间。用于同一张图时，先核对两端 ID 与骨架 ID。这里的 pUC19 FASTA 用于演示长度读取，BLAST 表来自另一组序列。见[比对输入](alignments.md)。
 
 <a id="alternatives"></a>
 

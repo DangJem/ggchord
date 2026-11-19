@@ -1,6 +1,6 @@
 <a id="task"></a>
 
-## 任务与结果 {#task}
+## 沿一条序列画注释图 {#task}
 
 已有长度与注释表即可绘图；只有识别、搜索或计算 DNA 派生轨道时才需要序列字符。
 
@@ -8,14 +8,14 @@
 
 <a id="path"></a>
 
-## 功能索引 {#path}
+## 想添加哪些内容？ {#path}
 
 - [绘制圆形骨架](circular-start.md#input)
 - [单序列长度、DNA 和注释](circular-data.md#tables)
 - [圆图骨架、中心文字与注释轨道](circular-layout.md#input)
 - [圆图固定标签与自动适配](circular-labels.md)
 - [添加数据轨道](tracks.md)
-- [pUC19：完整注释图](plasmids.md)
+- [pUC19 完整注释图](plasmids.md)
 
 <a id="inputs"></a>
 

@@ -6,16 +6,25 @@
     },
     "landing": "installation",
     "pages": [
-      "installation",
-      "modes",
-      "data"
+      "installation"
     ],
-    "number": 0
+    "navbar": "start"
+  },
+  {
+    "id": "plots",
+    "landing": "modes",
+    "pages": [
+      "modes"
+    ],
+    "navbar": "plots",
+    "title": {
+      "zh": "绘图指南"
+    }
   },
   {
     "id": "multi-sequence",
     "title": {
-      "zh": "模块一 · 多序列关系"
+      "zh": "多序列关系"
     },
     "landing": "multi-sequence",
     "pages": [
@@ -36,12 +45,12 @@
       "views",
       "homology"
     ],
-    "number": 1
+    "parent": "plots"
   },
   {
     "id": "circular",
     "title": {
-      "zh": "模块二 · 单序列圆图"
+      "zh": "单序列圆图"
     },
     "landing": "circular",
     "pages": [
@@ -58,24 +67,24 @@
       "circular-dense-case",
       "plasmid-catalog"
     ],
-    "number": 2
+    "parent": "plots"
   },
   {
     "id": "dotplot",
     "title": {
-      "zh": "模块三 · 序列比对点图"
+      "zh": "序列比对点图"
     },
     "landing": "dotplot",
     "pages": [
       "dotplot",
       "dotplot-start"
     ],
-    "number": 3
+    "parent": "plots"
   },
   {
     "id": "fusion",
     "title": {
-      "zh": "模块四 · 多视图组合"
+      "zh": "多视图组合"
     },
     "landing": "fusion",
     "pages": [
@@ -86,12 +95,12 @@
       "fusion-details",
       "fusion-advanced"
     ],
-    "number": 4
+    "parent": "plots"
   },
   {
     "id": "shared-techniques",
     "title": {
-      "zh": "通用技巧"
+      "zh": "图层、样式与输出"
     },
     "landing": "styling",
     "pages": [
@@ -106,16 +115,17 @@
       "output",
       "diagnostics"
     ],
-    "number": 5
+    "parent": "plots"
   },
   {
     "id": "data",
     "title": {
-      "zh": "数据与工作流"
+      "zh": "数据与操作"
     },
     "landing": "formats",
     "pages": [
       "formats",
+      "data",
       "import-sequences",
       "import-intervals",
       "import-signals",
@@ -128,7 +138,7 @@
       "real-data",
       "flagship-data"
     ],
-    "number": 6
+    "navbar": "data"
   },
   {
     "id": "cases",
@@ -139,7 +149,7 @@
     "pages": [
       "gallery"
     ],
-    "number": 7
+    "navbar": "gallery"
   },
   {
     "id": "reference",
@@ -153,7 +163,7 @@
       "parameter-atlas",
       "api-curriculum"
     ],
-    "number": 8
+    "navbar": "reference"
   },
   {
     "id": "information",
@@ -165,7 +175,6 @@
       "about",
       "faq",
       "migration"
-    ],
-    "number": 9
+    ]
   }
 ]

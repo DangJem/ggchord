@@ -56,31 +56,33 @@ def main():
         require(hashlib.sha256(code.encode()).hexdigest()==rendered['figures'][row['id']]['code_sha256'],'Course code changed: '+row['id'])
         digest=rendered['figures'][row['id']]['sha256']
         require(hashlib.sha256((site/'assets'/Path(row['file']).name).read_bytes()).hexdigest()==digest,'Course figure: '+row['id'])
-    # Verify visible section links against one canonical order, including exits.
+    # Verify topic navigation and the absence of sequential controls.
     pages={p['slug']:p for p in json.loads((ROOT/'website/pages.json').read_text())}
     navigation=json.loads((ROOT/'website/navigation.json').read_text())
+    topics=json.loads((ROOT/'website/manual-sections.json').read_text())
     navigation_checks=0
     for lang in ['en','zh']:
         for group in navigation:
-            keys=group['pages']
-            for i,key in enumerate(keys):
-                page=pages[key]
-                if len(keys)<2 or page['canonical_path'].startswith('reference/'):continue
-                raw=(site/lang/page['canonical_path']).read_text()
-                fragment=re.search(r'<nav class="lesson-pagination"[^>]*>(.*?)</nav>',raw,re.S)
-                require(bool(fragment),lang+'/'+key+': missing section navigation')
-                if not fragment:continue
-                links=[html.unescape(link) for link in re.findall(r'href="([^"]+)"',fragment[1])]
-                expected=([pages[keys[i-1]]['canonical_path']] if i else [])+[pages[keys[i+1]]['canonical_path'] if i+1<len(keys) else 'modes.html']
-                require(links==expected and page['canonical_path'] not in links,lang+'/'+key+': wrong/self section link')
-                require(page['next_steps']==keys[i+1:i+2],key+': navigation metadata differs')
+            topic_sections=topics.get(group['id'], [])
+            for key in group['pages']:
+                raw=(site/lang/pages[key]['canonical_path']).read_text()
+                require(not re.search(r'class="(?:lesson-pagination|lesson-stage|section-number)"',raw),
+                        lang+'/'+key+': unexpected ordered section navigation')
+                fragment=re.search(r'<nav class="chapter-nav"[^>]*>(.*?)</nav>',raw,re.S)
+                require(bool(fragment)==bool(topic_sections),lang+'/'+key+': unexpected related-topics navigation')
+                if fragment:
+                    prefix='../' if pages[key]['canonical_path'].startswith('reference/') else ''
+                    links=[html.unescape(link) for link in re.findall(r'href="([^"]+)"',fragment[1])]
+                    expected=[group['landing'], *(slug for section in topic_sections for slug in section['pages'])]
+                    if group.get('parent'):
+                        expected.append(next(item['landing'] for item in navigation if item['id']==group['parent']))
+                    require(links==[prefix+pages[slug]['canonical_path'] for slug in expected],
+                            lang+'/'+key+': unexpected related-topic links')
                 navigation_checks+=1
         for slug in ['multi-sequence','circular','dotplot','fusion','parameters']:
             raw=(site/lang/(slug+'.html')).read_text()
             crumb=re.search(r'<nav class="breadcrumb".*?</nav>',raw,re.S)
-            require(bool(crumb) and not any(bad in crumb[0] for bad in ['installation.html','styling.html']),lang+'/'+slug+': misleading category breadcrumb')
-        gallery=(site/lang/'gallery.html').read_text()
-        require(not re.search(r'<h3[^>]*>\s*<span class="section-number"',gallery),lang+': gallery titles carry section numbers')
+            require(bool(crumb) and 'href="modes.html"' in crumb[0],lang+'/'+slug+': missing plotting guide breadcrumb')
     # Execute the exact current ranking expressions over final indexes. This is
     # an algorithm check, not browser interaction or a simulated DOM.
     search_code=r"""

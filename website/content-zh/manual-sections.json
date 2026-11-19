@@ -1,91 +1,102 @@
 {
-  "multi-sequence": [
+  "plots": [
     {
       "title": {
-        "zh": "共用数据与显示规则"
+        "zh": "要画哪一种图？"
       },
       "pages": [
         "multi-sequence",
+        "circular",
+        "dotplot",
+        "fusion"
+      ]
+    },
+    {
+      "title": {
+        "zh": "图画出来后，怎样调整？"
+      },
+      "pages": [
+        "styling",
+        "annotations",
+        "labels",
+        "tracks",
+        "output",
+        "diagnostics"
+      ]
+    }
+  ],
+  "multi-sequence": [
+    {
+      "title": {
+        "zh": "怎样选择或切换布局？"
+      },
+      "pages": [
         "multi-sequence-start",
         "multi-sequence-views",
+        "chord-geometry",
+        "collinear-layout",
+        "radial-synteny",
+        "sankey"
+      ]
+    },
+    {
+      "title": {
+        "zh": "怎样调整序列与连接？"
+      },
+      "pages": [
         "multi-sequence-layout",
         "multi-sequence-links",
-        "multi-sequence-labels",
         "ribbons",
         "instances"
       ]
     },
     {
       "title": {
-        "zh": "Chord"
+        "zh": "怎样标注或比较局部区域？"
       },
       "pages": [
-        "chord-geometry",
-        "chord"
-      ]
-    },
-    {
-      "title": {
-        "zh": "Collinear"
-      },
-      "pages": [
-        "collinear-layout",
-        "collinear"
-      ]
-    },
-    {
-      "title": {
-        "zh": "Radial"
-      },
-      "pages": [
-        "radial-synteny"
-      ]
-    },
-    {
-      "title": {
-        "zh": "Sankey"
-      },
-      "pages": [
-        "sankey"
-      ]
-    },
-    {
-      "title": {
-        "zh": "关系与局部比较"
-      },
-      "pages": [
+        "multi-sequence-labels",
         "views",
         "homology"
+      ]
+    },
+    {
+      "title": {
+        "zh": "完整示例"
+      },
+      "pages": [
+        "chord",
+        "collinear"
       ]
     }
   ],
   "circular": [
     {
       "title": {
-        "zh": "骨架与数据"
+        "zh": "怎么画骨架和已有注释？"
       },
       "pages": [
-        "circular",
         "circular-start",
         "circular-data",
-        "circular-layout"
+        "circular-layout",
+        "circular-features"
       ]
     },
     {
       "title": {
-        "zh": "注释与标注"
+        "zh": "怎样标注、查找与添加轨道？"
       },
       "pages": [
-        "circular-features",
         "circular-labels",
         "recognition",
         "primers",
-        "restriction-sites"
+        "restriction-sites",
+        "tracks"
       ]
     },
     {
       "title": {
-        "zh": "完整参考图"
+        "zh": "完整示例"
       },
       "pages": [
         "plasmids",
@@ -97,29 +108,29 @@
   "dotplot": [
     {
       "title": {
-        "zh": "序列比对点图"
+        "zh": "怎样把比对结果画在双轴上？"
       },
       "pages": [
-        "dotplot",
-        "dotplot-start"
+        "dotplot-start",
+        "alignments",
+        "protein-alignments"
       ]
     }
   ],
   "fusion": [
     {
       "title": {
-        "zh": "组合与布局"
+        "zh": "怎样组合和连接面板？"
       },
       "pages": [
-        "fusion",
         "fusion-start",
-        "fusion-routing",
-        "fusion-layout"
+        "fusion-layout",
+        "fusion-routing"
       ]
     },
     {
       "title": {
-        "zh": "连接与放大"
+        "zh": "怎样放大或组合局部视图？"
       },
       "pages": [
         "fusion-details",
@@ -127,32 +138,33 @@
       ]
     }
   ],
-  "start": [
-    {
-      "title": {
-        "zh": "开始使用"
-      },
-      "pages": [
-        "installation",
-        "modes",
-        "data"
-      ]
-    }
-  ],
   "shared-techniques": [
     {
       "title": {
-        "zh": "通用技巧"
+        "zh": "怎样调整外观与图层？"
       },
       "pages": [
-        "styling",
         "annotations",
         "feature-geometry",
         "labels",
         "parameters",
-        "scale-families",
+        "scale-families"
+      ]
+    },
+    {
+      "title": {
+        "zh": "怎样绘制数值轨道？"
+      },
+      "pages": [
         "tracks",
-        "tracks-statistics",
+        "tracks-statistics"
+      ]
+    },
+    {
+      "title": {
+        "zh": "怎样检查和保存？"
+      },
+      "pages": [
         "output",
         "diagnostics"
       ]
@@ -161,41 +173,44 @@
   "data": [
     {
       "title": {
-        "zh": "数据与工作流"
+        "zh": "手中的文件怎样读入？"
       },
       "pages": [
-        "formats",
         "import-sequences",
         "import-intervals",
         "import-signals",
-        "aligned-sequences",
         "import-relations",
         "alignments",
-        "protein-alignments",
-        "projection",
-        "workflows",
-        "real-data",
-        "flagship-data"
+        "aligned-sequences",
+        "protein-alignments"
       ]
-    }
-  ],
-  "cases": [
+    },
     {
       "title": {
-        "zh": "案例图库"
+        "zh": "怎样接到图层或变换坐标？"
       },
       "pages": [
-        "gallery"
+        "data",
+        "workflows",
+        "projection"
+      ]
+    },
+    {
+      "title": {
+        "zh": "哪里有可复现的完整输入？"
+      },
+      "pages": [
+        "real-data",
+        "flagship-data"
       ]
     }
   ],
   "reference": [
     {
       "title": {
-        "zh": "API 参考"
+        "zh": "怎样查函数和参数？"
       },
       "pages": [
-        "reference",
         "compatibility",
         "parameter-atlas",
         "api-curriculum"
@@ -205,10 +220,9 @@
   "information": [
     {
       "title": {
-        "zh": "项目信息"
+        "zh": "项目维护"
       },
       "pages": [
-        "about",
         "faq",
         "migration"
       ]

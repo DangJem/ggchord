@@ -1,8 +1,7 @@
 {{code:courseblockan}}
 
-{{prepare:setup}}
 
-Extract the [input bundle](https://github.com/DangJem/ggchord/archive/refs/heads/main.zip) so the working directory contains examples/. Each section names its optional dependencies.
+Examples use bundled tables or small installed files. Each block identifies the packages it uses.
 
 <a id="adapters"></a>
 
@@ -22,7 +21,6 @@ See [alignment input](alignments.md) for minimal fields and coordinate units.
 
 ## GenBank: retain record identity {#genbank}
 {{code:genbank}}
-{{console:genbank}}
 
 This is the original NCBI L09137.2 record, named pUC19c; do not rename it to the
 bundled pUC19. Results include `seq_data`, `features$annotation` and `report`,
@@ -30,19 +28,20 @@ retaining segmented locations and record/feature provenance. The selected Python
 needs Biopython already installed; no automatic installation occurs.
 `unsupported = "report"` records unsupported locations rather than guessing bounds.
 
-The GenBank example was rerun with Python Biopython 1.85 enabled: it returned L09137.2, length 2686 bp and one annotation row. For a separate documentation environment, install Biopython with that Python’s `python3 -m pip install biopython`, then put its executable on PATH before starting R. Do not treat an optional-dependency skip or NULL as successful import.
+This section requires a Python interpreter with Biopython. A successful read returns one sequence record, L09137.2, with a full length of 2,686 bp.
 
 An explicit `python` path keeps the selected virtual environment, including interpreter symlinks; no environment is installed or modified.
 
-Extract the [manual bundle](https://github.com/DangJem/ggchord/archive/refs/heads/main.zip) so the working directory contains `examples/`. Read one format at a time, inspect a few rows, then match sequence IDs.
+
 
 <a id="files"></a>
 
 ## FASTA lengths and GFF3 annotations {#files}
 
 {{code:frontimportseq}}
-
 {{output:frontimportseq}}
+
+
 
 FASTA supplies full lengths. GFF3 supplies intervals, types and source strands. Select CDS for plotting as needed.
 
@@ -58,7 +57,7 @@ FASTA supplies full lengths. GFF3 supplies intervals, types and source strands. 
 
 {{output:frontimportblast}}
 
-Each row contains two intervals. Keep their endpoint order and check both sequence IDs against the FASTA records. See [alignment inputs](alignments.md) for standard BLAST output.
+Each row links two intervals. For a plot, check that both IDs occur in its backbone table. The pUC19 FASTA demonstrates length import. The BLAST example comes from a separate dataset. See [alignment inputs](alignments.md).
 
 <a id="alternatives"></a>
 

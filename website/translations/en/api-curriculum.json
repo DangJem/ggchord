@@ -1,15 +1,15 @@
 {
-  "source_sha256": "a5cb64fdd0f264397260c496f7c87d204bbe99c5181b51f50e44c87b6214ad90",
+  "source_sha256": "3104e732408b316c342aa0eaa45f4acddc92b9405a1502cea510bc7c6a8a290b",
   "blocks": {
     "0": {
-      "source_sha256": "84523c88e7698c4e601135877b30c7f308c5aa235da4355659d8db61dee11f25",
+      "source_sha256": "7bd21bbc182e5bb3c5d4ed12bf41ed1fd8e049dbbfb65be76ae71c0779aa2d91",
       "status": "reviewed",
-      "translation": "Find purpose, primary section, modes, complete cases and full parameters by API. References define exact defaults, formats, units and constraints; maintenance levels appear at the end. Upstream reexports and spelling aliases are explained by family rather than duplicate sections.\n"
+      "translation": "Look up functions by name, purpose and accepted input. Each function name links to its signature and argument descriptions.\n"
     },
     "2": {
-      "source_sha256": "5edddeb8f1c61501c8d86a26c1d082fc785f2de315451faef98c5bc6c6129160",
+      "source_sha256": "0cb6f4bf3d4e4974c60178e383cd622975909f3b96ca61d706afc7ff790e62ed",
       "status": "reviewed",
-      "translation": "## API usage index ⟦shared:0⟧\n"
+      "translation": "## Find a function ⟦shared:0⟧\n"
     },
     "3": {
       "source_sha256": "419d187a94729f6852a343829af430e2ba210419798f5f2fe31291348d24e586",
@@ -737,909 +737,99 @@
       "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Prepare independent windows for a segmented linear display | [Usage](⟦shared:2⟧) | independent windows and declared local display reversal | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
     },
     "148": {
+      "source_sha256": "401325ee79fe8155d5cbdcf7ca8adbbef29207a5f6a7976a1db019edfd7701bd",
+      "status": "reviewed",
+      "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Compute common numeric limits for selected tracks across plots | [Usage](⟦shared:2⟧) | Independent plots with numeric tracks; select ranges by track ID | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
+    },
+    "149": {
       "source_sha256": "3ea090d872984f24706b79b4aaf72be12821af18d89d0887e8f2d35646265b65",
       "status": "reviewed",
       "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Compute union coverage and mean depth for inclusive intervals in each window | [Usage](⟦shared:2⟧) | Source intervals with reference lengths and units; statistics within each observed group | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
     },
-    "149": {
+    "150": {
       "source_sha256": "d9bc26910396c92a14ccd5f87f5374863fed669e4cf9440b2d56dcb471a8a805",
       "status": "reviewed",
       "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Bundle ribbons as a ggchord stat | [Usage](⟦shared:2⟧) | chord/collinear ribbon layer; explicit aggregation | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
     },
-    "150": {
+    "151": {
       "source_sha256": "2623e9d422492c6a2ed89a8ac54acc0eb722c85d7c404bd8c4196ae989f6456c",
       "status": "reviewed",
       "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Compute local ribbon density as a ggchord stat | [Usage](⟦shared:2⟧) | chord/collinear ribbon layer; one ribbon per source observation | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
     },
-    "151": {
+    "152": {
       "source_sha256": "fba0e21c9e7104a177dd52653e6dc166331dafb7cb1625c749ec7dbd56f34880",
       "status": "reviewed",
       "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Selected ggplot2 helpers for ggchord plots | [upstream](⟦shared:2⟧) | upstream; applies only to matching supported ggplot roles | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
     },
-    "152": {
+    "153": {
       "source_sha256": "6a347d1e45781129552e0ce835cfcd491af6c0d81d9418168048c035104c6536",
       "status": "reviewed",
       "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | ggchord themes | [Usage](⟦shared:2⟧) | non-data style; plasmid preset intended circular | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
     },
-    "153": {
+    "154": {
       "source_sha256": "0cda35a98daa5546ea9e955b2a6bc4cec5dee17fc2c1c161bd34c73f82458b8c",
       "status": "reviewed",
       "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | ggchord themes | [Usage](⟦shared:2⟧) | non-data style; plasmid preset intended circular | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
     },
-    "154": {
+    "155": {
       "source_sha256": "994b1778d654582526f672eb9e91cc8c69f34319b2786111ee21dc2211776059",
       "status": "reviewed",
       "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | ggchord themes | [Usage](⟦shared:2⟧) | non-data style; plasmid preset intended circular | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
     },
-    "155": {
+    "156": {
       "source_sha256": "1488fd3700e4645b035cf2de6f24b6a39a60d9235dee3c9a4cf00f1a5f41d596",
       "status": "reviewed",
       "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | ggchord themes | [Usage](⟦shared:2⟧) | non-data style; plasmid preset intended circular | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
     },
-    "156": {
+    "157": {
       "source_sha256": "b02e3de53a5271b71d434c53cdf515c5dad80a3983accad002b7b742c7d24bf0",
       "status": "reviewed",
       "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | ggchord themes | [Usage](⟦shared:2⟧) | non-data style; plasmid preset intended circular | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
     },
-    "157": {
+    "158": {
       "source_sha256": "fcbb5b1ced93ec56d88ad817b4acbe78115aee58919c0c4d0173e65ba63895c9",
       "status": "reviewed",
       "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Declare a quantitative band along sequence backbones | [Usage](⟦shared:2⟧) | all three; one placement and numerical domain per track ID | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
     },
-    "158": {
+    "159": {
       "source_sha256": "178803d02408cf4ad23fa04a60cf1e570e153ee4c651ae8154b7a3f959e4f977",
       "status": "reviewed",
       "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Translate real CDS strings with codon provenance using optional Biostrings | [Usage](⟦shared:2⟧) | Explicit source/column map; independent Cartesian detail; complete observed codons | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
     },
-    "159": {
+    "160": {
       "source_sha256": "eedf554ef5c146c2e6d2431a506be834c6c1fe85eb2d323aff2b063b581b85c9",
       "status": "reviewed",
       "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Physical units and direction arrows | [upstream](⟦shared:2⟧) | upstream; applies only to matching supported ggplot roles | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
     },
-    "160": {
+    "161": {
       "source_sha256": "2ae1ff4b80702c6882bd5cc8611f02062583f334253dbeab26941c7e8716d1ab",
       "status": "reviewed",
       "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Validate ggchord input data before plotting | [Usage](⟦shared:2⟧) | validation reports, no silent input repair | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
     },
-    "161": {
+    "162": {
       "source_sha256": "71eb5497a722ee8e0940bd9616066c4c01d3b651302c71ba1cdd14ad615b02da",
       "status": "reviewed",
       "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Validate explicit genome and contig relationships | [Usage](⟦shared:2⟧) | explicit genome/contig membership; never inferred from ID prefixes | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
     },
-    "162": {
+    "163": {
       "source_sha256": "a83bc1dc17d57a0b8d59a04d14c61fe71b49ecb44f557556330313264a378b62",
       "status": "reviewed",
       "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Preview a ggchord plot at its intended export size | [Usage](⟦shared:2⟧) | target-size preview of all supported plots; temporary path output | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
     },
-    "163": {
+    "164": {
       "source_sha256": "fa1a825924e4562f217e37d987f5395d262f2cb8d053c3461d85eac8200365a9",
       "status": "reviewed",
       "translation": "| [⟦shared:0⟧](⟦shared:1⟧) | Selected ggplot2 helpers for ggchord plots | [upstream](⟦shared:2⟧) | upstream; applies only to matching supported ggplot roles | [↗](⟦shared:3⟧) | [↗](⟦shared:4⟧) |\n"
     },
-    "165": {
-      "source_sha256": "cb64b7300f19234c92578c1dc2bf925654078f97c118828131013fe167c1a5fd",
-      "status": "reviewed",
-      "translation": "## How to reproduce ⟦shared:0⟧\n"
-    },
     "166": {
-      "source_sha256": "b8de5e4fe29e1b3c33688fbd6586304f8fe8e2f5b713e003d841f8f9bf2a55fe",
+      "source_sha256": "ba769f1ef05b747e6e3de4718b3b3edd64aa2e07df4059b58fa0d0d5a197b832",
       "status": "reviewed",
-      "translation": "Start at the preparation code in the primary section. Inspect fields in [basic tables](⟦shared:0⟧) and conversions in [formats](⟦shared:1⟧). Shared example snippets execute in independent environments and important comparisons are rendered by ggchord. Explicit synthetic geometry demonstrations are not biological evidence. Retain inputs, source and reproduction notes; see [installation](⟦shared:2⟧) for setup.\n"
+      "translation": "## Run an example ⟦shared:0⟧\n"
     },
     "167": {
-      "source_sha256": "f4d27760e8a308f385342139fe489b2f72dd9e984c70464d858b59d237c87170",
+      "source_sha256": "5fbc46f7022b5ffe4b531c8bac26c4c8b07058e27cf3707e60298c05275fb245",
       "status": "reviewed",
-      "translation": "⟦shared:0⟧⟦shared:1⟧Maintenance coverage record⟦shared:2⟧\n"
-    },
-    "168": {
-      "source_sha256": "959c0dab5047d15e562256ceeb5178775ea4c27aa694a04703f45a8b174f06cf",
-      "status": "reviewed",
-      "translation": "L2 denotes minimal runnable use and input/output explanation; L3 adds key-parameter contrasts. Neither certifies every combination.\n"
-    },
-    "169": {
-      "source_sha256": "21fa394fd45661d7a96acac905af3e613a8ebd6b9af5ebf936f0876370113a51",
-      "status": "reviewed",
-      "translation": "| API | Level |\n"
-    },
-    "170": {
-      "source_sha256": "3491e014f5503eb5b2fca81db42f6f72765980ba5b5e48ef135b6cf69d7f92cc",
-      "status": "reviewed",
-      "translation": "| --- | --- |\n"
-    },
-    "171": {
-      "source_sha256": "907f57b9a2e73088de78fc1e3414982465e4dc03af672dd447305fb5d0281ebd",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L2 |\n"
-    },
-    "172": {
-      "source_sha256": "d5a70b7c421b2e49fb2b902c9b1b2d8b695fa1711f1f651a3158fea48b9beef3",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L1 |\n"
-    },
-    "173": {
-      "source_sha256": "221c85ce3254bb4e78edb74c7e5581086d1e7a595e67bdadd61bf41bd457d18f",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L1 |\n"
-    },
-    "174": {
-      "source_sha256": "ebc2ca419e6fd28d1e86a2a1330c745d5334d19e2c9cb4f1429f75978e7e9c38",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L1 |\n"
-    },
-    "175": {
-      "source_sha256": "cdebb05c49afbfbaa50b6b0571b9c1c85f55f763ae0dbc1affd92d2924ca8375",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L1 |\n"
-    },
-    "176": {
-      "source_sha256": "e30808ef2d91d933b9e359ba1ebda31ec14997f05f3cdbed34969aeef69abc45",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L1 |\n"
-    },
-    "177": {
-      "source_sha256": "1960495780fd6a72d70e7337e28c61b5790b9466e584c042a7adc979672a4f52",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L2 |\n"
-    },
-    "178": {
-      "source_sha256": "a5b303246209387e5b06c24db1abdb00a4c4cee085168d1d07102635a0f7c04a",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L2 |\n"
-    },
-    "179": {
-      "source_sha256": "ca6af59573e4c3c856922c534ab2d46c3d23aff9faee1dbc4ee8ce7f32a7780f",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L2 |\n"
-    },
-    "180": {
-      "source_sha256": "a328f170eb86f2fd974d3cd765e72c3f8bcead1b5603b174df196cf0f5b81324",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L2 |\n"
-    },
-    "181": {
-      "source_sha256": "953989c21cdfd8c98bb419c16784ed8ed575d230f340729bbc33a3507cddb405",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L2 |\n"
-    },
-    "182": {
-      "source_sha256": "dd0b8eb4b6843f4b4b22b5a58d073de1e694a24abddf0c49ccd9cc54ff706fc0",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L3 |\n"
-    },
-    "183": {
-      "source_sha256": "c00d4b29072a2c43b2f55538be3f42b4010d4ee91a7efa8e1fba641296b65224",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L2 |\n"
-    },
-    "184": {
-      "source_sha256": "db6f10c4ed62c708e4bc58c9e1a7492b03afe33fd02afae7316a1f9834a7657d",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L3 |\n"
-    },
-    "185": {
-      "source_sha256": "108ff85d29e97179d0eddee1d78a79f5fb4385944cc276276a727deac189f768",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L3 |\n"
-    },
-    "186": {
-      "source_sha256": "1366e6a9cd0e968b5eb192f3c403b005363110446479f55c9727e2b0e40efd1d",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L3 |\n"
-    },
-    "187": {
-      "source_sha256": "90c40d1f42724e525e9e205940bd01b9fcd44ce10b4d132e785197af4af63ff4",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L2 |\n"
-    },
-    "188": {
-      "source_sha256": "cee14850457853aaeada9679fbc61ea24ebb227bff88c6fe4efafd1ecf31863b",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L2 |\n"
-    },
-    "189": {
-      "source_sha256": "b0a22a32f96ce8f416d43e549021a59bff3fa3a374730f191791a772891c70cc",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L2 |\n"
-    },
-    "190": {
-      "source_sha256": "f1f5a5edb93ba6a86e84bcb0e6d213684f4ae0dad856825e24948af2154fa52f",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L2 |\n"
-    },
-    "191": {
-      "source_sha256": "f0066779d03a8a5e663be0230eff56ad336b0cf578a26c567fb8c33d15502a6c",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L2 |\n"
-    },
-    "192": {
-      "source_sha256": "9041c5be1782d0e7ca67aba9af65373c3823c2ad74247cc877f6fa3024693a16",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L1 |\n"
-    },
-    "193": {
-      "source_sha256": "f64ced2e0ed528491865b89a3a31ccaab69afcecdb381fcaa09b342671adc6d9",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L1 |\n"
-    },
-    "194": {
-      "source_sha256": "b2e24fa4a1221e71c9eaf215598fb3d4122364c6d2d58c2edb41b75527d29e33",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L1 |\n"
-    },
-    "195": {
-      "source_sha256": "4c1d709a485418822de635ad8c30fb4e5f8a40d2d93b453898e1aa136e58cf00",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L1 |\n"
-    },
-    "196": {
-      "source_sha256": "9a0674d5a37f5cb823d19c7e1171732ee5502789f29efd921021d015ffa2e3f9",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L1 |\n"
-    },
-    "197": {
-      "source_sha256": "244ff35997ff9eeeb6df377bd2538746fa148e811ed0e580e1372c4b999dc5bf",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L2 |\n"
-    },
-    "198": {
-      "source_sha256": "88592f4c24b085b96376fb92515208ac8da9dbb191c62eab87d3e891c5744438",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L2 |\n"
-    },
-    "199": {
-      "source_sha256": "b2eadd2b7ab8f1c22e5ffe6b5c5ee80f5d7bd3cea50820850654c68c45a3fc92",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L2 |\n"
-    },
-    "200": {
-      "source_sha256": "8957c592bdf3007d5d0c3307747613a21c59b8c41a320a0587242f34723e5162",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L2 |\n"
-    },
-    "201": {
-      "source_sha256": "3d85a9258b7c62431dc288bce28d5c00e03a326ed8d7ef449173a64a1e45cbe4",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L2 |\n"
-    },
-    "202": {
-      "source_sha256": "9e28f290c20cc7c3fe6038d4350cea51a3e8b075ed2f65f681c127cf32bdff01",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L2 |\n"
-    },
-    "203": {
-      "source_sha256": "a83a85eacbcc46814541b62a72254005e7103d13de3427f35854db328a0da106",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L2 |\n"
-    },
-    "204": {
-      "source_sha256": "8ce09db3ac5e97887036a5227be41de50a2e86797aedf2a6fedb4cb8e9fb07ec",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L2 |\n"
-    },
-    "205": {
-      "source_sha256": "e4e025cdaee4c7e44cd12071976acca038537527aab74fac330ef8444ee89566",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L2 |\n"
-    },
-    "206": {
-      "source_sha256": "0e7b65737cdbbd27fdc0d418b1ad9b812f30c4d29f33f04f2975d13371fb8656",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L2 |\n"
-    },
-    "207": {
-      "source_sha256": "0788eb42bde26f3c9f5ed9b620bfa3063b3eab578652abb919eb7e179a860d2b",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L2 |\n"
-    },
-    "208": {
-      "source_sha256": "12bfb586166a1ead6a938cb3d648aa385e1a62c374248f3a819d0f07d727b639",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L2 |\n"
-    },
-    "209": {
-      "source_sha256": "504bad30496b250a4fe2602cd6a76c640e0c273cf1f9f447ee65ca128f411ffd",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L2 |\n"
-    },
-    "210": {
-      "source_sha256": "2bc21c8a528ff5baa79839dfcb52872cf37269d117546127cfd837dcba700b25",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L3 |\n"
-    },
-    "211": {
-      "source_sha256": "d786375d8be02b0d32aa8cb24582b50c493e630e5797115c519e7bf557c664fe",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L3 |\n"
-    },
-    "212": {
-      "source_sha256": "b032deda56e352e0a715a2314c1ac82eba7e03bb378b3fde1c6c72b4b6f3009a",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L3 |\n"
-    },
-    "213": {
-      "source_sha256": "6f627804ad2c24cd2f756eaa464307c82c3ec090613d9a532749bcecf24c81d8",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L3 |\n"
-    },
-    "214": {
-      "source_sha256": "5b5d2cac22f5b763b48678c85502d2c866260024e411aa8207cd955727bec0bf",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L3 |\n"
-    },
-    "215": {
-      "source_sha256": "793384b6abf49d7a9be83039ae5c6eb7098b4f50b3f1f8ddcdc94847ccd7cd5a",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L3 |\n"
-    },
-    "216": {
-      "source_sha256": "ffd4cd0dac832534d7b7cb43134e6913b7dd0cbb33c2ac855733ab915ba7b5cc",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L3 |\n"
-    },
-    "217": {
-      "source_sha256": "283ac4eadf7ce7d5c29121b65aceb9cfebed44e1769615fa264cd58506a32eea",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L3 |\n"
-    },
-    "218": {
-      "source_sha256": "c28161944664c8b15c177321cd3afaaccbe7630bf6576a884018e273f7dfa09b",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L2 |\n"
-    },
-    "219": {
-      "source_sha256": "4233bc519e501ded655566d829eee3ddbe5d00019b3de2fb6175c18e9e0d9a17",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L3 |\n"
-    },
-    "220": {
-      "source_sha256": "de5e2a61b350301e5209164440d7acb9aa2570c2837db7b10d3fee6a784e3ff1",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L3 |\n"
-    },
-    "221": {
-      "source_sha256": "286cd92ae5cabd6acec18f19e3aef6c58aab6198a7f6ed44d87e44ab643571c0",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L2 |\n"
-    },
-    "222": {
-      "source_sha256": "673c8e9bf27ef012b025d7b8146617f7c3f7ce3c1fad90ac3491057ebb88b9e6",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L3 |\n"
-    },
-    "223": {
-      "source_sha256": "9c13272fe61eb7d3ed15f94f9a17a2003c879d6d499dcf594e812f3c77053634",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L3 |\n"
-    },
-    "224": {
-      "source_sha256": "9fe1835ba4d43b8b8b76cea0a729ced007f3395d6d7b8f393f9bf80631f7f6ad",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L3 |\n"
-    },
-    "225": {
-      "source_sha256": "ec1a71cd560ac3842d0d6c612e8d834402e47e068c8e8211a02a2cdb0204f90e",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L3 |\n"
-    },
-    "226": {
-      "source_sha256": "3199335d822986ed8348c40b3cbdf9d0d8881d4034f5d976003cc6fea6c3bb09",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L2 |\n"
-    },
-    "227": {
-      "source_sha256": "9d7c50c129855374d7bfaef7b9c541aa064a8b41c3abf061938e2fa6a1a7e6df",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L3 |\n"
-    },
-    "228": {
-      "source_sha256": "86b4a2fb7f62487fbf49a784350b44ec75b57f8106c876f440720745188622ee",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L2 |\n"
-    },
-    "229": {
-      "source_sha256": "6d408488c7b6e33b1476e87bc866937b0091cff530b125eea37d50e0d86d6724",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L3 |\n"
-    },
-    "230": {
-      "source_sha256": "af8a071588d58c2e63ae3c69969eca1f774a692bd9e0decbe34dbad2bacb7ed5",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L3 |\n"
-    },
-    "231": {
-      "source_sha256": "b477cd462718e554a9886cd413ca02f895aca085c8e6dc8e969158a7f0d7e292",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L2 |\n"
-    },
-    "232": {
-      "source_sha256": "2b1ad1fbe23b88946d467bf2f5fb0c7d7d23883e165a48480c28f98619b7a95c",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L2 |\n"
-    },
-    "233": {
-      "source_sha256": "aab9e5023777d23c950330422fca3d9e4faccbd4e490d94e36f43a01a566c604",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L2 |\n"
-    },
-    "234": {
-      "source_sha256": "01d155f8015c11ea70de19eab4e79665cb7b1704853174bb128af7ee09bafb4e",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L1 |\n"
-    },
-    "235": {
-      "source_sha256": "4d38f676cdb0357b70dc39f87098dfc4997b4ce0733d9b1369f7fdc2b2f94cb9",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L1 |\n"
-    },
-    "236": {
-      "source_sha256": "2b51bf802da0d31af6f91b3b0942824456d597a0654be969cd2a442c4a787544",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L2 |\n"
-    },
-    "237": {
-      "source_sha256": "eaaf3d5a9af4c4a670f5c93f3713ec96523947c49613003d20d5c14dbdfd0c56",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L2 |\n"
-    },
-    "238": {
-      "source_sha256": "e6752044e37ad0e28f048d10a15b100dc78050d4cc20b379117b4f9b3d6508f2",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L2 |\n"
-    },
-    "239": {
-      "source_sha256": "a05d424f017c1758b4673600a5f94966b2d7926bb0e5d75ffdc2d71de11d377f",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L2 |\n"
-    },
-    "240": {
-      "source_sha256": "fada28f6addb093f92c8a0499db60449c0995daaf09fe61e7ee162c59a300c04",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L2 |\n"
-    },
-    "241": {
-      "source_sha256": "329b99857b7e7c053af998690cd807d526ad58c994c4f60cae210b81b6119c8c",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L1 |\n"
-    },
-    "242": {
-      "source_sha256": "ca6ab19346cede6c64f08287cd69173859817a9cad028eb9214f6d21140878fe",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L1 |\n"
-    },
-    "243": {
-      "source_sha256": "f777a5869071ab8548164db347261eb31d657ac07a8252a9ecb1f6f95638e8c0",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L1 |\n"
-    },
-    "244": {
-      "source_sha256": "500cbc06e5314b708e393cd7bf8f28e08544d6670f0234638312f6dd5200e713",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L2 |\n"
-    },
-    "245": {
-      "source_sha256": "5ea677575f40f8abdb06a8789113a64b298a6769263401baeb8cafde4b049845",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L2 |\n"
-    },
-    "246": {
-      "source_sha256": "83c2e2711f5c28461ea63e1b49e5f9088a29401c100495d49deaeb4a67233082",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L2 |\n"
-    },
-    "247": {
-      "source_sha256": "c332d8eea9379b35f39d7548c6e3d5b286dc18ca9c89362f1a118438fe017f6a",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L2 |\n"
-    },
-    "248": {
-      "source_sha256": "dd3635ec43439893804c0bf5e7b90f789d923cc9508ed7aeea93ae983bbfcfb9",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L2 |\n"
-    },
-    "249": {
-      "source_sha256": "c5c7c17eb6228d7eb1d75403b39054973b0f537194aaadf3f84e97b7ac4456d3",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L1 |\n"
-    },
-    "250": {
-      "source_sha256": "3f19e1b47c2c80f1d423eb3bdb64208752d13b9251e89d0e6ddce8bf5f63dc27",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L2 |\n"
-    },
-    "251": {
-      "source_sha256": "473958b7cf1ef9bbed18eacd1888f0cc29c83d9229e4c2ce313881d7f14475ad",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L2 |\n"
-    },
-    "252": {
-      "source_sha256": "a32cbcc7eccb89530f65b671aff2158d9ea69628c9e194bd5788453905149f90",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L3 |\n"
-    },
-    "253": {
-      "source_sha256": "9a61a6b67e18b231181c1a17fb1920c33f9fd330b4f469bdd301e85cdd92109d",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L1 |\n"
-    },
-    "254": {
-      "source_sha256": "a4dc1b71cccde3aa1d7adfaa1530c81aa49ad7d6b05a2150d2b5505e31a0cbcd",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L2 |\n"
-    },
-    "255": {
-      "source_sha256": "bf25786cc53d10bfbeb749cc2c788fb299f4ff9cf40034ca55bd80e2d18c3c09",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L2 |\n"
-    },
-    "256": {
-      "source_sha256": "1f75e0a59a5594081d76ddc3a96cabbfd8a5152eac8fa7ec6a26645420494d4d",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L1 |\n"
-    },
-    "257": {
-      "source_sha256": "1f5654ede6708097adf41e368fe7fc274049bd597b5620f5393ed5b0aabd52dd",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L2 |\n"
-    },
-    "258": {
-      "source_sha256": "ebb0254f51abff43725f0d53f66b0f6153a5f1b31e37c4026acc9170baf87ca2",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L2 |\n"
-    },
-    "259": {
-      "source_sha256": "e1cd602810897edcbbf4e0e4c2d3ba1379ba14a276bd2fc93e1a61d9f9c992cd",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L2 |\n"
-    },
-    "260": {
-      "source_sha256": "944d0143af5acaee3e6bcaa32d57f7d0f71d7d2a0645aa62757e0b9eb6eb5644",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L2 |\n"
-    },
-    "261": {
-      "source_sha256": "624a38705e4e5e123aa28fd0a5932eb75bb11a377f46ad2182a21c0d79a7f1fa",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L2 |\n"
-    },
-    "262": {
-      "source_sha256": "d573bce8ffdf97dcfc99e024a0fa8b2bb3ba97d6b23eb71540b819eb757c05f8",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L2 |\n"
-    },
-    "263": {
-      "source_sha256": "3ce03d36fb6d8c13f2fefe0e855a1bcdd992bcca318992801b2a47ad6403c9ad",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L2 |\n"
-    },
-    "264": {
-      "source_sha256": "7623429d746d8fc3b3805ae84b5d003da4e6f4e9c0c469da0ee0d85844e2d8f8",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L2 |\n"
-    },
-    "265": {
-      "source_sha256": "8f77be2627e4febfa1420c009323c6599e6feb8a4a6fc8599961776849165231",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L2 |\n"
-    },
-    "266": {
-      "source_sha256": "e2fb7b459a627b91e5530fafce9989369d37a1688ecbbf46225c0aff619e8c42",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L2 |\n"
-    },
-    "267": {
-      "source_sha256": "83eb3ba848b3d7c60b1aa9d5d16bb1fb494b9da1120ae99c8e068345483e42e5",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L2 |\n"
-    },
-    "268": {
-      "source_sha256": "3a096156a731718c91c903e66cd7ac742d7d091ae9db5a67af5cc40c633a1d60",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L2 |\n"
-    },
-    "269": {
-      "source_sha256": "96b6285666d37dbc1bc364f5fb9e8d2599b21e678a68f720d507c588d9973cf2",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L2 |\n"
-    },
-    "270": {
-      "source_sha256": "1d8d3cc685d2972b3d2ae05d0a58bf7e872929395941012d588cf48b95800661",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L2 |\n"
-    },
-    "271": {
-      "source_sha256": "f77fb6b89de3765096e5b1b19da71eebf4c0e164d3e1c564f9a1a38f3fb07f90",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L2 |\n"
-    },
-    "272": {
-      "source_sha256": "d4794b72a250db86e166d93410eb3c6279a274e6149eb0a2bc3dd97c4f18c0e0",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L2 |\n"
-    },
-    "273": {
-      "source_sha256": "9fde8108e4bfbc64a146013e9c689df0f8eeeb4aa073ac3bd2b61b05ca1eb496",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L2 |\n"
-    },
-    "274": {
-      "source_sha256": "587483895b15c3b9a534b9407a61479291143f91cfc5c95440fdd2b68bc32f48",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L2 |\n"
-    },
-    "275": {
-      "source_sha256": "8e7efb3319ae6cf16db4cbe6279e192889fee0ece7775741cb54c85a1a857df3",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L2 |\n"
-    },
-    "276": {
-      "source_sha256": "516af6fb94d61e07f54939ac1ce6142c5e7095947a3b8cede47f5e6abb23af37",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L2 |\n"
-    },
-    "277": {
-      "source_sha256": "dff16fefe6cd448ca5f4c81e3b3d0a31df42546ea474db9da6e2785b26ed2d36",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L2 |\n"
-    },
-    "278": {
-      "source_sha256": "86acd2cb3583f38c5e1e7dd1450224d352088c7c70f74993b481805a9931d141",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L1 |\n"
-    },
-    "279": {
-      "source_sha256": "acf14588c41640e8703dc00b59d2d29a6781a74e1a159ff1ffe84d9500e3e177",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L2 |\n"
-    },
-    "280": {
-      "source_sha256": "b2616611738d7bea3db2e2579c2aa7ccd144d00a9600a6a1d369c3d06472d6c9",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L2 |\n"
-    },
-    "281": {
-      "source_sha256": "ff3d9279a9ebd32edd7ce6e352424a91e1696fcebab750726a853ddf36d6a56c",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L2 |\n"
-    },
-    "282": {
-      "source_sha256": "a441fb544317baeec7a1d65c565eac9f1654ead132973b13e1f3a66f4fa1a602",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L2 |\n"
-    },
-    "283": {
-      "source_sha256": "569c8e093b5959021a4e89cf7130c1dade3622873107496a4b456bdc36268a97",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L2 |\n"
-    },
-    "284": {
-      "source_sha256": "6965b06b8e28d731ec875107016c43af4460167639404f5fd420788a769d8cf4",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L2 |\n"
-    },
-    "285": {
-      "source_sha256": "ff0e41b18d40f7019652b78c91a606d7cf7c7c4e315ce84aa47e4cbc98dea9a0",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L2 |\n"
-    },
-    "286": {
-      "source_sha256": "79b671550afdbead6d741621da65310b963b8f1f622a9ce74e8579ec5a068c3a",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L2 |\n"
-    },
-    "287": {
-      "source_sha256": "7293cf4839953a0d381d9cc8eed75677d387528ca8dd9bd0cb985cb94ce16338",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L2 |\n"
-    },
-    "288": {
-      "source_sha256": "fe1483f092ef82ede8fbcc53f03ba0d48622cc5a7f7c3bc026e343f4225c1d0e",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L2 |\n"
-    },
-    "289": {
-      "source_sha256": "811f7782ead2abec9ba69698f923f18fb805b2dd397fe761aa0241e34b42c774",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L2 |\n"
-    },
-    "290": {
-      "source_sha256": "139439d0bb5dcef9c2128d8728cd3bd202ae5331522d6f132a1bc4cd146b47db",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L2 |\n"
-    },
-    "291": {
-      "source_sha256": "a08b375e369091327e1d2b20b61d90df0a75f8eb17f7bf9ae5712a2d46800b4c",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L2 |\n"
-    },
-    "292": {
-      "source_sha256": "b54b9e42cee5c37faf8a342445f7ff8acc3326a18331118202715ec15797e3f6",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L2 |\n"
-    },
-    "293": {
-      "source_sha256": "0b5689985c599990bf3354165405b32ebbd0f3c0cb7f939c12d7e6b223e2e262",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L2 |\n"
-    },
-    "294": {
-      "source_sha256": "93c8d401e3e6274f784b66125f0fde19372fe5f1009dabaa624a65dbdc5e8dee",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L2 |\n"
-    },
-    "295": {
-      "source_sha256": "4dc2536e5e5646a3e9d586d53ccd5e5aa305e5670810adea74ddafa6cd33f19d",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L2 |\n"
-    },
-    "296": {
-      "source_sha256": "a66288f9e8aa4e8d3830921407eab45ea33288b4a9123aac5c30a5034101234f",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L2 |\n"
-    },
-    "297": {
-      "source_sha256": "be7c29975a3c058719de3c2fb96313228c5484920dced8e30a703119c4cb9ed8",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L2 |\n"
-    },
-    "298": {
-      "source_sha256": "164c97f914b137d1a7e5f932de5029d4f39b742160b631542490f78626aae556",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L2 |\n"
-    },
-    "299": {
-      "source_sha256": "1d8f68ccf9ef256f4e6ef617a8a2e94fce3fe4ddc601ebb901b6c24e782333b9",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L2 |\n"
-    },
-    "300": {
-      "source_sha256": "1693fd3063c09d08d4787bb3b4380a050ddbdb8601e5061f1135e39925c1c909",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L2 |\n"
-    },
-    "301": {
-      "source_sha256": "bce3f827042e48d86772f2e894b4b2bfc7bf7fc21f6b0d972e6c1d47bc07065a",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L2 |\n"
-    },
-    "302": {
-      "source_sha256": "e2bb8a489599d710cde6ffd135b88001b1f6bfa6d6557ca423d4e3b5942b9d1f",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L2 |\n"
-    },
-    "303": {
-      "source_sha256": "c26b6522d51c477f5c354882400491205936e654f45d4543d0ed272fbc2a4070",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L2 |\n"
-    },
-    "304": {
-      "source_sha256": "b89341e70abcf1fdd0c3fbbbd8fb67fca156c6ccd6717b20ab0bdbd581f1c1cc",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L2 |\n"
-    },
-    "305": {
-      "source_sha256": "9de4fd6657307dbe350963e8bcef397f36250ed300398592c5291504c1232c80",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L2 |\n"
-    },
-    "306": {
-      "source_sha256": "0e5c132178fa97a2e985223bcf7de456c586a8362a3453b879a377b8f31b5257",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L2 |\n"
-    },
-    "307": {
-      "source_sha256": "bb614049fc19112684721bd59935afa02a95cad402c363f3c09041b868e4e7ef",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L2 |\n"
-    },
-    "308": {
-      "source_sha256": "ec3b665634d6f5f07cb0aa810d80362f1e8988c64b6a1872d3d5ed4e9b6bee41",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L2 |\n"
-    },
-    "309": {
-      "source_sha256": "42f8843e51022261ac1b711e635bc7fba1ea977e7fd1c4fa6cac0bc7b86b89d9",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L2 |\n"
-    },
-    "310": {
-      "source_sha256": "51ce33a0b6207640d906adfc1d0bd1e5d14a5e724d8892ef67f9c9009f899604",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L2 |\n"
-    },
-    "311": {
-      "source_sha256": "87f45ed6c91a0d9f375a6fab6be296674894ada6ee7ad74897b014da2ec51ec0",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L2 |\n"
-    },
-    "312": {
-      "source_sha256": "bad26e08be4eaceece32763e8711888cebb011d2ea03598811ad7e166e7edf5a",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L2 |\n"
-    },
-    "313": {
-      "source_sha256": "35ae0f6a662dbada5e3655e95d162637073cc9e7a9ccdc220dcd50dd391f2c75",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L2 |\n"
-    },
-    "314": {
-      "source_sha256": "498304a8c9bc0c9c478dc77a20f90990687d67aa1e2ec1c846badcb54970f8c8",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L2 |\n"
-    },
-    "315": {
-      "source_sha256": "3442f520198b576d92856dfc75c453130089a834e87d41cdac202ce2c46458d8",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L3 |\n"
-    },
-    "316": {
-      "source_sha256": "f5a828b22aed4046e49385844fe5c60dc9941168e953576eeabd11724f4d5fb6",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L3 |\n"
-    },
-    "317": {
-      "source_sha256": "f50531c12b3da3385d4d3d2a516cf8642bdd01a3c536cb8f916d730bcbc605bf",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L1 |\n"
-    },
-    "318": {
-      "source_sha256": "39c52017a601a62ce2cc30f1125c0e4e896c8b75184882a28748f5c37f917037",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L2 |\n"
-    },
-    "319": {
-      "source_sha256": "a2d3239b403fbd0763c00dfdaf5efee63b941a8466e6c5aacb527269920c742b",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L2 |\n"
-    },
-    "320": {
-      "source_sha256": "0de05ef1b651106fcf874ea0c17040e90b4898736810f623a08c57fdd00773f8",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L2 |\n"
-    },
-    "321": {
-      "source_sha256": "ba5dbb58fa094326956cd9593e2c78d071b35830e913eb68ee69cd7cd180ff1f",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L2 |\n"
-    },
-    "322": {
-      "source_sha256": "fbdd36a25684c84049a88913eb3deca933e9baed9feb38d19511090af1cc6424",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L2 |\n"
-    },
-    "323": {
-      "source_sha256": "fbcad11311f3e98a9d254f4f6a879047a86291c9af0938449d120d978a1a3550",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L3 |\n"
-    },
-    "324": {
-      "source_sha256": "c56d07155ef0a016c549cbcd375c2764dddf1ee9325191a07b63e04df5c8875b",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L2 |\n"
-    },
-    "325": {
-      "source_sha256": "2d887f34074678a0ccc51222f4760a55a5b6d3c340954b6fcd64fc9a17971428",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L1 |\n"
-    },
-    "326": {
-      "source_sha256": "5734b8a263e242b12ec00ae9d938793a3c220b44ab2ab8ad9195e93d505e551e",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L2 |\n"
-    },
-    "327": {
-      "source_sha256": "1a38fcd624f979caa23f202f909f204b3267c91d00f7b1bfcd59f1a7d22ede39",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L2 |\n"
-    },
-    "328": {
-      "source_sha256": "b203cffea0d1664cae3bbe584777bc83d32e1a17d94ec04ef8ffddaf526755d5",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L2 |\n"
-    },
-    "329": {
-      "source_sha256": "762ae2bc2a7cd78807a41bfdea623ab6108a733b996df1fdecb0b77c6d8bd15b",
-      "status": "reviewed",
-      "translation": "| ⟦shared:0⟧ | L1 |\n"
+      "translation": "Open the entry and copy the example for the figure or operation you need. [Browse data formats](⟦shared:0⟧).\n"
     }
   }
 }

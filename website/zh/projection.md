@@ -1,50 +1,50 @@
-<div class="task-intro"><p>把已知蛋白区间投影到真实 CDS 的基因组位置，显式保留 phase、链与分段关系。</p></div>
-
 <a id="prepare"></a>
 
-## 本页准备 {#prepare}
-准备[已核对编码 DNA 的 AmpR 数据](homology.md)，或将下方脚本放入工作目录并运行。
+## 选择输入 {#prepare}
 
-{{recipe:ampr}}
+绘图前准备一张 CDS 表和一个已知的氨基酸区间。完整 CDS 提供来源坐标、链及阅读框。
 
 <a id="cds"></a>
 
-## 先准备有来源的 CDS {#cds}
-本页准备代码包含[完全相同 CDS 的比较](homology.md#membership)，使用随包质粒的真实注释
-和 DNA。完整 CDS 的 phase 明确为 0，翻译表显式设为 11。
+## 从氨基酸区间找到核酸坐标 {#cds}
 
-{{code:projection}}
+随包 pUC19 参考注释给出 lacZα 的完整 CDS。第 2–5 个残基落在原始负链的 455–466 bp。
 
-{{console:projection}}
-
-这个例子选择第 2–20 个残基作显示范围，不声称它是检测到的蛋白结构域。
-投影结果是基因组区间，保留正负链与分段关系。真实检测到的 domain 也应提供确切
-父 CDS ID 及氨基酸范围；不能通过同名注释或注释最大端点猜测。
+```r
+record <- flagship_circular_example$references[["pUC19"]]
+coding <- record$features |>
+  dplyr::filter(anno == "lacZα", type == "CDS") |>
+  dplyr::transmute(accver, start, end, strand, feature_id = "lacZ_alpha", phase = 0L)
+cds <- build_ggchord_cds(coding, genetic_code = 11)
+span <- data.frame(feature_id = "display", parent_id = "lacZ_alpha", start = 2, end = 5)
+mapped <- project_ggchord_features(span, cds)
+mapped[c("accver", "start", "end", "strand")]
+```
 
 <a id="boundaries"></a>
 
-## 分段、phase 和部分区域 {#boundaries}
-`build_ggchord_cds()` 先建立 CDS 分段映射，`project_ggchord_features()` 再通过分段映射投影氨基酸区间。
-每个输入 feature 返回一行，跨剪接片段放在 `segments` 列表列；
-`project_ggchord_links()` 才按双方边界拆成配对行。不要简单把坐标乘以 3。
-不完整 CDS、phase、截断或不支持的位置必须按文档策略处理并检查报告。
-DNA 匹配、氨基酸区间投影和真实翻译/比对是不同步骤，绘图库不会代为推断缺失证据。
+## 跨片段与 phase {#boundaries}
+
+多个 CDS 片段可以共享一个父 ID。投影按转录方向排列片段，返回的 segments 列保留内含子间隔。单看外包区间会把这些间隔也计入。
 
 <a id="links"></a>
 
-## BLASTp 查询范围与双端连接 {#links}
-{{code:linkprojection}}
+## 投影两端的已知对应区间 {#links}
 
-{{console:linkprojection}}
+下面两条教学坐标轴各含十个密码子。示例明确给定三个残基的一一对应，同时展示正负链的端点方向。真实输入需要自己的对应证据。
 
-这个无缺口例子依赖[同源专题](homology.md)中已核对的相同编码序列。
-真实 BLASTp 输入可以有 gap；查询区间仍能投影，但双端连接还需要 subject 的 CDS
-和无缺口对应证据。请阅读[真实 BLASTp 读取与投影](protein-alignments.md#projection)。
-绘制以 bp 为轴的图时，应使用投影后的基因组端点。
+```r
+models <- data.frame(
+  feature_id = c("A", "B"), accver = c("row1", "row2"),
+  start = c(101, 301), end = c(130, 330), strand = c("+", "-"), phase = 0L
+)
+pair <- data.frame(qfeature_id = "A", sfeature_id = "B",
+  qstart = 2, qend = 4, sstart = 5, send = 7)
+project_ggchord_links(pair, build_ggchord_cds(models), ungapped = TRUE)
+```
 
 <a id="check-result"></a>
 
-## 检查要点 {#check-result}
-检查父 CDS ID、投影报告及返回分段。选择的残基区间只是显示例子，不能将其描述为检测到的结构域。
+## 核对投影 {#check-result}
 
-<div class="next-step">继续：<a href="workflows.md">数据处理流程 →</a></div>
+检查父 CDS 标识、原生单位和完整片段列表。实际 BLASTp 命中若包含 gap，先判断已有证据能支持单侧区间还是双端逐位对应。

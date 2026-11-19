@@ -1,8 +1,7 @@
 {{code:courseblockaz}}
 
-{{prepare:setup}}
 
-先解压[真实输入包](https://github.com/DangJem/ggchord/archive/refs/heads/main.zip)，工作目录须含 examples/；每节单列可选依赖。
+示例使用随包表或随安装提供的小文件。每段代码列出所用的依赖。
 
 <a id="variants"></a>
 
@@ -22,7 +21,7 @@ VCF 需要可选 **VariantAnnotation**，显式结构变异解码另外需要 **
 
 ## 基因组对齐块：MAF 与 chain {#genome-alignments}
 
-使用已有 Python 环境，其中须安装支持 MAF/chain 的可选 **Biopython Bio.Align**，已直接验证 1.85。章节可通过 `ALIGNMENT_PYTHON` 选择该解释器。源码 checkout/输入包须包含 `examples/genome-alignments/`；两个未改动的固定上游版本文件有哈希、许可归属及验证脚本，不运行 aligner。可选解析器不可用意味着跳过示例，不是成功导入。
+这两个 MAF 与 chain 文件来自 Biopython 的公开测试数据。读取时需要安装支持这两种格式的 Python Biopython，并可通过环境变量选择解释器。
 
 {{code:courseblockbb}}
 
@@ -82,6 +81,6 @@ JSON 需要可选 **jsonlite**，只读提供的本地缓存。后续页 URL 和
 
 GFA 图边表达邻接/重叠，不自动提供整基因组间 HSP。已有显式路径步骤在坐标构建有据时，可用普通 sequence/feature 表展示。节点 ID 可在同一路径重复，须保留路径、源步骤索引、出现次序及遍历方向，不能连接所有出现位置，也不能把节点/边数当作直系同源、Identity 或 read support。
 
-真实探索例使用固定提交中未改动的 ODGI 人类 LPA 图，由可选 **gfapy** 解码。5,195 条原边都是零重叠；原型核对每个原始路径转移和节点长度，投影 13 条给定路径的 202,806 个步骤。展示子集显式保留两条命名路径各前 100 个步骤，原遍历方向及 ID 不改；给定完整路径长度与染色体长度严格区分，不生成 pair 连接。代码、源 URL/哈希、原 MIT 许可、输出表及实际图见源码 checkout 的 `tools/long-term-audit/OPTIONAL-GRAPH-BRIDGE-v0.27.0.md` 及其原型资产；`data-raw/prepare-graph-prototype.py` 仅在显式调用时取得两个固定原文件。
+真实探索例使用固定提交中未改动的 ODGI 人类 LPA 图，由可选 **gfapy** 解码。5,195 条原边都是零重叠；原型核对每个原始路径转移和节点长度，投影 13 条给定路径的 202,806 个步骤。展示子集显式保留两条命名路径各前 100 个步骤，原遍历方向及 ID 不改；给定完整路径长度与染色体长度严格区分，不生成 pair 连接。代码、源 URL/哈希、原 MIT 许可、输出表及实际图见源码 checkout 的 [图路径来源与验证](https://github.com/DangJem/ggchord/blob/v0.29.0/tools/long-term-audit/OPTIONAL-GRAPH-BRIDGE-v0.27.0.md) 及其原型资产；`data-raw/prepare-graph-prototype.py` 仅在显式调用时取得两个固定原文件。
 
 这不是通用 `read_gfa()` 或 graph Coord。非零/未知重叠、源字符缺失、GFA W/J/GFA2 及 ODGI 原生二进制不在此原型范围。用成熟上游工具导出明确路径子集并保留日志/来源映射，不推断缺失坐标或成对证据；文档中的上游导出路线也不等同于此处已验证二进制解码。

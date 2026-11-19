@@ -1,5 +1,5 @@
 {
-  "source_sha256": "42200195377cecf5a469b1dd4cebda0c93fdd75d11b55c4b1dbcea5fb0877b5a",
+  "source_sha256": "637267ef8395b2d33a73c80bf7d9aa64bb17414a3c673e9da6bc967a6cb9ab06",
   "blocks": {
     "1": {
       "source_sha256": "419a8cc4b7e153dc423fc1c3ae8a0220ecf96e814a011372c36372f675279cc1",
@@ -17,9 +17,9 @@
       "translation": "To read the matrix, choose a query sequence at the top and a subject sequence on the left. Their outlined intersection is the comparison region for that pair. Headers show complete ranges; bottom and right ticks use local positions. Cell sizes retain sequence-length proportions, and an empty region means only that the input contains no HSP there.\n"
     },
     "6": {
-      "source_sha256": "ac254812b10a9ba8422df92cf096ae0582b6e9178faa2e8f3042f37dc9f20fea",
+      "source_sha256": "31138c4f78a34a97b6da7d7b692460d16ab5153eee103b7fd7428387fe1788ee",
       "status": "reviewed",
-      "translation": "## What the module supports ⟦shared:0⟧\n"
+      "translation": "## What do you want to inspect? ⟦shared:0⟧\n"
     },
     "7": {
       "source_sha256": "72ebf3b4bda7bc02f99ce1e08d00c37c7f01e23fb8c47f7afb73d73911a5eff5",
@@ -42,9 +42,9 @@
       "translation": "- Exact source-to-display conversion, visible windows and traceable input rows.\n"
     },
     "11": {
-      "source_sha256": "9daf18d97d988ac054324a3679fcd8dcb20d2e5a95f45b541197afdaad90dcba",
+      "source_sha256": "9c18f0c26827aaaa3438005556bbc971829ff64bcb7e51f853c56e607a4a29a1",
       "status": "reviewed",
-      "translation": "[Data, axes and mapping](⟦shared:0⟧) · [Alignment imports](⟦shared:1⟧) · [Protein coordinates](⟦shared:2⟧)\n"
+      "translation": "[Try an HSP dot plot](⟦shared:0⟧) · [Import an alignment](⟦shared:1⟧) · [Protein coordinates](⟦shared:2⟧)\n"
     },
     "13": {
       "source_sha256": "39ca55fec1b3a8ad4755fc618b43e00b0951e5f17f55e37fa36186c75776533e",

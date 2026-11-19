@@ -6,10 +6,6 @@ Each map retains all source features, independent reference primers and every si
 
 ## Preparation and complete display policy {#prepare}
 
-{{code:courseblockg}}
-
-{{code:referencebuilder}}
-
 `reference$features`, `reference$primers` and `reference$sites` are the complete tables actually drawn. `reference$all_site_count` records the number of original candidates, with complete search results reproducible through the generator; `reference$policy` describes the enzyme set. Feature geometry is not reduced and site sets are not sampled to a fixed count.
 
 <a id="counts"></a>
@@ -20,91 +16,91 @@ Each map retains all source features, independent reference primers and every si
 <a id="catalogpsb"></a>
 
 ## pSB1C3: Small vector and basic structure {#catalogpsb}
-{{code:courseblockh}}
+{{code:courseblockh,catalogmap}}
 
 {{figure:catalogpsb}}
 
 <a id="catalogpuc"></a>
 
 ## pUC19: Common features and replication origin {#catalogpuc}
-{{code:courseblocki}}
+{{code:courseblocki,catalogmap}}
 
 {{figure:catalogpuc}}
 
 <a id="catalogpbr"></a>
 
 ## pBR322: Multiple resistance regions and direction {#catalogpbr}
-{{code:courseblockj}}
+{{code:courseblockj,catalogmap}}
 
 {{figure:catalogpbr}}
 
 <a id="catalogblue"></a>
 
 ## pBluescript II SK(+): Local regulation and short features {#catalogblue}
-{{code:courseblockk}}
+{{code:courseblockk,catalogmap}}
 
 {{figure:catalogblue}}
 
 <a id="catalogpet"></a>
 
 ## pET-28a(+): Expression regions and tags {#catalogpet}
-{{code:courseblockl}}
+{{code:courseblockl,catalogmap}}
 
 {{figure:catalogpet}}
 
 <a id="catalogduet"></a>
 
 ## pETDuet-1: Dual expression units; transition to the dense case {#catalogduet}
-{{code:courseblockm}}
+{{code:courseblockm,catalogmap}}
 
 {{figure:catalogduet}}
 
 <a id="catalogdonr"></a>
 
 ## pDONR221: Recombination-related architecture {#catalogdonr}
-{{code:courseblockn}}
+{{code:courseblockn,catalogmap}}
 
 {{figure:catalogdonr}}
 
 <a id="catalogpcdna"></a>
 
 ## pcDNA3.1(+): Annotation hierarchy in an expression vector {#catalogpcdna}
-{{code:courseblocko}}
+{{code:courseblocko,catalogmap}}
 
 {{figure:catalogpcdna}}
 
 <a id="catalogtre"></a>
 
 ## pTRE-Tight-BI: Bidirectional regulatory structure {#catalogtre}
-{{code:courseblockp}}
+{{code:courseblockp,catalogmap}}
 
 {{figure:catalogtre}}
 
 <a id="catalogtripz"></a>
 
 ## pTRIPZ: Display density on a longer sequence {#catalogtripz}
-{{code:courseblockq}}
+{{code:courseblockq,catalogmap}}
 
 {{figure:catalogtripz}}
 
 <a id="catalogcambia"></a>
 
 ## pCAMBIA1300: Architecture of a larger plant vector {#catalogcambia}
-{{code:courseblockr}}
+{{code:courseblockr,catalogmap}}
 
 {{figure:catalogcambia}}
 
 <a id="catalogearley"></a>
 
 ## pEarleyGate 201: Category comparison with another plant vector {#catalogearley}
-{{code:courseblocks}}
+{{code:courseblocks,catalogmap}}
 
 {{figure:catalogearley}}
 
 <a id="catalogcas"></a>
 
 ## pSpCas9(BB)-2A-GFP (PX458): Large expression vector and label fitting {#catalogcas}
-{{code:courseblockt}}
+{{code:courseblockt,catalogmap}}
 
 {{figure:catalogcas}}
 

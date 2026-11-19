@@ -1,64 +1,49 @@
-<div class="task-intro"><p>Compare AmpR neighbourhoods in two plasmids. Check real coding DNA, establish correspondence, then focus to each CDS plus 200 bp on either side.</p></div>
-
 <a id="membership"></a>
 
-## Extract actual CDS and coding DNA {#membership}
-Select AmpR annotations from bundled pUC19 and pETDuet-1, retaining IDs, coordinates, strand and text. Reverse-complement negative-strand DNA so comparisons use the same biological orientation rather than annotation names alone.
+## Read existing group memberships {#membership}
 
-{{code:homologinput}}
+The installed file contains group memberships from public plant data. Each output row identifies a group and one member.
 
-{{output:homologinput}}
-
-Read the negative-strand CDS in coding orientation, then compare the two DNA strings.
-
-{{code:homologdna}}
-{{output:homologdna}}
-
-`cluster_features` should contain two actual CDS; `cds_dna` retains their oriented coding sequences. This strict example checks exact DNA equality. General homology analysis can use external alignments and clustering; homologs need not be identical.
+```r
+groups <- system.file("extdata", "plant-feature-groups.txt", package = "ggchord")
+members <- read_feature_relations(groups, format = "named_groups")
+head(members$membership[c("group_id", "feature_id")])
+```
 
 <a id="links"></a>
 
-## Declare members and sequence pairs {#links}
-Build membership from exact coding-DNA equality. Different DNA does not enter one group merely because both annotations say AmpR.
+## Check both source IDs {#links}
 
-{{code:homologmembership}}
+The pair table retains source IDs from Arabidopsis and soybean. Supply feature coordinates to obtain intervals for each end.
 
-{{output:homologmembership}}
-
-Inspect `membership` and `homologs$report$comparisons` and `$members`. The linking utility consumes existing groups; it does not compute a new alignment. Unknown members and ambiguous paralogs are reported; only explicit `paralogs = "all"` requests all combinations within the documented bounds.
+```r
+pairs <- system.file("extdata", "plant-feature-pairs.homology", package = "ggchord")
+positions <- system.file("extdata", "plant-pair-features.gff", package = "ggchord")
+anchors <- read.table(positions, col.names = c("accver", "feature_id", "start", "end"))
+joined <- read_feature_relations(pairs, feature_data = anchors)
+head(joined$ribbon_data[c("qfeature_id", "sfeature_id", "qstart", "sstart")])
+```
 
 <a id="focus"></a>
 
-## Focus on comparable neighbourhoods {#focus}
-Full plasmid lengths would shrink the individual CDS. Construct windows from each real CDS source interval and add 200 bp on either side, retaining the original sequence and annotation tables.
+## Choose local windows {#focus}
 
-{{code:homologs}}
-{{figure:homologs}}
-
-Blue arrows show the reverse-strand AmpR CDS and the grey band connects the verified intervals. Axes use each original sequence's positions, so one horizontal location can have different source labels. Break markers indicate that only local windows remain.
-
-`local_homologs$report` records retention and clipping. Genes outside the windows are omitted, not absent. The band represents declared interval correspondence, not a base alignment; envelopes of segmented annotations likewise do not establish exon-level correspondence.
+Before plotting, obtain complete sequence lengths independently, then choose windows around both anchors. See [local views](views.md).
 
 <a id="projection"></a>
 
-## Project supported protein intervals to both CDS {#projection}
-{{code:linkprojection}}
+## Protein and genome coordinates {#projection}
 
-{{console:linkprojection}}
-{{results:projection}}
-
-The first 20 residues of identical CDS provide sequence evidence for `ungapped = TRUE`. Equal spans alone do not justify that claim for ordinary BLASTp HSPs. The utility retains protein statistics rather than presenting them as nucleotide identity.
+Existing membership records identify related features. For precise amino-acid to nucleotide coordinates, see the [CDS projection example](projection.md#cds).
 
 <a id="check-result"></a>
 
-## Result checks {#check-result}
-Both AmpR arrows show the reverse strand. Coding DNA supports correspondence; source axes and focus reports explain the local display. Save at [explicit 10 × 5 in dimensions](output.md).
+## Check the relationships {#check-result}
 
-Next: [read real BLASTp query intervals](alignments.md#protein), understand [CDS projection and segments](projection.md), or create [independent local windows](views.md).
+Check source ID matches and the coordinate units at both ends. The score in the third input column retains its original source meaning.
 
 <a id="save-result"></a>
 
-## Save this result {#save-result}
-Save the plot just created to the working directory; use matching dimensions for preview.
+## Export matched relationships {#save-result}
 
-{{code:courseblocke}}
+The returned ribbon_data is an ordinary table that can be saved with both endpoint intervals.

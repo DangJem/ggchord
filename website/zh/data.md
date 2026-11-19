@@ -3,9 +3,8 @@
 <a id="prepare"></a>
 
 ## 本页准备 {#prepare}
-先选出校验所需的列。运行文件示例前解压[说明输入](https://github.com/DangJem/ggchord/archive/refs/heads/main.zip)，使工作目录包含 `examples/`。
+示例使用随包表或随安装提供的小文件。每段代码列出所用的依赖。
 
-{{prepare:setup}}
 
 <a id="tables"></a>
 
@@ -95,11 +94,11 @@
 <a id="import"></a>
 
 ## 进阶：导入原始记录 {#import}
-在仓库根目录运行这个仅用于源码仓库的例子，不改写原始文件。
+分别读取三个独立格式示例。FASTA 来自 pUC19；GFF3 与 BLAST 表来自四序列比较数据。
 
 {{code:imports}}
 
-{{console:imports}}
+
 
 `read_genbank()` 保留记录/注释来源和分段位置。`read_bed()`、`read_paf()` 保留
 坐标转换元数据。`as_ggchord_seq()`、`as_ggchord_feature()`、`as_ggchord_link()`

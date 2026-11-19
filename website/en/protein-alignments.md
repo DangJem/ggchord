@@ -34,19 +34,7 @@ Use generic layers such as `geom_feature()` for annotations at amino-acid positi
 
 ## Place protein hits on a nucleotide genome {#projection}
 
-To locate protein hits on a nucleotide backbone, provide known CDS mappings and project aa intervals into bp. This section uses source protein hits for BVI_023A_0009, selecting records with complete CDS before converting the query side. Inputs come directly from bundled `sequence_detail_example`; original provenance is available in the [input bundle](formats.md).
-
-```r
-library(dplyr)
-```
-
-{{code:protein}}
-{{output:protein}}
-{{code:proteinproject}}
-{{output:proteinproject}}
-{{results:protein}}
-
-Residues 50–289 project to 7,181–7,900 bp on BVI_023A, on the reverse strand. A single-end projection can retain the span of a gapped HSP. Connecting two genomes also requires the subject CDS model. See [CDS projection](projection.md) for a supported ungapped two-ended example.
+To locate a protein interval on a nucleotide backbone, supply its source CDS, reading frame and strand. The [projection example](projection.md#cds) checks a known negative-strand interval.
 
 <a id="source"></a>
 

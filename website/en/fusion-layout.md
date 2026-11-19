@@ -2,7 +2,6 @@ See [Flagship data sources and construction](flagship-data.md) for provenance, d
 
 {{code:courseblockbm}}
 
-{{prepare:fusiondata,fusionpanels,fusionlinear,fusionview}}
 
 <a id="styles"></a>
 

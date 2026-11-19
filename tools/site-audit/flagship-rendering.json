@@ -2,42 +2,42 @@
   "figures": {
     "flagradial": {
       "file": "man/figures/flagradial.png",
-      "sha256": "ea24dafaa0e3fc79f83f481eeddab30b71c806bdb6902c643dabf51358b2d506",
+      "sha256": "7122363a4099d95300a196b028234a3c458aef3755346c73554b2d7e29a86645",
       "width": 12,
-      "height": 9,
-      "dpi": 120,
+      "height": 10.5,
+      "dpi": 144,
       "background": "#FFFCF5",
-      "rendered_source_sha256": "96c39c6ea6d0fcee4da910d4cd1210f71462b04ebb8d8e0645fb06076aa312b5"
+      "rendered_source_sha256": "26f8c7f6b8ea3ffb9cc76dd154cec923994b9a7c19784064c0b383be95625454"
     },
     "flagsankey": {
       "file": "man/figures/flagsankey.png",
-      "sha256": "57a1e672314e60cb6966a2465022ffb088d1219cab7567421c3703405ce41a13",
-      "width": 12,
-      "height": 9,
-      "dpi": 120,
+      "sha256": "1c133d8ab9f53c6ad0539a29b95ddae9fa39d376ba8f74bac0a31f9a67850d70",
+      "width": 10,
+      "height": 16,
+      "dpi": 144,
       "background": "#FFFCF5",
-      "rendered_source_sha256": "96c39c6ea6d0fcee4da910d4cd1210f71462b04ebb8d8e0645fb06076aa312b5"
+      "rendered_source_sha256": "26f8c7f6b8ea3ffb9cc76dd154cec923994b9a7c19784064c0b383be95625454"
     },
     "flagdotplot": {
       "file": "man/figures/flagdotplot.png",
-      "sha256": "6ccd5a904a6494c4c8e92692148c97d1f778e47798883d972d7f8bb5bea90906",
-      "width": 12,
-      "height": 9,
-      "dpi": 120,
+      "sha256": "9604c0e99f8e1a21aa303a5772eb8de5e78841b15be0e4cfa82a203f84daa4c0",
+      "width": 13,
+      "height": 12,
+      "dpi": 144,
       "background": "#FFFCF5",
-      "rendered_source_sha256": "96c39c6ea6d0fcee4da910d4cd1210f71462b04ebb8d8e0645fb06076aa312b5"
+      "rendered_source_sha256": "26f8c7f6b8ea3ffb9cc76dd154cec923994b9a7c19784064c0b383be95625454"
     },
     "flagfusion": {
       "file": "man/figures/flagfusion.png",
-      "sha256": "6dd1f0f99c54cb2338bdd3b5fd6385f4f5ddb495f9f10822dccef0b0e3d9e7a4",
+      "sha256": "b64c141570b22484ae3141aa91edeebb66311cbcb14ba74b76a11b5293afebe2",
       "width": 16,
-      "height": 12,
+      "height": 14,
       "dpi": 120,
       "background": "#FFFCF5",
-      "rendered_source_sha256": "96c39c6ea6d0fcee4da910d4cd1210f71462b04ebb8d8e0645fb06076aa312b5"
+      "rendered_source_sha256": "26f8c7f6b8ea3ffb9cc76dd154cec923994b9a7c19784064c0b383be95625454"
     }
   },
-  "source_sha256": "96c39c6ea6d0fcee4da910d4cd1210f71462b04ebb8d8e0645fb06076aa312b5",
+  "source_sha256": "26f8c7f6b8ea3ffb9cc76dd154cec923994b9a7c19784064c0b383be95625454",
   "inputs": {
     "sequences": 4,
     "hsp": 32,
@@ -47,7 +47,7 @@
     "retained_linear_features": 16,
     "linear_displayed_hsp": 10
   },
-  "scope": "Retained Chord/Collinear design and biological data; Chord redrawn for the default-style bug fix. Radial/Sankey derive from these parents; Dotplot/Fusion use expanded source tables. Normal PNGs only, no browser or publication checks.",
+  "scope": "Existing Chord/Collinear design and biological data retained; Chord PNG separately refreshed for the default-style bug fix. Radial/Sankey derive from these parents, Dotplot/Fusion use expanded source tables; normal PNGs only, no browser or publication checks",
   "retained_existing_flagships": {
     "showcasechord": {
       "file": "man/figures/showcasechord.png",

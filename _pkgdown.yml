@@ -17,182 +17,271 @@ template:
     navbar-dark-bg: "#17272C"
 navbar:
   structure:
-    left: [home, start, plots, articles, reference]
+    left: [start, plots, data, gallery, reference]
     right: [github, lightswitch]
   components:
-    home:
-      text: Home
-      href: index.html
-    plots:
-      text: Plot courses
-      menu:
-        - text: Chord comparisons
-          href: chord-start.html
-        - text: Collinear comparisons
-          href: collinear-start.html
-        - text: Plasmid maps
-          href: plasmid-start.html
-        - text: Gallery
-          href: gallery.html
     start:
       text: Get started
       href: installation.html
-    reference:
-      text: Reference
-      href: reference/index.html
-    articles:
-      text: Articles
-      href: about.html
+    plots:
+      text: Plotting guide
+      href: modes.html
+    data:
+      text: Data and workflows
+      href: formats.html
     gallery:
-      text: Gallery
+      text: Example gallery
       href: gallery.html
-    news:
-      text: Changelog
-      href: about.html#status
+    reference:
+      text: API reference
+      href: reference/index.html
 reference:
-  - title: Construction and contracts
+  - title: "Start a plot"
+    desc: "Start with reference sequences and optional default tables, then add layers with their own data and mappings."
+    id: plot-basics
+    previous_id: construction-and-contracts
+    title_zh: "创建图与图层"
+    desc_zh: "用参考序列和默认数据表创建图，再叠加各自拥有数据和映射的图层。"
+    source_sha256: 831a5d559e44e537ada3d42560807ab7e86c0c555f0cb88756c99f424e993c8e
+    contents:
+      - '`ggchord`'
+      - '`prepare_ggchord_data`'
+      - '`+.ggchord`'
+      - '`ggchord_api_contract`'
+  - title: "Coordinates and sequence order"
+    desc: "Choose how sequences occupy the panel. Single-sequence maps, multi-sequence comparisons and HSP dotplots use different coordinates."
+    id: coordinates
+    title_zh: "选择坐标与序列顺序"
+    desc_zh: "选择序列在图上的排列方式。单序列环图、多序列比较和 HSP 点图各自使用相应的坐标系。"
+    source_sha256: cb0d733f5bc299aa5cff1e8a9574ccd0723f1b42b4297dcc8ba0a8e343649651
     contents:
       - '`coord_chord`'
-      - '`coord_circular`'
       - '`coord_collinear`'
-      - '`coord_sankey`'
-      - '`coord_dotplot`'
       - '`coord_radial_synteny`'
-      - '`ggchord`'
-      - '`adapt_ggchord`'
-      - '`ggchord_api_contract`'
-      - '`ggchord_layout_contract`'
-  - title: Input and validation
+      - '`coord_sankey`'
+      - '`coord_circular`'
+      - '`coord_dotplot`'
+      - '`layout_sequences`'
+  - title: "Backbones and reference marks"
+    desc: "Draw sequence backbones, highlight intervals, mark breaks and label sequence names or distances."
+    id: sequence-layers
+    title_zh: "绘制序列骨架与参照"
+    desc_zh: "显示序列本体、局部区间、断点、序列名称及长度单位。"
+    source_sha256: e6de126ee3552b51b0c7ae2bd517e08ee6a6c406d76ac5e13e83d6376e50e5c9
     contents:
-      - '`as_ggchord_feature`'
-      - '`as_ggchord_link`'
-      - '`as_ggchord_seq`'
-      - '`clean_ggchord_data`'
-      - '`ggchord_data_contract`'
-      - '`prepare_ggchord_data`'
-      - '`read_bed`'
-      - '`read_bedpe`'
-      - '`read_bedgraph`'
-      - '`read_bigwig`'
-      - '`read_vcf`'
-      - '`read_maf`'
-      - '`read_chain`'
-      - '`read_delta`'
-      - '`read_feature_relations`'
-      - '`read_signature_matches`'
-      - '`read_aligned_fasta`'
-      - '`as_ggchord_alignment`'
-      - '`map_alignment_position`'
-      - '`read_blast`'
-      - '`read_fasta_lengths`'
-      - '`read_genbank`'
-      - '`read_gff3`'
-      - '`read_paf`'
-      - '`validate_ggchord_data`'
-      - '`validate_ggchord_hierarchy`'
-  - title: Geometry and labels
+      - '`geom_seq`'
+      - '`geom_seq_label`'
+      - '`geom_seq_region`'
+      - '`geom_seq_break`'
+      - '`geom_seq_scale`'
+      - '`geom_seq_center_label`'
+  - title: "Features and labels"
+    desc: "Place annotations, primers and restriction sites along the backbone. Arrange features and labels with lanes or offsets."
+    id: annotation-layers
+    previous_id: geometry-and-labels
+    title_zh: "绘制特征与标签"
+    desc_zh: "沿骨架绘制注释、引物和酶切位点。用分道或偏移安排特征与标签的位置。"
+    source_sha256: 25dcab3e4c16f96f4c9bbbe08ff3164bff3b3641ad138d94fcdd91bbe4c47142
     contents:
       - '`geom_feature`'
       - '`geom_feature_label`'
       - '`geom_gene_label`'
       - '`geom_gene_label_repel`'
-      - '`geom_link_line`'
-      - '`geom_alignment_segment`'
-      - '`geom_residue`'
-      - '`scale_fill_residue`'
-      - '`geom_link_ribbon`'
+      - '`position_feature_stack`'
+      - '`position_strand`'
+      - '`position_offset`'
       - '`geom_primer`'
       - '`geom_primer_label_repel`'
       - '`geom_restriction_site`'
-      - '`geom_seq`'
-      - '`geom_seq_break`'
-      - '`geom_seq_center_label`'
-      - '`geom_seq_label`'
-      - '`geom_seq_region`'
-      - '`geom_seq_scale`'
-  - title: Positions, scales, themes and guides
+  - title: "Links and alignments"
+    desc: "Connect sequence endpoints with ribbons or lines, display pairwise alignments as segments and inspect individual residues."
+    id: relationships
+    title_zh: "显示连接与比对"
+    desc_zh: "用带或线连接两个端点，用点图线段表示一对序列的比对，用字符矩阵查看单个残基。"
+    source_sha256: 409c2ad274f08c9a8d0e3f53a913a62647fb033fa0fa9bc063eebc0a4d690138
     contents:
-      - '`guide_ggchord_legend`'
-      - '`guide_seq_axis`'
-      - '`guide_track_axis`'
-      - '`layout_sequences`'
-      - '`position_feature_stack`'
-      - '`position_plasmid`'
-      - '`position_strand`'
-      - '`scale_feature_fill_plasmid`'
-      - '`scale_feature_shape_manual`'
-      - '`scale_gene_fill_manual`'
-      - '`scale_link`'
-      - '`scale_ribbon_alpha_continuous`'
-      - '`scale_ribbon_fill_stepsn`'
-      - '`scale_seq_colour_manual`'
-      - '`scale_seq_position_continuous`'
-      - '`scale_seq_ring_manual`'
-      - '`theme_ggchord`'
-  - title: Quantitative tracks
-    contents:
-      - '`geom_track_tile`'
-      - '`geom_track_bar`'
-      - '`track_band`'
-      - '`stat_coverage`'
-      - '`scale_track_fill_gradientn`'
-      - '`scale_track_value_continuous`'
-  - title: Sequence recognition
-    contents:
-      - '`filter_restriction_sites`'
-      - '`find_common_features`'
-      - '`find_ggchord_loci`'
-      - '`find_primer_bindings`'
-      - '`find_restriction_sites`'
-      - '`primer_catalog`'
-  - title: Projection and comparison workflows
-    contents:
-      - '`build_ggchord_cds`'
-      - '`translate_ggchord_cds`'
-      - '`register_ggchord_alignment`'
-      - '`bundle_ggchord_ribbons`'
-      - '`deduplicate_ggchord_ribbons`'
-      - '`filter_ggchord_ribbons`'
-      - '`focus_ggchord_data`'
-      - '`focus_ggchord_track`'
-      - '`link_ggchord_clusters`'
-      - '`map_ggchord_position`'
-      - '`merge_ggchord_ribbons`'
-      - '`project_ggchord_features`'
-      - '`project_ggchord_links`'
-      - '`segment_ggchord_data`'
+      - '`geom_link_ribbon`'
+      - '`geom_link_line`'
       - '`stat_ribbon_bundle`'
       - '`stat_ribbon_density`'
-  - title: Static panel composition
+      - '`geom_alignment_segment`'
+      - '`geom_residue`'
+      - '`scale_fill_residue`'
+  - title: "Quantitative tracks"
+    desc: "Declare a physical band, map values or compute interval coverage, then set track heights, colours and axis marks."
+    id: tracks
+    previous_id: quantitative-tracks
+    title_zh: "添加定量轨道"
+    desc_zh: "声明物理轨带，映射数值或计算区间覆盖率，再设置轨道高度、颜色和刻度。"
+    source_sha256: da511ff16351b36cd0d204809b49536e6a8a4892c28daab752d0b48b6e8af57f
+    contents:
+      - '`track_band`'
+      - '`geom_track`'
+      - '`geom_track_tile`'
+      - '`stat_coverage`'
+      - '`scale_track_value_continuous`'
+      - '`shared_track_limits`'
+      - '`scale_track_fill_gradientn`'
+      - '`guide_track_axis`'
+  - title: "Scales, guides and themes"
+    desc: "Control mappings for sequence positions, colour, shape and opacity, and choose the appearance of axes and legends."
+    id: scales-and-guides
+    previous_id: positions-scales-themes-and-guides
+    title_zh: "设置标度、图例与主题"
+    desc_zh: "控制序列坐标、颜色、形状及透明度的映射，选择坐标轴和图例的外观。"
+    source_sha256: 32e99f5b2b080f0b1376a840ab20b588149d81472b2b4c8200c5cd019a3485f6
+    contents:
+      - '`scale_seq_position_continuous`'
+      - '`guide_seq_axis`'
+      - '`scale_seq_ring_manual`'
+      - '`scale_seq_colour_manual`'
+      - '`scale_feature_shape_manual`'
+      - '`scale_feature_fill_plasmid`'
+      - '`scale_gene_fill_manual`'
+      - '`scale_link`'
+      - '`scale_ribbon_fill_stepsn`'
+      - '`scale_ribbon_alpha_continuous`'
+      - '`guide_ggchord_legend`'
+      - '`theme_ggchord`'
+  - title: "Read files"
+    desc: "Find readers by file format for sequences, annotations, quantitative signals, alignments and links."
+    id: read-files
+    title_zh: "读取文件"
+    desc_zh: "按文件格式查找序列、注释、定量信号、比对与连接的读取函数。"
+    source_sha256: 6c68f216d067b6195fee18c88f48fe971c6a13a02157adf50d560a0b9bb136b6
+    contents:
+      - '`read_fasta_lengths`'
+      - '`read_genbank`'
+      - '`read_gff3`'
+      - '`read_bed`'
+      - '`read_vcf`'
+      - '`read_bedgraph`'
+      - '`read_bigwig`'
+      - '`read_blast`'
+      - '`read_paf`'
+      - '`read_bedpe`'
+      - '`read_aligned_fasta`'
+      - '`read_maf`'
+      - '`read_chain`'
+      - '`read_delta`'
+      - '`read_feature_relations`'
+      - '`read_signature_matches`'
+  - title: "Adapt and validate input"
+    desc: "Convert existing objects and tables into sequences, features or links and check coordinates, identifiers and hierarchies."
+    id: validate-input
+    previous_id: input-and-validation
+    title_zh: "整理与验证输入"
+    desc_zh: "把现有对象或数据表转换为序列、特征与连接，核对坐标、标识及层级关系。"
+    source_sha256: 2eb3aeeefef8d56e9fa136b07c829167bd0cc94a35ce417e74410ef72f5bbbe6
+    contents:
+      - '`adapt_ggchord`'
+      - '`as_ggchord_seq`'
+      - '`as_ggchord_feature`'
+      - '`as_ggchord_link`'
+      - '`as_ggchord_alignment`'
+      - '`ggchord_data_contract`'
+      - '`validate_ggchord_data`'
+      - '`validate_ggchord_hierarchy`'
+      - '`clean_ggchord_data`'
+      - '`as.data.frame.ggchord_validation`'
+      - '`print.ggchord_clean`'
+  - title: "Intervals and projection"
+    desc: "Select windows and anchors and project features, links, tracks and alignment positions into local views."
+    id: regions
+    previous_id: projection-and-comparison-workflows
+    title_zh: "筛选区间与投影坐标"
+    desc_zh: "选择窗口与锚点，将特征、连接、轨道及比对位置映射到局部视图。"
+    source_sha256: 27cd957fc4ef8e77412715f856bcbd5ed6f17e364fe57cabc891c13ef813f3c7
+    contents:
+      - '`find_ggchord_loci`'
+      - '`focus_ggchord_data`'
+      - '`focus_ggchord_track`'
+      - '`segment_ggchord_data`'
+      - '`project_ggchord_features`'
+      - '`project_ggchord_links`'
+      - '`register_ggchord_alignment`'
+      - '`map_alignment_position`'
+      - '`map_ggchord_position`'
+  - title: "Prepare sequence comparisons"
+    desc: "Build links from cluster membership, then filter, deduplicate, merge or bundle comparisons."
+    id: prepare-links
+    title_zh: "整理比较关系"
+    desc_zh: "按成员关系构建连接，再筛选、去重、合并或聚束。"
+    source_sha256: 2bcdd6abc3d09765dce616db4205af2582656812c5ebdde6c097fd6bcdd681cd
+    contents:
+      - '`link_ggchord_clusters`'
+      - '`filter_ggchord_ribbons`'
+      - '`deduplicate_ggchord_ribbons`'
+      - '`merge_ggchord_ribbons`'
+      - '`bundle_ggchord_ribbons`'
+  - title: "Sequence annotations"
+    desc: "Find common features, primers and restriction sites, and assemble or translate annotated coding sequences."
+    id: sequence-annotation
+    previous_id: sequence-recognition
+    title_zh: "识别和整理序列注释"
+    desc_zh: "从序列和来源注释整理常见特征、引物、酶切位点、CDS 与翻译产物。"
+    source_sha256: 9b55acf7951b3f4bfdb1b928f6b17c56c0bb9bc89b485d432f44688c7ec44ccb
+    contents:
+      - '`find_common_features`'
+      - '`primer_catalog`'
+      - '`find_primer_bindings`'
+      - '`find_restriction_sites`'
+      - '`filter_restriction_sites`'
+      - '`build_ggchord_cds`'
+      - '`translate_ggchord_cds`'
+  - title: "Panel composition and magnification"
+    desc: "Compose independent views, magnify a source interval and export connections between panels."
+    id: compose-panels
+    previous_id: static-panel-composition
+    title_zh: "组合面板与局部放大"
+    desc_zh: "组合独立视图，将源区间与局部细节对应，并导出跨面板连接。"
+    source_sha256: acba6dae34ca88aa42c06d69727470501882b43431a32eb93096d433c4555c8f
     contents:
       - '`ggchord_fusion`'
-      - '`magnify_ggchord`'
       - '`fusion_panel`'
       - '`fusion_ribbon`'
+      - '`magnify_ggchord`'
       - '`export_ggchord_fusion`'
-  - title: Output and diagnostics
+  - title: "Preview, diagnose and export"
+    desc: "Preview a plot at the intended size, inspect its layout and export layer geometry with source records."
+    id: output
+    previous_id: output-and-diagnostics
+    title_zh: "预览、诊断与导出"
+    desc_zh: "查看目标尺寸下的图形，检查布局，并导出图层几何及来源记录。"
+    source_sha256: e495d2c8d5d39ef30f6723e4436fed50871c37d27fcadfaf60bfe810fc1e7b0d
     contents:
+      - '`view_ggchord`'
       - '`diagnose_ggchord`'
+      - '`optimize_ggchord_layout`'
       - '`export_ggchord_layout`'
       - '`get_chord_layout`'
-      - '`optimize_ggchord_layout`'
-      - '`view_ggchord`'
-  - title: Methods, teaching data and upstream reexports
+      - '`ggchord_layout_contract`'
+  - title: "Example datasets"
+    desc: "Choose a packaged dataset by input type and inspect its fields, source and units."
+    id: example-data
+    previous_id: methods-teaching-data-and-upstream-reexports
+    title_zh: "查找示例数据"
+    desc_zh: "按输入类型选择随包数据，查看字段、来源和单位。"
+    source_sha256: 3fbfbaa086645201240f2ba7e0dc30f4ef2ef05196212289dc9f892de322da75
     contents:
-      - '`as.data.frame.ggchord_validation`'
-      - '`gene_data_example`'
-      - '`ggplot2-helpers`'
-      - '`grid-helpers`'
-      - '`plasmid_example_pUC19`'
-      - '`+.ggchord`'
-      - '`print.ggchord_clean`'
-      - '`restriction_site_example`'
-      - '`ribbon_data_example`'
-      - '`seq_data_example`'
-      - '`genome_comparison_example`'
       - '`flagship_examples`'
-      - '`sequence_detail_example`'
+      - '`genome_comparison_example`'
+      - '`seq_data_example`'
+      - '`ribbon_data_example`'
+      - '`gene_data_example`'
+      - '`single_genome_example`'
+      - '`single_gene_example`'
+      - '`plasmid_example_pUC19`'
+      - '`restriction_site_example`'
       - '`protein_seq_data_example`'
       - '`protein_ribbon_data_example`'
-      - '`single_gene_example`'
-      - '`single_genome_example`'
+      - '`sequence_detail_example`'
+  - title: "ggplot2 and grid helpers"
+    desc: "Look up mapping, guide, theme, export and physical-unit helpers for use with plot layers."
+    id: upstream
+    title_zh: "ggplot2 与 grid 工具"
+    desc_zh: "查找可直接配合图层使用的映射、图例、主题、保存及物理单位工具。"
+    source_sha256: cc8c8c9a120d223a5da9e3c62d3268dcb99cb225104c97f91c230eaac4357efa
+    contents:
+      - '`ggplot2-helpers`'
+      - '`grid-helpers`'

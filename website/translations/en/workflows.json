@@ -1,5 +1,5 @@
 {
-  "source_sha256": "00dd3ea5a73f0562172df4dae24acebaded903d99931718e8c057160bf91b276",
+  "source_sha256": "1ebb142c9b0dbb05c1eb13a317bc7842f3fe917ea1a7ce589d2686e8943cff63",
   "blocks": {
     "1": {
       "source_sha256": "37aa7df51808dedd819d382b6d30261b6c98a150357bd9eb41c0a7ca878fca97",
@@ -87,9 +87,9 @@
       "translation": "## Complete source-backed example ⟦shared:0⟧\n"
     },
     "20": {
-      "source_sha256": "53e7312b9da1fbab91ac51733ab3389ab6ff183f6e17da48276c8956438c69d2",
+      "source_sha256": "aa63a46122a60cbbcbcd45e085075fc982abbcc1422416c8ca7b243c28773e7c",
       "status": "reviewed",
-      "translation": "[Sequence comparison from FASTA/GFF3/BLAST](⟦shared:0⟧) retains paths, display filters, inputs and results. Obtain originals from the [input archive](⟦shared:1⟧), extract it and run downloaded scripts from a directory containing ⟦shared:2⟧.\n"
+      "translation": "The [four-sequence comparison](⟦shared:0⟧) shows the original sources, filters and resulting plots.\n"
     },
     "21": {
       "source_sha256": "ac824c41ca58ec8a63d3c82740aa29d5501404e6f40d5dadda5f423956cd494f",

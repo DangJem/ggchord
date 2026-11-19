@@ -10,16 +10,19 @@ if (length(selected)) {
 }
 record <- 'tools/site-audit/flagship-rendering.json'
 prior <- if (file.exists(record)) jsonlite::read_json(record) else list(figures = list())
+specs <- jsonlite::read_json('website/content-zh/manual-figures.json')
+names(specs) <- vapply(specs, `[[`, character(1), 'id')
 results <- list()
 for (id in names(items)) {
   cat('Rendering:', id, '\n'); flush.console()
   path <- paste0('man/figures/', id, '.png')
-  size <- if (id == 'flagfusion') c(16, 14) else c(12, 9)
+  spec <- specs[[id]]
+  size <- c(spec$width, spec$height)
   ggplot2::ggsave(path, items[[id]], width = size[1], height = size[2],
-    units = 'in', dpi = 120, bg = flagship_paper)
+    units = 'in', dpi = spec$dpi, bg = flagship_paper)
   stopifnot(identical(render_source_sha,digest::digest(file='tools/site-flagships.R',algo='sha256',serialize=FALSE)))
   results[[id]] <- list(file = path, sha256 = digest::digest(file = path, algo = 'sha256', serialize = FALSE),
-    width = size[1], height = size[2], dpi = 120, background = flagship_paper,
+    width = size[1], height = size[2], dpi = spec$dpi, background = flagship_paper,
     rendered_source_sha256 = render_source_sha)
   prior$figures[id] <- results[id]
   jsonlite::write_json(prior, record, auto_unbox = TRUE, pretty = TRUE)

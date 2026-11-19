@@ -1,8 +1,7 @@
 {{code:courseblockaw}}
 
-{{prepare:setup}}
 
-Extract the [input bundle](https://github.com/DangJem/ggchord/archive/refs/heads/main.zip) so the working directory contains examples/. Each section names its optional dependencies.
+Examples use bundled tables or small installed files. Each block identifies the packages it uses.
 
 <a id="signals"></a>
 
@@ -20,7 +19,7 @@ Rectangles use `start - 1` and `end` as cell boundaries; no line is interpolated
 
 ## Aligned reads: an optional coverage bridge {#aligned-reads}
 
-Use optional **GenomicAlignments**, **Rsamtools** and **GenomicRanges** for an existing BAM. Keep filtering and counting choices explicit; ggchord draws the resulting signal. This example uses the dependency's unchanged Drosophila RNA-seq subset. Its source BAM header retains the original TopHat/reference and SRR provenance; the fixed source URL and checksum are in `tools/long-term-audit/v0.27.0-read-coverage-results.json`. No read alignment or variant calling occurs.
+The optional GenomicAlignments, Rsamtools and GenomicRanges packages read the aligned Drosophila RNA-seq subset. Choose filters and counting rules before plotting the signal. The dependency package supplies the BAM file and its original header.
 
 {{code:courseblockay}}
 

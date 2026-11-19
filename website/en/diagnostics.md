@@ -15,7 +15,6 @@ Requires ggchord and optional dplyr for later tables. Start with a minimal backb
 
 {{code:courseblockbj}}
 
-{{prepare:frontlinearbase}}
 
 ```r
 report <- diagnose_ggchord(p_linear_base, width = 8, height = 5, device = "png")
@@ -81,7 +80,6 @@ On cramped circular canvases, already-crossed exterior leaders can acquire bound
 
 The `scale` and `adaptive` policies also adjust omitted fixed linewidths in native sequence, point-link, ribbon and alignment layers. Explicit linewidth values, including values equal to the default, remain fixed; mapped linewidths keep their scales. `fixed` and plots without a policy retain their styles. This does not multiply every geometry constant or native theme-derived aesthetic expression.
 
-{{prepare:comparescaledata}}
 
 <a id="target-size"></a>
 

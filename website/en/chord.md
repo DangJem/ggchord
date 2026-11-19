@@ -28,7 +28,7 @@ CDS are sampled separately for each available source strand, without a length th
 <a id="prepare"></a>
 
 ## Prepare bundled data {#prepare}
-Use bundled `flagship_comparison_example` directly, without extracting files; original records remain traceable through the [input bundle](https://github.com/DangJem/ggchord/archive/refs/heads/main.zip). The example requires dplyr and purrr.
+This example uses bundled data. Each link retains its original HSP endpoints.
 
 Retrieve the display subsets selected by the original rules, then prepare shared colours and styles; source-file filtering does not need to be repeated.
 

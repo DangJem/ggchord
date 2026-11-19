@@ -318,5 +318,32 @@
     "circular": "circular-dense-case.html",
     "learn": "installation.html",
     "versions": "about.html#reproducibility"
+  },
+  "reference/geom_gene.html": {
+    "": "migration.html#removed-layers",
+    "ref-examples": "reference/geom_feature.html#ref-examples"
+  },
+  "reference/geom_feature_plasmid.html": {
+    "": "migration.html#removed-layers",
+    "ref-examples": "reference/geom_feature.html#ref-examples"
+  },
+  "reference/geom_feature_label_repel.html": {
+    "": "migration.html#removed-layers",
+    "ref-examples": "reference/geom_feature_label.html#ref-examples"
+  },
+  "reference/position_plasmid.html": {
+    "": "migration.html#removed-layers",
+    "ref-examples": "reference/position_offset.html#ref-examples"
+  },
+  "reference/position_track.html": {
+    "": "migration.html#removed-layers",
+    "ref-examples": "reference/track_band.html#ref-examples"
+  },
+  "parameter-atlas.html": {
+    "api-geom_feature_plasmid": "circular-features.html#feature-shapes",
+    "api-position_plasmid": "circular-features.html#stacking",
+    "api-geom_feature_label_repel": "circular-labels.html#automatic-labels",
+    "api-geom_gene": "feature-geometry.html#parameters",
+    "api-position_track": "tracks.html#draw-gc"
   }
 }

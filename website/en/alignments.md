@@ -28,7 +28,7 @@ Both tabular formats use these 12 columns, in this order, unless you provide a f
 | 7–10 | `qstart`, `qend`, `sstart`, `send` | One-based inclusive endpoints on each sequence. Descending coordinates preserve alignment direction |
 | 11–12 | `evalue`, `bitscore` | Expected count and score in bits. Lower E-values and higher bit scores generally indicate stronger hits |
 
-Extract the [input bundle](https://github.com/DangJem/ggchord/archive/refs/heads/main.zip) and work from the directory containing `examples/`. The example file preserves the first 12 fields of observed HSPs.
+Examples use bundled tables or small installed files. Each block identifies the packages it uses.
 
 {{code:standardblast}}
 {{output:standardblast}}

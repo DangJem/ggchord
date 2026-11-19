@@ -8,9 +8,13 @@
 
 <a id="path"></a>
 
-## 共用输入与图层 {#path}
+## 想画什么或调整什么？ {#path}
 
-[数据与图层](multi-sequence-start.md) · [四视图对照](multi-sequence-views.md) · [显示规则](multi-sequence-layout.md) · [连接](multi-sequence-links.md) · [标签](multi-sequence-labels.md)
+- [试画序列骨架、连接与注释](multi-sequence-start.md#draw)
+- [用同一输入比较四种布局](multi-sequence-views.md#input)
+- [改变序列顺序与显示方向](multi-sequence-layout.md)
+- [调整连接端点与路径](multi-sequence-links.md)
+- [显示序列名与特征标签](multi-sequence-labels.md)
 
 <a id="chord"></a>
 

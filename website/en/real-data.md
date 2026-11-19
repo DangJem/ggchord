@@ -12,7 +12,7 @@ Package code is MIT-licensed. Original database records and third-party catalogu
 <a id="prepare"></a>
 
 ## Prepare this page {#prepare}
-Extract the [input bundle](https://github.com/DangJem/ggchord/archive/refs/heads/main.zip) so your working directory contains `examples/`.
+The following examples use bundled tables derived from the original records. For standalone file-reading examples, see [sequence and annotation import](import-sequences.md).
 
 <a id="read"></a>
 

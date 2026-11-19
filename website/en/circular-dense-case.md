@@ -6,15 +6,7 @@ See [Flagship data sources and construction](flagship-data.md) for provenance, d
 
 This independent pETDuet-1 example demonstrates the interaction of complete annotations, primers and enzyme labels at a normal output size. It does not depend on objects from the pUC19 page.
 
-{{code:courseblockg}}
-
-{{code:referencebuilder}}
-
-```r
-reference <- make_reference_map(flagship_circular_example$references[["pETDuet-1"]])
-p <- reference$plot
-view_ggchord(p, width = 10, height = 8, units = "in")
-```
+{{code:courseblockm,catalogmap}}
 
 {{figure:catalogduet}}
 

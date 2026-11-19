@@ -1,6 +1,5 @@
 {{code:courseblocky}}
 
-{{prepare:frontlinks}}
 
 Start with [your first collinear plot](multi-sequence-start.md#collinear), then compare alignment, anchors and orientation on the same real input. No chord sections are required.
 

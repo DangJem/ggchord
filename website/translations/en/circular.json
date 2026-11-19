@@ -1,10 +1,10 @@
 {
-  "source_sha256": "ad7aab10e04de4462d123178f4d1651252a8280a8e424099d8ca40c20c3f5331",
+  "source_sha256": "a38dc8c0f5880f19079abd061a86a5174166d72005e85a48deb05c618208a777",
   "blocks": {
     "1": {
-      "source_sha256": "53f3d6a2361e13c60d016f1278173d17f5889690a6f34f6660b49e0318abbef7",
+      "source_sha256": "18b12fd758a9fe0bf71d13e18631cb9edcc769ae27f8dd6da2dc84316eb90e78",
       "status": "reviewed",
-      "translation": "## Task and result ⟦shared:0⟧\n"
+      "translation": "## Plot annotations along one sequence ⟦shared:0⟧\n"
     },
     "2": {
       "source_sha256": "fe2926d88bf78cd41fc4b0f062cddab31a97d6db7e0c107dab5eb155178dbb38",
@@ -12,9 +12,9 @@
       "translation": "Lengths and prepared annotations are sufficient to draw. Sequence characters are needed for recognition, searches or DNA-derived tracks.\n"
     },
     "5": {
-      "source_sha256": "75f7a24507b2ba3a38cdd5766c278490a27e79ee6bd32ae743bd2fdf734334e8",
+      "source_sha256": "9dffba5371ff3c5ebc33fcf4efe580c871271cdfce4f8d16b19abd2aa8d8c0b0",
       "status": "reviewed",
-      "translation": "## Function index ⟦shared:0⟧\n"
+      "translation": "## What do you want to add? ⟦shared:0⟧\n"
     },
     "6": {
       "source_sha256": "55ce844579a8e191562172984ce6974b69b4600a46a3c87f545c2280f8fccdce",
@@ -42,9 +42,9 @@
       "translation": "- [Quantitative tracks](⟦shared:0⟧)\n"
     },
     "11": {
-      "source_sha256": "d7cceb6e6a3577a16fe36d050396be4ccd6bd4760e384c1db58a8f9f9f6bd863",
+      "source_sha256": "69485071004cb077d5ff17e3f3a86008a426b02195a4e1b55715848e8cbb88d6",
       "status": "reviewed",
-      "translation": "- [Complete pUC19 and pETDuet-1 cases](⟦shared:0⟧)\n"
+      "translation": "- [Complete pUC19 map](⟦shared:0⟧)\n"
     },
     "13": {
       "source_sha256": "aa3ae1e5c150aa48eb45757c973a5d194093dfabff13cd06d5853c1e346b6e19",

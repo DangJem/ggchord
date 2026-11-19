@@ -2,7 +2,6 @@
 
 {{code:courseblockbm}}
 
-{{prepare:fusiondata,fusionpanels,fusionlinear,fusionview}}
 
 <a id="styles"></a>
 

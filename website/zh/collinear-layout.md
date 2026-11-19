@@ -1,6 +1,5 @@
 {{code:courseblocky}}
 
-{{prepare:frontlinks}}
 
 先查看[第一张共线性图](multi-sequence-start.md#collinear)，再用同一组真实输入观察对齐、锚点和方向。无需了解弦图。
 

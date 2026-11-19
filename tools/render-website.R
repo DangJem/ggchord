@@ -3,6 +3,8 @@
 Sys.setenv(CI = 'true') # init_site must use the local favicon, not its optional remote service.
 options(sass.cache = FALSE)
 page_index <- jsonlite::fromJSON('website/pages.json', simplifyVector = FALSE)
+navigation <- jsonlite::fromJSON('website/navigation.json', simplifyVector = FALSE)
+primary_groups <- Filter(function(group) !is.null(group$navbar), navigation)
 arguments <- commandArgs(trailingOnly=TRUE)
 option <- function(key, default) {
   value <- grep(paste0('^--',key,'='),arguments,value=TRUE)
@@ -26,40 +28,30 @@ if('zh' %in% languages && part!='articles') {
 for (lang in languages) {
   is_han <- lang == 'zh'
   Sys.setenv(LANGUAGE=if(is_han)'zh_CN' else 'en')
-  nav_names <- if(is_han) c('首页','开始使用','绘图模块','通用技巧','数据与工作流','案例图库','API 参考') else
-    c('Home','Get started','Plotting modules','Shared techniques','Data & workflows','Gallery','API reference')
-  keys <- c('home','start','plots','techniques','data','gallery','reference')
-  components <- setNames(lapply(seq_along(keys),function(i) list(text=nav_names[i])),keys)
-  # Every primary menu opens useful teaching directly; the project page remains
-  # an auxiliary index rather than a required intermediate navigation step.
-  groups <- jsonlite::fromJSON('website/navigation.json', simplifyVector=FALSE)
-  page_menu <- function(slugs) lapply(slugs, function(slug) {
-    page <- Filter(function(x) identical(x$slug, slug), page_index)[[1L]]
-    list(text = page$title[[lang]], href = page$canonical_path)
-  })
-  modules <- Filter(function(x) x$id %in% c('multi-sequence','circular','dotplot','fusion'),groups)
-  components$plots$menu <- lapply(modules,function(group) list(
-    text=group$title[[lang]],href=paste0(group$landing,'.html')))
-  shared <- Filter(function(x) x$id == 'shared-techniques', groups)[[1L]]
-  data <- Filter(function(x) x$id == 'data', groups)[[1L]]
-  components$techniques$menu <- page_menu(unlist(shared$pages))
-  components$data$menu <- page_menu(unlist(data$pages))
-  components$home$href <- 'index.html'
-  components$start$menu <- page_menu(c('installation','modes','data'))
-  components$gallery$href <- 'gallery.html'
-  components$reference$href <- 'reference/index.html'
+  keys <- vapply(primary_groups, function(group) group$navbar, '')
+  components <- setNames(lapply(primary_groups, function(group) {
+    page <- Filter(function(x) identical(x$slug, group$landing), page_index)[[1L]]
+    list(text = group$title[[lang]], href = page$canonical_path)
+  }), keys)
   cfg <- list(destination=paste0('.site/',lang),lang=if(is_han)'zh_CN' else 'en',
     navbar=list(structure = list(left = keys, right = c('github', 'lightswitch')),
       components=components))
   # Localized category titles; topic bindings remain the exact source names.
   source <- yaml::read_yaml('_pkgdown.yml')
+  for (section in source$reference) {
+    original <- paste(section$title_zh, section$desc_zh, sep = "\n")
+    if (!identical(digest::digest(original, algo = "sha256", serialize = FALSE),
+                   section$source_sha256) || !nzchar(section$title) || !nzchar(section$desc)) {
+      stop("Missing or stale reference section translation: ", section$id)
+    }
+  }
   cfg$url <- paste0(source$url,lang,'/')
   if(is_han) {
-    titles <- c('创建图形','读取和整理数据','图层和标签','配色、图例和布局调整',
-      '添加数据轨道','查找序列注释','投影和局部比较','静态面板组合','保存与检查图形','方法、示例数据和通用工具')
-    stopifnot(length(titles) == length(source$reference))
-    cfg$reference <- source$reference
-    for(i in seq_along(cfg$reference)) cfg$reference[[i]]$title <- titles[i]
+    cfg$reference <- lapply(source$reference, function(section) {
+      section$title <- section$title_zh
+      section$desc <- section$desc_zh
+      section
+    })
   }
   pkg <- pkgdown::as_pkgdown('.',override=cfg)
   # utils::modifyList does not replace the unnamed reference section list.
@@ -112,6 +104,21 @@ for (lang in languages) {
     pkg$topics$rd[[i]] <- getFromNamespace('rd_file', 'pkgdown')(path, pkg_path = '.')
     unlink(path)
   }
+  # Reference examples are copied independently of the console used by pkgdown.
+  if (part %in% c("all", "reference")) {
+    indices <- if (part == "reference") match(selected_files, pkg$topics$file_in) else seq_len(nrow(pkg$topics))
+    for (i in indices) {
+      rd <- pkg$topics$rd[[i]]
+      j <- which(vapply(rd, inherits, logical(1), "tag_examples"))
+      if (length(j) != 1L) stop("Missing reference example: ", pkg$topics$name[i])
+      example <- rd[[j]]
+      if (!any(trimws(unlist(example)) == "library(ggchord)")) {
+        first <- structure("\nlibrary(ggchord)\n", class = "RCODE")
+        rd[[j]] <- structure(c(list(first), unclass(example)), class = class(example))
+        pkg$topics$rd[[i]] <- rd
+      }
+    }
+  }
   if(part!='articles') {
   if (part %in% c('all','init')) {
   pkgdown::init_site(pkg)
@@ -125,14 +132,8 @@ for (lang in languages) {
   if (part != 'init') {
   reference_topics <- if (part == 'reference')
     pkg$topics$name[seq.int(offset + 1L, min(nrow(pkg$topics), offset + count))] else NULL
-  # pkgdown evaluates under reference/, while source examples use the checkout's
-  # relative input paths. Expose those inputs only during evaluation.
-  input_link <- file.path(pkg$dst_path, 'reference', 'examples')
-  dir.create(dirname(input_link), recursive = TRUE, showWarnings = FALSE)
-  if (!file.symlink(normalizePath('examples'), input_link)) stop('Cannot expose local example inputs')
-  tryCatch(pkgdown::build_reference(pkg,examples=TRUE,run_dont_run=FALSE,lazy=FALSE,preview=FALSE,
-    topics = reference_topics),
-    finally = unlink(input_link))
+  pkgdown::build_reference(pkg, examples = TRUE, run_dont_run = FALSE,
+                           lazy = FALSE, preview = FALSE, topics = reference_topics)
   } else pkgdown::build_reference(pkg, examples=FALSE, topics=character(), preview=FALSE)
   }
   selected <- if(part %in% c('reference','init')) list() else payload[[lang]]

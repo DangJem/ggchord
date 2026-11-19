@@ -1,6 +1,5 @@
 {{code:courseblockbr}}
 
-{{prepare:fusiondata,fusionpanels,fusionlinear,fusionview}}
 
 <a id="magnify"></a>
 

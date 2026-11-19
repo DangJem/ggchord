@@ -1,6 +1,6 @@
 <a id="task"></a>
 
-## Task and result {#task}
+## Plot annotations along one sequence {#task}
 
 Lengths and prepared annotations are sufficient to draw. Sequence characters are needed for recognition, searches or DNA-derived tracks.
 
@@ -8,14 +8,14 @@ Lengths and prepared annotations are sufficient to draw. Sequence characters are
 
 <a id="path"></a>
 
-## Function index {#path}
+## What do you want to add? {#path}
 
 - [Draw your first circular map](circular-start.md#input)
 - [Single-sequence length, DNA and annotations](circular-data.md#tables)
 - [Circular backbones, centre text and annotation lanes](circular-layout.md#input)
 - [Fixed circular labels and automatic fitting](circular-labels.md)
 - [Quantitative tracks](tracks.md)
-- [Complete pUC19 and pETDuet-1 cases](plasmids.md)
+- [Complete pUC19 map](plasmids.md)
 
 <a id="inputs"></a>
 

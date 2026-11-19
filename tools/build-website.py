@@ -24,7 +24,7 @@ class PageText(__import__('html.parser',fromlist=['HTMLParser']).HTMLParser):
     def handle_starttag(self,tag,attrs):
         values=dict(attrs)
         excluded=bool(self.ignored) or tag in ['nav','script','style','pre','summary','h1'] or bool(
-            {'chapter-drawer','page-outline','candidate-note','lesson-stage','breadcrumb','example-actions','section-number'} & set(values.get('class','').split()))
+            {'chapter-drawer','page-outline','candidate-note','breadcrumb','example-actions'} & set(values.get('class','').split()))
         if tag not in ['area','base','br','col','embed','hr','img','input','link','meta','param','source','track','wbr']:
             self.stack.append((tag,excluded));self.ignored+=int(excluded)
     def handle_endtag(self,tag):
@@ -73,11 +73,13 @@ def render_source_snapshot():
              not any(part.startswith('.') for part in p.relative_to(ROOT).parts)}
     files.update(public_files(ROOT.glob('*.md')))
     files.update(ROOT/r['file'] for r in json.loads((WEB/'manual-figures.json').read_text()))
+    files.update(p for p in (ROOT/'tools/website').iterdir() if p.suffix in {'.py','.R'})
+    files.update(p for p in (ROOT/'inst/extdata').rglob('*') if p.is_file())
     files.update(ROOT/name for name in [
         'DESCRIPTION','NAMESPACE','LICENSE','_pkgdown.yml',
         'tools/teaching-audit/layer-compatibility.csv','tools/teaching-audit/parameter-contracts.json',
-        'tools/website/__init__.py','tools/build-website.py','tools/site_cache.py','tools/documentation_lib.py','tools/website/source_links.py','tools/website/search.py','tools/website/registry.py','tools/website/components.py',
-        'tools/render-website.R','tools/finalize-website.R','tools/site-course-examples.R','tools/site-flagships.R',
+        'tools/website/__init__.py','tools/build-website.py','tools/site_cache.py','tools/documentation_lib.py','tools/website/source_links.py','tools/website/search.py','tools/website/registry.py','tools/website/components.py','tools/website/gallery.py',
+        'tools/render-website.R','tools/finalize-website.R','tools/website/reference.R','tools/site-course-examples.R','tools/site-flagships.R',
         'tools/reference-translations.py','tools/documentation-examples.R',
         'tools/documentation-plots.R','tools/audit-source-snapshot.R',
         'tools/render-teaching-comparisons.R','tools/home-previews.R','tools/documentation-fingerprints.py','tools/sync-website-languages.py'])
@@ -248,7 +250,6 @@ def main():
             headings=re.findall(r'<h[23] id="([^"]+)"[^>]*>(.*?)</h[23]>',body,re.S)
             toc=''.join(f'<li><a href="#{a}">{re.sub("<[^>]+>","",t)}</a></li>' for a,t in headings)
             sidebar=('<h2>本页目录</h2>' if lang=='zh' else '<h2>On this page</h2>')+'<ul class="toc-list">'+toc+'</ul>'
-            sidebar+=('<h2>项目资料</h2>' if lang=='zh' else '<h2>Project</h2>')+'<ul><li><a href="https://github.com/DangJem/ggchord">GitHub</a></li><li><a href="modes.html#modules">'+('章节索引' if lang=='zh' else 'Chapter index')+'</a></li><li>MIT</li></ul>'
             payload[lang].append(dict(slug=page['slug'],title=page['title'][lang],body=body,sidebar=sidebar))
     article_identities={lang:{page['slug']:dict(shell=shell_identity,language=lang,page=page) for page in payload[lang]} for lang in payload}
     all_payload={lang:list(rows) for lang,rows in payload.items()}
@@ -285,12 +286,21 @@ def main():
             snapshot_seconds = time.monotonic() - snapshot_started
             worker_started = time.monotonic()
             print(f'Starting {lang} worker {index + 1}/{len(jobs)}: '+ ' '.join(options), flush=True)
-            logfile=out/(lang+'-worker-'+str(index)+'.log')
-            with logfile.open('w') as log:
-                result=subprocess.run(['Rscript','--vanilla','tools/render-website.R',lang,*options],cwd=ROOT,
-                    stdout=log,stderr=subprocess.STDOUT)
-            logs.append(logfile.read_text())
-            results.append(dict(options=options,return_code=result.returncode,log=logfile.name,
+            attempts = []
+            for attempt in (1, 2):
+                suffix = '' if attempt == 1 else '-retry'
+                logfile = out/f'{lang}-worker-{index}{suffix}.log'
+                with logfile.open('w') as log:
+                    result = subprocess.run(['Rscript','--vanilla','tools/render-website.R',lang,*options],
+                                            cwd=ROOT, stdout=log, stderr=subprocess.STDOUT)
+                logs.append(logfile.read_text())
+                attempts.append(dict(return_code=result.returncode, log=logfile.name))
+                if not result.returncode:
+                    break
+                if attempt == 1:
+                    assert_render_source_snapshot(render_snapshot, input_hashes)
+                    print(f'Retrying {lang} worker {index+1} after exit {result.returncode}', flush=True)
+            results.append(dict(options=options,return_code=result.returncode,log=logfile.name,attempts=attempts,
                                 elapsed_seconds=round(time.monotonic()-worker_started,3),
                                 snapshot_check_seconds=round(snapshot_seconds,3)))
             print(f'Completed {lang} worker {index + 1}/{len(jobs)}: '
@@ -334,6 +344,31 @@ def main():
     timings['status'] = 'complete'
     save_timings()
 
+def write_reference_redirect(out, path, mapping, script, languages):
+    labels = {
+        'en': ('English', 'API migration', 'Replacement example'),
+        'zh': ('现代汉语', '接口迁移说明', '替代用法示例'),
+    }
+    sections = []
+    for lang in languages:
+        language, migration, example = labels[lang]
+        tag = 'zh-Hans' if lang == 'zh' else 'en'
+        heading = '<h2>' + language + '</h2>' if len(languages) > 1 else ''
+        links = []
+        for fragment, text in (('', migration), ('ref-examples', example)):
+            target = os.path.relpath(out/lang/mapping[fragment], path.parent)
+            links.append('<li><a hreflang="' + tag + '" href="' + html.escape(target, quote=True)
+                         + '">' + text + '</a></li>')
+        sections.append('<section lang="' + tag + '">' + heading + '<ul>' + ''.join(links)
+                        + '</ul></section>')
+    tag = 'zh-Hans' if languages == ('zh',) else 'en'
+    name = html.escape(path.stem) + '()'
+    path.write_text('<!doctype html><html lang="' + tag + '"><head><meta charset="utf-8">'
+                    '<title>' + name + ' · ggchord</title>' + script + '</head><body><main>'
+                    '<h1><code>' + name + '</code></h1>' + ''.join(sections)
+                    + '</main></body></html>')
+
+
 def finalize(out,args,render_snapshot,input_hashes):
     inputs=[ROOT/name for name in input_hashes]
     assets=out/'assets'
@@ -359,12 +394,21 @@ def finalize(out,args,render_snapshot,input_hashes):
     # Keep project presentation files identical to the source digested by finalization.
     for name in ['site.css','site.js']: shutil.copy2(WEB/'assets'/name,assets/name)
     extra_migrations=set(migrations)-{p['slug']+'.html' for p in PAGES}
+    retired_references = {name for name in extra_migrations
+                          if name.startswith('reference/') and 'ref-examples' in migrations[name]}
     for lang in ['en','zh']:
         for name in extra_migrations:
             mapping=migrations[name]
             if not mapping.get(''):continue
-            script=('<script>const m='+json.dumps(mapping,ensure_ascii=False)+';location.replace(m[decodeURIComponent(location.hash.slice(1))]||m[String()])</script>')
-            (out/lang/name).write_text('<!doctype html><html lang="'+('zh-Hans' if lang=='zh' else 'en')+'"><meta charset="utf-8"><title>ggchord</title>'+script+'<a href="'+mapping['']+'">Continue / 继续</a></html>')
+            path = out/lang/name
+            path.parent.mkdir(parents=True, exist_ok=True)
+            targets = {anchor: os.path.relpath(out/lang/dest, path.parent)
+                       for anchor, dest in mapping.items()}
+            script=('<script>const m='+json.dumps(targets,ensure_ascii=False)+';location.replace(m[decodeURIComponent(location.hash.slice(1))]||m[String()])</script>')
+            if name in retired_references:
+                write_reference_redirect(out, path, mapping, script, (lang,))
+                continue
+            path.write_text('<!doctype html><html lang="'+('zh-Hans' if lang=='zh' else 'en')+'"><meta charset="utf-8"><title>ggchord</title>'+script+'<a href="'+html.escape(targets[''], quote=True)+'">Continue / 继续</a></html>')
     for lang in ['en','zh']:
         def redirect(old,target):
             path=out/lang/old;path.parent.mkdir(parents=True,exist_ok=True)
@@ -384,6 +428,9 @@ def finalize(out,args,render_snapshot,input_hashes):
     routes={'index.html':'en/index.html','articles/ggchord_vignette.html':'en/real-data.html',
         'articles/ggchord_guide_hans.html':'zh/real-data.html','reference/index.html':'en/reference/index.html','news/index.html':'assets/NEWS.md'}
     routes.update({'reference/'+s+'.html':'en/reference/'+s+'.html' for s in topics})
+    # Keep the retired public names out of canonical search and reference lists.
+    # Their localized redirects retain the explicit replacements and example anchors.
+    routes.update({name: 'en/'+name for name in extra_migrations if name.startswith('reference/')})
     aliases={a:p.stem for p in (ROOT/'man').glob('*.Rd')
              for a in re.findall(r'\\alias\{([^}]+)\}',p.read_text())}
     for rel in json.loads((WEB/'historical-pages.json').read_text()):
@@ -392,6 +439,10 @@ def finalize(out,args,render_snapshot,input_hashes):
     routes.update({name:'en/'+name for name in ['authors.html','LICENSE.html','LICENSE-text.html']})
     for old,target in routes.items():
         path=out/old;path.parent.mkdir(parents=True,exist_ok=True);dest=os.path.relpath(out/target,path.parent)
+        if old in retired_references:
+            script = '<script>location.replace(' + json.dumps(dest) + '+location.hash)</script>'
+            write_reference_redirect(out, path, migrations[old], script, ('zh', 'en'))
+            continue
         extra='<script>try{if(localStorage.getItem("ggchord-language")==="zh")location.replace("zh/index.html");else location.replace("en/index.html")}catch(e){location.replace("en/index.html")}</script>' if old=='index.html' else '<script>location.replace('+json.dumps(dest)+'+('+json.dumps('' if '#' in dest else '#')+'===""?"":location.hash))</script>'+f'<noscript><meta http-equiv="refresh" content="0;url={dest}"></noscript>'
         path.write_text(f'<!doctype html><html lang="en"><head><meta charset="utf-8"><title>ggchord</title>{extra}</head><body><a href="{dest}">English</a> · <a href="{os.path.relpath(out/"zh/index.html",path.parent)}">现代汉语</a></body></html>')
     (out/'404.html').write_text('<!doctype html><html lang="en"><meta charset="utf-8"><title>Page not found / 未找到页面</title><h1>Page not found / 未找到页面</h1><p><a href="en/index.html">English home</a> · <a href="zh/index.html">现代汉语首页</a></p></html>')

@@ -2,7 +2,7 @@
 
 ## 长度与已有注释 {#input}
 
-只需要长度与已知表格。本例 ori 行来自已核对 pUC19 注释 867–1455，与原 inspectorigin 输出一致；不运行 DNA 识别。需要 ggchord、dplyr。
+本例从随包 pUC19 记录读取全长和已有注释。复制任一绘图代码块，即可查看该阶段的图。
 
 ```r
 library(ggchord)

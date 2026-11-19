@@ -1,8 +1,7 @@
 {{code:courseblockao}}
 
-{{prepare:setup}}
 
-Extract the [input bundle](https://github.com/DangJem/ggchord/archive/refs/heads/main.zip) so the working directory contains examples/. Each section names its optional dependencies.
+Examples use bundled tables or small installed files. Each block identifies the packages it uses.
 
 <a id="zero-based"></a>
 

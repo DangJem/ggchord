@@ -1,6 +1,5 @@
 {{code:courseblockbw}}
 
-{{prepare:fusiondata,fusionpanels,fusionlinear,fusionview}}
 
 <a id="nested-detail"></a>
 

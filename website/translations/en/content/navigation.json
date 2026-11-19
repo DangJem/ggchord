@@ -1,5 +1,5 @@
 {
-  "source_sha256": "a03f1032be0762eef3d3de42bff49b37b18b9ce049a84eafe45667ef3bd101fd",
+  "source_sha256": "a2f76200b9f075f33e805dd077686834dd5edcfe1e5d2b9c07cfec9938d6dfdf",
   "strings": {
     "0/title": {
       "source_sha256": "715ee9dc842f34e48f267f0bf3261d7980e544b26eb3d2f0ff20e19b121c4a99",
@@ -7,46 +7,51 @@
       "translation": "Get started"
     },
     "1/title": {
-      "source_sha256": "26984dce74ab24ba5efa0653fb5898538e9a340db046bca55920d139d0d03f24",
+      "source_sha256": "6786aadb96b18f1aa20d7ce625f4664eb20357f92113efc1e70dc055e2700b20",
       "status": "reviewed",
-      "translation": "Module I · Multi-sequence relationships"
+      "translation": "Plotting guide"
     },
     "2/title": {
-      "source_sha256": "6f7ec570bbd765e78941eb9daa63e6f1dc4f977b793fb732240bdb56239b7364",
+      "source_sha256": "6ee7675f0e2e418db2b51921533d7672ffd4e549ba0232464efbb17c5f405367",
       "status": "reviewed",
-      "translation": "Module II · Single-sequence circular maps"
+      "translation": "Multi-sequence relationships"
     },
     "3/title": {
-      "source_sha256": "49ac39c6dc8fd02a3d93ec92906284d275cca790332a00b88f616880531d6109",
+      "source_sha256": "7492978c0f12187f83f9bdfe6272f3e5b9a64368227b35f88959f8e97a18ac9c",
       "status": "reviewed",
-      "translation": "Module III · Sequence alignment Dotplot"
+      "translation": "Single-sequence circular maps"
     },
     "4/title": {
-      "source_sha256": "f3e0d1b8bed6308bd09da265e835335b2d35a8b3745e1d13172a0222177dfdee",
+      "source_sha256": "634b698059b9449b58c5f0e0a77517837e1c64840a17d06f3d0480dd4ea4dad7",
       "status": "reviewed",
-      "translation": "Module IV · Multi-view composition"
+      "translation": "Alignment dot plots"
     },
     "5/title": {
-      "source_sha256": "e67a8dae21f2b855050b2deaacbb3a27db68a882500b57c8783f56d392d93945",
+      "source_sha256": "e663b1ecece03f85064b528f6c06e4ef1b5d940c458ab6f41dd2295d601a6aae",
       "status": "reviewed",
-      "translation": "Shared techniques"
+      "translation": "Multi-view composition"
     },
     "6/title": {
-      "source_sha256": "26dfa22fcf450bbc0760c529cb98110502b029cca12d43de2a940374356333e2",
+      "source_sha256": "220580ce0845f931802cc89635c74fce41262a579d798ff909700dd35d39082c",
+      "status": "reviewed",
+      "translation": "Layers, styling and output"
+    },
+    "7/title": {
+      "source_sha256": "4db455e1da936d60bc13c26d2bc2b1681d2b64ab820cc8b7082e585a1f4fb61c",
       "status": "reviewed",
       "translation": "Data and workflows"
     },
-    "7/title": {
+    "8/title": {
       "source_sha256": "2c400ce3c2dea9394f8d06d5af230e0e84a5aed6e386bcc56f9bf34a62a14722",
       "status": "reviewed",
-      "translation": "Gallery"
+      "translation": "Example gallery"
     },
-    "8/title": {
+    "9/title": {
       "source_sha256": "63e51325a41ffa3e76da38b0e104e00727207b6b3251c38524908b16181a7cb4",
       "status": "reviewed",
       "translation": "API reference"
     },
-    "9/title": {
+    "10/title": {
       "source_sha256": "46e1eb2d8785badc69fe850386f02e174f80674683fb70bc9f8f1cd1d1fb6658",
       "status": "reviewed",
       "translation": "Project information"

@@ -8,9 +8,9 @@ Fusion 是组合层。综合示例在明确的面板矩形中放置 Chord 总览
 
 <a id="path"></a>
 
-## 组合与布局 {#path}
+## 怎样组合和连接面板？ {#path}
 
-[面板与来源连接](fusion-start.md) · [位置、尺寸与图例](fusion-layout.md) · [跨面板路由](fusion-routing.md)
+[试着组合并连接两张图](fusion-start.md#panels) · [位置、尺寸与图例](fusion-layout.md) · [跨面板路由](fusion-routing.md)
 
 <a id="magnify"></a>
 

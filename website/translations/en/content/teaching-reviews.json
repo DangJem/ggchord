@@ -1,5 +1,5 @@
 {
-  "source_sha256": "69b0b15e0acc4d1dcc513a94324c893ade694479850f2faa1eadb0c56e71c66a",
+  "source_sha256": "cbe8f05ad19a3eaf7aa40f1d793bd2fbaf0afeaf977ddc63e923e126c1583a0d",
   "strings": {
     "aes/purpose": {
       "source_sha256": "72476687defa4ed5f3795aaaddc8af6699cfebd0c00ca8da10f0e86d4e8e7dbc",
@@ -1590,6 +1590,16 @@
       "source_sha256": "d58ac449d62ddd5845d7082980653e6ca55532a2c83985ea3d2ba3e0dd47ec7f",
       "status": "reviewed",
       "translation": "Views using a local quantitative track value scale"
+    },
+    "shared_track_limits/purpose": {
+      "source_sha256": "6615d55d1440aa87d7cd9a2f98e0ae496ab3c5483e9629980594feedb900389c",
+      "status": "reviewed",
+      "translation": "Compute common numeric limits for selected tracks across plots"
+    },
+    "shared_track_limits/modes_localized": {
+      "source_sha256": "0bda324f3e53c94954e66301c08a50022c36b539c8597a69e2d48215f92923c6",
+      "status": "reviewed",
+      "translation": "Independent plots with numeric tracks; select ranges by track ID"
     }
   }
 }

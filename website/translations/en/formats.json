@@ -1,10 +1,10 @@
 {
-  "source_sha256": "6975f221d7b9745de5906b5ead8add86b4f5daf9f68fb36e863de83d563709fd",
+  "source_sha256": "56de502d8a4172841fb8acbefc66b1272f941632396d6a12cbb385a986d08d8a",
   "blocks": {
     "1": {
-      "source_sha256": "bf63f25ebc67ab671a53b06a5f7a8d85b1695ffbdb57a79455bba3fdea5980d9",
+      "source_sha256": "640b2e0f76c9f186d932285a0cd0c8daae2a248d632f17466dda2aaa6c3f84e9",
       "status": "reviewed",
-      "translation": "## Choose by the files you have ⟦shared:0⟧\n"
+      "translation": "## How do I read the files I have? ⟦shared:0⟧\n"
     },
     "2": {
       "source_sha256": "d9f630ae1228aa7d9423f05ddf5730fea599c5ec6c57be59415d0774bc645440",
@@ -77,14 +77,14 @@
       "translation": "| GRanges or GInteractions | [Convert interval objects](⟦shared:0⟧) |\n"
     },
     "17": {
-      "source_sha256": "819551bc764b5ada3d5095294c545cadd767247701d868f68d96023dd36a12cf",
+      "source_sha256": "b991e99d7a234d01a004703cbb2533ec1e54b5d79b345f9d9db6848e85459e6b",
       "status": "reviewed",
-      "translation": "## Three files to a first plot ⟦shared:0⟧\n"
+      "translation": "## From files to a plot ⟦shared:0⟧\n"
     },
     "18": {
-      "source_sha256": "db7015658d0d5976510c35a716e258f13a01e941aa34a95c40635f186afd6370",
+      "source_sha256": "e353b3cf325c6124eedf92bf034f1221769acdb830a14b8809f2990f25867b99",
       "status": "reviewed",
-      "translation": "[FASTA / GFF3 / BLAST](⟦shared:0⟧)\n"
+      "translation": "[Read FASTA, GFF3 and BLAST](⟦shared:0⟧) or see the [complete sequence comparison](⟦shared:1⟧). If your data are already in R, go straight to the [required fields and coordinates](⟦shared:2⟧).\n"
     },
     "19": {
       "source_sha256": "a22c2aadd2a67d481a16c9e6cbc3b741fdd3bf6a945c4d4f74bb01a45ab5a419",
@@ -102,9 +102,9 @@
       "translation": "| --- | --- | --- |\n"
     },
     "22": {
-      "source_sha256": "f043c7f3e47eda96fcc5b8d5b7a98608fb5867464f0dee1c0baa73c2fc1bff14",
+      "source_sha256": "6e8155a1c190a13bcc6bfff9eab8968eec3f614fad8861ae9a3eedb1eeb84033",
       "status": "reviewed",
-      "translation": "| FASTA length table, GFF3 annotation table, BLAST link table | Declare bp or aa for FASTA. GFF3 uses one-based inclusive intervals. Check the source strand before drawing arrows. BLAST retains endpoint order and input units. Pass the tables to ⟦shared:0⟧, ⟦shared:1⟧ and ⟦shared:2⟧, respectively. | Built in |\n"
+      "translation": "| FASTA length table, GFF3 annotation table, BLAST link table | Declare bp or aa for FASTA. GFF3 uses one-based inclusive intervals. Check the source strand before drawing arrows. BLAST retains endpoint order and input units. Supply the length table as the reference to ⟦shared:0⟧. Pass the annotations and alignments as ⟦shared:1⟧ to their respective layers. | Built in |\n"
     },
     "23": {
       "source_sha256": "a820e958bacfd0d712644a28873fefd53ff54c7f28147f9bcb58ae355a7ac315",
@@ -140,6 +140,36 @@
       "source_sha256": "2606f019196f60214dca9e7ed76ec836c1f1c2db9959448b9b4b4c2ae7f3bbf0",
       "status": "reviewed",
       "translation": "| Signature or feature relation lists | Signatures provide ⟦shared:0⟧ in protein aa coordinates. Relations retain original pairs or group members. Only complete mapped original pairs produce drawable links. | Signature JSON requires ⟦shared:1⟧. Local tabular files are read directly |\n"
+    },
+    "30": {
+      "source_sha256": "9889b0ede40b0c8fc73c37a426c20607b9ffd3684378f41cc1741f7274d8c60e",
+      "status": "reviewed",
+      "translation": "## What do you need to do after import? ⟦shared:0⟧\n"
+    },
+    "31": {
+      "source_sha256": "5eb70e18c41ceac64b267ddb6447d5ed742465a2bc5ae4f7c706e621b0fdb178",
+      "status": "reviewed",
+      "translation": "- [Check identifiers, complete lengths and units](⟦shared:0⟧)\n"
+    },
+    "32": {
+      "source_sha256": "8eb8e1f098299e9d0a1333a70d4c0ab3f96ed87bd46a2427a5edd60076171b1f",
+      "status": "reviewed",
+      "translation": "- [Filter, focus or organize comparison data](⟦shared:0⟧)\n"
+    },
+    "33": {
+      "source_sha256": "f5d8dd3dfa8550a2bd9d10ff51762c586fd187d14b37acd0d7a7cd6b828f3c8b",
+      "status": "reviewed",
+      "translation": "- [Project between nucleotide and protein coordinates](⟦shared:0⟧)\n"
+    },
+    "34": {
+      "source_sha256": "cc0ba5b0b2fd47c7106e16a1017147da17dfa83cb1e9d9a3997429c5e33ed906",
+      "status": "reviewed",
+      "translation": "- [Inspect source records and layout results](⟦shared:0⟧)\n"
+    },
+    "35": {
+      "source_sha256": "58da7ce21c5336ecab9b5edd51b805dc9031d7c4f262e7a35923ca29ffcc28a1",
+      "status": "reviewed",
+      "translation": "- [Find original files and build steps for the showcase figures](⟦shared:0⟧)\n"
     }
   }
 }

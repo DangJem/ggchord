@@ -76,7 +76,6 @@ band 用填充多边形表示整条骨架，宽度由 seq_backbone_width 控制�
 
 ## 切换为单线骨架 {#style}
 
-{{prepare:firstcircle,firstfeatures}}
 
 {{code:frontcirclestyle}}
 

@@ -1,8 +1,7 @@
 {{code:courseblockaz}}
 
-{{prepare:setup}}
 
-Extract the [input bundle](https://github.com/DangJem/ggchord/archive/refs/heads/main.zip) so the working directory contains examples/. Each section names its optional dependencies.
+Examples use bundled tables or small installed files. Each block identifies the packages it uses.
 
 <a id="variants"></a>
 
@@ -22,7 +21,7 @@ For modern BCF (`.bcf` or `.bcf.gz`), supply `python` naming an existing interpr
 
 ## Genomic alignment blocks: MAF and chain {#genome-alignments}
 
-Use an existing Python environment with optional **Biopython Bio.Align** MAF/chain support (directly verified with 1.85). `ALIGNMENT_PYTHON` can select that interpreter for this section. The source checkout/input bundle must contain `examples/genome-alignments/`. Its two unchanged fixed-version upstream files have hashes, permission attribution and a verification script; no aligner is run. An unavailable optional parser skips the example, not a successful import.
+Both installed MAF and chain examples come from public Biopython test data. Reading them requires a Python interpreter with Biopython support for both formats. The interpreter can be selected through the environment.
 
 {{code:courseblockbb}}
 
@@ -82,6 +81,6 @@ Optional `feature_data` matches exact unique `feature_id` values. Case, versions
 
 GFA graph edges describe adjacency/overlap, rather than automatically providing HSPs between whole genomes. Existing explicit path steps can be shown through ordinary sequence/feature tables when their coordinate construction is justified. Node IDs can recur within one path; retain the path, source-step index, occurrence and traversal orientation. Do not pair every occurrence or equate node/edge counts with orthology, Identity or read support.
 
-A source-backed exploratory example uses ODGI's unchanged human LPA graph at a pinned commit, decoded by optional **gfapy**. All 5,195 original edges have zero overlap; the prototype validates every original path transition and node length, then projects 202,806 steps across 13 supplied paths. An explicit display subset keeps the first 100 steps of each of two named paths, with original traversal orientation and IDs. Complete supplied path lengths remain separate from chromosome lengths. No pair links are generated. Code, source URL/hash, original MIT notice, output tables and actual image are in `tools/long-term-audit/OPTIONAL-GRAPH-BRIDGE-v0.27.0.md` and its linked prototype artifacts in the source checkout; `data-raw/prepare-graph-prototype.py` retrieves only the two pinned originals on explicit invocation.
+A source-backed exploratory example uses ODGI's unchanged human LPA graph at a pinned commit, decoded by optional **gfapy**. All 5,195 original edges have zero overlap; the prototype validates every original path transition and node length, then projects 202,806 steps across 13 supplied paths. An explicit display subset keeps the first 100 steps of each of two named paths, with original traversal orientation and IDs. Complete supplied path lengths remain separate from chromosome lengths. No pair links are generated. Code, source URL/hash, original MIT notice, output tables and actual image are in [graph-path sources and validation](https://github.com/DangJem/ggchord/blob/v0.29.0/tools/long-term-audit/OPTIONAL-GRAPH-BRIDGE-v0.27.0.md) and its linked prototype artifacts in the source checkout; `data-raw/prepare-graph-prototype.py` retrieves only the two pinned originals on explicit invocation.
 
 This is not a generic `read_gfa()` or graph Coord. Nonzero/unknown overlaps, missing source characters, GFA W/J/GFA2 and native ODGI binaries are outside this prototype. Use mature upstream tools to export an explicit path subset and retain their log/source mapping; do not infer missing coordinate or pair evidence. A documented upstream export route is distinct from a binary decoder actually validated here.

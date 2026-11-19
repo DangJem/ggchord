@@ -3,9 +3,8 @@
 <a id="prepare"></a>
 
 ## Prepare this page {#prepare}
-In a fresh R session, run the code below, then follow this page in order. Colours and layout are optional display choices; inputs select only the fields needed. For file-based examples, first extract the [input bundle](https://github.com/DangJem/ggchord/archive/refs/heads/main.zip) so the working directory contains `examples/`.
+Examples use bundled tables or small installed files. Each block identifies the packages it uses.
 
-{{prepare:setup}}
 
 <a id="tables"></a>
 
@@ -99,11 +98,11 @@ track value units are different domains. See the full
 <a id="import"></a>
 
 ## Advanced: import original records {#import}
-Run this repository-only example from its root. Original files are not rewritten.
+Read three independent format examples. The FASTA comes from pUC19. The GFF3 and BLAST table come from the four-sequence comparison.
 
 {{code:imports}}
 
-{{console:imports}}
+
 
 `read_genbank()` retains record/feature provenance and segmented locations.
 `read_bed()` and `read_paf()` retain their conversion metadata. `as_ggchord_seq()`,

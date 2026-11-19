@@ -10,14 +10,14 @@
 
 <a id="path"></a>
 
-## 本模块的主要功能 {#path}
+## 想检查哪一种比对结果？ {#path}
 
 - 多条 query 与 subject 序列的拼接轴、显式顺序和原生单位间隙。
 - 正向与反向 HSP 端点，两轴独立的显示方向。
 - Identity 等已有指标的 link 映射与标度。
 - 精确来源坐标转换、可见窗口和输入行追溯。
 
-[数据、双轴与映射](dotplot-start.md) · [比对结果导入](alignments.md) · [蛋白坐标](protein-alignments.md)
+[试画第一张 HSP 图](dotplot-start.md#dotplot) · [比对结果导入](alignments.md) · [蛋白坐标](protein-alignments.md)
 
 <a id="inputs"></a>
 

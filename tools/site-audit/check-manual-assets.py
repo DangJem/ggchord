@@ -1,140 +1,127 @@
 #!/usr/bin/env python3
-"""Check manual image provenance and optional copied build assets; no UI checks."""
+"""Verify current handbook images. Use --record-render LOG after the R renderer exits successfully."""
 import argparse
+import csv
 import hashlib
 import json
 import re
-import subprocess
+import struct
 from pathlib import Path
 
-from PIL import Image
-from retained_provenance import validate_home_sources, radial_revision, render_source
-
 ROOT = Path(__file__).resolve().parents[2]
+WEB = ROOT / 'website'
+RECEIPT = ROOT / 'tools/site-audit/handbook-art-rendering.json'
+RENDERER = 'tools/website/render-handbook-art.R'
 
 
-def sha(path):
-    return hashlib.sha256(path.read_bytes()).hexdigest()
+def read(path):
+    return json.loads(path.read_text())
 
 
-def main():
-    parser = argparse.ArgumentParser()
-    parser.add_argument('--built', action='store_true')
-    args = parser.parse_args()
-    radial=radial_revision()
-    rows = json.loads((ROOT/'website/manual-figures.json').read_text())
-    render = json.loads((ROOT/'tools/site-audit/flagship-rendering.json').read_text())
-    source_sha = sha(ROOT/'tools/site-flagships.R')
-    revised_path=ROOT/'tools/site-audit/home-rendering.json'
-    revised=json.loads(revised_path.read_text()) if revised_path.exists() else None
-    if revised:
-        assert revised['status']=='complete','Homepage image generation incomplete'
-        dot=validate_home_sources(revised)
-        before=subprocess.check_output(['git','show','3a6b412:tools/site-flagships.R'],cwd=ROOT)
-        assert hashlib.sha256(before).hexdigest()==render['source_sha256']
-        def chunks(text):
-            return dict(re.findall(r'^# ---- ([a-z]+) ----\n(.*?)(?=^# ---- [a-z]+ ----)',text,re.M|re.S))
-        old_chunks=chunks(before.decode());new_chunks=chunks(render_source('tools/site-flagships.R').decode())
-        assert {key for key in old_chunks.keys()|new_chunks.keys() if old_chunks.get(key)!=new_chunks.get(key)}==({'flagshipmulti','flagshipdot'} if dot else {'flagshipmulti'})
-        assert all(row['original_records']>0 and row['all_source_fields_identical'] for row in revised['source_checks'].values())
-        if revised.get('source_check_correction'):
-            assert revised['source_check_correction']['verifier_sha256']==sha(ROOT/'tools/site-audit/render-home.R')
+def digest(path, algorithm='sha256'):
+    return hashlib.new(algorithm, path.read_bytes()).hexdigest()
 
-    retained = json.loads((ROOT/'tools/long-term-audit/v0.27.0-normal-layout-verification.json').read_text())
-    profiles = json.loads((ROOT/'website/reference-catalog.json').read_text())
-    complete = [r for r in rows if r.get('replaces')]
-    assert len(complete) == len(profiles) == 13
-    assert {r['replaces'] for r in complete} == {r['figure'] for r in profiles}
-    old_records = {r['retained_file']: r for r in retained['cases'].values()}
-    for row in rows:
-        file = ROOT/row['file']
-        digest = sha(file)
-        if radial and row['id'] in radial['figures']:
-            record=radial['figures'][row['id']]
-            assert record['sha256']==digest and all(record[k]==row[k] for k in ('width','height','dpi'))
-        elif revised and dot and row['id']=='flagdotplot':
-            record=dot['figures']['flagdotplot']
-            assert record['sha256']==digest and all(record[k]==row[k] for k in ('width','height','dpi'))
-        elif revised and row['id']=='flaglinear' and 'showcasecollinear' in revised.get('legacy_figures',{}):
-            record=revised['legacy_figures']['showcasecollinear']
-            assert record['sha256']==digest and record['status']=='actual PNG rendered'
-        elif revised and row['id'] in ('flagradial','flagsankey'):
-            record=revised['figures'][row['id']]
-            assert record['status']=='actual PNG rendered'
-            assert record['sha256']==digest
-            assert all(float(record[k])==float(row[k]) for k in ('width','height','dpi'))
-        elif row['id'] in render['figures']:
-            record = render['figures'][row['id']]
-            if revised:
-                assert record['rendered_source_sha256']==render['source_sha256']
-                assert all(old_chunks.get(key)==new_chunks.get(key) for key in row['snippets'] if key in old_chunks),row['id']
-            else: assert record['rendered_source_sha256'] == source_sha, row['id']
-            assert record['sha256'] == digest, row['id']
+
+def require(condition, message):
+    if not condition:
+        raise ValueError(message)
+
+
+def image_record(row):
+    path = ROOT / row['file']
+    with path.open('rb') as stream:
+        header = stream.read(24)
+    require(header[:16] == b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR', f'Invalid PNG: {path}')
+    pixels = struct.unpack('>II', header[16:])
+    expected = (round(row['width'] * row['dpi']), round(row['height'] * row['dpi']))
+    require(pixels == expected, f'{path}: expected {expected}, found {pixels}')
+    return dict(file=row['file'], width=row['width'], height=row['height'],
+                dpi=row['dpi'], sha256=digest(path))
+
+
+def render_inputs():
+    paths = [ROOT / name for name in (
+        RENDERER, 'tools/home-previews.R', 'tools/site-course-examples.R',
+        'tools/site-flagships.R', 'tools/documentation-examples.R',
+        'website/zh/plasmid-catalog.md', 'website/home-previews.json',
+        'website/reference-catalog.json', 'DESCRIPTION')]
+    paths.extend(sorted((ROOT / 'R').glob('*.R')))
+    paths.extend(sorted((ROOT / 'R').glob('*.rda')))
+    paths.extend(sorted((ROOT / 'data').glob('*.rda')))
+    return {str(path.relative_to(ROOT)): digest(path) for path in paths}
+
+
+def verify(args):
+    manual = read(WEB / 'manual-figures.json')
+    home = read(WEB / 'home-previews.json')
+    profiles = read(WEB / 'reference-catalog.json')
+    manual_ids = {row['id'] for row in manual}
+    home_ids = {row['id'] for row in home}
+    require(len(manual_ids) == len(manual) and len(home_ids) == len(home) and
+            manual_ids.isdisjoint(home_ids), 'Duplicate manual or homepage image ID')
+    catalog = [row for row in manual if row.get('replaces')]
+    flagship = [row for row in manual if not row.get('replaces')]
+    require(len(catalog) == len(profiles) and
+            {row['replaces'] for row in catalog} == {r['figure'] for r in profiles},
+            'Reference catalog and full maps differ')
+    require(all(row['full'] in manual_ids for row in home), 'Missing homepage full-size map')
+    published = read(WEB / 'home.json')['modules']
+    require({key for module in published for key in module['figures']} == home_ids,
+            'Homepage modules and preview manifest differ')
+
+    records = {r['id']: image_record(r) for r in manual + home}
+    if args.record_render:
+        # The R command draws every homepage preview before the catalog loop.
+        # It prints each accession only after ggsave() finishes that map.
+        written = re.findall(r'^Rendered (.+?)\s*$', args.record_render.read_text(), re.M)
+        require(written == [row['accver'] for row in profiles],
+                'Render log is incomplete or lists different catalog inputs')
+    for row in manual:
+        require(records[row['id']]['sha256'] == row['sha256'],
+                f"{row['id']}: SHA-256 differs from website/manual-figures.json")
+
+    flagship_log = read(ROOT / 'tools/site-audit/flagship-rendering.json')
+    with (WEB / 'assets/plots.csv').open() as stream:
+        plots = {row['file']: row for row in csv.DictReader(stream)}
+    for row in flagship:
+        identifier = row['id']
+        if row['source'] == 'tools/render-site-flagships.R':
+            logged = flagship_log['figures'][identifier]
+            require(logged['rendered_source_sha256'] == digest(ROOT / 'tools/site-flagships.R')
+                    and all(logged[k] == v for k, v in records[identifier].items()),
+                    f'{identifier}: flagship render record differs')
         else:
-            assert row['sha256'] == digest, row['id']
-        if row.get('replaces'):
-            record = old_records[row['file']]
-            assert record['complete_inputs_identical']
-            assert record['source_labels'] == row['source_labels'], row['id']
-            assert record['png_sha256'] == digest, row['id']
-        else:
-            # All seven homepage images use the retained flagship paper colour.
-            with Image.open(file) as im:
-                assert im.convert('RGB').getpixel((0, 0)) == (255, 252, 245), row['id']
-        if args.built:
-            assert sha(ROOT/'.site/assets'/f"{row['id']}.png") == digest, row['id']
-    previews=json.loads((ROOT/'website/home-previews.json').read_text()) if revised else []
-    for row in previews:
-        record=(radial['figures'][row['id']] if radial and row['id'] in radial['figures'] else dot['figures'][row['id']] if dot and row['id']=='homedotplot' else revised['figures'][row['id']])
-        assert record['sha256']==sha(ROOT/row['file']),row['id']
-        assert record['status']=='actual PNG rendered'
-        with Image.open(ROOT/row['file']) as im:
-            assert im.size==(round(row['width']*row['dpi']),round(row['height']*row['dpi']))
-            assert im.convert('RGB').getpixel((0,0))==(255,252,245)
-        if args.built:assert sha(ROOT/'.site/assets'/Path(row['file']).name)==record['sha256']
-    if revised:
-        home=json.loads((ROOT/'website/home.json').read_text())
-        assert [row['slug'] for row in home['modules']]==['multi-sequence','circular','dotplot','fusion']
-        assert len(home['modules'][0]['figures'])==4
-        assert len(home['capabilities'])==3
-        assert home['capabilities'][1]['title']['zh']=='灵活的参数格式'
-        assert home['modules'][2]['title']['zh']=='序列比对点图'
-        css=(ROOT/'website/assets/site.css').read_text()
-        assert 'svh' not in css and '.home-shell{height:' not in css
-        logo=re.search(r'\.home-logo\{display:block;width:(\d+)px',css)
-        assert logo and 280<=int(logo[1])<=320
-        assert 'body[data-page=index]{background:var(--surface-home)}' in css
-        assert 'body[data-page=index] > .container{max-width:1280px}' in css
-        assert 'object-fit:cover' not in css
-        if args.built:
-            for lang in ['en','zh']:
-                text=(ROOT/'.site'/lang/'index.html').read_text()
-                assert len(re.findall(r'<h1\b',text))==1,lang
-                assert 'home-introduction' in text and 'manual-brand' not in text
-                assert text.index('home-introduction')<text.index('home-capabilities')
-                fragments=re.findall(r'<section class="home-module"[^>]*>(.*?)</section>',text,re.S)
-                assert len(fragments)==len(home['modules'])
-                for module,fragment in zip(home['modules'],fragments):
-                    assert fragment.index('<h2')<fragment.index('home-purpose')<fragment.index('home-module-art')<fragment.index('home-module-actions')
-                    assert module['entry'] in fragment
-                full_keys={row['full'] for row in previews}
-                original=(ROOT/'.site'/lang/'index.html').read_text()
-                for row in previews:
-                    assert Path(row['file']).name in original
-                    target=row.get('full_file',row['full']+'.png')
-                    assert f'../assets/{target}' in original
-                    assert (ROOT/'.site/assets'/target).exists()
-    assert not (ROOT/'website/en/learn.md').exists()
-    assert not (ROOT/'website/zh/learn.md').exists()
-    result = dict(status='passed', manual_images=len(rows), new_flagship_pngs=len(render['figures']),
-                  complete_reference_maps=len(complete), homepage_previews=len(previews),
-                  current_flagship_rerenders=2 if revised else 0,
-                  retained_original_source_sha256=render['source_sha256'],common_home_background='#FFFCF5',
-                  built_assets_checked=args.built, helper_sha256=source_sha,
-                  scope='Source and PNG provenance; reused reference maps retain earlier measured-layout evidence. No browser interaction or viewport acceptance.')
-    (ROOT/'tools/site-audit/manual-assets-check.json').write_text(json.dumps(result, indent=2)+'\n')
-    print(f"PASS: {len(rows)} manual images, {len(previews)} homepage previews, 13 complete reference maps" + (' and built copies' if args.built else ''))
+            registered = plots[row['file']]
+            require(registered['md5'] == digest(ROOT / row['file'], 'md5')
+                    and registered['object'] == row['object']
+                    and all(float(registered[k]) == row[k] for k in ('width', 'height', 'dpi')),
+                    f'{identifier}: public plotting manifest differs')
+
+    receipt = dict(renderer=RENDERER, sources=render_inputs(),
+                   figures={r['id']: records[r['id']] for r in home + catalog})
+    if args.record_render:
+        RECEIPT.write_text(json.dumps(receipt, indent=2, ensure_ascii=False) + '\n')
+    else:
+        require(RECEIPT.exists() and read(RECEIPT) == receipt,
+                'Handbook render receipt is missing or stale. After a successful render, '
+                'run check-manual-assets.py --record-render <completed-render.log>.')
+    if args.built:
+        assets = args.site_dir / 'assets'
+        for row in manual + home:
+            name = row['id'] + '.png' if row['id'] in manual_ids else Path(row['file']).name
+            require(digest(assets / name) == records[row['id']]['sha256'],
+                    f'{assets / name}: copied PNG differs')
+    print(f"Verified {len(flagship)} flagship images, {len(catalog)} catalog maps and "
+          f"{len(home)} homepage previews" + (' and their built copies.' if args.built else '.'))
 
 
 if __name__ == '__main__':
-    main()
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--built', action='store_true', help='Also verify the final website PNGs.')
+    parser.add_argument('--site-dir', type=Path, default=ROOT / '.site')
+    parser.add_argument('--record-render', type=Path, metavar='LOG',
+                        help='Write the image and source receipt after a successful full handbook render.')
+    try:
+        verify(parser.parse_args())
+    except (ValueError, OSError, KeyError) as error:
+        raise SystemExit(str(error)) from error

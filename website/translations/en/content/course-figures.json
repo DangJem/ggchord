@@ -1,5 +1,5 @@
 {
-  "source_sha256": "f58be6f00f4a30c42460414c26b2425155996a13023c976fc53cbd4083b31638",
+  "source_sha256": "88d1f357f6a5159c4ca63e8e2a93bdfd8ceffcb5e73e4b99a4edf563e20384f7",
   "strings": {
     "0/caption": {
       "source_sha256": "6afc9433dda50822080a8dbc78f227a49206cf6599f3777d7211a9c5e6b0fec5",
@@ -135,6 +135,11 @@
       "source_sha256": "46423a0e979ceb6d1260af2c577d9bcb945e3aff4b0f648b488d6a38ebbe3515",
       "status": "reviewed",
       "translation": "100 observed bases displayed as two lines of 50 columns"
+    },
+    "27/caption": {
+      "source_sha256": "b1d841d549bf819097a5ea15688c8bbc6bf0f2fb6c15cc72e5b24a0a2a5160ef",
+      "status": "reviewed",
+      "translation": "pUC19 backbone and nine reference features"
     }
   }
 }

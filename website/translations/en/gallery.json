@@ -1,25 +1,25 @@
 {
-  "source_sha256": "ea54ef6d36a0a8cbee1b399e23d76411aa4eb0f58132f8d8ea54b25b8c427ddc",
+  "source_sha256": "d2cfbd7bdac5856b92421acd629c027b7e25a0271167ccbe01985279f783bb8e",
   "blocks": {
     "0": {
-      "source_sha256": "3b6c8cffbbd70461cccd4322444490f2bc31d25c7ea6f74597fd7b2e21c51301",
+      "source_sha256": "190c0b4b6d18ff98ac78beca04fe5ad7aac81191126ef29b6b62e46ba8233184",
       "status": "reviewed",
-      "translation": "Start with selected results, then filter by module, task, type and level. All 178 original figures, full-resolution files and IDs are retained. Opening an old figure anchor reveals its card.\n"
+      "translation": "Browse representative examples by plot type. Expand a group to compare labels, links, tracks and layouts. Each figure links to its entry.\n"
     },
     "4": {
-      "source_sha256": "edb074ba08b76770c58324476d28cee5b80ef7e97bafdbc62d24673cad658c89",
+      "source_sha256": "1d45f9467e1a0d0ff38fde9736fca2fa666911d95bd051ad8b17df7c9816226b",
       "status": "reviewed",
-      "translation": "## Sources, scripts and circular reference collection ⟦shared:0⟧\n"
+      "translation": "## Figure sources ⟦shared:0⟧\n"
     },
     "5": {
-      "source_sha256": "9447fc176712288287dcf42797640adbe0911e8bc9f5444207bb380b30e3a46e",
+      "source_sha256": "8044e1c18d73326f50e993304f910a7f9158efa051938a2cd2a4d2331fdd2144",
       "status": "reviewed",
-      "translation": "[13 circular reference maps](⟦shared:0⟧) · [R](⟦shared:1⟧) · [Sources](⟦shared:2⟧)\n"
+      "translation": "[13 single-sequence reference maps](⟦shared:0⟧) · [Data and figure sources](⟦shared:1⟧)\n"
     },
     "7": {
-      "source_sha256": "2b561f527f8db5cd04d3f3fdd3d317944f7573b359f76571d94083bad6ceb148",
+      "source_sha256": "8e16e23c96ae8d9e10a40a76799652d261f79e3e0db056f9c898ecfd2620a0ea",
       "status": "reviewed",
-      "translation": "[Inputs](⟦shared:0⟧) · [Figure manifest](⟦shared:1⟧)\n"
+      "translation": "[Figure sizes and rendering records](⟦shared:0⟧)\n"
     }
   }
 }

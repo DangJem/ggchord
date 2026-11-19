@@ -57,7 +57,7 @@ def reference_inputs():
     fixtures = [ROOT/os.fsdecode(name) for name in listed.split(b'\0') if name]
     return inputs(fixtures + [p for name in ['R','man','data','website/reference-zh']
         for p in (ROOT/name).rglob('*')] + [ROOT/p for p in [
-        'website/reference-examples.json','tools/reference-translations.py','tools/website-dependencies.R']])
+        'website/reference-examples.json','website/r-comments-zh.json','tools/reference-translations.py','tools/documentation_lib.py','tools/website-dependencies.R']])
 
 
 def reference_cache_allowed():

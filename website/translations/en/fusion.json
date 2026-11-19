@@ -1,5 +1,5 @@
 {
-  "source_sha256": "04abf737535dbc95ec4ea68b0965f638c1c310da4f9b1c884eb5271fdc078b8c",
+  "source_sha256": "e9d0ecd9935644700a043839897e75c394b922c026187aab7826513f7bdd1757",
   "blocks": {
     "1": {
       "source_sha256": "61fb363c7a49e9dab5d78878395d1848cdfeaf5b3d3ecc1ca60c9829a863e0a2",
@@ -12,14 +12,14 @@
       "translation": "Fusion composes explicit panel rectangles containing a Chord overview, Collinear view, Radial view, two-sequence context, local zoom and observed nucleotide detail. Connections use existing HSPs and registered source intervals; displaying a record twice creates no new observation.\n"
     },
     "5": {
-      "source_sha256": "1e022fdf3e1891419a11ee48fbe8e02c905ffc262d84abaac4af3a813ae79c76",
+      "source_sha256": "3a0ae798471139e6708e68dcc88b3e452991489159e1df69b2812b2a0923db1c",
       "status": "reviewed",
-      "translation": "## Panel composition ⟦shared:0⟧\n"
+      "translation": "## How do I compose and connect panels? ⟦shared:0⟧\n"
     },
     "6": {
-      "source_sha256": "3e6f8b3d79fa3e37f2cfa5a76a404676b5075cd834f3c3d4c12ebdee7de4337e",
+      "source_sha256": "07eb858fa639c2fc3cd796dab3a838053e33527666af0c2a7f7d60924aa3d580",
       "status": "reviewed",
-      "translation": "[Panels and source links](⟦shared:0⟧) · [Position, size and guides](⟦shared:1⟧) · [Cross-panel routing](⟦shared:2⟧)\n"
+      "translation": "[Combine and connect two plots](⟦shared:0⟧) · [Position, size and guides](⟦shared:1⟧) · [Cross-panel routing](⟦shared:2⟧)\n"
     },
     "8": {
       "source_sha256": "b112f685b89abbed1fb5a370ed86f7352a57db28a8edbae03b1f9999f7159e61",

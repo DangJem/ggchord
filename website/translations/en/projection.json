@@ -1,70 +1,55 @@
 {
-  "source_sha256": "bfcfffb78c6b48ed1531cc2f2570ad890138229a4a78c9df5ef265e620bb6b0f",
+  "source_sha256": "6adf1b7affaac3e057b267d25a06c15f7e27ded7c2638096b2d7939ddb11789a",
   "blocks": {
-    "0": {
-      "source_sha256": "a58040672418977cb302f5dba056054cc074dd0e2d6165a48ff6e6fe79db72f5",
+    "1": {
+      "source_sha256": "8fa0789c34a47590cc749ca3675343867c4abde14b5fb2d7bc6867ae97f9c0cb",
       "status": "reviewed",
-      "translation": "⟦shared:0⟧⟦shared:1⟧Project known protein intervals to genomic positions through real CDS, retaining phase, strand and segmentation explicitly.⟦shared:2⟧⟦shared:3⟧\n"
+      "translation": "## Choose the input ⟦shared:0⟧\n"
     },
     "2": {
-      "source_sha256": "0fa3fbfa0a873728926e3af5e6670e13482733d3820f9266bf2ef86dfe4f9a5c",
+      "source_sha256": "bb468f4763a2f66ea1e6a32342ec67ca16579b17b719edf90e89f0d552345156",
       "status": "reviewed",
-      "translation": "## Prepare this page ⟦shared:0⟧\n"
+      "translation": "Start with a CDS table and a known amino-acid interval. A complete CDS supplies source coordinates, strand and reading frame.\n"
     },
-    "3": {
-      "source_sha256": "d6c23f34e341d49d3270e24227e3c9893d5d0403044fd72905dbd4f96982a6e1",
+    "4": {
+      "source_sha256": "664d543abbb339d40697edbbad8abdfcaae80dfa1450cb0ed9d19bacf7c5ef9b",
       "status": "reviewed",
-      "translation": "Use the [verified AmpR input](⟦shared:0⟧) or save and run the preparation script below.\n"
+      "translation": "## Locate an amino-acid interval on the nucleotide axis ⟦shared:0⟧\n"
     },
-    "6": {
-      "source_sha256": "3604c1bb8a038550c8f3b50fccb7b82f6eb043595388847fc0c1108c001870c3",
+    "5": {
+      "source_sha256": "163382ae406a4f33cdc26c6be0e3664267bc33b6eb9bf6d22d3b21481d1dcd7c",
       "status": "reviewed",
-      "translation": "## Start with source-backed CDS ⟦shared:0⟧\n"
+      "translation": "The bundled pUC19 annotation supplies the complete lacZα CDS. Residues 2–5 map to 455–466 bp on the original negative strand.\n"
     },
-    "7": {
-      "source_sha256": "0205554f053b98c2bbc466243aaab179de450590347dde9e68e3563a7eccc362",
+    "8": {
+      "source_sha256": "6bdf026e0c8f73fd2b8b0ed140d64fef85132f72cda99f444d2f56dcf6ae5ef0",
       "status": "reviewed",
-      "translation": "Run the [identical-CDS comparison](⟦shared:0⟧) first. It uses real\nbundled plasmid annotations and DNA. Complete CDS use explicit phase 0 and\ntranslation table 11.\n"
+      "translation": "## Segment boundaries and phase ⟦shared:0⟧\n"
     },
-    "10": {
-      "source_sha256": "8a90470c51edebcee9c44272fca1d28822043b9f0ba912ec916d50f54fbaa56d",
+    "9": {
+      "source_sha256": "62827c495ce97112a79e765baa21c251a9ebac002c5b5f8488448480c88a1ed8",
       "status": "reviewed",
-      "translation": "This example selects residues 2–20 for display; it does not claim a detected\nprotein domain. Projection returns genomic intervals with strand/segment context.\nActual domains require exact parent CDS IDs and amino-acid ranges; annotation\nnames or maximum feature endpoints cannot supply missing evidence.\n"
+      "translation": "Several CDS segments can share one parent ID. Projection orders them in transcription direction. The returned segments column preserves intron gaps that the outer interval spans.\n"
+    },
+    "11": {
+      "source_sha256": "0b8b417a4e409aef0d3a1474598418e1df86427c510d8da169c2082a9ac74564",
+      "status": "reviewed",
+      "translation": "## Project a known pair of intervals ⟦shared:0⟧\n"
     },
     "12": {
-      "source_sha256": "93df272e96b0d729b6ed974bf30c3783fe334c345e74e72f90153ad2c19bf3ad",
+      "source_sha256": "bf8dd1795af6aa52c361b2886f1b18b8f086ea6cda3a0d12d0f59f9edd651f7f",
       "status": "reviewed",
-      "translation": "## Segments, phase and partial regions ⟦shared:0⟧\n"
-    },
-    "13": {
-      "source_sha256": "6fa0ea6b11b4e21cc047a3f0041ca359a7025d85ffc68341f73d060c9bf02228",
-      "status": "reviewed",
-      "translation": "⟦shared:0⟧ constructs a segment map; ⟦shared:1⟧ then\nprojects amino-acid intervals through it. Each input feature returns one row;\nits genomic pieces are retained in the ⟦shared:2⟧ list-column. ⟦shared:3⟧ can instead split into several paired rows. Multiplying coordinates\nby three is insufficient. Inspect policies/reports\nfor partial CDS, phase and truncation. DNA matching, interval projection and\nactual translation/alignment are distinct operations.\n"
+      "translation": "Each schematic axis below contains ten codons. The example specifies a one-to-one correspondence between three residues and shows endpoint order on both strands. Real data require their own evidence for that correspondence.\n"
     },
     "15": {
-      "source_sha256": "401c1a716360ab92449ba3ece91c91ddfcd95150a0a6664f7380b88d46c28ae1",
+      "source_sha256": "91656426ce4c7e0bc833381684298844a401e1ac98c761a386485ba61fba9b9b",
       "status": "reviewed",
-      "translation": "## BLASTp query spans and two-ended links ⟦shared:0⟧\n"
+      "translation": "## Check the projection ⟦shared:0⟧\n"
     },
-    "18": {
-      "source_sha256": "ffc1f86c493de79ce354edc52ec48ebda36f7b6d4b4650858addead52f5f8142",
+    "16": {
+      "source_sha256": "471c0c5d21f80414b59145e8dc8e1ff36615385f21de8f2f0003e747ac0c1164",
       "status": "reviewed",
-      "translation": "This ungapped case relies on [verified identical coding DNA](⟦shared:0⟧).\nReal BLASTp HSPs may contain gaps: query spans can still be projected, but paired\nlinks need the subject CDS and justified ungapped correspondence. See\n[real BLASTp import/projection](⟦shared:1⟧). Genomic plots use the projected bp coordinates.\n"
-    },
-    "20": {
-      "source_sha256": "96d3b3403a7277d64e0e970205753ee81e2d284e9e04a56212cef8617bb26319",
-      "status": "reviewed",
-      "translation": "## Result checks ⟦shared:0⟧\n"
-    },
-    "21": {
-      "source_sha256": "18df9017d47f717531492bb89ceb451acb6044b3558e83d56b2c3174aeb2894b",
-      "status": "reviewed",
-      "translation": "Check parent CDS IDs, projection reports and returned segments. The selected residue range is a display example, not a detected domain.\n"
-    },
-    "22": {
-      "source_sha256": "6efa5ca18eb63c53cc46bb70bc8b5686bc9f00e3a78a11183cef06491e3839c5",
-      "status": "reviewed",
-      "translation": "⟦shared:0⟧Continue: ⟦shared:1⟧Data workflows →⟦shared:2⟧⟦shared:3⟧\n"
+      "translation": "Check parent CDS IDs, native units and the full segment list. For a gapped BLASTp hit, determine whether the evidence supports a single query span or a residue correspondence at both ends.\n"
     }
   }
 }

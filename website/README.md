@@ -67,12 +67,11 @@ counterpart, preserving matching anchors, including on mobile. The root entry
 remembers the chosen language when browser storage is available.
 
 汉语正文与保存译文生成的英语 Markdown 经 Pandoc 转换，展示已有代码、结果与图，不执行其中的 R。完整
-reference 从当前 Rd 生成，不运行帮助示例。帮助正文从英语 Rd 生成，汉语函数参考逐项翻译并绑定源摘要，缺译或过期会阻止构建。首次原型的自制页面壳和
+reference 从当前 Rd 生成，同时运行帮助示例。帮助正文从英语 Rd 生成，汉语函数参考逐项翻译并绑定源摘要，缺译或过期会阻止构建。首次原型的自制页面壳和
 Rd 转换器已退役，不同时维护另一套网站实现。
 
 Han-source Markdown and generated English are converted by Pandoc using existing code, outputs and figures;
-R chunks are not executed. Current Rd generates the complete reference without
-running examples. Canonical R help remains English; the Han website reference translates every prose section and checks source hashes. The first prototype's custom page shell/Rd renderer is retired.
+R chunks are not executed. Current Rd generates the complete reference with evaluated examples. Canonical R help remains English; the Han website reference translates every prose section and checks source hashes. The first prototype's custom page shell/Rd renderer is retired.
 
 ## 本地生成 / Local build
 
@@ -90,10 +89,11 @@ are disabled; the existing local icon is used.
 ```sh
 # 修改共享例子后才更新 PNG / Only when changing shared examples
 Rscript tools/documentation-plots.R
-# 仅同步源码，不渲染 vignette / Sync sources, without knitting
-python3 tools/sync-tutorials.py
+# 检查双语网站源 / Check the paired website sources
+python3 tools/sync-website-languages.py --check
 python3 tools/build-website.py
 python3 tools/check-documentation.py
+python3 tools/website/copy_examples.py
 python3 -m http.server 8765 --directory .site --bind 127.0.0.1
 ```
 
@@ -155,90 +155,23 @@ The Han Rd adapter uses pkgdown 2.2.1 classed parsing with explicit structural
 guards. Recheck this one adapter when upgrading pkgdown; page generation uses
 public builders. Generated reference prose and code are checked.
 
-## 阅读架构与局部验证 / Reading structure and scoped verification
+## 工具书内容与验证 / Handbook content and verification
 
-三种模块各自从随包数据开始，完成首图后再读表格并加图层。自备数据、常用技巧、
-专业专题和图库单独分组。全站导航折叠当前模块之外的分组，正文显示章节编号和前后章节。
-基础课将必要的几行输入放在使用它们的步骤中。`prepare` 用于文件、可选依赖或完整案例。
-`output` 紧跟同名检查代码，显示实际运行所得的小表。
+汉语正文和已校对英语译文共用导航、代码、图片与锚点。顶栏的五个入口面向开始使用、绘图、数据与操作、案例和函数查询。首页保留四组旗舰预览，图库按生成图像的坐标类型分组。默认显示代表图，可展开整组并使用历史图片锚点。函数索引和参数表取自本分支的帮助与公开签名。
 
-Each module starts with bundled records, then explains its tables and layers.
-Separate groups cover user inputs, techniques, advanced workflows and the gallery.
-The current module opens in the site guide and shows its progress and section links.
-Opening lessons put their short inputs next to the step that uses them. Use `prepare` for files,
-optional dependencies or full cases. An `output` marker shows the table returned by the matching inspection code.
+Both editions share navigation, code, figures and anchors. Five entries lead to getting started, plotting guides, data and operations, the gallery and the API reference. The dashboard retains four families of flagship previews. The gallery groups figures by coordinate system and preserves individual figure anchors.
+
+普通绘图示例使用安装包内的数据和公开接口。单个复制按钮、可下载的脚本及网页上的代码来自同一段源。定向验收从生成的 HTML 读取每个独立示例，分别在空工作目录与新 R 进程运行。复杂案例在对应条目保留输入、尺寸和完整图层。文件导入条目在使用处指出依赖和输入文件。
+
+Each standalone example uses the same source for its on-page code, copy button and download. The clipboard check reads the built HTML and executes the examples in fresh R processes and empty working directories. Cases record their input, layers and output size. File import entries identify their exact files and optional packages.
 
 ```sh
-# 只检查文档任务的独立准备，不运行包检查 / Independent lesson objects only
-Rscript tools/check-documentation-lessons.R
-# 共享检查代码或输入变化后刷新输出 / Refresh after inspection code or data changes
-Rscript tools/check-documentation-lessons.R --write-outputs
+python3 tools/build-website.py --render-jobs 2
+python3 tools/check-documentation.py
+python3 tools/website/copy_examples.py
 ```
 
-检查含共享代码的页面准备与步骤，使用独立环境，不保存用户输出、不打开预览，也不执行
-完整 testthat、vignette 或包发布检查。代码默认展开。重建 GenBank 输出时，
-请让 PATH 中的 python3 能导入 Biopython。
-
-The scoped script checks pages with shared examples in separate environments, without user exports,
-interactive previews, test suites, vignette rendering or package release checks.
-Code is visible by default. To regenerate the GenBank output, use a python3 on PATH
-that can import Biopython.
-
-折叠页内目录在生成时直接读取实际标题，完整参考页无需等待脚本填充目录。
-图片使用资产清单的固有宽高预留比例，懒加载不挤动章节。文档顶栏保持可见，
-窄屏移除模板行负边距；数据图形仍按页面宽度缩放，并支持原始尺寸画布。
-
-Compact outlines are generated from actual headings, including reference topics.
-Intrinsic figure dimensions reserve their aspect ratios before lazy loading.
-The documentation header stays visible; narrow layouts remove inherited negative
-row margins. Figures remain responsive with an actual-size canvas available.
-
-代码复制按钮只复制 `pre code` 正文，避免把折叠标题一并写入剪贴板；反馈随页面语种显示。
-Copy controls use only `pre code` text, excluding disclosure labels, with localized feedback.
-
-当前示例优先使用 dplyr 动词和 R ≥4.1 的原生 `|>` 管道；保留清晰的向量计算与文件 I/O。
-安装示例依赖时不需要加载整个 tidyverse。共享例子改动后应实际重建相应 PNG，
-不得仅更新代码摘要来复用未验证的图片。
-
-Current examples prefer dplyr verbs and the native R ≥4.1 `|>` pipe. Keep direct
-vector calculations and file I/O where clearer; loading the entire tidyverse is
-unnecessary. Regenerate PNGs after shared example changes rather than changing
-code hashes without verified exports.
-
-## 当前导航与展示 / Current navigation and showcases
-
-首页与README共用三张旗舰PNG，完整示例源仍只有documentation-examples.R。
-首页提供三张带图的模块入口和完整大图；README将长代码折叠保留，入门首图继续使用
-最小数据。桌面左侧是本页目录，右侧是全站目录；小屏分别折叠，不混成一个菜单。
-
-Home and README share three flagship PNGs from the same executable source.
-Home offers three illustrated task entries and full-size figures; README keeps
-long runnable code in disclosures. First-plot lessons remain minimal. The left
-outline describes the current page; the right guide covers the whole site.
-They become separate disclosures on compact screens.
-
-全站任务分类编辑于 website/content-zh/navigation.json，顶部“可视化”菜单读取生成的 website/navigation.json 中的
-弦图/共线性/质粒模块，其他顶栏链接为首页、入门、教程总览和函数参考。全站目录
-列出各模块下的具体流程和通用技巧，不在顶栏重复全部页面。
-
-The task taxonomy is authored in website/content-zh/navigation.json and rendered into website/navigation.json. The top Visualizations menu
-uses its chord/collinear/plasmid modules; Home, Get started, All guides and
-Reference are primary entry points. The right guide expands these paths into
-workflows and shared techniques rather than repeating every page in the header.
-
-综合示例使用dplyr、purrr、tidyr整理原始记录、展开GC窗口和逐窗口计算；这些包是
-Suggests中的可选文档依赖。密集pETDuet-1示例使用显式视野与label_fit="shrink"，
-按16.5×8英寸通过标准ggsave保存；自动view预览可以选择不同尺寸，不能混用其布局。
-
-Complete examples use dplyr, purrr and tidyr to prepare source records, expand
-GC windows and calculate per-window values. These are optional Suggests for
-documentation. The dense pETDuet-1 example uses an explicit viewport and
-label_fit="shrink", saved with standard ggsave at 16.5×8 inches; automatic view
-previews can choose different dimensions and should not be mixed with that layout.
-
-三个模块独立从首图进入输入表、图层和完整案例。13个独立质粒参考均由当前代码生成；共同数据/图层的coord替换示例与圆形专属参数限制分开说明。
-
-文档图像manifest保留每张PNG及实际生成时共享脚本的MD5，同时记录当前依赖摘要。R实现或共同准备变动会要求重新生成所有受影响图；已审阅的独立共线性/三种标签示例块可局部重绘。只有完整当前输出和实际PNG哈希全部匹配时，才允许为旧manifest补录依赖摘要，不能用补写哈希代替渲染。
+页面内容从汉语源和译文生成。修改网站显示图后，按对应生成器重绘并更新图像清单。网页构建输出在本地 `.site/`；离线教程图片有独立的同步命令。
 
 ## 离线教程图片
 

@@ -1,6 +1,5 @@
 {{code:courseblockag}}
 
-{{prepare:frontbackbone,frontlinks}}
 
 <a id="control"></a>
 
@@ -70,7 +69,6 @@
 
 ## 跨行连接 {#cross-row}
 
-{{prepare:frontlinearbase,frontlinks,frontlinearlink}}
 
 <a id="routes"></a>
 
@@ -167,7 +165,6 @@
 
 操作示例：只将主干比例改为 0.25；再回到默认比例，比较曲线与直线的选点。用自己的数据时先决定需要展示区间长度还是单个位置，随后查看 [`geom_link_ribbon()`](../../man/geom_link_ribbon.Rd) 与 [`geom_link_line()`](../../man/geom_link_line.Rd)。
 
-{{prepare:ribboninputs}}
 
 <a id="interval-points"></a>
 

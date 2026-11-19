@@ -10,14 +10,14 @@ To read the matrix, choose a query sequence at the top and a subject sequence on
 
 <a id="path"></a>
 
-## What the module supports {#path}
+## What do you want to inspect? {#path}
 
 - Multiple query and subject sequences, explicit axis order and native-unit gaps.
 - Forward and reverse HSP endpoints, independent display orientation on either axis.
 - Identity and other supplied metrics mapped through link scales.
 - Exact source-to-display conversion, visible windows and traceable input rows.
 
-[Data, axes and mapping](dotplot-start.md) · [Alignment imports](alignments.md) · [Protein coordinates](protein-alignments.md)
+[Try an HSP dot plot](dotplot-start.md#dotplot) · [Import an alignment](alignments.md) · [Protein coordinates](protein-alignments.md)
 
 <a id="inputs"></a>
 

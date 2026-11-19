@@ -8,9 +8,9 @@ Fusion composes explicit panel rectangles containing a Chord overview, Collinear
 
 <a id="path"></a>
 
-## Panel composition {#path}
+## How do I compose and connect panels? {#path}
 
-[Panels and source links](fusion-start.md) · [Position, size and guides](fusion-layout.md) · [Cross-panel routing](fusion-routing.md)
+[Combine and connect two plots](fusion-start.md#panels) · [Position, size and guides](fusion-layout.md) · [Cross-panel routing](fusion-routing.md)
 
 <a id="magnify"></a>
 

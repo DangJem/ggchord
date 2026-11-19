@@ -34,19 +34,7 @@
 
 ## 将蛋白命中显示在基因组上 {#projection}
 
-如果需要在核酸骨架上定位命中，则提供已知 CDS 映射，将 aa 区间投影到 bp。下面另用 BVI_023A_0009 的源蛋白命中演示，先选出具有完整 CDS 的记录，再转换 query 端。此小节直接使用随包数据 `sequence_detail_example`，原始记录的来源见[说明输入包](formats.md)。
-
-```r
-library(dplyr)
-```
-
-{{code:protein}}
-{{output:protein}}
-{{code:proteinproject}}
-{{output:proteinproject}}
-{{results:protein}}
-
-氨基酸范围 50–289 投影后对应 BVI_023A 的 7,181–7,900 bp，方向为负链。单侧范围投影可保留有缺口 HSP 的覆盖范围。需要连接两端基因组时，还应提供 subject 的 CDS 模型；双端无缺口投影见[CDS 投影](projection.md)。
+若要在核酸骨架定位一个蛋白区间，请提供有来源的 CDS、阅读框和链。用[坐标投影实例](projection.md#cds)核对一个已知负链区间。
 
 <a id="source"></a>
 

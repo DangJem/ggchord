@@ -81,7 +81,7 @@ def source_document(text):
 def site_document(text, figures='../assets'):
     """Resolve repository paths for HTML/tutorial output, before adding macros."""
     # Explicit source anchors coexist with Pandoc IDs only in the Markdown.
-    text = re.sub(r'<a id="([^"]+)"></a>\n\n(?=#{1,6} [^\n]*\{#\1\})','',text)
+    text = re.sub(r'<a id="([^"]+)"></a>\n\n(?=#{1,6} [^\n]*\{#\1\})','\n\n',text)
     assets = asset_sources()
     inverse = {}
     # Prefer the source basename where both declared output aliases exist.

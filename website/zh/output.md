@@ -40,6 +40,8 @@ ggsave("comparison.pdf", p_linear_base,
   width = output_width, height = output_height, units = "in")
 ```
 
+<a id="layout-results"></a>
+
 ## 按问题查找布局结果 {#layout-results}
 
 | 想知道什么 | 调用与返回项 | 行与单位 |

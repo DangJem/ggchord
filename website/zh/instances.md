@@ -2,7 +2,6 @@
 
 ## 准备 {#input}
 
-{{prepare:foundationdata}}
 
 <a id="instances"></a>
 
