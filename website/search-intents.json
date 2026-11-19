@@ -5,12 +5,12 @@
     ],
     "url": "sankey.html",
     "title": {
-      "zh": "镜像 Sankey 章节",
-      "en": "Mirrored Sankey section"
+      "zh": "双列区间关系图",
+      "en": "Two-column interval links"
     },
     "summary": {
-      "zh": "按任务选择当前章节或精确参数；详见输入与支持边界。",
-      "en": "Choose the current section or exact parameter; inspect its input and support boundary."
+      "zh": "在左右两列序列间绘制查询与目标区间的对应关系。",
+      "en": "Draw correspondences between query and subject intervals in two sequence columns."
     }
   },
   {
@@ -21,12 +21,12 @@
     ],
     "url": "radial-synteny.html",
     "title": {
-      "zh": "径向共线性章节",
-      "en": "Radial synteny section"
+      "zh": "径向共线性图",
+      "en": "Radial synteny"
     },
     "summary": {
-      "zh": "按任务选择当前章节或精确参数；详见输入与支持边界。",
-      "en": "Choose the current section or exact parameter; inspect its input and support boundary."
+      "zh": "将多条序列画成辐条并连接同源区间。",
+      "en": "Draw sequences as spokes and connect homologous intervals."
     }
   },
   {
@@ -38,12 +38,12 @@
     ],
     "url": "dotplot.html",
     "title": {
-      "zh": "从 HSP 读取 Dotplot",
-      "en": "Read a Dotplot from HSPs"
+      "zh": "比对点图",
+      "en": "Alignment dotplots"
     },
     "summary": {
-      "zh": "按任务选择当前章节或精确参数；详见输入与支持边界。",
-      "en": "Choose the current section or exact parameter; inspect its input and support boundary."
+      "zh": "在双轴上显示局部比对区间及方向。",
+      "en": "Show local alignment intervals and direction on two axes."
     }
   },
   {
@@ -53,12 +53,12 @@
     ],
     "url": "fusion.html",
     "title": {
-      "zh": "两面板真实来源组合",
-      "en": "Two-panel source-backed composition"
+      "zh": "跨面板组合图",
+      "en": "Linked sequence panels"
     },
     "summary": {
-      "zh": "按任务选择当前章节或精确参数；详见输入与支持边界。",
-      "en": "Choose the current section or exact parameter; inspect its input and support boundary."
+      "zh": "组合来源明确的独立面板并连接对应区间。",
+      "en": "Compose source-backed panels and link corresponding intervals."
     }
   },
   {
@@ -68,12 +68,12 @@
     ],
     "url": "reference/geom_track.html#ref-usage",
     "title": {
-      "zh": "给定值使用 geom_track_col",
-      "en": "Use geom_track_col for supplied values"
+      "zh": "用 geom_track_col 绘制给定数值",
+      "en": "Plot supplied values with geom_track_col"
     },
     "summary": {
-      "zh": "按任务选择当前章节或精确参数；详见输入与支持边界。",
-      "en": "Choose the current section or exact parameter; inspect its input and support boundary."
+      "zh": "将已有数值映射到序列局部柱形轨道。",
+      "en": "Map supplied values to a sequence-local column track."
     }
   },
   {
@@ -81,14 +81,14 @@
       "计数",
       "count"
     ],
-    "url": "tracks-statistics.html",
+    "url": "reference/geom_track.html#ref-usage",
     "title": {
-      "zh": "计数与给定值：bar 和 col",
-      "en": "Counts and supplied values: bar and col"
+      "zh": "绘制已有计数值",
+      "en": "Plot supplied count values"
     },
     "summary": {
-      "zh": "按任务选择当前章节或精确参数；详见输入与支持边界。",
-      "en": "Choose the current section or exact parameter; inspect its input and support boundary."
+      "zh": "将已计算的计数值作为数值映射到柱形轨道。",
+      "en": "Map precomputed count values to a column track."
     }
   },
   {
@@ -98,12 +98,12 @@
     ],
     "url": "output.html",
     "title": {
-      "zh": "按目标尺寸保存图片",
-      "en": "Save a plot at target size"
+      "zh": "按目标尺寸预览与导出",
+      "en": "Preview and export at target size"
     },
     "summary": {
-      "zh": "按任务选择当前章节或精确参数；详见输入与支持边界。",
-      "en": "Choose the current section or exact parameter; inspect its input and support boundary."
+      "zh": "按目标尺寸预览，并使用 ggsave 保存图形。",
+      "en": "Preview at the intended size and save the plot with ggsave."
     }
   },
   {
@@ -113,12 +113,12 @@
     ],
     "url": "annotations.html",
     "title": {
-      "zh": "检查文字布局与目标尺寸",
-      "en": "Inspect label layout and target size"
+      "zh": "特征分道与子集标签",
+      "en": "Features and subset labels"
     },
     "summary": {
-      "zh": "按任务选择当前章节或精确参数；详见输入与支持边界。",
-      "en": "Choose the current section or exact parameter; inspect its input and support boundary."
+      "zh": "为全部特征分道，再选择部分记录添加标签。",
+      "en": "Allocate lanes to all features and label a selected subset."
     }
   },
   {
@@ -127,26 +127,26 @@
     ],
     "url": "data.html",
     "title": {
-      "zh": "统一 feature_data 输入",
-      "en": "Unified feature_data inputs"
+      "zh": "参考表与图层表",
+      "en": "Reference and layer tables"
     },
     "summary": {
-      "zh": "按任务选择当前章节或精确参数；详见输入与支持边界。",
-      "en": "Choose the current section or exact parameter; inspect its input and support boundary."
+      "zh": "了解参考表与 feature_data 如何提供序列和注释。",
+      "en": "See how reference tables and feature_data supply sequences and annotations."
     }
   },
   {
     "queries": [
       "windows"
     ],
-    "url": "parameter-atlas.html",
+    "url": "reference/segment_ggchord_data.html#ref-arguments",
     "title": {
       "zh": "segment_ggchord_data 的 windows",
       "en": "windows in segment_ggchord_data"
     },
     "summary": {
-      "zh": "按任务选择当前章节或精确参数；详见输入与支持边界。",
-      "en": "Choose the current section or exact parameter; inspect its input and support boundary."
+      "zh": "查阅分段显示窗口表所需的序列、起止坐标与 locus_id。",
+      "en": "Look up sequence, coordinate and locus_id requirements for segmented display windows."
     }
   },
   {
@@ -164,12 +164,12 @@
     ],
     "url": "parameters.html",
     "title": {
-      "zh": "灵活的参数格式",
-      "en": "Flexible parameter formats"
+      "zh": "灵活参数",
+      "en": "Flexible parameters"
     },
     "summary": {
-      "zh": "单值、按 accver 命名、按显示顺序、按链及适用列表；分别说明匹配、补值和家族边界。",
-      "en": "Scalars, accver names, display order, strands and supported lists; matching, omitted values and family boundaries."
+      "zh": "按序列名称、显示顺序或链指定支持的几何参数。",
+      "en": "Set supported geometry parameters by sequence name, display order or strand."
     }
   }
 ]

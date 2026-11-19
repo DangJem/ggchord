@@ -5,10 +5,10 @@
     ],
     "url": "sankey.html",
     "title": {
-      "en": "Mirrored Sankey section"
+      "en": "Two-column interval links"
     },
     "summary": {
-      "en": "Choose the current section or exact parameter; inspect its input and support boundary."
+      "en": "Draw correspondences between query and subject intervals in two sequence columns."
     }
   },
   {
@@ -19,10 +19,10 @@
     ],
     "url": "radial-synteny.html",
     "title": {
-      "en": "Radial synteny section"
+      "en": "Radial synteny"
     },
     "summary": {
-      "en": "Choose the current section or exact parameter; inspect its input and support boundary."
+      "en": "Draw sequences as spokes and connect homologous intervals."
     }
   },
   {
@@ -34,10 +34,10 @@
     ],
     "url": "dotplot.html",
     "title": {
-      "en": "Read a Dotplot from HSPs"
+      "en": "Alignment dotplots"
     },
     "summary": {
-      "en": "Choose the current section or exact parameter; inspect its input and support boundary."
+      "en": "Show local alignment intervals and direction on two axes."
     }
   },
   {
@@ -47,10 +47,10 @@
     ],
     "url": "fusion.html",
     "title": {
-      "en": "Two-panel source-backed composition"
+      "en": "Linked sequence panels"
     },
     "summary": {
-      "en": "Choose the current section or exact parameter; inspect its input and support boundary."
+      "en": "Compose source-backed panels and link corresponding intervals."
     }
   },
   {
@@ -60,10 +60,10 @@
     ],
     "url": "reference/geom_track.html#ref-usage",
     "title": {
-      "en": "Use geom_track_col for supplied values"
+      "en": "Plot supplied values with geom_track_col"
     },
     "summary": {
-      "en": "Choose the current section or exact parameter; inspect its input and support boundary."
+      "en": "Map supplied values to a sequence-local column track."
     }
   },
   {
@@ -71,12 +71,12 @@
       "计数",
       "count"
     ],
-    "url": "tracks-statistics.html",
+    "url": "reference/geom_track.html#ref-usage",
     "title": {
-      "en": "Counts and supplied values: bar and col"
+      "en": "Plot supplied count values"
     },
     "summary": {
-      "en": "Choose the current section or exact parameter; inspect its input and support boundary."
+      "en": "Map precomputed count values to a column track."
     }
   },
   {
@@ -86,10 +86,10 @@
     ],
     "url": "output.html",
     "title": {
-      "en": "Save a plot at target size"
+      "en": "Preview and export at target size"
     },
     "summary": {
-      "en": "Choose the current section or exact parameter; inspect its input and support boundary."
+      "en": "Preview at the intended size and save the plot with ggsave."
     }
   },
   {
@@ -99,10 +99,10 @@
     ],
     "url": "annotations.html",
     "title": {
-      "en": "Inspect label layout and target size"
+      "en": "Features and subset labels"
     },
     "summary": {
-      "en": "Choose the current section or exact parameter; inspect its input and support boundary."
+      "en": "Allocate lanes to all features and label a selected subset."
     }
   },
   {
@@ -111,22 +111,22 @@
     ],
     "url": "data.html",
     "title": {
-      "en": "Unified feature_data inputs"
+      "en": "Reference and layer tables"
     },
     "summary": {
-      "en": "Choose the current section or exact parameter; inspect its input and support boundary."
+      "en": "See how reference tables and feature_data supply sequences and annotations."
     }
   },
   {
     "queries": [
       "windows"
     ],
-    "url": "parameter-atlas.html",
+    "url": "reference/segment_ggchord_data.html#ref-arguments",
     "title": {
       "en": "windows in segment_ggchord_data"
     },
     "summary": {
-      "en": "Choose the current section or exact parameter; inspect its input and support boundary."
+      "en": "Look up sequence, coordinate and locus_id requirements for segmented display windows."
     }
   },
   {
@@ -144,10 +144,10 @@
     ],
     "url": "parameters.html",
     "title": {
-      "en": "Flexible parameter formats"
+      "en": "Flexible parameters"
     },
     "summary": {
-      "en": "Scalars, accver names, display order, strands and supported lists; matching, omitted values and family boundaries."
+      "en": "Set supported geometry parameters by sequence name, display order or strand."
     }
   }
 ]

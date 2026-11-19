@@ -424,3 +424,11 @@ body[data-page=installation] :is(.page-nav,.page-outline) {display:none}
   display: inline-block; border-radius: .3rem; padding: .1rem .45rem;
   color: #124f58; background: #d8f3ee; font-weight: 650;
 }
+.site-nav-menu .menu-section-title {
+  padding: .65rem .75rem .2rem;
+  color: var(--text-strong);
+  font-size: .86rem;
+  font-weight: 700;
+  border-top: 1px solid var(--color-rule);
+}
+.site-nav-menu .menu-section-title:first-child {border-top: 0}

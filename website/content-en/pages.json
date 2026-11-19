@@ -57,7 +57,7 @@
   {
     "slug": "chord",
     "title": {
-      "en": "Chord example"
+      "en": "Chord diagrams"
     },
     "group": "plots",
     "id": "chord",
@@ -146,7 +146,7 @@
   {
     "slug": "collinear",
     "title": {
-      "en": "Collinear example"
+      "en": "Collinear sequence comparisons"
     },
     "group": "plots",
     "id": "collinear",
@@ -236,7 +236,7 @@
   {
     "slug": "radial-synteny",
     "title": {
-      "en": "Radial: synteny spokes"
+      "en": "Radial synteny"
     },
     "group": "plots",
     "id": "radial-synteny",
@@ -290,7 +290,7 @@
   {
     "slug": "sankey",
     "title": {
-      "en": "Sankey: mirrored interval relationships"
+      "en": "Two-column interval links"
     },
     "group": "plots",
     "id": "sankey",
@@ -351,7 +351,7 @@
   {
     "slug": "dotplot",
     "title": {
-      "en": "Alignment dot plots"
+      "en": "Alignment dotplots"
     },
     "group": "plots",
     "id": "dotplot",
@@ -370,7 +370,7 @@
   {
     "slug": "fusion",
     "title": {
-      "en": "Multi-view composition"
+      "en": "Linked sequence panels"
     },
     "group": "plots",
     "id": "fusion",
@@ -389,7 +389,7 @@
   {
     "slug": "multi-sequence-views",
     "title": {
-      "en": "Compare four layouts with the same inputs"
+      "en": "Compare four layouts"
     },
     "group": "plots",
     "id": "multi-sequence-views",
@@ -509,7 +509,7 @@
   {
     "slug": "multi-sequence-layout",
     "title": {
-      "en": "Arrange sequences and set display direction"
+      "en": "Order and orient sequences"
     },
     "group": "plots",
     "id": "multi-sequence-layout",
@@ -542,7 +542,7 @@
   {
     "slug": "multi-sequence-links",
     "title": {
-      "en": "Draw and adjust sequence links"
+      "en": "Connect intervals and positions"
     },
     "group": "plots",
     "id": "multi-sequence-links",
@@ -618,7 +618,7 @@
   {
     "slug": "annotations",
     "title": {
-      "en": "Features, stacking and genomic decoration"
+      "en": "Features and subset labels"
     },
     "group": "plots",
     "id": "annotations",
@@ -670,7 +670,7 @@
   {
     "slug": "parameters",
     "title": {
-      "en": "Set geometry and position parameters"
+      "en": "Flexible parameters"
     },
     "group": "plots",
     "id": "parameters",
@@ -711,7 +711,7 @@
   {
     "slug": "tracks",
     "title": {
-      "en": "Quantitative tracks"
+      "en": "Share a quantitative track"
     },
     "group": "plots",
     "id": "tracks",
@@ -775,7 +775,7 @@
   {
     "slug": "tracks-statistics",
     "title": {
-      "en": "Counts, bins and track statistics"
+      "en": "Coverage and facets"
     },
     "group": "plots",
     "id": "tracks-statistics",
@@ -845,7 +845,7 @@
   {
     "slug": "styling",
     "title": {
-      "en": "Mappings, scales, guides and themes"
+      "en": "Colour, legends and themes"
     },
     "group": "plots",
     "id": "styling",
@@ -903,7 +903,7 @@
   {
     "slug": "formats",
     "title": {
-      "en": "Data and workflows"
+      "en": "Data and operations"
     },
     "group": "data",
     "id": "formats",
@@ -920,7 +920,7 @@
   {
     "slug": "data",
     "title": {
-      "en": "Data and operations"
+      "en": "Reference and layer tables"
     },
     "group": "data",
     "id": "data",
@@ -968,7 +968,7 @@
   {
     "slug": "import-sequences",
     "title": {
-      "en": "Import sequences and annotations"
+      "en": "Read sequences and annotations"
     },
     "group": "data",
     "id": "import-sequences",
@@ -1019,7 +1019,7 @@
   {
     "slug": "import-relations",
     "title": {
-      "en": "Relationships, variants and annotations"
+      "en": "Read alignments and feature groups"
     },
     "group": "data",
     "id": "import-relations",
@@ -1086,7 +1086,7 @@
   {
     "slug": "import-signals",
     "title": {
-      "en": "Signals and coverage data"
+      "en": "Read quantitative signals"
     },
     "group": "data",
     "id": "import-signals",
@@ -1142,7 +1142,7 @@
   {
     "slug": "projection",
     "title": {
-      "en": "Protein-to-genome coordinate projection"
+      "en": "Project protein residues onto a CDS"
     },
     "group": "data",
     "id": "projection",
@@ -1194,7 +1194,7 @@
   {
     "slug": "output",
     "title": {
-      "en": "Preview and export at publication size"
+      "en": "Preview and export"
     },
     "group": "data",
     "id": "output",
@@ -1224,7 +1224,7 @@
   {
     "slug": "diagnostics",
     "title": {
-      "en": "Data and layout diagnostics"
+      "en": "Query layers and diagnose output"
     },
     "group": "data",
     "id": "diagnostics",
@@ -1290,7 +1290,7 @@
     "translation_key": "case-chord",
     "aliases": [],
     "title": {
-      "en": "Chord flagship case"
+      "en": "Four-genome chord map"
     },
     "kind": "case",
     "apis": [],
@@ -1307,7 +1307,7 @@
     "translation_key": "case-collinear",
     "aliases": [],
     "title": {
-      "en": "Collinear flagship case"
+      "en": "Four-genome collinearity map"
     },
     "kind": "case",
     "apis": [],
@@ -1324,7 +1324,7 @@
     "translation_key": "case-radial",
     "aliases": [],
     "title": {
-      "en": "Radial synteny flagship case"
+      "en": "Four-genome radial map"
     },
     "kind": "case",
     "apis": [],
@@ -1341,7 +1341,7 @@
     "translation_key": "case-sankey",
     "aliases": [],
     "title": {
-      "en": "Sankey flagship case"
+      "en": "Four-genome mirrored interval map"
     },
     "kind": "case",
     "apis": [],
@@ -1358,7 +1358,7 @@
     "translation_key": "case-circular",
     "aliases": [],
     "title": {
-      "en": "Circular map flagship case"
+      "en": "Complete pUC19 reference map"
     },
     "kind": "case",
     "apis": [],
@@ -1375,7 +1375,7 @@
     "translation_key": "case-dotplot",
     "aliases": [],
     "title": {
-      "en": "Dotplot flagship case"
+      "en": "Four-sequence alignment matrix"
     },
     "kind": "case",
     "apis": [],
@@ -1392,7 +1392,7 @@
     "translation_key": "case-fusion",
     "aliases": [],
     "title": {
-      "en": "Fusion flagship case"
+      "en": "Six-panel comparison and sequence detail"
     },
     "kind": "case",
     "apis": [],
@@ -1402,7 +1402,7 @@
   {
     "slug": "plasmid-catalog",
     "title": {
-      "en": "13 complete plasmid reference maps"
+      "en": "Thirteen reference plasmid maps"
     },
     "group": "cases",
     "id": "plasmid-catalog",
@@ -1495,7 +1495,7 @@
   {
     "slug": "parameter-atlas",
     "title": {
-      "en": "Complete parameters and defaults atlas"
+      "en": "Parameter index"
     },
     "group": "reference",
     "id": "parameter-atlas",
@@ -1529,7 +1529,7 @@
   {
     "slug": "migration",
     "title": {
-      "en": "Documentation and API migration"
+      "en": "Version choice"
     },
     "group": "information",
     "id": "migration",

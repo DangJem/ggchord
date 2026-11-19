@@ -60,8 +60,8 @@
   {
     "slug": "chord",
     "title": {
-      "zh": "Chord 综合实例",
-      "en": "Chord example"
+      "zh": "弦图",
+      "en": "Chord diagrams"
     },
     "group": "plots",
     "id": "chord",
@@ -150,8 +150,8 @@
   {
     "slug": "collinear",
     "title": {
-      "zh": "Collinear 综合实例",
-      "en": "Collinear example"
+      "zh": "共线性图",
+      "en": "Collinear sequence comparisons"
     },
     "group": "plots",
     "id": "collinear",
@@ -241,8 +241,8 @@
   {
     "slug": "radial-synteny",
     "title": {
-      "zh": "Radial：径向共线性",
-      "en": "Radial: synteny spokes"
+      "zh": "径向共线性图",
+      "en": "Radial synteny"
     },
     "group": "plots",
     "id": "radial-synteny",
@@ -296,8 +296,8 @@
   {
     "slug": "sankey",
     "title": {
-      "zh": "Sankey：双列区间关系",
-      "en": "Sankey: mirrored interval relationships"
+      "zh": "双列区间关系图",
+      "en": "Two-column interval links"
     },
     "group": "plots",
     "id": "sankey",
@@ -359,8 +359,8 @@
   {
     "slug": "dotplot",
     "title": {
-      "zh": "序列比对点图",
-      "en": "Alignment dot plots"
+      "zh": "比对点图",
+      "en": "Alignment dotplots"
     },
     "group": "plots",
     "id": "dotplot",
@@ -379,8 +379,8 @@
   {
     "slug": "fusion",
     "title": {
-      "zh": "多视图组合",
-      "en": "Multi-view composition"
+      "zh": "跨面板组合图",
+      "en": "Linked sequence panels"
     },
     "group": "plots",
     "id": "fusion",
@@ -399,8 +399,8 @@
   {
     "slug": "multi-sequence-views",
     "title": {
-      "zh": "用同一输入比较四种布局",
-      "en": "Compare four layouts with the same inputs"
+      "zh": "比较四种多序列布局",
+      "en": "Compare four layouts"
     },
     "group": "plots",
     "id": "multi-sequence-views",
@@ -520,8 +520,8 @@
   {
     "slug": "multi-sequence-layout",
     "title": {
-      "zh": "调整序列顺序与显示方向",
-      "en": "Arrange sequences and set display direction"
+      "zh": "序列排列与显示方向",
+      "en": "Order and orient sequences"
     },
     "group": "plots",
     "id": "multi-sequence-layout",
@@ -554,8 +554,8 @@
   {
     "slug": "multi-sequence-links",
     "title": {
-      "zh": "绘制和调整序列连接",
-      "en": "Draw and adjust sequence links"
+      "zh": "连接区间与位置",
+      "en": "Connect intervals and positions"
     },
     "group": "plots",
     "id": "multi-sequence-links",
@@ -631,8 +631,8 @@
   {
     "slug": "annotations",
     "title": {
-      "zh": "绘制注释与处理重叠",
-      "en": "Features, stacking and genomic decoration"
+      "zh": "特征分道与子集标签",
+      "en": "Features and subset labels"
     },
     "group": "plots",
     "id": "annotations",
@@ -684,8 +684,8 @@
   {
     "slug": "parameters",
     "title": {
-      "zh": "填写几何与位置参数",
-      "en": "Set geometry and position parameters"
+      "zh": "灵活参数",
+      "en": "Flexible parameters"
     },
     "group": "plots",
     "id": "parameters",
@@ -726,8 +726,8 @@
   {
     "slug": "tracks",
     "title": {
-      "zh": "添加数据轨道",
-      "en": "Quantitative tracks"
+      "zh": "多层共享定量轨道",
+      "en": "Share a quantitative track"
     },
     "group": "plots",
     "id": "tracks",
@@ -791,8 +791,8 @@
   {
     "slug": "tracks-statistics",
     "title": {
-      "zh": "计数、分箱与轨道统计",
-      "en": "Counts, bins and track statistics"
+      "zh": "逐窗覆盖与分面",
+      "en": "Coverage and facets"
     },
     "group": "plots",
     "id": "tracks-statistics",
@@ -862,8 +862,8 @@
   {
     "slug": "styling",
     "title": {
-      "zh": "配置配色、图例和主题",
-      "en": "Mappings, scales, guides and themes"
+      "zh": "配色、图例与主题",
+      "en": "Colour, legends and themes"
     },
     "group": "plots",
     "id": "styling",
@@ -922,7 +922,7 @@
     "slug": "formats",
     "title": {
       "zh": "数据与操作",
-      "en": "Data and workflows"
+      "en": "Data and operations"
     },
     "group": "data",
     "id": "formats",
@@ -939,8 +939,8 @@
   {
     "slug": "data",
     "title": {
-      "zh": "数据与操作",
-      "en": "Data and operations"
+      "zh": "参考表与图层表",
+      "en": "Reference and layer tables"
     },
     "group": "data",
     "id": "data",
@@ -988,8 +988,8 @@
   {
     "slug": "import-sequences",
     "title": {
-      "zh": "读取序列与注释文件",
-      "en": "Import sequences and annotations"
+      "zh": "读取序列与注释",
+      "en": "Read sequences and annotations"
     },
     "group": "data",
     "id": "import-sequences",
@@ -1040,8 +1040,8 @@
   {
     "slug": "import-relations",
     "title": {
-      "zh": "关系、变异与注释输入",
-      "en": "Relationships, variants and annotations"
+      "zh": "读取比对与特征分组",
+      "en": "Read alignments and feature groups"
     },
     "group": "data",
     "id": "import-relations",
@@ -1108,8 +1108,8 @@
   {
     "slug": "import-signals",
     "title": {
-      "zh": "信号与覆盖数据",
-      "en": "Signals and coverage data"
+      "zh": "读取定量信号",
+      "en": "Read quantitative signals"
     },
     "group": "data",
     "id": "import-signals",
@@ -1165,8 +1165,8 @@
   {
     "slug": "projection",
     "title": {
-      "zh": "蛋白—基因组坐标投影",
-      "en": "Protein-to-genome coordinate projection"
+      "zh": "将蛋白残基投影到 CDS",
+      "en": "Project protein residues onto a CDS"
     },
     "group": "data",
     "id": "projection",
@@ -1218,8 +1218,8 @@
   {
     "slug": "output",
     "title": {
-      "zh": "按论文尺寸预览和导出",
-      "en": "Preview and export at publication size"
+      "zh": "按目标尺寸预览与导出",
+      "en": "Preview and export"
     },
     "group": "data",
     "id": "output",
@@ -1249,8 +1249,8 @@
   {
     "slug": "diagnostics",
     "title": {
-      "zh": "数据与布局诊断",
-      "en": "Data and layout diagnostics"
+      "zh": "查询图层来源与诊断输出",
+      "en": "Query layers and diagnose output"
     },
     "group": "data",
     "id": "diagnostics",
@@ -1317,8 +1317,8 @@
     "translation_key": "case-chord",
     "aliases": [],
     "title": {
-      "zh": "弦图旗舰案例",
-      "en": "Chord flagship case"
+      "zh": "四基因组弦图",
+      "en": "Four-genome chord map"
     },
     "kind": "case",
     "apis": [],
@@ -1335,8 +1335,8 @@
     "translation_key": "case-collinear",
     "aliases": [],
     "title": {
-      "zh": "共线性旗舰案例",
-      "en": "Collinear flagship case"
+      "zh": "四基因组共线性图",
+      "en": "Four-genome collinearity map"
     },
     "kind": "case",
     "apis": [],
@@ -1353,8 +1353,8 @@
     "translation_key": "case-radial",
     "aliases": [],
     "title": {
-      "zh": "径向共线性旗舰案例",
-      "en": "Radial synteny flagship case"
+      "zh": "四基因组径向图",
+      "en": "Four-genome radial map"
     },
     "kind": "case",
     "apis": [],
@@ -1371,8 +1371,8 @@
     "translation_key": "case-sankey",
     "aliases": [],
     "title": {
-      "zh": "Sankey 旗舰案例",
-      "en": "Sankey flagship case"
+      "zh": "四基因组双列区间图",
+      "en": "Four-genome mirrored interval map"
     },
     "kind": "case",
     "apis": [],
@@ -1389,8 +1389,8 @@
     "translation_key": "case-circular",
     "aliases": [],
     "title": {
-      "zh": "单序列圆图旗舰案例",
-      "en": "Circular map flagship case"
+      "zh": "pUC19 完整参考图",
+      "en": "Complete pUC19 reference map"
     },
     "kind": "case",
     "apis": [],
@@ -1407,8 +1407,8 @@
     "translation_key": "case-dotplot",
     "aliases": [],
     "title": {
-      "zh": "点图旗舰案例",
-      "en": "Dotplot flagship case"
+      "zh": "四序列比对矩阵",
+      "en": "Four-sequence alignment matrix"
     },
     "kind": "case",
     "apis": [],
@@ -1425,8 +1425,8 @@
     "translation_key": "case-fusion",
     "aliases": [],
     "title": {
-      "zh": "多视图组合旗舰案例",
-      "en": "Fusion flagship case"
+      "zh": "六面板比较与序列细节",
+      "en": "Six-panel comparison and sequence detail"
     },
     "kind": "case",
     "apis": [],
@@ -1436,8 +1436,8 @@
   {
     "slug": "plasmid-catalog",
     "title": {
-      "zh": "13 个质粒完整参考图",
-      "en": "13 complete plasmid reference maps"
+      "zh": "十三张质粒参考图",
+      "en": "Thirteen reference plasmid maps"
     },
     "group": "cases",
     "id": "plasmid-catalog",
@@ -1531,8 +1531,8 @@
   {
     "slug": "parameter-atlas",
     "title": {
-      "zh": "完整参数与默认值图谱",
-      "en": "Complete parameters and defaults atlas"
+      "zh": "参数索引",
+      "en": "Parameter index"
     },
     "group": "reference",
     "id": "parameter-atlas",
@@ -1567,8 +1567,8 @@
   {
     "slug": "migration",
     "title": {
-      "zh": "文档与接口迁移",
-      "en": "Documentation and API migration"
+      "zh": "版本选择",
+      "en": "Version choice"
     },
     "group": "information",
     "id": "migration",

@@ -11,3 +11,10 @@
 | Where do annotated features, primers or cut sites lie on one circular sequence? | [Circular map](circular.md) |
 | Where do local alignments fall along two genomic axes, and which way do they run? | [Alignment dot plot](dotplot.md) |
 | How does a region in an overview correspond to an independent detail panel? | [Fusion composition](fusion.md) |
+
+## Adjust an existing plot {#adjust}
+
+- [Flexible parameters](parameters.md): set supported geometry for individual sequences or strands.
+- [Features and subset labels](annotations.md): arrange features and label selected records.
+- [Quantitative tracks](tracks.md): combine layers in a shared track.
+- [Sequence order and orientation](multi-sequence-layout.md): arrange and orient the displayed sequences.

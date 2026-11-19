@@ -415,6 +415,10 @@ def finalize(out,args,render_snapshot,input_hashes):
     for rel in json.loads((WEB/'historical-pages.json').read_text()):
         if rel in routes:continue
         path=out/rel;path.parent.mkdir(parents=True,exist_ok=True)
+        if rel.startswith('reference/'):
+            write_reference_redirect(out, path, 'migration.html#api', ('en', 'zh'))
+            retired.append(rel)
+            continue
         en=os.path.relpath(out/'en/reference/index.html',path.parent);zh=os.path.relpath(out/'zh/reference/index.html',path.parent)
         path.write_text(f'<!doctype html><html lang="en"><head><meta charset="utf-8"><title>Historical documentation</title></head><body><h1>Historical documentation / 历史文档</h1><p>This historical URL has no exact current equivalent. 此旧地址没有一一对应的当前页面。</p><a href="{en}">Current reference</a> · <a href="{zh}">现代汉语参考</a></body></html>')
         retired.append(rel)

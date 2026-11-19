@@ -1,95 +1,95 @@
 {
-  "source_sha256": "386bd18c1a1aad0671c239d74f58079e1d47160242a3dc345399127e3a52372b",
+  "source_sha256": "66420819cdf5bcb76370dbb2e5d99e7d244c9f089d5a36dc19b2f8dcd9dda1cb",
   "strings": {
     "0/title": {
-      "source_sha256": "bd88e404b2fba66e829e96ba29b0f7bcbb28ea437a219e9a4848bd8c52550d9e",
+      "source_sha256": "6f64915e45df7493a2be3fdaf9f028f35b47a51a193d17c6dff5cb89d80d8eb4",
       "status": "reviewed",
-      "translation": "镜像 Sankey 章节"
+      "translation": "双列区间关系图"
     },
     "0/summary": {
-      "source_sha256": "666075e8b313e45bf53abf5999ee1ecadd571999d9d69e523ecb9308b4136135",
+      "source_sha256": "3c36170fbb41bab22e96b7cb6dc9d49943ae1cb91971d0d61098c13d62203742",
       "status": "reviewed",
-      "translation": "按任务选择当前章节或精确参数；详见输入与支持边界。"
+      "translation": "在左右两列序列间绘制查询与目标区间的对应关系。"
     },
     "1/title": {
-      "source_sha256": "e2068b724fe72d646503737333f448540f0fe74d29c8f99b6489f86b9485722e",
+      "source_sha256": "6e4f9ccded88ca1ebb6119d27dba375d713f836592e319d863e43f01a594c954",
       "status": "reviewed",
-      "translation": "径向共线性章节"
+      "translation": "径向共线性图"
     },
     "1/summary": {
-      "source_sha256": "666075e8b313e45bf53abf5999ee1ecadd571999d9d69e523ecb9308b4136135",
+      "source_sha256": "7f47c17eba9ab982727f9b4e67939a92b31bdd0b14d0c96a4add72df92cec75e",
       "status": "reviewed",
-      "translation": "按任务选择当前章节或精确参数；详见输入与支持边界。"
+      "translation": "将多条序列画成辐条并连接同源区间。"
     },
     "2/title": {
-      "source_sha256": "2a9b5bcb43a3806e2a931a474ba70d777b77987addb83335a6d4d37c86ba5fbb",
+      "source_sha256": "bacf00b7a66003382e0bebac5f2b662159bd198f62d3cfd06de5a8c4b124f415",
       "status": "reviewed",
-      "translation": "从 HSP 读取 Dotplot"
+      "translation": "比对点图"
     },
     "2/summary": {
-      "source_sha256": "666075e8b313e45bf53abf5999ee1ecadd571999d9d69e523ecb9308b4136135",
+      "source_sha256": "5e7aa10fff14f90dbb330cd1b8322a089b70162559772e5cc40a6695276eacb8",
       "status": "reviewed",
-      "translation": "按任务选择当前章节或精确参数；详见输入与支持边界。"
+      "translation": "在双轴上显示局部比对区间及方向。"
     },
     "3/title": {
-      "source_sha256": "090a53c82af541a9cde43b7ce05b1a32a9e11a07f5b7b2cda1f3602e288d40e0",
+      "source_sha256": "a999360f9ea8c79107df243d311c5e6e56ba1c42707fbc8469d9671eb07f62b6",
       "status": "reviewed",
-      "translation": "两面板真实来源组合"
+      "translation": "跨面板组合图"
     },
     "3/summary": {
-      "source_sha256": "666075e8b313e45bf53abf5999ee1ecadd571999d9d69e523ecb9308b4136135",
+      "source_sha256": "9afaf1bcacdd2cac4ec253876e62599218bc9f7c7e5919a8774cd7ae7e7c2a93",
       "status": "reviewed",
-      "translation": "按任务选择当前章节或精确参数；详见输入与支持边界。"
+      "translation": "组合来源明确的独立面板并连接对应区间。"
     },
     "4/title": {
-      "source_sha256": "1875fcb8b6588bf95c9dc54587f96dea36dcc3832fc91078bfbf0db08a813061",
+      "source_sha256": "374c5610b65c1f7e09b3f9df1a6318254ff18f76c0faad9718f8b38389e341de",
       "status": "reviewed",
-      "translation": "给定值使用 geom_track_col"
+      "translation": "用 geom_track_col 绘制给定数值"
     },
     "4/summary": {
-      "source_sha256": "666075e8b313e45bf53abf5999ee1ecadd571999d9d69e523ecb9308b4136135",
+      "source_sha256": "7b20ca1c3abf59a1444f05beb6eea29513445356d782b8b4228bb5ca3e50b4f7",
       "status": "reviewed",
-      "translation": "按任务选择当前章节或精确参数；详见输入与支持边界。"
+      "translation": "将已有数值映射到序列局部柱形轨道。"
     },
     "5/title": {
-      "source_sha256": "44ca0456344f4a46f71a6e36919f2e8825f800f3958b5a8c5e97ef8e1f3491f8",
+      "source_sha256": "c91c228ad9ad3b51b347dca0aebe83e472333dabd1c89bd3a9d1251ad2437396",
       "status": "reviewed",
-      "translation": "计数与给定值：bar 和 col"
+      "translation": "绘制已有计数值"
     },
     "5/summary": {
-      "source_sha256": "666075e8b313e45bf53abf5999ee1ecadd571999d9d69e523ecb9308b4136135",
+      "source_sha256": "b465782de937a3a843de1ae455d4e92eed2bd2be01dfb112d38ba950c23ecc1c",
       "status": "reviewed",
-      "translation": "按任务选择当前章节或精确参数；详见输入与支持边界。"
+      "translation": "将已计算的计数值作为数值映射到柱形轨道。"
     },
     "6/title": {
-      "source_sha256": "b1a30c74a525e7478d9736950636ff26a8e2eb018a6aa97fa9173f57757b5176",
+      "source_sha256": "0793bb43da5b96da953132b34cafecf79f177e984c67c54a438fa7406f95a7fc",
       "status": "reviewed",
-      "translation": "按目标尺寸保存图片"
+      "translation": "按目标尺寸预览与导出"
     },
     "6/summary": {
-      "source_sha256": "666075e8b313e45bf53abf5999ee1ecadd571999d9d69e523ecb9308b4136135",
+      "source_sha256": "68fab7f50b55bdd0c6335e19ecd15eb9ee0d4a813f4b7608cbd3361bdb582b33",
       "status": "reviewed",
-      "translation": "按任务选择当前章节或精确参数；详见输入与支持边界。"
+      "translation": "按目标尺寸预览，并使用 ggsave 保存图形。"
     },
     "7/title": {
-      "source_sha256": "f7fc240ccaea31ede0c879fcc5c669751695a53a5b45e766bba9262cec67dc52",
+      "source_sha256": "d80b3833be276b8878be9de27152c73376677cd9429a5f0df50968bcb0a8a833",
       "status": "reviewed",
-      "translation": "检查文字布局与目标尺寸"
+      "translation": "特征分道与子集标签"
     },
     "7/summary": {
-      "source_sha256": "666075e8b313e45bf53abf5999ee1ecadd571999d9d69e523ecb9308b4136135",
+      "source_sha256": "fb0538c2043c3849c4cd3b26102f3801bfbebab4c609a2414fa8ec884ce7514a",
       "status": "reviewed",
-      "translation": "按任务选择当前章节或精确参数；详见输入与支持边界。"
+      "translation": "为全部特征分道，再选择部分记录添加标签。"
     },
     "8/title": {
-      "source_sha256": "508dd0d1b2709b305796ad5e7bccb437519dcafe118f5fc8278be8dd60189b7c",
+      "source_sha256": "5652ce9deb8d8a55836de0076434a48344e6d74b952fec97eecd6cdfe0c4a192",
       "status": "reviewed",
-      "translation": "统一 feature_data 输入"
+      "translation": "参考表与图层表"
     },
     "8/summary": {
-      "source_sha256": "666075e8b313e45bf53abf5999ee1ecadd571999d9d69e523ecb9308b4136135",
+      "source_sha256": "fc17a4ce3950f6cad5ee863f9b7a1a9d5e84be81cca9d970c1539ec5420cd631",
       "status": "reviewed",
-      "translation": "按任务选择当前章节或精确参数；详见输入与支持边界。"
+      "translation": "了解参考表与 feature_data 如何提供序列和注释。"
     },
     "9/title": {
       "source_sha256": "c9d2d2e63970fcd2c322569b46928aab0af6a1cf9c6ba2d12487255f0c3b25cc",
@@ -97,19 +97,19 @@
       "translation": "segment_ggchord_data 的 windows"
     },
     "9/summary": {
-      "source_sha256": "666075e8b313e45bf53abf5999ee1ecadd571999d9d69e523ecb9308b4136135",
+      "source_sha256": "f7307224b0a38810fab6d21893f5a60bc048b92cbc209918c88c9c616af90120",
       "status": "reviewed",
-      "translation": "按任务选择当前章节或精确参数；详见输入与支持边界。"
+      "translation": "查阅分段显示窗口表所需的序列、起止坐标与 locus_id。"
     },
     "10/title": {
-      "source_sha256": "784f35e2179d61205cab0a5a31c2934765c61ad696828a69fd028fa19b0561e8",
+      "source_sha256": "801fa2082fe7caa189deea52aa41ae7934326cf951fe83354d7f4f9b3220163a",
       "status": "reviewed",
-      "translation": "灵活的参数格式"
+      "translation": "灵活参数"
     },
     "10/summary": {
-      "source_sha256": "9c61b322059b0a212d3d98dd7ad00b03c0feda3286262c7f0f1ad577e7b20536",
+      "source_sha256": "a82695f29dc4595f01b778bb34e4db33cee5c5a2723e0aadcf6a0f634d6c7bf3",
       "status": "reviewed",
-      "translation": "单值、按 accver 命名、按显示顺序、按链及适用列表；分别说明匹配、补值和家族边界。"
+      "translation": "按序列名称、显示顺序或链指定支持的几何参数。"
     }
   }
 }

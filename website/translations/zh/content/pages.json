@@ -1,5 +1,5 @@
 {
-  "source_sha256": "f44c19c833d3aa18cf4a2c229c6d28eed667d0d13b4a60a194ff91824a65e570",
+  "source_sha256": "a7aa79e78cd1686fcf77be3f66cf47f363736a4b43d28e74398faa9e3218a17b",
   "strings": {
     "0/title": {
       "source_sha256": "46ee1bb903f9924d7fa6d2d6e6c67e6fdd7eb10ee42505dde94310eaa4b67079",
@@ -17,24 +17,24 @@
       "translation": "绘图指南"
     },
     "3/title": {
-      "source_sha256": "ec0aec48a5d72dd5647d22895af97eb0d982460a57933f49db171acef29fb1bf",
+      "source_sha256": "7082654643eaeedc7bb77296bfa1b1ea33239aa9cf8fadd8545761758a175a26",
       "status": "reviewed",
-      "translation": "Chord 综合实例"
+      "translation": "弦图"
     },
     "4/title": {
-      "source_sha256": "525e64dec2701afd8f39ec48faabbd23d7bc2ca2950a9f969dc90fb94936c066",
+      "source_sha256": "75977229ee378d2062615a1843b22aa7348f6461c29686367fb2a938a75dba0d",
       "status": "reviewed",
-      "translation": "Collinear 综合实例"
+      "translation": "共线性图"
     },
     "5/title": {
-      "source_sha256": "6ff6a0a75a405d976f532f19280f1d4dd60bcf24e648942872218808af8d4f68",
+      "source_sha256": "6e4f9ccded88ca1ebb6119d27dba375d713f836592e319d863e43f01a594c954",
       "status": "reviewed",
-      "translation": "Radial：径向共线性"
+      "translation": "径向共线性图"
     },
     "6/title": {
-      "source_sha256": "0effe219a73db17ebd533c20ee40807398416f60fea0b08c8092f4f6fafe15ba",
+      "source_sha256": "6f64915e45df7493a2be3fdaf9f028f35b47a51a193d17c6dff5cb89d80d8eb4",
       "status": "reviewed",
-      "translation": "Sankey：双列区间关系"
+      "translation": "双列区间关系图"
     },
     "7/title": {
       "source_sha256": "8e89ea00d8a295af5d9641c6854745b0022a45268e5f0a89b3be758226ca26d7",
@@ -42,94 +42,94 @@
       "translation": "单序列圆图"
     },
     "8/title": {
-      "source_sha256": "ba6f8f110ee920a34b17d4f370dc6ff64f2a93582960c86a192b40461cff5c02",
+      "source_sha256": "bacf00b7a66003382e0bebac5f2b662159bd198f62d3cfd06de5a8c4b124f415",
       "status": "reviewed",
-      "translation": "序列比对点图"
+      "translation": "比对点图"
     },
     "9/title": {
-      "source_sha256": "cb503f425fa87c00864d6bbd71f9997ac5414c30c3d8db4afdc28955c7c5b1a0",
+      "source_sha256": "a999360f9ea8c79107df243d311c5e6e56ba1c42707fbc8469d9671eb07f62b6",
       "status": "reviewed",
-      "translation": "多视图组合"
+      "translation": "跨面板组合图"
     },
     "10/title": {
-      "source_sha256": "7f08a29fd8508c087d226011a43e631189b0f072d510f981f91ce7e292fc2e40",
+      "source_sha256": "429b234736779b9ab8062d29ca6db28401ec8a8bbf4a1a49d2f89d3b5796a5e0",
       "status": "reviewed",
-      "translation": "用同一输入比较四种布局"
+      "translation": "比较四种多序列布局"
     },
     "11/title": {
-      "source_sha256": "d29413e8d6c6e4eebe04a6b95b2bdb3e6ab3cc8d152cd933ce6e1591e2ee4c6d",
+      "source_sha256": "ce876caf4f33cc65b81b3c83efd38c5f7d54426f56dd4e2369a7dc790f8d62f6",
       "status": "reviewed",
-      "translation": "调整序列顺序与显示方向"
+      "translation": "序列排列与显示方向"
     },
     "12/title": {
-      "source_sha256": "5b60504caff9f6725811b2ebfdf26fed1d85598a1454b6d786cfb50f8f90472a",
+      "source_sha256": "78a2fef4a10e03888b797acb8cf20e4deeef0060c98fdd3b6bd2f664669bb571",
       "status": "reviewed",
-      "translation": "绘制和调整序列连接"
+      "translation": "连接区间与位置"
     },
     "13/title": {
-      "source_sha256": "6913f1e95fd12c433b753f5dcaa761165d37a016aabc4fdd0b42d2220b91dc50",
+      "source_sha256": "d80b3833be276b8878be9de27152c73376677cd9429a5f0df50968bcb0a8a833",
       "status": "reviewed",
-      "translation": "绘制注释与处理重叠"
+      "translation": "特征分道与子集标签"
     },
     "14/title": {
-      "source_sha256": "d55c474905cfd800b8c073587dd53df5442f9362029c4914854620051c96bd6e",
+      "source_sha256": "801fa2082fe7caa189deea52aa41ae7934326cf951fe83354d7f4f9b3220163a",
       "status": "reviewed",
-      "translation": "填写几何与位置参数"
+      "translation": "灵活参数"
     },
     "15/title": {
-      "source_sha256": "366838e144e03e27dd66d58ab0c20c3de9fc3e6f6e32f5cea3d797379346b3fc",
+      "source_sha256": "ae055b6e0c0d1d870cdc3fc6093964a5558d1714b3daaace18d48136aeee464e",
       "status": "reviewed",
-      "translation": "添加数据轨道"
+      "translation": "多层共享定量轨道"
     },
     "16/title": {
-      "source_sha256": "7811ccaa2fadba7906fe3f6dcd25838559b8759ee20c3ca677e53aff4b36e9b7",
+      "source_sha256": "1921625129edd40c69e7966ecdcbbf5b99d3e19dbc4afbcb3bdfd31584bfa947",
       "status": "reviewed",
-      "translation": "计数、分箱与轨道统计"
+      "translation": "逐窗覆盖与分面"
     },
     "17/title": {
-      "source_sha256": "7f84588e1c05204470a23a5f4515159974410e8d8fab9615ca7e2101110d14be",
+      "source_sha256": "a63bccfa0b4b7fd144397c982c99f4ea2876e5a2fbd96fa2d8333180baaef47f",
       "status": "reviewed",
-      "translation": "配置配色、图例和主题"
+      "translation": "配色、图例与主题"
     },
     "18/title": {
-      "source_sha256": "1294507cffe66e364af71866d3d7f9bc22cb3453e0d315a8bb48d7af447a9eda",
-      "status": "reviewed",
-      "translation": "数据与操作"
-    },
-    "19/title": {
       "source_sha256": "5646f1467a5827a5854bbf2316b7271cafbf811a4df12062956177a8a29be39c",
       "status": "reviewed",
       "translation": "数据与操作"
     },
-    "20/title": {
-      "source_sha256": "9532a93351936e18c2c183dbcf6a127282e9b0982e551bc05c90917cfc473d1e",
+    "19/title": {
+      "source_sha256": "5652ce9deb8d8a55836de0076434a48344e6d74b952fec97eecd6cdfe0c4a192",
       "status": "reviewed",
-      "translation": "读取序列与注释文件"
+      "translation": "参考表与图层表"
+    },
+    "20/title": {
+      "source_sha256": "9c3b8afd6fd37a340bdcc3bf0a1a1a62ab5181c7af6aa48ed265d29ce6038255",
+      "status": "reviewed",
+      "translation": "读取序列与注释"
     },
     "21/title": {
-      "source_sha256": "f63a1a0af5933950102d3083f425ab0c8b32e95b56ba016f4a5335fdf5db60af",
+      "source_sha256": "26f5465d8d94ad7f980eef6e1ecffdc96f7a45dbd1e22089c81cbddac8d3fa2b",
       "status": "reviewed",
-      "translation": "关系、变异与注释输入"
+      "translation": "读取比对与特征分组"
     },
     "22/title": {
-      "source_sha256": "fc5ef7967c36dd1e076f2bb77371f40a5df4d91410b966dcf67e04a525712e0f",
+      "source_sha256": "181ad0bfc9079019cc9881de3bd4a2b375abe0a918c9ef161b98edb030cd97a0",
       "status": "reviewed",
-      "translation": "信号与覆盖数据"
+      "translation": "读取定量信号"
     },
     "23/title": {
-      "source_sha256": "7d55cf85c720fc0fe7cb1ac20af355642155a9e03126125c588389cad727e8db",
+      "source_sha256": "be295ccd359269b5be2a6a1fdf2739a7513800f5b77f715a0400ec5558ba3c87",
       "status": "reviewed",
-      "translation": "蛋白—基因组坐标投影"
+      "translation": "将蛋白残基投影到 CDS"
     },
     "24/title": {
-      "source_sha256": "b1d43c6a04fc332f19e93fbc823bfa1844d4c1f5be611c48b36f9bc991c07235",
+      "source_sha256": "fe06505c9fa3006e4a01087a50b7f96878b2d1943cff7e5c097649bce7c5a591",
       "status": "reviewed",
-      "translation": "按论文尺寸预览和导出"
+      "translation": "按目标尺寸预览与导出"
     },
     "25/title": {
-      "source_sha256": "61816f5ead38ecafe6246039b68f97599b792de8bf202f580e69892933c082aa",
+      "source_sha256": "66ff287e7cd07d85041189e12a9dc95bcfa7361a133dab119fb2438dda2ffab0",
       "status": "reviewed",
-      "translation": "数据与布局诊断"
+      "translation": "查询图层来源与诊断输出"
     },
     "26/title": {
       "source_sha256": "8a8b68ec7d86a8c63ecf86867207231b9a3af89f2a1e328803c2f28053551b49",
@@ -137,44 +137,44 @@
       "translation": "案例图库"
     },
     "27/title": {
-      "source_sha256": "bb997623c42301040a19f4861d4d2de9b3212853c1379e0c956ae50ba77dbc21",
+      "source_sha256": "f9128d17359948410910d02af312344e940d9eb04069df972805ed750fd224f1",
       "status": "reviewed",
-      "translation": "弦图旗舰案例"
+      "translation": "四基因组弦图"
     },
     "28/title": {
-      "source_sha256": "2da0692d266386f79f4c11528ffaf5772c9a91f02286a7a343d7714d1da4762a",
+      "source_sha256": "fab79598a895f295ea833f9c2e62db144b5154f85deb375b3793c52be7611465",
       "status": "reviewed",
-      "translation": "共线性旗舰案例"
+      "translation": "四基因组共线性图"
     },
     "29/title": {
-      "source_sha256": "eb3d905b5986bbb88ab6356b7b11378a1f0c4aa3f5f3d635dfb54c0d4e4e46a1",
+      "source_sha256": "4fbfce317ce5d0b902902999b6f677972c5d8332a793dc7affcb4b5f508df373",
       "status": "reviewed",
-      "translation": "径向共线性旗舰案例"
+      "translation": "四基因组径向图"
     },
     "30/title": {
-      "source_sha256": "9fe9801ce888af98f93831af93099dd1112ce48a2d1248de01a8de748ba31b7d",
+      "source_sha256": "6f5805d27de72783d9197c7ba8ec4ac516fb619c8c6f0892aafdc16a72e22a2a",
       "status": "reviewed",
-      "translation": "Sankey 旗舰案例"
+      "translation": "四基因组双列区间图"
     },
     "31/title": {
-      "source_sha256": "9cdf3744fbc93de101ee7a4e3f7039cbb160f6a63cca560d0a9a5454325e56c7",
+      "source_sha256": "d568f2af3b1da4918eba0c915cdea4460b9e2e255697c7d6e2d4bbf1573ab977",
       "status": "reviewed",
-      "translation": "单序列圆图旗舰案例"
+      "translation": "pUC19 完整参考图"
     },
     "32/title": {
-      "source_sha256": "feab968cd683ed3fd5fc036ba149a494e2e7b4471a98e1f2824b4404f1e947d4",
+      "source_sha256": "963323c5ec4deb930a697093017a7bdf978051269efb77154fd07c24574daafb",
       "status": "reviewed",
-      "translation": "点图旗舰案例"
+      "translation": "四序列比对矩阵"
     },
     "33/title": {
-      "source_sha256": "24a4bcb431552a6f801e01d53e524021db5c89127297274aed75640c021c20e5",
+      "source_sha256": "20e400f69b8df2ffe7d93a650ce0028ba80e600e233df5bc27f3c06d9b542df7",
       "status": "reviewed",
-      "translation": "多视图组合旗舰案例"
+      "translation": "六面板比较与序列细节"
     },
     "34/title": {
-      "source_sha256": "16a4f1a25b61c9cdc2b7a533dde09d93aa6ce9a2bd4207a5d452ebc9cda61869",
+      "source_sha256": "e5a34d6efb0da105f95882bba841d530fae1e9b02e3da7223236ab580f9b8470",
       "status": "reviewed",
-      "translation": "13 个质粒完整参考图"
+      "translation": "十三张质粒参考图"
     },
     "35/title": {
       "source_sha256": "484ee9bb6e51e328b73f0db584c797bccfccf6c93a3b1157ec160f5d5950ff0d",
@@ -182,9 +182,9 @@
       "translation": "API 参考"
     },
     "36/title": {
-      "source_sha256": "87cfc12c9b4769d31dfbcf014a56f6d690c2f09153eaedb60d945208e24aab40",
+      "source_sha256": "bfac3e626c13cb0658e9d3b00d1f6e65b0922932c35169f17a893e29bb4308c2",
       "status": "reviewed",
-      "translation": "完整参数与默认值图谱"
+      "translation": "参数索引"
     },
     "37/title": {
       "source_sha256": "3f35b414c8a048a15beaee7d4b972e20df510dd4b2ec9449ba5b612921d57122",
@@ -192,9 +192,9 @@
       "translation": "项目信息与来源"
     },
     "38/title": {
-      "source_sha256": "94caaee2ebf93f63018ac8f13f4bcc0ec539ff60c0c6ed31b593e00c40b9e024",
+      "source_sha256": "c2c78864582860c80669a1f1fda8254c1a0bf18460bd5fcbb6ecbca2fe1ab5ef",
       "status": "reviewed",
-      "translation": "文档与接口迁移"
+      "translation": "版本选择"
     },
     "39/title": {
       "source_sha256": "44da1919da5c7f4f8bdfaa8ed71c4d9fe8f61233ccea862f25518a9ec364f8e1",

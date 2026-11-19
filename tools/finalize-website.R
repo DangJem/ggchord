@@ -87,10 +87,21 @@ for(lang in c('en','zh')) {
       link <- page_link(g$landing,g$title[[lang]],'nav-link')
       if(identical(primary$id,g$id) && current_page!='index' && !identical(relative,page_record(g$landing)$canonical_path))
         link <- sub('<a ', '<a aria-current="location" ',link,fixed=TRUE)
+      menu_links <- function(items) paste(vapply(items, function(key)
+        paste0('<li>', page_link(key), '</li>'), ''), collapse = '')
+      sections <- manual_sections[[g$id]]
+      blocks <- vapply(sections, function(section) {
+        items <- intersect(unlist(section$pages), keys)
+        if (!length(items)) return('')
+        paste0('<li class="menu-section-title">', escape(section$title[[lang]]),
+               '</li>', menu_links(items))
+      }, '')
+      listed <- unlist(lapply(sections, function(section) section$pages))
+      contents <- paste0(paste(blocks, collapse = ''), menu_links(setdiff(keys, listed)))
       menu <- if(length(keys)) paste0('<button type="button" class="site-nav-toggle" aria-expanded="false" aria-controls="site-menu-',
         escape(g$id,attribute=TRUE),'" aria-label="',escape(paste(if(lang=='zh') '展开' else 'Open',g$title[[lang]]),attribute=TRUE),'">▾</button>',
         '<ul class="site-nav-menu" id="site-menu-',escape(g$id,attribute=TRUE),'">',
-        paste(vapply(keys,function(key) paste0('<li>',page_link(key),'</li>'),''),collapse=''),'</ul>') else ''
+        contents,'</ul>') else ''
       paste0('<li class="site-nav-item site-nav-',escape(g$navbar,attribute=TRUE),'">',link,menu,'</li>')
     },''))
   primary_list <- xml2::xml_find_first(doc,'//div[@id="navbar"]/ul[contains(@class,"navbar-nav")]')
