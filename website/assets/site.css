@@ -166,7 +166,9 @@ body:not([data-page=index]) main :is(.sourceCode,.code-disclosure,.data-output) 
 body:not([data-page=index]) main :is(div.sourceCode,.code-disclosure) {width:fit-content}
 body:not([data-page=index]) main .documentation-figure {max-width:min(100%,var(--plot-width))}
 body:not([data-page=index]) main .wide-output {max-width:100%}
-body:not([data-page=index]) main pre .r-plt img {display:block;max-width:min(100%,var(--plot-width));height:auto;filter:none}
+body:not([data-page=index]) main pre .r-plt img {display:block;max-width:min(100%,var(--plot-width));height:auto}
+/* Preserve the plotted colours and the white device background in both themes. */
+[data-bs-theme] main pre .r-plt.img img {filter:none;background-color:#fff}
 main li {margin-block:4px}
 main img {max-width:100%;height:auto;filter:none}
 main code {font-family:"SFMono-Regular",Consolas,"Liberation Mono",monospace;font-size:.9em}
