@@ -1,5 +1,16 @@
 [
   {
+    "id": "home",
+    "title": {
+      "zh": "首页",
+      "en": "Home"
+    },
+    "landing": "index",
+    "pages": [
+      "index"
+    ]
+  },
+  {
     "id": "start",
     "title": {
       "zh": "开始使用",
@@ -13,138 +24,47 @@
   },
   {
     "id": "plots",
-    "landing": "modes",
-    "pages": [
-      "modes"
-    ],
-    "navbar": "plots",
     "title": {
       "zh": "绘图指南",
       "en": "Plotting guide"
-    }
-  },
-  {
-    "id": "multi-sequence",
-    "title": {
-      "zh": "多序列关系",
-      "en": "Multi-sequence relationships"
     },
-    "landing": "multi-sequence",
+    "landing": "modes",
     "pages": [
-      "multi-sequence",
-      "multi-sequence-start",
-      "multi-sequence-views",
-      "multi-sequence-layout",
-      "multi-sequence-links",
-      "multi-sequence-labels",
-      "ribbons",
-      "instances",
-      "chord-geometry",
+      "modes",
       "chord",
-      "collinear-layout",
       "collinear",
       "radial-synteny",
       "sankey",
-      "views",
-      "homology"
-    ],
-    "parent": "plots"
-  },
-  {
-    "id": "circular",
-    "title": {
-      "zh": "单序列圆图",
-      "en": "Single-sequence circular maps"
-    },
-    "landing": "circular",
-    "pages": [
       "circular",
-      "circular-start",
-      "circular-data",
-      "circular-layout",
-      "circular-features",
-      "circular-labels",
-      "recognition",
-      "primers",
-      "restriction-sites",
-      "plasmids",
-      "circular-dense-case",
-      "plasmid-catalog"
-    ],
-    "parent": "plots"
-  },
-  {
-    "id": "dotplot",
-    "title": {
-      "zh": "序列比对点图",
-      "en": "Alignment dot plots"
-    },
-    "landing": "dotplot",
-    "pages": [
       "dotplot",
-      "dotplot-start"
-    ],
-    "parent": "plots"
-  },
-  {
-    "id": "fusion",
-    "title": {
-      "zh": "多视图组合",
-      "en": "Multi-view composition"
-    },
-    "landing": "fusion",
-    "pages": [
       "fusion",
-      "fusion-start",
-      "fusion-routing",
-      "fusion-layout",
-      "fusion-details",
-      "fusion-advanced"
-    ],
-    "parent": "plots"
-  },
-  {
-    "id": "shared-techniques",
-    "title": {
-      "zh": "图层、样式与输出",
-      "en": "Layers, styling and output"
-    },
-    "landing": "styling",
-    "pages": [
-      "styling",
+      "multi-sequence-views",
+      "multi-sequence-layout",
+      "multi-sequence-links",
       "annotations",
-      "feature-geometry",
-      "labels",
       "parameters",
-      "scale-families",
       "tracks",
       "tracks-statistics",
-      "output",
-      "diagnostics"
+      "styling"
     ],
-    "parent": "plots"
+    "navbar": "plots"
   },
   {
     "id": "data",
     "title": {
       "zh": "数据与操作",
-      "en": "Data and workflows"
+      "en": "Data and operations"
     },
     "landing": "formats",
     "pages": [
       "formats",
       "data",
       "import-sequences",
-      "import-intervals",
-      "import-signals",
-      "aligned-sequences",
       "import-relations",
-      "alignments",
-      "protein-alignments",
+      "import-signals",
       "projection",
-      "workflows",
-      "real-data",
-      "flagship-data"
+      "output",
+      "diagnostics"
     ],
     "navbar": "data"
   },
@@ -156,7 +76,15 @@
     },
     "landing": "gallery",
     "pages": [
-      "gallery"
+      "gallery",
+      "case-chord",
+      "case-collinear",
+      "case-radial",
+      "case-sankey",
+      "case-circular",
+      "case-dotplot",
+      "case-fusion",
+      "plasmid-catalog"
     ],
     "navbar": "gallery"
   },
@@ -169,9 +97,7 @@
     "landing": "reference",
     "pages": [
       "reference",
-      "compatibility",
-      "parameter-atlas",
-      "api-curriculum"
+      "parameter-atlas"
     ],
     "navbar": "reference"
   },
@@ -184,7 +110,6 @@
     "landing": "about",
     "pages": [
       "about",
-      "faq",
       "migration"
     ]
   }

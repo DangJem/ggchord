@@ -1,0 +1,15 @@
+{
+  "source_sha256": "8a95ce59271ca368b2dd7a577fb2659bcb91009aab5ada12a91c1dee689f6c53",
+  "blocks": {
+    "1": {
+      "source_sha256": "78f3b751cc6a81f151c97d45744da2989fa25c9ea71a757fa0548ec3895c1028",
+      "status": "reviewed",
+      "translation": "## 本页已迁移 {#moved}\n"
+    },
+    "2": {
+      "source_sha256": "693662339b1a7549ce7cc3856476d1d21497f73347fdc3fee785a341538a327a",
+      "status": "reviewed",
+      "translation": "[单序列圆图旗舰案例](case-circular.md)\n"
+    }
+  }
+}

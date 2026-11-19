@@ -19,7 +19,7 @@
 
 | {{module}} | {{purpose}} | {{view}} |
 | --- | --- | --- |
-| [{{multi}}](website/{{lang}}/multi-sequence.md) | {{multi-purpose}} | Chord · Collinear · Radial · Sankey |
+| [{{multi}}](website/{{lang}}/multi-sequence-views.md) | {{multi-purpose}} | Chord · Collinear · Radial · Sankey |
 | [{{circular}}](website/{{lang}}/circular.md) | {{circular-purpose}} | Circular |
 | [{{dotplot}}](website/{{lang}}/dotplot.md) | {{dotplot-purpose}} | Dotplot |
 | [{{fusion}}](website/{{lang}}/fusion.md) | {{fusion-purpose}} | Fusion |
@@ -33,15 +33,15 @@
 
 <table>
   <tr>
-    <td width="50%"><strong>{{chord-title}}</strong><br><a href="man/figures/showcasechord.png"><img src="man/figures/showcasechord.png" alt="{{chord-alt}}" width="460"></a><br>{{chord-caption}}<br><a href="website/{{lang}}/chord.md">{{case}} →</a></td>
-    <td width="50%"><strong>{{linear-title}}</strong><br><a href="man/figures/showcasecollinear.png"><img src="man/figures/showcasecollinear.png" alt="{{linear-alt}}" width="460"></a><br>{{linear-caption}}<br><a href="website/{{lang}}/collinear.md">{{case}} →</a></td>
+    <td width="50%"><strong>{{chord-title}}</strong><br><a href="man/figures/showcasechord.png"><img src="man/figures/showcasechord.png" alt="{{chord-alt}}" width="460"></a><br>{{chord-caption}}<br><a href="website/{{lang}}/case-chord.md">{{case}} →</a></td>
+    <td width="50%"><strong>{{linear-title}}</strong><br><a href="man/figures/showcasecollinear.png"><img src="man/figures/showcasecollinear.png" alt="{{linear-alt}}" width="460"></a><br>{{linear-caption}}<br><a href="website/{{lang}}/case-collinear.md">{{case}} →</a></td>
   </tr>
 </table>
 
 <table>
   <tr>
-    <td width="50%"><strong>{{radial-title}}</strong><br><a href="man/figures/flagradial.png"><img src="man/figures/flagradial.png" alt="{{radial-alt}}" width="460"></a><br>{{radial-caption}}<br><a href="website/{{lang}}/radial-synteny.md">{{case}} →</a></td>
-    <td width="50%"><strong>{{sankey-title}}</strong><br><a href="man/figures/flagsankey.png"><img src="man/figures/flagsankey.png" alt="{{sankey-alt}}" width="460"></a><br>{{sankey-caption}}<br><a href="website/{{lang}}/sankey.md">{{case}} →</a></td>
+    <td width="50%"><strong>{{radial-title}}</strong><br><a href="man/figures/flagradial.png"><img src="man/figures/flagradial.png" alt="{{radial-alt}}" width="460"></a><br>{{radial-caption}}<br><a href="website/{{lang}}/case-radial.md">{{case}} →</a></td>
+    <td width="50%"><strong>{{sankey-title}}</strong><br><a href="man/figures/flagsankey.png"><img src="man/figures/flagsankey.png" alt="{{sankey-alt}}" width="460"></a><br>{{sankey-caption}}<br><a href="website/{{lang}}/case-sankey.md">{{case}} →</a></td>
   </tr>
 </table>
 
@@ -51,7 +51,7 @@
 
 {{circular-caption}}
 
-[{{case}}](website/{{lang}}/circular-dense-case.md)
+[{{dense-figure-source}}](tools/documentation-examples.R) · [{{circular-reference}}](website/{{lang}}/plasmid-catalog.md#catalogduet)
 
 ### {{dotplot}}
 
@@ -59,7 +59,7 @@
 
 {{dotplot-caption}}
 
-[{{case}}](website/{{lang}}/dotplot-start.md)
+[{{case}}](website/{{lang}}/case-dotplot.md)
 
 ### {{fusion}}
 
@@ -67,7 +67,7 @@
 
 {{fusion-caption}}
 
-[{{case}}](website/{{lang}}/fusion-details.md)
+[{{case}}](website/{{lang}}/case-fusion.md)
 
 {{source-note}}
 [{{source-inputs}}](examples/) · [{{source-figures}}](tools/site-flagships.R) · [{{plot-source}}](tools/documentation-examples.R) · [{{source-attribution}}](website/ASSET-SOURCES.md)

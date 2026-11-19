@@ -367,3 +367,60 @@ body[data-page=installation] :is(.page-nav,.page-outline) {display:none}
 .gallery-families .gallery-family {min-width:0;margin-block:.5rem 1rem}
 .gallery-family:has(.gallery-more[open]) {grid-column:1/-1}
 .gallery-family .gallery-grid:has(.gallery-card:only-child) {grid-template-columns:1fr}
+
+/* Navigation colours echo the original logo while each link stays direct. */
+.site-primary-nav {gap:4px}
+.navbar .site-nav-item {position:relative;display:flex;align-items:stretch;border-radius:5px;background:var(--nav-tint);border-bottom:3px solid var(--nav-color)}
+.site-nav-home {--nav-color:#345d72;--nav-tint:#eaf2f5}
+.site-nav-start {--nav-color:#287daf;--nav-tint:#e8f3f9}
+.site-nav-plots {--nav-color:#b83f3f;--nav-tint:#faeeee}
+.site-nav-data {--nav-color:#287d64;--nav-tint:#e8f4ef}
+.site-nav-gallery {--nav-color:#9b6b16;--nav-tint:#fbf3df}
+.site-nav-reference {--nav-color:#69549a;--nav-tint:#f1eef8}
+.navbar .site-nav-item .nav-link {color:#222f33;padding:8px 10px;text-decoration:none}
+.navbar .site-nav-item .nav-link:is(:hover,[aria-current]) {color:#172326;text-decoration:underline;text-decoration-color:var(--nav-color);text-underline-offset:.25em}
+.site-nav-toggle {border:0;background:transparent;color:#253438;padding:0 9px;cursor:pointer}
+.site-nav-toggle:focus-visible,.site-nav-menu a:focus-visible {outline:3px solid var(--nav-color);outline-offset:-3px}
+.site-nav-menu {display:none;position:absolute;z-index:1100;top:100%;left:0;min-width:16rem;max-width:min(28rem,90vw);max-height:65vh;overflow:auto;margin:0;padding:6px;list-style:none;background:var(--surface-paper);border:1px solid var(--color-rule);border-top:3px solid var(--nav-color);box-shadow:0 8px 20px #0002}
+.site-nav-item.is-open .site-nav-menu {display:block}
+.site-nav-menu a {display:block;padding:9px 12px;color:var(--text-main);text-decoration:none;white-space:normal}
+.site-nav-menu a:is(:hover,[aria-current]) {background:var(--surface-soft);color:var(--text-strong)}
+[data-bs-theme=dark] .site-nav-item {--nav-tint:#dce9e5}
+.chapter-nav,.page-nav {font-size:1rem;line-height:1.6}
+.chapter-nav a,.chapter-nav summary,.page-nav a,.page-nav li,.chapter-drawer a {font-size:1rem;line-height:1.6}
+.navigation-title {font-size:1rem;color:var(--text-strong)}
+/* Gallery and reference index have useful outlines; reference detail pages
+   retain the ordinary three-column documentation layout. */
+@media(min-width:1200px){
+  body:is([data-page=gallery],[data-page=reference]) .doc-layout {grid-template-columns:minmax(0,1fr) 210px}
+  body:is([data-page=gallery],[data-page=reference]) .page-nav {display:block;grid-column:2}
+  body:is([data-page=gallery],[data-page=reference]) .doc-layout > main {grid-column:1}
+}
+@media(max-width:1199px){
+  .site-primary-nav {align-items:stretch!important;gap:5px}
+  .navbar .site-nav-item {flex-wrap:wrap}
+  .site-nav-menu {position:static;flex-basis:100%;max-width:none;max-height:45vh;box-shadow:none}
+}
+
+.handbook-gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 1fr));
+  gap: 1.4rem;
+  margin-block: 1.5rem 2rem;
+}
+.handbook-gallery .gallery-card {
+  padding: 1rem 1.1rem 1.25rem;
+  border: 1px solid var(--color-rule);
+  border-radius: .8rem;
+}
+.handbook-gallery .gallery-card h2 {margin-top: 0; font-size: 1.25rem}
+.handbook-gallery .gallery-card img {width: 100%; height: 14rem; object-fit: contain}
+.handbook-gallery .gallery-card p {margin: .6rem 0 .2rem}
+.argument-anchor {scroll-margin-top: 7rem}
+.parameter-controls {display: flex; align-items: center; flex-wrap: wrap; gap: .6rem 1.2rem; margin: 1rem 0}
+.parameter-controls[hidden], .parameter-directory tr[hidden] {display: none}
+.parameter-controls input[type=search] {display: block; border: 1px solid var(--color-rule); border-radius: .35rem; padding: .4rem .6rem}
+.parameter-directory .flexible-label, .flexible-parameter a {
+  display: inline-block; border-radius: .3rem; padding: .1rem .45rem;
+  color: #124f58; background: #d8f3ee; font-weight: 650;
+}

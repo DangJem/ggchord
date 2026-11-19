@@ -1,3 +1,12 @@
+# API 版本选择
+
+需要使用旧 API 的代码请选用 v0.29.0，从 v0.50.0 起，接口与旧版不兼容。
+
+<details>
+<summary>维护者内部变动记录</summary>
+
+以下档案按版本保存接口移除项、替代调用和核验过的行为，供维护者追溯兼容性决策和复核历史审计。
+
 ## 迁移到 0.50.0
 
 下表记录 0.50.0 移除的调用和发生变化的行为。后续章节注明历史示例适用的版本。
@@ -22,7 +31,9 @@
 | `geom_*()` 曾忽略的拼写，如 `geom_seq(linewditth = 2)` | v0.50.0 起会报错。改写为 `geom_seq(linewidth = 2)`。统计专用参数随所选 Stat 传入，例如区间数据使用 `geom_track_line(stat = "coverage", binwidth = 4)`。 |
 | 缩写形参，如 `position_offset(offse = .1)` 或 `guide_seq_axis(sequence = "A")` | 改用 `position_offset(offset = .1)` 和 `guide_seq_axis(sequences = "A")`。本次重构的入口要求写全具名参数，经 `...` 转发也适用。按位置传值仍可写 `position_offset(.1)`。 |
 | 显式传入一个 `width` 同时设置外部 Stat 的邻域半径和 Geom 的柱宽 | 将 Stat 的半径参数改名为 `radius`，分别设置两项，例如 `geom_track_col(stat = MyStat, radius = 4, width = 2)`。 |
-| `ggchord(seq_data = ref, gene_data = f, ribbon_data = h)` | 从 `ggchord(ref)` 开始，分别加 `geom_feature(data = f, preset = "gene")` 和 `geom_link_ribbon(data = h)`。也可写 `ggchord(prepare_ggchord_data(ref, ribbon_data = h, gene_data = f))`。有多张可用的准备表时在图层中指定数据。 |
+| `ggchord(seq_data = ref, gene_data = f, ribbon_data = h)` | 从 `ggchord(ref)` 开始，分别加 `geom_feature(data = f, preset = "gene")` 和 `geom_link_ribbon(data = h)`。已有来源分类的主表可写 `ggchord(prepare_ggchord_data(ref, ribbon_data = h, feature_data = f))`。有多张可用的准备表时在图层中指定数据。 |
+| 准备、校验、清洗、聚焦、分段函数的 `gene_data`，以及准备函数的 `mapping$gene` | 0.50.0 的第三个参数为 `feature_data`。自定义列可写 `prepare_ggchord_data(ref, feature_data = f, mapping = list(feature = c(strand = "source_strand")))`。主注释输出、转换记录、校验行数分别读取 `$feature_data`、`$report$conversions$feature` 和 `$data_summary$n_feature`。附加表仍按名称独立保存，例如 `features = list(cds = cds, sites = sites)`。 |
+| 已保存且含非空 `$gene_data` 的准备对象，或将无分类表按第三位置传入并继承基因预设 | 用原输入重建。基因预设继承时，依次查找 `feature_class`、`type`、`role`，按第一个存在的字段选 gene/CDS。原始资料确认所有记录均为基因时，无分类表可写 `feature_data = dplyr::mutate(f, type = "gene")`。要直接绘制有方向且无分类列的基因表，可写 `ggchord(ref) + geom_seq() + geom_feature(data = f, preset = "gene")`。继承记录的来源标识前缀为 `feature:`，显式图层使用该层自己的行标识。 |
 | 用 `position_track("depth", width = w)` 指定物理带 | 加一次 `track_band("depth", width = w)`，在同带各层写 `track = "depth"`。默认带可省略轨道 ID。堆叠、并排和微移交给各层的 `position`。 |
 | `geom_seq()` 的 `seq_order`、`seq_orientation`、`seq_gap`、`length_mode` | 添加 `layout_sequences(order = ids, orientation = directions, gap = gaps, length_mode = "equal")`。骨架线条与固定样式继续放在 `geom_seq()`。 |
 | `position_plasmid(offset)` 和 `position_feature_stack(side = ...)` | 偏移改用 `position_offset(offset)`。原 `side = "outside"` 用 `base_position = position_offset(-0.1), direction = "inward"`。原 `"inside"` 用 `position_offset(0.1)` 及 `"outward"`。原 `"strand"` 对应默认分道。 |
@@ -36,7 +47,7 @@
 普通构图遇到轨道 Stat 错误会停止。可用 `get_chord_layout(p, build = FALSE)` 读取上次成功的布局，修正输入后再构图。
 零行输入也保留内置统计的已知计算列，可照常选取 `count`、`prop` 等字段。
 
-运行[迁移示例](examples/migrate-v0.50.0.R)可绘制双样本比较，并在结果表中检查每个窗口的来源行。两面板共用 10 bp 参考和数值域。第二张图先按完整特征表分道，再对选中的特征加标签。
+[审计示例](examples/migrate-v0.50.0.R)记录双样本比较及各窗口的来源行。两面板共用 10 bp 参考和数值域。第二张图先按完整特征表分道，再对选中的特征加标签。
 
 ## 0.29.0 数据与映射
 
@@ -271,3 +282,5 @@ Ribbon 默认恢复此前的 Identity 填充并保留完整区间端面。
 渐变填充沿真实曲线使用设备分辨率网格，轮廓保持向量路径，避免透明分片接缝，并保留弯曲的来源端面。
 
 自动 Identity 图例不再把通用图例色块尺寸当成整条数值标尺的长度，而是按边界文字测量和区间比例预留长度；独立设置 Ribbon 图例尺寸或显式 guide 可覆盖它。圆图 parallel 坐标轴文字逐字符沿弧排布；水平或数值角度仍保持直线文字。
+
+</details>

@@ -1,26 +1,17 @@
-<a id="task"></a>
+A circular map places positions from one reference around a ring. Start with its full length and an annotation table. Feature coordinates share the backbone’s units, so the positions at the beginning and end meet at the seam.
 
-## Plot annotations along one sequence {#task}
+<a id="draw"></a>
 
-Lengths and prepared annotations are sufficient to draw. Sequence characters are needed for recognition, searches or DNA-derived tracks.
+## Draw the nine pUC19 features {#draw}
 
-{{figure:showcaseplasmid}}
+The installed pUC19 record provides the 2,686 bp length and nine existing annotations. `geom_feature()` reads the feature table directly. The arrows follow the annotated strand where a direction is known.
 
-<a id="path"></a>
+{{example:first-circular}}
 
-## What do you want to add? {#path}
+<a id="adapt"></a>
 
-- [Draw your first circular map](circular-start.md#input)
-- [Single-sequence length, DNA and annotations](circular-data.md#tables)
-- [Circular backbones, centre text and annotation lanes](circular-layout.md#input)
-- [Fixed circular labels and automatic fitting](circular-labels.md)
-- [Quantitative tracks](tracks.md)
-- [Complete pUC19 map](plasmids.md)
+## Add labels and sites {#adapt}
 
-<a id="inputs"></a>
+Attach the same position adjustment to `geom_feature()` and `geom_feature_label()` to keep labels with their lanes. Use separate layers for primer intervals and restriction sites. The full pUC19 record includes 39 site records at 33 distinct positions. A shared position can carry more than one enzyme name.
 
-## Inputs and boundaries {#inputs}
-
-Provide source IDs, complete lengths and the standard tables required by your layers. Keep native bp/aa units consistent. Check [input conventions](data.md) and [compatibility](compatibility.md).
-
-[pETDuet-1: dense layout](circular-dense-case.md) · [13 complete reference maps](plasmid-catalog.md)
+[Fully annotated pUC19 map](case-circular.md) · [Thirteen plasmid maps](plasmid-catalog.md) · [Circular coordinates](../../man/coord_circular.Rd)

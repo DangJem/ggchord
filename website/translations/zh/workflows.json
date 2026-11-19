@@ -1,0 +1,15 @@
+{
+  "source_sha256": "0901902980afd76cd2e920fa11f9a2044cb7865016d48c2a23c387ec3247c405",
+  "blocks": {
+    "2": {
+      "source_sha256": "78f3b751cc6a81f151c97d45744da2989fa25c9ea71a757fa0548ec3895c1028",
+      "status": "reviewed",
+      "translation": "## 本页已迁移 {#moved}\n"
+    },
+    "3": {
+      "source_sha256": "897c9eda941382248a7b4c414cc2cac24f8f71f58b148d138ace60053a91756d",
+      "status": "reviewed",
+      "translation": "[数据与操作](data.md)\n"
+    }
+  }
+}

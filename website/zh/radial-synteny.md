@@ -1,67 +1,17 @@
-<a id="radial"></a>
+径向共线性图把每条序列放在一根辐条上。多条序列围绕同一中心排列，各自沿辐条保留位置刻度，适合查看多对序列的区间关系。
 
-## 真实比例的径向辐条 {#radial}
+<a id="draw"></a>
 
-随包四序列数据保留原始长度和CDS链。以下显式展示筛选选择长度至少900 bp、identity
-至少75%的已观测HSP，并取每个有向序列对最长两条。计数轨道统计所选query起点观测数，
-不将其解释为深度或覆盖度。
+## 绘制选定的序列对 {#draw}
 
-{{code:radialdata}}
+随包的弦图子集含四条序列间的 12 条已观测比对。允许连接非相邻辐条即可显示整个子集。降低不透明度有助于辨认重叠的带。
 
-{{code:radialview}}
+{{example:first-radial}}
 
-{{figure:viewradial}}
+<a id="adapt"></a>
 
-辐条顺序来自`layout_sequences(order = ...)`。默认按真实长度比例展示；只有显式
-`layout_sequences(length_mode = "equal")`才归一显示长度，源坐标保持不变。`start_angle`从正x轴逆时针计角，
-`clockwise`控制辐条顺序，不改生物链。特征和轨道的正偏移指向辐条逆时针法向。
-物理Track宽度和源统计复用共享band与Stat系统。
+## 沿辐条读取位置 {#adapt}
 
-首尾序列只有在**存在HSP**时才在闭合通道连接；没有该关系时通道保持空白。
-N=2每条原始HSP只绘一次，N=1报错。反向HSP保留完整、有顺序的前缘及扭转。
-新Radial采用闭区间边界`[min-1,max]`，所以单位置HSP仍有宽度；轴位置仍是一基。
-已有视图继续采用各自文档约定。中心孔只是显示留白，不删除序列；序列名位于辐条外端。
+沿一条带分别找到两端辐条上的刻度，即可定位来源区间。`start_angle` 会整体旋转辐条，`inner_radius` 控制中心留白。判断生物学方向时，结合来源链或有序的比对端点读图。
 
-
-{{code:courseradialangle}}
-
-![仅改变首辐条角度](../../man/figures/courseradialangle.png)
-
-
-Ribbon可用显式`pairs`或`adjacent_only=FALSE`选择非邻接关系；非邻接点连接须指定
-`between`。命名A–B–A实例沿用[明确路由契约](instances.md#instances)。
-用户控制点使用最终x/y布局单位。端点渐变和subject尖头仍须显式选择，默认保留Identity填充。
-
-<a id="export"></a>
-
-## 导出与反向映射 {#export}
-
-{{code:radialmap}}
-
-导出保留`radial_frames`、原始源区间与`radial_endpoints`中的完整投影前缘，以及连接
-筛选、实例路由、轨道统计和标签可见性。Radial反查必须给出所选骨架上的x、y，避免
-仅凭多条辐条共享的单个x值猜位置。focus/segment输入保留源原点；径向显示不将多个
-窗口拼为一条辐条。
-
-<a id="support"></a>
-
-## 操作示例与支持边界 {#support}
-
-只改 start_angle 不改其他参数，核对源坐标及方向。N=1、shared branches、单圆专属层和多窗口拼接为一条辐条不支持；逆映射要给骨架上的 x/y。
-
-<a id="nonadjacent"></a>
-
-## 非相邻连接的边框与外拱 {#nonadjacent}
-
-按最终环形顺序，相邻（含首尾）ribbon保持实线，非相邻ribbon使用虚线和与Collinear一致的0.4 mm边框。`nonadjacent_linewidth=0`恢复普通线宽；显式线型、线宽映射和用户标度优先。
-
-`nonadjacent_bulge`调整非相邻环形路径的外拱量，默认0；正值还会按完整中间辐条及同通道连接的带宽增加必要外拱。最长比例辐条长2，以下0.2是显示布局单位，不是bp。端点、源坐标和区间宽度保留，端点顺序要求的交叉仍可能存在。
-
-```r
-ggchord(prepare_ggchord_data(radial_seqs, radial_hsp)) +
-  geom_seq() +
-  geom_link_ribbon(adjacent_only = FALSE) +
-  coord_radial_synteny(nonadjacent_bulge = 0.2)
-```
-
-需要逐条手动调整时，`link_ctrl_point`支持按输入行提供两条边的笛卡尔控制点，优先于自动外拱；这会改变环形路径形态。`link_gap`只控制序列端点附近的间隙，不能替代中部外拱。
+[带基因注释的径向图](case-radial.md) · [径向坐标选项](../../man/coord_radial_synteny.Rd)

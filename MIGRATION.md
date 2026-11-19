@@ -1,3 +1,12 @@
+# API version choice
+
+Use v0.29.0 for code that relies on the previous API, because v0.50.0 and later are incompatible with that API.
+
+<details>
+<summary>Internal change records for maintainers</summary>
+
+These archived records document removals, replacement calls and verified behaviours for the versions named in each section. Maintainers use them to trace compatibility decisions and reproduce earlier audits.
+
 ## Migrating to 0.50.0
 
 The table covers removed calls and changes in behaviour in 0.50.0. Later sections identify the versions to which historical examples apply.
@@ -22,7 +31,9 @@ The table covers removed calls and changes in behaviour in 0.50.0. Later section
 | Unrecognised arguments to `geom_*()`, such as `geom_seq(linewditth = 2)` | Use `geom_seq(linewidth = 2)`. Starting in 0.50.0, unknown names cause an error. Supply Stat-specific parameters to the selected Stat, for example `geom_track_line(stat = "coverage", binwidth = 4)` with interval data. |
 | Partial argument names such as `position_offset(offse = .1)` or `guide_seq_axis(sequence = "A")` | Use `position_offset(offset = .1)` and `guide_seq_axis(sequences = "A")`. Spell out names in refactored calls, including arguments forwarded through `...`. Positional calls such as `position_offset(.1)` still work. |
 | One explicit `width` for an external Stat's neighbourhood and the column Geom | Name the Stat argument `radius` and pass both controls, for example `geom_track_col(stat = MyStat, radius = 4, width = 2)`. |
-| `ggchord(seq_data = ref, gene_data = f, ribbon_data = h)` | Start with `ggchord(ref)`, then add `geom_feature(data = f, preset = "gene")` and `geom_link_ribbon(data = h)`. Alternatively pass `ggchord(prepare_ggchord_data(ref, ribbon_data = h, gene_data = f))`. When several prepared inputs are eligible, specify the layer table. |
+| `ggchord(seq_data = ref, gene_data = f, ribbon_data = h)` | Start with `ggchord(ref)`, then add `geom_feature(data = f, preset = "gene")` and `geom_link_ribbon(data = h)`. For a classified primary table use `ggchord(prepare_ggchord_data(ref, ribbon_data = h, feature_data = f))`. When several prepared inputs are eligible, specify the layer table. |
+| `gene_data` in prepare, validate, clean, focus or segment, and `mapping$gene` in preparation | In 0.50.0 the third argument is `feature_data`. Use `prepare_ggchord_data(ref, feature_data = f, mapping = list(feature = c(strand = "source_strand")))`. The primary annotation output, conversion report and validation count use `$feature_data`, `$report$conversions$feature` and `$data_summary$n_feature` respectively. Named tables remain independent in `features = list(cds = cds, sites = sites)`. |
+| A saved prepared object with a populated `$gene_data`, or an unclassified third positional argument used with a gene preset | Rebuild from the original inputs. An inherited gene preset selects gene/CDS rows by the first available classification column (`feature_class`, `type`, `role`). If the data source identifies all rows as genes, use `feature_data = dplyr::mutate(f, type = "gene")` on an unclassified table. For a directional gene table without a classification column, use `ggchord(ref) + geom_seq() + geom_feature(data = f, preset = "gene")`. Inherited annotation row IDs use the `feature:` prefix. An explicit layer has layer-local row IDs. |
 | Physical `position_track("depth", width = w)` | Add `track_band("depth", width = w)` and use `track = "depth"` on each layer. Omit the ID for the default band. Use the geom's `position` for stack, dodge or nudge. |
 | `seq_order`, `seq_orientation`, `seq_gap`, `length_mode` on `geom_seq()` | Add `layout_sequences(order = ids, orientation = directions, gap = gaps, length_mode = "equal")`. The geom still sets the backbone's appearance. |
 | `position_plasmid(offset)` and `position_feature_stack(side = ...)` | Use `position_offset(offset)`. For old `side = "outside"`, use `base_position = position_offset(-0.1), direction = "inward"`. For old `"inside"`, use `position_offset(0.1)` and `"outward"`. The former `"strand"` setting is the default. |
@@ -38,7 +49,7 @@ An ordinary build stops on a track Stat error. Use `get_chord_layout(p, build = 
 to inspect the last successful layout, then rebuild after correcting the input.
 For zero input rows, built-in computed fields such as `count` and `prop` remain available for selection.
 
-Run the [migration example](examples/migrate-v0.50.0.R) to draw a two-sample comparison and inspect each window's contributing rows. Each panel uses the same 10 bp reference and numerical scale. A second plot labels selected features in the lanes assigned to the full input.
+The [audit example](examples/migrate-v0.50.0.R) records a two-sample comparison and the contributing rows of each window. Each panel uses the same 10 bp reference and numerical scale. A second plot labels selected features in the lanes assigned to the full input.
 
 ## 0.29.0 data and mappings
 
@@ -304,3 +315,5 @@ Identity mode; it uses the fixed 0–100 domain and proportional intervals
 Gradient fills use a device-resolved raster mesh along the true curve; outlines remain vector paths. This avoids translucent strip seams and preserves curved source fronts.
 
 Automatic Identity guides treat generic legend key sizes as swatch dimensions, rather than compressing the entire numerical ruler. Their length accounts for boundary-label measurements and interval proportions. Set a Ribbon-specific key dimension or an explicit guide to override it. Circular parallel axis text follows the arc glyph by glyph; use horizontal or numeric orientation for straight text.
+
+</details>

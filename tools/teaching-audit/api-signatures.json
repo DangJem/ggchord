@@ -135,14 +135,13 @@
     "parameters": {
       "seq_data": "",
       "ribbon_data": "NULL",
-      "gene_data": "NULL",
+      "feature_data": "NULL",
       "unknown_id": "c(\"drop\", \"error\", \"keep\")",
       "out_of_range": "c(\"clip\", \"drop\", \"error\", \"keep\")",
       "reversed_interval": "c(\"sort\", \"drop\", \"error\", \"keep\")",
       "invalid_pident": "c(\"clip\", \"drop\", \"error\", \"keep\")",
       "empty_annotation": "c(\"keep\", \"drop\", \"replace\")",
-      "replacement_annotation": "\"unannotated\"",
-      "feature_data": "NULL"
+      "replacement_annotation": "\"unannotated\""
     }
   },
   {
@@ -458,11 +457,10 @@
     "parameters": {
       "seq_data": "",
       "ribbon_data": "NULL",
-      "gene_data": "NULL",
+      "feature_data": "NULL",
       "loci": "",
       "expand": "0",
-      "boundary": "c(\"trim\", \"drop\")",
-      "feature_data": "NULL"
+      "boundary": "c(\"trim\", \"drop\")"
     }
   },
   {
@@ -1334,12 +1332,11 @@
     "parameters": {
       "seq_data": "",
       "ribbon_data": "NULL",
-      "gene_data": "NULL",
+      "feature_data": "NULL",
       "features": "list()",
       "links": "list()",
       "mapping": "list()",
-      "steps": "list()",
-      "feature_data": "NULL"
+      "steps": "list()"
     }
   },
   {
@@ -1929,12 +1926,11 @@
     "parameters": {
       "seq_data": "",
       "ribbon_data": "NULL",
-      "gene_data": "NULL",
+      "feature_data": "NULL",
       "windows": "",
       "point_data": "NULL",
       "cross_gap": "c(\"split\", \"drop\")",
-      "max_links": "10000",
-      "feature_data": "NULL"
+      "max_links": "10000"
     }
   },
   {
@@ -2772,12 +2768,11 @@
     "parameters": {
       "seq_data": "",
       "ribbon_data": "NULL",
-      "gene_data": "NULL",
+      "feature_data": "NULL",
       "strict": "FALSE",
       "check_coordinates": "TRUE",
       "check_duplicates": "TRUE",
-      "check_self_links": "TRUE",
-      "feature_data": "NULL"
+      "check_self_links": "TRUE"
     }
   },
   {

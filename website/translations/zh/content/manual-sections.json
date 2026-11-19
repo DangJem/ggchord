@@ -1,0 +1,45 @@
+{
+  "source_sha256": "ddb382a17fe1108ff71a1223cac8fc7765ed94d77d2837460eebf4151e5e963b",
+  "strings": {
+    "plots/0/title": {
+      "source_sha256": "505636727e6e171a772014bb7157aa724af37df2f667c6cb8da2367b1f79b259",
+      "status": "reviewed",
+      "translation": "图形类型"
+    },
+    "plots/1/title": {
+      "source_sha256": "bf4a256cbbcd7b3f919112311b0cc409d72281792e50e71851e986e6ecdffedf",
+      "status": "reviewed",
+      "translation": "图层与外观"
+    },
+    "data/0/title": {
+      "source_sha256": "1544ff48d76c47ce5e9fa6525eb822ab98737bc4abefc6743ef1936c9b8e9a63",
+      "status": "reviewed",
+      "translation": "数据与文件"
+    },
+    "data/1/title": {
+      "source_sha256": "affd0cfbcc2377e47888ae10418881c93da98b13cb3756cf879c417dd50323fb",
+      "status": "reviewed",
+      "translation": "检查与输出"
+    },
+    "cases/0/title": {
+      "source_sha256": "0a9418a152d4355edc52e98d8bad40188c3d119e1615c102c1ebe6965e65d3e0",
+      "status": "reviewed",
+      "translation": "旗舰案例"
+    },
+    "cases/1/title": {
+      "source_sha256": "d8c1c607aa753fbce117cb8f40646f5020b9a211c42a16222ab55666a4b65e75",
+      "status": "reviewed",
+      "translation": "质粒图谱"
+    },
+    "reference/0/title": {
+      "source_sha256": "309707cf2a1dd05d0a14706dccc7f1bb84c57917efaccfed416242d7fa1c8d95",
+      "status": "reviewed",
+      "translation": "查找参数"
+    },
+    "information/0/title": {
+      "source_sha256": "cc149190687e0c3fcc7a9ee1c83d2da2a0dbbd63a897daeb4f217f8f5b79388b",
+      "status": "reviewed",
+      "translation": "迁移"
+    }
+  }
+}

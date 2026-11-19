@@ -1,0 +1,3308 @@
+{
+  "aes": {
+    "level": "L1",
+    "page": "parameter-atlas",
+    "anchor": "upstream",
+    "reason": "Explicitly classified upstream reexport/object; follows original ggplot2/grid contract; exempt from independent manual requirement",
+    "modes": "upstream; applies only to matching supported ggplot roles",
+    "parameters": [],
+    "purpose": {
+      "en": "Selected ggplot2 helpers for ggchord plots"
+    },
+    "alias_of": "",
+    "case": "chord",
+    "scope": "inherited upstream contract",
+    "modes_localized": {
+      "en": "upstream; applies only to matching supported ggplot roles"
+    }
+  },
+  "after_scale": {
+    "level": "L1",
+    "page": "parameter-atlas",
+    "anchor": "upstream",
+    "reason": "Explicitly classified upstream reexport/object; follows original ggplot2/grid contract; exempt from independent manual requirement",
+    "modes": "upstream; applies only to matching supported ggplot roles",
+    "parameters": [],
+    "purpose": {
+      "en": "Selected ggplot2 helpers for ggchord plots"
+    },
+    "alias_of": "",
+    "case": "chord",
+    "scope": "inherited upstream contract",
+    "modes_localized": {
+      "en": "upstream; applies only to matching supported ggplot roles"
+    }
+  },
+  "after_stat": {
+    "level": "L1",
+    "page": "parameter-atlas",
+    "anchor": "upstream",
+    "reason": "Explicitly classified upstream reexport/object; follows original ggplot2/grid contract; exempt from independent manual requirement",
+    "modes": "upstream; applies only to matching supported ggplot roles",
+    "parameters": [],
+    "purpose": {
+      "en": "Selected ggplot2 helpers for ggchord plots"
+    },
+    "alias_of": "",
+    "case": "chord",
+    "scope": "inherited upstream contract",
+    "modes_localized": {
+      "en": "upstream; applies only to matching supported ggplot roles"
+    }
+  },
+  "annotate": {
+    "level": "L1",
+    "page": "parameter-atlas",
+    "anchor": "upstream",
+    "reason": "Explicitly classified upstream reexport/object; follows original ggplot2/grid contract; exempt from independent manual requirement",
+    "modes": "upstream; applies only to matching supported ggplot roles",
+    "parameters": [],
+    "purpose": {
+      "en": "Selected ggplot2 helpers for ggchord plots"
+    },
+    "alias_of": "",
+    "case": "chord",
+    "scope": "inherited upstream contract",
+    "modes_localized": {
+      "en": "upstream; applies only to matching supported ggplot roles"
+    }
+  },
+  "arrow": {
+    "level": "L1",
+    "page": "parameter-atlas",
+    "anchor": "upstream",
+    "reason": "Explicitly classified upstream reexport/object; follows original ggplot2/grid contract; exempt from independent manual requirement",
+    "modes": "upstream; applies only to matching supported ggplot roles",
+    "parameters": [],
+    "purpose": {
+      "en": "Physical units and direction arrows"
+    },
+    "alias_of": "",
+    "case": "chord",
+    "scope": "inherited upstream contract",
+    "modes_localized": {
+      "en": "upstream; applies only to matching supported ggplot roles"
+    }
+  },
+  "as_ggchord_feature": {
+    "level": "L2",
+    "page": "import-sequences",
+    "anchor": "adapters",
+    "reason": "Reviewed input/output, constraints and runnable canonical section; key-parameter level applies only to listed behavior",
+    "modes": "table/S4 adapter; coordinates and biological direction retained",
+    "parameters": [
+      "x",
+      "mapping"
+    ],
+    "purpose": {
+      "en": "Convert intervals to generic ggchord features"
+    },
+    "alias_of": "",
+    "case": "formats",
+    "scope": "documented canonical use; not all combinations",
+    "modes_localized": {
+      "en": "table/S4 adapter; coordinates and biological direction retained"
+    }
+  },
+  "as_ggchord_link": {
+    "level": "L2",
+    "page": "import-sequences",
+    "anchor": "adapters",
+    "reason": "Reviewed input/output, constraints and runnable canonical section; key-parameter level applies only to listed behavior",
+    "modes": "table/GInteractions adapter; no invented alignment statistics",
+    "parameters": [
+      "x",
+      "mapping"
+    ],
+    "purpose": {
+      "en": "Convert paired genomic intervals to ggchord links"
+    },
+    "alias_of": "",
+    "case": "formats",
+    "scope": "documented canonical use; not all combinations",
+    "modes_localized": {
+      "en": "table/GInteractions adapter; no invented alignment statistics"
+    }
+  },
+  "as_ggchord_seq": {
+    "level": "L2",
+    "page": "import-sequences",
+    "anchor": "adapters",
+    "reason": "Reviewed input/output, constraints and runnable canonical section; key-parameter level applies only to listed behavior",
+    "modes": "table/S4 adapter; complete lengths and explicit IDs/units",
+    "parameters": [
+      "x",
+      "mapping",
+      "lengths",
+      "ids"
+    ],
+    "purpose": {
+      "en": "Convert sequence information to ggchord input"
+    },
+    "alias_of": "",
+    "case": "formats",
+    "scope": "documented canonical use; not all combinations",
+    "modes_localized": {
+      "en": "table/S4 adapter; complete lengths and explicit IDs/units"
+    }
+  },
+  "build_ggchord_cds": {
+    "level": "L2",
+    "page": "projection",
+    "anchor": "boundaries",
+    "reason": "Reviewed input/output, constraints and runnable canonical section; key-parameter level applies only to listed behavior",
+    "modes": "known genomic CDS, phase and genetic code; no guessed correspondence",
+    "parameters": [
+      "cds_data",
+      "genetic_code",
+      "partial"
+    ],
+    "purpose": {
+      "en": "Build an explicit spliced CDS coordinate map"
+    },
+    "alias_of": "",
+    "case": "homology",
+    "scope": "documented canonical use; not all combinations",
+    "modes_localized": {
+      "en": "known genomic CDS, phase and genetic code; no guessed correspondence"
+    }
+  },
+  "bundle_ggchord_ribbons": {
+    "level": "L3",
+    "page": "ribbons",
+    "anchor": "statistics-bundle",
+    "reason": "Reviewed input/output, constraints and runnable canonical section; key-parameter level applies only to listed behavior",
+    "modes": "explicit normalized-bin aggregation; original observations retained separately",
+    "parameters": [
+      "bins",
+      "min_bundle",
+      "weight",
+      "group_by"
+    ],
+    "purpose": {
+      "en": "Bundle dense alignment ribbons explicitly"
+    },
+    "alias_of": "",
+    "case": "chord",
+    "scope": "documented canonical use; not all combinations",
+    "modes_localized": {
+      "en": "explicit normalized-bin aggregation; original observations retained separately"
+    }
+  },
+  "clean_ggchord_data": {
+    "level": "L2",
+    "page": "data",
+    "anchor": "repairs",
+    "reason": "Reviewed input/output, constraints and runnable canonical section; key-parameter level applies only to listed behavior",
+    "modes": "explicit repair policies with original tables retained",
+    "parameters": [
+      "unknown_id",
+      "out_of_range",
+      "reversed_interval",
+      "invalid_pident"
+    ],
+    "purpose": {
+      "en": "Clean ggchord input data with explicit, report-driven policies"
+    },
+    "alias_of": "",
+    "case": "real-data",
+    "scope": "documented canonical use; not all combinations",
+    "modes_localized": {
+      "en": "explicit repair policies with original tables retained"
+    }
+  },
+  "coord_chord": {
+    "level": "L3",
+    "page": "chord-geometry",
+    "anchor": "shape",
+    "reason": "Reviewed input/output, constraints and runnable canonical section; key-parameter level applies only to listed behavior",
+    "modes": "chord",
+    "parameters": [
+      "rotation",
+      "ratio",
+      "fit"
+    ],
+    "purpose": {
+      "en": "Chord diagram coordinate system"
+    },
+    "alias_of": "",
+    "case": "chord",
+    "scope": "documented canonical use; not all combinations",
+    "modes_localized": {
+      "en": "chord"
+    }
+  },
+  "coord_circular": {
+    "level": "L3",
+    "page": "circular-layout",
+    "anchor": "coordinates",
+    "reason": "Reviewed input/output, constraints and runnable canonical section; key-parameter level applies only to listed behavior",
+    "modes": "one sequence; bp or aa; no ribbon/link layers",
+    "parameters": [
+      "rotation",
+      "direction",
+      "gap",
+      "fit"
+    ],
+    "purpose": {
+      "en": "Single-sequence circular coordinate system"
+    },
+    "alias_of": "",
+    "case": "circular-start",
+    "scope": "documented canonical use; not all combinations",
+    "modes_localized": {
+      "en": "one sequence; bp or aa; no ribbon/link layers"
+    }
+  },
+  "coord_collinear": {
+    "level": "L3",
+    "page": "collinear-layout",
+    "anchor": "parameters",
+    "reason": "Reviewed input/output, constraints and runnable canonical section; key-parameter level applies only to listed behavior",
+    "modes": "collinear; bp or aa; circular-only local controls rejected",
+    "parameters": [
+      "align",
+      "anchor",
+      "orientation",
+      "min_support",
+      "segments",
+      "segment_gap"
+    ],
+    "purpose": {
+      "en": "Linear multi-sequence collinearity coordinates"
+    },
+    "alias_of": "",
+    "case": "collinear",
+    "scope": "documented canonical use; not all combinations",
+    "modes_localized": {
+      "en": "collinear; bp or aa; circular-only local controls rejected"
+    }
+  },
+  "deduplicate_ggchord_ribbons": {
+    "level": "L2",
+    "page": "ribbons",
+    "anchor": "transformations",
+    "reason": "Reviewed input/output, constraints and runnable canonical section; key-parameter level applies only to listed behavior",
+    "modes": "select existing representatives with source membership",
+    "parameters": [
+      "by",
+      "keep",
+      "tolerance",
+      "min_reciprocal_overlap"
+    ],
+    "purpose": {
+      "en": "Deduplicate alignment ribbons"
+    },
+    "alias_of": "",
+    "case": "chord",
+    "scope": "documented canonical use; not all combinations",
+    "modes_localized": {
+      "en": "select existing representatives with source membership"
+    }
+  },
+  "diagnose_ggchord": {
+    "level": "L2",
+    "page": "diagnostics",
+    "anchor": "target-size",
+    "reason": "Reviewed input/output, constraints and runnable canonical section; key-parameter level applies only to listed behavior",
+    "modes": "one target-size device; advisory, not universal quality certification",
+    "parameters": [
+      "plot",
+      "width",
+      "height",
+      "units",
+      "device",
+      "dpi",
+      "min_size",
+      "min_linewidth"
+    ],
+    "purpose": {
+      "en": "Inspect one target-size render without changing the plot"
+    },
+    "alias_of": "",
+    "case": "chord",
+    "scope": "documented canonical use; not all combinations",
+    "modes_localized": {
+      "en": "one target-size device; advisory, not universal quality certification"
+    }
+  },
+  "element_blank": {
+    "level": "L1",
+    "page": "parameter-atlas",
+    "anchor": "upstream",
+    "reason": "Explicitly classified upstream reexport/object; follows original ggplot2/grid contract; exempt from independent manual requirement",
+    "modes": "upstream; applies only to matching supported ggplot roles",
+    "parameters": [],
+    "purpose": {
+      "en": "Selected ggplot2 helpers for ggchord plots"
+    },
+    "alias_of": "",
+    "case": "chord",
+    "scope": "inherited upstream contract",
+    "modes_localized": {
+      "en": "upstream; applies only to matching supported ggplot roles"
+    }
+  },
+  "element_line": {
+    "level": "L1",
+    "page": "parameter-atlas",
+    "anchor": "upstream",
+    "reason": "Explicitly classified upstream reexport/object; follows original ggplot2/grid contract; exempt from independent manual requirement",
+    "modes": "upstream; applies only to matching supported ggplot roles",
+    "parameters": [],
+    "purpose": {
+      "en": "Selected ggplot2 helpers for ggchord plots"
+    },
+    "alias_of": "",
+    "case": "chord",
+    "scope": "inherited upstream contract",
+    "modes_localized": {
+      "en": "upstream; applies only to matching supported ggplot roles"
+    }
+  },
+  "element_rect": {
+    "level": "L1",
+    "page": "parameter-atlas",
+    "anchor": "upstream",
+    "reason": "Explicitly classified upstream reexport/object; follows original ggplot2/grid contract; exempt from independent manual requirement",
+    "modes": "upstream; applies only to matching supported ggplot roles",
+    "parameters": [],
+    "purpose": {
+      "en": "Selected ggplot2 helpers for ggchord plots"
+    },
+    "alias_of": "",
+    "case": "chord",
+    "scope": "inherited upstream contract",
+    "modes_localized": {
+      "en": "upstream; applies only to matching supported ggplot roles"
+    }
+  },
+  "element_text": {
+    "level": "L1",
+    "page": "parameter-atlas",
+    "anchor": "upstream",
+    "reason": "Explicitly classified upstream reexport/object; follows original ggplot2/grid contract; exempt from independent manual requirement",
+    "modes": "upstream; applies only to matching supported ggplot roles",
+    "parameters": [],
+    "purpose": {
+      "en": "Selected ggplot2 helpers for ggchord plots"
+    },
+    "alias_of": "",
+    "case": "chord",
+    "scope": "inherited upstream contract",
+    "modes_localized": {
+      "en": "upstream; applies only to matching supported ggplot roles"
+    }
+  },
+  "expansion": {
+    "level": "L1",
+    "page": "parameter-atlas",
+    "anchor": "upstream",
+    "reason": "Explicitly classified upstream reexport/object; follows original ggplot2/grid contract; exempt from independent manual requirement",
+    "modes": "upstream; applies only to matching supported ggplot roles",
+    "parameters": [],
+    "purpose": {
+      "en": "Selected ggplot2 helpers for ggchord plots"
+    },
+    "alias_of": "",
+    "case": "chord",
+    "scope": "inherited upstream contract",
+    "modes_localized": {
+      "en": "upstream; applies only to matching supported ggplot roles"
+    }
+  },
+  "export_ggchord_layout": {
+    "level": "L2",
+    "page": "diagnostics",
+    "anchor": "geometry",
+    "reason": "Reviewed input/output, constraints and runnable canonical section; key-parameter level applies only to listed behavior",
+    "modes": "layer-aware public tables for all supported plots",
+    "parameters": [
+      "plot",
+      "include",
+      "original_data"
+    ],
+    "purpose": {
+      "en": "Export computed ggchord geometry"
+    },
+    "alias_of": "",
+    "case": "chord",
+    "scope": "documented canonical use; not all combinations",
+    "modes_localized": {
+      "en": "layer-aware public tables for all supported plots"
+    }
+  },
+  "filter_ggchord_ribbons": {
+    "level": "L2",
+    "page": "ribbons",
+    "anchor": "input",
+    "reason": "Reviewed input/output, constraints and runnable canonical section; key-parameter level applies only to listed behavior",
+    "modes": "observed alignment filtering, not recomputation",
+    "parameters": [
+      "min_pident",
+      "min_length"
+    ],
+    "purpose": {
+      "en": "Filter alignment ribbons before plotting"
+    },
+    "alias_of": "",
+    "case": "chord",
+    "scope": "documented canonical use; not all combinations",
+    "modes_localized": {
+      "en": "observed alignment filtering, not recomputation"
+    }
+  },
+  "filter_restriction_sites": {
+    "level": "L2",
+    "page": "restriction-sites",
+    "anchor": "parameters",
+    "reason": "Reviewed input/output, constraints and runnable canonical section; key-parameter level applies only to listed behavior",
+    "modes": "display set selection preserves complete-target counts",
+    "parameters": [
+      "sites",
+      "set",
+      "enzymes"
+    ],
+    "purpose": {
+      "en": "Filter restriction sites for display"
+    },
+    "alias_of": "",
+    "case": "plasmids",
+    "scope": "documented canonical use; not all combinations",
+    "modes_localized": {
+      "en": "display set selection preserves complete-target counts"
+    }
+  },
+  "find_common_features": {
+    "level": "L2",
+    "page": "recognition",
+    "anchor": "features",
+    "reason": "Reviewed input/output, constraints and runnable canonical section; key-parameter level applies only to listed behavior",
+    "modes": "DNA/reference feature recognition with method/provenance, not wet-lab validation",
+    "parameters": [
+      "sequence",
+      "database",
+      "types",
+      "features",
+      "circular",
+      "mode",
+      "min_protein_identity",
+      "min_protein_coverage",
+      "resolve"
+    ],
+    "purpose": {
+      "en": "Find common biological features in DNA sequences"
+    },
+    "alias_of": "",
+    "case": "plasmids",
+    "scope": "documented canonical use; not all combinations",
+    "modes_localized": {
+      "en": "DNA/reference feature recognition with method/provenance, not wet-lab validation"
+    }
+  },
+  "find_ggchord_loci": {
+    "level": "L2",
+    "page": "feature-geometry",
+    "anchor": "locus-selection",
+    "reason": "Reviewed input/output, constraints and runnable canonical section; key-parameter level applies only to listed behavior",
+    "modes": "genomic workflow with explicit target IDs and source strands",
+    "parameters": [
+      "seq_data",
+      "feature_data",
+      "targets",
+      "upstream",
+      "downstream"
+    ],
+    "purpose": {
+      "en": "Find genomic loci around explicitly identified features"
+    },
+    "alias_of": "",
+    "case": "views",
+    "scope": "documented canonical use; not all combinations",
+    "modes_localized": {
+      "en": "genomic workflow with explicit target IDs and source strands"
+    }
+  },
+  "find_primer_bindings": {
+    "level": "L2",
+    "page": "primers",
+    "anchor": "input",
+    "reason": "Reviewed input/output, constraints and runnable canonical section; key-parameter level applies only to listed behavior",
+    "modes": "actual DNA and explicit oligonucleotides/catalogue; matches not experiments",
+    "parameters": [
+      "sequence",
+      "primers",
+      "set",
+      "match",
+      "min_annealed_bases",
+      "circular",
+      "unique_only"
+    ],
+    "purpose": {
+      "en": "Find sequencing-primer binding sites"
+    },
+    "alias_of": "",
+    "case": "plasmids",
+    "scope": "documented canonical use; not all combinations",
+    "modes_localized": {
+      "en": "actual DNA and explicit oligonucleotides/catalogue; matches not experiments"
+    }
+  },
+  "find_restriction_sites": {
+    "level": "L2",
+    "page": "restriction-sites",
+    "anchor": "input",
+    "reason": "Reviewed input/output, constraints and runnable canonical section; key-parameter level applies only to listed behavior",
+    "modes": "actual DNA and explicit methylation assumptions; full site results",
+    "parameters": [
+      "sequence",
+      "enzymes",
+      "patterns",
+      "circular",
+      "database",
+      "methylation"
+    ],
+    "purpose": {
+      "en": "Find restriction pattern matches and cleavage coordinates"
+    },
+    "alias_of": "",
+    "case": "plasmids",
+    "scope": "documented canonical use; not all combinations",
+    "modes_localized": {
+      "en": "actual DNA and explicit methylation assumptions; full site results"
+    }
+  },
+  "focus_ggchord_data": {
+    "level": "L2",
+    "page": "views",
+    "anchor": "focus",
+    "reason": "Reviewed input/output, constraints and runnable canonical section; key-parameter level applies only to listed behavior",
+    "modes": "explicit source windows with reversible origins and clipping reports",
+    "parameters": [
+      "seq_data",
+      "ribbon_data",
+      "gene_data",
+      "loci",
+      "expand",
+      "boundary"
+    ],
+    "purpose": {
+      "en": "Focus ggchord data on one or more loci"
+    },
+    "alias_of": "",
+    "case": "homology",
+    "scope": "documented canonical use; not all combinations",
+    "modes_localized": {
+      "en": "explicit source windows with reversible origins and clipping reports"
+    }
+  },
+  "focus_ggchord_track": {
+    "level": "L2",
+    "page": "tracks-statistics",
+    "anchor": "track-focus",
+    "reason": "Reviewed input/output, constraints and runnable canonical section; key-parameter level applies only to listed behavior",
+    "modes": "point/interval track data; shares declared loci with focus/segment",
+    "parameters": [
+      "data",
+      "seq_data",
+      "loci",
+      "type",
+      "boundary"
+    ],
+    "purpose": {
+      "en": "Focus quantitative intervals or samples without bridging omitted windows"
+    },
+    "alias_of": "",
+    "case": "tracks",
+    "scope": "documented canonical use; not all combinations",
+    "modes_localized": {
+      "en": "point/interval track data; shares declared loci with focus/segment"
+    }
+  },
+  "geom_feature": {
+    "level": "L3",
+    "page": "circular-features",
+    "anchor": "feature-shapes",
+    "reason": "Reviewed input/output, constraints and runnable canonical section; key-parameter level applies only to listed behavior",
+    "modes": "all three; generic annotations including unknown strand and aa; Radial per view-expansion matrix",
+    "parameters": [
+      "shape",
+      "width",
+      "arrow_head_style",
+      "short_feature",
+      "segment_boundaries",
+      "preset",
+      "arrow_head_length",
+      "arrow_head_width",
+      "position",
+      "id"
+    ],
+    "purpose": {
+      "en": "Draw generic genomic features"
+    },
+    "alias_of": "",
+    "case": "chord",
+    "scope": "documented canonical use; not all combinations",
+    "modes_localized": {
+      "en": "all three; generic annotations including unknown strand and aa; Radial per new-view support matrix"
+    }
+  },
+  "geom_feature_label": {
+    "level": "L3",
+    "page": "circular-labels",
+    "anchor": "fixed-labels",
+    "reason": "Reviewed input/output, constraints and runnable canonical section; key-parameter level applies only to listed behavior",
+    "modes": "all three; linear uses vertical/horizontal rows for radial/tangent; Radial per view-expansion matrix",
+    "parameters": [
+      "label_orientation",
+      "label_side",
+      "label_overlap",
+      "label_rotation",
+      "label_radial_offset",
+      "label_circum_offset",
+      "label_wrap",
+      "placement",
+      "label_layout",
+      "overflow",
+      "label_max_lines",
+      "label_min_size",
+      "external",
+      "max_overlaps",
+      "label_segment_layer",
+      "label_repeat",
+      "label_segment_colour",
+      "id",
+      "anchor_layer"
+    ],
+    "purpose": {
+      "en": "Label generic genomic features"
+    },
+    "alias_of": "",
+    "case": "chord",
+    "scope": "documented canonical use; not all combinations",
+    "modes_localized": {
+      "en": "all three; linear uses vertical/horizontal rows for radial/tangent; Radial per new-view support matrix"
+    }
+  },
+  "geom_gene_label": {
+    "level": "L3",
+    "page": "labels",
+    "anchor": "fixed",
+    "reason": "Reviewed input/output, constraints and runnable canonical section; key-parameter level applies only to listed behavior",
+    "modes": "bp gene labels; circular/linear orientation differs; Radial per view-expansion matrix",
+    "parameters": [
+      "label_rotation",
+      "label_radial_offset",
+      "label_circum_offset",
+      "label_side",
+      "label_overlap"
+    ],
+    "purpose": {
+      "en": "Add a gene label layer"
+    },
+    "alias_of": "",
+    "case": "chord",
+    "scope": "documented canonical use; not all combinations",
+    "modes_localized": {
+      "en": "bp gene labels; circular/linear orientation differs; Radial per new-view support matrix"
+    }
+  },
+  "geom_gene_label_repel": {
+    "level": "L3",
+    "page": "labels",
+    "anchor": "comparison",
+    "reason": "Reviewed input/output, constraints and runnable canonical section; key-parameter level applies only to listed behavior",
+    "modes": "bp gene labels; linear shares row layout; Radial per view-expansion matrix",
+    "parameters": [
+      "label_layout",
+      "label_fit",
+      "label_wrap",
+      "label_min_size",
+      "max_overlaps"
+    ],
+    "purpose": {
+      "en": "Add an automatically arranged gene label layer"
+    },
+    "alias_of": "",
+    "case": "chord",
+    "scope": "documented canonical use; not all combinations",
+    "modes_localized": {
+      "en": "bp gene labels; linear shares row layout; Radial per new-view support matrix"
+    }
+  },
+  "geom_link_line": {
+    "level": "L3",
+    "page": "multi-sequence-links",
+    "anchor": "point-links",
+    "reason": "Reviewed input/output, constraints and runnable canonical section; key-parameter level applies only to listed behavior",
+    "modes": "chord/collinear; explicit qpos/spos; circular rejected; Radial per view-expansion matrix",
+    "parameters": [
+      "link_type",
+      "link_gap",
+      "link_ctrl_point",
+      "link_avoid",
+      "arrow"
+    ],
+    "purpose": {
+      "en": "Draw point-to-point sequence links"
+    },
+    "alias_of": "",
+    "case": "chord",
+    "scope": "documented canonical use; not all combinations",
+    "modes_localized": {
+      "en": "chord/collinear; explicit qpos/spos; circular rejected; Radial per new-view support matrix"
+    }
+  },
+  "geom_link_ribbon": {
+    "level": "L3",
+    "page": "multi-sequence-links",
+    "anchor": "branches",
+    "reason": "Reviewed input/output, constraints and runnable canonical section; key-parameter level applies only to listed behavior",
+    "modes": "chord/collinear; circular rejected; linear adjacency follows displayed rows; Radial per view-expansion matrix",
+    "parameters": [
+      "link_ctrl_point",
+      "link_gap",
+      "link_avoid",
+      "link_branch",
+      "link_branch_fraction",
+      "adjacent_only",
+      "pairs",
+      "nonadjacent_linewidth",
+      "gradient"
+    ],
+    "purpose": {
+      "en": "Add an alignment ribbon layer"
+    },
+    "alias_of": "",
+    "case": "chord",
+    "scope": "documented canonical use; not all combinations",
+    "modes_localized": {
+      "en": "chord/collinear; circular rejected; linear adjacency follows displayed rows; Radial per new-view support matrix"
+    }
+  },
+  "geom_primer": {
+    "level": "L3",
+    "page": "primers",
+    "anchor": "primer-arcs",
+    "reason": "Reviewed input/output, constraints and runnable canonical section; key-parameter level applies only to listed behavior",
+    "modes": "bp single circular recommended; single chord composition available; linear rejected",
+    "parameters": [
+      "side",
+      "arc_offset",
+      "arc_linewidth"
+    ],
+    "purpose": {
+      "en": "Draw primer binding ranges on a circular sequence"
+    },
+    "alias_of": "",
+    "case": "plasmids",
+    "scope": "documented canonical use; not all combinations",
+    "modes_localized": {
+      "en": "bp single circular recommended; single chord composition available; linear rejected"
+    }
+  },
+  "geom_primer_label_repel": {
+    "level": "L3",
+    "page": "primers",
+    "anchor": "primer-labels",
+    "reason": "Reviewed input/output, constraints and runnable canonical section; key-parameter level applies only to listed behavior",
+    "modes": "bp single circular recommended; linear rejected",
+    "parameters": [
+      "side",
+      "show_location",
+      "max_overlaps"
+    ],
+    "purpose": {
+      "en": "Arrange primer labels and leaders"
+    },
+    "alias_of": "",
+    "case": "plasmids",
+    "scope": "documented canonical use; not all combinations",
+    "modes_localized": {
+      "en": "bp single circular recommended; linear rejected"
+    }
+  },
+  "geom_restriction_site": {
+    "level": "L3",
+    "page": "restriction-sites",
+    "anchor": "restriction-labels",
+    "reason": "Reviewed input/output, constraints and runnable canonical section; key-parameter level applies only to listed behavior",
+    "modes": "bp single circular recommended; linear rejected",
+    "parameters": [
+      "label",
+      "label_style",
+      "label_order",
+      "label_side",
+      "leader",
+      "min_label_gap",
+      "tick_length",
+      "label_offset",
+      "label_size"
+    ],
+    "purpose": {
+      "en": "Draw restriction sites, labels and deterministic leaders"
+    },
+    "alias_of": "",
+    "case": "plasmids",
+    "scope": "documented canonical use; not all combinations",
+    "modes_localized": {
+      "en": "bp single circular recommended; linear rejected"
+    }
+  },
+  "geom_seq": {
+    "level": "L3",
+    "page": "circular-layout",
+    "anchor": "backbones",
+    "reason": "Reviewed input/output, constraints and runnable canonical section; key-parameter level applies only to listed behavior",
+    "modes": "all three; linear rejects radius/curvature/ring; circular owns gap/direction; Radial per view-expansion matrix",
+    "parameters": [
+      "seq_style",
+      "seq_backbone_gap",
+      "seq_backbone_width",
+      "seq_radius",
+      "seq_curvature"
+    ],
+    "purpose": {
+      "en": "Add a sequence arc layer"
+    },
+    "alias_of": "",
+    "case": "chord",
+    "scope": "documented canonical use; not all combinations",
+    "modes_localized": {
+      "en": "all three; linear rejects radius/curvature/ring; circular owns gap/direction; Radial per new-view support matrix"
+    }
+  },
+  "geom_seq_break": {
+    "level": "L2",
+    "page": "views",
+    "anchor": "segments",
+    "reason": "Reviewed input/output, constraints and runnable canonical section; key-parameter level applies only to listed behavior",
+    "modes": "collinear only, focused/segmented truncated-end metadata required; Radial per view-expansion matrix",
+    "parameters": [
+      "position"
+    ],
+    "purpose": {
+      "en": "Mark cropped ends of linear sequences"
+    },
+    "alias_of": "",
+    "case": "collinear",
+    "scope": "documented canonical use; not all combinations",
+    "modes_localized": {
+      "en": "collinear only, focused/segmented truncated-end metadata required; Radial per new-view support matrix"
+    }
+  },
+  "geom_seq_center_label": {
+    "level": "L3",
+    "page": "circular-layout",
+    "anchor": "center",
+    "reason": "Reviewed input/output, constraints and runnable canonical section; key-parameter level applies only to listed behavior",
+    "modes": "one sequence; circular recommended; linear rejected",
+    "parameters": [
+      "name",
+      "length",
+      "separator",
+      "name_style",
+      "length_style"
+    ],
+    "purpose": {
+      "en": "Add a circular-sequence centre label"
+    },
+    "alias_of": "",
+    "case": "chord",
+    "scope": "documented canonical use; not all combinations",
+    "modes_localized": {
+      "en": "one sequence; circular recommended; linear rejected"
+    }
+  },
+  "geom_seq_label": {
+    "level": "L3",
+    "page": "multi-sequence-labels",
+    "anchor": "sequence-parameters",
+    "reason": "Reviewed input/output, constraints and runnable canonical section; key-parameter level applies only to listed behavior",
+    "modes": "all three; linear rejects explicit seq_label_radius; Radial per view-expansion matrix",
+    "parameters": [
+      "seq_label_orientation",
+      "seq_label_rotation",
+      "seq_label_radius",
+      "seq_label_hjust",
+      "seq_label_vjust",
+      "labels",
+      "check_overlap"
+    ],
+    "purpose": {
+      "en": "Add a sequence label layer"
+    },
+    "alias_of": "",
+    "case": "chord",
+    "scope": "documented canonical use; not all combinations",
+    "modes_localized": {
+      "en": "all three; linear rejects explicit seq_label_radius; Radial per new-view support matrix"
+    }
+  },
+  "geom_seq_region": {
+    "level": "L3",
+    "page": "annotations",
+    "anchor": "region-parameters",
+    "reason": "Reviewed input/output, constraints and runnable canonical section; key-parameter level applies only to listed behavior",
+    "modes": "all three, valid source intervals and units; Radial per view-expansion matrix",
+    "parameters": [
+      "region_side",
+      "region_width",
+      "region_offset"
+    ],
+    "purpose": {
+      "en": "Highlight regions along sequence arcs"
+    },
+    "alias_of": "",
+    "case": "chord",
+    "scope": "documented canonical use; not all combinations",
+    "modes_localized": {
+      "en": "all three, valid source intervals and units; Radial per new-view support matrix"
+    }
+  },
+  "geom_seq_scale": {
+    "level": "L3",
+    "page": "collinear-layout",
+    "anchor": "gap",
+    "reason": "Reviewed input/output, constraints and runnable canonical section; key-parameter level applies only to listed behavior",
+    "modes": "collinear only; native bp/aa ruler",
+    "parameters": [
+      "length",
+      "label",
+      "location",
+      "offset",
+      "tick_height",
+      "label_gap"
+    ],
+    "purpose": {
+      "en": "Add a shared sequence-position scale bar to a linear display"
+    },
+    "alias_of": "",
+    "case": "collinear",
+    "scope": "documented canonical use; not all combinations",
+    "modes_localized": {
+      "en": "collinear only; native bp/aa ruler"
+    }
+  },
+  "geom_track_bar": {
+    "level": "L3",
+    "page": "tracks-statistics",
+    "anchor": "tracks",
+    "reason": "Reviewed input/output, constraints and runnable canonical section; key-parameter level applies only to listed behavior",
+    "modes": "all three; default or named band and valid interval bins; Radial per view-expansion matrix",
+    "parameters": [
+      "mapping",
+      "track",
+      "position"
+    ],
+    "purpose": {
+      "en": "Count observations at source positions"
+    },
+    "alias_of": "",
+    "case": "multi-sequence",
+    "scope": "documented canonical use; not all combinations",
+    "modes_localized": {
+      "en": "Count observations at source positions in compatible backbone views; zero baseline; binning is a separate explicit Stat"
+    }
+  },
+  "geom_track_line": {
+    "level": "L3",
+    "page": "tracks",
+    "anchor": "multiple",
+    "reason": "Reviewed input/output, constraints and runnable canonical section; key-parameter level applies only to listed behavior",
+    "modes": "all three; increasing positions per group; closed requires complete circular gap=0; Radial per view-expansion matrix",
+    "parameters": [
+      "closed",
+      "bounds",
+      "position"
+    ],
+    "purpose": {
+      "en": "Draw explicit quantitative tracks along sequence backbones"
+    },
+    "alias_of": "",
+    "case": "tracks",
+    "scope": "documented canonical use; not all combinations",
+    "modes_localized": {
+      "en": "all three; increasing positions per group; closed requires complete circular gap=0; Radial per new-view support matrix"
+    }
+  },
+  "geom_track_tile": {
+    "level": "L3",
+    "page": "tracks",
+    "anchor": "tile",
+    "reason": "Reviewed input/output, constraints and runnable canonical section; key-parameter level applies only to listed behavior",
+    "modes": "all three; default or named track; overlapping input tiles keep drawing order; Radial per view-expansion matrix",
+    "parameters": [
+      "bounds",
+      "position"
+    ],
+    "purpose": {
+      "en": "Draw explicit quantitative tracks along sequence backbones"
+    },
+    "alias_of": "",
+    "case": "tracks",
+    "scope": "documented canonical use; not all combinations",
+    "modes_localized": {
+      "en": "all three; default or named track; overlapping input tiles keep drawing order; Radial per new-view support matrix"
+    }
+  },
+  "get_chord_layout": {
+    "level": "L2",
+    "page": "diagnostics",
+    "anchor": "geometry",
+    "reason": "Reviewed input/output, constraints and runnable canonical section; key-parameter level applies only to listed behavior",
+    "modes": "complete documented layout for all supported plots",
+    "parameters": [
+      "plot"
+    ],
+    "purpose": {
+      "en": "Get the chord layout from a ggchord plot"
+    },
+    "alias_of": "",
+    "case": "chord",
+    "scope": "documented canonical use; not all combinations",
+    "modes_localized": {
+      "en": "complete documented layout for all supported plots"
+    }
+  },
+  "ggchord": {
+    "level": "L2",
+    "page": "modes",
+    "anchor": "composition",
+    "reason": "Reviewed input/output, constraints and runnable canonical section; key-parameter level applies only to listed behavior",
+    "modes": "constructor; one declared unit per plot",
+    "parameters": [
+      "seq_data",
+      "ribbon_data",
+      "gene_data",
+      "validate"
+    ],
+    "purpose": {
+      "en": "Create sequence plots from tables and independent layers"
+    },
+    "alias_of": "",
+    "case": "real-data",
+    "scope": "source-backed complete workflow",
+    "modes_localized": {
+      "en": "constructor; one declared unit per plot"
+    }
+  },
+  "ggsave": {
+    "level": "L1",
+    "page": "parameter-atlas",
+    "anchor": "upstream",
+    "reason": "Explicitly classified upstream reexport/object; follows original ggplot2/grid contract; exempt from independent manual requirement",
+    "modes": "upstream; applies only to matching supported ggplot roles",
+    "parameters": [],
+    "purpose": {
+      "en": "Selected ggplot2 helpers for ggchord plots"
+    },
+    "alias_of": "",
+    "case": "chord",
+    "scope": "inherited upstream contract",
+    "modes_localized": {
+      "en": "upstream; applies only to matching supported ggplot roles"
+    }
+  },
+  "ggtitle": {
+    "level": "L1",
+    "page": "parameter-atlas",
+    "anchor": "upstream",
+    "reason": "Explicitly classified upstream reexport/object; follows original ggplot2/grid contract; exempt from independent manual requirement",
+    "modes": "upstream; applies only to matching supported ggplot roles",
+    "parameters": [],
+    "purpose": {
+      "en": "Selected ggplot2 helpers for ggchord plots"
+    },
+    "alias_of": "",
+    "case": "chord",
+    "scope": "inherited upstream contract",
+    "modes_localized": {
+      "en": "upstream; applies only to matching supported ggplot roles"
+    }
+  },
+  "guide_ggchord_colorbar": {
+    "level": "L2",
+    "page": "scale-families",
+    "anchor": "guides",
+    "reason": "Reviewed input/output, constraints and runnable canonical section; key-parameter level applies only to listed behavior",
+    "modes": "matching discrete/continuous role guide; all supported plots",
+    "parameters": [
+      "title",
+      "position",
+      "direction"
+    ],
+    "purpose": {
+      "en": "Guides for ggchord role aesthetics"
+    },
+    "alias_of": "guide_ggchord_colourbar",
+    "case": "chord",
+    "scope": "documented canonical use; not all combinations",
+    "modes_localized": {
+      "en": "matching discrete/continuous role guide; all supported plots"
+    }
+  },
+  "guide_ggchord_colourbar": {
+    "level": "L2",
+    "page": "scale-families",
+    "anchor": "guides",
+    "reason": "Reviewed input/output, constraints and runnable canonical section; key-parameter level applies only to listed behavior",
+    "modes": "matching discrete/continuous role guide; all supported plots",
+    "parameters": [
+      "title",
+      "position",
+      "direction"
+    ],
+    "purpose": {
+      "en": "Guides for ggchord role aesthetics"
+    },
+    "alias_of": "",
+    "case": "chord",
+    "scope": "documented canonical use; not all combinations",
+    "modes_localized": {
+      "en": "matching discrete/continuous role guide; all supported plots"
+    }
+  },
+  "guide_ggchord_legend": {
+    "level": "L2",
+    "page": "scale-families",
+    "anchor": "guides",
+    "reason": "Reviewed input/output, constraints and runnable canonical section; key-parameter level applies only to listed behavior",
+    "modes": "matching discrete/continuous role guide; all supported plots",
+    "parameters": [
+      "title",
+      "nrow",
+      "ncol",
+      "position",
+      "direction"
+    ],
+    "purpose": {
+      "en": "Guides for ggchord role aesthetics"
+    },
+    "alias_of": "",
+    "case": "chord",
+    "scope": "documented canonical use; not all combinations",
+    "modes_localized": {
+      "en": "matching discrete/continuous role guide; all supported plots"
+    }
+  },
+  "guides": {
+    "level": "L1",
+    "page": "parameter-atlas",
+    "anchor": "upstream",
+    "reason": "Explicitly classified upstream reexport/object; follows original ggplot2/grid contract; exempt from independent manual requirement",
+    "modes": "upstream; applies only to matching supported ggplot roles",
+    "parameters": [],
+    "purpose": {
+      "en": "Selected ggplot2 helpers for ggchord plots"
+    },
+    "alias_of": "",
+    "case": "chord",
+    "scope": "inherited upstream contract",
+    "modes_localized": {
+      "en": "upstream; applies only to matching supported ggplot roles"
+    }
+  },
+  "labs": {
+    "level": "L1",
+    "page": "parameter-atlas",
+    "anchor": "upstream",
+    "reason": "Explicitly classified upstream reexport/object; follows original ggplot2/grid contract; exempt from independent manual requirement",
+    "modes": "upstream; applies only to matching supported ggplot roles",
+    "parameters": [],
+    "purpose": {
+      "en": "Selected ggplot2 helpers for ggchord plots"
+    },
+    "alias_of": "",
+    "case": "chord",
+    "scope": "inherited upstream contract",
+    "modes_localized": {
+      "en": "upstream; applies only to matching supported ggplot roles"
+    }
+  },
+  "last_plot": {
+    "level": "L1",
+    "page": "parameter-atlas",
+    "anchor": "upstream",
+    "reason": "Explicitly classified upstream reexport/object; follows original ggplot2/grid contract; exempt from independent manual requirement",
+    "modes": "upstream; applies only to matching supported ggplot roles",
+    "parameters": [],
+    "purpose": {
+      "en": "Selected ggplot2 helpers for ggchord plots"
+    },
+    "alias_of": "",
+    "case": "chord",
+    "scope": "inherited upstream contract",
+    "modes_localized": {
+      "en": "upstream; applies only to matching supported ggplot roles"
+    }
+  },
+  "link_ggchord_clusters": {
+    "level": "L2",
+    "page": "homology",
+    "anchor": "links",
+    "reason": "Reviewed input/output, constraints and runnable canonical section; key-parameter level applies only to listed behavior",
+    "modes": "explicit biological membership; matching names alone are insufficient",
+    "parameters": [
+      "feature_data",
+      "membership",
+      "pairs",
+      "paralogs"
+    ],
+    "purpose": {
+      "en": "Convert explicit homology-cluster membership to feature links"
+    },
+    "alias_of": "",
+    "case": "homology",
+    "scope": "documented canonical use; not all combinations",
+    "modes_localized": {
+      "en": "explicit biological membership; matching names alone are insufficient"
+    }
+  },
+  "map_ggchord_position": {
+    "level": "L2",
+    "page": "radial-synteny",
+    "anchor": "export",
+    "reason": "Reviewed input/output, constraints and runnable canonical section; key-parameter level applies only to listed behavior",
+    "modes": "Collinear / Dotplot / Radial",
+    "parameters": [
+      "plot",
+      "accver",
+      "position",
+      "inverse",
+      "source"
+    ],
+    "purpose": {
+      "en": "Map source positions and display coordinates"
+    },
+    "alias_of": "",
+    "case": "dotplot-start",
+    "scope": "documented canonical use; not all combinations",
+    "modes_localized": {
+      "en": "Native/source positions; explicit Dotplot axis, or both x/y for radial inverse"
+    }
+  },
+  "margin": {
+    "level": "L1",
+    "page": "parameter-atlas",
+    "anchor": "upstream",
+    "reason": "Explicitly classified upstream reexport/object; follows original ggplot2/grid contract; exempt from independent manual requirement",
+    "modes": "upstream; applies only to matching supported ggplot roles",
+    "parameters": [],
+    "purpose": {
+      "en": "Selected ggplot2 helpers for ggchord plots"
+    },
+    "alias_of": "",
+    "case": "chord",
+    "scope": "inherited upstream contract",
+    "modes_localized": {
+      "en": "upstream; applies only to matching supported ggplot roles"
+    }
+  },
+  "merge_ggchord_ribbons": {
+    "level": "L2",
+    "page": "ribbons",
+    "anchor": "transformations",
+    "reason": "Reviewed input/output, constraints and runnable canonical section; key-parameter level applies only to listed behavior",
+    "modes": "compatible display envelopes with estimation/provenance flags",
+    "parameters": [
+      "max_gap",
+      "min_pident_difference"
+    ],
+    "purpose": {
+      "en": "Merge adjacent or overlapping alignment blocks of the same sequence pair"
+    },
+    "alias_of": "",
+    "case": "chord",
+    "scope": "documented canonical use; not all combinations",
+    "modes_localized": {
+      "en": "compatible display envelopes with estimation/provenance flags"
+    }
+  },
+  "optimize_ggchord_layout": {
+    "level": "L2",
+    "page": "diagnostics",
+    "anchor": "target-size",
+    "reason": "Reviewed input/output, constraints and runnable canonical section; key-parameter level applies only to listed behavior",
+    "modes": "explicit input sequence order/orientation heuristic, not biological inference",
+    "parameters": [
+      "seq_data",
+      "ribbon_data",
+      "optimize",
+      "weight",
+      "max_iter"
+    ],
+    "purpose": {
+      "en": "Optimize sequence order and orientation for ribbon readability"
+    },
+    "alias_of": "",
+    "case": "chord",
+    "scope": "documented canonical use; not all combinations",
+    "modes_localized": {
+      "en": "explicit input sequence order/orientation heuristic, not biological inference"
+    }
+  },
+  "position_feature_stack": {
+    "level": "L3",
+    "page": "circular-features",
+    "anchor": "stacking",
+    "reason": "Reviewed input/output, constraints and runnable canonical section; key-parameter level applies only to listed behavior",
+    "modes": "feature lanes; base Position before overlap allocation",
+    "parameters": [
+      "spacing",
+      "base_position",
+      "direction"
+    ],
+    "purpose": {
+      "en": "Stack overlapping genes or features on local lanes"
+    },
+    "alias_of": "",
+    "case": "chord",
+    "scope": "documented canonical use; not all combinations",
+    "modes_localized": {
+      "en": "feature lanes; base Position before overlap allocation"
+    }
+  },
+  "position_identity": {
+    "level": "L1",
+    "page": "parameter-atlas",
+    "anchor": "upstream",
+    "reason": "Explicitly classified upstream reexport/object; follows original ggplot2/grid contract; exempt from independent manual requirement",
+    "modes": "upstream; applies only to matching supported ggplot roles",
+    "parameters": [],
+    "purpose": {
+      "en": "Selected ggplot2 helpers for ggchord plots"
+    },
+    "alias_of": "",
+    "case": "chord",
+    "scope": "inherited upstream contract",
+    "modes_localized": {
+      "en": "upstream; applies only to matching supported ggplot roles"
+    }
+  },
+  "position_offset": {
+    "level": "L2",
+    "page": "circular-features",
+    "anchor": "stacking",
+    "reason": "Reviewed input/output, constraints and runnable canonical section; key-parameter level applies only to listed behavior",
+    "modes": "local shared offset on feature/gene layers",
+    "parameters": [
+      "offset"
+    ],
+    "purpose": {
+      "en": "Place both feature strands on one shared band"
+    },
+    "alias_of": "",
+    "case": "circular-features",
+    "scope": "documented canonical use; not all combinations",
+    "modes_localized": {
+      "en": "shared local offset for compatible sequence coordinates"
+    }
+  },
+  "position_strand": {
+    "level": "L2",
+    "page": "parameters",
+    "anchor": "strand",
+    "reason": "Reviewed input/output, constraints and runnable canonical section; key-parameter level applies only to listed behavior",
+    "modes": "local signed placement on valid feature/gene layers",
+    "parameters": [
+      "offset"
+    ],
+    "purpose": {
+      "en": "Place features on opposite sides according to strand"
+    },
+    "alias_of": "",
+    "case": "parameters",
+    "scope": "documented canonical use; not all combinations",
+    "modes_localized": {
+      "en": "local signed placement on valid feature/gene layers"
+    }
+  },
+  "track_band": {
+    "level": "L3",
+    "page": "tracks-statistics",
+    "anchor": "independent-bands",
+    "reason": "Reviewed input/output, constraints and runnable canonical section; key-parameter level applies only to listed behavior",
+    "modes": "all three; one placement and numerical domain per track ID",
+    "parameters": [
+      "id",
+      "side",
+      "order",
+      "width",
+      "gap"
+    ],
+    "purpose": {
+      "en": "Declare a quantitative band along sequence backbones"
+    },
+    "alias_of": "",
+    "case": "tracks",
+    "scope": "documented canonical use; not all combinations",
+    "modes_localized": {
+      "en": "all three; one placement and numerical domain per track ID"
+    }
+  },
+  "PositionIdentity": {
+    "level": "L1",
+    "page": "parameter-atlas",
+    "anchor": "upstream",
+    "reason": "Explicitly classified upstream reexport/object; follows original ggplot2/grid contract; exempt from independent manual requirement",
+    "modes": "upstream; applies only to matching supported ggplot roles",
+    "parameters": [],
+    "purpose": {
+      "en": "Selected ggplot2 helpers for ggchord plots"
+    },
+    "alias_of": "",
+    "case": "chord",
+    "scope": "inherited upstream contract",
+    "modes_localized": {
+      "en": "upstream; applies only to matching supported ggplot roles"
+    }
+  },
+  "prepare_ggchord_data": {
+    "level": "L2",
+    "page": "data",
+    "anchor": "validation",
+    "reason": "Reviewed input/output, constraints and runnable canonical section; key-parameter level applies only to listed behavior",
+    "modes": "workflow preparation; defaults differ from standalone cleaning",
+    "parameters": [
+      "seq_data",
+      "ribbon_data",
+      "gene_data"
+    ],
+    "purpose": {
+      "en": "Prepare named ggchord tables with an explicit audit trail"
+    },
+    "alias_of": "",
+    "case": "real-data",
+    "scope": "documented canonical use; not all combinations",
+    "modes_localized": {
+      "en": "workflow preparation; defaults differ from standalone cleaning"
+    }
+  },
+  "primer_catalog": {
+    "level": "L2",
+    "page": "recognition",
+    "anchor": "catalog",
+    "reason": "Reviewed input/output, constraints and runnable canonical section; key-parameter level applies only to listed behavior",
+    "modes": "catalogue metadata, not a binding search",
+    "parameters": [
+      "set",
+      "aliases"
+    ],
+    "purpose": {
+      "en": "Inspect the bundled sequencing-primer catalogue"
+    },
+    "alias_of": "",
+    "case": "plasmids",
+    "scope": "documented canonical use; not all combinations",
+    "modes_localized": {
+      "en": "catalogue metadata, not a binding search"
+    }
+  },
+  "project_ggchord_features": {
+    "level": "L2",
+    "page": "projection",
+    "anchor": "cds",
+    "reason": "Reviewed input/output, constraints and runnable canonical section; key-parameter level applies only to listed behavior",
+    "modes": "supported amino-acid intervals through explicit CDS segment maps",
+    "parameters": [
+      "feature_data",
+      "cds"
+    ],
+    "purpose": {
+      "en": "Project protein domains or genomic features through a spliced CDS map"
+    },
+    "alias_of": "",
+    "case": "homology",
+    "scope": "documented canonical use; not all combinations",
+    "modes_localized": {
+      "en": "supported amino-acid intervals through explicit CDS segment maps"
+    }
+  },
+  "project_ggchord_links": {
+    "level": "L2",
+    "page": "projection",
+    "anchor": "links",
+    "reason": "Reviewed input/output, constraints and runnable canonical section; key-parameter level applies only to listed behavior",
+    "modes": "known paired protein/CDS correspondence; gaps require justified handling",
+    "parameters": [
+      "link_data",
+      "cds",
+      "ungapped"
+    ],
+    "purpose": {
+      "en": "Project explicitly ungapped protein links to genomic coding segments"
+    },
+    "alias_of": "",
+    "case": "homology",
+    "scope": "documented canonical use; not all combinations",
+    "modes_localized": {
+      "en": "known paired protein/CDS correspondence; gaps require justified handling"
+    }
+  },
+  "read_bed": {
+    "level": "L2",
+    "page": "import-intervals",
+    "anchor": "zero-based",
+    "reason": "Reviewed input/output, constraints and runnable canonical section; key-parameter level applies only to listed behavior",
+    "modes": "zero-based half-open BED converted once",
+    "parameters": [
+      "file",
+      "files"
+    ],
+    "purpose": {
+      "en": "Read BED intervals as ggchord features"
+    },
+    "alias_of": "",
+    "case": "formats",
+    "scope": "documented canonical use; not all combinations",
+    "modes_localized": {
+      "en": "zero-based half-open BED converted once"
+    }
+  },
+  "read_blast": {
+    "level": "L2",
+    "page": "alignments",
+    "anchor": "standard",
+    "reason": "Reviewed input/output, constraints and runnable canonical section; key-parameter level applies only to listed behavior",
+    "modes": "local observed BLAST records; retain q/s coordinate meaning",
+    "parameters": [
+      "file",
+      "files"
+    ],
+    "purpose": {
+      "en": "Read one or more BLAST tabular output files into ribbon_data format"
+    },
+    "alias_of": "",
+    "case": "real-data",
+    "scope": "documented canonical use; not all combinations",
+    "modes_localized": {
+      "en": "local observed BLAST records; retain q/s coordinate meaning"
+    }
+  },
+  "read_fasta_lengths": {
+    "level": "L2",
+    "page": "aligned-sequences",
+    "anchor": "characters",
+    "reason": "Reviewed input/output, constraints and runnable canonical section; key-parameter level applies only to listed behavior",
+    "modes": "local FASTA; declared bp/aa unit and complete lengths",
+    "parameters": [
+      "file",
+      "files",
+      "sequence_unit",
+      "keep_sequence"
+    ],
+    "purpose": {
+      "en": "Read one or more FASTA files into seq_data format"
+    },
+    "alias_of": "",
+    "case": "real-data",
+    "scope": "documented canonical use; not all combinations",
+    "modes_localized": {
+      "en": "local FASTA; declared bp/aa unit and complete lengths"
+    }
+  },
+  "read_genbank": {
+    "level": "L2",
+    "page": "import-sequences",
+    "anchor": "genbank",
+    "reason": "Reviewed input/output, constraints and runnable canonical section; key-parameter level applies only to listed behavior",
+    "modes": "local GenBank; explicit installed Biopython parser; provenance retained",
+    "parameters": [
+      "file",
+      "files",
+      "python",
+      "unsupported"
+    ],
+    "purpose": {
+      "en": "Import local GenBank or GBFF records using an optional mature parser"
+    },
+    "alias_of": "",
+    "case": "formats",
+    "scope": "documented canonical use; not all combinations",
+    "modes_localized": {
+      "en": "local GenBank; explicit installed Biopython parser; provenance retained"
+    }
+  },
+  "read_gff3": {
+    "level": "L2",
+    "page": "real-data",
+    "anchor": "read",
+    "reason": "Reviewed input/output, constraints and runnable canonical section; key-parameter level applies only to listed behavior",
+    "modes": "local one-based inclusive genomic annotation",
+    "parameters": [
+      "file",
+      "files",
+      "unstranded"
+    ],
+    "purpose": {
+      "en": "Read one or more GFF3 files into gene_data format"
+    },
+    "alias_of": "",
+    "case": "real-data",
+    "scope": "documented canonical use; not all combinations",
+    "modes_localized": {
+      "en": "local one-based inclusive genomic annotation"
+    }
+  },
+  "read_paf": {
+    "level": "L2",
+    "page": "import-intervals",
+    "anchor": "zero-based",
+    "reason": "Reviewed input/output, constraints and runnable canonical section; key-parameter level applies only to listed behavior",
+    "modes": "PAF with complete source lengths and strand-aware endpoint conversion",
+    "parameters": [
+      "file",
+      "files"
+    ],
+    "purpose": {
+      "en": "Read PAF mappings as ggchord links"
+    },
+    "alias_of": "",
+    "case": "formats",
+    "scope": "documented canonical use; not all combinations",
+    "modes_localized": {
+      "en": "PAF with complete source lengths and strand-aware endpoint conversion"
+    }
+  },
+  "rel": {
+    "level": "L1",
+    "page": "parameter-atlas",
+    "anchor": "upstream",
+    "reason": "Explicitly classified upstream reexport/object; follows original ggplot2/grid contract; exempt from independent manual requirement",
+    "modes": "upstream; applies only to matching supported ggplot roles",
+    "parameters": [],
+    "purpose": {
+      "en": "Selected ggplot2 helpers for ggchord plots"
+    },
+    "alias_of": "",
+    "case": "chord",
+    "scope": "inherited upstream contract",
+    "modes_localized": {
+      "en": "upstream; applies only to matching supported ggplot roles"
+    }
+  },
+  "scale_feature_fill_manual": {
+    "level": "L2",
+    "page": "scale-families",
+    "anchor": "features",
+    "reason": "Reviewed input/output, constraints and runnable canonical section; key-parameter level applies only to listed behavior",
+    "modes": "all three; matching generic feature role/preset",
+    "parameters": [
+      "values",
+      "limits"
+    ],
+    "purpose": {
+      "en": "Gene, feature and region fill scales"
+    },
+    "alias_of": "",
+    "case": "chord",
+    "scope": "documented canonical use; not all combinations",
+    "modes_localized": {
+      "en": "all three; matching generic feature role/preset"
+    }
+  },
+  "scale_feature_fill_plasmid": {
+    "level": "L2",
+    "page": "scale-families",
+    "anchor": "features",
+    "reason": "Reviewed input/output, constraints and runnable canonical section; key-parameter level applies only to listed behavior",
+    "modes": "all three; matching generic feature role/preset",
+    "parameters": [
+      "limits"
+    ],
+    "purpose": {
+      "en": "Plasmid-map feature presets"
+    },
+    "alias_of": "",
+    "case": "chord",
+    "scope": "documented canonical use; not all combinations",
+    "modes_localized": {
+      "en": "all three; matching generic feature role/preset"
+    }
+  },
+  "scale_feature_shape_manual": {
+    "level": "L2",
+    "page": "scale-families",
+    "anchor": "features",
+    "reason": "Reviewed input/output, constraints and runnable canonical section; key-parameter level applies only to listed behavior",
+    "modes": "all three; matching generic feature role/preset",
+    "parameters": [
+      "values",
+      "limits",
+      "guide",
+      "name"
+    ],
+    "purpose": {
+      "en": "Feature shape scale"
+    },
+    "alias_of": "",
+    "case": "chord",
+    "scope": "documented canonical use; not all combinations",
+    "modes_localized": {
+      "en": "all three; matching generic feature role/preset"
+    }
+  },
+  "scale_feature_shape_plasmid": {
+    "level": "L2",
+    "page": "scale-families",
+    "anchor": "features",
+    "reason": "Reviewed input/output, constraints and runnable canonical section; key-parameter level applies only to listed behavior",
+    "modes": "all three; matching generic feature role/preset",
+    "parameters": [
+      "limits",
+      "guide"
+    ],
+    "purpose": {
+      "en": "Plasmid-map feature presets"
+    },
+    "alias_of": "",
+    "case": "chord",
+    "scope": "documented canonical use; not all combinations",
+    "modes_localized": {
+      "en": "all three; matching generic feature role/preset"
+    }
+  },
+  "scale_gene_fill_manual": {
+    "level": "L2",
+    "page": "scale-families",
+    "anchor": "rings",
+    "reason": "Reviewed input/output, constraints and runnable canonical section; key-parameter level applies only to listed behavior",
+    "modes": "bp gene layers; all three coordinates",
+    "parameters": [
+      "values"
+    ],
+    "purpose": {
+      "en": "Gene, feature and region fill scales"
+    },
+    "alias_of": "",
+    "case": "chord",
+    "scope": "documented canonical use; not all combinations",
+    "modes_localized": {
+      "en": "bp gene layers; compatible backbone coordinates"
+    }
+  },
+  "scale_link_alpha_continuous": {
+    "level": "L2",
+    "page": "scale-families",
+    "anchor": "point-links",
+    "reason": "Reviewed input/output, constraints and runnable canonical section; key-parameter level applies only to listed behavior",
+    "modes": "chord/collinear matching point-link roles",
+    "parameters": [],
+    "purpose": {
+      "en": "Scales for point links"
+    },
+    "alias_of": "",
+    "case": "chord",
+    "scope": "documented canonical use; not all combinations",
+    "modes_localized": {
+      "en": "chord/collinear matching point-link roles"
+    }
+  },
+  "scale_link_alpha_manual": {
+    "level": "L2",
+    "page": "scale-families",
+    "anchor": "point-links",
+    "reason": "Reviewed input/output, constraints and runnable canonical section; key-parameter level applies only to listed behavior",
+    "modes": "chord/collinear matching point-link roles",
+    "parameters": [
+      "values"
+    ],
+    "purpose": {
+      "en": "Scales for point links"
+    },
+    "alias_of": "",
+    "case": "chord",
+    "scope": "documented canonical use; not all combinations",
+    "modes_localized": {
+      "en": "chord/collinear matching point-link roles"
+    }
+  },
+  "scale_link_color_gradientn": {
+    "level": "L2",
+    "page": "scale-families",
+    "anchor": "point-links",
+    "reason": "Reviewed input/output, constraints and runnable canonical section; key-parameter level applies only to listed behavior",
+    "modes": "chord/collinear matching point-link roles",
+    "parameters": [],
+    "purpose": {
+      "en": "Scales for point links"
+    },
+    "alias_of": "scale_link_colour_gradientn",
+    "case": "chord",
+    "scope": "documented canonical use; not all combinations",
+    "modes_localized": {
+      "en": "chord/collinear matching point-link roles"
+    }
+  },
+  "scale_link_color_manual": {
+    "level": "L2",
+    "page": "scale-families",
+    "anchor": "point-links",
+    "reason": "Reviewed input/output, constraints and runnable canonical section; key-parameter level applies only to listed behavior",
+    "modes": "chord/collinear matching point-link roles",
+    "parameters": [
+      "values"
+    ],
+    "purpose": {
+      "en": "Scales for point links"
+    },
+    "alias_of": "scale_link_colour_manual",
+    "case": "chord",
+    "scope": "documented canonical use; not all combinations",
+    "modes_localized": {
+      "en": "chord/collinear matching point-link roles"
+    }
+  },
+  "scale_link_colour_gradientn": {
+    "level": "L2",
+    "page": "scale-families",
+    "anchor": "point-links",
+    "reason": "Reviewed input/output, constraints and runnable canonical section; key-parameter level applies only to listed behavior",
+    "modes": "chord/collinear matching point-link roles",
+    "parameters": [],
+    "purpose": {
+      "en": "Scales for point links"
+    },
+    "alias_of": "",
+    "case": "chord",
+    "scope": "documented canonical use; not all combinations",
+    "modes_localized": {
+      "en": "chord/collinear matching point-link roles"
+    }
+  },
+  "scale_link_colour_manual": {
+    "level": "L2",
+    "page": "scale-families",
+    "anchor": "point-links",
+    "reason": "Reviewed input/output, constraints and runnable canonical section; key-parameter level applies only to listed behavior",
+    "modes": "chord/collinear matching point-link roles",
+    "parameters": [
+      "values"
+    ],
+    "purpose": {
+      "en": "Scales for point links"
+    },
+    "alias_of": "",
+    "case": "chord",
+    "scope": "documented canonical use; not all combinations",
+    "modes_localized": {
+      "en": "chord/collinear matching point-link roles"
+    }
+  },
+  "scale_link_linetype_manual": {
+    "level": "L2",
+    "page": "scale-families",
+    "anchor": "point-links",
+    "reason": "Reviewed input/output, constraints and runnable canonical section; key-parameter level applies only to listed behavior",
+    "modes": "chord/collinear matching point-link roles",
+    "parameters": [
+      "values"
+    ],
+    "purpose": {
+      "en": "Scales for point links"
+    },
+    "alias_of": "",
+    "case": "chord",
+    "scope": "documented canonical use; not all combinations",
+    "modes_localized": {
+      "en": "chord/collinear matching point-link roles"
+    }
+  },
+  "scale_link_linewidth_continuous": {
+    "level": "L2",
+    "page": "scale-families",
+    "anchor": "point-links",
+    "reason": "Reviewed input/output, constraints and runnable canonical section; key-parameter level applies only to listed behavior",
+    "modes": "chord/collinear matching point-link roles",
+    "parameters": [],
+    "purpose": {
+      "en": "Scales for point links"
+    },
+    "alias_of": "",
+    "case": "chord",
+    "scope": "documented canonical use; not all combinations",
+    "modes_localized": {
+      "en": "chord/collinear matching point-link roles"
+    }
+  },
+  "scale_link_linewidth_manual": {
+    "level": "L2",
+    "page": "scale-families",
+    "anchor": "point-links",
+    "reason": "Reviewed input/output, constraints and runnable canonical section; key-parameter level applies only to listed behavior",
+    "modes": "chord/collinear matching point-link roles",
+    "parameters": [
+      "values"
+    ],
+    "purpose": {
+      "en": "Scales for point links"
+    },
+    "alias_of": "",
+    "case": "chord",
+    "scope": "documented canonical use; not all combinations",
+    "modes_localized": {
+      "en": "chord/collinear matching point-link roles"
+    }
+  },
+  "scale_region_fill_manual": {
+    "level": "L2",
+    "page": "scale-families",
+    "anchor": "rings",
+    "reason": "Reviewed input/output, constraints and runnable canonical section; key-parameter level applies only to listed behavior",
+    "modes": "all three; matching region_fill role",
+    "parameters": [
+      "values"
+    ],
+    "purpose": {
+      "en": "Gene, feature and region fill scales"
+    },
+    "alias_of": "",
+    "case": "chord",
+    "scope": "documented canonical use; not all combinations",
+    "modes_localized": {
+      "en": "all three; matching region_fill role"
+    }
+  },
+  "scale_ribbon_alpha_continuous": {
+    "level": "L2",
+    "page": "scale-families",
+    "anchor": "categories",
+    "reason": "Reviewed input/output, constraints and runnable canonical section; key-parameter level applies only to listed behavior",
+    "modes": "chord/collinear matching ribbon roles",
+    "parameters": [
+      "range"
+    ],
+    "purpose": {
+      "en": "Ribbon alpha, outline and linetype scales"
+    },
+    "alias_of": "",
+    "case": "chord",
+    "scope": "documented canonical use; not all combinations",
+    "modes_localized": {
+      "en": "chord/collinear matching ribbon roles"
+    }
+  },
+  "scale_ribbon_alpha_manual": {
+    "level": "L2",
+    "page": "scale-families",
+    "anchor": "categories",
+    "reason": "Reviewed input/output, constraints and runnable canonical section; key-parameter level applies only to listed behavior",
+    "modes": "chord/collinear matching ribbon roles",
+    "parameters": [
+      "values"
+    ],
+    "purpose": {
+      "en": "Ribbon alpha, outline and linetype scales"
+    },
+    "alias_of": "",
+    "case": "chord",
+    "scope": "documented canonical use; not all combinations",
+    "modes_localized": {
+      "en": "chord/collinear matching ribbon roles"
+    }
+  },
+  "scale_ribbon_color_manual": {
+    "level": "L2",
+    "page": "scale-families",
+    "anchor": "categories",
+    "reason": "Reviewed input/output, constraints and runnable canonical section; key-parameter level applies only to listed behavior",
+    "modes": "chord/collinear matching ribbon roles",
+    "parameters": [
+      "values"
+    ],
+    "purpose": {
+      "en": "Ribbon alpha, outline and linetype scales"
+    },
+    "alias_of": "scale_ribbon_colour_manual",
+    "case": "chord",
+    "scope": "documented canonical use; not all combinations",
+    "modes_localized": {
+      "en": "chord/collinear matching ribbon roles"
+    }
+  },
+  "scale_ribbon_colour_manual": {
+    "level": "L2",
+    "page": "scale-families",
+    "anchor": "categories",
+    "reason": "Reviewed input/output, constraints and runnable canonical section; key-parameter level applies only to listed behavior",
+    "modes": "chord/collinear matching ribbon roles",
+    "parameters": [
+      "values"
+    ],
+    "purpose": {
+      "en": "Ribbon alpha, outline and linetype scales"
+    },
+    "alias_of": "",
+    "case": "chord",
+    "scope": "documented canonical use; not all combinations",
+    "modes_localized": {
+      "en": "chord/collinear matching ribbon roles"
+    }
+  },
+  "scale_ribbon_fill_gradientn": {
+    "level": "L2",
+    "page": "scale-families",
+    "anchor": "numeric",
+    "reason": "Reviewed input/output, constraints and runnable canonical section; key-parameter level applies only to listed behavior",
+    "modes": "chord/collinear matching ribbon roles",
+    "parameters": [
+      "values",
+      "guide",
+      "colours"
+    ],
+    "purpose": {
+      "en": "Ribbon fill scales"
+    },
+    "alias_of": "",
+    "case": "chord",
+    "scope": "documented canonical use; not all combinations",
+    "modes_localized": {
+      "en": "chord/collinear matching ribbon roles"
+    }
+  },
+  "scale_ribbon_fill_identity": {
+    "level": "L2",
+    "page": "scale-families",
+    "anchor": "identity",
+    "reason": "Reviewed input/output, constraints and runnable canonical section; key-parameter level applies only to listed behavior",
+    "modes": "chord/collinear matching ribbon roles",
+    "parameters": [],
+    "purpose": {
+      "en": "Ribbon fill scales"
+    },
+    "alias_of": "",
+    "case": "chord",
+    "scope": "documented canonical use; not all combinations",
+    "modes_localized": {
+      "en": "chord/collinear matching ribbon roles"
+    }
+  },
+  "scale_ribbon_fill_manual": {
+    "level": "L2",
+    "page": "scale-families",
+    "anchor": "categories",
+    "reason": "Reviewed input/output, constraints and runnable canonical section; key-parameter level applies only to listed behavior",
+    "modes": "chord/collinear matching ribbon roles",
+    "parameters": [
+      "values"
+    ],
+    "purpose": {
+      "en": "Ribbon fill scales"
+    },
+    "alias_of": "",
+    "case": "chord",
+    "scope": "documented canonical use; not all combinations",
+    "modes_localized": {
+      "en": "chord/collinear matching ribbon roles"
+    }
+  },
+  "scale_ribbon_fill_stepsn": {
+    "level": "L2",
+    "page": "scale-families",
+    "anchor": "numeric",
+    "reason": "Reviewed input/output, constraints and runnable canonical section; key-parameter level applies only to listed behavior",
+    "modes": "chord/collinear matching ribbon roles",
+    "parameters": [
+      "values",
+      "guide",
+      "colours"
+    ],
+    "purpose": {
+      "en": "Ribbon fill scales"
+    },
+    "alias_of": "",
+    "case": "chord",
+    "scope": "documented canonical use; not all combinations",
+    "modes_localized": {
+      "en": "chord/collinear matching ribbon roles"
+    }
+  },
+  "scale_ribbon_linetype_manual": {
+    "level": "L2",
+    "page": "scale-families",
+    "anchor": "categories",
+    "reason": "Reviewed input/output, constraints and runnable canonical section; key-parameter level applies only to listed behavior",
+    "modes": "chord/collinear matching ribbon roles",
+    "parameters": [
+      "values"
+    ],
+    "purpose": {
+      "en": "Ribbon alpha, outline and linetype scales"
+    },
+    "alias_of": "",
+    "case": "chord",
+    "scope": "documented canonical use; not all combinations",
+    "modes_localized": {
+      "en": "chord/collinear matching ribbon roles"
+    }
+  },
+  "scale_seq_color_manual": {
+    "level": "L2",
+    "page": "scale-families",
+    "anchor": "categories",
+    "reason": "Reviewed input/output, constraints and runnable canonical section; key-parameter level applies only to listed behavior",
+    "modes": "all three; matching sequence colour role",
+    "parameters": [
+      "values"
+    ],
+    "purpose": {
+      "en": "Sequence colour scales"
+    },
+    "alias_of": "scale_seq_colour_manual",
+    "case": "chord",
+    "scope": "documented canonical use; not all combinations",
+    "modes_localized": {
+      "en": "all three; matching sequence colour role"
+    }
+  },
+  "scale_seq_colour_manual": {
+    "level": "L2",
+    "page": "scale-families",
+    "anchor": "categories",
+    "reason": "Reviewed input/output, constraints and runnable canonical section; key-parameter level applies only to listed behavior",
+    "modes": "all three; matching sequence colour role",
+    "parameters": [
+      "values"
+    ],
+    "purpose": {
+      "en": "Sequence colour scales"
+    },
+    "alias_of": "",
+    "case": "chord",
+    "scope": "documented canonical use; not all combinations",
+    "modes_localized": {
+      "en": "all three; matching sequence colour role"
+    }
+  },
+  "scale_seq_position_continuous": {
+    "level": "L2",
+    "page": "views",
+    "anchor": "focus",
+    "reason": "Reviewed input/output, constraints and runnable canonical section; key-parameter level applies only to listed behavior",
+    "modes": "all three; position axis, separate from the collinear ruler",
+    "parameters": [
+      "limits",
+      "breaks",
+      "name"
+    ],
+    "purpose": {
+      "en": "Genomic sequence position scale"
+    },
+    "alias_of": "",
+    "case": "chord",
+    "scope": "documented canonical use; not all combinations",
+    "modes_localized": {
+      "en": "all three; position axis, separate from the collinear ruler"
+    }
+  },
+  "scale_seq_ring_manual": {
+    "level": "L2",
+    "page": "scale-families",
+    "anchor": "rings",
+    "reason": "Reviewed input/output, constraints and runnable canonical section; key-parameter level applies only to listed behavior",
+    "modes": "chord/circular; positive declared radii; linear rejected",
+    "parameters": [
+      "values",
+      "limits",
+      "guide",
+      "name"
+    ],
+    "purpose": {
+      "en": "Explicit sequence ring scale"
+    },
+    "alias_of": "",
+    "case": "chord",
+    "scope": "documented canonical use; not all combinations",
+    "modes_localized": {
+      "en": "chord/circular; positive declared radii; linear rejected"
+    }
+  },
+  "scale_track_colour_gradientn": {
+    "level": "L2",
+    "page": "scale-families",
+    "anchor": "tracks",
+    "reason": "Reviewed input/output, constraints and runnable canonical section; key-parameter level applies only to listed behavior",
+    "modes": "all three; scale ID must match track_band",
+    "parameters": [
+      "guide",
+      "colours"
+    ],
+    "purpose": {
+      "en": "Set a track's fill or colour mapping"
+    },
+    "alias_of": "",
+    "case": "tracks",
+    "scope": "documented canonical use; not all combinations",
+    "modes_localized": {
+      "en": "all three; scale ID must match track_band"
+    }
+  },
+  "scale_track_colour_manual": {
+    "level": "L2",
+    "page": "scale-families",
+    "anchor": "tracks",
+    "reason": "Reviewed input/output, constraints and runnable canonical section; key-parameter level applies only to listed behavior",
+    "modes": "all three; scale ID must match track_band",
+    "parameters": [
+      "values"
+    ],
+    "purpose": {
+      "en": "Set a track's fill or colour mapping"
+    },
+    "alias_of": "",
+    "case": "tracks",
+    "scope": "documented canonical use; not all combinations",
+    "modes_localized": {
+      "en": "all three; scale ID must match track_band"
+    }
+  },
+  "scale_track_fill_gradientn": {
+    "level": "L2",
+    "page": "scale-families",
+    "anchor": "tracks",
+    "reason": "Reviewed input/output, constraints and runnable canonical section; key-parameter level applies only to listed behavior",
+    "modes": "all three; scale ID must match track_band",
+    "parameters": [
+      "guide",
+      "colours"
+    ],
+    "purpose": {
+      "en": "Set a track's fill or colour mapping"
+    },
+    "alias_of": "",
+    "case": "tracks",
+    "scope": "documented canonical use; not all combinations",
+    "modes_localized": {
+      "en": "all three; scale ID must match track_band"
+    }
+  },
+  "scale_track_fill_manual": {
+    "level": "L2",
+    "page": "scale-families",
+    "anchor": "tracks",
+    "reason": "Reviewed input/output, constraints and runnable canonical section; key-parameter level applies only to listed behavior",
+    "modes": "all three; scale ID must match track_band",
+    "parameters": [
+      "values"
+    ],
+    "purpose": {
+      "en": "Set a track's fill or colour mapping"
+    },
+    "alias_of": "",
+    "case": "tracks",
+    "scope": "documented canonical use; not all combinations",
+    "modes_localized": {
+      "en": "all three; scale ID must match track_band"
+    }
+  },
+  "scale_track_value_continuous": {
+    "level": "L2",
+    "page": "scale-families",
+    "anchor": "tracks",
+    "reason": "Reviewed input/output, constraints and runnable canonical section; key-parameter level applies only to listed behavior",
+    "modes": "all three; scale ID must match track_band",
+    "parameters": [
+      "limits",
+      "breaks",
+      "guide",
+      "name"
+    ],
+    "purpose": {
+      "en": "Set a named track's numerical height scale"
+    },
+    "alias_of": "",
+    "case": "tracks",
+    "scope": "documented canonical use; not all combinations",
+    "modes_localized": {
+      "en": "all three; scale ID must match track_band"
+    }
+  },
+  "segment_ggchord_data": {
+    "level": "L2",
+    "page": "views",
+    "anchor": "segments",
+    "reason": "Reviewed input/output, constraints and runnable canonical section; key-parameter level applies only to listed behavior",
+    "modes": "independent windows and declared local display reversal",
+    "parameters": [
+      "seq_data",
+      "ribbon_data",
+      "gene_data",
+      "windows",
+      "point_data",
+      "cross_gap",
+      "max_links"
+    ],
+    "purpose": {
+      "en": "Prepare independent windows for a segmented linear display"
+    },
+    "alias_of": "",
+    "case": "views",
+    "scope": "documented canonical use; not all combinations",
+    "modes_localized": {
+      "en": "independent windows and declared local display reversal"
+    }
+  },
+  "stat_ribbon_bundle": {
+    "level": "L3",
+    "page": "ribbons",
+    "anchor": "statistics-bundle",
+    "reason": "Reviewed input/output, constraints and runnable canonical section; key-parameter level applies only to listed behavior",
+    "modes": "chord/collinear ribbon layer; explicit aggregation",
+    "parameters": [
+      "bins",
+      "min_bundle",
+      "weight",
+      "group_by"
+    ],
+    "purpose": {
+      "en": "Bundle ribbons as a ggchord stat"
+    },
+    "alias_of": "",
+    "case": "chord",
+    "scope": "documented canonical use; not all combinations",
+    "modes_localized": {
+      "en": "chord/collinear ribbon layer; explicit aggregation"
+    }
+  },
+  "stat_ribbon_density": {
+    "level": "L3",
+    "page": "ribbons",
+    "anchor": "statistics-density",
+    "reason": "Reviewed input/output, constraints and runnable canonical section; key-parameter level applies only to listed behavior",
+    "modes": "chord/collinear ribbon layer; one ribbon per source observation",
+    "parameters": [
+      "bins",
+      "weight",
+      "group_by"
+    ],
+    "purpose": {
+      "en": "Compute local ribbon density as a ggchord stat"
+    },
+    "alias_of": "",
+    "case": "chord",
+    "scope": "documented canonical use; not all combinations",
+    "modes_localized": {
+      "en": "chord/collinear ribbon layer; one ribbon per source observation"
+    }
+  },
+  "theme": {
+    "level": "L1",
+    "page": "parameter-atlas",
+    "anchor": "upstream",
+    "reason": "Explicitly classified upstream reexport/object; follows original ggplot2/grid contract; exempt from independent manual requirement",
+    "modes": "upstream; applies only to matching supported ggplot roles",
+    "parameters": [],
+    "purpose": {
+      "en": "Selected ggplot2 helpers for ggchord plots"
+    },
+    "alias_of": "",
+    "case": "chord",
+    "scope": "inherited upstream contract",
+    "modes_localized": {
+      "en": "upstream; applies only to matching supported ggplot roles"
+    }
+  },
+  "theme_ggchord": {
+    "level": "L2",
+    "page": "scale-families",
+    "anchor": "themes",
+    "reason": "Reviewed input/output, constraints and runnable canonical section; key-parameter level applies only to listed behavior",
+    "modes": "non-data style; plasmid preset intended circular",
+    "parameters": [
+      "axis",
+      "axis.text",
+      "axis.gap"
+    ],
+    "purpose": {
+      "en": "ggchord themes"
+    },
+    "alias_of": "",
+    "case": "chord",
+    "scope": "documented canonical use; not all combinations",
+    "modes_localized": {
+      "en": "non-data style; plasmid preset intended circular"
+    }
+  },
+  "theme_ggchord_dark": {
+    "level": "L2",
+    "page": "scale-families",
+    "anchor": "themes",
+    "reason": "Reviewed input/output, constraints and runnable canonical section; key-parameter level applies only to listed behavior",
+    "modes": "non-data style; plasmid preset intended circular",
+    "parameters": [
+      "axis",
+      "axis.text",
+      "axis.gap"
+    ],
+    "purpose": {
+      "en": "ggchord themes"
+    },
+    "alias_of": "",
+    "case": "chord",
+    "scope": "documented canonical use; not all combinations",
+    "modes_localized": {
+      "en": "non-data style; plasmid preset intended circular"
+    }
+  },
+  "theme_ggchord_minimal": {
+    "level": "L2",
+    "page": "scale-families",
+    "anchor": "themes",
+    "reason": "Reviewed input/output, constraints and runnable canonical section; key-parameter level applies only to listed behavior",
+    "modes": "non-data style; plasmid preset intended circular",
+    "parameters": [
+      "axis",
+      "axis.text",
+      "axis.gap"
+    ],
+    "purpose": {
+      "en": "ggchord themes"
+    },
+    "alias_of": "",
+    "case": "chord",
+    "scope": "documented canonical use; not all combinations",
+    "modes_localized": {
+      "en": "non-data style; plasmid preset intended circular"
+    }
+  },
+  "theme_ggchord_plasmid": {
+    "level": "L2",
+    "page": "scale-families",
+    "anchor": "themes",
+    "reason": "Reviewed input/output, constraints and runnable canonical section; key-parameter level applies only to listed behavior",
+    "modes": "non-data style; plasmid preset intended circular",
+    "parameters": [
+      "axis",
+      "axis.text",
+      "axis.gap"
+    ],
+    "purpose": {
+      "en": "ggchord themes"
+    },
+    "alias_of": "",
+    "case": "chord",
+    "scope": "documented canonical use; not all combinations",
+    "modes_localized": {
+      "en": "non-data style; plasmid preset intended circular"
+    }
+  },
+  "theme_ggchord_publication": {
+    "level": "L2",
+    "page": "scale-families",
+    "anchor": "themes",
+    "reason": "Reviewed input/output, constraints and runnable canonical section; key-parameter level applies only to listed behavior",
+    "modes": "non-data style; plasmid preset intended circular",
+    "parameters": [
+      "axis",
+      "axis.text",
+      "axis.gap"
+    ],
+    "purpose": {
+      "en": "ggchord themes"
+    },
+    "alias_of": "",
+    "case": "chord",
+    "scope": "documented canonical use; not all combinations",
+    "modes_localized": {
+      "en": "non-data style; plasmid preset intended circular"
+    }
+  },
+  "unit": {
+    "level": "L1",
+    "page": "parameter-atlas",
+    "anchor": "upstream",
+    "reason": "Explicitly classified upstream reexport/object; follows original ggplot2/grid contract; exempt from independent manual requirement",
+    "modes": "upstream; applies only to matching supported ggplot roles",
+    "parameters": [],
+    "purpose": {
+      "en": "Physical units and direction arrows"
+    },
+    "alias_of": "",
+    "case": "chord",
+    "scope": "inherited upstream contract",
+    "modes_localized": {
+      "en": "upstream; applies only to matching supported ggplot roles"
+    }
+  },
+  "validate_ggchord_data": {
+    "level": "L2",
+    "page": "data",
+    "anchor": "validation",
+    "reason": "Reviewed input/output, constraints and runnable canonical section; key-parameter level applies only to listed behavior",
+    "modes": "validation reports, no silent input repair",
+    "parameters": [
+      "seq_data",
+      "ribbon_data",
+      "gene_data"
+    ],
+    "purpose": {
+      "en": "Validate ggchord input data before plotting"
+    },
+    "alias_of": "",
+    "case": "real-data",
+    "scope": "documented canonical use; not all combinations",
+    "modes_localized": {
+      "en": "validation reports, no silent input repair"
+    }
+  },
+  "validate_ggchord_hierarchy": {
+    "level": "L2",
+    "page": "data",
+    "anchor": "hierarchy",
+    "reason": "Reviewed input/output, constraints and runnable canonical section; key-parameter level applies only to listed behavior",
+    "modes": "explicit genome/contig membership; never inferred from ID prefixes",
+    "parameters": [
+      "genomes",
+      "strict"
+    ],
+    "purpose": {
+      "en": "Validate explicit genome and contig relationships"
+    },
+    "alias_of": "",
+    "case": "real-data",
+    "scope": "documented canonical use; not all combinations",
+    "modes_localized": {
+      "en": "explicit genome/contig membership; never inferred from ID prefixes"
+    }
+  },
+  "view_ggchord": {
+    "level": "L2",
+    "page": "output",
+    "anchor": "size",
+    "reason": "Reviewed input/output, constraints and runnable canonical section; key-parameter level applies only to listed behavior",
+    "modes": "target-size preview of all supported plots; temporary path output",
+    "parameters": [
+      "width",
+      "height",
+      "units",
+      "dpi",
+      "device",
+      "viewer"
+    ],
+    "purpose": {
+      "en": "Preview a ggchord plot at its intended export size"
+    },
+    "alias_of": "",
+    "case": "chord",
+    "scope": "documented canonical use; not all combinations",
+    "modes_localized": {
+      "en": "target-size preview of all supported plots; temporary path output"
+    }
+  },
+  "waiver": {
+    "level": "L1",
+    "page": "parameter-atlas",
+    "anchor": "upstream",
+    "reason": "Explicitly classified upstream reexport/object; follows original ggplot2/grid contract; exempt from independent manual requirement",
+    "modes": "upstream; applies only to matching supported ggplot roles",
+    "parameters": [],
+    "purpose": {
+      "en": "Selected ggplot2 helpers for ggchord plots"
+    },
+    "alias_of": "",
+    "case": "chord",
+    "scope": "inherited upstream contract",
+    "modes_localized": {
+      "en": "upstream; applies only to matching supported ggplot roles"
+    }
+  },
+  "geom_track": {
+    "level": "L2",
+    "page": "tracks-statistics",
+    "anchor": "tracks",
+    "reason": "Explicit source/result example and documented first support matrix; local Foundation checks",
+    "modes": "Chord/Circular/Collinear/Sankey within the first support matrix; Radial per view-expansion matrix",
+    "parameters": [
+      "geom",
+      "stat",
+      "track",
+      "position",
+      "mapping"
+    ],
+    "purpose": {
+      "en": "Source-space statistical tracks"
+    },
+    "alias_of": "",
+    "case": "multi-sequence",
+    "scope": "Foundation first implementation",
+    "modes_localized": {
+      "en": "Chord/Circular/Collinear/Sankey within the first support matrix; Radial per new-view support matrix"
+    }
+  },
+  "geom_track_col": {
+    "level": "L2",
+    "page": "tracks-statistics",
+    "anchor": "tracks",
+    "reason": "Explicit source/result example and documented first support matrix; local Foundation checks",
+    "modes": "Chord/Circular/Collinear/Sankey; Radial per view-expansion matrix",
+    "parameters": [
+      "track",
+      "position",
+      "mapping"
+    ],
+    "purpose": {
+      "en": "Display supplied numerical heights"
+    },
+    "alias_of": "",
+    "case": "multi-sequence",
+    "scope": "Foundation first implementation",
+    "modes_localized": {
+      "en": "Chord/Circular/Collinear/Sankey; Radial per new-view support matrix"
+    }
+  },
+  "coord_sankey": {
+    "level": "L2",
+    "page": "sankey",
+    "anchor": "sankey",
+    "reason": "Explicit source/result example and documented first support matrix; local Foundation checks",
+    "modes": "Mirrored two-column relationships",
+    "parameters": [
+      "self_links",
+      "column_gap"
+    ],
+    "purpose": {
+      "en": "Mirrored query-left/subject-right interval relationships"
+    },
+    "alias_of": "",
+    "case": "multi-sequence",
+    "scope": "Foundation first implementation",
+    "modes_localized": {
+      "en": "Mirrored two-column relationships"
+    }
+  },
+  "coord_dotplot": {
+    "level": "L2",
+    "page": "dotplot-start",
+    "anchor": "dotplot",
+    "reason": "Runnable source-backed example, endpoint/source semantics and explicit support matrix; no all-parameter guarantee",
+    "modes": "Dotplot",
+    "parameters": [],
+    "purpose": {
+      "en": "Two-axis HSP projection"
+    },
+    "alias_of": "",
+    "case": "dotplot-start",
+    "scope": "Native endpoints and per-coordinate explicit support contract",
+    "modes_localized": {
+      "en": "Identity HSP segments on independent native axes"
+    }
+  },
+  "geom_alignment_segment": {
+    "level": "L2",
+    "page": "dotplot-start",
+    "anchor": "dotplot",
+    "reason": "Runnable source-backed example, endpoint/source semantics and explicit support matrix; no all-parameter guarantee",
+    "modes": "Dotplot",
+    "parameters": [],
+    "purpose": {
+      "en": "Draw complete HSP endpoints"
+    },
+    "alias_of": "",
+    "case": "dotplot-start",
+    "scope": "Native endpoints and per-coordinate explicit support contract",
+    "modes_localized": {
+      "en": "Identity HSP segments on independent native axes"
+    }
+  },
+  "coord_radial_synteny": {
+    "level": "L2",
+    "page": "radial-synteny",
+    "anchor": "radial",
+    "reason": "Runnable source-backed example, endpoint/source semantics and explicit support matrix; no all-parameter guarantee",
+    "modes": "Radial synteny",
+    "parameters": [],
+    "purpose": {
+      "en": "Project linear sequences onto radial spokes"
+    },
+    "alias_of": "",
+    "case": "radial-synteny",
+    "scope": "Native endpoints and per-coordinate explicit support contract",
+    "modes_localized": {
+      "en": "Proportional/equal spokes, cyclic actual HSPs and shared feature/Track frames"
+    }
+  },
+  "ggchord_fusion": {
+    "level": "L2",
+    "page": "fusion-routing",
+    "anchor": "intervals",
+    "reason": "Runnable source-backed composition with explicit boundaries and measured interval exports",
+    "modes": "Fusion",
+    "parameters": [
+      "center",
+      "center_size",
+      "layout",
+      "allow_overlap",
+      "center_box"
+    ],
+    "purpose": {
+      "en": "Compose independent genomic panels"
+    },
+    "alias_of": "",
+    "case": "fusion",
+    "scope": "Explicit source-aware composition, physical placement and nested leaf paths; no inferred alignments or silent statistical rebuilding",
+    "modes_localized": {
+      "en": "Registered genomic/character panels; eight sides, explicit boxes and nested paths"
+    }
+  },
+  "fusion_panel": {
+    "level": "L2",
+    "page": "fusion-layout",
+    "anchor": "advanced-placement",
+    "reason": "Runnable source-backed composition with explicit boundaries and measured interval exports",
+    "modes": "Fusion",
+    "parameters": [
+      "plot",
+      "id",
+      "side",
+      "size",
+      "box",
+      "angle",
+      "distance"
+    ],
+    "purpose": {
+      "en": "Register a panel at a physical side"
+    },
+    "alias_of": "",
+    "case": "fusion",
+    "scope": "Explicit source-aware composition, physical placement and nested leaf paths; no inferred alignments or silent statistical rebuilding",
+    "modes_localized": {
+      "en": "Registered genomic/character panels; eight sides, explicit boxes and nested paths"
+    }
+  },
+  "fusion_ribbon": {
+    "level": "L2",
+    "page": "fusion-routing",
+    "anchor": "intervals",
+    "reason": "Runnable source-backed composition with explicit boundaries and measured interval exports",
+    "modes": "Registered genomic plots, nested Fusion and registered character details; explicit panel/instance routing; Dotplot excluded",
+    "parameters": [],
+    "purpose": {
+      "en": "Connect full source intervals"
+    },
+    "alias_of": "",
+    "case": "fusion",
+    "scope": "F0/F1 static composition; no F2/F3 guarantee",
+    "modes_localized": {
+      "en": "Registered genomic plots, nested Fusion and registered character details; explicit panel/instance routing; Dotplot excluded"
+    }
+  },
+  "export_ggchord_fusion": {
+    "level": "L2",
+    "page": "fusion-routing",
+    "anchor": "export",
+    "reason": "Runnable source-backed composition with explicit boundaries and measured interval exports",
+    "modes": "Registered genomic plots, nested Fusion and registered character details; explicit panel/instance routing; Dotplot excluded",
+    "parameters": [],
+    "purpose": {
+      "en": "Export measured composition fronts and sources"
+    },
+    "alias_of": "",
+    "case": "fusion",
+    "scope": "F0/F1 static composition; no F2/F3 guarantee",
+    "modes_localized": {
+      "en": "Registered genomic plots, nested Fusion and registered character details; explicit panel/instance routing; Dotplot excluded"
+    }
+  },
+  "read_bedpe": {
+    "level": "L2",
+    "page": "import-intervals",
+    "anchor": "bedpe",
+    "reason": "Runnable observed-interval round trip and explicit missing-anchor/strand boundaries",
+    "modes": "Input adapter",
+    "parameters": [],
+    "purpose": {
+      "en": "Read paired genomic intervals without inventing alignment evidence"
+    },
+    "alias_of": "",
+    "case": "formats",
+    "scope": "Tab-separated BEDPE; raw fields and explicit missing-anchor policy",
+    "modes_localized": {
+      "en": "Canonical q/s intervals, paired-anchor direction and provenance"
+    }
+  },
+  "as_ggchord_alignment": {
+    "level": "L2",
+    "page": "aligned-sequences",
+    "anchor": "aligned-source",
+    "reason": "Runnable real aligned-character workflow and explicit source/column/physical-space boundaries",
+    "modes": "Local aligned characters",
+    "parameters": [
+      "sequences",
+      "alphabet",
+      "source_data"
+    ],
+    "purpose": {
+      "en": "Adapt existing aligned strings with exact nullable source positions"
+    },
+    "alias_of": "",
+    "case": "formats",
+    "scope": "Existing alignment or local excerpt; no new alignment, macro Coord projection or CDS inference",
+    "modes_localized": {
+      "en": "Existing DNA/RNA/AA columns; Cartesian local cells; explicit source mapping"
+    }
+  },
+  "read_aligned_fasta": {
+    "level": "L2",
+    "page": "aligned-sequences",
+    "anchor": "aligned-characters",
+    "reason": "Runnable real aligned-character workflow and explicit source/column/physical-space boundaries",
+    "modes": "Local aligned characters",
+    "parameters": [
+      "file",
+      "alphabet",
+      "source_file"
+    ],
+    "purpose": {
+      "en": "Read existing DNA/RNA/AA alignment characters without computing a new alignment"
+    },
+    "alias_of": "",
+    "case": "formats",
+    "scope": "Existing alignment or local excerpt; no new alignment, macro Coord projection or CDS inference",
+    "modes_localized": {
+      "en": "Existing DNA/RNA/AA columns; Cartesian local cells; explicit source mapping"
+    }
+  },
+  "map_alignment_position": {
+    "level": "L2",
+    "page": "aligned-sequences",
+    "anchor": "aligned-characters",
+    "reason": "Runnable real aligned-character workflow and explicit source/column/physical-space boundaries",
+    "modes": "Local aligned characters",
+    "parameters": [
+      "accver",
+      "position",
+      "inverse"
+    ],
+    "purpose": {
+      "en": "Look up exact alignment columns and source positions in a selected row"
+    },
+    "alias_of": "",
+    "case": "formats",
+    "scope": "Existing alignment or local excerpt; no new alignment, macro Coord projection or CDS inference",
+    "modes_localized": {
+      "en": "Existing DNA/RNA/AA columns; Cartesian local cells; explicit source mapping"
+    }
+  },
+  "geom_residue": {
+    "level": "L2",
+    "page": "aligned-sequences",
+    "anchor": "aligned-characters",
+    "reason": "Runnable real aligned-character workflow and explicit source/column/physical-space boundaries",
+    "modes": "Local aligned characters",
+    "parameters": [
+      "mapping",
+      "overflow",
+      "line_width"
+    ],
+    "purpose": {
+      "en": "Draw local characters with measured physical space and explicit tile/error policy"
+    },
+    "alias_of": "",
+    "case": "formats",
+    "scope": "Existing alignment or local excerpt; no new alignment, macro Coord projection or CDS inference",
+    "modes_localized": {
+      "en": "Existing DNA/RNA/AA columns; Cartesian local cells; explicit source mapping"
+    }
+  },
+  "magnify_ggchord": {
+    "level": "L2",
+    "page": "fusion-details",
+    "anchor": "magnify",
+    "reason": "Runnable source-backed locus and explicit local detail; source/leader/stat boundaries reviewed",
+    "modes": "Registered genomic plots, nested Fusion and registered character details; explicit panel/instance routing; Dotplot excluded",
+    "parameters": [
+      "region",
+      "detail_plot",
+      "side",
+      "connector",
+      "center_box",
+      "detail_box",
+      "allow_overlap"
+    ],
+    "purpose": {
+      "en": "Connect a real source interval to an explicit independent local detail plot"
+    },
+    "alias_of": "",
+    "case": "fusion",
+    "scope": "Explicit source-aware composition, physical placement and nested leaf paths; no inferred alignments or silent statistical rebuilding",
+    "modes_localized": {
+      "en": "Registered genomic plots, nested Fusion and registered character details; explicit panel/instance routing; Dotplot excluded"
+    }
+  },
+  "adapt_ggchord": {
+    "level": "L2",
+    "page": "styling",
+    "anchor": "adaptive",
+    "reason": "Runnable real-data policy and target-size diagnostics; focused mode and constraint evidence in check-adaptive.R",
+    "modes": "fixed; scale; adaptive",
+    "parameters": [
+      "mode",
+      "reference_size",
+      "text_scale_range",
+      "min_text_size"
+    ],
+    "purpose": {
+      "en": "Opt into bounded theme scaling and joint guide layout at the target size"
+    },
+    "alias_of": "",
+    "case": "styling",
+    "scope": "native guides and theme defaults within individual plots and Fusion panels",
+    "modes_localized": {
+      "en": "fixed/scale/adaptive; explicit settings remain authoritative; no global collision guarantee"
+    }
+  },
+  "register_ggchord_alignment": {
+    "level": "L2",
+    "page": "fusion-details",
+    "anchor": "character-detail",
+    "reason": "Runnable source-backed M2 workflow with explicit coordinate and translation boundaries",
+    "modes": "Explicit source-backed M2",
+    "parameters": [
+      "plot",
+      "data"
+    ],
+    "purpose": {
+      "en": "Register exact character/source positions for independent Fusion details"
+    },
+    "alias_of": "",
+    "case": "fusion",
+    "scope": "Exact source characters and observed codons; no inferred alignment or missing phase",
+    "modes_localized": {
+      "en": "Explicit source/column map; independent Cartesian detail; complete observed codons"
+    }
+  },
+  "translate_ggchord_cds": {
+    "level": "L2",
+    "page": "aligned-sequences",
+    "anchor": "cds-translation",
+    "reason": "Runnable source-backed M2 workflow with explicit coordinate and translation boundaries",
+    "modes": "Explicit source-backed M2",
+    "parameters": [
+      "cds",
+      "sequences",
+      "alphabet",
+      "initiation",
+      "ambiguous"
+    ],
+    "purpose": {
+      "en": "Translate real CDS strings with codon provenance using optional Biostrings"
+    },
+    "alias_of": "",
+    "case": "formats",
+    "scope": "Exact source characters and observed codons; no inferred alignment or missing phase",
+    "modes_localized": {
+      "en": "Explicit source/column map; independent Cartesian detail; complete observed codons"
+    }
+  },
+  "read_bedgraph": {
+    "level": "L2",
+    "page": "import-signals",
+    "anchor": "signals",
+    "reason": "Real packaged GC input, explicit coordinates and units; optional binary query and platform boundary",
+    "modes": "quantitative Track input",
+    "parameters": [
+      "file",
+      "files",
+      "source_file"
+    ],
+    "purpose": {
+      "en": "Import continuous interval signals without inferring units"
+    },
+    "alias_of": "",
+    "case": "formats",
+    "scope": "signal import with explicit source semantics",
+    "modes_localized": {
+      "en": "quantitative Track input; BigWig optional on supported platforms"
+    }
+  },
+  "read_bigwig": {
+    "level": "L2",
+    "page": "import-signals",
+    "anchor": "signals",
+    "reason": "Real packaged GC input, explicit coordinates and units; optional binary query and platform boundary",
+    "modes": "quantitative Track input",
+    "parameters": [
+      "file",
+      "files",
+      "which",
+      "source_file"
+    ],
+    "purpose": {
+      "en": "Import continuous interval signals without inferring units"
+    },
+    "alias_of": "",
+    "case": "formats",
+    "scope": "signal import with explicit source semantics",
+    "modes_localized": {
+      "en": "quantitative Track input; BigWig optional on supported platforms"
+    }
+  },
+  "read_vcf": {
+    "level": "L2",
+    "page": "import-relations",
+    "anchor": "variants",
+    "reason": "Real optional-package VCF with complete source evidence; structural/BCF controls in directed audit",
+    "modes": "variant feature input; optional structural pair input",
+    "parameters": [
+      "file",
+      "files",
+      "structural",
+      "python",
+      "source_file"
+    ],
+    "purpose": {
+      "en": "Import variant records and explicitly decoded structural breakpoints"
+    },
+    "alias_of": "",
+    "case": "formats",
+    "scope": "reference allele spans and separately decoded uncertainty intervals",
+    "modes_localized": {
+      "en": "VCF; BCF with explicit pysam Python; optional structural decoder"
+    }
+  },
+  "read_maf": {
+    "level": "L2",
+    "page": "import-relations",
+    "anchor": "genome-alignments",
+    "reason": "Pinned unchanged real genomic input; directional endpoints and source evidence verified in dedicated audit",
+    "modes": "MAF exact cells; chain intervals without characters",
+    "parameters": [
+      "file",
+      "files",
+      "alphabet",
+      "python",
+      "source_file"
+    ],
+    "purpose": {
+      "en": "Read existing genomic alignment blocks and source coordinates"
+    },
+    "alias_of": "",
+    "case": "formats",
+    "scope": "existing alignment source input with explicit coordinate and identity boundaries",
+    "modes_localized": {
+      "en": "optional Biopython; MAF cells and chain intervals"
+    }
+  },
+  "read_chain": {
+    "level": "L2",
+    "page": "import-relations",
+    "anchor": "genome-alignments",
+    "reason": "Pinned unchanged real genomic input; directional endpoints and source evidence verified in dedicated audit",
+    "modes": "MAF exact cells; chain intervals without characters",
+    "parameters": [
+      "file",
+      "files",
+      "query_ids",
+      "subject_ids",
+      "sequence_unit",
+      "python",
+      "source_file"
+    ],
+    "purpose": {
+      "en": "Read existing genomic alignment blocks and source coordinates"
+    },
+    "alias_of": "",
+    "case": "formats",
+    "scope": "existing alignment source input with explicit coordinate and identity boundaries",
+    "modes_localized": {
+      "en": "optional Biopython; MAF cells and chain intervals"
+    }
+  },
+  "read_delta": {
+    "level": "L2",
+    "page": "import-relations",
+    "anchor": "delta",
+    "reason": "Unchanged source-backed translated delta input and native metric/coordinate distinction; direct two-mode verification",
+    "modes": "existing NUCMER/PROMER results; no aligner",
+    "parameters": [
+      "file",
+      "files",
+      "executable",
+      "query_ids",
+      "subject_ids",
+      "source_file"
+    ],
+    "purpose": {
+      "en": "Read existing delta alignments through an optional native decoder"
+    },
+    "alias_of": "",
+    "case": "formats",
+    "scope": "source interval pairs and native metrics, without character reconstruction",
+    "modes_localized": {
+      "en": "optional show-coords; bp coordinates and declared alignment metric unit"
+    }
+  },
+  "read_signature_matches": {
+    "level": "L2",
+    "page": "import-relations",
+    "anchor": "protein-signatures",
+    "reason": "Real cached AA annotations and explicit TSV re-encoding, with native score/segment provenance checks",
+    "modes": "AA feature input; offline signature TSV and cached entry JSON",
+    "parameters": [
+      "file",
+      "files",
+      "format",
+      "source_file"
+    ],
+    "purpose": {
+      "en": "Read existing protein signature locations and source metadata"
+    },
+    "alias_of": "",
+    "case": "formats",
+    "scope": "existing annotation input, no new signature analysis",
+    "modes_localized": {
+      "en": "AA features; source-native scores; JSON needs optional jsonlite"
+    }
+  },
+  "read_feature_relations": {
+    "level": "L2",
+    "page": "import-relations",
+    "anchor": "feature-relations",
+    "reason": "Pinned original plant pairs and memberships with exact-ID mapping and provenance checks",
+    "modes": "Offline pairs and group membership",
+    "parameters": [
+      "file",
+      "files",
+      "format",
+      "feature_data",
+      "unmatched",
+      "source_file"
+    ],
+    "purpose": {
+      "en": "Read precomputed feature pairs and memberships"
+    },
+    "alias_of": "",
+    "case": "formats",
+    "scope": "existing relations only; no inference or clique expansion",
+    "modes_localized": {
+      "en": "Exact feature IDs; contiguous supplied anchors; no full lengths inferred"
+    }
+  },
+  "scale_fill_residue": {
+    "level": "L2",
+    "page": "aligned-sequences",
+    "anchor": "aligned-characters",
+    "reason": "Runnable explicit DNA scale in the aligned-character lesson; manual scales retain priority",
+    "modes": "Local aligned characters",
+    "parameters": [
+      "alphabet"
+    ],
+    "purpose": {
+      "en": "Choose chemical-property colors for nucleotide or protein residues"
+    },
+    "alias_of": "",
+    "case": "formats",
+    "scope": "Existing alignment or local excerpt; no new alignment, macro Coord projection or CDS inference",
+    "modes_localized": {
+      "en": "Existing DNA/RNA/AA columns; Cartesian local cells; explicit source mapping"
+    }
+  },
+  "stat_coverage": {
+    "level": "L2",
+    "page": "tracks-statistics",
+    "anchor": "interval-coverage",
+    "reason": "Worked example with hand-computed fractions, depth, source rows and a short final bin",
+    "modes": "Source intervals with reference lengths and units; statistics within each observed group",
+    "parameters": [
+      "mapping",
+      "data",
+      "geom",
+      "binwidth",
+      "windows",
+      "track"
+    ],
+    "purpose": {
+      "en": "Compute union coverage and mean depth for inclusive intervals in each window"
+    },
+    "alias_of": "",
+    "case": "tracks",
+    "scope": "Interval coverage and shared-band geometry",
+    "modes_localized": {
+      "en": "Source intervals with reference lengths and units; statistics within each observed group"
+    }
+  },
+  "layout_sequences": {
+    "level": "L2",
+    "page": "multi-sequence-layout",
+    "anchor": "order",
+    "reason": "Documented examples change one layout setting at a time",
+    "modes": "Multi-sequence chord and linear layouts; instance IDs can override source directions; circular and dotplot axes own their directions",
+    "parameters": [
+      "order",
+      "orientation",
+      "gap",
+      "length_mode"
+    ],
+    "purpose": {
+      "en": "Set backbone order, direction, spacing and relative display lengths"
+    },
+    "alias_of": "",
+    "case": "chord",
+    "scope": "Shared sequence layout",
+    "modes_localized": {
+      "en": "Multi-sequence chord and linear layouts; instance IDs can override source directions; circular and dotplot axes own their directions"
+    }
+  },
+  "guide_seq_axis": {
+    "level": "L2",
+    "page": "scale-families",
+    "anchor": "guides",
+    "reason": "Runnable guide declaration with a bounded set of local display options",
+    "modes": "Backbone views with sequence axes; select focused axes by window ID",
+    "parameters": [
+      "sequences",
+      "check.overlap"
+    ],
+    "purpose": {
+      "en": "Select sequence axes and control tick label overlap"
+    },
+    "alias_of": "",
+    "case": "tracks",
+    "scope": "Sequence and quantitative track axis guides",
+    "modes_localized": {
+      "en": "Backbone views with sequence axes; select focused axes by window ID"
+    }
+  },
+  "guide_track_axis": {
+    "level": "L2",
+    "page": "scale-families",
+    "anchor": "guides",
+    "reason": "Runnable guide declaration with a bounded set of local display options",
+    "modes": "Views using a local quantitative track value scale",
+    "parameters": [
+      "angle",
+      "check.overlap",
+      "theme"
+    ],
+    "purpose": {
+      "en": "Set tick angle, overlap policy and local theme on a quantitative track axis"
+    },
+    "alias_of": "",
+    "case": "tracks",
+    "scope": "Sequence and quantitative track axis guides",
+    "modes_localized": {
+      "en": "Views using a local quantitative track value scale"
+    }
+  },
+  "shared_track_limits": {
+    "level": "L2",
+    "page": "tracks-statistics",
+    "anchor": "independent-bands",
+    "reason": "A common value range for tracks in independent plots",
+    "modes": "numeric source scales in independent plots",
+    "parameters": [
+      "...",
+      "tracks"
+    ],
+    "purpose": {
+      "en": "Compute common numeric limits for selected tracks across plots"
+    },
+    "alias_of": "",
+    "case": "tracks",
+    "scope": "documented canonical use; not all combinations",
+    "modes_localized": {
+      "en": "Independent plots with numeric tracks; select ranges by track ID"
+    }
+  }
+}

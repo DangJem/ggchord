@@ -1,0 +1,55 @@
+{
+  "source_sha256": "9a51797827eccc7b5d568a8dd101315b1bb2a92cb09b2e87873d073db5882299",
+  "blocks": {
+    "1": {
+      "source_sha256": "5b22a1d30c79ea212600e84231a65f3d50147557ecf26128524a7ef771607d3d",
+      "status": "reviewed",
+      "translation": "## 取回一个具名图层的输入 {#source}\n"
+    },
+    "2": {
+      "source_sha256": "d6ee0aa902864500f1f63e1fd6bb9df17d3020651599496c49af76d86988fd02",
+      "status": "reviewed",
+      "translation": "给连接带图层设置稳定 ID，再请求 `data_stage = \"source\"`。结果中的三条记录保留进入这一层的 accession 和原始端点。要同时查询来源和连接带几何，可再指定 `include = \"ribbon\"`。\n"
+    },
+    "5": {
+      "source_sha256": "347a2922b83fd844173cc259e654d40265178f70f746097f8b2dedae7e27967e",
+      "status": "reviewed",
+      "translation": "## 根据现象选择核对项 {#checks}\n"
+    },
+    "6": {
+      "source_sha256": "d76982f3f0a9845798edc72862d9c1068dbb22d147ba1ba71f334498b733fe66",
+      "status": "reviewed",
+      "translation": "| 问题 | 查看什么 |\n"
+    },
+    "7": {
+      "source_sha256": "3491e014f5503eb5b2fca81db42f6f72765980ba5b5e48ef135b6cf69d7f92cc",
+      "status": "reviewed",
+      "translation": "| --- | --- |\n"
+    },
+    "8": {
+      "source_sha256": "fe8dbab1836ccedaa1c8e4bbaad45dd21e5e206c740ce64985acf228dd69b039",
+      "status": "reviewed",
+      "translation": "| 一条连接带去了哪里？ | 比较来源 ID、端点、已选择的序列和邻接规则。重复显示一条参考时，可能需要指定具名副本。 |\n"
+    },
+    "9": {
+      "source_sha256": "7e3a21e28aa50f26473e69b9fa4be502e2d6136a866d3d20e0f037ac3cde65d8",
+      "status": "reviewed",
+      "translation": "| 哪些区间贡献了窗口覆盖率？ | 查看轨道的 `track_statistics` 表和 `source_rows`。[逐窗示例](tracks-statistics.md#members)同时列出实际分母。 |\n"
+    },
+    "10": {
+      "source_sha256": "5efdb768eaacaa612b659999275dd3a13b46cc1fba72f6e9b630f2c8bb31baba",
+      "status": "reviewed",
+      "translation": "| 标签为何隐藏或拥挤？ | 给 `diagnose_ggchord()` 指定输出设备和最终宽高，结合 `label_diagnostics`、测量状态和实际图形核对。 |\n"
+    },
+    "11": {
+      "source_sha256": "f59c79bf85b7a09d550fa605110e2047a552ed6d46708a9f44b89ed38a77599e",
+      "status": "reviewed",
+      "translation": "| 同一来源位置投影到了哪个面板？ | 分面之间的投影有差异时，可在 `map_ggchord_position()` 指定目标 `panel`。 |\n"
+    },
+    "12": {
+      "source_sha256": "c8167c54ba7489c527787de97aae68f6e8a18873ce1a23f85b2b6c2b905e3b76",
+      "status": "reviewed",
+      "translation": "查询统计阶段时，先看 `layer_stage_status`。统计成功但结果为零行时状态为 `available`。计算失败时状态为 `failed` 并给出原因。两种情况对应的后续处理不同。\n"
+    }
+  }
+}

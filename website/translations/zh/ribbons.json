@@ -1,0 +1,15 @@
+{
+  "source_sha256": "eebb9c34ffa5b15a03d391680baa2f3562f39d6d66d4e67f95808edb13b96795",
+  "blocks": {
+    "1": {
+      "source_sha256": "78f3b751cc6a81f151c97d45744da2989fa25c9ea71a757fa0548ec3895c1028",
+      "status": "reviewed",
+      "translation": "## 本页已迁移 {#moved}\n"
+    },
+    "2": {
+      "source_sha256": "a96fb21450751c453bbf432f6111bb886d4dbd022c73e25e4f80a456bcff7687",
+      "status": "reviewed",
+      "translation": "[绘制和调整序列连接](multi-sequence-links.md)\n"
+    }
+  }
+}

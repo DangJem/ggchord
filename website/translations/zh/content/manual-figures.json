@@ -1,0 +1,105 @@
+{
+  "source_sha256": "bb798450e0ee5ee1c153fdae6837687b63fae035bad364d7cac62e3b112144ec",
+  "strings": {
+    "0/caption": {
+      "source_sha256": "004468b8087ea2f1c09af8a3d3377b66fcb093ae223cc3abf25808428b8b903f",
+      "status": "reviewed",
+      "translation": "四条序列的区间连接"
+    },
+    "1/caption": {
+      "source_sha256": "c58c46b3b680e171b0fce520a1e40a3f232bc7f69d082e92603798b6d6062d08",
+      "status": "reviewed",
+      "translation": "四条序列的共线性与基因方向"
+    },
+    "2/caption": {
+      "source_sha256": "947525b834db472be2639525706917bcc215d79a445a715dab197f0003540e23",
+      "status": "reviewed",
+      "translation": "径向共线性与注释"
+    },
+    "3/caption": {
+      "source_sha256": "8421ba7517b2abbf9ce538cc9e213856687eaa8393ff7775bb7c5f1635634838",
+      "status": "reviewed",
+      "translation": "两列序列间的区间连接"
+    },
+    "4/caption": {
+      "source_sha256": "2c9bce7f69b724068b384755190bb1da527ba3393fbc07bcbaa45ab7d9b266bf",
+      "status": "reviewed",
+      "translation": "四条序列的比对点图"
+    },
+    "5/caption": {
+      "source_sha256": "7c8045e602b427dbf047f848a9e5d87033aa22618e57ec3bf62646f89edb5b39",
+      "status": "reviewed",
+      "translation": "全局关系、共线性与局部放大"
+    },
+    "6/caption": {
+      "source_sha256": "2c29e9a99107d508bf1aa7fb84f7838706ca4431f161bd952a718290261c7a78",
+      "status": "reviewed",
+      "translation": "pETDuet-1 的密集注释"
+    },
+    "7/caption": {
+      "source_sha256": "ebe30478911989ce9ad6c39e430b2feae83c946a8a28a0fa87d89496cbb72302",
+      "status": "reviewed",
+      "translation": "pSB1C3 · 7 个特征，33 个酶切位置"
+    },
+    "8/caption": {
+      "source_sha256": "45418724f2d0ada13c0a17f59097553c8a41387c8eb1950bb8d0d54e985e44bd",
+      "status": "reviewed",
+      "translation": "pUC19 · 9 个特征，33 个酶切位置"
+    },
+    "9/caption": {
+      "source_sha256": "2aa779b2b99c2217937aabe8f6da48ca57e2107ce91b96a400faf402ee4201cc",
+      "status": "reviewed",
+      "translation": "pBR322 · 6 个特征，42 个酶切位置"
+    },
+    "10/caption": {
+      "source_sha256": "91983fde15cc18500067d1902aa0b7cb3c3556fe5ac058c0007f6132f6bef7d0",
+      "status": "reviewed",
+      "translation": "pBluescript II SK(+) · 14 个特征，42 个酶切位置"
+    },
+    "11/caption": {
+      "source_sha256": "e02b79e83b3fc1a7aa1d0f4ca3bff6ac15f779bbac19acfa2794dadfe5c7197c",
+      "status": "reviewed",
+      "translation": "pET-28a(+) · 16 个特征，45 个酶切位置"
+    },
+    "12/caption": {
+      "source_sha256": "467ae5fec171e9e808cd6d27d0787f474c2e5fafd53d939cb9918ed409cb3c38",
+      "status": "reviewed",
+      "translation": "pETDuet-1 · 20 个特征，54 个酶切位置"
+    },
+    "13/caption": {
+      "source_sha256": "395bcaf073c68b6a83dea439caa280d7751d24486d3be5ee211d55c8c2e4436c",
+      "status": "reviewed",
+      "translation": "pDONR221 · 11 个特征，42 个酶切位置"
+    },
+    "14/caption": {
+      "source_sha256": "f884b80d25446952bc6d05e0dd080182c2d02529b33b51b4d516398283dec4a1",
+      "status": "reviewed",
+      "translation": "pcDNA3.1(+) · 13 个特征，47 个酶切位置"
+    },
+    "15/caption": {
+      "source_sha256": "57b0e38126cc7317c7e8713b486373e7fca1cb1cbe853b770bc6ca788697be48",
+      "status": "reviewed",
+      "translation": "pTRE-Tight-BI · 15 个特征，44 个酶切位置"
+    },
+    "16/caption": {
+      "source_sha256": "2ba6e08102d363e2c210e27a6fab9d4bd1db13bb32c8865a4844a6c7db72108f",
+      "status": "reviewed",
+      "translation": "pTRIPZ · 33 个特征，35 个酶切位置"
+    },
+    "17/caption": {
+      "source_sha256": "ea1af6ed15ea83b7afaea3e688e51cfa15017cf82e55e467ec20ca1b89895ce1",
+      "status": "reviewed",
+      "translation": "pCAMBIA1300 · 17 个特征，37 个酶切位置"
+    },
+    "18/caption": {
+      "source_sha256": "f839318912f40c218e288b8004ceab87ef28de181ad21ddca7d90e12a4ec5c82",
+      "status": "reviewed",
+      "translation": "pEarleyGate 201 · 21 个特征，37 个酶切位置"
+    },
+    "19/caption": {
+      "source_sha256": "5cf2df89902060c535013466bd5c1bacf59974f0f2f09b58c80c60e5a6567a42",
+      "status": "reviewed",
+      "translation": "pSpCas9(BB)-2A-GFP (PX458) · 19 个特征，4 个酶切位置"
+    }
+  }
+}

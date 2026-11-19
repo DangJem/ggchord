@@ -1,0 +1,140 @@
+{
+  "source_sha256": "930c9346eb6df458736fe4bc115e9cff992d36b7782b27ebc8f318a565bc1897",
+  "strings": {
+    "0/title": {
+      "source_sha256": "e603e1828e81b53744bcceaa6b5513aac3de03f63f0d91d4037dfbe5506c2aa4",
+      "status": "reviewed",
+      "translation": "四模块与六种坐标"
+    },
+    "1/title": {
+      "source_sha256": "e457a4e6c5be05000b5dc53fa1e0953e4edfa30399492d1b37b1489898c81b9e",
+      "status": "reviewed",
+      "translation": "真实记录比较"
+    },
+    "2/title": {
+      "source_sha256": "a0f4c3df67b2bb261c0563460f837ac8311772f4c076a445241b33f1e444bd05",
+      "status": "reviewed",
+      "translation": "完整圆图注释"
+    },
+    "3/title": {
+      "source_sha256": "cf34226e333313a73e6707d858d5dc211edb2d9c74aa931f6f1b7a6e0773d3f0",
+      "status": "reviewed",
+      "translation": "校验、清理与层次"
+    },
+    "4/title": {
+      "source_sha256": "cfc8afe1e9c1ef6312fb569bbe8ba6d8166cc531aea8baf50053315b12172627",
+      "status": "reviewed",
+      "translation": "文件格式与适配器"
+    },
+    "5/title": {
+      "source_sha256": "676b251514e0b7ae7e6301140945f7aa09eb32bcdb7375241f1bec983d2c8840",
+      "status": "reviewed",
+      "translation": "连接准备与统计"
+    },
+    "6/title": {
+      "source_sha256": "82060632976f13338dbe5f3fb52db34831b2254d37689bbd948a79f5dd0a3a78",
+      "status": "reviewed",
+      "translation": "区间与点连接"
+    },
+    "7/title": {
+      "source_sha256": "bf20e0e6a9c180df700c30df722211a0aa4b22e556a53478048fd832b2ec960a",
+      "status": "reviewed",
+      "translation": "Feature 与 Position"
+    },
+    "8/title": {
+      "source_sha256": "7cb894bfe26105b26fee88ce729cfe1af8b840dc382992b64a4b12fc1041f410",
+      "status": "reviewed",
+      "translation": "自动与固定标签"
+    },
+    "9/title": {
+      "source_sha256": "4b1864877a6c067245e285df632543c7f7e66a7ba29769cd113ea2699a146ad5",
+      "status": "reviewed",
+      "translation": "轴、参照条与区域"
+    },
+    "10/title": {
+      "source_sha256": "13e61daa235c50466791f22ecea8e2c6942d936d96be100c5c65101bbc452e6b",
+      "status": "reviewed",
+      "translation": "定量轨道与数值域"
+    },
+    "11/title": {
+      "source_sha256": "fc9ba493744c210db354a5a411bf951c0640ca3b8e14359cf38550d3b2dda8a6",
+      "status": "reviewed",
+      "translation": "引物、酶切及 feature 搜索"
+    },
+    "12/title": {
+      "source_sha256": "bff8a3bc5089241a37b0a403a7c174e5e0afd0faf4acbae6d7b36754bf373ebb",
+      "status": "reviewed",
+      "translation": "CDS 与连接投影"
+    },
+    "13/title": {
+      "source_sha256": "59cab0393d356b18a01c0698802765d64c34df3b9112e44271de40728c76d0ce",
+      "status": "reviewed",
+      "translation": "显式 cluster 与 loci"
+    },
+    "14/title": {
+      "source_sha256": "ee5cfb0e5f2aae1ddc70e39f4c79516679ceb65978f69aa215d3111d1dc040a8",
+      "status": "reviewed",
+      "translation": "局部、分段与源映射"
+    },
+    "15/title": {
+      "source_sha256": "e400f52ea53baefccb873b0c11a3865be5554f586319d0f16d098d8e43642688",
+      "status": "reviewed",
+      "translation": "标度、图例与主题"
+    },
+    "16/title": {
+      "source_sha256": "0d5ced09e89bd901f06b9e4a4c74bf13d908322bfdc58f6d5511168bf54d7055",
+      "status": "reviewed",
+      "translation": "预览、结果与排序"
+    },
+    "17/title": {
+      "source_sha256": "c209fd85bf08fa1c1dd4e9e1117213dc9da6d9b0268e8159878de56b52824580",
+      "status": "reviewed",
+      "translation": "共线性对齐与显示方向"
+    },
+    "18/title": {
+      "source_sha256": "d962cc84e19bd900c9b6d1ed4dd25ee39f3c8b8725da69a32380cb10e433c548",
+      "status": "reviewed",
+      "translation": "真实基因箭头样式"
+    },
+    "19/title": {
+      "source_sha256": "a956d0b957fa12c8973a752d0206afd213133eeb3e13253a14fd532dd8997052",
+      "status": "reviewed",
+      "translation": "共享分支与点路径"
+    },
+    "20/title": {
+      "source_sha256": "fe74cd5731745b6738cd6455b014aa57e1f55dfd872c53eb6dfad6d796e1ac1e",
+      "status": "reviewed",
+      "translation": "圆图骨架、中心文字与注释轨道"
+    },
+    "21/title": {
+      "source_sha256": "91ffddc73c87ccd20dc774ddd2d5c800e178101a1f650c6df40a924910d85294",
+      "status": "reviewed",
+      "translation": "圆图固定标签与自动适配"
+    },
+    "22/title": {
+      "source_sha256": "8fd7ba8abcf23e909ad7321cd92c5085264cdc8e86e5bfa58892129bb497ee76",
+      "status": "reviewed",
+      "translation": "识别引物、弧线与文字"
+    },
+    "23/title": {
+      "source_sha256": "13d504db40911b191538d031815a4526842f66586bd76d87250acdf36b69774a",
+      "status": "reviewed",
+      "translation": "限制酶搜索、切点与标签"
+    },
+    "24/title": {
+      "source_sha256": "b09a3d6f6377acd6de47b40a03bdb68e46b0ca0e5f042eee89aed388051abde2",
+      "status": "reviewed",
+      "translation": "按角色选择标度、图例与主题"
+    },
+    "25/title": {
+      "source_sha256": "874bc513d492e77f8a27b143f575dcc0d1de9108ea4acca5af32533502d7a6c5",
+      "status": "reviewed",
+      "translation": "连接密度与显式聚束"
+    },
+    "26/title": {
+      "source_sha256": "1beda362990cdc4f9d97ab1090f9abe3c3ab302b2bab3beeb5d2c526aff38888",
+      "status": "reviewed",
+      "translation": "按任务使用工作流与诊断工具"
+    }
+  }
+}

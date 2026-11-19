@@ -1,5 +1,5 @@
 <a id="moved"></a>
 
-## Section moved {#moved}
+## This page has moved {#moved}
 
-[Circular lengths, annotations and optional DNA](circular-data.md#tables)
+[Data and operations](data.md)

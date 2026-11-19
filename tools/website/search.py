@@ -1,30 +1,33 @@
 """Structured local search index and downloadable examples."""
-import html,json,re,hashlib
-from pathlib import Path
+import html,json,re,hashlib,shutil
 from urllib.parse import quote
-from documentation_lib import ROOT,WEB,PAGES,RECIPES,snippets,expand
-from website.registry import page_kind
+from website import ROOT
+from website.handbook import EXAMPLE, WEB, manifest
+from website.registry import page_kind, pages
 
 def complete_examples(assets):
-    folder=assets/'examples';folder.mkdir(exist_ok=True)
+    folder = assets/'examples'
+    folder.mkdir(exist_ok=True)
+    specs = manifest()
     records = []
     for lang in ('en', 'zh'):
-        for page in PAGES:
+        for page in pages():
             slug = page['slug']
-            if page.get('kind') == 'alias':
+            if page.get('kind') == 'alias' or slug == 'reference':
                 continue
-            text = (WEB/lang/(slug+'.md')).read_text()
-            if not re.search(r'\{\{(?:code|prepare):|^```r', text, re.M):
-                continue
-            expanded = expand(text, lang, figures='../assets')
-            blocks = re.findall(r'^```\{[^}]*\brun-example\b[^}]*\}\n(.*?)\n```', expanded, re.S | re.M)
-            for index, block in enumerate(blocks, 1):
-                code = block + '\n'
+            text = (WEB/lang/(slug + '.md')).read_text()
+            for index, match in enumerate(EXAMPLE.finditer(text), 1):
+                example_id = match[1]
+                if example_id not in specs:
+                    raise ValueError(f'{lang}/{slug}: unknown example {example_id}')
+                source = WEB/'examples'/(example_id + '.R')
                 name = f'{slug}-{index}-{lang}.R'
-                (folder/name).write_text(code)
-                records.append(dict(page=slug, index=index, language=lang, file='assets/examples/'+name,
-                                    sha256=hashlib.sha256(code.encode()).hexdigest()))
-    (assets/'examples.json').write_text(json.dumps(records,ensure_ascii=False,indent=2)+'\n')
+                shutil.copyfile(source, folder/name)
+                records.append(dict(page=slug, index=index, language=lang, id=example_id,
+                                    file='assets/examples/'+name,
+                                    sha256=hashlib.sha256(source.read_bytes()).hexdigest()))
+    (assets/'examples.json').write_text(json.dumps(records, ensure_ascii=False, indent=2)+'\n')
+
 
 def search_records(out,lang,page_records):
     records=[]
@@ -65,7 +68,7 @@ def search_records(out,lang,page_records):
         return ' '.join(html.unescape(re.sub(r'<[^>]*>', ' ', markup)).split())
 
     exports = set(re.findall(r'^export\(([^)]+)\)', (ROOT/'NAMESPACE').read_text(), re.M))
-    titles = {p['slug']: p['title'][lang] for p in PAGES}
+    titles = {p['slug']: p['title'][lang] for p in pages()}
     for path in sorted((ROOT/'man').glob('*.Rd')):
         names = set(re.findall(r'\\alias\{([^}]+)\}', path.read_text())) & exports
         if not names:
@@ -84,17 +87,12 @@ def search_records(out,lang,page_records):
         anchor = html.unescape(row[1])
         api, parameter = anchor.removeprefix('param-').split('-', 1)
         cells = [plain(cell) for cell in re.findall(r'<td\b[^>]*>(.*?)</td>', row[2], re.S)]
-        default = cells[1]
-        summary = ('默认值 ' if lang == 'zh' else 'Default ') + default + ' · ' + cells[-1]
+        if len(cells) != 3:
+            raise ValueError(f'{lang}/parameter-atlas: expected parameter, function and usage in {anchor}')
+        summary = ' · '.join(cell for cell in cells if cell)
         records.append(dict(kind='parameter', url='parameter-atlas.html#' + quote(anchor, safe='._-'),
                             title=api + ' · ' + parameter, section=titles['parameter-atlas'],
                             keywords=api + ' ' + parameter, text=' '.join(cells), summary=summary))
-    for r in json.loads((WEB/'teaching-tasks.json').read_text()):
-        slug, _, anchor = r['page'].partition('#')
-        records.append(dict(kind='task', url=slug + '.html' + ('#' + anchor if anchor else ''),
-                            title=r['task'][lang], section=titles[slug],
-                            keywords=r['api'] + ' ' + r['parameters'], text=r['task'][lang],
-                            summary=r['api'] + ' · ' + r['parameters'] + ' · ' + r['modes']))
     for intent in json.loads((WEB/'search-intents.json').read_text()):
         records.append(dict(kind='task',url=intent['url'],title=intent['title'][lang],queries=intent['queries'],keywords=' '.join(intent['queries']),text=intent['title'][lang],summary=intent['summary'][lang]))
     return records

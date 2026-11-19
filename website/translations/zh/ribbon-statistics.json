@@ -1,0 +1,15 @@
+{
+  "source_sha256": "68d0f89ae037bbf67b384502659bc5f310f6b5f9e7c335e0ed5b73ad34209d55",
+  "blocks": {
+    "1": {
+      "source_sha256": "78f3b751cc6a81f151c97d45744da2989fa25c9ea71a757fa0548ec3895c1028",
+      "status": "reviewed",
+      "translation": "## 本页已迁移 {#moved}\n"
+    },
+    "2": {
+      "source_sha256": "3faed89ce9448714168391e8c061d565d1427fafb2d7003a993250d09204db93",
+      "status": "reviewed",
+      "translation": "[计数、分箱与轨道统计](tracks-statistics.md)\n"
+    }
+  }
+}

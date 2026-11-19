@@ -1,0 +1,30 @@
+{
+  "source_sha256": "b0a31e629c3d3a317468f5c6021230e30026386fe756346a1e842b2e10ef9584",
+  "blocks": {
+    "1": {
+      "source_sha256": "48d1973fcdae3d339cadb434b59a6e9c5cd922dd7b71620215f51c9828c75619",
+      "status": "reviewed",
+      "translation": "## 核对第一个窗口 {#coordinates}\n"
+    },
+    "2": {
+      "source_sha256": "d4ee289e62b7d4530ab107e2f2dcac71125886fd92f36e24233dca06f5c5ae80",
+      "status": "reviewed",
+      "translation": "这份 pUC19 bedGraph 记录每个 100 bp 窗口的 GC 百分数，末窗较短。文件第一个区间是 `[0, 100)`。读取后，`chromStart, chromEnd` 保留文件边界，供绘图的坐标是 `start = 1, end = 100`。数值 60 表示 GC 为 60%。\n"
+    },
+    "5": {
+      "source_sha256": "6b1a29ba778914400622976012959a5c7c171f686dd2d384ad8649d858be2208",
+      "status": "reviewed",
+      "translation": "## 选择信号的几何表示 {#display}\n"
+    },
+    "6": {
+      "source_sha256": "2da54596cc3d4d1a17b442e525defcd4679b14385c834f35c219a9c0819b27b4",
+      "status": "reviewed",
+      "translation": "将导入表交给 `geom_track_col(aes(y = value), ...)` 可用柱高表示每个区间的数值，也可用 `geom_track_tile(aes(fill = value), ...)` 将数值映射到颜色。在标度上注明测量单位。[叠加柱与折线](tracks.md)有使用这份数据的完整图。\n"
+    },
+    "7": {
+      "source_sha256": "407242d625b0a4e987ffa8e9cc3eb8cd8b5451e9fbf25bbefb778697efcf4698",
+      "status": "reviewed",
+      "translation": "`read_bigwig()` 可从二进制信号文件读取相同的核心列。根据输入信号说明确定单位。若要计算一组区间占窗口的比例，应把原始区间交给[覆盖统计](tracks-statistics.md)。\n"
+    }
+  }
+}

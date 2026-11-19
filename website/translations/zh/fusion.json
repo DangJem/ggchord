@@ -1,0 +1,40 @@
+{
+  "source_sha256": "9b25fcec2b5c516845f4e3954c317fa7907f2ed8c35f3f83e9ddd6f7ecd3f994",
+  "blocks": {
+    "0": {
+      "source_sha256": "0cdfef7c9e41d4a207897d73d955a0a004e1e3dff143fc236c2cc37bef1e193a",
+      "status": "reviewed",
+      "translation": "Fusion 把独立构建的图放在同一画布上。跨面板带将两个原始序列区间分别连接到指定面板，总览图和局部图可以采用不同的布局。\n"
+    },
+    "2": {
+      "source_sha256": "e7e35626bc21b7273cf5fd5c3fb7719997190059ebcc5125017faa8dbb611301",
+      "status": "reviewed",
+      "translation": "## 把圆图连接到线性图 {#draw}\n"
+    },
+    "3": {
+      "source_sha256": "73d61c571e496624e96146d80a4b852d482292e28f739af2995b3063c58c0d08",
+      "status": "reviewed",
+      "translation": "中心图只含 MT108731.1，右侧面板显示两条序列。两者间最短的已观测比对把 MT108731.1 的 20,376–20,677 bp 连接到 MT118296.1 的 403–704 bp。`qpanel` 将 query 端放到圆图，`spanel` 将 subject 端放到名为 `detail` 的面板。\n"
+    },
+    "7": {
+      "source_sha256": "16ffd3bb7ecac69d0d88958e2f220c0d1dd98671fae3ca71e4a19ba87029a24c",
+      "status": "reviewed",
+      "translation": "## 给每一端指定明确的落点 {#adapt}\n"
+    },
+    "8": {
+      "source_sha256": "bb10289a730fc9aeb9d2391ebc4172b0dfad172bd0366d5990d34f0b1e8b47b5",
+      "status": "reviewed",
+      "translation": "先核对两端都在指定面板的可见区间内，并使用相容的单位。`fusion_panel()` 的 side 决定子图摆放位置，子图自身的坐标系控制骨架方向。要把总览连接到来源窗口，可用局部放大函数创建并登记该窗口。\n"
+    },
+    "9": {
+      "source_sha256": "a8896c862b6486541744222710e86ed3cc1ec7b9adf2b76e3e6ccce2f8501e08",
+      "status": "reviewed",
+      "translation": "要集中放置外侧图例，可将 `guides = \"collect\"` 传给 `ggchord_fusion()`。当不同面板表示同一度量时，给它们设置相同的范围、刻度和样式。组合收集图例，各面板保留各自的标度。\n"
+    },
+    "10": {
+      "source_sha256": "1ac5b05ca9e3b34666af12d4661e86b81a34bbbce540e3818b58c40f94ac0a2c",
+      "status": "reviewed",
+      "translation": "[六面板比较图](case-fusion.md) · [跨面板连接](../../man/fusion_ribbon.Rd) · [来源窗口放大](../../man/magnify_ggchord.Rd)\n"
+    }
+  }
+}

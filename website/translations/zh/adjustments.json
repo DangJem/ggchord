@@ -1,0 +1,15 @@
+{
+  "source_sha256": "30a2c81cb17932aabad0f6e5b095364a4104706cf6d3ea3214023f0fdeda39e4",
+  "blocks": {
+    "1": {
+      "source_sha256": "78f3b751cc6a81f151c97d45744da2989fa25c9ea71a757fa0548ec3895c1028",
+      "status": "reviewed",
+      "translation": "## 本页已迁移 {#moved}\n"
+    },
+    "2": {
+      "source_sha256": "12a087b31d92342555a5ca1909a2de2d9a34f6f134bd3f719c0679c61bbfc453",
+      "status": "reviewed",
+      "translation": "[配置配色、图例和主题](styling.md)\n"
+    }
+  }
+}

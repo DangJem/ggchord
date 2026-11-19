@@ -1,0 +1,60 @@
+{
+  "source_sha256": "1b44e0409d75bfa2db14c9018bd46f3aebdb29c7f10103b7d9355de68e369bc7",
+  "blocks": {
+    "1": {
+      "source_sha256": "e9779562de9eee548d75c1c651c89c6c56fc6791d92f5044b8dbd92cbae21e00",
+      "status": "reviewed",
+      "translation": "## 固定输入，比较布局 {#comparison}\n"
+    },
+    "2": {
+      "source_sha256": "91e3a3ea33d4722a254aba58eb2e3e2f84992279426864d980ad9f4f9ac851f7",
+      "status": "reviewed",
+      "translation": "四个示例均使用两条完整参考，以及 MT108731.1 对 MT118296.1 的三条实测 HSP。每段代码都能独立运行。可比较每条连接带与骨架相接的位置。四种视图均保留两条参考的全长和 HSP 的端点顺序。\n"
+    },
+    "4": {
+      "source_sha256": "73196e38e9569d6de01381174c39ac42daf6d6c14224c8365916e6e998ae7c46",
+      "status": "reviewed",
+      "translation": "### 弦图 {#chord}\n"
+    },
+    "5": {
+      "source_sha256": "a1d16bfb12ebab6ccfe05575a1d46560eca74c7448d3e53db7aa8693d0c9e3b1",
+      "status": "reviewed",
+      "translation": "沿圆周读取连接带两端。多对多关系较多时，可用这种布局查看整体结构。\n"
+    },
+    "8": {
+      "source_sha256": "bf878d8e7228a713fc4daa386c76250c73a7dd6d119bedc67aca121fdbef4dd0",
+      "status": "reviewed",
+      "translation": "### 共线性图 {#collinear}\n"
+    },
+    "9": {
+      "source_sha256": "c778c6be8e558aa2f61f8bac62f3c793bd5fb0f4ce7261e17644247963f9d30d",
+      "status": "reviewed",
+      "translation": "沿各行比较三条比对的位置和跨度。要翻转其中一条参考的显示方向，见[序列排列与显示方向](multi-sequence-layout.md)。\n"
+    },
+    "12": {
+      "source_sha256": "021a6242fa591a87d6b39923b79a8f641f8b5a688e1eaad6fc6923a9745dd8c3",
+      "status": "reviewed",
+      "translation": "### 径向共线性图 {#radial}\n"
+    },
+    "13": {
+      "source_sha256": "0f4ac46b9324a5389170f285e1e4fc2207c7aea9046aaa0871bad082bbb5aa44",
+      "status": "reviewed",
+      "translation": "从中心向外沿各条辐条读取位置。加入更多参考时，辐条顺序决定哪些参考彼此相邻。\n"
+    },
+    "16": {
+      "source_sha256": "a90fe0063f886d054b6fbc3118db80b726c4774cad09a00a1a9b3e230e0bc29f",
+      "status": "reviewed",
+      "translation": "### Sankey 双列图 {#sankey}\n"
+    },
+    "17": {
+      "source_sha256": "7515d3e7f50effb72e63802e85054a8dfa675b7085a48a5a6a52c8c51433b878",
+      "status": "reviewed",
+      "translation": "从左侧的 query 副本读向右侧的 subject 副本。带在两端的宽度分别反映该条序列上的观测跨度。需要区分 query 和 subject 角色时，可选择这种双列布局。\n"
+    },
+    "19": {
+      "source_sha256": "5058ebb6374b383245a91d096ee4c8a02fb28f9a460a5a6abd64e32076c4ab90",
+      "status": "reviewed",
+      "translation": "需要带有数据与绘图脚本的完整多序列案例时，可查阅[案例图库](gallery.md)。\n"
+    }
+  }
+}

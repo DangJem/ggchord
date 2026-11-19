@@ -1,0 +1,109 @@
+[
+  {
+    "id": "home",
+    "title": {
+      "en": "Home"
+    },
+    "landing": "index",
+    "pages": [
+      "index"
+    ]
+  },
+  {
+    "id": "start",
+    "title": {
+      "en": "Get started"
+    },
+    "landing": "installation",
+    "pages": [
+      "installation"
+    ],
+    "navbar": "start"
+  },
+  {
+    "id": "plots",
+    "title": {
+      "en": "Plotting guide"
+    },
+    "landing": "modes",
+    "pages": [
+      "modes",
+      "chord",
+      "collinear",
+      "radial-synteny",
+      "sankey",
+      "circular",
+      "dotplot",
+      "fusion",
+      "multi-sequence-views",
+      "multi-sequence-layout",
+      "multi-sequence-links",
+      "annotations",
+      "parameters",
+      "tracks",
+      "tracks-statistics",
+      "styling"
+    ],
+    "navbar": "plots"
+  },
+  {
+    "id": "data",
+    "title": {
+      "en": "Data and operations"
+    },
+    "landing": "formats",
+    "pages": [
+      "formats",
+      "data",
+      "import-sequences",
+      "import-relations",
+      "import-signals",
+      "projection",
+      "output",
+      "diagnostics"
+    ],
+    "navbar": "data"
+  },
+  {
+    "id": "cases",
+    "title": {
+      "en": "Example gallery"
+    },
+    "landing": "gallery",
+    "pages": [
+      "gallery",
+      "case-chord",
+      "case-collinear",
+      "case-radial",
+      "case-sankey",
+      "case-circular",
+      "case-dotplot",
+      "case-fusion",
+      "plasmid-catalog"
+    ],
+    "navbar": "gallery"
+  },
+  {
+    "id": "reference",
+    "title": {
+      "en": "API reference"
+    },
+    "landing": "reference",
+    "pages": [
+      "reference",
+      "parameter-atlas"
+    ],
+    "navbar": "reference"
+  },
+  {
+    "id": "information",
+    "title": {
+      "en": "Project information"
+    },
+    "landing": "about",
+    "pages": [
+      "about",
+      "migration"
+    ]
+  }
+]

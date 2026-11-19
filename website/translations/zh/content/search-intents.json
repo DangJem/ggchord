@@ -1,0 +1,115 @@
+{
+  "source_sha256": "386bd18c1a1aad0671c239d74f58079e1d47160242a3dc345399127e3a52372b",
+  "strings": {
+    "0/title": {
+      "source_sha256": "bd88e404b2fba66e829e96ba29b0f7bcbb28ea437a219e9a4848bd8c52550d9e",
+      "status": "reviewed",
+      "translation": "镜像 Sankey 章节"
+    },
+    "0/summary": {
+      "source_sha256": "666075e8b313e45bf53abf5999ee1ecadd571999d9d69e523ecb9308b4136135",
+      "status": "reviewed",
+      "translation": "按任务选择当前章节或精确参数；详见输入与支持边界。"
+    },
+    "1/title": {
+      "source_sha256": "e2068b724fe72d646503737333f448540f0fe74d29c8f99b6489f86b9485722e",
+      "status": "reviewed",
+      "translation": "径向共线性章节"
+    },
+    "1/summary": {
+      "source_sha256": "666075e8b313e45bf53abf5999ee1ecadd571999d9d69e523ecb9308b4136135",
+      "status": "reviewed",
+      "translation": "按任务选择当前章节或精确参数；详见输入与支持边界。"
+    },
+    "2/title": {
+      "source_sha256": "2a9b5bcb43a3806e2a931a474ba70d777b77987addb83335a6d4d37c86ba5fbb",
+      "status": "reviewed",
+      "translation": "从 HSP 读取 Dotplot"
+    },
+    "2/summary": {
+      "source_sha256": "666075e8b313e45bf53abf5999ee1ecadd571999d9d69e523ecb9308b4136135",
+      "status": "reviewed",
+      "translation": "按任务选择当前章节或精确参数；详见输入与支持边界。"
+    },
+    "3/title": {
+      "source_sha256": "090a53c82af541a9cde43b7ce05b1a32a9e11a07f5b7b2cda1f3602e288d40e0",
+      "status": "reviewed",
+      "translation": "两面板真实来源组合"
+    },
+    "3/summary": {
+      "source_sha256": "666075e8b313e45bf53abf5999ee1ecadd571999d9d69e523ecb9308b4136135",
+      "status": "reviewed",
+      "translation": "按任务选择当前章节或精确参数；详见输入与支持边界。"
+    },
+    "4/title": {
+      "source_sha256": "1875fcb8b6588bf95c9dc54587f96dea36dcc3832fc91078bfbf0db08a813061",
+      "status": "reviewed",
+      "translation": "给定值使用 geom_track_col"
+    },
+    "4/summary": {
+      "source_sha256": "666075e8b313e45bf53abf5999ee1ecadd571999d9d69e523ecb9308b4136135",
+      "status": "reviewed",
+      "translation": "按任务选择当前章节或精确参数；详见输入与支持边界。"
+    },
+    "5/title": {
+      "source_sha256": "44ca0456344f4a46f71a6e36919f2e8825f800f3958b5a8c5e97ef8e1f3491f8",
+      "status": "reviewed",
+      "translation": "计数与给定值：bar 和 col"
+    },
+    "5/summary": {
+      "source_sha256": "666075e8b313e45bf53abf5999ee1ecadd571999d9d69e523ecb9308b4136135",
+      "status": "reviewed",
+      "translation": "按任务选择当前章节或精确参数；详见输入与支持边界。"
+    },
+    "6/title": {
+      "source_sha256": "b1a30c74a525e7478d9736950636ff26a8e2eb018a6aa97fa9173f57757b5176",
+      "status": "reviewed",
+      "translation": "按目标尺寸保存图片"
+    },
+    "6/summary": {
+      "source_sha256": "666075e8b313e45bf53abf5999ee1ecadd571999d9d69e523ecb9308b4136135",
+      "status": "reviewed",
+      "translation": "按任务选择当前章节或精确参数；详见输入与支持边界。"
+    },
+    "7/title": {
+      "source_sha256": "f7fc240ccaea31ede0c879fcc5c669751695a53a5b45e766bba9262cec67dc52",
+      "status": "reviewed",
+      "translation": "检查文字布局与目标尺寸"
+    },
+    "7/summary": {
+      "source_sha256": "666075e8b313e45bf53abf5999ee1ecadd571999d9d69e523ecb9308b4136135",
+      "status": "reviewed",
+      "translation": "按任务选择当前章节或精确参数；详见输入与支持边界。"
+    },
+    "8/title": {
+      "source_sha256": "508dd0d1b2709b305796ad5e7bccb437519dcafe118f5fc8278be8dd60189b7c",
+      "status": "reviewed",
+      "translation": "统一 feature_data 输入"
+    },
+    "8/summary": {
+      "source_sha256": "666075e8b313e45bf53abf5999ee1ecadd571999d9d69e523ecb9308b4136135",
+      "status": "reviewed",
+      "translation": "按任务选择当前章节或精确参数；详见输入与支持边界。"
+    },
+    "9/title": {
+      "source_sha256": "c9d2d2e63970fcd2c322569b46928aab0af6a1cf9c6ba2d12487255f0c3b25cc",
+      "status": "reviewed",
+      "translation": "segment_ggchord_data 的 windows"
+    },
+    "9/summary": {
+      "source_sha256": "666075e8b313e45bf53abf5999ee1ecadd571999d9d69e523ecb9308b4136135",
+      "status": "reviewed",
+      "translation": "按任务选择当前章节或精确参数；详见输入与支持边界。"
+    },
+    "10/title": {
+      "source_sha256": "784f35e2179d61205cab0a5a31c2934765c61ad696828a69fd028fa19b0561e8",
+      "status": "reviewed",
+      "translation": "灵活的参数格式"
+    },
+    "10/summary": {
+      "source_sha256": "9c61b322059b0a212d3d98dd7ad00b03c0feda3286262c7f0f1ad577e7b20536",
+      "status": "reviewed",
+      "translation": "单值、按 accver 命名、按显示顺序、按链及适用列表；分别说明匹配、补值和家族边界。"
+    }
+  }
+}

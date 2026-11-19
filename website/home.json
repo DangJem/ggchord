@@ -61,8 +61,8 @@
         "homeradial",
         "homesankey"
       ],
-      "entry": "multi-sequence-start.html",
-      "case": "multi-sequence-views.html#flagship"
+      "entry": "chord.html",
+      "case": "case-chord.html"
     },
     {
       "slug": "circular",
@@ -77,8 +77,8 @@
       "figures": [
         "homecircular"
       ],
-      "entry": "circular-start.html",
-      "case": "plasmid-catalog.html#catalogpuc"
+      "entry": "circular.html",
+      "case": "case-circular.html"
     },
     {
       "slug": "dotplot",
@@ -93,8 +93,8 @@
       "figures": [
         "homedotplot"
       ],
-      "entry": "dotplot-start.html",
-      "case": "dotplot-start.html#matrix"
+      "entry": "dotplot.html",
+      "case": "case-dotplot.html"
     },
     {
       "slug": "fusion",
@@ -109,8 +109,8 @@
       "figures": [
         "homefusion"
       ],
-      "entry": "fusion-start.html",
-      "case": "fusion-layout.html#flagship"
+      "entry": "fusion.html",
+      "case": "case-fusion.html"
     }
   ]
 }

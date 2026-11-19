@@ -1,26 +1,17 @@
-<a id="task"></a>
+单序列圆图把一条参考序列的位置排在圆环上。输入为序列全长和注释表。各特征与骨架使用同一坐标单位，序列首尾在圆环接缝相遇。
 
-## 沿一条序列画注释图 {#task}
+<a id="draw"></a>
 
-已有长度与注释表即可绘图；只有识别、搜索或计算 DNA 派生轨道时才需要序列字符。
+## 画出 pUC19 的九条注释 {#draw}
 
-{{figure:showcaseplasmid}}
+随包 pUC19 记录提供 2,686 bp 的完整长度和九条已有注释。`geom_feature()` 直接读取特征表；已知方向的箭头沿注释链绘制。
 
-<a id="path"></a>
+{{example:first-circular}}
 
-## 想添加哪些内容？ {#path}
+<a id="adapt"></a>
 
-- [绘制圆形骨架](circular-start.md#input)
-- [单序列长度、DNA 和注释](circular-data.md#tables)
-- [圆图骨架、中心文字与注释轨道](circular-layout.md#input)
-- [圆图固定标签与自动适配](circular-labels.md)
-- [添加数据轨道](tracks.md)
-- [pUC19 完整注释图](plasmids.md)
+## 加入标签与位点 {#adapt}
 
-<a id="inputs"></a>
+给 `geom_feature()` 和 `geom_feature_label()` 传入同一位置调整，可使标签跟随特征所在道。引物区间和酶切位点各用独立图层。完整 pUC19 记录含 39 条位点记录，对应 33 个不同位置；同一位置可能有多个酶名。
 
-## 输入与边界 {#inputs}
-
-需要来源 ID、完整长度和所用图层的标准表；原生 bp/aa 单位保持一致。先核对[数据契约](data.md)与[兼容范围](compatibility.md)。
-
-[pETDuet-1：密集注释布局](circular-dense-case.md) · [13 个完整参考图](plasmid-catalog.md)
+[pUC19 完整注释图](case-circular.md) · [十三张质粒图](plasmid-catalog.md) · [圆形坐标](../../man/coord_circular.Rd)

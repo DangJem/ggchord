@@ -1,5 +1,5 @@
 <a id="moved"></a>
 
-## 章节已迁移 {#moved}
+## 本页已迁移 {#moved}
 
-[对齐、锚点与显示方向](collinear-layout.md#gap)
+[Collinear 综合实例](collinear.md)

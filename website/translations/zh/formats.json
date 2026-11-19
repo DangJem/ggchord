@@ -1,0 +1,55 @@
+{
+  "source_sha256": "60b6a2a9cd6c21e0e2118b7bdd4635375ad26f441123ea11a31bdc684c87102e",
+  "blocks": {
+    "1": {
+      "source_sha256": "40efb09f1c3c63841e3551656365846100d1e284f15ab6993e943382f5e16bc2",
+      "status": "reviewed",
+      "translation": "## 按手头的数据找入口 {#inputs}\n"
+    },
+    "2": {
+      "source_sha256": "b939b3df735615d9a4e66c6609ea4b4ab2ae5dc81800037ddc693ae152b6a844",
+      "status": "reviewed",
+      "translation": "| 手中的数据 | 需要得到的结果 | 从哪里开始 |\n"
+    },
+    "3": {
+      "source_sha256": "a9e436d2babd638ade86791e162e7de5a6b1b3128c6ae9ed93504fbf3c53dc93",
+      "status": "reviewed",
+      "translation": "| --- | --- | --- |\n"
+    },
+    "4": {
+      "source_sha256": "206e98644b8abd72d95863d76638990b99993f05a5881fc5dd7ebb359cdc23ce",
+      "status": "reviewed",
+      "translation": "| 完整序列长度、特征区间或双端记录 | 标识可匹配、单位明确的绘图表格 | [参考表与图层表](data.md) |\n"
+    },
+    "5": {
+      "source_sha256": "7cfe9f754eb7b43200a9e034e89d8c36eb5ebefdd4f4522dcdf8e29cf2093ccd",
+      "status": "reviewed",
+      "translation": "| FASTA、GenBank 或 GFF3 | 长度表或注释区间 | [读取序列与注释文件](import-sequences.md) |\n"
+    },
+    "6": {
+      "source_sha256": "af2eb8a312f81bae0e765c62cda3741e4ad48c21cf7b17578ee1051b4c90fca1",
+      "status": "reviewed",
+      "translation": "| BLAST、PAF 或特征分组文件 | 比对端点或明确记录的组成员 | [读取关系](import-relations.md) |\n"
+    },
+    "7": {
+      "source_sha256": "8b0ce2b4466382b9fc173f0991d5e02043d02d687acec66aa9a8aa29134e4b63",
+      "status": "reviewed",
+      "translation": "| bedGraph 或 BigWig | 区间及其测量数值 | [读取连续信号](import-signals.md) |\n"
+    },
+    "8": {
+      "source_sha256": "f7cf409fc64299bfb18ebd8c87093695f5861e24769e3609a453a8d63402d917",
+      "status": "reviewed",
+      "translation": "| 氨基酸区间及其父 CDS | 对应的基因组碱基与链向 | [将残基投影到 CDS](projection.md) |\n"
+    },
+    "11": {
+      "source_sha256": "d277311546e9d17b5a2f98aba17f7ab80d0aabcd82c2096b573efb98636171e3",
+      "status": "reviewed",
+      "translation": "## 从源记录追到图上 {#results}\n"
+    },
+    "12": {
+      "source_sha256": "5e83df2ab3a027cffaf9d98700ffbe2e7eabe908efcd94809ccaef18d4658f6c",
+      "status": "reviewed",
+      "translation": "从完整参考表开始构图。各层显式提供所用观测表，或用 `prepare_ggchord_data()` 组装准备对象。为了展示而筛选记录时，保留 accession 与原端点。需要核对某个图层或统计窗口对应的源记录时，见[查询布局与来源](diagnostics.md)。设置最终图片尺寸见[预览与导出](output.md)。\n"
+    }
+  }
+}

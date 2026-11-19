@@ -1,0 +1,45 @@
+{
+  "source_sha256": "96aa179e31802f1f165ac9f9e9e45091c768cdf3f5f4597d1aea425c8f168fae",
+  "blocks": {
+    "0": {
+      "source_sha256": "5fdd5bff443d1d5726c875d7f7a6656b15800603df83e7ad99681a8862ffa097",
+      "status": "reviewed",
+      "translation": "这张径向图在四根辐条上分别排列四条全长序列。输入与弦图案例相同，均为 12 条 HSP 和 20 条 CDS，可以直接对照两种布局。\n"
+    },
+    "2": {
+      "source_sha256": "647b1b27743b54f4a06675810939d0090818b00090dc7c72159ff29cd2eee532",
+      "status": "reviewed",
+      "translation": "## 绘制完整图 {#map}\n"
+    },
+    "3": {
+      "source_sha256": "9d0efee551f40e7c7c7c5c44ee6a6110a406de1ebd5d508fc2d2b6e02d9d4482",
+      "status": "reviewed",
+      "translation": "该图使用 12 × 10.5 英寸画布、144 dpi。脚本返回绘图对象，可传给 `ggplot2::ggsave()` 按相同尺寸保存。\n"
+    },
+    "6": {
+      "source_sha256": "84a540c546a282c8238972eface9931f272ce56681f6a8548bf82160a1d72e0e",
+      "status": "reviewed",
+      "translation": "## 读图 {#reading}\n"
+    },
+    "7": {
+      "source_sha256": "7f6cd08c81e8eb344d3804a1558bbe79938b618b4d050c23a2bc5ec58c60bd07",
+      "status": "reviewed",
+      "translation": "每条彩色骨架有自己的 bp 刻度，旁边的箭头和标签给出 CDS 位置。连接非相邻辐条时，带子向外弯曲，为绕过中间辐条留出空间。\n"
+    },
+    "9": {
+      "source_sha256": "de1eb696f2ab1c739faa9f8ef7b26fc480da4593cffdb8c750e451460f700193",
+      "status": "reviewed",
+      "translation": "## 来源记录与展示选择 {#inputs}\n"
+    },
+    "10": {
+      "source_sha256": "31cb6a2d1d32d231b1f80c4502f193c3d9ddd173b8614122dd4c29b5bf451b57",
+      "status": "reviewed",
+      "translation": "视图使用随包保存的序列显示方向向量。`start_angle = 45` 旋转整个布局，`nonadjacent_bulge = 0.20` 控制额外外拱量，两项设置都保留比对的来源端点。\n"
+    },
+    "11": {
+      "source_sha256": "f644d748feba420052ba3f74cae5ac6d1313af748b2cb12e1f87526131cfea86",
+      "status": "reviewed",
+      "translation": "[首张径向比较图](radial-synteny.md) · [同组序列的弦图](case-chord.md)\n"
+    }
+  }
+}

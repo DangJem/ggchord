@@ -1,0 +1,30 @@
+{
+  "source_sha256": "d885b7eebffd6f8904f48f935b23503a1790f7222084f0e67c36221815588b43",
+  "blocks": {
+    "1": {
+      "source_sha256": "6ab192ed2ebbe419a9cc23c87b106f8a6aac82a0e30aabc5ad47ec28a8069c15",
+      "status": "reviewed",
+      "translation": "## 绘制全部特征，只标出选中的记录 {#anchors}\n"
+    },
+    "2": {
+      "source_sha256": "8f4262240fd410d23a77a4389a2610fa09b392fb3f0eb078757bcd4180a76e7f",
+      "status": "reviewed",
+      "translation": "pUC19 示例包含九条参考特征。每条特征有稳定 ID，标签可据此找到对应实体。先用完整表分配道位，再筛出两条 CDS 作标签。实体图层的 ID 是 `features`，标签层通过 `anchor_layer` 指向它。\n"
+    },
+    "5": {
+      "source_sha256": "763890ebcf326ed55ddb5bb010b1f8dfa230159a3ded0cff232d7a811ce5e311",
+      "status": "reviewed",
+      "translation": "## 决定形状与标签如何放置 {#placement}\n"
+    },
+    "6": {
+      "source_sha256": "4450de8a228b169f8a0acbd4f89cd5d71d92c5d4298f285da833205db4882092",
+      "status": "reviewed",
+      "translation": "混合链向或未知链的区间可用 `geom_feature()`。核酸参考上链向已知的编码特征可选 gene 预设绘制有向箭头。教学表若同时保留原始链和重编码的展示链，应明确传入来源链。若想把多道放在同侧，可给 `position_feature_stack()` 指定 `base_position = position_offset(...)` 和分道方向。稳定特征键与原区间使筛选、重排后的标签仍可跟随道位。\n"
+    },
+    "7": {
+      "source_sha256": "55e6b13bdd9decb87797baa9e35079d6b009103d1857948143b46a4ab3e06a27",
+      "status": "reviewed",
+      "translation": "需要指定文字角度时使用固定位置。需要自动排布时使用 `placement = \"repel\"`，用 `overflow` 决定空间不足时如何处理文字。最后按[目标导出尺寸](output.md)检查标签。\n"
+    }
+  }
+}

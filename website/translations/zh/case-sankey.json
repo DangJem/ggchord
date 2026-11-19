@@ -1,0 +1,45 @@
+{
+  "source_sha256": "c47b5c0d48089dfb53c736ab649051be5c962f3688b8352fe5daa6ee8fae449d",
+  "blocks": {
+    "0": {
+      "source_sha256": "80ff62fea28b207b3bfc42b65e6fd8f2349f20f8167e57f27fad31048de6221d",
+      "status": "reviewed",
+      "translation": "四条来源序列都在左右两列出现。即使两个 accession 在行序中相距较远，也能从左列 query 端追踪到右列 subject 端。\n"
+    },
+    "2": {
+      "source_sha256": "647b1b27743b54f4a06675810939d0090818b00090dc7c72159ff29cd2eee532",
+      "status": "reviewed",
+      "translation": "## 绘制完整图 {#map}\n"
+    },
+    "3": {
+      "source_sha256": "85d00a297ef84eb8e3fa791009f358b5339c5bddf93202c55b4f909a445b42b9",
+      "status": "reviewed",
+      "translation": "该图使用 10 × 16 英寸画布、144 dpi。脚本返回绘图对象，可传给 `ggplot2::ggsave()` 按相同尺寸保存。\n"
+    },
+    "6": {
+      "source_sha256": "84a540c546a282c8238972eface9931f272ce56681f6a8548bf82160a1d72e0e",
+      "status": "reviewed",
+      "translation": "## 读图 {#reading}\n"
+    },
+    "7": {
+      "source_sha256": "6105255c0f6873a9b5925beda64c169c2b830f795f31ce1fe1af83e73076c453",
+      "status": "reviewed",
+      "translation": "输入含十条精选 HSP 和 16 条 CDS。带的填色表示一致性百分比，箭头标出 CDS 的链方向，序列配色帮助识别两列中同一 accession 的副本。另一列中的同一序列为这些特征提供了第二个显示位置。\n"
+    },
+    "9": {
+      "source_sha256": "de1eb696f2ab1c739faa9f8ef7b26fc480da4593cffdb8c750e451460f700193",
+      "status": "reviewed",
+      "translation": "## 来源记录与展示选择 {#inputs}\n"
+    },
+    "10": {
+      "source_sha256": "e1665fbcc40ebb028ce55214b568750296ddcfd1090aa7584dafcc146389928a",
+      "status": "reviewed",
+      "translation": "相邻行和跨行连接均来自共线性图的展示子集。两列的间距设为 `column_gap = 4.2`，序列与链图例共用。若缩小导出宽度，先检查两列外侧的标签空间。\n"
+    },
+    "11": {
+      "source_sha256": "6e5490a665c2f6d9989c53bbedbe950ca6f21b36d75a607c5f7a27b5a844b396",
+      "status": "reviewed",
+      "translation": "[双列区间图读法](sankey.md) · [对照线性布局](case-collinear.md)\n"
+    }
+  }
+}

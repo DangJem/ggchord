@@ -1,97 +1,15 @@
+<a id="shared-band"></a>
+
+## Overlay bars and a line on one scale {#shared-band}
+
+The installed bedGraph contains GC percentages in successive pUC19 windows. Bars span the observed intervals and the line joins their midpoints. Declare the physical band once with `track_band("gc")`. Both geometry layers select it with `track = "gc"`. A height of 60 has the same meaning in both layers.
+
+{{example:gc-shared-band}}
+
 <a id="domain"></a>
 
-## Compute a track from actual DNA {#domain}
-Compute GC fraction in 100 bp
-windows of bundled pUC19. The final shorter window uses its actual base count.
+## Separate physical width, value and colour {#domain}
 
-{{code:trackdata,frontgctable}}
+Use the band's `width` for space on the page. Use `scale_track_value_continuous()` with explicit `limits` for the numerical axis. Changing the width leaves each GC percentage intact. A tile with `aes(fill = value)` represents a value by colour across an interval. For a second measure with different units, declare another band and give it its own value scale.
 
-{{output:frontgctable}}
-
-Each row of `bins` is an actual sequence window. Check its endpoints and `gc`, then map values to track height and colour.
-
-<a id="draw-gc"></a>
-
-### Draw GC fractions {#draw-gc}
-
-{{code:tracks}}
-{{figure:tracks}}
-
-The domain is 0–1, in fractions. Replace it with the actual unit/range of other
-measurements. `track_band()` controls placement/physical width;
-`scale_track_value_continuous()` controls numerical mapping.
-
-<a id="sharing"></a>
-
-## Share an ID deliberately {#sharing}
-Same-ID layers share a numerical domain, including bar baselines. Declare width and placement once for the band. Colour scales are scoped independently by track ID. Tiles
-show interval categories, lines connect observations, `geom_track_col()` encodes supplied interval values relative to a baseline;
-`geom_track_bar()` counts observations at positions with baseline 0. Binning
-requires explicit binwidth/breaks through the bin workflow. Sharing a domain does not require sharing a spatial band.
-
-<a id="diagnostics"></a>
-
-## Inspect retention and limits {#diagnostics}
-`export_ggchord_layout()` returns `track_registry` and `track_diagnostics` record domains, physical
-sizes, native offsets and clipping. Omitted/clipped rows do not mean zero values.
-Focus tracks with `focus_ggchord_track()` using the same windows.
-
-<a id="multiple"></a>
-
-## Combine bars and a moving mean {#multiple}
-Use the same GC windows and add a three-window moving mean.
-
-{{code:multitrack}}
-{{figure:multitrack}}
-
-Bars and line use the same actual GC measurements; the line is a three-window
-moving mean. Incomplete end windows are omitted, not filled with invented values.
-Line positions use integer bin midpoints. Both layers use the same track ID.
-
-<a id="tile"></a>
-
-## Encode values with a tile track {#tile}
-
-Reuse `track_seq` and `bins`, computed from real DNA on this page. Tiles require `accver, start, end` and do not require numeric heights. Here the same `gc` values map to `track_fill`.
-
-{{code:tracktile}}
-{{figure:tracktile}}
-
-Use the same 9 × 8 inch dimensions and 100 bp windows as the bars. Bars encode value by height; tiles keep a fixed band width and encode GC fraction from 0 to 1 by colour. This is not another experimental observation and does not average overlapping intervals. It compares encodings, **not a single geometry parameter**.
-
-| Parameter or mapping | Default | Choice and constraints |
-| --- | --- | --- |
-| `track` | Default band | `track = "gc_colour"` selects the band declared with `track_band("gc_colour")` |
-| `width` | 4 mm in `track_band()` | 10 mm here; physical band width |
-| `side` / `order` | outside / 1 | Lower order places a band nearer the backbone |
-| `gap` | 1 mm | Physical spacing from the preceding band, not a sequence gap |
-| `track_fill` | Never inferred | Map gc inside `aes()`; use `fill` for a fixed colour |
-| `bounds` | `"error"` | Out-of-range coordinates error; clip reports clipping |
-| `alpha` / `linewidth` | 1 / 0.25 | Fixed opacity and border width; border colour defaults to NA |
-
-Use `scale_track_fill_gradientn()` for continuous colours or `scale_track_fill_manual()` for categories, with the matching track ID. Do not label a fraction as a percentage. To combine with the bars, add this tile layer to `p_tracks` and retain separate IDs for separate bands. Layers sharing an ID use its declared side, order, width and gap.
-
-Change only tile width from 10 to 4 mm: colours stay the same while physical band width changes. Your own data must declare windows, units, NA handling and overlap policy. Check coordinate errors rather than hiding them with clip. See [`geom_track_tile()`](../../man/geom_track_tile.Rd) and [`track_band()`](../../man/track_band.Rd).
-
-<a id="tile-width"></a>
-
-## Change only physical tile width {#tile-width}
-
-Compare with the 10 mm band above. Keep the same 9 × 8 inch device, windows, colours and value domain, changing only `track_band(width)` to 4 mm:
-
-{{code:comparetrackthin}}
-{{figure:comparetrackthin}}
-
-Colours still encode the same GC fractions. Only physical band width shrinks. `geom_track_tile()` draws interval tiles and the band declaration sets its width; neither changes base composition. Try 6 mm while retaining export dimensions. Bar heights are separately controlled by `track_value` and its value scale; reducing band width is not numerical normalization.
-
-<a id="check-result"></a>
-
-## Result checks {#check-result}
-GC in bins lies between 0 and 1; each row is an actual window and the last may be shorter than 100 bp. Bars and line share the same 0–1 fraction scale.
-
-<a id="save-result"></a>
-
-## Save this result {#save-result}
-Save the plot just created to the working directory; use matching dimensions for preview.
-
-{{code:courseblockv}}
+To compute coverage from intervals and compare groups, see [window statistics and facets](tracks-statistics.md).

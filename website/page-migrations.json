@@ -1,302 +1,298 @@
 {
   "chord-start.html": {
-    "": "multi-sequence-start.html#draw",
-    "draw": "multi-sequence-start.html#draw",
-    "read": "multi-sequence-start.html#read",
-    "try": "multi-sequence-start.html#try",
-    "adapt": "multi-sequence-start.html#adapt"
+    "": "chord.html",
+    "draw": "chord.html",
+    "read": "chord.html",
+    "try": "chord.html",
+    "adapt": "chord.html",
+    "moved": "chord.html"
   },
   "chord-build.html": {
-    "": "multi-sequence-start.html#draw",
-    "bundled": "multi-sequence-start.html#draw",
-    "backbones": "multi-sequence-start.html#draw",
-    "links": "multi-sequence-start.html#links",
-    "add-genes": "multi-sequence-start.html#add-genes",
-    "prepare": "multi-sequence-start.html#prepare",
-    "inspect-genes": "multi-sequence-start.html#inspect-genes",
-    "genes": "multi-sequence-start.html#genes",
-    "labels": "multi-sequence-start.html#labels"
+    "": "chord.html",
+    "bundled": "chord.html",
+    "backbones": "chord.html",
+    "links": "chord.html",
+    "add-genes": "chord.html",
+    "prepare": "chord.html",
+    "inspect-genes": "chord.html",
+    "genes": "chord.html",
+    "labels": "chord.html",
+    "moved": "chord.html"
   },
   "collinear-start.html": {
-    "": "multi-sequence-start.html#collinear",
-    "draw": "multi-sequence-start.html#draw",
-    "read": "multi-sequence-start.html#read",
-    "try": "multi-sequence-start.html#try",
-    "adapt": "multi-sequence-start.html#adapt"
+    "": "collinear.html",
+    "draw": "chord.html",
+    "read": "chord.html",
+    "try": "chord.html",
+    "adapt": "chord.html",
+    "moved": "collinear.html"
   },
   "collinear-build.html": {
-    "": "multi-sequence-start.html#collinear",
-    "bundled": "multi-sequence-start.html#draw",
-    "prepare": "multi-sequence-start.html#prepare",
-    "switch": "multi-sequence-start.html#collinear",
-    "backbones": "multi-sequence-start.html#collinear",
-    "links": "multi-sequence-start.html#links",
-    "inspect-genes": "multi-sequence-start.html#inspect-genes",
-    "add-genes": "multi-sequence-start.html#add-genes",
-    "labels": "multi-sequence-start.html#labels"
+    "": "collinear.html",
+    "bundled": "chord.html",
+    "prepare": "chord.html",
+    "switch": "chord.html",
+    "backbones": "chord.html",
+    "links": "chord.html",
+    "inspect-genes": "chord.html",
+    "add-genes": "chord.html",
+    "labels": "chord.html",
+    "moved": "collinear.html"
   },
   "chord-data.html": {
-    "": "data.html#tables",
-    "tables": "data.html#tables",
-    "inspect": "data.html#inspect",
-    "names": "data.html#names",
-    "coordinates": "data.html#reading-coordinates",
-    "protein-unit": "data.html#protein-unit"
+    "": "data.html",
+    "tables": "data.html",
+    "inspect": "data.html",
+    "names": "data.html",
+    "coordinates": "data.html",
+    "protein-unit": "data.html",
+    "moved": "data.html"
   },
   "collinear-data.html": {
-    "": "multi-sequence-views.html#direction-and-adjacency",
-    "tables": "multi-sequence-views.html#input",
-    "example": "multi-sequence-views.html#input",
-    "import": "multi-sequence-views.html#input",
-    "contract": "multi-sequence-views.html#input"
+    "": "data.html",
+    "tables": "multi-sequence-views.html",
+    "example": "multi-sequence-views.html",
+    "import": "multi-sequence-views.html",
+    "contract": "multi-sequence-views.html",
+    "moved": "data.html"
   },
   "chord-tuning.html": {
-    "orientation": "chord-geometry.html#orientation",
-    "parameters": "chord-geometry.html#parameters",
-    "": "chord-geometry.html#orientation",
-    "prepare": "chord-geometry.html#orientation",
-    "clearance": "chord-geometry.html#orientation",
-    "guides": "chord-geometry.html#orientation"
+    "orientation": "chord.html",
+    "parameters": "chord.html",
+    "": "chord.html",
+    "prepare": "chord.html",
+    "clearance": "chord.html",
+    "guides": "chord.html",
+    "moved": "chord.html"
   },
   "chord-geometry.html": {
-    "direction": "multi-sequence-layout.html#direction",
-    "order": "multi-sequence-layout.html#order",
-    "": "chord-geometry.html",
-    "shape": "chord-geometry.html#shape",
-    "curvature": "chord-geometry.html#curvature"
+    "direction": "multi-sequence-layout.html",
+    "order": "multi-sequence-layout.html",
+    "": "chord.html",
+    "shape": "chord.html",
+    "curvature": "chord.html",
+    "parameters": "chord.html",
+    "orientation": "chord.html"
   },
   "collinear-tuning.html": {
-    "gap": "collinear-layout.html#gap",
-    "": "collinear-layout.html#gap",
-    "baseline": "collinear-layout.html#baseline",
-    "scale": "collinear-layout.html#gap"
+    "gap": "collinear.html",
+    "": "collinear.html",
+    "baseline": "collinear.html",
+    "scale": "collinear.html",
+    "moved": "collinear.html"
   },
   "chord-routing.html": {
-    "control": "multi-sequence-links.html#control",
-    "clearance": "multi-sequence-links.html#clearance",
-    "point-markers": "multi-sequence-links.html#point-markers",
-    "branch-contract": "multi-sequence-links.html#branch-contract",
-    "": "multi-sequence-links.html#control",
-    "region-parameters": "annotations.html#region-parameters"
+    "control": "multi-sequence-links.html",
+    "clearance": "multi-sequence-links.html",
+    "point-markers": "multi-sequence-links.html",
+    "branch-contract": "multi-sequence-links.html",
+    "": "multi-sequence-links.html",
+    "region-parameters": "annotations.html",
+    "moved": "multi-sequence-links.html"
   },
   "chord-branches.html": {
-    "input": "multi-sequence-links.html#input",
-    "branches": "multi-sequence-links.html#branches",
-    "fraction": "multi-sequence-links.html#fraction",
-    "point-links": "multi-sequence-links.html#point-links",
-    "adapt": "multi-sequence-links.html#adapt",
-    "": "multi-sequence-links.html#input"
+    "input": "multi-sequence-links.html",
+    "branches": "multi-sequence-links.html",
+    "fraction": "multi-sequence-links.html",
+    "point-links": "multi-sequence-links.html",
+    "adapt": "multi-sequence-links.html",
+    "": "multi-sequence-links.html",
+    "moved": "multi-sequence-links.html"
   },
   "collinear-routing.html": {
-    "routes": "multi-sequence-links.html#routes",
-    "width": "multi-sequence-links.html#width",
-    "": "multi-sequence-links.html#routes",
-    "prepare": "multi-sequence-links.html#routes",
-    "clearance": "multi-sequence-links.html#clearance",
-    "ruler": "multi-sequence-links.html#routes",
-    "next": "multi-sequence-links.html#routes"
+    "routes": "multi-sequence-links.html",
+    "width": "multi-sequence-links.html",
+    "": "multi-sequence-links.html",
+    "prepare": "multi-sequence-links.html",
+    "clearance": "multi-sequence-links.html",
+    "ruler": "multi-sequence-links.html",
+    "next": "multi-sequence-links.html",
+    "moved": "multi-sequence-links.html"
   },
   "chord-labels.html": {
-    "sequence-labels": "multi-sequence-labels.html#sequence-labels",
-    "gene-labels": "multi-sequence-labels.html#gene-labels",
-    "sequence-parameters": "multi-sequence-labels.html#sequence-parameters",
-    "": "multi-sequence-labels.html#sequence-labels"
+    "sequence-labels": "annotations.html",
+    "gene-labels": "annotations.html",
+    "sequence-parameters": "annotations.html",
+    "": "annotations.html",
+    "moved": "annotations.html"
   },
   "plasmid-start.html": {
-    "draw": "circular-start.html#input",
-    "features": "circular-start.html#features-and-labels",
-    "adapt": "circular-start.html#exercise",
-    "": "circular-start.html#input"
+    "draw": "circular.html",
+    "features": "circular.html",
+    "adapt": "circular.html",
+    "": "circular.html",
+    "moved": "circular.html"
   },
   "plasmid-build.html": {
-    "origin": "circular-start.html#input",
-    "features": "circular-start.html#features-and-labels",
-    "add-label": "circular-start.html#features-and-labels",
-    "adapt": "circular-start.html#exercise",
-    "": "circular-start.html#input",
-    "prepare": "circular-start.html#input",
-    "backbone": "circular-start.html#input",
-    "labels": "circular-start.html#input",
-    "details": "circular-start.html#input"
+    "origin": "circular.html",
+    "features": "circular.html",
+    "add-label": "circular.html",
+    "adapt": "circular.html",
+    "": "circular.html",
+    "prepare": "circular.html",
+    "backbone": "circular.html",
+    "labels": "circular.html",
+    "details": "circular.html",
+    "moved": "circular.html"
   },
   "plasmid-data.html": {
-    "tables": "circular-data.html#tables",
-    "inspect": "circular-data.html#inspect",
-    "import": "circular-data.html#import",
-    "path": "circular-data.html#path",
-    "": "circular-data.html#tables"
+    "tables": "data.html",
+    "inspect": "data.html",
+    "import": "data.html",
+    "path": "data.html",
+    "": "data.html",
+    "moved": "data.html"
   },
   "circular-layers.html": {
-    "input": "circular-layout.html#input",
-    "backbones": "circular-layout.html#backbones",
-    "band-rendering": "circular-layout.html#band-rendering",
-    "coordinates": "circular-layout.html#coordinates",
-    "center": "circular-layout.html#center",
-    "feature-shapes": "circular-features.html#feature-shapes",
-    "stacking": "circular-features.html#stacking",
-    "adapt": "circular-features.html#adapt",
-    "": "circular-layout.html#input"
+    "input": "circular.html",
+    "backbones": "circular.html",
+    "band-rendering": "circular.html",
+    "coordinates": "circular.html",
+    "center": "circular.html",
+    "feature-shapes": "annotations.html",
+    "stacking": "annotations.html",
+    "adapt": "annotations.html",
+    "": "circular.html",
+    "moved": "circular.html"
   },
   "plasmid-tuning.html": {
-    "style": "circular-layout.html#style",
-    "rotation": "circular-layout.html#rotation",
-    "": "circular-layout.html#style",
-    "baseline": "circular-layout.html#style"
+    "style": "circular.html",
+    "rotation": "circular.html",
+    "": "circular.html",
+    "baseline": "circular.html",
+    "moved": "circular.html"
   },
   "plasmids.html": {
-    "complex": "circular-dense-case.html#complex",
-    "": "plasmids.html",
-    "question": "plasmids.html#question",
-    "input": "plasmids.html#input",
-    "draw": "plasmids.html#draw",
-    "layers": "plasmids.html#layers",
-    "sites": "plasmids.html#sites",
-    "limits": "plasmids.html#limits",
-    "adapt": "plasmids.html#adapt",
-    "check-result": "plasmids.html#check-result",
-    "save-result": "plasmids.html#save-result",
-    "evidence-check": "plasmids.html#evidence-check",
-    "source-rights": "plasmids.html#source-rights"
+    "complex": "case-circular.html",
+    "": "case-circular.html",
+    "question": "case-circular.html",
+    "input": "case-circular.html",
+    "draw": "case-circular.html",
+    "layers": "case-circular.html",
+    "sites": "case-circular.html",
+    "limits": "case-circular.html",
+    "adapt": "case-circular.html",
+    "check-result": "case-circular.html",
+    "save-result": "case-circular.html",
+    "evidence-check": "case-circular.html",
+    "source-rights": "case-circular.html",
+    "features": "case-circular.html"
   },
   "view-expansion.html": {
-    "dotplot": "dotplot-start.html#dotplot",
-    "support": "dotplot-start.html#support",
-    "radial": "radial-synteny.html#radial",
-    "export": "radial-synteny.html#export",
-    "": "dotplot-start.html#dotplot"
+    "dotplot": "dotplot.html",
+    "support": "dotplot.html",
+    "radial": "radial-synteny.html",
+    "export": "radial-synteny.html",
+    "": "dotplot.html",
+    "moved": "dotplot.html"
   },
   "formats.html": {
-    "adapters": "import-sequences.html#adapters",
-    "genbank": "import-sequences.html#genbank",
-    "zero-based": "import-intervals.html#zero-based",
-    "ranges": "import-intervals.html#ranges",
-    "bedpe": "import-intervals.html#bedpe",
-    "characters": "aligned-sequences.html#characters",
-    "aligned-characters": "aligned-sequences.html#aligned-characters",
-    "aligned-protein": "aligned-sequences.html#aligned-protein",
-    "aligned-source": "aligned-sequences.html#aligned-source",
-    "cds-translation": "aligned-sequences.html#cds-translation",
-    "signals": "import-signals.html#signals",
-    "aligned-reads": "import-signals.html#aligned-reads",
-    "variants": "import-relations.html#variants",
-    "genome-alignments": "import-relations.html#genome-alignments",
-    "delta": "import-relations.html#delta",
-    "protein-signatures": "import-relations.html#protein-signatures",
-    "feature-relations": "import-relations.html#feature-relations",
-    "graph-paths": "import-relations.html#graph-paths",
-    "": "formats.html",
-    "choose-format": "formats.html#choose-format",
-    "prepare": "formats.html",
-    "check-result": "formats.html"
+    "adapters": "import-sequences.html",
+    "genbank": "import-sequences.html",
+    "zero-based": "import-sequences.html",
+    "ranges": "import-sequences.html",
+    "bedpe": "import-sequences.html",
+    "characters": "import-sequences.html",
+    "aligned-characters": "import-sequences.html",
+    "aligned-protein": "import-sequences.html",
+    "aligned-source": "import-sequences.html",
+    "cds-translation": "import-sequences.html",
+    "signals": "import-signals.html",
+    "aligned-reads": "import-signals.html",
+    "variants": "import-relations.html",
+    "genome-alignments": "import-relations.html",
+    "delta": "import-relations.html",
+    "protein-signatures": "import-relations.html",
+    "feature-relations": "import-relations.html",
+    "graph-paths": "import-relations.html"
   },
   "chord-import.html": {
-    "files": "import-sequences.html#files",
-    "blast": "import-sequences.html#blast",
-    "alternatives": "import-sequences.html#alternatives",
-    "": "import-sequences.html#files"
+    "files": "import-sequences.html",
+    "blast": "import-sequences.html",
+    "alternatives": "import-sequences.html",
+    "": "import-sequences.html",
+    "moved": "import-sequences.html"
   },
   "tracks.html": {
-    "independent-bands": "tracks-statistics.html#independent-bands",
-    "window-policy": "tracks-statistics.html#window-policy",
-    "estimates": "tracks-statistics.html#estimates",
-    "": "tracks.html",
-    "prepare": "tracks.html",
-    "domain": "tracks.html#domain",
-    "draw-gc": "tracks.html#draw-gc",
-    "sharing": "tracks.html#sharing",
-    "diagnostics": "tracks.html#diagnostics",
-    "multiple": "tracks.html#multiple",
-    "tile": "tracks.html#tile",
-    "tile-width": "tracks.html#tile-width",
-    "check-result": "tracks.html#check-result",
-    "save-result": "tracks.html#save-result"
+    "independent-bands": "tracks-statistics.html",
+    "window-policy": "tracks-statistics.html",
+    "estimates": "tracks-statistics.html"
   },
   "foundation.html": {
-    "tracks": "tracks-statistics.html#tracks",
-    "source": "data.html#source",
-    "instances": "instances.html#instances",
-    "sankey": "sankey.html#sankey",
-    "projection": "multi-sequence-views.html#projection",
-    "tip": "multi-sequence-views.html#tip",
-    "": "multi-sequence.html#task"
+    "tracks": "tracks-statistics.html",
+    "source": "data.html",
+    "instances": "multi-sequence-layout.html",
+    "sankey": "sankey.html",
+    "projection": "multi-sequence-views.html",
+    "tip": "multi-sequence-views.html",
+    "": "installation.html",
+    "moved": "installation.html"
   },
   "output.html": {
-    "geometry": "diagnostics.html#geometry",
-    "diagnostics": "diagnostics.html#diagnostics",
-    "consumption": "diagnostics.html#consumption",
-    "label-quality": "diagnostics.html#label-quality",
-    "": "output.html",
-    "prepare": "output.html#prepare",
-    "size": "output.html#size",
-    "check-result": "output.html#check-result"
+    "geometry": "diagnostics.html",
+    "diagnostics": "diagnostics.html",
+    "consumption": "diagnostics.html",
+    "label-quality": "diagnostics.html"
   },
   "workflow-tools.html": {
-    "input": "workflows.html#tools",
-    "catalog": "recognition.html#catalog",
-    "diagnostics": "diagnostics.html#target-size",
-    "track-focus": "tracks-statistics.html#track-focus",
-    "tools": "workflows.html#tools",
-    "adapt": "workflows.html#tools",
-    "": "workflows.html#tools"
+    "input": "data.html",
+    "catalog": "annotations.html",
+    "diagnostics": "diagnostics.html",
+    "track-focus": "tracks-statistics.html",
+    "tools": "data.html",
+    "adapt": "data.html",
+    "": "data.html",
+    "moved": "data.html"
   },
   "adjustments.html": {
-    "grammar": "styling.html#grammar",
-    "mapping": "styling.html#mapping",
-    "position": "styling.html#position",
-    "check-result": "styling.html#check-result",
-    "": "styling.html#roles",
-    "prepare": "styling.html#prepare"
+    "grammar": "styling.html",
+    "mapping": "styling.html",
+    "position": "styling.html",
+    "check-result": "styling.html",
+    "": "styling.html",
+    "prepare": "styling.html",
+    "moved": "styling.html"
   },
-  "fusion.html": {
-    "panels": "fusion-routing.html#panels",
-    "export": "fusion-routing.html#export",
-    "routing": "fusion-routing.html#routing",
-    "styles": "fusion-layout.html#styles",
-    "advanced-placement": "fusion-layout.html#advanced-placement",
-    "outer-guides": "fusion-layout.html#outer-guides",
-    "auto-perimeter": "fusion-layout.html#auto-perimeter",
-    "plot-furniture": "fusion-layout.html#plot-furniture",
-    "magnify": "fusion-details.html#magnify",
-    "paired-detail": "fusion-details.html#paired-detail",
-    "multiple-details": "fusion-details.html#multiple-details",
-    "character-detail": "fusion-details.html#character-detail",
-    "nested-detail": "fusion-advanced.html#nested-detail",
-    "origin-detail": "fusion-advanced.html#origin-detail",
-    "intervals": "fusion-routing.html#intervals",
-    "": "fusion.html"
-  },
+  "fusion.html": {},
   "about.html": {
-    "modules": "modes.html#modules",
-    "": "about.html",
-    "compatibility": "about.html#compatibility",
-    "feedback": "about.html#feedback",
-    "sources": "about.html#sources",
+    "modules": "modes.html",
     "path-techniques": "installation.html",
-    "path-chord": "multi-sequence.html#path",
-    "path-collinear": "multi-sequence.html#path",
-    "path-plasmid": "circular.html#path",
-    "path-shared-techniques": "styling.html#roles",
-    "path-data": "formats.html#choose-format",
+    "path-chord": "chord.html",
+    "path-collinear": "chord.html",
+    "path-plasmid": "circular.html",
+    "path-shared-techniques": "styling.html",
+    "path-data": "formats.html",
     "path-cases": "gallery.html",
-    "path-reference": "reference/index.html",
-    "path-information": "about.html#compatibility"
+    "path-reference": "reference/index.html"
   },
   "task-index.html": {
     "": "reference/index.html",
     "tasks": "reference/index.html",
-    "paths": "installation.html"
+    "paths": "installation.html",
+    "moved": "reference/index.html"
   },
   "ribbon-statistics.html": {
-    "": "ribbons.html#statistics",
-    "input": "ribbons.html#statistics",
-    "density": "ribbons.html#statistics-density",
-    "bundle": "ribbons.html#statistics-bundle",
-    "parameters": "ribbons.html#statistics-parameters",
-    "adapt": "ribbons.html#statistics-adapt"
+    "": "tracks-statistics.html",
+    "input": "multi-sequence-links.html",
+    "density": "multi-sequence-links.html",
+    "bundle": "multi-sequence-links.html",
+    "parameters": "multi-sequence-links.html",
+    "adapt": "multi-sequence-links.html",
+    "moved": "tracks-statistics.html"
   },
   "ribbons.html": {
-    "points": "multi-sequence-links.html#interval-points",
-    "": "ribbons.html"
+    "points": "multi-sequence-links.html",
+    "": "multi-sequence-links.html",
+    "statistics-density": "multi-sequence-links.html",
+    "statistics-bundle": "multi-sequence-links.html",
+    "transformations": "multi-sequence-links.html",
+    "statistics-parameters": "multi-sequence-links.html",
+    "density": "multi-sequence-links.html",
+    "statistics-adapt": "multi-sequence-links.html",
+    "check-result": "multi-sequence-links.html",
+    "input": "multi-sequence-links.html",
+    "prepare": "multi-sequence-links.html",
+    "statistics": "multi-sequence-links.html"
   },
   "reference.html": {
     "": "reference/index.html",
@@ -304,46 +300,355 @@
   },
   "learn.html": {
     "": "installation.html",
-    "modules": "modes.html#modules",
+    "modules": "modes.html",
     "foundations": "installation.html",
     "tasks": "reference/index.html",
     "paths": "installation.html"
   },
   "index.html": {
-    "choose": "modes.html#modules",
-    "quick-start": "installation.html#first-plot",
+    "choose": "modes.html",
+    "quick-start": "installation.html",
     "results": "gallery.html",
-    "chord": "chord.html",
-    "collinear": "collinear.html",
-    "circular": "circular-dense-case.html",
+    "chord": "case-chord.html",
+    "collinear": "case-collinear.html",
+    "circular": "case-circular.html",
     "learn": "installation.html",
-    "versions": "about.html#reproducibility"
+    "versions": "about.html"
   },
   "reference/geom_gene.html": {
-    "": "migration.html#removed-layers",
-    "ref-examples": "reference/geom_feature.html#ref-examples"
+    "": "migration.html#api",
+    "ref-examples": "migration.html#api"
   },
   "reference/geom_feature_plasmid.html": {
-    "": "migration.html#removed-layers",
-    "ref-examples": "reference/geom_feature.html#ref-examples"
+    "": "migration.html#api",
+    "ref-examples": "migration.html#api"
   },
   "reference/geom_feature_label_repel.html": {
-    "": "migration.html#removed-layers",
-    "ref-examples": "reference/geom_feature_label.html#ref-examples"
+    "": "migration.html#api",
+    "ref-examples": "migration.html#api"
   },
   "reference/position_plasmid.html": {
-    "": "migration.html#removed-layers",
-    "ref-examples": "reference/position_offset.html#ref-examples"
+    "": "migration.html#api",
+    "ref-examples": "migration.html#api"
   },
   "reference/position_track.html": {
-    "": "migration.html#removed-layers",
-    "ref-examples": "reference/track_band.html#ref-examples"
+    "": "migration.html#api",
+    "ref-examples": "migration.html#api"
   },
   "parameter-atlas.html": {
-    "api-geom_feature_plasmid": "circular-features.html#feature-shapes",
-    "api-position_plasmid": "circular-features.html#stacking",
-    "api-geom_feature_label_repel": "circular-labels.html#automatic-labels",
-    "api-geom_gene": "feature-geometry.html#parameters",
-    "api-position_track": "tracks.html#draw-gc"
+    "api-geom_feature_plasmid": "annotations.html",
+    "api-position_plasmid": "annotations.html",
+    "api-geom_feature_label_repel": "annotations.html",
+    "api-geom_gene": "annotations.html",
+    "api-position_track": "tracks.html"
+  },
+  "real-data.html": {
+    "": "case-chord.html",
+    "research-question": "case-chord.html",
+    "chord": "case-chord.html",
+    "read": "case-chord.html",
+    "evidence-check": "case-chord.html",
+    "provenance": "case-chord.html",
+    "check-result": "case-chord.html",
+    "selection": "case-chord.html",
+    "linear": "case-chord.html",
+    "save-result": "case-chord.html",
+    "prepared-layers": "case-chord.html",
+    "prepare": "case-chord.html",
+    "minimal-fields": "case-chord.html"
+  },
+  "homology.html": {
+    "": "projection.html",
+    "links": "projection.html",
+    "membership": "projection.html",
+    "focus": "projection.html",
+    "save-result": "projection.html",
+    "projection": "projection.html",
+    "check-result": "projection.html"
+  },
+  "views.html": {
+    "": "projection.html",
+    "focus": "projection.html",
+    "homology": "projection.html",
+    "mapping": "projection.html",
+    "check-result": "projection.html",
+    "segments": "projection.html"
+  },
+  "recognition.html": {
+    "": "annotations.html",
+    "restriction": "annotations.html",
+    "catalog": "annotations.html",
+    "prepare": "annotations.html",
+    "check-result": "annotations.html",
+    "search": "annotations.html",
+    "features": "annotations.html",
+    "reference": "annotations.html"
+  },
+  "alignments.html": {
+    "": "import-relations.html",
+    "minimal": "import-relations.html",
+    "source": "import-relations.html",
+    "prepare": "import-relations.html",
+    "projection": "import-relations.html",
+    "check-result": "import-relations.html",
+    "standard": "import-relations.html",
+    "protein": "import-relations.html"
+  },
+  "labels.html": {
+    "": "annotations.html",
+    "prepare": "annotations.html",
+    "comparison": "annotations.html",
+    "fixed": "annotations.html",
+    "check-result": "annotations.html",
+    "anchors": "annotations.html",
+    "layout": "annotations.html"
+  },
+  "faq.html": {
+    "": "diagnostics.html",
+    "removed": "diagnostics.html",
+    "report": "diagnostics.html",
+    "quality": "diagnostics.html",
+    "resize": "diagnostics.html",
+    "strand": "diagnostics.html",
+    "ribbons": "diagnostics.html",
+    "biology": "diagnostics.html"
+  },
+  "protein-alignments.html": {
+    "": "import-relations.html",
+    "source": "import-relations.html",
+    "protein": "import-relations.html",
+    "projection": "import-relations.html",
+    "check-result": "import-relations.html"
+  },
+  "collinear-layout.html": {
+    "": "collinear.html",
+    "gap": "collinear.html",
+    "anchor": "collinear.html",
+    "parameters": "collinear.html",
+    "adapt": "collinear.html",
+    "baseline": "collinear.html",
+    "orientation": "collinear.html",
+    "alignment": "collinear.html"
+  },
+  "compatibility.html": {
+    "": "migration.html",
+    "aligned-cells": "migration.html",
+    "conditions": "migration.html",
+    "new-views": "migration.html",
+    "adaptive": "migration.html",
+    "versions": "migration.html",
+    "fusion": "migration.html",
+    "layers": "migration.html"
+  },
+  "feature-geometry.html": {
+    "": "annotations.html",
+    "locus-selection": "annotations.html",
+    "arrow-heads": "annotations.html",
+    "parameters": "annotations.html",
+    "input": "annotations.html",
+    "adapt": "annotations.html",
+    "short-features": "annotations.html"
+  },
+  "circular-labels.html": {
+    "": "annotations.html",
+    "consecutive-repeats": "annotations.html",
+    "automatic-labels": "annotations.html",
+    "fixed-parameters": "annotations.html",
+    "input": "annotations.html",
+    "adapt": "annotations.html",
+    "fitting": "annotations.html",
+    "fixed-labels": "annotations.html",
+    "automatic-parameters": "annotations.html"
+  },
+  "primers.html": {
+    "": "annotations.html",
+    "primer-labels": "annotations.html",
+    "parameters": "annotations.html",
+    "input": "annotations.html",
+    "adapt": "annotations.html",
+    "primer-arcs": "annotations.html"
+  },
+  "restriction-sites.html": {
+    "": "annotations.html",
+    "parameters": "annotations.html",
+    "input": "annotations.html",
+    "text-content": "annotations.html",
+    "adapt": "annotations.html",
+    "restriction-labels": "annotations.html"
+  },
+  "scale-families.html": {
+    "": "styling.html",
+    "categories": "styling.html",
+    "rings": "styling.html",
+    "themes": "styling.html",
+    "tracks": "styling.html",
+    "guides": "styling.html",
+    "identity": "styling.html",
+    "adapt": "styling.html",
+    "point-links": "styling.html",
+    "features": "styling.html",
+    "input": "styling.html",
+    "numeric": "styling.html"
+  },
+  "api-curriculum.html": {
+    "": "reference/index.html",
+    "apis": "reference/index.html",
+    "reproduce": "reference/index.html"
+  },
+  "multi-sequence.html": {
+    "": "chord.html",
+    "path": "chord.html",
+    "sankey": "chord.html",
+    "radial": "chord.html",
+    "inputs": "chord.html",
+    "chord": "chord.html",
+    "collinear": "chord.html",
+    "task": "chord.html"
+  },
+  "multi-sequence-start.html": {
+    "": "chord.html",
+    "add-genes": "chord.html",
+    "labels": "chord.html",
+    "read": "chord.html",
+    "collinear": "chord.html",
+    "adapt": "chord.html",
+    "try": "chord.html",
+    "draw": "chord.html",
+    "genes": "chord.html",
+    "links": "chord.html",
+    "inspect-genes": "chord.html",
+    "prepare": "chord.html"
+  },
+  "instances.html": {
+    "": "multi-sequence-layout.html",
+    "instances": "multi-sequence-layout.html",
+    "input": "multi-sequence-layout.html"
+  },
+  "multi-sequence-labels.html": {
+    "": "annotations.html",
+    "sequence-parameters": "annotations.html",
+    "gene-labels": "annotations.html",
+    "sequence-labels": "annotations.html"
+  },
+  "circular-start.html": {
+    "": "circular.html",
+    "features-and-labels": "circular.html",
+    "exercise": "circular.html",
+    "input": "circular.html"
+  },
+  "circular-data.html": {
+    "": "data.html",
+    "inspect": "data.html",
+    "path": "data.html",
+    "import": "data.html",
+    "tables": "data.html"
+  },
+  "circular-layout.html": {
+    "": "circular.html",
+    "style": "circular.html",
+    "backbones": "circular.html",
+    "center": "circular.html",
+    "input": "circular.html",
+    "band-rendering": "circular.html",
+    "rotation": "circular.html",
+    "coordinates": "circular.html"
+  },
+  "circular-features.html": {
+    "": "annotations.html",
+    "adapt": "annotations.html",
+    "feature-shapes": "annotations.html",
+    "stacking": "annotations.html"
+  },
+  "circular-dense-case.html": {
+    "": "case-circular.html",
+    "complex": "case-circular.html",
+    "size": "case-circular.html",
+    "next": "case-circular.html",
+    "layout": "case-circular.html",
+    "source-profile": "case-circular.html"
+  },
+  "dotplot-start.html": {
+    "": "dotplot.html",
+    "support": "dotplot.html",
+    "dotplot": "dotplot.html",
+    "matrix": "case-dotplot.html",
+    "mapping": "dotplot.html",
+    "direction": "dotplot.html"
+  },
+  "import-intervals.html": {
+    "": "import-sequences.html",
+    "zero-based": "import-sequences.html",
+    "bedpe": "import-sequences.html",
+    "ranges": "import-sequences.html"
+  },
+  "aligned-sequences.html": {
+    "": "import-sequences.html",
+    "aligned-protein": "import-sequences.html",
+    "aligned-source": "import-sequences.html",
+    "cds-translation": "import-sequences.html",
+    "aligned-characters": "import-sequences.html",
+    "characters": "import-sequences.html",
+    "wrapped-residues": "import-sequences.html",
+    "read-alignment": "import-sequences.html",
+    "gap-to-display": "import-sequences.html"
+  },
+  "workflows.html": {
+    "": "data.html",
+    "examples": "data.html",
+    "choose-operation": "data.html",
+    "checks": "data.html",
+    "tools": "data.html"
+  },
+  "fusion-routing.html": {
+    "": "fusion.html",
+    "export": "fusion.html",
+    "panels": "fusion.html",
+    "routing": "fusion.html",
+    "intervals": "fusion.html"
+  },
+  "fusion-layout.html": {
+    "": "fusion.html",
+    "flagship": "case-fusion.html",
+    "outer-guides": "fusion.html",
+    "auto-perimeter": "fusion.html",
+    "plot-furniture": "fusion.html",
+    "advanced-placement": "fusion.html",
+    "styles": "fusion.html"
+  },
+  "fusion-details.html": {
+    "": "fusion.html",
+    "paired-detail": "fusion.html",
+    "multiple-details": "fusion.html",
+    "character-detail": "fusion.html",
+    "magnify": "fusion.html",
+    "source-frame": "fusion.html"
+  },
+  "fusion-advanced.html": {
+    "": "fusion.html",
+    "nested-detail": "fusion.html",
+    "origin-detail": "fusion.html"
+  },
+  "fusion-start.html": {
+    "": "fusion.html",
+    "panels": "fusion.html",
+    "save": "fusion.html",
+    "intervals": "fusion.html"
+  },
+  "flagship-data.html": {
+    "": "gallery.html",
+    "comparison": "gallery.html",
+    "sources": "gallery.html",
+    "rebuild": "gallery.html",
+    "plots": "gallery.html",
+    "circular": "case-circular.html",
+    "composition": "gallery.html",
+    "datasets": "gallery.html"
+  },
+  "multi-sequence-views.html": {
+    "flagship": "case-chord.html",
+    "flagship-chord": "case-chord.html",
+    "flagship-collinear": "case-collinear.html",
+    "flagship-radial": "case-radial.html",
+    "flagship-sankey": "case-sankey.html"
   }
 }

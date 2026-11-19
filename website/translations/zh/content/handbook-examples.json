@@ -1,0 +1,255 @@
+{
+  "source_sha256": "5aac5e360f4ce7e9d002af60635f4a945eee6065b4415d8b77da3623326d1c1d",
+  "strings": {
+    "first-plot/caption": {
+      "source_sha256": "4bcf1a74bdbf7bb989134d60941e199f660c3ae13533083da6cf0decad7ba263",
+      "status": "reviewed",
+      "translation": "四条噬菌体基因组的骨架与随包比对表中的前四条记录。每条连接带对应一对原始比对区间。"
+    },
+    "flex-radius/caption": {
+      "source_sha256": "f14827d731fc7e1f256aa6ddfd7712190ab5a9f472e20f9d861e1a431ce6206a",
+      "status": "reviewed",
+      "translation": "MT118296.1 的骨架半径为 0.72，其余三条保持半径 1。"
+    },
+    "flex-radius-order/caption": {
+      "source_sha256": "6f110e8695c5fb1a8abfaad05d37cf0edc8813ea0e8906dc81e7e33a2f3c02eb",
+      "status": "reviewed",
+      "translation": "相同重排后，左图的命名值使 MT118296.1 向内移动；右图的顺序值使 MT108731.1 向内移动。"
+    },
+    "flex-strand/caption": {
+      "source_sha256": "3ccbe6f2d888203c6cf89af0763305580684c80d09c584bcd7ca25512c77ab4e",
+      "status": "reviewed",
+      "translation": "OR222515.1 的正、负链 CDS 分别偏移 0.08 和 −0.14，箭头宽度分别为 0.03 和 0.08。"
+    },
+    "flex-radius-error/caption": {
+      "source_sha256": "e6ba220931a7a8f335c048ef50a76f0cb3d5d200a17820f4a4036db171fa6d0f",
+      "status": "reviewed",
+      "translation": "布局计算指出 seq_radius 中的两个链符号均为未知序列标识。"
+    },
+    "views-chord/caption": {
+      "source_sha256": "13e96f6452809a70f70941c34c1452dab8bac9bbf3d08231816f5f998eda9ede",
+      "status": "reviewed",
+      "translation": "三条实测 HSP 的弦图视图"
+    },
+    "views-collinear/caption": {
+      "source_sha256": "95cb4bda90d674629af29c08c922830ecac8cc0ff9881c4ab2359c936f6a7459",
+      "status": "reviewed",
+      "translation": "三条实测 HSP 的共线性视图"
+    },
+    "views-radial/caption": {
+      "source_sha256": "69113f4f0a346b9f8cf755f7ef0d32197cc90ef842552ef25f823a087f103649",
+      "status": "reviewed",
+      "translation": "三条实测 HSP 的径向共线性视图"
+    },
+    "views-sankey/caption": {
+      "source_sha256": "40352f2df4e78c7906c5a023c1d0e84426fe83794e0e0b4d66e7f8ecb395c8d7",
+      "status": "reviewed",
+      "translation": "三条实测 HSP 的双列 Sankey视图"
+    },
+    "order-orientation/caption": {
+      "source_sha256": "993ac36cc13dcda7db873476e1ce6e9ca5f68544f659988dd2997251f507d5b8",
+      "status": "reviewed",
+      "translation": "重排两条序列并翻转第二条的显示方向"
+    },
+    "feature-subset-labels/caption": {
+      "source_sha256": "2288309718e5d13ead5a2c8e3e2b1b7729072d68e41c12472f9a76d0aa9cfaae",
+      "status": "reviewed",
+      "translation": "两个 CDS 标签跟随 pUC19 全部特征的分道位置"
+    },
+    "paired-ribbons/caption": {
+      "source_sha256": "58daa444cfd8702a1d6298e69486b1551323379231707cb6fb9009921d4937d7",
+      "status": "reviewed",
+      "translation": "单一序列对的三条 HSP 区间连接带"
+    },
+    "gc-shared-band/caption": {
+      "source_sha256": "a93389fddde947266a84382a922f643d01d7a9e74ab98562793f0a41b3bcb983",
+      "status": "reviewed",
+      "translation": "柱与经过窗口中点的折线共用 GC 百分数轨道"
+    },
+    "coverage-facets/caption": {
+      "source_sha256": "faecec945a9c3470d66cdde1f367d62881baaabe2ab0437fdc1539dbfc8c3226",
+      "status": "reviewed",
+      "translation": "同一 query 匹配各个 subject 的窗口覆盖比例"
+    },
+    "window-members/caption": {
+      "source_sha256": "a87bda8cee2db8ad4c8306359f380bdea10f6dc0fd14e039a51b08e5a96bb86f",
+      "status": "reviewed",
+      "translation": "逐窗覆盖率、实际分母及贡献的来源行"
+    },
+    "category-fill/caption": {
+      "source_sha256": "41fbb98bd5af824242acd885c89150db532e89436f3dbafaf7526a818cf269e9",
+      "status": "reviewed",
+      "translation": "按实际特征类别设置命名填色标度"
+    },
+    "prepared-tables/caption": {
+      "source_sha256": "20d99949ba914592d3296850320def1153816f6e7b8d494efadcbfb9b7f24ff3",
+      "status": "reviewed",
+      "translation": "准备结果中保留的特征列"
+    },
+    "installed-gff/caption": {
+      "source_sha256": "cfd4628917b61b4d403affb15fa668bb575c60863b5525849c8cc67ed54bea7d",
+      "status": "reviewed",
+      "translation": "随包 GFF3 中的特征行及原始行号"
+    },
+    "installed-blast/caption": {
+      "source_sha256": "e7ea88c8b15ff8baa61fae871a8ec1f5d02a34494d4ff35e237fa7dd021969ca",
+      "status": "reviewed",
+      "translation": "随包 BLAST 表中的两端坐标和一致性百分数"
+    },
+    "installed-members/caption": {
+      "source_sha256": "e7589455bb6611ed521044019860ff94a3f0226a8ec76f2481083c5a00daaf29",
+      "status": "reviewed",
+      "translation": "文件中第一组的特征 ID"
+    },
+    "installed-signal/caption": {
+      "source_sha256": "d8247061771f114407e448b8f05508b1d6b3afacee65fa7e23d4d10fa3ae17c6",
+      "status": "reviewed",
+      "translation": "bedGraph 原始边界与导入后的一基闭区间"
+    },
+    "project-residues/caption": {
+      "source_sha256": "cd8b5d77e419431a07d495e7942574c45028db6c5521c73db78cb9440a2767f3",
+      "status": "reviewed",
+      "translation": "将第 2–5 个残基投影到 pUC19 的负链 CDS"
+    },
+    "export-size/caption": {
+      "source_sha256": "82e6782b0cebb3694e18561cb8be0d835d390ff905a4622d6121c751253e823b",
+      "status": "reviewed",
+      "translation": "按 160 × 110 mm 保存的四序列图"
+    },
+    "inspect-source/caption": {
+      "source_sha256": "b8d5816d76699741cb5f26412d85e5718212d35234cb4ba49bd719e03209f2f7",
+      "status": "reviewed",
+      "translation": "按图层 ID 取回输入记录的两端坐标"
+    },
+    "first-chord/caption": {
+      "source_sha256": "b3a140ae7b37e327778034f4aa008e1f59fbc9fdb8dc7672d9be3861f9f67583",
+      "status": "reviewed",
+      "translation": "四条序列弧中，一条已观测比对连接其中两条。"
+    },
+    "first-collinear/caption": {
+      "source_sha256": "a123b34017e57680f364de41f5766ea0449882638cefb06abaadaa47492d63c7",
+      "status": "reviewed",
+      "translation": "三条已观测比对连接两条全长序列上的区间。"
+    },
+    "first-radial/caption": {
+      "source_sha256": "15c9d66a31cc0a7ce13425e4b854d847ddd89a6ca06b506a2b6726de67f71fd8",
+      "status": "reviewed",
+      "translation": "四条径向骨架显示选出的 HSP，包括非相邻序列对。"
+    },
+    "first-sankey/caption": {
+      "source_sha256": "63043e50155a3f897a44729109309f52f495d09c898865771967c5f2b2cbeccd",
+      "status": "reviewed",
+      "translation": "三条比对分别连接一列的 query 区间与另一列的 subject 区间。"
+    },
+    "first-circular/caption": {
+      "source_sha256": "4c08b7d5467f64e0c05c427edf548ef07be7a5023753c32afd421ec1e044fb76",
+      "status": "reviewed",
+      "translation": "pUC19 全长 2,686 bp，骨架上共有九条参考注释。"
+    },
+    "first-dotplot/caption": {
+      "source_sha256": "9f7eae87e99eadc6e4e9ffd0a2bf770e2af67f17c1084ec671b043f8495e9e74",
+      "status": "reviewed",
+      "translation": "一条线段连接 query 与 subject 的成对起点及成对终点。"
+    },
+    "first-fusion/caption": {
+      "source_sha256": "c281e23057cc666f88b6049b6f1118f809d664fcd51f7fc8561e5dea9488fc10",
+      "status": "reviewed",
+      "translation": "一对已观测区间连接左侧圆形总览与右侧双序列纵向视图。"
+    },
+    "case-chord/caption": {
+      "source_sha256": "004468b8087ea2f1c09af8a3d3377b66fcb093ae223cc3abf25808428b8b903f",
+      "status": "reviewed",
+      "translation": "四条序列的区间连接"
+    },
+    "case-collinear/caption": {
+      "source_sha256": "c58c46b3b680e171b0fce520a1e40a3f232bc7f69d082e92603798b6d6062d08",
+      "status": "reviewed",
+      "translation": "四条序列的共线性与基因方向"
+    },
+    "case-radial/caption": {
+      "source_sha256": "947525b834db472be2639525706917bcc215d79a445a715dab197f0003540e23",
+      "status": "reviewed",
+      "translation": "径向共线性与注释"
+    },
+    "case-sankey/caption": {
+      "source_sha256": "8421ba7517b2abbf9ce538cc9e213856687eaa8393ff7775bb7c5f1635634838",
+      "status": "reviewed",
+      "translation": "两列序列间的区间连接"
+    },
+    "case-dotplot/caption": {
+      "source_sha256": "2c9bce7f69b724068b384755190bb1da527ba3393fbc07bcbaa45ab7d9b266bf",
+      "status": "reviewed",
+      "translation": "四条序列的比对点图"
+    },
+    "case-fusion/caption": {
+      "source_sha256": "7c8045e602b427dbf047f848a9e5d87033aa22618e57ec3bf62646f89edb5b39",
+      "status": "reviewed",
+      "translation": "全局关系、共线性与局部放大"
+    },
+    "map-psb/caption": {
+      "source_sha256": "ebe30478911989ce9ad6c39e430b2feae83c946a8a28a0fa87d89496cbb72302",
+      "status": "reviewed",
+      "translation": "pSB1C3 · 7 个特征，33 个酶切位置"
+    },
+    "case-circular/caption": {
+      "source_sha256": "45418724f2d0ada13c0a17f59097553c8a41387c8eb1950bb8d0d54e985e44bd",
+      "status": "reviewed",
+      "translation": "pUC19 · 9 个特征，33 个酶切位置"
+    },
+    "map-pbr/caption": {
+      "source_sha256": "2aa779b2b99c2217937aabe8f6da48ca57e2107ce91b96a400faf402ee4201cc",
+      "status": "reviewed",
+      "translation": "pBR322 · 6 个特征，42 个酶切位置"
+    },
+    "map-blue/caption": {
+      "source_sha256": "91983fde15cc18500067d1902aa0b7cb3c3556fe5ac058c0007f6132f6bef7d0",
+      "status": "reviewed",
+      "translation": "pBluescript II SK(+) · 14 个特征，42 个酶切位置"
+    },
+    "map-pet/caption": {
+      "source_sha256": "e02b79e83b3fc1a7aa1d0f4ca3bff6ac15f779bbac19acfa2794dadfe5c7197c",
+      "status": "reviewed",
+      "translation": "pET-28a(+) · 16 个特征，45 个酶切位置"
+    },
+    "map-duet/caption": {
+      "source_sha256": "467ae5fec171e9e808cd6d27d0787f474c2e5fafd53d939cb9918ed409cb3c38",
+      "status": "reviewed",
+      "translation": "pETDuet-1 · 20 个特征，54 个酶切位置"
+    },
+    "map-donr/caption": {
+      "source_sha256": "395bcaf073c68b6a83dea439caa280d7751d24486d3be5ee211d55c8c2e4436c",
+      "status": "reviewed",
+      "translation": "pDONR221 · 11 个特征，42 个酶切位置"
+    },
+    "map-pcdna/caption": {
+      "source_sha256": "f884b80d25446952bc6d05e0dd080182c2d02529b33b51b4d516398283dec4a1",
+      "status": "reviewed",
+      "translation": "pcDNA3.1(+) · 13 个特征，47 个酶切位置"
+    },
+    "map-tre/caption": {
+      "source_sha256": "57b0e38126cc7317c7e8713b486373e7fca1cb1cbe853b770bc6ca788697be48",
+      "status": "reviewed",
+      "translation": "pTRE-Tight-BI · 15 个特征，44 个酶切位置"
+    },
+    "map-tripz/caption": {
+      "source_sha256": "2ba6e08102d363e2c210e27a6fab9d4bd1db13bb32c8865a4844a6c7db72108f",
+      "status": "reviewed",
+      "translation": "pTRIPZ · 33 个特征，35 个酶切位置"
+    },
+    "map-cambia/caption": {
+      "source_sha256": "ea1af6ed15ea83b7afaea3e688e51cfa15017cf82e55e467ec20ca1b89895ce1",
+      "status": "reviewed",
+      "translation": "pCAMBIA1300 · 17 个特征，37 个酶切位置"
+    },
+    "map-earley/caption": {
+      "source_sha256": "f839318912f40c218e288b8004ceab87ef28de181ad21ddca7d90e12a4ec5c82",
+      "status": "reviewed",
+      "translation": "pEarleyGate 201 · 21 个特征，37 个酶切位置"
+    },
+    "map-cas/caption": {
+      "source_sha256": "5cf2df89902060c535013466bd5c1bacf59974f0f2f09b58c80c60e5a6567a42",
+      "status": "reviewed",
+      "translation": "pSpCas9(BB)-2A-GFP (PX458) · 19 个特征，4 个酶切位置"
+    }
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "source_sha256": "340ce0aa3c3c7eda81b88f620fa5957813fdfeee2a22907373d8dd301330d970",
+  "blocks": {
+    "0": {
+      "source_sha256": "8ca67bffba4e7ba008b8ca9e558884bf10688a826babab8311e9bb60e9fd7872",
+      "status": "reviewed",
+      "translation": "单序列圆图把一条参考序列的位置排在圆环上。输入为序列全长和注释表。各特征与骨架使用同一坐标单位，序列首尾在圆环接缝相遇。\n"
+    },
+    "2": {
+      "source_sha256": "3334bef3db7b14cea45340a965f7c85e09528a1e44421ca7c3df8d035fe88ded",
+      "status": "reviewed",
+      "translation": "## 画出 pUC19 的九条注释 {#draw}\n"
+    },
+    "3": {
+      "source_sha256": "16afd2303b2a1b892401b3520e298117416094f48bff92628c020678c795cc89",
+      "status": "reviewed",
+      "translation": "随包 pUC19 记录提供 2,686 bp 的完整长度和九条已有注释。`geom_feature()` 直接读取特征表；已知方向的箭头沿注释链绘制。\n"
+    },
+    "6": {
+      "source_sha256": "b3dec60540985f527a2456525811cc7abe0d0c7cc0deec2ddf5292845638c2ac",
+      "status": "reviewed",
+      "translation": "## 加入标签与位点 {#adapt}\n"
+    },
+    "7": {
+      "source_sha256": "f242b189096513f87207df3afb9f3aeabb7b0723b2ba20ef41e46e2190dfe390",
+      "status": "reviewed",
+      "translation": "给 `geom_feature()` 和 `geom_feature_label()` 传入同一位置调整，可使标签跟随特征所在道。引物区间和酶切位点各用独立图层。完整 pUC19 记录含 39 条位点记录，对应 33 个不同位置；同一位置可能有多个酶名。\n"
+    },
+    "8": {
+      "source_sha256": "67a251f752b218241dda470ea64e539f0a808a858c83bae4ac41c820a80c8529",
+      "status": "reviewed",
+      "translation": "[pUC19 完整注释图](case-circular.md) · [十三张质粒图](plasmid-catalog.md) · [圆形坐标](../../man/coord_circular.Rd)\n"
+    }
+  }
+}

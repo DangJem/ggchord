@@ -1,0 +1,458 @@
+{
+  "first-plot": {
+    "kind": "plot",
+    "width": 7,
+    "height": 6,
+    "dpi": 144,
+    "caption": {
+      "en": "Four phage genome backbones and the first four alignments in the bundled alignment table. Each ribbon joins the two reported sequence intervals."
+    }
+  },
+  "flex-radius": {
+    "kind": "plot",
+    "width": 7,
+    "height": 7,
+    "dpi": 144,
+    "caption": {
+      "en": "The MT118296.1 backbone uses radius 0.72. The other three remain at radius 1."
+    }
+  },
+  "flex-radius-order": {
+    "kind": "plot",
+    "width": 11,
+    "height": 5.5,
+    "dpi": 144,
+    "caption": {
+      "en": "After reordering, the named value moves MT118296.1 inward on the left. The positional value moves MT108731.1 inward on the right."
+    }
+  },
+  "flex-strand": {
+    "kind": "plot",
+    "width": 7,
+    "height": 7,
+    "dpi": 144,
+    "caption": {
+      "en": "The OR222515.1 plus and minus CDS use offsets of 0.08 and −0.14. Their arrow widths are 0.03 and 0.08, respectively."
+    }
+  },
+  "flex-radius-error": {
+    "kind": "data",
+    "width": 7,
+    "height": 3,
+    "dpi": 144,
+    "caption": {
+      "en": "The layout reports both strand symbols as unknown sequence IDs for seq_radius."
+    }
+  },
+  "views-chord": {
+    "kind": "plot",
+    "width": 7,
+    "height": 5,
+    "dpi": 144,
+    "caption": {
+      "en": "Chord view of three observed HSPs"
+    }
+  },
+  "views-collinear": {
+    "kind": "plot",
+    "width": 7,
+    "height": 5,
+    "dpi": 144,
+    "caption": {
+      "en": "Collinear view of three observed HSPs"
+    }
+  },
+  "views-radial": {
+    "kind": "plot",
+    "width": 7,
+    "height": 5,
+    "dpi": 144,
+    "caption": {
+      "en": "Radial synteny view of three observed HSPs"
+    }
+  },
+  "views-sankey": {
+    "kind": "plot",
+    "width": 7,
+    "height": 5,
+    "dpi": 144,
+    "caption": {
+      "en": "Sankey view of three observed HSPs"
+    }
+  },
+  "order-orientation": {
+    "kind": "plot",
+    "width": 7,
+    "height": 5,
+    "dpi": 144,
+    "caption": {
+      "en": "A reordered pair with the second reference reversed"
+    }
+  },
+  "feature-subset-labels": {
+    "kind": "plot",
+    "width": 6,
+    "height": 6,
+    "dpi": 144,
+    "caption": {
+      "en": "Two CDS labels anchored to the full pUC19 feature layout"
+    }
+  },
+  "paired-ribbons": {
+    "kind": "plot",
+    "width": 7,
+    "height": 5,
+    "dpi": 144,
+    "caption": {
+      "en": "Interval ribbons connecting the three HSPs for one sequence pair"
+    }
+  },
+  "gc-shared-band": {
+    "kind": "plot",
+    "width": 7,
+    "height": 5,
+    "dpi": 144,
+    "caption": {
+      "en": "Window GC percentages shown as bars with a line through their midpoints"
+    }
+  },
+  "coverage-facets": {
+    "kind": "plot",
+    "width": 7,
+    "height": 6.5,
+    "dpi": 144,
+    "caption": {
+      "en": "Fraction of the query covered by HSPs to each subject"
+    }
+  },
+  "window-members": {
+    "kind": "data",
+    "width": 7,
+    "height": 5,
+    "dpi": 144,
+    "caption": {
+      "en": "Coverage denominators and the source rows contributing to each window"
+    }
+  },
+  "category-fill": {
+    "kind": "plot",
+    "width": 7,
+    "height": 5.5,
+    "dpi": 144,
+    "caption": {
+      "en": "Three feature classes with a named fill scale"
+    }
+  },
+  "prepared-tables": {
+    "kind": "data",
+    "width": 7,
+    "height": 5,
+    "dpi": 144,
+    "caption": {
+      "en": "Contents of the prepared feature table"
+    }
+  },
+  "installed-gff": {
+    "kind": "data",
+    "width": 7,
+    "height": 5,
+    "dpi": 144,
+    "caption": {
+      "en": "Feature rows and original line numbers from the installed GFF3"
+    }
+  },
+  "installed-blast": {
+    "kind": "data",
+    "width": 7,
+    "height": 5,
+    "dpi": 144,
+    "caption": {
+      "en": "Both endpoints and identity in the installed BLAST table"
+    }
+  },
+  "installed-members": {
+    "kind": "data",
+    "width": 7,
+    "height": 5,
+    "dpi": 144,
+    "caption": {
+      "en": "Feature IDs in the first recorded group"
+    }
+  },
+  "installed-signal": {
+    "kind": "data",
+    "width": 7,
+    "height": 5,
+    "dpi": 144,
+    "caption": {
+      "en": "Native bedGraph boundaries and the imported inclusive coordinates"
+    }
+  },
+  "project-residues": {
+    "kind": "data",
+    "width": 7,
+    "height": 5,
+    "dpi": 144,
+    "caption": {
+      "en": "Residues 2–5 projected onto the reverse-strand pUC19 CDS"
+    }
+  },
+  "export-size": {
+    "kind": "plot",
+    "width": 6.299212598425197,
+    "height": 4.330708661417323,
+    "dpi": 144,
+    "caption": {
+      "en": "A four-sequence plot saved at 160 × 110 mm"
+    }
+  },
+  "inspect-source": {
+    "kind": "data",
+    "width": 7,
+    "height": 5,
+    "dpi": 144,
+    "caption": {
+      "en": "Source endpoints read back from the named layer"
+    }
+  },
+  "first-chord": {
+    "kind": "plot",
+    "width": 8,
+    "height": 7,
+    "dpi": 120,
+    "caption": {
+      "en": "One observed alignment spans two of the four sequence arcs."
+    }
+  },
+  "first-collinear": {
+    "kind": "plot",
+    "width": 9,
+    "height": 5,
+    "dpi": 120,
+    "caption": {
+      "en": "Three observed alignments join intervals on two full-length sequences."
+    }
+  },
+  "first-radial": {
+    "kind": "plot",
+    "width": 8,
+    "height": 7,
+    "dpi": 120,
+    "caption": {
+      "en": "Four radial backbones show the selected HSPs, including non-neighbour pairs."
+    }
+  },
+  "first-sankey": {
+    "kind": "plot",
+    "width": 8,
+    "height": 6,
+    "dpi": 120,
+    "caption": {
+      "en": "Three alignments link the query interval in one column to the subject interval in the other."
+    }
+  },
+  "first-circular": {
+    "kind": "plot",
+    "width": 7,
+    "height": 6,
+    "dpi": 120,
+    "caption": {
+      "en": "Nine annotated features on the 2,686 bp pUC19 reference."
+    }
+  },
+  "first-dotplot": {
+    "kind": "plot",
+    "width": 7,
+    "height": 6,
+    "dpi": 120,
+    "caption": {
+      "en": "An alignment segment connects the paired start and end coordinates."
+    }
+  },
+  "first-fusion": {
+    "kind": "plot",
+    "width": 10,
+    "height": 6,
+    "dpi": 120,
+    "caption": {
+      "en": "One observed interval pair links a circular overview and a vertical two-sequence view."
+    }
+  },
+  "case-chord": {
+    "kind": "plot",
+    "width": 12.0,
+    "height": 10.0,
+    "dpi": 144.0,
+    "caption": {
+      "en": "Interval links between four sequences"
+    },
+    "background": "#FFFCF5"
+  },
+  "case-collinear": {
+    "kind": "plot",
+    "width": 12.0,
+    "height": 8.0,
+    "dpi": 144.0,
+    "caption": {
+      "en": "Collinearity and gene orientation across four sequences"
+    },
+    "background": "#FFFCF5"
+  },
+  "case-radial": {
+    "kind": "plot",
+    "width": 12,
+    "height": 10.5,
+    "dpi": 144,
+    "caption": {
+      "en": "Radial synteny and annotations"
+    },
+    "background": "#FFFCF5"
+  },
+  "case-sankey": {
+    "kind": "plot",
+    "width": 10,
+    "height": 16,
+    "dpi": 144,
+    "caption": {
+      "en": "Interval links between two columns of sequences"
+    },
+    "background": "#FFFCF5"
+  },
+  "case-dotplot": {
+    "kind": "plot",
+    "width": 13,
+    "height": 12,
+    "dpi": 144,
+    "caption": {
+      "en": "Alignment dotplot for four sequences"
+    },
+    "background": "#FFFCF5"
+  },
+  "case-fusion": {
+    "kind": "plot",
+    "width": 16,
+    "height": 14,
+    "dpi": 120,
+    "caption": {
+      "en": "Overview, collinearity and local detail"
+    },
+    "background": "#FFFCF5"
+  },
+  "map-psb": {
+    "kind": "plot",
+    "width": 10,
+    "height": 8,
+    "dpi": 110,
+    "caption": {
+      "en": "pSB1C3 · 7 features and 33 restriction positions"
+    }
+  },
+  "case-circular": {
+    "kind": "plot",
+    "width": 10,
+    "height": 8,
+    "dpi": 110,
+    "caption": {
+      "en": "pUC19 · 9 features and 33 restriction positions"
+    }
+  },
+  "map-pbr": {
+    "kind": "plot",
+    "width": 10,
+    "height": 8,
+    "dpi": 110,
+    "caption": {
+      "en": "pBR322 · 6 features and 42 restriction positions"
+    }
+  },
+  "map-blue": {
+    "kind": "plot",
+    "width": 10,
+    "height": 8,
+    "dpi": 110,
+    "caption": {
+      "en": "pBluescript II SK(+) · 14 features and 42 restriction positions"
+    }
+  },
+  "map-pet": {
+    "kind": "plot",
+    "width": 10,
+    "height": 8,
+    "dpi": 110,
+    "caption": {
+      "en": "pET-28a(+) · 16 features and 45 restriction positions"
+    }
+  },
+  "map-duet": {
+    "kind": "plot",
+    "width": 10,
+    "height": 8,
+    "dpi": 110,
+    "caption": {
+      "en": "pETDuet-1 · 20 features and 54 restriction positions"
+    }
+  },
+  "map-donr": {
+    "kind": "plot",
+    "width": 10,
+    "height": 8,
+    "dpi": 110,
+    "caption": {
+      "en": "pDONR221 · 11 features and 42 restriction positions"
+    }
+  },
+  "map-pcdna": {
+    "kind": "plot",
+    "width": 10,
+    "height": 8,
+    "dpi": 110,
+    "caption": {
+      "en": "pcDNA3.1(+) · 13 features and 47 restriction positions"
+    }
+  },
+  "map-tre": {
+    "kind": "plot",
+    "width": 10,
+    "height": 8,
+    "dpi": 110,
+    "caption": {
+      "en": "pTRE-Tight-BI · 15 features and 44 restriction positions"
+    }
+  },
+  "map-tripz": {
+    "kind": "plot",
+    "width": 10,
+    "height": 8,
+    "dpi": 110,
+    "caption": {
+      "en": "pTRIPZ · 33 features and 35 restriction positions"
+    }
+  },
+  "map-cambia": {
+    "kind": "plot",
+    "width": 10,
+    "height": 8,
+    "dpi": 110,
+    "caption": {
+      "en": "pCAMBIA1300 · 17 features and 37 restriction positions"
+    }
+  },
+  "map-earley": {
+    "kind": "plot",
+    "width": 10,
+    "height": 8,
+    "dpi": 110,
+    "caption": {
+      "en": "pEarleyGate 201 · 21 features and 37 restriction positions"
+    }
+  },
+  "map-cas": {
+    "kind": "plot",
+    "width": 10,
+    "height": 8,
+    "dpi": 110,
+    "caption": {
+      "en": "pSpCas9(BB)-2A-GFP (PX458) · 19 features and 4 restriction positions"
+    }
+  }
+}

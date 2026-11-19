@@ -1,5 +1,5 @@
 <a id="moved"></a>
 
-## Section moved {#moved}
+## This page has moved {#moved}
 
-[Intervals, points and cross-row links](multi-sequence-links.md#control)
+[Draw and adjust sequence links](multi-sequence-links.md)

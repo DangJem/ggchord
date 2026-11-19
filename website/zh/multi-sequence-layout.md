@@ -1,30 +1,19 @@
-{{code:courseblockaf}}
-
-
 <a id="direction"></a>
 
-## 方向：让坐标从另一端开始 {#direction}
+## 翻转一条序列的显示方向 {#direction}
 
-{{code:frontorientation}}
+把 MT118296.1 放在第一行，并翻转 MT108731.1。用 accession 给方向向量命名，之后重排时，翻转仍作用于同一条序列。可以对照[原排列](multi-sequence-links.md)观察三条连接带的两端。
 
-{{figure:frontorientation}}
+{{example:order-orientation}}
 
-`layout_sequences(orientation = -1)` 反转该序列的显示方向。对照默认图，这条骨架的 0 刻度和箭头端互换。输入坐标和基因的生物学链仍来自数据表。三个向量都按序列 ID 命名，修改 `layout_sequences(order = ...)` 重排时仍能找到对应序列。
+<a id="instances"></a>
 
-<a id="order"></a>
+## 在图中两次显示同一条参考序列 {#instances}
 
-## 顺序：指定骨架的排列 {#order}
+要比较 A–B–A，可为两个 A 命名，例如 `layout_sequences(order = c(left = "A", middle = "B", right = "A"))`。在每个连接层筛选相应的原始记录，再用 `between = c("left", "middle")` 或 `between = c("middle", "right")` 选择显示副本。来源坐标与生物学链仍属于原序列 A，两个副本均保留其完整长度。
 
-{{code:frontorder}}
+<a id="length"></a>
 
-{{figure:frontorder}}
+## 选择按比例或等长显示 {#length}
 
-`layout_sequences(order = ...)` 接收序列 ID 的排列。这里把 `OQ646790.1` 提到 `MT118296.1` 前面。重排后，连接表仍按原来的 ID 匹配。
-
-接下来[改变连接带的路径与端点留白](multi-sequence-links.md#control)。
-
-<a id="anchors"></a>
-
-## 线性锚点 {#anchors}
-
-[Collinear](collinear-layout.md#anchor) · [Radial](radial-synteny.md) · [Sankey](sankey.md)
+要比较不同序列上的实际距离，保留默认长度比例。要用等长骨架比较特征在各序列上的相对位置，可用 `layout_sequences(length_mode = "equal")`。碱基数或残基数从各自的局部序列轴读取。

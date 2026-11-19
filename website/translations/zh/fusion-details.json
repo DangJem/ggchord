@@ -1,0 +1,15 @@
+{
+  "source_sha256": "702e51ca9e0f639a6c3a9304d32db03474cba37ebb683ddfe3ef5e4b8c882f96",
+  "blocks": {
+    "1": {
+      "source_sha256": "78f3b751cc6a81f151c97d45744da2989fa25c9ea71a757fa0548ec3895c1028",
+      "status": "reviewed",
+      "translation": "## 本页已迁移 {#moved}\n"
+    },
+    "2": {
+      "source_sha256": "a55d4dcb11e94f8caf64b00188e72aaaa8c4ba3bb1e647f79fc553d7dc65b3b3",
+      "status": "reviewed",
+      "translation": "[多视图组合](fusion.md)\n"
+    }
+  }
+}

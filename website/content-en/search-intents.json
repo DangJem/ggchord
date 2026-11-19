@@ -1,0 +1,153 @@
+[
+  {
+    "queries": [
+      "Sankey"
+    ],
+    "url": "sankey.html",
+    "title": {
+      "en": "Mirrored Sankey section"
+    },
+    "summary": {
+      "en": "Choose the current section or exact parameter; inspect its input and support boundary."
+    }
+  },
+  {
+    "queries": [
+      "径向共线性",
+      "Radial",
+      "Radial synteny"
+    ],
+    "url": "radial-synteny.html",
+    "title": {
+      "en": "Radial synteny section"
+    },
+    "summary": {
+      "en": "Choose the current section or exact parameter; inspect its input and support boundary."
+    }
+  },
+  {
+    "queries": [
+      "Dotplot",
+      "HSP 点图",
+      "序列比对点图",
+      "Sequence alignment Dotplot"
+    ],
+    "url": "dotplot.html",
+    "title": {
+      "en": "Read a Dotplot from HSPs"
+    },
+    "summary": {
+      "en": "Choose the current section or exact parameter; inspect its input and support boundary."
+    }
+  },
+  {
+    "queries": [
+      "Fusion",
+      "多视图组合"
+    ],
+    "url": "fusion.html",
+    "title": {
+      "en": "Two-panel source-backed composition"
+    },
+    "summary": {
+      "en": "Choose the current section or exact parameter; inspect its input and support boundary."
+    }
+  },
+  {
+    "queries": [
+      "给定数值柱",
+      "supplied value bars"
+    ],
+    "url": "reference/geom_track.html#ref-usage",
+    "title": {
+      "en": "Use geom_track_col for supplied values"
+    },
+    "summary": {
+      "en": "Choose the current section or exact parameter; inspect its input and support boundary."
+    }
+  },
+  {
+    "queries": [
+      "计数",
+      "count"
+    ],
+    "url": "tracks-statistics.html",
+    "title": {
+      "en": "Counts and supplied values: bar and col"
+    },
+    "summary": {
+      "en": "Choose the current section or exact parameter; inspect its input and support boundary."
+    }
+  },
+  {
+    "queries": [
+      "保存图片",
+      "save plot"
+    ],
+    "url": "output.html",
+    "title": {
+      "en": "Save a plot at target size"
+    },
+    "summary": {
+      "en": "Choose the current section or exact parameter; inspect its input and support boundary."
+    }
+  },
+  {
+    "queries": [
+      "标签重叠",
+      "overlapping labels"
+    ],
+    "url": "annotations.html",
+    "title": {
+      "en": "Inspect label layout and target size"
+    },
+    "summary": {
+      "en": "Choose the current section or exact parameter; inspect its input and support boundary."
+    }
+  },
+  {
+    "queries": [
+      "feature_data"
+    ],
+    "url": "data.html",
+    "title": {
+      "en": "Unified feature_data inputs"
+    },
+    "summary": {
+      "en": "Choose the current section or exact parameter; inspect its input and support boundary."
+    }
+  },
+  {
+    "queries": [
+      "windows"
+    ],
+    "url": "parameter-atlas.html",
+    "title": {
+      "en": "windows in segment_ggchord_data"
+    },
+    "summary": {
+      "en": "Choose the current section or exact parameter; inspect its input and support boundary."
+    }
+  },
+  {
+    "queries": [
+      "灵活的参数格式",
+      "灵活参数",
+      "灵活参数配置",
+      "参数格式与逐序列配置",
+      "逐序列",
+      "按链",
+      "命名向量",
+      "列表",
+      "Flexible parameters",
+      "Flexible parameter formats"
+    ],
+    "url": "parameters.html",
+    "title": {
+      "en": "Flexible parameter formats"
+    },
+    "summary": {
+      "en": "Scalars, accver names, display order, strands and supported lists; matching, omitted values and family boundaries."
+    }
+  }
+]

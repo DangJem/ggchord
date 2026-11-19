@@ -69,8 +69,9 @@ def manual_home(lang,base):
     escape=lambda value:html.escape(value,quote=True)
     def picture(key, title):
         row=previews[key]
-        complete=row.get('full_file',row['full']+'.png')
+        from .handbook import case_figure
         code=escape(complete_figures[row['full']]['page'])
+        complete='handbook/'+case_figure(code.split('.')[0])+'.png'
         name=escape(row['name'])
         text=escape(title+' · '+row['name'])
         label=escape(('查看完整图 ' if zh else 'View complete figure for ')+row['name'])

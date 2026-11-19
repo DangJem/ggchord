@@ -36,7 +36,7 @@
       "序列比对点图",
       "Sequence alignment Dotplot"
     ],
-    "url": "dotplot-start.html",
+    "url": "dotplot.html",
     "title": {
       "zh": "从 HSP 读取 Dotplot",
       "en": "Read a Dotplot from HSPs"
@@ -51,7 +51,7 @@
       "Fusion",
       "多视图组合"
     ],
-    "url": "fusion-start.html",
+    "url": "fusion.html",
     "title": {
       "zh": "两面板真实来源组合",
       "en": "Two-panel source-backed composition"
@@ -81,7 +81,7 @@
       "计数",
       "count"
     ],
-    "url": "tracks-statistics.html#tracks",
+    "url": "tracks-statistics.html",
     "title": {
       "zh": "计数与给定值：bar 和 col",
       "en": "Counts and supplied values: bar and col"
@@ -96,7 +96,7 @@
       "保存图片",
       "save plot"
     ],
-    "url": "output.html#size",
+    "url": "output.html",
     "title": {
       "zh": "按目标尺寸保存图片",
       "en": "Save a plot at target size"
@@ -111,7 +111,7 @@
       "标签重叠",
       "overlapping labels"
     ],
-    "url": "labels.html",
+    "url": "annotations.html",
     "title": {
       "zh": "检查文字布局与目标尺寸",
       "en": "Inspect label layout and target size"
@@ -125,7 +125,7 @@
     "queries": [
       "feature_data"
     ],
-    "url": "data.html#source",
+    "url": "data.html",
     "title": {
       "zh": "统一 feature_data 输入",
       "en": "Unified feature_data inputs"
@@ -139,7 +139,7 @@
     "queries": [
       "windows"
     ],
-    "url": "parameter-atlas.html#param-segment_ggchord_data-windows",
+    "url": "parameter-atlas.html",
     "title": {
       "zh": "segment_ggchord_data 的 windows",
       "en": "windows in segment_ggchord_data"

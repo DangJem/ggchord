@@ -1,0 +1,15 @@
+{
+  "source_sha256": "dc29be7aed854a44074c6cceeb9242abe0989862a66e2c9c17e1eb5f406ce713",
+  "blocks": {
+    "1": {
+      "source_sha256": "78f3b751cc6a81f151c97d45744da2989fa25c9ea71a757fa0548ec3895c1028",
+      "status": "reviewed",
+      "translation": "## 本页已迁移 {#moved}\n"
+    },
+    "2": {
+      "source_sha256": "88738d8f36603e2ffafe4aae4a76e64eecdd401aa7b699ae82a5a213c883c96f",
+      "status": "reviewed",
+      "translation": "[Chord 综合实例](chord.md)\n"
+    }
+  }
+}

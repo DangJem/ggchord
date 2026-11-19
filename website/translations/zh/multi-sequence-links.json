@@ -1,0 +1,30 @@
+{
+  "source_sha256": "794e7f63e2d4ca1242371f40ee247997d2dd46d51bacb4704d3d55bf2b9c10ca",
+  "blocks": {
+    "1": {
+      "source_sha256": "89d1e894b317fb548fb4bfb7dde71eafcebe09e13a6276f23c14128ed1a75e46",
+      "status": "reviewed",
+      "translation": "## 每条实测比对绘制一条连接带 {#intervals}\n"
+    },
+    "2": {
+      "source_sha256": "e1f110b4d9bb0564f6db32530a3375501086e85822386a274d2a9cbc4b2e32ad",
+      "status": "reviewed",
+      "translation": "这三条局部比对连接 MT108731.1 和 MT118296.1。每行有四个端点，带的两端分别覆盖对应骨架上的区间。坐标递减可以表示反向匹配，准备连接表时应保留原始端点顺序。\n"
+    },
+    "5": {
+      "source_sha256": "8d55117ecc11603271c6a09d408fa8882e3e7405b1aeb90339277ec06538dfc3",
+      "status": "reviewed",
+      "translation": "## 选择点连接、区间连接和序列对 {#points}\n"
+    },
+    "6": {
+      "source_sha256": "4b0b340d806175e71203f20bed9a37502e4d9b7571cacfb69bc2b868a2d84409",
+      "status": "reviewed",
+      "translation": "连接两个位点时使用 `geom_link_line()`，两端字段为 `qaccver, qpos, saccver, spos`。连接两段区间时使用 `geom_link_ribbon()`。示例固定填色，使三条记录同色。要表示一致性百分数，可保留输入的 `pident`，使用连接带默认的一致性映射。\n"
+    },
+    "7": {
+      "source_sha256": "9974617f64215fb18a6006871c607f51430e9b72354d44d2db972fb94b223b0a",
+      "status": "reviewed",
+      "translation": "共线性图默认比较相邻行。把关心的序列对表传给 `pairs`，或用 `adjacent_only = FALSE` 纳入非相邻行。解读缺失的连接前，可以先核对[来源行](diagnostics.md)。\n"
+    }
+  }
+}

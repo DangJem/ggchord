@@ -1,0 +1,45 @@
+{
+  "source_sha256": "4dba72bbb8769895498649664c4dd680bf8e34d6eb6ff8b1dd7ba2abf721e2c5",
+  "blocks": {
+    "0": {
+      "source_sha256": "eee198f4ea3195116d452c139839e7ab570f50ae572bcbb4450992ba0f9a4574",
+      "status": "reviewed",
+      "translation": "四条全长参考序列组成 4 × 4 个有向序列对。图中完整保留随包比较数据中的 32 条 HSP。\n"
+    },
+    "2": {
+      "source_sha256": "647b1b27743b54f4a06675810939d0090818b00090dc7c72159ff29cd2eee532",
+      "status": "reviewed",
+      "translation": "## 绘制完整图 {#map}\n"
+    },
+    "3": {
+      "source_sha256": "4146709887c7598ae3ffbd17c7287f1d47c8af498c7d35a8c387c7c52a069a59",
+      "status": "reviewed",
+      "translation": "该图使用 13 × 12 英寸画布、144 dpi。脚本返回绘图对象，可传给 `ggplot2::ggsave()` 按相同尺寸保存。\n"
+    },
+    "6": {
+      "source_sha256": "84a540c546a282c8238972eface9931f272ce56681f6a8548bf82160a1d72e0e",
+      "status": "reviewed",
+      "translation": "## 读图 {#reading}\n"
+    },
+    "7": {
+      "source_sha256": "0c48115cdb1cf76b02e5f434f6f6b5f0cde4e924fb237c14bcdc14f0ee92def4",
+      "status": "reviewed",
+      "translation": "从列标题读取 query accession，从行标题读取 subject accession。在对应格内，线色表示一致性，线宽表示以 bp 计的比对长度，斜率由成对端点的顺序决定。格内文字给出该有向序列对的输入 HSP 条数。\n"
+    },
+    "9": {
+      "source_sha256": "de1eb696f2ab1c739faa9f8ef7b26fc480da4593cffdb8c750e451460f700193",
+      "status": "reviewed",
+      "translation": "## 来源记录与展示选择 {#inputs}\n"
+    },
+    "10": {
+      "source_sha256": "58e4cf22eaf34d3e289ca6642fb52f96449cd9cdfee353903d7a7144f440d008",
+      "status": "reviewed",
+      "translation": "六个无序序列组合都只在一个 query→subject 方向有记录。数据中没有自比对行或互换两端的副本。`flagship_dotplot_example$cell_labels` 在当前 4,000 bp 的轴间隙下提供全部 16 个单元格标签；若改变间隙或轴顺序，应重新确定标签位置。\n"
+    },
+    "11": {
+      "source_sha256": "e7fc7d33c390caa7b98e45994447ca5b1ad7cee6f67a78b0320b62f8bc5d97f4",
+      "status": "reviewed",
+      "translation": "[绘制一条 HSP](dotplot.md) · [点图坐标轴](../../man/coord_dotplot.Rd)\n"
+    }
+  }
+}

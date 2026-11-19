@@ -10,7 +10,7 @@
 Build layered sequence figures in R with ggplot2: compare multiple sequences, annotate a circular map, inspect HSP alignments and connect independent views.
 
 > [!IMPORTANT]
-> v0.29.0 is the final release using the legacy API. The v0.50.0 development version changes plot construction, tracks and labels. See the [migration guide](MIGRATION.md) when upgrading.
+> Use v0.29.0 for code that relies on the previous API, because v0.50.0 and later are incompatible with that API.
 
 [Website](https://dangjem.github.io/ggchord/) · [Usage guide](website/en/modes.md) · [Figure gallery](website/en/gallery.md) · [Report an issue](https://github.com/DangJem/ggchord/issues)
 
@@ -19,7 +19,7 @@ Build layered sequence figures in R with ggplot2: compare multiple sequences, an
 
 | Module | Use it to | Views |
 | --- | --- | --- |
-| [I · Multi-sequence relationships](website/en/multi-sequence.md) | Compare sequence intervals, gene order and observed relationships. | Chord · Collinear · Radial · Sankey |
+| [I · Multi-sequence relationships](website/en/multi-sequence-views.md) | Compare sequence intervals, gene order and observed relationships. | Chord · Collinear · Radial · Sankey |
 | [II · Single-sequence circular maps](website/en/circular.md) | Place features, primers and restriction sites on one sequence. | Circular |
 | [III · HSP Dotplot](website/en/dotplot.md) | Inspect alignment intervals on query and subject axes. | Dotplot |
 | [IV · Multi-view composition](website/en/fusion.md) | Connect independent plots through explicit source intervals. | Fusion |
@@ -33,15 +33,15 @@ The multi-sequence module has four Coord types. Circular and Dotplot add two mor
 
 <table>
   <tr>
-    <td width="50%"><strong>Chord · relationships across four genomes</strong><br><a href="man/figures/showcasechord.png"><img src="man/figures/showcasechord.png" alt="Four-genome Chord flagship with labelled genes and alignment ribbons" width="460"></a><br>Combine mixed-curvature backbones, strand-aware CDS arrows, selected source labels and Identity-coloured ribbons. Features and HSPs are display subsets of the original records.<br><a href="website/en/chord.md">Complete example →</a></td>
-    <td width="50%"><strong>Collinear · order, orientation and cross-row links</strong><br><a href="man/figures/showcasecollinear.png"><img src="man/figures/showcasecollinear.png" alt="Four-genome Collinear flagship with strand-separated genes and cross-row ribbons" width="460"></a><br>Compare four genomes on a shared base-pair scale. Selected CDS sit on either side of each backbone; dashed outlines distinguish links across non-adjacent rows.<br><a href="website/en/collinear.md">Complete example →</a></td>
+    <td width="50%"><strong>Chord · relationships across four genomes</strong><br><a href="man/figures/showcasechord.png"><img src="man/figures/showcasechord.png" alt="Four-genome Chord flagship with labelled genes and alignment ribbons" width="460"></a><br>Combine mixed-curvature backbones, strand-aware CDS arrows, selected source labels and Identity-coloured ribbons. Features and HSPs are display subsets of the original records.<br><a href="website/en/case-chord.md">Complete example →</a></td>
+    <td width="50%"><strong>Collinear · order, orientation and cross-row links</strong><br><a href="man/figures/showcasecollinear.png"><img src="man/figures/showcasecollinear.png" alt="Four-genome Collinear flagship with strand-separated genes and cross-row ribbons" width="460"></a><br>Compare four genomes on a shared base-pair scale. Selected CDS sit on either side of each backbone; dashed outlines distinguish links across non-adjacent rows.<br><a href="website/en/case-collinear.md">Complete example →</a></td>
   </tr>
 </table>
 
 <table>
   <tr>
-    <td width="50%"><strong>Radial · synteny along radial spokes</strong><br><a href="man/figures/flagradial.png"><img src="man/figures/flagradial.png" alt="Radial flagship derived from the four-genome Chord example" width="460"></a><br>Derived from the Chord flagship, using its source preparation and selected features. Radial backbones expose interval relationships while preserving sequence identities and native positions.<br><a href="website/en/radial-synteny.md">Complete example →</a></td>
-    <td width="50%"><strong>Sankey · source intervals across two mirrored columns</strong><br><a href="man/figures/flagsankey.png"><img src="man/figures/flagsankey.png" alt="Sankey flagship derived from the four-genome Collinear example" width="460"></a><br>Derived from the Collinear flagship, retaining its selected genes and HSPs. Mirrored sequence columns show observed interval relationships; ribbon width is not a conserved flow quantity.<br><a href="website/en/sankey.md">Complete example →</a></td>
+    <td width="50%"><strong>Radial · synteny along radial spokes</strong><br><a href="man/figures/flagradial.png"><img src="man/figures/flagradial.png" alt="Radial flagship derived from the four-genome Chord example" width="460"></a><br>Derived from the Chord flagship, using its source preparation and selected features. Radial backbones expose interval relationships while preserving sequence identities and native positions.<br><a href="website/en/case-radial.md">Complete example →</a></td>
+    <td width="50%"><strong>Sankey · source intervals across two mirrored columns</strong><br><a href="man/figures/flagsankey.png"><img src="man/figures/flagsankey.png" alt="Sankey flagship derived from the four-genome Collinear example" width="460"></a><br>Derived from the Collinear flagship, retaining its selected genes and HSPs. Mirrored sequence columns show observed interval relationships; ribbon width is not a conserved flow quantity.<br><a href="website/en/case-sankey.md">Complete example →</a></td>
   </tr>
 </table>
 
@@ -51,7 +51,7 @@ The multi-sequence module has four Coord types. Circular and Dotplot add two mor
 
 A complete circular map with 20 features, five reference primers and 58 grouped cut positions from the declared enzyme set. Original sequence positions and annotation identities are retained.
 
-[Complete example](website/en/circular-dense-case.md)
+[Code for the dense map above](tools/documentation-examples.R) · [Compare the pETDuet-1 reference map](website/en/plasmid-catalog.md#catalogduet)
 
 ### III · HSP Dotplot
 
@@ -59,7 +59,7 @@ A complete circular map with 20 features, five reference primers and 58 grouped 
 
 32 original HSPs; Identity by colour, reported alignment length by line width.
 
-[Complete example](website/en/dotplot-start.md)
+[Complete example](website/en/case-dotplot.md)
 
 ### IV · Multi-view composition
 
@@ -67,7 +67,7 @@ A complete circular map with 20 features, five reference primers and 58 grouped 
 
 Global relationships, ordered comparisons and a magnified source interval in one composition.
 
-[Complete example](website/en/fusion-details.md)
+[Complete example](website/en/case-fusion.md)
 
 Figures share traceable inputs and plot definitions. See the source records and reproduction notes:
 [Input files](examples/) · [Dotplot / Fusion source](tools/site-flagships.R) · [Plot source](tools/documentation-examples.R) · [Data sources and attribution](website/ASSET-SOURCES.md)

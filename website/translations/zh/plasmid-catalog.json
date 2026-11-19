@@ -1,0 +1,165 @@
+{
+  "source_sha256": "fbd068296d7a3b87a4679c7bfa879cd83672db66d28dd7f50483b44155965f4d",
+  "blocks": {
+    "0": {
+      "source_sha256": "119d9e3fdacf3c9ecb1a549e0eb4df580ec12629b59c6b49359c0415ee668037",
+      "status": "reviewed",
+      "translation": "本图集将同一套注释图层用于十三条参考序列。可从表中选择一条记录，或在完整图旁复制可独立运行的代码。所有图均使用 10 × 8 英寸画布、110 dpi。\n"
+    },
+    "2": {
+      "source_sha256": "d6f8cffc29596de602f8ccab487928b51d32d3c76792c6cffff215019cd46222",
+      "status": "reviewed",
+      "translation": "## 选择参考序列 {#inputs}\n"
+    },
+    "3": {
+      "source_sha256": "29dbd5204ad6aedd8f3f6845b467244f0c12786d70494a6a74fb94fcce3f6c51",
+      "status": "reviewed",
+      "translation": "| 参考序列 | 全长（bp） | 特征 | 参考引物 | 位点记录 | 不同位置 |\n"
+    },
+    "4": {
+      "source_sha256": "8d71e97b256f28258e6364f13cbf29747a5e3df45137d90b82fc9e0b6217f32d",
+      "status": "reviewed",
+      "translation": "| --- | ---: | ---: | ---: | ---: | ---: |\n"
+    },
+    "5": {
+      "source_sha256": "9722d847665be608a3c308e37c33c158ed571b605f60182a37bbef353e2ff7a2",
+      "status": "reviewed",
+      "translation": "| [pSB1C3](#catalogpsb) | 2070 | 7 | 2 | 38 | 33 |\n"
+    },
+    "6": {
+      "source_sha256": "64afa7aa32b4ad77e1893058aac0517c8e7081cd2f55d9b4108eb5a381bddc5c",
+      "status": "reviewed",
+      "translation": "| [pUC19](#catalogpuc) | 2686 | 9 | 0 | 39 | 33 |\n"
+    },
+    "7": {
+      "source_sha256": "b9916f6dc582394b3e77a7aa6464ac7c6af651e65e7d89a931b0e6933bab40cd",
+      "status": "reviewed",
+      "translation": "| [pBR322](#catalogpbr) | 4361 | 6 | 0 | 47 | 42 |\n"
+    },
+    "8": {
+      "source_sha256": "50b768c45c8d2fb176fe7f83ba84cf21784c4d0a1d52e8fd775dcd97af5994ef",
+      "status": "reviewed",
+      "translation": "| [pBluescript II SK(+)](#catalogblue) | 2961 | 14 | 0 | 48 | 42 |\n"
+    },
+    "9": {
+      "source_sha256": "f27ed1aaf9249e6a441c94617a48cdf95611cc55d41bcf311ed2364565112e36",
+      "status": "reviewed",
+      "translation": "| [pET-28a(+)](#catalogpet) | 5369 | 16 | 0 | 51 | 45 |\n"
+    },
+    "10": {
+      "source_sha256": "ecbcabfe61bfac39e76c0aa56001355cdbcc91e498b8b810ae7e457c37a8b6b3",
+      "status": "reviewed",
+      "translation": "| [pETDuet-1](#catalogduet) | 5420 | 20 | 5 | 58 | 54 |\n"
+    },
+    "11": {
+      "source_sha256": "03381ee6b061a8a40d35f407e851da576dd2eee77990a7b8dce98f3c718bcb62",
+      "status": "reviewed",
+      "translation": "| [pDONR221](#catalogdonr) | 4761 | 11 | 0 | 47 | 42 |\n"
+    },
+    "12": {
+      "source_sha256": "201ec982283c92a0d947a3c2c2ad751ada90982cbd695830b8a560e915e3ac3a",
+      "status": "reviewed",
+      "translation": "| [pcDNA3.1(+)](#catalogpcdna) | 5428 | 13 | 0 | 51 | 47 |\n"
+    },
+    "13": {
+      "source_sha256": "09d788b42804d7de33983d242a57046c9f9e567dbd79d66d37ef203cae15c0cd",
+      "status": "reviewed",
+      "translation": "| [pTRE-Tight-BI](#catalogtre) | 2856 | 15 | 0 | 47 | 44 |\n"
+    },
+    "14": {
+      "source_sha256": "2965e7b4a1e4d6f553a81163de661457eaeeaa9d8ebe9455b23aafa2577beafe",
+      "status": "reviewed",
+      "translation": "| [pTRIPZ](#catalogtripz) | 13320 | 33 | 0 | 38 | 35 |\n"
+    },
+    "15": {
+      "source_sha256": "3652d319bef396ca416a50c6d7e08a62c4f8753ae9282c8d76b082bdd195fe31",
+      "status": "reviewed",
+      "translation": "| [pCAMBIA1300](#catalogcambia) | 8959 | 17 | 0 | 42 | 37 |\n"
+    },
+    "16": {
+      "source_sha256": "4ea9210a7eb7e094d33ac41ba92486feb26876526afc75cffc1ce9ae68dfe74e",
+      "status": "reviewed",
+      "translation": "| [pEarleyGate 201](#catalogearley) | 11779 | 21 | 0 | 39 | 37 |\n"
+    },
+    "17": {
+      "source_sha256": "495b1156b551ebfe3d260d7638f76be2018a427b72d7947eab87e43dce48b5d5",
+      "status": "reviewed",
+      "translation": "| [pSpCas9(BB)-2A-GFP (PX458)](#catalogcas) | 9288 | 19 | 0 | 4 | 4 |\n"
+    },
+    "18": {
+      "source_sha256": "16e9f713579da80728d29fd12f7444e4333cb7e4f6a06e8480097cd3d74b0034",
+      "status": "reviewed",
+      "translation": "位点数按每条参考记录声明的酶集合统计。不同酶可以共享同一切点。引物数只统计独立记录的参考引物。\n"
+    },
+    "20": {
+      "source_sha256": "40ed268a44b927ad12580c3cf127cd146f5ccfd0301c21649a2c931410bd1936",
+      "status": "reviewed",
+      "translation": "## pSB1C3 {#catalogpsb}\n"
+    },
+    "23": {
+      "source_sha256": "ccf57a2f7852d88760060604e3fa80f53398ca6429183d535bb17f8e1780c914",
+      "status": "reviewed",
+      "translation": "## pUC19 {#catalogpuc}\n"
+    },
+    "26": {
+      "source_sha256": "d307953401431159e4c987b23bca8e898ac0a9238cf3cce69ba32828111bf837",
+      "status": "reviewed",
+      "translation": "## pBR322 {#catalogpbr}\n"
+    },
+    "29": {
+      "source_sha256": "73345e2d2276d97161b94ce6650341a18d406d96c7dc9a62289c44c0281185ac",
+      "status": "reviewed",
+      "translation": "## pBluescript II SK(+) {#catalogblue}\n"
+    },
+    "32": {
+      "source_sha256": "c0d35094b70c107c4afad675eb6f5e805394069af2ce057728025c9977e3c199",
+      "status": "reviewed",
+      "translation": "## pET-28a(+) {#catalogpet}\n"
+    },
+    "35": {
+      "source_sha256": "ab9db4df90f28e44ce89294d4de6f8b07188c19ae7fc4bc66ea27a37c73a7d3b",
+      "status": "reviewed",
+      "translation": "## pETDuet-1 {#catalogduet}\n"
+    },
+    "38": {
+      "source_sha256": "dd9ea0a71ea5cc2b941611f4657db6614139e6f6ba2c948af96914b2e670dd02",
+      "status": "reviewed",
+      "translation": "## pDONR221 {#catalogdonr}\n"
+    },
+    "41": {
+      "source_sha256": "19d42676b1e892d3c9f3ee68fd81de3ddd1c8e1a50807c73b1969a118cf5f724",
+      "status": "reviewed",
+      "translation": "## pcDNA3.1(+) {#catalogpcdna}\n"
+    },
+    "44": {
+      "source_sha256": "1fc9a0932ef1ced2e4b5c5546f5e7e72bce1bc9a4467f1e01b377e8ee0ea55eb",
+      "status": "reviewed",
+      "translation": "## pTRE-Tight-BI {#catalogtre}\n"
+    },
+    "47": {
+      "source_sha256": "d259139f3a146d6cceeb164e393fd2a3ada41e9707e47654243fccc6724665f0",
+      "status": "reviewed",
+      "translation": "## pTRIPZ {#catalogtripz}\n"
+    },
+    "50": {
+      "source_sha256": "9c4405b4fd0d74f4e5c913c3871dbcad4dac0a3e2e57deb5a03aae112985d594",
+      "status": "reviewed",
+      "translation": "## pCAMBIA1300 {#catalogcambia}\n"
+    },
+    "53": {
+      "source_sha256": "333528de2afaabffccedfb7fa825d0cd0c33782b4eb897f8b9fdd3ff3ee344fe",
+      "status": "reviewed",
+      "translation": "## pEarleyGate 201 {#catalogearley}\n"
+    },
+    "56": {
+      "source_sha256": "db13e47b80b03ab0d34a5ab81494b0bec6aac67da6e598e3f750fe9b58d93f84",
+      "status": "reviewed",
+      "translation": "## pSpCas9(BB)-2A-GFP (PX458) {#catalogcas}\n"
+    },
+    "58": {
+      "source_sha256": "ef9fd796f3683ffcc2db048d287593a1972351bd6d787dc93436c6fec56ffdfe",
+      "status": "reviewed",
+      "translation": "[单序列圆图指南](circular.md) · [阅读 pUC19 的各层](case-circular.md)\n"
+    }
+  }
+}

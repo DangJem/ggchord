@@ -1,0 +1,35 @@
+{
+  "source_sha256": "29fa9a331c445f59bae7d5b22ec9ca7a3c20ae07c38f618107197793dfac95f8",
+  "blocks": {
+    "0": {
+      "source_sha256": "aef4beee97b2f41612a7001c9e0fe98a3225213d6386a24d2919ea4dff2d43d1",
+      "status": "reviewed",
+      "translation": "想了解多条序列中哪些区间互相匹配时，可以画弦图。弧线表示序列骨架，带子的两端各占据来源序列上的一段区间。\n"
+    },
+    "2": {
+      "source_sha256": "0717fe3e57601aa53af41fa80818e10d671e5256f73815f2eaee9084deaa1583",
+      "status": "reviewed",
+      "translation": "## 在四条骨架上画一条比对 {#draw}\n"
+    },
+    "3": {
+      "source_sha256": "a25d65591efd57d830f2458d2da3a6feca8cd46fd311b031fef9c37aca1bf94a",
+      "status": "reviewed",
+      "translation": "`ribbon_data_example` 首行连接四条参考序列中的两条。query 在 MT108731.1 上覆盖 26,298–51,139 bp，subject 在 MT118296.1 上覆盖 7,121–31,959 bp。另外两条弧保留在图中，便于比较全长。\n"
+    },
+    "6": {
+      "source_sha256": "da74ed406ebe61f059b5d6b8571e51f6de8906c0a9e68e9c991a947f513c0503",
+      "status": "reviewed",
+      "translation": "## 换用自己的比对 {#adapt}\n"
+    },
+    "7": {
+      "source_sha256": "0be83476578b619dcd964eeb9c869b165a3e04cbdc805ef083b2289e0676b5bf",
+      "status": "reviewed",
+      "translation": "每条骨架提供 `accver` 和完整 `length`。连接表需要 `qaccver`、`saccver` 以及 `qstart`、`qend`、`sstart`、`send` 四个端点。反向比对产生的降序端点应保留。要用色标比较多条带的一致性，还需保留连接表中的 `pident`。\n"
+    },
+    "8": {
+      "source_sha256": "c03d81ca300c1877b9330528bfe3e6f490ebce8cdaf196e2ad33111da23f10cc",
+      "status": "reviewed",
+      "translation": "[四基因组弦图](case-chord.md) · [区间连接层](../../man/geom_link_ribbon.Rd) · [弦图坐标](../../man/coord_chord.Rd)\n"
+    }
+  }
+}

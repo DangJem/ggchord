@@ -1,0 +1,10 @@
+{
+  "source_sha256": "fbfde371a19bafc0a605168d574c70cec5b8ccd90b6d056f130580f88e76aaed",
+  "blocks": {
+    "1": {
+      "source_sha256": "e8caca56b7a6d17b8037a67aaa3d53faf87b45a3fb3193a01173a4c38c30415c",
+      "status": "reviewed",
+      "translation": "v0.29.0 是沿用旧 API 的最后一个版本，从 v0.50.0 起，部分接口与旧版不兼容。\n"
+    }
+  }
+}

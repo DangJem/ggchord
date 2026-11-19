@@ -1,0 +1,55 @@
+{
+  "source_sha256": "f720e6d58b3fdcb64ae77088d6e418472f8cefe951932b6f7dad904b4caecb0d",
+  "blocks": {
+    "1": {
+      "source_sha256": "a53367170ddb2e4a7eb95bc726f924b8e9dc5e1f28c58adbe831bbf45b4663fe",
+      "status": "reviewed",
+      "translation": "## 哪类图适合你的问题？ {#modules}\n"
+    },
+    "2": {
+      "source_sha256": "84dee221ea99d51f97f4f078c556e7fe24c1ec3213b63eb56479e2fb138841eb",
+      "status": "reviewed",
+      "translation": "| 想回答的问题 | 绘图指南 |\n"
+    },
+    "3": {
+      "source_sha256": "3491e014f5503eb5b2fca81db42f6f72765980ba5b5e48ef135b6cf69d7f92cc",
+      "status": "reviewed",
+      "translation": "| --- | --- |\n"
+    },
+    "4": {
+      "source_sha256": "8f26c4e79662510ed0ca1bf0b739fb243df06815c8d3e0ac04d75f8cfb3d50d7",
+      "status": "reviewed",
+      "translation": "| 多条序列环绕排列时，哪些区间彼此匹配？ | [弦图](chord.md) |\n"
+    },
+    "5": {
+      "source_sha256": "266601c6945a6e1384bb14a8b0d5039e20a12d47c88b45d8c1193139313bfaa7",
+      "status": "reviewed",
+      "translation": "| 沿平行的序列骨架比较时，基因顺序和方向有何差异？ | [共线性图](collinear.md) |\n"
+    },
+    "6": {
+      "source_sha256": "3e6ca86dee44095ee37943f1a293329add1c0f2b034d5d74de119da90fdd55fe",
+      "status": "reviewed",
+      "translation": "| 把序列画成辐条时，哪些同源区间彼此相连？ | [径向共线性图](radial-synteny.md) |\n"
+    },
+    "7": {
+      "source_sha256": "d0fe174bd3fa203ad9f25e53b1737911a01780ad8b726b6c9364a95c4321f615",
+      "status": "reviewed",
+      "translation": "| 左侧查询序列上的区间对应右侧目标序列的哪个区间？ | [桑基视图](sankey.md) |\n"
+    },
+    "8": {
+      "source_sha256": "c0d01296a33e8ed2f18be6483343afe2fb6620c1cf7d801561e6676ceb2260c0",
+      "status": "reviewed",
+      "translation": "| 注释特征、引物或酶切位点位于一条环状序列的什么位置？ | [单序列圆图](circular.md) |\n"
+    },
+    "9": {
+      "source_sha256": "c4fcc20eb1dfbea0c58c38e675331710ad4b2d9e8c1ef6cfc43c1691822d5380",
+      "status": "reviewed",
+      "translation": "| 局部比对位于两条基因组坐标轴的什么位置，方向如何？ | [比对点图](dotplot.md) |\n"
+    },
+    "10": {
+      "source_sha256": "688eb53c92af25afa3280a9ef0dcce438657c5a68b0f894e567a3508c911d1aa",
+      "status": "reviewed",
+      "translation": "| 总览图中的区间与独立细节面板如何对应？ | [组合图](fusion.md) |\n"
+    }
+  }
+}

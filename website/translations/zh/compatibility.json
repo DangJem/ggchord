@@ -1,0 +1,15 @@
+{
+  "source_sha256": "045d3111cdf8a246afbbffe02eff435aa40b093949df459093d74959a79bc634",
+  "blocks": {
+    "1": {
+      "source_sha256": "78f3b751cc6a81f151c97d45744da2989fa25c9ea71a757fa0548ec3895c1028",
+      "status": "reviewed",
+      "translation": "## 本页已迁移 {#moved}\n"
+    },
+    "2": {
+      "source_sha256": "63ead5450132bbd11a3682a76fcfed2ca51304855bdd27e889a4235b2c60d185",
+      "status": "reviewed",
+      "translation": "[文档与接口迁移](migration.md)\n"
+    }
+  }
+}

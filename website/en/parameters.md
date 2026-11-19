@@ -1,119 +1,73 @@
-Flexible parameter formats refine shared settings into local control for parameters that support them. These examples use the same four bundled sequences; the first three compare only `seq_radius` on a 7 × 7 inch canvas. Requires ggchord and optional dplyr for CDS preparation.
-
-{{code:courseblockac}}
+A flexible parameter lets one layer give different geometry to individual sequences or strands. The **Flexible parameter** link beside an argument in the function reference leads back to the matching rules on this page.
 
 <a id="scalar"></a>
 
-## One value for every sequence {#scalar}
+## Change one backbone radius {#scalar}
 
-{{code:parameteruniform}}
-{{figure:parameteruniform}}
+<span id="recommendation"></span>
 
-Every radius is 1. A scalar is sufficient when all sequences share a setting.
+The four phage genome sequences in `seq_data_example` share a radius of 1 by default. Give `MT118296.1` a radius of 0.72 to bring its backbone inward. The name matches the sequence's `accver`. The other three retain radius 1.
 
-<a id="recommendation"></a>
+{{example:flex-radius}}
 
-## Change one sequence by name {#recommendation}
-
-{{code:parameters}}
-{{figure:parameterexample}}
-
-Only `MT118296.1` uses 0.72; the rest retain this parameter's default of 1. Keys match actual `accver` values after display reordering. Keep complete named vectors when every sequence has a different setting.
-
-<a id="vector"></a>
-
-## Values in display order {#vector}
-
-<span id="compatibility"></span>
-
-{{code:parametervector}}
-{{figure:parametervector}}
-
-Values match display order after `layout_sequences(order = ...)` and must cover all displayed sequences. The second sequence is currently `MT118296.1`, making this plot equivalent to the preceding one.
+| Value of `seq_radius` | Which backbone changes? |
+| --- | --- |
+| `0.72` | All four |
+| `c("MT118296.1" = 0.72)` | Only MT118296.1 |
+| `c(1, 0.72, 1, 1)` | The second displayed sequence |
+| `list("MT118296.1" = 0.72)` | Only MT118296.1 |
 
 <a id="reorder"></a>
 
-### Matching after reordering {#reorder}
+## Match by name or by display order {#reorder}
 
-Keep the vector and change `layout_sequences(order = ...)`. Named values still change `MT118296.1`; the unnamed vector changes the second displayed sequence, now `MT108731.1`.
+<span id="vector"></span>
+<span id="compatibility"></span>
 
-{{code:parameterreorder}}
+Both panels display the same four sequences in the same reordered layout. On the left the smaller radius follows its name, `MT118296.1`. On the right it follows the **second position**, now occupied by `MT108731.1`. The sequence lengths, colours and sequence labels are identical across the panels.
 
-```r
-view_ggchord(p_parameter_named_order, width = 7, height = 7, units = "in")
-view_ggchord(p_parameter_ordered_values, width = 7, height = 7, units = "in")
-```
+{{example:flex-radius-order}}
 
-![Named values after reordering](../../man/figures/parameternamedorder.png)
-![Ordered values after reordering](../../man/figures/parameterorderedvalues.png)
-
-<a id="genes"></a>
-
-## Prepare observed CDS on both strands {#genes}
-
-{{code:parametergenes}}
-{{output:parametergenes}}
-
-`OR222515.1` has a plus-strand record at 2624–4195 and a minus-strand record at 19246–20523; the integrase on `OQ646790.1` is plus-strand. Strands come from `source_strand`, with original coordinates retained.
+An unnamed vector must contain one value per displayed sequence. For a radius list, each element holds one number. A named vector is the shortest way to change a few sequences and keep their settings when the plot is rearranged.
 
 <a id="strand"></a>
 
-## Set strand positions {#strand}
+## Set strand offsets and arrow widths {#strand}
 
-{{code:parameterstrand}}
-{{figure:parameterstrand}}
+<span id="genes"></span>
+<span id="lists"></span>
+<span id="width"></span>
 
-Explicit strand values are already signed: 0.08 for plus and −0.08 for minus, without another reversal. A scalar `position_strand(0.08)` expands to plus 0.08 and minus −0.08.
+Two CDS on `OR222515.1` lie on opposite source strands. Give the plus CDS an outward offset of 0.08 and the minus CDS an inward offset of −0.14. A single value of 0.06 gives the two strands of `OQ646790.1` symmetric offsets. The example uses dplyr to select the CDS and read each recorded `source_strand`.
 
-<a id="lists"></a>
+{{example:flex-strand}}
 
-### Combine sequence and strand differences {#lists}
+An explicit minus-strand offset already includes its sign. Missing sequences or strands have offset 0 in `position_strand()`. Width changes arrow thickness. Here the plus strand uses 0.03 and the minus strand uses 0.08; the endpoints still come from `start` and `end`. When specifying widths by sequence **and** strand, supply a strand vector for each named entry, for example `list("OR222515.1" = c("+" = 0.03, "-" = 0.08))`.
 
-Place the two `OR222515.1` strands asymmetrically, while the other sequence uses a smaller symmetric offset. A list expresses these two levels of variation.
+<a id="invalid-radius"></a>
 
-{{code:parameterlist}}
+## What happens if a radius uses strand names? {#invalid-radius}
 
-![Offsets by observed sequence and strand](../../man/figures/parameterlist.png)
+A backbone belongs to one sequence. Passing `+` and `-` as radius names asks for two sequence IDs absent from the input. This example catches the error when the plot layout is built. Use an `accver` for a backbone radius, or [position_strand()](../../man/position_strand.Rd) for strand offsets.
 
-`OR222515.1` uses explicit 0.08/−0.14; the scalar 0.06 for `OQ646790.1` expands symmetrically. Omitted sequences or strands become 0 in this Position family. Do not copy this mixed list directly into `width`.
-
-<a id="width"></a>
-
-## Set strand widths {#width}
-
-{{code:parameterwidth}}
-{{figure:parameterwidth}}
-
-Plus uses width 0.03 and minus 0.08. Width changes arrow thickness; start/end still determine interval length. Per-sequence width lists require elements following that family's strand-value rules; see [geometry parameters](../../man/geom_feature.Rd).
-
-<a id="labels"></a>
-
-## Place names by sequence {#labels}
-
-{{code:parameterlabels}}
-{{figure:parameterlabels}}
-
-Text radii for `MT108731.1` and `OQ646790.1` are 75% and 115% of their backbone radii. Other sequences keep their defaults. Explicit `seq_label_radius` is incompatible with Collinear.
+{{example:flex-radius-error}}
 
 <a id="scope"></a>
 
-## Families and omitted values {#scope}
+## Find an argument by task {#scope}
 
-| Interface | Formats and matching | Boundaries and omitted values |
+<span id="labels"></span>
+<span id="check-result"></span>
+
+| Task | Arguments to look up | Matching rule |
 | --- | --- | --- |
-| `geom_seq()` and `layout_sequences()` | Scalar, accver names, display order and corresponding scalar lists | `seq_radius`, `seq_curvature`, `layout_sequences(gap = ...)`, `layout_sequences(orientation = ...)` have individual defaults and Coord support |
-| `geom_seq_label()` | `labels`, radius, rotation, size and hjust/vjust by sequence | `seq_label_orientation` is a single mode; explicit radius is incompatible with Collinear |
-| `geom_link_ribbon()` / `geom_link_line()` | `link_gap` by endpoint sequence | `NULL` retains automatic behavior; control points are not sequence scalars |
-| `geom_feature(preset = 'gene')` / `geom_feature()` | `width` by sequence or strand; list elements follow strand-value rules | Omitted entries retain the parameter default; arbitrary mixed Position lists do not apply |
-| `position_strand()` | `offset`: scalar, sequence values, explicit strand values and mixed sequence lists | Scalar x becomes +x/−x; explicit strands are not reversed; omitted sequences/strands become 0 |
-| `position_offset()` | Scalar or per-sequence scalar `offset` values | Both strands share the offset. Omitted sequences receive zero. |
-| Fixed `geom_gene_label()` / `geom_feature_label()` | `label_radial_offset`, `label_circum_offset`, `label_circum_limit`, `label_rotation` by sequence or strand | Follow this family's strand rules; not every text parameter accepts lists |
-| `track_band()` | One absolute `unit()` or per-sequence numeric width/gap | Numeric settings cover every displayed sequence; absolute sizes retain their physical meaning |
+| Shape sequence backbones | [geom_seq()](../../man/geom_seq.Rd) · `seq_radius`, `seq_curvature` | Both default to 1. Use finite positive radii and finite signed curvatures. |
+| Set direction and spacing | [layout_sequences()](../../man/layout_sequences.Rd) · `orientation`, `gap` | Each sequence has a direction of 1 or −1. Gap units and defaults depend on the view. |
+| Place a sequence name | [geom_seq_label()](../../man/geom_seq_label.Rd) · `labels`, `seq_label_radius`, `seq_label_rotation`, `seq_label_hjust`, `seq_label_vjust` | Match the label to the accession. Radius is relative to its backbone. |
+| Clear a connection endpoint | [geom_link_ribbon()](../../man/geom_link_ribbon.Rd) or [geom_link_line()](../../man/geom_link_line.Rd) · `link_gap` | Match a gap to the sequence at each end. |
+| Set feature thickness | [geom_feature()](../../man/geom_feature.Rd) · `width` | Match by sequence, strand, or both. |
+| Move features | [position_strand()](../../man/position_strand.Rd) or [position_offset()](../../man/position_offset.Rd) · `offset` | Use the first for differences between strands and the second for a shared displacement on each sequence. |
+| Place fixed labels | [geom_feature_label()](../../man/geom_feature_label.Rd) or [geom_gene_label()](../../man/geom_gene_label.Rd) · `label_radial_offset`, `label_circum_offset`, `label_circum_limit`, `label_rotation` | Match by sequence or strand for fixed placement. Automatic labels choose their own positions. |
+| Size a quantitative band | [track_band()](../../man/track_band.Rd) · `width`, `gap` | Supply one physical unit or native numeric values covering every displayed sequence. Width is positive and the gap may be zero. |
 
-`layout_sequences(order = ...)` specifies ordering and `label_layout` specifies a layout mode. Automatic label layers do not accept arbitrary fixed offsets. Axes/themes, aesthetics, scales and guides retain their own interfaces. Manual colour scales match **data categories**; see [styling](styling.md). Consult the [parameter atlas](parameter-atlas.md) for exact defaults and ranges.
-
-<a id="check-result"></a>
-
-## Choose a format and check results {#check-result}
-
-Use scalars for shared settings, named values for local differences, equal-length vectors for display-order settings, and supported lists when two levels of differences require them. Check IDs, order, omitted entries and actual results. Other sections use the simplest expression that serves their task; vector/list counts are not a quality measure.
+For data-driven colours use [aesthetic mappings and scales](styling.md). For the formals, defaults and flexible-parameter flags, see the [parameter index](parameter-atlas.md).

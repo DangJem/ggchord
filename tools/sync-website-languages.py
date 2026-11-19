@@ -1,252 +1,414 @@
 #!/usr/bin/env python3
-"""Generate English pages and paired content from one Han source and reviewed translations."""
+"""Generate Han Markdown and bilingual metadata from English and reviewed translations."""
 import argparse
 import hashlib
 import json
 import re
+from collections import Counter
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 WEB = ROOT / 'website'
 CONFIG = WEB / 'content-policy.json'
+FENCE = re.compile(r'^\s*(`{3,}|~{3,})')
+LIST = re.compile(r'^\s*(?:[-*+] |\d+[.)] )')
+SHARED = {'space', 'code', 'directive', 'html'}
+TOKEN = re.compile(r'`[^`\n]+`|\{#[^}\n]+\}|\{\{[^}\n]+\}\}|<[^>\n]+>|(?<=\]\()[^)\n]*(?=\))')
+# The atlas formats its missing-default explanations as inline code.
+ATLAS_LABELS = {
+    '`No formal default; requiredness follows the contract`': '`无形式默认；是否必需见契约`',
+    '`No formal default; see upstream contract`': '`无形式默认；见上游契约`',
+}
 
 
 def sha(text):
     return hashlib.sha256(text.encode()).hexdigest()
 
 
+def json_text(value):
+    return json.dumps(value, ensure_ascii=False, indent=2) + '\n'
+
+
+def digest_json(value):
+    return sha(json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(',', ':')))
+
+
+def write_if_changed(path, text):
+    if not path.exists() or path.read_text() != text:
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(text)
+
+
+def block_kind(line):
+    if not line.strip():
+        return 'space'
+    if FENCE.match(line):
+        return 'code'
+    if re.fullmatch(r'\s*\{\{[^\n]+\}\}\s*', line):
+        return 'directive'
+    if re.match(r'^#{1,6} ', line):
+        return 'heading'
+    if line.lstrip().startswith('|'):
+        return 'table'
+    if LIST.match(line):
+        return 'list'
+    if re.fullmatch(r'(?:\s*<[^>]+>)+\s*', line):
+        return 'html'
+    return 'paragraph'
+
+
 def blocks(text):
- lines=text.splitlines(keepends=True);out=[];i=0
- while i<len(lines):
-  if not lines[i].strip():
-   j=i+1
-   while j<len(lines) and not lines[j].strip():j+=1
-   out.append(('space',''.join(lines[i:j])));i=j;continue
-  line=lines[i]
-  if m:=re.match(r'^\s*(`{3,}|~{3,})',line):
-   j=i+1
-   while j<len(lines) and not re.match(r'^\s*'+re.escape(m[1][0])+r'{'+str(len(m[1]))+r',}\s*$',lines[j]):j+=1
-   out.append(('code',''.join(lines[i:min(j+1,len(lines))])));i=j+1;continue
-  if re.match(r'^\s*\{\{[^\n]+\}\}\s*$',line):kind='directive'
-  elif re.match(r'^#{1,6} ',line):kind='heading'
-  elif line.lstrip().startswith('|'):kind='table'
-  elif re.match(r'^\s*(?:[-*+] |\d+[.)] )',line):kind='list'
-  elif re.fullmatch(r'(?:\s*<[^>]+>)+\s*',line):kind='html'
-  else:kind='paragraph'
-  j=i+1
-  if kind in ('paragraph','list'):
-   while j<len(lines) and lines[j].strip() and not re.match(r'^(?:#{1,6} |\s*(?:[-*+] |\d+[.)] )|\s*\{\{|\s*\||\s*```|\s*<)',lines[j]):j+=1
-  out.append((kind,''.join(lines[i:j])));i=j
- return out
-
-# Protect executable snippets, shared directives, links, HTML and explicit IDs.
-# Inline backticked prose in the generated parameter atlas remains translatable.
-TOKENS = re.compile(r'`[^`\n]+`|\{#[^}\n]+\}|\{\{[^}\n]+\}\}|<[^>\n]+>|(?<=\]\()[^\)\n]*(?=\))')
+    lines = text.splitlines(keepends=True)
+    start = 0
+    while start < len(lines):
+        end = start + 1
+        kind = block_kind(lines[start])
+        if kind == 'code':
+            fence = FENCE.match(lines[start])[1]
+            close = re.compile(r'^\s*' + fence[0] + '{' + str(len(fence)) + r',}\s*$')
+            while end < len(lines) and not close.match(lines[end]):
+                end += 1
+            if end == len(lines):
+                raise ValueError(f'Unclosed code fence at line {start + 1}')
+            end += 1
+        elif kind == 'space':
+            while end < len(lines) and not lines[end].strip():
+                end += 1
+        elif kind in ('paragraph', 'list'):
+            while end < len(lines) and block_kind(lines[end]) == 'paragraph' and not lines[end].lstrip().startswith('<'):
+                end += 1
+        yield kind, ''.join(lines[start:end])
+        start = end
 
 
-def protected(text):
-    values = []
-    for match in TOKENS.finditer(text):
-        value = match[0]
-        if value.startswith('`') and re.search('[\u3400-\u9fff]', value):
-            continue
-        if value not in values:
-            values.append(value)
-    return values
+def localized_token(token):
+    if token in ATLAS_LABELS:
+        return ATLAS_LABELS[token]
+    return re.sub(r'(^|/)MIGRATION\.md(?=$|#)', r'\1MIGRATION-Hans.md', token)
 
 
-def mask_target(source, target):
-    for i, value in sorted(enumerate(protected(source)), key=lambda item: -len(item[1])):
-        localized = value.replace('../assets/MIGRATION-Hans.md', '../assets/MIGRATION.md').replace('../../MIGRATION-Hans.md', '../../MIGRATION.md')
-        if localized not in target:
-            # Natural English may omit backticks around an inline identifier.
-            if value.startswith('`') and localized.strip('`') in target:
-                localized = localized.strip('`')
-            else:
-                raise ValueError('Translation lost shared token: ' + value)
-        target = target.replace(localized, f'⟦shared:{i}⟧')
-    return target
+def validate_tokens(source, target):
+    expected = Counter(localized_token(token) for token in TOKEN.findall(source))
+    actual = Counter(TOKEN.findall(target))
+    # Existing prose occasionally prints an identifier without its backticks.
+    # Count literal, delimited occurrences outside all code spans, links and HTML.
+    bare_prose = TOKEN.sub(' ', target)
+    missing = expected - actual
+    for token, count in list(missing.items()):
+        if token.startswith('`'):
+            name = re.escape(token[1:-1])
+            bare = re.findall(r'(?<![a-zA-Z0-9_.])' + name + r'(?![a-zA-Z0-9_.])', bare_prose)
+            if len(bare) >= count:
+                del missing[token]
+    if missing or actual - expected:
+        raise ValueError(f'Shared code, links, markup or anchors differ: missing {list(missing)}, extra {list(actual - expected)}')
 
 
-def unmask(source, target):
-    for i, value in enumerate(protected(source)):
-        marker = f'⟦shared:{i}⟧'
-        if marker not in target:
-            raise ValueError('Translation lost protected placeholder: ' + marker)
-        value = value.replace('../assets/MIGRATION-Hans.md', '../assets/MIGRATION.md').replace('../../MIGRATION-Hans.md', '../../MIGRATION.md')
-        target = target.replace(marker, value)
-    if '⟦shared:' in target:
-        raise ValueError('Unknown shared placeholder')
-    return target
+def validate_translation(source, target, kind=None):
+    if not isinstance(target, str) or not target.strip():
+        raise ValueError('Empty translation')
+    if kind:
+        if [k for k, _ in blocks(target)] != [kind]:
+            raise ValueError(f'Translation changes the {kind} block structure')
+        if kind == 'heading' and source.split(' ', 1)[0] != target.split(' ', 1)[0]:
+            raise ValueError('Heading level differs')
+        if kind == 'table' and len(re.findall(r'(?<!\\)\|', source)) != len(re.findall(r'(?<!\\)\|', target)):
+            raise ValueError('Table column count differs')
+    validate_tokens(source, target)
 
 
-def validate_shape(source, target, kind):
-    shape=[k for k,t in blocks(target) if k!='space']
-    if shape!=[kind]:raise ValueError('Translation changes the shared block structure')
-    if re.findall(r'\{#[^}]+\}',source)!=re.findall(r'\{#[^}]+\}',target):
-        raise ValueError('Translated explicit anchors differ')
-    if kind == 'heading':
-        if re.match(r'^#+', source)[0] != re.match(r'^#+', target)[0]:
-            raise ValueError('Translated heading level differs')
-    if kind == 'table' and len(re.split(r'(?<!\\)\|', source)) != len(re.split(r'(?<!\\)\|', target)):
-        raise ValueError('Translated table structure differs')
-    # Block-level code/directives must always come from the canonical source.
-    if any(token in target for token in ('```', '~~~', '{{code:', '{{prepare:')):
-        raise ValueError('Translation contains executable structure')
-    source_urls = re.findall(r'(?<=\]\()[^\)\n]*(?=\))', source)
-    target_urls = re.findall(r'(?<=\]\()[^\)\n]*(?=\))', target)
-    if sorted(u.replace('../assets/MIGRATION-Hans.md', '../assets/MIGRATION.md').replace('../../MIGRATION-Hans.md', '../../MIGRATION.md') for u in source_urls) != sorted(target_urls):
-        raise ValueError('Translated links/images differ from source')
+def english_blocks(source):
+    return ((kind, text) for kind, text in blocks(source) if kind != 'space')
+
+
+def checked_entry(entries, key, text, kind=None):
+    entry = entries.get(key, {})
+    if entry.get('source_sha256') != sha(text) or entry.get('status') != 'reviewed':
+        raise ValueError(f'Missing, stale or unreviewed translation at {key}')
+    try:
+        translation = entry['translation']
+        validate_translation(text, translation, kind)
+    except (ValueError, KeyError) as error:
+        raise ValueError(f'{key}: {error}') from error
+    return translation
+
+
+def reviewed_entry(source, target):
+    return dict(source_sha256=sha(source), status='reviewed', translation=target)
+
+
+def reviewed_page(source, target):
+    originals = list(english_blocks(source))
+    translations = list(english_blocks(target))
+    if len(originals) != len(translations):
+        raise ValueError(f'Block counts differ: {len(originals)} English, {len(translations)} Han')
+    entries = {}
+    for index, ((kind, text), (translated_kind, translation)) in enumerate(zip(originals, translations)):
+        if translated_kind != kind:
+            raise ValueError(f'Block {index}: expected {kind}, found {translated_kind}')
+        if kind in SHARED:
+            if text != translation:
+                raise ValueError(f'Block {index}: shared {kind} differs')
+        else:
+            try:
+                validate_translation(text, translation, kind)
+            except ValueError as error:
+                raise ValueError(f'Block {index}: {error}') from error
+            entries[str(index)] = reviewed_entry(text, translation)
+    return dict(source_sha256=sha(source), blocks=entries)
 
 
 def translated_page(source, saved):
     if saved.get('source_sha256') != sha(source):
-        raise ValueError('Han source changed; review translations before generating')
+        raise ValueError('English source changed; review the Han translation')
     entries = saved['blocks']
-    used = set(); output = []; index = 0
+    output = []
+    used = set()
+    index = 0
     for kind, text in blocks(source):
-        if kind == 'space':
-            output.append(text); continue
-        key = str(index); index += 1
-        if kind in ('code', 'directive', 'html'):
-            output.append(text); continue
-        entry = entries.get(key)
-        if entry is None:
-            raise ValueError('Missing translation block ' + key)
-        if entry.get('source_sha256') != sha(text) or entry.get('status') != 'reviewed':
-            raise ValueError('Unreviewed/stale translation block ' + key)
-        target = unmask(text, entry['translation'])
-        validate_shape(text, target, kind)
-        output.append(target); used.add(key)
+        if kind in SHARED:
+            output.append(text)
+        else:
+            key = str(index)
+            output.append(checked_entry(entries, key, text, kind))
+            used.add(key)
+        if kind != 'space':
+            index += 1
     if used != set(entries):
         raise ValueError('Orphan translation blocks')
     return ''.join(output)
 
 
-def resolve_content(source, saved, path=()):
-    entries=saved['strings']; used=set()
-    def visit(value, pointer):
+def map_strings(value, fn, path=()):
+    if isinstance(value, dict):
+        if set(value) == {'en'} and isinstance(value['en'], str):
+            return fn('/'.join(map(str, path)), value['en'])
+        if 'zh' in value and isinstance(value['zh'], str):
+            raise ValueError(f'Canonical structured content contains a Han string at {path}')
+        return {k: map_strings(v, fn, (*path, k)) for k, v in value.items()}
+    if isinstance(value, list):
+        return [map_strings(v, fn, (*path, i)) for i, v in enumerate(value)]
+    return value
+
+
+def split_content(paired):
+    """Extract a canonical English tree and its explicitly supplied Han strings."""
+    strings = {}
+
+    def visit(value, path):
         if isinstance(value, dict):
-            if set(value)=={'zh'} and isinstance(value['zh'], str):
-                key='/'.join(map(str,pointer)); entry=entries.get(key)
-                if not entry or entry.get('source_sha256')!=sha(value['zh']) or entry.get('status')!='reviewed':
-                    raise ValueError('Missing/stale structured translation: '+key)
-                used.add(key)
-                return dict(zh=value['zh'],en=entry['translation'])
-            return {k:visit(v,(*pointer,k)) for k,v in value.items()}
-        if isinstance(value,list):return [visit(v,(*pointer,i)) for i,v in enumerate(value)]
+            if set(value) == {'en', 'zh'}:
+                text, target = value['en'], value['zh']
+                key = '/'.join(map(str, path))
+                validate_translation(text, target)
+                strings[key] = reviewed_entry(text, target)
+                return {'en': text}
+            if 'en' in value or 'zh' in value:
+                raise ValueError(f'Incomplete language pair at {path}')
+            return {k: visit(v, (*path, k)) for k, v in value.items()}
+        if isinstance(value, list):
+            return [visit(v, (*path, i)) for i, v in enumerate(value)]
         return value
-    canonical=json.dumps(source,ensure_ascii=False,sort_keys=True,separators=(',',':'))
-    if saved.get('source_sha256')!=sha(canonical):raise ValueError('Structured source changed; translations need review')
-    result=visit(source,path)
-    if used!=set(entries):raise ValueError('Orphan structured translations')
+
+    source = visit(paired, ())
+    return source, dict(source_sha256=digest_json(source), strings=strings)
+
+
+def resolve_content(source, saved):
+    if saved.get('source_sha256') != digest_json(source):
+        raise ValueError('Structured English source changed; review the Han translation')
+    entries = saved['strings']
+    used = set()
+
+    def pair(key, text):
+        used.add(key)
+        return {'zh': checked_entry(entries, key, text), 'en': text}
+
+    result = map_strings(source, pair)
+    if used != set(entries):
+        raise ValueError('Orphan structured translations')
     return result
 
 
-def sources_for(row):
-    return f"website/{row['source']} + website/{row['translations']} → website/{row['output']}"
+def generate(row, kind):
+    source = (WEB / row['source']).read_text()
+    saved = json.loads((WEB / row['translations']).read_text())
+    if kind == 'markdown':
+        return translated_page(source, saved), len(saved['blocks'])
+    return json_text(resolve_content(json.loads(source), saved)), len(saved['strings'])
 
 
-def generate_item(row, kind):
-    try:
-        source = (WEB / row['source']).read_text()
-        saved = json.loads((WEB / row['translations']).read_text())
-        if kind == 'markdown':
-            return translated_page(source, saved), len(saved['blocks'])
-        content = resolve_content(json.loads(source), saved)
-        return json.dumps(content, ensure_ascii=False, indent=2) + '\n', len(saved['strings'])
-    except (OSError, ValueError, KeyError) as error:
-        raise ValueError(f"{sources_for(row)}: {error}") from error
+def policy():
+    settings = json.loads(CONFIG.read_text())
+    if (settings['source_language'], settings['generated_language']) != ('en', 'zh'):
+        raise ValueError('The website content policy requires an English source and a Han translation')
+    return settings
 
 
-def generated_outputs():
-    policy=json.loads(CONFIG.read_text())
-    if policy['source_language']!='zh' or policy['generated_language']!='en':raise ValueError('Unsupported content policy')
-    outputs={}; counts={'pages':0,'extra_markdown':0,'structured_files':0,'translated_blocks':0,'translated_strings':0}
-    for row in policy['markdown']:
-        outputs[WEB/row['output']], blocks_count = generate_item(row, 'markdown')
-        counts['pages' if row['source'].startswith('zh/') else 'extra_markdown']+=1
-        counts['translated_blocks']+=blocks_count
-    for row in policy['structured']:
-        outputs[WEB/row['output']], strings_count = generate_item(row, 'structured')
-        counts['structured_files']+=1;counts['translated_strings']+=strings_count
-    return outputs,counts
+def check_inventory(settings):
+    markdown = settings['markdown']
+    structured = settings['structured']
+    all_rows = markdown + structured
+    for key in ('source', 'translations', 'output'):
+        paths = [r[key] for r in all_rows]
+        if len(paths) != len(set(paths)):
+            raise ValueError(f'Duplicate {key} path in website/content-policy.json')
+    for pattern, expected in [
+        ('en/*.md', {r['source'] for r in markdown}),
+        ('zh/*.md', {r['output'] for r in markdown}),
+        ('content-en/**/*.json', {r['source'] for r in structured}),
+        ('translations/zh/**/*.json', {r['translations'] for r in all_rows}),
+    ]:
+        actual = {p.relative_to(WEB).as_posix() for p in WEB.glob(pattern)}
+        unregistered = sorted(actual - expected)
+        if unregistered:
+            raise ValueError(f'Files missing from website/content-policy.json: {", ".join(unregistered)}')
 
 
 def sync(check=True):
-    outputs,counts=generated_outputs()
-    if check:
-        policy = json.loads(CONFIG.read_text())
-        for row in policy['markdown'] + policy['structured']:
+    settings = policy()
+    check_inventory(settings)
+    counts = dict(pages=0, extra_markdown=0, structured_files=0, translated_blocks=0, translated_strings=0)
+    outputs = {}
+    for kind in ('markdown', 'structured'):
+        for row in settings[kind]:
+            try:
+                output, count = generate(row, kind)
+            except (OSError, ValueError, KeyError) as error:
+                raise ValueError(f"{row['source']} + {row['translations']}: {error}") from error
             path = WEB / row['output']
-            if not path.exists() or path.read_text() != outputs[path]:
-                raise ValueError(f"Regenerate stale content with tools/sync-website-languages.py: {sources_for(row)}")
+            if check and (not path.exists() or path.read_text() != output):
+                raise ValueError(f"Generated output differs: {row['output']}. Run tools/sync-website-languages.py")
+            outputs[path] = output
+            if kind == 'markdown':
+                counts['pages' if row['source'].startswith('en/') else 'extra_markdown'] += 1
+                counts['translated_blocks'] += count
+            else:
+                counts['structured_files'] += 1
+                counts['translated_strings'] += count
     if not check:
-        for path,text in outputs.items():
-            path.parent.mkdir(parents=True,exist_ok=True)
-            if not path.exists() or path.read_text()!=text:path.write_text(text)
+        for path, text in outputs.items():
+            write_if_changed(path, text)
     return counts
 
 
 def prepare():
-    """Keep unchanged translations; new/changed source prose becomes an explicit draft."""
-    policy=json.loads(CONFIG.read_text());drafts=0
-    for row in policy['markdown']:
-        source=(WEB/row['source']).read_text();path=WEB/row['translations']
-        saved=json.loads(path.read_text()) if path.exists() else {'blocks':{}}
-        previous=saved['blocks'];by_hash={v['source_sha256']:v for v in previous.values()}
-        entries={};index=0
-        for kind,text in blocks(source):
-            if kind=='space':continue
-            key=str(index);index+=1
-            if kind in ('code','directive','html'):continue
-            digest=sha(text)
-            if previous.get(key,{}).get('source_sha256')==digest:entry=previous[key]
-            elif digest in by_hash:entry=by_hash[digest]
-            else:
-                entry={'source_sha256':digest,'status':'needs_review',
-                    'source_for_review':text,'translation':previous.get(key,{}).get('translation','')}
-                drafts+=1
-            entries[key]=entry
-        fresh={'source_sha256':sha(source),'blocks':entries}
-        path.parent.mkdir(parents=True,exist_ok=True)
-        path.write_text(json.dumps(fresh,ensure_ascii=False,indent=2)+'\n')
-    for row in policy['structured']:
-        source=json.loads((WEB/row['source']).read_text());path=WEB/row['translations']
-        saved=json.loads(path.read_text()) if path.exists() else {'strings':{}}
-        previous=saved['strings'];entries={}
-        def visit(value,pointer=()):
-            nonlocal drafts
-            if isinstance(value,dict):
-                if set(value)=={'zh'} and isinstance(value['zh'],str):
-                    key='/'.join(map(str,pointer));digest=sha(value['zh']);entry=previous.get(key,{})
-                    if entry.get('source_sha256')!=digest:
-                        entry={'source_sha256':digest,'status':'needs_review','source_for_review':value['zh'],
-                            'translation':entry.get('translation','')};drafts+=1
-                    entries[key]=entry
+    """Only an unchanged English source string may keep its existing review."""
+    settings = policy()
+    drafts = 0
+    for kind, field in [('markdown', 'blocks'), ('structured', 'strings')]:
+        for row in settings[kind]:
+            source = (WEB / row['source']).read_text()
+            path = WEB / row['translations']
+            previous = json.loads(path.read_text())[field] if path.exists() else {}
+            by_hash = {entry['source_sha256']: entry for entry in previous.values()}
+            entries = {}
+
+            def keep_or_draft(key, text):
+                nonlocal drafts
+                digest = sha(text)
+                old = previous.get(key, {})
+                if old.get('source_sha256') == digest:
+                    entry = old
+                elif digest in by_hash and kind == 'markdown':
+                    entry = by_hash[digest]
                 else:
-                    for key,item in value.items():visit(item,(*pointer,key))
-            elif isinstance(value,list):
-                for i,item in enumerate(value):visit(item,(*pointer,i))
-        visit(source)
-        payload=json.dumps(source,ensure_ascii=False,sort_keys=True,separators=(',',':'))
-        path.parent.mkdir(parents=True,exist_ok=True)
-        path.write_text(json.dumps({'source_sha256':sha(payload),'strings':entries},ensure_ascii=False,indent=2)+'\n')
+                    entry = dict(source_sha256=digest, status='needs_review', source_for_review=text,
+                                 translation=old.get('translation', ''))
+                    drafts += 1
+                entries[key] = entry
+
+            if kind == 'markdown':
+                digest = sha(source)
+                for index, (block_type, text) in enumerate(english_blocks(source)):
+                    if block_type not in SHARED:
+                        keep_or_draft(str(index), text)
+            else:
+                content = json.loads(source)
+                digest = digest_json(content)
+                map_strings(content, keep_or_draft)
+            write_if_changed(path, json_text({'source_sha256': digest, field: entries}))
     return drafts
 
 
+def review_outputs(row, kind, draft_path):
+    output_path = WEB / row['output']
+    if Path(draft_path).resolve() == output_path.resolve():
+        raise ValueError('Supply a separately reviewed translation draft, not the generated file')
+    source = (WEB / row['source']).read_text()
+    draft = Path(draft_path).read_text()
+    if kind == 'markdown':
+        record = reviewed_page(source, draft)
+        output = translated_page(source, record)
+    else:
+        expected, record = split_content(json.loads(draft))
+        if expected != json.loads(source):
+            raise ValueError('Reviewed paired JSON differs from the English source or its shared metadata')
+        output = json_text(resolve_content(expected, record))
+    return {WEB / row['translations']: json_text(record), output_path: output}
+
+
+def record_review(kind, name, draft_path):
+    field = 'source' if kind == 'markdown' else 'output'
+    row = next((r for r in policy()[kind] if r[field] == name), None)
+    if not row:
+        raise ValueError(f'{name}: register the source and output in website/content-policy.json first')
+    for path, content in review_outputs(row, kind, draft_path).items():
+        write_if_changed(path, content)
+
+
+def review_directory(folder):
+    settings = policy()
+    rows = {r['source']: r for r in settings['markdown']}
+    drafts = sorted(Path(folder).glob('*.md'))
+    if not drafts:
+        raise ValueError(f'No reviewed Markdown drafts in {folder}')
+    outputs = {}
+    for draft in drafts:
+        source = 'en/' + draft.name
+        if source not in rows:
+            row = dict(source=source, translations=f'translations/zh/{draft.stem}.json',
+                       output='zh/' + draft.name)
+            settings['markdown'].append(row)
+        else:
+            row = rows[source]
+        try:
+            outputs.update(review_outputs(row, 'markdown', draft))
+        except (OSError, ValueError) as error:
+            raise ValueError(f'{draft}: {error}') from error
+    # Validate every supplied pair before writing anything, including new registrations.
+    for path, content in outputs.items():
+        write_if_changed(path, content)
+    write_if_changed(CONFIG, json_text(settings))
+    return len(drafts)
+
+
 def main():
-    parser=argparse.ArgumentParser(description=__doc__)
-    group=parser.add_mutually_exclusive_group()
-    group.add_argument('--check',action='store_true')
-    group.add_argument('--prepare',action='store_true',help='Mark changed Han prose as drafts; never accepts old translations automatically')
-    args=parser.parse_args()
-    if args.prepare:
-        print("Prepared",prepare(),"translation drafts; review English and set status to reviewed before generation")
-        return
-    try:counts=sync(check=args.check)
-    except (ValueError,KeyError) as error:raise SystemExit(str(error))
-    print('PASS: Han source → reviewed English; '+', '.join(str(v)+' '+k for k,v in counts.items()))
+    parser = argparse.ArgumentParser(description=__doc__)
+    group = parser.add_mutually_exclusive_group()
+    group.add_argument('--check', action='store_true')
+    group.add_argument('--prepare', action='store_true', help='Prepare changed English prose for translation')
+    group.add_argument('--reviewed-page', nargs=2, metavar=('ENGLISH_SOURCE', 'REVIEWED_HAN_MARKDOWN'))
+    group.add_argument('--reviewed-content', nargs=2, metavar=('OUTPUT_NAME', 'REVIEWED_PAIRED_JSON'))
+    group.add_argument('--reviewed-directory', metavar='REVIEWED_HAN_DIRECTORY',
+                       help='Register reviewed Han drafts matching website/en/*.md and write their generated outputs')
+    args = parser.parse_args()
+    try:
+        if args.prepare:
+            print('Prepared', prepare(), 'new or changed translation drafts')
+        elif args.reviewed_directory:
+            print('Saved reviewed Han translations for', review_directory(args.reviewed_directory), 'pages')
+        elif args.reviewed_page or args.reviewed_content:
+            kind = 'markdown' if args.reviewed_page else 'structured'
+            name, path = args.reviewed_page or args.reviewed_content
+            record_review(kind, name, path)
+            print('Saved reviewed Han translation for', name)
+        else:
+            counts = sync(check=args.check)
+            print('PASS: English source → reviewed Han; ' + ', '.join(f'{v} {k}' for k, v in counts.items()))
+    except (OSError, ValueError, KeyError) as error:
+        parser.exit(1, f'{error}\n')
 
 
-if __name__=='__main__':main()
+if __name__ == '__main__':
+    main()

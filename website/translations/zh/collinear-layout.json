@@ -1,0 +1,15 @@
+{
+  "source_sha256": "0cbfbd631a60fb89369cf94a08c77f92c1e2481ab44c53c75aacbfee01420917",
+  "blocks": {
+    "1": {
+      "source_sha256": "78f3b751cc6a81f151c97d45744da2989fa25c9ea71a757fa0548ec3895c1028",
+      "status": "reviewed",
+      "translation": "## 本页已迁移 {#moved}\n"
+    },
+    "2": {
+      "source_sha256": "97582497cf8d77ae3a87940c0c7d7368d8f46311ffa277b029574b912b00e77b",
+      "status": "reviewed",
+      "translation": "[Collinear 综合实例](collinear.md)\n"
+    }
+  }
+}

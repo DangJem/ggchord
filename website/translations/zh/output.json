@@ -1,0 +1,30 @@
+{
+  "source_sha256": "20ab89b575447f02373cfb2cd55462e6ba19c81bd57822b9789838a0da544bf6",
+  "blocks": {
+    "1": {
+      "source_sha256": "413443509cab437a1c78304f39b48bd2e75ed36448f5f2b2fdae8f994cf65fb5",
+      "status": "reviewed",
+      "translation": "## 按最终宽度保存 {#size}\n"
+    },
+    "2": {
+      "source_sha256": "51beea8609597fb0b4fc93fb6de9611bcec02afd85be7a8948097c4762108cc6",
+      "status": "reviewed",
+      "translation": "示例以 160 × 110 mm 保存四序列图，在当前 R 会话的临时目录写入 `sequence-backbones.pdf`。用于论文时，可将 `output_file` 改为长期保存路径。显式传入图对象，可以准确指定要保存哪一幅图。\n"
+    },
+    "6": {
+      "source_sha256": "20ab43d1d41fe7fc0091a1e173dddb977a24a1680a66d7ca0cd047d311a96b5d",
+      "status": "reviewed",
+      "translation": "## 按相同尺寸检查文字和间距 {#preview}\n"
+    },
+    "7": {
+      "source_sha256": "f478bce11da764d97a098558393d36c6adac9b5a2980e382583df168ec5b5adc",
+      "status": "reviewed",
+      "translation": "要静态预览，可给 `view_ggchord()` 传相同的图、宽、高和单位，`dpi` 控制栅格分辨率。最终用 `ggsave()` 保存，并按目标设备选择文件扩展名。印刷用 PNG 可显式设置 `dpi`，仍须保留要求的物理尺寸。\n"
+    },
+    "8": {
+      "source_sha256": "4b0e31b860ea1e3043a590b1170644b6345d7ce0e26eea84f0ed42e526a4c594",
+      "status": "reviewed",
+      "translation": "查看画布边缘的标签、面板标题与轴的距离，以及图例键是否清晰。字体度量与可用空间共同决定文字能否放下。需要留下测量结果时，见[布局诊断](diagnostics.md)。\n"
+    }
+  }
+}

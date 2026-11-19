@@ -1,0 +1,15 @@
+{
+  "source_sha256": "c6acbc3f64bf37e071bce0ede1869e65b702b0a759c8a05fd0588a1d89340ec6",
+  "blocks": {
+    "1": {
+      "source_sha256": "78f3b751cc6a81f151c97d45744da2989fa25c9ea71a757fa0548ec3895c1028",
+      "status": "reviewed",
+      "translation": "## 本页已迁移 {#moved}\n"
+    },
+    "2": {
+      "source_sha256": "f3e8e2c34abd6958d58b51cd78685f0803db05d4cdf55499810348a44a9e84af",
+      "status": "reviewed",
+      "translation": "[绘制注释与处理重叠](annotations.md)\n"
+    }
+  }
+}

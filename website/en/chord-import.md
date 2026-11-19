@@ -1,5 +1,5 @@
 <a id="moved"></a>
 
-## Section moved {#moved}
+## This page has moved {#moved}
 
-[Import sequences and annotations](import-sequences.md#files)
+[Import sequences and annotations](import-sequences.md)

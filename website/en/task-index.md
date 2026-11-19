@@ -1,5 +1,5 @@
 <a id="moved"></a>
 
-## Reading overview {#moved}
+## This page has moved {#moved}
 
-[Tasks](../../man/)
+[API reference](../../man/)

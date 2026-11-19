@@ -1,119 +1,73 @@
-灵活的参数格式让支持它的参数从统一设置细化到局部控制。下面始终使用相同四条随包序列；前三幅图只比较 `seq_radius`，画布均为 7 × 7 英寸。需要 ggchord；真实 CDS 整理使用可选 dplyr。
-
-{{code:courseblockac}}
+灵活参数让同一图层中的不同序列或不同链采用各自的几何设置。在函数帮助中，点击参数旁的**灵活参数**链接即可查阅这里的匹配规则。
 
 <a id="scalar"></a>
 
-## 一个值应用到所有序列 {#scalar}
+## 改变一条序列的骨架半径 {#scalar}
 
-{{code:parameteruniform}}
-{{figure:parameteruniform}}
+<span id="recommendation"></span>
 
-半径统一为 1。所有序列采用相同设置时，单值已经足够。
+随包数据 `seq_data_example` 中的四条噬菌体基因组序列默认半径均为 1。给 `MT118296.1` 设置半径 0.72 即可把这条骨架向内移。名称按序列的 `accver` 匹配，其余三条仍为 1。
 
-<a id="recommendation"></a>
+{{example:flex-radius}}
 
-## 按名称只改一条序列 {#recommendation}
-
-{{code:parameters}}
-{{figure:parameterexample}}
-
-只把 `MT118296.1` 的半径改为 0.72，其余保留本参数默认值 1。键是实际 `accver`；调整显示顺序后仍按 ID 匹配。完整配置中每条序列确有不同值时，保留完整命名向量。
-
-<a id="vector"></a>
-
-## 按显示顺序分别设置 {#vector}
-
-<span id="compatibility"></span>
-
-{{code:parametervector}}
-{{figure:parametervector}}
-
-四个值对应处理 `layout_sequences(order = ...)` 后的显示顺序，长度须与显示序列数相同。当前第二条是 `MT118296.1`，所以本图与上一张相同。
+| `seq_radius` 的值 | 哪些骨架会改变？ |
+| --- | --- |
+| `0.72` | 全部四条 |
+| `c("MT118296.1" = 0.72)` | 仅 MT118296.1 |
+| `c(1, 0.72, 1, 1)` | 第二条显示序列 |
+| `list("MT118296.1" = 0.72)` | 仅 MT118296.1 |
 
 <a id="reorder"></a>
 
-### 重排时两种匹配的差异 {#reorder}
+## 按名称还是按显示顺序匹配 {#reorder}
 
-保持原向量，只改变 `layout_sequences(order = ...)`。命名值仍修改 `MT118296.1`；无名向量的第二个值改为作用在第二条显示序列 `MT108731.1`。
+<span id="vector"></span>
+<span id="compatibility"></span>
 
-{{code:parameterreorder}}
+左右两图使用相同的四条序列和相同的重排次序。左图的小半径跟随名称 `MT118296.1`。右图的小半径跟随**第二个显示位置**，此处已换为 `MT108731.1`。两图的序列长度、颜色和序列标签均相同。
 
-```r
-view_ggchord(p_parameter_named_order, width = 7, height = 7, units = "in")
-view_ggchord(p_parameter_ordered_values, width = 7, height = 7, units = "in")
-```
+{{example:flex-radius-order}}
 
-![重排后的命名值](../../man/figures/parameternamedorder.png)
-![重排后的顺序值](../../man/figures/parameterorderedvalues.png)
-
-<a id="genes"></a>
-
-## 准备真实正负链 CDS {#genes}
-
-{{code:parametergenes}}
-{{output:parametergenes}}
-
-`OR222515.1` 同时有 2624–4195 的正链和 19246–20523 的负链记录；`OQ646790.1` 的 integrase 为正链。所有链取自 `source_strand`，不改变源坐标。
+无名向量的长度须与显示序列数一致。用列表指定半径时，每个元素都是一个数。只改少数序列时，命名向量写法最短，重排后也能保留各条序列的设置。
 
 <a id="strand"></a>
 
-## 分别设置链的位置 {#strand}
+## 设置链偏移和箭头宽度 {#strand}
 
-{{code:parameterstrand}}
-{{figure:parameterstrand}}
+<span id="genes"></span>
+<span id="lists"></span>
+<span id="width"></span>
 
-显式链值已经带符号：正链 0.08、负链 −0.08，不再次反转。单值 `position_strand(0.08)` 则按规则展开为正链 0.08、负链 −0.08。
+序列 `OR222515.1` 上的两条 CDS 来源链相反。给正链 CDS 设向外偏移 0.08，给负链 CDS 设向内偏移 −0.14。给 `OQ646790.1` 一个值 0.06，则它的正负链对称偏移。示例用 dplyr 筛选 CDS，并从记录的 `source_strand` 列取链向。
 
-<a id="lists"></a>
+{{example:flex-strand}}
 
-### 同时按序列和链设置 {#lists}
+显式负链偏移自带符号。`position_strand()` 将未指定的序列或链的偏移补为 0。宽度改变箭头厚度。这里正链宽 0.03，负链宽 0.08，箭头端点仍取自 `start` 和 `end`。按序列**再按链**指定宽度时，每个命名元素都应提供一个链向量，例如 `list("OR222515.1" = c("+" = 0.03, "-" = 0.08))`。
 
-实际目标是让 `OR222515.1` 正负链不对称偏移，另一条序列采用较小的对称偏移。此时列表能表达两层差异。
+<a id="invalid-radius"></a>
 
-{{code:parameterlist}}
+## 用链名指定半径会发生什么？ {#invalid-radius}
 
-![按真实序列和链设置偏移](../../man/figures/parameterlist.png)
+每条骨架对应一条序列。把 `+` 和 `-` 写成半径的名称，相当于请求两个输入中没有的序列标识。下面的示例捕获布局计算时的报错。要调整骨架半径，用 `accver` 作名称；要调整正负链偏移，使用 [position_strand()](../../man/position_strand.Rd)。
 
-`OR222515.1` 使用显式的 0.08/−0.14；`OQ646790.1` 的单值 0.06 按正负链对称展开。未指定序列或链在这个 Position 家族中补 0。该混合列表不能直接复制给 `width`。
-
-<a id="width"></a>
-
-## 分别设置链的宽度 {#width}
-
-{{code:parameterwidth}}
-{{figure:parameterwidth}}
-
-正链宽度 0.03、负链 0.08，改变箭头厚度，区间长度仍来自 start/end。需要逐序列宽度列表时，各元素须满足本家族的链值规则，详见[几何参数](../../man/geom_feature.Rd)。
-
-<a id="labels"></a>
-
-## 按序列放置名称 {#labels}
-
-{{code:parameterlabels}}
-{{figure:parameterlabels}}
-
-`MT108731.1` 与 `OQ646790.1` 的文字半径分别为骨架的 75% 和 115%，其余使用默认位置。显式 `seq_label_radius` 不适用于 Collinear。
+{{example:flex-radius-error}}
 
 <a id="scope"></a>
 
-## 参数家族与未指定项 {#scope}
+## 按绘图任务查参数 {#scope}
 
-| 接口 | 可用格式与匹配 | 边界与未指定项 |
+<span id="labels"></span>
+<span id="check-result"></span>
+
+| 用途 | 参数入口 | 匹配规则 |
 | --- | --- | --- |
-| `geom_seq()` 与 `layout_sequences()` | 单值、按 accver、按显示顺序及相应标量列表 | `seq_radius`、`seq_curvature`、`layout_sequences(gap = ...)`、`layout_sequences(orientation = ...)` 各有默认；效果与支持范围依 Coord |
-| `geom_seq_label()` | `labels`、半径、旋转、size、hjust/vjust 按序列 | `seq_label_orientation` 是单个模式；显式半径与 Collinear 不兼容 |
-| `geom_link_ribbon()` / `geom_link_line()` | `link_gap` 按端点所在序列 | `NULL` 保留自动行为；控制点不属于逐序列标量 |
-| `geom_feature(preset = 'gene')` / `geom_feature()` | `width` 按序列或链，列表元素遵循链值规则 | 未指定项用本参数默认；不接受 Position 的任意混合列表 |
-| `position_strand()` | `offset` 可单值、按序列、显式链值、逐序列混合列表 | 单值 x 展开为 +x/−x；显式链值不反转；未指定序列或链补 0 |
-| `position_offset()` | `offset` 单值或逐序列标量配置 | 两链共用偏移，不支持逐链；未指定序列补 0 |
-| 固定 `geom_gene_label()` / `geom_feature_label()` | `label_radial_offset`、`label_circum_offset`、`label_circum_limit`、`label_rotation` 按序列或链 | 不代表所有文本参数支持列表；按本家族链值规则解析 |
-| `track_band()` | 单个绝对 `unit()`；或原生数值的逐序列 width/gap | 数值须覆盖全部显示序列；物理尺寸保留毫米含义 |
+| 调整序列骨架 | [geom_seq()](../../man/geom_seq.Rd) · `seq_radius`、`seq_curvature` | 两者默认均为 1。半径取有限正数，曲率取有限的有符号数。 |
+| 设置方向与间隙 | [layout_sequences()](../../man/layout_sequences.Rd) · `orientation`、`gap` | 每条序列的方向取 1 或 −1。间隙的单位和默认值依视图而定。 |
+| 放置序列名称 | [geom_seq_label()](../../man/geom_seq_label.Rd) · `labels`、`seq_label_radius`、`seq_label_rotation`、`seq_label_hjust`、`seq_label_vjust` | 名称按序列标识匹配。标签半径取相对该骨架的比例。 |
+| 调整连接端点间隙 | [geom_link_ribbon()](../../man/geom_link_ribbon.Rd) 或 [geom_link_line()](../../man/geom_link_line.Rd) · `link_gap` | 每个端点按其所在序列取间隙值。 |
+| 设置特征厚度 | [geom_feature()](../../man/geom_feature.Rd) · `width` | 可按序列、按链或同时按序列与链设置。 |
+| 移动特征 | [position_strand()](../../man/position_strand.Rd) 或 [position_offset()](../../man/position_offset.Rd) · `offset` | 两条链分别移动用前者，每条序列的两条链共用偏移用后者。 |
+| 固定标签位置 | [geom_feature_label()](../../man/geom_feature_label.Rd) 或 [geom_gene_label()](../../man/geom_gene_label.Rd) · `label_radial_offset`、`label_circum_offset`、`label_circum_limit`、`label_rotation` | 固定布局可按序列或链设置。自动布局自行决定标签位置。 |
+| 调整定量轨道尺寸 | [track_band()](../../man/track_band.Rd) · `width`、`gap` | 取一个物理单位值，或用原生布局数值覆盖全部显示序列。宽度须为正，间隙可为零。 |
 
-`layout_sequences(order = ...)` 是排列，`label_layout` 是布局模式。自动避让层不接收任意固定偏移。axis/theme、aesthetic、标度与 guide 不继承这套列表规则；手工颜色标度按**数据类别**匹配，见[配色说明](styling.md)。精确默认值和取值范围见[参数图谱](parameter-atlas.md)。
-
-<a id="check-result"></a>
-
-## 选择写法与核对结果 {#check-result}
-
-统一设置用单值；少数局部差异优先用命名值；依赖显示顺序时用等长向量；两层差异确实必要且接口支持时才用列表。核对 ID、显示顺序、未指定项和真实结果。其他技巧页采用适合任务的最短表达，不按向量或列表的数量评价示例。
+基于数据的颜色用[视觉映射与标度](styling.md)设置。函数签名、默认值及灵活参数标记见[参数索引](parameter-atlas.md)。

@@ -1,5 +1,5 @@
 <a id="moved"></a>
 
-## Section moved {#moved}
+## This page has moved {#moved}
 
-[Multi-sequence names and feature labels](multi-sequence-labels.md#sequence-labels)
+[Features, stacking and genomic decoration](annotations.md)

@@ -1,0 +1,45 @@
+{
+  "source_sha256": "2c48b609e9c0374a8548bbba5f0b15fc9a03f78ac969d35ac46b6f69291ae5b8",
+  "blocks": {
+    "2": {
+      "source_sha256": "be2e994e4a5a63612a635ac81c9057f2cc808d9e23a3adc180c9f3d8287e4c09",
+      "status": "reviewed",
+      "translation": "## 按组比较各窗口的覆盖率 {#coverage}\n"
+    },
+    "3": {
+      "source_sha256": "e6a139d5e50a452f7464a12da18d554ed124cad2df91b372b15d1e89b1d16f1b",
+      "status": "reviewed",
+      "translation": "以 MT108731.1 为共同的 query 参考，按 subject accession 拆分实测 HSP。每个面板显示该 subject 在 query 连续 10,000 bp 窗口内覆盖的碱基比例。重叠的 HSP 取并集，每个碱基计一次。三个面板共用 0–1 高度轴，可以直接比较。\n"
+    },
+    "7": {
+      "source_sha256": "fc5a88616d41c2b0c3740a632627f2c34de1bdcd49a72ab113b68c372296c973",
+      "status": "reviewed",
+      "translation": "## 读取实际分母与来源行 {#members}\n"
+    },
+    "8": {
+      "source_sha256": "583503799d6775f77ddb0ce58b56376eb9ae933e6026952ee690afe332417f52",
+      "status": "reviewed",
+      "translation": "完整窗口的分母为 10,000 bp。末窗在第 64,323 个碱基截止，分母为 4,323。对于 subject MT118296.1，20,001–30,000 bp 窗口内有 8,415 个碱基被覆盖。导出的 `source_rows` 列给出参与该窗统计的输入行。\n"
+    },
+    "10": {
+      "source_sha256": "eb598c7e30d13313799dcefe625e4ef319eb3ada0eda02d0bcacd8dd20db8052",
+      "status": "reviewed",
+      "translation": "对单位置观测，`geom_track_bar()` 统计各位置的记录数。如果输入已包含计数列，使用 `geom_track_col()` 将该列映射到高度。\n"
+    },
+    "12": {
+      "source_sha256": "1658c310efe3a07645a6b9d42e203eb3b189ee97fe0e8de886661854a99d1552",
+      "status": "reviewed",
+      "translation": "## 选择共用或局部高度域 {#domains}\n"
+    },
+    "13": {
+      "source_sha256": "069daa2a757c96287bdadf9c75035a80966a3814b0afaa19bb94e97e369d9189",
+      "status": "reviewed",
+      "translation": "若观测来自不同生物学样本，在区间表保留样本 ID，再按该列分面。默认共用高度域，方便跨样本比较。若要看各面板内的局部波动，在轨道数值标度设 `facet_domain = \"panel\"`，让数值上下限自动训练，保留可见的局部数值轴。两张独立图比较同一种度量时，可用 `shared_track_limits()` 算出范围，再传给两边的标度。\n"
+    },
+    "14": {
+      "source_sha256": "760415ea3934ae466343acc1e3c82da1271d0e90301be7cdd270f6dbebfb3262",
+      "status": "reviewed",
+      "translation": "平均深度会分别计入重叠区间。要和覆盖率一同展示，可在第二条轨道映射 `aes(y = after_stat(mean_depth))`，为两种度量分别标出单位。\n"
+    }
+  }
+}

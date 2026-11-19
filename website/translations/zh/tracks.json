@@ -1,0 +1,30 @@
+{
+  "source_sha256": "7b7c6820484bcde0b8d2e9c7538f128dca39a64df709f791ce5d5e77579adb1d",
+  "blocks": {
+    "1": {
+      "source_sha256": "dce6a271277c89f1b01e05353ae694ae849cce6300f81264bc5e701ec76131dc",
+      "status": "reviewed",
+      "translation": "## 在同一高度轴叠加柱与折线 {#shared-band}\n"
+    },
+    "2": {
+      "source_sha256": "b28c83307e1ca9892fafb4c4add8a9510e6a96a927dc57b15a4a23b7d000ae8d",
+      "status": "reviewed",
+      "translation": "随包 bedGraph 记录 pUC19 各窗口的 GC 百分数。柱横跨原窗口，折线连接窗口中点。用 `track_band(\"gc\")` 声明一次物理轨带，两种几何都用 `track = \"gc\"` 选取它。两层高度为 60 的位置都代表 60% GC。\n"
+    },
+    "5": {
+      "source_sha256": "ee787c528941ac45c6b974ff4d2e1be4db800cc48d9e4a5f318c2cf99cb27539",
+      "status": "reviewed",
+      "translation": "## 分别控制物理宽度、数值和颜色 {#domain}\n"
+    },
+    "6": {
+      "source_sha256": "c938eea5eb8da1957961e20264bd085bbe9cd5cb3e50ca910d6dfa7c464463ce",
+      "status": "reviewed",
+      "translation": "轨带的 `width` 决定它在纸上占多宽。`scale_track_value_continuous()` 的 `limits` 决定数值轴范围。更改带宽不影响窗口的 GC 百分数。若想用颜色表示区间数值，可在 tile 层映射 `aes(fill = value)`。有不同单位的第二种度量时，另设一条带及其高度轴。\n"
+    },
+    "7": {
+      "source_sha256": "02c15056be0e6730f59b2a243d284b3d012102c62e525cc1762e52f7a4db47af",
+      "status": "reviewed",
+      "translation": "若需要从区间计算覆盖率再作分组比较，见[逐窗统计与分面](tracks-statistics.md)。\n"
+    }
+  }
+}

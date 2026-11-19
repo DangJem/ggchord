@@ -1,0 +1,621 @@
+[
+  {
+    "id": "modes",
+    "title": {
+      "en": "Four modules and six coordinates"
+    },
+    "articles": [],
+    "snippets": [],
+    "figures": [],
+    "result": null
+  },
+  {
+    "id": "real",
+    "title": {
+      "en": "Original-record comparisons"
+    },
+    "articles": [
+      "real-data"
+    ],
+    "snippets": [
+      "realimport",
+      "realprepare",
+      "realchord",
+      "reallinear"
+    ],
+    "figures": [
+      "realchord",
+      "reallinear"
+    ],
+    "result": "real"
+  },
+  {
+    "id": "circular",
+    "title": {
+      "en": "Complete circular annotation"
+    },
+    "articles": [
+      "plasmid-catalog",
+      "plasmids",
+      "circular-dense-case"
+    ],
+    "snippets": [
+      "catalogmap"
+    ],
+    "figures": [
+      "catalogpuc",
+      "catalogduet"
+    ],
+    "result": null
+  },
+  {
+    "id": "validation",
+    "title": {
+      "en": "Validation, cleaning and hierarchy"
+    },
+    "articles": [
+      "data"
+    ],
+    "snippets": [
+      "validation",
+      "cleaning",
+      "hierarchy"
+    ],
+    "figures": [],
+    "result": "cleaning"
+  },
+  {
+    "id": "formats",
+    "title": {
+      "en": "Formats and adapters"
+    },
+    "articles": [
+      "alignments",
+      "protein-alignments",
+      "import-sequences",
+      "import-intervals"
+    ],
+    "snippets": [
+      "adapters",
+      "formats",
+      "genbank",
+      "frontimportgr",
+      "standardblast",
+      "nativeproteininput",
+      "nativeproteinplot"
+    ],
+    "figures": [
+      "paf",
+      "nativeprotein",
+      "nativeproteinchord"
+    ],
+    "result": null
+  },
+  {
+    "id": "preparation",
+    "title": {
+      "en": "Link preparation and statistics"
+    },
+    "articles": [
+      "ribbons"
+    ],
+    "snippets": [
+      "ribbons"
+    ],
+    "figures": [
+      "density"
+    ],
+    "result": "ribbons"
+  },
+  {
+    "id": "pointlinks",
+    "title": {
+      "en": "Interval and point links"
+    },
+    "articles": [
+      "ribbons",
+      "multi-sequence-start",
+      "multi-sequence-links",
+      "multi-sequence-labels"
+    ],
+    "snippets": [
+      "pointlinks",
+      "frontribbon"
+    ],
+    "figures": [
+      "pointlinks"
+    ],
+    "result": null
+  },
+  {
+    "id": "feature",
+    "title": {
+      "en": "Features and Position"
+    },
+    "articles": [
+      "annotations"
+    ],
+    "snippets": [
+      "featurestack"
+    ],
+    "figures": [
+      "featurestack"
+    ],
+    "result": null
+  },
+  {
+    "id": "labels",
+    "title": {
+      "en": "Automatic and fixed labels"
+    },
+    "articles": [
+      "labels"
+    ],
+    "snippets": [
+      "labellayouts",
+      "labels"
+    ],
+    "figures": [
+      "labelauto",
+      "labelradial",
+      "labelarc"
+    ],
+    "result": null
+  },
+  {
+    "id": "decorations",
+    "title": {
+      "en": "Axes, scale bars and regions"
+    },
+    "articles": [
+      "views",
+      "annotations"
+    ],
+    "snippets": [
+      "decorations",
+      "focus"
+    ],
+    "figures": [
+      "decorations"
+    ],
+    "result": null
+  },
+  {
+    "id": "tracks",
+    "title": {
+      "en": "Quantitative tracks and domains"
+    },
+    "articles": [
+      "tracks",
+      "tracks-statistics"
+    ],
+    "snippets": [
+      "tracks",
+      "multitrack",
+      "tracktile",
+      "comparetrackthin"
+    ],
+    "figures": [
+      "multitrack",
+      "tracktile",
+      "comparetrackthin"
+    ],
+    "result": null
+  },
+  {
+    "id": "recognition",
+    "title": {
+      "en": "Primers, sites and feature search"
+    },
+    "articles": [
+      "recognition",
+      "plasmid-catalog",
+      "plasmids",
+      "circular-dense-case"
+    ],
+    "snippets": [
+      "recognition",
+      "catalogmap"
+    ],
+    "figures": [
+      "recognition",
+      "catalogpuc"
+    ],
+    "result": null
+  },
+  {
+    "id": "projection",
+    "title": {
+      "en": "CDS and link projection"
+    },
+    "articles": [
+      "homology",
+      "projection"
+    ],
+    "snippets": [],
+    "figures": [],
+    "result": null,
+    "calls": [
+      "build_ggchord_cds",
+      "project_ggchord_features",
+      "project_ggchord_links"
+    ]
+  },
+  {
+    "id": "homologs",
+    "title": {
+      "en": "Explicit clusters and loci"
+    },
+    "articles": [
+      "homology"
+    ],
+    "snippets": [],
+    "figures": [],
+    "result": null,
+    "calls": [
+      "read_feature_relations"
+    ]
+  },
+  {
+    "id": "views",
+    "title": {
+      "en": "Focus, segments and source mapping"
+    },
+    "articles": [
+      "views"
+    ],
+    "snippets": [
+      "focus",
+      "segment",
+      "mappingposition"
+    ],
+    "figures": [
+      "focus"
+    ],
+    "result": null
+  },
+  {
+    "id": "styles",
+    "title": {
+      "en": "Scales, guides and themes"
+    },
+    "articles": [
+      "styling",
+      "parameters"
+    ],
+    "snippets": [
+      "styling",
+      "adjustments",
+      "parameters"
+    ],
+    "figures": [
+      "styling"
+    ],
+    "result": null
+  },
+  {
+    "id": "output",
+    "title": {
+      "en": "Preview, results and ordering"
+    },
+    "articles": [
+      "output",
+      "diagnostics"
+    ],
+    "snippets": [
+      "frontpreview",
+      "frontsave",
+      "frontgeometry"
+    ],
+    "figures": [],
+    "result": null
+  },
+  {
+    "id": "linear-layout",
+    "title": {
+      "en": "Collinear alignment and display orientation"
+    },
+    "articles": [
+      "collinear-layout"
+    ],
+    "snippets": [
+      "alignbase",
+      "aligncenter",
+      "alignright",
+      "alignanchor",
+      "alignauto"
+    ],
+    "figures": [
+      "alignleft",
+      "aligncenter",
+      "alignright",
+      "alignanchor",
+      "alignauto"
+    ],
+    "result": null
+  },
+  {
+    "id": "arrow-geometry",
+    "title": {
+      "en": "Real gene arrow styles"
+    },
+    "articles": [
+      "feature-geometry"
+    ],
+    "snippets": [
+      "comparegenedata",
+      "comparegeneshouldered",
+      "comparegeneflush",
+      "comparegenetriangle"
+    ],
+    "figures": [
+      "comparegeneshouldered",
+      "comparegeneflush",
+      "comparegenetriangle"
+    ],
+    "result": null
+  },
+  {
+    "id": "shared-branches",
+    "title": {
+      "en": "Shared branches and point paths"
+    },
+    "articles": [
+      "multi-sequence-links"
+    ],
+    "snippets": [
+      "comparebranchdata",
+      "comparebranchnone",
+      "comparebranchquery",
+      "comparebranchfraction",
+      "comparepointdata",
+      "comparelinkcurve",
+      "comparelinkstraight"
+    ],
+    "figures": [
+      "comparebranchnone",
+      "comparebranchquery",
+      "comparebranchfraction",
+      "comparelinkcurve",
+      "comparelinkstraight"
+    ],
+    "result": null
+  },
+  {
+    "id": "circular-layers",
+    "title": {
+      "en": "Circular Layers"
+    },
+    "articles": [
+      "circular-labels",
+      "circular-layout",
+      "circular-features"
+    ],
+    "snippets": [
+      "comparefinishcircle",
+      "comparebonedouble",
+      "comparebonesingle",
+      "comparebonegap",
+      "compareboneband",
+      "comparebandwidth",
+      "comparecirclecounter",
+      "comparecirclegap",
+      "comparecenter",
+      "comparecenternolength",
+      "comparecenterstyle",
+      "comparefeaturearrow",
+      "comparefeatureblock",
+      "comparefeaturepreset",
+      "comparefinishstack",
+      "comparepositionidentity",
+      "comparepositionstack"
+    ],
+    "figures": [
+      "comparebonedouble",
+      "comparebonesingle",
+      "comparebonegap",
+      "compareboneband",
+      "comparebandwidth",
+      "comparecirclecounter",
+      "comparecirclegap",
+      "comparecenter",
+      "comparecenternolength",
+      "comparecenterstyle",
+      "comparefeaturearrow",
+      "comparefeatureblock",
+      "comparefeaturepreset",
+      "comparepositionidentity",
+      "comparepositionstack"
+    ],
+    "result": null
+  },
+  {
+    "id": "circular-labels",
+    "title": {
+      "en": "Circular Labels"
+    },
+    "articles": [
+      "circular-labels",
+      "circular-layout",
+      "circular-features"
+    ],
+    "snippets": [
+      "comparefinishcircle",
+      "comparefixedfeature",
+      "comparefixedhorizontal",
+      "comparefixedinside",
+      "comparefixedrotate",
+      "comparefeaturefit",
+      "compareradialfit",
+      "compareautofit",
+      "comparecalloutfit",
+      "compareshrinkfit",
+      "comparewrapfit",
+      "compareellipsisfit",
+      "compareexternaloff"
+    ],
+    "figures": [
+      "comparefixedfeature",
+      "comparefixedhorizontal",
+      "comparefixedinside",
+      "comparefixedrotate",
+      "comparefeaturefit",
+      "compareradialfit",
+      "compareautofit",
+      "comparecalloutfit",
+      "compareshrinkfit",
+      "comparewrapfit",
+      "compareellipsisfit",
+      "compareexternaloff"
+    ],
+    "result": null
+  },
+  {
+    "id": "primers",
+    "title": {
+      "en": "Primers"
+    },
+    "articles": [
+      "primers",
+      "restriction-sites"
+    ],
+    "snippets": [
+      "comparefinishdnabase",
+      "comparefinishprimer",
+      "comparefinishprimerrows",
+      "compareprimerbetween",
+      "compareprimeroutside",
+      "compareprimeroffset",
+      "compareprimerinside",
+      "compareprimerwidth",
+      "compareprimerlabel",
+      "compareprimernolocation",
+      "compareprimerlabelinside"
+    ],
+    "figures": [
+      "compareprimerbetween",
+      "compareprimeroutside",
+      "compareprimeroffset",
+      "compareprimerinside",
+      "compareprimerwidth",
+      "compareprimerlabel",
+      "compareprimernolocation",
+      "compareprimerlabelinside"
+    ],
+    "result": null
+  },
+  {
+    "id": "restriction-sites",
+    "title": {
+      "en": "Restriction Sites"
+    },
+    "articles": [
+      "primers",
+      "restriction-sites"
+    ],
+    "snippets": [
+      "comparefinishdnabase",
+      "comparefinishsites",
+      "comparefinishsiterows",
+      "comparerestrictionradial",
+      "comparerestrictionelbow",
+      "comparerestrictionstraight",
+      "comparerestrictionenzyme",
+      "comparerestrictionposition",
+      "comparerestrictionorder",
+      "comparerestrictioninside"
+    ],
+    "figures": [
+      "comparerestrictionradial",
+      "comparerestrictionelbow",
+      "comparerestrictionstraight",
+      "comparerestrictionenzyme",
+      "comparerestrictionposition",
+      "comparerestrictionorder",
+      "comparerestrictioninside"
+    ],
+    "result": null
+  },
+  {
+    "id": "scale-families",
+    "title": {
+      "en": "Scale Families"
+    },
+    "articles": [
+      "tracks",
+      "scale-families",
+      "tracks-statistics",
+      "diagnostics"
+    ],
+    "snippets": [
+      "comparescaledata",
+      "comparescalegradient",
+      "comparescalesteps",
+      "comparescaleidentity",
+      "comparescalemanual",
+      "comparescalelinkdata",
+      "comparescalelinkmanual",
+      "comparescalelinkcontinuous",
+      "comparescalefeature",
+      "comparescalepreset",
+      "comparescalegenering",
+      "comparescaleregion",
+      "trackdata",
+      "comparescaletrack",
+      "comparescaletrackgradient",
+      "comparethemes"
+    ],
+    "figures": [
+      "comparescalegradient",
+      "comparescalesteps",
+      "comparescalelinkcontinuous",
+      "comparethememinimal",
+      "comparethemedark"
+    ],
+    "result": null
+  },
+  {
+    "id": "ribbon-statistics",
+    "title": {
+      "en": "Ribbon Statistics"
+    },
+    "articles": [
+      "ribbons"
+    ],
+    "snippets": [
+      "comparedensitydata",
+      "comparedensityfour",
+      "comparedensityeight",
+      "comparebundle",
+      "comparebundlesummary"
+    ],
+    "figures": [
+      "comparedensityfour",
+      "comparedensityeight",
+      "comparebundle"
+    ],
+    "result": null
+  },
+  {
+    "id": "workflow-tools",
+    "title": {
+      "en": "Workflow Tools"
+    },
+    "articles": [
+      "recognition",
+      "tracks",
+      "scale-families",
+      "tracks-statistics",
+      "diagnostics"
+    ],
+    "snippets": [
+      "comparescaledata",
+      "trackdata",
+      "comparecatalog",
+      "comparediagnostics",
+      "comparetrackfocus"
+    ],
+    "figures": [],
+    "result": null
+  }
+]

@@ -1,0 +1,85 @@
+{
+  "source_sha256": "dcee9f7b3048bb7e38a32b96f7c0d258f67595d49f150af4bb237f28f438e77c",
+  "strings": {
+    "hero/title": {
+      "source_sha256": "84ee079b93f2bc68c28e9c281957cea43625163593c1a32518b7fd45d58815ef",
+      "status": "reviewed",
+      "translation": "用 ggplot2 绘制基因组与序列关系"
+    },
+    "hero/description": {
+      "source_sha256": "fedc244e1fbcee99b2893327f01af5e26cee40d818cbd40055fad9bcfb135659",
+      "status": "reviewed",
+      "translation": "比较多条序列、绘制环形注释、查看局部比对，或把多张图连接成一个综合视图。"
+    },
+    "capabilities/0/title": {
+      "source_sha256": "94ec411fb9d7e5870d4c542b6321c0197176d2d77804d2bd1e2664fddf750066",
+      "status": "reviewed",
+      "translation": "绘图指南"
+    },
+    "capabilities/0/description": {
+      "source_sha256": "c6dcf223ba075f55f1294c77f7347a8add407ab132eb870f85dc3e3c01aaa00e",
+      "status": "reviewed",
+      "translation": "按想画的图或要调整的图层查找。"
+    },
+    "capabilities/1/title": {
+      "source_sha256": "1294507cffe66e364af71866d3d7f9bc22cb3453e0d315a8bb48d7af447a9eda",
+      "status": "reviewed",
+      "translation": "数据与操作"
+    },
+    "capabilities/1/description": {
+      "source_sha256": "d53e8063660d96108175c525b51bd83175303fa9223b597d5dfd6155651e3583",
+      "status": "reviewed",
+      "translation": "查找文件读取、坐标转换与输出检查。"
+    },
+    "capabilities/2/title": {
+      "source_sha256": "484ee9bb6e51e328b73f0db584c797bccfccf6c93a3b1157ec160f5d5950ff0d",
+      "status": "reviewed",
+      "translation": "API 参考"
+    },
+    "capabilities/2/description": {
+      "source_sha256": "ae0d09396c3a8faa98517ce46ed7f3d7879ddd8f7388f60ecbfc0abb4b2b3899",
+      "status": "reviewed",
+      "translation": "查找函数用法、参数与返回值。"
+    },
+    "modules/0/title": {
+      "source_sha256": "139441b5e05cbb6b9661e2edac3baa874aff978a2b263243eba94529428d7b3b",
+      "status": "reviewed",
+      "translation": "多序列关系"
+    },
+    "modules/0/purpose": {
+      "source_sha256": "6291393b8315512412fe6ee024a869913cb8552b757157e8ce3010b12d3ba08c",
+      "status": "reviewed",
+      "translation": "比较基因组或基因簇，查看注释位置与区间之间的连接。"
+    },
+    "modules/1/title": {
+      "source_sha256": "8e89ea00d8a295af5d9641c6854745b0022a45268e5f0a89b3be758226ca26d7",
+      "status": "reviewed",
+      "translation": "单序列圆图"
+    },
+    "modules/1/purpose": {
+      "source_sha256": "2fd2c65e64d6d75a43e2a217e88bb8d836f1b5f877dfb7b8dcb800ec367d8f8c",
+      "status": "reviewed",
+      "translation": "沿一条环形序列组织特征、名称与定量轨道。"
+    },
+    "modules/2/title": {
+      "source_sha256": "ba6f8f110ee920a34b17d4f370dc6ff64f2a93582960c86a192b40461cff5c02",
+      "status": "reviewed",
+      "translation": "序列比对点图"
+    },
+    "modules/2/purpose": {
+      "source_sha256": "61afa9ad36afe47a2b740533b375609f9effc8631ed0da4724b308cbf98f7f98",
+      "status": "reviewed",
+      "translation": "在两条坐标轴上查看序列比对区段、方向与一致性。"
+    },
+    "modules/3/title": {
+      "source_sha256": "cb503f425fa87c00864d6bbd71f9997ac5414c30c3d8db4afdc28955c7c5b1a0",
+      "status": "reviewed",
+      "translation": "多视图组合"
+    },
+    "modules/3/purpose": {
+      "source_sha256": "4972cfc189daf5040a246b073dc17a7db9c4ef6aea21c1409e4444a1a25f42f1",
+      "status": "reviewed",
+      "translation": "组合弦图、共线性图、径向视图和局部细节，用真实区间连接独立面板。"
+    }
+  }
+}

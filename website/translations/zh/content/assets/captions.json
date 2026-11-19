@@ -1,0 +1,895 @@
+{
+  "source_sha256": "616fb47e27978ffb9d330fd5c78086b12a72ab830ae1298def046b6826f8109a",
+  "strings": {
+    "chord": {
+      "source_sha256": "bc20d573e08b68103c04af189b268cfad356b2935ea8994d22d5016b959b89f6",
+      "status": "reviewed",
+      "translation": "随包序列与已有比对区间的弦图"
+    },
+    "circular": {
+      "source_sha256": "575097d3ce4e723eab4f733fac8f507ee7a56ef0fddb322f07fc568668e78160",
+      "status": "reviewed",
+      "translation": "pUC19 注释的单序列圆图"
+    },
+    "collinear": {
+      "source_sha256": "ea9c0825a8c15604b2e2cc16108bc7697eb1a59ebf11815ab43a3936912fd71f",
+      "status": "reviewed",
+      "translation": "按选定注释锚定的随包序列共线性图"
+    },
+    "tracks": {
+      "source_sha256": "e13fbc02446f73c0fde8e71f1bdf23cd5660819f882f5d71ed25a658972128c2",
+      "status": "reviewed",
+      "translation": "从随包 pUC19 DNA 计算的 GC 比例"
+    },
+    "focus": {
+      "source_sha256": "7b233f57fab940a8931b138c477344c1fe3cf026a75a5580c4466ed1af40764b",
+      "status": "reviewed",
+      "translation": "保留原始坐标刻度的局部序列视图"
+    },
+    "labels": {
+      "source_sha256": "f09d0fe78f6c42bf9e484acb4ab26df9b61db94ea1a78a73f9c3a61c5cc2eef3",
+      "status": "reviewed",
+      "translation": "实际基因注释的自动标签布局"
+    },
+    "realchord": {
+      "source_sha256": "6370dbce3427954fef19a619bc11fb0aac1699224925402bdb2be95fb748e25d",
+      "status": "reviewed",
+      "translation": "原始序列、选定 CDS 与已有比对的弦图"
+    },
+    "reallinear": {
+      "source_sha256": "66dbedb40fb4fa7f01cfc269fe286c32aafbdf47941c45959436426b4561cfd7",
+      "status": "reviewed",
+      "translation": "原始序列、全部导入 CDS 与筛选连接的线性图"
+    },
+    "plasmid": {
+      "source_sha256": "ab38831d10f3cae03c304ecc4262e4888ef92fae5ef74029433a2afa3f22cca7",
+      "status": "reviewed",
+      "translation": "pUC19 注释、精确引物命中与三个选定酶切位点"
+    },
+    "density": {
+      "source_sha256": "a5d600cec13bc385d29f32aa5846429d8acb3d4f9a2f197afaca26e07f5a8742",
+      "status": "reviewed",
+      "translation": "原始比对记录的区间密度"
+    },
+    "pointlinks": {
+      "source_sha256": "770108b4ea88e1825cae0cc98750af323e346399fa2e37bc68d5e557de2071b3",
+      "status": "reviewed",
+      "translation": "从已有 HSP 区间计算中点的点连接"
+    },
+    "featurestack": {
+      "source_sha256": "3598bdf9100ca67d479e3a0664bdded473e0ff8f29d2cc55bcfa57168ed0c9a8",
+      "status": "reviewed",
+      "translation": "pUC19 中重叠注释的分层显示"
+    },
+    "multitrack": {
+      "source_sha256": "f3e30e888707e126a845154848462738d43cb82bcdc38fab91797e079897378e",
+      "status": "reviewed",
+      "translation": "pUC19 GC 比例与三窗口滑动均值"
+    },
+    "homologs": {
+      "source_sha256": "030964c4c977d71017123aedec7bcb73de8515becde8b8ac77d6fe1bb2e1eca5",
+      "status": "reviewed",
+      "translation": "蓝色箭头标出负链 AmpR，灰色带连接两段完全一致的编码 DNA。"
+    },
+    "decorations": {
+      "source_sha256": "1da84824e730d0446eab8c91ef2cd498b67144c8f13fae6d8812a18227058eeb",
+      "status": "reviewed",
+      "translation": "突出显示 pUC19 复制起点的实际区间"
+    },
+    "labelauto": {
+      "source_sha256": "c042ef8c7e733093d88a3a887bcea32e5e57e35271958216ac1b7f1806f5d6c3",
+      "status": "reviewed",
+      "translation": "实际基因注释的自动侧边标签"
+    },
+    "labelradial": {
+      "source_sha256": "63df3a2d5fd1215fa6a1c76faec6137ffdf81a3fd31b444fde63fa81233dcbf0",
+      "status": "reviewed",
+      "translation": "同一组基因注释的径向标签"
+    },
+    "labelarc": {
+      "source_sha256": "1d1936d4eb68bbb6601226a9c9404f495f1d8533cd7be0906c6c301d6836ae68",
+      "status": "reviewed",
+      "translation": "同一组基因注释的沿弧标签"
+    },
+    "styling": {
+      "source_sha256": "92c1f374adc6be84ef8f6b8a0e0c1e849aa2da6d160b46952401f4e33e3dcee8",
+      "status": "reviewed",
+      "translation": "四条弦图骨架与查询类别的颜色标度"
+    },
+    "paf": {
+      "source_sha256": "af4f01c570c0ce4d1c1a8be7aea75bae4fbdd2ecbb2acc79aeb1ca4bfedef116",
+      "status": "reviewed",
+      "translation": "从真实 minimap2 PAF 结果绘制的两条 EMALE 序列"
+    },
+    "first": {
+      "source_sha256": "4a44a52d74ea6233a406ab2777c4d5144e0af1fa05f06106efafd9ede9113b97",
+      "status": "reviewed",
+      "translation": "第一张图：两条真实随包序列、基因箭头及已有比对区间"
+    },
+    "showcasechord": {
+      "source_sha256": "da5ef085a4b8a5b8c33c707c588fd949b44484ba6dd9343c37feef8f42108913",
+      "status": "reviewed",
+      "translation": "四条原始基因组，按各序列真实链分别抽样 CDS"
+    },
+    "showcaseplasmid": {
+      "source_sha256": "82427c8e8849d26dbc706e2caa7d264229044fd2186e00b1f3b4e0642426d5c9",
+      "status": "reviewed",
+      "translation": "pETDuet-1密集质粒图：特征、参考引物与合并酶切位点"
+    },
+    "showcasecollinear": {
+      "source_sha256": "bb33d4769735da4dd259a0bd515293e2a3957c35c1b2f0a8c5986531e32edacc",
+      "status": "reviewed",
+      "translation": "四基因组共线性图：分链特征与绕行的跨行连接"
+    },
+    "learnseq": {
+      "source_sha256": "03ed9288861c93a8eccb26ea62cfb6b9ca86d471d63d41fc16145f6ad27f520a",
+      "status": "reviewed",
+      "translation": "弦图第一步：序列骨架"
+    },
+    "learnlinks": {
+      "source_sha256": "f9f58329f95987035e2a2b4a0a178a972aef561afe996d16f3c645f0fe4e70ef",
+      "status": "reviewed",
+      "translation": "弦图第二步：已有比对"
+    },
+    "learngenes": {
+      "source_sha256": "2f06deb7c27a30391f962877abf316aeadeacd1eea4afa92fd10693c592e12a8",
+      "status": "reviewed",
+      "translation": "弦图第三步：精选基因"
+    },
+    "learnlabels": {
+      "source_sha256": "bcf508bdd5cc6c6744aeb349b81320eee666cfabb8f54625d0984c270db9cb06",
+      "status": "reviewed",
+      "translation": "弦图第四步：逐一添加标签"
+    },
+    "linearseq": {
+      "source_sha256": "109c6a863d8ad481e3ecc217d9c9943ecf5d7ee1b47491d5015d1bfc29cea9f9",
+      "status": "reviewed",
+      "translation": "相同骨架，仅替换坐标系"
+    },
+    "linearlinks": {
+      "source_sha256": "e97269a1821d2e2f783bfd3fce6abfde2c0eb25f3cc64765c396dcb4270275ef",
+      "status": "reviewed",
+      "translation": "相同连接，仅替换坐标系"
+    },
+    "linearlabels": {
+      "source_sha256": "76ac100f1212d3704b02fffba6013d7ed8ddde41eb4244ab72a6f0639b31299d",
+      "status": "reviewed",
+      "translation": "相同基因与标签，仅替换坐标系"
+    },
+    "plasmidbackbone": {
+      "source_sha256": "4f5fe68233fb71d5efa44c6174eedaa75c5828b9da779b98a5dc261b0046220c",
+      "status": "reviewed",
+      "translation": "pUC19第一步：双线骨架"
+    },
+    "plasmidfeatures": {
+      "source_sha256": "40755659c80e9695acf969fd6dfbd362c0ad0178f8a07f86903eaa276f878adb",
+      "status": "reviewed",
+      "translation": "pUC19第二步：特征"
+    },
+    "plasmidtext": {
+      "source_sha256": "03c33d766e298b3bf198073b9ffdc59d9be07d4e37eac9184fde3e20203b548f",
+      "status": "reviewed",
+      "translation": "pUC19第三步：标签"
+    },
+    "catalogpsb": {
+      "source_sha256": "bcbccfd8ebd14b6d8a3bc27cfe62a6bf257351c18ed1ad0c23d47fd6fcbd87aa",
+      "status": "reviewed",
+      "translation": "pSB1C3：参考特征图"
+    },
+    "catalogpuc": {
+      "source_sha256": "c732dc9d0cc75eca9d9284d5ba75e2c7b5892d08ce284b543454497bdc44e06d",
+      "status": "reviewed",
+      "translation": "pUC19：参考特征图"
+    },
+    "catalogpbr": {
+      "source_sha256": "e3d3735eb2813f79526346a63f6368042fa9f657997b1536c01f87a125e453f6",
+      "status": "reviewed",
+      "translation": "pBR322：参考特征图"
+    },
+    "catalogblue": {
+      "source_sha256": "063c5a9c5d149bac54d7a457248d50291b17c204525e1c93860c66affeadef3d",
+      "status": "reviewed",
+      "translation": "pBluescript II SK(+)：参考特征图"
+    },
+    "catalogpet": {
+      "source_sha256": "71adaf5c6064ece6135e494088540c70b82295b8075202fd647fffa41b703866",
+      "status": "reviewed",
+      "translation": "pET-28a(+)：参考特征图"
+    },
+    "catalogduet": {
+      "source_sha256": "6914073c9a1415b3f85e63e8da4e7fb723a4103a1dd20ee57a94e60a760705a7",
+      "status": "reviewed",
+      "translation": "pETDuet-1：参考特征图"
+    },
+    "catalogdonr": {
+      "source_sha256": "836634db09b03b3221c19ab6e6590d5d9087a78ec17545de99b98f2e089a3df7",
+      "status": "reviewed",
+      "translation": "pDONR221：参考特征图"
+    },
+    "catalogpcdna": {
+      "source_sha256": "1ec56eb0221a4f6175776b39500c39ba12652ccf0f5b2f1d20e1bd79f9d85d0f",
+      "status": "reviewed",
+      "translation": "pcDNA3.1(+)：参考特征图"
+    },
+    "catalogtre": {
+      "source_sha256": "2667c9a489320fc694cdf57e6febde7c176d05a0b38dc61e3431343d9a7c412f",
+      "status": "reviewed",
+      "translation": "pTRE-Tight-BI：参考特征图"
+    },
+    "catalogtripz": {
+      "source_sha256": "9e324d87b54494248974f9513c532a3fd28da04bd57b1c7833c330d4b6896d10",
+      "status": "reviewed",
+      "translation": "pTRIPZ：参考特征图"
+    },
+    "catalogcambia": {
+      "source_sha256": "bed0150184e394b0caad485db27493c4b543f12a949325e438f33c3deb819600",
+      "status": "reviewed",
+      "translation": "pCAMBIA1300：参考特征图"
+    },
+    "catalogearley": {
+      "source_sha256": "3a3a46b7b9e026dd6d26436ac41f2715830308fd4192271a98e99016c7736f5b",
+      "status": "reviewed",
+      "translation": "pEarleyGate 201：参考特征图"
+    },
+    "catalogcas": {
+      "source_sha256": "8a516e80db1ddab33c2736feb82d035f074ef83507ee1388955692d93e997cbc",
+      "status": "reviewed",
+      "translation": "pSpCas9(BB)-2A-GFP (PX458)：参考特征图"
+    },
+    "firstchord": {
+      "source_sha256": "6bfb72914dcfd21a723d398d5b51ab39ee07e5a2e96d2744b9ddf66a85279f93",
+      "status": "reviewed",
+      "translation": "两条随包序列的骨架及已有比对连接带"
+    },
+    "firstlinear": {
+      "source_sha256": "781bca23e03c420f43e2cb4f44c7c3a40872f86c8daade0dcb5a1c26a04b67fe",
+      "status": "reviewed",
+      "translation": "两条序列共享碱基坐标尺度，带状连接标示对应区间"
+    },
+    "firstcircle": {
+      "source_sha256": "059968c6d1d1ef893f946dd26977b7f4fa4aa55e126d5e94bbe111560b6c45e8",
+      "status": "reviewed",
+      "translation": "标有名称与长度的 pUC19 圆形骨架"
+    },
+    "firstfeatures": {
+      "source_sha256": "5bb74f977b4606b7b255742ed7786bd0f2495f03607174f31fe64b3f7c60d6dd",
+      "status": "reviewed",
+      "translation": "pUC19 圆形骨架上的复制起点注释区间"
+    },
+    "practicechord": {
+      "source_sha256": "8010da0976f718ac9f8e607b83f5a58f70d8fcda7c88b1e43d8e51c30792eace",
+      "status": "reviewed",
+      "translation": "两条序列的弦图，每条增加一个基因箭头和原始注释名"
+    },
+    "practicelinear": {
+      "source_sha256": "3a22e502999f728f37791e7d1346ebed6eeba16086b2e70a4336a2ca7836da5a",
+      "status": "reviewed",
+      "translation": "两行共线性图，带基因箭头、注释名及 10 kb 比例尺"
+    },
+    "practiceplasmid": {
+      "source_sha256": "b7eba0b4d459696b6c4064f4b5809517c37761bd888ab61a2ff540df77e7d271",
+      "status": "reviewed",
+      "translation": "pUC19 圆图上的复制起点及标签"
+    },
+    "frontbackbone": {
+      "source_sha256": "adfc478e6a4ac69fcd2423bde78aedd535f4601f3ab583a3399e9a5d126d6ef8",
+      "status": "reviewed",
+      "translation": "四条序列的默认弧形骨架"
+    },
+    "frontribbon": {
+      "source_sha256": "0f88f2b89d2cf9a4273d6669679cc7879b8e665b306752a342341d06117f304a",
+      "status": "reviewed",
+      "translation": "加入一条区间比对带"
+    },
+    "frontfeature": {
+      "source_sha256": "5fbfd15d6765f1ec021e3072ec9433882579a3a9a0b6369b63c6c3a3929bdc7d",
+      "status": "reviewed",
+      "translation": "在绿色骨架上加入一个 integrase CDS"
+    },
+    "frontrotation": {
+      "source_sha256": "b0c48847b73eac266e4136ce3b9e5daa19a17747e7777db53a161ef26bdf770b",
+      "status": "reviewed",
+      "translation": "相对默认弦图逆时针旋转 90°"
+    },
+    "frontgap": {
+      "source_sha256": "c8a89ef50c723e26890fea21dba08f805951737be374dd11bf6ac3193d2e75ed",
+      "status": "reviewed",
+      "translation": "增大相邻骨架之间的间隙"
+    },
+    "frontradius": {
+      "source_sha256": "895600fe2a60bde1187a4671015c6d96a10773fe63a4c1b5d928b272427d81da",
+      "status": "reviewed",
+      "translation": "缩小 MT118296.1 骨架的半径"
+    },
+    "frontcurvature": {
+      "source_sha256": "18f1a9a2c5f975e3fc00c8c022d42cf3699a4be659c29f0653af30067c50a576",
+      "status": "reviewed",
+      "translation": "把 MT118296.1 骨架画成直线"
+    },
+    "frontorientation": {
+      "source_sha256": "621f9b7e3921db37d642ca559a4dce85446ad780819946c74de853668099c4da",
+      "status": "reviewed",
+      "translation": "反转 MT118296.1 的显示方向"
+    },
+    "frontroute": {
+      "source_sha256": "6a811046a831e2477eb8c79c769f0c3c13b2815a8964e6a9cd7857c20659f741",
+      "status": "reviewed",
+      "translation": "向上移动连接带的控制点"
+    },
+    "frontnoavoid": {
+      "source_sha256": "c1ee7c0b8f1ec0b80ae9dca518ada45c992a83fa7bba94a261b0ad51bc672548",
+      "status": "reviewed",
+      "translation": "固定间距下连接带与 CDS 重叠"
+    },
+    "frontsmooth": {
+      "source_sha256": "f23d52e53698b5531844de4805dc2f0ecd5578f5c8af46b70e39ee0bb5f96892",
+      "status": "reviewed",
+      "translation": "连接带在 CDS 附近平滑让位"
+    },
+    "frontseqlabels": {
+      "source_sha256": "2b1e67b8584999073d2424bca3ba2428fe2d5eca04737d2d0f166451be10fc7b",
+      "status": "reviewed",
+      "translation": "把序列标签放到内侧并横排"
+    },
+    "frontgenelabels": {
+      "source_sha256": "afe1d5a6705bce893c0e3eb9014b223e973d2d94cd51632e4c48a2a104f11aba",
+      "status": "reviewed",
+      "translation": "保留骨架、连接与 CDS，增加特征名称"
+    },
+    "frontmarkers": {
+      "source_sha256": "f5e211ae1c23a458fcc09da01056446379f7a6de1c82595baaa71a2d591bcd1e",
+      "status": "reviewed",
+      "translation": "区间高亮与有向点连接"
+    },
+    "frontorder": {
+      "source_sha256": "59ec27c7bf6960eb946859bc22a83d78351c1964e8d2d02ad920026d1ee124f9",
+      "status": "reviewed",
+      "translation": "交换两条骨架的显示顺序"
+    },
+    "frontlinearbase": {
+      "source_sha256": "2576739fa550e12b4d3c6c7656402d898345f32a8049e2a7e470020fa1cf1765",
+      "status": "reviewed",
+      "translation": "四条共线性骨架"
+    },
+    "frontlinearlink": {
+      "source_sha256": "2d2c976da17ffc6ece9bc77f779b5e6db5b3bfbfd8efdb089d9f65ecb1adb4cc",
+      "status": "reviewed",
+      "translation": "四行中加入一条比对带"
+    },
+    "frontlinearcds": {
+      "source_sha256": "2fce62a92185236ec6598c77e75b14cb8f12a8a42cb4904b1fa8be7066daa87e",
+      "status": "reviewed",
+      "translation": "在第三条绿色骨架上加入 CDS 箭头"
+    },
+    "frontlineargap": {
+      "source_sha256": "ce3efede6ba238ef0a029fa0f79d7353d334fcf9b971fb87a72661df7299472a",
+      "status": "reviewed",
+      "translation": "增大共线性图行距"
+    },
+    "frontlinearscale": {
+      "source_sha256": "3b18abf5ce7e9bcb744f70529d94b9b881788956c500df8cbc06345889509dc1",
+      "status": "reviewed",
+      "translation": "添加 10 kb 标尺"
+    },
+    "frontcirclestyle": {
+      "source_sha256": "7e0fad745a70f3fa0ffb88a9b6becf2f8fdcd938901f4709a0dcc42502dd7e13",
+      "status": "reviewed",
+      "translation": "pUC19 的单线骨架"
+    },
+    "frontcirclerotation": {
+      "source_sha256": "f85df54f84ae37fe7db260e3056141a1feb4760e7c8925bccf5ef8cffca74201",
+      "status": "reviewed",
+      "translation": "序列坐标原点位于 9 点钟的 pUC19 圆图"
+    },
+    "frontlinearcross": {
+      "source_sha256": "5355b39740e477f5d835db588369123109545b004fae186d714ff750419d97d2",
+      "status": "reviewed",
+      "translation": "跨过第二行的连接带"
+    },
+    "mappingexample": {
+      "source_sha256": "c8c969f67ffdb6809aea1962b1e663b0969ecd9a1dc5be89f86fb3f29ceb6d93",
+      "status": "reviewed",
+      "translation": "将比对一致性映射到连接带颜色"
+    },
+    "parameterexample": {
+      "source_sha256": "fc192d85fcbb84042287387d0f0783d5aa04358cb0cb9ca734adcaf8080d555f",
+      "status": "reviewed",
+      "translation": "按序列名称单独设置一个骨架半径"
+    },
+    "segment": {
+      "source_sha256": "7bee5074f60a39e0853dd2d3745806cce41aaa8c3dff4d6bcd718c9503e21c82",
+      "status": "reviewed",
+      "translation": "同一序列的两个窗口。右窗口反向显示。"
+    },
+    "mappingposition": {
+      "source_sha256": "161405739e88740cc6aa54cf5171097d43f24f454acf1a3ff329f06e6847b6fe",
+      "status": "reviewed",
+      "translation": "黑点对应第一条序列的源坐标 10,100 bp。"
+    },
+    "recognition": {
+      "source_sha256": "a7a824ab4056fc76a3f08135e7cd8c1ccc39f5b0b483bf850881e49c45ccb636",
+      "status": "reviewed",
+      "translation": "pUC19 上的已知引物匹配和所选酶切位点。"
+    },
+    "nativeprotein": {
+      "source_sha256": "224f102c7a650a5b8c4abbf63b02ef8094730f2ce9ecda8a0d56d3800674f566",
+      "status": "reviewed",
+      "translation": "四条完整蛋白与三条相邻 BLASTp 连接，比例尺为 50 aa"
+    },
+    "nativeproteinchord": {
+      "source_sha256": "e0d48cfb57308044b0af67a38f409957e8573013ba4a00ef733eda6b2f448eb1",
+      "status": "reviewed",
+      "translation": "四条完整蛋白及六对实际 BLASTp 比对的弦图"
+    },
+    "parameteruniform": {
+      "source_sha256": "f6651b8d28eff6d885686d00794f880303dde06b86e6f15288d09397a3c87258",
+      "status": "reviewed",
+      "translation": "统一半径：所有序列使用 1"
+    },
+    "parametervector": {
+      "source_sha256": "b8716d326574f24193ea2ba48309d3652326c11de811ae40f203a8643dfcdf81",
+      "status": "reviewed",
+      "translation": "顺序半径：第二条显示序列使用 0.72"
+    },
+    "parameterstrand": {
+      "source_sha256": "ae9dd58bc587554978c0035aa9844a9115a1ddd6e7e7d31904b4a0874fc07aad",
+      "status": "reviewed",
+      "translation": "按正负链分别设置 CDS 偏移"
+    },
+    "parameterwidth": {
+      "source_sha256": "746310e9c3e2cb73c7a2ae86466597e88090b456871d4a1b655a18331732790d",
+      "status": "reviewed",
+      "translation": "按正负链分别设置 CDS 宽度"
+    },
+    "parameterlabels": {
+      "source_sha256": "e6d7718cbccdc1f6fd02c09955be724a0a10f521f0e4d4fee3fdd904ed019d9c",
+      "status": "reviewed",
+      "translation": "按序列名称调整标签半径"
+    },
+    "frontcrosswidth": {
+      "source_sha256": "c5305436d8e59c2bac7cad2dc2b263ede98dedd3d30d2660b939d5c9b2295bc8",
+      "status": "reviewed",
+      "translation": "单独加粗跨行连接带边框"
+    },
+    "frontcrosssame": {
+      "source_sha256": "3c8496c3aa87023ba7d76810764339884445bc699bbb13443341eeef9909a00e",
+      "status": "reviewed",
+      "translation": "跨行边框沿用普通线宽"
+    },
+    "manualgenelabels": {
+      "source_sha256": "fba5698b8ff61a0a62a55853d16bf0c19a1742ef23675af7a3cbc3757a0ea7dd",
+      "status": "reviewed",
+      "translation": "弦图中的固定基因标签"
+    },
+    "alignleft": {
+      "source_sha256": "a6c5f187ad726a72d94d96fe615784da4bda2c86d5c9fd1ecdfc9d4e09de8608",
+      "status": "reviewed",
+      "translation": "相同四条序列和真实比对：左端对齐。"
+    },
+    "aligncenter": {
+      "source_sha256": "190299916b445a33c601b729b5e262d020298ee5c01d4ebec60092cd7c95d4fb",
+      "status": "reviewed",
+      "translation": "只将 align 改为 center：完整序列的显示中点对齐。"
+    },
+    "alignright": {
+      "source_sha256": "d558625f3a48c1ee860fc78a74573c000daf7bba8ee21f9fc75dc8093aaf3818",
+      "status": "reviewed",
+      "translation": "只将 align 改为 right：完整序列的显示右端对齐。"
+    },
+    "alignanchor": {
+      "source_sha256": "a5b26cfa3d75a1deab810ea1b09fb8be04de5636fd7e373fdc5fcf21d2c94aae",
+      "status": "reviewed",
+      "translation": "保持 left，增加各序列中点锚定；此处锚点是几何示范，不表示同源位点。"
+    },
+    "alignauto": {
+      "source_sha256": "d26f85e2349d7b120bfd0549592fc28364df96a90a91bd075774feb8dd7c4004",
+      "status": "reviewed",
+      "translation": "只启用自动显示方向，采用默认支持阈值 0.1；行顺序和原始端点不变。"
+    },
+    "tracktile": {
+      "source_sha256": "ee49bf8b7ed88430fd11d6245b9cf83dd13ff3aa8938f95ca81f0855e0a13dbb",
+      "status": "reviewed",
+      "translation": "同一批真实 GC 窗口：固定宽度色带用颜色表示比例，色带高度不编码 GC。"
+    },
+    "comparegeneshouldered": {
+      "source_sha256": "e861a92e83cf275119edbf4b2f24032116d12fe129401d5e1e79c683e683a070",
+      "status": "reviewed",
+      "translation": "同一个真实 integrase：默认 shouldered 箭头。"
+    },
+    "comparegeneflush": {
+      "source_sha256": "503f7cbaf33baaf4009be02c97f9ecb367e092b4ac15c3fbabb89f1f9c0dc49e",
+      "status": "reviewed",
+      "translation": "只把 arrow_head_style 改为 flush。"
+    },
+    "comparegenetriangle": {
+      "source_sha256": "5b6de5b0d92e11380486917b849b1f21b4df659ee7ee9c2504732dd3a7780a2c",
+      "status": "reviewed",
+      "translation": "只把 arrow_head_style 改为 triangle，整个区间采用三角楔形。"
+    },
+    "comparebranchnone": {
+      "source_sha256": "afd0d4109f3f72ea5ba47e503061338064bfcc6f66a15fa04095bc64feedff79",
+      "status": "reviewed",
+      "translation": "简化示意：相同 query 区间的两条带独立绘制。"
+    },
+    "comparebranchquery": {
+      "source_sha256": "efb23f1f921dc00877936c495b927194a760bb9b650f38d7eb0c6339350f5179",
+      "status": "reviewed",
+      "translation": "同一简化输入，只启用 query 分支，默认比例 0.15。"
+    },
+    "comparebranchfraction": {
+      "source_sha256": "2ea6a043b240aaf09c3e87d01ffab3596531971cd2235a46885228045ecd713b",
+      "status": "reviewed",
+      "translation": "保持 query 分支，只将主干比例从 0.15 改为 0.35。"
+    },
+    "comparelinkcurve": {
+      "source_sha256": "ecbea1c3fff8fe1d25ec7729a3fbf4fb2d04aa0a0e303acb0f71e642a732cdda",
+      "status": "reviewed",
+      "translation": "同一简化输入，用曲线连接区间中点。"
+    },
+    "comparelinkstraight": {
+      "source_sha256": "56ddd0cacec6b547550efcfba3bc789dde7ef3ca1404dc4ac56849012b718fba",
+      "status": "reviewed",
+      "translation": "只把 link_type 改为 straight，中点锚定不变。"
+    },
+    "comparetrackthin": {
+      "source_sha256": "9f6c8aa4dec69f87cfec9889198429a927501f0ca61d4d85e1cbfda244e00ce6",
+      "status": "reviewed",
+      "translation": "同一 pUC19 GC 数据，只将 tile 带宽从 10 mm 改为 4 mm。"
+    },
+    "comparecenter": {
+      "source_sha256": "db237409d909b423c7a8d94838c443cac7fe2ebbef5e66e2710d439c2029a704",
+      "status": "reviewed",
+      "translation": "中心名称与长度使用独立的默认文字样式。"
+    },
+    "comparecenternolength": {
+      "source_sha256": "7652f17da7ea453c6ecb16d17bb21ef09fff107eeebc48e684f8623da39984c4",
+      "status": "reviewed",
+      "translation": "只隐藏中心长度，名称保留。"
+    },
+    "comparecenterstyle": {
+      "source_sha256": "25e4aaa4c21842f7a43fdfa4842ddc92a7b8f476c3cf8f100201ed3d745175b7",
+      "status": "reviewed",
+      "translation": "只增大中心名称字号，长度样式不变。"
+    },
+    "comparebonedouble": {
+      "source_sha256": "a2867cd84160bbff3979c10b4027aae2e88f04c2a5ee6431905754868c55a552",
+      "status": "reviewed",
+      "translation": "相同 pUC19 的双线骨架。"
+    },
+    "comparebonesingle": {
+      "source_sha256": "1d4432c152805c02d5d9855e7c70286b96ecf45768a48f89c0763352dd5ceb1b",
+      "status": "reviewed",
+      "translation": "只改为 single。"
+    },
+    "compareboneband": {
+      "source_sha256": "8ca6d77646f404b3f40217b6aa58aea1a3094a3b1533130c9c503f250ab1385a",
+      "status": "reviewed",
+      "translation": "同一 pUC19，只将骨架样式改为 band；这是修复后实际渲染的骨架。"
+    },
+    "comparebonegap": {
+      "source_sha256": "469f0ca5fbe91a12483c20e370bec18072521be9b1c386668f34961a04828153",
+      "status": "reviewed",
+      "translation": "双线间距从 0.025 改为 0.05。"
+    },
+    "comparecirclecounter": {
+      "source_sha256": "25cba346abfd9d1357e20d408d19dc3254a917dde2c0a797358fa41088dc55d1",
+      "status": "reviewed",
+      "translation": "同一圆图，坐标改为逆时针增加。"
+    },
+    "comparecirclegap": {
+      "source_sha256": "3a3abaaad5591cd1439e312693865a3232450f77756b0134f6d62a24e9993f81",
+      "status": "reviewed",
+      "translation": "只将圆图开口设为 25 度。"
+    },
+    "comparefixedfeature": {
+      "source_sha256": "756fac68cb7402176429cb97cf861379fc675107f87d2f182ddcdec710fadea2",
+      "status": "reviewed",
+      "translation": "固定标签沿特征方向放置。"
+    },
+    "comparefixedhorizontal": {
+      "source_sha256": "3561ccb9c4f54f24c86727a66ddfb84609eb3df40fd4467d5864da414f2b36d3",
+      "status": "reviewed",
+      "translation": "只把固定文字改为横排。"
+    },
+    "comparefixedinside": {
+      "source_sha256": "e3ee94e8cb5afa00a674dc2de5efc01b5ab8fb899783f709185720b7de060c90",
+      "status": "reviewed",
+      "translation": "只把固定标签放在内侧。"
+    },
+    "comparefixedrotate": {
+      "source_sha256": "d3fc3130169e65f8bcc157dd0685ccfb6f0362cabc8b5e849697541dd1ec1d9c",
+      "status": "reviewed",
+      "translation": "只给固定标签增加 30 度旋转。"
+    },
+    "comparefeaturefit": {
+      "source_sha256": "8389b3649daf5494d575f6ee668f3fb10700ae21b5130b80787784fbcd0ebba7",
+      "status": "reviewed",
+      "translation": "同一批注释，feature 内部优先标签布局。"
+    },
+    "compareradialfit": {
+      "source_sha256": "f9c03552f8680ee082864530df0f4a1d2aeace7cda21995c73f597d85bb08caa",
+      "status": "reviewed",
+      "translation": "只改为 radial 布局。"
+    },
+    "compareautofit": {
+      "source_sha256": "636a9cc4db6a6ba5e877a374390e75d0dbc7df9f5b6c0d8a23d88e7d4c3af2b1",
+      "status": "reviewed",
+      "translation": "只改为 auto 布局。"
+    },
+    "comparecalloutfit": {
+      "source_sha256": "fdcb1e6331e6de5fe5be72e06e6272e9821edcabb693e2707acebb7b7ffd1254",
+      "status": "reviewed",
+      "translation": "只改为 callout 布局。"
+    },
+    "compareshrinkfit": {
+      "source_sha256": "7077893dd541e392e602505566605a8394df80d613951d3c223284006f638d78",
+      "status": "reviewed",
+      "translation": "只将适配策略改为 shrink，字号下限仍为默认 1.5。"
+    },
+    "comparewrapfit": {
+      "source_sha256": "0956ff162a11a01ff325bb71db9d0b90fde27bf6ea8a462271d3427a2182ab87",
+      "status": "reviewed",
+      "translation": "只指定 14 字符换行宽度，标签文字仍由源名称和坐标组成。"
+    },
+    "comparepositionidentity": {
+      "source_sha256": "f7f584e1be751b97c10302f1b33461710c7cf5a8f7d503da20f0f0dc15db6298",
+      "status": "reviewed",
+      "translation": "原始同一位置上的实际重叠注释。"
+    },
+    "comparepositionstack": {
+      "source_sha256": "77fe05bb2303d68ab1cd23143e6f1da85543e461807d34c6818e68de63a109d3",
+      "status": "reviewed",
+      "translation": "只替换共享 Position，特征和标签一起分层。"
+    },
+    "compareprimerbetween": {
+      "source_sha256": "753b4975d61a0d243337e714cdd669340bb4ccd72c930e02d4e68f50f0aff896",
+      "status": "reviewed",
+      "translation": "同三条真实搜索命中，引物弧线位于双线之间。"
+    },
+    "compareprimeroutside": {
+      "source_sha256": "d0881105e556f32d4583ac078c99f36b0881867ddc09219c2ee6ae9e5a84b736",
+      "status": "reviewed",
+      "translation": "只把引物弧线移到外侧。"
+    },
+    "compareprimerinside": {
+      "source_sha256": "ab7788638b9ad97c3b995b719b34e03ba5e63c8a2d302ee84012998f27829933",
+      "status": "reviewed",
+      "translation": "只把引物弧线移到内侧。"
+    },
+    "compareprimerwidth": {
+      "source_sha256": "1945847c4841b909fd29e943336a818997933ec104f60e3d0ab0a84fbe546b96",
+      "status": "reviewed",
+      "translation": "只将引物弧宽从 0.026 改为 0.05。"
+    },
+    "compareprimerlabel": {
+      "source_sha256": "3a586e600d67a36c97d82cf0e20e3e8a10c1c273448a3fe9af6b2cc86380c4bd",
+      "status": "reviewed",
+      "translation": "引物文字默认包含真实结合范围。"
+    },
+    "compareprimernolocation": {
+      "source_sha256": "9caad268db8cfb3576e219c31f6763e6058be5f0531eac161dbb0ba80bda290b",
+      "status": "reviewed",
+      "translation": "只隐藏标签中的范围，弧线仍对应完整结合区间。"
+    },
+    "compareprimerlabelinside": {
+      "source_sha256": "981cc79059901242cf06450373d00a244ea858becfc212642e6605db303d7e32",
+      "status": "reviewed",
+      "translation": "只把引物文字放到内侧。"
+    },
+    "comparerestrictionradial": {
+      "source_sha256": "8f5ad2179e4f1223ecd2d6c2b89f7e5dfa2e8a0237f81cced554799d1bc5c378",
+      "status": "reviewed",
+      "translation": "同一批真实酶切命中，默认 radial 引线。"
+    },
+    "comparerestrictionelbow": {
+      "source_sha256": "7fc4699ec66e45bac12b481ca41566e0a72aad642e47855b9fefe3721887eef4",
+      "status": "reviewed",
+      "translation": "只把引线改为 elbow。"
+    },
+    "comparerestrictionstraight": {
+      "source_sha256": "b48fdd916759ad5c69fe1dfe63ac6e7c3166bccf50a308f634168d489a9b6eea",
+      "status": "reviewed",
+      "translation": "只把引线改为 straight。"
+    },
+    "comparerestrictionenzyme": {
+      "source_sha256": "f8f5beab6d002cd55dec237d956c4418dff12760ffd9ceed0d53779e0a993d8f",
+      "status": "reviewed",
+      "translation": "只显示酶名，切点坐标仍保留。"
+    },
+    "comparerestrictionposition": {
+      "source_sha256": "f81782ec59320e199661fa9a38f97d2db92a390dcb2e371b790d3cb7c8dbd35a",
+      "status": "reviewed",
+      "translation": "只显示位置，原始酶名不丢弃。"
+    },
+    "comparerestrictionorder": {
+      "source_sha256": "a28fe9606990dbf00b74ed1d5a25ceb422f6f140ae18cbbab5c6d7530410309b",
+      "status": "reviewed",
+      "translation": "只将文字顺序固定为位置后接酶名。"
+    },
+    "comparerestrictioninside": {
+      "source_sha256": "169e052536c300c0df7b52094bdbd42ad715a35c37fce98a3b03a4160e0f194b",
+      "status": "reviewed",
+      "translation": "只把酶切文字放到内侧。"
+    },
+    "compareshortauto": {
+      "source_sha256": "11dd39b948472fc8d5d06b892c47cccd1066f3e1e8e8c4db3424eb507aee3639",
+      "status": "reviewed",
+      "translation": "同一真实 CDS，请求较长头部以观察 auto 回退。"
+    },
+    "compareshortwedge": {
+      "source_sha256": "c779ace03ee67af6c2592cb1e7c0c38f26fb6d0e094d2f0d562fadf869de04ed",
+      "status": "reviewed",
+      "translation": "同一真实 CDS，请求较长头部以观察 wedge 回退。"
+    },
+    "compareshortblock": {
+      "source_sha256": "c8b85117d24ea19fa34584fa463f192d8c9b29dab730e60e41f77e539999a2ba",
+      "status": "reviewed",
+      "translation": "同一真实 CDS，请求较长头部以观察 block 回退。"
+    },
+    "compareseqlabelarc": {
+      "source_sha256": "729c77268635ece8e3817e7624372f8b4807ee0dcfaabb8cbed5b6ea09a1eca9",
+      "status": "reviewed",
+      "translation": "默认序列文字沿弧排布。"
+    },
+    "compareseqlabelhorizontal": {
+      "source_sha256": "e2a00927c3fde083312b3d79fd16e028a6724eca32c0ecad3ef5b09ee070d370",
+      "status": "reviewed",
+      "translation": "只把序列文字改为横排。"
+    },
+    "compareseqlabelrotation": {
+      "source_sha256": "1107eb81dd19da38b666b00b9eb9aa3ffc2a81addcb2137fd1d3a30f8538c319",
+      "status": "reviewed",
+      "translation": "沿弧文字只增加 30 度旋转。"
+    },
+    "compareregioninside": {
+      "source_sha256": "ebb889ca0a2088a1095a5c933406324d03e70ca415d91294a8ebf94baa7737a6",
+      "status": "reviewed",
+      "translation": "用实际 query 比对区间高亮内侧。"
+    },
+    "compareregionoutside": {
+      "source_sha256": "b725a7445f945ce82c0b89fd8c2c960a6b7649d1b6b97b2f18a01e85a537d89d",
+      "status": "reviewed",
+      "translation": "只把同一区间高亮移到外侧。"
+    },
+    "comparescalegradient": {
+      "source_sha256": "0f85d6abfa9396fdc64b9005171fdca86d6b3c9177ae2112f12c4121d41a56cc",
+      "status": "reviewed",
+      "translation": "相同真实 HSP 的连续 Identity 渐变。"
+    },
+    "comparescalesteps": {
+      "source_sha256": "19451ab81d60c032c29ede1d5d65b548301ce400889258d035ba36cff6e097b6",
+      "status": "reviewed",
+      "translation": "只替换为显式分段填色，原始 identity 不变。"
+    },
+    "comparescalelinkcontinuous": {
+      "source_sha256": "9870e7dc97d731f9c20ea15e2f19ea61d0baa2c7e6020d309fde55e43868696b",
+      "status": "reviewed",
+      "translation": "同一批真实 HSP 中点，以 identity 映射颜色、透明度与线宽。"
+    },
+    "comparethememinimal": {
+      "source_sha256": "085111b49e1c460be78a6fa5c52e43d3119b0256f7754b8177d4db6b7ea2995e",
+      "status": "reviewed",
+      "translation": "同一骨架与默认映射，minimal 主题只改非数据外观。"
+    },
+    "comparethemedark": {
+      "source_sha256": "6fd400e7db79cb8efc5866d8c46f3249bca5bc80539a131b6c708c57cd24494f",
+      "status": "reviewed",
+      "translation": "只替换为 dark 主题，序列与映射保留。"
+    },
+    "comparedensityfour": {
+      "source_sha256": "2127e88480f4d6afc204e34ab6f3310f2eb708e1d4919d8a51e946f26a05e984",
+      "status": "reviewed",
+      "translation": "真实 HSP，两端中点各分四箱；一条输入仍是一条输出带。"
+    },
+    "comparedensityeight": {
+      "source_sha256": "4316e954e5c0f4dcdff1dd3c93661366e76283c855c62db1461451a1ba401731",
+      "status": "reviewed",
+      "translation": "只将 bins 从 4 改为 8，局部计数的分组尺度改变。"
+    },
+    "comparebundle": {
+      "source_sha256": "9d40dc92f9949cd0dbd305aff0b25bc579e2d9bc6c73bfeec0178687f9348772",
+      "status": "reviewed",
+      "translation": "同一真实 HSP 以四箱显式聚束，展示范围不是重新比对结果。"
+    },
+    "comparebandwidth": {
+      "source_sha256": "c640af0e2be4e0a23fbeba97745aad9a625647f41b6cc4c83c089d4d8b00f5b6",
+      "status": "reviewed",
+      "translation": "只将实际 band 骨架宽度从 0.035 改为 0.07。"
+    },
+    "comparefeaturearrow": {
+      "source_sha256": "f1c7b268b66867817421095ec504489e2d67c50f12afe6f6e5cf0646dbae8111",
+      "status": "reviewed",
+      "translation": "同六条真实注释，通用 arrow 几何。"
+    },
+    "comparefeatureblock": {
+      "source_sha256": "05602efb41db4b68f551a11a7625ab855f190d51877cfba2d5ec26ce7e857365",
+      "status": "reviewed",
+      "translation": "只改为 block，不再用箭头表示方向，原始链保留。"
+    },
+    "comparefeaturepreset": {
+      "source_sha256": "b06a39806c7017bd5b5b40ec4194bedff8662acb8704313b48b73f1d92f7e373",
+      "status": "reviewed",
+      "translation": "质粒预设会共同改变默认头部、宽度及放置；这是预设示例，不是单参数对照。"
+    },
+    "compareexternaloff": {
+      "source_sha256": "acc1b8bc958d9dc58f2855f738e0072ede70f6c38db5ab141648e2b99b1ba332",
+      "status": "reviewed",
+      "translation": "只禁止外侧回退，无法放下的名称可隐藏，特征仍在。"
+    },
+    "compareellipsisfit": {
+      "source_sha256": "f95b3d1742f0f48071c5f8cfbf7dd77630ebff2f150dded5b86a596934d73526",
+      "status": "reviewed",
+      "translation": "保持 14 字符适配宽度，只改用 ellipsis；完整源名称仍保留。"
+    },
+    "compareprimeroffset": {
+      "source_sha256": "ed098535964534c7c37b9c5e0cc8f649dc7ae4dae639e3927374bf0b4bd21401",
+      "status": "reviewed",
+      "translation": "与 outside 基线相比只把 arc_offset 从 0.045 改为 0.09。"
+    },
+    "compareregionwidth": {
+      "source_sha256": "c709bab6b375970349ff6ee8556809d44ca17c238993f5050054262b4999207c",
+      "status": "reviewed",
+      "translation": "同一真实 query 区间，只把宽度从 0.08 改为 0.14。"
+    },
+    "compareregionoffset": {
+      "source_sha256": "6c059cdd118297d7507c7dc60f67e7ac3cc872591919397682f2b8745f6d4c5c",
+      "status": "reviewed",
+      "translation": "只把 region_offset 从 0 改为 0.1，区间不变。"
+    },
+    "comparetracktwo": {
+      "source_sha256": "950f9d2b75b2a28d7e6806cb3d81aa32e39d6a201cb284cf7cc0029783c58f41",
+      "status": "reviewed",
+      "translation": "同一 GC 窗口分别用数值高度和颜色编码，显式声明两条轨道。"
+    },
+    "comparetrackorder": {
+      "source_sha256": "abbf77829cf19d0a25244d95e169e1033afae5ce431256ee91b35115ac0bee0d",
+      "status": "reviewed",
+      "translation": "只改变颜色轨道的 order，轨道顺序交换，GC 值不变。"
+    },
+    "foundationvertical": {
+      "source_sha256": "8058226e058dc63e7dfc2560b5e1491172374ac7e5559a09ec41b4497d0afd15",
+      "status": "reviewed",
+      "translation": "原始 HSP 在命名 A–B–A 显示实例之间路由，使用纵向骨架。"
+    },
+    "foundationsankey": {
+      "source_sha256": "5e8b372d09b78375a45b39f37b0a6d15f979295c1be81f28e63d9cb3c779d687",
+      "status": "reviewed",
+      "translation": "同一组来源序列的镜像双列：query 区间在左，subject 区间在右。"
+    },
+    "foundationcount": {
+      "source_sha256": "ea6c7902e0cbf05c652b864a8428c12cd9e6693694bff98744ee5687c4303e09",
+      "status": "reviewed",
+      "translation": "在源坐标统计真实 query 起点观测数。"
+    },
+    "foundationequal": {
+      "source_sha256": "90ff7dbd013efbbcb0ceb2f13562a19a388bfddd3764c070aae1dcd2e25f9d1c",
+      "status": "reviewed",
+      "translation": "等长视觉投影保留真实局部轴，并显式选择 Identity 填充。"
+    },
+    "foundationarrow": {
+      "source_sha256": "9b0858a6e913096781d07218264f8f969af71d5eec22eb0e8ae9e0bc1fd46bf9",
+      "status": "reviewed",
+      "translation": "可选 subject 尖头：箭肩保留目标端点跨度，尖点仅作装饰标记。"
+    },
+    "viewdotplot": {
+      "source_sha256": "a1f8b6f6514acf798490fe9a91521d619eda32406cf9f3efebcb802cacc9a8d6",
+      "status": "reviewed",
+      "translation": "真实EMALE PAF的全部11条HSP，一基原生坐标；反向比对保留负斜率。"
+    },
+    "viewradial": {
+      "source_sha256": "2c4b8ffc690939c18a71e81ce6e0b64e8dba1ba84e313bc3cfbf0e8332c81137",
+      "status": "reviewed",
+      "translation": "四条真实序列的等比例辐条、原始链CDS、已观测区间Ribbon和所选HSP起点计数；环形邻接只筛选已有关系。"
+    },
+    "fusionview": {
+      "source_sha256": "6e087eea0ef8eeac3aca355908fc7dd40a20a9de9bac0782357f00fd8c997012",
+      "status": "reviewed",
+      "translation": "两条已观测EMALE HSP以完整来源区间连接独立测量的圆图与纵向面板；计数轨道按明确的2,000 bp分箱统计原始11条HSP起点。"
+    },
+    "fusionfour": {
+      "source_sha256": "79fc33ad7d38c8bfff1ac0c817f20fa0bd31f9a769e1e09aba58557a281d8ecf",
+      "status": "reviewed",
+      "translation": "四方向Fusion：真实PAF第3、2、9、1行明确路由到上、左、下、右，各面板保持自身序列比例。"
+    }
+  }
+}

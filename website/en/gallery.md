@@ -1,15 +1,5 @@
-Browse representative examples by plot type. Expand a group to compare labels, links, tracks and layouts. Each figure links to its entry.
+Choose a case by the relationship you want to show. Each entry links the finished plot to its data and R code.
 
-<span id="tasks"></span><span id="figures"></span>
+{{case-gallery}}
 
-{{gallery}}
-
-<a id="circular-catalog"></a>
-
-## Figure sources {#circular-catalog}
-
-[13 single-sequence reference maps](plasmid-catalog.md) · [Data and figure sources](../ASSET-SOURCES.md)
-
-<span id="source"></span><span id="reproduce"></span><span id="assets"></span>
-
-[Figure sizes and rendering records](../assets/plots.csv)
+For maps of individual reference plasmids, open the [plasmid map collection](plasmid-catalog.md).

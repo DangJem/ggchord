@@ -1,5 +1,5 @@
 <a id="moved"></a>
 
-## 章节已迁移 {#moved}
+## 本页已迁移 {#moved}
 
-[区间、点与跨行连接](multi-sequence-links.md#control)
+[绘制和调整序列连接](multi-sequence-links.md)

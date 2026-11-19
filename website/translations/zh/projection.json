@@ -1,0 +1,30 @@
+{
+  "source_sha256": "ffffe4bcee47b06d3c22519cfc37a9c6ad334214c3d28e0b3bd9fc9e59a4e137",
+  "blocks": {
+    "1": {
+      "source_sha256": "55797e0b118403757effe94ec550cfc354cc25637a79b607d6ff2b15237896dc",
+      "status": "reviewed",
+      "translation": "## 在基因组上定位一段残基 {#cds}\n"
+    },
+    "2": {
+      "source_sha256": "86f321cf61df81fea8573e4eb8946d42362b08b7de08ac1ba2ef9d328e48a0b9",
+      "status": "reviewed",
+      "translation": "要定位 pUC19 的 lacZα 第 2–5 个残基，先选出有注释的 CDS 并保留来源链。这条完整 CDS 的起始 phase 为 0，使用细菌遗传密码表 11。示例选取的残基范围仅用于展示投影，对应负链上的 455–466 bp。\n"
+    },
+    "5": {
+      "source_sha256": "2e0a75dd6abcd4d2a2b25950ba4dd67bfbb63300064f146f28c975fe0eca60bc",
+      "status": "reviewed",
+      "translation": "## 处理跨片段 CDS 与双端比对 {#segments}\n"
+    },
+    "6": {
+      "source_sha256": "37d6cbd5b396af1bb0307009f44b2e00d03a2868b76d75f2c648432c96b99da0",
+      "status": "reviewed",
+      "translation": "当 CDS 分成多段时，用全部原始片段及注释阅读框建立模型。一个残基区间可能映射到多个基因组片段。查看返回的片段表，可区分实际编码碱基与外显子之间的碱基。\n"
+    },
+    "7": {
+      "source_sha256": "15fe883b15b58451c87edd7fc08117069d535a0355eae8d35a8d4ec9f1ec54a6",
+      "status": "reviewed",
+      "translation": "`project_ggchord_links()` 可投影已有对应关系的两端。带缺口的蛋白 HSP 给出外侧边界，区间内部的逐列对应须另有比对证据。根据已有证据选择投影范围。如果目标本来就是蛋白比较图，可直接提供完整蛋白长度，保留原生 aa 坐标。\n"
+    }
+  }
+}

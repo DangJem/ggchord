@@ -1,0 +1,150 @@
+{
+  "source_sha256": "7e2ed6f49934cadaa8c257c067ad36d98a9ec18784c28529f9f832beaebd393f",
+  "blocks": {
+    "0": {
+      "source_sha256": "6af89669f68a3265d32304564a1478eeeb1acd31ae3fbadaea1c41329495244f",
+      "status": "reviewed",
+      "translation": "灵活参数让同一图层中的不同序列或不同链采用各自的几何设置。在函数帮助中，点击参数旁的**灵活参数**链接即可查阅这里的匹配规则。\n"
+    },
+    "2": {
+      "source_sha256": "a0e68d5c588ebd74733b843549ed106aaf92bcc5d8914c224226b754f32b7276",
+      "status": "reviewed",
+      "translation": "## 改变一条序列的骨架半径 {#scalar}\n"
+    },
+    "4": {
+      "source_sha256": "3943b0b7d269f75476ff9ce4f18b09f5cd8465182a11360db4f8f5ba4eb34794",
+      "status": "reviewed",
+      "translation": "随包数据 `seq_data_example` 中的四条噬菌体基因组序列默认半径均为 1。给 `MT118296.1` 设置半径 0.72 即可把这条骨架向内移。名称按序列的 `accver` 匹配，其余三条仍为 1。\n"
+    },
+    "6": {
+      "source_sha256": "76b480808c5ec6c51494aa74340da2f789fca9fb766535efaad845d34775d4bc",
+      "status": "reviewed",
+      "translation": "| `seq_radius` 的值 | 哪些骨架会改变？ |\n"
+    },
+    "7": {
+      "source_sha256": "3491e014f5503eb5b2fca81db42f6f72765980ba5b5e48ef135b6cf69d7f92cc",
+      "status": "reviewed",
+      "translation": "| --- | --- |\n"
+    },
+    "8": {
+      "source_sha256": "c8d36e2e96435c143d87cfa0ec8b19cb0f7c1d9e70cd94f48e6be560ee2ec182",
+      "status": "reviewed",
+      "translation": "| `0.72` | 全部四条 |\n"
+    },
+    "9": {
+      "source_sha256": "730b6a93a89c794d6ed26ff72e468959fe63f6f535ba862ad29d2378119f4daf",
+      "status": "reviewed",
+      "translation": "| `c(\"MT118296.1\" = 0.72)` | 仅 MT118296.1 |\n"
+    },
+    "10": {
+      "source_sha256": "1dc86c5979eff0cb81499ef16c296fb443563763521d6c3c35395b2858425b96",
+      "status": "reviewed",
+      "translation": "| `c(1, 0.72, 1, 1)` | 第二条显示序列 |\n"
+    },
+    "11": {
+      "source_sha256": "3619ed519d4a701aceb47ae1e735ba68c72b5ac833578c101e787b4de88731dc",
+      "status": "reviewed",
+      "translation": "| `list(\"MT118296.1\" = 0.72)` | 仅 MT118296.1 |\n"
+    },
+    "13": {
+      "source_sha256": "9a2d19ea22efde208c0476696df21f8a4c516c3d5342ca8855523171f81710fa",
+      "status": "reviewed",
+      "translation": "## 按名称还是按显示顺序匹配 {#reorder}\n"
+    },
+    "16": {
+      "source_sha256": "c2ff0f7885c28fc8ed431cc14c74dbd567fc30e6d717103e5568755addea182f",
+      "status": "reviewed",
+      "translation": "左右两图使用相同的四条序列和相同的重排次序。左图的小半径跟随名称 `MT118296.1`。右图的小半径跟随**第二个显示位置**，此处已换为 `MT108731.1`。两图的序列长度、颜色和序列标签均相同。\n"
+    },
+    "18": {
+      "source_sha256": "95252ee1aa16208bb2076a9d9a984225529d08a262f37809aa88974dacddaf05",
+      "status": "reviewed",
+      "translation": "无名向量的长度须与显示序列数一致。用列表指定半径时，每个元素都是一个数。只改少数序列时，命名向量写法最短，重排后也能保留各条序列的设置。\n"
+    },
+    "20": {
+      "source_sha256": "d5f0c78b9ceab50869559e2b687400a0bc116275e740cc11d659024c9e7cf126",
+      "status": "reviewed",
+      "translation": "## 设置链偏移和箭头宽度 {#strand}\n"
+    },
+    "24": {
+      "source_sha256": "f6dd86c976bcd4f71d9244d813aaa7b97d90b562f6b2b5944817b25a44402583",
+      "status": "reviewed",
+      "translation": "序列 `OR222515.1` 上的两条 CDS 来源链相反。给正链 CDS 设向外偏移 0.08，给负链 CDS 设向内偏移 −0.14。给 `OQ646790.1` 一个值 0.06，则它的正负链对称偏移。示例用 dplyr 筛选 CDS，并从记录的 `source_strand` 列取链向。\n"
+    },
+    "26": {
+      "source_sha256": "7305e4604456cb890dfa124549623d35282954739a6b54e1a5836db26ea3a8ad",
+      "status": "reviewed",
+      "translation": "显式负链偏移自带符号。`position_strand()` 将未指定的序列或链的偏移补为 0。宽度改变箭头厚度。这里正链宽 0.03，负链宽 0.08，箭头端点仍取自 `start` 和 `end`。按序列**再按链**指定宽度时，每个命名元素都应提供一个链向量，例如 `list(\"OR222515.1\" = c(\"+\" = 0.03, \"-\" = 0.08))`。\n"
+    },
+    "28": {
+      "source_sha256": "12bfef0c8148849b3d658f45d90f8facb4175a941dffe7fac03143b1fb8d09a2",
+      "status": "reviewed",
+      "translation": "## 用链名指定半径会发生什么？ {#invalid-radius}\n"
+    },
+    "29": {
+      "source_sha256": "b0fc0380f74011df303e8a7ef71749981218999f39a429fda06f1efd0ecb3819",
+      "status": "reviewed",
+      "translation": "每条骨架对应一条序列。把 `+` 和 `-` 写成半径的名称，相当于请求两个输入中没有的序列标识。下面的示例捕获布局计算时的报错。要调整骨架半径，用 `accver` 作名称；要调整正负链偏移，使用 [position_strand()](../../man/position_strand.Rd)。\n"
+    },
+    "32": {
+      "source_sha256": "a403959fe097fb63cc5db8ffa0c9a5f174a8710f6a1630702a09964f9eb73b35",
+      "status": "reviewed",
+      "translation": "## 按绘图任务查参数 {#scope}\n"
+    },
+    "35": {
+      "source_sha256": "2ef705d65057027160239fc749db976e7aafc9268879264d8ef2b5cca31447f2",
+      "status": "reviewed",
+      "translation": "| 用途 | 参数入口 | 匹配规则 |\n"
+    },
+    "36": {
+      "source_sha256": "a9e436d2babd638ade86791e162e7de5a6b1b3128c6ae9ed93504fbf3c53dc93",
+      "status": "reviewed",
+      "translation": "| --- | --- | --- |\n"
+    },
+    "37": {
+      "source_sha256": "3df00d1bd5c4d91c4d1b3a292cdc9b28497428f6eab96343e83f882f8ef38b89",
+      "status": "reviewed",
+      "translation": "| 调整序列骨架 | [geom_seq()](../../man/geom_seq.Rd) · `seq_radius`、`seq_curvature` | 两者默认均为 1。半径取有限正数，曲率取有限的有符号数。 |\n"
+    },
+    "38": {
+      "source_sha256": "c9552f212e8ef9338df715f093602c0c92abb0fcf22180a61cbe51359f77ac17",
+      "status": "reviewed",
+      "translation": "| 设置方向与间隙 | [layout_sequences()](../../man/layout_sequences.Rd) · `orientation`、`gap` | 每条序列的方向取 1 或 −1。间隙的单位和默认值依视图而定。 |\n"
+    },
+    "39": {
+      "source_sha256": "97e568d4c06c682a44a0e7386e2c1f6c0756007bd235ece7fd1510221ac6e8cb",
+      "status": "reviewed",
+      "translation": "| 放置序列名称 | [geom_seq_label()](../../man/geom_seq_label.Rd) · `labels`、`seq_label_radius`、`seq_label_rotation`、`seq_label_hjust`、`seq_label_vjust` | 名称按序列标识匹配。标签半径取相对该骨架的比例。 |\n"
+    },
+    "40": {
+      "source_sha256": "28c5b1ef8f5dc006bb894cd29404ad4a525fc98e8d072f7a6a18d174e8bbf62e",
+      "status": "reviewed",
+      "translation": "| 调整连接端点间隙 | [geom_link_ribbon()](../../man/geom_link_ribbon.Rd) 或 [geom_link_line()](../../man/geom_link_line.Rd) · `link_gap` | 每个端点按其所在序列取间隙值。 |\n"
+    },
+    "41": {
+      "source_sha256": "032e138fe70b1f7f87dc36c87dffb84330fd385f5c26954d52f394b3d40d2447",
+      "status": "reviewed",
+      "translation": "| 设置特征厚度 | [geom_feature()](../../man/geom_feature.Rd) · `width` | 可按序列、按链或同时按序列与链设置。 |\n"
+    },
+    "42": {
+      "source_sha256": "04b37050f9c50ef16cf5ae4324a9285600ccc9b240f32cdcee25d6cdeeb88a1d",
+      "status": "reviewed",
+      "translation": "| 移动特征 | [position_strand()](../../man/position_strand.Rd) 或 [position_offset()](../../man/position_offset.Rd) · `offset` | 两条链分别移动用前者，每条序列的两条链共用偏移用后者。 |\n"
+    },
+    "43": {
+      "source_sha256": "9b49712a292b10dd5a061e1d609c9d6a19c848d8bf179c1551be081d353fc018",
+      "status": "reviewed",
+      "translation": "| 固定标签位置 | [geom_feature_label()](../../man/geom_feature_label.Rd) 或 [geom_gene_label()](../../man/geom_gene_label.Rd) · `label_radial_offset`、`label_circum_offset`、`label_circum_limit`、`label_rotation` | 固定布局可按序列或链设置。自动布局自行决定标签位置。 |\n"
+    },
+    "44": {
+      "source_sha256": "183423abef1796ef5e289e97b004d7809f238e2e81f3f8c135b1138bd940411a",
+      "status": "reviewed",
+      "translation": "| 调整定量轨道尺寸 | [track_band()](../../man/track_band.Rd) · `width`、`gap` | 取一个物理单位值，或用原生布局数值覆盖全部显示序列。宽度须为正，间隙可为零。 |\n"
+    },
+    "45": {
+      "source_sha256": "f345a08d5e06077bac05f2786d6ebded54616cbdf100170451c9b862ad73dd34",
+      "status": "reviewed",
+      "translation": "基于数据的颜色用[视觉映射与标度](styling.md)设置。函数签名、默认值及灵活参数标记见[参数索引](parameter-atlas.md)。\n"
+    }
+  }
+}

@@ -1,5 +1,5 @@
 <a id="moved"></a>
 
-## 章节已迁移 {#moved}
+## 本页已迁移 {#moved}
 
-[多序列名字与特征标签](multi-sequence-labels.md#sequence-labels)
+[绘制注释与处理重叠](annotations.md)

@@ -1,5 +1,5 @@
 <a id="moved"></a>
 
-## Section moved {#moved}
+## This page has moved {#moved}
 
-[Multi-sequence relationships](multi-sequence.md#task)
+[Get started](installation.md)

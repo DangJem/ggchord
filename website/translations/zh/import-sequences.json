@@ -1,0 +1,30 @@
+{
+  "source_sha256": "c6f830632274e0e051f3dd5e9a21a6d36e5ba2e2b6e0aedc0515f3ac077585fd",
+  "blocks": {
+    "1": {
+      "source_sha256": "8a3b6c878dfe9ecb9146b322efac1fea05cbf5e9f4bfeb57a5a6de93bc575ce9",
+      "status": "reviewed",
+      "translation": "## 从 GFF3 读取注释区间 {#gff3}\n"
+    },
+    "2": {
+      "source_sha256": "1f4e7a5fc70c755513dc16e896957f253169328020ea3b926399ec4d9f51b127",
+      "status": "reviewed",
+      "translation": "随包 GFF3 记录了 MT108731.1 的 CDS 注释。位置、链向和原始行号应一起保留，绘图后可以追溯到单条记录。遇到链向未知的记录时，`unstranded = \"keep\"` 会保留其原始状态。\n"
+    },
+    "5": {
+      "source_sha256": "48d14017a604b72a2882ce4ced975208f08f90013e190738a87ea21ac438c2f3",
+      "status": "reviewed",
+      "translation": "## 补齐完整参考 {#reference}\n"
+    },
+    "6": {
+      "source_sha256": "a88e5e1f86b15bca53cdc3ef22509e005af05f15ee7c958404c64de2489d120f",
+      "status": "reviewed",
+      "translation": "用 `read_fasta_lengths()` 读取 FASTA 的 ID 和全长。一条序列的最后一个注释可能远在序列终点之前。对于此例，可以从 `seq_data_example` 选择 MT108731.1 得到完整参考，再把 GFF3 表交给 `geom_feature(data = features)`。换成自己的文件时，应核对两个表的 ID 拼写是否完全一致。\n"
+    },
+    "7": {
+      "source_sha256": "de0decfbe3a7093f149447cd6342982598e8bd1158eb1b6f28a716f488151031",
+      "status": "reviewed",
+      "translation": "GenBank 记录同时带有序列和注释。`read_genbank()` 返回的 `seq_data` 是参考表，`features$annotation` 是特征行。用编码特征进行[坐标投影](projection.md)时，保留拼接片段及其来源链。\n"
+    }
+  }
+}

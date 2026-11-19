@@ -1,160 +1,39 @@
-See [Flagship data sources and construction](flagship-data.md) for provenance, display selections and rebuilding. This page loads bundled inputs directly and focuses on plotting settings.
+<a id="comparison"></a>
 
-```r
-library(ggchord)
-library(ggplot2)
-```
+## Keep the observations fixed {#comparison}
 
-<a id="input"></a>
-
-## Prepare once {#input}
-
-The same source input need not produce the same default relation set. First explicitly select all pairs to compare geometry, then inspect each view’s default selection. Dependencies: ggchord and dplyr.
-
-
-{{code:coursecomparison}}
+All four examples use the same two complete references and the same three observed HSPs from MT108731.1 to MT118296.1. Each code block runs independently. Compare where the ends of each ribbon meet a backbone. The order of HSP endpoints and the lengths of both reference sequences are preserved across these views.
 
 <a id="chord"></a>
 
 ### Chord {#chord}
 
-![Chord: same source tables and all-pair links](../../man/figures/coursechord.png)
+Read ribbon endpoints around the circumference. This layout gives many-to-many relations a compact overview.
 
-<a id="linear"></a>
+{{example:views-chord}}
 
-### Linear {#linear}
+<a id="collinear"></a>
 
-![Linear: same source tables and all-pair links](../../man/figures/courselinear.png)
+### Collinear {#collinear}
+
+Read along each row to compare the positions and spans of the three alignments. To change the displayed direction of one reference, see [order and orientation](multi-sequence-layout.md).
+
+{{example:views-collinear}}
 
 <a id="radial"></a>
 
-### Radial {#radial}
+### Radial synteny {#radial}
 
-![Radial: same source tables and all-pair links](../../man/figures/courseradial.png)
+Read outward along each spoke. With additional references, the spoke order determines which neighbours sit next to each other.
+
+{{example:views-radial}}
 
 <a id="sankey"></a>
 
 ### Sankey {#sankey}
 
-![Sankey: same source tables and all-pair links](../../man/figures/coursesankey.png)
+Read the query copy on the left and the subject copy on the right. Ribbon width at each end reflects the observed span on that sequence. The two-column arrangement is useful when query and subject roles matter.
 
-<a id="selection"></a>
+{{example:views-sankey}}
 
-## Default selection and comparable conditions {#selection}
-
-| View | Default relation selection | This comparison |
-| --- | --- | --- |
-| Chord | All pairs | Same HSP table, explicit all pairs |
-| Collinear | Adjacent rows | Explicit adjacent_only = FALSE |
-| Radial | Cyclic neighbors | Explicit adjacent_only = FALSE |
-| Sankey | Excludes same-entity self links | This real input has no self links |
-
-<a id="flagship"></a>
-
-## Four flagship views {#flagship}
-
-All four views use bundled `flagship_comparison_example` and run after installing ggchord. Chord/Radial and Collinear/Sankey retain their respective CDS and HSP selections, so their displayed subsets are not identical.
-
-Prepare the shared data, palette and styles once; each view then sets its own geometry, labels and coordinates. The following code requires ggplot2, dplyr and purrr; complete styling is also shown on this page.
-
-{{code:sequencepalette,docstyle,showcasedata,chordshowcasegenes}}
-
-Radial removes Chord-only radii and curvature. Sankey uses each column’s native axis, replacing Collinear Cartesian controls and its shared scale bar. Complete figures retain all original CDS name candidates, Sequence guides and source records. Labels are placed near their features in final projected coordinates using measured text sizes and short leaders. Crowded names that cannot fit may still be hidden; use `diagnose_ggchord()` at the export size to inspect visibility and contacts.
-
-<a id="flagship-chord"></a>
-
-### Chord {#flagship-chord}
-
-{{code:showcasechord}}
-
-{{manualfigure:flagchord}}
-
-<a id="flagship-collinear"></a>
-
-### Collinear {#flagship-collinear}
-
-{{code:showcasecollinear}}
-
-{{manualfigure:flaglinear}}
-
-<a id="flagship-radial"></a>
-
-### Radial {#flagship-radial}
-
-{{code:relationshipstyle,flagshipradial}}
-
-Use a 12 × 10.5 inch canvas, spokes starting at 45°, and horizontal sequence IDs. All 20 original CDS geometries and name candidates remain. Local labels avoid long leaders and global side columns that shrink the sequence panel. Sequence, Strand and the numerically proportional Identity guide sit below the plot.
-
-```r
-view_ggchord(flag_radial, width = 12, height = 10.5, units = "in")
-```
-
-{{manualfigure:flagradial}}
-
-<a id="flagship-sankey"></a>
-
-### Sankey {#flagship-sankey}
-
-{{code:flagshipsankey}}
-
-Four sequences stack in each column on a 10 × 16 inch portrait canvas. All 16 original CDS geometries and name candidates, and the 10 selected HSPs remain. Both display copies receive annotations; names are no longer sampled to one per sequence. Short connections and local collision handling keep names near their features. Complete coordinates and all three guides remain; homepage previews separately omit dense names and coordinate text.
-
-```r
-view_ggchord(flag_sankey, width = 10, height = 16, units = "in")
-```
-
-{{manualfigure:flagsankey}}
-
-<a id="direction-and-adjacency"></a>
-
-## Directions, instances and display scale {#direction-and-adjacency}
-
-Biological strand, HSP endpoint direction, display orientation and layout_sequences(order = ...) are separate. Sankey copies do not add observations; interval widths do not imply flow conservation. Reuse layers only within their shared support.
-
-<a id="projection"></a>
-
-## Visual length and connection style {#projection}
-
-`layout_sequences(length_mode = "equal")` changes angular allocation or linear span. Original lengths,
-intervals and local axes remain unchanged. `sequence_display` exports both source
-length and projection factor. A shared absolute scale bar is rejected for equal
-multi-sequence displays. Default axes show 1 and the final source position;
-intermediate ticks use available physical space. Closed circular seams combine
-the two endpoints. Explicit breaks and labels take priority.
-
-
-{{code:foundationequal}}
-
-{{figure:foundationequal}}
-
-Default ribbons keep Identity fills and full interval fronts.
-Use `geom_link_ribbon(gradient = TRUE)` to interpolate endpoint sequence colours along the curve. `tip="subject"` opts into a decorative taper; its
-shoulder retains the translated target span and its marker is not a single
-matched base or a biological transfer direction. The source endpoints stay in layout exports.
-Use `tip="none"` to keep full fronts. Fixed fill, mapped ribbon_fill or an explicit
-ribbon fill scale overrides endpoint interpolation. Explicit pident uses a fixed
-0–100 domain, boundaries 0/50/80/90/95/100 and five numerical interval proportions
-50/30/10/5/5%. User scales and guides remain authoritative.
-
-<a id="tip"></a>
-
-### Optional subject taper {#tip}
-
-{{code:foundationarrow}}
-
-{{figure:foundationarrow}}
-
-Automatic categorical guides measure text to choose rows/columns, while the
-render loop measures guide and panel space together. Explicit guide/theme
-settings win. Circular outer labels share a measured queue at every label count;
-`label_visibility` reports source row, visibility and available placement fields.
-An unavailable collision count is not zero. Tiny canvases can remain crowded;
-inspect [output diagnostics](output.md) at the intended export size.
-
-Automatic Identity rulers reserve length from measured boundary text rather than generic legend swatch sizes. Set `legend.ribbon.key.height` or `legend.ribbon.key.width`, or supply an explicit guide, for a manual length. In circular layouts, parallel axis labels follow the circle glyph by glyph; horizontal and numeric orientations remain straight.
-
-<a id="exercise"></a>
-
-## Preview and save {#exercise}
-
-Choose an HSP and identify its two sources. Restore default adjacency and explain a possible omission. Save your chosen view at target size and retain the input table.
+The [gallery](gallery.md) contains full multi-sequence examples with their data and rendering scripts.

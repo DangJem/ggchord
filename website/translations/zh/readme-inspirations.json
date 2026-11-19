@@ -1,0 +1,50 @@
+{
+  "source_sha256": "2d54a6d03a37667e48ebd495c15bccd6bd16534665e7ee9e6a461afac2dfa675",
+  "blocks": {
+    "0": {
+      "source_sha256": "e5d1564fd068b48b85d91530d05eecd350a727afec89c390ac730ac1ac0dc082",
+      "status": "reviewed",
+      "translation": "## 设计参考与致谢\n"
+    },
+    "1": {
+      "source_sha256": "6eab1fc51629cac4584f6003b39ba2386416e79fb52b598fb241ad66fa63df85",
+      "status": "reviewed",
+      "translation": "ggchord 的图形语法、基因组表达和预览流程参考了以下开源项目与公共工具：\n"
+    },
+    "2": {
+      "source_sha256": "646e431c8c52d7a16ba5e1a23b514bc79d936d81f75fd610fd93248df3ed690e",
+      "status": "reviewed",
+      "translation": "- [ggplot2](https://ggplot2.tidyverse.org/)：以图层组合图形，区分数据映射、标度、几何、坐标与主题。\n"
+    },
+    "3": {
+      "source_sha256": "a87f4b251bc434893be05af774adbb44490344f5cd9f2e512911256c3d2b6e66",
+      "status": "reviewed",
+      "translation": "- [BLAST](https://blast.ncbi.nlm.nih.gov/doc/blast-help/)：借鉴 query/subject 表格字段命名，便于追踪比对端点与序列标识。\n"
+    },
+    "4": {
+      "source_sha256": "c755a4fbf9f6a41caffe42648765a1bb35fb096a6614cf4b66f69b9abb497601",
+      "status": "reviewed",
+      "translation": "- [Circos](https://circos.ca/) 和 [circlize](https://github.com/jokergoo/circlize)：参考环形信息层级、连接带表达与多轨道的阅读秩序。\n"
+    },
+    "5": {
+      "source_sha256": "de39cb41a13f414b302eedcde1fc79830fca1339aac393ee8a7ac9edbf48d416",
+      "status": "reviewed",
+      "translation": "- [clinker](https://github.com/gamcil/clinker)、[gggenes](https://github.com/wilkox/gggenes) 和 [genoPlotR](https://genoplotr.r-forge.r-project.org/)：参考基因箭头、基因簇与线性共线性比较的可读表达。\n"
+    },
+    "6": {
+      "source_sha256": "1729de625c353b6df6d71a37582b5277f3eb49195e423a5c18e66c1f8d1b0568",
+      "status": "reviewed",
+      "translation": "- [DNA Features Viewer](https://github.com/Edinburgh-Genome-Foundry/DnaFeaturesViewer) 和 [gggenomes](https://thackl.github.io/gggenomes/)：参考注释布局、多表输入、特征堆叠及局部比较工作流。\n"
+    },
+    "7": {
+      "source_sha256": "6f3c542f5cc522a99442c1aa3495a5dca5a851c97cd9fc1199d732aeb9b5c5e9",
+      "status": "reviewed",
+      "translation": "- [ggview](https://github.com/idmn/ggview)：参考按实际导出尺寸预览的流程；ggchord 用 `view_ggchord()` 预览，用标准 `ggsave()` 保存。\n"
+    },
+    "8": {
+      "source_sha256": "0a0fa46dfa8a2dcbe04e49d0dd54eece53714e5fbea650433f1f982d3656f348",
+      "status": "reviewed",
+      "translation": "这些项目为设计与比较提供了重要参考。具体可用功能、参数及运行依赖以 ggchord 的函数文档和 `DESCRIPTION` 为准。\n"
+    }
+  }
+}

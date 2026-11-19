@@ -1,0 +1,25 @@
+{
+  "source_sha256": "0a374ba840ef1fcdc5eb025c31e9e06872bf669f1f0124ba211d24c421baa85a",
+  "blocks": {
+    "1": {
+      "source_sha256": "4a8399e40950dedbb3a1b97b6276a39c2c037846e9e85e8e4baacb3f8c28f201",
+      "status": "reviewed",
+      "translation": "## 数据与图稿 {#sources}\n"
+    },
+    "2": {
+      "source_sha256": "5ebe0ac9e9b0aefb018ed84d16a959bb9b2b6213650bbe5d16f9f7ff6b6ed881",
+      "status": "reviewed",
+      "translation": "[数据与视觉资产来源](../ASSET-SOURCES.md)记录了序列、注释目录和 ggchord 图稿的来源。要追查某张图的输入和绘图代码，可从[案例图库](gallery.md)打开对应条目。\n"
+    },
+    "4": {
+      "source_sha256": "89a19b405f7d2a7193cbe3b5c014ff47459882a092ce9d43c7030635a9b79f4d",
+      "status": "reviewed",
+      "translation": "## 反馈问题 {#feedback}\n"
+    },
+    "5": {
+      "source_sha256": "621d646f787db76a3d02f1d1bfc4e15ae32428001fbd9fd5a3dd5a58b4d557ee",
+      "status": "reviewed",
+      "translation": "请提供能复现问题的最小输入、R 代码和 `packageVersion(\"ggchord\")` 的结果。反馈绘图问题时，请附上图片并注明预期宽高。[在 GitHub 上反馈](https://github.com/DangJem/ggchord/issues)\n"
+    }
+  }
+}

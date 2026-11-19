@@ -1,32 +1,17 @@
-<a id="task"></a>
+A dotplot maps query coordinates to x and subject coordinates to y. Each alignment segment connects two recorded coordinate pairs. It shows which regions align, their spans and their relative direction.
 
-## HSP relationships on two sequence axes {#task}
+<a id="draw"></a>
 
-This matrix uses all 32 original HSP records across four complete sequence inputs. Both axes preserve accession identity and local positions. Identity controls colour; observed HSP length controls stroke width.
+## Draw one observed segment {#draw}
 
-To read the matrix, choose a query sequence at the top and a subject sequence on the left. Their outlined intersection is the comparison region for that pair. Headers show complete ranges; bottom and right ticks use local positions. Cell sizes retain sequence-length proportions, and an empty region means only that the input contains no HSP there.
+This segment starts at (26,298, 7,121) bp and ends at (51,139, 31,959) bp. Both source coordinates increase between the endpoints, so the segment has positive slope on these axes.
 
-{{manualfigure:flagdotplot}}
+{{example:first-dotplot}}
 
-<a id="path"></a>
+<a id="adapt"></a>
 
-## What do you want to inspect? {#path}
+## Read a matrix of sequence pairs {#adapt}
 
-- Multiple query and subject sequences, explicit axis order and native-unit gaps.
-- Forward and reverse HSP endpoints, independent display orientation on either axis.
-- Identity and other supplied metrics mapped through link scales.
-- Exact source-to-display conversion, visible windows and traceable input rows.
+Supply full sequence lengths and retain the order of both endpoint pairs. `x_seqs` and `y_seqs` select and order the two axes independently. In a multi-sequence matrix, an empty cell contains no record from the supplied table. Per-base gaps and mismatches require alignment columns or a finer alignment path.
 
-[Try an HSP dot plot](dotplot-start.md#dotplot) · [Import an alignment](alignments.md) · [Protein coordinates](protein-alignments.md)
-
-<a id="inputs"></a>
-
-## Required inputs {#inputs}
-
-Supply complete lengths and query/subject IDs, plus qstart/qend/sstart/send for each HSP. Axis concatenation does not fuse biological sequence identities. bp and aa need separate coordinate domains or an explicit projection.
-
-<a id="support"></a>
-
-## Boundaries {#support}
-
-Each mark is an HSP endpoint segment, not a base-by-base reconstruction. Mismatches and gaps need observed aligned characters or an exact alignment trace. Backbone gene/feature/track layers do not apply here. Dotplot is not a registered Fusion endpoint.
+[Four-sequence alignment matrix](case-dotplot.md) · [Alignment segment layer](../../man/geom_alignment_segment.Rd) · [Dotplot axes](../../man/coord_dotplot.Rd)

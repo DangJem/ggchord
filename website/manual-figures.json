@@ -16,7 +16,7 @@
       "showcasecollinear"
     ],
     "source": "tools/documentation-plots.R",
-    "page": "multi-sequence-views.html#flagship-chord",
+    "page": "case-chord.html",
     "width": 12.0,
     "height": 10.0,
     "dpi": 144.0,
@@ -39,7 +39,7 @@
       "showcasecollinear"
     ],
     "source": "tools/documentation-plots.R",
-    "page": "multi-sequence-views.html#flagship-collinear",
+    "page": "case-collinear.html",
     "width": 12.0,
     "height": 8.0,
     "dpi": 144.0,
@@ -63,7 +63,7 @@
       "flagshipmulti"
     ],
     "source": "tools/render-site-flagships.R",
-    "page": "multi-sequence-views.html#flagship-radial",
+    "page": "case-radial.html",
     "width": 12,
     "height": 10.5,
     "dpi": 144,
@@ -87,7 +87,7 @@
       "flagshipmulti"
     ],
     "source": "tools/render-site-flagships.R",
-    "page": "multi-sequence-views.html#flagship-sankey",
+    "page": "case-sankey.html",
     "width": 10,
     "height": 16,
     "dpi": 144,
@@ -106,7 +106,7 @@
       "flagshipdot"
     ],
     "source": "tools/render-site-flagships.R",
-    "page": "dotplot-start.html#matrix",
+    "page": "case-dotplot.html",
     "width": 13,
     "height": 12,
     "dpi": 144,
@@ -126,7 +126,7 @@
       "flagshipfusion"
     ],
     "source": "tools/render-site-flagships.R",
-    "page": "fusion-layout.html#flagship",
+    "page": "case-fusion.html",
     "width": 16,
     "height": 14,
     "dpi": 120,
@@ -146,7 +146,7 @@
       "showcaseplasmid"
     ],
     "source": "tools/documentation-plots.R",
-    "page": "circular-dense-case.html#complex",
+    "page": "case-circular.html",
     "width": 16.5,
     "height": 8.0,
     "dpi": 144.0,
@@ -179,7 +179,7 @@
     },
     "source": "tools/website/render-handbook-art.R",
     "sha256": "4d4e64c818e899f8d3eef22301cbd292f258a728557d26e6549196bf8c9a2700",
-    "page": "plasmid-catalog.html#catalogpuc",
+    "page": "case-circular.html",
     "width": 10,
     "height": 8,
     "dpi": 110

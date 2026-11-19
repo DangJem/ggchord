@@ -2,11 +2,14 @@
   "plots": [
     {
       "title": {
-        "zh": "要画哪一种图？",
-        "en": "What do you want to plot?"
+        "zh": "图形类型",
+        "en": "Plot types"
       },
       "pages": [
-        "multi-sequence",
+        "chord",
+        "collinear",
+        "radial-synteny",
+        "sankey",
         "circular",
         "dotplot",
         "fusion"
@@ -14,236 +17,91 @@
     },
     {
       "title": {
-        "zh": "图画出来后，怎样调整？",
-        "en": "What do you want to adjust?"
+        "zh": "图层与外观",
+        "en": "Layers and appearance"
       },
       "pages": [
-        "styling",
-        "annotations",
-        "labels",
-        "tracks",
-        "output",
-        "diagnostics"
-      ]
-    }
-  ],
-  "multi-sequence": [
-    {
-      "title": {
-        "zh": "怎样选择或切换布局？",
-        "en": "How do I choose or switch layouts?"
-      },
-      "pages": [
-        "multi-sequence-start",
         "multi-sequence-views",
-        "chord-geometry",
-        "collinear-layout",
-        "radial-synteny",
-        "sankey"
-      ]
-    },
-    {
-      "title": {
-        "zh": "怎样调整序列与连接？",
-        "en": "How do I arrange sequences and links?"
-      },
-      "pages": [
         "multi-sequence-layout",
         "multi-sequence-links",
-        "ribbons",
-        "instances"
-      ]
-    },
-    {
-      "title": {
-        "zh": "怎样标注或比较局部区域？",
-        "en": "How do I label or compare selected regions?"
-      },
-      "pages": [
-        "multi-sequence-labels",
-        "views",
-        "homology"
-      ]
-    },
-    {
-      "title": {
-        "zh": "完整示例",
-        "en": "Complete examples"
-      },
-      "pages": [
-        "chord",
-        "collinear"
-      ]
-    }
-  ],
-  "circular": [
-    {
-      "title": {
-        "zh": "怎么画骨架和已有注释？",
-        "en": "How do I draw the backbone and known annotations?"
-      },
-      "pages": [
-        "circular-start",
-        "circular-data",
-        "circular-layout",
-        "circular-features"
-      ]
-    },
-    {
-      "title": {
-        "zh": "怎样标注、查找与添加轨道？",
-        "en": "How do I label, search and add tracks?"
-      },
-      "pages": [
-        "circular-labels",
-        "recognition",
-        "primers",
-        "restriction-sites",
-        "tracks"
-      ]
-    },
-    {
-      "title": {
-        "zh": "完整示例",
-        "en": "Complete examples"
-      },
-      "pages": [
-        "plasmids",
-        "circular-dense-case",
-        "plasmid-catalog"
-      ]
-    }
-  ],
-  "dotplot": [
-    {
-      "title": {
-        "zh": "怎样把比对结果画在双轴上？",
-        "en": "How do I plot alignments on two axes?"
-      },
-      "pages": [
-        "dotplot-start",
-        "alignments",
-        "protein-alignments"
-      ]
-    }
-  ],
-  "fusion": [
-    {
-      "title": {
-        "zh": "怎样组合和连接面板？",
-        "en": "How do I compose and connect panels?"
-      },
-      "pages": [
-        "fusion-start",
-        "fusion-layout",
-        "fusion-routing"
-      ]
-    },
-    {
-      "title": {
-        "zh": "怎样放大或组合局部视图？",
-        "en": "How do I magnify or compose detailed views?"
-      },
-      "pages": [
-        "fusion-details",
-        "fusion-advanced"
-      ]
-    }
-  ],
-  "shared-techniques": [
-    {
-      "title": {
-        "zh": "怎样调整外观与图层？",
-        "en": "How do I adjust appearance and layers?"
-      },
-      "pages": [
         "annotations",
-        "feature-geometry",
-        "labels",
         "parameters",
-        "scale-families"
-      ]
-    },
-    {
-      "title": {
-        "zh": "怎样绘制数值轨道？",
-        "en": "How do I draw quantitative tracks?"
-      },
-      "pages": [
         "tracks",
-        "tracks-statistics"
-      ]
-    },
-    {
-      "title": {
-        "zh": "怎样检查和保存？",
-        "en": "How do I check and save a plot?"
-      },
-      "pages": [
-        "output",
-        "diagnostics"
+        "tracks-statistics",
+        "styling"
       ]
     }
   ],
   "data": [
     {
       "title": {
-        "zh": "手中的文件怎样读入？",
-        "en": "How do I read my files?"
+        "zh": "数据与文件",
+        "en": "Data and files"
       },
       "pages": [
-        "import-sequences",
-        "import-intervals",
-        "import-signals",
-        "import-relations",
-        "alignments",
-        "aligned-sequences",
-        "protein-alignments"
-      ]
-    },
-    {
-      "title": {
-        "zh": "怎样接到图层或变换坐标？",
-        "en": "How do I use layers or transform coordinates?"
-      },
-      "pages": [
+        "formats",
         "data",
-        "workflows",
+        "import-sequences",
+        "import-relations",
+        "import-signals",
         "projection"
       ]
     },
     {
       "title": {
-        "zh": "哪里有可复现的完整输入？",
-        "en": "Where can I find complete inputs to reproduce?"
+        "zh": "检查与输出",
+        "en": "Checks and output"
       },
       "pages": [
-        "real-data",
-        "flagship-data"
+        "output",
+        "diagnostics"
+      ]
+    }
+  ],
+  "cases": [
+    {
+      "title": {
+        "zh": "旗舰案例",
+        "en": "Flagship cases"
+      },
+      "pages": [
+        "case-chord",
+        "case-collinear",
+        "case-radial",
+        "case-sankey",
+        "case-circular",
+        "case-dotplot",
+        "case-fusion"
+      ]
+    },
+    {
+      "title": {
+        "zh": "质粒图谱",
+        "en": "Plasmid catalogue"
+      },
+      "pages": [
+        "plasmid-catalog"
       ]
     }
   ],
   "reference": [
     {
       "title": {
-        "zh": "怎样查函数和参数？",
-        "en": "How do I look up functions and arguments?"
+        "zh": "查找参数",
+        "en": "Find parameters"
       },
       "pages": [
-        "compatibility",
-        "parameter-atlas",
-        "api-curriculum"
+        "parameter-atlas"
       ]
     }
   ],
   "information": [
     {
       "title": {
-        "zh": "项目维护",
-        "en": "Project maintenance"
+        "zh": "迁移",
+        "en": "Migration"
       },
       "pages": [
-        "faq",
         "migration"
       ]
     }

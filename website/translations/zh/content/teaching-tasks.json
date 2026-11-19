@@ -1,0 +1,270 @@
+{
+  "source_sha256": "fe190603404e8f5b6eefba6e6dfea20b9d6eeb5968ee17002afafc0f7e699915",
+  "strings": {
+    "0/task": {
+      "source_sha256": "753dde48c335338f81a0206e3e15e450a3b8e557c12e18ba3ed66e953241ea45",
+      "status": "reviewed",
+      "translation": "改变骨架样式"
+    },
+    "1/task": {
+      "source_sha256": "fb04ae2aa48d97169cf1fcfaa3c390e3dfa7841a24e8c062d823c6e010b5b4f4",
+      "status": "reviewed",
+      "translation": "指定半径与曲率"
+    },
+    "2/task": {
+      "source_sha256": "ce876caf4f33cc65b81b3c83efd38c5f7d54426f56dd4e2369a7dc790f8d62f6",
+      "status": "reviewed",
+      "translation": "改变序列顺序和方向"
+    },
+    "3/task": {
+      "source_sha256": "2b1850f00f0a57128d741ea7936264992336e6c3995ce347dd1e7ab3a6e761a5",
+      "status": "reviewed",
+      "translation": "改变连接路径与避障"
+    },
+    "4/task": {
+      "source_sha256": "c3b1f0db40d3638a108afaccf961e9e9d1ecbc084a58325e0bb88687288656bc",
+      "status": "reviewed",
+      "translation": "将色带改为有向点连接"
+    },
+    "5/task": {
+      "source_sha256": "100688139fbd6f30ae7c3a82f5ba9f0dc71ae0e05a18101deb4b122e5184a0a8",
+      "status": "reviewed",
+      "translation": "调整基因箭头形状"
+    },
+    "6/task": {
+      "source_sha256": "2b156f93c2889dbee6689080844ecea4e5307472d90f0aaafb7f6c9a53bae108",
+      "status": "reviewed",
+      "translation": "强调一个局部区间"
+    },
+    "7/task": {
+      "source_sha256": "d0b7363cacdffa0224556d39b8ccaf1be038af8213f9cd898f96baed64848df0",
+      "status": "reviewed",
+      "translation": "根据相似度配色"
+    },
+    "8/task": {
+      "source_sha256": "32b436fdab0aa2e20e51d75a0d3123a7f4d55df8b56649ec6e247baf80f7f59b",
+      "status": "reviewed",
+      "translation": "分类配色与图例"
+    },
+    "9/task": {
+      "source_sha256": "3480b57098af9a451a1556b24cde34611fad7bb35c9cbf691ce992e3a5278a67",
+      "status": "reviewed",
+      "translation": "筛选、去重、合并比对"
+    },
+    "10/task": {
+      "source_sha256": "8d4e7e06e4a87ab8b6f9b8b7fdccecdb216a9288ef061660eacf944b7bfcee08",
+      "status": "reviewed",
+      "translation": "汇总连接密度"
+    },
+    "11/task": {
+      "source_sha256": "49c706d84c21699e33c0726594cae16befddba61d3deab89206f5a89d1efdffa",
+      "status": "reviewed",
+      "translation": "显式聚束连接"
+    },
+    "12/task": {
+      "source_sha256": "77064223887abd55fb807585d83f3792e071cf6d22043aed2be6739dcbcdbee6",
+      "status": "reviewed",
+      "translation": "左中右对齐序列"
+    },
+    "13/task": {
+      "source_sha256": "edfadceaa95a0962945df801b0660db9fde0d1a214fbd9e6665cd507f6686110",
+      "status": "reviewed",
+      "translation": "以共同位点锚定"
+    },
+    "14/task": {
+      "source_sha256": "56aed345b16991823a10c985ac0ea49ed1e898f670e775e9f7a96de0b0057376",
+      "status": "reviewed",
+      "translation": "自动选择显示方向"
+    },
+    "15/task": {
+      "source_sha256": "582d0dedc5d304433666436ad372233cddc2263ef4af2b882dc3c3a312b57155",
+      "status": "reviewed",
+      "translation": "连接非相邻行"
+    },
+    "16/task": {
+      "source_sha256": "ac18d9c3610ee11e190b5b9da68961cc8d579e8830e42bc8a01aa7ad5c905459",
+      "status": "reviewed",
+      "translation": "显示局部窗口与断点"
+    },
+    "17/task": {
+      "source_sha256": "c44f7df2b32ca77edb4d0dba6be71910898f667a5fa8ac2c52ada74783ba5ea5",
+      "status": "reviewed",
+      "translation": "绘制固定长度标尺"
+    },
+    "18/task": {
+      "source_sha256": "94016ec110ef568714ec90a3612ff02392b339eb19213d8b26556d81f78e94b5",
+      "status": "reviewed",
+      "translation": "改变圆图朝向"
+    },
+    "19/task": {
+      "source_sha256": "dd6986cf17e0d16120bdb3acdd7da46f98c75a056a8d3f53273fd0619ba38c09",
+      "status": "reviewed",
+      "translation": "堆叠特征注释"
+    },
+    "20/task": {
+      "source_sha256": "21fccaa4079c02b4cc8230f331b20a126600643f289127ce8effb77edc1b004e",
+      "status": "reviewed",
+      "translation": "自动排布特征文字"
+    },
+    "21/task": {
+      "source_sha256": "84c5677af6fb00a72c514e1d1fb7c7af02832586e801d17a712a40103982c47e",
+      "status": "reviewed",
+      "translation": "搜索引物结合位置"
+    },
+    "22/task": {
+      "source_sha256": "5a51030cbc47c9731bbaf33af230ac09b2a4bfde6b10309b8443189d95860de5",
+      "status": "reviewed",
+      "translation": "绘制引物及文字"
+    },
+    "23/task": {
+      "source_sha256": "c26d3d1e80f300810520337f112a4aa72be16934bf08dd4f3e822b71efe110c2",
+      "status": "reviewed",
+      "translation": "搜索和筛选酶切位点"
+    },
+    "24/task": {
+      "source_sha256": "17e6a6d54ab384bbc3dc77f1387d8f8b694494ce835b1b3da61f4756d5138fda",
+      "status": "reviewed",
+      "translation": "调整酶切文字引线"
+    },
+    "25/task": {
+      "source_sha256": "ae2852f6e08c28bc98f669ea2fbb5569087eff13952a5f37defca67fa1c45485",
+      "status": "reviewed",
+      "translation": "绘制 GC 柱图与折线"
+    },
+    "26/task": {
+      "source_sha256": "494f5489f6692e2b957d322e613c9a05daac34901b6cb2c28b07b3a46cce40e3",
+      "status": "reviewed",
+      "translation": "绘制 tile 色带"
+    },
+    "27/task": {
+      "source_sha256": "79b53ef010483e2f33460c88be8cfa2bc736b3f18e580027cd78da3ecff49d06",
+      "status": "reviewed",
+      "translation": "设置轨道宽度和次序"
+    },
+    "28/task": {
+      "source_sha256": "0ef63a994e36993bc0cabc3758574e5ba8eb890d60eaf8109fc0307a48fa0f02",
+      "status": "reviewed",
+      "translation": "导入 FASTA、GFF3 和比对"
+    },
+    "29/task": {
+      "source_sha256": "f9e907ecf95d6ea30fa402ee5805c6a9d22aef318efb1f4a27fbb33368d85e8c",
+      "status": "reviewed",
+      "translation": "绘制原生蛋白比较"
+    },
+    "30/task": {
+      "source_sha256": "aeb28ecabccfe8cd588a5fa030ecedb9632146714b98c2256de4e4da245bfded",
+      "status": "reviewed",
+      "translation": "预览并导出论文图"
+    },
+    "31/task": {
+      "source_sha256": "6f399a26c44dc02710c69c7aa4b0a411a97cb716bb0981571e4f399791803f94",
+      "status": "reviewed",
+      "translation": "诊断布局与导出坐标"
+    },
+    "32/task": {
+      "source_sha256": "0878c6dc7365df89232e0f90d892e91f4cdf63f8117cf2ab574195d7f4b8f17a",
+      "status": "reviewed",
+      "translation": "让相同端点的连接共享主干"
+    },
+    "33/task": {
+      "source_sha256": "b52d235c02090d47fe398f4e1c70dc9897fb302b5748883696442a71b7bbdd60",
+      "status": "reviewed",
+      "translation": "调整中心名称和长度"
+    },
+    "34/task": {
+      "source_sha256": "3c06bd4963fac55daa8f3fb31b0499f1c85ecafd7993bdcb851657300935fa90",
+      "status": "reviewed",
+      "translation": "固定标签方向与内外侧"
+    },
+    "35/task": {
+      "source_sha256": "7f299d4cd4fe7cde3fb5b7f99175eba69905584892700d148d682c7abf213fcb",
+      "status": "reviewed",
+      "translation": "自动标签缩放与省略"
+    },
+    "36/task": {
+      "source_sha256": "9a436335be8fc548fa2d703c198125fff440f58c3d44b73e1f6c5254c4d75d6b",
+      "status": "reviewed",
+      "translation": "选择连续与分段角色标度"
+    },
+    "37/task": {
+      "source_sha256": "a4b5c77c87b3ca2bde1e3f79b1dea9404fafb22e372489153e94e40a6e175040",
+      "status": "reviewed",
+      "translation": "诊断窗口和查询目录"
+    },
+    "38/task": {
+      "source_sha256": "c2d29fefb3cc5d82a385f64d9c1bf4a512e7b856f237ba8ebc8a215d8fb481a4",
+      "status": "reviewed",
+      "translation": "查看全部接口的主讲位置"
+    },
+    "39/task": {
+      "source_sha256": "de6db74dd7001c5f59e5c96f39e2c13dc4f6909141b5e6d38d802c658a4cfc4a",
+      "status": "reviewed",
+      "translation": "查找参数类型与完整默认值"
+    },
+    "40/task": {
+      "source_sha256": "09ae3cfba1233657a03506d4b9b5af6884080bb49e51b058720eb61f89ee923a",
+      "status": "reviewed",
+      "translation": "统计源位置观测数"
+    },
+    "41/task": {
+      "source_sha256": "99a1ddfa32a902f3ad4c1704106b9fbbe8bda0fc432f07eb029f7efad658a2d3",
+      "status": "reviewed",
+      "translation": "为重复序列实例选择路由"
+    },
+    "42/task": {
+      "source_sha256": "33a61c6f6fdff47efe9af0846cd65da5201c1d13b163373dd8dad926f6a94ac7",
+      "status": "reviewed",
+      "translation": "绘制镜像区间关系"
+    },
+    "43/task": {
+      "source_sha256": "531a59b95b4c1ad5396b95aefff6c54bda4a6e1ea87402c20627f2d34558b476",
+      "status": "reviewed",
+      "translation": "用独立双轴展示HSP"
+    },
+    "44/task": {
+      "source_sha256": "0e1866c5dddcc77446d609ff732d9bc689f788ede4d73e10ece14891935e7407",
+      "status": "reviewed",
+      "translation": "保留四个比对端点"
+    },
+    "45/task": {
+      "source_sha256": "9a11a802cd3ecabb53574962a2b48ac387500baab35521974b576cdd86a247a1",
+      "status": "reviewed",
+      "translation": "绘制环形邻接的径向共线性"
+    },
+    "46/task": {
+      "source_sha256": "5689a45f2a43dd05c018203e55ac1184759e86dd027562cf5263af5fee8d1000",
+      "status": "reviewed",
+      "translation": "组合有来源锚点的视图"
+    },
+    "47/task": {
+      "source_sha256": "d01641c5791125cf3c90df0a483009f7e40fe40fccbd549e19fc86b45f289394",
+      "status": "reviewed",
+      "translation": "跨面板连接真实区间"
+    },
+    "48/task": {
+      "source_sha256": "f10bde1528e0ba6ef84e867024d604bc77b1b48717cc3e7dd3ad122d91988119",
+      "status": "reviewed",
+      "translation": "审计组合来源与物理锚点"
+    },
+    "49/task": {
+      "source_sha256": "e75969466cf2500bb54d30dc2789ce34a0a5e170440c78bc3cd0a54e9b7f1531",
+      "status": "reviewed",
+      "translation": "导入BED双端区间"
+    },
+    "50/task": {
+      "source_sha256": "e8f51134e6c9ee6173be79ad75ee33401933aef414e648090f03c7fdefa0779e",
+      "status": "reviewed",
+      "translation": "显示已有对齐的真实字符与gap"
+    },
+    "51/task": {
+      "source_sha256": "6ac63bfb810ec1633c33c09d8d2d65eb84f678851e7a8e03c66adfa6e058d161",
+      "status": "reviewed",
+      "translation": "精确查找源位置与对齐列"
+    },
+    "52/task": {
+      "source_sha256": "c4c7711b76530c4fc7199bee9ca5c1b84e136fb22a76f71909feb5fb6ead4db4",
+      "status": "reviewed",
+      "translation": "连接基因组区域与独立重建的细节图"
+    }
+  }
+}

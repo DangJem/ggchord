@@ -1,0 +1,37 @@
+{
+  "map_alignment_position": {
+    "position": {
+      "type": {
+        "en": "Positive integers or NA; source positions or alignment columns"
+      }
+    }
+  },
+  "map_ggchord_position": {
+    "position": {
+      "type": {
+        "en": "Numeric positions; Radial inverse uses an x/y matrix or data frame"
+      }
+    }
+  },
+  "project_ggchord_features": {
+    "feature_data": {
+      "type": {
+        "en": "data.frame; one output per input feature, with pieces in segments"
+      }
+    }
+  },
+  "segment_ggchord_data": {
+    "windows": {
+      "type": {
+        "en": "Window data frame; fields and coordinates follow the argument contract"
+      }
+    }
+  },
+  "geom_track_bar": {
+    "baseline": {
+      "type": {
+        "en": "Numeric 0; count bars reject nonzero baselines"
+      }
+    }
+  }
+}

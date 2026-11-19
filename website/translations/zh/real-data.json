@@ -1,0 +1,15 @@
+{
+  "source_sha256": "77bec8aebfea4a87184398847421cb6f12a7d98f451708ecb285a8be41b6d08d",
+  "blocks": {
+    "2": {
+      "source_sha256": "78f3b751cc6a81f151c97d45744da2989fa25c9ea71a757fa0548ec3895c1028",
+      "status": "reviewed",
+      "translation": "## 本页已迁移 {#moved}\n"
+    },
+    "3": {
+      "source_sha256": "abfb8f5e847a4f5f04342f67ba525b0d9704efbd3492d95aeb63310aab6fd1d0",
+      "status": "reviewed",
+      "translation": "[弦图旗舰案例](case-chord.md)\n"
+    }
+  }
+}

@@ -1,0 +1,45 @@
+{
+  "source_sha256": "285e6b65163d4d30a315eb9c569efcd81e1cdb6313eda1dfd4290da7e6eff88a",
+  "blocks": {
+    "0": {
+      "source_sha256": "8d23103772c0ba0289cdc1584503ebd625d3252c8d898ec758dfb5ae902df91d",
+      "status": "reviewed",
+      "translation": "这张组合图从四序列总览追踪一条真实比对到局部区域。三个总览面板共用一组 HSP 和 CDS，其他面板分别展示相关的两条全长参考序列、局部邻域和一行来源碱基。\n"
+    },
+    "2": {
+      "source_sha256": "647b1b27743b54f4a06675810939d0090818b00090dc7c72159ff29cd2eee532",
+      "status": "reviewed",
+      "translation": "## 绘制完整图 {#map}\n"
+    },
+    "3": {
+      "source_sha256": "a252b24fd0de7cc6f38c117e2917b0dea34804d5cca1a1aa51909365208b97c5",
+      "status": "reviewed",
+      "translation": "该图使用 16 × 14 英寸画布、120 dpi。脚本返回绘图对象，可传给 `ggplot2::ggsave()` 按相同尺寸保存。\n"
+    },
+    "6": {
+      "source_sha256": "84a540c546a282c8238972eface9931f272ce56681f6a8548bf82160a1d72e0e",
+      "status": "reviewed",
+      "translation": "## 读图 {#reading}\n"
+    },
+    "7": {
+      "source_sha256": "5c6954093ce2ab588a6d9c054a0c18590a485e6451235af5749be35cae4f34a7",
+      "status": "reviewed",
+      "translation": "先读 A（弦图）、B（共线性）和 C（径向）。跨面板带连接对应区间。D 中的框标出 E 放大的窗口；E 的引线指出 F 中显示字符的短区间。面板内比对的一致性色标与跨面板的对应关系图例分别说明各自的连接。\n"
+    },
+    "9": {
+      "source_sha256": "de1eb696f2ab1c739faa9f8ef7b26fc480da4593cffdb8c750e451460f700193",
+      "status": "reviewed",
+      "translation": "## 来源记录与展示选择 {#inputs}\n"
+    },
+    "10": {
+      "source_sha256": "85e81f0b160636b2a91cf3d4a75187be063c63cfe914124c332ae41effb922d8",
+      "status": "reviewed",
+      "translation": "总览对每个序列组合选一条长度最接近 4,000 bp 的已观测 HSP，每条序列选三条 CDS。`flagship_fusion_example` 提供精选端点、局部窗口和 F 中有来源位置的 60 个碱基。E 只显示窗口范围，其刻度仍使用原始坐标。\n"
+    },
+    "11": {
+      "source_sha256": "b60dd03e73e6c4f965f2df8b2597fa8ddb535c8fa37d1684c5191b15df7f5dea",
+      "status": "reviewed",
+      "translation": "[构建双面板组合图](fusion.md) · [登记字符面板](../../man/register_ggchord_alignment.Rd)\n"
+    }
+  }
+}

@@ -1,0 +1,508 @@
+{
+  "first-plot": {
+    "kind": "plot",
+    "width": 7,
+    "height": 6,
+    "dpi": 144,
+    "caption": {
+      "zh": "四条噬菌体基因组的骨架与随包比对表中的前四条记录。每条连接带对应一对原始比对区间。",
+      "en": "Four phage genome backbones and the first four alignments in the bundled alignment table. Each ribbon joins the two reported sequence intervals."
+    }
+  },
+  "flex-radius": {
+    "kind": "plot",
+    "width": 7,
+    "height": 7,
+    "dpi": 144,
+    "caption": {
+      "zh": "MT118296.1 的骨架半径为 0.72，其余三条保持半径 1。",
+      "en": "The MT118296.1 backbone uses radius 0.72. The other three remain at radius 1."
+    }
+  },
+  "flex-radius-order": {
+    "kind": "plot",
+    "width": 11,
+    "height": 5.5,
+    "dpi": 144,
+    "caption": {
+      "zh": "相同重排后，左图的命名值使 MT118296.1 向内移动；右图的顺序值使 MT108731.1 向内移动。",
+      "en": "After reordering, the named value moves MT118296.1 inward on the left. The positional value moves MT108731.1 inward on the right."
+    }
+  },
+  "flex-strand": {
+    "kind": "plot",
+    "width": 7,
+    "height": 7,
+    "dpi": 144,
+    "caption": {
+      "zh": "OR222515.1 的正、负链 CDS 分别偏移 0.08 和 −0.14，箭头宽度分别为 0.03 和 0.08。",
+      "en": "The OR222515.1 plus and minus CDS use offsets of 0.08 and −0.14. Their arrow widths are 0.03 and 0.08, respectively."
+    }
+  },
+  "flex-radius-error": {
+    "kind": "data",
+    "width": 7,
+    "height": 3,
+    "dpi": 144,
+    "caption": {
+      "zh": "布局计算指出 seq_radius 中的两个链符号均为未知序列标识。",
+      "en": "The layout reports both strand symbols as unknown sequence IDs for seq_radius."
+    }
+  },
+  "views-chord": {
+    "kind": "plot",
+    "width": 7,
+    "height": 5,
+    "dpi": 144,
+    "caption": {
+      "zh": "三条实测 HSP 的弦图视图",
+      "en": "Chord view of three observed HSPs"
+    }
+  },
+  "views-collinear": {
+    "kind": "plot",
+    "width": 7,
+    "height": 5,
+    "dpi": 144,
+    "caption": {
+      "zh": "三条实测 HSP 的共线性视图",
+      "en": "Collinear view of three observed HSPs"
+    }
+  },
+  "views-radial": {
+    "kind": "plot",
+    "width": 7,
+    "height": 5,
+    "dpi": 144,
+    "caption": {
+      "zh": "三条实测 HSP 的径向共线性视图",
+      "en": "Radial synteny view of three observed HSPs"
+    }
+  },
+  "views-sankey": {
+    "kind": "plot",
+    "width": 7,
+    "height": 5,
+    "dpi": 144,
+    "caption": {
+      "zh": "三条实测 HSP 的双列 Sankey视图",
+      "en": "Sankey view of three observed HSPs"
+    }
+  },
+  "order-orientation": {
+    "kind": "plot",
+    "width": 7,
+    "height": 5,
+    "dpi": 144,
+    "caption": {
+      "zh": "重排两条序列并翻转第二条的显示方向",
+      "en": "A reordered pair with the second reference reversed"
+    }
+  },
+  "feature-subset-labels": {
+    "kind": "plot",
+    "width": 6,
+    "height": 6,
+    "dpi": 144,
+    "caption": {
+      "zh": "两个 CDS 标签跟随 pUC19 全部特征的分道位置",
+      "en": "Two CDS labels anchored to the full pUC19 feature layout"
+    }
+  },
+  "paired-ribbons": {
+    "kind": "plot",
+    "width": 7,
+    "height": 5,
+    "dpi": 144,
+    "caption": {
+      "zh": "单一序列对的三条 HSP 区间连接带",
+      "en": "Interval ribbons connecting the three HSPs for one sequence pair"
+    }
+  },
+  "gc-shared-band": {
+    "kind": "plot",
+    "width": 7,
+    "height": 5,
+    "dpi": 144,
+    "caption": {
+      "zh": "柱与经过窗口中点的折线共用 GC 百分数轨道",
+      "en": "Window GC percentages shown as bars with a line through their midpoints"
+    }
+  },
+  "coverage-facets": {
+    "kind": "plot",
+    "width": 7,
+    "height": 6.5,
+    "dpi": 144,
+    "caption": {
+      "zh": "同一 query 匹配各个 subject 的窗口覆盖比例",
+      "en": "Fraction of the query covered by HSPs to each subject"
+    }
+  },
+  "window-members": {
+    "kind": "data",
+    "width": 7,
+    "height": 5,
+    "dpi": 144,
+    "caption": {
+      "zh": "逐窗覆盖率、实际分母及贡献的来源行",
+      "en": "Coverage denominators and the source rows contributing to each window"
+    }
+  },
+  "category-fill": {
+    "kind": "plot",
+    "width": 7,
+    "height": 5.5,
+    "dpi": 144,
+    "caption": {
+      "zh": "按实际特征类别设置命名填色标度",
+      "en": "Three feature classes with a named fill scale"
+    }
+  },
+  "prepared-tables": {
+    "kind": "data",
+    "width": 7,
+    "height": 5,
+    "dpi": 144,
+    "caption": {
+      "zh": "准备结果中保留的特征列",
+      "en": "Contents of the prepared feature table"
+    }
+  },
+  "installed-gff": {
+    "kind": "data",
+    "width": 7,
+    "height": 5,
+    "dpi": 144,
+    "caption": {
+      "zh": "随包 GFF3 中的特征行及原始行号",
+      "en": "Feature rows and original line numbers from the installed GFF3"
+    }
+  },
+  "installed-blast": {
+    "kind": "data",
+    "width": 7,
+    "height": 5,
+    "dpi": 144,
+    "caption": {
+      "zh": "随包 BLAST 表中的两端坐标和一致性百分数",
+      "en": "Both endpoints and identity in the installed BLAST table"
+    }
+  },
+  "installed-members": {
+    "kind": "data",
+    "width": 7,
+    "height": 5,
+    "dpi": 144,
+    "caption": {
+      "zh": "文件中第一组的特征 ID",
+      "en": "Feature IDs in the first recorded group"
+    }
+  },
+  "installed-signal": {
+    "kind": "data",
+    "width": 7,
+    "height": 5,
+    "dpi": 144,
+    "caption": {
+      "zh": "bedGraph 原始边界与导入后的一基闭区间",
+      "en": "Native bedGraph boundaries and the imported inclusive coordinates"
+    }
+  },
+  "project-residues": {
+    "kind": "data",
+    "width": 7,
+    "height": 5,
+    "dpi": 144,
+    "caption": {
+      "zh": "将第 2–5 个残基投影到 pUC19 的负链 CDS",
+      "en": "Residues 2–5 projected onto the reverse-strand pUC19 CDS"
+    }
+  },
+  "export-size": {
+    "kind": "plot",
+    "width": 6.299212598425197,
+    "height": 4.330708661417323,
+    "dpi": 144,
+    "caption": {
+      "zh": "按 160 × 110 mm 保存的四序列图",
+      "en": "A four-sequence plot saved at 160 × 110 mm"
+    }
+  },
+  "inspect-source": {
+    "kind": "data",
+    "width": 7,
+    "height": 5,
+    "dpi": 144,
+    "caption": {
+      "zh": "按图层 ID 取回输入记录的两端坐标",
+      "en": "Source endpoints read back from the named layer"
+    }
+  },
+  "first-chord": {
+    "kind": "plot",
+    "width": 8,
+    "height": 7,
+    "dpi": 120,
+    "caption": {
+      "zh": "四条序列弧中，一条已观测比对连接其中两条。",
+      "en": "One observed alignment spans two of the four sequence arcs."
+    }
+  },
+  "first-collinear": {
+    "kind": "plot",
+    "width": 9,
+    "height": 5,
+    "dpi": 120,
+    "caption": {
+      "zh": "三条已观测比对连接两条全长序列上的区间。",
+      "en": "Three observed alignments join intervals on two full-length sequences."
+    }
+  },
+  "first-radial": {
+    "kind": "plot",
+    "width": 8,
+    "height": 7,
+    "dpi": 120,
+    "caption": {
+      "zh": "四条径向骨架显示选出的 HSP，包括非相邻序列对。",
+      "en": "Four radial backbones show the selected HSPs, including non-neighbour pairs."
+    }
+  },
+  "first-sankey": {
+    "kind": "plot",
+    "width": 8,
+    "height": 6,
+    "dpi": 120,
+    "caption": {
+      "zh": "三条比对分别连接一列的 query 区间与另一列的 subject 区间。",
+      "en": "Three alignments link the query interval in one column to the subject interval in the other."
+    }
+  },
+  "first-circular": {
+    "kind": "plot",
+    "width": 7,
+    "height": 6,
+    "dpi": 120,
+    "caption": {
+      "zh": "pUC19 全长 2,686 bp，骨架上共有九条参考注释。",
+      "en": "Nine annotated features on the 2,686 bp pUC19 reference."
+    }
+  },
+  "first-dotplot": {
+    "kind": "plot",
+    "width": 7,
+    "height": 6,
+    "dpi": 120,
+    "caption": {
+      "zh": "一条线段连接 query 与 subject 的成对起点及成对终点。",
+      "en": "An alignment segment connects the paired start and end coordinates."
+    }
+  },
+  "first-fusion": {
+    "kind": "plot",
+    "width": 10,
+    "height": 6,
+    "dpi": 120,
+    "caption": {
+      "zh": "一对已观测区间连接左侧圆形总览与右侧双序列纵向视图。",
+      "en": "One observed interval pair links a circular overview and a vertical two-sequence view."
+    }
+  },
+  "case-chord": {
+    "kind": "plot",
+    "width": 12.0,
+    "height": 10.0,
+    "dpi": 144.0,
+    "caption": {
+      "zh": "四条序列的区间连接",
+      "en": "Interval links between four sequences"
+    },
+    "background": "#FFFCF5"
+  },
+  "case-collinear": {
+    "kind": "plot",
+    "width": 12.0,
+    "height": 8.0,
+    "dpi": 144.0,
+    "caption": {
+      "zh": "四条序列的共线性与基因方向",
+      "en": "Collinearity and gene orientation across four sequences"
+    },
+    "background": "#FFFCF5"
+  },
+  "case-radial": {
+    "kind": "plot",
+    "width": 12,
+    "height": 10.5,
+    "dpi": 144,
+    "caption": {
+      "zh": "径向共线性与注释",
+      "en": "Radial synteny and annotations"
+    },
+    "background": "#FFFCF5"
+  },
+  "case-sankey": {
+    "kind": "plot",
+    "width": 10,
+    "height": 16,
+    "dpi": 144,
+    "caption": {
+      "zh": "两列序列间的区间连接",
+      "en": "Interval links between two columns of sequences"
+    },
+    "background": "#FFFCF5"
+  },
+  "case-dotplot": {
+    "kind": "plot",
+    "width": 13,
+    "height": 12,
+    "dpi": 144,
+    "caption": {
+      "zh": "四条序列的比对点图",
+      "en": "Alignment dotplot for four sequences"
+    },
+    "background": "#FFFCF5"
+  },
+  "case-fusion": {
+    "kind": "plot",
+    "width": 16,
+    "height": 14,
+    "dpi": 120,
+    "caption": {
+      "zh": "全局关系、共线性与局部放大",
+      "en": "Overview, collinearity and local detail"
+    },
+    "background": "#FFFCF5"
+  },
+  "map-psb": {
+    "kind": "plot",
+    "width": 10,
+    "height": 8,
+    "dpi": 110,
+    "caption": {
+      "zh": "pSB1C3 · 7 个特征，33 个酶切位置",
+      "en": "pSB1C3 · 7 features and 33 restriction positions"
+    }
+  },
+  "case-circular": {
+    "kind": "plot",
+    "width": 10,
+    "height": 8,
+    "dpi": 110,
+    "caption": {
+      "zh": "pUC19 · 9 个特征，33 个酶切位置",
+      "en": "pUC19 · 9 features and 33 restriction positions"
+    }
+  },
+  "map-pbr": {
+    "kind": "plot",
+    "width": 10,
+    "height": 8,
+    "dpi": 110,
+    "caption": {
+      "zh": "pBR322 · 6 个特征，42 个酶切位置",
+      "en": "pBR322 · 6 features and 42 restriction positions"
+    }
+  },
+  "map-blue": {
+    "kind": "plot",
+    "width": 10,
+    "height": 8,
+    "dpi": 110,
+    "caption": {
+      "zh": "pBluescript II SK(+) · 14 个特征，42 个酶切位置",
+      "en": "pBluescript II SK(+) · 14 features and 42 restriction positions"
+    }
+  },
+  "map-pet": {
+    "kind": "plot",
+    "width": 10,
+    "height": 8,
+    "dpi": 110,
+    "caption": {
+      "zh": "pET-28a(+) · 16 个特征，45 个酶切位置",
+      "en": "pET-28a(+) · 16 features and 45 restriction positions"
+    }
+  },
+  "map-duet": {
+    "kind": "plot",
+    "width": 10,
+    "height": 8,
+    "dpi": 110,
+    "caption": {
+      "zh": "pETDuet-1 · 20 个特征，54 个酶切位置",
+      "en": "pETDuet-1 · 20 features and 54 restriction positions"
+    }
+  },
+  "map-donr": {
+    "kind": "plot",
+    "width": 10,
+    "height": 8,
+    "dpi": 110,
+    "caption": {
+      "zh": "pDONR221 · 11 个特征，42 个酶切位置",
+      "en": "pDONR221 · 11 features and 42 restriction positions"
+    }
+  },
+  "map-pcdna": {
+    "kind": "plot",
+    "width": 10,
+    "height": 8,
+    "dpi": 110,
+    "caption": {
+      "zh": "pcDNA3.1(+) · 13 个特征，47 个酶切位置",
+      "en": "pcDNA3.1(+) · 13 features and 47 restriction positions"
+    }
+  },
+  "map-tre": {
+    "kind": "plot",
+    "width": 10,
+    "height": 8,
+    "dpi": 110,
+    "caption": {
+      "zh": "pTRE-Tight-BI · 15 个特征，44 个酶切位置",
+      "en": "pTRE-Tight-BI · 15 features and 44 restriction positions"
+    }
+  },
+  "map-tripz": {
+    "kind": "plot",
+    "width": 10,
+    "height": 8,
+    "dpi": 110,
+    "caption": {
+      "zh": "pTRIPZ · 33 个特征，35 个酶切位置",
+      "en": "pTRIPZ · 33 features and 35 restriction positions"
+    }
+  },
+  "map-cambia": {
+    "kind": "plot",
+    "width": 10,
+    "height": 8,
+    "dpi": 110,
+    "caption": {
+      "zh": "pCAMBIA1300 · 17 个特征，37 个酶切位置",
+      "en": "pCAMBIA1300 · 17 features and 37 restriction positions"
+    }
+  },
+  "map-earley": {
+    "kind": "plot",
+    "width": 10,
+    "height": 8,
+    "dpi": 110,
+    "caption": {
+      "zh": "pEarleyGate 201 · 21 个特征，37 个酶切位置",
+      "en": "pEarleyGate 201 · 21 features and 37 restriction positions"
+    }
+  },
+  "map-cas": {
+    "kind": "plot",
+    "width": 10,
+    "height": 8,
+    "dpi": 110,
+    "caption": {
+      "zh": "pSpCas9(BB)-2A-GFP (PX458) · 19 个特征，4 个酶切位置",
+      "en": "pSpCas9(BB)-2A-GFP (PX458) · 19 features and 4 restriction positions"
+    }
+  }
+}

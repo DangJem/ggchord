@@ -1,121 +1,103 @@
-See [Flagship data sources and construction](flagship-data.md) for provenance, display selections and rebuilding. This page loads bundled inputs directly and focuses on plotting settings.
+Use this collection to compare the same annotation layers on thirteen references. Choose a record from the table or copy the independent script beside its full-size map. Each map uses a 10 × 8 in canvas at 110 dpi.
 
-Each map retains all source features, independent reference primers and every site in its declared enzyme profile. No three-site sampling is used. Maps use their own complete sequence, the same layers and a 10 × 8 in canvas. Open the full-resolution image for annotation text.
+<a id="inputs"></a>
 
-<a id="prepare"></a>
+## Choose a reference {#inputs}
 
-## Preparation and complete display policy {#prepare}
+| Reference | Length (bp) | Features | Reference primers | Site records | Unique positions |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| [pSB1C3](#catalogpsb) | 2070 | 7 | 2 | 38 | 33 |
+| [pUC19](#catalogpuc) | 2686 | 9 | 0 | 39 | 33 |
+| [pBR322](#catalogpbr) | 4361 | 6 | 0 | 47 | 42 |
+| [pBluescript II SK(+)](#catalogblue) | 2961 | 14 | 0 | 48 | 42 |
+| [pET-28a(+)](#catalogpet) | 5369 | 16 | 0 | 51 | 45 |
+| [pETDuet-1](#catalogduet) | 5420 | 20 | 5 | 58 | 54 |
+| [pDONR221](#catalogdonr) | 4761 | 11 | 0 | 47 | 42 |
+| [pcDNA3.1(+)](#catalogpcdna) | 5428 | 13 | 0 | 51 | 47 |
+| [pTRE-Tight-BI](#catalogtre) | 2856 | 15 | 0 | 47 | 44 |
+| [pTRIPZ](#catalogtripz) | 13320 | 33 | 0 | 38 | 35 |
+| [pCAMBIA1300](#catalogcambia) | 8959 | 17 | 0 | 42 | 37 |
+| [pEarleyGate 201](#catalogearley) | 11779 | 21 | 0 | 39 | 37 |
+| [pSpCas9(BB)-2A-GFP (PX458)](#catalogcas) | 9288 | 19 | 0 | 4 | 4 |
 
-`reference$features`, `reference$primers` and `reference$sites` are the complete tables actually drawn. `reference$all_site_count` records the number of original candidates, with complete search results reproducible through the generator; `reference$policy` describes the enzyme set. Feature geometry is not reduced and site sets are not sampled to a fixed count.
-
-<a id="counts"></a>
-
-## Inputs and recognition results {#counts}
-{{plasmidcatalog}}
+Site counts refer to the declared enzyme set in each record. Different enzymes can share one cut position. Primer counts refer to independently recorded reference primers.
 
 <a id="catalogpsb"></a>
 
-## pSB1C3: Small vector and basic structure {#catalogpsb}
-{{code:courseblockh,catalogmap}}
+## pSB1C3 {#catalogpsb}
 
-{{figure:catalogpsb}}
+{{example:map-psb}}
 
 <a id="catalogpuc"></a>
 
-## pUC19: Common features and replication origin {#catalogpuc}
-{{code:courseblocki,catalogmap}}
+## pUC19 {#catalogpuc}
 
-{{figure:catalogpuc}}
+{{example:case-circular}}
 
 <a id="catalogpbr"></a>
 
-## pBR322: Multiple resistance regions and direction {#catalogpbr}
-{{code:courseblockj,catalogmap}}
+## pBR322 {#catalogpbr}
 
-{{figure:catalogpbr}}
+{{example:map-pbr}}
 
 <a id="catalogblue"></a>
 
-## pBluescript II SK(+): Local regulation and short features {#catalogblue}
-{{code:courseblockk,catalogmap}}
+## pBluescript II SK(+) {#catalogblue}
 
-{{figure:catalogblue}}
+{{example:map-blue}}
 
 <a id="catalogpet"></a>
 
-## pET-28a(+): Expression regions and tags {#catalogpet}
-{{code:courseblockl,catalogmap}}
+## pET-28a(+) {#catalogpet}
 
-{{figure:catalogpet}}
+{{example:map-pet}}
 
 <a id="catalogduet"></a>
 
-## pETDuet-1: Dual expression units; transition to the dense case {#catalogduet}
-{{code:courseblockm,catalogmap}}
+## pETDuet-1 {#catalogduet}
 
-{{figure:catalogduet}}
+{{example:map-duet}}
 
 <a id="catalogdonr"></a>
 
-## pDONR221: Recombination-related architecture {#catalogdonr}
-{{code:courseblockn,catalogmap}}
+## pDONR221 {#catalogdonr}
 
-{{figure:catalogdonr}}
+{{example:map-donr}}
 
 <a id="catalogpcdna"></a>
 
-## pcDNA3.1(+): Annotation hierarchy in an expression vector {#catalogpcdna}
-{{code:courseblocko,catalogmap}}
+## pcDNA3.1(+) {#catalogpcdna}
 
-{{figure:catalogpcdna}}
+{{example:map-pcdna}}
 
 <a id="catalogtre"></a>
 
-## pTRE-Tight-BI: Bidirectional regulatory structure {#catalogtre}
-{{code:courseblockp,catalogmap}}
+## pTRE-Tight-BI {#catalogtre}
 
-{{figure:catalogtre}}
+{{example:map-tre}}
 
 <a id="catalogtripz"></a>
 
-## pTRIPZ: Display density on a longer sequence {#catalogtripz}
-{{code:courseblockq,catalogmap}}
+## pTRIPZ {#catalogtripz}
 
-{{figure:catalogtripz}}
+{{example:map-tripz}}
 
 <a id="catalogcambia"></a>
 
-## pCAMBIA1300: Architecture of a larger plant vector {#catalogcambia}
-{{code:courseblockr,catalogmap}}
+## pCAMBIA1300 {#catalogcambia}
 
-{{figure:catalogcambia}}
+{{example:map-cambia}}
 
 <a id="catalogearley"></a>
 
-## pEarleyGate 201: Category comparison with another plant vector {#catalogearley}
-{{code:courseblocks,catalogmap}}
+## pEarleyGate 201 {#catalogearley}
 
-{{figure:catalogearley}}
+{{example:map-earley}}
 
 <a id="catalogcas"></a>
 
-## pSpCas9(BB)-2A-GFP (PX458): Large expression vector and label fitting {#catalogcas}
-{{code:courseblockt,catalogmap}}
+## pSpCas9(BB)-2A-GFP (PX458) {#catalogcas}
 
-{{figure:catalogcas}}
+{{example:map-cas}}
 
-<a id="reference-selection"></a>
-
-## Enzyme profiles and provenance {#reference-selection}
-
-Saved reference profiles take priority within `commercial_nonredundant`. The pETDuet-1 file saves None while its reference PNG shows sites, so `unique_6plus` is selected explicitly. This does not claim to recover the original PNG export settings. Every row of the chosen profile is retained. Complete means that declared profile, rather than every candidate from every enzyme database on one map.
-
-Independent primers use `set = "reference"`. A source without independent reference primers has zero such rows; no records are invented. Named pieces remain in `segments` rather than becoming new top-level features. Enzymes at a shared position can share a label while their input records remain available.
-
-<a id="next"></a>
-
-## Related views {#next}
-
-[pUC19 layers](plasmids.md) · [pETDuet-1 dense layout](circular-dense-case.md) · [Labels and output size](circular-labels.md)
-
-<span id="gallery-limits"></span>
+[Circular map guide](circular.md) · [Read the pUC19 layers](case-circular.md)

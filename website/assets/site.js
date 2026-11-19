@@ -15,6 +15,33 @@
   language?.addEventListener('keydown',e=>{if(e.key==='Escape'){language.open=false;language.querySelector('summary').focus();}});
   const header=document.querySelector('.navbar');
   if(header&&'ResizeObserver'in window)new ResizeObserver(entries=>{document.documentElement.style.setProperty('--header-height',Math.ceil(entries[0].target.getBoundingClientRect().height)+'px');}).observe(header);
+  const navItems=[...document.querySelectorAll('.site-nav-item:has(.site-nav-toggle)')];
+  const closeMenus=except=>navItems.forEach(item=>{if(item!==except){item.classList.remove('is-open');item.querySelector('.site-nav-toggle').setAttribute('aria-expanded','false');}});
+  navItems.forEach(item=>{
+    const button=item.querySelector('.site-nav-toggle');
+    const setOpen=open=>{if(open)closeMenus(item);item.classList.toggle('is-open',open);button.setAttribute('aria-expanded',String(open));};
+    button.addEventListener('click',()=>setOpen(!item.classList.contains('is-open')));
+    item.addEventListener('mouseenter',()=>setOpen(true));
+    item.addEventListener('mouseleave',()=>{if(!item.contains(document.activeElement))setOpen(false);});
+    item.addEventListener('focusout',e=>{if(!item.contains(e.relatedTarget))setOpen(false);});
+    item.addEventListener('keydown',e=>{
+      if(e.key==='Escape'){setOpen(false);button.focus();}
+      else if(e.key==='ArrowDown' && e.target===button){e.preventDefault();setOpen(true);item.querySelector('.site-nav-menu a')?.focus();}
+    });
+  });
+  document.addEventListener('click',e=>{if(!e.target.closest('.site-nav-item'))closeMenus();});
+  const directoryQuery=document.querySelector('#directory-query'), directoryFlex=document.querySelector('#directory-flex');
+  if(directoryQuery&&directoryFlex){
+    const controls=directoryQuery.closest('.parameter-controls');
+    const rows=[...document.querySelectorAll('.parameter-directory tbody tr[data-flex]')];
+    const output=controls.querySelector('output');
+    const updateDirectory=()=>{
+      const query=directoryQuery.value.trim().toLocaleLowerCase();let count=0;
+      rows.forEach(row=>{row.hidden=!(row.textContent.toLocaleLowerCase().includes(query)&&(!directoryFlex.checked||row.dataset.flex==='1'));if(!row.hidden)count++;});
+      if(output)output.textContent=zh?`显示 ${count} 项`:`Showing ${count} entries`;
+    };
+    controls.hidden=false;directoryQuery.addEventListener('input',updateDirectory);directoryFlex.addEventListener('change',updateDirectory);updateDirectory();
+  }
   // Copy actions announce exactly which range was copied.
   const copy=async(button,text,label)=>{
     let ok=false;

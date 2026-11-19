@@ -1,5 +1,5 @@
 <a id="moved"></a>
 
-## 功能索引 {#moved}
+## 本页已迁移 {#moved}
 
-[Tasks](../../man/)
+[API 参考](../../man/)

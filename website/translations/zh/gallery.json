@@ -1,0 +1,15 @@
+{
+  "source_sha256": "cc4a4e0bbc13a50a4f8810dc2cab6a2180591948f386ca283063003f3c7ce131",
+  "blocks": {
+    "0": {
+      "source_sha256": "d2b691e06d31c1af0305929a59d86ab707ba542376e088b5e40908133e0abfa4",
+      "status": "reviewed",
+      "translation": "按要展示的关系选择案例。每个条目都将成图与对应的数据和 R 代码放在一起。\n"
+    },
+    "2": {
+      "source_sha256": "f6a97883b42e0076265227d5f28d61c0bec83dc4efeee0b08503ae09206eeb58",
+      "status": "reviewed",
+      "translation": "要查看各条参考质粒的单序列圆图，可打开[质粒图集](plasmid-catalog.md)。\n"
+    }
+  }
+}

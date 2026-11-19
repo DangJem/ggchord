@@ -1,0 +1,145 @@
+{
+  "source_sha256": "6f6efe529d99f18458e8c62a01bea825e7363fcdacb45460ac8fd9a695426e06",
+  "strings": {
+    "0/caption": {
+      "source_sha256": "ba7458c3989adf4fe8eaf052706e20a9e8be9441e0d003e226e48d48b233a651",
+      "status": "reviewed",
+      "translation": "chord：同源数据全对关系"
+    },
+    "1/caption": {
+      "source_sha256": "8ab7d7ef85c147771590fb8fd67569ef1e750ead00a226d4ef202a57d3c2e984",
+      "status": "reviewed",
+      "translation": "linear：同源数据全对关系"
+    },
+    "2/caption": {
+      "source_sha256": "b20da66ad1587c853ccb6b92fb920376f938c41d22de923eeafb7759b2e96b4b",
+      "status": "reviewed",
+      "translation": "radial：同源数据全对关系"
+    },
+    "3/caption": {
+      "source_sha256": "1885934f38eb5c2e2f2ec24ae1f2ad8a57409f43eff4aecc693372f5b2c40d47",
+      "status": "reviewed",
+      "translation": "sankey：同源数据全对关系"
+    },
+    "4/caption": {
+      "source_sha256": "c003fbaad7006719c3af38722cb025eccf3666010ca88059ecf15f16dcd12517",
+      "status": "reviewed",
+      "translation": "仅改变左右列间距"
+    },
+    "5/caption": {
+      "source_sha256": "c4a3fa1660cf47a1ab7d846a4b2d5e1e78aa0864071714d90de506354ec39ef4",
+      "status": "reviewed",
+      "translation": "仅改变首辐条角度"
+    },
+    "6/caption": {
+      "source_sha256": "93468ea24af9030e3b257e2945bf24d97eb45d540106ed985edee3c6f943705d",
+      "status": "reviewed",
+      "translation": "两个独立面板与一条真实关系"
+    },
+    "7/caption": {
+      "source_sha256": "c069776fd060bfa64ed3b8fb465d969dc7a03f51719eacce86a938d39d95ef00",
+      "status": "reviewed",
+      "translation": "长度与骨架"
+    },
+    "8/caption": {
+      "source_sha256": "bf0a619fdd4d602b37874c9bb68ac2c21c56be1af6ec6b1f9aa3d3138842eae8",
+      "status": "reviewed",
+      "translation": "已有注释与名称"
+    },
+    "9/caption": {
+      "source_sha256": "1be62acd46f2fb1e0bb757a63e4952bc2435fd0b39e2c7abe5017d43b7d8fac3",
+      "status": "reviewed",
+      "translation": "单一来源局部细节"
+    },
+    "10/caption": {
+      "source_sha256": "1898cd2c64e45d229a8425b6dea052ff55f3b33b009a1cf1b17de8947e8ff99e",
+      "status": "reviewed",
+      "translation": "HSP 两端共享细节图"
+    },
+    "11/caption": {
+      "source_sha256": "a4c7ad845d461aa85cb0d04587ab9058dec9e87d75d992034f7ba0d56a5627e2",
+      "status": "reviewed",
+      "translation": "两个独立来源细节面板"
+    },
+    "12/caption": {
+      "source_sha256": "1a203187da64c0ec651881864ecd2ac32e26f93c0c807be03d9c9542af095a35",
+      "status": "reviewed",
+      "translation": "已有真实字符的注册细节"
+    },
+    "13/caption": {
+      "source_sha256": "456349b3107a6d457a42d1253fc9302b8c1e9ddcf31b23faea81f1038ffda9de",
+      "status": "reviewed",
+      "translation": "显式毫米布局"
+    },
+    "14/caption": {
+      "source_sha256": "9b4e8c2b7a19ebc8678ecd6bfd9f1f1f8de7639f170d9529c7436f00bb116b01",
+      "status": "reviewed",
+      "translation": "多侧图例预算"
+    },
+    "15/caption": {
+      "source_sha256": "27e639ce515d46ea05f264178d3fe15de0a008bc297959403f54cefdac273e22",
+      "status": "reviewed",
+      "translation": "同一 HSP 的十二次有意展示"
+    },
+    "16/caption": {
+      "source_sha256": "f9dba462f51b5246574821ff678b3ef928894a3c1e2b93f050f2b542cf98ebb0",
+      "status": "reviewed",
+      "translation": "外层标题与图注"
+    },
+    "17/caption": {
+      "source_sha256": "d633ab84f6eb13cca3f21e1c6b1eeaaca1a2d88d7cd786302d4bcf4886449c3e",
+      "status": "reviewed",
+      "translation": "具有叶路径的嵌套细节"
+    },
+    "18/caption": {
+      "source_sha256": "b4d4c89e3c76fd06174b97a625fe97821b59985610adaa5fa33fd85f02416531",
+      "status": "reviewed",
+      "translation": "显式跨原点选区"
+    },
+    "19/caption": {
+      "source_sha256": "a25636146f52cbbaba10fd69a4b1c1410f87b6baa3331f2582e53ffd47acb02a",
+      "status": "reviewed",
+      "translation": "显式显示通道与障碍"
+    },
+    "20/caption": {
+      "source_sha256": "f500fde6f1b0bb594afd1f5b508033fba3e74ea1f07a8cdb5b7b9f30b42ce67f",
+      "status": "reviewed",
+      "translation": "独立中心图"
+    },
+    "21/caption": {
+      "source_sha256": "f5b080f6963b6abb7233f22c2c663fdce9e529c813b27ef5f6b89943443e2b3d",
+      "status": "reviewed",
+      "translation": "独立细节图"
+    },
+    "22/caption": {
+      "source_sha256": "e69d8d3c1470c9758db5b9dbe208442078a04af54132ced5b2bb68ae656a063e",
+      "status": "reviewed",
+      "translation": "重排后命名值仍修改 MT118296.1"
+    },
+    "23/caption": {
+      "source_sha256": "a941480beacdc309dd7b05c2f7c27a022b677996957550ebe82f99ffa0ba4dd7",
+      "status": "reviewed",
+      "translation": "重排后顺序值修改第二条显示序列 MT108731.1"
+    },
+    "24/caption": {
+      "source_sha256": "be52035cd70f657cdb1fb18c842f5434ff84592970a1232bfcf50f24144af6f9",
+      "status": "reviewed",
+      "translation": "OR222515.1 双链不对称偏移，OQ646790.1 保持单值规则"
+    },
+    "25/caption": {
+      "source_sha256": "1dd317b97477691483ba6cead3bdedeb95f2f825c191cd217dfe3d7a2b76afee",
+      "status": "reviewed",
+      "translation": "切换 Collinear 后保留连接、CDS 与特征名称"
+    },
+    "26/caption": {
+      "source_sha256": "ee2f46e7108f439a09fd8694b10cd07a4e1432c1b2e86ba799bc87761f938b38",
+      "status": "reviewed",
+      "translation": "100个真实碱基按每行50列换行显示"
+    },
+    "27/caption": {
+      "source_sha256": "01f3d9f785c34ca66b61f4a135c5199c8ad07eeaaa559e69a0bcd72fddb4133a",
+      "status": "reviewed",
+      "translation": "pUC19 骨架与九条参考特征"
+    }
+  }
+}

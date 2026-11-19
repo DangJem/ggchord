@@ -1,5 +1,5 @@
 <a id="moved"></a>
 
-## 章节已迁移 {#moved}
+## 本页已迁移 {#moved}
 
-[从已有 HSP 读取双轴点图](dotplot-start.md#dotplot)
+[序列比对点图](dotplot.md)

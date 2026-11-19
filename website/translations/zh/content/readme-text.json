@@ -1,0 +1,405 @@
+{
+  "source_sha256": "20afd96a32caa04db7908bdb19e14351b6fb15837a2b911a1dd7ea9cc227996f",
+  "strings": {
+    "title": {
+      "source_sha256": "3dae9df0bcd52f7b79153e9d60c16ec82d9899fcc87119dabe6c9dfdef8303a1",
+      "status": "reviewed",
+      "translation": "ggchord：序列、注释与关系"
+    },
+    "intro": {
+      "source_sha256": "6acce7b4e6f50f8c962980e6b54d47bd80b433a0d7cbe00485185030f5a4f44e",
+      "status": "reviewed",
+      "translation": "基于 ggplot2 的 R 可视化包：比较多序列关系、组织单序列注释、展示 HSP 比对，并组合全局与局部视图。"
+    },
+    "api-compatibility": {
+      "source_sha256": "f5d66fa1157c9bd0344a1f6f952e5e28441c06ea1874e9341cc09a605d1be59a",
+      "status": "reviewed",
+      "translation": "需要使用旧 API 的代码请选用 v0.29.0，从 v0.50.0 起，接口与旧版不兼容。"
+    },
+    "website": {
+      "source_sha256": "b5a229ac8becc6035511f432ca6018f581f0627233eada6ae8e12b505d44af7f",
+      "status": "reviewed",
+      "translation": "网站"
+    },
+    "manual": {
+      "source_sha256": "7d0a443704515f65f87329697c45dcd701baf49ce54ee0e2efbb69098d43ca11",
+      "status": "reviewed",
+      "translation": "使用说明"
+    },
+    "gallery": {
+      "source_sha256": "61dbfc53e3ccbc10b46c1d39f3d381d05d70e9db6da31026d454c42984007019",
+      "status": "reviewed",
+      "translation": "示例图集"
+    },
+    "issues": {
+      "source_sha256": "635ae219ad13dc7102f5c3238921479a443419e1d7ef03ebcaafefbf53e1e47e",
+      "status": "reviewed",
+      "translation": "问题反馈"
+    },
+    "modules": {
+      "source_sha256": "e8bf166304c98c1703afa44ab65b5c7e2e483668f7fe05dd10087dc416a39757",
+      "status": "reviewed",
+      "translation": "四个绘图模块"
+    },
+    "module": {
+      "source_sha256": "f148224ae44fb843af83a04ca8ce59812e45afe345f05530b6f6d5058c5c6d3f",
+      "status": "reviewed",
+      "translation": "模块"
+    },
+    "purpose": {
+      "source_sha256": "29ed5968ba86cc1eb9bfbd935027c528355213bff48d5c92286ee7fdf60d169f",
+      "status": "reviewed",
+      "translation": "主要用途"
+    },
+    "view": {
+      "source_sha256": "69c404591e99d86fd11f5ae1b15ebd246d4836aaa88a29f75f3f3d61c028357a",
+      "status": "reviewed",
+      "translation": "视图"
+    },
+    "multi": {
+      "source_sha256": "88412ae97cba238283e8414e2a01e37413e8422372879b7fbc2d03d44c7193e4",
+      "status": "reviewed",
+      "translation": "I · 多序列关系"
+    },
+    "multi-purpose": {
+      "source_sha256": "a4ccc5d290a23aa963b8699974e37fc32fe9c5c983c47cfecf175a12157cc304",
+      "status": "reviewed",
+      "translation": "比较序列区间、基因顺序与已有连接关系。"
+    },
+    "circular": {
+      "source_sha256": "0bf4abb6ecb0e8ab82555fdc1d1fe665725fa540bbf00f72eac22129997fab30",
+      "status": "reviewed",
+      "translation": "II · 单序列圆图"
+    },
+    "circular-purpose": {
+      "source_sha256": "f999aeac7fa9e8c363d897957c8f14be39da68e7e0cd7f2361d1919983086426",
+      "status": "reviewed",
+      "translation": "在一条序列上组织特征、引物和限制位点。"
+    },
+    "dotplot": {
+      "source_sha256": "de5beeb788cc39513dcfad236f687ce7ce0eae4300347bfaadf16f96d19c599f",
+      "status": "reviewed",
+      "translation": "III · HSP 点图"
+    },
+    "dotplot-purpose": {
+      "source_sha256": "f634ef8d4fc123d9f9b68367f6fc4445d680770042d9cbb26699f8de6f511063",
+      "status": "reviewed",
+      "translation": "在 query 与 subject 双轴上查看比对区间。"
+    },
+    "fusion": {
+      "source_sha256": "adca8a4b780b215d7d063e2a9982c4dda725a712c3a1b21013302e633ac61b12",
+      "status": "reviewed",
+      "translation": "IV · 多视图组合"
+    },
+    "fusion-purpose": {
+      "source_sha256": "7a469bbe38a33dbab003506998b099043541c4625390ac5aab51f360ce9277a1",
+      "status": "reviewed",
+      "translation": "用明确的来源区间连接独立图形。"
+    },
+    "grammar": {
+      "source_sha256": "fe046083a07eade7747cfebc8d3c4e62679a0240e63e30917e2ed4e60de90628",
+      "status": "reviewed",
+      "translation": "多序列模块包含四种 Coord；Circular、Dotplot 各有专属坐标系，Fusion 负责组合独立图形。图层、映射、标度、局部位置与主题各司其职，沿用 ggplot2 的绘图语法。"
+    },
+    "examples": {
+      "source_sha256": "f5e11e0faae6af4c275ea42eba1d7bf444725e4dbcfba9950830c1ddfcf94583",
+      "status": "reviewed",
+      "translation": "真实数据综合示例"
+    },
+    "chord-title": {
+      "source_sha256": "01d73a7c41c3148949a1942122ec737180de991704bee166426bbedc784ee6e1",
+      "status": "reviewed",
+      "translation": "Chord · 四条基因组的关系总览"
+    },
+    "chord-caption": {
+      "source_sha256": "a552e3982a329517842af596fb7e6aa3b1c47edafaa3580ef44c40e3bc8a957f",
+      "status": "reviewed",
+      "translation": "混合曲率骨架、保留真实链方向的 CDS 箭头、来源标签与 Identity 连接带组合展示。特征与 HSP 按显示需要从原始记录中选取。"
+    },
+    "chord-alt": {
+      "source_sha256": "2ca548651fde231dc72f0a884ee9323e559d01992d5b9a42a90fdfb189a99cfd",
+      "status": "reviewed",
+      "translation": "四条基因组的弦图旗舰：基因标签与比对连接带"
+    },
+    "linear-title": {
+      "source_sha256": "fddfc0dc0282cee7fa7169dbcf254d4bc9abc9575b77fbc9866269dccc2b1e48",
+      "status": "reviewed",
+      "translation": "Collinear · 顺序、方向与跨行连接"
+    },
+    "linear-caption": {
+      "source_sha256": "41a2e0ee924d41f7363114b1aa6ab455f0793df68b29b654ca039fd8d089b2f3",
+      "status": "reviewed",
+      "translation": "在共同的 bp 标尺下比较四条基因组，骨架两侧展示精选 CDS。跨越非相邻显示行的连接带使用虚线轮廓。"
+    },
+    "linear-alt": {
+      "source_sha256": "404ce816052f8f5fe4e550f7c36b8b59520c4a1fc7b24a3b819a629f1ba7ee30",
+      "status": "reviewed",
+      "translation": "四条基因组的共线性旗舰：分链基因与跨行连接带"
+    },
+    "circular-title": {
+      "source_sha256": "fef93c8f508ef947d3c1829fc16eef0aa2053dbb51a00be4c05f3fddc2a546fc",
+      "status": "reviewed",
+      "translation": "Circular · pETDuet-1 密集注释"
+    },
+    "circular-caption": {
+      "source_sha256": "d771af9c63ca69ca8d09566347c613e85d05106d10d6b55441704f13bbd7a78d",
+      "status": "reviewed",
+      "translation": "完整圆图包含 20 个特征、5 个参考引物，以及声明酶集合中的 58 个合并切点位置。序列位置与注释身份均来自原始输入。"
+    },
+    "circular-alt": {
+      "source_sha256": "295100eed3cb32bbe665f1174cf726f7b9e18cc6264479894505ed1ce43a36cf",
+      "status": "reviewed",
+      "translation": "pETDuet-1 圆图旗舰：完整特征、引物与限制位点"
+    },
+    "case": {
+      "source_sha256": "9e46ca429e2e480ce9c88117ae767fb55aa8dd6bd739c60f048b7b51e6909b51",
+      "status": "reviewed",
+      "translation": "完整案例"
+    },
+    "four-views": {
+      "source_sha256": "b2efb8e11d2ac19487f9d21475b6ba9dd93f59134cd172e43e1d40eee95b16be",
+      "status": "reviewed",
+      "translation": "四种关系视图转换"
+    },
+    "plot-source": {
+      "source_sha256": "35e8495b3208f43b62d316d8a08013fbfbbff551116e5cbfb876784bedb8df9e",
+      "status": "reviewed",
+      "translation": "绘图源码"
+    },
+    "layout": {
+      "source_sha256": "0be9c829dfb648a00ec5fb1b1f88247e458c998c1fa334e03de5b84fcf366c55",
+      "status": "reviewed",
+      "translation": "对齐与排列"
+    },
+    "reference-maps": {
+      "source_sha256": "eec048e596b16ffcdcb65cd0ac4592b5bc1e0ac6df2bfe4202ae218c02fc76dd",
+      "status": "reviewed",
+      "translation": "13 个完整参考图"
+    },
+    "more-views": {
+      "source_sha256": "21866e70d43707897f91b3d7adac2652080b72a78a6ebe1a3c8f9e16ef603504",
+      "status": "reviewed",
+      "translation": "HSP 矩阵与多视图组合"
+    },
+    "dotplot-alt": {
+      "source_sha256": "3e27189d06d44e641f97ae3d097158fa218b78f1ea276cc3d11c8cb4a2cb8b92",
+      "status": "reviewed",
+      "translation": "四序列、32 条原始 HSP 的双轴矩阵"
+    },
+    "fusion-alt": {
+      "source_sha256": "466445920b3be6b2fd86ade4a9b2fc175cdb6a49c15239da3e54596ee8c04494",
+      "status": "reviewed",
+      "translation": "连接 Chord、Collinear、Radial 与局部放大的组合图"
+    },
+    "dotplot-caption": {
+      "source_sha256": "e37e1d818c1be74269e0ddd436b08d2f6a03e5b8f6d3ff5f6ff0aefccf66e018",
+      "status": "reviewed",
+      "translation": "32 条原始 HSP；颜色表示 Identity，线宽表示原记录中的比对长度。"
+    },
+    "fusion-caption": {
+      "source_sha256": "6bdbe2cd4798be29c77218d93362d867f1a00bf536fd5c78a8107a228c39ace2",
+      "status": "reviewed",
+      "translation": "在同一组合中关联全局关系、共线性比较与来源区间的局部放大。"
+    },
+    "dotplot-guide": {
+      "source_sha256": "bfb1fc1ae841b7db4962192dcdb143f910db3d62692d89356f7787a925384ee8",
+      "status": "reviewed",
+      "translation": "双轴、方向与映射 →"
+    },
+    "fusion-guide": {
+      "source_sha256": "97844174c799e057a4998cafde09a6b024e04b31e54be7caa5a1dc912c741ba2",
+      "status": "reviewed",
+      "translation": "局部放大与字符细节 →"
+    },
+    "source-note": {
+      "source_sha256": "c149e474c9aa7c2e6eb9d685f0ca07faee456c10878b51ae667a8221931db91d",
+      "status": "reviewed",
+      "translation": "图像的输入、显示选择与绘图定义均可追溯："
+    },
+    "source-inputs": {
+      "source_sha256": "dc3ca68538d9224a89c56a31f779289424e810f865bb4409f440eefe54ceb564",
+      "status": "reviewed",
+      "translation": "输入文件"
+    },
+    "source-figures": {
+      "source_sha256": "e7b2a30ccabaf54893ad7deade0057343df6650118ee47c91a0200e4902d5d00",
+      "status": "reviewed",
+      "translation": "Dotplot / Fusion 源码"
+    },
+    "source-attribution": {
+      "source_sha256": "299d7ef486bfb74376d919755d40a1538d57ad62c796875efdf6526e0afde49d",
+      "status": "reviewed",
+      "translation": "数据来源与归属"
+    },
+    "installation": {
+      "source_sha256": "c3fc54aa5390dc2c333d4bb596a339d552ad787337c1fdaac3957ca5a7facf50",
+      "status": "reviewed",
+      "translation": "安装"
+    },
+    "optional-deps": {
+      "source_sha256": "47ba71a5be2df91d6712d50c5cd289f67c283d3a905708eac2bda058bd5b6147",
+      "status": "reviewed",
+      "translation": "下面的最小示例只需加载 ggchord。完整数据整理示例会在代码旁声明 dplyr、purrr、tidyr 等可选依赖。"
+    },
+    "quick-start": {
+      "source_sha256": "03a453b92c7a804ad58f69f7de6ce39f8da4aa1638303f50eb0f3ceb7d273a22",
+      "status": "reviewed",
+      "translation": "绘制第一张图"
+    },
+    "quick-intro": {
+      "source_sha256": "c9c34091972a2ed19177b85c0d634de4834e6182eee227a039bb696446cfc895",
+      "status": "reviewed",
+      "translation": "使用随包表格绘制序列骨架、比对连接带和序列名称，无需下载文件或运行比对程序。"
+    },
+    "quick-note": {
+      "source_sha256": "0544de78a6ab1ca0d9e9c99ca976c39179a4190cde60764fa677ac0f9f00a868",
+      "status": "reviewed",
+      "translation": "这段最小示例展示图层组合方式。上方综合图进一步加入了对应的来源注释、显示选择和样式。"
+    },
+    "output": {
+      "source_sha256": "4dece8cdf01a2606c1566f058322792909809d833d29809a81b2484235590880",
+      "status": "reviewed",
+      "translation": "预览与保存"
+    },
+    "output-intro": {
+      "source_sha256": "15cd777f5206d760d484f2d8b6f5c8d1dd683b73223694f17c6311ca92dbfb82",
+      "status": "reviewed",
+      "translation": "按相同的明确宽高预览并保存，让标签按预定成图尺寸排布。"
+    },
+    "inspiration-grammar": {
+      "source_sha256": "3602e76d920c1e698d6e19bf29ec8bd9919f1f25e7317c76e6b220a89ef68bc6",
+      "status": "reviewed",
+      "translation": "提供分层绘图语法，以及映射、标度、图例、几何、坐标与主题的职责划分。ggchord 沿用这一模型，让用户组合独立图层，并使用自己的标度和样式。"
+    },
+    "inspiration-naming": {
+      "source_sha256": "7832f9cbf852c28d2690177b13fb57c915ea7a983202174800326f196c9fd10b",
+      "status": "reviewed",
+      "translation": "为紧凑的 query/subject 字段命名提供参照，便于追踪比对记录、端点与序列标识。绘图读取已有结果，不在绘图阶段运行比对程序。"
+    },
+    "inspiration-circular": {
+      "source_sha256": "c150deb153d60bf800a8d3a2b9634bf40cfcc8b32a979c522e9e677029654e45",
+      "status": "reviewed",
+      "translation": "Circos 为环形信息层级和连接带表达提供设计参照；circlize 用于多轨道与显式 track/ring 契约的能力比较。"
+    },
+    "inspiration-synteny": {
+      "source_sha256": "06c939c5aa7f501b06374034d05c153d1a2e1856e28d6cc63ceb0180370b2eb4",
+      "status": "reviewed",
+      "translation": "为保留链方向的基因箭头、基因簇比较和直线共线性提供清晰范例，帮助协调序列方向、特征位置与连接关系的表达。"
+    },
+    "inspiration-features": {
+      "source_sha256": "67f4b59e7071a027d0b4da06d34cd5032490394baec35b92d54cb368a8dab194",
+      "status": "reviewed",
+      "translation": "为可读的特征注释、拥挤标签处理和局部特征布局提供参照，帮助明确标签与其来源区间之间的对应关系。"
+    },
+    "inspiration-preview": {
+      "source_sha256": "c62bb511ed50eed0ad43c95fa487ed90083db2c1ee6a1ede16061293e3dd8736",
+      "status": "reviewed",
+      "translation": "为按预定导出尺寸检查静态图形提供流程参照。ggchord 用 view_ggchord() 进行指定尺寸预览，用标准 ggsave() 保存。"
+    },
+    "license": {
+      "source_sha256": "cc1d3b0234846714b0aeda6cc34b057b4305bb83dd447fb88f816efeb59a4e96",
+      "status": "reviewed",
+      "translation": "许可证"
+    },
+    "radial-title": {
+      "source_sha256": "113b5b228a9c8397fc04c6412df0c078d693aed67c84e2e11ad5bbb93e3b0838",
+      "status": "reviewed",
+      "translation": "Radial · 径向辐条上的共线性"
+    },
+    "radial-caption": {
+      "source_sha256": "412008048a56368af57eade272adaea8e93470341ff162f0be2b13a485986510",
+      "status": "reviewed",
+      "translation": "从弦图旗舰复用来源准备与精选特征，改用径向辐条骨架展示区间关系；序列身份与原生位置保持可追溯。"
+    },
+    "radial-alt": {
+      "source_sha256": "a86b179a58c5d2ca3070448470207dc29edad6ab4d9453ebec89c9d997faf31f",
+      "status": "reviewed",
+      "translation": "从四基因组弦图派生的 Radial 旗舰"
+    },
+    "sankey-title": {
+      "source_sha256": "58f5b066d4292ca992c518a96914794efc66ed7802ce7af88e4783fd8419ddf8",
+      "status": "reviewed",
+      "translation": "Sankey · 镜像双列中的来源区间"
+    },
+    "sankey-caption": {
+      "source_sha256": "86ed8be874b057ab72c591eb2e0ebaf77f9985823b53db30867aa95936707c48",
+      "status": "reviewed",
+      "translation": "从共线性旗舰派生，保留对应的精选基因与 HSP。序列镜像排列在两列中，连接带表示已有区间关系，带宽不代表守恒流量。"
+    },
+    "sankey-alt": {
+      "source_sha256": "574807b3bac2fc6c48b8f9210e54c7f80a8531c4a334ee1bec1c7244cb6d0071",
+      "status": "reviewed",
+      "translation": "从四基因组共线性图派生的 Sankey 旗舰"
+    },
+    "inspiration-grammar-title": {
+      "source_sha256": "8c762fb5716e285b82afd8a54895421e97c4d06d317299eb24d1e6175b7a4694",
+      "status": "reviewed",
+      "translation": "绘图语法与序列关系表达"
+    },
+    "inspiration-features-title": {
+      "source_sha256": "077d0bb08506285071fe3c7c91d8dbad8b636b19737d59eb89a8730e93cb0abd",
+      "status": "reviewed",
+      "translation": "基因箭头、注释布局与局部比较"
+    },
+    "inspiration-genomes": {
+      "source_sha256": "199e1098cd7f8616eaf16f3245f03f9c19978eb4970b76d72a12f1fd6960b2e1",
+      "status": "reviewed",
+      "translation": "为 tidy 多表输入、focus/sync 工作流、特征堆叠、局部锚定与局部显示翻转提供参照，帮助区分数据整理和显示选择的职责。"
+    },
+    "inspiration-detail-title": {
+      "source_sha256": "67ea683961e786692551ecde2527c5fa93415d338ec9737c128bc11f6b55d714",
+      "status": "reviewed",
+      "translation": "局部放大、对齐字符与图形预览"
+    },
+    "inspiration-magnify": {
+      "source_sha256": "43fe0b19244c252950792599b578846f4191e76681606c9c7c709ccb9ee41997",
+      "status": "reviewed",
+      "translation": "为整体图与局部放大图之间的关联表达提供参照。ggchord 围绕明确的来源区间和独立注册的序列视图发展这一表达方式。"
+    },
+    "inspiration-alignment": {
+      "source_sha256": "3551e5c36557d8e25bfb75c59f34254615621281baba01cb1f1c362c20446026",
+      "status": "reviewed",
+      "translation": "v0.20.0 将其列为字符视图调研对象；v0.28.0 进一步实际核对其残基格和化学性质配色，并用于 geom_residue() 的紧凑背景与默认颜色标度。保留独立字形绘制、真实坐标注册和用户标度优先规则。"
+    },
+    "inspiration-columns": {
+      "source_sha256": "c584c0e7ebb32a25820e23c7986f8d7dbbdab90776c145ece8cd7162ca86c949",
+      "status": "reviewed",
+      "translation": "[ggseqalign](https://www.bioconductor.org/packages/release/bioc/html/ggseqalign.html)、[ggseqlogo](https://omarwagih.github.io/ggseqlogo/)、[Jalview](https://www.jalview.org/help/html/features/annotation.html) 和 [ESPript](https://espript.ibcp.fr/ESPript/ESPript/) 仅列为对齐字符、序列 logo、列注释或静态输出的调研比较对象；当前未实现这些工具的集成、logo、共识或保守性图层。历史记录不足以证明它们分别影响了现有布局算法。"
+    },
+    "inspiration-title": {
+      "source_sha256": "9b69105a3809f390df6512658fbc1aba2f0eef92f62f8add7eaa86898dbdb19a",
+      "status": "reviewed",
+      "translation": "设计灵感来源"
+    },
+    "inspiration-intro": {
+      "source_sha256": "0ccfc54f513c438fecbe045316297ffcd1f52205004bd9aa9b2ee505ec20d441",
+      "status": "reviewed",
+      "translation": "以下条目区分已记录并落实到设计的参考，以及仅用于能力调研的项目。具体依据见[设计来源核对](tools/site-audit/design-inspiration.md)。"
+    },
+    "get-started": {
+      "source_sha256": "61e8d44ad423a4a0951b21b9d11440a1c23a881fe79335c367f63be251c64800",
+      "status": "reviewed",
+      "translation": "开始使用"
+    },
+    "install-cran": {
+      "source_sha256": "31367e85c57711eb2b46f6d83ddc34965d816df3226b33bad4291b4cf74e4266",
+      "status": "reviewed",
+      "translation": "从 [CRAN](https://CRAN.R-project.org/package=ggchord) 安装稳定版："
+    },
+    "install-development": {
+      "source_sha256": "d7369163380b508bcaef60da4a36722bcc37edd654ae188e050680bae3b9c0ff",
+      "status": "reviewed",
+      "translation": "从 GitHub 安装指定的 v0.29.0 正式版："
+    },
+    "circular-reference": {
+      "source_sha256": "2d16ec61142a5662ebd82227d4af8ee67784abd21a81d812f533884259ebdc9b",
+      "status": "reviewed",
+      "translation": "对照 pETDuet-1 参考图"
+    },
+    "dense-figure-source": {
+      "source_sha256": "05dd80f4ce6fc9d15dcf34fff424ee2da8b8b43caeedb0c4d365cc54ac705cac",
+      "status": "reviewed",
+      "translation": "上方密集注释图代码"
+    }
+  }
+}

@@ -1,5 +1,5 @@
 <a id="moved"></a>
 
-## Section moved {#moved}
+## This page has moved {#moved}
 
-[Adjust individual backbones](chord-geometry.md#orientation)
+[Chord example](chord.md)

@@ -1,0 +1,532 @@
+[
+  {
+    "task": {
+      "en": "Change backbone style"
+    },
+    "api": "geom_seq",
+    "parameters": "seq_style, seq_backbone_gap, seq_backbone_width",
+    "modes": "A / B / C",
+    "page": "circular-layout#style",
+    "level": "basics"
+  },
+  {
+    "task": {
+      "en": "Set radii and curvature"
+    },
+    "api": "geom_seq",
+    "parameters": "seq_radius, seq_curvature",
+    "modes": "A",
+    "page": "chord-geometry",
+    "level": "advanced"
+  },
+  {
+    "task": {
+      "en": "Order and orient sequences"
+    },
+    "api": "layout_sequences",
+    "parameters": "order, orientation",
+    "modes": "A / B",
+    "page": "chord-geometry",
+    "level": "advanced"
+  },
+  {
+    "task": {
+      "en": "Route links around features"
+    },
+    "api": "geom_link_ribbon",
+    "parameters": "link_ctrl_point, link_gap, link_avoid",
+    "modes": "A / B",
+    "page": "multi-sequence-links#control",
+    "level": "advanced"
+  },
+  {
+    "task": {
+      "en": "Connect points with arrows"
+    },
+    "api": "geom_link_line",
+    "parameters": "link_type, qpos/spos, arrow",
+    "modes": "A / B",
+    "page": "multi-sequence-links#point-links",
+    "level": "advanced"
+  },
+  {
+    "task": {
+      "en": "Change gene arrow shapes"
+    },
+    "api": "geom_feature",
+    "parameters": "preset = gene, arrow_head_style, short_feature",
+    "modes": "A / B / C (bp)",
+    "page": "feature-geometry#arrow-heads",
+    "level": "advanced"
+  },
+  {
+    "task": {
+      "en": "Highlight an interval"
+    },
+    "api": "geom_seq_region",
+    "parameters": "region_side, region_width, region_offset",
+    "modes": "A / B / C",
+    "page": "multi-sequence-links#control",
+    "level": "advanced"
+  },
+  {
+    "task": {
+      "en": "Colour by identity"
+    },
+    "api": "scale_ribbon_fill_stepsn",
+    "parameters": "ribbon_fill",
+    "modes": "A / B",
+    "page": "styling#roles",
+    "level": "basics"
+  },
+  {
+    "task": {
+      "en": "Use categories and legends"
+    },
+    "api": "scale_seq_colour_manual",
+    "parameters": "values, guide",
+    "modes": "A / B / C",
+    "page": "styling",
+    "level": "advanced"
+  },
+  {
+    "task": {
+      "en": "Filter, deduplicate and merge HSPs"
+    },
+    "api": "filter_ggchord_ribbons",
+    "parameters": "min_pident, min_length",
+    "modes": "A / B",
+    "page": "ribbons",
+    "level": "advanced"
+  },
+  {
+    "task": {
+      "en": "Summarize link density"
+    },
+    "api": "stat_ribbon_density",
+    "parameters": "bins, weight",
+    "modes": "A / B",
+    "page": "ribbons#statistics-density",
+    "level": "advanced"
+  },
+  {
+    "task": {
+      "en": "Bundle existing links"
+    },
+    "api": "stat_ribbon_bundle",
+    "parameters": "min_bundle, group_by",
+    "modes": "A / B",
+    "page": "ribbons#statistics-bundle",
+    "level": "advanced"
+  },
+  {
+    "task": {
+      "en": "Align sequences left, center or right"
+    },
+    "api": "coord_collinear",
+    "parameters": "align",
+    "modes": "B",
+    "page": "collinear-layout#alignment",
+    "level": "basics"
+  },
+  {
+    "task": {
+      "en": "Anchor to common loci"
+    },
+    "api": "coord_collinear",
+    "parameters": "anchor",
+    "modes": "B",
+    "page": "collinear-layout#anchor",
+    "level": "advanced"
+  },
+  {
+    "task": {
+      "en": "Choose display directions automatically"
+    },
+    "api": "coord_collinear",
+    "parameters": "orientation, min_support",
+    "modes": "B",
+    "page": "collinear-layout#orientation",
+    "level": "advanced"
+  },
+  {
+    "task": {
+      "en": "Connect nonadjacent rows"
+    },
+    "api": "geom_link_ribbon",
+    "parameters": "adjacent_only, pairs, nonadjacent_linewidth",
+    "modes": "B",
+    "page": "multi-sequence-links#routes",
+    "level": "advanced"
+  },
+  {
+    "task": {
+      "en": "Show local windows and breaks"
+    },
+    "api": "segment_ggchord_data",
+    "parameters": "windows; coord_collinear: segments, segment_gap",
+    "modes": "B",
+    "page": "views#segments",
+    "level": "advanced"
+  },
+  {
+    "task": {
+      "en": "Draw a fixed-length scale bar"
+    },
+    "api": "geom_seq_scale",
+    "parameters": "length, location, offset",
+    "modes": "B",
+    "page": "collinear-layout#gap",
+    "level": "advanced"
+  },
+  {
+    "task": {
+      "en": "Rotate a circular view"
+    },
+    "api": "coord_circular",
+    "parameters": "rotation, direction, gap, fit",
+    "modes": "C",
+    "page": "circular-layout#style",
+    "level": "basics"
+  },
+  {
+    "task": {
+      "en": "Stack feature annotations"
+    },
+    "api": "position_feature_stack",
+    "parameters": "spacing, side, base_position",
+    "modes": "A / B / C",
+    "page": "annotations",
+    "level": "advanced"
+  },
+  {
+    "task": {
+      "en": "Arrange feature labels automatically"
+    },
+    "api": "geom_feature_label",
+    "parameters": "placement = repel, label_layout, overflow, label_min_size",
+    "modes": "A / B / C (conditional)",
+    "page": "labels",
+    "level": "advanced"
+  },
+  {
+    "task": {
+      "en": "Find primer bindings"
+    },
+    "api": "find_primer_bindings",
+    "parameters": "set, circular",
+    "modes": "DNA",
+    "page": "primers#input",
+    "level": "advanced"
+  },
+  {
+    "task": {
+      "en": "Draw primers and labels"
+    },
+    "api": "geom_primer",
+    "parameters": "position",
+    "modes": "C (bp)",
+    "page": "primers#primer-arcs",
+    "level": "advanced"
+  },
+  {
+    "task": {
+      "en": "Search and filter restriction sites"
+    },
+    "api": "find_restriction_sites",
+    "parameters": "methylation, enzymes",
+    "modes": "DNA",
+    "page": "recognition#restriction",
+    "level": "advanced"
+  },
+  {
+    "task": {
+      "en": "Adjust restriction label leaders"
+    },
+    "api": "geom_restriction_site",
+    "parameters": "leader, label_style, label_side",
+    "modes": "C (bp)",
+    "page": "restriction-sites#restriction-labels",
+    "level": "advanced"
+  },
+  {
+    "task": {
+      "en": "Draw GC bars and lines"
+    },
+    "api": "geom_track_col",
+    "parameters": "track_value, baseline",
+    "modes": "A / B / C",
+    "page": "tracks",
+    "level": "advanced"
+  },
+  {
+    "task": {
+      "en": "Draw a tile colour band"
+    },
+    "api": "geom_track_tile",
+    "parameters": "track_fill, position",
+    "modes": "A / B / C",
+    "page": "tracks",
+    "level": "advanced"
+  },
+  {
+    "task": {
+      "en": "Set track width and order"
+    },
+    "api": "track_band",
+    "parameters": "id, side, order, width, gap",
+    "modes": "A / B / C",
+    "page": "tracks",
+    "level": "advanced"
+  },
+  {
+    "task": {
+      "en": "Import FASTA, GFF3 and alignments"
+    },
+    "api": "read_fasta_lengths",
+    "parameters": "sequence_unit",
+    "modes": "general",
+    "page": "formats",
+    "level": "basics"
+  },
+  {
+    "task": {
+      "en": "Plot native protein comparisons"
+    },
+    "api": "ggchord",
+    "parameters": "seq_data: sequence_unit",
+    "modes": "A / B (aa)",
+    "page": "protein-alignments",
+    "level": "advanced"
+  },
+  {
+    "task": {
+      "en": "Preview and export publication figures"
+    },
+    "api": "view_ggchord",
+    "parameters": "width, height, units",
+    "modes": "general",
+    "page": "output",
+    "level": "basics"
+  },
+  {
+    "task": {
+      "en": "Diagnose and export layout"
+    },
+    "api": "export_ggchord_layout",
+    "parameters": "plot",
+    "modes": "general",
+    "page": "faq",
+    "level": "advanced"
+  },
+  {
+    "task": {
+      "en": "Share a trunk at equal endpoints"
+    },
+    "api": "geom_link_ribbon",
+    "parameters": "link_branch, link_branch_fraction",
+    "modes": "A / B",
+    "page": "multi-sequence-links#branches",
+    "level": "advanced"
+  },
+  {
+    "task": {
+      "en": "Style centre names and lengths"
+    },
+    "api": "geom_seq_center_label",
+    "parameters": "name, length, separator, name_style, length_style",
+    "modes": "C",
+    "page": "circular-layout#center",
+    "level": "advanced"
+  },
+  {
+    "task": {
+      "en": "Set fixed label direction and side"
+    },
+    "api": "geom_feature_label",
+    "parameters": "label_orientation, label_side, label_rotation",
+    "modes": "A / B / C",
+    "page": "circular-labels#fixed-labels",
+    "level": "advanced"
+  },
+  {
+    "task": {
+      "en": "Fit or abbreviate automatic labels"
+    },
+    "api": "geom_feature_label",
+    "parameters": "placement = repel, overflow, label_max_lines, external",
+    "modes": "A / B / C",
+    "page": "circular-labels#fitting",
+    "level": "advanced"
+  },
+  {
+    "task": {
+      "en": "Choose continuous and binned role scales"
+    },
+    "api": "scale_ribbon_fill_gradientn",
+    "parameters": "colours, values, limits, guide",
+    "modes": "A / B",
+    "page": "scale-families",
+    "level": "advanced"
+  },
+  {
+    "task": {
+      "en": "Inspect windows and built-in catalogs"
+    },
+    "api": "diagnose_ggchord",
+    "parameters": "plot, width, height; catalog: aliases",
+    "modes": "general",
+    "page": "workflows#tools",
+    "level": "advanced"
+  },
+  {
+    "task": {
+      "en": "Locate every API section"
+    },
+    "api": "ggchord",
+    "parameters": "all exported APIs",
+    "modes": "general",
+    "page": "api-curriculum",
+    "level": "advanced"
+  },
+  {
+    "task": {
+      "en": "Find parameter types and full defaults"
+    },
+    "api": "ggchord",
+    "parameters": "all public formals",
+    "modes": "general",
+    "page": "parameter-atlas",
+    "level": "advanced"
+  },
+  {
+    "task": {
+      "en": "Count source-position observations"
+    },
+    "api": "geom_track",
+    "parameters": "geom, stat, track, position",
+    "modes": "A / B / C / Sankey",
+    "page": "tracks-statistics#tracks",
+    "level": "advanced"
+  },
+  {
+    "task": {
+      "en": "Route repeated sequence instances"
+    },
+    "api": "geom_link_ribbon",
+    "parameters": "between, allow_repeated",
+    "modes": "A / B",
+    "page": "instances#instances",
+    "level": "advanced"
+  },
+  {
+    "task": {
+      "en": "Draw mirrored interval relationships"
+    },
+    "api": "coord_sankey",
+    "parameters": "column_gap, self_links",
+    "modes": "Sankey",
+    "page": "sankey#sankey",
+    "level": "advanced"
+  },
+  {
+    "task": {
+      "en": "Show HSPs on independent axes"
+    },
+    "api": "coord_dotplot",
+    "parameters": "x_seqs, y_seqs, x_orientation, y_orientation",
+    "modes": "Dotplot",
+    "page": "dotplot-start#dotplot",
+    "level": "advanced"
+  },
+  {
+    "task": {
+      "en": "Retain four alignment endpoints"
+    },
+    "api": "geom_alignment_segment",
+    "parameters": "mapping, data, allow_repeated",
+    "modes": "Dotplot",
+    "page": "dotplot-start#dotplot",
+    "level": "advanced"
+  },
+  {
+    "task": {
+      "en": "Draw cyclic radial synteny"
+    },
+    "api": "coord_radial_synteny",
+    "parameters": "start_angle, clockwise, inner_radius",
+    "modes": "Radial",
+    "page": "radial-synteny#radial",
+    "level": "advanced"
+  },
+  {
+    "task": {
+      "en": "Compose source-anchored views"
+    },
+    "api": "ggchord_fusion",
+    "parameters": "center, center_size, layout",
+    "modes": "Fusion",
+    "page": "fusion-routing#intervals",
+    "level": "advanced"
+  },
+  {
+    "task": {
+      "en": "Connect real intervals across panels"
+    },
+    "api": "fusion_ribbon",
+    "parameters": "data, qpanel, spanel, gradient, tip",
+    "modes": "Fusion",
+    "page": "fusion-routing#intervals",
+    "level": "advanced"
+  },
+  {
+    "task": {
+      "en": "Audit composition sources and physical anchors"
+    },
+    "api": "export_ggchord_fusion",
+    "parameters": "width, height",
+    "modes": "Fusion",
+    "page": "fusion-routing#export",
+    "level": "advanced"
+  },
+  {
+    "task": {
+      "en": "Import paired BED intervals"
+    },
+    "api": "read_bedpe",
+    "parameters": "file, files, source_file, unmapped",
+    "modes": "Input",
+    "page": "import-intervals#bedpe",
+    "level": "advanced"
+  },
+  {
+    "task": {
+      "en": "Show actual characters and gaps from an alignment"
+    },
+    "api": "geom_residue",
+    "parameters": "mapping, overflow, size",
+    "modes": "Cartesian aligned excerpts",
+    "page": "aligned-sequences#aligned-characters",
+    "level": "advanced"
+  },
+  {
+    "task": {
+      "en": "Look up source positions and alignment columns"
+    },
+    "api": "map_alignment_position",
+    "parameters": "data, accver, position, inverse",
+    "modes": "DNA / RNA / AA",
+    "page": "aligned-sequences#aligned-source",
+    "level": "advanced"
+  },
+  {
+    "task": {
+      "en": "Connect a genomic region to its independently rebuilt detail"
+    },
+    "api": "magnify_ggchord",
+    "parameters": "region, detail_plot, side, connector",
+    "modes": "Circular / Chord + Collinear",
+    "page": "fusion-details#magnify",
+    "level": "advanced"
+  }
+]

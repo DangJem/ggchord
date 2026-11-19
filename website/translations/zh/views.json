@@ -1,0 +1,15 @@
+{
+  "source_sha256": "a3651a03262b04e4f073162631fb33e0dc0e28397ea903efcb54e7739206923b",
+  "blocks": {
+    "1": {
+      "source_sha256": "78f3b751cc6a81f151c97d45744da2989fa25c9ea71a757fa0548ec3895c1028",
+      "status": "reviewed",
+      "translation": "## 本页已迁移 {#moved}\n"
+    },
+    "2": {
+      "source_sha256": "e899ec61d5d68fc483d6adc07031b860f718aa7a192f8650c9def0f81adaaef0",
+      "status": "reviewed",
+      "translation": "[蛋白—基因组坐标投影](projection.md)\n"
+    }
+  }
+}

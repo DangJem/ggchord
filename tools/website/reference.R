@@ -10,6 +10,46 @@ reference_files <- unlist(lapply(reference_sections, '[[', 'files'), use.names =
 stopifnot(!anyDuplicated(reference_files),
           setequal(reference_files, tools::file_path_sans_ext(basename(topic_files))))
 
+# Parameter names are scoped to the function whose public result was checked.
+flexible_parameters <- jsonlite::fromJSON("website/flexible-parameters.json",
+                                          simplifyVector = FALSE)
+
+mark_flexible_parameters <- function(main, topic, lang) {
+  parameters <- flexible_parameters[[topic]]
+
+  zh <- identical(lang, "zh")
+  kinds <- c(sequence = if (zh) "按序列" else "by sequence",
+             strand = if (zh) "按序列或链" else "by sequence or strand",
+             `strand-offset` = if (zh) "按序列或链" else "by sequence or strand",
+             `fixed-label` = if (zh) "固定布局按序列或链" else "by sequence or strand for fixed labels",
+             band = if (zh) "逐序列原生尺寸" else "native dimensions by sequence")
+  anchors <- c(sequence = "scalar", strand = "width", `strand-offset` = "strand",
+               `fixed-label` = "scope", band = "scope")
+  found <- character()
+  for (term in xml2::xml_find_all(main, ".//dt[starts-with(@id, 'arg-')]")) {
+    arguments <- trimws(strsplit(trimws(xml2::xml_text(term)), ",", fixed = TRUE)[[1]])
+    for (argument in arguments) {
+      xml2::xml_add_child(term, "span", id = paste0("parameter-", argument), class = "argument-anchor")
+    }
+    marked <- intersect(arguments, names(parameters))
+    if (!length(marked)) next
+    # Grouped Rd entries share a note only if all arguments share its contract.
+    stopifnot(setequal(arguments, marked))
+    kind <- unique(unlist(parameters[marked], use.names = FALSE))
+    stopifnot(length(kind) == 1L, kind %in% names(kinds))
+    description <- xml2::xml_find_first(term, "following-sibling::dd[1]")
+    note <- xml2::xml_add_child(description, "p", class = "flexible-parameter")
+    xml2::xml_add_child(note, "a", if (zh) "灵活参数" else "Flexible parameter",
+                        href = paste0("../parameters.html#", anchors[[kind]]))
+    xml2::xml_add_child(note, "span", paste0(" · ", kinds[[kind]]))
+    found <- c(found, marked)
+  }
+  if (!setequal(found, names(parameters))) {
+    stop("Missing documented arguments in ", topic, ": ",
+         paste(setdiff(names(parameters), found), collapse = ", "))
+  }
+}
+
 add_reference_navigation <- function(doc, main, slug, lang) {
   zh <- lang == 'zh'
   label <- if (zh) 'API 参考' else 'API reference'
@@ -44,6 +84,7 @@ add_reference_navigation <- function(doc, main, slug, lang) {
     xml2::xml_add_child(filter, 'output', id = 'reference-filter-count', 'aria-live' = 'polite')
     return(invisible())
   }
+  mark_flexible_parameters(main, slug, lang)
   section <- Filter(function(section) slug %in% section$files, reference_sections)[[1L]]
   idx <- match(slug, section$files)
   nearby <- head(order(abs(seq_along(section$files) - idx))[-1L], 3L)
@@ -60,6 +101,6 @@ add_reference_navigation <- function(doc, main, slug, lang) {
                       href = paste0('index.html#', section$id))
   if (slug == 'ggchord_api_contract') {
     item <- xml2::xml_add_child(links, 'li')
-    xml2::xml_add_child(item, 'a', if (zh) '接口迁移' else 'API migration', href = '../migration.html')
+    xml2::xml_add_child(item, 'a', if (zh) '版本选择' else 'Version choice', href = '../migration.html')
   }
 }

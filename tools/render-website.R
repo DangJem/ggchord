@@ -39,9 +39,10 @@ for (lang in languages) {
   # Localized category titles; topic bindings remain the exact source names.
   source <- yaml::read_yaml('_pkgdown.yml')
   for (section in source$reference) {
-    original <- paste(section$title_zh, section$desc_zh, sep = "\n")
+    original <- paste(section$title, section$desc, sep = "\n")
     if (!identical(digest::digest(original, algo = "sha256", serialize = FALSE),
-                   section$source_sha256) || !nzchar(section$title) || !nzchar(section$desc)) {
+                   section$source_sha256) || !isTRUE(nzchar(section$title_zh)) ||
+        !isTRUE(nzchar(section$desc_zh))) {
       stop("Missing or stale reference section translation: ", section$id)
     }
   }

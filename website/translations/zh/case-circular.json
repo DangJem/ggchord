@@ -1,0 +1,45 @@
+{
+  "source_sha256": "1a65bcae40e157555a9f6b467ffd3889a918bf6e42992b9ebb7b846d397d3376",
+  "blocks": {
+    "0": {
+      "source_sha256": "07cb57b087f9394823a588ff844f752cf79999d417c8843f5ff35f6a97b76de3",
+      "status": "reviewed",
+      "translation": "这是首页圆图预览所链接的完整 pUC19 图。它将来源注释与酶切位点共同放在 2,686 bp 的双线骨架上。\n"
+    },
+    "2": {
+      "source_sha256": "647b1b27743b54f4a06675810939d0090818b00090dc7c72159ff29cd2eee532",
+      "status": "reviewed",
+      "translation": "## 绘制完整图 {#map}\n"
+    },
+    "3": {
+      "source_sha256": "f731c4ea41fc696bced50b93e25348b0983418574de8ae73f0a0d16daa1aa7de",
+      "status": "reviewed",
+      "translation": "该图使用 10 × 8 英寸画布、110 dpi。脚本返回绘图对象，可传给 `ggplot2::ggsave()` 按相同尺寸保存。\n"
+    },
+    "6": {
+      "source_sha256": "84a540c546a282c8238972eface9931f272ce56681f6a8548bf82160a1d72e0e",
+      "status": "reviewed",
+      "translation": "## 读图 {#reading}\n"
+    },
+    "7": {
+      "source_sha256": "24734898a4537844ae17d02a4a5f3ec54f35fcbf0f79fd8a739e52324b375c43",
+      "status": "reviewed",
+      "translation": "九条特征均保留参考坐标和链。沿骨架刻度定位特征，再从圆环外侧读取酶切标签。39 条位点记录对应 33 个不同位置，独立参考引物为零条。\n"
+    },
+    "9": {
+      "source_sha256": "de1eb696f2ab1c739faa9f8ef7b26fc480da4593cffdb8c750e451460f700193",
+      "status": "reviewed",
+      "translation": "## 来源记录与展示选择 {#inputs}\n"
+    },
+    "10": {
+      "source_sha256": "32c04a8ef619c355acce45ea6c324e1e3f62fa0b9f4535f2f53c0a6fb80a2179",
+      "status": "reviewed",
+      "translation": "`flagship_circular_example$references[[\"pUC19\"]]` 中保存完整长度和三张用于绘图的表。特征层和标签层共用分道位置；代码会在参考记录包含引物行时加入引物层。\n"
+    },
+    "11": {
+      "source_sha256": "7e93f63fadcca0d3f2b7f1c5d2f122306aef3ff3a6c6f59ffbcce60174eb1ed5",
+      "status": "reviewed",
+      "translation": "[只绘制九条特征](circular.md) · [对照十三张完整参考图](plasmid-catalog.md)\n"
+    }
+  }
+}

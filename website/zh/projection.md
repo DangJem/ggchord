@@ -1,50 +1,15 @@
-<a id="prepare"></a>
-
-## 选择输入 {#prepare}
-
-绘图前准备一张 CDS 表和一个已知的氨基酸区间。完整 CDS 提供来源坐标、链及阅读框。
-
 <a id="cds"></a>
 
-## 从氨基酸区间找到核酸坐标 {#cds}
+## 在基因组上定位一段残基 {#cds}
 
-随包 pUC19 参考注释给出 lacZα 的完整 CDS。第 2–5 个残基落在原始负链的 455–466 bp。
+要定位 pUC19 的 lacZα 第 2–5 个残基，先选出有注释的 CDS 并保留来源链。这条完整 CDS 的起始 phase 为 0，使用细菌遗传密码表 11。示例选取的残基范围仅用于展示投影，对应负链上的 455–466 bp。
 
-```r
-record <- flagship_circular_example$references[["pUC19"]]
-coding <- record$features |>
-  dplyr::filter(anno == "lacZα", type == "CDS") |>
-  dplyr::transmute(accver, start, end, strand, feature_id = "lacZ_alpha", phase = 0L)
-cds <- build_ggchord_cds(coding, genetic_code = 11)
-span <- data.frame(feature_id = "display", parent_id = "lacZ_alpha", start = 2, end = 5)
-mapped <- project_ggchord_features(span, cds)
-mapped[c("accver", "start", "end", "strand")]
-```
+{{example:project-residues}}
 
-<a id="boundaries"></a>
+<a id="segments"></a>
 
-## 跨片段与 phase {#boundaries}
+## 处理跨片段 CDS 与双端比对 {#segments}
 
-多个 CDS 片段可以共享一个父 ID。投影按转录方向排列片段，返回的 segments 列保留内含子间隔。单看外包区间会把这些间隔也计入。
+当 CDS 分成多段时，用全部原始片段及注释阅读框建立模型。一个残基区间可能映射到多个基因组片段。查看返回的片段表，可区分实际编码碱基与外显子之间的碱基。
 
-<a id="links"></a>
-
-## 投影两端的已知对应区间 {#links}
-
-下面两条教学坐标轴各含十个密码子。示例明确给定三个残基的一一对应，同时展示正负链的端点方向。真实输入需要自己的对应证据。
-
-```r
-models <- data.frame(
-  feature_id = c("A", "B"), accver = c("row1", "row2"),
-  start = c(101, 301), end = c(130, 330), strand = c("+", "-"), phase = 0L
-)
-pair <- data.frame(qfeature_id = "A", sfeature_id = "B",
-  qstart = 2, qend = 4, sstart = 5, send = 7)
-project_ggchord_links(pair, build_ggchord_cds(models), ungapped = TRUE)
-```
-
-<a id="check-result"></a>
-
-## 核对投影 {#check-result}
-
-检查父 CDS 标识、原生单位和完整片段列表。实际 BLASTp 命中若包含 gap，先判断已有证据能支持单侧区间还是双端逐位对应。
+`project_ggchord_links()` 可投影已有对应关系的两端。带缺口的蛋白 HSP 给出外侧边界，区间内部的逐列对应须另有比对证据。根据已有证据选择投影范围。如果目标本来就是蛋白比较图，可直接提供完整蛋白长度，保留原生 aa 坐标。

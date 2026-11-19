@@ -1,5 +1,5 @@
 <a id="moved"></a>
 
-## Section moved {#moved}
+## This page has moved {#moved}
 
-[Mappings, scales, guides and themes](styling.md#roles)
+[Mappings, scales, guides and themes](styling.md)

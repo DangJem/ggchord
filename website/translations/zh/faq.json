@@ -1,0 +1,15 @@
+{
+  "source_sha256": "624723a1d1c93560c90612a9faf36ece50b65bdf75f36483556695579bca1ffb",
+  "blocks": {
+    "1": {
+      "source_sha256": "78f3b751cc6a81f151c97d45744da2989fa25c9ea71a757fa0548ec3895c1028",
+      "status": "reviewed",
+      "translation": "## 本页已迁移 {#moved}\n"
+    },
+    "2": {
+      "source_sha256": "fa8c28befc117f0544627cd305eb68f05b94d41db3a7b3fdc82e720a6d2a77b5",
+      "status": "reviewed",
+      "translation": "[数据与布局诊断](diagnostics.md)\n"
+    }
+  }
+}

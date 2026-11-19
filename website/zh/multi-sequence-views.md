@@ -1,153 +1,39 @@
-数据来源、展示子集与重建规则见[旗舰数据来源与构建](flagship-data.md)。本页直接加载随包输入，集中设置绘图参数。
+<a id="comparison"></a>
 
-```r
-library(ggchord)
-library(ggplot2)
-```
+## 固定输入，比较布局 {#comparison}
 
-<a id="input"></a>
-
-## 一次准备 {#input}
-
-相同来源输入不代表默认展示完全相同的关系。本例先明确全对选择再比较几何；随后核对各视图默认筛选。依赖：ggchord、dplyr。
-
-
-{{code:coursecomparison}}
+四个示例均使用两条完整参考，以及 MT108731.1 对 MT118296.1 的三条实测 HSP。每段代码都能独立运行。可比较每条连接带与骨架相接的位置。四种视图均保留两条参考的全长和 HSP 的端点顺序。
 
 <a id="chord"></a>
 
-### Chord {#chord}
+### 弦图 {#chord}
 
-![chord：同源数据全对关系](../../man/figures/coursechord.png)
+沿圆周读取连接带两端。多对多关系较多时，可用这种布局查看整体结构。
 
-<a id="linear"></a>
+{{example:views-chord}}
 
-### Linear {#linear}
+<a id="collinear"></a>
 
-![linear：同源数据全对关系](../../man/figures/courselinear.png)
+### 共线性图 {#collinear}
+
+沿各行比较三条比对的位置和跨度。要翻转其中一条参考的显示方向，见[序列排列与显示方向](multi-sequence-layout.md)。
+
+{{example:views-collinear}}
 
 <a id="radial"></a>
 
-### Radial {#radial}
+### 径向共线性图 {#radial}
 
-![radial：同源数据全对关系](../../man/figures/courseradial.png)
+从中心向外沿各条辐条读取位置。加入更多参考时，辐条顺序决定哪些参考彼此相邻。
+
+{{example:views-radial}}
 
 <a id="sankey"></a>
 
-### Sankey {#sankey}
+### Sankey 双列图 {#sankey}
 
-![sankey：同源数据全对关系](../../man/figures/coursesankey.png)
+从左侧的 query 副本读向右侧的 subject 副本。带在两端的宽度分别反映该条序列上的观测跨度。需要区分 query 和 subject 角色时，可选择这种双列布局。
 
-<a id="selection"></a>
+{{example:views-sankey}}
 
-## 默认选择与可比条件 {#selection}
-
-| 视图 | 默认关系选择 | 本例条件 |
-| --- | --- | --- |
-| Chord | 全对 | 同一 HSP 表，显式全对 |
-| Collinear | 相邻行 | 显式 adjacent_only = FALSE |
-| Radial | 环形邻居 | 显式 adjacent_only = FALSE |
-| Sankey | 排除同实体自身关系 | 本例真实表不含自身关系 |
-
-<a id="flagship"></a>
-
-## 四种旗舰视图 {#flagship}
-
-四图共用随包数据 `flagship_comparison_example`，安装 ggchord 后即可运行。Chord/Radial 与 Collinear/Sankey 保留各自的 CDS 和 HSP 选择，不能视为完全相同的显示子集。
-
-先准备共用数据、配色和样式；各图只设置自己的几何、标签和坐标参数。以下需要 ggplot2、dplyr 和 purrr；完整样式也在本页列出。
-
-{{code:sequencepalette,docstyle,showcasedata,chordshowcasegenes}}
-
-Radial 移除 Chord 专属的半径和曲率；Sankey 使用各列原生坐标轴，不照搬 Collinear 的 Cartesian 控制点和共享比例尺。完整图保留所有原 CDS 名称候选、序列图例和来源记录。注释在最终投影坐标中按真实文字尺寸避让，优先邻近特征的短引导线；数据密集时仍可能隐藏无法安放的名称，可用 `diagnose_ggchord()` 查看实际导出尺寸下的显示与碰撞结果。
-
-<a id="flagship-chord"></a>
-
-### Chord {#flagship-chord}
-
-{{code:showcasechord}}
-
-{{manualfigure:flagchord}}
-
-<a id="flagship-collinear"></a>
-
-### Collinear {#flagship-collinear}
-
-{{code:showcasecollinear}}
-
-{{manualfigure:flaglinear}}
-
-<a id="flagship-radial"></a>
-
-### Radial {#flagship-radial}
-
-{{code:relationshipstyle,flagshipradial}}
-
-采用 12 × 10.5 英寸画布，辐条从 45° 起排、序列名水平显示。保留全部 20 条原 CDS 几何与名称候选，名称随源特征就近安排，避免全局两侧名列和长引导线压缩序列主体。Sequence、Strand 与按数值区间比例显示的 Identity 图例集中在下方。
-
-```r
-view_ggchord(flag_radial, width = 12, height = 10.5, units = "in")
-```
-
-{{manualfigure:flagradial}}
-
-<a id="flagship-sankey"></a>
-
-### Sankey {#flagship-sankey}
-
-{{code:flagshipsankey}}
-
-四条序列在两列中纵向排列，使用 10 × 16 英寸纵向画布。16 条原 CDS 几何与名称候选、10 条已选择 HSP 均保留；左右副本分别标注，名称不再每序列只选一条。列外的短连接与局部避让保持文字靠近对应特征；完整刻度和三组图例保留。首页预览另省略密集名称和坐标文字。
-
-```r
-view_ggchord(flag_sankey, width = 10, height = 16, units = "in")
-```
-
-{{manualfigure:flagsankey}}
-
-<a id="direction-and-adjacency"></a>
-
-## 方向、实例与显示比例 {#direction-and-adjacency}
-
-生物学链、HSP 端点方向、显示 orientation 和 layout_sequences(order = ...) 各有独立含义。Sankey 的左右副本不增加观测，区间宽度不是流量守恒。图层仅在共同支持范围内可复用。
-
-<a id="projection"></a>
-
-## 显示长度与连接样式 {#projection}
-
-`layout_sequences(length_mode = "equal")` 改变角度分配或直线跨度，保留原始长度、区间与局部轴。
-`sequence_display` 导出源长度和投影系数。多序列等长显示不能使用共享绝对比例尺。
-默认轴显示 1 与真实末位，中间刻度按可用物理空间选择；闭圆接缝合并两端。
-显式 breaks 和 labels 优先。
-
-
-{{code:foundationequal}}
-
-{{figure:foundationequal}}
-
-默认 Ribbon 使用 Identity 填充并保留完整区间端面；显式 `geom_link_ribbon(gradient = TRUE)` 才沿曲线插值端点序列色。`tip="subject"` 才在 subject 端装饰性收尖，
-箭肩保留平移后的目标端点跨度，尖点不代表唯一匹配碱基或生物学转移方向；
-源端点仍在布局导出中。`tip="none"` 保留完整端面。固定 fill、ribbon_fill 映射或显式
-Ribbon 填充标度会覆盖显式启用的端点插值。显式 pident 使用固定 0–100 域，边界为
-0/50/80/90/95/100，五段数值比例为 50/30/10/5/5%。用户标度与 guide 优先。
-
-<a id="tip"></a>
-
-### 可选 subject 收尖 {#tip}
-
-{{code:foundationarrow}}
-
-{{figure:foundationarrow}}
-
-自动离散图例测量文字后选择行列，渲染循环联合测量图例与 panel；显式 guide/theme
-设置优先。圆图外侧标签在所有数量下共享测量队列，`label_visibility` 报告源行、可见性
-及可用的放置字段。未测得碰撞数不等于零。过小画布仍可能拥挤，请按目标导出尺寸
-检查[输出诊断](output.md)。
-
-自动 Identity 标尺按边界文字的实际尺寸预留长度，不再把通用色块尺寸当成整条标尺长度。手动指定长度时，使用 `legend.ribbon.key.height`、`legend.ribbon.key.width` 或显式 guide。圆图 parallel 坐标轴文字逐字符沿圆弧排布；水平和数值角度仍保留直线文字。
-
-<a id="exercise"></a>
-
-## 操作示例 {#exercise}
-
-选一条 HSP，指出两端来源；恢复默认邻接后说明为何可能省略。按目标尺寸保存选定视图，保留输入表。
+需要带有数据与绘图脚本的完整多序列案例时，可查阅[案例图库](gallery.md)。

@@ -1,0 +1,35 @@
+{
+  "source_sha256": "da455720d7a5507f21f194aa41db7ccb9132b5cdb8fc5bd1ab02a74455b1a895",
+  "blocks": {
+    "0": {
+      "source_sha256": "878115fa974709b0fb5634f10aa60d31aabc867bec26bb315c4eac6807eb5ab6",
+      "status": "reviewed",
+      "translation": "径向共线性图把每条序列放在一根辐条上。多条序列围绕同一中心排列，各自沿辐条保留位置刻度，适合查看多对序列的区间关系。\n"
+    },
+    "2": {
+      "source_sha256": "9e05293af7781340e437806529d25952c35f9833bce27d0c657d46f5e00b4db3",
+      "status": "reviewed",
+      "translation": "## 绘制选定的序列对 {#draw}\n"
+    },
+    "3": {
+      "source_sha256": "865b1998e8dacbb6bc5cd8b54435828d8671bc771a9a3799dc84393213773624",
+      "status": "reviewed",
+      "translation": "随包的弦图子集含四条序列间的 12 条已观测比对。允许连接非相邻辐条即可显示整个子集。降低不透明度有助于辨认重叠的带。\n"
+    },
+    "6": {
+      "source_sha256": "6d1527903814618352961ab09a9e5e887ae5a83169b556048df5689ddd4f144d",
+      "status": "reviewed",
+      "translation": "## 沿辐条读取位置 {#adapt}\n"
+    },
+    "7": {
+      "source_sha256": "466d2fda1d0937254ec90e51fdf1c0dc1ae9c70dcc348fe00840fdd607cb3155",
+      "status": "reviewed",
+      "translation": "沿一条带分别找到两端辐条上的刻度，即可定位来源区间。`start_angle` 会整体旋转辐条，`inner_radius` 控制中心留白。判断生物学方向时，结合来源链或有序的比对端点读图。\n"
+    },
+    "8": {
+      "source_sha256": "08c23fbf6fae25d5c30ab26aeaea00e848d07b33f1d1bfc0d462d1e0d34e535e",
+      "status": "reviewed",
+      "translation": "[带基因注释的径向图](case-radial.md) · [径向坐标选项](../../man/coord_radial_synteny.Rd)\n"
+    }
+  }
+}

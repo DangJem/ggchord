@@ -1,0 +1,10 @@
+{
+  "source_sha256": "53141e1cf1b39c6901848015737769aafbb0a4be45632bffd3c8e0b53972fe89",
+  "blocks": {
+    "0": {
+      "source_sha256": "5f7efc27fd51148a9b345432c43ab00409c0f3c62bf43d63f118c2f96f488565",
+      "status": "reviewed",
+      "translation": "按名称或所属函数查找参数。默认值列显示函数签名中的值，`NULL` 有时表示在布局时确定取值。点击[灵活参数](parameters.md)标记，可查阅序列名称、显示顺序和链向如何参与匹配。\n"
+    }
+  }
+}

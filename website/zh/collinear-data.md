@@ -1,5 +1,5 @@
 <a id="moved"></a>
 
-## 此章节已迁移 {#moved}
+## 本页已迁移 {#moved}
 
-[同一数据选择四种视图](multi-sequence-views.md#direction-and-adjacency)
+[数据与操作](data.md)

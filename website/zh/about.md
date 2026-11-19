@@ -1,36 +1,11 @@
-<a id="compatibility"></a>
+<a id="sources"></a>
 
-## 接口与兼容性 {#compatibility}
+## 数据与图稿 {#sources}
 
-函数参考说明当前参数、返回值及支持边界。需要维护已有脚本时，可查阅[迁移说明](../../MIGRATION-Hans.md)。绘图前核对序列 ID、坐标单位和完整长度，导出时记录包版本、输入和代码。
+[数据与视觉资产来源](../ASSET-SOURCES.md)记录了序列、注释目录和 ggchord 图稿的来源。要追查某张图的输入和绘图代码，可从[案例图库](gallery.md)打开对应条目。
 
 <a id="feedback"></a>
 
-## 问题反馈 {#feedback}
+## 反馈问题 {#feedback}
 
-描述问题时附上最小输入、可运行代码、包版本及目标图像尺寸。显示结果的问题可同时附上 `view_ggchord()` 的预览。常见问题见[排错说明](faq.md)。
-
-<a id="sources"></a>
-
-## 设计与资产来源 {#sources}
-语法参考 [ggplot2](https://ggplot2.tidyverse.org/)，映射、标度、几何、位置、坐标与主题
-分别承担不同职责。紧凑的 query/subject 字段参考 BLAST 风格表格，ggchord 绘图时
-不运行比对工具。环形层次和注释可读性与 Circos、clinker、DNA Features Viewer
-进行比较，具体边界记录在仓库设计文档中；这些是概念借鉴，不是复制 API。
-
-精细的 ggchord 图标由用户于 2026-11-01 提供，授权用于网站和说明文档。
-完整 PNG 和 WebP 保留逐像素 RGBA，只有导航缩略图调整尺寸。
-[图标清单](../assets/icon.json)记录来源 hash 和准确体积。下方的简洁六边形研究标识、网站 CSS/JS
-及文档示意图是本项目原创资产，遵循仓库 MIT 条款。研究标识作为补充方案保留，
-不替代用户提供的图标。
-
-![简洁六边形研究标识](../../man/figures/logo.svg)
-使用系统字体，不下载网络字体、图标库或第三方图片。
-图中颜色来自包的现有默认值或显式说明代码，具体色值随源码记录。
-网站在构建时使用已有 Pandoc 和 R 文档转换器，不捆绑其二进制或样式表。
-
-<a id="reproducibility"></a>
-
-## 复现与构建记录 {#reproducibility}
-
-[图像清单](../assets/plots.csv)记录导出尺寸与来源摘要；图形的原始输入、筛选和完整脚本分别在对应功能页提供。
+请提供能复现问题的最小输入、R 代码和 `packageVersion("ggchord")` 的结果。反馈绘图问题时，请附上图片并注明预期宽高。[在 GitHub 上反馈](https://github.com/DangJem/ggchord/issues)

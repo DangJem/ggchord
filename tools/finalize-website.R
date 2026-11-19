@@ -18,7 +18,6 @@ page_record <- function(key) {
   found <- Filter(function(x) identical(x$slug,key),page_index)
   if(length(found)) found[[1]] else NULL
 }
-figure_lessons <- jsonlite::fromJSON('website/figure-lessons.json')
 manual_sections <- jsonlite::fromJSON('website/manual-sections.json', simplifyVector=FALSE)
 navigation <- setNames(navigation, vapply(navigation, function(group) group$id, ''))
 for(lang in c('en','zh')) {
@@ -54,7 +53,7 @@ for(lang in c('en','zh')) {
   }
   if(slug=='404' && lang=='zh') for(node in xml2::xml_find_all(main,'.//p'))
     xml2::xml_set_text(node,'未找到页面。请从首页、绘图指南或搜索找回所需内容。')
-  xml2::xml_set_attr(xml2::xml_find_first(doc,'//body'),'data-page',if(startsWith(relative,'reference/')) 'reference' else slug)
+  xml2::xml_set_attr(xml2::xml_find_first(doc,'//body'),'data-page',if(identical(relative,'reference/index.html')) 'reference' else slug)
   if(slug=='index' && length(xml2::xml_find_all(main,'.//h1'))>1L) xml2::xml_remove(xml2::xml_find_first(main,'./h1'))
   layout <- xml2::xml_parent(main)
   xml2::xml_set_attr(layout,'class',paste(xml2::xml_attr(layout,'class'),'doc-layout'))
@@ -77,15 +76,27 @@ for(lang in c('en','zh')) {
       'href="',prefix,escape(page$canonical_path,attribute=TRUE),'">',escape(label),'</a>')
   }
 
-  if(current_page!='index' && !is.null(primary$navbar)) {
-    target_path <- paste0(prefix,page_record(primary$landing)$canonical_path)
-    for(link in xml2::xml_find_all(doc,'//div[@id="navbar"]//a[contains(@class,"nav-link")][@href]')) {
-      if(!identical(xml2::xml_attr(link,'href'),target_path)) next
-      current <- if(identical(relative,page_record(primary$landing)$canonical_path)) 'page' else 'location'
-      xml2::xml_set_attr(link,'aria-current',current)
-      xml2::xml_set_attr(link,'class',paste(xml2::xml_attr(link,'class'),'active'))
-    }
-  }
+  # Keep each destination directly clickable and use a separate menu button.
+  primary_groups <- Filter(function(x) !is.null(x$navbar), navigation)
+  nav_items <- c(paste0('<li class="site-nav-item site-nav-home">',
+    page_link('index',if(lang=='zh') '首页' else 'Home','nav-link'),'</li>'),
+    vapply(primary_groups,function(g) {
+      descendants <- Filter(function(x) identical(x$parent,g$id),navigation)
+      keys <- unique(c(unlist(g$pages),unlist(lapply(descendants,function(x) c(x$landing,unlist(x$pages))))))
+      keys <- Filter(function(key) !identical(key,g$landing) && !is.null(page_record(key)),keys)
+      link <- page_link(g$landing,g$title[[lang]],'nav-link')
+      if(identical(primary$id,g$id) && current_page!='index' && !identical(relative,page_record(g$landing)$canonical_path))
+        link <- sub('<a ', '<a aria-current="location" ',link,fixed=TRUE)
+      menu <- if(length(keys)) paste0('<button type="button" class="site-nav-toggle" aria-expanded="false" aria-controls="site-menu-',
+        escape(g$id,attribute=TRUE),'" aria-label="',escape(paste(if(lang=='zh') '展开' else 'Open',g$title[[lang]]),attribute=TRUE),'">▾</button>',
+        '<ul class="site-nav-menu" id="site-menu-',escape(g$id,attribute=TRUE),'">',
+        paste(vapply(keys,function(key) paste0('<li>',page_link(key),'</li>'),''),collapse=''),'</ul>') else ''
+      paste0('<li class="site-nav-item site-nav-',escape(g$navbar,attribute=TRUE),'">',link,menu,'</li>')
+    },''))
+  primary_list <- xml2::xml_find_first(doc,'//div[@id="navbar"]/ul[contains(@class,"navbar-nav")]')
+  xml2::xml_set_attr(primary_list,'class','navbar-nav site-primary-nav')
+  xml2::xml_remove(xml2::xml_children(primary_list))
+  for(item in nav_items) xml2::xml_add_child(primary_list,nav_fragment(item))
 
   sections <- manual_sections[[module]]
   if(length(sections)) {
@@ -151,7 +162,8 @@ for(lang in c('en','zh')) {
   }
   # Native reference TOCs are populated later by JavaScript. Build the compact
   # outline from actual headings, rather than cloning their initially empty nav.
-  outline_headings <- xml2::xml_find_all(main,
+  outline_headings <- xml2::xml_find_all(main, if(slug=='gallery')
+    './/h2[@id][not(ancestor::details[@class="lesson-extension"])]' else
     './/*[self::h2 or self::h3][@id][not(ancestor::details[@class="lesson-extension"])]')
   if(length(outline_headings)) {
     outline_links <- paste(vapply(outline_headings,function(h) paste0('<li><a href="#',
@@ -189,6 +201,7 @@ for(lang in c('en','zh')) {
   no_script <- xml2::xml_add_child(head,'noscript')
   xml2::xml_add_child(no_script,'style',paste0(
     '.navbar .navbar-toggler,.navbar .local-search,.navbar #dropdown-lightswitch{display:none}',
+    '.site-nav-item:hover .site-nav-menu,.site-nav-item:focus-within .site-nav-menu{display:block}',
     '@media(max-width:1199.98px){',
     'body{padding-top:0}.navbar.fixed-top{position:static}',
     '.navbar .navbar-collapse.collapse{display:flex}',
@@ -222,7 +235,7 @@ for(lang in c('en','zh')) {
    if(lang=='zh')'筛选结果类型' else 'Filter result types','"></div><p class="search-count" id="search-status" role="status"></p><ul id="site-results" class="search-results" role="listbox" aria-label="',
    if(lang=='zh')'搜索结果' else 'Search results','"></ul><div class="search-help">',
    if(lang=='zh')'↑ ↓ 选择 · Enter 打开 · Esc 关闭；也可按任务查找。' else '↑ ↓ select · Enter open · Esc close; or browse by task.',
-   ' <a href="',prefix,'modes.html#modules">',if(lang=='zh')'绘图指南' else 'Plotting guide','</a></div></dialog>')))
+   ' <a href="',prefix,escape(page_record(navigation$plots$landing)$canonical_path,attribute=TRUE),'">',if(lang=='zh')'绘图指南' else 'Plotting guide','</a></div></dialog>')))
   xml2::xml_set_attr(body,'data-lang',lang)
   xml2::xml_set_attr(body,'data-search',paste0(paste(rep('../',deep),collapse=''),'search.json'))
   # Native locale messages add a translated S3 preamble to usage code. Keep
@@ -265,61 +278,24 @@ for(lang in c('en','zh')) {
     xml2::xml_add_child(xml2::xml_find_first(table,'preceding-sibling::*[1]'),table)
     xml2::xml_remove(table)
   }
-  for(cell in xml2::xml_find_all(main,'.//table//td')) {
-    if(grepl('^[0-9]+([.,][0-9]+)*$',trimws(xml2::xml_text(cell)))) xml2::xml_set_attr(cell,'class','numeric')
+  # Numeric alignment belongs to columns, including the header. Mixed
+  # default-value columns remain left aligned.
+  for(table in xml2::xml_find_all(main,'.//table')) {
+    rows <- xml2::xml_find_all(table,'.//tbody/tr')
+    if(!length(rows)) next
+    n <- max(vapply(rows,function(row) length(xml2::xml_find_all(row,'./th|./td')),integer(1)))
+    for(i in seq_len(n)) {
+      cells <- xml2::xml_find_all(table,paste0('.//tbody/tr/*[self::td or self::th][',i,']'))
+      values <- trimws(xml2::xml_text(cells)); values <- values[nzchar(values)]
+      if(!length(values) || !all(grepl('^[+-]?([0-9]+([.,][0-9]+)?|\\.[0-9]+)([eE][+-]?[0-9]+)?%?$',values))) next
+      headers <- xml2::xml_find_all(table,paste0('.//thead/tr/*[self::th or self::td][',i,']'))
+      for(cell in c(headers,cells)) xml2::xml_set_attr(cell,'class',trimws(paste(xml2::xml_attr(cell,'class') %||% '', 'numeric')))
+    }
   }
   for(output in xml2::xml_find_all(main,'.//*[contains(@class,"data-output")]')) {
     xml2::xml_set_attr(output,'tabindex','0')
     xml2::xml_set_attr(output,'role','region')
     xml2::xml_set_attr(output,'aria-label',if(lang=='zh')'R 数据输出，可横向滚动' else 'R data output, horizontally scrollable')
-    for(cell in xml2::xml_find_all(output,'.//td')) if(grepl('^-?[0-9]+(\\.[0-9]+)?$',xml2::xml_text(cell))) xml2::xml_set_attr(cell,'class','numeric')
-  }
-  # Adjacent code/figure pairs form comparisons without changing code order.
-  children <- xml2::xml_children(main)
-  is_pair <- function(node) {
-    next_node <- xml2::xml_find_first(node,'following-sibling::*[1]')
-    identical(xml2::xml_name(node),'details') && grepl('code-disclosure',xml2::xml_attr(node,'class') %||% '') &&
-      !inherits(next_node,'xml_missing') && startsWith(xml2::xml_attr(next_node,'data-figure') %||% '', 'compare')
-  }
-  skip <- 0L
-  for(i in seq_along(children)) {
-    if(i<=skip) next
-    node <- children[[i]]
-    if(!is_pair(node)) next
-    pairs <- list(); cursor <- node
-    while(!inherits(cursor,'xml_missing') && is_pair(cursor)) {
-      fig <- xml2::xml_find_first(cursor,'following-sibling::*[1]')
-      pairs[[length(pairs)+1L]] <- list(code=cursor,figure=fig)
-      cursor <- xml2::xml_find_first(fig,'following-sibling::*[1]')
-    }
-    if(length(pairs)<2L) next
-    skip <- i+2L*length(pairs)-1L
-    group_node <- fragment('<div class="figure-comparison"></div>')
-    xml2::xml_add_sibling(node,group_node,.where='before')
-    group_node <- xml2::xml_find_first(node,'preceding-sibling::*[1]')
-    for(pair in pairs) {
-      xml2::xml_add_child(group_node,fragment('<div class="figure-panel"></div>'))
-      panel <- xml2::xml_find_first(group_node,'./div[last()]')
-      xml2::xml_add_child(panel,pair$code);xml2::xml_add_child(panel,pair$figure)
-      xml2::xml_set_attr(xml2::xml_find_all(panel,'.//img'),'sizes','(max-width: 650px) calc(100vw - 48px), (max-width: 1199px) 42vw, 480px')
-      xml2::xml_remove(pair$code);xml2::xml_remove(pair$figure)
-    }
-  }
-  if(current_page=='parameter-atlas') {
-    for(details in xml2::xml_find_all(main,'.//details')) {
-      api <- sub('\\(\\)$','',xml2::xml_text(xml2::xml_find_first(details,'./summary/code')))
-      for(row in xml2::xml_find_all(details,'.//table/tbody/tr')) {
-        parameter <- xml2::xml_text(xml2::xml_find_first(row,'./td[1]'))
-        xml2::xml_set_attr(row,'id',paste0('param-',api,'-',parameter))
-      }
-    }
-  }
-  for(figure in xml2::xml_find_all(main,'.//figure[@data-figure]')) {
-    key <- xml2::xml_attr(figure,'data-figure')
-    if(!key %in% names(figure_lessons)) next
-    code_url <- if(current_page=='gallery') xml2::xml_attr(xml2::xml_find_first(figure,'./a'),'data-code-url') else
-      paste0(prefix,if(grepl('#',figure_lessons[[key]],fixed=TRUE)) sub('#','.html#',figure_lessons[[key]],fixed=TRUE) else paste0(figure_lessons[[key]],'.html'))
-    xml2::xml_set_attr(xml2::xml_find_first(figure,'./a'),'data-code-url',code_url)
   }
   if(current_page=='index') xml2::xml_set_attr(xml2::xml_find_all(main,'.//*[contains(@class,"home-results")]//img'),
     'sizes','(max-width: 899px) calc(100vw - 48px), (max-width: 1199px) 30vw, 420px')

@@ -1,30 +1,19 @@
-{{code:courseblockaf}}
-
-
 <a id="direction"></a>
 
-## Orientation: start the coordinates at the other end {#direction}
+## Reverse one displayed sequence {#direction}
 
-{{code:frontorientation}}
+Place MT118296.1 first and reverse MT108731.1. The accession names in the orientation vector let you reorder the rows later without moving the reversal to the other sequence. Compare the ends of the three ribbons with the [original arrangement](multi-sequence-links.md).
 
-{{figure:frontorientation}}
+{{example:order-orientation}}
 
-`layout_sequences(orientation = -1)` reverses the sequence's display direction. Compared with the default, this backbone’s zero tick and arrow swap ends. Input coordinates and biological strands still come from the tables. The three vectors are named by sequence ID, so they still match if you reorder the sequences with `layout_sequences(order = ...)`.
+<a id="instances"></a>
 
-<a id="order"></a>
+## Display the same reference twice {#instances}
 
-## Order: arrange the backbones {#order}
+For an A–B–A comparison, name the two copies in the order vector, for example `layout_sequences(order = c(left = "A", middle = "B", right = "A"))`. In each ribbon layer, select the relevant source records and use `between = c("left", "middle")` or `between = c("middle", "right")`. Source coordinates and biological strand still belong to the original A. Both copies retain its complete length.
 
-{{code:frontorder}}
+<a id="length"></a>
 
-{{figure:frontorder}}
+## Preserve or standardise visual lengths {#length}
 
-`layout_sequences(order = ...)` takes the sequence IDs in display order. Here `OQ646790.1` moves ahead of `MT118296.1`. Link rows still match the same IDs after reordering.
-
-Next, [change the path and endpoint clearance of a ribbon](multi-sequence-links.md#control).
-
-<a id="anchors"></a>
-
-## Linear anchors {#anchors}
-
-[Collinear](collinear-layout.md#anchor) · [Radial](radial-synteny.md) · [Sankey](sankey.md)
+Keep the default proportional lengths when comparing physical distances between sequences. Use `layout_sequences(length_mode = "equal")` to compare the relative positions of features on equal-length backbones. Read the local sequence axis for base or residue distances.

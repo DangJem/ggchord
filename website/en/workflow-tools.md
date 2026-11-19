@@ -1,5 +1,5 @@
 <a id="moved"></a>
 
-## Section moved {#moved}
+## This page has moved {#moved}
 
-[Choose a data workflow by task](workflows.md#tools)
+[Data and operations](data.md)

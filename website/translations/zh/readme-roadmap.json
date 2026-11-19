@@ -1,0 +1,35 @@
+{
+  "source_sha256": "8da3f25b0ab8fe09912ccabb867c1a79d812398b9d6b0dc246eb372dc73fcce6",
+  "blocks": {
+    "0": {
+      "source_sha256": "47362e6a06c9f26984c821db2d15e0217d5c683dda2f2bbe066e45cee3e54e03",
+      "status": "reviewed",
+      "translation": "## 未来方向\n"
+    },
+    "1": {
+      "source_sha256": "6b94df254e9753a00ba84ec033c42da6188da09d4144c40de468f07a13171694",
+      "status": "reviewed",
+      "translation": "后续开发继续围绕清晰的静态科研图和一致的绘图语法展开。当前函数、支持输入及限制见教程与参考文档；以下列出进一步改进的方向。\n"
+    },
+    "2": {
+      "source_sha256": "eabf530739583571f5457e5e76062c6b97d8ffefdada72943c8da416bb40edb1",
+      "status": "reviewed",
+      "translation": "- 改善实际成图尺寸下的密集注释、引导线和图例布局，空间不足时提供明确诊断。\n"
+    },
+    "3": {
+      "source_sha256": "e953a7df1f0f388000b782e23ddedcc5d0d6ac6b37cfd3201ef903201cc3a1e0",
+      "status": "reviewed",
+      "translation": "- 完善整体与局部细节的组合，保留原始坐标、单位及每条显示关系的含义。\n"
+    },
+    "4": {
+      "source_sha256": "c93bc6604883be7205c402c96bc762478b0abb3deb418ebaff8f8e9d3bcff86b",
+      "status": "reviewed",
+      "translation": "- 扩展已有科研结果的适配，优先使用成熟的可选工具，保留源记录与缺失信息。\n"
+    },
+    "5": {
+      "source_sha256": "fb6152c337dddd321f9404cd1bd0efc344b9ae30b353e49b71a6c0fac1ad7fc7",
+      "status": "reviewed",
+      "translation": "- 完善 API 一致性、兼容性和可重现的教学示例，保持普通数据框输入简洁。\n"
+    }
+  }
+}

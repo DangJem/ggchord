@@ -1,5 +1,5 @@
 <a id="moved"></a>
 
-## Section moved {#moved}
+## This page has moved {#moved}
 
-[Alignment, anchors and display directions](collinear-layout.md#gap)
+[Collinear example](collinear.md)

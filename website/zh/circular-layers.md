@@ -1,5 +1,5 @@
 <a id="moved"></a>
 
-## 章节已迁移 {#moved}
+## 本页已迁移 {#moved}
 
-[圆图骨架与布局](circular-layout.md#input)
+[单序列圆图](circular.md)

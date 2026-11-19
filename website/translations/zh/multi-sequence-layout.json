@@ -1,0 +1,35 @@
+{
+  "source_sha256": "02deb67e4d0f2bb05749460f41115085279cedc0d4989515e57c69b7ba098b37",
+  "blocks": {
+    "1": {
+      "source_sha256": "9d4ae082582de8fc2fd6dbbaa5da528eba9ef3efe18c065e17ac72c1db7ab634",
+      "status": "reviewed",
+      "translation": "## 翻转一条序列的显示方向 {#direction}\n"
+    },
+    "2": {
+      "source_sha256": "df43799e44098bbb6157e6bb5f17bd7d471b034695c1af4bb344fc4642cc3beb",
+      "status": "reviewed",
+      "translation": "把 MT118296.1 放在第一行，并翻转 MT108731.1。用 accession 给方向向量命名，之后重排时，翻转仍作用于同一条序列。可以对照[原排列](multi-sequence-links.md)观察三条连接带的两端。\n"
+    },
+    "5": {
+      "source_sha256": "9431213e85eccad2fab4de04a972ea3aefe2fece117f4d91c22d8aa9b101d1dd",
+      "status": "reviewed",
+      "translation": "## 在图中两次显示同一条参考序列 {#instances}\n"
+    },
+    "6": {
+      "source_sha256": "2c620449d483c278109099324d60068f57b11f036613c7b535a67561df50f806",
+      "status": "reviewed",
+      "translation": "要比较 A–B–A，可为两个 A 命名，例如 `layout_sequences(order = c(left = \"A\", middle = \"B\", right = \"A\"))`。在每个连接层筛选相应的原始记录，再用 `between = c(\"left\", \"middle\")` 或 `between = c(\"middle\", \"right\")` 选择显示副本。来源坐标与生物学链仍属于原序列 A，两个副本均保留其完整长度。\n"
+    },
+    "8": {
+      "source_sha256": "ca427e0e36b557178aa845b4c5ba50243381c0b487d41e06c073df809fe91e3e",
+      "status": "reviewed",
+      "translation": "## 选择按比例或等长显示 {#length}\n"
+    },
+    "9": {
+      "source_sha256": "86548c854c5da3d1597afc0e1e25cd3900d4c1d0c4acdc877740635f55d2ba0e",
+      "status": "reviewed",
+      "translation": "要比较不同序列上的实际距离，保留默认长度比例。要用等长骨架比较特征在各序列上的相对位置，可用 `layout_sequences(length_mode = \"equal\")`。碱基数或残基数从各自的局部序列轴读取。\n"
+    }
+  }
+}

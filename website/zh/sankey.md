@@ -1,35 +1,17 @@
-<a id="input"></a>
+Sankey 坐标把参考序列排成左右两列。带子左端取 query 区间，右端取 subject 区间，两端宽度分别由记录的跨度决定。
 
-## 先准备真实来源 {#input}
+<a id="draw"></a>
 
+## 从左列的 query 追踪到右列 {#draw}
 
-<a id="sankey"></a>
+输入的前三行均连接 MT108731.1 和 MT118296.1。在第一条序列的左列副本找到三个区间，沿带子可到达第二条序列的右列副本。每条参考序列均在两列出现。
 
-## 镜像双列关系 {#sankey}
+{{example:first-sankey}}
 
-Sankey 将每个来源在左右两列各显示一次。左侧 query 端点连接右侧 subject 端点，
-互反输入行保持独立；默认排除同实体自身连接，`self_links=TRUE` 可启用。
-宽度由两端真实区间决定，表达的是关系，不是流量守恒。本版由坐标系管理左右副本，
-不接受 `between`，也不支持共享分支。
+<a id="adapt"></a>
 
-{{code:foundationsankey}}
+## 理解宽度与方向 {#adapt}
 
-{{figure:foundationsankey}}
+带宽按来源端点的坐标单位读取。一条比对在两端可以占据不同数量的位置。若输入同时提供互换 query 和 subject 的记录，这些行各自表示一次观测。可用 `column_gap` 调整两列之间的距离。
 
-<a id="column-gap"></a>
-
-## 只改变列间距 {#column-gap}
-
-{{code:coursesankeygap}}
-
-![仅改变左右列间距](../../man/figures/coursesankeygap.png)
-
-<a id="instances"></a>
-
-## 核对来源与实例 {#instances}
-
-{{code:courseblockae}}
-
-两条来源在左右各显示一次；不能手工复制 seq_data 冒充新观测。互反记录保持独立。self_links = TRUE 只启用已有自身记录，不补造关系。layout_sequences(order = ...) 每个来源只能出现一次；between 和 shared branches 不支持。
-
-操作示例：从一条 ribbon 的左右端找回 query 和 subject，并解释为什么两端总宽不需守恒。
+[四基因组双列图](case-sankey.md) · [Sankey 坐标](../../man/coord_sankey.Rd)

@@ -6,9 +6,14 @@
   `features` remain independent. Gene presets inherit classified gene/CDS rows;
   pass unclassified directional genes explicitly with `geom_feature(data = genes, preset = "gene")`.
 
-- The bilingual website now groups figures by plot type and functions by task.
-  Plot examples include their inputs and can be copied or downloaded individually.
-  The homepage retains the flagship previews and links to their complete figures.
+- The handbook now has seven plotting guides, individual flagship case pages
+  and a searchable function and argument reference. The home dashboard keeps
+  its seven original previews. Examples run from the installed package, and
+  the site uses each downloadable script to produce its figure or data output.
+  Native help marks the arguments that accept flexible parameters.
+- English is now the maintained source for paired documentation. Reviewed Han
+  translations share the same code, anchors, figures and navigation; the site
+  build checks them against the English source.
 
 - In a feature layer, `aes(accver = ref, fill = accver)` places each
   feature on `ref` and colours it by its original `accver`. To colour by

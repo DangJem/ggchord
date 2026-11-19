@@ -1,0 +1,15 @@
+{
+  "source_sha256": "625615d5509042cc2180ac9d8ad1587bea2a27669e4462980dddc78304aee5c2",
+  "blocks": {
+    "1": {
+      "source_sha256": "78f3b751cc6a81f151c97d45744da2989fa25c9ea71a757fa0548ec3895c1028",
+      "status": "reviewed",
+      "translation": "## 本页已迁移 {#moved}\n"
+    },
+    "2": {
+      "source_sha256": "20fc36e46d61399757ce3fd7f549b64c140db9040d5b0bf5885405cb7c489bac",
+      "status": "reviewed",
+      "translation": "[序列比对点图](dotplot.md)\n"
+    }
+  }
+}

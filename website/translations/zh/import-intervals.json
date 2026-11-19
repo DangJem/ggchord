@@ -1,0 +1,15 @@
+{
+  "source_sha256": "78b7622b8107d5ed506eb9f92a2361d56f5d653dda343aa44811025088dc6e1b",
+  "blocks": {
+    "1": {
+      "source_sha256": "78f3b751cc6a81f151c97d45744da2989fa25c9ea71a757fa0548ec3895c1028",
+      "status": "reviewed",
+      "translation": "## 本页已迁移 {#moved}\n"
+    },
+    "2": {
+      "source_sha256": "01aec4625144304eafb600af113221e11767adf7bb52783452d896947479d3ea",
+      "status": "reviewed",
+      "translation": "[读取序列与注释文件](import-sequences.md)\n"
+    }
+  }
+}

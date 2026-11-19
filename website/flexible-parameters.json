@@ -1,0 +1,13 @@
+{
+  "geom_seq": {"seq_radius": "sequence", "seq_curvature": "sequence"},
+  "layout_sequences": {"orientation": "sequence", "gap": "sequence"},
+  "geom_seq_label": {"labels": "sequence", "seq_label_radius": "sequence", "seq_label_rotation": "sequence", "seq_label_hjust": "sequence", "seq_label_vjust": "sequence"},
+  "geom_link_ribbon": {"link_gap": "sequence"},
+  "geom_link_line": {"link_gap": "sequence"},
+  "geom_feature": {"width": "strand"},
+  "position_strand": {"offset": "strand-offset"},
+  "position_offset": {"offset": "sequence"},
+  "geom_feature_label": {"label_radial_offset": "fixed-label", "label_circum_offset": "fixed-label", "label_circum_limit": "fixed-label", "label_rotation": "fixed-label"},
+  "geom_gene_label": {"label_radial_offset": "fixed-label", "label_circum_offset": "fixed-label", "label_circum_limit": "fixed-label", "label_rotation": "fixed-label"},
+  "track_band": {"width": "band", "gap": "band"}
+}

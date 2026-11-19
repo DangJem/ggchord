@@ -1,0 +1,15 @@
+{
+  "source_sha256": "4bdeb08399b7322664b7e1e7e3c5f06dea1486b12d73d988f1507127552a76a1",
+  "blocks": {
+    "1": {
+      "source_sha256": "78f3b751cc6a81f151c97d45744da2989fa25c9ea71a757fa0548ec3895c1028",
+      "status": "reviewed",
+      "translation": "## 本页已迁移 {#moved}\n"
+    },
+    "2": {
+      "source_sha256": "487047c642a89f73de070f241fed71f65bdbe9aac34d2ec2d1859116b6a46b56",
+      "status": "reviewed",
+      "translation": "[调整序列顺序与显示方向](multi-sequence-layout.md)\n"
+    }
+  }
+}

@@ -42,7 +42,7 @@ reference:
     previous_id: construction-and-contracts
     title_zh: "创建图与图层"
     desc_zh: "用参考序列和默认数据表创建图，再叠加各自拥有数据和映射的图层。"
-    source_sha256: 831a5d559e44e537ada3d42560807ab7e86c0c555f0cb88756c99f424e993c8e
+    source_sha256: f5dcfea87f79d02b5399947ee89993eaa5e76d9d3d5e4bdb023ba90d8998b9f5
     contents:
       - '`ggchord`'
       - '`prepare_ggchord_data`'
@@ -53,7 +53,7 @@ reference:
     id: coordinates
     title_zh: "选择坐标与序列顺序"
     desc_zh: "选择序列在图上的排列方式。单序列环图、多序列比较和 HSP 点图各自使用相应的坐标系。"
-    source_sha256: cb0d733f5bc299aa5cff1e8a9574ccd0723f1b42b4297dcc8ba0a8e343649651
+    source_sha256: 41f7ad2de2b997178b8fff450fc86b3c8319b7ee9b7f15e99052ef5d76d5a7bd
     contents:
       - '`coord_chord`'
       - '`coord_collinear`'
@@ -67,7 +67,7 @@ reference:
     id: sequence-layers
     title_zh: "绘制序列骨架与参照"
     desc_zh: "显示序列本体、局部区间、断点、序列名称及长度单位。"
-    source_sha256: e6de126ee3552b51b0c7ae2bd517e08ee6a6c406d76ac5e13e83d6376e50e5c9
+    source_sha256: ff936198208718a14e372c58823272847d71a1a52212069ddc57dd6fb778ab3d
     contents:
       - '`geom_seq`'
       - '`geom_seq_label`'
@@ -81,7 +81,7 @@ reference:
     previous_id: geometry-and-labels
     title_zh: "绘制特征与标签"
     desc_zh: "沿骨架绘制注释、引物和酶切位点。用分道或偏移安排特征与标签的位置。"
-    source_sha256: 25dcab3e4c16f96f4c9bbbe08ff3164bff3b3641ad138d94fcdd91bbe4c47142
+    source_sha256: 0054fa3a0d06f34d085d3d330664fd5484961e5490687d0448ebcc6f5140ac23
     contents:
       - '`geom_feature`'
       - '`geom_feature_label`'
@@ -98,7 +98,7 @@ reference:
     id: relationships
     title_zh: "显示连接与比对"
     desc_zh: "用带或线连接两个端点，用点图线段表示一对序列的比对，用字符矩阵查看单个残基。"
-    source_sha256: 409c2ad274f08c9a8d0e3f53a913a62647fb033fa0fa9bc063eebc0a4d690138
+    source_sha256: 8cfcd7d94b1166625938002fea6ce3a50212175153ed9163fd14d3f9206f3cba
     contents:
       - '`geom_link_ribbon`'
       - '`geom_link_line`'
@@ -113,7 +113,7 @@ reference:
     previous_id: quantitative-tracks
     title_zh: "添加定量轨道"
     desc_zh: "声明物理轨带，映射数值或计算区间覆盖率，再设置轨道高度、颜色和刻度。"
-    source_sha256: da511ff16351b36cd0d204809b49536e6a8a4892c28daab752d0b48b6e8af57f
+    source_sha256: ca182e9a250709544f666517c2d2f5f9d47a65158bff6db4558b364ed402c8ab
     contents:
       - '`track_band`'
       - '`geom_track`'
@@ -129,7 +129,7 @@ reference:
     previous_id: positions-scales-themes-and-guides
     title_zh: "设置标度、图例与主题"
     desc_zh: "控制序列坐标、颜色、形状及透明度的映射，选择坐标轴和图例的外观。"
-    source_sha256: 32e99f5b2b080f0b1376a840ab20b588149d81472b2b4c8200c5cd019a3485f6
+    source_sha256: 072148b9637089571e6e7c37cca39f41f87726672db8ec7b4a36a084b6966c2e
     contents:
       - '`scale_seq_position_continuous`'
       - '`guide_seq_axis`'
@@ -148,7 +148,7 @@ reference:
     id: read-files
     title_zh: "读取文件"
     desc_zh: "按文件格式查找序列、注释、定量信号、比对与连接的读取函数。"
-    source_sha256: 6c68f216d067b6195fee18c88f48fe971c6a13a02157adf50d560a0b9bb136b6
+    source_sha256: 1b3d6347d6220de86345e263eb44a9e860ad2ec7249d4971d49cc3deddf4d4ce
     contents:
       - '`read_fasta_lengths`'
       - '`read_genbank`'
@@ -172,7 +172,7 @@ reference:
     previous_id: input-and-validation
     title_zh: "整理与验证输入"
     desc_zh: "把现有对象或数据表转换为序列、特征与连接，核对坐标、标识及层级关系。"
-    source_sha256: 2eb3aeeefef8d56e9fa136b07c829167bd0cc94a35ce417e74410ef72f5bbbe6
+    source_sha256: 7b097317529e47cb72b3c68f470eb9c895f264ff612101c89685068f884b7d8b
     contents:
       - '`adapt_ggchord`'
       - '`as_ggchord_seq`'
@@ -191,7 +191,7 @@ reference:
     previous_id: projection-and-comparison-workflows
     title_zh: "筛选区间与投影坐标"
     desc_zh: "选择窗口与锚点，将特征、连接、轨道及比对位置映射到局部视图。"
-    source_sha256: 27cd957fc4ef8e77412715f856bcbd5ed6f17e364fe57cabc891c13ef813f3c7
+    source_sha256: 38dd4cbc33ab71b5ca9c683fcc1a60d43f3522c305b9946fe3653107e5a824ad
     contents:
       - '`find_ggchord_loci`'
       - '`focus_ggchord_data`'
@@ -207,7 +207,7 @@ reference:
     id: prepare-links
     title_zh: "整理比较关系"
     desc_zh: "按成员关系构建连接，再筛选、去重、合并或聚束。"
-    source_sha256: 2bcdd6abc3d09765dce616db4205af2582656812c5ebdde6c097fd6bcdd681cd
+    source_sha256: 87a09fc22d02972ed178e9402f3d2452ee48b3047c2ffa751f968d4294cde852
     contents:
       - '`link_ggchord_clusters`'
       - '`filter_ggchord_ribbons`'
@@ -220,7 +220,7 @@ reference:
     previous_id: sequence-recognition
     title_zh: "识别和整理序列注释"
     desc_zh: "从序列和来源注释整理常见特征、引物、酶切位点、CDS 与翻译产物。"
-    source_sha256: 9b55acf7951b3f4bfdb1b928f6b17c56c0bb9bc89b485d432f44688c7ec44ccb
+    source_sha256: e230db8c42d7081f7b8d4e08bcd6862f015658249a72f542dcba28731a845e92
     contents:
       - '`find_common_features`'
       - '`primer_catalog`'
@@ -235,7 +235,7 @@ reference:
     previous_id: static-panel-composition
     title_zh: "组合面板与局部放大"
     desc_zh: "组合独立视图，将源区间与局部细节对应，并导出跨面板连接。"
-    source_sha256: acba6dae34ca88aa42c06d69727470501882b43431a32eb93096d433c4555c8f
+    source_sha256: 00a183a6390adefa126ab713ecc881785bc4020adcb7fa29761b95fdbcdf5895
     contents:
       - '`ggchord_fusion`'
       - '`fusion_panel`'
@@ -248,7 +248,7 @@ reference:
     previous_id: output-and-diagnostics
     title_zh: "预览、诊断与导出"
     desc_zh: "查看目标尺寸下的图形，检查布局，并导出图层几何及来源记录。"
-    source_sha256: e495d2c8d5d39ef30f6723e4436fed50871c37d27fcadfaf60bfe810fc1e7b0d
+    source_sha256: 1a5ad0b7107d3aef7318ccb398f7a16c939c0d9786240035a9cff0c88e4de8c9
     contents:
       - '`view_ggchord`'
       - '`diagnose_ggchord`'
@@ -262,7 +262,7 @@ reference:
     previous_id: methods-teaching-data-and-upstream-reexports
     title_zh: "查找示例数据"
     desc_zh: "按输入类型选择随包数据，查看字段、来源和单位。"
-    source_sha256: 3fbfbaa086645201240f2ba7e0dc30f4ef2ef05196212289dc9f892de322da75
+    source_sha256: f5a71b11a5a0e3d8d5bf7dbcc8429af62d49f7c4736705e900d684b4611ba987
     contents:
       - '`flagship_examples`'
       - '`genome_comparison_example`'
@@ -281,7 +281,7 @@ reference:
     id: upstream
     title_zh: "ggplot2 与 grid 工具"
     desc_zh: "查找可直接配合图层使用的映射、图例、主题、保存及物理单位工具。"
-    source_sha256: cc8c8c9a120d223a5da9e3c62d3268dcb99cb225104c97f91c230eaac4357efa
+    source_sha256: 79525f7458894dffee0367c310fb1736f36074cda4b29d83f55dda73364db256
     contents:
       - '`ggplot2-helpers`'
       - '`grid-helpers`'

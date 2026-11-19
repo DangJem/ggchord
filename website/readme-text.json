@@ -8,8 +8,8 @@
     "en": "Build layered sequence figures in R with ggplot2: compare multiple sequences, annotate a circular map, inspect HSP alignments and connect independent views."
   },
   "api-compatibility": {
-    "zh": "v0.29.0 是沿用旧版 API 的最后一个正式版。v0.50.0 开发版已调整构图、轨道和标签接口，升级写法见[迁移指南](MIGRATION-Hans.md)。",
-    "en": "v0.29.0 is the final release using the legacy API. The v0.50.0 development version changes plot construction, tracks and labels. See the [migration guide](MIGRATION.md) when upgrading."
+    "zh": "需要使用旧 API 的代码请选用 v0.29.0，从 v0.50.0 起，接口与旧版不兼容。",
+    "en": "Use v0.29.0 for code that relies on the previous API, because v0.50.0 and later are incompatible with that API."
   },
   "website": {
     "zh": "网站",
@@ -310,5 +310,13 @@
   "install-development": {
     "zh": "从 GitHub 安装指定的 v0.29.0 正式版：",
     "en": "Install the v0.29.0 release from GitHub:"
+  },
+  "circular-reference": {
+    "zh": "对照 pETDuet-1 参考图",
+    "en": "Compare the pETDuet-1 reference map"
+  },
+  "dense-figure-source": {
+    "zh": "上方密集注释图代码",
+    "en": "Code for the dense map above"
   }
 }

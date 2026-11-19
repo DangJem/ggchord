@@ -1,32 +1,17 @@
-<a id="task"></a>
+点图把 query 坐标放在 x 轴、subject 坐标放在 y 轴。每条比对线段连接两组成对坐标，可用来读取匹配区间、跨度和相对方向。
 
-## 两条序列轴上的 HSP 关系 {#task}
+<a id="draw"></a>
 
-综合矩阵保留四条完整序列之间的 32 条原始 HSP。两轴分别保留 accession 身份和局部位置，颜色表达 Identity，线宽表达原记录中的 HSP 长度。
+## 画一条已观测比对线段 {#draw}
 
-读矩阵时，先从上方选择 query 序列，再从左侧选择 subject 序列；两者交叉的带边框区域就是该序列对的比较区。标题给出各自完整范围，底部和右侧刻度使用局部坐标。不同矩形的大小保留序列长度比例，空白区只表示输入中没有 HSP。
+这条线段起于 (26,298, 7,121) bp，止于 (51,139, 31,959) bp。由起点到终点，两条来源坐标均递增，因此本图上的斜率为正。
 
-{{manualfigure:flagdotplot}}
+{{example:first-dotplot}}
 
-<a id="path"></a>
+<a id="adapt"></a>
 
-## 想检查哪一种比对结果？ {#path}
+## 读取多对序列的矩阵 {#adapt}
 
-- 多条 query 与 subject 序列的拼接轴、显式顺序和原生单位间隙。
-- 正向与反向 HSP 端点，两轴独立的显示方向。
-- Identity 等已有指标的 link 映射与标度。
-- 精确来源坐标转换、可见窗口和输入行追溯。
+提供序列全长，并保留两端点对的原始次序。`x_seqs` 和 `y_seqs` 分别选择两轴上的序列和排列顺序。多序列矩阵中的空格表示输入表在该格没有记录。查看逐碱基缺口或错配还需要对齐列或更精细的比对路径。
 
-[试画第一张 HSP 图](dotplot-start.md#dotplot) · [比对结果导入](alignments.md) · [蛋白坐标](protein-alignments.md)
-
-<a id="inputs"></a>
-
-## 输入要求 {#inputs}
-
-提供完整长度、query/subject 标识和每条 HSP 的 qstart/qend/sstart/send。拼接轴不会合并生物学序列身份；bp 与 aa 需要独立坐标域或显式投影。
-
-<a id="support"></a>
-
-## 能力边界 {#support}
-
-每个标记是连接 HSP 端点的线段，不是逐碱基重建。错配和缺口需要真实对齐字符或精细轨迹。骨架 gene/feature/track 图层不适用；Dotplot 目前不是 Fusion 的注册端点。
+[四序列比对矩阵](case-dotplot.md) · [比对线段层](../../man/geom_alignment_segment.Rd) · [点图坐标轴](../../man/coord_dotplot.Rd)

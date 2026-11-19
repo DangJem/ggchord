@@ -1,0 +1,101 @@
+{
+  "plots": [
+    {
+      "title": {
+        "en": "Plot types"
+      },
+      "pages": [
+        "chord",
+        "collinear",
+        "radial-synteny",
+        "sankey",
+        "circular",
+        "dotplot",
+        "fusion"
+      ]
+    },
+    {
+      "title": {
+        "en": "Layers and appearance"
+      },
+      "pages": [
+        "multi-sequence-views",
+        "multi-sequence-layout",
+        "multi-sequence-links",
+        "annotations",
+        "parameters",
+        "tracks",
+        "tracks-statistics",
+        "styling"
+      ]
+    }
+  ],
+  "data": [
+    {
+      "title": {
+        "en": "Data and files"
+      },
+      "pages": [
+        "formats",
+        "data",
+        "import-sequences",
+        "import-relations",
+        "import-signals",
+        "projection"
+      ]
+    },
+    {
+      "title": {
+        "en": "Checks and output"
+      },
+      "pages": [
+        "output",
+        "diagnostics"
+      ]
+    }
+  ],
+  "cases": [
+    {
+      "title": {
+        "en": "Flagship cases"
+      },
+      "pages": [
+        "case-chord",
+        "case-collinear",
+        "case-radial",
+        "case-sankey",
+        "case-circular",
+        "case-dotplot",
+        "case-fusion"
+      ]
+    },
+    {
+      "title": {
+        "en": "Plasmid catalogue"
+      },
+      "pages": [
+        "plasmid-catalog"
+      ]
+    }
+  ],
+  "reference": [
+    {
+      "title": {
+        "en": "Find parameters"
+      },
+      "pages": [
+        "parameter-atlas"
+      ]
+    }
+  ],
+  "information": [
+    {
+      "title": {
+        "en": "Migration"
+      },
+      "pages": [
+        "migration"
+      ]
+    }
+  ]
+}

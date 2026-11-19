@@ -1,67 +1,15 @@
-<div class="task-intro"><p>把真实注释画为独立图层，选择合适形状，并让重叠区间和文字共享堆叠位置。</p></div>
+<a id="anchors"></a>
 
-<span id="prepare"></span>
+## 绘制全部特征，只标出选中的记录 {#anchors}
 
-<a id="stack"></a>
+pUC19 示例包含九条参考特征。每条特征有稳定 ID，标签可据此找到对应实体。先用完整表分配道位，再筛出两条 CDS 作标签。实体图层的 ID 是 `features`，标签层通过 `anchor_layer` 指向它。
 
-## 保留注释语义 {#stack}
-用 pUC19 识别结果的前六条区间绘制圆图。
-这里保留 pUC19 中实际重叠的注释和原本未知的链方向。
-两层使用同一个堆叠位置，文字跟随对应注释。
+{{example:feature-subset-labels}}
 
-{{code:featurestack}}
-{{figure:featurestack}}
+<a id="placement"></a>
 
-`position_feature_stack()` 解决注释轨道重叠。标签层使用同一 Position，让文字锚点
-跟随轨道。标签子集或重排时优先提供唯一 `feature_id`。严格的 gene 快捷层要求
-已知 `+/-`，通用注释保留未知/双向语义。
+## 决定形状与标签如何放置 {#placement}
 
-<a id="shapes"></a>
+混合链向或未知链的区间可用 `geom_feature()`。核酸参考上链向已知的编码特征可选 gene 预设绘制有向箭头。教学表若同时保留原始链和重编码的展示链，应明确传入来源链。若想把多道放在同侧，可给 `position_feature_stack()` 指定 `base_position = position_offset(...)` 和分道方向。稳定特征键与原区间使筛选、重排后的标签仍可跟随道位。
 
-## 按含义选择形状 {#shapes}
-| 几何 | 常见用途 | 重要区别 |
-| --- | --- | --- |
-| `arrow`, `compact_arrow` | 有方向的编码/注释区间 | 已知方向来自证据，不由显示猜测 |
-| `block`, `capped_line` | 区域或不填充区间 | 选择形状不推断生物学功能 |
-| `promoter_arrow`, `primer_arrow`, `primer_arc` | 已声明的启动子/引物式注释 | 计算匹配与绘图分开 |
-| `marker`, `chevron`, `lollipop` | 自定义区间/类点强调 | 保留真实区间元数据，显示形状属于映射 |
-
-`geom_feature(preset = 'gene')` 与 `geom_feature(preset = 'plasmid')` 提供不同的图形预设。
-`position_strand()` 按链给出带符号位移，`position_offset()` 让两条链共用一个偏移，两种位置均按当前位置的局部法向解释。
-
-<a id="decoration"></a>
-
-## 高亮区间而不改写观测 {#decoration}
-{{code:decorations}}
-{{figure:decorations}}
-
-图中高亮 pUC19 复制起点的实际范围。区域叠层有自己的数据和 `region_fill` 标度。`geom_seq_label()` 命名序列，
-`geom_seq_center_label()` 在单圆图中心提供名称/长度，`geom_seq_break()` 标记裁剪或
-分段末端。`geom_seq_scale()` 是仅用于共线性图的独立序列位置参照条，与控制序列基因组轴
-的 `scale_seq_position_continuous()` 不同。普通 ggplot2 注释应使用
-[位置映射](views.md#mapping)，不能把 bp 直接当作笛卡尔 x/y。
-
-<a id="check-result"></a>
-
-## 检查要点 {#check-result}
-先检查区间与链，再看形状与标签。未知链仍保留在通用注释中；堆叠改变显示位置，不改变原始基因组坐标。
-
-<div class="next-step">继续：<a href="feature-geometry.md">基因与特征的箭头几何 →</a></div>
-
-比较真实 CDS 的 shouldered/flush/triangle 三种箭头，见[箭头几何对照](feature-geometry.md#arrow-heads)。
-
-<a id="region-parameters"></a>
-
-## 区间高亮的侧向、宽度与偏移 {#region-parameters}
-
-从第一条真实 HSP 的 query 端保留原始 ID 与区间。默认宽度 0.08、偏移 0、侧向 inside；后图分别只改变 outside、宽度或偏移。它们是局部几何量，不是 bp。固定填色写在 geom 外观参数，数据类别映射使用 region_fill 和其专用标度。不能把高亮当作新的功能注释。
-
-{{code:comparefinishchord}}
-{{code:compareregioninside}}
-{{figure:compareregioninside}}
-{{code:compareregionoutside}}
-{{figure:compareregionoutside}}
-{{code:compareregionwidth}}
-{{figure:compareregionwidth}}
-{{code:compareregionoffset}}
-{{figure:compareregionoffset}}
+需要指定文字角度时使用固定位置。需要自动排布时使用 `placement = "repel"`，用 `overflow` 决定空间不足时如何处理文字。最后按[目标导出尺寸](output.md)检查标签。

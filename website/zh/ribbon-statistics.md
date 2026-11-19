@@ -1,5 +1,5 @@
 <a id="moved"></a>
 
-## 统计课已合并 {#moved}
+## 本页已迁移 {#moved}
 
-[Statistics](ribbons.md#statistics)
+[计数、分箱与轨道统计](tracks-statistics.md)

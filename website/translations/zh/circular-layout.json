@@ -1,0 +1,15 @@
+{
+  "source_sha256": "7b9c0a1a1d369eb8edd4de7d8b2fcc5f77027be37a2d67fc9d3b617e3df62722",
+  "blocks": {
+    "1": {
+      "source_sha256": "78f3b751cc6a81f151c97d45744da2989fa25c9ea71a757fa0548ec3895c1028",
+      "status": "reviewed",
+      "translation": "## 本页已迁移 {#moved}\n"
+    },
+    "2": {
+      "source_sha256": "87287f3aec3cb8732264cd38f8eb926e2c3a6f54a2d3f69f22093058e6c11873",
+      "status": "reviewed",
+      "translation": "[单序列圆图](circular.md)\n"
+    }
+  }
+}

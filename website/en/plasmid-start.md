@@ -1,5 +1,5 @@
 <a id="moved"></a>
 
-## Section moved {#moved}
+## This page has moved {#moved}
 
-[First single-sequence circular map](circular-start.md#input)
+[Single-sequence circular maps](circular.md)

@@ -1,0 +1,536 @@
+{
+  "chord": {
+    "en": "Bundled sequences and alignment intervals in a chord view"
+  },
+  "circular": {
+    "en": "pUC19 annotations in a circular map"
+  },
+  "collinear": {
+    "en": "Bundled records aligned to explicitly selected annotation anchors"
+  },
+  "tracks": {
+    "en": "GC fractions computed from the bundled pUC19 DNA"
+  },
+  "focus": {
+    "en": "Focused sequence windows with source-coordinate axes"
+  },
+  "labels": {
+    "en": "Automatic placement of informative source gene annotations"
+  },
+  "realchord": {
+    "en": "Original sequences with explicitly selected CDS and alignment links"
+  },
+  "reallinear": {
+    "en": "Original sequences, all imported CDS and filtered links"
+  },
+  "plasmid": {
+    "en": "pUC19 features, exact primer hits and three selected restriction sites"
+  },
+  "density": {
+    "en": "Interval density from the original alignment observations"
+  },
+  "pointlinks": {
+    "en": "Midpoint links derived from existing HSP intervals"
+  },
+  "featurestack": {
+    "en": "Stacked overlapping annotations from the pUC19 reference"
+  },
+  "multitrack": {
+    "en": "pUC19 GC fractions and a three-window moving mean"
+  },
+  "homologs": {
+    "en": "Blue reverse-strand AmpR arrows and a grey ribbon between identical coding intervals."
+  },
+  "decorations": {
+    "en": "Highlighting the pUC19 replication-origin interval"
+  },
+  "labelauto": {
+    "en": "Informative gene annotations with automatic side placement"
+  },
+  "labelradial": {
+    "en": "The same gene annotations with radial placement"
+  },
+  "labelarc": {
+    "en": "The same gene annotations with arc-oriented text"
+  },
+  "styling": {
+    "en": "A query-category colour scale on four chord backbones"
+  },
+  "paf": {
+    "en": "A real minimap2 PAF comparison between two EMALE genomes"
+  },
+  "first": {
+    "en": "Your first plot: two bundled sequences, gene arrows and observed alignment intervals"
+  },
+  "showcasechord": {
+    "en": "Four original genomes with CDS sampled separately by source strand"
+  },
+  "showcaseplasmid": {
+    "en": "Dense pETDuet-1 map: features, reference primers and grouped restriction sites"
+  },
+  "showcasecollinear": {
+    "en": "Four-genome collinearity: strand-separated features and routed cross-row links"
+  },
+  "learnseq": {
+    "en": "Chord step1: sequence backbones"
+  },
+  "learnlinks": {
+    "en": "Chord step2: observed comparisons"
+  },
+  "learngenes": {
+    "en": "Chord step3: selected genes"
+  },
+  "learnlabels": {
+    "en": "Chord step4: labels for selected features"
+  },
+  "linearseq": {
+    "en": "The same backbones with linear coordinates"
+  },
+  "linearlinks": {
+    "en": "The same observed links with linear coordinates"
+  },
+  "linearlabels": {
+    "en": "The same genes and labels with linear coordinates"
+  },
+  "plasmidbackbone": {
+    "en": "pUC19 step1: double backbone"
+  },
+  "plasmidfeatures": {
+    "en": "pUC19 step2: features"
+  },
+  "plasmidtext": {
+    "en": "pUC19 step3: labels"
+  },
+  "catalogpsb": {
+    "en": "pSB1C3: source-backed feature map"
+  },
+  "catalogpuc": {
+    "en": "pUC19: source-backed feature map"
+  },
+  "catalogpbr": {
+    "en": "pBR322: source-backed feature map"
+  },
+  "catalogblue": {
+    "en": "pBluescript II SK(+): source-backed feature map"
+  },
+  "catalogpet": {
+    "en": "pET-28a(+): source-backed feature map"
+  },
+  "catalogduet": {
+    "en": "pETDuet-1: source-backed feature map"
+  },
+  "catalogdonr": {
+    "en": "pDONR221: source-backed feature map"
+  },
+  "catalogpcdna": {
+    "en": "pcDNA3.1(+): source-backed feature map"
+  },
+  "catalogtre": {
+    "en": "pTRE-Tight-BI: source-backed feature map"
+  },
+  "catalogtripz": {
+    "en": "pTRIPZ: source-backed feature map"
+  },
+  "catalogcambia": {
+    "en": "pCAMBIA1300: source-backed feature map"
+  },
+  "catalogearley": {
+    "en": "pEarleyGate 201: source-backed feature map"
+  },
+  "catalogcas": {
+    "en": "pSpCas9(BB)-2A-GFP (PX458): source-backed feature map"
+  },
+  "firstchord": {
+    "en": "Two bundled sequence backbones and their observed alignment ribbons"
+  },
+  "firstlinear": {
+    "en": "Two sequence rows share a base-pair scale and are joined by aligned intervals"
+  },
+  "firstcircle": {
+    "en": "A circular pUC19 backbone with its name and length"
+  },
+  "firstfeatures": {
+    "en": "The pUC19 replication-origin interval on the circular backbone"
+  },
+  "practicechord": {
+    "en": "Two-sequence chord plot with one gene arrow and source annotation per sequence"
+  },
+  "practicelinear": {
+    "en": "Two-row collinear plot with gene arrows, annotations and a 10 kb scale bar"
+  },
+  "practiceplasmid": {
+    "en": "pUC19 circular map with its labelled replication origin"
+  },
+  "frontbackbone": {
+    "en": "Default arc backbones for four sequences"
+  },
+  "frontribbon": {
+    "en": "One alignment ribbon added"
+  },
+  "frontfeature": {
+    "en": "One integrase CDS added to the green backbone"
+  },
+  "frontrotation": {
+    "en": "Chord layout rotated 90 degrees counterclockwise from the default"
+  },
+  "frontgap": {
+    "en": "Wider gaps between adjacent backbones"
+  },
+  "frontradius": {
+    "en": "Move the MT118296.1 backbone inward"
+  },
+  "frontcurvature": {
+    "en": "Draw MT118296.1 as a straight segment"
+  },
+  "frontorientation": {
+    "en": "Reverse the display direction of MT118296.1"
+  },
+  "frontroute": {
+    "en": "Move the ribbon control upward"
+  },
+  "frontnoavoid": {
+    "en": "Fixed clearance overlaps the CDS"
+  },
+  "frontsmooth": {
+    "en": "The ribbon leaves smooth clearance near the CDS"
+  },
+  "frontseqlabels": {
+    "en": "Move sequence labels inward and set them horizontally"
+  },
+  "frontgenelabels": {
+    "en": "Add the feature name while retaining backbones, ribbon and CDS"
+  },
+  "frontmarkers": {
+    "en": "An interval highlight and a directed point link"
+  },
+  "frontorder": {
+    "en": "Swap the display order of two backbones"
+  },
+  "frontlinearbase": {
+    "en": "Four collinear backbones"
+  },
+  "frontlinearlink": {
+    "en": "One alignment ribbon across four rows"
+  },
+  "frontlinearcds": {
+    "en": "A CDS arrow on the third, green row"
+  },
+  "frontlineargap": {
+    "en": "Wider spacing between collinear rows"
+  },
+  "frontlinearscale": {
+    "en": "A 10 kb scale bar"
+  },
+  "frontcirclestyle": {
+    "en": "A single backbone for pUC19"
+  },
+  "frontcirclerotation": {
+    "en": "pUC19 with the sequence coordinate origin at 9 o’clock"
+  },
+  "frontlinearcross": {
+    "en": "A ribbon crossing the second row"
+  },
+  "mappingexample": {
+    "en": "Map alignment identity to ribbon colour"
+  },
+  "parameterexample": {
+    "en": "Set one backbone radius by sequence name"
+  },
+  "segment": {
+    "en": "Two windows on one sequence. The right window is displayed in reverse."
+  },
+  "mappingposition": {
+    "en": "The dot marks 10,100 bp on the first source sequence."
+  },
+  "recognition": {
+    "en": "Known primer matches and selected restriction sites on pUC19."
+  },
+  "nativeprotein": {
+    "en": "Four complete proteins and three adjacent BLASTp ribbons, with a 50-aa scale bar"
+  },
+  "nativeproteinchord": {
+    "en": "Four complete proteins and all six pairwise BLASTp alignments"
+  },
+  "parameteruniform": {
+    "en": "Uniform radius: every sequence uses 1"
+  },
+  "parametervector": {
+    "en": "Ordered radii: the second displayed sequence uses 0.72"
+  },
+  "parameterstrand": {
+    "en": "Opposite offsets for forward and reverse CDS"
+  },
+  "parameterwidth": {
+    "en": "Different widths for forward and reverse CDS"
+  },
+  "parameterlabels": {
+    "en": "Named label radii for selected sequences"
+  },
+  "frontcrosswidth": {
+    "en": "A dedicated width for cross-row outlines"
+  },
+  "frontcrosssame": {
+    "en": "Cross-row outlines inherit the ordinary width"
+  },
+  "manualgenelabels": {
+    "en": "Manual gene labels in a chord view"
+  },
+  "alignleft": {
+    "en": "Same four sequences and observed alignments: left alignment."
+  },
+  "aligncenter": {
+    "en": "Only align changes to center: complete sequence midpoints align."
+  },
+  "alignright": {
+    "en": "Only align changes to right: complete sequence right edges align."
+  },
+  "alignanchor": {
+    "en": "Keep left alignment and add midpoint anchors; these geometric anchors do not assert homology."
+  },
+  "alignauto": {
+    "en": "Enable automatic display orientation at the default 0.1 support threshold; row order and source endpoints remain unchanged."
+  },
+  "tracktile": {
+    "en": "The same real GC windows: a fixed-width band encodes fraction by colour, not height."
+  },
+  "comparegeneshouldered": {
+    "en": "The same source integrase: default shouldered arrow."
+  },
+  "comparegeneflush": {
+    "en": "Only arrow_head_style changes to flush."
+  },
+  "comparegenetriangle": {
+    "en": "Only arrow_head_style changes to triangle, a full triangular wedge."
+  },
+  "comparebranchnone": {
+    "en": "Synthetic demonstration: two ribbons from the same query interval, drawn independently."
+  },
+  "comparebranchquery": {
+    "en": "Same synthetic input: enable query branching at the default 0.15 fraction."
+  },
+  "comparebranchfraction": {
+    "en": "Keep query branching and change only the trunk fraction from 0.15 to 0.35."
+  },
+  "comparelinkcurve": {
+    "en": "Same synthetic input: curved links connect interval midpoints."
+  },
+  "comparelinkstraight": {
+    "en": "Only link_type changes to straight; midpoint anchors stay fixed."
+  },
+  "comparetrackthin": {
+    "en": "Same pUC19 GC values: only tile band width changes from 10 mm to 4 mm."
+  },
+  "comparecenter": {
+    "en": "Centre name and length use independent default text styles."
+  },
+  "comparecenternolength": {
+    "en": "Hide only centre length; retain the name."
+  },
+  "comparecenterstyle": {
+    "en": "Change only centre name size; length style stays fixed."
+  },
+  "comparebonedouble": {
+    "en": "Double backbone on the same pUC19."
+  },
+  "comparebonesingle": {
+    "en": "Change only to single."
+  },
+  "compareboneband": {
+    "en": "Same pUC19 with only backbone style changed to band, rendered after the confirmed fix."
+  },
+  "comparebonegap": {
+    "en": "Double-line gap changes from 0.025 to 0.05."
+  },
+  "comparecirclecounter": {
+    "en": "Same circle, with coordinates increasing counterclockwise."
+  },
+  "comparecirclegap": {
+    "en": "Set only the circular opening to 25 degrees."
+  },
+  "comparefixedfeature": {
+    "en": "Fixed labels follow feature direction."
+  },
+  "comparefixedhorizontal": {
+    "en": "Change only fixed text orientation to horizontal."
+  },
+  "comparefixedinside": {
+    "en": "Change only fixed label side to inside."
+  },
+  "comparefixedrotate": {
+    "en": "Add only a 30-degree fixed-label rotation."
+  },
+  "comparefeaturefit": {
+    "en": "Same annotations with feature-first label placement."
+  },
+  "compareradialfit": {
+    "en": "Change only layout to radial."
+  },
+  "compareautofit": {
+    "en": "Change only layout to auto."
+  },
+  "comparecalloutfit": {
+    "en": "Change only layout to callout."
+  },
+  "compareshrinkfit": {
+    "en": "Change only fitting to shrink; retain the default 1.5 minimum size."
+  },
+  "comparewrapfit": {
+    "en": "Set only a 14-character wrap width; text remains source names plus coordinates."
+  },
+  "comparepositionidentity": {
+    "en": "Actual overlapping annotations at their original common placement."
+  },
+  "comparepositionstack": {
+    "en": "Replace only the shared Position; features and labels follow the same lanes."
+  },
+  "compareprimerbetween": {
+    "en": "Same three computed bindings, with primer arcs between backbone lines."
+  },
+  "compareprimeroutside": {
+    "en": "Move only primer arcs outside."
+  },
+  "compareprimerinside": {
+    "en": "Move only primer arcs inside."
+  },
+  "compareprimerwidth": {
+    "en": "Change only primer arc width from 0.026 to 0.05."
+  },
+  "compareprimerlabel": {
+    "en": "Primer labels include actual binding ranges by default."
+  },
+  "compareprimernolocation": {
+    "en": "Hide only range text; arcs still encode complete binding intervals."
+  },
+  "compareprimerlabelinside": {
+    "en": "Move only primer text inside."
+  },
+  "comparerestrictionradial": {
+    "en": "Same computed restriction sites with default radial leaders."
+  },
+  "comparerestrictionelbow": {
+    "en": "Change only leader routing to elbow."
+  },
+  "comparerestrictionstraight": {
+    "en": "Change only leader routing to straight."
+  },
+  "comparerestrictionenzyme": {
+    "en": "Show only enzyme names; retain cut coordinates in data."
+  },
+  "comparerestrictionposition": {
+    "en": "Show only positions; source enzyme names are retained."
+  },
+  "comparerestrictionorder": {
+    "en": "Change only text order to position then enzyme."
+  },
+  "comparerestrictioninside": {
+    "en": "Move only restriction labels inside."
+  },
+  "compareshortauto": {
+    "en": "Same observed CDS with an oversized requested head to demonstrate auto fallback."
+  },
+  "compareshortwedge": {
+    "en": "Same observed CDS with an oversized requested head to demonstrate wedge fallback."
+  },
+  "compareshortblock": {
+    "en": "Same observed CDS with an oversized requested head to demonstrate block fallback."
+  },
+  "compareseqlabelarc": {
+    "en": "Default sequence text follows each arc."
+  },
+  "compareseqlabelhorizontal": {
+    "en": "Change only sequence text orientation to horizontal."
+  },
+  "compareseqlabelrotation": {
+    "en": "Add only 30 degrees to arc-oriented sequence text."
+  },
+  "compareregioninside": {
+    "en": "Highlight the observed query interval inside."
+  },
+  "compareregionoutside": {
+    "en": "Move only the same interval highlight outside."
+  },
+  "comparescalegradient": {
+    "en": "Continuous identity gradient for the same observed HSPs."
+  },
+  "comparescalesteps": {
+    "en": "Replace only the fill scale with explicit steps; source identity stays fixed."
+  },
+  "comparescalelinkcontinuous": {
+    "en": "Same observed HSP midpoints with identity mapped to colour, opacity and width."
+  },
+  "comparethememinimal": {
+    "en": "Same backbones and default mapping; minimal theme changes non-data appearance."
+  },
+  "comparethemedark": {
+    "en": "Change only to the dark theme, retaining sequences and mappings."
+  },
+  "comparedensityfour": {
+    "en": "Observed HSPs with four midpoint bins per endpoint; one ribbon per input remains."
+  },
+  "comparedensityeight": {
+    "en": "Change only bins from 4 to 8, altering the grouping scale of local counts."
+  },
+  "comparebundle": {
+    "en": "Same observed HSPs explicitly bundled into four bins; envelopes are not new alignments."
+  },
+  "comparebandwidth": {
+    "en": "Change only actual band width from 0.035 to 0.07."
+  },
+  "comparefeaturearrow": {
+    "en": "Same six source annotations with generic arrow geometry."
+  },
+  "comparefeatureblock": {
+    "en": "Change only shape to block; source strand is retained without a directional arrow."
+  },
+  "comparefeaturepreset": {
+    "en": "Plasmid preset changes head, width and placement defaults; this is a preset example, not a single-parameter contrast."
+  },
+  "compareexternaloff": {
+    "en": "Disable only exterior fallback; unresolved names may hide while features remain."
+  },
+  "compareellipsisfit": {
+    "en": "Keep the 14-character width and change only fitting to ellipsis; full source names remain."
+  },
+  "compareprimeroffset": {
+    "en": "Relative to outside baseline, only arc_offset changes from 0.045 to 0.09."
+  },
+  "compareregionwidth": {
+    "en": "Same observed query interval; only width changes from 0.08 to 0.14."
+  },
+  "compareregionoffset": {
+    "en": "Change only region_offset from 0 to 0.1, retaining the interval."
+  },
+  "comparetracktwo": {
+    "en": "Same GC windows encoded by height and colour in two explicitly named tracks."
+  },
+  "comparetrackorder": {
+    "en": "Change only the colour track order, swapping bands while GC values stay fixed."
+  },
+  "foundationvertical": {
+    "en": "Original HSPs routed through named A–B–A display instances on vertical backbones."
+  },
+  "foundationsankey": {
+    "en": "Mirrored source sequences: query intervals on the left, subject intervals on the right."
+  },
+  "foundationcount": {
+    "en": "Counts of actual query-start observations in source coordinates."
+  },
+  "foundationequal": {
+    "en": "Equal visual lengths with true local axes and explicitly selected identity fill."
+  },
+  "foundationarrow": {
+    "en": "Optional subject tips: shoulders retain target endpoint spans; the tip is a decorative marker."
+  },
+  "viewdotplot": {
+    "en": "All 11 source-backed EMALE PAF HSPs in one-based native coordinates; reverse alignments retain their negative slope."
+  },
+  "viewradial": {
+    "en": "Four real sequences with proportional spokes, source-strand CDS, observed interval ribbons and counts of retained HSP-start observations. Cyclic adjacency selects existing relationships only."
+  },
+  "fusionview": {
+    "en": "Two observed EMALE HSPs connect their full source intervals across independently measured circular and vertical panels. The count track uses all 11 original HSP starts."
+  },
+  "fusionfour": {
+    "en": "Four-direction Fusion with explicit observed PAF rows 3, 2, 9 and 1 routed north, west, south and east. Each panel retains its own original sequence scale."
+  }
+}

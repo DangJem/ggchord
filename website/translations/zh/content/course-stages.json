@@ -1,0 +1,50 @@
+{
+  "source_sha256": "99afe73ffd6980f9a3b4f58d82700734899fcdeb6f5a62949ce7087664dd5c4b",
+  "strings": {
+    "chord/0/title": {
+      "source_sha256": "9674595407a561e727dde46d79c13456fb2c1ec69310de79be2b8adac39b81d8",
+      "status": "reviewed",
+      "translation": "基础必学"
+    },
+    "chord/1/title": {
+      "source_sha256": "0c06867abc617e0393d6cad8d4c2e598f55d63288348c5ac99ef2512c4e8fba0",
+      "status": "reviewed",
+      "translation": "进阶可选"
+    },
+    "chord/2/title": {
+      "source_sha256": "4aea01d6905c8905f5d4bd2f956768de55d3ba53655bbc1b18f001ec282dd323",
+      "status": "reviewed",
+      "translation": "综合案例与参考"
+    },
+    "collinear/0/title": {
+      "source_sha256": "9674595407a561e727dde46d79c13456fb2c1ec69310de79be2b8adac39b81d8",
+      "status": "reviewed",
+      "translation": "基础必学"
+    },
+    "collinear/1/title": {
+      "source_sha256": "0c06867abc617e0393d6cad8d4c2e598f55d63288348c5ac99ef2512c4e8fba0",
+      "status": "reviewed",
+      "translation": "进阶可选"
+    },
+    "collinear/2/title": {
+      "source_sha256": "4aea01d6905c8905f5d4bd2f956768de55d3ba53655bbc1b18f001ec282dd323",
+      "status": "reviewed",
+      "translation": "综合案例与参考"
+    },
+    "plasmid/0/title": {
+      "source_sha256": "9674595407a561e727dde46d79c13456fb2c1ec69310de79be2b8adac39b81d8",
+      "status": "reviewed",
+      "translation": "基础必学"
+    },
+    "plasmid/1/title": {
+      "source_sha256": "0c06867abc617e0393d6cad8d4c2e598f55d63288348c5ac99ef2512c4e8fba0",
+      "status": "reviewed",
+      "translation": "进阶可选"
+    },
+    "plasmid/2/title": {
+      "source_sha256": "4aea01d6905c8905f5d4bd2f956768de55d3ba53655bbc1b18f001ec282dd323",
+      "status": "reviewed",
+      "translation": "综合案例与参考"
+    }
+  }
+}

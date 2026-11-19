@@ -1,32 +1,58 @@
 #!/usr/bin/env python3
-"""Read-only HTTP checks against the local preview; never inspect a deployed site."""
-import argparse,json
+"""Check registered pages, historical addresses and downloads on a running local preview."""
+import argparse
+import json
 from pathlib import Path
+from urllib.error import HTTPError, URLError
+from urllib.parse import quote, urlsplit
 from urllib.request import urlopen
-from urllib.error import HTTPError
-from urllib.parse import urlsplit
-ROOT=Path(__file__).resolve().parents[2]
+
+ROOT = Path(__file__).resolve().parents[2]
+
+
+def read(path):
+    return json.loads(path.read_text())
+
+
 def main():
-    parser=argparse.ArgumentParser();parser.add_argument('--base-url',default='http://127.0.0.1:8765/');args=parser.parse_args()
-    base=args.base_url.rstrip('/')+'/'
-    assert urlsplit(base).hostname in {'127.0.0.1','localhost'},'Local preview only'
-    baseline=json.loads((ROOT/'tools/site-audit/baseline.json').read_text());failures=[]
-    for row in baseline['urls']:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--base-url', default='http://127.0.0.1:8765/')
+    parser.add_argument('--site', type=Path, default=ROOT/'.site')
+    parser.add_argument('--report', type=Path)
+    args = parser.parse_args()
+    base = args.base_url.rstrip('/')+'/'
+    if urlsplit(base).hostname not in {'127.0.0.1','localhost','::1'}:
+        parser.error('A loopback preview URL is required')
+    site = args.site.resolve()
+    urls = {p.relative_to(site).as_posix() for p in site.rglob('*.html')}
+    urls.update(read(ROOT/'website/historical-pages.json'))
+    urls.update(record['file'] for record in read(site/'assets/examples.json'))
+    urls.update('assets/handbook/'+key+'.png' for key in read(site/'assets/handbook/rendered.json'))
+    errors = []
+    for path in sorted(urls):
         try:
-            with urlopen(base+row['path'],timeout=10) as response:
-                if response.status!=200:failures.append(row['path']+': '+str(response.status))
-        except Exception as error:failures.append(row['path']+': '+str(error))
-    missing='__ggchord_missing_route_for_audit__.html'
+            with urlopen(base+quote(path,safe='/'),timeout=10) as response:
+                if response.status!=200:
+                    errors.append(f'{path}: HTTP {response.status}')
+        except (OSError,URLError) as error:
+            errors.append(f'{path}: {error}')
     try:
-        with urlopen(base+missing,timeout=10) as response:status=response.status
-    except HTTPError as error:status=error.code
-    if status!=404:failures.append('Unknown route returned '+str(status))
+        with urlopen(base+'__ggchord_missing_route_for_audit__.html',timeout=10) as response:
+            status=response.status
+    except HTTPError as error:
+        status=error.code
+    if status!=404:
+        errors.append(f'Unknown route returned {status}')
     with urlopen(base+'404.html',timeout=10) as response:
-        body=response.read().decode();recovery=response.status==200 and 'en/index.html' in body and 'zh/index.html' in body
-    if not recovery:failures.append('Explicit bilingual 404 recovery page missing')
-    result=dict(audited_urls=len(baseline['urls']),expected_status=200,unknown_route_status=status,explicit_bilingual_recovery_page=recovery,
-        scope='Local Python HTTP server; unknown URLs get its HTTP 404 body. The generated 404.html is separately verified; hosting rewrite/custom-404 configuration is not deployed or tested.',failures=failures)
-    (ROOT/'tools/site-audit/http-check.json').write_text(json.dumps(result,indent=2)+'\n')
-    if failures:raise SystemExit('\n'.join(failures))
-    print('PASS: 582 audited HTTP URLs, unknown URL 404, bilingual recovery file')
-if __name__=='__main__':main()
+        body=response.read().decode()
+    if not all(lang+'/index.html' in body for lang in ('en','zh')):
+        errors.append('Missing bilingual recovery links on 404.html')
+    if args.report:
+        args.report.write_text(json.dumps(dict(checked_urls=len(urls),missing_page_status=status,errors=errors),indent=2)+'\n')
+    if errors:
+        raise SystemExit('\n'.join(errors))
+    print(f'PASS: {len(urls)} local HTTP URLs, expected 404 and bilingual recovery links.')
+
+
+if __name__=='__main__':
+    main()

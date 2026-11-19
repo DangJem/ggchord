@@ -1,0 +1,1605 @@
+{
+  "source_sha256": "5b6fa45add3770a8d2e544b7888968d98413f80cfec637eb574525c4ea4dd9a2",
+  "strings": {
+    "aes/purpose": {
+      "source_sha256": "1f18c58a24dc5b5d92f428e8b94f76bcf54aabd45fae0856bb2f6a246a5e247d",
+      "status": "reviewed",
+      "translation": "适用于 ggchord 的部分 ggplot2 辅助函数"
+    },
+    "aes/modes_localized": {
+      "source_sha256": "1258e659a444ec4770caca0628df0e8061f1ecba48bf73526e11b5514c97e9fa",
+      "status": "reviewed",
+      "translation": "上游对象/接口；遵循 ggplot2/grid 的原始契约"
+    },
+    "after_scale/purpose": {
+      "source_sha256": "1f18c58a24dc5b5d92f428e8b94f76bcf54aabd45fae0856bb2f6a246a5e247d",
+      "status": "reviewed",
+      "translation": "适用于 ggchord 的部分 ggplot2 辅助函数"
+    },
+    "after_scale/modes_localized": {
+      "source_sha256": "1258e659a444ec4770caca0628df0e8061f1ecba48bf73526e11b5514c97e9fa",
+      "status": "reviewed",
+      "translation": "上游对象/接口；遵循 ggplot2/grid 的原始契约"
+    },
+    "after_stat/purpose": {
+      "source_sha256": "1f18c58a24dc5b5d92f428e8b94f76bcf54aabd45fae0856bb2f6a246a5e247d",
+      "status": "reviewed",
+      "translation": "适用于 ggchord 的部分 ggplot2 辅助函数"
+    },
+    "after_stat/modes_localized": {
+      "source_sha256": "1258e659a444ec4770caca0628df0e8061f1ecba48bf73526e11b5514c97e9fa",
+      "status": "reviewed",
+      "translation": "上游对象/接口；遵循 ggplot2/grid 的原始契约"
+    },
+    "annotate/purpose": {
+      "source_sha256": "1f18c58a24dc5b5d92f428e8b94f76bcf54aabd45fae0856bb2f6a246a5e247d",
+      "status": "reviewed",
+      "translation": "适用于 ggchord 的部分 ggplot2 辅助函数"
+    },
+    "annotate/modes_localized": {
+      "source_sha256": "1258e659a444ec4770caca0628df0e8061f1ecba48bf73526e11b5514c97e9fa",
+      "status": "reviewed",
+      "translation": "上游对象/接口；遵循 ggplot2/grid 的原始契约"
+    },
+    "arrow/purpose": {
+      "source_sha256": "b828ba20012a493fa23c9cb816d1ad8e116d470ec7e1f2e6ad4b9730d4c306d5",
+      "status": "reviewed",
+      "translation": "物理单位与方向箭头"
+    },
+    "arrow/modes_localized": {
+      "source_sha256": "1258e659a444ec4770caca0628df0e8061f1ecba48bf73526e11b5514c97e9fa",
+      "status": "reviewed",
+      "translation": "上游对象/接口；遵循 ggplot2/grid 的原始契约"
+    },
+    "as_ggchord_feature/purpose": {
+      "source_sha256": "95d1160d3c6bdc9f93419507371e50dc9ffa0b348f65fd65d672cbc03b2846e6",
+      "status": "reviewed",
+      "translation": "将区间转换为 ggchord 通用注释"
+    },
+    "as_ggchord_feature/modes_localized": {
+      "source_sha256": "8b9fff38a4bf7b5eedbeef0eb0bc316663475831920d4c70a421f4625add13e1",
+      "status": "reviewed",
+      "translation": "表格/受支持对象适配；完整长度与 ID 不得猜测"
+    },
+    "as_ggchord_link/purpose": {
+      "source_sha256": "b6c41c5b86621d900d3df13ec571a46ab1452d9d499c077f52ca6c2bc133babe",
+      "status": "reviewed",
+      "translation": "将成对基因组区间转换为 ggchord 连接"
+    },
+    "as_ggchord_link/modes_localized": {
+      "source_sha256": "dbbc3d79606401a78a63896991417092c6a1d57e815da5b87f1acf58ecf758b0",
+      "status": "reviewed",
+      "translation": "表格/受支持对象适配；完整长度与 ID 不得猜测"
+    },
+    "as_ggchord_seq/purpose": {
+      "source_sha256": "984989c62f10f3c828043e867b80405c56f31f35b008ed4c0408d23362b85a78",
+      "status": "reviewed",
+      "translation": "将序列信息转换为 ggchord 输入"
+    },
+    "as_ggchord_seq/modes_localized": {
+      "source_sha256": "760397deebf942e640c58938b5c076003a198dc7e9195c49c962efba017bd2ee",
+      "status": "reviewed",
+      "translation": "表格/受支持对象适配；完整长度与 ID 不得猜测"
+    },
+    "build_ggchord_cds/purpose": {
+      "source_sha256": "08b243f6b9f098aab80c5fff22724a00c30abe26eb85c1aaf512cf05e8389f8f",
+      "status": "reviewed",
+      "translation": "建立显式的剪接 CDS 坐标映射"
+    },
+    "build_ggchord_cds/modes_localized": {
+      "source_sha256": "03eb09eb8302785551b65aa40f8c17c1d2d6a225a2841938b6f6853941d7b5b9",
+      "status": "reviewed",
+      "translation": "显式 CDS/相位/单位的编码坐标工作流"
+    },
+    "bundle_ggchord_ribbons/purpose": {
+      "source_sha256": "65ddf4304dde08a4a701b20a42cc11feeef55d524b6a5db44c65548cf8e4fd4d",
+      "status": "reviewed",
+      "translation": "显式聚束密集比对连接"
+    },
+    "bundle_ggchord_ribbons/modes_localized": {
+      "source_sha256": "61a785d4f9c10e5a81ec547a567c72e048935f4561e57b13208e19ecb91fd69d",
+      "status": "reviewed",
+      "translation": "处理已有比对；不生成新的序列比对"
+    },
+    "clean_ggchord_data/purpose": {
+      "source_sha256": "6f5ec43d1fc107f1772bb95b4dc866889dd027455dd432319c517290be7d3a7c",
+      "status": "reviewed",
+      "translation": "按明确策略清理输入并返回报告"
+    },
+    "clean_ggchord_data/modes_localized": {
+      "source_sha256": "d5fc71c79091e732afab3e1fe64eac6185512421c7a4a3cb3f2af92ea3894da3",
+      "status": "reviewed",
+      "translation": "显式校验/修复/成员工作流；保留源表及报告"
+    },
+    "coord_chord/purpose": {
+      "source_sha256": "dae8580a551d5d0d614366dcee05586bf3c9c69d99aeb34970125039fd07f8c1",
+      "status": "reviewed",
+      "translation": "弦图坐标系"
+    },
+    "coord_chord/modes_localized": {
+      "source_sha256": "25735baaa5b4e4cc238fa0027f21ed8418e9a12ff4c082f5cfb630f89fdd6fec",
+      "status": "reviewed",
+      "translation": "弦图；整图旋转与逐序列几何分工"
+    },
+    "coord_circular/purpose": {
+      "source_sha256": "2e24a65b945ebc759e92ff223d69fa4d003691204b72de2daa63717884aaec9e",
+      "status": "reviewed",
+      "translation": "单序列圆图坐标系"
+    },
+    "coord_circular/modes_localized": {
+      "source_sha256": "23fea0da3ce519e8e1b6eac5d0456f7b7e51487322921c0f9b224dad61368b4d",
+      "status": "reviewed",
+      "translation": "单条序列；bp/aa 布局；不接受 ribbon/link"
+    },
+    "coord_collinear/purpose": {
+      "source_sha256": "98009b4abb72743ab2e24130a5707e68a1daeb84d69b7382492022e49cc6e501",
+      "status": "reviewed",
+      "translation": "直线型多序列共线性坐标系"
+    },
+    "coord_collinear/modes_localized": {
+      "source_sha256": "3bb135b33234cd56bfd91fad5ff3ac08283540f5fda7243a7b9015630a4d15a9",
+      "status": "reviewed",
+      "translation": "共线性；bp/aa；拒绝圆图专属参数"
+    },
+    "deduplicate_ggchord_ribbons/purpose": {
+      "source_sha256": "7d211f628f3db6bc42b646c91f6a6fac00e9697b2a4df4fe46dd7415ebc4cc90",
+      "status": "reviewed",
+      "translation": "去除重复比对区间"
+    },
+    "deduplicate_ggchord_ribbons/modes_localized": {
+      "source_sha256": "01ce5fe5410bd649c38614abfab2949758f303196230b08c8663bd0e782a3135",
+      "status": "reviewed",
+      "translation": "处理已有比对；不生成新的序列比对"
+    },
+    "diagnose_ggchord/purpose": {
+      "source_sha256": "593120c52aa8feba6d9bd988483186d0e0d9c38eee6e1c92d1477ff9fde55460",
+      "status": "reviewed",
+      "translation": "检查指定尺寸的一次渲染而不改变原图"
+    },
+    "diagnose_ggchord/modes_localized": {
+      "source_sha256": "c178b9756a75b39c75b5dc55d41b9f14d59cfed88b598bfca06c6a78c2d85480",
+      "status": "reviewed",
+      "translation": "单一目标尺寸和设备；提示不等于全面质量保证"
+    },
+    "element_blank/purpose": {
+      "source_sha256": "1f18c58a24dc5b5d92f428e8b94f76bcf54aabd45fae0856bb2f6a246a5e247d",
+      "status": "reviewed",
+      "translation": "适用于 ggchord 的部分 ggplot2 辅助函数"
+    },
+    "element_blank/modes_localized": {
+      "source_sha256": "1258e659a444ec4770caca0628df0e8061f1ecba48bf73526e11b5514c97e9fa",
+      "status": "reviewed",
+      "translation": "上游对象/接口；遵循 ggplot2/grid 的原始契约"
+    },
+    "element_line/purpose": {
+      "source_sha256": "1f18c58a24dc5b5d92f428e8b94f76bcf54aabd45fae0856bb2f6a246a5e247d",
+      "status": "reviewed",
+      "translation": "适用于 ggchord 的部分 ggplot2 辅助函数"
+    },
+    "element_line/modes_localized": {
+      "source_sha256": "1258e659a444ec4770caca0628df0e8061f1ecba48bf73526e11b5514c97e9fa",
+      "status": "reviewed",
+      "translation": "上游对象/接口；遵循 ggplot2/grid 的原始契约"
+    },
+    "element_rect/purpose": {
+      "source_sha256": "1f18c58a24dc5b5d92f428e8b94f76bcf54aabd45fae0856bb2f6a246a5e247d",
+      "status": "reviewed",
+      "translation": "适用于 ggchord 的部分 ggplot2 辅助函数"
+    },
+    "element_rect/modes_localized": {
+      "source_sha256": "1258e659a444ec4770caca0628df0e8061f1ecba48bf73526e11b5514c97e9fa",
+      "status": "reviewed",
+      "translation": "上游对象/接口；遵循 ggplot2/grid 的原始契约"
+    },
+    "element_text/purpose": {
+      "source_sha256": "1f18c58a24dc5b5d92f428e8b94f76bcf54aabd45fae0856bb2f6a246a5e247d",
+      "status": "reviewed",
+      "translation": "适用于 ggchord 的部分 ggplot2 辅助函数"
+    },
+    "element_text/modes_localized": {
+      "source_sha256": "1258e659a444ec4770caca0628df0e8061f1ecba48bf73526e11b5514c97e9fa",
+      "status": "reviewed",
+      "translation": "上游对象/接口；遵循 ggplot2/grid 的原始契约"
+    },
+    "expansion/purpose": {
+      "source_sha256": "1f18c58a24dc5b5d92f428e8b94f76bcf54aabd45fae0856bb2f6a246a5e247d",
+      "status": "reviewed",
+      "translation": "适用于 ggchord 的部分 ggplot2 辅助函数"
+    },
+    "expansion/modes_localized": {
+      "source_sha256": "1258e659a444ec4770caca0628df0e8061f1ecba48bf73526e11b5514c97e9fa",
+      "status": "reviewed",
+      "translation": "上游对象/接口；遵循 ggplot2/grid 的原始契约"
+    },
+    "export_ggchord_layout/purpose": {
+      "source_sha256": "f5ac0e718523c9065b727f217879f6df0cd25016c290319cfe9bd386ce15b456",
+      "status": "reviewed",
+      "translation": "导出 ggchord 计算几何"
+    },
+    "export_ggchord_layout/modes_localized": {
+      "source_sha256": "2a87b858108ff5dded32cc0013bcffdb99c1cafff14a82471b6ea62ec2992580",
+      "status": "reviewed",
+      "translation": "所有受支持图；按图层导出公共表"
+    },
+    "filter_ggchord_ribbons/purpose": {
+      "source_sha256": "69ca7eceece24650b06cb2e9234bf5a4b96f5cb7bf69b0809c58bc304eea4eaf",
+      "status": "reviewed",
+      "translation": "绘图前筛选比对区间"
+    },
+    "filter_ggchord_ribbons/modes_localized": {
+      "source_sha256": "ce4fe881def92b44d38565441d4b3fe1595757a46fdf3b22b670be5069e052b0",
+      "status": "reviewed",
+      "translation": "处理已有比对；不生成新的序列比对"
+    },
+    "filter_restriction_sites/purpose": {
+      "source_sha256": "1924f0dac44f7d0d57c21961c4f175124c1123e1c568c6a2c65c498aca537d86",
+      "status": "reviewed",
+      "translation": "筛选要显示的酶切位点"
+    },
+    "filter_restriction_sites/modes_localized": {
+      "source_sha256": "7da8c0e26e45b43e8dbbba73bf97a703ad7ce4548eb9f564719696de5fdd577a",
+      "status": "reviewed",
+      "translation": "显示集合选择；保留完整目标上的位点计数"
+    },
+    "find_common_features/purpose": {
+      "source_sha256": "1e7d75a6cae1bb9b20b1e8034d2014e23b189d3ca5b957ed4ac4d66fb6f9b3e4",
+      "status": "reviewed",
+      "translation": "在 DNA 中查找常见生物学注释"
+    },
+    "find_common_features/modes_localized": {
+      "source_sha256": "51042a08feffae00dcf4206c81703258ebe98716a297b3b3896728c9ccba426d",
+      "status": "reviewed",
+      "translation": "DNA/参考注释识别；保留方法与来源"
+    },
+    "find_ggchord_loci/purpose": {
+      "source_sha256": "5f416df7bb1bc6dea2191d49842d342ebcee5c51da0ae28b4e37b65d5cb578e6",
+      "status": "reviewed",
+      "translation": "围绕明确指定的注释查找基因组区域"
+    },
+    "find_ggchord_loci/modes_localized": {
+      "source_sha256": "646edd054eae2c2ea773f764a973199ce1ea21bcaac738d0e01266da3b3a0e9f",
+      "status": "reviewed",
+      "translation": "基因组窗口；显式目标 ID 与真实链"
+    },
+    "find_primer_bindings/purpose": {
+      "source_sha256": "6732e202bc97c9e2dec70d9ce7394aad24de1356a6f3c4d7e1fc9b6d49ddcecd",
+      "status": "reviewed",
+      "translation": "查找测序引物结合位点"
+    },
+    "find_primer_bindings/modes_localized": {
+      "source_sha256": "251617f75256019a4f57dcc4e6441ce4fc924ebd231fb872ca239a312166f383",
+      "status": "reviewed",
+      "translation": "实际 DNA 与寡核苷酸；命中不等于实验验证"
+    },
+    "find_restriction_sites/purpose": {
+      "source_sha256": "3c3388519524d7f1a48e0df63031fd7a7f673110abbc9a787d51ddcb6e39df14",
+      "status": "reviewed",
+      "translation": "查找酶切模式匹配及切割坐标"
+    },
+    "find_restriction_sites/modes_localized": {
+      "source_sha256": "7ccc71d745f5930bb26d07ac381879262e0e057855b27527f551b746007e3a2e",
+      "status": "reviewed",
+      "translation": "实际 DNA；明确甲基化假设；完整位点结果"
+    },
+    "focus_ggchord_data/purpose": {
+      "source_sha256": "3e87ed542b8fe363bbba27be79d629425d4895d791ff720f4843eea5546937b2",
+      "status": "reviewed",
+      "translation": "将 ggchord 数据聚焦到一个或多个区域"
+    },
+    "focus_ggchord_data/modes_localized": {
+      "source_sha256": "f32adb6d26be1f6bc1169c75183ad3cbbbd8d520d654b5ef8b236d71ba5d95ad",
+      "status": "reviewed",
+      "translation": "显式输入、窗口与来源的工作流"
+    },
+    "focus_ggchord_track/purpose": {
+      "source_sha256": "45a2a367c9382f79342729980ed7e5d987abd53bf3bce975b2b0211183b940b2",
+      "status": "reviewed",
+      "translation": "聚焦定量区间或采样点而不跨越省略窗口"
+    },
+    "focus_ggchord_track/modes_localized": {
+      "source_sha256": "4b4acb35c5eb10c69bb9912568ee8a27834789a533aaf8eb6e649c94f2406601",
+      "status": "reviewed",
+      "translation": "点/区间轨道；与显示窗口共享 loci"
+    },
+    "geom_feature/purpose": {
+      "source_sha256": "2f96c0774e937167d7a51c509ee1869484cba63de3c0969a63fb017b152a6e62",
+      "status": "reviewed",
+      "translation": "绘制通用基因组注释"
+    },
+    "geom_feature/modes_localized": {
+      "source_sha256": "cab66b0b40afed491aaa2577592ff0c33cf90930cb966a5b4e696b9412ed3885",
+      "status": "reviewed",
+      "translation": "兼容骨架坐标（见支持表）；通用注释可保留未知链及 aa 区间；Radial见新增视图支持矩阵"
+    },
+    "geom_feature_label/purpose": {
+      "source_sha256": "e44a7a6f98a6ec5381688b847326022ab7d9d9c8cffeda40135d19a95b8d001c",
+      "status": "reviewed",
+      "translation": "为通用基因组注释添加标签"
+    },
+    "geom_feature_label/modes_localized": {
+      "source_sha256": "61514bffcdbbb3ce063859b8cd484e61dd2aa9bcf20c493c2befd532c92bda16",
+      "status": "reviewed",
+      "translation": "兼容骨架坐标（见支持表）；直线图的 radial/tangent 为竖排/横排；Radial见新增视图支持矩阵"
+    },
+    "geom_gene_label/purpose": {
+      "source_sha256": "98523f6537fe78211023798d3375e25bfa1c967e92c48771cda69716b329d58d",
+      "status": "reviewed",
+      "translation": "添加固定基因标签图层"
+    },
+    "geom_gene_label/modes_localized": {
+      "source_sha256": "9b7d6e0e6dca55547a90bb6b2d5bc65d8e94ecee969cbe31b4138842108403eb",
+      "status": "reviewed",
+      "translation": "bp 基因标签；各坐标的方向含义不同；Radial见新增视图支持矩阵"
+    },
+    "geom_gene_label_repel/purpose": {
+      "source_sha256": "7e4ae85ade3faa730558b9de76a2747fe07ce543128e2e194e6425d2e9f461f0",
+      "status": "reviewed",
+      "translation": "添加自动布局的基因标签图层"
+    },
+    "geom_gene_label_repel/modes_localized": {
+      "source_sha256": "98a79e0314d50ebdbc6a7c1052cd3eb9a001827f377c95fa1954925821369343",
+      "status": "reviewed",
+      "translation": "bp 基因标签；直线图统一使用行布局；Radial见新增视图支持矩阵"
+    },
+    "geom_link_line/purpose": {
+      "source_sha256": "2c95b892030c0abf585cbdcfe136ccfcc632b87deb8dee35326d5cb23690dc59",
+      "status": "reviewed",
+      "translation": "绘制序列间的点连接"
+    },
+    "geom_link_line/modes_localized": {
+      "source_sha256": "89896c58b2ad0f18baf28271cfe7550a08fdfa5fdb7bed22f35791bfd90a7433",
+      "status": "reviewed",
+      "translation": "弦图/共线性；需 qpos/spos；圆图拒绝；Radial见新增视图支持矩阵"
+    },
+    "geom_link_ribbon/purpose": {
+      "source_sha256": "c36dcfd861440c155591f9751c72ebf3583af4c06969e989f82bd75f219b5c47",
+      "status": "reviewed",
+      "translation": "添加比对区间连接图层"
+    },
+    "geom_link_ribbon/modes_localized": {
+      "source_sha256": "af59d5571bf19b985b737ae1c7b5d40aabbc0109d55aed26ca16cea4502f2e37",
+      "status": "reviewed",
+      "translation": "弦图/共线性；邻接按显示顺序；圆图拒绝；Radial见新增视图支持矩阵"
+    },
+    "geom_primer/purpose": {
+      "source_sha256": "52c6f0a6c1b0b4a4fa27445602906df728d4896b0c39c606be4ae9c4d0ffc242",
+      "status": "reviewed",
+      "translation": "在圆形序列上绘制引物结合范围"
+    },
+    "geom_primer/modes_localized": {
+      "source_sha256": "7244ccf8c6ed10bab62a6779d1953750a906193bcda54f6c547d534bf21f7f55",
+      "status": "reviewed",
+      "translation": "bp；推荐单圆图；单序列弦图可组合；共线性拒绝"
+    },
+    "geom_primer_label_repel/purpose": {
+      "source_sha256": "88b4eed010a2452b530b02aed391940fb8c628548896d8c2f7f7b8a91fa7a12c",
+      "status": "reviewed",
+      "translation": "排列引物标签和引导线"
+    },
+    "geom_primer_label_repel/modes_localized": {
+      "source_sha256": "2da703db337359a94000f07f2e38440504345413a0e1375975062372e0eda90e",
+      "status": "reviewed",
+      "translation": "bp；推荐单圆图；共线性拒绝"
+    },
+    "geom_restriction_site/purpose": {
+      "source_sha256": "68a0e8cf16592802412135309a375aa63f3e8f3d8e08b528865acea3d6a98255",
+      "status": "reviewed",
+      "translation": "绘制酶切位点、标签和确定性引导线"
+    },
+    "geom_restriction_site/modes_localized": {
+      "source_sha256": "2da703db337359a94000f07f2e38440504345413a0e1375975062372e0eda90e",
+      "status": "reviewed",
+      "translation": "bp；推荐单圆图；共线性拒绝"
+    },
+    "geom_seq/purpose": {
+      "source_sha256": "7566fdb73f96bfbf7655c14c0c7b30d08cb6a6532821f65b540f241aa59ad0f2",
+      "status": "reviewed",
+      "translation": "添加序列骨架图层"
+    },
+    "geom_seq/modes_localized": {
+      "source_sha256": "46968f7990ec0f046028b19b34724b00c1308574365e34da0aa4570a8239142c",
+      "status": "reviewed",
+      "translation": "兼容骨架坐标（见支持表）；直线图拒绝半径/曲率/ring；圆图自管方向与开口；Radial见新增视图支持矩阵"
+    },
+    "geom_seq_break/purpose": {
+      "source_sha256": "09b05a98c66eae23096f52bc949fd9bf59aa4ea6d99342dfd3d37b444975c3e2",
+      "status": "reviewed",
+      "translation": "标记线性序列的裁剪端点"
+    },
+    "geom_seq_break/modes_localized": {
+      "source_sha256": "357c93df2643c53e64555e05855e228ea6ba802d3aa47b67f9d698a552e322bf",
+      "status": "reviewed",
+      "translation": "仅共线性；需要聚焦/分段端点元数据；Radial见新增视图支持矩阵"
+    },
+    "geom_seq_center_label/purpose": {
+      "source_sha256": "bbbd1c2355162ac914768e6e2cc2311be6ec8c0273dc3bc7a39f4624605f60d7",
+      "status": "reviewed",
+      "translation": "添加圆形序列中心标签"
+    },
+    "geom_seq_center_label/modes_localized": {
+      "source_sha256": "15e82624589b2732faaf700e7cf02df753a634d12ec839273e5bf67c62537caf",
+      "status": "reviewed",
+      "translation": "单条序列；推荐圆图；共线性拒绝"
+    },
+    "geom_seq_label/purpose": {
+      "source_sha256": "284d877f4c3215c0da598b638d84bbd93457b47e8178f7b7af7d3df6548c64b6",
+      "status": "reviewed",
+      "translation": "添加序列名称图层"
+    },
+    "geom_seq_label/modes_localized": {
+      "source_sha256": "d393ee3b07c840821e7b344b2fe78e0c238383b7ec959fd2cb31ad80885b524f",
+      "status": "reviewed",
+      "translation": "兼容骨架坐标（见支持表）；直线图拒绝显式径向半径；Radial见新增视图支持矩阵"
+    },
+    "geom_seq_region/purpose": {
+      "source_sha256": "a60a8c8e7b03f3a0b6d3075b4b0b033190c33900d00fcec17cf21d072da92c5a",
+      "status": "reviewed",
+      "translation": "沿序列骨架突出显示区域"
+    },
+    "geom_seq_region/modes_localized": {
+      "source_sha256": "a7ef5a3b384ff58364bb37ff1817c513b2fb1aa20e7283fddee0c2699ab95af1",
+      "status": "reviewed",
+      "translation": "兼容骨架坐标（见支持表）；区间、ID、单位需合法；Radial见新增视图支持矩阵"
+    },
+    "geom_seq_scale/purpose": {
+      "source_sha256": "930d2e9daca7c1d6b5b515ec2f854e349937a0dcd25ff5c00b438cdfc93d0f52",
+      "status": "reviewed",
+      "translation": "在线性图中添加共享的序列位置比例尺"
+    },
+    "geom_seq_scale/modes_localized": {
+      "source_sha256": "a6f50dea17f1cec8b4affef938b079bbdb1197210c7a842a84aa83aa8c8cd8d1",
+      "status": "reviewed",
+      "translation": "仅共线性；原生 bp/aa 标尺"
+    },
+    "geom_track_bar/purpose": {
+      "source_sha256": "e75d9726042570e8ffc99b6cb8fd7ecdec477e05b06ffe9c41237b76d2030a12",
+      "status": "reviewed",
+      "translation": "按源位置统计观测数"
+    },
+    "geom_track_bar/modes_localized": {
+      "source_sha256": "0efc6f0f600b050496161323ceb486993b1b42bef0347966a80f7a8b25d7c06a",
+      "status": "reviewed",
+      "translation": "兼容骨架坐标中的源位置观测计数；基线仅 0；分箱是另行声明的 Stat"
+    },
+    "geom_track_line/purpose": {
+      "source_sha256": "c81bd358cb6fe45a9690e61704246c979e0b96613393506c67eaf94a5d549e94",
+      "status": "reviewed",
+      "translation": "沿序列骨架绘制定量轨道"
+    },
+    "geom_track_line/modes_localized": {
+      "source_sha256": "a202f95be52c5014f1a1e767efa6861c29b8d51c888de0c34cf93a940a0a57bf",
+      "status": "reviewed",
+      "translation": "兼容骨架坐标（见支持表）；每组位置递增；closed 需完整闭圆；Radial见新增视图支持矩阵"
+    },
+    "geom_track_tile/purpose": {
+      "source_sha256": "c81bd358cb6fe45a9690e61704246c979e0b96613393506c67eaf94a5d549e94",
+      "status": "reviewed",
+      "translation": "沿序列骨架绘制定量轨道"
+    },
+    "geom_track_tile/modes_localized": {
+      "source_sha256": "3dfe870f1f7acead6db6c504ccf115d5faa8f1d13da4fc06ac6433b2cbf7b2ee",
+      "status": "reviewed",
+      "translation": "兼容骨架坐标（见支持表）；默认或具名轨道；重叠按输入顺序绘制；Radial见新增视图支持矩阵"
+    },
+    "get_chord_layout/purpose": {
+      "source_sha256": "6c0f0d44230b695d386a7c2653cb36fc1f54220cfd12f08dae388243910648ff",
+      "status": "reviewed",
+      "translation": "获取 ggchord 图的完整布局"
+    },
+    "get_chord_layout/modes_localized": {
+      "source_sha256": "3bf984fdcab941f43041541f199962d3002cf39f8307b1b5b54f7b58f566ede7",
+      "status": "reviewed",
+      "translation": "所有受支持图；完整文档化布局"
+    },
+    "ggchord/purpose": {
+      "source_sha256": "722fb3ae661bf9ebfd430e9735d9d860489d1182e3d84392c27d14fca5d24ffb",
+      "status": "reviewed",
+      "translation": "用数据表和独立图层创建序列图"
+    },
+    "ggchord/modes_localized": {
+      "source_sha256": "0609643c9abc6ee258da201a2c10d2d2c163a0167a7f0b83b066e561a72ec4fa",
+      "status": "reviewed",
+      "translation": "兼容坐标（见支持表）；同一图的 bp/aa 单位必须一致"
+    },
+    "ggsave/purpose": {
+      "source_sha256": "1f18c58a24dc5b5d92f428e8b94f76bcf54aabd45fae0856bb2f6a246a5e247d",
+      "status": "reviewed",
+      "translation": "适用于 ggchord 的部分 ggplot2 辅助函数"
+    },
+    "ggsave/modes_localized": {
+      "source_sha256": "1258e659a444ec4770caca0628df0e8061f1ecba48bf73526e11b5514c97e9fa",
+      "status": "reviewed",
+      "translation": "上游对象/接口；遵循 ggplot2/grid 的原始契约"
+    },
+    "ggtitle/purpose": {
+      "source_sha256": "1f18c58a24dc5b5d92f428e8b94f76bcf54aabd45fae0856bb2f6a246a5e247d",
+      "status": "reviewed",
+      "translation": "适用于 ggchord 的部分 ggplot2 辅助函数"
+    },
+    "ggtitle/modes_localized": {
+      "source_sha256": "1258e659a444ec4770caca0628df0e8061f1ecba48bf73526e11b5514c97e9fa",
+      "status": "reviewed",
+      "translation": "上游对象/接口；遵循 ggplot2/grid 的原始契约"
+    },
+    "guide_ggchord_colorbar/purpose": {
+      "source_sha256": "18edd4d7e3453ed56477d2e14ffc5b5a1b478273da1103ec45b832d0b5348be9",
+      "status": "reviewed",
+      "translation": "ggchord 角色 aesthetic 图例"
+    },
+    "guide_ggchord_colorbar/modes_localized": {
+      "source_sha256": "c5958fed9759d388efec443de1a819c6082ac6a66095e58d001bb340d175a36c",
+      "status": "reviewed",
+      "translation": "受支持图的相应主题/图例；按角色及设备解释"
+    },
+    "guide_ggchord_colourbar/purpose": {
+      "source_sha256": "18edd4d7e3453ed56477d2e14ffc5b5a1b478273da1103ec45b832d0b5348be9",
+      "status": "reviewed",
+      "translation": "ggchord 角色 aesthetic 图例"
+    },
+    "guide_ggchord_colourbar/modes_localized": {
+      "source_sha256": "c5958fed9759d388efec443de1a819c6082ac6a66095e58d001bb340d175a36c",
+      "status": "reviewed",
+      "translation": "受支持图的相应主题/图例；按角色及设备解释"
+    },
+    "guide_ggchord_legend/purpose": {
+      "source_sha256": "18edd4d7e3453ed56477d2e14ffc5b5a1b478273da1103ec45b832d0b5348be9",
+      "status": "reviewed",
+      "translation": "ggchord 角色 aesthetic 图例"
+    },
+    "guide_ggchord_legend/modes_localized": {
+      "source_sha256": "c5958fed9759d388efec443de1a819c6082ac6a66095e58d001bb340d175a36c",
+      "status": "reviewed",
+      "translation": "受支持图的相应主题/图例；按角色及设备解释"
+    },
+    "guides/purpose": {
+      "source_sha256": "1f18c58a24dc5b5d92f428e8b94f76bcf54aabd45fae0856bb2f6a246a5e247d",
+      "status": "reviewed",
+      "translation": "适用于 ggchord 的部分 ggplot2 辅助函数"
+    },
+    "guides/modes_localized": {
+      "source_sha256": "1258e659a444ec4770caca0628df0e8061f1ecba48bf73526e11b5514c97e9fa",
+      "status": "reviewed",
+      "translation": "上游对象/接口；遵循 ggplot2/grid 的原始契约"
+    },
+    "labs/purpose": {
+      "source_sha256": "1f18c58a24dc5b5d92f428e8b94f76bcf54aabd45fae0856bb2f6a246a5e247d",
+      "status": "reviewed",
+      "translation": "适用于 ggchord 的部分 ggplot2 辅助函数"
+    },
+    "labs/modes_localized": {
+      "source_sha256": "1258e659a444ec4770caca0628df0e8061f1ecba48bf73526e11b5514c97e9fa",
+      "status": "reviewed",
+      "translation": "上游对象/接口；遵循 ggplot2/grid 的原始契约"
+    },
+    "last_plot/purpose": {
+      "source_sha256": "1f18c58a24dc5b5d92f428e8b94f76bcf54aabd45fae0856bb2f6a246a5e247d",
+      "status": "reviewed",
+      "translation": "适用于 ggchord 的部分 ggplot2 辅助函数"
+    },
+    "last_plot/modes_localized": {
+      "source_sha256": "1258e659a444ec4770caca0628df0e8061f1ecba48bf73526e11b5514c97e9fa",
+      "status": "reviewed",
+      "translation": "上游对象/接口；遵循 ggplot2/grid 的原始契约"
+    },
+    "link_ggchord_clusters/purpose": {
+      "source_sha256": "b46be1ae06131517d067056feaa46e5d2eef8473db6f55d0f8e526ed3be67d9a",
+      "status": "reviewed",
+      "translation": "将显式同源分组成员转换为注释连接"
+    },
+    "link_ggchord_clusters/modes_localized": {
+      "source_sha256": "22c04b4abfc1516b3126e57751f9149f6dbdfb7939414fd672696efdc1dcc817",
+      "status": "reviewed",
+      "translation": "消费明确成员表；同名不能证明同源"
+    },
+    "map_ggchord_position/purpose": {
+      "source_sha256": "92e10cabe0154dab1a4538b9e9c84acc0dec29b8af41654adca5ddf1d9244f0b",
+      "status": "reviewed",
+      "translation": "映射源位置与显示坐标"
+    },
+    "map_ggchord_position/modes_localized": {
+      "source_sha256": "c3a2f6876614d5515a8d44bbc9760827567f77d4ddf7303a56c303d04e6de78a",
+      "status": "reviewed",
+      "translation": "原生或源坐标；Dotplot须选轴，Radial反查须给x/y"
+    },
+    "margin/purpose": {
+      "source_sha256": "1f18c58a24dc5b5d92f428e8b94f76bcf54aabd45fae0856bb2f6a246a5e247d",
+      "status": "reviewed",
+      "translation": "适用于 ggchord 的部分 ggplot2 辅助函数"
+    },
+    "margin/modes_localized": {
+      "source_sha256": "1258e659a444ec4770caca0628df0e8061f1ecba48bf73526e11b5514c97e9fa",
+      "status": "reviewed",
+      "translation": "上游对象/接口；遵循 ggplot2/grid 的原始契约"
+    },
+    "merge_ggchord_ribbons/purpose": {
+      "source_sha256": "15ecea825b982fdf11eb6d4c926c67b567b50e79a918d87d352b93922338f728",
+      "status": "reviewed",
+      "translation": "合并同序列对的相邻或重叠比对块"
+    },
+    "merge_ggchord_ribbons/modes_localized": {
+      "source_sha256": "41ff6f1335abf8b0c3d4e478e9825c3fc1200933db8d272f5a9fd77de6ea5095",
+      "status": "reviewed",
+      "translation": "处理已有比对；不生成新的序列比对"
+    },
+    "optimize_ggchord_layout/purpose": {
+      "source_sha256": "39e67a0a3810f2dd292c5537347a1ff3b55aa0d718c6e1a6766709bc4c7d71cc",
+      "status": "reviewed",
+      "translation": "优化序列顺序和方向以改善连接可读性"
+    },
+    "optimize_ggchord_layout/modes_localized": {
+      "source_sha256": "8c4017bb731a12e7b927b85c56735b4ab1b60953644d085f262f90d3d349485c",
+      "status": "reviewed",
+      "translation": "明确请求的顺序/方向启发式；不是生物学推断"
+    },
+    "position_feature_stack/purpose": {
+      "source_sha256": "7001b2c2b9a8dbf41b0ce6198b807f8e6596342384a9b04de7167c7fb27f2eb2",
+      "status": "reviewed",
+      "translation": "将重叠基因或注释堆叠到局部轨道"
+    },
+    "position_feature_stack/modes_localized": {
+      "source_sha256": "baecdd50773effcdf857450885835f9621502c24e3b2b9aaa27368657c459557",
+      "status": "reviewed",
+      "translation": "先应用基础 Position，再分配重叠轨道"
+    },
+    "position_identity/purpose": {
+      "source_sha256": "1f18c58a24dc5b5d92f428e8b94f76bcf54aabd45fae0856bb2f6a246a5e247d",
+      "status": "reviewed",
+      "translation": "适用于 ggchord 的部分 ggplot2 辅助函数"
+    },
+    "position_identity/modes_localized": {
+      "source_sha256": "1258e659a444ec4770caca0628df0e8061f1ecba48bf73526e11b5514c97e9fa",
+      "status": "reviewed",
+      "translation": "上游对象/接口；遵循 ggplot2/grid 的原始契约"
+    },
+    "position_offset/purpose": {
+      "source_sha256": "013e28018ee33c4ee2bac4a0b0f832affdd5c41269b3733f8df24a2c00337eb4",
+      "status": "reviewed",
+      "translation": "将两条链的注释放在同一带上"
+    },
+    "position_offset/modes_localized": {
+      "source_sha256": "4ecb607f3b8e0730205024847ab137c72ba5350c811411b019167f7edab7c65a",
+      "status": "reviewed",
+      "translation": "所有兼容骨架坐标中的共享局部偏移"
+    },
+    "position_strand/purpose": {
+      "source_sha256": "b863cceb7f07ed460bb8b225227faa7720ec24e5c10fe26fe50c6a7a66b40f2f",
+      "status": "reviewed",
+      "translation": "按链将注释放在两侧"
+    },
+    "position_strand/modes_localized": {
+      "source_sha256": "372b3459a3e6d2f1013052f0918558cc16cd28b18ef5b900816d421d04c1e3c0",
+      "status": "reviewed",
+      "translation": "合法特征/基因的带符号局部放置"
+    },
+    "track_band/purpose": {
+      "source_sha256": "eec157685c13928cbb7c04b5644e0158c35bd9e0438b06f6cdffb057308d7b4f",
+      "status": "reviewed",
+      "translation": "声明序列骨架旁的定量轨道"
+    },
+    "track_band/modes_localized": {
+      "source_sha256": "f7fcac74f1a0bfa9fc1a8fba49ed24be53698356ebdd9aed5f0a74827d262710",
+      "status": "reviewed",
+      "translation": "兼容骨架坐标（见支持表）；各 ID 统一声明放置方式并共享数值域"
+    },
+    "PositionIdentity/purpose": {
+      "source_sha256": "1f18c58a24dc5b5d92f428e8b94f76bcf54aabd45fae0856bb2f6a246a5e247d",
+      "status": "reviewed",
+      "translation": "适用于 ggchord 的部分 ggplot2 辅助函数"
+    },
+    "PositionIdentity/modes_localized": {
+      "source_sha256": "1258e659a444ec4770caca0628df0e8061f1ecba48bf73526e11b5514c97e9fa",
+      "status": "reviewed",
+      "translation": "上游对象/接口；遵循 ggplot2/grid 的原始契约"
+    },
+    "prepare_ggchord_data/purpose": {
+      "source_sha256": "232e63aae196d25d4fced7bc923311c67008775a3fde390fed8b0f73f7d5d11f",
+      "status": "reviewed",
+      "translation": "准备命名输入表并保留明确审计记录"
+    },
+    "prepare_ggchord_data/modes_localized": {
+      "source_sha256": "eb2347556bb0dad77d4a55aedfc736f7a0aaa2fe8f74234bb1ff2d025aed7005",
+      "status": "reviewed",
+      "translation": "显式校验/修复/成员工作流；保留源表及报告"
+    },
+    "primer_catalog/purpose": {
+      "source_sha256": "eef0bc236e3f02e3132f2ed86004928988a5fcc03e80986cc676aaade942b74b",
+      "status": "reviewed",
+      "translation": "查看随包测序引物目录"
+    },
+    "primer_catalog/modes_localized": {
+      "source_sha256": "7e65d79c19b3424bf661140abe728653c6624814dccf3fa67d71b79ab82559e9",
+      "status": "reviewed",
+      "translation": "目录元数据；不是目标上的结合搜索"
+    },
+    "project_ggchord_features/purpose": {
+      "source_sha256": "e76c9ecc39e47553883f3a0627a25f11538ac04639bdb634b0be23b597821420",
+      "status": "reviewed",
+      "translation": "通过剪接 CDS 映射投影蛋白结构域或基因组注释"
+    },
+    "project_ggchord_features/modes_localized": {
+      "source_sha256": "f2d8dba6f45e5f49832f92bd7e34369577b65a213b66cd5a1b64f0fcec913b60",
+      "status": "reviewed",
+      "translation": "显式 CDS/相位/单位的编码坐标工作流"
+    },
+    "project_ggchord_links/purpose": {
+      "source_sha256": "4da4858f47549f22ff16be6db98cbe92336370d76dd7beea3b74600c1d6e91b3",
+      "status": "reviewed",
+      "translation": "将明确无缺口的蛋白连接投影为基因组编码片段"
+    },
+    "project_ggchord_links/modes_localized": {
+      "source_sha256": "ec1b34afd98f1d31d515560b0e6f2be4b983e1b60e882a2c01b1d4b967d2886f",
+      "status": "reviewed",
+      "translation": "显式 CDS/相位/单位的编码坐标工作流"
+    },
+    "read_bed/purpose": {
+      "source_sha256": "5196c7845c3248a787b3e723dc97f30383f9c758c26acfd5d0ab9531c6f73390",
+      "status": "reviewed",
+      "translation": "将 BED 区间读为 ggchord 注释"
+    },
+    "read_bed/modes_localized": {
+      "source_sha256": "8c53259e41e4e812ba5fbe7ec97c26c2e83b0604d27c5988a98131bd8b07f607",
+      "status": "reviewed",
+      "translation": "本地文件到标准表；按源格式转换坐标和声明单位"
+    },
+    "read_blast/purpose": {
+      "source_sha256": "459583e4edbf4ec566ba46dffd9a5e45aeed9c7693919130634f6cd373914010",
+      "status": "reviewed",
+      "translation": "将一个或多个 BLAST 表格文件读为连接数据"
+    },
+    "read_blast/modes_localized": {
+      "source_sha256": "c2b12832978b4a99699f94cfa3c0f7a13bcf634a8f263eca43862b1589c9bfd4",
+      "status": "reviewed",
+      "translation": "本地文件到标准表；按源格式转换坐标和声明单位"
+    },
+    "read_fasta_lengths/purpose": {
+      "source_sha256": "35227393693754320b30b1b068aaa9a750ea888b9f5442fd3e53d41eed7477b1",
+      "status": "reviewed",
+      "translation": "将一个或多个 FASTA 文件读为序列数据"
+    },
+    "read_fasta_lengths/modes_localized": {
+      "source_sha256": "59f99f2127cf13116c3794478a9ceb59d1b14b3b9d44fbdabdade12da70b70a4",
+      "status": "reviewed",
+      "translation": "本地文件到标准表；按源格式转换坐标和声明单位"
+    },
+    "read_genbank/purpose": {
+      "source_sha256": "915bfe6ac918aadc17aab968ede4cd6b92f6767699edb8dda9ec471f24e509d6",
+      "status": "reviewed",
+      "translation": "使用可选成熟解析器导入本地 GenBank 或 GBFF"
+    },
+    "read_genbank/modes_localized": {
+      "source_sha256": "7cc35a7a6d3c5d3e42aafef2a93e2db1efdef46c9f7593c45d8723b3e8600aa9",
+      "status": "reviewed",
+      "translation": "本地文件到标准表；按源格式转换坐标和声明单位"
+    },
+    "read_gff3/purpose": {
+      "source_sha256": "5efcc891e9a6768b7c334c7927832248dc074006c549922fd86565a22a612f2c",
+      "status": "reviewed",
+      "translation": "将一个或多个 GFF3 文件读为注释数据"
+    },
+    "read_gff3/modes_localized": {
+      "source_sha256": "ade3d7b5e729d240658a1aa696866d2df5b9b6154e25534db4c7d436a0e19dc9",
+      "status": "reviewed",
+      "translation": "本地文件到标准表；按源格式转换坐标和声明单位"
+    },
+    "read_paf/purpose": {
+      "source_sha256": "90bcb858550d5de2c3cf18d6bede07e3c9f20c6859e39dffadcce39f7af660e5",
+      "status": "reviewed",
+      "translation": "将 PAF 比对读为 ggchord 连接"
+    },
+    "read_paf/modes_localized": {
+      "source_sha256": "dc991a503c765c1041c96248d3f9e562601f527400f0cd37e508984d9d949a9c",
+      "status": "reviewed",
+      "translation": "本地文件到标准表；按源格式转换坐标和声明单位"
+    },
+    "rel/purpose": {
+      "source_sha256": "1f18c58a24dc5b5d92f428e8b94f76bcf54aabd45fae0856bb2f6a246a5e247d",
+      "status": "reviewed",
+      "translation": "适用于 ggchord 的部分 ggplot2 辅助函数"
+    },
+    "rel/modes_localized": {
+      "source_sha256": "1258e659a444ec4770caca0628df0e8061f1ecba48bf73526e11b5514c97e9fa",
+      "status": "reviewed",
+      "translation": "上游对象/接口；遵循 ggplot2/grid 的原始契约"
+    },
+    "scale_feature_fill_manual/purpose": {
+      "source_sha256": "5a838a339babcf7fcf7945cbda4e119dc9f21692caf1b5fcfcaa4c87f47f1e2d",
+      "status": "reviewed",
+      "translation": "基因、注释及区域填色标度"
+    },
+    "scale_feature_fill_manual/modes_localized": {
+      "source_sha256": "93201935ae8c8e1846f5e095e438cf755d2bfb567401467f3f045ede64f72011",
+      "status": "reviewed",
+      "translation": "兼容骨架坐标（见支持表）；匹配通用注释角色或预设"
+    },
+    "scale_feature_fill_plasmid/purpose": {
+      "source_sha256": "ea88445eca74697f07691de4cb32bc285d9d530c02904e5698681d10d47bb0a9",
+      "status": "reviewed",
+      "translation": "质粒注释预设标度"
+    },
+    "scale_feature_fill_plasmid/modes_localized": {
+      "source_sha256": "93201935ae8c8e1846f5e095e438cf755d2bfb567401467f3f045ede64f72011",
+      "status": "reviewed",
+      "translation": "兼容骨架坐标（见支持表）；匹配通用注释角色或预设"
+    },
+    "scale_feature_shape_manual/purpose": {
+      "source_sha256": "cd0bf41ab062a0fa1f189f7b5583aa77253ebc434ba0c883ba8df1895494a88b",
+      "status": "reviewed",
+      "translation": "注释形状标度"
+    },
+    "scale_feature_shape_manual/modes_localized": {
+      "source_sha256": "93201935ae8c8e1846f5e095e438cf755d2bfb567401467f3f045ede64f72011",
+      "status": "reviewed",
+      "translation": "兼容骨架坐标（见支持表）；匹配通用注释角色或预设"
+    },
+    "scale_feature_shape_plasmid/purpose": {
+      "source_sha256": "ea88445eca74697f07691de4cb32bc285d9d530c02904e5698681d10d47bb0a9",
+      "status": "reviewed",
+      "translation": "质粒注释预设标度"
+    },
+    "scale_feature_shape_plasmid/modes_localized": {
+      "source_sha256": "93201935ae8c8e1846f5e095e438cf755d2bfb567401467f3f045ede64f72011",
+      "status": "reviewed",
+      "translation": "兼容骨架坐标（见支持表）；匹配通用注释角色或预设"
+    },
+    "scale_gene_fill_manual/purpose": {
+      "source_sha256": "5a838a339babcf7fcf7945cbda4e119dc9f21692caf1b5fcfcaa4c87f47f1e2d",
+      "status": "reviewed",
+      "translation": "基因、注释及区域填色标度"
+    },
+    "scale_gene_fill_manual/modes_localized": {
+      "source_sha256": "f4df37cddc19318bbd90f232eb22214a57054dbf5cf297197b2e018559946702",
+      "status": "reviewed",
+      "translation": "兼容骨架坐标（见支持表）的 bp 基因图层"
+    },
+    "scale_link_alpha_continuous/purpose": {
+      "source_sha256": "6a403a6616c5680fed836162691ebd2ee938e729607ae9103c1c65940536764b",
+      "status": "reviewed",
+      "translation": "点连接标度"
+    },
+    "scale_link_alpha_continuous/modes_localized": {
+      "source_sha256": "31ccc3bd95b20e699919ff31e5920d5516fe86865d54220f5aedd5ef605bda1c",
+      "status": "reviewed",
+      "translation": "弦图/共线性；匹配点连接角色"
+    },
+    "scale_link_alpha_manual/purpose": {
+      "source_sha256": "6a403a6616c5680fed836162691ebd2ee938e729607ae9103c1c65940536764b",
+      "status": "reviewed",
+      "translation": "点连接标度"
+    },
+    "scale_link_alpha_manual/modes_localized": {
+      "source_sha256": "31ccc3bd95b20e699919ff31e5920d5516fe86865d54220f5aedd5ef605bda1c",
+      "status": "reviewed",
+      "translation": "弦图/共线性；匹配点连接角色"
+    },
+    "scale_link_color_gradientn/purpose": {
+      "source_sha256": "6a403a6616c5680fed836162691ebd2ee938e729607ae9103c1c65940536764b",
+      "status": "reviewed",
+      "translation": "点连接标度"
+    },
+    "scale_link_color_gradientn/modes_localized": {
+      "source_sha256": "31ccc3bd95b20e699919ff31e5920d5516fe86865d54220f5aedd5ef605bda1c",
+      "status": "reviewed",
+      "translation": "弦图/共线性；匹配点连接角色"
+    },
+    "scale_link_color_manual/purpose": {
+      "source_sha256": "6a403a6616c5680fed836162691ebd2ee938e729607ae9103c1c65940536764b",
+      "status": "reviewed",
+      "translation": "点连接标度"
+    },
+    "scale_link_color_manual/modes_localized": {
+      "source_sha256": "31ccc3bd95b20e699919ff31e5920d5516fe86865d54220f5aedd5ef605bda1c",
+      "status": "reviewed",
+      "translation": "弦图/共线性；匹配点连接角色"
+    },
+    "scale_link_colour_gradientn/purpose": {
+      "source_sha256": "6a403a6616c5680fed836162691ebd2ee938e729607ae9103c1c65940536764b",
+      "status": "reviewed",
+      "translation": "点连接标度"
+    },
+    "scale_link_colour_gradientn/modes_localized": {
+      "source_sha256": "31ccc3bd95b20e699919ff31e5920d5516fe86865d54220f5aedd5ef605bda1c",
+      "status": "reviewed",
+      "translation": "弦图/共线性；匹配点连接角色"
+    },
+    "scale_link_colour_manual/purpose": {
+      "source_sha256": "6a403a6616c5680fed836162691ebd2ee938e729607ae9103c1c65940536764b",
+      "status": "reviewed",
+      "translation": "点连接标度"
+    },
+    "scale_link_colour_manual/modes_localized": {
+      "source_sha256": "31ccc3bd95b20e699919ff31e5920d5516fe86865d54220f5aedd5ef605bda1c",
+      "status": "reviewed",
+      "translation": "弦图/共线性；匹配点连接角色"
+    },
+    "scale_link_linetype_manual/purpose": {
+      "source_sha256": "6a403a6616c5680fed836162691ebd2ee938e729607ae9103c1c65940536764b",
+      "status": "reviewed",
+      "translation": "点连接标度"
+    },
+    "scale_link_linetype_manual/modes_localized": {
+      "source_sha256": "31ccc3bd95b20e699919ff31e5920d5516fe86865d54220f5aedd5ef605bda1c",
+      "status": "reviewed",
+      "translation": "弦图/共线性；匹配点连接角色"
+    },
+    "scale_link_linewidth_continuous/purpose": {
+      "source_sha256": "6a403a6616c5680fed836162691ebd2ee938e729607ae9103c1c65940536764b",
+      "status": "reviewed",
+      "translation": "点连接标度"
+    },
+    "scale_link_linewidth_continuous/modes_localized": {
+      "source_sha256": "31ccc3bd95b20e699919ff31e5920d5516fe86865d54220f5aedd5ef605bda1c",
+      "status": "reviewed",
+      "translation": "弦图/共线性；匹配点连接角色"
+    },
+    "scale_link_linewidth_manual/purpose": {
+      "source_sha256": "6a403a6616c5680fed836162691ebd2ee938e729607ae9103c1c65940536764b",
+      "status": "reviewed",
+      "translation": "点连接标度"
+    },
+    "scale_link_linewidth_manual/modes_localized": {
+      "source_sha256": "31ccc3bd95b20e699919ff31e5920d5516fe86865d54220f5aedd5ef605bda1c",
+      "status": "reviewed",
+      "translation": "弦图/共线性；匹配点连接角色"
+    },
+    "scale_region_fill_manual/purpose": {
+      "source_sha256": "5a838a339babcf7fcf7945cbda4e119dc9f21692caf1b5fcfcaa4c87f47f1e2d",
+      "status": "reviewed",
+      "translation": "基因、注释及区域填色标度"
+    },
+    "scale_region_fill_manual/modes_localized": {
+      "source_sha256": "5db354ba1f26c46f7e9f3a8582a43e225d9f1d5a19651624cb9c6f4c17bb9e3b",
+      "status": "reviewed",
+      "translation": "兼容骨架坐标（见支持表）；匹配 region_fill"
+    },
+    "scale_ribbon_alpha_continuous/purpose": {
+      "source_sha256": "66d7db0399f4170e2000e76e445f634a75572b58256e8764d2853d07f6f0b5ef",
+      "status": "reviewed",
+      "translation": "区间连接透明度、轮廓及线型标度"
+    },
+    "scale_ribbon_alpha_continuous/modes_localized": {
+      "source_sha256": "636c125ccf39275c46ca5b9f9af9fef50910e9b262af308db4772c384736242f",
+      "status": "reviewed",
+      "translation": "弦图/共线性；匹配连接带角色"
+    },
+    "scale_ribbon_alpha_manual/purpose": {
+      "source_sha256": "66d7db0399f4170e2000e76e445f634a75572b58256e8764d2853d07f6f0b5ef",
+      "status": "reviewed",
+      "translation": "区间连接透明度、轮廓及线型标度"
+    },
+    "scale_ribbon_alpha_manual/modes_localized": {
+      "source_sha256": "636c125ccf39275c46ca5b9f9af9fef50910e9b262af308db4772c384736242f",
+      "status": "reviewed",
+      "translation": "弦图/共线性；匹配连接带角色"
+    },
+    "scale_ribbon_color_manual/purpose": {
+      "source_sha256": "66d7db0399f4170e2000e76e445f634a75572b58256e8764d2853d07f6f0b5ef",
+      "status": "reviewed",
+      "translation": "区间连接透明度、轮廓及线型标度"
+    },
+    "scale_ribbon_color_manual/modes_localized": {
+      "source_sha256": "636c125ccf39275c46ca5b9f9af9fef50910e9b262af308db4772c384736242f",
+      "status": "reviewed",
+      "translation": "弦图/共线性；匹配连接带角色"
+    },
+    "scale_ribbon_colour_manual/purpose": {
+      "source_sha256": "66d7db0399f4170e2000e76e445f634a75572b58256e8764d2853d07f6f0b5ef",
+      "status": "reviewed",
+      "translation": "区间连接透明度、轮廓及线型标度"
+    },
+    "scale_ribbon_colour_manual/modes_localized": {
+      "source_sha256": "636c125ccf39275c46ca5b9f9af9fef50910e9b262af308db4772c384736242f",
+      "status": "reviewed",
+      "translation": "弦图/共线性；匹配连接带角色"
+    },
+    "scale_ribbon_fill_gradientn/purpose": {
+      "source_sha256": "552876fc26b29af575fd7afbd5546b9f76e1e20db6c2c91c5a271a8c89052697",
+      "status": "reviewed",
+      "translation": "区间连接填色标度"
+    },
+    "scale_ribbon_fill_gradientn/modes_localized": {
+      "source_sha256": "636c125ccf39275c46ca5b9f9af9fef50910e9b262af308db4772c384736242f",
+      "status": "reviewed",
+      "translation": "弦图/共线性；匹配连接带角色"
+    },
+    "scale_ribbon_fill_identity/purpose": {
+      "source_sha256": "552876fc26b29af575fd7afbd5546b9f76e1e20db6c2c91c5a271a8c89052697",
+      "status": "reviewed",
+      "translation": "区间连接填色标度"
+    },
+    "scale_ribbon_fill_identity/modes_localized": {
+      "source_sha256": "636c125ccf39275c46ca5b9f9af9fef50910e9b262af308db4772c384736242f",
+      "status": "reviewed",
+      "translation": "弦图/共线性；匹配连接带角色"
+    },
+    "scale_ribbon_fill_manual/purpose": {
+      "source_sha256": "552876fc26b29af575fd7afbd5546b9f76e1e20db6c2c91c5a271a8c89052697",
+      "status": "reviewed",
+      "translation": "区间连接填色标度"
+    },
+    "scale_ribbon_fill_manual/modes_localized": {
+      "source_sha256": "636c125ccf39275c46ca5b9f9af9fef50910e9b262af308db4772c384736242f",
+      "status": "reviewed",
+      "translation": "弦图/共线性；匹配连接带角色"
+    },
+    "scale_ribbon_fill_stepsn/purpose": {
+      "source_sha256": "552876fc26b29af575fd7afbd5546b9f76e1e20db6c2c91c5a271a8c89052697",
+      "status": "reviewed",
+      "translation": "区间连接填色标度"
+    },
+    "scale_ribbon_fill_stepsn/modes_localized": {
+      "source_sha256": "636c125ccf39275c46ca5b9f9af9fef50910e9b262af308db4772c384736242f",
+      "status": "reviewed",
+      "translation": "弦图/共线性；匹配连接带角色"
+    },
+    "scale_ribbon_linetype_manual/purpose": {
+      "source_sha256": "66d7db0399f4170e2000e76e445f634a75572b58256e8764d2853d07f6f0b5ef",
+      "status": "reviewed",
+      "translation": "区间连接透明度、轮廓及线型标度"
+    },
+    "scale_ribbon_linetype_manual/modes_localized": {
+      "source_sha256": "636c125ccf39275c46ca5b9f9af9fef50910e9b262af308db4772c384736242f",
+      "status": "reviewed",
+      "translation": "弦图/共线性；匹配连接带角色"
+    },
+    "scale_seq_color_manual/purpose": {
+      "source_sha256": "44c309a8aff29a1ddb2dcebbc75f3a58c7d3a877d3fe239f2ddca1be74cd2b89",
+      "status": "reviewed",
+      "translation": "序列颜色标度"
+    },
+    "scale_seq_color_manual/modes_localized": {
+      "source_sha256": "0421eba0aeab047b394277878e08be3aec00e16a22ce0bd60515c539e4a741d6",
+      "status": "reviewed",
+      "translation": "兼容骨架坐标（见支持表）；匹配序列颜色角色"
+    },
+    "scale_seq_colour_manual/purpose": {
+      "source_sha256": "44c309a8aff29a1ddb2dcebbc75f3a58c7d3a877d3fe239f2ddca1be74cd2b89",
+      "status": "reviewed",
+      "translation": "序列颜色标度"
+    },
+    "scale_seq_colour_manual/modes_localized": {
+      "source_sha256": "0421eba0aeab047b394277878e08be3aec00e16a22ce0bd60515c539e4a741d6",
+      "status": "reviewed",
+      "translation": "兼容骨架坐标（见支持表）；匹配序列颜色角色"
+    },
+    "scale_seq_position_continuous/purpose": {
+      "source_sha256": "934612638af3991bac881228a8acce7a5101ea73cc2c27addeb483810bf9b9cc",
+      "status": "reviewed",
+      "translation": "基因组序列位置标度"
+    },
+    "scale_seq_position_continuous/modes_localized": {
+      "source_sha256": "459def35c7a35f09924d3eead01932d63519d3656edaee7fd436cf74e7e0c895",
+      "status": "reviewed",
+      "translation": "兼容骨架坐标（见支持表）的位置轴；与直线标尺不同"
+    },
+    "scale_seq_ring_manual/purpose": {
+      "source_sha256": "23dca4b984725743536b060d019f32449932a4af40ecbb1c63685a3953bc8f06",
+      "status": "reviewed",
+      "translation": "显式序列环标度"
+    },
+    "scale_seq_ring_manual/modes_localized": {
+      "source_sha256": "137a2c55434b3e34ca2f25db59f7d0461639002518784f5967516f312663566c",
+      "status": "reviewed",
+      "translation": "弦图/圆图；显式正半径；共线性拒绝"
+    },
+    "scale_track_colour_gradientn/purpose": {
+      "source_sha256": "d6b6aaf2dc37436942d7cc3958b95b8142018b3c1e2cd7dd927fda1cd127c1d9",
+      "status": "reviewed",
+      "translation": "设置轨道填色或颜色映射"
+    },
+    "scale_track_colour_gradientn/modes_localized": {
+      "source_sha256": "bed08ac7495970803ae2442662c66da54174bb0149e0489915f3a08cb1aad4c9",
+      "status": "reviewed",
+      "translation": "兼容骨架坐标（见支持表）；ID 必须匹配 track_band"
+    },
+    "scale_track_colour_manual/purpose": {
+      "source_sha256": "d6b6aaf2dc37436942d7cc3958b95b8142018b3c1e2cd7dd927fda1cd127c1d9",
+      "status": "reviewed",
+      "translation": "设置轨道填色或颜色映射"
+    },
+    "scale_track_colour_manual/modes_localized": {
+      "source_sha256": "bed08ac7495970803ae2442662c66da54174bb0149e0489915f3a08cb1aad4c9",
+      "status": "reviewed",
+      "translation": "兼容骨架坐标（见支持表）；ID 必须匹配 track_band"
+    },
+    "scale_track_fill_gradientn/purpose": {
+      "source_sha256": "d6b6aaf2dc37436942d7cc3958b95b8142018b3c1e2cd7dd927fda1cd127c1d9",
+      "status": "reviewed",
+      "translation": "设置轨道填色或颜色映射"
+    },
+    "scale_track_fill_gradientn/modes_localized": {
+      "source_sha256": "bed08ac7495970803ae2442662c66da54174bb0149e0489915f3a08cb1aad4c9",
+      "status": "reviewed",
+      "translation": "兼容骨架坐标（见支持表）；ID 必须匹配 track_band"
+    },
+    "scale_track_fill_manual/purpose": {
+      "source_sha256": "d6b6aaf2dc37436942d7cc3958b95b8142018b3c1e2cd7dd927fda1cd127c1d9",
+      "status": "reviewed",
+      "translation": "设置轨道填色或颜色映射"
+    },
+    "scale_track_fill_manual/modes_localized": {
+      "source_sha256": "bed08ac7495970803ae2442662c66da54174bb0149e0489915f3a08cb1aad4c9",
+      "status": "reviewed",
+      "translation": "兼容骨架坐标（见支持表）；ID 必须匹配 track_band"
+    },
+    "scale_track_value_continuous/purpose": {
+      "source_sha256": "f01608c0c224b623259a036554f7bb326f8ea4880217d6268b68dded1c3e8280",
+      "status": "reviewed",
+      "translation": "设置命名轨道的数值高度标度"
+    },
+    "scale_track_value_continuous/modes_localized": {
+      "source_sha256": "bed08ac7495970803ae2442662c66da54174bb0149e0489915f3a08cb1aad4c9",
+      "status": "reviewed",
+      "translation": "兼容骨架坐标（见支持表）；ID 必须匹配 track_band"
+    },
+    "segment_ggchord_data/purpose": {
+      "source_sha256": "871d0664a4aa6693dc6e8fb1240f1d8bdd68ffd15df92bc660458b6c031a8f79",
+      "status": "reviewed",
+      "translation": "为分段线性图准备独立窗口"
+    },
+    "segment_ggchord_data/modes_localized": {
+      "source_sha256": "d8348cf9e15f7a19328436a114d069edb6de58f9da4cca92dd9d5c6e2cab7fe1",
+      "status": "reviewed",
+      "translation": "显式输入、窗口与来源的工作流"
+    },
+    "stat_ribbon_bundle/purpose": {
+      "source_sha256": "aa6b54b92fdaceafd857807b04fef54aaff821e1d44b4861e066492f4a78adf1",
+      "status": "reviewed",
+      "translation": "以统计图层聚束区间连接"
+    },
+    "stat_ribbon_bundle/modes_localized": {
+      "source_sha256": "b08e5718f6ee6d37b092a2d63e5668cd8c7e34fc3355b607b1619d272c6a9eab",
+      "status": "reviewed",
+      "translation": "弦图/共线性；显式聚束"
+    },
+    "stat_ribbon_density/purpose": {
+      "source_sha256": "e39a0be44ecf4763f0743329f3649eecd6dc6579f18e0f03abde52f6bee43c4a",
+      "status": "reviewed",
+      "translation": "以统计图层计算局部连接密度"
+    },
+    "stat_ribbon_density/modes_localized": {
+      "source_sha256": "bc56fe1a1022f082b330b6024004a62cbd8ee3ab753449b0246435e51ae76483",
+      "status": "reviewed",
+      "translation": "弦图/共线性；一行观测仍是一条带"
+    },
+    "theme/purpose": {
+      "source_sha256": "1f18c58a24dc5b5d92f428e8b94f76bcf54aabd45fae0856bb2f6a246a5e247d",
+      "status": "reviewed",
+      "translation": "适用于 ggchord 的部分 ggplot2 辅助函数"
+    },
+    "theme/modes_localized": {
+      "source_sha256": "1258e659a444ec4770caca0628df0e8061f1ecba48bf73526e11b5514c97e9fa",
+      "status": "reviewed",
+      "translation": "上游对象/接口；遵循 ggplot2/grid 的原始契约"
+    },
+    "theme_ggchord/purpose": {
+      "source_sha256": "5abf8224083a2898ba676a1dd4e531fd5c0af82d06740c41332eeaafffbc3ed3",
+      "status": "reviewed",
+      "translation": "ggchord 主题"
+    },
+    "theme_ggchord/modes_localized": {
+      "source_sha256": "5f8147f97d38733b62e61d3b4b4eeb72a60a28c4d294a597b23669ebfa19638d",
+      "status": "reviewed",
+      "translation": "受支持图的相应主题/图例；按角色及设备解释"
+    },
+    "theme_ggchord_dark/purpose": {
+      "source_sha256": "5abf8224083a2898ba676a1dd4e531fd5c0af82d06740c41332eeaafffbc3ed3",
+      "status": "reviewed",
+      "translation": "ggchord 主题"
+    },
+    "theme_ggchord_dark/modes_localized": {
+      "source_sha256": "5f8147f97d38733b62e61d3b4b4eeb72a60a28c4d294a597b23669ebfa19638d",
+      "status": "reviewed",
+      "translation": "受支持图的相应主题/图例；按角色及设备解释"
+    },
+    "theme_ggchord_minimal/purpose": {
+      "source_sha256": "5abf8224083a2898ba676a1dd4e531fd5c0af82d06740c41332eeaafffbc3ed3",
+      "status": "reviewed",
+      "translation": "ggchord 主题"
+    },
+    "theme_ggchord_minimal/modes_localized": {
+      "source_sha256": "5f8147f97d38733b62e61d3b4b4eeb72a60a28c4d294a597b23669ebfa19638d",
+      "status": "reviewed",
+      "translation": "受支持图的相应主题/图例；按角色及设备解释"
+    },
+    "theme_ggchord_plasmid/purpose": {
+      "source_sha256": "5abf8224083a2898ba676a1dd4e531fd5c0af82d06740c41332eeaafffbc3ed3",
+      "status": "reviewed",
+      "translation": "ggchord 主题"
+    },
+    "theme_ggchord_plasmid/modes_localized": {
+      "source_sha256": "5f8147f97d38733b62e61d3b4b4eeb72a60a28c4d294a597b23669ebfa19638d",
+      "status": "reviewed",
+      "translation": "受支持图的相应主题/图例；按角色及设备解释"
+    },
+    "theme_ggchord_publication/purpose": {
+      "source_sha256": "5abf8224083a2898ba676a1dd4e531fd5c0af82d06740c41332eeaafffbc3ed3",
+      "status": "reviewed",
+      "translation": "ggchord 主题"
+    },
+    "theme_ggchord_publication/modes_localized": {
+      "source_sha256": "5f8147f97d38733b62e61d3b4b4eeb72a60a28c4d294a597b23669ebfa19638d",
+      "status": "reviewed",
+      "translation": "受支持图的相应主题/图例；按角色及设备解释"
+    },
+    "unit/purpose": {
+      "source_sha256": "b828ba20012a493fa23c9cb816d1ad8e116d470ec7e1f2e6ad4b9730d4c306d5",
+      "status": "reviewed",
+      "translation": "物理单位与方向箭头"
+    },
+    "unit/modes_localized": {
+      "source_sha256": "1258e659a444ec4770caca0628df0e8061f1ecba48bf73526e11b5514c97e9fa",
+      "status": "reviewed",
+      "translation": "上游对象/接口；遵循 ggplot2/grid 的原始契约"
+    },
+    "validate_ggchord_data/purpose": {
+      "source_sha256": "a548bb61bbbda5d865453fb39d46a475b47032924cce9b5b1866ac72d527709e",
+      "status": "reviewed",
+      "translation": "绘图前校验 ggchord 输入"
+    },
+    "validate_ggchord_data/modes_localized": {
+      "source_sha256": "81fc1dd8900ec66bd4fac123dba39e7f35a757ca0b1999c03fdf3ef72ea878f4",
+      "status": "reviewed",
+      "translation": "显式校验/修复/成员工作流；保留源表及报告"
+    },
+    "validate_ggchord_hierarchy/purpose": {
+      "source_sha256": "65c4b016ea7ddf433f8ec630ede13ac5193c1f7edd42cf158a9daabdea39d218",
+      "status": "reviewed",
+      "translation": "校验显式 genome 与 contig 关系"
+    },
+    "validate_ggchord_hierarchy/modes_localized": {
+      "source_sha256": "5fd8925f95e7fe1eba4685c420f8205b1f3a7395ee620167a3e3cea8760a4556",
+      "status": "reviewed",
+      "translation": "显式校验/修复/成员工作流；保留源表及报告"
+    },
+    "view_ggchord/purpose": {
+      "source_sha256": "bef6345d7f2b0e3b7621c8cd6a28b70be910d5972cd4502234e8916d5a5844a0",
+      "status": "reviewed",
+      "translation": "按预期导出尺寸预览图形"
+    },
+    "view_ggchord/modes_localized": {
+      "source_sha256": "701dd6568f67cd01f54f0dd148b101d5ee45b8c115d83fb76ce98aba5073a51c",
+      "status": "reviewed",
+      "translation": "所有受支持图；目标尺寸临时预览"
+    },
+    "waiver/purpose": {
+      "source_sha256": "1f18c58a24dc5b5d92f428e8b94f76bcf54aabd45fae0856bb2f6a246a5e247d",
+      "status": "reviewed",
+      "translation": "适用于 ggchord 的部分 ggplot2 辅助函数"
+    },
+    "waiver/modes_localized": {
+      "source_sha256": "1258e659a444ec4770caca0628df0e8061f1ecba48bf73526e11b5514c97e9fa",
+      "status": "reviewed",
+      "translation": "上游对象/接口；遵循 ggplot2/grid 的原始契约"
+    },
+    "geom_track/purpose": {
+      "source_sha256": "7067cac1a106153968307e2fedfde35f7dacca2b6549412beee9a761142a0610",
+      "status": "reviewed",
+      "translation": "源空间统计轨道"
+    },
+    "geom_track/modes_localized": {
+      "source_sha256": "676620980c578eb273e1095ef45e3efcafac52e9e3950a38737cccebdd06a20f",
+      "status": "reviewed",
+      "translation": "首批基础架构范围；详见本章支持矩阵；Radial见新增视图支持矩阵"
+    },
+    "geom_track_col/purpose": {
+      "source_sha256": "df9cc9ac8fb15f8b6162fe7c8901fb10b01d8e599026668390402837dd1338c6",
+      "status": "reviewed",
+      "translation": "显示给定数值高度"
+    },
+    "geom_track_col/modes_localized": {
+      "source_sha256": "a7d488701e8f123183b2b1a4abe705caa0757e6551b88b6f62c503aebb8c3429",
+      "status": "reviewed",
+      "translation": "首批基础架构范围；详见本章支持矩阵；Radial见新增视图支持矩阵"
+    },
+    "coord_sankey/purpose": {
+      "source_sha256": "3ed4bfc282d7241dd8aead2dcae89544c899eb7485b626a3480c95cc30667a06",
+      "status": "reviewed",
+      "translation": "query 左列与 subject 右列镜像区间关系"
+    },
+    "coord_sankey/modes_localized": {
+      "source_sha256": "f2a881f40370cea6c6028ee252964a1e2392adc9ab755f758c367754318421fb",
+      "status": "reviewed",
+      "translation": "首批基础架构范围；详见本章支持矩阵"
+    },
+    "coord_dotplot/purpose": {
+      "source_sha256": "7131c175ebafc46f816796a9258381e5ca0f9b5bd40ab455b8039e3dc912ffd9",
+      "status": "reviewed",
+      "translation": "HSP双轴投影"
+    },
+    "coord_dotplot/modes_localized": {
+      "source_sha256": "486436e2e69a46006bda229b2fb7768660cce4d6140f2edb384e3493c4ea8777",
+      "status": "reviewed",
+      "translation": "独立原生轴上的identity HSP线段"
+    },
+    "geom_alignment_segment/purpose": {
+      "source_sha256": "175afc899090cc8ee183805ac371ad289f4f3ca1f69fce105be2e7091a5fd644",
+      "status": "reviewed",
+      "translation": "绘制HSP完整端点"
+    },
+    "geom_alignment_segment/modes_localized": {
+      "source_sha256": "486436e2e69a46006bda229b2fb7768660cce4d6140f2edb384e3493c4ea8777",
+      "status": "reviewed",
+      "translation": "独立原生轴上的identity HSP线段"
+    },
+    "coord_radial_synteny/purpose": {
+      "source_sha256": "0737e8cf7b936089d51742b2e266d988b89efb75c44c5e2a9abbd2bead069cf1",
+      "status": "reviewed",
+      "translation": "将线性序列投影到径向辐条"
+    },
+    "coord_radial_synteny/modes_localized": {
+      "source_sha256": "ef87888d891bb0fb9d1eb659a7c9c6699e5d4aefc35e3c204746a34a011ec09d",
+      "status": "reviewed",
+      "translation": "比例或equal辐条、真实环形邻接HSP、共享Feature与Track框架"
+    },
+    "ggchord_fusion/purpose": {
+      "source_sha256": "9b1747cc80792781bdef8aec883486144339739b2a397d20f4558082314f4592",
+      "status": "reviewed",
+      "translation": "组合独立基因组面板"
+    },
+    "ggchord_fusion/modes_localized": {
+      "source_sha256": "5be4116558515448dfb20e5b4160cf24007da07564c98450d6545d4550e50852",
+      "status": "reviewed",
+      "translation": "已注册基因组/字符面板；八方位、显式区域和嵌套路径"
+    },
+    "fusion_panel/purpose": {
+      "source_sha256": "ec7a5e989abdf7672d0ae662c53d6b6d6651a5d829b8cc6cd2ea84d101de44d3",
+      "status": "reviewed",
+      "translation": "注册指定方位的物理面板"
+    },
+    "fusion_panel/modes_localized": {
+      "source_sha256": "5be4116558515448dfb20e5b4160cf24007da07564c98450d6545d4550e50852",
+      "status": "reviewed",
+      "translation": "已注册基因组/字符面板；八方位、显式区域和嵌套路径"
+    },
+    "fusion_ribbon/purpose": {
+      "source_sha256": "79aff898f7b690b65337997d813bb1d7cad574eb0f8236275a84cc620c6c7049",
+      "status": "reviewed",
+      "translation": "连接完整来源区间"
+    },
+    "fusion_ribbon/modes_localized": {
+      "source_sha256": "b1cebdfe81f5cba3ec22665e7abfd9a7f097ab46d4fce690ac68973f7dc843b7",
+      "status": "reviewed",
+      "translation": "已注册基因组图、嵌套 Fusion 与已注册字符细节；显式面板/实例路由；不含 Dotplot"
+    },
+    "export_ggchord_fusion/purpose": {
+      "source_sha256": "02a53eb5104a70e5dfdb1c8791b64791b8c219a8ff56ed3647ec9106e9792c00",
+      "status": "reviewed",
+      "translation": "导出实测组合前缘与来源"
+    },
+    "export_ggchord_fusion/modes_localized": {
+      "source_sha256": "b1cebdfe81f5cba3ec22665e7abfd9a7f097ab46d4fce690ac68973f7dc843b7",
+      "status": "reviewed",
+      "translation": "已注册基因组图、嵌套 Fusion 与已注册字符细节；显式面板/实例路由；不含 Dotplot"
+    },
+    "read_bedpe/purpose": {
+      "source_sha256": "090cfad5d9b3abbac2814ecf934170fd5cafd79a0d8214ed0fde4c99b667d277",
+      "status": "reviewed",
+      "translation": "读取双端区间，保留来源且不推断缺失比对证据"
+    },
+    "read_bedpe/modes_localized": {
+      "source_sha256": "7aba6a748493247204d9dfb6e82ec6e48b5cd4ab7b73b215077cc1ed24927d6c",
+      "status": "reviewed",
+      "translation": "标准q/s区间、配对锚点方向与来源"
+    },
+    "as_ggchord_alignment/purpose": {
+      "source_sha256": "c072f2dc182bfdcdb97a31233d336b63415463a2d205565a0f96f863d46ba958",
+      "status": "reviewed",
+      "translation": "适配已有对齐字符串，保留精确且可缺失的源位置"
+    },
+    "as_ggchord_alignment/modes_localized": {
+      "source_sha256": "f2146abdad754d14a4d3e42880a8cc67ed889ea81df6b98a8ee9953ab676f746",
+      "status": "reviewed",
+      "translation": "已有DNA/RNA/AA对齐列；Cartesian局部单元与显式源映射"
+    },
+    "read_aligned_fasta/purpose": {
+      "source_sha256": "f7ec6295ca5c6d0a7c428c7a68392125dcd61aec32e3907aa2d36321c0c8aabd",
+      "status": "reviewed",
+      "translation": "读取已有DNA/RNA/AA对齐字符，不计算新比对"
+    },
+    "read_aligned_fasta/modes_localized": {
+      "source_sha256": "f2146abdad754d14a4d3e42880a8cc67ed889ea81df6b98a8ee9953ab676f746",
+      "status": "reviewed",
+      "translation": "已有DNA/RNA/AA对齐列；Cartesian局部单元与显式源映射"
+    },
+    "map_alignment_position/purpose": {
+      "source_sha256": "b3ac8340457642821799fbde2d9247b7455e9964d1fa8ac506d52f2cac2b5e01",
+      "status": "reviewed",
+      "translation": "在选定行中精确查找对齐列与源位置"
+    },
+    "map_alignment_position/modes_localized": {
+      "source_sha256": "f2146abdad754d14a4d3e42880a8cc67ed889ea81df6b98a8ee9953ab676f746",
+      "status": "reviewed",
+      "translation": "已有DNA/RNA/AA对齐列；Cartesian局部单元与显式源映射"
+    },
+    "geom_residue/purpose": {
+      "source_sha256": "9b98364a4fb9520a0a0019be9eb2403501f4356daf9731e2cbe00c49a4a83bbe",
+      "status": "reviewed",
+      "translation": "按实际物理空间绘制局部字符，明确选择色格或报错策略"
+    },
+    "geom_residue/modes_localized": {
+      "source_sha256": "f2146abdad754d14a4d3e42880a8cc67ed889ea81df6b98a8ee9953ab676f746",
+      "status": "reviewed",
+      "translation": "已有DNA/RNA/AA对齐列；Cartesian局部单元与显式源映射"
+    },
+    "magnify_ggchord/purpose": {
+      "source_sha256": "1dac01958bd525bfb2c50c66da5335857558882b1ed5820343d501983935249f",
+      "status": "reviewed",
+      "translation": "连接真实源区间与显式独立构建的局部细节图"
+    },
+    "magnify_ggchord/modes_localized": {
+      "source_sha256": "b1cebdfe81f5cba3ec22665e7abfd9a7f097ab46d4fce690ac68973f7dc843b7",
+      "status": "reviewed",
+      "translation": "已注册基因组图、嵌套 Fusion 与已注册字符细节；显式面板/实例路由；不含 Dotplot"
+    },
+    "adapt_ggchord/purpose": {
+      "source_sha256": "68e61901d17c080522a3dbe579333b914ca21860a5ea8a5284b48174814b54d8",
+      "status": "reviewed",
+      "translation": "按目标尺寸启用有界主题缩放与图例联合排布"
+    },
+    "adapt_ggchord/modes_localized": {
+      "source_sha256": "237aa2c84899f02d5f7e1c161a267a86c58384f4d1355aa85710eb65c8ab485c",
+      "status": "reviewed",
+      "translation": "fixed/scale/adaptive；显式设置优先，不保证全局零碰撞"
+    },
+    "register_ggchord_alignment/purpose": {
+      "source_sha256": "a40bc49273a2361c0b483a8e0d969e25ae1ec1d6b990660f1ba38b8f6b892769",
+      "status": "reviewed",
+      "translation": "注册精确字符/源位置用于独立Fusion细节"
+    },
+    "register_ggchord_alignment/modes_localized": {
+      "source_sha256": "5a6cb367010f2ccd9c7573e5202b6c9074f46f0a08cabeea87a6a74ff73933e7",
+      "status": "reviewed",
+      "translation": "显式源/对齐列映射；独立Cartesian细节；已观测完整codon"
+    },
+    "translate_ggchord_cds/purpose": {
+      "source_sha256": "e9228cf3c7f207bf240492bb52b0eb278bc1c6551ffb591d7ba0f48bd78725fe",
+      "status": "reviewed",
+      "translation": "通过可选Biostrings翻译真实CDS并保留codon来源"
+    },
+    "translate_ggchord_cds/modes_localized": {
+      "source_sha256": "5a6cb367010f2ccd9c7573e5202b6c9074f46f0a08cabeea87a6a74ff73933e7",
+      "status": "reviewed",
+      "translation": "显式源/对齐列映射；独立Cartesian细节；已观测完整codon"
+    },
+    "read_bedgraph/purpose": {
+      "source_sha256": "dd72916a9721ec8e10d13156374c81f167a859a398e96292597efc236c94d243",
+      "status": "reviewed",
+      "translation": "导入连续区间信号，显式保留坐标及单位边界"
+    },
+    "read_bedgraph/modes_localized": {
+      "source_sha256": "8c43c470bd85ca31b2fb23e469abd32bc838a574d4b88e27c7b55604f8d81515",
+      "status": "reviewed",
+      "translation": "定量轨道输入；BigWig 为支持平台上的可选依赖"
+    },
+    "read_bigwig/purpose": {
+      "source_sha256": "dd72916a9721ec8e10d13156374c81f167a859a398e96292597efc236c94d243",
+      "status": "reviewed",
+      "translation": "导入连续区间信号，显式保留坐标及单位边界"
+    },
+    "read_bigwig/modes_localized": {
+      "source_sha256": "8c43c470bd85ca31b2fb23e469abd32bc838a574d4b88e27c7b55604f8d81515",
+      "status": "reviewed",
+      "translation": "定量轨道输入；BigWig 为支持平台上的可选依赖"
+    },
+    "read_vcf/purpose": {
+      "source_sha256": "681cc6ec264c1fe530242a50a06a57432ac53660619b75aab8e663ee52415227",
+      "status": "reviewed",
+      "translation": "导入变异记录及显式解码的结构断点"
+    },
+    "read_vcf/modes_localized": {
+      "source_sha256": "d8206528e359ee7d498852a4c4ee1119d8890916208674dae34218b61535a2ba",
+      "status": "reviewed",
+      "translation": "VCF；BCF 需显式 pysam Python；结构解码为可选依赖"
+    },
+    "read_maf/purpose": {
+      "source_sha256": "5bab458c01dd1dc82aec40d9d811e450cdb3c9a86cc3db5b988f169ec6be6263",
+      "status": "reviewed",
+      "translation": "读取已有基因组对齐块及真实源坐标"
+    },
+    "read_maf/modes_localized": {
+      "source_sha256": "8c60e30692cb1518da3da59b5efd61ed3146abf37a5ba0fd93dd531811975344",
+      "status": "reviewed",
+      "translation": "可选 Biopython；MAF 字符单元与 chain 区间"
+    },
+    "read_chain/purpose": {
+      "source_sha256": "5bab458c01dd1dc82aec40d9d811e450cdb3c9a86cc3db5b988f169ec6be6263",
+      "status": "reviewed",
+      "translation": "读取已有基因组对齐块及真实源坐标"
+    },
+    "read_chain/modes_localized": {
+      "source_sha256": "8c60e30692cb1518da3da59b5efd61ed3146abf37a5ba0fd93dd531811975344",
+      "status": "reviewed",
+      "translation": "可选 Biopython；MAF 字符单元与 chain 区间"
+    },
+    "read_delta/purpose": {
+      "source_sha256": "220c16c11fe222a7a24bae221e2915bfaf6f7f965fbb7b9c05f1f650667adee1",
+      "status": "reviewed",
+      "translation": "通过可选原生解码器读取已有 delta 比对"
+    },
+    "read_delta/modes_localized": {
+      "source_sha256": "c763f969281f73765cdb2a5fc1e02d6f7b0a33ee93ffcd149bf94d71349e2196",
+      "status": "reviewed",
+      "translation": "可选 show-coords；bp 坐标与独立声明的比对统计单位"
+    },
+    "read_signature_matches/purpose": {
+      "source_sha256": "a3cccb8dd6052d490e56799cc69723a4aa81f9c493cbeb2086686eb795aedfe8",
+      "status": "reviewed",
+      "translation": "读取已有蛋白 signature 位置及源元数据"
+    },
+    "read_signature_matches/modes_localized": {
+      "source_sha256": "ccd2e84032fe911948a77786f42430cd9862debf179f7b7c5da3f65ef150b090",
+      "status": "reviewed",
+      "translation": "AA feature；源原生分数；JSON 需可选 jsonlite"
+    },
+    "read_feature_relations/purpose": {
+      "source_sha256": "8ea5d7b48dede2818051905174dffc153ff7acf9670c94ed45b0957207b59bcc",
+      "status": "reviewed",
+      "translation": "读取预计算 feature 对及成员关系"
+    },
+    "read_feature_relations/modes_localized": {
+      "source_sha256": "8326863e4591a61e28df9b48b65a63a99a48214a722cc012e394e601f80651e7",
+      "status": "reviewed",
+      "translation": "精确 feature ID；显式连续锚点；不推断完整长度"
+    },
+    "scale_fill_residue/purpose": {
+      "source_sha256": "0298364e1c8d538a9cf12cb91ea9382e1f5ae31852ad60a2e9c993735d25a5b2",
+      "status": "reviewed",
+      "translation": "显式选择核酸或蛋白残基的化学性质配色"
+    },
+    "scale_fill_residue/modes_localized": {
+      "source_sha256": "f2146abdad754d14a4d3e42880a8cc67ed889ea81df6b98a8ee9953ab676f746",
+      "status": "reviewed",
+      "translation": "已有DNA/RNA/AA对齐列；Cartesian局部单元与显式源映射"
+    },
+    "stat_coverage/purpose": {
+      "source_sha256": "d7d53c885e2b3084a5245e39b26e3d0a72ca3c32f756b5eb87b1f349a3eb7361",
+      "status": "reviewed",
+      "translation": "计算一基闭区间在各窗口的并集覆盖率和平均深度"
+    },
+    "stat_coverage/modes_localized": {
+      "source_sha256": "4de1e1bdebdf3dab2e47b69575a9d872473e2e0439ae7a4ac219c278a9d99981",
+      "status": "reviewed",
+      "translation": "具备参考长度和单位的源区间；每个有观测的组独立统计"
+    },
+    "layout_sequences/purpose": {
+      "source_sha256": "1caebb0909a0f2f0293f10e7c21fccdcd831e5d93246bbc03b5923d1d9ffeb4d",
+      "status": "reviewed",
+      "translation": "设置共同骨架的显示顺序、方向、间距与长度分配"
+    },
+    "layout_sequences/modes_localized": {
+      "source_sha256": "99b51898f5e7300e76b78781eb663e55e72084c6632005f383dbabb01065fc18",
+      "status": "reviewed",
+      "translation": "多序列弦图及线性布局；具名实例可覆盖来源方向；圆图和点图由坐标系设置方向"
+    },
+    "guide_seq_axis/purpose": {
+      "source_sha256": "9b41899b26a519b550529463e5c7a9dd28f5c74ad9a3f636b989f1715aa0efaa",
+      "status": "reviewed",
+      "translation": "按显示 ID 选择序列轴及标签重叠策略"
+    },
+    "guide_seq_axis/modes_localized": {
+      "source_sha256": "8a94968ca70fdb238eb4732ab707bcfc7a42953ba4e2e3acf563404e1a099a74",
+      "status": "reviewed",
+      "translation": "具有序列位置轴的骨架视图；聚焦时按窗口 ID 选择"
+    },
+    "guide_track_axis/purpose": {
+      "source_sha256": "f32da19fefb4a049bd40a38c7a89b02c05e6824d6a82d66b87400842b8c68f2f",
+      "status": "reviewed",
+      "translation": "设置定量轨道轴的刻度角度、标签避让与局部主题"
+    },
+    "guide_track_axis/modes_localized": {
+      "source_sha256": "4e797d85571030b70ce92d950a46b4895891c40b15d058cb501b5a8790ae5762",
+      "status": "reviewed",
+      "translation": "使用局部定量轨道数值标度的视图"
+    },
+    "shared_track_limits/purpose": {
+      "source_sha256": "ff1b961abba94d8b3da3b349d3036399e3f0f957be58ee20ff58cfec13b2a129",
+      "status": "reviewed",
+      "translation": "为多个图的指定轨道计算共同数值范围"
+    },
+    "shared_track_limits/modes_localized": {
+      "source_sha256": "a8bf1f0b93b8db87e25771016a92de78d3a53e1dc6a72d0179783598f38ccfc3",
+      "status": "reviewed",
+      "translation": "具有数值轨道的独立图，可按轨道 ID 选择范围"
+    }
+  }
+}

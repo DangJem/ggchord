@@ -1,0 +1,35 @@
+{
+  "source_sha256": "2fe8b16ac46bf408f4a8f24a143f7ca39d14644b3120bd3cce21f91c8f02dcae",
+  "blocks": {
+    "0": {
+      "source_sha256": "557b15a83aa8e83f0446942dd7d3c37cdb8212c315b2cdad3cc5614f6aaa7f2f",
+      "status": "reviewed",
+      "translation": "点图把 query 坐标放在 x 轴、subject 坐标放在 y 轴。每条比对线段连接两组成对坐标，可用来读取匹配区间、跨度和相对方向。\n"
+    },
+    "2": {
+      "source_sha256": "dc8e4710734f8ea53c74c86771231875de0a1e8fb6bf1a01cfe1c9b544488e5e",
+      "status": "reviewed",
+      "translation": "## 画一条已观测比对线段 {#draw}\n"
+    },
+    "3": {
+      "source_sha256": "5c008021be25e33ab3ffaaf794f631a507964ed532e259a0ca351bb9e983a2ab",
+      "status": "reviewed",
+      "translation": "这条线段起于 (26,298, 7,121) bp，止于 (51,139, 31,959) bp。由起点到终点，两条来源坐标均递增，因此本图上的斜率为正。\n"
+    },
+    "6": {
+      "source_sha256": "dd60a2ff324b5182ca2bc95c14d02b92b99a81480425f2b47c384847c0427d6d",
+      "status": "reviewed",
+      "translation": "## 读取多对序列的矩阵 {#adapt}\n"
+    },
+    "7": {
+      "source_sha256": "cf0e48deb83e5100542689753a79e2e383e2a31e864ea80f36da87537396e00c",
+      "status": "reviewed",
+      "translation": "提供序列全长，并保留两端点对的原始次序。`x_seqs` 和 `y_seqs` 分别选择两轴上的序列和排列顺序。多序列矩阵中的空格表示输入表在该格没有记录。查看逐碱基缺口或错配还需要对齐列或更精细的比对路径。\n"
+    },
+    "8": {
+      "source_sha256": "9eea998becc10ff80c105d6f919a5602bcb623947c16007668f4378e9df25f4a",
+      "status": "reviewed",
+      "translation": "[四序列比对矩阵](case-dotplot.md) · [比对线段层](../../man/geom_alignment_segment.Rd) · [点图坐标轴](../../man/coord_dotplot.Rd)\n"
+    }
+  }
+}

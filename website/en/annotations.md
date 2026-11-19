@@ -1,69 +1,15 @@
-<div class="task-intro"><p>Draw real annotations as independent layers, choose suitable shapes and share stacking positions between overlapping intervals and text.</p></div>
+<a id="anchors"></a>
 
-<span id="prepare"></span>
+## Draw all features, label selected records {#anchors}
 
-<a id="stack"></a>
+The pUC19 example contains nine reference features. A stable ID links each label to its source feature. Allocate lanes using the full table, then select the two CDS records for labels. The entity layer has the ID `features`, which the label layer names in `anchor_layer`.
 
-## Preserve feature semantics {#stack}
-Use the first six pUC19 annotations to see how overlapping intervals share stacked positions. Source strand is retained.
+{{example:feature-subset-labels}}
 
-{{code:featurestack}}
-{{figure:featurestack}}
+<a id="placement"></a>
 
-`position_feature_stack()` resolves overlapping annotation lanes. The label layer
-uses the same Position, so text anchors follow those lanes. Prefer unique
-`feature_id` values for subset/reordered label inputs. The strict gene shortcut
-requires known `+/-`; general features retain unknown/bidirectional semantics.
+## Choose what controls the geometry {#placement}
 
-<a id="shapes"></a>
+Use `geom_feature()` for intervals with mixed or unknown strand. The gene preset draws directed coding features on nucleotide references with known strand. Supply the source strand when a teaching table also contains a recoded display strand. For same-side lanes, give `position_feature_stack()` a `base_position = position_offset(...)` and a lane direction. The feature key and original interval let subset labels follow those lanes after a reorder.
 
-## Choose shapes by meaning {#shapes}
-| Geometry | Typical use | Important distinction |
-| --- | --- | --- |
-| `arrow`, `compact_arrow` | Directional coding/feature interval | Known direction is evidence, not a display guess |
-| `block`, `capped_line` | Region or unfilled interval | Shape choice does not infer biological function |
-| `promoter_arrow`, `primer_arrow`, `primer_arc` | Declared promoter/primer-style annotation | Computational matching and drawing are separate |
-| `marker`, `chevron`, `lollipop` | Custom interval/point-like emphasis | Keep real interval metadata; display shape is a mapping |
-
-`geom_feature(preset = 'gene')` and `geom_feature(preset = 'plasmid')` provide distinct geometry presets.
-Use `position_strand()` for signed strand offsets and `position_offset()`
-for one offset shared by both strands. Both use the local normal at the feature.
-
-<a id="decoration"></a>
-
-## Highlight an interval without rewriting observations {#decoration}
-{{code:decorations}}
-{{figure:decorations}}
-
-The highlighted interval is the observed pUC19 replication origin. A region overlay uses its own table and `region_fill` scale. `geom_seq_label()`
-names sequences, `geom_seq_center_label()` supplies name/length in a single circle,
-and `geom_seq_break()` marks cropped/segmented ends. `geom_seq_scale()` is an
-independent sequence-position reference bar for collinear plots; it differs from
-`scale_seq_position_continuous()`, which controls genomic axes on sequences.
-An ordinary ggplot2 annotation should use [position mapping](views.md#mapping)
-instead of treating bp as Cartesian x/y.
-
-<a id="check-result"></a>
-
-## Result checks {#check-result}
-Check intervals and strands before shapes and labels. Unknown strands remain in general features; stacking changes display placement, not genomic coordinates.
-
-<div class="next-step">Continue: <a href="feature-geometry.md">Gene and feature arrow geometry →</a></div>
-
-Compare shouldered/flush/triangle arrows on one observed CDS in [arrow geometry](feature-geometry.md#arrow-heads).
-
-<a id="region-parameters"></a>
-
-## Region side, width and offset {#region-parameters}
-
-Keep the original query ID and interval of the first observed HSP. Defaults are width 0.08, offset 0 and inside. Each subsequent figure changes only outside placement, width or offset. These are local geometry quantities, not bp. Set fixed fill in geom parameters or map categories to region_fill with its dedicated scale. Highlighting does not establish a new functional annotation.
-
-{{code:comparefinishchord}}
-{{code:compareregioninside}}
-{{figure:compareregioninside}}
-{{code:compareregionoutside}}
-{{figure:compareregionoutside}}
-{{code:compareregionwidth}}
-{{figure:compareregionwidth}}
-{{code:compareregionoffset}}
-{{figure:compareregionoffset}}
+For a label drawn at a chosen angle, use fixed placement. For automatic placement, use `placement = "repel"`. Choose `overflow` for text that exceeds the available space. Inspect labels at the [intended export dimensions](output.md).

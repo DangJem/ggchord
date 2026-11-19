@@ -1,0 +1,15 @@
+{
+  "source_sha256": "6a350fe65ac39f7ed522a5f7541e65cd45580e04f09c58ce57d6489f0be4a437",
+  "blocks": {
+    "1": {
+      "source_sha256": "78f3b751cc6a81f151c97d45744da2989fa25c9ea71a757fa0548ec3895c1028",
+      "status": "reviewed",
+      "translation": "## 本页已迁移 {#moved}\n"
+    },
+    "2": {
+      "source_sha256": "cd62ebd0ec157f6b61827b4d29231e1ad66c45f8b4cf5d8aa0fb3bc84f43eb02",
+      "status": "reviewed",
+      "translation": "[开始使用](installation.md)\n"
+    }
+  }
+}

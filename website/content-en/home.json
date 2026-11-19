@@ -1,0 +1,100 @@
+{
+  "hero": {
+    "title": {
+      "en": "Plot genomes and sequence relationships with ggplot2"
+    },
+    "description": {
+      "en": "Compare sequences, annotate circular maps, inspect local alignments or connect multiple plots in one view."
+    }
+  },
+  "capabilities": [
+    {
+      "url": "modes.html",
+      "title": {
+        "en": "Plotting guide"
+      },
+      "description": {
+        "en": "Find a plot type or learn how to adjust a layer."
+      }
+    },
+    {
+      "url": "formats.html",
+      "title": {
+        "en": "Data and workflows"
+      },
+      "description": {
+        "en": "Read files, transform coordinates and check output."
+      }
+    },
+    {
+      "url": "reference/index.html",
+      "title": {
+        "en": "API reference"
+      },
+      "description": {
+        "en": "Look up function usage, arguments and return values."
+      }
+    }
+  ],
+  "modules": [
+    {
+      "slug": "multi-sequence",
+      "title": {
+        "en": "Multi-sequence relationships"
+      },
+      "purpose": {
+        "en": "Compare genomes or gene clusters through annotations and interval relationships."
+      },
+      "figures": [
+        "homechord",
+        "homecollinear",
+        "homeradial",
+        "homesankey"
+      ],
+      "entry": "chord.html",
+      "case": "case-chord.html"
+    },
+    {
+      "slug": "circular",
+      "title": {
+        "en": "Single-sequence circular maps"
+      },
+      "purpose": {
+        "en": "Organize features, labels and quantitative tracks around one circular sequence."
+      },
+      "figures": [
+        "homecircular"
+      ],
+      "entry": "circular.html",
+      "case": "case-circular.html"
+    },
+    {
+      "slug": "dotplot",
+      "title": {
+        "en": "Alignment dot plots"
+      },
+      "purpose": {
+        "en": "Inspect aligned intervals, direction and identity on two sequence axes."
+      },
+      "figures": [
+        "homedotplot"
+      ],
+      "entry": "dotplot.html",
+      "case": "case-dotplot.html"
+    },
+    {
+      "slug": "fusion",
+      "title": {
+        "en": "Multi-view composition"
+      },
+      "purpose": {
+        "en": "Combine Chord, Collinear, radial and detailed views, connecting independent panels through real intervals."
+      },
+      "figures": [
+        "homefusion"
+      ],
+      "entry": "fusion.html",
+      "case": "case-fusion.html"
+    }
+  ]
+}

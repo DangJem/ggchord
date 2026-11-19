@@ -1,5 +1,5 @@
 <a id="moved"></a>
 
-## Statistics section merged {#moved}
+## This page has moved {#moved}
 
-[Statistics](ribbons.md#statistics)
+[Counts, bins and track statistics](tracks-statistics.md)

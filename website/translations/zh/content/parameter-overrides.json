@@ -1,0 +1,30 @@
+{
+  "source_sha256": "83da3d4adf2892d232e976a9734c147eca95010c39128956f8da70e0363b9eeb",
+  "strings": {
+    "map_alignment_position/position/type": {
+      "source_sha256": "e149dc2b756a729b648d593f7ae09f7b3db2454dbdba9196c9d3a0e27151b549",
+      "status": "reviewed",
+      "translation": "正整数或 NA；原始位置或对齐列"
+    },
+    "map_ggchord_position/position/type": {
+      "source_sha256": "f3af4fbf8cdea2e1228092b0cae0d61668645fa19705bdd9920eacd282dc0a2c",
+      "status": "reviewed",
+      "translation": "数值位置；Radial 逆映射用 x/y 矩阵或数据框"
+    },
+    "project_ggchord_features/feature_data/type": {
+      "source_sha256": "afc26bfcee32c02d4316f348bd9436a9f52066610d02e977894c07a96489ef77",
+      "status": "reviewed",
+      "translation": "data.frame；每个输入特征一行，分段存于 segments 列"
+    },
+    "segment_ggchord_data/windows/type": {
+      "source_sha256": "afddae11d2aba83d435a7f88409c9b2c4d3a426fabe8114c1989ffc6f833966a",
+      "status": "reviewed",
+      "translation": "窗口数据框；字段与坐标约束见参数契约"
+    },
+    "geom_track_bar/baseline/type": {
+      "source_sha256": "0600c001ef940a41021d0c0b588306a5b63e8c6e27f23bbbeb7117f05b5ce1d4",
+      "status": "reviewed",
+      "translation": "数值 0；计数柱拒绝非零基线"
+    }
+  }
+}

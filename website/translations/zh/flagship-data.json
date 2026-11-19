@@ -1,0 +1,15 @@
+{
+  "source_sha256": "7dabdd336c9d3ca8b60899ad49bdd57c113d993f23c83f83d1d67563fe920f12",
+  "blocks": {
+    "1": {
+      "source_sha256": "78f3b751cc6a81f151c97d45744da2989fa25c9ea71a757fa0548ec3895c1028",
+      "status": "reviewed",
+      "translation": "## 本页已迁移 {#moved}\n"
+    },
+    "2": {
+      "source_sha256": "ea7f815c46feaa3be7bcf650b55b091b3cdc7f008e7ef4b99a7282a2e73cc593",
+      "status": "reviewed",
+      "translation": "[案例图库](gallery.md)\n"
+    }
+  }
+}

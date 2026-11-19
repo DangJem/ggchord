@@ -1,0 +1,40 @@
+{
+  "source_sha256": "9e1471a992c892499b81eccf515705c5dde18f8a77ff85f7e2e761008505367d",
+  "strings": {
+    "0/title": {
+      "source_sha256": "3a78695388b38b5cceefaf6796b0137877514593543b91af2752d5a17e3d736c",
+      "status": "reviewed",
+      "translation": "首页"
+    },
+    "1/title": {
+      "source_sha256": "61e8d44ad423a4a0951b21b9d11440a1c23a881fe79335c367f63be251c64800",
+      "status": "reviewed",
+      "translation": "开始使用"
+    },
+    "2/title": {
+      "source_sha256": "94ec411fb9d7e5870d4c542b6321c0197176d2d77804d2bd1e2664fddf750066",
+      "status": "reviewed",
+      "translation": "绘图指南"
+    },
+    "3/title": {
+      "source_sha256": "5646f1467a5827a5854bbf2316b7271cafbf811a4df12062956177a8a29be39c",
+      "status": "reviewed",
+      "translation": "数据与操作"
+    },
+    "4/title": {
+      "source_sha256": "8a8b68ec7d86a8c63ecf86867207231b9a3af89f2a1e328803c2f28053551b49",
+      "status": "reviewed",
+      "translation": "案例图库"
+    },
+    "5/title": {
+      "source_sha256": "484ee9bb6e51e328b73f0db584c797bccfccf6c93a3b1157ec160f5d5950ff0d",
+      "status": "reviewed",
+      "translation": "API 参考"
+    },
+    "6/title": {
+      "source_sha256": "d8b267a5dc4c5079256cf92eb38ae9dd62b00a99c3cbbbbdcc5021592ac16f8b",
+      "status": "reviewed",
+      "translation": "项目信息"
+    }
+  }
+}
