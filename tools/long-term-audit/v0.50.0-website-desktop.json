@@ -1,0 +1,255 @@
+{
+  "implementation": "266a53bda78ae5356ad2cb356bfe4b5ae9d3b8c3",
+  "local_no_cache_build": "complete",
+  "layout_method": "CSS grid box model, desktop viewport widths in CSS pixels, two directories expanded; excludes scrollbar and browser font metrics.",
+  "estimated_article_width": {
+    "1280": 832.0,
+    "1366": 891.12,
+    "1399": 913.81,
+    "1400": 914.5,
+    "1440": 942.0,
+    "1920": 1416
+  },
+  "scope": {
+    "en": {
+      "articles_with_chapter_directory": 169,
+      "articles_with_page_outline": 164,
+      "no_outline": [
+        "404.html",
+        "LICENSE-text.html",
+        "LICENSE.html",
+        "migration.html",
+        "parameter-atlas.html"
+      ],
+      "home_title": "Visualize genome annotations and sequence alignments with ggchord",
+      "flagships": {
+        "multi-sequence": [
+          {
+            "id": "homechord",
+            "case": "case-chord.html",
+            "full_image": "case-chord.png",
+            "preview_sha256": "c988bb0411d85b3c8a9e43dc5d9ee967844997e215aedba05c343114ff568963"
+          },
+          {
+            "id": "homecollinear",
+            "case": "case-collinear.html",
+            "full_image": "case-collinear.png",
+            "preview_sha256": "abceef9dab9507f6db7dae86684b9bde7e1f8646e18c2332f717c9f6fe236388"
+          },
+          {
+            "id": "homeradial",
+            "case": "case-radial.html",
+            "full_image": "case-radial.png",
+            "preview_sha256": "776d4605a706239a837c6f39b6e7102b41db03cee56fed26ed614f953032443a"
+          },
+          {
+            "id": "homesankey",
+            "case": "case-sankey.html",
+            "full_image": "case-sankey.png",
+            "preview_sha256": "66045d84c616fb876dd0de33b3cb35a4928280c76ac7b57e989da9fbad8e0c6f"
+          }
+        ],
+        "circular": [
+          {
+            "id": "homecircular",
+            "case": "case-circular.html",
+            "full_image": "case-circular.png",
+            "preview_sha256": "40af128f73c3409cf4d1c234938c8440b96a266ce594a74fec420b5810edf5fd"
+          }
+        ],
+        "dotplot": [
+          {
+            "id": "homedotplot",
+            "case": "case-dotplot.html",
+            "full_image": "case-dotplot.png",
+            "preview_sha256": "1d55735b81e9b264fcf8c4383e8cdb56ac00cd3540a11cd87e4dfd387800c1c5"
+          }
+        ],
+        "fusion": [
+          {
+            "id": "homefusion",
+            "case": "case-fusion.html",
+            "full_image": "case-fusion.png",
+            "preview_sha256": "48670d09129c8fc41ac58c9d8d6d14ca2893c8680048f83112b04dddef823643"
+          }
+        ]
+      },
+      "data_field_rows": [
+        3,
+        8,
+        8,
+        5,
+        6
+      ],
+      "data_value_tables": 3,
+      "data_outline": [
+        "#fields",
+        "#features",
+        "#alignments",
+        "#points",
+        "#measurements",
+        "#prepared"
+      ],
+      "geom_seq_outline": [
+        "#ref-usage",
+        "#arguments",
+        "#value",
+        "#ref-examples",
+        "#ref-related"
+      ],
+      "geom_seq_flexible_parameters": [
+        "seq_radius",
+        "seq_curvature"
+      ]
+    },
+    "zh": {
+      "articles_with_chapter_directory": 169,
+      "articles_with_page_outline": 164,
+      "no_outline": [
+        "404.html",
+        "LICENSE-text.html",
+        "LICENSE.html",
+        "migration.html",
+        "parameter-atlas.html"
+      ],
+      "home_title": "用 ggchord 绘制基因组注释图与序列比对图",
+      "flagships": {
+        "multi-sequence": [
+          {
+            "id": "homechord",
+            "case": "case-chord.html",
+            "full_image": "case-chord.png",
+            "preview_sha256": "c988bb0411d85b3c8a9e43dc5d9ee967844997e215aedba05c343114ff568963"
+          },
+          {
+            "id": "homecollinear",
+            "case": "case-collinear.html",
+            "full_image": "case-collinear.png",
+            "preview_sha256": "abceef9dab9507f6db7dae86684b9bde7e1f8646e18c2332f717c9f6fe236388"
+          },
+          {
+            "id": "homeradial",
+            "case": "case-radial.html",
+            "full_image": "case-radial.png",
+            "preview_sha256": "776d4605a706239a837c6f39b6e7102b41db03cee56fed26ed614f953032443a"
+          },
+          {
+            "id": "homesankey",
+            "case": "case-sankey.html",
+            "full_image": "case-sankey.png",
+            "preview_sha256": "66045d84c616fb876dd0de33b3cb35a4928280c76ac7b57e989da9fbad8e0c6f"
+          }
+        ],
+        "circular": [
+          {
+            "id": "homecircular",
+            "case": "case-circular.html",
+            "full_image": "case-circular.png",
+            "preview_sha256": "40af128f73c3409cf4d1c234938c8440b96a266ce594a74fec420b5810edf5fd"
+          }
+        ],
+        "dotplot": [
+          {
+            "id": "homedotplot",
+            "case": "case-dotplot.html",
+            "full_image": "case-dotplot.png",
+            "preview_sha256": "1d55735b81e9b264fcf8c4383e8cdb56ac00cd3540a11cd87e4dfd387800c1c5"
+          }
+        ],
+        "fusion": [
+          {
+            "id": "homefusion",
+            "case": "case-fusion.html",
+            "full_image": "case-fusion.png",
+            "preview_sha256": "48670d09129c8fc41ac58c9d8d6d14ca2893c8680048f83112b04dddef823643"
+          }
+        ]
+      },
+      "data_field_rows": [
+        3,
+        8,
+        8,
+        5,
+        6
+      ],
+      "data_value_tables": 3,
+      "data_outline": [
+        "#fields",
+        "#features",
+        "#alignments",
+        "#points",
+        "#measurements",
+        "#prepared"
+      ],
+      "geom_seq_outline": [
+        "#ref-usage",
+        "#arguments",
+        "#value",
+        "#ref-examples",
+        "#ref-related"
+      ],
+      "geom_seq_flexible_parameters": [
+        "seq_radius",
+        "seq_curvature"
+      ]
+    }
+  },
+  "html": {
+    "search_results_en": 2897,
+    "search_results_zh": 2897,
+    "handbook_pages": 39,
+    "native_topics": 127,
+    "handbook_inputs": 132,
+    "unique_examples": 61,
+    "handbook_plots": 52,
+    "parameter_rows": 1692,
+    "ellipsis_rows": 80,
+    "dotted_argument_rows": 735,
+    "local_urls": 35796,
+    "redirect_cases": 1223,
+    "native_figures_en": 74,
+    "native_figures_zh": 74
+  },
+  "http": {
+    "checked_urls": 880,
+    "missing_page_status": 404,
+    "errors": []
+  },
+  "handbook": {
+    "status": "passed",
+    "registered_examples": 61,
+    "clipboard_occurrences": 132,
+    "unique_sessions": 60,
+    "per_kind": {
+      "plot": 52,
+      "data": 9
+    },
+    "successful_byte_comparisons": 61
+  },
+  "native_reference": {
+    "clean_replays": 127,
+    "unchanged_native_pngs": 148,
+    "compared_to": "b7b9a64b branch baseline, generated website identified native source e877ff37"
+  },
+  "palette_contrast_pairs": 126,
+  "static_design_checks": 7,
+  "dom_events": {
+    "method": "Actual finalized HTML and site.js; simulated focus, geometry, scroll positions and keyboard events. No native browser QA.",
+    "pages": [
+      "data",
+      "reference/geom_seq",
+      "parameter-atlas",
+      "index"
+    ],
+    "outline_assertions": 36,
+    "toolbar_languages": [
+      "en",
+      "zh"
+    ],
+    "search_target": "reference/geom_feature.html#ref-usage"
+  },
+  "assets": {
+    "site.css": "354eb9305f32df50b66fb453df52aa67d8ef9c147b04dda34a2d1065205ac544",
+    "site.js": "319972e9a06881edf0fbf157d05daac20a36ac98165461dd3f96d8543f986c36"
+  }
+}
