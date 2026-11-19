@@ -1,5 +1,5 @@
 {
-  "source_sha256": "180da806eac24def90f1916006551390ad240ae5f1ad7954c7fbb243d5b4df13",
+  "source_sha256": "5a175134c39bf2d300d5833199a9870c49dd1b8b8875758d304394b27740a226",
   "blocks": {
     "0": {
       "source_sha256": "b9f93391c279e6dc4a6029cb7d537235f464462b27155ac4cf967bbc527c319b",
@@ -22,9 +22,9 @@
       "translation": "2. 把同一组记录放到[平行骨架](collinear.md)上，再比较[径向排列](radial-synteny.md)和[双列桑基视图](sankey.md)。同样的源坐标换一种排列，有时更容易读出位置关系。\n"
     },
     "5": {
-      "source_sha256": "282a820aa3c72e7e8244831e9954f47d846d58eb8ed08485451a77997324f64d",
+      "source_sha256": "8a9f9bb4112fa1d06462ef781c28c2eae5685bcd27aa359d176506bd30ccc0cd",
       "status": "reviewed",
-      "translation": "3. 根据问题继续读[单序列圆图](circular.md)、[双轴比对点图](dotplot.md)，或[总览与细节组合图](fusion.md)。这些图使用不同的输入或面板布局。\n"
+      "translation": "3. 在[比对点图](dotplot.md)的两条坐标轴上找到同一条比对。要查看一条参考序列上的注释，可从[单序列圆图](circular.md)开始。画出各自的视图后，还可以[连接总览图和细节面板](fusion.md)。\n"
     },
     "7": {
       "source_sha256": "a88dad0d6bc666fa14e25e3e3cd2b8687bcca01abea3e8334d6769d26ca9ff9c",
@@ -67,14 +67,14 @@
       "translation": "| 左侧查询序列的哪个区间与右侧目标序列的哪个区间匹配？ | [桑基视图](sankey.md) |\n"
     },
     "15": {
-      "source_sha256": "5aba4f01ec25bd9b45e21ada50d1326060e1da785c29924c0fc25cfffe967826",
-      "status": "reviewed",
-      "translation": "| 特征、引物和酶切位点位于一条环状序列的什么位置？ | [单序列圆图](circular.md) |\n"
-    },
-    "16": {
       "source_sha256": "0b019a755fef7eaf3e22326746bc6a4a96225c4fa5a1c453efe10a422c66888c",
       "status": "reviewed",
       "translation": "| 局部比对线段的斜率反映了怎样的相对方向？ | [比对点图](dotplot.md) |\n"
+    },
+    "16": {
+      "source_sha256": "5aba4f01ec25bd9b45e21ada50d1326060e1da785c29924c0fc25cfffe967826",
+      "status": "reviewed",
+      "translation": "| 特征、引物和酶切位点位于一条环状序列的什么位置？ | [单序列圆图](circular.md) |\n"
     },
     "17": {
       "source_sha256": "95fb927c8a4d50c71bb76eda4be18deaa7fb3a7d8a6cfa3d05911abbdb52feaa",

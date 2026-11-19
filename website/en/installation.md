@@ -1,7 +1,5 @@
 ggchord uses sequence coordinates to show where features lie and how sequences match. Suppose you have two phage genomes and a local alignment between them. You can start with their lengths, add the aligned intervals and then see which coding sequences occupy those regions. You can also lay the same genomes out in parallel to compare their positions from left to right.
 
-Map an annotation category to fill or an alignment score to colour, and the scale supplies a legend for reading those values. A [quantitative track](tracks.md) can show GC content along a backbone. A [Fusion composition](fusion.md) can connect one interval in the overview to its own detail panel.
-
 <a id="requirements"></a>
 
 ## Install ggchord {#requirements}
@@ -12,10 +10,10 @@ For the CRAN release, run the following in R. CRAN currently supplies ggchord 0.
 install.packages("ggchord")
 ```
 
-To run the examples in this manual, [download the matching package source](../../) and unzip it. Open R in the extracted ggchord folder that contains `DESCRIPTION`. With R 4.1.0 or later, install the source and the dplyr package used to select example records. The source installer resolves the required dependencies, including ggplot2 4.0.0 or later.
+To run the examples in this manual, [download the matching package source](../../) and unzip it. Open R in the extracted ggchord folder that contains `DESCRIPTION`. With R 4.1.0 or later, install or update ggplot2 (version 4.0.0 or later), remotes for local installation, and dplyr for selecting example records. Then install ggchord from the extracted folder.
 
 ```{.r}
-install.packages(c("remotes", "dplyr"))
+install.packages(c("ggplot2", "remotes", "dplyr"))
 remotes::install_local(".", dependencies = NA, upgrade = "never", build = FALSE)
 ```
 
@@ -44,6 +42,8 @@ In a chord diagram you can follow either end of the ribbon around the circle. In
 {{preview:views-collinear}}
 
 [Draw your first chord diagram with the bundled data](chord.md#backbones). To learn what to put in your own tables, read the [data guide](data.md). To choose another view, open the [plotting guide](modes.md).
+
+Map an annotation category to fill or an alignment score to colour, and the scale supplies a legend for reading those values. A [quantitative track](tracks.md) can show GC content along a backbone. A [Fusion composition](fusion.md) can connect one interval in the overview to its own detail panel.
 
 <a id="first-plot"></a>
 

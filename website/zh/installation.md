@@ -1,7 +1,5 @@
 ggchord 根据序列坐标展示特征的位置，以及不同序列之间的比对关系。假设你有两条噬菌体基因组及它们之间的一条局部比对。可以先按全长画出两条基因组，再标出相互匹配的区间，最后查看这些区间内有哪些编码序列。也可以把同一对基因组平行排开，从左到右比较它们的位置。
 
-把注释类别映射到填色，或把比对得分映射到颜色，标度就会提供解读这些值的图例。[定量轨道](tracks.md)可以沿骨架展示 GC 含量；[Fusion 组合图](fusion.md)可以把总览中的一个区间连到单独的细节面板。
-
 <a id="requirements"></a>
 
 ## 安装 ggchord {#requirements}
@@ -12,10 +10,10 @@ ggchord 根据序列坐标展示特征的位置，以及不同序列之间的比
 install.packages("ggchord")
 ```
 
-要运行本手册的示例，请先[下载配套的包源码](../../)并解压。在含有 `DESCRIPTION` 的 ggchord 目录中打开 R。使用 R 4.1.0 或更高版本，安装源码包和示例筛选数据所用的 dplyr。源码安装程序会处理依赖，包括 ggplot2 4.0.0 或更高版本。
+要运行本手册的示例，请先[下载配套的包源码](../../)并解压。在含有 `DESCRIPTION` 的 ggchord 目录中打开 R。使用 R 4.1.0 或更高版本，先安装或更新 ggplot2（需要 4.0.0 或更高版本）、本地安装所用的 remotes，以及示例筛选记录所用的 dplyr。然后从解压目录安装 ggchord。
 
 ```{.r}
-install.packages(c("remotes", "dplyr"))
+install.packages(c("ggplot2", "remotes", "dplyr"))
 remotes::install_local(".", dependencies = NA, upgrade = "never", build = FALSE)
 ```
 
@@ -44,6 +42,8 @@ remotes::install_local(".", dependencies = NA, upgrade = "never", build = FALSE)
 {{preview:views-collinear}}
 
 [用随包数据绘制第一张弦图](chord.md#backbones)。准备自己的表格时，可先读[数据指南](data.md)；要挑选其他图形，可查阅[绘图指南](modes.md)。
+
+把注释类别映射到填色，或把比对得分映射到颜色，标度就会提供解读这些值的图例。[定量轨道](tracks.md)可以沿骨架展示 GC 含量；[Fusion 组合图](fusion.md)可以把总览中的一个区间连到单独的细节面板。
 
 <a id="first-plot"></a>
 

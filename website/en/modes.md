@@ -6,7 +6,7 @@ Start with the [reference and layer tables](data.md). A pair of sequence lengths
 
 1. Begin with the [chord diagram](chord.md#backbones). Read the length of each reference and find the two ends of the ribbon.
 2. Move the same records onto [parallel backbones](collinear.md). Then compare a [radial arrangement](radial-synteny.md) and a [two-column Sankey view](sankey.md). The same source positions can be easier to read in a different arrangement.
-3. Follow the question into a [single circular map](circular.md), a [two-axis dot plot](dotplot.md), or an [overview with a detail panel](fusion.md). These use different inputs or panel arrangements.
+3. Read the same alignment on the two axes of a [dot plot](dotplot.md). To explore annotations on one reference, open the [single circular map](circular.md). After drawing individual views, connect an [overview and a detail panel](fusion.md).
 
 <a id="modules"></a>
 
@@ -20,8 +20,8 @@ Six coordinate systems arrange data inside a panel. Fusion combines independentl
 | Where does an alignment start and end along two parallel sequences? | [Collinear plot](collinear.md) |
 | Which intervals match when the sequences radiate out from a centre? | [Radial synteny](radial-synteny.md) |
 | Which query interval on the left matches which subject interval on the right? | [Sankey view](sankey.md) |
-| Where are features, primers and cut sites on one circular sequence? | [Circular map](circular.md) |
 | What do the slopes of local alignments show about their relative direction? | [Alignment dot plot](dotplot.md) |
+| Where are features, primers and cut sites on one circular sequence? | [Circular map](circular.md) |
 | Which region of an overview is enlarged in another panel? | [Fusion composition](fusion.md) |
 
 <a id="adjust"></a>
