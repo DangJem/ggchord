@@ -2,6 +2,7 @@
 import html
 import json
 import re
+import struct
 from . import ROOT
 
 WEB = ROOT / 'website'
@@ -12,6 +13,12 @@ PREVIEW_GROUP = re.compile(r'(?:\{\{preview:[a-z0-9-]+\}\}\s*)+')
 
 def manifest():
     return json.loads((WEB / 'handbook-examples.json').read_text())
+
+
+def image_dimensions(name):
+    with (ROOT / '.site/assets/handbook' / (name + '.png')).open('rb') as image:
+        image.seek(16)
+        return struct.unpack('>II', image.read(8))
 
 
 def parameter_directory(lang):
@@ -48,7 +55,8 @@ def expand(text, lang, base='../assets'):
     if '{{manualhome}}' in text:
         text = text.replace('{{manualhome}}', manual_home(lang, base))
     if '{{parameter-directory}}' in text:
-        text = text.replace('{{parameter-directory}}', parameter_directory(lang))
+        # Preserve literal R defaults such as "\\n" across Markdown conversion.
+        text = text.replace('{{parameter-directory}}', '\n```{=html}\n' + parameter_directory(lang) + '\n```\n')
     if '{{case-gallery}}' in text:
         text = text.replace('{{case-gallery}}', case_gallery(lang, base))
     specs = manifest()
@@ -60,8 +68,7 @@ def expand(text, lang, base='../assets'):
             caption = html.escape(entry['caption'][lang], quote=True)
             image = f'{base}/handbook/{name}.png'
             target = f'{entry["preview_page"]}.html#example-{name}'
-            width = round(entry['width'] * entry['dpi'])
-            height = round(entry['height'] * entry['dpi'])
+            width, height = image_dimensions(name)
             figures.append(f'<figure class="documentation-figure handbook-preview"><a href="{target}">'
                            f'<img src="{image}" alt="{caption}" width="{width}" height="{height}" loading="lazy"></a>'
                            f'<figcaption>{caption}</figcaption></figure>')
@@ -78,7 +85,7 @@ def expand(text, lang, base='../assets'):
         if kind == 'plot':
             image = base + '/handbook/' + name + '.png'
             caption = entry.get('caption', {}).get(lang) or entry.get('label', {}).get(lang) or name
-            width, height = (round(entry.get(key, default) * entry.get('dpi', 144)) for key, default in [('width',7),('height',5)])
+            width, height = image_dimensions(name)
             visual = (f'<figure class="documentation-figure handbook-output"><a href="{image}" class="figure-link" data-code-url="#example-{name}">'
                       f'<img src="{image}" alt="{html.escape(caption, quote=True)}" width="{width}" height="{height}" loading="lazy"></a>'
                       f'<figcaption>{html.escape(caption)}</figcaption></figure>')

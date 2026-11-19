@@ -197,6 +197,7 @@ def main():
     require(all((api,arg) in formals for api,args_here in flex.items() for arg in args_here),
             'Flexible argument missing from the runtime parameter directory')
     plots = {key for key,s in specs.items() if s['kind']=='plot'}
+    png_dimensions = {}
     require(set(rendered)==plots, 'Rendered plot inventory differs from registered plotting scripts')
     for name in sorted(plots):
         png = site/'assets/handbook'/(name+'.png')
@@ -207,6 +208,8 @@ def main():
         if png.is_file():
             with png.open('rb') as handle:
                 header = handle.read(24)
+            if len(header)==24:
+                png_dimensions[name] = tuple(map(str,struct.unpack('>II', header[16:24])))
             dims = tuple(round(specs[name][d]*specs[name].get('dpi',144)) for d in ('width','height'))
             require(len(header)==24 and header[:8]==b'\x89PNG\r\n\x1a\n' and
                     all(abs(x-y)<=1 for x,y in zip(struct.unpack('>II', header[16:24]), dims)),
@@ -397,7 +400,7 @@ def main():
             caption = spec['caption'][lang]
             img = figure.find('.//img')
             link = figure.find('a')
-            require(img is not None and img.get('alt')==caption and text(figure.find('figcaption'))==caption
+            require(img is not None and img.get('alt')==caption and text(figure.find('figcaption')).strip()==caption
                     and link is not None and destination(rel,link.get('href',''))==
                     (lang+'/'+spec['preview_page']+'.html','example-'+name),
                     rel+': preview caption or code link differs for '+name)
@@ -412,6 +415,10 @@ def main():
         dl_links = styled(main_content,'example-download','a')
         require(len(expected)==len(blocks)==len(dl_links),f'{rel}: marker/code/download counts {len(expected)}/{len(blocks)}/{len(dl_links)}')
         actual_figs = [destination(rel,img.get('src','')) for fig in styled(main_content,'handbook-output','figure') for img in fig.iter('img')]
+        for fig in [*visual_previews, *styled(main_content,'handbook-output','figure')]:
+            for img in fig.iter('img'):
+                key = Path(img.get('src','')).stem
+                require((img.get('width'),img.get('height'))==png_dimensions.get(key),rel+': HTML dimensions differ from PNG '+key)
         require(actual_figs==[('assets/handbook/'+name+'.png','') for name in expected if specs[name]['kind']=='plot'],
                 rel+': missing, reordered or unrelated handbook plot output')
         for i,(name,block,anchor) in enumerate(zip(expected,blocks,dl_links),1):
@@ -481,7 +488,7 @@ def main():
                 supported = arg in flex.get(api,{})
                 require(row.get('data-flex')==str(int(supported)) and
                         len(styled(row[0],'flexible-parameter','a'))==int(supported) and
-                        text(row[2])==(entry['default'] or '—'),
+                        text(row[2]).strip()==(entry['default'] or '—'),
                         f'{rel}: incorrect flexible flag for {api}({arg})')
         if local=='reference/index.html':
             entries = {destination(rel,a.get('href','')) for group in styled(main_content,'reference-group')
