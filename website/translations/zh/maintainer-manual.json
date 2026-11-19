@@ -1,0 +1,115 @@
+{
+  "source_sha256": "278bc380d0cd8e441a1d08d8a2a8c5e8d75d10a4df0e3e8bffbf910b2f13e948",
+  "blocks": {
+    "0": {
+      "source_sha256": "68663d8f41c011a894ae75dda3c48ada2906637454a6a4b6e01a8435153e46f1",
+      "status": "reviewed",
+      "translation": "# 维护 ggchord 文档\n"
+    },
+    "1": {
+      "source_sha256": "88a0bb04a47c46a7831421070d050dc9350e12d90fa13cff914f720ee2d43fbc",
+      "status": "reviewed",
+      "translation": "[English](README.md) · [现代汉语](README-Hans.md)\n"
+    },
+    "2": {
+      "source_sha256": "99654085fd35ae3206ad88897ee457594f42a2283e42a3aacf6442b7a4d9ac34",
+      "status": "reviewed",
+      "translation": "网站说明当前检出版本的公开 API。比较本地构建与已部署网站时，先核对包版本和文档通道。[包元数据](../DESCRIPTION) · [文档通道](version.json)\n"
+    },
+    "3": {
+      "source_sha256": "0919c2620ad55d0b935bbf8099e2f4d77534af343b78d9d8e0415dc5a8b8fce2",
+      "status": "reviewed",
+      "translation": "## 更新文章或导航标签\n"
+    },
+    "4": {
+      "source_sha256": "f749d6041ddd0a0afee6379376ee95072d2ad772c998094a911d4a32a18b929c",
+      "status": "reviewed",
+      "translation": "文章正文维护在 `website/en/`。英语标题、导航标签、图注及其他结构化文案维护在 `website/content-en/`。可翻译字段采用 `{\"en\": \"Get started\"}` 这样的格式。内容清单为每项列出英语源、保存在 `website/translations/zh/` 的汉语译文及生成文件。渲染器从 `website/zh/` 读取汉语 Markdown，并从双语 JSON 读取结构化文案。[内容清单](content-policy.json)\n"
+    },
+    "5": {
+      "source_sha256": "1c8c0bd193ddc98889a5864fa1a932be21ac142c7ce61c5ebde818b077f1f529",
+      "status": "reviewed",
+      "translation": "修改英语原文后，在仓库根目录准备翻译草稿。\n"
+    },
+    "7": {
+      "source_sha256": "5c7d72ecc98a80f4b66ea5a15c37b11d5d47b815d3931f2c342bc1fc7714a462",
+      "status": "reviewed",
+      "translation": "对照当前英语逐项校对标有 `needs_review` 的条目。草稿记录了英语原文及其 SHA-256 摘要。更新汉语译文，将状态改为 `reviewed`，然后生成并检查输出。\n"
+    },
+    "9": {
+      "source_sha256": "b25cf3c7a1e30d520267b9e51852e9cd14957b354e5a06be0d0f55439418cba5",
+      "status": "reviewed",
+      "translation": "检查会指出缺译、校对所依据的原文已变，以及直接修改生成文件等问题。两种语言共用代码、指令、图像标识、导航标识、链接目标和显式章节锚点。翻译时应保持标题层级和表格列一致。\n"
+    },
+    "10": {
+      "source_sha256": "465103c40bb7069498af111a538927de7ff0bb78b3cc367c5e4e417fa0591860",
+      "status": "reviewed",
+      "translation": "## 导入完整的校对稿\n"
+    },
+    "11": {
+      "source_sha256": "66fdb222ea587006419228190a2cee565e366c782ed2695c1a2dba01c77472c4",
+      "status": "reviewed",
+      "translation": "更新已有文章时，使用清单中登记的英语源路径，并提供已校对汉语 Markdown 的路径。批量新增页面时，将汉语校对稿放在同一目录，文件名与各自的英语源一致。目录导入命令会先检查所有提交的双语稿，全部通过后再登记新页并写入生成文件。\n"
+    },
+    "13": {
+      "source_sha256": "b1a55db00ea70bf330d6dfee335e303219c1443471d1063e228182ed9836a10a",
+      "status": "reviewed",
+      "translation": "修改结构化文案时，先编辑英语 JSON。校对稿的结构、英语字符串和共享字段均应与原文一致，每个可翻译字段同时包含 `en` 和 `zh`。新增结构化文件时，先在内容清单中登记，再导入译稿。下列命令用于登记已校对的首页文案。\n"
+    },
+    "15": {
+      "source_sha256": "4766e98d39da48920c2c8a379682192793bf38672010431087b18c9993852397",
+      "status": "reviewed",
+      "translation": "文章链接指向仓库里实际存在的文件，例如同目录的 `.md` 页面、`../../man/` 下的帮助主题或 `../../man/figures/` 下的图片。渲染时会将这些链接转成网站网址。撤下文章时，一并移除清单条目、英语源、译文记录和生成文件。更新指向该文章的链接，并记录原网址和章节锚点的去向。\n"
+    },
+    "16": {
+      "source_sha256": "bf3108f5906aef4c598f7808f77bcbfaf7a455cf1ee6465ea86f6fe6a007d12f",
+      "status": "reviewed",
+      "translation": "## 更新函数帮助、包 README 或离线教程\n"
+    },
+    "17": {
+      "source_sha256": "943a2b8e17ab26455f7f0e13bd9713e6ca428fc5327cf398d6ef786f1ffecc49",
+      "status": "reviewed",
+      "translation": "- **函数参考。** 修改英语 roxygen 源并重新生成 Rd。汉语参考使用 `website/reference-zh/` 下的译文，按主题核对英语原文的摘要。`_pkgdown.yml` 中的英语 `title` 或 `desc` 变动时，校对 `title_zh` 和 `desc_zh`。分组摘要为英语标题、一个换行符及英语说明依次拼接后的 SHA-256。\n"
+    },
+    "18": {
+      "source_sha256": "b0a9c9f956aaa5b471d95dab6533b4c3a0f5c7e3895a946b9e57599b4ff54674",
+      "status": "reviewed",
+      "translation": "- **包 README。** 两种语言共用 `website/readme-template.md` 的版式和代码。修改 `website/content-en/readme-text.json`，校对汉语译文并重新生成双语 JSON。运行 `python3 tools/sync-tutorials.py` 更新两份 README，然后加上 `--check` 验证结果。\n"
+    },
+    "19": {
+      "source_sha256": "05c68fd6f187ab5c1b5cf9268b5938d1317f58702fc8d5cc16767b7b34e80e36",
+      "status": "reviewed",
+      "translation": "- **离线教程。** 修改英语源 `vignettes/ggchord_vignette.Rmd`，同步更新汉语版 `vignettes/ggchord_guide_hans.Rmd`。校对后，将英语文件的 SHA-256 写入汉语文件头。README 同步命令也会检查教程摘要、R 代码块、章节锚点及本地资源引用。\n"
+    },
+    "20": {
+      "source_sha256": "447eb52ffd369f23fd69558c2374960ebefcb9707564a71524276e6c148462b8",
+      "status": "reviewed",
+      "translation": "- **离线图片。** 运行 `python3 tools/prepare-vignette-figures.py`，为 CRAN 单独分发的教程 HTML 准备嵌入图片。这一步需要 Pillow。发布验收时，用 `tools/check-vignette-resources.py` 核对源码包中教程 HTML 引用的本地资源。\n"
+    },
+    "21": {
+      "source_sha256": "c0ab6eed51bd145dca38d0d87176135444421815531c497e445e3243e8254d1f",
+      "status": "reviewed",
+      "translation": "## 构建和检查本地网站\n"
+    },
+    "22": {
+      "source_sha256": "87dae5af9a9c6c7e6add812659240e016dab9525a1024a1cc0f209fd8a40a65f",
+      "status": "reviewed",
+      "translation": "基本构建需要 Python 3.9 或更高版本、R、Pandoc、包依赖及示例依赖。网站使用 `pkgdown`、Bootstrap 5、`pkgload`、`rmarkdown` 和 `jsonlite`。构建时会渲染文章，并运行原生 Rd 示例。在仓库根目录执行下列命令。\n"
+    },
+    "24": {
+      "source_sha256": "a7a3ee3dedc7e435553ca8d80cd0a69972dfe1524a7fd3ac018da000986d34e3",
+      "status": "reviewed",
+      "translation": "打开 `http://127.0.0.1:8765/` 可查看 `.site/` 中的文件。两种语言的首页共用四组预览图。修改网站、包 README 或离线教程的图像时，保留输入数据、过滤规则、绘图代码及图像来源记录。[原画、第三方资产及许可](ASSET-SOURCES.md)\n"
+    },
+    "25": {
+      "source_sha256": "a2a454b1170d8e3eb7223f922499c9d4305339dd709b5429f4a7a2759f2136e7",
+      "status": "reviewed",
+      "translation": "## 持续集成与部署\n"
+    },
+    "26": {
+      "source_sha256": "3a520dec5b34a060996f2c6a2daf6cd6c97126d15e395b52a3a4d348945f3e62",
+      "status": "reviewed",
+      "translation": "推送或拉取请求涉及文档构建输入时，会触发源码检查。手动运行 GitHub Actions 可生成预览产物。部署需要明确授权。`--publication` 控制构建产物的标记。历史网站归档在 `docs/`。包的发布记录见 GitHub Releases，网站的部署记录见 GitHub Actions。\n"
+    }
+  }
+}

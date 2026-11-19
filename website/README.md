@@ -1,49 +1,55 @@
-# ggchord documentation / 文档网站
+# Maintaining the ggchord documentation
 
-The website follows the package API in this checkout. [DESCRIPTION](../DESCRIPTION) identifies the version and [version.json](version.json) records the documentation channel. The deployed website and the current development checkout can have different versions.
+[English](README.md) · [现代汉语](README-Hans.md)
 
-## English sources and Han translations / 英语源与汉语译文
+The website documents the public API in this checkout. Check the package version and documentation channel when comparing a local build with the deployed site. [Package metadata](../DESCRIPTION) · [Documentation channel](version.json)
 
-Edit English Markdown in `website/en/` and English structured content in `website/content-en/`. Each localizable structured string has the form `{"en": "Get started"}`. Page identifiers, destinations, figure keys, example code and related metadata occur once. The [content policy](content-policy.json) lists the English source, saved translation and generated output for each item. The English R help remains the source of the function reference.
+## Update an article or a navigation label
 
-网站以英语为主源。页面正文维护在 `website/en/`，标题、导航、首页文案、图注及 README 文案维护在 `website/content-en/`。汉语译文保存在 `website/translations/zh/`。构建器读取生成的 `website/zh/` Markdown 和配对 JSON。两种语言共用代码、图片、导航标识、链接目标及章节锚点。
+Edit article prose in `website/en/`. Edit English titles, navigation labels, captions and other structured text in `website/content-en/`. A localizable field looks like `{"en": "Get started"}`. The content policy lists the English source, the saved Han translation in `website/translations/zh/` and the generated output for each item. The renderer reads Han Markdown from `website/zh/` and uses the paired JSON for structured text. [Content policy](content-policy.json)
 
-1. Edit the English source and run `--prepare`. Changed strings become `needs_review`. Each draft carries the current English text and a SHA-256 fingerprint.
-2. Compare the Han translation with the current English. After reviewing an entry, update its translation and change its status to `reviewed`.
-3. Generate the outputs, then run `--check`. The site build uses this check to reject missing translations, outdated source fingerprints, changed code, links or anchors, and edits to generated files.
+After changing the English, prepare translation drafts from the repository root.
 
 ```sh
 python3 tools/sync-website-languages.py --prepare
-# Review entries in website/translations/zh/
+```
+
+Review each `needs_review` entry against the current English. The draft records the English text and its SHA-256 digest. Update the Han text, set its status to `reviewed`, then generate and verify the outputs.
+
+```sh
 python3 tools/sync-website-languages.py
 python3 tools/sync-website-languages.py --check
 ```
 
-已校对的完整 Markdown 稿可以直接与英语源配对登记。共有代码块与指令应逐字一致，标题层级、表格列及显式锚点应对应。整目录导入会检查每份 `.md` 的同名英语源，全部通过后再更新相应记录，并将新页加入清单。退役页面时，同时移除清单项、英语源、已保存译文和生成页，并处理原网址与锚点。
+The check reports missing translations, stale reviews and direct edits to generated outputs. Both editions share code, directives, figure identifiers, navigation identifiers, link destinations and explicit section anchors. Match heading levels and table columns when translating.
+
+## Import complete reviewed drafts
+
+For an existing article, use the English source path from the policy and the path to the reviewed Han Markdown. To add several pages, place the reviewed Han drafts in one directory with the same filenames as their English sources. The directory command validates every supplied pair before registering new pages and writing their outputs.
 
 ```sh
 python3 tools/sync-website-languages.py --reviewed-page en/installation.md /tmp/installation-reviewed.md
 python3 tools/sync-website-languages.py --reviewed-directory /tmp/reviewed-han
 ```
 
-For structured changes, edit the corresponding English JSON first. A complete reviewed draft must match its structure, English text and shared metadata. Localized fields in that draft hold both `en` and `zh`. Register any new structured file in the policy before importing it. Ordinary cell-level translation can use the same `--prepare` workflow as Markdown.
+For structured content, edit the English JSON first. The reviewed draft must have the same structure, English strings and shared metadata, with both `en` and `zh` in each localized field. Register new structured files in the content policy before importing them. Run the following command to record a reviewed homepage draft.
 
 ```sh
 python3 tools/sync-website-languages.py --reviewed-content home.json /tmp/home-reviewed.json
 ```
 
-最初切换以分支提交 `85b1b065` 的 94 个页面、2 个 README 附页和 14 个结构化文件为对照，先验证旧生成器能复现原英语，再以其为新源逆向比对已有汉语。旧稿中未能逐项匹配英语内联标识的段落保留待校对状态。后续版本使用当前清单和英语摘要。
+Article links point to actual repository files, such as a sibling `.md` page, a help topic in `../../man/` or an image in `../../man/figures/`. The renderer converts these links to website URLs. When retiring an article, remove its policy entry, source, translation and generated file together. Update incoming links and record destinations for its old URL and section anchors.
 
-## Source links, reference and README / 链接、函数参考与 README
+## Update function help, package READMEs or offline tutorials
 
-- Article links use real repository files such as a sibling `.md`, a `../../man/*.Rd` help topic or a figure in `../../man/figures/`. The source-link resolver converts these to site destinations during rendering. Keep explicit section anchors when moving content.
-- The reference renders English Rd from the package and checks the saved Han translation in `website/reference-zh/` against each source digest. In `_pkgdown.yml`, each reference group has its canonical English `title` and `desc`, corresponding `title_zh` and `desc_zh`, and the SHA-256 of the English title, one newline and the description. Review both localized fields when English changes.
-- The two READMEs share layout and code in `website/readme-template.md`. Edit `website/content-en/readme-text.json`, review the matching Han strings, regenerate the paired JSON and run `python3 tools/sync-tutorials.py`. Run it with `--check` to verify the result.
-- The installed offline tutorial has its own English source in `vignettes/ggchord_vignette.Rmd` and reviewed Han edition in `vignettes/ggchord_guide_hans.Rmd`. The Han source header records the reviewed English file's SHA-256. After reviewing an English edit, update the Han source and this digest. The sync command checks the digest, R chunks, section anchors and local asset references.
+- **Function reference.** Edit the English roxygen source and regenerate its Rd. The Han reference uses the translations in `website/reference-zh/` and checks the digest of each English topic. In `_pkgdown.yml`, review `title_zh` and `desc_zh` when the English `title` or `desc` changes. The group digest is the SHA-256 of the English title, a newline and the English description.
+- **Package READMEs.** Both editions share layout and code in `website/readme-template.md`. Edit `website/content-en/readme-text.json`, review the Han translation and regenerate the paired JSON. Run `python3 tools/sync-tutorials.py` to update the two READMEs, then run it with `--check` to verify them.
+- **Offline tutorials.** Edit `vignettes/ggchord_vignette.Rmd` and update the Han edition in `vignettes/ggchord_guide_hans.Rmd`. After review, record the SHA-256 of the English file in the Han header. The README sync command also checks the tutorial digest, R chunks, section anchors and local asset references.
+- **Offline figures.** Run `python3 tools/prepare-vignette-figures.py` to prepare the images embedded in the standalone tutorial HTML distributed by CRAN. This maintenance step uses Pillow. During release checks, `tools/check-vignette-resources.py` verifies the local resources referenced by the tutorial HTML in the source archive.
 
-## Local website build / 本地构建
+## Build and inspect the local site
 
-The site uses pkgdown, Bootstrap 5 and Pandoc. Install the package dependencies, `pkgdown`, `pkgload`, `rmarkdown`, `jsonlite` and the example-specific dependencies. Python ≥ 3.9 supports the core build scripts. Optional image maintenance uses Pillow. The renderer reads the Markdown sources and renders native Rd reference pages with evaluated examples.
+The core build requires Python 3.9 or newer, R, Pandoc, the package dependencies and the dependencies of the examples. The site uses `pkgdown`, Bootstrap 5, `pkgload`, `rmarkdown` and `jsonlite`. The build renders the articles and evaluates native Rd examples. Run the following commands from the repository root.
 
 ```sh
 python3 tools/sync-website-languages.py --check
@@ -53,10 +59,8 @@ python3 tools/check-documentation.py
 python3 -m http.server 8765 --directory .site --bind 127.0.0.1
 ```
 
-网站生成至 `.site/`。首页使用四组旗舰预览，两种语言引用同一份图像。原画、第三方资产与授权见[来源记录](ASSET-SOURCES.md)。README、网站及离线教程涉及的原始数据、过滤规则、绘图代码和图像来源须可追溯。
+Open `http://127.0.0.1:8765/` to inspect the files in `.site/`. Both editions use the same images for the four groups of homepage previews. For changes to a figure in the website, package README or offline tutorial, keep a record of the input data, filtering rules, plotting code and image source. [Artwork, third-party assets and licenses](ASSET-SOURCES.md)
 
-离线图像维护由 `python3 tools/prepare-vignette-figures.py` 单独执行。离线教程在 CRAN 单独提供 HTML 时仍可使用已嵌入的图片。发布验收时，`tools/check-vignette-resources.py` 核对源码包内 HTML 的资源闭包。
+## CI and deployment
 
-## CI and deployment / CI 与部署
-
-Ordinary pushes and pull requests run source checks. Manual Actions runs can build a preview artifact. Deployment requires explicit authorization. The `--publication` build flag controls the candidate label. The old `docs/` tree is a historical archive. Release and deployment status are recorded separately in GitHub Releases and Actions.
+Pushes and pull requests that affect documentation inputs run source checks. A manual GitHub Actions run can produce a preview artifact. Deployment requires explicit authorization. The `--publication` flag controls the build label. The historical site is archived in `docs/`. GitHub Releases records package releases and GitHub Actions records website deployments.

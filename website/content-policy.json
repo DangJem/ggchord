@@ -518,6 +518,11 @@
       "source": "en/case-sankey.md",
       "translations": "translations/zh/case-sankey.json",
       "output": "zh/case-sankey.md"
+    },
+    {
+      "source": "README.md",
+      "translations": "translations/zh/maintainer-manual.json",
+      "output": "README-Hans.md"
     }
   ],
   "structured": [
