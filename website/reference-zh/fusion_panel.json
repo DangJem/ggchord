@@ -1,5 +1,5 @@
 {
-  "source_sha256": "ec6e991bb99f5b3d5770014ad2474b13b847ae2580db6108b29f55fb6cd6e120",
+  "source_sha256": "5cacc1acf2aab766c7b4acd4540ff375de0e017d44b8dc0759325483586e0afb",
   "translations": {
     "0": "向Fusion添加基因组面板",
     "1": "独立ggchord基因组图、另一张Fusion，或来自 ⟦0⟧ 的Cartesian细节图。Dotplot、分面和未注册的外部ggplot当前尚未接入。字符面板的跨面板连接须明确fill，不能使用骨架颜色渐变。",

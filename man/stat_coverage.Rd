@@ -77,7 +77,9 @@ intervals <- data.frame(accver = "A", start = c(3, 4, 10), end = c(6, 5, 10))
 windows <- data.frame(accver = "A", start = c(1, 3), end = c(4, 6),
                       window_id = c("first", "overlap"))
 ggchord(reference) + geom_seq() +
-  stat_coverage(data = intervals, windows = windows) +
+  track_band("coverage", width = grid::unit(10, "mm")) +
+  stat_coverage(data = intervals, windows = windows, geom = "track_point",
+                track = "coverage", size = 3) +
   coord_collinear()
 ggchord(reference) + geom_seq() +
   geom_track_line(aes(y = after_stat(mean_depth)),

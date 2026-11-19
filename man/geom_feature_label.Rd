@@ -149,7 +149,9 @@ established leader style.}
 A ggplot2 layer.
 }
 \description{
-Label generic genomic features
+Map a column to \code{label} and supply the same interval table to
+\code{\link[=geom_feature]{geom_feature()}} and this layer to label each feature. With a stable
+\code{feature_id}, a filtered label table can follow just the matching intervals.
 }
 \section{Automatic labels}{
 
@@ -158,13 +160,36 @@ fixed placement. Automatic placement detects conflicting manual controls.
 }
 
 \examples{
-intervals <- data.frame(accver = "A", start = c(10, 15), end = c(60, 35),
-  strand = "+", feature_id = c("outer", "inner"))
-ggchord(data.frame(accver = "A", length = 100)) + geom_seq() +
-  geom_feature(data = intervals, id = "features",
-               position = position_feature_stack()) +
-  geom_feature_label(aes(label = feature_id), data = intervals[2, ],
-                     anchor_layer = "features", placement = "repel",
-                     overflow = "ellipsis") +
+# Label both intervals using their names.
+reference <- data.frame(accver = "A", length = 100)
+intervals <- data.frame(
+  accver = "A", start = c(10, 60), end = c(35, 85), strand = "+",
+  anno = c("alpha", "beta")
+)
+ggchord(reference) +
+  geom_seq() +
+  geom_feature(data = intervals, show.legend = FALSE) +
+  geom_feature_label(
+    aes(label = anno), data = intervals, size = 4,
+    label_orientation = "horizontal", label_radial_offset = 0.16
+  ) +
+  coord_circular()
+
+# Label only the inner interval and follow its stacked lane.
+nested <- data.frame(
+  accver = "A", start = c(10, 20), end = c(80, 65), strand = "+",
+  feature_id = c("outer", "inner")
+)
+inner <- dplyr::filter(nested, feature_id == "inner")
+ggchord(reference) +
+  geom_seq() +
+  geom_feature(
+    aes(fill = feature_id), data = nested, id = "features",
+    position = position_feature_stack(), show.legend = FALSE
+  ) +
+  geom_feature_label(
+    aes(label = feature_id), data = inner, anchor_layer = "features",
+    placement = "repel", overflow = "none", size = 4
+  ) +
   coord_circular()
 }

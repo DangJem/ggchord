@@ -53,9 +53,11 @@ with a warning and recorded in the layout connection report.
 This is an HSP-level view, not a reconstruction of mismatches or gaps.
 }
 \examples{
-data(seq_data_example)
-data(ribbon_data_example)
-ggchord(prepare_ggchord_data(seq_data_example, ribbon_data_example)) +
-  geom_alignment_segment(aes(link_colour = pident)) +
+library(dplyr)
+pair <- ribbon_data_example |>
+  filter(qaccver == "MT108731.1", saccver == "MT118296.1")
+ggchord(prepare_ggchord_data(seq_data_example, pair)) +
+  geom_alignment_segment(aes(link_colour = pident), linewidth = 1.2, alpha = 1) +
+  scale_link_colour_gradientn(colours = c("#31777C", "#66274F")) +
   coord_dotplot()
 }

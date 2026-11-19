@@ -186,10 +186,11 @@ ggchord(data.frame(accver = "A", length = 10)) +
   geom_track(aes(pos, value, shape = kind), data = sites) +
   ggplot2::scale_shape_manual(values = c(start = 21, end = 24)) +
   coord_collinear()
-intervals <- data.frame(accver = "A", start = c(3, 4), end = c(6, 5))
-ggchord(data.frame(accver = "A", length = 10)) +
+intervals <- data.frame(accver = "A", start = c(6, 10), end = c(16, 12))
+ggchord(data.frame(accver = "A", length = 20)) +
+  track_band("depth", width = grid::unit(10, "mm")) +
   geom_track_bar(aes(y = after_stat(mean_depth)), data = intervals, id = "depth",
-    stat = "coverage", binwidth = 4) +
+    stat = "coverage", binwidth = 4, track = "depth", colour = "white") +
   coord_collinear()
 # Fit existing GC windows in source space; estimates are not new data.
 path <- system.file("extdata", "pUC19-gc-100.bedGraph", package = "ggchord")

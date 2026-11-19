@@ -9,6 +9,6 @@ hit <- ribbon_data_example |>
   slice_head(n = 1)
 
 ggchord(reference) +
-  geom_alignment_segment(data = hit, linewidth = 1) +
+  geom_alignment_segment(data = hit, colour = "#315F73", linewidth = 1.2, alpha = 1) +
   coord_dotplot(x_seqs = ids[1], y_seqs = ids[2]) +
   ggplot2::theme(plot.margin = ggplot2::margin(8, 22, 8, 8))

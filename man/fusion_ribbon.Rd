@@ -76,8 +76,10 @@ required; split/focus the source data explicitly before composition.
 \examples{
 data(seq_data_example)
 data(ribbon_data_example)
-p <- ggchord(seq_data_example) + geom_seq()
+link <- dplyr::slice_head(ribbon_data_example, n = 1)
+refs <- dplyr::filter(seq_data_example, accver \%in\% c(link$qaccver, link$saccver))
+p <- ggchord(refs) + geom_seq() + theme(legend.position = "none")
 ggchord_fusion(p) +
   fusion_panel(p + coord_collinear(), "detail") +
-  fusion_ribbon(ribbon_data_example, qpanel = "center", spanel = "detail")
+  fusion_ribbon(link, qpanel = "center", spanel = "detail", fill = "#397D79")
 }

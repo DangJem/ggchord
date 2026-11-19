@@ -14,5 +14,5 @@ midpoints <- hits |>
 ggchord(reference) +
   geom_seq(show.legend = FALSE) +
   geom_seq_label() +
-  geom_link_line(data = midpoints, colour = "#3A7984") +
+  geom_link_line(data = midpoints, colour = "#316774", linewidth = .85, alpha = 1) +
   coord_collinear()

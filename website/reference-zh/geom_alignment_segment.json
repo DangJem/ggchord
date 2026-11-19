@@ -1,5 +1,5 @@
 {
-  "source_sha256": "6510cbc599ccb0b45c08a030449e82dd0471775d9c0e46e0fc92042d87c01147",
+  "source_sha256": "77da96d22dc08f7d83d2bb617ada9fb5d931bb604805bc7cfac6086220b78bd4",
   "translations": {
     "0": "绘制HSP比对线段",
     "1": "标准ggplot2映射与图层数据，默认使用构造时的⟦0⟧。几何角色为⟦1⟧、⟦2⟧、⟦3⟧、⟦4⟧、⟦5⟧和⟦6⟧。",

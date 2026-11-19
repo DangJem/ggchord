@@ -67,7 +67,11 @@ for(lang in c('en','zh')) {
   xml2::xml_set_attr(xml2::xml_find_first(doc,'//body'),'data-module',module)
   nav_fragment <- function(html) xml2::xml_find_first(xml2::read_html(paste0('<html><body>',html,'</body></html>')),'//body/*')
   escape <- htmltools::htmlEscape
-  page_link <- function(key, label = NULL, class = NULL, compact = NULL) {
+  rail_number <- function(number) {
+    if(!length(number)) return('')
+    paste0('<span class="rail-number" aria-hidden="true">',number,'</span>')
+  }
+  page_link <- function(key, label = NULL, class = NULL, compact = NULL, number = NULL) {
     page <- page_record(key)
     if(is.null(label)) label <- page$title[[lang]]
     has_compact <- !is.null(compact) && !identical(label, compact)
@@ -75,18 +79,18 @@ for(lang in c('en','zh')) {
       if(!is.null(class)) paste0('class="',class,'" '),
       if(has_compact) paste0('aria-label="',escape(label,attribute=TRUE),'" '),
       if(identical(relative,page$canonical_path)) 'aria-current="page" ',
-      'href="',prefix,escape(page$canonical_path,attribute=TRUE),'">',
+      'href="',prefix,escape(page$canonical_path,attribute=TRUE),'">',rail_number(number),
       if(has_compact) paste0('<span class="nav-full-label" aria-hidden="true">',escape(label),'</span>',
         '<span class="nav-compact-label" aria-hidden="true">',escape(compact),'</span>') else escape(label),
       '</a>')
   }
 
   # Keep each destination directly clickable and use a separate menu button.
-  section_links <- function(keys, section = NULL) {
+  section_links <- function(keys, section = NULL, numbers = NULL) {
     paste(vapply(keys, function(key) {
       subheading <- section$subheading_before[[key]][[lang]]
       paste0('<li>', if (!is.null(subheading)) paste0('<span class="menu-subheading">',
-        escape(subheading), '</span>'), page_link(key), '</li>')
+        escape(subheading), '</span>'), page_link(key, number=numbers[[key]]), '</li>')
     }, ''), collapse = '')
   }
   primary_groups <- Filter(function(x) !is.null(x$navbar), navigation)
@@ -129,18 +133,20 @@ for(lang in c('en','zh')) {
     xml2::xml_add_sibling(main,rail,.where='before')
   }
   if(relative != 'index.html') {
-    chapters <- vapply(navigation, function(chapter) {
+    chapters <- vapply(seq_along(navigation), function(index) {
+      chapter <- navigation[[index]]
       keys <- setdiff(unlist(chapter$pages),chapter$landing)
+      numbers <- if(length(keys)) setNames(paste(index,seq_along(keys),sep='.'),keys)
       sections <- manual_sections[[chapter$id]]
       blocks <- vapply(sections,function(section) {
         members <- intersect(unlist(section$pages),keys)
         if(!length(members)) return('')
         paste0('<span class="manual-section-title">',escape(section$title[[lang]]),
-          '</span><ul>',section_links(members,section),'</ul>')
+          '</span><ul>',section_links(members,section,numbers),'</ul>')
       },'')
       remaining <- setdiff(keys,unlist(lapply(sections,`[[`,'pages')))
       content <- paste0(paste(blocks,collapse=''),
-        if(length(remaining)) paste0('<ul>',section_links(remaining),'</ul>'))
+        if(length(remaining)) paste0('<ul>',section_links(remaining,numbers=numbers),'</ul>'))
       active <- identical(chapter$id,module)
       if(active && (!is_known_page || (current_page=='reference' && relative!='reference/index.html'))) {
         label <- if(current_page=='reference') slug else xml2::xml_text(xml2::xml_find_first(main,'.//h1'))
@@ -149,7 +155,7 @@ for(lang in c('en','zh')) {
       }
       title <- chapter$title[[lang]]
       paste0('<div class="chapter-group" data-chapter="',chapter$id,'">',
-        page_link(chapter$landing,title,'chapter-home'),
+        page_link(chapter$landing,title,'chapter-home',number=index),
         if(nzchar(content)) paste0('<details class="chapter-children"',if(active)' open',
           '><summary aria-label="',escape(paste(nav_text$toggle,title,sep=' · '),attribute=TRUE),
           '"></summary>',content,'</details>'),'</div>')
@@ -208,9 +214,16 @@ for(lang in c('en','zh')) {
     './/h2[@id][not(ancestor::details[@class="lesson-extension"])]' else
     './/*[self::h2 or self::h3][@id][not(ancestor::details[@class="lesson-extension"])]')
   if(relative != 'index.html' && length(outline_headings)) {
-    outline_links <- vapply(outline_headings,function(h) {
+    levels <- xml2::xml_name(outline_headings)
+    # A leading subheading, if present, starts the first local section.
+    sections <- cumsum(levels=='h2' | seq_along(levels)==1L)
+    subsection <- ave(seq_along(levels), sections, FUN=seq_along) - 1L
+    outline_numbers <- ifelse(subsection==0L,sections,paste(sections,subsection,sep='.'))
+    outline_links <- vapply(seq_along(outline_headings),function(i) {
+      h <- outline_headings[[i]]
       paste0('<li class="outline-',xml2::xml_name(h),'"><a href="#',
-        escape(xml2::xml_attr(h,'id'),attribute=TRUE),'">',escape(xml2::xml_text(h)),'</a></li>')
+        escape(xml2::xml_attr(h,'id'),attribute=TRUE),'">',rail_number(outline_numbers[i]),
+        escape(xml2::xml_text(h)),'</a></li>')
     },'')
     add_rail('page-nav',nav_text$on_this_page,
       paste0('<ul>',paste(outline_links,collapse=''),'</ul>'))

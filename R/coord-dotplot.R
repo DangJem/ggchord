@@ -27,12 +27,13 @@
 #' @return A ggplot2 Coord object.
 #' @export
 #' @examples
-#' data(seq_data_example)
-#' data(ribbon_data_example)
-#' ggchord(prepare_ggchord_data(seq_data_example, ribbon_data_example)) +
-#'   geom_alignment_segment() +
-#'   ggplot2::facet_wrap(ggplot2::vars(qaccver, saccver)) +
-#'   coord_dotplot()
+#' library(dplyr)
+#' pair <- ribbon_data_example |>
+#'   filter(qaccver == "MT108731.1", saccver == "MT118296.1")
+#' ggchord(prepare_ggchord_data(seq_data_example, pair)) +
+#'   geom_alignment_segment(colour = "#275B75", linewidth = 1, alpha = 1) +
+#'   coord_dotplot() +
+#'   theme(plot.margin = margin(6, 18, 6, 6))
 coord_dotplot <- function(x_seqs = NULL, y_seqs = NULL,
     x_orientation = 1, y_orientation = 1, gap = NULL,
     ratio = 1, xlim = NULL, ylim = NULL, expand = FALSE, clip = "on") {

@@ -100,14 +100,17 @@ ggchord_fusion <- function(center, center_size = NULL, layout = c("fixed", "adap
 #' @export
 #' @examples
 #' data(seq_data_example)
-#' p <- ggchord(seq_data_example) + geom_seq()
-#' ggchord_fusion(p) + fusion_panel(p + coord_collinear(), "right")
+#' refs <- dplyr::slice_head(seq_data_example, n = 2)
+#' p <- ggchord(refs) + geom_seq() + geom_seq_label()
+#' quiet <- p + scale_seq_position_continuous(guide = "none") +
+#'   theme(legend.position = "none")
+#' ggchord_fusion(quiet) + fusion_panel(quiet + coord_collinear(), "right")
 #' \donttest{
-#' quiet <- p + theme(legend.position = "none")
-#' ggchord_fusion(quiet) +
-#'   fusion_panel(quiet + coord_sankey(), "mirror", angle = 31, distance = .8)
-#' ggchord_fusion(quiet, center_box = c(.02, .35, .2, .8), allow_overlap = TRUE) +
-#'   fusion_panel(quiet + coord_collinear(), "inset", box = c(.25, .98, .3, .7))
+#' ggchord_fusion(quiet, center_box = c(.05, .38, .12, .74)) +
+#'   fusion_panel(quiet + coord_sankey(), "mirror", angle = 31,
+#'               distance = 1.35, size = c(.32, .38))
+#' ggchord_fusion(quiet, center_box = c(.02, .39, .2, .8)) +
+#'   fusion_panel(quiet + coord_collinear(), "inset", box = c(.44, .98, .3, .7))
 #' }
 fusion_panel <- function(plot, id, side = c("right", "top", "left", "bottom"), size = NULL,
     box = NULL, angle = NULL, distance = NULL) {
@@ -176,10 +179,12 @@ fusion_panel <- function(plot, id, side = c("right", "top", "left", "bottom"), s
 #' @examples
 #' data(seq_data_example)
 #' data(ribbon_data_example)
-#' p <- ggchord(seq_data_example) + geom_seq()
+#' link <- dplyr::slice_head(ribbon_data_example, n = 1)
+#' refs <- dplyr::filter(seq_data_example, accver %in% c(link$qaccver, link$saccver))
+#' p <- ggchord(refs) + geom_seq() + theme(legend.position = "none")
 #' ggchord_fusion(p) +
 #'   fusion_panel(p + coord_collinear(), "detail") +
-#'   fusion_ribbon(ribbon_data_example, qpanel = "center", spanel = "detail")
+#'   fusion_ribbon(link, qpanel = "center", spanel = "detail", fill = "#397D79")
 fusion_ribbon <- function(data, mapping = NULL, qpanel = NULL, spanel = NULL,
     gradient = FALSE, tip = c("none", "subject"), allow_repeated = FALSE,
     curvature = .3, fill = NULL, colour = NA, alpha = .35, linewidth = .25,

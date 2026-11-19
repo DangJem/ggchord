@@ -77,17 +77,8 @@ fields, provenance, measurement status and plot/render cache ownership.
 }
 
 \examples{
-library(dplyr)
-data(plasmid_example_pUC19)
-seqs <- plasmid_example_pUC19 |>
-  select(accver, length)
-feature_source <- find_common_features(plasmid_example_pUC19)
-features <- feature_source |>
-  select(accver, start, end, strand, type, anno)
-# ASCII display copy for the default PDF help-example device.
-features <- features |>
-  mutate(anno = gsub("\u03b1", "alpha", anno, fixed = TRUE))
-p <- ggchord(data = seqs) +
+features <- find_common_features(plasmid_example_pUC19, features = c("AmpR", "ori"))
+p <- ggchord(plasmid_example_pUC19) +
   geom_seq() +
   geom_feature(data = features) +
   coord_circular()

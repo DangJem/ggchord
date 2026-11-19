@@ -12,7 +12,8 @@ ggchord(reference) +
   track_band("gc", width = grid::unit(15, "mm")) +
   geom_track_col(aes(y = value), data = windows, track = "gc", fill = "#99C9C2") +
   geom_track_line(
-    aes(x = midpoint, y = value), data = windows, track = "gc", colour = "#1F5961"
+    aes(x = midpoint, y = value), data = windows, track = "gc",
+    colour = "#1F5961", linewidth = .85
   ) +
   scale_track_value_continuous("gc", name = "GC (%)", limits = c(0, 100)) +
   coord_collinear()

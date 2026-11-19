@@ -15,6 +15,6 @@ ggchord(record$seq_data) +
   ) +
   geom_feature_label(
     aes(label = anno), data = captions, anchor_layer = "features",
-    placement = "repel"
+    placement = "repel", label_layout = "callout", size = 4
   ) +
   coord_circular()

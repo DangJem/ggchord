@@ -90,11 +90,16 @@ internal segment joins.}
 
 \item{id}{Optional plot-unique layer ID for label anchors and layout export.}
 
-\item{preset}{Use \code{"default"} for general intervals. The \code{"gene"} preset
-selects gene/CDS rows from the default unified source, requires known
-strands and uses strand-based arrows. Explicit layer data selects its own
-rows. The \code{"plasmid"} preset uses compact stacked bands, wider arrowheads
-and source feature colours. Explicit layer arguments override the preset.}
+\item{preset}{Choose how intervals are drawn. The default, \code{"default"},
+draws all rows of the selected table on the backbone and accepts unknown
+strands. Use \code{"gene"} for directed genes with \code{+} or \code{-} strands. It
+colours arrows by strand and, when inheriting annotations, selects gene
+and CDS rows. Explicit layer data supplies its own rows. Use \code{"plasmid"}
+to place overlapping intervals in lanes inside the circle, with wider
+arrowheads and no feature legend by default. It uses the same source
+colours as the general layer when available. The examples give the
+equivalent general-layer call. Explicit layer arguments override these
+preset defaults.}
 }
 \value{
 A ggplot2 layer.
@@ -106,24 +111,45 @@ lollipops, all generated against the sequence's real local curve. Feature
 fill and geometry use independent role-specific scales.
 }
 \examples{
-library(dplyr)
-data(plasmid_example_pUC19)
-seqs <- plasmid_example_pUC19 |>
-  select(accver, length)
-# Restrict discovery to two named features on the real plasmid.
-feature_source <- find_common_features(
-  plasmid_example_pUC19, features = c("AmpR", "ori"), mode = "dna"
+reference <- data.frame(accver = "A", length = 100)
+intervals <- data.frame(
+  accver = "A", start = c(10, 60), end = c(35, 85), strand = "+",
+  anno = c("alpha", "beta")
 )
-features <- feature_source |>
-  select(accver, start, end, strand, type, anno)
-# ASCII display copy for the default PDF help-example device.
-features <- features |>
-  mutate(anno = gsub("\u03b1", "alpha", anno, fixed = TRUE))
-ggchord(data = seqs) +
+ggchord(reference) +
   geom_seq() +
+  geom_feature(data = intervals) +
+  coord_circular()
+
+# Draw the two curated pUC19 intervals as blocks.
+features <- find_common_features(
+  plasmid_example_pUC19, features = c("AmpR", "ori"), mode = "auto"
+)
+backbone <- ggchord(plasmid_example_pUC19) +
+  geom_seq()
+backbone +
+  geom_feature(data = features, shape = "block") +
+  coord_circular()
+
+# The gene preset selects the AmpR CDS from the prepared annotations.
+prepared <- prepare_ggchord_data(plasmid_example_pUC19, feature_data = features)
+ggchord(prepared) +
+  geom_seq() +
+  geom_feature(preset = "gene") +
+  coord_collinear()
+
+# The plasmid preset and its equivalent general-layer settings.
+backbone +
+  geom_feature(data = features, preset = "plasmid") +
+  coord_circular()
+backbone +
   geom_feature(
-    data = features,
-    shape = "block"
+    data = features, width = 0.058,
+    arrow_head_length = 0.068, arrow_head_width = 1.42,
+    position = position_feature_stack(
+      spacing = 0.10, base_position = position_offset(-0.10)
+    ),
+    show.legend = FALSE
   ) +
   coord_circular()
 
@@ -134,11 +160,4 @@ calls <- data.frame(accver = c("u", "v"), ref = c("A", "B"),
 ggchord(references, aes(accver = ref, fill = accver)) +
   geom_feature(data = calls) +
   coord_collinear()
-
-intervals <- data.frame(accver = "A", start = 10, end = 70,
-                        strand = "+", type = "CDS", anno = "g")
-p <- ggchord(data.frame(accver = "A", length = 100)) + geom_seq()
-p + geom_feature(data = intervals, preset = "gene", width = .06) +
-  coord_collinear()
-p + geom_feature(data = intervals, preset = "plasmid") + coord_circular()
 }

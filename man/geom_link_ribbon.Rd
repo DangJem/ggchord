@@ -151,7 +151,12 @@ seqs <- seq_data_example |>
 ggchord(prepare_ggchord_data(seq_data = seqs, ribbon_data = links)) +
   geom_seq() +
   geom_link_ribbon()
-ggchord(prepare_ggchord_data(seqs, links)) +
+pair_links <- ribbon_data_example |>
+  filter(qaccver == links$qaccver, saccver == links$saccver)
+ggchord(prepare_ggchord_data(seqs, pair_links)) +
+  geom_seq() +
   geom_link_ribbon(aes(ribbon_alpha = after_stat(density)),
-    stat = "ribbon_density", bins = 10, weight = "count")
+    stat = "ribbon_density", bins = 10, weight = "length", fill = "#265D76") +
+  scale_ribbon_alpha_continuous(name = "Density", range = c(.35, .95)) +
+  coord_collinear()
 }

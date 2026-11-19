@@ -24,10 +24,12 @@
 #' @return A ggplot2 layer for a ggchord Dotplot.
 #' @export
 #' @examples
-#' data(seq_data_example)
-#' data(ribbon_data_example)
-#' ggchord(prepare_ggchord_data(seq_data_example, ribbon_data_example)) +
-#'   geom_alignment_segment(aes(link_colour = pident)) +
+#' library(dplyr)
+#' pair <- ribbon_data_example |>
+#'   filter(qaccver == "MT108731.1", saccver == "MT118296.1")
+#' ggchord(prepare_ggchord_data(seq_data_example, pair)) +
+#'   geom_alignment_segment(aes(link_colour = pident), linewidth = 1.2, alpha = 1) +
+#'   scale_link_colour_gradientn(colours = c("#31777C", "#66274F")) +
 #'   coord_dotplot()
 geom_alignment_segment <- function(mapping = NULL, data = NULL,
     colour = "#59636D", alpha = 0.6, linewidth = 0.4, linetype = 1,

@@ -102,8 +102,19 @@ def check_article_directories(doc, main_content, rel, lang, local, navigation, p
     require(len(outlines)==int(bool(headings)),rel+': outline must be omitted when there are no article headings')
     if headings and outlines:
         links = list(outlines[0].iter('a'))
+        section = subsection = 0
+        numbers = []
+        for heading in headings:
+            if heading.tag=='h2' or not numbers:
+                section += 1
+                subsection = 0
+            else:
+                subsection += 1
+            numbers.append(f'{section}.{subsection}' if subsection else str(section))
+        prefixes = [a.find('./span[@class="rail-number"]') for a in links]
         require([a.get('href') for a in links]==['#'+h.get('id') for h in headings] and
-                [text(a).strip() for a in links]==[text(h).strip() for h in headings],
+                [text(prefix) for prefix in prefixes]==numbers and
+                [text(a).removeprefix(n).strip() for a,n in zip(links,numbers)]==[text(h).strip() for h in headings],
                 rel+': outline must follow article heading order and labels')
     require([node for node in layout if node in chapters+outlines+[main_content]]==chapters+outlines+[main_content],
             rel+': expected chapter directory, page outline and article in reading order')

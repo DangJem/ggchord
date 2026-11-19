@@ -145,12 +145,15 @@ ggchord_gene_layer <- function(mapping = NULL, data = NULL,
 #'   select(accver, length)
 #' data(gene_data_example)
 #' genes <- gene_data_example |>
-#'   slice_head(n = 3) |>
+#'   filter(anno %in% c("hypothetical protein", "morphogenesis protein")) |>
+#'   distinct(anno, .keep_all = TRUE) |>
 #'   transmute(accver, start, end, strand = source_strand, type = "gene", anno)
+#' seqs <- seqs |> semi_join(genes, by = "accver")
 #' ggchord(prepare_ggchord_data(seq_data = seqs, feature_data = genes)) +
 #'   geom_seq() +
 #'   geom_feature(preset = "gene") +
-#'   geom_gene_label(id = "gene-names")
+#'   geom_gene_label(id = "gene-names") +
+#'   coord_collinear()
 geom_gene_label <- function(mapping = NULL, data = NULL,
     label_orientation = "horizontal", label_side = "outside",
     label_overlap = "hide", label_rotation = NULL,

@@ -1,5 +1,5 @@
 {
-  "source_sha256": "86e1e9cd15bfbc9f72c4aa898eb00b46d8bea353be2b1d45f5f3d2ad9238c554",
+  "source_sha256": "23cd4188301ce49963f83c91abde654b42fa62121bc57af7d1472f3681e43c62",
   "translations": {
     "0": "绘图、输入与输出契约",
     "1": "了解各类绘图参数的归属、源坐标的指定方式及布局测量结果的读取入口。",

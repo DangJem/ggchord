@@ -12,7 +12,7 @@ Pass the sequence table to `ggchord()` and add `geom_seq()`. The default circula
 
 ## Place nine annotated intervals on the ring {#adapt}
 
-Add one feature layer from the same record. The plasmid preset reads the recorded feature styles. The long green arrow lies on the arc occupied by the AmpR CDS (1,626–2,486 bp). The cluster near the origin includes the M13 primer-binding intervals and the multiple cloning site.
+Add one feature layer from the same record. The plasmid preset moves overlapping intervals into compact lanes just inside the backbone, widens arrowheads and hides the feature legend. The feature layer uses colours from the annotation table. See [the equivalent layer and position settings](../../man/geom_feature.Rd) to adjust the layout. The long green arrow lies on the arc occupied by the AmpR CDS (1,626–2,486 bp). The cluster near the origin includes the M13 primer-binding intervals and the multiple cloning site.
 
 {{example:first-circular}}
 

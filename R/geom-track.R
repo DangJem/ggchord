@@ -161,26 +161,18 @@ ggplot_add.ggchord_track_band <- function(object, plot, ...) {
 #'   rowwise() |>
 #'   mutate(gc = gc_fraction(substr(plasmid_example_pUC19$sequence, start, end))) |>
 #'   ungroup()
-#' doc_theme <- theme_ggchord_publication(
-#'   axis.text = element_text(size = 9), axis.text.check.overlap = TRUE
-#' ) +
-#'   theme(legend.position = "bottom")
-#' p_tracks <- ggchord(data = track_seq) +
-#'   geom_seq() +
-#'   geom_seq_center_label() +
-#'   track_band("gc", width = unit(6, "mm")) +
-#'   geom_track_col(aes(track_value = gc, track_fill = gc),
-#'     data = bins,
-#'     track = "gc"
-#'   ) +
-#'   scale_track_value_continuous("gc", limits = c(0, 1), unit = "GC fraction") +
-#'   scale_track_fill_gradientn("gc", colours = c("#EDF1EA", "#8AAE9C", "#345F58")) +
-#'   coord_circular() +
-#'   doc_theme
-#' ggchord(track_seq) + geom_track_line(aes(x = (start + end) / 2, y = gc), data = bins) + coord_collinear()
 #' ggchord(track_seq) +
-#'   geom_track_tile(aes(fill = after_stat(coverage)), data = bins,
-#'     stat = "coverage", binwidth = 250) +
+#'   geom_track_line(aes(x = (start + end) / 2, y = gc), data = bins) +
+#'   coord_collinear()
+#' # Tile colour shows the covered fraction of each window in this teaching example.
+#' reference <- data.frame(accver = "A", length = 60)
+#' intervals <- data.frame(accver = "A", start = c(8, 21, 42), end = c(12, 38, 54))
+#' ggchord(reference) +
+#'   track_band("coverage", width = grid::unit(8, "mm")) +
+#'   geom_track_tile(aes(fill = after_stat(coverage)), data = intervals,
+#'     track = "coverage", stat = "coverage", binwidth = 10) +
+#'   ggplot2::scale_fill_gradient(name = "Coverage", limits = c(0, 1),
+#'     low = "#EAF2EE", high = "#176E69") +
 #'   coord_collinear()
 geom_track_tile <- function(mapping = NULL, data = NULL, position = NULL,
     fill = "#86AFB9", colour = NA, alpha = 1, linewidth = .25,

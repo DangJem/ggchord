@@ -86,7 +86,8 @@ def expand(text, lang, base='../assets'):
             image = base + '/handbook/' + name + '.png'
             caption = entry.get('caption', {}).get(lang) or entry.get('label', {}).get(lang) or name
             width, height = image_dimensions(name)
-            visual = (f'<figure class="documentation-figure handbook-output"><a href="{image}" class="figure-link" data-code-url="#example-{name}">'
+            size_class = ' wide-output' if entry['width'] >= 10 else ''
+            visual = (f'<figure class="documentation-figure handbook-output{size_class}"><a href="{image}" class="figure-link" data-code-url="#example-{name}">'
                       f'<img src="{image}" alt="{html.escape(caption, quote=True)}" width="{width}" height="{height}" loading="lazy"></a>'
                       f'<figcaption>{html.escape(caption)}</figcaption></figure>')
             return '\n' + visual + '\n\n' + fence

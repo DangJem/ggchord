@@ -1,5 +1,5 @@
 {
-  "source_sha256": "a272ca2e76487fdbfa1bd36acab929ae7c1e1332eb053ab1e241addfc5fd1065",
+  "source_sha256": "6553234b18729c0b36a3e054548b9eb56bada9d40a135afc4fdf86f38270179f",
   "translations": {
     "0": "用 ggplot2 语法绘制序列局部数据层",
     "1": "标准图层输入。提供 accver，使用 x/pos 表示点位，或 start/end 表示区间。直接绘制已有数值时，映射 y/track_value。初始映射表达式读取图层源列，即便映射 ⟦0⟧，仍可读取原始序列标识。零行表也须包含表达式使用的列。",

@@ -20,13 +20,11 @@
 #' @md
 #' @export
 #' @examples
-#' library(dplyr)
-#' data(plasmid_example_pUC19)
-#' seqs <- plasmid_example_pUC19 |>
-#'   select(accver, length)
-#' primers <- find_primer_bindings(plasmid_example_pUC19, set = "reference") |>
-#'   slice_head(n = 2)
-#' ggchord(data = seqs) +
+#' # Two illustrative intervals show the direction and labels of primer arcs.
+#' reference <- data.frame(accver = "A", length = 100)
+#' primers <- data.frame(accver = "A", start = c(12, 62), end = c(22, 72),
+#'   strand = c("+", "-"), name = c("P1", "P2"))
+#' ggchord(reference) +
 #'   geom_seq() +
 #'   geom_primer(data = primers, id = "primer-arcs") +
 #'   geom_primer_label_repel(data = primers, id = "primer-labels") +

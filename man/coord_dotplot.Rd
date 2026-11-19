@@ -54,10 +54,11 @@ mapped accessions determine panel order and numeric layer selections.
 Standard ggplot2 annotations and explicit position scales remain available.
 }
 \examples{
-data(seq_data_example)
-data(ribbon_data_example)
-ggchord(prepare_ggchord_data(seq_data_example, ribbon_data_example)) +
-  geom_alignment_segment() +
-  ggplot2::facet_wrap(ggplot2::vars(qaccver, saccver)) +
-  coord_dotplot()
+library(dplyr)
+pair <- ribbon_data_example |>
+  filter(qaccver == "MT108731.1", saccver == "MT118296.1")
+ggchord(prepare_ggchord_data(seq_data_example, pair)) +
+  geom_alignment_segment(colour = "#275B75", linewidth = 1, alpha = 1) +
+  coord_dotplot() +
+  theme(plot.margin = margin(6, 18, 6, 6))
 }

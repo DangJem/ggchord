@@ -53,13 +53,16 @@ Add a genomic panel to a Fusion
 }
 \examples{
 data(seq_data_example)
-p <- ggchord(seq_data_example) + geom_seq()
-ggchord_fusion(p) + fusion_panel(p + coord_collinear(), "right")
+refs <- dplyr::slice_head(seq_data_example, n = 2)
+p <- ggchord(refs) + geom_seq() + geom_seq_label()
+quiet <- p + scale_seq_position_continuous(guide = "none") +
+  theme(legend.position = "none")
+ggchord_fusion(quiet) + fusion_panel(quiet + coord_collinear(), "right")
 \donttest{
-quiet <- p + theme(legend.position = "none")
-ggchord_fusion(quiet) +
-  fusion_panel(quiet + coord_sankey(), "mirror", angle = 31, distance = .8)
-ggchord_fusion(quiet, center_box = c(.02, .35, .2, .8), allow_overlap = TRUE) +
-  fusion_panel(quiet + coord_collinear(), "inset", box = c(.25, .98, .3, .7))
+ggchord_fusion(quiet, center_box = c(.05, .38, .12, .74)) +
+  fusion_panel(quiet + coord_sankey(), "mirror", angle = 31,
+              distance = 1.35, size = c(.32, .38))
+ggchord_fusion(quiet, center_box = c(.02, .39, .2, .8)) +
+  fusion_panel(quiet + coord_collinear(), "inset", box = c(.44, .98, .3, .7))
 }
 }

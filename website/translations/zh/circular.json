@@ -1,5 +1,5 @@
 {
-  "source_sha256": "55fe39e48d5c1c9d7a85c084bc3f0363832f818b092be7c1134e0ab6dddcbe3c",
+  "source_sha256": "126e696f1025a88ebf19334066fd2498a30692d7c6420cd81134fb6a507c345a",
   "blocks": {
     "0": {
       "source_sha256": "c3075ec28799d9ae3c60c19c2867e6618b06b8a2149a7f96e5be3bb05c50e2af",
@@ -22,9 +22,9 @@
       "translation": "## 沿骨架画出九段注释区间 {#adapt}\n"
     },
     "7": {
-      "source_sha256": "de0c434b49ce845f71e7fe07801417c9c94155ced1aab835d125a4612e5aae4d",
+      "source_sha256": "14f4c7dcc556b43cb1655445f9d1e18ae26e1bdb807561da590f617255d2678e",
       "status": "reviewed",
-      "translation": "从同一份记录取出特征表，加一层特征。质粒预设会读取记录中的特征样式。浅绿色长箭头位于 AmpR 编码区（1,626–2,486 bp）所在的弧段，靠近序列起点的一组较短区间则包含 M13 引物结合区和多克隆位点。\n"
+      "translation": "从同一份记录取出特征表，加一层特征。质粒预设把重叠区间分排在骨架内侧的紧凑轨道上，加宽箭头头部，并隐藏特征图例。特征层从注释表读取配色。若要单独调整这些设置，可查看[等价的图层和位置参数写法](../../man/geom_feature.Rd)。浅绿色长箭头位于 AmpR 编码区（1,626–2,486 bp）所在的弧段，靠近序列起点的一组较短区间则包含 M13 引物结合区和多克隆位点。\n"
     },
     "9": {
       "source_sha256": "aa72f758652f8feb2ed873087c6f87028c09de25b6abc055b0d363a78d5fd24a",

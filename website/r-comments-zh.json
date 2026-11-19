@@ -41,7 +41,6 @@
   "Thirteen unique records; the compatibility spelling pUC19c is not an extra plasmid.": "共十三条独立记录，pUC19c 别名不另算一条质粒。",
   "Pick the nearest observed cut to each of three evenly spaced targets.": "在三个等距目标附近分别选择最近的实际切点。",
   "Save any record at the same size used in the gallery.": "使用与图集一致的尺寸保存所选记录。",
-  "ASCII display copy for the default PDF help-example device.": "为默认 PDF 帮助示例设备准备 ASCII 显示副本。",
   "Deliberate diagnostic error in a copy; source observations remain unchanged.": "在副本中加入错误来演示诊断，源记录保留。",
   "Membership is computed from exact strand-corrected CDS DNA equality, not gene names.": "按链校正后 DNA 完全一致的 CDS 归为同组。",
   "Requires the source checkout or tutorial input bundle and optional Biopython.": "需要仓库源码或教学输入包，并安装可选的 Biopython。",
@@ -64,7 +63,6 @@
   "The counts annotate the example, not a new default statistic in the Coord.": "计数属于此示例，不改变坐标系的默认统计行为。",
   "Adjustable annular lift for non-neighbours, in layout units; longest spoke = 2.": "可调整非相邻环形连接的外拱量，单位为布局单位；最长辐条为2。",
   "Select the second displayed CDS on E's lower sequence, then read its real bases.": "选择 E 下方序列实际展示的第二条 CDS，再读取其真实碱基。",
-  "Restrict discovery to two named features on the real plasmid.": "仅在真实质粒中识别两个指定名称的特征。",
   "Optional Bioconductor decoder loading can take several seconds.": "可选 Bioconductor 解码器的加载可能需要数秒。",
   "Optional dependency: dplyr. These are real bundled HSP records.": "可选依赖为 dplyr；这里使用真实随包 HSP 记录。",
   "Shared corridors describe drawing; they do not aggregate biological evidence.": "共用通道描述绘制方式，不合并生物学证据。",
@@ -72,5 +70,12 @@
   "Optional dependency: dplyr. Source: unchanged bundled pUC19 FASTA.": "可选依赖为 dplyr；来源是未经改动的随包 pUC19 FASTA。",
   "Extract actual source characters, keeping their order across the origin.": "提取真实来源字符，保留跨原点的字符顺序。",
   "Preserve the original headers and first three observed records.": "保留原始头部和前三条真实记录，不改写字段。",
-  "Fill describes the feature source; ref selects its sequence.": "填色取自特征源表，ref 选择显示该特征的参考序列。"
+  "Fill describes the feature source; ref selects its sequence.": "填色取自特征源表，ref 选择显示该特征的参考序列。",
+  "Draw the two curated pUC19 intervals as blocks.": "将 pUC19 上两个已有注释的区间画成色块。",
+  "The gene preset selects the AmpR CDS from the prepared annotations.": "基因预设从整理好的注释中选出 AmpR 的 CDS。",
+  "The plasmid preset and its equivalent general-layer settings.": "下面两幅图分别使用质粒预设和通用图层的等价设置。",
+  "Label both intervals using their names.": "用两个区间各自的名称作标签。",
+  "Label only the inner interval and follow its stacked lane.": "只标注名为 inner 的区间，让标签跟随该区间所在的轨道。",
+  "Two illustrative intervals show the direction and labels of primer arcs.": "用两个教学区间展示引物弧的方向和标签。",
+  "Tile colour shows the covered fraction of each window in this teaching example.": "此教学示例用色块表示每个窗口被区间覆盖的比例。"
 }

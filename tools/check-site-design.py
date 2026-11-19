@@ -100,9 +100,9 @@ def report():
         current_navigation_labeled_visually=all(selector in css for selector in (
             '.navbar .nav-link[aria-current]', '.rail-links a[aria-current]')),
         no_external_font_or_stylesheet_import=not bool(re.search(r'@import|@font-face|https?://', css, re.I)),
-        article_width_follows_grid='--content-reading' not in css and
-            bool(re.search(r'\.doc-layout\s*>\s*main\.col-md-9\s*\{[^}]*max-width:\s*none', css)) and
-            '.doc-layout:has(> .page-nav)' in css,
+        article_has_bounded_reading_width=bool(re.search(
+            r'\.doc-layout\s*>\s*main\.col-md-9\s*\{[^}]*max-width:\s*[\d.]+rem', css)) and
+            'max-width:var(--prose-width)' in css and '.doc-layout:has(> .page-nav)' in css,
         legacy_palette_removed=not bool(re.search(r'--(?:accent|ink|body-ink|paper|canvas|gg-soft|gg-muted)\s*:', css)))
     return dict(schema=1, source='website/assets/site.css', source_sha256=hashlib.sha256(css.encode()).hexdigest(),
                 method=dict(
