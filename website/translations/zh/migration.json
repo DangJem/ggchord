@@ -1,10 +1,10 @@
 {
-  "source_sha256": "fbfde371a19bafc0a605168d574c70cec5b8ccd90b6d056f130580f88e76aaed",
+  "source_sha256": "0138b76989bc842c044a8f81ef9f9f7f0fec6e4c9d1afca673c314d506a967e8",
   "blocks": {
     "1": {
-      "source_sha256": "e8caca56b7a6d17b8037a67aaa3d53faf87b45a3fb3193a01173a4c38c30415c",
+      "source_sha256": "3792b6ecb93ad04870dd350af26783b882490b8f0da6a5e689feb909b1e4ce64",
       "status": "reviewed",
-      "translation": "v0.29.0 是沿用旧 API 的最后一个版本，从 v0.50.0 起，部分接口与旧版不兼容。\n"
+      "translation": "使用旧 API 的脚本请选用 v0.29.0。从 v0.50.0 起，ggchord 采用重构后的新 API，与旧接口完全不兼容。\n"
     }
   }
 }

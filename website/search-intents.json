@@ -139,7 +139,7 @@
     "queries": [
       "windows"
     ],
-    "url": "reference/segment_ggchord_data.html#ref-arguments",
+    "url": "reference/segment_ggchord_data.html#parameter-windows",
     "title": {
       "zh": "segment_ggchord_data 的 windows",
       "en": "windows in segment_ggchord_data"

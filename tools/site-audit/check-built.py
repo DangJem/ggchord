@@ -164,6 +164,7 @@ def main():
     used_downloads = set()
     counts = Counter()
     figures = {}
+    argument_terms = {}
     body_anchors = {}
     expected_pages = {p['canonical_path'] for p in pages.values()}
     canonical_topics = {'reference/'+slug+'.html' for slug in rd}
@@ -316,6 +317,9 @@ def main():
                 for child in dl:
                     if child.tag=='dt' and child.get('id','').startswith('arg-'):
                         args_here = [v.strip() for v in text(child).split(',')]
+                        term_ids = {n.get('id') for n in child.iter() if n.get('id')}
+                        for arg in args_here:
+                            argument_terms[(lang,topic,arg)] = term_ids
                     if child.tag=='dd':
                         for badge in styled(child,'flexible-parameter'):
                             marked.update(args_here)
@@ -330,6 +334,11 @@ def main():
         if page is None:
             continue
         slug = page['slug']
+        heading = ' '.join(text(main_content.find('.//h1')).split())
+        expected_title = read(WEB/'home.json')['hero']['title'][lang] if slug=='index' else page['title'][lang]
+        require(heading==expected_title,rel+': H1 differs from the registered title: '+heading)
+        if slug=='parameters':
+            require(heading==('Flexible parameters' if lang=='en' else '灵活参数'),rel+': incorrect flexible-parameter guide heading')
         source = (WEB/lang/(slug+'.md')).read_text()
         expected = MARKER.findall(source)
         blocks = [n for n in main_content.iter() if n.get('data-example-kind')]
@@ -418,6 +427,9 @@ def main():
         existing = {rel[len(lang)+1:] for rel in all_html if rel.startswith(lang+'/')}
         require(expected_pages<=existing,lang+': missing canonical pages '+str(sorted(expected_pages-existing)))
         require(set(output_rows[lang])==set(rd),lang+': reference-output topic inventory mismatch')
+        for (api,arg),row in formals.items():
+            require(row['anchor']=='parameter-'+arg and row['anchor'] in argument_terms.get((lang,row['topic'],arg),set()),
+                    f'{lang}: {api}({arg}) anchor does not belong to the documented argument')
         search = read(site/lang/'search.json')
         indexed = {urlsplit(r['url']).path for r in search}
         require(indexed==expected_pages,lang+': wrong search coverage '+str(sorted(indexed ^ expected_pages)))
@@ -493,8 +505,18 @@ def main():
         cases.add((path,dest))
     for name in retired:
         require(name in scripts,name+': historical page must redirect')
-        if name.startswith('reference/'):
-            cases.add((name, 'en/'+pages['migration']['canonical_path']))
+    existing_reference_names = {alias for aliases in rd.values() for alias in aliases} | set(rd) | {'index'}
+    for name in read(WEB/'historical-pages.json'):
+        if not name.startswith('reference/') or Path(name).stem in existing_reference_names | RETIRED:
+            continue
+        fallback = Document(site/name).root if (site/name).is_file() else ET.Element('body')
+        targets = {destination(name,a.get('href','')) for a in fallback.iter('a')}
+        for lang in LANGUAGES:
+            selected = [t for t in targets if t and t[0]==lang+'/'+pages['migration']['canonical_path']]
+            require(len(selected)==1,name+': missing localized fallback to version selection for '+lang)
+            if lang=='en' and selected:
+                filename,fragment = selected[0]
+                cases.add((name,filename+('#'+fragment if fragment else '')))
     for origin,url,name,anchor in links:
         dest = site/name
         require(dest.is_file(),origin+': missing local URL '+url)
@@ -503,7 +525,8 @@ def main():
     if not errors:
         run_redirects(scripts, sorted(cases))
     counts.update(handbook_pages=len(pages), native_topics=len(rd), handbook_inputs=len(records),
-                  unique_examples=len(specs), handbook_plots=len(plots), local_urls=len(links), redirect_cases=len(cases),
+                  unique_examples=len(specs), handbook_plots=len(plots), parameter_rows=len(formals),
+                  ellipsis_rows=sum(arg=='...' for api,arg in formals), dotted_argument_rows=sum('.' in arg and arg!='...' for api,arg in formals), local_urls=len(links), redirect_cases=len(cases),
                   native_figures_en=sum(len(v) for (lang,_),v in figures.items() if lang=='en'),
                   native_figures_zh=sum(len(v) for (lang,_),v in figures.items() if lang=='zh'))
     if args.report:

@@ -21,8 +21,8 @@
     const button=item.querySelector('.site-nav-toggle');
     const setOpen=open=>{if(open)closeMenus(item);item.classList.toggle('is-open',open);button.setAttribute('aria-expanded',String(open));};
     button.addEventListener('click',()=>setOpen(!item.classList.contains('is-open')));
-    item.addEventListener('mouseenter',()=>setOpen(true));
-    item.addEventListener('mouseleave',()=>{if(!item.contains(document.activeElement))setOpen(false);});
+    item.addEventListener('pointerenter',e=>{if(e.pointerType==='mouse')setOpen(true);});
+    item.addEventListener('pointerleave',e=>{if(e.pointerType==='mouse'&&!item.contains(document.activeElement))setOpen(false);});
     item.addEventListener('focusout',e=>{if(!item.contains(e.relatedTarget))setOpen(false);});
     item.addEventListener('keydown',e=>{
       if(e.key==='Escape'){setOpen(false);button.focus();}

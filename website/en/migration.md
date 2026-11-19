@@ -1,3 +1,3 @@
 <span id="api"></span>
 
-v0.29.0 was the last release with the previous API, and v0.50.0 introduced incompatible changes to that API.
+Use v0.29.0 for scripts written against the old API. From v0.50.0 onward, ggchord uses a redesigned API that is incompatible with the old interface.
