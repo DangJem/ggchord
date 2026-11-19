@@ -29,12 +29,11 @@ ggchord_normalize_feature_input <- function(data) {
 }
 
 ggchord_annotation_fallback <- function(data) {
-  unified <- !is.null(data$feature_data)
-  input <- if (unified) data$feature_data else data$gene_data
+  input <- data$feature_data
   if (is.null(input)) return(NULL)
-  attr(input, "ggchord_annotation_input") <- unified
+  attr(input, "ggchord_annotation_input") <- TRUE
   attr(input, "ggchord_source") <- list(
-    table = if (unified) "feature" else "gene", rows = seq_len(nrow(input)))
+    table = "feature", rows = seq_len(nrow(input)))
   input
 }
 
@@ -61,40 +60,6 @@ ggchord_source_registry <- function(data) {
       stringsAsFactors = FALSE)
   })
   ggchord_rbind_fill(parts) %||% data.frame()
-}
-
-# Reuse interval checks while retaining the generic feature strand vocabulary.
-validate_feature_data <- function(data, seq_data, col, check_coordinates, check_duplicates) {
-  if (is.null(data)) return(col)
-  local <- validate_gene_data(data, seq_data, new_validation_collector(),
-    check_coordinates, check_duplicates, check_overlap = FALSE)
-  local$errors <- Filter(function(x) !identical(x$category[1L], "invalid_strand"), local$errors)
-  local$warnings <- Filter(function(x) !x$category[1L] %in% c("missing_anno", "overlapping"), local$warnings)
-  if (is.data.frame(data) && "strand" %in% names(data)) {
-    direction_column <- intersect(c("directionality", "direction"), names(data))[1L]
-    if (!is.na(direction_column)) {
-      expected <- ggchord_direction_strand(data[[direction_column]])
-      conflicts <- which(is.na(expected) | (!is.na(data$strand) & data$strand != expected))
-      if (length(conflicts)) local <- add_validation_issue(local, "gene", "direction_conflict",
-        conflicts, direction_column, paste("feature_data strand and", direction_column,
-          "disagree or direction is invalid"), "error")
-    }
-    invalid <- which(is.na(data$strand) | !data$strand %in% c("+", "-", ".", "+/-"))
-    if (length(invalid)) local <- add_validation_issue(local, "gene", "invalid_strand",
-      invalid, "strand", "feature_data$strand must be '+', '-', '.' or '+/-'", "error")
-  }
-  for (kind in c("errors", "warnings")) {
-    local[[kind]] <- lapply(local[[kind]], function(x) {
-      x$table <- "feature"
-      x$message <- gsub("gene_data", "feature_data", x$message, fixed = TRUE)
-      x$message <- gsub("gene features", "features", x$message, fixed = TRUE)
-      x$message <- gsub(" (clean_ggchord_data(out_of_range = 'clip') clamps it)",
-        "; correct or explicitly clip the source intervals before plotting", x$message, fixed = TRUE)
-      x
-    })
-    col[[kind]] <- c(col[[kind]], local[[kind]])
-  }
-  col
 }
 
 # Row-level source sidecars never overwrite user metadata columns.

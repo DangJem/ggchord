@@ -644,8 +644,7 @@ Set a Ribbon-specific dimension or an explicit guide for a manual ruler length.}
 \item{legend.ribbon.ticks.length}{Ribbon colourbar tick length.}
 
 \item{...}{Standard ggplot2 theme arguments, including common text, plot
-and legend settings. Common legend settings also supply role inheritance.
-Removed underscore-style arguments produce a migration error.}
+and legend settings. Common legend settings also supply role inheritance.}
 }
 \value{
 A complete ggplot2 theme carrying ggchord appearance settings.

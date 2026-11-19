@@ -221,8 +221,9 @@ ggchord_feature_data <- function(data, fixed_shape = "arrow",
 #'   \code{strand}, \code{directionality} or \code{direction} may contain
 #'   \code{"forward"}, \code{"reverse"}, \code{"bidirectional"}, or
 #'   \code{"none"}.
-#'   When omitted, uses the full constructor `feature_data` (or compatible
-#'   `gene_data`). Other layers never remove records from this default input.
+#'   With one prepared annotation table, the default preset draws all rows.
+#'   The gene preset inherits rows classified as gene or CDS. When several
+#'   tables qualify, pass the selected table explicitly.
 #' @param shape Fixed feature geometry. An explicitly supplied shape takes
 #'   precedence over \code{aes(feature_shape = ...)}: \code{"arrow"},
 #'   \code{"compact_arrow"}, \code{"promoter_arrow"},

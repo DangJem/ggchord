@@ -2,7 +2,7 @@
 % Please edit documentation in R/data-import.R
 \name{read_gff3}
 \alias{read_gff3}
-\title{Read one or more GFF3 files into gene_data format}
+\title{Read feature annotations from one or more GFF3 files}
 \usage{
 read_gff3(
   file = NULL,

@@ -95,7 +95,7 @@ local({
         inverse <- map_ggchord_position(f$linear, f$windows$locus_id[i], forward$x, source = TRUE, inverse = TRUE)
         stopifnot(isTRUE(all.equal(inverse$position, pos)))
       }
-      stopifnot(all(f$view$gene_data$.source_accver %in% f$cds$accver))
+      stopifnot(all(f$view$feature_data$.source_accver %in% f$cds$accver))
       "Source-backed pUC19/pETDuet AmpR exact CDS membership; focused windows, local reversal and source-coordinate inverse retain provenance; display links are not a realignment"
     },
     labels = function() {

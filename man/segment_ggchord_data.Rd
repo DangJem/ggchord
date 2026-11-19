@@ -7,12 +7,11 @@
 segment_ggchord_data(
   seq_data,
   ribbon_data = NULL,
-  gene_data = NULL,
+  feature_data = NULL,
   windows,
   point_data = NULL,
   cross_gap = c("split", "drop"),
-  max_links = 10000,
-  feature_data = NULL
+  max_links = 10000
 )
 }
 \arguments{
@@ -20,7 +19,7 @@ segment_ggchord_data(
 
 \item{ribbon_data}{Optional paired interval table.}
 
-\item{gene_data}{Optional gene or generic feature table, including segments.}
+\item{feature_data}{Optional gene or generic feature table, including segments.}
 
 \item{windows}{Table with \code{accver}, \code{start}, \code{end}, unique \code{locus_id},
 optional \code{row_id} (defaults to source \code{accver}) and \code{orientation} (1 or -1,
@@ -32,11 +31,9 @@ defaults to 1). Bounds must be ordered, integral and within the sequence.}
 
 \item{max_links}{Positive integer upper bound on candidate ribbon/point
 copies. Increase explicitly for larger, intentionally overlapping views.}
-
-\item{feature_data}{Unified annotation input; mutually exclusive with gene_data.}
 }
 \value{
-A list containing focused \code{seq_data}, \code{ribbon_data}, \code{gene_data},
+A list containing focused \code{seq_data}, \code{ribbon_data}, \code{feature_data},
 \code{point_data}, \code{segments} for the coordinate system, reversible source to
 window \code{transforms}, and a \code{report} with input row numbers for every
 output connection and omitted input rows. Each window retains its own

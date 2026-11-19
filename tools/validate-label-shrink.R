@@ -49,8 +49,8 @@ local({
   stopifnot(nrow(fit) > 0L, all(fit$label_size_final >= 1.5),
     any(grepl("minimum_size_exceeded", fit$label_fit_reason)))
 
-  genes <- transform(features, anno = label)
-  gene_plot <- ggchord(prepare_ggchord_data(sequences, gene_data = genes), validate = "none") +
+  genes <- transform(features, feature_class = "gene", anno = label)
+  gene_plot <- ggchord(prepare_ggchord_data(sequences, feature_data = genes), validate = "none") +
     geom_seq() + geom_feature(preset = 'gene', width = .12) +
     geom_gene_label_repel(label_fit = "shrink", size = 5) + coord_collinear()
   text <- export_ggchord_layout(gene_plot, include = "labels")$labels

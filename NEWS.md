@@ -1,5 +1,11 @@
 # ggchord 0.50.0 (development)
 
+- `feature_data` is the primary annotation argument (third position) in preparation,
+  validation, cleaning, focusing and segmentation. It replaces `gene_data` and
+  the old output slot. Map its columns with `mapping$feature`. Additional named
+  `features` remain independent. Gene presets inherit classified gene/CDS rows;
+  pass unclassified directional genes explicitly with `geom_feature(data = genes, preset = "gene")`.
+
 - The bilingual website now groups figures by plot type and functions by task.
   Plot examples include their inputs and can be copied or downloaded individually.
   The homepage retains the flagship previews and links to their complete figures.

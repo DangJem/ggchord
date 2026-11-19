@@ -19,7 +19,7 @@
 #'
 #' @param seq_data Full sequence table with unique `accver` and integer lengths.
 #' @param ribbon_data Optional paired interval table.
-#' @param gene_data Optional gene or generic feature table, including segments.
+#' @param feature_data Optional gene or generic feature table, including segments.
 #' @param windows Table with `accver`, `start`, `end`, unique `locus_id`,
 #'   optional `row_id` (defaults to source `accver`) and `orientation` (1 or -1,
 #'   defaults to 1). Bounds must be ordered, integral and within the sequence.
@@ -27,14 +27,13 @@
 #' @param cross_gap How to handle interval links clipped by selected windows.
 #' @param max_links Positive integer upper bound on candidate ribbon/point
 #'   copies. Increase explicitly for larger, intentionally overlapping views.
-#' @return A list containing focused `seq_data`, `ribbon_data`, `gene_data`,
+#' @return A list containing focused `seq_data`, `ribbon_data`, `feature_data`,
 #'   `point_data`, `segments` for the coordinate system, reversible source to
 #'   window `transforms`, and a `report` with input row numbers for every
 #'   output connection and omitted input rows. Each window retains its own
 #'   source accession, origin, full length and truncation flags.
 #' @md
 #' @seealso \code{\link{ggchord_data_contract}}
-#' @param feature_data Unified annotation input; mutually exclusive with gene_data.
 #' @export
 #' @examples
 #' library(dplyr)
@@ -48,18 +47,8 @@
 #'   locus_id = c("left_window", "right_window"), row_id = seqs$accver[1]
 #' )
 #' segment_ggchord_data(slice_head(seqs, n = 1), windows = windows)
-segment_ggchord_data <- function(seq_data, ribbon_data = NULL, gene_data = NULL,
-    windows, point_data = NULL, cross_gap = c("split", "drop"), max_links = 10000, feature_data = NULL) {
-  if (!is.null(feature_data)) {
-    if (!is.null(gene_data)) ggchord_stop("Supply only feature_data or gene_data")
-    features <- ggchord_normalize_feature_input(feature_data)
-    result <- segment_ggchord_data(seq_data, ribbon_data, features, windows, point_data, cross_gap, max_links)
-    result$feature_data <- result$gene_data
-    result$gene_data <- NULL
-    if (is.data.frame(result$report) && "component" %in% names(result$report))
-      result$report$component[result$report$component == "gene"] <- "feature"
-    return(result)
-  }
+segment_ggchord_data <- function(seq_data, ribbon_data = NULL, feature_data = NULL,
+    windows, point_data = NULL, cross_gap = c("split", "drop"), max_links = 10000) {
 
   caller <- "segment_ggchord_data()"
   cross_gap <- match.arg(cross_gap)
@@ -82,12 +71,12 @@ segment_ggchord_data <- function(seq_data, ribbon_data = NULL, gene_data = NULL,
       any(!windows$orientation %in% c(-1, 1))) ggchord_stop(caller, ": window orientation must be 1 or -1")
   if (!is.numeric(max_links) || length(max_links) != 1L || !is.finite(max_links) ||
       max_links < 1 || max_links != floor(max_links)) ggchord_stop(caller, ": max_links must be a positive integer")
-  if (!is.null(gene_data)) {
-    gene_data <- as_ggchord_feature(gene_data)
-    if (any(gene_data$start > gene_data$end)) ggchord_stop(caller,
+  if (!is.null(feature_data)) {
+    feature_data <- ggchord_convert_feature(feature_data, mapping = NULL, unified = TRUE)
+    if (any(feature_data$start > feature_data$end)) ggchord_stop(caller,
       ": origin-spanning features need explicit ordered segments and a genomic envelope before window selection")
-    at <- match(gene_data$accver, seq_data$accver)
-    if (anyNA(at) || any(gene_data$end > seq_data$length[at])) ggchord_stop(caller,
+    at <- match(feature_data$accver, seq_data$accver)
+    if (anyNA(at) || any(feature_data$end > seq_data$length[at])) ggchord_stop(caller,
       ": features must lie within known source sequences")
   }
   if (!is.null(ribbon_data)) ribbon_data <- as_ggchord_link(ribbon_data)
@@ -147,7 +136,7 @@ segment_ggchord_data <- function(seq_data, ribbon_data = NULL, gene_data = NULL,
   if (!is.null(ribbon_data)) ribbon_data[[tag]] <- seq_len(nrow(ribbon_data))
   focused <- focus_ggchord_data(seq_data,
     ribbon_data = if (is.null(ribbon_data)) NULL else ribbon_data[retained, , drop = FALSE],
-    gene_data = gene_data, loci = windows)
+    feature_data = feature_data, loci = windows)
   ribbon_rows <- if (is.null(focused$ribbon_data)) integer() else focused$ribbon_data[[tag]]
   if (!is.null(focused$ribbon_data)) focused$ribbon_data[[tag]] <- NULL
   # Whole-link policy must be evaluated for each window pair, not merely for
@@ -191,7 +180,7 @@ segment_ggchord_data <- function(seq_data, ribbon_data = NULL, gene_data = NULL,
     local_start = 1, local_end = focused$seq_data$length,
     orientation = windows$orientation, stringsAsFactors = FALSE)
   list(seq_data = focused$seq_data, ribbon_data = focused$ribbon_data,
-    gene_data = focused$gene_data,
+    feature_data = focused$feature_data,
     point_data = if (length(points)) ggchord_rbind_fill(points) else
       if (is.null(point_data)) NULL else point_data[0, , drop = FALSE],
     segments = segments, transforms = transforms, report = list(

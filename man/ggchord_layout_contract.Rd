@@ -7,7 +7,7 @@
 \code{\link[=export_ggchord_layout]{export_ggchord_layout()}} is the recommended interface for consuming
 layer-aware geometry tables. \code{\link[=get_chord_layout]{get_chord_layout()}} retains the complete
 layout list and its documented geometry, bounds, colour and label members.
-Neither entrance is deprecated. \code{\link[=view_ggchord]{view_ggchord()}} returns a temporary image
+\code{\link[=view_ggchord]{view_ggchord()}} returns a temporary image
 path; \code{\link[=diagnose_ggchord]{diagnose_ggchord()}} returns evidence for one requested render.
 }
 \section{Geometry and provenance}{

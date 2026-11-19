@@ -187,7 +187,7 @@ ggchord_focus_feature_parts <- function(row, lo, hi, origin, caller) {
 
 #' Focus ggchord data on one or more loci
 #'
-#' Crops sequence, gene and ribbon tables together and relocates retained
+#' Crops sequence, feature and ribbon tables together and relocates retained
 #' coordinates to start at one in each output locus. Multiple loci from the
 #' same source sequence are supported; provide a unique `locus_id` column to
 #' control their output sequence IDs.
@@ -202,40 +202,29 @@ ggchord_focus_feature_parts <- function(row, lo, hi, origin, caller) {
 #'
 #' @param seq_data Sequence table containing `accver` and `length`.
 #' @param ribbon_data Optional ggchord alignment table.
-#' @param gene_data Optional gene or feature table.
+#' @param feature_data Optional gene or feature table.
 #' @param loci Data frame containing `accver`, `start`, and `end`, and
 #'   optionally `locus_id`.
 #' @param expand Non-negative number of bases added on both sides, scalar or
 #'   one value per locus.
 #' @param boundary Boundary policy. `"trim"` clips partially overlapping genes
 #'   and alignments; `"drop"` keeps only rows fully contained in selected loci.
-#' @return A list of focused `seq_data`, `ribbon_data`, `gene_data`, normalized
+#' @return A list of focused `seq_data`, `ribbon_data`, `feature_data`, normalized
 #'   `loci`, and a compact `report` including retained/dropped source rows and
 #'   truncated output rows. `.source_origin` is the original genomic position
 #'   corresponding to local position one, including after repeated focusing.
 #' @seealso \code{\link{ggchord_data_contract}}
-#' @param feature_data Unified annotation input; mutually exclusive with gene_data.
 #' @export
 focus_ggchord_data <- function(
     seq_data,
     ribbon_data = NULL,
-    gene_data = NULL,
+    feature_data = NULL,
     loci,
     expand = 0,
-    boundary = c("trim", "drop"), feature_data = NULL) {
-  if (!is.null(feature_data)) {
-    if (!is.null(gene_data)) ggchord_stop("Supply only feature_data or gene_data")
-    features <- ggchord_normalize_feature_input(feature_data)
-    result <- focus_ggchord_data(seq_data, ribbon_data, features, loci, expand, boundary)
-    result$feature_data <- result$gene_data
-    result$gene_data <- NULL
-    if (is.data.frame(result$report) && "component" %in% names(result$report))
-      result$report$component[result$report$component == "gene"] <- "feature"
-    return(result)
-  }
+    boundary = c("trim", "drop")) {
 
   seq_data <- ggchord_normalize_accver(seq_data)
-  gene_data <- ggchord_normalize_accver(gene_data)
+  feature_data <- ggchord_normalize_feature_input(feature_data)
   loci <- ggchord_normalize_accver(loci)
 
   old_error <- ggchord_disable_debug()
@@ -272,21 +261,21 @@ focus_ggchord_data <- function(
     seq_out$sequence <- substring(characters[seq_index], focus$.focus_start, focus$.focus_end)
   }
 
-  gene_out <- NULL
-  gene_kept <- ribbon_kept <- integer()
-  if (!is.null(gene_data)) {
+  feature_out <- NULL
+  feature_kept <- ribbon_kept <- integer()
+  if (!is.null(feature_data)) {
     required <- c("accver", "start", "end", "strand")
-    if (!is.data.frame(gene_data) || any(!required %in% names(gene_data)) ||
-        !is.numeric(gene_data$start) || !is.numeric(gene_data$end) ||
-        any(!is.finite(gene_data$start)) || any(!is.finite(gene_data$end))) {
-      ggchord_stop(caller, ": gene_data must contain accver, numeric start/end, and strand")
+    if (!is.data.frame(feature_data) || any(!required %in% names(feature_data)) ||
+        !is.numeric(feature_data$start) || !is.numeric(feature_data$end) ||
+        any(!is.finite(feature_data$start)) || any(!is.finite(feature_data$end))) {
+      ggchord_stop(caller, ": feature_data must contain accver, numeric start/end, and strand")
     }
     pieces <- list()
-    for (i in seq_len(nrow(gene_data))) {
-      hits <- which(focus$.source_accver == as.character(gene_data$accver[i]))
+    for (i in seq_len(nrow(feature_data))) {
+      hits <- which(focus$.source_accver == as.character(feature_data$accver[i]))
       if (!length(hits)) next
-      a <- gene_data$start[i]
-      b <- gene_data$end[i]
+      a <- feature_data$start[i]
+      b <- feature_data$end[i]
       glo <- min(a, b)
       ghi <- max(a, b)
       for (j in hits) {
@@ -297,7 +286,7 @@ focus_ggchord_data <- function(
         }
         if (!keep) next
         clipped <- c(max(glo, lo), min(ghi, hi))
-        row <- as.data.frame(gene_data[i, , drop = FALSE],
+        row <- as.data.frame(feature_data[i, , drop = FALSE],
                              stringsAsFactors = FALSE)
         input_seq <- seq_index[j]
         row <- ggchord_focus_feature_parts(row, lo, hi, source$origin[input_seq], caller)
@@ -321,11 +310,11 @@ focus_ggchord_data <- function(
         row$.source_row <- ggchord_focus_original(row, ".source_row", i)
         row$.locus_row <- focus$.locus_row[j]
         pieces[[length(pieces) + 1L]] <- row
-        gene_kept <- c(gene_kept, i)
+        feature_kept <- c(feature_kept, i)
       }
     }
-    gene_out <- if (length(pieces)) ggchord_rbind_fill(pieces) else {
-      empty <- gene_data[0, , drop = FALSE]
+    feature_out <- if (length(pieces)) ggchord_rbind_fill(pieces) else {
+      empty <- feature_data[0, , drop = FALSE]
       empty$.source_accver <- character(0)
       empty$.source_start <- empty$.source_end <- empty$.source_origin <- numeric()
       empty$.truncated_left <- empty$.truncated_right <- logical()
@@ -438,22 +427,22 @@ focus_ggchord_data <- function(
   list(
     seq_data = seq_out,
     ribbon_data = ribbon_out,
-    gene_data = gene_out,
+    feature_data = feature_out,
     loci = focus,
     report = data.frame(
-      component = c("sequence", "ribbon", "gene"),
+      component = c("sequence", "ribbon", "feature"),
       input_rows = c(nrow(seq_data), if (is.null(ribbon_data)) 0L else nrow(ribbon_data),
-                     if (is.null(gene_data)) 0L else nrow(gene_data)),
+                     if (is.null(feature_data)) 0L else nrow(feature_data)),
       output_rows = c(nrow(seq_out), if (is.null(ribbon_out)) 0L else nrow(ribbon_out),
-                      if (is.null(gene_out)) 0L else nrow(gene_out)),
+                      if (is.null(feature_out)) 0L else nrow(feature_out)),
       retained_input_rows = c(length(unique(seq_index)), length(unique(ribbon_kept)),
-        length(unique(gene_kept))),
+        length(unique(feature_kept))),
       dropped_input_rows = c(nrow(seq_data) - length(unique(seq_index)),
         if (is.null(ribbon_data)) 0L else nrow(ribbon_data) - length(unique(ribbon_kept)),
-        if (is.null(gene_data)) 0L else nrow(gene_data) - length(unique(gene_kept))),
+        if (is.null(feature_data)) 0L else nrow(feature_data) - length(unique(feature_kept))),
       truncated_output_rows = c(sum(seq_out$.truncated_left | seq_out$.truncated_right,
         na.rm = TRUE), if (is.null(ribbon_out)) 0L else sum(ribbon_out$.alignment_clipped),
-        if (is.null(gene_out)) 0L else sum(gene_out$.truncated_left | gene_out$.truncated_right)),
+        if (is.null(feature_out)) 0L else sum(feature_out$.truncated_left | feature_out$.truncated_right)),
       projection = c("source_coordinates", "linear_display", "source_coordinates"),
       boundary = boundary,
       stringsAsFactors = FALSE

@@ -46,8 +46,7 @@ and routes either a direct connector or an independent radial stub plus
 fan segment.
 All enzyme-facing text edges follow one close circular contour in genomic
 order. Dense lateral clusters use evenly spaced contour fans, while sparse
-clusters retain their natural angular positions. The former \code{"trunk"}
-alias is unsupported; use \code{"radial"}.
+clusters retain their natural angular positions.
 \code{"straight"} connects the tick tip directly to the final label edge,
 without detours around the sequence or other leaders. \code{"elbow"} uses
 one bend, starting with a local-normal departure where possible.

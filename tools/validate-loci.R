@@ -13,7 +13,7 @@ stopifnot(identical(loci$target_id, c("reverse", "forward", "split")),
   loci$clipped_right[1], loci$clipped_left[2],
   identical(loci$target_source_rows[[3]], c(3L, 4L)),
   identical(loci$genome, c("isolate1", "isolate1", "isolate2")))
-focused <- focus_ggchord_data(sequences, gene_data = features, loci = loci)
+focused <- focus_ggchord_data(sequences, feature_data = features, loci = loci)
 stopifnot(identical(focused$seq_data$accver, loci$locus_id),
   identical(focused$seq_data$length, loci$end - loci$start + 1),
   sum(focused$seq_data$.source_accver == "A") == 2L)

@@ -460,69 +460,66 @@ interval_recip_overlap <- function(a1, a2, b1, b2) {
   ovl / denom
 }
 
-validate_gene_data <- function(gene_data, seq_data, col,
-                               check_coordinates, check_duplicates, check_overlap = TRUE) {
-  if (is.null(gene_data)) return(col)
-  if (!is.data.frame(gene_data)) {
+validate_feature_data <- function(feature_data, seq_data, col,
+                                  check_coordinates, check_duplicates) {
+  if (is.null(feature_data)) return(col)
+  if (!is.data.frame(feature_data)) {
     return(add_validation_issue(
-      col, "gene", "not_dataframe", NA_integer_, NA_character_,
-      "gene_data must be a data.frame", "error"))
+      col, "feature", "not_dataframe", NA_integer_, NA_character_,
+      "feature_data must be a data.frame", "error"))
   }
   required <- c("accver", "start", "end", "strand")
-  missing <- setdiff(required, colnames(gene_data))
+  missing <- setdiff(required, colnames(feature_data))
   if (length(missing) > 0) {
     return(add_validation_issue(
-      col, "gene", "missing_columns", NA_integer_, NA_character_,
-      sprintf("gene_data is missing required column(s): %s",
+      col, "feature", "missing_columns", NA_integer_, NA_character_,
+      sprintf("feature_data is missing required column(s): %s",
               paste(missing, collapse = ", ")), "error"))
   }
-  if (nrow(gene_data) == 0) return(col)
+  if (nrow(feature_data) == 0) return(col)
 
-  coords_ok <- is.numeric(gene_data$start) && is.numeric(gene_data$end) &&
-    all(is.finite(gene_data$start)) && all(is.finite(gene_data$end))
-  if (!is.numeric(gene_data$start) || !is.numeric(gene_data$end)) {
+  coords_ok <- is.numeric(feature_data$start) && is.numeric(feature_data$end) &&
+    all(is.finite(feature_data$start)) && all(is.finite(feature_data$end))
+  if (!is.numeric(feature_data$start) || !is.numeric(feature_data$end)) {
     col <- add_validation_issue(
-      col, "gene", "non_numeric", NA_integer_, "start/end",
-      "gene_data$start and $end must be numeric", "error")
+      col, "feature", "non_numeric", NA_integer_, "start/end",
+      "feature_data$start and $end must be numeric", "error")
   } else {
     for (nm in c("start", "end")) {
-      if (any(!is.finite(gene_data[[nm]]))) {
-        rows <- which(!is.finite(gene_data[[nm]]))
+      if (any(!is.finite(feature_data[[nm]]))) {
+        rows <- which(!is.finite(feature_data[[nm]]))
         col <- add_validation_issue(
-          col, "gene", "non_finite", rows, nm,
-          sprintf("gene_data$%s contains NA/NaN/Inf values", nm), "error")
+          col, "feature", "non_finite", rows, nm,
+          sprintf("feature_data$%s contains NA/NaN/Inf values", nm), "error")
       }
     }
   }
 
-  sid <- gene_data$accver
+  sid <- feature_data$accver
   if (anyNA(sid)) {
     rows <- which(is.na(sid))
     col <- add_validation_issue(
-      col, "gene", "missing_id", rows, "accver",
-      "gene_data$accver contains NA values", "error")
+      col, "feature", "missing_id", rows, "accver",
+      "feature_data$accver contains NA values", "error")
   }
   empty <- !is.na(sid) & !nzchar(as.character(sid))
   if (any(empty)) {
     rows <- which(empty)
     col <- add_validation_issue(
-      col, "gene", "empty_id", rows, "accver",
-      "gene_data$accver contains empty strings", "error")
+      col, "feature", "empty_id", rows, "accver",
+      "feature_data$accver contains empty strings", "error")
   }
-  if (anyNA(gene_data$strand)) {
-    rows <- which(is.na(gene_data$strand))
-    col <- add_validation_issue(
-      col, "gene", "invalid_strand", rows, "strand",
-      "gene_data$strand contains NA; strand must be '+' or '-'", "error")
+  direction_column <- intersect(c("directionality", "direction"), names(feature_data))[1L]
+  if (!is.na(direction_column)) {
+    expected <- ggchord_direction_strand(feature_data[[direction_column]])
+    conflicts <- which(is.na(expected) | (!is.na(feature_data$strand) & feature_data$strand != expected))
+    if (length(conflicts)) col <- add_validation_issue(col, "feature", "direction_conflict",
+      conflicts, direction_column, paste("feature_data strand and", direction_column,
+        "disagree or direction is invalid"), "error")
   }
-  bad_strand <- !is.na(gene_data$strand) & !gene_data$strand %in% c("+", "-")
-  if (any(bad_strand)) {
-    rows <- which(bad_strand)
-    col <- add_validation_issue(
-      col, "gene", "invalid_strand", rows, "strand",
-      sprintf("gene_data$strand contains invalid values (%s); strand must be '+' or '-'",
-              paste(unique(gene_data$strand[bad_strand]), collapse = ", ")), "error")
-  }
+  invalid <- which(is.na(feature_data$strand) | !feature_data$strand %in% c("+", "-", ".", "+/-"))
+  if (length(invalid)) col <- add_validation_issue(col, "feature", "invalid_strand",
+    invalid, "strand", "feature_data$strand must be '+', '-', '.' or '+/-'", "error")
 
   if (is.data.frame(seq_data) && "accver" %in% colnames(seq_data)) {
     x <- as.character(sid)
@@ -531,8 +528,8 @@ validate_gene_data <- function(gene_data, seq_data, col,
       rows <- which(bad)
       unk <- sort(unique(x[bad]))
       col <- add_validation_issue(
-        col, "gene", "unknown_id", rows, "accver",
-        sprintf(paste0("gene_data$accver references sequence IDs not present in ",
+        col, "feature", "unknown_id", rows, "accver",
+        sprintf(paste0("feature_data$accver references sequence IDs not present in ",
                        "seq_data (%s); these features are skipped when drawing"),
                 paste(unk, collapse = ", ")), "error")
     }
@@ -550,65 +547,29 @@ validate_gene_data <- function(gene_data, seq_data, col,
     ids <- as.character(sid)
     known <- !is.na(ids) & ids %in% names(lens)
     for (nm in c("start", "end")) {
-      vals <- gene_data[[nm]]
+      vals <- feature_data[[nm]]
       bad <- known & (is.na(vals) | vals < 1 | vals > lens[ids])
       bad[is.na(bad)] <- FALSE
       if (any(bad)) {
         rows <- which(bad)
         col <- add_validation_issue(
-          col, "gene", "out_of_range", rows, nm,
-          sprintf("gene_data$%s is outside [1, sequence length] (clean_ggchord_data(out_of_range = 'clip') clamps it)", nm),
+          col, "feature", "out_of_range", rows, nm,
+          sprintf("feature_data$%s is outside [1, sequence length]; correct or explicitly clip the source intervals before plotting", nm),
           "error")
       }
     }
   }
 
-  anno <- gene_data$anno
-  miss_anno <- is.na(anno) | !nzchar(as.character(anno))
-  if (any(miss_anno)) {
-    rows <- which(miss_anno)
-    col <- add_validation_issue(
-      col, "gene", "missing_anno", rows, "anno",
-      "gene_data$anno is missing or empty (clean_ggchord_data(empty_annotation = 'replace') fills it)",
-      "warning")
-  }
-
-  if (isTRUE(check_duplicates) && nrow(gene_data) > 0) {
-    key <- paste(gene_data$accver, gene_data$start, gene_data$end,
-                 gene_data$strand, gene_data$anno %||% rep("", nrow(gene_data)), sep = "\r")
+  if (isTRUE(check_duplicates) && nrow(feature_data) > 0) {
+    key <- paste(feature_data$accver, feature_data$start, feature_data$end,
+                 feature_data$strand, feature_data$anno %||% rep("", nrow(feature_data)), sep = "\r")
     dup_idx <- which(duplicated(key))
     if (length(dup_idx) > 0) {
       first <- match(key[dup_idx], key)
       rows <- unique(c(dup_idx, first))
       col <- add_validation_issue(
-        col, "gene", "exact_duplicate", rows, NA_character_,
-        "Fully duplicated gene features (same accver, coordinates, strand and anno)",
-        "warning")
-    }
-    # Highly overlapping features require valid numeric coordinates. Exact
-    # duplicate reporting above remains useful even when coordinates are bad.
-    ov_rows <- integer(0)
-    if (check_overlap && coords_ok) {
-      # Reversed feature bounds can mean a circular origin join. Without a
-      # coordinate context there is no safe linear overlap interpretation.
-      ordered <- which(gene_data$start <= gene_data$end)
-      grp <- split(ordered, gene_data$accver[ordered])
-      for (g in grp) {
-        if (length(g) < 2 || length(g) > 1000) next
-        st <- gene_data$start[g]
-        en <- gene_data$end[g]
-        for (i in seq_len(length(g) - 1L)) {
-          for (j in (i + 1L):length(g)) {
-            r <- interval_recip_overlap(st[i], en[i], st[j], en[j])
-            if (is.finite(r) && r >= 0.9) ov_rows <- c(ov_rows, g[j])
-          }
-        }
-      }
-    }
-    if (length(ov_rows) > 0) {
-      col <- add_validation_issue(
-        col, "gene", "overlapping", unique(ov_rows), NA_character_,
-        "Highly overlapping gene features on the same sequence (reciprocal overlap >= 0.9)",
+        col, "feature", "exact_duplicate", rows, NA_character_,
+        "Fully duplicated features (same accver, coordinates, strand and anno)",
         "warning")
     }
   }
@@ -668,8 +629,8 @@ validation_cleanable <- function(errors, warnings) {
   cats$suggestion <- suggestions[cats$category]
   id_issue <- cats$table != "seq" & cats$category %in% c("missing_id", "empty_id")
   cats$suggestion[id_issue] <- suggestions[["unknown_id"]]
-  gene_duplicate <- cats$table == "gene" & cats$category %in% c("exact_duplicate", "overlapping")
-  cats$suggestion[gene_duplicate] <- "Inspect and filter gene rows explicitly; ribbon deduplication does not accept gene tables"
+  feature_duplicate <- cats$table == "feature" & cats$category %in% c("exact_duplicate", "overlapping")
+  cats$suggestion[feature_duplicate] <- "Inspect and filter feature rows explicitly"
   cats <- cats[!is.na(cats$suggestion), , drop = FALSE]
   if (nrow(cats) == 0) {
     return(data.frame(table = character(0), category = character(0),
@@ -691,7 +652,7 @@ validation_cleanable <- function(errors, warnings) {
 #' Validate ggchord input data before plotting
 #'
 #' Performs structured validation of \code{seq_data}, \code{ribbon_data} and
-#' \code{gene_data} so that problems can be found, understood and fixed before
+#' \code{feature_data} so that problems can be found, understood and fixed before
 #' plotting. The result is a \code{"ggchord_validation"} object with a
 #' \code{valid} flag, \code{errors} (severe problems that make the plot
 #' misleading), \code{warnings} (drawable but noteworthy issues), per-category
@@ -702,23 +663,20 @@ validation_cleanable <- function(errors, warnings) {
 #'   (columns \code{accver}, \code{length}).
 #' @param ribbon_data data.frame/tibble, optional. Alignment results (columns
 #'   \code{qaccver}, \code{saccver}, \code{qstart}, \code{qend}, \code{sstart}, \code{send}).
-#' @param gene_data data.frame/tibble, optional. Gene annotation data (columns
-#'   \code{accver}, \code{start}, \code{end}, \code{strand}; \code{anno} is optional).
-#' @param feature_data Unified annotation table, mutually exclusive with
-#'   `gene_data`. Requires `accver`, `start`, `end`. Missing strand is unknown;
+#' @param feature_data Optional annotation table with `accver`, `start` and
+#'   `end`. Missing strand is unknown;
 #'   `+`, `-`, `.`, and `+/-` are accepted. Reports use table `"feature"` and
 #'   `data_summary$n_feature`; the input is never modified.
 #' @param strict Logical. When \code{TRUE}, collect issues and then stop if any
 #'   severe problem is found. When \code{FALSE} (default), return the full
 #'   diagnostic report without stopping.
 #' @param check_coordinates Logical, default \code{TRUE}. Whether to check that
-#'   ribbon/gene coordinates stay inside \code{[1, sequence length]}.
+#'   ribbon/feature coordinates stay inside \code{[1, sequence length]}.
 #' @param check_duplicates Logical, default \code{TRUE}. Whether to look for
 #'   fully duplicated, near-duplicated and highly overlapping records.
 #'   Reciprocal overlap requires the intersection to cover at least 90 percent
-#'   of each interval, including descending ribbon endpoints. Reversed feature
-#'   bounds may cross a circular origin and are excluded from linear overlap
-#'   diagnostics; exact duplicates are still reported.
+#'   of each interval, including descending ribbon endpoints. These overlap checks apply to ribbons.
+#'   For features, only exact duplicates are reported.
 #' @param check_self_links Logical, default \code{TRUE}. Whether to flag
 #'   alignment rows where \code{qaccver == saccver}.
 #'
@@ -729,7 +687,7 @@ validation_cleanable <- function(errors, warnings) {
 #'       column, message).}
 #'     \item{\code{warnings}}{data.frame of non-severe issues (same columns).}
 #'     \item{\code{summary}}{Per-category counts (table, category, severity, n).}
-#'     \item{\code{data_summary}}{Counts of sequences/ribbons/genes, unknown
+#'     \item{\code{data_summary}}{Counts of sequences/ribbons/features, unknown
 #'       IDs, out-of-range rows, etc.}
 #'     \item{\code{invalid_rows}}{Named list of original row numbers per
 #'       problem category.}
@@ -755,16 +713,12 @@ validation_cleanable <- function(errors, warnings) {
 #' result$valid
 validate_ggchord_data <- function(seq_data,
                                   ribbon_data = NULL,
-                                  gene_data = NULL,
+                                  feature_data = NULL,
                                   strict = FALSE,
                                   check_coordinates = TRUE,
                                   check_duplicates = TRUE,
-                                  check_self_links = TRUE,
-                                  feature_data = NULL) {
-  if (!is.null(gene_data) && !is.null(feature_data)) ggchord_stop(
-    "validate_ggchord_data(): use only one of gene_data and feature_data")
+                                  check_self_links = TRUE) {
   seq_data <- ggchord_normalize_accver(seq_data)
-  gene_data <- ggchord_normalize_accver(gene_data)
   feature_data <- ggchord_normalize_feature_input(feature_data)
 
   old_error <- ggchord_disable_debug()
@@ -789,12 +743,11 @@ validate_ggchord_data <- function(seq_data,
   col <- new_validation_collector()
   col <- validate_seq_data(seq_data, col)
   unit <- tryCatch(ggchord_sequence_unit(seq_data), error = function(e) NULL)
-  intervals <- list(ribbon = ribbon_data, gene = gene_data, feature = feature_data)
+  intervals <- list(ribbon = ribbon_data, feature = feature_data)
   if (!is.null(unit)) for (name in names(intervals)) {
     problem <- tryCatch({
       ggchord_check_interval_unit(intervals[[name]], unit, name)
-      if (name == "gene" && !is.null(gene_data) && unit == "aa")
-        "gene_data requires bp coordinates" else NULL
+      NULL
     }, error = conditionMessage)
     if (!is.null(problem)) col <- add_validation_issue(col, name, "invalid_unit",
       NA_integer_, "sequence_unit", problem, "error")
@@ -802,8 +755,6 @@ validate_ggchord_data <- function(seq_data,
   col <- validate_ribbon_data(ribbon_data, seq_data, col,
                               check_coordinates, check_duplicates,
                               check_self_links)
-  col <- validate_gene_data(gene_data, seq_data, col,
-                            check_coordinates, check_duplicates)
   col <- validate_feature_data(feature_data, seq_data, col,
     check_coordinates, check_duplicates)
 
@@ -815,28 +766,27 @@ validate_ggchord_data <- function(seq_data,
   ds <- list(
     n_seq = if (is.data.frame(seq_data)) nrow(seq_data) else NA_integer_,
     n_ribbon = if (is.data.frame(ribbon_data)) nrow(ribbon_data) else NA_integer_,
-    n_gene = if (is.data.frame(gene_data)) nrow(gene_data) else NA_integer_,
     n_feature = if (is.data.frame(feature_data)) nrow(feature_data) else NA_integer_,
     n_unknown_ribbon_ids = sum(errors$category == "unknown_id" &
                                  errors$table == "ribbon" & !is.na(errors$row)),
-    n_unknown_gene_ids = sum(errors$category == "unknown_id" &
-                               errors$table == "gene" & !is.na(errors$row)),
+    n_unknown_feature_ids = sum(errors$category == "unknown_id" &
+                               errors$table == "feature" & !is.na(errors$row)),
     n_self_links = sum(errors$category == "self_link" & !is.na(errors$row)),
     n_out_of_range_ribbon = sum(errors$category == "out_of_range" &
                                   errors$table == "ribbon" & !is.na(errors$row)),
-    n_out_of_range_gene = sum(errors$category == "out_of_range" &
-                                errors$table == "gene" & !is.na(errors$row)),
+    n_out_of_range_feature = sum(errors$category == "out_of_range" &
+                                errors$table == "feature" & !is.na(errors$row)),
     n_reversed_ribbon = sum(warnings$category == "reversed_interval" &
                               warnings$table == "ribbon" & !is.na(warnings$row)),
-    n_reversed_gene = sum(warnings$category == "reversed_interval" &
-                            warnings$table == "gene" & !is.na(warnings$row)),
+    n_reversed_feature = sum(warnings$category == "reversed_interval" &
+                            warnings$table == "feature" & !is.na(warnings$row)),
     n_duplicates_ribbon = sum(errors$category %in% c("exact_duplicate", "near_duplicate",
                                                      "overlapping") &
                                 errors$table == "ribbon" & !is.na(errors$row)) +
       sum(warnings$category %in% c("exact_duplicate", "near_duplicate", "overlapping") &
             warnings$table == "ribbon" & !is.na(warnings$row)),
-    n_duplicates_gene = sum(warnings$category %in% c("exact_duplicate", "overlapping") &
-                              warnings$table == "gene" & !is.na(warnings$row)),
+    n_duplicates_feature = sum(warnings$category %in% c("exact_duplicate", "overlapping") &
+                              warnings$table == "feature" & !is.na(warnings$row)),
     n_bad_strand = sum(errors$category == "invalid_strand" & !is.na(errors$row))
   )
 
@@ -879,10 +829,6 @@ ggchord_structural_validation_errors <- function(validation) {
       "not_dataframe", "missing_columns", "non_numeric", "non_finite",
       "missing_id", "empty_id", "invalid_length"
     ),
-    gene = c(
-      "not_dataframe", "missing_columns", "non_numeric", "non_finite",
-      "missing_id", "empty_id", "invalid_strand"
-    ),
     feature = c(
       "direction_conflict", "not_dataframe", "missing_columns", "non_numeric", "non_finite",
       "missing_id", "empty_id", "invalid_strand"
@@ -906,12 +852,10 @@ print.ggchord_validation <- function(x, ...) {
   cat(sprintf("Result: %s (%d error(s), %d warning(s))\n",
               status, nrow(x$errors), nrow(x$warnings)))
   ds <- x$data_summary
-  cat(sprintf("Sequences: %s | Ribbons: %s | Genes: %s\n",
+  cat(sprintf("Sequences: %s | Ribbons: %s | Features: %s\n",
               ifelse(is.na(ds$n_seq), "NA", ds$n_seq),
               ifelse(is.na(ds$n_ribbon), "NA", ds$n_ribbon),
-              ifelse(is.na(ds$n_gene), "NA", ds$n_gene)))
-  if (!is.null(ds$n_feature) && !is.na(ds$n_feature))
-    cat("Features: ", ds$n_feature, "\n", sep = "")
+              ifelse(is.na(ds$n_feature), "NA", ds$n_feature)))
   if (nrow(x$errors) > 0) {
     cat("\nSevere errors (fix before plotting):\n")
     print(utils::head(x$errors[, c("table", "row", "column", "message")], 10),
@@ -957,10 +901,10 @@ print.ggchord_validation_summary <- function(x, ...) {
   cat("ggchord validation summary\n")
   cat(sprintf("Valid: %s\n", if (isTRUE(attr(x, "valid"))) "TRUE" else "FALSE"))
   ds <- attr(x, "data_summary")
-  cat(sprintf("Sequences: %s | Ribbons: %s | Genes: %s\n",
+  cat(sprintf("Sequences: %s | Ribbons: %s | Features: %s\n",
               ifelse(is.na(ds$n_seq), "NA", ds$n_seq),
               ifelse(is.na(ds$n_ribbon), "NA", ds$n_ribbon),
-              ifelse(is.na(ds$n_gene), "NA", ds$n_gene)))
+              ifelse(is.na(ds$n_feature), "NA", ds$n_feature)))
   if (nrow(x) == 0) {
     cat("No issues found.\n")
   } else {

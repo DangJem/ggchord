@@ -66,8 +66,8 @@ globalVariables(c(
 #'   (\code{p$ggchord$validation}); \code{"error"} stops on severe problems;
 #'   \code{"none"} skips the diagnostic validation (the cheap structural
 #'   checks that prevent crashes are still performed).
-#' @param ... Reserved for clear migration errors from removed constructor
-#'   arguments. Use [labs()], [coord_chord()] and [theme()] for presentation.
+#' @param ... Must be empty. Add [labs()], [coord_chord()] or [theme()] to
+#'   the plot to set labels, select coordinates or style its appearance.
 #'
 #' @return A ggchord object (inherits from ggplot) to which geom_* layers can be added with +
 #' @seealso [ggchord_api_contract], [ggchord_data_contract],
@@ -105,25 +105,23 @@ ggchord <- function(data, mapping = NULL, ..., debug = FALSE,
   prepared <- if (inherits(data, "ggchord_prepared")) data else NULL
   seq_data <- if (is.null(prepared)) data else prepared$seq_data
   ribbon_data <- prepared$ribbon_data
-  gene_data <- prepared$gene_data
+  if (!is.null(prepared[["gene_data"]])) ggchord_stop(
+    "ggchord(): this saved prepared object contains gene_data. Rebuild it with ",
+    "feature_data for classified annotations, or pass its gene_data explicitly ",
+    "to geom_feature(data = ..., preset = 'gene').")
   feature_data <- prepared$feature_data
   if (inherits(seq_data, "GRanges") || inherits(seq_data, "Seqinfo") ||
       inherits(seq_data, "GInteractions") || inherits(seq_data, "XStringSet") ||
       inherits(seq_data, "XString")) seq_data <- as_ggchord_seq(seq_data)
   if (inherits(ribbon_data, "GInteractions")) ribbon_data <- as_ggchord_link(ribbon_data)
-  if (inherits(gene_data, "GRanges")) {
-    gene_data <- as_ggchord_feature(gene_data)
-    if (any(!gene_data$strand %in% c("+", "-"))) ggchord_stop(
-      "ggchord(): nondirectional GRanges belong in geom_feature(data = ...), not gene_data"
-    )
-  }
   seq_data <- ggchord_normalize_accver(seq_data)
-  gene_data <- ggchord_normalize_accver(gene_data)
   feature_data <- ggchord_normalize_feature_input(feature_data)
   old_error <- ggchord_disable_debug()
   on.exit(options(error = old_error), add = TRUE)
   dots <- list(...)
-  retired <- intersect(names(dots), c("seq_data", "gene_data", "feature_data", "ribbon_data"))
+  if ("gene_data" %in% names(dots)) ggchord_stop(
+    "ggchord(): use geom_feature(data = genes, preset = 'gene') or prepare_ggchord_data(feature_data = ...) with classified annotations.")
+  retired <- intersect(names(dots), c("seq_data", "feature_data", "ribbon_data"))
   if (length(retired)) ggchord_stop("ggchord(): move ", paste(retired, collapse = ", "),
     " into prepare_ggchord_data() or an explicit layer data argument.")
   ggchord_reject_retired(dots, "ggchord()", c(
@@ -148,10 +146,10 @@ ggchord <- function(data, mapping = NULL, ..., debug = FALSE,
   # checks and the optional diagnostics. `validate = "none"` skips the costly
   # coordinate, duplicate and self-link checks but still rejects unsafe input.
   validation_result <- validate_ggchord_data(
-    seq_data, ribbon_data, gene_data, strict = FALSE,
+    seq_data, ribbon_data, feature_data, strict = FALSE,
     check_coordinates = validate != "none",
     check_duplicates = validate != "none",
-    check_self_links = validate != "none", feature_data = feature_data
+    check_self_links = validate != "none"
   )
   structural_errors <- ggchord_structural_validation_errors(validation_result)
   if (nrow(structural_errors) > 0) {
@@ -162,10 +160,7 @@ ggchord <- function(data, mapping = NULL, ..., debug = FALSE,
     if (nrow(ribbon_data) == 0) warning("No valid alignment data in ribbon_data")
     if (debug) cat("Number of alignment data rows: ", nrow(ribbon_data), "\n")
   }
-  if (!is.null(gene_data)) {
-    if (nrow(gene_data) == 0) warning("No valid gene annotation data in gene_data")
-    if (debug) cat("Number of gene annotation rows: ", nrow(gene_data), "\n")
-  }
+  if (debug && !is.null(feature_data)) cat("Number of feature annotation rows: ", nrow(feature_data), "\n")
 
   validation <- if (validate == "none") NULL else validation_result
   if (!is.null(validation)) {
@@ -200,10 +195,10 @@ ggchord <- function(data, mapping = NULL, ..., debug = FALSE,
 
   p$ggchord <- list(
     data   = list(seq_data = seq_data, ribbon_data = ribbon_data,
-                  gene_data = gene_data, feature_data = feature_data),
+                  feature_data = feature_data),
     collections = list(features = prepared$features, links = prepared$links),
     sources = list(sequence = seq_data, relationship = ribbon_data,
-      gene = gene_data, feature = feature_data),
+      feature = feature_data),
     global = list(rotation = 0, debug = debug, validate = validate),
     validation = validation,
     # Shared reference environment for plot-owned layout caching.
@@ -212,7 +207,7 @@ ggchord <- function(data, mapping = NULL, ..., debug = FALSE,
   )
   for (kind in c("features", "links")) {
     named <- p$ggchord$collections[[kind]]
-    primary <- if (kind == "features") c("feature_data", "gene_data") else "ribbon_data"
+    primary <- if (kind == "features") "feature_data" else "ribbon_data"
     present <- primary[!vapply(p$ggchord$data[primary], is.null, logical(1))]
     p$ggchord$candidates[[kind]] <- c(present, if (length(named)) paste0(kind, "$", names(named)))
     if (!length(present) && length(named) == 1L) {

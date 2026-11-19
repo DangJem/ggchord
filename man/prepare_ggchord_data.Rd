@@ -7,12 +7,11 @@
 prepare_ggchord_data(
   seq_data,
   ribbon_data = NULL,
-  gene_data = NULL,
+  feature_data = NULL,
   features = list(),
   links = list(),
   mapping = list(),
-  steps = list(),
-  feature_data = NULL
+  steps = list()
 )
 }
 \arguments{
@@ -20,24 +19,25 @@ prepare_ggchord_data(
 
 \item{ribbon_data}{Optional paired intervals accepted by \code{\link[=as_ggchord_link]{as_ggchord_link()}}.}
 
-\item{gene_data}{Optional directional gene input accepted by
-\code{\link[=as_ggchord_feature]{as_ggchord_feature()}}. Nondirectional intervals belong in \code{features}.}
+\item{feature_data}{Optional primary annotation table with \code{accver}, \code{start}
+and \code{end}. Mixed feature types, unknown strands and bidirectional features
+are supported. An inherited gene preset selects classified gene/CDS rows.}
 
-\item{features, links}{Named lists of feature or paired-interval inputs.}
+\item{features, links}{Independent named lists of additional annotation or
+paired-interval tables. If a layer has multiple eligible tables, supply
+one explicitly in its \code{data} argument.}
 
-\item{mapping}{Named list with optional \code{seq}, \code{ribbon}, \code{gene} column
-mappings (use \code{feature} for unified \code{feature_data}, or its legacy key \code{gene}), and \code{features}/
-\code{links} lists of mappings named like the respective
-collections. Each column mapping is a named character vector.}
+\item{mapping}{Named list of column mappings. Use \code{seq}, \code{ribbon} and
+\code{feature} for the respective primary tables. Use \code{features} and \code{links}
+for lists of mappings keyed by additional table name. Each mapping is
+a named character vector.}
 
 \item{steps}{Named list of explicit helper argument lists. Supported names:
 \code{clean}, \code{filter}, \code{deduplicate}, \code{merge}, \code{bundle}, \code{optimize}.
 Data arguments are supplied by preparation and cannot be overridden.}
-
-\item{feature_data}{Unified annotation table, mutually exclusive with gene_data.}
 }
 \value{
-A list with \code{seq_data}, \code{ribbon_data}, \code{gene_data}, \code{feature_data}, \code{features},
+A list with \code{seq_data}, \code{ribbon_data}, \code{feature_data}, \code{features},
 \code{links} and \code{report}. \code{report$valid} describes final validity, with
 \code{validation} before/after, \code{feature_issues}, per-link validations,
 \code{conversions}, \code{steps}, effective \code{step_arguments}, a ribbon \code{source_rows} list (original input rows
@@ -49,7 +49,8 @@ default. Helper stage reports number rows in that stage's input.
 \description{
 Converts inputs using the existing \verb{as_ggchord_*()} adapters and returns
 named feature/link collections alongside the constructor tables.
-Collections are passed explicitly to layers, for example
+A layer inherits its only eligible table. With several candidates, pass
+the selected table explicitly, for example
 \code{geom_feature(data = result$features$sites)}; preparation never adds layers.
 Import files first with the appropriate reader. No file format, alignment,
 sequence length, genome membership or biological identity is guessed.
@@ -88,9 +89,9 @@ links <- ribbon_data_example |>
 data(gene_data_example)
 genes <- gene_data_example |>
   transmute(accver, start, end, strand = source_strand)
-prepared <- prepare_ggchord_data(seqs, links, features = list(genes = genes))
+prepared <- prepare_ggchord_data(seqs, links, feature_data = genes)
 prepared$report
-ggchord(prepared) + geom_seq() + geom_link_ribbon()
+ggchord(prepared) + geom_seq() + geom_link_ribbon() + geom_feature()
 }
 \seealso{
 \code{\link{ggchord_data_contract}}

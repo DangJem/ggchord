@@ -10,7 +10,7 @@ if (length(selected)) {
 }
 record <- 'tools/site-audit/flagship-rendering.json'
 prior <- if (file.exists(record)) jsonlite::read_json(record) else list(figures = list())
-specs <- jsonlite::read_json('website/content-zh/manual-figures.json')
+specs <- jsonlite::read_json('website/content-en/manual-figures.json')
 names(specs) <- vapply(specs, `[[`, character(1), 'id')
 results <- list()
 for (id in names(items)) {

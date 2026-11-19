@@ -7,14 +7,13 @@
 clean_ggchord_data(
   seq_data,
   ribbon_data = NULL,
-  gene_data = NULL,
+  feature_data = NULL,
   unknown_id = c("drop", "error", "keep"),
   out_of_range = c("clip", "drop", "error", "keep"),
   reversed_interval = c("sort", "drop", "error", "keep"),
   invalid_pident = c("clip", "drop", "error", "keep"),
   empty_annotation = c("keep", "drop", "replace"),
-  replacement_annotation = "unannotated",
-  feature_data = NULL
+  replacement_annotation = "unannotated"
 )
 }
 \arguments{
@@ -26,17 +25,17 @@ IDs must always be non-missing, non-empty and unique, regardless of
 \item{ribbon_data}{data.frame/tibble or \code{NULL}, optional. Alignment
 results. Other input types are rejected rather than treated as absent.}
 
-\item{gene_data}{data.frame/tibble or \code{NULL}, optional. Gene annotation
+\item{feature_data}{data.frame/tibble or \code{NULL}, optional. Feature annotation
 data. Other input types are rejected rather than treated as absent.}
 
 \item{unknown_id}{Character, default \code{"drop"}. Policy for rows whose
-sequence ID in \code{ribbon_data} or \code{gene_data} is missing, empty or
+sequence ID in \code{ribbon_data} or \code{feature_data} is missing, empty or
 unknown: \code{"drop"} removes them,
 \code{"error"} stops with a message, \code{"keep"} leaves them unchanged.
 A kept row without a reference sequence is reported, but its coordinates
 and annotations are not cleaned and it is not guaranteed to be drawable.
 IDs are never guessed or replaced. Other structural checks, including
-finite numeric coordinates and valid gene strands, still apply.}
+finite numeric coordinates and valid feature strands, still apply.}
 
 \item{out_of_range}{Character, default \code{"clip"}. Policy for coordinates
 outside \code{[1, sequence length]}: \code{"clip"} clamps them,
@@ -58,18 +57,16 @@ report), \code{"drop"} removes the row, \code{"error"} stops,
 them unchanged.}
 
 \item{empty_annotation}{Character, default \code{"keep"}. Policy for
-missing/empty \code{anno} in gene data: \code{"replace"} fills them with
+missing/empty \code{anno} in feature data: \code{"replace"} fills them with
 \code{replacement_annotation}, \code{"drop"} removes the row,
 \code{"keep"} leaves them unchanged.}
 
 \item{replacement_annotation}{Character, default \code{"unannotated"}.
 Replacement annotation used when \code{empty_annotation = "replace"}.}
-
-\item{feature_data}{Unified annotation input; mutually exclusive with gene_data.}
 }
 \value{
 A list with four components: \code{seq_data}, \code{ribbon_data},
-\code{gene_data} (cleaned copies) and \code{report} (a data.frame with
+\code{feature_data} (cleaned copies) and \code{report} (a data.frame with
 columns \code{table}, \code{row} (original row number), \code{column},
 \code{reason}, \code{original_value}, \code{new_value} and
 \code{action}).

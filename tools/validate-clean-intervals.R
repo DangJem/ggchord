@@ -9,9 +9,9 @@ links <- data.frame(qaccver = "q", saccver = "s",
   sstart = c(7, 2, 21, 6, 15), send = c(7, 5, 25, 2, 18),
   orientation_known = c(FALSE, TRUE, TRUE, TRUE, TRUE), case = cases)
 out <- clean_ggchord_data(seqs, links, genes)
-stopifnot(identical(out$gene_data$case, cases[c(1, 4, 5)]),
-  identical(out$gene_data$start, c(5, 1, 10)),
-  identical(out$gene_data$end, c(5, 1, 10)),
+stopifnot(identical(out$feature_data$case, cases[c(1, 4, 5)]),
+  identical(out$feature_data$start, c(5, 1, 10)),
+  identical(out$feature_data$end, c(5, 1, 10)),
   identical(out$ribbon_data$case, cases[c(1, 4, 5)]),
   identical(out$ribbon_data$qstart, c(5, 1, 10)),
   identical(out$ribbon_data$qend, c(5, 1, 10)),

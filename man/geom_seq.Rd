@@ -2,7 +2,7 @@
 % Please edit documentation in R/geom-seq.R
 \name{geom_seq}
 \alias{geom_seq}
-\title{Add a sequence arc layer}
+\title{Draw sequence backbones}
 \usage{
 geom_seq(
   mapping = NULL,
@@ -28,9 +28,18 @@ Accessions must be unique. Overlaid backbones must agree on accessions,
 lengths, coordinate unit and original sequence windows.
 Their row order, mappings and drawing styles may differ.}
 
-\item{seq_radius}{Optional numeric (> 0). Sequence arc radius, default 1.0}
+\item{seq_radius}{Finite positive backbone radius in layout units. The default
+\code{NULL} uses 1. Supply one value for all sequences, a vector named by
+\code{accver} for selected sequences, or one unnamed value per displayed
+sequence in display order. Equivalent lists have one number per entry.
+Omitted IDs keep radius 1. An explicit radius is incompatible with
+\code{\link[=coord_collinear]{coord_collinear()}} and with a mapped \code{seq_ring}.}
 
-\item{seq_curvature}{Optional numeric. Signed arc bow (0=straight, 1=standard arc, negative=opposite bow), default 1.0. Finite positive and negative values are accepted without clipping; magnitudes above 1 amplify the bow.}
+\item{seq_curvature}{Finite signed arc curvature. Zero draws a straight
+backbone, 1 the standard arc, and negative values reverse the bow.
+Magnitudes above 1 increase the bow. Accepts the same per-sequence
+forms as \code{seq_radius}; omitted IDs use 1. \code{\link[=coord_collinear]{coord_collinear()}} uses
+straight backbones and rejects explicit curvature.}
 
 \item{seq_style}{Backbone geometry. \code{"auto"} uses a double backbone in
 \code{\link[=coord_circular]{coord_circular()}} and a single backbone in \code{\link[=coord_chord]{coord_chord()}}.}
@@ -53,14 +62,13 @@ omit fixed arguments to retain mapped styles. Unknown names raise an error.}
 A ggplot2 layer.
 }
 \description{
-Draws arcs (or straight lines, depending on the curvature setting) representing sequences in the chord diagram.
+Draw one backbone for each displayed sequence. In a chord diagram its radius
+sets its distance from the centre and its curvature sets the arc shape.
 Use \code{\link[=layout_sequences]{layout_sequences()}} to change the sequence order, orientation, spacing or length allocation.
 }
 \examples{
-library(dplyr)
-data(seq_data_example)
-seqs <- seq_data_example |>
-  select(accver, length)
-ggchord(data = seqs) +
-  geom_seq()
+ggchord(seq_data_example) +
+  geom_seq(seq_radius = c("MT118296.1" = 0.72)) +
+  geom_seq_label() +
+  coord_chord()
 }

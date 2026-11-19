@@ -35,8 +35,7 @@ gene/CDS selection described in \code{\link[=ggchord]{ggchord()}}.}
 contours, with straight normal leaders or a short normal departure followed
 by a long connector when displaced; \code{"auto"} uses shared vertical
 columns on the left/right and radial placement elsewhere; \code{"arc"}
-rotates text along the sequence tangent. The former \code{"aligned"}
-mode has been removed; use \code{"auto"} for side columns.}
+rotates text along the sequence tangent.}
 
 \item{label_wrap}{Numeric or NULL, default NULL. When set, long gene
 annotations are wrapped at this many characters (e.g. 15), overriding
@@ -114,9 +113,7 @@ following each sequence; crowded names fan out along that contour.
 elsewhere. \code{"arc"} rotates text along the sequence tangent.
 }
 \details{
-Low-level force, padding, orientation and segment arguments used by earlier
-releases have been removed and now produce an error. Use
-\code{label_layout} for automatic placement, or
+Choose \code{label_layout} for automatic placement or
 \code{\link{geom_gene_label}()} for manual rotation and offsets.
 }
 \examples{
@@ -129,8 +126,8 @@ genes <- gene_data_example |>
   group_by(accver) |>
   slice_head(n = 2) |>
   ungroup() |>
-  transmute(accver, start, end, strand = source_strand, anno)
-ggchord(prepare_ggchord_data(seq_data = seqs, gene_data = genes)) +
+  transmute(accver, start, end, strand = source_strand, type = "gene", anno)
+ggchord(prepare_ggchord_data(seq_data = seqs, feature_data = genes)) +
   geom_seq() +
   geom_feature(preset = "gene") +
   geom_gene_label_repel(label_wrap = 20, id = "gene-callouts")

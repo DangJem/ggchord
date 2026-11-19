@@ -43,14 +43,14 @@ workflow_aligned <- ggchord(prepare_ggchord_data(workflow_sequences, workflow_li
 
 # Focus retains source coordinates; end marks identify cropped sequence ends.
 workflow_focused <- focus_ggchord_data(workflow_sequences,
-  ribbon_data = workflow_links, gene_data = workflow_features,
+  ribbon_data = workflow_links, feature_data = workflow_features,
   loci = tibble(
     accver = c("A", "B", "C"),
     start = c(50, 150, 250), end = c(600, 650, 900)
   )
 )
 workflow_source_axis <- ggchord(prepare_ggchord_data(workflow_focused$seq_data,
-  workflow_focused$ribbon_data, workflow_focused$gene_data),
+  workflow_focused$ribbon_data, workflow_focused$feature_data),
   validate = "none"
 ) +
   geom_link_ribbon(alpha = .25) +

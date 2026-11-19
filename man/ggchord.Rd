@@ -35,8 +35,8 @@ Generated fields such as \code{.component} are available after projection.
 ggplot2 stages. A layer mapping overrides the same plot aesthetic.
 Native ggplot2 layers inherit the reference table as their plot data.}
 
-\item{...}{Reserved for clear migration errors from removed constructor
-arguments. Use \code{\link[=labs]{labs()}}, \code{\link[=coord_chord]{coord_chord()}} and \code{\link[=theme]{theme()}} for presentation.}
+\item{...}{Must be empty. Add \code{\link[=labs]{labs()}}, \code{\link[=coord_chord]{coord_chord()}} or \code{\link[=theme]{theme()}} to
+the plot to set labels, select coordinates or style its appearance.}
 
 \item{debug}{Logical. Whether to output debug information, default FALSE}
 

@@ -184,7 +184,7 @@ ggchord_layer_fallback <- function(layer, data) {
   if (p$type %in% c("ribbon", "alignment")) return(data$ribbon_data)
   if (p$type %in% c("gene", "gene_label", "gene_label_repel"))
     return(ggchord_annotation_fallback(data))
-  if (identical(p$native_stat, "coverage")) return(data$feature_data %||% data$gene_data)
+  if (identical(p$native_stat, "coverage")) return(data$feature_data)
   if (p$type == "seq_region") return(if (is.function(p$regions)) data$seq_data else p$regions)
   if (p$type %in% c("link", "restriction_site")) return(NULL)
   data$seq_data

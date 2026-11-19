@@ -14,10 +14,10 @@ view <- segment_ggchord_data(seqs, links, features, windows, point_data = points
 stopifnot(nrow(view$ribbon_data) == 2L, nrow(view$point_data) == 1L,
   all(view$ribbon_data$.alignment_clipped),
   identical(view$report$omitted_point_rows, 2L),
-  all(view$gene_data$feature_id == "spanning"))
+  all(view$feature_data$feature_id == "spanning"))
 p <- ggchord(prepare_ggchord_data(view$seq_data, view$ribbon_data), validate = "none") +
-  geom_seq() + geom_link_ribbon() + geom_feature(data = view$gene_data) +
-  geom_feature_label(placement = 'repel', data = view$gene_data) +
+  geom_seq() + geom_link_ribbon() + geom_feature(data = view$feature_data) +
+  geom_feature_label(placement = 'repel', data = view$feature_data) +
   geom_link_line(data = view$point_data) +
   coord_collinear(segments = view$segments, segment_gap = 50)
 out <- export_ggchord_layout(p, include = c("seq", "ribbon", "feature", "link"))

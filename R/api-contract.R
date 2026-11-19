@@ -28,36 +28,22 @@
 #' sequence-unit reference bar; [scale_seq_position_continuous()] configures genomic axes.
 #' A matching name never implies that every geom supports every coord.
 #'
-#' @section Names and migration errors:
-#' The `colour` spelling is preferred in documentation; existing `color`
-#' spelling aliases remain supported. Selected ggplot2/grid reexports retain
-#' the original upstream object and follow that dependency's public contract.
-#' Their internals and future upstream signatures are not frozen by ggchord.
+#' @section Choosing arguments for a layer:
+#' Use [position_strand()] to give the two strands separate offsets. A single
+#' numeric offset sets equal distances on opposite sides. Named strand values
+#' such as `c("+" = 0.08, "-" = -0.14)` give signed displacements directly.
 #'
-#' Retired arguments remain errors with replacement guidance; they do not
-#' execute compatibility code. Fixed `feature_shape`, old width,
-#' label and ribbon endpoint names were removed in favour of the names above.
-#' `gene_offset`/`feature_offset` were also removed; use
-#' `position = position_strand(offset = ...)`. Explicit strand-named offsets
-#' are signed, so negate the former minus-strand magnitude when migrating it.
+#' Use [geom_gene_label()] or [geom_feature_label()] with fixed placement to
+#' control label rotation, radial and circumferential offsets, and overlap.
+#' For automatic placement, choose a `label_layout` on the automatic label
+#' layer. Its layout determines each label's orientation and position.
 #'
-#' Automatic gene/feature labels own their rotation, offsets, orientation and
-#' overlap policy. Manual `label_rotation`, `label_radial_offset`,
-#' `label_circum_offset`, `label_circum_limit`, `label_orientation` and
-#' `label_overlap` supplied through their `...` now fail rather than being
-#' ignored. Use [geom_gene_label()] or [geom_feature_label()] for manual
-#' placement, or choose automatic geometry with `label_layout`.
-#' The old `"aligned"` label request becomes `label_layout = "auto"`;
-#' restriction `leader = "trunk"` becomes `leader = "radial"`.
-#'
-#' The constructor rejects unknown arguments. ggchord geoms check
-#' extra names against the selected layer, geom and stat before construction.
-#' For example, `geom_seq(linewditth = 2)` reports the spelling error and
-#' suggests `linewidth`. Scale, guide and theme arguments follow the contract
-#' of the function that receives them. Geometric roles
-#' must be evaluated before layout, whereas supported visual mappings may use
-#' `after_stat()`/`after_scale()`. Unknown legacy label prefixes never imply
-#' that a similarly named replacement parameter exists.
+#' Each geom checks its named arguments against the selected layer, geom and
+#' stat. Write `linewidth` for a stroke width. The documentation uses
+#' `colour`, and the `color` spelling is also supported. Scales, guides and
+#' themes accept the arguments of the function that receives them. Geometric
+#' mappings are evaluated before layout. Visual mappings that support staged
+#' evaluation can use `after_stat()` and `after_scale()`.
 #'
 #' @section Data, units and results:
 #' Input `accver` and query/subject identifiers are preserved without adding or

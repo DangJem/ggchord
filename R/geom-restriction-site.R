@@ -102,8 +102,7 @@ GeomRestrictionSite <- ggplot2::ggproto(
 #'   fan segment.
 #'   All enzyme-facing text edges follow one close circular contour in genomic
 #'   order. Dense lateral clusters use evenly spaced contour fans, while sparse
-#'   clusters retain their natural angular positions. The former `"trunk"`
-#'   alias is unsupported; use `"radial"`.
+#'   clusters retain their natural angular positions.
 #'   `"straight"` connects the tick tip directly to the final label edge,
 #'   without detours around the sequence or other leaders. `"elbow"` uses
 #'   one bend, starting with a local-normal departure where possible.

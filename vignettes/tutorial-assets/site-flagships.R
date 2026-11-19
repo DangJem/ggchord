@@ -88,7 +88,7 @@ flag_radial <- ggchord(prepare_ggchord_data(show_sequences, show_links)) +
   labs(title = "Four genomes, a radial view", subtitle = "Original Chord sources; all 20 CDS annotations")
 # -- flagshipsankey --
 sankey_labels <- flagship_comparison_example$sankey$labels
-flag_sankey <- ggchord(prepare_ggchord_data(show_sequences, gene_data = show_linear_features)) +
+flag_sankey <- ggchord(prepare_ggchord_data(show_sequences, feature_data = show_linear_features)) +
   geom_link_ribbon(aes(ribbon_fill = pident), data = show_adjacent,
     link_avoid = "smooth", alpha = 0.48, linewidth = 0.25) +
   geom_link_ribbon(aes(ribbon_fill = pident), data = show_cross,

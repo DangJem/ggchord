@@ -91,9 +91,10 @@ ggchord_seq_style_geometry <- function(seq_arcs, params) {
   out
 }
 
-#' Add a sequence arc layer
+#' Draw sequence backbones
 #'
-#' Draws arcs (or straight lines, depending on the curvature setting) representing sequences in the chord diagram.
+#' Draw one backbone for each displayed sequence. In a chord diagram its radius
+#' sets its distance from the centre and its curvature sets the arc shape.
 #' Use [layout_sequences()] to change the sequence order, orientation, spacing or length allocation.
 #'
 #' @param mapping Default NULL (uses pre-computed data)
@@ -101,8 +102,17 @@ ggchord_seq_style_geometry <- function(seq_arcs, params) {
 #'   Accessions must be unique. Overlaid backbones must agree on accessions,
 #'   lengths, coordinate unit and original sequence windows.
 #'   Their row order, mappings and drawing styles may differ.
-#' @param seq_radius Optional numeric (> 0). Sequence arc radius, default 1.0
-#' @param seq_curvature Optional numeric. Signed arc bow (0=straight, 1=standard arc, negative=opposite bow), default 1.0. Finite positive and negative values are accepted without clipping; magnitudes above 1 amplify the bow.
+#' @param seq_radius Finite positive backbone radius in layout units. The default
+#'   `NULL` uses 1. Supply one value for all sequences, a vector named by
+#'   `accver` for selected sequences, or one unnamed value per displayed
+#'   sequence in display order. Equivalent lists have one number per entry.
+#'   Omitted IDs keep radius 1. An explicit radius is incompatible with
+#'   [coord_collinear()] and with a mapped `seq_ring`.
+#' @param seq_curvature Finite signed arc curvature. Zero draws a straight
+#'   backbone, 1 the standard arc, and negative values reverse the bow.
+#'   Magnitudes above 1 increase the bow. Accepts the same per-sequence
+#'   forms as `seq_radius`; omitted IDs use 1. [coord_collinear()] uses
+#'   straight backbones and rejects explicit curvature.
 #' @param seq_style Backbone geometry. `"auto"` uses a double backbone in
 #'   [coord_circular()] and a single backbone in [coord_chord()].
 #' @param seq_backbone_gap Gap between double backbone lines.
@@ -118,12 +128,10 @@ ggchord_seq_style_geometry <- function(seq_arcs, params) {
 #' @export
 #'
 #' @examples
-#' library(dplyr)
-#' data(seq_data_example)
-#' seqs <- seq_data_example |>
-#'   select(accver, length)
-#' ggchord(data = seqs) +
-#'   geom_seq()
+#' ggchord(seq_data_example) +
+#'   geom_seq(seq_radius = c("MT118296.1" = 0.72)) +
+#'   geom_seq_label() +
+#'   coord_chord()
 geom_seq <- function(mapping = NULL, data = NULL,
                      seq_radius = NULL,
                      seq_curvature = NULL,

@@ -19,15 +19,15 @@ links <- data.frame(qaccver = "A", saccver = "B", qstart = 400, qend = 700,
   sstart = 900, send = 100, length = 801, pident = 95)
 
 focused <- focus_ggchord_data(sequences, links, features, loci = loci)
-segment <- focused$gene_data$segments[[1L]]
+segment <- focused$feature_data$segments[[1L]]
 stopifnot(all(segment$start >= 1), all(segment$end <= focused$seq_data$length[1L]),
   identical(as.numeric(segment$start), c(1, 152)),
   identical(as.numeric(segment$end), c(51, 201)),
-  identical(as.numeric(focused$gene_data$cleavage_arrows[[1L]]), c(26, 176)),
-  !".feature_runs" %in% names(focused$gene_data),
-  focused$gene_data$.truncated_left, focused$gene_data$.truncated_right,
-  focused$gene_data$.source_start == features$start,
-  focused$gene_data$.source_end == features$end,
+  identical(as.numeric(focused$feature_data$cleavage_arrows[[1L]]), c(26, 176)),
+  !".feature_runs" %in% names(focused$feature_data),
+  focused$feature_data$.truncated_left, focused$feature_data$.truncated_right,
+  focused$feature_data$.source_start == features$start,
+  focused$feature_data$.source_end == features$end,
   focused$seq_data$.source_origin[1L] == loci$start[1L],
   all(focused$ribbon_data$.alignment_projection == "linear"),
   all(focused$ribbon_data$.length_estimated),
@@ -36,38 +36,38 @@ stopifnot(all(segment$start >= 1), all(segment$end <= focused$seq_data$length[1L
 
 # A second focus composes source coordinates rather than overwriting origin.
 again <- focus_ggchord_data(focused$seq_data, focused$ribbon_data,
-  focused$gene_data, loci = data.frame(accver = c("A", "B"),
+  focused$feature_data, loci = data.frame(accver = c("A", "B"),
     start = c(11, 11), end = c(191, 591)))
 stopifnot(again$seq_data$.source_origin[1L] == loci$start[1L] + 10,
-  again$gene_data$.source_start == features$start,
-  again$gene_data$.source_end == features$end,
-  all(again$gene_data$segments[[1L]]$end <= again$seq_data$length[1L]),
+  again$feature_data$.source_start == features$start,
+  again$feature_data$.source_end == features$end,
+  all(again$feature_data$segments[[1L]]$end <= again$seq_data$length[1L]),
   all(again$ribbon_data$.source_qstart == links$qstart),
   all(again$ribbon_data$.source_sstart == links$sstart))
 
 # The focused public rendering stays within its biological sequence interval.
-plot <- ggchord(prepare_ggchord_data(focused$seq_data, gene_data = focused$gene_data), validate = "none") +
+plot <- ggchord(prepare_ggchord_data(focused$seq_data, feature_data = focused$feature_data), validate = "none") +
   geom_seq() + geom_feature() + coord_collinear()
 geometry <- export_ggchord_layout(plot, include = "feature")
 sequence_width <- geometry$sequence_layout$xmax[
-  geometry$sequence_layout$accver == focused$gene_data$accver[1L]]
+  geometry$sequence_layout$accver == focused$feature_data$accver[1L]]
 stopifnot(all(is.finite(geometry$feature$x)),
   all(geometry$feature$x >= 0 & geometry$feature$x <= sequence_width))
 
 # Already-derived interval runs are handled even without raw segments.
 run_features <- features
 run_features$segments <- NULL
-run_focused <- focus_ggchord_data(sequences, gene_data = run_features, loci = loci)
-run <- run_focused$gene_data$.feature_runs[[1L]]
+run_focused <- focus_ggchord_data(sequences, feature_data = run_features, loci = loci)
+run <- run_focused$feature_data$.feature_runs[[1L]]
 stopifnot(run$start == 1, run$end == 201,
   identical(as.numeric(run$boundaries[[1L]]), 26))
 
 # Cropping a gap-only part does not turn it into a solid false interval.
-gap_focus <- focus_ggchord_data(sequences, gene_data = features,
+gap_focus <- focus_ggchord_data(sequences, feature_data = features,
   loci = data.frame(accver = "A", start = 550, end = 580))
-stopifnot(nrow(gap_focus$gene_data) == 0L,
-  gap_focus$report$dropped_input_rows[gap_focus$report$component == "gene"] == 1L)
+stopifnot(nrow(gap_focus$feature_data) == 0L,
+  gap_focus$report$dropped_input_rows[gap_focus$report$component == "feature"] == 1L)
 
 dropped <- focus_ggchord_data(sequences, links, features, loci = loci, boundary = "drop")
-stopifnot(nrow(dropped$gene_data) == 0L, nrow(dropped$ribbon_data) == 0L)
+stopifnot(nrow(dropped$feature_data) == 0L, nrow(dropped$ribbon_data) == 0L)
 cat("Focused composite coordinates and provenance passed.\n")

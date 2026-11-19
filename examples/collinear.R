@@ -11,7 +11,7 @@ collinear_genes <- tibble(
   accver = rep(collinear_sequences$accver, each = 2),
   start = c(100, 350, 120, 310, 150, 510),
   end = c(280, 480, 260, 430, 320, 660),
-  strand = rep(c("+", "-"), 3),
+  strand = rep(c("+", "-"), 3), type = "gene",
   anno = c("alpha", "beta", "alpha", "beta", "alpha", "gamma")
 )
 collinear_alignments <- tibble(

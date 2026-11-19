@@ -3,11 +3,11 @@ seqs <- data.frame(accver = c("A", "B"), length = 1000)
 links <- data.frame(qaccver = "A", saccver = "B",
   qstart = 100, qend = 200, sstart = 300, send = 400)
 genes <- data.frame(accver = c("A", "B"), start = c(100, 400),
-  end = c(200, 500), strand = c("+", "-"), anno = c("alpha", "beta"))
+  end = c(200, 500), type = "gene", strand = c("+", "-"), anno = c("alpha", "beta"))
 
 test_that("core layers build and keep manual gene colours", {
   colours <- c("+" = "#56887C", "-" = "#B58169")
-  p <- ggchord(prepare_ggchord_data(seqs, links, genes[c("accver", "start", "end", "strand")])) +
+  p <- ggchord(prepare_ggchord_data(seqs, links, genes[c("accver", "start", "end", "strand", "type")])) +
     geom_seq() + geom_link_ribbon() + geom_feature(preset = 'gene') + geom_seq_label() +
     scale_gene_fill_manual(values = colours)
   built <- ggplot2::ggplot_build(p)
@@ -18,7 +18,7 @@ test_that("core layers build and keep manual gene colours", {
 })
 
 test_that("three label layouts retain representative annotations", {
-  p <- ggchord(prepare_ggchord_data(seqs, gene_data = genes)) + geom_seq() + geom_feature(preset = 'gene')
+  p <- ggchord(prepare_ggchord_data(seqs, feature_data = genes)) + geom_seq() + geom_feature(preset = 'gene')
   for (mode in c("radial", "auto", "arc")) {
     labels <- get_chord_layout(p + geom_gene_label_repel(label_layout = mode))$gene_labels
     expect_setequal(labels$label, genes$anno)

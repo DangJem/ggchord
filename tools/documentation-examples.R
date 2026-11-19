@@ -8,7 +8,7 @@ links <- ribbon_data_example |>
   select(qaccver, saccver, qstart, qend, sstart, send)
 # Recover biological strands from the source annotation field.
 genes <- gene_data_example |>
-  transmute(accver, start, end, strand = source_strand)
+  transmute(accver, start, end, strand = source_strand, type = "gene")
 # ---- sequencepalette ----
 # Optional appearance choices; none of these columns or scales is required input.
 seq_palette <- setNames(
@@ -68,7 +68,7 @@ doc_axis <- function(coordinates = "relative") {
   )
 }
 # ---- chord ----
-p_chord <- ggchord(prepare_ggchord_data(seq_data = seqs, ribbon_data = links, gene_data = genes)) +
+p_chord <- ggchord(prepare_ggchord_data(seq_data = seqs, ribbon_data = links, feature_data = genes)) +
   geom_link_ribbon(aes(ribbon_fill = qaccver), alpha = .7) +
   scale_ribbon_fill_manual(values = seq_palette, guide = "none") +
   geom_seq(show.legend = FALSE) +
@@ -105,7 +105,7 @@ anchors <- genes |>
   slice_max(end - start, n = 1, with_ties = FALSE) |>
   ungroup() |>
   select(accver, start, end)
-p_collinear <- ggchord(prepare_ggchord_data(seq_data = seqs, ribbon_data = links, gene_data = genes)) +
+p_collinear <- ggchord(prepare_ggchord_data(seq_data = seqs, ribbon_data = links, feature_data = genes)) +
   geom_link_ribbon(aes(ribbon_fill = qaccver), alpha = .7) +
   scale_ribbon_fill_manual(values = seq_palette, guide = "none") +
   geom_seq() +
@@ -203,7 +203,7 @@ local_homologs <- focus_ggchord_data(homolog_seq, homologs$data, cluster_feature
 p_homologs <- ggchord(local_homologs$seq_data) +
   geom_seq() +
   geom_link_ribbon(data = local_homologs$ribbon_data, fill = "grey75") +
-  geom_feature(preset = 'gene', data = local_homologs$gene_data) +
+  geom_feature(preset = 'gene', data = local_homologs$feature_data) +
   geom_seq_break() +
   coord_collinear() +
   scale_seq_position_continuous(coordinates = "source")
@@ -251,7 +251,7 @@ p_migrated <- ggchord(plasmid_seq) +
   geom_feature(data = features, shape = "block", width = .05) +
   geom_feature_label(data = features, label_rotation = 0) +
   coord_circular()
-p_offsets <- ggchord(prepare_ggchord_data(seqs, gene_data = genes)) +
+p_offsets <- ggchord(prepare_ggchord_data(seqs, feature_data = genes)) +
   geom_seq() +
   geom_feature(preset = 'gene', position = position_strand(c("+" = .1, "-" = -.2)))
 # ---- save ----
@@ -843,7 +843,7 @@ first_sequences <- seq_data_example |>
   select(accver, length)
 first_genes <- gene_data_example |>
   filter(accver %in% ids) |>
-  transmute(accver, start, end, strand = source_strand)
+  transmute(accver, start, end, strand = source_strand, type = "gene")
 first_links <- ribbon_data_example |>
   filter(qaccver %in% ids, saccver %in% ids) |>
   select(qaccver, saccver, qstart, qend, sstart, send)
@@ -851,7 +851,7 @@ first_links <- ribbon_data_example |>
 first_colours <- setNames(c("#E64B35", "#233E4A"), ids)
 p_first <- ggchord(prepare_ggchord_data(
   seq_data = first_sequences, ribbon_data = first_links,
-  gene_data = first_genes)
+  feature_data = first_genes)
 ) +
   geom_link_ribbon(fill = "#82B6AD", alpha = .55) +
   geom_seq(colour = "#233E4A", show.legend = FALSE) +
@@ -965,12 +965,13 @@ p_show_plasmid
 # Quantitative GC tracks remain in the dedicated tracks tutorial.
 # The flagship comparison reserves the space for genes and routed alignments.
 # ---- showcasecollinear ----
-show_linear_features <- flagship_comparison_example$collinear$features
+show_linear_features <- flagship_comparison_example$collinear$features |>
+  mutate(type = "CDS")
 show_adjacent <- flagship_comparison_example$collinear$adjacent_links
 show_cross <- flagship_comparison_example$collinear$cross_links
 show_linear_coord <- coord_collinear(align = "center", orientation = "auto", ratio = 0.7)
 show_cross_controls <- flagship_comparison_example$collinear$route_controls
-p_show_collinear <- ggchord(prepare_ggchord_data(show_sequences, gene_data = show_linear_features)) +
+p_show_collinear <- ggchord(prepare_ggchord_data(show_sequences, feature_data = show_linear_features)) +
   geom_link_ribbon(
     aes(ribbon_fill = pident),
     data = show_adjacent,
@@ -1178,13 +1179,13 @@ library(ggchord)
 library(dplyr)
 source_gene <- gene_data_example |>
   filter(accver == "OQ646790.1", start == 43765) |>
-  transmute(accver, start, end, strand = source_strand, anno)
+  transmute(accver, start, end, strand = source_strand, type = "gene", anno)
 gene_window <- focus_ggchord_data(
   seq_data = filter(seq_data_example, accver == "OQ646790.1"),
-  gene_data = source_gene,
+  feature_data = source_gene,
   loci = data.frame(accver = "OQ646790.1", start = 43000, end = 47000)
 )
-gene_base <- ggchord(prepare_ggchord_data(gene_window$seq_data, gene_data = gene_window$gene_data)) +
+gene_base <- ggchord(prepare_ggchord_data(gene_window$seq_data, feature_data = gene_window$feature_data)) +
   geom_seq() +
   scale_seq_position_continuous(coordinates = "source") +
   coord_collinear()
@@ -1587,8 +1588,8 @@ invisible(ggplot2::ggplot_build(p_scale_preset))
 
 # ---- comparescalegenering ----
 scale_gene_data <- gene_data_example |>
-  transmute(accver, start, end, strand = source_strand)
-p_scale_gene <- ggchord(prepare_ggchord_data(scale_seqs, gene_data = scale_gene_data)) + geom_seq() +
+  transmute(accver, start, end, strand = source_strand, type = "gene")
+p_scale_gene <- ggchord(prepare_ggchord_data(scale_seqs, feature_data = scale_gene_data)) + geom_seq() +
   geom_feature(preset = 'gene') + scale_gene_fill_manual(values = c("+" = "#CE1536", "-" = "#346B9D")) + coord_chord()
 p_scale_ring <- ggchord(scale_seqs) + geom_seq(aes(seq_ring = accver)) +
   scale_seq_ring_manual(values = setNames(c(0.8, 1, 1.2, 1.4), scale_ids)) + coord_chord()

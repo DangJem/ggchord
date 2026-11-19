@@ -15,10 +15,10 @@ links <- tibble(
 features <- tibble(
   accver = c("A", "A", "B", "B"),
   start = c(130, 730, 130, 730), end = c(260, 860, 260, 860),
-  strand = c("+", "+", "+", "+"), anno = c("A left", "A reversed", "B left", "B right")
+  type = "gene", strand = c("+", "+", "+", "+"), anno = c("A left", "A reversed", "B left", "B right")
 )
 view <- segment_ggchord_data(sequences, links, features, windows)
-segmented_plot <- ggchord(prepare_ggchord_data(view$seq_data, view$ribbon_data, view$gene_data)) +
+segmented_plot <- ggchord(prepare_ggchord_data(view$seq_data, view$ribbon_data, view$feature_data)) +
   geom_seq() +
   geom_link_ribbon(fill = "#83AEB8") +
   geom_feature(preset = 'gene') +

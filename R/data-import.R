@@ -433,7 +433,7 @@ read_gff3_single <- function(file, feature_types = "CDS",
   out
 }
 
-#' Read one or more GFF3 files into gene_data format
+#' Read feature annotations from one or more GFF3 files
 #'
 #' `file` reads a single GFF3 file; `files` reads multiple files at once and
 #' combines them. `files` accepts a character vector of literal paths and/or

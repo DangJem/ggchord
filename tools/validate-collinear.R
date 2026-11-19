@@ -138,7 +138,7 @@ focused <- focus_ggchord_data(collinear_sequences, collinear_alignments,
   collinear_genes, loci = data.frame(accver = collinear_sequences$accver,
     start = c(80, 90, 100), end = c(800, 800, 900)))
 focused_plot <- ggchord(prepare_ggchord_data(focused$seq_data, focused$ribbon_data,
-  focused$gene_data), validate = "none") + geom_seq() +
+  focused$feature_data), validate = "none") + geom_seq() +
   geom_link_ribbon() + geom_feature(preset = 'gene') + coord_collinear()
 focused_out <- export_ggchord_layout(focused_plot,
   include = c("seq", "ribbon", "gene"), original_data = TRUE)

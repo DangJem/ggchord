@@ -97,8 +97,8 @@ seqs <- seq_data_example |>
 data(gene_data_example)
 genes <- gene_data_example |>
   slice_head(n = 3) |>
-  transmute(accver, start, end, strand = source_strand, anno)
-ggchord(prepare_ggchord_data(seq_data = seqs, gene_data = genes)) +
+  transmute(accver, start, end, strand = source_strand, type = "gene", anno)
+ggchord(prepare_ggchord_data(seq_data = seqs, feature_data = genes)) +
   geom_seq() +
   geom_feature(preset = "gene") +
   geom_gene_label(id = "gene-names")

@@ -70,7 +70,7 @@ ggchord_register_layers <- function(plot) {
         ggchord_stop("Layer '", id, "' has multiple eligible inputs: ", paste(candidates, collapse = ", "),
           ". Select one with data = prepared$", candidates[length(candidates)], ".")
       input <- if (kind == "links") plot$ggchord$data$ribbon_data else
-        plot$ggchord$data$feature_data %||% plot$ggchord$data$gene_data
+        plot$ggchord$data$feature_data
       if (is.null(input) && is.null(copy$ggchord_input_data))
         ggchord_stop("Layer '", id, "' requires ", kind, ". Supply a layer data table or prepare_ggchord_data().")
     }

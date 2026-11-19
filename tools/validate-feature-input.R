@@ -48,16 +48,16 @@ check("gene_labels_default_selection", {
   out <- export(base + geom_gene_label() + coord_collinear())
   stopifnot(all(out$layer_sources$source_id == "feature:1"))
 })
-check("prepared_directional_genes", {
-  genes <- features[1, c("accver", "start", "end", "strand", "anno")]
+check("prepared_classified_genes", {
+  genes <- features[1, c("accver", "start", "end", "strand", "anno", "type")]
   prepared <- prepare_ggchord_data(seqs, NULL, genes)
   out <- export(ggchord(prepared) + geom_seq() + geom_feature(preset = 'gene'))
   stopifnot(setequal(unique(out$gene$start), genes$start),
-    all(out$layer_sources$source_id == "gene:1"))
+    all(out$layer_sources$source_id == "feature:1"))
 })
 check("input_errors_and_validation", {
   expect_error(ggchord(prepare_ggchord_data(seqs, gene_data = features, feature_data = features)),
-    "only feature_data or gene_data")
+    "unused argument")
   expect_error(ggchord(prepare_ggchord_data(seqs, feature_data = transform(features, strand = "unknown"))), "strand")
   v <- validate_ggchord_data(seqs, feature_data = transform(features, accver = "missing"))
   stopifnot(!v$valid, all(v$errors$table == "feature"), identical(v$data_summary$n_feature, 5L))

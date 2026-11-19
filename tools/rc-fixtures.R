@@ -53,8 +53,8 @@ rc_fixtures <- function() {
   view <- segment_ggchord_data(refs[c("accver", "length")], homology, cds,
     windows = windows)
   linear <- ggchord(prepare_ggchord_data(view$seq_data, view$ribbon_data)) + geom_seq() +
-    geom_link_ribbon(fill = "#8971BB") + geom_feature(data = view$gene_data) +
-    geom_feature_label(placement = 'repel', data = view$gene_data) +
+    geom_link_ribbon(fill = "#8971BB") + geom_feature(data = view$feature_data) +
+    geom_feature_label(placement = 'repel', data = view$feature_data) +
     coord_collinear(segments = view$segments) +
     scale_seq_position_continuous(coordinates = "source")
   starts <- seq.int(1L, s$length, by = 100L)

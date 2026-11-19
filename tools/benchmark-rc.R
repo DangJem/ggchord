@@ -26,7 +26,7 @@ local({
       measure = "single build, fresh plot cache; object footprint is not peak allocation",
       sequence_rows = switch(case, chord = nrow(f$seqs), collinear = nrow(f$view$seq_data), 1L),
       primary_rows = switch(case, chord = nrow(f$links), circular = nrow(f$features) + nrow(f$primers) + nrow(f$sites),
-        collinear = nrow(f$view$gene_data) + nrow(f$view$ribbon_data), track = nrow(f$bins)),
+        collinear = nrow(f$view$feature_data) + nrow(f$view$ribbon_data), track = nrow(f$bins)),
       R = R.version.string, ggplot2 = as.character(utils::packageVersion("ggplot2")),
       platform = R.version$platform, device = "PDF metrics 8x8 in; Helvetica; no output file",
       revision = system2("git", c("rev-parse", "HEAD"), stdout = TRUE))

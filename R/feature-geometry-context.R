@@ -2,7 +2,7 @@
 # sharing on plot-owned layers while the caller's original tables are available.
 ggchord_register_annotation_sources <- function(plot, old_count) {
   inherited <- if (length(plot$ggchord$candidates$features) == 1L)
-    plot$ggchord$data$feature_data %||% plot$ggchord$data$gene_data
+    plot$ggchord$data$feature_data
   annotation_data <- function(layer) {
     if (isTRUE(layer$ggchord_params$type %in% c("gene", "gene_label", "gene_label_repel")))
       layer$ggchord_input_data %||% inherited

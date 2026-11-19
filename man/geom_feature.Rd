@@ -42,8 +42,9 @@ their internal level codes. Coordinates must resolve to finite numbers.
 \code{strand}, \code{directionality} or \code{direction} may contain
 \code{"forward"}, \code{"reverse"}, \code{"bidirectional"}, or
 \code{"none"}.
-When omitted, uses the full constructor \code{feature_data} (or compatible
-\code{gene_data}). Other layers never remove records from this default input.}
+With one prepared annotation table, the default preset draws all rows.
+The gene preset inherits rows classified as gene or CDS. When several
+tables qualify, pass the selected table explicitly.}
 
 \item{shape}{Fixed feature geometry. An explicitly supplied shape takes
 precedence over \code{aes(feature_shape = ...)}: \code{"arrow"},

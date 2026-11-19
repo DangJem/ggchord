@@ -29,12 +29,12 @@
 #'   \item{Validate}{\code{validate_ggchord_data()} reports all collected issues
 #'     without changing input. \code{strict = TRUE} stops after collection if
 #'     errors exist. Logical argument errors stop immediately. This validator
-#'     describes constructor seq/ribbon/gene tables and the unified
+#'     describes the reference and paired-interval tables and the primary
 #'     `feature_data` input, including unknown and bidirectional strands. Coordinate
 #'     checks do not prove an alignment or a biological annotation.}
 #'   \item{Clean}{\code{clean_ggchord_data()} explicitly applies selected
-#'     policies and reports original rows and old/new values. Its historical
-#'     \code{reversed_interval = "sort"} is retained; use \code{"keep"} for
+#'     policies and reports original rows and values before and after cleaning.
+#'     The default is \code{reversed_interval = "sort"}. Use \code{"keep"} for
 #'     directional links or circular-origin features. Sorting cannot recover
 #'     their original meaning later. Unknown-ID \code{"keep"} is an audit
 #'     policy, not a guarantee that the result is drawable. NULL means an absent
@@ -52,8 +52,9 @@
 #' Pass `feature_data` to [prepare_ggchord_data()] and give the prepared object
 #' to [ggchord()] to supply default data for generic annotation layers. Gene
 #' layers select explicitly classified gene/CDS records; tRNA/rRNA and
-#' unclassified annotations remain generic features. Prepare can also accept
-#' an untyped directional table as `gene_data`. Supply one annotation input.
+#' unclassified annotations remain generic features. To use an untyped
+#' directional gene table, pass it explicitly to
+#' `geom_feature(data = genes, preset = "gene")`.
 #' Explicit layer data takes priority; mixed gene/feature compositions should
 #' use disjoint data subsets. Independent layers do not remove each other's rows.
 #'
@@ -64,11 +65,9 @@
 #' and restriction layers require nucleotide input. A circular protein layout
 #' is a visual arrangement and does not declare circular biological topology.
 #' \code{start == end} is one base or one residue in the declared unit.
-#' The explicit adapters enforce integral coordinates. Legacy constructor
-#' validation, cleaning and raw focus accept finite numeric positions; their
-#' success alone does not certify integral genomic coordinates. Prefer integral
-#' windows for biological data and use adapters before these legacy entries
-#' when strict integer checks are required.
+#' The explicit adapters enforce integral coordinates. Constructor validation,
+#' cleaning and raw focus accept finite numeric positions. For biological data,
+#' provide integral windows and use an adapter to check integrality.
 #' BEDPE keeps first/second anchors as query/subject, preserves original fields,
 #' and follows paired-object negative-strand endpoint ordering. It does not
 #' infer identity or read support. Unknown anchors fail by default; the explicit
@@ -90,17 +89,16 @@
 #' aggregate endpoint directions. Unknown orientation is kept separate from
 #' known direction in density and deduplication.
 #' Unknown strands remain unknown in
-#' adapters; GFF3's explicit legacy \code{unstranded = "plus"} is an exception,
+#' adapters. GFF3's explicit \code{unstranded = "plus"} assigns a plus strand,
 #' with \code{source_strand} retained. Prefer \code{unstranded = "keep"} and
 #' generic feature layers when direction is unknown.
 #'
 #' Plotting uses a continuous display axis, not a base-cell raster: feature/axis
 #' chord anchors use pos/length, point-link anchors use (pos-1)/length. These
-#' historical graphical offsets do not change stored coordinates. Region highlights
+#' graphical offsets preserve the stored coordinates. Region highlights
 #' use closed intervals with display edges at the lower endpoint minus one and
 #' the upper endpoint. Single-base
-#' features can use a point or widened glyph. No new endpoint convention is
-#' imposed on plots in this data-workflow revision.
+#' features can use a point or widened glyph.
 #'
 #' @section Selection, projection and aggregation:
 #' Focus crops all selected tables and composes earliest source coordinates.

@@ -7,11 +7,10 @@
 focus_ggchord_data(
   seq_data,
   ribbon_data = NULL,
-  gene_data = NULL,
+  feature_data = NULL,
   loci,
   expand = 0,
-  boundary = c("trim", "drop"),
-  feature_data = NULL
+  boundary = c("trim", "drop")
 )
 }
 \arguments{
@@ -19,7 +18,7 @@ focus_ggchord_data(
 
 \item{ribbon_data}{Optional ggchord alignment table.}
 
-\item{gene_data}{Optional gene or feature table.}
+\item{feature_data}{Optional gene or feature table.}
 
 \item{loci}{Data frame containing \code{accver}, \code{start}, and \code{end}, and
 optionally \code{locus_id}.}
@@ -29,17 +28,15 @@ one value per locus.}
 
 \item{boundary}{Boundary policy. \code{"trim"} clips partially overlapping genes
 and alignments; \code{"drop"} keeps only rows fully contained in selected loci.}
-
-\item{feature_data}{Unified annotation input; mutually exclusive with gene_data.}
 }
 \value{
-A list of focused \code{seq_data}, \code{ribbon_data}, \code{gene_data}, normalized
+A list of focused \code{seq_data}, \code{ribbon_data}, \code{feature_data}, normalized
 \code{loci}, and a compact \code{report} including retained/dropped source rows and
 truncated output rows. \code{.source_origin} is the original genomic position
 corresponding to local position one, including after repeated focusing.
 }
 \description{
-Crops sequence, gene and ribbon tables together and relocates retained
+Crops sequence, feature and ribbon tables together and relocates retained
 coordinates to start at one in each output locus. Multiple loci from the
 same source sequence are supported; provide a unique \code{locus_id} column to
 control their output sequence IDs.

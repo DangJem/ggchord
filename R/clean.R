@@ -1,7 +1,7 @@
 # clean.R - conservative, report-driven data cleaning for ggchord inputs
 #
 # v0.7.0: clean_ggchord_data() applies explicit, per-problem policies to
-# seq/ribbon/gene data and returns the cleaned tables plus a full report of
+# seq/ribbon/feature data and returns the cleaned tables plus a full report of
 # every change (original row number, reason, original/new values, action).
 # The user's input objects are never modified.
 
@@ -23,16 +23,16 @@
 #'   \code{unknown_id}.
 #' @param ribbon_data data.frame/tibble or \code{NULL}, optional. Alignment
 #'   results. Other input types are rejected rather than treated as absent.
-#' @param gene_data data.frame/tibble or \code{NULL}, optional. Gene annotation
+#' @param feature_data data.frame/tibble or \code{NULL}, optional. Feature annotation
 #'   data. Other input types are rejected rather than treated as absent.
 #' @param unknown_id Character, default \code{"drop"}. Policy for rows whose
-#'   sequence ID in \code{ribbon_data} or \code{gene_data} is missing, empty or
+#'   sequence ID in \code{ribbon_data} or \code{feature_data} is missing, empty or
 #'   unknown: \code{"drop"} removes them,
 #'   \code{"error"} stops with a message, \code{"keep"} leaves them unchanged.
 #'   A kept row without a reference sequence is reported, but its coordinates
 #'   and annotations are not cleaned and it is not guaranteed to be drawable.
 #'   IDs are never guessed or replaced. Other structural checks, including
-#'   finite numeric coordinates and valid gene strands, still apply.
+#'   finite numeric coordinates and valid feature strands, still apply.
 #' @param out_of_range Character, default \code{"clip"}. Policy for coordinates
 #'   outside \code{[1, sequence length]}: \code{"clip"} clamps them,
 #'   \code{"drop"} removes the row, \code{"error"} stops, \code{"keep"} leaves
@@ -50,19 +50,18 @@
 #'   \code{"drop"} removes the row, \code{"error"} stops, \code{"keep"} leaves
 #'   them unchanged.
 #' @param empty_annotation Character, default \code{"keep"}. Policy for
-#'   missing/empty \code{anno} in gene data: \code{"replace"} fills them with
+#'   missing/empty \code{anno} in feature data: \code{"replace"} fills them with
 #'   \code{replacement_annotation}, \code{"drop"} removes the row,
 #'   \code{"keep"} leaves them unchanged.
 #' @param replacement_annotation Character, default \code{"unannotated"}.
 #'   Replacement annotation used when \code{empty_annotation = "replace"}.
 #'
 #' @return A list with four components: \code{seq_data}, \code{ribbon_data},
-#'   \code{gene_data} (cleaned copies) and \code{report} (a data.frame with
+#'   \code{feature_data} (cleaned copies) and \code{report} (a data.frame with
 #'   columns \code{table}, \code{row} (original row number), \code{column},
 #'   \code{reason}, \code{original_value}, \code{new_value} and
 #'   \code{action}).
 #' @seealso \code{\link{ggchord_data_contract}}
-#' @param feature_data Unified annotation input; mutually exclusive with gene_data.
 #' @export
 #'
 #' @examples
@@ -82,27 +81,16 @@
 clean_ggchord_data <- function(
     seq_data,
     ribbon_data = NULL,
-    gene_data = NULL,
+    feature_data = NULL,
     unknown_id = c("drop", "error", "keep"),
     out_of_range = c("clip", "drop", "error", "keep"),
     reversed_interval = c("sort", "drop", "error", "keep"),
     invalid_pident = c("clip", "drop", "error", "keep"),
     empty_annotation = c("keep", "drop", "replace"),
-    replacement_annotation = "unannotated", feature_data = NULL) {
-  if (!is.null(feature_data)) {
-    if (!is.null(gene_data)) ggchord_stop("Supply only feature_data or gene_data")
-    features <- ggchord_normalize_feature_input(feature_data)
-    attr(features, "ggchord_unified_feature") <- TRUE
-    result <- clean_ggchord_data(seq_data, ribbon_data, features, unknown_id, out_of_range, reversed_interval, invalid_pident, empty_annotation, replacement_annotation)
-    result$feature_data <- result$gene_data
-    result$gene_data <- NULL
-    result$report$table[result$report$table == "gene"] <- "feature"
-    return(result)
-  }
+    replacement_annotation = "unannotated") {
 
-  unified_feature <- isTRUE(attr(gene_data, "ggchord_unified_feature"))
   seq_data <- ggchord_normalize_accver(seq_data)
-  gene_data <- ggchord_normalize_accver(gene_data)
+  feature_data <- ggchord_normalize_feature_input(feature_data)
 
   old_error <- ggchord_disable_debug()
   on.exit(options(error = old_error), add = TRUE)
@@ -144,7 +132,7 @@ clean_ggchord_data <- function(
   # Copies: the user's objects are never modified.
   seq_out <- seq_data
   ribbon_out <- ribbon_data
-  gene_out <- gene_data
+  feature_out <- feature_data
 
   report_rows <- list()
   report_chunk <- function(table, row, column, reason,
@@ -385,31 +373,31 @@ clean_ggchord_data <- function(
   }
 
   # -------------------------------------------------------------------------
-  # gene_data
+  # feature_data
   # -------------------------------------------------------------------------
-  if (!is.null(gene_out)) {
-    if (!is.data.frame(gene_out)) {
-      ggchord_stop("clean_ggchord_data(): gene_data must be a data.frame or NULL", call. = FALSE)
+  if (!is.null(feature_out)) {
+    if (!is.data.frame(feature_out)) {
+      ggchord_stop("clean_ggchord_data(): feature_data must be a data.frame or NULL", call. = FALSE)
     }
     req <- c("accver", "start", "end", "strand")
-    missing <- setdiff(req, colnames(gene_out))
+    missing <- setdiff(req, colnames(feature_out))
     if (length(missing) > 0) {
-      ggchord_stop("clean_ggchord_data(): gene_data is missing required column(s): ",
+      ggchord_stop("clean_ggchord_data(): feature_data is missing required column(s): ",
            paste(missing, collapse = ", "), call. = FALSE)
     }
-    if (!is.numeric(gene_out$start) || !is.numeric(gene_out$end) ||
-        any(!is.finite(gene_out$start)) || any(!is.finite(gene_out$end))) {
-      ggchord_stop("clean_ggchord_data(): gene_data$start and $end must contain finite numbers",
+    if (!is.numeric(feature_out$start) || !is.numeric(feature_out$end) ||
+        any(!is.finite(feature_out$start)) || any(!is.finite(feature_out$end))) {
+      ggchord_stop("clean_ggchord_data(): feature_data$start and $end must contain finite numbers",
            call. = FALSE)
     }
-    if (anyNA(gene_out$strand) || any(!gene_out$strand %in% if (unified_feature) c("+", "-", ".", "+/-") else c("+", "-"))) {
-      ggchord_stop("clean_ggchord_data(): gene_data$strand can only be '+' or '-'",
+    if (anyNA(feature_out$strand) || any(!feature_out$strand %in% c("+", "-", ".", "+/-"))) {
+      ggchord_stop("clean_ggchord_data(): feature_data$strand must be '+', '-', '.' or '+/-'",
            call. = FALSE)
     }
-    drop <- rep(FALSE, nrow(gene_out))
-    n <- nrow(gene_out)
+    drop <- rep(FALSE, nrow(feature_out))
+    n <- nrow(feature_out)
 
-    raw_id <- gene_out$accver
+    raw_id <- feature_out$accver
     id <- as.character(raw_id)
     missing_id <- is.na(raw_id) | is.na(id)
     bad <- missing_id | !nzchar(id) | !id %in% names(seq_lens)
@@ -417,22 +405,22 @@ clean_ggchord_data <- function(
       rows <- which(bad)
       if (unknown_id == "error") {
         ggchord_stop(sprintf(paste0("clean_ggchord_data(): missing, empty or unknown sequence ID(s) in ",
-                            "gene_data row(s) %s (column accver): %s; choose ",
+                            "feature_data row(s) %s (column accver): %s; choose ",
                             "unknown_id = 'drop' or 'keep'"),
                      paste(rows, collapse = ", "),
                      describe_unknown_ids(id[bad], missing_id[bad])), call. = FALSE)
       } else if (unknown_id == "drop") {
         drop[bad] <- TRUE
-        report_chunk("gene", rows, "accver", "unknown sequence ID",
+        report_chunk("feature", rows, "accver", "unknown sequence ID",
                      id[bad], NA_character_, "drop")
       } else {
-        report_chunk("gene", rows, "accver", "unknown sequence ID (kept)",
+        report_chunk("feature", rows, "accver", "unknown sequence ID (kept)",
                      id[bad], id[bad], "keep")
       }
     }
 
     for (i in which(!drop)) {
-      row <- gene_out[i, ]
+      row <- feature_out[i, ]
       sid_ <- as.character(row$accver)
       if (anyNA(row$accver) || !sid_ %in% names(seq_lens)) {
         # unknown_id = "keep": without a reference length there is no safe
@@ -446,7 +434,7 @@ clean_ggchord_data <- function(
 
       if (out_of_range == "clip" && (max(st, en) < 1 || min(st, en) > len)) {
         drop[i] <- TRUE
-        report_chunk("gene", i, "start/end",
+        report_chunk("feature", i, "start/end",
                      "interval has no overlap with its sequence",
                      sprintf("start=%s, end=%s", st, en), NA_character_, "drop")
         next
@@ -454,41 +442,41 @@ clean_ggchord_data <- function(
 
       if (st < 1 || st > len) {
         if (out_of_range == "error") {
-          ggchord_stop(sprintf("clean_ggchord_data(): gene_data$start row %d is %s (outside [1, %d]); choose out_of_range = 'clip', 'drop' or 'keep'",
+          ggchord_stop(sprintf("clean_ggchord_data(): feature_data$start row %d is %s (outside [1, %d]); choose out_of_range = 'clip', 'drop' or 'keep'",
                        i, st, len), call. = FALSE)
         } else if (out_of_range == "drop") {
           drop[i] <- TRUE
-          report_chunk("gene", i, "start", "coordinate out of range",
+          report_chunk("feature", i, "start", "coordinate out of range",
                        as.character(st), NA_character_, "drop")
           next
         } else if (out_of_range == "clip") {
-          report_chunk("gene", i, "start", "coordinate clipped to [1, length]",
+          report_chunk("feature", i, "start", "coordinate clipped to [1, length]",
                        as.character(st), as.character(min(max(st, 1), len)),
                        "clip")
           st <- min(max(st, 1), len)
           changed <- TRUE
         } else {
-          report_chunk("gene", i, "start", "coordinate out of range (kept)",
+          report_chunk("feature", i, "start", "coordinate out of range (kept)",
                        as.character(st), as.character(st), "keep")
         }
       }
       if (en < 1 || en > len) {
         if (out_of_range == "error") {
-          ggchord_stop(sprintf("clean_ggchord_data(): gene_data$end row %d is %s (outside [1, %d]); choose out_of_range = 'clip', 'drop' or 'keep'",
+          ggchord_stop(sprintf("clean_ggchord_data(): feature_data$end row %d is %s (outside [1, %d]); choose out_of_range = 'clip', 'drop' or 'keep'",
                        i, en, len), call. = FALSE)
         } else if (out_of_range == "drop") {
           drop[i] <- TRUE
-          report_chunk("gene", i, "end", "coordinate out of range",
+          report_chunk("feature", i, "end", "coordinate out of range",
                        as.character(en), NA_character_, "drop")
           next
         } else if (out_of_range == "clip") {
-          report_chunk("gene", i, "end", "coordinate clipped to [1, length]",
+          report_chunk("feature", i, "end", "coordinate clipped to [1, length]",
                        as.character(en), as.character(min(max(en, 1), len)),
                        "clip")
           en <- min(max(en, 1), len)
           changed <- TRUE
         } else {
-          report_chunk("gene", i, "end", "coordinate out of range (kept)",
+          report_chunk("feature", i, "end", "coordinate out of range (kept)",
                        as.character(en), as.character(en), "keep")
         }
       }
@@ -496,22 +484,22 @@ clean_ggchord_data <- function(
 
       if (st > en) {
         if (reversed_interval == "error") {
-          ggchord_stop(sprintf("clean_ggchord_data(): reversed interval in gene_data row %d (start > end); choose reversed_interval = 'sort', 'drop' or 'keep'",
+          ggchord_stop(sprintf("clean_ggchord_data(): reversed interval in feature_data row %d (start > end); choose reversed_interval = 'sort', 'drop' or 'keep'",
                        i), call. = FALSE)
         } else if (reversed_interval == "drop") {
           drop[i] <- TRUE
-          report_chunk("gene", i, "start/end", "reversed interval (start > end)",
+          report_chunk("feature", i, "start/end", "reversed interval (start > end)",
                        sprintf("start=%s, end=%s", st, en), NA_character_, "drop")
           next
         } else if (reversed_interval == "sort") {
-          report_chunk("gene", i, "start/end",
+          report_chunk("feature", i, "start/end",
                        "reversed interval sorted (original direction recorded)",
                        sprintf("start=%s, end=%s", st, en),
                        sprintf("start=%s, end=%s", en, st), "sort")
           tmp <- st; st <- en; en <- tmp
           changed <- TRUE
         } else {
-          report_chunk("gene", i, "start/end", "reversed interval (kept)",
+          report_chunk("feature", i, "start/end", "reversed interval (kept)",
                        sprintf("start=%s, end=%s", st, en),
                        sprintf("start=%s, end=%s", st, en), "keep")
         }
@@ -520,31 +508,31 @@ clean_ggchord_data <- function(
       if (length(anno) && (is.na(anno) || !nzchar(anno))) {
         if (empty_annotation == "drop") {
           drop[i] <- TRUE
-          report_chunk("gene", i, "anno", "missing or empty annotation",
+          report_chunk("feature", i, "anno", "missing or empty annotation",
                        ifelse(is.na(anno), NA_character_, ""),
                        NA_character_, "drop")
           next
         } else if (empty_annotation == "replace") {
-          report_chunk("gene", i, "anno", "missing or empty annotation replaced",
+          report_chunk("feature", i, "anno", "missing or empty annotation replaced",
                        ifelse(is.na(anno), NA_character_, ""),
                        replacement_annotation, "replace")
           anno <- replacement_annotation
           changed <- TRUE
         } else {
-          report_chunk("gene", i, "anno", "missing or empty annotation (kept)",
+          report_chunk("feature", i, "anno", "missing or empty annotation (kept)",
                        ifelse(is.na(anno), NA_character_, ""),
                        ifelse(is.na(anno), NA_character_, ""), "keep")
         }
       }
 
       if (changed) {
-        gene_out[i, "start"] <- st
-        gene_out[i, "end"] <- en
-        if (length(anno)) gene_out[i, "anno"] <- anno
+        feature_out[i, "start"] <- st
+        feature_out[i, "end"] <- en
+        if (length(anno)) feature_out[i, "anno"] <- anno
       }
     }
 
-    gene_out <- gene_out[!drop, , drop = FALSE]
+    feature_out <- feature_out[!drop, , drop = FALSE]
   }
 
   report <- if (length(report_rows) > 0) {
@@ -561,7 +549,7 @@ clean_ggchord_data <- function(
   structure(list(
     seq_data = seq_out,
     ribbon_data = ribbon_out,
-    gene_data = gene_out,
+    feature_data = feature_out,
     report = report
   ), class = "ggchord_clean")
 }
@@ -589,9 +577,8 @@ print.ggchord_clean <- function(x, ...) {
   cat(sprintf("ribbon_data: %s row(s)
 ",
               if (is.null(x$ribbon_data)) "NULL" else nrow(x$ribbon_data)))
-  field <- if ("feature_data" %in% names(x)) "feature_data" else "gene_data"
-  cat(sprintf("%s: %s row(s)\n", field,
-              if (is.null(x[[field]])) "NULL" else nrow(x[[field]])))
+  cat(sprintf("feature_data: %s row(s)\n",
+              if (is.null(x$feature_data)) "NULL" else nrow(x$feature_data)))
   cat(sprintf("report: %s change(s)
 ", nrow(x$report)))
   if (nrow(x$report) > 0) {

@@ -7,12 +7,11 @@
 validate_ggchord_data(
   seq_data,
   ribbon_data = NULL,
-  gene_data = NULL,
+  feature_data = NULL,
   strict = FALSE,
   check_coordinates = TRUE,
   check_duplicates = TRUE,
-  check_self_links = TRUE,
-  feature_data = NULL
+  check_self_links = TRUE
 )
 }
 \arguments{
@@ -22,30 +21,26 @@ validate_ggchord_data(
 \item{ribbon_data}{data.frame/tibble, optional. Alignment results (columns
 \code{qaccver}, \code{saccver}, \code{qstart}, \code{qend}, \code{sstart}, \code{send}).}
 
-\item{gene_data}{data.frame/tibble, optional. Gene annotation data (columns
-\code{accver}, \code{start}, \code{end}, \code{strand}; \code{anno} is optional).}
+\item{feature_data}{Optional annotation table with \code{accver}, \code{start} and
+\code{end}. Missing strand is unknown;
+\code{+}, \code{-}, \code{.}, and \verb{+/-} are accepted. Reports use table \code{"feature"} and
+\code{data_summary$n_feature}; the input is never modified.}
 
 \item{strict}{Logical. When \code{TRUE}, collect issues and then stop if any
 severe problem is found. When \code{FALSE} (default), return the full
 diagnostic report without stopping.}
 
 \item{check_coordinates}{Logical, default \code{TRUE}. Whether to check that
-ribbon/gene coordinates stay inside \code{[1, sequence length]}.}
+ribbon/feature coordinates stay inside \code{[1, sequence length]}.}
 
 \item{check_duplicates}{Logical, default \code{TRUE}. Whether to look for
 fully duplicated, near-duplicated and highly overlapping records.
 Reciprocal overlap requires the intersection to cover at least 90 percent
-of each interval, including descending ribbon endpoints. Reversed feature
-bounds may cross a circular origin and are excluded from linear overlap
-diagnostics; exact duplicates are still reported.}
+of each interval, including descending ribbon endpoints. These overlap checks apply to ribbons.
+For features, only exact duplicates are reported.}
 
 \item{check_self_links}{Logical, default \code{TRUE}. Whether to flag
 alignment rows where \code{qaccver == saccver}.}
-
-\item{feature_data}{Unified annotation table, mutually exclusive with
-\code{gene_data}. Requires \code{accver}, \code{start}, \code{end}. Missing strand is unknown;
-\code{+}, \code{-}, \code{.}, and \verb{+/-} are accepted. Reports use table \code{"feature"} and
-\code{data_summary$n_feature}; the input is never modified.}
 }
 \value{
 A \code{"ggchord_validation"} object (a list) with at least:
@@ -55,7 +50,7 @@ A \code{"ggchord_validation"} object (a list) with at least:
 column, message).}
 \item{\code{warnings}}{data.frame of non-severe issues (same columns).}
 \item{\code{summary}}{Per-category counts (table, category, severity, n).}
-\item{\code{data_summary}}{Counts of sequences/ribbons/genes, unknown
+\item{\code{data_summary}}{Counts of sequences/ribbons/features, unknown
 IDs, out-of-range rows, etc.}
 \item{\code{invalid_rows}}{Named list of original row numbers per
 problem category.}
@@ -66,7 +61,7 @@ actions.}
 }
 \description{
 Performs structured validation of \code{seq_data}, \code{ribbon_data} and
-\code{gene_data} so that problems can be found, understood and fixed before
+\code{feature_data} so that problems can be found, understood and fixed before
 plotting. The result is a \code{"ggchord_validation"} object with a
 \code{valid} flag, \code{errors} (severe problems that make the plot
 misleading), \code{warnings} (drawable but noteworthy issues), per-category
