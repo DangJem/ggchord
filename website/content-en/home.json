@@ -1,10 +1,10 @@
 {
   "hero": {
     "title": {
-      "en": "Plot genome annotations and sequence alignments with ggchord"
+      "en": "Visualize genome annotations and sequence alignments with ggchord"
     },
     "description": {
-      "en": "Built on ggplot2, ggchord lets you compare sequences, draw circular maps for individual sequences, and zoom from an overview into selected regions."
+      "en": "ggchord is an R package built on ggplot2. Compare aligned regions across sequences, show genes and quantitative tracks on a circular map, or connect a region in an overview to its detailed view."
     },
     "actions": [
       {

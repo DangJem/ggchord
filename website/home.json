@@ -2,11 +2,11 @@
   "hero": {
     "title": {
       "zh": "用 ggchord 绘制基因组注释图与序列比对图",
-      "en": "Plot genome annotations and sequence alignments with ggchord"
+      "en": "Visualize genome annotations and sequence alignments with ggchord"
     },
     "description": {
-      "zh": "ggchord 基于 ggplot2，可比较多条序列、绘制单序列圆图，并从总览放大到指定区域。",
-      "en": "Built on ggplot2, ggchord lets you compare sequences, draw circular maps for individual sequences, and zoom from an overview into selected regions."
+      "zh": "ggchord 是基于 ggplot2 的 R 包。你可以比较多条序列的对应区段，在环形图上标注基因、叠加定量轨道，也可以把总览图中的一个区间连到它的局部详图。",
+      "en": "ggchord is an R package built on ggplot2. Compare aligned regions across sequences, show genes and quantitative tracks on a circular map, or connect a region in an overview to its detailed view."
     },
     "actions": [
       {

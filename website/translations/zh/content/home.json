@@ -1,15 +1,15 @@
 {
-  "source_sha256": "27d9ed03e2e07ef857dc0dfc7823a7482f88ff6926ac58651c589f3ef72643fe",
+  "source_sha256": "bbabec1db0b180e23baebf2b07ccd2f80da97e20595e737e97b2bb665ab709f0",
   "strings": {
     "hero/title": {
-      "source_sha256": "5711a3d31769dc9cce08c665c543700ad630d7d7259f704486abce1be417545a",
+      "source_sha256": "d8e4f4495c03286ef18d463414f6e3f6a7ea4a5bb5cc2b36cb796d5650c86936",
       "status": "reviewed",
       "translation": "用 ggchord 绘制基因组注释图与序列比对图"
     },
     "hero/description": {
-      "source_sha256": "35b4207e5bc94b4702bb1e7a15ae2870dd824e5bf6c7648d4e022f50d6b5106a",
+      "source_sha256": "eb4e2398d4ab38cdd90f665e4ee39bb33cbeba8067b4c1fcedc5e5c96f796f54",
       "status": "reviewed",
-      "translation": "ggchord 基于 ggplot2，可比较多条序列、绘制单序列圆图，并从总览放大到指定区域。"
+      "translation": "ggchord 是基于 ggplot2 的 R 包。你可以比较多条序列的对应区段，在环形图上标注基因、叠加定量轨道，也可以把总览图中的一个区间连到它的局部详图。"
     },
     "hero/actions/0/label": {
       "source_sha256": "61e8d44ad423a4a0951b21b9d11440a1c23a881fe79335c367f63be251c64800",
