@@ -1,17 +1,19 @@
-Sankey coordinates display the references in two columns. A ribbon starts at a query interval on the left and ends at its subject interval on the right. Its width at each end follows the recorded span.
+Use a two-column Sankey view when you want to distinguish the query and subject ends of an alignment. Each reference appears in both columns, and each input row connects a left query interval to a right subject interval.
 
 <a id="draw"></a>
 
-## Follow a query across columns {#draw}
+## Trace one band across the two columns {#draw}
 
-The first three input rows link MT108731.1 to MT118296.1. Locate the three intervals on the left copy of the first accession, then follow each band to the right copy of the second. Each reference appears in both columns.
+Keep the two phages and the first HSP. Read the band from MT108731.1 on the upper left to MT118296.1 on the lower right. The two other copies provide coordinate context and carry no endpoint for this record.
 
-{{example:first-sankey}}
+{{example:views-sankey}}
 
 <a id="adapt"></a>
 
-## Interpret width and direction {#adapt}
+## Compare the widths of three HSPs {#adapt}
 
-Width is measured in the coordinate units of the endpoints. An alignment can span different numbers of positions at its two ends. Reciprocal query-to-subject rows count as separate observations when supplied. Adjust `column_gap` to separate the columns.
+Include all three rows in the same query-to-subject direction. Each band takes its width from the span on that particular reference. The broad band covers roughly 25 kb on each side. The shortest covers just 302 bp on each side.
 
-[Four-genome two-column map](case-sankey.md) · [Sankey coordinates](../../man/coord_sankey.Rd)
+{{example:first-sankey}}
+
+A reciprocal row in the input would give a separate band in the opposite sequence pairing. For a denser layout, `column_gap` sets the distance between columns. Next, [compare all four layouts](multi-sequence-views.md) or [plot the HSP as an x–y segment](dotplot.md). The [four-genome Sankey case](case-sankey.md) adds annotations to the repeated references.

@@ -9,6 +9,7 @@ import re
 import shutil
 import subprocess
 import time
+from zipfile import ZIP_DEFLATED, ZipFile, ZipInfo
 from datetime import datetime, timezone
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
@@ -57,6 +58,17 @@ def copy_source_downloads(assets):
         target = assets/'source'/path.relative_to(source)
         target.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(path, target)
+    # The local manual may describe a checkout newer than the published package.
+    # Ship the installable inputs from the same working tree as its examples.
+    package = [ROOT / name for name in ('DESCRIPTION', 'NAMESPACE', 'LICENSE', 'LICENSE.md')]
+    package += list((ROOT/'man').glob('*.Rd'))
+    for folder in ('R', 'data', 'inst', 'src'):
+        package.extend((ROOT/folder).rglob('*'))
+    with ZipFile(assets/'ggchord-source.zip', 'w') as archive:
+        for path in public_files(package):
+            member = ZipInfo('ggchord/' + path.relative_to(ROOT).as_posix())
+            member.external_attr = 0o100644 << 16
+            archive.writestr(member, path.read_bytes(), compress_type=ZIP_DEFLATED)
 
 
 def render_handbook_examples(assets):
@@ -82,7 +94,8 @@ def render_source_snapshot():
     files.update(public_files(ROOT.glob('*.md')))
     files.update(ROOT/row['file'] for row in json.loads((WEB/'home-previews.json').read_text()))
     files.update(p for p in (ROOT/'tools/website').iterdir() if p.suffix in {'.py', '.R'})
-    files.update(p for p in (ROOT/'inst/extdata').rglob('*') if p.is_file())
+    for folder in ('inst','src'):
+        files.update(public_files((ROOT/folder).rglob('*')))
     files.update(public_files((ROOT/'examples').rglob('*')))
     files.update(ROOT/name for name in [
         'DESCRIPTION', 'NAMESPACE', 'LICENSE', '_pkgdown.yml',

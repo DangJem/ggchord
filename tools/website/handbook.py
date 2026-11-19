@@ -6,6 +6,8 @@ from . import ROOT
 
 WEB = ROOT / 'website'
 EXAMPLE = re.compile(r'\{\{example:([a-z0-9-]+)\}\}')
+PREVIEW = re.compile(r'\{\{preview:([a-z0-9-]+)\}\}')
+PREVIEW_GROUP = re.compile(r'(?:\{\{preview:[a-z0-9-]+\}\}\s*)+')
 
 
 def manifest():
@@ -17,14 +19,22 @@ def parameter_directory(lang):
     inventory = json.loads((ROOT / '.site/parameter-directory.json').read_text())
     zh = lang == 'zh'
     records = []
+    sections = {'sequence':'scalar', 'strand':'width', 'strand-offset':'strand',
+                'fixed-label':'scope', 'band':'scope'}
     for row in inventory:
         api, param = row['api'], row['parameter']
         destination = 'reference/' + row['topic'] + '.html#' + row['anchor']
-        supported = param in flexible.get(api, {})
-        flag = '<a class="flexible-label" href="parameters.html">' + ('灵活参数' if zh else 'Flexible parameters') + '</a>' if supported else ''
-        records.append(f'<tr id="param-{html.escape(api)}-{html.escape(param)}" data-flex="{int(supported)}"><td><code>{html.escape(param)}</code></td><td><a href="{destination}"><code>{html.escape(api)}()</code></a></td><td>{flag}</td></tr>')
-    labels = (('搜索参数或函数', '仅显示支持灵活参数的条目', '参数', '函数', '用法') if zh else
-              ('Find a parameter or function', 'Flexible parameters only', 'Parameter', 'Function', 'Usage'))
+        kind = flexible.get(api, {}).get(param)
+        badge = ''
+        if kind:
+            label = '【支持灵活参数】' if zh else '[Flexible parameter]'
+            badge = f'<a class="flexible-parameter" href="parameters.html#{sections[kind]}">{label}</a>'
+        default = f'<code>{html.escape(row["default"])}</code>' if row['default'] else '—'
+        records.append(f'<tr id="param-{html.escape(api)}-{html.escape(param)}" data-flex="{int(bool(kind))}">'
+                       f'<td><span class="argument-term"><code>{html.escape(param)}</code>{badge}</span></td>'
+                       f'<td><a href="{destination}"><code>{html.escape(api)}()</code></a></td><td>{default}</td></tr>')
+    labels = (('搜索参数或函数', '仅显示支持灵活参数的条目', '参数', '函数', '签名默认值') if zh else
+              ('Find a parameter or function', 'Flexible parameters only', 'Parameter', 'Function', 'Signature default'))
     return (f'<div class="parameter-controls" hidden><label>{labels[0]} <input id="directory-query" type="search"></label> '
             f'<label><input id="directory-flex" type="checkbox"> {labels[1]}</label><output aria-live="polite"></output></div>'
             '<table class="parameter-directory"><thead><tr>' + ''.join('<th scope="col">'+s+'</th>' for s in labels[2:]) +
@@ -42,6 +52,22 @@ def expand(text, lang, base='../assets'):
     if '{{case-gallery}}' in text:
         text = text.replace('{{case-gallery}}', case_gallery(lang, base))
     specs = manifest()
+
+    def previews(match):
+        figures = []
+        for name in PREVIEW.findall(match[0]):
+            entry = specs[name]
+            caption = html.escape(entry['caption'][lang], quote=True)
+            image = f'{base}/handbook/{name}.png'
+            target = f'{entry["preview_page"]}.html#example-{name}'
+            width = round(entry['width'] * entry['dpi'])
+            height = round(entry['height'] * entry['dpi'])
+            figures.append(f'<figure class="documentation-figure handbook-preview"><a href="{target}">'
+                           f'<img src="{image}" alt="{caption}" width="{width}" height="{height}" loading="lazy"></a>'
+                           f'<figcaption>{caption}</figcaption></figure>')
+        return '<div class="handbook-previews">' + ''.join(figures) + '</div>\n\n'
+
+    text = PREVIEW_GROUP.sub(previews, text)
 
     def example(match):
         name = match[1]

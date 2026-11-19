@@ -25,6 +25,7 @@ def main():
         parser.error('A loopback preview URL is required')
     site = args.site.resolve()
     urls = {p.relative_to(site).as_posix() for p in site.rglob('*.html')}
+    urls.add('assets/ggchord-source.zip')
     urls.update(read(ROOT/'website/historical-pages.json'))
     urls.update(record['file'] for record in read(site/'assets/examples.json'))
     urls.update('assets/handbook/'+key+'.png' for key in read(site/'assets/handbook/rendered.json'))

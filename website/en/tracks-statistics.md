@@ -1,10 +1,20 @@
+Coverage answers a different question from a precomputed measurement. Given a set of alignments to a subject, what fraction of each query window lies inside at least one of those intervals? Start with a single subject before comparing several.
+
 <span id="interval-coverage"></span>
 
 <a id="coverage"></a>
 
-## Compare window coverage across groups {#coverage}
+## Compute window coverage for one subject {#coverage}
 
-Keep MT108731.1 as the query reference and split its observed HSPs by subject accession. Each panel shows the fraction of query bases covered by that subject in successive 10,000 bp windows. Overlapping HSPs count once toward the union. The common 0–1 axis makes the three panels directly comparable.
+Select the three MT108731.1-to-MT118296.1 HSPs. For each HSP take the lower and upper query coordinates as interval bounds. Set `stat = "coverage"` and `binwidth = 10000` on the column layer. Overlaps count once toward the covered fraction. The rightmost window is only 4,323 bp long because the query ends at 64,323 bp.
+
+{{example:coverage-pair}}
+
+<a id="domains"></a>
+
+## Compare subjects on the same height scale {#domains}
+
+Keep all subjects for the same query, retain their IDs in the interval table and facet by subject. The MT118296.1 panel reproduces the single-subject result. The other panels show where the same query overlaps each of the two other subjects. Shared limits from 0 to 1 let the same bar height mean the same fraction in every panel.
 
 {{example:coverage-facets}}
 
@@ -12,18 +22,10 @@ Keep MT108731.1 as the query reference and split its observed HSPs by subject ac
 
 <a id="members"></a>
 
-## Read the denominator and contributing rows {#members}
+## Check the denominator and contributing HSPs {#members}
 
-A full window divides by 10,000 bases. The last window ends at base 64,323 and divides by 4,323. For subject MT118296.1, the window 20,001–30,000 contains 8,415 covered bases. The exported `source_rows` column identifies the input intervals that contributed.
+Name the coverage layer `windows`, export its statistics and inspect the rows for MT118296.1. The 20,001–30,000 bp window has 8,415 covered bases out of 10,000. The `source_rows` column identifies the contributing rows of the input interval table.
 
 {{example:window-members}}
 
-For single-position observations, `geom_track_bar()` counts records at each position. When the input already has a count column, use `geom_track_col()` and map that column to height.
-
-<a id="domains"></a>
-
-## Choose the height domain {#domains}
-
-For measurements from different biological samples, keep the sample ID in the interval table and facet by that column. The default shared height domain supports comparisons between samples. To examine variation within each panel, request `facet_domain = "panel"` on the track value scale, leave its numerical limits open and keep the local axes visible. For separate plots of the same measure, `shared_track_limits()` computes a range you can pass to each scale.
-
-Mean depth counts overlapping intervals separately. Map `aes(y = after_stat(mean_depth))` on a second track to show it alongside coverage. The two axes have different units.
+For point observations, `geom_track_bar()` counts records per position. For precomputed window measurements, [draw columns directly](tracks.md). To compare mean depth with coverage, map `after_stat(mean_depth)` to height on a separately labelled track. Mean depth includes multiple contributions from overlapping intervals.

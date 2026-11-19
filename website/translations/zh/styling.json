@@ -1,30 +1,35 @@
 {
-  "source_sha256": "70debfda4687a95fc4ae1db2188301db5cbba13b08778c10c09608a5f13ba00b",
+  "source_sha256": "141163d5f696c4d85f0fb25b2b4d2e17d61cab5d935039df4b7c3a6d7ca09edf",
   "blocks": {
-    "1": {
-      "source_sha256": "287d65dc67381da51c207725b2cd4a16ef0f7990dbdfdf7cc5a5a3a5f338b064",
+    "0": {
+      "source_sha256": "441223939bf23846bb93de393b385dedcbc77fb50efc1885f1cad640a2f06432",
       "status": "reviewed",
-      "translation": "## 按特征类别填色 {#categories}\n"
+      "translation": "同样的五条 pUC19 特征可以回答两个问题。统一填色可显示区间的位置。再把填色映射到记录中的注释类型，就能同时看出每个区间属于哪一类。\n"
     },
     "2": {
-      "source_sha256": "33ddd5a6715972360495f46599542a1906739d0eabf95f56f88bd8b447d8d6f9",
+      "source_sha256": "827e00ef7a6297e1f444af8af5231a041b373a8528204f3afbc6bb56f78457e6",
       "status": "reviewed",
-      "translation": "来源列 `type` 的每种类别对应一种填色。用类别名给调色板命名，排序或筛选后各类别仍能找到原来的颜色。标度同时给出图例标题和图例键。\n"
+      "translation": "## 用固定填色观察区间位置 {#styles}\n"
     },
-    "5": {
-      "source_sha256": "6a0e2fca81e9331b33bde8756f697e35a638a97d95694b38e6ed5262d60de9f3",
+    "3": {
+      "source_sha256": "d100f718e20c1e6c2a712f35d764cbcd39c5378b100984419268bdc2aa2d1413",
       "status": "reviewed",
-      "translation": "## 设置图层或整张图的样式 {#styles}\n"
+      "translation": "选取两个 CDS、两个引物结合区和一个多克隆位点，直接在特征图层设置 `fill`。长短区间都呈相同的蓝绿色，靠近起点、已经分道的区间也是如此。\n"
     },
     "6": {
-      "source_sha256": "60a2c34ed5440f262ece4983fb0c440cde0fed441ce13d72c78c24a46f9e9561",
+      "source_sha256": "322e4873475bd51b15da8c4adb6c63145f81c5df75952cf687a3c1978959a1af",
       "status": "reviewed",
-      "translation": "整层同色时直接设置 `fill = \"#2B7580\"`。要表示数据差异，将来源列映射到 `aes()` 中的 `fill`，再选择标度。各个起始映射都读取图层源表。如果用 `aes(accver = ref)` 决定特征位置，想按这个显示参考着色，可同时映射 `fill = ref`。\n"
+      "translation": "## 把类型列映射到具名调色板 {#categories}\n"
     },
     "7": {
-      "source_sha256": "2d1de134eca84b5284dfdc0ce68b1c26237436b54718e95f75f594fe417d8d5a",
+      "source_sha256": "3fdad470400a2158782e0aeef3a1ebca064b29c99faa3e491aca87cb48f8bd5e",
       "status": "reviewed",
-      "translation": "图层设 `show.legend = FALSE` 可隐藏它对所有图例的贡献。点轨道设 `show.legend = c(fill = FALSE)` 则只隐藏这一层对填色图例的贡献。全图字体和图例位置用 `ggplot2::theme()` 调整。数值高度使用[轨道数值标度](tracks.md)，调色板使用填色或颜色标度。\n"
+      "translation": "沿用同样的筛选和位置设置。把 `fill = type` 写进 `aes()`，在 `scale_fill_manual()` 中用三个原始类别值给颜色命名。两个 CDS 使用同一种颜色，两个引物结合区也各自同色，第三种颜色单独标出了多克隆位点。\n"
+    },
+    "9": {
+      "source_sha256": "e13aa5ac24defe5aae6dd41455cd1af9f907ab7c403aa59d631c89a7f675fde3",
+      "status": "reviewed",
+      "translation": "调色板中的名称使重新排序或筛选后的类别仍对应原来的颜色。要调整字体或移动图例，可使用 `ggplot2::theme()`。调整不同序列的半径、偏移或宽度，请继续看[灵活参数](parameters.md)。要用高度表示实测值，可试画 [GC 轨道](tracks.md)。\n"
     }
   }
 }

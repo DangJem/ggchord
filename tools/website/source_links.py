@@ -88,6 +88,8 @@ def site_document(text, figures='../assets'):
     for name,path in assets.items():
         if path not in inverse or name==Path(path).name:inverse[path]=name
     def convert(url):
+        if url == '../../':
+            return figures+'/ggchord-source.zip'
         if url==INPUT_ARCHIVE:return figures+'/tutorial-inputs.zip'
         part=urlsplit(url)
         if part.scheme or part.netloc or not part.path:return url

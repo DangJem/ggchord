@@ -1,15 +1,19 @@
-<a id="anchors"></a>
-
-## Draw all features, label selected records {#anchors}
-
-The pUC19 example contains nine reference features. A stable ID links each label to its source feature. Allocate lanes using the full table, then select the two CDS records for labels. The entity layer has the ID `features`, which the label layer names in `anchor_layer`.
-
-{{example:feature-subset-labels}}
+On a dense circular map, the set of features you want to draw is often larger than the set you want to label. Keep the whole feature table for placement, then select labels by a recorded field.
 
 <a id="placement"></a>
 
-## Choose what controls the geometry {#placement}
+## Locate the features before choosing labels {#placement}
 
-Use `geom_feature()` for intervals with mixed or unknown strand. The gene preset draws directed coding features on nucleotide references with known strand. Supply the source strand when a teaching table also contains a recoded display strand. For same-side lanes, give `position_feature_stack()` a `base_position = position_offset(...)` and a lane direction. The feature key and original interval let subset labels follow those lanes after a reorder.
+Draw the nine pUC19 annotations on their 2,686 bp backbone. Each feature row carries an accession, start and end, and a strand where known. In the cluster near the origin, several short intervals occupy overlapping spans.
 
-For a label drawn at a chosen angle, use fixed placement. For automatic placement, use `placement = "repel"`. Choose `overflow` for text that exceeds the available space. Inspect labels at the [intended export dimensions](output.md).
+{{example:first-circular}}
+
+<a id="anchors"></a>
+
+## Label two CDS while placing all nine features {#anchors}
+
+Keep the source match ID as `feature_id`. The layer named `features` places overlapping intervals in lanes with `position_feature_stack()`. The label layer selects the two CDS and names the original layer in `anchor_layer` so each label follows its feature, even after the selection.
+
+{{example:feature-subset-labels}}
+
+Look for lacZα close to the origin and AmpR across the longer interval on the opposite side of the map. The seven unlabelled records still appear. Next, [map annotation types to a palette](styling.md), or [see how the full pUC19 map labels sites](case-circular.md).

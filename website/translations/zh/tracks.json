@@ -1,30 +1,35 @@
 {
-  "source_sha256": "7b7c6820484bcde0b8d2e9c7538f128dca39a64df709f791ce5d5e77579adb1d",
+  "source_sha256": "2fd18c894e8d88ad19b8ad963cc20ea62f15942118b39365edf55fb2d27cf13f",
   "blocks": {
-    "1": {
-      "source_sha256": "dce6a271277c89f1b01e05353ae694ae849cce6300f81264bc5e701ec76131dc",
+    "0": {
+      "source_sha256": "c1e76d829855cd4f9dd31ec3a13dd7dc7e288e07e5796bfd4bc70b809b0881db",
       "status": "reviewed",
-      "translation": "## 在同一高度轴叠加柱与折线 {#shared-band}\n"
+      "translation": "从随包 pUC19 bedGraph 已经记录的 GC 百分比开始。定量轨道在序列旁为这些数值提供一条高度轴。下面使用可选的 dplyr 包整理表格。\n"
     },
     "2": {
-      "source_sha256": "b28c83307e1ca9892fafb4c4add8a9510e6a96a927dc57b15a4a23b7d000ae8d",
+      "source_sha256": "da48705eb5ef9f91b90497efd878824dd1dc905f2ac91a6c62a50c51f4eb1b16",
       "status": "reviewed",
-      "translation": "随包 bedGraph 记录 pUC19 各窗口的 GC 百分数。柱横跨原窗口，折线连接窗口中点。用 `track_band(\"gc\")` 声明一次物理轨带，两种几何都用 `track = \"gc\"` 选取它。两层高度为 60 的位置都代表 60% GC。\n"
+      "translation": "## 每个实测窗口画一根柱 {#domain}\n"
     },
-    "5": {
-      "source_sha256": "ee787c528941ac45c6b974ff4d2e1be4db800cc48d9e4a5f318c2cf99cb27539",
+    "3": {
+      "source_sha256": "679248c6ef13e8ea3bd5214d072f80ea96e7adb936177b2171d187426a24c4b3",
       "status": "reviewed",
-      "translation": "## 分别控制物理宽度、数值和颜色 {#domain}\n"
+      "translation": "用 `read_bedgraph()` 读取已安装的文件。前三个 100 bp 窗口的 GC 含量分别为 60%、57% 和 59%。声明一个名为 `gc` 的轨道带，从每个窗口的值画一根柱，并把百分比轴设为 0–100。第一根柱从第 1 bp 延伸至第 100 bp。\n"
     },
     "6": {
-      "source_sha256": "c938eea5eb8da1957961e20264bd085bbe9cd5cb3e50ca910d6dfa7c464463ce",
+      "source_sha256": "63ae02afa19d7434c480520b5887f4d386a9c99a51096035553273b8584ce9d7",
       "status": "reviewed",
-      "translation": "轨带的 `width` 决定它在纸上占多宽。`scale_track_value_continuous()` 的 `limits` 决定数值轴范围。更改带宽不影响窗口的 GC 百分数。若想用颜色表示区间数值，可在 tile 层映射 `aes(fill = value)`。有不同单位的第二种度量时，另设一条带及其高度轴。\n"
+      "translation": "## 沿同一组窗口值叠加折线 {#shared-band}\n"
     },
     "7": {
-      "source_sha256": "02c15056be0e6730f59b2a243d284b3d012102c62e525cc1762e52f7a4db47af",
+      "source_sha256": "e3744c248831fcfb8fc0375ad718bfdd20cec7e618915ee9552f97ecb6a1886e",
       "status": "reviewed",
-      "translation": "若需要从区间计算覆盖率再作分组比较，见[逐窗统计与分面](tracks-statistics.md)。\n"
+      "translation": "计算各窗口的中点。保留柱图层，再加一层折线，以中点为横坐标、实测值为纵坐标。两层都指定同一轨道，因此折线会经过每根柱顶边的中点。\n"
+    },
+    "9": {
+      "source_sha256": "da4cf2062a3de65fe23a55bfa592562c429e433f85a352d1752b9a8af623135a",
+      "status": "reviewed",
+      "translation": "轨道带的 `width` 在图上预留 15 mm 空间，数值范围决定高度如何映射到这段空间。加宽轨道可让一个百分点的差异更容易看出，原始测量值仍然相同。下一步可[从比对区间计算覆盖率](tracks-statistics.md)，或[检查 bedGraph 原始列](import-signals.md)。\n"
     }
   }
 }

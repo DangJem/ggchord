@@ -532,6 +532,11 @@
       "output": "navigation.json"
     },
     {
+      "source": "content-en/navigation-ui.json",
+      "translations": "translations/zh/content/navigation-ui.json",
+      "output": "navigation-ui.json"
+    },
+    {
       "source": "content-en/manual-sections.json",
       "translations": "translations/zh/content/manual-sections.json",
       "output": "manual-sections.json"

@@ -1,35 +1,40 @@
 {
-  "source_sha256": "da455720d7a5507f21f194aa41db7ccb9132b5cdb8fc5bd1ab02a74455b1a895",
+  "source_sha256": "d92c467dc9b3c3d0602a44b1daee6e23baa8843fd92117856bd743669984f8da",
   "blocks": {
     "0": {
-      "source_sha256": "878115fa974709b0fb5634f10aa60d31aabc867bec26bb315c4eac6807eb5ab6",
+      "source_sha256": "4b3cc83da66df91cad6ed5c13bf8f70c72569c98eddf7d81cccf73b2a43c5331",
       "status": "reviewed",
-      "translation": "径向共线性图把每条序列放在一根辐条上。多条序列围绕同一中心排列，各自沿辐条保留位置刻度，适合查看多对序列的区间关系。\n"
+      "translation": "在径向共线性图中，每条参考序列占一根直辐条，有自己的位置刻度。沿连接带找到两端所在的辐条，即可读出对应区间。\n"
     },
     "2": {
-      "source_sha256": "9e05293af7781340e437806529d25952c35f9833bce27d0c657d46f5e00b4db3",
+      "source_sha256": "f180b4c0b0330e690be1544caf08bf307530c2b561536b333b9b62c693366c52",
       "status": "reviewed",
-      "translation": "## 绘制选定的序列对 {#draw}\n"
+      "translation": "## 在两根辐条上读取一条 HSP {#draw}\n"
     },
     "3": {
-      "source_sha256": "865b1998e8dacbb6bc5cd8b54435828d8671bc771a9a3799dc84393213773624",
+      "source_sha256": "465e891fc3478f5c42c6722d7296573c7a766568692769af44a1294d011046aa",
       "status": "reviewed",
-      "translation": "随包的弦图子集含四条序列间的 12 条已观测比对。允许连接非相邻辐条即可显示整个子集。降低不透明度有助于辨认重叠的带。\n"
+      "translation": "取 MT108731.1 到 MT118296.1 的第一条比对。数据与图层都和[两行共线性图](collinear.md)相同，只需更换末行的坐标函数。\n"
     },
-    "6": {
-      "source_sha256": "6d1527903814618352961ab09a9e5e887ae5a83169b556048df5689ddd4f144d",
+    "5": {
+      "source_sha256": "7a5c38866fbea913aff874cae5c7923559c43447bc7468d4dc222fcd7c924195",
       "status": "reviewed",
-      "translation": "## 沿辐条读取位置 {#adapt}\n"
+      "translation": "只有两条参考序列时，辐条伸向相反的方向。分别从中央空隙向外读数，连接带在 MT118296.1 上一直延伸到接近外端 32,090 bp 的位置。\n"
     },
     "7": {
-      "source_sha256": "466d2fda1d0937254ec90e51fdf1c0dc1ae9c70dcc348fe00840fdd607cb3155",
+      "source_sha256": "109c1abd45e73b107508a5b1b1d0c3dca2c23da768a58b1182becf51ba24a5f9",
       "status": "reviewed",
-      "translation": "沿一条带分别找到两端辐条上的刻度，即可定位来源区间。`start_angle` 会整体旋转辐条，`inner_radius` 控制中心留白。判断生物学方向时，结合来源链或有序的比对端点读图。\n"
+      "translation": "## 加入第二根目标序列辐条 {#adapt}\n"
     },
     "8": {
-      "source_sha256": "08c23fbf6fae25d5c30ab26aeaea00e848d07b33f1d1bfc0d462d1e0d34e535e",
+      "source_sha256": "b5b24da5ccf4c91bbd2acfc851bc70c6056b041db9a3e0aaf43eccd3f41a1636",
       "status": "reviewed",
-      "translation": "[带基因注释的径向图](case-radial.md) · [径向坐标选项](../../man/coord_radial_synteny.Rd)\n"
+      "translation": "将 OQ646790.1 加入参考序列。先按目标序列分组，再取各组首行，每条目标序列各提供一对实测区间。现在有两条带从 MT108731.1 连向不同辐条，它们在查询序列上覆盖的宽度也不同。\n"
+    },
+    "10": {
+      "source_sha256": "6f51202ebf9dbba2511ea42aec7123c6441756a6cb737d2ed8d2525b862de911",
+      "status": "reviewed",
+      "translation": "第一根辐条从十二点方向开始。绘制较大的图时，可用 `start_angle` 旋转整组辐条，用 `inner_radius` 调整中央空隙。下一步可[将查询与目标分列](sankey.md)，也可以看[带基因注释的四辐条图](case-radial.md)。\n"
     }
   }
 }

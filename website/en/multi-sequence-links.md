@@ -1,15 +1,19 @@
+An HSP supplies one interval on each of two sequences. Choose a ribbon if both spans matter. When you only need the location of each match, a line can join a representative position from each interval.
+
 <a id="intervals"></a>
 
-## Draw a ribbon from each observed alignment {#intervals}
+## Keep both interval spans {#intervals}
 
-These three local alignments connect MT108731.1 and MT118296.1. Each record supplies four endpoints. The ribbon meets each backbone across that endpoint interval. A decreasing pair of coordinates can record a reverse hit. Keep the recorded order when preparing a ribbon table.
+The same directed pair has three HSPs. Map each one to a ribbon using its original endpoints. A fixed fill gives them all one colour, so it is easy to compare the widths. The shortest ribbon meets MT118296.1 close to base 1.
 
 {{example:paired-ribbons}}
 
 <a id="points"></a>
 
-## Choose endpoints and visible pairs {#points}
+## Join the midpoints of the same three records {#points}
 
-Use `geom_link_line()` to connect two individual positions. Supply `qaccver, qpos, saccver, spos` when each end is a point. Use `geom_link_ribbon()` for a pair of intervals. The fixed fill above gives the three records the same colour. To encode percent identity, keep the input `pident` and use the default ribbon identity mapping.
+Compute one midpoint on the query and one on the subject, rounding down to whole bases. Pass these as `qpos` and `spos` to `geom_link_line()`. The rightmost line connects the midpoints of the longest HSP. With only the two midpoints the line no longer shows the interval widths or endpoint order.
 
-In a collinear plot, adjacent rows are the default comparison. Set `pairs` to a table of the sequence pairs of interest, or use `adjacent_only = FALSE` to include nonadjacent comparisons. Check the [source rows](diagnostics.md) before interpreting a missing link.
+{{example:link-midpoints}}
+
+For more than two rows, the collinear ribbon layer connects adjacent rows by default. Set `adjacent_only = FALSE` to show selected nonadjacent pairs. Next, [inspect the input records of a layer](diagnostics.md) or [route records to repeated copies of a reference](multi-sequence-layout.md#instances).

@@ -1,4 +1,12 @@
-A flexible parameter lets one layer give different geometry to individual sequences or strands. The **Flexible parameter** link beside an argument in the function reference leads back to the matching rules on this page.
+A flexible parameter lets a layer give different sequences or strands their own geometry. Start by moving one label. Then try the same matching rule for backbone radius, reorder the sequences, and assign thickness or offset by strand. The **Flexible parameter** link beside a reference argument returns here.
+
+<a id="named-label"></a>
+
+## Move the label of one phage {#named-label}
+
+Keep both backbone radii at 1. Set the label radius of MT108731.1 to 0.72 and that of MT118296.1 to 1. Each name matches the accession on its own arc. The longer blue arc stays in place while its label moves towards the centre.
+
+{{example:flex-labels}}
 
 <a id="scalar"></a>
 
@@ -6,7 +14,7 @@ A flexible parameter lets one layer give different geometry to individual sequen
 
 <span id="recommendation"></span>
 
-The four phage genome sequences in `seq_data_example` share a radius of 1 by default. Give `MT118296.1` a radius of 0.72 to bring its backbone inward. The name matches the sequence's `accver`. The other three retain radius 1.
+All four phage genomes in `seq_data_example` share a radius of 1 by default. Give `MT118296.1` a radius of 0.72 to bring its backbone inward. The name matches the sequence's `accver`. The other three retain radius 1.
 
 {{example:flex-radius}}
 

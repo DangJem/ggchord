@@ -11,6 +11,7 @@ from html.parser import HTMLParser
 from pathlib import Path
 from urllib.parse import unquote, urljoin, urlsplit
 from xml.etree import ElementTree as ET
+from zipfile import ZipFile
 
 ROOT = Path(__file__).resolve().parents[2]
 WEB = ROOT/'website'
@@ -18,6 +19,7 @@ LANGUAGES = ('en','zh')
 VOID = set('area base br col embed hr img input link meta param source track wbr'.split())
 BASE = 'https://local.invalid/ggchord/'
 MARKER = re.compile(r'\{\{example:([a-z0-9-]+)\}\}')
+PREVIEW = re.compile(r'\{\{preview:([a-z0-9-]+)\}\}')
 RETIRED = {'geom_gene','geom_feature_plasmid','geom_feature_label_repel','position_plasmid','position_track'}
 
 
@@ -139,6 +141,8 @@ def main():
     pages = {p['slug']:p for p in registry if p['kind']!='alias'}
     alias_pages = {p['slug']+'.html' for p in registry if p['kind']=='alias'}
     navigation = read(WEB/'navigation.json')
+    menu_sections = read(WEB/'manual-sections.json')
+    nav_ui = read(WEB/'navigation-ui.json')
     groups = [g for g in navigation if g.get('navbar')]
     specs = read(WEB/'handbook-examples.json')
     home = read(WEB/'home.json')['modules']
@@ -208,6 +212,15 @@ def main():
                     all(abs(x-y)<=1 for x,y in zip(struct.unpack('>II', header[16:24]), dims)),
                     name+': PNG format/dimensions differ from plotting manifest')
     require(output.get('status')=='passed', 'Native render reported failed example output')
+    install_inputs = {name for name in manifest['source_sha256'] if name.startswith(('R/','data/','inst/','src/'))
+                      or (name.startswith('man/') and name.endswith('.Rd'))}
+    install_inputs.update(('DESCRIPTION','NAMESPACE','LICENSE','LICENSE.md'))
+    with ZipFile(site/'assets/ggchord-source.zip') as archive:
+        require(set(archive.namelist())=={'ggchord/'+name for name in install_inputs},
+                'Matching package download omits inputs or includes extraneous files')
+        for name in install_inputs:
+            require(archive.read('ggchord/'+name)==(ROOT/name).read_bytes(),
+                    'Download differs from the package used in the manual: '+name)
     require(len(downloads)==len(records), 'Duplicate example download records')
     primary = ['index']+[g['landing'] for g in groups if g['landing']!='index']
     expected_nav = [pages[k]['canonical_path'] for k in primary]
@@ -262,6 +275,32 @@ def main():
                         for n in styled(doc,'site-nav-menu')}
         require(actual_menus=={key:[(lang+'/'+path,'') for path in values] for key,values in menus.items()},
                 rel+': dropdown destinations differ from the navigation registry')
+        for menu in styled(doc, 'site-nav-menu'):
+            group_id = menu.get('id').removeprefix('site-menu-')
+            sections = menu_sections.get(group_id, [])
+            landing = next(g['landing'] for g in groups if g['id']==group_id)
+            sections = [s for s in sections if any(key!=landing for key in s['pages'])]
+            columns = menu.findall('./li')
+            require(len(columns)==len(sections), rel+': incorrect menu group count for '+group_id)
+            for column, section in zip(columns, sections):
+                expected = [(lang+'/'+pages[k]['canonical_path'],'') for k in section['pages'] if k!=landing]
+                require('menu-group' in column.get('class','').split() and
+                        text(column.find('./span'))==section['title'][lang] and
+                        [destination(rel,a.get('href','')) for a in column.findall('./ul/li/a')]==expected,
+                        rel+': incorrect menu column '+section['title'][lang])
+                for key, label in section.get('subheading_before',{}).items():
+                    rows = [li for li in column.findall('./ul/li') if text(li.find('./span'))==label[lang]]
+                    require(len(rows)==1 and rows[0].find('a') is not None and
+                            destination(rel,rows[0].find('a').get('href',''))==(lang+'/'+pages[key]['canonical_path'],''),
+                            rel+': missing subsection heading for '+key)
+        utilities = styled(doc,'site-nav-tools')
+        controls = utilities[0].findall('./li') if utilities else []
+        require(len(controls)==4 and controls[0].find('./a[@aria-label="GitHub"]') is not None and
+                controls[1].find('./button[@id="dropdown-lightswitch"]') is not None and
+                nav_ui['language'][lang] in text(controls[2].find('./details/summary')) and
+                controls[3].find('.//input[@id="site-search"][@type="search"][@aria-controls="site-results"]') is not None and
+                controls[3].find('.//ul[@id="site-results"][@role="listbox"]') is not None,
+                rel+': toolbar order, visible language label or inline search is incorrect')
         other = 'zh' if lang=='en' else 'en'
         switch = doc.find('.//a[@id="site-language"]')
         require(switch is not None and destination(rel,switch.get('href',''))==(other+'/'+local,''),
@@ -312,19 +351,26 @@ def main():
             require(imgs==row.get('figures') and (bool(imgs) or bool(styled(example,'r-out'))) and
                     not styled(example,'r-err'),rel+': missing native evaluated output or output audit mismatch')
             marked = set()
-            for dl in main_content.iter('dl'):
-                args_here = []
-                for child in dl:
-                    if child.tag=='dt' and child.get('id','').startswith('arg-'):
-                        args_here = [v.strip() for v in text(child).split(',')]
-                        term_ids = {n.get('id') for n in child.iter() if n.get('id')}
-                        for arg in args_here:
-                            argument_terms[(lang,topic,arg)] = term_ids
-                    if child.tag=='dd':
-                        for badge in styled(child,'flexible-parameter'):
-                            marked.update(args_here)
-                            require(any(a.get('href','').startswith('../parameters.html#') for a in badge.iter('a')),
-                                    rel+': flexible badge lacks a matching handbook section')
+            sections_by_kind = {'sequence':'scalar','strand':'width','strand-offset':'strand',
+                                'fixed-label':'scope','band':'scope'}
+            label = '【支持灵活参数】' if lang=='zh' else '[Flexible parameter]'
+            for term in main_content.iter('dt'):
+                if not term.get('id','').startswith('arg-'):
+                    continue
+                for name in styled(term,'argument-term'):
+                    code = name.find('code')
+                    arg = text(code)
+                    argument_terms[(lang,topic,arg)] = {code.get('id')} if code is not None else set()
+                    badges = styled(name,'flexible-parameter','a')
+                    kind = flex.get(topic,{}).get(arg)
+                    require(len(badges)==int(bool(kind)), f'{rel}: badge count for {arg}')
+                    if badges and kind:
+                        marked.add(arg)
+                        badge = badges[0]
+                        require(list(name)==[code,badge] and text(badge)==label and
+                                badge.get('href')=='../parameters.html#'+sections_by_kind[kind],
+                                f'{rel}: wrong inline label or destination for {arg}')
+            require(len(styled(main_content,'flexible-parameter'))==len(marked),rel+': stray flexible badge')
             require(marked==set(flex.get(topic,{})),f'{rel}: incorrect flexible parameter badges {marked}')
             if lang=='zh':
                 require(bool(re.search('[\u3400-\u9fff]',text(main_content.find('.//h1')))) or
@@ -341,6 +387,27 @@ def main():
             require(heading==('Flexible parameters' if lang=='en' else '灵活参数'),rel+': incorrect flexible-parameter guide heading')
         source = (WEB/lang/(slug+'.md')).read_text()
         expected = MARKER.findall(source)
+        previews_here = PREVIEW.findall(source)
+        visual_previews = styled(main_content,'handbook-preview','figure')
+        preview_images = [destination(rel,img.get('src','')) for fig in visual_previews for img in fig.iter('img')]
+        require(preview_images==[('assets/handbook/'+name+'.png','') for name in previews_here],
+                rel+': introductory figures differ from their registered examples')
+        for name,figure in zip(previews_here,visual_previews):
+            spec = specs[name]
+            caption = spec['caption'][lang]
+            img = figure.find('.//img')
+            link = figure.find('a')
+            require(img is not None and img.get('alt')==caption and text(figure.find('figcaption'))==caption
+                    and link is not None and destination(rel,link.get('href',''))==
+                    (lang+'/'+spec['preview_page']+'.html','example-'+name),
+                    rel+': preview caption or code link differs for '+name)
+        if slug=='installation':
+            require(bool(previews_here) and not expected,rel+': the introduction should illustrate the steps without plotting code')
+            require(not any(re.search(r'\b(ggchord|geom_\w+|coord_\w+)\s*\(',text(pre)) for pre in main_content.iter('pre')),
+                    rel+': plotting code embedded in the introduction')
+            require('install.packages("ggchord")' in text(main_content) and
+                    any(destination(rel,a.get('href',''))==('assets/ggchord-source.zip','') for a in main_content.iter('a')),
+                    rel+': missing CRAN or matching-source installation path')
         blocks = [n for n in main_content.iter() if n.get('data-example-kind')]
         dl_links = styled(main_content,'example-download','a')
         require(len(expected)==len(blocks)==len(dl_links),f'{rel}: marker/code/download counts {len(expected)}/{len(blocks)}/{len(dl_links)}')
@@ -412,14 +479,16 @@ def main():
                 require(any(a.get('href')==expected_link for a in row.iter('a')),
                         f'{rel}: incorrect argument destination for {api}({arg})')
                 supported = arg in flex.get(api,{})
-                require(row.get('data-flex')==str(int(supported)) and bool(styled(row,'flexible-label','a'))==supported,
+                require(row.get('data-flex')==str(int(supported)) and
+                        len(styled(row[0],'flexible-parameter','a'))==int(supported) and
+                        text(row[2])==(entry['default'] or '—'),
                         f'{rel}: incorrect flexible flag for {api}({arg})')
         if local=='reference/index.html':
             entries = {destination(rel,a.get('href','')) for group in styled(main_content,'reference-group')
                        for dl in group.iter('dl') for a in dl.iter('a')}
             require({(lang+'/'+key,'') for key in canonical_topics} <= entries,rel+': reference index omits a native help topic')
             require('reference-filter' in identifiers[rel],rel+': no reference filter')
-        require(not re.search(r'\{\{(?:example:|case-gallery|manualhome|parameter-directory)',text(main_content)),
+        require(not re.search(r'\{\{(?:example:|preview:|case-gallery|manualhome|parameter-directory)',text(main_content)),
                 rel+': unresolved handbook directive')
     require(used_downloads==set(downloads),'Example download manifest has missing or extra rows')
     all_html = set(identifiers)

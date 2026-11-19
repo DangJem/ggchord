@@ -9,10 +9,15 @@
         "collinear",
         "radial-synteny",
         "sankey",
-        "circular",
         "dotplot",
+        "circular",
         "fusion"
-      ]
+      ],
+      "subheading_before": {
+        "fusion": {
+          "en": "Multi-panel composition"
+        }
+      }
     },
     {
       "title": {
@@ -23,10 +28,10 @@
         "multi-sequence-layout",
         "multi-sequence-links",
         "annotations",
+        "styling",
         "parameters",
         "tracks",
-        "tracks-statistics",
-        "styling"
+        "tracks-statistics"
       ]
     }
   ],
@@ -36,7 +41,6 @@
         "en": "Data and files"
       },
       "pages": [
-        "formats",
         "data",
         "import-sequences",
         "import-relations",

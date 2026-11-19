@@ -12,6 +12,7 @@ alias_topics<-unlist(lapply(topic_files,function(path) {
 }))
 source('tools/website/reference.R')
 navigation <- jsonlite::fromJSON('website/navigation.json', simplifyVector=FALSE)
+navigation_ui <- jsonlite::fromJSON('website/navigation-ui.json', simplifyVector=FALSE)
 page_index <- jsonlite::fromJSON('website/pages.json', simplifyVector=FALSE)
 page_migrations <- jsonlite::fromJSON('website/page-migrations.json', simplifyVector=FALSE)
 page_record <- function(key) {
@@ -21,6 +22,7 @@ page_record <- function(key) {
 manual_sections <- jsonlite::fromJSON('website/manual-sections.json', simplifyVector=FALSE)
 navigation <- setNames(navigation, vapply(navigation, function(group) group$id, ''))
 for(lang in c('en','zh')) {
+ nav_text <- lapply(navigation_ui, `[[`, lang)
  root<-file.path('.site',lang)
  for(path in list.files(root,'\\.html$',recursive=TRUE,full.names=TRUE)) {
   relative<-substring(path,nchar(root)+2L)
@@ -40,8 +42,6 @@ for(lang in c('en','zh')) {
   xml2::xml_set_attr(xml2::xml_find_first(doc,'//html'),'lang',if(lang=='zh')'zh-Hans' else 'en')
   og<-xml2::xml_find_first(doc,'//meta[@property="og:image"]')
   if(!inherits(og,'xml_missing')) xml2::xml_set_attr(og,'content','https://dangjem.github.io/ggchord/assets/logo.png')
-  for(navbar in xml2::xml_find_all(doc,'//nav[contains(@class,"navbar-expand-lg")]'))
-    xml2::xml_set_attr(navbar,'class',sub('navbar-expand-lg','navbar-expand-xl',xml2::xml_attr(navbar,'class'),fixed=TRUE))
   main<-xml2::xml_find_first(doc,'//main')
   xml2::xml_set_attr(main,'tabindex','-1')
   slug <- sub('\\.html$','',basename(relative))
@@ -77,9 +77,16 @@ for(lang in c('en','zh')) {
   }
 
   # Keep each destination directly clickable and use a separate menu button.
+  section_links <- function(keys, section = NULL) {
+    paste(vapply(keys, function(key) {
+      subheading <- section$subheading_before[[key]][[lang]]
+      paste0('<li>', if (!is.null(subheading)) paste0('<span class="menu-subheading">',
+        escape(subheading), '</span>'), page_link(key), '</li>')
+    }, ''), collapse = '')
+  }
   primary_groups <- Filter(function(x) !is.null(x$navbar), navigation)
   nav_items <- c(paste0('<li class="site-nav-item site-nav-home">',
-    page_link('index',if(lang=='zh') '首页' else 'Home','nav-link'),'</li>'),
+    page_link('index', navigation$home$title[[lang]], 'nav-link'),'</li>'),
     vapply(primary_groups,function(g) {
       descendants <- Filter(function(x) identical(x$parent,g$id),navigation)
       keys <- unique(c(unlist(g$pages),unlist(lapply(descendants,function(x) c(x$landing,unlist(x$pages))))))
@@ -87,19 +94,19 @@ for(lang in c('en','zh')) {
       link <- page_link(g$landing,g$title[[lang]],'nav-link')
       if(identical(primary$id,g$id) && current_page!='index' && !identical(relative,page_record(g$landing)$canonical_path))
         link <- sub('<a ', '<a aria-current="location" ',link,fixed=TRUE)
-      menu_links <- function(items) paste(vapply(items, function(key)
-        paste0('<li>', page_link(key), '</li>'), ''), collapse = '')
       sections <- manual_sections[[g$id]]
       blocks <- vapply(sections, function(section) {
         items <- intersect(unlist(section$pages), keys)
         if (!length(items)) return('')
-        paste0('<li class="menu-section-title">', escape(section$title[[lang]]),
-               '</li>', menu_links(items))
+        paste0('<li class="menu-group"><span class="menu-section-title">', escape(section$title[[lang]]),
+               '</span><ul>', section_links(items, section), '</ul></li>')
       }, '')
       listed <- unlist(lapply(sections, function(section) section$pages))
-      contents <- paste0(paste(blocks, collapse = ''), menu_links(setdiff(keys, listed)))
+      other <- setdiff(keys, listed)
+      contents <- paste0(paste(blocks, collapse = ''), if (length(other))
+        paste0('<li class="menu-group"><ul>', section_links(other), '</ul></li>'))
       menu <- if(length(keys)) paste0('<button type="button" class="site-nav-toggle" aria-expanded="false" aria-controls="site-menu-',
-        escape(g$id,attribute=TRUE),'" aria-label="',escape(paste(if(lang=='zh') '展开' else 'Open',g$title[[lang]]),attribute=TRUE),'">▾</button>',
+        escape(g$id,attribute=TRUE),'" aria-label="',escape(paste(nav_text$toggle, g$title[[lang]], sep=' · '),attribute=TRUE),'"><span aria-hidden="true">▾</span></button>',
         '<ul class="site-nav-menu" id="site-menu-',escape(g$id,attribute=TRUE),'">',
         contents,'</ul>') else ''
       paste0('<li class="site-nav-item site-nav-',escape(g$navbar,attribute=TRUE),'">',link,menu,'</li>')
@@ -113,10 +120,9 @@ for(lang in c('en','zh')) {
   if(length(sections)) {
     topic_label <- if(lang=='zh') '相关主题' else 'Related topics'
     links <- vapply(sections,function(section) {
-      items <- vapply(unlist(section$pages),function(key) paste0('<li>',page_link(key),'</li>'),'')
       paste0('<div class="manual-section"><span class="manual-section-title">',
         escape(section$title[[lang]]),'</span><ul class="manual-section-pages">',
-        paste(items,collapse=''),'</ul></div>')
+        section_links(setdiff(unlist(section$pages), group$landing), section),'</ul></div>')
     },'')
     topics <- paste0(page_link(group$landing,group$title[[lang]],'module-home'),
       paste(links,collapse=''),
@@ -211,42 +217,47 @@ for(lang in c('en','zh')) {
   xml2::xml_add_child(head,fragment(paste0('<script src="',base,'site.js?v=',unname(tools::md5sum('website/assets/site.js')),'" defer></script>')))
   no_script <- xml2::xml_add_child(head,'noscript')
   xml2::xml_add_child(no_script,'style',paste0(
-    '.navbar .navbar-toggler,.navbar .local-search,.navbar #dropdown-lightswitch{display:none}',
-    '.site-nav-item:hover .site-nav-menu,.site-nav-item:focus-within .site-nav-menu{display:block}',
-    '@media(max-width:1199.98px){',
+    '.navbar .navbar-toggler,.navbar .local-search,.navbar #dropdown-lightswitch,.site-nav-toggle{display:none}',
+    '.site-nav-item:hover .site-nav-menu,.site-nav-item:focus-within .site-nav-menu{display:grid}',
+    '@media(max-width:991.98px){',
     'body{padding-top:0}.navbar.fixed-top{position:static}',
-    '.navbar .navbar-collapse.collapse{display:flex}',
-    '.navbar .navbar-collapse>.navbar-nav:first-child{flex-direction:row;flex-wrap:wrap;gap:0 .35rem}',
+    '.navbar .navbar-collapse.collapse{display:block;max-height:none}',
     '}'))
-  toggle<-xml2::xml_find_first(doc,'//button[contains(@class,"navbar-toggler")]')
-  language<-fragment(paste0('<details class="language-control"><summary><span aria-hidden="true">🌐</span> ',
-   if(lang=='zh')'现代汉语' else 'English',' <span aria-hidden="true">▾</span></summary>',
-   '<nav aria-label="',if(lang=='zh')'选择语言' else 'Choose language','">',
+  target <- xml2::xml_find_first(doc,'(//div[@id="navbar"]/ul[contains(@class,"navbar-nav")])[last()]')
+  # Only the primary links collapse. Search, language and appearance remain reachable.
+  tools_list <- xml2::xml_add_sibling(xml2::xml_parent(target), target, .where='after')
+  xml2::xml_remove(target)
+  xml2::xml_set_attr(tools_list, 'class', 'navbar-nav site-nav-tools')
+  xml2::xml_set_attr(xml2::xml_parent(primary_list), 'class', 'collapse navbar-collapse')
+  theme <- xml2::xml_find_first(tools_list, './/button[@id="dropdown-lightswitch"]')
+  xml2::xml_set_attr(theme, 'aria-label', nav_text$appearance)
+  xml2::xml_set_attr(theme, 'title', nav_text$appearance)
+  language<-fragment(paste0('<li class="nav-item"><details class="language-control"><summary>',
+   nav_text$language,' <span aria-hidden="true">▾</span></summary>',
+   '<nav aria-label="',nav_text$choose_language,'">',
    '<a ',if(lang=='en')'aria-current="true" ' else '', 'href="',if(lang=='en') '' else partner,
    '" lang="en" data-language="en">English</a>',
    '<a ',if(lang=='zh')'aria-current="true" ' else '', 'href="',if(lang=='zh') '' else partner,
    '" lang="zh-Hans" data-language="zh" ',if(lang=='en')'id="site-language"' else '',
-   '>现代汉语</a></nav></details>'))
-  # Keep one stable identifier for the other-language link on every page.
+   '>现代汉语</a></nav></details></li>'))
   if(lang=='zh') xml2::xml_set_attr(xml2::xml_find_first(language,'.//a[@lang="en"]'),'id','site-language')
-  xml2::xml_add_sibling(toggle,language,.where='before')
-  target<-xml2::xml_find_first(doc,'(//div[@id="navbar"]/ul[contains(@class,"navbar-nav")])[last()]')
-  label<-if(lang=='zh')'搜索说明' else 'Search documentation'
-  search<-fragment(paste0('<li class="nav-item local-search"><button type="button" class="search-trigger" id="site-search-trigger" aria-haspopup="dialog"><span aria-hidden="true">⌕</span><span class="search-trigger-label">',
-   if(lang=='zh')'搜索文档' else 'Search docs','</span><kbd aria-hidden="true">⌘ K</kbd></button></li>'))
-  xml2::xml_add_child(target,search)
+  xml2::xml_add_child(tools_list,language)
+  search<-fragment(paste0('<li class="nav-item local-search"><div class="search-field" role="search">',
+    '<label for="site-search" class="visually-hidden">',nav_text$search,'</label>',
+    '<input id="site-search" type="search" role="combobox" aria-autocomplete="list" aria-controls="site-results" aria-expanded="false" autocomplete="off" placeholder="',
+    nav_text$search_hint,'"><kbd aria-hidden="true">Ctrl K</kbd></div>',
+    '<div class="search-panel" hidden><div class="search-heading"><strong>',nav_text$results,
+    '</strong><button type="button" class="search-close" aria-label="',nav_text$close,'">×</button></div>',
+    '<div class="search-filters" role="group" aria-label="',nav_text$filter,'"></div>',
+    '<p class="search-count" id="search-status" role="status"></p><ul id="site-results" class="search-results" role="listbox" aria-label="',
+    nav_text$results,'"></ul><div class="search-help">',nav_text$keys,' · <a href="',
+    prefix,escape(page_record(navigation$plots$landing)$canonical_path,attribute=TRUE),'">',
+    escape(navigation$plots$title[[lang]]),'</a></div></div></li>'))
+  xml2::xml_add_child(tools_list,search)
   body<-xml2::xml_find_first(doc,'//body')
   xml2::xml_set_attr(body,'data-kind',if(startsWith(relative,'reference/')) 'api' else if(!is.null(record)) record$kind else 'utility')
   metadata <- jsonlite::fromJSON('.site/build-metadata.json')
   xml2::xml_remove(xml2::xml_find_all(doc,'//nav//small[contains(@class,"nav-text")]'))
-  xml2::xml_add_child(body,fragment(paste0('<dialog class="search-dialog" id="site-search-dialog" aria-labelledby="site-search-title"><div class="search-heading"><h2 id="site-search-title">',label,
-   '</h2><button type="button" class="search-close" aria-label="',if(lang=='zh')'关闭搜索' else 'Close search','">×</button></div>',
-   '<label class="search-field" for="site-search"><span class="visually-hidden">',label,'</span><input id="site-search" type="search" role="combobox" aria-autocomplete="list" aria-controls="site-results" aria-expanded="false" autocomplete="off" placeholder="',
-   if(lang=='zh')'例如：覆盖度、geom_feature、图例' else 'Examples: coverage, geom_feature, legends','"></label><div class="search-filters" aria-label="',
-   if(lang=='zh')'筛选结果类型' else 'Filter result types','"></div><p class="search-count" id="search-status" role="status"></p><ul id="site-results" class="search-results" role="listbox" aria-label="',
-   if(lang=='zh')'搜索结果' else 'Search results','"></ul><div class="search-help">',
-   if(lang=='zh')'↑ ↓ 选择 · Enter 打开 · Esc 关闭；也可按任务查找。' else '↑ ↓ select · Enter open · Esc close; or browse by task.',
-   ' <a href="',prefix,escape(page_record(navigation$plots$landing)$canonical_path,attribute=TRUE),'">',if(lang=='zh')'绘图指南' else 'Plotting guide','</a></div></dialog>')))
   xml2::xml_set_attr(body,'data-lang',lang)
   xml2::xml_set_attr(body,'data-search',paste0(paste(rep('../',deep),collapse=''),'search.json'))
   # Native locale messages add a translated S3 preamble to usage code. Keep

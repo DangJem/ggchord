@@ -32,17 +32,17 @@
       "collinear",
       "radial-synteny",
       "sankey",
-      "circular",
       "dotplot",
+      "circular",
       "fusion",
       "multi-sequence-views",
       "multi-sequence-layout",
       "multi-sequence-links",
       "annotations",
+      "styling",
       "parameters",
       "tracks",
-      "tracks-statistics",
-      "styling"
+      "tracks-statistics"
     ],
     "navbar": "plots"
   },

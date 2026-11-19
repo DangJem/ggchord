@@ -3,5 +3,5 @@
   "channel": "development",
   "runtime_source_commit": null,
   "stable_version": "0.29.0",
-  "installation": "General GitHub installation; inspect the active package and environment. The documentation build records its own source commit and file hashes."
+  "installation": "The Get started page links to CRAN and to assets/ggchord-source.zip, which contains the installable source used for this manual."
 }

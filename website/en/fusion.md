@@ -1,21 +1,21 @@
-Fusion places independently constructed plots on one canvas. A cross-panel ribbon connects its two original sequence intervals to named panels, letting an overview and a detailed view use different coordinates.
+Fusion combines plots that already have their own coordinate systems. Here a circle shows the full MT108731.1 genome, and two vertical backbones show it beside MT118296.1. An observed HSP will connect one interval on the circle to one on the second backbone.
 
 <a id="draw"></a>
 
-## Connect a circle to a linear view {#draw}
+## Place two independently built plots {#draw}
 
-The centre plot contains MT108731.1. The right panel shows both sequences. Their shortest observed alignment connects 20,376–20,677 bp on MT108731.1 to 403–704 bp on MT118296.1. `qpanel` places the query end on the circle and `spanel` places the subject end in the panel called `detail`.
+Build the circular overview and linear detail first. Pass the overview to `ggchord_fusion()`, then place the second plot on the right with `fusion_panel()`. The central panel has the ID `center`. Give the new panel the ID `detail` so another layer can address it.
+
+{{example:fusion-panels}}
+
+<a id="adapt"></a>
+
+## Route one HSP to the named panels {#adapt}
+
+Use the first query-to-subject HSP again. In `fusion_ribbon()`, `qpanel` places MT108731.1 positions 26,298–51,139 bp on the circle. The `spanel` argument places MT118296.1 positions 7,121–31,959 bp on the right. Although MT108731.1 also appears in the right panel, the query end meets the circle.
 
 {{example:first-fusion}}
 
 <span id="shared-guides"></span>
 
-<a id="adapt"></a>
-
-## Choose an unambiguous destination {#adapt}
-
-Check that both endpoints fall inside the visible interval of the intended panel and use compatible units. The side chosen in `fusion_panel()` places the child plot. Its coordinate system controls the direction of the child backbones. For an overview connected to a source window, the magnification helper can create and register the window.
-
-To place outside legends together, pass `guides = "collect"` to `ggchord_fusion()`. Give panels matching limits, breaks and styles when they represent the same quantity. The composition collects their legends while retaining each panel’s scales.
-
-[Six-panel comparative map](case-fusion.md) · [Cross-panel ribbons](../../man/fusion_ribbon.Rd) · [Magnified source windows](../../man/magnify_ggchord.Rd)
+Each panel must contain the named reference and the interval it receives. To collect matching outside legends across panels, use `guides = "collect"` in `ggchord_fusion()` and give comparable measures the same scale limits and breaks. Next, follow [the six-panel case](case-fusion.md) from a genome overview to a short alignment, or [export the figure at its final width](output.md).

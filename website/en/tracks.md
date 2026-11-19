@@ -1,15 +1,19 @@
-<a id="shared-band"></a>
-
-## Overlay bars and a line on one scale {#shared-band}
-
-The installed bedGraph contains GC percentages in successive pUC19 windows. Bars span the observed intervals and the line joins their midpoints. Declare the physical band once with `track_band("gc")`. Both geometry layers select it with `track = "gc"`. A height of 60 has the same meaning in both layers.
-
-{{example:gc-shared-band}}
+Start with the GC percentages already measured in the bundled pUC19 bedGraph. A quantitative track gives those values a height axis alongside the sequence. The examples use the optional dplyr package for table preparation.
 
 <a id="domain"></a>
 
-## Separate physical width, value and colour {#domain}
+## Draw one bar per measured window {#domain}
 
-Use the band's `width` for space on the page. Use `scale_track_value_continuous()` with explicit `limits` for the numerical axis. Changing the width leaves each GC percentage intact. A tile with `aes(fill = value)` represents a value by colour across an interval. For a second measure with different units, declare another band and give it its own value scale.
+Read the installed file with `read_bedgraph()`. The first three 100 bp windows have GC contents of 60%, 57% and 59%. Declare a band named `gc`, draw one column from each window’s value and give the band a 0–100 percentage axis. The first bar begins at base 1 and ends at base 100.
 
-To compute coverage from intervals and compare groups, see [window statistics and facets](tracks-statistics.md).
+{{example:gc-bars}}
+
+<a id="shared-band"></a>
+
+## Add a line through the same window values {#shared-band}
+
+Compute the midpoint of each window. Keep the column layer and add a line using the midpoint for x and the measured value for y. Both layers name the same track, so the line passes the middle of each bar’s top edge.
+
+{{example:gc-shared-band}}
+
+The band’s `width` reserves 15 mm of drawing space. Its numerical limits set the heights on that space. Increasing the band width makes a one-percentage-point change easier to see while preserving every measured percentage. Next, [compute coverage from alignment intervals](tracks-statistics.md) or [inspect the original bedGraph columns](import-signals.md).

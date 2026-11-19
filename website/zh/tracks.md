@@ -1,15 +1,19 @@
-<a id="shared-band"></a>
-
-## 在同一高度轴叠加柱与折线 {#shared-band}
-
-随包 bedGraph 记录 pUC19 各窗口的 GC 百分数。柱横跨原窗口，折线连接窗口中点。用 `track_band("gc")` 声明一次物理轨带，两种几何都用 `track = "gc"` 选取它。两层高度为 60 的位置都代表 60% GC。
-
-{{example:gc-shared-band}}
+从随包 pUC19 bedGraph 已经记录的 GC 百分比开始。定量轨道在序列旁为这些数值提供一条高度轴。下面使用可选的 dplyr 包整理表格。
 
 <a id="domain"></a>
 
-## 分别控制物理宽度、数值和颜色 {#domain}
+## 每个实测窗口画一根柱 {#domain}
 
-轨带的 `width` 决定它在纸上占多宽。`scale_track_value_continuous()` 的 `limits` 决定数值轴范围。更改带宽不影响窗口的 GC 百分数。若想用颜色表示区间数值，可在 tile 层映射 `aes(fill = value)`。有不同单位的第二种度量时，另设一条带及其高度轴。
+用 `read_bedgraph()` 读取已安装的文件。前三个 100 bp 窗口的 GC 含量分别为 60%、57% 和 59%。声明一个名为 `gc` 的轨道带，从每个窗口的值画一根柱，并把百分比轴设为 0–100。第一根柱从第 1 bp 延伸至第 100 bp。
 
-若需要从区间计算覆盖率再作分组比较，见[逐窗统计与分面](tracks-statistics.md)。
+{{example:gc-bars}}
+
+<a id="shared-band"></a>
+
+## 沿同一组窗口值叠加折线 {#shared-band}
+
+计算各窗口的中点。保留柱图层，再加一层折线，以中点为横坐标、实测值为纵坐标。两层都指定同一轨道，因此折线会经过每根柱顶边的中点。
+
+{{example:gc-shared-band}}
+
+轨道带的 `width` 在图上预留 15 mm 空间，数值范围决定高度如何映射到这段空间。加宽轨道可让一个百分点的差异更容易看出，原始测量值仍然相同。下一步可[从比对区间计算覆盖率](tracks-statistics.md)，或[检查 bedGraph 原始列](import-signals.md)。

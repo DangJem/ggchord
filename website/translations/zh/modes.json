@@ -1,80 +1,95 @@
 {
-  "source_sha256": "ad7dbb81c49e0c3344825afd7688d1372b7898e966953e1f6f7fe81be741792c",
+  "source_sha256": "180da806eac24def90f1916006551390ad240ae5f1ad7954c7fbb243d5b4df13",
   "blocks": {
-    "1": {
-      "source_sha256": "a53367170ddb2e4a7eb95bc726f924b8e9dc5e1f28c58adbe831bbf45b4663fe",
+    "0": {
+      "source_sha256": "b9f93391c279e6dc4a6029cb7d537235f464462b27155ac4cf967bbc527c319b",
       "status": "reviewed",
-      "translation": "## 哪类图适合你的问题？ {#modules}\n"
+      "translation": "先了解[参考表和图层数据表](data.md)。只要知道两条序列的全长和一对实测比对区间，就能开始比较这两条基因组。可以直接用随包数据[绘制第一张弦图](chord.md#backbones)。示例先画两条带名称的骨架，再加入一条比对，最后在同一组弧线上标出编码序列。\n"
     },
     "2": {
-      "source_sha256": "84dee221ea99d51f97f4f078c556e7fe24c1ec3213b63eb56479e2fb138841eb",
+      "source_sha256": "9af800bb5b66378672abca73849e97f22172a82e6352ec0f65f9d399385c9ad9",
+      "status": "reviewed",
+      "translation": "## 换几种视图阅读同一条比对 {#reading-order}\n"
+    },
+    "3": {
+      "source_sha256": "995e5bf414de7a623c360906ba3daf92235e334b9e6e9db85a02afea196e53c9",
+      "status": "reviewed",
+      "translation": "1. 从[弦图](chord.md#backbones)开始，先比较两条参考序列的长度，再找到连接带的两端。\n"
+    },
+    "4": {
+      "source_sha256": "ea0bc3f9a8975423a39406fe160a6d8abd5488046dc996073ddeacf9d0ab4251",
+      "status": "reviewed",
+      "translation": "2. 把同一组记录放到[平行骨架](collinear.md)上，再比较[径向排列](radial-synteny.md)和[双列桑基视图](sankey.md)。同样的源坐标换一种排列，有时更容易读出位置关系。\n"
+    },
+    "5": {
+      "source_sha256": "282a820aa3c72e7e8244831e9954f47d846d58eb8ed08485451a77997324f64d",
+      "status": "reviewed",
+      "translation": "3. 根据问题继续读[单序列圆图](circular.md)、[双轴比对点图](dotplot.md)，或[总览与细节组合图](fusion.md)。这些图使用不同的输入或面板布局。\n"
+    },
+    "7": {
+      "source_sha256": "a88dad0d6bc666fa14e25e3e3cd2b8687bcca01abea3e8334d6769d26ca9ff9c",
+      "status": "reviewed",
+      "translation": "## 按问题选择视图 {#modules}\n"
+    },
+    "8": {
+      "source_sha256": "0eaa3118f9125d467b849c337667a384a189591aa9e605ec05a61530b27d7096",
+      "status": "reviewed",
+      "translation": "六种坐标系分别决定单个面板内的数据如何排列。Fusion 组合图将独立绘制的面板放在一起，并连接面板间相互对应的区间。\n"
+    },
+    "9": {
+      "source_sha256": "9683bfd2441abd66681857f28634b3695e554e6f803923cf9941dbffc4501e21",
       "status": "reviewed",
       "translation": "| 想回答的问题 | 绘图指南 |\n"
     },
-    "3": {
+    "10": {
       "source_sha256": "3491e014f5503eb5b2fca81db42f6f72765980ba5b5e48ef135b6cf69d7f92cc",
       "status": "reviewed",
       "translation": "| --- | --- |\n"
     },
-    "4": {
-      "source_sha256": "8f26c4e79662510ed0ca1bf0b739fb243df06815c8d3e0ac04d75f8cfb3d50d7",
+    "11": {
+      "source_sha256": "2c74d7dab30c8a5356477ffaf5e2b1be97ca49cb555c510d802d1ee655be0677",
       "status": "reviewed",
       "translation": "| 多条序列环绕排列时，哪些区间彼此匹配？ | [弦图](chord.md) |\n"
     },
-    "5": {
-      "source_sha256": "266601c6945a6e1384bb14a8b0d5039e20a12d47c88b45d8c1193139313bfaa7",
+    "12": {
+      "source_sha256": "c69386d040752328b8171ab893099b5fce5a45e32ccddd7874171c6714563691",
       "status": "reviewed",
-      "translation": "| 沿平行的序列骨架比较时，基因顺序和方向有何差异？ | [共线性图](collinear.md) |\n"
+      "translation": "| 两条序列平行排列时，比对区间分别在哪里起止？ | [共线性图](collinear.md) |\n"
     },
-    "6": {
-      "source_sha256": "3e6ca86dee44095ee37943f1a293329add1c0f2b034d5d74de119da90fdd55fe",
+    "13": {
+      "source_sha256": "47febbdb0c5b45ca3ecd9931bfc737501df5fe54a12fe6dfaf69bf4e5323afe0",
       "status": "reviewed",
-      "translation": "| 把序列画成辐条时，哪些同源区间彼此相连？ | [径向共线性图](radial-synteny.md) |\n"
+      "translation": "| 序列从中心向外辐射时，哪些区间彼此匹配？ | [径向共线性图](radial-synteny.md) |\n"
     },
-    "7": {
-      "source_sha256": "d0fe174bd3fa203ad9f25e53b1737911a01780ad8b726b6c9364a95c4321f615",
+    "14": {
+      "source_sha256": "5ed6387dfa34b84d0e11bcacb63c6ce0aa4dfa4ffa6ffb3d31d055c25ccb53ee",
       "status": "reviewed",
-      "translation": "| 左侧查询序列上的区间对应右侧目标序列的哪个区间？ | [桑基视图](sankey.md) |\n"
+      "translation": "| 左侧查询序列的哪个区间与右侧目标序列的哪个区间匹配？ | [桑基视图](sankey.md) |\n"
     },
-    "8": {
-      "source_sha256": "c0d01296a33e8ed2f18be6483343afe2fb6620c1cf7d801561e6676ceb2260c0",
+    "15": {
+      "source_sha256": "5aba4f01ec25bd9b45e21ada50d1326060e1da785c29924c0fc25cfffe967826",
       "status": "reviewed",
-      "translation": "| 注释特征、引物或酶切位点位于一条环状序列的什么位置？ | [单序列圆图](circular.md) |\n"
+      "translation": "| 特征、引物和酶切位点位于一条环状序列的什么位置？ | [单序列圆图](circular.md) |\n"
     },
-    "9": {
-      "source_sha256": "c4fcc20eb1dfbea0c58c38e675331710ad4b2d9e8c1ef6cfc43c1691822d5380",
+    "16": {
+      "source_sha256": "0b019a755fef7eaf3e22326746bc6a4a96225c4fa5a1c453efe10a422c66888c",
       "status": "reviewed",
-      "translation": "| 局部比对位于两条基因组坐标轴的什么位置，方向如何？ | [比对点图](dotplot.md) |\n"
+      "translation": "| 局部比对线段的斜率反映了怎样的相对方向？ | [比对点图](dotplot.md) |\n"
     },
-    "10": {
-      "source_sha256": "688eb53c92af25afa3280a9ef0dcce438657c5a68b0f894e567a3508c911d1aa",
+    "17": {
+      "source_sha256": "95fb927c8a4d50c71bb76eda4be18deaa7fb3a7d8a6cfa3d05911abbdb52feaa",
       "status": "reviewed",
-      "translation": "| 总览图中的区间与独立细节面板如何对应？ | [组合图](fusion.md) |\n"
+      "translation": "| 另一个面板放大了总览中的哪一段？ | [Fusion 组合图](fusion.md) |\n"
     },
-    "11": {
+    "19": {
       "source_sha256": "158e2c4c2547585be15f792c09ebcf7ca17d5df824222273ee5a87d17e50e60f",
       "status": "reviewed",
       "translation": "## 调整已有图形 {#adjust}\n"
     },
-    "12": {
-      "source_sha256": "177d19f82d4d9ae8f1c0f2ed0ebb48f8c1746e022b57b09ce9f779e4a855a72d",
+    "20": {
+      "source_sha256": "b364ed3b5505c67b4abf7e249b47b19646b1b24391179d4bf50d54ab494e7965",
       "status": "reviewed",
-      "translation": "- [灵活参数](parameters.md)：为各条序列或正负链设置支持的几何参数。\n"
-    },
-    "13": {
-      "source_sha256": "3cb187c27ffadec3fb1e1655205e3be91ead70a66f8ad845a7f3d8f119be15e5",
-      "status": "reviewed",
-      "translation": "- [特征分道与子集标签](annotations.md)：排列特征并为选中的记录添加标签。\n"
-    },
-    "14": {
-      "source_sha256": "309fefb2b0655a89716bf7b63371f60be5efbc47d770ef02d3452c525eeddfda",
-      "status": "reviewed",
-      "translation": "- [定量轨道](tracks.md)：在共享轨道中组合图层。\n"
-    },
-    "15": {
-      "source_sha256": "cf0010930511ff24fe048ab931c60e2a1a0fa3bad5b4376933f40b415fc84ce9",
-      "status": "reviewed",
-      "translation": "- [序列排列与显示方向](multi-sequence-layout.md)：排列序列并设置显示方向。\n"
+      "translation": "要改变骨架的阅读顺序或方向，可查阅[序列排列与方向](multi-sequence-layout.md)。要标明部分注释，可查阅[特征和标签](annotations.md)。要叠加测量值，可查阅[定量轨道](tracks.md)。如果需要按序列或链分别设置几何参数，见[灵活参数](parameters.md)。\n"
     }
   }
 }

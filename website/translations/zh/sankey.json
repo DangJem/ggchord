@@ -1,35 +1,35 @@
 {
-  "source_sha256": "a8672ab595f4e93bad10d8ec77dddab74f1468dcc2e2c2649df4ec72d16abb51",
+  "source_sha256": "204d073fdd5ac1b976d2fb2fceda2e93a82b4825ab19438eec7184e15ac413d0",
   "blocks": {
     "0": {
-      "source_sha256": "1eb2ef06963554b4bea016b4478421689df0461c080416134f450da936fd2d25",
+      "source_sha256": "310c05abf34c93d0d956477d386eaa7dc0556a701357058328f436dde088e518",
       "status": "reviewed",
-      "translation": "Sankey 坐标把参考序列排成左右两列。带子左端取 query 区间，右端取 subject 区间，两端宽度分别由记录的跨度决定。\n"
+      "translation": "要区分比对的查询端和目标端，可以使用双列 Sankey 图。每条参考序列在左右两列各出现一次，每条输入记录把左列的查询区间连到右列的目标区间。\n"
     },
     "2": {
-      "source_sha256": "ae00d6f13ecc2cbbc983a8b2913a4175e5347a6e49f58d14885a8050ae51be50",
+      "source_sha256": "2bae1d79720d90bf890e6fa7387769f180a60793c227d0862bfd4487b7e5acc0",
       "status": "reviewed",
-      "translation": "## 从左列的 query 追踪到右列 {#draw}\n"
+      "translation": "## 从左到右追踪一条带 {#draw}\n"
     },
     "3": {
-      "source_sha256": "6858add5a1f34831d96af20a0704913adb7b3920a06323ab161a13d62c5db3b7",
+      "source_sha256": "7d4e2bf30e5b63ff5ba0576eec874dfb74de8beb4345ac6b27d4cdfada4b1354",
       "status": "reviewed",
-      "translation": "输入的前三行均连接 MT108731.1 和 MT118296.1。在第一条序列的左列副本找到三个区间，沿带子可到达第二条序列的右列副本。每条参考序列均在两列出现。\n"
+      "translation": "沿用两条噬菌体序列与第一条 HSP。连接带从左上方的 MT108731.1 连到右下方的 MT118296.1。另两份序列也有坐标刻度，这条记录的端点均落在前两份上。\n"
     },
     "6": {
-      "source_sha256": "97680898709a8117bb4877063c7cbd22ece0f7f856d3ee2bd1d194e70d8ae6b7",
+      "source_sha256": "d66e81005def89d0f610b5a43c364c002b0b135f5d98880709260dcd0d59b7f2",
       "status": "reviewed",
-      "translation": "## 理解宽度与方向 {#adapt}\n"
+      "translation": "## 比较三条 HSP 的带宽 {#adapt}\n"
     },
     "7": {
-      "source_sha256": "34ecfaf67d644133e852075720ab8ebbd58d639c9040f4dac332fc68a71e5a9c",
+      "source_sha256": "faa9efecff06f3efd361db2bd5035ccbf82a2d3f456b24804cdf394854d7121a",
       "status": "reviewed",
-      "translation": "带宽按来源端点的坐标单位读取。一条比对在两端可以占据不同数量的位置。若输入同时提供互换 query 和 subject 的记录，这些行各自表示一次观测。可用 `column_gap` 调整两列之间的距离。\n"
+      "translation": "保留相同查询方向上的全部三行。每条带的两端分别按对应序列上的跨度确定宽度。最宽的一条在两端各覆盖约 25 kb，最窄的一条在两端各覆盖 302 bp。\n"
     },
-    "8": {
-      "source_sha256": "36c28b210291511a2d78e8ddf245586b358b2246df280834157a2a7e8c840fce",
+    "9": {
+      "source_sha256": "9383c460b48a9557e5254ffc32f44f80f5e2c7340f552cdb6e9f0688f2e79ae5",
       "status": "reviewed",
-      "translation": "[四基因组双列图](case-sankey.md) · [Sankey 坐标](../../man/coord_sankey.Rd)\n"
+      "translation": "如果输入还含反向查询记录，它会生成另一条带，对应交换角色后的序列对。绘制较密的图时，可用 `column_gap` 调整两列间距。下一步可[对照四种布局](multi-sequence-views.md)，或[在二维坐标中把 HSP 画成线段](dotplot.md)。[四基因组 Sankey 案例](case-sankey.md)还为重复显示的参考序列加上了注释。\n"
     }
   }
 }

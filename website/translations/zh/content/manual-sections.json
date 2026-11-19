@@ -1,10 +1,15 @@
 {
-  "source_sha256": "ddb382a17fe1108ff71a1223cac8fc7765ed94d77d2837460eebf4151e5e963b",
+  "source_sha256": "b5f2e55217d1d34905f2d75791f6c4ca04b34fdca0b1ee8d4ea0d956d54a8aca",
   "strings": {
     "plots/0/title": {
       "source_sha256": "505636727e6e171a772014bb7157aa724af37df2f667c6cb8da2367b1f79b259",
       "status": "reviewed",
       "translation": "图形类型"
+    },
+    "plots/0/subheading_before/fusion": {
+      "source_sha256": "c0266ecccf107a89ab2fb5239ed0886e9fec6c1294c909ab806469f549cc7c7d",
+      "status": "reviewed",
+      "translation": "多图组合"
     },
     "plots/1/title": {
       "source_sha256": "bf4a256cbbcd7b3f919112311b0cc409d72281792e50e71851e986e6ecdffedf",

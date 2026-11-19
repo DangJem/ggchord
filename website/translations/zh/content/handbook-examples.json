@@ -1,11 +1,6 @@
 {
-  "source_sha256": "5aac5e360f4ce7e9d002af60635f4a945eee6065b4415d8b77da3623326d1c1d",
+  "source_sha256": "1a81624f5860579ba19195d659c35cce8d5ee7c9db6e9ee0ed2dd8339c9707ca",
   "strings": {
-    "first-plot/caption": {
-      "source_sha256": "4bcf1a74bdbf7bb989134d60941e199f660c3ae13533083da6cf0decad7ba263",
-      "status": "reviewed",
-      "translation": "四条噬菌体基因组的骨架与随包比对表中的前四条记录。每条连接带对应一对原始比对区间。"
-    },
     "flex-radius/caption": {
       "source_sha256": "f14827d731fc7e1f256aa6ddfd7712190ab5a9f472e20f9d861e1a431ce6206a",
       "status": "reviewed",
@@ -27,24 +22,24 @@
       "translation": "布局计算指出 seq_radius 中的两个链符号均为未知序列标识。"
     },
     "views-chord/caption": {
-      "source_sha256": "13e96f6452809a70f70941c34c1452dab8bac9bbf3d08231816f5f998eda9ede",
+      "source_sha256": "a6480c9a3fee0cd51ab8644d8f4441ff516a95cbc9f1cd3751211ee8aff77a3a",
       "status": "reviewed",
-      "translation": "三条实测 HSP 的弦图视图"
+      "translation": "一条 HSP 连接两条噬菌体序列弧上的区间。"
     },
     "views-collinear/caption": {
-      "source_sha256": "95cb4bda90d674629af29c08c922830ecac8cc0ff9881c4ab2359c936f6a7459",
+      "source_sha256": "b997ebb6f443bc4eb4584efbcff22e4d962aec2462646346135542e8443206b8",
       "status": "reviewed",
-      "translation": "三条实测 HSP 的共线性视图"
+      "translation": "同一条 HSP 横跨两条平行骨架上的区间。"
     },
     "views-radial/caption": {
-      "source_sha256": "69113f4f0a346b9f8cf755f7ef0d32197cc90ef842552ef25f823a087f103649",
+      "source_sha256": "2d6166754f0ac54d0b5fb0d56c9ac0c33723c7fcfa7a8237d0dd52675f6dc9b0",
       "status": "reviewed",
-      "translation": "三条实测 HSP 的径向共线性视图"
+      "translation": "两根辐条显示同一条 HSP 的端点。"
     },
     "views-sankey/caption": {
-      "source_sha256": "40352f2df4e78c7906c5a023c1d0e84426fe83794e0e0b4d66e7f8ecb395c8d7",
+      "source_sha256": "cd0ed348641cc33a304d79b17d37078947b49f554925a1a6de5ef49968d49103",
       "status": "reviewed",
-      "translation": "三条实测 HSP 的双列 Sankey视图"
+      "translation": "一条 HSP 从左列的查询序列连到右列的目标序列。"
     },
     "order-orientation/caption": {
       "source_sha256": "993ac36cc13dcda7db873476e1ce6e9ca5f68544f659988dd2997251f507d5b8",
@@ -122,9 +117,9 @@
       "translation": "按图层 ID 取回输入记录的两端坐标"
     },
     "first-chord/caption": {
-      "source_sha256": "b3a140ae7b37e327778034f4aa008e1f59fbc9fdb8dc7672d9be3861f9f67583",
+      "source_sha256": "64fcbdbbbbdf485a8b30a7c57f9769f9c51661f13c9eb669b591cf851eae62c6",
       "status": "reviewed",
-      "translation": "四条序列弧中，一条已观测比对连接其中两条。"
+      "translation": "一条连接带标出两条基因组之间第一条实测比对的区间。"
     },
     "first-collinear/caption": {
       "source_sha256": "a123b34017e57680f364de41f5766ea0449882638cefb06abaadaa47492d63c7",
@@ -132,9 +127,9 @@
       "translation": "三条已观测比对连接两条全长序列上的区间。"
     },
     "first-radial/caption": {
-      "source_sha256": "15c9d66a31cc0a7ce13425e4b854d847ddd89a6ca06b506a2b6726de67f71fd8",
+      "source_sha256": "38c224a7bc6b8d065d0d62958d64a914b1e2d4dc51fb74ddb7e37c205442c48d",
       "status": "reviewed",
-      "translation": "四条径向骨架显示选出的 HSP，包括非相邻序列对。"
+      "translation": "两条 HSP 共用一根查询序列辐条，分别通向不同的目标序列。"
     },
     "first-sankey/caption": {
       "source_sha256": "63043e50155a3f897a44729109309f52f495d09c898865771967c5f2b2cbeccd",
@@ -250,6 +245,66 @@
       "source_sha256": "5cf2df89902060c535013466bd5c1bacf59974f0f2f09b58c80c60e5a6567a42",
       "status": "reviewed",
       "translation": "pSpCas9(BB)-2A-GFP (PX458) · 19 个特征，4 个酶切位置"
+    },
+    "puc-backbone/caption": {
+      "source_sha256": "4f5c261ed15b78bb0dc5ced16651e7f24fbf6ec56c0e8bbac4fc397bfc2e38d8",
+      "status": "reviewed",
+      "translation": "pUC19 环形骨架覆盖全长 2,686 bp。"
+    },
+    "dotplot-pair/caption": {
+      "source_sha256": "4ca40b12d839b2fe0f636d51d85a2b44c0b651b912d446c9be5285fbc3922f05",
+      "status": "reviewed",
+      "translation": "三条 HSP 在相同的两条坐标轴上形成三段向右上方延伸的线段。"
+    },
+    "fusion-panels/caption": {
+      "source_sha256": "e27b26c8ea6e05266024f093af2bea3e3f7d22cd1c9c7dea2f29e521cecc8998",
+      "status": "reviewed",
+      "translation": "左侧以圆图展示 MT108731.1，右侧以直线骨架展示两条参考序列。"
+    },
+    "link-midpoints/caption": {
+      "source_sha256": "c6dbd2fe5e9f5f1a5629365931f74d6fda06d848f30587eddeed18c228a6d289",
+      "status": "reviewed",
+      "translation": "每条线连接一条 HSP 两端区间的中点。"
+    },
+    "layout-instances/caption": {
+      "source_sha256": "35b079b69128ccb6a1e4b3abe4254968dd0b188e4af42225db1ba1355df212c6",
+      "status": "reviewed",
+      "translation": "两条参考序列占据三个显示行，最长的 HSP 连接上方两行。"
+    },
+    "layout-equal/caption": {
+      "source_sha256": "35403ad329cfee14afc2a9fb0d3ae5fdbee2c67d4c58d3228767d9a0b70cd157",
+      "status": "reviewed",
+      "translation": "将两条骨架显示为等长，便于比较同一条 HSP 在各序列中所占的比例。"
+    },
+    "gc-bars/caption": {
+      "source_sha256": "e617abb09b7beafac9dae342b29ad28605a65fcf1acb9fcd7a56bd42bb3756f0",
+      "status": "reviewed",
+      "translation": "pUC19 的第一个区间覆盖第 1–100 bp，GC 含量为 60%。"
+    },
+    "coverage-pair/caption": {
+      "source_sha256": "543aa04868cea236ec11b17b7223ce7cd77f54560a9dacc11740ba0b0441364f",
+      "status": "reviewed",
+      "translation": "按 10,000 bp 分窗，显示与 MT118296.1 的三条 HSP 覆盖 MT108731.1 的比例。"
+    },
+    "fixed-features/caption": {
+      "source_sha256": "209a7c11337c33633596b5168abe657613af5295370ee541a4cbcf7b4292f2df",
+      "status": "reviewed",
+      "translation": "同一种填色标出 pUC19 上选出的五个区间。"
+    },
+    "flex-labels/caption": {
+      "source_sha256": "47ab4419789cd1234128557dc801b445b0333465ef0348fb869a936c3ce127c0",
+      "status": "reviewed",
+      "translation": "MT108731.1 的标签向圆心移动，两条骨架的半径仍为 1。"
+    },
+    "first-backbones/caption": {
+      "source_sha256": "a8c6465334151bb1abb239464939206de239fb478f5f2b164dfbeff6048ca1a2",
+      "status": "reviewed",
+      "translation": "两段带有序列名称的弧分别表示 MT108731.1 和 MT118296.1 的全长。"
+    },
+    "first-features/caption": {
+      "source_sha256": "9f375b515c41edaf262b8ef43daf248d17bf577f335e182165a48b73cb71f278",
+      "status": "reviewed",
+      "translation": "绿色箭头标出两条骨架上选取的编码序列。"
     }
   }
 }

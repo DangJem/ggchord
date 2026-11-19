@@ -1,19 +1,27 @@
+Use sequence layout to decide how a reference is displayed. Begin with the two-row comparison of MT108731.1 and MT118296.1, then try a change of order, a second copy of a reference, or equal visual lengths.
+
 <a id="direction"></a>
 
 ## Reverse one displayed sequence {#direction}
 
-Place MT118296.1 first and reverse MT108731.1. The accession names in the orientation vector let you reorder the rows later without moving the reversal to the other sequence. Compare the ends of the three ribbons with the [original arrangement](multi-sequence-links.md).
+The [original arrangement](collinear.md#adapt) has MT108731.1 on top, with both arrows pointing right. Place MT118296.1 first and assign a named orientation of −1 to MT108731.1. Now the longer backbone is below the shorter one and its arrow points left. All three HSPs keep their original coordinates.
 
 {{example:order-orientation}}
 
-<a id="instances"></a>
-
-## Display the same reference twice {#instances}
-
-For an A–B–A comparison, name the two copies in the order vector, for example `layout_sequences(order = c(left = "A", middle = "B", right = "A"))`. In each ribbon layer, select the relevant source records and use `between = c("left", "middle")` or `between = c("middle", "right")`. Source coordinates and biological strand still belong to the original A. Both copies retain its complete length.
-
 <a id="length"></a>
 
-## Preserve or standardise visual lengths {#length}
+## Compare relative positions on equal-length rows {#length}
 
-Keep the default proportional lengths when comparing physical distances between sequences. Use `layout_sequences(length_mode = "equal")` to compare the relative positions of features on equal-length backbones. Read the local sequence axis for base or residue distances.
+Look at the first HSP on its own and set `length_mode = "equal"`. The query and subject rows now occupy the same visual width. Read the terminal ticks to see that the rows still represent 64,323 bp and 32,090 bp. The subject interval covers a larger proportion of its sequence.
+
+{{example:layout-equal}}
+
+<a id="instances"></a>
+
+## Choose which displayed copy receives each ribbon {#instances}
+
+Name three display rows `top`, `middle` and `bottom` in the order vector. The top and bottom rows are copies of MT108731.1. The first layer sends the longest HSP to the top copy. The second sends the remaining two to the bottom copy. In each layer, `between` names the two rows that receive the selected records.
+
+{{example:layout-instances}}
+
+Next, [compare interval ribbons and midpoint lines](multi-sequence-links.md). For spacing, orientation and per-sequence geometry, see [flexible parameters](parameters.md) and [the layout reference](../../man/layout_sequences.Rd).

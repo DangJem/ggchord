@@ -1,0 +1,32 @@
+{
+  "language": {
+    "en": "Language · English"
+  },
+  "choose_language": {
+    "en": "Choose language"
+  },
+  "appearance": {
+    "en": "Appearance"
+  },
+  "search": {
+    "en": "Search documentation"
+  },
+  "search_hint": {
+    "en": "Search tasks, functions or parameters"
+  },
+  "filter": {
+    "en": "Filter result types"
+  },
+  "results": {
+    "en": "Search results"
+  },
+  "close": {
+    "en": "Close search"
+  },
+  "keys": {
+    "en": "↑ ↓ select · Enter open · Esc close"
+  },
+  "toggle": {
+    "en": "Toggle menu"
+  }
+}

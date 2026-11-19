@@ -1,0 +1,17 @@
+library(ggchord)
+library(dplyr)
+
+reference <- seq_data_example |>
+  filter(accver == "MT108731.1")
+intervals <- ribbon_data_example |>
+  filter(qaccver == reference$accver, saccver == "MT118296.1") |>
+  transmute(accver = qaccver,
+            start = pmin(qstart, qend), end = pmax(qstart, qend))
+
+ggchord(reference) +
+  geom_seq(show.legend = FALSE) +
+  track_band("coverage", width = grid::unit(12, "mm")) +
+  geom_track_col(data = intervals, stat = "coverage", binwidth = 10000,
+                 track = "coverage", fill = "#327B83") +
+  scale_track_value_continuous("coverage", limits = c(0, 1), name = "Coverage") +
+  coord_collinear()

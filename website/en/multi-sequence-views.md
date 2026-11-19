@@ -1,39 +1,37 @@
 <a id="comparison"></a>
 
-## Keep the observations fixed {#comparison}
+## Follow one alignment through four coordinate systems {#comparison}
 
-All four examples use the same two complete references and the same three observed HSPs from MT108731.1 to MT118296.1. Each code block runs independently. Compare where the ends of each ribbon meet a backbone. The order of HSP endpoints and the lengths of both reference sequences are preserved across these views.
+All four plots use the full lengths of MT108731.1 (64,323 bp) and MT118296.1 (32,090 bp) and the first local alignment between them in that direction. Each example runs on its own. The only change between scripts is the last line, which chooses the coordinates.
 
 <a id="chord"></a>
 
-### Chord {#chord}
-
-Read ribbon endpoints around the circumference. This layout gives many-to-many relations a compact overview.
+### Find the two endpoint intervals on arcs {#chord}
 
 {{example:views-chord}}
 
+The longer blue arc belongs to MT108731.1. The band joins 26,298–51,139 bp on that arc to 7,121–31,959 bp on the shorter orange arc. The arrow on each backbone shows its display direction. [Build this diagram a layer at a time](chord.md).
+
 <a id="collinear"></a>
 
-### Collinear {#collinear}
-
-Read along each row to compare the positions and spans of the three alignments. To change the displayed direction of one reference, see [order and orientation](multi-sequence-layout.md).
+### Read both intervals against straight axes {#collinear}
 
 {{example:views-collinear}}
 
+The shorter sequence now lies below the longer one. Both rows begin at base 1 on the left. The lower end of the band reaches nearly to the right end of its backbone. [Add the other two alignments](collinear.md#adapt).
+
 <a id="radial"></a>
 
-### Radial synteny {#radial}
-
-Read outward along each spoke. With additional references, the spoke order determines which neighbours sit next to each other.
+### Read from the centre out along each spoke {#radial}
 
 {{example:views-radial}}
 
+Here base 1 on each spoke faces the central gap. Follow the band between the upper and lower spokes to find the same two intervals. [Add a third spoke](radial-synteny.md#adapt) to see how two alignments can share a query.
+
 <a id="sankey"></a>
 
-### Sankey {#sankey}
-
-Read the query copy on the left and the subject copy on the right. Ribbon width at each end reflects the observed span on that sequence. The two-column arrangement is useful when query and subject roles matter.
+### Follow query on the left to subject on the right {#sankey}
 
 {{example:views-sankey}}
 
-The [gallery](gallery.md) contains full multi-sequence examples with their data and rendering scripts.
+Each accession appears in both columns. The single input row links the upper left copy to the lower right copy. Next, [compare the three bands for this pair](sankey.md#adapt), or [use their coordinates on two dotplot axes](dotplot.md).

@@ -1,0 +1,42 @@
+{
+  "language": {
+    "zh": "语言 · 现代汉语",
+    "en": "Language · English"
+  },
+  "choose_language": {
+    "zh": "选择语言",
+    "en": "Choose language"
+  },
+  "appearance": {
+    "zh": "外观",
+    "en": "Appearance"
+  },
+  "search": {
+    "zh": "搜索文档",
+    "en": "Search documentation"
+  },
+  "search_hint": {
+    "zh": "搜索任务、函数或参数",
+    "en": "Search tasks, functions or parameters"
+  },
+  "filter": {
+    "zh": "筛选结果类型",
+    "en": "Filter result types"
+  },
+  "results": {
+    "zh": "搜索结果",
+    "en": "Search results"
+  },
+  "close": {
+    "zh": "关闭搜索",
+    "en": "Close search"
+  },
+  "keys": {
+    "zh": "↑ ↓ 选择 · Enter 打开 · Esc 关闭",
+    "en": "↑ ↓ select · Enter open · Esc close"
+  },
+  "toggle": {
+    "zh": "展开或收起菜单",
+    "en": "Toggle menu"
+  }
+}

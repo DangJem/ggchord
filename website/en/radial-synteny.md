@@ -1,17 +1,21 @@
-A radial synteny plot assigns one sequence to each spoke. It shows relationships among several sequences around a common centre while retaining an individual position scale along each spoke.
+In radial synteny, each reference is a straight spoke with its own position scale. Follow a ribbon to the two spokes to find the intervals it connects.
 
 <a id="draw"></a>
 
-## Plot the selected sequence pairs {#draw}
+## Read one HSP on two spokes {#draw}
 
-The bundled chord subset contains 12 observed alignments across four sequences. Including non-neighbours makes the whole subset visible. Transparency helps separate overlapping ribbons.
+Use the first alignment from MT108731.1 to MT118296.1. The data and layers match the [two-row comparison](collinear.md). Only the final coordinate call changes.
 
-{{example:first-radial}}
+{{example:views-radial}}
+
+With two references the spokes point in opposite directions. Read outward from the central gap on each one. The subject end of the ribbon reaches almost to the outer end of MT118296.1 at 32,090 bp.
 
 <a id="adapt"></a>
 
-## Read position along a spoke {#adapt}
+## Add a second subject spoke {#adapt}
 
-Follow one ribbon to the scale on each spoke to locate its endpoints. `start_angle` rotates the set of spokes together. `inner_radius` changes the space at the centre. To compare biological directions, check the source strand or ordered alignment endpoints as well as the displayed geometry.
+Add OQ646790.1 to the references. Group hits by subject before selecting the first row so each subject contributes one observed interval pair. MT108731.1 now connects to two separate spokes, with different widths at the query end.
 
-[Radial map with gene annotations](case-radial.md) · [Radial coordinate options](../../man/coord_radial_synteny.Rd)
+{{example:first-radial}}
+
+The first spoke starts at noon. In larger maps, `start_angle` rotates the set of spokes and `inner_radius` changes the central opening. Next, [separate query and subject into columns](sankey.md), or [add genes to a four-spoke map](case-radial.md).

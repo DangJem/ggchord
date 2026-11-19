@@ -74,6 +74,13 @@ def measurements(css):
             add('custom focus indicator / necessary non-text', '--color-focus', background, NECESSARY_UI)
         add('primary button text', '--surface-paper', '--color-brand', NORMAL_TEXT)
         add('primary button hover text', '--surface-paper', '--text-strong', NORMAL_TEXT)
+        for module in ('home', 'start', 'plots', 'data', 'gallery', 'reference'):
+            for state in ('tint', 'hover'):
+                background = f'--nav-{module}-{state}'
+                add('navigation tile text / ' + state, '--text-strong', background, NORMAL_TEXT)
+                add('navigation tile edge and focus / ' + state, f'--nav-{module}-edge',
+                    background, NECESSARY_UI)
+        add('appearance option hover text', '--text-strong', '--surface-soft', NORMAL_TEXT)
         # Decorative separators intentionally stay quiet. Necessary control
         # boundaries must be a separate token, or fall back to the actual rule.
         control = '--color-control' if '--color-control' in values else '--color-rule'

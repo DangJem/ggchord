@@ -1,14 +1,4 @@
 {
-  "first-plot": {
-    "kind": "plot",
-    "width": 7,
-    "height": 6,
-    "dpi": 144,
-    "caption": {
-      "zh": "四条噬菌体基因组的骨架与随包比对表中的前四条记录。每条连接带对应一对原始比对区间。",
-      "en": "Four phage genome backbones and the first four alignments in the bundled alignment table. Each ribbon joins the two reported sequence intervals."
-    }
-  },
   "flex-radius": {
     "kind": "plot",
     "width": 7,
@@ -55,9 +45,10 @@
     "height": 5,
     "dpi": 144,
     "caption": {
-      "zh": "三条实测 HSP 的弦图视图",
-      "en": "Chord view of three observed HSPs"
-    }
+      "zh": "一条 HSP 连接两条噬菌体序列弧上的区间。",
+      "en": "One HSP joins intervals on the two phage arcs."
+    },
+    "preview_page": "multi-sequence-views"
   },
   "views-collinear": {
     "kind": "plot",
@@ -65,9 +56,10 @@
     "height": 5,
     "dpi": 144,
     "caption": {
-      "zh": "三条实测 HSP 的共线性视图",
-      "en": "Collinear view of three observed HSPs"
-    }
+      "zh": "同一条 HSP 横跨两条平行骨架上的区间。",
+      "en": "The same HSP spans two intervals on parallel backbones."
+    },
+    "preview_page": "multi-sequence-views"
   },
   "views-radial": {
     "kind": "plot",
@@ -75,8 +67,8 @@
     "height": 5,
     "dpi": 144,
     "caption": {
-      "zh": "三条实测 HSP 的径向共线性视图",
-      "en": "Radial synteny view of three observed HSPs"
+      "zh": "两根辐条显示同一条 HSP 的端点。",
+      "en": "The two spokes show the endpoints of one HSP."
     }
   },
   "views-sankey": {
@@ -85,8 +77,8 @@
     "height": 5,
     "dpi": 144,
     "caption": {
-      "zh": "三条实测 HSP 的双列 Sankey视图",
-      "en": "Sankey view of three observed HSPs"
+      "zh": "一条 HSP 从左列的查询序列连到右列的目标序列。",
+      "en": "One HSP runs from the left query copy to the right subject copy."
     }
   },
   "order-orientation": {
@@ -245,9 +237,10 @@
     "height": 7,
     "dpi": 120,
     "caption": {
-      "zh": "四条序列弧中，一条已观测比对连接其中两条。",
-      "en": "One observed alignment spans two of the four sequence arcs."
-    }
+      "zh": "一条连接带标出两条基因组之间第一条实测比对的区间。",
+      "en": "One ribbon connects the first observed alignment on these two genomes."
+    },
+    "preview_page": "chord"
   },
   "first-collinear": {
     "kind": "plot",
@@ -265,8 +258,8 @@
     "height": 7,
     "dpi": 120,
     "caption": {
-      "zh": "四条径向骨架显示选出的 HSP，包括非相邻序列对。",
-      "en": "Four radial backbones show the selected HSPs, including non-neighbour pairs."
+      "zh": "两条 HSP 共用一根查询序列辐条，分别通向不同的目标序列。",
+      "en": "Two observed HSPs share a query spoke and reach different subject spokes."
     }
   },
   "first-sankey": {
@@ -504,5 +497,127 @@
       "zh": "pSpCas9(BB)-2A-GFP (PX458) · 19 个特征，4 个酶切位置",
       "en": "pSpCas9(BB)-2A-GFP (PX458) · 19 features and 4 restriction positions"
     }
+  },
+  "puc-backbone": {
+    "kind": "plot",
+    "width": 7,
+    "height": 6,
+    "dpi": 144,
+    "caption": {
+      "zh": "pUC19 环形骨架覆盖全长 2,686 bp。",
+      "en": "The pUC19 ring spans all 2,686 bp."
+    }
+  },
+  "dotplot-pair": {
+    "kind": "plot",
+    "width": 7,
+    "height": 6,
+    "dpi": 144,
+    "caption": {
+      "zh": "三条 HSP 在相同的两条坐标轴上形成三段向右上方延伸的线段。",
+      "en": "Three HSPs form three rising segments on the same pair of axes."
+    }
+  },
+  "fusion-panels": {
+    "kind": "plot",
+    "width": 10,
+    "height": 6,
+    "dpi": 144,
+    "caption": {
+      "zh": "左侧以圆图展示 MT108731.1，右侧以直线骨架展示两条参考序列。",
+      "en": "A circular MT108731.1 overview beside a linear view of both references."
+    }
+  },
+  "link-midpoints": {
+    "kind": "plot",
+    "width": 7,
+    "height": 5,
+    "dpi": 144,
+    "caption": {
+      "zh": "每条线连接一条 HSP 两端区间的中点。",
+      "en": "Each line joins the two interval midpoints of one HSP."
+    }
+  },
+  "layout-instances": {
+    "kind": "plot",
+    "width": 8,
+    "height": 6,
+    "dpi": 144,
+    "caption": {
+      "zh": "两条参考序列占据三个显示行，最长的 HSP 连接上方两行。",
+      "en": "Three display rows represent two references. The longest HSP joins the top pair."
+    }
+  },
+  "layout-equal": {
+    "kind": "plot",
+    "width": 7,
+    "height": 5,
+    "dpi": 144,
+    "caption": {
+      "zh": "将两条骨架显示为等长，便于比较同一条 HSP 在各序列中所占的比例。",
+      "en": "Equal display lengths reveal the fraction of each backbone occupied by the same HSP."
+    }
+  },
+  "gc-bars": {
+    "kind": "plot",
+    "width": 7,
+    "height": 5,
+    "dpi": 144,
+    "caption": {
+      "zh": "pUC19 的第一个区间覆盖第 1–100 bp，GC 含量为 60%。",
+      "en": "The first pUC19 interval covers bases 1–100 and contains 60% GC."
+    }
+  },
+  "coverage-pair": {
+    "kind": "plot",
+    "width": 7,
+    "height": 5,
+    "dpi": 144,
+    "caption": {
+      "zh": "按 10,000 bp 分窗，显示与 MT118296.1 的三条 HSP 覆盖 MT108731.1 的比例。",
+      "en": "Coverage of MT108731.1 by its three HSPs to MT118296.1, in 10,000 bp windows."
+    }
+  },
+  "fixed-features": {
+    "kind": "plot",
+    "width": 6,
+    "height": 6,
+    "dpi": 144,
+    "caption": {
+      "zh": "同一种填色标出 pUC19 上选出的五个区间。",
+      "en": "One fixed fill marks all five selected pUC19 intervals."
+    }
+  },
+  "flex-labels": {
+    "kind": "plot",
+    "width": 7,
+    "height": 6,
+    "dpi": 144,
+    "caption": {
+      "zh": "MT108731.1 的标签向圆心移动，两条骨架的半径仍为 1。",
+      "en": "The MT108731.1 label moves towards the centre while both backbone radii stay at 1."
+    }
+  },
+  "first-backbones": {
+    "kind": "plot",
+    "width": 8,
+    "height": 7,
+    "dpi": 120,
+    "caption": {
+      "zh": "两段带有序列名称的弧分别表示 MT108731.1 和 MT118296.1 的全长。",
+      "en": "Two labelled arcs show the full lengths of MT108731.1 and MT118296.1."
+    },
+    "preview_page": "chord"
+  },
+  "first-features": {
+    "kind": "plot",
+    "width": 8,
+    "height": 7,
+    "dpi": 120,
+    "caption": {
+      "zh": "绿色箭头标出两条骨架上选取的编码序列。",
+      "en": "Green arrows mark the selected coding sequences along both backbones."
+    },
+    "preview_page": "chord"
   }
 }

@@ -18,31 +18,29 @@ mark_flexible_parameters <- function(main, topic, lang) {
   parameters <- flexible_parameters[[topic]]
 
   zh <- identical(lang, "zh")
-  kinds <- c(sequence = if (zh) "按序列" else "by sequence",
-             strand = if (zh) "按序列或链" else "by sequence or strand",
-             `strand-offset` = if (zh) "按序列或链" else "by sequence or strand",
-             `fixed-label` = if (zh) "固定布局按序列或链" else "by sequence or strand for fixed labels",
-             band = if (zh) "逐序列原生尺寸" else "native dimensions by sequence")
+  badge <- if (zh) "【支持灵活参数】" else "[Flexible parameter]"
   anchors <- c(sequence = "scalar", strand = "width", `strand-offset` = "strand",
                `fixed-label` = "scope", band = "scope")
   found <- character()
   for (term in xml2::xml_find_all(main, ".//dt[starts-with(@id, 'arg-')]")) {
     arguments <- trimws(strsplit(trimws(xml2::xml_text(term)), ",", fixed = TRUE)[[1]])
-    for (argument in arguments) {
-      xml2::xml_add_child(term, "span", id = paste0("parameter-", argument), class = "argument-anchor")
+    permalink <- xml2::xml_find_first(term, "./a[@class='anchor']")
+    xml2::xml_remove(xml2::xml_contents(term))
+    for (i in seq_along(arguments)) {
+      argument <- arguments[i]
+      if (i > 1L) xml2::xml_add_child(term, "span", ", ")
+      name <- xml2::xml_add_child(term, "span", class = "argument-term")
+      xml2::xml_add_child(name, "code", argument, id = paste0("parameter-", argument),
+                          class = "argument-anchor")
+      kind <- parameters[[argument]]
+      if (!is.null(kind)) {
+        stopifnot(kind %in% names(anchors))
+        xml2::xml_add_child(name, "a", badge, class = "flexible-parameter",
+                            href = paste0("../parameters.html#", anchors[[kind]]))
+        found <- c(found, argument)
+      }
     }
-    marked <- intersect(arguments, names(parameters))
-    if (!length(marked)) next
-    # Grouped Rd entries share a note only if all arguments share its contract.
-    stopifnot(setequal(arguments, marked))
-    kind <- unique(unlist(parameters[marked], use.names = FALSE))
-    stopifnot(length(kind) == 1L, kind %in% names(kinds))
-    description <- xml2::xml_find_first(term, "following-sibling::dd[1]")
-    note <- xml2::xml_add_child(description, "p", class = "flexible-parameter")
-    xml2::xml_add_child(note, "a", if (zh) "灵活参数" else "Flexible parameter",
-                        href = paste0("../parameters.html#", anchors[[kind]]))
-    xml2::xml_add_child(note, "span", paste0(" · ", kinds[[kind]]))
-    found <- c(found, marked)
+    if (!inherits(permalink, "xml_missing")) xml2::xml_add_child(term, permalink)
   }
   if (!setequal(found, names(parameters))) {
     stop("Missing documented arguments in ", topic, ": ",

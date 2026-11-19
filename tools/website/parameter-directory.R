@@ -20,7 +20,8 @@ for (path in list.files(file.path(root, "man"), "\\.Rd$", full.names = TRUE)) {
     if (!is.function(object)) next
     parameters <- intersect(names(formals(object)), documented)
     if (!length(parameters)) next
-    rows[[api]] <- data.frame(api = api, parameter = parameters,
+    defaults <- vapply(parameters, function(name) deparse1(formals(object)[[name]]), "")
+    rows[[api]] <- data.frame(api = api, parameter = parameters, default = unname(defaults),
                               topic = tools::file_path_sans_ext(basename(path)),
                               anchor = paste0("parameter-", parameters))
   }

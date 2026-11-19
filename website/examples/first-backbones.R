@@ -1,0 +1,11 @@
+library(ggchord)
+library(dplyr)
+
+ids <- c("MT108731.1", "MT118296.1")
+reference <- seq_data_example |>
+  filter(accver %in% ids)
+
+ggchord(reference) +
+  geom_seq(show.legend = FALSE) +
+  geom_seq_label() +
+  coord_chord()

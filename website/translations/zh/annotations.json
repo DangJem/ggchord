@@ -1,30 +1,35 @@
 {
-  "source_sha256": "d885b7eebffd6f8904f48f935b23503a1790f7222084f0e67c36221815588b43",
+  "source_sha256": "b99c6c218c969899e54fc2ab24bc8cc50c39bd9f19158cdae1d2567cd8a97137",
   "blocks": {
-    "1": {
-      "source_sha256": "6ab192ed2ebbe419a9cc23c87b106f8a6aac82a0e30aabc5ad47ec28a8069c15",
+    "0": {
+      "source_sha256": "197e9c986ad2ac18ae0f74619faf191c69b2f8fa9cdc2885d220a08e5aacb9e0",
       "status": "reviewed",
-      "translation": "## 绘制全部特征，只标出选中的记录 {#anchors}\n"
+      "translation": "当圆图上的注释较密时，通常希望保留全部特征，只给其中一部分加标签。可以先用完整的特征表安排布局，再按记录中的字段选择要标注的条目。\n"
     },
     "2": {
-      "source_sha256": "8f4262240fd410d23a77a4389a2610fa09b392fb3f0eb078757bcd4180a76e7f",
+      "source_sha256": "04366336c64c6df81f89326dae4779556bcfa8a51a5d4930c96a7244f0ddb1a1",
       "status": "reviewed",
-      "translation": "pUC19 示例包含九条参考特征。每条特征有稳定 ID，标签可据此找到对应实体。先用完整表分配道位，再筛出两条 CDS 作标签。实体图层的 ID 是 `features`，标签层通过 `anchor_layer` 指向它。\n"
+      "translation": "## 先确定特征位置，再选择标签 {#placement}\n"
     },
-    "5": {
-      "source_sha256": "763890ebcf326ed55ddb5bb010b1f8dfa230159a3ded0cff232d7a811ce5e311",
+    "3": {
+      "source_sha256": "6920ff37a0a2f75e2e82d916fb9ed8998446b8598ef94fe034b3b0ad97e99c5c",
       "status": "reviewed",
-      "translation": "## 决定形状与标签如何放置 {#placement}\n"
+      "translation": "在 2,686 bp 的 pUC19 骨架上画出九条注释。每一行特征都有登录号和起止位置，方向已知时也记录链别。靠近序列起点的一组短区间有多处重叠。\n"
     },
     "6": {
-      "source_sha256": "4450de8a228b169f8a0acbd4f89cd5d71d92c5d4298f285da833205db4882092",
+      "source_sha256": "fc905fd8f097d028c13ac3126b9f05045c7a8ed64127a388fde873f56fd99247",
       "status": "reviewed",
-      "translation": "混合链向或未知链的区间可用 `geom_feature()`。核酸参考上链向已知的编码特征可选 gene 预设绘制有向箭头。教学表若同时保留原始链和重编码的展示链，应明确传入来源链。若想把多道放在同侧，可给 `position_feature_stack()` 指定 `base_position = position_offset(...)` 和分道方向。稳定特征键与原区间使筛选、重排后的标签仍可跟随道位。\n"
+      "translation": "## 保留九条特征，只标注两个 CDS {#anchors}\n"
     },
     "7": {
-      "source_sha256": "55e6b13bdd9decb87797baa9e35079d6b009103d1857948143b46a4ab3e06a27",
+      "source_sha256": "7688683fa9bfb9abb5381685d644e0cf03aad08ed827cdc30b270f48eb0c045f",
       "status": "reviewed",
-      "translation": "需要指定文字角度时使用固定位置。需要自动排布时使用 `placement = \"repel\"`，用 `overflow` 决定空间不足时如何处理文字。最后按[目标导出尺寸](output.md)检查标签。\n"
+      "translation": "保留源记录的匹配标识作为 `feature_id`。将实体层命名为 `features`，用 `position_feature_stack()` 把重叠区间分到不同的道上。标签层只取两个 CDS，再通过 `anchor_layer` 指定原实体层。这样筛选之后，每个标签仍跟随各自的特征。\n"
+    },
+    "9": {
+      "source_sha256": "e7c3eb1097e1fa50b2651524db448c4fc4f5128606914659160fb6780cf155a2",
+      "status": "reviewed",
+      "translation": "在起点附近可以找到 lacZα，圆图另一侧较长的区间标有 AmpR。其余七条记录仍然可见。下一步可[按注释类型设置配色](styling.md)，也可以查看[完整 pUC19 图的位点标记](case-circular.md)。\n"
     }
   }
 }

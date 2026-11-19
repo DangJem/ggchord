@@ -1,17 +1,21 @@
-Collinear coordinates lay sequences on separate rows. Use them to compare the order and orientation of aligned intervals, or to see where an annotated feature falls relative to an alignment.
+To compare positions along two genomes, lay their backbones on parallel rows. Start with the two phages and the single local alignment (HSP) from the [chord diagram](chord.md).
 
 <a id="draw"></a>
 
-## Compare two full-length sequences {#draw}
+## Locate one alignment on two rows {#draw}
 
-The sequence table provides full lengths in bp. The filter keeps every input alignment in the displayed query-to-subject direction. Three ribbons remain. Read their two widths against the two backbones.
+Select the first HSP from MT108731.1 to MT118296.1. The ribbon layer reads its four endpoints. Changing the last line to `coord_collinear()` gives each reference its own horizontal axis in bp.
 
-{{example:first-collinear}}
+{{example:views-collinear}}
+
+The upper interval runs from 26,298 to 51,139 bp. The lower one runs from 7,121 to 31,959 bp and nearly reaches the end of the 32,090 bp subject. The shorter lower backbone shows the difference in genome lengths.
 
 <a id="adapt"></a>
 
-## Choose row order and orientation {#adapt}
+## Keep every HSP for this ordered pair {#adapt}
 
-With several rows, the default ribbon layer shows adjacent pairs. Use `adjacent_only = FALSE` to include selected non-adjacent pairs. Set the order with `layout_sequences(order = ...)`. A named orientation vector can flip a displayed row while retaining its source coordinates and strand.
+Keep the two accession filters and drop the one-row selection. Two shorter ribbons now lie to the left of the long ribbon. The narrowest links 20,376–20,677 bp on the query to 403–704 bp on the subject.
 
-[Labelled four-genome comparison](case-collinear.md) · [Linear coordinates and anchoring](../../man/coord_collinear.Rd) · [Sequence ordering](../../man/layout_sequences.Rd)
+{{example:first-collinear}}
+
+Next, [read the first alignment along radial spokes](radial-synteny.md). To reverse a row or repeat a reference, try [sequence layout](multi-sequence-layout.md). The [four-genome case](case-collinear.md) adds CDS annotations and nonadjacent comparisons.

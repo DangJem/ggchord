@@ -1,4 +1,8 @@
 {
+  "installation.html": {
+    "first-plot": "chord.html#draw",
+    "example-first-plot": "chord.html#draw"
+  },
   "chord-start.html": {
     "": "chord.html",
     "draw": "chord.html",

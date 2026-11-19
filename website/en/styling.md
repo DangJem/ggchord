@@ -1,15 +1,19 @@
-<a id="categories"></a>
-
-## Map a feature class to colour {#categories}
-
-Each category in the source `type` column gets its own fill. Naming the palette entries keeps the same colour attached to each category after sorting or filtering. The named scale supplies the legend title and keys.
-
-{{example:category-fill}}
+The same five pUC19 features can answer two questions. A single fill shows where the intervals lie. Mapping fill to the recorded annotation type also tells you which class each interval belongs to.
 
 <a id="styles"></a>
 
-## Style a layer or the complete figure {#styles}
+## Use a fixed fill to show the intervals {#styles}
 
-Use a fixed layer argument such as `fill = "#2B7580"` for one uniform colour. Inside `aes()`, map the source column to `fill` and choose a scale for its values. Each starting aesthetic reads from the layer's source table. If sequence placement uses `aes(accver = ref)`, map `fill = ref` as well to colour by that displayed reference.
+Select the two CDS, two primer-binding intervals and the multiple cloning site. Set `fill` directly on the feature layer. The long and short intervals all have the same teal fill, including those separated into lanes near the origin.
 
-Set `show.legend = FALSE` on a layer to hide all its guide contributions. On a point track, `show.legend = c(fill = FALSE)` suppresses just that layer's fill contribution. For plot-wide typography or legend position, use `ggplot2::theme()`. Use [track value scales](tracks.md) for numerical heights and a fill or colour scale for the palette.
+{{example:fixed-features}}
+
+<a id="categories"></a>
+
+## Map the type column to a named palette {#categories}
+
+Keep the same feature selection and placement. Put `fill = type` inside `aes()`, then name the colours in `scale_fill_manual()` with the three source values. The two CDS share one colour, as do the two primer-binding intervals. The third colour picks out the multiple cloning site.
+
+{{example:category-fill}}
+
+The palette names keep each colour attached to its type after sorting or filtering. To change typography or move the legend, use `ggplot2::theme()`. For differences between sequences in radius, offset or width, continue to [flexible parameters](parameters.md). To display measured values by height, try [a GC track](tracks.md).

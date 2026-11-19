@@ -1,0 +1,55 @@
+{
+  "source_sha256": "994b43492dcb1fa8e859ffc340169690c327d2cadb6c9e07dc196f16f7e32d85",
+  "strings": {
+    "language": {
+      "source_sha256": "c32944490008f275aff7c23daca5a531a58c48ad795bf1246870b29b2150c0cb",
+      "status": "reviewed",
+      "translation": "语言 · 现代汉语"
+    },
+    "choose_language": {
+      "source_sha256": "bba5b40bdd28c66e413c02fac811aab366d20aa19fe15348a8c907d46957ce77",
+      "status": "reviewed",
+      "translation": "选择语言"
+    },
+    "appearance": {
+      "source_sha256": "3907fa7f80722a6fc58cd8c1bd30abf7638095d6774f183b6e831b7093957d1b",
+      "status": "reviewed",
+      "translation": "外观"
+    },
+    "search": {
+      "source_sha256": "ea582e69cce77d672df1926e1a0c2e99083a3964e6711512d064a7e17722fd1b",
+      "status": "reviewed",
+      "translation": "搜索文档"
+    },
+    "search_hint": {
+      "source_sha256": "68dd90c5ea87b2f424ec6ec2043a459f70b3326b2b754e06aa9613bd4fc898af",
+      "status": "reviewed",
+      "translation": "搜索任务、函数或参数"
+    },
+    "filter": {
+      "source_sha256": "e9730811561bd64fac4abacec2a179b633e70f7a58166ef107e39369169fc76e",
+      "status": "reviewed",
+      "translation": "筛选结果类型"
+    },
+    "results": {
+      "source_sha256": "e978b00de465a271a13bf2f6b9d74d67fdfaa7d973a37378fa32f988c3280599",
+      "status": "reviewed",
+      "translation": "搜索结果"
+    },
+    "close": {
+      "source_sha256": "55656b5e434f4c069877f0c12174a14e67ef9619d30e796834b1216a03d9f677",
+      "status": "reviewed",
+      "translation": "关闭搜索"
+    },
+    "keys": {
+      "source_sha256": "872d2a6e64c855c0a3349cd2b2c86b4e65f3b0db6337b6fb2a6169fd34becadb",
+      "status": "reviewed",
+      "translation": "↑ ↓ 选择 · Enter 打开 · Esc 关闭"
+    },
+    "toggle": {
+      "source_sha256": "c02651240c87b47d3319c6878d0c2ec16eadc4d6932b9f4f35955326463d4cdb",
+      "status": "reviewed",
+      "translation": "展开或收起菜单"
+    }
+  }
+}

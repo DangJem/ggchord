@@ -1,30 +1,35 @@
 {
-  "source_sha256": "794e7f63e2d4ca1242371f40ee247997d2dd46d51bacb4704d3d55bf2b9c10ca",
+  "source_sha256": "b420ec94606244b1dcb0d242801b56db6bdbe1d5e403e365c49bde7751cdb0aa",
   "blocks": {
-    "1": {
-      "source_sha256": "89d1e894b317fb548fb4bfb7dde71eafcebe09e13a6276f23c14128ed1a75e46",
+    "0": {
+      "source_sha256": "f64682cc46a3d3dc0625b721ba945aec2780ce88ea2fd2cdd625cd98b8c70798",
       "status": "reviewed",
-      "translation": "## 每条实测比对绘制一条连接带 {#intervals}\n"
+      "translation": "每条 HSP 在两条序列上各有一个区间。两端的跨度都重要时，可以用连接带。如果只想标出每段匹配的大致位置，可以从两个区间各取一个代表位置，用线连接。\n"
     },
     "2": {
-      "source_sha256": "e1f110b4d9bb0564f6db32530a3375501086e85822386a274d2a9cbc4b2e32ad",
+      "source_sha256": "ae4937ab6f455c116bfa8056a7d3486c85fadb6fe38dda5d1ccb21f08778f6cd",
       "status": "reviewed",
-      "translation": "这三条局部比对连接 MT108731.1 和 MT118296.1。每行有四个端点，带的两端分别覆盖对应骨架上的区间。坐标递减可以表示反向匹配，准备连接表时应保留原始端点顺序。\n"
+      "translation": "## 保留两个区间的跨度 {#intervals}\n"
     },
-    "5": {
-      "source_sha256": "8d55117ecc11603271c6a09d408fa8882e3e7405b1aeb90339277ec06538dfc3",
+    "3": {
+      "source_sha256": "204fca299788e6e43510d2fa99058ac3d2fed4fa7b660d63659bc1be33d54a8b",
       "status": "reviewed",
-      "translation": "## 选择点连接、区间连接和序列对 {#points}\n"
+      "translation": "这对有向序列有三条 HSP。用每条记录的原始端点画连接带，给所有带使用同一固定填色，便于比较宽度。最短的一条在靠近第 1 bp 的位置接到 MT118296.1 上。\n"
     },
     "6": {
-      "source_sha256": "4b0b340d806175e71203f20bed9a37502e4d9b7571cacfb69bc2b868a2d84409",
+      "source_sha256": "691e0d9da941f8daf27fe06ab47fdefe20b1397a748cb3ecb70f09a741948371",
       "status": "reviewed",
-      "translation": "连接两个位点时使用 `geom_link_line()`，两端字段为 `qaccver, qpos, saccver, spos`。连接两段区间时使用 `geom_link_ribbon()`。示例固定填色，使三条记录同色。要表示一致性百分数，可保留输入的 `pident`，使用连接带默认的一致性映射。\n"
+      "translation": "## 连接同三条记录的区间中点 {#points}\n"
     },
     "7": {
-      "source_sha256": "9974617f64215fb18a6006871c607f51430e9b72354d44d2db972fb94b223b0a",
+      "source_sha256": "ff798f6f1a3837ab981f61e873a9d8d86a7cb9716d57e737cab01129c830c103",
       "status": "reviewed",
-      "translation": "共线性图默认比较相邻行。把关心的序列对表传给 `pairs`，或用 `adjacent_only = FALSE` 纳入非相邻行。解读缺失的连接前，可以先核对[来源行](diagnostics.md)。\n"
+      "translation": "对查询端和目标端分别计算区间中点，向下取整到碱基位置。将两个位置作为 `qpos` 和 `spos` 传入 `geom_link_line()`。最右侧的线连接最长 HSP 的两个中点。只保留中点后，图中看不到两端的跨度及端点顺序。\n"
+    },
+    "9": {
+      "source_sha256": "89f16380ce2276100f5eecdc73083ad63525c2ca4ee4f183105d3d6044cfebe7",
+      "status": "reviewed",
+      "translation": "当骨架超过两行时，共线性连接带层默认只连接相邻行。要显示已选中的非相邻序列对，可设置 `adjacent_only = FALSE`。下一步可[检查某一图层的来源记录](diagnostics.md)，或[把记录分配到重复显示的参考序列](multi-sequence-layout.md#instances)。\n"
     }
   }
 }
