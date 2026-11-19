@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "source": "website/assets/site.css",
-  "source_sha256": "8b05bf87198d26e9f15642ba5bf486ee196e263c5e9d07ece8ee466f5e78655e",
+  "source_sha256": "354eb9305f32df50b66fb453df52aa67d8ef9c147b04dda34a2d1065205ac544",
   "method": {
     "reference": "https://www.w3.org/TR/WCAG22/#contrast-minimum",
     "non_text_reference": "https://www.w3.org/TR/WCAG22/#non-text-contrast",
@@ -62,10 +62,8 @@
       "--radius-small": "5px",
       "--radius-panel": "10px",
       "--shadow-dialog": "0 16px 60px #0e282d40",
-      "--content-reading": "76ch",
-      "--content-wide": "100%",
-      "--topics-width": "248px",
-      "--toc-width": "188px",
+      "--topics-width": "clamp(156px,calc(20vw - 86px),202px)",
+      "--toc-width": "clamp(136px,calc(11.25vw + 8px),176px)",
       "--header-height": "76px",
       "--header-min": "76px",
       "--code-font-size": "15px",
@@ -1504,7 +1502,7 @@
     "visible_focus_rule": true,
     "current_navigation_labeled_visually": true,
     "no_external_font_or_stylesheet_import": true,
-    "reading_width_separate_from_wide_content": true,
+    "article_width_follows_grid": true,
     "legacy_palette_removed": true
   },
   "passed": true,

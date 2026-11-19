@@ -67,13 +67,18 @@ for(lang in c('en','zh')) {
   xml2::xml_set_attr(xml2::xml_find_first(doc,'//body'),'data-module',module)
   nav_fragment <- function(html) xml2::xml_find_first(xml2::read_html(paste0('<html><body>',html,'</body></html>')),'//body/*')
   escape <- htmltools::htmlEscape
-  page_link <- function(key, label = NULL, class = NULL) {
+  page_link <- function(key, label = NULL, class = NULL, compact = NULL) {
     page <- page_record(key)
     if(is.null(label)) label <- page$title[[lang]]
+    has_compact <- !is.null(compact) && !identical(label, compact)
     paste0('<a ',
       if(!is.null(class)) paste0('class="',class,'" '),
+      if(has_compact) paste0('aria-label="',escape(label,attribute=TRUE),'" '),
       if(identical(relative,page$canonical_path)) 'aria-current="page" ',
-      'href="',prefix,escape(page$canonical_path,attribute=TRUE),'">',escape(label),'</a>')
+      'href="',prefix,escape(page$canonical_path,attribute=TRUE),'">',
+      if(has_compact) paste0('<span class="nav-full-label" aria-hidden="true">',escape(label),'</span>',
+        '<span class="nav-compact-label" aria-hidden="true">',escape(compact),'</span>') else escape(label),
+      '</a>')
   }
 
   # Keep each destination directly clickable and use a separate menu button.
@@ -91,7 +96,7 @@ for(lang in c('en','zh')) {
       descendants <- Filter(function(x) identical(x$parent,g$id),navigation)
       keys <- unique(c(unlist(g$pages),unlist(lapply(descendants,function(x) c(x$landing,unlist(x$pages))))))
       keys <- Filter(function(key) !identical(key,g$landing) && !is.null(page_record(key)),keys)
-      link <- page_link(g$landing,g$title[[lang]],'nav-link')
+      link <- page_link(g$landing,g$title[[lang]],'nav-link',nav_text[[paste0('compact_',g$id)]])
       if(identical(primary$id,g$id) && current_page!='index' && !identical(relative,page_record(g$landing)$canonical_path))
         link <- sub('<a ', '<a aria-current="location" ',link,fixed=TRUE)
       sections <- manual_sections[[g$id]]
@@ -116,21 +121,40 @@ for(lang in c('en','zh')) {
   xml2::xml_remove(xml2::xml_children(primary_list))
   for(item in nav_items) xml2::xml_add_child(primary_list,nav_fragment(item))
 
-  sections <- manual_sections[[module]]
-  if(length(sections)) {
-    topic_label <- if(lang=='zh') '相关主题' else 'Related topics'
-    links <- vapply(sections,function(section) {
-      paste0('<div class="manual-section"><span class="manual-section-title">',
-        escape(section$title[[lang]]),'</span><ul class="manual-section-pages">',
-        section_links(setdiff(unlist(section$pages), group$landing), section),'</ul></div>')
+  # The same tree and the same links serve desktop columns and narrow disclosures.
+  add_rail <- function(class, title, content) {
+    rail <- nav_fragment(paste0('<nav class="',class,'" tabindex="0" aria-label="',escape(title,attribute=TRUE),
+      '"><details class="rail-panel" open><summary class="navigation-title">',escape(title),
+      '</summary><div class="rail-links">',content,'</div></details></nav>'))
+    xml2::xml_add_sibling(main,rail,.where='before')
+  }
+  if(relative != 'index.html') {
+    chapters <- vapply(navigation, function(chapter) {
+      keys <- setdiff(unlist(chapter$pages),chapter$landing)
+      sections <- manual_sections[[chapter$id]]
+      blocks <- vapply(sections,function(section) {
+        members <- intersect(unlist(section$pages),keys)
+        if(!length(members)) return('')
+        paste0('<span class="manual-section-title">',escape(section$title[[lang]]),
+          '</span><ul>',section_links(members,section),'</ul>')
+      },'')
+      remaining <- setdiff(keys,unlist(lapply(sections,`[[`,'pages')))
+      content <- paste0(paste(blocks,collapse=''),
+        if(length(remaining)) paste0('<ul>',section_links(remaining),'</ul>'))
+      active <- identical(chapter$id,module)
+      if(active && (!is_known_page || (current_page=='reference' && relative!='reference/index.html'))) {
+        label <- if(current_page=='reference') slug else xml2::xml_text(xml2::xml_find_first(main,'.//h1'))
+        content <- paste0(content,'<a aria-current="page" href="',escape(basename(relative),attribute=TRUE),
+          '">',escape(label),'</a>')
+      }
+      title <- chapter$title[[lang]]
+      paste0('<div class="chapter-group" data-chapter="',chapter$id,'">',
+        page_link(chapter$landing,title,'chapter-home'),
+        if(nzchar(content)) paste0('<details class="chapter-children"',if(active)' open',
+          '><summary aria-label="',escape(paste(nav_text$toggle,title,sep=' · '),attribute=TRUE),
+          '"></summary>',content,'</details>'),'</div>')
     },'')
-    topics <- paste0(page_link(group$landing,group$title[[lang]],'module-home'),
-      paste(links,collapse=''),
-      if(!is.null(group$parent)) page_link(primary$landing,primary$title[[lang]],'topic-overview'))
-    xml2::xml_add_sibling(main,nav_fragment(paste0('<nav class="chapter-nav" aria-label="',
-      topic_label,'"><p class="navigation-title">',topic_label,'</p>',topics,'</nav>')),.where='before')
-    xml2::xml_add_child(main,nav_fragment(paste0('<details class="chapter-drawer"><summary>',
-      topic_label,'</summary><nav aria-label="',topic_label,'">',topics,'</nav></details>')),.where=0L)
+    add_rail('chapter-nav',nav_text$chapters,paste(chapters,collapse=''))
   }
 
   if(current_page!='index') {
@@ -177,27 +201,19 @@ for(lang in c('en','zh')) {
     }
    }
   }
-  # Native reference TOCs are populated later by JavaScript. Build the compact
-  # outline from actual headings, rather than cloning their initially empty nav.
+  # Build one outline from permanent article headings. Gallery cards already link
+  # to their cases, so its outline only needs the figure families.
+  xml2::xml_remove(xml2::xml_find_all(layout,'./aside'))
   outline_headings <- xml2::xml_find_all(main, if(slug=='gallery')
     './/h2[@id][not(ancestor::details[@class="lesson-extension"])]' else
     './/*[self::h2 or self::h3][@id][not(ancestor::details[@class="lesson-extension"])]')
-  if(length(outline_headings)) {
-    outline_links <- paste(vapply(outline_headings,function(h) paste0('<li><a href="#',
-      htmltools::htmlEscape(xml2::xml_attr(h,'id'),attribute=TRUE),'">',
-      htmltools::htmlEscape(xml2::xml_text(h)),'</a></li>'),''),collapse='')
-    toc_fragment <- nav_fragment(paste0('<details class="page-outline"><summary>',
-      if(lang=='zh')'本页目录' else 'On this page','</summary><ul>',outline_links,'</ul></details>'))
-    xml2::xml_add_sibling(xml2::xml_find_first(main,'.//h1'),toc_fragment,.where='after')
-  }
-
-  native_sidebar <- xml2::xml_find_all(layout,'./aside')
-  xml2::xml_remove(native_sidebar)
-  if(length(outline_headings)) {
-    page_nav <- nav_fragment(paste0('<aside class="page-nav" aria-label="',
-      if(lang=='zh')'本页目录' else 'On this page','"><p class="navigation-title">',
-      if(lang=='zh')'本页目录' else 'On this page','</p><nav><ul>',outline_links,'</ul></nav></aside>'))
-    xml2::xml_add_sibling(main,page_nav,.where='before')
+  if(relative != 'index.html' && length(outline_headings)) {
+    outline_links <- vapply(outline_headings,function(h) {
+      paste0('<li class="outline-',xml2::xml_name(h),'"><a href="#',
+        escape(xml2::xml_attr(h,'id'),attribute=TRUE),'">',escape(xml2::xml_text(h)),'</a></li>')
+    },'')
+    add_rail('page-nav',nav_text$on_this_page,
+      paste0('<ul>',paste(outline_links,collapse=''),'</ul>'))
   }
 
   for(logo in xml2::xml_find_all(main,'.//img[@src]')) {
@@ -229,11 +245,20 @@ for(lang in c('en','zh')) {
   xml2::xml_remove(target)
   xml2::xml_set_attr(tools_list, 'class', 'navbar-nav site-nav-tools')
   xml2::xml_set_attr(xml2::xml_parent(primary_list), 'class', 'collapse navbar-collapse')
+  github <- xml2::xml_find_first(tools_list, './/a[@aria-label="GitHub"]')
+  xml2::xml_set_attr(github, 'title', 'GitHub')
+  xml2::xml_set_attr(xml2::xml_find_first(github, './span'), 'aria-hidden', 'true')
   theme <- xml2::xml_find_first(tools_list, './/button[@id="dropdown-lightswitch"]')
   xml2::xml_set_attr(theme, 'aria-label', nav_text$appearance)
+  xml2::xml_set_attr(theme, 'aria-labelledby', 'appearance-label')
   xml2::xml_set_attr(theme, 'title', nav_text$appearance)
+  xml2::xml_set_attr(xml2::xml_find_first(theme, './span'), 'aria-hidden', 'true')
+  # pkgdown updates its icon and aria-label to reflect the selected theme.
+  xml2::xml_add_child(theme, fragment(paste0('<span id="appearance-label" class="visually-hidden">',
+    escape(nav_text$appearance), '</span>')))
   language<-fragment(paste0('<li class="nav-item"><details class="language-control"><summary>',
-   nav_text$language,' <span aria-hidden="true">▾</span></summary>',
+   '<span class="language-icon" aria-hidden="true">🌐</span> ',escape(nav_text$language),
+   ' <span aria-hidden="true" class="language-chevron"></span></summary>',
    '<nav aria-label="',nav_text$choose_language,'">',
    '<a ',if(lang=='en')'aria-current="true" ' else '', 'href="',if(lang=='en') '' else partner,
    '" lang="en" data-language="en">English</a>',
@@ -244,8 +269,9 @@ for(lang in c('en','zh')) {
   xml2::xml_add_child(tools_list,language)
   search<-fragment(paste0('<li class="nav-item local-search"><div class="search-field" role="search">',
     '<label for="site-search" class="visually-hidden">',nav_text$search,'</label>',
+    '<span class="search-icon fa-solid fa-magnifying-glass" aria-hidden="true"></span>',
     '<input id="site-search" type="search" role="combobox" aria-autocomplete="list" aria-controls="site-results" aria-expanded="false" autocomplete="off" placeholder="',
-    nav_text$search_hint,'"><kbd aria-hidden="true">Ctrl K</kbd></div>',
+    escape(nav_text$search_hint,attribute=TRUE),'"><kbd aria-hidden="true">Ctrl K</kbd></div>',
     '<div class="search-panel" hidden><div class="search-heading"><strong>',nav_text$results,
     '</strong><button type="button" class="search-close" aria-label="',nav_text$close,'">×</button></div>',
     '<div class="search-filters" role="group" aria-label="',nav_text$filter,'"></div>',
@@ -253,7 +279,7 @@ for(lang in c('en','zh')) {
     nav_text$results,'"></ul><div class="search-help">',nav_text$keys,' · <a href="',
     prefix,escape(page_record(navigation$plots$landing)$canonical_path,attribute=TRUE),'">',
     escape(navigation$plots$title[[lang]]),'</a></div></div></li>'))
-  xml2::xml_add_child(tools_list,search)
+  xml2::xml_add_child(tools_list,search,.where=0L)
   body<-xml2::xml_find_first(doc,'//body')
   xml2::xml_set_attr(body,'data-kind',if(startsWith(relative,'reference/')) 'api' else if(!is.null(record)) record$kind else 'utility')
   metadata <- jsonlite::fromJSON('.site/build-metadata.json')
@@ -293,12 +319,23 @@ for(lang in c('en','zh')) {
   for(table in xml2::xml_find_all(main,'.//table')) {
     container <- xml2::xml_parent(table)
     if(grepl('data-output',xml2::xml_attr(container,'class') %||% '')) next
-    if(length(xml2::xml_find_all(table,'(.//tr)[1]/*')) >= 4L)
-      xml2::xml_set_attr(table,'class',trimws(paste(xml2::xml_attr(table,'class') %||% '', 'wide-table')))
-    wrapper <- fragment(paste0('<div class="table-scroll" role="region" tabindex="0" aria-label="',if(lang=='zh')'可横向滚动的表格' else 'Horizontally scrollable table','"></div>'))
-    xml2::xml_add_sibling(table,wrapper,.where='before')
-    xml2::xml_add_child(xml2::xml_find_first(table,'preceding-sibling::*[1]'),table)
-    xml2::xml_remove(table)
+    # Pandoc infers percentages from Markdown separator widths. Let the
+    # browser size value columns from their contents in either language.
+    for(group in xml2::xml_find_all(table,'./colgroup[not(@*)]')) {
+      cols <- xml2::xml_find_all(group, './col')
+      widths <- xml2::xml_attr(cols, 'style')
+      if(length(cols) && all(lengths(xml2::xml_attrs(cols)) == 1L) &&
+         all(!is.na(widths) & grepl('^width: *[0-9.]+%[; ]*$', widths)))
+        xml2::xml_remove(group)
+    }
+    if(!grepl('\\bfield-definitions\\b', xml2::xml_attr(container,'class') %||% '')) {
+      container <- xml2::xml_add_sibling(table, 'div', .where='before')
+      xml2::xml_add_child(container, table, .copy=FALSE)
+    }
+    xml2::xml_set_attr(container, 'class', trimws(paste(xml2::xml_attr(container,'class') %||% '', 'table-scroll')))
+    xml2::xml_set_attr(container, 'role', 'region')
+    xml2::xml_set_attr(container, 'tabindex', '0')
+    xml2::xml_set_attr(container, 'aria-label', if(lang=='zh')'可横向滚动的表格' else 'Horizontally scrollable table')
   }
   # Numeric alignment belongs to columns, including the header. Mixed
   # default-value columns remain left aligned.
@@ -319,8 +356,6 @@ for(lang in c('en','zh')) {
     xml2::xml_set_attr(output,'role','region')
     xml2::xml_set_attr(output,'aria-label',if(lang=='zh')'R 数据输出，可横向滚动' else 'R data output, horizontally scrollable')
   }
-  if(current_page=='index') xml2::xml_set_attr(xml2::xml_find_all(main,'.//*[contains(@class,"home-results")]//img'),
-    'sizes','(max-width: 899px) calc(100vw - 48px), (max-width: 1199px) 30vw, 420px')
   # pkgdown rewrites Markdown links to HTML; these are downloadable source files.
   for(a in xml2::xml_find_all(main,'.//a[@href]')) {
    href<-xml2::xml_attr(a,'href')

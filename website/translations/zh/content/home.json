@@ -1,45 +1,70 @@
 {
-  "source_sha256": "dcee9f7b3048bb7e38a32b96f7c0d258f67595d49f150af4bb237f28f438e77c",
+  "source_sha256": "27d9ed03e2e07ef857dc0dfc7823a7482f88ff6926ac58651c589f3ef72643fe",
   "strings": {
     "hero/title": {
-      "source_sha256": "84ee079b93f2bc68c28e9c281957cea43625163593c1a32518b7fd45d58815ef",
+      "source_sha256": "5711a3d31769dc9cce08c665c543700ad630d7d7259f704486abce1be417545a",
       "status": "reviewed",
-      "translation": "用 ggplot2 绘制基因组与序列关系"
+      "translation": "用 ggchord 绘制基因组注释图与序列比对图"
     },
     "hero/description": {
-      "source_sha256": "fedc244e1fbcee99b2893327f01af5e26cee40d818cbd40055fad9bcfb135659",
+      "source_sha256": "35b4207e5bc94b4702bb1e7a15ae2870dd824e5bf6c7648d4e022f50d6b5106a",
       "status": "reviewed",
-      "translation": "比较多条序列、绘制环形注释、查看局部比对，或把多张图连接成一个综合视图。"
+      "translation": "ggchord 基于 ggplot2，可比较多条序列、绘制单序列圆图，并从总览放大到指定区域。"
     },
-    "capabilities/0/title": {
-      "source_sha256": "94ec411fb9d7e5870d4c542b6321c0197176d2d77804d2bd1e2664fddf750066",
+    "hero/actions/0/label": {
+      "source_sha256": "61e8d44ad423a4a0951b21b9d11440a1c23a881fe79335c367f63be251c64800",
       "status": "reviewed",
-      "translation": "绘图指南"
+      "translation": "开始使用"
     },
-    "capabilities/0/description": {
-      "source_sha256": "c6dcf223ba075f55f1294c77f7347a8add407ab132eb870f85dc3e3c01aaa00e",
+    "hero/actions/1/label": {
+      "source_sha256": "25134a0e97c3f8d65fa1288eed7a5ddc46f6bf2ff3e155de44a49952ea684f4a",
       "status": "reviewed",
-      "translation": "按想画的图或要调整的图层查找。"
+      "translation": "浏览案例"
     },
-    "capabilities/1/title": {
-      "source_sha256": "1294507cffe66e364af71866d3d7f9bc22cb3453e0d315a8bb48d7af447a9eda",
+    "figure_labels/case": {
+      "source_sha256": "fba3047820172839b34c3637f09fb413b957662d35b44d4582498b4da280a158",
       "status": "reviewed",
-      "translation": "数据与操作"
+      "translation": "案例与代码"
     },
-    "capabilities/1/description": {
-      "source_sha256": "d53e8063660d96108175c525b51bd83175303fa9223b597d5dfd6155651e3583",
+    "figure_labels/full": {
+      "source_sha256": "894efb452da8b689aee662c31227071192b8d46b94cea94645fcfb83123e23db",
       "status": "reviewed",
-      "translation": "查找文件读取、坐标转换与输出检查。"
+      "translation": "查看大图"
     },
-    "capabilities/2/title": {
-      "source_sha256": "484ee9bb6e51e328b73f0db584c797bccfccf6c93a3b1157ec160f5d5950ff0d",
+    "figure_titles/homechord": {
+      "source_sha256": "456bb0100878d4840d9afc2a296736fdb8e6eddb7641902a990da60ebe248977",
       "status": "reviewed",
-      "translation": "API 参考"
+      "translation": "弦图"
     },
-    "capabilities/2/description": {
-      "source_sha256": "ae0d09396c3a8faa98517ce46ed7f3d7879ddd8f7388f60ecbfc0abb4b2b3899",
+    "figure_titles/homecollinear": {
+      "source_sha256": "8f9e4cc91dde749a8df1c472eb3737da1a14881a6e3f76800ea934ccc421c0f3",
       "status": "reviewed",
-      "translation": "查找函数用法、参数与返回值。"
+      "translation": "共线性图"
+    },
+    "figure_titles/homeradial": {
+      "source_sha256": "02693d5af96479f14f504da89bf94efd593d4349794996af1cb7fb65ab0e5e9b",
+      "status": "reviewed",
+      "translation": "径向图"
+    },
+    "figure_titles/homesankey": {
+      "source_sha256": "362c638c72a060cda5e08c29c6c957acae71da857d23eb85f35c78f9d2577638",
+      "status": "reviewed",
+      "translation": "桑基图"
+    },
+    "figure_titles/homecircular": {
+      "source_sha256": "47d99984032a2b1108c54dca192aa6cc50448aa5160d59428295a56abb0e3111",
+      "status": "reviewed",
+      "translation": "pUC19 质粒"
+    },
+    "figure_titles/homedotplot": {
+      "source_sha256": "408de1d0fa3a5ba85bc88ae41a5cd039b24bfc2b4f76c16ba5c000847316e1a6",
+      "status": "reviewed",
+      "translation": "四条参考序列"
+    },
+    "figure_titles/homefusion": {
+      "source_sha256": "2bc6f2f1529c484fde428fedb8ee8d5a77bf2feb4ad66b25c58e3a6b2babf0a1",
+      "status": "reviewed",
+      "translation": "从总览到局部碱基"
     },
     "modules/0/title": {
       "source_sha256": "139441b5e05cbb6b9661e2edac3baa874aff978a2b263243eba94529428d7b3b",
@@ -72,9 +97,9 @@
       "translation": "在两条坐标轴上查看序列比对区段、方向与一致性。"
     },
     "modules/3/title": {
-      "source_sha256": "cb503f425fa87c00864d6bbd71f9997ac5414c30c3d8db4afdc28955c7c5b1a0",
+      "source_sha256": "383bf6010be40ff367e47e827a80780107dc23a52dc81b7ff1d5519eb10716f8",
       "status": "reviewed",
-      "translation": "多视图组合"
+      "translation": "Fusion 多视图组合"
     },
     "modules/3/purpose": {
       "source_sha256": "4972cfc189daf5040a246b073dc17a7db9c4ef6aea21c1409e4444a1a25f42f1",

@@ -1,5 +1,5 @@
 {
-  "source_sha256": "278bc380d0cd8e441a1d08d8a2a8c5e8d75d10a4df0e3e8bffbf910b2f13e948",
+  "source_sha256": "f888a5054195ca8a40fced899a5825be4f87dc3083f5a41e1156135b93a08090",
   "blocks": {
     "0": {
       "source_sha256": "68663d8f41c011a894ae75dda3c48ada2906637454a6a4b6e01a8435153e46f1",
@@ -92,21 +92,26 @@
       "translation": "## 构建和检查本地网站\n"
     },
     "22": {
+      "source_sha256": "d81f591c9540f7600b03979d918bd7aea9669ef0f4e7fe8095738e98fc7f454e",
+      "status": "reviewed",
+      "translation": "网站默认面向电脑设计。核对可用空间时采用 1280、1366、1440 和 1920 CSS 像素。文章和函数参考页的章节列表与本页目录在左侧并排。页面没有本页目录时，相应空间交给正文。表格和代码置于正文内，过宽的内容可在各自区块中横向滚动。布局推算与浏览器实测分别记录。手机和平板布局不列入默认设计和验收范围。\n"
+    },
+    "23": {
       "source_sha256": "87dae5af9a9c6c7e6add812659240e016dab9525a1024a1cc0f209fd8a40a65f",
       "status": "reviewed",
       "translation": "基本构建需要 Python 3.9 或更高版本、R、Pandoc、包依赖及示例依赖。网站使用 `pkgdown`、Bootstrap 5、`pkgload`、`rmarkdown` 和 `jsonlite`。构建时会渲染文章，并运行原生 Rd 示例。在仓库根目录执行下列命令。\n"
     },
-    "24": {
+    "25": {
       "source_sha256": "a7a3ee3dedc7e435553ca8d80cd0a69972dfe1524a7fd3ac018da000986d34e3",
       "status": "reviewed",
       "translation": "打开 `http://127.0.0.1:8765/` 可查看 `.site/` 中的文件。两种语言的首页共用四组预览图。修改网站、包 README 或离线教程的图像时，保留输入数据、过滤规则、绘图代码及图像来源记录。[原画、第三方资产及许可](ASSET-SOURCES.md)\n"
     },
-    "25": {
+    "26": {
       "source_sha256": "a2a454b1170d8e3eb7223f922499c9d4305339dd709b5429f4a7a2759f2136e7",
       "status": "reviewed",
       "translation": "## 持续集成与部署\n"
     },
-    "26": {
+    "27": {
       "source_sha256": "3a520dec5b34a060996f2c6a2daf6cd6c97126d15e395b52a3a4d348945f3e62",
       "status": "reviewed",
       "translation": "推送或拉取请求涉及文档构建输入时，会触发源码检查。手动运行 GitHub Actions 可生成预览产物。部署需要明确授权。`--publication` 控制构建产物的标记。历史网站归档在 `docs/`。包的发布记录见 GitHub Releases，网站的部署记录见 GitHub Actions。\n"

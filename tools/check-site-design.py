@@ -98,9 +98,11 @@ def report():
         reduced_motion_rule='prefers-reduced-motion:reduce' in css.replace(' ', ''),
         visible_focus_rule=':focus-visible' in css,
         current_navigation_labeled_visually=all(selector in css for selector in (
-            '.navbar .nav-link[aria-current]', '.manual-section-pages a[aria-current=page]')),
+            '.navbar .nav-link[aria-current]', '.rail-links a[aria-current]')),
         no_external_font_or_stylesheet_import=not bool(re.search(r'@import|@font-face|https?://', css, re.I)),
-        reading_width_separate_from_wide_content='--content-reading' in css and '--content-wide' in css,
+        article_width_follows_grid='--content-reading' not in css and
+            bool(re.search(r'\.doc-layout\s*>\s*main\.col-md-9\s*\{[^}]*max-width:\s*none', css)) and
+            '.doc-layout:has(> .page-nav)' in css,
         legacy_palette_removed=not bool(re.search(r'--(?:accent|ink|body-ink|paper|canvas|gg-soft|gg-muted)\s*:', css)))
     return dict(schema=1, source='website/assets/site.css', source_sha256=hashlib.sha256(css.encode()).hexdigest(),
                 method=dict(

@@ -49,6 +49,8 @@ Article links point to actual repository files, such as a sibling `.md` page, a 
 
 ## Build and inspect the local site
 
+Design the website for desktop computers. Use 1280, 1366, 1440 and 1920 CSS pixels when checking available space. On article and reference pages, the chapter list and the outline sit together on the left. A page with no outline gives that space to the article. Keep tables and code within the article and allow wide values to scroll inside their own block. Record layout calculations separately from any observed browser measurements. Phone and tablet layouts are outside the default design and verification scope.
+
 The core build requires Python 3.9 or newer, R, Pandoc, the package dependencies and the dependencies of the examples. The site uses `pkgdown`, Bootstrap 5, `pkgload`, `rmarkdown` and `jsonlite`. The build renders the articles and evaluates native Rd examples. Run the following commands from the repository root.
 
 ```sh

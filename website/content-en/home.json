@@ -1,41 +1,57 @@
 {
   "hero": {
     "title": {
-      "en": "Plot genomes and sequence relationships with ggplot2"
+      "en": "Plot genome annotations and sequence alignments with ggchord"
     },
     "description": {
-      "en": "Compare sequences, annotate circular maps, inspect local alignments or connect multiple plots in one view."
+      "en": "Built on ggplot2, ggchord lets you compare sequences, draw circular maps for individual sequences, and zoom from an overview into selected regions."
+    },
+    "actions": [
+      {
+        "url": "installation.html",
+        "label": {
+          "en": "Get started"
+        }
+      },
+      {
+        "url": "gallery.html",
+        "label": {
+          "en": "Browse examples"
+        }
+      }
+    ]
+  },
+  "figure_labels": {
+    "case": {
+      "en": "Case and code"
+    },
+    "full": {
+      "en": "View full figure"
     }
   },
-  "capabilities": [
-    {
-      "url": "modes.html",
-      "title": {
-        "en": "Plotting guide"
-      },
-      "description": {
-        "en": "Find a plot type or learn how to adjust a layer."
-      }
+  "figure_titles": {
+    "homechord": {
+      "en": "Chord"
     },
-    {
-      "url": "formats.html",
-      "title": {
-        "en": "Data and workflows"
-      },
-      "description": {
-        "en": "Read files, transform coordinates and check output."
-      }
+    "homecollinear": {
+      "en": "Collinear"
     },
-    {
-      "url": "reference/index.html",
-      "title": {
-        "en": "API reference"
-      },
-      "description": {
-        "en": "Look up function usage, arguments and return values."
-      }
+    "homeradial": {
+      "en": "Radial"
+    },
+    "homesankey": {
+      "en": "Sankey"
+    },
+    "homecircular": {
+      "en": "pUC19 plasmid"
+    },
+    "homedotplot": {
+      "en": "Four reference sequences"
+    },
+    "homefusion": {
+      "en": "From overview to nucleotides"
     }
-  ],
+  },
   "modules": [
     {
       "slug": "multi-sequence",
@@ -50,9 +66,7 @@
         "homecollinear",
         "homeradial",
         "homesankey"
-      ],
-      "entry": "chord.html",
-      "case": "case-chord.html"
+      ]
     },
     {
       "slug": "circular",
@@ -64,9 +78,7 @@
       },
       "figures": [
         "homecircular"
-      ],
-      "entry": "circular.html",
-      "case": "case-circular.html"
+      ]
     },
     {
       "slug": "dotplot",
@@ -78,23 +90,19 @@
       },
       "figures": [
         "homedotplot"
-      ],
-      "entry": "dotplot.html",
-      "case": "case-dotplot.html"
+      ]
     },
     {
       "slug": "fusion",
       "title": {
-        "en": "Multi-view composition"
+        "en": "Fusion composition"
       },
       "purpose": {
         "en": "Combine Chord, Collinear, radial and detailed views, connecting independent panels through real intervals."
       },
       "figures": [
         "homefusion"
-      ],
-      "entry": "fusion.html",
-      "case": "case-fusion.html"
+      ]
     }
   ]
 }

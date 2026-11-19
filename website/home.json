@@ -1,49 +1,70 @@
 {
   "hero": {
     "title": {
-      "zh": "用 ggplot2 绘制基因组与序列关系",
-      "en": "Plot genomes and sequence relationships with ggplot2"
+      "zh": "用 ggchord 绘制基因组注释图与序列比对图",
+      "en": "Plot genome annotations and sequence alignments with ggchord"
     },
     "description": {
-      "zh": "比较多条序列、绘制环形注释、查看局部比对，或把多张图连接成一个综合视图。",
-      "en": "Compare sequences, annotate circular maps, inspect local alignments or connect multiple plots in one view."
+      "zh": "ggchord 基于 ggplot2，可比较多条序列、绘制单序列圆图，并从总览放大到指定区域。",
+      "en": "Built on ggplot2, ggchord lets you compare sequences, draw circular maps for individual sequences, and zoom from an overview into selected regions."
+    },
+    "actions": [
+      {
+        "url": "installation.html",
+        "label": {
+          "zh": "开始使用",
+          "en": "Get started"
+        }
+      },
+      {
+        "url": "gallery.html",
+        "label": {
+          "zh": "浏览案例",
+          "en": "Browse examples"
+        }
+      }
+    ]
+  },
+  "figure_labels": {
+    "case": {
+      "zh": "案例与代码",
+      "en": "Case and code"
+    },
+    "full": {
+      "zh": "查看大图",
+      "en": "View full figure"
     }
   },
-  "capabilities": [
-    {
-      "url": "modes.html",
-      "title": {
-        "zh": "绘图指南",
-        "en": "Plotting guide"
-      },
-      "description": {
-        "zh": "按想画的图或要调整的图层查找。",
-        "en": "Find a plot type or learn how to adjust a layer."
-      }
+  "figure_titles": {
+    "homechord": {
+      "zh": "弦图",
+      "en": "Chord"
     },
-    {
-      "url": "formats.html",
-      "title": {
-        "zh": "数据与操作",
-        "en": "Data and workflows"
-      },
-      "description": {
-        "zh": "查找文件读取、坐标转换与输出检查。",
-        "en": "Read files, transform coordinates and check output."
-      }
+    "homecollinear": {
+      "zh": "共线性图",
+      "en": "Collinear"
     },
-    {
-      "url": "reference/index.html",
-      "title": {
-        "zh": "API 参考",
-        "en": "API reference"
-      },
-      "description": {
-        "zh": "查找函数用法、参数与返回值。",
-        "en": "Look up function usage, arguments and return values."
-      }
+    "homeradial": {
+      "zh": "径向图",
+      "en": "Radial"
+    },
+    "homesankey": {
+      "zh": "桑基图",
+      "en": "Sankey"
+    },
+    "homecircular": {
+      "zh": "pUC19 质粒",
+      "en": "pUC19 plasmid"
+    },
+    "homedotplot": {
+      "zh": "四条参考序列",
+      "en": "Four reference sequences"
+    },
+    "homefusion": {
+      "zh": "从总览到局部碱基",
+      "en": "From overview to nucleotides"
     }
-  ],
+  },
   "modules": [
     {
       "slug": "multi-sequence",
@@ -60,9 +81,7 @@
         "homecollinear",
         "homeradial",
         "homesankey"
-      ],
-      "entry": "chord.html",
-      "case": "case-chord.html"
+      ]
     },
     {
       "slug": "circular",
@@ -76,9 +95,7 @@
       },
       "figures": [
         "homecircular"
-      ],
-      "entry": "circular.html",
-      "case": "case-circular.html"
+      ]
     },
     {
       "slug": "dotplot",
@@ -92,15 +109,13 @@
       },
       "figures": [
         "homedotplot"
-      ],
-      "entry": "dotplot.html",
-      "case": "case-dotplot.html"
+      ]
     },
     {
       "slug": "fusion",
       "title": {
-        "zh": "多视图组合",
-        "en": "Multi-view composition"
+        "zh": "Fusion 多视图组合",
+        "en": "Fusion composition"
       },
       "purpose": {
         "zh": "组合弦图、共线性图、径向视图和局部细节，用真实区间连接独立面板。",
@@ -108,9 +123,7 @@
       },
       "figures": [
         "homefusion"
-      ],
-      "entry": "fusion.html",
-      "case": "case-fusion.html"
+      ]
     }
   ]
 }

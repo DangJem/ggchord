@@ -61,45 +61,56 @@ def manual_figure(key,lang,base='../assets'):
       f'<img src="{target}" alt="{caption}" width="{round(r["width"]*r["dpi"])}" height="{round(r["height"]*r["dpi"])}" loading="lazy" decoding="async"></a>'
       f'<figcaption>{caption} · <a href="{code}">'+('完整 R 源码' if lang=='zh' else 'Complete R source')+'</a></figcaption></figure>')
 
-def manual_home(lang,base):
-    zh=lang=='zh'
-    content=json.loads((ROOT/'website/home.json').read_text())
-    previews={row['id']:row for row in json.loads((ROOT/'website/home-previews.json').read_text())}
-    complete_figures=manual_figures()
-    escape=lambda value:html.escape(value,quote=True)
-    def picture(key, title):
-        row=previews[key]
-        from .handbook import case_figure
-        code=escape(complete_figures[row['full']]['page'])
-        complete='handbook/'+case_figure(code.split('.')[0])+'.png'
-        name=escape(row['name'])
-        text=escape(title+' · '+row['name'])
-        label=escape(('查看完整图 ' if zh else 'View complete figure for ')+row['name'])
-        return (f'<figure class="home-preview"><a class="figure-link" href="{base}/{complete}" '
-          f'data-code-url="{code}" aria-label="{label}"><img src="{base}/{key}.png" alt="{text}" '
-          f'width="{round(row["width"]*row["dpi"])}" height="{round(row["height"]*row["dpi"])}" loading="lazy" decoding="async"></a>'
-          f'<figcaption><a href="{code}">{name}</a></figcaption></figure>')
-    cards=[]
+def manual_home(lang, base):
+    from .handbook import case_figure
+
+    content = json.loads((ROOT / 'website/home.json').read_text())
+    previews = {row['id']: row for row in json.loads((ROOT / 'website/home-previews.json').read_text())}
+    complete_figures = manual_figures()
+    escape = html.escape
+    case_label = content['figure_labels']['case'][lang]
+    full_label = content['figure_labels']['full'][lang]
+
+    def picture(key):
+        row = previews[key]
+        case = complete_figures[row['full']]['page']
+        complete = case_figure(case.removesuffix('.html'))
+        title = content['figure_titles'][key][lang]
+        width = round(row['width'] * row['dpi'])
+        height = round(row['height'] * row['dpi'])
+        return (
+            '<figure class="home-preview">'
+            f'<figcaption><strong>{escape(title)}</strong><a class="home-case" href="{escape(case)}" '
+            f'aria-label="{escape(f"{case_label} ({title})")}">{escape(case_label)}</a></figcaption>'
+            f'<a class="figure-link" href="{base}/handbook/{complete}.png" data-code-url="{escape(case)}" '
+            f'aria-label="{escape(f"{full_label} ({title})")}">'
+            f'<img src="{base}/{key}.png" alt="{escape(title)}" '
+            f'width="{width}" height="{height}" loading="lazy" decoding="async">'
+            f'<span>{escape(full_label)}</span></a></figure>'
+        )
+
+    cards = []
     for module in content['modules']:
-        title=module['title'][lang]
-        purpose=escape(module['purpose'][lang])
-        entry=escape(module['entry'])
-        case=escape(module['case'])
-        slug=escape(module['slug'])
-        grid=' home-four' if len(module['figures'])==4 else ''
-        art=''.join(picture(key, title) for key in module['figures'])
-        cards.append(f'<section class="home-module" aria-labelledby="home-{slug}"><h2 id="home-{slug}">{escape(title)}</h2>'
-          f'<p class="home-purpose">{purpose}</p><div class="home-module-art{grid}">{art}</div>'
-          f'<div class="home-module-actions"><a class="module-entry" href="{entry}">'+('试画' if zh else 'Try it')+'</a>'
-          f'<a class="home-source" href="{case}">'+('完整示例和代码' if zh else 'Full example and code')+'</a></div></section>')
-    features=''.join('<a href="'+item['url']+'"><strong>'+escape(item['title'][lang])+'</strong><span>'+escape(item['description'][lang])+'</span></a>' for item in content['capabilities'])
-    hero=content['hero']
-    return ('<div class="home-shell"><section class="home-introduction"><div class="home-intro-copy"><h1>'+
-        escape(hero['title'][lang])+'</h1><p class="home-description">'+escape(hero['description'][lang])+
-        '</p><div class="home-actions"><a class="primary-action" href="installation.html">'+
-        ('开始使用' if zh else 'Get started')+'</a><a class="secondary-action" href="gallery.html">'+
-        ('浏览案例' if zh else 'Browse examples')+'</a></div><nav class="home-features" aria-label="'+
-        ('文档入口' if zh else 'Documentation')+'">'+features+'</nav></div>'+
-        responsive_image('logo',lang,base,eager=True,css='home-logo')+
-        '</section><div class="home-capabilities" id="modules">'+''.join(cards)+'</div><p class="home-image-note">'+
-        ('点击预览图可查看完整图。' if zh else 'Select a preview to open the complete figure.')+'</p></div>')
+        title = escape(module['title'][lang])
+        purpose = escape(module['purpose'][lang])
+        slug = escape(module['slug'])
+        art = ''.join(picture(key) for key in module['figures'])
+        cards.append(
+            f'<section class="home-module" data-module="{slug}" aria-labelledby="home-{slug}">'
+            f'<h2 id="home-{slug}">{title}</h2><p class="home-purpose">{purpose}</p>'
+            f'<div class="home-module-art">{art}</div></section>'
+        )
+
+    hero = content['hero']
+    actions = ''.join(
+        f'<a class="{style}" href="{escape(action["url"])}">{escape(action["label"][lang])}</a>'
+        for action, style in zip(hero['actions'], ('primary-action', 'secondary-action'))
+    )
+    logo = responsive_image('logo', lang, base, eager=True, css='home-logo')
+    return (
+        f'<div class="home-shell"><section class="home-introduction">{logo}'
+        f'<div><h1>{escape(hero["title"][lang])}</h1>'
+        f'<p class="home-description">{escape(hero["description"][lang])}</p>'
+        f'<div class="home-actions">{actions}</div></div></section>'
+        f'<div class="home-capabilities" id="modules">{"".join(cards)}</div></div>'
+    )

@@ -202,8 +202,13 @@
     const filters=panel.querySelector('.search-filters');
     Object.entries(labels).forEach(([key,label])=>{const b=document.createElement('button');b.type='button';b.textContent=label;b.setAttribute('aria-pressed',String(key===filter));filters.append(b);b.addEventListener('click',()=>{filter=key;[...filters.children].forEach(x=>x.setAttribute('aria-pressed',String(x===b)));render();});});
     function fitSearch() {
-      const bottom = search.getBoundingClientRect().bottom;
-      panel.style.setProperty('--search-height', Math.max(0, innerHeight - bottom - 16) + 'px');
+      const gutter = 16;
+      const field = input.getBoundingClientRect();
+      const viewport = document.documentElement.clientWidth;
+      panel.style.setProperty('--search-max-width', Math.max(0, viewport - 2 * gutter) + 'px');
+      const left = Math.max(gutter, Math.min(field.left, viewport - panel.offsetWidth - gutter));
+      panel.style.setProperty('--search-left', (left - search.getBoundingClientRect().left) + 'px');
+      panel.style.setProperty('--search-height', Math.max(0, innerHeight - field.bottom - gutter - 4) + 'px');
     }
     function openSearch() {
       if (!panel.hidden) return;
@@ -225,7 +230,6 @@
       items = [];
       selected = -1;
     }
-    input.addEventListener('focus', openSearch);
     input.addEventListener('click', openSearch);
     input.addEventListener('compositionstart', () => { composing = true; });
     input.addEventListener('compositionend', () => {
@@ -243,8 +247,10 @@
       if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
         e.preventDefault(); openSearch();
         select(e.key === 'ArrowDown' ? selected + 1 : (selected < 0 ? items.length - 1 : selected - 1));
-      } else if (e.key === 'Enter' && items.length && !panel.hidden) {
-        e.preventDefault(); items[Math.max(selected, 0)].click();
+      } else if (e.key === 'Enter') {
+        e.preventDefault();
+        if (panel.hidden) openSearch();
+        else if (items.length) items[Math.max(selected, 0)].click();
       }
     });
     panel.querySelector('.search-close').addEventListener('click', () => closeSearch(true));
@@ -317,13 +323,49 @@
     canvas.addEventListener('pointermove',e=>{if(drag){canvas.scrollLeft=drag.left-e.clientX+drag.x;canvas.scrollTop=drag.top-e.clientY+drag.y;}});canvas.addEventListener('pointerup',()=>{drag=null;});
     figures.forEach(a=>a.addEventListener('click',e=>{if(e.metaKey||e.ctrlKey||e.shiftKey||e.altKey)return;e.preventDefault();invoker=a;image.src=a.href;image.alt=a.querySelector('img')?.alt||'';viewer.querySelector('strong').textContent=image.alt;original.href=a.href;codeLink.href=a.dataset.codeUrl||location.href;fit();previousOverflow=document.body.style.overflow;document.body.style.overflow='hidden';viewer.showModal();close.focus();}));
   }
-  // Right outline tracks location without moving keyboard focus.
-  const links=[...document.querySelectorAll('.page-nav a[href^="#"]')],targets=links.map(a=>document.getElementById(decodeURIComponent(a.hash.slice(1)))).filter(Boolean);
-  if(targets.length&&'IntersectionObserver'in window) {
-    const observer=new IntersectionObserver(()=>{
-      const target=targets.filter(h=>h.getBoundingClientRect().top<160).at(-1)||targets[0];
-      links.forEach(a=>{if(a.hash==='#'+target.id)a.setAttribute('aria-current','location');else a.removeAttribute('aria-current');});
-    },{rootMargin:'-90px 0px -55% 0px',threshold:[0,1]});targets.forEach(h=>observer.observe(h));
+  // Keep one copy of each directory when it moves above the article.
+  for (const [selector, threshold] of [['.chapter-nav', 899.98], ['.page-nav', 1099.98]]) {
+    const disclosure = document.querySelector(selector + ' > details');
+    if (!disclosure) continue;
+    const narrow = matchMedia(`(max-width: ${threshold}px)`);
+    function setDisclosure() { disclosure.open = !narrow.matches; }
+    setDisclosure();
+    narrow.addEventListener('change', setDisclosure);
+  }
+
+  const outline = [...document.querySelectorAll('.page-nav a')].map(link => ({
+    link, heading: document.getElementById(decodeURIComponent(link.hash.slice(1)))
+  })).filter(entry => entry.heading);
+  if (outline.length) {
+    let current, pending = false;
+    function updateOutline() {
+      pending = false;
+      const threshold = (header?.getBoundingClientRect().bottom || 0) + 25;
+      let active;
+      for (const entry of outline) {
+        if (!entry.heading.getClientRects().length) continue;
+        if (!active || entry.heading.getBoundingClientRect().top <= threshold) active = entry;
+        else break;
+      }
+      // A short last section may never reach the header before the page ends.
+      if (Math.ceil(scrollY + innerHeight) >= document.documentElement.scrollHeight && scrollY > 0) {
+        const visible = outline.filter(entry => entry.heading.getClientRects().length);
+        active = visible.find(entry => entry.link.hash === location.hash &&
+          entry.heading.getBoundingClientRect().top >= 0) || visible.at(-1);
+      }
+      if (active === current) return;
+      current?.link.removeAttribute('aria-current');
+      active?.link.setAttribute('aria-current', 'location');
+      current = active;
+    }
+    function scheduleOutline() {
+      if (!pending) { pending = true; requestAnimationFrame(updateOutline); }
+    }
+    addEventListener('scroll', scheduleOutline, {passive: true});
+    addEventListener('resize', scheduleOutline);
+    addEventListener('hashchange', scheduleOutline);
+    if ('ResizeObserver' in window) new ResizeObserver(scheduleOutline).observe(document.querySelector('main'));
+    updateOutline();
   }
   function openLinkedSection(){
     const target=document.getElementById(decodeURIComponent(location.hash.slice(1)));

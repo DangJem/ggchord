@@ -1,5 +1,5 @@
 {
-  "source_sha256": "994b43492dcb1fa8e859ffc340169690c327d2cadb6c9e07dc196f16f7e32d85",
+  "source_sha256": "9884b5b23a09dc9aeb78409fe9601aaaa5b094a5542343f3842a11373860b0fd",
   "strings": {
     "language": {
       "source_sha256": "c32944490008f275aff7c23daca5a531a58c48ad795bf1246870b29b2150c0cb",
@@ -22,9 +22,9 @@
       "translation": "搜索文档"
     },
     "search_hint": {
-      "source_sha256": "68dd90c5ea87b2f424ec6ec2043a459f70b3326b2b754e06aa9613bd4fc898af",
+      "source_sha256": "e2af5a17d42b83b9a56cf5ae38acf75ac7d8af517c0102f78f7335e5447dc625",
       "status": "reviewed",
-      "translation": "搜索任务、函数或参数"
+      "translation": "搜索文档"
     },
     "filter": {
       "source_sha256": "e9730811561bd64fac4abacec2a179b633e70f7a58166ef107e39369169fc76e",
@@ -50,6 +50,31 @@
       "source_sha256": "c02651240c87b47d3319c6878d0c2ec16eadc4d6932b9f4f35955326463d4cdb",
       "status": "reviewed",
       "translation": "展开或收起菜单"
+    },
+    "compact_plots": {
+      "source_sha256": "ace8dcef1ca74cffda0cd02f8725f353195562cfde74ca5f2a54c6db15286f54",
+      "status": "reviewed",
+      "translation": "绘图指南"
+    },
+    "compact_data": {
+      "source_sha256": "cec3a9b89b2e391393d0f68e4bc12a9fa6cf358b3cdf79496dc442d52b8dd528",
+      "status": "reviewed",
+      "translation": "数据与操作"
+    },
+    "compact_cases": {
+      "source_sha256": "352cfc749e55222e135ee48e67631ba33f834d936c137560fd39063d2e57e5cb",
+      "status": "reviewed",
+      "translation": "案例图库"
+    },
+    "chapters": {
+      "source_sha256": "9831375bc65196d8c923455ec07c27aefa5761edfe4162dde1c7b36eec25a3ad",
+      "status": "reviewed",
+      "translation": "全站章节"
+    },
+    "on_this_page": {
+      "source_sha256": "b5658fc8edda24f9c94eabac9e536e0a18e3055a8ca255f9d1b8f256ea02a6cc",
+      "status": "reviewed",
+      "translation": "本页目录"
     }
   }
 }

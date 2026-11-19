@@ -16,8 +16,8 @@
     "en": "Search documentation"
   },
   "search_hint": {
-    "zh": "搜索任务、函数或参数",
-    "en": "Search tasks, functions or parameters"
+    "zh": "搜索文档",
+    "en": "Search docs"
   },
   "filter": {
     "zh": "筛选结果类型",
@@ -38,5 +38,25 @@
   "toggle": {
     "zh": "展开或收起菜单",
     "en": "Toggle menu"
+  },
+  "compact_plots": {
+    "zh": "绘图指南",
+    "en": "Plotting"
+  },
+  "compact_data": {
+    "zh": "数据与操作",
+    "en": "Data"
+  },
+  "compact_cases": {
+    "zh": "案例图库",
+    "en": "Gallery"
+  },
+  "chapters": {
+    "zh": "全站章节",
+    "en": "Chapters"
+  },
+  "on_this_page": {
+    "zh": "本页目录",
+    "en": "On this page"
   }
 }

@@ -49,6 +49,8 @@ python3 tools/sync-website-languages.py --reviewed-content home.json /tmp/home-r
 
 ## 构建和检查本地网站
 
+网站默认面向电脑设计。核对可用空间时采用 1280、1366、1440 和 1920 CSS 像素。文章和函数参考页的章节列表与本页目录在左侧并排。页面没有本页目录时，相应空间交给正文。表格和代码置于正文内，过宽的内容可在各自区块中横向滚动。布局推算与浏览器实测分别记录。手机和平板布局不列入默认设计和验收范围。
+
 基本构建需要 Python 3.9 或更高版本、R、Pandoc、包依赖及示例依赖。网站使用 `pkgdown`、Bootstrap 5、`pkgload`、`rmarkdown` 和 `jsonlite`。构建时会渲染文章，并运行原生 Rd 示例。在仓库根目录执行下列命令。
 
 ```sh

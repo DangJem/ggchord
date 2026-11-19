@@ -12,7 +12,7 @@
     "en": "Search documentation"
   },
   "search_hint": {
-    "en": "Search tasks, functions or parameters"
+    "en": "Search docs"
   },
   "filter": {
     "en": "Filter result types"
@@ -28,5 +28,20 @@
   },
   "toggle": {
     "en": "Toggle menu"
+  },
+  "compact_plots": {
+    "en": "Plotting"
+  },
+  "compact_data": {
+    "en": "Data"
+  },
+  "compact_cases": {
+    "en": "Gallery"
+  },
+  "chapters": {
+    "en": "Chapters"
+  },
+  "on_this_page": {
+    "en": "On this page"
   }
 }

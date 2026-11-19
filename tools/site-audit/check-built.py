@@ -66,6 +66,49 @@ def styled(elem, css, tag=None):
     return [n for n in elem.iter(tag) if css in n.get('class','').split()]
 
 
+def check_article_directories(doc, main_content, rel, lang, local, navigation, pages, require):
+    layouts = styled(doc, 'doc-layout')
+    require(len(layouts)==1,rel+': expected a single article layout')
+    if len(layouts)!=1:
+        return
+    layout = layouts[0]
+    chapters = styled(layout, 'chapter-nav')
+    outlines = styled(layout, 'page-nav')
+    if local == 'index.html':
+        require(not chapters and not outlines, rel+': homepage contains article directories')
+        return
+    expected_chapters = [group['id'] for group in navigation]
+    require(len(chapters)==1, rel+': expected a single chapter directory')
+    if len(chapters)!=1:
+        return
+    tree = chapters[0]
+    groups = styled(tree, 'chapter-group')
+    require([g.get('data-chapter') for g in groups]==expected_chapters, rel+': missing or reordered site chapters')
+    current = [a for a in tree.iter('a') if a.get('aria-current')=='page']
+    require(len(current)==1 and target(rel,current[0].get('href',''))==(rel,''),
+            rel+': chapter directory must identify this page')
+    group = next((g for g in groups if current and current[0] in g.iter('a')),None)
+    expanded = [g for g in groups if any('open' in d.attrib for d in g.findall('./details'))]
+    require(expanded==([group] if group is not None and group.find('./details') is not None else []),
+            rel+': initial chapter expansion does not match the current page')
+    expected_pages = {lang+'/'+page['canonical_path'] for page in pages.values()} | {rel}
+    tree_links = [target(rel,a.get('href','')) for a in tree.iter('a')]
+    require(set(tree_links)=={(page,'') for page in expected_pages} and len(tree_links)==len(expected_pages),
+            rel+': chapter links differ from the handbook registry or repeat entries')
+
+    excluded = {h for box in styled(main_content, 'lesson-extension', 'details') for h in box.iter()}
+    levels = {'h2'} if local=='gallery.html' else {'h2','h3'}
+    headings = [h for h in main_content.iter() if h.tag in levels and h.get('id') and h not in excluded]
+    require(len(outlines)==int(bool(headings)),rel+': outline must be omitted when there are no article headings')
+    if headings and outlines:
+        links = list(outlines[0].iter('a'))
+        require([a.get('href') for a in links]==['#'+h.get('id') for h in headings] and
+                [text(a).strip() for a in links]==[text(h).strip() for h in headings],
+                rel+': outline must follow article heading order and labels')
+    require([node for node in layout if node in chapters+outlines+[main_content]]==chapters+outlines+[main_content],
+            rel+': expected chapter directory, page outline and article in reading order')
+
+
 def target(page, url):
     """Resolve the same relative URL a browser would see on a project Pages site."""
     result = urlsplit(urljoin(BASE+page, url))
@@ -145,7 +188,7 @@ def main():
     nav_ui = read(WEB/'navigation-ui.json')
     groups = [g for g in navigation if g.get('navbar')]
     specs = read(WEB/'handbook-examples.json')
-    home = read(WEB/'home.json')['modules']
+    home = read(WEB/'home.json')
     previews = {row['id']:row for row in read(WEB/'home-previews.json')}
     full_cases = {row['id']:row['page'] for row in read(WEB/'manual-figures.json')}
     example_cases = {p['canonical_path']:MARKER.findall((WEB/'en'/(p['slug']+'.md')).read_text())
@@ -269,6 +312,7 @@ def main():
         if main_content is None:
             continue
         main_ids = {n.get('id') for n in main_content.iter() if n.get('id')}
+        check_article_directories(doc,main_content,rel,lang,local,navigation,pages,require)
         body_anchors[rel] = main_ids
         require({'main','site-search','site-language'} <= identifiers[rel], rel+': missing accessibility, search or language entry')
         nav = styled(doc,'site-primary-nav')
@@ -298,12 +342,21 @@ def main():
                             rel+': missing subsection heading for '+key)
         utilities = styled(doc,'site-nav-tools')
         controls = utilities[0].findall('./li') if utilities else []
-        require(len(controls)==4 and controls[0].find('./a[@aria-label="GitHub"]') is not None and
-                controls[1].find('./button[@id="dropdown-lightswitch"]') is not None and
-                nav_ui['language'][lang] in text(controls[2].find('./details/summary')) and
-                controls[3].find('.//input[@id="site-search"][@type="search"][@aria-controls="site-results"]') is not None and
-                controls[3].find('.//ul[@id="site-results"][@role="listbox"]') is not None,
-                rel+': toolbar order, visible language label or inline search is incorrect')
+        require(len(controls)==4, rel+': incorrect toolbar control count')
+        if len(controls)==4:
+            search = controls[0].find('.//input[@id="site-search"][@type="search"][@aria-controls="site-results"]')
+            github = controls[1].find('./a[@aria-label="GitHub"][@href]')
+            appearance = controls[2].find('./button[@id="dropdown-lightswitch"][@aria-labelledby="appearance-label"]')
+            language = controls[3].find('./details/summary')
+            require(all(control is not None and control.get('tabindex') is None for control in
+                        (search, github, appearance, language)), rel+': toolbar order or native focus is incorrect')
+            require(search is not None and search.get('placeholder')==nav_ui['search_hint'][lang] and
+                    text(controls[0].find('.//label[@for="site-search"]'))==nav_ui['search'][lang] and
+                    controls[0].find('.//ul[@id="site-results"][@role="listbox"]') is not None,
+                    rel+': inline search is incorrect')
+            require(appearance is not None and text(appearance.find('./span[@id="appearance-label"]'))==nav_ui['appearance'][lang],
+                    rel+': appearance label is incorrect')
+            require(text(language).strip()=='🌐 '+nav_ui['language'][lang], rel+': visible language label is incorrect')
         other = 'zh' if lang=='en' else 'en'
         switch = doc.find('.//a[@id="site-language"]')
         require(switch is not None and destination(rel,switch.get('href',''))==(other+'/'+local,''),
@@ -313,6 +366,15 @@ def main():
         for toggle in toggles:
             require(toggle.get('aria-controls') in identifiers[rel] and toggle.get('aria-expanded')=='false',
                     rel+': menu button has no matching controlled menu')
+        if local == 'data.html':
+            definitions = styled(main_content, 'field-definitions', 'div')
+            require(len(definitions)==5 and all(
+                'table-scroll' in block.get('class','').split() and
+                len(block.findall('./table/thead/tr/th'))==3 for block in definitions),
+                rel+': expected five independently sized field-definition tables')
+            require(len(list(main_content.iter('table')))==len(definitions)+3 and
+                    main_content.find('.//table/colgroup/col[@style]') is None,
+                    rel+': data records or field descriptions still have inferred column widths')
         for table in main_content.iter('table'):
             rows = table.findall('./tbody/tr')
             if not rows:
@@ -384,7 +446,7 @@ def main():
             continue
         slug = page['slug']
         heading = ' '.join(text(main_content.find('.//h1')).split())
-        expected_title = read(WEB/'home.json')['hero']['title'][lang] if slug=='index' else page['title'][lang]
+        expected_title = home['hero']['title'][lang] if slug=='index' else page['title'][lang]
         require(heading==expected_title,rel+': H1 differs from the registered title: '+heading)
         if slug=='parameters':
             require(heading==('Flexible parameters' if lang=='en' else '灵活参数'),rel+': incorrect flexible-parameter guide heading')
@@ -437,25 +499,46 @@ def main():
             require(file.is_file() and file.read_bytes()==script.read_bytes() and digest(file)==registered.get('sha256'),
                     rel+': downloaded bytes differ from '+name+'.R')
         if local=='index.html':
+            hero = home['hero']
+            home_actions = [a for block in styled(main_content,'home-actions') for a in block.iter('a')]
+            require([(a.get('href'),text(a)) for a in home_actions]==
+                    [(a['url'],a['label'][lang]) for a in hero['actions']] and len(home_actions)==2,
+                    rel+': homepage should have two introduction links')
+            require([text(p).strip() for p in styled(main_content,'home-description','p')]==[hero['description'][lang]] and
+                    len(styled(main_content,'home-logo','img'))==1,rel+': homepage introduction differs from its source')
+            require({'choose','chord','circular','collinear','learn','quick-start','results','versions','modules'} <= main_ids,
+                    rel+': missing a homepage bookmark')
             cards = styled(main_content,'home-module','section')
-            require(len(cards)==len(home)==4 and sum(len(g['figures']) for g in home)==7,rel+': expected four homepage groups and seven previews')
-            for card,item in zip(cards,home):
+            modules = home['modules']
+            require([card.get('data-module') for card in cards]==['multi-sequence','circular','dotplot','fusion'] and
+                    [len(item['figures']) for item in modules]==[4,1,1,1],
+                    rel+': expected four homepage groups and seven previews')
+            for card,item in zip(cards,modules):
                 pictures = styled(card,'home-preview','figure')
                 keys = [Path(img.get('src','')).stem for preview in pictures for img in preview.iter('img')]
                 require(keys==item['figures'],rel+': wrong flagship preview in '+item['slug'])
-                actions = [a.get('href') for a in card.iter('a') if {'module-entry','home-source'} & set(a.get('class','').split())]
-                require(actions==[item['entry'],item['case']],rel+': try-it/complete case link mismatch')
+                anchor_id = 'home-'+item['slug']
+                require(card.get('aria-labelledby')==anchor_id and
+                        text(card.find(f'./h2[@id="{anchor_id}"]')).strip()==item['title'][lang],
+                        rel+': missing or incorrect homepage group heading '+anchor_id)
                 for key,preview in zip(keys,pictures):
-                    links_to_figure = [a for a in preview.iter('a') if a.get('data-code-url')]
-                    require(len(links_to_figure)==1,rel+': preview has no case and full figure links')
-                    if not links_to_figure or key not in previews:
+                    case_links = styled(preview,'home-case','a')
+                    links_to_figure = styled(preview,'figure-link','a')
+                    require(len(case_links)==len(links_to_figure)==1,rel+': preview needs distinct case and full figure links')
+                    if not (case_links and links_to_figure and key in previews):
                         continue
                     case = full_cases[previews[key]['full']]
                     ids = example_cases.get(case,[])
                     anchor = links_to_figure[0]
-                    require(anchor.get('data-code-url')==case and len(ids)==1 and
+                    require(case_links[0].get('href')==anchor.get('data-code-url')==case and
+                            text(case_links[0])==home['figure_labels']['case'][lang] and
+                            text(anchor.find('span'))==home['figure_labels']['full'][lang] and len(ids)==1 and
                             destination(rel,anchor.get('href',''))==('assets/handbook/'+ids[0]+'.png',''),
                             rel+': homepage expanded image does not match case script for '+key)
+                    title = home['figure_titles'][key][lang]
+                    img = anchor.find('img')
+                    require(img is not None and img.get('alt')==title and
+                            text(preview.find('./figcaption/strong')).strip()==title,rel+': wrong homepage figure title '+key)
                     original = ROOT/previews[key]['file']
                     served = site/'assets'/original.name
                     require(served.is_file() and digest(served)==digest(original),rel+': homepage preview differs from source '+key)
