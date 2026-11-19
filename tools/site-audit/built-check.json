@@ -18,9 +18,9 @@
     "theme_ggchord_publication"
   ],
   "original_figure_ids": 178,
-  "new_course_pngs": 26,
+  "new_course_pngs": 28,
   "archive_inputs": 76,
-  "canonical_navigation_records": 132,
+  "canonical_navigation_records": 138,
   "parameter_synonym_queries": [
     {
       "language": "en",
@@ -121,17 +121,12 @@
     {
       "language": "en",
       "query": "Flexible parameters",
-      "count_after_deduplication": 3,
+      "count_after_deduplication": 2,
       "top_three": [
         {
           "url": "parameters.html",
           "title": "Flexible parameter formats",
           "score": 2250
-        },
-        {
-          "url": "modes.html",
-          "title": "Plotting concepts",
-          "score": 100
         },
         {
           "url": "parameter-atlas.html",
@@ -143,7 +138,7 @@
     {
       "language": "en",
       "query": "Flexible parameter formats",
-      "count_after_deduplication": 5,
+      "count_after_deduplication": 3,
       "top_three": [
         {
           "url": "parameters.html",
@@ -156,8 +151,8 @@
           "score": 100
         },
         {
-          "url": "modes.html",
-          "title": "Plotting concepts",
+          "url": "multi-sequence-start.html",
+          "title": "Draw sequence backbones, links and annotations",
           "score": 100
         }
       ]
@@ -165,7 +160,7 @@
     {
       "language": "zh",
       "query": "灵活的参数格式",
-      "count_after_deduplication": 5,
+      "count_after_deduplication": 3,
       "top_three": [
         {
           "url": "parameters.html",
@@ -178,8 +173,8 @@
           "score": 100
         },
         {
-          "url": "modes.html",
-          "title": "绘图基本概念",
+          "url": "multi-sequence-start.html",
+          "title": "绘制多序列骨架、连接与注释",
           "score": 100
         }
       ]
@@ -200,8 +195,8 @@
           "score": 100
         },
         {
-          "url": "modes.html",
-          "title": "绘图基本概念",
+          "url": "multi-sequence-start.html",
+          "title": "绘制多序列骨架、连接与注释",
           "score": 100
         }
       ]
@@ -218,7 +213,7 @@
         },
         {
           "url": "multi-sequence-start.html",
-          "title": "共用数据与图层",
+          "title": "绘制多序列骨架、连接与注释",
           "score": 100
         },
         {
@@ -243,7 +238,7 @@
     {
       "language": "zh",
       "query": "逐序列",
-      "count_after_deduplication": 7,
+      "count_after_deduplication": 10,
       "top_three": [
         {
           "url": "parameters.html",
@@ -265,7 +260,7 @@
     {
       "language": "zh",
       "query": "按链",
-      "count_after_deduplication": 11,
+      "count_after_deduplication": 15,
       "top_three": [
         {
           "url": "parameters.html",
@@ -278,8 +273,8 @@
           "score": 170
         },
         {
-          "url": "data.html",
-          "title": "表格字段与坐标约定",
+          "url": "annotations.html",
+          "title": "绘制注释与处理重叠",
           "score": 100
         }
       ]
@@ -287,7 +282,7 @@
     {
       "language": "zh",
       "query": "命名向量",
-      "count_after_deduplication": 34,
+      "count_after_deduplication": 62,
       "top_three": [
         {
           "url": "parameters.html",
@@ -309,7 +304,7 @@
     {
       "language": "zh",
       "query": "列表",
-      "count_after_deduplication": 64,
+      "count_after_deduplication": 114,
       "top_three": [
         {
           "url": "parameters.html",
@@ -318,7 +313,7 @@
         },
         {
           "url": "data.html#tables",
-          "title": "表格字段与坐标约定 · \n2 序列表 seq_data\n",
+          "title": "表格字段与坐标约定 · 序列表 seq_data\n",
           "score": 285
         },
         {

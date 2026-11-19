@@ -4622,19 +4622,19 @@
   {
     "language": "en",
     "old": "parameter-atlas.html#api-geom_feature_label_repel",
-    "target": "parameter-atlas.html#api-geom_feature_label_repel",
+    "target": "circular-labels.html#automatic-labels",
     "valid": true
   },
   {
     "language": "en",
     "old": "parameter-atlas.html#api-geom_feature_plasmid",
-    "target": "parameter-atlas.html#api-geom_feature_plasmid",
+    "target": "circular-features.html#feature-shapes",
     "valid": true
   },
   {
     "language": "en",
     "old": "parameter-atlas.html#api-geom_gene",
-    "target": "parameter-atlas.html#api-geom_gene",
+    "target": "feature-geometry.html#parameters",
     "valid": true
   },
   {
@@ -4874,7 +4874,7 @@
   {
     "language": "en",
     "old": "parameter-atlas.html#api-position_plasmid",
-    "target": "parameter-atlas.html#api-position_plasmid",
+    "target": "circular-features.html#stacking",
     "valid": true
   },
   {
@@ -4886,7 +4886,7 @@
   {
     "language": "en",
     "old": "parameter-atlas.html#api-position_track",
-    "target": "parameter-atlas.html#api-position_track",
+    "target": "tracks.html#draw-gc",
     "valid": true
   },
   {
@@ -5618,19 +5618,19 @@
   {
     "language": "zh",
     "old": "parameter-atlas.html#api-geom_feature_label_repel",
-    "target": "parameter-atlas.html#api-geom_feature_label_repel",
+    "target": "circular-labels.html#automatic-labels",
     "valid": true
   },
   {
     "language": "zh",
     "old": "parameter-atlas.html#api-geom_feature_plasmid",
-    "target": "parameter-atlas.html#api-geom_feature_plasmid",
+    "target": "circular-features.html#feature-shapes",
     "valid": true
   },
   {
     "language": "zh",
     "old": "parameter-atlas.html#api-geom_gene",
-    "target": "parameter-atlas.html#api-geom_gene",
+    "target": "feature-geometry.html#parameters",
     "valid": true
   },
   {
@@ -5870,7 +5870,7 @@
   {
     "language": "zh",
     "old": "parameter-atlas.html#api-position_plasmid",
-    "target": "parameter-atlas.html#api-position_plasmid",
+    "target": "circular-features.html#stacking",
     "valid": true
   },
   {
@@ -5882,7 +5882,7 @@
   {
     "language": "zh",
     "old": "parameter-atlas.html#api-position_track",
-    "target": "parameter-atlas.html#api-position_track",
+    "target": "tracks.html#draw-gc",
     "valid": true
   },
   {
