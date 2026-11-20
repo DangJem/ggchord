@@ -20,10 +20,11 @@ ggchord_builtin_primers <- function() {
 #' @seealso \code{\link{ggchord_data_contract}}
 #' @export
 #' @examples
-#' head(primer_catalog("universal"))
-#' head(primer_catalog("universal", aliases = TRUE))
-primer_catalog <- function(set = c("all", "universal"), aliases = FALSE) {
-  set <- match.arg(set)
+#' catalog <- primer_catalog(set="universal")
+#' catalog[c("primer_id", "name", "sequence")]
+#' primer_catalog(set="universal", aliases=TRUE)
+primer_catalog <- function(set = "all", aliases = FALSE) {
+  set <- match.arg(set, c("all", "universal"))
   if (!is.logical(aliases) || length(aliases) != 1L || is.na(aliases)) {
     ggchord_stop("primer_catalog(): aliases must be TRUE or FALSE")
   }
@@ -31,8 +32,12 @@ primer_catalog <- function(set = c("all", "universal"), aliases = FALSE) {
   out <- if (aliases) database$aliases else database$catalog
   if (set == "universal") out <- out[out$is_universal, , drop = FALSE]
   rownames(out) <- NULL
-  attr(out, "primer_database_metadata") <- database$metadata
-  out
+  out$name <- out$name %||% out$preferred_name
+  if (!aliases) {
+    names_by_id <- split(database$aliases$name, database$aliases$primer_id)
+    out$aliases <- I(lapply(out$primer_id, function(id) unique(names_by_id[[id]])))
+  }
+  ggchord_attach_data_report(out, "primer_catalog", metadata = database$metadata)
 }
 
 ggchord_primer_definitions <- function(primers, set) {
@@ -176,22 +181,34 @@ ggchord_reference_primer_bindings <- function(ids, sequences) {
 #' @seealso \code{\link{ggchord_data_contract}}
 #' @export
 #' @examples
-#' target <- c(circle = "TTGCAAAAACG")
-#' find_primer_bindings(
-#'   target, primers = c(test = "ACGTTGCA"),
-#'   min_annealed_bases = 8
-#' )
-find_primer_bindings <- function(sequence, primers = NULL,
-                                 set = c("universal", "all", "reference"),
-                                 match = c("exact", "three_prime"),
-                                 min_annealed_bases = 15L,
-                                 circular = TRUE, unique_only = FALSE) {
-  set <- match.arg(set)
-  match <- match.arg(match)
-  normalized <- ggchord_normalize_sequence_input(sequence, "find_primer_bindings()")
-  if (!is.logical(circular) || length(circular) != 1L || is.na(circular) ||
-      !is.logical(unique_only) || length(unique_only) != 1L || is.na(unique_only)) {
-    ggchord_stop("find_primer_bindings(): circular and unique_only must be TRUE or FALSE")
+#' target <- c(A="TTGCAAAAACG")
+#' bindings <- find_primer_bindings(target, primers=c(test="ACGTTGCA"),
+#'                                 circular=TRUE, min_annealed_bases=8)
+#' ref <- as_ggchord_seq(data.frame(accver="A", length=nchar(target)), sequence_unit="bp", topology="circular")
+#' ggchord(ref) + geom_primer(data=bindings) + coord_circular()
+find_primer_bindings <- function(sequence, primers = NULL, set = "universal",
+    match = "exact", min_annealed_bases = 15L, circular = NULL, unique_only = FALSE) {
+  caller <- "find_primer_bindings()"
+  set <- match.arg(set, c("universal", "all", "reference"))
+  match <- match.arg(match, c("exact", "three_prime"))
+  normalized <- ggchord_normalize_sequence_input(sequence, caller)
+  topology <- ggchord_search_topology(sequence, circular, normalized$ids, caller)
+  if (!is.logical(unique_only) || length(unique_only) != 1L || is.na(unique_only)) {
+    ggchord_stop(caller, ": unique_only must be TRUE or FALSE")
+  }
+  finish <- function(out) {
+    if (unique_only) out <- out[out$is_unique, , drop = FALSE]
+    out$feature_id <- paste(out$accver, out$primer_id, out$strand, out$start, sep = ":")[seq_len(nrow(out))]
+    out$label <- out$name
+    out$matched_bases <- out$annealed_length
+    out$segments <- I(ggchord_segment_search_matches(out$start, out$end,
+      nchar(normalized$sequences[match(out$accver, normalized$ids)])))
+    across_origin <- which(out$crosses_origin)
+    out$start[across_origin] <- 1
+    out$end[across_origin] <- nchar(normalized$sequences[match(out$accver[across_origin], normalized$ids)])
+    ggchord_attach_data_report(out, "find_primer_bindings", inputs = normalized$ids,
+      metadata = list(set = set, match = match, min_annealed_bases = min_annealed_bases,
+        topology = topology, temperature_method = "Wallace or source record"))
   }
   if (!is.numeric(min_annealed_bases) || length(min_annealed_bases) != 1L ||
       !is.finite(min_annealed_bases) || min_annealed_bases < 8L ||
@@ -201,19 +218,26 @@ find_primer_bindings <- function(sequence, primers = NULL,
   min_annealed_bases <- as.integer(min_annealed_bases)
   if (set == "reference") {
     if (!is.null(primers)) ggchord_stop("find_primer_bindings(): primers cannot be combined with set = 'reference'")
+    references <- ggchord_builtin_common_features()$reference_sequences$sequence
+    if (any(!normalized$sequences %in% references))
+      ggchord_stop(caller, ": reference mode requires matching complete source characters")
     out <- ggchord_reference_primer_bindings(normalized$ids, normalized$sequences)
+    out <- out[!out$crosses_origin | topology[match(out$accver, normalized$ids)], , drop = FALSE]
     out$aliases <- I(lapply(out$name, function(x) x))
-    return(if (unique_only) out[out$is_unique, , drop = FALSE] else out)
+    return(finish(out))
   }
   definitions <- ggchord_primer_definitions(primers, set)
   rows <- list()
   for (s in seq_along(normalized$sequences)) {
     target <- normalized$sequences[s]
+    circular <- topology[s]
     target_length <- nchar(target)
     for (d in seq_len(nrow(definitions$catalog))) {
       full <- definitions$catalog$sequence[d]
+      if (match == "three_prime" && nchar(full) < min_annealed_bases) next
       lengths <- if (match == "exact") nchar(full) else
-        seq.int(nchar(full), min(min_annealed_bases, nchar(full)), by = -1L)
+        seq.int(nchar(full), min_annealed_bases, by = -1L)
+      lengths <- lengths[lengths <= target_length]
       primer_hits <- list()
       for (annealed_length in lengths) {
         query <- substr(full, nchar(full) - annealed_length + 1L, nchar(full))
@@ -248,7 +272,7 @@ find_primer_bindings <- function(sequence, primers = NULL,
   if (!length(rows)) {
     out <- ggchord_primer_empty()
     out$aliases <- I(list())
-    return(out)
+    return(finish(out))
   }
   out <- do.call(rbind, rows)
   key <- paste(out$accver, out$primer_id, sep = "\r")
@@ -256,7 +280,6 @@ find_primer_bindings <- function(sequence, primers = NULL,
   out$is_unique <- out$binding_count == 1L
   alias_map <- split(definitions$aliases$name, definitions$aliases$primer_id)
   out$aliases <- I(lapply(out$primer_id, function(id) unique(as.character(alias_map[[id]]))))
-  if (unique_only) out <- out[out$is_unique, , drop = FALSE]
   rownames(out) <- NULL
-  out
+  finish(out)
 }

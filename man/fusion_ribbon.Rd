@@ -2,84 +2,71 @@
 % Please edit documentation in R/fusion.R
 \name{fusion_ribbon}
 \alias{fusion_ribbon}
-\title{Connect real intervals across Fusion panels}
+\title{Connect real source intervals across panels}
 \usage{
 fusion_ribbon(
-  data,
   mapping = NULL,
-  qpanel = NULL,
-  spanel = NULL,
-  gradient = FALSE,
-  tip = c("none", "subject"),
-  allow_repeated = FALSE,
-  curvature = 0.3,
-  fill = NULL,
-  colour = NA,
-  alpha = 0.35,
-  linewidth = 0.25,
-  linetype = 1,
+  data = NULL,
+  route = "curve",
+  curvature = 0.5,
+  ...,
+  na.rm = FALSE,
   show.legend = NA,
-  route = c("direct", "avoid", "bundle"),
-  route_width = 0.8
+  id = NULL
 )
 }
 \arguments{
-\item{data}{A relationship data frame, preserving original endpoints.}
+\item{mapping}{Optional aesthetic mappings, including interval and path roles.}
 
-\item{mapping}{Standard ggplot2 aesthetic mapping: fill, colour, alpha,
-linewidth and linetype. With pident and no explicit fill, Identity is
-mapped by default with 0/50/80/90/95/100 breaks. Composition uses ordinary
-scale_fill_* etc.; panel role scales remain local to each panel.}
+\item{data}{Relationship table with q/s endpoints and qpanel_path/spanel_path.}
 
-\item{qpanel, spanel}{Optional fixed panel IDs. Do not also supply their columns.}
+\item{route}{Curve or straight ribbon routing.}
 
-\item{gradient}{Opt in to query-to-subject sequence-colour interpolation.
-Cannot be combined with an explicit fill or fill mapping.}
+\item{curvature}{Curve strength in the interval \verb{[0, 1]}.}
 
-\item{tip}{\code{"none"} or a decorative \code{"subject"} tip. Source fronts remain
-exported in full even when the tip is drawn.}
+\item{...}{Fixed visual attributes, lineend or key_glyph.}
 
-\item{allow_repeated}{Explicitly allow repeated source_hsp_id display.}
+\item{na.rm}{Remove incomplete relationships without a warning.}
 
-\item{curvature}{Control distance relative to endpoint separation, in \verb{[0,1]}.
-Nearly tangential arrivals use coherent perpendicular endpoint normals
-to avoid artificial S bends; ordered source fronts are never rearranged.}
+\item{show.legend}{Whether the layer contributes to composition guides.}
 
-\item{fill, colour, alpha, linewidth, linetype}{Fixed styles; explicit values
-take priority over mappings. The default fill without pident is steelblue.}
-
-\item{show.legend}{Standard ggplot2 legend selection: NA follows mappings;
-TRUE/FALSE or a named logical vector controls guide participation.}
-
-\item{route}{Default direct Bezier ribbons, or avoid for a measured obstacle
-route. Bundle requires an explicit route_group character column and shares
-a corridor for each group and ordered panel pair within the layer; every
-observation, source row, complete front and style remains independent. It
-does not aggregate evidence or imply biological flow. Avoid preserves complete interval fronts and uses a narrow polygonal
-corridor between them. Failure to find a clear route is explicit.}
-
-\item{route_width}{Positive corridor width in mm for avoid/bundle (default .8).
-This is drawing width, not an alignment length or statistical weight.}
+\item{id}{Optional root layer ID.}
 }
 \value{
 A component for \code{\link[=ggchord_fusion]{ggchord_fusion()}}.
 }
 \description{
-Uses ordinary qaccver/saccver and qstart/qend/sstart/send columns. Optional
-qpanel/spanel and q_instance/s_instance select exact panels and display
-instances. Missing selectors are inferred only when a unique candidate
-exists. Query/subject roles never depend on the placement of a panel.
-Intervals are one-based inclusive, with ordered fronts spanning \verb{[min-1,max]};
-a one-position interval has nonzero width. Fully visible intervals are
-required; split/focus the source data explicitly before composition.
+Connect real source intervals across panels
 }
 \examples{
-data(seq_data_example)
-data(ribbon_data_example)
-link <- dplyr::slice_head(ribbon_data_example, n = 1)
-refs <- dplyr::filter(seq_data_example, accver \%in\% c(link$qaccver, link$saccver))
-p <- ggchord(refs) + geom_seq() + theme(legend.position = "none")
-ggchord_fusion(p) +
-  fusion_panel(p + coord_collinear(), "detail") +
-  fusion_ribbon(link, qpanel = "center", spanel = "detail", fill = "#397D79")
+library(ggplot2)
+
+seqs <- data.frame(
+  accver = c("A", "B"), length = c(1000, 800),
+  sequence_unit = "bp", topology = "linear"
+)
+
+genes <- data.frame(
+  accver = c("A", "A", "B"), feature_id = c("g1", "g2", "g3"),
+  start = c(100, 400, 150), end = c(240, 620, 380),
+  strand = c("+", "-", "+"), label = c("g1", "g2", "g3"),
+  type = c("CDS", "tRNA", "CDS")
+)
+
+links <- data.frame(
+  qaccver = "A", saccver = "B", qstart = c(100, 400),
+  qend = c(240, 620), sstart = c(150, 450), send = c(290, 650),
+  qstrand = "+", sstrand = c("+", "-"),
+  pident = c(98, 90), link_id = c("l1", "l2")
+)
+
+p_basic <- ggchord(seqs) + geom_seq() +
+  geom_gene(data = genes) + coord_collinear()
+
+cross <- links[1, ]
+cross$qpanel_path <- "overview"
+cross$spanel_path <- "detail"
+f <- ggchord_fusion(list(overview = p_basic, detail = p_basic))
+f + fusion_ribbon(aes(fill = pident), data = cross, id = "cross") +
+  scale_fill_gradient(limits = c(0, 100))
 }

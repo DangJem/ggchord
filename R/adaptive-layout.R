@@ -1,81 +1,65 @@
-#' Choose target-size styles and joint guide layout
+#' Set a target-size rendering policy
 #'
-#' Add this policy to a ggchord plot. The ordinary print, ggsave, preview and
-#' diagnostic paths rebuild at the actual device or Fusion panel size.
-#' Plots without a policy retain their existing behaviour.
+#' Scope size adaptation to default appearance and guide layout. Explicit
+#' geometric dimensions and source-coordinate computations remain locked.
 #'
-#' `fixed` keeps default theme sizes and guide furniture at their reference
-#' physical sizes. `scale` adjusts theme-driven default text, lines and spacing
-#' within bounds. `adaptive` additionally selects a joint arrangement of trained
-#' native legends and colour bars, then remeasures the complete plot. Existing
-#' label layout is rerun with the resulting sizes; this is not a new global
-#' label collision solver. Data, source coordinates and scale mappings are unchanged.
-#' Omitted fixed line widths in native backbone, link, ribbon and alignment
-#' layers follow the bounded line factor. Explicit widths and mapped widths
-#' retain their own values and scale rules. Other geometry constants and native
-#' theme-derived aesthetic expressions are not uniformly multiplied.
-#'
-#' Explicit geom styles, mapped sizes, theme fields and guide constraints take
-#' priority. Only unspecified guide grids, directions and positions can change.
-#' Continuous/stepped bars stay intact and retain their scale breaks and order.
-#' Unknown custom guides are measured but not rearranged. Infeasible layouts
-#' warn and report their constraints; categories are never silently removed.
-#'
-#' Apply a policy to each desired Fusion panel before composition. Cross-panel
-#' endpoints are rebuilt after panel measurement; the outer Fusion allocations
-#' and its separate relationship guide are not controlled by this policy.
-#' Facets and arbitrary annotation grobs are outside the automatic layout contract.
-#'
-#' @param mode One of `adaptive`, `fixed`, or `scale`.
-#' @param reference_size Positive width and height in inches. Scale modes use
-#'   the fourth root of target/reference area, with a bounded text multiplier.
-#' @param text_scale_range Lower and upper positive text multipliers containing
-#'   `1`. Lines and default spacing use the square root of the text multiplier.
-#' @param min_text_size Lower bound in mm for automatically reduced theme text.
-#'   Defaults already smaller than this value are preserved rather than enlarged.
-#'   Explicit text sizes and existing label-fit policies keep their own contracts.
-#' @return A plot policy added with `+`. Target-size [diagnose_ggchord()] results
-#'   include `adaptive_layout` (effective styles and scale factors) and
-#'   `guide_layout` (candidates, constraints, chosen layouts and measured bounds).
-#'   A feasible guide layout is not certification of every label or arbitrary
-#'   grob. Ordinary layout-only exports report the policy without claiming a
-#'   target-device guide arrangement.
+#' @param mode Fixed styling, scale unlocked defaults, or adapt text and guides.
+#' @param reference_size Width and height for the scaling baseline.
+#' @param units Physical units of reference_size.
+#' @param text_scale_range Lower and upper text factors for adaptive mode.
+#' @param min_text_size Optional minimum automatically reduced text size in mm.
+#' @return A policy that can be added to a plot or Fusion.
 #' @export
 #' @examples
-#' library(dplyr)
-#' seqs <- seq_data_example |>
-#'   slice_head(n = 2) |>
-#'   select(accver, length)
-#' p <- ggchord(seqs) +
-#'   geom_seq() +
-#'   geom_seq_label() +
-#'   adapt_ggchord(reference_size = c(8, 6))
-#' p
-#' # ggplot2::ggsave("adaptive.png", p, width = 8, height = 6, units = "in")
-adapt_ggchord <- function(mode = c("adaptive", "fixed", "scale"),
-    reference_size = c(8, 6), text_scale_range = c(.85, 1.35), min_text_size = 2.5) {
-  mode <- match.arg(mode)
-  if (!is.numeric(reference_size) || length(reference_size) != 2L ||
-      any(!is.finite(reference_size)) || any(reference_size <= 0))
-    ggchord_stop("adapt_ggchord(): reference_size must be positive width and height in inches")
+#' seqs <- data.frame(
+#'   accver = c("A", "B"), length = c(1000, 800),
+#'   sequence_unit = "bp", topology = "linear"
+#' )
+#'
+#' genes <- data.frame(
+#'   accver = c("A", "A", "B"), feature_id = c("g1", "g2", "g3"),
+#'   start = c(100, 400, 150), end = c(240, 620, 380),
+#'   strand = c("+", "-", "+"), label = c("g1", "g2", "g3"),
+#'   type = c("CDS", "tRNA", "CDS")
+#' )
+#'
+#' p_basic <- ggchord(seqs) + geom_seq() +
+#'   geom_gene(data = genes) + coord_collinear()
+#'
+#' p_basic + render_policy(mode = "adaptive", text_scale_range = c(.9, 1.1))
+render_policy <- function(mode = "fixed", reference_size = NULL, units = "in",
+    text_scale_range = c(0.8, 1.2), min_text_size = NULL) {
+  caller <- "render_policy()"
+  mode <- match.arg(mode, c("fixed", "scale", "adaptive"))
+  units <- match.arg(units, c("in", "mm", "cm"))
+  if (mode == "scale" && is.null(reference_size))
+    ggchord_stop(caller, ": scale mode requires reference_size")
+  if (!is.null(reference_size) && (!is.numeric(reference_size) ||
+      length(reference_size) != 2L || any(!is.finite(reference_size) | reference_size <= 0)))
+    ggchord_stop(caller, ": reference_size must contain positive width and height")
   if (!is.numeric(text_scale_range) || length(text_scale_range) != 2L ||
-      any(!is.finite(text_scale_range)) || any(text_scale_range <= 0) ||
-      text_scale_range[1] > 1 || text_scale_range[2] < 1)
-    ggchord_stop("adapt_ggchord(): text_scale_range must contain positive lower/upper multipliers around 1")
-  if (!is.numeric(min_text_size) || length(min_text_size) != 1L ||
-      !is.finite(min_text_size) || min_text_size < 0)
-    ggchord_stop("adapt_ggchord(): min_text_size must be one nonnegative size in mm")
-  structure(list(mode=mode,reference_size=unname(reference_size),
-    text_scale_range=unname(text_scale_range),min_text_size=min_text_size),class="ggchord_layout_policy")
+      any(!is.finite(text_scale_range) | text_scale_range <= 0) ||
+      text_scale_range[1L] > text_scale_range[2L])
+    ggchord_stop(caller, ": text_scale_range must contain positive increasing multipliers")
+  if (mode != "adaptive" && !missing(text_scale_range))
+    ggchord_stop(caller, ": text_scale_range only applies in adaptive mode")
+  if (!is.null(min_text_size) && (!is.numeric(min_text_size) ||
+      length(min_text_size) != 1L || !is.finite(min_text_size) || min_text_size <= 0))
+    ggchord_stop(caller, ": min_text_size must be positive physical mm")
+  if (mode == "fixed" && !is.null(min_text_size))
+    ggchord_stop(caller, ": min_text_size applies to adaptive or scale mode")
+  size_in <- unname(reference_size) / switch(units, "in" = 1, "cm" = 2.54, "mm" = 25.4)
+  structure(list(mode = mode, reference_size = if (length(size_in)) size_in,
+    text_scale_range = unname(text_scale_range), min_text_size = min_text_size),
+    class = "ggchord_layout_policy")
 }
 
 #' @export
 #' @importFrom ggplot2 ggplot_add
 ggplot_add.ggchord_layout_policy <- function(object, plot, ...) {
-  if (!inherits(plot,"ggchord")) ggchord_stop("adapt_ggchord(): add the policy to an individual ggchord plot")
-  if (!inherits(plot$facet,"FacetNull")) ggchord_stop("adapt_ggchord(): faceted layouts are not supported")
+  if (!inherits(plot, "ggchord")) ggchord_stop("render_policy(): add the policy to ggchord or Fusion")
   plot$ggchord$layout_policy <- unclass(object)
-  plot$ggchord$ref <- new.env(parent=emptyenv())
+  plot$ggchord$ref <- new.env(parent = emptyenv())
   plot$ggchord$layout <- NULL
   plot
 }
@@ -83,12 +67,14 @@ ggplot_add.ggchord_layout_policy <- function(object, plot, ...) {
 # Build-local policy: data and the source plot stay untouched.
 ggchord_adaptive_factors <- function(policy, canvas = ggchord_render_dimensions()) {
   measured <- length(canvas) == 2L && all(is.finite(canvas)) && all(canvas > 0)
-  factor <- if (policy$mode == "fixed" || !measured) 1 else
-    (prod(canvas / 25.4) / prod(policy$reference_size))^.25
-  factor <- max(policy$text_scale_range[1], min(policy$text_scale_range[2], factor))
-  if (policy$mode == "fixed") factor <- 1
+  reference <- policy$reference_size %||% c(8, 6)
+  scale <- if (measured) canvas / 25.4 / reference else c(1, 1)
+  factor <- switch(policy$mode, fixed = 1, scale = min(scale),
+    adaptive = if (!measured) 1 else max(policy$text_scale_range[1L],
+      min(policy$text_scale_range[2L], prod(scale)^.25)))
+  spacing <- if (policy$mode == "scale") factor else sqrt(factor)
   list(mode = policy$mode, canvas_mm = canvas, reference_size_in = policy$reference_size,
-    text_factor = factor, line_factor = sqrt(factor), spacing_factor = sqrt(factor),
+    text_factor = factor, line_factor = spacing, spacing_factor = spacing,
     min_text_size_mm = policy$min_text_size,
     measurement = if (measured) "device_dimensions" else "unavailable")
 }
@@ -96,8 +82,6 @@ ggchord_adaptive_factors <- function(policy, canvas = ggchord_render_dimensions(
 ggchord_apply_adaptive_styles <- function(plot) {
   policy <- plot$ggchord$layout_policy
   if (is.null(policy)) return(plot)
-  if (!inherits(plot$facet, "FacetNull"))
-    ggchord_stop("adapt_ggchord(): faceted layouts are not supported")
   plot <- ggchord_render_plot_copy(plot)
   report <- ggchord_adaptive_factors(policy)
   explicit <- plot$ggchord$theme_explicit %||% list()
@@ -122,7 +106,8 @@ ggchord_apply_adaptive_styles <- function(plot) {
     target <- value
     if (!locked && policy$mode != "fixed") {
       target <- value * if (field == "size") report$text_factor else report$line_factor
-      if (field == "size") target <- max(target, min(value, policy$min_text_size * ggplot2::.pt))
+      if (field == "size" && !is.null(policy$min_text_size))
+        target <- max(target, min(value, policy$min_text_size * ggplot2::.pt))
     }
     raw[[field]] <- target
     theme[[name]] <- raw

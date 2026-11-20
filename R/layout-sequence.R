@@ -1,67 +1,304 @@
-#' Declare the arrangement of sequence backbones
+#' Arrange reference paths and display windows
 #'
-#' A plot has one sequence layout, independent of its drawing layers. Add the
-#' declaration before or after the layers. It also applies when the backbone
-#' is hidden. A named instance inherits its source orientation and gap unless
-#' overridden by instance ID. A single circular map uses the opening and
-#' direction in [coord_circular()]; [coord_dotplot()] owns both of its axes.
-#' @param order Source IDs in display order. Repeats create display instances;
-#'   use names such as c(A_high='A', B='B', A_low='A') for stable instance IDs.
-#'   Repeated-entity HSPs require a unique between route on each link layer.
-#' @param orientation Direction (1 or -1). A named vector selects source or display instance IDs; unspecified sequences use 1.
-#' @param gap Optional numeric. Gap proportion between sequences, default
-#'   0.03 in chord coordinates. A named vector can set the gap after each
-#'   sequence; omitted IDs use the coordinate default. In [coord_collinear()], a positive distance
-#'   between consecutive backbones as a proportion of the longest backbone's
-#'   width, default 0.3. The final sequence's gap is unused in linear layouts.
-#'   Segmented linear displays measure it against the longest display row;
-#'   windows in one row must request the same gap, and only gaps between rows
-#'   affect vertical placement.
-#' @param length_mode `"proportional"` (default) retains source-length ratios;
-#'   `"equal"` gives each displayed sequence the same angular allocation or
-#'   linear span without modifying source lengths. Shared absolute scale bars
-#'   are unavailable in multi-sequence equal mode; local axes retain source units.
-#' @return A layout declaration to add to a ggchord plot with `+`.
+#' @param order Complete display order of references or instances.
+#' @param orientation Display orientation (1 or -1) by reference or instance.
+#' @param length_mode Proportional or equal display lengths.
+#' @param angular_gap Angular spacing in degrees for arc references.
+#' @param row_gap,segment_gap,column_gap Physical distances in mm.
+#' @param radius Relative radius for arc references.
+#' @param inner_radius Relative inner radius for radial spokes.
+#' @param curvature Signed reference curvature for chord coordinates.
+#' @param align Display alignment of linear paths: start, center or end.
+#' @param anchor Source anchor positions or intervals for linear alignment.
+#' @param windows An optional table with instance_id, accver, start and end.
+#' @return A layout declaration to add to a ggchord plot.
 #' @export
 #' @examples
-#' reference <- data.frame(accver = c("A", "B"), length = c(100, 200))
-#' ggchord(reference) +
-#'   geom_seq() +
-#'   layout_sequences(order = c("B", "A"), orientation = c(B = -1), gap = 0.2,
-#'                    length_mode = "equal") +
+#' seqs <- data.frame(
+#'   accver = c("A", "B"), length = c(1000, 800),
+#'   sequence_unit = "bp", topology = "linear"
+#' )
+#'
+#' one_seq <- seqs[1, , drop = FALSE]
+#'
+#' genes <- data.frame(
+#'   accver = c("A", "A", "B"), feature_id = c("g1", "g2", "g3"),
+#'   start = c(100, 400, 150), end = c(240, 620, 380),
+#'   strand = c("+", "-", "+"), label = c("g1", "g2", "g3"),
+#'   type = c("CDS", "tRNA", "CDS")
+#' )
+#'
+#' windows <- data.frame(accver = "A", start = 1, end = 500, window_id = "w1")
+#'
+#' ggchord(data = seqs) +
+#'   geom_seq() + geom_gene(data = genes) +
+#'   layout_sequences(
+#'     order = c("B", "A"), orientation = c(A = 1, B = -1),
+#'     row_gap = 8, align = "center"
+#'   ) +
 #'   coord_collinear()
-layout_sequences <- function(order = NULL, orientation = NULL, gap = NULL,
-    length_mode = c("proportional", "equal")) {
+#'
+#' w <- data.frame(instance_id = c("A_left", "A_right"),
+#'                 accver = "A", start = c(1, 501), end = c(500, 1000),
+#'                 row_id = "A_split")
+#' ggchord(data = one_seq) + geom_seq() +
+#'   layout_sequences(windows = w, segment_gap = 3) + coord_collinear()
+layout_sequences <- function(order = NULL, orientation = 1, length_mode = "proportional",
+    angular_gap = NULL, row_gap = NULL, segment_gap = NULL, column_gap = NULL,
+    radius = NULL, inner_radius = NULL, curvature = NULL, align = NULL,
+    anchor = NULL, windows = NULL) {
   ggchord_check_argument_names(sys.call(), sys.function())
-  if (!is.null(order) && (!is.character(order) || !length(order) || anyNA(order) || any(!nzchar(order))))
-    ggchord_stop("layout_sequences(): order must contain nonempty sequence IDs")
-  if (!is.null(names(order)) && (anyNA(names(order)) || any(!nzchar(names(order))) ||
-      anyDuplicated(names(order))))
-    ggchord_stop("layout_sequences(): display instance names must be nonempty and unique")
-  for (value in list(orientation, gap)) {
-    if (anyDuplicated(names(value)))
-      ggchord_stop("layout_sequences(): a sequence or instance cannot be configured twice")
+  if (!is.null(order)) ggchord_id_vector(order, "order")
+  length_mode <- ggchord_match_choice(length_mode, c("proportional", "equal"), "length_mode")
+  if (!is.null(align)) align <- ggchord_match_choice(align, c("start", "center", "end"), "align")
+  if (!is.null(windows)) {
+    ggchord_require_columns(windows, c("instance_id", "accver", "start", "end"), "layout_sequences(windows)")
+    windows <- as.data.frame(windows)
+    ggchord_id_vector(windows$instance_id, "windows instance_id")
+    if (anyNA(windows$accver) || any(!nzchar(windows$accver)))
+      ggchord_stop("windows must identify a source reference for every instance")
+    for (key in c("start", "end")) {
+      x <- windows[[key]]
+      if (!is.numeric(x) || any(!is.finite(x) | x < 1 | x != trunc(x)))
+        ggchord_stop("windows ", key, " must contain positive source positions")
+    }
+    if (any(windows$start > windows$end)) ggchord_stop("windows start must not exceed end")
+    if (!is.null(windows$ring_id) && (!is.character(windows$ring_id) ||
+        anyNA(windows$ring_id) || any(!nzchar(trimws(windows$ring_id)))))
+      ggchord_stop("windows ring_id must contain nonempty ring identifiers")
   }
-  structure(list(order = order, orientation = orientation, gap = gap,
-    length_mode = match.arg(length_mode)), class = "ggchord_sequence_layout")
+  structure(list(order = order, orientation = orientation, length_mode = length_mode,
+    angular_gap = angular_gap, row_gap = row_gap, segment_gap = segment_gap,
+    column_gap = column_gap, radius = radius, inner_radius = inner_radius,
+    curvature = curvature, align = align, anchor = anchor, windows = windows),
+    class = "ggchord_sequence_layout")
+}
+
+ggchord_id_vector <- function(x, field) {
+  if (!is.character(x) || !length(x) || anyNA(x) ||
+      any(!nzchar(trimws(x))) || anyDuplicated(x))
+    ggchord_stop(field, " must contain distinct nonempty identifiers")
+  invisible(x)
 }
 
 #' @export
-#' @importFrom ggplot2 ggplot_add
 ggplot_add.ggchord_sequence_layout <- function(object, plot, ...) {
-  if (!inherits(plot, "ggchord")) ggchord_stop("Add layout_sequences() to a ggchord plot")
-  if (!is.null(plot$ggchord$sequence_layout))
-    ggchord_stop("Sequence layout already declared; supply one layout_sequences() per plot")
-  plot$ggchord$sequence_layout <- object
-  plot$ggchord$ref <- new.env(parent = emptyenv())
-  plot$ggchord$layout <- NULL
+  if (!inherits(plot, "ggchord")) ggchord_stop("Add a reference layout to a ggchord plot")
+  if (!is.null(plot$ggchord$sequence_layout) || !is.null(plot$ggchord$dotplot_layout))
+    message("A reference layout is already present and will be replaced.")
+  plot$ggchord$sequence_layout <- plot$ggchord$dotplot_layout <- NULL
+  field <- if (inherits(object, "ggchord_dotplot_layout")) "dotplot_layout" else "sequence_layout"
+  plot$ggchord[[field]] <- object
   plot
+}
+
+#' Arrange the query and subject axes of a Dotplot
+#'
+#' @param x_order,y_order Unique reference IDs in query and subject order.
+#' @param x_orientation,y_orientation Display orientations (1 or -1).
+#' @param x_gap,y_gap Gaps in the corresponding source coordinate unit.
+#' @return A Dotplot layout declaration.
+#' @export
+#' @examples
+#' seqs <- data.frame(
+#'   accver = c("A", "B"), length = c(1000, 800),
+#'   sequence_unit = "bp", topology = "linear"
+#' )
+#'
+#' links <- data.frame(
+#'   qaccver = "A", saccver = "B", qstart = c(100, 400),
+#'   qend = c(240, 620), sstart = c(150, 450), send = c(290, 650),
+#'   qstrand = "+", sstrand = c("+", "-"),
+#'   pident = c(98, 90), link_id = c("l1", "l2")
+#' )
+#'
+#' ggchord(data = seqs) +
+#'   geom_alignment_segment(data = links) +
+#'   layout_dotplot(x_order = "A", y_order = "B", y_orientation = -1) +
+#'   coord_dotplot()
+layout_dotplot <- function(x_order = NULL, y_order = NULL, x_orientation = 1,
+    y_orientation = 1, x_gap = 0, y_gap = 0) {
+  ggchord_check_argument_names(sys.call(), sys.function())
+  if (!is.null(x_order)) ggchord_id_vector(x_order, "x_order")
+  if (!is.null(y_order)) ggchord_id_vector(y_order, "y_order")
+  for (gap in list(x_gap, y_gap)) if (!is.numeric(gap) || any(!is.finite(gap) | gap < 0)) ggchord_stop("Dotplot gaps must be nonnegative finite numbers")
+  structure(list(x_order = x_order, y_order = y_order, x_orientation = x_orientation,
+    y_orientation = y_orientation, x_gap = x_gap, y_gap = y_gap),
+    class = c("ggchord_dotplot_layout", "ggchord_sequence_layout"))
+}
+
+# Resolve the supported flexible input forms before converting physical units.
+ggchord_layout_values <- function(value, source, instance = source, field, default) {
+  expand <- function(value, ids, keys, named_only = FALSE) {
+    if (is.null(value)) return(rep(NA, length(ids)))
+    if (anyNA(value) || (is.list(value) && !grid::is.unit(value)))
+      ggchord_stop(field, " must contain finite scalar settings")
+    if (is.null(names(value))) {
+      if (named_only || !length(value) %in% c(1L, length(ids)))
+        ggchord_stop(field, " needs an unnamed scalar, exact-length vector or named settings")
+      return(rep_len(value, length(ids)))
+    }
+    if (anyDuplicated(names(value)) || anyNA(names(value)) || any(!names(value) %in% keys))
+      ggchord_stop(field, " has unknown or repeated configuration keys")
+    value[match(ids, names(value))]
+  }
+  if (is.list(value) && !grid::is.unit(value)) {
+    if (is.null(names(value)) || anyDuplicated(names(value)) ||
+        any(!names(value) %in% c("source", "instance")))
+      ggchord_stop(field, " accepts list(source = ..., instance = ...)")
+    out <- expand(value$source, source, unique(source), TRUE)
+    local <- expand(value$instance, instance, instance, TRUE)
+    out[!is.na(local)] <- local[!is.na(local)]
+  } else out <- expand(value, source, unique(source))
+  out[is.na(out)] <- default
+  stats::setNames(out, instance)
+}
+
+ggchord_layout_mm <- function(value, field) {
+  if (grid::is.unit(value)) {
+    value <- vapply(seq_along(value), function(i) ggchord_unit_inches(value[i]) * 25.4,
+      numeric(1))
+  } else if (is.list(value)) {
+    value <- lapply(value, ggchord_layout_mm, field = field)
+  }
+  if (!is.null(value) && !is.list(value) &&
+      (!is.numeric(value) || any(!is.finite(value) | value < 0)))
+    ggchord_stop(field, " must use nonnegative mm or absolute grid units")
+  value
+}
+
+ggchord_configure_layout <- function(plot) {
+  ggchord_validate_coord_contract(plot)
+  if (isTRUE(plot$ggchord$layout_configured)) return(plot)
+  coord <- plot$coordinates
+  dotplot <- isTRUE(coord$ggchord_dotplot)
+  layout <- plot$ggchord$sequence_layout
+  if (dotplot) {
+    if (!is.null(layout)) ggchord_stop("Use layout_dotplot() with coord_dotplot()")
+    return(plot)
+  }
+  if (!is.null(plot$ggchord$dotplot_layout)) ggchord_stop("layout_dotplot() requires coord_dotplot()")
+  layout <- layout %||% layout_sequences()
+  source <- plot$ggchord$data$seq_data
+  windows <- layout$windows
+  mode <- if (isTRUE(coord$ggchord_radial)) "radial" else
+    if (isTRUE(coord$ggchord_sankey)) "sankey" else
+    if (isTRUE(coord$ggchord_collinear)) "linear" else
+    if (isTRUE(coord$ggchord_circular)) "circular" else "chord"
+  supported <- switch(mode, radial = "inner_radius", sankey = c("row_gap", "column_gap"),
+    linear = c("row_gap", "segment_gap", "align", "anchor"),
+    circular = c("angular_gap", "radius"), chord = c("angular_gap", "radius", "curvature"))
+  optional <- c("angular_gap", "row_gap", "segment_gap", "column_gap", "radius",
+    "inner_radius", "curvature", "align", "anchor")
+  bad <- setdiff(optional[!vapply(layout[optional], is.null, logical(1))], supported)
+  if (length(bad)) ggchord_stop("Unsupported layout parameter for ", mode, ": ", bad[1L])
+  if (!is.null(layout$segment_gap) && (is.null(windows$row_id) || !anyDuplicated(windows$row_id)))
+    ggchord_stop("segment_gap applies to windows sharing a Collinear display row")
+  if (mode != "linear" && anyDuplicated(windows$row_id))
+    ggchord_stop("Multiple windows in one display row require coord_collinear()")
+  if (!mode %in% c("circular", "chord") && !is.null(windows$ring_id))
+    ggchord_stop("windows ring_id requires coord_circular() or coord_chord()")
+  if (!is.null(windows)) {
+    at <- match(windows$accver, source$accver)
+    if (anyNA(at) || any(windows$end > source$length[at]))
+      ggchord_stop("Layout windows must lie within a known complete reference")
+  }
+  keys <- windows$instance_id %||% source$accver
+  order <- layout$order %||% sort(keys, method = "radix")
+  if (!setequal(order, keys) || length(order) != length(keys))
+    ggchord_stop("layout_sequences(order) must list every reference or display instance exactly once")
+  if (!is.null(windows)) windows <- windows[match(order, keys), , drop = FALSE]
+  ids <- windows$accver %||% order
+  layout$order <- order
+  values <- function(name, default) ggchord_layout_values(layout[[name]], ids, order, name, default)
+  layout$orientation <- values("orientation", 1)
+  if (!is.null(windows$orientation)) {
+    known <- !is.na(windows$orientation)
+    layout$orientation[known] <- windows$orientation[known]
+  }
+  if (any(!layout$orientation %in% c(-1, 1))) ggchord_stop("orientation must be 1 or -1")
+  if (mode %in% c("chord", "circular")) {
+    layout$gap <- values("angular_gap", if (mode == "chord") 2 else 0) / 360
+    layout$radius <- values("radius", 1)
+    layout$curvature <- values("curvature", 1)
+  }
+  if (mode %in% c("linear", "sankey")) {
+    layout$row_gap <- ggchord_layout_mm(layout$row_gap, "row_gap")
+    layout$row_gap <- values("row_gap", 6)
+  }
+  updates <- list()
+  if (mode == "radial") {
+    inner <- layout$inner_radius %||% .25
+    if (!is.numeric(inner) || length(inner) != 1L || !is.finite(inner) || inner < 0 || inner >= 1)
+      ggchord_stop("inner_radius must be in [0, 1)")
+    updates$radial_inner_radius <- 2 * inner / (1 - inner)
+  }
+  if (mode == "linear") {
+    updates$collinear_align <- c(start = "left", center = "center", end = "right")[[layout$align %||% "start"]]
+    if (!is.null(layout$anchor)) {
+      anchor <- layout$anchor
+      if (!is.data.frame(anchor)) ggchord_stop("anchor must be a data frame")
+      if ("pos" %in% names(anchor)) anchor$position <- anchor$pos
+      if ("instance_id" %in% names(anchor)) anchor$accver <- anchor$instance_id
+      ggchord_validate_collinear_anchor(anchor)
+      updates$collinear_anchor <- anchor
+    }
+    if (!is.null(windows$row_id)) {
+      updates$collinear_segments <- data.frame(accver = order,
+        row_id = windows$row_id, orientation = unname(layout$orientation))
+      updates$collinear_segment_gap_mm <- ggchord_layout_mm(layout$segment_gap %||% 2, "segment_gap")
+    }
+  }
+  if (mode == "sankey") {
+    gap <- ggchord_layout_mm(layout$column_gap %||% 20, "column_gap")
+    if (length(gap) != 1L || gap <= 0) ggchord_stop("column_gap must be one positive distance")
+    updates$sankey_column_gap_mm <- gap
+  }
+  layout$windows <- windows
+  plot$coordinates <- ggplot2::ggproto(NULL, coord, !!!updates)
+  plot$ggchord$sequence_layout <- layout
+  plot$ggchord$layout_configured <- TRUE
+  plot
+}
+
+ggchord_layout_units_per_mm <- function(axis) {
+  measured <- ggchord_render_context()$units_per_mm
+  if (length(measured) == 2L && all(is.finite(measured))) return(unname(measured[axis]))
+  ggchord_device_units_per_inch(c(0, 2), c(0, 2)) / 25.4
+}
+
+ggchord_path_normal_axis <- function(coord) {
+  if (!isTRUE(coord$ggchord_collinear) || isTRUE(coord$ggchord_radial)) return(NULL)
+  vertical <- if (isTRUE(coord$ggchord_sankey)) identical(coord$sankey_axis, "y") else
+    identical(coord$collinear_seq_axis, "vertical")
+  if (vertical) "x" else "y"
+}
+
+ggchord_row_gap <- function(plot, layout, seqs) {
+  coord <- plot$coordinates
+  if (is.null(layout$row_gap)) return(rep(0, length(seqs)))
+  axis <- if (identical(coord$collinear_seq_axis, "vertical")) 1L else 2L
+  if (isTRUE(coord$ggchord_sankey)) axis <- if (identical(coord$sankey_axis, "x")) 1L else 2L
+  gap <- layout$row_gap[seqs]
+  # Parallel Collinear references reserve space for both neighbouring sides.
+  if (!isTRUE(coord$ggchord_sankey)) {
+    tracks <- Filter(function(layer) identical(layer$ggchord_type, "track"), plot$layers)
+    ids <- unique(vapply(tracks, function(layer) layer$ggchord_params$track_id, character(1)))
+    for (id in ids) {
+      band <- plot$ggchord$track_bands[[id]] %||% if (id == "default") track_band()
+      if (is.null(band)) next
+      width <- ggchord_track_dimension(band$width, seqs, "thickness")$mm
+      clear <- ggchord_track_dimension(band$gap, seqs, "gap")$mm
+      gap <- gap + width + clear
+    }
+  }
+  gap * ggchord_layout_units_per_mm(axis) / 2
 }
 
 # Sequence allocation, references and track geometry.
 ggchord_layout_sequence_step <- function(
-    axisGap, axisMajLen, axisMinLen, circular, geometry_cache, labelOffset, lens, orientation,
-    rotation, seq_curvature, seq_gap, seqRadius, seqs, length_mode) {
+    axisGap, axisMajLen, axisMinLen, circular, clockwise, geometry_cache, labelOffset, lens, orientation,
+    rotation, seq_curvature, seq_gap, seqRadius, seqs, length_mode, ring) {
   n <- length(seqs)
 
   # ====================================================================
@@ -69,32 +306,24 @@ ggchord_layout_sequence_step <- function(
   # ====================================================================
   total_circ <- 2 * pi
 
-  total_gap_prop <- sum(seq_gap)
-
-  if (total_gap_prop >= 1) {
-    ggchord_stop("The sum of layout_sequences(gap) cannot exceed 1 (no space left for sequences)")
-  }
-
-  seq_total_prop <- 1 - total_gap_prop
   weights <- if (identical(length_mode, "equal")) rep(1, length(lens)) else lens
-  theta <- (weights / sum(weights)) * total_circ * seq_total_prop
-  gap_rads <- total_circ * seq_gap
-
-  # Compute the start and end angles of each sequence
-  starts <- numeric(n)
-  names(starts) <- seqs
-  starts[1] <- 0
-
-  if (n > 1) {
-    for (i in 2:n) {
-      starts[i] <- starts[i - 1] + theta[i - 1] + gap_rads[i - 1]
-    }
+  groups <- if (is.null(ring)) list(seq_len(n)) else split(seq_len(n), ring)
+  starts <- ends <- stats::setNames(numeric(n), seqs)
+  for (members in groups) {
+    gap <- seq_gap[members]
+    available <- 1 - sum(gap)
+    if (available <= 0)
+      ggchord_stop("Reference gaps must leave drawable space in each ring")
+    weight <- weights[members]
+    span <- weight / sum(weight) * total_circ * available
+    offsets <- c(0, head(cumsum(span + total_circ * gap), -1L))
+    starts[members] <- offsets
+    ends[members] <- offsets + span
   }
-  ends <- starts + theta
-  names(ends) <- seqs
-  if (isTRUE(circular) && n == 1L && orientation[seqs[1L]] == -1) {
-    starts[1L] <- -theta[1L]
-    ends[1L] <- 0
+  if (clockwise) {
+    original <- starts
+    starts <- -ends
+    ends <- -original
   }
 
   # ====================================================================
@@ -179,4 +408,107 @@ ggchord_layout_sequence_step <- function(
     gene_track_radius = gene_track_radius, seq_arcs = seq_arcs,
     axis_units_per_inch = axis_units_per_inch, axisGap = axisGap, axisMajLen = axisMajLen,
     axisMinLen = axisMinLen, labelOffset = labelOffset)
+}
+
+#' Suggest reference order and orientation from link evidence
+#'
+#' @param sequences A complete reference table.
+#' @param links An interval relationship table supplying direction evidence.
+#' @param order Optional complete display order.
+#' @param reference Optional source accession to keep in the positive orientation.
+#' @param weight Use aligned length, observation count, or a numeric input column.
+#' @param min_support Minimum relative imbalance required to choose a direction.
+#' @return A list of layout arguments, evidence and diagnostics.
+#' @export
+#' @examples
+#' seqs <- data.frame(
+#'   accver = c("A", "B"), length = c(1000, 800),
+#'   sequence_unit = "bp", topology = "linear"
+#' )
+#'
+#' links <- data.frame(
+#'   qaccver = "A", saccver = "B", qstart = c(100, 400),
+#'   qend = c(240, 620), sstart = c(150, 450), send = c(290, 650),
+#'   qstrand = "+", sstrand = c("+", "-"),
+#'   pident = c(98, 90), link_id = c("l1", "l2")
+#' )
+#'
+#' suggestion <- suggest_sequence_layout(seqs, links, weight = "count")
+#' suggestion$evidence
+#' ggchord(data = seqs) + geom_seq() + geom_link_ribbon(data = links) +
+#'   do.call(layout_sequences, suggestion$layout) + coord_collinear()
+suggest_sequence_layout <- function(sequences, links, order = NULL, reference = NULL,
+    weight = "aligned_length", min_support = 0.1) {
+  ggchord_check_argument_names(sys.call(), sys.function())
+  caller <- "suggest_sequence_layout()"
+  sequences <- ggchord_reference_table(sequences, caller)
+  links <- as_ggchord_link(links)
+  ids <- sort(sequences$accver, method = "radix")
+  if (!is.null(order)) {
+    ggchord_id_vector(order, "order")
+    if (!setequal(order, ids)) ggchord_stop(caller, ": order must list all references")
+  }
+  if (!is.null(reference) && (length(reference) != 1L || !reference %in% ids))
+    ggchord_stop(caller, ": reference must select one known accession")
+  if (!is.numeric(min_support) || length(min_support) != 1L ||
+      !is.finite(min_support) || min_support < 0 || min_support > 1)
+    ggchord_stop(caller, ": min_support must be in [0, 1]")
+  if (!is.character(weight) || length(weight) != 1L || is.na(weight))
+    ggchord_stop(caller, ": weight must identify one weighting rule or column")
+  ggchord_check_reference_ids(links, c("qaccver", "saccver"), ids, caller)
+  unit <- stats::setNames(sequences$sequence_unit, sequences$accver)
+  q <- links$qaccver
+  s <- links$saccver
+  aligned <- pmin(links$qend - links$qstart, links$send - links$sstart) + 1
+  if (weight == "aligned_length" && any(unit[q] != unit[s]))
+    ggchord_stop(caller, ": aligned length requires comparable endpoint units")
+  values <- switch(weight, count = rep(1, nrow(links)), aligned_length = aligned, links[[weight]])
+  if (!is.numeric(values) || any(!is.finite(values) | values < 0))
+    ggchord_stop(caller, ": missing or invalid nonnegative link weights")
+  direction <- ggchord_reference_direction(links, caller)
+  adjacency <- matrix(0, length(ids), length(ids), dimnames = list(ids, ids))
+  for (i in which(q != s)) {
+    adjacency[q[i], s[i]] <- adjacency[q[i], s[i]] + values[i]
+    adjacency[s[i], q[i]] <- adjacency[s[i], q[i]] + values[i]
+  }
+  if (is.null(order)) {
+    order <- reference %||% ids[which.max(rowSums(adjacency))]
+    while (length(order) < length(ids)) {
+      remaining <- setdiff(ids, order)
+      order <- c(order, remaining[which.max(rowSums(adjacency[remaining, order, drop = FALSE]))])
+    }
+  }
+  reference <- reference %||% order[1L]
+  orientation <- stats::setNames(rep(1, length(ids)), ids)
+  evidence <- data.frame(accver = order, forward_support = 0, reverse_support = 0,
+    confidence = NA_real_, orientation = 1, status = "unresolved")
+  evidence$status[order == reference] <- "reference"
+  evidence$source_rows <- rep(list(integer()), length(ids))
+  visited <- reference
+  for (id in setdiff(order, reference)) {
+    at <- match(id, order)
+    query <- q == id & s %in% visited
+    subject <- s == id & q %in% visited
+    rows <- which((query | subject) & !is.na(direction) & values > 0)
+    peer <- ifelse(query[rows], s[rows], q[rows])
+    vote <- direction[rows] * orientation[peer]
+    forward <- sum(values[rows][vote > 0])
+    reverse <- sum(values[rows][vote < 0])
+    total <- forward + reverse
+    confidence <- if (total > 0) abs(forward - reverse) / total else NA_real_
+    evidence$source_rows[[at]] <- rows
+    evidence[at, c("forward_support", "reverse_support", "confidence")] <-
+      list(forward, reverse, confidence)
+    if (forward != reverse && confidence >= min_support) {
+      orientation[id] <- if (forward > reverse) 1 else -1
+      evidence$status[at] <- "supported"
+    }
+    visited <- c(visited, id)
+  }
+  evidence$orientation <- unname(orientation[order])
+  unresolved <- evidence[evidence$status == "unresolved", c("accver", "confidence")]
+  unresolved$reason <- ifelse(rowSums(adjacency)[unresolved$accver] == 0, "isolated",
+    ifelse(is.na(unresolved$confidence), "missing_direction", "insufficient_support"))
+  list(layout = list(order = order, orientation = orientation[order]),
+    evidence = evidence, diagnostics = unresolved)
 }

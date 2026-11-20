@@ -64,54 +64,31 @@ ggchord_alignment_report <- function(source, convention) list(
   input_coordinates = convention, output_coordinates = '1-based-inclusive',
   interpretation = 'existing alignment hypotheses, not newly validated homology; source block indices are provenance, not independent observation IDs')
 
-#' Read existing MAF blocks with exact source characters
+#' Read true alignment characters and relationships from MAF
 #'
-#' Optional Biopython Bio.Align parses local MAF through an explicitly selected
-#' Python environment. No alignment is computed. Full source IDs, lengths,
-#' block scores, coordinate matrices and original text remain traceable. Empty
-#' components and quality/context lines remain in source text/parser metadata;
-#' no characters or relations are invented for absent components.
-#' Zero-length s components are listed in report$unplaced_components. They do
-#' not acquire source positions or links; an empty first anchor is not replaced
-#' by another component implicitly.
+#' Keep block context and real character columns. A block's first component
+#' is its query anchor. An empty anchor yields no derived relation.
+#' Select a single block when displaying a character alignment.
 #'
-#' Each block's first component is the query anchor, paired with every other
-#' nonempty component. No all-pairs clique or Identity is inferred. Source
-#' positions come from the decoder's forward zero-based boundary matrix and
-#' are converted once to directional one-based inclusive endpoints. Negative
-#' rows decrease from their true forward source coordinate, not the offset on
-#' the reverse-complement string. Blocks and input files are separate contexts.
-#'
-#' Alignment cells reuse [as_ggchord_alignment()]. Original symbols and gaps
-#' are retained; gaps have missing source positions. Full lengths do not verify
-#' source characters independently, so source_verified stays FALSE. Filter
-#' .source_input and source_block before column lookup or drawing a character
-#' panel: alignment columns restart at one in each block. No blocks are joined,
-#' renumbered or promoted to complete source sequences.
-#'
-#' @param file Optional local path vector or glob patterns, before files.
-#' @param files Optional additional MAF paths or patterns.
-#' @param alphabet Declared DNA, RNA or AA alphabet, default "DNA".
-#' @param python Existing interpreter with optional Biopython, default "python3".
-#' @param source_file Add .source_file to alignment/ribbon rows, default FALSE.
-#' @return A list with seq_data (declared full lengths), ribbon_data, alignment
-#'   cells and report. Source indices and original decoder metadata remain in
-#'   the report. No pident or read support is manufactured.
-#' @seealso [read_chain()], [map_alignment_position()]
+#' @param file Local MAF paths.
+#' @param alphabet Explicit DNA, RNA, or AA.
+#' @param python Python executable with Biopython available.
+#' @param source_file Whether to include row-level source paths.
+#' @return A ggchord_import collection with sequences, links$maf,
+#'   alignments$maf, and block provenance.
 #' @export
 #' @examples
 #' \dontrun{
-#' # Requires an existing Python environment with optional Biopython.
-#' blocks <- read_maf("examples/genome-alignments/ucsc_mm9_chr10.maf")
-#' local <- blocks$alignment[blocks$alignment$source_block == 1, ]
+#' f <- system.file("extdata", "tutorial", "ucsc_mm9_chr10.maf", package = "ggchord")
+#' x <- read_maf(f, python = "python3")
+#' head(x$alignments$maf)
 #' }
-read_maf <- function(file = NULL, files = NULL, alphabet = 'DNA',
-                     python = 'python3', source_file = FALSE) {
+read_maf <- function(file, alphabet = "DNA", python = "python3", source_file = FALSE) {
   caller <- 'read_maf()'
   alphabet <- match.arg(alphabet, c('DNA', 'RNA', 'AA'))
   if (!is.logical(source_file) || length(source_file) != 1L || is.na(source_file))
     ggchord_stop(caller, ': source_file must be TRUE or FALSE')
-  source <- ggchord_alignment_source(file, files, python, 'maf', caller)
+  source <- ggchord_alignment_source(file, NULL, python, 'maf', caller)
   dictionary <- list(); links <- list(); cells <- list(); empty <- list()
   for (i in seq_along(source$parsed$files)) {
     input <- source$parsed$files[[i]]
@@ -145,6 +122,7 @@ read_maf <- function(file = NULL, files = NULL, alphabet = 'DNA',
       if (!nonempty[1L] || !length(other)) next
       out <- data.frame(qaccver = ids[1L], saccver = ids[other],
         qstart = start[1L], qend = end[1L], sstart = start[other], send = end[other],
+        qstrand = if (plus[1L]) "+" else "-", sstrand = ifelse(plus[other], "+", "-"),
         qlen = lengths[1L], slen = lengths[other], .source_input = i,
         source_block = block$source_block, source_component = other, stringsAsFactors = FALSE)
       links[[length(links)+1L]] <- ggchord_add_source_file(out, source$paths[i], source_file)
@@ -158,10 +136,10 @@ read_maf <- function(file = NULL, files = NULL, alphabet = 'DNA',
     files = source$paths, context_columns = c('.source_input', 'source_block'),
     decoder = source$parsed$decoder,
     coordinates = 'per-block alignment columns and nullable one-based source positions')
-  list(seq_data = ggchord_alignment_dictionary(dictionary, if (alphabet == 'AA') 'aa' else 'bp', caller),
-    ribbon_data = ggchord_rbind_fill(links) %||% data.frame(),
-    alignment = alignment,
-    report = report)
+  ggchord_import_collection(
+    ggchord_alignment_dictionary(dictionary, if (alphabet == "AA") "aa" else "bp", caller),
+    links = list(maf = ggchord_canonical_read_links(links, caller)),
+    alignments = list(maf = alignment), report = report)
 }
 
 ggchord_alignment_rename <- function(ids, map, caller) {
@@ -183,48 +161,35 @@ ggchord_alignment_identity_maps <- function(query, subject, query_ids, subject_i
   list(query = q, subject = s)
 }
 
-#' Read chain alignment blocks without inventing sequence characters
+#' Read block relationships from a chain file
 #'
-#' Optional Biopython Bio.Align parses chain coordinates. Each block aligned
-#' on both sides becomes one directional interval pair; intervening gaps stay
-#' in the source coordinate matrix rather than becoming a false uninterrupted
-#' match. Source chain scores and IDs remain in report metadata; neither is
-#' an Identity or read-support count. Chain contains no aligned characters.
+#' Use an existing Biopython environment to decode chain block coordinates.
+#' Store lengths as reference information and retain the original chain
+#' fields and directional alignment evidence. Chain scores preserve their
+#' source meaning.
 #'
-#' The chain query becomes qaccver and its target becomes saccver. Original
-#' IDs stay in q_source_accver/s_source_accver. If both assemblies use the same
-#' IDs, supply explicit query_ids/subject_ids rather than implicitly merging
-#' distinct molecules or auto-prefixing them. Shared final IDs require explicit
-#' declaration on both sides and consistent full lengths. This is data identity
-#' mapping, not automatic homology discovery or display-instance creation.
-#'
-#' @param file Optional local path vector or glob patterns, before files.
-#' @param files Optional additional chain paths or patterns.
-#' @param query_ids,subject_ids Optional named character vectors mapping
-#'   original query/target IDs to explicit source IDs. Unspecified IDs stay
-#'   unchanged. Unknown map keys and conflicting full lengths fail.
-#' @param sequence_unit Declared coordinate unit, "bp" (default) or "aa".
-#'   The format itself cannot establish the biological unit.
-#' @param python Existing interpreter with optional Biopython, default "python3".
-#' @param source_file Add .source_file to ribbon rows, default FALSE.
-#' @return A list with seq_data, ribbon_data and report containing original
-#'   text, chain scores/IDs, full lengths and exact zero-based boundary matrices.
-#'   Each link retains source_block and source_segment provenance; no source
-#'   HSP ID, pident, base mismatch script or character alignment is fabricated.
-#' @seealso [read_maf()], [geom_link_ribbon()]
+#' @param file Local chain paths.
+#' @param query_ids,subject_ids Optional named source ID translations.
+#'   Renamed IDs must refer to distinct, consistent reference sequences.
+#' @param sequence_unit Native coordinate unit.
+#' @param python Python executable with Biopython available.
+#' @param source_file Whether to include row-level source paths.
+#' @return A ggchord_import collection with sequences, links$chain, and the
+#'   source and decoder report.
 #' @export
 #' @examples
 #' \dontrun{
-#' # Requires an existing Python environment with optional Biopython.
-#' chains <- read_chain("examples/genome-alignments/dna_rna.chain")
-#' head(chains$ribbon_data)
+#' f <- system.file("extdata", "tutorial", "dna_rna.chain", package = "ggchord")
+#' x <- read_chain(f, python = "python3")
+#' head(x$links$chain)
 #' }
-read_chain <- function(file = NULL, files = NULL, query_ids = NULL, subject_ids = NULL,
-                       sequence_unit = c('bp', 'aa'), python = 'python3', source_file = FALSE) {
-  caller <- 'read_chain()'; sequence_unit <- match.arg(sequence_unit)
+read_chain <- function(file, query_ids = NULL, subject_ids = NULL,
+                       sequence_unit = "bp", python = "python3", source_file = FALSE) {
+  caller <- "read_chain()"
+  sequence_unit <- match.arg(sequence_unit, c("bp", "aa"))
   if (!is.logical(source_file) || length(source_file) != 1L || is.na(source_file))
     ggchord_stop(caller, ': source_file must be TRUE or FALSE')
-  source <- ggchord_alignment_source(file, files, python, 'chain', caller)
+  source <- ggchord_alignment_source(file, NULL, python, 'chain', caller)
   blocks <- unlist(lapply(source$parsed$files, `[[`, 'blocks'), recursive = FALSE)
   q_original <- unique(vapply(blocks, function(b) b$sequences[[2L]]$accver, character(1)))
   s_original <- unique(vapply(blocks, function(b) b$sequences[[1L]]$accver, character(1)))
@@ -251,12 +216,14 @@ read_chain <- function(file = NULL, files = NULL, query_ids = NULL, subject_ids 
     out <- data.frame(qaccver = ids[2L], saccver = ids[1L],
       qstart = start[2L, keep], qend = end[2L, keep],
       sstart = start[1L, keep], send = end[1L, keep], qlen = lengths[2L], slen = lengths[1L],
+      qstrand = ifelse(last[2L, keep] > first[2L, keep], "+", "-"),
+      sstrand = ifelse(last[1L, keep] > first[1L, keep], "+", "-"),
       q_source_accver = original[2L], s_source_accver = original[1L],
       .source_input = i, source_block = block$source_block, source_segment = keep, stringsAsFactors = FALSE)
     links[[length(links)+1L]] <- ggchord_add_source_file(out, source$paths[i], source_file)
   }
   report <- ggchord_alignment_report(source, 'chain 0-based boundary coordinates from Bio.Align')
   report$explicit_id_maps <- list(query = query_ids, subject = subject_ids)
-  list(seq_data = ggchord_alignment_dictionary(dictionary, sequence_unit, caller),
-    ribbon_data = ggchord_rbind_fill(links) %||% data.frame(), report = report)
+  ggchord_import_collection(ggchord_alignment_dictionary(dictionary, sequence_unit, caller),
+    links = list(chain = ggchord_canonical_read_links(links, caller)), report = report)
 }

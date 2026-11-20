@@ -2,50 +2,28 @@
 % Please edit documentation in R/data-formats.R
 \name{read_paf}
 \alias{read_paf}
-\title{Read PAF mappings as ggchord links}
+\title{Read PAF relationships}
 \usage{
-read_paf(file = NULL, files = NULL, source_file = FALSE)
+read_paf(file, source_file = FALSE)
 }
 \arguments{
-\item{file}{Optional path vector or glob patterns; read before \code{files}.}
+\item{file}{Local PAF paths.}
 
-\item{files}{Optional paths or wildcard patterns for multiple PAF files.}
-
-\item{source_file}{Logical. Add a \code{.source_file} column, default \code{FALSE}.}
+\item{source_file}{Whether to include row-level source paths.}
 }
 \value{
-A link data frame with canonical endpoints, \code{qlen}, \code{slen},
-\code{nmatch}, \code{length}, \code{pident}, \code{mapq}, relative orientation, original
-zero-based coordinates, tags and \code{.source_line}. The \code{ggchord_import}
-attribute records input/output coordinate conventions and files.
+A relationship table with ordered endpoints, declared reference
+lengths, matching positions, alignment block length, mapq and tags.
 }
 \description{
-Converts zero-based half-open PAF query/target intervals to one-based
-inclusive endpoints. Query endpoints increase; target endpoints decrease
-for relative strand \code{"-"}. This display convention preserves relative
-orientation and does not infer a biological strand for either sequence.
-}
-\details{
-\code{length} is the reported alignment block length, including gaps, and
-\code{pident} is \code{100 * nmatch / length} using the reported PAF fields. Both
-counts may be approximate when the producer did not compute an alignment.
-The importer does not recompute an alignment, validate a CIGAR, or claim
-exact base identity. \code{pident_basis} records this ratio's provenance.
-Mapping quality 255 means unavailable: \code{mapq} becomes \code{NA}, while
-\code{source_mapq} retains the original value. Optional typed tags are retained
-verbatim in the \code{tags} list-column, including unknown tags and their order.
+Preserve query/subject definitions, declared lengths, directional evidence,
+and optional tags. Numeric position fields are converted from zero-based
+half-open ranges to one-based closed intervals. Identity is labelled as
+reported match count divided by alignment block length.
 }
 \examples{
-\dontrun{
-library(dplyr)
-# Requires the source checkout or tutorial input bundle.
-links <- read_paf("examples/format-inputs/emales-pair.paf")
-links |>
-  select(qaccver, saccver, qstart, qend, sstart, send)
-}
-}
-\seealso{
-\url{https://github.com/lh3/miniasm/blob/master/PAF.md}
-
-\code{\link{ggchord_data_contract}}
+f <- tempfile(fileext=".paf")
+writeLines("A	1000	99	240	+	B	800	149	290	138	141	60", f)
+paf <- read_paf(f)
+unlink(f)
 }

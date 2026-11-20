@@ -316,6 +316,7 @@ ggchord_text_boxes <- function(df,
     as.character(df[[family_col]])
   fontfaces <- if (is.null(df[[fontface_col]])) rep(1, n) else
     df[[fontface_col]]
+  fontfaces[is.na(fontfaces)] <- if (is.numeric(fontfaces)) 1L else "plain"
   lineheights <- if (is.null(df[[lineheight_col]])) rep(1.2, n) else
     as.numeric(df[[lineheight_col]])
   families[is.na(families)] <- ""
@@ -340,8 +341,9 @@ ggchord_text_boxes <- function(df,
     regular <- valid
     regular[c(composite, uniform_sites)] <- FALSE
     for (i in which(regular)) {
+      label <- if (isTRUE(df$.axis_plotmath[i])) parse(text = texts[i]) else texts[i]
       grob <- grid::textGrob(
-        texts[i], gp = grid::gpar(
+        label, gp = grid::gpar(
           fontsize = sizes[i] * (72.27 / 25.4),
           fontfamily = families[i], fontface = fontfaces[i],
           lineheight = lineheights[i]

@@ -1,142 +1,42 @@
-# geom-region.R - sequence-region highlight layer (v0.9.0)
-
-region_geom <- rename_geom_aes(
-  ggplot2::GeomPolygon, renames = c(fill = "region_fill")
-)
-
-#' Highlight regions along sequence arcs
-#'
-#' Draws rectangular bands on sequence arcs for one or more coordinate
-#' intervals. This is useful for marking loci, repeats, CRISPR arrays, or other
-#' user-defined regions without turning them into gene arrows.
-#'
-#' @param mapping Default NULL (uses pre-computed data)
-#' @param data data.frame with at least \code{accver}, \code{start},
-#'   \code{end}; optional \code{label}, \code{category} and \code{color}.
-#'   Factor start/end columns use their numeric labels, not level codes.
-#'   An explicit `sequence_unit` must match the backbone (bp or aa). The closed
-#'   interval from start to end fills the display edges start - 1 to end.
-#'   A single base or residue occupies one unit.
-#'   A data callback receives the plot's reference table.
-#' @param fill Character. Default fill colour for regions, default
-#'   \code{"#F59E0B"}.
-#' @param colour Outline colour, default \code{"#B45309"}.
-#' @param alpha Numeric (0-1). Region alpha, default 0.25.
-#' @param region_width Numeric. Band width in chord radius units, default 0.08.
-#' @param region_offset Numeric. Radial offset from the sequence arc, default 0.
-#' @param region_side Character. \code{"inside"}, \code{"outside"} or
-#'   \code{"auto"}; \code{"auto"} places regions inside the chord when possible.
-#' @param position,show.legend,inherit.aes Standard ggplot2 layer arguments.
-#' @param ... Additional arguments passed to \code{geom_polygon()}
-#'
-#' @param id Optional unique layer ID for layout and source exports.
-#' @return A ggplot2 layer.
+#' Highlight reference intervals
 #' @export
-#'
+#' @param mapping Aesthetic mapping from `ggplot2::aes()`. A local mapping overrides the matching inherited channel.
+#' @param data Observation table or a data function. For ggchord layers, provide the required data-role columns.
+#' @param shape Default shape. An explicitly supplied fixed shape takes priority over its mapping.
+#' @param thickness Physical thickness in mm or absolute grid units. Named values select references.
+#' @param stat A compatible ggplot2 Stat or its name. The default uses the supplied records.
+#' @param position A compatible Position for placement of the layer geometry.
+#' @param alpha Opacity from zero to one.
+#' @param ... Additional named visual styles and parameters accepted by this layer.
+#' @param na.rm Suppress warnings for missing observations that the layer can omit.
+#' @param show.legend Logical or named logical indicating whether the layer contributes legend keys.
+#' @param inherit.aes Whether to inherit plot mappings and evaluate them on the layer data.
+#' @param id Optional plot-local layer identifier. Name a layer explicitly to scope a scale, anchor a label or export it.
+#' @return A ggplot2 layer for addition to a plot.
+#' @details Provide one-based closed intervals with `accver`, `start` and `end`. A strand or disjoint segments can be supplied where appropriate. The gene shortcut defaults to an arrow and strand placement. The primer shortcut defaults to a directional narrow path, and the region shortcut defaults to a translucent block.
 #' @examples
-#' library(dplyr)
-#' data(seq_data_example)
-#' seqs <- seq_data_example |>
-#'   select(accver, length)
-#' data(ribbon_data_example)
-#' links <- ribbon_data_example |>
-#'   select(qaccver, saccver, qstart, qend, sstart, send)
-#' region <- tibble(
-#'   accver = links$qaccver[1], start = min(links$qstart[1], links$qend[1]),
-#'   end = max(links$qstart[1], links$qend[1])
+#' seqs <- data.frame(
+#'   accver = c("A", "B"), length = c(1000, 800),
+#'   sequence_unit = "bp", topology = "linear"
 #' )
-#' ggchord(data = seqs) +
+#'
+#' genes <- data.frame(
+#'   accver = c("A", "A", "B"), feature_id = c("g1", "g2", "g3"),
+#'   start = c(100, 400, 150), end = c(240, 620, 380),
+#'   strand = c("+", "-", "+"), label = c("g1", "g2", "g3"),
+#'   type = c("CDS", "tRNA", "CDS")
+#' )
+#'
+#' ggchord(seqs) +
+#'   geom_seq_region(data = genes, fill = "#E5B66A", thickness = 4) +
 #'   geom_seq() +
-#'   geom_seq_region(data = region)
-geom_seq_region <- function(mapping = NULL, data = NULL,
-                            fill = "#F59E0B",
-                            colour = "#B45309",
-                            alpha = 0.25,
-                            region_width = 0.08,
-                            region_offset = 0,
-                            region_side = c("inside", "outside", "auto"),
-                            position = "identity",
-                            show.legend = FALSE,
-                            inherit.aes = TRUE,
-                            ..., id = NULL) {
+#'   coord_collinear()
+geom_seq_region <- function(mapping = NULL, data = NULL, shape = "block",
+    thickness = 2, stat = "identity", position = position_offset(0),
+    alpha = 0.25, ..., na.rm = FALSE, show.legend = NA, inherit.aes = TRUE, id = NULL) {
   ggchord_check_argument_names(sys.call(), sys.function())
-  supplied <- c(region_fill = !missing(fill), colour = !missing(colour),
-    alpha = !missing(alpha))
-  old_error <- ggchord_disable_debug()
-  on.exit(options(error = old_error), add = TRUE)
-
-  dots <- list(...)
-  if ("color" %in% names(dots)) supplied[["colour"]] <- TRUE
-  alias <- ggchord_colour_alias(colour, dots, "geom_seq_region()", sys.call())
-  colour <- alias$colour
-  dots <- alias$dots
-  ggchord_reject_retired(dots, "geom_seq_region()", c(
-    regions = "data",
-    region_fill = "fill",
-    region_color = "colour",
-    region_alpha = "alpha",
-    show_legend = "show.legend"
-  ))
-  region_side <- match.arg(region_side)
-  if (!is.numeric(alpha) || length(alpha) != 1 ||
-      !is.finite(alpha) || alpha < 0 || alpha > 1) {
-    ggchord_stop("alpha must be in [0, 1]")
-  }
-  if (!is.numeric(region_width) || length(region_width) != 1 ||
-      !is.finite(region_width) || region_width <= 0) {
-    ggchord_stop("region_width must be a finite positive number")
-  }
-  if (!is.numeric(region_offset) || length(region_offset) != 1 ||
-      !is.finite(region_offset)) {
-    ggchord_stop("region_offset must be a finite number")
-  }
-
-  empty_polys <- data.frame(
-    x = numeric(0), y = numeric(0),
-    group = integer(0),
-    zregionfill = character(0),
-    colour = character(0),
-    alpha = numeric(0),
-    stringsAsFactors = FALSE
-  )
-
-  ggchord_check_geom_params(dots, region_geom, "geom_seq_region()", position)
-  lyr <- ggplot2::layer(
-    data        = empty_polys,
-    mapping     = ggplot2::aes(x = x, y = y, group = group,
-                      region_fill = zregionfill, colour = colour,
-                      alpha = alpha),
-    stat        = "identity",
-    geom        = region_geom,
-    position    = position,
-    show.legend = show.legend,
-    inherit.aes = inherit.aes,
-    check.aes   = FALSE,
-    check.param = FALSE,
-    params      = c(dots, list(region_fill = fill, colour = colour,
-      alpha = alpha)[supplied])
-  )
-  lyr$ggchord_type <- "seq_region"
-  lyr$ggchord_params <- list(
-    id = id, type           = "seq_region",
-    regions        = data,
-    region_fill    = fill,
-    region_color   = colour,
-    region_alpha   = alpha,
-    region_width   = region_width,
-    region_offset  = region_offset,
-    region_side    = region_side
-  )
-  lyr <- ggchord_capture_layer_input(
-    lyr, data, mapping, c("accver", "start", "end")
-  )
-  lyr$ggchord_input_transform <- function(x) {
-    for (name in intersect(c("start", "end"), names(x))) {
-      if (is.factor(x[[name]])) {
-        x[[name]] <- suppressWarnings(as.numeric(as.character(x[[name]])))
-      }
-    }
-    x
-  }
-  lyr
+  layer <- ggchord_feature_layer(mapping, data, shape, !missing(shape), thickness,
+    stat, position, c(list(alpha = alpha), list(...)), na.rm, show.legend, inherit.aes, id)
+  layer$ggchord_params$style_defaults["alpha"] <- missing(alpha)
+  layer
 }

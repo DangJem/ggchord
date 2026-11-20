@@ -2,45 +2,25 @@
 % Please edit documentation in R/data-signal.R
 \name{read_bedgraph}
 \alias{read_bedgraph}
-\title{Read bedGraph intervals as quantitative track data}
+\title{Read bedGraph signal intervals}
 \usage{
-read_bedgraph(file = NULL, files = NULL, source_file = FALSE)
+read_bedgraph(file, source_file = FALSE)
 }
 \arguments{
-\item{file}{Optional input path vector or glob patterns, before files.}
+\item{file}{Local bedGraph paths.}
 
-\item{files}{Optional additional paths or wildcard patterns for bedGraph files.}
-
-\item{source_file}{Logical. Add .source_file to each row, default FALSE.}
+\item{source_file}{Whether to include row-level source paths.}
 }
 \value{
-A data frame with accver, start, end, value, original chromStart,
-chromEnd, dataValue and physical .source_line. The ggchord_import attribute
-records conventions, per-file row counts, and unchanged headers. When
-combining different signals, keep source_file = TRUE and select each
-signal's layers/scales explicitly. Coordinate units follow source metadata.
+A track table with accver, start, end, value and source provenance.
 }
 \description{
-Reads four columns, converts zero-based half-open coordinates to one-based
-inclusive positions, and retains every finite signed value and source row.
-Missing intervals remain absent: no zero filling, interpolation, sorting or
-aggregation is performed. Overlapping rows are retained as observations,
-not silently resolved into a single value. Choose any summarisation explicitly.
-}
-\details{
-A file contains one signal. More than one track definition is rejected;
-split different browser tracks explicitly rather than mixing their domains.
-Comments and display headers are retained in import provenance. Their colour,
-smoothing and other display instructions never configure a ggchord plot.
-Sequence identifiers, including literal track/browser, are retained verbatim.
-Neither value units nor sequencing coverage are inferred from the file name.
+Convert half-open spans to one-based closed source intervals without
+computing values at unobserved positions.
 }
 \examples{
-# Actual 100-bp-window GC percentages; not measured read coverage.
-path <- system.file("extdata", "pUC19-gc-100.bedGraph", package = "ggchord")
-signal <- read_bedgraph(path)
-head(signal)
-}
-\seealso{
-\code{\link[=geom_track]{geom_track()}}, \code{\link[=scale_track_value_continuous]{scale_track_value_continuous()}}
+f <- tempfile(fileext = ".bedgraph")
+writeLines(c("A	0	100	0.4", "A	100	200	0.6"), f)
+signal_intervals <- read_bedgraph(f)
+unlink(f)
 }

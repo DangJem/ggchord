@@ -133,6 +133,8 @@ ggchord_shape_arrow <- function(a_start, a_end, r0, width,
       head_length <- min(available * .36, width * .45)
       fallback <- "arrow"
     }
+    if (identical(fallback, "error"))
+      ggchord_stop("geom_feature(): the visible interval is shorter than its arrow head")
     if (identical(fallback, "block")) {
       return(ggchord_shape_block(a_start, a_end, r0, width))
     }
@@ -317,7 +319,7 @@ ggchord_feature_geometry <- function(shape, a_start, a_end, r0, width,
       interval[1L], interval[2L], r0, width,
       head_length = compact_head_length,
       head_width = compact_head_width,
-      short_feature = "auto", draw_head = draw_head
+      short_feature = short_feature, draw_head = draw_head
     ))
   }
   if (isTRUE(bidirectional) &&

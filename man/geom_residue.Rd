@@ -2,83 +2,63 @@
 % Please edit documentation in R/geom-residue.R
 \name{geom_residue}
 \alias{geom_residue}
-\title{Draw physically readable residue cells}
+\title{Draw true aligned character cells}
 \usage{
 geom_residue(
   mapping = NULL,
   data = NULL,
-  overflow = c("tile", "error"),
+  representation = "tile_text",
+  overflow = "tile",
+  line_width = NULL,
+  stat = "identity",
   position = "identity",
+  ...,
+  na.rm = FALSE,
   show.legend = FALSE,
   inherit.aes = TRUE,
-  line_width = NULL,
-  ...
+  id = NULL
 )
 }
 \arguments{
-\item{mapping, data}{Standard ggplot2 layer mapping and data. Required
-aesthetics are x, y and label. Ordinary colour, fill, alpha, size, family
-and fontface mappings/scales are supported. Explicit \code{size} is in mm;
-omitted size fits cells uniformly with a 3 mm readability floor.}
+\item{mapping}{Aesthetic mapping from \code{ggplot2::aes()}. A local mapping overrides the matching inherited channel.}
 
-\item{overflow}{\code{"tile"} (default) or \code{"error"} when letters do not fit.}
+\item{data}{Observation table or a data function. For ggchord layers, provide the required data-role columns.}
 
-\item{position, show.legend, inherit.aes}{Standard ggplot2 layer arguments.}
+\item{representation}{Draw text, filled tiles, or both.}
 
-\item{line_width}{Optional positive integer number of columns per displayed
-line. NULL (default) keeps one line. Lines start at the smallest displayed
-x value; gaps occupy columns. Multiple sequences share the same breaks.
-Row labels show the original column range; the x axis counts within a line.
-Wrapping changes display only, preserving original input/source coordinates.
-Registered Fusion selections must fit one displayed line; split a selection
-crossing lines into explicit source intervals.}
+\item{overflow}{Hide text, use tile fallback, or report a failure if the character does not fit.}
 
-\item{...}{Fixed text/cell aesthetics and na.rm, passed to the layer.}
+\item{line_width}{Maximum number of displayed alignment columns per wrapped row.}
+
+\item{stat}{A compatible ggplot2 Stat or its name. The default uses the supplied records.}
+
+\item{position}{A compatible Position for placement of the layer geometry.}
+
+\item{...}{Additional named visual styles and parameters accepted by this layer.}
+
+\item{na.rm}{Suppress warnings for missing observations that the layer can omit.}
+
+\item{show.legend}{Logical or named logical indicating whether the layer contributes legend keys.}
+
+\item{inherit.aes}{Whether to inherit plot mappings and evaluate them on the layer data.}
+
+\item{id}{Optional plot-local layer identifier. Name a layer explicitly to scope a scale, anchor a label or export it.}
 }
 \value{
-A standard ggplot2 layer. Cells span one x unit and one y unit.
-Use discrete y rows or unit-spaced rows.
+A ggplot2 layer for addition to a plot.
 }
 \description{
-A standard Cartesian ggplot layer for local nucleotide/protein excerpts.
-Map \code{x} to alignment columns (or independently known source positions), \code{y}
-to sequence rows and \code{label} to actual characters. It does not compute an
-alignment or project through ggchord's biological backbone coordinates.
-Use \code{\link[=register_ggchord_alignment]{register_ggchord_alignment()}} to associate exact source positions with
-a Fusion/magnify detail panel. Half-cell extents train position scales so
-first/last cells remain fully visible by default.
-Native scales must be identity or reverse; nonlinear scales and non-Cartesian
-coordinates are rejected rather than misrepresenting single-position cells.
+Draw true aligned character cells
 }
 \details{
-At drawing time, each cell's final physical width/height is compared with
-its actual glyph metrics. \code{overflow = "tile"} omits letters that cannot fit
-and retains their mapped fill cells; \code{"error"} requires readable letters.
-Explicit font sizes are never silently reduced. The decision is remade at every target
-size, including standard ggsave; DPI alone does not supply physical space.
-Cells meet at their edges to form a continuous alignment matrix. When the
-plot still uses its default Cartesian coordinate system, the layer supplies
-a fixed 1:1 aspect ratio so rows remain as compact as alignment columns.
-Explicit coordinates take priority. Without a size mapping or fixed size,
-characters grow uniformly to fit their cells, with a 3 mm readability floor;
-smaller cells use the same overflow policy rather than shrinking the text.
-When fill is not supplied, label is mapped to fill. A chemistry scale is
-inferred from the data's explicit alphabet column (DNA/RNA/AA; otherwise AA).
-Existing user fill mappings, fixed fills and scales take priority.
-See \code{\link[=scale_fill_residue]{scale_fill_residue()}} for explicit alphabet and palette control.
-
-This native alignment layer accepts the ggplot2 layer parameter \code{name}.
-Sequence-layout IDs apply to layers registered by \code{ggchord()}.
+Provide an aligned character table with source or alignment identity. Display wrapping does not change alignment columns, and a gap has no source position. Pair text and tiles explicitly with a residue fill scale when colour conveys alphabet symbols.
 }
 \examples{
-# Explicit synthetic format example; real-data workflow is in the tutorial.
-cells <- as_ggchord_alignment(c(A = "AC-G", B = "ACTG"), "DNA")
+library(ggplot2)
+
+cells <- as_ggchord_alignment(c(A = "AC-G", B = "ACTG"), alphabet = "DNA")
 ggplot2::ggplot(cells, aes(alignment_column, accver, label = symbol)) +
-  geom_residue(aes(fill = symbol))
-long <- as_ggchord_alignment(c(A = strrep("ACGT", 25)), "DNA")
-ggplot2::ggplot(long, aes(alignment_column, accver, label = symbol)) +
-  geom_residue(line_width = 50)
-}
-\seealso{
-\code{\link[=read_aligned_fasta]{read_aligned_fasta()}}, \code{\link[=map_alignment_position]{map_alignment_position()}}
+  geom_residue(aes(fill = symbol)) +
+  scale_fill_residue(alphabet = "DNA") +
+  ggplot2::coord_fixed(ratio = 1)
 }

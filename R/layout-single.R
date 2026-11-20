@@ -12,7 +12,6 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
   seq_params    <- list()
   ribbon_params <- list()
   gene_params   <- list()
-  seq_data_override <- NULL
   ribbon_data_override <- NULL
   gene_data_override <- NULL
   region_data_override <- NULL
@@ -22,7 +21,6 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
   seq_label_params <- list()
   seq_region_params <- list()
   seq_layer_requested <- FALSE
-  seq_ring_mapped <- FALSE
   ribbon_layer_requested <- FALSE
   gene_geometry_layer_requested <- FALSE
   gene_label_layer <- FALSE
@@ -36,10 +34,6 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
       seq               = {
         seq_params <- pp
         seq_layer_requested <- TRUE
-        seq_ring_mapped <- "seq_ring" %in% names(lyr$ggchord_input_mapping)
-        seq_data_override <- ggchord_resolve_layer_input(
-          lyr, data_list$seq_data
-        )
       },
       ribbon            = {
         ribbon_params <- pp
@@ -84,7 +78,7 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
 
   arrangement <- chord$sequence_layout
   # --- Process sequences ---
-  seq_data <- seq_data_override %||% data_list$seq_data
+  seq_data <- data_list$seq_data
   sequence_unit <- ggchord_sequence_unit(seq_data, "ggchord layout")
   if (identical(sequence_unit, "aa")) {
     if (any(seq_data$length != floor(seq_data$length))) ggchord_stop(
@@ -111,82 +105,33 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
       ggchord_stop("layout_sequences(): order must contain known sequence IDs from the displayed reference")
     }
     seqs <- arrangement$order
-  } else if (!is.null(seq_data_override)) {
-    # A layer may reorder its own input rows without reordering the reference.
-    reference <- data_list$seq_data$accver
-    seqs <- c(intersect(reference, seqs), setdiff(seqs, reference))
   }
   lens <- lens[seqs]
   n <- length(seqs)
 
   seq_labels    <- process_sequence_param(seq_params$seq_labels, seqs,
                                           "seq_labels", default_value = seqs)
-  seqRadius     <- process_sequence_param(seq_params$seq_radius, seqs,
-                                          "seq_radius", 1.0)
+  seqRadius     <- process_sequence_param(arrangement$radius, seqs,
+                                          "layout_sequences(radius)", 1)
   orientation   <- process_sequence_param(arrangement$orientation, seqs,
                                           "layout_sequences(orientation)", 1)
   collinear <- isTRUE(plot$coordinates$ggchord_collinear)
-  seq_gap       <- process_sequence_param(arrangement$gap, seqs,
-                                          "layout_sequences(gap)", if (collinear) 0.3 else 0.03)
-  seq_curvature <- process_sequence_param(seq_params$seq_curvature, seqs,
-                                          "seq_curvature", 1.0)
+  clockwise <- identical(plot$coordinates$reference_direction, "clockwise")
+  if (clockwise) orientation <- -orientation
+  seq_gap       <- if (collinear) ggchord_row_gap(plot, arrangement, seqs) else
+    process_sequence_param(arrangement$gap, seqs, "angular_gap", 0)
+  seq_curvature <- process_sequence_param(arrangement$curvature, seqs,
+                                          "layout_sequences(curvature)", 1)
 
   if (isTRUE(plot$coordinates$ggchord_circular)) {
-    if (n != 1L) {
-      ggchord_stop("coord_circular() requires exactly one sequence in seq_data")
-    }
-    incompatible <- vapply(plot$layers, function(layer) {
-      (layer$ggchord_params$type %||% "") %in% c("ribbon", "link")
-    }, logical(1))
-    if (any(incompatible)) {
-      ggchord_stop("coord_circular() does not support ribbon or link layers")
-    }
-    if (!is.null(arrangement$gap)) {
-      ggchord_stop("coord_circular() owns the opening; use its `gap` argument instead of layout_sequences(gap = ...)")
-    }
-    if (!is.null(arrangement$orientation)) {
-      ggchord_stop("coord_circular() owns genomic direction; use its `direction` argument instead of layout_sequences(orientation = ...)")
-    }
-    seq_gap[] <- plot$coordinates$circular_gap / 360
-    orientation[] <- if (identical(plot$coordinates$circular_direction, "clockwise")) -1 else 1
+    source <- chord$display_instances$accver %||% seqs
+    if (length(unique(source)) != 1L)
+      ggchord_stop("coord_circular() requires one reference per panel")
   }
 
-  # Rings are explicit input roles. Their scale values are radii, so no ring
-  # count or spacing is guessed from the data. This deliberately keeps the
-  # existing seq_radius interface unchanged for plots without a ring mapping.
-  seq_ring <- NULL
-  if (isTRUE(seq_ring_mapped)) {
-    if (!is.null(seq_params$seq_radius)) {
-      ggchord_stop(
-        "geom_seq(): `seq_radius` cannot be combined with a `seq_ring` ",
-        "mapping; set radii with scale_seq_ring_manual(values = ...)"
-      )
-    }
-    ring_scale <- plot$scales$get_scales("seq_ring")
-    if (is.null(ring_scale)) {
-      ggchord_stop(
-        "A mapped `seq_ring` requires scale_seq_ring_manual(values = ...)"
-      )
-    }
-    raw_ring <- as.character(seq_data$seq_ring[match(seqs, seq_data$accver)])
-    if (anyNA(raw_ring) || any(!nzchar(raw_ring))) {
-      ggchord_stop("Mapped `seq_ring` values must be non-missing")
-    }
-    trained_ring_scale <- ring_scale$clone()
-    trained_ring_scale$train(raw_ring)
-    mapped_radius <- suppressWarnings(as.numeric(
-      trained_ring_scale$map(raw_ring)
-    ))
-    if (anyNA(mapped_radius) || any(!is.finite(mapped_radius)) ||
-        any(mapped_radius <= 0)) {
-      ggchord_stop(
-        "scale_seq_ring_manual(): every used ring must map to a finite ",
-        "positive radius"
-      )
-    }
-    seq_ring <- stats::setNames(raw_ring, seqs)
-    seqRadius <- stats::setNames(mapped_radius, seqs)
-  }
+  seq_ring <- chord$display_instances$ring_id
+  if (!is.null(seq_ring))
+    seq_ring <- stats::setNames(seq_ring[match(seqs, chord$display_instances$key)], seqs)
 
   if (!is.numeric(seqRadius) || any(!is.finite(seqRadius)) || any(seqRadius <= 0)) {
     ggchord_stop("seq_radius must contain finite positive numbers")
@@ -195,19 +140,8 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
       any(!orientation %in% c(-1, 1))) {
     ggchord_stop("layout_sequences(): orientation can only be 1 or -1")
   }
-  gap_limit <- if (isTRUE(plot$coordinates$ggchord_circular)) 1 else 0.5
-  invalid_gap <- !is.numeric(seq_gap) || any(!is.finite(seq_gap))
-  if (!invalid_gap) invalid_gap <- if (collinear) any(seq_gap <= 0) else
-    any(seq_gap < 0 | seq_gap >= gap_limit)
-  if (invalid_gap) {
-    ggchord_stop(
-      if (isTRUE(plot$coordinates$ggchord_circular)) {
-        "coord_circular() gap must leave some drawable circumference"
-      } else if (collinear) {
-        "coord_collinear(): layout_sequences(gap) must contain finite positive spacings"
-      } else "layout_sequences(gap) must be in the [0, 0.5) range"
-    )
-  }
+  if (!is.numeric(seq_gap) || any(!is.finite(seq_gap) | seq_gap < 0))
+    ggchord_stop("Reference gaps must be finite and nonnegative")
   if (!is.numeric(seq_curvature) || any(!is.finite(seq_curvature))) {
     ggchord_stop("seq_curvature must contain finite numbers")
   }
@@ -290,15 +224,25 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
     length_mode = arrangement$length_mode %||% "proportional"
   ) else NULL
   if (collinear) orientation <- collinear_transform$orientation
-  ribbon_stat_report <- NULL
-  ribbon_stat_data <- NULL
-  ribbon_stat <- ribbon_params$ribbon_stat
-  if (!is.null(ribbon_stat) && !is.null(ribbon_data)) {
-    computed <- do.call(ribbon_stat$compute, c(list(
-      ribbon_data = ribbon_data, seq_data = seq_data), ribbon_stat$arguments))
-    ribbon_data <- computed$data
-    ribbon_stat_data <- computed$data
-    ribbon_stat_report <- computed$report
+  ribbon_stat_data <- if (!is.null(ribbon_params$link_stat)) ribbon_data else NULL
+  ribbon_stat_report <- if (is.null(ribbon_stat_data)) NULL else data.frame(
+    source_rows = I(ggchord_link_source_members(ribbon_stat_data)))
+  if (NROW(ribbon_data)) {
+    strand <- ggchord_link_orientation(ribbon_data)
+    reversed <- strand == "opposite"
+    q_minus <- ribbon_data$qstrand %in% "-" & length(ribbon_data$qstrand) > 0L
+    if (!length(q_minus)) q_minus <- rep(FALSE, nrow(ribbon_data))
+    s_minus <- xor(q_minus, reversed)
+    ribbon_data[c("qstart", "qend")] <- list(
+      ifelse(q_minus, pmax(ribbon_data$qstart, ribbon_data$qend),
+        pmin(ribbon_data$qstart, ribbon_data$qend)),
+      ifelse(q_minus, pmin(ribbon_data$qstart, ribbon_data$qend),
+        pmax(ribbon_data$qstart, ribbon_data$qend)))
+    ribbon_data[c("sstart", "send")] <- list(
+      ifelse(s_minus, pmax(ribbon_data$sstart, ribbon_data$send),
+        pmin(ribbon_data$sstart, ribbon_data$send)),
+      ifelse(s_minus, pmin(ribbon_data$sstart, ribbon_data$send),
+        pmax(ribbon_data$sstart, ribbon_data$send)))
   }
   display_rows <- if (collinear && "row_index" %in% names(collinear_transform$table))
     stats::setNames(collinear_transform$table$row_index, seqs) else NULL
@@ -306,8 +250,7 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
     columns <- c("qstart", "qend", "sstart", "send")
     ggchord_require_columns(ribbon_data, columns, "Protein alignments")
     for (column in columns) ggchord_conversion_coordinates(ribbon_data, column, "Protein alignments")
-    if (any(ribbon_data$qstart > ribbon_data$qend | ribbon_data$sstart > ribbon_data$send))
-      ggchord_stop("Protein alignments require ascending amino-acid endpoints; set display orientation on the backbone")
+
   }
   ggchord_check_interval_unit(ribbon_data, sequence_unit, "Ribbon layer")
   ribbon_selection <- ggchord_select_ribbons(ribbon_data, seqs, ribbon_params, collinear, display_rows,
@@ -482,20 +425,20 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
     ggchord_stop("max_overlaps must be a non-negative number or Inf")
   }
 
-  geometry_label_size <- gene_params$feature_layout_label_size %||% gene_lsz
-  geneWidth  <- process_gene_param(gene_w, seqs, "width", 0.05, FALSE)
-  if (isTRUE(gene_params$is_feature) &&
-      (isTRUE(gene_params$feature_layout_has_labels) || isTRUE(lbl$is_feature_label)) &&
-      isTRUE(plot$coordinates$ggchord_circular)) {
-    # Feature bands accommodate the actual label font size within bounded
-    # limits. This is a modest physical adjustment, not a response to label
-    # length; long text must still use adjacent/external fallback.
-    width_factor <- pmin(1.42, pmax(.78, .82 + .072 * geometry_label_size))
-    geneWidth <- lapply(geneWidth, function(value) {
-      adjusted <- as.numeric(value) * width_factor
-      stats::setNames(pmin(.095, pmax(.032, adjusted)), names(value))
-    })
+  metric_axis <- ggchord_path_normal_axis(plot$coordinates)
+  normal_metric <- ggchord_units_per_mm(metric_axis)
+  thickness <- gene_params$feature_mm
+  if (!is.null(thickness)) {
+    if (!is.null(chord$display_instances))
+      thickness <- ggchord_instance_param(thickness, chord$display_instances)
+    if (!is.null(names(thickness)) &&
+        (anyDuplicated(names(thickness)) || any(!names(thickness) %in% seqs)))
+      ggchord_stop("geom_feature(): invalid or unknown thickness keys")
+    gene_w <- if (is.list(thickness)) unlist(thickness) else thickness
+    gene_w <- gene_w * normal_metric
   }
+  geneWidth <- process_gene_param(gene_w, seqs, "thickness",
+    2 * normal_metric, FALSE)
 
   # Feature geometry is resolved before coordinate generation because these
   # values change the actual polygon, not only its appearance. A user-supplied
@@ -526,14 +469,13 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
     )
     feature_shape_order <- unique(raw_shape)
     if (isTRUE(gene_params$feature_shape_mapped)) {
-      shape_scale <- plot$scales$get_scales("feature_shape")
+      shape_scale <- gene_params$shape_scale %||% plot$scales$get_scales("shape")
       if (!is.null(shape_scale)) {
         shape_scale <- shape_scale$clone()
         shape_scale$train(unique(c(chord$facet_feature_shape_order, raw_shape)))
         mapped_shape <- as.character(shape_scale$map(raw_shape))
       } else {
-        feature_shape_pal <- ggchord_default_feature_shapes(feature_shape_order)
-        mapped_shape <- unname(feature_shape_pal[raw_shape])
+        ggchord_stop("geom_feature(): mapped shape requires an explicit shape scale")
       }
     } else {
       mapped_shape <- raw_shape
@@ -542,10 +484,9 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
       "arrow", "compact_arrow", "promoter_arrow", "primer_arrow",
       "marker", "block", "capped_line", "primer_arc", "chevron", "lollipop"
     )
-    mapped_shape[is.na(mapped_shape)] <- "arrow"
-    if (any(!mapped_shape %in% allowed_shape)) {
+    if (anyNA(mapped_shape) || any(!mapped_shape %in% allowed_shape)) {
       ggchord_stop(
-        "feature_shape scale contains an unknown geometry"
+        "geom_feature(): shape scale must produce feature geometry names"
       )
     }
     if (is.null(feature_shape_pal) &&
@@ -556,76 +497,20 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
       )
     }
     gene_data_layout <- as.data.frame(gene_data_layout, stringsAsFactors = FALSE)
+    if (length(gene_params$head_args) && any(!mapped_shape %in% ggchord_feature_heads))
+      ggchord_stop("geom_feature(): arrow head parameters require headed shapes")
+    biological <- gene_data_layout$.feature_biological_strand
+    unknown <- biological == "." & mapped_shape %in% c(ggchord_feature_heads, "chevron")
+    if (identical(gene_params$unknown_strand, "error") && any(unknown))
+      ggchord_stop("geom_feature(): directional shapes require a known strand")
+    mapped_shape[unknown] <- "block"
     gene_data_layout$.feature_shape <- mapped_shape
-    gene_data_layout$.feature_width_factor <-
-      ggchord_feature_width_factor(mapped_shape)
-    # Resolve the visible feature fill once so polygon text contrast and the
-    # pastel background of an external callout share exactly the same semantic
-    # colour. Explicit source colours and user scales remain authoritative.
-    fill_values <- if (!isTRUE(gene_params$user_feature_fill) && "feature_color" %in% names(gene_data_layout)) {
-      as.character(gene_data_layout$feature_color)
-    } else rep(NA_character_, nrow(gene_data_layout))
-    unresolved_fill <- is.na(fill_values) | !nzchar(fill_values)
-    fixed_fill <- gene_params$feature_fill_fixed
-    if (any(unresolved_fill) && !is.null(fixed_fill) &&
-        length(fixed_fill) == 1L) {
-      fill_values[unresolved_fill] <- as.character(fixed_fill)
-    }
-    raw_fill <- as.character(gene_data_layout$anno)
-    fill_mapping <- gene_params$feature_fill_mapping
-    if (any(unresolved_fill) && !is.null(fill_mapping)) {
-      start <- ggchord_start_mapping(fill_mapping)
-      visual <- gene_params$visual_source
-      key <- if (isTRUE(gene_params$user_feature_fill)) "fill" else "feature_fill"
-      # Contrast uses the same source values as the visible fill. A mapping
-      # that needs projected vertices becomes available only during drawing.
-      mapped_input <- if (is.null(visual$data)) {
-        tryCatch(rlang::eval_tidy(start, gene_data_layout), error = function(e) NULL)
-      } else ggchord_visual_value(visual, key, start, gene_data_layout,
-        seq_len(nrow(gene_data_layout)), projected = FALSE)[[1L]]
-      raw_fill <- NULL
-      if (!is.null(mapped_input)) {
-        if (length(mapped_input) == 1L) {
-          mapped_input <- rep(mapped_input, nrow(gene_data_layout))
-        }
-        if (length(mapped_input) == nrow(gene_data_layout)) {
-          raw_fill <- mapped_input
-        }
-      }
-    }
-    fill_scale <- plot$scales$get_scales(if (isTRUE(gene_params$user_feature_fill)) "fill" else "feature_fill")
-    if (any(unresolved_fill) && !is.null(fill_scale) && !is.null(raw_fill)) {
-      trained_fill <- fill_scale$clone()
-      trained_fill$train(raw_fill)
-      fill_values[unresolved_fill] <- as.character(trained_fill$map(
-        raw_fill[unresolved_fill]
-      ))
-    }
-    unresolved_fill <- is.na(fill_values) | !nzchar(fill_values)
-    if (any(unresolved_fill) &&
-        isTRUE(plot$coordinates$ggchord_circular)) {
-      preset <- ggchord_plasmid_feature_colours()
-      fill_values[unresolved_fill] <- unname(preset[
-        as.character(gene_data_layout$anno[unresolved_fill])
-      ])
-    }
-    fill_values[is.na(fill_values) | !nzchar(fill_values)] <- "#B8BDC3"
-    gene_data_layout$feature_label_fill <-
-      ggchord_feature_callout_fill(fill_values)
-    existing_label_colour <- if (
-        "feature_label_colour" %in% names(gene_data_layout)) {
-      as.character(gene_data_layout$feature_label_colour)
-    } else rep(NA_character_, nrow(gene_data_layout))
-    unresolved_labels <- is.na(existing_label_colour) |
-      !nzchar(existing_label_colour)
-    if (any(unresolved_labels)) {
-      existing_label_colour[unresolved_labels] <- ggchord_contrast_colour(
-        fill_values[unresolved_labels]
-      )
-    }
-    gene_data_layout$feature_label_colour <- existing_label_colour
+    gene_data_layout$.feature_width_factor <- rep(1, length(mapped_shape))
+
   }
   if (!is.null(gene_data_layout) && nrow(gene_data_layout)) {
+    if (!is.null(gene_params$head_width_mm))
+      gene_data_layout$.feature_head_width <- gene_params$head_width_mm * normal_metric
     gene_data_layout$.feature_width <- vapply(seq_len(nrow(gene_data_layout)),
       function(i) {
         sid <- as.character(gene_data_layout$accver[i])
@@ -637,14 +522,9 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
       }, numeric(1))
   }
   if (!is.null(gene_data_layout)) {
-    if (!isTRUE(plot$coordinates$ggchord_circular) &&
-        any(gene_data_layout$start > gene_data_layout$end, na.rm = TRUE)) {
-      warning(
-        "start > end is drawn with legacy min/max outside coord_circular(); ",
-        "use coord_circular() for origin-crossing features",
-        call. = FALSE
-      )
-    }
+    outside <- gene_data_layout$end > unname(lens[gene_data_layout$accver])
+    if (any(outside, na.rm = TRUE))
+      ggchord_stop("geom_feature(): intervals extend outside their reference")
     active_position <- if (isTRUE(lbl$position_supplied)) {
       lbl$feature_position
     } else {
@@ -655,8 +535,8 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
       active_position,
       seqs = seqs, lengths = lens,
       circular = isTRUE(plot$coordinates$ggchord_circular),
-      label_size = geometry_label_size,
-      caller = if (isTRUE(gene_params$is_feature)) "geom_feature()" else "geom_feature(preset = 'gene')"
+      units_per_mm = normal_metric,
+      caller = "geom_feature()"
     )
     # Allocate on the complete entity table before selecting/reordering labels;
     # a label subset must not cause the remaining entities to change lanes.
@@ -680,7 +560,20 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
                                               "gene_label_rotation", 0, FALSE)
 
   # --- Process axes ---
+  position_scale <- plot$scales$get_scales("seq_position")
+  if (is.null(position_scale) && !is.null(chord$display_instances$window_start))
+    position_scale <- scale_seq_position(name = NULL)
+  seq_guide <- position_scale$ggchord_axis_guide
   axis_theme <- ggchord_plot_settings(plot)$axis
+  guide_theme <- seq_guide$theme
+  if (!is.null(guide_theme[["axis.ticks.length"]]))
+    axis_theme$ticks.length <- guide_theme[["axis.ticks.length"]]
+  if (is.numeric(seq_guide$angle)) axis_theme$text.orientation <- seq_guide$angle
+  side_sign <- if (collinear) -1 else 1
+  if (identical(seq_guide$side, "negative")) side_sign <- -side_sign
+  axis_theme$gap <- side_sign * if (as.numeric(axis_theme$gap) == 0)
+    grid::unit(.8, "mm") else axis_theme$gap
+
   show_axis <- !isTRUE(axis_theme$hidden)
   # Pass physical distances as inches. compute_chord_layout() converts them
   # against the actual curved sequence span once that geometry is available.
@@ -706,7 +599,6 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
   )
   labelOffset <- process_sequence_param(axis_unit_data(axis_theme$text.offset),
                                         seqs, "axis.text.offset", 0.02)
-  position_scale <- plot$scales$get_scales("seq_position")
   axisLabelHide <- position_scale$ggchord_check_overlap %||% isTRUE(axis_theme$text.check.overlap)
   axisLabelOri <- process_axis_orientation(
     axis_theme$text.orientation, seqs
@@ -746,42 +638,64 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
     ggchord_stop("axis_tick_minor_number must contain non-negative integers")
   }
   axis_breaks <- axis_minor_breaks <- axis_labels <- NULL
-  if (!collinear && !is.null(position_scale) &&
-      identical(position_scale$ggchord_position_coordinates, "source")) ggchord_stop(
-    "scale_seq_position_continuous(coordinates = 'source') requires coord_collinear()"
-  )
   if (!is.null(position_scale)) {
     axis_breaks <- axis_minor_breaks <- axis_labels <- setNames(
       vector("list", length(seqs)), seqs
     )
     for (id in seqs) {
       sc <- position_scale$clone()
-      source_axis <- collinear && identical(position_scale$ggchord_position_coordinates, "source")
-      origin <- if (source_axis && ".source_origin" %in% names(seq_data)) {
-        seq_data$.source_origin[match(id, seq_data$accver)]
-      } else if (source_axis && ".focus_start" %in% names(seq_data)) {
-        seq_data$.focus_start[match(id, seq_data$accver)]
-      } else 1
-      domain <- if (source_axis) c(origin, origin + lens[[id]] - 1) else
-        c(1, lens[[id]])
+      instances <- chord$display_instances
+      provenance <- ggchord_focus_source(seq_data)
+      at <- match(id, seq_data$accver)
+      instance <- if (is.null(instances)) NA_integer_ else match(id, instances$key)
+      source_axis <- identical(position_scale$ggchord_position_coordinates, "source")
+      origin <- if (source_axis) provenance$origin[at] else
+        if (!is.na(instance) && !is.null(instances$window_start)) instances$window_start[instance] else 1
+      source_id <- if (!is.na(instance)) instances$accver[instance] else id
+      for (field in names(position_scale$ggchord_axis_spec)) {
+        values <- position_scale$ggchord_axis_spec[[field]]
+        if (is.list(values) && !ggplot2::is_waiver(values)) {
+          if (is.null(names(values)) || anyDuplicated(names(values)))
+            ggchord_stop("Axis ", field, " must use distinct source or instance keys")
+          if (all(names(values) %in% c("source", "instance"))) {
+            if (anyDuplicated(names(values$source)) || anyDuplicated(names(values$instance)) ||
+                any(!names(values$source) %in% chord$complete_reference_ids) ||
+                any(!names(values$instance) %in% (chord$complete_display_instances$instance_id %||% chord$complete_reference_ids)))
+              ggchord_stop("Unknown or repeated axis ", field, " key")
+            values <- values$instance[[id]] %||% values$source[[source_id]] %||% waiver()
+          } else {
+            if (any(!names(values) %in% chord$complete_reference_ids))
+              ggchord_stop("Unknown source key in axis ", field)
+            values <- values[[source_id]] %||% waiver()
+          }
+        }
+        sc[[field]] <- values
+      }
+      domain <- c(origin, origin + lens[[id]] - 1)
       domain <- suppressWarnings(sc$transform(domain))
       sc$train(domain[is.finite(domain)])
+      get_labels <- function(breaks) {
+        labels <- sc$labels
+        if (!(is.expression(labels) || is.function(labels))) return(sc$get_labels(breaks))
+        if (is.function(labels)) labels <- labels(sc$get_transformation()$inverse(breaks))
+        if (!is.null(labels) && length(labels) != length(breaks))
+          ggchord_stop("scale_seq_position(): labels must match the number of breaks")
+        labels
+      }
       br <- sc$get_breaks()
-      break_labels <- sc$get_labels(br)
       raw_br <- sc$get_transformation()$inverse(br) %||% numeric()
-      break_labels <- break_labels %||% rep(NA_character_, length(raw_br))
-      if (source_axis) raw_br <- raw_br - origin + 1
-      automatic_breaks <- inherits(position_scale$breaks,"waiver")
+      raw_br <- raw_br - origin + 1
+      automatic_breaks <- inherits(sc$breaks, "waiver")
       if (automatic_breaks) {
         domain_limits <- range(sc$get_transformation()$inverse(sc$get_limits()))
         endpoints <- c(1,lens[[id]])
-        source_endpoints <- endpoints + if(source_axis) origin-1 else 0
+        source_endpoints <- endpoints + origin - 1
         endpoints <- endpoints[source_endpoints>=domain_limits[1] & source_endpoints<=domain_limits[2]]
         raw_br <- sort(unique(c(raw_br[is.finite(raw_br) & raw_br>=1 & raw_br<=lens[[id]]],endpoints)))
-        source_breaks <- raw_br + if(source_axis) origin-1 else 0
+        source_breaks <- raw_br + origin - 1
         br <- sc$transform(source_breaks)
-        break_labels <- sc$get_labels(br)
       }
+      break_labels <- get_labels(br) %||% rep(NA_character_, length(raw_br))
       keep <- is.finite(raw_br) & raw_br >= 0 & raw_br <= lens[[id]]
       br <- br[keep]
       values <- raw_br[keep]
@@ -789,7 +703,7 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
       axis_breaks[id] <- list(values)
       minor <- sc$get_breaks_minor()
       minor <- sc$get_transformation()$inverse(minor) %||% numeric()
-      if (source_axis) minor <- minor - origin + 1
+      minor <- minor - origin + 1
       axis_minor_breaks[id] <- list(minor[
         is.finite(minor) & minor >= 0 & minor <= lens[[id]]
       ])
@@ -882,13 +796,6 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
     global$rotation
   }
 
-  # Circular zero rotation starts at noon; the shared geometry engine uses
-  # the positive x axis as its angular origin. Apply the basis offset once
-  # so backbones, ticks, annotations and labels share the same transform.
-  if (isTRUE(plot$coordinates$ggchord_circular)) {
-    coord_rotation <- coord_rotation + 90
-  }
-
   layout_strategy <- if (collinear) {
     function(...) compute_collinear_layout(..., gene_label_text = lbl$label_text,
       seq_label_hjust_explicit = !is.null(seq_label_params$seq_label_hjust),
@@ -898,13 +805,13 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
       collinear_radial = isTRUE(plot$coordinates$ggchord_radial),
       collinear_vertical = isTRUE(plot$coordinates$ggchord_sankey) ||
         identical(plot$coordinates$collinear_seq_axis, "vertical"))
-  } else compute_chord_layout
+  } else function(...) compute_chord_layout(..., ring = seq_ring)
   layout <- layout_strategy(
     seqs = seqs, lens = lens, seq_labels = seq_labels,
     length_mode = arrangement$length_mode %||% "proportional",
     seq_colors = seq_colors, seqRadius = seqRadius,
     seq_curvature = seq_curvature, orientation = orientation,
-    seq_gap = seq_gap,
+    seq_gap = seq_gap, clockwise = clockwise,
     ribbon_data = ribbon_data, ribbonGap = ribbonGap,
     ribbon_gap_auto = ribbon_gap_auto,
     link_avoid = ribbon_params$link_avoid %||% "none",
@@ -936,7 +843,9 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
     gene_data = gene_data_layout,
     draw_gene_geometry = gene_geometry_layer_requested,
     geneWidth = geneWidth,
-    arrow_head_length = gene_params$arrow_head_length %||% 0.04,
+    arrow_head_length = (gene_params$head_length_mm %||% 2) *
+      ggchord_units_per_mm(if (is.null(metric_axis)) NULL else
+        if (metric_axis == "x") "y" else "x"),
     arrow_head_width = gene_params$arrow_head_width %||% 1,
     arrow_head_style = gene_params$arrow_head_style %||% "shouldered",
     short_feature = gene_params$short_feature %||% "auto",
@@ -1045,7 +954,8 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
     layout$sequence_layout$units_per_position <- layout$sequence_layout$units_per_bp
   }
   position_scale <- plot$scales$get_scales("seq_position")
-  if (!is.null(position_scale$ggchord_axis_sequences))
-    layout <- ggchord_filter_sequence_axes(layout, position_scale$ggchord_axis_sequences)
+  selection <- ggchord_axis_selection(position_scale$ggchord_axis_sequences,
+    chord$complete_reference_ids %||% seqs, chord$complete_display_instances)
+  if (!is.null(selection)) layout <- ggchord_filter_sequence_axes(layout, intersect(selection, seqs))
   layout
 }

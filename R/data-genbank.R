@@ -69,81 +69,35 @@ with open(sys.argv[2], 'w', encoding='utf-8') as handle:
               ensure_ascii=False, allow_nan=False)
 )---"
 
-#' Import local GenBank or GBFF records using an optional mature parser
+#' Read reference and feature records from GenBank
 #'
-#' Uses the public `Bio.SeqIO.parse(..., "genbank")` API in an explicitly
-#' selected Python environment with Biopython installed. The R package
-#' `jsonlite` exchanges structured temporary JSON with that process. This
-#' function never installs packages, downloads records, or runs during plot
-#' building. It reads all selected records into memory and is intended for
-#' small to moderate local annotation files, not chromosome-scale streaming.
+#' Read the source dictionary and source-backed feature positions with
+#' Biopython. Joined, partial, and origin-crossing locations retain their
+#' segments and source boundary information.
 #'
-#' Record IDs, including accession versions, are retained exactly as returned
-#' by the source parser. Full parsed record annotations, feature qualifiers,
-#' source locations, and original file text are retained in `report`. Feature
-#' IDs use explicit `ID`, then `protein_id` for CDS, then `locus_tag`, then a
-#' non-placeholder parser feature ID. Missing IDs remain missing. Shared
-#' `locus_tag` values do not invent gene/CDS parent relationships; explicit
-#' `Parent` qualifiers become `parent_ids`.
-#'
-#' Simple and joined local locations retain one-based inclusive `segments`
-#' in parser order. Before/after fuzzy bounds retain their source descriptors
-#' and partial flags; they are displayed at the reported boundary rather than
-#' treated as exact biology. Remote locations, missing or unsupported fuzzy
-#' positions, zero-width sites, and mixed-strand joined features are never
-#' flattened into guessed intervals. `unsupported = "error"` stops by default;
-#' `"report"` retains these features in `report$unplaced_features` instead.
-#' An absent ORIGIN sequence does not imply an unknown declared length.
-#' Truly missing/zero lengths require explicit `lengths`; feature endpoints
-#' are never used to infer full lengths. Protein records require an explicit
-#' protein-coordinate workflow instead of this nucleotide reader.
-#'
-#' @param file Optional path vector or glob patterns; read before `files`.
-#' @param files Optional paths or wildcard patterns for several files.
-#' @param feature_types Optional feature types to select. `NULL` retains all.
-#' @param lengths Optional named numeric vector of known full sequence lengths,
-#'   following [as_ggchord_seq()].
-#' @param python Interpreter name or path, default `"python3"`. It must already
-#'   have the optional Biopython package installed. No environment is modified.
-#'   An explicit virtual-environment interpreter keeps its entry path rather
-#'   than resolving its executable symlink into a different environment.
-#' @param unsupported `"error"` or `"report"` for locations without a safe
-#'   local interval representation.
-#' @param source_file Add `.source_file` columns to output tables, default
-#'   `FALSE`. File provenance is retained in the report regardless.
-#' @return A list with `seq_data`, named `features$annotation`, and `report`.
-#'   Tables can be supplied to [prepare_ggchord_data()]. Feature rows include
-#'   `feature_id`, `parent_ids`, `segments`, source record/feature indices,
-#'   `qualifiers`, `source_location`, `partial_start`/`partial_end`, and
-#'   `location_operator`. `report$records` retains the complete parsed source
-#'   CDS rows also expose source `codon_start`, `genetic_code`, biological
-#'   `partial5`/`partial3`, and `translation_exception` qualifiers for explicit
-#'   downstream coding-coordinate models. Missing CDS `codon_start` uses the
-#'   INSDC default 1, marked by `codon_start_source = "format-default"`.
-#'   Bound-only flags remain in `bound_partial5`/`bound_partial3`; CDS partial
-#'   flags also record initial codon offset or terminal coding remainder, with
-#'   their evidence in `partial5_source`/`partial3_source`. They describe the
-#'   observed coding extent, not proof of a complete biological protein.
-#'   No per-segment phase values are invented. `segment_order` preserves the
-#'   source's declared coding-piece order independently of `segment_index`.
-#'   metadata, `raw_files` retains original text, and `unplaced_features`
-#'   identifies every selected feature not placed under `"report"`.
-#' @seealso <https://biopython.org/docs/latest/api/Bio.SeqIO.html>
-#' @md
-#' @seealso \code{\link{ggchord_data_contract}}
+#' @param file Local GenBank paths.
+#' @param feature_types Optional set of feature types.
+#' @param lengths Optional named complete lengths for referenced records.
+#' @param python Python executable with Biopython available.
+#' @param unsupported `"error"` stops at unsupported locations.
+#'   `"report"` retains unplaced records in the report.
+#' @param source_file Whether to include row-level source paths.
+#' @return A ggchord_import collection with sequences, features$annotation,
+#'   and a source and parser report.
 #' @export
 #' @examples
 #' \dontrun{
-#' # Requires the source checkout or tutorial input bundle and optional Biopython.
-#' imported <- read_genbank("examples/format-inputs/pUC19c-L09137.2.gb")
-#' imported$report
+#' f <- system.file("extdata", "tutorial", "pUC19c-L09137.2.gb",
+#'   package = "ggchord")
+#' x <- read_genbank(f, feature_types = "CDS", python = "python3")
+#' head(x$features$annotation)
 #' }
-read_genbank <- function(file = NULL, files = NULL, feature_types = NULL,
-    lengths = NULL, python = "python3", unsupported = c("error", "report"),
+read_genbank <- function(file, feature_types = NULL,
+    lengths = NULL, python = "python3", unsupported = "error",
     source_file = FALSE) {
   caller <- "read_genbank()"
-  unsupported <- match.arg(unsupported)
-  paths <- ggchord_resolve_files(file, files, "read_genbank")
+  unsupported <- match.arg(unsupported, c("error", "report"))
+  paths <- ggchord_resolve_files(file, NULL, "read_genbank")
   if (!is.null(feature_types) && (!is.character(feature_types) || !length(feature_types) ||
       anyNA(feature_types) || any(!nzchar(feature_types)))) ggchord_stop(
     caller, ": feature_types must be NULL or nonempty feature type names")
@@ -300,7 +254,8 @@ read_genbank <- function(file = NULL, files = NULL, feature_types = NULL,
     sum(feature_files == path), integer(1))
   attr(seq_data, "ggchord_import") <- sequence_provenance
   attr(feature_data, "ggchord_import") <- feature_provenance
-  list(seq_data = seq_data, features = list(annotation = feature_data), report = list(
+  feature_data$label <- feature_data$anno
+  ggchord_import_collection(as_ggchord_seq(seq_data), features = list(annotation = feature_data), report = list(
     parser = provenance, records = records,
     raw_files = stats::setNames(lapply(paths, readLines, warn = FALSE), paths),
     parser_messages = messages, unplaced_features = unplaced))

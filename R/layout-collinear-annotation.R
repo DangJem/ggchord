@@ -2,7 +2,7 @@
 # normal offsets always mean up, including on reverse-oriented sequences.
 
 ggchord_collinear_feature_parts <- function(shape, x0, x1, center, width,
-                                            backbone, p, draw_head = TRUE,
+                                            backbone, p, head_width = NULL, draw_head = TRUE,
                                             draw_start_head = FALSE,
                                             bidirectional = FALSE) {
   if (identical(shape, "lollipop")) {
@@ -19,12 +19,12 @@ ggchord_collinear_feature_parts <- function(shape, x0, x1, center, width,
   # These shape templates use two local coordinates. A unit reference makes
   # their along-interval dimensions linear; no circular reference, radius or
   # physical track is stored in the resulting layout or exported geometry.
-  short <- p$short_feature %||% "auto"
+  short <- p$short_feature %||% "shrink"
   if (identical(short, "auto")) short <- "arrow"
   parts <- ggchord_feature_geometry(
     shape, x0, x1, 1, width, 1, NULL,
     arrow_head_length = p$arrow_head_length %||% .04,
-    arrow_head_width = p$arrow_head_width %||% 1,
+    arrow_head_width = if (is.null(head_width)) 1 else head_width / width,
     arrow_head_style = p$arrow_head_style %||% "shouldered",
     short_feature = short,
     draw_head = draw_head, draw_start_head = draw_start_head,
@@ -98,7 +98,7 @@ ggchord_collinear_gene_geometry <- function(p, layout) {
     }
     if (row$start == row$end) {
       x <- ggchord_collinear_x(row$start, id, ref)
-      half <- max(.014, min(.028, width * .36))
+      half <- width / 2
       add_part(cbind(rep(x, 2L), center + c(-half, half)), "point")
       next
     }
@@ -107,6 +107,7 @@ ggchord_collinear_gene_geometry <- function(p, layout) {
       x <- ggchord_collinear_x(c(piece$start, piece$end), id, ref)
       parts <- ggchord_collinear_feature_parts(
         shape, x[1L], x[2L], center, width, backbone, p,
+        head_width = row$.feature_head_width,
         draw_head = piece$draw_head && isTRUE(row$.feature_draw_head %||% TRUE) && !head_cut,
         draw_start_head = isTRUE(row$.feature_draw_start_head %||%
           identical(biological, "+/-")) && !start_head_cut,
@@ -207,7 +208,7 @@ ggchord_collinear_axis <- function(p, layout) {
     }
     pos <- c(majors, minors)
     major <- c(rep(TRUE, length(majors)), rep(FALSE, length(minors)))
-    labels <- c(as.character(major_labels), rep(NA_character_, length(minors)))
+    labels <- c(ggchord_axis_label_text(major_labels), rep(NA_character_, length(minors)))
     keep <- is.finite(pos) & pos >= 0 & pos <= ref$lens[id]
     pos <- pos[keep]; major <- major[keep]; labels <- labels[keep]
     if (!length(pos)) next
@@ -224,6 +225,7 @@ ggchord_collinear_axis <- function(p, layout) {
       x0 = ggchord_collinear_x(pos, id, ref), y0 = y,
       x1 = ggchord_collinear_x(pos, id, ref), y1 = y + direction * len,
       label = labels, label_x = ggchord_collinear_x(pos, id, ref),
+      .axis_plotmath = is.expression(major_labels) & major,
       label_y = label_y, size = unname(p$labelSize[id]),
       family = p$axis_text_style$family %||% "",
       fontface = p$axis_text_style$fontface %||% "plain",

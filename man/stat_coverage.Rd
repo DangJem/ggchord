@@ -9,13 +9,15 @@ stat_coverage(
   data = NULL,
   geom = "track_col",
   position = "identity",
-  ...,
   binwidth = NULL,
   windows = NULL,
-  track = NULL,
-  id = NULL,
+  bounds = "error",
+  track = "default",
+  ...,
+  na.rm = FALSE,
   show.legend = NA,
-  inherit.aes = TRUE
+  inherit.aes = TRUE,
+  id = NULL
 )
 }
 \arguments{
@@ -32,8 +34,6 @@ provide the columns used by these expressions.}
 \code{ggplot2::position_dodge(width = 10)}. Source x uses sequence units.
 Feature placement belongs on feature layers.}
 
-\item{...}{Track geometry parameters, including fixed styles.}
-
 \item{binwidth}{A positive whole number of sequence units, starting at 1.
 Supply exactly one of \code{binwidth} and \code{windows}.}
 
@@ -42,15 +42,21 @@ Supply exactly one of \code{binwidth} and \code{windows}.}
 records its contributing interval rows. Window coordinates refer to the
 input reference, including the local coordinates of a focused reference.}
 
+\item{bounds}{Coordinate error/clip policy.}
+
 \item{track}{Character ID declared with \code{\link[=track_band]{track_band()}}. Omit for the shared default band.}
 
-\item{id}{Optional unique layer ID for exported statistics and source rows.}
+\item{...}{Track geometry parameters, including fixed styles.}
+
+\item{na.rm}{Suppress warnings for missing observations that the layer can omit.}
 
 \item{show.legend}{Standard ggplot2 layer legend selection. A named logical
 vector such as \code{c(fill = FALSE, colour = TRUE)} controls this layer's
 contribution to each guide, including guides on named track scales.}
 
 \item{inherit.aes}{Whether to inherit the plot mapping.}
+
+\item{id}{Optional unique layer ID for exported statistics and source rows.}
 }
 \value{
 A track layer. Exported statistics include \code{window_id}, local
@@ -72,17 +78,31 @@ Give sample columns names distinct from statistical and geometry fields.
 \code{after_stat()} expressions then see all statistical rows in the layer.
 }
 \examples{
-reference <- data.frame(accver = "A", length = 10L, sequence_unit = "bp")
-intervals <- data.frame(accver = "A", start = c(3, 4, 10), end = c(6, 5, 10))
-windows <- data.frame(accver = "A", start = c(1, 3), end = c(4, 6),
-                      window_id = c("first", "overlap"))
-ggchord(reference) + geom_seq() +
-  track_band("coverage", width = grid::unit(10, "mm")) +
-  stat_coverage(data = intervals, windows = windows, geom = "track_point",
-                track = "coverage", size = 3) +
+library(ggplot2)
+
+seqs <- data.frame(
+  accver = c("A", "B"), length = c(1000, 800),
+  sequence_unit = "bp", topology = "linear"
+)
+
+genes <- data.frame(
+  accver = c("A", "A", "B"), feature_id = c("g1", "g2", "g3"),
+  start = c(100, 400, 150), end = c(240, 620, 380),
+  strand = c("+", "-", "+"), label = c("g1", "g2", "g3"),
+  type = c("CDS", "tRNA", "CDS")
+)
+
+intervals <- genes[c("accver", "start", "end")]
+
+ggchord(data = seqs) + geom_seq() +
+  track_band("coverage", thickness = 5) +
+  stat_coverage(data = intervals, binwidth = 100, track = "coverage") +
+  scale_track_value("coverage", limits = c(0, 1),
+                    labels = scales::label_percent()) +
   coord_collinear()
-ggchord(reference) + geom_seq() +
-  geom_track_line(aes(y = after_stat(mean_depth)),
-                  data = intervals, stat = "coverage", binwidth = 4) +
+
+ggchord(data = seqs) +
+  geom_track_line(data = intervals, aes(y = after_stat(mean_depth)),
+                  stat = "coverage", binwidth = 100) +
   coord_collinear()
 }

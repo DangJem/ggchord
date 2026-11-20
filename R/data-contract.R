@@ -1,166 +1,29 @@
-#' Data workflow and biological coordinate contracts
+#' Biological data and source coordinates
 #'
-#' ggchord separates reading, adaptation, validation, explicit cleaning and
-#' preparation. None of these steps runs BLAST, infers a missing full sequence
-#' length from features, verifies homology experimentally, or adds plot layers.
+#' Sequence tables carry stable reference IDs, complete lengths, coordinate
+#' units and biological topology. Reference lengths are supplied by the
+#' source or declared explicitly. Features and interval links use ordered,
+#' one-based closed coordinates. Biological strands and relative alignment
+#' direction remain separate from endpoints and display orientation.
 #'
-#' \describe{
-#'   \item{Read}{The \code{read_*()} functions parse local files. Both
-#'     \code{file} and \code{files}, when both are exposed by a reader, accept
-#'     path vectors and glob patterns. When
-#'     both are supplied, \code{file} precedes \code{files}; matches expand in
-#'     pattern order, and each normalized path is read once, retaining its first
-#'     supplied spelling. Missing, empty, unmatched or directory paths fail.
-#'     Text input must be UTF-8 (an initial BOM is accepted by table readers).
-#'     Convert other encodings explicitly before reading. Import attributes
-#'     record format, files and output counts. Tabular readers and FASTA lengths
-#'     retain physical \code{.source_line}; optional \code{.source_file} gives
-#'     row-level file identity. GenBank instead retains record/feature indices
-#'     and source text in its report. Malformed field counts stop, rather than
-#'     shifting fields between rows. Numeric conversion problems in BLAST/GFF3
-#'     warn and retain missing values for inspection and validation.}
-#'   \item{Adapt}{\code{as_ggchord_*()} accepts documented tables or optional
-#'     interval/sequence objects. Required IDs and positive integral coordinates
-#'     are checked immediately; zero-based tables must be converted explicitly.
-#'     Metadata name collisions receive prefixes and a column map. Required
-#'     coordinate NA is an error, while unrelated metadata NA survives. Seqinfo,
-#'     object metadata, names and upstream provenance are retained in the
-#'     conversion attribute. Optional packages are never installed automatically.}
-#'   \item{Validate}{\code{validate_ggchord_data()} reports all collected issues
-#'     without changing input. \code{strict = TRUE} stops after collection if
-#'     errors exist. Logical argument errors stop immediately. This validator
-#'     describes the reference and paired-interval tables and the primary
-#'     `feature_data` input, including unknown and bidirectional strands. Coordinate
-#'     checks do not prove an alignment or a biological annotation.}
-#'   \item{Clean}{\code{clean_ggchord_data()} explicitly applies selected
-#'     policies and reports original rows and values before and after cleaning.
-#'     The default is \code{reversed_interval = "sort"}. Use \code{"keep"} for
-#'     directional links or circular-origin features. Sorting cannot recover
-#'     their original meaning later. Unknown-ID \code{"keep"} is an audit
-#'     policy, not a guarantee that the result is drawable. NULL means an absent
-#'     optional table, and an empty table remains a table.}
-#'   \item{Prepare}{\code{prepare_ggchord_data()} adapts first, validates, then
-#'     runs only requested steps in the documented order. Its cleaning default
-#'     is \code{reversed_interval = "keep"}, because downstream operations use
-#'     endpoint directions. Adaptation errors therefore occur before cleaning;
-#'     clean/drop malformed IDs separately when needed. Named features/links
-#'     remain independent collections. Reports distinguish stage-local rows from
-#'     composed original ribbon source sets.}
-#' }
+#' [ggchord_data()] optionally organizes a reference and named observation
+#' tables. Each drawing layer uses its own observation table. [data_report()]
+#' retrieves source information and operation results, including the members
+#' of aggregated relationships and the original positions of focused windows.
 #'
-#' @section Coordinates and direction:
-#' Pass `feature_data` to [prepare_ggchord_data()] and give the prepared object
-#' to [ggchord()] to supply default data for generic annotation layers. Gene
-#' layers select explicitly classified gene/CDS records; tRNA/rRNA and
-#' unclassified annotations remain generic features. To use an untyped
-#' directional gene table, pass it explicitly to
-#' `geom_feature(data = genes, preset = "gene")`.
-#' Explicit layer data takes priority; mixed gene/feature compositions should
-#' use disjoint data subsets. Independent layers do not remove each other's rows.
+#' [validate_ggchord_data()] reports input issues and [clean_ggchord_data()]
+#' applies explicitly chosen repairs. [focus_ggchord_data()] builds new local
+#' data coordinates. A layout display window leaves the reference dictionary
+#' and source statistics in their original coordinate system.
 #'
-#' Native coordinates are one-based inclusive. Sequence tables may declare
-#' `sequence_unit = "bp"` or `"aa"`; omitted units mean bp. A plot uses one unit.
-#' Full protein lengths must be provided; alignment endpoints do not establish
-#' full lengths. Protein annotations use generic feature layers. Gene, primer
-#' and restriction layers require nucleotide input. A circular protein layout
-#' is a visual arrangement and does not declare circular biological topology.
-#' \code{start == end} is one base or one residue in the declared unit.
-#' The explicit adapters enforce integral coordinates. Constructor validation,
-#' cleaning and raw focus accept finite numeric positions. For biological data,
-#' provide integral windows and use an adapter to check integrality.
-#' BEDPE keeps first/second anchors as query/subject, preserves original fields,
-#' and follows paired-object negative-strand endpoint ordering. It does not
-#' infer identity or read support. Unknown anchors fail by default; the explicit
-#' `read_bedpe(unmapped = "keep")` auditing policy retains missing canonical
-#' coordinates and mapping flags. Filter complete anchors before adaptation or
-#' plotting; keeping them is not evidence that they are drawable.
-#'
-#' BED/PAF half-open \code{[a,b)} becomes \code{[a+1,b]}; zero-width records
-#' cannot become nonempty intervals and are rejected. Link endpoint order can
-#' encode relative direction; it is not a circular-origin join. Feature
-#' \code{start > end} is context-dependent: circular plotting can split an origin
-#' join, while linear window workflows require explicit ordered segments and an
-#' envelope. A raw focus locus uses min/max of its bounds, not an origin wrap.
-#' \code{strand} is biological annotation, \code{orientation} is display choice,
-#' and link \code{direction} is relative. Single-base link endpoints have no
-#' order: supplied strand or
-#' relative direction can provide evidence, otherwise direction remains unknown.
-#' Merge and bundle retain these rows independently instead of manufacturing
-#' aggregate endpoint directions. Unknown orientation is kept separate from
-#' known direction in density and deduplication.
-#' Unknown strands remain unknown in
-#' adapters. GFF3's explicit \code{unstranded = "plus"} assigns a plus strand,
-#' with \code{source_strand} retained. Prefer \code{unstranded = "keep"} and
-#' generic feature layers when direction is unknown.
-#'
-#' Plotting uses a continuous display axis, not a base-cell raster: feature/axis
-#' chord anchors use pos/length, point-link anchors use (pos-1)/length. These
-#' graphical offsets preserve the stored coordinates. Region highlights
-#' use closed intervals with display edges at the lower endpoint minus one and
-#' the upper endpoint. Single-base
-#' features can use a point or widened glyph.
-#'
-#' @section Selection, projection and aggregation:
-#' Focus crops all selected tables and composes earliest source coordinates.
-#' Overlapping windows can copy a row. Ribbon clipping interpolates an endpoint
-#' correspondence, rounds to bp and marks estimated length; identity is retained,
-#' not recalculated. Segment preparation creates separate windows and explicit
-#' gaps; it never concatenates their biological sequences. Position mapping is
-#' invertible within the selected linear window and rejects segmented gaps.
-#' [translate_ggchord_cds()] extracts real forward source strings through the
-#' same CDS map and delegates translation to optional Biostrings. It requires
-#' known genetic codes, retains stops, reports partial trimming and preserves
-#' the three genomic positions of every codon.
-#' [register_ggchord_alignment()] registers exact source/column cells for
-#' independent Cartesian detail panels, without deriving any bases from HSPs.
-#' CDS projection uses observed complete codons and explicit phase/partial
-#' policies; it does not translate with the stored genetic-code ID. Protein
-#' identity/length remain source-prefixed metadata when links are projected.
-#'
-#' Filtering retains full rows. Deduplication selects representatives and
-#' reports discarded rows; it does not combine their statistics. Merge creates
-#' envelopes and reports source sets, lengths and identities. Bundle groups by
-#' pair, relative endpoint direction and midpoint bins; both endpoints may be
-#' reversed together in one group. Envelope endpoints follow the first row's
-#' absolute direction. Bundle length is a rounded length-weighted mean of source
-#' lengths, identity is a length-weighted mean, and conflicting extra metadata
-#' become typed NA. These summaries are not new alignments. Supply
-#' \code{group_by} for metadata that must remain separate. Density retains every
-#' input row and measures bin weight relative to that pair's maximum bin; it
-#' is not coverage or statistical probability. Optimization suggests display
-#' order/orientation without changing biological strand or query/subject roles.
-#'
-#' @section Search helpers:
-#' Cluster links use declared membership, with explicit paralog and segment
-#' policies, not sequence alignment. Primer exact and three-prime suffix searches
-#' report zero mismatches; a partial suffix is not full-oligo validation. Wallace
-#' temperature is a simple composition estimate, not an experimental prediction.
-#' Restriction results are motif matches and source-backed cut offsets; missing
-#' cuts remain unknown. Methylation status uses supplied/reference context and a
-#' limited sensitivity catalogue, not a complete digestion model. Linear context
-#' never wraps sequence ends. Common-feature confidence is a deterministic
-#' heuristic rank, not a probability or experimental confirmation. Its six-frame
-#' protein search uses the standard codon table without alternative starts,
-#' splicing or circular-origin protein matches. Source \code{geneticCode}
-#' metadata is not interpreted as a selectable translation table. Use exact DNA
-#' mode or an external code-aware analysis for nonstandard translation.
-#'
-#' @section Character alignments:
-#' [read_aligned_fasta()] is a single-alignment, single-file reader; it does
-#' not concatenate independent alignments or expose a files argument.
-#' [as_ggchord_alignment()] distinguishes alignment columns from nullable
-#' source positions. Gaps consume columns only. Default positions refer to
-#' ungapped input fragments, not complete genomes. Explicit source metadata
-#' can verify supplied characters; it does not independently establish homology.
-#' [map_alignment_position()] performs exact lookups without interpolation.
-#' [geom_residue()] draws local cells in ordinary Cartesian ggplots, outside
-#' the biological backbone Coord pipeline. No new alignment is computed.
+#' Character alignments use real alignment columns and nullable source
+#' positions. A gap consumes a column without occupying a source residue.
+#' Restriction cut boundaries are interbase coordinates, from zero to the
+#' complete reference length. Source coordinate metadata records unit and
+#' origin without relying on the selected plotting coordinate system.
 #'
 #' @name ggchord_data_contract
-#' @seealso \code{\link{prepare_ggchord_data}}, \code{\link{read_genbank}},
-#'   \code{\link{as_ggchord_feature}}, \code{\link{project_ggchord_links}}
 NULL
-
 
 # Resolve the native coordinate domain without inferring it from alphabet or IDs.
 ggchord_sequence_unit <- function(seq_data, caller = "ggchord") {

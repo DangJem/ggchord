@@ -1,79 +1,42 @@
-#' Radial spokes for multi-sequence synteny
+#' Project references along radial spokes
 #'
-#' Displays linear sequences as equally spaced outward spokes. Adjacent
-#' spokes, including the last and first, may be joined by existing interval
-#' alignments. No missing relationship is created. Two spokes display each
-#' input HSP once; one spoke is not a multi-sequence synteny view.
-#'
-#' Uses the same sequence, feature, track, label and link layers as
-#' [coord_collinear()]. `layout_sequences(order = ...)` orders spokes and declares
-#' named repeated display instances; ambiguous relationships require `between`.
-#' Lengths are proportional by default; `layout_sequences(length_mode = "equal")`
-#' explicitly normalizes display lengths while retaining native positions.
-#' Positive feature/track offsets point counterclockwise from each outward
-#' spoke, independently of biological direction and display order. Sequence
-#' names are placed just beyond the outer ends to keep the central hole clear.
-#'
-#' Ribbons default to cyclic neighbors. Use explicit `pairs` or
-#' `adjacent_only = FALSE` for nonadjacent ribbons; point links to nonneighbors
-#' require explicit `between`. Adjacent ribbon outlines are solid; nonadjacent
-#' outlines are dashed, following the final cyclic spoke order. Explicit fixed
-#' or mapped line types take priority. Default curved connections stay in an annular
-#' channel, retaining the complete interval fronts and inversion twists.
-#' Explicit control points use final layout x/y units. Shared link branches,
-#' circular-only annotations, shared straight scale bars and joined multi-window
-#' rows are unsupported. Use the native position axis on each spoke.
-#'
-#' Interval fronts use closed one-based interval boundaries
-#' `[min(start,end)-1, max(start,end)]` in input direction. A one-position
-#' interval retains nonzero width. Axis ticks and position mapping use
-#' one-based positions; this new view does not change existing view conventions.
-#'
-#' @param start_angle Direction of the first outward spoke in degrees,
-#'   counterclockwise from the positive x axis. Default 90 starts at noon.
-#' @param clockwise Logical, order subsequent spokes clockwise, default TRUE.
-#' @param inner_radius Positive inner radius in layout units, default 0.6.
-#'   The longest proportional spoke has length 2. The central hole is display
-#'   spacing and does not remove any source positions.
-#' @param nonadjacent_bulge Non-negative outward lift at the midpoint of
-#'   nonadjacent annular ribbons, in layout units (the longest proportional
-#'   spoke has length 2). Default 0 retains the original path. The lift and its
-#'   slope vanish at both endpoints. Adjacent ribbons and point links are
-#'   unchanged. A positive lift also separates overlapping nonadjacent ribbon
-#'   midpoints in the same channel, retaining their individual interval widths;
-#'   this does not eliminate crossings forced by source endpoint order.
-#'   Explicit `geom_link_ribbon(link_ctrl_point = ...)` takes priority.
-#' @inheritParams coord_collinear
-#' @return A ggchord coordinate object.
+#' @inheritParams coord_chord
+#' @return A coordinate system for a ggchord plot.
 #' @export
 #' @examples
-#' data(seq_data_example)
-#' data(ribbon_data_example)
-#' ggchord(prepare_ggchord_data(seq_data_example, ribbon_data_example)) +
+#' seqs <- data.frame(
+#'   accver = c("A", "B"), length = c(1000, 800),
+#'   sequence_unit = "bp", topology = "linear"
+#' )
+#'
+#' genes <- data.frame(
+#'   accver = c("A", "A", "B"), feature_id = c("g1", "g2", "g3"),
+#'   start = c(100, 400, 150), end = c(240, 620, 380),
+#'   strand = c("+", "-", "+"), label = c("g1", "g2", "g3"),
+#'   type = c("CDS", "tRNA", "CDS")
+#' )
+#'
+#' links <- data.frame(
+#'   qaccver = "A", saccver = "B", qstart = c(100, 400),
+#'   qend = c(240, 620), sstart = c(150, 450), send = c(290, 650),
+#'   qstrand = "+", sstrand = c("+", "-"),
+#'   pident = c(98, 90), link_id = c("l1", "l2")
+#' )
+#'
+#' ggchord(data = seqs) +
 #'   geom_seq() +
-#'   geom_link_ribbon() +
-#'   geom_seq_label() +
-#'   coord_radial_synteny(start_angle = 90, inner_radius = 0.7)
-coord_radial_synteny <- function(start_angle = 90, clockwise = TRUE,
-    inner_radius = 0.6, ratio = 1, xlim = NULL, ylim = NULL,
-    expand = FALSE, clip = "off", fit = c("labels", "geometry", "manual"),
-    nonadjacent_bulge = 0) {
-  for (name in c("start_angle", "inner_radius")) {
-    value <- get(name)
-    if (!is.numeric(value) || length(value) != 1L || !is.finite(value))
-      ggchord_stop("coord_radial_synteny(): ", name, " must be a finite number")
-  }
-  if (inner_radius <= 0) ggchord_stop("coord_radial_synteny(): inner_radius must be positive")
-  if (!is.numeric(nonadjacent_bulge) || length(nonadjacent_bulge) != 1L ||
-      !is.finite(nonadjacent_bulge) || nonadjacent_bulge < 0)
-    ggchord_stop("coord_radial_synteny(): nonadjacent_bulge must be one finite non-negative number")
-  if (!is.logical(clockwise) || length(clockwise) != 1L || is.na(clockwise))
-    ggchord_stop("coord_radial_synteny(): clockwise must be TRUE or FALSE")
-  base <- coord_collinear(ratio = ratio, xlim = xlim, ylim = ylim,
+#'   geom_gene(data = genes) +
+#'   geom_link_ribbon(data = links) +
+#'   layout_sequences(inner_radius = 0.3) +
+#'   coord_radial_synteny(start_angle = 90)
+coord_radial_synteny <- function(start_angle = 0, direction = "clockwise",
+    xlim = NULL, ylim = NULL, expand = FALSE, clip = "on", fit = "geometry") {
+  ggchord_check_argument_names(sys.call(), sys.function())
+  direction <- ggchord_coord_direction(start_angle, direction)
+  base <- coord_collinear(ratio = 1, xlim = xlim, ylim = ylim,
     expand = expand, clip = clip, fit = fit)
   ggplot2::ggproto("CoordRadialSynteny", base, ggchord_radial = TRUE,
-    radial_start_angle = start_angle, radial_clockwise = clockwise,
-    radial_inner_radius = inner_radius, radial_nonadjacent_bulge = nonadjacent_bulge)
+    radial_start_angle = start_angle %% 360, radial_clockwise = direction == "clockwise")
 }
 
 # An isometry per source frame: along-axis distances and physical band widths
@@ -134,6 +97,20 @@ ggchord_radial_edge <- function(a, b, delta, controls = NULL, n = 50L, bulge = 0
   cbind(x = r * cos(angle), y = r * sin(angle))
 }
 
+ggchord_radial_route <- function(a, b, delta, route, bulge) {
+  if (identical(route$route, "straight"))
+    return(rbind(a, b))
+  if (abs(delta) < 1e-10) {
+    control <- (a + b) * (1 - (route$curvature %||% .5)) / 2
+    return(bezier_pts(a, b, control, control, n = 50))
+  }
+  path <- ggchord_radial_edge(a, b, delta, bulge = bulge)
+  weights <- seq(0, 1, length.out = nrow(path))
+  straight <- outer(1 - weights, a) + outer(weights, b)
+  curvature <- route$curvature %||% .5
+  path * curvature + straight * (1 - curvature)
+}
+
 ggchord_radial_connections <- function(d, input, params, component, layout, frames) {
   if (!is.data.frame(d) || !nrow(d) || is.null(input)) return(d)
   if (!identical(params$link_branch %||% "none", "none"))
@@ -148,14 +125,13 @@ ggchord_radial_connections <- function(d, input, params, component, layout, fram
     qi <- match(q, frames$key); si <- match(s, frames$key); count <- nrow(frames)
     forward <- (si - qi) %% count
     adjacent <- forward %in% c(1L, count - 1L)
-    if (component == "link" && !adjacent && is.null(params$between))
-      ggchord_stop("coord_radial_synteny(): nonadjacent point links require explicit between")
     # For two spokes, anchor the one physical channel to declared-order pair,
     # independent of input query/subject order. Reciprocal source rows survive.
     step <- if (forward <= count / 2) forward else forward - count
     if (count == 2L) step <- if (qi < si) 1 else -1
     delta <- step * (if (isTRUE(layout$radial_clockwise)) -1 else 1) * 2 * pi / count
     normal_q <- sign(delta); normal_s <- -sign(delta)
+    route <- params$route
     front <- function(id, start, end, sign) {
       if (!is.numeric(start) || !is.numeric(end) || any(!is.finite(c(start, end))) ||
           any(c(start, end) < 1 | c(start, end) > ref$lens[id]))
@@ -169,14 +145,14 @@ ggchord_radial_connections <- function(d, input, params, component, layout, fram
       r <- frames$inner[match(id, frames$key)] + ggchord_collinear_x(pos, id, ref) - frames$axis_min[match(id, frames$key)]
       # Oversized fixed/automatic bands would invert the front or consume its
       # angular channel. Do not silently clamp the user's physical geometry.
-      if (any(!is.finite(gap)) || any(gap < 0) || any(atan2(gap, r) >= abs(delta) * .45))
+      if (any(!is.finite(gap)) || any(gap < 0) || (delta != 0 && any(atan2(gap, r) >= abs(delta) * .45)))
         ggchord_stop("coord_radial_synteny(): endpoint clearance does not fit its angular channel; increase inner_radius or reduce bands/gaps")
       ggchord_radial_points(ggchord_collinear_x(pos, id, ref), ref$y[id] + sign * gap, id, frames)
     }
     if (component == "ribbon") {
       qxy <- front(q, input$qstart[i], input$qend[i], normal_q)
       sxy <- front(s, input$sstart[i], input$send[i], normal_s)
-      bulge <- if (adjacent) 0 else layout$radial_nonadjacent_bulge %||% 0
+      bulge <- if (adjacent || delta == 0) 0 else route$bulge %||% 0
       if (bulge > 0 && is.null(params$ribbon_ctrl_point)) {
         # Clear the full intervening backbones, not merely their centre points.
         # Both ribbon edges must pass outside each spoke tip in this channel.
@@ -219,10 +195,7 @@ ggchord_radial_connections <- function(d, input, params, component, layout, fram
         channels[[channel]] <- c(occupied, list(span))
       }
       edge <- function(a, b, which) {
-        cp <- if (is.null(params$ribbon_ctrl_point)) NULL else
-          rep(ggchord_link_controls(params$ribbon_ctrl_point, i, (a + b) / 2)[which], 2L)
-        ggchord_radial_edge(a, b, delta, cp,
-          bulge = bulge)
+        ggchord_radial_route(a, b, delta, route, bulge)
       }
       a <- edge(qxy[1, ], sxy[1, ], 1L)
       b <- edge(qxy[nrow(qxy), ], sxy[nrow(sxy), ], 2L)
@@ -230,10 +203,9 @@ ggchord_radial_connections <- function(d, input, params, component, layout, fram
     } else {
       qxy <- front(q, input$qpos[i], input$qpos[i], normal_q)
       sxy <- front(s, input$spos[i], input$spos[i], normal_s)
-      cp <- if (is.null(params$link_ctrl_point)) NULL else
-        ggchord_link_controls(params$link_ctrl_point, i, (qxy[1, ] + sxy[1, ]) / 2)
-      xy <- if (identical(params$link_type, "straight")) rbind(qxy, sxy) else
-        ggchord_radial_edge(qxy[1, ], sxy[1, ], delta, cp)
+      xy <- ggchord_radial_route(qxy[1L, ], sxy[1L, ], delta, route,
+        if (adjacent || delta == 0) 0 else route$bulge %||% 0)
+
     }
     piece <- template[rep(1L, nrow(xy)), , drop = FALSE]
     piece$x <- xy[, 1]; piece$y <- xy[, 2]; piece$group <- i
@@ -250,7 +222,7 @@ ggchord_radial_connections <- function(d, input, params, component, layout, fram
         qx_start = qxy[1, 1], qy_start = qxy[1, 2], qx_end = tail(qxy[, 1], 1), qy_end = tail(qxy[, 2], 1),
         sx_start = sxy[1, 1], sy_start = sxy[1, 2], sx_end = tail(sxy[, 1], 1), sy_end = tail(sxy[, 2], 1),
         adjacent = adjacent, channel_angle = delta,
-        route_bulge = if (is.null(params$ribbon_ctrl_point)) bulge else NA_real_)
+        route_bulge = bulge)
     }
     pieces[[length(pieces) + 1L]] <- piece
   }
@@ -287,7 +259,12 @@ ggchord_project_radial_layout <- function(layout, plot) {
         if (is.null(params$seq_label_vjust)) d$vjust <- if (horizontal)
           ifelse(upright, ifelse(frames$ty[at] > 0, 0, 1), .5) else .5
       }
-      fixed <- identical(params$seq_label_orientation, "horizontal") ||
+      fixed <- (identical(component, "domain_label") &&
+        (identical(params$label_layout$orientation, "horizontal") ||
+          identical(params$label_layout$orientation, "vertical") ||
+          (identical(params$label_layout$orientation, "auto") &&
+            !identical(params$label_layout$arrangement, "local")))) ||
+        identical(params$seq_label_orientation, "horizontal") ||
         identical(params$gene_label_orientation, "horizontal") || !is.null(params$gene_label_rotation)
       layout$layer_geometry[[owner]][[component]] <- ggchord_project_radial_data(d, frames, fixed_angle = fixed)
       next

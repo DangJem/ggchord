@@ -1,350 +1,183 @@
-# Complete ggchord themes and chord-specific appearance settings.
-
-#' ggchord themes
+#' Common appearance for sequence visualizations
 #'
-#' Complete themes for chord diagrams. Besides ordinary ggplot2 theme
-#' elements, these functions control automatic sequence axes, chord labels and
-#' the appearance and placement of guides belonging to each ggchord role.
-#' Palettes, breaks, labels and guide ordering remain scale/guide concerns.
-#'
-#' For plot-wide text, add `theme(text = element_text(family = "sans"))`.
-#' Set an individual ribbon legend title with `labs(ribbon_fill = "Identity")`
-#' and configure its guide with [guide_ggchord_colourbar()]. For sequence
-#' labels alone, set `seq.label = element_text(size = 10)` in this theme.
-#'
-#' @section Appearance settings:
-#' Ordinary text, panel, title and shared legend settings follow ggplot2.
-#' Sequence-axis settings control automatic axis decoration, not genomic
-#' break selection; use \code{\link{scale_seq_position_continuous}()} for breaks and labels.
-#' Role text and leader elements style non-data annotation. Role legend
-#' settings inherit common legend appearance, while scale and guide objects
-#' continue to own palettes, breaks and ordering. Physical spacings require
-#' scalar absolute \code{grid::unit()} values; \code{axis.text.orientation} is scalar.
-#' The preset themes share this signature and provide appearance defaults.
-#'
-#' @section Native detailed configuration:
-#' Use standard `theme()` with the registered `ggchord.axis.*`, `ggchord.seq.label`,
-#' `ggchord.gene.label`, `ggchord.feature.label` and leader elements. Axis gap,
-#' tick lengths, text offset/orientation and overlap settings also have
-#' `ggchord.axis.*` entries. Absolute scalar units are required for spacings.
-#' Existing short arguments remain convenient aliases; do not supply both
-#' spellings for one setting in the same call. Later theme() entries override
-#' earlier defaults following ordinary ggplot2 field-wise merging.
-#'
-#' Quantitative axis decoration uses ggchord.track.axis.line,
-#' ggchord.track.axis.text and ggchord.track.axis.title, plus absolute
-#' ggchord.track.axis.text.offset and ggchord.track.axis.title.offset.
-#' These inherit sequence-axis/text styling; each track may override its own
-#' decoration through guide_track_axis(theme = theme(axis.text = ..., axis.title = ...,
-#' axis.line = ...)) in scale_track_value_continuous(). Numerical domains,
-#' units, breaks and labels still belong to that scale; colours to scoped
-#' fill/colour scales; physical bands to track_band().
-#' Theme changes never filter data, alter HSPs or choose sequence directions.
-#'
-#' @section Standard ggplot2 settings:
-#' Standard text, plot title/caption/tag, backgrounds, plot margins and common
-#' legend settings remain available through \code{...}, for example
-#' \code{theme_ggchord(text = element_text(size = 12))}.
-#' Only ggchord-specific settings appear as explicit formals for IDE argument
-#' completion. An IDE that additionally expands upstream dots may still offer
-#' upstream suggestions; this package controls its own function signature.
-#' @param axis `NULL` to show automatic sequence axes, or
-#'   [ggplot2::element_blank()] to hide the complete axis decoration.
-#' @param axis.line,axis.ticks,axis.minor.ticks Axis line elements.
-#' @param axis.text Axis text element.
-#' @param axis.gap,axis.ticks.length,axis.minor.ticks.length,axis.text.offset
-#'   Scalar [grid::unit()] objects controlling physical axis spacing. For
-#'   horizontal or vertical collinear layouts with measured panels these
-#'   distances use the physical scale perpendicular to each backbone. A
-#'   negative `axis.gap` places the circular axis inside the backbone; a
-#'   positive value places it outside. Zero attaches ticks to the inner
-#'   backbone edge and is the circular default, including the plasmid preset.
-#'   Circular major/minor tick lengths default to 1.5/0.7 mm, or 2.2/0.8 mm
-#'   with the plasmid preset. Their default line widths are 0.45/0.3 mm, or
-#'   0.6/0.35 mm with that preset. Explicit length and line settings take priority.
-#' @param axis.text.orientation One of `"horizontal"`, `"parallel"`,
-#'   `"perpendicular"`, or a finite numeric angle. In circular layouts,
-#'   parallel labels follow the circle glyph by glyph. Horizontal and numeric
-#'   orientations retain straight text.
-#' @param axis.text.check.overlap Whether overlapping axis labels are hidden. Defaults to TRUE.
-#'   Automatically positioned circular parallel labels, including combined seam
-#'   strings, can receive bounded inward or outward radial clearance around
-#'   feature polygons and fixed annotation-leader roots. Internal and exterior
-#'   annotation leaders route around the resolved axis text; mutable shoulders
-#'   do not feed back into axis placement. Automatic strings stay in a near-
-#'   backbone channel. Origin/end strings take priority and remain visible;
-#'   an automatic endpoint may use either readable side of its tick, with a
-#'   bounded tangential gap up to 4 mm, to clear fixed feature exit rays.
-#'   Unresolved endpoint clearance is reported as `endpoint_unresolved`.
-#'   Overlap checking may hide ordinary intermediate text while keeping its
-#'   tick, with `hidden_near_backbone` in diagnostics.
-#'   Explicit `axis.text.offset` values and explicit scale breaks stay fixed.
-#' @param seq.label,gene.label,feature.label,restriction.label,seq.center.label,seq.center.name,seq.center.length
-#'   Text elements for sequence, gene, feature, restriction-site and circular
-#'   centre labels.
-#' @param gene.label.segment,feature.label.segment,restriction.label.segment
-#'   Line elements for gene, feature and restriction-site leader lines.
-#' @param legend.link,legend.link.position,legend.link.direction,legend.link.background,legend.link.key,legend.link.key.size,legend.link.key.width,legend.link.key.height,legend.link.text,legend.link.text.position,legend.link.title,legend.link.title.position,legend.link.margin,legend.link.spacing Point-link guide appearance; follows the same role-specific rules.
-#' @param legend.seq,legend.ribbon,legend.gene,legend.feature,legend.region
-#'   `NULL` to show and inherit common settings, or [ggplot2::element_blank()]
-#'   to hide every guide for that role.
-#' @param legend.seq.position,legend.ribbon.position,legend.gene.position,legend.feature.position,legend.region.position Per-role guide positions.
-#' @param legend.seq.direction,legend.ribbon.direction,legend.gene.direction,legend.feature.direction,legend.region.direction Per-role directions.
-#' @param legend.seq.background,legend.ribbon.background,legend.gene.background,legend.feature.background,legend.region.background Per-role backgrounds.
-#' @param legend.seq.key,legend.ribbon.key,legend.gene.key,legend.feature.key,legend.region.key Per-role key elements.
-#' @param legend.seq.key.size,legend.seq.key.width,legend.seq.key.height,legend.ribbon.key.size,legend.ribbon.key.width,legend.ribbon.key.height,legend.gene.key.size,legend.gene.key.width,legend.gene.key.height,legend.feature.key.size,legend.feature.key.width,legend.feature.key.height,legend.region.key.size,legend.region.key.width,legend.region.key.height Per-role key dimensions. Automatic Identity rulers
-#'   measure their boundary labels independently of generic legend swatch sizes.
-#'   Set a Ribbon-specific dimension or an explicit guide for a manual ruler length.
-#' @param legend.seq.text,legend.ribbon.text,legend.gene.text,legend.feature.text,legend.region.text Per-role text elements.
-#' @param legend.seq.text.position,legend.ribbon.text.position,legend.gene.text.position,legend.feature.text.position,legend.region.text.position Per-role text positions.
-#' @param legend.seq.title,legend.ribbon.title,legend.gene.title,legend.feature.title,legend.region.title Per-role title elements.
-#' @param legend.seq.title.position,legend.ribbon.title.position,legend.gene.title.position,legend.feature.title.position,legend.region.title.position Per-role title positions.
-#' @param legend.seq.margin,legend.ribbon.margin,legend.gene.margin,legend.feature.margin,legend.region.margin Per-role margins.
-#' @param legend.seq.spacing,legend.ribbon.spacing,legend.gene.spacing,legend.feature.spacing,legend.region.spacing Per-role spacing.
-#' @param legend.ribbon.ticks,legend.ribbon.axis.line Ribbon colourbar lines.
-#' @param legend.ribbon.ticks.length Ribbon colourbar tick length.
-#' @param ... Standard ggplot2 theme arguments, including common text, plot
-#'   and legend settings. Common legend settings also supply role inheritance.
-#' @return A complete ggplot2 theme carrying ggchord appearance settings.
+#' @param base_size Base font size in points.
+#' @param base_family Base font family.
+#' @param ... Named ggplot2 theme elements, including ggchord sequence and
+#'   track axis elements. Explicit settings override theme defaults.
+#' @return A ggplot2 theme.
 #' @export
 #' @examples
-#' theme_ggchord(ggchord.track.axis.text = ggplot2::element_text(size = 9))
-theme_ggchord <- function(
-    axis = NULL, axis.line = NULL, axis.ticks = NULL,
-    axis.minor.ticks = NULL, axis.text = NULL,
-    axis.gap = NULL, axis.ticks.length = NULL,
-    axis.minor.ticks.length = NULL, axis.text.offset = NULL,
-    axis.text.orientation = NULL, axis.text.check.overlap = NULL,
-    seq.label = NULL, gene.label = NULL, gene.label.segment = NULL,
-    feature.label = NULL, feature.label.segment = NULL,
-    restriction.label = NULL, restriction.label.segment = NULL,
-    seq.center.label = NULL, seq.center.name = NULL, seq.center.length = NULL,
-    legend.seq = NULL, legend.seq.position = NULL,
-    legend.seq.direction = NULL, legend.seq.background = NULL,
-    legend.seq.key = NULL, legend.seq.key.size = NULL,
-    legend.seq.key.width = NULL, legend.seq.key.height = NULL,
-    legend.seq.text = NULL, legend.seq.text.position = NULL,
-    legend.seq.title = NULL, legend.seq.title.position = NULL,
-    legend.seq.margin = NULL, legend.seq.spacing = NULL,
-    legend.link = NULL, legend.link.position = NULL,
-    legend.link.direction = NULL, legend.link.background = NULL,
-    legend.link.key = NULL, legend.link.key.size = NULL,
-    legend.link.key.width = NULL, legend.link.key.height = NULL,
-    legend.link.text = NULL, legend.link.text.position = NULL,
-    legend.link.title = NULL, legend.link.title.position = NULL,
-    legend.link.margin = NULL, legend.link.spacing = NULL,
-    legend.ribbon = NULL, legend.ribbon.position = NULL,
-    legend.ribbon.direction = NULL, legend.ribbon.background = NULL,
-    legend.ribbon.key = NULL, legend.ribbon.key.size = NULL,
-    legend.ribbon.key.width = NULL, legend.ribbon.key.height = NULL,
-    legend.ribbon.text = NULL, legend.ribbon.text.position = NULL,
-    legend.ribbon.title = NULL, legend.ribbon.title.position = NULL,
-    legend.ribbon.margin = NULL, legend.ribbon.spacing = NULL,
-    legend.ribbon.ticks = NULL, legend.ribbon.ticks.length = NULL,
-    legend.ribbon.axis.line = NULL,
-    legend.gene = NULL, legend.gene.position = NULL,
-    legend.gene.direction = NULL, legend.gene.background = NULL,
-    legend.gene.key = NULL, legend.gene.key.size = NULL,
-    legend.gene.key.width = NULL, legend.gene.key.height = NULL,
-    legend.gene.text = NULL, legend.gene.text.position = NULL,
-    legend.gene.title = NULL, legend.gene.title.position = NULL,
-    legend.gene.margin = NULL, legend.gene.spacing = NULL,
-    legend.feature = NULL, legend.feature.position = NULL,
-    legend.feature.direction = NULL, legend.feature.background = NULL,
-    legend.feature.key = NULL, legend.feature.key.size = NULL,
-    legend.feature.key.width = NULL, legend.feature.key.height = NULL,
-    legend.feature.text = NULL, legend.feature.text.position = NULL,
-    legend.feature.title = NULL, legend.feature.title.position = NULL,
-    legend.feature.margin = NULL, legend.feature.spacing = NULL,
-    legend.region = NULL, legend.region.position = NULL,
-    legend.region.direction = NULL, legend.region.background = NULL,
-    legend.region.key = NULL, legend.region.key.size = NULL,
-    legend.region.key.width = NULL, legend.region.key.height = NULL,
-    legend.region.text = NULL, legend.region.text.position = NULL,
-    legend.region.title = NULL, legend.region.title.position = NULL,
-    legend.region.margin = NULL, legend.region.spacing = NULL,
-    ...) {
-  ggchord_theme_from_environment("default", environment(), list(...))
+#' seqs <- data.frame(
+#'   accver = c("A", "B"), length = c(1000, 800),
+#'   sequence_unit = "bp", topology = "linear"
+#' )
+#'
+#' genes <- data.frame(
+#'   accver = c("A", "A", "B"), feature_id = c("g1", "g2", "g3"),
+#'   start = c(100, 400, 150), end = c(240, 620, 380),
+#'   strand = c("+", "-", "+"), label = c("g1", "g2", "g3"),
+#'   type = c("CDS", "tRNA", "CDS")
+#' )
+#'
+#' p_basic <- ggchord(seqs) + geom_seq() +
+#'   geom_gene(data = genes) + coord_collinear()
+#'
+#' p_basic + theme_ggchord(base_size = 12,
+#'   legend.position = "bottom",
+#'   ggchord.axis.text = element_text(colour = "#40545A"))
+theme_ggchord <- function(base_size = 11, base_family = "", ...) {
+  ggchord_make_theme(base_size, base_family, "default", list(...))
 }
 
-#' @noRd
-ggchord_theme_variant <- function(preset) {
-  out <- theme_ggchord
-  body(out) <- substitute(
-    ggchord_theme_from_environment(PRESET, environment(), list(...)),
-    list(PRESET = preset)
-  )
-  environment(out) <- environment(theme_ggchord)
-  out
+#' Minimal sequence-plot appearance
+#' @inheritParams theme_ggchord
+#' @return An ordinary ggplot2 theme.
+#' @export
+#' @examples
+#' seqs <- data.frame(
+#'   accver = c("A", "B"), length = c(1000, 800),
+#'   sequence_unit = "bp", topology = "linear"
+#' )
+#'
+#' genes <- data.frame(
+#'   accver = c("A", "A", "B"), feature_id = c("g1", "g2", "g3"),
+#'   start = c(100, 400, 150), end = c(240, 620, 380),
+#'   strand = c("+", "-", "+"), label = c("g1", "g2", "g3"),
+#'   type = c("CDS", "tRNA", "CDS")
+#' )
+#'
+#' p_basic <- ggchord(seqs) + geom_seq() +
+#'   geom_gene(data = genes) + coord_collinear()
+#'
+#' p_basic + theme_ggchord_minimal(base_size = 11)
+theme_ggchord_minimal <- function(base_size = 11, base_family = "", ...) {
+  ggchord_make_theme(base_size, base_family, "minimal", list(...))
 }
 
-#' @rdname theme_ggchord
+#' Dark sequence-plot appearance
+#' @inheritParams theme_ggchord
+#' @return An ordinary ggplot2 theme.
 #' @export
-theme_ggchord_minimal <- ggchord_theme_variant("minimal")
-#' @rdname theme_ggchord
-#' @export
-theme_ggchord_dark <- ggchord_theme_variant("dark")
-#' @rdname theme_ggchord
-#' @export
-theme_ggchord_publication <- ggchord_theme_variant("publication")
-#' @rdname theme_ggchord
-#' @export
-theme_ggchord_plasmid <- ggchord_theme_variant("plasmid")
+#' @examples
+#' seqs <- data.frame(
+#'   accver = c("A", "B"), length = c(1000, 800),
+#'   sequence_unit = "bp", topology = "linear"
+#' )
+#'
+#' genes <- data.frame(
+#'   accver = c("A", "A", "B"), feature_id = c("g1", "g2", "g3"),
+#'   start = c(100, 400, 150), end = c(240, 620, 380),
+#'   strand = c("+", "-", "+"), label = c("g1", "g2", "g3"),
+#'   type = c("CDS", "tRNA", "CDS")
+#' )
+#'
+#' p_basic <- ggchord(seqs) + geom_seq() +
+#'   geom_gene(data = genes) + coord_collinear()
+#'
+#' p_basic + theme_ggchord_dark(base_size = 11)
+theme_ggchord_dark <- function(base_size = 11, base_family = "", ...) {
+  ggchord_make_theme(base_size, base_family, "dark", list(...))
+}
 
-#' @noRd
-ggchord_theme_from_environment <- function(preset, env, dots) {
-  old <- c(
-    base_size = "text = element_text(size = ...)",
-    base_family = "text = element_text(family = ...)",
-    axis_line = "axis.line", axis_ticks = "axis.ticks",
-    axis_text = "axis.text", seq_label = "seq.label",
-    gene_label = "gene.label", gene_label_segment = "gene.label.segment"
-  )
-  caller <- paste0("theme_ggchord", if (preset == "default") "" else paste0("_", preset), "()")
-  ggchord_reject_retired(dots, caller, old)
-  nms <- setdiff(names(formals(theme_ggchord)), "...")
-  values <- stats::setNames(lapply(nms, get, envir = env), nms)
-  supplied_shortcuts <- names(values)[!vapply(values, is.null, logical(1))]
-  native_overrides <- names(dots)
-  # Standard settings remain usable through dots and participate in role inheritance.
-  values <- c(values, dots)
-  dots <- list()
-  if (preset == "plasmid" && is.null(values$legend.feature)) {
-    values$legend.feature <- ggplot2::element_blank()
-  }
-  if (preset == "plasmid" && is.null(values$axis.gap)) {
-    values$axis.gap <- grid::unit(0, "mm")
-  }
-  if (preset == "plasmid" && is.null(values$axis.ticks.length)) {
-    values$axis.ticks.length <- grid::unit(2.2, "mm")
-  }
-  if (preset == "plasmid" && is.null(values$axis.minor.ticks.length)) {
-    values$axis.minor.ticks.length <- grid::unit(.8, "mm")
-  }
-  if (preset == "plasmid" && is.null(values$axis.text.offset)) {
-    values$axis.text.offset <- grid::unit(.8, "mm")
-    # The unit retains provenance through theme + theme, whose settings
-    # attribute alone cannot reveal a later equal-valued native override.
-    attr(values$axis.text.offset, "ggchord.automatic_axis_offset") <- TRUE
-  }
-  base_size <- if (preset == "publication") 9 else if (preset == "plasmid") 10 else 11
-  dark <- preset == "dark"
-  fg <- if (dark) "#F1F3F5" else "#30353A"
-  bg <- if (dark) "#17191C" else if (preset == "plasmid")
-    "#FFFCF5" else "white"
-  out <- ggplot2::theme_void(base_size = base_size, base_family = "") +
+#' Publication sequence-plot appearance
+#' @inheritParams theme_ggchord
+#' @return An ordinary ggplot2 theme.
+#' @export
+#' @examples
+#' seqs <- data.frame(
+#'   accver = c("A", "B"), length = c(1000, 800),
+#'   sequence_unit = "bp", topology = "linear"
+#' )
+#'
+#' genes <- data.frame(
+#'   accver = c("A", "A", "B"), feature_id = c("g1", "g2", "g3"),
+#'   start = c(100, 400, 150), end = c(240, 620, 380),
+#'   strand = c("+", "-", "+"), label = c("g1", "g2", "g3"),
+#'   type = c("CDS", "tRNA", "CDS")
+#' )
+#'
+#' p_basic <- ggchord(seqs) + geom_seq() +
+#'   geom_gene(data = genes) + coord_collinear()
+#'
+#' p_basic + theme_ggchord_publication(base_size = 10)
+theme_ggchord_publication <- function(base_size = 10, base_family = "", ...) {
+  ggchord_make_theme(base_size, base_family, "publication", list(...))
+}
+
+#' Plasmid sequence-plot appearance
+#' @inheritParams theme_ggchord
+#' @return An ordinary ggplot2 theme.
+#' @export
+#' @examples
+#' seqs <- data.frame(
+#'   accver = c("A", "B"), length = c(1000, 800),
+#'   sequence_unit = "bp", topology = "linear"
+#' )
+#'
+#' one_seq <- seqs[1, , drop = FALSE]
+#'
+#' genes <- data.frame(
+#'   accver = c("A", "A", "B"), feature_id = c("g1", "g2", "g3"),
+#'   start = c(100, 400, 150), end = c(240, 620, 380),
+#'   strand = c("+", "-", "+"), label = c("g1", "g2", "g3"),
+#'   type = c("CDS", "tRNA", "CDS")
+#' )
+#'
+#' ggchord(data = one_seq) + geom_seq() +
+#'   geom_gene(data = subset(genes, accver == "A")) +
+#'   coord_circular() + theme_ggchord_plasmid()
+theme_ggchord_plasmid <- function(base_size = 11, base_family = "", ...) {
+  ggchord_make_theme(base_size, base_family, "plasmid", list(...))
+}
+
+ggchord_make_theme <- function(base_size, base_family, variant, overrides) {
+  if (!is.numeric(base_size) || length(base_size) != 1L ||
+      !is.finite(base_size) || base_size <= 0)
+    ggchord_stop("base_size must be a positive font size in points")
+  if (!is.character(base_family) || length(base_family) != 1L || is.na(base_family))
+    ggchord_stop("base_family must be one font family")
+  ggchord_check_param_names(overrides, names(ggplot2::get_element_tree()), "theme_ggchord()")
+  blank <- ggplot2::element_blank()
+  dark <- variant == "dark"
+  publication <- variant == "publication"
+  fg <- if (dark) "#E8EFEE" else if (publication) "#111111" else "#24343B"
+  bg <- if (dark) "#17252A" else "white"
+  border <- if (dark) "#71888B" else "#D6DEDE"
+  axis_col <- if (dark) "#71888B" else if (publication) "#333333" else "#63767A"
+  line <- ggplot2::element_line(colour = axis_col, linewidth = .3)
+  axis_text <- ggplot2::element_text(colour = fg, size = ggplot2::rel(.8))
+  title <- ggplot2::element_text(colour = fg, size = ggplot2::rel(.9))
+  hide_lines <- variant %in% c("minimal", "plasmid")
+  sequence_text <- if (variant == "plasmid") blank else axis_text
+  background <- ggplot2::element_rect(fill = bg, colour = NA)
+  out <- ggplot2::theme_bw(base_size = base_size, base_family = base_family) +
     ggplot2::theme(
-      text = ggplot2::element_text(size = base_size, family = "", colour = fg),
-      plot.title = ggplot2::element_text(hjust = .5, size = ggplot2::rel(1.27),
-        face = "bold", colour = if (dark) fg else "#202428",
-        margin = ggplot2::margin(b = 4)),
-      plot.subtitle = ggplot2::element_text(size = ggplot2::rel(.9)),
-      plot.caption = ggplot2::element_text(size = ggplot2::rel(.72)),
-      plot.background = ggplot2::element_rect(fill = bg, colour = NA),
-      panel.background = ggplot2::element_rect(fill = bg, colour = NA),
-      plot.margin = if (preset == "plasmid") {
-        ggplot2::margin(6, 6, 6, 6)
-      } else ggplot2::margin(3, 2, 3, 2),
+      text = ggplot2::element_text(colour = fg),
+      panel.grid = blank,
+      panel.background = background,
+      plot.background = background,
+      panel.border = if (variant %in% c("minimal", "publication", "plasmid")) blank else
+        ggplot2::element_rect(fill = NA, colour = border, linewidth = .3),
+      legend.position = if (variant %in% c("publication", "plasmid")) "bottom" else "right",
       legend.background = ggplot2::element_rect(fill = NA, colour = NA),
       legend.key = ggplot2::element_rect(fill = NA, colour = NA),
-      legend.box.spacing = grid::unit(
-        if (preset == "minimal") 3 else if (preset == "plasmid") 5 else 4,
-        "mm"
-      ),
-      legend.spacing = grid::unit(2, "mm"),
-      legend.spacing.x = grid::unit(2, "mm"),
-      legend.spacing.y = grid::unit(4, "mm"),
-      legend.text = ggplot2::element_text(size = ggplot2::rel(.73), colour = fg),
-      legend.title = ggplot2::element_text(size = ggplot2::rel(.82), face = "bold", colour = fg),
-      ggchord.track.axis.line = ggplot2::element_line(colour = if (dark) fg else "#4F5962", linewidth = .25),
-      ggchord.track.axis.text = ggplot2::element_text(colour = if (dark) fg else "#4F5962", size = ggplot2::rel(2.2 * ggplot2::.pt / (11 * .72))),
-      ggchord.track.axis.title = ggplot2::element_text(),
-      ggchord.track.axis.text.offset = grid::unit(2.5, "mm"),
-      ggchord.track.axis.title.offset = grid::unit(5.5, "mm"),
-      ggchord.axis.line = ggplot2::element_line(
-        colour = if (dark) "#ADB5BD" else if (preset == "plasmid") "#252525" else if (preset == "minimal") "#90969B" else "#737A80",
-        linewidth = if (preset == "plasmid") .55 else if (preset == "minimal") .25 else .3),
-      ggchord.axis.ticks = ggplot2::element_line(
-        colour = if (dark) "#ADB5BD" else if (preset == "plasmid") "#252525" else if (preset == "minimal") "#A0A5AA" else "#8A9096",
-        linewidth = NULL),
-      ggchord.axis.minor.ticks = ggplot2::element_line(
-        colour = if (dark) "#8F979F" else "#A5AAAF", linewidth = NULL),
-      ggchord.axis.text = ggplot2::element_text(
-        colour = if (dark) fg else if (preset == "plasmid") "#252525" else "#3D4348", size = ggplot2::rel(if (preset == "plasmid") .78 else .72)),
-      ggchord.seq.label = ggplot2::element_text(
-        colour = if (dark) fg else "#252A2E", size = ggplot2::rel(.8)),
-      ggchord.gene.label = ggplot2::element_text(
-        colour = if (dark) fg else "#2B3035", size = ggplot2::rel(.64)),
-      ggchord.gene.label.segment = ggplot2::element_line(
-        colour = if (dark) "#CED4DA" else if (preset == "minimal") "#A1A6AA" else "#858B91",
-        linewidth = if (preset == "minimal") .2 else .25),
-      ggchord.feature.label = ggplot2::element_text(
-        colour = if (dark) fg else if (preset == "plasmid") "#202020" else "#27313A", size = ggplot2::rel(if (preset == "plasmid") .95 else .68)),
-      ggchord.feature.label.segment = ggplot2::element_line(
-        colour = if (dark) "#CED4DA" else if (preset == "plasmid") "#626A70" else "#7B858E",
-        linewidth = if (preset == "plasmid") .35 else .25),
-      ggchord.restriction.label = ggplot2::element_text(
-        colour = if (dark) fg else if (preset == "plasmid") "#111111" else "#7A271A", size = ggplot2::rel(if (preset == "plasmid") .95 else .62)),
-      ggchord.restriction.label.segment = ggplot2::element_line(
-        colour = if (dark) "#F1A7A0" else if (preset == "plasmid") "#858585" else "#B5473C", linewidth = if (preset == "plasmid") .28 else .25),
-      ggchord.seq.center.label = ggplot2::element_text(
-        colour = if (dark) fg else "#20282F", size = ggplot2::rel(1.05),
-        face = "bold", lineheight = 1.15),
-      ggchord.seq.center.name = ggplot2::element_text(
-        colour = if (dark) fg else "#111111", size = ggplot2::rel(if (preset == "plasmid") 1.15 else 1.35),
-        face = "bold", lineheight = 1),
-      ggchord.seq.center.length = ggplot2::element_text(
-        colour = if (dark) fg else "#111111", size = ggplot2::rel(.9),
-        face = "plain", lineheight = 1)
-    )
-  attr(out[["ggchord.feature.label.segment"]], "ggchord.automatic_feature_segment") <- TRUE
-  custom <- list(
-    ggchord.axis.line = values$axis.line,
-    ggchord.axis.ticks = values$axis.ticks,
-    ggchord.axis.minor.ticks = values$axis.minor.ticks,
-    ggchord.axis.text = values$axis.text,
-    ggchord.seq.label = values$seq.label,
-    ggchord.gene.label = values$gene.label,
-    ggchord.gene.label.segment = values$gene.label.segment,
-    ggchord.feature.label = values$feature.label,
-    ggchord.feature.label.segment = values$feature.label.segment,
-    ggchord.restriction.label = values$restriction.label,
-    ggchord.restriction.label.segment = values$restriction.label.segment,
-    ggchord.seq.center.label = values$seq.center.label,
-    ggchord.seq.center.name = values$seq.center.name,
-    ggchord.seq.center.length = values$seq.center.length
-  )
-  physical <- c("axis", "axis.gap", "axis.ticks.length", "axis.minor.ticks.length",
-    "axis.text.offset", "axis.text.orientation", "axis.text.check.overlap")
-  custom <- c(custom, stats::setNames(values[physical], paste0("ggchord.", physical)))
-  aliases <- sub("^ggchord[.]", "", names(custom))
-  conflict <- names(custom)[aliases %in% supplied_shortcuts & names(custom) %in% native_overrides]
-  if (length(conflict)) ggchord_stop(caller, ": use either the shortcut or its native theme element, not both: ",
-    paste(conflict, collapse = ", "))
-  custom <- custom[!names(custom) %in% native_overrides]
-  standard <- c("text", "plot.title", "plot.subtitle", "plot.caption", "plot.tag",
-    "plot.title.position", "plot.caption.position", "plot.tag.position",
-    "plot.background", "panel.background", "plot.margin", "legend.position",
-    "legend.justification", "legend.direction", "legend.box", "legend.box.just",
-    "legend.box.margin", "legend.box.background", "legend.box.spacing",
-    "legend.background", "legend.margin", "legend.spacing", "legend.spacing.x",
-    "legend.spacing.y", "legend.key", "legend.key.size", "legend.key.width",
-    "legend.key.height", "legend.text", "legend.text.position", "legend.title",
-    "legend.title.position")
-  dots <- values[setdiff(names(values), c(nms, standard))]
-  overrides <- c(values[standard], custom, dots)
-  overrides <- overrides[!vapply(overrides, is.null, logical(1))]
+      legend.text = ggplot2::element_text(colour = fg),
+      legend.title = ggplot2::element_text(colour = fg),
+      axis.line = line, axis.ticks = line, axis.text = axis_text,
+      axis.title = title,
+      ggchord.axis.line = if (hide_lines) blank else line,
+      ggchord.axis.ticks = if (variant == "plasmid") blank else line,
+      ggchord.axis.minor.ticks = if (variant == "plasmid") blank else line,
+      ggchord.axis.ticks.length = grid::unit(1.2, "mm"),
+      ggchord.axis.text = sequence_text,
+      ggchord.axis.title = if (variant == "plasmid") blank else title,
+      ggchord.track.axis.line = if (variant == "minimal") blank else line,
+      ggchord.track.axis.ticks = line,
+      ggchord.track.axis.ticks.length = grid::unit(1.2, "mm"),
+      ggchord.track.axis.text = axis_text,
+      ggchord.track.axis.title = title)
+  if (publication) out <- out + ggplot2::theme(plot.margin = ggplot2::margin(4, 4, 4, 4, unit = "mm"))
   if (length(overrides)) out <- out + do.call(ggplot2::theme, overrides)
-  settings <- ggchord_theme_settings(values)
-  settings$axis$text.offset.explicit <- 'axis.text.offset' %in% supplied_shortcuts ||
-    'ggchord.axis.text.offset' %in% native_overrides
-  settings$axis$tick.linewidth <- c(
-    major = if (preset == "plasmid") .45 else if (preset == "minimal") .2 else .25,
-    minor = .2)
-  settings$axis$circular.tick.linewidth <- c(
-    major = if (preset == "plasmid") .6 else .45,
-    minor = if (preset == "plasmid") .35 else .3)
-  attr(out, "ggchord.settings") <- settings
   attr(out, "ggchord.explicit_theme") <- overrides
   out
 }
@@ -526,7 +359,7 @@ ggchord_apply_theme_styles <- function(plot) {
     lyr <- plot$layers[[i]]
     if (identical(lyr$ggchord_type, "track")) {
       style <- ggchord_track_axis_style(plot, lyr$ggchord_params$track_id)
-      for (name in c("axis_line_params", "axis_text_params", "axis_title_params", "axis_check_overlap"))
+      for (name in c("axis_line_params", "axis_tick_params", "axis_text_params", "axis_title_params", "axis_check_overlap"))
         if (is.null(lyr$geom_params[[name]])) lyr$geom_params[[name]] <- style[[name]]
       plot$layers[[i]] <- lyr
     }

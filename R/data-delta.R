@@ -34,50 +34,29 @@ ggchord_delta_source <- function(text, caller) {
   list(mode = text[2L], original_preamble = text[1L], headers = headers, alignments = alignments)
 }
 
-#' Read existing delta alignments through an optional command-line decoder
+#' Read an existing NUCmer or PROmer delta file
 #'
-#' Invokes an existing show-coords executable with fixed -THld arguments to
-#' read NUCMER/PROMER delta. No alignment, filtering, sorting, merging or
-#' missing-character reconstruction is performed. Source FASTA paths in the
-#' delta preamble are retained as metadata, never opened or downloaded.
+#' Decode ranges with an already installed show-coords executable.
+#' Retain source blocks, the delta edit script and original position
+#' evidence. PROmer locations remain in bp and its reported identity
+#' continues to describe a protein alignment.
 #'
-#' Query becomes qaccver and reference becomes saccver. Original one-based
-#' inclusive directional endpoints and full lengths are checked against the
-#' tool output without shifting or inferring lengths. Original numeric-looking
-#' IDs stay strings. Source errors and signed delta scripts (including terminal
-#' zero) remain attached to each row, with physical alignment/header lines.
-#' No sequence characters are reconstructed from these scripts alone.
-#'
-#' pident is the decoder's reported percent identity, with its printed precision;
-#' it is not inferred from endpoints. For NUCMER this describes nucleotide
-#' alignment; for PROMER it describes amino-acid alignment, while endpoint and
-#' full-length coordinates still use bp. Similarity, stop percentages and frames
-#' remain separate native fields. qspan/sspan are source interval widths, not
-#' alignment-column counts. No BLAST length or read-support field is invented.
-#'
-#' @param file Optional local path vector or glob patterns, before files.
-#' @param files Optional additional delta paths or patterns.
-#' @param executable Existing show-coords executable name or path, default
-#'   "show-coords". It must already be installed; no environment is modified.
-#' @param query_ids,subject_ids Optional explicit named source-ID maps,
-#'   following [read_chain()]. Shared final IDs need explicit declaration on
-#'   both sides and consistent full lengths. Defaults never auto-prefix IDs.
-#' @param source_file Add .source_file to ribbon rows, default FALSE.
-#' @return A list with seq_data, ribbon_data and report. The report retains
-#'   original text/headers, native decoder output/messages, executable and
-#'   exact arguments. No executable version is guessed when the tool cannot
-#'   report one; record the prepared environment's version separately. All
-#'   source rows remain distinct; no source HSP IDs or observation counts are
-#'   manufactured. Parsing is explicit data preparation, never a draw-time step.
-#' @seealso [read_chain()], [read_maf()], [geom_link_ribbon()]
+#' @param file Local delta paths.
+#' @param executable Path or command for an existing show-coords.
+#' @param query_ids,subject_ids Optional named mappings to unambiguous
+#'   reference IDs.
+#' @param source_file Whether to include row-level source paths.
+#' @return A ggchord_import collection with sequences, links$delta and a
+#'   source/decoder report.
 #' @export
 #' @examples
 #' \dontrun{
-#' # Requires an existing show-coords executable and the source input bundle.
-#' observed <- read_delta("examples/genome-alignments/arabidopsis-first-pair.delta")
-#' head(observed$ribbon_data)
+#' f <- system.file("extdata", "tutorial", "arabidopsis-first-pair.delta",
+#'   package = "ggchord")
+#' x <- read_delta(f, executable = "show-coords")
+#' head(x$links$delta)
 #' }
-read_delta <- function(file = NULL, files = NULL, executable = 'show-coords',
+read_delta <- function(file, executable = "show-coords",
                        query_ids = NULL, subject_ids = NULL, source_file = FALSE) {
   caller <- 'read_delta()'
   if (!is.character(executable) || length(executable) != 1L || is.na(executable) || !nzchar(executable))
@@ -86,7 +65,7 @@ read_delta <- function(file = NULL, files = NULL, executable = 'show-coords',
   if (!nzchar(program)) ggchord_stop(caller, ': optional show-coords executable not found; select an existing installation or supply a standard pair table')
   if (!is.logical(source_file) || length(source_file) != 1L || is.na(source_file))
     ggchord_stop(caller, ': source_file must be TRUE or FALSE')
-  paths <- ggchord_resolve_files(file, files, 'read_delta')
+  paths <- ggchord_resolve_files(file, NULL, 'read_delta')
   text <- stats::setNames(lapply(paths, ggchord_read_text, caller = caller), paths)
   parsed <- lapply(text, ggchord_delta_source, caller = caller)
   headers <- unlist(lapply(parsed, `[[`, 'headers'), recursive = FALSE)
@@ -145,9 +124,9 @@ read_delta <- function(file = NULL, files = NULL, executable = 'show-coords',
     reports[[i]] <- list(file = paths[i], mode = input$mode, source = input,
       native_output = native_text, messages = messages, arguments = c('-THld', normalizePath(paths[i])))
   }
-  list(seq_data = ggchord_alignment_dictionary(dictionary, 'bp', caller),
-    ribbon_data = ggchord_rbind_fill(links) %||% data.frame(qaccver = character(),
-      saccver = character(), qstart = numeric(), qend = numeric(), sstart = numeric(), send = numeric()),
+  relations <- ggchord_canonical_read_links(links, caller, directional_order = TRUE)
+  ggchord_import_collection(ggchord_alignment_dictionary(dictionary, 'bp', caller),
+    links = list(delta = relations),
     report = list(raw_files = text, records = reports,
       decoder = list(executable = program, version = NA_character_,
         version_note = 'No version is inferred from a command path; record prepared environment provenance separately'),

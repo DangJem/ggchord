@@ -2,133 +2,74 @@
 % Please edit documentation in R/geom-gene.R
 \name{geom_gene_label_repel}
 \alias{geom_gene_label_repel}
-\title{Add an automatically arranged gene label layer}
+\title{Label gene intervals}
 \usage{
 geom_gene_label_repel(
   mapping = NULL,
   data = NULL,
-  label_layout = "radial",
-  label_wrap = NULL,
-  label_fit = "wrap",
-  label_max_lines = 2L,
-  label_side = "outside",
-  max_overlaps = Inf,
-  label_segment_overlap = "fade",
-  label_segment_overlap_alpha = 0.18,
-  label_segment_linetype = "auto",
-  position = "identity",
+  stat = "identity",
+  anchor_layer = NULL,
+  anchor = "middle",
+  position = NULL,
+  label_layout = label_layout_repel(),
+  ...,
+  na.rm = FALSE,
   show.legend = FALSE,
   inherit.aes = TRUE,
-  label_min_size = 1.5,
-  ...,
   id = NULL
 )
 }
 \arguments{
-\item{mapping}{Default NULL (uses pre-computed data)}
+\item{mapping}{Aesthetic mapping from \code{ggplot2::aes()}. A local mapping overrides the matching inherited channel.}
 
-\item{data}{Optional layer table or function. Default data follows the
-gene/CDS selection described in \code{\link[=ggchord]{ggchord()}}.}
+\item{data}{Optional label table or function. With a named anchor, the default data consists of the target entities.}
 
-\item{label_layout}{Character, default \code{"radial"}. Label layout:
-\code{"radial"} arranges horizontal external labels along sequence-relative
-contours, with straight normal leaders or a short normal departure followed
-by a long connector when displaced; \code{"auto"} uses shared vertical
-columns on the left/right and radial placement elsewhere; \code{"arc"}
-rotates text along the sequence tangent.}
+\item{stat}{A compatible ggplot2 Stat or its name. The default uses the supplied records.}
 
-\item{label_wrap}{Numeric or NULL, default NULL. When set, long gene
-annotations are wrapped at this many characters (e.g. 15), overriding
-\code{label_fit}.}
+\item{anchor_layer}{ID of the target layer. Labels use the target entities after its Stat and follow their displayed placement.}
 
-\item{label_fit}{Character, default \code{"wrap"}. How labels whose
-initial boxes are crowded or unusually wide are fitted before deterministic layout:
-\code{"wrap"} preserves the complete annotation over multiple lines,
-\code{"ellipsis"} uses a single shortened line, \code{"auto"} wraps and
-adds an ellipsis only if text exceeds \code{label_max_lines}, and
-\code{"none"} disables adaptive fitting. Explicit \code{"shrink"} uses
-internal-first feature placement and reduces the complete text only as
-far as \code{label_min_size}. Labels that still cannot fit use the
-existing adjacent/external placement or hiding policy, at their requested
-size. This choice uses feature placement rather than the external layout
-selected by \code{label_layout}; other fitting modes are unchanged.}
+\item{anchor}{Position on the entity or reference path that anchors the text.}
 
-\item{label_max_lines}{Positive integer, default 2. Maximum number of
-lines used by adaptive \code{"wrap"} or \code{"auto"} fitting.}
+\item{position}{Position adjustment. For bound labels, leave this unset to follow the target layer.}
 
-\item{label_side}{Character, default "outside". Which side of the arc
-the labels sit on. \code{"auto"} keeps the strand-based placement
-(same as before); \code{"outside"} moves labels that would be inside the
-chord (where they can overlap the ribbons) to the outside of their arc;
-\code{"inside"} does the opposite. Labels moved to the other side are
-connected with a dashed leader line (see \code{label_segment_linetype}).}
+\item{label_layout}{A fixed or repelled label layout declaration.}
 
-\item{max_overlaps}{Numeric, default Inf. Hide labels that still overlap
-more than this many other labels after repulsion (ggrepel-style
-decluttering). Use a finite value to clean up crowded plots.}
+\item{...}{Additional named visual styles and parameters accepted by this layer.}
 
-\item{label_segment_overlap}{Character, default \code{"fade"}.
-How portions of a leader line covered by another label are drawn:
-\code{"fade"} keeps them at reduced opacity, \code{"clip"} removes them,
-and \code{"show"} leaves the complete leader visible. This does not affect
-text wrapping, ellipsis or label hiding.}
+\item{na.rm}{Suppress warnings for missing observations that the layer can omit.}
 
-\item{label_segment_overlap_alpha}{Numeric in \code{[0, 1]}, default
-0.18. Relative opacity applied only to covered leader-line portions when
-\code{label_segment_overlap = "fade"}.}
+\item{show.legend}{Logical or named logical indicating whether the layer contributes legend keys.}
 
-\item{label_segment_linetype}{Character or numeric, default "auto".
-Leader-line linetype. \code{"auto"} draws solid lines, except for labels
-that were moved to the other side of their arc, which are drawn dashed.
-Any other valid ggplot2 linetype (e.g. \code{"solid"}, \code{"dashed"},
-\code{"dotted"}, or a numeric dash pattern) is used for all leader lines.}
+\item{inherit.aes}{Whether to inherit plot mappings and evaluate them on the layer data.}
 
-\item{position}{Position adjustment. Supply the same
-\code{\link[=position_feature_stack]{position_feature_stack()}} used by a gene/feature layer when labels are
-drawn from separate data or without a geometry layer.}
-
-\item{show.legend, inherit.aes}{Standard ggplot2 layer arguments.}
-
-\item{label_min_size}{Minimum text size in millimetres for explicit
-\code{label_fit = "shrink"}, default 1.5. It must not exceed the
-requested text size. Source text, requested/final size and fitting reason
-are retained in exported label geometry.}
-
-\item{...}{Additional text styles and drawing options. Automatic layouts
-own rotation, offsets, orientation and overlap policy; use
-\code{\link[=geom_gene_label]{geom_gene_label()}} for manual \code{label_rotation}, \code{label_radial_offset},
-\code{label_circum_offset}, \code{label_circum_limit}, \code{label_orientation} or
-\code{label_overlap}. These manual controls are rejected here.}
-
-\item{id}{Optional unique layer ID used in layout and source exports.}
+\item{id}{Optional plot-local layer identifier. Name a layer explicitly to scope a scale, anchor a label or export it.}
 }
 \value{
-A ggplot2 layer that draws labels and leader lines together.
+A ggplot2 layer for addition to a plot.
 }
 \description{
-Like \code{\link{geom_gene_label}()}, with deterministic external label
-placement. The default \code{"radial"} keeps horizontal text on a contour
-following each sequence; crowded names fan out along that contour.
-\code{"auto"} aligns left/right names in columns and uses radial placement
-elsewhere. \code{"arc"} rotates text along the sequence tangent.
+Label gene intervals
 }
 \details{
-Choose \code{label_layout} for automatic placement or
-\code{\link{geom_gene_label}()} for manual rotation and offsets.
+The source entities have \code{accver}, \code{start}, \code{end} and a label or label mapping. A bound label follows the target layer by identity. Text size, collision handling and leader placement are independent of the underlying feature geometry.
 }
 \examples{
-library(dplyr)
-data(seq_data_example)
-seqs <- seq_data_example |>
-  select(accver, length)
-data(gene_data_example)
-genes <- gene_data_example |>
-  group_by(accver) |>
-  slice_head(n = 2) |>
-  ungroup() |>
-  transmute(accver, start, end, strand = source_strand, type = "gene", anno)
-ggchord(prepare_ggchord_data(seq_data = seqs, feature_data = genes)) +
-  geom_seq() +
-  geom_feature(preset = "gene") +
-  geom_gene_label_repel(label_wrap = 20, id = "gene-callouts")
+library(ggplot2)
+
+seqs <- data.frame(
+  accver = c("A", "B"), length = c(1000, 800),
+  sequence_unit = "bp", topology = "linear"
+)
+
+genes <- data.frame(
+  accver = c("A", "A", "B"), feature_id = c("g1", "g2", "g3"),
+  start = c(100, 400, 150), end = c(240, 620, 380),
+  strand = c("+", "-", "+"), label = c("g1", "g2", "g3"),
+  type = c("CDS", "tRNA", "CDS")
+)
+
+ggchord(seqs) +
+  geom_gene(data = genes, id = "genes") +
+  geom_gene_label_repel(aes(label = label), anchor_layer = "genes") +
+  coord_collinear()
 }

@@ -2,11 +2,10 @@
 % Please edit documentation in R/data-delta.R
 \name{read_delta}
 \alias{read_delta}
-\title{Read existing delta alignments through an optional command-line decoder}
+\title{Read an existing NUCmer or PROmer delta file}
 \usage{
 read_delta(
-  file = NULL,
-  files = NULL,
+  file,
   executable = "show-coords",
   query_ids = NULL,
   subject_ids = NULL,
@@ -14,55 +13,30 @@ read_delta(
 )
 }
 \arguments{
-\item{file}{Optional local path vector or glob patterns, before files.}
+\item{file}{Local delta paths.}
 
-\item{files}{Optional additional delta paths or patterns.}
+\item{executable}{Path or command for an existing show-coords.}
 
-\item{executable}{Existing show-coords executable name or path, default
-"show-coords". It must already be installed; no environment is modified.}
+\item{query_ids, subject_ids}{Optional named mappings to unambiguous
+reference IDs.}
 
-\item{query_ids, subject_ids}{Optional explicit named source-ID maps,
-following \code{\link[=read_chain]{read_chain()}}. Shared final IDs need explicit declaration on
-both sides and consistent full lengths. Defaults never auto-prefix IDs.}
-
-\item{source_file}{Add .source_file to ribbon rows, default FALSE.}
+\item{source_file}{Whether to include row-level source paths.}
 }
 \value{
-A list with seq_data, ribbon_data and report. The report retains
-original text/headers, native decoder output/messages, executable and
-exact arguments. No executable version is guessed when the tool cannot
-report one; record the prepared environment's version separately. All
-source rows remain distinct; no source HSP IDs or observation counts are
-manufactured. Parsing is explicit data preparation, never a draw-time step.
+A ggchord_import collection with sequences, links$delta and a
+source/decoder report.
 }
 \description{
-Invokes an existing show-coords executable with fixed -THld arguments to
-read NUCMER/PROMER delta. No alignment, filtering, sorting, merging or
-missing-character reconstruction is performed. Source FASTA paths in the
-delta preamble are retained as metadata, never opened or downloaded.
-}
-\details{
-Query becomes qaccver and reference becomes saccver. Original one-based
-inclusive directional endpoints and full lengths are checked against the
-tool output without shifting or inferring lengths. Original numeric-looking
-IDs stay strings. Source errors and signed delta scripts (including terminal
-zero) remain attached to each row, with physical alignment/header lines.
-No sequence characters are reconstructed from these scripts alone.
-
-pident is the decoder's reported percent identity, with its printed precision;
-it is not inferred from endpoints. For NUCMER this describes nucleotide
-alignment; for PROMER it describes amino-acid alignment, while endpoint and
-full-length coordinates still use bp. Similarity, stop percentages and frames
-remain separate native fields. qspan/sspan are source interval widths, not
-alignment-column counts. No BLAST length or read-support field is invented.
+Decode ranges with an already installed show-coords executable.
+Retain source blocks, the delta edit script and original position
+evidence. PROmer locations remain in bp and its reported identity
+continues to describe a protein alignment.
 }
 \examples{
 \dontrun{
-# Requires an existing show-coords executable and the source input bundle.
-observed <- read_delta("examples/genome-alignments/arabidopsis-first-pair.delta")
-head(observed$ribbon_data)
+f <- system.file("extdata", "tutorial", "arabidopsis-first-pair.delta",
+  package = "ggchord")
+x <- read_delta(f, executable = "show-coords")
+head(x$links$delta)
 }
-}
-\seealso{
-\code{\link[=read_chain]{read_chain()}}, \code{\link[=read_maf]{read_maf()}}, \code{\link[=geom_link_ribbon]{geom_link_ribbon()}}
 }

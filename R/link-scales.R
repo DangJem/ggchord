@@ -9,23 +9,17 @@
 #' @name scale_link
 NULL
 
-#' @rdname scale_link
-#' @export
+#' @noRd
 scale_link_colour_manual <- function(..., values) ggplot2::scale_colour_manual(..., values = values, aesthetics = "link_colour")
-#' @rdname scale_link
-#' @export
+#' @noRd
 scale_link_color_manual <- scale_link_colour_manual
-#' @rdname scale_link
-#' @export
+#' @noRd
 scale_link_alpha_manual <- function(..., values) ggplot2::scale_alpha_manual(..., values = values, aesthetics = "link_alpha")
-#' @rdname scale_link
-#' @export
+#' @noRd
 scale_link_linewidth_manual <- function(..., values) ggplot2::scale_linewidth_manual(..., values = values, aesthetics = "link_linewidth")
-#' @rdname scale_link
-#' @export
+#' @noRd
 scale_link_linetype_manual <- function(..., values) ggplot2::scale_linetype_manual(..., values = values, aesthetics = "link_linetype")
-#' @rdname scale_link
-#' @export
+#' @noRd
 scale_link_colour_gradientn <- function(...) {
   args <- list(...)
   if (!"guide" %in% names(args)) {
@@ -33,14 +27,11 @@ scale_link_colour_gradientn <- function(...) {
   }
   do.call(ggplot2::scale_colour_gradientn, c(args, list(aesthetics = "link_colour")))
 }
-#' @rdname scale_link
-#' @export
+#' @noRd
 scale_link_color_gradientn <- scale_link_colour_gradientn
-#' @rdname scale_link
-#' @export
+#' @noRd
 scale_link_alpha_continuous <- function(...) ggplot2::scale_alpha_continuous(..., aesthetics = "link_alpha")
-#' @rdname scale_link
-#' @export
+#' @noRd
 scale_link_linewidth_continuous <- function(...) ggplot2::scale_linewidth_continuous(..., aesthetics = "link_linewidth")
 
 ggchord_add_link_scales <- function(plot) {

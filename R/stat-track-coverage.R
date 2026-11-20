@@ -26,27 +26,46 @@
 #'   table. Dividing the two counts by `denominator` gives `coverage` and
 #'   `mean_depth`. Windows without a hit in an observed group have zero counts.
 #' @export
+#' @param na.rm Suppress warnings for missing observations that the layer can omit.
 #' @examples
-#' reference <- data.frame(accver = "A", length = 10L, sequence_unit = "bp")
-#' intervals <- data.frame(accver = "A", start = c(3, 4, 10), end = c(6, 5, 10))
-#' windows <- data.frame(accver = "A", start = c(1, 3), end = c(4, 6),
-#'                       window_id = c("first", "overlap"))
-#' ggchord(reference) + geom_seq() +
-#'   track_band("coverage", width = grid::unit(10, "mm")) +
-#'   stat_coverage(data = intervals, windows = windows, geom = "track_point",
-#'                 track = "coverage", size = 3) +
+#' library(ggplot2)
+#'
+#' seqs <- data.frame(
+#'   accver = c("A", "B"), length = c(1000, 800),
+#'   sequence_unit = "bp", topology = "linear"
+#' )
+#'
+#' genes <- data.frame(
+#'   accver = c("A", "A", "B"), feature_id = c("g1", "g2", "g3"),
+#'   start = c(100, 400, 150), end = c(240, 620, 380),
+#'   strand = c("+", "-", "+"), label = c("g1", "g2", "g3"),
+#'   type = c("CDS", "tRNA", "CDS")
+#' )
+#'
+#' intervals <- genes[c("accver", "start", "end")]
+#'
+#' ggchord(data = seqs) + geom_seq() +
+#'   track_band("coverage", thickness = 5) +
+#'   stat_coverage(data = intervals, binwidth = 100, track = "coverage") +
+#'   scale_track_value("coverage", limits = c(0, 1),
+#'                     labels = scales::label_percent()) +
 #'   coord_collinear()
-#' ggchord(reference) + geom_seq() +
-#'   geom_track_line(aes(y = after_stat(mean_depth)),
-#'                   data = intervals, stat = "coverage", binwidth = 4) +
+#'
+#' ggchord(data = seqs) +
+#'   geom_track_line(data = intervals, aes(y = after_stat(mean_depth)),
+#'                   stat = "coverage", binwidth = 100) +
 #'   coord_collinear()
 stat_coverage <- function(mapping = NULL, data = NULL, geom = "track_col",
-    position = "identity", ..., binwidth = NULL, windows = NULL, track = NULL,
-    id = NULL, show.legend = NA, inherit.aes = TRUE) {
+    position = "identity", binwidth = NULL, windows = NULL, bounds = "error",
+    track = "default", ..., na.rm = FALSE, show.legend = NA,
+    inherit.aes = TRUE, id = NULL) {
   ggchord_check_argument_names(sys.call(), sys.function())
-  geom_track(mapping = mapping, data = data, geom = sub("^track_", "", geom),
-    stat = "coverage", position = position, ..., binwidth = binwidth,
-    windows = windows, track = track, id = id, show.legend = show.legend, inherit.aes = inherit.aes)
+  if (!is.character(geom) || length(geom) != 1L || !startsWith(geom, "track_"))
+    ggchord_stop("stat_coverage(): choose a compatible track geometry")
+  geom_track(mapping, data, geom = sub("^track_", "", geom), stat = "coverage",
+    position = position, track = track, ..., binwidth = binwidth, windows = windows,
+    bounds = bounds, na.rm = na.rm, show.legend = show.legend,
+    inherit.aes = inherit.aes, id = id)
 }
 
 ggchord_coverage_grid <- function(sequences, binwidth, windows, observed) {
@@ -107,17 +126,24 @@ ggchord_coverage_windows <- function(data, grid) {
   covered <- depth_sum <- numeric(nrow(grid))
   for (j in seq_along(intersections)) {
     i <- sort(intersections[[j]])
-    hits[[j]] <- sort(data$.ggchord_source_index[ord[i]])
+    member <- data$.ggchord_source_index[ord[i]]
+    hits[[j]] <- sort(unique(member[!is.na(member)]))
     if (!length(i)) next
     a <- pmax(left[i], grid$window_start[j])
     b <- pmin(right[i], grid$window_end[j])
-    depth_sum[j] <- sum(b - a + 1)
+    part_groups <- split(seq_along(a), member)
+    depth_sum[j] <- sum(vapply(part_groups, function(at) {
+      aa <- a[at]; bb <- b[at]
+      sum(pmax(0, bb - pmax(aa - 1, c(aa[1L] - 1, head(cummax(bb), -1L)))))
+    }, numeric(1)))
     previous_end <- c(a[1L] - 1, utils::head(cummax(b), -1L))
     covered[j] <- sum(pmax(0, b - pmax(a - 1, previous_end)))
   }
   grid$xmin <- grid$window_start - 1
   grid$xmax <- grid$window_end
-  grid$x <- (grid$xmin + grid$xmax) / 2
+  grid$x <- (grid$window_start + grid$window_end) / 2
+  grid$start <- grid$window_start
+  grid$end <- grid$window_end
   grid$width <- grid$denominator
   grid$covered <- covered
   grid$depth_sum <- depth_sum
@@ -159,22 +185,6 @@ ggchord_coverage_input <- function(input, mapping, sequences, bounds, index) {
   bad <- raw$.coverage_start > raw$.coverage_end
   if (any(bad)) ggchord_stop("Coverage requires start <= end; split origin-crossing intervals before aggregation",
     ggchord_input_rows(bad))
-  parts <- raw[["segments"]]
-  if (!is.null(parts)) {
-    if (!is.list(parts) || is.data.frame(parts) || length(parts) != nrow(raw))
-      ggchord_stop("Coverage expects segments to be a list-column of intervals")
-    # Readers such as read_genbank() keep a segment table even for a single
-    # ordinary interval. A compound envelope, in contrast, can include gaps.
-    simple <- vapply(seq_along(parts), function(i) {
-      s <- parts[[i]]
-      if (is.null(s) || (is.data.frame(s) && !nrow(s))) return(TRUE)
-      is.data.frame(s) && nrow(s) == 1L && all(c("start", "end") %in% names(s)) &&
-        isTRUE(s$start == raw$.coverage_start[i]) && isTRUE(s$end == raw$.coverage_end[i]) &&
-        (is.null(s$segment_type) || isTRUE(s$segment_type != "gap"))
-    }, logical(1))
-    if (any(!simple)) ggchord_stop("Coverage needs one interval per row; expand the segments column before aggregation",
-      ggchord_input_rows(!simple))
-  }
   bad <- raw$.coverage_start < 1 | raw$.coverage_end > sequences$length[index]
   if (bounds == "error" && any(bad))
     ggchord_stop("Coverage interval outside sequence length in start/end; use bounds='clip' to intersect it with the sequence",

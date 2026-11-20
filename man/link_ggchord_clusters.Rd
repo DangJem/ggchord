@@ -5,16 +5,17 @@
 \title{Convert explicit homology-cluster membership to feature links}
 \usage{
 link_ggchord_clusters(
-  feature_data,
+  features,
   membership,
   pairs,
-  paralogs = c("drop", "all"),
-  segment_policy = c("error", "span"),
+  paralogs = "drop",
+  segment_policy = "error",
+  unmatched = "error",
   max_links = 10000
 )
 }
 \arguments{
-\item{feature_data}{Feature data frame with \code{feature_id}, \code{accver}, \code{start},
+\item{features}{Feature data frame with \code{feature_id}, \code{accver}, \code{start},
 \code{end}, and optional \code{strand}, accepted by \code{\link[=as_ggchord_feature]{as_ggchord_feature()}}.}
 
 \item{membership}{Data frame with \code{feature_id} and \code{cluster_id}. A feature
@@ -28,17 +29,13 @@ can belong to one cluster; extra columns are retained in the report.}
 \item{segment_policy}{\code{"error"} (default) rejects repeated feature IDs;
 \code{"span"} explicitly uses a validated discontinuous feature's outer bounds.}
 
+\item{unmatched}{Whether missing or unplaced feature matches form an error or are omitted with a report.}
+
 \item{max_links}{Positive integer upper limit for generated rows, default
 10000. Exceeding it stops before Cartesian products are allocated.}
 }
 \value{
-A list with \code{data}, an ordinary link data frame, and \code{report}.
-Links retain cluster/member IDs, strands, source feature/membership rows
-and segment tables. \code{report$comparisons} lists member counts, output counts
-and retention/omission reasons for each requested pair and clusters
-represented on either side (clusters absent from both sides are omitted);
-\code{report$members} retains membership metadata with resolution status.
-\code{report$valid} is false when membership contains unknown feature IDs.
+A link table with source members and a data report.
 }
 \description{
 Connects feature intervals belonging to the same declared cluster for
@@ -70,57 +67,22 @@ listed in the report. Negative strands reverse their link endpoints;
 unknown strands retain increasing coordinates and \code{orientation_known = FALSE}.
 }
 \examples{
-library(ggchord)
-library(dplyr)
-data(plasmid_example_pUC19)
-data(plasmid_example_pETDuet_1)
-homolog_source <- bind_rows(plasmid_example_pUC19, plasmid_example_pETDuet_1)
-homolog_seq <- homolog_source |>
-  select(accver, length)
-cluster_features <- homolog_source |>
-  find_common_features() |>
-  filter(type == "CDS", anno == "AmpR") |>
-  select(accver, start, end, strand, anno) |>
-  arrange(match(accver, homolog_source$accver)) |>
-  mutate(feature_id = paste(accver, start, end, sep = ":"))
-# Membership is computed from exact strand-corrected CDS DNA equality, not gene names.
-reverse_complement <- function(sequence) {
-  bases <- strsplit(sequence, "")[[1]]
-  chartr("ACGT", "TGCA", paste(rev(bases), collapse = ""))
-}
-coding_sequences <- cluster_features |>
-  left_join(select(homolog_source, accver, sequence), by = "accver") |>
-  rowwise() |>
-  mutate(
-    coding_dna = substr(sequence, start, end),
-    coding_dna = if (strand == "-") reverse_complement(coding_dna) else coding_dna
-  ) |>
-  ungroup()
-cds_dna <- pull(coding_sequences, coding_dna)
-membership <- tibble(
-  feature_id = cluster_features$feature_id,
-  cluster_id = paste0("exact_CDS_", match(cds_dna, unique(cds_dna)))
+seqs <- data.frame(
+  accver = c("A", "B"), length = c(1000, 800),
+  sequence_unit = "bp", topology = "linear"
 )
-homologs <- link_ggchord_clusters(cluster_features, membership,
-  pairs = tibble(qaccver = homolog_seq$accver[1], saccver = homolog_seq$accver[2])
+
+genes <- data.frame(
+  accver = c("A", "A", "B"), feature_id = c("g1", "g2", "g3"),
+  start = c(100, 400, 150), end = c(240, 620, 380),
+  strand = c("+", "-", "+"), label = c("g1", "g2", "g3"),
+  type = c("CDS", "tRNA", "CDS")
 )
-loci <- find_ggchord_loci(homolog_seq, cluster_features,
-  targets = cluster_features$feature_id[cluster_features$anno == "AmpR"][1],
-  upstream = 100, downstream = 100
-)
-gene_palette <- c("+" = "#56887C", "-" = "#B58169", "." = "#AAB9AE")
-doc_theme <- theme_ggchord_publication(
-  axis.text = element_text(size = 9), axis.text.check.overlap = TRUE
-) +
-  theme(legend.position = "bottom")
-p_homologs <- ggchord(data = homolog_seq) +
-  geom_link_ribbon(data = homologs$data, fill = "#ADC5B9", alpha = .6) +
-  geom_seq() +
-  geom_feature(preset = "gene", data = cluster_features) +
-  geom_seq_label(size = 4) +
-  coord_collinear() +
-  scale_gene_fill_manual(values = gene_palette) +
-  doc_theme
+
+membership <- data.frame(feature_id=c("g1","g3"), cluster_id="cluster1")
+pairs <- data.frame(qaccver="A", saccver="B")
+cluster_links <- link_ggchord_clusters(genes, membership, pairs)
+ggchord(seqs) + geom_link_ribbon(data=cluster_links)
 }
 \seealso{
 \code{\link{ggchord_data_contract}}

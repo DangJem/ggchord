@@ -2,47 +2,57 @@
 % Please edit documentation in R/coord-circular.R
 \name{coord_circular}
 \alias{coord_circular}
-\title{Single-sequence circular coordinate system}
+\title{Project a reference sequence onto a circle}
 \usage{
 coord_circular(
-  rotation = 0,
-  direction = c("clockwise", "counterclockwise"),
-  gap = 0,
-  ratio = 1,
+  start_angle = 0,
+  direction = "clockwise",
   xlim = NULL,
   ylim = NULL,
   expand = FALSE,
-  clip = "off",
-  fit = c("labels", "geometry", "manual")
+  clip = "on",
+  fit = "geometry"
 )
 }
 \arguments{
-\item{rotation}{Counterclockwise rotation in degrees from a 12-o'clock
-genomic origin. The default 0 keeps the origin at 12 o'clock; 90 places
-it at 9 o'clock, and -90 at 3 o'clock.}
+\item{start_angle}{Initial angle in degrees counterclockwise from the right.}
 
-\item{direction}{Direction of increasing genomic coordinates.}
+\item{direction}{Direction of the positive reference frame.}
 
-\item{gap}{Opening in degrees. Zero draws a closed circle.}
+\item{xlim, ylim}{Optional increasing pairs of view limits.}
 
-\item{ratio}{Fixed y/x aspect ratio, default 1.}
+\item{expand}{Whether to expand automatic view limits.}
 
-\item{xlim, ylim}{Optional user limits. Explicit limits take priority over
-automatically fitted limits.}
+\item{clip}{Panel clipping, \code{"on"} or \code{"off"}.}
 
-\item{expand}{Logical. Expand coordinate limits, default FALSE. Automatic
-fitting already includes a small safety margin; set TRUE to request the
-additional ggplot2 coordinate expansion.}
-
-\item{clip}{Whether drawing is clipped to the panel, default \code{"off"}.}
-
-\item{fit}{Fitting strategy: \code{"labels"} includes measured label boxes,
-\code{"geometry"} fits geometric elements only, and \code{"manual"}
-requires explicit \code{xlim} and \code{ylim}.}
+\item{fit}{Fit geometry, include labels, or require manual limits.}
 }
 \value{
-A Coord object for ggplot2 composition.
+A coordinate system for a ggchord plot.
 }
 \description{
-Single-sequence circular coordinate system
+Project a reference sequence onto a circle
+}
+\examples{
+library(ggplot2)
+
+seqs <- data.frame(
+  accver = c("A", "B"), length = c(1000, 800),
+  sequence_unit = "bp", topology = "linear"
+)
+
+one_seq <- seqs[1, , drop = FALSE]
+
+genes <- data.frame(
+  accver = c("A", "A", "B"), feature_id = c("g1", "g2", "g3"),
+  start = c(100, 400, 150), end = c(240, 620, 380),
+  strand = c("+", "-", "+"), label = c("g1", "g2", "g3"),
+  type = c("CDS", "tRNA", "CDS")
+)
+
+ggchord(data = one_seq) +
+  geom_seq() +
+  geom_gene(data = subset(genes, accver == "A"), aes(fill = type)) +
+  layout_sequences(angular_gap = 12) +
+  coord_circular(start_angle = 90)
 }

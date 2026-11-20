@@ -1,37 +1,51 @@
-# Chemistry colour values: ggmsa scheme_NT / scheme_AA, Artistic-2.0.
-# Only palette values are adapted; no ggmsa rendering code is used. See inst/NOTICE.
-
-#' Colour residue cells by chemical group
+#' Colour residue cells by alphabet
 #'
-#' A standard discrete fill scale for [geom_residue()]. DNA/RNA use separate
-#' colours for A, C, G and T/U; AA groups residues by side-chain chemistry.
-#' Gaps, stops and ambiguous symbols are neutral. Lowercase symbols receive
-#' the same colours as uppercase symbols. The chemistry colours follow ggmsa;
-#' this scale does not compute conservation or an alignment.
-#'
-#' @param alphabet Explicit DNA, RNA or AA palette. Defaults to DNA for direct
-#'   calls. geom_residue() uses the data's alphabet column, otherwise AA.
-#' @param ... Additional arguments to [ggplot2::scale_fill_manual()], including
-#'   name, breaks and guide. Use scale_fill_manual() for custom colours.
-#' @return A ggplot2 discrete fill scale. Explicit user scales take priority
-#'   over a residue layer's inferred default.
+#' @param alphabet DNA, RNA or AA.
+#' @param name Fill legend title. The default is the alphabet name.
+#' @param values Optional named colours overriding the defaults for those symbols.
+#' @param na.value Colour for missing or unmapped values.
+#' @param guide A standard discrete guide.
+#' @param ... Additional options for a discrete fill scale.
+#' @return An ordinary ggplot2 fill scale.
 #' @export
 #' @examples
-#' cells <- as_ggchord_alignment(c(A = "AC-G", B = "ACTG"), "DNA")
+#' library(ggplot2)
+#'
+#' cells <- as_ggchord_alignment(c(A = "AC-GT", B = "ACTGT"), alphabet = "DNA")
 #' ggplot2::ggplot(cells, aes(alignment_column, accver, label = symbol)) +
-#'   geom_residue() +
-#'   scale_fill_residue("DNA", guide = "none")
-scale_fill_residue <- function(alphabet = c("DNA", "RNA", "AA"), ...) {
-  alphabet <- match.arg(alphabet)
-  values <- stats::setNames(rep("#FFFFFF", 29), c(LETTERS, "-", ".", "*"))
+#'   geom_residue(aes(fill = symbol)) +
+#'   scale_fill_residue("DNA", values = c(G = "#D9A400"))
+scale_fill_residue <- function(alphabet = "DNA", name = waiver(), values = NULL,
+    na.value = "#B8C1C5", guide = "legend", ...) {
+  ggchord_check_argument_names(sys.call(), sys.function(), ggplot2::scale_fill_manual)
+  alphabet <- ggchord_match_choice(alphabet, c("DNA", "RNA", "AA"), "alphabet")
+  dots <- list(...)
+  ggchord_check_param_names(dots, c("breaks", "labels", "limits", "drop", "na.translate",
+    "expand", "call", "super"), "scale_fill_residue()")
+  allowed <- if (alphabet == "AA") c(LETTERS, "*", "-", ".") else
+    strsplit(if (alphabet == "RNA") "ACGURYSWKMBDHVN-." else "ACGTRYSWKMBDHVN-.", "")[[1L]]
+  palette <- stats::setNames(rep("#B8C1C5", length(allowed)), allowed)
   if (alphabet == "AA") {
-    groups <- list("#F2BE3C" = c("A", "G", "I", "L", "M", "P", "V"),
-      "#FF6D6D" = c("D", "E"), "#769DCC" = c("H", "K", "R"),
-      "#74CE98" = c("C", "N", "Q", "S", "T"), "#FFFF66" = c("F", "W", "Y"))
-    for (colour in names(groups)) values[groups[[colour]]] <- colour
+    groups <- list("#E41A1C" = c("D", "E"), "#377EB8" = c("K", "R", "H"),
+      "#4DAF4A" = c("S", "T", "N", "Q"), "#FFB000" = c("A", "V", "I", "L", "M", "F", "W", "Y"),
+      "#984EA3" = "C", "#999999" = "G", "#A65628" = "P", "#222222" = "*")
+    for (colour in names(groups)) palette[groups[[colour]]] <- colour
   } else {
-    values[c("A", "C", "G", "T", "U")] <- c("#FF6D6D", "#769DCC", "#F2BE3C", "#74CE98", "#74CE98")
+    letters <- c("A", "C", "G", if (alphabet == "RNA") "U" else "T")
+    palette[letters] <- c("#4DAF4A", "#377EB8", "#FFB000", "#E41A1C")
   }
-  values <- c(values, stats::setNames(values[LETTERS], tolower(LETTERS)))
-  ggplot2::scale_fill_manual(values = values, ...)
+  palette[c("-", ".")] <- "transparent"
+  if (!is.null(values)) {
+    if (!is.character(values) || is.null(names(values)) || anyNA(values) ||
+        anyNA(names(values)) || anyDuplicated(toupper(names(values))) ||
+        any(!toupper(names(values)) %in% allowed))
+      ggchord_stop("values must provide colours for distinct valid residue symbols")
+    palette[toupper(names(values))] <- values
+  }
+  if (!is.character(na.value) || length(na.value) != 1L || is.na(na.value))
+    ggchord_stop("na.value must be one colour")
+  tryCatch(grDevices::col2rgb(c(palette, na.value)), error = function(e)
+    ggchord_stop("scale_fill_residue(): ", conditionMessage(e)))
+  if (ggplot2::is_waiver(name)) name <- alphabet
+  ggplot2::scale_fill_manual(name = name, values = palette, na.value = na.value, guide = guide, ...)
 }

@@ -201,10 +201,14 @@ ggchord_segmented_transform <- function(seqs, lens, coord, length_mode = "propor
   data$accver <- as.character(data$accver); data$row_id <- as.character(data$row_id)
   groups <- lapply(rows, function(row) data$accver[data$row_id == row])
   display_lens <- if (identical(length_mode, "equal")) stats::setNames(rep(max(lens), length(lens)), names(lens)) else lens
-  totals <- vapply(groups, function(ids) sum(display_lens[ids]) +
-    max(0, length(ids) - 1L) * coord$collinear_segment_gap, numeric(1))
-  if (any(!is.finite(totals))) ggchord_stop("coord_collinear(): segmented display widths must remain finite")
-  scale <- 2 / max(totals)
+  gap <- coord$collinear_segment_gap_mm * ggchord_layout_units_per_mm(
+    if (identical(coord$collinear_seq_axis, "vertical")) 2L else 1L)
+  counts <- lengths(groups) - 1L
+  lengths <- vapply(groups, function(ids) sum(display_lens[ids]), numeric(1))
+  scale <- min((2 - counts * gap) / lengths)
+  if (!is.finite(scale) || scale <= 0) ggchord_stop("Display gaps leave no room for reference windows")
+  gap_source <- gap / scale
+  totals <- lengths + counts * gap_source
   per_sequence_scale <- scale * display_lens / lens
   fraction <- switch(coord$collinear_align, left = 0, center = .5, right = 1)
   offset <- stats::setNames(numeric(length(seqs)), seqs)
@@ -212,7 +216,7 @@ ggchord_segmented_transform <- function(seqs, lens, coord, length_mode = "propor
   left_break <- right_break <- stats::setNames(rep(FALSE, length(seqs)), seqs)
   for (i in seq_along(groups)) {
     ids <- groups[[i]]
-    offset[ids] <- (c(0, utils::head(cumsum(display_lens[ids] + coord$collinear_segment_gap), -1L)) -
+    offset[ids] <- (c(0, utils::head(cumsum(display_lens[ids] + gap_source), -1L)) -
       totals[i] * fraction) * scale
     slot[ids] <- seq_along(ids)
     if (length(ids) > 1L) {
@@ -239,7 +243,7 @@ ggchord_segmented_transform <- function(seqs, lens, coord, length_mode = "propor
     anchor_x = NA_real_, align = coord$collinear_align,
     row_id = row_id, row_index = match(row_id, rows), segment_index = unname(slot),
     break_left = unname(left_break), break_right = unname(right_break),
-    gap_bp = coord$collinear_segment_gap, stringsAsFactors = FALSE)
+    gap_bp = gap_source, stringsAsFactors = FALSE)
   list(orientation = orientation, offset = offset, table = table,
     diagnostics = data.frame(accver = seqs, orientation = unname(orientation),
       status = "explicit_segment", stringsAsFactors = FALSE))

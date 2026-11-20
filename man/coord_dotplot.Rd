@@ -2,63 +2,51 @@
 % Please edit documentation in R/coord-dotplot.R
 \name{coord_dotplot}
 \alias{coord_dotplot}
-\title{Two-axis HSP Dotplot coordinates}
+\title{Project HSPs onto two source-reference axes}
 \usage{
 coord_dotplot(
-  x_seqs = NULL,
-  y_seqs = NULL,
-  x_orientation = 1,
-  y_orientation = 1,
-  gap = NULL,
   ratio = 1,
   xlim = NULL,
   ylim = NULL,
   expand = FALSE,
-  clip = "on"
+  clip = "on",
+  fit = "geometry"
 )
 }
 \arguments{
-\item{x_seqs, y_seqs}{Optional unique accession vectors in axis order.
-Defaults to the query/subject accessions occurring in alignment layers,
-or all sequences when there are no alignments. Rows outside a selected
-axis set are omitted and recorded; self and repeated HSP rows are retained.}
+\item{ratio}{Positive ratio of y to x units on the device, or NULL.}
 
-\item{x_orientation, y_orientation}{Display direction: 1 or -1, either a
-scalar or a vector named by every selected accession. Input is unchanged.}
+\item{xlim, ylim}{Optional increasing pairs of view limits.}
 
-\item{gap}{Nonnegative spacing in native sequence units between axis
-segments. \code{NULL} uses five percent of the longest sequence.}
+\item{expand}{Whether to expand automatic view limits.}
 
-\item{ratio}{Ratio of physical y units to physical x units, default 1.}
+\item{clip}{Panel clipping, \code{"on"} or \code{"off"}.}
 
-\item{xlim, ylim}{Optional global concatenated position limits. These zoom
-the panel without changing exported HSP endpoints.}
-
-\item{expand}{Logical. Expand panel limits, default FALSE.}
-
-\item{clip}{Panel clipping, \code{"on"} (default) or \code{"off"}.}
+\item{fit}{Fit geometry, include labels, or require manual limits.}
 }
 \value{
-A ggplot2 Coord object.
+A coordinate system for a ggchord plot.
 }
 \description{
-Query positions occupy x and subject positions occupy y. Each axis has
-independently ordered sequence segments, optionally reversed for display.
-Coordinates are one-based positions in native sequence units (bp or aa).
-Concatenation gaps are display spacing, not omitted biological sequence.
-No sequence backbone layer is required. Use \code{\link[=geom_alignment_segment]{geom_alignment_segment()}} to
-display HSPs. Fixed-scale facets on both qaccver and saccver show ordered
-sequence pairs with the same coordinate axes. Use facet_wrap for observed
-pairs or facet_grid to also show empty combinations. Factor levels in the
-mapped accessions determine panel order and numeric layer selections.
-Standard ggplot2 annotations and explicit position scales remain available.
+Project HSPs onto two source-reference axes
 }
 \examples{
-library(dplyr)
-pair <- ribbon_data_example |>
-  filter(qaccver == "MT108731.1", saccver == "MT118296.1")
-ggchord(prepare_ggchord_data(seq_data_example, pair)) +
-  geom_alignment_segment(colour = "#275B75", linewidth = 1, alpha = 1) +
-  coord_dotplot() +
-  theme(plot.margin = margin(6, 18, 6, 6))
+library(ggplot2)
+
+seqs <- data.frame(
+  accver = c("A", "B"), length = c(1000, 800),
+  sequence_unit = "bp", topology = "linear"
+)
+
+links <- data.frame(
+  qaccver = "A", saccver = "B", qstart = c(100, 400),
+  qend = c(240, 620), sstart = c(150, 450), send = c(290, 650),
+  qstrand = "+", sstrand = c("+", "-"),
+  pident = c(98, 90), link_id = c("l1", "l2")
+)
+
+ggchord(data = seqs) +
+  geom_alignment_segment(data = links, aes(colour = pident)) +
+  layout_dotplot(x_order = "A", y_order = "B") +
+  coord_dotplot(ratio = 1)
 }

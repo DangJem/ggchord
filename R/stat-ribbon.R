@@ -1,180 +1,186 @@
-# Formal ribbon statistics. Computation happens before shared chord geometry;
-# the ggproto objects then expose the computed columns to after_stat().
-
-StatGgchordRibbon <- ggplot2::ggproto(
-  "StatGgchordRibbon", ggplot2::Stat,
-  required_aes = c("x", "y"),
-  default_aes = ggplot2::aes(
-    .ggchord_bundle_n = NA_real_,
-    .ggchord_bundle_weight = NA_real_,
-    .ggchord_density = NA_real_
-  ),
+# The source computation happens before reference-window projection. The
+# drawing-side identity Stat makes the source results available to after_stat.
+StatGgchordLink <- ggplot2::ggproto(
+  "StatGgchordLink", ggplot2::Stat, required_aes = c("x", "y"),
   compute_panel = function(data, scales) {
-    data$bundle_n <- data$.ggchord_bundle_n
-    data$bundle_weight <- data$.ggchord_bundle_weight
-    data$density <- data$.ggchord_density
+    keys <- grep("^.ggchord_link_stat_", names(data), value = TRUE)
+    for (key in keys) data[[sub("^.ggchord_link_stat_", "", key)]] <- data[[key]]
     data
   }
 )
 
-StatGgchordRibbonBundle <- ggplot2::ggproto(
-  "StatGgchordRibbonBundle", StatGgchordRibbon,
-  source_type = "bundle",
-  source_parameters = c("bins", "min_bundle", "weight", "group_by"),
-  compute_source = function(ribbon_data, seq_data, ...) {
-    result <- bundle_ggchord_ribbons(ribbon_data, seq_data, ...)
-    result$data$bundle_n <- result$data$.bundle_n
-    result$data$bundle_weight <- result$data$.bundle_weight
-    result$data$density <- result$data$.bundle_density
-    result
-  }
-)
-
-StatGgchordRibbonDensity <- ggplot2::ggproto(
-  "StatGgchordRibbonDensity", StatGgchordRibbon,
-  source_type = "density",
-  source_parameters = c("bins", "weight", "group_by"),
-  compute_source = function(ribbon_data, seq_data, bins = 80L, weight = "length", group_by = NULL) {
-    ggchord_ribbon_density(ribbon_data, seq_data, bins, match.arg(weight, c("length", "count", "pident")),
-      group_by, "stat_ribbon_density()")
-  }
-)
-
-ggchord_ribbon_density <- function(ribbon_data, seq_data, bins, weight,
-                                   group_by, caller) {
-  checked <- ggchord_check_ribbon_tables(seq_data, ribbon_data, caller)
-  if (!is.numeric(bins) || length(bins) != 1L || !is.finite(bins) ||
-      bins < 1 || bins != as.integer(bins)) {
-    ggchord_stop(caller, ": bins must be one positive integer")
-  }
-  bins <- as.integer(bins)
-  if (!is.null(group_by) &&
-      (!is.character(group_by) || anyNA(group_by) ||
-       any(!group_by %in% names(ribbon_data)))) {
-    ggchord_stop(caller, ": group_by must name columns in ribbon_data")
-  }
-  input <- as.data.frame(ribbon_data, stringsAsFactors = FALSE)
-  if (nrow(input) == 0L) {
-    input$.bundle_n <- integer(0)
-    input$.bundle_weight <- numeric(0)
-    input$.bundle_density <- numeric(0)
-    input$bundle_n <- integer(0)
-    input$bundle_weight <- numeric(0)
-    input$density <- numeric(0)
-    return(list(data = input, report = data.frame()))
-  }
-  lengths <- checked$lengths
-  qid <- as.character(input$qaccver)
-  sid <- as.character(input$saccver)
-  qmid <- (input$qstart + input$qend) / 2
-  smid <- (input$sstart + input$send) / 2
-  qbin <- pmin(bins, pmax(1L, floor((qmid - 1) / lengths[qid] * bins) + 1L))
-  sbin <- pmin(bins, pmax(1L, floor((smid - 1) / lengths[sid] * bins) + 1L))
-  direction <- ggchord_ribbon_direction(input)
-  parts <- list(qid, sid, direction, qbin, sbin)
-  if (length(group_by)) parts <- c(parts, lapply(input[group_by], as.character))
-  key <- do.call(paste, c(parts, sep = "\r"))
-  row_weight <- ggchord_ribbon_weights(input, weight)
-  group_n <- stats::ave(rep(1L, nrow(input)), key, FUN = sum)
-  group_weight <- stats::ave(row_weight, key, FUN = sum)
-  pair <- paste(qid, sid, sep = "\r")
-  pair_max <- stats::ave(group_weight, pair, FUN = max)
-  input$.bundle_n <- as.integer(group_n)
-  input$.bundle_weight <- as.numeric(group_weight)
-  input$.bundle_density <- ifelse(pair_max > 0, group_weight / pair_max, 0)
-  input$bundle_n <- input$.bundle_n
-  input$bundle_weight <- input$.bundle_weight
-  input$density <- input$.bundle_density
-  list(
-    data = input,
-    report = data.frame(
-      source_row = seq_len(nrow(input)),
-      bin_count = input$.bundle_n,
-      bin_weight = input$.bundle_weight,
-      density = input$.bundle_density,
-      stringsAsFactors = FALSE
-    )
-  )
-}
-
 ggchord_ribbon_stat <- function(name, dots) {
-  stats <- list(ribbon_bundle = StatGgchordRibbonBundle, ribbon_density = StatGgchordRibbonDensity)
-  if (!is.character(name) || length(name) != 1L || !name %in% c("identity", names(stats)))
-    ggchord_stop("Choose ribbon stat from: identity, ", paste(names(stats), collapse = ", "))
-  if (length(dots) && (is.null(names(dots)) || any(!nzchar(names(dots))) || anyDuplicated(names(dots))))
-    ggchord_stop("Supply each ribbon geometry or statistic parameter once, by name")
-  stat <- stats[[name]]
-  controls <- unique(unlist(lapply(stats, function(s) s$source_parameters)))
+  if (!is.character(name) || !name %in% c("link_bundle", "link_density"))
+    return(list(geom_parameters = dots))
+  controls <- if (name == "link_bundle") c("bins", "min_bundle") else c("bins", "normalization")
   arguments <- dots[intersect(names(dots), controls)]
-  if (length(setdiff(names(arguments), stat$source_parameters)))
-    ggchord_stop("Unsupported parameter for ribbon stat '", name, "': ",
-      paste(setdiff(names(arguments), stat$source_parameters), collapse = ", "))
-  list(stat = stat, arguments = arguments, geom_parameters = dots[!names(dots) %in% controls])
+  list(stat = name, arguments = arguments,
+    geom_parameters = dots[setdiff(names(dots), names(arguments))])
 }
 
-ggchord_apply_ribbon_stat <- function(lyr, specification) {
-  # ggplot2 deliberately drops input columns that are not mapped before a Stat
-  # runs. Carry the three precomputed values through private aesthetics, then
-  # expose their public names from compute_panel() for after_stat().
-  lyr$mapping[[".ggchord_bundle_n"]] <- as.name("bundle_n")
-  lyr$mapping[[".ggchord_bundle_weight"]] <- as.name("bundle_weight")
-  lyr$mapping[[".ggchord_density"]] <- as.name("density")
-  lyr$stat <- specification$stat
-  lyr$ggchord_params$ribbon_stat <- list(type = specification$stat$source_type,
-    compute = specification$stat$compute_source, arguments = specification$arguments)
-  lyr
+ggchord_apply_ribbon_stat <- function(layer, specification) {
+  type <- specification$stat
+  fields <- if (type == "link_bundle") c("n_members", "sum_weight", "is_summary") else
+    c("bin_weight", "bin_area", "density_raw", "density")
+  layer$stat <- StatGgchordLink
+  layer$ggchord_params$link_stat <- list(type = type, arguments = specification$arguments)
+  for (field in fields)
+    layer$mapping[[paste0(".ggchord_link_stat_", field)]] <- as.name(field)
+  layer$ggchord_role_aes <- c(layer$ggchord_role_aes, "group", "weight")
+  layer
 }
 
-#' Bundle ribbons as a ggchord stat
-#'
-#' A layer form of [bundle_ggchord_ribbons()] that computes bundles before the
-#' shared chord geometry and exposes `after_stat(bundle_n)`,
-#' `after_stat(bundle_weight)`, and `after_stat(density)`.
-#'
-#' @param mapping,data Standard layer mapping and data arguments.
-#' @param bins,min_bundle,weight,group_by Passed to
-#'   [bundle_ggchord_ribbons()].
-#' @param position,show.legend,inherit.aes Standard ggplot2 layer arguments.
-#' @param ... Ribbon geometry and appearance arguments passed to
-#'   [geom_link_ribbon()].
-#' @return A ggchord ribbon layer.
-#' @seealso \code{\link{ggchord_data_contract}}
+ggchord_prepare_link_statistics <- function(plot, references) {
+  for (layer in plot$layers) {
+    p <- layer$ggchord_params
+    specification <- p$link_stat
+    if (is.null(specification)) next
+    caller <- ggchord_layer_input_context(layer)
+    input <- ggchord_resolve_layer_input(layer, ggchord_layer_fallback(layer, plot$ggchord$data))
+    if (is.null(input)) ggchord_stop(caller, ": supply interval link data")
+    members <- ggchord_facet_stat_input(input, plot, layer)
+    compute <- function(raw) {
+      data <- as_ggchord_link(raw)
+      group <- raw[intersect("group", names(raw))]
+      arguments <- specification$arguments
+      grid <- ggchord_link_bins(data, references, arguments$bins %||% 80,
+        if (is.null(raw$weight)) NULL else as.numeric(raw$weight), group, caller)
+      if (identical(specification$type, "link_bundle"))
+        return(ggchord_bundle_binned_links(data, grid, arguments$min_bundle %||% 2))
+      fields <- c("bin_weight", "bin_area", "density_raw", "density")
+      if (any(fields %in% names(data))) ggchord_stop(caller, ": density fields collide with source columns")
+      normalization <- match.arg(arguments$normalization %||% "none", c("none", "pair_max"))
+      data$bin_weight <- if (nrow(grid)) stats::ave(grid$weight, grid$bin_group, FUN = sum) else numeric()
+      data$bin_area <- grid$area
+      data$density_raw <- data$bin_weight / grid$area
+      data$density <- data$density_raw
+      if (normalization == "pair_max" && nrow(data)) {
+        pair_max <- stats::ave(data$density_raw, grid$pair_group, FUN = max)
+        data$density <- ifelse(pair_max > 0, data$density_raw / pair_max, 0)
+      }
+      attr(data, "ggchord_density_normalization") <- normalization
+      data$source_members <- I(ggchord_link_source_members(data))
+      data
+    }
+    if (is.null(members)) result <- compute(input) else {
+      panels <- plot$ggchord$source_facet_setup$panels
+      keys <- ggchord_facet_vars(plot)
+      result <- ggchord_rbind_fill(lapply(seq_len(nrow(panels)), function(panel) {
+        rows <- members$.ggchord_input_index[as.integer(members$PANEL) == panel]
+        part <- input[rows, , drop = FALSE]
+        if (!".source_row" %in% names(part)) part$.source_row <- rows
+        out <- compute(part)
+        out$.ggchord_stat_panel <- rep.int(panel, nrow(out))
+        for (key in keys) out[[key]] <- rep(panels[[key]][panel], nrow(out))
+        out
+      }))
+    }
+    capture <- p$stage_capture
+    if (!is.null(capture)) {
+      if ("mapped" %in% capture$requested) capture$mapped <- input
+      if ("statistic" %in% capture$requested) capture$statistic <- result
+    }
+    mapping <- layer$ggchord_input_mapping
+    for (name in intersect(layer$ggchord_role_aes, names(mapping)))
+      mapping[[name]] <- rlang::new_quosure(rlang::sym(name), emptyenv())
+    layer$ggchord_input_mapping <- mapping
+    layer$ggchord_input_data <- result
+    layer$ggchord_params$link_stat_source <- input
+    if (!is.null(p$visual_source)) {
+      p$visual_source$data <- result
+      p$visual_source$rows <- seq_len(nrow(result))
+      p$visual_source$values <- new.env(parent = emptyenv())
+    }
+  }
+  plot
+}
+
+#' Aggregate source intervals in a complete reference grid
 #' @export
-stat_ribbon_bundle <- function(
-    mapping = NULL, data = NULL,
-    bins = 80L, min_bundle = 2L,
-    weight = c("length", "count", "pident"),
-    group_by = NULL, position = "identity",
-    show.legend = TRUE, inherit.aes = TRUE, ...) {
+#' @param mapping Aesthetic mapping from `ggplot2::aes()`. A local mapping overrides the matching inherited channel.
+#' @param data Observation table or a data function. For ggchord layers, provide the required data-role columns.
+#' @param geom Compatible geometry to consume this statistic.
+#' @param position A compatible Position for placement of the layer geometry.
+#' @param bins Number of bins for both axes, or a named vector with q and s counts.
+#' @param min_bundle Minimum number of source records required to aggregate a bin.
+#' @param ... Additional named visual styles and parameters accepted by this layer.
+#' @param na.rm Suppress warnings for missing observations that the layer can omit.
+#' @param show.legend Logical or named logical indicating whether the layer contributes legend keys.
+#' @param inherit.aes Whether to inherit plot mappings and evaluate them on the layer data.
+#' @param id Optional plot-local layer identifier. Name a layer explicitly to scope a scale, anchor a label or export it.
+#' @return A ggplot2 layer for addition to a plot.
+#' @details Source references are `qaccver` and `saccver`. Point links consume `qpos` and `spos`. Interval links and alignment segments consume closed interval endpoints on both references. Supply reliable `qstrand` and `sstrand` or explicit relative direction when the geometry requires it.
+#' @examples
+#' library(ggplot2)
+#'
+#' seqs <- data.frame(
+#'   accver = c("A", "B"), length = c(1000, 800),
+#'   sequence_unit = "bp", topology = "linear"
+#' )
+#'
+#' links <- data.frame(
+#'   qaccver = "A", saccver = "B", qstart = c(100, 400),
+#'   qend = c(240, 620), sstart = c(150, 450), send = c(290, 650),
+#'   qstrand = "+", sstrand = c("+", "-"),
+#'   pident = c(98, 90), link_id = c("l1", "l2")
+#' )
+#'
+#' ggchord(data = seqs) + geom_seq() +
+#'   stat_link_bundle(data = links, bins = c(q = 20, s = 20),
+#'     min_bundle = 2, aes(fill = after_stat(n_members))) +
+#'   scale_fill_viridis_c(name = "Members") + coord_chord()
+stat_link_bundle <- function(mapping = NULL, data = NULL, geom = "link_ribbon",
+    position = "identity", bins = 80, min_bundle = 2, ...,
+    na.rm = FALSE, show.legend = NA, inherit.aes = TRUE, id = NULL) {
   ggchord_check_argument_names(sys.call(), sys.function())
-  geom_link_ribbon(mapping = mapping, data = data, stat = "ribbon_bundle",
-    bins = bins, min_bundle = min_bundle, weight = match.arg(weight), group_by = group_by,
-    position = position, show.legend = show.legend, inherit.aes = inherit.aes, ...)
+  if (!identical(geom, "link_ribbon")) ggchord_stop("stat_link_bundle(): requires an interval link geometry")
+  geom_link_ribbon(mapping, data, stat = "link_bundle", position = position,
+    ..., bins = bins, min_bundle = min_bundle, na.rm = na.rm, show.legend = show.legend,
+    inherit.aes = inherit.aes, id = id)
 }
 
-#' Compute local ribbon density as a ggchord stat
-#'
-#' Keeps one output ribbon per input row while measuring density in normalized
-#' query/subject midpoint bins. The computed variables are the same as
-#' [stat_ribbon_bundle()], so density can be mapped with
-#' `aes(ribbon_alpha = after_stat(density))`.
-#'
-#' @inheritParams stat_ribbon_bundle
-#' @param bins Positive integer number of normalized midpoint bins per
-#'   sequence.
-#' @param weight Density weight: `"length"`, `"count"`, or `"pident"`.
-#' @param group_by Optional columns that define independent density groups.
-#' @return A ggchord ribbon layer.
-#' @seealso \code{\link{ggchord_data_contract}}
+#' Compute source interval density
 #' @export
-stat_ribbon_density <- function(
-    mapping = NULL, data = NULL,
-    bins = 80L,
-    weight = c("length", "count", "pident"),
-    group_by = NULL, position = "identity",
-    show.legend = TRUE, inherit.aes = TRUE, ...) {
+#' @param mapping Aesthetic mapping from `ggplot2::aes()`. A local mapping overrides the matching inherited channel.
+#' @param data Observation table or a data function. For ggchord layers, provide the required data-role columns.
+#' @param geom Compatible geometry to consume this statistic.
+#' @param position A compatible Position for placement of the layer geometry.
+#' @param bins Number of bins for both axes, or a named vector with q and s counts.
+#' @param normalization Return raw bin density or also normalize relative to the pair maximum.
+#' @param ... Additional named visual styles and parameters accepted by this layer.
+#' @param na.rm Suppress warnings for missing observations that the layer can omit.
+#' @param show.legend Logical or named logical indicating whether the layer contributes legend keys.
+#' @param inherit.aes Whether to inherit plot mappings and evaluate them on the layer data.
+#' @param id Optional plot-local layer identifier. Name a layer explicitly to scope a scale, anchor a label or export it.
+#' @return A ggplot2 layer for addition to a plot.
+#' @details Source references are `qaccver` and `saccver`. Point links consume `qpos` and `spos`. Interval links and alignment segments consume closed interval endpoints on both references. Supply reliable `qstrand` and `sstrand` or explicit relative direction when the geometry requires it.
+#' @examples
+#' library(ggplot2)
+#'
+#' seqs <- data.frame(
+#'   accver = c("A", "B"), length = c(1000, 800),
+#'   sequence_unit = "bp", topology = "linear"
+#' )
+#'
+#' links <- data.frame(
+#'   qaccver = "A", saccver = "B", qstart = c(100, 400),
+#'   qend = c(240, 620), sstart = c(150, 450), send = c(290, 650),
+#'   qstrand = "+", sstrand = c("+", "-"),
+#'   pident = c(98, 90), link_id = c("l1", "l2")
+#' )
+#'
+#' ggchord(data = seqs) + geom_seq() +
+#'   stat_link_density(data = links,
+#'     aes(fill = after_stat(density)), bins = 20,
+#'     normalization = "pair_max") +
+#'   scale_fill_viridis_c(name = "Relative density", limits = c(0, 1)) +
+#'   coord_chord()
+stat_link_density <- function(mapping = NULL, data = NULL, geom = "link_ribbon",
+    position = "identity", bins = 80, normalization = "none", ...,
+    na.rm = FALSE, show.legend = NA, inherit.aes = TRUE, id = NULL) {
   ggchord_check_argument_names(sys.call(), sys.function())
-  geom_link_ribbon(mapping = mapping, data = data, stat = "ribbon_density",
-    bins = bins, weight = match.arg(weight), group_by = group_by,
-    position = position, show.legend = show.legend, inherit.aes = inherit.aes, ...)
+  if (!identical(geom, "link_ribbon")) ggchord_stop("stat_link_density(): requires an interval link geometry")
+  geom_link_ribbon(mapping, data, stat = "link_density", position = position,
+    ..., bins = bins, normalization = normalization, na.rm = na.rm, show.legend = show.legend,
+    inherit.aes = inherit.aes, id = id)
 }

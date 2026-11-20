@@ -2,28 +2,44 @@
 % Please edit documentation in R/scales.R
 \name{guide_seq_axis}
 \alias{guide_seq_axis}
-\title{Select local sequence axes and their label overlap policy}
+\title{Configure a sequence position guide}
 \usage{
-guide_seq_axis(sequences = NULL, check.overlap = NULL)
+guide_seq_axis(
+  sequences = NULL,
+  side = "positive",
+  angle = "auto",
+  check.overlap = TRUE,
+  theme = NULL
+)
 }
 \arguments{
-\item{sequences}{Optional character vector selecting sequence axes by their
-displayed \code{accver}. \code{NULL} keeps all axes; \code{character()} hides every axis.
-Focused or segmented views use window IDs, not parent source accessions.
-Unknown or undisplayed identifiers produce an error. This controls axis
-lines, ticks and labels together without dropping sequence geometry.}
+\item{sequences}{Source accessions, or a list with source and instance IDs.}
 
-\item{check.overlap}{Optional logical. When supplied, use this overlap
-policy for tick labels. Otherwise use the plot's axis text policy.}
+\item{side}{Positive or negative local side of the reference path.}
+
+\item{angle}{Automatic label orientation, or a numeric angle in degrees.}
+
+\item{check.overlap}{Whether to hide overlapping tick labels.}
+
+\item{theme}{Optional local axis theme.}
 }
 \value{
-A guide for \code{\link[=scale_seq_position_continuous]{scale_seq_position_continuous()}}.
+A guide for \code{\link[=scale_seq_position]{scale_seq_position()}}.
 }
 \description{
-Select local sequence axes and their label overlap policy
+Configure a sequence position guide
 }
 \examples{
-ggchord(data.frame(accver = c("A", "B"), length = c(100, 80))) +
-  geom_seq() + coord_collinear() +
-  scale_seq_position_continuous(guide = guide_seq_axis("B", check.overlap = TRUE))
+library(ggplot2)
+
+seqs <- data.frame(
+  accver = c("A", "B"), length = c(1000, 800),
+  sequence_unit = "bp", topology = "linear"
+)
+
+ggchord(data = seqs) + geom_seq() +
+  scale_seq_position(breaks = scales::breaks_width(200),
+    guide = guide_seq_axis(sequences = "A", side = "negative",
+      theme = theme(axis.text = element_text(size = 8)))) +
+  coord_collinear()
 }

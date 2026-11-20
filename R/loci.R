@@ -1,56 +1,39 @@
 # Explicit target selection produces independent genomic windows for focus.
 
-#' Find genomic loci around explicitly identified features
+#' Locate windows around known feature IDs
 #'
-#' Selects targets by `feature_id` and expands their genomic bounds using
-#' biological upstream/downstream directions. For a negative-strand target,
-#' upstream extends towards larger genomic coordinates. Unknown or
-#' bidirectional strands require equal upstream and downstream distances.
-#' Windows are clipped to the known full sequence length; clipping is reported.
+#' Extensions follow biological strand. A target without a single
+#' known strand can be extended symmetrically. The result preserves
+#' individual overlapping windows and clips them to source boundaries.
 #'
-#' Repeated rows with the same `feature_id` represent segments of one target
-#' and must belong to the same sequence and strand. Their outer bounds define
-#' the target window. Different targets always produce separate windows,
-#' including overlapping targets on the same sequence. No intervening sequence
-#' is removed, concatenated or locally reversed. Ordered one-based inclusive
-#' genomic coordinates are required; origin-spanning circular features and
-#' protein coordinates need an explicit conversion before this operation.
-#'
-#' The returned `locus_id` equals `target_id`. Pass the returned table as
-#' `loci` to [focus_ggchord_data()] to create independent focused sequences
-#' named by those IDs, including multiple windows from one source sequence.
-#'
-#' @param seq_data Sequence table containing unique `accver` and positive
-#'   integer `length` values. Optional `genome` and `genome_id` columns are
-#'   retained in the returned windows.
-#' @param feature_data Feature table containing `feature_id`, `accver`,
-#'   `start`, `end`, and optionally `strand`. Missing strand means unknown.
-#' @param targets Non-empty character vector of distinct `feature_id` values.
-#'   Selection is exact; no annotation text or accession versions are guessed.
-#' @param upstream,downstream Single non-negative integer numbers of bases
-#'   added before and after each target in its biological direction.
-#' @return An ordinary data frame in target order with `target_id`, `locus_id`,
-#'   `accver`, `start`, `end`, `strand`, unexpanded `target_start` and
-#'   `target_end`, requested extensions, and `clipped_left`/`clipped_right`.
-#'   The `target_source_rows` list column identifies feature input rows used
-#'   for each target. Coordinates refer to the supplied sequence table; no
-#'   implicit change from focused coordinates to an earlier source is made.
-#' @md
-#' @seealso \code{\link{ggchord_data_contract}}
+#' @param sequences Complete reference dictionary.
+#' @param features Feature table with accver/start/end and feature_id.
+#'   Repeated IDs must identify segments of one feature on one reference and
+#'   strand.
+#' @param targets Distinct, exact feature IDs.
+#' @param upstream,downstream Integral upstream and downstream lengths in
+#'   source coordinates.
+#' @return A window table with locus_id, target_id, coordinates, source
+#'   member rows, and clipping flags.
 #' @export
 #' @examples
-#' library(dplyr)
-#' data(seq_data_example)
-#' seqs <- seq_data_example |>
-#'   select(accver, length)
-#' data(gene_data_example)
-#' genes <- gene_data_example |>
-#'   transmute(accver, start, end, strand = source_strand)
-#' genes <- genes |>
-#'   mutate(feature_id = paste(accver, start, end, sep = ":"))
-#' find_ggchord_loci(seqs, genes, targets = genes$feature_id[1], upstream = 100, downstream = 100)
-find_ggchord_loci <- function(seq_data, feature_data, targets,
-                             upstream = 0, downstream = 0) {
+#' seqs <- data.frame(
+#'   accver = c("A", "B"), length = c(1000, 800),
+#'   sequence_unit = "bp", topology = "linear"
+#' )
+#'
+#' genes <- data.frame(
+#'   accver = c("A", "A", "B"), feature_id = c("g1", "g2", "g3"),
+#'   start = c(100, 400, 150), end = c(240, 620, 380),
+#'   strand = c("+", "-", "+"), label = c("g1", "g2", "g3"),
+#'   type = c("CDS", "tRNA", "CDS")
+#' )
+#'
+#' loci <- find_ggchord_loci(seqs, genes, targets="g1", upstream=50, downstream=100)
+#' loci
+find_ggchord_loci <- function(sequences, features, targets, upstream = 0, downstream = 0) {
+  seq_data <- sequences
+  feature_data <- features
   caller <- "find_ggchord_loci()"
   seq_data <- as_ggchord_seq(seq_data)
   if (!is.data.frame(feature_data)) ggchord_stop(

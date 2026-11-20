@@ -191,7 +191,11 @@ ggchord_layout_ribbon_step <- function(
       ribbon_q_n[j] <- nrow(q_coords)
       ribbon_s_n[j] <- nrow(s_coords)
       # Bezier control points
-      if (!is.null(ribbon_ctrl_point)) {
+      if (inherits(ribbon_ctrl_point, "ggchord_link_route")) {
+        c1 <- (q_coords[1L, ] + s_coords[1L, ]) * (1 - ribbon_ctrl_point$curvature) / 2
+        c2 <- (q_coords[nrow(q_coords), ] + s_coords[nrow(s_coords), ]) *
+          (1 - ribbon_ctrl_point$curvature) / 2
+      } else if (!is.null(ribbon_ctrl_point)) {
         if (is.list(ribbon_ctrl_point)) {
           cp <- ggchord_link_controls(ribbon_ctrl_point, i, c(0, 0))
           c1 <- cp[[1L]]
@@ -220,8 +224,13 @@ ggchord_layout_ribbon_step <- function(
         c2 <- c1
       }
 
-      b1 <- bezier_pts(q_coords[1, ], s_coords[1, ], c1, c1, n = 50)
-      b2 <- bezier_pts(q_coords[nrow(q_coords), ], s_coords[nrow(s_coords), ], c2, c2, n = 50)
+      edge <- function(a, b, control) {
+        if (inherits(ribbon_ctrl_point, "ggchord_link_route") && ribbon_ctrl_point$route == "straight")
+          return(rbind(a, b))
+        bezier_pts(a, b, control, control, n = 50)
+      }
+      b1 <- edge(q_coords[1, ], s_coords[1, ], c1)
+      b2 <- edge(q_coords[nrow(q_coords), ], s_coords[nrow(s_coords), ], c2)
 
       ribbon_polys_list[[j]] <- cbind(
         x = c(q_coords[, 1], b2[, 1], rev(s_coords[, 1]), rev(b1[, 1])),

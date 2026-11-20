@@ -19,18 +19,19 @@
 #'   within each row. Keep original columns when filtering a window. Every
 #'   selected source base must be present; split spliced regions explicitly.
 #'   Origin-wrapping magnify regions require explicit circular source metadata. Gap columns remain visible but have no source coordinate.
-#' @return The ordinary plot with a source registration. Use it as detail_plot
-#'   in [magnify_ggchord()] or as an outer [fusion_panel()]. Region detail_instance
-#'   selects an exact alignment row accver when several rows share a source.
+#' @return The ordinary editable plot with a source registration suitable for
+#'   [ggchord_fusion()]. Select a display instance if several alignment rows
+#'   represent the same source interval.
 #'   Registrations assert supplied provenance; source_verified is not an
 #'   independent biological validation. Exported source layouts retain data.
 #' @export
 #' @examples
-#' # Explicit synthetic format example.
-#' cells <- as_ggchord_alignment(c(A = "AC-G", B = "ACTG"), "DNA")
+#' library(ggplot2)
+#'
+#' cells <- as_ggchord_alignment(c(A = "AC-G", B = "ACTG"), alphabet = "DNA")
 #' p <- ggplot2::ggplot(cells, aes(alignment_column, accver, label = symbol)) +
-#'   geom_residue(aes(fill = symbol), show.legend = FALSE)
-#' register_ggchord_alignment(p, cells)
+#'   geom_residue(aes(fill = symbol)) + scale_fill_residue("DNA")
+#' registered <- register_ggchord_alignment(p, cells)
 register_ggchord_alignment <- function(plot, data) {
   caller <- "register_ggchord_alignment()"
   if (!inherits(plot, "ggplot") || inherits(plot, "ggchord") ||
@@ -81,6 +82,9 @@ ggchord_alignment_layout <- function(built, data) {
     ggchord_stop(caller, ": use identity/reverse x and discrete accession y scales")
   layers <- which(vapply(built$plot$layers, function(l) inherits(l$geom, "GeomResidue"), logical(1)))
   if (!length(layers)) ggchord_stop(caller, ": geom_residue is required")
+  if (any(!vapply(built$plot$layers[layers], function(layer)
+      inherits(layer$position, "PositionIdentity"), logical(1))))
+    ggchord_stop(caller, ": residue Position must be identity")
   wrapping <- lapply(built$plot$layers[layers], function(l) l$ggchord_residue_wrap)
   wrapped <- !vapply(wrapping, is.null, logical(1))
   data$display_column <- data$alignment_column
@@ -97,7 +101,10 @@ ggchord_alignment_layout <- function(built, data) {
   observed <- do.call(rbind, lapply(built$data[layers], function(d) d[c("x", "y", "label")]))
   key <- function(x, y, label) paste(x, y, label, sep = "\r")
   expected <- key(xs$transform(data$display_column), ys$map(data$display_row), data$symbol)
-  if (any(!expected %in% key(observed$x, observed$y, observed$label)))
+  positions <- coord$transform(observed, built$layout$panel_params[[1L]])
+  if (!setequal(expected, key(observed$x, observed$y, observed$label)) ||
+      any(!is.finite(positions$x) | !is.finite(positions$y) |
+        positions$x < 0 | positions$x > 1 | positions$y < 0 | positions$y > 1))
     ggchord_stop(caller, ": registered cells no longer match rendered residue positions/labels")
   ids <- unique(data$display_row)
   list(character = TRUE, seqs = ids, character_data = data,
@@ -124,7 +131,8 @@ ggchord_alignment_interval <- function(panel, id, entity, start, end, instance) 
     x <- a$display_column[ends] + c(-.5, .5) * direction
     candidates[[length(candidates) + 1L]] <- list(panel = id, key = row, instance = row,
       entity = entity, origin = 1, start = start, end = end, unit = a$sequence_unit[1L],
-      character_x = x, character_y = row)
+      character_x = x, character_y = row,
+      fragment = identical(unique(a$source_scope), "fragment"))
   }
   candidates
 }
@@ -147,4 +155,11 @@ ggchord_alignment_front <- function(panel, endpoint) {
     x = bounds[1] + projected$x * diff(bounds[1:2]), y = bounds[3] + projected$y * diff(bounds[3:4]),
     normal_x = 0, normal_y = 1, tangent_x = -1, tangent_y = 0,
     cell_half_height_mm = abs(upper$y - lower$y) * diff(bounds[3:4]) / 2)
+}
+
+ggchord_check_character_origin <- function(q, s, caller) {
+  for (endpoint in list(q, s)) {
+    if (isTRUE(endpoint$fragment))
+      ggchord_stop(caller, ": fragment-local coordinates require an explicit source mapping before linking")
+  }
 }

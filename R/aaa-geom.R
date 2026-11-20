@@ -57,23 +57,24 @@ GeomChordAxis <- ggplot2::ggproto(
   required_aes = c("x", "y"),
   default_aes = ggplot2::aes(
     xend = NA_real_, yend = NA_real_, label = NA_character_,
-    .component = NA_character_, .draw_as_arc = FALSE,
+    .component = NA_character_, .draw_as_arc = FALSE, .axis_plotmath = FALSE,
     colour = "#737A80", alpha = NA, linewidth = 0.3,
     linetype = 1, size = 3, angle = 0, hjust = 0.5, vjust = 0.5,
     family = "", fontface = 1, lineheight = 1.2
   ),
   extra_params = c(
-    "na.rm", "line_params", "tick_params", "minor_tick_params", "text_params"
+    "na.rm", "line_params", "tick_params", "minor_tick_params", "text_params", "title_params"
   ),
   draw_key = function(data, params, size) grid::nullGrob(),
   draw_panel = function(data, panel_params, coord, na.rm = FALSE,
                         line_params = list(), tick_params = list(),
                         minor_tick_params = list(),
-                        text_params = list()) {
+                        text_params = list(), title_params = list()) {
     line <- data[data$.component %in% "line", , drop = FALSE]
     tick <- data[data$.component %in% "major_tick", , drop = FALSE]
     minor_tick <- data[data$.component %in% "minor_tick", , drop = FALSE]
     text <- data[data$.component %in% "text", , drop = FALSE]
+    title <- data[data$.component %in% "title", , drop = FALSE]
     line <- ggchord_component_style(
       line, line_params, c("colour", "alpha", "linewidth", "linetype")
     )
@@ -121,13 +122,16 @@ GeomChordAxis <- ggplot2::ggproto(
         na.rm = na.rm
       )
     }
-    if (nrow(text)) {
-      grobs[[length(grobs) + 1L]] <- ggplot2::GeomText$draw_panel(
-        text, panel_params, coord,
-        parse = text_params$parse %||% FALSE,
-        check_overlap = text_params$check_overlap %||% FALSE,
-        na.rm = na.rm
-      )
+    title <- ggchord_component_style(title, title_params,
+      c("colour", "alpha", "size", "family", "fontface", "lineheight"))
+    for (component in list(text, title)) {
+      math <- component$.axis_plotmath %in% TRUE
+      if (any(!math)) grobs[[length(grobs) + 1L]] <- ggplot2::GeomText$draw_panel(
+        component[!math, , drop = FALSE], panel_params, coord,
+        check_overlap = text_params$check_overlap %||% FALSE, na.rm = na.rm)
+      if (any(math)) grobs[[length(grobs) + 1L]] <- ggplot2::GeomText$draw_panel(
+        component[math, , drop = FALSE], panel_params, coord, parse = TRUE,
+        check_overlap = text_params$check_overlap %||% FALSE, na.rm = na.rm)
     }
     do.call(grid::grobTree, grobs)
   }

@@ -254,17 +254,22 @@ ggchord_normalize_restriction_patterns <- function(patterns) {
 #'   saved display set for use by [filter_restriction_sites()].
 #' @seealso \code{\link{ggchord_data_contract}}
 #' @export
-find_restriction_sites <- function(sequence,enzymes=NULL,patterns=NULL,
-                                   circular=TRUE,database=NULL,
-                                   methylation=c("auto","none","dam_dcm")){
-  methylation <- match.arg(methylation)
+#' @examples
+#' target <- c(A="ACGGAATTCGTT")
+#' found <- find_restriction_sites(target, enzymes="EcoRI", circular=FALSE)
+#' ref <- as_ggchord_seq(data.frame(accver="A", length=nchar(target)), sequence_unit="bp")
+#' ggchord(ref) + geom_restriction_site(data=found) + coord_collinear()
+find_restriction_sites <- function(sequence, enzymes = NULL, patterns = NULL,
+    circular = NULL, database = NULL, methylation = "unknown") {
+  caller <- "find_restriction_sites()"
+  methylation <- match.arg(methylation, c("unknown", "none", "dam_dcm"))
   normalized <- ggchord_normalize_sequence_input(
     sequence, "find_restriction_sites()"
   )
   ids <- normalized$ids
   seqs <- normalized$sequences
-  if(!is.logical(circular)||length(circular)!=1L||is.na(circular))ggchord_stop("find_restriction_sites(): circular must be TRUE or FALSE")
-  if(is.data.frame(enzymes)){if(!is.null(patterns))ggchord_stop("Supply custom definitions once");patterns<-enzymes;enzymes<-NULL}
+  topology <- ggchord_search_topology(sequence, circular, ids, caller)
+  if (!is.null(patterns) && !is.null(database)) ggchord_stop(caller, ": supply patterns or database")
   defs<-if(!is.null(patterns))patterns else database%||%ggchord_builtin_rebase()
   defs<-ggchord_normalize_restriction_patterns(defs)
   if(!is.null(enzymes)){
@@ -279,9 +284,13 @@ find_restriction_sites <- function(sequence,enzymes=NULL,patterns=NULL,
   }
   rows<-list();match_number<-0L
   for(s in seq_along(seqs)){
-    target<-seqs[s];len<-nchar(target);match_cache<-new.env(hash=TRUE,parent=emptyenv())
+    target <- seqs[s]
+    circular <- topology[s]
+    len <- nchar(target)
+    match_cache <- new.env(hash = TRUE, parent = emptyenv())
     for(d in seq_len(nrow(defs))){
     motif<-defs$motif[d];m<-nchar(motif)
+    if (m > len) next
     search<-if(circular&&m>1L)paste0(target,substr(target,1L,m-1L))else target
     rc<-ggchord_reverse_complement(motif);strands<-if(identical(rc,motif))"+" else c("+","-")
     for(site_strand in strands){
@@ -303,7 +312,8 @@ find_restriction_sites <- function(sequence,enzymes=NULL,patterns=NULL,
         unwrapped<-matrix(NA_real_,nrow=count,ncol=4L)
         for(k in which(known))unwrapped[,k]<-starts+boundary_offsets[k]-1
         cuts<-unwrapped
-        if(circular)cuts[,known]<-((unwrapped[,known,drop=FALSE]-1)%%len)+1 else cuts[cuts<1|cuts>len]<-NA_real_
+        if (circular) cuts[, known] <- ((unwrapped[, known, drop = FALSE] - 1) %% len) + 1
+        else cuts[cuts < 0 | cuts > len] <- NA_real_
         finish_unwrapped<-starts+m-1L;finish<-if(circular)((finish_unwrapped-1L)%%len)+1L else finish_unwrapped
         end_type<-if(defs$ncuts[d]==0L)"unknown" else if(defs$ncuts[d]==1L)"nick" else if(defs$ncuts[d]==4L)"complex" else if(isTRUE(defs$blunt[d]))"blunt" else if(defs$cut_offset_1[d]<defs$cut_offset_2[d])"5_prime_overhang" else "3_prime_overhang"
         known_indices<-which(known);has_cut<-length(known_indices)>0L
@@ -343,14 +353,15 @@ find_restriction_sites <- function(sequence,enzymes=NULL,patterns=NULL,
     if (length(profile_rows)) reference_profiles <-
       ggchord_rbind_fill(profile_rows)
   }
-  active_methylation <- methylation
-  if (identical(active_methylation, "auto")) {
-    active_methylation <- if (nrow(reference_profiles)) "dam_dcm" else "none"
+  if (nrow(out) && methylation == "unknown") {
+    out$methylation_status <- rep("unknown", nrow(out))
+    formerly_blocked <- out$display_warning %in% "methylation_blocked"
+    out$display_warning[formerly_blocked] <- NA_character_
   }
-  if (nrow(out)) {
+  if (nrow(out) && methylation != "unknown") {
     explicit_status <- !is.na(out$methylation_status) &
       nzchar(out$methylation_status)
-    if (identical(active_methylation, "none")) {
+    if (methylation == "none") {
       inferred <- ifelse(is.na(out$blocked_by),
         "unknown", "unblocked")
       out$methylation_status[!explicit_status] <- inferred[!explicit_status]
@@ -366,7 +377,7 @@ find_restriction_sites <- function(sequence,enzymes=NULL,patterns=NULL,
         len <- nchar(target)
         positions <- seq.int(out$start[i] - 6L,
           out$start[i] + out$motif_length[i] + 5L)
-        positions <- if (circular) ((positions - 1L) %% len) + 1L else
+        positions <- if (topology[[as.character(out$accver[i])]]) ((positions - 1L) %% len) + 1L else
           positions[positions >= 1L & positions <= len]
         window <- paste0(strsplit(target, "", fixed = TRUE)[[1L]][positions],
           collapse = "")
@@ -380,30 +391,20 @@ find_restriction_sites <- function(sequence,enzymes=NULL,patterns=NULL,
       out$display_warning[inferred_warning] <- "methylation_blocked"
     }
   }
-  attr(out,"enzyme_database_version")<-unique(defs$database_version)
-  attr(out,"reference_enzyme_profiles")<-reference_profiles
-  attr(out,"methylation")<-methylation
-  out
+  out$site_id <- out$match_id
+  out$label <- out$enzyme
+  out$pos <- out$recognition_start <- out$start
+  out$recognition_end <- out$end
+  out$cut_top <- out$cut_1
+  out$cut_bottom <- out$cut_2
+  out$segments <- I(ggchord_segment_search_matches(out$start, out$end, nchar(seqs[match(out$accver, ids)])))
+  attr(out, "reference_enzyme_profiles") <- reference_profiles
+  ggchord_attach_data_report(out, "find_restriction_sites", inputs = ids,
+    metadata = list(database_version = unique(defs$database_version),
+      topology = topology, methylation = methylation, reference_profiles = reference_profiles))
 }
 
-#' Filter restriction sites for display
-#' @param sites Result from [find_restriction_sites()].
-#' @param set Display preset. `"reference"` reuses the enzyme-set profile
-#'   stored for an exactly recognized reference sequence. It errors when no
-#'   such profile is available. A saved `"None"` profile returns no sites.
-#' @param enzymes,min_site_length,cuts,window,commercial_only Additional filters.
-#' @param parent_set Enzyme catalogue subset. `"commercial_nonredundant"`
-#'   keeps one stable commercial representative per equivalent recognition
-#'   group and site, preferring the database's preferred enzyme when present.
-#' @return A row subset whose biological coordinates are unchanged.
-#' @examples
-#' data(plasmid_example_pUC19)
-#' sites <- find_restriction_sites(plasmid_example_pUC19,
-#'   enzymes = c("EcoRI", "BamHI", "HindIII"))
-#' unique_sites <- filter_restriction_sites(sites, set = "unique")
-#' @seealso \code{\link{ggchord_data_contract}}
-#' @export
-filter_restriction_sites<-function(sites,set=c("all","unique","unique_dual","six_plus","unique_6plus","commercial","reference"),enzymes=NULL,min_site_length=NULL,cuts=NULL,window=NULL,commercial_only=FALSE,parent_set=c("all","commercial_all","commercial_nonredundant")){
+ggchord_filter_restriction_profile<-function(sites,set=c("all","unique","unique_dual","six_plus","unique_6plus","commercial","reference"),enzymes=NULL,min_site_length=NULL,cuts=NULL,window=NULL,commercial_only=FALSE,parent_set=c("all","commercial_all","commercial_nonredundant")){
   if(!is.data.frame(sites))ggchord_stop("filter_restriction_sites(): sites must be a data frame")
   set<-match.arg(set);parent_set<-match.arg(parent_set);if(!nrow(sites))return(sites)
   ggchord_require_columns(sites,c("accver","enzyme","motif_length","position"),"filter_restriction_sites()")
@@ -428,7 +429,7 @@ filter_restriction_sites<-function(sites,set=c("all","unique","unique_dual","six
       profile <- profiles[match(id, profiles$accver), , drop = FALSE]
       if (profile$profile_type == "none") return(part[FALSE, , drop = FALSE])
       if (profile$profile_type == "custom") {
-        return(filter_restriction_sites(part, set = "all",
+        return(ggchord_filter_restriction_profile(part, set = "all",
           enzymes = profile$enzymes[[1L]], min_site_length = min_site_length,
           cuts = cuts, window = window, commercial_only = commercial_only,
           parent_set = "all"))
@@ -442,7 +443,7 @@ filter_restriction_sites<-function(sites,set=c("all","unique","unique_dual","six
       if (is.null(preset)) {
         ggchord_stop("Unsupported reference enzyme set: ", profile$set_name)
       }
-      filter_restriction_sites(part, set = preset,
+      ggchord_filter_restriction_profile(part, set = preset,
         min_site_length = min_site_length, cuts = cuts, window = window,
         commercial_only = commercial_only, parent_set = parent_set)
     })

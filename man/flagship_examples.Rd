@@ -15,7 +15,6 @@ Four named lists:
 and \code{sankey}, each containing \code{seq_data}, selected links, \code{features}
 and ordered \code{labels}. Chord/Radial also contain display \code{orientation};
 Collinear/Sankey separate \code{adjacent_links} and \code{cross_links}.
-Collinear \code{route_controls} apply to the unchanged fixed flagship layout.
 The additional \code{comparison} entry retains the original four-coordinate
 teaching inputs as \code{seq_data}, \code{links}, \code{features} and \code{events}.}
 \item{flagship_dotplot_example}{Complete \code{seq_data} and \code{links}, the

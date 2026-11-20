@@ -2,31 +2,41 @@
 % Please edit documentation in R/scale-residue.R
 \name{scale_fill_residue}
 \alias{scale_fill_residue}
-\title{Colour residue cells by chemical group}
+\title{Colour residue cells by alphabet}
 \usage{
-scale_fill_residue(alphabet = c("DNA", "RNA", "AA"), ...)
+scale_fill_residue(
+  alphabet = "DNA",
+  name = waiver(),
+  values = NULL,
+  na.value = "#B8C1C5",
+  guide = "legend",
+  ...
+)
 }
 \arguments{
-\item{alphabet}{Explicit DNA, RNA or AA palette. Defaults to DNA for direct
-calls. geom_residue() uses the data's alphabet column, otherwise AA.}
+\item{alphabet}{DNA, RNA or AA.}
 
-\item{...}{Additional arguments to \code{\link[ggplot2:scale_fill_manual]{ggplot2::scale_fill_manual()}}, including
-name, breaks and guide. Use scale_fill_manual() for custom colours.}
+\item{name}{Fill legend title. The default is the alphabet name.}
+
+\item{values}{Optional named colours overriding the defaults for those symbols.}
+
+\item{na.value}{Colour for missing or unmapped values.}
+
+\item{guide}{A standard discrete guide.}
+
+\item{...}{Additional options for a discrete fill scale.}
 }
 \value{
-A ggplot2 discrete fill scale. Explicit user scales take priority
-over a residue layer's inferred default.
+An ordinary ggplot2 fill scale.
 }
 \description{
-A standard discrete fill scale for \code{\link[=geom_residue]{geom_residue()}}. DNA/RNA use separate
-colours for A, C, G and T/U; AA groups residues by side-chain chemistry.
-Gaps, stops and ambiguous symbols are neutral. Lowercase symbols receive
-the same colours as uppercase symbols. The chemistry colours follow ggmsa;
-this scale does not compute conservation or an alignment.
+Colour residue cells by alphabet
 }
 \examples{
-cells <- as_ggchord_alignment(c(A = "AC-G", B = "ACTG"), "DNA")
+library(ggplot2)
+
+cells <- as_ggchord_alignment(c(A = "AC-GT", B = "ACTGT"), alphabet = "DNA")
 ggplot2::ggplot(cells, aes(alignment_column, accver, label = symbol)) +
-  geom_residue() +
-  scale_fill_residue("DNA", guide = "none")
+  geom_residue(aes(fill = symbol)) +
+  scale_fill_residue("DNA", values = c(G = "#D9A400"))
 }

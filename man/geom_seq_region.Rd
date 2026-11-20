@@ -2,76 +2,72 @@
 % Please edit documentation in R/geom-region.R
 \name{geom_seq_region}
 \alias{geom_seq_region}
-\title{Highlight regions along sequence arcs}
+\title{Highlight reference intervals}
 \usage{
 geom_seq_region(
   mapping = NULL,
   data = NULL,
-  fill = "#F59E0B",
-  colour = "#B45309",
+  shape = "block",
+  thickness = 2,
+  stat = "identity",
+  position = position_offset(0),
   alpha = 0.25,
-  region_width = 0.08,
-  region_offset = 0,
-  region_side = c("inside", "outside", "auto"),
-  position = "identity",
-  show.legend = FALSE,
-  inherit.aes = TRUE,
   ...,
+  na.rm = FALSE,
+  show.legend = NA,
+  inherit.aes = TRUE,
   id = NULL
 )
 }
 \arguments{
-\item{mapping}{Default NULL (uses pre-computed data)}
+\item{mapping}{Aesthetic mapping from \code{ggplot2::aes()}. A local mapping overrides the matching inherited channel.}
 
-\item{data}{data.frame with at least \code{accver}, \code{start},
-\code{end}; optional \code{label}, \code{category} and \code{color}.
-Factor start/end columns use their numeric labels, not level codes.
-An explicit \code{sequence_unit} must match the backbone (bp or aa). The closed
-interval from start to end fills the display edges start - 1 to end.
-A single base or residue occupies one unit.
-A data callback receives the plot's reference table.}
+\item{data}{Observation table or a data function. For ggchord layers, provide the required data-role columns.}
 
-\item{fill}{Character. Default fill colour for regions, default
-\code{"#F59E0B"}.}
+\item{shape}{Default shape. An explicitly supplied fixed shape takes priority over its mapping.}
 
-\item{colour}{Outline colour, default \code{"#B45309"}.}
+\item{thickness}{Physical thickness in mm or absolute grid units. Named values select references.}
 
-\item{alpha}{Numeric (0-1). Region alpha, default 0.25.}
+\item{stat}{A compatible ggplot2 Stat or its name. The default uses the supplied records.}
 
-\item{region_width}{Numeric. Band width in chord radius units, default 0.08.}
+\item{position}{A compatible Position for placement of the layer geometry.}
 
-\item{region_offset}{Numeric. Radial offset from the sequence arc, default 0.}
+\item{alpha}{Opacity from zero to one.}
 
-\item{region_side}{Character. \code{"inside"}, \code{"outside"} or
-\code{"auto"}; \code{"auto"} places regions inside the chord when possible.}
+\item{...}{Additional named visual styles and parameters accepted by this layer.}
 
-\item{position, show.legend, inherit.aes}{Standard ggplot2 layer arguments.}
+\item{na.rm}{Suppress warnings for missing observations that the layer can omit.}
 
-\item{...}{Additional arguments passed to \code{geom_polygon()}}
+\item{show.legend}{Logical or named logical indicating whether the layer contributes legend keys.}
 
-\item{id}{Optional unique layer ID for layout and source exports.}
+\item{inherit.aes}{Whether to inherit plot mappings and evaluate them on the layer data.}
+
+\item{id}{Optional plot-local layer identifier. Name a layer explicitly to scope a scale, anchor a label or export it.}
 }
 \value{
-A ggplot2 layer.
+A ggplot2 layer for addition to a plot.
 }
 \description{
-Draws rectangular bands on sequence arcs for one or more coordinate
-intervals. This is useful for marking loci, repeats, CRISPR arrays, or other
-user-defined regions without turning them into gene arrows.
+Highlight reference intervals
+}
+\details{
+Provide one-based closed intervals with \code{accver}, \code{start} and \code{end}. A strand or disjoint segments can be supplied where appropriate. The gene shortcut defaults to an arrow and strand placement. The primer shortcut defaults to a directional narrow path, and the region shortcut defaults to a translucent block.
 }
 \examples{
-library(dplyr)
-data(seq_data_example)
-seqs <- seq_data_example |>
-  select(accver, length)
-data(ribbon_data_example)
-links <- ribbon_data_example |>
-  select(qaccver, saccver, qstart, qend, sstart, send)
-region <- tibble(
-  accver = links$qaccver[1], start = min(links$qstart[1], links$qend[1]),
-  end = max(links$qstart[1], links$qend[1])
+seqs <- data.frame(
+  accver = c("A", "B"), length = c(1000, 800),
+  sequence_unit = "bp", topology = "linear"
 )
-ggchord(data = seqs) +
+
+genes <- data.frame(
+  accver = c("A", "A", "B"), feature_id = c("g1", "g2", "g3"),
+  start = c(100, 400, 150), end = c(240, 620, 380),
+  strand = c("+", "-", "+"), label = c("g1", "g2", "g3"),
+  type = c("CDS", "tRNA", "CDS")
+)
+
+ggchord(seqs) +
+  geom_seq_region(data = genes, fill = "#E5B66A", thickness = 4) +
   geom_seq() +
-  geom_seq_region(data = region)
+  coord_collinear()
 }

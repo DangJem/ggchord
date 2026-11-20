@@ -25,92 +25,114 @@ ggchord_ribbon_visible_polygon <- function(path, nq, ns, tip) {
     if (shape$tip == "none") subject, shape$edge1[ne:1L, , drop = FALSE])
 }
 
-# Ribbon colour follows the sampled Bezier parameter, never screen x/y.
+# Preserve complete fronts in exported data and add separate decoration at draw time.
 GeomRibbonFlow <- ggplot2::ggproto("GeomRibbonFlow", ggplot2::GeomPolygon,
-  default_aes = utils::modifyList(ggplot2::GeomPolygon$default_aes,
-    ggplot2::aes(flow_from=NA_character_, flow_to=NA_character_, flow_qn=0, flow_sn=0, flow_tip=NA_character_)),
-  extra_params = c("na.rm", "flow", "tip"),
-  draw_panel = function(data, panel_params, coord, na.rm=FALSE, rule="evenodd",
-      flow=FALSE, tip="none") {
-    if (!flow && tip == "none") return(ggplot2::GeomPolygon$draw_panel(data,panel_params,coord,rule=rule))
-    groups <- split(data,data$group)
-    device_pixels <- if(grDevices::dev.cur()==1L) 1e6 else prod(grDevices::dev.size("px"))
-    pixel_budget <- min(8e6,max(2e6,device_pixels*4))/max(1,length(groups))
-    reduced <- 0L
-    grobs <- lapply(groups,function(d) {
-      if(!is.null(d$flow_tip) && !is.na(d$flow_tip[1]))tip <- as.character(d$flow_tip[1])
-      nq <- as.integer(d$flow_qn[1]); ns <- as.integer(d$flow_sn[1])
-      ne <- (nrow(d)-nq-ns)/2
-      if (nq < 1 || ns < 1 || ne < 2 || ne != floor(ne))
-        return(ggplot2::GeomPolygon$draw_panel(d,panel_params,coord,rule=rule))
-      # Geometry is query front, second edge, reversed subject front,
-      # reversed first edge. Both edges below run query -> subject.
-      edge2 <- d[nq+seq_len(ne),c("x","y")]
-      edge1 <- d[nrow(d)-seq_len(ne)+1L,c("x","y")]
-      xy1 <- as.matrix(edge1); xy2 <- as.matrix(edge2)
-      t <- seq(0,1,length.out=ne)
-      subject_rows <- nq+ne+seq_len(ns)
-      shape <- ggchord_ribbon_tip_edges(xy1, xy2, as.matrix(d[subject_rows, c("x", "y")]), tip)
-      if (tip == "subject" && shape$tip == "none") warning(
-        "Ribbon subject tip has a degenerate interval/channel; keeping the full front", call. = FALSE)
-      xy1 <- shape$edge1; xy2 <- shape$edge2; tip <- shape$tip
-
-      colors <- if (flow) {
-        if (is.na(d$flow_from[1]) || is.na(d$flow_to[1])) rep(NA_character_,ne-1L) else
-          { endpoints <- c(d$flow_from[1],d$flow_to[1])
-            opacity <- grDevices::col2rgb(endpoints,alpha=TRUE)[4,]/255
-            scales::alpha(grDevices::colorRampPalette(endpoints,space="Lab")(ne-1L),
-              seq(opacity[1],opacity[2],length.out=ne-1L)) }
-      } else rep(d$fill[1],ne-1L)
-      subject_rows <- nq+ne+seq_len(ns)
-      xy <- rbind(as.matrix(d[seq_len(nq),c("x","y")]),xy2,
-        if(tip=="none") as.matrix(d[subject_rows,c("x","y")]),xy1[ne:1,,drop=FALSE])
-      fill <- ggchord_ribbon_mesh_fill(xy1,xy2,xy,colors,d$alpha[1],coord,panel_params,pixel_budget)
-      if(isTRUE(attr(fill,"ggchord_reduced_fill")))reduced <<- reduced+1L
-      border <- d[rep(1L,nrow(xy)),,drop=FALSE]
-      border$x<-xy[,1];border$y<-xy[,2];border$fill<-NA
+  default_aes = aes(fill = "grey70", colour = NA, alpha = .6, linewidth = .3,
+    linetype = 1, fill_from = NA_character_, fill_to = NA_character_,
+    flow_qn = 0, flow_sn = 0),
+  extra_params = c("na.rm", "flow", "tip", "tip_length"),
+  draw_panel = function(data, panel_params, coord, na.rm = FALSE, rule = "evenodd",
+      flow = FALSE, tip = "none", tip_length = 2) {
+    if (!flow && tip == "none")
+      return(ggplot2::GeomPolygon$draw_panel(data, panel_params, coord, rule = rule))
+    groups <- split(data, data$group)
+    device_pixels <- if (grDevices::dev.cur() == 1L) 1e6 else prod(grDevices::dev.size("px"))
+    pixel_budget <- min(8e6, max(2e6, device_pixels * 4)) / max(1, length(groups))
+    metric <- c(grid::convertWidth(grid::unit(1, "npc"), "mm", TRUE),
+      grid::convertHeight(grid::unit(1, "npc"), "mm", TRUE))
+    grobs <- lapply(groups, function(d) {
+      nq <- as.integer(d$flow_qn[1L])
+      ns <- as.integer(d$flow_sn[1L])
+      ne <- (nrow(d) - nq - ns) / 2
+      if (is.na(ne) || nq < 1 || ns < 1 || ne < 2 || ne != floor(ne))
+        return(ggplot2::GeomPolygon$draw_panel(d, panel_params, coord, rule = rule))
+      query <- as.matrix(d[seq_len(nq), c("x", "y")])
+      subject <- as.matrix(d[nq + ne + seq_len(ns), c("x", "y")])
+      edge2 <- as.matrix(d[nq + seq_len(ne), c("x", "y")])
+      edge1 <- as.matrix(d[nrow(d) - seq_len(ne) + 1L, c("x", "y")])
+      decorated <- function(a, b, front, reverse = FALSE) {
+        if (reverse) {
+          a <- a[ne:1L, , drop = FALSE]
+          b <- b[ne:1L, , drop = FALSE]
+        }
+        center <- (a + b) / 2
+        screen <- coord$transform(data.frame(x = center[, 1L], y = center[, 2L]), panel_params)
+        length_mm <- c(0, cumsum(sqrt((diff(screen$x) * metric[1L])^2 +
+          (diff(screen$y) * metric[2L])^2)))
+        shoulder <- max(which(length_mm <= max(length_mm) - min(tip_length, max(length_mm) / 2)),
+          1L)
+        if (shoulder >= ne || max(length_mm) <= 0)
+          return(list(a = edge1, b = edge2, applied = FALSE))
+        marker <- colMeans(front)
+        t <- seq(0, 1, length.out = ne - shoulder + 1L)
+        a[shoulder:ne, ] <- outer(1 - t, a[shoulder, ]) + outer(t, marker)
+        b[shoulder:ne, ] <- outer(1 - t, b[shoulder, ]) + outer(t, marker)
+        if (reverse) {
+          a <- a[ne:1L, , drop = FALSE]
+          b <- b[ne:1L, , drop = FALSE]
+        }
+        list(a = a, b = b, applied = TRUE)
+      }
+      if (tip %in% c("from", "both")) {
+        shape <- decorated(edge1, edge2, query, TRUE)
+        edge1 <- shape$a; edge2 <- shape$b
+        if (shape$applied) query <- query[FALSE, , drop = FALSE]
+      }
+      if (tip %in% c("to", "both")) {
+        shape <- decorated(edge1, edge2, subject)
+        edge1 <- shape$a; edge2 <- shape$b
+        if (shape$applied) subject <- subject[FALSE, , drop = FALSE]
+      }
+      xy <- rbind(query, edge2, subject, edge1[ne:1L, , drop = FALSE])
+      border <- d[rep(1L, nrow(xy)), , drop = FALSE]
+      border$x <- xy[, 1L]; border$y <- xy[, 2L]
+      if (!flow) return(ggplot2::GeomPolygon$draw_panel(border, panel_params, coord, rule = rule))
+      endpoints <- c(d$fill_from[1L], d$fill_to[1L])
+      if (anyNA(endpoints)) return(grid::nullGrob())
+      opacity <- grDevices::col2rgb(endpoints, alpha = TRUE)[4L, ] / 255
+      n <- max(2L, ne - 1L)
+      colors <- scales::alpha(grDevices::colorRampPalette(endpoints, space = "Lab")(n),
+        seq(opacity[1L], opacity[2L], length.out = n))
+      fill <- ggchord_ribbon_mesh_fill(edge1, edge2, xy, colors, d$alpha[1L],
+        coord, panel_params, pixel_budget)
+      border$fill <- NA
       grid::grobTree(fill,
-        ggplot2::GeomPolygon$draw_panel(border,panel_params,coord,rule=rule))
+        ggplot2::GeomPolygon$draw_panel(border, panel_params, coord, rule = rule))
     })
-    if(reduced>0L)warning(sprintf("Gradient fill resolution reduced for %d ribbon(s) to bound device memory; source intervals and vector outlines are retained",reduced),call.=FALSE)
-    do.call(grid::grobTree,grobs)
+    do.call(grid::grobTree, grobs)
+  },
+  draw_key = function(data, params, size) {
+    if (isTRUE(params$flow)) {
+      endpoints <- c(data$fill_from, data$fill_to)
+      data$fill <- c(endpoints[!is.na(endpoints)], "grey70")[1L]
+    }
+    ggplot2::draw_key_polygon(data, params, size)
   })
 
-ggchord_ribbon_flow <- function(layer, geometry, layout, plot, sequence_colours=NULL) {
-  if (!identical(layer$ggchord_type,"ribbon") || !nrow(geometry)) return(list(layer=layer,data=geometry))
-  flow <- ggchord_ribbon_uses_flow(layer,plot)
+ggchord_ribbon_flow <- function(layer, geometry, layout, plot) {
+  if (!identical(layer$ggchord_type, "ribbon") || !nrow(geometry))
+    return(list(layer = layer, data = geometry))
+  flow <- identical(layer$ggchord_params$fill_mode, "endpoint")
+  mapping <- layer$ggchord_input_mapping
+  channels <- c(names(mapping), names(layer$aes_params))
+  if (!flow && any(c("fill_from", "fill_to") %in% channels))
+    ggchord_stop("Endpoint colours require fill_mode = 'endpoint'")
   if (flow) {
-    if (is.null(sequence_colours)) sequence_colours <- ggchord_sequence_display_colours(plot,layout)
-    endpoint_colour <- function(query) {
-      ids <- if(is.null(layout$display_instances)) {
-        if(query) geometry$qaccver else geometry$saccver
-      } else if(query) geometry$q_instance else geometry$s_instance
-      fallback <- unname((layout$legend_seq_colors %||% layout$seq_colors)[if(query) geometry$qaccver else geometry$saccver])
-      for (rows in split(seq_len(nrow(geometry)),geometry$group)) {
-        d<-geometry[rows,,drop=FALSE]
-        front <- if(query) seq_len(d$.q_n[1]) else d$.q_n[1]+(nrow(d)-d$.q_n[1]-d$.s_n[1])/2+seq_len(d$.s_n[1])
-        centre <- colMeans(d[front,c("x","y"),drop=FALSE])
-        candidates <- which(sequence_colours$instance==ids[rows[1]])
-        if(length(candidates)) {
-          at <- candidates[which.min((sequence_colours$x[candidates]-centre[1])^2+(sequence_colours$y[candidates]-centre[2])^2)]
-          fallback[rows] <- sequence_colours$colour[at]
-        }
-      }
-      fallback
+    if ("fill" %in% channels) ggchord_stop("Endpoint ribbons use fill_from and fill_to")
+    scopes <- ggchord_scale_scopes(plot)
+    for (channel in c("fill_from", "fill_to")) {
+      if (channel %in% names(layer$aes_params)) next
+      scoped <- any(vapply(scopes, function(scope) {
+        channel %in% scope$aesthetics && any(vapply(plot$layers[scope$selected],
+          function(candidate) identical(candidate$ggchord_layer_id, layer$ggchord_layer_id), logical(1)))
+      }, logical(1)))
+      if (!channel %in% names(mapping) || (!plot$scales$has_scale(channel) && !scoped))
+        ggchord_stop("Endpoint ribbons require a fixed colour or an explicit scale for ", channel)
     }
-    geometry$.flow_from <- endpoint_colour(TRUE)
-    geometry$.flow_to <- endpoint_colour(FALSE)
-    layer$mapping$ribbon_fill <- NULL
-    layer$mapping$flow_from <- ggplot2::aes(flow_from=I(.flow_from))$flow_from
-    layer$mapping$flow_to <- ggplot2::aes(flow_to=I(.flow_to))$flow_to
   }
-  geometry$.flow_tip <- layer$ggchord_params$tip %||% "none"
-  layer$mapping$flow_tip <- ggplot2::aes(flow_tip=I(.flow_tip))$flow_tip
-  layer$mapping$flow_qn <- ggplot2::aes(flow_qn=I(.q_n))$flow_qn
-  layer$mapping$flow_sn <- ggplot2::aes(flow_sn=I(.s_n))$flow_sn
-  layer$geom_params$flow <- flow
-  layer$geom_params$tip <- layer$ggchord_params$tip %||% "none"
-  list(layer=layer,data=geometry)
+  layer$mapping$flow_qn <- aes(flow_qn = I(.q_n))$flow_qn
+  layer$mapping$flow_sn <- aes(flow_sn = I(.s_n))$flow_sn
+  list(layer = layer, data = geometry)
 }
 
 # Paint the mesh once so translucent strips cannot accumulate edge seams.
@@ -175,39 +197,4 @@ ggchord_ribbon_mesh_fill <- function(edge1,edge2,outline,colours,alpha,coord,pan
   device_dimensions <- pmax(2L,ceiling(c(diff(limits[1:2]),diff(limits[3:4]))*panel_inches*(pixels/canvas)))
   attr(grob,"ggchord_reduced_fill") <- any(dimensions < .8*device_dimensions)
   grob
-}
-
-# Resolve the actual sequence aesthetic through the same geom, staged mapping
-# and scales as the visible layer. The small bare ggplot cannot recurse into
-# ggchord layout. Last sequence layer is the visible owner where layers overlap.
-ggchord_sequence_display_colours <- function(plot,layout) {
-  layers <- Filter(function(layer) identical(layer$ggchord_type,"seq"),plot$layers)
-  empty <- data.frame(instance=character(),x=numeric(),y=numeric(),colour=character())
-  if(!length(layers)) layers <- list(geom_seq(show.legend=FALSE))
-  layer <- tail(layers,1)[[1]]
-  geometry <- extract_ggchord_layer_data(layer,layout)
-  if(!nrow(geometry))return(empty)
-  if (!".component" %in% names(geometry)) geometry$.component <- "path"
-  if (!"group" %in% names(geometry)) geometry$group <- match(geometry$accver,unique(geometry$accver))
-  layer$ggchord_resolved_input <- geometry
-  layer <- ggchord_draw_layer(layer, geometry, layout$layer_inputs[[layer$ggchord_layer_id]][["seq"]])
-  native <- ggplot2::ggplot(mapping=plot$mapping)+layer
-  for (name in c("seq_colour", "colour")) {
-    explicit <- plot$scales$get_scales(name)
-    if (!is.null(explicit)) native$scales$add(explicit$clone())
-  }
-  defaults <- list(scale_seq_colour_manual(values=layout$legend_seq_colors %||% layout$seq_colors,guide="none"))
-  defaults <- ggchord_infer_visual_scales(native,layout,defaults)
-  native <- attach_ggchord_scales(native,defaults)
-  built <- ggplot2::ggplot_build(native)$data[[1]]
-  data.frame(instance=if(is.null(layout$display_instances)) as.character(geometry$accver) else geometry$display_instance_id,
-    x=geometry$x,y=geometry$y,colour=built$colour %||% built$seq_colour,stringsAsFactors=FALSE)
-}
-
-ggchord_ribbon_uses_flow <- function(layer,plot) {
-  if(!identical(layer$ggchord_type,"ribbon") || !isTRUE(layer$ggchord_params$gradient))return(FALSE)
-  user <- layer$ggchord_input_mapping
-  if(isTRUE(layer$inherit.aes))user <- c(user,plot$mapping[setdiff(names(plot$mapping),names(user))])
-  is.null(layer$aes_params$ribbon_fill) && !any(c("ribbon_fill", "fill") %in% names(user)) &&
-    !plot$scales$has_scale("ribbon_fill") && !plot$scales$has_scale("fill")
 }

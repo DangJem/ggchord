@@ -10,7 +10,9 @@
     ggchord.axis.ticks = ggplot2::element_line(),
     ggchord.axis.minor.ticks = ggplot2::element_line(),
     ggchord.axis.text = ggplot2::element_text(),
+    ggchord.axis.title = ggplot2::element_text(),
     ggchord.track.axis.line = ggplot2::element_line(),
+    ggchord.track.axis.ticks = ggplot2::element_line(),
     ggchord.track.axis.text = ggplot2::element_text(),
     ggchord.track.axis.title = ggplot2::element_text(),
     ggchord.seq.label = ggplot2::element_text(),
@@ -32,6 +34,8 @@
       "ggchord.axis.text.orientation" = ggplot2::el_def(c("character", "numeric")),
       "ggchord.axis.text.check.overlap" = ggplot2::el_def("logical"),
       "ggchord.track.axis.line" = ggplot2::el_def("element_line", inherit = "ggchord.axis.line"),
+      "ggchord.track.axis.ticks" = ggplot2::el_def("element_line", inherit = "line"),
+      "ggchord.track.axis.ticks.length" = ggplot2::el_def("unit"),
       "ggchord.track.axis.text" = ggplot2::el_def("element_text", inherit = "ggchord.axis.text"),
       "ggchord.track.axis.title" = ggplot2::el_def("element_text", inherit = "ggchord.track.axis.text"),
       "ggchord.track.axis.text.offset" = ggplot2::el_def("unit"),
@@ -42,6 +46,7 @@
         "element_line", inherit = "line"
       ),
       "ggchord.axis.text" = ggplot2::el_def("element_text", inherit = "text"),
+      "ggchord.axis.title" = ggplot2::el_def("element_text", inherit = "text"),
       "ggchord.seq.label" = ggplot2::el_def("element_text", inherit = "text"),
       "ggchord.gene.label" = ggplot2::el_def("element_text", inherit = "text"),
       "ggchord.gene.label.segment" = ggplot2::el_def(
@@ -109,30 +114,7 @@ ggchord_reject_retired <- function(dots, caller, migrations,
 # Plot-owned layout access
 # ====================================================================
 
-#' Get the chord layout from a ggchord plot
-#'
-#' Returns the layout owned by an explicit ggchord plot. This avoids ambiguous
-#' cross-talk when several plots are built in one R session.
-#' For layer-aware tabular results, prefer [export_ggchord_layout()]. See
-#' [ggchord_layout_contract] for fields, units and cache ownership.
-#' Device/context changes invalidate cached estimates, including ordinary
-#' label layouts. `build = FALSE` then reports that no current layout is cached.
-#'
-#' @param plot A ggchord plot.
-#' @param build Logical. Build the layout when it is not cached, default TRUE.
-#' @return A chord layout list containing the computed geometry (sequence
-#'   arcs, ribbon polygons, gene arrows, axis elements, extremes, colors, etc.)
-#' @md
-#' @export
-#'
-#' @examples
-#' library(dplyr)
-#' data(seq_data_example)
-#' seqs <- seq_data_example |>
-#'   select(accver, length)
-#' p <- ggchord(data = seqs) +
-#'   geom_seq()
-#' get_chord_layout(p)$seqs
+#' @noRd
 get_chord_layout <- function(plot, build = TRUE) {
   old_error <- ggchord_disable_debug()
   on.exit(options(error = old_error), add = TRUE)
@@ -202,6 +184,7 @@ extract_ggchord_layer_data <- function(lyr, layout) {
 ggchord_axis_label_geometry <- function(layout, labels) {
   if (!nrow(labels) || !isTRUE(layout$circular)) return(labels)
   curved <- !is.na(labels$label_along_axis) & labels$label_along_axis
+  if (!is.null(labels$.axis_plotmath)) curved <- curved & !(labels$.axis_plotmath %in% TRUE)
   if (!any(curved)) return(labels)
   text <- labels[curved, , drop = FALSE]
   text$text <- text$label
@@ -258,7 +241,15 @@ ggchord_axis_geometry <- function(layout) {
     label$hjust <- label$label_hjust
     label$vjust <- label$label_vjust
   }
-  values <- Filter(nrow, list(line, tick, label))
+  heading <- layout$axis_heading
+  if (NROW(heading)) {
+    heading$.component <- "title"
+    heading$x <- heading$label_x
+    heading$y <- heading$label_y
+    heading$angle <- heading$label_angle
+    heading$hjust <- heading$vjust <- .5
+  }
+  values <- Filter(function(x) NROW(x) > 0, list(line, tick, label, heading))
   if (!length(values)) {
     return(data.frame(x=numeric(),y=numeric(),xend=numeric(),yend=numeric(),
       label=character(),group=integer(),.component=character(),
@@ -279,7 +270,8 @@ ggchord_axis_layer <- function(layout, components = NULL, data = ggchord_axis_ge
   mapping <- ggplot2::aes(
     x = x, y = y, xend = xend, yend = yend, label = label,
     group = group, size = I(size), angle = angle,
-    hjust = hjust, vjust = vjust, .component = I(.component)
+    hjust = hjust, vjust = vjust, .component = I(.component),
+    .axis_plotmath = I(.axis_plotmath)
   )
   # A line-only axis has no tick endpoints or text columns. Let the geom's
   # existing defaults supply unused aesthetics rather than evaluating absent
@@ -292,13 +284,14 @@ ggchord_axis_layer <- function(layout, components = NULL, data = ggchord_axis_ge
     show.legend = FALSE, inherit.aes = FALSE, check.aes = FALSE,
     check.param = FALSE,
     params = list(line_params = list(), tick_params = list(),
-      minor_tick_params = list(), text_params = list(), na.rm = FALSE)
+      minor_tick_params = list(), text_params = list(), title_params = list(), na.rm = FALSE)
   )
   lyr$ggchord_theme_components <- c(
     line_params = "ggchord.axis.line",
     tick_params = "ggchord.axis.ticks",
     minor_tick_params = "ggchord.axis.minor.ticks",
-    text_params = "ggchord.axis.text"
+    text_params = "ggchord.axis.text",
+    title_params = "ggchord.axis.title"
   )
   lyr
 }

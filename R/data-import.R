@@ -257,68 +257,46 @@ read_blast_single <- function(file, format = c("auto", "outfmt6", "outfmt7", "cu
   raw[, c(req, extra), drop = FALSE]
 }
 
-#' Read one or more BLAST tabular output files into ribbon_data format
+#' Read a BLAST tabular result
 #'
-#' Both `file` and `files` accept literal path vectors or wildcard patterns.
-#' Repeated resolved paths are read once, in first-occurrence order. Known numeric
-#' fields are converted; custom metadata and identifiers retain their spelling
-#' unless an explicit column class is supplied.
-#' Standard `-outfmt 6` and `-outfmt 7` use the default 12 tabular fields.
-#' Omitting `-outfmt`
-#' entirely produces pairwise text, which this tabular reader does not parse.
+#' Read standard 12-column outfmt 6, outfmt 7 with declared fields or a
+#' custom table. Retain the original alignment column count and source
+#' identity, and preserve direction separately from ordered endpoints.
+#' Standard BLAST output does not declare complete reference lengths.
 #'
-#' The reader also parses BLASTp tabular output. It preserves the producer's
-#' numeric endpoints and does not infer or convert amino-acid/nucleotide units.
-#' Supply complete protein lengths with `sequence_unit = "aa"` for native
-#' protein plots. Protein intervals require an explicit CDS projection for
-#' plotting on a nucleotide genome. Reading a protein HSP does not establish
-#' an ungapped nucleotide correspondence.
-#' See [project_ggchord_features()] and [project_ggchord_links()].
-#'
-#' @param file Optional path vector or glob patterns; read before `files`.
-#' @param files Optional character vector of BLAST tabular output files
-#'   (literal paths and/or wildcard patterns). All matched files are read and
-#'   combined into one data.frame.
-#' @param format Character. `"auto"` (default) detects the column layout
-#'   from the file; `"outfmt6"` requires the standard 12-column layout,
-#'   `"outfmt7"` parses its `# Fields:` declaration, and `"custom"` requires
-#'   `col_names`.
-#' @param col_names Optional character vector naming the columns in the file,
-#'   used with `format = "custom"` or to override auto-detection.
-#' @param comment Character comment character, default `"#"` (BLAST
-#'   outfmt 7 header lines start with `#`).
-#' @param source_file Logical. Add a `.source_file` column when reading one or
-#'   more files, default `FALSE`.
-#' @param ... Additional arguments passed to [utils::read.table()]
-#'   (e.g. `na.strings`).
-#'
-#' @return A data.frame with the required ribbon columns first
-#'   (`qaccver`, `saccver`, `qstart`, `qend`, `sstart`, `send`) followed by any preserved optional columns.
-#'   A `ggchord_import` attribute records files, per-file output row counts and
-#'   the one-based inclusive coordinate convention.
-#' @seealso \code{\link{ggchord_data_contract}}
+#' @param file Local BLAST table paths.
+#' @param format `"auto"`, `"outfmt6"`, `"outfmt7"`, or `"custom"`.
+#' @param col_names Explicit input column names for custom tables.
+#' @param comment Comment prefix. Supply an empty string to disable comments.
+#' @param source_file Whether to include row-level source paths.
+#' @return An interval relationship table with file and row provenance.
 #' @export
-#'
 #' @examples
-#' \dontrun{
-#' library(dplyr)
-#' # Standard 12-column records; requires the source checkout or tutorial input bundle.
-#' source <- read_blast("examples/blastn-standard/MT108731.1__MT118296.1.tsv")
-#' links <- source |>
-#'   select(qaccver, saccver, qstart, qend, sstart, send)
-#' }
-read_blast <- function(file = NULL, files = NULL,
-                       format = c("auto", "outfmt6", "outfmt7", "custom"),
-                       col_names = NULL, comment = "#", source_file = FALSE,
-                       ...) {
+#' f <- tempfile(fileext = ".tsv")
+#' writeLines("A	B	98	141	2	0	100	240	150	290	1e-20	100", f)
+#' blast <- read_blast(f, format = "outfmt6")
+#' unlink(f)
+read_blast <- function(file, format = "auto", col_names = NULL,
+                       comment = "#", source_file = FALSE) {
   old_error <- ggchord_disable_debug()
   on.exit(options(error = old_error), add = TRUE)
 
-  format <- match.arg(format)
-  paths <- ggchord_resolve_files(file, files, "read_blast")
+  format <- match.arg(format, c("auto", "outfmt6", "outfmt7", "custom"))
+  paths <- ggchord_resolve_files(file, NULL, "read_blast")
   out <- lapply(paths, function(f) {
     data <- read_blast_single(f, format = format, col_names = col_names,
-                              comment = comment, ...)
+                              comment = comment)
+    if (all(ggchord_ribbon_required_columns() %in% names(data))) {
+      for (field in intersect(c("qstrand", "sstrand"), names(data))) {
+        original <- as.character(data[[field]])
+        text <- tolower(trimws(original))
+        named <- text %in% c("plus", "minus")
+        if (!any(named)) next
+        data[[paste0("source_", field)]] <- original
+        data[[field]][named] <- unname(c(plus = "+", minus = "-")[text[named]])
+      }
+      data <- ggchord_order_link_endpoints(data, "read_blast()", directional_order = TRUE)
+    }
     ggchord_add_source_file(data, f, source_file)
   })
   ggchord_format_import(ggchord_rbind_fill(out), paths, "BLAST",
@@ -334,7 +312,7 @@ read_gff3_single <- function(file, feature_types = "CDS",
   on.exit(options(error = old_error), add = TRUE)
 
   unstranded <- match.arg(unstranded)
-  if (!is.character(feature_types) || length(feature_types) == 0) {
+  if (!is.null(feature_types) && (!is.character(feature_types) || !length(feature_types) || anyNA(feature_types))) {
     ggchord_stop("read_gff3(): feature_types must be a non-empty character vector",
          call. = FALSE)
   }
@@ -376,7 +354,7 @@ read_gff3_single <- function(file, feature_types = "CDS",
             call. = FALSE)
   }
 
-  sub <- raw[raw$type %in% feature_types, , drop = FALSE]
+  sub <- if (is.null(feature_types)) raw else raw[raw$type %in% feature_types, , drop = FALSE]
   if (nrow(sub) == 0) {
     ggchord_stop(sprintf(paste0("read_gff3(): no features of type(s) %s found in %s; ",
                         "use feature_types to select the features to keep"),
@@ -430,61 +408,52 @@ read_gff3_single <- function(file, feature_types = "CDS",
     vapply(strsplit(substring(hit[1L], 8L), ",", fixed = TRUE)[[1]],
       gff3_percent_decode, character(1), USE.NAMES = FALSE)
   }))
+  declaration <- grep("^##", lines, value = TRUE)
+  attr(out, "source_declarations") <- declaration
+  attr(out, "source_records") <- setNames(data_lines, source_line)
   out
 }
 
-#' Read feature annotations from one or more GFF3 files
+#' Read GFF3 annotations
 #'
-#' `file` reads a single GFF3 file; `files` reads multiple files at once and
-#' combines them. `files` accepts a character vector of literal paths and/or
-#' wildcard patterns (e.g. `"examples/gff3/*.gff3"`).
+#' Retain unknown strand and phase. Repeated IDs may represent separate
+#' parts of one biological feature. Parent IDs are decoded as lists and
+#' the original file declarations and source records are reported.
 #'
-#' @param file Optional path vector or glob patterns; read before `files`.
-#' @param files Optional character vector of GFF3 files (literal paths and/or
-#'   wildcard patterns). All matched files are read and combined.
-#' @param feature_types Character vector of feature types to keep, default
-#'   `"CDS"`.
-#' @param anno_from Character vector of GFF3 attribute keys, tried in order to
-#'   fill the `anno` column.
-#' @param unstranded `"plus"` (the default) assigns unknown strands to `+`;
-#'   `"drop"` removes them. Use `"keep"` with [geom_feature()] to retain them
-#'   as nondirectional `.` intervals. `source_strand` always records the input.
-#' @param source_file Logical. Add a `.source_file` column when reading one or
-#'   more files, default `FALSE`.
-#'
-#' @return A data.frame with `accver`, `start`, `end`, `strand`, `anno`
-#'   followed by `type`, `source`, `score`, `phase`, `attributes`,
-#'   `source_strand`, `feature_id` (decoded GFF3 ID, or missing) and a
-#'   `parent_ids` list-column. Repeated IDs for discontinuous features and
-#'   multiple parents are retained; selecting feature types may omit parents.
-#'   A `ggchord_import` attribute records files, per-file output row counts and
-#'   the one-based inclusive coordinate convention.
-#' @seealso \code{\link{ggchord_data_contract}}
+#' @param file Local GFF3 paths.
+#' @param feature_types Optional set of feature types. NULL keeps all.
+#' @param label_from Ordered attributes used to derive the label.
+#' @param unstranded `"keep"` retains unknown strands. `"drop"` removes
+#'   those rows.
+#' @param source_file Whether to include row-level source paths.
+#' @return A feature table with ordered source intervals, attributes,
+#'   labels, parent IDs, strand, phase and a file report.
 #' @export
-#'
 #' @examples
-#' \dontrun{
-#' library(dplyr)
-#' # Requires the source checkout or tutorial input bundle.
-#' source <- read_gff3("examples/gff3/MT108731.1.gff3", unstranded = "keep")
-#' features <- source |>
-#'   select(accver, start, end, strand, anno)
-#' }
-read_gff3 <- function(file = NULL, files = NULL, feature_types = "CDS",
-                      anno_from = c("product", "Name", "gene", "ID"),
-                      unstranded = c("plus", "drop", "keep"), source_file = FALSE) {
+#' f <- tempfile(fileext=".gff3")
+#' writeLines(c("##gff-version 3",
+#'  "A	source	CDS	100	240	.	+	0	ID=g1;Name=example"), f)
+#' ann <- read_gff3(f, feature_types="CDS")
+#' unlink(f)
+read_gff3 <- function(file, feature_types = NULL,
+                      label_from = c("product", "Name", "gene", "ID"),
+                      unstranded = "keep", source_file = FALSE) {
   old_error <- ggchord_disable_debug()
   on.exit(options(error = old_error), add = TRUE)
 
-  unstranded <- match.arg(unstranded)
-  paths <- ggchord_resolve_files(file, files, "read_gff3")
+  unstranded <- match.arg(unstranded, c("keep", "drop"))
+  paths <- ggchord_resolve_files(file, NULL, "read_gff3")
   out <- lapply(paths, function(f) {
     data <- read_gff3_single(f, feature_types = feature_types,
-                             anno_from = anno_from, unstranded = unstranded)
+                             anno_from = label_from, unstranded = unstranded)
+    data$label <- data$anno
     ggchord_add_source_file(data, f, source_file)
   })
-  ggchord_format_import(ggchord_rbind_fill(out), paths, "GFF3",
+  result <- ggchord_format_import(ggchord_rbind_fill(out), paths, "GFF3",
     vapply(out, nrow, integer(1)), "1-based-inclusive")
+  attr(result, "ggchord_import")$declarations <- setNames(lapply(out, attr, "source_declarations"), paths)
+  attr(result, "ggchord_import")$source_records <- setNames(lapply(out, attr, "source_records"), paths)
+  result
 }
 
 #' Extract a GFF3 attribute value by key
@@ -514,7 +483,7 @@ gff3_percent_decode <- function(x) {
 
 # Internal single-file reader; the public read_fasta_lengths() wrapper
 # resolves `file` / `files` and combines the result.
-read_fasta_lengths_single <- function(file, header_delim = NULL, keep_sequence = FALSE) {
+read_fasta_lengths_single <- function(file, header_delim = NULL, keep_sequence = FALSE, allow_gaps = FALSE) {
   old_error <- ggchord_disable_debug()
   on.exit(options(error = old_error), add = TRUE)
 
@@ -541,8 +510,11 @@ read_fasta_lengths_single <- function(file, header_delim = NULL, keep_sequence =
     if (anyNA(ids) || any(!nzchar(ids))) ggchord_stop("read_fasta_lengths(): empty sequence identifier in ", file)
     rows <- which(!header & index > 0L)
     symbols <- gsub("[[:space:]]+", "", lines[rows])
+    if (!allow_gaps && any(grepl("[-.]", symbols)))
+      ggchord_stop("read_fasta_lengths(): use read_aligned_fasta() for gapped input: ", file)
     runs <- split(symbols, factor(index[rows], levels = unique(index[rows])))
-    chunks[[length(chunks) + 1L]] <- list(ids = ids, line = offset + which(header),
+    chunks[[length(chunks) + 1L]] <- list(ids = ids, title = substring(lines[header], 2L),
+      line = offset + which(header),
       index = unique(index[rows]), length = vapply(runs, function(x) sum(as.double(nchar(x))), numeric(1)),
       sequence = if (keep_sequence) vapply(runs, paste0, collapse = "", FUN.VALUE = character(1)))
     record <- tail(index, 1L)
@@ -553,7 +525,8 @@ read_fasta_lengths_single <- function(file, header_delim = NULL, keep_sequence =
   index <- collect("index")
   lens <- numeric(record)
   if (length(index)) lens[unique(index)] <- rowsum(collect("length"), index, reorder = FALSE)[, 1L]
-  out <- data.frame(accver = collect("ids"), length = lens, .source_line = collect("line"))
+  out <- data.frame(accver = collect("ids"), length = lens, source_title = collect("title"),
+    .source_line = collect("line"))
   if (keep_sequence) {
     sequence <- character(record)
     if (length(index)) sequence[unique(index)] <- vapply(
@@ -563,68 +536,46 @@ read_fasta_lengths_single <- function(file, header_delim = NULL, keep_sequence =
   out
 }
 
-#' Read one or more FASTA files into seq_data format
+#' Read complete sequence lengths from FASTA
 #'
-#' `file` reads a single FASTA file; `files` reads multiple files at once and
-#' combines them. `files` accepts a character vector of literal paths and/or
-#' wildcard patterns (e.g. `"examples/fasta/*.fna"`).
+#' Count both uppercase and lowercase source characters, excluding wrapping
+#' whitespace. Gaps belong in [read_aligned_fasta()]. A FASTA record's full
+#' length does not prove that it is the full chromosome from which the
+#' record originated.
 #'
-#' @param file Optional path vector or glob patterns; read before `files`.
-#' @param files Optional character vector of FASTA files (literal paths and/or
-#'   wildcard patterns). All matched files are read and combined.
-#' @param header_delim Optional character. When given, each header is split at
-#'   every occurrence of this delimiter and only the first piece is kept.
-#' @param source_file Logical. Add a `.source_file` column when reading one or
-#'   more files, default `FALSE`.
-#'
-#' @param sequence_unit Optional `"bp"` or `"aa"` declaration. When supplied,
-#'   adds that column to the result; the alphabet is not inferred. Omitted
-#'   units retain the existing output columns and ggchord interprets them as bp.
-#'
-#' @param keep_sequence Logical, default `FALSE`. Also retain the actual FASTA
-#'   characters in `sequence`, removing whitespace only and preserving case.
-#'   No alphabet, reverse complement or alignment columns are inferred. Gap
-#'   characters, if present, are counted in `length`; gapped input needs an
-#'   explicit alignment-to-source map before genomic use.
-#'
-#' @return A data.frame with columns `accver` and `length`, plus
-#'   `sequence_unit` and `sequence` when explicitly requested.
-#'   A `ggchord_import` attribute records files and per-file output row counts.
-#' @seealso \code{\link{ggchord_data_contract}}
+#' @param file Local FASTA paths.
+#' @param sequence_unit Explicit `"bp"` or `"aa"` coordinate unit.
+#' @param header_delim Optional literal identifier separator. The default
+#'   uses the first whitespace-separated token.
+#' @param keep_sequence Include original ungapped characters.
+#' @param source_file Whether to include row-level source paths.
+#' @return A reference data frame with accver, length and sequence_unit, and
+#'   optional sequence. Headers and file provenance are retained.
 #' @export
-#'
 #' @examples
-#' \dontrun{
-#' library(dplyr)
-#' # Requires the source checkout or tutorial input bundle.
-#' source <- read_fasta_lengths("examples/fasta/MT108731.1.fna")
-#' seqs <- source |>
-#'   select(accver, length)
-#' characters <- read_fasta_lengths(
-#'   "examples/fasta/MT108731.1.fna", keep_sequence = TRUE
-#' )
-#' }
-read_fasta_lengths <- function(file = NULL, files = NULL, header_delim = NULL,
-                               source_file = FALSE, sequence_unit = NULL,
-                               keep_sequence = FALSE) {
+#' f <- tempfile(fileext=".fa")
+#' writeLines(c(">A", "ACGTACGT"), f)
+#' ref <- read_fasta_lengths(f, sequence_unit="bp", keep_sequence=TRUE)
+#' unlink(f)
+read_fasta_lengths <- function(file, sequence_unit, header_delim = NULL,
+                               keep_sequence = FALSE, source_file = FALSE) {
   if (!is.logical(keep_sequence) || length(keep_sequence) != 1L || is.na(keep_sequence))
     ggchord_stop("read_fasta_lengths(): keep_sequence must be TRUE or FALSE")
-  if (!is.null(sequence_unit)) sequence_unit <- match.arg(sequence_unit, c("bp", "aa"))
+  if (missing(sequence_unit) || is.null(sequence_unit))
+    ggchord_stop("read_fasta_lengths(): declare sequence_unit as 'bp' or 'aa'")
+  sequence_unit <- match.arg(sequence_unit, c("bp", "aa"))
   old_error <- ggchord_disable_debug()
   on.exit(options(error = old_error), add = TRUE)
 
-  paths <- ggchord_resolve_files(file, files, "read_fasta_lengths")
+  paths <- ggchord_resolve_files(file, NULL, "read_fasta_lengths")
   out <- lapply(paths, function(f) {
     data <- read_fasta_lengths_single(f, header_delim = header_delim, keep_sequence = keep_sequence)
-    if (!is.null(sequence_unit)) data$sequence_unit <- sequence_unit
+    data$sequence_unit <- sequence_unit
     ggchord_add_source_file(data, f, source_file)
   })
   res <- ggchord_rbind_fill(out)
-  if (!is.null(res) && anyDuplicated(res$accver)) {
-    dup <- unique(res$accver[duplicated(res$accver)])
-    warning("read_fasta_lengths(): duplicate sequence IDs found: ",
-            paste(dup, collapse = ", "), call. = FALSE)
-  }
+  if (anyDuplicated(res$accver)) ggchord_stop("read_fasta_lengths(): duplicate reference IDs")
+  if (any(res$length < 1)) ggchord_stop("read_fasta_lengths(): empty records are not complete references")
   ggchord_format_import(res, paths, "FASTA", vapply(out, nrow, integer(1)),
     "sequence-lengths")
 }

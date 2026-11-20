@@ -7,10 +7,10 @@
 find_primer_bindings(
   sequence,
   primers = NULL,
-  set = c("universal", "all", "reference"),
-  match = c("exact", "three_prime"),
+  set = "universal",
+  match = "exact",
   min_annealed_bases = 15L,
-  circular = TRUE,
+  circular = NULL,
   unique_only = FALSE
 )
 }
@@ -48,11 +48,11 @@ Binding hits are sequence-search results, not experimental validation.
 annotations supply it; ambiguous bases do not contribute to that estimate.
 }
 \examples{
-target <- c(circle = "TTGCAAAAACG")
-find_primer_bindings(
-  target, primers = c(test = "ACGTTGCA"),
-  min_annealed_bases = 8
-)
+target <- c(A="TTGCAAAAACG")
+bindings <- find_primer_bindings(target, primers=c(test="ACGTTGCA"),
+                                circular=TRUE, min_annealed_bases=8)
+ref <- as_ggchord_seq(data.frame(accver="A", length=nchar(target)), sequence_unit="bp", topology="circular")
+ggchord(ref) + geom_primer(data=bindings) + coord_circular()
 }
 \seealso{
 \code{\link{ggchord_data_contract}}

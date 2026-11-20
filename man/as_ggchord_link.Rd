@@ -2,40 +2,43 @@
 % Please edit documentation in R/data-convert.R
 \name{as_ggchord_link}
 \alias{as_ggchord_link}
-\title{Convert paired genomic intervals to ggchord links}
+\title{Adapt point or interval relationships}
 \usage{
-as_ggchord_link(x, mapping = NULL)
+as_ggchord_link(x, columns = NULL, kind = "interval", sequence_unit = NULL)
 }
 \arguments{
-\item{x}{A data frame or \code{GInteractions} object.}
+\item{x}{Data frame, or a \code{GInteractions} object for interval links.}
 
-\item{mapping}{Optional named character vector mapping canonical link roles
-to source columns, as in \code{\link[=as_ggchord_seq]{as_ggchord_seq()}}.}
+\item{columns}{Named mapping from canonical roles to input fields.}
+
+\item{kind}{\code{"interval"} consumes qstart/qend and sstart/send.
+\code{"point"} consumes qpos and spos. Both require qaccver and saccver.}
+
+\item{sequence_unit}{Optional declaration of native \code{"bp"} or \code{"aa"}.
+This operation preserves the scientific meaning of existing units.}
 }
 \value{
-An ordinary data frame with \code{qaccver}, \code{saccver}, \code{qstart}, \code{qend},
-\code{sstart}, \code{send} and source metadata. Paired objects also retain anchor
-indices, source row/name, anchor strands, anchor metadata prefixed with
-\code{query_}/\code{subject_}, and object-level metadata in the conversion attribute.
+A point or interval relationship table and conversion provenance.
 }
 \description{
-For \code{GInteractions}, the first stored anchor becomes query and the second
-becomes subject. Their order is never sorted or swapped by this adapter.
-A source object that already canonicalized its anchors cannot recover their
-earlier biological host/virus roles; establish those roles before conversion.
-Negative-strand anchor endpoints run from end to start. Unknown-strand
-anchors retain increasing coordinates, their \code{*} strand and
-\code{orientation_known = FALSE}; increasing order is not direction evidence.
-Interval interactions do not imply a pairwise alignment: identity and
-alignment length are not inferred from anchor widths.
+Query and subject roles and biological direction evidence are kept
+separate. Interval endpoints are ordered within each reference, and
+original endpoint order is retained as source metadata. Equal endpoints
+carry no direction evidence of their own.
 }
 \examples{
-library(dplyr)
-data(ribbon_data_example)
-links <- ribbon_data_example |>
-  select(qaccver, saccver, qstart, qend, sstart, send)
-as_ggchord_link(links)
-}
-\seealso{
-\code{\link{ggchord_data_contract}}
+seqs <- data.frame(
+  accver = c("A", "B"), length = c(1000, 800),
+  sequence_unit = "bp", topology = "linear"
+)
+
+links <- data.frame(
+  qaccver = "A", saccver = "B", qstart = c(100, 400),
+  qend = c(240, 620), sstart = c(150, 450), send = c(290, 650),
+  qstrand = "+", sstrand = c("+", "-"),
+  pident = c(98, 90), link_id = c("l1", "l2")
+)
+
+paired <- as_ggchord_link(links, kind = "interval", sequence_unit = "bp")
+ggchord(seqs) + geom_link_ribbon(data = paired)
 }

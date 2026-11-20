@@ -4,49 +4,17 @@
 \alias{ggchord}
 \title{Layered sequence comparisons, circular maps and dot plots}
 \usage{
-ggchord(
-  data,
-  mapping = NULL,
-  ...,
-  debug = FALSE,
-  validate = c("warn", "error", "none")
-)
+ggchord(data = NULL, mapping = aes(), ...)
 }
 \arguments{
-\item{data}{A reference data.frame/tibble with accver and length, or a \code{GRanges},
-\code{Seqinfo} or \code{GInteractions} object with known full sequence lengths,
-or a named nucleotide or protein Biostrings \code{XStringSet}. Unnamed sequence
-objects must first use \code{\link[=as_ggchord_seq]{as_ggchord_seq()}} with explicit \code{ids}.
-Optional S4 inputs use \code{\link[=as_ggchord_seq]{as_ggchord_seq()}}. The \code{sequence_unit} column is
-\code{"bp"} (default when omitted) or \code{"aa"}. All rows use the same unit.
-Protein lengths come from complete proteins. Native aa plots accept
-links and generic features; gene, primer and restriction layers require bp.
-Arbitrary character widths are not biological sequence lengths.
-A result from \code{\link[=prepare_ggchord_data]{prepare_ggchord_data()}} supplies all constructor tables.
-A single eligible table supplies the layer default. When several qualify,
-select one explicitly, e.g. \code{geom_feature(data = prepared$features$cds)}.}
+\item{data}{A complete reference table with \code{accver} and \code{length}.
+Omitted units default to bp. An explicit reference table supplied to
+\code{\link[=geom_seq]{geom_seq()}} can also define the reference when the plot has no data.}
 
-\item{mapping}{Default aesthetic mapping, made with \code{\link[ggplot2:aes]{ggplot2::aes()}}.
-Each inheriting layer uses its own source table for domain roles and
-starting visual mappings. With \code{aes(accver = ref, fill = accver)},
-\code{ref} selects the reference and the source \code{accver} supplies the fill.
-Generated fields such as \code{.component} are available after projection.
-\code{\link[ggplot2:after_stat]{ggplot2::after_stat()}} and \code{\link[ggplot2:after_scale]{ggplot2::after_scale()}} use their respective
-ggplot2 stages. A layer mapping overrides the same plot aesthetic.
-Native ggplot2 layers inherit the reference table as their plot data.}
+\item{mapping}{Default aesthetic mapping, constructed with \code{\link[ggplot2:aes]{ggplot2::aes()}}.
+Evaluate inherited mappings on the data of each layer.}
 
-\item{...}{Must be empty. Add \code{\link[=labs]{labs()}}, \code{\link[=coord_chord]{coord_chord()}} or \code{\link[=theme]{theme()}} to
-the plot to set labels, select coordinates or style its appearance.}
-
-\item{debug}{Logical. Whether to output debug information, default FALSE}
-
-\item{validate}{Character, default \code{"warn"}. How to run the structured
-input-data validation (see \code{\link{validate_ggchord_data}}):
-\code{"warn"} emits a single summary warning when the data has problems
-and caches the full report on the plot object
-(\code{p$ggchord$validation}); \code{"error"} stops on severe problems;
-\code{"none"} skips the diagnostic validation (the cheap structural
-checks that prevent crashes are still performed).}
+\item{...}{Must be empty.}
 }
 \value{
 A ggchord object (inherits from ggplot) to which geom_* layers can be added with +
@@ -61,23 +29,25 @@ The layout is computed lazily when the plot is built (e.g. via \code{print()},
 \code{ggsave()}, or \code{ggplot_build()}).
 }
 \examples{
-library(dplyr)
-library(ggchord)
-data(seq_data_example)
-data(ribbon_data_example)
-data(gene_data_example)
+seqs <- data.frame(
+  accver = c("A", "B"), length = c(1000, 800),
+  sequence_unit = "bp", topology = "linear"
+)
 
-seqs <- seq_data_example |>
-  select(accver, length)
-links <- ribbon_data_example |>
-  select(qaccver, saccver, qstart, qend, sstart, send)
-genes <- gene_data_example |>
-  transmute(accver, start, end, strand = source_strand, type = "CDS")
-p <- ggchord(seqs) +
-  geom_seq() +
-  geom_link_ribbon(data = links) +
-  geom_feature(data = genes)
-print(p)
+genes <- data.frame(
+  accver = c("A", "A", "B"), feature_id = c("g1", "g2", "g3"),
+  start = c(100, 400, 150), end = c(240, 620, 380),
+  strand = c("+", "-", "+"), label = c("g1", "g2", "g3"),
+  type = c("CDS", "tRNA", "CDS")
+)
+
+ggchord(data = seqs) +
+  geom_seq() + geom_gene(data = genes) + coord_collinear()
+
+ggchord() +
+  geom_seq(data = seqs) + geom_gene(data = genes) + coord_chord()
+
+ggchord(data = seqs) + geom_gene(data = genes) + coord_collinear()
 }
 \seealso{
 \link{ggchord_api_contract}, \link{ggchord_data_contract},

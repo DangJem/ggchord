@@ -18,25 +18,6 @@ ggchord_panel_backbone_frame <- function(layout, id, position) {
   list(xy = xy, normal = tip - xy)
 }
 
-# Explicit physical or relative rectangles are visual allocations only.
-ggchord_fusion_box <- function(box) {
-  if (is.null(box)) return(invisible(NULL))
-  physical <- grid::is.unit(box)
-  if (length(box) != 4L || (!physical && !is.numeric(box)))
-    ggchord_stop("Fusion: box must be xmin, xmax, ymin, ymax (four fractions or absolute units)")
-  if (!is.null(names(box))) {
-    if (anyDuplicated(names(box)) || !setequal(names(box), c("xmin", "xmax", "ymin", "ymax")))
-      ggchord_stop("Fusion: name box coordinates xmin, xmax, ymin, ymax")
-    box <- box[c("xmin", "xmax", "ymin", "ymax")]
-  }
-  value <- if (physical) vapply(seq_along(box), function(i) ggchord_unit_inches(box[i]) * 25.4, numeric(1)) else as.numeric(box)
-  if (any(!is.finite(value)) || min(value) < 0 || value[1] >= value[2] || value[3] >= value[4] ||
-      (!physical && max(value) > 1)) ggchord_stop("Fusion: box must have ordered nonnegative bounds within its allocation frame")
-  invisible(box)
-}
-
-ggchord_fusion_sides <- function() c("right", "top", "left", "bottom", "topright", "topleft", "bottomright", "bottomleft", "auto")
-
 # Move child exports from their local composition to the enclosing canvas.
 # Only known geometric columns are shifted, never arbitrary source metadata.
 ggchord_fusion_translate_table <- function(data, offset, x = character(), y = character()) {
@@ -69,21 +50,28 @@ ggchord_fusion_nested_export <- function(value, parent, offset) {
   value$instances <- prefix(value$instances, "panel_id")
   value$routing_obstacles <- prefix(ggchord_fusion_translate_table(value$routing_obstacles, offset,
     c("xmin", "xmax"), c("ymin", "ymax")), "panel_id")
-  value$connections <- prefix(value$connections, c("qpanel", "spanel", "layer_id"))
-  for (name in c("fronts", "paths", "focus_fronts", "leaders", "leader_paths", "routing_corridors")) {
-    value[[name]] <- ggchord_fusion_translate_table(value[[name]], offset, c("x", "xend"), c("y", "yend"))
-    value[[name]] <- prefix(value[[name]], c("panel_id", "layer_id", "composition_id"))
+  prepend <- function(data, fields) {
+    if (is.null(parent) || !is.data.frame(data) || !nrow(data)) return(data)
+    for (name in intersect(fields, names(data))) data[[name]] <- lapply(data[[name]], function(path)
+      c(ggchord_fusion_path_ids(parent), path))
+    data
   }
-  value$focus_regions <- prefix(value$focus_regions, c("source_panel", "detail_panel", "composition_id"))
+  scope <- function(data) {
+    if (is.null(parent) || !is.data.frame(data) || !nrow(data) || !"composition_id" %in% names(data)) return(data)
+    data$composition_id <- ifelse(data$composition_id == "", parent,
+      paste0(parent, "/", data$composition_id))
+    data
+  }
+  value$connections <- scope(prepend(prefix(value$connections, c("qpanel", "spanel")),
+    c("qpanel_path", "spanel_path")))
+  for (name in c("fronts", "paths", "zoom_paths")) {
+    value[[name]] <- ggchord_fusion_translate_table(value[[name]], offset, c("x", "xend"), c("y", "yend"))
+    value[[name]] <- scope(prefix(value[[name]], "panel_id"))
+  }
+  value$zoom_regions <- scope(prepend(value$zoom_regions, c("from_panel_path", "to_panel_path")))
   value$overlaps <- prefix(ggchord_fusion_translate_table(value$overlaps, offset,
     c("xmin", "xmax"), c("ymin", "ymax")), c("under", "over"))
   value
-}
-
-ggchord_fusion_panel_paths <- function(plot, parent) {
-  if (!inherits(plot, "ggchord_fusion")) return(parent)
-  c(parent, unlist(lapply(names(plot$panels), function(id)
-    ggchord_fusion_panel_paths(plot$panels[[id]]$plot, paste0(parent, "/", id))), use.names = FALSE))
 }
 
 # Clip to a leaf panel, then restore the full composition coordinate frame.
@@ -111,11 +99,4 @@ ggchord_fusion_rect_subtract <- function(rect, exclusions) {
     pieces <- next_pieces
   }
   pieces
-}
-
-ggchord_fusion_box_rect <- function(box, canvas) {
-  box <- ggchord_fusion_box(box)
-  if (grid::is.unit(box)) return(vapply(seq_along(box), function(i)
-    ggchord_unit_inches(box[i]) * 25.4, numeric(1)) / rep(canvas, each = 2L))
-  unname(box)
 }

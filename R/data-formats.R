@@ -51,55 +51,39 @@ ggchord_format_import <- function(out, paths, format, rows_per_file,
   out
 }
 
-#' Read BED intervals as ggchord features
+ggchord_canonical_read_links <- function(parts, caller, directional_order = FALSE) {
+  links <- ggchord_rbind_fill(parts) %||% data.frame(qaccver = character(),
+    saccver = character(), qstart = numeric(), qend = numeric(), sstart = numeric(), send = numeric())
+  ggchord_order_link_endpoints(links, caller, directional_order)
+}
+
+#' Read BED features and their observed segments
 #'
-#' Reads standard BED3 through BED12. Starts are converted from zero-based
-#' half-open intervals to one-based inclusive intervals; accession identifiers
-#' are kept verbatim. Blank lines, comments, and custom-track header lines are
-#' skipped. Every data row in a file must have the same number of fields.
-#' Zero-width insertion records cannot be represented as nonempty genomic
-#' intervals and produce an explicit error.
+#' Read standard BED3 through BED12. Convert each nonempty half-open range
+#' to a one-based closed interval. BED12 blocks are preserved as segments.
+#' A BED name provides a label, and a missing strand stays unknown.
 #'
-#' BED names are labels, not guaranteed unique feature IDs. Unspecified strand
-#' remains `"."` and `directionality = "none"`; use [geom_feature()] for these
-#' records. Optional fields retain their BED names and coordinate conventions,
-#' including zero-based `thickStart`, `thickEnd`, and relative `blockStarts`.
-#' BED12 additionally creates a `segments` list-column of one-based inclusive
-#' block intervals after checking block counts, boundaries and non-overlap.
-#' Blocks are retained in genomic order on both strands. No colour or shape is
-#' inferred from BED display fields. BED extensions beyond column 12 require an
-#' explicit data-frame conversion with [as_ggchord_feature()].
-#'
-#' @param file Optional path vector or glob patterns; read before `files`.
-#' @param files Optional paths or wildcard patterns for multiple BED files.
-#' @param source_file Logical. Add a `.source_file` column, default `FALSE`.
-#' @return A feature data frame with `accver`, `start`, `end`, `strand`,
-#'   `directionality`, original `chromStart`/`chromEnd`, optional BED fields,
-#'   and `.source_line` (the physical file line). A `ggchord_import` attribute
-#'   records the input/output coordinate conventions and files.
-#' @seealso <https://genome.ucsc.edu/FAQ/FAQformat.html#format1>
-#' @md
-#' @seealso \code{\link{ggchord_data_contract}}
+#' @param file Local BED paths.
+#' @param source_file Whether to include row-level source paths.
+#' @return A feature data frame and file provenance available from
+#'   [data_report()].
 #' @export
 #' @examples
-#' library(dplyr)
-#' data(plasmid_example_pUC19)
-#' feature_source <- find_common_features(plasmid_example_pUC19)
-#' features <- feature_source |>
-#'   select(accver, start, end, strand, type, anno)
-#' bed <- tempfile(fileext = ".bed")
-#' bed_rows <- features |>
-#'   transmute(accver, start0 = start - 1L, end)
-#' write.table(bed_rows, bed,
-#'   sep = "\t", quote = FALSE, row.names = FALSE, col.names = FALSE
+#' seqs <- data.frame(
+#'   accver = c("A", "B"), length = c(1000, 800),
+#'   sequence_unit = "bp", topology = "linear"
 #' )
-#' read_bed(bed)
-#' unlink(bed)
-read_bed <- function(file = NULL, files = NULL, source_file = FALSE) {
+#'
+#' f <- tempfile(fileext = ".bed")
+#' writeLines("A	99	240	region1	0	+", f)
+#' bed <- read_bed(f)
+#' ggchord(seqs) + geom_feature(data = bed)
+#' unlink(f)
+read_bed <- function(file, source_file = FALSE) {
   old_error <- ggchord_disable_debug()
   on.exit(options(error = old_error), add = TRUE)
   caller <- "read_bed()"
-  paths <- ggchord_resolve_files(file, files, "read_bed")
+  paths <- ggchord_resolve_files(file, NULL, "read_bed")
   tables <- lapply(paths, function(path) {
     input <- ggchord_format_lines(path, caller, bed = TRUE)
     widths <- lengths(input$fields)
@@ -134,7 +118,7 @@ read_bed <- function(file = NULL, files = NULL, source_file = FALSE) {
       end = raw$chromEnd, strand = strand,
       directionality = unname(c("+" = "forward", "-" = "reverse", "." = "none")[strand]),
       stringsAsFactors = FALSE)
-    if ("name" %in% names(raw)) out$anno <- raw$name
+    if ("name" %in% names(raw)) out$label <- raw$name
     for (field in setdiff(names(raw), c("chrom", "strand"))) out[[field]] <- raw[[field]]
     if ("blockCount" %in% names(raw) && any(raw$blockCount < 1)) {
       ggchord_stop(caller, ": blockCount must be positive")
@@ -169,46 +153,28 @@ read_bed <- function(file = NULL, files = NULL, source_file = FALSE) {
   ggchord_format_import(ggchord_rbind_fill(tables), paths, "BED", vapply(tables, nrow, integer(1)))
 }
 
-#' Read PAF mappings as ggchord links
+#' Read PAF relationships
 #'
-#' Converts zero-based half-open PAF query/target intervals to one-based
-#' inclusive endpoints. Query endpoints increase; target endpoints decrease
-#' for relative strand `"-"`. This display convention preserves relative
-#' orientation and does not infer a biological strand for either sequence.
+#' Preserve query/subject definitions, declared lengths, directional evidence,
+#' and optional tags. Numeric position fields are converted from zero-based
+#' half-open ranges to one-based closed intervals. Identity is labelled as
+#' reported match count divided by alignment block length.
 #'
-#' `length` is the reported alignment block length, including gaps, and
-#' `pident` is `100 * nmatch / length` using the reported PAF fields. Both
-#' counts may be approximate when the producer did not compute an alignment.
-#' The importer does not recompute an alignment, validate a CIGAR, or claim
-#' exact base identity. `pident_basis` records this ratio's provenance.
-#' Mapping quality 255 means unavailable: `mapq` becomes `NA`, while
-#' `source_mapq` retains the original value. Optional typed tags are retained
-#' verbatim in the `tags` list-column, including unknown tags and their order.
-#'
-#' @param file Optional path vector or glob patterns; read before `files`.
-#' @param files Optional paths or wildcard patterns for multiple PAF files.
-#' @param source_file Logical. Add a `.source_file` column, default `FALSE`.
-#' @return A link data frame with canonical endpoints, `qlen`, `slen`,
-#'   `nmatch`, `length`, `pident`, `mapq`, relative orientation, original
-#'   zero-based coordinates, tags and `.source_line`. The `ggchord_import`
-#'   attribute records input/output coordinate conventions and files.
-#' @seealso <https://github.com/lh3/miniasm/blob/master/PAF.md>
-#' @md
-#' @seealso \code{\link{ggchord_data_contract}}
+#' @param file Local PAF paths.
+#' @param source_file Whether to include row-level source paths.
+#' @return A relationship table with ordered endpoints, declared reference
+#'   lengths, matching positions, alignment block length, mapq and tags.
 #' @export
 #' @examples
-#' \dontrun{
-#' library(dplyr)
-#' # Requires the source checkout or tutorial input bundle.
-#' links <- read_paf("examples/format-inputs/emales-pair.paf")
-#' links |>
-#'   select(qaccver, saccver, qstart, qend, sstart, send)
-#' }
-read_paf <- function(file = NULL, files = NULL, source_file = FALSE) {
+#' f <- tempfile(fileext=".paf")
+#' writeLines("A	1000	99	240	+	B	800	149	290	138	141	60", f)
+#' paf <- read_paf(f)
+#' unlink(f)
+read_paf <- function(file, source_file = FALSE) {
   old_error <- ggchord_disable_debug()
   on.exit(options(error = old_error), add = TRUE)
   caller <- "read_paf()"
-  paths <- ggchord_resolve_files(file, files, "read_paf")
+  paths <- ggchord_resolve_files(file, NULL, "read_paf")
   tables <- lapply(paths, function(path) {
     input <- ggchord_format_lines(path, caller)
     if (any(lengths(input$fields) < 12L)) ggchord_stop(caller, ": PAF requires at least 12 tab-separated fields: ", path)
@@ -237,6 +203,11 @@ read_paf <- function(file = NULL, files = NULL, source_file = FALSE) {
       send = ifelse(reverse, raw$target_start0 + 1, raw$target_end0),
       stringsAsFactors = FALSE)
     for (field in setdiff(names(raw), c("qaccver", "saccver"))) out[[field]] <- raw[[field]]
+    out$match_count <- out$nmatch
+    out$alignment_block_length <- out$length
+    out$qstrand <- "+"
+    out$sstrand <- raw$relative_strand
+    out <- ggchord_order_link_endpoints(out, caller)
     out$pident <- 100 * out$nmatch / out$length
     out$pident_basis <- "reported_matches/block_length"
     out$mapq <- ifelse(out$source_mapq == 255, NA_real_, out$source_mapq)
@@ -246,5 +217,9 @@ read_paf <- function(file = NULL, files = NULL, source_file = FALSE) {
     out$.source_line <- input$line
     ggchord_add_source_file(out, path, source_file)
   })
-  ggchord_format_import(ggchord_rbind_fill(tables), paths, "PAF", vapply(tables, nrow, integer(1)))
+  out <- ggchord_format_import(ggchord_rbind_fill(tables), paths, "PAF", vapply(tables, nrow, integer(1)))
+  attr(out, "ggchord_import")$sequences <- ggchord_alignment_dictionary(list(
+    data.frame(accver = out$qaccver, length = out$qlen),
+    data.frame(accver = out$saccver, length = out$slen)), "bp", caller)
+  out
 }

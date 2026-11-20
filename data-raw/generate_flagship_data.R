@@ -3,34 +3,17 @@
 # No ggplot objects, device measurements or label placement solutions are saved.
 pkgload::load_all(".", quiet = TRUE)
 library(dplyr)
-library(purrr)
-library(ggplot2)
 show_sequences <- genome_comparison_example$seq_data
 show_links <- genome_comparison_example$links
 show_cross <- genome_comparison_example$cross_links
 chord_genes <- genome_comparison_example$chord_features
 show_linear_features <- genome_comparison_example$linear_features
 show_adjacent <- genome_comparison_example$adjacent_links
-show_optimization <- optimize_ggchord_layout(show_sequences, show_links,
-  optimize = "orientation", weight = "length")
-radial_orientation <- show_optimization$seq_orientation
+show_optimization <- suggest_sequence_layout(show_sequences, show_links,
+  order = show_sequences$accver, weight = "length")
+radial_orientation <- show_optimization$layout$orientation
 radial_orientation[c("MT108731.1", "OR222515.1")] <- 1
-# Inspect a backbone-only layout using the same alignment and gap as the final view.
-show_linear_coord <- coord_collinear(align = "center", orientation = "auto", ratio = 0.7)
-show_routing_base <- ggchord(show_sequences, show_links) +
-  layout_sequences(gap = 0.42) +
-  geom_seq() + show_linear_coord
-show_reference <- get_chord_layout(show_routing_base)$sequence_reference
-# Shared controls sit just beyond the intervening backbones, rather than far away.
-show_cross_controls <- map2(show_cross$query_row, show_cross$subject_row, function(query_row, subject_row) {
-  between <- seq(min(query_row, subject_row) + 1L, max(query_row, subject_row) - 1L)
-  middle_ids <- show_sequences$accver[between]
-  right_edge <- max(show_reference$x_offset[middle_ids] + show_reference$lens[middle_ids] * show_reference$x_scale)
-  middle_y <- mean(show_reference$y[show_sequences$accver[c(query_row, subject_row)]])
-  c(right_edge + if (abs(query_row - subject_row) == 3) 0.85 else 0.65, middle_y)
-})
 
-library(dplyr)
 radial_seqs <- seq_data_example |>
   select(accver, length)
 radial_hsp <- ribbon_data_example |>
@@ -47,11 +30,10 @@ flagship_comparison_example <- list(
   comparison = list(seq_data = radial_seqs, links = radial_hsp, features = radial_features, events = radial_events),
   chord = list(seq_data = show_sequences, links = show_links,
     features = chord_genes, labels = chord_genes,
-    orientation = show_optimization$seq_orientation),
+    orientation = show_optimization$layout$orientation),
   collinear = list(seq_data = show_sequences, adjacent_links = show_adjacent,
     cross_links = show_cross, features = show_linear_features,
-    labels = arrange(show_linear_features, desc(nchar(anno)), accver, start),
-    route_controls = show_cross_controls),
+    labels = arrange(show_linear_features, desc(nchar(anno)), accver, start)),
   radial = list(seq_data = show_sequences, links = show_links,
     features = chord_genes, labels = chord_genes, orientation = radial_orientation),
   sankey = list(seq_data = show_sequences, adjacent_links = show_adjacent,
@@ -62,26 +44,25 @@ flagship_hsp <- genome_comparison_example$source_alignments
 flagship_features <- filter(genome_comparison_example$annotations, type == "CDS")
 dotplot_pair_counts <- flagship_hsp |>
   count(qaccver, saccver, name = "HSP")
-dotplot_frames <- export_ggchord_layout(
-  ggchord(flagship_sequences, flagship_hsp) + geom_alignment_segment() +
-    coord_dotplot(x_seqs = flagship_sequences$accver,
-      y_seqs = flagship_sequences$accver, gap = 4000)
-)$axis_layout
+dotplot_gap <- 4000
+dotplot_frames <- flagship_sequences |>
+  mutate(offset = c(0, head(cumsum(length + dotplot_gap), -1L)),
+    min = offset + 1, max = offset + length)
 dotplot_cells <- tidyr::expand_grid(
   qaccver = flagship_sequences$accver, saccver = flagship_sequences$accver
 ) |>
   left_join(dotplot_pair_counts, by = c("qaccver", "saccver")) |>
   mutate(HSP = coalesce(HSP, 0L)) |>
-  left_join(dotplot_frames |> filter(axis == "x") |>
+  left_join(dotplot_frames |>
     transmute(qaccver = accver, x = min, xmax = max), by = "qaccver") |>
-  left_join(dotplot_frames |> filter(axis == "y") |>
+  left_join(dotplot_frames |>
     transmute(saccver = accver, y = max, ymin = min), by = "saccver") |>
   mutate(x = x + (xmax - x) * 0.04, y = y - (y - ymin) * 0.05,
     label = if_else(HSP > 0L, paste(HSP, "HSP"), "No input HSP"))
 
 flagship_dotplot_example <- list(seq_data = flagship_sequences,
   links = flagship_hsp, cell_labels = dotplot_cells, pair_counts = dotplot_pair_counts,
-  axis_gap = 4000)
+  axis_gap = dotplot_gap)
 fusion_orientation <- setNames(rep(1, nrow(flagship_sequences)), flagship_sequences$accver)
 fusion_display_hsp <- flagship_hsp |>
   group_by(qaccver, saccver) |>
@@ -107,19 +88,21 @@ flagship_windows <- bind_rows(
   left_join(flagship_sequences, by = "accver") |>
   mutate(start = pmax(1, start - 800), end = pmin(length, end + 800)) |>
   select(accver, start, end)
-flagship_focused <- focus_ggchord_data(flagship_sequences, ribbon_data = flagship_selected,
-  feature_data = flagship_features, loci = flagship_windows)
-fusion_detail_features <- flagship_focused$feature_data |>
+flagship_focused <- focus_ggchord_data(
+  ggchord_data(flagship_sequences, features = list(genes = flagship_features),
+    links = list(observed = flagship_selected)),
+  mutate(flagship_windows, locus_id = paste0(accver, "_detail")))
+fusion_detail_features <- flagship_focused$features$genes |>
   group_by(accver) |>
   arrange(anno == "hypothetical protein", start, .by_group = TRUE) |>
   slice_head(n = 2) |>
   ungroup()
 fusion_context_sequences <- flagship_sequences |> filter(accver %in% flagship_windows$accver)
 fusion_detail_source_features <- flagship_features |>
-  semi_join(fusion_detail_features, by = c("accver", "feature_id"))
+  semi_join(fusion_detail_features, by = join_by(accver == source_accver, feature_id))
 # Select the second displayed CDS on E's lower sequence, then read its real bases.
 fusion_base_cds <- fusion_detail_source_features |>
-  filter(accver == tail(flagship_focused$seq_data$accver, 1)) |>
+  filter(accver == tail(flagship_focused$sequences$source_accver, 1)) |>
   arrange(start) |>
   slice(2)
 fusion_base_genome <- genome_comparison_example$sequences |>
@@ -164,14 +147,15 @@ flagship_fusion_example <- list(
 )
 
 # Dense pETDuet-1 flagship: keep its existing unique-site parent collection.
-sequence <- plasmid_example_pETDuet_1
+sequence <- mutate(plasmid_example_pETDuet_1, topology = "circular")
 dense_sites <- find_restriction_sites(sequence)
 flagship_circular_example <- list(dense = list(
   seq_data = select(sequence, accver, length),
-  features = find_common_features(sequence),
+  features = find_common_features(sequence, mode = "reference"),
   primers = find_primer_bindings(sequence, set = "reference"),
   all_site_count = nrow(dense_sites),
-  sites = filter_restriction_sites(dense_sites, set = "unique_6plus", parent_set = "commercial_all")
+  sites = filter_restriction_sites(dense_sites, min_site_length = 6, cuts = 1,
+    commercial_only = TRUE)
 ))
 # Complete reference maps and the older three-cut gallery are distinct selections.
 objects <- c("plasmid_example_pSB1C3", "plasmid_example_pUC19", "plasmid_example_pBR322",
@@ -182,18 +166,20 @@ objects <- c("plasmid_example_pSB1C3", "plasmid_example_pUC19", "plasmid_example
 records <- lapply(objects, function(object) {
   e <- new.env(parent = emptyenv())
   data(list = object, package = "ggchord", envir = e)
-  sequence <- e[[object]]
-  features <- find_common_features(sequence)
+  sequence <- mutate(e[[object]], topology = "circular")
+  features <- find_common_features(sequence, mode = "reference")
   all_sites <- find_restriction_sites(sequence)
   profile <- attr(all_sites, "reference_enzyme_profiles")
-  sites <- filter_restriction_sites(all_sites, set = "reference", parent_set = "commercial_nonredundant")
+  sites <- filter_restriction_sites(all_sites, profile = "reference", commercial_only = TRUE,
+    representatives = "preferred")
   policy <- "Saved reference profile; commercial nonredundant representatives"
   if (nrow(profile) && profile$profile_type == "none") {
-    sites <- filter_restriction_sites(all_sites, set = "unique_6plus", parent_set = "commercial_nonredundant")
+    sites <- filter_restriction_sites(all_sites, min_site_length = 6, cuts = 1,
+      commercial_only = TRUE, representatives = "preferred")
     policy <- "Explicit unique 6+ profile; saved None does not reproduce the reference PNG"
   }
   targets <- sequence$length * c(1, 3, 5) / 6
-  nearest <- vapply(targets, function(x) which.min(abs(all_sites$position - x)), integer(1))
+  nearest <- vapply(targets, function(x) which.min(abs(all_sites$pos - x)), integer(1))
   list(seq_data = select(sequence, accver, length), source_sequence = sequence,
     features = features, primers = find_primer_bindings(sequence, set = "reference"),
     all_site_count = nrow(all_sites), sites = sites, policy = policy, gallery_sites = all_sites[unique(nearest), ])

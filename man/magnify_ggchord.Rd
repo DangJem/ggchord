@@ -2,153 +2,49 @@
 % Please edit documentation in R/magnify.R
 \name{magnify_ggchord}
 \alias{magnify_ggchord}
-\title{Compose a source region and an explicit local detail plot}
+\title{Compose an overview and a detail with a source interval marker}
 \usage{
-magnify_ggchord(
-  plot,
-  region,
-  detail_plot,
-  side = c("right", "top", "left", "bottom"),
-  center_size = NULL,
-  detail_size = NULL,
-  connector = c("leader", "none", "envelope"),
-  colour = "#B45309",
-  alpha = 0.2,
-  highlight_width = 1.5,
-  linewidth = 0.35,
-  linetype = 2,
-  detail_box = NULL,
-  allow_overlap = FALSE,
-  center_box = NULL,
-  route = c("direct", "avoid"),
-  guides = c("keep", "collect"),
-  frame_region = NULL
-)
+magnify_ggchord(overview, detail, region, layout = NULL, guides = "keep", ...)
 }
 \arguments{
-\item{plot}{A registered ggchord genomic source plot or nested Fusion.}
+\item{overview, detail}{Independent plots.}
 
-\item{region}{Nonempty data frame with \code{accver}, \code{start}, \code{end} in original
-one-based inclusive source coordinates. Bounds must be ordered positive
-integers. Optional \code{instance} and \code{detail_instance} select exact display
-instances in the source and detail panels for every row. Ambiguity fails.
-Explicit wrap = TRUE permits start > end across a circular source origin.
-Both selected leaves must declare matching full source lengths; character
-sources require as_ggchord_alignment(circular = TRUE). The interval is
-drawn as two pieces with only its two external boundary leaders. With a list of details,
-a \code{detail_panel} column selects the named target for each row. Nested leaves
-use full paths, for example detail/center; optional source_panel similarly
-selects a source leaf under center. Ambiguous container selection fails.}
+\item{region}{Source intervals passed to \code{\link[=fusion_zoom]{fusion_zoom()}}.}
 
-\item{detail_plot}{An explicit registered ggchord genomic plot, nested Fusion,
-a character plot from \code{\link[=register_ggchord_alignment]{register_ggchord_alignment()}}, or a uniquely named
-list of such plots. Every panel must have
-at least one source region; the name \code{center} is reserved.
-The selected source interval must be fully visible in both panels, in the
-same bp/aa unit. Character plots require explicit source/column registration;
-ordinary unregistered plots are rejected.}
+\item{layout}{An optional layout for the overview and detail.}
 
-\item{side}{A named side from fusion_panel(), including diagonal sides.
-For a list of plots, supply a character vector named by panel ID, with
-distinct fixed sides or repeated auto values for automatic perimeter
-allocation. Every input region still explicitly selects its detail panel.}
+\item{guides}{Policy passed to \code{\link[=ggchord_fusion]{ggchord_fusion()}}.}
 
-\item{center_size, detail_size}{Optional panel width/height fractions, following
-\code{\link[=ggchord_fusion]{ggchord_fusion()}} and \code{\link[=fusion_panel]{fusion_panel()}}. Defaults reserve a smaller source
-panel and a wider detail container for a single detail plot. With multiple
-details, use a named list of sizes or NULL for Fusion defaults; center_size
-also follows Fusion defaults. Out-of-frame allocations fail; overlap
-requires explicit allow_overlap.}
-
-\item{connector}{\code{"leader"} draws two decorative boundary leaders per row; \code{"none"}
-retains the highlights only. \code{"envelope"} groups selections by source/detail
-panel pair, outlines each exact source highlight band and frames the
-displayed detail sequences with their native labels (excluding plot titles
-and guides). Two leaders join actual source-band edges to the detail frame.
-Source selections are never enclosed in a padded combined rectangle.
-The detail frame is a display boundary, not a genomic interval.
-These are not biological ribbons or alignments.}
-
-\item{colour}{Fixed highlight/leader colour.}
-
-\item{alpha}{Highlight opacity in \verb{[0,1]}. Leaders use the opaque colour.
-Character selections use unfilled cell outlines to preserve glyph contrast
-and residue colours, independently of this opacity.}
-
-\item{highlight_width}{Positive highlight band width in physical mm.
-Character panels instead follow the actual cell height.}
-
-\item{linewidth}{Nonnegative leader width using the usual ggplot2 convention.}
-
-\item{linetype}{Leader line type, default dashed.}
-
-\item{detail_box}{Explicit detail allocation instead of side/detail_size,
-using the box convention in fusion_panel(). For multiple plots, supply a
-named list covering every detail. Physical boxes are rechecked at target size.}
-
-\item{allow_overlap}{Deliberately permit overlapping containers, following
-ggchord_fusion(). Later panels cover earlier ones; default FALSE.}
-
-\item{center_box}{Explicit source allocation instead of center_size.}
-
-\item{route}{Direct boundary leaders (default), or avoid to route around
-measured other containers and native text/guide envelopes. Endpoints stay
-fixed; no clear route fails rather than hiding the selection.}
-
-\item{guides}{Child legend placement, passed to \code{\link[=ggchord_fusion]{ggchord_fusion()}}.
-Default \code{"keep"}; use \code{"collect"} for shared native outside legends.}
-
-\item{frame_region}{Optional data frame with one row per region, in the
-same order, containing ordered positive source start/end coordinates.
-It changes only the source frame and leader departure points; region,
-detail data and the measured magnification ratio stay unchanged. NULL
-(default) uses the exact selected interval. Optional accver must match
-region. Each frame must be visible in the same source instance. Split
-origin-wrapping frames/selections into explicit intervals before using it.}
+\item{...}{Fixed zoom styles or a root decoration ID.}
 }
 \value{
-A \code{\link[=ggchord_fusion]{ggchord_fusion()}} object. \code{\link[=export_ggchord_fusion]{export_ggchord_fusion()}} additionally
-returns focus_regions, focus_fronts and leaders in mm, plus original
-focus_region_data (without metadata-name collisions), preserving the input
-region, exact instances, source origins and sampled physical path-length ratio.
-The derived tables use region_row to identify the original input row and
-region_piece to identify the origin-split piece. The raw input stays intact.
-Stat scope is recorded as explicit_detail_plot. Leaders do not appear in
-connections or relationship_data. leader_paths contains the final decorative
-polyline vertices. Routing is deterministic in measured physical space, not
-a guarantee of globally optimal layout or automatic layer rebuilding. The measured ratio may be below one if the chosen
-detail allocation does not enlarge the region.
-Envelope leaders use their group's first region_row as the export key;
-focus_regions$leader_group records that key for every member selection.
-frame_start/frame_end record the displayed source frame independently of
-start/end; explicit overrides are retained in focus_frame_region_data.
+A Fusion with the two plots and a zoom decoration.
 }
 \description{
-Marks real source intervals in registered genomic panels and connects them to
-the same intervals in independent genomic or registered character details.
-A detail or source can itself be a nested Fusion.
-Returns a Fusion, not a new Coord or a crop of an existing image. Ordinary
-ggsave rebuilds both panels, highlights and leaders at the actual target size.
-}
-\details{
-Build \code{detail_plot} explicitly with \code{\link[=focus_ggchord_data]{focus_ggchord_data()}} or other documented
-source-aware operations. This function does not copy/filter arbitrary layers
-or silently choose a local/global Stat policy. The supplied detail plot owns
-its data, mappings, statistics and labels. Original source origins, including
-renamed/repeated focus windows, are used to resolve the same interval.
+Compose an overview and a detail with a source interval marker
 }
 \examples{
-library(dplyr)
-data(plasmid_example_pUC19)
-whole <- ggchord(plasmid_example_pUC19) + geom_seq() + coord_circular()
-region <- tibble(accver = "pUC19", start = 101, end = 1900)
-local <- focus_ggchord_data(plasmid_example_pUC19, loci = region)
-detail <- ggchord(local$seq_data) +
-  geom_seq() + coord_collinear(seq_axis = "vertical")
-magnify_ggchord(whole, region, detail)
-magnify_ggchord(whole, region, detail,
-  center_box = c(.02, .35, .2, .8), detail_box = c(.45, .98, .1, .9),
-  connector = "envelope")
-magnify_ggchord(whole, region, detail,
-  frame_region = tibble(start = 81, end = 1920))
+seqs <- data.frame(
+  accver = c("A", "B"), length = c(1000, 800),
+  sequence_unit = "bp", topology = "linear"
+)
+
+genes <- data.frame(
+  accver = c("A", "A", "B"), feature_id = c("g1", "g2", "g3"),
+  start = c(100, 400, 150), end = c(240, 620, 380),
+  strand = c("+", "-", "+"), label = c("g1", "g2", "g3"),
+  type = c("CDS", "tRNA", "CDS")
+)
+
+windows <- data.frame(accver = "A", start = 1, end = 500, window_id = "w1")
+
+p_basic <- ggchord(seqs) + geom_seq() +
+  geom_gene(data = genes) + coord_collinear()
+
+region <- data.frame(accver = "A", start = 100, end = 240)
+p_detail <- ggchord(seqs) + geom_seq() +
+  geom_gene(data = genes) +
+  layout_sequences(windows = data.frame(instance_id = "A_zoom", accver = "A",
+    start = 80, end = 260, row_id = "r1")) + coord_collinear()
+magnify_ggchord(p_basic, p_detail, region)
 }

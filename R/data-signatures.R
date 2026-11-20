@@ -113,56 +113,27 @@ ggchord_signature_json <- function(parsed, caller) {
     pagination = list(count = parsed$count, next_page = parsed[['next']], previous_page = parsed$previous))
 }
 
-#' Read existing protein signature matches as AA features
+#' Read existing protein signature matches
 #'
-#' Reads local signature TSV or cached entry JSON from InterPro/Pfam without
-#' running an annotation engine or retrieving online data. Accession case and
-#' versions remain verbatim, including lowercase accessions returned by the
-#' API. Declared full protein lengths supply seq_data; feature endpoints never
-#' stand in for full lengths. No source characters or verification are invented.
+#' Keep original protein lengths, match scores, database provenance and
+#' discontinuous fragments. Entry JSON pagination URLs are recorded
+#' without retrieving additional data.
 #'
-#' Source score is a list-column preserving each native scalar/string/missing
-#' value. Member-library scores and e-values cannot be assumed comparable;
-#' no universal confidence, evalue, Identity or read support is manufactured.
-#' Original TSV fields and JSON objects remain in the report. TSV field 10,
-#' dates, optional integrated/GO/pathway metadata are retained without guessing
-#' version-specific semantics or promoting them to plotting instructions.
-#'
-#' Each JSON location remains one feature row, reusing the existing segments
-#' contract for actual fragments and their original indices/status. start/end
-#' bound that location; gaps between its segments are not filled. Per-file
-#' .source_match and entry/protein/location indices retain the source context.
-#' Model and signature IDs are labels, not unique feature-instance IDs; feature_id
-#' stays missing. All representative and nonrepresentative matches remain.
-#' TSV rows retain their original interval and physical line. No grouping
-#' across TSV rows is guessed. Match indices need .source_input when several
-#' files are combined; none is an invented biological observation ID.
-#'
-#' @param file Optional local path vector or glob patterns, before files.
-#' @param files Optional additional input paths or patterns.
-#' @param format Explicit schema: "scan_tsv" (default, 11-15 columns) or
-#'   "entry_json" (cached entry results with metadata/proteins/locations).
-#'   JSON requires optional jsonlite. No pagination links are followed;
-#'   declared counts and remaining-page links stay in the report.
-#' @param source_file Add .source_file to feature rows, default FALSE.
-#' @return A list with seq_data (aa), features$signature and report. Source
-#'   lengths, native metadata, raw files and pagination remain traceable.
-#'   Known length or declared MD5 conflicts for the same accession fail, rather
-#'   than silently merging different sources. A declared MD5 is retained, not
-#'   independently verified without actual source characters.
-#' @seealso [geom_feature()], [geom_feature_label()]
+#' @param file Local protein signature result paths.
+#' @param format `"scan_tsv"` or `"entry_json"`.
+#' @param source_file Whether to include row-level source paths.
+#' @return A ggchord_import collection with AA sequences,
+#'   features$signature and a source report.
 #' @export
 #' @examples
-#' # Explicit re-encoding of cached AA annotations, not a new analysis run.
-#' path <- system.file("extdata", "P00517-signatures.tsv", package = "ggchord")
-#' matches <- read_signature_matches(path)
-#' matches$features$signature[c("accver", "start", "end", "signature_id")]
-read_signature_matches <- function(file = NULL, files = NULL,
-    format = c('scan_tsv', 'entry_json'), source_file = FALSE) {
-  caller <- 'read_signature_matches()'; format <- match.arg(format)
+#' file <- system.file("extdata", "P00517-signatures.tsv", package = "ggchord")
+#' read_signature_matches(file)
+read_signature_matches <- function(file, format = "scan_tsv", source_file = FALSE) {
+  caller <- "read_signature_matches()"
+  format <- match.arg(format, c("scan_tsv", "entry_json"))
   if (!is.logical(source_file) || length(source_file) != 1L || is.na(source_file))
     ggchord_stop(caller, ': source_file must be TRUE or FALSE')
-  paths <- ggchord_resolve_files(file, files, 'read_signature_matches')
+  paths <- ggchord_resolve_files(file, NULL, 'read_signature_matches')
   if (format == 'entry_json') ggchord_conversion_require('jsonlite', caller)
   tables <- list(); reports <- list(); dictionary <- list(); raw <- list()
   for (i in seq_along(paths)) {
@@ -187,7 +158,8 @@ read_signature_matches <- function(file = NULL, files = NULL,
   }
   sequence_rows <- lapply(Filter(Negate(is.null), dictionary), function(d)
     data.frame(accver = d$accver, length = d$source_length))
-  list(seq_data = ggchord_alignment_dictionary(sequence_rows, 'aa', caller),
+  features$label <- features$anno
+  ggchord_import_collection(ggchord_alignment_dictionary(sequence_rows, 'aa', caller),
     features = list(signature = features),
     report = list(format = format, records = reports, raw_files = stats::setNames(raw, paths),
       coordinates = 'declared AA full lengths and 1-based-inclusive source intervals; no shift',

@@ -2,43 +2,44 @@
 % Please edit documentation in R/geom-track.R
 \name{track_band}
 \alias{track_band}
-\title{Declare a quantitative band along sequence backbones}
+\title{Declare a physical track band}
 \usage{
 track_band(
-  id,
-  side = c("outside", "inside"),
+  id = "default",
+  side = "positive",
   order = 1,
-  width = grid::unit(4, "mm"),
-  gap = grid::unit(1, "mm")
+  thickness = 4,
+  gap = 1
 )
 }
 \arguments{
-\item{id}{One nonempty character ID.}
+\item{id}{Track identifier.}
 
-\item{side}{\code{"outside"} (positive local normal, up in linear coordinates)
-or \code{"inside"}.}
+\item{side}{Positive or negative side of the path.}
 
-\item{order}{Finite ordering priority, nearest band first. Ties use ID order.}
+\item{order}{Order from the backbone. Tracks on the same side require distinct orders.}
 
-\item{width, gap}{Positive band width and nonnegative preceding gap. Supply
-an absolute grid unit (mm, cm, inches or points), or native layout units
-as a scalar or a per-sequence numeric vector/list.}
+\item{thickness, gap}{Band thickness and preceding gap in millimetres or absolute grid units.}
 }
 \value{
-A band declaration to add with \code{+}.
+A physical band declaration.
 }
 \description{
-Add a band to a ggchord plot and reference its ID from any number of
-quantitative layers, before or after its declaration. Omit \code{track} on a
-layer to use the shared \code{"default"} band. Declare that ID explicitly to
-change its placement. Layers on the same band share a numerical scale
-across displayed sequences and windows. Use separate IDs for different units.
+Declare a physical track band
 }
 \examples{
-observations <- data.frame(accver = "A", pos = c(25, 75), depth = c(3, 5))
-ggchord(data.frame(accver = "A", length = 100)) +
-  track_band("depth", width = grid::unit(8, "mm")) +
-  geom_track_col(aes(pos, depth), data = observations, track = "depth", width = 10) +
-  geom_track(aes(pos, depth), data = observations, geom = "point", track = "depth") +
-  coord_collinear()
+library(ggplot2)
+
+seqs <- data.frame(
+  accver = c("A", "B"), length = c(1000, 800),
+  sequence_unit = "bp", topology = "linear"
+)
+
+signal <- data.frame(accver = rep(c("A", "B"), each = 3),
+  pos = rep(c(100, 400, 700), 2), value = c(2, 5, 3, 1, 4, 2))
+
+ggchord(data = seqs) + geom_seq() +
+  track_band("signal", thickness = 5, gap = 2) +
+  geom_track_line(data = signal, aes(x = pos, y = value), track = "signal") +
+  scale_track_value("signal", name = "Signal") + coord_collinear()
 }

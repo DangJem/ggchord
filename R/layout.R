@@ -53,7 +53,7 @@
 #' @noRd
 compute_chord_layout <- function(
     seqs, lens, seq_labels, seq_colors,
-    seqRadius, seq_curvature, orientation, seq_gap,
+    seqRadius, seq_curvature, orientation, seq_gap, clockwise = FALSE,
     # Ribbon parameters
     ribbon_data = NULL, ribbonGap,
     ribbon_gap_auto = FALSE, ribbon_obstacles = NULL, link_avoid = "none",
@@ -121,7 +121,8 @@ compute_chord_layout <- function(
     show_axis,
     # Global parameters
     rotation, debug = FALSE,
-    geometry_cache = NULL, length_mode = "proportional", axis_text_style = list()
+    geometry_cache = NULL, length_mode = "proportional", axis_text_style = list(),
+    ring = NULL
 ) {
   # Only declared stage results enter the next context. Each stage has its
   # own frame; temporary loops and closures cannot write into another stage.

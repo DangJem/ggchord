@@ -1,47 +1,35 @@
-#' Focus quantitative intervals or samples without bridging omitted windows
+
+#' Crop a quantitative track to explicit windows
 #'
-#' Applies the same explicit loci and output IDs as [focus_ggchord_data()] and
-#' [segment_ggchord_data()]. It never averages, interpolates, rescales values,
-#' or creates boundary samples. Missing values remain missing. Subsequent
-#' track layers group by the returned window accession, so separate windows
-#' cannot be joined by a line. Source coordinates and original row lineage
-#' survive repeated focusing.
-#' @param data Quantitative input table. Metadata and mapped values are retained.
-#' @param seq_data Sequence reference table.
-#' @param loci Explicit `accver`, `start`, `end` and optional `locus_id`, as in
-#'   [focus_ggchord_data()].
-#' @param type `"point"` requires `pos`; `"interval"` requires `start`/`end`.
-#' @param boundary `"trim"` (default) or `"drop"` for partly retained intervals.
-#' @return An ordinary data frame with focused coordinates. Its
-#'   `ggchord_track_focus` attribute reports output-to-input rows and omitted
-#'   input rows; `.source_*` columns retain earliest source coordinates.
-#' @md
-#' @seealso \code{\link{ggchord_data_contract}}
+#' Local references use the window IDs. Points are retained only when they
+#' are present in the window. Signals keep their original values and
+#' measurement units. Earliest source coordinates are available through
+#' the source columns and [data_report()].
+#'
+#' @param data Track data frame.
+#' @param sequences Complete reference dictionary.
+#' @param loci Window table with accver, start, end and distinct locus_id.
+#' @param type `"point"` uses pos. `"interval"` uses start and end.
+#' @param boundary `"trim"` intersects intervals with the window, and
+#'   `"drop"` keeps whole observations only.
+#' @return A focused track table with source positions and a data report.
 #' @export
 #' @examples
-#' library(ggchord)
-#' library(dplyr)
-#' data(plasmid_example_pUC19)
-#' track_seq <- plasmid_example_pUC19 |>
-#'   select(accver, length)
-#' starts <- seq.int(1L, track_seq$length, by = 100L)
-#' gc_fraction <- function(sequence) {
-#'   bases <- strsplit(sequence, "")[[1]]
-#'   mean(bases %in% c("G", "C"))
-#' }
-#' bins <- tibble(
-#'   accver = track_seq$accver,
-#'   start = starts,
-#'   end = pmin(starts + 99L, track_seq$length)
-#' ) |>
-#'   rowwise() |>
-#'   mutate(gc = gc_fraction(substr(plasmid_example_pUC19$sequence, start, end))) |>
-#'   ungroup()
-#' loci <- tibble(accver = track_seq$accver, start = 501, end = 2000)
-#' focus_ggchord_track(bins, track_seq, loci, type = "interval")
-focus_ggchord_track <- function(data, seq_data, loci, type = c("point", "interval"),
-    boundary = c("trim", "drop")) {
-  type <- match.arg(type); boundary <- match.arg(boundary)
+#' seqs <- data.frame(
+#'   accver = c("A", "B"), length = c(1000, 800),
+#'   sequence_unit = "bp", topology = "linear"
+#' )
+#'
+#' signal <- data.frame(accver = rep(c("A", "B"), each = 3),
+#'   pos = rep(c(100, 400, 700), 2), value = c(2, 5, 3, 1, 4, 2))
+#'
+#' loci <- data.frame(accver="A", start=50, end=500, locus_id="A_local")
+#' local_signal <- focus_ggchord_track(signal, seqs, loci, type="point")
+#' data_report(local_signal)$lineage
+focus_ggchord_track <- function(data, sequences, loci, type = "point", boundary = "trim") {
+  seq_data <- sequences
+  type <- match.arg(type, c("point", "interval"))
+  boundary <- match.arg(boundary, c("trim", "drop"))
   caller <- "focus_ggchord_track()"
   seq_data <- as_ggchord_seq(seq_data)
   if (!is.data.frame(data)) ggchord_stop(caller, ": data must be a data.frame")
@@ -54,7 +42,7 @@ focus_ggchord_track <- function(data, seq_data, loci, type = c("point", "interva
     ggchord_stop(caller, ": coordinates must lie within known sequence lengths")
   if (type == "interval" && any(data$start > data$end)) ggchord_stop(caller,
     ": split origin-crossing intervals explicitly before linear window selection")
-  windows <- ggchord_focus_validate_loci(seq_data, loci, 0, caller)
+  windows <- ggchord_explicit_focus_loci(seq_data, loci, 0, caller)
   source <- ggchord_focus_source(seq_data)
   pieces <- list(); lineage <- integer()
   for (i in seq_len(nrow(data))) for (j in which(windows$.source_accver == ids[i])) {
@@ -86,5 +74,13 @@ focus_ggchord_track <- function(data, seq_data, loci, type = c("point", "interva
   attr(out, "ggchord_track_focus") <- list(type = type, input_rows = nrow(data),
     output_input_rows = lineage, omitted_rows = setdiff(seq_len(nrow(data)), lineage),
     windows = windows, source_focus = attr(data, "ggchord_track_focus"))
-  out
+  out$source_accver <- out$.source_accver %||% character()
+  if (type == "point") out$source_position <- out$.source_pos %||% numeric()
+  else {
+    out$source_start <- out$.source_start %||% numeric()
+    out$source_end <- out$.source_end %||% numeric()
+  }
+  ggchord_attach_data_report(out, "focus_ggchord_track", inputs = data_report(data),
+    lineage = data.frame(output_row = seq_along(lineage), input_row = lineage),
+    metadata = attr(out, "ggchord_track_focus"))
 }

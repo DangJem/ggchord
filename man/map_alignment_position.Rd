@@ -2,33 +2,36 @@
 % Please edit documentation in R/data-alignment.R
 \name{map_alignment_position}
 \alias{map_alignment_position}
-\title{Map exact alignment columns and source positions}
+\title{Look up exact source positions and alignment columns}
 \usage{
-map_alignment_position(data, accver, position, inverse = FALSE)
+map_alignment_position(
+  alignment,
+  positions,
+  from = "source",
+  to = "alignment",
+  instance = NULL
+)
 }
 \arguments{
-\item{data}{Long alignment frame from \code{\link[=as_ggchord_alignment]{as_ggchord_alignment()}}.}
+\item{alignment}{A character table or a registered character plot.}
 
-\item{accver}{One alignment-row ID, even if its \code{source_accver} differs.}
+\item{positions}{Query table with source_accver/source_position or
+accver/alignment_column, according to from.}
 
-\item{position}{Numeric positions, positive integral or NA.}
+\item{from, to}{The input and output spaces, source or alignment.}
 
-\item{inverse}{FALSE maps alignment columns to source positions; TRUE maps
-source positions to alignment columns.}
+\item{instance}{Optional accession of a specific alignment row.}
 }
 \value{
-A frame with input_position, accver, alignment_column, source_accver,
-source_position, is_gap and matched. A known gap column has matched TRUE
-and source_position NA; an unavailable position has matched FALSE.
+A correspondence table retaining all matching rows, query IDs and
+explicit reasons for gaps and missing positions.
 }
 \description{
-Looks up existing cells within one alignment row. Never interpolates across
-gaps or discarded columns. Filter an alignment with ordinary data operations
-before looking up positions to restrict the available window.
+Look up exact source positions and alignment columns
 }
 \examples{
-# Explicit synthetic format example.
-aligned <- as_ggchord_alignment(c(A = "AC-G", B = "ACTG"), "DNA")
-map_alignment_position(aligned, "A", c(2, 3, 5))
-map_alignment_position(aligned, "A", 3, inverse = TRUE)
+cells <- as_ggchord_alignment(c(A = "AC-G"), alphabet = "DNA")
+map_alignment_position(cells,
+  data.frame(accver = "A", alignment_column = 3),
+  from = "alignment", to = "source")
 }

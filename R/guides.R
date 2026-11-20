@@ -31,26 +31,7 @@ ggchord_check_guide_scale <- function(size_scale, caller) {
   size_scale
 }
 
-#' Guides for ggchord role aesthetics
-#'
-#' Thin wrappers around [ggplot2::guide_legend()] and
-#' [ggplot2::guide_colourbar()] with compact defaults suitable for
-#' chord diagrams. All ordinary ggplot2 guide arguments remain available.
-#'
-#' @param title Guide title.
-#' @param theme Optional guide-specific theme.
-#' @param position,direction Guide position and direction.
-#' @param override.aes A list of legend-key aesthetic overrides.
-#' @param nrow,ncol Legend key layout.
-#' @param reverse Whether to reverse the key order.
-#' @param order Guide order.
-#' @param size_scale Positive multiplier for keys, spacing and typography.
-#'   ggchord's automatically generated guides derive this from the active
-#'   export device; direct calls default to 1.
-#' @param ... Additional arguments passed to the corresponding ggplot2 guide.
-#'
-#' @return A ggplot2 guide object.
-#' @export
+#' @noRd
 guide_ggchord_legend <- function(
     title = ggplot2::waiver(), theme = NULL, position = NULL, direction = NULL,
     override.aes = list(), nrow = NULL, ncol = NULL, reverse = FALSE,
@@ -79,14 +60,7 @@ guide_ggchord_legend <- function(
   )
 }
 
-#' @rdname guide_ggchord_legend
-#' @param nbin Number of colourbar bins.
-#' @param display Colourbar display method.
-#' @param alpha Colourbar alpha override.
-#' @param draw.ulim,draw.llim Whether to draw upper/lower limit ticks.
-#' @param angle Tick-label angle.
-#' @param available_aes Aesthetics accepted by the guide.
-#' @export
+#' @noRd
 guide_ggchord_colourbar <- function(
     title = ggplot2::waiver(), theme = NULL, nbin = NULL, display = "raster",
     alpha = NA, draw.ulim = TRUE, draw.llim = TRUE, angle = NULL,
@@ -172,8 +146,7 @@ ggchord_colourbar_dimensions <- function(native, user_theme, size_scale) {
     })
 }
 
-#' @rdname guide_ggchord_legend
-#' @export
+#' @noRd
 guide_ggchord_colorbar <- guide_ggchord_colourbar
 
 #' Resolve a guide theme and placement for one chord role
@@ -304,9 +277,12 @@ ggchord_role_guide <- function(plot, role, colourbar = FALSE, order = 0,
 }
 
 # Unequal numeric intervals occupy their actual share of the 0..100 domain.
-ggchord_identity_guide <- function(plot = NULL) {
+ggchord_identity_guide <- function(plot = NULL, aesthetic = "ribbon_fill") {
   spec <- if (!is.null(plot)) ggchord_role_guide_spec(plot,"ribbon",TRUE) else list()
   if (isTRUE(spec$hidden)) return("none")
+  if (identical(aesthetic, "fill") && inherits(plot, "ggchord") &&
+      identical(spec$position, "right") && is.null(plot$ggchord$theme_explicit[["legend.position"]]))
+    spec$position <- "left"
   # Generic legend key sizes describe categorical swatches, not the full
   # numerical ruler. Reserve enough physical distance for its closest labels.
   if (!is.null(plot)) {
@@ -317,28 +293,37 @@ ggchord_identity_guide <- function(plot = NULL) {
     family <- if(inherits(style,"element_text")) style@family %||% "" else ""
     face <- if(inherits(style,"element_text")) style@face %||% "plain" else "plain"
     values <- c(0,50,80,90,95,100)
-    dimensions <- vapply(as.character(values), function(label) {
-      g <- grid::textGrob(label,gp=grid::gpar(fontsize=points,fontfamily=family,fontface=face))
-      if(horizontal) grid::convertWidth(grid::grobWidth(g),"mm",TRUE) else
-        grid::convertHeight(grid::grobHeight(g),"mm",TRUE)
-    }, numeric(1))
+    context <- ggchord_render_context()
+    dimensions <- if (inherits(style, "element_blank")) rep(0, length(values)) else
+      if (!is.null(context) && grDevices::dev.cur() != 1L) {
+        vapply(as.character(values), function(label) {
+          g <- grid::textGrob(label, gp = grid::gpar(fontsize = points, fontfamily = family, fontface = face))
+          if (horizontal) grid::convertWidth(grid::grobWidth(g), "mm", TRUE) else
+            grid::convertHeight(grid::grobHeight(g), "mm", TRUE)
+        }, numeric(1))
+      } else {
+        points * 25.4 / 72 * if (horizontal) nchar(as.character(values)) * .6 else
+          rep(1, length(values))
+      }
     required <- max(((head(dimensions,-1L)+tail(dimensions,-1L))/2 + 1.2) /
       (diff(values)/100))
     settings <- ggchord_plot_settings(plot)
     field <- if(horizontal) "key.width" else "key.height"
     explicit <- settings$legends$ribbon[[field]] %||%
-      settings$legends$ribbon$key.size
+      settings$legends$ribbon$key.size %||%
+      plot$ggchord$theme_explicit[[paste0("legend.", field)]] %||%
+      plot$ggchord$theme_explicit$legend.key.size
     if(is.null(explicit)) {
       length_mm <- max(required, (if(horizontal) 100 else 80) * spec$size_scale)
       spec$theme <- spec$theme + do.call(ggplot2::theme,
         stats::setNames(list(grid::unit(length_mm,"mm")),paste0("legend.",field)))
-    } else if(grid::is.unit(explicit) &&
+    } else if(grDevices::dev.cur() != 1L && grid::is.unit(explicit) &&
         grid::convertUnit(explicit,"mm",valueOnly=TRUE) < required) {
       warning(paste0("Identity guide labels need at least ",round(required,1),
         " mm along the bar at this font size; the explicit guide size is retained"),call.=FALSE)
     }
   }
-  ggplot2::guide_coloursteps(available_aes="ribbon_fill", even.steps=FALSE,
+  ggplot2::guide_coloursteps(available_aes=aesthetic, even.steps=FALSE,
     show.limits=TRUE, position=spec$position, direction=spec$direction,
     theme=spec$theme, order=2)
 }

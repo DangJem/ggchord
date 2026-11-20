@@ -2,74 +2,47 @@
 % Please edit documentation in R/fusion.R
 \name{ggchord_fusion}
 \alias{ggchord_fusion}
-\title{Compose independent genomic panels}
+\title{Compose independent plots}
 \usage{
-ggchord_fusion(
-  center,
-  center_size = NULL,
-  layout = c("fixed", "adaptive"),
-  allow_overlap = FALSE,
-  center_box = NULL,
-  guides = c("keep", "collect")
-)
+ggchord_fusion(panels, layout = layout_fusion_grid(), guides = "keep")
 }
 \arguments{
-\item{center}{A ggchord genomic plot (Circular, Chord, Collinear, Sankey or
-Radial), or another Fusion. Nested biological endpoints use full panel paths.}
+\item{panels}{Uniquely named list of ggchord plots, Cartesian ggplots or
+nested compositions. Source endpoints require a registered source map.}
 
-\item{center_size}{Optional width and height as fractions of the composition
-content area, excluding native outer plot decorations and cross-panel
-Guides. NULL allocates available space.}
+\item{layout}{Panel allocation from \code{\link[=layout_fusion]{layout_fusion()}} or \code{\link[=layout_fusion_grid]{layout_fusion_grid()}}.}
 
-\item{layout}{\code{"fixed"} uses fixed panel allocations; \code{"adaptive"} also
-adjusts the central allocation to the physical aspect ratio and jointly
-measures native cross-panel Guide candidates against panel allocations.
-Unlocked Guide positions/direction/rows may adapt; explicit native settings
-and absolute boxes stay fixed. Multiple outside Guide positions are allowed.
-Both rebuild labels and guides at actual panel sizes without shrinking
-explicit fonts. Impossible space constraints fail rather than dropping keys.}
-
-\item{allow_overlap}{Explicitly allow container overlap. Default FALSE fails
-on overlap. When TRUE, later panels paint over earlier panels. Connections
-use disjoint native grid clips to avoid accumulating translucent fills.
-Ordinary child margins do not break links; later containers still cover
-earlier content. This is deliberate placement, not global collision avoidance.}
-
-\item{center_box}{Optional centre allocation: xmin, xmax, ymin, ymax as four
-fractions of the composition content area excluding outer decorations and
-Guides, or four absolute
-grid units. Use instead of center_size. See fusion_panel().}
-
-\item{guides}{\code{"keep"} (default) leaves child plot legends local.
-\code{"collect"} moves their native outside legends to the composition edge
-and removes visually identical duplicates. Scales are not combined or
-retrained across panels: use matching limits, breaks and guide styles for
-shared semantics. Different legends are retained separately, even with
-identical titles. Child \code{legend.position = "none"} stays hidden; inside
-legends cannot be collected. Nested cross-panel legends stay local to
-their composition. Collected boxes wrap to available device width.}
+\item{guides}{Keep child guides local, or collect semantically equivalent guides.}
 }
 \value{
-A Fusion object, printable and accepted by \code{\link[ggplot2:ggsave]{ggplot2::ggsave()}}.
+A composition accepted by print and \code{\link[ggplot2:ggsave]{ggplot2::ggsave()}}.
 }
 \description{
-A Fusion is a static composition, not a coordinate system. Add independent
-\code{\link[=fusion_panel]{fusion_panel()}} objects and independent \code{\link[=fusion_ribbon]{fusion_ribbon()}} layers. Ordinary
-\code{\link[ggplot2:ggsave]{ggplot2::ggsave()}} rebuilds panels and interval fronts at the target size.
-Source plots and their scales remain independent. Composition scales and
-themes apply to cross-panel links, their separate Guides and native outer
-plot furniture. Use labs(title/subtitle/caption/tag) and standard plot Theme
-elements for composition headings, captions, backgrounds and margins. Child
-axes and styles remain local; the composition has no Cartesian data axes.
+Compose independent plots
 }
 \examples{
-library(dplyr)
-data(seq_data_example)
-seqs <- seq_data_example |> select(accver, length) |> slice_head(n = 2)
-center <- ggchord(seqs) + geom_seq() + coord_chord()
-detail <- ggchord(seqs) + geom_seq() + coord_collinear(seq_axis = "vertical")
-ggchord_fusion(center, guides = "collect") +
-  fusion_panel(detail, id = "detail", side = "right") +
-  ggplot2::labs(title = "Independent genomic views",
-    caption = "Source: bundled sequence records")
+seqs <- data.frame(
+  accver = c("A", "B"), length = c(1000, 800),
+  sequence_unit = "bp", topology = "linear"
+)
+
+genes <- data.frame(
+  accver = c("A", "A", "B"), feature_id = c("g1", "g2", "g3"),
+  start = c(100, 400, 150), end = c(240, 620, 380),
+  strand = c("+", "-", "+"), label = c("g1", "g2", "g3"),
+  type = c("CDS", "tRNA", "CDS")
+)
+
+links <- data.frame(
+  qaccver = "A", saccver = "B", qstart = c(100, 400),
+  qend = c(240, 620), sstart = c(150, 450), send = c(290, 650),
+  qstrand = "+", sstrand = c("+", "-"),
+  pident = c(98, 90), link_id = c("l1", "l2")
+)
+
+p_over <- ggchord(seqs) + geom_seq() +
+  geom_link_ribbon(data = links) + coord_chord()
+p_detail <- ggchord(seqs) + geom_seq() +
+  geom_gene(data = genes) + coord_collinear()
+ggchord_fusion(list(overview = p_over, detail = p_detail))
 }

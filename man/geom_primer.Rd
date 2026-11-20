@@ -2,57 +2,69 @@
 % Please edit documentation in R/geom-primer.R
 \name{geom_primer}
 \alias{geom_primer}
-\title{Draw primer binding ranges on a circular sequence}
+\title{Draw primer binding intervals}
 \usage{
 geom_primer(
   mapping = NULL,
   data = NULL,
-  side = c("between", "outside", "inside"),
-  arc_offset = 0.045,
-  arc_linewidth = 0.026,
-  colour = "#A020F0",
-  position = NULL,
-  show.legend = FALSE,
-  inherit.aes = TRUE,
+  shape = "primer_arc",
+  thickness = 2,
+  stat = "identity",
+  position = position_offset(0),
   ...,
+  na.rm = FALSE,
+  show.legend = NA,
+  inherit.aes = TRUE,
   id = NULL
 )
 }
 \arguments{
-\item{mapping, data}{Standard layer inputs.}
+\item{mapping}{Aesthetic mapping from \code{ggplot2::aes()}. A local mapping overrides the matching inherited channel.}
 
-\item{side}{Backbone lane used by the primer arc. \code{"between"} uses the
-backbone centre line; \code{"outside"} and \code{"inside"} use \code{arc_offset}.}
+\item{data}{Observation table or a data function. For ggchord layers, provide the required data-role columns.}
 
-\item{arc_offset}{Distance from the backbone centre when \code{side} is
-\code{"outside"} or \code{"inside"}.}
+\item{shape}{Default shape. An explicitly supplied fixed shape takes priority over its mapping.}
 
-\item{arc_linewidth}{Radial width of the primer arc.}
+\item{thickness}{Physical thickness in mm or absolute grid units. Named values select references.}
 
-\item{colour}{Primer arc colour.}
+\item{stat}{A compatible ggplot2 Stat or its name. The default uses the supplied records.}
 
-\item{position, show.legend, inherit.aes}{Standard layer arguments.}
+\item{position}{A compatible Position for placement of the layer geometry.}
 
-\item{...}{Additional parameters passed to \code{\link[=geom_feature]{geom_feature()}}.}
+\item{...}{Additional named visual styles and parameters accepted by this layer.}
 
-\item{id}{Optional unique layer ID used in layout and source exports.}
+\item{na.rm}{Suppress warnings for missing observations that the layer can omit.}
+
+\item{show.legend}{Logical or named logical indicating whether the layer contributes legend keys.}
+
+\item{inherit.aes}{Whether to inherit plot mappings and evaluate them on the layer data.}
+
+\item{id}{Optional plot-local layer identifier. Name a layer explicitly to scope a scale, anchor a label or export it.}
 }
 \value{
-A ggplot2 layer.
+A ggplot2 layer for addition to a plot.
 }
 \description{
-Primers are slender directional arcs drawn between the two lines of a
-double sequence backbone by default, not arrows in the feature stack. Add
-\code{\link[=geom_primer_label_repel]{geom_primer_label_repel()}} for the matching unboxed label and leader.
+Draw primer binding intervals
+}
+\details{
+Provide one-based closed intervals with \code{accver}, \code{start} and \code{end}. A strand or disjoint segments can be supplied where appropriate. The gene shortcut defaults to an arrow and strand placement. The primer shortcut defaults to a directional narrow path, and the region shortcut defaults to a translucent block.
 }
 \examples{
-# Two illustrative intervals show the direction and labels of primer arcs.
-reference <- data.frame(accver = "A", length = 100)
-primers <- data.frame(accver = "A", start = c(12, 62), end = c(22, 72),
-  strand = c("+", "-"), name = c("P1", "P2"))
-ggchord(reference) +
-  geom_seq() +
-  geom_primer(data = primers, id = "primer-arcs") +
-  geom_primer_label_repel(data = primers, id = "primer-labels") +
+seqs <- data.frame(
+  accver = c("A", "B"), length = c(1000, 800),
+  sequence_unit = "bp", topology = "linear"
+)
+
+one_seq <- seqs[1, , drop = FALSE]
+
+primers <- data.frame(
+  accver = "A", feature_id = c("p1", "p2"),
+  start = c(80, 700), end = c(100, 720),
+  strand = c("+", "-"), label = c("Forward", "Reverse")
+)
+ggchord(one_seq) +
+  geom_seq(geometry = "double", thickness = 3) +
+  geom_primer(data = primers, thickness = 0.6, id = "primers") +
   coord_circular()
 }

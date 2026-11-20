@@ -179,23 +179,15 @@ ggchord_project_intervals <- function(row, caller) {
 #' @seealso \code{\link{ggchord_data_contract}}
 #' @export
 #' @examples
-#' library(dplyr)
-#' data(plasmid_example_pUC19)
-#' feature_source <- find_common_features(plasmid_example_pUC19)
-#' features <- feature_source |>
-#'   select(accver, start, end, strand, type, anno)
-#' coding <- features |>
-#'   filter(anno == "AmpR", type == "CDS") |>
-#'   select(accver, start, end, strand) |>
-#'   mutate(feature_id = paste(accver, "AmpR", sep = ":"), phase = 0)
-#' cds <- build_ggchord_cds(coding, genetic_code = 11)
-#' cds$features
-build_ggchord_cds <- function(cds_data, genetic_code = NULL,
-                              partial = c("error", "trim")) {
+#' coding <- data.frame(feature_id="cds1", accver="A", start=1, end=9,
+#'                      strand="+", phase=0)
+#' cds <- build_ggchord_cds(coding, genetic_code=11)
+#' cds$models
+build_ggchord_cds <- function(cds_data, genetic_code = NULL, partial = "error") {
   caller <- "build_ggchord_cds()"
   if (identical(ggchord_sequence_unit(cds_data, caller), "aa"))
     ggchord_stop(caller, ": CDS models require genomic bp coordinates")
-  partial <- match.arg(partial)
+  partial <- match.arg(partial, c("error", "trim"))
   if (!is.data.frame(cds_data) || !nrow(cds_data)) ggchord_stop(caller, ": cds_data must be a nonempty data.frame")
   ggchord_require_columns(cds_data, c("feature_id", "accver", "start", "end", "strand"), caller)
   if ("type" %in% names(cds_data) && (anyNA(cds_data$type) || any(cds_data$type != "CDS")))
@@ -335,7 +327,7 @@ ggchord_project_genomic <- function(segment, lower, upper) {
 #' `codon_boundary = "expand"` explicitly permits an inverse interval to cover
 #' partial codons and reports this expansion; it does not modify source bases.
 #'
-#' @param feature_data Domain/feature data frame with `feature_id`, `parent_id`
+#' @param features Domain/feature data frame with `feature_id`, `parent_id`
 #'   (or a single-valued `parent_ids` list-column), `start` and `end`.
 #' @param cds A map from [build_ggchord_cds()].
 #' @param from `"protein"` (default) or `"genome"`.
@@ -347,26 +339,16 @@ ggchord_project_genomic <- function(segment, lower, upper) {
 #' @seealso \code{\link{ggchord_data_contract}}
 #' @export
 #' @examples
-#' library(dplyr)
-#' data(plasmid_example_pUC19)
-#' feature_source <- find_common_features(plasmid_example_pUC19)
-#' features <- feature_source |>
-#'   select(accver, start, end, strand, type, anno)
-#' coding <- features |>
-#'   filter(anno == "AmpR", type == "CDS") |>
-#'   select(accver, start, end, strand) |>
-#'   mutate(feature_id = paste(accver, "AmpR", sep = ":"), phase = 0)
-#' cds <- build_ggchord_cds(coding, genetic_code = 11)
-#' # Select residues for display; this is not a detected domain.
-#' selected <- tibble(
-#'   feature_id = "selected_residues", parent_id = coding$feature_id,
-#'   start = 2, end = 20
-#' )
-#' project_ggchord_features(selected, cds)
-project_ggchord_features <- function(feature_data, cds, from = c("protein", "genome"),
-                                     codon_boundary = c("error", "expand")) {
+#' coding <- data.frame(feature_id="cds1", accver="A", start=1, end=9, strand="+", phase=0)
+#' cds <- build_ggchord_cds(coding, genetic_code=11)
+#' domain <- data.frame(feature_id="domain1", parent_id="cds1", start=2, end=3)
+#' genomic <- project_ggchord_features(domain, cds, from="protein")
+#' genomic
+project_ggchord_features <- function(features, cds, from = "protein", codon_boundary = "error") {
   caller <- "project_ggchord_features()"
-  from <- match.arg(from); codon_boundary <- match.arg(codon_boundary)
+  feature_data <- features
+  from <- match.arg(from, c("protein", "genome"))
+  codon_boundary <- match.arg(codon_boundary, c("error", "expand"))
   cds <- ggchord_project_model(cds, caller)
   if (!is.data.frame(feature_data)) ggchord_stop(caller, ": feature_data must be a data.frame")
   ggchord_require_columns(feature_data, c("feature_id", "start", "end"), caller)
@@ -462,7 +444,7 @@ project_ggchord_features <- function(feature_data, cds, from = c("protein", "gen
 #' alignments require explicit per-column alignment information and cannot be
 #' projected by this endpoint-only helper.
 #'
-#' @param link_data Data frame with `qfeature_id`, `sfeature_id` identifying CDS
+#' @param links Data frame with `qfeature_id`, `sfeature_id` identifying CDS
 #'   models and ordered inclusive protein `qstart`, `qend`, `sstart`, `send`.
 #'   Query and subject residue spans must be equal. If present, `gapopen` must
 #'   be zero and source `length` must equal this residue span.
@@ -476,25 +458,15 @@ project_ggchord_features <- function(feature_data, cds, from = c("protein", "gen
 #' @seealso \code{\link{ggchord_data_contract}}
 #' @export
 #' @examples
-#' library(dplyr)
-#' data(plasmid_example_pUC19)
-#' feature_source <- find_common_features(plasmid_example_pUC19)
-#' features <- feature_source |>
-#'   select(accver, start, end, strand, type, anno)
-#' coding <- features |>
-#'   filter(anno == "AmpR", type == "CDS") |>
-#'   select(accver, start, end, strand) |>
-#'   mutate(feature_id = paste(accver, "AmpR", sep = ":"), phase = 0)
-#' cds <- build_ggchord_cds(coding, genetic_code = 11)
-#' # Self-correspondence of one real CDS, solely to demonstrate coordinate conversion.
-#' # The same observed residues are paired, so the correspondence is ungapped.
-#' selected <- tibble(
-#'   qfeature_id = coding$feature_id, sfeature_id = coding$feature_id,
-#'   qstart = 1, qend = 20, sstart = 1, send = 20
-#' )
-#' project_ggchord_links(selected, cds, ungapped = TRUE)
-project_ggchord_links <- function(link_data, cds, ungapped = FALSE) {
+#' coding <- data.frame(feature_id=c("ca","cb"), accver=c("A","B"),
+#'   start=c(1,10), end=c(9,18), strand=c("+","-"), phase=0)
+#' cds <- build_ggchord_cds(coding, genetic_code=11)
+#' protein_links <- data.frame(qfeature_id="ca", sfeature_id="cb",
+#'   qstart=1, qend=3, sstart=1, send=3)
+#' project_ggchord_links(protein_links, cds, ungapped=TRUE)
+project_ggchord_links <- function(links, cds, ungapped = FALSE) {
   caller <- "project_ggchord_links()"
+  link_data <- links
   cds <- ggchord_project_model(cds, caller)
   if (!isTRUE(ungapped)) ggchord_stop(caller, ": set ungapped = TRUE only for a known ungapped residue correspondence")
   if (!is.data.frame(link_data)) ggchord_stop(caller, ": link_data must be a data.frame")
@@ -545,6 +517,12 @@ project_ggchord_links <- function(link_data, cds, ungapped = FALSE) {
   if (length(output)) out <- ggchord_rbind_fill(output) else out <- data.frame(
     qaccver = character(), saccver = character(), qstart = numeric(), qend = numeric(), sstart = numeric(), send = numeric())
   rownames(out) <- NULL
+  out <- ggchord_order_link_endpoints(out, caller)
+  if (!"source_row" %in% names(out)) out$source_row <- integer()
+  out$source_members <- I(lapply(out$source_row, function(i) {
+    if (is.null(link_data$source_members)) i else link_data$source_members[[i]]
+  }))
+  out$piece_index <- out$projection_piece %||% integer()
   attr(out, "ggchord_projection") <- list(from = "ungapped-protein-correspondence",
     coordinate_system = "1-based-inclusive", models = cds$models, cds_provenance = cds$provenance,
     source_import = attr(link_data, "ggchord_import"), source_conversion = attr(link_data, "ggchord_conversion"))

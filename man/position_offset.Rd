@@ -4,7 +4,7 @@
 \alias{position_offset}
 \title{Place both feature strands on one shared band}
 \usage{
-position_offset(offset)
+position_offset(offset = 0)
 }
 \arguments{
 \item{offset}{Signed local-normal offset. Negative values place the shared
@@ -20,10 +20,19 @@ A ggplot2 Position object.
 Place both feature strands on one shared band
 }
 \examples{
-seqs <- data.frame(accver = "A", length = 100L)
-intervals <- data.frame(accver = "A", start = c(8L, 55L),
-  end = c(35L, 80L), strand = c("+", "-"))
-ggchord(seqs) + geom_seq() +
-  geom_feature(data = intervals, position = position_offset(-0.1)) +
-  coord_circular()
+seqs <- data.frame(
+  accver = c("A", "B"), length = c(1000, 800),
+  sequence_unit = "bp", topology = "linear"
+)
+
+genes <- data.frame(
+  accver = c("A", "A", "B"), feature_id = c("g1", "g2", "g3"),
+  start = c(100, 400, 150), end = c(240, 620, 380),
+  strand = c("+", "-", "+"), label = c("g1", "g2", "g3"),
+  type = c("CDS", "tRNA", "CDS")
+)
+
+ggchord(data = seqs) + geom_seq() +
+  geom_feature(data = genes, position = position_offset(c(A = 2, B = -1))) +
+  coord_collinear()
 }

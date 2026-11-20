@@ -2,63 +2,41 @@
 % Please edit documentation in R/focus-track.R
 \name{focus_ggchord_track}
 \alias{focus_ggchord_track}
-\title{Focus quantitative intervals or samples without bridging omitted windows}
+\title{Crop a quantitative track to explicit windows}
 \usage{
-focus_ggchord_track(
-  data,
-  seq_data,
-  loci,
-  type = c("point", "interval"),
-  boundary = c("trim", "drop")
-)
+focus_ggchord_track(data, sequences, loci, type = "point", boundary = "trim")
 }
 \arguments{
-\item{data}{Quantitative input table. Metadata and mapped values are retained.}
+\item{data}{Track data frame.}
 
-\item{seq_data}{Sequence reference table.}
+\item{sequences}{Complete reference dictionary.}
 
-\item{loci}{Explicit \code{accver}, \code{start}, \code{end} and optional \code{locus_id}, as in
-\code{\link[=focus_ggchord_data]{focus_ggchord_data()}}.}
+\item{loci}{Window table with accver, start, end and distinct locus_id.}
 
-\item{type}{\code{"point"} requires \code{pos}; \code{"interval"} requires \code{start}/\code{end}.}
+\item{type}{\code{"point"} uses pos. \code{"interval"} uses start and end.}
 
-\item{boundary}{\code{"trim"} (default) or \code{"drop"} for partly retained intervals.}
+\item{boundary}{\code{"trim"} intersects intervals with the window, and
+\code{"drop"} keeps whole observations only.}
 }
 \value{
-An ordinary data frame with focused coordinates. Its
-\code{ggchord_track_focus} attribute reports output-to-input rows and omitted
-input rows; \verb{.source_*} columns retain earliest source coordinates.
+A focused track table with source positions and a data report.
 }
 \description{
-Applies the same explicit loci and output IDs as \code{\link[=focus_ggchord_data]{focus_ggchord_data()}} and
-\code{\link[=segment_ggchord_data]{segment_ggchord_data()}}. It never averages, interpolates, rescales values,
-or creates boundary samples. Missing values remain missing. Subsequent
-track layers group by the returned window accession, so separate windows
-cannot be joined by a line. Source coordinates and original row lineage
-survive repeated focusing.
+Local references use the window IDs. Points are retained only when they
+are present in the window. Signals keep their original values and
+measurement units. Earliest source coordinates are available through
+the source columns and \code{\link[=data_report]{data_report()}}.
 }
 \examples{
-library(ggchord)
-library(dplyr)
-data(plasmid_example_pUC19)
-track_seq <- plasmid_example_pUC19 |>
-  select(accver, length)
-starts <- seq.int(1L, track_seq$length, by = 100L)
-gc_fraction <- function(sequence) {
-  bases <- strsplit(sequence, "")[[1]]
-  mean(bases \%in\% c("G", "C"))
-}
-bins <- tibble(
-  accver = track_seq$accver,
-  start = starts,
-  end = pmin(starts + 99L, track_seq$length)
-) |>
-  rowwise() |>
-  mutate(gc = gc_fraction(substr(plasmid_example_pUC19$sequence, start, end))) |>
-  ungroup()
-loci <- tibble(accver = track_seq$accver, start = 501, end = 2000)
-focus_ggchord_track(bins, track_seq, loci, type = "interval")
-}
-\seealso{
-\code{\link{ggchord_data_contract}}
+seqs <- data.frame(
+  accver = c("A", "B"), length = c(1000, 800),
+  sequence_unit = "bp", topology = "linear"
+)
+
+signal <- data.frame(accver = rep(c("A", "B"), each = 3),
+  pos = rep(c(100, 400, 700), 2), value = c(2, 5, 3, 1, 4, 2))
+
+loci <- data.frame(accver="A", start=50, end=500, locus_id="A_local")
+local_signal <- focus_ggchord_track(signal, seqs, loci, type="point")
+data_report(local_signal)$lineage
 }

@@ -7,9 +7,9 @@
 translate_ggchord_cds(
   cds,
   sequences,
-  alphabet = c("DNA", "RNA"),
-  initiation = c("literal", "start"),
-  ambiguous = c("error", "solve")
+  alphabet = "DNA",
+  initiation = "literal",
+  ambiguous = "error"
 )
 }
 \arguments{
@@ -53,13 +53,11 @@ translation, not a validation of gene function or a predicted full protein.
 Partial-end trimming follows the supplied CDS map and is reported in models.
 }
 \examples{
-# Explicit synthetic codon contract, not a biological annotation claim.
-if (requireNamespace("Biostrings", quietly = TRUE)) {
-  coding <- data.frame(feature_id = "cds", accver = "source",
-    start = 1, end = 6, strand = "+", phase = 0)
-  cds <- build_ggchord_cds(coding, genetic_code = 11)
-  translate_ggchord_cds(cds, c(source = "ATGTAA"))$residues
-}
+coding <- data.frame(feature_id="cds1", accver="A", start=1, end=9, strand="+", phase=0)
+cds <- build_ggchord_cds(coding, genetic_code=11)
+translated <- translate_ggchord_cds(cds, c(A="ATGAAATAA"), alphabet="DNA")
+translated$models
+translated$residues
 }
 \seealso{
 \url{https://bioconductor.org/packages/Biostrings}

@@ -27,7 +27,7 @@ ggchord_build_fusion_core <- function(x) {
       ymin = xy[2]-size[2]/2, ymax = xy[2]+size[2]/2, width_mm = size[1], height_mm = size[2])
   })
   guide_boxes <- ggchord_rbind_fill(guide_boxes) %||% data.frame()
-  if (min(area)<15 || (nrow(guide_boxes) && any(guide_boxes$xmin < 0 | guide_boxes$ymin < 0 |
+  if (min(area) <= 0 || (nrow(guide_boxes) && any(guide_boxes$xmin < 0 | guide_boxes$ymin < 0 |
       guide_boxes$xmax > canvas[1] | guide_boxes$ymax > canvas[2]))) ggchord_stop(
     "Fusion: canvas cannot contain required cross-panel guides; increase width/height or set explicit guide layout")
   if (nrow(guide_boxes) > 1L) for (i in seq_len(nrow(guide_boxes))) for (j in seq_len(i-1L)) {
@@ -43,8 +43,9 @@ ggchord_build_fusion_core <- function(x) {
   rectangles <- ggchord_fusion_rectangles(x, area)
   panels <- list(); panel_rows <- list(); instances <- list(); diagnostics <- list()
   backgrounds <- list(); foregrounds <- list(); nested_results <- list(); sources <- list()
+  measured_leaves <- list()
   render_events <- list(); connection_grobs <- list(); overlay_grobs <- list(); obstacle_parts <- list()
-  for (id in names(x$panels)) {
+  for (id in names(rectangles)) {
     spec <- x$panels[[id]]; rect <- rectangles[[id]]
     dimensions <- c(diff(rect[1:2]),diff(rect[3:4]))*area
     center <- c(mean(rect[1:2]),mean(rect[3:4]))*area+shift
@@ -58,7 +59,7 @@ ggchord_build_fusion_core <- function(x) {
       })
       offset <- center - dimensions / 2
       child <- ggchord_fusion_nested_export(nested$export, id, offset)
-      nested_results[[id]] <- list(export = child, permissions = nested$source_permissions)
+      nested_results[[id]] <- list(export = child)
       obstacle_parts[[id]] <- child$routing_obstacles[child$routing_obstacles$kind != "container", , drop = FALSE]
       for (key in names(nested$panel_registry)) {
         full <- paste0(id, "/", key)
@@ -67,7 +68,7 @@ ggchord_build_fusion_core <- function(x) {
         panel$context$panel_bounds_mm <- panel$context$panel_bounds_mm + rep(offset, each = 2L)
         panels[[full]] <- panel
       }
-      container <- data.frame(panel_id = id, side = spec$side, coordinate = "fusion", is_container = TRUE,
+      container <- data.frame(panel_id = id, side = "area", coordinate = "fusion", is_container = TRUE,
         container_xmin = offset[1], container_xmax = offset[1] + dimensions[1],
         container_ymin = offset[2], container_ymax = offset[2] + dimensions[2],
         panel_xmin = offset[1], panel_xmax = offset[1] + dimensions[1],
@@ -106,7 +107,8 @@ ggchord_build_fusion_core <- function(x) {
     # Clone build-local ggproto state without serializing quosure/data-function
     # environments: a teaching environment can contain many unrelated plots.
     character_panel <- !is.null(spec$plot$ggchord_alignment)
-    plot <- if (character_panel) spec$plot else ggchord_render_plot_copy(spec$plot)
+    genomic_panel <- inherits(spec$plot, "ggchord")
+    plot <- if (genomic_panel) ggchord_render_plot_copy(spec$plot) else spec$plot
     plot$layers <- lapply(plot$layers,function(layer) {
       copy <- ggplot2::ggproto(NULL,layer)
       copy$geom <- ggplot2::ggproto(NULL,layer$geom)
@@ -118,9 +120,9 @@ ggchord_build_fusion_core <- function(x) {
       grid::pushViewport(viewport)
       on.exit(grid::popViewport())
       ggchord_with_render_context(list(available_canvas_mm=dimensions), {
-        if (character_panel) {
+        if (!genomic_panel) {
           built <- ggplot2::ggplot_build(plot)
-          layout <- ggchord_alignment_layout(built, plot$ggchord_alignment)
+          layout <- if (character_panel) ggchord_alignment_layout(built, plot$ggchord_alignment)
           table <- ggplot2::ggplot_gtable(built)
           context <- ggchord_panel_context(table, built)
           context$geometry_metric_status <- "measured_positions; glyph_fit_at_draw"
@@ -140,13 +142,21 @@ ggchord_build_fusion_core <- function(x) {
     })
     context <- attr(table,"ggchord_render_context")
     if (!identical(context$status,"measured")) ggchord_stop("Fusion panel '",id,"': actual panel measurement unavailable")
+    if (is.null(context$panel_bounds_mm) && length(context$facet_contexts)) {
+      b <- do.call(rbind, lapply(context$facet_contexts, `[[`, "panel_bounds_mm"))
+      context$panel_bounds_mm <- c(min(b[, 1L]), max(b[, 2L]), min(b[, 3L]), max(b[, 4L]))
+    }
     context$device_panel_bounds_mm <- context$panel_bounds_mm
-    context$panel_bounds_mm <- context$panel_bounds_mm-rep(origin,each=2L)
+    context$panel_bounds_mm <- context$panel_bounds_mm - rep(origin, each = 2L)
     layout <- attr(table,"ggchord_render_layout")
     built <- attr(table,"ggchord_render_built")
-    panels[[id]] <- list(layout=layout,built=built,context=context,
-      seq_data=spec$plot$ggchord$data$seq_data)
-    obstacle_parts[[paste0(id, "/text")]] <- ggchord_fusion_text_obstacles(panels[[id]], id)
+    ggchord_output_capture_build(plot, built, layout)
+    panels[[id]] <- list(layout = layout, built = built, context = context,
+      seq_data = built$plot$ggchord$data$seq_data %||% spec$plot$ggchord$data$seq_data,
+      guides = ggchord_diagnostic_guides(table, dimensions))
+    measured_leaves[[id]] <- panels[[id]]
+    if (!is.null(layout))
+      obstacle_parts[[paste0(id, "/text")]] <- ggchord_fusion_text_obstacles(panels[[id]], id)
     sources[[id]] <- spec$plot$ggchord_alignment %||% spec$plot$ggchord$sources
     backgrounds[[id]] <- grid::grobTree(ggchord_fusion_partition(table,TRUE),vp=viewport)
     foregrounds[[id]] <- grid::grobTree(ggchord_fusion_partition(table,FALSE),vp=viewport)
@@ -155,8 +165,9 @@ ggchord_build_fusion_core <- function(x) {
       foreground = foregrounds[[id]], bounds = bounds,
       container_bounds = c(center[1]-dimensions[1]/2, center[1]+dimensions[1]/2,
         center[2]-dimensions[2]/2, center[2]+dimensions[2]/2))
-    panel_rows[[id]] <- data.frame(panel_id=id,side=spec$side,
-      coordinate=if(character_panel) "alignment" else if(isTRUE(layout$sankey_projected)) "sankey" else
+    panel_rows[[id]] <- data.frame(panel_id=id,side="area",
+      coordinate=if(character_panel) "alignment" else if (!genomic_panel) "cartesian" else
+        if (isTRUE(layout$dotplot)) "dotplot" else if(isTRUE(layout$sankey_projected)) "sankey" else
         if(isTRUE(layout$radial_projected)) "radial" else if(isTRUE(spec$plot$coordinates$ggchord_circular)) "circular" else
         if(isTRUE(layout$collinear)) "collinear" else "chord",
       container_xmin=center[1]-dimensions[1]/2,container_xmax=center[1]+dimensions[1]/2,
@@ -165,8 +176,10 @@ ggchord_build_fusion_core <- function(x) {
       measurement=context$status,geometry_metric_status=context$geometry_metric_status,
       converged=context$converged,stringsAsFactors=FALSE)
     d <- layout$display_instances
-    if (is.null(d)) d <- data.frame(instance_id=layout$seqs,accver=layout$seqs,key=layout$seqs)
-    d$panel_id <- id; instances[[id]] <- d
+    if (is.null(d)) d <- data.frame(instance_id = layout$seqs %||% character(),
+      accver = layout$seqs %||% character(), key = layout$seqs %||% character())
+    d$panel_id <- rep(id, nrow(d))
+    instances[[id]] <- d
     # Report actual gtable guide bounds without claiming arbitrary label collision coverage.
     guide_at <- which(grepl("^guide-box",table$layout$name) &
       !vapply(table$grobs,inherits,logical(1),"zeroGrob"))
@@ -190,105 +203,91 @@ ggchord_build_fusion_core <- function(x) {
   if (nrow(guide_boxes)) obstacle_parts[["composition-guide"]] <- data.frame(panel_id = "",
     kind = "guide", guide_boxes[c("xmin", "xmax", "ymin", "ymax")], measurement = "composition_guide")
   obstacles <- unique(ggchord_rbind_fill(c(containers, obstacle_parts))) %||% data.frame()
-  # Use the shared Ribbon renderer with a single full-canvas Cartesian frame.
-  frame <- ggplot2::ggplot() + ggplot2::coord_cartesian(xlim=c(0,canvas[1]),ylim=c(0,canvas[2]),expand=FALSE)
-  frame <- ggplot2::ggplot_build(frame)
-  connection_rows <- list(); fronts <- list(); paths <- list(); ribbons <- list(); seen <- list()
-  corridors <- list(); corridor_rows <- list()
+  connection_rows <- list()
+  fronts <- list()
+  paths <- list()
+  ribbons <- list()
+  ribbon_mapped <- list()
   for (i in seq_along(x$ribbons)) {
-    layer <- x$ribbons[[i]]; input <- layer$data
-    layer_id <- paste0("fusion-ribbon-",i)
-    for (name in names(layer$selectors)) if (!is.null(layer$selectors[[name]])) input[[name]] <- rep(layer$selectors[[name]],nrow(input))
-    unknown <- ggchord_alignment_unknown(input,"fusion_ribbon()")
-    if (any(unknown)) warning("Fusion: omitted relationships with unknown direction; see connections",call.=FALSE)
+    layer <- x$ribbons[[i]]
+    input <- ggchord_fusion_input(layer)
+    ribbon_mapped[[layer$id]] <- input
+    if (!is.null(layer$capture)) {
+      layer$capture$mapped <- input
+      layer$capture$statistic <- input
+    }
+    incomplete <- rep(FALSE, nrow(input))
+    for (role in layer$required) {
+      value <- input[[role]]
+      missing <- if (is.list(value)) vapply(value, function(v) !length(v) || anyNA(v), logical(1)) else is.na(value)
+      incomplete <- incomplete | missing
+    }
+    if (any(incomplete) && !layer$na.rm)
+      warning("Fusion layer '", layer$id, "': omitted ", sum(incomplete), " incomplete relationship row(s)", call. = FALSE)
     for (row in seq_len(nrow(input))) {
-      record <- input[row,,drop=FALSE]
-      report <- cbind(data.frame(layer_id=layer_id,source_row=row),record)
-      if (unknown[row]) {
-        report$retained <- FALSE; report$reason <- "unknown_direction"
-        connection_rows[[length(connection_rows)+1L]] <- report
+      record <- input[row, , drop = FALSE]
+      report <- record
+      report$qpanel_path <- list(report$qpanel_path[[1L]])
+      report$spanel_path <- list(report$spanel_path[[1L]])
+      report$layer_id <- layer$id
+      report$composition_id <- ""
+      report$source_row <- row
+      report$component_type <- "relationship"
+      if (!"source_members" %in% names(report)) report$source_members <- list(row)
+      if (incomplete[row]) {
+        report$retained <- FALSE
+        report$reason <- "missing_input"
+        connection_rows[[length(connection_rows) + 1L]] <- report
         next
       }
-      q <- ggchord_fusion_endpoint(panels,record,"q",layer_id,row)
-      s <- ggchord_fusion_endpoint(panels,record,"s",layer_id,row)
-      if (q$panel == s$panel) ggchord_stop("Fusion ",layer_id," row ",row,": cross-panel links require distinct panels")
-      if (q$unit != s$unit) ggchord_stop("Fusion ",layer_id," row ",row,": bp/aa links require an explicit source projection")
-      ggchord_check_interval_unit(record,q$unit,"fusion_ribbon()")
-      if ("source_hsp_id" %in% names(record)) {
-        key <- as.character(record$source_hsp_id)
-        if (is.na(key) || !nzchar(key)) ggchord_stop("Fusion: source_hsp_id must be nonempty when supplied")
-        if (!is.null(seen[[key]]) && !(layer$allow_repeated && all(unlist(seen[[key]]))))
-          ggchord_stop("Fusion: repeated source_hsp_id '",key,"' requires allow_repeated=TRUE on all participating layers")
-        seen[[key]] <- c(seen[[key]],list(layer$allow_repeated))
-      }
-      qf <- ggchord_fusion_front(panels[[q$panel]],q); sf <- ggchord_fusion_front(panels[[s$panel]],s)
-      path <- ggchord_fusion_path(qf,sf,layer$curvature)
-      style <- styles$data[[i]][row,,drop=FALSE]
-      relevant <- ggchord_route_obstacles(obstacles, c(q$panel, s$panel))
-      stroke <- if (is.na(style$colour) || !is.finite(style$linewidth)) 0 else style$linewidth/2
-      relevant <- ggchord_route_inflate(relevant, stroke)
-      group <- if (identical(layer$route, "bundle")) record$route_group else NA_character_
-      # Length-prefixed keys avoid collisions with slashes or arbitrary user IDs.
-      key <- if (!is.na(group)) paste0(nchar(c(layer_id, q$panel, s$panel, group)), ":",
-        c(layer_id, q$panel, s$panel, group), collapse = "") else NULL
-      corridor <- if (!is.null(key)) corridors[[key]] else NULL
-      routed <- ggchord_route_ribbon(qf, sf, path, relevant, canvas,
-        layer$route %||% "direct", layer$route_width %||% .8, corridor = corridor, tip = layer$tip)
-      if (!is.null(key)) {
-        corridors[[key]] <- routed$corridor
-        corridor_rows[[length(corridor_rows)+1L]] <- data.frame(layer_id = layer_id,
-          route_group = group, source_row = row, qpanel = q$panel, spanel = s$panel,
-          vertex = seq_len(nrow(routed$corridor)), x = routed$corridor[, 1], y = routed$corridor[, 2],
-          coordinate_space = "composition", units = "mm", semantic = "shared_drawing_corridor")
-      }
-      path <- routed$path
-      normals <- attr(path,"endpoint_normals")
-      for (prefix in c("q","s")) {
-        endpoint <- if(prefix=="q") q else s
-        front <- if(prefix=="q") qf else sf
-        front$endpoint <- prefix; front$panel_id <- endpoint$panel; front$instance_id <- endpoint$instance
-        front$accver <- endpoint$entity; front$layer_id <- layer_id; front$source_row <- row
+      q <- ggchord_fusion_endpoint(panels, record, "q", layer$id, row)
+      s <- ggchord_fusion_endpoint(panels, record, "s", layer$id, row)
+      if (q$panel == s$panel) ggchord_stop("Fusion: links require distinct panels")
+      if (q$unit != s$unit) ggchord_stop("Fusion: bp/aa links require an explicit source projection")
+      ggchord_check_character_origin(q, s, "fusion_ribbon()")
+      ggchord_check_interval_unit(record, q$unit, "fusion_ribbon()")
+      qf <- ggchord_fusion_front(panels[[q$panel]], q)
+      sf <- ggchord_fusion_front(panels[[s$panel]], s)
+      path <- ggchord_fusion_path(qf, sf, if (layer$route == "straight") 0 else layer$curvature)
+      style <- styles$data[[i]][row, , drop = FALSE]
+      normals <- attr(path, "endpoint_normals")
+      for (prefix in c("q", "s")) {
+        endpoint <- if (prefix == "q") q else s
+        front <- if (prefix == "q") qf else sf
+        front$endpoint <- prefix
+        front$panel_id <- endpoint$panel
+        front$instance_id <- endpoint$instance
+        front$accver <- endpoint$entity
+        front$layer_id <- layer$id
+        front$composition_id <- ""
+        front$source_row <- row
         front$sequence_unit <- endpoint$unit
-        front$control_normal_x <- normals[prefix,1]; front$control_normal_y <- normals[prefix,2]
-        fronts[[length(fronts)+1L]] <- front
+        front$control_normal_x <- normals[prefix, 1L]
+        front$control_normal_y <- normals[prefix, 2L]
+        fronts[[length(fronts) + 1L]] <- front
       }
-      d <- data.frame(x=path[,1],y=path[,2],group=1L,fill=style$fill,colour=style$colour,
-        alpha=style$alpha,linewidth=style$linewidth,linetype=style$linetype,
-        flow_qn=nrow(qf),flow_sn=nrow(sf),flow_tip=layer$tip,flow_from=NA_character_,flow_to=NA_character_)
-      if (layer$gradient) {
-        endpoint_colour <- function(endpoint,front) {
-          panel <- panels[[endpoint$panel]]
-          if (isTRUE(panel$layout$character)) ggchord_stop("Fusion: character endpoints require explicit fill; sequence-colour gradient has no backbone colour")
-          colours <- ggchord_sequence_display_colours(panel$built$plot,panel$layout)
-          ids <- if(is.null(panel$layout$display_instances)) endpoint$key else endpoint$instance
-          at <- which(colours$instance == ids)
-          if (!length(at)) ggchord_stop("Fusion: cannot resolve endpoint sequence colour")
-          at <- at[which.min((colours$x[at]-mean(front$local_x))^2+(colours$y[at]-mean(front$local_y))^2)]
-          colours$colour[at]
-        }
-        d$flow_from <- endpoint_colour(q,qf); d$flow_to <- endpoint_colour(s,sf)
-      }
-      ribbons[[length(ribbons)+1L]] <- GeomRibbonFlow$draw_panel(d,frame$layout$panel_params[[1]],frame$layout$coord,
-        flow=layer$gradient,tip=layer$tip)
-      d$layer_id <- layer_id; d$source_row <- row; paths[[length(paths)+1L]] <- d
-      report$route <- layer$route %||% "direct"; report$route_status <- routed$status
-      report$obstacle_collisions <- routed$collisions; report$tip <- layer$tip; report$route_stroke_mm <- stroke
-      report$qpanel <- q$panel; report$spanel <- s$panel
-      report$q_instance <- q$instance; report$s_instance <- s$instance
-      report$sequence_unit <- q$unit; report$retained <- TRUE; report$reason <- "retained"
-      connection_rows[[length(connection_rows)+1L]] <- report
+      d <- data.frame(x = path[, 1L], y = path[, 2L], fill = style$fill,
+        colour = style$colour, alpha = style$alpha, linewidth = style$linewidth,
+        linetype = style$linetype, layer_id = layer$id, composition_id = "",
+        source_row = row, units = "mm", component_type = "relationship")
+      ribbons[[length(ribbons) + 1L]] <- grid::pathGrob(d$x, d$y,
+        default.units = "mm", rule = "evenodd", gp = grid::gpar(
+          fill = scales::alpha(style$fill, style$alpha),
+          col = scales::alpha(style$colour, style$alpha), lwd = style$linewidth * ggplot2::.pt,
+          lty = style$linetype, lineend = layer$fixed$lineend %||% "butt"))
+      paths[[length(paths) + 1L]] <- d
+      report$route <- layer$route
+      report$qpanel <- q$panel
+      report$spanel <- s$panel
+      report$qinstance <- q$instance
+      report$sinstance <- s$instance
+      report$sequence_unit <- q$unit
+      report$retained <- TRUE
+      report$reason <- NA_character_
+      connection_rows[[length(connection_rows) + 1L]] <- report
     }
   }
-  for (nested in nested_results) for (key in names(nested$permissions)) {
-    permissions <- c(seen[[key]], nested$permissions[[key]])
-    if (length(permissions) > 1L && !all(unlist(permissions)))
-      ggchord_stop("Fusion: repeated source_hsp_id '", key, "' across nested panels requires allow_repeated=TRUE on all participating layers")
-    seen[[key]] <- permissions
-  }
-  focus_settings <- x$focus
-  if (!is.null(focus_settings)) { focus_settings$obstacles <- obstacles; focus_settings$canvas <- canvas }
-  focus <- ggchord_build_focus(focus_settings, panels)
-  for (name in c("regions", "fronts", "leaders", "leader_paths")) focus[[name]]$composition_id <- rep("root", nrow(focus[[name]]))
+  zooms <- do.call(c, unname(lapply(x$zooms, ggchord_render_zoom, panels = panels)))
   guide_grobs <- lapply(seq_len(nrow(guide_boxes)), function(i) {
     b <- guide_boxes[i, ]
     grid::grobTree(styles$guides[[b$side]], vp = grid::viewport(
@@ -297,7 +296,7 @@ ggchord_build_fusion_core <- function(x) {
   })
   guide <- do.call(grid::grobTree, guide_grobs)
   overlaps <- list()
-  ids <- names(x$panels)
+  ids <- names(rectangles)
   for (i in seq_along(ids)) for (j in seq_len(i - 1L)) {
     a <- rectangles[[i]]; b <- rectangles[[j]]
     box <- c(max(a[1], b[1]), min(a[2], b[2]), max(a[3], b[3]), min(a[4], b[4]))
@@ -307,8 +306,8 @@ ggchord_build_fusion_core <- function(x) {
       xmin = box[1], xmax = box[2], ymin = box[3], ymax = box[4], units = "mm",
       policy = "explicit_allow; later panel paints over earlier panel")
   }
-  connection_grobs <- c(ribbons, focus$underlay, connection_grobs)
-  overlay_grobs <- c(overlay_grobs, focus$overlay)
+  connection_grobs <- c(ribbons, lapply(zooms, `[[`, "grob"), connection_grobs)
+  overlay_grobs <- c(overlay_grobs, do.call(c, unname(lapply(zooms, `[[`, "overlay"))))
   render_events[[length(render_events) + 1L]] <- list(panel_id = NULL,
     background = grid::nullGrob(), foreground = guide, bounds = NULL)
   overlap_mode <- isTRUE(x$allow_overlap) || any(vapply(nested_results,
@@ -317,50 +316,20 @@ ggchord_build_fusion_core <- function(x) {
   bind <- function(rows) if(length(rows)) ggchord_rbind_fill(rows) else data.frame()
   child_tables <- function(name) lapply(nested_results, function(n) n$export[[name]])
   combine <- function(rows, name) bind(c(rows, child_tables(name)))
-  focus_regions <- bind(c(list(focus$regions), child_tables("focus_regions")))
-  focus_fronts <- bind(c(list(focus$fronts), child_tables("focus_fronts")))
-  leaders <- bind(c(list(focus$leaders), child_tables("leaders")))
-  leader_paths <- bind(c(list(focus$leader_paths), child_tables("leader_paths")))
-  for (id in names(panel_rows)) {
-    d <- panel_rows[[id]]; at <- which(d$panel_id == id); spec <- x$panels[[id]]
-    for (name in c("requested_angle", "requested_distance")) if (!name %in% names(d)) d[[name]] <- NA_real_
-    d$requested_angle[at] <- spec$angle %||% NA_real_
-    for (name in c("auto_angle", "auto_size_factor")) {
-      if (!name %in% names(d)) d[[name]] <- NA_real_
-      d[[name]][at] <- attr(rectangles[[id]], name) %||% NA_real_
-    }
-    d$requested_distance[at] <- spec$distance %||% NA_real_
-    if (!"requested_box" %in% names(d)) d$requested_box <- I(rep(list(NULL), nrow(d)))
-    d$requested_box[at] <- list(spec$box)
-    panel_rows[[id]] <- d
-  }
-  export <- list(panels=bind(panel_rows),instances=bind(instances),overlaps=combine(overlaps,"overlaps"),
-    connections=combine(connection_rows,"connections"),fronts=combine(fronts,"fronts"),paths=combine(paths,"paths"),
-    focus_region_data=focus$input,focus_frame_region_data=focus$frame_input,
-    focus_regions=focus_regions,focus_fronts=focus_fronts,leaders=leaders,leader_paths=leader_paths,
-    nested_focus_region_data=lapply(nested_results,function(n) n$export$focus_region_data),
-    focus_region_data_by_composition=c(list(root=focus$input), unlist(lapply(names(nested_results), function(id) {
-      data <- nested_results[[id]]$export$focus_region_data_by_composition
-      stats::setNames(data, paste0(id, "/", names(data)))
-    }), recursive=FALSE)),
-    focus_frame_region_data_by_composition=c(list(root=focus$frame_input), unlist(lapply(names(nested_results), function(id) {
-      data <- nested_results[[id]]$export$focus_frame_region_data_by_composition
-      stats::setNames(data, paste0(id, "/", names(data)))
-    }), recursive=FALSE)),
-    routing_obstacles=obstacles,routing_corridors=combine(corridor_rows,"routing_corridors"),diagnostics=diagnostics,source_layouts=lapply(panels,`[[`,"layout"),source_data=sources,
-    relationship_data=c(lapply(x$ribbons,`[[`,"data"),unlist(lapply(nested_results,function(n) n$export$relationship_data),recursive=FALSE)),
-    metadata=list(canvas_mm=canvas,panel_layout=attr(rectangles,"automatic_layout") %||% list(status="fixed"),coordinate_space="composition",units="mm",layout=x$fusion_layout,
-      guide_side=styles$side,guide_size_mm=guide_size,guide_sizes_mm=styles$sizes,
-      guide_bounds_mm=guide_boxes,guide_layout=styles$report,measurement="measured",allow_overlap=isTRUE(x$allow_overlap),
-      device=names(grDevices::dev.cur()),font_conditions="Selected device metrics; fallback and embedding not certified"))
-  export <- ggchord_fusion_recheck_routes(export, obstacles)
-  if ("source_hsp_id" %in% names(export$connections)) {
-    d <- export$connections
-    ids <- unique(as.character(d$source_hsp_id[!is.na(d$source_hsp_id) & d$retained]))
-    export$source_observations <- ggchord_rbind_fill(lapply(ids, function(id) data.frame(
-      source_hsp_id = id, displayed_connections = sum(d$source_hsp_id %in% id & d$retained),
-      identity_basis = "explicit source_hsp_id; display copies are not new observations"))) %||% data.frame()
-  } else export$source_observations <- data.frame()
-  list(grob=grob,export=export,panel_registry=panels,source_permissions=seen,
-    render_events=render_events,connection_grobs=connection_grobs,overlay_grobs=overlay_grobs)
+  export <- list(
+    panels = bind(panel_rows), instances = bind(instances), overlaps = combine(overlaps, "overlaps"),
+    connections = combine(connection_rows, "connections"), fronts = combine(fronts, "fronts"),
+    paths = combine(paths, "paths"), zoom_regions = combine(lapply(zooms, `[[`, "region"), "zoom_regions"),
+    zoom_paths = combine(lapply(zooms, `[[`, "path"), "zoom_paths"), diagnostics = diagnostics,
+    source_layouts = lapply(panels, `[[`, "layout"), source_data = sources,
+    routing_obstacles = obstacles,
+    metadata = list(canvas_mm = canvas, panel_layout = x$fusion_areas,
+      coordinate_space = "composition", units = "mm",
+      guide_side = styles$side, guide_size_mm = guide_size, guide_sizes_mm = styles$sizes,
+      guide_bounds_mm = guide_boxes, guide_layout = styles$report, measurement = "measured",
+      allow_overlap = isTRUE(x$allow_overlap), device = names(grDevices::dev.cur()),
+      font_conditions = "Selected device metrics; fallback and embedding have not been inspected"))
+  list(grob = grob, export = export, panel_registry = panels, measured_leaves = measured_leaves,
+    ribbon_mapped = ribbon_mapped, nested = nested_results,
+    render_events = render_events, connection_grobs = connection_grobs, overlay_grobs = overlay_grobs)
 }

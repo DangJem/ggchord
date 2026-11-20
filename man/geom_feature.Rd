@@ -2,162 +2,78 @@
 % Please edit documentation in R/geom-feature.R
 \name{geom_feature}
 \alias{geom_feature}
-\title{Draw generic genomic features}
+\title{Draw sequence features}
 \usage{
 geom_feature(
   mapping = NULL,
   data = NULL,
-  shape = "arrow",
-  width = NULL,
-  arrow_head_length = 0.04,
-  arrow_head_width = 1,
-  arrow_head_style = c("shouldered", "flush", "triangle"),
-  short_feature = c("auto", "wedge", "block"),
-  segment_boundaries = TRUE,
-  boundary_colour = "#666666",
-  boundary_linewidth = 0.25,
-  boundary_linetype = "22",
+  shape = "block",
+  thickness = 2,
+  stat = "identity",
   position = "identity",
-  show.legend = TRUE,
-  inherit.aes = TRUE,
   ...,
-  id = NULL,
-  preset = c("default", "gene", "plasmid")
+  na.rm = FALSE,
+  show.legend = NA,
+  inherit.aes = TRUE,
+  id = NULL
 )
 }
 \arguments{
-\item{mapping}{Optional aesthetic mapping. Role aesthetics such as
-\code{accver}, \code{start}, \code{end} and \code{strand} may rename
-input columns. Starting visual mappings read the same source rows.
-A source column keeps its original value when a domain role has the
-same name. Expressions that also use a generated field, such as
-\code{.component}, combine each vertex with its source row. Staged visual
-mappings can use \code{\link[ggplot2:after_stat]{ggplot2::after_stat()}} and \code{\link[ggplot2:after_scale]{ggplot2::after_scale()}}.}
+\item{mapping}{Aesthetic mapping from \code{ggplot2::aes()}. A local mapping overrides the matching inherited channel.}
 
-\item{data}{data.frame with \code{accver}, \code{start}, \code{end} and
-\code{strand}; optional \code{type}, \code{category} and \code{label}.
-Factor \code{start}/\code{end} columns use their numeric labels, not
-their internal level codes. Coordinates must resolve to finite numbers.
-\code{display_priority} or logical \code{prioritized_display}. As an alternative to
-\code{strand}, \code{directionality} or \code{direction} may contain
-\code{"forward"}, \code{"reverse"}, \code{"bidirectional"}, or
-\code{"none"}.
-With one prepared annotation table, the default preset draws all rows.
-The gene preset inherits rows classified as gene or CDS. When several
-tables qualify, pass the selected table explicitly.}
+\item{data}{Observation table or a data function. For ggchord layers, provide the required data-role columns.}
 
-\item{shape}{Fixed feature geometry. An explicitly supplied shape takes
-precedence over \code{aes(feature_shape = ...)}: \code{"arrow"},
-\code{"compact_arrow"}, \code{"promoter_arrow"},
-\code{"primer_arrow"}, \code{"marker"}, \code{"block"},
-\code{"capped_line"}, \code{"primer_arc"}, \code{"chevron"}, or
-\code{"lollipop"}. When omitted, use the layer's or inherited
-\code{feature_shape} mapping if present, with \code{"arrow"} as the default.
-Use \code{aes(feature_shape = type)} together with
-\code{scale_feature_shape_manual()} to map categories to geometry.}
+\item{shape}{Default shape. An explicitly supplied fixed shape takes priority over its mapping.}
 
-\item{width}{Optional numeric/vector/list controlling width in the
-shared feature geometry engine. In a circular feature-label composition,
-the base width responds to final label size within bounded limits.}
+\item{thickness}{Physical thickness in mm or absolute grid units. Named values select references.}
 
-\item{arrow_head_length, arrow_head_width}{Arrow-head dimensions in the
-sequence-local frame. Values above one for
-\code{arrow_head_width} create a protruding block-arrow head.}
+\item{stat}{A compatible ggplot2 Stat or its name. The default uses the supplied records.}
 
-\item{arrow_head_style}{Arrowhead construction: \code{"shouldered"} keeps the
-requested protruding head, \code{"flush"} keeps it level with the body, and
-\code{"triangle"} draws a full triangular wedge.}
+\item{position}{A compatible Position for placement of the layer geometry.}
 
-\item{short_feature}{Fallback for arrows too short to hold their requested
-head: an automatically compressed directional glyph, a wedge, or a block.}
+\item{...}{Additional named visual styles and parameters accepted by this layer.}
 
-\item{segment_boundaries}{Draw explicit internal marks carried by a
-segmented feature. Contiguous source-segment joins use dotted dividers;
-a non-solid segment-level \code{line_style} may override them, while a
-\code{cleavage_arrows} coordinate adds or merges a biological cut mark. These
-marks never create additional arrowheads.}
+\item{na.rm}{Suppress warnings for missing observations that the layer can omit.}
 
-\item{boundary_colour, boundary_linewidth, boundary_linetype}{Appearance of
-internal segment joins.}
+\item{show.legend}{Logical or named logical indicating whether the layer contributes legend keys.}
 
-\item{position}{Feature placement. Use \code{"identity"}, \code{"strand"},
-\code{\link[=position_strand]{position_strand()}}, \code{\link[=position_offset]{position_offset()}}, or
-\code{\link[=position_feature_stack]{position_feature_stack()}}.}
+\item{inherit.aes}{Whether to inherit plot mappings and evaluate them on the layer data.}
 
-\item{show.legend, inherit.aes}{Standard ggplot2 layer arguments.}
-
-\item{...}{Additional fixed polygon aesthetics.}
-
-\item{id}{Optional plot-unique layer ID for label anchors and layout export.}
-
-\item{preset}{Choose how intervals are drawn. The default, \code{"default"},
-draws all rows of the selected table on the backbone and accepts unknown
-strands. Use \code{"gene"} for directed genes with \code{+} or \code{-} strands. It
-colours arrows by strand and, when inheriting annotations, selects gene
-and CDS rows. Explicit layer data supplies its own rows. Use \code{"plasmid"}
-to place overlapping intervals in lanes inside the circle, with wider
-arrowheads and no feature legend by default. It uses the same source
-colours as the general layer when available. The examples give the
-equivalent general-layer call. Explicit layer arguments override these
-preset defaults.}
+\item{id}{Optional plot-local layer identifier. Name a layer explicitly to scope a scale, anchor a label or export it.}
 }
 \value{
-A ggplot2 layer.
+A ggplot2 layer for addition to a plot.
 }
 \description{
-A general layer for CDS, tRNA, rRNA, repeat, CRISPR, promoter or user-defined
-features. It supports directional arrows, blocks, notched chevrons and
-lollipops, all generated against the sequence's real local curve. Feature
-fill and geometry use independent role-specific scales.
+Draw sequence features
+}
+\details{
+Provide one-based closed intervals with \code{accver}, \code{start} and \code{end}. A strand or disjoint segments can be supplied where appropriate. The gene shortcut defaults to an arrow and strand placement. The primer shortcut defaults to a directional narrow path, and the region shortcut defaults to a translucent block.
 }
 \examples{
-reference <- data.frame(accver = "A", length = 100)
-intervals <- data.frame(
-  accver = "A", start = c(10, 60), end = c(35, 85), strand = "+",
-  anno = c("alpha", "beta")
+library(ggplot2)
+
+seqs <- data.frame(
+  accver = c("A", "B"), length = c(1000, 800),
+  sequence_unit = "bp", topology = "linear"
 )
-ggchord(reference) +
-  geom_seq() +
-  geom_feature(data = intervals) +
-  coord_circular()
 
-# Draw the two curated pUC19 intervals as blocks.
-features <- find_common_features(
-  plasmid_example_pUC19, features = c("AmpR", "ori"), mode = "auto"
+genes <- data.frame(
+  accver = c("A", "A", "B"), feature_id = c("g1", "g2", "g3"),
+  start = c(100, 400, 150), end = c(240, 620, 380),
+  strand = c("+", "-", "+"), label = c("g1", "g2", "g3"),
+  type = c("CDS", "tRNA", "CDS")
 )
-backbone <- ggchord(plasmid_example_pUC19) +
-  geom_seq()
-backbone +
-  geom_feature(data = features, shape = "block") +
-  coord_circular()
 
-# The gene preset selects the AmpR CDS from the prepared annotations.
-prepared <- prepare_ggchord_data(plasmid_example_pUC19, feature_data = features)
-ggchord(prepared) +
+gene_colours <- c(CDS = "#187B77", tRNA = "#CC7D3A")
+
+ggchord(seqs) +
   geom_seq() +
-  geom_feature(preset = "gene") +
-  coord_collinear()
-
-# The plasmid preset and its equivalent general-layer settings.
-backbone +
-  geom_feature(data = features, preset = "plasmid") +
-  coord_circular()
-backbone +
   geom_feature(
-    data = features, width = 0.058,
-    arrow_head_length = 0.068, arrow_head_width = 1.42,
-    position = position_feature_stack(
-      spacing = 0.10, base_position = position_offset(-0.10)
-    ),
-    show.legend = FALSE
+    aes(shape = type, fill = type), data = genes,
+    thickness = c(A = 2.5, B = 1.5)
   ) +
-  coord_circular()
-
-# Fill describes the feature source; ref selects its sequence.
-references <- data.frame(accver = c("A", "B"), length = 100)
-calls <- data.frame(accver = c("u", "v"), ref = c("A", "B"),
-                    start = c(10, 20), end = c(18, 35), strand = "+")
-ggchord(references, aes(accver = ref, fill = accver)) +
-  geom_feature(data = calls) +
+  ggplot2::scale_shape_manual(values = c(CDS = "arrow", tRNA = "block")) +
+  ggplot2::scale_fill_manual(values = gene_colours) +
   coord_collinear()
 }

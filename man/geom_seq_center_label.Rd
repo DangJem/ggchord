@@ -2,53 +2,60 @@
 % Please edit documentation in R/geom-seq-center-label.R
 \name{geom_seq_center_label}
 \alias{geom_seq_center_label}
-\title{Add a circular-sequence centre label}
+\title{Label the centre of a circular reference}
 \usage{
 geom_seq_center_label(
   mapping = NULL,
   data = NULL,
-  name = TRUE,
-  length = TRUE,
-  separator = "\\n",
-  name_style = list(),
-  length_style = list(),
+  position = "identity",
+  label_layout = label_layout_fixed(orientation = "horizontal"),
+  ...,
+  na.rm = FALSE,
   show.legend = FALSE,
   inherit.aes = TRUE,
-  ...,
-  id = NULL,
-  position = "identity"
+  id = NULL
 )
 }
 \arguments{
-\item{mapping, data}{Standard layer inputs.}
+\item{mapping}{Aesthetic mapping from \code{ggplot2::aes()}. A local mapping overrides the matching inherited channel.}
 
-\item{name}{Show the sequence name. A character value overrides the name.}
+\item{data}{Optional reference table or function selecting from the registered reference.}
 
-\item{length}{Show the formatted sequence length.}
+\item{position}{Position adjustment. For bound labels, leave this unset to follow the target layer.}
 
-\item{separator}{Separator between name and length.}
+\item{label_layout}{A fixed or repelled label layout declaration.}
 
-\item{name_style, length_style}{Named lists of fixed text-style overrides
-for the name and length grobs. Supported fields are \code{colour}, \code{size},
-\code{family}, \code{fontface}, and \code{lineheight}.}
+\item{...}{Additional named visual styles and parameters accepted by this layer.}
 
-\item{show.legend, inherit.aes}{Standard ggplot2 layer arguments.}
+\item{na.rm}{Suppress warnings for missing observations that the layer can omit.}
 
-\item{...}{Fixed aesthetics and ggplot2 layer parameters for the centre label.}
+\item{show.legend}{Logical or named logical indicating whether the layer contributes legend keys.}
 
-\item{id}{Optional unique layer ID for layout and source exports.}
+\item{inherit.aes}{Whether to inherit plot mappings and evaluate them on the layer data.}
 
-\item{position}{ggplot2 data position for the centre text.}
+\item{id}{Optional plot-local layer identifier. Name a layer explicitly to scope a scale, anchor a label or export it.}
 }
 \value{
-A ggplot2 layer.
+A ggplot2 layer for addition to a plot.
 }
 \description{
-Add a circular-sequence centre label
+Label the centre of a circular reference
+}
+\details{
+The source is the complete reference table with \code{accver} and \code{length}. A backbone can select an authoritative subset. An explicit complete table in geom_seq() can register a reference when the plot has no global data.
 }
 \examples{
-ggchord(data.frame(accver = "A", length = 100)) +
+library(ggplot2)
+
+seqs <- data.frame(
+  accver = c("A", "B"), length = c(1000, 800),
+  sequence_unit = "bp", topology = "linear"
+)
+
+one_seq <- seqs[1, , drop = FALSE]
+
+ggchord(one_seq) +
   geom_seq() +
-  geom_seq_center_label(position = "identity") +
+  geom_seq_center_label(aes(label = accver), size = 5) +
   coord_circular()
 }

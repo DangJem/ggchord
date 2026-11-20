@@ -2,51 +2,62 @@
 % Please edit documentation in R/coord-chord.R
 \name{coord_chord}
 \alias{coord_chord}
-\title{Chord diagram coordinate system}
+\title{Project reference sequences onto arcs}
 \usage{
 coord_chord(
-  rotation = 0,
-  ratio = 1,
+  start_angle = 0,
+  direction = "counterclockwise",
   xlim = NULL,
   ylim = NULL,
   expand = FALSE,
-  clip = "off",
-  fit = c("labels", "geometry", "manual")
+  clip = "on",
+  fit = "geometry"
 )
 }
 \arguments{
-\item{rotation}{Global counterclockwise layout rotation in degrees,
-default 0, measured from the positive x axis. This rotates the complete
-layout; it does not change the biological strand or sequence orientation.}
+\item{start_angle}{Initial angle in degrees counterclockwise from the right.}
 
-\item{ratio}{Fixed y/x aspect ratio, default 1.}
+\item{direction}{Direction of the positive reference frame.}
 
-\item{xlim, ylim}{Optional user limits. Explicit limits take priority over
-automatically fitted limits.}
+\item{xlim, ylim}{Optional increasing pairs of view limits.}
 
-\item{expand}{Logical. Expand coordinate limits, default FALSE. Automatic
-fitting already includes a small safety margin; set TRUE to request the
-additional ggplot2 coordinate expansion.}
+\item{expand}{Whether to expand automatic view limits.}
 
-\item{clip}{Whether drawing is clipped to the panel, default \code{"off"}.}
+\item{clip}{Panel clipping, \code{"on"} or \code{"off"}.}
 
-\item{fit}{Fitting strategy: \code{"labels"} includes measured label boxes,
-\code{"geometry"} fits geometric elements only, and \code{"manual"}
-requires explicit \code{xlim} and \code{ylim}.}
+\item{fit}{Fit geometry, include labels, or require manual limits.}
 }
 \value{
-A Coord object for ggplot2 \code{+} composition
+A coordinate system for a ggchord plot.
 }
 \description{
-Controls global rotation, aspect ratio, coordinate limits, clipping and the
-strategy used to fit chord geometry and labels.
+Project reference sequences onto arcs
 }
 \examples{
-library(dplyr)
-data(seq_data_example)
-seqs <- seq_data_example |>
-  select(accver, length)
+library(ggplot2)
+
+seqs <- data.frame(
+  accver = c("A", "B"), length = c(1000, 800),
+  sequence_unit = "bp", topology = "linear"
+)
+
+genes <- data.frame(
+  accver = c("A", "A", "B"), feature_id = c("g1", "g2", "g3"),
+  start = c(100, 400, 150), end = c(240, 620, 380),
+  strand = c("+", "-", "+"), label = c("g1", "g2", "g3"),
+  type = c("CDS", "tRNA", "CDS")
+)
+
+links <- data.frame(
+  qaccver = "A", saccver = "B", qstart = c(100, 400),
+  qend = c(240, 620), sstart = c(150, 450), send = c(290, 650),
+  qstrand = "+", sstrand = c("+", "-"),
+  pident = c(98, 90), link_id = c("l1", "l2")
+)
+
 ggchord(data = seqs) +
   geom_seq() +
-  coord_chord(rotation = 20)
+  geom_gene(data = genes, aes(fill = type)) +
+  geom_link_ribbon(data = links) +
+  coord_chord(start_angle = 90)
 }

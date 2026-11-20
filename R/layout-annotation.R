@@ -156,8 +156,8 @@ ggchord_layout_annotation_step <- function(
         )[1L]
         # Point features are backbone annotations, not artificially widened
         # intervals. Keep the short radial mark centred on the DNA backbone.
-        r0 <- unname(seqRadius[sid])
-        tick_half <- max(.014, min(.028, width * .36))
+        r0 <- gene_track_radius(gene, sid, strand, point_angle)
+        tick_half <- width / 2
         mapped <- map_to_curve_many(
           rep(point_angle, 2L), c(r0 - tick_half, r0 + tick_half), ref
         )
@@ -197,7 +197,8 @@ ggchord_layout_annotation_step <- function(
           feature_shape, interval[1L], interval[2L], r0, width,
           seqRadius[sid], ref,
           arrow_head_length = arrow_head_length,
-          arrow_head_width = arrow_head_width,
+          arrow_head_width = if (is.null(gene$.feature_head_width)) arrow_head_width else
+            gene$.feature_head_width / width,
           arrow_head_style = arrow_head_style,
           short_feature = short_feature,
           draw_head = piece$draw_head && isTRUE(

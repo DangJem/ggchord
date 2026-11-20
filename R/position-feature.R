@@ -22,11 +22,28 @@ PositionGgchordFeature <- ggplot2::ggproto(
 #'   specification.
 #' @return A ggplot2 Position object.
 #' @export
-position_strand <- function(offset = 0.1) {
+#' @examples
+#' seqs <- data.frame(
+#'   accver = c("A", "B"), length = c(1000, 800),
+#'   sequence_unit = "bp", topology = "linear"
+#' )
+#'
+#' genes <- data.frame(
+#'   accver = c("A", "A", "B"), feature_id = c("g1", "g2", "g3"),
+#'   start = c(100, 400, 150), end = c(240, 620, 380),
+#'   strand = c("+", "-", "+"), label = c("g1", "g2", "g3"),
+#'   type = c("CDS", "tRNA", "CDS")
+#' )
+#'
+#' ggchord(data = seqs) + geom_seq() +
+#'   geom_feature(data = genes, shape = "arrow",
+#'     position = position_strand(list(A = c("+" = 2, "-" = -3), B = 1))) +
+#'   coord_collinear()
+position_strand <- function(offset = 1) {
   ggchord_check_argument_names(sys.call(), sys.function())
   ggplot2::ggproto(
     NULL, PositionGgchordFeature,
-    placement = "strand", offset = offset
+    placement = "strand", offset = ggchord_physical_mm(offset, "position_strand()")
   )
 }
 
@@ -40,17 +57,26 @@ position_strand <- function(offset = 0.1) {
 #' @return A ggplot2 Position object.
 #' @export
 #' @examples
-#' seqs <- data.frame(accver = "A", length = 100L)
-#' intervals <- data.frame(accver = "A", start = c(8L, 55L),
-#'   end = c(35L, 80L), strand = c("+", "-"))
-#' ggchord(seqs) + geom_seq() +
-#'   geom_feature(data = intervals, position = position_offset(-0.1)) +
-#'   coord_circular()
-position_offset <- function(offset) {
+#' seqs <- data.frame(
+#'   accver = c("A", "B"), length = c(1000, 800),
+#'   sequence_unit = "bp", topology = "linear"
+#' )
+#'
+#' genes <- data.frame(
+#'   accver = c("A", "A", "B"), feature_id = c("g1", "g2", "g3"),
+#'   start = c(100, 400, 150), end = c(240, 620, 380),
+#'   strand = c("+", "-", "+"), label = c("g1", "g2", "g3"),
+#'   type = c("CDS", "tRNA", "CDS")
+#' )
+#'
+#' ggchord(data = seqs) + geom_seq() +
+#'   geom_feature(data = genes, position = position_offset(c(A = 2, B = -1))) +
+#'   coord_collinear()
+position_offset <- function(offset = 0) {
   ggchord_check_argument_names(sys.call(), sys.function())
   ggplot2::ggproto(
     NULL, PositionGgchordFeature,
-    placement = "offset", offset = offset
+    placement = "offset", offset = ggchord_physical_mm(offset, "position_offset()")
   )
 }
 
@@ -104,20 +130,25 @@ ggchord_validate_offset_value <- function(x, caller) {
 ggchord_resolve_position_offset <- function(offset, seqs, placement,
                                              caller = "position") {
   n <- length(seqs)
+  keys <- names(offset)
+  if (anyDuplicated(keys) || (!is.null(keys) && anyNA(keys)))
+    ggchord_stop(caller, ": repeated or invalid offset keys")
   expand_scalar <- function(x) {
     x <- ggchord_validate_offset_value(x, caller)
-    if (identical(placement, "strand")) c("+" = x, "-" = -x)
-    else c("+" = x, "-" = x)
+    if (identical(placement, "strand")) {
+      if (x < 0) ggchord_stop(caller, ": symmetric strand offsets must be nonnegative")
+      c("+" = x, "-" = -x, "." = 0)
+    } else c("+" = x, "-" = x, "." = x)
   }
   explicit_strands <- function(x) {
     if (is.null(names(x)) || !length(x) ||
-        any(!names(x) %in% c("+", "-")) || anyDuplicated(names(x))) {
-      ggchord_stop(caller, ": strand offsets must be uniquely named '+' and/or '-'")
+        any(!names(x) %in% c("+", "-", ".")) || anyDuplicated(names(x))) {
+      ggchord_stop(caller, ": strand offsets must be uniquely named '+', '-' or '.'")
     }
     if (identical(placement, "offset")) {
       ggchord_stop(caller, ": for strand-specific offsets, use position_strand()")
     }
-    out <- c("+" = 0, "-" = 0)
+    out <- c("+" = 1, "-" = -1, "." = 0)
     for (st in names(x)) out[st] <- ggchord_validate_offset_value(x[[st]], caller)
     out
   }
@@ -132,14 +163,14 @@ ggchord_resolve_position_offset <- function(offset, seqs, placement,
       val <- expand_scalar(offset)
       return(stats::setNames(rep(list(val), n), seqs))
     }
-    if (!is.null(nm) && all(nm %in% c("+", "-"))) {
+    if (!is.null(nm) && all(nm %in% c("+", "-", "."))) {
       val <- explicit_strands(offset)
       return(stats::setNames(rep(list(val), n), seqs))
     }
     if (!is.null(nm)) {
       unknown <- setdiff(nm, seqs)
       if (length(unknown)) ggchord_stop(caller, ": unknown accver: ", paste(unknown, collapse = ", "))
-      out <- stats::setNames(rep(list(expand_scalar(0)), n), seqs)
+      out <- stats::setNames(rep(list(expand_scalar(if (identical(placement, "strand")) 1 else 0)), n), seqs)
       for (id in nm) out[[id]] <- expand_scalar(offset[[id]])
       return(out)
     }
@@ -155,13 +186,13 @@ ggchord_resolve_position_offset <- function(offset, seqs, placement,
     return(stats::setNames(rep(list(val), n), seqs))
   }
   if (!is.null(nm) && length(nm) && all(nm %in% seqs)) {
-    out <- stats::setNames(rep(list(expand_scalar(0)), n), seqs)
+    out <- stats::setNames(rep(list(expand_scalar(if (identical(placement, "strand")) 1 else 0)), n), seqs)
     for (id in nm) out[[id]] <- resolve_element(offset[[id]])
     return(out)
   }
   idx_names <- as.character(seq_along(seqs))
   if (!is.null(nm) && length(nm) && all(nm %in% idx_names)) {
-    out <- stats::setNames(rep(list(expand_scalar(0)), n), seqs)
+    out <- stats::setNames(rep(list(expand_scalar(if (identical(placement, "strand")) 1 else 0)), n), seqs)
     for (i in seq_along(nm)) out[[seqs[as.integer(nm[i])]]] <- resolve_element(offset[[i]])
     return(out)
   }
@@ -170,23 +201,6 @@ ggchord_resolve_position_offset <- function(offset, seqs, placement,
     return(stats::setNames(lapply(offset, resolve_element), seqs))
   }
   ggchord_stop(caller, ": invalid flexible offset specification")
-}
-
-ggchord_feature_display_priority <- function(data, rows) {
-  priority <- rep(0, length(rows))
-  if ("display_priority" %in% names(data)) {
-    value <- data$display_priority[rows]
-    if (is.logical(value)) value <- as.numeric(value)
-    value <- suppressWarnings(as.numeric(value))
-    value[!is.finite(value)] <- 0
-    priority <- value
-  }
-  if ("prioritized_display" %in% names(data)) {
-    prioritized <- data$prioritized_display[rows]
-    prioritized[is.na(prioritized)] <- FALSE
-    priority[as.logical(prioritized)] <- Inf
-  }
-  priority
 }
 
 ggchord_allocate_feature_lanes <- function(data, base, direction, spacing,
@@ -232,17 +246,14 @@ ggchord_allocate_feature_lanes <- function(data, base, direction, spacing,
     })
     entity_source <- vapply(entity_members, function(members) idx[members[1L]],
       integer(1))
-    entity_priority <- vapply(entity_members, function(members) {
-      max(ggchord_feature_display_priority(data, idx[members]))
-    }, numeric(1))
-    entity_span <- vapply(intervals, function(x) {
-      sum(pmax(0, x[, 2] - x[, 1]))
-    }, numeric(1))
     entity_start <- vapply(intervals, function(x) min(x[, 1]), numeric(1))
-    # Longest/highest-priority first, then always reuse the nearest available
-    # lane. Non-overlapping neighbours may therefore share a lane, but no
-    # cassette-continuity preference may carry them past a parent interval.
-    ord <- order(-entity_priority, -entity_span, entity_start, entity_source)
+    entity_end <- vapply(intervals, function(x) max(x[, 2]), numeric(1))
+    ids <- if ("feature_id" %in% names(data)) as.character(data$feature_id[entity_source]) else
+      rep(NA_character_, length(entity_source))
+    key <- data.frame(start = entity_start, end = entity_end, id = ids)
+    if (anyDuplicated(key)) ggchord_stop(
+      "position_feature_stack(): indistinguishable intervals need distinct feature_id values")
+    ord <- order(entity_start, entity_end, ids, na.last = TRUE)
     lane_intervals <- list()
     overlaps <- function(parts, occupied) {
       for (i in seq_len(nrow(parts))) {
@@ -264,107 +275,24 @@ ggchord_allocate_feature_lanes <- function(data, base, direction, spacing,
   lane
 }
 
-ggchord_feature_lane_offsets <- function(data, lane, base, direction,
-                                          spacing, circular = FALSE,
-                                          lengths = NULL, label_size = 2.5) {
+ggchord_feature_lane_offsets <- function(data, lane, base, direction, spacing) {
   offsets <- numeric(nrow(data))
-  label_text <- if ("anno" %in% names(data)) as.character(data$anno) else
-    if ("label" %in% names(data)) as.character(data$label) else
-      rep(NA_character_, nrow(data))
-  measured_units <- ggchord_render_context()$units_per_inch %||% .35
-  label_metrics <- if (isTRUE(circular) && any(!is.na(label_text) &
-      nzchar(label_text))) ggchord_text_boxes(data.frame(
-        text = label_text, text_x = 0, text_y = 0,
-        size = label_size
-      ), units_per_inch = measured_units) else NULL
-  band <- paste(
-    data$accver,
-    format(base, digits = 15, scientific = FALSE, trim = TRUE),
-    direction, sep = "\r"
-  )
-  groups <- split(seq_len(nrow(data)), factor(band, levels = unique(band)))
-  for (idx in groups) {
-    local_lanes <- lane[idx]
-    widths <- if (".feature_width" %in% names(data)) {
-      as.numeric(data$.feature_width[idx])
-    } else rep(0, length(idx))
-    widths[!is.finite(widths) | widths < 0] <- 0
-    lane_width <- vapply(seq.int(0L, max(local_lanes)), function(value) {
-      used <- widths[local_lanes == value]
-      if (length(used)) max(used) else 0
+  bands <- interaction(data$accver, base, direction, drop = TRUE)
+  for (idx in split(seq_len(nrow(data)), bands)) {
+    lanes <- lane[idx]
+    widths <- vapply(seq_len(max(lanes) + 1L) - 1L, function(at) {
+      max(data$.feature_width[idx[lanes == at]])
     }, numeric(1))
-    centres <- numeric(length(lane_width))
-    if (length(centres) > 1L) {
-      sid <- as.character(data$accver[idx[1L]])
-      sequence_length <- if (!is.null(lengths)) unname(lengths[sid]) else
-        NA_real_
-      lane_demand <- rep(0L, length(lane_width))
-      if (isTRUE(circular) && !is.null(label_metrics) &&
-          length(sequence_length) == 1L && is.finite(sequence_length) &&
-          sequence_length > 0) {
-        span <- ifelse(data$start[idx] <= data$end[idx],
-          data$end[idx] - data$start[idx] + 1,
-          sequence_length - data$start[idx] + data$end[idx] + 1)
-        midpoint <- ((data$start[idx] - 1 + span / 2) %%
-          sequence_length) / sequence_length
-        radius <- pmax(.35, abs(1 + base[idx]))
-        arc_width <- 2 * pi * radius * span / sequence_length
-        needs_gutter <- is.finite(label_metrics$w[idx]) &
-          nzchar(label_text[idx]) &
-          label_metrics$w[idx] > arc_width * .85
-        needs_gutter[is.na(needs_gutter)] <- FALSE
-        for (lane_value in seq_len(length(lane_width) - 1L) - 1L) {
-          members <- which(local_lanes == lane_value & needs_gutter)
-          if (!length(members)) next
-          half_span <- pmin(.25, label_metrics$w[idx[members]] /
-            (4 * pi * radius[members]))
-          overlap <- vapply(seq_along(members), function(j) {
-            delta <- abs(midpoint[members] - midpoint[members[j]])
-            delta <- pmin(delta, 1 - delta)
-            sum(delta < half_span[j] + half_span + .004)
-          }, integer(1L))
-          lane_demand[lane_value + 1L] <- max(overlap)
-        }
-      }
-      # A centred-label demand estimate is conservative: some names use
-      # angular slots or exterior fallback. Do not spend the whole inner disk
-      # on that estimate. Share the remaining radial budget across band gaps.
-      radius_budget <- max(.25, min(abs(1 + base[idx])))
-      minimum_steps <- pmax(spacing, head(lane_width, -1L)/2 +
-        tail(lane_width, -1L)/2)
-      corridor_budget <- min(radius_budget*.18,
-        max(0, radius_budget-.25-sum(minimum_steps))/(length(centres)-1L))
-      for (i in 2:length(centres)) {
-        # Reserve only the corridor demanded by labels that cannot fit their
-        # own arrows.  Fixed wide gutters made mostly empty outer bands push
-        # the innermost annotations into the centre or even outside the map.
-        label_gutter <- if (isTRUE(circular)) {
-          # Reserve rows only for the outer band's names that do not fit
-          # their arrows. Empty corridors use physical stroke clearance.
-          height <- if (!is.null(label_metrics))
-            max(label_metrics$h[idx], na.rm = TRUE) else .025
-          row_pitch <- height*1.15 + .3*measured_units/25.4
-          needed <- lane_demand[i-1L]
-          max(.45*measured_units/25.4, min(corridor_budget,
-            needed*row_pitch + if (needed>0L) .5*measured_units/25.4 else 0))
-        } else if (i == 2L) {
-          max(.125, spacing * 1.20)
-        } else {
-          max(.080, spacing * .85)
-        }
-        glyph_clearance <- lane_width[i - 1L] / 2 +
-          lane_width[i] / 2 + label_gutter
-        centres[i] <- centres[i - 1L] + max(spacing, glyph_clearance)
-      }
-    }
-    offsets[idx] <- direction[idx] * centres[local_lanes + 1L]
+    neighbours <- (head(widths, -1L) + tail(widths, -1L)) / 2
+    centres <- c(0, cumsum(neighbours + spacing[idx[1L]]))
+    offsets[idx] <- direction[idx] * centres[lanes + 1L]
   }
   offsets
 }
 
 ggchord_apply_feature_position <- function(data, position, seqs, lengths,
                                             circular = FALSE,
-                                            label_size = 2.5,
+                                            units_per_mm = ggchord_units_per_mm(),
                                             caller = "feature position") {
   if (is.null(data) || !nrow(data)) return(data)
   ggchord_require_columns(
@@ -396,27 +324,26 @@ ggchord_apply_feature_position <- function(data, position, seqs, lengths,
     )
     position_name <- position$placement
   } else {
-    resolved <- stats::setNames(rep(list(c("+" = 0, "-" = 0)), length(seqs)), seqs)
+    resolved <- stats::setNames(rep(list(c("+" = 0, "-" = 0, "." = 0)), length(seqs)), seqs)
     position_name <- "identity"
   }
 
   out <- as.data.frame(data, stringsAsFactors = FALSE)
-  base <- vapply(seq_len(nrow(out)), function(i) {
-    unname(resolved[[as.character(out$accver[i])]][as.character(out$strand[i])])
+  strand <- out$.feature_biological_strand %||% out$strand
+  base <- units_per_mm * vapply(seq_len(nrow(out)), function(i) {
+    unname(resolved[[as.character(out$accver[i])]][strand[i]])
   }, numeric(1))
   lane <- integer(nrow(out)); lane_offset <- numeric(nrow(out))
   if (isTRUE(position$ggchord_feature_stack)) {
-    direction <- switch(position$direction %||% "auto",
-      auto = ifelse(base < 0, -1, 1),
-      outward = rep(1, length(base)), inward = rep(-1, length(base)))
-    lane <- ggchord_allocate_feature_lanes(
-      out, base, direction, position$spacing %||% 0.10,
-      circular = circular, lengths = lengths
-    )
-    lane_offset <- ggchord_feature_lane_offsets(
-      out, lane, base, direction, position$spacing %||% 0.10,
-      circular = circular, lengths = lengths, label_size = label_size
-    )
+    direction <- switch(position$direction,
+      positive = rep(1, length(base)), negative = rep(-1, length(base)),
+      strand = ifelse(strand == "-", -1, 1))
+    gap <- ggchord_resolve_position_offset(position$spacing, seqs, "offset",
+      "position_feature_stack(spacing)")
+    spacing <- units_per_mm * vapply(out$accver, function(id) gap[[id]][[1L]], numeric(1))
+    lane <- ggchord_allocate_feature_lanes(out, base, direction, spacing,
+      circular = circular, lengths = lengths)
+    lane_offset <- ggchord_feature_lane_offsets(out, lane, base, direction, spacing)
   }
   out$.position_name <- position_name
   out$.position_base_offset <- base

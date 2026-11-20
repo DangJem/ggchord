@@ -83,12 +83,12 @@ ggchord_focus_source <- function(seq_data) {
     value <- as.numeric(value)
     ifelse(is.finite(value), value, fallback)
   }
-  origin <- number(".source_origin",
-    number(".source_start", number(".focus_start", rep(1, nrow(seq_data)))))
-  source_accver <- as.character(seq_data[[".source_accver"]] %||% seq_data$accver)
-  source_length <- number(".source_length", if (".focus_start" %in% names(seq_data)) {
+  origin <- number("source_origin", number(".source_origin",
+    number(".source_start", number(".focus_start", rep(1, nrow(seq_data))))))
+  source_accver <- as.character(seq_data$source_accver %||% seq_data[[".source_accver"]] %||% seq_data$accver)
+  source_length <- number("source_length", number(".source_length", if (".focus_start" %in% names(seq_data)) {
     rep(NA_real_, nrow(seq_data))
-  } else as.numeric(seq_data$length))
+  } else as.numeric(seq_data$length)))
   list(origin = origin, accver = source_accver, length = source_length)
 }
 
@@ -185,37 +185,7 @@ ggchord_focus_feature_parts <- function(row, lo, hi, origin, caller) {
   row
 }
 
-#' Focus ggchord data on one or more loci
-#'
-#' Crops sequence, feature and ribbon tables together and relocates retained
-#' coordinates to start at one in each output locus. Multiple loci from the
-#' same source sequence are supported; provide a unique `locus_id` column to
-#' control their output sequence IDs.
-#' Segmented annotations, cleavage positions and cached feature runs are
-#' cropped and relocated together. Source intervals, source origins and
-#' genomic left/right truncation flags are retained on the returned tables.
-#' An optional `sequence` column must contain non-missing strings matching
-#' each input length. It is cropped with integer locus boundaries, preserving
-#' character order and case; focusing does not reverse-complement strings.
-#' Alignment cropping is a linear display projection, not a new alignment:
-#' identity is retained, and a scaled alignment length is marked as estimated.
-#'
-#' @param seq_data Sequence table containing `accver` and `length`.
-#' @param ribbon_data Optional ggchord alignment table.
-#' @param feature_data Optional gene or feature table.
-#' @param loci Data frame containing `accver`, `start`, and `end`, and
-#'   optionally `locus_id`.
-#' @param expand Non-negative number of bases added on both sides, scalar or
-#'   one value per locus.
-#' @param boundary Boundary policy. `"trim"` clips partially overlapping genes
-#'   and alignments; `"drop"` keeps only rows fully contained in selected loci.
-#' @return A list of focused `seq_data`, `ribbon_data`, `feature_data`, normalized
-#'   `loci`, and a compact `report` including retained/dropped source rows and
-#'   truncated output rows. `.source_origin` is the original genomic position
-#'   corresponding to local position one, including after repeated focusing.
-#' @seealso \code{\link{ggchord_data_contract}}
-#' @export
-focus_ggchord_data <- function(
+ggchord_focus_tables <- function(
     seq_data,
     ribbon_data = NULL,
     feature_data = NULL,
@@ -326,7 +296,6 @@ focus_ggchord_data <- function(
 
   ribbon_out <- NULL
   if (!is.null(ribbon_data)) {
-    ggchord_check_ribbon_tables(seq_data, ribbon_data, caller)
     pieces <- list()
     for (i in seq_len(nrow(ribbon_data))) {
       qhits <- which(focus$.source_accver == as.character(ribbon_data$qaccver[i]))

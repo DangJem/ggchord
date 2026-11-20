@@ -1,7 +1,25 @@
 # A source entity can own several display rows. The legacy engines consume
 # unique private keys, while public data and scales retain biological IDs.
 ggchord_instance_param <- function(value, instances) {
-  if (is.null(value) || grid::is.unit(value) || is.null(names(value))) return(value)
+  if (is.null(value) || grid::is.unit(value)) return(value)
+  if (is.list(value) && all(names(value) %in% c("source", "instance"))) {
+    source <- value$source
+    local <- value$instance
+    if (anyDuplicated(names(source)) || anyDuplicated(names(local)) ||
+        any(!names(source) %in% instances$accver) ||
+        any(!names(local) %in% instances$instance_id))
+      ggchord_stop("Unknown or repeated source/instance parameter keys")
+    out <- vector("list", nrow(instances))
+    for (i in seq_len(nrow(instances))) {
+      out[[i]] <- list(local[[instances$instance_id[i]]] %||% source[[instances$accver[i]]])
+    }
+    out <- lapply(out, `[[`, 1L)
+    names(out) <- instances$key
+    out <- Filter(Negate(is.null), out)
+    if (all(lengths(out) == 1L)) return(unlist(out, use.names = TRUE))
+    return(out)
+  }
+  if (is.null(names(value))) return(value)
   keys <- unique(c(instances$accver, instances$instance_id))
   if (!all(names(value) %in% keys)) return(value)
   out <- list()
@@ -16,28 +34,57 @@ ggchord_instance_param <- function(value, instances) {
 ggchord_instance_position <- function(position, instances) {
   if (!inherits(position, "Position")) return(position)
   changes <- list()
-  for (field in c("offset", "width", "gap")) if (!is.null(position[[field]]))
+  for (field in c("offset", "width", "gap", "spacing")) if (!is.null(position[[field]]))
     changes[[field]] <- ggchord_instance_param(position[[field]], instances)
   if (!is.null(position$base_position)) changes$base_position <-
     ggchord_instance_position(position$base_position, instances)
   do.call(ggplot2::ggproto, c(list(NULL, position), changes))
 }
 
-ggchord_instance_expand <- function(input, instances) {
+ggchord_instance_expand <- function(input, instances, reference = FALSE) {
   if (is.null(input)) return(list(data = NULL, rows = integer()))
   ggchord_require_columns(input, "accver", "display instances")
   rows <- integer(); targets <- integer()
   for (i in seq_len(nrow(input))) {
     at <- which(instances$accver == as.character(input$accver[i]))
-    if ("display_instance_id" %in% names(input) && !is.na(input$display_instance_id[i]))
-      at <- at[instances$instance_id[at] == as.character(input$display_instance_id[i])]
-    if (!length(at) && "display_instance_id" %in% names(input) && !is.na(input$display_instance_id[i]))
-      ggchord_stop("No display instance matches input row ", i, " (", input$accver[i], ")")
+    selected <- input$instance_id[i] %||% input$display_instance_id[i]
+    if (!is.null(selected) && !is.na(selected)) {
+      at <- at[instances$instance_id[at] == selected]
+      if (!length(at)) ggchord_stop("No display instance matches input row ", i)
+    }
+    if ("window_start" %in% names(instances)) {
+      low <- if (all(c("start", "end") %in% names(input))) input$start[i] else
+        input$pos[i] %||% input$x[i]
+      high <- if (all(c("start", "end") %in% names(input))) input$end[i] else low
+      if (!is.null(low)) at <- at[is.finite(low) & is.finite(high) &
+        high >= instances$window_start[at] & low <= instances$window_end[at]]
+    }
     rows <- c(rows, rep(i, length(at))); targets <- c(targets, at)
   }
   out <- input[rows, , drop = FALSE]
   out$accver <- instances$key[targets]
   out$display_instance_id <- instances$instance_id[targets]
+  if ("window_start" %in% names(instances)) {
+    from <- instances$window_start[targets]
+    to <- instances$window_end[targets]
+    for (field in intersect(c("start", "end", "pos", "x", "xmin", "xmax",
+        "cut_top", "cut_bottom", "recognition_start", "recognition_end"), names(out))) {
+      boundary <- field %in% c("xmin", "xmax", "cut_top", "cut_bottom")
+      out[[paste0(".window_source_", field)]] <- out[[field]]
+      out[[field]] <- pmax(from - boundary, pmin(to, out[[field]])) - from + 1
+    }
+    if (reference && "length" %in% names(out)) out$length <- as.numeric(to - from + 1L)
+    nested <- c("segments", ".feature_runs", ".feature_boundaries", "cleavage_arrows")
+    if (nrow(out) && any(nested %in% names(out))) {
+      parts <- lapply(seq_len(nrow(out)), function(i) {
+        ggchord_focus_feature_parts(out[i, , drop = FALSE], from[i], to[i],
+          origin = 1, caller = "layout_sequences(windows)")
+      })
+      keep <- !vapply(parts, is.null, logical(1))
+      out <- if (any(keep)) ggchord_rbind_fill(parts[keep]) else out[FALSE, , drop = FALSE]
+      rows <- rows[keep]
+    }
+  }
   list(data = out, rows = rows)
 }
 
@@ -53,21 +100,49 @@ ggchord_route_instances <- function(input, instances, between, layer_id, mirrore
     if (any(!between %in% instances$instance_id) || anyDuplicated(between)) ggchord_stop("between names unknown or repeated display instances")
   }
   report <- list(); out <- input
+  omitted <- logical(nrow(input))
   out$qaccver <- as.character(out$qaccver); out$saccver <- as.character(out$saccver)
   for (i in seq_len(nrow(input))) {
     q <- which(instances$accver == as.character(input$qaccver[i]))
     s <- which(instances$accver == as.character(input$saccver[i]))
     if (mirrored) { q <- q[instances$side[q] == "left"]; s <- s[instances$side[s] == "right"] }
+    if ("window_start" %in% names(instances)) {
+      endpoint <- function(at, side) {
+        low <- (input[[paste0(side, "start")]] %||% input[[paste0(side, "pos")]])[i]
+        high <- (input[[paste0(side, "end")]] %||% input[[paste0(side, "pos")]])[i]
+        at[pmax(low, high) >= instances$window_start[at] &
+          pmin(low, high) <= instances$window_end[at]]
+      }
+      q <- endpoint(q, "q")
+      s <- endpoint(s, "s")
+    }
+    if (!is.null(input$qinstance) && !is.na(input$qinstance[i]))
+      q <- q[instances$instance_id[q] == input$qinstance[i]]
+    if (!is.null(input$sinstance) && !is.na(input$sinstance[i]))
+      s <- s[instances$instance_id[s] == input$sinstance[i]]
     candidates <- expand.grid(q = q, s = s)
-    candidates <- candidates[candidates$q != candidates$s, , drop = FALSE]
     if (!is.null(between)) candidates <- candidates[
       instances$instance_id[candidates$q] %in% between & instances$instance_id[candidates$s] %in% between, , drop = FALSE]
     if (!is.null(between) && input$qaccver[i] == input$saccver[i])
       candidates <- candidates[instances$instance_id[candidates$q] == between[1], , drop=FALSE]
+    if (!nrow(candidates) && "window_start" %in% names(instances) &&
+        is.null(between) && is.null(input$qinstance) && is.null(input$sinstance)) {
+      omitted[i] <- TRUE
+      next
+    }
     if (nrow(candidates) != 1L) ggchord_stop("HSP row ", i,
       " has an absent or ambiguous instance route; specify between = c(instance1, instance2)")
     qi <- candidates$q; si <- candidates$s
     out$qaccver[i] <- instances$key[qi]; out$saccver[i] <- instances$key[si]
+    if ("window_start" %in% names(instances)) {
+      for (name in c("q", "s")) {
+        window <- if (name == "q") qi else si
+        from <- instances$window_start[window]
+        to <- instances$window_end[window]
+        for (field in intersect(paste0(name, c("start", "end", "pos")), names(input)))
+          out[[field]][i] <- pmax(from, pmin(to, input[[field]][i])) - from + 1
+      }
+    }
     stable <- "source_hsp_id" %in% names(input)
     source_id <- if (stable) as.character(input$source_hsp_id[i]) else paste0(layer_id, ":source:", i)
     if (is.na(source_id) || !nzchar(source_id)) ggchord_stop("source_hsp_id must be nonempty when supplied")
@@ -78,107 +153,116 @@ ggchord_route_instances <- function(input, instances, between, layer_id, mirrore
       q_instance = instances$instance_id[qi], s_instance = instances$instance_id[si],
       repeated_display = FALSE, stringsAsFactors = FALSE)
   }
-  list(data = out, report = ggchord_rbind_fill(report) %||% data.frame())
+  list(data = out[!omitted, , drop = FALSE], rows = which(!omitted),
+    report = ggchord_rbind_fill(report) %||% data.frame())
+}
+
+ggchord_reference_table <- function(data, caller) {
+  ggchord_require_columns(data, c("accver", "length"), caller)
+  if (!nrow(data)) ggchord_stop(caller, ": the reference table is empty")
+  out <- as_ggchord_seq(data)
+  ggchord_require_columns(out, c("accver", "length"), caller)
+  if (anyDuplicated(out$accver) || anyNA(out$accver) || any(!nzchar(trimws(out$accver))))
+    ggchord_stop(caller, ": reference IDs must be unique and nonempty")
+  if (!is.numeric(out$length) || any(!is.finite(out$length) | out$length < 1 |
+      out$length != trunc(out$length)))
+    ggchord_stop(caller, ": length must contain complete positive integer sequence lengths")
+  if (is.null(out$sequence_unit)) out$sequence_unit <- rep("bp", nrow(out))
+  if (is.null(out$topology)) out$topology <- rep(NA_character_, nrow(out))
+  out
+}
+
+ggchord_check_reference_claim <- function(reference, claim, facet_fields, subset, caller) {
+  at <- match(claim$accver, reference$accver)
+  if (anyNA(at) || (!subset && length(at) != nrow(reference)))
+    ggchord_stop(caller, ": conflicting reference accession sets")
+  original <- ggchord_focus_source(reference)
+  proposed <- ggchord_focus_source(claim)
+  for (field in c("accver", "origin", "length")) {
+    left <- original[[field]]
+    right <- proposed[[field]]
+    if (!identical(unname(left[at]), unname(right)))
+      ggchord_stop(caller, ": conflicting reference source ", field)
+  }
+  fields <- unique(c("length", "sequence_unit", "topology", facet_fields))
+  for (name in fields) {
+    left <- reference[[name]]
+    right <- claim[[name]]
+    # A display subset may omit ancillary facet columns and inherit them only
+    # for reference membership. It cannot redefine any value that it supplies.
+    if (subset && is.null(right) && name %in% facet_fields) next
+    if (!isTRUE(all.equal(left[at], right, check.attributes = FALSE)))
+      ggchord_stop(caller, ": conflicting reference ", name)
+  }
+  invisible(at)
+}
+
+ggchord_resolve_reference <- function(plot) {
+  if (isTRUE(plot$ggchord$reference_resolved)) return(plot)
+  reference <- if (!ggplot2::is_waiver(plot$data)) plot$data
+  global <- !is.null(reference)
+  facet <- plot$facet$params
+  fields <- names(c(facet$facets, facet$rows, facet$cols))
+  for (layer in plot$layers) {
+    if (!identical(layer$ggchord_params$type, "seq")) next
+    input <- layer$ggchord_input_data
+    if (!is.data.frame(input)) next
+    claim <- ggchord_reference_table(input, "geom_seq()")
+    if (is.null(reference)) reference <- claim else
+      ggchord_check_reference_claim(reference, claim, fields, global, "geom_seq()")
+  }
+  if (is.null(reference)) ggchord_stop(
+    "ggchord(): supply a complete reference in ggchord(data = ...) or geom_seq(data = ...)")
+  reference <- reference[order(reference$accver, method = "radix"), , drop = FALSE]
+  rownames(reference) <- NULL
+  plot$ggchord$data$seq_data <- reference
+  plot$ggchord$complete_reference_ids <- reference$accver
+  plot$ggchord$reference_resolved <- TRUE
+  plot
 }
 
 ggchord_sequence_reference_data <- function(plot) {
-  reference <- plot$ggchord$data$seq_data
-  skeleton <- which(vapply(plot$layers, function(l) identical(l$ggchord_params$type, "seq"), logical(1)))
-  if (!length(skeleton)) return(reference)
-  resolve <- function(layer) {
-    input <- ggchord_resolve_layer_input(layer, reference) %||% reference
-    caller <- ggchord_layer_input_context(layer)
-    ggchord_require_columns(input, c("accver", "length"), caller)
-    ids <- as.character(input$accver)
-    missing <- is.na(ids) | !nzchar(trimws(ids))
-    if (any(missing)) ggchord_stop(caller, ": missing backbone accver", ggchord_input_rows(missing))
-    duplicate <- duplicated(ids) | duplicated(ids, fromLast = TRUE)
-    if (any(duplicate)) ggchord_stop(caller, ": duplicate backbone accver ",
-      paste(unique(ids[duplicate]), collapse = ", "), ggchord_input_rows(duplicate))
-    if (!is.numeric(input$length) || any(!is.finite(input$length) | input$length <= 0))
-      ggchord_stop(caller, ": backbone lengths must be finite positive numbers")
-    # Registered layers belong to this render. Geometry must consume the
-    # same mapped reference that was used to check and calculate statistics.
-    layer$ggchord_params$backbone_input <- input
-    input
-  }
-  owner <- plot$layers[[tail(skeleton, 1L)]]
-  sequences <- resolve(owner)
-  source <- ggchord_focus_source(sequences)
-  for (i in utils::head(skeleton, -1L)) {
-    layer <- plot$layers[[i]]
-    other <- resolve(layer)
-    conflict <- function(...) ggchord_stop("Conflicting backbone layers '",
-      owner$ggchord_layer_id, "' and '", layer$ggchord_layer_id, "': ", ...)
-    if (!setequal(sequences$accver, other$accver))
-      conflict("the reference accession sets differ")
-    unit <- ggchord_sequence_unit(sequences, ggchord_layer_input_context(owner))
-    other_unit <- ggchord_sequence_unit(other, ggchord_layer_input_context(layer))
-    if (unit != other_unit) conflict("sequence_unit is ", unit, " versus ", other_unit)
-    at <- match(other$accver, sequences$accver)
-    different <- which(other$length != sequences$length[at])
-    if (length(different)) {
-      j <- different[1L]
-      conflict("length of '", other$accver[j], "' is ", sequences$length[at[j]],
-        " versus ", other$length[j], " ", unit)
-    }
-    other_source <- ggchord_focus_source(other)
-    window <- function(s, i, length) paste0(s$accver[i], ":", s$origin[i],
-      "-", s$origin[i] + length - 1)
-    left <- window(source, at, other$length)
-    right <- window(other_source, seq_along(at), other$length)
-    different <- which(is.na(source$accver[at]) | is.na(other_source$accver) |
-      source$accver[at] != other_source$accver | source$origin[at] != other_source$origin)
-    if (length(different)) {
-      j <- different[1L]
-      conflict("source window for '", other$accver[j], "' is ", left[j], " versus ", right[j])
-    }
-  }
-  sequences
+  ggchord_resolve_reference(plot)$ggchord$data$seq_data
 }
 
 ggchord_prepare_instances <- function(plot, seqs) {
   if (isTRUE(plot$ggchord$instances_prepared)) return(plot)
-  order <- plot$ggchord$sequence_layout$order
+  arrangement <- plot$ggchord$sequence_layout
+  windows <- arrangement$windows
+  order <- arrangement$order %||% seqs$accver
   configured <- any(vapply(plot$layers, function(l) !is.null(l$ggchord_params$between), logical(1)))
   mirrored <- isTRUE(plot$coordinates$ggchord_sankey)
-  activate <- mirrored || configured || (!is.null(order) && (anyDuplicated(order) ||
-    (!is.null(names(order)) && any(names(order) != unname(order)))))
-  if (!activate) return(plot)
-  if (isTRUE(plot$coordinates$ggchord_circular)) ggchord_stop("coord_circular() does not support repeated display instances")
-  order <- order %||% seqs$accver
-  if (!is.character(order) || !length(order) || anyNA(order) || any(!order %in% seqs$accver))
-    ggchord_stop("layout_sequences(): order must contain known source sequence IDs")
+  if (is.null(windows) && !mirrored && !configured) return(plot)
+  refs <- windows$accver %||% order
+  ids <- windows$instance_id %||% order
   if (mirrored) {
-    if (anyDuplicated(order)) ggchord_stop("coord_sankey() owns left/right copies; use each source once in layout_sequences(order = ...)")
-    if (configured) ggchord_stop("coord_sankey() routes query left and subject right; between is for repeated Chord/Collinear views")
-    labels <- names(order) %||% unname(order)
-    prefix <- ""
-    while (any(c(paste0(prefix,"left:",labels),paste0(prefix,"right:",labels)) %in% seqs$accver)) prefix <- paste0(".",prefix)
-    order <- stats::setNames(rep(unname(order),2),c(paste0(prefix,"left:",labels),paste0(prefix,"right:",labels)))
+    ids <- c(paste0("left:", ids), paste0("right:", ids))
+    refs <- rep(refs, 2L)
   }
-  ids <- names(order)
-  if (is.null(ids)) {
-    if (!anyDuplicated(order)) ids <- unname(order) else {
-      prefix <- "instance-"
-      while (any(paste0(prefix, seq_along(order)) %in% seqs$accver)) prefix <- paste0(".", prefix)
-      ids <- paste0(prefix, seq_along(order))
-    }
-  }
-  if (anyNA(ids) || any(!nzchar(ids)) || anyDuplicated(ids)) ggchord_stop("Display instance names must be nonempty and unique")
-  for (i in seq_along(ids)) if (ids[i] %in% seqs$accver &&
-      (ids[i] != order[i] || sum(order == ids[i]) > 1L)) ggchord_stop(
-    "Instance name '", ids[i], "' conflicts with a source ID; give repeated instances distinct names")
-  instances <- data.frame(instance_id = ids, accver = unname(order),
-    declared_order = seq_along(order), key = ids, stringsAsFactors = FALSE)
-  instances$side <- if (mirrored) rep(c("left","right"),each=nrow(instances)/2) else NA_character_
+  side <- if (mirrored) rep(c("left", "right"), each = length(ids) / 2L) else rep(NA_character_, length(ids))
+  instances <- data.frame(instance_id = ids, accver = refs,
+    declared_order = seq_along(ids), key = ids, side = side, stringsAsFactors = FALSE)
   original <- plot$ggchord$data
   virtual <- seqs[match(instances$accver, seqs$accver), , drop = FALSE]
+  if (!is.null(windows)) {
+    at <- rep(seq_len(nrow(windows)), if (mirrored) 2L else 1L)
+    instances$window_start <- windows$start[at]
+    instances$window_end <- windows$end[at]
+    if (!is.null(windows$ring_id)) instances$ring_id <- windows$ring_id[at]
+    provenance <- ggchord_focus_source(virtual)
+    virtual$.source_accver <- provenance$accver
+    virtual$.source_origin <- provenance$origin + instances$window_start - 1L
+    virtual$.source_length <- provenance$length
+    virtual$length <- as.numeric(instances$window_end - instances$window_start + 1L)
+    for (field in setdiff(names(windows), c("instance_id", "accver", "start", "end", "orientation", "ring_id", "row_id")))
+      virtual[[field]] <- windows[[field]][at]
+  }
+  plot$ggchord$facet_reference <- virtual
   virtual$accver <- instances$key
   routes <- omissions <- list()
   facet <- plot$facet$params
   facet_keys <- names(c(facet$facets, facet$rows, facet$cols))
-  numeric_fields <- c("seq_radius", "seq_curvature", "seq_labels",
+  numeric_fields <- c("seq_radius", "seq_curvature", "seq_labels", "seq_thickness_mm",
     "seq_label_radius", "seq_label_rotation", "seq_label_size", "seq_label_hjust", "seq_label_vjust",
     "gene_width", "gene_label_radial_offset", "gene_label_circum_offset", "gene_label_circum_limit",
     "gene_label_rotation", "ribbon_gap", "link_gap", "label_size", "label_offset")
@@ -215,6 +299,7 @@ ggchord_prepare_instances <- function(plot, seqs) {
       }
       routed <- ggchord_route_instances(input, instances, p$between, layer$ggchord_layer_id, mirrored,input_rows)
       input <- routed$data
+      if (!is.null(routed$rows)) input_rows <- input_rows[routed$rows]
       p$visual_source <- ggchord_visual_rows(p$visual_source, input_rows)
       field <- paste0(type, "_ctrl_point")
       p[[field]] <- ggchord_link_control_rows(p[[field]], input_rows)
@@ -233,7 +318,8 @@ ggchord_prepare_instances <- function(plot, seqs) {
       p$pairs <- NULL
       if (mirrored) p$adjacent_only <- FALSE
     } else if (!is.null(input) && "accver" %in% names(input)) {
-      expanded <- ggchord_instance_expand(input, instances)
+      expanded <- ggchord_instance_expand(input, instances,
+        reference = ggchord_reference_layer(type, p$label_kind))
       input <- expanded$data
       p$visual_source <- ggchord_visual_rows(p$visual_source, expanded$rows)
       if (length(keys)) p$instance_facet_rows <- expanded$rows
@@ -247,6 +333,7 @@ ggchord_prepare_instances <- function(plot, seqs) {
     layer$ggchord_input_data <- input
     p$reference_ids <- NULL  # validated before replacing accessions with instance keys
     layer$ggchord_input_transform <- NULL
+    p$source_stat <- NULL
     for (role in intersect(layer$ggchord_role_aes, names(layer$ggchord_input_mapping)))
       layer$ggchord_input_mapping[[role]] <- rlang::new_quosure(rlang::sym(role), emptyenv())
     for (field in intersect(names(p), numeric_fields)) p[[field]] <- ggchord_instance_param(p[[field]], instances)
@@ -267,22 +354,16 @@ ggchord_prepare_instances <- function(plot, seqs) {
   if (!is.null(coord$collinear_anchor) || !is.null(coord$collinear_segments)) {
     source_coord <- coord
     coord <- ggplot2::ggproto(NULL, source_coord)
-    if (is.numeric(coord$collinear_anchor)) coord$collinear_anchor <- ggchord_instance_param(coord$collinear_anchor, instances) else
-      if (is.data.frame(coord$collinear_anchor)) coord$collinear_anchor <- ggchord_instance_expand(coord$collinear_anchor, instances)$data
-    if (!is.null(coord$collinear_segments)) coord$collinear_segments <- ggchord_instance_expand(coord$collinear_segments, instances)$data
+    if (!is.null(coord$collinear_anchor) && any(!coord$collinear_anchor$accver %in% instances$key))
+      coord$collinear_anchor <- ggchord_instance_expand(coord$collinear_anchor, instances)$data
     plot$coordinates <- coord
   }
-  axis <- plot$scales$get_scales("seq_position")
-  if (!is.null(axis$ggchord_axis_sequences)) {
-    plot$scales <- plot$scales$clone()
-    axis <- plot$scales$get_scales("seq_position")
-    chosen <- axis$ggchord_axis_sequences
-    axis$ggchord_axis_sequences <- instances$key[instances$accver %in% chosen | instances$instance_id %in% chosen]
-  }
-  arrangement <- plot$ggchord$sequence_layout %||% layout_sequences()
+  plot$ggchord$complete_display_instances <- instances
   arrangement$order <- instances$key
-  for (field in c("orientation", "gap"))
-    arrangement[field] <- list(ggchord_instance_param(arrangement[[field]], instances))
+  if (mirrored) for (field in c("orientation", "gap", "row_gap", "radius", "curvature")) {
+    value <- arrangement[[field]]
+    if (!is.null(value)) arrangement[[field]] <- stats::setNames(rep(value, 2L), instances$key)
+  }
   plot$ggchord$sequence_layout <- arrangement
   plot$ggchord$data$seq_data <- virtual
   plot$ggchord$display_instances <- instances

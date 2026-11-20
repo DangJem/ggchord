@@ -5,14 +5,14 @@
 \title{Project protein domains or genomic features through a spliced CDS map}
 \usage{
 project_ggchord_features(
-  feature_data,
+  features,
   cds,
-  from = c("protein", "genome"),
-  codon_boundary = c("error", "expand")
+  from = "protein",
+  codon_boundary = "error"
 )
 }
 \arguments{
-\item{feature_data}{Domain/feature data frame with \code{feature_id}, \code{parent_id}
+\item{features}{Domain/feature data frame with \code{feature_id}, \code{parent_id}
 (or a single-valued \code{parent_ids} list-column), \code{start} and \code{end}.}
 
 \item{cds}{A map from \code{\link[=build_ggchord_cds]{build_ggchord_cds()}}.}
@@ -45,22 +45,11 @@ inconsistent-strand and ambiguous codon-boundary input produce errors.
 partial codons and reports this expansion; it does not modify source bases.
 }
 \examples{
-library(dplyr)
-data(plasmid_example_pUC19)
-feature_source <- find_common_features(plasmid_example_pUC19)
-features <- feature_source |>
-  select(accver, start, end, strand, type, anno)
-coding <- features |>
-  filter(anno == "AmpR", type == "CDS") |>
-  select(accver, start, end, strand) |>
-  mutate(feature_id = paste(accver, "AmpR", sep = ":"), phase = 0)
-cds <- build_ggchord_cds(coding, genetic_code = 11)
-# Select residues for display; this is not a detected domain.
-selected <- tibble(
-  feature_id = "selected_residues", parent_id = coding$feature_id,
-  start = 2, end = 20
-)
-project_ggchord_features(selected, cds)
+coding <- data.frame(feature_id="cds1", accver="A", start=1, end=9, strand="+", phase=0)
+cds <- build_ggchord_cds(coding, genetic_code=11)
+domain <- data.frame(feature_id="domain1", parent_id="cds1", start=2, end=3)
+genomic <- project_ggchord_features(domain, cds, from="protein")
+genomic
 }
 \seealso{
 \code{\link{ggchord_data_contract}}

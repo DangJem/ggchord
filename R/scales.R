@@ -2,34 +2,15 @@
 # independent sequence, ribbon, gene, feature and region scales without the
 # usual fill/colour collisions.
 
-#' Sequence colour scales
-#'
-#' @param ... Arguments passed to [ggplot2::scale_colour_manual()].
-#' @param values A set of aesthetic values to map data values to.
-#' @return A ggplot2 scale.
-#' @export
+#' @noRd
 scale_seq_colour_manual <- function(..., values) {
   ggplot2::scale_colour_manual(..., values = values, aesthetics = "seq_colour")
 }
 
-#' @rdname scale_seq_colour_manual
-#' @export
+#' @noRd
 scale_seq_color_manual <- scale_seq_colour_manual
 
-#' Explicit sequence ring scale
-#'
-#' Maps user-defined ring identifiers to positive sequence radii. Ring
-#' membership is supplied with `geom_seq(aes(seq_ring = ...))`; ggchord never
-#' guesses the number, order, or spacing of rings.
-#'
-#' @param ... Arguments passed to [ggplot2::discrete_scale()].
-#' @param values A named or unnamed numeric vector of positive radii.
-#' @param name Scale title. The guide is hidden by default because the scale
-#'   controls geometry rather than a visible legend aesthetic.
-#' @param limits Optional ring order.
-#' @param guide Guide specification, default `"none"`.
-#' @return A ggplot2 discrete scale for the `seq_ring` role.
-#' @export
+#' @noRd
 scale_seq_ring_manual <- function(..., values, name = "Ring",
                                   limits = NULL, guide = "none") {
   if (!is.numeric(values) || length(values) == 0L || anyNA(values) ||
@@ -45,15 +26,7 @@ scale_seq_ring_manual <- function(..., values, name = "Ring",
   )
 }
 
-#' Ribbon fill scales
-#'
-#' @param ... Arguments passed to the corresponding ggplot2 scale.
-#' @param colours,colors Gradient colours.
-#' @param values Manual values, or positions for gradient colours where
-#'   supported by the corresponding ggplot2 scale.
-#' @param guide A guide object; defaults accept the `ribbon_fill` aesthetic.
-#' @return A ggplot2 scale.
-#' @export
+#' @noRd
 scale_ribbon_fill_stepsn <- function(
     ..., colours, values = NULL, colors,
     guide = ggplot2::guide_coloursteps(available_aes = "ribbon_fill")) {
@@ -70,8 +43,7 @@ scale_ribbon_fill_stepsn <- function(
   )
 }
 
-#' @rdname scale_ribbon_fill_stepsn
-#' @export
+#' @noRd
 scale_ribbon_fill_gradientn <- function(
     ..., colours, values = NULL, colors,
     guide = ggplot2::guide_colourbar(available_aes = "ribbon_fill")) {
@@ -88,26 +60,17 @@ scale_ribbon_fill_gradientn <- function(
   )
 }
 
-#' @rdname scale_ribbon_fill_stepsn
-#' @export
+#' @noRd
 scale_ribbon_fill_manual <- function(..., values) {
   ggplot2::scale_fill_manual(..., values = values, aesthetics = "ribbon_fill")
 }
 
-#' @rdname scale_ribbon_fill_stepsn
-#' @export
+#' @noRd
 scale_ribbon_fill_identity <- function(...) {
   ggplot2::scale_fill_identity(..., aesthetics = "ribbon_fill")
 }
 
-#' Ribbon alpha, outline and linetype scales
-#'
-#' @param ... Arguments passed to the corresponding ggplot2 scale.
-#' @param range Output alpha range for a continuous scale. NULL uses the
-#'   corresponding ggplot2 scale's default range.
-#' @param values Manual aesthetic values.
-#' @return A ggplot2 scale.
-#' @export
+#' @noRd
 scale_ribbon_alpha_continuous <- function(..., range = NULL) {
   # Older 4.0.x finds the default palette by aesthetic name, so an extension
   # role needs the same explicit fallback range as the native alpha scale.
@@ -119,46 +82,34 @@ scale_ribbon_alpha_continuous <- function(..., range = NULL) {
   )
 }
 
-#' @rdname scale_ribbon_alpha_continuous
-#' @export
+#' @noRd
 scale_ribbon_alpha_manual <- function(..., values) {
   ggplot2::scale_alpha_manual(..., values = values, aesthetics = "ribbon_alpha")
 }
 
-#' @rdname scale_ribbon_alpha_continuous
-#' @export
+#' @noRd
 scale_ribbon_colour_manual <- function(..., values) {
   ggplot2::scale_colour_manual(
     ..., values = values, aesthetics = "ribbon_colour"
   )
 }
 
-#' @rdname scale_ribbon_alpha_continuous
-#' @export
+#' @noRd
 scale_ribbon_color_manual <- scale_ribbon_colour_manual
 
-#' @rdname scale_ribbon_alpha_continuous
-#' @export
+#' @noRd
 scale_ribbon_linetype_manual <- function(..., values) {
   ggplot2::scale_linetype_manual(
     ..., values = values, aesthetics = "ribbon_linetype"
   )
 }
 
-#' Gene, feature and region fill scales
-#'
-#' @param ... Arguments passed to [ggplot2::scale_fill_manual()].
-#' @param values A set of fill values to map data values to.
-#' @param limits Optional display order. Named feature values use their name
-#'   order by default.
-#' @return A ggplot2 scale.
-#' @export
+#' @noRd
 scale_gene_fill_manual <- function(..., values) {
   ggplot2::scale_fill_manual(..., values = values, aesthetics = "gene_fill")
 }
 
-#' @rdname scale_gene_fill_manual
-#' @export
+#' @noRd
 scale_feature_fill_manual <- function(..., values, limits = NULL) {
   if (is.null(limits) && !is.null(names(values))) limits <- names(values)
   out <- ggplot2::scale_fill_manual(..., values = values, limits = limits,
@@ -167,25 +118,7 @@ scale_feature_fill_manual <- function(..., values, limits = NULL) {
   out
 }
 
-#' Feature shape scale
-#'
-#' Maps feature categories to the geometry types understood by
-#' [geom_feature()], including full/compact/promoter/primer arrows, markers,
-#' blocks, capped lines, chevrons, and lollipops. `capped_line` is an
-#' unfilled interval with short terminal caps.
-#' Shape values affect the actual feature geometry as well as its legend key.
-#'
-#' @param ... Arguments passed to [ggplot2::discrete_scale()].
-#' @param values A named or unnamed character vector of feature geometry names.
-#' @param name Scale and guide title, default `"Feature"`.
-#' @param limits Optional category order. Named `values` use their name order
-#'   by default so shape and fill guides can merge cleanly.
-#' @param guide Guide specification. The default is `"none"` because
-#'   [geom_feature()] combines shape silhouettes into its fill legend when
-#'   both aesthetics describe the same feature categories. Supply
-#'   [guide_ggchord_legend()] for a separate shape guide.
-#' @return A ggplot2 discrete scale for the `feature_shape` aesthetic.
-#' @export
+#' @noRd
 scale_feature_shape_manual <- function(..., values, name = "Feature",
                                        limits = NULL, guide = "none") {
   allowed <- c(
@@ -263,12 +196,7 @@ ggchord_contrast_colour <- function(fill) {
   }, character(1), USE.NAMES = FALSE)
 }
 
-#' Plasmid-map feature presets
-#' @param ... Additional scale arguments.
-#' @param limits Optional feature-type order.
-#' @param guide Guide used by the shape preset.
-#' @return A feature fill or shape scale.
-#' @export
+#' @noRd
 scale_feature_fill_plasmid <- function(..., limits = NULL) {
   values <- ggchord_plasmid_feature_colours()
   if (is.null(limits)) limits <- names(values)
@@ -279,8 +207,7 @@ scale_feature_fill_plasmid <- function(..., limits = NULL) {
   out
 }
 
-#' @rdname scale_feature_fill_plasmid
-#' @export
+#' @noRd
 scale_feature_shape_plasmid <- function(..., limits = NULL, guide = "none") {
   values <- c(
     CDS="arrow", gene="arrow", resistance_gene="arrow",
@@ -303,43 +230,12 @@ scale_feature_shape_plasmid <- function(..., limits = NULL, guide = "none") {
   out
 }
 
-#' @rdname scale_gene_fill_manual
-#' @export
+#' @noRd
 scale_region_fill_manual <- function(..., values) {
   ggplot2::scale_fill_manual(..., values = values, aesthetics = "region_fill")
 }
 
-#' Genomic sequence position scale
-#'
-#' Controls major/minor genomic position breaks and labels independently for
-#' every sequence. The default domain is each sequence's `[1, length]` range;
-#' linear source-coordinate axes use the retained original genomic interval.
-#' This scale configures sequence axes across supported coordinate modes. To add
-#' an independent bp reference bar in a linear display, use [geom_seq_scale()].
-#'
-#' @param name Optional scale name.
-#' @param breaks,minor_breaks,labels,limits,expand,oob,transform,n.breaks Standard
-#'   continuous-scale controls.
-#' @param ... Additional arguments passed to [ggplot2::continuous_scale()].
-#' @param coordinates In linear layouts, use relative locus coordinates or
-#'   original source coordinates retained by [focus_ggchord_data()]. This
-#'   affects axis breaks and labels, not the underlying genomic geometry.
-#'   Breaks returned in transformed scale space are converted back to genomic
-#'   positions in every coordinate mode. Explicit `breaks = NULL` and
-#'   `minor_breaks = NULL` suppress the corresponding ticks.
-#' @param guide A [guide_seq_axis()] declaration, or `"none"` to hide the sequence axes.
-#' @return A ggplot2 continuous scale for the `seq_position` role.
-#' @md
-#' @export
-#' @examples
-#' library(dplyr)
-#' data(seq_data_example)
-#' seqs <- seq_data_example |>
-#'   select(accver, length)
-#' ggchord(data = seqs) +
-#'   geom_seq() +
-#'   coord_collinear() +
-#'   scale_seq_position_continuous(n.breaks = 4)
+#' @noRd
 scale_seq_position_continuous <- function(
     name = ggplot2::waiver(), breaks = ggplot2::waiver(),
     minor_breaks = ggplot2::waiver(), labels = ggplot2::waiver(),
@@ -365,29 +261,231 @@ scale_seq_position_continuous <- function(
   sc
 }
 
-#' Select local sequence axes and their label overlap policy
+#' Configure a sequence position guide
 #'
-#' @param sequences Optional character vector selecting sequence axes by their
-#'   displayed `accver`. `NULL` keeps all axes; `character()` hides every axis.
-#'   Focused or segmented views use window IDs, not parent source accessions.
-#'   Unknown or undisplayed identifiers produce an error. This controls axis
-#'   lines, ticks and labels together without dropping sequence geometry.
-#' @param check.overlap Optional logical. When supplied, use this overlap
-#'   policy for tick labels. Otherwise use the plot's axis text policy.
-#' @return A guide for [scale_seq_position_continuous()].
+#' @param sequences Source accessions, or a list with source and instance IDs.
+#' @param side Positive or negative local side of the reference path.
+#' @param angle Automatic label orientation, or a numeric angle in degrees.
+#' @param check.overlap Whether to hide overlapping tick labels.
+#' @param theme Optional local axis theme.
+#' @return A guide for [scale_seq_position()].
 #' @export
 #' @examples
-#' ggchord(data.frame(accver = c("A", "B"), length = c(100, 80))) +
-#'   geom_seq() + coord_collinear() +
-#'   scale_seq_position_continuous(guide = guide_seq_axis("B", check.overlap = TRUE))
-guide_seq_axis <- function(sequences = NULL, check.overlap = NULL) {
+#' library(ggplot2)
+#'
+#' seqs <- data.frame(
+#'   accver = c("A", "B"), length = c(1000, 800),
+#'   sequence_unit = "bp", topology = "linear"
+#' )
+#'
+#' ggchord(data = seqs) + geom_seq() +
+#'   scale_seq_position(breaks = scales::breaks_width(200),
+#'     guide = guide_seq_axis(sequences = "A", side = "negative",
+#'       theme = theme(axis.text = element_text(size = 8)))) +
+#'   coord_collinear()
+guide_seq_axis <- function(sequences = NULL, side = "positive", angle = "auto",
+    check.overlap = TRUE, theme = NULL) {
   ggchord_check_argument_names(sys.call(), sys.function())
-  if (!is.null(sequences) && (!is.character(sequences) || anyNA(sequences) ||
-      any(!nzchar(sequences)) || anyDuplicated(sequences)))
-    ggchord_stop("guide_seq_axis(): sequences must be distinct, nonempty displayed IDs")
-  if (!is.null(check.overlap) && (!is.logical(check.overlap) || length(check.overlap) != 1L || is.na(check.overlap)))
-    ggchord_stop("guide_seq_axis(): check.overlap must be TRUE or FALSE")
-  structure(list(sequences = sequences, check.overlap = check.overlap), class = "ggchord_seq_axis")
+  ggchord_check_axis_selection(sequences)
+  side <- ggchord_match_choice(side, c("positive", "negative"), "side")
+  if (!identical(angle, "auto") && (!is.numeric(angle) || length(angle) != 1L || !is.finite(angle)))
+    ggchord_stop("angle must be 'auto' or finite degrees")
+  ggchord_check_axis_theme(theme, check.overlap)
+  structure(list(sequences = sequences, side = side, angle = angle,
+    check.overlap = check.overlap, theme = theme), class = "ggchord_seq_axis")
+}
+
+ggchord_check_axis_selection <- function(selection) {
+  if (is.null(selection) || identical(selection, character())) return(invisible(NULL))
+  if (is.list(selection)) {
+    if (is.null(names(selection)) || anyDuplicated(names(selection)) ||
+        any(!names(selection) %in% c("source", "instance")))
+      ggchord_stop("Axis selection accepts list(source = ..., instance = ...)")
+    for (ids in selection) ggchord_id_vector(ids, "Guide sequences")
+  } else ggchord_id_vector(selection, "Guide sequences")
+}
+
+ggchord_axis_selection <- function(selection, sources, instances = NULL) {
+  if (is.null(selection)) return(NULL)
+  source_ids <- instances$accver %||% sources
+  keys <- instances$key %||% sources
+  source <- if (is.list(selection)) selection$source else selection
+  local <- if (is.list(selection)) selection$instance
+  if (any(!source %in% source_ids) || any(!local %in% (instances$instance_id %||% keys)))
+    ggchord_stop("Axis guide selects an unknown source or instance")
+  keys[source_ids %in% source | (instances$instance_id %||% keys) %in% local]
+}
+
+ggchord_check_axis_theme <- function(theme, overlap) {
+  if (!is.logical(overlap) || length(overlap) != 1L || is.na(overlap))
+    ggchord_stop("check.overlap must be TRUE or FALSE")
+  if (!is.null(theme) && (!inherits(theme, "theme") ||
+      any(!names(theme) %in% c("axis.line", "axis.ticks", "axis.ticks.length", "axis.text", "axis.title"))))
+    ggchord_stop("The local guide theme can set axis.line, axis.ticks, axis.ticks.length, axis.text and axis.title")
+}
+
+#' Define the linear scale for sequence positions
+#'
+#' @param name Optional axis title.
+#' @param breaks,minor_breaks Position vectors, functions or named lists.
+#' @param labels Labels or a labelling function, optionally by source or instance.
+#' @param coordinates Use local or original source coordinates for axis labels.
+#' @param guide A sequence axis guide or `"none"`.
+#' @return A domain scale for use with sequence-path coordinates.
+#' @export
+#' @examples
+#' seqs <- data.frame(
+#'   accver = c("A", "B"), length = c(1000, 800),
+#'   sequence_unit = "bp", topology = "linear"
+#' )
+#'
+#' ggchord(data = seqs) + geom_seq() +
+#'   scale_seq_position(
+#'     breaks = scales::breaks_width(200),
+#'     labels = scales::label_number(suffix = " bp")
+#'   ) + coord_collinear()
+scale_seq_position <- function(name = waiver(), breaks = waiver(),
+    minor_breaks = waiver(), labels = waiver(), coordinates = "local",
+    guide = guide_seq_axis()) {
+  ggchord_check_argument_names(sys.call(), sys.function())
+  coordinates <- ggchord_match_choice(coordinates, c("local", "source"), "coordinates")
+  if (!is.null(name) && !ggplot2::is_waiver(name) &&
+      (!(is.character(name) || is.expression(name)) || length(name) != 1L ||
+       (is.character(name) && is.na(name))))
+    ggchord_stop("scale_seq_position(): name must be one title or NULL")
+  if (identical(guide, "none")) guide <- guide_seq_axis(character())
+  if (!inherits(guide, "ggchord_seq_axis")) ggchord_stop("Use guide_seq_axis() or 'none'")
+  out <- ggplot2::continuous_scale("seq_position", palette = identity,
+    name = name, breaks = if (is.list(breaks)) waiver() else breaks,
+    minor_breaks = if (is.list(minor_breaks)) waiver() else minor_breaks,
+    labels = if (is.list(labels)) waiver() else labels, guide = "none")
+  out$ggchord_axis_spec <- list(breaks = breaks, minor_breaks = minor_breaks, labels = labels)
+  out$ggchord_position_coordinates <- coordinates
+  out$ggchord_axis_guide <- guide
+  out$ggchord_axis_sequences <- guide$sequences
+  out$ggchord_check_overlap <- guide$check.overlap
+  out
+}
+
+#' Map measurements to height within a physical track
+#'
+#' @param track Track ID.
+#' @param name Axis title.
+#' @param limits,breaks,labels,transform,oob Continuous scale settings.
+#' @param unit Optional unit of measurement for the shared track.
+#' @param domain Train a shared scale or train separately by panel.
+#' @param guide A track axis guide or `"none"`.
+#' @return A numerical height scale for the chosen track.
+#' @export
+#' @examples
+#' library(ggplot2)
+#'
+#' seqs <- data.frame(
+#'   accver = c("A", "B"), length = c(1000, 800),
+#'   sequence_unit = "bp", topology = "linear"
+#' )
+#'
+#' signal <- data.frame(accver = rep(c("A", "B"), each = 3),
+#'   pos = rep(c(100, 400, 700), 2), value = c(2, 5, 3, 1, 4, 2))
+#'
+#' ggchord(data = seqs) +
+#'   track_band("signal", thickness = 6) +
+#'   geom_track_line(data = signal, aes(x = pos, y = value), track = "signal") +
+#'   scale_track_value("signal", limits = c(0, 6), breaks = c(0, 3, 6),
+#'                     name = "Signal", unit = "a.u.") +
+#'   coord_collinear()
+scale_track_value <- function(track = "default", name = waiver(), limits = NULL,
+    breaks = waiver(), labels = waiver(), transform = "identity", oob = scales::censor,
+    unit = NULL, domain = "shared", guide = guide_track_axis()) {
+  ggchord_check_argument_names(sys.call(), sys.function())
+  ggchord_track_id(track)
+  domain <- ggchord_match_choice(domain, c("shared", "panel"), "domain")
+  if (!is.null(unit) && (!is.character(unit) || length(unit) != 1L || is.na(unit) || !nzchar(unit)))
+    ggchord_stop("unit must be one nonempty measurement unit")
+  if (!is.null(limits) && !is.function(limits) && (!is.numeric(limits) ||
+      length(limits) != 2L || any(!is.finite(limits)) || limits[1L] > limits[2L]))
+    ggchord_stop("limits must define an increasing finite domain")
+  if (!is.function(oob)) ggchord_stop("oob must be a function")
+  axis <- ggchord_track_axis_guide(guide)
+  sc <- ggplot2::continuous_scale(ggchord_track_aes("value", track), palette = identity,
+    name = name, limits = limits, breaks = breaks, labels = labels,
+    transform = transform, oob = oob, guide = "none")
+  sc$ggchord_facet_domain <- domain
+  sc$ggchord_domain_policy <- list(transform = sc$get_transformation()$name, oob = oob, limits = limits)
+  sc$ggchord_track_axis <- axis$show
+  sc$ggchord_track_axis_guide <- axis$guide
+  sc$ggchord_track_unit <- unit
+  sc$ggchord_track_id <- track
+  sc
+}
+
+#' Report shared numerical limits across independent plots
+#'
+#' @param plots A ggchord plot or a list of independent ggchord plots.
+#' @param tracks IDs of numerical tracks present in every plot.
+#' @return A data frame of current limits, units and available measure evidence.
+#' @export
+#' @examples
+#' library(ggplot2)
+#'
+#' seqs <- data.frame(
+#'   accver = c("A", "B"), length = c(1000, 800),
+#'   sequence_unit = "bp", topology = "linear"
+#' )
+#'
+#' signal <- data.frame(accver = rep(c("A", "B"), each = 3),
+#'   pos = rep(c(100, 400, 700), 2), value = c(2, 5, 3, 1, 4, 2))
+#'
+#' p1 <- ggchord(data = seqs) +
+#'   geom_track_line(data = signal, aes(x = pos, y = value)) + coord_collinear()
+#' signal2 <- transform(signal, value = value * 2)
+#' p2 <- ggchord(data = seqs) +
+#'   geom_track_line(data = signal2, aes(x = pos, y = value)) + coord_collinear()
+#' rng <- track_limits(list(first = p1, second = p2))
+#' p1 + scale_track_value(limits = rng$limits[[1]])
+#' p2 + scale_track_value(limits = rng$limits[[1]])
+track_limits <- function(plots, tracks = "default") {
+  ggchord_check_argument_names(sys.call(), sys.function())
+  if (inherits(plots, "ggchord")) plots <- list(plots)
+  if (!is.list(plots) || !length(plots) || !all(vapply(plots, inherits, logical(1), "ggchord")))
+    ggchord_stop("track_limits(): supply independent ggchord plots")
+  ggchord_id_vector(tracks, "tracks")
+  labels <- names(plots) %||% as.character(seq_along(plots))
+  labels[!nzchar(labels)] <- as.character(which(!nzchar(labels)))
+  reports <- lapply(plots, function(plot) {
+    plot <- ggchord_render_inputs(plot)
+    plot <- ggchord_register_layers(plot)
+    plot$layers <- Filter(function(l) identical(l$ggchord_type, "track"), plot$layers)
+    ggchord_render_track_source(plot)
+  })
+  compatible <- function(values, field) {
+    known <- unique(values[!is.na(values)])
+    if (length(known) > 1L) ggchord_stop("Incompatible track ", field)
+    if (anyNA(values)) NA_character_ else known[1L]
+  }
+  do.call(rbind, lapply(tracks, function(id) {
+    ranges <- lapply(reports, function(plot) {
+      owners <- Filter(function(l) identical(l$ggchord_params$track_id, id) &&
+        !identical(l$ggchord_params$track_kind, "tile"), plot$layers)
+      if (!length(owners)) ggchord_stop("No numerical layer in track '", id, "'")
+      values <- unlist(lapply(owners, function(l)
+        ggchord_track_domain_values(ggchord_resolve_layer_input(l), l$ggchord_params)), use.names = FALSE)
+      scale <- ggchord_train_track_scale(plot, id, values)
+      if (!scale$has_domain) ggchord_stop("No numerical domain in track '", id, "'")
+      sc <- scale$scale
+      measures <- vapply(owners, function(l) l$ggchord_params$measure %||% NA_character_, character(1))
+      list(limits = sc$get_transformation()$inverse(sc$get_limits()),
+        transform = sc$get_transformation()$name,
+        unit = sc$ggchord_track_unit %||% NA_character_, measure = compatible(measures, "measure"))
+    })
+    collect <- function(key) vapply(ranges, `[[`, character(1), key)
+    compatible(collect("transform"), "transform")
+    unit <- compatible(collect("unit"), "unit")
+    measure <- compatible(collect("measure"), "measure")
+    data.frame(track = id, limits = I(list(range(unlist(lapply(ranges, `[[`, "limits"))))),
+      unit = unit, measure = measure, plots = I(list(labels)),
+      status = if (is.na(measure) || is.na(unit)) "unknown" else "available")
+  }))
 }
 
 # Axis selection changes decorations, never source sequence membership.
@@ -396,10 +494,10 @@ ggchord_filter_sequence_axes <- function(layout, selection = NULL) {
   if (!is.null(selection)) {
     if (!is.character(selection) || anyNA(selection) || any(!nzchar(selection)) ||
         anyDuplicated(selection)) ggchord_stop(
-      "scale_seq_position_continuous(): sequences must name distinct displayed sequence IDs")
+      "guide_seq_axis(): sequences must name distinct displayed sequence IDs")
     unknown <- setdiff(selection, seqs)
     if (length(unknown)) ggchord_stop(
-      "scale_seq_position_continuous(): unknown or undisplayed axis sequence ID(s): ",
+      "guide_seq_axis(): unknown or undisplayed axis sequence ID(s): ",
       paste(unknown, collapse = ", "), "; focused/segmented views require window IDs")
     for (component in c("axis_lines", "axis_ticks")) {
       data <- layout[[component]]

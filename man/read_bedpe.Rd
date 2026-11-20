@@ -2,73 +2,30 @@
 % Please edit documentation in R/data-bedpe.R
 \name{read_bedpe}
 \alias{read_bedpe}
-\title{Read paired BED intervals as ggchord links}
+\title{Read BEDPE interval pairs}
 \usage{
-read_bedpe(
-  file = NULL,
-  files = NULL,
-  source_file = FALSE,
-  unmapped = c("error", "keep")
-)
+read_bedpe(file, sequence_unit = "bp", source_file = FALSE)
 }
 \arguments{
-\item{file}{Optional local path vector or glob patterns; read before \code{files}.}
+\item{file}{Local BEDPE paths.}
 
-\item{files}{Optional additional local paths or glob patterns.}
+\item{sequence_unit}{The native coordinate unit, \code{"bp"} or \code{"aa"}.}
 
-\item{source_file}{Logical. Add a \code{.source_file} column, default FALSE.}
-
-\item{unmapped}{\code{"error"} (default) or \code{"keep"} for incomplete anchors.}
+\item{source_file}{Whether to include a row-level source path column.}
 }
 \value{
-A data frame with canonical q/s endpoints, anchor strands, mapping
-flags, relative direction, original BEDPE fields, \code{bedpe_extra} and physical
-\code{.source_line}. The \code{ggchord_import} attribute records files, row counts
-and coordinate conventions. The keep policy does not make missing anchors
-drawable and does not manufacture source positions.
+An interval relationship table. \code{\link[=data_report]{data_report()}} records source
+paths, original fields, and unplaced records.
 }
 \description{
-Reads tab-separated BEDPE with six required columns, optional name, score,
-strand1 and strand2 in standard order, and any additional fields. Each file
-must have a consistent field count. Blank/comment lines and tab-free
-track/browser headers are skipped. Accession identifiers and the order of
-the two anchors are retained: the first anchor is query, the second subject.
-}
-\details{
-Zero-based half-open intervals become one-based inclusive intervals.
-Negative-strand anchor endpoints decrease, matching \code{\link[=as_ggchord_link]{as_ggchord_link()}} for
-paired interval objects. Unspecified strands remain \code{"."}; relative anchor
-direction is known only when both anchors and both strands are known.
-Anchor direction does not establish a pairwise alignment. No identity,
-alignment length, read support or full sequence length is inferred.
-
-Original standard fields are retained as character columns, including
-arbitrary score strings. Extra fields are retained in the \code{bedpe_extra}
-list-column as character vectors named by their physical column number.
-Names are labels, not guaranteed unique HSP IDs. Unknown chromosome \code{"."}
-and coordinate \code{-1} are explicit missing-value sentinels. The default stops
-on incomplete anchors; \code{unmapped = "keep"} retains them for auditing with
-missing canonical fields and \code{q_mapped}/\code{s_mapped} flags. Filter for both
-flags before adaptation or plotting. Invalid known coordinates, including
-zero-width intervals, are always errors.
+Convert each placed anchor from the file's zero-based half-open convention
+to ordered one-based closed endpoints. Preserve strand evidence and the
+original score. The input's first anchor is query and its second is
+subject. Unplaced rows are recorded in the data report.
 }
 \examples{
-library(dplyr)
-data(ribbon_data_example)
-# Re-encode observed intervals for a format round trip, not paired-read evidence.
-paired <- ribbon_data_example |>
-  transmute(
-    chrom1 = qaccver, start1 = pmin(qstart, qend) - 1, end1 = pmax(qstart, qend),
-    chrom2 = saccver, start2 = pmin(sstart, send) - 1, end2 = pmax(sstart, send)
-  )
-path <- tempfile(fileext = ".bedpe")
-write.table(paired, path,
-  sep = "\t", quote = FALSE, row.names = FALSE, col.names = FALSE
-)
-read_bedpe(path)
-unlink(path)
-}
-\seealso{
-\code{\link[=as_ggchord_link]{as_ggchord_link()}}, \link{ggchord_data_contract},
-\url{https://bedtools.readthedocs.io/en/latest/content/general-usage.html#bedpe-format}
+f <- tempfile(fileext = ".bedpe")
+writeLines("A	99	240	B	149	290	pair1	10	+	-", f)
+paired <- read_bedpe(f)
+unlink(f)
 }

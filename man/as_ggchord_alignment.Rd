@@ -56,7 +56,9 @@ DNA/RNA use the complement on the negative strand, AA only reverses order.
 Missing full source strings mean unverified characters, not invented data.
 }
 \examples{
-# Explicit synthetic format example, not a biological alignment claim.
-aligned <- as_ggchord_alignment(c(A = "AC-G", B = "ACTG"), "DNA")
-aligned
+library(ggplot2)
+
+cells <- as_ggchord_alignment(c(A = "AC-G", B = "ACTG"), alphabet = "DNA")
+ggplot2::ggplot(cells, aes(alignment_column, accver, label = symbol)) +
+  geom_residue(aes(fill = symbol))
 }

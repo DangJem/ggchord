@@ -2,85 +2,70 @@
 % Please edit documentation in R/geom-restriction-site.R
 \name{geom_restriction_site}
 \alias{geom_restriction_site}
-\title{Draw restriction sites, labels and deterministic leaders}
+\title{Draw documented restriction cuts}
 \usage{
 geom_restriction_site(
   mapping = NULL,
   data = NULL,
-  label = TRUE,
-  label_style = c("enzyme_position", "enzyme", "position"),
-  label_order = c("auto", "enzyme_position", "position_enzyme"),
-  label_side = c("outside", "inside", "auto"),
-  leader = c("radial", "elbow", "straight"),
-  min_label_gap = NULL,
-  tick_length = 0.04,
-  label_offset = 0.18,
-  colour = "#202020",
-  linewidth = 0.28,
-  label_size = 3.2,
-  fontface = NULL,
-  family = NULL,
+  shape = "cut",
+  size = 2,
+  stat = "identity",
   position = "identity",
-  show.legend = FALSE,
-  inherit.aes = FALSE,
   ...,
+  na.rm = FALSE,
+  show.legend = NA,
+  inherit.aes = TRUE,
   id = NULL
 )
 }
 \arguments{
-\item{mapping, data}{Standard layer inputs. Positions refer to the displayed
-nucleotide backbone. An explicit \code{sequence_unit} must be \code{"bp"}.}
+\item{mapping}{Aesthetic mapping from \code{ggplot2::aes()}. A local mapping overrides the matching inherited channel.}
 
-\item{label}{Draw labels.}
+\item{data}{Observation table or a data function. For ggchord layers, provide the required data-role columns.}
 
-\item{label_style}{Label enzyme and position, enzyme only, or position only.}
+\item{shape}{Default shape. An explicitly supplied fixed shape takes priority over its mapping.}
 
-\item{label_order}{Automatic mirrored label order, enzyme first, or
-position first.}
+\item{size}{Physical size of the symbol in millimetres.}
 
-\item{label_side}{Draw labels outside, inside, or automatically.}
+\item{stat}{A compatible ggplot2 Stat or its name. The default uses the supplied records.}
 
-\item{leader}{Leader routing style. The default \code{"radial"} measures actual
-text boxes, separates site anchors from final radial label positions,
-and routes either a direct connector or an independent radial stub plus
-fan segment.
-All enzyme-facing text edges follow one close circular contour in genomic
-order. Dense lateral clusters use evenly spaced contour fans, while sparse
-clusters retain their natural angular positions.
-\code{"straight"} connects the tick tip directly to the final label edge,
-without detours around the sequence or other leaders. \code{"elbow"} uses
-one bend, starting with a local-normal departure where possible.
-Label positions and grouping are shared by all routing styles.}
+\item{position}{A compatible Position for placement of the layer geometry.}
 
-\item{min_label_gap}{Minimum genomic fraction between label slots. \code{NULL}
-derives a compact device-aware default from the rendered labels.}
+\item{...}{Additional named visual styles and parameters accepted by this layer.}
 
-\item{tick_length, label_offset}{Local-normal distances.}
+\item{na.rm}{Suppress warnings for missing observations that the layer can omit.}
 
-\item{colour, linewidth, label_size, fontface, family}{Fixed appearance. With
-the default \code{fontface = NULL}, enzyme names are bold only when that enzyme
-cuts once in the supplied sequence; coordinates remain regular. An
-explicit \code{fontface} disables this automatic distinction.}
+\item{show.legend}{Logical or named logical indicating whether the layer contributes legend keys.}
 
-\item{position, show.legend, inherit.aes}{Standard layer arguments.}
+\item{inherit.aes}{Whether to inherit plot mappings and evaluate them on the layer data.}
 
-\item{...}{Additional geom parameters.}
-
-\item{id}{Optional unique layer ID used in layout and source exports.}
+\item{id}{Optional plot-local layer identifier. Name a layer explicitly to scope a scale, anchor a label or export it.}
 }
 \value{
-A ggplot2 layer.
+A ggplot2 layer for addition to a plot.
 }
 \description{
-Draw restriction sites, labels and deterministic leaders
+Draw documented restriction cuts
+}
+\details{
+Site data supplies \code{accver} and a one-based \code{pos}. A double-strand cut uses \code{cut_top} and \code{cut_bottom} as interbase positions. Add site labels separately or bind them to the site layer.
 }
 \examples{
-sites <- data.frame(accver = "A", position = 10, enzyme = "E")
-ggchord(data.frame(accver = "A", length = 100)) +
+library(ggplot2)
+
+seqs <- data.frame(
+  accver = c("A", "B"), length = c(1000, 800),
+  sequence_unit = "bp", topology = "linear"
+)
+
+one_seq <- seqs[1, , drop = FALSE]
+
+sites <- data.frame(accver = "A", pos = 300, site_id = "s1", label = "EcoRI")
+
+cut_sites <- transform(sites, cut_top = 300, cut_bottom = 304)
+ggchord(one_seq) +
   geom_seq() +
-  geom_restriction_site(data = sites, id = "sites") +
+  geom_restriction_site(data = cut_sites, id = "sites") +
+  geom_site_label(aes(label = label), anchor_layer = "sites") +
   coord_circular()
-}
-\seealso{
-\code{\link{ggchord_data_contract}}
 }

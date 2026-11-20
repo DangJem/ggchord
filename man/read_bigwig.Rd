@@ -2,57 +2,29 @@
 % Please edit documentation in R/data-signal.R
 \name{read_bigwig}
 \alias{read_bigwig}
-\title{Read indexed BigWig signals through an optional mature decoder}
+\title{Read a BigWig signal track}
 \usage{
-read_bigwig(file = NULL, files = NULL, which = NULL, source_file = FALSE)
+read_bigwig(file, which = NULL, source_file = FALSE)
 }
 \arguments{
-\item{file}{Optional local input path vector or glob patterns, before files.}
+\item{file}{Local BigWig paths.}
 
-\item{files}{Optional additional paths or wildcards for local BigWig files.}
+\item{which}{Optional genomic selection as a supported interval object
+or an accver/start/end table.}
 
-\item{which}{NULL for the whole file, or a GRanges / data frame with
-character accver and numeric start/end in one-based inclusive coordinates.
-Unknown accessions and out-of-bounds intervals fail explicitly. An empty
-selection returns no signal rows. The same selection applies to each file.}
-
-\item{source_file}{Logical. Add .source_file to each row, default FALSE.}
+\item{source_file}{Whether to include row-level source paths.}
 }
 \value{
-A data frame with accver, start, end, value and original imported
-score. Import provenance includes decoder/version, each file's sequence
-dictionary, original query and effective selected intervals. No physical
-source lines or original measurement IDs are manufactured from a binary file.
+An accver/start/end/value track table with a decoder and selection report.
 }
 \description{
-Uses optional rtracklayer and its GRanges import. Those coordinates are
-already one-based inclusive and are not shifted again. Stored sequence
-lengths come from the file header, not the last nonmissing interval.
-Scores retain the binary file's floating-point representation. They are
-signal values, not original observation counts, identity or read support.
-}
-\details{
-Optional selection is an unstranded coordinate union, so overlapping query
-windows do not duplicate a source signal. Returned runs are clipped to
-that union. The original query and effective union are retained
-separately; no pre-clipping window boundaries are invented. Missing ranges
-stay absent, and imported missing scores remain missing. No zero filling,
-smoothing, summarisation or value-unit inference is performed.
-The optional decoder does not support BigWig on Windows; use an existing
-bedGraph file with read_bedgraph() there instead.
+Read source intervals using the optional rtracklayer decoder. Missing
+intervals remain missing. Signal units retain their source meaning.
+The source report retains sequence lengths and the actual selection.
 }
 \examples{
-\donttest{
-# Optional Bioconductor decoder loading can take several seconds.
-if (.Platform$OS.type != "windows" && requireNamespace("rtracklayer", quietly = TRUE)) {
-  # Packaged real GC signal, not measured read coverage.
-  path <- system.file("extdata", "pUC19-gc-100.bw", package = "ggchord")
-  signal <- read_bigwig(path,
-    which = data.frame(accver = "pUC19", start = 50, end = 150))
-  head(signal)
+if (requireNamespace("rtracklayer", quietly = TRUE)) {
+  file <- system.file("extdata", "pUC19-gc-100.bw", package = "ggchord")
+  read_bigwig(file)
 }
-}
-}
-\seealso{
-\code{\link[=read_bedgraph]{read_bedgraph()}}, \code{\link[=geom_track]{geom_track()}}
 }

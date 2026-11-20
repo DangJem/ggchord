@@ -2,137 +2,61 @@
 % Please edit documentation in R/coord-collinear.R
 \name{coord_collinear}
 \alias{coord_collinear}
-\title{Linear multi-sequence collinearity coordinates}
+\title{Project references onto parallel linear paths}
 \usage{
 coord_collinear(
-  ratio = 1,
+  axis = "x",
+  ratio = NULL,
   xlim = NULL,
   ylim = NULL,
   expand = FALSE,
-  clip = "off",
-  fit = c("labels", "geometry", "manual"),
-  align = c("left", "center", "right"),
-  anchor = NULL,
-  orientation = c("manual", "auto"),
-  min_support = 0.1,
-  segments = NULL,
-  segment_gap = 100,
-  seq_axis = c("horizontal", "vertical")
+  clip = "on",
+  fit = "geometry"
 )
 }
 \arguments{
-\item{ratio}{Fixed y/x aspect ratio, default 1.}
+\item{axis}{Direction of the reference paths, either \code{"x"} or \code{"y"}.}
 
-\item{xlim, ylim}{Optional user limits. Explicit limits take priority over
-automatically fitted limits.}
+\item{ratio}{Positive ratio of y to x units on the device, or NULL.}
 
-\item{expand}{Logical. Expand coordinate limits, default FALSE. Automatic
-fitting already includes a small safety margin; set TRUE to request the
-additional ggplot2 coordinate expansion.}
+\item{xlim, ylim}{Optional increasing pairs of view limits.}
 
-\item{clip}{Whether drawing is clipped to the panel, default \code{"off"}.}
+\item{expand}{Whether to expand automatic view limits.}
 
-\item{fit}{Fitting strategy: \code{"labels"} includes measured label boxes,
-\code{"geometry"} fits geometric elements only, and \code{"manual"}
-requires explicit \code{xlim} and \code{ylim}.}
+\item{clip}{Panel clipping, \code{"on"} or \code{"off"}.}
 
-\item{align}{Display alignment: \code{"left"} (default), \code{"center"}, or
-\code{"right"}. Applied to the full sequence or the interval supplied by
-\code{anchor}.}
-
-\item{anchor}{Optional anchor positions as a numeric vector named by
-\code{accver}, or a data frame with \code{accver} and either \code{position} or
-\code{start}/\code{end}. Every displayed sequence must have exactly one anchor.
-Missing and duplicate anchors are errors; multiple-copy targets must be
-selected explicitly before constructing the coordinate system.}
-
-\item{orientation}{\code{"manual"} (default) uses sequence directions supplied
-by \code{layout_sequences()}. \code{"auto"} derives display directions from interval-link
-evidence and records support and unresolved cases.}
-
-\item{min_support}{Minimum directional imbalance in \verb{[0, 1]} for an automatic
-change. It is the absolute difference between forward and reverse
-support divided by their sum, default 0.1. A tie is always unresolved.}
-
-\item{segments}{Optional data frame with unique window \code{accver}, \code{row_id}
-and \code{orientation} (1 or -1). Every displayed accession must be declared.
-Each window has its own local coordinates and reversible source metadata.}
-
-\item{segment_gap}{Positive display gap in native sequence units when \code{segments}
-is supplied, default 100. It never implies genomic continuity.}
-
-\item{seq_axis}{\code{"horizontal"} (default) or \code{"vertical"}. Vertical mode
-projects sequence-local geometry onto upright columns and lays out text
-in its own readable orientation; it does not change source strands.}
+\item{fit}{Fit geometry, include labels, or require manual limits.}
 }
 \value{
-A ggplot2 Coord object for composition with a ggchord plot.
+A coordinate system for a ggchord plot.
 }
 \description{
-Draws sequences as left-aligned horizontal backbones, ordered from top to
-bottom by \code{layout_sequences(order = ...)}. All sequences share one linear sequence-unit
-scale. \code{layout_sequences(orientation = -1)} reverses a sequence together with its features,
-links and axis without modifying the input data.
-}
-\details{
-In this coordinate system, \code{layout_sequences(gap = ...)} specifies the distance
-between consecutive backbones as a proportion of the longest backbone's
-width (default 0.3). Positive Position offsets point upward and negative
-offsets downward, independently of sequence orientation. Sequence labels
-appear to the left of their backbone. Automatic feature labels use local
-horizontal rows; fixed radial labels are vertical and tangent labels are
-horizontal. Label side \code{"outside"} means above and \code{"inside"} below.
-
-Explicit sequence radius, curvature, ring mappings/scales and sequence-label
-radius cannot be converted and produce an error. Remove these arguments
-when switching from \code{\link[=coord_chord]{coord_chord()}}. Primer, restriction-site and centre-label
-layers are unsupported here; use \code{\link[=coord_circular]{coord_circular()}} for single-sequence maps
-or \code{\link[=geom_feature]{geom_feature()}} for general linear annotations. Single-sequence chord
-compositions remain available. Cross-track links may cross intervening tracks.
-Explicit link control points use the exported linear layout x/y units;
-the longest backbone has width 2 (the longest complete display row when
-\code{segments} is supplied).
-The circular \code{external = FALSE} feature-label constraint cannot be converted;
-remove it to use linear label rows. Gene/feature repel layout modes share
-the linear row strategy rather than selecting circular label tracks.
-
-\code{align} and \code{anchor} control a reversible display translation. With no
-anchor, the selected edge or centre of each complete sequence is placed at
-x = 0. With an anchor, the selected edge or centre of each anchor interval
-is placed at x = 0 instead. Left and right refer to the displayed interval,
-after orientation has been applied. Genomic input coordinates stay unchanged.
-Sequence order is never changed by alignment or automatic orientation.
-
-\code{orientation = "auto"} evaluates interval links against earlier displayed
-sequences and chooses the direction supported by the larger aligned-interval
-weight. The first sequence fixes the reference direction. Ambiguous,
-insufficiently supported and unconnected sequences retain their initial
-direction, with evidence recorded in the exported layout diagnostics. This
-is a display heuristic, not a biological strand assignment or a guarantee
-of a global optimum. It cannot be combined with an explicit
-\code{layout_sequences(orientation = ...)}.
-
-With \code{segments}, each accession remains an independent window but windows
-sharing \code{row_id} occupy one display row. Their table order is left to right;
-\code{align} applies to the whole row. \code{segment_gap} reserves display space in native
-sequence units, independently of omitted genomic length. Internal ends receive
-break marks. Use \code{\link[=segment_ggchord_data]{segment_ggchord_data()}} to crop/split input first. Local
-reversal comes from the table's \code{orientation}, so automatic orientation,
-explicit sequence orientation and \code{anchor} conflict with this mode. Ribbon
-adjacency follows display rows; same-row ribbons are omitted with a report,
-and explicit same-row pairs or point links are unsupported.
+Project references onto parallel linear paths
 }
 \examples{
-library(dplyr)
-data(seq_data_example)
-seqs <- seq_data_example |>
-  select(accver, length)
-data(ribbon_data_example)
-links <- ribbon_data_example |>
-  select(qaccver, saccver, qstart, qend, sstart, send)
-ggchord(prepare_ggchord_data(seq_data = seqs, ribbon_data = links)) +
+seqs <- data.frame(
+  accver = c("A", "B"), length = c(1000, 800),
+  sequence_unit = "bp", topology = "linear"
+)
+
+genes <- data.frame(
+  accver = c("A", "A", "B"), feature_id = c("g1", "g2", "g3"),
+  start = c(100, 400, 150), end = c(240, 620, 380),
+  strand = c("+", "-", "+"), label = c("g1", "g2", "g3"),
+  type = c("CDS", "tRNA", "CDS")
+)
+
+links <- data.frame(
+  qaccver = "A", saccver = "B", qstart = c(100, 400),
+  qend = c(240, 620), sstart = c(150, 450), send = c(290, 650),
+  qstrand = "+", sstrand = c("+", "-"),
+  pident = c(98, 90), link_id = c("l1", "l2")
+)
+
+ggchord(data = seqs) +
   geom_seq() +
-  geom_link_ribbon() +
-  geom_seq_label() +
-  coord_collinear(orientation = "auto")
+  geom_gene(data = genes) +
+  geom_link_ribbon(data = links) +
+  layout_sequences(orientation = c(A = 1, B = -1), row_gap = 8) +
+  coord_collinear(axis = "x")
 }

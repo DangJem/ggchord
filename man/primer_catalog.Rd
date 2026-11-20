@@ -4,7 +4,7 @@
 \alias{primer_catalog}
 \title{Inspect the bundled sequencing-primer catalogue}
 \usage{
-primer_catalog(set = c("all", "universal"), aliases = FALSE)
+primer_catalog(set = "all", aliases = FALSE)
 }
 \arguments{
 \item{set}{Return all records or only the commonly used universal subset.}
@@ -21,8 +21,9 @@ names that share one sequence. The source direction is retained only as a
 descriptive hint; binding strand is determined from the target sequence.
 }
 \examples{
-head(primer_catalog("universal"))
-head(primer_catalog("universal", aliases = TRUE))
+catalog <- primer_catalog(set="universal")
+catalog[c("primer_id", "name", "sequence")]
+primer_catalog(set="universal", aliases=TRUE)
 }
 \seealso{
 \code{\link{ggchord_data_contract}}

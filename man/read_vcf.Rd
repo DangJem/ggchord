@@ -2,95 +2,38 @@
 % Please edit documentation in R/data-variant.R
 \name{read_vcf}
 \alias{read_vcf}
-\title{Read VCF or BCF with optional mature variant decoders}
+\title{Read local variant and structural relationship records}
 \usage{
-read_vcf(
-  file = NULL,
-  files = NULL,
-  structural = FALSE,
-  python = "python3",
-  source_file = FALSE
-)
+read_vcf(file, structural = FALSE, python = "python3", source_file = FALSE)
 }
 \arguments{
-\item{file}{Optional local path vector or glob patterns, before files.}
+\item{file}{Local VCF or BCF paths.}
 
-\item{files}{Optional additional VCF/BCF paths or patterns.}
+\item{structural}{Decode supported structural breakend relationships.}
 
-\item{structural}{Logical. Explicitly request optional structural decoding,
-default FALSE. Duplicate record IDs fail in this mode because mates would
-be ambiguous. All source records remain accessible in the default mode.}
+\item{python}{Python executable with pysam for BCF conversion.}
 
-\item{python}{Existing interpreter with optional pysam for BCF only.
-Ignored for VCF text; default "python3". No environment is modified.}
-
-\item{source_file}{Add .source_file to returned table rows, default FALSE.}
+\item{source_file}{Whether to include row-level source paths.}
 }
 \value{
-A list with features$variant (reference allele spans), breakends,
-links and report. The report retains each complete parsed VCF object,
-source record text, original headers/IDs, decoder versions, warnings and
-sequence dictionaries with unknown lengths preserved. Original INFO and
-genotype evidence stays in report$records; no caller-specific support
-field is silently promoted to a universal count. Table .source_input and
-.source_record refer to the report file and its record order, never an
-invented biological observation ID. BCF text is decoder output rather
-than original binary bytes; no physical BCF line numbers are assigned.
+A ggchord_import collection with a source dictionary,
+features$variant, optional links$structural, and a report with
+breakends and unplaced records.
 }
 \description{
-VariantAnnotation reads local VCF text (including gzip). Files ending in
-.bcf or .bcf.gz first use pysam/HTSlib in the explicitly selected Python
-environment to transcode to temporary VCF. No parser is installed or run at
-plot time. This is an in-memory adapter for selected local files, not an
-indexed chromosome-scale query or variant caller.
-}
-\details{
-Each placed source record remains one row, including multiallelic records. Variant
-features show the reference allele span at POS, including its padding base;
-they are not claimed to be the inserted sequence or a symbolic SV footprint.
-Original IDs, REF, ALT lists, QUAL, FILTER, INFO and sample/genotype arrays
-are retained. Missing IDs stay missing. No alleles or samples are combined,
-filtered, phased or normalised. No support, Identity or full lengths are
-inferred from positions. Header length entries that are missing remain NA.
-Telomeric or out-of-bounds reference spans remain in the complete parsed
-source and \code{report$records[[i]]$unplaced_features} rather than being clipped
-into invented reference features. Empty VCFs return empty feature tables.
-
-Explicit structural decoding uses optional StructuralVariantAnnotation,
-with missing-mate inference disabled and positional uncertainty retained.
-Each reciprocal decoded pair produces one link, with both source record
-indices; single and unpaired records remain in the source/report. Breakend
-orientation describes derivative sequence, not homology or feature strand.
-Links retain ascending confidence intervals and separate orientation fields;
-no pident, relative Orientation or connection to an absent mate is invented.
-Decoder-derived metadata is labelled separately from original evidence.
-Breakends outside known bounds have .plottable = FALSE; affected pairs stay
-in the report's unplaced_links instead of being clipped to exact boundaries.
+Use optional VariantAnnotation to decode variants, and
+StructuralVariantAnnotation for requested structural relationships.
+Preserve multiallelic records. A missing length in the source dictionary
+remains unknown until a complete length is supplied explicitly.
 }
 \examples{
-\donttest{
-# Optional Bioconductor decoder loading can take several seconds.
 if (requireNamespace("VariantAnnotation", quietly = TRUE)) {
-  path <- system.file("extdata", "chr22.vcf.gz", package = "VariantAnnotation")
-  # Preserve the original headers and first three observed records.
-  con <- gzfile(path, "rt")
-  lines <- character()
-  records <- 0L
-  while (records < 3L) {
-    line <- readLines(con, n = 1L)
-    if (!length(line)) break
-    lines <- c(lines, line)
-    if (!startsWith(line, "#")) records <- records + 1L
-  }
-  close(con)
-  input <- tempfile(fileext = ".vcf")
-  writeLines(lines, input)
-  variants <- read_vcf(input)
-  print(variants$features$variant[c("accver", "start", "end", "feature_id")])
-  unlink(input)
+  f <- tempfile(fileext = ".vcf")
+  writeLines(c("##fileformat=VCFv4.3", "##contig=<ID=A>",
+    "#CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\tINFO",
+    "A\t9\t.\tA\tG\t.\t.\t."), f)
+  x <- read_vcf(f)
+  as_ggchord_seq(x$sequences, lengths = c(A = 12))
+  unlink(f)
 }
-}
-}
-\seealso{
-\code{\link[=geom_feature]{geom_feature()}}, \code{\link[=geom_link_ribbon]{geom_link_ribbon()}}, \code{\link[=read_bedpe]{read_bedpe()}}
 }

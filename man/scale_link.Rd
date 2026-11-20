@@ -2,35 +2,7 @@
 % Please edit documentation in R/link-scales.R
 \name{scale_link}
 \alias{scale_link}
-\alias{scale_link_colour_manual}
-\alias{scale_link_color_manual}
-\alias{scale_link_alpha_manual}
-\alias{scale_link_linewidth_manual}
-\alias{scale_link_linetype_manual}
-\alias{scale_link_colour_gradientn}
-\alias{scale_link_color_gradientn}
-\alias{scale_link_alpha_continuous}
-\alias{scale_link_linewidth_continuous}
 \title{Scales for point links and alignment segments}
-\usage{
-scale_link_colour_manual(..., values)
-
-scale_link_color_manual(..., values)
-
-scale_link_alpha_manual(..., values)
-
-scale_link_linewidth_manual(..., values)
-
-scale_link_linetype_manual(..., values)
-
-scale_link_colour_gradientn(...)
-
-scale_link_color_gradientn(...)
-
-scale_link_alpha_continuous(...)
-
-scale_link_linewidth_continuous(...)
-}
 \arguments{
 \item{...}{Arguments passed to the corresponding ggplot2 scale.}
 

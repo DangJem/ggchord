@@ -2,53 +2,40 @@
 % Please edit documentation in R/data-alignment.R
 \name{read_aligned_fasta}
 \alias{read_aligned_fasta}
-\title{Read aligned FASTA with source-to-column mapping}
+\title{Read an existing character alignment from FASTA}
 \usage{
 read_aligned_fasta(
   file,
   alphabet,
   source_data = NULL,
-  source_file = FALSE,
-  circular = FALSE
+  circular = FALSE,
+  source_file = FALSE
 )
 }
 \arguments{
-\item{file}{A single local aligned FASTA path; no multi-alignment concatenation.}
+\item{file}{One local aligned FASTA path.}
 
-\item{alphabet}{Explicit \code{"DNA"}, \code{"RNA"} or \code{"AA"}. IUPAC nucleotide
-ambiguity codes and protein ambiguity/rare-residue codes are accepted;
-\code{*} is accepted only for AA. The alphabet is never guessed.}
+\item{alphabet}{Explicit DNA, RNA, or AA.}
 
-\item{source_data}{Optional data frame with one row per alignment \code{accver},
-\code{start} (first nongap source coordinate) and \code{strand} (\code{"+"} or \code{"-"}).
-Optional \code{source_accver} declares a different source ID; optional character
-\code{sequence} supplies the full forward source for verification. Coordinates
-must remain positive exact integers. Input metadata is retained in the
-\code{ggchord_conversion} attribute.}
+\item{source_data}{Optional source-coordinate metadata as in
+\code{\link[=as_ggchord_alignment]{as_ggchord_alignment()}}.}
 
-\item{source_file}{Logical. Also retain \code{.source_file} on each character row.}
+\item{circular}{Whether the explicit source positions can cross a known
+circular origin.}
 
-\item{circular}{Explicit logical declaration that every source is circular,
-default FALSE. Requires source_data with full source_length or full sequence.
-Coordinates wrap at that length in the declared strand direction; nongap
-characters may cover at most one complete tour. Adds source_circular and
-source_length columns. A circular plot never activates this conversion.}
+\item{source_file}{Whether to include a row-level file path.}
 }
 \value{
-The long frame from \code{\link[=as_ggchord_alignment]{as_ggchord_alignment()}}, with the physical FASTA
-header \code{.source_line}, optional \code{.source_file}, and import provenance.
+A long alignment data frame preserving character and source columns.
 }
 \description{
-Reads one alignment file. Whitespace wrapping is removed by the FASTA reader;
-gaps and case remain unchanged. Records must have equal width. Does not run
-an aligner or infer strand, genomic origins, mismatch classes or CDS phase.
+All records must have an equal positive width. Gaps occupy alignment
+columns without receiving source residue positions. Without explicit
+source mapping, reported source positions refer to local input fragments.
 }
 \examples{
-\dontrun{
-# Requires the source checkout or tutorial input bundle.
-dna <- read_aligned_fasta("examples/alignment/opuntia-aligned.fasta", "DNA")
-}
-}
-\seealso{
-\code{\link[=geom_residue]{geom_residue()}}, \code{\link[=map_alignment_position]{map_alignment_position()}}
+f <- tempfile(fileext = ".fa")
+writeLines(c(">A", "AC-G", ">B", "ACTG"), f)
+cells <- read_aligned_fasta(f, alphabet = "DNA")
+unlink(f)
 }

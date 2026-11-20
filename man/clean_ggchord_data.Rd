@@ -2,101 +2,53 @@
 % Please edit documentation in R/clean.R
 \name{clean_ggchord_data}
 \alias{clean_ggchord_data}
-\title{Clean ggchord input data with explicit, report-driven policies}
+\title{Apply explicit repairs to observation collections}
 \usage{
 clean_ggchord_data(
-  seq_data,
-  ribbon_data = NULL,
-  feature_data = NULL,
-  unknown_id = c("drop", "error", "keep"),
-  out_of_range = c("clip", "drop", "error", "keep"),
-  reversed_interval = c("sort", "drop", "error", "keep"),
-  invalid_pident = c("clip", "drop", "error", "keep"),
-  empty_annotation = c("keep", "drop", "replace"),
-  replacement_annotation = "unannotated"
+  x,
+  unknown_id = "error",
+  out_of_range = "error",
+  reversed_interval = "error",
+  invalid_pident = "error",
+  empty_label = "keep",
+  replacement_label = "unannotated"
 )
 }
 \arguments{
-\item{seq_data}{data.frame/tibble, required. Must contain \code{accver} and
-\code{length}; used as the coordinate reference for clipping. Reference
-IDs must always be non-missing, non-empty and unique, regardless of
-\code{unknown_id}.}
+\item{x}{Data or import collection.}
 
-\item{ribbon_data}{data.frame/tibble or \code{NULL}, optional. Alignment
-results. Other input types are rejected rather than treated as absent.}
+\item{unknown_id}{Whether to report or drop unknown references.}
 
-\item{feature_data}{data.frame/tibble or \code{NULL}, optional. Feature annotation
-data. Other input types are rejected rather than treated as absent.}
+\item{out_of_range}{Whether to report, drop or clip out-of-range observations.}
 
-\item{unknown_id}{Character, default \code{"drop"}. Policy for rows whose
-sequence ID in \code{ribbon_data} or \code{feature_data} is missing, empty or
-unknown: \code{"drop"} removes them,
-\code{"error"} stops with a message, \code{"keep"} leaves them unchanged.
-A kept row without a reference sequence is reported, but its coordinates
-and annotations are not cleaned and it is not guaranteed to be drawable.
-IDs are never guessed or replaced. Other structural checks, including
-finite numeric coordinates and valid feature strands, still apply.}
+\item{reversed_interval}{Whether to report or normalize reversed endpoints.}
 
-\item{out_of_range}{Character, default \code{"clip"}. Policy for coordinates
-outside \code{[1, sequence length]}: \code{"clip"} clamps them,
-\code{"drop"} removes the row, \code{"error"} stops, \code{"keep"} leaves
-them unchanged. Coordinates are one-based inclusive, so \code{start == end}
-is a valid single-base interval and is retained. With \code{"clip"}, intervals
-wholly outside their sequence are removed and reported; partially
-overlapping intervals retain their intersection, even a single base.}
+\item{invalid_pident}{Whether to report, drop or clear invalid identity values.}
 
-\item{reversed_interval}{Character, default \code{"sort"}. Policy for
-intervals with \code{start > end}: \code{"sort"} swaps the endpoints so
-the feature draws stably (the original direction is recorded in the
-report), \code{"drop"} removes the row, \code{"error"} stops,
-\code{"keep"} leaves them unchanged.}
+\item{empty_label}{Whether to keep, drop or replace empty label values.}
 
-\item{invalid_pident}{Character, default \code{"clip"}. Policy for
-\code{pident} outside \code{[0, 100]}: \code{"clip"} clamps them,
-\code{"drop"} removes the row, \code{"error"} stops, \code{"keep"} leaves
-them unchanged.}
-
-\item{empty_annotation}{Character, default \code{"keep"}. Policy for
-missing/empty \code{anno} in feature data: \code{"replace"} fills them with
-\code{replacement_annotation}, \code{"drop"} removes the row,
-\code{"keep"} leaves them unchanged.}
-
-\item{replacement_annotation}{Character, default \code{"unannotated"}.
-Replacement annotation used when \code{empty_annotation = "replace"}.}
+\item{replacement_label}{Text used with empty_label = "replace".}
 }
 \value{
-A list with four components: \code{seq_data}, \code{ribbon_data},
-\code{feature_data} (cleaned copies) and \code{report} (a data.frame with
-columns \code{table}, \code{row} (original row number), \code{column},
-\code{reason}, \code{original_value}, \code{new_value} and
-\code{action}).
+A collection of the input class, with a change report.
 }
 \description{
-Applies a conservative, predictable set of cleaning policies to the three
-ggchord tables and returns the cleaned copies plus a full report. The
-original data frames are never modified. Nothing is dropped silently: every
-change (including every dropped row) is recorded in \code{report} with the
-original row number, the reason, the original value(s) and the new value(s).
-Its default sorting policy differs from preparation's
-direction-preserving default. Use \code{reversed_interval = "keep"} for
-directional links and circular-origin features; sorting endpoints loses
-information that a later workflow cannot reconstruct.
+Apply explicit repairs to observation collections
 }
 \examples{
-library(dplyr)
-data(seq_data_example)
-seqs <- seq_data_example |>
-  select(accver, length)
-data(ribbon_data_example)
-links <- ribbon_data_example |>
-  select(qaccver, saccver, qstart, qend, sstart, send, pident, length)
-# Deliberate diagnostic error in a copy; source observations remain unchanged.
-problem <- links |>
-  slice_head(n = 2) |>
-  mutate(qaccver = replace(qaccver, 2, "absent"))
-cleaned <- clean_ggchord_data(seqs, problem, unknown_id = "drop")
-cleaned$report
-}
-\seealso{
-\code{\link{ggchord_data_contract}}
+seqs <- data.frame(
+  accver = c("A", "B"), length = c(1000, 800),
+  sequence_unit = "bp", topology = "linear"
+)
+
+genes <- data.frame(
+  accver = c("A", "A", "B"), feature_id = c("g1", "g2", "g3"),
+  start = c(100, 400, 150), end = c(240, 620, 380),
+  strand = c("+", "-", "+"), label = c("g1", "g2", "g3"),
+  type = c("CDS", "tRNA", "CDS")
+)
+
+bundle <- ggchord_data(seqs, features=list(genes=genes))
+cleaned <- clean_ggchord_data(bundle, out_of_range="clip")
+data_report(cleaned)$changes
 }

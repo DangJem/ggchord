@@ -4,86 +4,45 @@
 \alias{ggchord_api_contract}
 \title{Plotting, data and output contracts}
 \description{
-Use this guide to choose where a plotting parameter belongs, how to specify
-source coordinates and where to retrieve layout measurements.
+\code{\link[=ggchord]{ggchord()}} and \code{\link[=geom_seq]{geom_seq()}} offer two ways to declare the same
+authoritative reference. Build geometry against that reference even when
+a plot draws no backbone or uses several backbone layers. Pass feature,
+link and track observations to their respective layers.
 }
-\section{Plotting responsibilities}{
+\section{Plot components}{
 
-\code{\link[=ggchord]{ggchord()}} supplies reference sequences and optional default input tables.
-Each layer retains its own data, mapping, parameters and identity. \code{aes()}
-selects data roles, scales control mapping rules/guides, geoms draw entities,
-Positions place them locally, coords select the canvas mode, and themes
-control non-data appearance. Explicit fixed styles take precedence over
-matching mappings; omit a fixed argument to retain its mapping. User scales
-take precedence over automatically inferred defaults.
+Use \code{\link[=layout_sequences]{layout_sequences()}} for order, display orientation, physical distances
+and source windows. Use a coordinate system for projection and viewport,
+a Position for local placement and a label layout for text arrangement.
+For Dotplot, \code{\link[=layout_dotplot]{layout_dotplot()}} defines the query and subject axes.
+The native ggplot2 facet functions divide observations among panels.
 
-\code{geom_feature(preset = "gene")} draws strictly directed genes. Use the
-generic \code{\link[=geom_feature]{geom_feature()}} constructor for unknown-strand features. The plasmid
-preset retains its compact placement and styling defaults. Fixed feature shape is \code{shape}; mapped shape is \code{feature_shape}.
-Gene/feature widths use \code{width}, label controls use \verb{label_*}, and point/area
-links use \code{link_gap} and \code{link_ctrl_point}. These names do not merge the
-distinct geometries or their defaults.
-
-Chord, collinear, radial synteny, Sankey, circular and Dotplot are six
-coordinate modes. Fusion composes independently registered plots and is not
-a coordinate mode. Dotplot requires its dedicated alignment segment layer
-and is not a registered Fusion endpoint. Circular
-maps reject ribbon and point-link layers; collinear maps reject
-restriction/primer/centre-label layers. \code{geom_seq_scale()} is a collinear
-sequence-unit reference bar; \code{\link[=scale_seq_position_continuous]{scale_seq_position_continuous()}} configures genomic axes.
-A matching name never implies that every geom supports every coord.
+Use the ordinary ggplot2 aesthetics and visual scales. \code{\link[=scale_for]{scale_for()}}
+assigns a separate visual scale to explicitly named layers.
+\code{\link[=track_band]{track_band()}} declares a physical container, \code{\link[=scale_track_value]{scale_track_value()}}
+controls its numerical height, and \code{\link[=guide_track_axis]{guide_track_axis()}} explains the
+resulting scale. \code{\link[=theme_ggchord]{theme_ggchord()}} controls appearance.
 }
 
-\section{Choosing arguments for a layer}{
+\section{Coordinates and identity}{
 
-Use \code{\link[=position_strand]{position_strand()}} to give the two strands separate offsets. A single
-numeric offset sets equal distances on opposite sides. Named strand values
-such as \code{c("+" = 0.08, "-" = -0.14)} give signed displacements directly.
-
-Use \code{\link[=geom_gene_label]{geom_gene_label()}} or \code{\link[=geom_feature_label]{geom_feature_label()}} with fixed placement to
-control label rotation, radial and circumferential offsets, and overlap.
-For automatic placement, choose a \code{label_layout} on the automatic label
-layer. Its layout determines each label's orientation and position.
-
-Each geom checks its named arguments against the selected layer, geom and
-stat. Write \code{linewidth} for a stroke width. The documentation uses
-\code{colour}, and the \code{color} spelling is also supported. Scales, guides and
-themes accept the arguments of the function that receives them. Geometric
-mappings are evaluated before layout. Visual mappings that support staged
-evaluation can use \code{after_stat()} and \code{after_scale()}.
+Source intervals are one-based and closed. Keep biological strand
+separate from display orientation. Interbase cut coordinates count
+from the boundary before the first residue. Use bp or aa according to
+the original sequence. Position offsets and track thickness are in mm.
+Give each referenced layer an explicit identifier. Source entity,
+display instance and Fusion panel path have separate identities.
 }
 
-\section{Data, units and results}{
+\section{Reproducible output}{
 
-Input \code{accver} and query/subject identifiers are preserved without adding or
-removing versions. Biological strand, display orientation and link direction
-remain distinct. Coordinates are one-based inclusive in the declared native
-bp or aa units after explicit
-external-format adaptation. Missing values, defaults and \code{NULL} are defined
-per responsibility, not by one package-wide coercion rule.
-Standalone cleaning defaults to sorting reversed endpoints; preparation
-retains direction by default. Readers retain \code{file}/\code{files} with shared
-path expansion. See \link{ggchord_data_contract} for source rows, optional
-dependencies, transformations, aggregation estimates and search limits.
-
-Native layout distances, sequence units, angles, numerical track domains and physical
-mm are separate quantities. Track IDs share numerical domains and consistent
-band declarations; their physical placement is not a numeric value scale.
-Existing documented return members remain supported. Prefer
-\code{\link[=export_ggchord_layout]{export_ggchord_layout()}} for layer-aware tables; \code{\link[=get_chord_layout]{get_chord_layout()}} remains
-available for the complete layout. Preview paths and target-size diagnostic
-reports retain separate purposes. See \link{ggchord_layout_contract} for stable
-fields, provenance, measurement status and plot/render cache ownership.
+\code{\link[=export_ggchord_layout]{export_ggchord_layout()}} reports source, mapped, statistical and
+geometric stages with their availability and measurement conditions.
+\code{\link[=map_ggchord_position]{map_ggchord_position()}} queries source, local and display coordinates.
+Preview a composition at saved dimensions with \code{\link[=view_ggchord]{view_ggchord()}} and
+save it with \code{\link[ggplot2:ggsave]{ggplot2::ggsave()}}.
 }
 
-\examples{
-features <- find_common_features(plasmid_example_pUC19, features = c("AmpR", "ori"))
-p <- ggchord(plasmid_example_pUC19) +
-  geom_seq() +
-  geom_feature(data = features) +
-  coord_circular()
-export_ggchord_layout(p, include = "feature")$metadata$coordinate
-}
 \seealso{
 \link{ggchord_data_contract}, \link{ggchord_layout_contract}
 }

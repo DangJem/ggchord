@@ -7,85 +7,56 @@
 geom_link_line(
   mapping = NULL,
   data = NULL,
-  link_type = c("curve", "straight"),
-  link_gap = NULL,
-  link_ctrl_point = NULL,
-  link_avoid = c("none", "smooth", "uniform"),
-  link_branch = c("none", "query", "subject"),
-  link_branch_fraction = 0.15,
-  arrow = NULL,
-  colour = "#59636D",
-  alpha = 0.6,
-  linewidth = 0.4,
-  linetype = 1,
+  stat = "identity",
   position = "identity",
+  route = "curve",
+  ...,
+  na.rm = FALSE,
   show.legend = NA,
   inherit.aes = TRUE,
-  between = NULL,
-  allow_repeated = FALSE,
-  ...,
   id = NULL
 )
 }
 \arguments{
-\item{mapping, data}{Standard ggplot2 mapping and layer data, including data functions.
-Both endpoints use the backbone unit. An explicit \code{sequence_unit} must match it.}
+\item{mapping}{Aesthetic mapping from \code{ggplot2::aes()}. A local mapping overrides the matching inherited channel.}
 
-\item{link_type}{Either "curve" (default) or "straight".}
+\item{data}{Observation table or a data function. For ggchord layers, provide the required data-role columns.}
 
-\item{link_gap}{Explicit endpoint spacing. With the default
-\code{link_avoid = "none"}, \code{NULL} uses a fixed spacing of 0.035.
-Set \code{link_avoid} to \code{"smooth"} or \code{"uniform"} to opt in
-to entity-aware endpoint spacing.}
+\item{stat}{A compatible ggplot2 Stat or its name. The default uses the supplied records.}
 
-\item{link_ctrl_point}{Bezier control points: two numbers, four numbers, or a list per input row.}
+\item{position}{A compatible Position for placement of the layer geometry.}
 
-\item{link_avoid}{One of "none" (default), "smooth", or "uniform".
-Explicit gap takes precedence.}
+\item{route}{Choose curved or straight routes, or a shared corridor where supported.}
 
-\item{link_branch}{Share equal query or subject endpoints: "none", "query", "subject".}
+\item{...}{Additional named visual styles and parameters accepted by this layer.}
 
-\item{link_branch_fraction}{Shared length relative to the shortest member, in (0, 0.5].}
+\item{na.rm}{Suppress warnings for missing observations that the layer can omit.}
 
-\item{arrow}{A grid arrow specification, or NULL.}
+\item{show.legend}{Logical or named logical indicating whether the layer contributes legend keys.}
 
-\item{colour, alpha, linewidth, linetype}{Fixed styles; mappings use link_* aesthetics.
-An explicitly supplied fixed value takes precedence over the matching
-mapping. Omit the fixed argument to retain a mapped style, including an
-inherited mapping when \code{inherit.aes = TRUE}.}
+\item{inherit.aes}{Whether to inherit plot mappings and evaluate them on the layer data.}
 
-\item{position, show.legend, inherit.aes}{Standard ggplot2 layer arguments.}
-
-\item{between}{Two display-instance names or declared-order indices.}
-
-\item{allow_repeated}{Allow repeated display of an explicitly declared source_hsp_id.}
-
-\item{...}{Additional path parameters.}
-
-\item{id}{Optional unique layer ID for layout and source exports.}
+\item{id}{Optional plot-local layer identifier. Name a layer explicitly to scope a scale, anchor a label or export it.}
 }
 \value{
-A ggplot2 layer.
+A ggplot2 layer for addition to a plot.
 }
 \description{
-Requires qaccver, saccver, qpos and spos. Positions use the same genomic
-coordinates as sequence tracks. Curves run from query to subject; an arrow
-supplied by \code{\link[=arrow]{arrow()}} therefore points to the subject by default.
+Draw point-to-point sequence links
+}
+\details{
+Source references are \code{qaccver} and \code{saccver}. Point links consume \code{qpos} and \code{spos}. Interval links and alignment segments consume closed interval endpoints on both references. Supply reliable \code{qstrand} and \code{sstrand} or explicit relative direction when the geometry requires it.
 }
 \examples{
-library(dplyr)
-data(seq_data_example)
-seqs <- seq_data_example |>
-  select(accver, length)
-data(ribbon_data_example)
-links <- ribbon_data_example |>
-  select(qaccver, saccver, qstart, qend, sstart, send, pident, length)
-points <- links |>
-  transmute(qaccver, saccver,
-    qpos = floor((qstart + qend) / 2),
-    spos = floor((sstart + send) / 2)
-  )
-ggchord(data = seqs) +
+seqs <- data.frame(
+  accver = c("A", "B"), length = c(1000, 800),
+  sequence_unit = "bp", topology = "linear"
+)
+
+points <- data.frame(qaccver = "A", qpos = 200, saccver = "B", spos = 220)
+
+ggchord(seqs) +
   geom_seq() +
-  geom_link_line(data = points)
+  geom_link_line(data = points, route = "curve", colour = "#187B77") +
+  coord_chord()
 }

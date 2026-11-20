@@ -2,142 +2,59 @@
 % Please edit documentation in R/layout-export.R
 \name{export_ggchord_layout}
 \alias{export_ggchord_layout}
-\title{Export computed ggchord geometry}
+\title{Export the source, mapped, statistical or rendered stages of a plot}
 \usage{
 export_ggchord_layout(
   plot,
-  include = c("seq", "ribbon", "gene", "feature", "labels", "axis", "track"),
-  original_data = FALSE,
-  data_stage = NULL
+  layers = NULL,
+  stages = "geometry",
+  width = NULL,
+  height = NULL,
+  units = "in",
+  device = NULL,
+  dpi = 300
 )
 }
 \arguments{
-\item{plot}{A ggchord plot.}
+\item{plot}{A ggchord plot, Fusion or registered character plot.}
 
-\item{include}{Character vector selecting any of \code{"seq"},
-\code{"ribbon"}, \code{"gene"}, \code{"feature"}, \code{"labels"},
-\code{"alignment"}, \code{"link"}, \code{"restriction"}, \code{"track"}, and \code{"axis"}. Point links and
-restriction sites require explicit selection.
-Dotplots default to \code{alignment} and \code{axis}; \code{axis_layout} contains reversible
-axis offsets, directions and source origins. Alignment exports retain all four
-endpoints, layer identity and source row; omissions appear in \code{connection_report}.}
+\item{layers}{Optional layer IDs in the root, or a table with list-column
+panel_path and character layer_id. An empty path selects the root.}
 
-\item{original_data}{Logical. Include the resolved per-layer input tables
-under \code{original_data}, default \code{FALSE}.}
+\item{stages}{Stage names: source, mapped, statistic and geometry.}
 
-\item{data_stage}{Optional character vector selecting source, mapped, statistic
-or geometry. A fresh layout returns these stages in \code{layer_data} by layer ID.
-Source is the adapted input before role mappings. For example, a coverage
-track supplied with a GRanges returns its adapted interval data frame.
-Mapped is the role table
-before the layer transform. Native track mappings run inside ggplot2 and
-have no separate mapped table. Geometry contains named components.
-\code{layer_stage_status} lists each requested layer ID and stage. A successful
-zero-row statistic is \code{available}. Built-in track statistics retain their
-known computed variables, e.g. zero-length numeric \code{count} and \code{prop}.
-A stage with no separate data is
-\code{unavailable} with a reason and a NULL entry. A track Stat error marks
-its statistic and derived geometry as \code{failed}, with the error message
-in \code{reason}. Successful panels can still contribute rows to these entries.
-An ordinary build stops on a failed track Stat and preserves the last
-successful layout for \code{\link[=get_chord_layout]{get_chord_layout()}}.
-An error in a registered layer's data callback stops the export and reports
-the layer ID together with the original cause.
-All registered layers participate regardless of include.
-Requesting only \code{"source"} with omitted or empty \code{include} returns just
-\code{layer_data} and \code{layer_stage_status}. This reads each source without
-evaluating mappings, statistics or geometry. Supply a nonempty
-\code{include} to request layout components alongside these source tables.}
+\item{width, height}{Optional target device dimensions, specified together.}
+
+\item{units}{Device dimensions in inches, millimetres or centimetres.}
+
+\item{device}{A png, pdf or svg device, a device function, or NULL.}
+
+\item{dpi}{Raster device resolution.}
 }
 \value{
-An object of class \code{ggchord_layout_export}. Selected component
-names contain data frames. Circular layouts additionally contain an
-\code{annotation_registry} data frame. Its inner rows expose the physical
-track, radial width and boundaries; outer rows expose region, sector,
-annotation class, dominant and actual band, spill reason, leader-crossing
-count, slot, bounding box and leader corridor.
-Explicitly inside primer and restriction callouts
-register measured inner boxes rather than exterior bands or slots.
-The \code{metadata} member
-records rotation, aspect ratio, limits, native \code{sequence_unit} (bp/aa), and
-transformation state.
-Collinear layouts instead include \code{sequence_layout}, containing each
-sequence's horizontal range, backbone y, orientation, \code{units_per_position},
-and \code{sequence_unit}. The compatibility field \code{units_per_bp} is NA for aa. It also records
-reversible x offset, anchor and source origin. \code{orientation_diagnostics}
-records directional support, confidence and unresolved cases.
-When panels compute independent layouts, axis geometry, \code{sequence_layout},
-\code{sequence_display} and \code{orientation_diagnostics} include \code{PANEL} and
-the facet keys. Use those panel numbers with \code{\link[=map_ggchord_position]{map_ggchord_position()}}.
-Position lanes remain local offsets and are not circular physical tracks.
-Their \code{label_diagnostics} records placed or hidden labels after shared
-linear collision handling, including source layer, row, reason and leader
-collisions. \code{connection_report} records retained and omitted ribbon input
-rows with a selection reason. When converted inputs are present,
-\code{conversion_reports} retains their conversion attributes, including source
-class, column renaming, sequence information and object metadata.
-Sequence break marks are included under \code{seq}.
-Segmented linear displays retain one \code{sequence_layout} row per window,
-including \code{row_id}, segment order, break flags and display \code{gap_bp}.
-Source accession, origin/end/full length, local orientation, x offset and
-units per bp describe each reversible piece; gaps have no source mapping.
-Automatic segment break paths have \code{.decoration = "segment_break"} in
-the sequence geometry. \code{gap_bp} is display spacing, not omitted length.
-Quantitative geometry is selected with \code{track}; \code{track_registry} records
-each ID/sequence band, source layers, numerical limits, unit and physical
-measurement status. \code{track_diagnostics} records retained/missing/clipped
-source rows. Numerical track axes and explicit bp reference bars are
-included under \code{axis}; \code{axis_selection} records selected sequence axes.
-Explicit label shrinking adds \code{label_fit_diagnostics}, preserving original
-text, requested/minimum/final sizes and fallback or hiding reasons.
-\code{render_context} distinguishes layout-only estimates from actual panel
-measurements. For a target-size measured report use \code{\link[=diagnose_ggchord]{diagnose_ggchord()}}.
-\code{source_registry} and \code{layer_sources} retain constructor and per-layer
-annotation identities without overwriting user columns. Explicit layer
-tables/functions have layer-local source scope. \code{annotation_duplicates}
-reports shared constructor rows drawn by multiple geometry layers.
+Per-layer stage tables, geometry components, stage status, reference
+and provenance information, diagnostics and measurement conditions.
 }
 \description{
-Builds a ggchord plot and returns selected computed geometry in a stable,
-layer-aware structure. Every exported row records its source layer and,
-where applicable, its source input row. Original mapped columns already
-attached to the geometry are preserved.
-This is the recommended interface for consuming layout tables;
-\code{\link[=get_chord_layout]{get_chord_layout()}} remains available for the complete layout list.
-Both retain their documented fields. See \link{ggchord_layout_contract} for
-units, provenance and stability boundaries.
+Export the source, mapped, statistical or rendered stages of a plot
 }
-\section{New coordinate fields}{
-
-Radial synteny layouts include \code{radial_frames} (tangent/normal, angle,
-local origin and inner radius; theta is in radians) and \code{radial_endpoints} (full HSP fronts).
-Metadata records cyclic adjacency, display rotation and closed one-based
-interval boundaries; these never imply a biological sequence closure.
-Dotplots include independent \code{axis_layout} frames and original endpoint
-rows under \code{alignment}; axis selection and unknown directions appear in
-\code{connection_report}.
-}
-
-\section{Ribbon drawing}{
-
-\code{ribbon_rendering} records per-layer fill/tip mode. Exported polygon fronts
-retain the full source intervals. An optional subject tip is decorative;
-its shoulder translates the target endpoint span to 88 percent of the
-channel. Continuous fills use a device-resolved raster mesh and vector
-outlines. A bounded fill budget warns when dense layers reduce resolution.
-}
-
 \examples{
-library(dplyr)
-library(ggchord)
-data(seq_data_example)
-data(ribbon_data_example)
-p <- ggchord(prepare_ggchord_data(seq_data_example, ribbon_data_example)) +
-  geom_seq() +
-  geom_link_ribbon()
-exported <- export_ggchord_layout(p, include = c("seq", "ribbon"))
-names(exported)
-stages <- export_ggchord_layout(p, data_stage = c("source", "geometry"))
-stages$layer_data
-stages$layer_stage_status
+seqs <- data.frame(
+  accver = c("A", "B"), length = c(1000, 800),
+  sequence_unit = "bp", topology = "linear"
+)
+
+genes <- data.frame(
+  accver = c("A", "A", "B"), feature_id = c("g1", "g2", "g3"),
+  start = c(100, 400, 150), end = c(240, 620, 380),
+  strand = c("+", "-", "+"), label = c("g1", "g2", "g3"),
+  type = c("CDS", "tRNA", "CDS")
+)
+
+p_basic <- ggchord(seqs) + geom_seq() +
+  geom_gene(data = genes) + coord_collinear()
+
+export_ggchord_layout(p_basic, stages = c("source", "statistic"))
+export_ggchord_layout(p_basic, stages = "geometry",
+  width = 8, height = 5, units = "in", device = "pdf")
 }

@@ -1,3 +1,12 @@
+# Serialize plotmath labels for the geometry table while retaining their type.
+ggchord_axis_label_text <- function(labels) {
+  if (!is.expression(labels)) return(as.character(labels))
+  vapply(as.list(labels), function(label) {
+    if (is.atomic(label) && length(label) == 1L && is.na(label)) return(NA_character_)
+    paste(deparse(label), collapse = " ")
+  }, character(1))
+}
+
 # Sequence-axis lines, ticks and labels.
 ggchord_layout_axis_step <- function(
     axis_breaks, axis_labels, axis_minor_breaks, axisGap, axisLabelOrientation, axisMaj, axisMajLen,
@@ -46,15 +55,23 @@ ggchord_layout_axis_step <- function(
       metric <- ggchord_render_context()$units_per_mm
       available <- if (!is.null(metric) && all(is.finite(metric))) curve_length/max(metric) else NULL
       majors <- axis_breaks[[id]] %||% breakPointsFunc(lens[id], axisMaj[id], available_mm=available)
-      major_labels <- axis_labels[[id]]
+      major_labels <- axis_labels[[id]] %||% as.character(majors)
+      plotmath <- is.expression(major_labels)
+      major_labels <- ggchord_axis_label_text(major_labels)
       seam_position <- numeric()
       automatic_breaks <- is.null(axis_breaks[[id]]) ||
         isTRUE(attr(axis_breaks[[id]], 'ggchord_automatic_breaks'))
       if (isTRUE(circular) && abs(abs(ends[id]-starts[id])-2*pi)<1e-7 &&
           automatic_breaks && lens[id] > 1 && all(c(1,lens[id]) %in% majors)) {
         # One seam cue names both actual ends without stacking two labels.
-        major_labels <- as.character(major_labels %||% majors)
-        major_labels[majors == 1] <- paste0(major_labels[majors==1]," / ",major_labels[majors==lens[id]])
+        first <- major_labels[majors == 1]
+        last <- major_labels[majors == lens[id]]
+        seam <- c(first, last)
+        seam <- seam[!is.na(seam)]
+        if (length(seam) == 2L) seam <- if (plotmath)
+          paste0("paste(", seam[1L], ', " / ", ', seam[2L], ")") else
+          paste(seam, collapse = " / ")
+        major_labels[majors == 1] <- if (length(seam)) seam else NA_character_
         keep <- majors != lens[id]
         majors <- majors[keep]; major_labels <- major_labels[keep]
         seam_position <- 1
@@ -65,7 +82,6 @@ ggchord_layout_axis_step <- function(
           seq(majors[i], majors[i + 1], length.out = axisMin[id] + 2)[-c(1, axisMin[id] + 2)]
         }))
       }
-      major_labels <- major_labels %||% as.character(majors)
       pts <- data.frame(
         pos = c(majors, minors),
         is_major = c(rep(TRUE, length(majors)), rep(FALSE, length(minors))),
@@ -148,6 +164,7 @@ ggchord_layout_axis_step <- function(
         x1 = tip[, 1], y1 = tip[, 2],
         label = pts$display_label,
         label_x = lbl[, 1], label_y = lbl[, 2],
+        .axis_plotmath = plotmath & pts$is_major,
         size = labelSize[[id]],
         family = axis_text_style$family %||% "",
         fontface = axis_text_style$fontface %||% "plain",
@@ -170,4 +187,52 @@ ggchord_layout_axis_step <- function(
   }
 
   list(axis_lines = axis_lines, axis_ticks = axis_ticks)
+}
+
+# Put the scale title next to the ticks without adding a native position scale.
+ggchord_axis_heading <- function(plot, layout) {
+  if (!isTRUE(layout$show_axis)) return(NULL)
+  scale <- plot$scales$get_scales("seq_position")
+  if (is.null(scale)) return(NULL)
+  title <- scale$name
+  if (ggplot2::is_waiver(title)) title <- paste0("Position (", layout$sequence_unit, ")")
+  if (is.null(title)) return(NULL)
+  view <- plot
+  guide_theme <- scale$ggchord_axis_guide$theme
+  if (!is.null(guide_theme)) {
+    overrides <- stats::setNames(as.list(guide_theme), paste0("ggchord.", names(guide_theme)))
+    view$theme <- plot$theme + do.call(ggplot2::theme, overrides)
+  }
+  element <- ggchord_theme_element(view, "ggchord.axis.title")
+  if (inherits(element, "element_blank")) return(NULL)
+  ticks <- layout$axis_ticks
+  selection <- layout$axis_selection
+  ids <- if (is.null(selection)) layout$seqs else selection$accver[selection$selected]
+  if (!length(ids)) return(NULL)
+  selected <- ticks[ticks$accver == ids[1L], , drop = FALSE]
+  if (NROW(selected)) {
+    majors <- which(selected$is_major)
+    j <- if (length(majors)) majors[ceiling(length(majors) / 2)] else ceiling(nrow(selected) / 2)
+    tick <- selected[j, , drop = FALSE]
+    xy <- c(tick$label_x, tick$label_y)
+    normal <- c(tick$x1 - tick$x0, tick$y1 - tick$y0)
+  } else {
+    id <- ids[1L]
+    frame <- ggchord_panel_backbone_frame(layout, id, (layout$sequence_reference$lens[id] + 1) / 2)
+    xy <- drop(frame$xy)
+    normal <- drop(frame$normal)
+    if (identical(scale$ggchord_axis_guide$side, "negative")) normal <- -normal
+  }
+  magnitude <- sqrt(sum(normal^2))
+  if (!is.finite(magnitude) || magnitude == 0) return(NULL)
+  normal <- normal / magnitude
+  mm <- ggchord_track_units(matrix(normal, nrow = 1L), layout)
+  xy <- xy + normal * mm * 5
+  data.frame(label = ggchord_axis_label_text(title), .axis_plotmath = is.expression(title),
+    label_x = xy[1L], label_y = xy[2L],
+    label_angle = 0, label_hjust = .5, label_vjust = .5, accver = ids[1L],
+    family = if (inherits(element, "element_text")) element@family %||% "" else "",
+    fontface = if (inherits(element, "element_text")) element@face %||% "plain" else "plain",
+    lineheight = if (inherits(element, "element_text")) element@lineheight %||% 1.2 else 1.2,
+    size = ggchord_theme_text_size(view, "ggchord.axis.title", 3), group = "axis-title")
 }

@@ -1,163 +1,32 @@
-#' Layout results, units and ownership
+#' Reference frames, display instances and rendered geometry
 #'
-#' [export_ggchord_layout()] is the recommended interface for consuming
-#' layer-aware geometry tables. [get_chord_layout()] retains the complete
-#' layout list and its documented geometry, bounds, colour and label members.
-#' [view_ggchord()] returns a temporary image
-#' path; [diagnose_ggchord()] returns evidence for one requested render.
+#' A reference frame records the complete length and unit of each
+#' accession. A display instance identifies one rendering of the reference
+#' or a source window. Several instances may draw the same source interval.
 #'
-#' @section Geometry and provenance:
-#' Selected export components are data frames; absent components may be empty
-#' data frames without columns. Nonempty geometry has `layer_id`, `component`
-#' and `source_row`. An ID identifies one layer occurrence in that plot;
-#' editing/reordering layers can change IDs. A source row indexes the resolved
-#' input for that layer/component, not necessarily a physical file line.
-#' Generated decorations use missing source rows. Aggregates may carry
-#' `source_rows` membership instead of identifying one observation.
-#' `original_data = TRUE` includes resolved inputs for selected nonempty
-#' components, after role mapping and input adaptation. It is not a raw-file
-#' archive. File line/record provenance and conversion attributes retain their
-#' separate meanings from [ggchord_data_contract].
+#' @section Stages:
+#' [export_ggchord_layout()] returns four optional stages. Source contains
+#' the table selected for the layer. Mapped contains the resolved data
+#' roles. Statistic contains computed records and their source membership.
+#' Geometry contains projected components. Stage status distinguishes a
+#' successful empty table from an unavailable or failed stage. Give the
+#' geometry stage explicit dimensions and a device for measured results.
 #'
-#' Cartesian geometry and bounding boxes use native layout data units.
-#' Genomic source coordinates remain one-based inclusive bp; they are not
-#' converted to Cartesian distances. Angles use degrees except explicitly
-#' internal sequence-reference angles. Text sizes use mm. Metadata retains
-#' `coordinate_space`, `units`, `coordinate`, `rotation`, `rotation_applied`,
-#' `coord_transform_applied`, `ratio`, `fit`, `xlim`, `ylim` and `clip`.
-#' Exported coordinates already include layout rotation, before the ggplot2
-#' coord transform. Native data units are not millimetres or genomic bp.
+#' @section Coordinate spaces:
+#' [map_ggchord_position()] converts between source, local and display
+#' space. Use the instance ID for a particular occurrence of a repeated
+#' window. Dotplot lookups select the appropriate query or subject axis.
+#' Use a panel path to address each level of a Fusion. Unrepresented
+#' positions carry a reason alongside their missing result.
 #'
-#' @section Coordinate-specific tables:
-#' `source_registry` identifies constructor source rows without adding reserved
-#' columns to user data. `layer_sources` maps annotation `input_row` to its
-#' source ID, table and row; geometry `source_row` still indexes the resolved
-#' layer input. Default annotation layers share constructor source IDs. Explicit
-#' layer tables and data functions have layer-local scope; content equality is
-#' not used to guess shared identity. IDs are local to the plot, not persistent
-#' file identifiers. `annotation_duplicates` reports constructor annotations
-#' rendered by more than one geometry layer; labels do not count as duplicates.
+#' @section Units and provenance:
+#' Keep source coordinates and physical geometry separate. Sequence
+#' lengths, windows and intervals use the declared bp or aa unit. Physical
+#' thickness, spacing and offsets use mm. The measurement record describes
+#' the device or assumptions used for a result. Aggregates and cropped
+#' entities retain the original rows or their member sets.
 #'
-#' Circular `annotation_registry` retains its documented identity, owner,
-#' component/source row, inner track/radius/width/boundaries, outer region,
-#' sector, band, dominant band, slot, spill reason, crossing count, bounding box
-#' and leader corridor fields. Radii, widths and boxes use layout data units;
-#' tracks/slots are build-local resource indices. Missing values denote fields
-#' that do not apply. These resources are distinct from named quantitative
-#' track IDs and Position lanes.
-#'
-#' Collinear `sequence_layout` retains reversible window/source origins,
-#' horizontal range, backbone y, display orientation, units per bp, x offset
-#' and anchor. Segmented rows also retain row/window order, breaks and display
-#' `gap_bp`; omitted gaps have no source mapping. `orientation_diagnostics`,
-#' `connection_report` and `label_diagnostics` retain support, selection and
-#' placed/hidden-label evidence, including layer/row provenance where applicable.
-#'
-#' `track_registry` retains track ID, accession, placement, source layers,
-#' numerical `limits` in original value units, optional `unit`, domain status
-#' and measurement status. Native offsets/widths use layout units; `_mm`
-#' fields are physical mm contributions. `normal_min`/`normal_max` use layout
-#' units. `track_diagnostics` records input rows, retention/reason, coordinate
-#' clipping and the original bar baseline. `axis_selection` records selected
-#' sequence axes. `label_fit_diagnostics` retains original text, requested,
-#' minimum/final sizes in mm and fallback/hiding reasons. Empty diagnostic
-#' tables need not have a fixed column prototype.
-#'
-#' @section Dotplot and radial frames:
-#' Dotplot `axis_layout` records one frame per axis/accession with length,
-#' offset, direction, source origin and native unit. Display gaps have no source
-#' mapping. `alignment` retains all four HSP positions; it is not a fine-grained
-#' alignment trace. A declared unknown direction is omitted and reported.
-#' Radial `radial_frames` exposes local tangent/normal vectors, angle and inner
-#' radius. `radial_endpoints` retains both original positions and ordered closed
-#' interval boundaries, with their final endpoint coordinates. Position mapping
-#' uses one-based native positions; interval fronts use `[min-1,max]` boundaries.
-#' Radial adjacency is cyclic display topology, never biological closure or
-#' evidence of a missing relationship. Native track statistics remain computed
-#' before instance replication and view projection.
-#'
-#' @section Measurement and cache scope:
-#' `render_context` and diagnostic `measurement` distinguish `estimated`,
-#' `unavailable` and `measured` panel status. `panel_mm`, `canvas_mm` and,
-#' when measured, `panel_bounds_mm` use physical mm. `units_per_mm` and
-#' `axis_units_per_inch` convert layout units along x/y; `units_per_inch` is
-#' a conservative scalar text metric. `geometry_metric_status` and `converged`
-#' describe refinement accuracy separately from panel measurement. Estimated
-#' contexts can have missing dimensions and convergence. Device/basis/font
-#' conditions state the source and limits of the evidence. Refinement counts
-#' and private solver/candidate/cache structures are implementation details.
-#'
-#' With [adapt_ggchord()], layout-only exports report `adaptive_layout$policy`
-#' and mark the guide layout as `target_device_required`. Target-size diagnostics
-#' instead report effective theme styles, scale factors and a `guide_layout`
-#' with selected grids, explicit locks, candidate sizes and final guide-box
-#' bounds in mm. Search indices and scores are diagnostic details, not stable
-#' biological identifiers. A feasible guide budget is not a global collision
-#' certificate. Fusion exposes these reports separately for each panel.
-#'
-#' A plot composition owns a fresh layout cache; a build/getter may populate
-#' it. Device/context changes invalidate estimates, even for ordinary labels.
-#' `get_chord_layout(build = FALSE)` requires a current cache. Previews and
-#' diagnostics render independent copies and preserve the source cache.
-#' Reference-path reuse lasts only for one geometry calculation. Temporary
-#' render contexts restore their predecessor on normal or exceptional exit.
-#' Ordinary R assignment retains ggplot2 reference semantics for ggproto
-#' objects; arbitrary direct mutation of shared layer environments is not
-#' tracked as a new plot composition.
-#'
-#' @section Stability and diagnostic limits:
-#' Existing documented members above remain supported. Additional columns may
-#' be attached for input metadata or geometry-specific needs; consumers should
-#' select named fields, not fixed column positions/counts. Numeric layouts can
-#' change with size, device, font and legitimate collision handling. Resource
-#' numbers and diagnostic reason details are not persistent biological IDs.
-#' No candidate layout, private cache or iteration count is a stable result.
-#'
-#' Diagnostics retain `measurement`, `checks`, `text`, `guides`,
-#' `colour_suggestions`, `label_diagnostics`, `annotation_registry`,
-#' `track_registry`, `track_diagnostics` and `warnings`. Text/guide bounds and
-#' line/text sizes use mm; colour distances use the named model in each row.
-#' A measured panel does not certify collision-free geometry, font embedding,
-#' fallback, arbitrary grobs or cross-application portability. Preview paths
-#' live in a temporary directory and may be removed by cleanup; use ordinary
-#' [ggplot2::ggsave()] to keep a final file.
-#' `label_quality` adds measured panel text/annotation-leader contacts, source
-#' visibility counts and text/leader tables. Oriented boxes and leader lengths
-#' use mm; arc glyphs share a text-object identity. Counts are evidence within
-#' the stated scope, not exact ink outlines or a certificate for text-feature
-#' contacts, custom grobs or external plot decorations. Unchecked metrics stay
-#' missing, and diagnostics do not change the layout or its original records.
-#'
-#' @section Foundation projection and identity:
-#' `display_instances` separates source accver from instance_id and display
-#' order. `instance_routing` identifies each source HSP and its unique query/
-#' subject display route. Explicit source_hsp_id is shared across layers;
-#' absent IDs are layer-local. Routing `retained` records whether a relation
-#' survives geometry selection; `repeated_display` and repeated-ID checks use
-#' only retained source observations, including ordinary views without copies.
-#' `sequence_display` records source_length,
-#' display_length and display_scale_factor; equal allocation changes only the
-#' display projection. Vertical Collinear uses final y as its inverse axis.
-#' Sankey instances additionally record left/right side; query is always left.
-#' `track_statistics` retains computed values and source_rows before display
-#' replication; `track_source_data` is included with original_data=TRUE.
-#' `label_visibility` reports layer/component/source_row, visibility, policy
-#' reason, final position and size, and available perimeter/crossing fields.
-#' An unavailable collision field is NA, never evidence of zero collisions.
-#'
-#' @md
+#' @seealso [ggchord_api_contract], [ggchord_data_contract],
+#'   [export_ggchord_layout()], [diagnose_ggchord()]
 #' @name ggchord_layout_contract
-#' @family layout results
-#' @seealso [ggchord_data_contract], [export_ggchord_layout()],
-#'   [get_chord_layout()], [view_ggchord()], [diagnose_ggchord()]
-#' @examples
-#' library(dplyr)
-#' data(seq_data_example)
-#' seqs <- seq_data_example |>
-#'   select(accver, length)
-#' p <- ggchord(data = seqs) +
-#'   geom_seq()
-#' geometry <- export_ggchord_layout(p, include = "seq")
-#' geometry$seq |>
-#'   distinct(layer_id, component, source_row)
 NULL

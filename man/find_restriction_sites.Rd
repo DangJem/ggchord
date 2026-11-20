@@ -8,9 +8,9 @@ find_restriction_sites(
   sequence,
   enzymes = NULL,
   patterns = NULL,
-  circular = TRUE,
+  circular = NULL,
   database = NULL,
-  methylation = c("auto", "none", "dam_dcm")
+  methylation = "unknown"
 )
 }
 \arguments{
@@ -43,6 +43,12 @@ saved display set for use by \code{\link[=filter_restriction_sites]{filter_restr
 }
 \description{
 Find restriction pattern matches and cleavage coordinates
+}
+\examples{
+target <- c(A="ACGGAATTCGTT")
+found <- find_restriction_sites(target, enzymes="EcoRI", circular=FALSE)
+ref <- as_ggchord_seq(data.frame(accver="A", length=nchar(target)), sequence_unit="bp")
+ggchord(ref) + geom_restriction_site(data=found) + coord_collinear()
 }
 \seealso{
 \code{\link{ggchord_data_contract}}

@@ -4,7 +4,7 @@
 \alias{build_ggchord_cds}
 \title{Build an explicit spliced CDS coordinate map}
 \usage{
-build_ggchord_cds(cds_data, genetic_code = NULL, partial = c("error", "trim"))
+build_ggchord_cds(cds_data, genetic_code = NULL, partial = "error")
 }
 \arguments{
 \item{cds_data}{Data frame with \code{feature_id}, \code{accver}, ordered one-based
@@ -64,17 +64,10 @@ triplet map and are rejected
 when declared. No full protein length or identity is inferred.
 }
 \examples{
-library(dplyr)
-data(plasmid_example_pUC19)
-feature_source <- find_common_features(plasmid_example_pUC19)
-features <- feature_source |>
-  select(accver, start, end, strand, type, anno)
-coding <- features |>
-  filter(anno == "AmpR", type == "CDS") |>
-  select(accver, start, end, strand) |>
-  mutate(feature_id = paste(accver, "AmpR", sep = ":"), phase = 0)
-cds <- build_ggchord_cds(coding, genetic_code = 11)
-cds$features
+coding <- data.frame(feature_id="cds1", accver="A", start=1, end=9,
+                     strand="+", phase=0)
+cds <- build_ggchord_cds(coding, genetic_code=11)
+cds$models
 }
 \seealso{
 \url{https://github.com/The-Sequence-Ontology/Specifications/blob/master/gff3.md}

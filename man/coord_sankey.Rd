@@ -2,53 +2,61 @@
 % Please edit documentation in R/coord-sankey.R
 \name{coord_sankey}
 \alias{coord_sankey}
-\title{Mirrored two-column genomic interval relationships}
+\title{Project reference relationships onto two aligned sets of paths}
 \usage{
 coord_sankey(
-  column_gap = 3,
-  self_links = FALSE,
-  ratio = 1,
+  axis = "y",
+  ratio = NULL,
   xlim = NULL,
   ylim = NULL,
   expand = FALSE,
-  clip = "off",
-  fit = c("labels", "geometry", "manual")
+  clip = "on",
+  fit = "geometry"
 )
 }
 \arguments{
-\item{column_gap}{Positive separation of the two backbones in layout units.}
+\item{axis}{Direction of the reference paths, either \code{"x"} or \code{"y"}.}
 
-\item{self_links}{Show relationships whose query and subject entity are equal.}
+\item{ratio}{Positive ratio of y to x units on the device, or NULL.}
 
-\item{ratio}{Fixed y/x aspect ratio, default 1.}
+\item{xlim, ylim}{Optional increasing pairs of view limits.}
 
-\item{xlim, ylim}{Optional user limits. Explicit limits take priority over
-automatically fitted limits.}
+\item{expand}{Whether to expand automatic view limits.}
 
-\item{expand}{Logical. Expand coordinate limits, default FALSE. Automatic
-fitting already includes a small safety margin; set TRUE to request the
-additional ggplot2 coordinate expansion.}
+\item{clip}{Panel clipping, \code{"on"} or \code{"off"}.}
 
-\item{clip}{Whether drawing is clipped to the panel, default \code{"off"}.}
-
-\item{fit}{Fitting strategy: \code{"labels"} includes measured label boxes,
-\code{"geometry"} fits geometric elements only, and \code{"manual"}
-requires explicit \code{xlim} and \code{ylim}.}
+\item{fit}{Fit geometry, include labels, or require manual limits.}
 }
 \value{
-A ggchord coordinate object.
+A coordinate system for a ggchord plot.
 }
 \description{
-Each source sequence appears once in each column. Input query intervals
-connect from the left to subject intervals on the right; input reciprocal
-records remain distinct. This is not a multistage flow or a conservation law.
-Source lengths and both HSP endpoints determine the displayed interval widths.
+Project reference relationships onto two aligned sets of paths
 }
 \examples{
-# Synthetic intervals illustrate the mirrored layout.
-s <- data.frame(accver = c("A", "B"), length = c(1000, 600))
-h <- data.frame(qaccver = "A", saccver = "B",
-  qstart = 100, qend = 300, sstart = 50, send = 250)
-ggchord(prepare_ggchord_data(s, h)) + geom_seq() + geom_link_ribbon() +
-  geom_seq_label() + coord_sankey()
+seqs <- data.frame(
+  accver = c("A", "B"), length = c(1000, 800),
+  sequence_unit = "bp", topology = "linear"
+)
+
+genes <- data.frame(
+  accver = c("A", "A", "B"), feature_id = c("g1", "g2", "g3"),
+  start = c(100, 400, 150), end = c(240, 620, 380),
+  strand = c("+", "-", "+"), label = c("g1", "g2", "g3"),
+  type = c("CDS", "tRNA", "CDS")
+)
+
+links <- data.frame(
+  qaccver = "A", saccver = "B", qstart = c(100, 400),
+  qend = c(240, 620), sstart = c(150, 450), send = c(290, 650),
+  qstrand = "+", sstrand = c("+", "-"),
+  pident = c(98, 90), link_id = c("l1", "l2")
+)
+
+ggchord(data = seqs) +
+  geom_seq() +
+  geom_gene(data = genes) +
+  geom_link_ribbon(data = links) +
+  layout_sequences(column_gap = 25) +
+  coord_sankey()
 }

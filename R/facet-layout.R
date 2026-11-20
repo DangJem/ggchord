@@ -6,8 +6,7 @@ ggchord_facet_vars <- function(plot) {
   if (!inherits(facet, c("FacetWrap", "FacetGrid")))
     ggchord_stop("Sequence layouts support facet_wrap() and facet_grid()")
   p <- facet$params
-  if (any(unlist(p$free)) || !identical(p$margins %||% FALSE, FALSE))
-    ggchord_stop("Sequence panels require fixed scales and no facet margins")
+  ggchord_validate_coord_contract(plot)
   vars <- c(p$facets, p$rows, p$cols)
   plain <- vapply(vars, function(x) rlang::is_symbol(rlang::get_expr(x)), logical(1))
   if (!all(plain) || !identical(unname(vapply(vars, rlang::as_name, character(1))), names(vars)))
@@ -36,16 +35,48 @@ ggchord_facet_frames <- function(plot) {
 }
 
 ggchord_facet_panels <- function(plot, sources) {
-  frames <- Filter(is.data.frame, c(list(plot$data), sources))
+  frames <- Filter(is.data.frame, c(list(plot$ggchord$facet_reference %||%
+    plot$ggchord$data$seq_data), sources))
   params <- plot$facet$setup_params(frames, plot$facet$params)
   list(panels = plot$facet$compute_layout(frames, params), params = params)
+}
+
+# Determine panel membership from source data before statistics create rows.
+ggchord_prepare_facet_sources <- function(plot) {
+  if (!is.null(plot$ggchord$source_facet_setup) || inherits(plot$facet, "FacetNull"))
+    return(plot)
+  frames <- lapply(plot$layers, function(layer) {
+    if (is.null(layer$ggchord_type)) return(layer$layer_data(plot$data))
+    if (!is.null(layer$ggchord_params$track_sources)) return(layer$ggchord_params$track_sources)
+    if (!is.null(layer$ggchord_params$anchor_layer)) return(layer$ggchord_input_data)
+    ggchord_layer_source(layer, ggchord_layer_fallback(layer, plot$ggchord$data))
+  })
+  plot$ggchord$source_facet_setup <- ggchord_facet_panels(plot, frames)
+  plot
+}
+
+ggchord_facet_stat_input <- function(data, plot, layer) {
+  setup <- plot$ggchord$source_facet_setup
+  if (is.null(setup)) return(NULL)
+  keys <- ggchord_facet_vars(plot)
+  rows <- data[intersect(keys, names(data))]
+  rows$.ggchord_input_index <- seq_len(nrow(data))
+  attr(rows, "layout") <- layer$layout
+  plot$facet$map_data(rows, setup$panels, setup$params)
 }
 
 # Draw against the same panel table used to select and project source rows.
 # The original Facet still maps observations, assigns scales and draws strips.
 ggchord_precomputed_facet <- function(facet, panels) {
   force(panels)
-  ggplot2::ggproto(NULL, facet, compute_layout = function(data, params) panels)
+  ggplot2::ggproto(NULL, facet,
+    compute_layout = function(data, params) panels,
+    map_data = function(data, layout, params) {
+      if (!".ggchord_panel" %in% names(data)) return(facet$map_data(data, layout, params))
+      data$PANEL <- layout$PANEL[match(data$.ggchord_panel, as.integer(layout$PANEL))]
+      data$.ggchord_panel <- NULL
+      data
+    })
 }
 
 ggchord_check_panel_layout <- function(layer, reference = FALSE) {
@@ -59,25 +90,17 @@ ggchord_check_panel_layout <- function(layer, reference = FALSE) {
     "Repeating observations across samples would change their ownership; supply sample-keyed rows.")
 }
 
-ggchord_facet_backbones <- function(plot, sources, members, panels, backbones) {
-  original <- as.character(plot$ggchord$data$seq_data$accver)
-  order <- plot$ggchord$sequence_layout$order
+ggchord_facet_backbones <- function(plot, panels, params) {
+  data <- plot$ggchord$facet_reference %||% plot$ggchord$data$seq_data
+  ids <- plot$ggchord$data$seq_data$accver
+  keys <- ggchord_facet_vars(plot)
+  rows <- data[intersect(keys, names(data))]
+  rows$.ggchord_input_index <- seq_len(nrow(data))
+  membership <- plot$facet$map_data(rows, panels, params)
+  order <- plot$ggchord$sequence_layout$order %||% ids
   lapply(seq_len(nrow(panels)), function(panel) {
-    selected <- Filter(function(i) {
-      pick <- plot$layers[[i]]$layout
-      !is.numeric(pick) || panel %in% pick
-    }, backbones)
-    all_ids <- local <- original
-    if (length(selected)) {
-      i <- tail(selected, 1L)
-      map <- members[[i]]
-      all_ids <- as.character(sources[[i]]$accver)
-      local <- all_ids[map$.ggchord_input_index[as.integer(map$PANEL) == panel]]
-    }
-    ordered <- order %||% c(intersect(original, all_ids), setdiff(all_ids, original))
-    if (!all(ordered %in% all_ids)) ggchord_stop(
-      "layout_sequences(): order must contain known sequence IDs from the displayed reference")
-    list(order = ordered, displayed = intersect(ordered, local))
+    local <- membership$.ggchord_input_index[as.integer(membership$PANEL) == panel]
+    list(order = order, displayed = intersect(order, ids[local]))
   })
 }
 
@@ -147,23 +170,8 @@ ggchord_facet_feature_styles <- function(plot, sources, members, backbones) {
 }
 
 ggchord_facet_layout <- function(plot) {
-  shared <- c("seq", "seq_label", "seq_break", "seq_scale", "axis", "seq_center_label")
+  shared <- c("seq", "seq_label", "seq_break", "seq_scale", "axis", "seq_center_label", "domain_label")
   types <- vapply(plot$layers, function(layer) layer$ggchord_params$type %||% "", character(1))
-  has_layout <- any(vapply(plot$layers, function(layer)
-    !is.null(layer$ggchord_type) && !is.null(layer$layout), logical(1)))
-  references_only <- all(!nzchar(types) | types %in% shared) && !has_layout
-  if (references_only) {
-    # Keep native facets (including expressions) on a shared frame. When a
-    # backbone itself supplies a fixed facet key it defines a frame per panel.
-    keys <- tryCatch(ggchord_facet_vars(plot), error = function(e) character())
-    keyed_backbone <- any(vapply(plot$layers[types == "seq"], function(layer)
-      any(keys %in% names(layer$ggchord_params$backbone_input %||%
-        ggchord_resolve_layer_input(layer, plot$ggchord$data$seq_data))), logical(1)))
-    if (!keyed_backbone) {
-      plot$facet <- ggplot2::facet_null()
-      return(compute_chord_geometry_prepared(plot))
-    }
-  }
   keys <- ggchord_facet_vars(plot)
   sources <- lapply(plot$layers, function(layer) {
     type <- layer$ggchord_params$type
@@ -172,27 +180,24 @@ ggchord_facet_layout <- function(plot) {
       return(if (is.data.frame(input)) input else data.frame())
     }
     ggchord_check_panel_layout(layer, reference = type %in% shared)
-    if (!type %in% c(shared, "track", "gene", "gene_label", "gene_label_repel", "link", "ribbon", "seq_region"))
+    if (!type %in% c(shared, "track", "gene", "gene_label", "gene_label_repel", "link", "ribbon", "seq_region", "restriction_site"))
       ggchord_stop("Faceting this layer requires a panel ownership rule: ", type)
-    if (type == "ribbon" && !is.null(layer$ggchord_params$ribbon_stat))
-      ggchord_stop("Facet source ribbons directly; for aggregated ribbons compute each panel's table and retain its source members")
     fallback <- ggchord_layer_fallback(layer, plot$ggchord$data)
-    input <- ggchord_resolve_layer_input(layer, fallback)
-    absent <- setdiff(keys, names(input))
-    if (!type %in% shared && length(absent) && NROW(input) > 0L)
-      ggchord_stop("Layer '", layer$ggchord_layer_id, "' needs facet column(s): ",
-        paste(absent, collapse = ", "), ". Supply observations with their sample keys.")
-    input
+    ggchord_resolve_layer_input(layer, fallback)
   })
   full <- lapply(plot$layers, function(layer) layer$ggchord_params$track_sources)
   facet_sources <- Map(function(layer, data) {
     layer$ggchord_params$instance_facet_source %||% data
   }, plot$layers, sources)
-  setup <- ggchord_facet_panels(plot, c(facet_sources, full))
+  setup <- plot$ggchord$source_facet_setup %||% ggchord_facet_panels(plot, c(facet_sources, full))
   params <- setup$params
   panels <- setup$panels
   members <- Map(function(data, layer) {
     if (is.null(data)) return(NULL)
+    if (".ggchord_stat_panel" %in% names(data)) {
+      return(data.frame(.ggchord_input_index = seq_len(nrow(data)),
+        PANEL = panels$PANEL[match(data$.ggchord_stat_panel, as.integer(panels$PANEL))]))
+    }
     at <- layer$ggchord_params$instance_facet_rows
     rows <- if (is.null(at)) data[intersect(keys, names(data))] else
       layer$ggchord_params$instance_facet_source[at, , drop = FALSE]
@@ -201,7 +206,15 @@ ggchord_facet_layout <- function(plot) {
     plot$facet$map_data(rows, panels, params)
   }, sources, plot$layers)
   plot$ggchord$shared_track_scales <- ggchord_facet_track_scales(plot, sources, members, panels)
-  backbones <- ggchord_facet_backbones(plot, sources, members, panels, which(types == "seq"))
+  backbones <- ggchord_facet_backbones(plot, panels, params)
+  if (isTRUE(plot$coordinates$ggchord_circular)) {
+    reference <- plot$ggchord$data$seq_data
+    source <- plot$ggchord$display_instances
+    originals <- if (is.null(source)) stats::setNames(reference$accver, reference$accver) else
+      stats::setNames(source$accver, source$key)
+    bad <- which(vapply(backbones, function(x) length(unique(originals[x$displayed])) != 1L, logical(1)))
+    if (length(bad)) ggchord_stop("coord_circular() requires one reference per panel (panel ", bad[1L], ")")
+  }
   feature_styles <- ggchord_facet_feature_styles(plot, sources, members, backbones)
   if (length(feature_styles$scales)) {
     plot$scales <- plot$scales$clone()
@@ -213,12 +226,9 @@ ggchord_facet_layout <- function(plot) {
       data <- ggchord_restore_instance_data(data, plot$ggchord$display_instances, fields = keys)
       for (key in keys) {
         value <- rep(panels[[key]][panel], nrow(data))
-        present <- !is.na(data[[key]])
-        if (any(present) && !identical(as.character(data[[key]][present]), as.character(value[present])))
-          ggchord_stop("Facet column conflicts with layout output: ", key, ". Copy the facet key to a sample column.")
         data[[key]] <- value
       }
-      data$PANEL <- rep.int(panel, nrow(data))
+      data$PANEL <- data$.ggchord_panel <- rep.int(panel, nrow(data))
     }
     data
   }
@@ -227,14 +237,25 @@ ggchord_facet_layout <- function(plot) {
     if (!length(local)) return(NULL)
     sub <- plot
     sub$facet <- ggplot2::facet_null()
+    sub$ggchord$data$seq_data <- sub$ggchord$data$seq_data[
+      match(local, sub$ggchord$data$seq_data$accver), , drop = FALSE]
+    if (!is.null(sub$ggchord$display_instances))
+      sub$ggchord$display_instances <- sub$ggchord$display_instances[
+        sub$ggchord$display_instances$key %in% local, , drop = FALSE]
     selected <- which(vapply(plot$layers, function(layer) is.null(layer$ggchord_type) ||
       !is.numeric(layer$layout) || panel %in% layer$layout, logical(1)))
+    panel_rows <- vector("list", length(plot$layers))
     sub$layers <- lapply(selected, function(i) {
       layer <- plot$layers[[i]]
       if (is.null(layer$ggchord_type)) return(layer)
       copy <- reconstruct_layer(layer, layer$data, mapping = layer$mapping)
       map <- members[[i]]
       rows <- map$.ggchord_input_index[as.integer(map$PANEL) == panel]
+      source_data <- sources[[i]]
+      if ("accver" %in% names(source_data)) rows <- rows[source_data$accver[rows] %in% local]
+      if (all(c("qaccver", "saccver") %in% names(source_data)))
+        rows <- rows[source_data$qaccver[rows] %in% local & source_data$saccver[rows] %in% local]
+      panel_rows[[i]] <<- rows
       copy$ggchord_params$visual_source <- ggchord_visual_rows(layer$ggchord_params$visual_source, rows)
       panel_input <- sources[[i]][rows, , drop = FALSE]
       source <- attr(panel_input, "ggchord_source")
@@ -253,11 +274,8 @@ ggchord_facet_layout <- function(plot) {
     ordered <- backbones[[panel]]$order
     if (!is.null(arrangement) && length(local) < length(ordered)) {
       arrangement$order <- local
-      for (field in c("orientation", "gap")) if (!is.null(arrangement[[field]])) {
-        default <- if (field == "orientation") 1 else
-          if (isTRUE(plot$coordinates$ggchord_collinear)) 0.3 else 0.03
-        arrangement[[field]] <- process_sequence_param(arrangement[[field]], ordered,
-          paste0("layout_sequences(", field, ")"), default)[local]
+      for (field in c("orientation", "gap", "row_gap", "radius", "curvature")) {
+        if (!is.null(arrangement[[field]])) arrangement[[field]] <- arrangement[[field]][local]
       }
       sub$ggchord$sequence_layout <- arrangement
     }
@@ -268,8 +286,7 @@ ggchord_facet_layout <- function(plot) {
       layer <- sub$layers[[i]]
       id <- layer$ggchord_layer_id
       if (is.null(id)) next
-      map <- members[[selected[i]]]
-      rows <- map$.ggchord_input_index[as.integer(map$PANEL) == panel]
+      rows <- panel_rows[[selected[i]]]
       component <- layer$ggchord_type
       geom <- layout$layer_geometry[[id]][[component]]
       if (is.data.frame(geom)) {

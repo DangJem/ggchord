@@ -27,22 +27,25 @@ reconstruct_layer <- function(lyr, data, mapping = NULL) {
   new
 }
 
-# Register a plot-local copy, including repeated uses of the same layer object.
-# IDs describe component order in this plot, never mutate the user's ggproto.
+ggchord_check_layer_id <- function(id) {
+  if (!is.character(id) || length(id) != 1L || is.na(id) || !nzchar(trimws(id)))
+    ggchord_stop("Layer id must be a non-empty string")
+  invisible(id)
+}
+
+# Register a plot-local copy without changing the caller's layer object.
 ggchord_register_layers <- function(plot) {
   next_id <- 0L
-  declared <- lapply(plot$layers, function(layer) layer$ggchord_params$id)
+  declared <- lapply(plot$layers, function(layer) {
+    if (is.null(layer$ggchord_type)) layer$ggchord_layer_id else layer$ggchord_params$id
+  })
   declared <- Filter(Negate(is.null), declared)
-  if (any(!vapply(declared, function(id) is.character(id) && length(id) == 1L &&
-      !is.na(id) && nzchar(trimws(id)), logical(1))))
-    ggchord_stop("Layer id must be a non-empty string")
+  for (id in declared) ggchord_check_layer_id(id)
   reserved <- unlist(declared, use.names = FALSE)
   if (anyDuplicated(reserved)) ggchord_stop("Duplicate layer id '", reserved[anyDuplicated(reserved)], "'")
   plot$layers <- lapply(plot$layers, function(layer) {
     if (is.null(layer$ggchord_type)) return(layer)
-    copy <- if (ggchord_uses_inherited_line_xy(layer, plot$mapping)) {
-      ggchord_native_track_line(layer)
-    } else reconstruct_layer(layer, layer$data, mapping = layer$mapping)
+    copy <- reconstruct_layer(layer, layer$data, mapping = layer$mapping)
     next_id <<- next_id + 1L
     id <- copy$ggchord_params$id
     if (is.null(id)) {
@@ -54,45 +57,19 @@ ggchord_register_layers <- function(plot) {
     }
     copy$ggchord_layer_id <- id
     type <- copy$ggchord_params$type
-    kind <- if (type %in% c("ribbon", "alignment")) "links" else
-      if (type %in% c("gene", "gene_label", "gene_label_repel") ||
-          identical(copy$ggchord_params$native_stat, "coverage")) "features"
-    if (is.null(copy$ggchord_params$input_description)) {
-      input <- copy$ggchord_input_data
-      copy$ggchord_params$input_description <- if (is.function(input)) "layer data callback" else
-        if (!is.null(input)) paste0("layer data (", class(input)[1L], ")") else
-        if (length(kind)) paste(plot$ggchord$candidates[[kind]], collapse = ", ") else
-        if (type == "seq_region") "region data" else "reference data"
-    }
-    if (length(kind) && (is.null(copy$ggchord_input_data) || is.function(copy$ggchord_input_data))) {
-      candidates <- plot$ggchord$candidates[[kind]]
-      if (length(candidates) > 1L)
-        ggchord_stop("Layer '", id, "' has multiple eligible inputs: ", paste(candidates, collapse = ", "),
-          ". Select one with data = prepared$", candidates[length(candidates)], ".")
-      input <- if (kind == "links") plot$ggchord$data$ribbon_data else
-        plot$ggchord$data$feature_data
-      if (is.null(input) && is.null(copy$ggchord_input_data))
-        ggchord_stop("Layer '", id, "' requires ", kind, ". Supply a layer data table or prepare_ggchord_data().")
-    }
+    copy$ggchord_params$plot_data <- list(if (!ggplot2::is_waiver(plot$data)) plot$data)
+    copy$ggchord_params$reference <- plot$ggchord$data$seq_data
+    input <- copy$ggchord_input_data
+    copy$ggchord_params$input_description <- if (is.function(input)) "layer data callback" else
+      if (is.null(input)) "default layer data" else "explicit layer data"
+
     if (isTRUE(copy$inherit.aes) && length(plot$mapping) && !identical(type, "track")) {
-      if ("feature_shape" %in% names(plot$mapping)) copy <- ggchord_restore_feature_shape_defaults(copy)
-      copy <- ggchord_inherit_ribbon_linetype(copy, plot$mapping)
       local <- copy$ggchord_input_mapping %||% ggplot2::aes()
-      fixed <- names(copy$aes_params)
-      defaults <- copy$ggchord_params$style_defaults
-      fixed <- setdiff(fixed, names(defaults)[defaults])
-      if (identical(unname(defaults["feature_shape"]), FALSE)) {
-        fixed <- c(fixed, "feature_shape")
-        local$feature_shape <- NULL
-      }
-      if ("seq_colour" %in% fixed) fixed <- c(fixed, "colour")
-      if (any(c("ribbon_fill", "feature_fill", "gene_fill") %in% fixed)) fixed <- c(fixed, "fill")
-      for (nm in setdiff(names(plot$mapping), c(names(local), fixed))) local[[nm]] <- plot$mapping[[nm]]
+      for (name in setdiff(names(plot$mapping), names(local))) local[[name]] <- plot$mapping[[name]]
       copy$ggchord_input_mapping <- local
       copy$inherit.aes <- FALSE
-      copy <- ggchord_inherit_feature_shape(copy)
     }
-    copy
+    ggchord_inherit_feature_shape(copy)
   })
   plot
 }

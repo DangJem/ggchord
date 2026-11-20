@@ -2,46 +2,36 @@
 % Please edit documentation in R/data-convert.R
 \name{as_ggchord_feature}
 \alias{as_ggchord_feature}
-\title{Convert intervals to generic ggchord features}
+\title{Adapt one-based sequence feature intervals}
 \usage{
-as_ggchord_feature(x, mapping = NULL)
+as_ggchord_feature(x, columns = NULL, sequence_unit = NULL)
 }
 \arguments{
 \item{x}{A data frame or \code{GRanges} object.}
 
-\item{mapping}{Optional named character vector mapping output roles to
-source columns, as in \code{\link[=as_ggchord_seq]{as_ggchord_seq()}}.}
+\item{columns}{Named mapping from canonical roles to input column names.}
+
+\item{sequence_unit}{Optional native \code{"bp"} or \code{"aa"} declaration. An
+existing declaration must agree. Undeclared observation units can be
+resolved against a reference later.}
 }
 \value{
-An ordinary feature data frame with \code{accver}, \code{start}, \code{end},
-\code{strand}, \code{directionality}, retained metadata and conversion provenance.
-Conflicting metadata names receive a \code{metadata_} prefix; the attribute's
-\code{column_map} records the output name.
+A feature data frame with \code{accver}, \code{start}, \code{end}, strand
+and available feature metadata. Use \code{\link[=data_report]{data_report()}} for provenance.
 }
 \description{
-\code{GRanges} coordinates are already one-based inclusive and are not shifted.
-Strand \code{*} is retained as \code{source_strand}, while the output uses
-\code{strand = "."} and \code{directionality = "none"}. Use the returned table in
-\code{geom_feature(data = ...)} to preserve nondirectional intervals; \code{geom_feature(preset = "gene")}
-requires directional gene input. No unknown strand is invented as \code{+}.
+Coordinates are ordered and closed. A missing strand is reported as \code{"."}.
+A \code{segments} list of explicit ordered interval tables can record
+discontinuous features without filling gaps in their parent range.
 }
 \examples{
-library(dplyr)
-data(seq_data_example)
-seqs <- seq_data_example |>
-  select(accver, length)
-data(gene_data_example)
-genes <- gene_data_example |>
-  transmute(accver, start, end, strand = source_strand)
-renamed <- genes |>
-  rename(chrom = accver, left = start, right = end)
-features <- as_ggchord_feature(renamed,
-  mapping = c(accver = "chrom", start = "left", end = "right")
+seqs <- data.frame(
+  accver = c("A", "B"), length = c(1000, 800),
+  sequence_unit = "bp", topology = "linear"
 )
-ggchord(data = seqs) +
-  geom_seq() +
-  geom_feature(data = features)
-}
-\seealso{
-\code{\link{ggchord_data_contract}}
+
+raw <- data.frame(chrom = "A", begin = 100, finish = 240, direction = "+")
+features <- as_ggchord_feature(raw, columns = c(
+  accver = "chrom", start = "begin", end = "finish", strand = "direction"))
+ggchord(seqs) + geom_feature(data = features)
 }

@@ -8,40 +8,7 @@ ggchord_relation_ids <- function(x, name, caller) {
   value
 }
 
-#' Validate explicit genome and contig relationships
-#'
-#' Checks relational keys without deriving genome membership, changing sequence
-#' order or joining contigs into a continuous sequence. Original input tables
-#' and their metadata are returned unchanged. Sequence lengths and annotation
-#' coordinates can be checked separately with [validate_ggchord_data()].
-#'
-#' A sequence belongs to exactly one genome. Sequence `accver` values must be
-#' globally unique, including when local contig names would be reused by two
-#' genomes. Supply distinct explicit identifiers before validation; this
-#' function never prefixes or rewrites them. Genome rows with no contigs are
-#' reported as warnings, and remain in the returned genome table.
-#'
-#' @param seq_data A data frame containing `accver` and `genome` foreign keys.
-#' @param genomes A data frame containing a unique `genome` primary key.
-#' @param strict Logical. Stop if relational errors are present; warnings about
-#'   genomes without contigs do not cause failure.
-#' @return A list with `valid`, unchanged `seq_data` and `genomes`, an `issues`
-#'   data frame (`table`, `row`, `column`, `category`, `severity`, `message`),
-#'   and `contigs`, a genome-order table with `genome`, `n_contigs`, and
-#'   `sequence_rows`/`accvers` list-columns for each valid unique genome key.
-#' @md
-#' @seealso \code{\link{ggchord_data_contract}}
-#' @export
-#' @examples
-#' library(dplyr)
-#' data(seq_data_example)
-#' seqs <- seq_data_example |>
-#'   select(accver, length)
-#' contigs <- seqs |>
-#'   mutate(genome = accver)
-#' genomes <- tibble(genome = seqs$accver)
-#' validate_ggchord_hierarchy(contigs, genomes)
-validate_ggchord_hierarchy <- function(seq_data, genomes, strict = FALSE) {
+ggchord_validate_hierarchy_keys <- function(seq_data, genomes, strict = FALSE) {
   caller <- "validate_ggchord_hierarchy()"
   if (!is.logical(strict) || length(strict) != 1L || is.na(strict)) ggchord_stop(
     caller, ": strict must be TRUE or FALSE")
@@ -146,7 +113,7 @@ validate_ggchord_hierarchy <- function(seq_data, genomes, strict = FALSE) {
 #' listed in the report. Negative strands reverse their link endpoints;
 #' unknown strands retain increasing coordinates and `orientation_known = FALSE`.
 #'
-#' @param feature_data Feature data frame with `feature_id`, `accver`, `start`,
+#' @param features Feature data frame with `feature_id`, `accver`, `start`,
 #'   `end`, and optional `strand`, accepted by [as_ggchord_feature()].
 #' @param membership Data frame with `feature_id` and `cluster_id`. A feature
 #'   can belong to one cluster; extra columns are retained in the report.
@@ -157,73 +124,35 @@ validate_ggchord_hierarchy <- function(seq_data, genomes, strict = FALSE) {
 #'   `"span"` explicitly uses a validated discontinuous feature's outer bounds.
 #' @param max_links Positive integer upper limit for generated rows, default
 #'   10000. Exceeding it stops before Cartesian products are allocated.
-#' @return A list with `data`, an ordinary link data frame, and `report`.
-#'   Links retain cluster/member IDs, strands, source feature/membership rows
-#'   and segment tables. `report$comparisons` lists member counts, output counts
-#'   and retention/omission reasons for each requested pair and clusters
-#'   represented on either side (clusters absent from both sides are omitted);
-#'   `report$members` retains membership metadata with resolution status.
-#'   `report$valid` is false when membership contains unknown feature IDs.
+#' @return A link table with source members and a data report.
 #' @md
 #' @seealso \code{\link{ggchord_data_contract}}
 #' @export
+#' @param unmatched Whether missing or unplaced feature matches form an error or are omitted with a report.
 #' @examples
-#' library(ggchord)
-#' library(dplyr)
-#' data(plasmid_example_pUC19)
-#' data(plasmid_example_pETDuet_1)
-#' homolog_source <- bind_rows(plasmid_example_pUC19, plasmid_example_pETDuet_1)
-#' homolog_seq <- homolog_source |>
-#'   select(accver, length)
-#' cluster_features <- homolog_source |>
-#'   find_common_features() |>
-#'   filter(type == "CDS", anno == "AmpR") |>
-#'   select(accver, start, end, strand, anno) |>
-#'   arrange(match(accver, homolog_source$accver)) |>
-#'   mutate(feature_id = paste(accver, start, end, sep = ":"))
-#' # Membership is computed from exact strand-corrected CDS DNA equality, not gene names.
-#' reverse_complement <- function(sequence) {
-#'   bases <- strsplit(sequence, "")[[1]]
-#'   chartr("ACGT", "TGCA", paste(rev(bases), collapse = ""))
-#' }
-#' coding_sequences <- cluster_features |>
-#'   left_join(select(homolog_source, accver, sequence), by = "accver") |>
-#'   rowwise() |>
-#'   mutate(
-#'     coding_dna = substr(sequence, start, end),
-#'     coding_dna = if (strand == "-") reverse_complement(coding_dna) else coding_dna
-#'   ) |>
-#'   ungroup()
-#' cds_dna <- pull(coding_sequences, coding_dna)
-#' membership <- tibble(
-#'   feature_id = cluster_features$feature_id,
-#'   cluster_id = paste0("exact_CDS_", match(cds_dna, unique(cds_dna)))
+#' seqs <- data.frame(
+#'   accver = c("A", "B"), length = c(1000, 800),
+#'   sequence_unit = "bp", topology = "linear"
 #' )
-#' homologs <- link_ggchord_clusters(cluster_features, membership,
-#'   pairs = tibble(qaccver = homolog_seq$accver[1], saccver = homolog_seq$accver[2])
+#'
+#' genes <- data.frame(
+#'   accver = c("A", "A", "B"), feature_id = c("g1", "g2", "g3"),
+#'   start = c(100, 400, 150), end = c(240, 620, 380),
+#'   strand = c("+", "-", "+"), label = c("g1", "g2", "g3"),
+#'   type = c("CDS", "tRNA", "CDS")
 #' )
-#' loci <- find_ggchord_loci(homolog_seq, cluster_features,
-#'   targets = cluster_features$feature_id[cluster_features$anno == "AmpR"][1],
-#'   upstream = 100, downstream = 100
-#' )
-#' gene_palette <- c("+" = "#56887C", "-" = "#B58169", "." = "#AAB9AE")
-#' doc_theme <- theme_ggchord_publication(
-#'   axis.text = element_text(size = 9), axis.text.check.overlap = TRUE
-#' ) +
-#'   theme(legend.position = "bottom")
-#' p_homologs <- ggchord(data = homolog_seq) +
-#'   geom_link_ribbon(data = homologs$data, fill = "#ADC5B9", alpha = .6) +
-#'   geom_seq() +
-#'   geom_feature(preset = "gene", data = cluster_features) +
-#'   geom_seq_label(size = 4) +
-#'   coord_collinear() +
-#'   scale_gene_fill_manual(values = gene_palette) +
-#'   doc_theme
-link_ggchord_clusters <- function(feature_data, membership, pairs,
-    paralogs = c("drop", "all"), segment_policy = c("error", "span"), max_links = 10000) {
+#'
+#' membership <- data.frame(feature_id=c("g1","g3"), cluster_id="cluster1")
+#' pairs <- data.frame(qaccver="A", saccver="B")
+#' cluster_links <- link_ggchord_clusters(genes, membership, pairs)
+#' ggchord(seqs) + geom_link_ribbon(data=cluster_links)
+link_ggchord_clusters <- function(features, membership, pairs, paralogs = "drop",
+    segment_policy = "error", unmatched = "error", max_links = 10000) {
   caller <- "link_ggchord_clusters()"
-  paralogs <- match.arg(paralogs)
-  segment_policy <- match.arg(segment_policy)
+  feature_data <- features
+  paralogs <- match.arg(paralogs, c("drop", "all"))
+  segment_policy <- match.arg(segment_policy, c("error", "span"))
+  unmatched <- match.arg(unmatched, c("error", "report"))
   if (!is.numeric(max_links) || length(max_links) != 1L || !is.finite(max_links) ||
       max_links < 1 || max_links != floor(max_links)) ggchord_stop(caller, ": max_links must be a positive integer")
   for (input in c("feature_data", "membership", "pairs")) {
@@ -241,10 +170,8 @@ link_ggchord_clusters <- function(feature_data, membership, pairs,
   sid <- ggchord_relation_ids(pairs$saccver, "pairs$saccver", caller)
   if (!nrow(pairs)) ggchord_stop(caller, ": request at least one explicit sequence pair")
   if (any(qid == sid)) ggchord_stop(caller, ": pairs must compare distinct sequences")
-  pair_keys <- lapply(seq_along(qid), function(i) unname(sort(c(qid[i], sid[i]))))
-  if (anyDuplicated(pair_keys)) ggchord_stop(caller, ": repeated or reversed sequence pairs are not allowed")
-  if (anyDuplicated(member_id)) ggchord_stop(caller,
-    ": each feature_id must occur once in membership; resolve duplicates or conflicting clusters explicitly")
+  conflicts <- vapply(split(cluster_id, member_id), function(id) length(unique(id)) > 1L, logical(1))
+  if (any(conflicts)) ggchord_stop(caller, ": a feature belongs to conflicting clusters")
   features <- as_ggchord_feature(feature_data)
   if (any(features$start > features$end)) ggchord_stop(caller,
     ": feature intervals must be ordered; split origin-crossing features explicitly")
@@ -255,7 +182,12 @@ link_ggchord_clusters <- function(feature_data, membership, pairs,
   groups <- split(seq_along(feature_id), factor(feature_id, levels = ids))
   representative <- lapply(seq_along(ids), function(i) {
     rows <- groups[[i]]
-    if (length(rows) > 1L && segment_policy == "error") ggchord_stop(caller,
+    nested <- unlist(lapply(rows, function(j) {
+      if ("segments" %in% names(features)) list(features$segments[[j]]) else list(NULL)
+    }), recursive = FALSE)
+    multisegment <- length(rows) > 1L || any(vapply(nested, function(x)
+      is.data.frame(x) && nrow(x) > 1L, logical(1)))
+    if (multisegment && segment_policy == "error") ggchord_stop(caller,
       ": repeated feature_id '", ids[i], "'; use segment_policy = 'span' only for one discontinuous feature")
     data <- features[rows, , drop = FALSE]
     if (length(unique(data$accver)) != 1L || length(unique(data$strand)) != 1L) ggchord_stop(caller,
@@ -265,7 +197,10 @@ link_ggchord_clusters <- function(feature_data, membership, pairs,
       ": repeated feature_id '", ids[i], "' has overlapping or duplicate segments")
     list(feature_id = ids[i], accver = data$accver[1L], strand = data$strand[1L],
       start = min(data$start), end = max(data$end), source_rows = rows,
-      segments = feature_data[rows, , drop = FALSE])
+      segments = ggchord_rbind_fill(lapply(seq_along(rows), function(j) {
+        if (is.data.frame(nested[[j]]) && nrow(nested[[j]])) nested[[j]]
+        else features[rows[j], c("start", "end", "strand"), drop = FALSE]
+      })))
   })
   names(representative) <- ids
   members <- membership
@@ -276,6 +211,9 @@ link_ggchord_clusters <- function(feature_data, membership, pairs,
     paste(intersect(reserved, names(members)), collapse = ", "))
   member_index <- match(member_id, ids)
   resolved <- !is.na(member_index)
+  if (unmatched == "error" && any(!resolved)) ggchord_stop(caller, ": unknown feature ID(s): ",
+    paste(unique(member_id[!resolved]), collapse = ", "))
+  first_membership <- !duplicated(member_id)
   members$.membership_row <- seq_len(nrow(members))
   members$.status <- ifelse(resolved, "resolved", "unknown_feature")
   members$.resolved_accver <- vapply(member_index, function(index) {
@@ -291,8 +229,8 @@ link_ggchord_clusters <- function(feature_data, membership, pairs,
     relevant <- clusters[clusters %in% cluster_id[resolved &
       members$.resolved_accver %in% c(qid[pair_row], sid[pair_row])]]
     for (cluster in relevant) {
-      query <- which(resolved & cluster_id == cluster & members$.resolved_accver == qid[pair_row])
-      subject <- which(resolved & cluster_id == cluster & members$.resolved_accver == sid[pair_row])
+      query <- which(resolved & first_membership & cluster_id == cluster & members$.resolved_accver == qid[pair_row])
+      subject <- which(resolved & first_membership & cluster_id == cluster & members$.resolved_accver == sid[pair_row])
       potential <- as.double(length(query)) * as.double(length(subject))
       reason <- if (!length(query) || !length(subject)) "missing_member" else
         if (paralogs == "drop" && (length(query) != 1L || length(subject) != 1L)) "multiple_members" else "retained"
@@ -314,10 +252,8 @@ link_ggchord_clusters <- function(feature_data, membership, pairs,
       subject <- representative[[member_id[srow]]]
       known <- query$strand %in% c("+", "-") && subject$strand %in% c("+", "-")
       row <- data.frame(qaccver = query$accver, saccver = subject$accver,
-        qstart = if (query$strand == "-") query$end else query$start,
-        qend = if (query$strand == "-") query$start else query$end,
-        sstart = if (subject$strand == "-") subject$end else subject$start,
-        send = if (subject$strand == "-") subject$start else subject$end,
+        qstart = query$start, qend = query$end,
+        sstart = subject$start, send = subject$end,
         qstrand = query$strand, sstrand = subject$strand,
         orientation_known = known,
         direction = if (known) if (query$strand == subject$strand) "same" else "reverse" else NA_character_,
@@ -345,7 +281,11 @@ link_ggchord_clusters <- function(feature_data, membership, pairs,
       n_possible = x$n_possible, n_output = x$n_output, reason = x$reason, stringsAsFactors = FALSE)
   })) else data.frame(pair_row = integer(), qaccver = character(), saccver = character(), cluster_id = character(),
     n_query = integer(), n_subject = integer(), n_possible = numeric(), n_output = numeric(), reason = character())
-  list(data = data, report = list(valid = all(resolved), members = members,
+  data$source_members <- I(Map(function(query, subject) list(query = query, subject = subject),
+    data$.query_feature_rows, data$.subject_feature_rows))
+  ggchord_attach_data_report(data, "link_ggchord_clusters",
+    lineage = data.frame(source_members = data$source_members),
+    metadata = list(valid = all(resolved), members = members,
     comparisons = comparison_report, unassigned_feature_ids = setdiff(ids, member_id),
     n_output = nrow(data), paralogs = paralogs, segment_policy = segment_policy,
     source_pairs = pairs, source_features = feature_data,

@@ -42,15 +42,15 @@ set_ggchord_coord <- function(plot, layout, axis_labels = NULL) {
   }
   if (isTRUE(coord$ggchord_collinear)) {
     resolved <- new_ggchord_coord(
-      CoordCollinear, rotation = 0, ratio = coord$ratio %||% 1,
+      CoordCollinear, rotation = 0, ratio = coord$ratio,
       xlim = xlim, ylim = ylim, expand = coord$expand %||% FALSE,
       clip = coord$clip %||% "off", fit = coord$fit %||% "labels",
       user_xlim = coord$user_xlim, user_ylim = coord$user_ylim
     )
     resolved$ggchord_collinear <- TRUE
     for (field in c("collinear_align", "collinear_anchor", "collinear_orientation",
-        "collinear_min_support", "collinear_segments", "collinear_segment_gap", "collinear_seq_axis",
-        "ggchord_sankey", "sankey_column_gap", "sankey_self_links",
+        "collinear_min_support", "collinear_segments", "collinear_segment_gap_mm", "collinear_seq_axis",
+        "ggchord_sankey", "sankey_column_gap_mm", "sankey_self_links", "sankey_axis",
         "ggchord_radial", "radial_start_angle", "radial_clockwise", "radial_inner_radius")) resolved[[field]] <- coord[[field]]
   }
   plot$coordinates <- resolved
@@ -157,6 +157,16 @@ ggchord_adaptive_limits <- function(layout, axis_labels = NULL) {
     }
   }
 
+  for (owner in layout$layer_geometry) {
+    labels <- owner$domain_label
+    if (!NROW(labels)) next
+    labels <- labels[labels$.component == "text", , drop = FALSE]
+    if (all(c("bbox_xmin", "bbox_xmax", "bbox_ymin", "bbox_ymax") %in% names(labels))) {
+      add_boxes(data.frame(xmin = labels$bbox_xmin, xmax = labels$bbox_xmax,
+        ymin = labels$bbox_ymin, ymax = labels$bbox_ymax))
+    }
+  }
+
   resources <- layout$circular_annotation_registry
   for (entry in list(list(data = layout$track_axes, size = 2.2),
       list(data = layout$sequence_scales, size = 3))) {
@@ -210,40 +220,21 @@ prepare_ggchord_plot <- function(plot) {
   layout <- compute_chord_geometry_prepared(plot)
   new_layers <- plot$layers
   track_axes <- list()
-  needs_flow <- any(vapply(plot$layers,ggchord_ribbon_uses_flow,logical(1),plot=plot))
-  sequence_colours <- if(needs_flow) ggchord_sequence_display_colours(plot,layout) else NULL
-  if (needs_flow && !any(vapply(plot$layers,function(layer) identical(layer$ggchord_type,"seq"),logical(1)))) {
-    # The role scale has been consumed by endpoint lookup. Keeping an unmapped
-    # build-local copy would emit a false no-shared-levels warning. The source
-    # plot retains its scale for subsequent + geom_seq() compositions.
-    plot$scales <- plot$scales$clone()
-    plot$scales$scales <- Filter(function(scale)!"seq_colour" %in% scale$aesthetics,plot$scales$scales)
-  }
   for (i in seq_along(plot$layers)) {
     lyr <- plot$layers[[i]]
     if (is.null(lyr$ggchord_type)) next
-    if (isTRUE(plot$coordinates$ggchord_circular) &&
-        identical(lyr$ggchord_type, "seq") &&
-        !isTRUE(lyr$ggchord_params$seq_arrow_supplied)) {
-      lyr$geom_params$arrow <- NULL
-    }
-    if (isTRUE(plot$coordinates$ggchord_circular) &&
-        identical(lyr$ggchord_type, "seq") &&
-        !isTRUE(lyr$ggchord_params$seq_legend_supplied)) {
-      lyr$show.legend <- FALSE
-    }
     lyr$ggchord_resolved_input <- ggchord_restore_instance_data(
       layout$layer_inputs[[lyr$ggchord_layer_id]][[lyr$ggchord_type]], layout$display_instances)
     geometry <- extract_ggchord_layer_data(lyr, layout)
     if (identical(lyr$ggchord_type, "track")) {
-      axis <- geometry$.component %in% c("track_axis_line", "track_axis_text", "track_axis_title")
+      axis <- geometry$.component %in% c("track_axis_line", "track_axis_tick", "track_axis_text", "track_axis_title")
       if (any(axis)) {
         track_axes[[lyr$ggchord_layer_id]] <- geometry[axis, , drop = FALSE]
         geometry <- geometry[!axis, , drop = FALSE]
       }
     }
     if (isTRUE(lyr$ggchord_params$user_feature_fill)) geometry$feature_fill_explicit <- NULL
-    flow <- ggchord_ribbon_flow(lyr, geometry, layout, plot,sequence_colours)
+    flow <- ggchord_ribbon_flow(lyr, geometry, layout, plot)
     lyr <- flow$layer; geometry <- flow$data
     # An absent component can have no column prototype in the public layout.
     # Draw its empty build-local layer without evaluating nonexistent x/text
@@ -254,18 +245,7 @@ prepare_ggchord_plot <- function(plot) {
     if (empty) new_layers[[i]]$inherit.aes <- FALSE
     # Domain geometry already owns its final panel, including explicit repeats.
     if (!is.null(layout$facet_keys)) new_layers[[i]]$layout <- NULL
-    built <- new_layers[[i]]
-    cross_width <- lyr$ggchord_params$nonadjacent_linewidth %||% 0.4
-    if ((ggchord_collinear_row_styles(plot$coordinates) || isTRUE(plot$coordinates$ggchord_radial)) &&
-        identical(lyr$ggchord_type, "ribbon") &&
-        !empty && cross_width > 0 && !is.null(built$aes_params$linewidth)) {
-      built$data$.ggchord_ribbon_linewidth <- ifelse(
-        geometry$.ggchord_adjacent, built$aes_params$linewidth, cross_width)
-      built$aes_params$linewidth <- NULL
-      built$mapping$linewidth <- ggplot2::aes(
-        linewidth = I(.ggchord_ribbon_linewidth)
-      )$linewidth
-    }
+
   }
   plot$layers <- new_layers
   if (!is.null(layout$facet_keys)) {
@@ -300,9 +280,9 @@ prepare_ggchord_plot <- function(plot) {
   axis_labels <- NULL
   if (!isTRUE(ggchord_plot_settings(plot)$axis$hidden) &&
       (nrow(layout$axis_lines %||% data.frame()) > 0L ||
-       nrow(layout$axis_ticks %||% data.frame()) > 0L)) {
+       nrow(layout$axis_ticks %||% data.frame()) > 0L || NROW(layout$axis_heading) > 0L)) {
     axis_data <- ggchord_axis_geometry(layout)
-    axis_labels <- axis_data[axis_data$.component %in% "text", , drop = FALSE]
+    axis_labels <- axis_data[axis_data$.component %in% c("text", "title"), , drop = FALSE]
     feature_layers <- which(vapply(plot$layers, function(layer)
       identical(layer$ggchord_type, "gene_poly"), logical(1)))
     if (length(feature_layers)) {
@@ -312,14 +292,24 @@ prepare_ggchord_plot <- function(plot) {
       if (nrow(marks$data)) plot$layers <- append(
         plot$layers, list(marks), after = feature_layers[1L] - 1L)
       # Text has its own measured clearance and remains in the foreground.
-      text <- ggchord_axis_layer(layout, "text", data = axis_data)
+      text <- ggchord_axis_layer(layout, c("text", "title"), data = axis_data)
       if (nrow(text$data)) plot$layers[[length(plot$layers) + 1L]] <- text
     } else {
       plot$layers[[length(plot$layers) + 1L]] <- ggchord_axis_layer(layout, data = axis_data)
     }
   }
   plot <- set_ggchord_coord(plot, layout, axis_labels)
-  plot <- ggchord_apply_theme_styles(plot)
+  plot$theme <- plot$theme + ggplot2::theme(axis.title.x = ggplot2::element_blank(),
+    axis.title.y = ggplot2::element_blank())
+  sequence_theme <- plot$scales$get_scales("seq_position")$ggchord_axis_guide$theme
+  if (!is.null(sequence_theme)) {
+    local <- stats::setNames(as.list(sequence_theme), paste0("ggchord.", names(sequence_theme)))
+    axes_only <- plot
+    axes_only$theme <- plot$theme + do.call(ggplot2::theme, local)
+    plot$layers <- ggchord_apply_theme_styles(axes_only)$layers
+  } else {
+    plot <- ggchord_apply_theme_styles(plot)
+  }
   # Axes use the owner's resolved theme and draw immediately above its marks.
   # They contain no observations with which to train data scales or guides.
   if (length(track_axes)) {
@@ -327,8 +317,11 @@ prepare_ggchord_plot <- function(plot) {
       owner <- plot$layers[[i]]
       id <- owner$ggchord_layer_id
       if (is.null(id) || is.null(track_axes[[id]])) next
-      axis <- ggplot2::layer(data = track_axes[[id]],
-        mapping = ggplot2::aes(x = x, y = y, group = group, label = label, .component = I(.component)),
+      axis_data <- track_axes[[id]]
+      if (is.null(axis_data$xend)) axis_data$xend <- axis_data$yend <- NA_real_
+      axis <- ggplot2::layer(data = axis_data,
+        mapping = ggplot2::aes(x = x, y = y, xend = xend, yend = yend,
+          group = group, label = label, .component = I(.component)),
         geom = owner$geom, stat = "identity", position = "identity", params = owner$geom_params,
         layout = owner$layout, inherit.aes = FALSE, show.legend = FALSE, check.aes = FALSE)
       plot$layers <- append(plot$layers, list(axis), after = i)
@@ -353,6 +346,8 @@ ggplot_build.ggchord <- function(plot, ...) {
   plot$ggchord$ref <- new.env(parent = emptyenv())
   plot <- prepare_ggchord_plot(plot)
   plot$ggchord$ref$layout$adaptive_layout <- plot$ggchord$adaptive_report
+  plot <- ggchord_apply_scoped_scales(plot)
+  plot <- ggchord_add_identity_scales(plot)
   class(plot) <- setdiff(class(plot), "ggchord")
   built <- ggchord_branch_built(ggplot2::ggplot_build(plot))
   ggchord_cache_layout(source, built$plot$ggchord$ref$layout)

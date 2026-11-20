@@ -2,107 +2,74 @@
 % Please edit documentation in R/geom-gene.R
 \name{geom_gene_label}
 \alias{geom_gene_label}
-\title{Add a gene label layer}
+\title{Label gene intervals}
 \usage{
 geom_gene_label(
   mapping = NULL,
   data = NULL,
-  label_orientation = "horizontal",
-  label_side = "outside",
-  label_overlap = "hide",
-  label_rotation = NULL,
-  label_radial_offset = 0.04,
-  label_circum_offset = NULL,
-  label_circum_limit = NULL,
-  label_wrap = NULL,
-  position = "identity",
+  stat = "identity",
+  anchor_layer = NULL,
+  anchor = "middle",
+  position = NULL,
+  label_layout = label_layout_fixed(orientation = "horizontal"),
+  ...,
+  na.rm = FALSE,
   show.legend = FALSE,
   inherit.aes = TRUE,
-  ...,
   id = NULL
 )
 }
 \arguments{
-\item{mapping}{Default NULL (uses pre-computed data)}
+\item{mapping}{Aesthetic mapping from \code{ggplot2::aes()}. A local mapping overrides the matching inherited channel.}
 
-\item{data}{Optional layer table or function. Default data follows the
-gene/CDS selection described in \code{\link[=ggchord]{ggchord()}}.}
+\item{data}{Optional label table or function. With a named anchor, the default data consists of the target entities.}
 
-\item{label_orientation}{Character, default \code{"horizontal"}. Text
-orientation relative to each sequence path: \code{"radial"},
-\code{"tangent"}, or \code{"horizontal"}.}
+\item{stat}{A compatible ggplot2 Stat or its name. The default uses the supplied records.}
 
-\item{label_side}{Character, default \code{"outside"}. Place labels
-outside the chord, use the strand-based \code{"auto"} side, or force
-\code{"inside"} placement.}
+\item{anchor_layer}{ID of the target layer. Labels use the target entities after its Stat and follow their displayed placement.}
 
-\item{label_overlap}{Character, default \code{"hide"}. Fixed-label
-collision policy: omit later conflicting labels (\code{"hide"}), apply
-the small position adjustment (\code{"nudge"}), or keep all requested
-positions (\code{"allow"}). Input row order therefore provides a simple
-way to prioritize labels in \code{"hide"} mode.}
+\item{anchor}{Position on the entity or reference path that anchors the text.}
 
-\item{label_rotation}{Optional numeric/vector/list. Label rotation angle, default 0}
+\item{position}{Position adjustment. For bound labels, leave this unset to follow the target layer.}
 
-\item{label_radial_offset}{Optional numeric/vector/list. Radial offset of labels, default 0.04}
+\item{label_layout}{A fixed or repelled label layout declaration.}
 
-\item{label_circum_offset}{Optional numeric/vector/list. Circumferential offset of labels, default 0}
+\item{...}{Additional named visual styles and parameters accepted by this layer.}
 
-\item{label_circum_limit}{Optional logical/vector/list. Whether to limit circumferential offset, default TRUE}
+\item{na.rm}{Suppress warnings for missing observations that the layer can omit.}
 
-\item{label_wrap}{Numeric or NULL, default NULL. When set, long gene
-annotations are wrapped at this many characters (e.g. 15), which makes the
-labels narrower and less prone to overlap.}
+\item{show.legend}{Logical or named logical indicating whether the layer contributes legend keys.}
 
-\item{position}{Position adjustment. Supply the same
-\code{\link[=position_feature_stack]{position_feature_stack()}} used by a gene/feature layer when labels are
-drawn from separate data or without a geometry layer.
-In \code{coord_collinear()}, labels without an explicit Position share
-a matching geometry layer's lanes; explicit label Positions do not move
-the geometry layer.
-Unique \code{feature_id} columns allow label subsets and reordered labels when
-their accession, interval and strand agree with the geometry input.
-Multiple matching geometry layers require an explicit label Position or
-unambiguous feature IDs.}
+\item{inherit.aes}{Whether to inherit plot mappings and evaluate them on the layer data.}
 
-\item{show.legend, inherit.aes}{Standard ggplot2 layer arguments.}
-
-\item{...}{Additional arguments passed to \code{geom_text()}}
-
-\item{id}{Optional unique layer ID used in layout and source exports.}
+\item{id}{Optional plot-local layer identifier. Name a layer explicitly to scope a scale, anchor a label or export it.}
 }
 \value{
-A ggplot2 layer. To let the labels avoid each other and the
-genes (with leader lines), use \code{\link{geom_gene_label_repel}()}
-instead.
+A ggplot2 layer for addition to a plot.
 }
 \description{
-Draws the gene annotation labels on a chord diagram. This layer is
-independent from \code{\link{geom_feature}()}: add it after \code{geom_feature(preset = "gene")}
-to annotate the gene arrows with their texts.
+Label gene intervals
 }
 \details{
-This is the deterministic, fixed-position label layer. By default labels
-sit outside their sequence and labels that would collide are omitted in
-input-row order. Use \code{label_overlap = "nudge"} to retain the
-small position adjustment, or \code{"allow"} to draw every label at its
-requested position. For automatic arrangement with leader lines, use
-\code{\link{geom_gene_label_repel}()} instead.
+The source entities have \code{accver}, \code{start}, \code{end} and a label or label mapping. A bound label follows the target layer by identity. Text size, collision handling and leader placement are independent of the underlying feature geometry.
 }
 \examples{
-library(dplyr)
-data(seq_data_example)
-seqs <- seq_data_example |>
-  select(accver, length)
-data(gene_data_example)
-genes <- gene_data_example |>
-  filter(anno \%in\% c("hypothetical protein", "morphogenesis protein")) |>
-  distinct(anno, .keep_all = TRUE) |>
-  transmute(accver, start, end, strand = source_strand, type = "gene", anno)
-seqs <- seqs |> semi_join(genes, by = "accver")
-ggchord(prepare_ggchord_data(seq_data = seqs, feature_data = genes)) +
-  geom_seq() +
-  geom_feature(preset = "gene") +
-  geom_gene_label(id = "gene-names") +
+library(ggplot2)
+
+seqs <- data.frame(
+  accver = c("A", "B"), length = c(1000, 800),
+  sequence_unit = "bp", topology = "linear"
+)
+
+genes <- data.frame(
+  accver = c("A", "A", "B"), feature_id = c("g1", "g2", "g3"),
+  start = c(100, 400, 150), end = c(240, 620, 380),
+  strand = c("+", "-", "+"), label = c("g1", "g2", "g3"),
+  type = c("CDS", "tRNA", "CDS")
+)
+
+ggchord(seqs) +
+  geom_gene(data = genes, id = "genes") +
+  geom_gene_label(aes(label = label), anchor_layer = "genes") +
   coord_collinear()
 }

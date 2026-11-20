@@ -1,111 +1,34 @@
-# geom-seq-label.R - sequence label layer
-# Places sequence labels on (or outside) the sequence arcs.  The positions are
-# computed at build time from the chord layout and injected into this layer.
-
-#' Add a sequence label layer
-#'
-#' Places sequence labels at the midpoint of each sequence arc, radially
-#' offset from the arc. Labels can be styled via their radial offset, rotation,
-#' font size, text orientation and justification.
-#'
-#' @param mapping Default NULL (uses pre-computed data)
-#' @param data Default NULL (retrieved automatically from the layout)
-#' @param seq_label_radius Optional numeric/vector. Radial position of the
-#'   labels as a multiplier of the sequence arc radius: \code{1} is on the arc,
-#'   \code{> 1} places the label outside (away from the chord center) and
-#'   \code{< 1} places it inside, default 1
-#'   Explicit values are incompatible with [coord_collinear()], which places
-#'   sequence labels beside the left endpoint of each horizontal track.
-#' @param seq_label_rotation Optional numeric/vector. Additional label rotation
-#'   (degrees) on top of the arc-aligned orientation, default NULL (0). Ignored
-#'   when \code{seq_label_orientation = "horizontal"}.
-#' @param labels Optional character vector. Override the label texts
-#'   (defaults to the sequence labels from \code{geom_seq()} or the sequence IDs)
-#' @param seq_label_orientation Character, default "arc". Label text
-#'   orientation: \code{"arc"} rotates the text along the sequence arc (and
-#'   keeps it readable), \code{"horizontal"} draws every label horizontally,
-#'   extending away from the chord center.
-#' @param seq_label_hjust Optional numeric/vector. Horizontal justification of
-#'   the labels, default NULL. The default arc orientation uses -0.2 so the
-#'   text sits just inside the sequence; with
-#'   \code{seq_label_orientation = "horizontal"} the justification is chosen
-#'   automatically so the text extends away from the chord center.
-#' @param seq_label_vjust Optional numeric/vector. Vertical justification of
-#'   the labels, default NULL (0.5).
-#' @param check_overlap Logical, default FALSE. When TRUE, labels that would
-#'   overlap a previously drawn label are skipped (ggplot2's
-#'   \code{geom_text()} option).
-#' @param position,show.legend,inherit.aes Standard ggplot2 layer arguments.
-#' @param ... Additional arguments passed to \code{geom_text()}
-#'
-#' @param id Optional unique layer ID for layout and source exports.
-#' @return A ggplot2 layer.
+#' Label reference sequences
 #' @export
-#'
+#' @param mapping Aesthetic mapping from `ggplot2::aes()`. A local mapping overrides the matching inherited channel.
+#' @param data Optional reference table or function selecting from the registered reference.
+#' @param anchor Position on the entity or reference path that anchors the text.
+#' @param position Position adjustment. For bound labels, leave this unset to follow the target layer.
+#' @param label_layout A fixed or repelled label layout declaration.
+#' @param ... Additional named visual styles and parameters accepted by this layer.
+#' @param na.rm Suppress warnings for missing observations that the layer can omit.
+#' @param show.legend Logical or named logical indicating whether the layer contributes legend keys.
+#' @param inherit.aes Whether to inherit plot mappings and evaluate them on the layer data.
+#' @param id Optional plot-local layer identifier. Name a layer explicitly to scope a scale, anchor a label or export it.
+#' @return A ggplot2 layer for addition to a plot.
+#' @details The source is the complete reference table with `accver` and `length`. A backbone can select an authoritative subset. An explicit complete table in geom_seq() can register a reference when the plot has no global data.
 #' @examples
-#' library(dplyr)
-#' data(seq_data_example)
-#' seqs <- seq_data_example |>
-#'   select(accver, length)
-#' ggchord(data = seqs) +
+#' library(ggplot2)
+#'
+#' seqs <- data.frame(
+#'   accver = c("A", "B"), length = c(1000, 800),
+#'   sequence_unit = "bp", topology = "linear"
+#' )
+#'
+#' ggchord(seqs) +
 #'   geom_seq() +
-#'   geom_seq_label()
-geom_seq_label <- function(mapping = NULL, data = NULL,
-                           seq_label_radius = 1,
-                           seq_label_rotation = NULL,
-                           labels = NULL,
-                           seq_label_orientation = c("arc", "horizontal"),
-                           seq_label_hjust = NULL,
-                           seq_label_vjust = NULL,
-                           check_overlap = FALSE,
-                           position = "identity",
-                           show.legend = FALSE,
-                           inherit.aes = TRUE,
-                           ..., id = NULL) {
+#'   geom_seq_label(aes(label = accver), anchor = "start") +
+#'   coord_collinear()
+geom_seq_label <- function(mapping = NULL, data = NULL, anchor = "middle",
+    position = "identity", label_layout = label_layout_fixed(orientation = "horizontal"),
+    ..., na.rm = FALSE, show.legend = FALSE, inherit.aes = TRUE, id = NULL) {
   ggchord_check_argument_names(sys.call(), sys.function())
-  old_error <- ggchord_disable_debug()
-  on.exit(options(error = old_error), add = TRUE)
-
-  dots <- list(...)
-  dots <- ggchord_colour_dots(dots, "geom_seq_label()")
-  ggchord_reject_retired(dots, "geom_seq_label()", c(
-    seq_label_size = "size",
-    seq_labels = "labels",
-    show_legend = "show.legend"
-  ))
-
-  seq_label_orientation <- match.arg(seq_label_orientation)
-  supplied <- if (!missing(check_overlap)) c(dots, list(check_overlap = check_overlap)) else dots
-  ggchord_check_geom_params(supplied, ggplot2::GeomText, "geom_seq_label()", position,
-    stat = dots[["stat"]] %||% ggplot2::StatIdentity, extra = "stat")
-  lyr <- do.call(ggplot2::geom_text, c(list(
-    data = data.frame(text_x = numeric(0), text_y = numeric(0),
-                      label = character(0), text_angle = numeric(0),
-                      size = numeric(0), hjust = numeric(0),
-                      vjust = numeric(0)),
-    mapping = ggplot2::aes(x = text_x, y = text_y, label = label,
-                  angle = text_angle, hjust = hjust, vjust = vjust,
-                  size = I(size)),
-    inherit.aes = inherit.aes,
-    position = position,
-    show.legend = show.legend,
-    check_overlap = check_overlap
-  ), dots))
-  lyr$ggchord_type <- "seq_label"
-  lyr$ggchord_theme_element <- "ggchord.seq.label"
-  lyr$ggchord_params <- list(
-    id = id, type              = "seq_label",
-    seq_label_radius  = seq_label_radius,
-    seq_label_radius_supplied = !missing(seq_label_radius),
-    seq_label_rotation = seq_label_rotation,
-    seq_label_size    = dots$size %||% NULL,
-    seq_labels        = labels,
-    seq_label_orientation = seq_label_orientation,
-    seq_label_hjust   = seq_label_hjust,
-    seq_label_vjust   = seq_label_vjust
-  )
-  lyr <- ggchord_capture_layer_input(
-    lyr, data, mapping, c("accver", "length")
-  )
-  lyr
+  anchor <- match.arg(anchor, c("start", "middle", "end", "center"))
+  ggchord_domain_label(mapping, data, "identity", NULL, anchor, position,
+    label_layout, "sequence", list(...), na.rm, show.legend, inherit.aes, id)
 }

@@ -2,27 +2,47 @@
 % Please edit documentation in R/track-theme.R
 \name{guide_track_axis}
 \alias{guide_track_axis}
-\title{Set the guide for a quantitative track axis}
+\title{Attach a track value guide to a reference path}
 \usage{
 guide_track_axis(
-  angle = ggplot2::waiver(),
+  position = "start",
+  sequences = NULL,
+  angle = waiver(),
   check.overlap = FALSE,
   theme = NULL
 )
 }
 \arguments{
-\item{angle}{Tick label angle passed to \code{\link[ggplot2:guide_axis]{ggplot2::guide_axis()}}.}
+\item{position}{Display start or end of the reference path.}
+
+\item{sequences}{Source accessions, or a list of source and instance IDs.}
+
+\item{angle}{Tick label angle or the default waiver.}
 
 \item{check.overlap}{Hide overlapping tick labels.}
 
-\item{theme}{Local theme with axis.line, axis.text and axis.title elements.}
+\item{theme}{Optional local axis theme.}
 }
 \value{
-A local numeric axis guide for \code{\link[=scale_track_value_continuous]{scale_track_value_continuous()}}.
+A guide for \code{\link[=scale_track_value]{scale_track_value()}}.
 }
 \description{
-Set the guide for a quantitative track axis
+Attach a track value guide to a reference path
 }
 \examples{
-scale_track_value_continuous("depth", guide = guide_track_axis(angle = 30))
+library(ggplot2)
+
+seqs <- data.frame(
+  accver = c("A", "B"), length = c(1000, 800),
+  sequence_unit = "bp", topology = "linear"
+)
+
+signal <- data.frame(accver = rep(c("A", "B"), each = 3),
+  pos = rep(c(100, 400, 700), 2), value = c(2, 5, 3, 1, 4, 2))
+
+ggchord(data = seqs) + track_band("signal") +
+  geom_track_line(data = signal, aes(x = pos, y = value), track = "signal") +
+  scale_track_value("signal", guide = guide_track_axis(
+    position = "end", sequences = "A", angle = 0)) +
+  coord_collinear()
 }

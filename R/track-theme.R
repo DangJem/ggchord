@@ -1,16 +1,41 @@
-#' Set the guide for a quantitative track axis
+#' Attach a track value guide to a reference path
 #'
-#' @param angle Tick label angle passed to [ggplot2::guide_axis()].
+#' @param position Display start or end of the reference path.
+#' @param sequences Source accessions, or a list of source and instance IDs.
+#' @param angle Tick label angle or the default waiver.
 #' @param check.overlap Hide overlapping tick labels.
-#' @param theme Local theme with axis.line, axis.text and axis.title elements.
-#' @return A local numeric axis guide for [scale_track_value_continuous()].
+#' @param theme Optional local axis theme.
+#' @return A guide for [scale_track_value()].
 #' @export
 #' @examples
-#' scale_track_value_continuous("depth", guide = guide_track_axis(angle = 30))
-guide_track_axis <- function(angle = ggplot2::waiver(), check.overlap = FALSE, theme = NULL) {
+#' library(ggplot2)
+#'
+#' seqs <- data.frame(
+#'   accver = c("A", "B"), length = c(1000, 800),
+#'   sequence_unit = "bp", topology = "linear"
+#' )
+#'
+#' signal <- data.frame(accver = rep(c("A", "B"), each = 3),
+#'   pos = rep(c(100, 400, 700), 2), value = c(2, 5, 3, 1, 4, 2))
+#'
+#' ggchord(data = seqs) + track_band("signal") +
+#'   geom_track_line(data = signal, aes(x = pos, y = value), track = "signal") +
+#'   scale_track_value("signal", guide = guide_track_axis(
+#'     position = "end", sequences = "A", angle = 0)) +
+#'   coord_collinear()
+guide_track_axis <- function(position = "start", sequences = NULL,
+    angle = waiver(), check.overlap = FALSE, theme = NULL) {
   ggchord_check_argument_names(sys.call(), sys.function())
+  position <- ggchord_match_choice(position, c("start", "end"), "position")
+  ggchord_check_axis_selection(sequences)
+  ggchord_check_axis_theme(theme, check.overlap)
+  if (!ggplot2::is_waiver(angle) &&
+      (!is.numeric(angle) || length(angle) != 1L || !is.finite(angle)))
+    ggchord_stop("angle must be waiver() or finite degrees")
   guide <- ggplot2::guide_axis(angle = angle, check.overlap = check.overlap, theme = theme)
-  ggchord_track_axis_guide(guide)$guide
+  guide$ggchord_position <- position
+  guide$ggchord_sequences <- sequences
+  guide
 }
 
 # Track value scales own their own axis Guide declaration. Theme affects only
@@ -25,7 +50,7 @@ ggchord_track_axis_guide <- function(guide) {
     if (!identical(params[[name]], defaults[[name]])) ggchord_stop(
       "Track guide_axis(): unsupported option '", name, "'; use theme, angle or check.overlap")
   local <- params$theme
-  allowed <- c("axis.line", "axis.text", "axis.title")
+  allowed <- c("axis.line", "axis.ticks", "axis.ticks.length", "axis.text", "axis.title")
   if (!is.null(local) && any(!names(local) %in% allowed)) ggchord_stop(
     "Track guide_axis(): local theme supports axis.line, axis.text and axis.title")
   list(show = TRUE, guide = guide)
@@ -41,7 +66,7 @@ ggchord_track_axis_style <- function(plot, id) {
     themed$theme <- plot$theme + do.call(ggplot2::theme, overrides)
   }
   element <- function(role) ggchord_theme_element(themed, paste0("ggchord.track.axis.", role))
-  line <- element("line"); text <- element("text"); title <- element("title")
+  line <- element("line"); text <- element("text"); title <- element("title"); tick <- element("ticks")
   angle <- guide$params$angle
   if (!is.null(angle) && !ggplot2::is_waiver(angle)) {
     if (!is.numeric(angle) || length(angle) != 1L || !is.finite(angle)) ggchord_stop("Track guide_axis(): angle must be finite")
@@ -61,7 +86,9 @@ ggchord_track_axis_style <- function(plot, id) {
       ggchord_stop("Track axis offsets require nonnegative scalar absolute units")
     ggchord_unit_inches(value) * 25.4
   }
-  list(axis_line_params = as_params(line), axis_text_params = as_params(text),
+  tick_length <- themed$theme[["ggchord.track.axis.ticks.length"]] %||% grid::unit(1.2, "mm")
+  list(axis_line_params = as_params(line), axis_tick_params = as_params(tick),
+    tick_length_mm = ggchord_unit_inches(tick_length) * 25.4, axis_text_params = as_params(text),
     axis_title_params = as_params(title), axis_check_overlap = isTRUE(guide$params$check.overlap),
     text_offset_mm = offset("text",2.5), title_offset_mm = offset("title",5.5),
     text_offset_locked = !is.null(plot$ggchord$theme_explicit[["ggchord.track.axis.text.offset"]]),

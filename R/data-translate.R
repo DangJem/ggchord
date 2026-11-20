@@ -33,18 +33,18 @@
 #' @seealso <https://bioconductor.org/packages/Biostrings>
 #' @export
 #' @examples
-#' # Explicit synthetic codon contract, not a biological annotation claim.
-#' if (requireNamespace("Biostrings", quietly = TRUE)) {
-#'   coding <- data.frame(feature_id = "cds", accver = "source",
-#'     start = 1, end = 6, strand = "+", phase = 0)
-#'   cds <- build_ggchord_cds(coding, genetic_code = 11)
-#'   translate_ggchord_cds(cds, c(source = "ATGTAA"))$residues
-#' }
-translate_ggchord_cds <- function(cds, sequences, alphabet = c("DNA", "RNA"),
-    initiation = c("literal", "start"), ambiguous = c("error", "solve")) {
+#' coding <- data.frame(feature_id="cds1", accver="A", start=1, end=9, strand="+", phase=0)
+#' cds <- build_ggchord_cds(coding, genetic_code=11)
+#' translated <- translate_ggchord_cds(cds, c(A="ATGAAATAA"), alphabet="DNA")
+#' translated$models
+#' translated$residues
+translate_ggchord_cds <- function(cds, sequences, alphabet = "DNA",
+    initiation = "literal", ambiguous = "error") {
   caller <- "translate_ggchord_cds()"
   cds <- ggchord_project_model(cds, caller)
-  alphabet <- match.arg(alphabet); initiation <- match.arg(initiation); ambiguous <- match.arg(ambiguous)
+  alphabet <- match.arg(alphabet, c("DNA", "RNA"))
+  initiation <- match.arg(initiation, c("literal", "start"))
+  ambiguous <- match.arg(ambiguous, c("error", "solve"))
   if (!requireNamespace("Biostrings", quietly = TRUE))
     ggchord_stop(caller, ": install the optional Biostrings package for translation")
   original <- sequences
@@ -109,7 +109,7 @@ translate_ggchord_cds <- function(cds, sequences, alphabet = c("DNA", "RNA"),
   models$initiation <- initiation; models$ambiguous <- ambiguous
   models$translation_status <- ifelse(models$partial5 | models$partial3, "observed_partial", "observed_complete")
   result <- list(models = models, nucleotides = do.call(rbind, nt), residues = do.call(rbind, aa),
-    provenance = list(cds = cds, source_sequences = original, alphabet = alphabet,
+    report = list(operation = "translate_ggchord_cds", cds = cds, source_sequences = original, alphabet = alphabet,
       engine = "Biostrings", engine_version = as.character(utils::packageVersion("Biostrings")),
       initiation = initiation, ambiguous = ambiguous, coordinate_system = "1-based-inclusive"))
   rownames(result$nucleotides) <- rownames(result$residues) <- NULL

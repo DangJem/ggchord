@@ -2,95 +2,61 @@
 % Please edit documentation in R/coord-radial-synteny.R
 \name{coord_radial_synteny}
 \alias{coord_radial_synteny}
-\title{Radial spokes for multi-sequence synteny}
+\title{Project references along radial spokes}
 \usage{
 coord_radial_synteny(
-  start_angle = 90,
-  clockwise = TRUE,
-  inner_radius = 0.6,
-  ratio = 1,
+  start_angle = 0,
+  direction = "clockwise",
   xlim = NULL,
   ylim = NULL,
   expand = FALSE,
-  clip = "off",
-  fit = c("labels", "geometry", "manual"),
-  nonadjacent_bulge = 0
+  clip = "on",
+  fit = "geometry"
 )
 }
 \arguments{
-\item{start_angle}{Direction of the first outward spoke in degrees,
-counterclockwise from the positive x axis. Default 90 starts at noon.}
+\item{start_angle}{Initial angle in degrees counterclockwise from the right.}
 
-\item{clockwise}{Logical, order subsequent spokes clockwise, default TRUE.}
+\item{direction}{Direction of the positive reference frame.}
 
-\item{inner_radius}{Positive inner radius in layout units, default 0.6.
-The longest proportional spoke has length 2. The central hole is display
-spacing and does not remove any source positions.}
+\item{xlim, ylim}{Optional increasing pairs of view limits.}
 
-\item{ratio}{Fixed y/x aspect ratio, default 1.}
+\item{expand}{Whether to expand automatic view limits.}
 
-\item{xlim, ylim}{Optional user limits. Explicit limits take priority over
-automatically fitted limits.}
+\item{clip}{Panel clipping, \code{"on"} or \code{"off"}.}
 
-\item{expand}{Logical. Expand coordinate limits, default FALSE. Automatic
-fitting already includes a small safety margin; set TRUE to request the
-additional ggplot2 coordinate expansion.}
-
-\item{clip}{Whether drawing is clipped to the panel, default \code{"off"}.}
-
-\item{fit}{Fitting strategy: \code{"labels"} includes measured label boxes,
-\code{"geometry"} fits geometric elements only, and \code{"manual"}
-requires explicit \code{xlim} and \code{ylim}.}
-
-\item{nonadjacent_bulge}{Non-negative outward lift at the midpoint of
-nonadjacent annular ribbons, in layout units (the longest proportional
-spoke has length 2). Default 0 retains the original path. The lift and its
-slope vanish at both endpoints. Adjacent ribbons and point links are
-unchanged. A positive lift also separates overlapping nonadjacent ribbon
-midpoints in the same channel, retaining their individual interval widths;
-this does not eliminate crossings forced by source endpoint order.
-Explicit \code{geom_link_ribbon(link_ctrl_point = ...)} takes priority.}
+\item{fit}{Fit geometry, include labels, or require manual limits.}
 }
 \value{
-A ggchord coordinate object.
+A coordinate system for a ggchord plot.
 }
 \description{
-Displays linear sequences as equally spaced outward spokes. Adjacent
-spokes, including the last and first, may be joined by existing interval
-alignments. No missing relationship is created. Two spokes display each
-input HSP once; one spoke is not a multi-sequence synteny view.
-}
-\details{
-Uses the same sequence, feature, track, label and link layers as
-\code{\link[=coord_collinear]{coord_collinear()}}. \code{layout_sequences(order = ...)} orders spokes and declares
-named repeated display instances; ambiguous relationships require \code{between}.
-Lengths are proportional by default; \code{layout_sequences(length_mode = "equal")}
-explicitly normalizes display lengths while retaining native positions.
-Positive feature/track offsets point counterclockwise from each outward
-spoke, independently of biological direction and display order. Sequence
-names are placed just beyond the outer ends to keep the central hole clear.
-
-Ribbons default to cyclic neighbors. Use explicit \code{pairs} or
-\code{adjacent_only = FALSE} for nonadjacent ribbons; point links to nonneighbors
-require explicit \code{between}. Adjacent ribbon outlines are solid; nonadjacent
-outlines are dashed, following the final cyclic spoke order. Explicit fixed
-or mapped line types take priority. Default curved connections stay in an annular
-channel, retaining the complete interval fronts and inversion twists.
-Explicit control points use final layout x/y units. Shared link branches,
-circular-only annotations, shared straight scale bars and joined multi-window
-rows are unsupported. Use the native position axis on each spoke.
-
-Interval fronts use closed one-based interval boundaries
-\verb{[min(start,end)-1, max(start,end)]} in input direction. A one-position
-interval retains nonzero width. Axis ticks and position mapping use
-one-based positions; this new view does not change existing view conventions.
+Project references along radial spokes
 }
 \examples{
-data(seq_data_example)
-data(ribbon_data_example)
-ggchord(prepare_ggchord_data(seq_data_example, ribbon_data_example)) +
+seqs <- data.frame(
+  accver = c("A", "B"), length = c(1000, 800),
+  sequence_unit = "bp", topology = "linear"
+)
+
+genes <- data.frame(
+  accver = c("A", "A", "B"), feature_id = c("g1", "g2", "g3"),
+  start = c(100, 400, 150), end = c(240, 620, 380),
+  strand = c("+", "-", "+"), label = c("g1", "g2", "g3"),
+  type = c("CDS", "tRNA", "CDS")
+)
+
+links <- data.frame(
+  qaccver = "A", saccver = "B", qstart = c(100, 400),
+  qend = c(240, 620), sstart = c(150, 450), send = c(290, 650),
+  qstrand = "+", sstrand = c("+", "-"),
+  pident = c(98, 90), link_id = c("l1", "l2")
+)
+
+ggchord(data = seqs) +
   geom_seq() +
-  geom_link_ribbon() +
-  geom_seq_label() +
-  coord_radial_synteny(start_angle = 90, inner_radius = 0.7)
+  geom_gene(data = genes) +
+  geom_link_ribbon(data = links) +
+  layout_sequences(inner_radius = 0.3) +
+  coord_radial_synteny(start_angle = 90)
 }

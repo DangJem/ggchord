@@ -7,17 +7,13 @@
     "zh": "基于 ggplot2 的 R 可视化包：比较多序列关系、组织单序列注释、展示 HSP 比对，并组合全局与局部视图。",
     "en": "Build layered sequence figures in R with ggplot2: compare multiple sequences, annotate a circular map, inspect HSP alignments and connect independent views."
   },
-  "api-compatibility": {
-    "zh": "需要使用旧 API 的代码请选用 v0.29.0，从 v0.50.0 起，接口与旧版不兼容。",
-    "en": "Use v0.29.0 for code that relies on the previous API, because v0.50.0 and later are incompatible with that API."
-  },
   "website": {
     "zh": "网站",
     "en": "Website"
   },
   "manual": {
-    "zh": "使用说明",
-    "en": "Usage guide"
+    "zh": "教程",
+    "en": "Tutorial"
   },
   "gallery": {
     "zh": "示例图集",
@@ -88,8 +84,8 @@
     "en": "Chord · relationships across four genomes"
   },
   "chord-caption": {
-    "zh": "混合曲率骨架、保留真实链方向的 CDS 箭头、来源标签与 Identity 连接带组合展示。特征与 HSP 按显示需要从原始记录中选取。",
-    "en": "Combine mixed-curvature backbones, strand-aware CDS arrows, selected source labels and Identity-coloured ribbons. Features and HSPs are display subsets of the original records."
+    "zh": "比较四条基因组参考。基因箭头显示链向，连带按原始比对一致性着色。",
+    "en": "Compare four genome references with strand-aware gene arrows and ribbons coloured by reported alignment identity."
   },
   "chord-alt": {
     "zh": "四条基因组的弦图旗舰：基因标签与比对连接带",
@@ -100,8 +96,8 @@
     "en": "Collinear · order, orientation and cross-row links"
   },
   "linear-caption": {
-    "zh": "在共同的 bp 标尺下比较四条基因组，骨架两侧展示精选 CDS。跨越非相邻显示行的连接带使用虚线轮廓。",
-    "en": "Compare four genomes on a shared base-pair scale. Selected CDS sit on either side of each backbone; dashed outlines distinguish links across non-adjacent rows."
+    "zh": "同一组源区间使用共同的碱基位置比例，按显式声明的显示方向排列。",
+    "en": "The same source intervals share a base-pair scale. The declared display orientation orders each strand along its reference."
   },
   "linear-alt": {
     "zh": "四条基因组的共线性旗舰：分链基因与跨行连接带",
@@ -112,12 +108,12 @@
     "en": "Circular · dense pETDuet-1 annotations"
   },
   "circular-caption": {
-    "zh": "完整圆图包含 20 个特征、5 个参考引物，以及声明酶集合中的 58 个合并切点位置。序列位置与注释身份均来自原始输入。",
-    "en": "A complete circular map with 20 features, five reference primers and 58 grouped cut positions from the declared enzyme set. Original sequence positions and annotation identities are retained."
+    "zh": "pETDuet-1 图组合随包区间注释、选定的标签和单切酶的识别位置。",
+    "en": "The pETDuet-1 map combines the bundled intervals, a subset of labels and the recognition positions of single-cut enzymes."
   },
   "circular-alt": {
-    "zh": "pETDuet-1 圆图旗舰：完整特征、引物与限制位点",
-    "en": "pETDuet-1 circular flagship with features, primers and restriction sites"
+    "zh": "pETDuet-1 圆形注释图，含区间特征和酶切识别位置",
+    "en": "pETDuet-1 circular map with features and cut-site positions"
   },
   "case": {
     "zh": "完整案例",
@@ -129,7 +125,7 @@
   },
   "plot-source": {
     "zh": "绘图源码",
-    "en": "Plot source"
+    "en": "Figure source"
   },
   "layout": {
     "zh": "对齐与排列",
@@ -148,16 +144,16 @@
     "en": "Four-sequence matrix of 32 original HSPs"
   },
   "fusion-alt": {
-    "zh": "连接 Chord、Collinear、Radial 与局部放大的组合图",
-    "en": "Linked Chord, Collinear, Radial and local-detail views"
+    "zh": "由两个面板组成的源区间全局图与局部放大图",
+    "en": "Overview and enlarged view of a source interval in two connected panels"
   },
   "dotplot-caption": {
-    "zh": "32 条原始 HSP；颜色表示 Identity，线宽表示原记录中的比对长度。",
-    "en": "32 original HSPs; Identity by colour, reported alignment length by line width."
+    "zh": "显示 32 条原始 HSP，颜色表示原始一致性，线宽表示原始比对长度。",
+    "en": "The original 32 HSPs use colour for reported identity and line width for reported alignment length."
   },
   "fusion-caption": {
-    "zh": "在同一组合中关联全局关系、共线性比较与来源区间的局部放大。",
-    "en": "Global relationships, ordered comparisons and a magnified source interval in one composition."
+    "zh": "弦图总览与独立的共线性细节图以不同尺度展示同一来源区间。",
+    "en": "A Chord overview and an independent Collinear detail show the same source region at different scales."
   },
   "dotplot-guide": {
     "zh": "双轴、方向与映射 →",
@@ -176,8 +172,8 @@
     "en": "Input files"
   },
   "source-figures": {
-    "zh": "Dotplot / Fusion 源码",
-    "en": "Dotplot / Fusion source"
+    "zh": "数据制备",
+    "en": "Data preparation"
   },
   "source-attribution": {
     "zh": "数据来源与归属",
@@ -188,8 +184,8 @@
     "en": "Installation"
   },
   "optional-deps": {
-    "zh": "下面的最小示例只需加载 ggchord。完整数据整理示例会在代码旁声明 dplyr、purrr、tidyr 等可选依赖。",
-    "en": "The minimal example below needs only ggchord. Complete data-preparation examples declare optional dependencies such as dplyr, purrr and tidyr alongside their code."
+    "zh": "入门图使用随包数据和 ggplot2。旗舰图复现脚本还使用 dplyr。",
+    "en": "The first plot uses bundled tables and ggplot2. The figure reproduction script also uses dplyr."
   },
   "quick-start": {
     "zh": "绘制第一张图",
@@ -200,8 +196,8 @@
     "en": "Use bundled tables to draw sequence backbones, alignment ribbons and sequence names. No file download or alignment program is needed."
   },
   "quick-note": {
-    "zh": "这段最小示例展示图层组合方式。上方综合图进一步加入了对应的来源注释、显示选择和样式。",
-    "en": "This small example shows the layer grammar. The figures above add their own source annotations, display choices and styling."
+    "zh": "观察层各自接收数据。切换坐标系时，序列参考定义保持一致。",
+    "en": "Each observation layer receives its own data. The coordinate system can change without redefining the sequence reference."
   },
   "output": {
     "zh": "预览与保存",
@@ -244,8 +240,8 @@
     "en": "Radial · synteny along radial spokes"
   },
   "radial-caption": {
-    "zh": "从弦图旗舰复用来源准备与精选特征，改用径向辐条骨架展示区间关系；序列身份与原生位置保持可追溯。",
-    "en": "Derived from the Chord flagship, using its source preparation and selected features. Radial backbones expose interval relationships while preserving sequence identities and native positions."
+    "zh": "同一组观察投影到径向辐条，保留参考身份与源区间端点。",
+    "en": "The same observations project onto radial spokes, preserving the reference identities and source interval endpoints."
   },
   "radial-alt": {
     "zh": "从四基因组弦图派生的 Radial 旗舰",
@@ -256,8 +252,8 @@
     "en": "Sankey · source intervals across two mirrored columns"
   },
   "sankey-caption": {
-    "zh": "从共线性旗舰派生，保留对应的精选基因与 HSP。序列镜像排列在两列中，连接带表示已有区间关系，带宽不代表守恒流量。",
-    "en": "Derived from the Collinear flagship, retaining its selected genes and HSPs. Mirrored sequence columns show observed interval relationships; ribbon width is not a conserved flow quantity."
+    "zh": "各参考在查询列和目标列各显示一次，连带颜色沿用其他比较视图的一致性标度。",
+    "en": "Each source reference has a query and subject copy. Colours retain the same identity scale as the other comparison views."
   },
   "sankey-alt": {
     "zh": "从四基因组共线性图派生的 Sankey 旗舰",
@@ -308,15 +304,15 @@
     "en": "Install the stable release from [CRAN](https://CRAN.R-project.org/package=ggchord):"
   },
   "install-development": {
-    "zh": "从 GitHub 安装指定的 v0.29.0 正式版：",
-    "en": "Install the v0.29.0 release from GitHub:"
+    "zh": "在当前检出目录的根目录安装开发版源码。",
+    "en": "From the root of this checkout, install the development source."
   },
-  "circular-reference": {
-    "zh": "对照 pETDuet-1 参考图",
-    "en": "Compare the pETDuet-1 reference map"
+  "development-status": {
+    "zh": "此 README 对应开发中的 v0.50.0 源码。请从当前检出目录安装后运行示例。",
+    "en": "This README describes the in-development v0.50.0 source. Install from this checkout to run its examples."
   },
-  "dense-figure-source": {
-    "zh": "上方密集注释图代码",
-    "en": "Code for the dense map above"
+  "tutorial-path": {
+    "zh": "vignettes/ggchord_guide_hans.Rmd",
+    "en": "vignettes/ggchord_vignette.Rmd"
   }
 }

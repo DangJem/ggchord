@@ -50,9 +50,11 @@ ggchord_alignment_complement <- function(x, alphabet) {
 #'   confirmation of the supplied source.
 #' @export
 #' @examples
-#' # Explicit synthetic format example, not a biological alignment claim.
-#' aligned <- as_ggchord_alignment(c(A = "AC-G", B = "ACTG"), "DNA")
-#' aligned
+#' library(ggplot2)
+#'
+#' cells <- as_ggchord_alignment(c(A = "AC-G", B = "ACTG"), alphabet = "DNA")
+#' ggplot2::ggplot(cells, aes(alignment_column, accver, label = symbol)) +
+#'   geom_residue(aes(fill = symbol))
 as_ggchord_alignment <- function(sequences, alphabet, source_data = NULL, circular = FALSE) {
   caller <- "as_ggchord_alignment()"
   alphabet <- match.arg(alphabet, c("DNA", "RNA", "AA"))
@@ -141,6 +143,7 @@ as_ggchord_alignment <- function(sequences, alphabet, source_data = NULL, circul
       source_verified = verified, .source_row = i, stringsAsFactors = FALSE)
   })
   result <- do.call(rbind, pieces); rownames(result) <- NULL
+  result$source_scope <- if (is.null(source_data)) "fragment" else "source"
   if (circular) {
     result$source_circular <- TRUE
     result$source_length <- metadata$source_length[result$.source_row]
@@ -151,32 +154,35 @@ as_ggchord_alignment <- function(sequences, alphabet, source_data = NULL, circul
   result
 }
 
-#' Read aligned FASTA with source-to-column mapping
+#' Read an existing character alignment from FASTA
 #'
-#' Reads one alignment file. Whitespace wrapping is removed by the FASTA reader;
-#' gaps and case remain unchanged. Records must have equal width. Does not run
-#' an aligner or infer strand, genomic origins, mismatch classes or CDS phase.
-#' @param file A single local aligned FASTA path; no multi-alignment concatenation.
-#' @inheritParams as_ggchord_alignment
-#' @param source_file Logical. Also retain `.source_file` on each character row.
-#' @return The long frame from [as_ggchord_alignment()], with the physical FASTA
-#'   header `.source_line`, optional `.source_file`, and import provenance.
-#' @seealso [geom_residue()], [map_alignment_position()]
+#' All records must have an equal positive width. Gaps occupy alignment
+#' columns without receiving source residue positions. Without explicit
+#' source mapping, reported source positions refer to local input fragments.
+#'
+#' @param file One local aligned FASTA path.
+#' @param alphabet Explicit DNA, RNA, or AA.
+#' @param source_data Optional source-coordinate metadata as in
+#'   [as_ggchord_alignment()].
+#' @param circular Whether the explicit source positions can cross a known
+#'   circular origin.
+#' @param source_file Whether to include a row-level file path.
+#' @return A long alignment data frame preserving character and source columns.
 #' @export
 #' @examples
-#' \dontrun{
-#' # Requires the source checkout or tutorial input bundle.
-#' dna <- read_aligned_fasta("examples/alignment/opuntia-aligned.fasta", "DNA")
-#' }
-read_aligned_fasta <- function(file, alphabet, source_data = NULL, source_file = FALSE, circular = FALSE) {
+#' f <- tempfile(fileext = ".fa")
+#' writeLines(c(">A", "AC-G", ">B", "ACTG"), f)
+#' cells <- read_aligned_fasta(f, alphabet = "DNA")
+#' unlink(f)
+read_aligned_fasta <- function(file, alphabet, source_data = NULL, circular = FALSE, source_file = FALSE) {
   if (!is.character(file) || length(file) != 1L || is.na(file) || !file.exists(file) || dir.exists(file))
     ggchord_stop("read_aligned_fasta(): supply a single existing file")
   if (!is.logical(source_file) || length(source_file) != 1L || is.na(source_file))
     ggchord_stop("read_aligned_fasta(): source_file must be TRUE or FALSE")
-  sequences <- read_fasta_lengths(file, keep_sequence = TRUE, source_file = source_file)
+  sequences <- read_fasta_lengths_single(file, keep_sequence = TRUE, allow_gaps = TRUE)
   result <- as_ggchord_alignment(sequences, alphabet, source_data, circular = circular)
   result$.source_line <- sequences$.source_line[result$.source_row]
-  if (source_file) result$.source_file <- sequences$.source_file[result$.source_row]
+  if (source_file) result$.source_file <- rep(file, nrow(result))
   result <- ggchord_format_import(result, file, "aligned FASTA", nrow(result),
     "aligned characters; no genomic coordinate conversion")
   provenance <- attr(result, "ggchord_import")
@@ -185,41 +191,67 @@ read_aligned_fasta <- function(file, alphabet, source_data = NULL, source_file =
   result
 }
 
-#' Map exact alignment columns and source positions
-#'
-#' Looks up existing cells within one alignment row. Never interpolates across
-#' gaps or discarded columns. Filter an alignment with ordinary data operations
-#' before looking up positions to restrict the available window.
-#' @param data Long alignment frame from [as_ggchord_alignment()].
-#' @param accver One alignment-row ID, even if its `source_accver` differs.
-#' @param position Numeric positions, positive integral or NA.
-#' @param inverse FALSE maps alignment columns to source positions; TRUE maps
-#'   source positions to alignment columns.
-#' @return A frame with input_position, accver, alignment_column, source_accver,
-#'   source_position, is_gap and matched. A known gap column has matched TRUE
-#'   and source_position NA; an unavailable position has matched FALSE.
+#' Look up exact source positions and alignment columns
+#' @param alignment A character table or a registered character plot.
+#' @param positions Query table with source_accver/source_position or
+#'   accver/alignment_column, according to from.
+#' @param from,to The input and output spaces, source or alignment.
+#' @param instance Optional accession of a specific alignment row.
+#' @return A correspondence table retaining all matching rows, query IDs and
+#'   explicit reasons for gaps and missing positions.
 #' @export
 #' @examples
-#' # Explicit synthetic format example.
-#' aligned <- as_ggchord_alignment(c(A = "AC-G", B = "ACTG"), "DNA")
-#' map_alignment_position(aligned, "A", c(2, 3, 5))
-#' map_alignment_position(aligned, "A", 3, inverse = TRUE)
-map_alignment_position <- function(data, accver, position, inverse = FALSE) {
+#' cells <- as_ggchord_alignment(c(A = "AC-G"), alphabet = "DNA")
+#' map_alignment_position(cells,
+#'   data.frame(accver = "A", alignment_column = 3),
+#'   from = "alignment", to = "source")
+map_alignment_position <- function(alignment, positions, from = "source",
+    to = "alignment", instance = NULL) {
   caller <- "map_alignment_position()"
-  ggchord_require_columns(data, c("accver", "alignment_column", "source_accver", "source_position", "is_gap"), caller)
-  if (!is.character(accver) || length(accver) != 1L || is.na(accver) || !nzchar(accver) ||
-      !is.logical(inverse) || length(inverse) != 1L || is.na(inverse))
-    ggchord_stop(caller, ": select one nonempty accession and logical inverse")
-  if (!is.numeric(position) || any(!is.na(position) &
-      (!is.finite(position) | position < 1 | position != floor(position) | position > 2^53 - 1)))
+  spaces <- c("source", "alignment")
+  from <- match.arg(from, spaces)
+  to <- match.arg(to, spaces)
+  data <- alignment
+  if (inherits(alignment, "ggplot")) {
+    data <- alignment$ggchord_alignment
+    if (is.null(data)) ggchord_stop(caller, ": register the character plot first")
+    ggchord_alignment_layout(ggplot2::ggplot_build(alignment), data)
+  }
+  required <- c("accver", "alignment_column", "source_accver", "source_position", "is_gap")
+  ggchord_require_columns(data, required, caller)
+  keys <- if (from == "source") c("source_accver", "source_position") else c("accver", "alignment_column")
+  ggchord_require_columns(positions, keys, caller)
+  coords <- positions[[keys[2L]]]
+  if (!is.numeric(coords) || any(!is.na(coords) &
+      (!is.finite(coords) | coords < 1 | coords != floor(coords) | coords > 2^53 - 1)))
     ggchord_stop(caller, ": positions must be positive exact integers or NA")
-  part <- data[!is.na(data$accver) & data$accver == accver, , drop = FALSE]
-  if (anyDuplicated(part$alignment_column) || anyDuplicated(part$source_position[!is.na(part$source_position)]))
-    ggchord_stop(caller, ": ambiguous repeated columns or source positions within this accession")
-  key <- if (inverse) part$source_position else part$alignment_column
-  at <- match(position, key); at[is.na(position)] <- NA_integer_
-  # Inverse NA must not match one of the gap cells.
-  data.frame(input_position = position, accver = rep(accver, length(position)),
-    alignment_column = part$alignment_column[at], source_accver = part$source_accver[at],
-    source_position = part$source_position[at], is_gap = part$is_gap[at], matched = !is.na(at))
+  if (!is.null(instance)) {
+    if (!is.character(instance) || length(instance) != 1L || is.na(instance) ||
+        !instance %in% data$accver) ggchord_stop(caller, ": unknown alignment row")
+    data <- data[data$accver == instance, , drop = FALSE]
+  }
+  if (anyDuplicated(data[c("accver", "alignment_column")]))
+    ggchord_stop(caller, ": select a single alignment block")
+  fields <- intersect(c(required, "strand", "sequence_unit", "symbol", "alphabet"), names(data))
+  out <- lapply(seq_len(nrow(positions)), function(i) {
+    at <- which(data[[keys[1L]]] == positions[[keys[1L]]][i] & data[[keys[2L]]] == coords[i])
+    if (!length(at)) {
+      row <- data[NA_integer_, fields, drop = FALSE]
+      for (field in keys) row[[field]] <- positions[[field]][i]
+      row$status <- "unavailable"
+      row$reason <- "not_present"
+    } else {
+      row <- data[at, fields, drop = FALSE]
+      gap <- to == "source" & row$is_gap
+      row$status <- ifelse(gap, "unavailable", "available")
+      row$reason <- ifelse(gap, "gap", NA_character_)
+    }
+    row$input_row <- i
+    row
+  })
+  if (length(out)) return(do.call(rbind, out))
+  empty <- data[FALSE, fields, drop = FALSE]
+  empty$status <- empty$reason <- character()
+  empty$input_row <- integer()
+  empty
 }

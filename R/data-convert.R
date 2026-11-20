@@ -12,7 +12,7 @@ ggchord_conversion_mapping <- function(mapping, columns, allowed, caller) {
   if (!is.character(mapping) || is.null(names(mapping)) || anyNA(mapping) ||
       anyNA(names(mapping)) || any(!nzchar(mapping)) || any(!nzchar(names(mapping))) ||
       anyDuplicated(names(mapping)) || any(!names(mapping) %in% allowed)) {
-    ggchord_stop(caller, ": mapping must be a named character vector from output ",
+    ggchord_stop(caller, ": columns must be a named character vector from output ",
       "roles to source columns; supported roles: ", paste(allowed, collapse = ", "))
   }
   missing <- setdiff(unname(mapping), columns)
@@ -42,11 +42,11 @@ ggchord_conversion_frame <- function(x, mapping, roles, caller) {
   mapping <- ggchord_conversion_mapping(mapping, names(x), roles, caller)
   selected <- stats::setNames(intersect(roles, names(x)), intersect(roles, names(x)))
   selected[names(mapping)] <- mapping
-  out <- data.frame(.source_row = seq_len(nrow(x)))
+  out <- data.frame(.source_row = x[[".source_row"]] %||% seq_len(nrow(x)))
   for (role in names(selected)) out[[role]] <- x[[selected[[role]]]]
   # Renamed source roles survive under their original metadata names when an
   # explicit mapping replaces them; one source may intentionally map twice.
-  extra <- x[setdiff(names(x), unique(unname(selected)))]
+  extra <- x[setdiff(names(x), c(unname(selected), ".source_row"))]
   appended <- ggchord_conversion_append(out, extra)
   list(data = appended$data,
     map = rbind(data.frame(source = unname(selected), output = names(selected),
@@ -92,6 +92,74 @@ ggchord_conversion_coordinates <- function(out, columns, caller) {
   invisible(out)
 }
 
+ggchord_declare_sequence_unit <- function(data, unit, caller, default = NULL) {
+  allowed <- c("bp", "aa")
+  if (!is.null(unit) && (!is.character(unit) || length(unit) != 1L || !unit %in% allowed))
+    ggchord_stop(caller, ": sequence_unit must be 'bp' or 'aa'")
+  existing <- data$sequence_unit
+  if (!is.null(existing)) {
+    existing <- as.character(existing)
+    if (any(!is.na(existing) & !existing %in% allowed))
+      ggchord_stop(caller, ": sequence_unit must be 'bp' or 'aa'")
+    if (!is.null(unit) && any(!is.na(existing) & existing != unit))
+      ggchord_stop(caller, ": sequence_unit disagrees with the source")
+  }
+  selected <- unit %||% default
+  if (!is.null(selected)) {
+    if (is.null(existing)) existing <- rep(NA_character_, nrow(data))
+    existing[is.na(existing)] <- selected
+  }
+  if (!is.null(existing)) data$sequence_unit <- existing
+  data
+}
+
+ggchord_validate_feature_segments <- function(data, caller) {
+  if (!is.list(data$segments)) ggchord_stop(caller, ": segments must be a list of interval tables")
+  for (i in seq_len(nrow(data))) {
+    parts <- data$segments[[i]]
+    if (is.null(parts)) next
+    if (!is.data.frame(parts)) ggchord_stop(caller, ": segments must be interval tables, row ", i)
+    ggchord_require_columns(parts, c("start", "end"), caller)
+    ggchord_conversion_coordinates(parts, c("start", "end"), caller)
+    if (any(parts$start > parts$end | parts$start < data$start[i] | parts$end > data$end[i]))
+      ggchord_stop(caller, ": segments must be ordered within their parent interval, row ", i)
+  }
+}
+
+ggchord_order_link_endpoints <- function(data, caller, directional_order = FALSE) {
+  for (prefix in c("q", "s")) {
+    start <- paste0(prefix, "start")
+    end <- paste0(prefix, "end")
+    strand <- paste0(prefix, "strand")
+    before <- data[[start]]
+    after <- data[[end]]
+    if (!nrow(data)) {
+      data[[strand]] <- character()
+      next
+    }
+    direction <- as.character(data[[strand]] %||% rep(NA_character_, nrow(data)))
+    if (any(!is.na(direction) & !direction %in% c("+", "-", ".", "*", "?")))
+      ggchord_stop(caller, ": invalid ", strand)
+    descending <- is.finite(before) & is.finite(after) & before > after
+    ascending <- is.finite(before) & is.finite(after) & before < after
+    if (any(descending & !is.na(direction) & direction == "+") ||
+        (directional_order && any(ascending & !is.na(direction) & direction == "-")))
+      ggchord_stop(caller, ": endpoint order conflicts with ", strand)
+    implicit <- is.na(direction)
+    direction[descending & implicit] <- "-"
+    direction[ascending & implicit & directional_order] <- "+"
+    direction[is.na(direction) | !direction %in% c("+", "-")] <- "."
+    for (field in c(start, end)) {
+      original <- paste0("source_", field)
+      if (!original %in% names(data)) data[[original]] <- data[[field]]
+    }
+    data[[start]] <- pmin(before, after)
+    data[[end]] <- pmax(before, after)
+    data[[strand]] <- direction
+  }
+  data
+}
+
 ggchord_conversion_ranges <- function(x, caller) {
   ggchord_conversion_require("GenomicRanges", caller)
   ggchord_conversion_require("S4Vectors", caller)
@@ -128,69 +196,56 @@ ggchord_conversion_seqinfo <- function(x, caller) {
   out
 }
 
-#' Convert sequence information to ggchord input
+#' Adapt a complete reference dictionary
 #'
-#' Explicit adapters return ordinary data frames. Optional interval packages
-#' are loaded only when their objects are supplied; drawing never installs or
-#' runs external data preparation. Supported S4 inputs supplied directly to
-#' ggchord or its layers use the same adapters. Identifiers are kept verbatim.
+#' A reference dictionary has one row per stable reference ID, with a complete
+#' positive integral length and an explicit native coordinate unit. Optional
+#' sequence and feature range classes supply their declared whole-reference
+#' lengths. Observation endpoints cannot establish a full sequence length.
 #'
-#' For a `GRanges` object, lengths come from its `Seqinfo`, never from the
-#' maximum observed feature endpoint. A `GInteractions` object uses the same
-#' information from its common regions. Only sequence names used by the
-#' supplied intervals are returned; a `Seqinfo` object returns all its entries.
-#' Unknown lengths require explicit `lengths` or corrected source information.
-#'
-#' `XStringSet` and `XString` inputs use their stored sequence widths.
-#' Set names are identifiers; unnamed sequences require explicit `ids`.
-#' Explicit IDs must agree with existing nonempty names, so identifiers and
-#' accession versions are never silently rewritten. `sequence_unit` records
-#' `"bp"`, `"aa"`, or `"character"`; amino-acid widths are not nucleotide
-#' coordinates. AAString inputs can be plotted directly in native aa coordinates.
-#' Arbitrary character widths remain available for data workflows but are not
-#' accepted by `ggchord()`. To display protein intervals on a nucleotide
-#' genome instead, use [build_ggchord_cds()] and [project_ggchord_features()] or
-#' [project_ggchord_links()] with known nucleotide sequence lengths.
-#' Empty sequences are rejected like other zero lengths.
-#'
-#' @param x A data frame, `GRanges`, `Seqinfo`, `GInteractions`, or a
-#'   Biostrings `XStringSet`/`XString` object.
-#' @param mapping Optional named character vector `output_role = "input_column"`
-#'   for data-frame inputs. For example `c(accver = "chrom", length = "size")`.
-#' @param lengths Optional named numeric vector of known sequence lengths.
-#'   Fills unknown lengths and must agree with any known source lengths.
-#' @param ids Optional character vector of explicit identifiers for unnamed
-#'   `XStringSet`/`XString` inputs only. Existing source names must agree.
-#' @return An ordinary data frame with `accver`, `length` and retained metadata.
-#'   Its `ggchord_conversion` attribute records input class, coordinate system,
-#'   column renaming, object-level metadata, and upstream import/conversion
-#'   provenance when present. No genomic coordinates or
-#'   accession versions are guessed or rewritten.
-#' @md
-#' @seealso \code{\link{ggchord_data_contract}}
+#' @param x A reference data frame, named length vector, or supported
+#'   `Seqinfo`, `GRanges`, `GInteractions` or Biostrings sequence object.
+#' @param columns Named mapping from canonical roles to data-frame fields,
+#'   such as `c(accver = "chrom", length = "size")`.
+#' @param lengths Named positive integral lengths. They may fill missing
+#'   dictionary values and must agree with known lengths.
+#' @param ids Explicit reference IDs for unnamed input. Established source
+#'   IDs retain their original identity.
+#' @param sequence_unit Native `"bp"` or `"aa"`. The input declaration takes
+#'   precedence over the documented default of `"bp"`. Explicit declarations
+#'   must agree.
+#' @param topology `"linear"`, `"circular"`, or a named configuration by
+#'   reference ID. Absent source topology defaults to linear.
+#' @return An ordinary data frame with `accver`, `length`, `sequence_unit`,
+#'   and `topology`. [data_report()] records source metadata and defaults.
 #' @export
 #' @examples
-#' library(dplyr)
-#' data(seq_data_example)
-#' seqs <- seq_data_example |>
-#'   select(accver, length)
-#' renamed <- seqs |>
-#'   rename(chrom = accver, size = length)
-#' as_ggchord_seq(renamed, mapping = c(accver = "chrom", length = "size"))
-as_ggchord_seq <- function(x, mapping = NULL, lengths = NULL, ids = NULL) {
+#' raw <- data.frame(chrom = c("A", "B"), size = c(1000, 800))
+#' ref <- as_ggchord_seq(raw, columns = c(accver = "chrom", length = "size"),
+#'                        sequence_unit = "bp")
+#' ggchord(ref) + geom_seq()
+as_ggchord_seq <- function(x, columns = NULL, lengths = NULL, ids = NULL,
+                           sequence_unit = NULL, topology = NULL) {
   caller <- "as_ggchord_seq()"
   map <- data.frame(source = character(), output = character(), stringsAsFactors = FALSE)
   metadata <- NULL
   sequence_object <- inherits(x, "XStringSet") || inherits(x, "XString")
-  if (!is.null(ids) && !sequence_object) ggchord_stop(caller,
-    ": ids is only for XStringSet/XString inputs; use data columns or source names otherwise")
+  if (is.numeric(x) && is.null(dim(x))) {
+    if (!is.null(columns)) ggchord_stop(caller, ": columns are only for data-frame inputs")
+    vector_ids <- names(x) %||% ids
+    if (is.null(vector_ids) || length(vector_ids) != length(x))
+      ggchord_stop(caller, ": provide one reference ID per length")
+    x <- data.frame(accver = vector_ids, length = unname(x))
+  }
   if (is.data.frame(x)) {
-    converted <- ggchord_conversion_frame(x, mapping, c("accver", "length"), caller)
+    converted <- ggchord_conversion_frame(x, columns, c("accver", "length", "sequence_unit",
+      "topology", "circular", "source_accver", "source_origin", "source_length"), caller)
     out <- converted$data; map <- converted$map
+    if (!"accver" %in% names(out) && !is.null(ids) && length(ids) == nrow(out)) out$accver <- ids
     ggchord_require_columns(out, "accver", caller)
     if (!"length" %in% names(out)) out$length <- rep(NA_real_, nrow(out))
   } else {
-    if (!is.null(mapping)) ggchord_stop(caller, ": mapping is for data-frame inputs")
+    if (!is.null(columns)) ggchord_stop(caller, ": columns are for data-frame inputs")
     if (sequence_object) {
       ggchord_conversion_require("Biostrings", caller)
       count <- if (inherits(x, "XString")) 1L else length(x)
@@ -233,7 +288,15 @@ as_ggchord_seq <- function(x, mapping = NULL, lengths = NULL, ids = NULL) {
         out <- out[match(used, out$accver), , drop = FALSE]
       }
       metadata <- if (inherits(x, "GRanges")) S4Vectors::metadata(x) else NULL
-    } else ggchord_stop(caller, ": x must be a data.frame, GRanges, Seqinfo, GInteractions, XStringSet or XString")
+    } else ggchord_stop(caller, ": x must be lengths, a data frame, or a supported sequence object")
+  }
+  if (!nrow(out)) ggchord_stop(caller, ": at least one reference is required")
+  if (!is.null(ids)) {
+    if (!is.character(ids) || length(ids) != nrow(out) || anyNA(ids) || any(!nzchar(ids)))
+      ggchord_stop(caller, ": ids must provide one nonempty ID per reference")
+    known <- !is.na(out$accver) & nzchar(out$accver)
+    if (any(out$accver[known] != ids[known])) ggchord_stop(caller, ": ids cannot replace source IDs")
+    out$accver <- ids
   }
   out$accver <- ggchord_conversion_ids(out$accver, caller)
   if (anyDuplicated(out$accver)) ggchord_stop(caller, ": every sequence ID must occur once")
@@ -241,7 +304,8 @@ as_ggchord_seq <- function(x, mapping = NULL, lengths = NULL, ids = NULL) {
   if (!is.null(lengths)) {
     if (!is.numeric(lengths) || is.null(names(lengths)) || anyNA(names(lengths)) ||
         any(!nzchar(names(lengths))) || anyDuplicated(names(lengths)) ||
-        any(!is.finite(lengths)) || any(lengths < 1 | lengths != floor(lengths))) {
+        any(!is.finite(lengths)) || any(lengths < 1 | lengths != floor(lengths)) ||
+        any(!names(lengths) %in% out$accver)) {
       ggchord_stop(caller, ": lengths must be a named vector of positive integer lengths")
     }
     supplied <- lengths[match(out$accver, names(lengths))]
@@ -251,52 +315,85 @@ as_ggchord_seq <- function(x, mapping = NULL, lengths = NULL, ids = NULL) {
     fill <- is.na(out$length) & !is.na(supplied)
     out$length[fill] <- supplied[fill]
   }
-  if (any(!is.finite(out$length)) || any(out$length < 1 | out$length != floor(out$length))) {
-    bad <- !is.finite(out$length) | out$length < 1 | out$length != floor(out$length)
+  bad <- !is.finite(out$length) | out$length < 1 | out$length > 2^53 | out$length != floor(out$length)
+  if (any(bad)) {
     ggchord_stop(caller, ": unknown or invalid full sequence lengths for: ",
       paste(out$accver[bad], collapse = ", "),
       "; set source seqlengths or supply lengths = c(accver = ...); ",
       "feature endpoints are not full sequence lengths")
   }
-  ggchord_conversion_finish(out, x, map, metadata)
+  default_unit <- if (is.null(sequence_unit)) {
+    if (is.null(out$sequence_unit)) out$accver else out$accver[is.na(out$sequence_unit)]
+  } else character()
+  out <- ggchord_declare_sequence_unit(out, sequence_unit, caller, default = "bp")
+  known_topology <- out$topology
+  if (is.null(known_topology)) known_topology <- rep(NA_character_, nrow(out))
+  if (!is.null(out$circular)) {
+    if (!is.logical(out$circular)) ggchord_stop(caller, ": circular must be logical")
+    circular_topology <- ifelse(out$circular, "circular", "linear")
+    conflict <- !is.na(known_topology) & !is.na(circular_topology) & known_topology != circular_topology
+    if (any(conflict)) ggchord_stop(caller, ": circular and topology disagree")
+    known_topology[is.na(known_topology)] <- circular_topology[is.na(known_topology)]
+  }
+  if (!is.null(topology)) {
+    if (!is.character(topology) || anyNA(topology) || any(!topology %in% c("linear", "circular")))
+      ggchord_stop(caller, ": topology must be 'linear' or 'circular'")
+    if (!is.null(names(topology))) {
+      if (anyDuplicated(names(topology)) || any(!names(topology) %in% out$accver))
+        ggchord_stop(caller, ": topology keys must be unique reference IDs")
+      topology <- unname(topology[out$accver])
+    } else if (length(topology) != 1L) {
+      ggchord_stop(caller, ": use a scalar topology or values named by reference ID")
+    }
+    topology <- rep_len(topology, nrow(out))
+    if (any(!is.na(known_topology) & !is.na(topology) & known_topology != topology))
+      ggchord_stop(caller, ": topology disagrees with the source")
+    known_topology[is.na(known_topology)] <- topology[is.na(known_topology)]
+  }
+  default_topology <- is.na(known_topology)
+  known_topology[default_topology] <- "linear"
+  if (any(!known_topology %in% c("linear", "circular")))
+    ggchord_stop(caller, ": topology must be 'linear' or 'circular'")
+  out$topology <- as.character(known_topology)
+  out$circular <- out$topology == "circular"
+  out <- ggchord_conversion_finish(out, x, map, metadata)
+  attr(out, "ggchord_conversion")$defaults <- list(sequence_unit = if (length(default_unit))
+    setNames(rep("bp", length(default_unit)), default_unit),
+    topology = out$accver[default_topology])
+  out
 }
 
-#' Convert intervals to generic ggchord features
+#' Adapt one-based sequence feature intervals
 #'
-#' `GRanges` coordinates are already one-based inclusive and are not shifted.
-#' Strand `*` is retained as `source_strand`, while the output uses
-#' `strand = "."` and `directionality = "none"`. Use the returned table in
-#' `geom_feature(data = ...)` to preserve nondirectional intervals; `geom_feature(preset = "gene")`
-#' requires directional gene input. No unknown strand is invented as `+`.
+#' Coordinates are ordered and closed. A missing strand is reported as `"."`.
+#' A `segments` list of explicit ordered interval tables can record
+#' discontinuous features without filling gaps in their parent range.
 #'
 #' @param x A data frame or `GRanges` object.
-#' @param mapping Optional named character vector mapping output roles to
-#'   source columns, as in [as_ggchord_seq()].
-#' @return An ordinary feature data frame with `accver`, `start`, `end`,
-#'   `strand`, `directionality`, retained metadata and conversion provenance.
-#'   Conflicting metadata names receive a `metadata_` prefix; the attribute's
-#'   `column_map` records the output name.
-#' @md
-#' @seealso \code{\link{ggchord_data_contract}}
+#' @param columns Named mapping from canonical roles to input column names.
+#' @param sequence_unit Optional native `"bp"` or `"aa"` declaration. An
+#'   existing declaration must agree. Undeclared observation units can be
+#'   resolved against a reference later.
+#' @return A feature data frame with `accver`, `start`, `end`, strand
+#'   and available feature metadata. Use [data_report()] for provenance.
 #' @export
 #' @examples
-#' library(dplyr)
-#' data(seq_data_example)
-#' seqs <- seq_data_example |>
-#'   select(accver, length)
-#' data(gene_data_example)
-#' genes <- gene_data_example |>
-#'   transmute(accver, start, end, strand = source_strand)
-#' renamed <- genes |>
-#'   rename(chrom = accver, left = start, right = end)
-#' features <- as_ggchord_feature(renamed,
-#'   mapping = c(accver = "chrom", start = "left", end = "right")
+#' seqs <- data.frame(
+#'   accver = c("A", "B"), length = c(1000, 800),
+#'   sequence_unit = "bp", topology = "linear"
 #' )
-#' ggchord(data = seqs) +
-#'   geom_seq() +
-#'   geom_feature(data = features)
-as_ggchord_feature <- function(x, mapping = NULL) {
-  ggchord_convert_feature(x, mapping)
+#'
+#' raw <- data.frame(chrom = "A", begin = 100, finish = 240, direction = "+")
+#' features <- as_ggchord_feature(raw, columns = c(
+#'   accver = "chrom", start = "begin", end = "finish", strand = "direction"))
+#' ggchord(seqs) + geom_feature(data = features)
+as_ggchord_feature <- function(x, columns = NULL, sequence_unit = NULL) {
+  caller <- "as_ggchord_feature()"
+  out <- ggchord_convert_feature(x, columns)
+  if (any(out$start > out$end)) ggchord_stop(caller,
+    ": start must not exceed end; use segments for discontinuous or circular-origin intervals")
+  if ("segments" %in% names(out)) ggchord_validate_feature_segments(out, caller)
+  ggchord_declare_sequence_unit(out, sequence_unit, caller)
 }
 
 ggchord_convert_feature <- function(x, mapping, unified = FALSE) {
@@ -304,7 +401,7 @@ ggchord_convert_feature <- function(x, mapping, unified = FALSE) {
   metadata <- NULL
   if (is.data.frame(x)) {
     roles <- c("accver", "start", "end", "strand", "directionality", "feature_id", "parent_ids",
-      "type", "label", "anno", "feature_color", "display_priority")
+      "type", "label", "anno", "feature_color", "display_priority", "segments", "sequence_unit")
     converted <- ggchord_conversion_frame(x, mapping, roles, caller)
   } else if (inherits(x, "GRanges")) {
     if (!is.null(mapping)) ggchord_stop(caller, ": mapping is for data-frame inputs")
@@ -324,65 +421,67 @@ ggchord_convert_feature <- function(x, mapping, unified = FALSE) {
     ggchord_stop(caller, ": directionality must be forward, reverse, bidirectional or none")
   }
   if (is.null(strand)) strand <- expected %||% rep(".", nrow(out))
-  if (anyNA(strand) || any(!strand %in% c("+", "-", "*", ".", "+/-"))) {
+  if (any(!is.na(strand) & !strand %in% c("+", "-", "*", ".", "+/-"))) {
     ggchord_stop(caller, ": strand must be '+', '-', '*', '.', or '+/-'")
   }
-  source_strand <- strand
-  strand[strand == "*"] <- "."
+  source_strand <- out$source_strand %||% strand
+  strand[is.na(strand) | strand == "*"] <- "."
   if (!is.null(expected) && any(strand != expected)) {
     ggchord_stop(caller, ": strand and directionality describe conflicting directions")
   }
   out$strand <- strand
   out$directionality <- unname(c("+" = "forward", "-" = "reverse", "." = "none", "+/-" = "bidirectional")[strand])
   map <- converted$map
-  if ("source_strand" %in% names(out) && !identical(out$source_strand, source_strand)) {
-    appended <- ggchord_conversion_append(out, out["source_strand"])
-    out <- appended$data; map <- rbind(map, appended$map)
-  }
   out$source_strand <- source_strand
   map <- rbind(map, data.frame(source = "strand", output = "source_strand",
     stringsAsFactors = FALSE))
   ggchord_conversion_finish(out, x, map, metadata)
 }
 
-#' Convert paired genomic intervals to ggchord links
+#' Adapt point or interval relationships
 #'
-#' For `GInteractions`, the first stored anchor becomes query and the second
-#' becomes subject. Their order is never sorted or swapped by this adapter.
-#' A source object that already canonicalized its anchors cannot recover their
-#' earlier biological host/virus roles; establish those roles before conversion.
-#' Negative-strand anchor endpoints run from end to start. Unknown-strand
-#' anchors retain increasing coordinates, their `*` strand and
-#' `orientation_known = FALSE`; increasing order is not direction evidence.
-#' Interval interactions do not imply a pairwise alignment: identity and
-#' alignment length are not inferred from anchor widths.
+#' Query and subject roles and biological direction evidence are kept
+#' separate. Interval endpoints are ordered within each reference, and
+#' original endpoint order is retained as source metadata. Equal endpoints
+#' carry no direction evidence of their own.
 #'
-#' @param x A data frame or `GInteractions` object.
-#' @param mapping Optional named character vector mapping canonical link roles
-#'   to source columns, as in [as_ggchord_seq()].
-#' @return An ordinary data frame with `qaccver`, `saccver`, `qstart`, `qend`,
-#'   `sstart`, `send` and source metadata. Paired objects also retain anchor
-#'   indices, source row/name, anchor strands, anchor metadata prefixed with
-#'   `query_`/`subject_`, and object-level metadata in the conversion attribute.
-#' @md
-#' @seealso \code{\link{ggchord_data_contract}}
+#' @param x Data frame, or a `GInteractions` object for interval links.
+#' @param columns Named mapping from canonical roles to input fields.
+#' @param kind `"interval"` consumes qstart/qend and sstart/send.
+#'   `"point"` consumes qpos and spos. Both require qaccver and saccver.
+#' @param sequence_unit Optional declaration of native `"bp"` or `"aa"`.
+#'   This operation preserves the scientific meaning of existing units.
+#' @return A point or interval relationship table and conversion provenance.
 #' @export
 #' @examples
-#' library(dplyr)
-#' data(ribbon_data_example)
-#' links <- ribbon_data_example |>
-#'   select(qaccver, saccver, qstart, qend, sstart, send)
-#' as_ggchord_link(links)
-as_ggchord_link <- function(x, mapping = NULL) {
+#' seqs <- data.frame(
+#'   accver = c("A", "B"), length = c(1000, 800),
+#'   sequence_unit = "bp", topology = "linear"
+#' )
+#'
+#' links <- data.frame(
+#'   qaccver = "A", saccver = "B", qstart = c(100, 400),
+#'   qend = c(240, 620), sstart = c(150, 450), send = c(290, 650),
+#'   qstrand = "+", sstrand = c("+", "-"),
+#'   pident = c(98, 90), link_id = c("l1", "l2")
+#' )
+#'
+#' paired <- as_ggchord_link(links, kind = "interval", sequence_unit = "bp")
+#' ggchord(seqs) + geom_link_ribbon(data = paired)
+as_ggchord_link <- function(x, columns = NULL, kind = "interval", sequence_unit = NULL) {
   caller <- "as_ggchord_link()"
-  required <- c("qaccver", "saccver", "qstart", "qend", "sstart", "send")
+  kind <- match.arg(kind, c("interval", "point"))
+  endpoints <- if (kind == "interval") c("qstart", "qend", "sstart", "send") else c("qpos", "spos")
+  required <- c("qaccver", "saccver", endpoints)
   metadata <- NULL
   if (is.data.frame(x)) {
-    converted <- ggchord_conversion_frame(x, mapping,
-      c(required, "qstrand", "sstrand", "pident", "length", "direction", "orientation_known"), caller)
+    converted <- ggchord_conversion_frame(x, columns,
+      c(required, "qstrand", "sstrand", "pident", "length", "direction", "orientation_known",
+        "link_id", "qlen", "slen", "sequence_unit", "qsegments", "ssegments"), caller)
     out <- converted$data; map <- converted$map
   } else if (inherits(x, "GInteractions")) {
-    if (!is.null(mapping)) ggchord_stop(caller, ": mapping is for data-frame inputs")
+    if (kind == "point") ggchord_stop(caller, ": provide explicit point endpoints for kind = 'point'")
+    if (!is.null(columns)) ggchord_stop(caller, ": columns are for data-frame inputs")
     ggchord_conversion_require("InteractionSet", caller)
     first <- InteractionSet::anchors(x, type = "first", id = FALSE)
     second <- InteractionSet::anchors(x, type = "second", id = FALSE)
@@ -419,6 +518,9 @@ as_ggchord_link <- function(x, mapping = NULL) {
   ggchord_require_columns(out, required, caller)
   out$qaccver <- ggchord_conversion_ids(out$qaccver, caller)
   out$saccver <- ggchord_conversion_ids(out$saccver, caller)
-  ggchord_conversion_coordinates(out, c("qstart", "qend", "sstart", "send"), caller)
+  ggchord_conversion_coordinates(out, endpoints, caller)
+  if (kind == "interval") out <- ggchord_order_link_endpoints(out, caller)
+  ggchord_link_orientation(out, caller)
+  out <- ggchord_declare_sequence_unit(out, sequence_unit, caller)
   ggchord_conversion_finish(out, x, map, metadata)
 }

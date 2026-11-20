@@ -7,68 +7,69 @@
 geom_seq(
   mapping = NULL,
   data = NULL,
-  seq_radius = NULL,
-  seq_curvature = NULL,
-  seq_style = c("auto", "single", "double", "band"),
-  seq_backbone_gap = 0.025,
-  seq_backbone_width = 0.035,
-  linewidth = 0.9,
+  geometry = "line",
+  thickness = 1,
+  stat = "identity",
   position = "identity",
-  show.legend = TRUE,
-  inherit.aes = TRUE,
   ...,
+  na.rm = FALSE,
+  show.legend = NA,
+  inherit.aes = TRUE,
   id = NULL
 )
 }
 \arguments{
-\item{mapping}{Default NULL (uses pre-computed data)}
+\item{mapping}{Aesthetic mapping from \code{ggplot2::aes()}. A local mapping overrides the matching inherited channel.}
 
-\item{data}{A backbone reference table, defaulting to the plot reference.
-Accessions must be unique. Overlaid backbones must agree on accessions,
-lengths, coordinate unit and original sequence windows.
-Their row order, mappings and drawing styles may differ.}
+\item{data}{Optional reference table or function selecting from the registered reference.}
 
-\item{seq_radius}{Finite positive backbone radius in layout units. The default
-\code{NULL} uses 1. Supply one value for all sequences, a vector named by
-\code{accver} for selected sequences, or one unnamed value per displayed
-sequence in display order. Equivalent lists have one number per entry.
-Omitted IDs keep radius 1. An explicit radius is incompatible with
-\code{\link[=coord_collinear]{coord_collinear()}} and with a mapped \code{seq_ring}.}
+\item{geometry}{Backbone style, either \code{"line"}, \code{"double"} or \code{"band"}.}
 
-\item{seq_curvature}{Finite signed arc curvature. Zero draws a straight
-backbone, 1 the standard arc, and negative values reverse the bow.
-Magnitudes above 1 increase the bow. Accepts the same per-sequence
-forms as \code{seq_radius}; omitted IDs use 1. \code{\link[=coord_collinear]{coord_collinear()}} uses
-straight backbones and rejects explicit curvature.}
+\item{thickness}{Physical thickness in mm or absolute grid units. Named values select references.}
 
-\item{seq_style}{Backbone geometry. \code{"auto"} uses a double backbone in
-\code{\link[=coord_circular]{coord_circular()}} and a single backbone in \code{\link[=coord_chord]{coord_chord()}}.}
+\item{stat}{A compatible ggplot2 Stat or its name. The default uses the supplied records.}
 
-\item{seq_backbone_gap}{Gap between double backbone lines.}
+\item{position}{A compatible Position for placement of the layer geometry.}
 
-\item{seq_backbone_width}{Width of a band backbone.}
+\item{...}{Additional named visual styles and parameters accepted by this layer.}
 
-\item{linewidth}{Arc line width, default 0.9}
+\item{na.rm}{Suppress warnings for missing observations that the layer can omit.}
 
-\item{position, show.legend, inherit.aes}{Standard ggplot2 layer arguments.}
+\item{show.legend}{Logical or named logical indicating whether the layer contributes legend keys.}
 
-\item{...}{Additional fixed path aesthetics. \code{colour} (or \code{color}) sets
-\code{seq_colour}. Explicit fixed values take precedence over matching mappings;
-omit fixed arguments to retain mapped styles. Unknown names raise an error.}
+\item{inherit.aes}{Whether to inherit plot mappings and evaluate them on the layer data.}
 
-\item{id}{Optional unique layer ID for layout and source exports.}
+\item{id}{Optional plot-local layer identifier. Name a layer explicitly to scope a scale, anchor a label or export it.}
 }
 \value{
-A ggplot2 layer.
+A ggplot2 layer for addition to a plot.
 }
 \description{
-Draw one backbone for each displayed sequence. In a chord diagram its radius
-sets its distance from the centre and its curvature sets the arc shape.
-Use \code{\link[=layout_sequences]{layout_sequences()}} to change the sequence order, orientation, spacing or length allocation.
+Draw sequence backbones
+}
+\details{
+The source is the complete reference table with \code{accver} and \code{length}. A backbone can select an authoritative subset. An explicit complete table in geom_seq() can register a reference when the plot has no global data.
 }
 \examples{
-ggchord(seq_data_example) +
-  geom_seq(seq_radius = c("MT118296.1" = 0.72)) +
-  geom_seq_label() +
-  coord_chord()
+seqs <- data.frame(
+  accver = c("A", "B"), length = c(1000, 800),
+  sequence_unit = "bp", topology = "linear"
+)
+
+genes <- data.frame(
+  accver = c("A", "A", "B"), feature_id = c("g1", "g2", "g3"),
+  start = c(100, 400, 150), end = c(240, 620, 380),
+  strand = c("+", "-", "+"), label = c("g1", "g2", "g3"),
+  type = c("CDS", "tRNA", "CDS")
+)
+
+ggchord() +
+  geom_seq(data = seqs, colour = "#187B77") +
+  geom_gene(data = genes) +
+  coord_collinear()
+
+ggchord(seqs) +
+  geom_seq(linewidth = 2, colour = "white") +
+  geom_seq(linewidth = 0.5, colour = "black") +
+  coord_collinear()
 }

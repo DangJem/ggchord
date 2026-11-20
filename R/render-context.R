@@ -251,7 +251,7 @@ ggchord_render_table <- function(built, force = FALSE) {
   context$adaptive_layout <- built$plot$ggchord$adaptive_report
   context$guide_layout <- result$report
   if (identical(result$report$status,"insufficient_space")) warning(
-    "adapt_ggchord(): guides cannot fit the canvas and panel budget under the supplied constraints; increase width/height or revise explicit guide layout. See guide_layout diagnostics.",call.=FALSE)
+    "render_policy(): guides cannot fit the canvas and panel budget under the supplied constraints; increase width/height or revise explicit guide layout. See guide_layout diagnostics.",call.=FALSE)
   layout <- built$plot$ggchord$ref$layout
   if (!is.null(layout)) {
     layout$render_context <- context

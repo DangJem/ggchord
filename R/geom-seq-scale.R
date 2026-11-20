@@ -28,63 +28,54 @@ ggchord_empty_seq_scale_geometry <- function() data.frame(
   bp_length = numeric(), measurement_status = character(),
   .component = character(), stringsAsFactors = FALSE)
 
-#' Add a shared sequence-position scale bar to a linear display
-#'
-#' Adds a free-standing reference bar in the empty space outside the sequence
-#' envelope. Its length uses the same sequence-position-to-x conversion as every backbone in
-#' [coord_collinear()], including independent windows on shared display rows.
-#' Display gaps are never interpreted as genomic length. Local reversals and
-#' original-source axis labels do not change the bar's sequence scale. Chord and
-#' circular coordinates have local sequence axes instead and are rejected.
-#'
-#' The bar does not claim to span one source interval. An explicit length can
-#' therefore exceed a single window and still be a valid distance reference
-#' in the shared linear metric. With no length, a small whole-number 1/2/5
-#' reference is chosen from displayed window lengths. No source coordinates
-#' are modified and no missing genomic region is manufactured.
-#'
-#' To change ticks and labels on sequence axes instead, use
-#' [scale_seq_position_continuous()]. A position scale configures existing
-#' axes; this geom adds an independent distance reference.
-#'
-#' @param mapping,data Standard ggplot2 layer inputs. Optional `scale_length`
-#'   maps one positive integer length per bar, in the sequence unit; `label` supplies its text.
-#'   Multiple bars require explicit `x` and `y` layout positions in `data`
-#'   (or their role mappings), to avoid accidental overprinting.
-#' @param length Optional fixed positive integer length in the sequence unit. Cannot be
-#'   combined with a `scale_length` mapping. `NULL` uses input lengths or an
-#'   automatic reference length.
-#' @param label Optional fixed character label, or a function receiving the
-#'   chosen lengths. `NULL` uses input labels or formatted bp/aa text.
-#' @param location Corner of the sequence envelope used for automatic placement.
-#' @param offset Two non-negative distances, horizontal then vertical. Absolute
-#'   grid units are supported; plain numeric values are layout-unit distances.
-#'   The default is 0 mm horizontally and 6 mm vertically.
-#' @param tick_height,label_gap Non-negative absolute grid units or layout-unit
-#'   numbers for the end ticks and space between the bar and caption. Physical
-#'   conversion uses the current render context when available; device-free
-#'   builds retain an explicitly estimated measurement status.
-#' @param linewidth,colour,size Fixed line colour/width and text size. Text size
-#'   follows ordinary ggplot2 millimetres. These may also use normal mappings
-#'   and scales when not supplied as fixed arguments.
-#' @param position,show.legend,inherit.aes Standard ggplot2 layer arguments.
-#' @param ... Additional fixed aesthetics passed to [ggplot2::layer()].
-#' @param id Optional unique layer ID for layout and source exports.
-#' @return One independent ggplot2 layer. Exported axis geometry retains the
-#'   length, sequence unit, input row and measurement status for each bar.
-#'   The compatibility field `bp_length` is NA for protein plots.
-#' @md
+#' Draw a reference length annotation
 #' @export
+#' @param length Positive scale-bar length in the reference coordinate unit.
+#' @param sequence Optional source reference accession for the scale bar.
+#' @param instance Optional display instance for the scale bar.
+#' @param location Placement of the scale bar in the panel.
+#' @param label Optional text for the scale bar.
+#' @param height Scale-bar height in millimetres.
+#' @param text_size Scale-bar text size in ggplot2 text units.
+#' @param colour Fixed colour.
+#' @param id Optional plot-local layer identifier. Name a layer explicitly to scope a scale, anchor a label or export it.
+#' @return A ggplot2 layer for addition to a plot.
 #' @examples
-#' library(dplyr)
-#' data(seq_data_example)
-#' seqs <- seq_data_example |>
-#'   select(accver, length)
-#' ggchord(data = seqs) +
+#' seqs <- data.frame(
+#'   accver = c("A", "B"), length = c(1000, 800),
+#'   sequence_unit = "bp", topology = "linear"
+#' )
+#'
+#' one_seq <- seqs[1, , drop = FALSE]
+#'
+#' ggchord(one_seq) +
 #'   geom_seq() +
 #'   coord_collinear() +
-#'   geom_seq_scale(length = 10000)
-geom_seq_scale <- function(mapping = NULL, data = NULL, length = NULL, label = NULL,
+#'   annotation_seq_scalebar(length = 100, sequence = "A")
+annotation_seq_scalebar <- function(length, sequence = NULL, instance = NULL,
+    location = "bottomleft", label = NULL, height = 1, text_size = 3,
+    colour = "black", id = NULL) {
+  ggchord_check_argument_names(sys.call(), sys.function())
+  if (missing(length) || !is.numeric(length) || base::length(length) != 1L ||
+      !is.finite(length) || length <= 0)
+    ggchord_stop("annotation_seq_scalebar(): length must be positive")
+  for (key in c("sequence", "instance")) {
+    value <- get(key)
+    if (!is.null(value)) ggchord_check_layer_id(value)
+  }
+  height <- ggchord_physical_mm(height, "scalebar height", TRUE)
+  text_size <- ggchord_physical_mm(text_size, "scalebar text size", TRUE)
+  if (base::length(height) != 1L || height <= 0 || base::length(text_size) != 1L || text_size <= 0)
+    ggchord_stop("annotation_seq_scalebar(): height and text_size must be positive scalars")
+  layer <- ggchord_seq_scale_layer(length = length, label = label, location = location,
+    tick_height = grid::unit(height, "mm"), size = text_size, colour = colour,
+    inherit.aes = FALSE, id = id)
+  layer$ggchord_params$sequence <- sequence
+  layer$ggchord_params$instance <- instance
+  layer
+}
+
+ggchord_seq_scale_layer <- function(mapping = NULL, data = NULL, length = NULL, label = NULL,
     location = c("bottomleft", "bottomright", "topleft", "topright"),
     offset = grid::unit(c(0, 6), "mm"), tick_height = grid::unit(1.5, "mm"),
     label_gap = grid::unit(1.5, "mm"), linewidth = .4, colour = "#3D4348", size = 3,
@@ -94,8 +85,8 @@ geom_seq_scale <- function(mapping = NULL, data = NULL, length = NULL, label = N
   location <- match.arg(location)
   mapping <- ggchord_normalize_mapping(mapping)
   if (!is.null(length) && (!is.numeric(length) || length(length) != 1L ||
-      !is.finite(length) || length < 1 || length != floor(length))) ggchord_stop(
-    "geom_seq_scale(): length must be one positive integer sequence positions")
+      !is.finite(length) || length <= 0)) ggchord_stop(
+    "annotation_seq_scalebar(): length must be positive")
   if (!is.null(length) && "scale_length" %in% names(mapping)) ggchord_stop(
     "geom_seq_scale(): use a fixed length or a scale_length mapping, not both")
   if (!is.null(label) && !is.function(label) &&
@@ -121,16 +112,30 @@ geom_seq_scale <- function(mapping = NULL, data = NULL, length = NULL, label = N
 }
 
 ggchord_seq_scale_geometry <- function(data, params, layout) {
-  caller <- "geom_seq_scale()"
-  if (!isTRUE(layout$collinear)) ggchord_stop(caller,
-    ": a shared straight bp scale requires coord_collinear(); use local sequence axes for other coordinates")
+  caller <- "annotation_seq_scalebar()"
   if (is.null(data) || !nrow(data)) return(ggchord_empty_seq_scale_geometry())
   ref <- layout$sequence_reference
-  if (identical(layout$length_mode, "equal") && length(layout$seqs) > 1L)
-    ggchord_stop(caller, ": equal sequence lengths have no shared absolute scale; use each sequence's source axis")
-  scale <- ref$x_scale
-  if (!is.numeric(scale) || length(scale) != 1L || !is.finite(scale) || scale <= 0)
-    ggchord_stop(caller, ": the layout does not expose one shared positive bp scale")
+  ids <- layout$seqs
+  instances <- layout$display_instances
+  selected <- ids
+  if (!is.null(params$sequence))
+    selected <- if (is.null(instances)) intersect(selected, params$sequence) else
+      intersect(selected, instances$key[instances$accver == params$sequence])
+  if (!is.null(params$instance))
+    selected <- if (is.null(instances)) intersect(selected, params$instance) else
+      intersect(selected, instances$key[instances$instance_id == params$instance])
+  if (!length(selected)) ggchord_stop(caller, ": unknown sequence or display instance")
+  widths <- vapply(selected, function(id) {
+    if (isTRUE(layout$collinear)) return(ggchord_collinear_scale(id, ref))
+    arc <- layout$seq_arcs[[id]]
+    measure <- ggchord_render_context()$units_per_mm
+    if (length(measure) != 2L) measure <- rep(ggchord_units_per_mm(), 2L)
+    mm <- sum(sqrt((diff(arc$x) / measure[1L])^2 + (diff(arc$y) / measure[2L])^2))
+    mm * measure[1L] / ref$lens[[id]]
+  }, numeric(1))
+  scale <- widths[1L]
+  if (!is.finite(scale) || scale <= 0 || any(abs(widths / scale - 1) > 1e-4))
+    ggchord_stop(caller, ": choose a sequence or instance with a unique length scale")
   supplied <- params$length %||% data$scale_length
   if (is.null(supplied)) {
     target <- max(unname(ref$lens)) / 4
@@ -140,8 +145,8 @@ ggchord_seq_scale_geometry <- function(data, params, layout) {
   }
   if (length(supplied) == 1L) supplied <- rep(supplied, nrow(data))
   if (!is.numeric(supplied) || length(supplied) != nrow(data) ||
-      any(!is.finite(supplied)) || any(supplied < 1 | supplied != floor(supplied)))
-    ggchord_stop(caller, ": each bar requires one positive integer scale_length")
+      any(!is.finite(supplied)) || any(supplied <= 0))
+    ggchord_stop(caller, ": each bar requires one positive source length")
   labels <- if (is.function(params$label)) params$label(supplied) else params$label %||% data$label
   unit <- layout$sequence_unit %||% "bp"
   automatic_labels <- paste(format(supplied, big.mark = ",", scientific = FALSE, trim = TRUE), unit)
@@ -188,7 +193,7 @@ ggchord_seq_scale_geometry <- function(data, params, layout) {
       group = group + c(1L, 1L, 2L, 3L, 4L), source_row = i,
       scale_length = supplied[i], sequence_unit = unit,
       bp_length = if (identical(unit, "bp")) supplied[i] else NA_real_,
-      measurement_status = status,
+      measurement_status = status, component_type = "scale_annotation",
       .component = c("line", "line", "major_tick", "major_tick", "text"),
       stringsAsFactors = FALSE)
   })

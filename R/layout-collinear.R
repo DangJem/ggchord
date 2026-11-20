@@ -135,8 +135,12 @@ ggchord_collinear_ribbons <- function(p, layout) {
       "geom_link_ribbon()")
     edge <- function(index, control_edge) {
       from <- q_xy[index[1L], ]; to <- s_xy[index[2L], ]
-      cp <- ggchord_collinear_controls(from, to, p$ribbon_ctrl_point,
-        i, edge = control_edge)
+      route <- p$ribbon_ctrl_point
+      if (inherits(route, "ggchord_link_route")) {
+        if (route$route == "straight") return(rbind(from, to))
+        cp <- list(c(from[1L], from[2L] + route$curvature * (to[2L] - from[2L])),
+          c(to[1L], to[2L] + route$curvature * (from[2L] - to[2L])))
+      } else cp <- ggchord_collinear_controls(from, to, route, i, edge = control_edge)
       bezier_pts(from, to, cp[[1L]], cp[[2L]], n = 50L)
     }
     first_edge <- edge(c(1L, 1L), 1L)

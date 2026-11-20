@@ -2,59 +2,33 @@
 % Please edit documentation in R/data-formats.R
 \name{read_bed}
 \alias{read_bed}
-\title{Read BED intervals as ggchord features}
+\title{Read BED features and their observed segments}
 \usage{
-read_bed(file = NULL, files = NULL, source_file = FALSE)
+read_bed(file, source_file = FALSE)
 }
 \arguments{
-\item{file}{Optional path vector or glob patterns; read before \code{files}.}
+\item{file}{Local BED paths.}
 
-\item{files}{Optional paths or wildcard patterns for multiple BED files.}
-
-\item{source_file}{Logical. Add a \code{.source_file} column, default \code{FALSE}.}
+\item{source_file}{Whether to include row-level source paths.}
 }
 \value{
-A feature data frame with \code{accver}, \code{start}, \code{end}, \code{strand},
-\code{directionality}, original \code{chromStart}/\code{chromEnd}, optional BED fields,
-and \code{.source_line} (the physical file line). A \code{ggchord_import} attribute
-records the input/output coordinate conventions and files.
+A feature data frame and file provenance available from
+\code{\link[=data_report]{data_report()}}.
 }
 \description{
-Reads standard BED3 through BED12. Starts are converted from zero-based
-half-open intervals to one-based inclusive intervals; accession identifiers
-are kept verbatim. Blank lines, comments, and custom-track header lines are
-skipped. Every data row in a file must have the same number of fields.
-Zero-width insertion records cannot be represented as nonempty genomic
-intervals and produce an explicit error.
-}
-\details{
-BED names are labels, not guaranteed unique feature IDs. Unspecified strand
-remains \code{"."} and \code{directionality = "none"}; use \code{\link[=geom_feature]{geom_feature()}} for these
-records. Optional fields retain their BED names and coordinate conventions,
-including zero-based \code{thickStart}, \code{thickEnd}, and relative \code{blockStarts}.
-BED12 additionally creates a \code{segments} list-column of one-based inclusive
-block intervals after checking block counts, boundaries and non-overlap.
-Blocks are retained in genomic order on both strands. No colour or shape is
-inferred from BED display fields. BED extensions beyond column 12 require an
-explicit data-frame conversion with \code{\link[=as_ggchord_feature]{as_ggchord_feature()}}.
+Read standard BED3 through BED12. Convert each nonempty half-open range
+to a one-based closed interval. BED12 blocks are preserved as segments.
+A BED name provides a label, and a missing strand stays unknown.
 }
 \examples{
-library(dplyr)
-data(plasmid_example_pUC19)
-feature_source <- find_common_features(plasmid_example_pUC19)
-features <- feature_source |>
-  select(accver, start, end, strand, type, anno)
-bed <- tempfile(fileext = ".bed")
-bed_rows <- features |>
-  transmute(accver, start0 = start - 1L, end)
-write.table(bed_rows, bed,
-  sep = "\t", quote = FALSE, row.names = FALSE, col.names = FALSE
+seqs <- data.frame(
+  accver = c("A", "B"), length = c(1000, 800),
+  sequence_unit = "bp", topology = "linear"
 )
-read_bed(bed)
-unlink(bed)
-}
-\seealso{
-\url{https://genome.ucsc.edu/FAQ/FAQformat.html#format1}
 
-\code{\link{ggchord_data_contract}}
+f <- tempfile(fileext = ".bed")
+writeLines("A	99	240	region1	0	+", f)
+bed <- read_bed(f)
+ggchord(seqs) + geom_feature(data = bed)
+unlink(f)
 }

@@ -2,62 +2,68 @@
 % Please edit documentation in R/geom-seq-break.R
 \name{geom_seq_break}
 \alias{geom_seq_break}
-\title{Mark cropped ends of linear sequences}
+\title{Mark display breaks on reference paths}
 \usage{
 geom_seq_break(
   mapping = NULL,
   data = NULL,
-  break_width = 0.02,
-  break_height = 0.04,
-  linewidth = 0.4,
-  colour = "#3D4348",
+  mark = "slash",
+  size = 2,
   position = "identity",
-  show.legend = FALSE,
-  inherit.aes = TRUE,
   ...,
+  na.rm = FALSE,
+  show.legend = NA,
+  inherit.aes = TRUE,
   id = NULL
 )
 }
 \arguments{
-\item{mapping, data}{Standard layer mapping and sequence data. By default,
-use the plot's sequence table. Truncation is read from
-\code{.truncated_left}/\code{.truncated_right}, with source interval and
-length metadata as fallback when available.}
+\item{mapping}{Aesthetic mapping from \code{ggplot2::aes()}. A local mapping overrides the matching inherited channel.}
 
-\item{break_width, break_height}{Width and height of the complete break mark
-in linear layout units. These are layout distances, not millimetres.}
+\item{data}{Optional reference table or function selecting from the registered reference.}
 
-\item{linewidth, colour}{Fixed line appearance. Ordinary visual aesthetics
-can also be mapped and controlled by their ggplot2 scales.}
+\item{mark}{Symbol used at a display discontinuity.}
 
-\item{position, show.legend, inherit.aes}{Standard ggplot2 layer arguments.}
+\item{size}{Physical size of the symbol in millimetres.}
 
-\item{...}{Additional parameters passed to \code{ggplot2::geom_path()}.}
+\item{position}{A compatible Position for placement of the layer geometry.}
 
-\item{id}{Optional unique layer ID for layout and source exports.}
+\item{...}{Additional named visual styles and parameters accepted by this layer.}
+
+\item{na.rm}{Suppress warnings for missing observations that the layer can omit.}
+
+\item{show.legend}{Logical or named logical indicating whether the layer contributes legend keys.}
+
+\item{inherit.aes}{Whether to inherit plot mappings and evaluate them on the layer data.}
+
+\item{id}{Optional plot-local layer identifier. Name a layer explicitly to scope a scale, anchor a label or export it.}
 }
 \value{
-A ggplot2 layer. Other ggchord coordinate systems are unsupported.
+A ggplot2 layer for addition to a plot.
 }
 \description{
-Adds two short diagonal strokes at each truncated sequence end in
-\code{coord_collinear()}. Metadata returned by \code{focus_ggchord_data()}
-determines the truncated genomic ends; reversed sequence orientation moves
-each mark to the corresponding displayed end. These marks are decorations
-and do not change the source sequence or feature coordinates.
+Mark display breaks on reference paths
+}
+\details{
+The source is the complete reference table with \code{accver} and \code{length}. A backbone can select an authoritative subset. An explicit complete table in geom_seq() can register a reference when the plot has no global data.
 }
 \examples{
-library(dplyr)
-data(seq_data_example)
-seqs <- seq_data_example |>
-  select(accver, length)
-loci <- tibble(
-  accver = seqs$accver, start = floor(seqs$length * .25),
-  end = floor(seqs$length * .75)
+seqs <- data.frame(
+  accver = c("A", "B"), length = c(1000, 800),
+  sequence_unit = "bp", topology = "linear"
 )
-focused <- focus_ggchord_data(seqs, loci = loci)
-ggchord(data = focused$seq_data) +
+
+one_seq <- seqs[1, , drop = FALSE]
+
+windows <- data.frame(accver = "A", start = 1, end = 500, window_id = "w1")
+
+display_windows <- data.frame(
+  instance_id = c("A_left", "A_right"), accver = "A",
+  start = c(1, 600), end = c(300, 1000), row_id = "A"
+)
+ggchord(one_seq) +
+  layout_sequences(windows = display_windows, segment_gap = 3) +
   geom_seq() +
-  geom_seq_break() +
+  geom_seq_break(mark = "double_slash") +
   coord_collinear()
 }

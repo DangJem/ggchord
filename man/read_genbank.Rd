@@ -2,96 +2,45 @@
 % Please edit documentation in R/data-genbank.R
 \name{read_genbank}
 \alias{read_genbank}
-\title{Import local GenBank or GBFF records using an optional mature parser}
+\title{Read reference and feature records from GenBank}
 \usage{
 read_genbank(
-  file = NULL,
-  files = NULL,
+  file,
   feature_types = NULL,
   lengths = NULL,
   python = "python3",
-  unsupported = c("error", "report"),
+  unsupported = "error",
   source_file = FALSE
 )
 }
 \arguments{
-\item{file}{Optional path vector or glob patterns; read before \code{files}.}
+\item{file}{Local GenBank paths.}
 
-\item{files}{Optional paths or wildcard patterns for several files.}
+\item{feature_types}{Optional set of feature types.}
 
-\item{feature_types}{Optional feature types to select. \code{NULL} retains all.}
+\item{lengths}{Optional named complete lengths for referenced records.}
 
-\item{lengths}{Optional named numeric vector of known full sequence lengths,
-following \code{\link[=as_ggchord_seq]{as_ggchord_seq()}}.}
+\item{python}{Python executable with Biopython available.}
 
-\item{python}{Interpreter name or path, default \code{"python3"}. It must already
-have the optional Biopython package installed. No environment is modified.
-An explicit virtual-environment interpreter keeps its entry path rather
-than resolving its executable symlink into a different environment.}
+\item{unsupported}{\code{"error"} stops at unsupported locations.
+\code{"report"} retains unplaced records in the report.}
 
-\item{unsupported}{\code{"error"} or \code{"report"} for locations without a safe
-local interval representation.}
-
-\item{source_file}{Add \code{.source_file} columns to output tables, default
-\code{FALSE}. File provenance is retained in the report regardless.}
+\item{source_file}{Whether to include row-level source paths.}
 }
 \value{
-A list with \code{seq_data}, named \code{features$annotation}, and \code{report}.
-Tables can be supplied to \code{\link[=prepare_ggchord_data]{prepare_ggchord_data()}}. Feature rows include
-\code{feature_id}, \code{parent_ids}, \code{segments}, source record/feature indices,
-\code{qualifiers}, \code{source_location}, \code{partial_start}/\code{partial_end}, and
-\code{location_operator}. \code{report$records} retains the complete parsed source
-CDS rows also expose source \code{codon_start}, \code{genetic_code}, biological
-\code{partial5}/\code{partial3}, and \code{translation_exception} qualifiers for explicit
-downstream coding-coordinate models. Missing CDS \code{codon_start} uses the
-INSDC default 1, marked by \code{codon_start_source = "format-default"}.
-Bound-only flags remain in \code{bound_partial5}/\code{bound_partial3}; CDS partial
-flags also record initial codon offset or terminal coding remainder, with
-their evidence in \code{partial5_source}/\code{partial3_source}. They describe the
-observed coding extent, not proof of a complete biological protein.
-No per-segment phase values are invented. \code{segment_order} preserves the
-source's declared coding-piece order independently of \code{segment_index}.
-metadata, \code{raw_files} retains original text, and \code{unplaced_features}
-identifies every selected feature not placed under \code{"report"}.
+A ggchord_import collection with sequences, features$annotation,
+and a source and parser report.
 }
 \description{
-Uses the public \code{Bio.SeqIO.parse(..., "genbank")} API in an explicitly
-selected Python environment with Biopython installed. The R package
-\code{jsonlite} exchanges structured temporary JSON with that process. This
-function never installs packages, downloads records, or runs during plot
-building. It reads all selected records into memory and is intended for
-small to moderate local annotation files, not chromosome-scale streaming.
-}
-\details{
-Record IDs, including accession versions, are retained exactly as returned
-by the source parser. Full parsed record annotations, feature qualifiers,
-source locations, and original file text are retained in \code{report}. Feature
-IDs use explicit \code{ID}, then \code{protein_id} for CDS, then \code{locus_tag}, then a
-non-placeholder parser feature ID. Missing IDs remain missing. Shared
-\code{locus_tag} values do not invent gene/CDS parent relationships; explicit
-\code{Parent} qualifiers become \code{parent_ids}.
-
-Simple and joined local locations retain one-based inclusive \code{segments}
-in parser order. Before/after fuzzy bounds retain their source descriptors
-and partial flags; they are displayed at the reported boundary rather than
-treated as exact biology. Remote locations, missing or unsupported fuzzy
-positions, zero-width sites, and mixed-strand joined features are never
-flattened into guessed intervals. \code{unsupported = "error"} stops by default;
-\code{"report"} retains these features in \code{report$unplaced_features} instead.
-An absent ORIGIN sequence does not imply an unknown declared length.
-Truly missing/zero lengths require explicit \code{lengths}; feature endpoints
-are never used to infer full lengths. Protein records require an explicit
-protein-coordinate workflow instead of this nucleotide reader.
+Read the source dictionary and source-backed feature positions with
+Biopython. Joined, partial, and origin-crossing locations retain their
+segments and source boundary information.
 }
 \examples{
 \dontrun{
-# Requires the source checkout or tutorial input bundle and optional Biopython.
-imported <- read_genbank("examples/format-inputs/pUC19c-L09137.2.gb")
-imported$report
+f <- system.file("extdata", "tutorial", "pUC19c-L09137.2.gb",
+  package = "ggchord")
+x <- read_genbank(f, feature_types = "CDS", python = "python3")
+head(x$features$annotation)
 }
-}
-\seealso{
-\url{https://biopython.org/docs/latest/api/Bio.SeqIO.html}
-
-\code{\link{ggchord_data_contract}}
 }

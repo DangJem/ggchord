@@ -2,161 +2,71 @@
 % Please edit documentation in R/geom-ribbon.R
 \name{geom_link_ribbon}
 \alias{geom_link_ribbon}
-\title{Add an alignment ribbon layer}
+\title{Draw interval-to-interval links}
 \usage{
 geom_link_ribbon(
   mapping = NULL,
   data = NULL,
-  link_ctrl_point = NULL,
-  link_gap = NULL,
-  link_avoid = c("uniform", "none", "smooth"),
-  link_branch = c("none", "query", "subject"),
-  link_branch_fraction = 0.15,
-  fill = NULL,
-  alpha = 0.42,
-  colour = "#59636D",
-  linewidth = 0.08,
-  linetype = NULL,
-  adjacent_only = NULL,
-  pairs = NULL,
+  stat = "identity",
   position = "identity",
-  show.legend = TRUE,
-  inherit.aes = TRUE,
-  nonadjacent_linewidth = 0.4,
-  between = NULL,
-  allow_repeated = FALSE,
-  tip = c("none", "subject"),
-  gradient = FALSE,
+  route = "curve",
+  fill_mode = "solid",
   ...,
-  id = NULL,
-  stat = "identity"
+  na.rm = FALSE,
+  show.legend = NA,
+  inherit.aes = TRUE,
+  id = NULL
 )
 }
 \arguments{
-\item{mapping}{Default NULL (uses pre-computed data)}
+\item{mapping}{Aesthetic mapping from \code{ggplot2::aes()}. A local mapping overrides the matching inherited channel.}
 
-\item{data}{Default NULL (retrieved automatically from the layout)}
+\item{data}{Observation table or a data function. For ggchord layers, provide the required data-role columns.}
 
-\item{link_ctrl_point}{Optional vector/list of Bezier edge controls.
-Two numbers specify one shared control; four numbers specify controls for
-the two ribbon edges. A per-row list may contain pairs of coordinate vectors.
-NULL uses the origin \code{c(0, 0)} in chord layouts and derives controls
-from the sequence endpoints in collinear layouts. In Radial layouts NULL
-uses annular curves; explicit controls use final Cartesian layout units,
-one point for each edge. Use a separate layer to adjust nonadjacent links
-without changing adjacent curves. This controls the middle of the path;
-\code{link_gap} only controls clearance at the sequence endpoints. With shared branches,
-controls shape the far ends while the junction follows the shared trunk.}
+\item{stat}{A compatible ggplot2 Stat or its name. The default uses the supplied records.}
 
-\item{link_gap}{Optional numeric/vector controlling spacing between
-sequences and ribbon endpoints. With the default
-\code{link_avoid = "uniform"}, \code{NULL} uses one obstacle-aware
-clearance across each endpoint. Use \code{"smooth"} for clearance that
-changes only next to \code{geom_feature(preset = "gene")} and \code{geom_feature()} polygons,
-or \code{"none"} for fixed spacing 0.035. Text and leader lines are ignored.
-Supplying a number disables the automatic rule and uses that exact spacing.
-Linear layouts reduce automatic baseline clearance to fit narrow channels;
-an explicit gap or feature clearance that cannot fit raises an error.}
+\item{position}{A compatible Position for placement of the layer geometry.}
 
-\item{link_avoid}{One of \code{"uniform"} (default), \code{"none"}, or
-\code{"smooth"}. Smooth avoidance changes clearance locally; uniform
-avoidance uses one clearance across an endpoint.}
+\item{route}{Choose curved or straight routes, or a shared corridor where supported.}
 
-\item{link_branch}{Share equal query or subject endpoints: "none", "query", "subject".}
+\item{fill_mode}{Use solid fill or map independent query and subject endpoint colours.}
 
-\item{link_branch_fraction}{Shared length relative to the shortest member, in (0, 0.5].}
+\item{...}{Additional named visual styles and parameters accepted by this layer.}
 
-\item{fill}{Optional fixed ribbon fill. NULL uses the default Identity fill.}
+\item{na.rm}{Suppress warnings for missing observations that the layer can omit.}
 
-\item{alpha, colour, linewidth}{Standard fixed ribbon styles. Explicit values
-take precedence over matching mappings; omitted defaults do not suppress
-user mappings. For example, omit \code{alpha} when mapping \code{ribbon_alpha}.}
+\item{show.legend}{Logical or named logical indicating whether the layer contributes legend keys.}
 
-\item{linetype}{Fixed outline line type. The default \code{NULL} uses solid
-outlines in Chord and Sankey views. \code{\link[=coord_collinear]{coord_collinear()}}
-uses dashed outlines for non-adjacent displayed rows, with widths set by
-\code{nonadjacent_linewidth}; adjacent rows stay solid. This row convention
-follows final display order, independently of alignment direction.
-\code{\link[=coord_radial_synteny]{coord_radial_synteny()}} also uses dashed nonadjacent outlines, with
-adjacency defined cyclically (including first/last); \code{nonadjacent_linewidth}
-uses the same width convention as Collinear.
-Explicit fixed styles or \code{aes(ribbon_linetype = ...)} (also
-\code{aes(linetype = ...)}) replace the automatic styles. Use a matching scale
-for data mappings; automatic styles do not train a linetype scale.
-Global line-type mappings are used when \code{inherit.aes = TRUE}.}
+\item{inherit.aes}{Whether to inherit plot mappings and evaluate them on the layer data.}
 
-\item{adjacent_only}{Whether only neighbouring sequences are connected.
-\code{NULL} uses TRUE in \code{\link[=coord_collinear]{coord_collinear()}} and FALSE in \code{\link[=coord_chord]{coord_chord()}}.
-Set FALSE to retain cross-track ribbons. Chord neighbours include the
-first/last sequence pair.}
-
-\item{pairs}{Optional data frame with \code{qaccver} and \code{saccver} selecting
-unordered comparison pairs. With \code{adjacent_only = NULL}, explicit pairs
-take precedence over the coordinate default. Omitted rows are reported
-by \code{\link[=export_ggchord_layout]{export_ggchord_layout()}}.}
-
-\item{position, show.legend, inherit.aes}{Standard ggplot2 layer arguments.}
-
-\item{nonadjacent_linewidth}{Fixed outline width for non-adjacent displayed
-rows in \code{\link[=coord_collinear]{coord_collinear()}} or nonadjacent spokes in
-\code{\link[=coord_radial_synteny]{coord_radial_synteny()}}, default 0.4 mm. These ribbons use dashed
-outlines by default. Zero uses the layer's ordinary \code{linewidth} for every
-ribbon. This changes width independently of line type. An explicit
-\code{aes(linewidth = ...)} controls widths instead of this fixed default.}
-
-\item{between}{Two display-instance names or declared-order indices for a unique route.}
-
-\item{allow_repeated}{Explicitly allow a declared source_hsp_id in more than one displayed relation.}
-
-\item{tip}{Full interval fronts (none, default), or an optional subject taper.
-The shoulder retains the translated target endpoint span at 88 percent
-of the channel. The tip is a decorative front-midpoint marker, not a
-single matched base or biological transfer direction. Degenerate fronts
-fall back to the full front with a warning. Source intervals are unchanged.}
-
-\item{gradient}{Logical. Opt into endpoint sequence-colour interpolation;
-default FALSE. Explicit fill, mapping and scales still take priority.}
-
-\item{...}{With a computed stat, pass \code{bins}, \code{weight}, or \code{group_by} here.
-Only bundling accepts \code{min_bundle}. Other arguments go to the ribbon geom.}
-
-\item{id}{Optional unique layer ID for layout and source exports.}
-
-\item{stat}{Source-interval statistic. Use \code{"identity"} to retain individual
-records, \code{"ribbon_bundle"} to aggregate them, or \code{"ribbon_density"} to
-annotate each record with local density. The two computed statistics
-have the same controls and computed variables as \code{\link[=stat_ribbon_bundle]{stat_ribbon_bundle()}}
-and \code{\link[=stat_ribbon_density]{stat_ribbon_density()}}.}
+\item{id}{Optional plot-local layer identifier. Name a layer explicitly to scope a scale, anchor a label or export it.}
 }
 \value{
-A ggplot2 layer.
+A ggplot2 layer for addition to a plot.
 }
 \description{
-Draws alignment ribbons with Identity fills by default.
-Set gradient = TRUE for query-to-subject sequence-colour interpolation. Explicit fill, ribbon_fill mappings or ribbon fill scales
-replace the gradient; map ribbon_fill = pident for an Identity guide. Alignment length and identity are never inferred from endpoints.
-Alternative mappings and legends are controlled with \code{aes()}, \verb{scale_*()}
-and \code{guides()}. With gradient enabled, shared trunks keep the common
-endpoint colour and branches interpolate between their endpoint colours. Optional tips appear
-only at real subject fronts.
+Draw interval-to-interval links
+}
+\details{
+Source references are \code{qaccver} and \code{saccver}. Point links consume \code{qpos} and \code{spos}. Interval links and alignment segments consume closed interval endpoints on both references. Supply reliable \code{qstrand} and \code{sstrand} or explicit relative direction when the geometry requires it.
 }
 \examples{
-library(dplyr)
-links <- ribbon_data_example |>
-  slice_head(n = 1) |>
-  select(qaccver, saccver, qstart, qend, sstart, send)
-seqs <- seq_data_example |>
-  filter(accver \%in\% c(links$qaccver, links$saccver)) |>
-  select(accver, length)
-ggchord(prepare_ggchord_data(seq_data = seqs, ribbon_data = links)) +
+library(ggplot2)
+
+seqs <- data.frame(
+  accver = c("A", "B"), length = c(1000, 800),
+  sequence_unit = "bp", topology = "linear"
+)
+
+links <- data.frame(
+  qaccver = "A", saccver = "B", qstart = c(100, 400),
+  qend = c(240, 620), sstart = c(150, 450), send = c(290, 650),
+  qstrand = "+", sstrand = c("+", "-"),
+  pident = c(98, 90), link_id = c("l1", "l2")
+)
+
+ggchord(seqs) +
   geom_seq() +
-  geom_link_ribbon()
-pair_links <- ribbon_data_example |>
-  filter(qaccver == links$qaccver, saccver == links$saccver)
-ggchord(prepare_ggchord_data(seqs, pair_links)) +
-  geom_seq() +
-  geom_link_ribbon(aes(ribbon_alpha = after_stat(density)),
-    stat = "ribbon_density", bins = 10, weight = "length", fill = "#265D76") +
-  scale_ribbon_alpha_continuous(name = "Density", range = c(.35, .95)) +
-  coord_collinear()
+  geom_link_ribbon(aes(fill = pident), data = links, id = "matches") +
+  coord_chord()
 }

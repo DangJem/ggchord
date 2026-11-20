@@ -1,157 +1,25 @@
 # ggchord 0.50.0 (development)
 
-- `feature_data` is the primary annotation argument (third position) in preparation,
-  validation, cleaning, focusing and segmentation. It replaces `gene_data` and
-  the old output slot. Map its columns with `mapping$feature`. Additional named
-  `features` remain independent. Gene presets inherit classified gene/CDS rows;
-  pass unclassified directional genes explicitly with `geom_feature(data = genes, preset = "gene")`.
-
-- The handbook now has seven plotting guides, individual flagship case pages
-  and a searchable function and argument reference. The home dashboard keeps
-  its seven original previews. Examples run from the installed package, and
-  the site uses each downloadable script to produce its figure or data output.
-  Native help marks the arguments that accept flexible parameters.
-- English is now the maintained source for paired documentation. Reviewed Han
-  translations share the same code, anchors, figures and navigation; the site
-  build checks them against the English source.
-
-- In a feature layer, `aes(accver = ref, fill = accver)` places each
-  feature on `ref` and colours it by its original `accver`. To colour by
-  the displayed reference as well, use `aes(accver = ref, fill = ref)`.
-  Inherited and local mappings follow the same rule.
-- Point tracks share the plot's shape scale with ordinary point layers.
-  Map `aes(shape = kind)` and use `scale_shape_manual()` to choose symbols.
-  On a track, `show.legend = c(fill = FALSE)` hides that layer's fill
-  guide contribution while preserving its other guides and drawn colours.
-  Missing style observations follow the scale's missing-value settings
-  under implicit grouping. Track axes no longer add a missing category
-  to discrete guides.
-- Faceted sequence axes and exported positions follow the reference length
-  and orientation of each panel. Use `map_ggchord_position(..., panel = 2)`
-  to select a panel when the same position has different projections. Links
-  and ribbons use the source accessions for faceting, including named display
-  instances and the left and right copies in Sankey plots.
-- Height layers selecting different panels of the same band share the range
-  of their selected observations by default. Open track lines inherit plot
-  mappings for source position and height in the same way as a local mapping.
-- Default feature colours and shape keys cover the categories drawn across
-  facets. A standard fill mapped on one layer can coexist with a ribbon
-  identity gradient or an explicit feature fill scale on another layer.
-- Feature layers inherit a plot-level `feature_shape` mapping when the layer
-  has no shape of its own. Facets keep the sample panels trained on source
-  observations, including samples left empty by sequence selection. Native
-  ggplot2 layers contribute the data returned by their `layer_data()` method.
-- Dotplot panel numbers follow the mapped query and subject factor levels
-  in both the drawing and the export. Links and ribbons retain the control
-  points assigned to each source row through panel and sequence selection.
-  Major and minor collinear sequence ticks use the perpendicular millimetre
-  scale of each panel, including on vertical backbones.
-- Native tracks adapt interval objects before source export or statistics.
-  Direct coverage and mean-depth references through `.data[["column"]]`
-  participate in band measure checks. Naming a display instance preserves
-  the track selection for the same accession. Partly visible columns report
-  clipping, and columns wholly outside the reference report `outside_window`.
-- Height layers can declare a `measure`. Conflicting measures in one band
-  identify the affected layers. Coverage and mean depth are recognised from
-  their direct mappings. `shared_track_limits()` checks the measures, units
-  and scale policies of selected tracks before returning common limits.
-- Track heights use a common domain across facets by default. Use
-  `scale_track_value_continuous(..., facet_domain = "panel")` for a visible
-  per-panel axis. Coverage tiles use actual window extents, including the
-  shorter final window. Named track fills retain alpha set by `after_scale()`.
-- Source-keyed point links, original ribbons and highlights can be faceted.
-  Fixed-scale Dotplots support ordered query/subject pairs with
-  `facet_wrap(vars(qaccver, saccver))` and `facet_grid()`; exports record the
-  panel and source row. Independent facet layouts use each panel's measured
-  dimensions to refine millimetre geometry and report its convergence.
-- Backbone accessions must be unique within each layer. Overlaid focused
-  backbones must identify the same original sequence and interval.
-  Track facets diagnose sample keys that collide with computed columns.
-- Restriction sites validate their nucleotide coordinates against the displayed
-  reference. Unknown accessions in annotations and connections identify the
-  layer, field, value and input rows. Region highlights draw inclusive cell
-  edges, including a single base or residue.
-- Source-only exports read layer inputs directly. To request geometry as well,
-  supply a nonempty `include` or request the geometry stage.
-
-- Overlaying sequence backbones with conflicting reference lengths, accessions
-  or units now reports both layer IDs before coverage is computed. Region
-  highlights and point-to-point links also check explicit bp/aa units against
-  the displayed backbone before projection.
-- Track mappings read the original source columns even when another role
-  remaps the accession. Interval columns use their inferred width by default
-  and honour an explicit width mapping. Start-stage mappings report missing
-  columns on zero-row inputs. Valid empty inputs still return a typed empty statistic.
-- Track coordinates and coverage denominators use the displayed backbone's
-  reference table, including a reference supplied to `geom_seq(data = ...)`.
-  An unknown accession reports its layer and source rows before statistics or
-  expansion into repeated display instances.
-- Track statistics use the evaluated source aesthetics once per build. Discrete
-  style combinations remain distinct when labels contain punctuation. A fixed
-  `group = 1` pools coverage across styles. Empty weighted counts preserve the
-  integer or double type of the weight mapping, including expressions.
-- Feature labels keep a verified shared-table anchor when the plot is saved and
-  reopened with `saveRDS()` and `readRDS()`. A layer that explicitly selects a
-  prepared table can share its source with a layer inheriting that same table.
-- All track inputs check an explicit `sequence_unit` against the reference
-  before statistics or projection. Missing unit declarations inherit the
-  reference. A track's fixed style overrides its inherited mapping before
-  grouping. Use `aes(group = kind)` for separate coverage estimates with one
-  fixed fill. Mapping and fixing the same aesthetic in one layer raises an error.
-- Feature labels without `feature_id` follow rows from a shared source in order.
-  Independently created tables with identical values keep independent positions.
-- A failed track Stat stops an ordinary build and preserves the last successful
-  cached layout. Empty built-in statistics retain known computed columns and their
-  types. Role-mapping errors identify the layer and source. Coverage diagnostics
-  identify invalid interval or window rows.
-
-- All exported `geom_*()` constructors reject unknown named parameters. For
-  example, `geom_seq(linewditth = 2)` points to `linewidth`. Track layers
-  accept parameters declared by their selected Geom, Stat and Position.
-  A parameter supplied to both an external Stat and its Geom raises an error
-  naming both recipients. Give the statistical control a distinct name, such
-  as `radius` alongside column `width`.
-- Spell out named arguments in the refactored positions, axis guides and
-  position/value scales, including calls forwarded through `...`.
-- All 21 sequence-layout geoms expose `id` for named exports. The native
-  alignment-cell layer `geom_residue()` accepts ggplot2's `name`.
-  Centre labels expose `position` and open track lines expose `stat`.
-- When `export_ggchord_layout()` is called with `data_stage`, the new
-  `layer_stage_status` table gives a status for each requested layer and
-  stage. A successful empty statistic is `available`. A track Stat error
-  marks its statistic and geometry as `failed` and supplies the cause.
-  Successful panels retain their rows. Errors in registered layer data
-  callbacks report the layer ID and the underlying error.
-  The [external Stat example](examples/stat-window-count.R)
-  shows how to count intersecting intervals per window and recover the
-  contributing rows from both a column layer and a line layer.
-
-- Start with `ggchord(reference, aes(...))` or a prepared object. Supply annotation
-  and relationship tables at their layers. A layer can inherit a unique eligible
-  table, override a global mapping, or opt out of inheritance. Native ggplot2
-  Layer subclasses retain their own build methods.
-- Declare a physical band with `track_band("depth", width = grid::unit(8, "mm"))`.
-  Layers with `track = "depth"` share its space and numerical range. Layers
-  with no track ID share the default band. Stack and dodge operate in source coordinates.
-- `stat_coverage()` and track geoms with `stat = "coverage"` accept a bin width
-  or explicit, possibly overlapping windows. Results expose source intervals,
-  units, actual denominators and contributing rows. Fixed-scale sample facets
-  compute statistics and feature lanes per panel. Custom track Stats can report
-  source members. Unreported membership is recorded as unknown.
-- Use `geom_feature(preset = "gene")` and `geom_feature(preset = "plasmid")`
-  for the previous geometries. `geom_feature_label(placement = "repel")`
-  follows a subset of a named entity layer through `anchor_layer`.
-  Use `layout_sequences()` for sequence order, orientation, gap and length
-  mode, and `position_offset()` for the starting offset.
-- Standard colour and fill mappings reach the rendered geoms and legend keys.
-  `guide_seq_axis()` selects the sequences to annotate, and
-  `guide_track_axis()` configures a quantitative track's axis text.
-- Dense circular labels reuse measured glyph bounds and leader anchors.
-  Four representative images were compared with the previous implementation
-  on the same device. Dotplots retain their original alignment segments.
-
-For the names removed in 0.50.0, see the [migration table](MIGRATION.md) and
-[executable example](examples/migrate-v0.50.0.R).
+- Rebuilt the public plotting API around one complete reference registered
+  through `ggchord(data = sequences)` or an explicit `geom_seq()` layer.
+  Observation layers receive their own tables and inherit mappings from the plot.
+- Added independent declarations for reference layouts, physical track bands,
+  track-value domains and label placement. The six coordinate systems project
+  those layouts. Dotplot supports independent query and subject axes.
+- Standardized feature, label, site, ribbon and track layer families.
+  Ordinary ggplot2 visual scales can be scoped to named layers with
+  `scale_for()`. Coverage, bundle and density statistics retain source evidence.
+- Ribbon fill mapped to `pident` uses the stepped Identity (%) guide with
+  proportional intervals and ticks at 0, 50, 80, 90, 95 and 100. Alignment
+  and point-link colour use line keys at the same percentages.
+- Updated data adapters, validation and the 16 readers to expose stable
+  reference identities, canonical coordinate roles and source reports.
+- Fusion arranges named plots and can display either observed relationships
+  or zoom decorations. Layout export reports four stages with explicit
+  availability and measurement status. Position queries address source,
+  local and display coordinates.
+- Updated the function help, paired tutorials and README figures for the
+  rewritten API.
 
 # ggchord 0.29.0
 

@@ -2,122 +2,52 @@
 % Please edit documentation in R/diagnostics.R
 \name{diagnose_ggchord}
 \alias{diagnose_ggchord}
-\title{Inspect one target-size render without changing the plot}
+\title{Diagnose plot references, layout and target-device fit}
 \usage{
 diagnose_ggchord(
   plot,
-  width = 7,
-  height = 5,
-  units = c("in", "cm", "mm", "px"),
-  device = c("png", "pdf", "svg"),
-  dpi = 144,
-  min_size = 2,
-  min_linewidth = 0.2,
-  colour_vision = FALSE
+  width = NULL,
+  height = NULL,
+  units = "in",
+  device = NULL,
+  dpi = 300,
+  action = "report"
 )
 }
 \arguments{
-\item{plot}{A ggchord plot.}
+\item{plot}{A ggchord plot, Fusion or registered character plot.}
 
-\item{width, height}{Positive target canvas dimensions.}
+\item{width, height}{Optional target device dimensions, specified together.}
 
-\item{units}{Dimensions in \code{"in"}, \code{"cm"}, \code{"mm"}, or \code{"px"}.}
+\item{units}{Device dimensions in inches, millimetres or centimetres.}
 
-\item{device}{Target device: \code{"png"}, \code{"pdf"}, or \code{"svg"}. It must be
-available in the current R environment. Only this device is inspected.}
+\item{device}{A png, pdf or svg device, a device function, or NULL.}
 
-\item{dpi}{Raster resolution; also defines pixel dimensions.}
+\item{dpi}{Raster device resolution.}
 
-\item{min_size, min_linewidth}{Advisory minimum text size and line width,
-both in millimetres. These do not modify the supplied style.}
-
-\item{colour_vision}{Request optional simulated colour-vision hints.}
+\item{action}{Return a report, warn on issues, or stop on error-level issues.}
 }
 \value{
-A \code{ggchord_diagnostics} list with \code{measurement}, \code{checks}, text and
-guide measurements, colour suggestions, existing \code{label_diagnostics},
-\code{annotation_registry}, \code{track_registry}, \code{track_diagnostics}, and captured
-device warnings. Field units and provenance are described in
-\link{ggchord_layout_contract}. \code{measurement$status} concerns panel measurement only;
-it never means that all quality or portability checks passed.
-For facet layouts with independent geometry, \code{facet_panels_mm} records
-measured bounds and \code{facet_contexts} records each panel's convergence.
+A structured issue table and measurement conditions.
 }
 \description{
-Builds on a temporary device of the requested kind and measures the actual
-panel bounds after gtable layout, then refines physical geometry within a
-bounded render-local context. The original plot and its layout cache are
-left unchanged. Standard saving continues to use \code{\link[ggplot2:ggsave]{ggplot2::ggsave()}}.
+Diagnose plot references, layout and target-device fit
 }
-\details{
-Results describe evidence, not a general quality certificate. Checks cover
-registered vertex bounds, measured text, small text/lines, oversized guides,
-and existing label/track diagnostics. Objects outside a panel with
-\code{clip = "off"} are legal when they still fit the canvas. Unregistered custom
-grobs, arrowhead extents, font embedding/fallback and cross-application
-transparency are not certified. Device warnings remain in the report.
-
-Grayscale suggestions compare luminance of opaque discrete mapped colours
-(difference below 0.05); continuous gradients are deliberately excluded.
-With \code{colour_vision = TRUE}, optional colorspace public simulations for
-protan/deutan/tritan at severity 1 in linear RGB flag Lab distances below 10.
-These heuristic thresholds ignore spatial context, alpha compositing and
-viewing conditions, and never automatically change the plot or fail a run.
-}
-\section{Label quality}{
-
-\code{label_quality} reports summary counts, text-object conflicts, registered
-annotation polylines and measured oriented text boxes in millimetres. Its
-\code{measurement} entry separates panel measurement, geometry convergence and
-physical refinement passes. Circular calibration may try one extrapolated
-scale, accepting it only after the usual measured convergence gate passes;
-rejected trials retain the ordinary refinement sequence. Drawing warns when
-bounded physical refinement does not converge; diagnostics capture that
-warning and retain the \code{physical_layout} check. Arc
-glyphs belonging to one string are one text object; their intentional
-internal contacts are not label collisions. Leader crossings exclude shared
-endpoints; through-text checks concern box interiors, not exact glyph ink.
-Source-label visibility follows the layer policy and may share one displayed
-label across records. It is distinct from the number of text/glyph boxes.
-Registered gene/feature polygon envelopes are checked against text boxes;
-\code{feature_contacts} separates proven own-source placement, other-source
-contacts and unresolved associations. Transparent polygons remain in this
-conservative geometry check. Non-polygon strokes/markers and visibility or
-occlusion are not checked; \code{feature_parts_unchecked} records skipped parts.
-Unregistered/outer decorations remain unchecked. These measurements never
-move, hide or change input records.
-Degenerate annotation placeholders with coincident endpoints are not
-counted as leaders. Circular label visibility can additionally report
-\code{leader_text_status} for clear, detoured or unresolved static-text routes.
-\code{leader_route_status} records bounded crossing detours or unresolved routes
-while preserving directed endpoints and source-label positions.
-\code{axis_clearance} records available automatic circular label decisions and
-radial shifts in millimetres, positive outward and negative inward.
-Composite site labels use the same bold name and regular coordinate
-fragments, physical gap and text styles as the renderer.
-}
-
-\section{Guide measurements}{
-
-\code{guide_measurements} records active roles, titles, item counts, device text
-widths/heights, requested key sizes, direction, grid and shared side budget.
-These complement actual guide-box measurements; requested key dimensions
-are not claimed as final grob bounds. Font fallback remains uninspected.
-With \code{\link[=adapt_ggchord]{adapt_ggchord()}}, \code{adaptive_layout} reports effective theme styles,
-selected default fixed geom line widths and scale factors. In adaptive mode,
-\code{guide_layout} reports the bounded joint
-search, selected guide grids/positions, explicit locks and measured guide-box
-bounds in mm. \code{feasible} concerns the guide canvas and reserved panel budget;
-it does not certify every label or custom grob. \code{insufficient_space} retains
-all categories and reports the failure instead of silently shrinking text.
-}
-
 \examples{
-library(dplyr)
-data(seq_data_example)
-seqs <- seq_data_example |>
-  select(accver, length)
-p <- ggchord(data = seqs) +
-  geom_seq()
-diagnose_ggchord(p, width = 8, height = 6, units = "in", device = "png")
+seqs <- data.frame(
+  accver = c("A", "B"), length = c(1000, 800),
+  sequence_unit = "bp", topology = "linear"
+)
+
+genes <- data.frame(
+  accver = c("A", "A", "B"), feature_id = c("g1", "g2", "g3"),
+  start = c(100, 400, 150), end = c(240, 620, 380),
+  strand = c("+", "-", "+"), label = c("g1", "g2", "g3"),
+  type = c("CDS", "tRNA", "CDS")
+)
+
+p_basic <- ggchord(seqs) + geom_seq() +
+  geom_gene(data = genes) + coord_collinear()
+
+diagnose_ggchord(p_basic, width = 8, height = 4, device = "pdf")
 }

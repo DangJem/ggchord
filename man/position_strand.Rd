@@ -4,7 +4,7 @@
 \alias{position_strand}
 \title{Place features on opposite sides according to strand}
 \usage{
-position_strand(offset = 0.1)
+position_strand(offset = 1)
 }
 \arguments{
 \item{offset}{A finite scalar or a flexible per-sequence/per-strand
@@ -20,4 +20,22 @@ offsets point inward.  A scalar is expanded to \verb{+ = offset} and
 not flipped again.
 In \code{\link[=coord_collinear]{coord_collinear()}}, the positive local normal points upward and the
 negative local normal downward, regardless of sequence orientation.
+}
+\examples{
+seqs <- data.frame(
+  accver = c("A", "B"), length = c(1000, 800),
+  sequence_unit = "bp", topology = "linear"
+)
+
+genes <- data.frame(
+  accver = c("A", "A", "B"), feature_id = c("g1", "g2", "g3"),
+  start = c(100, 400, 150), end = c(240, 620, 380),
+  strand = c("+", "-", "+"), label = c("g1", "g2", "g3"),
+  type = c("CDS", "tRNA", "CDS")
+)
+
+ggchord(data = seqs) + geom_seq() +
+  geom_feature(data = genes, shape = "arrow",
+    position = position_strand(list(A = c("+" = 2, "-" = -3), B = 1))) +
+  coord_collinear()
 }

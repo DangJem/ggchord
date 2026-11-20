@@ -9,11 +9,12 @@ find_common_features(
   database = NULL,
   types = NULL,
   features = NULL,
-  circular = TRUE,
-  mode = c("auto", "dna", "protein"),
+  circular = NULL,
+  mode = "dna",
+  genetic_code = NULL,
   min_protein_identity = 0.9,
   min_protein_coverage = 0.8,
-  resolve = c("best", "all")
+  resolve = "best"
 )
 }
 \arguments{
@@ -31,6 +32,8 @@ exactly known sequence, then follows each record's detection mode. Records
 marked \code{exactProteinMatch} use exact protein followed by near-exact DNA;
 other records use exact DNA. \code{"protein"} explicitly enables exact and
 approximate protein matching.}
+
+\item{genetic_code}{Optional integer genetic code identifier for protein matching.}
 
 \item{min_protein_identity, min_protein_coverage}{Approximate protein
 thresholds, each one finite number in \verb{[0, 1]}.}
@@ -57,6 +60,11 @@ nonstandard codes use \code{mode = "dna"} or external code-aware analysis.
 \code{confidence} is a deterministic heuristic label, not a probability or
 experimental confirmation. \code{identity} and \code{coverage} describe the reported
 match method, not independently validated biological function.
+}
+\examples{
+database <- data.frame(feature_id = "marker", name = "Marker",
+  sequence = "AACCGG", type = "misc_feature")
+find_common_features(c(A = "TTAACCGGTT"), database = database)
 }
 \seealso{
 \code{\link{ggchord_data_contract}}

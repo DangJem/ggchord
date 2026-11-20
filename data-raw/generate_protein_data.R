@@ -19,8 +19,8 @@ protein_ribbon_data_example <- read_blast("examples/protein/all-vs-all-blastp.ts
   mutate(sequence_unit = "aa")
 stopifnot(nrow(protein_seq_data_example) == 4L,
           nrow(protein_ribbon_data_example) == choose(4, 2))
-stopifnot(validate_ggchord_data(protein_seq_data_example,
-                              protein_ribbon_data_example)$valid)
+stopifnot(validate_ggchord_data(protein_ribbon_data_example, role = "link",
+                               sequences = protein_seq_data_example)$valid)
 save(protein_seq_data_example, file = "data/protein_seq_data_example.rda",
      compress = "xz", version = 2)
 save(protein_ribbon_data_example, file = "data/protein_ribbon_data_example.rda",

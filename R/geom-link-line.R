@@ -1,92 +1,80 @@
+ggchord_link_route <- function(route, dots, caller) {
+  route <- match.arg(route, c("curve", "straight", "shared"))
+  curvature <- dots$curvature %||% 0.5
+  bulge <- dots$bulge %||% 0.2
+  corridor <- ggchord_physical_mm(dots$corridor_width %||% 2, "corridor_width", TRUE)
+  if (!is.numeric(curvature) || length(curvature) != 1L || !is.finite(curvature) ||
+      curvature < 0 || curvature > 1 || !is.numeric(bulge) || length(bulge) != 1L ||
+      !is.finite(bulge) || bulge < 0 || length(corridor) != 1L || corridor <= 0)
+    ggchord_stop(caller, ": invalid route curvature, bulge, or corridor width")
+  if (route == "straight" && any(c("curvature", "bulge") %in% names(dots)))
+    ggchord_stop(caller, ": straight links do not use curvature or bulge")
+  if (route != "shared" && "corridor_width" %in% names(dots))
+    ggchord_stop(caller, ": corridor_width requires route = 'shared'")
+  args <- dots[setdiff(names(dots), c("curvature", "bulge", "corridor_width"))]
+  structure(list(route = route, curvature = curvature, bulge = bulge,
+    explicit_bulge = "bulge" %in% names(dots), corridor_width = corridor, dots = args),
+    class = "ggchord_link_route")
+}
+
 #' Draw point-to-point sequence links
-#'
-#' Requires qaccver, saccver, qpos and spos. Positions use the same genomic
-#' coordinates as sequence tracks. Curves run from query to subject; an arrow
-#' supplied by [arrow()] therefore points to the subject by default.
-#' @param mapping,data Standard ggplot2 mapping and layer data, including data functions.
-#'   Both endpoints use the backbone unit. An explicit `sequence_unit` must match it.
-#' @param link_type Either "curve" (default) or "straight".
-#' @param link_gap Explicit endpoint spacing. With the default
-#'   \code{link_avoid = "none"}, \code{NULL} uses a fixed spacing of 0.035.
-#'   Set \code{link_avoid} to \code{"smooth"} or \code{"uniform"} to opt in
-#'   to entity-aware endpoint spacing.
-#' @param link_ctrl_point Bezier control points: two numbers, four numbers, or a list per input row.
-#' @param link_avoid One of "none" (default), "smooth", or "uniform".
-#'   Explicit gap takes precedence.
-#' @param link_branch Share equal query or subject endpoints: "none", "query", "subject".
-#' @param link_branch_fraction Shared length relative to the shortest member, in (0, 0.5].
-#' @param between Two display-instance names or declared-order indices.
-#' @param allow_repeated Allow repeated display of an explicitly declared source_hsp_id.
-#' @param arrow A grid arrow specification, or NULL.
-#' @param colour,alpha,linewidth,linetype Fixed styles; mappings use link_* aesthetics.
-#'   An explicitly supplied fixed value takes precedence over the matching
-#'   mapping. Omit the fixed argument to retain a mapped style, including an
-#'   inherited mapping when `inherit.aes = TRUE`.
-#' @param position,show.legend,inherit.aes Standard ggplot2 layer arguments.
-#' @param ... Additional path parameters.
-#' @param id Optional unique layer ID for layout and source exports.
-#' @return A ggplot2 layer.
 #' @export
+#' @param mapping Aesthetic mapping from `ggplot2::aes()`. A local mapping overrides the matching inherited channel.
+#' @param data Observation table or a data function. For ggchord layers, provide the required data-role columns.
+#' @param stat A compatible ggplot2 Stat or its name. The default uses the supplied records.
+#' @param position A compatible Position for placement of the layer geometry.
+#' @param route Choose curved or straight routes, or a shared corridor where supported.
+#' @param ... Additional named visual styles and parameters accepted by this layer.
+#' @param na.rm Suppress warnings for missing observations that the layer can omit.
+#' @param show.legend Logical or named logical indicating whether the layer contributes legend keys.
+#' @param inherit.aes Whether to inherit plot mappings and evaluate them on the layer data.
+#' @param id Optional plot-local layer identifier. Name a layer explicitly to scope a scale, anchor a label or export it.
+#' @return A ggplot2 layer for addition to a plot.
+#' @details Source references are `qaccver` and `saccver`. Point links consume `qpos` and `spos`. Interval links and alignment segments consume closed interval endpoints on both references. Supply reliable `qstrand` and `sstrand` or explicit relative direction when the geometry requires it.
 #' @examples
-#' library(dplyr)
-#' data(seq_data_example)
-#' seqs <- seq_data_example |>
-#'   select(accver, length)
-#' data(ribbon_data_example)
-#' links <- ribbon_data_example |>
-#'   select(qaccver, saccver, qstart, qend, sstart, send, pident, length)
-#' points <- links |>
-#'   transmute(qaccver, saccver,
-#'     qpos = floor((qstart + qend) / 2),
-#'     spos = floor((sstart + send) / 2)
-#'   )
-#' ggchord(data = seqs) +
+#' seqs <- data.frame(
+#'   accver = c("A", "B"), length = c(1000, 800),
+#'   sequence_unit = "bp", topology = "linear"
+#' )
+#'
+#' points <- data.frame(qaccver = "A", qpos = 200, saccver = "B", spos = 220)
+#'
+#' ggchord(seqs) +
 #'   geom_seq() +
-#'   geom_link_line(data = points)
-geom_link_line <- function(mapping = NULL, data = NULL,
-    link_type = c("curve", "straight"), link_gap = NULL, link_ctrl_point = NULL,
-    link_avoid = c("none", "smooth", "uniform"),
-    link_branch = c("none", "query", "subject"), link_branch_fraction = 0.15,
-    arrow = NULL, colour = "#59636D", alpha = 0.6, linewidth = 0.4,
-    linetype = 1, position = "identity", show.legend = NA, inherit.aes = TRUE,
-    between = NULL, allow_repeated = FALSE, ..., id = NULL) {
+#'   geom_link_line(data = points, route = "curve", colour = "#187B77") +
+#'   coord_chord()
+geom_link_line <- function(mapping = NULL, data = NULL, stat = "identity",
+    position = "identity", route = "curve", ...,
+    na.rm = FALSE, show.legend = NA, inherit.aes = TRUE, id = NULL) {
   ggchord_check_argument_names(sys.call(), sys.function())
-  if (!is.logical(allow_repeated) || length(allow_repeated) != 1L || is.na(allow_repeated))
-    ggchord_stop("allow_repeated must be TRUE or FALSE")
-  style_defaults <- c(link_colour = missing(colour), link_alpha = missing(alpha),
-    link_linewidth = missing(linewidth), link_linetype = missing(linetype))
-  link_type <- match.arg(link_type)
-  link_avoid <- match.arg(link_avoid)
-  link_branch <- match.arg(link_branch)
-  ggchord_check_branch_fraction(link_branch_fraction)
-  if (link_type == "straight" && (!is.null(link_ctrl_point) || link_branch != "none"))
-    ggchord_stop("Straight links cannot use link_ctrl_point or link_branch; use link_type='curve'")
-  if (!is.null(arrow) && !inherits(arrow, "arrow")) ggchord_stop("arrow must be a grid::arrow() object")
-  mapping <- ggchord_normalize_mapping(mapping)
-  alias <- ggchord_colour_alias(colour, list(...), "geom_link_line()", sys.call())
-  if ("color" %in% names(list(...))) style_defaults[["link_colour"]] <- FALSE
-  styles <- list(link_colour = alias$colour, link_alpha = alpha,
-                 link_linewidth = linewidth, link_linetype = linetype)
-  ggchord_check_geom_params(alias$dots, GeomChordLinkLine, "geom_link_line()", position)
-  lyr <- ggplot2::layer(
+  caller <- "geom_link_line()"
+  controls <- ggchord_link_route(route, ggchord_colour_dots(list(...), caller), caller)
+  dots <- controls$dots
+  controls$dots <- NULL
+  position <- ggchord_as_feature_position(position, caller)
+  if (ggchord_local_position(position) && !identical(position$placement, "offset"))
+    ggchord_stop(caller, ": use identity or position_offset()")
+  ggchord_check_geom_params(dots, GeomChordLinkLine, caller, stat = stat)
+  parameters <- ggchord_split_source_stat(stat, dots, GeomChordLinkLine)
+  layer <- ggplot2::layer(
     data = data.frame(x = numeric(), y = numeric(), group = integer()),
-    mapping = ggplot2::aes(x = x, y = y, group = group), geom = GeomChordLinkLine,
-    stat = "identity", position = position, inherit.aes = inherit.aes,
+    mapping = aes(x = x, y = y, group = group), geom = GeomChordLinkLine,
+    stat = "identity", position = "identity", inherit.aes = inherit.aes,
     show.legend = show.legend, check.aes = FALSE,
-    params = c(styles, list(arrow = arrow), alias$dots))
-  lyr$ggchord_type <- "link"
-  lyr$ggchord_params <- list(id = id, type = "link", style_defaults = style_defaults,
-    between = between, allow_repeated = allow_repeated,
-    link_type = link_type, link_gap = link_gap,
-    link_ctrl_point = link_ctrl_point, link_avoid = link_avoid,
-    link_branch = link_branch, link_branch_fraction = link_branch_fraction)
-  ggchord_capture_layer_input(lyr, data, mapping, c("qaccver", "saccver", "qpos", "spos"))
+    params = c(list(na.rm = na.rm), parameters$geom)
+  )
+  layer$ggchord_type <- "link"
+  layer$ggchord_params <- list(id = id, type = "link", route = controls,
+    link_type = if (controls$route == "straight") "straight" else "curve",
+    link_gap = 0, link_avoid = "none", feature_position = position,
+    link_branch = if (controls$route == "shared") "query" else "none",
+    link_branch_fraction = 0.15, source_stat = parameters$stat)
+  ggchord_capture_layer_input(layer, data, mapping, c("qaccver", "saccver", "qpos", "spos"))
 }
 
 GeomChordLinkLine <- ggplot2::ggproto("GeomChordLinkLine", ggplot2::GeomPath,
   rename_size = FALSE,
-  default_aes = ggplot2::aes(link_colour = "#59636D", link_alpha = 0.6,
-    link_linewidth = 0.4, link_linetype = 1),
+  default_aes = ggplot2::aes(colour = "#59636D", alpha = .6, linewidth = .4, linetype = 1),
   draw_panel = function(data, panel_params, coord, arrow = NULL, lineend = "round",
                         linejoin = "round", linemitre = 10, na.rm = FALSE) {
     for (nm in c("colour", "alpha", "linewidth", "linetype")) data[[nm]] <- data[[nm]] %||% data[[paste0("link_", nm)]]
@@ -133,7 +121,7 @@ ggchord_link_controls <- function(control, row, fallback) {
 # A vector or a one-element list applies to every row. A shorter list extends
 # its last entry, as it does when rendering the unsliced layer.
 ggchord_link_control_rows <- function(control, rows) {
-  if (is.list(control) && length(control) > 1L) control[pmin(rows, length(control))]
+  if (is.list(control) && !inherits(control, "ggchord_link_route") && length(control) > 1L) control[pmin(rows, length(control))]
   else control
 }
 
@@ -148,7 +136,9 @@ ggchord_link_geometry <- function(data, params, layout) {
       ggchord_stop("geom_link_line(): positions must be finite and within sequence length")
   }
   if (isTRUE(layout$collinear)) return(ggchord_collinear_link_geometry(data, params, layout, rows))
-  gaps <- process_sequence_param(params$link_gap %||% 0.035, layout$seqs, "link_gap", 0.035)
+  gap_mm <- ggchord_resolve_position_offset(params$feature_position$offset %||% 0,
+    layout$seqs, "offset", "link position")
+  gaps <- vapply(gap_mm, function(value) value[[1L]] * ggchord_units_per_mm(), numeric(1))
   if (any(!is.finite(unlist(gaps)))) ggchord_stop("link_gap must contain finite numbers")
   endpoint <- function(id, pos) {
     f <- (pos - 1) / ref$lens[id]
@@ -163,8 +153,9 @@ ggchord_link_geometry <- function(data, params, layout) {
   out <- lapply(rows, function(i) {
     q <- endpoint(as.character(data$qaccver[i]), data$qpos[i])
     s <- endpoint(as.character(data$saccver[i]), data$spos[i])
-    cp <- ggchord_link_controls(params$link_ctrl_point, i, (q + s) / 4)
-    xy <- if (params$link_type == "straight") rbind(q, s) else bezier_pts(q, s, cp[[1]], cp[[2]], n = 60)
+    curvature <- params$route$curvature %||% .5
+    cp <- (q + s) * (1 - curvature) / 2
+    xy <- if (params$link_type == "straight") rbind(q, s) else bezier_pts(q, s, cp, cp, n = 60)
     xy <- ggchord_rotate_points(xy, layout$rotation)
     data.frame(x = xy[,1], y = xy[,2], group = i, source_row = i, .component = "branch")
   })

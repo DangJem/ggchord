@@ -1,56 +1,46 @@
-# Tiny format fixtures; no external programs or optional biological databases.
 seqs <- data.frame(accver = c("A", "B"), length = 1000)
-links <- data.frame(qaccver = "A", saccver = "B",
-  qstart = 100, qend = 200, sstart = 300, send = 400)
+links <- data.frame(qaccver = "A", saccver = "B", qstart = 100,
+  qend = 200, sstart = 300, send = 400, qstrand = "+", sstrand = "+")
 genes <- data.frame(accver = c("A", "B"), start = c(100, 400),
-  end = c(200, 500), type = "gene", strand = c("+", "-"), anno = c("alpha", "beta"))
+  end = c(200, 500), strand = c("+", "-"), label = c("alpha", "beta"))
 
 test_that("core layers build and keep manual gene colours", {
   colours <- c("+" = "#56887C", "-" = "#B58169")
-  p <- ggchord(prepare_ggchord_data(seqs, links, genes[c("accver", "start", "end", "strand", "type")])) +
-    geom_seq() + geom_link_ribbon() + geom_feature(preset = 'gene') + geom_seq_label() +
-    scale_gene_fill_manual(values = colours)
+  p <- ggchord() + geom_seq(data = seqs) + geom_link_ribbon(data = links) +
+    geom_gene(ggplot2::aes(fill = strand), data = genes) +
+    ggplot2::scale_fill_manual(values = colours)
   built <- ggplot2::ggplot_build(p)
-  expect_s3_class(built, "ggplot_built")
-  # Automatic axes may insert layers before genes; select the actual fill output.
-  fills <- unlist(lapply(built$data, function(layer) layer$gene_fill))
-  expect_setequal(fills, unname(colours))
+  fills <- unlist(lapply(built$data, function(layer) layer$fill))
+  expect_true(all(colours %in% fills))
+  expect_true(ggplot2::is_waiver(p$data))
 })
 
-test_that("three label layouts retain representative annotations", {
-  p <- ggchord(prepare_ggchord_data(seqs, feature_data = genes)) + geom_seq() + geom_feature(preset = 'gene')
-  for (mode in c("radial", "auto", "arc")) {
-    labels <- get_chord_layout(p + geom_gene_label_repel(label_layout = mode))$gene_labels
-    expect_setequal(labels$label, genes$anno)
+test_that("fixed and repelled labels retain representative annotations", {
+  p <- ggchord(seqs) + geom_gene(data = genes, id = "genes") + coord_collinear()
+  for (layer in list(geom_gene_label(anchor_layer = "genes"),
+                     geom_gene_label_repel(anchor_layer = "genes"))) {
+    built <- ggplot2::ggplot_build(p + layer)
+    labels <- unlist(lapply(built$data, function(layer) as.character(layer$label)))
+    expect_true(all(genes$label %in% labels))
   }
 })
 
-test_that("feature, region and point-link layers retain source rows", {
-  p <- ggchord(seqs) + geom_seq() + geom_feature(data = genes) +
-    geom_seq_region(data = genes) +
-    geom_link_line(data = data.frame(qaccver = "A", saccver = "B", qpos = 100, spos = 400))
-  out <- export_ggchord_layout(p, include = c("feature", "link"))
-  expect_setequal(out$feature$source_row, 1:2)
-  expect_setequal(out$feature$source_row[out$feature$component == "seq_region"], 1:2)
-  expect_equal(unique(out$link$source_row), 1L)
+test_that("feature, region and point-link layers retain their source tables", {
+  points <- data.frame(qaccver = "A", saccver = "B", qpos = 100, spos = 400)
+  p <- ggchord(seqs) + geom_feature(data = genes, id = "genes") +
+    geom_seq_region(data = genes, id = "region") +
+    geom_link_line(data = points, id = "points")
+  out <- export_ggchord_layout(p, stages = "source")
+  expect_setequal(out$stage_status$layer_id, c("genes", "region", "points"))
+  expect_true(all(out$stage_status$status == "available"))
 })
 
-test_that("automatic ribbon styles follow each coordinate's adjacency", {
-  s <- data.frame(accver = LETTERS[1:4], length = 1000)
-  h <- data.frame(qaccver = "A", saccver = c("B", "C", "D"),
-    qstart = 100, qend = 200, sstart = 300, send = 400)
-  coords <- list(coord_chord(), coord_collinear(), coord_radial_synteny(), coord_sankey())
-  for (i in seq_along(coords)) {
-    p <- ggchord(prepare_ggchord_data(s, h)) + geom_seq() +
-      geom_link_ribbon(adjacent_only = FALSE) +
-      geom_link_ribbon(adjacent_only = FALSE, linetype = "dotted") + coords[[i]]
+test_that("explicit ribbon styles follow all sequence relationship projections", {
+  for (coord in list(coord_chord(), coord_collinear(), coord_radial_synteny(), coord_sankey())) {
+    p <- ggchord(seqs) + geom_link_ribbon(data = links, colour = "black",
+      linetype = "dotted") + coord
     built <- ggplot2::ggplot_build(p)
-    ribbons <- Filter(function(d) "ribbon_fill" %in% names(d), built$data)
-    styles <- function(d) unname(vapply(split(d$linetype, d$group), unique, character(1)))
-    expected <- switch(i, rep("solid", 3), c("solid", "dashed", "dashed"),
-      c("solid", "dashed", "solid"), rep("solid", 3))
-    expect_equal(styles(ribbons[[1]]), expected)
-    expect_equal(styles(ribbons[[2]]), rep("dotted", 3))
+    expect_true("dotted" %in% built$data[[1]]$linetype)
   }
 })
 
@@ -59,9 +49,9 @@ test_that("empty primer results compose with circular layers", {
     primers = c(test = "ACGTTGCA"), min_annealed_bases = 8)
   p <- ggchord(data.frame(accver = "A", length = 20)) + geom_seq() +
     geom_primer(data = hits) + geom_primer_label_repel(data = hits) + coord_circular()
-  out <- export_ggchord_layout(p, include = c("gene", "labels"))
-  expect_equal(nrow(out$gene), 0L)
-  expect_equal(nrow(out$labels), 0L)
+  out <- export_ggchord_layout(p, stages = "source")
+  expect_true(all(out$stage_status$status == "available"))
+  expect_equal(sum(vapply(out$source, function(layer) nrow(layer$data) == 0L, logical(1))), 2L)
 })
 
 test_that("Unicode measurement preserves content and the active PDF device", {

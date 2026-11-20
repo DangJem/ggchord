@@ -4,10 +4,10 @@
 \alias{project_ggchord_links}
 \title{Project explicitly ungapped protein links to genomic coding segments}
 \usage{
-project_ggchord_links(link_data, cds, ungapped = FALSE)
+project_ggchord_links(links, cds, ungapped = FALSE)
 }
 \arguments{
-\item{link_data}{Data frame with \code{qfeature_id}, \code{sfeature_id} identifying CDS
+\item{links}{Data frame with \code{qfeature_id}, \code{sfeature_id} identifying CDS
 models and ordered inclusive protein \code{qstart}, \code{qend}, \code{sstart}, \code{send}.
 Query and subject residue spans must be equal. If present, \code{gapopen} must
 be zero and source \code{length} must equal this residue span.}
@@ -32,23 +32,12 @@ alignments require explicit per-column alignment information and cannot be
 projected by this endpoint-only helper.
 }
 \examples{
-library(dplyr)
-data(plasmid_example_pUC19)
-feature_source <- find_common_features(plasmid_example_pUC19)
-features <- feature_source |>
-  select(accver, start, end, strand, type, anno)
-coding <- features |>
-  filter(anno == "AmpR", type == "CDS") |>
-  select(accver, start, end, strand) |>
-  mutate(feature_id = paste(accver, "AmpR", sep = ":"), phase = 0)
-cds <- build_ggchord_cds(coding, genetic_code = 11)
-# Self-correspondence of one real CDS, solely to demonstrate coordinate conversion.
-# The same observed residues are paired, so the correspondence is ungapped.
-selected <- tibble(
-  qfeature_id = coding$feature_id, sfeature_id = coding$feature_id,
-  qstart = 1, qend = 20, sstart = 1, send = 20
-)
-project_ggchord_links(selected, cds, ungapped = TRUE)
+coding <- data.frame(feature_id=c("ca","cb"), accver=c("A","B"),
+  start=c(1,10), end=c(9,18), strand=c("+","-"), phase=0)
+cds <- build_ggchord_cds(coding, genetic_code=11)
+protein_links <- data.frame(qfeature_id="ca", sfeature_id="cb",
+  qstart=1, qend=3, sstart=1, send=3)
+project_ggchord_links(protein_links, cds, ungapped=TRUE)
 }
 \seealso{
 \code{\link{ggchord_data_contract}}

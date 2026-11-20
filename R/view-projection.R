@@ -1,7 +1,7 @@
 # Final view projection changes geometry, never source input tables.
 ggchord_project_vertical_data <- function(data) {
   if (!is.data.frame(data) || !nrow(data)) return(data)
-  for (pair in list(c("x", "y"), c("x0", "y0"), c("x1", "y1"),
+  for (pair in list(c("x", "y"), c("x0", "y0"), c("x1", "y1"), c("xend", "yend"),
       c("text_x", "text_y"), c("label_x", "label_y"), c("anchor_x", "anchor_y"))) {
     if (!all(pair %in% names(data))) next
     x <- data[[pair[1L]]]; y <- data[[pair[2L]]]

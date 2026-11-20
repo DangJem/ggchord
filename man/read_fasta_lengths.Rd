@@ -2,61 +2,41 @@
 % Please edit documentation in R/data-import.R
 \name{read_fasta_lengths}
 \alias{read_fasta_lengths}
-\title{Read one or more FASTA files into seq_data format}
+\title{Read complete sequence lengths from FASTA}
 \usage{
 read_fasta_lengths(
-  file = NULL,
-  files = NULL,
+  file,
+  sequence_unit,
   header_delim = NULL,
-  source_file = FALSE,
-  sequence_unit = NULL,
-  keep_sequence = FALSE
+  keep_sequence = FALSE,
+  source_file = FALSE
 )
 }
 \arguments{
-\item{file}{Optional path vector or glob patterns; read before \code{files}.}
+\item{file}{Local FASTA paths.}
 
-\item{files}{Optional character vector of FASTA files (literal paths and/or
-wildcard patterns). All matched files are read and combined.}
+\item{sequence_unit}{Explicit \code{"bp"} or \code{"aa"} coordinate unit.}
 
-\item{header_delim}{Optional character. When given, each header is split at
-every occurrence of this delimiter and only the first piece is kept.}
+\item{header_delim}{Optional literal identifier separator. The default
+uses the first whitespace-separated token.}
 
-\item{source_file}{Logical. Add a \code{.source_file} column when reading one or
-more files, default \code{FALSE}.}
+\item{keep_sequence}{Include original ungapped characters.}
 
-\item{sequence_unit}{Optional \code{"bp"} or \code{"aa"} declaration. When supplied,
-adds that column to the result; the alphabet is not inferred. Omitted
-units retain the existing output columns and ggchord interprets them as bp.}
-
-\item{keep_sequence}{Logical, default \code{FALSE}. Also retain the actual FASTA
-characters in \code{sequence}, removing whitespace only and preserving case.
-No alphabet, reverse complement or alignment columns are inferred. Gap
-characters, if present, are counted in \code{length}; gapped input needs an
-explicit alignment-to-source map before genomic use.}
+\item{source_file}{Whether to include row-level source paths.}
 }
 \value{
-A data.frame with columns \code{accver} and \code{length}, plus
-\code{sequence_unit} and \code{sequence} when explicitly requested.
-A \code{ggchord_import} attribute records files and per-file output row counts.
+A reference data frame with accver, length and sequence_unit, and
+optional sequence. Headers and file provenance are retained.
 }
 \description{
-\code{file} reads a single FASTA file; \code{files} reads multiple files at once and
-combines them. \code{files} accepts a character vector of literal paths and/or
-wildcard patterns (e.g. \code{"examples/fasta/*.fna"}).
+Count both uppercase and lowercase source characters, excluding wrapping
+whitespace. Gaps belong in \code{\link[=read_aligned_fasta]{read_aligned_fasta()}}. A FASTA record's full
+length does not prove that it is the full chromosome from which the
+record originated.
 }
 \examples{
-\dontrun{
-library(dplyr)
-# Requires the source checkout or tutorial input bundle.
-source <- read_fasta_lengths("examples/fasta/MT108731.1.fna")
-seqs <- source |>
-  select(accver, length)
-characters <- read_fasta_lengths(
-  "examples/fasta/MT108731.1.fna", keep_sequence = TRUE
-)
-}
-}
-\seealso{
-\code{\link{ggchord_data_contract}}
+f <- tempfile(fileext=".fa")
+writeLines(c(">A", "ACGTACGT"), f)
+ref <- read_fasta_lengths(f, sequence_unit="bp", keep_sequence=TRUE)
+unlink(f)
 }

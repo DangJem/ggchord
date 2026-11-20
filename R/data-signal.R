@@ -1,41 +1,25 @@
 # File coordinates belong to data. Track headers never override plot grammar.
 # Specification: https://genome.ucsc.edu/goldenPath/help/bedgraph.html
 
-#' Read bedGraph intervals as quantitative track data
+#' Read bedGraph signal intervals
 #'
-#' Reads four columns, converts zero-based half-open coordinates to one-based
-#' inclusive positions, and retains every finite signed value and source row.
-#' Missing intervals remain absent: no zero filling, interpolation, sorting or
-#' aggregation is performed. Overlapping rows are retained as observations,
-#' not silently resolved into a single value. Choose any summarisation explicitly.
+#' Convert half-open spans to one-based closed source intervals without
+#' computing values at unobserved positions.
 #'
-#' A file contains one signal. More than one track definition is rejected;
-#' split different browser tracks explicitly rather than mixing their domains.
-#' Comments and display headers are retained in import provenance. Their colour,
-#' smoothing and other display instructions never configure a ggchord plot.
-#' Sequence identifiers, including literal track/browser, are retained verbatim.
-#' Neither value units nor sequencing coverage are inferred from the file name.
-#'
-#' @param file Optional input path vector or glob patterns, before files.
-#' @param files Optional additional paths or wildcard patterns for bedGraph files.
-#' @param source_file Logical. Add .source_file to each row, default FALSE.
-#' @return A data frame with accver, start, end, value, original chromStart,
-#'   chromEnd, dataValue and physical .source_line. The ggchord_import attribute
-#'   records conventions, per-file row counts, and unchanged headers. When
-#'   combining different signals, keep source_file = TRUE and select each
-#'   signal's layers/scales explicitly. Coordinate units follow source metadata.
-#' @seealso [geom_track()], [scale_track_value_continuous()]
+#' @param file Local bedGraph paths.
+#' @param source_file Whether to include row-level source paths.
+#' @return A track table with accver, start, end, value and source provenance.
 #' @export
 #' @examples
-#' # Actual 100-bp-window GC percentages; not measured read coverage.
-#' path <- system.file("extdata", "pUC19-gc-100.bedGraph", package = "ggchord")
-#' signal <- read_bedgraph(path)
-#' head(signal)
-read_bedgraph <- function(file = NULL, files = NULL, source_file = FALSE) {
+#' f <- tempfile(fileext = ".bedgraph")
+#' writeLines(c("A	0	100	0.4", "A	100	200	0.6"), f)
+#' signal_intervals <- read_bedgraph(f)
+#' unlink(f)
+read_bedgraph <- function(file, source_file = FALSE) {
   caller <- 'read_bedgraph()'
   if (!is.logical(source_file) || length(source_file) != 1L || is.na(source_file))
     ggchord_stop(caller, ': source_file must be TRUE or FALSE')
-  paths <- ggchord_resolve_files(file, files, 'read_bedgraph')
+  paths <- ggchord_resolve_files(file, NULL, 'read_bedgraph')
   input <- lapply(paths, function(path) {
     parsed <- ggchord_format_lines(path, caller, bed = TRUE)
     if (any(lengths(parsed$fields) != 4L)) ggchord_stop(caller,
@@ -92,48 +76,24 @@ ggchord_bigwig_selection <- function(which, information, caller) {
   GenomicRanges::reduce(query, ignore.strand = TRUE)
 }
 
-#' Read indexed BigWig signals through an optional mature decoder
+#' Read a BigWig signal track
 #'
-#' Uses optional rtracklayer and its GRanges import. Those coordinates are
-#' already one-based inclusive and are not shifted again. Stored sequence
-#' lengths come from the file header, not the last nonmissing interval.
-#' Scores retain the binary file's floating-point representation. They are
-#' signal values, not original observation counts, identity or read support.
+#' Read source intervals using the optional rtracklayer decoder. Missing
+#' intervals remain missing. Signal units retain their source meaning.
+#' The source report retains sequence lengths and the actual selection.
 #'
-#' Optional selection is an unstranded coordinate union, so overlapping query
-#' windows do not duplicate a source signal. Returned runs are clipped to
-#' that union. The original query and effective union are retained
-#' separately; no pre-clipping window boundaries are invented. Missing ranges
-#' stay absent, and imported missing scores remain missing. No zero filling,
-#' smoothing, summarisation or value-unit inference is performed.
-#' The optional decoder does not support BigWig on Windows; use an existing
-#' bedGraph file with read_bedgraph() there instead.
-#'
-#' @param file Optional local input path vector or glob patterns, before files.
-#' @param files Optional additional paths or wildcards for local BigWig files.
-#' @param which NULL for the whole file, or a GRanges / data frame with
-#'   character accver and numeric start/end in one-based inclusive coordinates.
-#'   Unknown accessions and out-of-bounds intervals fail explicitly. An empty
-#'   selection returns no signal rows. The same selection applies to each file.
-#' @param source_file Logical. Add .source_file to each row, default FALSE.
-#' @return A data frame with accver, start, end, value and original imported
-#'   score. Import provenance includes decoder/version, each file's sequence
-#'   dictionary, original query and effective selected intervals. No physical
-#'   source lines or original measurement IDs are manufactured from a binary file.
-#' @seealso [read_bedgraph()], [geom_track()]
+#' @param file Local BigWig paths.
+#' @param which Optional genomic selection as a supported interval object
+#'   or an accver/start/end table.
+#' @param source_file Whether to include row-level source paths.
+#' @return An accver/start/end/value track table with a decoder and selection report.
 #' @export
 #' @examples
-#' \donttest{
-#' # Optional Bioconductor decoder loading can take several seconds.
-#' if (.Platform$OS.type != "windows" && requireNamespace("rtracklayer", quietly = TRUE)) {
-#'   # Packaged real GC signal, not measured read coverage.
-#'   path <- system.file("extdata", "pUC19-gc-100.bw", package = "ggchord")
-#'   signal <- read_bigwig(path,
-#'     which = data.frame(accver = "pUC19", start = 50, end = 150))
-#'   head(signal)
+#' if (requireNamespace("rtracklayer", quietly = TRUE)) {
+#'   file <- system.file("extdata", "pUC19-gc-100.bw", package = "ggchord")
+#'   read_bigwig(file)
 #' }
-#' }
-read_bigwig <- function(file = NULL, files = NULL, which = NULL, source_file = FALSE) {
+read_bigwig <- function(file, which = NULL, source_file = FALSE) {
   caller <- 'read_bigwig()'
   if (.Platform$OS.type == 'windows') ggchord_stop(caller,
     ': optional rtracklayer BigWig decoding is unsupported on Windows; use read_bedgraph() with an existing bedGraph file')
@@ -141,7 +101,7 @@ read_bigwig <- function(file = NULL, files = NULL, which = NULL, source_file = F
     ": requires optional package 'rtracklayer'; install it or read an existing bedGraph with read_bedgraph()")
   if (!is.logical(source_file) || length(source_file) != 1L || is.na(source_file))
     ggchord_stop(caller, ': source_file must be TRUE or FALSE')
-  paths <- ggchord_resolve_files(file, files, 'read_bigwig')
+  paths <- ggchord_resolve_files(file, NULL, 'read_bigwig')
   input <- lapply(paths, function(path) {
     resource <- rtracklayer::BigWigFile(path)
     information <- ggchord_conversion_seqinfo(GenomicRanges::seqinfo(resource), caller)

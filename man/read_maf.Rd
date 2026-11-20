@@ -2,64 +2,32 @@
 % Please edit documentation in R/data-genome-alignment.R
 \name{read_maf}
 \alias{read_maf}
-\title{Read existing MAF blocks with exact source characters}
+\title{Read true alignment characters and relationships from MAF}
 \usage{
-read_maf(
-  file = NULL,
-  files = NULL,
-  alphabet = "DNA",
-  python = "python3",
-  source_file = FALSE
-)
+read_maf(file, alphabet = "DNA", python = "python3", source_file = FALSE)
 }
 \arguments{
-\item{file}{Optional local path vector or glob patterns, before files.}
+\item{file}{Local MAF paths.}
 
-\item{files}{Optional additional MAF paths or patterns.}
+\item{alphabet}{Explicit DNA, RNA, or AA.}
 
-\item{alphabet}{Declared DNA, RNA or AA alphabet, default "DNA".}
+\item{python}{Python executable with Biopython available.}
 
-\item{python}{Existing interpreter with optional Biopython, default "python3".}
-
-\item{source_file}{Add .source_file to alignment/ribbon rows, default FALSE.}
+\item{source_file}{Whether to include row-level source paths.}
 }
 \value{
-A list with seq_data (declared full lengths), ribbon_data, alignment
-cells and report. Source indices and original decoder metadata remain in
-the report. No pident or read support is manufactured.
+A ggchord_import collection with sequences, links$maf,
+alignments$maf, and block provenance.
 }
 \description{
-Optional Biopython Bio.Align parses local MAF through an explicitly selected
-Python environment. No alignment is computed. Full source IDs, lengths,
-block scores, coordinate matrices and original text remain traceable. Empty
-components and quality/context lines remain in source text/parser metadata;
-no characters or relations are invented for absent components.
-Zero-length s components are listed in report$unplaced_components. They do
-not acquire source positions or links; an empty first anchor is not replaced
-by another component implicitly.
-}
-\details{
-Each block's first component is the query anchor, paired with every other
-nonempty component. No all-pairs clique or Identity is inferred. Source
-positions come from the decoder's forward zero-based boundary matrix and
-are converted once to directional one-based inclusive endpoints. Negative
-rows decrease from their true forward source coordinate, not the offset on
-the reverse-complement string. Blocks and input files are separate contexts.
-
-Alignment cells reuse \code{\link[=as_ggchord_alignment]{as_ggchord_alignment()}}. Original symbols and gaps
-are retained; gaps have missing source positions. Full lengths do not verify
-source characters independently, so source_verified stays FALSE. Filter
-.source_input and source_block before column lookup or drawing a character
-panel: alignment columns restart at one in each block. No blocks are joined,
-renumbered or promoted to complete source sequences.
+Keep block context and real character columns. A block's first component
+is its query anchor. An empty anchor yields no derived relation.
+Select a single block when displaying a character alignment.
 }
 \examples{
 \dontrun{
-# Requires an existing Python environment with optional Biopython.
-blocks <- read_maf("examples/genome-alignments/ucsc_mm9_chr10.maf")
-local <- blocks$alignment[blocks$alignment$source_block == 1, ]
+f <- system.file("extdata", "tutorial", "ucsc_mm9_chr10.maf", package = "ggchord")
+x <- read_maf(f, python = "python3")
+head(x$alignments$maf)
 }
-}
-\seealso{
-\code{\link[=read_chain]{read_chain()}}, \code{\link[=map_alignment_position]{map_alignment_position()}}
 }

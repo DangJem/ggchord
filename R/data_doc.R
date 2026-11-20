@@ -233,7 +233,6 @@ NULL
 #'     and `sankey`, each containing `seq_data`, selected links, `features`
 #'     and ordered `labels`. Chord/Radial also contain display `orientation`;
 #'     Collinear/Sankey separate `adjacent_links` and `cross_links`.
-#'     Collinear `route_controls` apply to the unchanged fixed flagship layout.
 #'     The additional `comparison` entry retains the original four-coordinate
 #'     teaching inputs as `seq_data`, `links`, `features` and `events`.}
 #'   \item{flagship_dotplot_example}{Complete `seq_data` and `links`, the

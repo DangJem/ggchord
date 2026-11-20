@@ -86,7 +86,6 @@ ggchord_build_fusion <- function(x) {
   overlays <- lapply(result$overlay_grobs, function(g) grid::grobTree(g, vp = viewport))
   obstacles <- ggchord_fusion_guide_obstacles(decoration$table, '', origin)
   result$export$routing_obstacles <- ggchord_rbind_fill(list(result$export$routing_obstacles, obstacles))
-  result$export <- ggchord_fusion_recheck_routes(result$export, result$export$routing_obstacles)
   result$export$metadata$content_canvas_mm <- dimensions
   result$export$metadata$content_bounds_mm <- bounds
   result$export$metadata$canvas_mm <- canvas

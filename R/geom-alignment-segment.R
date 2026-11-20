@@ -1,77 +1,57 @@
-#' Draw HSP alignment segments
-#'
-#' Projects each standard ribbon-data row from `(qstart, sstart)` to
-#' `(qend, send)` in [coord_dotplot()]. All four endpoints are retained;
-#' reverse alignments must have normalized descending endpoints, as returned
-#' by [read_paf()]. Explicit unknown `direction` or `strand` values are omitted
-#' with a warning and recorded in the layout connection report.
-#' This is an HSP-level view, not a reconstruction of mismatches or gaps.
-#'
-#' @param mapping,data Standard ggplot2 mapping and layer data. Data defaults
-#'   to the constructor's `ribbon_data`. Geometry roles are `qaccver`,
-#'   `saccver`, `qstart`, `qend`, `sstart`, and `send`.
-#' @param colour,alpha,linewidth,linetype Fixed styles. Mapped styles use
-#'   `link_colour`, `link_alpha`, `link_linewidth` and `link_linetype`, with
-#'   the corresponding [scale_link] functions. Explicit fixed styles win.
-#' @param allow_repeated Allow explicitly identified `source_hsp_id` records to
-#'   be displayed more than once. All participating layers must opt in. Rows
-#'   without declared IDs are never deduplicated by their values.
-#' @param position Only `"identity"` is supported: data adjustment would
-#'   change the alignment endpoints.
-#' @param show.legend,inherit.aes Standard ggplot2 layer arguments.
-#' @param ... Additional arguments passed to ggplot2's segment geometry.
-#' @param id Optional unique layer ID for layout and source exports.
-#' @return A ggplot2 layer for a ggchord Dotplot.
+#' Draw HSP alignments as Dotplot segments
 #' @export
+#' @param mapping Aesthetic mapping from `ggplot2::aes()`. A local mapping overrides the matching inherited channel.
+#' @param data Observation table or a data function. For ggchord layers, provide the required data-role columns.
+#' @param stat A compatible ggplot2 Stat or its name. The default uses the supplied records.
+#' @param position A compatible Position for placement of the layer geometry.
+#' @param ... Additional named visual styles and parameters accepted by this layer.
+#' @param na.rm Suppress warnings for missing observations that the layer can omit.
+#' @param show.legend Logical or named logical indicating whether the layer contributes legend keys.
+#' @param inherit.aes Whether to inherit plot mappings and evaluate them on the layer data.
+#' @param id Optional plot-local layer identifier. Name a layer explicitly to scope a scale, anchor a label or export it.
+#' @return A ggplot2 layer for addition to a plot.
+#' @details Source references are `qaccver` and `saccver`. Point links consume `qpos` and `spos`. Interval links and alignment segments consume closed interval endpoints on both references. Supply reliable `qstrand` and `sstrand` or explicit relative direction when the geometry requires it.
 #' @examples
-#' library(dplyr)
-#' pair <- ribbon_data_example |>
-#'   filter(qaccver == "MT108731.1", saccver == "MT118296.1")
-#' ggchord(prepare_ggchord_data(seq_data_example, pair)) +
-#'   geom_alignment_segment(aes(link_colour = pident), linewidth = 1.2, alpha = 1) +
-#'   scale_link_colour_gradientn(colours = c("#31777C", "#66274F")) +
-#'   coord_dotplot()
-geom_alignment_segment <- function(mapping = NULL, data = NULL,
-    colour = "#59636D", alpha = 0.6, linewidth = 0.4, linetype = 1,
-    position = "identity", show.legend = NA, inherit.aes = TRUE,
-    allow_repeated = FALSE, ..., id = NULL) {
+#' library(ggplot2)
+#'
+#' seqs <- data.frame(
+#'   accver = c("A", "B"), length = c(1000, 800),
+#'   sequence_unit = "bp", topology = "linear"
+#' )
+#'
+#' links <- data.frame(
+#'   qaccver = "A", saccver = "B", qstart = c(100, 400),
+#'   qend = c(240, 620), sstart = c(150, 450), send = c(290, 650),
+#'   qstrand = "+", sstrand = c("+", "-"),
+#'   pident = c(98, 90), link_id = c("l1", "l2")
+#' )
+#'
+#' ggchord(seqs) +
+#'   geom_alignment_segment(aes(colour = pident), data = links) +
+#'   layout_dotplot(x_order = "A", y_order = "B") +
+#'   coord_dotplot(ratio = 1) +
+#'   ggplot2::scale_colour_gradient(limits = c(0, 100))
+geom_alignment_segment <- function(mapping = NULL, data = NULL, stat = "identity",
+    position = "identity", ...,
+    na.rm = FALSE, show.legend = NA, inherit.aes = TRUE, id = NULL) {
   ggchord_check_argument_names(sys.call(), sys.function())
-  if (!is.logical(allow_repeated) || length(allow_repeated) != 1L || is.na(allow_repeated))
-    ggchord_stop("allow_repeated must be TRUE or FALSE")
-  if (!ggchord_is_data_identity(position))
-    ggchord_stop("geom_alignment_segment(): only position = 'identity' is supported")
-  defaults <- c(link_colour = missing(colour), link_alpha = missing(alpha),
-    link_linewidth = missing(linewidth), link_linetype = missing(linetype))
-  alias <- ggchord_colour_alias(colour, list(...), "geom_alignment_segment()", sys.call())
-  if ("color" %in% names(list(...))) defaults[["link_colour"]] <- FALSE
-  ggchord_check_geom_params(alias$dots, GeomAlignmentSegment, "geom_alignment_segment()", position)
+  caller <- "geom_alignment_segment()"
+  if (!ggchord_identity_stat(stat)) ggchord_stop(caller, ": use an identity Stat")
+  if (!ggchord_is_data_identity(position)) ggchord_stop(caller, ": use an identity Position")
+  dots <- ggchord_colour_dots(list(...), caller)
+  ggchord_check_geom_params(dots, GeomAlignmentSegment, caller)
   layer <- ggplot2::layer(
     data = data.frame(x = numeric(), y = numeric(), xend = numeric(), yend = numeric()),
-    mapping = ggplot2::aes(x = x, y = y, xend = xend, yend = yend),
-    geom = GeomAlignmentSegment, stat = "identity", position = position,
+    mapping = aes(x = x, y = y, xend = xend, yend = yend),
+    geom = GeomAlignmentSegment, stat = "identity", position = "identity",
     show.legend = show.legend, inherit.aes = inherit.aes, check.aes = FALSE,
-    params = c(list(link_colour = alias$colour, link_alpha = alpha,
-      link_linewidth = linewidth, link_linetype = linetype), alias$dots))
+    params = c(list(na.rm = na.rm), dots)
+  )
   layer$ggchord_type <- "alignment"
-  layer$ggchord_params <- list(id = id, type = "alignment", style_defaults = defaults, allow_repeated = allow_repeated)
+  layer$ggchord_params <- list(id = id, type = "alignment")
   ggchord_capture_layer_input(layer, data, mapping,
-    c("qaccver", "saccver", "qstart", "qend", "sstart", "send"))
+    c("qaccver", "qstart", "qend", "saccver", "sstart", "send", "qstrand", "sstrand", "direction"))
 }
 
 GeomAlignmentSegment <- ggplot2::ggproto("GeomAlignmentSegment", ggplot2::GeomSegment,
-  rename_size = FALSE,
-  default_aes = ggplot2::aes(link_colour = "#59636D", link_alpha = 0.6,
-    link_linewidth = 0.4, link_linetype = 1),
-  draw_panel = function(data, panel_params, coord, arrow = NULL,
-      arrow.fill = NULL, lineend = "butt", linejoin = "round", na.rm = FALSE) {
-    for (name in c("colour", "alpha", "linewidth", "linetype"))
-      data[[name]] <- data[[name]] %||% data[[paste0("link_", name)]]
-    ggplot2::GeomSegment$draw_panel(data, panel_params, coord,
-      arrow = arrow, arrow.fill = arrow.fill, lineend = lineend,
-      linejoin = linejoin, na.rm = na.rm)
-  },
-  draw_key = function(data, params, size) {
-    for (name in c("colour", "alpha", "linewidth", "linetype"))
-      data[[name]] <- data[[name]] %||% data[[paste0("link_", name)]]
-    ggplot2::draw_key_path(data, params, size)
-  })
+  default_aes = aes(colour = "#59636D", alpha = .6, linewidth = .4, linetype = 1))

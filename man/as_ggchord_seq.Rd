@@ -2,64 +2,50 @@
 % Please edit documentation in R/data-convert.R
 \name{as_ggchord_seq}
 \alias{as_ggchord_seq}
-\title{Convert sequence information to ggchord input}
+\title{Adapt a complete reference dictionary}
 \usage{
-as_ggchord_seq(x, mapping = NULL, lengths = NULL, ids = NULL)
+as_ggchord_seq(
+  x,
+  columns = NULL,
+  lengths = NULL,
+  ids = NULL,
+  sequence_unit = NULL,
+  topology = NULL
+)
 }
 \arguments{
-\item{x}{A data frame, \code{GRanges}, \code{Seqinfo}, \code{GInteractions}, or a
-Biostrings \code{XStringSet}/\code{XString} object.}
+\item{x}{A reference data frame, named length vector, or supported
+\code{Seqinfo}, \code{GRanges}, \code{GInteractions} or Biostrings sequence object.}
 
-\item{mapping}{Optional named character vector \code{output_role = "input_column"}
-for data-frame inputs. For example \code{c(accver = "chrom", length = "size")}.}
+\item{columns}{Named mapping from canonical roles to data-frame fields,
+such as \code{c(accver = "chrom", length = "size")}.}
 
-\item{lengths}{Optional named numeric vector of known sequence lengths.
-Fills unknown lengths and must agree with any known source lengths.}
+\item{lengths}{Named positive integral lengths. They may fill missing
+dictionary values and must agree with known lengths.}
 
-\item{ids}{Optional character vector of explicit identifiers for unnamed
-\code{XStringSet}/\code{XString} inputs only. Existing source names must agree.}
+\item{ids}{Explicit reference IDs for unnamed input. Established source
+IDs retain their original identity.}
+
+\item{sequence_unit}{Native \code{"bp"} or \code{"aa"}. The input declaration takes
+precedence over the documented default of \code{"bp"}. Explicit declarations
+must agree.}
+
+\item{topology}{\code{"linear"}, \code{"circular"}, or a named configuration by
+reference ID. Absent source topology defaults to linear.}
 }
 \value{
-An ordinary data frame with \code{accver}, \code{length} and retained metadata.
-Its \code{ggchord_conversion} attribute records input class, coordinate system,
-column renaming, object-level metadata, and upstream import/conversion
-provenance when present. No genomic coordinates or
-accession versions are guessed or rewritten.
+An ordinary data frame with \code{accver}, \code{length}, \code{sequence_unit},
+and \code{topology}. \code{\link[=data_report]{data_report()}} records source metadata and defaults.
 }
 \description{
-Explicit adapters return ordinary data frames. Optional interval packages
-are loaded only when their objects are supplied; drawing never installs or
-runs external data preparation. Supported S4 inputs supplied directly to
-ggchord or its layers use the same adapters. Identifiers are kept verbatim.
-}
-\details{
-For a \code{GRanges} object, lengths come from its \code{Seqinfo}, never from the
-maximum observed feature endpoint. A \code{GInteractions} object uses the same
-information from its common regions. Only sequence names used by the
-supplied intervals are returned; a \code{Seqinfo} object returns all its entries.
-Unknown lengths require explicit \code{lengths} or corrected source information.
-
-\code{XStringSet} and \code{XString} inputs use their stored sequence widths.
-Set names are identifiers; unnamed sequences require explicit \code{ids}.
-Explicit IDs must agree with existing nonempty names, so identifiers and
-accession versions are never silently rewritten. \code{sequence_unit} records
-\code{"bp"}, \code{"aa"}, or \code{"character"}; amino-acid widths are not nucleotide
-coordinates. AAString inputs can be plotted directly in native aa coordinates.
-Arbitrary character widths remain available for data workflows but are not
-accepted by \code{ggchord()}. To display protein intervals on a nucleotide
-genome instead, use \code{\link[=build_ggchord_cds]{build_ggchord_cds()}} and \code{\link[=project_ggchord_features]{project_ggchord_features()}} or
-\code{\link[=project_ggchord_links]{project_ggchord_links()}} with known nucleotide sequence lengths.
-Empty sequences are rejected like other zero lengths.
+A reference dictionary has one row per stable reference ID, with a complete
+positive integral length and an explicit native coordinate unit. Optional
+sequence and feature range classes supply their declared whole-reference
+lengths. Observation endpoints cannot establish a full sequence length.
 }
 \examples{
-library(dplyr)
-data(seq_data_example)
-seqs <- seq_data_example |>
-  select(accver, length)
-renamed <- seqs |>
-  rename(chrom = accver, size = length)
-as_ggchord_seq(renamed, mapping = c(accver = "chrom", length = "size"))
-}
-\seealso{
-\code{\link{ggchord_data_contract}}
+raw <- data.frame(chrom = c("A", "B"), size = c(1000, 800))
+ref <- as_ggchord_seq(raw, columns = c(accver = "chrom", length = "size"),
+                       sequence_unit = "bp")
+ggchord(ref) + geom_seq()
 }

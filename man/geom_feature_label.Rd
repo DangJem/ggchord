@@ -2,194 +2,74 @@
 % Please edit documentation in R/geom-feature-label.R
 \name{geom_feature_label}
 \alias{geom_feature_label}
-\title{Label generic genomic features}
+\title{Label source feature intervals}
 \usage{
 geom_feature_label(
   mapping = NULL,
   data = NULL,
-  label_orientation = c("feature", "horizontal", "radial", "tangent"),
-  label_side = c("outside", "inside", "auto"),
-  label_overlap = c("hide", "nudge", "allow"),
-  label_wrap = NULL,
-  label_rotation = NULL,
-  label_radial_offset = 0.04,
-  label_circum_offset = NULL,
-  label_circum_limit = NULL,
-  position = "identity",
+  stat = "identity",
+  anchor_layer = NULL,
+  anchor = "middle",
+  position = NULL,
+  label_layout = label_layout_fixed(),
+  ...,
+  na.rm = FALSE,
   show.legend = FALSE,
   inherit.aes = TRUE,
-  ...,
-  id = NULL,
-  anchor_layer = NULL,
-  placement = c("fixed", "repel"),
-  label_layout = "feature",
-  overflow = "wrap",
-  label_max_lines = 2L,
-  max_overlaps = Inf,
-  external = TRUE,
-  label_min_size = 1.5,
-  label_segment_overlap = "fade",
-  label_segment_overlap_alpha = 0.18,
-  label_segment_linetype = "auto",
-  label_segment_layer = "below",
-  label_repeat = "individual",
-  label_segment_colour = "auto"
+  id = NULL
 )
 }
 \arguments{
-\item{mapping, data}{Standard layer inputs. Map feature text with \code{label}.}
+\item{mapping}{Aesthetic mapping from \code{ggplot2::aes()}. A local mapping overrides the matching inherited channel.}
 
-\item{label_orientation}{One of \code{"feature"}, \code{"horizontal"}, \code{"radial"},
-or \code{"tangent"}. \code{"feature"} keeps both internal and adjacent labels
-tangent to the feature direction; compact labels move beside the feature.}
+\item{data}{Optional label table or function. With a named anchor, the default data consists of the target entities.}
 
-\item{label_side}{One of \code{"inside"}, \code{"outside"}, or \code{"auto"}.}
+\item{stat}{A compatible ggplot2 Stat or its name. The default uses the supplied records.}
 
-\item{label_overlap}{Fixed-label collision policy.}
+\item{anchor_layer}{ID of the target layer. Labels use the target entities after its Stat and follow their displayed placement.}
 
-\item{label_wrap}{Optional character wrapping width.}
+\item{anchor}{Position on the entity or reference path that anchors the text.}
 
-\item{label_rotation}{Optional numeric/vector/list. Label rotation angle, default 0}
+\item{position}{Position adjustment. For bound labels, leave this unset to follow the target layer.}
 
-\item{label_radial_offset}{Optional numeric/vector/list. Radial offset of labels, default 0.04}
+\item{label_layout}{A fixed or repelled label layout declaration.}
 
-\item{label_circum_offset}{Optional numeric/vector/list. Circumferential offset of labels, default 0}
+\item{...}{Additional named visual styles and parameters accepted by this layer.}
 
-\item{label_circum_limit}{Optional logical/vector/list. Whether to limit circumferential offset, default TRUE}
+\item{na.rm}{Suppress warnings for missing observations that the layer can omit.}
 
-\item{position}{An explicit Position places labels independently. Otherwise
-labels follow the matching feature layer's lanes, within each facet and
-displayed sequence. A reordered or filtered label table needs stable
-\code{feature_id} values and matching source intervals. Without an entity key,
-both layers must use the same table object or the same registered source
-rows in order for labels to inherit the feature lanes.
-A plot saved with \code{\link[base:saveRDS]{base::saveRDS()}} retains these shared-source anchors.}
+\item{show.legend}{Logical or named logical indicating whether the layer contributes legend keys.}
 
-\item{show.legend, inherit.aes}{Standard ggplot2 layer arguments.}
+\item{inherit.aes}{Whether to inherit plot mappings and evaluate them on the layer data.}
 
-\item{...}{Additional text parameters.}
-
-\item{id}{Optional plot-unique label layer ID.}
-
-\item{anchor_layer}{Optional ID of the feature layer to follow. Supply it
-when multiple layers match. An explicit anchor requires a match for each
-label. A label with its own position cannot also request an anchor.}
-
-\item{placement}{Select fixed labels or automatically arranged labels.
-With \code{"repel"}, choose the arrangement with \code{label_layout} and text fitting
-with \code{overflow}.}
-
-\item{label_layout}{One of \code{"feature"}, \code{"radial"}, \code{"auto"}, or
-\code{"callout"}. The default \code{"feature"} follows plasmid-map convention:
-text is tried inside first, then assigned to a fixed-radius internal
-track. All non-external text is laid out character by character along its
-selected track radius rather than rotated as one straight string. A light
-leader appears when tracks separate the feature and its label or a
-visible angular displacement could obscure ownership. Circular feature
-layouts retain direct leaders instead of multi-bend detours.
-Choose another mode for unrestricted external callouts.}
-
-\item{overflow, label_max_lines}{Text fitting controls.
-\code{overflow = "shrink"} explicitly uses internal-first placement without
-truncating the text. Text size is bounded by \code{label_min_size}; unresolved
-labels keep their requested font and use adjacent/external placement or
-hiding. Other fitting modes retain their existing behavior.}
-
-\item{max_overlaps}{Maximum unresolved overlaps.}
-
-\item{external}{Whether the staged feature layout may place a label outside
-the circular backbone after inside and adjacent placement fail. When
-\code{FALSE}, unresolved labels are hidden instead of pushing inward forever.
-External labels are rendered as rounded callouts using a lightened form
-of the feature's resolved fill. When restriction-site labels coexist on a
-circular map, both retain their own layout semantics but register final
-boxes in one coordinate-owned exterior track region so they cannot occupy
-the same space.}
-
-\item{label_min_size}{Minimum text size in millimetres for explicit shrink,
-default 1.5. Must not exceed the requested text size. Original text,
-requested/final sizes and fitting reason are exported with the label.}
-
-\item{label_segment_overlap}{Character, default \code{"fade"}.
-How portions of a leader line covered by another label are drawn:
-\code{"fade"} keeps them at reduced opacity, \code{"clip"} removes them,
-and \code{"show"} leaves the complete leader visible. This does not affect
-text wrapping, ellipsis or label hiding.}
-
-\item{label_segment_overlap_alpha}{Numeric in \code{[0, 1]}, default
-0.18. Relative opacity applied only to covered leader-line portions when
-\code{label_segment_overlap = "fade"}.}
-
-\item{label_segment_linetype}{Character or numeric, default "auto".
-Leader-line linetype. \code{"auto"} draws solid lines, except for labels
-that were moved to the other side of their arc, which are drawn dashed.
-Any other valid ggplot2 linetype (e.g. \code{"solid"}, \code{"dashed"},
-\code{"dotted"}, or a numeric dash pattern) is used for all leader lines.}
-
-\item{label_segment_layer}{Draw leaders \code{"below"} all data layers (default),
-or \code{"above"} at this label layer's normal position. Text always stays at
-this layer's position. Filled features can cover leaders drawn below;
-transparent features retain their normal transparency.}
-
-\item{label_repeat}{\code{"individual"} (default) keeps one label per feature.
-\code{"bracket"} shares a counted label and an arc bracket for consecutive,
-non-overlapping short features with the same name, type, direction and
-resolved fill in one circular feature band. Source rows and individual
-arrows remain separate. Only supported with \code{label_layout = "feature"}.}
-
-\item{label_segment_colour}{\code{"auto"} uses muted grey for leaders from
-a feature inside the sequence circle to a label outside it. Other leaders
-retain the theme colour. Explicit colours override both. A custom
-feature-label segment theme overrides the automatic palette.
-\code{label_segment_linetype = "auto"} uses dashed lines for those
-inside-to-outside attachments. Labels that stay inside retain their
-established leader style.}
+\item{id}{Optional plot-local layer identifier. Name a layer explicitly to scope a scale, anchor a label or export it.}
 }
 \value{
-A ggplot2 layer.
+A ggplot2 layer for addition to a plot.
 }
 \description{
-Map a column to \code{label} and supply the same interval table to
-\code{\link[=geom_feature]{geom_feature()}} and this layer to label each feature. With a stable
-\code{feature_id}, a filtered label table can follow just the matching intervals.
+Label source feature intervals
 }
-\section{Automatic labels}{
-
-Manual label rotation, offsets, orientation and overlap policy belong to
-fixed placement. Automatic placement detects conflicting manual controls.
+\details{
+The source entities have \code{accver}, \code{start}, \code{end} and a label or label mapping. A bound label follows the target layer by identity. Text size, collision handling and leader placement are independent of the underlying feature geometry.
 }
-
 \examples{
-# Label both intervals using their names.
-reference <- data.frame(accver = "A", length = 100)
-intervals <- data.frame(
-  accver = "A", start = c(10, 60), end = c(35, 85), strand = "+",
-  anno = c("alpha", "beta")
-)
-ggchord(reference) +
-  geom_seq() +
-  geom_feature(data = intervals, show.legend = FALSE) +
-  geom_feature_label(
-    aes(label = anno), data = intervals, size = 4,
-    label_orientation = "horizontal", label_radial_offset = 0.16
-  ) +
-  coord_circular()
+library(ggplot2)
 
-# Label only the inner interval and follow its stacked lane.
-nested <- data.frame(
-  accver = "A", start = c(10, 20), end = c(80, 65), strand = "+",
-  feature_id = c("outer", "inner")
+seqs <- data.frame(
+  accver = c("A", "B"), length = c(1000, 800),
+  sequence_unit = "bp", topology = "linear"
 )
-inner <- dplyr::filter(nested, feature_id == "inner")
-ggchord(reference) +
-  geom_seq() +
-  geom_feature(
-    aes(fill = feature_id), data = nested, id = "features",
-    position = position_feature_stack(), show.legend = FALSE
-  ) +
-  geom_feature_label(
-    aes(label = feature_id), data = inner, anchor_layer = "features",
-    placement = "repel", overflow = "none", size = 4
-  ) +
-  coord_circular()
+
+genes <- data.frame(
+  accver = c("A", "A", "B"), feature_id = c("g1", "g2", "g3"),
+  start = c(100, 400, 150), end = c(240, 620, 380),
+  strand = c("+", "-", "+"), label = c("g1", "g2", "g3"),
+  type = c("CDS", "tRNA", "CDS")
+)
+
+ggchord(seqs) +
+  geom_gene(data = genes, id = "genes") +
+  geom_feature_label(aes(label = label), anchor_layer = "genes") +
+  coord_collinear()
 }

@@ -2,62 +2,43 @@
 % Please edit documentation in R/data-genome-alignment.R
 \name{read_chain}
 \alias{read_chain}
-\title{Read chain alignment blocks without inventing sequence characters}
+\title{Read block relationships from a chain file}
 \usage{
 read_chain(
-  file = NULL,
-  files = NULL,
+  file,
   query_ids = NULL,
   subject_ids = NULL,
-  sequence_unit = c("bp", "aa"),
+  sequence_unit = "bp",
   python = "python3",
   source_file = FALSE
 )
 }
 \arguments{
-\item{file}{Optional local path vector or glob patterns, before files.}
+\item{file}{Local chain paths.}
 
-\item{files}{Optional additional chain paths or patterns.}
+\item{query_ids, subject_ids}{Optional named source ID translations.
+Renamed IDs must refer to distinct, consistent reference sequences.}
 
-\item{query_ids, subject_ids}{Optional named character vectors mapping
-original query/target IDs to explicit source IDs. Unspecified IDs stay
-unchanged. Unknown map keys and conflicting full lengths fail.}
+\item{sequence_unit}{Native coordinate unit.}
 
-\item{sequence_unit}{Declared coordinate unit, "bp" (default) or "aa".
-The format itself cannot establish the biological unit.}
+\item{python}{Python executable with Biopython available.}
 
-\item{python}{Existing interpreter with optional Biopython, default "python3".}
-
-\item{source_file}{Add .source_file to ribbon rows, default FALSE.}
+\item{source_file}{Whether to include row-level source paths.}
 }
 \value{
-A list with seq_data, ribbon_data and report containing original
-text, chain scores/IDs, full lengths and exact zero-based boundary matrices.
-Each link retains source_block and source_segment provenance; no source
-HSP ID, pident, base mismatch script or character alignment is fabricated.
+A ggchord_import collection with sequences, links$chain, and the
+source and decoder report.
 }
 \description{
-Optional Biopython Bio.Align parses chain coordinates. Each block aligned
-on both sides becomes one directional interval pair; intervening gaps stay
-in the source coordinate matrix rather than becoming a false uninterrupted
-match. Source chain scores and IDs remain in report metadata; neither is
-an Identity or read-support count. Chain contains no aligned characters.
-}
-\details{
-The chain query becomes qaccver and its target becomes saccver. Original
-IDs stay in q_source_accver/s_source_accver. If both assemblies use the same
-IDs, supply explicit query_ids/subject_ids rather than implicitly merging
-distinct molecules or auto-prefixing them. Shared final IDs require explicit
-declaration on both sides and consistent full lengths. This is data identity
-mapping, not automatic homology discovery or display-instance creation.
+Use an existing Biopython environment to decode chain block coordinates.
+Store lengths as reference information and retain the original chain
+fields and directional alignment evidence. Chain scores preserve their
+source meaning.
 }
 \examples{
 \dontrun{
-# Requires an existing Python environment with optional Biopython.
-chains <- read_chain("examples/genome-alignments/dna_rna.chain")
-head(chains$ribbon_data)
+f <- system.file("extdata", "tutorial", "dna_rna.chain", package = "ggchord")
+x <- read_chain(f, python = "python3")
+head(x$links$chain)
 }
-}
-\seealso{
-\code{\link[=read_maf]{read_maf()}}, \code{\link[=geom_link_ribbon]{geom_link_ribbon()}}
 }

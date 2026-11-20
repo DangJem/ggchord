@@ -2,75 +2,39 @@
 % Please edit documentation in R/data-import.R
 \name{read_blast}
 \alias{read_blast}
-\title{Read one or more BLAST tabular output files into ribbon_data format}
+\title{Read a BLAST tabular result}
 \usage{
 read_blast(
-  file = NULL,
-  files = NULL,
-  format = c("auto", "outfmt6", "outfmt7", "custom"),
+  file,
+  format = "auto",
   col_names = NULL,
   comment = "#",
-  source_file = FALSE,
-  ...
+  source_file = FALSE
 )
 }
 \arguments{
-\item{file}{Optional path vector or glob patterns; read before \code{files}.}
+\item{file}{Local BLAST table paths.}
 
-\item{files}{Optional character vector of BLAST tabular output files
-(literal paths and/or wildcard patterns). All matched files are read and
-combined into one data.frame.}
+\item{format}{\code{"auto"}, \code{"outfmt6"}, \code{"outfmt7"}, or \code{"custom"}.}
 
-\item{format}{Character. \code{"auto"} (default) detects the column layout
-from the file; \code{"outfmt6"} requires the standard 12-column layout,
-\code{"outfmt7"} parses its \verb{# Fields:} declaration, and \code{"custom"} requires
-\code{col_names}.}
+\item{col_names}{Explicit input column names for custom tables.}
 
-\item{col_names}{Optional character vector naming the columns in the file,
-used with \code{format = "custom"} or to override auto-detection.}
+\item{comment}{Comment prefix. Supply an empty string to disable comments.}
 
-\item{comment}{Character comment character, default \code{"#"} (BLAST
-outfmt 7 header lines start with \verb{#}).}
-
-\item{source_file}{Logical. Add a \code{.source_file} column when reading one or
-more files, default \code{FALSE}.}
-
-\item{...}{Additional arguments passed to \code{\link[utils:read.table]{utils::read.table()}}
-(e.g. \code{na.strings}).}
+\item{source_file}{Whether to include row-level source paths.}
 }
 \value{
-A data.frame with the required ribbon columns first
-(\code{qaccver}, \code{saccver}, \code{qstart}, \code{qend}, \code{sstart}, \code{send}) followed by any preserved optional columns.
-A \code{ggchord_import} attribute records files, per-file output row counts and
-the one-based inclusive coordinate convention.
+An interval relationship table with file and row provenance.
 }
 \description{
-Both \code{file} and \code{files} accept literal path vectors or wildcard patterns.
-Repeated resolved paths are read once, in first-occurrence order. Known numeric
-fields are converted; custom metadata and identifiers retain their spelling
-unless an explicit column class is supplied.
-Standard \verb{-outfmt 6} and \verb{-outfmt 7} use the default 12 tabular fields.
-Omitting \code{-outfmt}
-entirely produces pairwise text, which this tabular reader does not parse.
-}
-\details{
-The reader also parses BLASTp tabular output. It preserves the producer's
-numeric endpoints and does not infer or convert amino-acid/nucleotide units.
-Supply complete protein lengths with \code{sequence_unit = "aa"} for native
-protein plots. Protein intervals require an explicit CDS projection for
-plotting on a nucleotide genome. Reading a protein HSP does not establish
-an ungapped nucleotide correspondence.
-See \code{\link[=project_ggchord_features]{project_ggchord_features()}} and \code{\link[=project_ggchord_links]{project_ggchord_links()}}.
+Read standard 12-column outfmt 6, outfmt 7 with declared fields or a
+custom table. Retain the original alignment column count and source
+identity, and preserve direction separately from ordered endpoints.
+Standard BLAST output does not declare complete reference lengths.
 }
 \examples{
-\dontrun{
-library(dplyr)
-# Standard 12-column records; requires the source checkout or tutorial input bundle.
-source <- read_blast("examples/blastn-standard/MT108731.1__MT118296.1.tsv")
-links <- source |>
-  select(qaccver, saccver, qstart, qend, sstart, send)
-}
-}
-\seealso{
-\code{\link{ggchord_data_contract}}
+f <- tempfile(fileext = ".tsv")
+writeLines("A	B	98	141	2	0	100	240	150	290	1e-20	100", f)
+blast <- read_blast(f, format = "outfmt6")
+unlink(f)
 }

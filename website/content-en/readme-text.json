@@ -5,14 +5,11 @@
   "intro": {
     "en": "Build layered sequence figures in R with ggplot2: compare multiple sequences, annotate a circular map, inspect HSP alignments and connect independent views."
   },
-  "api-compatibility": {
-    "en": "Use v0.29.0 for code that relies on the previous API, because v0.50.0 and later are incompatible with that API."
-  },
   "website": {
     "en": "Website"
   },
   "manual": {
-    "en": "Usage guide"
+    "en": "Tutorial"
   },
   "gallery": {
     "en": "Figure gallery"
@@ -66,7 +63,7 @@
     "en": "Chord · relationships across four genomes"
   },
   "chord-caption": {
-    "en": "Combine mixed-curvature backbones, strand-aware CDS arrows, selected source labels and Identity-coloured ribbons. Features and HSPs are display subsets of the original records."
+    "en": "Compare four genome references with strand-aware gene arrows and ribbons coloured by reported alignment identity."
   },
   "chord-alt": {
     "en": "Four-genome Chord flagship with labelled genes and alignment ribbons"
@@ -75,7 +72,7 @@
     "en": "Collinear · order, orientation and cross-row links"
   },
   "linear-caption": {
-    "en": "Compare four genomes on a shared base-pair scale. Selected CDS sit on either side of each backbone; dashed outlines distinguish links across non-adjacent rows."
+    "en": "The same source intervals share a base-pair scale. The declared display orientation orders each strand along its reference."
   },
   "linear-alt": {
     "en": "Four-genome Collinear flagship with strand-separated genes and cross-row ribbons"
@@ -84,10 +81,10 @@
     "en": "Circular · dense pETDuet-1 annotations"
   },
   "circular-caption": {
-    "en": "A complete circular map with 20 features, five reference primers and 58 grouped cut positions from the declared enzyme set. Original sequence positions and annotation identities are retained."
+    "en": "The pETDuet-1 map combines the bundled intervals, a subset of labels and the recognition positions of single-cut enzymes."
   },
   "circular-alt": {
-    "en": "pETDuet-1 circular flagship with features, primers and restriction sites"
+    "en": "pETDuet-1 circular map with features and cut-site positions"
   },
   "case": {
     "en": "Complete example"
@@ -96,7 +93,7 @@
     "en": "Chord / Collinear / Radial / Sankey"
   },
   "plot-source": {
-    "en": "Plot source"
+    "en": "Figure source"
   },
   "layout": {
     "en": "Alignment and arrangement"
@@ -111,13 +108,13 @@
     "en": "Four-sequence matrix of 32 original HSPs"
   },
   "fusion-alt": {
-    "en": "Linked Chord, Collinear, Radial and local-detail views"
+    "en": "Overview and enlarged view of a source interval in two connected panels"
   },
   "dotplot-caption": {
-    "en": "32 original HSPs; Identity by colour, reported alignment length by line width."
+    "en": "The original 32 HSPs use colour for reported identity and line width for reported alignment length."
   },
   "fusion-caption": {
-    "en": "Global relationships, ordered comparisons and a magnified source interval in one composition."
+    "en": "A Chord overview and an independent Collinear detail show the same source region at different scales."
   },
   "dotplot-guide": {
     "en": "Axes, direction and mappings →"
@@ -132,7 +129,7 @@
     "en": "Input files"
   },
   "source-figures": {
-    "en": "Dotplot / Fusion source"
+    "en": "Data preparation"
   },
   "source-attribution": {
     "en": "Data sources and attribution"
@@ -141,7 +138,7 @@
     "en": "Installation"
   },
   "optional-deps": {
-    "en": "The minimal example below needs only ggchord. Complete data-preparation examples declare optional dependencies such as dplyr, purrr and tidyr alongside their code."
+    "en": "The first plot uses bundled tables and ggplot2. The figure reproduction script also uses dplyr."
   },
   "quick-start": {
     "en": "Draw a first plot"
@@ -150,7 +147,7 @@
     "en": "Use bundled tables to draw sequence backbones, alignment ribbons and sequence names. No file download or alignment program is needed."
   },
   "quick-note": {
-    "en": "This small example shows the layer grammar. The figures above add their own source annotations, display choices and styling."
+    "en": "Each observation layer receives its own data. The coordinate system can change without redefining the sequence reference."
   },
   "output": {
     "en": "Preview and save"
@@ -183,7 +180,7 @@
     "en": "Radial · synteny along radial spokes"
   },
   "radial-caption": {
-    "en": "Derived from the Chord flagship, using its source preparation and selected features. Radial backbones expose interval relationships while preserving sequence identities and native positions."
+    "en": "The same observations project onto radial spokes, preserving the reference identities and source interval endpoints."
   },
   "radial-alt": {
     "en": "Radial flagship derived from the four-genome Chord example"
@@ -192,7 +189,7 @@
     "en": "Sankey · source intervals across two mirrored columns"
   },
   "sankey-caption": {
-    "en": "Derived from the Collinear flagship, retaining its selected genes and HSPs. Mirrored sequence columns show observed interval relationships; ribbon width is not a conserved flow quantity."
+    "en": "Each source reference has a query and subject copy. Colours retain the same identity scale as the other comparison views."
   },
   "sankey-alt": {
     "en": "Sankey flagship derived from the four-genome Collinear example"
@@ -231,12 +228,12 @@
     "en": "Install the stable release from [CRAN](https://CRAN.R-project.org/package=ggchord):"
   },
   "install-development": {
-    "en": "Install the v0.29.0 release from GitHub:"
+    "en": "From the root of this checkout, install the development source."
   },
-  "circular-reference": {
-    "en": "Compare the pETDuet-1 reference map"
+  "development-status": {
+    "en": "This README describes the in-development v0.50.0 source. Install from this checkout to run its examples."
   },
-  "dense-figure-source": {
-    "en": "Code for the dense map above"
+  "tutorial-path": {
+    "en": "vignettes/ggchord_vignette.Rmd"
   }
 }

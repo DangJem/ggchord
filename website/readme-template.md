@@ -10,19 +10,19 @@
 {{intro}}
 
 > [!IMPORTANT]
-> {{api-compatibility}}
+> {{development-status}}
 
-[{{website}}](https://dangjem.github.io/ggchord/) · [{{manual}}](website/{{lang}}/modes.md) · [{{gallery}}](website/{{lang}}/gallery.md) · [{{issues}}](https://github.com/DangJem/ggchord/issues)
+[{{website}}](https://dangjem.github.io/ggchord/) · [{{manual}}]({{tutorial-path}}) · [{{issues}}](https://github.com/DangJem/ggchord/issues)
 
 <a id="modules"></a>
 ## {{modules}}
 
 | {{module}} | {{purpose}} | {{view}} |
 | --- | --- | --- |
-| [{{multi}}](website/{{lang}}/multi-sequence-views.md) | {{multi-purpose}} | Chord · Collinear · Radial · Sankey |
-| [{{circular}}](website/{{lang}}/circular.md) | {{circular-purpose}} | Circular |
-| [{{dotplot}}](website/{{lang}}/dotplot.md) | {{dotplot-purpose}} | Dotplot |
-| [{{fusion}}](website/{{lang}}/fusion.md) | {{fusion-purpose}} | Fusion |
+| {{multi}} | {{multi-purpose}} | Chord · Collinear · Radial · Sankey |
+| {{circular}} | {{circular-purpose}} | Circular |
+| {{dotplot}} | {{dotplot-purpose}} | Dotplot |
+| {{fusion}} | {{fusion-purpose}} | Fusion |
 
 {{grammar}}
 
@@ -33,15 +33,15 @@
 
 <table>
   <tr>
-    <td width="50%"><strong>{{chord-title}}</strong><br><a href="man/figures/showcasechord.png"><img src="man/figures/showcasechord.png" alt="{{chord-alt}}" width="460"></a><br>{{chord-caption}}<br><a href="website/{{lang}}/case-chord.md">{{case}} →</a></td>
-    <td width="50%"><strong>{{linear-title}}</strong><br><a href="man/figures/showcasecollinear.png"><img src="man/figures/showcasecollinear.png" alt="{{linear-alt}}" width="460"></a><br>{{linear-caption}}<br><a href="website/{{lang}}/case-collinear.md">{{case}} →</a></td>
+    <td width="50%"><strong>{{chord-title}}</strong><br><a href="man/figures/showcasechord.png"><img src="man/figures/showcasechord.png" alt="{{chord-alt}}" width="460"></a><br>{{chord-caption}}<br><a href="examples/make_readme_plots.R">{{case}} →</a></td>
+    <td width="50%"><strong>{{linear-title}}</strong><br><a href="man/figures/showcasecollinear.png"><img src="man/figures/showcasecollinear.png" alt="{{linear-alt}}" width="460"></a><br>{{linear-caption}}<br><a href="examples/make_readme_plots.R">{{case}} →</a></td>
   </tr>
 </table>
 
 <table>
   <tr>
-    <td width="50%"><strong>{{radial-title}}</strong><br><a href="man/figures/flagradial.png"><img src="man/figures/flagradial.png" alt="{{radial-alt}}" width="460"></a><br>{{radial-caption}}<br><a href="website/{{lang}}/case-radial.md">{{case}} →</a></td>
-    <td width="50%"><strong>{{sankey-title}}</strong><br><a href="man/figures/flagsankey.png"><img src="man/figures/flagsankey.png" alt="{{sankey-alt}}" width="460"></a><br>{{sankey-caption}}<br><a href="website/{{lang}}/case-sankey.md">{{case}} →</a></td>
+    <td width="50%"><strong>{{radial-title}}</strong><br><a href="man/figures/flagradial.png"><img src="man/figures/flagradial.png" alt="{{radial-alt}}" width="460"></a><br>{{radial-caption}}<br><a href="examples/make_readme_plots.R">{{case}} →</a></td>
+    <td width="50%"><strong>{{sankey-title}}</strong><br><a href="man/figures/flagsankey.png"><img src="man/figures/flagsankey.png" alt="{{sankey-alt}}" width="460"></a><br>{{sankey-caption}}<br><a href="examples/make_readme_plots.R">{{case}} →</a></td>
   </tr>
 </table>
 
@@ -51,7 +51,7 @@
 
 {{circular-caption}}
 
-[{{dense-figure-source}}](tools/documentation-examples.R) · [{{circular-reference}}](website/{{lang}}/plasmid-catalog.md#catalogduet)
+[{{case}}](examples/make_readme_plots.R)
 
 ### {{dotplot}}
 
@@ -59,7 +59,7 @@
 
 {{dotplot-caption}}
 
-[{{case}}](website/{{lang}}/case-dotplot.md)
+[{{case}}](examples/make_readme_plots.R)
 
 ### {{fusion}}
 
@@ -67,10 +67,10 @@
 
 {{fusion-caption}}
 
-[{{case}}](website/{{lang}}/case-fusion.md)
+[{{case}}](examples/make_readme_plots.R)
 
 {{source-note}}
-[{{source-inputs}}](examples/) · [{{source-figures}}](tools/site-flagships.R) · [{{plot-source}}](tools/documentation-examples.R) · [{{source-attribution}}](website/ASSET-SOURCES.md)
+[{{source-inputs}}](examples/) · [{{plot-source}}](examples/make_readme_plots.R) · [{{source-figures}}](data-raw/) · [{{source-attribution}}](website/ASSET-SOURCES.md)
 
 <a id="get-started"></a>
 ## {{get-started}}
@@ -90,7 +90,7 @@ install.packages("ggchord")
 
 ```r
 install.packages("remotes")
-remotes::install_github("DangJem/ggchord", ref = "v0.29.0", dependencies = NA)
+remotes::install_local(".", dependencies = NA)
 ```
 
 {{optional-deps}}
@@ -102,10 +102,11 @@ remotes::install_github("DangJem/ggchord", ref = "v0.29.0", dependencies = NA)
 
 ```r
 library(ggchord)
+library(ggplot2)
 
-p <- ggchord(prepare_ggchord_data(seq_data_example, ribbon_data_example)) +
+p <- ggchord(seq_data_example) +
   geom_seq() +
-  geom_link_ribbon() +
+  geom_link_ribbon(aes(fill = pident), data = ribbon_data_example) +
   geom_seq_label() +
   coord_chord()
 

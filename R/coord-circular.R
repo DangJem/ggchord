@@ -9,43 +9,39 @@ CoordCircular <- ggplot2::ggproto(
   }
 )
 
-#' Single-sequence circular coordinate system
+#' Project a reference sequence onto a circle
 #'
-#' @param rotation Counterclockwise rotation in degrees from a 12-o'clock
-#'   genomic origin. The default 0 keeps the origin at 12 o'clock; 90 places
-#'   it at 9 o'clock, and -90 at 3 o'clock.
-#' @param direction Direction of increasing genomic coordinates.
-#' @param gap Opening in degrees. Zero draws a closed circle.
 #' @inheritParams coord_chord
-#' @return A Coord object for ggplot2 composition.
+#' @return A coordinate system for a ggchord plot.
 #' @export
-coord_circular <- function(
-    rotation = 0,
-    direction = c("clockwise", "counterclockwise"),
-    gap = 0,
-    ratio = 1,
-    xlim = NULL, ylim = NULL,
-    expand = FALSE, clip = "off",
-    fit = c("labels", "geometry", "manual")) {
-  direction <- match.arg(direction)
-  fit <- match.arg(fit)
-  if (!is.numeric(rotation) || length(rotation) != 1L || !is.finite(rotation)) {
-    ggchord_stop("coord_circular(): rotation must be one finite number")
-  }
-  if (!is.numeric(gap) || length(gap) != 1L || !is.finite(gap) ||
-      gap < 0 || gap >= 360) {
-    ggchord_stop("coord_circular(): gap must be one finite number in [0, 360)")
-  }
-  validated <- coord_chord(
-    rotation = rotation, ratio = ratio, xlim = xlim, ylim = ylim,
-    expand = expand, clip = clip, fit = fit
-  )
-  coord <- new_ggchord_coord(
-    CoordCircular, rotation, ratio, xlim, ylim, expand, clip, fit,
-    validated$user_xlim, validated$user_ylim
-  )
-  coord$ggchord_circular <- TRUE
-  coord$circular_gap <- as.numeric(gap)
-  coord$circular_direction <- direction
-  coord
+#' @examples
+#' library(ggplot2)
+#'
+#' seqs <- data.frame(
+#'   accver = c("A", "B"), length = c(1000, 800),
+#'   sequence_unit = "bp", topology = "linear"
+#' )
+#'
+#' one_seq <- seqs[1, , drop = FALSE]
+#'
+#' genes <- data.frame(
+#'   accver = c("A", "A", "B"), feature_id = c("g1", "g2", "g3"),
+#'   start = c(100, 400, 150), end = c(240, 620, 380),
+#'   strand = c("+", "-", "+"), label = c("g1", "g2", "g3"),
+#'   type = c("CDS", "tRNA", "CDS")
+#' )
+#'
+#' ggchord(data = one_seq) +
+#'   geom_seq() +
+#'   geom_gene(data = subset(genes, accver == "A"), aes(fill = type)) +
+#'   layout_sequences(angular_gap = 12) +
+#'   coord_circular(start_angle = 90)
+coord_circular <- function(start_angle = 0, direction = "clockwise",
+    xlim = NULL, ylim = NULL, expand = FALSE, clip = "on", fit = "geometry") {
+  ggchord_check_argument_names(sys.call(), sys.function())
+  direction <- ggchord_coord_direction(start_angle, direction)
+  settings <- ggchord_coord_settings(1, xlim, ylim, expand, clip, fit)
+  ggplot2::ggproto(NULL, CoordCircular, !!!settings,
+    rotation = start_angle %% 360, reference_direction = direction,
+    ggchord_circular = TRUE)
 }

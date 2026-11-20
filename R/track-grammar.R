@@ -102,42 +102,58 @@
 #' interval. Coverage layers use identity position.
 #' @return A ggplot2 layer using a shared sequence-local band.
 #' @export
+#' @param na.rm Suppress warnings for missing observations that the layer can omit.
+#' @details Numerical tracks use `x` in sequence units and `y` in measurement units. They default to the `pos` and `value` columns. An interval fills the band across `start` and `end` without training a numerical height. Track bands set geometry in millimetres.
 #' @examples
-#' # Synthetic observations illustrate counting, not biological measurements.
-#' events <- data.frame(accver = "A", pos = c(100, 100, 400))
-#' ggchord(data.frame(accver = "A", length = 1000)) +
+#' library(ggplot2)
+#'
+#' seqs <- data.frame(
+#'   accver = c("A", "B"), length = c(1000, 800),
+#'   sequence_unit = "bp", topology = "linear"
+#' )
+#'
+#' signal <- data.frame(accver = rep(c("A", "B"), each = 3),
+#'   pos = rep(c(100, 400, 700), 2), value = c(2, 5, 3, 1, 4, 2))
+#'
+#' ggchord(seqs) +
 #'   geom_seq() +
-#'   geom_track_bar(data = events, stat = "count") +
-#'   coord_collinear()
-#' sites <- data.frame(accver = "A", pos = c(2, 7), value = c(3, 5),
-#'   kind = c("start", "end"))
-#' ggchord(data.frame(accver = "A", length = 10)) +
-#'   geom_track(aes(pos, value, shape = kind), data = sites) +
-#'   ggplot2::scale_shape_manual(values = c(start = 21, end = 24)) +
-#'   coord_collinear()
-#' intervals <- data.frame(accver = "A", start = c(6, 10), end = c(16, 12))
-#' ggchord(data.frame(accver = "A", length = 20)) +
-#'   track_band("depth", width = grid::unit(10, "mm")) +
-#'   geom_track_bar(aes(y = after_stat(mean_depth)), data = intervals, id = "depth",
-#'     stat = "coverage", binwidth = 4, track = "depth", colour = "white") +
-#'   coord_collinear()
-#' # Fit existing GC windows in source space; estimates are not new data.
-#' path <- system.file("extdata", "pUC19-gc-100.bedGraph", package = "ggchord")
-#' signal <- read_bedgraph(path)
-#' signal$pos <- (signal$start + signal$end) / 2
-#' ggchord(data.frame(accver = "pUC19", length = 2686)) +
-#'   geom_seq() +
-#'   geom_track(aes(x = pos, y = value), data = signal, geom = "line",
-#'     stat = "smooth", method = "lm", formula = y ~ x, se = FALSE) +
+#'   geom_track(aes(x = pos, y = value), data = signal, geom = "line") +
+#'   scale_track_value(name = "Signal") +
 #'   coord_collinear()
 geom_track <- function(mapping = NULL, data = NULL, geom = "point", stat = NULL,
-    track = NULL, position = NULL, bounds = c("error", "clip"), baseline = 0,
-    show.legend = NA, inherit.aes = TRUE, ..., id = NULL, measure = NULL) {
+    position = NULL, track = "default", ...,
+    na.rm = FALSE, show.legend = NA, inherit.aes = TRUE, id = NULL) {
   ggchord_check_argument_names(sys.call(), sys.function())
-  geoms <- c("point", "line", "path", "step", "col", "bar", "tile", "rect", "area",
-    "ribbon", "segment", "linerange", "errorbar", "text")
+  geoms <- c("point", "line", "path", "step", "col", "bar", "area", "tile", "interval")
   if (!is.character(geom) || length(geom) != 1L || !geom %in% geoms)
-    ggchord_stop("geom_track(): unsupported geom; see the documented support matrix")
+    ggchord_stop("geom_track(): unsupported geometry")
+  dots <- ggchord_colour_dots(list(...), "geom_track()")
+  bounds <- match.arg(dots$bounds %||% "error", c("error", "clip"))
+  baseline <- dots$baseline %||% 0
+  measure <- dots$measure
+  closed <- dots$closed %||% FALSE
+  outline <- dots$outline %||% "upper"
+  if (!is.logical(closed) || length(closed) != 1L || is.na(closed))
+    ggchord_stop("geom_track(): closed must be TRUE or FALSE")
+  if ("closed" %in% names(dots) && !geom %in% c("line", "path"))
+    ggchord_stop("geom_track(): only line and path support closing")
+  if ("baseline" %in% names(dots) && !geom %in% c("col", "bar", "area"))
+    ggchord_stop("geom_track(): baseline requires col, bar or area")
+  if ("outline" %in% names(dots) && geom != "area")
+    ggchord_stop("geom_track(): outline applies to area")
+  outline <- match.arg(outline, c("upper", "both", "full"))
+  dots[c("bounds", "baseline", "measure", "closed", "outline")] <- NULL
+  if (geom == "interval" && ggchord_identity_stat(stat %||% "identity")) {
+    if (!ggchord_is_data_identity(position %||% "identity") ||
+        any(c("x", "y", "ymin", "ymax", "height", "width") %in% c(names(mapping), names(dots))))
+      ggchord_stop("geom_track_interval(): use interval endpoints and an identity position")
+    return(ggchord_track_layer("tile", mapping, data, track,
+      "grey60", NA, 1, 0.2, 1, bounds, 0, FALSE, show.legend, inherit.aes,
+      c(fill = FALSE, colour = FALSE, alpha = FALSE, linewidth = FALSE, linetype = FALSE),
+      c(list(na.rm = na.rm), dots), id))
+  }
+  interval <- geom == "interval"
+  if (interval) geom <- "tile"
   stat <- stat %||% if (geom == "bar") "count" else "identity"
   stats <- c(identity = "StatIdentity", count = "StatCount", bin = "StatBin",
     summary = "StatSummary", smooth = "StatSmooth", density = "StatDensity", ecdf = "StatEcdf")
@@ -151,7 +167,7 @@ geom_track <- function(mapping = NULL, data = NULL, geom = "point", stat = NULL,
   if (!is.character(stat) || length(stat) != 1L ||
       (!stat %in% c(names(stats), "coverage") && is.null(custom_stat)))
     ggchord_stop("geom_track(): use a ggplot2 Stat object or a supported statistic name")
-  position <- position %||% if (stat != "coverage" && geom %in% c("bar", "col", "area")) "stack" else "identity"
+  position <- position %||% if (geom %in% c("bar", "col", "area")) "stack" else "identity"
   estimates <- list(smooth = c("line", "path", "point", "ribbon"),
     density = c("line", "path", "point", "area"), ecdf = c("line", "path", "point", "step"))
   if (ggchord_local_position(position))
@@ -159,7 +175,6 @@ geom_track <- function(mapping = NULL, data = NULL, geom = "point", stat = NULL,
   identity_position <- ggchord_is_data_identity(position)
   if (stat %in% names(estimates) && (!geom %in% estimates[[stat]] || !identity_position))
     ggchord_stop("geom_track(): ", stat, " requires position='identity' and geom in ", paste(estimates[[stat]], collapse = ", "))
-  dots <- ggchord_colour_dots(list(...), "geom_track()")
   fixed <- character()
   if (length(dots)) {
     # Resolve the source layer's Geom, Stat and Position just as ggplot2 will
@@ -170,9 +185,12 @@ geom_track <- function(mapping = NULL, data = NULL, geom = "point", stat = NULL,
     names(dots) <- ggplot2::standardise_aes_names(names(dots))
     fixed <- intersect(names(dots), geom_aesthetics)
   }
+  if (interval && stat != "coverage")
+    ggchord_stop("geom_track_interval(): this Stat does not supply source interval edges")
   if (stat == "coverage") {
-    if (!geom %in% c("bar", "col", "point", "line", "step", "tile") || !identity_position)
-      ggchord_stop("Coverage requires position='identity' and geom bar, col, point, line, step or tile")
+    if (!geom %in% c("bar", "col", "point", "line", "step", "tile", "path", "area") ||
+        (interval && !identity_position))
+      ggchord_stop("Coverage requires a compatible track geometry and position")
     width <- dots[["binwidth"]]
     windows <- dots[["windows"]]
     if (is.null(width) == is.null(windows))
@@ -197,10 +215,11 @@ geom_track <- function(mapping = NULL, data = NULL, geom = "point", stat = NULL,
     ggchord_stop("geom_track(): only full polygon outlines are supported")
   mapping <- ggchord_normalize_mapping(mapping) %||% ggplot2::aes()
   mapping <- ggchord_track_mapping_aliases(mapping)
-  ggchord_check_track_styles(names(mapping), fixed, id %||% paste0("geom_track(", geom, ")"))
+  mapping[fixed] <- NULL
+  dots$na.rm <- na.rm
   if (!is.numeric(baseline) || length(baseline) != 1L || !is.finite(baseline)) ggchord_stop("Track baseline must be finite")
-  if (baseline != 0 && !(geom == "col" && stat == "identity" && identity_position))
-    ggchord_stop("geom_track(): a nonzero baseline needs col/identity and position='identity'")
+  if (baseline != 0 && !identity_position)
+    ggchord_stop("geom_track(): a nonzero baseline requires position='identity'")
   l <- ggchord_track_layer("line", NULL, data, track, "#86AFB9",
     if (geom %in% c("point", "line", "path", "step", "segment", "linerange", "errorbar", "text")) "#387D88" else NA,
     1, .4, 1, bounds, 0, FALSE, show.legend, FALSE,
@@ -209,6 +228,9 @@ geom_track <- function(mapping = NULL, data = NULL, geom = "point", stat = NULL,
   dots$layout <- NULL
   l$ggchord_params$id <- id
   l$ggchord_params$native_geom <- geom
+  l$ggchord_params$interval <- interval
+  l$ggchord_params$closed <- closed
+  l$ggchord_params$outline <- outline
   l$ggchord_params$native_stat <- stat
   l$ggchord_params$custom_stat <- custom_stat
   l$ggchord_params$measure <- ggchord_measure_name(measure)
@@ -216,18 +238,373 @@ geom_track <- function(mapping = NULL, data = NULL, geom = "point", stat = NULL,
   l$ggchord_params$native_mapping <- mapping
   l$ggchord_params$native_params <- dots
   l$ggchord_params$fixed_aesthetics <- fixed
+  l$geom$default_aes$fill <- "grey60"
+  l$geom$default_aes$colour <- if (geom %in% c("point", "line", "path", "step")) "black" else NA
+  l$geom$default_aes$linewidth <- if (geom %in% c("line", "path", "step")) .5 else
+    if (geom == "tile") .2 else .3
+  l$geom$default_aes$size <- 1.5
   l$ggchord_params$native_inherit <- inherit.aes
   l$ggchord_params$baseline <- baseline
   l
 }
 
-#' @rdname geom_track
+#' Draw a track point layer
 #' @export
-geom_track_col <- function(mapping = NULL, data = NULL, position = NULL,
-    track = NULL, ..., stat = "identity", id = NULL, show.legend = NA, inherit.aes = TRUE) {
+#' @param mapping Aesthetic mapping from `ggplot2::aes()`. A local mapping overrides the matching inherited channel.
+#' @param data Track observation table, or a function returning it. Numerical measurements use source positions and values.
+#' @param stat A compatible ggplot2 Stat or its name. The default uses the supplied records.
+#' @param position A compatible Position for placement of the layer geometry.
+#' @param track ID of the physical band. The default band is available when first used.
+#' @param ... Additional named visual styles and parameters accepted by this layer.
+#' @param na.rm Suppress warnings for missing observations that the layer can omit.
+#' @param show.legend Logical or named logical indicating whether the layer contributes legend keys.
+#' @param inherit.aes Whether to inherit plot mappings and evaluate them on the layer data.
+#' @param id Optional plot-local layer identifier. Name a layer explicitly to scope a scale, anchor a label or export it.
+#' @return A ggplot2 layer for addition to a plot.
+#' @details Numerical tracks use `x` in sequence units and `y` in measurement units. They default to the `pos` and `value` columns. An interval fills the band across `start` and `end` without training a numerical height. Track bands set geometry in millimetres.
+#' @examples
+#' library(ggplot2)
+#'
+#' seqs <- data.frame(
+#'   accver = c("A", "B"), length = c(1000, 800),
+#'   sequence_unit = "bp", topology = "linear"
+#' )
+#'
+#' signal <- data.frame(accver = rep(c("A", "B"), each = 3),
+#'   pos = rep(c(100, 400, 700), 2), value = c(2, 5, 3, 1, 4, 2))
+#'
+#' ggchord(seqs) +
+#'   geom_seq() +
+#'   geom_track_point(aes(x = pos, y = value), data = signal, size = 2) +
+#'   scale_track_value(name = "Signal") +
+#'   coord_collinear()
+geom_track_point <- function(mapping = NULL, data = NULL, stat = "identity",
+    position = "identity", track = "default", ...,
+    na.rm = FALSE, show.legend = NA, inherit.aes = TRUE, id = NULL) {
   ggchord_check_argument_names(sys.call(), sys.function())
-  geom_track(mapping, data, geom = "col", stat = stat, track = track, id = id,
-    position = position, ..., show.legend = show.legend, inherit.aes = inherit.aes)
+  geom_track(mapping, data, geom = "point", stat = stat, position = position,
+    track = track, ..., na.rm = na.rm, show.legend = show.legend,
+    inherit.aes = inherit.aes, id = id)
+}
+
+#' Draw a track line layer
+#' @export
+#' @param mapping Aesthetic mapping from `ggplot2::aes()`. A local mapping overrides the matching inherited channel.
+#' @param data Track observation table, or a function returning it. Numerical measurements use source positions and values.
+#' @param stat A compatible ggplot2 Stat or its name. The default uses the supplied records.
+#' @param position A compatible Position for placement of the layer geometry.
+#' @param track ID of the physical band. The default band is available when first used.
+#' @param ... Additional named visual styles and parameters accepted by this layer.
+#' @param na.rm Suppress warnings for missing observations that the layer can omit.
+#' @param show.legend Logical or named logical indicating whether the layer contributes legend keys.
+#' @param inherit.aes Whether to inherit plot mappings and evaluate them on the layer data.
+#' @param id Optional plot-local layer identifier. Name a layer explicitly to scope a scale, anchor a label or export it.
+#' @return A ggplot2 layer for addition to a plot.
+#' @details Numerical tracks use `x` in sequence units and `y` in measurement units. They default to the `pos` and `value` columns. An interval fills the band across `start` and `end` without training a numerical height. Track bands set geometry in millimetres.
+#' @examples
+#' library(ggplot2)
+#'
+#' seqs <- data.frame(
+#'   accver = c("A", "B"), length = c(1000, 800),
+#'   sequence_unit = "bp", topology = "linear"
+#' )
+#'
+#' signal <- data.frame(accver = rep(c("A", "B"), each = 3),
+#'   pos = rep(c(100, 400, 700), 2), value = c(2, 5, 3, 1, 4, 2))
+#'
+#' ggchord(seqs) +
+#'   geom_seq() +
+#'   geom_track_line(aes(x = pos, y = value), data = signal) +
+#'   scale_track_value(name = "Signal") +
+#'   coord_collinear()
+geom_track_line <- function(mapping = NULL, data = NULL, stat = "identity",
+    position = "identity", track = "default", ...,
+    na.rm = FALSE, show.legend = NA, inherit.aes = TRUE, id = NULL) {
+  ggchord_check_argument_names(sys.call(), sys.function())
+  geom_track(mapping, data, geom = "line", stat = stat, position = position,
+    track = track, ..., na.rm = na.rm, show.legend = show.legend,
+    inherit.aes = inherit.aes, id = id)
+}
+
+#' Draw a track path layer
+#' @export
+#' @param mapping Aesthetic mapping from `ggplot2::aes()`. A local mapping overrides the matching inherited channel.
+#' @param data Track observation table, or a function returning it. Numerical measurements use source positions and values.
+#' @param stat A compatible ggplot2 Stat or its name. The default uses the supplied records.
+#' @param position A compatible Position for placement of the layer geometry.
+#' @param track ID of the physical band. The default band is available when first used.
+#' @param ... Additional named visual styles and parameters accepted by this layer.
+#' @param na.rm Suppress warnings for missing observations that the layer can omit.
+#' @param show.legend Logical or named logical indicating whether the layer contributes legend keys.
+#' @param inherit.aes Whether to inherit plot mappings and evaluate them on the layer data.
+#' @param id Optional plot-local layer identifier. Name a layer explicitly to scope a scale, anchor a label or export it.
+#' @return A ggplot2 layer for addition to a plot.
+#' @details Numerical tracks use `x` in sequence units and `y` in measurement units. They default to the `pos` and `value` columns. An interval fills the band across `start` and `end` without training a numerical height. Track bands set geometry in millimetres.
+#' @examples
+#' library(ggplot2)
+#'
+#' seqs <- data.frame(
+#'   accver = c("A", "B"), length = c(1000, 800),
+#'   sequence_unit = "bp", topology = "linear"
+#' )
+#'
+#' signal <- data.frame(accver = rep(c("A", "B"), each = 3),
+#'   pos = rep(c(100, 400, 700), 2), value = c(2, 5, 3, 1, 4, 2))
+#'
+#' ggchord(seqs) +
+#'   geom_seq() +
+#'   geom_track_path(aes(x = pos, y = value), data = signal) +
+#'   scale_track_value(name = "Signal") +
+#'   coord_collinear()
+geom_track_path <- function(mapping = NULL, data = NULL, stat = "identity",
+    position = "identity", track = "default", ...,
+    na.rm = FALSE, show.legend = NA, inherit.aes = TRUE, id = NULL) {
+  ggchord_check_argument_names(sys.call(), sys.function())
+  geom_track(mapping, data, geom = "path", stat = stat, position = position,
+    track = track, ..., na.rm = na.rm, show.legend = show.legend,
+    inherit.aes = inherit.aes, id = id)
+}
+
+#' Draw a track step layer
+#' @export
+#' @param mapping Aesthetic mapping from `ggplot2::aes()`. A local mapping overrides the matching inherited channel.
+#' @param data Track observation table, or a function returning it. Numerical measurements use source positions and values.
+#' @param stat A compatible ggplot2 Stat or its name. The default uses the supplied records.
+#' @param position A compatible Position for placement of the layer geometry.
+#' @param track ID of the physical band. The default band is available when first used.
+#' @param ... Additional named visual styles and parameters accepted by this layer.
+#' @param na.rm Suppress warnings for missing observations that the layer can omit.
+#' @param show.legend Logical or named logical indicating whether the layer contributes legend keys.
+#' @param inherit.aes Whether to inherit plot mappings and evaluate them on the layer data.
+#' @param id Optional plot-local layer identifier. Name a layer explicitly to scope a scale, anchor a label or export it.
+#' @return A ggplot2 layer for addition to a plot.
+#' @details Numerical tracks use `x` in sequence units and `y` in measurement units. They default to the `pos` and `value` columns. An interval fills the band across `start` and `end` without training a numerical height. Track bands set geometry in millimetres.
+#' @examples
+#' library(ggplot2)
+#'
+#' seqs <- data.frame(
+#'   accver = c("A", "B"), length = c(1000, 800),
+#'   sequence_unit = "bp", topology = "linear"
+#' )
+#'
+#' signal <- data.frame(accver = rep(c("A", "B"), each = 3),
+#'   pos = rep(c(100, 400, 700), 2), value = c(2, 5, 3, 1, 4, 2))
+#'
+#' ggchord(seqs) +
+#'   geom_seq() +
+#'   geom_track_step(aes(x = pos, y = value), data = signal, direction = "hv") +
+#'   scale_track_value(name = "Signal") +
+#'   coord_collinear()
+geom_track_step <- function(mapping = NULL, data = NULL, stat = "identity",
+    position = "identity", track = "default", ...,
+    na.rm = FALSE, show.legend = NA, inherit.aes = TRUE, id = NULL) {
+  ggchord_check_argument_names(sys.call(), sys.function())
+  geom_track(mapping, data, geom = "step", stat = stat, position = position,
+    track = track, ..., na.rm = na.rm, show.legend = show.legend,
+    inherit.aes = inherit.aes, id = id)
+}
+
+#' Draw a track col layer
+#' @export
+#' @param mapping Aesthetic mapping from `ggplot2::aes()`. A local mapping overrides the matching inherited channel.
+#' @param data Track observation table, or a function returning it. Numerical measurements use source positions and values.
+#' @param stat A compatible ggplot2 Stat or its name. The default uses the supplied records.
+#' @param position A compatible Position for placement of the layer geometry.
+#' @param track ID of the physical band. The default band is available when first used.
+#' @param ... Additional named visual styles and parameters accepted by this layer.
+#' @param na.rm Suppress warnings for missing observations that the layer can omit.
+#' @param show.legend Logical or named logical indicating whether the layer contributes legend keys.
+#' @param inherit.aes Whether to inherit plot mappings and evaluate them on the layer data.
+#' @param id Optional plot-local layer identifier. Name a layer explicitly to scope a scale, anchor a label or export it.
+#' @return A ggplot2 layer for addition to a plot.
+#' @details Numerical tracks use `x` in sequence units and `y` in measurement units. They default to the `pos` and `value` columns. An interval fills the band across `start` and `end` without training a numerical height. Track bands set geometry in millimetres.
+#' @examples
+#' library(ggplot2)
+#'
+#' seqs <- data.frame(
+#'   accver = c("A", "B"), length = c(1000, 800),
+#'   sequence_unit = "bp", topology = "linear"
+#' )
+#'
+#' signal <- data.frame(accver = rep(c("A", "B"), each = 3),
+#'   pos = rep(c(100, 400, 700), 2), value = c(2, 5, 3, 1, 4, 2))
+#'
+#' ggchord(seqs) +
+#'   geom_seq() +
+#'   geom_track_col(aes(x = pos, y = value), data = signal, width = 40) +
+#'   scale_track_value(name = "Signal") +
+#'   coord_collinear()
+geom_track_col <- function(mapping = NULL, data = NULL, stat = "identity",
+    position = "stack", track = "default", ...,
+    na.rm = FALSE, show.legend = NA, inherit.aes = TRUE, id = NULL) {
+  ggchord_check_argument_names(sys.call(), sys.function())
+  geom_track(mapping, data, geom = "col", stat = stat, position = position,
+    track = track, ..., na.rm = na.rm, show.legend = show.legend,
+    inherit.aes = inherit.aes, id = id)
+}
+
+#' Draw a track bar layer
+#' @export
+#' @param mapping Aesthetic mapping from `ggplot2::aes()`. A local mapping overrides the matching inherited channel.
+#' @param data Track observation table, or a function returning it. Numerical measurements use source positions and values.
+#' @param stat A compatible ggplot2 Stat or its name. The default uses the supplied records.
+#' @param position A compatible Position for placement of the layer geometry.
+#' @param track ID of the physical band. The default band is available when first used.
+#' @param ... Additional named visual styles and parameters accepted by this layer.
+#' @param na.rm Suppress warnings for missing observations that the layer can omit.
+#' @param show.legend Logical or named logical indicating whether the layer contributes legend keys.
+#' @param inherit.aes Whether to inherit plot mappings and evaluate them on the layer data.
+#' @param id Optional plot-local layer identifier. Name a layer explicitly to scope a scale, anchor a label or export it.
+#' @return A ggplot2 layer for addition to a plot.
+#' @details Numerical tracks use `x` in sequence units and `y` in measurement units. They default to the `pos` and `value` columns. An interval fills the band across `start` and `end` without training a numerical height. Track bands set geometry in millimetres.
+#' @examples
+#' library(ggplot2)
+#'
+#' seqs <- data.frame(
+#'   accver = c("A", "B"), length = c(1000, 800),
+#'   sequence_unit = "bp", topology = "linear"
+#' )
+#'
+#' signal <- data.frame(accver = rep(c("A", "B"), each = 3),
+#'   pos = rep(c(100, 400, 700), 2), value = c(2, 5, 3, 1, 4, 2))
+#'
+#' ggchord(seqs) +
+#'   geom_seq() +
+#'   geom_track_bar(aes(x = pos), data = signal, width = 40) +
+#'   scale_track_value(name = "Count") +
+#'   coord_collinear()
+geom_track_bar <- function(mapping = NULL, data = NULL, stat = "count",
+    position = "stack", track = "default", ...,
+    na.rm = FALSE, show.legend = NA, inherit.aes = TRUE, id = NULL) {
+  ggchord_check_argument_names(sys.call(), sys.function())
+  geom_track(mapping, data, geom = "bar", stat = stat, position = position,
+    track = track, ..., na.rm = na.rm, show.legend = show.legend,
+    inherit.aes = inherit.aes, id = id)
+}
+
+#' Draw a track area layer
+#' @export
+#' @param mapping Aesthetic mapping from `ggplot2::aes()`. A local mapping overrides the matching inherited channel.
+#' @param data Track observation table, or a function returning it. Numerical measurements use source positions and values.
+#' @param stat A compatible ggplot2 Stat or its name. The default uses the supplied records.
+#' @param position A compatible Position for placement of the layer geometry.
+#' @param track ID of the physical band. The default band is available when first used.
+#' @param ... Additional named visual styles and parameters accepted by this layer.
+#' @param na.rm Suppress warnings for missing observations that the layer can omit.
+#' @param show.legend Logical or named logical indicating whether the layer contributes legend keys.
+#' @param inherit.aes Whether to inherit plot mappings and evaluate them on the layer data.
+#' @param id Optional plot-local layer identifier. Name a layer explicitly to scope a scale, anchor a label or export it.
+#' @return A ggplot2 layer for addition to a plot.
+#' @details Numerical tracks use `x` in sequence units and `y` in measurement units. They default to the `pos` and `value` columns. An interval fills the band across `start` and `end` without training a numerical height. Track bands set geometry in millimetres.
+#' @examples
+#' library(ggplot2)
+#'
+#' seqs <- data.frame(
+#'   accver = c("A", "B"), length = c(1000, 800),
+#'   sequence_unit = "bp", topology = "linear"
+#' )
+#'
+#' signal <- data.frame(accver = rep(c("A", "B"), each = 3),
+#'   pos = rep(c(100, 400, 700), 2), value = c(2, 5, 3, 1, 4, 2))
+#'
+#' ggchord(seqs) +
+#'   geom_seq() +
+#'   geom_track_area(aes(x = pos, y = value), data = signal, position = "identity") +
+#'   scale_track_value(name = "Signal") +
+#'   coord_collinear()
+geom_track_area <- function(mapping = NULL, data = NULL, stat = "identity",
+    position = "stack", track = "default", ...,
+    na.rm = FALSE, show.legend = NA, inherit.aes = TRUE, id = NULL) {
+  ggchord_check_argument_names(sys.call(), sys.function())
+  geom_track(mapping, data, geom = "area", stat = stat, position = position,
+    track = track, ..., na.rm = na.rm, show.legend = show.legend,
+    inherit.aes = inherit.aes, id = id)
+}
+
+#' Draw a track tile layer
+#' @export
+#' @param mapping Aesthetic mapping from `ggplot2::aes()`. A local mapping overrides the matching inherited channel.
+#' @param data Track observation table, or a function returning it. Numerical measurements use source positions and values.
+#' @param stat A compatible ggplot2 Stat or its name. The default uses the supplied records.
+#' @param position A compatible Position for placement of the layer geometry.
+#' @param track ID of the physical band. The default band is available when first used.
+#' @param ... Additional named visual styles and parameters accepted by this layer.
+#' @param na.rm Suppress warnings for missing observations that the layer can omit.
+#' @param show.legend Logical or named logical indicating whether the layer contributes legend keys.
+#' @param inherit.aes Whether to inherit plot mappings and evaluate them on the layer data.
+#' @param id Optional plot-local layer identifier. Name a layer explicitly to scope a scale, anchor a label or export it.
+#' @return A ggplot2 layer for addition to a plot.
+#' @details Numerical tracks use `x` in sequence units and `y` in measurement units. They default to the `pos` and `value` columns. An interval fills the band across `start` and `end` without training a numerical height. Track bands set geometry in millimetres.
+#' @examples
+#' library(ggplot2)
+#'
+#' seqs <- data.frame(
+#'   accver = c("A", "B"), length = c(1000, 800),
+#'   sequence_unit = "bp", topology = "linear"
+#' )
+#'
+#' signal <- data.frame(accver = rep(c("A", "B"), each = 3),
+#'   pos = rep(c(100, 400, 700), 2), value = c(2, 5, 3, 1, 4, 2))
+#'
+#' ggchord(seqs) +
+#'   geom_seq() +
+#'   geom_track_tile(aes(x = pos, y = value, fill = value), data = signal, width = 40, height = 0.5) +
+#'   scale_track_value(name = "Signal") +
+#'   coord_collinear()
+geom_track_tile <- function(mapping = NULL, data = NULL, stat = "identity",
+    position = "identity", track = "default", ...,
+    na.rm = FALSE, show.legend = NA, inherit.aes = TRUE, id = NULL) {
+  ggchord_check_argument_names(sys.call(), sys.function())
+  geom_track(mapping, data, geom = "tile", stat = stat, position = position,
+    track = track, ..., na.rm = na.rm, show.legend = show.legend,
+    inherit.aes = inherit.aes, id = id)
+}
+
+#' Draw a track interval layer
+#' @export
+#' @param mapping Aesthetic mapping from `ggplot2::aes()`. A local mapping overrides the matching inherited channel.
+#' @param data Track observation table, or a function returning it. Numerical measurements use source positions and values.
+#' @param stat A compatible ggplot2 Stat or its name. The default uses the supplied records.
+#' @param position A compatible Position for placement of the layer geometry.
+#' @param track ID of the physical band. The default band is available when first used.
+#' @param ... Additional named visual styles and parameters accepted by this layer.
+#' @param na.rm Suppress warnings for missing observations that the layer can omit.
+#' @param show.legend Logical or named logical indicating whether the layer contributes legend keys.
+#' @param inherit.aes Whether to inherit plot mappings and evaluate them on the layer data.
+#' @param id Optional plot-local layer identifier. Name a layer explicitly to scope a scale, anchor a label or export it.
+#' @return A ggplot2 layer for addition to a plot.
+#' @details Numerical tracks use `x` in sequence units and `y` in measurement units. They default to the `pos` and `value` columns. An interval fills the band across `start` and `end` without training a numerical height. Track bands set geometry in millimetres.
+#' @examples
+#' library(ggplot2)
+#'
+#' seqs <- data.frame(
+#'   accver = c("A", "B"), length = c(1000, 800),
+#'   sequence_unit = "bp", topology = "linear"
+#' )
+#'
+#' genes <- data.frame(
+#'   accver = c("A", "A", "B"), feature_id = c("g1", "g2", "g3"),
+#'   start = c(100, 400, 150), end = c(240, 620, 380),
+#'   strand = c("+", "-", "+"), label = c("g1", "g2", "g3"),
+#'   type = c("CDS", "tRNA", "CDS")
+#' )
+#'
+#' states <- genes[c("accver", "start", "end", "type")]
+#'
+#' gene_colours <- c(CDS = "#187B77", tRNA = "#CC7D3A")
+#'
+#' ggchord(seqs) +
+#'   geom_seq() +
+#'   geom_track_interval(aes(fill = type), data = states) +
+#'   ggplot2::scale_fill_manual(values = gene_colours) +
+#'   coord_collinear()
+geom_track_interval <- function(mapping = NULL, data = NULL, stat = "identity",
+    position = "identity", track = "default", ...,
+    na.rm = FALSE, show.legend = NA, inherit.aes = TRUE, id = NULL) {
+  ggchord_check_argument_names(sys.call(), sys.function())
+  geom_track(mapping, data, geom = "interval", stat = stat, position = position,
+    track = track, ..., na.rm = na.rm, show.legend = show.legend,
+    inherit.aes = inherit.aes, id = id)
 }
 
 ggchord_track_mapping_aliases <- function(mapping) {
@@ -326,11 +703,20 @@ ggchord_coverage_measure <- function(height) {
 ggchord_compute_track_input <- function(layer, plot, raw, sequences, coverage) {
   p <- layer$ggchord_params
   facet_keys <- ggchord_facet_vars(plot)
-  if(!isTRUE(plot$coordinates$ggchord_coord))ggchord_stop("geom_track(): use a ggchord coordinate; for vertical backbones use coord_collinear(seq_axis='vertical') instead of coord_flip()")
+  if (!isTRUE(plot$coordinates$ggchord_coord))
+    ggchord_stop("geom_track(): use a sequence-path coordinate such as coord_collinear(axis = 'y')")
   if (coverage && is.null(raw)) ggchord_stop("Coverage needs interval data or a plot feature table")
   ggchord_require_columns(raw, character(), "geom_track()")
-  ggchord_require_columns(raw, facet_keys, "Faceted track observations")
+  original_source <- raw
+  facet_rows <- ggchord_facet_stat_input(raw, plot, layer)
+  original_index <- if (is.null(facet_rows)) seq_len(nrow(raw)) else facet_rows$.ggchord_input_index
+  raw <- raw[original_index, , drop = FALSE]
+  if (!is.null(facet_rows)) raw$.ggchord_stat_panel <- as.integer(facet_rows$PANEL)
   source_data <- raw
+  layer$ggchord_params$measure <- p$measure <- ggchord_measure_name(p$measure %||%
+    attr(raw, "measure", exact = TRUE))
+  layer$ggchord_params$value_unit <- ggchord_measure_name(attr(raw, "value_unit", exact = TRUE) %||%
+    attr(raw, "unit", exact = TRUE))
   capture <- p$stage_capture
   caller <- if (coverage) "Coverage intervals" else "Track input"
   ggchord_check_interval_unit(raw, ggchord_sequence_unit(sequences), caller)
@@ -371,7 +757,7 @@ ggchord_compute_track_input <- function(layer, plot, raw, sequences, coverage) {
   if (coverage) {
     height <- rlang::get_expr(mapping$y)
     known <- ggchord_coverage_measure(height)
-    if (p$native_geom == "tile" && (!is.null(height) || "height" %in% c(names(mapping), names(p$native_params))))
+    if (isTRUE(p$interval) && (!is.null(height) || "height" %in% c(names(mapping), names(p$native_params))))
       ggchord_stop("Coverage tiles fill the whole band; map fill to after_stat(coverage) or after_stat(mean_depth)")
     if (!is.null(known) && !is.null(p$measure) && !identical(known, p$measure))
       ggchord_stop("The mapped height represents ", known, "; the declared measure is ", p$measure)
@@ -394,19 +780,15 @@ ggchord_compute_track_input <- function(layer, plot, raw, sequences, coverage) {
     }
   }
   interval_x <- FALSE
-  if (!coverage && !"x" %in% names(mapping) && p$native_geom != "rect") {
-    if ("pos" %in% names(raw)) mapping$x <- rlang::quo(pos) else if (all(c("start", "end") %in% names(raw))) {
-      interval_x <- TRUE
-      raw$.track_x <- (raw$start + raw$end - 1) / 2
-      raw$.track_width <- raw$end - raw$start + 1
-      mapping$x <- rlang::quo(.track_x)
-    } else ggchord_stop("geom_track(): map x or supply pos/start/end")
+  if (!coverage && !"x" %in% names(mapping)) {
+    if ("pos" %in% names(raw)) mapping$x <- rlang::quo(pos) else
+      ggchord_stop("geom_track(): map x or supply the pos column")
   }
-  if (!coverage && !"y" %in% names(mapping) && "track_value" %in% names(raw)) mapping$y <- rlang::quo(track_value)
+  if (!coverage && p$native_stat != "count" && !"y" %in% names(mapping) &&
+      "value" %in% names(raw)) mapping$y <- rlang::quo(value)
   if (p$native_stat == "count" && "y" %in% names(mapping) &&
       !is.null(ggchord_start_mapping(mapping$y))) ggchord_stop(
     "geom_track_bar(): count does not accept supplied heights; use geom_track_col() or explicit stat='identity'")
-  if (p$native_geom == "tile" && !coverage && !"y" %in% names(mapping)) mapping$y <- rlang::quo(0.5)
   late <- names(mapping)[vapply(mapping, ggchord_has_stage, logical(1), stages = "after_scale")]
   late_mapping <- mapping[late]
   for (key in late) {
@@ -439,22 +821,14 @@ ggchord_compute_track_input <- function(layer, plot, raw, sequences, coverage) {
   }
   # Partition source statistics by accession and facet values in ONE native
   # layer. ggplot2 evaluates after_stat() after all panels have been combined.
-  domain_keys <- unique(c("accver", facet_keys))
+  domain_keys <- c("accver", if (!is.null(facet_rows)) ".ggchord_stat_panel")
+  reference_data$.ggchord_stat_panel <- raw$.ggchord_stat_panel
   domain_id <- do.call(interaction, c(unname(lapply(reference_data[domain_keys], function(x)
     match(x, unique(x)))), list(drop = TRUE, lex.order = TRUE)))
   raw$.track_domain <- as.integer(domain_id)
   input_domain <- raw$.track_domain
   raw$.track_input_index <- seq_len(nrow(raw))
-  if (length(facet_keys) && !is.null(layer$layout)) {
-    ggchord_check_panel_layout(layer)
-    panel_map <- ggchord_facet_panels(plot, ggchord_facet_frames(plot))
-    rows <- raw[facet_keys]
-    attr(rows, "layout") <- layer$layout
-    rows$.input <- raw$.track_input_index
-    kept <- plot$facet$map_data(rows, panel_map$panels, panel_map$params)$.input
-    raw <- raw[kept, , drop = FALSE]
-  }
-  domains <- reference_data[raw$.track_input_index, domain_keys, drop = FALSE]
+  domains <- reference_data[domain_keys]
   domains$.track_domain <- raw$.track_domain
   domains <- domains[!duplicated(domains$.track_domain), , drop = FALSE]
   stat <- p$custom_stat %||% p$native_stat
@@ -462,15 +836,74 @@ ggchord_compute_track_input <- function(layer, plot, raw, sequences, coverage) {
     ggchord_stop("Custom track statistics reserve source_row and source_rows for provenance")
   if (coverage) {
     stat <- StatGgchordCoverage
+    if (isTRUE(p$interval))
+      stat <- ggplot2::ggproto(NULL, stat, default_aes = aes(y = after_stat(0.5)))
     params$window_grid <- ggchord_coverage_grid(sequences, params$binwidth, params$windows,
-      unique(raw$.track_reference))
+      seq_len(nrow(sequences)))
     params$binwidth <- params$windows <- NULL
     mapping$.ggchord_reference <- rlang::quo(.track_reference)
   }
-  source <- if (length(facet_keys) && !is.null(layer$layout))
-    source_data[raw$.track_input_index, , drop = FALSE] else source_data
+  source <- source_data
   start_aes <- ggchord_track_start_aesthetics(mapping, native_roles, source, raw, caller)
-  if (nrow(raw)) {
+  if (!is.null(capture) && "mapped" %in% capture$requested) {
+    mapped <- source
+    mapped$accver <- reference_data$accver
+    for (key in native_roles) {
+      value <- start_aes$data[[paste0(".ggchord_start_", key)]]
+      if (!is.null(value)) mapped[[key]] <- value
+    }
+    if (coverage) {
+      mapped$start <- raw$.coverage_start
+      mapped$end <- raw$.coverage_end
+    }
+    mapped$source_row <- original_index
+    capture$mapped <- mapped
+  }
+  if (coverage && nrow(raw) && !is.null(raw$segments)) {
+    expanded <- lapply(seq_len(nrow(raw)), function(i) {
+      parts <- raw$segments[[i]]
+      if (is.null(parts) || !nrow(parts)) return(start_aes$data[i, , drop = FALSE])
+      ggchord_require_columns(parts, c("start", "end"), "Coverage segments")
+      if ("segment_type" %in% names(parts))
+        parts <- parts[is.na(parts$segment_type) | parts$segment_type != "gap", , drop = FALSE]
+      start <- pmax(parts$start, raw$.coverage_start[i]); end <- pmin(parts$end, raw$.coverage_end[i])
+      keep <- start <= end
+      result <- start_aes$data[rep(i, sum(keep)), , drop = FALSE]
+      result$.coverage_start <- start[keep]; result$.coverage_end <- end[keep]
+      result
+    })
+    start_aes$data <- ggchord_rbind_fill(expanded)
+  }
+  if (coverage && implicit_group) {
+    style_columns <- paste0(".ggchord_start_", c("fill", "colour", "linetype", "shape"))
+    style_columns <- intersect(style_columns, names(start_aes$data))
+    grouped <- any(vapply(start_aes$data[style_columns], function(x) !is.numeric(x), logical(1)))
+    if (!grouped) {
+      reference_members <- ggchord_facet_stat_input(sequences, plot, layer)
+      if (is.null(reference_members)) {
+        missing <- data.frame(accver = sequences$accver)
+      } else {
+        missing <- data.frame(accver = sequences$accver[reference_members$.ggchord_input_index],
+          .ggchord_stat_panel = as.integer(reference_members$PANEL))
+      }
+      missing <- missing[!duplicated(missing), , drop = FALSE]
+      domain_key <- function(x) paste(x$accver, x$.ggchord_stat_panel %||% 1L, sep = "\r")
+      missing <- missing[!domain_key(missing) %in% domain_key(domains), , drop = FALSE]
+      if (nrow(missing)) {
+        missing$.track_domain <- nrow(domains) + seq_len(nrow(missing))
+        domains <- rbind(domains, missing)
+        # A zero-width sentinel before the first residue trains the missing
+        # reference domain, without contributing an interval to any window.
+        zeros <- start_aes$data[rep(NA_integer_, nrow(missing)), , drop = FALSE]
+        zeros$.track_domain <- missing$.track_domain
+        zeros$.track_reference <- match(missing$accver, sequences$accver)
+        zeros$.coverage_start <- zeros$.coverage_end <- rep(0, nrow(missing))
+        zeros$.track_input_index <- rep(0L, nrow(missing))
+        start_aes$data <- rbind(start_aes$data, zeros)
+      }
+    }
+  }
+  if (nrow(start_aes$data)) {
     # Identity scales retain source aesthetic values; final role scales train
     # only after projection. No device geometry enters these statistics.
     native <- do.call(getExportedValue("ggplot2", paste0("geom_", p$native_geom)),
@@ -533,14 +966,18 @@ ggchord_compute_track_input <- function(layer, plot, raw, sequences, coverage) {
       bin = computed$.ggchord_bin_rows,
       custom = ggchord_track_custom_members(computed$source_rows, domain, input_domain),
       computed$.ggchord_group_rows)
-    if (is.null(p$custom_stat)) members <- lapply(members, as.integer)
+    members <- lapply(members, function(rows) {
+      if (is.null(rows)) return(NULL)
+      original_index[as.integer(rows)]
+    })
     computed$source_rows <- I(members)
+    if (coverage) computed$source_members <- I(members)
     if (!is.null(p$custom_stat)) {
       computed$source_row <- NULL
       computed$source_status <- ifelse(vapply(members, is.null, logical(1)), "unknown", "reported")
     }
     if (coverage && nrow(computed)) {
-      computed$start <- computed$window_start - 1
+      computed$start <- computed$window_start - if (isTRUE(p$interval)) 0 else 1
       computed$end <- computed$window_end
       computed$width <- computed$denominator
     }
@@ -580,21 +1017,28 @@ ggchord_compute_track_input <- function(layer, plot, raw, sequences, coverage) {
     if (!is.null(p$custom_stat)) output$source_status <- character()
     mapping <- late_mapping <- ggplot2::aes()
   }
-  facet_fields <- setdiff(facet_keys, "accver")
-  conflicts <- intersect(facet_fields, c(names(output), ".track_domain", ".track_input_index"))
-  if (length(conflicts)) ggchord_stop("Facet column conflicts with track output: ",
-    paste(conflicts, collapse = ", "), ". Copy it to a sample column before faceting.")
-  for (key in facet_fields)
-    output[[key]] <- if (nrow(output)) domains[[key]][at] else domains[[key]][FALSE]
+  if (!is.null(facet_rows)) {
+    panel <- if (nrow(output)) domains$.ggchord_stat_panel[at] else integer()
+    output$.ggchord_stat_panel <- panel
+    panels <- plot$ggchord$source_facet_setup$panels
+    for (key in setdiff(facet_keys, "accver")) output[[key]] <- panels[[key]][panel]
+  }
+  if (!is.null(capture) && "statistic" %in% capture$requested) {
+    statistic <- output
+    # Coverage positions here are closed source windows. The preceding
+    # boundary retained by the renderer belongs only to the displayed bar.
+    if (coverage) statistic$start <- statistic$window_start
+    capture$statistic <- statistic
+  }
   visual <- ggplot2::aes()
   for (key in intersect(c("fill", "colour", "alpha", "linewidth", "linetype", "size", "shape", "label", "angle", "hjust", "vjust", "family", "fontface", "lineheight", "stroke"), names(mapping))) {
     column <- paste0(".track_", key)
     output[[column]] <- output[[key]]
-    target <- if (key %in% c("fill", "colour")) ggchord_track_aes(key, p$track_id) else key
+    target <- key
     visual[[target]] <- rlang::new_quosure(rlang::sym(column), emptyenv())
   }
   for (key in names(late_mapping)) {
-    target <- if (key %in% c("fill", "colour")) ggchord_track_aes(key, p$track_id) else key
+    target <- key
     q <- ggchord_track_stage_mapping(late_mapping[key], p$track_id)[[key]]
     expr <- rlang::get_expr(q)
     if (rlang::is_call(expr, "stage")) {
@@ -606,7 +1050,7 @@ ggchord_compute_track_input <- function(layer, plot, raw, sequences, coverage) {
   }
   # Fixed styles have already been interpreted by the native geom.
   for (key in intersect(c("fill", "colour", "alpha", "linewidth", "linetype", "size", "shape", "angle", "hjust", "vjust", "family", "fontface", "lineheight", "stroke"), names(params))) {
-    target <- if (key %in% c("fill", "colour")) ggchord_track_aes(key, p$track_id) else key
+    target <- key
     layer$aes_params[[target]] <- params[[key]]
   }
   layer$ggchord_input_mapping <- visual
@@ -620,13 +1064,12 @@ ggchord_compute_track_input <- function(layer, plot, raw, sequences, coverage) {
   }
   layer$ggchord_params$track_mapping_labels <- stats::setNames(
     vapply(mapping, mapping_label, character(1)),
-    vapply(names(mapping), function(key) if (key %in% c("fill", "colour"))
-      ggchord_track_aes(key, p$track_id) else key, character(1)))
+    names(mapping))
   layer$ggchord_input_data <- output
-  layer$ggchord_params$track_kind <- if (coverage && p$native_geom == "tile") "tile" else
+  layer$ggchord_params$track_kind <- if (coverage && isTRUE(p$interval)) "tile" else
     if (p$native_geom %in% c("bar", "col")) "bar" else "line"
   layer$ggchord_params$source_edges <- TRUE
-  layer$ggchord_params$track_sources <- source_data
+  layer$ggchord_params$track_sources <- original_source
   layer$ggchord_params$native_prepared <- TRUE
   layer$geom_params$native_draw_params <- params[intersect(names(params),c("arrow","lineend","linejoin","linemitre","parse","check_overlap","rule"))]
   layer$geom_params$track_kind <- p$native_geom
@@ -800,6 +1243,7 @@ ggchord_track_native_geometry <- function(d, p, layout, sc, at_value, draw_rows)
   if (geom %in% c("line", "path", "step", "area", "ribbon")) {
     series <- split(seq_len(nrow(d)), interaction(d$accver, d$group, drop = TRUE))
     for (rows in series) {
+      if (!identical(geom, "path")) rows <- rows[order(d$pos[rows])]
       valid <- is.finite(d$pos[rows]) & is.finite(d$track_ymin[rows]) & is.finite(d$track_ymax[rows])
       runs <- split(rows[valid], cumsum(!valid)[valid])
       for (run in runs) {
@@ -823,7 +1267,16 @@ ggchord_track_native_geometry <- function(d, p, layout, sc, at_value, draw_rows)
         if (geom %in% c("area", "ribbon")) {
           bottom <- path(rev(d$pos[run]), rev(lower), rev(run))
           add(c(top$x,bottom$x), c(top$y,bottom$y), c(top$rows,bottom$rows), "track_poly")
-        } else add(top$x, top$y, top$rows, "track_line")
+        } else {
+          if (isTRUE(p$closed) && length(run) == length(rows) && all(valid)) {
+            len <- layout$sequence_reference$lens[[d$accver[run[1L]]]]
+            seam <- seq(tail(x, 1L), x[1L] + len, length.out = 24L)
+            top$x <- c(top$x, seam %% len)
+            top$y <- c(top$y, seq(tail(upper, 1L), upper[1L], length.out = 24L))
+            top$rows <- c(top$rows, rep(tail(run, 1L), 24L))
+          }
+          add(top$x, top$y, top$rows, "track_line")
+        }
       }
     }
   } else for (i in draw_rows) {

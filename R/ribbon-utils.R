@@ -1,6 +1,6 @@
 # ribbon-utils.R - ribbon filtering, deduplication and merging
 #
-# v0.8.0: filter_ggchord_ribbons(), deduplicate_ggchord_ribbons() and
+# v0.8.0: ggchord_filter_link_rows(), ggchord_deduplicate_link_rows() and
 # merge_ggchord_ribbons() prepare alignment tables before plotting. All three
 # keep the original column order plus extra columns, return a report, and
 # attach the original row numbers as the "source_rows" attribute of the data.
@@ -15,56 +15,7 @@ ggchord_ribbon_numeric_input <- function(data, columns, caller) {
   invisible(NULL)
 }
 
-#' Filter alignment ribbons before plotting
-#'
-#' Keeps the ribbon rows that satisfy all requested criteria and optionally
-#' sorts them. The returned data frame keeps every extra column and the
-#' original column order; the original row numbers are attached as the
-#' \code{source_rows} attribute.
-#' Each non-NULL numeric threshold must be one finite number. Columns used by
-#' a numeric criterion must be numeric; missing values fail that criterion.
-#'
-#' @param ribbon_data data.frame with at least \code{qaccver} and
-#'   \code{saccver} columns (normally the full ribbon_data format).
-#' @param seq_ids Optional character vector. Keep only rows where both the
-#'   query and the subject are in \code{seq_ids}.
-#' @param min_pident,max_pident Optional numeric. Lower/upper bounds on
-#'   \code{pident}.
-#' @param min_length Optional numeric. Lower bound on \code{length}.
-#' @param max_evalue Optional numeric. Upper bound on \code{evalue} (requires
-#'   an \code{evalue} column).
-#' @param min_bitscore Optional numeric. Lower bound on \code{bitscore}
-#'   (requires a \code{bitscore} column).
-#' @param min_query_coverage Optional numeric (0-100). Lower bound on the query
-#'   coverage. Uses the \code{qcovs} column when present; otherwise computed
-#'   from \code{qlen} and the query interval (requires \code{qlen}).
-#' @param min_subject_coverage Optional numeric (0-100). Lower bound on the
-#'   subject coverage, computed from \code{slen} and the subject interval
-#'   (requires an \code{slen} column).
-#' @param keep_pairs Optional data.frame/list/matrix describing an undirected
-#'   set of sequence pairs. A data.frame or matrix with the first two columns
-#'   used as query/subject IDs, or a list of length-2 character vectors. A row
-#'   is kept when its query/subject pair matches any pair in either direction.
-#' @param drop_self_links Logical, default \code{TRUE}. Remove rows where
-#'   \code{qaccver == saccver}.
-#' @param sort_by Optional character vector of column names. Prefix a name
-#'   with \code{"-"} or \code{"desc:"} for descending order (e.g.
-#'   \code{c("pident", "-evalue")}).
-#'
-#' @return A list with \code{data} (the filtered data frame, with
-#'   \code{source_rows} attribute) and \code{report} (n_input/n_kept/n_removed,
-#'   removed_by_reason, removed_rows and kept_rows).
-#' @seealso \code{\link{ggchord_data_contract}}
-#' @export
-#'
-#' @examples
-#' library(dplyr)
-#' data(ribbon_data_example)
-#' links <- ribbon_data_example |>
-#'   select(qaccver, saccver, qstart, qend, sstart, send, pident, length)
-#' out <- filter_ggchord_ribbons(links, min_pident = 95, min_length = 500)
-#' out$report
-filter_ggchord_ribbons <- function(
+ggchord_filter_link_rows <- function(
     ribbon_data,
     seq_ids = NULL,
     min_pident = NULL,
@@ -81,13 +32,13 @@ filter_ggchord_ribbons <- function(
   on.exit(options(error = old_error), add = TRUE)
 
   if (!is.data.frame(ribbon_data)) {
-    ggchord_stop("filter_ggchord_ribbons(): ribbon_data must be a data.frame",
+    ggchord_stop("filter_ggchord_links(): ribbon_data must be a data.frame",
          call. = FALSE)
   }
   req <- c("qaccver", "saccver")
   missing <- setdiff(req, colnames(ribbon_data))
   if (length(missing) > 0) {
-    ggchord_stop("filter_ggchord_ribbons(): ribbon_data is missing required column(s): ",
+    ggchord_stop("filter_ggchord_links(): ribbon_data is missing required column(s): ",
          paste(missing, collapse = ", "), call. = FALSE)
   }
   thresholds <- list(min_pident = min_pident, max_pident = max_pident,
@@ -96,10 +47,10 @@ filter_ggchord_ribbons <- function(
   for (name in names(thresholds)) {
     value <- thresholds[[name]]
     if (!is.null(value) && (!is.numeric(value) || length(value) != 1L || !is.finite(value)))
-      ggchord_stop("filter_ggchord_ribbons(): ", name, " must be NULL or one finite number")
+      ggchord_stop("filter_ggchord_links(): ", name, " must be NULL or one finite number")
   }
   if (!is.logical(drop_self_links) || length(drop_self_links) != 1L || is.na(drop_self_links))
-    ggchord_stop("filter_ggchord_ribbons(): drop_self_links must be TRUE or FALSE")
+    ggchord_stop("filter_ggchord_links(): drop_self_links must be TRUE or FALSE")
   n_input <- nrow(ribbon_data)
   reasons <- replicate(n_input, character(0), simplify = FALSE)
   mark_reason <- function(idx, value) {
@@ -109,11 +60,11 @@ filter_ggchord_ribbons <- function(
   require_col <- function(col, arg) {
     if (!col %in% colnames(ribbon_data)) {
       ggchord_stop(sprintf(paste0(
-        "filter_ggchord_ribbons(): column '%s' is required for the '%s' ",
+        "filter_ggchord_links(): column '%s' is required for the '%s' ",
         "filter but is missing from ribbon_data"), col, arg), call. = FALSE)
     }
     if (!is.numeric(ribbon_data[[col]])) ggchord_stop(
-      "filter_ggchord_ribbons(): ", col, " must be numeric for ", arg)
+      "filter_ggchord_links(): ", col, " must be numeric for ", arg)
   }
 
   if (!is.null(seq_ids)) {
@@ -181,8 +132,8 @@ filter_ggchord_ribbons <- function(
   }
   if (!is.null(keep_pairs)) {
     pairs <- normalize_keep_pairs(keep_pairs)
-    ggchord_conversion_ids(pairs$q, "filter_ggchord_ribbons() keep_pairs")
-    ggchord_conversion_ids(pairs$s, "filter_ggchord_ribbons() keep_pairs")
+    ggchord_conversion_ids(pairs$q, "ggchord_filter_link_rows() keep_pairs")
+    ggchord_conversion_ids(pairs$s, "ggchord_filter_link_rows() keep_pairs")
     keep_row <- vapply(seq_len(n_input), function(i) {
       q <- as.character(ribbon_data$qaccver[i])
       s <- as.character(ribbon_data$saccver[i])
@@ -200,7 +151,7 @@ filter_ggchord_ribbons <- function(
   sort_info <- NULL
   if (!is.null(sort_by)) {
     if (!is.character(sort_by) || length(sort_by) == 0 || anyNA(sort_by) || any(!nzchar(sort_by))) {
-      ggchord_stop("filter_ggchord_ribbons(): sort_by must be a non-empty character vector",
+      ggchord_stop("filter_ggchord_links(): sort_by must be a non-empty character vector",
            call. = FALSE)
     }
     keys <- lapply(sort_by, function(nm) {
@@ -214,7 +165,7 @@ filter_ggchord_ribbons <- function(
         col <- sub("^desc:", "", nm)
       }
       if (!col %in% colnames(out)) {
-        ggchord_stop("filter_ggchord_ribbons(): sort_by column not found: ", col,
+        ggchord_stop("filter_ggchord_links(): sort_by column not found: ", col,
              call. = FALSE)
       }
       list(col = col, desc = desc)
@@ -262,8 +213,6 @@ filter_ggchord_ribbons <- function(
   )
 }
 
-#' Normalize the keep_pairs argument into a data.frame(q, s)
-#' @noRd
 normalize_keep_pairs <- function(pairs) {
   if (is.data.frame(pairs)) {
     if (ncol(pairs) < 2) {
@@ -311,47 +260,7 @@ normalize_keep_pairs <- function(pairs) {
        call. = FALSE)
 }
 
-#' Deduplicate alignment ribbons
-#'
-#' Removes fully duplicated, coordinate-near-duplicated or highly overlapping
-#' alignment blocks within each (query, subject) pair and keeps the best
-#' representative per \code{keep}.
-#'
-#' @param ribbon_data data.frame in ribbon_data format.
-#' @param tolerance Numeric, default 0. Maximum absolute difference (in bp)
-#'   allowed on each of \code{qstart}/\code{qend}/\code{sstart}/\code{send} for
-#'   two rows to count as coordinate duplicates (used with
-#'   \code{by = "coordinates"}).
-#' @param by Character, default \code{"exact"}. \code{"exact"} removes rows
-#'   with identical pair and coordinates; \code{"coordinates"} additionally
-#'   treats rows within \code{tolerance} bp as duplicates;
-#'   \code{"overlap"} treats blocks whose reciprocal overlap is at least
-#'   \code{min_reciprocal_overlap} on both sequences as duplicates. Each
-#'   interval must meet the threshold, not only the shorter one. Opposite
-#'   relative endpoint directions are kept as distinct relationships by all
-#'   methods. Single-base endpoints use supplied strand/direction evidence;
-#'   otherwise their direction is unknown.
-#' @param keep Character, default \code{"best_pident"}. Which representative to
-#'   keep: \code{"best_pident"} (highest pident), \code{"longest"} (longest
-#'   length) or \code{"first"} (first occurrence in the input).
-#' @param min_reciprocal_overlap Numeric (0-1), default 0.9. Reciprocal overlap
-#'   threshold used with \code{by = "overlap"}.
-#'
-#' @return A list with \code{data} (deduplicated data frame with
-#'   \code{source_rows} attribute) and \code{report} (n_input/n_kept/n_removed
-#'   plus a data.frame of removed rows with \code{row}, \code{duplicate_of} and
-#'   \code{reason}).
-#' @seealso \code{\link{ggchord_data_contract}}
-#' @export
-#'
-#' @examples
-#' library(dplyr)
-#' data(ribbon_data_example)
-#' links <- ribbon_data_example |>
-#'   select(qaccver, saccver, qstart, qend, sstart, send, pident, length)
-#' out <- deduplicate_ggchord_ribbons(links, by = "overlap")
-#' out$report
-deduplicate_ggchord_ribbons <- function(
+ggchord_deduplicate_link_rows <- function(
     ribbon_data,
     tolerance = 0,
     by = c("exact", "coordinates", "overlap"),
@@ -363,27 +272,27 @@ deduplicate_ggchord_ribbons <- function(
   by <- match.arg(by)
   keep <- match.arg(keep)
   if (!is.data.frame(ribbon_data)) {
-    ggchord_stop("deduplicate_ggchord_ribbons(): ribbon_data must be a data.frame",
+    ggchord_stop("deduplicate_ggchord_links(): ribbon_data must be a data.frame",
          call. = FALSE)
   }
   req <- c(ggchord_ribbon_required_columns(),
     switch(keep, first = character(), longest = "length", best_pident = "pident"))
   missing <- setdiff(req, colnames(ribbon_data))
   if (length(missing) > 0) {
-    ggchord_stop("deduplicate_ggchord_ribbons(): ribbon_data is missing required column(s): ",
+    ggchord_stop("deduplicate_ggchord_links(): ribbon_data is missing required column(s): ",
          paste(missing, collapse = ", "), call. = FALSE)
   }
   ggchord_ribbon_numeric_input(ribbon_data, setdiff(req, c("qaccver", "saccver")),
-    "deduplicate_ggchord_ribbons()")
+    "ggchord_deduplicate_link_rows()")
   if (!is.numeric(tolerance) || length(tolerance) != 1 || is.na(tolerance) ||
       !is.finite(tolerance) || tolerance < 0) {
-    ggchord_stop("deduplicate_ggchord_ribbons(): tolerance must be a non-negative number",
+    ggchord_stop("deduplicate_ggchord_links(): tolerance must be a non-negative number",
          call. = FALSE)
   }
   if (!is.numeric(min_reciprocal_overlap) || length(min_reciprocal_overlap) != 1 ||
       is.na(min_reciprocal_overlap) || min_reciprocal_overlap < 0 ||
       min_reciprocal_overlap > 1) {
-    ggchord_stop("deduplicate_ggchord_ribbons(): min_reciprocal_overlap must be in [0, 1]",
+    ggchord_stop("deduplicate_ggchord_links(): min_reciprocal_overlap must be in [0, 1]",
          call. = FALSE)
   }
 
@@ -403,7 +312,7 @@ deduplicate_ggchord_ribbons <- function(
 
   pair <- paste(ribbon_data$qaccver, ribbon_data$saccver, sep = "\r")
   grp <- split(seq_len(n), pair)
-  relative_direction <- ggchord_ribbon_direction(ribbon_data)
+  relative_direction <- ggchord_link_orientation(ribbon_data)
   keep_idx <- logical(n)
   removed <- data.frame(row = integer(0), duplicate_of = integer(0),
                         reason = character(0), stringsAsFactors = FALSE)
@@ -494,237 +403,4 @@ deduplicate_ggchord_ribbons <- function(
       removed = removed
     )
   )
-}
-
-#' Merge adjacent or overlapping alignment blocks of the same sequence pair
-#'
-#' Merges alignment blocks that belong to the same (query, subject) pair, are
-#' adjacent (gap <= \code{max_gap}) or overlapping on both sequences, and are
-#' compatible. The merged pident is weighted by alignment length. Merging is
-#' deliberately conservative: blocks whose merged query and subject spans would
-#' differ by more than \code{max(max_gap, 1)}, whose pident differs by more than
-#' \code{min_pident_difference}, or whose orientation differs (when
-#' \code{require_same_orientation}) are left unmerged.
-#' With the default orientation check, subject bounds must also progress in
-#' the order implied by the relative direction; crossing block orders remain
-#' separate.
-#' Query/subject identifiers always define separate groups, even when
-#' \code{group_by} selects additional metadata. An unmerged row retains its
-#' original alignment length. For a merged row, \code{length} is the query
-#' envelope span, not a newly computed alignment length; \code{.length_estimated}
-#' marks this display summary. Source lengths and identities are retained in
-#' the report. Overlap can count aligned bases more than once in the weighted
-#' identity; gaps can add unaligned bases to the envelope. Use the original
-#' blocks for alignment statistics.
-#' Rows with a single-base endpoint remain independent: endpoint order cannot
-#' define an absolute direction for an aggregate envelope.
-#'
-#' @param ribbon_data data.frame in ribbon_data format.
-#' @param max_gap Numeric, default 0. Maximum gap (in bp) allowed between two
-#'   blocks on both sequences for them to be merged.
-#' @param min_pident_difference Numeric, default 0. When > 0, two blocks are
-#'   only merged when their pident difference is <= this value.
-#' @param require_same_orientation Logical, default \code{TRUE}. Only merge
-#'   blocks with the same relative query/subject direction and compatible
-#'   progression of their bounds. Reversing both endpoints preserves relative
-#'   direction. \code{FALSE} explicitly permits a coarser mixed-direction summary.
-#' @param group_by Character vector, default \code{c("qaccver", "saccver")}.
-#'   Additional grouping columns; query/subject IDs always remain grouping keys.
-#' @param extra_columns How to handle columns other than the required ribbon
-#'   fields when multiple rows are merged. \code{"consistent"} (default)
-#'   keeps a value only when all source rows agree and otherwise stores a typed
-#'   missing value; \code{"first"} retains the first source row's value.
-#'
-#' @return A list with \code{data} (merged data frame with \code{source_rows}
-#'   attribute) and \code{report} (data.frame with \code{output_row},
-#'   \code{from_rows}, \code{n_merged}, and list-columns \code{source_length}
-#'   and \code{source_pident} for every output row).
-#' @seealso \code{\link{ggchord_data_contract}}
-#' @export
-#'
-#' @examples
-#' library(dplyr)
-#' data(ribbon_data_example)
-#' links <- ribbon_data_example |>
-#'   select(qaccver, saccver, qstart, qend, sstart, send, pident, length)
-#' out <- merge_ggchord_ribbons(links, max_gap = 100)
-#' out$report
-merge_ggchord_ribbons <- function(
-    ribbon_data,
-    max_gap = 0,
-    min_pident_difference = 0,
-    require_same_orientation = TRUE,
-    group_by = c("qaccver", "saccver"),
-    extra_columns = c("consistent", "first")) {
-  old_error <- ggchord_disable_debug()
-  on.exit(options(error = old_error), add = TRUE)
-  extra_columns <- match.arg(extra_columns)
-
-  if (!is.data.frame(ribbon_data)) {
-    ggchord_stop("merge_ggchord_ribbons(): ribbon_data must be a data.frame",
-         call. = FALSE)
-  }
-  req <- c("qaccver", "saccver", "length", "pident",
-           "qstart", "qend", "sstart", "send")
-  missing <- setdiff(req, colnames(ribbon_data))
-  if (length(missing) > 0) {
-    ggchord_stop("merge_ggchord_ribbons(): ribbon_data is missing required column(s): ",
-         paste(missing, collapse = ", "), call. = FALSE)
-  }
-  ggchord_ribbon_numeric_input(ribbon_data, setdiff(req, c("qaccver", "saccver")),
-    "merge_ggchord_ribbons()")
-  if (any(ribbon_data$length <= 0)) ggchord_stop(
-    "merge_ggchord_ribbons(): length must be positive")
-  if (!is.logical(require_same_orientation) || length(require_same_orientation) != 1L ||
-      is.na(require_same_orientation)) ggchord_stop(
-    "merge_ggchord_ribbons(): require_same_orientation must be TRUE or FALSE")
-  if (!is.character(group_by) || length(group_by) == 0 || anyNA(group_by) ||
-      !all(group_by %in% colnames(ribbon_data))) {
-    ggchord_stop("merge_ggchord_ribbons(): group_by must be a subset of the ribbon_data columns",
-         call. = FALSE)
-  }
-  if (!is.numeric(max_gap) || length(max_gap) != 1 || is.na(max_gap) ||
-      !is.finite(max_gap) || max_gap < 0) {
-    ggchord_stop("merge_ggchord_ribbons(): max_gap must be a non-negative number",
-         call. = FALSE)
-  }
-  if (!is.numeric(min_pident_difference) || length(min_pident_difference) != 1 ||
-      is.na(min_pident_difference) || !is.finite(min_pident_difference) || min_pident_difference < 0) {
-    ggchord_stop("merge_ggchord_ribbons(): min_pident_difference must be a non-negative number",
-         call. = FALSE)
-  }
-
-  n <- nrow(ribbon_data)
-  if (n == 0) {
-    out <- ribbon_data
-    out$.length_estimated <- logical()
-    attr(out, "source_rows") <- integer(0)
-    return(list(
-      data = out,
-      report = data.frame(output_row = integer(0),
-                          from_rows = character(0),
-                          n_merged = integer(0), source_length = I(list()),
-                          source_pident = I(list()))
-    ))
-  }
-
-  qA <- pmin(ribbon_data$qstart, ribbon_data$qend)
-  qB <- pmax(ribbon_data$qstart, ribbon_data$qend)
-  sA <- pmin(ribbon_data$sstart, ribbon_data$send)
-  sB <- pmax(ribbon_data$sstart, ribbon_data$send)
-  qdir <- sign(ribbon_data$qend - ribbon_data$qstart)
-  sdir <- sign(ribbon_data$send - ribbon_data$sstart)
-  orientation <- ifelse(qdir == sdir, "same", "opposite")
-  # A point has no absolute endpoint order. Keep it intact instead of
-  # manufacturing an aggregate direction from neighbouring points/intervals.
-  point <- qdir == 0 | sdir == 0
-
-  interval_gap <- function(l1, h1, l2, h2) {
-    if (h1 < l2) return(l2 - h1 - 1)
-    if (h2 < l1) return(l1 - h2 - 1)
-    0
-  }
-
-  grp_key <- do.call(paste, c(ribbon_data[unique(c("qaccver", "saccver", group_by))], sep = "\r"))
-  grp <- split(seq_len(n), grp_key)
-
-  out_chunks <- list()
-  out_src <- list()
-  report <- data.frame(output_row = integer(0), from_rows = character(0),
-                       n_merged = integer(0), stringsAsFactors = FALSE)
-
-  for (g in grp) {
-    ord <- g[order(qA[g], sA[g])]
-    subgroup <- if (isTRUE(require_same_orientation)) orientation[ord] else rep("all", length(ord))
-    subgroup[point[ord]] <- paste0("point:", ord[point[ord]])
-    sub_groups <- split(ord, subgroup)
-    for (sg in sub_groups) {
-      if (length(sg) == 0) next
-      cur_rows <- sg[1]
-      cur_qA <- qA[sg[1]]
-      cur_qB <- qB[sg[1]]
-      cur_sA <- sA[sg[1]]
-      cur_sB <- sB[sg[1]]
-      cur_qdir <- qdir[sg[1]]
-      cur_sdir <- sdir[sg[1]]
-      cur_wsum <- ribbon_data$pident[sg[1]] * ribbon_data$length[sg[1]]
-      cur_lsum <- ribbon_data$length[sg[1]]
-      cur_pident <- ribbon_data$pident[sg[1]]
-
-      emit <- function() {
-        r0 <- cur_rows[1]
-        new_row <- ribbon_data[r0, , drop = FALSE]
-        new_row$qstart <- if (cur_qdir >= 0) cur_qA else cur_qB
-        new_row$qend <- if (cur_qdir >= 0) cur_qB else cur_qA
-        new_row$sstart <- if (cur_sdir >= 0) cur_sA else cur_sB
-        new_row$send <- if (cur_sdir >= 0) cur_sB else cur_sA
-        new_row$length <- if (length(cur_rows) == 1L) ribbon_data$length[r0] else cur_qB - cur_qA + 1
-        new_row$pident <- cur_wsum / cur_lsum
-        if (extra_columns == "consistent" && length(cur_rows) > 1) {
-          extra <- setdiff(names(ribbon_data), req)
-          for (nm in extra) {
-            values <- ribbon_data[[nm]][cur_rows]
-            same <- length(unique(values[!is.na(values)])) <= 1 &&
-              (all(is.na(values)) || !anyNA(values))
-            if (!same) new_row[[nm]] <- ribbon_data[[nm]][NA_integer_][1]
-          }
-        }
-        new_row$.length_estimated <- length(cur_rows) > 1L ||
-          any(ribbon_data$.length_estimated[cur_rows] %in% TRUE)
-        out_chunks[[length(out_chunks) + 1L]] <<- new_row
-        out_src[[length(out_src) + 1L]] <<- cur_rows
-        report <<- rbind(report, data.frame(
-          output_row = length(out_chunks),
-          from_rows = paste(cur_rows, collapse = ","),
-          n_merged = length(cur_rows),
-          source_length = I(list(ribbon_data$length[cur_rows])),
-          source_pident = I(list(ribbon_data$pident[cur_rows])),
-          stringsAsFactors = FALSE))
-      }
-
-      if (length(sg) > 1) {
-        for (i in seq.int(2L, length(sg))) {
-          r <- sg[i]
-          q_gap <- interval_gap(cur_qA, cur_qB, qA[r], qB[r])
-          s_gap <- interval_gap(cur_sA, cur_sB, sA[r], sB[r])
-          pid_ok <- isTRUE(min_pident_difference == 0) ||
-            abs(cur_pident - ribbon_data$pident[r]) <= min_pident_difference
-          order_ok <- !require_same_orientation || if (cur_qdir * cur_sdir >= 0) {
-            sA[r] >= cur_sA && sB[r] >= cur_sB
-          } else sA[r] <= cur_sA && sB[r] <= cur_sB
-          if (q_gap <= max_gap && s_gap <= max_gap && pid_ok && order_ok) {
-            q_span <- max(cur_qB, qB[r]) - min(cur_qA, qA[r]) + 1
-            s_span <- max(cur_sB, sB[r]) - min(cur_sA, sA[r]) + 1
-            if (abs(q_span - s_span) <= max(max_gap, 1)) {
-              cur_qA <- min(cur_qA, qA[r])
-              cur_qB <- max(cur_qB, qB[r])
-              cur_sA <- min(cur_sA, sA[r])
-              cur_sB <- max(cur_sB, sB[r])
-              cur_wsum <- cur_wsum + ribbon_data$pident[r] * ribbon_data$length[r]
-              cur_lsum <- cur_lsum + ribbon_data$length[r]
-              cur_pident <- cur_wsum / cur_lsum
-              cur_rows <- c(cur_rows, r)
-              next
-            }
-          }
-          emit()
-          cur_rows <- r
-          cur_qA <- qA[r]
-          cur_qB <- qB[r]
-          cur_sA <- sA[r]
-          cur_sB <- sB[r]
-          cur_qdir <- qdir[r]
-          cur_sdir <- sdir[r]
-          cur_wsum <- ribbon_data$pident[r] * ribbon_data$length[r]
-          cur_lsum <- ribbon_data$length[r]
-          cur_pident <- ribbon_data$pident[r]
-        }
-      }
-      emit()
-    }
-  }
-
-  out <- do.call(rbind, out_chunks)
-  attr(out, "source_rows") <- unlist(out_src)
-  list(data = out, report = report)
 }

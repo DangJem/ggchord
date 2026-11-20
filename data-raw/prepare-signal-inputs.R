@@ -6,7 +6,7 @@ for (package in c('pkgload', 'jsonlite', 'digest', 'rtracklayer'))
   if (!requireNamespace(package, quietly = TRUE)) stop('Requires optional package: ', package)
 pkgload::load_all(quiet = TRUE)
 input <- 'examples/plasmid/pUC19.fna'
-genome <- read_fasta_lengths(input, keep_sequence = TRUE)
+genome <- read_fasta_lengths(input, sequence_unit = "bp", keep_sequence = TRUE)
 stopifnot(nrow(genome) == 1L)
 data(plasmid_example_pUC19)
 stopifnot(identical(genome$sequence[[1L]], plasmid_example_pUC19$sequence[[1L]]))

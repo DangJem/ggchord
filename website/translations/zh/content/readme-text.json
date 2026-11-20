@@ -1,5 +1,5 @@
 {
-  "source_sha256": "20afd96a32caa04db7908bdb19e14351b6fb15837a2b911a1dd7ea9cc227996f",
+  "source_sha256": "07d180656aad81b4196d0ec02e5f7a803ece0966f6a1d57a56d0db85105ea8dc",
   "strings": {
     "title": {
       "source_sha256": "3dae9df0bcd52f7b79153e9d60c16ec82d9899fcc87119dabe6c9dfdef8303a1",
@@ -11,20 +11,15 @@
       "status": "reviewed",
       "translation": "基于 ggplot2 的 R 可视化包：比较多序列关系、组织单序列注释、展示 HSP 比对，并组合全局与局部视图。"
     },
-    "api-compatibility": {
-      "source_sha256": "f5d66fa1157c9bd0344a1f6f952e5e28441c06ea1874e9341cc09a605d1be59a",
-      "status": "reviewed",
-      "translation": "需要使用旧 API 的代码请选用 v0.29.0，从 v0.50.0 起，接口与旧版不兼容。"
-    },
     "website": {
       "source_sha256": "b5a229ac8becc6035511f432ca6018f581f0627233eada6ae8e12b505d44af7f",
       "status": "reviewed",
       "translation": "网站"
     },
     "manual": {
-      "source_sha256": "7d0a443704515f65f87329697c45dcd701baf49ce54ee0e2efbb69098d43ca11",
+      "source_sha256": "c26982b1425da26a9637dd69da684a036c8b67a1ddf2c3d09b915a96e4b58037",
       "status": "reviewed",
-      "translation": "使用说明"
+      "translation": "教程"
     },
     "gallery": {
       "source_sha256": "61dbfc53e3ccbc10b46c1d39f3d381d05d70e9db6da31026d454c42984007019",
@@ -112,9 +107,9 @@
       "translation": "Chord · 四条基因组的关系总览"
     },
     "chord-caption": {
-      "source_sha256": "a552e3982a329517842af596fb7e6aa3b1c47edafaa3580ef44c40e3bc8a957f",
+      "source_sha256": "d6f7fbdd083dd8ebcd5ffee67b954cc37d1a017e29e314f8708d8bea44506be9",
       "status": "reviewed",
-      "translation": "混合曲率骨架、保留真实链方向的 CDS 箭头、来源标签与 Identity 连接带组合展示。特征与 HSP 按显示需要从原始记录中选取。"
+      "translation": "比较四条基因组参考。基因箭头显示链向，连带按原始比对一致性着色。"
     },
     "chord-alt": {
       "source_sha256": "2ca548651fde231dc72f0a884ee9323e559d01992d5b9a42a90fdfb189a99cfd",
@@ -127,9 +122,9 @@
       "translation": "Collinear · 顺序、方向与跨行连接"
     },
     "linear-caption": {
-      "source_sha256": "41a2e0ee924d41f7363114b1aa6ab455f0793df68b29b654ca039fd8d089b2f3",
+      "source_sha256": "faf37d2c025b0aab6704df87315473544cd93a750ffe889e8f1078a066d0d2ae",
       "status": "reviewed",
-      "translation": "在共同的 bp 标尺下比较四条基因组，骨架两侧展示精选 CDS。跨越非相邻显示行的连接带使用虚线轮廓。"
+      "translation": "同一组源区间使用共同的碱基位置比例，按显式声明的显示方向排列。"
     },
     "linear-alt": {
       "source_sha256": "404ce816052f8f5fe4e550f7c36b8b59520c4a1fc7b24a3b819a629f1ba7ee30",
@@ -142,14 +137,14 @@
       "translation": "Circular · pETDuet-1 密集注释"
     },
     "circular-caption": {
-      "source_sha256": "d771af9c63ca69ca8d09566347c613e85d05106d10d6b55441704f13bbd7a78d",
+      "source_sha256": "047c90b69ca97fb503430dd27afd196cf8685926c9e2ff17606b44f2b3eb3889",
       "status": "reviewed",
-      "translation": "完整圆图包含 20 个特征、5 个参考引物，以及声明酶集合中的 58 个合并切点位置。序列位置与注释身份均来自原始输入。"
+      "translation": "pETDuet-1 图组合随包区间注释、选定的标签和单切酶的识别位置。"
     },
     "circular-alt": {
-      "source_sha256": "295100eed3cb32bbe665f1174cf726f7b9e18cc6264479894505ed1ce43a36cf",
+      "source_sha256": "5ade6786cf876173e4d5ac82e6bcae180077405198a9961bbda16bc381ce012c",
       "status": "reviewed",
-      "translation": "pETDuet-1 圆图旗舰：完整特征、引物与限制位点"
+      "translation": "pETDuet-1 圆形注释图，含区间特征和酶切识别位置"
     },
     "case": {
       "source_sha256": "9e46ca429e2e480ce9c88117ae767fb55aa8dd6bd739c60f048b7b51e6909b51",
@@ -162,7 +157,7 @@
       "translation": "四种关系视图转换"
     },
     "plot-source": {
-      "source_sha256": "35e8495b3208f43b62d316d8a08013fbfbbff551116e5cbfb876784bedb8df9e",
+      "source_sha256": "8c428bd76f647037611919807f75bddcef6a2ebb43efadf0cf6b827105d26492",
       "status": "reviewed",
       "translation": "绘图源码"
     },
@@ -187,19 +182,19 @@
       "translation": "四序列、32 条原始 HSP 的双轴矩阵"
     },
     "fusion-alt": {
-      "source_sha256": "466445920b3be6b2fd86ade4a9b2fc175cdb6a49c15239da3e54596ee8c04494",
+      "source_sha256": "aa708581733cb6c61ad3a3aadb77215331a76329e51fa58e5f5fb3de57950a06",
       "status": "reviewed",
-      "translation": "连接 Chord、Collinear、Radial 与局部放大的组合图"
+      "translation": "由两个面板组成的源区间全局图与局部放大图"
     },
     "dotplot-caption": {
-      "source_sha256": "e37e1d818c1be74269e0ddd436b08d2f6a03e5b8f6d3ff5f6ff0aefccf66e018",
+      "source_sha256": "178ffb5905b2c66af0417707fbf74dc73c26c8a90326552746f30e8c5d8e4140",
       "status": "reviewed",
-      "translation": "32 条原始 HSP；颜色表示 Identity，线宽表示原记录中的比对长度。"
+      "translation": "显示 32 条原始 HSP，颜色表示原始一致性，线宽表示原始比对长度。"
     },
     "fusion-caption": {
-      "source_sha256": "6bdbe2cd4798be29c77218d93362d867f1a00bf536fd5c78a8107a228c39ace2",
+      "source_sha256": "4be51cb8928f84bd2f8cf6d69ddfef137807fd6bcbf2bf0f18aac09a0e280d29",
       "status": "reviewed",
-      "translation": "在同一组合中关联全局关系、共线性比较与来源区间的局部放大。"
+      "translation": "弦图总览与独立的共线性细节图以不同尺度展示同一来源区间。"
     },
     "dotplot-guide": {
       "source_sha256": "bfb1fc1ae841b7db4962192dcdb143f910db3d62692d89356f7787a925384ee8",
@@ -222,9 +217,9 @@
       "translation": "输入文件"
     },
     "source-figures": {
-      "source_sha256": "e7b2a30ccabaf54893ad7deade0057343df6650118ee47c91a0200e4902d5d00",
+      "source_sha256": "a722973c0daba5067fabf5ffb3b6931d528ba4170aff03d980e60f48e299f20b",
       "status": "reviewed",
-      "translation": "Dotplot / Fusion 源码"
+      "translation": "数据制备"
     },
     "source-attribution": {
       "source_sha256": "299d7ef486bfb74376d919755d40a1538d57ad62c796875efdf6526e0afde49d",
@@ -237,9 +232,9 @@
       "translation": "安装"
     },
     "optional-deps": {
-      "source_sha256": "47ba71a5be2df91d6712d50c5cd289f67c283d3a905708eac2bda058bd5b6147",
+      "source_sha256": "f97959f36be4e98d5e60f5f75d974a29884f3067d8d6df330bbbb5610bcb1010",
       "status": "reviewed",
-      "translation": "下面的最小示例只需加载 ggchord。完整数据整理示例会在代码旁声明 dplyr、purrr、tidyr 等可选依赖。"
+      "translation": "入门图使用随包数据和 ggplot2。旗舰图复现脚本还使用 dplyr。"
     },
     "quick-start": {
       "source_sha256": "03a453b92c7a804ad58f69f7de6ce39f8da4aa1638303f50eb0f3ceb7d273a22",
@@ -252,9 +247,9 @@
       "translation": "使用随包表格绘制序列骨架、比对连接带和序列名称，无需下载文件或运行比对程序。"
     },
     "quick-note": {
-      "source_sha256": "0544de78a6ab1ca0d9e9c99ca976c39179a4190cde60764fa677ac0f9f00a868",
+      "source_sha256": "26b5e23b4e771837e55f0277e70b5ab4fd223017837f238c47ebed735d812b2e",
       "status": "reviewed",
-      "translation": "这段最小示例展示图层组合方式。上方综合图进一步加入了对应的来源注释、显示选择和样式。"
+      "translation": "观察层各自接收数据。切换坐标系时，序列参考定义保持一致。"
     },
     "output": {
       "source_sha256": "4dece8cdf01a2606c1566f058322792909809d833d29809a81b2484235590880",
@@ -307,9 +302,9 @@
       "translation": "Radial · 径向辐条上的共线性"
     },
     "radial-caption": {
-      "source_sha256": "412008048a56368af57eade272adaea8e93470341ff162f0be2b13a485986510",
+      "source_sha256": "7cfde391038760ff2fe93d7334f015b213d576f4df7beba12f1724ae997d55f1",
       "status": "reviewed",
-      "translation": "从弦图旗舰复用来源准备与精选特征，改用径向辐条骨架展示区间关系；序列身份与原生位置保持可追溯。"
+      "translation": "同一组观察投影到径向辐条，保留参考身份与源区间端点。"
     },
     "radial-alt": {
       "source_sha256": "a86b179a58c5d2ca3070448470207dc29edad6ab4d9453ebec89c9d997faf31f",
@@ -322,9 +317,9 @@
       "translation": "Sankey · 镜像双列中的来源区间"
     },
     "sankey-caption": {
-      "source_sha256": "86ed8be874b057ab72c591eb2e0ebaf77f9985823b53db30867aa95936707c48",
+      "source_sha256": "a8233c6f310b0249c17819acd24c3eaf70041142f2cfae40718729d358928847",
       "status": "reviewed",
-      "translation": "从共线性旗舰派生，保留对应的精选基因与 HSP。序列镜像排列在两列中，连接带表示已有区间关系，带宽不代表守恒流量。"
+      "translation": "各参考在查询列和目标列各显示一次，连带颜色沿用其他比较视图的一致性标度。"
     },
     "sankey-alt": {
       "source_sha256": "574807b3bac2fc6c48b8f9210e54c7f80a8531c4a334ee1bec1c7244cb6d0071",
@@ -387,19 +382,19 @@
       "translation": "从 [CRAN](https://CRAN.R-project.org/package=ggchord) 安装稳定版："
     },
     "install-development": {
-      "source_sha256": "d7369163380b508bcaef60da4a36722bcc37edd654ae188e050680bae3b9c0ff",
+      "source_sha256": "507a00aa1934432cb7af1be7f740125fb185f53af75d3bd7de88a7cdaffd2b61",
       "status": "reviewed",
-      "translation": "从 GitHub 安装指定的 v0.29.0 正式版："
+      "translation": "在当前检出目录的根目录安装开发版源码。"
     },
-    "circular-reference": {
-      "source_sha256": "2d16ec61142a5662ebd82227d4af8ee67784abd21a81d812f533884259ebdc9b",
+    "development-status": {
+      "source_sha256": "b4a192dea86157383ee2c2f205385143fb864ce265aaab52cddea1c13702813b",
       "status": "reviewed",
-      "translation": "对照 pETDuet-1 参考图"
+      "translation": "此 README 对应开发中的 v0.50.0 源码。请从当前检出目录安装后运行示例。"
     },
-    "dense-figure-source": {
-      "source_sha256": "05dd80f4ce6fc9d15dcf34fff424ee2da8b8b43caeedb0c4d365cc54ac705cac",
+    "tutorial-path": {
+      "source_sha256": "7e6f4823dc0b74cab367f8fce31577bd11e22fde392fb97f279d3dcd4126c3aa",
       "status": "reviewed",
-      "translation": "上方密集注释图代码"
+      "translation": "vignettes/ggchord_guide_hans.Rmd"
     }
   }
 }

@@ -2,59 +2,41 @@
 % Please edit documentation in R/data-import.R
 \name{read_gff3}
 \alias{read_gff3}
-\title{Read feature annotations from one or more GFF3 files}
+\title{Read GFF3 annotations}
 \usage{
 read_gff3(
-  file = NULL,
-  files = NULL,
-  feature_types = "CDS",
-  anno_from = c("product", "Name", "gene", "ID"),
-  unstranded = c("plus", "drop", "keep"),
+  file,
+  feature_types = NULL,
+  label_from = c("product", "Name", "gene", "ID"),
+  unstranded = "keep",
   source_file = FALSE
 )
 }
 \arguments{
-\item{file}{Optional path vector or glob patterns; read before \code{files}.}
+\item{file}{Local GFF3 paths.}
 
-\item{files}{Optional character vector of GFF3 files (literal paths and/or
-wildcard patterns). All matched files are read and combined.}
+\item{feature_types}{Optional set of feature types. NULL keeps all.}
 
-\item{feature_types}{Character vector of feature types to keep, default
-\code{"CDS"}.}
+\item{label_from}{Ordered attributes used to derive the label.}
 
-\item{anno_from}{Character vector of GFF3 attribute keys, tried in order to
-fill the \code{anno} column.}
+\item{unstranded}{\code{"keep"} retains unknown strands. \code{"drop"} removes
+those rows.}
 
-\item{unstranded}{\code{"plus"} (the default) assigns unknown strands to \code{+};
-\code{"drop"} removes them. Use \code{"keep"} with \code{\link[=geom_feature]{geom_feature()}} to retain them
-as nondirectional \code{.} intervals. \code{source_strand} always records the input.}
-
-\item{source_file}{Logical. Add a \code{.source_file} column when reading one or
-more files, default \code{FALSE}.}
+\item{source_file}{Whether to include row-level source paths.}
 }
 \value{
-A data.frame with \code{accver}, \code{start}, \code{end}, \code{strand}, \code{anno}
-followed by \code{type}, \code{source}, \code{score}, \code{phase}, \code{attributes},
-\code{source_strand}, \code{feature_id} (decoded GFF3 ID, or missing) and a
-\code{parent_ids} list-column. Repeated IDs for discontinuous features and
-multiple parents are retained; selecting feature types may omit parents.
-A \code{ggchord_import} attribute records files, per-file output row counts and
-the one-based inclusive coordinate convention.
+A feature table with ordered source intervals, attributes,
+labels, parent IDs, strand, phase and a file report.
 }
 \description{
-\code{file} reads a single GFF3 file; \code{files} reads multiple files at once and
-combines them. \code{files} accepts a character vector of literal paths and/or
-wildcard patterns (e.g. \code{"examples/gff3/*.gff3"}).
+Retain unknown strand and phase. Repeated IDs may represent separate
+parts of one biological feature. Parent IDs are decoded as lists and
+the original file declarations and source records are reported.
 }
 \examples{
-\dontrun{
-library(dplyr)
-# Requires the source checkout or tutorial input bundle.
-source <- read_gff3("examples/gff3/MT108731.1.gff3", unstranded = "keep")
-features <- source |>
-  select(accver, start, end, strand, anno)
-}
-}
-\seealso{
-\code{\link{ggchord_data_contract}}
+f <- tempfile(fileext=".gff3")
+writeLines(c("##gff-version 3",
+ "A	source	CDS	100	240	.	+	0	ID=g1;Name=example"), f)
+ann <- read_gff3(f, feature_types="CDS")
+unlink(f)
 }

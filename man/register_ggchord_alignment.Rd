@@ -23,9 +23,9 @@ selected source base must be present; split spliced regions explicitly.
 Origin-wrapping magnify regions require explicit circular source metadata. Gap columns remain visible but have no source coordinate.}
 }
 \value{
-The ordinary plot with a source registration. Use it as detail_plot
-in \code{\link[=magnify_ggchord]{magnify_ggchord()}} or as an outer \code{\link[=fusion_panel]{fusion_panel()}}. Region detail_instance
-selects an exact alignment row accver when several rows share a source.
+The ordinary editable plot with a source registration suitable for
+\code{\link[=ggchord_fusion]{ggchord_fusion()}}. Select a display instance if several alignment rows
+represent the same source interval.
 Registrations assert supplied provenance; source_verified is not an
 independent biological validation. Exported source layouts retain data.
 }
@@ -37,9 +37,10 @@ geom_residue positions/labels, and project exact source boundaries. No HSP
 interpolation or implicit alignment is performed.
 }
 \examples{
-# Explicit synthetic format example.
-cells <- as_ggchord_alignment(c(A = "AC-G", B = "ACTG"), "DNA")
+library(ggplot2)
+
+cells <- as_ggchord_alignment(c(A = "AC-G", B = "ACTG"), alphabet = "DNA")
 p <- ggplot2::ggplot(cells, aes(alignment_column, accver, label = symbol)) +
-  geom_residue(aes(fill = symbol), show.legend = FALSE)
-register_ggchord_alignment(p, cells)
+  geom_residue(aes(fill = symbol)) + scale_fill_residue("DNA")
+registered <- register_ggchord_alignment(p, cells)
 }

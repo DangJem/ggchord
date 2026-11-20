@@ -1,68 +1,32 @@
 # BEDPE format description (no third-party parser code copied):
 # https://bedtools.readthedocs.io/en/latest/content/general-usage.html#bedpe-format
 
-#' Read paired BED intervals as ggchord links
+#' Read BEDPE interval pairs
 #'
-#' Reads tab-separated BEDPE with six required columns, optional name, score,
-#' strand1 and strand2 in standard order, and any additional fields. Each file
-#' must have a consistent field count. Blank/comment lines and tab-free
-#' track/browser headers are skipped. Accession identifiers and the order of
-#' the two anchors are retained: the first anchor is query, the second subject.
+#' Convert each placed anchor from the file's zero-based half-open convention
+#' to ordered one-based closed endpoints. Preserve strand evidence and the
+#' original score. The input's first anchor is query and its second is
+#' subject. Unplaced rows are recorded in the data report.
 #'
-#' Zero-based half-open intervals become one-based inclusive intervals.
-#' Negative-strand anchor endpoints decrease, matching [as_ggchord_link()] for
-#' paired interval objects. Unspecified strands remain `"."`; relative anchor
-#' direction is known only when both anchors and both strands are known.
-#' Anchor direction does not establish a pairwise alignment. No identity,
-#' alignment length, read support or full sequence length is inferred.
-#'
-#' Original standard fields are retained as character columns, including
-#' arbitrary score strings. Extra fields are retained in the `bedpe_extra`
-#' list-column as character vectors named by their physical column number.
-#' Names are labels, not guaranteed unique HSP IDs. Unknown chromosome `"."`
-#' and coordinate `-1` are explicit missing-value sentinels. The default stops
-#' on incomplete anchors; `unmapped = "keep"` retains them for auditing with
-#' missing canonical fields and `q_mapped`/`s_mapped` flags. Filter for both
-#' flags before adaptation or plotting. Invalid known coordinates, including
-#' zero-width intervals, are always errors.
-#'
-#' @param file Optional local path vector or glob patterns; read before `files`.
-#' @param files Optional additional local paths or glob patterns.
-#' @param source_file Logical. Add a `.source_file` column, default FALSE.
-#' @param unmapped `"error"` (default) or `"keep"` for incomplete anchors.
-#' @return A data frame with canonical q/s endpoints, anchor strands, mapping
-#'   flags, relative direction, original BEDPE fields, `bedpe_extra` and physical
-#'   `.source_line`. The `ggchord_import` attribute records files, row counts
-#'   and coordinate conventions. The keep policy does not make missing anchors
-#'   drawable and does not manufacture source positions.
-#' @seealso [as_ggchord_link()], [ggchord_data_contract],
-#'   <https://bedtools.readthedocs.io/en/latest/content/general-usage.html#bedpe-format>
-#' @md
+#' @param file Local BEDPE paths.
+#' @param sequence_unit The native coordinate unit, `"bp"` or `"aa"`.
+#' @param source_file Whether to include a row-level source path column.
+#' @return An interval relationship table. [data_report()] records source
+#'   paths, original fields, and unplaced records.
 #' @export
 #' @examples
-#' library(dplyr)
-#' data(ribbon_data_example)
-#' # Re-encode observed intervals for a format round trip, not paired-read evidence.
-#' paired <- ribbon_data_example |>
-#'   transmute(
-#'     chrom1 = qaccver, start1 = pmin(qstart, qend) - 1, end1 = pmax(qstart, qend),
-#'     chrom2 = saccver, start2 = pmin(sstart, send) - 1, end2 = pmax(sstart, send)
-#'   )
-#' path <- tempfile(fileext = ".bedpe")
-#' write.table(paired, path,
-#'   sep = "\t", quote = FALSE, row.names = FALSE, col.names = FALSE
-#' )
-#' read_bedpe(path)
-#' unlink(path)
-read_bedpe <- function(file = NULL, files = NULL, source_file = FALSE,
-                       unmapped = c("error", "keep")) {
+#' f <- tempfile(fileext = ".bedpe")
+#' writeLines("A	99	240	B	149	290	pair1	10	+	-", f)
+#' paired <- read_bedpe(f)
+#' unlink(f)
+read_bedpe <- function(file, sequence_unit = "bp", source_file = FALSE) {
   old_error <- ggchord_disable_debug()
   on.exit(options(error = old_error), add = TRUE)
   caller <- "read_bedpe()"
-  unmapped <- match.arg(unmapped)
+  sequence_unit <- match.arg(sequence_unit, c("bp", "aa"))
   if (!is.logical(source_file) || length(source_file) != 1L || is.na(source_file))
     ggchord_stop(caller, ": source_file must be TRUE or FALSE")
-  paths <- ggchord_resolve_files(file, files, "read_bedpe")
+  paths <- ggchord_resolve_files(file, NULL, "read_bedpe")
   standard <- c("chrom1", "start1", "end1", "chrom2", "start2", "end2",
     "name", "score", "strand1", "strand2")
   tables <- lapply(paths, function(path) {
@@ -110,10 +74,6 @@ read_bedpe <- function(file = NULL, files = NULL, source_file = FALSE,
         start = ifelse(strand == "-", high, low), end = ifelse(strand == "-", low, high))
     }
     q <- anchor(1L); s <- anchor(2L)
-    incomplete <- !q$mapped | !s$mapped
-    if (any(incomplete) && unmapped == "error") bad(
-      "incomplete anchor; use unmapped='keep' for auditing and filter q_mapped & s_mapped before plotting",
-      which(incomplete)[1L])
     known <- q$mapped & s$mapped & q$strand != "." & s$strand != "."
     out <- data.frame(qaccver = q$accver, saccver = s$accver,
       qstart = q$start, qend = q$end, sstart = s$start, send = s$end,
@@ -130,6 +90,9 @@ read_bedpe <- function(file = NULL, files = NULL, source_file = FALSE,
     ggchord_add_source_file(out, path, source_file)
   })
   out <- ggchord_format_import(ggchord_rbind_fill(tables), paths, "BEDPE", vapply(tables, nrow, integer(1)))
-  attr(out, "ggchord_import")$unmapped <- unmapped
-  out
+  out <- ggchord_order_link_endpoints(out, caller)
+  out$sequence_unit <- rep(sequence_unit, nrow(out))
+  placed <- out$q_mapped & out$s_mapped
+  attr(out, "ggchord_import")$unplaced <- out[!placed, , drop = FALSE]
+  out[placed, , drop = FALSE]
 }

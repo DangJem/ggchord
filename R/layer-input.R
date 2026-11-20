@@ -102,6 +102,8 @@ ggchord_native_facet_input <- function(layer) {
 }
 
 ggchord_render_inputs <- function(plot) {
+  plot <- ggchord_resolve_reference(plot)
+  plot <- ggchord_configure_layout(plot)
   for (i in seq_along(plot$layers)) {
     layer <- plot$layers[[i]]
     # A native layer may introduce or rename samples. Facet selection and
@@ -171,23 +173,30 @@ ggchord_colour_dots <- function(dots, caller) {
   dots
 }
 
+ggchord_reference_layer <- function(type, label_kind = NULL) {
+  identical(label_kind, "sequence") || type %in% c("seq", "seq_label", "seq_break", "seq_center_label", "seq_scale", "axis")
+}
+
 ggchord_layer_input_data <- function(layer, fallback) {
+  params <- layer$ggchord_params
+  reference <- ggchord_reference_layer(params$type %||% "", params$label_kind)
+  if (!is.null(params$plot_data)) {
+    fallback <- if (reference) params$reference else params$anchor_data %||% params$plot_data[[1L]]
+  }
   input <- layer$ggchord_input_data %||% fallback
-  if (!is.function(input)) return(input)
-  tryCatch(input(fallback), error = function(e) rlang::abort(
-    paste0("Data callback for layer '", layer$ggchord_layer_id, "' failed."),
-    parent = e, call = NULL))
+  if (is.function(input)) {
+    input <- tryCatch(input(fallback), error = function(e) rlang::abort(
+      paste0("Data callback for layer '", layer$ggchord_layer_id, "' failed."),
+      parent = e, call = NULL))
+  }
+  if (is.null(input) && !reference && is.null(params$anchor_layer)) {
+    ggchord_stop("Layer '", layer$ggchord_layer_id, "' needs explicit observation data")
+  }
+  input
 }
 
 ggchord_layer_fallback <- function(layer, data) {
-  p <- layer$ggchord_params
-  if (p$type %in% c("ribbon", "alignment")) return(data$ribbon_data)
-  if (p$type %in% c("gene", "gene_label", "gene_label_repel"))
-    return(ggchord_annotation_fallback(data))
-  if (identical(p$native_stat, "coverage")) return(data$feature_data)
-  if (p$type == "seq_region") return(if (is.function(p$regions)) data$seq_data else p$regions)
-  if (p$type %in% c("link", "restriction_site")) return(NULL)
-  data$seq_data
+  if (ggchord_reference_layer(layer$ggchord_params$type %||% "", layer$ggchord_params$label_kind)) data$seq_data else NULL
 }
 
 ggchord_layer_input_context <- function(layer) {
@@ -232,17 +241,19 @@ ggchord_layer_source <- function(lyr, fallback) {
     }
   } else if (inherits(data, "GInteractions")) {
     data <- as_ggchord_link(data)
-    if (identical(type, "link")) {
-      data$qpos <- (data$qstart + data$qend) / 2
-      data$spos <- (data$sstart + data$send) / 2
-      data$.point_projection <- "anchor_midpoint"
-    }
   }
   if (!is.data.frame(data)) {
     ggchord_stop("ggchord layer data must be a data.frame, a supported interval object, ",
       "or a function returning supported data")
   }
   data <- ggchord_normalize_accver(as.data.frame(data, stringsAsFactors = FALSE))
+  if (identical(type, "seq") && is.function(lyr$ggchord_input_data)) {
+    caller <- ggchord_layer_input_context(lyr)
+    if (nrow(data)) {
+      data <- ggchord_reference_table(data, caller)
+      ggchord_check_reference_claim(lyr$ggchord_params$reference, data, character(), TRUE, caller)
+    }
+  }
   capture <- lyr$ggchord_params$stage_capture
   if (!is.null(capture) && "source" %in% capture$requested && is.null(capture$source))
     capture$source <- data
@@ -335,6 +346,10 @@ ggchord_visual_value <- function(visual, key, start, geometry, rows, projected =
 
 ggchord_draw_layer <- function(layer, geometry, input = NULL) {
   mapping <- ggchord_effective_mapping(layer)
+  if (all(c("display_instance_id", "group") %in% names(geometry))) {
+    geometry$group <- interaction(geometry$display_instance_id, geometry$group,
+      drop = TRUE, lex.order = TRUE)
+  }
   visual <- layer$ggchord_params$visual_source
   prepared <- reconstruct_layer(layer, geometry, mapping)
   if (!nrow(geometry) || is.null(visual$data)) return(prepared)
@@ -431,10 +446,18 @@ ggchord_resolve_layer_input <- function(lyr, fallback = NULL,
   if (!is.null(capture) && "mapped" %in% capture$requested &&
       is.null(capture$mapped) && is.null(lyr$ggchord_params$native_geom))
     capture$mapped <- data
+  source_stat <- lyr$ggchord_params$source_stat
+  if (!is.null(source_stat)) {
+    data <- ggchord_run_source_stat(data, source_stat,
+      intersect(lyr$ggchord_role_aes, names(data)), ggchord_layer_input_context(lyr))
+    if (!is.null(capture) && "statistic" %in% capture$requested)
+      capture$statistic <- data
+    input <- data
+  }
   if (type %in% c("gene", "gene_label", "gene_label_repel") &&
       !isTRUE(lyr$ggchord_params$is_feature) && !isTRUE(lyr$ggchord_params$is_feature_label) &&
       (is.null(data$strand) || anyNA(data$strand) || any(!data$strand %in% c("+", "-")))) ggchord_stop(
-    "geom_feature(preset = 'gene'): directional genes need '+'/'-' strand; use geom_feature() for nondirectional intervals"
+    "Directional features need '+' or '-' strand"
   )
   transform <- lyr$ggchord_input_transform
   visual <- lyr$ggchord_params$visual_source

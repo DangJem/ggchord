@@ -367,3 +367,190 @@ ggchord_infer_visual_scales <- function(plot, layout, scales) {
   }
   scales
 }
+
+#' Train a visual scale on selected layers
+#'
+#' @param layers One or more explicitly named layer IDs.
+#' @param scale An ordinary ggplot2 visual scale for those layers.
+#' @return A scale declaration for a ggchord plot or a Fusion root.
+#' @export
+#' @examples
+#' library(ggplot2)
+#'
+#' seqs <- data.frame(
+#'   accver = c("A", "B"), length = c(1000, 800),
+#'   sequence_unit = "bp", topology = "linear"
+#' )
+#'
+#' genes <- data.frame(
+#'   accver = c("A", "A", "B"), feature_id = c("g1", "g2", "g3"),
+#'   start = c(100, 400, 150), end = c(240, 620, 380),
+#'   strand = c("+", "-", "+"), label = c("g1", "g2", "g3"),
+#'   type = c("CDS", "tRNA", "CDS")
+#' )
+#'
+#' links <- data.frame(
+#'   qaccver = "A", saccver = "B", qstart = c(100, 400),
+#'   qend = c(240, 620), sstart = c(150, 450), send = c(290, 650),
+#'   qstrand = "+", sstrand = c("+", "-"),
+#'   pident = c(98, 90), link_id = c("l1", "l2")
+#' )
+#'
+#' gene_colours <- c(CDS = "#187B77", tRNA = "#CC7D3A")
+#'
+#' ggchord(data = seqs) + geom_seq() +
+#'   geom_gene(data = genes, aes(fill = type), id = "genes") +
+#'   geom_link_ribbon(data = links, aes(fill = pident), id = "matches") +
+#'   scale_for("genes", scale_fill_manual(values = gene_colours, name = "Type")) +
+#'   scale_for("matches", scale_fill_gradient(limits = c(0, 100), name = "Identity (%)")) +
+#'   coord_chord()
+scale_for <- function(layers, scale) {
+  ggchord_check_argument_names(sys.call(), sys.function())
+  ggchord_id_vector(layers, "layers")
+  if (!inherits(scale, "Scale") || !length(scale$aesthetics))
+    ggchord_stop("scale_for(): scale must be an ordinary ggplot2 visual scale")
+  visual <- c("fill", "colour", "alpha", "linewidth", "linetype", "shape",
+    "size", "stroke", "fill_from", "fill_to")
+  if (any(!scale$aesthetics %in% visual))
+    ggchord_stop("scale_for(): position and domain scales cannot be scoped to layers")
+  structure(list(layers = layers, scale = scale), class = "ggchord_scoped_scale")
+}
+
+ggchord_scale_scopes <- function(plot, scopes = plot$ggchord$scoped_scales) {
+  if (!length(scopes)) return(list())
+  ids <- vapply(plot$layers, function(layer) layer$ggchord_layer_id %||%
+    layer$ggchord_params$id %||% "", character(1))
+  claimed <- character()
+  lapply(seq_along(scopes), function(i) {
+    scope <- scopes[[i]]
+    selected <- match(scope$layers, ids)
+    if (anyNA(selected)) ggchord_stop("scale_for(): unknown layer '",
+      scope$layers[which(is.na(selected))[1L]], "'")
+    aes <- scope$scale$aesthetics
+    keys <- as.vector(outer(selected, aes, paste, sep = "/"))
+    if (any(keys %in% claimed)) ggchord_stop("scale_for(): a layer and aesthetic have overlapping scopes")
+    claimed <<- c(claimed, keys)
+    list(selected = selected, aesthetics = aes, scale = scope$scale,
+      aliases = stats::setNames(paste0("ggchord_scope_", i, "_", aes), aes))
+  })
+}
+
+ggchord_alias_aes <- function(x, aliases) {
+  fields <- names(x)
+  selected <- fields %in% names(aliases)
+  fields[selected] <- unname(aliases[fields[selected]])
+  names(x) <- fields
+  x
+}
+
+ggchord_scope_layer <- function(layer, aliases, plot_mapping) {
+  geom <- layer$geom
+  inverse <- stats::setNames(names(aliases), aliases)
+  changed <- function(x) {
+    at <- x %in% names(aliases)
+    x[at] <- unname(aliases[x[at]])
+    x
+  }
+  copy <- ggplot2::ggproto(NULL, layer)
+  mapping <- layer$mapping %||% ggplot2::aes()
+  if (isTRUE(layer$inherit.aes)) {
+    for (key in setdiff(names(plot_mapping), names(mapping))) mapping[[key]] <- plot_mapping[[key]]
+  }
+  copy$inherit.aes <- FALSE
+  copy$mapping <- ggchord_alias_aes(mapping, aliases)
+  copy$aes_params <- ggchord_alias_aes(layer$aes_params, aliases)
+  copy$show.legend <- ggchord_alias_aes(layer$show.legend, aliases)
+  copy$geom <- ggplot2::ggproto(NULL, geom,
+    required_aes = changed(geom$required_aes),
+    non_missing_aes = changed(geom$non_missing_aes),
+    optional_aes = changed(geom$optional_aes),
+    default_aes = ggchord_alias_aes(geom$default_aes, aliases),
+    setup_data = function(data, params) {
+      data <- geom$setup_data(ggchord_alias_aes(data, inverse), params)
+      ggchord_alias_aes(data, aliases)
+    },
+    use_defaults = function(data, params = list(), modifiers = aes(), default_aes = NULL,
+        theme = NULL, ...) {
+      data <- geom$use_defaults(ggchord_alias_aes(data, inverse),
+        ggchord_alias_aes(params, inverse), ggchord_alias_aes(modifiers, inverse),
+        ggchord_alias_aes(default_aes, inverse), theme = theme, ...)
+      ggchord_alias_aes(data, aliases)
+    },
+    draw_layer = function(data, params, layout, coord) {
+      geom$draw_layer(ggchord_alias_aes(data, inverse), params, layout, coord)
+    },
+    draw_key = function(data, params, size) {
+      geom$draw_key(ggchord_alias_aes(data, inverse), params, size)
+    })
+  copy
+}
+
+ggchord_apply_scoped_scales <- function(plot, scopes = plot$ggchord$scoped_scales) {
+  specs <- ggchord_scale_scopes(plot, scopes)
+  if (!length(specs)) return(plot)
+  plot$scales <- plot$scales$clone()
+  aliases <- vector("list", length(plot$layers))
+  for (spec in specs) {
+    scale <- spec$scale$clone()
+    scale$aesthetics <- unname(spec$aliases)
+    guide <- scale$guide
+    if (is.character(guide) && length(guide) == 1L &&
+        guide %in% c("colourbar", "colorbar", "coloursteps", "colorsteps"))
+      guide <- getExportedValue("ggplot2", paste0("guide_", guide))()
+    if (inherits(guide, "Guide") && !is.null(guide$available_aes) && !"any" %in% guide$available_aes) {
+      available <- spec$aliases[intersect(names(spec$aliases), guide$available_aes)]
+      guide_parent <- guide
+      guide <- ggplot2::ggproto(NULL, guide_parent,
+        available_aes = union(guide$available_aes, unname(available)))
+    }
+    scale$guide <- guide
+    plot$scales$add(scale)
+    for (i in spec$selected) {
+      layer <- plot$layers[[i]]
+      missing <- setdiff(spec$aesthetics, layer$geom$aesthetics())
+      if (length(missing)) ggchord_stop("scale_for(): layer '", layer$ggchord_layer_id,
+        "' does not support ", missing[1L])
+      aliases[[i]] <- c(aliases[[i]], spec$aliases)
+    }
+  }
+  for (i in which(lengths(aliases) > 0L))
+    plot$layers[[i]] <- ggchord_scope_layer(plot$layers[[i]], aliases[[i]], plot$mapping)
+  plot
+}
+
+# Choose the identity default only for an unscoped, exclusively identity
+# mapping. The full visual channel is still shared with ordinary layers.
+ggchord_add_identity_scales <- function(plot) {
+  breaks <- c(0, 50, 80, 90, 95, 100)
+  for (aesthetic in c("fill", "colour")) {
+    if (plot$scales$has_scale(aesthetic)) next
+    layers <- Filter(function(layer) {
+      if (aesthetic %in% names(layer$aes_params)) return(FALSE)
+      mapping <- layer$mapping[[aesthetic]]
+      if (is.null(mapping) && isTRUE(layer$inherit.aes)) mapping <- plot$mapping[[aesthetic]]
+      !is.null(mapping)
+    }, plot$layers)
+    if (!length(layers)) next
+    types <- if (aesthetic == "fill") c("ribbon", "fusion_ribbon") else c("link", "alignment")
+    identity <- vapply(layers, function(layer) {
+      if (!isTRUE(layer$ggchord_type %in% types)) return(FALSE)
+      mapping <- layer$mapping[[aesthetic]] %||% plot$mapping[[aesthetic]]
+      identical(rlang::as_label(mapping), "pident")
+    }, logical(1))
+    if (!all(identity)) next
+    name <- if (aesthetic %in% names(plot$labels)) ggplot2::waiver() else "Identity (%)"
+    scale <- if (aesthetic == "fill") {
+      ggplot2::scale_fill_stepsn(name = name,
+        colours = c("#440154", "#482878", "#3E4A89", "#31688E", "#26828E",
+          "#1F9E89", "#35B779", "#6DCD59", "#B4DE2C", "#FDE725"),
+        limits = c(0, 100),
+        breaks = breaks, guide = ggchord_identity_guide(plot, aesthetic))
+    } else {
+      ggplot2::scale_colour_gradientn(name = name, colours = c("#34457E", "#2FA96B"),
+        limits = c(0, 100), breaks = breaks, guide = ggplot2::guide_legend(order = 2))
+    }
+    scale$ggchord_managed <- TRUE
+    plot$scales$add(scale)
+  }
+  plot
+}

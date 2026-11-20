@@ -2,78 +2,49 @@
 % Please edit documentation in R/viewer.R
 \name{view_ggchord}
 \alias{view_ggchord}
-\title{Preview a ggchord plot at its intended export size}
+\title{Preview a plot using explicit device dimensions}
 \usage{
 view_ggchord(
-  plot = ggplot2::last_plot(),
-  width = 12.39,
-  height = 9.71,
-  units = c("in", "cm", "mm", "px"),
-  device = c("png", "svg"),
-  dpi = 144,
-  bg = NULL,
-  viewer = c("auto", "ide", "browser", "none")
+  plot,
+  width = 8,
+  height = 6,
+  units = "in",
+  device = "png",
+  dpi = 150
 )
 }
 \arguments{
-\item{plot}{A ggchord or ggplot object, default \code{last_plot()}.}
+\item{plot}{A ggchord plot, Fusion or registered character plot.}
 
-\item{width}{Positive output width. With no explicit dimensions,
-\code{coord_chord()} uses 12.39 inches while \code{coord_circular()}
-derives its width from the annotation envelope.}
+\item{width, height}{Optional target device dimensions, specified together.}
 
-\item{height}{Positive output height. With no explicit dimensions,
-\code{coord_chord()} uses 9.71 inches while \code{coord_circular()}
-derives both dimensions. Use \code{NULL} to fit the
-sequence, labels and legends while preserving equal coordinate units.
-Explicit width/height values are always respected.}
+\item{units}{Device dimensions in inches, millimetres or centimetres.}
 
-\item{units}{Output units: \code{"in"}, \code{"cm"}, \code{"mm"}, or
-\code{"px"}.}
+\item{device}{A png, pdf or svg device, a device function, or NULL.}
 
-\item{device}{Preview device, \code{"png"} or \code{"svg"}. SVG output
-requires the optional svglite package or a working base Cairo SVG device.}
-
-\item{dpi}{Positive raster resolution, default 144.}
-
-\item{bg}{Optional background colour passed to \code{ggsave()}.}
-
-\item{viewer}{How to open the preview: \code{"auto"} prefers
-\code{getOption("viewer")} and falls back to a browser in interactive
-sessions; \code{"ide"}, \code{"browser"}, and \code{"none"} select an
-explicit destination. \code{"none"} is useful in scripts and tests.}
+\item{dpi}{Raster device resolution.}
 }
 \value{
-The normalized temporary image path, invisibly.
+Invisibly, the plot, measurement metadata and diagnostics.
 }
 \description{
-Renders a plot with \code{ggsave()} into a temporary PNG or SVG and opens a
-small static preview page in the configured IDE viewer or web browser. This
-is an export-size preview, not an interactive plot conversion; the original
-plot and its standard \code{ggsave()} workflow remain unchanged.
-ggchord inputs are rendered on a private copy, preserving their layout cache.
-See \link{ggchord_layout_contract} for the distinct preview/export/diagnostic results.
-Automatic height fitting does not resize an overwide legend. If decorations
-exceed the requested width, increase \code{width} or use, for example,
-\code{guides(seq_colour = guide_ggchord_legend(nrow = 2))}.
+Preview a plot using explicit device dimensions
 }
-\section{RStudio plot pane and export-size rendering}{
-
-Label packing, guide sizing, and fitted limits use the active graphics
-device's physical dimensions. Printing \code{p} in a small or narrow
-RStudio Plots pane can therefore produce a substantially different layout
-from an export, and very small panes may not have enough room for all radial
-labels. Resize or Zoom the pane and print again for a larger direct preview.
-For size-sensitive chord plots, use \code{view_ggchord()} while composing,
-then save the final figure with \code{ggsave()} at an explicit width and
-height matching the intended output. Preview measurements restore the
-previously active graphics device.
-}
-
 \examples{
-library(dplyr)
-data(seq_data_example)
-p <- ggchord(seq_data_example) +
-  geom_seq()
-if (interactive()) view_ggchord(p)
+seqs <- data.frame(
+  accver = c("A", "B"), length = c(1000, 800),
+  sequence_unit = "bp", topology = "linear"
+)
+
+genes <- data.frame(
+  accver = c("A", "A", "B"), feature_id = c("g1", "g2", "g3"),
+  start = c(100, 400, 150), end = c(240, 620, 380),
+  strand = c("+", "-", "+"), label = c("g1", "g2", "g3"),
+  type = c("CDS", "tRNA", "CDS")
+)
+
+p_basic <- ggchord(seqs) + geom_seq() +
+  geom_gene(data = genes) + coord_collinear()
+
+view_ggchord(p_basic, width = 180, height = 100, units = "mm")
 }

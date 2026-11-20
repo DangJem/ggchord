@@ -2,50 +2,50 @@
 % Please edit documentation in R/position-feature-stack.R
 \name{position_feature_stack}
 \alias{position_feature_stack}
-\title{Stack overlapping genes or features on local lanes}
+\title{Stack overlapping features in physical lanes}
 \usage{
 position_feature_stack(
-  spacing = 0.1,
-  base_position = position_strand(),
-  direction = c("auto", "outward", "inward")
+  spacing = 1,
+  base_position = position_identity(),
+  direction = "positive"
 )
 }
 \arguments{
-\item{spacing}{Positive minimum radial distance between adjacent feature
-lanes. Circular plasmid layout enlarges the first transition into a main
-label corridor and reserves at least one label track between deeper
-overlapping feature lanes.}
+\item{spacing}{Nonnegative physical gap between adjacent lanes, in millimetres.}
 
-\item{base_position}{Position applied before overlap detection and lane
-allocation. Use \code{"identity"} to start both strands on the backbone,
-\code{\link[=position_offset]{position_offset()}} for one shared offset, or \code{\link[=position_strand]{position_strand()}} for
-strand-specific offsets. The default starts at +0.1 on the plus strand
-and -0.1 on the minus strand.}
+\item{base_position}{Placement applied before lane assignment.}
 
-\item{direction}{Growth of successive lanes within each starting band.
-\code{"outward"} follows the positive local normal (up on a horizontal
-backbone), \code{"inward"} the negative normal. \code{"auto"} follows the sign
-of the starting offset, growing outward at zero. Lane zero stays at
-its starting offset.}
+\item{direction}{Placement direction, including strand-dependent lanes.}
 }
 \value{
-A ggplot2 Position object for \code{geom_feature(preset = "gene")} or \code{geom_feature()}.
+A placement declaration for compatible ggchord layers.
 }
 \description{
-Assigns overlapping intervals on the same sequence and side to radial lanes.
-Explicit display priority is ordered first, then intervals by decreasing
-length. Every interval takes the nearest collision-free lane; feature type,
-name and colour never choose a lane.
-The resulting anchors are shared with gene label layers because stacking is
-solved before polygons and labels are generated.
-In \code{\link[=coord_collinear]{coord_collinear()}}, these local lanes become parallel horizontal bands;
-they do not represent circular physical tracks or radii.
-}
-\details{
-The default object can also be selected on a feature layer with
-\code{position = "feature_stack"}. Use the constructor to configure the lanes.
+Stack overlapping features in physical lanes
 }
 \examples{
-position_feature_stack(base_position = "identity", direction = "inward")
-position_feature_stack(base_position = position_offset(0.1), direction = "outward")
+library(ggplot2)
+
+seqs <- data.frame(
+  accver = c("A", "B"), length = c(1000, 800),
+  sequence_unit = "bp", topology = "linear"
+)
+
+one_seq <- seqs[1, , drop = FALSE]
+
+genes <- data.frame(
+  accver = c("A", "A", "B"), feature_id = c("g1", "g2", "g3"),
+  start = c(100, 400, 150), end = c(240, 620, 380),
+  strand = c("+", "-", "+"), label = c("g1", "g2", "g3"),
+  type = c("CDS", "tRNA", "CDS")
+)
+
+ggchord(data = one_seq) + geom_seq() +
+  geom_feature(data = subset(genes, accver == "A"), shape = "arrow",
+    id = "features",
+    position = position_feature_stack(
+      base_position = position_offset(-2), spacing = 1,
+      direction = "negative")) +
+  geom_feature_label_repel(aes(label = label), anchor_layer = "features") +
+  coord_circular()
 }

@@ -5,13 +5,13 @@
 pkgload::load_all(".", quiet = TRUE)
 library(dplyr)
 # Unchanged repository inputs; the full tables and display subsets are saved separately.
-show_sequences <- read_fasta_lengths(files = "examples/fasta/*.fna") |>
+show_sequences <- read_fasta_lengths("examples/fasta/*.fna", sequence_unit = "bp") |>
   select(accver, length)
-show_annotations <- read_gff3(files = "examples/gff3/*.gff3", unstranded = "keep")
+show_annotations <- read_gff3("examples/gff3/*.gff3", unstranded = "keep")
 show_genes <- show_annotations |>
   filter(type == "CDS") |>
   select(accver, start, end, strand, anno)
-show_alignments <- read_blast(files = "examples/blastn-standard/*.tsv")
+show_alignments <- read_blast("examples/blastn-standard/*.tsv")
 # At most three substantial observed HSPs per pair; no coordinates are invented.
 show_links <- show_alignments |>
   filter(length >= 900, pident >= 75) |>
@@ -84,7 +84,7 @@ show_cross <- show_pair_rows |>
   ungroup()
 
 genome_comparison_example <- list(
-  sequences = read_fasta_lengths("examples/fasta/*.fna", keep_sequence = TRUE),
+  sequences = read_fasta_lengths("examples/fasta/*.fna", sequence_unit = "bp", keep_sequence = TRUE),
   seq_data = show_sequences,
   annotations = show_annotations,
   alignments = show_alignments,
@@ -94,17 +94,24 @@ genome_comparison_example <- list(
   chord_features = chord_genes, linear_features = show_linear_features,
   adjacent_links = show_adjacent, cross_links = show_cross
 )
+aligned_dna <- read_aligned_fasta("examples/alignment/opuntia-aligned.fasta", "DNA", source_file = TRUE)
+aligned_strings <- aligned_dna |>
+  arrange(alignment_column) |>
+  summarise(length = n(), sequence = paste0(symbol, collapse = ""), .by = accver)
 sequence_detail_example <- list(
-  plasmid_source = read_fasta_lengths("examples/plasmid/pUC19.fna", keep_sequence = TRUE, source_file = TRUE),
+  plasmid_source = read_fasta_lengths("examples/plasmid/pUC19.fna", sequence_unit = "bp",
+    keep_sequence = TRUE, source_file = TRUE),
   paf = read_paf("examples/format-inputs/emales-pair.paf"),
-  dna_alignment = read_aligned_fasta("examples/alignment/opuntia-aligned.fasta", "DNA", source_file = TRUE),
+  dna_alignment = aligned_dna,
   protein_alignment = read_aligned_fasta("examples/alignment/protein-aligned.fasta", "AA"),
-  aligned_strings = read_fasta_lengths("examples/alignment/opuntia-aligned.fasta", keep_sequence = TRUE),
+  aligned_strings = aligned_strings,
   protein_hits = read_blast("examples/format-inputs/emales-mavirus-blastp.tsv", source_file = TRUE),
   source_coding_features = read_gff3("examples/format-inputs/emales-BVI_023A.gff3", unstranded = "keep", source_file = TRUE),
-  coding_genome = read_fasta_lengths("examples/format-inputs/emales-BVI_023A.fna", keep_sequence = TRUE),
+  coding_genome = read_fasta_lengths("examples/format-inputs/emales-BVI_023A.fna",
+    sequence_unit = "bp", keep_sequence = TRUE),
   coding_features = read_gff3("examples/format-inputs/emales-BVI_023A.gff3", unstranded = "keep"),
-  coding_proteins = read_fasta_lengths("examples/format-inputs/protein-pair.faa", keep_sequence = TRUE)
+  coding_proteins = read_fasta_lengths("examples/format-inputs/protein-pair.faa",
+    sequence_unit = "aa", keep_sequence = TRUE)
 )
 # Import provenance retains source file names and coordinate conventions.
 # A separate manifest fingerprints the unchanged source files for rebuilding.

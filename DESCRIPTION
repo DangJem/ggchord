@@ -9,8 +9,8 @@ Description: A 'ggplot2'-based package for multi-sequence alignment chord
     A layered grammar combines
     sequence backbones, interval links, genes, general biological features,
     labels, quantitative tracks, genomic axes and restriction sites. Feature
-    placement is expressed with reusable Position objects, while role-specific
-    scales and themes keep data mapping separate from geometry and appearance.
+    placement uses reusable Position objects, while ordinary visual scales
+    and scoped layer scales keep mapping independent of geometry and appearance.
 License: MIT + file LICENSE
 Depends: R (>= 4.1.0)
 Imports: ggplot2 (>= 4.0.0), grDevices, grid, rlang, scales, utils

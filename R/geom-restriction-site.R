@@ -1,154 +1,301 @@
-GeomRestrictionSite <- ggplot2::ggproto(
-  "GeomRestrictionSite", ggplot2::Geom,
+GeomSequenceSite <- ggplot2::ggproto("GeomSequenceSite", ggplot2::Geom,
   required_aes = c("x", "y"),
-  default_aes = ggplot2::aes(
-    xend = NA_real_, yend = NA_real_, label = NA_character_,
-    enzyme_label = NA_character_, coordinate_label = NA_character_,
-    label_order = NA_character_, enzyme_fontface = "plain",
-    .component = NA_character_, group = NA_integer_, colour = "#202020",
-    alpha = 1, linewidth = .28, linetype = 1, size = 2.9, angle = 0,
-    hjust = .5, vjust = .5, family = "", fontface = 1, lineheight = 1.2
-  ),
+  default_aes = aes(colour = "black", fill = "grey70", size = 2, alpha = 1,
+    linewidth = .4, linetype = 1, shape = 21, stroke = .4),
+  optional_aes = c(".component", "group"),
   draw_key = ggplot2::draw_key_path,
-  draw_panel = function(data, panel_params, coord, na.rm = FALSE,
-                        segment_params = list(), text_params = list(),
-                        composite_labels = TRUE) {
+  draw_panel = function(data, panel_params, coord, na.rm = FALSE) {
     paths <- data[data$.component == "path", , drop = FALSE]
-    labels <- data[data$.component == "label", , drop = FALSE]
-    for (nm in names(segment_params)) {
-      if (nm %in% names(paths)) paths[[nm]] <- segment_params[[nm]]
-    }
-    for (nm in names(text_params)) {
-      if (nm %in% names(labels)) labels[[nm]] <- text_params[[nm]]
-    }
+    points <- data[data$.component == "point", , drop = FALSE]
     grobs <- list()
-    if (nrow(paths)) {
-      grobs[[length(grobs) + 1L]] <- ggplot2::GeomPath$draw_panel(
-        paths, panel_params, coord, lineend = "round", linejoin = "round",
-        na.rm = na.rm
-      )
-    }
-    if (nrow(labels)) {
-      composite <- isTRUE(composite_labels) &&
-        all(c("enzyme_label", "coordinate_label", "label_order") %in%
-          names(labels))
-      if (composite) {
-        placed <- coord$transform(labels, panel_params)
-        fragments <- vector("list", nrow(placed))
-        for (i in seq_len(nrow(placed))) {
-          enzyme_face <- if ("enzyme_fontface" %in% names(placed) &&
-              !is.na(placed$enzyme_fontface[i])) {
-            placed$enzyme_fontface[i]
-          } else "plain"
-          parts <- ggchord_site_label_parts(placed$enzyme_label[i], placed$coordinate_label[i],
-            placed$size[i], placed$family[i], enzyme_face, placed$lineheight[i],
-            scales::alpha(placed$colour[i], placed$alpha[i]))
-          enzyme <- parts$enzyme; coordinate <- parts$coordinate; gap <- parts$gap
-          enzyme$y <- coordinate$y <- grid::unit(placed$y[i], 'native')
-          enzyme$vjust <- coordinate$vjust <- placed$vjust[i]
-          has_enzyme <- !is.na(placed$enzyme_label[i]) &&
-            nzchar(placed$enzyme_label[i])
-          has_coordinate <- !is.na(placed$coordinate_label[i]) &&
-            nzchar(placed$coordinate_label[i])
-          centre <- grid::unit(placed$x[i], "native")
-          if (has_enzyme && has_coordinate) {
-            total <- grid::grobWidth(enzyme) + gap +
-              grid::grobWidth(coordinate)
-            if (placed$label_order[i] == "enzyme_position") {
-              enzyme$x <- centre - total / 2
-              enzyme$hjust <- 0
-              coordinate$x <- enzyme$x + grid::grobWidth(enzyme) + gap
-              coordinate$hjust <- 0
-            } else {
-              enzyme$x <- centre + total / 2
-              enzyme$hjust <- 1
-              coordinate$x <- enzyme$x - grid::grobWidth(enzyme) - gap
-              coordinate$hjust <- 1
-            }
-            fragments[[i]] <- grid::grobTree(enzyme, coordinate)
-          } else if (has_enzyme) {
-            enzyme$x <- centre
-            enzyme$hjust <- .5
-            fragments[[i]] <- enzyme
-          } else if (has_coordinate) {
-            coordinate$x <- centre
-            coordinate$hjust <- .5
-            fragments[[i]] <- coordinate
-          } else {
-            fragments[[i]] <- grid::nullGrob()
-          }
-        }
-        grobs[[length(grobs) + 1L]] <- do.call(grid::grobTree, fragments)
-      } else {
-        grobs[[length(grobs) + 1L]] <- ggplot2::GeomText$draw_panel(
-          labels, panel_params, coord, parse = FALSE,
-          check_overlap = FALSE, na.rm = na.rm
-        )
-      }
+    if (nrow(paths)) grobs[[1L]] <- ggplot2::GeomPath$draw_panel(
+      paths, panel_params, coord, lineend = "butt", na.rm = na.rm)
+    if (nrow(points)) {
+      points$shape <- 21
+      grobs[[length(grobs) + 1L]] <- ggplot2::GeomPoint$draw_panel(
+        points, panel_params, coord, na.rm = na.rm)
     }
     do.call(grid::grobTree, grobs)
   }
 )
 
-#' Draw restriction sites, labels and deterministic leaders
-#' @param mapping,data Standard layer inputs. Positions refer to the displayed
-#'   nucleotide backbone. An explicit `sequence_unit` must be `"bp"`.
-#' @param label Draw labels.
-#' @param label_style Label enzyme and position, enzyme only, or position only.
-#' @param label_side Draw labels outside, inside, or automatically.
-#' @param leader Leader routing style. The default `"radial"` measures actual
-#'   text boxes, separates site anchors from final radial label positions,
-#'   and routes either a direct connector or an independent radial stub plus
-#'   fan segment.
-#'   All enzyme-facing text edges follow one close circular contour in genomic
-#'   order. Dense lateral clusters use evenly spaced contour fans, while sparse
-#'   clusters retain their natural angular positions.
-#'   `"straight"` connects the tick tip directly to the final label edge,
-#'   without detours around the sequence or other leaders. `"elbow"` uses
-#'   one bend, starting with a local-normal departure where possible.
-#'   Label positions and grouping are shared by all routing styles.
-#' @param min_label_gap Minimum genomic fraction between label slots. `NULL`
-#'   derives a compact device-aware default from the rendered labels.
-#' @param tick_length,label_offset Local-normal distances.
-#' @param colour,linewidth,label_size,fontface,family Fixed appearance. With
-#'   the default `fontface = NULL`, enzyme names are bold only when that enzyme
-#'   cuts once in the supplied sequence; coordinates remain regular. An
-#'   explicit `fontface` disables this automatic distinction.
-#' @param label_order Automatic mirrored label order, enzyme first, or
-#'   position first.
-#' @param id Optional unique layer ID used in layout and source exports.
-#' @param position,show.legend,inherit.aes Standard layer arguments.
-#' @param ... Additional geom parameters.
-#' @return A ggplot2 layer.
-#' @seealso \code{\link{ggchord_data_contract}}
-#' @examples
-#' sites <- data.frame(accver = "A", position = 10, enzyme = "E")
-#' ggchord(data.frame(accver = "A", length = 100)) +
-#'   geom_seq() +
-#'   geom_restriction_site(data = sites, id = "sites") +
-#'   coord_circular()
+ggchord_site_layer <- function(mapping, data, shape, fixed_shape, size, fixed_size,
+    stat, position, dots, na.rm, show.legend, inherit.aes, id) {
+  shape <- match.arg(shape, c("tick", "point", "cut"))
+  size <- ggchord_physical_mm(size, "geom_site(size)", TRUE)
+  if (length(size) != 1L || size <= 0) ggchord_stop("geom_site(): size must be positive")
+  position <- ggchord_as_feature_position(position, "geom_site()")
+  if (ggchord_local_position(position) && !identical(position$placement, "offset"))
+    ggchord_stop("geom_site(): use identity or position_offset()")
+  dots <- ggchord_colour_dots(dots, "geom_site()")
+  mapped_shape <- !fixed_shape && !is.null(mapping$shape)
+  if ((fixed_shape || !mapped_shape) && !inherit.aes) {
+    if ("fill" %in% c(names(dots), names(mapping)) && shape != "point")
+      ggchord_stop("geom_site(): fill is only available for point symbols")
+    if ("unknown_cut" %in% names(dots) && shape != "cut")
+      ggchord_stop("geom_site(): unknown_cut is only available for cut symbols")
+  }
+  unknown_cut <- match.arg(dots$unknown_cut %||% "site", c("site", "error"))
+  explicit_cut <- "unknown_cut" %in% names(dots)
+  dots$unknown_cut <- NULL
+  if (fixed_shape) mapping$shape <- NULL
+  if (fixed_size) {
+    mapping$size <- NULL
+    dots$size <- size
+  }
+  ggchord_check_geom_params(dots, GeomSequenceSite, "geom_site()", stat = stat)
+  parameters <- ggchord_split_source_stat(stat, dots, GeomSequenceSite)
+  layer <- ggplot2::layer(
+    data = ggchord_site_empty(), mapping = aes(x = x, y = y, group = group,
+      .component = I(.component)),
+    geom = GeomSequenceSite, stat = "identity", position = "identity",
+    show.legend = show.legend, inherit.aes = inherit.aes, check.aes = FALSE,
+    params = c(list(na.rm = na.rm), parameters$geom)
+  )
+  layer$ggchord_type <- "restriction_site"
+  layer$ggchord_params <- list(id = id, type = "restriction_site",
+    site_shape = shape, fixed_shape = fixed_shape, site_size = size, fixed_size = fixed_size,
+    unknown_cut = unknown_cut, explicit_cut = explicit_cut, feature_position = position,
+    physical_layout = TRUE, source_stat = parameters$stat)
+  ggchord_capture_layer_input(layer, data, mapping, c("accver", "pos", "cut_top", "cut_bottom"))
+}
+
+#' Draw source point annotations
 #' @export
-geom_restriction_site<-function(mapping=NULL,data=NULL,label=TRUE,label_style=c("enzyme_position","enzyme","position"),label_order=c("auto","enzyme_position","position_enzyme"),label_side=c("outside","inside","auto"),leader=c("radial","elbow","straight"),min_label_gap=NULL,tick_length=.04,label_offset=.18,colour="#202020",linewidth=.28,label_size=3.2,fontface=NULL,family=NULL,position="identity",show.legend=FALSE,inherit.aes=FALSE,...,id=NULL){
+#' @param mapping Aesthetic mapping from `ggplot2::aes()`. A local mapping overrides the matching inherited channel.
+#' @param data Observation table or a data function. For ggchord layers, provide the required data-role columns.
+#' @param shape Default shape. An explicitly supplied fixed shape takes priority over its mapping.
+#' @param size Physical size of the symbol in millimetres.
+#' @param stat A compatible ggplot2 Stat or its name. The default uses the supplied records.
+#' @param position A compatible Position for placement of the layer geometry.
+#' @param ... Additional named visual styles and parameters accepted by this layer.
+#' @param na.rm Suppress warnings for missing observations that the layer can omit.
+#' @param show.legend Logical or named logical indicating whether the layer contributes legend keys.
+#' @param inherit.aes Whether to inherit plot mappings and evaluate them on the layer data.
+#' @param id Optional plot-local layer identifier. Name a layer explicitly to scope a scale, anchor a label or export it.
+#' @return A ggplot2 layer for addition to a plot.
+#' @details Site data supplies `accver` and a one-based `pos`. A double-strand cut uses `cut_top` and `cut_bottom` as interbase positions. Add site labels separately or bind them to the site layer.
+#' @examples
+#' library(ggplot2)
+#'
+#' seqs <- data.frame(
+#'   accver = c("A", "B"), length = c(1000, 800),
+#'   sequence_unit = "bp", topology = "linear"
+#' )
+#'
+#' one_seq <- seqs[1, , drop = FALSE]
+#'
+#' sites <- data.frame(accver = "A", pos = 300, site_id = "s1", label = "EcoRI")
+#'
+#' cut_sites <- transform(sites, cut_top = 300, cut_bottom = 304)
+#' ggchord(one_seq) +
+#'   geom_seq() +
+#'   geom_site(data = cut_sites, id = "sites") +
+#'   geom_site_label(aes(label = label), anchor_layer = "sites") +
+#'   coord_circular()
+geom_site <- function(mapping = NULL, data = NULL, shape = "tick", size = 2,
+    stat = "identity", position = "identity", ...,
+    na.rm = FALSE, show.legend = NA, inherit.aes = TRUE, id = NULL) {
   ggchord_check_argument_names(sys.call(), sys.function())
-  colour_supplied<-!missing(colour);linewidth_supplied<-!missing(linewidth);label_size_supplied<-!missing(label_size);fontface_supplied<-!missing(fontface)&&!is.null(fontface);family_supplied<-!missing(family)&&!is.null(family)
-  dots <- list(...)
-  colour_supplied <- colour_supplied || "color" %in% names(dots)
-  alias <- ggchord_colour_alias(colour, dots, "geom_restriction_site()", sys.call())
-  colour <- alias$colour
-  if(is.null(data))ggchord_stop("geom_restriction_site(): supply restriction-site data")
-  if (identical(leader, "trunk")) ggchord_stop(
-    "geom_restriction_site(): leader = 'trunk' was removed in v0.16.1; use leader = 'radial'")
-  label_style<-match.arg(label_style);label_order<-match.arg(label_order);label_side<-match.arg(label_side);leader<-match.arg(leader)
-  vals<-c(tick_length,label_offset);if(!is.numeric(vals)||any(!is.finite(vals))||any(vals<0)||(!is.null(min_label_gap)&&(!is.numeric(min_label_gap)||length(min_label_gap)!=1L||!is.finite(min_label_gap)||min_label_gap<0)))ggchord_stop("geom_restriction_site(): invalid gaps or offsets")
-  segment_params<-list();text_params<-list()
-  if(colour_supplied){segment_params$colour<-colour;text_params$colour<-colour}
-  if(linewidth_supplied)segment_params$linewidth<-linewidth
-  if(label_size_supplied)text_params$size<-label_size
-  if(fontface_supplied)text_params$fontface<-fontface
-  if(family_supplied)text_params$family<-family
-  ggchord_check_geom_params(alias$dots, GeomRestrictionSite, "geom_restriction_site()", position)
-  lyr<-ggplot2::layer(data=data.frame(x=numeric(),y=numeric()),mapping=ggplot2::aes(x=x,y=y,group=group,label=label,.component=I(.component),enzyme_label=I(enzyme_label),coordinate_label=I(coordinate_label),label_order=I(label_order),enzyme_fontface=I(enzyme_fontface)),stat="identity",geom=GeomRestrictionSite,position=position,show.legend=show.legend,inherit.aes=inherit.aes,check.aes=FALSE,check.param=FALSE,params=c(list(colour=colour,linewidth=linewidth,size=label_size,segment_params=segment_params,text_params=text_params,composite_labels=!fontface_supplied),alias$dots))
-  lyr$ggchord_type<-"restriction_site";lyr$ggchord_theme_components<-c(segment_params="ggchord.restriction.label.segment",text_params="ggchord.restriction.label")
-  lyr$ggchord_params<-list(id=id,type="restriction_site",label=label,label_style=label_style,label_order=label_order,label_side=label_side,leader=leader,min_label_gap=min_label_gap,tick_length=tick_length,label_offset=label_offset,label_size=label_size)
-  ggchord_capture_layer_input(lyr,data,mapping,c("accver","position","enzyme"))
+  ggchord_site_layer(mapping, data, shape, !missing(shape), size, !missing(size),
+    stat, position, list(...), na.rm, show.legend, inherit.aes, id)
+}
+
+#' Draw documented restriction cuts
+#' @export
+#' @param mapping Aesthetic mapping from `ggplot2::aes()`. A local mapping overrides the matching inherited channel.
+#' @param data Observation table or a data function. For ggchord layers, provide the required data-role columns.
+#' @param shape Default shape. An explicitly supplied fixed shape takes priority over its mapping.
+#' @param size Physical size of the symbol in millimetres.
+#' @param stat A compatible ggplot2 Stat or its name. The default uses the supplied records.
+#' @param position A compatible Position for placement of the layer geometry.
+#' @param ... Additional named visual styles and parameters accepted by this layer.
+#' @param na.rm Suppress warnings for missing observations that the layer can omit.
+#' @param show.legend Logical or named logical indicating whether the layer contributes legend keys.
+#' @param inherit.aes Whether to inherit plot mappings and evaluate them on the layer data.
+#' @param id Optional plot-local layer identifier. Name a layer explicitly to scope a scale, anchor a label or export it.
+#' @return A ggplot2 layer for addition to a plot.
+#' @details Site data supplies `accver` and a one-based `pos`. A double-strand cut uses `cut_top` and `cut_bottom` as interbase positions. Add site labels separately or bind them to the site layer.
+#' @examples
+#' library(ggplot2)
+#'
+#' seqs <- data.frame(
+#'   accver = c("A", "B"), length = c(1000, 800),
+#'   sequence_unit = "bp", topology = "linear"
+#' )
+#'
+#' one_seq <- seqs[1, , drop = FALSE]
+#'
+#' sites <- data.frame(accver = "A", pos = 300, site_id = "s1", label = "EcoRI")
+#'
+#' cut_sites <- transform(sites, cut_top = 300, cut_bottom = 304)
+#' ggchord(one_seq) +
+#'   geom_seq() +
+#'   geom_restriction_site(data = cut_sites, id = "sites") +
+#'   geom_site_label(aes(label = label), anchor_layer = "sites") +
+#'   coord_circular()
+geom_restriction_site <- function(mapping = NULL, data = NULL, shape = "cut", size = 2,
+    stat = "identity", position = "identity", ...,
+    na.rm = FALSE, show.legend = NA, inherit.aes = TRUE, id = NULL) {
+  ggchord_check_argument_names(sys.call(), sys.function())
+  ggchord_site_layer(mapping, data, shape, !missing(shape), size, !missing(size),
+    stat, position, list(...), na.rm, show.legend, inherit.aes, id)
+}
+
+#' Label source point annotations
+#' @export
+#' @param mapping Aesthetic mapping from `ggplot2::aes()`. A local mapping overrides the matching inherited channel.
+#' @param data Optional label table or function. With a named anchor, the default data consists of the target entities.
+#' @param stat A compatible ggplot2 Stat or its name. The default uses the supplied records.
+#' @param anchor_layer ID of the target layer. Labels use the target entities after its Stat and follow their displayed placement.
+#' @param position Position adjustment. For bound labels, leave this unset to follow the target layer.
+#' @param label_layout A fixed or repelled label layout declaration.
+#' @param ... Additional named visual styles and parameters accepted by this layer.
+#' @param na.rm Suppress warnings for missing observations that the layer can omit.
+#' @param show.legend Logical or named logical indicating whether the layer contributes legend keys.
+#' @param inherit.aes Whether to inherit plot mappings and evaluate them on the layer data.
+#' @param id Optional plot-local layer identifier. Name a layer explicitly to scope a scale, anchor a label or export it.
+#' @return A ggplot2 layer for addition to a plot.
+#' @details Site data supplies `accver` and a one-based `pos`. A double-strand cut uses `cut_top` and `cut_bottom` as interbase positions. Add site labels separately or bind them to the site layer.
+#' @examples
+#' library(ggplot2)
+#'
+#' seqs <- data.frame(
+#'   accver = c("A", "B"), length = c(1000, 800),
+#'   sequence_unit = "bp", topology = "linear"
+#' )
+#'
+#' one_seq <- seqs[1, , drop = FALSE]
+#'
+#' sites <- data.frame(accver = "A", pos = 300, site_id = "s1", label = "EcoRI")
+#'
+#' ggchord(one_seq) +
+#'   geom_site(data = sites, id = "sites") +
+#'   geom_site_label(aes(label = label), anchor_layer = "sites") +
+#'   coord_circular()
+geom_site_label <- function(mapping = NULL, data = NULL, stat = "identity",
+    anchor_layer = NULL, position = NULL, label_layout = label_layout_fixed(),
+    ..., na.rm = FALSE, show.legend = FALSE, inherit.aes = TRUE, id = NULL) {
+  ggchord_check_argument_names(sys.call(), sys.function())
+  ggchord_domain_label(mapping, data, stat, anchor_layer, "site", position,
+    label_layout, "site", list(...), na.rm, show.legend, inherit.aes, id)
+}
+
+#' Label source point annotations with collision avoidance
+#' @export
+#' @param mapping Aesthetic mapping from `ggplot2::aes()`. A local mapping overrides the matching inherited channel.
+#' @param data Optional label table or function. With a named anchor, the default data consists of the target entities.
+#' @param stat A compatible ggplot2 Stat or its name. The default uses the supplied records.
+#' @param anchor_layer ID of the target layer. Labels use the target entities after its Stat and follow their displayed placement.
+#' @param position Position adjustment. For bound labels, leave this unset to follow the target layer.
+#' @param label_layout A fixed or repelled label layout declaration.
+#' @param ... Additional named visual styles and parameters accepted by this layer.
+#' @param na.rm Suppress warnings for missing observations that the layer can omit.
+#' @param show.legend Logical or named logical indicating whether the layer contributes legend keys.
+#' @param inherit.aes Whether to inherit plot mappings and evaluate them on the layer data.
+#' @param id Optional plot-local layer identifier. Name a layer explicitly to scope a scale, anchor a label or export it.
+#' @return A ggplot2 layer for addition to a plot.
+#' @details Site data supplies `accver` and a one-based `pos`. A double-strand cut uses `cut_top` and `cut_bottom` as interbase positions. Add site labels separately or bind them to the site layer.
+#' @examples
+#' library(ggplot2)
+#'
+#' seqs <- data.frame(
+#'   accver = c("A", "B"), length = c(1000, 800),
+#'   sequence_unit = "bp", topology = "linear"
+#' )
+#'
+#' one_seq <- seqs[1, , drop = FALSE]
+#'
+#' sites <- data.frame(accver = "A", pos = 300, site_id = "s1", label = "EcoRI")
+#'
+#' ggchord(one_seq) +
+#'   geom_site(data = sites, id = "sites") +
+#'   geom_site_label_repel(aes(label = label), anchor_layer = "sites") +
+#'   coord_circular()
+geom_site_label_repel <- function(mapping = NULL, data = NULL, stat = "identity",
+    anchor_layer = NULL, position = NULL, label_layout = label_layout_repel(),
+    ..., na.rm = FALSE, show.legend = FALSE, inherit.aes = TRUE, id = NULL) {
+  ggchord_check_argument_names(sys.call(), sys.function())
+  geom_site_label(mapping, data, stat, anchor_layer, position, label_layout,
+    ..., na.rm = na.rm, show.legend = show.legend, inherit.aes = inherit.aes, id = id)
+}
+
+ggchord_site_empty <- function() data.frame(
+  x = numeric(), y = numeric(), group = integer(), accver = character(),
+  source_row = integer(), .component = character(), normal_offset = numeric()
+)
+
+ggchord_site_geometry <- function(layer, input, layout, plot) {
+  if (!NROW(input)) return(ggchord_site_empty())
+  ggchord_require_columns(input, c("accver", "pos"), "geom_site()")
+  p <- layer$ggchord_params
+  visual <- layer$ggchord_input_mapping
+  ids <- as.character(input$accver)
+  lens <- unname(layout$sequence_reference$lens[ids])
+  if (anyNA(lens) || !is.numeric(input$pos) || any(!is.finite(input$pos) |
+      input$pos < 1 | input$pos > lens))
+    ggchord_stop("geom_site(): positions must be within a known reference")
+  offsets <- ggchord_resolve_position_offset(p$feature_position$offset %||% 0,
+    layout$seqs, "offset", "geom_site()")
+  shape <- rep(p$site_shape, nrow(input))
+  size <- rep(p$site_size, nrow(input))
+  for (channel in c("shape", "size")) {
+    if (isTRUE(p[[paste0("fixed_", channel)]])) next
+    start <- ggchord_start_mapping(visual[[channel]])
+    if (is.null(start)) next
+    mapped <- ggchord_eval_input_mapping(channel, start, input, "geom_site()")
+    if (!length(mapped) %in% c(1L, nrow(input)))
+      ggchord_stop("geom_site(): invalid length for ", channel, " mapping")
+    scale <- p[[paste0(channel, "_scale")]] %||% plot$scales$get_scales(channel)
+    if (is.null(scale) && channel == "shape")
+      ggchord_stop("geom_site(): shape mapping requires an explicit visual scale")
+    scale <- (scale %||% ggplot2::scale_size())$clone()
+    transformed <- scale$transform(mapped)
+    scale$train(transformed)
+    mapped <- rep_len(scale$map(transformed), nrow(input))
+    if (channel == "shape") shape <- as.character(mapped) else size <- mapped
+  }
+  if (anyNA(shape) || any(!shape %in% c("tick", "point", "cut")))
+    ggchord_stop("geom_site(): shape scale must produce tick, point or cut")
+  if (any(shape != "point") && "fill" %in% c(names(layer$aes_params), names(visual)))
+    ggchord_stop("geom_site(): fill applies only to point symbols")
+  if (any(shape != "cut") && p$explicit_cut)
+    ggchord_stop("geom_site(): unknown_cut applies only to cut symbols")
+  if (any(shape == "cut") && identical(layout$sequence_unit, "aa"))
+    ggchord_stop("geom_site(): cleavage boundaries require bp coordinates")
+  boundary <- lapply(c("cut_top", "cut_bottom"), function(column) {
+    values <- input[[column]] %||% rep(NA_real_, nrow(input))
+    if (!is.numeric(values) ||
+        any(!is.na(values) & (!is.finite(values) | values < 0 | values > lens |
+          values != trunc(values))))
+      ggchord_stop("geom_site(): cut positions must be interbase boundaries in 0..length")
+    values
+  })
+  pieces <- list()
+  for (row in seq_len(nrow(input))) {
+    id <- ids[row]
+    mm <- ggchord_units_per_mm()
+    offset <- offsets[[id]][[1L]]
+    add <- function(pos, extent, component) {
+      xy <- ggchord_track_point(rep(pos, length(extent)), id, 0, offset + extent, layout)
+      pieces[[length(pieces) + 1L]] <<- data.frame(x = xy[, 1L], y = xy[, 2L],
+        group = length(pieces) + 1L, accver = id, source_row = row,
+        .component = component, normal_offset = offset * mm)
+    }
+    half <- size[row] / 2
+    if (shape[row] == "point") {
+      add(input$pos[row], 0, "point")
+      next
+    }
+    cut <- c(boundary[[1L]][row], boundary[[2L]][row])
+    if (shape[row] == "tick" || all(is.na(cut))) {
+      if (shape[row] == "cut" && p$unknown_cut == "error")
+        ggchord_stop("geom_site(): no documented cut for source row ", row)
+      add(input$pos[row], c(-half, half), "path")
+      next
+    }
+    if (!is.na(cut[1L])) add(cut[1L], c(0, half), "path")
+    if (!is.na(cut[2L])) add(cut[2L], c(-half, 0), "path")
+  }
+  ggchord_rbind_fill(pieces) %||% ggchord_site_empty()
 }

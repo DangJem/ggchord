@@ -2,82 +2,61 @@
 % Please edit documentation in R/geom-seq-label.R
 \name{geom_seq_label}
 \alias{geom_seq_label}
-\title{Add a sequence label layer}
+\title{Label reference sequences}
 \usage{
 geom_seq_label(
   mapping = NULL,
   data = NULL,
-  seq_label_radius = 1,
-  seq_label_rotation = NULL,
-  labels = NULL,
-  seq_label_orientation = c("arc", "horizontal"),
-  seq_label_hjust = NULL,
-  seq_label_vjust = NULL,
-  check_overlap = FALSE,
+  anchor = "middle",
   position = "identity",
+  label_layout = label_layout_fixed(orientation = "horizontal"),
+  ...,
+  na.rm = FALSE,
   show.legend = FALSE,
   inherit.aes = TRUE,
-  ...,
   id = NULL
 )
 }
 \arguments{
-\item{mapping}{Default NULL (uses pre-computed data)}
+\item{mapping}{Aesthetic mapping from \code{ggplot2::aes()}. A local mapping overrides the matching inherited channel.}
 
-\item{data}{Default NULL (retrieved automatically from the layout)}
+\item{data}{Optional reference table or function selecting from the registered reference.}
 
-\item{seq_label_radius}{Optional numeric/vector. Radial position of the
-labels as a multiplier of the sequence arc radius: \code{1} is on the arc,
-\code{> 1} places the label outside (away from the chord center) and
-\code{< 1} places it inside, default 1
-Explicit values are incompatible with \code{\link[=coord_collinear]{coord_collinear()}}, which places
-sequence labels beside the left endpoint of each horizontal track.}
+\item{anchor}{Position on the entity or reference path that anchors the text.}
 
-\item{seq_label_rotation}{Optional numeric/vector. Additional label rotation
-(degrees) on top of the arc-aligned orientation, default NULL (0). Ignored
-when \code{seq_label_orientation = "horizontal"}.}
+\item{position}{Position adjustment. For bound labels, leave this unset to follow the target layer.}
 
-\item{labels}{Optional character vector. Override the label texts
-(defaults to the sequence labels from \code{geom_seq()} or the sequence IDs)}
+\item{label_layout}{A fixed or repelled label layout declaration.}
 
-\item{seq_label_orientation}{Character, default "arc". Label text
-orientation: \code{"arc"} rotates the text along the sequence arc (and
-keeps it readable), \code{"horizontal"} draws every label horizontally,
-extending away from the chord center.}
+\item{...}{Additional named visual styles and parameters accepted by this layer.}
 
-\item{seq_label_hjust}{Optional numeric/vector. Horizontal justification of
-the labels, default NULL. The default arc orientation uses -0.2 so the
-text sits just inside the sequence; with
-\code{seq_label_orientation = "horizontal"} the justification is chosen
-automatically so the text extends away from the chord center.}
+\item{na.rm}{Suppress warnings for missing observations that the layer can omit.}
 
-\item{seq_label_vjust}{Optional numeric/vector. Vertical justification of
-the labels, default NULL (0.5).}
+\item{show.legend}{Logical or named logical indicating whether the layer contributes legend keys.}
 
-\item{check_overlap}{Logical, default FALSE. When TRUE, labels that would
-overlap a previously drawn label are skipped (ggplot2's
-\code{geom_text()} option).}
+\item{inherit.aes}{Whether to inherit plot mappings and evaluate them on the layer data.}
 
-\item{position, show.legend, inherit.aes}{Standard ggplot2 layer arguments.}
-
-\item{...}{Additional arguments passed to \code{geom_text()}}
-
-\item{id}{Optional unique layer ID for layout and source exports.}
+\item{id}{Optional plot-local layer identifier. Name a layer explicitly to scope a scale, anchor a label or export it.}
 }
 \value{
-A ggplot2 layer.
+A ggplot2 layer for addition to a plot.
 }
 \description{
-Places sequence labels at the midpoint of each sequence arc, radially
-offset from the arc. Labels can be styled via their radial offset, rotation,
-font size, text orientation and justification.
+Label reference sequences
+}
+\details{
+The source is the complete reference table with \code{accver} and \code{length}. A backbone can select an authoritative subset. An explicit complete table in geom_seq() can register a reference when the plot has no global data.
 }
 \examples{
-library(dplyr)
-data(seq_data_example)
-seqs <- seq_data_example |>
-  select(accver, length)
-ggchord(data = seqs) +
+library(ggplot2)
+
+seqs <- data.frame(
+  accver = c("A", "B"), length = c(1000, 800),
+  sequence_unit = "bp", topology = "linear"
+)
+
+ggchord(seqs) +
   geom_seq() +
-  geom_seq_label()
+  geom_seq_label(aes(label = accver), anchor = "start") +
+  coord_collinear()
 }

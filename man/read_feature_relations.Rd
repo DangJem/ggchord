@@ -2,68 +2,59 @@
 % Please edit documentation in R/data-feature-relations.R
 \name{read_feature_relations}
 \alias{read_feature_relations}
-\title{Read precomputed feature pairs or group memberships}
+\title{Read existing feature pairs or group memberships}
 \usage{
 read_feature_relations(
-  file = NULL,
-  files = NULL,
-  format = c("pairs", "named_groups", "groups"),
-  feature_data = NULL,
-  unmatched = c("error", "report"),
+  file,
+  format = "pairs",
+  features = NULL,
+  unmatched = "error",
   source_file = FALSE
 )
 }
 \arguments{
-\item{file}{Optional local paths or patterns, read before files.}
+\item{file}{Local relationship-file paths.}
 
-\item{files}{Optional additional local paths or patterns.}
+\item{format}{\code{"pairs"}, \code{"named_groups"}, or \code{"groups"}.}
 
-\item{format}{Explicit schema: "pairs" (default), "named_groups", or "groups".}
+\item{features}{Optional feature table to place exact IDs.}
 
-\item{feature_data}{Optional data frame with unique character feature_id,
-character accver and numeric start/end in declared source coordinates.
-Original columns remain in report$feature_data; optional strand is retained.}
+\item{unmatched}{\code{"error"} rejects unknown IDs when features are given.
+\code{"report"} records unplaced observations.}
 
-\item{unmatched}{"error" (default) rejects IDs absent from supplied
-feature_data; "report" retains incomplete rows with mapping flags and
-reports each missing ID. Without feature_data all rows stay unplaced.}
-
-\item{source_file}{Add .source_file to pairs, membership and mapped links.}
+\item{source_file}{Whether to include row-level source paths.}
 }
 \value{
-A list with pairs, membership, ribbon_data (only complete mapped
-original pairs), and report. Group input returns no pair links. Mapped
-members carry source intervals in membership. report retains raw files,
-original fields, missing IDs, unplaced pairs and supplied feature_data.
-No seq_data is generated from annotation endpoints. File-local record
-indices must be interpreted with .source_input, not as biological IDs.
+A list with pairs, membership, links$feature_relations and report.
 }
 \description{
-Reads local whitespace-separated pairs (two IDs and an optional opaque
-score), named groups (group ID followed by members), or unnamed groups
-(members only). Schemas are explicit; headers are not guessed. Blank lines
-and whole-line # comments are skipped. IDs, native score strings, physical
-lines, member order, duplicates and original fields remain traceable.
-Numeric-looking IDs remain strings. Group indices are local to each file;
-unnamed groups have no invented biological group ID. Membership never
-generates pairwise links or asserts orthology.
-}
-\details{
-Optional feature_data matches unique feature_id values exactly, without
-editing case, prefixes or versions or guessing gene/CDS parentage. Supply
-ascending 1-based-inclusive contiguous source intervals, with optional
-strand (+, - or .). Negative feature strand stays annotation metadata:
-paired anchor endpoints remain ascending and direction stays missing.
-These are feature relationships, not basewise alignments. Segmented
-features require an explicit contiguous anchor table rather than silently
-using their bounding spans. No full sequence length, identity, support,
-alignment direction or source characters are inferred.
+Keep IDs exactly as supplied. A pair can be placed using feature
+coordinates passed explicitly. Group inputs retain memberships and
+can be used to construct separately declared comparisons.
 }
 \examples{
-path <- system.file("extdata", "plant-feature-groups.txt", package = "ggchord")
-relations <- read_feature_relations(path, format = "named_groups")
-relations$membership[c("group_id", "feature_id")]
-}
-\seealso{
-\code{\link[=geom_feature]{geom_feature()}}, \code{\link[=geom_link_line]{geom_link_line()}}, \code{\link[=read_gff3]{read_gff3()}}
+seqs <- data.frame(
+  accver = c("A", "B"), length = c(1000, 800),
+  sequence_unit = "bp", topology = "linear"
+)
+
+genes <- data.frame(
+  accver = c("A", "A", "B"), feature_id = c("g1", "g2", "g3"),
+  start = c(100, 400, 150), end = c(240, 620, 380),
+  strand = c("+", "-", "+"), label = c("g1", "g2", "g3"),
+  type = c("CDS", "tRNA", "CDS")
+)
+
+links <- data.frame(
+  qaccver = "A", saccver = "B", qstart = c(100, 400),
+  qend = c(240, 620), sstart = c(150, 450), send = c(290, 650),
+  qstrand = "+", sstrand = c("+", "-"),
+  pident = c(98, 90), link_id = c("l1", "l2")
+)
+
+f <- tempfile(fileext=".txt")
+writeLines("g1 g3", f)
+relations <- read_feature_relations(f, features=genes)
+ggchord(seqs) + geom_link_ribbon(data=relations$links$feature_relations)
+unlink(f)
 }

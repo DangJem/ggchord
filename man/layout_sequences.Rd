@@ -2,51 +2,81 @@
 % Please edit documentation in R/layout-sequence.R
 \name{layout_sequences}
 \alias{layout_sequences}
-\title{Declare the arrangement of sequence backbones}
+\title{Arrange reference paths and display windows}
 \usage{
 layout_sequences(
   order = NULL,
-  orientation = NULL,
-  gap = NULL,
-  length_mode = c("proportional", "equal")
+  orientation = 1,
+  length_mode = "proportional",
+  angular_gap = NULL,
+  row_gap = NULL,
+  segment_gap = NULL,
+  column_gap = NULL,
+  radius = NULL,
+  inner_radius = NULL,
+  curvature = NULL,
+  align = NULL,
+  anchor = NULL,
+  windows = NULL
 )
 }
 \arguments{
-\item{order}{Source IDs in display order. Repeats create display instances;
-use names such as c(A_high='A', B='B', A_low='A') for stable instance IDs.
-Repeated-entity HSPs require a unique between route on each link layer.}
+\item{order}{Complete display order of references or instances.}
 
-\item{orientation}{Direction (1 or -1). A named vector selects source or display instance IDs; unspecified sequences use 1.}
+\item{orientation}{Display orientation (1 or -1) by reference or instance.}
 
-\item{gap}{Optional numeric. Gap proportion between sequences, default
-0.03 in chord coordinates. A named vector can set the gap after each
-sequence; omitted IDs use the coordinate default. In \code{\link[=coord_collinear]{coord_collinear()}}, a positive distance
-between consecutive backbones as a proportion of the longest backbone's
-width, default 0.3. The final sequence's gap is unused in linear layouts.
-Segmented linear displays measure it against the longest display row;
-windows in one row must request the same gap, and only gaps between rows
-affect vertical placement.}
+\item{length_mode}{Proportional or equal display lengths.}
 
-\item{length_mode}{\code{"proportional"} (default) retains source-length ratios;
-\code{"equal"} gives each displayed sequence the same angular allocation or
-linear span without modifying source lengths. Shared absolute scale bars
-are unavailable in multi-sequence equal mode; local axes retain source units.}
+\item{angular_gap}{Angular spacing in degrees for arc references.}
+
+\item{row_gap, segment_gap, column_gap}{Physical distances in mm.}
+
+\item{radius}{Relative radius for arc references.}
+
+\item{inner_radius}{Relative inner radius for radial spokes.}
+
+\item{curvature}{Signed reference curvature for chord coordinates.}
+
+\item{align}{Display alignment of linear paths: start, center or end.}
+
+\item{anchor}{Source anchor positions or intervals for linear alignment.}
+
+\item{windows}{An optional table with instance_id, accver, start and end.}
 }
 \value{
-A layout declaration to add to a ggchord plot with \code{+}.
+A layout declaration to add to a ggchord plot.
 }
 \description{
-A plot has one sequence layout, independent of its drawing layers. Add the
-declaration before or after the layers. It also applies when the backbone
-is hidden. A named instance inherits its source orientation and gap unless
-overridden by instance ID. A single circular map uses the opening and
-direction in \code{\link[=coord_circular]{coord_circular()}}; \code{\link[=coord_dotplot]{coord_dotplot()}} owns both of its axes.
+Arrange reference paths and display windows
 }
 \examples{
-reference <- data.frame(accver = c("A", "B"), length = c(100, 200))
-ggchord(reference) +
-  geom_seq() +
-  layout_sequences(order = c("B", "A"), orientation = c(B = -1), gap = 0.2,
-                   length_mode = "equal") +
+seqs <- data.frame(
+  accver = c("A", "B"), length = c(1000, 800),
+  sequence_unit = "bp", topology = "linear"
+)
+
+one_seq <- seqs[1, , drop = FALSE]
+
+genes <- data.frame(
+  accver = c("A", "A", "B"), feature_id = c("g1", "g2", "g3"),
+  start = c(100, 400, 150), end = c(240, 620, 380),
+  strand = c("+", "-", "+"), label = c("g1", "g2", "g3"),
+  type = c("CDS", "tRNA", "CDS")
+)
+
+windows <- data.frame(accver = "A", start = 1, end = 500, window_id = "w1")
+
+ggchord(data = seqs) +
+  geom_seq() + geom_gene(data = genes) +
+  layout_sequences(
+    order = c("B", "A"), orientation = c(A = 1, B = -1),
+    row_gap = 8, align = "center"
+  ) +
   coord_collinear()
+
+w <- data.frame(instance_id = c("A_left", "A_right"),
+                accver = "A", start = c(1, 501), end = c(500, 1000),
+                row_id = "A_split")
+ggchord(data = one_seq) + geom_seq() +
+  layout_sequences(windows = w, segment_gap = 3) + coord_collinear()
 }

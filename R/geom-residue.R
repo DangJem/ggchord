@@ -1,96 +1,73 @@
-# A Cartesian character marker; alignment/source mapping belongs to adapters.
-
-#' Draw physically readable residue cells
-#'
-#' A standard Cartesian ggplot layer for local nucleotide/protein excerpts.
-#' Map `x` to alignment columns (or independently known source positions), `y`
-#' to sequence rows and `label` to actual characters. It does not compute an
-#' alignment or project through ggchord's biological backbone coordinates.
-#' Use [register_ggchord_alignment()] to associate exact source positions with
-#' a Fusion/magnify detail panel. Half-cell extents train position scales so
-#' first/last cells remain fully visible by default.
-#' Native scales must be identity or reverse; nonlinear scales and non-Cartesian
-#' coordinates are rejected rather than misrepresenting single-position cells.
-#'
-#' At drawing time, each cell's final physical width/height is compared with
-#' its actual glyph metrics. `overflow = "tile"` omits letters that cannot fit
-#' and retains their mapped fill cells; `"error"` requires readable letters.
-#' Explicit font sizes are never silently reduced. The decision is remade at every target
-#' size, including standard ggsave; DPI alone does not supply physical space.
-#' Cells meet at their edges to form a continuous alignment matrix. When the
-#' plot still uses its default Cartesian coordinate system, the layer supplies
-#' a fixed 1:1 aspect ratio so rows remain as compact as alignment columns.
-#' Explicit coordinates take priority. Without a size mapping or fixed size,
-#' characters grow uniformly to fit their cells, with a 3 mm readability floor;
-#' smaller cells use the same overflow policy rather than shrinking the text.
-#' When fill is not supplied, label is mapped to fill. A chemistry scale is
-#' inferred from the data's explicit alphabet column (DNA/RNA/AA; otherwise AA).
-#' Existing user fill mappings, fixed fills and scales take priority.
-#' See [scale_fill_residue()] for explicit alphabet and palette control.
-#'
-#' This native alignment layer accepts the ggplot2 layer parameter `name`.
-#' Sequence-layout IDs apply to layers registered by `ggchord()`.
-#'
-#' @param mapping,data Standard ggplot2 layer mapping and data. Required
-#'   aesthetics are x, y and label. Ordinary colour, fill, alpha, size, family
-#'   and fontface mappings/scales are supported. Explicit `size` is in mm;
-#'   omitted size fits cells uniformly with a 3 mm readability floor.
-#' @param overflow `"tile"` (default) or `"error"` when letters do not fit.
-#' @param line_width Optional positive integer number of columns per displayed
-#'   line. NULL (default) keeps one line. Lines start at the smallest displayed
-#'   x value; gaps occupy columns. Multiple sequences share the same breaks.
-#'   Row labels show the original column range; the x axis counts within a line.
-#'   Wrapping changes display only, preserving original input/source coordinates.
-#'   Registered Fusion selections must fit one displayed line; split a selection
-#'   crossing lines into explicit source intervals.
-#' @param position,show.legend,inherit.aes Standard ggplot2 layer arguments.
-#' @param ... Fixed text/cell aesthetics and na.rm, passed to the layer.
-#' @return A standard ggplot2 layer. Cells span one x unit and one y unit.
-#'   Use discrete y rows or unit-spaced rows.
-#' @seealso [read_aligned_fasta()], [map_alignment_position()]
+#' Draw true aligned character cells
 #' @export
+#' @param mapping Aesthetic mapping from `ggplot2::aes()`. A local mapping overrides the matching inherited channel.
+#' @param data Observation table or a data function. For ggchord layers, provide the required data-role columns.
+#' @param representation Draw text, filled tiles, or both.
+#' @param overflow Hide text, use tile fallback, or report a failure if the character does not fit.
+#' @param line_width Maximum number of displayed alignment columns per wrapped row.
+#' @param stat A compatible ggplot2 Stat or its name. The default uses the supplied records.
+#' @param position A compatible Position for placement of the layer geometry.
+#' @param ... Additional named visual styles and parameters accepted by this layer.
+#' @param na.rm Suppress warnings for missing observations that the layer can omit.
+#' @param show.legend Logical or named logical indicating whether the layer contributes legend keys.
+#' @param inherit.aes Whether to inherit plot mappings and evaluate them on the layer data.
+#' @param id Optional plot-local layer identifier. Name a layer explicitly to scope a scale, anchor a label or export it.
+#' @return A ggplot2 layer for addition to a plot.
+#' @details Provide an aligned character table with source or alignment identity. Display wrapping does not change alignment columns, and a gap has no source position. Pair text and tiles explicitly with a residue fill scale when colour conveys alphabet symbols.
 #' @examples
-#' # Explicit synthetic format example; real-data workflow is in the tutorial.
-#' cells <- as_ggchord_alignment(c(A = "AC-G", B = "ACTG"), "DNA")
+#' library(ggplot2)
+#'
+#' cells <- as_ggchord_alignment(c(A = "AC-G", B = "ACTG"), alphabet = "DNA")
 #' ggplot2::ggplot(cells, aes(alignment_column, accver, label = symbol)) +
-#'   geom_residue(aes(fill = symbol))
-#' long <- as_ggchord_alignment(c(A = strrep("ACGT", 25)), "DNA")
-#' ggplot2::ggplot(long, aes(alignment_column, accver, label = symbol)) +
-#'   geom_residue(line_width = 50)
-geom_residue <- function(mapping = NULL, data = NULL, overflow = c("tile", "error"),
-    position = "identity", show.legend = FALSE, inherit.aes = TRUE, line_width = NULL, ...) {
+#'   geom_residue(aes(fill = symbol)) +
+#'   scale_fill_residue(alphabet = "DNA") +
+#'   ggplot2::coord_fixed(ratio = 1)
+geom_residue <- function(mapping = NULL, data = NULL, representation = "tile_text",
+    overflow = "tile", line_width = NULL, stat = "identity", position = "identity",
+    ..., na.rm = FALSE, show.legend = FALSE, inherit.aes = TRUE, id = NULL) {
   ggchord_check_argument_names(sys.call(), sys.function())
-  if ("id" %in% names(list(...)))
-    ggchord_stop("geom_residue() uses a native alignment layer. Use name to label the ggplot2 layer.")
-  if (ggchord_local_position(position)) ggchord_stop("geom_residue(): position adjusts alignment cells; use a data position")
-  if (!is.null(line_width) && (!is.numeric(line_width) || length(line_width) != 1L ||
-      !is.finite(line_width) || line_width < 1 || line_width != floor(line_width) || line_width > 2^53 - 1))
-    ggchord_stop("geom_residue(): line_width must be a positive integer or NULL")
-  ggchord_check_geom_params(list(...), GeomResidue, "geom_residue()", position)
+  representation <- match.arg(representation, c("text", "tile", "tile_text"))
+  overflow_supplied <- !missing(overflow)
+  overflow <- match.arg(overflow, c("tile", "hide", "error"))
+  if (!ggchord_identity_stat(stat) || !ggchord_is_data_identity(position))
+    ggchord_stop("geom_residue(): use identity Stat and Position")
+  if (representation == "tile" && overflow_supplied)
+    ggchord_stop("geom_residue(): overflow applies only when text is drawn")
+  if (!is.null(line_width)) ggchord_label_integer(line_width, "line_width")
+  dots <- ggchord_colour_dots(list(...), "geom_residue()")
+  ggchord_residue_validate_styles(c(names(mapping), names(dots)), representation, overflow)
+  ggchord_check_geom_params(dots, GeomResidue, "geom_residue()")
   layer <- ggplot2::layer(mapping = mapping, data = data, stat = "identity", geom = GeomResidue,
-    position = position, show.legend = show.legend, inherit.aes = inherit.aes,
-    params = c(list(overflow = match.arg(overflow), auto_size = TRUE, line_width = line_width), list(...)))
+    position = "identity", show.legend = show.legend, inherit.aes = inherit.aes,
+    params = c(list(representation = representation, overflow = overflow,
+      line_width = line_width, na.rm = na.rm), dots))
+  if (!is.null(id)) layer <- layer_id(layer, id)
   ggplot2::ggproto("LayerResidue", layer,
     compute_aesthetics = function(self, data, plot) {
       mapping <- self$computed_mapping
-      fixed_fill <- "fill" %in% names(self$aes_params)
-      if (!fixed_fill && is.null(mapping$fill) && !is.null(mapping$label)) {
-        mapping$fill <- mapping$label
-        self$computed_mapping <- mapping
-      }
-      symbol_fill <- !is.null(mapping$fill) && !is.null(mapping$label) &&
-        identical(rlang::quo_get_expr(mapping$fill), rlang::quo_get_expr(mapping$label))
-      if (!fixed_fill && symbol_fill && is.null(plot$scales$get_scales("fill"))) {
-        alphabet <- unique(as.character(data$alphabet))
-        if (length(alphabet) != 1L || !alphabet %in% c("DNA", "RNA", "AA")) alphabet <- "AA"
-        plot$scales$add(scale_fill_residue(alphabet))
-      }
-      self$geom_params$auto_size <- is.null(mapping$size) && !"size" %in% names(self$aes_params)
-      # Resolve ordinary mappings/recycling before wrapping and scale training.
+      fallback <- c(x = "alignment_column", y = "accver", label = "symbol")
+      for (field in setdiff(names(fallback), names(mapping)))
+        mapping[[field]] <- rlang::new_quosure(rlang::sym(fallback[[field]]), emptyenv())
+      fixed <- intersect(names(self$aes_params), names(mapping))
+      mapping[fixed] <- NULL
+      ggchord_residue_validate_styles(c(names(mapping), names(self$aes_params)),
+        representation, overflow)
+      self$computed_mapping <- mapping
       value <- ggplot2::ggproto_parent(layer, self)$compute_aesthetics(data, plot)
+      if (nrow(value)) {
+        if (anyDuplicated(data.frame(x = value$x, y = value$y)))
+          ggchord_stop("geom_residue(): one character is required per alignment cell")
+        label <- as.character(value$label)
+        bad <- !is.na(label) & (nchar(label) != 1L | grepl("[[:space:]]", label))
+        if (any(bad))
+          ggchord_stop("geom_residue(): each label must contain one residue or gap character")
+        if (!is.null(data$is_gap) && !identical(as.logical(data$is_gap), label %in% c("-", ".")))
+          ggchord_stop("geom_residue(): symbols conflict with gap metadata")
+        if (!is.null(data$is_gap) && !is.null(data$source_position) &&
+            any(data$is_gap & !is.na(data$source_position)))
+          ggchord_stop("geom_residue(): gaps cannot have source positions")
+      }
       if (!is.null(self$geom_params$line_width) && nrow(value)) {
-        if (!all(c("x", "y") %in% names(value)))
-          ggchord_stop("geom_residue(): line_width requires input x and y mappings")
         display <- ggchord_residue_wrap(value$x, value$y, self$geom_params$line_width)
         value$x <- display$column
         value$y <- display$row
@@ -100,15 +77,85 @@ geom_residue <- function(mapping = NULL, data = NULL, overflow = c("tile", "erro
     })
 }
 
+ggchord_residue_validate_styles <- function(styles, representation, overflow) {
+  if (representation == "tile" &&
+      any(c("colour", "size", "family", "fontface", "lineheight") %in% styles))
+    ggchord_stop("geom_residue(): tile geometry does not use text styles")
+  if (representation == "text" && overflow != "tile" &&
+      any(c("fill", "cell_colour", "cell_linewidth") %in% styles))
+    ggchord_stop("geom_residue(): text uses cell styles only with overflow = 'tile'")
+}
+
+#' Draw true alignment characters
+#' @export
+#' @param mapping Aesthetic mapping from `ggplot2::aes()`. A local mapping overrides the matching inherited channel.
+#' @param data Observation table or a data function. For ggchord layers, provide the required data-role columns.
+#' @param overflow Hide text, use tile fallback, or report a failure if the character does not fit.
+#' @param line_width Maximum number of displayed alignment columns per wrapped row.
+#' @param stat A compatible ggplot2 Stat or its name. The default uses the supplied records.
+#' @param position A compatible Position for placement of the layer geometry.
+#' @param ... Additional named visual styles and parameters accepted by this layer.
+#' @param na.rm Suppress warnings for missing observations that the layer can omit.
+#' @param show.legend Logical or named logical indicating whether the layer contributes legend keys.
+#' @param inherit.aes Whether to inherit plot mappings and evaluate them on the layer data.
+#' @param id Optional plot-local layer identifier. Name a layer explicitly to scope a scale, anchor a label or export it.
+#' @return A ggplot2 layer for addition to a plot.
+#' @details Provide an aligned character table with source or alignment identity. Display wrapping does not change alignment columns, and a gap has no source position. Pair text and tiles explicitly with a residue fill scale when colour conveys alphabet symbols.
+#' @examples
+#' library(ggplot2)
+#'
+#' cells <- as_ggchord_alignment(c(A = "AC-G", B = "ACTG"), alphabet = "DNA")
+#' ggplot2::ggplot(cells, aes(alignment_column, accver, label = symbol)) +
+#'   geom_residue_text() +
+#'   ggplot2::coord_fixed(ratio = 1)
+geom_residue_text <- function(mapping = NULL, data = NULL, overflow = "hide",
+    line_width = NULL, stat = "identity", position = "identity", ...,
+    na.rm = FALSE, show.legend = FALSE, inherit.aes = TRUE, id = NULL) {
+  ggchord_check_argument_names(sys.call(), sys.function())
+  geom_residue(mapping, data, representation = "text", overflow = overflow,
+    line_width = line_width, stat = stat, position = position, ...,
+    na.rm = na.rm, show.legend = show.legend, inherit.aes = inherit.aes, id = id)
+}
+
+#' Draw true alignment cells as tiles
+#' @export
+#' @param mapping Aesthetic mapping from `ggplot2::aes()`. A local mapping overrides the matching inherited channel.
+#' @param data Observation table or a data function. For ggchord layers, provide the required data-role columns.
+#' @param line_width Maximum number of displayed alignment columns per wrapped row.
+#' @param stat A compatible ggplot2 Stat or its name. The default uses the supplied records.
+#' @param position A compatible Position for placement of the layer geometry.
+#' @param ... Additional named visual styles and parameters accepted by this layer.
+#' @param na.rm Suppress warnings for missing observations that the layer can omit.
+#' @param show.legend Logical or named logical indicating whether the layer contributes legend keys.
+#' @param inherit.aes Whether to inherit plot mappings and evaluate them on the layer data.
+#' @param id Optional plot-local layer identifier. Name a layer explicitly to scope a scale, anchor a label or export it.
+#' @return A ggplot2 layer for addition to a plot.
+#' @details Provide an aligned character table with source or alignment identity. Display wrapping does not change alignment columns, and a gap has no source position. Pair text and tiles explicitly with a residue fill scale when colour conveys alphabet symbols.
+#' @examples
+#' library(ggplot2)
+#'
+#' cells <- as_ggchord_alignment(c(A = "AC-G", B = "ACTG"), alphabet = "DNA")
+#' ggplot2::ggplot(cells, aes(alignment_column, accver, label = symbol)) +
+#'   geom_residue_tile(aes(fill = symbol)) +
+#'   scale_fill_residue(alphabet = "DNA") +
+#'   ggplot2::coord_fixed(ratio = 1)
+geom_residue_tile <- function(mapping = NULL, data = NULL, line_width = NULL,
+    stat = "identity", position = "identity", ..., na.rm = FALSE,
+    show.legend = FALSE, inherit.aes = TRUE, id = NULL) {
+  ggchord_check_argument_names(sys.call(), sys.function())
+  if ("overflow" %in% names(list(...))) ggchord_stop("geom_residue_tile(): overflow applies to text")
+  geom_residue(mapping, data, representation = "tile", line_width = line_width,
+    stat = stat, position = position, ..., na.rm = na.rm, show.legend = show.legend,
+    inherit.aes = inherit.aes, id = id)
+}
+
 #' @export
 #' @importFrom ggplot2 ggplot_add
 ggplot_add.LayerResidue <- function(object, plot, ...) {
   # Clone before supplying defaults: reusing a layer must not change its mapping.
   original <- object
   object <- ggplot2::ggproto(NULL, original)
-  default_coord <- isTRUE(plot$coordinates$default)
   plot <- NextMethod()
-  if (default_coord) plot <- plot + ggplot2::coord_fixed(ratio = 1)
   if (!is.null(object$geom_params$line_width)) {
     y_scale <- plot$scales$get_scales("y")
     if (is.null(y_scale)) plot <- plot + ggplot2::scale_y_discrete() else
@@ -143,16 +190,18 @@ ggchord_residue_wrap <- function(x, y, width, origin = NULL) {
 
 GeomResidue <- ggplot2::ggproto("GeomResidue", ggplot2::Geom,
   required_aes = c("x", "y", "label"),
-  default_aes = ggplot2::aes(colour = "#111111", fill = "#E5EDF2", alpha = NA,
-    size = 3, family = "sans", fontface = 2, lineheight = 1.2),
-  extra_params = c("na.rm", "overflow", "auto_size", "line_width"),
+  default_aes = ggplot2::aes(colour = "black", fill = "grey95", alpha = 1,
+    size = 3, family = "mono", fontface = 1, lineheight = 1.2,
+    cell_colour = NA_character_, cell_linewidth = .2),
+  extra_params = c("na.rm", "representation", "overflow", "line_width"),
   setup_data = function(data, params) {
     data$xmin <- data$x - .5; data$xmax <- data$x + .5
     data$ymin <- as.numeric(data$y) - .5; data$ymax <- as.numeric(data$y) + .5
     data
   },
   draw_key = ggplot2::draw_key_rect,
-  draw_panel = function(data, panel_params, coord, overflow = "tile", auto_size = TRUE, line_width = NULL, na.rm = FALSE) {
+  draw_panel = function(data, panel_params, coord, representation = "tile_text",
+      overflow = "tile", line_width = NULL, na.rm = FALSE) {
     if (!inherits(coord, "CoordCartesian") || isTRUE(coord$ggchord_coord))
       ggchord_stop("geom_residue(): Cartesian coordinates are required")
     for (axis in c("x", "y")) {
@@ -163,7 +212,7 @@ GeomResidue <- ggplot2::ggproto("GeomResidue", ggplot2::Geom,
     }
     if (!nrow(data)) return(grid::nullGrob())
     grid::gTree(data = data, panel_params = panel_params, coord = coord,
-      overflow = overflow, auto_size = auto_size, cl = "ggchord_residue_grob")
+      overflow = overflow, representation = representation, cl = "ggchord_residue_grob")
   })
 
 #' @export
@@ -180,30 +229,30 @@ makeContent.ggchord_residue_grob <- function(x) {
   widths <- abs(b$x - a$x); heights <- abs(b$y - a$y)
   panel_w <- grid::convertWidth(grid::unit(1, "npc"), "mm", valueOnly = TRUE)
   panel_h <- grid::convertHeight(grid::unit(1, "npc"), "mm", valueOnly = TRUE)
-  key <- paste(d$label, d$size, d$family, d$fontface, d$lineheight, sep = "\r")
-  metrics <- lapply(which(!duplicated(key)), function(i) {
-    glyph <- grid::textGrob(as.character(d$label[i]), gp = grid::gpar(
-      fontsize = d$size[i] * 72.27 / 25.4, fontfamily = d$family[i],
-      fontface = d$fontface[i], lineheight = d$lineheight[i]))
-    c(width = grid::convertWidth(grid::grobWidth(glyph), "mm", valueOnly = TRUE),
-      height = grid::convertHeight(grid::grobHeight(glyph), "mm", valueOnly = TRUE))
-  })
-  metrics <- do.call(rbind, metrics)[match(key, unique(key)), , drop = FALSE]
-  if (isTRUE(x$auto_size)) {
-    # One size for the whole matrix, including gaps, rather than per-letter zoom.
-    # Both dimensions constrain the same uniform size.
-    growth <- max(1, min(min(widths * panel_w) * .80 / max(metrics[, "width"], .Machine$double.eps),
-      min(heights * panel_h) * .80 / max(metrics[, "height"], .Machine$double.eps)))
-    d$size <- d$size * growth
-    metrics <- metrics * growth
+  fit <- rep(FALSE, nrow(d))
+  if (x$representation != "tile") {
+    key <- paste(d$label, d$size, d$family, d$fontface, d$lineheight, sep = "\r")
+    metrics <- lapply(which(!duplicated(key)), function(i) {
+      glyph <- grid::textGrob(as.character(d$label[i]), gp = grid::gpar(
+        fontsize = d$size[i] * 72.27 / 25.4, fontfamily = d$family[i],
+        fontface = d$fontface[i], lineheight = d$lineheight[i]))
+      c(width = grid::convertWidth(grid::grobWidth(glyph), "mm", valueOnly = TRUE),
+        height = grid::convertHeight(grid::grobHeight(glyph), "mm", valueOnly = TRUE))
+    })
+    metrics <- do.call(rbind, metrics)[match(key, unique(key)), , drop = FALSE]
+    fit <- widths * panel_w >= metrics[, "width"] * 1.15 &
+      heights * panel_h >= metrics[, "height"] * 1.15
+    if (any(!fit) && x$overflow == "error")
+      ggchord_stop("geom_residue(): characters do not fit on this device; increase the canvas or reduce text size")
   }
-  fit <- widths * panel_w >= metrics[, "width"] * 1.15 &
-    heights * panel_h >= metrics[, "height"] * 1.15
-  if (any(!fit) && x$overflow == "error") ggchord_stop(
-    "geom_residue(): target panel cannot fit ", sum(!fit),
-    " character(s) at the requested font size; focus fewer columns, enlarge the canvas or use overflow = 'tile'")
-  tiles <- grid::rectGrob(x = center$x, y = center$y, width = widths, height = heights,
-    default.units = "native", gp = grid::gpar(col = NA, fill = scales::alpha(d$fill, d$alpha)))
+  tile_rows <- if (x$representation %in% c("tile", "tile_text")) rep(TRUE, nrow(d)) else
+    if (x$overflow == "tile") !fit else rep(FALSE, nrow(d))
+  tiles <- if (!any(tile_rows)) grid::nullGrob() else grid::rectGrob(
+    x = center$x[tile_rows], y = center$y[tile_rows],
+    width = widths[tile_rows], height = heights[tile_rows], default.units = "native",
+    gp = grid::gpar(col = scales::alpha(d$cell_colour[tile_rows], d$alpha[tile_rows]),
+      lwd = d$cell_linewidth[tile_rows] * ggplot2::.pt,
+      fill = scales::alpha(d$fill[tile_rows], d$alpha[tile_rows])))
   letters <- if (!any(fit)) grid::nullGrob() else grid::textGrob(as.character(d$label[fit]),
     x = center$x[fit], y = center$y[fit], default.units = "native",
     gp = grid::gpar(col = scales::alpha(d$colour[fit], d$alpha[fit]),

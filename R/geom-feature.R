@@ -3,14 +3,13 @@
 GeomChordFeatureBase <- ggplot2::ggproto(
   "GeomChordFeatureBase", ggplot2::GeomPolygon
 )
-feature_polygon_geom <- rename_geom_aes(
-  GeomChordFeatureBase, renames = c(fill = "feature_fill")
-)
+feature_polygon_geom <- GeomChordFeatureBase
 feature_geom_defaults <- feature_polygon_geom$default_aes
 feature_geom_defaults$feature_shape <- "arrow"
 feature_geom <- ggplot2::ggproto(
   "GeomChordFeature", feature_polygon_geom,
   default_aes = feature_geom_defaults,
+  optional_aes = "shape",
   extra_params = c(
     "na.rm", "segment_boundaries", "boundary_colour",
     "boundary_linewidth", "boundary_linetype", "adaptive_outline"
@@ -24,6 +23,7 @@ feature_geom <- ggplot2::ggproto(
                         boundary_linewidth = .25,
                         boundary_linetype = "22",
                         adaptive_outline = TRUE) {
+    boundary_colour <- boundary_colour %||% (data$colour[1L] %||% "black")
     component <- data$.component %||% rep("polygon", nrow(data))
     polygons <- data[is.na(component) | component == "polygon", , drop = FALSE]
     boundaries <- data[component == "boundary", , drop = FALSE]
@@ -36,11 +36,6 @@ feature_geom <- ggplot2::ggproto(
           "chevron", "lollipop"
         )
         polygons$linewidth[small] <- pmin(polygons$linewidth[small], .18)
-      }
-      if ("feature_fill_explicit" %in% names(polygons)) {
-        explicit <- !is.na(polygons$feature_fill_explicit) &
-          nzchar(polygons$feature_fill_explicit)
-        polygons$fill[explicit] <- polygons$feature_fill_explicit[explicit]
       }
       if ("feature_shape" %in% names(polygons)) {
         line_only <- polygons$feature_shape %in% "capped_line"
@@ -84,487 +79,242 @@ feature_geom <- ggplot2::ggproto(
 
 #' Normalize common and mapped feature roles once at build time
 #' @noRd
-ggchord_feature_data <- function(data, fixed_shape = "arrow",
+ggchord_feature_data <- function(data, fixed_shape = "block",
                                  expand_segments = TRUE) {
-  direction_column <- intersect(c("directionality", "direction"), names(data))[1L]
-  if (!is.na(direction_column)) {
-    strand <- ggchord_direction_strand(data[[direction_column]])
-    if (anyNA(strand)) {
-      ggchord_stop(
-        "geom_feature(): direction must be forward, reverse, ",
-        "bidirectional, none, or nondirectional"
-      )
-    }
-    if ("strand" %in% names(data)) {
-      conflicts <- which(is.na(data$strand) | as.character(data$strand) != strand)
-      if (length(conflicts)) ggchord_stop("geom_feature(): strand and ", direction_column,
-        " disagree at row(s) ", paste(utils::head(conflicts, 10L), collapse = ", "))
-    }
-    data$strand <- strand
+  ggchord_require_columns(data, c("accver", "start", "end"), "geom_feature()")
+  if (!"strand" %in% names(data)) data$strand <- rep(".", nrow(data))
+  for (coordinate in c("start", "end")) {
+    if (is.factor(data[[coordinate]]))
+      data[[coordinate]] <- as.character(data[[coordinate]])
+    data[[coordinate]] <- suppressWarnings(as.numeric(data[[coordinate]]))
   }
-  # Factor levels are labels for genomic coordinates, never integer codes.
-  # Normalize them before segment expansion also examines the parent interval.
-  for (coordinate in intersect(c("start", "end"), names(data))) {
-    if (is.factor(data[[coordinate]])) {
-      data[[coordinate]] <- as.numeric(as.character(data[[coordinate]]))
-    }
+  if (any(!is.finite(data$start) | !is.finite(data$end) |
+      data$start < 1 | data$end < data$start)) {
+    ggchord_stop("geom_feature(): start and end must be ordered, positive finite coordinates")
   }
   if (isTRUE(expand_segments)) data <- ggchord_expand_feature_segments(data)
-  required <- c("accver", "start", "end", "strand")
-  missing <- setdiff(required, names(data))
-  if (length(missing)) {
-    ggchord_stop(
-      "geom_feature(): data is missing required column(s): ",
-      paste(missing, collapse = ", ")
-    )
-  }
-  feature_value <- if (all(c("feature_color", "anno") %in% names(data))) {
-    # Built-in common features carry their authoring colour and use their
-    # biological name as the palette key; this preserves distinctions such as
-    # AmpR/TcR versus rop even though all three are CDS records.
-    data$anno
-  } else if ("feature_type" %in% names(data)) {
-    data$feature_type
-  } else if ("type" %in% names(data)) {
-    data$type
-  } else if ("category" %in% names(data)) {
-    data$category
-  } else if ("anno" %in% names(data)) {
-    data$anno
-  } else {
-    rep(NA_character_, nrow(data))
-  }
   out <- as.data.frame(data, stringsAsFactors = FALSE)
   out$accver <- as.character(out$accver)
-  out$start <- as.numeric(out$start)
-  out$end <- as.numeric(out$end)
   out$strand <- as.character(out$strand)
+  out$strand[is.na(out$strand)] <- "."
+  if (any(!out$strand %in% c("+", "-", ".")))
+    ggchord_stop("geom_feature(): strand must be '+', '-' or '.'")
   out$.feature_biological_strand <- out$strand
-  out$strand[out$strand %in% c(".", "+/-")] <- "+"
-  out$anno <- as.character(feature_value)
-  out$label <- if ("feature_label" %in% names(out)) {
-    as.character(out$feature_label)
-  } else if ("label" %in% names(out)) {
-    as.character(out$label)
-  } else {
-    out$anno
-  }
-  if (!"feature_class" %in% names(out)) {
-    semantic_source <- if ("feature_type" %in% names(out)) {
-      out$feature_type
-    } else if ("type" %in% names(out)) {
-      out$type
-    } else if ("category" %in% names(out)) {
-      out$category
-    } else out$anno
-    out$feature_class <- ggchord_feature_classes(semantic_source)
-  } else {
-    out$feature_class <- ggchord_feature_classes(out$feature_class)
-  }
-  out$.feature_shape_raw <- if ("feature_shape" %in% names(out)) {
-    as.character(out$feature_shape)
-  } else {
-    rep(fixed_shape, nrow(out))
-  }
-  nondirectional <- out$.feature_biological_strand == "." &
-    out$.feature_shape_raw == "arrow"
-  out$.feature_shape_raw[nondirectional] <- "block"
-  allowed <- c(
-    "arrow", "compact_arrow", "promoter_arrow", "primer_arrow", "marker",
-    "block", "capped_line", "primer_arc", "chevron", "lollipop"
-  )
-  if (anyNA(out$.feature_shape_raw) ||
-      (!is.null(fixed_shape) && any(!out$.feature_shape_raw %in% allowed))) {
-    ggchord_stop(
-      "geom_feature(): unknown feature shape"
-    )
-  }
-  if (!"type" %in% names(out)) out$type <- out$anno
-  if ("display_priority" %in% names(out)) {
-    if (!is.numeric(out$display_priority) || anyNA(out$display_priority) ||
-        any(!is.finite(out$display_priority))) {
-      ggchord_stop("geom_feature(): display_priority must be finite numeric values")
-    }
-  }
-  if ("prioritized_display" %in% names(out) &&
-      (!is.logical(out$prioritized_display) || anyNA(out$prioritized_display))) {
-    ggchord_stop("geom_feature(): prioritized_display must contain TRUE or FALSE")
-  }
+  # Legacy geometry templates require a traversal direction even for
+  # undirected polygons. The biological strand remains available separately.
+  out$strand[out$strand == "."] <- "+"
+  out$anno <- rep(NA_character_, nrow(out))
+  out$.feature_shape_raw <- if (is.null(fixed_shape)) {
+    out$feature_shape
+  } else rep(fixed_shape, nrow(out))
   out
 }
 
-#' Draw generic genomic features
-#'
-#' A general layer for CDS, tRNA, rRNA, repeat, CRISPR, promoter or user-defined
-#' features. It supports directional arrows, blocks, notched chevrons and
-#' lollipops, all generated against the sequence's real local curve. Feature
-#' fill and geometry use independent role-specific scales.
-#'
-#' @param mapping Optional aesthetic mapping. Role aesthetics such as
-#'   \code{accver}, \code{start}, \code{end} and \code{strand} may rename
-#'   input columns. Starting visual mappings read the same source rows.
-#'   A source column keeps its original value when a domain role has the
-#'   same name. Expressions that also use a generated field, such as
-#'   `.component`, combine each vertex with its source row. Staged visual
-#'   mappings can use [ggplot2::after_stat()] and [ggplot2::after_scale()].
-#' @param preset Choose how intervals are drawn. The default, `"default"`,
-#'   draws all rows of the selected table on the backbone and accepts unknown
-#'   strands. Use `"gene"` for directed genes with `+` or `-` strands. It
-#'   colours arrows by strand and, when inheriting annotations, selects gene
-#'   and CDS rows. Explicit layer data supplies its own rows. Use `"plasmid"`
-#'   to place overlapping intervals in lanes inside the circle, with wider
-#'   arrowheads and no feature legend by default. It uses the same source
-#'   colours as the general layer when available. The examples give the
-#'   equivalent general-layer call. Explicit layer arguments override these
-#'   preset defaults.
-#' @param id Optional plot-unique layer ID for label anchors and layout export.
-#' @param data data.frame with \code{accver}, \code{start}, \code{end} and
-#'   \code{strand}; optional \code{type}, \code{category} and \code{label}.
-#'   Factor \code{start}/\code{end} columns use their numeric labels, not
-#'   their internal level codes. Coordinates must resolve to finite numbers.
-#'   `display_priority` or logical `prioritized_display`. As an alternative to
-#'   \code{strand}, \code{directionality} or \code{direction} may contain
-#'   \code{"forward"}, \code{"reverse"}, \code{"bidirectional"}, or
-#'   \code{"none"}.
-#'   With one prepared annotation table, the default preset draws all rows.
-#'   The gene preset inherits rows classified as gene or CDS. When several
-#'   tables qualify, pass the selected table explicitly.
-#' @param shape Fixed feature geometry. An explicitly supplied shape takes
-#'   precedence over \code{aes(feature_shape = ...)}: \code{"arrow"},
-#'   \code{"compact_arrow"}, \code{"promoter_arrow"},
-#'   \code{"primer_arrow"}, \code{"marker"}, \code{"block"},
-#'   \code{"capped_line"}, \code{"primer_arc"}, \code{"chevron"}, or
-#'   \code{"lollipop"}. When omitted, use the layer's or inherited
-#'   \code{feature_shape} mapping if present, with \code{"arrow"} as the default.
-#'   Use \code{aes(feature_shape = type)} together with
-#'   \code{scale_feature_shape_manual()} to map categories to geometry.
-#' @param width Optional numeric/vector/list controlling width in the
-#'   shared feature geometry engine. In a circular feature-label composition,
-#'   the base width responds to final label size within bounded limits.
-#' @param arrow_head_length,arrow_head_width Arrow-head dimensions in the
-#'   sequence-local frame. Values above one for
-#'   `arrow_head_width` create a protruding block-arrow head.
-#' @param arrow_head_style Arrowhead construction: `"shouldered"` keeps the
-#'   requested protruding head, `"flush"` keeps it level with the body, and
-#'   `"triangle"` draws a full triangular wedge.
-#' @param short_feature Fallback for arrows too short to hold their requested
-#'   head: an automatically compressed directional glyph, a wedge, or a block.
-#' @param segment_boundaries Draw explicit internal marks carried by a
-#'   segmented feature. Contiguous source-segment joins use dotted dividers;
-#'   a non-solid segment-level \code{line_style} may override them, while a
-#'   `cleavage_arrows` coordinate adds or merges a biological cut mark. These
-#'   marks never create additional arrowheads.
-#' @param boundary_colour,boundary_linewidth,boundary_linetype Appearance of
-#'   internal segment joins.
-#' @param position Feature placement. Use `"identity"`, `"strand"`,
-#'   [position_strand()], [position_offset()], or
-#'   [position_feature_stack()].
-#' @param show.legend,inherit.aes Standard ggplot2 layer arguments.
-#' @param ... Additional fixed polygon aesthetics.
-#'
-#' @return A ggplot2 layer.
-#' @export
-#'
-#' @examples
-#' reference <- data.frame(accver = "A", length = 100)
-#' intervals <- data.frame(
-#'   accver = "A", start = c(10, 60), end = c(35, 85), strand = "+",
-#'   anno = c("alpha", "beta")
-#' )
-#' ggchord(reference) +
-#'   geom_seq() +
-#'   geom_feature(data = intervals) +
-#'   coord_circular()
-#'
-#' # Draw the two curated pUC19 intervals as blocks.
-#' features <- find_common_features(
-#'   plasmid_example_pUC19, features = c("AmpR", "ori"), mode = "auto"
-#' )
-#' backbone <- ggchord(plasmid_example_pUC19) +
-#'   geom_seq()
-#' backbone +
-#'   geom_feature(data = features, shape = "block") +
-#'   coord_circular()
-#'
-#' # The gene preset selects the AmpR CDS from the prepared annotations.
-#' prepared <- prepare_ggchord_data(plasmid_example_pUC19, feature_data = features)
-#' ggchord(prepared) +
-#'   geom_seq() +
-#'   geom_feature(preset = "gene") +
-#'   coord_collinear()
-#'
-#' # The plasmid preset and its equivalent general-layer settings.
-#' backbone +
-#'   geom_feature(data = features, preset = "plasmid") +
-#'   coord_circular()
-#' backbone +
-#'   geom_feature(
-#'     data = features, width = 0.058,
-#'     arrow_head_length = 0.068, arrow_head_width = 1.42,
-#'     position = position_feature_stack(
-#'       spacing = 0.10, base_position = position_offset(-0.10)
-#'     ),
-#'     show.legend = FALSE
-#'   ) +
-#'   coord_circular()
-#'
-#' # Fill describes the feature source; ref selects its sequence.
-#' references <- data.frame(accver = c("A", "B"), length = 100)
-#' calls <- data.frame(accver = c("u", "v"), ref = c("A", "B"),
-#'                     start = c(10, 20), end = c(18, 35), strand = "+")
-#' ggchord(references, aes(accver = ref, fill = accver)) +
-#'   geom_feature(data = calls) +
-#'   coord_collinear()
-geom_feature <- function(mapping = NULL, data = NULL,
-                         shape = "arrow",
-                         width = NULL,
-                         arrow_head_length = 0.04,
-                         arrow_head_width = 1,
-                         arrow_head_style = c("shouldered", "flush", "triangle"),
-                         short_feature = c("auto", "wedge", "block"),
-                         segment_boundaries = TRUE,
-                         boundary_colour = "#666666",
-                         boundary_linewidth = .25,
-                         boundary_linetype = "22",
-                         position = "identity",
-                         show.legend = TRUE,
-                         inherit.aes = TRUE,
-                         ..., id = NULL, preset = c("default", "gene", "plasmid")) {
-  ggchord_check_argument_names(sys.call(), sys.function())
-  preset <- match.arg(preset)
-  if (preset != "default") {
-    call <- match.call()
-    call[[1L]] <- if (preset == "gene") ggchord_gene_layer else ggchord_plasmid_layer
-    call$preset <- NULL
-    return(eval(call, parent.frame()))
-  }
-  old_error <- ggchord_disable_debug()
-  on.exit(options(error = old_error), add = TRUE)
-  shape_explicit <- !missing(shape)
-  feature_shape <- shape
-  feature_width <- width
-  mapping <- ggchord_normalize_mapping(mapping)
-  if (shape_explicit && !is.null(mapping)) mapping$feature_shape <- NULL
-  dots <- ggchord_colour_dots(list(...), "geom_feature()")
-  ggchord_reject_retired(dots, "geom_feature()", c(
-    feature_shape = "shape (fixed) or aes(feature_shape = ...) (mapped)",
-    feature_width = "width",
-    feature_offset = "position = position_strand(offset = ...)"))
-  arrow_head_style <- match.arg(arrow_head_style)
-  short_feature <- match.arg(short_feature)
-  position_object <- ggchord_as_feature_position(position, "geom_feature()")
-  if (!is.numeric(arrow_head_length) || length(arrow_head_length) != 1L ||
-      !is.finite(arrow_head_length) || arrow_head_length < 0 ||
-      !is.numeric(arrow_head_width) || length(arrow_head_width) != 1L ||
-      !is.finite(arrow_head_width) || arrow_head_width <= 0) {
-    ggchord_stop("geom_feature(): arrow head dimensions must be finite non-negative/positive numbers")
-  }
-  if (!is.logical(segment_boundaries) || length(segment_boundaries) != 1L ||
-      is.na(segment_boundaries) || !is.character(boundary_colour) ||
-      length(boundary_colour) != 1L || !is.numeric(boundary_linewidth) ||
-      length(boundary_linewidth) != 1L || !is.finite(boundary_linewidth) ||
-      boundary_linewidth < 0) {
-    ggchord_stop("geom_feature(): invalid segment-boundary appearance")
-  }
-  ggchord_reject_retired(dots, "geom_feature()", c(
-    type = "aes(feature_type = ...)",
-    category = "aes(feature_fill = ...)",
-    label = "aes(feature_label = ...)",
-    feature_colors = "scale_feature_fill_manual(values = ...)",
-    feature_order = "scale_feature_fill_manual(limits = ...)",
-    show_legend = "show.legend",
-    legend_position = "guides(feature_fill = guide_ggchord_legend(position = ...))"
-  ))
+ggchord_feature_shapes <- c(
+  "block", "arrow", "compact_arrow", "promoter_arrow", "primer_arrow",
+  "marker", "capped_line", "primer_arc", "chevron", "lollipop"
+)
 
-  allowed_shapes <- c(
-    "arrow", "compact_arrow", "promoter_arrow", "primer_arrow", "marker",
-    "block", "capped_line", "primer_arc", "chevron", "lollipop"
-  )
-  shape_mapped <- !is.null(mapping) && "feature_shape" %in% names(mapping)
-  if (!shape_mapped &&
-      (!is.character(feature_shape) || length(feature_shape) != 1L ||
-       is.na(feature_shape) || !feature_shape %in% allowed_shapes)) {
-    ggchord_stop(
-      "geom_feature(): unknown shape"
-    )
-  }
-  roles <- c(
-    "accver", "start", "end", "strand", "feature_type", "feature_label",
-    "feature_shape"
-  )
-  placeholder <- data.frame(
-    accver = character(), start = numeric(), end = numeric(),
-    strand = character(), anno = character(), label = character(),
-    type = character(), .feature_shape_raw = character()
-  )
+ggchord_feature_heads <- c("arrow", "compact_arrow", "promoter_arrow",
+  "primer_arrow", "primer_arc")
 
-  visual_mapping <- mapping
-  if (!is.null(visual_mapping)) {
-    visual_mapping <- visual_mapping[
-      setdiff(names(visual_mapping), roles)
-    ]
+# Convert absolute device units without opening a graphics device. Keep the
+# names in a flexible parameter so layout can resolve them against instances.
+ggchord_physical_mm <- function(value, caller, nonnegative = FALSE) {
+  if (inherits(value, "unit")) {
+    conversion <- c(mm = 1, cm = 10, inches = 25.4, points = 25.4 / 72.27,
+      picas = 25.4 / 6.0225, bigpts = 25.4 / 72)
+    unit_type <- grid::unitType(value)
+    if (any(!unit_type %in% names(conversion)))
+      ggchord_stop(caller, ": use absolute physical units")
+    value <- as.numeric(value) * unname(conversion[unit_type])
   }
-  if (shape_mapped) {
-    visual_mapping[["feature_shape"]] <- as.name(".feature_shape_raw")
-  }
-  ggchord_check_geom_params(dots, feature_geom, "geom_feature()", position_object)
-  lyr <- ggplot2::layer(
-    data = placeholder,
-    mapping = ggplot2::aes(
-      x = x, y = y, group = group, feature_fill = anno,
-      feature_shape = .feature_shape_raw
-    ),
-    stat = "identity", geom = feature_geom,
-    position = position_object,
-    show.legend = if (identical(show.legend, TRUE)) {
-      c(feature_fill = TRUE, feature_shape = shape_mapped, colour = FALSE)
-    } else show.legend,
-    inherit.aes = inherit.aes, check.param = FALSE,
-    key_glyph = dots$key_glyph %||% key_glyph_feature,
-    params = c(
-      if (!("colour" %in% names(dots))) list(colour = "#353A3E") else list(),
-      if (!("linewidth" %in% names(dots))) list(linewidth = 0.25) else list(),
-      list(
-        segment_boundaries = segment_boundaries,
-        boundary_colour = boundary_colour,
-        boundary_linewidth = boundary_linewidth,
-        boundary_linetype = boundary_linetype,
-        adaptive_outline = !("linewidth" %in% names(dots) ||
-          (!is.null(mapping) && "linewidth" %in% names(mapping)))
-      ),
-      dots
-    )
-  )
-  lyr$ggchord_type <- "gene_poly"
-  lyr$ggchord_params <- list(
-    type = "gene", id = id,
-    style_defaults = c(colour = !"colour" %in% names(dots),
-      linewidth = !"linewidth" %in% names(dots), feature_shape = !shape_explicit),
-    gene_width = feature_width,
-    arrow_head_length = as.numeric(arrow_head_length),
-    arrow_head_width = as.numeric(arrow_head_width),
-    arrow_head_style = arrow_head_style,
-    short_feature = short_feature,
-    feature_position = position_object,
-    feature_role = "feature",
-    gene_color_scheme = "manual",
-    gene_colors = NULL, gene_order = NULL,
-    is_feature = TRUE,
-    feature_shape_mapped = shape_mapped,
-    feature_shape_default_legend = identical(show.legend, TRUE),
-    feature_shape = feature_shape,
-    feature_fill_mapping = visual_mapping[["feature_fill"]],
-    feature_fill_fixed = dots$feature_fill %||% NULL
-  )
-  if (!"feature_fill" %in% names(visual_mapping))
-    lyr$ggchord_params$gene_colors <- ggchord_feature_source_palette(data)
-  lyr <- ggchord_capture_layer_input(lyr, data, mapping, roles)
-  fixed_shape <- if (shape_mapped) NULL else feature_shape
-  lyr$ggchord_input_transform <- function(x) {
-    if (shape_explicit) x$feature_shape <- rep(feature_shape, nrow(x))
-    ggchord_feature_data(x, fixed_shape = fixed_shape)
-  }
-  lyr$ggchord_params$gene_data_override <- NULL
-  if (!"feature_fill" %in% names(visual_mapping)) {
-    lyr$mapping[["feature_fill"]] <- as.name("anno")
-  }
-  if (shape_mapped && !"feature_fill" %in% names(visual_mapping)) {
-    # Both aesthetics describe the same feature type in the common case.
-    # Using the same source column lets ggplot2 merge fill and shape into one
-    # compact legend instead of printing two redundant "Feature" guides.
-    lyr$mapping[["feature_fill"]] <- as.name(".feature_shape_raw")
-  }
-  if (shape_mapped) lyr$mapping[["feature_shape"]] <- as.name(".feature_shape_raw")
-  if (!shape_mapped) lyr$aes_params$feature_shape <- feature_shape
-  lyr$ggchord_obstacle_provider <- ggchord_entity_obstacles
-  lyr
+  if (is.list(value)) return(lapply(value, ggchord_physical_mm,
+    caller = caller, nonnegative = nonnegative))
+  if (!is.numeric(value) || !length(value) || any(!is.finite(value)) ||
+      (nonnegative && any(value < 0))) ggchord_stop(caller, ": invalid physical size")
+  value
 }
 
-# Saved layers from before the shape flag keep the constructor's checked
-# `shape_explicit` in the input transform's own environment. The gene preset
-# drops that transform only when it records no shape override.
-ggchord_restore_feature_shape_defaults <- function(layer) {
-  params <- layer$ggchord_params
-  if (!identical(layer$ggchord_type, "gene_poly") ||
-      "feature_shape" %in% names(params$style_defaults)) return(layer)
-  transform <- layer$ggchord_input_transform
-  # Saved layer copies can already have a ggproto wrapper around the closure.
-  while (is.function(transform) && inherits(transform, "ggproto_method")) {
-    inner <- get0("f", envir = environment(transform), inherits = FALSE)
-    if (identical(inner, transform)) break
-    transform <- inner
+ggchord_units_per_mm <- function(axis = NULL) {
+  units <- ggchord_render_context()$units_per_mm
+  if (!is.null(axis)) units <- units[axis]
+  units <- units[is.finite(units) & units > 0]
+  if (length(units)) max(units) else .35 / 25.4
+}
+
+ggchord_identity_stat <- function(stat) {
+  identical(stat, "identity") || inherits(stat, "StatIdentity")
+}
+
+# Split source Stat parameters from those used by the geometry renderer.
+ggchord_split_source_stat <- function(stat, dots, geom) {
+  if (ggchord_identity_stat(stat)) return(list(geom = dots))
+  if (!inherits(stat, "Stat")) {
+    stat <- ggplot2::layer(geom = "blank", stat = stat, position = "identity")$stat
   }
-  frame <- if (is.function(transform)) environment(transform)
-  explicit <- if (isTRUE(params$is_primer)) {
-    TRUE
-  } else if (identical(params$gene_shape_override, FALSE)) {
-    FALSE
-  } else if (is.environment(frame)) {
-    get0("shape_explicit", envir = frame, inherits = FALSE)
-  }
-  if (!is.logical(explicit) || length(explicit) != 1L || is.na(explicit)) return(layer)
-  layer$ggchord_params$style_defaults["feature_shape"] <- !explicit
-  if (!explicit && isTRUE(params$is_feature) && is.environment(frame)) {
-    legend <- get0("show.legend", envir = frame, inherits = FALSE)
-    layer$ggchord_params$feature_shape_default_legend <- identical(legend, TRUE)
-  }
+  stat_keys <- intersect(names(dots), stat$parameters(TRUE))
+  list(stat = list(stat = stat, params = dots[stat_keys]),
+    geom = dots[setdiff(names(dots), stat_keys)])
+}
+
+# A domain Stat receives source roles and source-row membership.
+ggchord_run_source_stat <- function(data, specification, roles, caller) {
+  if (is.null(specification) || !nrow(data)) return(data)
+  stat <- specification$stat
+  data$source_row <- seq_len(nrow(data))
+  data$PANEL <- rep(1L, nrow(data))
+  data$group <- data$group %||% rep(-1L, nrow(data))
+  params <- c(specification$params, list(na.rm = FALSE))
+  params <- stat$setup_params(data, params)
+  data <- stat$setup_data(data, params)
+  needed <- setdiff(stat$required_aes, names(data))
+  if (length(needed)) ggchord_stop(caller, ": Stat requires ", paste(needed, collapse = ", "))
+  axes <- list(x = ggplot2::scale_x_continuous(), y = ggplot2::scale_y_continuous())
+  for (axis in intersect(c("x", "y"), names(data))) axes[[axis]]$train(data[[axis]])
+  param_names <- stat$parameters()
+  computed <- do.call(stat$compute_panel, c(list(data = data, scales = axes),
+    params[intersect(names(params), param_names)]))
+  if (!is.data.frame(computed)) ggchord_stop(caller, ": Stat must return a data frame")
+  ggchord_require_columns(computed, roles, caller)
+  computed
+}
+
+ggchord_feature_layer <- function(mapping, data, shape, fixed_shape, thickness,
+    stat, position, dots, na.rm, show.legend, inherit.aes, id) {
+  caller <- "geom_feature()"
+  if (!is.character(shape) || length(shape) != 1L || !shape %in% ggchord_feature_shapes)
+    ggchord_stop(caller, ": unknown shape")
+  thickness <- ggchord_physical_mm(thickness, "thickness", nonnegative = TRUE)
+  if (any(unlist(thickness, use.names = FALSE) <= 0))
+    ggchord_stop(caller, ": thickness must be positive")
+  position <- ggchord_as_feature_position(position, caller)
+  dots <- ggchord_colour_dots(dots, caller)
+  head_args <- c("head_length", "head_width", "head_style", "short_feature")
+  boundary_args <- c("boundary_colour", "boundary_linewidth", "boundary_linetype")
+  custom <- c(head_args, "unknown_strand", "segment_boundaries", boundary_args)
+  explicit_heads <- intersect(head_args, names(dots))
+  if (fixed_shape && length(explicit_heads) && !shape %in% ggchord_feature_heads)
+    ggchord_stop(caller, ": ", explicit_heads[1L], " requires a headed geometry")
+  if (length(intersect(boundary_args, names(dots))) &&
+      !isTRUE(dots$segment_boundaries))
+    ggchord_stop(caller, ": boundary styles require segment_boundaries = TRUE")
+  head_length <- ggchord_physical_mm(dots$head_length %||% 2, "head_length", TRUE)
+  head_width <- dots$head_width
+  if (!is.null(head_width)) head_width <- ggchord_physical_mm(head_width, "head_width", TRUE)
+  if (length(head_length) != 1L || head_length <= 0 ||
+      (!is.null(head_width) && (length(head_width) != 1L || head_width <= 0)))
+    ggchord_stop(caller, ": head dimensions must be positive scalars")
+  head_style <- match.arg(dots$head_style %||% "shouldered",
+    c("shouldered", "flush", "triangle"))
+  short <- match.arg(dots$short_feature %||% "shrink", c("shrink", "block", "error"))
+  unknown <- match.arg(dots$unknown_strand %||% "undirected", c("undirected", "error"))
+  geom_dots <- dots[setdiff(names(dots), custom)]
+  ggchord_check_geom_params(geom_dots, feature_geom, caller, position, stat)
+  geom_params <- ggchord_split_source_stat(stat, geom_dots, feature_geom)
+  mapping <- ggchord_normalize_mapping(mapping)
+  if (fixed_shape) mapping$shape <- NULL
+  shape_mapped <- "shape" %in% names(mapping)
+  if (shape_mapped) names(mapping)[names(mapping) == "shape"] <- "feature_shape"
+  layer <- ggplot2::layer(
+    data = data.frame(x = numeric(), y = numeric(), group = integer()),
+    mapping = aes(x = x, y = y, group = group),
+    stat = "identity", geom = feature_geom, position = position,
+    show.legend = show.legend, inherit.aes = inherit.aes, check.param = FALSE,
+    params = c(list(na.rm = na.rm,
+      segment_boundaries = isTRUE(dots$segment_boundaries),
+      boundary_colour = dots$boundary_colour,
+      boundary_linewidth = dots$boundary_linewidth %||% 0.3,
+      boundary_linetype = dots$boundary_linetype %||% 1,
+      adaptive_outline = FALSE), geom_params$geom)
+  )
+  layer$ggchord_type <- "gene_poly"
+  layer$ggchord_params <- list(
+    type = "gene", id = id, is_feature = TRUE,
+    style_defaults = c(feature_shape = !fixed_shape),
+    feature_mm = thickness, physical_layout = TRUE,
+    head_length_mm = head_length, head_width_mm = head_width,
+    head_args = explicit_heads, arrow_head_style = head_style, short_feature = short,
+    unknown_strand = unknown, feature_position = position,
+    gene_color_scheme = "manual", feature_role = "feature",
+    feature_shape_mapped = shape_mapped,
+    feature_shape = shape, user_feature_fill = TRUE,
+    feature_fill_mapping = mapping$fill, feature_fill_fixed = dots$fill,
+    source_stat = geom_params$stat
+  )
+  layer <- ggchord_capture_layer_input(layer, data, mapping,
+    c("accver", "start", "end", "strand", "feature_shape"))
+  if (shape_mapped) layer$mapping$shape <- as.name(".feature_shape_raw")
+  layer$ggchord_input_transform <- function(x)
+    ggchord_feature_data(x, fixed_shape = if (shape_mapped) NULL else shape)
+  layer$ggchord_obstacle_provider <- ggchord_entity_obstacles
   layer
 }
 
-# A plot mapping becomes known at registration, after the constructor has
-# provisionally set a fixed arrow for layers without a local shape mapping.
+#' Draw sequence features
+#' @export
+#' @param mapping Aesthetic mapping from `ggplot2::aes()`. A local mapping overrides the matching inherited channel.
+#' @param data Observation table or a data function. For ggchord layers, provide the required data-role columns.
+#' @param shape Default shape. An explicitly supplied fixed shape takes priority over its mapping.
+#' @param thickness Physical thickness in mm or absolute grid units. Named values select references.
+#' @param stat A compatible ggplot2 Stat or its name. The default uses the supplied records.
+#' @param position A compatible Position for placement of the layer geometry.
+#' @param ... Additional named visual styles and parameters accepted by this layer.
+#' @param na.rm Suppress warnings for missing observations that the layer can omit.
+#' @param show.legend Logical or named logical indicating whether the layer contributes legend keys.
+#' @param inherit.aes Whether to inherit plot mappings and evaluate them on the layer data.
+#' @param id Optional plot-local layer identifier. Name a layer explicitly to scope a scale, anchor a label or export it.
+#' @return A ggplot2 layer for addition to a plot.
+#' @details Provide one-based closed intervals with `accver`, `start` and `end`. A strand or disjoint segments can be supplied where appropriate. The gene shortcut defaults to an arrow and strand placement. The primer shortcut defaults to a directional narrow path, and the region shortcut defaults to a translucent block.
+#' @examples
+#' library(ggplot2)
+#'
+#' seqs <- data.frame(
+#'   accver = c("A", "B"), length = c(1000, 800),
+#'   sequence_unit = "bp", topology = "linear"
+#' )
+#'
+#' genes <- data.frame(
+#'   accver = c("A", "A", "B"), feature_id = c("g1", "g2", "g3"),
+#'   start = c(100, 400, 150), end = c(240, 620, 380),
+#'   strand = c("+", "-", "+"), label = c("g1", "g2", "g3"),
+#'   type = c("CDS", "tRNA", "CDS")
+#' )
+#'
+#' gene_colours <- c(CDS = "#187B77", tRNA = "#CC7D3A")
+#'
+#' ggchord(seqs) +
+#'   geom_seq() +
+#'   geom_feature(
+#'     aes(shape = type, fill = type), data = genes,
+#'     thickness = c(A = 2.5, B = 1.5)
+#'   ) +
+#'   ggplot2::scale_shape_manual(values = c(CDS = "arrow", tRNA = "block")) +
+#'   ggplot2::scale_fill_manual(values = gene_colours) +
+#'   coord_collinear()
+geom_feature <- function(mapping = NULL, data = NULL, shape = "block",
+    thickness = 2, stat = "identity", position = "identity", ...,
+    na.rm = FALSE, show.legend = NA, inherit.aes = TRUE, id = NULL) {
+  ggchord_check_argument_names(sys.call(), sys.function())
+  ggchord_feature_layer(mapping, data, shape, !missing(shape), thickness,
+    stat, position, list(...), na.rm, show.legend, inherit.aes, id)
+}
+
+# A plot mapping becomes known after layer assembly. Project the standard
+# shape mapping once as a source role, and train its standard Scale below.
 ggchord_inherit_feature_shape <- function(layer) {
   params <- layer$ggchord_params
-  if (!identical(layer$ggchord_type, "gene_poly") ||
-      !isTRUE(params$style_defaults["feature_shape"]) ||
-      isTRUE(params$feature_shape_mapped) ||
-      is.null(layer$ggchord_input_mapping$feature_shape)) return(layer)
-  layer$ggchord_params$feature_shape_mapped <- TRUE
-  layer$ggchord_input_transform <- function(data) ggchord_feature_data(data, fixed_shape = NULL)
-  if (!isTRUE(params$is_feature)) {
-    layer$ggchord_params$gene_shape_override <- TRUE
+  if (!identical(layer$ggchord_type, "gene_poly")) return(layer)
+  mapping <- layer$ggchord_input_mapping
+  if (!isTRUE(params$style_defaults["feature_shape"])) {
+    layer$ggchord_input_mapping$shape <- NULL
     return(layer)
   }
-  layer$aes_params$feature_shape <- NULL
-  layer$mapping$feature_shape <- as.name(".feature_shape_raw")
-  if (is.null(layer$ggchord_input_mapping$feature_fill))
-    layer$mapping$feature_fill <- as.name(".feature_shape_raw")
-  if (isTRUE(params$feature_shape_default_legend)) layer$show.legend[["feature_shape"]] <- TRUE
+  if (isTRUE(params$feature_shape_mapped) || is.null(mapping$shape)) return(layer)
+  layer$ggchord_input_mapping$feature_shape <- mapping$shape
+  layer$ggchord_input_mapping$shape <- NULL
+  layer$ggchord_params$feature_shape_mapped <- TRUE
+  layer$ggchord_input_transform <- function(data) ggchord_feature_data(data, fixed_shape = NULL)
+  layer$mapping$shape <- as.name(".feature_shape_raw")
   layer
-}
-
-ggchord_plasmid_layer <- function(mapping = NULL, data = NULL,
-                                 shape = "arrow",
-                                 width = .058,
-                                 arrow_head_length = .068,
-                                 arrow_head_width = 1.42,
-                                 arrow_head_style = "shouldered",
-                                 short_feature = "auto",
-                                 segment_boundaries = TRUE,
-                                 boundary_colour = "#666666",
-                                 boundary_linewidth = .25,
-                                 boundary_linetype = "22",
-                                 position = NULL,
-                                 show.legend = FALSE,
-                                 inherit.aes = TRUE, ...) {
-  if (is.null(position)) {
-    position <- position_feature_stack(
-      spacing = .10, base_position = position_offset(-0.1)
-    )
-  }
-  args <- list(
-    mapping = mapping, data = data, shape = shape, width = width,
-    arrow_head_length = arrow_head_length,
-    arrow_head_width = arrow_head_width,
-    arrow_head_style = arrow_head_style,
-    short_feature = short_feature,
-    segment_boundaries = segment_boundaries,
-    boundary_colour = boundary_colour,
-    boundary_linewidth = boundary_linewidth,
-    boundary_linetype = boundary_linetype,
-    position = position, show.legend = show.legend,
-    inherit.aes = inherit.aes, ...
-  )
-  if (missing(shape)) args$shape <- NULL
-  do.call(geom_feature, args)
 }

@@ -2,62 +2,66 @@
 % Please edit documentation in R/geom-alignment-segment.R
 \name{geom_alignment_segment}
 \alias{geom_alignment_segment}
-\title{Draw HSP alignment segments}
+\title{Draw HSP alignments as Dotplot segments}
 \usage{
 geom_alignment_segment(
   mapping = NULL,
   data = NULL,
-  colour = "#59636D",
-  alpha = 0.6,
-  linewidth = 0.4,
-  linetype = 1,
+  stat = "identity",
   position = "identity",
+  ...,
+  na.rm = FALSE,
   show.legend = NA,
   inherit.aes = TRUE,
-  allow_repeated = FALSE,
-  ...,
   id = NULL
 )
 }
 \arguments{
-\item{mapping, data}{Standard ggplot2 mapping and layer data. Data defaults
-to the constructor's \code{ribbon_data}. Geometry roles are \code{qaccver},
-\code{saccver}, \code{qstart}, \code{qend}, \code{sstart}, and \code{send}.}
+\item{mapping}{Aesthetic mapping from \code{ggplot2::aes()}. A local mapping overrides the matching inherited channel.}
 
-\item{colour, alpha, linewidth, linetype}{Fixed styles. Mapped styles use
-\code{link_colour}, \code{link_alpha}, \code{link_linewidth} and \code{link_linetype}, with
-the corresponding \link{scale_link} functions. Explicit fixed styles win.}
+\item{data}{Observation table or a data function. For ggchord layers, provide the required data-role columns.}
 
-\item{position}{Only \code{"identity"} is supported: data adjustment would
-change the alignment endpoints.}
+\item{stat}{A compatible ggplot2 Stat or its name. The default uses the supplied records.}
 
-\item{show.legend, inherit.aes}{Standard ggplot2 layer arguments.}
+\item{position}{A compatible Position for placement of the layer geometry.}
 
-\item{allow_repeated}{Allow explicitly identified \code{source_hsp_id} records to
-be displayed more than once. All participating layers must opt in. Rows
-without declared IDs are never deduplicated by their values.}
+\item{...}{Additional named visual styles and parameters accepted by this layer.}
 
-\item{...}{Additional arguments passed to ggplot2's segment geometry.}
+\item{na.rm}{Suppress warnings for missing observations that the layer can omit.}
 
-\item{id}{Optional unique layer ID for layout and source exports.}
+\item{show.legend}{Logical or named logical indicating whether the layer contributes legend keys.}
+
+\item{inherit.aes}{Whether to inherit plot mappings and evaluate them on the layer data.}
+
+\item{id}{Optional plot-local layer identifier. Name a layer explicitly to scope a scale, anchor a label or export it.}
 }
 \value{
-A ggplot2 layer for a ggchord Dotplot.
+A ggplot2 layer for addition to a plot.
 }
 \description{
-Projects each standard ribbon-data row from \verb{(qstart, sstart)} to
-\verb{(qend, send)} in \code{\link[=coord_dotplot]{coord_dotplot()}}. All four endpoints are retained;
-reverse alignments must have normalized descending endpoints, as returned
-by \code{\link[=read_paf]{read_paf()}}. Explicit unknown \code{direction} or \code{strand} values are omitted
-with a warning and recorded in the layout connection report.
-This is an HSP-level view, not a reconstruction of mismatches or gaps.
+Draw HSP alignments as Dotplot segments
+}
+\details{
+Source references are \code{qaccver} and \code{saccver}. Point links consume \code{qpos} and \code{spos}. Interval links and alignment segments consume closed interval endpoints on both references. Supply reliable \code{qstrand} and \code{sstrand} or explicit relative direction when the geometry requires it.
 }
 \examples{
-library(dplyr)
-pair <- ribbon_data_example |>
-  filter(qaccver == "MT108731.1", saccver == "MT118296.1")
-ggchord(prepare_ggchord_data(seq_data_example, pair)) +
-  geom_alignment_segment(aes(link_colour = pident), linewidth = 1.2, alpha = 1) +
-  scale_link_colour_gradientn(colours = c("#31777C", "#66274F")) +
-  coord_dotplot()
+library(ggplot2)
+
+seqs <- data.frame(
+  accver = c("A", "B"), length = c(1000, 800),
+  sequence_unit = "bp", topology = "linear"
+)
+
+links <- data.frame(
+  qaccver = "A", saccver = "B", qstart = c(100, 400),
+  qend = c(240, 620), sstart = c(150, 450), send = c(290, 650),
+  qstrand = "+", sstrand = c("+", "-"),
+  pident = c(98, 90), link_id = c("l1", "l2")
+)
+
+ggchord(seqs) +
+  geom_alignment_segment(aes(colour = pident), data = links) +
+  layout_dotplot(x_order = "A", y_order = "B") +
+  coord_dotplot(ratio = 1) +
+  ggplot2::scale_colour_gradient(limits = c(0, 100))
 }
