@@ -8,6 +8,7 @@ import shutil
 import subprocess
 from functools import lru_cache
 from pathlib import Path
+from tempfile import TemporaryDirectory
 
 from . import ROOT
 
@@ -16,24 +17,23 @@ ASSETS = ROOT / 'website/assets'
 LOCALES = ('en', 'zh')
 NATIVE = {'facet_null', 'facet_wrap', 'facet_grid'}
 LABELS = {
-    'en': dict(reference='API reference', contents='On this page', categories='API categories',
+    'en': dict(reference='API reference',
         parameter_index='Parameter index', usage='Usage', arguments='Arguments', format='Type / format', default='Default',
         purpose='Description', value='Return value', details='Behavior', errors='Errors',
         roles='Data roles and aesthetics', examples='Examples', related='See also',
         source='Native ggplot2', download='Download example', filter='Filter by function name or purpose',
         search_parameter='Filter by parameter or function', flex='Flexible parameters only',
         overview='How the API fits together', input='Input tables', setup='Shared example data',
-        upstream='Native ggplot2 tools', skip='Skip to contents',
-        theme='Toggle appearance', language='Language',
+        upstream='Native ggplot2 tools',
         archived='Historical API address', current='Open the current API reference'),
-    'zh': dict(reference='API 参考', contents='本页目录', categories='接口分类',
+    'zh': dict(reference='API 参考',
         parameter_index='参数索引', usage='调用形式', arguments='参数', format='类型与格式', default='默认值',
         purpose='说明', value='返回值', details='行为规则', errors='错误与限制',
         roles='数据角色与视觉映射', examples='示例', related='相关接口',
         source='原生 ggplot2', download='下载示例', filter='按函数名或用途筛选',
         search_parameter='按参数或函数筛选', flex='只显示灵活参数',
         overview='接口如何配合', input='输入表', setup='共用示例数据',
-        upstream='原生 ggplot2 工具', skip='跳到正文', theme='切换外观', language='语种',
+        upstream='原生 ggplot2 工具',
         archived='历史 API 地址', current='打开当前 API 参考'),
 }
 GRAMMAR = {
@@ -78,10 +78,6 @@ def write(path, content):
 
 def write_json(path, data):
     write(path, json.dumps(data, ensure_ascii=False, indent=2) + '\n')
-
-
-def label(lang, name):
-    return LABELS[lang][name]
 
 
 def link(href, name):
@@ -144,8 +140,10 @@ def section(id, title, body):
 
 
 def snippet(content, kind, caption):
+    # pkgdown's article highlighter expands literal tabs, including tabs in
+    # file-format fixture strings. Keep the code text intact for the copy action.
     return (f'<details class="code-disclosure" data-code-kind="{kind}" open>'
-            f'<summary>{html.escape(caption)}</summary><pre><code>{html.escape(content)}'
+            f'<summary>{html.escape(caption)}</summary><pre class="downlit"><code>{html.escape(content)}'
             '</code></pre></details>')
 
 
@@ -181,52 +179,39 @@ def prepare_examples(structure):
     return scripts
 
 
-def frame(lang, relative, title, heading, sidebar, body, groups, navbar, integrated):
-    other = 'zh' if lang == 'en' else 'en'
-    deep = len(Path(relative).parts) - 1
-    prefix = '../' * deep
-    shared = '../' * (deep + 1)
-    logo = f'{shared}assets/logo.svg'
-    nav = (f'<a class="api-brand" href="{prefix}{"index.html" if integrated else "reference/index.html"}">'
-           f'<img src="{logo}" width="36" height="36" alt="">ggchord</a>')
-    if integrated:
-        nav += ''.join(f'<a href="{prefix}{href}">{html.escape(name)}</a>' for href, name in navbar)
-    nav += (f'<a aria-current="page" href="{prefix}reference/index.html">{label(lang, "reference")}</a>'
-            f'<a href="{prefix}parameter-atlas.html">{label(lang, "parameter_index")}</a>')
-    language = '现代汉语' if lang == 'en' else 'English'
-    group_links = ''.join(f'<li>{link(prefix + "reference/index.html#" + key, name)}</li>' for key, name in groups)
-    left = f'<nav class="api-categories" aria-label="{label(lang, "categories")}"><ul>{group_links}</ul></nav>'
-    right = (f'<nav class="api-outline" aria-label="{label(lang, "contents")}"><h2>{label(lang, "contents")}</h2>'
-             f'<ul>{"".join(f"<li>{link(chr(35) + key, name)}</li>" for key, name in sidebar)}</ul></nav>') if sidebar else ''
-    return f'''<!doctype html>
-<html lang="{"zh-Hans" if lang == "zh" else "en"}">
-<head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>{html.escape(title)} · ggchord</title>
-<link rel="icon" href="{shared}assets/favicon.png">
-<link rel="stylesheet" href="{shared}assets/site.css">
-<link rel="stylesheet" href="{shared}assets/api-reference.css">
-<script src="{shared}assets/api-reference.js" defer></script>
-<script src="{shared}assets/site.js" defer></script>
-</head>
-<body class="api-manual" data-lang="{lang}" data-kind="api" data-module="reference">
-<a class="api-skip" href="#contents">{label(lang, "skip")}</a>
-<header class="api-header">
-<nav class="api-primary" aria-label="{label(lang, "reference")}">{nav}</nav>
-<div class="api-tools"><button type="button" id="api-theme" aria-label="{label(lang, "theme")}" hidden>◐</button>
-<a id="site-language" hreflang="{'zh-Hans' if other == 'zh' else 'en'}" href="{shared}{other}/{relative}">{language}</a></div>
-</header>
-<div class="api-grid">
-{left}
-{right}
-<main id="contents">
-{heading}
-{body}
-</main>
-</div>
-</body>
-</html>
-'''
+def render_articles(root, pages):
+    # Use the same pkgdown shell and navigation finalizer as the other chapters.
+    with TemporaryDirectory(prefix='ggchord-reference-') as temporary:
+        staging = Path(temporary)
+        payload = staging / 'pages.json'
+        write_json(payload, pages)
+        # pkgdown protects files made by other generators. Render into a fresh
+        # directory so old standalone pages cannot survive a successful build.
+        options = [f'--site={staging}', f'--payload={payload}']
+        for tool, flags in (('render-website.R', ['--part=articles']),
+                            ('finalize-website.R', [f'--navigation-site={root}'])):
+            result = subprocess.run(['Rscript', '--vanilla', f'tools/{tool}', *flags, *options],
+                                    cwd=ROOT, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
+            if result.returncode:
+                raise RuntimeError(result.stdout.rstrip())
+        for lang, entries in pages.items():
+            rendered = staging / lang
+            target = root / lang
+            for dependency in ('deps', 'lightswitch.js', 'pkgdown.js'):
+                asset = rendered / dependency
+                if asset.is_dir():
+                    for source in (p for p in asset.rglob('*') if p.is_file()):
+                        path = target / source.relative_to(rendered)
+                        if not path.exists():
+                            path.parent.mkdir(parents=True, exist_ok=True)
+                            shutil.copy2(source, path)
+                elif not (target / dependency).exists():
+                    shutil.copy2(asset, target / dependency)
+            for page in entries:
+                relative = page['slug'] + '.html'
+                path = target / relative
+                path.parent.mkdir(parents=True, exist_ok=True)
+                shutil.copy2(rendered / relative, path)
 
 
 def build(root):
@@ -236,30 +221,26 @@ def build(root):
         raise RuntimeError('Pandoc must be on PATH to build the API reference')
     root = root.resolve()
     version = re.search(r'^Version: (.+)$', (ROOT / 'DESCRIPTION').read_text(), re.M)[1]
-    integrated = (root / 'en/index.html').exists() and (root / 'zh/index.html').exists()
     assets = root / 'assets'
     assets.mkdir(parents=True, exist_ok=True)
-    shared_assets = ['site.css', 'site.js', 'favicon.png', 'api-reference.css', 'api-reference.js']
+    shared_assets = ['site.css', 'site.js', 'favicon.png', 'logo.webp']
     for name in shared_assets:
         shutil.copy2(ASSETS / name, assets / name)
-    shutil.copy2(ROOT / 'man/figures/logo.svg', assets / 'logo.svg')
     scripts = prepare_examples(structure)
     for name, text in scripts.items():
         write(assets / 'reference-examples' / f'{name}.R', text)
     write(assets / 'reference-examples' / 'setup.R', structure['setup'].strip() + '\n')
-    navigation = read(ROOT / 'website/navigation.json')
-    site_pages = {p['slug']: p['canonical_path'] for p in read(ROOT / 'website/pages.json')}
     old_names = {p.stem for p in (ROOT / 'website/reference-zh').glob('*.json')}
     existing_help = {p.stem for p in (ROOT / 'man').glob('*.Rd')}
     retired = old_names - existing_help - set(structure['topics'])
     flexible = read(ROOT / 'website/flexible-parameters.json')
+    pages = {lang: [] for lang in LOCALES}
     for lang, locale in locales.items():
         topics, groups = locale['topics'], locale['groups']
-        group_names = [(f'family-{k}', g['title']) for k,g in groups.items()]
-        navbar = [(site_pages[g['landing']], g['title'][lang]) for g in navigation if
-                  g.get('navbar') and g['id'] != 'reference']
         titles = LABELS[lang]
-        destination = root / lang / 'reference'
+        home = root / lang / 'index.html'
+        if not home.exists():
+            write(home, redirect('reference/index.html'))
         search = []
         overview = ''.join(f'<dt>{html.escape(k)}</dt><dd>{html.escape(v)}</dd>' for k,v in GRAMMAR[lang])
         total = len(topics)
@@ -276,24 +257,21 @@ def build(root):
         field = ('<div class="reference-filter" hidden><label for="reference-filter">'
                  f'{titles["filter"]}</label><input id="reference-filter" type="search" autocomplete="off">'
                  '<output id="reference-filter-count" aria-live="polite"></output></div>')
-        upstream = '<ul class="api-upstream">' + ''.join(
+        upstream = '<ul>' + ''.join(
             f'<li>{link("https://ggplot2.tidyverse.org/reference/" + href, name)}</li>'
             for name, href in UPSTREAM) + '</ul>'
-        roles = '<dl class="api-grammar">' + ''.join(
+        roles = '<dl>' + ''.join(
             f'<dt>{html.escape(names[lang == "zh"])}</dt>'
             f'<dd>{", ".join(code(key) for key in names[2])}</dd>' for names in INPUT_ROLES) + '</dl>'
         units = ('Closed source intervals are one-based. Documented cut boundaries use interbase coordinates from zero through the reference length.'
                  if lang == 'en' else '源区间使用一基闭区间。已知切口采用残基间坐标，范围为 0 到完整参考长度。')
         setup = (snippet(structure['setup'], 'r', titles['setup']) +
                  f'<a href="../../assets/reference-examples/setup.R" download>{titles["download"]}</a>')
-        index = (f'<p class="api-lead">{html.escape(intro)}</p>' +
-                 section('grammar', titles['overview'], f'<dl class="api-grammar">{overview}</dl>') +
+        index = (f'<p class="lead">{html.escape(intro)}</p>' +
+                 section('grammar', titles['overview'], f'<dl>{overview}</dl>') +
                  field + contents + section('input-roles', titles['input'], roles + f'<p>{html.escape(units)}</p>') +
                  section('example-setup', titles['setup'], setup) + section('upstream', titles['upstream'], upstream))
-        write(destination / 'index.html', frame(lang, 'reference/index.html', titles['reference'],
-              f'<h1>{titles["reference"]}</h1>', [('grammar', titles['overview']), ('input-roles', titles['input']),
-              ('example-setup', titles['setup']), ('upstream', titles['upstream'])],
-              index, group_names, navbar, integrated))
+        pages[lang].append(dict(slug='reference/index', title=titles['reference'], body=index))
         search.append(dict(url='reference/index.html',title=titles['reference'],kind='api',
                            summary=intro, text=' '.join(groups[k]['intro'] for k in groups),keywords='API reference'))
         parameter_rows = []
@@ -301,19 +279,12 @@ def build(root):
             for name in group['topics']:
                 shared = structure['topics'][name]
                 text = topics[name]
-                trail = (f'<nav class="api-breadcrumb" aria-label="{titles["reference"]}">'
-                         f'{link("index.html", titles["reference"])}<span aria-hidden="true">/</span>'
-                         f'{link("index.html#family-" + family, groups[family]["title"])}</nav>')
-                native = (f'<p class="api-origin">{link("https://ggplot2.tidyverse.org/reference/" + name + ".html", titles["source"])}</p>'
+                native = (f'<p>{link("https://ggplot2.tidyverse.org/reference/" + name + ".html", titles["source"])}</p>'
                           if shared['native'] else '')
-                heading = f'{trail}<h1 id="api-{name}">{code(name + "()")}</h1>{native}'
-                outline = []
-                bodies = []
+                bodies = [native]
                 def add(key, fragment):
                     if fragment:
-                        id = 'ref-' + key
-                        outline.append((id, titles[key]))
-                        bodies.append(section(id, titles[key], fragment))
+                        bodies.append(section('ref-' + key, titles[key], fragment))
                 add('purpose', '<span id="ref-description"></span>' + markdown(text['intro'], pandoc))
                 add('usage', snippet(shared['usage'], 'signature', titles['usage']))
                 rows = []
@@ -336,14 +307,14 @@ def build(root):
                     rows.append(f'<tr><th scope="row">{", ".join(names)}</th>'
                                 f'<td>{html.escape(syntax_format(param["format"])) or "—"}</td>'
                                 f'<td>{markdown(param["description"],pandoc)}</td></tr>')
-                table = ('<div class="table-scroll" tabindex="0"><table><thead><tr><th>'
+                table = ('<table><thead><tr><th>'
                          f'{titles["arguments"]}</th><th>{titles["format"]}</th>'
-                         f'<th>{titles["purpose"]}</th></tr></thead><tbody>{"".join(rows)}</tbody></table></div>')
+                         f'<th>{titles["purpose"]}</th></tr></thead><tbody>{"".join(rows)}</tbody></table>')
                 add('arguments', table)
                 if shared['roles']:
                     roles = ''.join(f'<dt>{html.escape(tag.replace(chr(96), ""))}</dt>'
                                     f'<dd>{markdown(desc,pandoc)}</dd>' for tag,desc in zip(shared['roles'], text['roles']))
-                    add('roles', f'<dl class="api-roles">{roles}</dl>')
+                    add('roles', f'<dl>{roles}</dl>')
                 add('value', markdown(text['value'], pandoc))
                 add('details', markdown(text['details'], pandoc))
                 if text['errors']:
@@ -353,8 +324,8 @@ def build(root):
                              f'{titles["download"]}</a>')
                 add('examples', example_note + snippet(scripts[name], 'r', titles['examples']) + downloads)
                 add('related', '<ul>' + ''.join(f'<li>{topic_link(target)}</li>' for target in shared['related']) + '</ul>')
-                write(destination / f'{name}.html', frame(lang, f'reference/{name}.html', name + '()', heading,
-                      outline, ''.join(bodies), group_names, navbar, integrated))
+                pages[lang].append(dict(slug=f'reference/{name}', title=name + '()',
+                                        heading_id=f'api-{name}', body=''.join(bodies)))
                 search.append(dict(url=f'reference/{name}.html',title=f'{name}() — {text["title"]}',
                                    kind='api',summary=text['intro'], text=text['details'],
                                    keywords=' '.join([name, family, *seen])))
@@ -367,26 +338,25 @@ def build(root):
                         f'<td><a href="reference/{topic}.html#{anchor}">{code(topic + "()")}</a></td>'
                         f'<td>{html.escape(fmt)}</td><td>{code(default) if default else "—"}</td></tr>'
                         for key,topic,anchor,flex,fmt,default in sorted(parameter_rows))
-        body = (f'{controls}<div class="table-scroll parameter-directory" tabindex="0"><table>'
+        body = (f'{controls}<table class="parameter-directory">'
                 f'<thead><tr><th>{titles["arguments"]}</th><th>API</th><th>{titles["format"]}</th>'
                 f'<th>{titles["default"]}</th></tr></thead>'
-                f'<tbody>{table}</tbody></table></div>')
-        write(root / lang / 'parameter-atlas.html', frame(lang,'parameter-atlas.html',ptitle,
-              f'<h1>{ptitle}</h1>',[],body,group_names,navbar,integrated))
+                f'<tbody>{table}</tbody></table>')
+        pages[lang].append(dict(slug='parameter-atlas', title=ptitle, body=body))
         for name in sorted(retired):
             title = titles['archived']
-            body = f'<p>{link("index.html", titles["current"])}</p>'
-            write(destination / f'{name}.html', frame(lang, f'reference/{name}.html', title,
-                  f'<h1>{code(name + "()")}</h1><p>{title}</p>', [], body, group_names, navbar, integrated))
+            body = f'<p>{title}</p><p>{link("index.html", titles["current"])}</p>'
+            pages[lang].append(dict(slug=f'reference/{name}', title=name + '()', body=body))
         search_file = root / lang / 'search.json'
         previous = read(search_file) if search_file.exists() else []
         previous = [row for row in previous if not row['url'].startswith('reference/') or
                     Path(row['url'].split('#')[0]).stem in existing_help - set(topics)]
         write_json(search_file, previous + search)
+    render_articles(root, pages)
     for name in ('index', *structure['topics'], *sorted(retired)):
         destination = f'../en/reference/{name}.html'
         write(root / 'reference' / f'{name}.html', redirect(destination))
-    if not integrated:
+    if not (root / 'index.html').exists():
         write(root / 'index.html', redirect('en/reference/index.html'))
     write_json(root / 'api-reference-manifest.json', {
         'version': version, 'source': structure['reference'], 'functions': len(structure['topics']) - len(NATIVE),

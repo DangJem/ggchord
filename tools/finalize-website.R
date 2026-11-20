@@ -1,8 +1,16 @@
 # Attach paired-language navigation and local progressive enhancements to pkgdown pages.
 args<-commandArgs(trailingOnly=TRUE)
-publication<-identical(args,'publication')
+option <- function(key, default) {
+  value <- grep(paste0('^--', key, '='), args, value = TRUE)
+  if (length(value)) sub('^[^=]+=', '', value[[1L]]) else default
+}
+site <- option('site', '.site')
+navigation_site <- option('navigation-site', site)
+payload_path <- option('payload', NULL)
+partial <- !is.null(payload_path)
+payload <- if (partial) jsonlite::fromJSON(payload_path, simplifyVector = FALSE)
+site_url <- if (partial) yaml::read_yaml('_pkgdown.yml')$url
 `%||%` <- function(x,y) if(is.null(x) || length(x)==0L || is.na(x)) y else x
-version <- read.dcf('DESCRIPTION', fields = 'Version')[1, 1]
 topic_files<-list.files('man','\\.Rd$',full.names=TRUE)
 alias_topics<-unlist(lapply(topic_files,function(path) {
  rd<-tools::parse_Rd(path)
@@ -10,7 +18,7 @@ alias_topics<-unlist(lapply(topic_files,function(path) {
   function(x) paste(unlist(x),collapse=''),'')
  setNames(rep(sub('\\.Rd$','',basename(path)),length(aliases)),aliases)
 }))
-source('tools/website/reference.R')
+if (!partial) source('tools/website/reference.R')
 navigation <- jsonlite::fromJSON('website/navigation.json', simplifyVector=FALSE)
 navigation_ui <- jsonlite::fromJSON('website/navigation-ui.json', simplifyVector=FALSE)
 page_index <- jsonlite::fromJSON('website/pages.json', simplifyVector=FALSE)
@@ -23,8 +31,10 @@ manual_sections <- jsonlite::fromJSON('website/manual-sections.json', simplifyVe
 navigation <- setNames(navigation, vapply(navigation, function(group) group$id, ''))
 for(lang in c('en','zh')) {
  nav_text <- lapply(navigation_ui, `[[`, lang)
- root<-file.path('.site',lang)
- for(path in list.files(root,'\\.html$',recursive=TRUE,full.names=TRUE)) {
+ root<-file.path(site,lang)
+ paths <- if (partial) file.path(root, paste0(vapply(payload[[lang]], `[[`, '', 'slug'), '.html')) else
+   list.files(root,'\\.html$',recursive=TRUE,full.names=TRUE)
+ for(path in paths) {
   relative<-substring(path,nchar(root)+2L)
   deep<-length(strsplit(relative,'/',fixed=TRUE)[[1]])-1L
   base<-paste0(paste(rep('../',deep+1L),collapse=''),'assets/')
@@ -45,7 +55,7 @@ for(lang in c('en','zh')) {
   main<-xml2::xml_find_first(doc,'//main')
   xml2::xml_set_attr(main,'tabindex','-1')
   slug <- sub('\\.html$','',basename(relative))
-  if(startsWith(relative, 'reference/')) add_reference_navigation(doc, main, slug, lang)
+  if(!partial && startsWith(relative, 'reference/')) add_reference_navigation(doc, main, slug, lang)
   if(slug=='LICENSE') {
     label <- if(lang=='zh') 'MIT 许可' else 'MIT License'
     xml2::xml_set_text(xml2::xml_find_first(main,'.//h1'),label)
@@ -58,6 +68,11 @@ for(lang in c('en','zh')) {
   layout <- xml2::xml_parent(main)
   xml2::xml_set_attr(layout,'class',paste(xml2::xml_attr(layout,'class'),'doc-layout'))
   prefix <- paste(rep('../',deep),collapse='')
+  page_href <- function(path) {
+    if (partial && !file.exists(file.path(root, path)) &&
+        !file.exists(file.path(navigation_site, lang, path))) paste0(site_url, lang, '/', path) else
+      paste0(prefix, path)
+  }
   current_page <- if(startsWith(relative, 'reference/')) 'reference' else slug
   record <- page_record(current_page)
   is_known_page <- !is.null(record)
@@ -79,7 +94,7 @@ for(lang in c('en','zh')) {
       if(!is.null(class)) paste0('class="',class,'" '),
       if(has_compact) paste0('aria-label="',escape(label,attribute=TRUE),'" '),
       if(identical(relative,page$canonical_path)) 'aria-current="page" ',
-      'href="',prefix,escape(page$canonical_path,attribute=TRUE),'">',rail_number(number),
+      'href="',escape(page_href(page$canonical_path),attribute=TRUE),'">',rail_number(number),
       if(has_compact) paste0('<span class="nav-full-label" aria-hidden="true">',escape(label),'</span>',
         '<span class="nav-compact-label" aria-hidden="true">',escape(compact),'</span>') else escape(label),
       '</a>')
@@ -290,12 +305,11 @@ for(lang in c('en','zh')) {
     '<div class="search-filters" role="group" aria-label="',nav_text$filter,'"></div>',
     '<p class="search-count" id="search-status" role="status"></p><ul id="site-results" class="search-results" role="listbox" aria-label="',
     nav_text$results,'"></ul><div class="search-help">',nav_text$keys,' · <a href="',
-    prefix,escape(page_record(navigation$plots$landing)$canonical_path,attribute=TRUE),'">',
+    escape(page_href(page_record(navigation$plots$landing)$canonical_path),attribute=TRUE),'">',
     escape(navigation$plots$title[[lang]]),'</a></div></div></li>'))
   xml2::xml_add_child(tools_list,search,.where=0L)
   body<-xml2::xml_find_first(doc,'//body')
   xml2::xml_set_attr(body,'data-kind',if(startsWith(relative,'reference/')) 'api' else if(!is.null(record)) record$kind else 'utility')
-  metadata <- jsonlite::fromJSON('.site/build-metadata.json')
   xml2::xml_remove(xml2::xml_find_all(doc,'//nav//small[contains(@class,"nav-text")]'))
   xml2::xml_set_attr(body,'data-lang',lang)
   xml2::xml_set_attr(body,'data-search',paste0(paste(rep('../',deep),collapse=''),'search.json'))
@@ -311,7 +325,7 @@ for(lang in c('en','zh')) {
   examples <- xml2::xml_find_all(main, './/*[@data-example-kind]')
   for (i in seq_along(examples)) {
     name <- sprintf('%s-%d-%s.R', current_page, i, lang)
-    if (!file.exists(file.path('.site/assets/examples', name))) stop('Missing example script: ',name)
+    if (!file.exists(file.path(site,'assets/examples', name))) stop('Missing example script: ',name)
     xml2::xml_add_sibling(examples[[i]], fragment(paste0('<a class="example-download" download href="',
       base,'examples/', name,'">',if(lang=='zh')'下载这段 R 代码' else 'Download this R example','</a>')), .where='after')
   }
@@ -398,7 +412,7 @@ for(lang in c('en','zh')) {
   # Translated native headings otherwise receive punctuation-only IDs. Match
   # paired heading positions to the finalized English page's stable URLs.
   if(lang=='zh') {
-   english<-xml2::read_html(file.path('.site/en',relative))
+   english<-xml2::read_html(file.path(site,'en',relative))
    headings<-xml2::xml_find_all(main,'.//*[self::h2 or self::h3 or self::h4][@id]')
    counterparts<-xml2::xml_find_all(english,'//main//*[self::h2 or self::h3 or self::h4][@id]')
    if(length(headings)!=length(counterparts)) stop('Unmatched paired headings: ',relative)

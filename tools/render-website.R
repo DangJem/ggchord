@@ -11,18 +11,20 @@ option <- function(key, default) {
   if(length(value)) sub('^[^=]+=','',value[[1]]) else default
 }
 part <- match.arg(option('part','all'),c('all','init','reference','articles'))
+site <- option('site', '.site')
 # Article payloads are already HTML and never evaluate package code.
 if (part %in% c("all", "reference")) pkgload::load_all(quiet = TRUE)
 payload <- if (part %in% c('reference','init')) list(en = list(), zh = list()) else
-  jsonlite::fromJSON('.site/page-content.json', simplifyVector = FALSE)
+  jsonlite::fromJSON(option('payload', file.path(site, 'page-content.json')), simplifyVector = FALSE)
 offset <- as.integer(option('offset','0'))
 count <- as.integer(option('count','10000'))
 languages <- arguments[!startsWith(arguments,'--')]
 if(!length(languages)) languages <- c('en','zh')
 stopifnot(all(languages %in% c('en','zh')))
-reference_examples <- jsonlite::fromJSON('website/reference-examples.json')
+reference_examples <- if (part %in% c('all', 'reference')) jsonlite::fromJSON('website/reference-examples.json')
+translated_reference <- file.path(site, 'reference-zh')
 if('zh' %in% languages && part!='articles') {
- status <- system2('python3',c('tools/reference-translations.py','--output','.site/reference-zh'))
+ status <- system2('python3',c('tools/reference-translations.py','--output',shQuote(translated_reference)))
  if(status != 0L) stop('Han reference translations are incomplete or stale')
 }
 for (lang in languages) {
@@ -33,12 +35,12 @@ for (lang in languages) {
     page <- Filter(function(x) identical(x$slug, group$landing), page_index)[[1L]]
     list(text = group$title[[lang]], href = page$canonical_path)
   }), keys)
-  cfg <- list(destination=paste0('.site/',lang),lang=if(is_han)'zh_CN' else 'en',
+  cfg <- list(destination=file.path(site,lang),lang=if(is_han)'zh_CN' else 'en',
     navbar=list(structure = list(left = keys, right = c('github', 'lightswitch')),
       components=components))
   # Localized category titles; topic bindings remain the exact source names.
   source <- yaml::read_yaml('_pkgdown.yml')
-  for (section in source$reference) {
+  if (part != 'articles') for (section in source$reference) {
     original <- paste(section$title, section$desc, sep = "\n")
     if (!identical(digest::digest(original, algo = "sha256", serialize = FALSE),
                    section$source_sha256) || !isTRUE(nzchar(section$title_zh)) ||
@@ -60,9 +62,12 @@ for (lang in languages) {
   if(is_han) pkg$meta$reference <- cfg$reference
   pkg$meta$navbar$structure <- cfg$navbar$structure
   for(key in keys) pkg$meta$navbar$components[[key]] <- components[[key]]
+  if (part == 'articles' && !file.exists(file.path(pkg$dst_path, 'lightswitch.js'))) {
+    pkgdown::init_site(pkg)
+  }
   if(is_han && part != "articles") {
     for(i in seq_len(nrow(pkg$topics))) {
-      path <- file.path('.site/reference-zh',pkg$topics$file_in[i])
+      path <- file.path(translated_reference,pkg$topics$file_in[i])
       raw <- tools::parse_Rd(path)
       # pkgdown topics require its classed Rd nodes, not tools::parse_Rd output.
       # Keep this one parser adapter explicit; generation uses public builders.
@@ -84,7 +89,7 @@ for (lang in languages) {
   if (part %in% c("all","reference")) for (topic in supplemental_topics) {
     i <- match(paste0(topic, '.Rd'), pkg$topics$file_in)
     if (is.na(i)) stop('Unknown reference example topic: ', topic)
-    input <- if (is_han) file.path('.site/reference-zh', pkg$topics$file_in[i]) else
+    input <- if (is_han) file.path(translated_reference, pkg$topics$file_in[i]) else
       file.path('man', pkg$topics$file_in[i])
     text <- paste(readLines(input, warn = FALSE), collapse = "\n")
     at <- regexpr("\\examples{", text, fixed = TRUE)
@@ -141,12 +146,16 @@ for (lang in languages) {
   if(length(selected)) selected <- selected[seq.int(offset+1L,min(length(selected),offset+count))]
   for(page in selected) {
     cat('Article:',lang,page$slug,'\n')
+    path <- paste0(page$slug, '.html')
+    dir.create(dirname(file.path(pkg$dst_path, path)), recursive = TRUE, showWarnings = FALSE)
+    heading_id <- if (!is.null(page$heading_id))
+      paste0(' id="', htmltools::htmlEscape(page$heading_id, attribute = TRUE), '"') else ''
     tryCatch(pkgdown::render_page(pkg,'home',list(pagetitle=page$title,
-      index=paste0('<h1>',htmltools::htmlEscape(page$title),'</h1>',page$body),
-      sidebar=page$sidebar),path=paste0(page$slug,'.html'),quiet=TRUE),
+      index=paste0('<h1',heading_id,'>',htmltools::htmlEscape(page$title),'</h1>',page$body),
+      sidebar=page$sidebar),path=path,quiet=TRUE),
       error=function(e) {cat('FAILED:',lang,page$slug,conditionMessage(e),'\n');stop(e)})
     cat('Completed article:',lang,page$slug,'\n')
     invisible(gc())
   }
 }
-cat('pkgdown templates and reference rendered for en and zh. Reference examples evaluated; no vignettes executed.\n')
+cat('Rendered documentation with the shared pkgdown templates.\n')

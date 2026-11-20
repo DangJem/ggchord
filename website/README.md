@@ -51,7 +51,7 @@ python3 tools/check-documentation.py --reference-only
 python3 tools/build-website.py --reference-only
 ```
 
-The local entry is `.site/en/reference/index.html`, with the matching Han entry under `.site/zh/reference/`. Reference examples include their required data setup. Reader pages name any optional decoder needed by their example.
+The local entry is `.site/en/reference/index.html`, with the matching Han entry under `.site/zh/reference/`. The API reference uses the same pkgdown template, navigation and appearance controls as the handbook. Reference examples include their required data setup. Reader pages name any optional decoder needed by their example.
 
 ## Update function help, package READMEs or offline tutorials
 
@@ -62,7 +62,7 @@ The local entry is `.site/en/reference/index.html`, with the matching Han entry 
 
 ## Build and inspect the local site
 
-Design the website for desktop computers. Use 1280, 1366, 1440 and 1920 CSS pixels when checking available space. On article and reference pages, the chapter list and the outline sit together on the left. A page with no outline gives that space to the article. Keep tables and code within the article and allow wide values to scroll inside their own block. For each example image, name the expected mark, label or comparison, inspect the input rows, then read the result at its actual desktop display width. To verify a table, compare the last visible column with its frame and test local scrolling on a genuinely wide table. Record browser measurements separately from layout calculations. Phone and tablet layouts are outside the default design and verification scope.
+Design the website for desktop computers. On article and reference pages, the chapter list and the outline sit together on the left. Keep tables and code within the article and allow wide values to scroll inside their own block. Use source, build and static HTML checks for website validation. Check the generated navigation, stylesheets, fragment links and example inputs from the build output.
 
 The core build requires Python 3.9 or newer, R, Pandoc, the package dependencies and the dependencies of the examples. The site uses `pkgdown`, Bootstrap 5, `pkgload`, `rmarkdown` and `jsonlite`. The build renders the articles and evaluates native Rd examples. Run the following commands from the repository root.
 

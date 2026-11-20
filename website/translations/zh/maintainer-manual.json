@@ -1,5 +1,5 @@
 {
-  "source_sha256": "5b05e8b64e507f1b8628369a652c547777cbe9c6865d054c443ad7b774705e76",
+  "source_sha256": "f07806a796391d9b43f3be08bdb8f387cad0b0dfd668fe7bad578c0e8ee21581",
   "blocks": {
     "0": {
       "source_sha256": "68663d8f41c011a894ae75dda3c48ada2906637454a6a4b6e01a8435153e46f1",
@@ -77,9 +77,9 @@
       "translation": "运行下列命令可独立核对和构建 API 参考章节及参数索引。\n"
     },
     "20": {
-      "source_sha256": "b0cbeb22e1ccdc41d1dffc3f50336f0eb431f0a9fba64353036c41072d9c1c6f",
+      "source_sha256": "e1a7f73ceb31f20dc4314d18b7f5c6cba335afe87845999da7d3fa56952398f2",
       "status": "reviewed",
-      "translation": "本地英语入口为 `.site/en/reference/index.html`，对应汉语入口位于 `.site/zh/reference/`。参考示例包含所需的数据准备代码。读取器页面会列出运行示例所需的可选解码器。\n"
+      "translation": "本地英语入口为 `.site/en/reference/index.html`，对应汉语入口位于 `.site/zh/reference/`。API 参考沿用工具书的 pkgdown 模板、导航和外观设置。参考示例包含所需的数据准备代码。读取器页面会列出运行示例所需的可选解码器。\n"
     },
     "21": {
       "source_sha256": "bf3108f5906aef4c598f7808f77bcbfaf7a455cf1ee6465ea86f6fe6a007d12f",
@@ -112,9 +112,9 @@
       "translation": "## 构建和检查本地网站\n"
     },
     "27": {
-      "source_sha256": "8a437338b457b7050233397d27929666fd40b34829a988a5e5acee938704d5ee",
+      "source_sha256": "11f15764d95de3b018507ce80a7b3c31a58b52d4157ca152940d620d468c36ad",
       "status": "reviewed",
-      "translation": "网站默认面向电脑设计。核对可用空间时采用 1280、1366、1440 和 1920 CSS 像素。文章和函数参考页的章节列表与本页目录在左侧并排。页面没有本页目录时，相应空间交给正文。表格和代码置于正文内，过宽的内容可在各自区块中横向滚动。逐幅写明示例应展示的图形、标签或对照，核对输入记录，再按桌面实际显示宽度查看结果。检查表格时比对末列和外框，遇到确实较宽的表再验证局部滚动。布局推算与浏览器实测分别记录。手机和平板布局不列入默认设计和验收范围。\n"
+      "translation": "站点面向电脑设计。文章和参考页的全站章节与本页目录在左侧并排。表格和代码置于正文内，过宽的内容可在各自区块内横向滚动。网站验收使用源码、构建和静态 HTML 检查。从构建结果核对导航、样式表、章节链接和示例输入。\n"
     },
     "28": {
       "source_sha256": "87dae5af9a9c6c7e6add812659240e016dab9525a1024a1cc0f209fd8a40a65f",

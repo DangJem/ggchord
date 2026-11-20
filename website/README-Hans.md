@@ -51,7 +51,7 @@ python3 tools/check-documentation.py --reference-only
 python3 tools/build-website.py --reference-only
 ```
 
-本地英语入口为 `.site/en/reference/index.html`，对应汉语入口位于 `.site/zh/reference/`。参考示例包含所需的数据准备代码。读取器页面会列出运行示例所需的可选解码器。
+本地英语入口为 `.site/en/reference/index.html`，对应汉语入口位于 `.site/zh/reference/`。API 参考沿用工具书的 pkgdown 模板、导航和外观设置。参考示例包含所需的数据准备代码。读取器页面会列出运行示例所需的可选解码器。
 
 ## 更新函数帮助、包 README 或离线教程
 
@@ -62,7 +62,7 @@ python3 tools/build-website.py --reference-only
 
 ## 构建和检查本地网站
 
-网站默认面向电脑设计。核对可用空间时采用 1280、1366、1440 和 1920 CSS 像素。文章和函数参考页的章节列表与本页目录在左侧并排。页面没有本页目录时，相应空间交给正文。表格和代码置于正文内，过宽的内容可在各自区块中横向滚动。逐幅写明示例应展示的图形、标签或对照，核对输入记录，再按桌面实际显示宽度查看结果。检查表格时比对末列和外框，遇到确实较宽的表再验证局部滚动。布局推算与浏览器实测分别记录。手机和平板布局不列入默认设计和验收范围。
+站点面向电脑设计。文章和参考页的全站章节与本页目录在左侧并排。表格和代码置于正文内，过宽的内容可在各自区块内横向滚动。网站验收使用源码、构建和静态 HTML 检查。从构建结果核对导航、样式表、章节链接和示例输入。
 
 基本构建需要 Python 3.9 或更高版本、R、Pandoc、包依赖及示例依赖。网站使用 `pkgdown`、Bootstrap 5、`pkgload`、`rmarkdown` 和 `jsonlite`。构建时会渲染文章，并运行原生 Rd 示例。在仓库根目录执行下列命令。
 
