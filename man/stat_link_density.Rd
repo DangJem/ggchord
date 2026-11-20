@@ -33,7 +33,9 @@ stat_link_density(
 
 \item{...}{Additional named visual styles and parameters accepted by this layer.}
 
-\item{na.rm}{Suppress warnings for missing observations that the layer can omit.}
+\item{na.rm}{Omit records with missing endpoint coordinates or weights.
+Set to \code{TRUE} to omit them silently. Invalid references, units and
+out-of-bounds coordinates remain errors.}
 
 \item{show.legend}{Logical or named logical indicating whether the layer contributes legend keys.}
 
@@ -42,13 +44,25 @@ stat_link_density(
 \item{id}{Optional plot-local layer identifier. Name a layer explicitly to scope a scale, anchor a label or export it.}
 }
 \value{
-A ggplot2 layer for addition to a plot.
+A ggplot2 layer. Its statistic output retains the source rows and
+adds \code{q_bin}, \code{s_bin}, \code{bin_weight}, \code{bin_area}, \code{density_raw},
+\code{density}, \code{normalization}, \code{density_unit} and \code{source_members}.
 }
 \description{
 Compute source interval density
 }
 \details{
-Source references are \code{qaccver} and \code{saccver}. Point links consume \code{qpos} and \code{spos}. Interval links and alignment segments consume closed interval endpoints on both references. Supply reliable \code{qstrand} and \code{sstrand} or explicit relative direction when the geometry requires it.
+Each interval midpoint is assigned to a bin along its full
+reference. The query and subject bin widths determine \code{bin_area}.
+The sum of nonnegative weights in a cell gives \code{bin_weight}, with
+unit weight per row by default. \code{density_raw} is \code{bin_weight / bin_area},
+expressed in weight per product of the two source units.
+
+With \code{normalization = "pair_max"}, \code{density} is relative to the maximum
+in the same reference pair, orientation, group and facet. An all-zero
+group returns zero. The normalization is recorded in the statistic
+output, including when the plot uses facets. Use
+\code{aes(fill = after_stat(density))} to map the result to colour.
 }
 \examples{
 library(ggplot2)

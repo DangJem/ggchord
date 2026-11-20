@@ -136,6 +136,9 @@ ggchord_diagnostic_text <- function(data, coordinate, panel, context, parse = FA
 #' @inheritParams export_ggchord_layout
 #' @param action Return a report, warn on issues, or stop on error-level issues.
 #' @return A structured issue table and measurement conditions.
+#' @details Without target dimensions, checks include feature bounds and
+#'   references to leaf panels in Fusion ribbons. With dimensions, a failed
+#'   Fusion layer is reported by its composition path and layer ID.
 #' @export
 #' @examples
 #' seqs <- data.frame(
@@ -161,13 +164,18 @@ diagnose_ggchord <- function(plot, width = NULL, height = NULL, units = "in",
   action <- match.arg(action, c("report", "warn", "error"))
   request <- ggchord_output_request(width, height, units, device, dpi, caller)
   warnings <- character()
+  failures <- list()
   failure <- NULL
   built <- tryCatch(withCallingHandlers({
     if (is.null(request$size)) {
       ggchord_diagnose_sources(plot)
     } else {
       ggchord_with_output_device(request, function() {
-        result <- ggchord_output_build_geometry(ggchord_query_clone(plot))
+        result <- ggchord_output_build_geometry(ggchord_query_clone(plot),
+          function(path, error, layer_id = NULL) {
+            failures[[length(failures) + 1L]] <<- ggchord_output_issue("error",
+              "build_failed", conditionMessage(error), path, layer_id %||% NA_character_)
+          })
         ggchord_diagnose_built(result, request$size * 25.4)
       })
     }
@@ -183,7 +191,7 @@ diagnose_ggchord <- function(plot, width = NULL, height = NULL, units = "in",
   severe <- if (!is.null(failure)) ggchord_output_issue("error", "build_failed", failure)
   warning_rows <- lapply(unique(warnings), function(message)
     ggchord_output_issue("warning", "plot_warning", message))
-  problems <- ggchord_rbind_fill(c(list(built, severe), warning_rows)) %||%
+  problems <- ggchord_rbind_fill(c(list(built, severe), failures, warning_rows)) %||%
     ggchord_output_issue("information", "", "")[FALSE, ]
   errors <- problems$message[problems$severity == "error"]
   warned <- problems$message[problems$severity %in% c("warning", "error")]
@@ -201,9 +209,28 @@ ggchord_diagnose_sources <- function(plot) {
       NULL
     })
   }
+  leaf_keys <- function(plot) {
+    unlist(lapply(names(plot$panels), function(id) {
+      panel <- plot$panels[[id]]$plot
+      if (inherits(panel, "ggchord_fusion")) paste(id, leaf_keys(panel), sep = "/") else id
+    }), use.names = FALSE)
+  }
   walk <- function(plot, path) {
     if (inherits(plot, "ggchord_fusion")) {
-      for (layer in plot$ribbons) check(ggchord_fusion_input(layer), path, layer$id)
+      leaves <- leaf_keys(plot)
+      for (layer in plot$ribbons) check({
+        input <- ggchord_fusion_input(layer)
+        ggchord_fusion_check_style_mapping(layer)
+        rows <- which(!ggchord_fusion_incomplete(input, layer$required))
+        for (row in rows) {
+          q <- ggchord_fusion_check_path(input$qpanel_path[[row]], "fusion_ribbon()")
+          s <- ggchord_fusion_check_path(input$spanel_path[[row]], "fusion_ribbon()")
+          unknown <- setdiff(c(q, s), leaves)
+          if (length(unknown))
+            ggchord_stop("Fusion ", layer$id, " row ", row, ": unknown leaf panel '", unknown[1L], "'")
+          if (identical(q, s)) ggchord_stop("Fusion: links require distinct panels")
+        }
+      }, path, layer$id)
       for (id in names(plot$panels))
         walk(plot$panels[[id]]$plot, c(path, ggchord_fusion_path_ids(id)))
       return(invisible(NULL))
@@ -221,7 +248,11 @@ ggchord_diagnose_sources <- function(plot) {
       if (isTRUE(plot$coordinates$ggchord_dotplot)) {
         ggchord_dotplot_geometry(plot)
       } else {
-        plot <- ggchord_prepare_geometry_inputs(plot)
+        ggchord_validate_coord_contract(plot)
+        plot <- ggchord_prepare_geometry_inputs(plot, prepare_instances = FALSE)
+        sequences <- plot$ggchord$data$seq_data
+        lengths <- stats::setNames(sequences$length, sequences$accver)
+        before <- length(issues)
         for (layer in plot$layers) {
           if (is.null(layer$ggchord_type)) {
             check(layer$layer_data(plot$data), path, layer$ggchord_layer_id %||% NA_character_)
@@ -232,11 +263,12 @@ ggchord_diagnose_sources <- function(plot) {
               ggchord_layer_fallback(layer, plot$ggchord$data))
             if (identical(layer$ggchord_params$type, "gene")) {
               ggchord_require_columns(input, c("accver", "start", "end"), "Feature layer")
-              ggchord_check_reference_ids(input, "accver",
-                plot$ggchord$data$seq_data$accver, "Feature layer")
+              ggchord_check_reference_ids(input, "accver", sequences$accver, "Feature layer")
+              ggchord_check_feature_bounds(input, lengths)
             }
           }, path, layer$ggchord_layer_id)
         }
+        if (length(issues) == before) ggchord_prepare_instances(plot, sequences)
       }
     }, path)
     invisible(NULL)

@@ -150,23 +150,27 @@ ggchord_link_geometry <- function(data, params, layout) {
   if (isTRUE(layout$collinear)) return(ggchord_collinear_link_geometry(data, params, layout, rows))
   gaps <- ggchord_connection_offsets(params, layout$seqs)
   if (any(!is.finite(unlist(gaps)))) ggchord_stop("link_gap must contain finite numbers")
-  endpoint <- function(id, pos) {
-    f <- (pos - 1) / ref$lens[id]
-    if (ref$orientation[id] != 1) f <- 1 - f
-    a <- ref$starts[id] + f * (ref$ends[id] - ref$starts[id])
-    gap <- unname(gaps[[id]])
-    if (is.null(params$link_gap) && params$link_avoid != "none") {
-      gap <- ggchord_gap_profile(pos, id, layout$obstacles, "uniform", close_gap = gap)
+  endpoints <- function(ids, positions) {
+    xy <- matrix(NA_real_, nrow = length(ids), ncol = 2L)
+    for (id in unique(ids)) {
+      at <- which(ids == id)
+      gap <- unname(gaps[[id]])
+      if (is.null(params$link_gap) && params$link_avoid != "none") {
+        gap <- vapply(positions[at], ggchord_gap_profile, numeric(1),
+          id = id, obstacles = layout$obstacles, avoid = "uniform", close_gap = gap)
+      }
+      xy[at, ] <- ggchord_track_point(positions[at], id, gap, 0, layout)
     }
-    map_to_curve(a, ref$radius[id] + gap, ref$refs[[id]])
+    xy
   }
-  out <- lapply(rows, function(i) {
-    q <- endpoint(as.character(data$qaccver[i]), data$qpos[i])
-    s <- endpoint(as.character(data$saccver[i]), data$spos[i])
+  query <- endpoints(as.character(data$qaccver[rows]), data$qpos[rows])
+  subject <- endpoints(as.character(data$saccver[rows]), data$spos[rows])
+  out <- lapply(seq_along(rows), function(j) {
+    i <- rows[j]
+    q <- query[j, ]; s <- subject[j, ]
     curvature <- params$route$curvature %||% .5
     cp <- (q + s) * (1 - curvature) / 2
     xy <- if (params$link_type == "straight") rbind(q, s) else bezier_pts(q, s, cp, cp, n = 60)
-    xy <- ggchord_rotate_points(xy, layout$rotation)
     data.frame(x = xy[,1], y = xy[,2], group = i, source_row = i, .component = "branch")
   })
   if (!length(out)) return(data.frame(x = numeric(), y = numeric(), group = integer(), source_row = integer()))

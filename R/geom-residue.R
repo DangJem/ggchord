@@ -65,7 +65,7 @@ geom_residue <- function(mapping = NULL, data = NULL, representation = "tile_tex
       self$computed_mapping <- mapping
       value <- ggplot2::ggproto_parent(layer, self)$compute_aesthetics(data, plot)
       if (nrow(value)) {
-        if (anyDuplicated(data.frame(x = value$x, y = value$y)))
+        if (anyDuplicated(data.frame(PANEL = value$PANEL, x = value$x, y = value$y)))
           ggchord_stop("geom_residue(): one character is required per alignment cell")
         label <- as.character(value$label)
         bad <- !is.na(label) & (nchar(label) != 1L | grepl("[[:space:]]", label))

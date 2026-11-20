@@ -228,7 +228,7 @@ ggchord_check_reference_ids <- function(data, fields, ids, caller) {
   }
 }
 
-ggchord_validate_layer_link <- function(data, type, reference, caller) {
+ggchord_validate_layer_link <- function(data, type, reference, caller, allow_missing = FALSE) {
   if (is.null(reference) || !type %in% c("link", "ribbon")) return(invisible(NULL))
   ggchord_check_interval_unit(data, ggchord_sequence_unit(reference), caller)
   for (side in c("q", "s")) {
@@ -240,8 +240,10 @@ ggchord_validate_layer_link <- function(data, type, reference, caller) {
     limit <- reference$length[at]
     for (field in fields) {
       value <- data[[field]]
+      if (allow_missing && is.logical(value) && all(is.na(value))) next
       if (!is.numeric(value)) ggchord_stop(caller, ": ", field, " must be numeric")
       invalid <- !is.finite(value) | value != trunc(value) | value < 1 | value > limit
+      if (allow_missing) invalid[is.na(value) & !is.nan(value)] <- FALSE
       if (any(invalid)) ggchord_stop(caller, ": ", field,
         " must be an integer within its reference", ggchord_input_rows(invalid))
     }
@@ -477,8 +479,10 @@ ggchord_resolve_layer_input <- function(lyr, fallback = NULL,
     fields <- if (type %in% c("link", "ribbon")) c("qaccver", "saccver") else "accver"
     ggchord_check_reference_ids(data, fields, reference_ids, ggchord_layer_input_context(lyr))
   }
+  link_stat_input <- !is.null(lyr$ggchord_params$link_stat) &&
+    is.null(lyr$ggchord_params$link_stat_source)
   ggchord_validate_layer_link(data, type, lyr$ggchord_params$reference,
-    ggchord_layer_input_context(lyr))
+    ggchord_layer_input_context(lyr), allow_missing = link_stat_input)
   for (nm in setdiff(names(mapping), c(roles, names(lyr$aes_params)))) {
     expr <- rlang::get_expr(mapping[[nm]])
     if (!ggchord_has_stage(expr)) {

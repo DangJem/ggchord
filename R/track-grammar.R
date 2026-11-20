@@ -705,7 +705,8 @@ ggchord_compute_track_input <- function(layer, plot, raw, sequences, coverage) {
   value_scale <- plot$scales$get_scales(ggchord_track_aes("value", p$track_id))
   value_transform <- if (!is.null(value_scale) && !isTRUE(p$interval))
     value_scale$get_transformation()
-  transformed_height <- !is.null(value_transform) && value_transform$name != "identity"
+  transformed_height <- !is.null(value_transform) &&
+    (value_transform$name != "identity" || isTRUE(value_scale$ggchord_custom_transform))
   if (transformed_height) {
     stacked <- identical(p$native_position, "stack") || inherits(p$native_position, "PositionStack")
     if (stacked && value_transform$name != "reverse")

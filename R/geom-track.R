@@ -375,13 +375,18 @@ scale_track_colour_manual <- function(track, ..., values) {
 }
 
 ggchord_add_track_scales <- function(plot) {
+  scoped <- vector("list", length(plot$layers))
+  for (scope in ggchord_scale_scopes(plot)) {
+    for (i in scope$selected) scoped[[i]] <- c(scoped[[i]], scope$aesthetics)
+  }
   seen <- character()
-  for (layer in plot$layers) {
+  for (i in seq_along(plot$layers)) {
+    layer <- plot$layers[[i]]
     # ggplot2 takes its default labels from the first mapped layer. Use the
     # original expression there, before projection introduced .track_* names.
     mapped <- names(layer$mapping)
     if (isTRUE(layer$inherit.aes)) mapped <- union(mapped, names(plot$mapping))
-    first <- setdiff(mapped, c(seen, names(layer$aes_params)))
+    first <- setdiff(mapped, c(seen, names(layer$aes_params), scoped[[i]]))
     seen <- union(seen, first)
     labels <- layer$ggchord_params$track_mapping_labels
     for (key in intersect(first, names(labels))) {

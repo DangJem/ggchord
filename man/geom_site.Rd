@@ -25,7 +25,8 @@ geom_site(
 
 \item{shape}{Default shape. An explicitly supplied fixed shape takes priority over its mapping.}
 
-\item{size}{Physical size of the symbol in millimetres.}
+\item{size}{Fixed symbol size in millimetres. To map size to data, use
+\code{aes(size = ...)} with a shared or \code{\link[=scale_for]{scale_for()}} size scale.}
 
 \item{stat}{A compatible ggplot2 Stat or its name. The default uses the supplied records.}
 

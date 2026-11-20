@@ -33,6 +33,11 @@ A structured issue table and measurement conditions.
 \description{
 Diagnose plot references, layout and target-device fit
 }
+\details{
+Without target dimensions, checks include feature bounds and
+references to leaf panels in Fusion ribbons. With dimensions, a failed
+Fusion layer is reported by its composition path and layer ID.
+}
 \examples{
 seqs <- data.frame(
   accver = c("A", "B"), length = c(1000, 800),

@@ -33,15 +33,16 @@ panel_path and character layer_id. An empty path selects the root.}
 }
 \value{
 Per-layer stage tables, geometry components, stage status, reference
-  and provenance information, diagnostics and measurement conditions.
+and provenance information, diagnostics and measurement conditions.
 }
 \description{
 Export the source, mapped, statistical or rendered stages of a plot
 }
 \details{
-Child panel failures are recorded by path during Fusion export.
-Successfully built panels retain their stages. Ribbon tips are returned
-as decoration geometry separately from the source fronts.
+Fusion export records failed panels by path and failed ribbons by
+path and layer ID. It retains the stages and geometry of other panels and
+ribbons. Ribbon tips are returned as decoration geometry separately from
+the source fronts.
 }
 \examples{
 seqs <- data.frame(

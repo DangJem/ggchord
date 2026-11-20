@@ -427,6 +427,15 @@ ggchord_scale_scopes <- function(plot, scopes = plot$ggchord$scoped_scales) {
     if (anyNA(selected)) ggchord_stop("scale_for(): unknown layer '",
       scope$layers[which(is.na(selected))[1L]], "'")
     aes <- scope$scale$aesthetics
+    for (j in selected) {
+      layer <- plot$layers[[j]]
+      native <- layer$ggchord_params$native_geom
+      geom <- if (is.null(native)) layer$geom else
+        ggplot2::layer(geom = native, stat = "identity", position = "identity")$geom
+      unsupported <- setdiff(aes, geom$aesthetics())
+      if (length(unsupported)) ggchord_stop("scale_for(): layer '", ids[j],
+        "' does not support ", unsupported[1L])
+    }
     keys <- as.vector(outer(selected, aes, paste, sep = "/"))
     if (any(keys %in% claimed)) ggchord_stop("scale_for(): a layer and aesthetic have overlapping scopes")
     claimed <<- c(claimed, keys)
@@ -505,11 +514,21 @@ ggchord_apply_scoped_scales <- function(plot, scopes = plot$ggchord$scoped_scale
     }
     scale$guide <- guide
     plot$scales$add(scale)
+    # Track styles project through generated columns. Keep the original
+    # title on its independent domain when this is the first mapped layer.
+    for (aesthetic in spec$aesthetics) {
+      for (i in sort(spec$selected)) {
+        layer <- plot$layers[[i]]
+        if (!is.null(layer$aes_params[[aesthetic]])) next
+        mapping <- layer$mapping[[aesthetic]] %||%
+          if (isTRUE(layer$inherit.aes)) plot$mapping[[aesthetic]]
+        if (is.null(mapping)) next
+        label <- layer$ggchord_params$track_mapping_labels[[aesthetic]]
+        if (!is.null(label)) plot$labels[[spec$aliases[[aesthetic]]]] <- label
+        break
+      }
+    }
     for (i in spec$selected) {
-      layer <- plot$layers[[i]]
-      missing <- setdiff(spec$aesthetics, layer$geom$aesthetics())
-      if (length(missing)) ggchord_stop("scale_for(): layer '", layer$ggchord_layer_id,
-        "' does not support ", missing[1L])
       aliases[[i]] <- c(aliases[[i]], spec$aliases)
     }
   }

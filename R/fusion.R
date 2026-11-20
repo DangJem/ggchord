@@ -289,6 +289,31 @@ ggchord_fusion_input <- function(layer) {
   data
 }
 
+ggchord_fusion_incomplete <- function(input, required) {
+  Reduce(`|`, lapply(input[required], function(value) {
+    if (is.list(value)) vapply(value, function(v) !length(v) || anyNA(v), logical(1)) else is.na(value)
+  }), init = rep(FALSE, nrow(input)))
+}
+
+ggchord_fusion_layer_error <- function(layer, stage, error, on_error) {
+  if (is.null(on_error)) stop(error)
+  if (!is.null(layer$capture)) {
+    for (field in if (stage == "mapped") c("mapped", "statistic", "geometry") else stage)
+      layer$capture[[paste0(field, "_error")]] <- conditionMessage(error)
+  }
+  on_error(character(), error, layer$id)
+  NULL
+}
+
+ggchord_fusion_subset_ribbons <- function(plot, ids) {
+  plot$ribbons <- plot$ribbons[ids]
+  plot$scope_scales <- Filter(function(scope) length(scope$layers), lapply(plot$scope_scales, function(scope) {
+    scope$layers <- intersect(scope$layers, ids)
+    scope
+  }))
+  plot
+}
+
 #' @export
 `+.ggchord_fusion` <- function(e1, e2) {
   if (inherits(e2, c("ggchord_fusion_ribbon", "ggchord_fusion_zoom"))) {
@@ -472,31 +497,43 @@ ggchord_fusion_shared_guides <- function(styles, boxes, x, canvas) {
   styles
 }
 
+ggchord_fusion_style_layer <- function(layer) {
+  input <- layer$data
+  d <- input[rep(seq_len(nrow(input)), each = 3L), , drop = FALSE]
+  d$.fusion_x <- rep(c(0, 1, 0), nrow(input))
+  d$.fusion_y <- rep(c(0, 0, 1), nrow(input))
+  d$.fusion_row <- rep(seq_len(nrow(input)), each = 3L)
+  mapping <- layer$mapping %||% ggplot2::aes()
+  for (role in intersect(c(layer$roles, "group"), names(mapping))) mapping[[role]] <- NULL
+  mapping$x <- ggplot2::aes(x = .fusion_x)$x
+  mapping$y <- ggplot2::aes(y = .fusion_y)$y
+  mapping$group <- ggplot2::aes(group = .fusion_row)$group
+  defaults <- list(fill = "steelblue", colour = NA, alpha = .35, linewidth = .25, linetype = 1)
+  fixed <- layer$fixed
+  for (name in setdiff(names(defaults), c(names(mapping), names(fixed))))
+    fixed[[name]] <- defaults[[name]]
+  carrier_layer <- do.call(ggplot2::geom_polygon, c(list(
+    data = d, mapping = mapping, inherit.aes = FALSE, show.legend = layer$show.legend), fixed))
+  carrier_layer$ggchord_layer_id <- layer$id
+  carrier_layer$ggchord_type <- "fusion_ribbon"
+  carrier_layer
+}
+
+ggchord_fusion_check_style_mapping <- function(layer) {
+  previous_plot <- ggplot2::last_plot()
+  on.exit(ggplot2::set_last_plot(previous_plot), add = TRUE)
+  carrier <- ggchord_fusion_style_layer(layer)
+  plot <- ggplot2::ggplot()
+  data <- carrier$setup_layer(carrier$data, plot)
+  carrier$compute_aesthetics(data, plot)
+  invisible(NULL)
+}
+
 # Train cross-panel styles through ggplot2; no second colour mapping engine.
-ggchord_fusion_styles <- function(x) {
+ggchord_fusion_build_styles <- function(x) {
   p <- ggplot2::ggplot() + ggplot2::theme_void(base_size = 9) +
     ggplot2::theme(legend.position = "right", plot.margin = ggplot2::margin(0,0,0,0))
-  for (layer in x$ribbons) {
-    input <- layer$data
-    d <- input[rep(seq_len(nrow(input)), each = 3L), , drop = FALSE]
-    d$.fusion_x <- rep(c(0, 1, 0), nrow(input))
-    d$.fusion_y <- rep(c(0, 0, 1), nrow(input))
-    d$.fusion_row <- rep(seq_len(nrow(input)), each = 3L)
-    mapping <- layer$mapping %||% ggplot2::aes()
-    for (role in intersect(c(layer$roles, "group"), names(mapping))) mapping[[role]] <- NULL
-    mapping$x <- ggplot2::aes(x = .fusion_x)$x
-    mapping$y <- ggplot2::aes(y = .fusion_y)$y
-    mapping$group <- ggplot2::aes(group = .fusion_row)$group
-    defaults <- list(fill = "steelblue", colour = NA, alpha = .35, linewidth = .25, linetype = 1)
-    fixed <- layer$fixed
-    for (name in setdiff(names(defaults), c(names(mapping), names(fixed))))
-      fixed[[name]] <- defaults[[name]]
-    carrier_layer <- do.call(ggplot2::geom_polygon, c(list(
-      data = d, mapping = mapping, inherit.aes = FALSE, show.legend = layer$show.legend), fixed))
-    carrier_layer$ggchord_layer_id <- layer$id
-    carrier_layer$ggchord_type <- "fusion_ribbon"
-    p <- p + carrier_layer
-  }
+  for (layer in x$ribbons) p <- p + ggchord_fusion_style_layer(layer)
   explicit <- ggplot2::theme()
   for (style in x$styles) {
     p <- suppressMessages(p + style)
@@ -517,7 +554,13 @@ ggchord_fusion_styles <- function(x) {
     inverse = stats::setNames(names(scope$aliases), scope$aliases)))
   if (length(scoped)) p <- ggchord_apply_scoped_scales(p, scoped)
   p <- ggchord_add_identity_scales(p)
-  built <- ggplot2::ggplot_build(p)
+  list(plot = p, built = ggplot2::ggplot_build(p), aliases = aliases)
+}
+
+ggchord_fusion_measure_styles <- function(x, styles) {
+  p <- styles$plot
+  built <- styles$built
+  aliases <- styles$aliases
   report <- list(status = "fixed", render_policy = p$ggchord$adaptive_report)
   if (identical(x$fusion_policy$mode, "adaptive")) {
     canvas <- c(grid::convertWidth(grid::unit(1, "npc"), "mm", TRUE),

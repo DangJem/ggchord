@@ -371,7 +371,10 @@ scale_seq_position <- function(name = waiver(), breaks = waiver(),
 #'
 #' @param track Track ID.
 #' @param name Axis title.
-#' @param limits,breaks,labels,transform,oob Continuous scale settings.
+#' @param limits,breaks,labels,oob Continuous scale settings.
+#' @param transform A continuous transformation name or object. An explicit
+#'   transformation object must be monotone and invertible over the values
+#'   used by the track scale.
 #' @param unit Optional unit of measurement for the shared track.
 #' @param domain Train a shared scale or train separately by panel.
 #' @param guide A track axis guide or `"none"`.
@@ -408,6 +411,8 @@ scale_track_value <- function(track = "default", name = waiver(), limits = NULL,
     ggchord_stop("limits must be an increasing range with at most one automatic endpoint")
   if (!is.function(oob)) ggchord_stop("oob must be a function")
   axis <- ggchord_track_axis_guide(guide)
+  custom <- inherits(transform, "transform")
+  if (custom) transform <- ggchord_check_track_transform(transform, track)
   sc <- ggplot2::continuous_scale(ggchord_track_aes("value", track), palette = identity,
     name = name, limits = limits, breaks = breaks, labels = labels,
     transform = transform, oob = oob, guide = "none")
@@ -417,7 +422,31 @@ scale_track_value <- function(track = "default", name = waiver(), limits = NULL,
   sc$ggchord_track_axis_guide <- axis$guide
   sc$ggchord_track_unit <- unit
   sc$ggchord_track_id <- track
+  sc$ggchord_custom_transform <- custom
   sc
+}
+
+ggchord_check_track_transform <- function(transformation, track) {
+  original <- transformation
+  transformation$transform <- function(x) {
+    result <- original$transform(x)
+    valid <- is.finite(x) & x >= original$domain[1L] & x <= original$domain[2L]
+    valid <- which(valid)
+    if (length(valid)) {
+      index <- valid[order(x[valid])]
+      index <- index[!duplicated(x[index])]
+      values <- result[index]
+      restored <- suppressWarnings(original$inverse(values))
+      direction <- sign(diff(values))
+      if (length(result) != length(x) || any(!is.finite(values)) ||
+          length(restored) != length(index) || any(!is.finite(restored)) ||
+          any(abs(restored - x[index]) > sqrt(.Machine$double.eps) * pmax(1, abs(x[index]))) ||
+          (length(direction) && (!all(direction > 0) && !all(direction < 0))))
+        ggchord_stop("Track '", track, "' requires a monotone, invertible value transform")
+    }
+    result
+  }
+  transformation
 }
 
 #' Report shared numerical limits across independent plots

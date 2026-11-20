@@ -526,9 +526,7 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
       }, numeric(1))
   }
   if (!is.null(gene_data_layout)) {
-    outside <- gene_data_layout$end > unname(lens[gene_data_layout$accver])
-    if (any(outside, na.rm = TRUE))
-      ggchord_stop("geom_feature(): intervals extend outside their reference")
+    ggchord_check_feature_bounds(gene_data_layout, lens)
     active_position <- if (isTRUE(lbl$position_supplied)) {
       lbl$feature_position
     } else {

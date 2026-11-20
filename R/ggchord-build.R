@@ -43,7 +43,7 @@ compute_chord_geometry <- function(plot) {
   ggchord_cache_layout(plot, compute_chord_geometry_prepared(plot))
 }
 
-ggchord_prepare_geometry_inputs <- function(plot) {
+ggchord_prepare_geometry_inputs <- function(plot, prepare_instances = TRUE) {
   if (any(vapply(plot$layers, function(x) identical(x$ggchord_type, "alignment"), logical(1))))
     ggchord_stop("geom_alignment_segment() requires coord_dotplot()")
   plot <- ggchord_register_layers(plot)
@@ -83,7 +83,7 @@ ggchord_prepare_geometry_inputs <- function(plot) {
   plot <- ggchord_prepare_track_layers(plot, sequences)
   plot <- ggchord_prepare_link_statistics(plot, sequences)
   plot <- ggchord_bind_domain_labels(plot)
-  plot <- ggchord_prepare_instances(plot, sequences)
+  if (prepare_instances) plot <- ggchord_prepare_instances(plot, sequences)
   plot$scales <- plot$scales$clone()
   plot$scales$scales <- Filter(function(s) is.null(s$ggchord_managed),
                                plot$scales$scales)
@@ -92,7 +92,7 @@ ggchord_prepare_geometry_inputs <- function(plot) {
   plot$layers <- lapply(plot$layers, ggchord_resolve_style_defaults,
     mapping = plot$mapping)
   plot$layers <- lapply(plot$layers, ggchord_bind_visual_mapping, plot = plot)
-  plot
+  ggchord_prepare_site_size_scales(plot)
 }
 
 compute_chord_geometry_prepared <- function(plot) {

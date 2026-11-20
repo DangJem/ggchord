@@ -4,6 +4,13 @@ GeomChordFeatureBase <- ggplot2::ggproto(
   "GeomChordFeatureBase", ggplot2::GeomPolygon
 )
 feature_polygon_geom <- GeomChordFeatureBase
+
+ggchord_check_feature_bounds <- function(data, lengths) {
+  limit <- unname(lengths[as.character(data$accver)])
+  if (any(data$start > limit | data$end > limit, na.rm = TRUE))
+    ggchord_stop("geom_feature(): intervals extend outside their reference")
+}
+
 feature_geom_defaults <- feature_polygon_geom$default_aes
 feature_geom_defaults$feature_shape <- "arrow"
 feature_geom <- ggplot2::ggproto(

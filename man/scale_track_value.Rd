@@ -22,7 +22,11 @@ scale_track_value(
 
 \item{name}{Axis title.}
 
-\item{limits, breaks, labels, transform, oob}{Continuous scale settings.}
+\item{limits, breaks, labels, oob}{Continuous scale settings.}
+
+\item{transform}{A continuous transformation name or object. An explicit
+transformation object must be monotone and invertible over the values
+used by the track scale.}
 
 \item{unit}{Optional unit of measurement for the shared track.}
 

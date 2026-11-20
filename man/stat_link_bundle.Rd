@@ -33,7 +33,9 @@ stat_link_bundle(
 
 \item{...}{Additional named visual styles and parameters accepted by this layer.}
 
-\item{na.rm}{Suppress warnings for missing observations that the layer can omit.}
+\item{na.rm}{Omit records with missing endpoint coordinates or weights.
+Set to \code{TRUE} to omit them silently. Invalid references, units and
+out-of-bounds coordinates remain errors.}
 
 \item{show.legend}{Logical or named logical indicating whether the layer contributes legend keys.}
 
@@ -42,13 +44,17 @@ stat_link_bundle(
 \item{id}{Optional plot-local layer identifier. Name a layer explicitly to scope a scale, anchor a label or export it.}
 }
 \value{
-A ggplot2 layer for addition to a plot.
+A ggplot2 layer whose statistic output retains the original members
+in \code{source_members}, with \code{n_members} and \code{sum_weight} for each result.
 }
 \description{
 Aggregate source intervals in a complete reference grid
 }
 \details{
-Source references are \code{qaccver} and \code{saccver}. Point links consume \code{qpos} and \code{spos}. Interval links and alignment segments consume closed interval endpoints on both references. Supply reliable \code{qstrand} and \code{sstrand} or explicit relative direction when the geometry requires it.
+The statistic bins the midpoints of closed query and subject
+intervals over their complete references. Bins are evaluated within
+reference pairs, orientation, explicit groups and facets. Bins below
+\code{min_bundle} retain separate source records.
 }
 \examples{
 library(ggplot2)

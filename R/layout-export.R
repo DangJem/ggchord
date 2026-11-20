@@ -9,9 +9,10 @@
 #' @param dpi Raster device resolution.
 #' @return Per-layer stage tables, geometry components, stage status, reference
 #'   and provenance information, diagnostics and measurement conditions.
-#' @details Child panel failures are recorded by path during Fusion export.
-#' Successfully built panels retain their stages. Ribbon tips are returned
-#' as decoration geometry separately from the source fronts.
+#' @details Fusion export records failed panels by path and failed ribbons by
+#' path and layer ID. It retains the stages and geometry of other panels and
+#' ribbons. Ribbon tips are returned as decoration geometry separately from
+#' the source fronts.
 #' @export
 #' @examples
 #' seqs <- data.frame(
@@ -380,9 +381,14 @@ ggchord_output_capture_source <- function(entry) {
 ggchord_output_build_stages <- function(plot, on_error = NULL, path = character()) {
   if (inherits(plot, "ggchord_fusion")) {
     for (layer in plot$ribbons) {
-      layer$capture$mapped <- tryCatch(ggchord_fusion_input(layer), error = function(e) {
-        layer$capture$mapped_error <- conditionMessage(e)
-        NULL
+      layer$capture$mapped <- tryCatch({
+        ggchord_fusion_check_style_mapping(layer)
+        ggchord_fusion_input(layer)
+      }, error = function(e) {
+        ggchord_fusion_layer_error(layer, "mapped", e, function(ignored, error, id) {
+          if (is.null(on_error)) stop(error)
+          on_error(path, error, id)
+        })
       })
       layer$capture$statistic <- layer$capture$mapped
     }

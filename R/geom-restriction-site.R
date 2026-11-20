@@ -65,7 +65,8 @@ ggchord_site_layer <- function(mapping, data, shape, fixed_shape, size, fixed_si
 #' @param mapping Aesthetic mapping from `ggplot2::aes()`. A local mapping overrides the matching inherited channel.
 #' @param data Observation table or a data function. For ggchord layers, provide the required data-role columns.
 #' @param shape Default shape. An explicitly supplied fixed shape takes priority over its mapping.
-#' @param size Physical size of the symbol in millimetres.
+#' @param size Fixed symbol size in millimetres. To map size to data, use
+#'   `aes(size = ...)` with a shared or [scale_for()] size scale.
 #' @param stat A compatible ggplot2 Stat or its name. The default uses the supplied records.
 #' @param position A compatible Position for placement of the layer geometry.
 #' @param ... Additional named visual styles and parameters accepted by this layer.
@@ -106,7 +107,8 @@ geom_site <- function(mapping = NULL, data = NULL, shape = "tick", size = 2,
 #' @param mapping Aesthetic mapping from `ggplot2::aes()`. A local mapping overrides the matching inherited channel.
 #' @param data Observation table or a data function. For ggchord layers, provide the required data-role columns.
 #' @param shape Default shape. An explicitly supplied fixed shape takes priority over its mapping.
-#' @param size Physical size of the symbol in millimetres.
+#' @param size Fixed symbol size in millimetres. To map size to data, use
+#'   `aes(size = ...)` with a shared or [scale_for()] size scale.
 #' @param stat A compatible ggplot2 Stat or its name. The default uses the supplied records.
 #' @param position A compatible Position for placement of the layer geometry.
 #' @param ... Additional named visual styles and parameters accepted by this layer.
@@ -225,6 +227,53 @@ ggchord_site_empty <- function() data.frame(
   source_row = integer(), .component = character(), normal_offset = numeric()
 )
 
+# Site dimensions enter the geometry before ggplot2 draws the marks. Train
+# each participating size domain once across its layers, before faceting.
+ggchord_prepare_site_size_scales <- function(plot) {
+  layers <- plot$layers
+  mapping <- lapply(layers, function(layer) {
+    if (!is.null(layer$aes_params$size)) return(NULL)
+    if (!is.null(layer$ggchord_type))
+      return(ggchord_start_mapping(layer$ggchord_input_mapping$size))
+    if (!"size" %in% layer$geom$aesthetics()) return(NULL)
+    ggchord_start_mapping(layer$mapping$size %||% if (isTRUE(layer$inherit.aes)) plot$mapping$size)
+  })
+  sites <- which(vapply(layers, function(layer) identical(layer$ggchord_type, "restriction_site") &&
+    !isTRUE(layer$ggchord_params$fixed_size), logical(1)) & lengths(mapping) > 0L)
+  if (!length(sites)) return(plot)
+  previous_plot <- ggplot2::last_plot()
+  on.exit(ggplot2::set_last_plot(previous_plot), add = TRUE)
+
+  scopes <- Filter(function(scope) "size" %in% scope$aesthetics, ggchord_scale_scopes(plot))
+  global <- setdiff(seq_along(layers), unlist(lapply(scopes, `[[`, "selected")))
+  domains <- c(scopes, list(list(selected = global, scale = plot$scales$get_scales("size"))))
+  for (domain in domains) {
+    owners <- intersect(sites, domain$selected)
+    if (!length(owners)) next
+    values <- lapply(domain$selected[lengths(mapping[domain$selected]) > 0L], function(i) {
+      layer <- layers[[i]]
+      data <- if (is.null(layer$ggchord_type)) layer$layer_data(plot$data) else
+        ggchord_resolve_layer_input(layer, ggchord_layer_fallback(layer, plot$ggchord$data))
+      if (!NROW(data)) return(NULL)
+      cached <- ggchord_visual_value(layer$ggchord_params$visual_source, "size",
+        mapping[[i]], data, seq_len(nrow(data)))
+      if (!is.null(cached)) return(cached[[1L]])
+      ggchord_eval_input_mapping("size", mapping[[i]], data, ggchord_layer_input_context(layer))
+    })
+    values <- Filter(length, values)
+    if (!length(values)) next
+    scale <- (domain$scale %||% ggplot2::scale_size())$clone()
+    # Use ggplot2's active theme and default palette, which can be deferred
+    # until its scale is initialized.
+    carrier <- ggplot2::ggplot(mapping = ggplot2::aes(x = 0, y = 0, size = value)) + plot$theme
+    for (value in values) carrier <- carrier + ggplot2::geom_point(data = data.frame(value = unique(value)))
+    scale$aesthetics <- "size"
+    trained <- ggplot2::ggplot_build(carrier + scale)$plot$scales$get_scales("size")
+    for (i in owners) plot$layers[[i]]$ggchord_params$size_scale <- trained
+  }
+  plot
+}
+
 ggchord_site_geometry <- function(layer, input, layout, plot) {
   if (!NROW(input)) return(ggchord_site_empty())
   ggchord_require_columns(input, c("accver", "pos"), "geom_site()")
@@ -243,15 +292,21 @@ ggchord_site_geometry <- function(layer, input, layout, plot) {
     if (isTRUE(p[[paste0("fixed_", channel)]])) next
     start <- ggchord_start_mapping(visual[[channel]])
     if (is.null(start)) next
-    mapped <- ggchord_eval_input_mapping(channel, start, input, "geom_site()")
+    cached <- ggchord_visual_value(p$visual_source, channel, start, input, seq_len(nrow(input)))
+    mapped <- if (is.null(cached)) ggchord_eval_input_mapping(channel, start, input, "geom_site()") else cached[[1L]]
     if (!length(mapped) %in% c(1L, nrow(input)))
       ggchord_stop("geom_site(): invalid length for ", channel, " mapping")
-    scale <- p[[paste0(channel, "_scale")]] %||% plot$scales$get_scales(channel)
-    if (is.null(scale) && channel == "shape")
-      ggchord_stop("geom_site(): shape mapping requires an explicit visual scale")
-    scale <- (scale %||% ggplot2::scale_size())$clone()
-    transformed <- scale$transform(mapped)
-    scale$train(transformed)
+    if (channel == "shape") {
+      scale <- p$shape_scale %||% plot$scales$get_scales("shape")
+      if (is.null(scale)) ggchord_stop("geom_site(): shape mapping requires an explicit visual scale")
+      scale <- scale$clone()
+      transformed <- scale$transform(mapped)
+      scale$train(transformed)
+    } else {
+      scale <- p$size_scale
+      if (is.null(scale)) next
+      transformed <- scale$transform(mapped)
+    }
     mapped <- rep_len(scale$map(transformed), nrow(input))
     if (channel == "shape") shape <- as.character(mapped) else size <- mapped
   }
@@ -273,6 +328,7 @@ ggchord_site_geometry <- function(layer, input, layout, plot) {
   })
   pieces <- list()
   for (row in seq_len(nrow(input))) {
+    if (is.na(size[row])) next
     id <- ids[row]
     mm <- ggchord_units_per_mm()
     offset <- offsets[[id]][[1L]]

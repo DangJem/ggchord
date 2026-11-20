@@ -11,7 +11,37 @@ ggchord_build_fusion_core <- function(x, on_error = NULL) {
     collected <- ggchord_fusion_collect_guides(x, partial = !is.null(on_error))
     x <- collected$plot
   }
-  styles <- ggchord_fusion_styles(x)
+  for (scope in x$scope_scales) {
+    if (any(!scope$layers %in% names(x$ribbons)))
+      ggchord_stop("Fusion: scale_for() must select root ribbon layers")
+  }
+  ribbon_mapped <- lapply(x$ribbons, function(layer) {
+    tryCatch(ggchord_fusion_input(layer), error = function(e)
+      ggchord_fusion_layer_error(layer, "mapped", e, on_error))
+  })
+  originals <- x
+  x <- ggchord_fusion_subset_ribbons(originals, names(Filter(Negate(is.null), ribbon_mapped)))
+  styles <- if (is.null(on_error)) ggchord_fusion_build_styles(x) else
+    tryCatch(ggchord_fusion_build_styles(x), error = identity)
+  if (inherits(styles, "error")) {
+    # Retry only after a joint build fails. Keep the layers that still train
+    # together so valid ribbons retain their shared scale and guides.
+    selected <- character()
+    styles <- ggchord_fusion_build_styles(ggchord_fusion_subset_ribbons(originals, selected))
+    for (id in names(x$ribbons)) {
+      trial <- ggchord_fusion_subset_ribbons(originals, c(selected, id))
+      built <- tryCatch(ggchord_fusion_build_styles(trial), error = identity)
+      if (inherits(built, "error")) {
+        ggchord_fusion_layer_error(x$ribbons[[id]], "mapped", built, on_error)
+      } else {
+        selected <- c(selected, id)
+        styles <- built
+      }
+    }
+    x <- ggchord_fusion_subset_ribbons(originals, selected)
+  }
+  ribbon_mapped <- ribbon_mapped[names(x$ribbons)]
+  styles <- ggchord_fusion_measure_styles(x, styles)
   styles <- ggchord_fusion_shared_guides(styles,collected$boxes,x,canvas)
   guide_size <- if (styles$side == "none") c(0, 0) else if (styles$side != "multiple")
     styles$sizes[styles$side, ] else apply(styles$sizes, 2, max)
@@ -221,21 +251,14 @@ ggchord_build_fusion_core <- function(x, on_error = NULL) {
   fronts <- list()
   paths <- list()
   ribbons <- list()
-  ribbon_mapped <- list()
   for (i in seq_along(x$ribbons)) {
     layer <- x$ribbons[[i]]
-    input <- ggchord_fusion_input(layer)
-    ribbon_mapped[[layer$id]] <- input
+    input <- ribbon_mapped[[layer$id]]
     if (!is.null(layer$capture)) {
       layer$capture$mapped <- input
       layer$capture$statistic <- input
     }
-    incomplete <- rep(FALSE, nrow(input))
-    for (role in layer$required) {
-      value <- input[[role]]
-      missing <- if (is.list(value)) vapply(value, function(v) !length(v) || anyNA(v), logical(1)) else is.na(value)
-      incomplete <- incomplete | missing
-    }
+    incomplete <- ggchord_fusion_incomplete(input, layer$required)
     if (any(incomplete) && !layer$na.rm)
       warning("Fusion layer '", layer$id, "': omitted ", sum(incomplete), " incomplete relationship row(s)", call. = FALSE)
     for (row in seq_len(nrow(input))) {
@@ -254,60 +277,61 @@ ggchord_build_fusion_core <- function(x, on_error = NULL) {
         connection_rows[[length(connection_rows) + 1L]] <- report
         next
       }
-      endpoints <- tryCatch(list(
-        q = ggchord_fusion_endpoint(panels, record, "q", layer$id, row),
-        s = ggchord_fusion_endpoint(panels, record, "s", layer$id, row)),
-        error = function(e) {
-          if (is.null(on_error)) stop(e)
-          if (!is.null(layer$capture)) layer$capture$geometry_error <- conditionMessage(e)
-          on_error(character(), e, layer$id)
-          NULL
+      connection <- tryCatch({
+        q <- ggchord_fusion_endpoint(panels, record, "q", layer$id, row)
+        s <- ggchord_fusion_endpoint(panels, record, "s", layer$id, row)
+        if (q$panel == s$panel) ggchord_stop("Fusion: links require distinct panels")
+        if (q$unit != s$unit) ggchord_stop("Fusion: bp/aa links require an explicit source projection")
+        ggchord_check_character_origin(q, s, "fusion_ribbon()")
+        ggchord_check_interval_unit(record, q$unit, "fusion_ribbon()")
+        qf <- ggchord_fusion_front(panels[[q$panel]], q)
+        sf <- ggchord_fusion_front(panels[[s$panel]], s)
+        path <- ggchord_fusion_path(qf, sf, if (layer$route == "straight") 0 else layer$curvature)
+        style <- styles$data[[i]][row, , drop = FALSE]
+        normals <- attr(path, "endpoint_normals")
+        row_fronts <- lapply(c("q", "s"), function(prefix) {
+          endpoint <- if (prefix == "q") q else s
+          front <- if (prefix == "q") qf else sf
+          front$endpoint <- prefix
+          front$panel_id <- endpoint$panel
+          front$instance_id <- endpoint$instance
+          front$accver <- endpoint$entity
+          front$layer_id <- layer$id
+          front$composition_id <- ""
+          front$source_row <- row
+          front$sequence_unit <- endpoint$unit
+          front$control_normal_x <- normals[prefix, 1L]
+          front$control_normal_y <- normals[prefix, 2L]
+          front
         })
-      if (is.null(endpoints)) next
-      q <- endpoints$q
-      s <- endpoints$s
-      if (q$panel == s$panel) ggchord_stop("Fusion: links require distinct panels")
-      if (q$unit != s$unit) ggchord_stop("Fusion: bp/aa links require an explicit source projection")
-      ggchord_check_character_origin(q, s, "fusion_ribbon()")
-      ggchord_check_interval_unit(record, q$unit, "fusion_ribbon()")
-      qf <- ggchord_fusion_front(panels[[q$panel]], q)
-      sf <- ggchord_fusion_front(panels[[s$panel]], s)
-      path <- ggchord_fusion_path(qf, sf, if (layer$route == "straight") 0 else layer$curvature)
-      style <- styles$data[[i]][row, , drop = FALSE]
-      normals <- attr(path, "endpoint_normals")
-      for (prefix in c("q", "s")) {
-        endpoint <- if (prefix == "q") q else s
-        front <- if (prefix == "q") qf else sf
-        front$endpoint <- prefix
-        front$panel_id <- endpoint$panel
-        front$instance_id <- endpoint$instance
-        front$accver <- endpoint$entity
-        front$layer_id <- layer$id
-        front$composition_id <- ""
-        front$source_row <- row
-        front$sequence_unit <- endpoint$unit
-        front$control_normal_x <- normals[prefix, 1L]
-        front$control_normal_y <- normals[prefix, 2L]
-        fronts[[length(fronts) + 1L]] <- front
+        d <- data.frame(x = path[, 1L], y = path[, 2L], fill = style$fill,
+          colour = style$colour, alpha = style$alpha, linewidth = style$linewidth,
+          linetype = style$linetype, layer_id = layer$id, composition_id = "",
+          source_row = row, units = "mm", component_type = "relationship")
+        grob <- grid::pathGrob(d$x, d$y,
+          default.units = "mm", rule = "evenodd", gp = grid::gpar(
+            fill = scales::alpha(style$fill, style$alpha),
+            col = scales::alpha(style$colour, style$alpha), lwd = style$linewidth * ggplot2::.pt,
+            lty = style$linetype, lineend = layer$fixed$lineend %||% "butt"))
+        report$route <- layer$route
+        report$qpanel <- q$panel
+        report$spanel <- s$panel
+        report$qinstance <- q$instance
+        report$sinstance <- s$instance
+        report$sequence_unit <- q$unit
+        report$retained <- TRUE
+        report$reason <- NA_character_
+        list(fronts = row_fronts, path = d, grob = grob, report = report)
+      }, error = function(e) ggchord_fusion_layer_error(layer, "geometry", e, on_error))
+      if (is.null(connection)) {
+        report$retained <- FALSE
+        report$reason <- "geometry_failed"
+      } else {
+        fronts <- c(fronts, connection$fronts)
+        paths[[length(paths) + 1L]] <- connection$path
+        ribbons[[length(ribbons) + 1L]] <- connection$grob
+        report <- connection$report
       }
-      d <- data.frame(x = path[, 1L], y = path[, 2L], fill = style$fill,
-        colour = style$colour, alpha = style$alpha, linewidth = style$linewidth,
-        linetype = style$linetype, layer_id = layer$id, composition_id = "",
-        source_row = row, units = "mm", component_type = "relationship")
-      ribbons[[length(ribbons) + 1L]] <- grid::pathGrob(d$x, d$y,
-        default.units = "mm", rule = "evenodd", gp = grid::gpar(
-          fill = scales::alpha(style$fill, style$alpha),
-          col = scales::alpha(style$colour, style$alpha), lwd = style$linewidth * ggplot2::.pt,
-          lty = style$linetype, lineend = layer$fixed$lineend %||% "butt"))
-      paths[[length(paths) + 1L]] <- d
-      report$route <- layer$route
-      report$qpanel <- q$panel
-      report$spanel <- s$panel
-      report$qinstance <- q$instance
-      report$sinstance <- s$instance
-      report$sequence_unit <- q$unit
-      report$retained <- TRUE
-      report$reason <- NA_character_
       connection_rows[[length(connection_rows) + 1L]] <- report
     }
   }

@@ -36,6 +36,18 @@
   Diagnostics detect invalid references and incompatible components before
   device measurement. MAF character tables expose `source_input` and
   `source_block` for selecting an alignment block.
+- Align Chord point links with other marks at the same source position.
+  Point annotations share size-scale training across layers, including
+  explicit scopes, and track scopes reject aesthetics unsupported by
+  their geometry.
+- Reject custom track transforms that fail the monotonicity or inverse
+  checks on the values used by the scale. Link density exports both bin
+  indices, raw density units and the normalization mode. Link statistics
+  omit incomplete observations according to `na.rm` and retain source rows.
+- Keep valid child panels and ribbons in Fusion exports when a root ribbon
+  fails. Diagnose unknown Fusion endpoint paths and out-of-reference
+  feature intervals before device measurement. Residue cells are unique
+  within each Cartesian facet.
 
 # ggchord 0.29.0
 
