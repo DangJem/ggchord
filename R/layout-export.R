@@ -9,6 +9,9 @@
 #' @param dpi Raster device resolution.
 #' @return Per-layer stage tables, geometry components, stage status, reference
 #'   and provenance information, diagnostics and measurement conditions.
+#' @details Child panel failures are recorded by path during Fusion export.
+#' Successfully built panels retain their stages. Ribbon tips are returned
+#' as decoration geometry separately from the source fronts.
 #' @export
 #' @examples
 #' seqs <- data.frame(
@@ -42,6 +45,12 @@ export_ggchord_layout <- function(plot, layers = NULL, stages = "geometry",
   catalogue <- new.env(parent = emptyenv())
   catalogue$layers <- list()
   catalogue$reference <- list()
+  failures <- list()
+  record_failure <- function(path, error, layer_id = NULL) {
+    failures[[length(failures) + 1L]] <<- list(path = path, layer_id = layer_id,
+      message = conditionMessage(error))
+  }
+  catalogue$on_error <- record_failure
   prospective <- ggchord_output_prepare(plot, character(), stages, catalogue)
   entries <- catalogue$layers
   if (!is.null(selections)) {
@@ -69,12 +78,12 @@ export_ggchord_layout <- function(plot, layers = NULL, stages = "geometry",
     results <- tryCatch({
       if (need_geometry) {
         ggchord_with_output_device(request, function() {
-          result <- ggchord_output_build_geometry(prospective)
+          result <- ggchord_output_build_geometry(prospective, record_failure)
           ggchord_output_attach_geometry(entries, result)
           result
         })
       } else {
-        ggchord_output_build_stages(prospective)
+        ggchord_output_build_stages(prospective, record_failure)
         NULL
       }
     }, error = function(e) {
@@ -103,14 +112,25 @@ export_ggchord_layout <- function(plot, layers = NULL, stages = "geometry",
       geometry$panels <- ggchord_output_panel_table(results$leaf$context)
     }
   }
+  if (length(failures)) {
+    diagnostic <- ggchord_rbind_fill(c(list(diagnostic), lapply(failures, function(issue)
+      ggchord_output_issue("error", "build_failed", issue$message, issue$path,
+        issue$layer_id %||% NA_character_))))
+  }
   measurement <- ggchord_output_measurement(request, need_geometry, failure,
     actual = attr(results, "measurement_device"))
   if (need_geometry && is.null(failure) && !is.null(results$leaf) &&
       !identical(results$leaf$context$status, "measured"))
     measurement <- utils::modifyList(measurement, list(status = "unavailable",
       reason = "panel_measurement_unavailable"))
-  statuses <- lapply(entries, ggchord_output_stage_status, stages = stages,
-    request = request, build_failure = failure)
+  statuses <- lapply(entries, function(entry) {
+    local <- Filter(function(issue)
+      length(issue$path) <= length(entry$panel_path) &&
+        identical(issue$path, utils::head(entry$panel_path, length(issue$path))) &&
+        (is.null(issue$layer_id) || identical(issue$layer_id, entry$layer_id)), failures)
+    ggchord_output_stage_status(entry, stages, request,
+      if (length(local)) local[[1L]]$message else failure)
+  })
   report <- ggchord_rbind_fill(statuses) %||% data.frame(
     layer_id = character(), stage = character(), status = character(), reason = character(),
     panel_path = I(list()))
@@ -292,7 +312,12 @@ ggchord_output_prepare <- function(plot, path, stages, catalogue) {
   }
   genomic <- inherits(plot, "ggchord")
   if (genomic) {
-    plot <- ggchord_render_plot_copy(ggchord_render_inputs(plot))
+    plot <- tryCatch(ggchord_render_inputs(plot), error = function(e) {
+      if (!length(path) || is.null(catalogue$on_error)) stop(e)
+      catalogue$on_error(path, e)
+      plot
+    })
+    plot <- ggchord_register_layers(ggchord_render_plot_copy(plot))
     reference <- plot$ggchord$data$seq_data
   } else reference <- plot$ggchord_alignment
   if (!is.null(reference)) catalogue$reference <- c(catalogue$reference,
@@ -311,6 +336,8 @@ ggchord_output_prepare <- function(plot, path, stages, catalogue) {
     } else {
       layer <- reconstruct_layer(layer, layer$data, mapping = layer$mapping)
       layer$ggchord_params$stage_capture <- capture
+      if (!is.null(layer$ggchord_params$source_stat))
+        layer$ggchord_params$source_stat_cache <- new.env(parent = emptyenv())
       local({
         lyr <- layer
         fallback <- ggchord_layer_fallback(lyr, plot$ggchord$data)
@@ -322,8 +349,13 @@ ggchord_output_prepare <- function(plot, path, stages, catalogue) {
           # Resolve precisely those two layers without building text geometry.
           at <- match(anchor, ids)
           if (is.na(at)) ggchord_stop("Unknown anchor layer '", anchor, "'")
-          branch <- plot
-          branch$layers <- list(plot$layers[[at]], lyr)
+          branch <- ggchord_prepare_facet_sources(plot)
+          owner <- branch$layers[[at]]
+          if (!is.null(owner$ggchord_params$source_stat)) {
+            owner <- reconstruct_layer(owner, owner$data, mapping = owner$mapping)
+            owner$ggchord_params$source_stat_facet <- branch$ggchord$source_facet_setup
+          }
+          branch$layers <- list(owner, lyr)
           branch <- ggchord_bind_domain_labels(branch)
           ggchord_layer_source(branch$layers[[2L]], fallback)
         }
@@ -345,7 +377,7 @@ ggchord_output_capture_source <- function(entry) {
   })
 }
 
-ggchord_output_build_stages <- function(plot) {
+ggchord_output_build_stages <- function(plot, on_error = NULL, path = character()) {
   if (inherits(plot, "ggchord_fusion")) {
     for (layer in plot$ribbons) {
       layer$capture$mapped <- tryCatch(ggchord_fusion_input(layer), error = function(e) {
@@ -354,7 +386,14 @@ ggchord_output_build_stages <- function(plot) {
       })
       layer$capture$statistic <- layer$capture$mapped
     }
-    for (panel in plot$panels) ggchord_output_build_stages(panel$plot)
+    for (id in names(plot$panels)) {
+      child <- c(path, ggchord_fusion_path_ids(id))
+      tryCatch(ggchord_output_build_stages(plot$panels[[id]]$plot, on_error, child),
+        error = function(e) {
+          if (is.null(on_error)) stop(e)
+          on_error(child, e)
+        })
+    }
   } else {
     built <- ggplot2::ggplot_build(plot)
     if (!is.null(plot$ggchord_alignment)) ggchord_alignment_layout(built, plot$ggchord_alignment)
@@ -378,9 +417,9 @@ ggchord_output_capture_build <- function(plot, built, layout) {
   }
 }
 
-ggchord_output_build_geometry <- function(plot) {
+ggchord_output_build_geometry <- function(plot, on_error = NULL) {
   if (inherits(plot, "ggchord_fusion")) {
-    fusion <- ggchord_build_fusion(plot)
+    fusion <- ggchord_build_fusion(plot, on_error)
     grid::grid.draw(fusion$grob)
     return(list(fusion = fusion, leaves = fusion$panel_registry))
   }
@@ -444,6 +483,28 @@ ggchord_output_attach_geometry <- function(entries, results) {
       }))
     }
     if (is.null(data)) data <- list(vertices = ggchord_rbind_fill(built$data[hit]) %||% data.frame())
+    if (identical(entry$type, "ribbon") && length(hit)) {
+      tips <- lapply(hit, function(i) {
+        params <- built$plot$layers[[i]]$geom_params
+        d <- built$data[[i]]
+        if (!nrow(d) || identical(params$tip %||% "none", "none")) return(NULL)
+        raw <- built$plot$layers[[i]]$data
+        if (is.null(d$source_row) && nrow(d) == nrow(raw)) d$source_row <- raw$source_row
+        ggchord_rbind_fill(lapply(split(d, interaction(d$PANEL, d$group, drop = TRUE)), function(piece) {
+          panel <- as.integer(piece$PANEL[1L])
+          context <- leaf$context$facet_contexts[[panel]] %||% leaf$context
+          trace <- ggchord_ribbon_trace(piece, params$tip, params$tip_length,
+            built$layout$coord, built$layout$panel_params[[panel]], context$panel_mm)
+          ggchord_rbind_fill(lapply(names(trace$tips), function(side) {
+            xy <- trace$tips[[side]]
+            data.frame(x = xy[, 1L], y = xy[, 2L], PANEL = panel,
+              group = piece$group[1L], source_row = piece$source_row[1L] %||% NA_integer_,
+              endpoint = side, component_type = "decoration")
+          }))
+        }))
+      })
+      if (any(lengths(tips) > 0L)) data$tip <- ggchord_rbind_fill(tips)
+    }
     capture$geometry <- lapply(data, ggchord_restore_instance_data,
       instances = leaf$layout$display_instances)
   }

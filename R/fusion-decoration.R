@@ -28,8 +28,8 @@ ggchord_fusion_decoration <- function(x) {
     labels = built$plot$labels, table = table)
 }
 
-ggchord_build_fusion <- function(x) {
-  if (!ggchord_fusion_has_decoration(x)) return(ggchord_build_fusion_core(x))
+ggchord_build_fusion <- function(x, on_error = NULL) {
+  if (!ggchord_fusion_has_decoration(x)) return(ggchord_build_fusion_core(x, on_error))
   previous <- ggplot2::last_plot()
   on.exit(ggplot2::set_last_plot(previous))
   canvas <- c(width = grid::convertWidth(grid::unit(1, 'npc'), 'mm', TRUE),
@@ -48,7 +48,8 @@ ggchord_build_fusion <- function(x) {
   result <- local({
     grid::pushViewport(viewport)
     on.exit(grid::popViewport())
-    ggchord_with_render_context(list(available_canvas_mm = dimensions), ggchord_build_fusion_core(inner))
+    ggchord_with_render_context(list(available_canvas_mm = dimensions),
+      ggchord_build_fusion_core(inner, on_error))
   })
   result$export <- ggchord_fusion_nested_export(result$export, NULL, offset)
   for (id in names(result$panel_registry)) result$panel_registry[[id]]$context$panel_bounds_mm <-

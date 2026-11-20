@@ -13,7 +13,7 @@ ggchord_panel_backbone_frame <- function(layout, id, position) {
     ggchord_sankey_points(p[, 1], p[, 2], id, layout$sankey_frames) else
     if (isTRUE(layout$radial_projected)) function(p)
       ggchord_radial_points(p[, 1], p[, 2], id, layout$radial_frames) else
-    if (identical(layout$seq_axis, "vertical")) function(p) cbind(x = -p[, 2], y = p[, 1]) else identity
+    if (identical(layout$seq_axis, "vertical")) function(p) cbind(x = p[, 2], y = p[, 1]) else identity
   tip <- project(xy + normal); xy <- project(xy)
   list(xy = xy, normal = tip - xy)
 }

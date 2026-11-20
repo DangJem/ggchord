@@ -63,9 +63,14 @@ ggchord_register_layers <- function(plot) {
     copy$ggchord_params$input_description <- if (is.function(input)) "layer data callback" else
       if (is.null(input)) "default layer data" else "explicit layer data"
 
-    if (isTRUE(copy$inherit.aes) && length(plot$mapping) && !identical(type, "track")) {
+    if (!identical(type, "track")) {
       local <- copy$ggchord_input_mapping %||% ggplot2::aes()
-      for (name in setdiff(names(plot$mapping), names(local))) local[[name]] <- plot$mapping[[name]]
+      if (isTRUE(copy$inherit.aes)) {
+        for (name in setdiff(names(plot$mapping), names(local))) local[[name]] <- plot$mapping[[name]]
+      }
+      defaults <- copy$ggchord_params$style_defaults
+      fixed <- setdiff(names(copy$aes_params), names(defaults)[defaults])
+      local[intersect(names(local), fixed)] <- NULL
       copy$ggchord_input_mapping <- local
       copy$inherit.aes <- FALSE
     }

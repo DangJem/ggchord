@@ -193,16 +193,55 @@ diagnose_ggchord <- function(plot, width = NULL, height = NULL, units = "in",
 }
 
 ggchord_diagnose_sources <- function(plot) {
-  catalogue <- new.env(parent = emptyenv())
-  catalogue$layers <- list()
-  catalogue$reference <- list()
-  ggchord_output_prepare(plot, character(), "source", catalogue)
-  issues <- lapply(catalogue$layers, function(entry) {
-    ggchord_output_capture_source(entry)
-    failure <- entry$capture$source_error
-    if (!is.null(failure)) ggchord_output_issue("error", "source_failed", failure,
-      panel_path = entry$panel_path, layer_id = entry$layer_id, component = "source")
-  })
+  issues <- list()
+  check <- function(expr, path, layer = NA_character_) {
+    tryCatch(expr, error = function(e) {
+      issues[[length(issues) + 1L]] <<- ggchord_output_issue(
+        "error", "source_failed", conditionMessage(e), path, layer, "source")
+      NULL
+    })
+  }
+  walk <- function(plot, path) {
+    if (inherits(plot, "ggchord_fusion")) {
+      for (layer in plot$ribbons) check(ggchord_fusion_input(layer), path, layer$id)
+      for (id in names(plot$panels))
+        walk(plot$panels[[id]]$plot, c(path, ggchord_fusion_path_ids(id)))
+      return(invisible(NULL))
+    }
+    if (!inherits(plot, "ggchord")) {
+      ids <- ggchord_output_layer_ids(plot)
+      for (i in seq_along(plot$layers))
+        check(plot$layers[[i]]$layer_data(plot$data), path, ids[i])
+      return(invisible(NULL))
+    }
+    check({
+      plot <- ggchord_render_inputs(plot)
+      plot <- ggchord_register_layers(plot)
+      ggchord_scale_scopes(plot)
+      if (isTRUE(plot$coordinates$ggchord_dotplot)) {
+        ggchord_dotplot_geometry(plot)
+      } else {
+        plot <- ggchord_prepare_geometry_inputs(plot)
+        for (layer in plot$layers) {
+          if (is.null(layer$ggchord_type)) {
+            check(layer$layer_data(plot$data), path, layer$ggchord_layer_id %||% NA_character_)
+            next
+          }
+          check({
+            input <- ggchord_resolve_layer_input(layer,
+              ggchord_layer_fallback(layer, plot$ggchord$data))
+            if (identical(layer$ggchord_params$type, "gene")) {
+              ggchord_require_columns(input, c("accver", "start", "end"), "Feature layer")
+              ggchord_check_reference_ids(input, "accver",
+                plot$ggchord$data$seq_data$accver, "Feature layer")
+            }
+          }, path, layer$ggchord_layer_id)
+        }
+      }
+    }, path)
+    invisible(NULL)
+  }
+  walk(plot, character())
   ggchord_rbind_fill(issues) %||% ggchord_output_issue("information", "", "")[FALSE, ]
 }
 

@@ -403,8 +403,9 @@ scale_track_value <- function(track = "default", name = waiver(), limits = NULL,
   if (!is.null(unit) && (!is.character(unit) || length(unit) != 1L || is.na(unit) || !nzchar(unit)))
     ggchord_stop("unit must be one nonempty measurement unit")
   if (!is.null(limits) && !is.function(limits) && (!is.numeric(limits) ||
-      length(limits) != 2L || any(!is.finite(limits)) || limits[1L] > limits[2L]))
-    ggchord_stop("limits must define an increasing finite domain")
+      length(limits) != 2L || all(is.na(limits)) || any(is.infinite(limits) | is.nan(limits)) ||
+      isTRUE(limits[1L] > limits[2L])))
+    ggchord_stop("limits must be an increasing range with at most one automatic endpoint")
   if (!is.function(oob)) ggchord_stop("oob must be a function")
   axis <- ggchord_track_axis_guide(guide)
   sc <- ggplot2::continuous_scale(ggchord_track_aes("value", track), palette = identity,
@@ -455,8 +456,8 @@ track_limits <- function(plots, tracks = "default") {
   reports <- lapply(plots, function(plot) {
     plot <- ggchord_render_inputs(plot)
     plot <- ggchord_register_layers(plot)
-    plot$layers <- Filter(function(l) identical(l$ggchord_type, "track"), plot$layers)
-    ggchord_render_track_source(plot)
+    plot <- ggchord_prepare_facet_sources(plot)
+    ggchord_prepare_track_layers(plot)
   })
   compatible <- function(values, field) {
     known <- unique(values[!is.na(values)])
@@ -474,7 +475,7 @@ track_limits <- function(plots, tracks = "default") {
       if (!scale$has_domain) ggchord_stop("No numerical domain in track '", id, "'")
       sc <- scale$scale
       measures <- vapply(owners, function(l) l$ggchord_params$measure %||% NA_character_, character(1))
-      list(limits = sc$get_transformation()$inverse(sc$get_limits()),
+      list(limits = sort(sc$get_transformation()$inverse(sc$get_limits())),
         transform = sc$get_transformation()$name,
         unit = sc$ggchord_track_unit %||% NA_character_, measure = compatible(measures, "measure"))
     })

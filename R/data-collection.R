@@ -112,7 +112,7 @@ data_report <- function(x, sections = NULL) {
     if (is.null(report) && length(provenance)) {
       latest <- provenance[[length(provenance)]]
       lineage <- if (is.data.frame(x)) {
-        fields <- intersect(c(".source_file", ".source_input", ".source_row", ".source_line",
+        fields <- intersect(c(".source_file", ".source_input", "source_input", ".source_row", ".source_line",
           "source_rows", "source_row", "source_block", "source_segment", "source_members"), names(x))
         if (length(fields)) x[fields]
       }

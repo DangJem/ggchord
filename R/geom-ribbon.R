@@ -13,6 +13,10 @@
 #' @param id Optional plot-local layer identifier. Name a layer explicitly to scope a scale, anchor a label or export it.
 #' @return A ggplot2 layer for addition to a plot.
 #' @details Source references are `qaccver` and `saccver`. Point links consume `qpos` and `spos`. Interval links and alignment segments consume closed interval endpoints on both references. Supply reliable `qstrand` and `sstrand` or explicit relative direction when the geometry requires it.
+#' Ribbons retain same-reference and non-neighbouring relationships. A
+#' same-row linear ribbon needs a curved route. A shared route retains
+#' independent source relationships and uses `corridor_width` in mm.
+#' Tip decoration is recorded separately from the source interval fronts.
 #' @examples
 #' library(ggplot2)
 #'
@@ -35,7 +39,17 @@
 geom_link_ribbon <- function(mapping = NULL, data = NULL, stat = "identity",
     position = "identity", route = "curve", fill_mode = "solid", ...,
     na.rm = FALSE, show.legend = NA, inherit.aes = TRUE, id = NULL) {
-  ggchord_check_argument_names(sys.call(), sys.function())
+  call <- match.call(function(...) NULL, sys.call(), envir = parent.frame())
+  if ("fill" %in% names(call) && !"fill_mode" %in% names(call)) {
+    # Reserve the exact visual argument so R cannot treat it as an
+    # abbreviation of fill_mode before ... is evaluated.
+    signature <- sys.function()
+    formals(signature) <- c(as.list(formals(signature)), alist(fill = ))
+    call <- match.call(signature, call, envir = parent.frame())
+    if (is.null(call[["fill_mode"]])) call[["fill_mode"]] <- "solid"
+    return(eval(call, parent.frame()))
+  }
+  ggchord_check_argument_names(sys.call(), sys.function(), dots = "fill")
   caller <- "geom_link_ribbon()"
   fill_mode <- match.arg(fill_mode, c("solid", "endpoint"))
   position <- ggchord_as_feature_position(position, caller)
@@ -73,6 +87,7 @@ geom_link_ribbon <- function(mapping = NULL, data = NULL, stat = "identity",
   layer$ggchord_params <- list(id = id, type = "ribbon", route = controls,
     ribbon_ctrl_point = controls, ribbon_gap = 0, link_avoid = "none",
     feature_position = position, tip = tip, fill_mode = fill_mode,
+    physical_layout = ggchord_local_position(position) || controls$route == "shared",
     ribbon_color_scheme = "single", ribbon_alpha = .6, ribbon_outline_color = NA,
     ribbon_outline_width = .3, ribbon_outline_linetype = 1,
     link_branch = if (controls$route == "shared") "query" else "none",

@@ -17,12 +17,13 @@ read_maf(file, alphabet = "DNA", python = "python3", source_file = FALSE)
 }
 \value{
 A ggchord_import collection with sequences, links$maf,
-alignments$maf, and block provenance.
+  alignments$maf, and block provenance.
 }
 \description{
 Keep block context and real character columns. A block's first component
 is its query anchor. An empty anchor yields no derived relation.
-Select a single block when displaying a character alignment.
+Select a single source file and block using `source_input` and
+`source_block` when displaying a character alignment.
 }
 \examples{
 \dontrun{

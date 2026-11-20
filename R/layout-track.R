@@ -135,6 +135,9 @@ ggchord_train_track_scale <- function(plot, id, values) {
   key <- ggchord_track_aes("value", id)
   sc <- plot$scales$get_scales(key) %||% scale_track_value(id)
   sc <- sc$clone()
+  quantity <- plot$ggchord$track_quantities[[id]]
+  if (length(quantity$unit)) sc$ggchord_track_unit <- quantity$unit
+  if (length(quantity$label) && ggplot2::is_waiver(sc$name)) sc$name <- quantity$label
   finite <- values[!is.na(values)]
   transformed <- suppressWarnings(sc$transform(finite))
   if (any(!is.finite(transformed))) ggchord_stop("Track '", id, "' has values/baseline incompatible with its scale transform")
@@ -184,8 +187,17 @@ ggchord_layout_tracks <- function(plot, layout, registry, inputs) {
       ggchord_stop("Tile tracks use track_fill, not numerical height track_value")
     if (!"group" %in% names(d)) d$group <- rep(1L, nrow(d))
     if (anyNA(d$group)) ggchord_stop("Track series group IDs must be non-missing")
-    if (isTRUE(p$closed) && (!isTRUE(layout$circular) || (plot$coordinates$circular_gap %||% 0) != 0))
-      ggchord_stop("closed=TRUE requires coord_circular(gap=0)")
+    if (isTRUE(p$closed)) {
+      shown <- unique(d$accver)
+      reference <- plot$ggchord$data$seq_data
+      reference <- reference[match(shown, reference$accver), , drop = FALSE]
+      source <- ggchord_focus_source(reference)
+      gap <- plot$ggchord$sequence_layout$gap[shown]
+      if (!isTRUE(layout$circular) || any(gap != 0) ||
+          anyNA(source$length) || any(source$origin != 1 | reference$length != source$length) ||
+          any(reference$topology %in% "linear"))
+        ggchord_stop("closed=TRUE requires a complete circular reference without an angular gap")
+    }
     if (p$track_kind == "line" && is.null(p$native_geom)) {
       groups <- split(seq_len(nrow(d)), interaction(match(d$accver, unique(d$accver)),
         match(d$group, unique(d$group)), drop = TRUE))
@@ -217,8 +229,7 @@ ggchord_layout_tracks <- function(plot, layout, registry, inputs) {
       layers = vapply(layers[members], function(l) l$ggchord_layer_id, character(1)))
     numeric <- members[vapply(members, function(i) layers[[i]]$ggchord_params$track_kind != "tile", logical(1))]
     if (!length(numeric)) next
-    measures <- vapply(layers[numeric], function(l) l$ggchord_params$measure %||% NA_character_, character(1))
-    if (!anyNA(measures)) declarations[[id]]$measure <- measures[1L]
+    declarations[[id]]$measure <- plot$ggchord$track_quantities[[id]]$measure
     training <- plot$ggchord$shared_track_scales[[id]]
     if (is.null(training)) {
       values <- unlist(lapply(numeric, function(i)
@@ -229,7 +240,7 @@ ggchord_layout_tracks <- function(plot, layout, registry, inputs) {
     for (i in numeric) {
       position <- layers[[i]]$ggchord_params$native_position
       if ((identical(position, "stack") || inherits(position, "PositionStack")) &&
-          !identical(sc$get_transformation()$name, "identity"))
+          !sc$get_transformation()$name %in% c("identity", "reverse"))
         ggchord_stop("Track '", id, "' cannot stack values on a nonlinear scale")
     }
     for (i in numeric) if (layers[[i]]$ggchord_params$track_kind == "bar" &&

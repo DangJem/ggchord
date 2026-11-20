@@ -67,6 +67,7 @@ geom_link_line <- function(mapping = NULL, data = NULL, stat = "identity",
   layer$ggchord_params <- list(id = id, type = "link", route = controls,
     link_type = if (controls$route == "straight") "straight" else "curve",
     link_gap = 0, link_avoid = "none", feature_position = position,
+    physical_layout = ggchord_local_position(position) || controls$route == "shared",
     link_branch = if (controls$route == "shared") "query" else "none",
     link_branch_fraction = 0.15, source_stat = parameters$stat)
   ggchord_capture_layer_input(layer, data, mapping, c("qaccver", "saccver", "qpos", "spos"))
@@ -74,7 +75,7 @@ geom_link_line <- function(mapping = NULL, data = NULL, stat = "identity",
 
 GeomChordLinkLine <- ggplot2::ggproto("GeomChordLinkLine", ggplot2::GeomPath,
   rename_size = FALSE,
-  default_aes = ggplot2::aes(colour = "#59636D", alpha = .6, linewidth = .4, linetype = 1),
+  default_aes = ggplot2::aes(colour = "grey40", alpha = 1, linewidth = .5, linetype = 1),
   draw_panel = function(data, panel_params, coord, arrow = NULL, lineend = "round",
                         linejoin = "round", linemitre = 10, na.rm = FALSE) {
     for (nm in c("colour", "alpha", "linewidth", "linetype")) data[[nm]] <- data[[nm]] %||% data[[paste0("link_", nm)]]
@@ -125,6 +126,17 @@ ggchord_link_control_rows <- function(control, rows) {
   else control
 }
 
+ggchord_connection_offsets <- function(params, sequences, axis = NULL) {
+  offset <- ggchord_resolve_position_offset(params$feature_position$offset %||% 0,
+    sequences, "offset", "connection position")
+  units <- ggchord_units_per_mm(axis)
+  vapply(offset, function(value) unname(value[1L]) * units, numeric(1))
+}
+
+ggchord_interval_front <- function(start, end) {
+  if (start <= end) c(start - 1, end) else c(start, end - 1)
+}
+
 ggchord_link_geometry <- function(data, params, layout) {
   if (is.null(data)) ggchord_stop("geom_link_line(): supply data with qaccver/saccver/qpos/spos")
   ggchord_require_columns(data, c("qaccver", "saccver", "qpos", "spos"), "geom_link_line()")
@@ -136,9 +148,7 @@ ggchord_link_geometry <- function(data, params, layout) {
       ggchord_stop("geom_link_line(): positions must be finite and within sequence length")
   }
   if (isTRUE(layout$collinear)) return(ggchord_collinear_link_geometry(data, params, layout, rows))
-  gap_mm <- ggchord_resolve_position_offset(params$feature_position$offset %||% 0,
-    layout$seqs, "offset", "link position")
-  gaps <- vapply(gap_mm, function(value) value[[1L]] * ggchord_units_per_mm(), numeric(1))
+  gaps <- ggchord_connection_offsets(params, layout$seqs)
   if (any(!is.finite(unlist(gaps)))) ggchord_stop("link_gap must contain finite numbers")
   endpoint <- function(id, pos) {
     f <- (pos - 1) / ref$lens[id]

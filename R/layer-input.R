@@ -1,10 +1,10 @@
 # R partially matches named arguments before the function sees its dots.
 # Inspect the original call without evaluating mappings or data callbacks.
-ggchord_check_argument_names <- function(call, fn, forwarded = NULL) {
+ggchord_check_argument_names <- function(call, fn, forwarded = NULL, dots = character()) {
   # A dots-only signature expands a caller's ... without matching or forcing it.
   supplied <- names(match.call(function(...) NULL, call, envir = parent.frame(2L))[-1L])
   formal <- setdiff(c(names(formals(fn)), if (!is.null(forwarded)) names(formals(forwarded))), "...")
-  unknown <- setdiff(supplied[nzchar(supplied)], formal)
+  unknown <- setdiff(supplied[nzchar(supplied)], c(formal, dots))
   for (key in unknown) {
     matches <- formal[startsWith(formal, key)]
     if (length(matches)) ggchord_stop("Spell out argument '", key,
@@ -64,6 +64,7 @@ ggchord_check_geom_params <- function(dots, geom, caller, position = "identity",
 #' Capture user data and mappings separately from the computed placeholder
 #' @noRd
 ggchord_capture_layer_input <- function(lyr, data, mapping, roles) {
+  if (!is.null(lyr$ggchord_params$source_stat)) roles <- union(roles, "group")
   if (ggchord_local_position(lyr$position) && is.null(lyr$ggchord_params$feature_position))
     ggchord_stop("Layer '", lyr$ggchord_type, "' cannot use a feature position")
   mapping <- ggchord_normalize_mapping(mapping)
@@ -227,6 +228,27 @@ ggchord_check_reference_ids <- function(data, fields, ids, caller) {
   }
 }
 
+ggchord_validate_layer_link <- function(data, type, reference, caller) {
+  if (is.null(reference) || !type %in% c("link", "ribbon")) return(invisible(NULL))
+  ggchord_check_interval_unit(data, ggchord_sequence_unit(reference), caller)
+  for (side in c("q", "s")) {
+    id <- paste0(side, "accver")
+    fields <- paste0(side, if (type == "link") "pos" else c("start", "end"))
+    ggchord_require_columns(data, c(id, fields), caller)
+    at <- match(data[[id]], reference$accver)
+    if (anyNA(at)) ggchord_stop(caller, ": unknown reference in ", id)
+    limit <- reference$length[at]
+    for (field in fields) {
+      value <- data[[field]]
+      if (!is.numeric(value)) ggchord_stop(caller, ": ", field, " must be numeric")
+      invalid <- !is.finite(value) | value != trunc(value) | value < 1 | value > limit
+      if (any(invalid)) ggchord_stop(caller, ": ", field,
+        " must be an integer within its reference", ggchord_input_rows(invalid))
+    }
+  }
+  invisible(NULL)
+}
+
 #' Read and adapt a layer's input before evaluating mappings
 #' @noRd
 ggchord_layer_source <- function(lyr, fallback) {
@@ -346,6 +368,27 @@ ggchord_visual_value <- function(visual, key, start, geometry, rows, projected =
 
 ggchord_draw_layer <- function(layer, geometry, input = NULL) {
   mapping <- ggchord_effective_mapping(layer)
+  if (!is.null(layer$ggchord_params$source_stat_cache)) {
+    staged <- Filter(function(q) ggchord_has_stage(q, "after_stat"), mapping)
+    fields <- unique(unlist(lapply(staged, function(q)
+      ggchord_visual_fields(rlang::get_expr(q), rlang::get_env(q))), use.names = FALSE))
+    fields <- setdiff(intersect(fields, names(geometry)), c("x", "y", "group", "PANEL"))
+    if (length(fields)) {
+      stat_columns <- tail(make.unique(c(names(mapping), paste0(".ggchord_computed_", fields))),
+        length(fields))
+      for (i in seq_along(fields)) {
+        mapping[[stat_columns[i]]] <- rlang::new_quosure(rlang::sym(fields[i]), emptyenv())
+      }
+      original <- layer
+      layer <- ggplot2::ggproto(NULL, original)
+      layer$stat <- ggplot2::ggproto(NULL, ggplot2::StatIdentity,
+        compute_layer = function(data, params, layout) {
+          data[fields] <- data[stat_columns]
+          data[stat_columns] <- NULL
+          data
+        })
+    }
+  }
   if (all(c("display_instance_id", "group") %in% names(geometry))) {
     geometry$group <- interaction(geometry$display_instance_id, geometry$group,
       drop = TRUE, lex.order = TRUE)
@@ -434,6 +477,8 @@ ggchord_resolve_layer_input <- function(lyr, fallback = NULL,
     fields <- if (type %in% c("link", "ribbon")) c("qaccver", "saccver") else "accver"
     ggchord_check_reference_ids(data, fields, reference_ids, ggchord_layer_input_context(lyr))
   }
+  ggchord_validate_layer_link(data, type, lyr$ggchord_params$reference,
+    ggchord_layer_input_context(lyr))
   for (nm in setdiff(names(mapping), c(roles, names(lyr$aes_params)))) {
     expr <- rlang::get_expr(mapping[[nm]])
     if (!ggchord_has_stage(expr)) {
@@ -448,8 +493,18 @@ ggchord_resolve_layer_input <- function(lyr, fallback = NULL,
     capture$mapped <- data
   source_stat <- lyr$ggchord_params$source_stat
   if (!is.null(source_stat)) {
-    data <- ggchord_run_source_stat(data, source_stat,
-      intersect(lyr$ggchord_role_aes, names(data)), ggchord_layer_input_context(lyr))
+    if (!is.null(lyr$aes_params$group)) data$group <- rep_len(lyr$aes_params$group, nrow(data))
+    cache <- lyr$ggchord_params$source_stat_cache
+    if (!is.null(cache$data)) {
+      data <- cache$data
+    } else {
+      data <- ggchord_run_source_stat(data, source_stat,
+        intersect(lyr$ggchord_role_aes, names(data)), ggchord_layer_input_context(lyr),
+        lyr$ggchord_params$source_stat_facet, lyr)
+      if (!is.null(cache)) cache$data <- data
+    }
+    ggchord_validate_layer_link(data, type, lyr$ggchord_params$reference,
+      ggchord_layer_input_context(lyr))
     if (!is.null(capture) && "statistic" %in% capture$requested)
       capture$statistic <- data
     input <- data
@@ -645,14 +700,10 @@ ggchord_bind_visual_mapping <- function(layer, plot) {
     if (!mapped && !fixed) next
     if (mapped && !is.null(layer$aes_params[[role]])) {
       if (isTRUE(unname(layer$ggchord_params$style_defaults[role]))) layer$aes_params[[role]] <- NULL else {
-        if (nm %in% names(layer$ggchord_input_mapping))
-          ggchord_stop("Layer '", layer$ggchord_layer_id, "' both maps and fixes ", nm)
         layer$ggchord_input_mapping[[nm]] <- NULL
         next
       }
     }
-    if (mapped && fixed && nm %in% names(layer$ggchord_input_mapping))
-      ggchord_stop("Layer '", layer$ggchord_layer_id, "' both maps and fixes ", nm)
     defaults <- layer$geom$default_aes
     names(defaults)[names(defaults) == role] <- nm
     layer$geom <- ggchord_geom_defaults(layer$geom, defaults)

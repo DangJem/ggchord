@@ -169,6 +169,11 @@ layer_id <- function(layer, id) {
   if (inherits(e2, "Scale")) {
     aesthetic <- e2$aesthetics[1L]
     existing <- if (!is.null(aesthetic)) e1$scales$get_scales(aesthetic) else NULL
+    if (!is.null(e2$ggchord_track_id) && !is.null(existing$ggchord_track_id) &&
+        (!identical(existing$ggchord_domain_policy, e2$ggchord_domain_policy) ||
+          !identical(existing$ggchord_facet_domain, e2$ggchord_facet_domain) ||
+          !identical(existing$ggchord_track_unit, e2$ggchord_track_unit)))
+      ggchord_stop("Conflicting value scales for track '", e2$ggchord_track_id, "'")
     new_priority <- attr(e2, "ggchord_scale_priority") %||% 2L
     old_priority <- if (is.null(existing)) -Inf else
       attr(existing, "ggchord_scale_priority") %||% 2L

@@ -25,6 +25,59 @@ ggchord_ribbon_visible_polygon <- function(path, nq, ns, tip) {
     if (shape$tip == "none") subject, shape$edge1[ne:1L, , drop = FALSE])
 }
 
+# Keep the projected interval fronts and compute tip decoration separately.
+ggchord_ribbon_trace <- function(data, tip, tip_length, coord, panel, metric) {
+  if (!all(c("flow_qn", "flow_sn") %in% names(data))) return(NULL)
+  nq <- as.integer(data$flow_qn[1L])
+  ns <- as.integer(data$flow_sn[1L])
+  ne <- (nrow(data) - nq - ns) / 2
+  if (anyNA(c(nq, ns, ne)) || nq < 1 || ns < 1 || ne < 2 || ne != floor(ne)) return(NULL)
+  xy <- as.matrix(data[c("x", "y")])
+  query <- xy[seq_len(nq), , drop = FALSE]
+  subject <- xy[nq + ne + seq_len(ns), , drop = FALSE]
+  a <- xy[nrow(xy) - seq_len(ne) + 1L, , drop = FALSE]
+  b <- xy[nq + seq_len(ne), , drop = FALSE]
+  tips <- list()
+  from <- tip %in% c("from", "both") && !identical(data$.arrow_first[1L], FALSE)
+  to <- tip %in% c("to", "both") && !identical(data$.arrow_last[1L], FALSE)
+  if (from || to) {
+    center <- (a + b) / 2
+    screen <- coord$transform(data.frame(x = center[, 1L], y = center[, 2L]), panel)
+    arc <- c(0, cumsum(sqrt((diff(screen$x) * metric[1L])^2 +
+      (diff(screen$y) * metric[2L])^2)))
+    total <- tail(arc, 1)
+    if (is.finite(total) && total > 0) {
+      tip_span <- min(tip_length, total / 2)
+      cuts <- c(if (from) tip_span, if (to) total - tip_span)
+      samples <- sort(unique(c(arc, cuts)))
+      resample <- function(edge) vapply(seq_len(2L), function(axis)
+        stats::approx(arc, edge[, axis], xout = samples, ties = "ordered")$y,
+        numeric(length(samples)))
+      a <- resample(a)
+      b <- resample(b)
+      add_tip <- function(front, at, distance, side) {
+        cut <- if (side == "from") tail(at, 1L) else at[1L]
+        marker <- colMeans(front)
+        a[at, ] <<- outer(1 - distance, a[cut, ]) + outer(distance, marker)
+        b[at, ] <<- outer(1 - distance, b[cut, ]) + outer(distance, marker)
+        tips[[side]] <<- rbind(a[at, , drop = FALSE], b[rev(at), , drop = FALSE])
+      }
+      if (from) {
+        at <- which(samples <= tip_span)
+        add_tip(query, at, 1 - samples[at] / tip_span, "from")
+        query <- query[FALSE, , drop = FALSE]
+      }
+      if (to) {
+        at <- which(samples >= total - tip_span)
+        add_tip(subject, at, (samples[at] - (total - tip_span)) / tip_span, "to")
+        subject <- subject[FALSE, , drop = FALSE]
+      }
+    }
+  }
+  list(polygon = rbind(query, b, subject, a[rev(seq_len(nrow(a))), , drop = FALSE]),
+    edge1 = a, edge2 = b, tips = tips)
+}
+
 # Preserve complete fronts in exported data and add separate decoration at draw time.
 GeomRibbonFlow <- ggplot2::ggproto("GeomRibbonFlow", ggplot2::GeomPolygon,
   default_aes = aes(fill = "grey70", colour = NA, alpha = .6, linewidth = .3,
@@ -41,59 +94,20 @@ GeomRibbonFlow <- ggplot2::ggproto("GeomRibbonFlow", ggplot2::GeomPolygon,
     metric <- c(grid::convertWidth(grid::unit(1, "npc"), "mm", TRUE),
       grid::convertHeight(grid::unit(1, "npc"), "mm", TRUE))
     grobs <- lapply(groups, function(d) {
-      nq <- as.integer(d$flow_qn[1L])
-      ns <- as.integer(d$flow_sn[1L])
-      ne <- (nrow(d) - nq - ns) / 2
-      if (is.na(ne) || nq < 1 || ns < 1 || ne < 2 || ne != floor(ne))
+      trace <- ggchord_ribbon_trace(d, tip, tip_length, coord, panel_params, metric)
+      if (is.null(trace))
         return(ggplot2::GeomPolygon$draw_panel(d, panel_params, coord, rule = rule))
-      query <- as.matrix(d[seq_len(nq), c("x", "y")])
-      subject <- as.matrix(d[nq + ne + seq_len(ns), c("x", "y")])
-      edge2 <- as.matrix(d[nq + seq_len(ne), c("x", "y")])
-      edge1 <- as.matrix(d[nrow(d) - seq_len(ne) + 1L, c("x", "y")])
-      decorated <- function(a, b, front, reverse = FALSE) {
-        if (reverse) {
-          a <- a[ne:1L, , drop = FALSE]
-          b <- b[ne:1L, , drop = FALSE]
-        }
-        center <- (a + b) / 2
-        screen <- coord$transform(data.frame(x = center[, 1L], y = center[, 2L]), panel_params)
-        length_mm <- c(0, cumsum(sqrt((diff(screen$x) * metric[1L])^2 +
-          (diff(screen$y) * metric[2L])^2)))
-        shoulder <- max(which(length_mm <= max(length_mm) - min(tip_length, max(length_mm) / 2)),
-          1L)
-        if (shoulder >= ne || max(length_mm) <= 0)
-          return(list(a = edge1, b = edge2, applied = FALSE))
-        marker <- colMeans(front)
-        t <- seq(0, 1, length.out = ne - shoulder + 1L)
-        a[shoulder:ne, ] <- outer(1 - t, a[shoulder, ]) + outer(t, marker)
-        b[shoulder:ne, ] <- outer(1 - t, b[shoulder, ]) + outer(t, marker)
-        if (reverse) {
-          a <- a[ne:1L, , drop = FALSE]
-          b <- b[ne:1L, , drop = FALSE]
-        }
-        list(a = a, b = b, applied = TRUE)
-      }
-      if (tip %in% c("from", "both")) {
-        shape <- decorated(edge1, edge2, query, TRUE)
-        edge1 <- shape$a; edge2 <- shape$b
-        if (shape$applied) query <- query[FALSE, , drop = FALSE]
-      }
-      if (tip %in% c("to", "both")) {
-        shape <- decorated(edge1, edge2, subject)
-        edge1 <- shape$a; edge2 <- shape$b
-        if (shape$applied) subject <- subject[FALSE, , drop = FALSE]
-      }
-      xy <- rbind(query, edge2, subject, edge1[ne:1L, , drop = FALSE])
+      xy <- trace$polygon
       border <- d[rep(1L, nrow(xy)), , drop = FALSE]
       border$x <- xy[, 1L]; border$y <- xy[, 2L]
       if (!flow) return(ggplot2::GeomPolygon$draw_panel(border, panel_params, coord, rule = rule))
       endpoints <- c(d$fill_from[1L], d$fill_to[1L])
       if (anyNA(endpoints)) return(grid::nullGrob())
       opacity <- grDevices::col2rgb(endpoints, alpha = TRUE)[4L, ] / 255
-      n <- max(2L, ne - 1L)
+      n <- max(2L, nrow(trace$edge1) - 1L)
       colors <- scales::alpha(grDevices::colorRampPalette(endpoints, space = "Lab")(n),
         seq(opacity[1L], opacity[2L], length.out = n))
-      fill <- ggchord_ribbon_mesh_fill(edge1, edge2, xy, colors, d$alpha[1L],
+      fill <- ggchord_ribbon_mesh_fill(trace$edge1, trace$edge2, xy, colors, d$alpha[1L],
         coord, panel_params, pixel_budget)
       border$fill <- NA
       grid::grobTree(fill,
@@ -159,7 +173,7 @@ ggchord_ribbon_mesh_fill <- function(edge1,edge2,outline,colours,alpha,coord,pan
   q<-colMeans(rbind(a[1,],b[1,]));s<-colMeans(rbind(tail(a,1),tail(b,1)))
   values<-outer(yy,xx,function(y,x) as.numeric((x-s[1])^2+(y-s[2])^2 < (x-q[1])^2+(y-q[2])^2))
   t<-seq(0,1,length.out=nrow(a))
-  triangle<-function(p,v) {
+  trace<-function(p,v) {
     ix<-which(xx>=min(p[,1]) & xx<=max(p[,1]));iy<-which(yy>=min(p[,2]) & yy<=max(p[,2]))
     if(!length(ix)||!length(iy))return()
     det<-(p[2,2]-p[3,2])*(p[1,1]-p[3,1])+(p[3,1]-p[2,1])*(p[1,2]-p[3,2])
@@ -172,8 +186,8 @@ ggchord_ribbon_mesh_fill <- function(edge1,edge2,outline,colours,alpha,coord,pan
     values[at[inside,,drop=FALSE]]<<-(w1*v[1]+w2*v[2]+w3*v[3])[inside]
   }
   for(i in seq_len(nrow(a)-1L)) {
-    triangle(rbind(a[i,],a[i+1,],b[i+1,]),c(t[i],t[i+1],t[i+1]))
-    triangle(rbind(a[i,],b[i+1,],b[i,]),c(t[i],t[i+1],t[i]))
+    trace(rbind(a[i,],a[i+1,],b[i+1,]),c(t[i],t[i+1],t[i+1]))
+    trace(rbind(a[i,],b[i+1,],b[i,]),c(t[i],t[i+1],t[i]))
   }
   mask<-matrix(FALSE,ny,nx)
   closed<-rbind(polygon,polygon[1,,drop=FALSE])

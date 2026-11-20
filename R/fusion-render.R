@@ -1,5 +1,5 @@
 # Render once inside final panel containers; never freeze a previous-size image.
-ggchord_build_fusion_core <- function(x) {
+ggchord_build_fusion_core <- function(x, on_error = NULL) {
   previous_plot <- ggplot2::last_plot()
   on.exit(ggplot2::set_last_plot(previous_plot),add=TRUE)
   canvas <- c(width=grid::convertWidth(grid::unit(1,"npc"),"mm",TRUE),
@@ -8,7 +8,7 @@ ggchord_build_fusion_core <- function(x) {
   origin <- c(origin$x,origin$y)*25.4
   collected <- list(boxes=list())
   if (identical(x$fusion_guides,"collect")) {
-    collected <- ggchord_fusion_collect_guides(x)
+    collected <- ggchord_fusion_collect_guides(x, partial = !is.null(on_error))
     x <- collected$plot
   }
   styles <- ggchord_fusion_styles(x)
@@ -46,17 +46,26 @@ ggchord_build_fusion_core <- function(x) {
   measured_leaves <- list()
   render_events <- list(); connection_grobs <- list(); overlay_grobs <- list(); obstacle_parts <- list()
   for (id in names(rectangles)) {
+    panel_path <- ggchord_fusion_path_ids(id)
     spec <- x$panels[[id]]; rect <- rectangles[[id]]
     dimensions <- c(diff(rect[1:2]),diff(rect[3:4]))*area
     center <- c(mean(rect[1:2]),mean(rect[3:4]))*area+shift
     viewport <- grid::viewport(x=center[1],y=center[2],width=dimensions[1],height=dimensions[2],
       default.units="mm",clip="off",name=paste0("fusion-",id))
+    panel_error <- function(e) {
+      if (is.null(on_error)) stop(e)
+      on_error(panel_path, e)
+      NULL
+    }
     if (inherits(spec$plot, "ggchord_fusion")) {
-      nested <- local({
+      child_error <- if (!is.null(on_error)) function(path, error, layer_id = NULL)
+        on_error(c(panel_path, path), error, layer_id)
+      nested <- tryCatch(local({
         grid::pushViewport(viewport)
         on.exit(grid::popViewport())
-        ggchord_build_fusion(spec$plot)
-      })
+        ggchord_build_fusion(spec$plot, child_error)
+      }), error = panel_error)
+      if (is.null(nested)) next
       offset <- center - dimensions / 2
       child <- ggchord_fusion_nested_export(nested$export, id, offset)
       nested_results[[id]] <- list(export = child)
@@ -116,7 +125,7 @@ ggchord_build_fusion_core <- function(x) {
       copy$position <- ggplot2::ggproto(NULL,layer$position)
       copy
     })
-    table <- local({
+    table <- tryCatch(local({
       grid::pushViewport(viewport)
       on.exit(grid::popViewport())
       ggchord_with_render_context(list(available_canvas_mm=dimensions), {
@@ -133,7 +142,8 @@ ggchord_build_fusion_core <- function(x) {
           table
         } else ggplot2::ggplotGrob(plot)
       })
-    })
+    }), error = panel_error)
+    if (is.null(table)) next
     # Guide bounds are measured while the actual child viewport is active.
     local({
       grid::pushViewport(viewport)
@@ -141,7 +151,10 @@ ggchord_build_fusion_core <- function(x) {
       obstacle_parts[[id]] <<- ggchord_fusion_guide_obstacles(table, id, origin)
     })
     context <- attr(table,"ggchord_render_context")
-    if (!identical(context$status,"measured")) ggchord_stop("Fusion panel '",id,"': actual panel measurement unavailable")
+    if (!identical(context$status, "measured")) {
+      panel_error(simpleError(paste0("Fusion panel '", id, "': actual panel measurement unavailable")))
+      next
+    }
     if (is.null(context$panel_bounds_mm) && length(context$facet_contexts)) {
       b <- do.call(rbind, lapply(context$facet_contexts, `[[`, "panel_bounds_mm"))
       context$panel_bounds_mm <- c(min(b[, 1L]), max(b[, 2L]), min(b[, 3L]), max(b[, 4L]))
@@ -188,7 +201,8 @@ ggchord_build_fusion_core <- function(x) {
       c(width=grid::convertWidth(grid::grobWidth(g),"mm",TRUE),height=grid::convertHeight(grid::grobHeight(g),"mm",TRUE))
     })
     oversized <- any(vapply(guide_bounds,function(size) any(size>dimensions),logical(1)))
-    if (oversized) ggchord_stop("Fusion panel '",id,"': guides exceed its container; increase size or configure local guides")
+    if (oversized) panel_error(simpleError(
+      paste0("Fusion panel '", id, "': guides exceed its container")))
     diagnostics[[id]] <- list(panel_id=id,canvas_mm=dimensions,render_context=context,
       adaptive_layout=context$adaptive_layout,guide_layout=context$guide_layout,
       label_fit=ggchord_label_fit_diagnostics(layout),label_visibility=ggchord_label_visibility(layout),
@@ -240,8 +254,18 @@ ggchord_build_fusion_core <- function(x) {
         connection_rows[[length(connection_rows) + 1L]] <- report
         next
       }
-      q <- ggchord_fusion_endpoint(panels, record, "q", layer$id, row)
-      s <- ggchord_fusion_endpoint(panels, record, "s", layer$id, row)
+      endpoints <- tryCatch(list(
+        q = ggchord_fusion_endpoint(panels, record, "q", layer$id, row),
+        s = ggchord_fusion_endpoint(panels, record, "s", layer$id, row)),
+        error = function(e) {
+          if (is.null(on_error)) stop(e)
+          if (!is.null(layer$capture)) layer$capture$geometry_error <- conditionMessage(e)
+          on_error(character(), e, layer$id)
+          NULL
+        })
+      if (is.null(endpoints)) next
+      q <- endpoints$q
+      s <- endpoints$s
       if (q$panel == s$panel) ggchord_stop("Fusion: links require distinct panels")
       if (q$unit != s$unit) ggchord_stop("Fusion: bp/aa links require an explicit source projection")
       ggchord_check_character_origin(q, s, "fusion_ribbon()")
@@ -287,7 +311,14 @@ ggchord_build_fusion_core <- function(x) {
       connection_rows[[length(connection_rows) + 1L]] <- report
     }
   }
-  zooms <- do.call(c, unname(lapply(x$zooms, ggchord_render_zoom, panels = panels)))
+  zooms <- do.call(c, unname(lapply(x$zooms, function(layer) {
+    tryCatch(ggchord_render_zoom(layer, panels), error = function(e) {
+      if (is.null(on_error)) stop(e)
+      if (!is.null(layer$capture)) layer$capture$geometry_error <- conditionMessage(e)
+      on_error(character(), e, layer$id)
+      NULL
+    })
+  })))
   guide_grobs <- lapply(seq_len(nrow(guide_boxes)), function(i) {
     b <- guide_boxes[i, ]
     grid::grobTree(styles$guides[[b$side]], vp = grid::viewport(

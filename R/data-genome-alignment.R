@@ -68,7 +68,8 @@ ggchord_alignment_report <- function(source, convention) list(
 #'
 #' Keep block context and real character columns. A block's first component
 #' is its query anchor. An empty anchor yields no derived relation.
-#' Select a single block when displaying a character alignment.
+#' Select a single source file and block using `source_input` and
+#' `source_block` when displaying a character alignment.
 #'
 #' @param file Local MAF paths.
 #' @param alphabet Explicit DNA, RNA, or AA.
@@ -116,7 +117,7 @@ read_maf <- function(file, alphabet = "DNA", python = "python3", source_file = F
       aligned <- as_ggchord_alignment(strings, alphabet, source_data = positions)
       aligned$source_length <- lengths[match(aligned$accver, ids)]
       aligned$source_component <- match(aligned$accver, ids)
-      aligned$.source_input <- rep(i, nrow(aligned)); aligned$source_block <- rep(block$source_block, nrow(aligned))
+      aligned$source_input <- rep(i, nrow(aligned)); aligned$source_block <- rep(block$source_block, nrow(aligned))
       cells[[length(cells)+1L]] <- ggchord_add_source_file(aligned, source$paths[i], source_file)
       other <- which(nonempty & seq_along(rows) != 1L)
       if (!nonempty[1L] || !length(other)) next
@@ -133,7 +134,7 @@ read_maf <- function(file, alphabet = "DNA", python = "python3", source_file = F
   alignment <- ggchord_rbind_fill(cells) %||% data.frame()
   # rbind must not retain only the first block's single-alignment provenance.
   attr(alignment, 'ggchord_conversion') <- list(format = 'MAF', alphabet = alphabet,
-    files = source$paths, context_columns = c('.source_input', 'source_block'),
+    files = source$paths, context_columns = c('source_input', 'source_block'),
     decoder = source$parsed$decoder,
     coordinates = 'per-block alignment columns and nullable one-based source positions')
   ggchord_import_collection(

@@ -53,6 +53,9 @@ ggchord_prepare_geometry_inputs <- function(plot) {
       layer$ggchord_params$visual_source <- new.env(parent = emptyenv())
   }
   sequences <- ggchord_sequence_reference_data(plot)
+  track_scales <- lapply(plot$scales$scales, function(scale) scale$ggchord_track_id)
+  unknown <- setdiff(unlist(track_scales), c("default", names(plot$ggchord$track_bands)))
+  if (length(unknown)) ggchord_stop("scale_track_value(): unknown track '", unknown[1L], "'")
   for (scope in ggchord_scale_scopes(plot)) {
     if (!"shape" %in% scope$aesthetics) next
     for (i in scope$selected) if (plot$layers[[i]]$ggchord_type %in% c("gene_poly", "restriction_site"))
@@ -70,6 +73,13 @@ ggchord_prepare_geometry_inputs <- function(plot) {
     }
   }
   plot <- ggchord_prepare_facet_sources(plot)
+  for (layer in plot$layers) {
+    if (!is.null(layer$ggchord_params$source_stat)) {
+      layer$ggchord_params$source_stat_facet <- plot$ggchord$source_facet_setup
+      if (is.null(layer$ggchord_params$source_stat_cache))
+        layer$ggchord_params$source_stat_cache <- new.env(parent = emptyenv())
+    }
+  }
   plot <- ggchord_prepare_track_layers(plot, sequences)
   plot <- ggchord_prepare_link_statistics(plot, sequences)
   plot <- ggchord_bind_domain_labels(plot)

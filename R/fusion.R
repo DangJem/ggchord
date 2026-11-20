@@ -367,7 +367,7 @@ ggchord_fusion_guide_semantics <- function(built, guide, source) {
     unresolved = if (!length(variables) || !length(scopes)) source)
 }
 
-ggchord_fusion_collect_guides <- function(x) {
+ggchord_fusion_collect_guides <- function(x, partial = FALSE) {
   boxes <- list()
   walk <- function(plot, path) {
     if (inherits(plot, "ggchord_fusion")) {
@@ -375,10 +375,18 @@ ggchord_fusion_collect_guides <- function(x) {
         walk(plot$panels[[id]]$plot, paste(path, id, sep = "/"))
       return(plot)
     }
-    if (inherits(plot, "ggchord"))
-      plot <- ggchord_render_track_source(ggchord_render_inputs(plot))
-    built <- ggplot2::ggplot_build(plot)
-    table <- ggplot2::ggplot_gtable(built)
+    result <- tryCatch({
+      if (inherits(plot, "ggchord"))
+        plot <- ggchord_render_track_source(ggchord_render_inputs(plot))
+      built <- ggplot2::ggplot_build(plot)
+      list(built = built, table = ggplot2::ggplot_gtable(built))
+    }, error = function(e) {
+      if (!partial) stop(e)
+      NULL
+    })
+    if (is.null(result)) return(plot)
+    built <- result$built
+    table <- result$table
     params <- built$plot$guides$params
     positions <- vapply(params, function(guide)
       guide$position %||% built$plot$theme$legend.position %||% "right", character(1))
@@ -626,34 +634,36 @@ ggchord_resolve_panel_interval <- function(panels, entity, start, end,
       next
     }
     if (is.null(layout) || isTRUE(layout$dotplot) || is.null(layout$sequence_reference)) next
-    if (length(layout$panel_references) > 1L) ggchord_stop(where,
-      "a faceted panel does not have a unique interval projection")
-    keys <- layout$seqs
-    instances <- layout$display_instances
-    entities <- if (is.null(instances)) keys else instances$accver[match(keys,instances$key)]
-    instance_ids <- if (is.null(instances)) keys else instances$instance_id[match(keys,instances$key)]
-    seq_data <- panels[[id]]$seq_data
-    original_entities <- entities
-    source_ids <- seq_data[[".source_accver"]] %||% seq_data[["source_accver"]]
-    if (length(source_ids)) original_entities <- as.character(source_ids[match(entities, seq_data$accver)])
-    tab <- layout$sequence_layout
-    if (is.data.frame(tab) && "source_accver" %in% names(tab)) {
-      sources <- as.character(tab$source_accver[match(keys, tab$accver)])
-      original_entities[!is.na(sources)] <- sources[!is.na(sources)]
-    }
-    for (at in which(original_entities == entity)) {
-      if (!is.null(selected_instance) && (is.na(selected_instance) || instance_ids[at] != selected_instance)) next
-      key <- keys[at]
-      origin <- 1
-      source_origins <- seq_data[[".source_origin"]] %||% seq_data[["source_origin"]]
-      if (length(source_origins)) origin <- source_origins[match(entities[at], seq_data$accver)]
-      if (is.data.frame(layout$sequence_layout) && "source_origin" %in% names(layout$sequence_layout))
-        origin <- layout$sequence_layout$source_origin[match(key, layout$sequence_layout$accver)]
-      length <- unname(layout$sequence_reference$lens[key])
-      if (!is.finite(origin) || !is.finite(length) ||
-          min(start, end) < origin || max(start, end) > origin + length - 1) next
-      candidates[[length(candidates)+1L]] <- list(panel=id, key=key, instance=instance_ids[at],
-        entity=entity, origin=origin, start=start, end=end, unit=layout$sequence_unit %||% "bp")
+    frames <- layout$panel_references %||% list(layout)
+    for (facet in seq_along(frames)) {
+      frame <- frames[[facet]]
+      keys <- frame$seqs
+      if (!length(keys)) next
+      instances <- frame$display_instances
+      match_instance <- match(keys, instances$key)
+      entities <- instances$accver[match_instance] %||% keys
+      instance_ids <- instances$instance_id[match_instance] %||% keys
+      source <- ggchord_focus_source(panels[[id]]$seq_data)
+      at <- match(entities, panels[[id]]$seq_data$accver)
+      originals <- source$accver[at]
+      origins <- source$origin[at]
+      tab <- frame$sequence_layout
+      if (is.data.frame(tab) && all(c("source_accver", "source_origin") %in% names(tab))) {
+        tab <- tab[match(keys, tab$accver), , drop = FALSE]
+        originals[!is.na(tab$source_accver)] <- tab$source_accver[!is.na(tab$source_accver)]
+        origins[!is.na(tab$source_origin)] <- tab$source_origin[!is.na(tab$source_origin)]
+      }
+      for (at in which(originals == entity)) {
+        if (!is.null(selected_instance) && !identical(instance_ids[at], selected_instance)) next
+        key <- keys[at]
+        origin <- origins[at]
+        length <- unname(frame$sequence_reference$lens[key])
+        if (!is.finite(origin) || !is.finite(length) ||
+            min(start, end) < origin || max(start, end) > origin + length - 1) next
+        candidates[[length(candidates) + 1L]] <- list(panel = id, facet = facet, key = key,
+          instance = instance_ids[at], entity = entity, origin = origin, start = start, end = end,
+          unit = frame$sequence_unit %||% "bp")
+      }
     }
   }
   if (length(candidates) != 1L) ggchord_stop(where,
@@ -663,32 +673,29 @@ ggchord_resolve_panel_interval <- function(panels, entity, start, end,
 
 ggchord_fusion_front <- function(panel, endpoint) {
   if (isTRUE(panel$layout$character)) return(ggchord_alignment_front(panel, endpoint))
-  layout <- panel$layout; ref <- layout$sequence_reference; id <- endpoint$key
-  boundary <- c(min(endpoint$start,endpoint$end)-1,max(endpoint$start,endpoint$end)) - endpoint$origin + 1
-  if (endpoint$end < endpoint$start) boundary <- rev(boundary)
-  pos <- seq(boundary[1], boundary[2], length.out = 40)
-  frame <- ggchord_panel_backbone_frame(layout, id, pos)
-  xy <- frame$xy; normal <- frame$normal
-  coord <- panel$built$layout$coord
-  project <- function(points) {
-    # ggplot transforms position scales before Coord; reflecting a circular
-    # panel must also reflect its interval anchors, even with symmetric limits.
-    scaled <- data.frame(
-      x=panel$built$layout$panel_scales_x[[1L]]$transform(points[,1]),
-      y=panel$built$layout$panel_scales_y[[1L]]$transform(points[,2]))
-    coord$transform(scaled,panel$built$layout$panel_params[[1L]])
-  }
+  facet <- endpoint$facet %||% 1L
+  layout <- panel$layout$panel_references[[facet]] %||% panel$layout
+  boundary <- ggchord_interval_front(endpoint$start, endpoint$end) - endpoint$origin + 1
+  pos <- seq(boundary[1L], boundary[2L], length.out = 40)
+  frame <- ggchord_panel_backbone_frame(layout, endpoint$key, pos)
+  xy <- frame$xy
+  normal <- frame$normal
+  project <- function(points) as.data.frame(ggchord_query_transform(panel, points, facet))
   projected <- project(xy)
   if (any(!is.finite(c(projected$x,projected$y))) || any(projected$x < -1e-7 | projected$x > 1+1e-7 | projected$y < -1e-7 | projected$y > 1+1e-7))
     ggchord_stop("Fusion: source front is outside the visible coordinate limits in panel '", endpoint$panel, "'")
   bounds <- panel$context$panel_bounds_mm
+  facet_context <- panel$context$facet_contexts[[facet]]
+  if (!is.null(facet_context))
+    bounds <- facet_context$panel_bounds_mm - (panel$context$device_panel_bounds_mm - bounds)
   normal_tip <- project(xy+normal)
   normal <- cbind((normal_tip$x-projected$x)*diff(bounds[1:2]),
     (normal_tip$y-projected$y)*diff(bounds[3:4]))
   normal <- normal / sqrt(rowSums(normal^2))
   data.frame(position_boundary = pos+endpoint$origin-1, local_x=xy[,1],local_y=xy[,2],
     x=bounds[1]+projected$x*diff(bounds[1:2]),y=bounds[3]+projected$y*diff(bounds[3:4]),
-    normal_x=normal[,1],normal_y=normal[,2],tangent_x=-normal[,2],tangent_y=normal[,1])
+    normal_x=normal[,1],normal_y=normal[,2],tangent_x=-normal[,2],tangent_y=normal[,1],
+    facet_panel = facet)
 }
 
 ggchord_fusion_path <- function(q, s, curvature) {

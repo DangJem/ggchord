@@ -61,7 +61,7 @@ ggchord_layout_ribbon_step <- function(
     rib_send <- ribbon_data$send
     rib_pident <- ribbon_data$pident %||% rep(NA_real_, nrow(ribbon_data))
 
-    valid <- rib_q != rib_s & rib_q %in% seqs & rib_s %in% seqs
+    valid <- rib_q %in% seqs & rib_s %in% seqs
     valid_idx <- which(valid)
     cntInvalid <- n_ribbons - length(valid_idx)
 
@@ -143,15 +143,15 @@ ggchord_layout_ribbon_step <- function(
       ribbon_q_gap[j] <- q_gap
       ribbon_s_gap[j] <- s_gap
 
-      q_frac_start <- if (orientation[q] == 1) (rib_qstart[i] - 1) / lens[q] else 1 - (rib_qstart[i] - 1) / lens[q]
-      q_angle_start <- starts[q] + q_frac_start * (ends[q] - starts[q])
-      q_frac_end <- if (orientation[q] == 1) (rib_qend[i] - 1) / lens[q] else 1 - (rib_qend[i] - 1) / lens[q]
-      q_angle_end <- starts[q] + q_frac_end * (ends[q] - starts[q])
-
-      s_frac_start <- if (orientation[s] == 1) (rib_sstart[i] - 1) / lens[s] else 1 - (rib_sstart[i] - 1) / lens[s]
-      s_angle_start <- starts[s] + s_frac_start * (ends[s] - starts[s])
-      s_frac_end <- if (orientation[s] == 1) (rib_send[i] - 1) / lens[s] else 1 - (rib_send[i] - 1) / lens[s]
-      s_angle_end <- starts[s] + s_frac_end * (ends[s] - starts[s])
+      angles <- function(id, bounds) {
+        fraction <- bounds / lens[id]
+        if (orientation[id] != 1) fraction <- 1 - fraction
+        starts[id] + fraction * (ends[id] - starts[id])
+      }
+      q_bounds <- ggchord_interval_front(rib_qstart[i], rib_qend[i])
+      s_bounds <- ggchord_interval_front(rib_sstart[i], rib_send[i])
+      q_angles <- angles(q, q_bounds)
+      s_angles <- angles(s, s_bounds)
 
       make_front <- function(id, start, end, ref, a0, a1, gap) {
         positions <- seq(start, end, length.out = 50)
@@ -183,9 +183,9 @@ ggchord_layout_ribbon_step <- function(
         }
         result$xy
       }
-      q_coords <- make_front(q, rib_qstart[i], rib_qend[i], q_ref, q_angle_start, q_angle_end,
+      q_coords <- make_front(q, q_bounds[1L], q_bounds[2L], q_ref, q_angles[1L], q_angles[2L],
     q_gap)
-      s_coords <- make_front(s, rib_sstart[i], rib_send[i], s_ref, s_angle_start, s_angle_end,
+      s_coords <- make_front(s, s_bounds[1L], s_bounds[2L], s_ref, s_angles[1L], s_angles[2L],
     s_gap)
 
       ribbon_q_n[j] <- nrow(q_coords)
@@ -212,8 +212,8 @@ ggchord_layout_ribbon_step <- function(
           }
         }
       } else {
-        mid_angle_q <- (q_angle_start + q_angle_end) / 2
-        mid_angle_s <- (s_angle_start + s_angle_end) / 2
+        mid_angle_q <- mean(q_angles)
+        mid_angle_s <- mean(s_angles)
         mid_point_q <- map_to_curve(
           mid_angle_q, seqRadius[q] + q_gap * 0.5, q_ref
         )
@@ -238,15 +238,7 @@ ggchord_layout_ribbon_step <- function(
       )
       ribbon_group[j] <- j
 
-      dir_val <- if ("direction" %in% names(ribbon_data) &&
-                     !is.na(ribbon_data$direction[i]) &&
-                     ribbon_data$direction[i] %in% c("same", "reverse")) {
-        as.character(ribbon_data$direction[i])
-      } else {
-        dir_sign <- (rib_qend[i] - rib_qstart[i]) *
-          (rib_send[i] - rib_sstart[i])
-        ifelse(dir_sign >= 0, "same", "reverse")
-      }
+      dir_val <- ribbon_data$.ggchord_relative_direction[i]
       ribbon_dir_vec[j] <- dir_val
 
       if (ribbon_color_scheme == "pident") {
@@ -260,7 +252,7 @@ ggchord_layout_ribbon_step <- function(
                                  subject = queryCols[s])
       }
 
-      dir_alpha_factor <- if (identical(ribbon_direction, "alpha")) {
+      dir_alpha_factor <- if (identical(ribbon_direction, "alpha") && dir_val != "unknown") {
         as.numeric(ribbon_direction_alpha[dir_val])
       } else {
         1

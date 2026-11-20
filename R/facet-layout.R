@@ -52,17 +52,21 @@ ggchord_prepare_facet_sources <- function(plot) {
     ggchord_layer_source(layer, ggchord_layer_fallback(layer, plot$ggchord$data))
   })
   plot$ggchord$source_facet_setup <- ggchord_facet_panels(plot, frames)
+  plot$ggchord$source_facet_setup$facet <- plot$facet
+  plot$ggchord$source_facet_setup$keys <- ggchord_facet_vars(plot)
   plot
 }
 
 ggchord_facet_stat_input <- function(data, plot, layer) {
-  setup <- plot$ggchord$source_facet_setup
+  ggchord_source_stat_members(data, plot$ggchord$source_facet_setup, layer)
+}
+
+ggchord_source_stat_members <- function(data, setup, layer) {
   if (is.null(setup)) return(NULL)
-  keys <- ggchord_facet_vars(plot)
-  rows <- data[intersect(keys, names(data))]
+  rows <- data[intersect(setup$keys, names(data))]
   rows$.ggchord_input_index <- seq_len(nrow(data))
   attr(rows, "layout") <- layer$layout
-  plot$facet$map_data(rows, setup$panels, setup$params)
+  setup$facet$map_data(rows, setup$panels, setup$params)
 }
 
 # Draw against the same panel table used to select and project source rows.
@@ -353,11 +357,13 @@ ggchord_facet_layout <- function(plot) {
       "ribbon_color_limits", "ribbon_color_breaks"), names(drawn))
     result[fields] <- drawn[fields]
   }
-  if (isTRUE(result$collinear)) {
-    fields <- c("seqs", "sequence_layout", "sequence_reference", "sequence_unit",
-      "seq_axis", "display_instances", "sankey_projected", "sankey_frames", "radial_frames")
-    result$panel_references <- lapply(layouts, function(x) x[intersect(fields, names(x))])
-  }
+  fields <- c("seqs", "sequence_layout", "sequence_reference", "sequence_unit",
+    "collinear", "circular", "rotation", "seq_axis", "display_instances",
+    "sankey_projected", "sankey_frames", "radial_projected", "radial_frames")
+  result$panel_references <- lapply(layouts, function(x) {
+    if (is.null(x)) return(list(seqs = character()))
+    x[intersect(fields, names(x))]
+  })
   for (field in c("axis_geometry", "axis_lines", "axis_ticks", "axis_selection",
       "sequence_display", "sequence_layout", "orientation_diagnostics", "radial_frames",
       "radial_endpoints", "gene_polys", "gene_labels", "gene_label_segments", "track_registry",

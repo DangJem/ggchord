@@ -44,6 +44,16 @@ geom_residue <- function(mapping = NULL, data = NULL, representation = "tile_tex
   if (!is.null(id)) layer <- layer_id(layer, id)
   ggplot2::ggproto("LayerResidue", layer,
     compute_aesthetics = function(self, data, plot) {
+      coord <- plot$coordinates
+      if (!inherits(coord, "CoordCartesian") || isTRUE(coord$ggchord_coord) ||
+          isTRUE(coord$ggchord_dotplot))
+        ggchord_stop("geom_residue(): use a separate Cartesian character panel")
+      for (axis in c("x", "y")) {
+        scale <- plot$scales$get_scales(axis)
+        if (!is.null(scale) && !scale$is_discrete() &&
+            !scale$get_transformation()$name %in% c("identity", "reverse"))
+          ggchord_stop("geom_residue(): position scales must use identity or reverse transformations")
+      }
       mapping <- self$computed_mapping
       fallback <- c(x = "alignment_column", y = "accver", label = "symbol")
       for (field in setdiff(names(fallback), names(mapping)))

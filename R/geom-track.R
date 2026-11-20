@@ -68,8 +68,9 @@ track_band <- function(id = "default", side = "positive", order = 1,
   ggchord_check_argument_names(sys.call(), sys.function())
   id <- ggchord_track_id(id)
   side <- match.arg(side, c("positive", "negative"))
-  if (!is.numeric(order) || length(order) != 1L || !is.finite(order))
-    ggchord_stop("track_band(): order must be finite")
+  if (!is.numeric(order) || length(order) != 1L || !is.finite(order) ||
+      order < 1 || order != trunc(order))
+    ggchord_stop("track_band(): order must be a positive integer")
   width <- ggchord_physical_mm(thickness, "track_band(thickness)", nonnegative = TRUE)
   gap <- ggchord_physical_mm(gap, "track_band(gap)", nonnegative = TRUE)
   if (any(unlist(width, use.names = FALSE) <= 0))
@@ -84,6 +85,9 @@ ggplot_add.ggchord_track_band <- function(object, plot, ...) {
   if (!inherits(plot, "ggchord")) ggchord_stop("Add track_band() to a ggchord plot")
   if (!is.null(plot$ggchord$track_bands[[object$id]]))
     ggchord_stop("Track band '", object$id, "' was already declared; declare each ID once")
+  if (any(vapply(plot$ggchord$track_bands, function(band)
+    band$side == object$side && band$track_order == object$track_order, logical(1))))
+    ggchord_stop("track_band(): tracks on the same side must have distinct order values")
   plot$ggchord$track_bands[[object$id]] <- object
   plot$ggchord$ref <- new.env(parent = emptyenv())
   plot$ggchord$layout <- NULL
@@ -166,7 +170,8 @@ GeomGgchordTrack <- ggplot2::ggproto("GeomGgchordTrack", ggplot2::Geom,
       axis_colour = NULL, axis_size = NULL, na.rm = FALSE, native_draw_params=list(),
       axis_line_params = list(), axis_tick_params = list(), axis_text_params = list(), axis_title_params = list(), axis_check_overlap = FALSE) {
     for (role in names(track_keys)) data[[role]] <- data[[track_keys[[role]]]]
-    polys <- data[data$.component %in% "track_poly", , drop = FALSE]
+    polys <- data[data$.component %in% c("track_poly", "track_area_fill"), , drop = FALSE]
+    polys$colour[polys$.component == "track_area_fill"] <- NA
     lines <- data[data$.component %in% "track_line", , drop = FALSE]
     points <- data[data$.component %in% "track_point", , drop = FALSE]
     labels <- data[data$.component %in% "track_text", , drop = FALSE]
@@ -252,7 +257,10 @@ ggchord_prepare_track_layers <- function(plot, sequences = ggchord_sequence_refe
     ggchord_check_interval_unit(source, ggchord_sequence_unit(sequences), caller)
     mapping <- layer$ggchord_input_mapping
     inherited <- if (isTRUE(layer$inherit.aes)) ggchord_normalize_mapping(plot$mapping)
-    for (name in setdiff(names(inherited), c("x", "y"))) if (!name %in% names(mapping)) mapping[[name]] <- inherited[[name]]
+    if (any(c("y", "ymin", "ymax") %in% names(inherited)))
+      warning("geom_track_interval(): ignored inherited y aesthetics", call. = FALSE)
+    for (name in setdiff(names(inherited), c("x", "y", "ymin", "ymax")))
+      if (!name %in% names(mapping)) mapping[[name]] <- inherited[[name]]
     for (name in intersect(names(layer$aes_params), names(mapping))) mapping[[name]] <- NULL
     layer <- reconstruct_layer(layer, layer$data, mapping = layer$mapping)
     layer$ggchord_input_mapping <- ggchord_track_stage_mapping(mapping, layer$ggchord_params$track_id)
@@ -270,21 +278,23 @@ ggchord_prepare_track_layers <- function(plot, sequences = ggchord_sequence_refe
   numeric_layers <- Filter(function(l) identical(l$ggchord_type, "track") &&
     !identical(l$ggchord_params$track_kind, "tile"), plot$layers)
   ids <- vapply(numeric_layers, function(l) l$ggchord_params$track_id, character(1))
-  for (id in unique(ids)) {
+  plot$ggchord$track_quantities <- setNames(lapply(unique(ids), function(id) {
     members <- numeric_layers[ids == id]
-    measures <- vapply(members, function(l) l$ggchord_params$measure %||% NA_character_, character(1))
-    units <- vapply(members, function(l) l$ggchord_params$value_unit %||% NA_character_, character(1))
+    known <- function(field) unique(unlist(lapply(members, function(l) l$ggchord_params[[field]])))
+    measures <- known("measure")
     scale <- plot$scales$get_scales(ggchord_track_aes("value", id))
-    declared_unit <- scale$ggchord_unit %||% NA_character_
-    known_units <- c(units, declared_unit)
-    if (length(unique(known_units[!is.na(known_units)])) > 1L)
+    units <- unique(c(known("value_unit"), scale$ggchord_track_unit))
+    if (length(units) > 1L)
       ggchord_stop("Track '", id, "' mixes incompatible value units")
-    if (length(unique(measures[!is.na(measures)])) > 1L) {
+    if (length(measures) > 1L) {
       owners <- vapply(members, function(l) l$ggchord_layer_id, character(1))
       ggchord_stop("Track '", id, "' mixes height measures: ",
-        paste(paste0(owners, "=", measures), collapse = ", "), ". Use separate bands for different quantities.")
+        paste(owners, collapse = ", "), ". Use separate bands for different quantities.")
     }
-  }
+    labels <- known("value_label")
+    list(unit = units, measure = measures,
+      label = if (length(measures)) measures else if (length(labels) == 1L) labels else id)
+  }), unique(ids))
   plot
 }
 

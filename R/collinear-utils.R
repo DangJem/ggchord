@@ -10,24 +10,20 @@ ggchord_select_ribbons <- function(data, seqs, params, collinear = FALSE, displa
   n <- nrow(data)
   qi <- match(as.character(data$qaccver), seqs)
   si <- match(as.character(data$saccver), seqs)
-  same_row <- rep(FALSE, n)
   if (!is.null(display_rows)) {
     qi <- unname(display_rows[as.character(data$qaccver)])
     si <- unname(display_rows[as.character(data$saccver)])
-    same_row <- !is.na(qi) & !is.na(si) & qi == si
   }
   adjacent <- abs(qi - si) == 1L
   if ((!collinear || cyclic) && length(seqs) > 1L) {
     adjacent <- adjacent | abs(qi - si) == length(seqs) - 1L
   }
   adjacent[is.na(adjacent)] <- FALSE
-  valid <- !is.na(qi) & !is.na(si) & qi != si
+  valid <- !is.na(qi) & !is.na(si)
   explicit_pairs <- params$pairs
-  only_adjacent <- params$adjacent_only %||%
-    ((isTRUE(collinear) || cyclic) && is.null(explicit_pairs))
+  only_adjacent <- isTRUE(params$adjacent_only)
   keep <- valid
-  reason <- ifelse(valid, NA_character_, "outside_sequence_set_or_self")
-  reason[same_row] <- "same_display_row"
+  reason <- ifelse(valid, NA_character_, "outside_sequence_set")
   if (only_adjacent) {
     keep <- keep & adjacent
     reason[valid & !adjacent] <- "non_adjacent"
@@ -53,13 +49,6 @@ ggchord_select_ribbons <- function(data, seqs, params, collinear = FALSE, displa
       pair_key(q, s)
     reason[keep & !selected] <- "unselected_pair"
     keep <- keep & selected
-  }
-  if (cyclic) {
-    unknown <- ggchord_alignment_unknown(data, "coord_radial_synteny()")
-    if (any(unknown)) warning("coord_radial_synteny(): omitted ", sum(unknown),
-      " HSPs with unknown direction", call. = FALSE)
-    reason[unknown] <- "unknown_direction"
-    keep <- keep & !unknown
   }
   report <- data.frame(source_row = seq_len(n), qaccver = data$qaccver,
     saccver = data$saccver, retained = keep, reason = reason,

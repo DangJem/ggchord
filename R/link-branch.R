@@ -30,8 +30,9 @@ ggchord_branch_built <- function(built) {
     style_cols <- intersect(c("PANEL", "ribbon_fill","ribbon_alpha","ribbon_colour",
       "ribbon_linetype","link_colour","link_alpha","link_linewidth","link_linetype",
       "fill","colour","alpha","linewidth","linetype",
+      grep("^ggchord_scope_", names(data), value = TRUE),
       if(isTRUE(layer$geom_params$flow)) if(side=="query")"flow_from" else "flow_to" else character()),names(data))
-    row_groups <- split(seq_len(nrow(data)), data$source_row)
+    row_groups <- split(seq_len(nrow(data)), interaction(data$PANEL, data$source_row, drop = TRUE))
     items <- lapply(row_groups, function(idx) {
       row <- data$source_row[idx[1]]
       xy <- as.matrix(data[idx,c("x","y")])
@@ -50,6 +51,7 @@ ggchord_branch_built <- function(built) {
       styles <- unique(data[idx,style_cols,drop=FALSE])
       if (nrow(styles) != 1L) return(list(idx=idx, key=paste0("single-",row)))
       control <- params$link_ctrl_point %||% params$ribbon_ctrl_point
+      if (inherits(control, "ggchord_link_route")) control <- NULL
       if (is.list(control)) control <- control[[min(row,length(control))]]
       signature <- list(unname(as.list(input[row,cols,drop=FALSE])), unname(as.list(styles)),
         unname(near), control)
@@ -64,6 +66,7 @@ ggchord_branch_built <- function(built) {
     })
     if (any(vapply(items,is.null,logical(1)))) next
     groups <- split(seq_along(items), vapply(items, `[[`, character(1), "key"))
+    member_rows <- ggchord_link_source_members(input)
     output <- list(); geometries <- list(); next_group <- 0L; failures <- 0L
     emit <- function(item, xy, component, members, first=TRUE,last=TRUE,preserve=FALSE,front_counts=NULL) {
       if(ribbon && !preserve && !is.null(front_counts) && side=="subject") {
@@ -79,12 +82,13 @@ ggchord_branch_built <- function(built) {
       d$x <- xy[,1]; d$y <- xy[,2]; d$group <- next_group
       d$.component <- component; d$.arrow_first <- first; d$.arrow_last <- last
       d$source_row <- if (component == "trunk") NA_integer_ else data$source_row[item$idx[1]]
-      d$source_rows <- rep(list(as.integer(members)),nrow(d))
+      d$source_rows <- rep(list(members), nrow(d))
       output[[length(output)+1L]] <<- d
       raw <- original[rows,,drop=FALSE]
       raw$x <- xy[,1]; raw$y <- xy[,2]; raw$group <- next_group
       raw$.component <- component; raw$source_row <- d$source_row
       raw$source_rows <- d$source_rows
+      raw$source_members <- d$source_rows
       if(ribbon && !preserve && !is.null(front_counts)) {
         raw$.q_n<-front_counts[1];raw$.s_n<-front_counts[2]
         if("flow_qn" %in% names(d))d$flow_qn<-front_counts[1]
@@ -102,7 +106,7 @@ ggchord_branch_built <- function(built) {
       }
       # A shared trunk does not claim any one member's destination or statistics.
       if (component == "trunk") {
-        protected <- c("x","y","group",".component","source_row","source_rows",cols)
+        protected <- c("x","y","group",".component","source_row","source_rows","source_members",cols)
         for (nm in intersect(setdiff(names(input),protected),names(raw))) raw[[nm]] <- raw[[nm]][NA_integer_]
       }
       geometries[[length(geometries)+1L]] <<- raw
@@ -112,7 +116,9 @@ ggchord_branch_built <- function(built) {
       if (length(parts) < 2L || is.null(parts[[1]]$near)) {
         for (item in parts) {
           idx <- item$idx
-          emit(item,as.matrix(data[idx,c("x","y")]),"branch",data$source_row[idx[1]],preserve=TRUE)
+          row <- data$source_row[idx[1]]
+          emit(item,as.matrix(data[idx,c("x","y")]),"branch",
+            member_rows[[row]], preserve=TRUE)
         }
         next
       }
@@ -123,28 +129,41 @@ ggchord_branch_built <- function(built) {
       norm <- sqrt(sum(direction^2))
       if (!is.finite(norm) || norm < 1e-8 || min(distances) < 1e-8) {
         failures <- failures+1L
-        for (item in parts) emit(item,item$xy,"branch",item$row,preserve=TRUE)
+        for (item in parts) emit(item, item$xy, "branch",
+          member_rows[[item$row]], preserve = TRUE)
         next
       }
       delta <- direction/norm*min(vapply(parts, `[[`, numeric(1), "path_length"))*params$link_branch_fraction
       near <- parts[[1]]$near
       node <- sweep(near,2,delta,"+")
-      members <- vapply(parts,`[[`,integer(1),"row")
+      members <- unique(unlist(member_rows[vapply(parts, `[[`, integer(1), "row")]))
+      context <- layout$render_context
+      panel <- as.integer(data$PANEL[parts[[1L]]$idx[1L]])
+      metric <- (context$facet_contexts[[panel]] %||% context)$units_per_mm
+      if (length(metric) != 2L || any(!is.finite(metric) | metric <= 0))
+        metric <- rep(ggchord_units_per_mm(), 2L)
+      width <- params$route$corridor_width
       if (!ribbon) {
         trunk <- bezier_pts(as.numeric(near),as.numeric(node),
           as.numeric(near)+delta/3,as.numeric(near)+delta*2/3,n=24)
         if (side == "subject") trunk <- trunk[nrow(trunk):1,,drop=FALSE]
         emit(parts[[1]],trunk,"trunk",members,first=side=="query",last=side=="subject")
-        for (item in parts) {
+        travel <- delta / metric
+        lateral <- c(-travel[2L], travel[1L]) / sqrt(sum(travel^2)) * metric
+        ranks <- rank(as.numeric(sweep(targets, 2L, metric, "/") %*% (lateral / metric)),
+          ties.method = "first")
+        for (j in seq_along(parts)) {
+          item <- parts[[j]]
           from <- as.numeric(node); to <- as.numeric(item$far)
           far_control <- (from+to)/2
           if (!is.null(item$control)) {
             controls <- ggchord_link_controls(item$control,1,far_control)
             far_control <- as.numeric(ggchord_rotate_points(matrix(controls[[if(side=="query") 2 else 1]],1,2),layout$rotation))
           }
-          xy <- bezier_pts(from,to,from+delta,far_control,n=60)
+          spread <- lateral * width * ((ranks[j] - .5) / length(parts) - .5)
+          xy <- bezier_pts(from,to,from+delta+spread,far_control,n=60)
           if (side == "subject") xy <- xy[nrow(xy):1,,drop=FALSE]
-          emit(item,xy,"branch",item$row,first=side=="subject",last=side=="query")
+          emit(item,xy,"branch",member_rows[[item$row]],first=side=="subject",last=side=="query")
         }
       } else {
         polygon <- function(a,b,c1,c2) {
@@ -153,14 +172,24 @@ ggchord_branch_built <- function(built) {
           rbind(a,right,b[nrow(b):1,,drop=FALSE],left[nrow(left):1,,drop=FALSE])
         }
         edges <- near[c(1,nrow(near)),,drop=FALSE]
-        trunk <- polygon(near,node,sweep(edges,2,delta/3,"+"),sweep(edges,2,delta*2/3,"+"))
+        tangent <- (edges[2L, ] - edges[1L, ]) / metric
+        length_mm <- sqrt(sum(tangent^2))
+        if (length_mm > 0) {
+          span <- tangent / length_mm * metric * width
+          node <- sweep(outer(seq(-.5, .5, length.out = nrow(near)), span),
+            2L, colMeans(near) + delta, "+")
+        }
+        exit <- node[c(1L, nrow(node)), , drop = FALSE]
+        trunk <- polygon(near,node,sweep(edges,2,delta/3,"+"),sweep(exit,2,delta/3,"-"))
         # Reject invalid strip sides rather than hiding a fold with overdraw.
         if (ggchord_front_invalid(node,near)) {
           failures <- failures+1L
-          for (item in parts) emit(item,item$xy,"branch",item$row,preserve=TRUE)
+          for (item in parts) emit(item, item$xy, "branch",
+            member_rows[[item$row]], preserve=TRUE)
           next
         }
-        emit(parts[[1]],trunk,"trunk",members,front_counts=c(nrow(near),nrow(node)))
+        emit(parts[[1]], trunk, "trunk", members, first = side == "query",
+          last = side == "subject", front_counts = c(nrow(near), nrow(node)))
         tangent <- node[nrow(node),]-node[1,]
         ranks <- order(as.numeric(targets %*% tangent))
         for (k in seq_along(ranks)) {
@@ -180,7 +209,8 @@ ggchord_branch_built <- function(built) {
             far_controls <- ggchord_rotate_points(do.call(rbind, controls), layout$rotation)
           }
           xy <- polygon(node_slice,item$far,sweep(a,2,delta,"+"),far_controls)
-          emit(item,xy,"branch",item$row,front_counts=c(nrow(node_slice),nrow(item$far)))
+          emit(item, xy, "branch", member_rows[[item$row]], first = side == "subject",
+            last = side == "query", front_counts = c(nrow(node_slice), nrow(item$far)))
         }
       }
     }

@@ -119,7 +119,8 @@ ggchord_data_validate_table <- function(data, role, references, enabled, add) {
     if ("alphabet" %in% names(data)) add("invalid_alphabet", "Alphabet must be DNA, RNA, or AA",
       which(!data$alphabet %in% c("DNA", "RNA", "AA")), "alphabet")
     if (all(c("accver", "alignment_column") %in% names(data))) {
-      context <- intersect(c(".source_input", "source_block", "accver", "alignment_column"), names(data))
+      context <- intersect(c("source_input", ".source_input", "source_block", "accver",
+        "alignment_column"), names(data))
       add("duplicate_cell", "Each alignment row and column must identify one cell",
         which(duplicated(data[context])), "alignment_column")
     }

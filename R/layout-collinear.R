@@ -58,8 +58,7 @@ ggchord_collinear_ribbons <- function(p, layout) {
   input <- p$ribbon_data
   if (is.null(input) || !nrow(input)) return(NULL)
   ref <- layout$sequence_reference
-  valid <- which(input$qaccver != input$saccver &
-    input$qaccver %in% layout$seqs & input$saccver %in% layout$seqs)
+  valid <- which(input$qaccver %in% layout$seqs & input$saccver %in% layout$seqs)
   if (!length(valid)) {
     warning("No valid alignment data available for plotting", call. = FALSE)
     return(NULL)
@@ -104,9 +103,14 @@ ggchord_collinear_ribbons <- function(p, layout) {
     i <- valid[j]
     q <- as.character(input$qaccver[i]); s <- as.character(input$saccver[i])
     direction_q <- sign(ref$y[s] - ref$y[q])
-    direction_s <- -direction_q
     channel <- abs(unname(ref$y[q] - ref$y[s]))
+    same_row <- channel == 0
+    direction_s <- if (same_row) 1 else -direction_q
+    if (same_row) direction_q <- 1
     make_front <- function(id, start, end, direction) {
+      bounds <- ggchord_interval_front(start, end)
+      start <- bounds[1L]
+      end <- bounds[2L]
       positions <- seq(start, end, length.out = 50L)
       configured <- unname(p$ribbonGap[[id]])
       automatic <- isTRUE(p$ribbon_gap_auto)
@@ -126,7 +130,7 @@ ggchord_collinear_ribbons <- function(p, layout) {
         close_gap = min(configured, .035, channel * .2)
       ) else rep(configured, length(positions))
       list(xy = cbind(x = ggchord_collinear_x(positions, id, ref),
-        y = unname(ref$y[id]) + direction * gap), gap = max(gap))
+        y = unname(ref$y[id]) + direction * gap + unname(p$ribbon_offset[id])), gap = max(gap))
     }
     q_front <- make_front(q, input$qstart[i], input$qend[i], direction_q)
     s_front <- make_front(s, input$sstart[i], input$send[i], direction_s)
@@ -136,6 +140,12 @@ ggchord_collinear_ribbons <- function(p, layout) {
     edge <- function(index, control_edge) {
       from <- q_xy[index[1L], ]; to <- s_xy[index[2L], ]
       route <- p$ribbon_ctrl_point
+      if (same_row) {
+        if (identical(route$route, "straight"))
+          ggchord_stop("geom_link_ribbon(): a same-row ribbon requires a curved route")
+        rise <- abs(to[1L] - from[1L]) * (route$curvature %||% .5)
+        return(bezier_pts(from, to, from + c(0, rise), to + c(0, rise), n = 50L))
+      }
       if (inherits(route, "ggchord_link_route")) {
         if (route$route == "straight") return(rbind(from, to))
         cp <- list(c(from[1L], from[2L] + route$curvature * (to[2L] - from[2L])),
@@ -147,13 +157,9 @@ ggchord_collinear_ribbons <- function(p, layout) {
     last_edge <- edge(c(nrow(q_xy), nrow(s_xy)), 2L)
     xy <- rbind(q_xy, last_edge, s_xy[nrow(s_xy):1L, , drop = FALSE],
       first_edge[nrow(first_edge):1L, , drop = FALSE])
-    biological_direction <- if ("direction" %in% names(input) &&
-        !is.na(input$direction[i]) && input$direction[i] %in% c("same", "reverse")) {
-      as.character(input$direction[i])
-    } else if ((input$qend[i] - input$qstart[i]) *
-        (input$send[i] - input$sstart[i]) >= 0) "same" else "reverse"
+    biological_direction <- input$.ggchord_relative_direction[i]
     opacity <- alpha[i]
-    if (identical(p$ribbon_direction, "alpha")) {
+    if (identical(p$ribbon_direction, "alpha") && biological_direction != "unknown") {
       opacity <- opacity * p$ribbon_direction_alpha[biological_direction]
     }
     outline <- if (!is.null(outline_map)) {
@@ -192,13 +198,13 @@ ggchord_collinear_link_geometry <- function(data, params, layout, rows) {
   ref <- layout$sequence_reference
   gaps <- process_sequence_param(params$link_gap %||% .035,
     layout$seqs, "link_gap", .035)
+  offsets <- ggchord_connection_offsets(params, layout$seqs,
+    if (identical(layout$seq_axis, "vertical")) "x" else "y")
   if (!is.numeric(gaps) || any(!is.finite(gaps))) {
     ggchord_stop("link_gap must contain finite numbers")
   }
   pieces <- lapply(rows, function(i) {
     q_id <- as.character(data$qaccver[i]); s_id <- as.character(data$saccver[i])
-    if ("row_id" %in% names(layout$sequence_layout) && ref$y[q_id] == ref$y[s_id]) ggchord_stop(
-      "geom_link_line(): point links within one display row are unsupported; use distinct row_id values")
     endpoint <- function(id, pos, destination) {
       direction <- sign(ref$y[destination] - ref$y[id])
       gap <- unname(gaps[[id]])
@@ -206,13 +212,16 @@ ggchord_collinear_link_geometry <- function(data, params, layout, rows) {
         abs(unname(ref$y[destination] - ref$y[id])) * .2)
       if (is.null(params$link_gap)) gap <- ggchord_collinear_gap_profile(
         pos, id, direction, layout$obstacles, params$link_avoid %||% "none", gap)
-      c(ggchord_collinear_x(pos, id, ref), unname(ref$y[id]) + direction * gap)
+      c(ggchord_collinear_x(pos, id, ref), unname(ref$y[id]) + direction * gap + offsets[[id]])
     }
     q <- endpoint(q_id, data$qpos[i], s_id)
     s <- endpoint(s_id, data$spos[i], q_id)
-    ggchord_collinear_check_gap(q_id, s_id, abs(q[2] - ref$y[q_id]),
-      abs(s[2] - ref$y[s_id]), ref, "geom_link_line()")
-    controls <- ggchord_collinear_controls(q, s, params$link_ctrl_point, i)
+    curvature <- params$route$curvature %||% .5
+    controls <- if (ref$y[q_id] == ref$y[s_id]) {
+      rise <- abs(q[1L] - s[1L]) * curvature
+      list(q + c(0, rise), s + c(0, rise))
+    } else list(c(q[1L], q[2L] + (s[2L] - q[2L]) * curvature),
+      c(s[1L], s[2L] + (q[2L] - s[2L]) * curvature))
     xy <- if (identical(params$link_type, "straight")) rbind(q, s) else
       bezier_pts(q, s, controls[[1L]], controls[[2L]], n = 60L)
     data.frame(x = xy[, 1L], y = xy[, 2L], group = i, source_row = i,
@@ -264,6 +273,7 @@ compute_collinear_layout <- function(...) {
     row_y <- if (rows > 1L) c(0, -2 * cumsum(gap[-rows])) else 0
     y <- stats::setNames(row_y[segment_table$row_index], seqs)
   }
+  if (isTRUE(p$collinear_right_normal)) y <- -y
   ref <- list(mode = "collinear", lens = lens, orientation = p$orientation,
     x_scale = if (identical(p$length_mode, "equal")) stats::setNames(
       p$collinear_transform$table$units_per_bp, seqs) else p$collinear_transform$table$units_per_bp[1L], y = y,

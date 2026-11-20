@@ -158,6 +158,9 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
   ribbon_gap_auto <- is.null(ribbon_params$ribbon_gap)
   ribbonGap  <- process_sequence_param(ribbon_params$ribbon_gap %||% 0.15,
                                        seqs, "link_gap", 0.15)
+  ribbon_offset <- ggchord_connection_offsets(ribbon_params, seqs,
+    ggchord_path_normal_axis(plot$coordinates))
+  if (!collinear) ribbonGap <- ribbonGap + ribbon_offset
   ribbon_color_scheme <- ribbon_params$ribbon_color_scheme %||% "pident"
   ribbon_color_by     <- ribbon_params$ribbon_color_by
   ribbon_color_limits <- ribbon_params$ribbon_color_limits
@@ -230,6 +233,7 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
   if (NROW(ribbon_data)) {
     strand <- ggchord_link_orientation(ribbon_data)
     reversed <- strand == "opposite"
+    ribbon_data$.ggchord_relative_direction <- ifelse(reversed, "reverse", strand)
     q_minus <- ribbon_data$qstrand %in% "-" & length(ribbon_data$qstrand) > 0L
     if (!length(q_minus)) q_minus <- rep(FALSE, nrow(ribbon_data))
     s_minus <- xor(q_minus, reversed)
@@ -803,9 +807,10 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
       collinear_transform = collinear_transform,
       collinear_crossrow_styles = ggchord_collinear_row_styles(plot$coordinates),
       collinear_radial = isTRUE(plot$coordinates$ggchord_radial),
+      collinear_right_normal = identical(plot$coordinates$collinear_seq_axis, "vertical"),
       collinear_vertical = isTRUE(plot$coordinates$ggchord_sankey) ||
         identical(plot$coordinates$collinear_seq_axis, "vertical"))
-  } else function(...) compute_chord_layout(..., ring = seq_ring)
+  } else function(..., ribbon_offset) compute_chord_layout(..., ring = seq_ring)
   layout <- layout_strategy(
     seqs = seqs, lens = lens, seq_labels = seq_labels,
     length_mode = arrangement$length_mode %||% "proportional",
@@ -813,6 +818,8 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
     seq_curvature = seq_curvature, orientation = orientation,
     seq_gap = seq_gap, clockwise = clockwise,
     ribbon_data = ribbon_data, ribbonGap = ribbonGap,
+    ribbon_offset = if (isTRUE(plot$coordinates$ggchord_radial) ||
+      isTRUE(plot$coordinates$ggchord_sankey)) ribbon_offset * 0 else ribbon_offset,
     ribbon_gap_auto = ribbon_gap_auto,
     link_avoid = ribbon_params$link_avoid %||% "none",
     ribbon_obstacles = ribbon_obstacles,

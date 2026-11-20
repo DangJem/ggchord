@@ -5,10 +5,10 @@ ggchord_project_vertical_data <- function(data) {
       c("text_x", "text_y"), c("label_x", "label_y"), c("anchor_x", "anchor_y"))) {
     if (!all(pair %in% names(data))) next
     x <- data[[pair[1L]]]; y <- data[[pair[2L]]]
-    data[[pair[1L]]] <- -y; data[[pair[2L]]] <- x
+    data[[pair[1L]]] <- y; data[[pair[2L]]] <- x
   }
   for (field in intersect(c("angle", "text_angle", "label_angle"), names(data))) {
-    value <- (data[[field]] + 90 + 180) %% 360 - 180
+    value <- (90 - data[[field]] + 180) %% 360 - 180
     # Preserve readable text rather than turning labels upside down.
     above <- which(value > 90)
     value[above] <- value[above] - 180
@@ -34,12 +34,12 @@ ggchord_project_vertical_layout <- function(layout) {
     d <- layout$sequence_layout
     d$axis_min <- d$xmin; d$axis_max <- d$xmax
     d$ymin <- d$xmin; d$ymax <- d$xmax
-    d$xmin <- d$xmax <- -d$y
+    d$xmin <- d$xmax <- d$y
     d$y <- (d$ymin + d$ymax) / 2
     layout$sequence_layout <- d
   }
   ext <- layout$extremes
-  if (!is.null(ext)) layout$extremes <- list(x_min = -ext$y_max, x_max = -ext$y_min,
+  if (!is.null(ext)) layout$extremes <- list(x_min = ext$y_min, x_max = ext$y_max,
     y_min = ext$x_min, y_max = ext$x_max)
   layout$seq_axis <- "vertical"
   layout$vertical_projected <- TRUE

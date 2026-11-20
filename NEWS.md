@@ -20,6 +20,22 @@
   local and display coordinates.
 - Updated the function help, paired tutorials and README figures for the
   rewritten API.
+- Retain same-reference and non-neighbouring ribbons. Validate source endpoints
+  before display clipping and draw both edges of closed intervals, including
+  single-residue intervals. Connection offsets are physical in every reference
+  projection. Shared routes retain source membership, and ribbon tips export
+  as separate decoration geometry.
+- Explicit fixed aesthetics take priority over layer mappings and inherited
+  mappings. Domain statistics respect facet groups and margins, and their
+  computed variables are available to `after_stat()`.
+- Track value transformations run at the native statistical stages. Track
+  guides and limit snapshots report known measures and units. Area outlines
+  and circular track closure follow the requested geometry.
+- Report failed Fusion children by panel path while retaining available stages
+  from other children. Position queries use each facet's own reference frame.
+  Diagnostics detect invalid references and incompatible components before
+  device measurement. MAF character tables expose `source_input` and
+  `source_block` for selecting an alignment block.
 
 # ggchord 0.29.0
 

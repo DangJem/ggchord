@@ -332,6 +332,7 @@ ggchord_prepare_instances <- function(plot, seqs) {
       layer$ggchord_annotation_origin <- layer$ggchord_input_data
     layer$ggchord_input_data <- input
     p$reference_ids <- NULL  # validated before replacing accessions with instance keys
+    p$reference <- NULL
     layer$ggchord_input_transform <- NULL
     p$source_stat <- NULL
     for (role in intersect(layer$ggchord_role_aes, names(layer$ggchord_input_mapping)))

@@ -2,9 +2,9 @@
 #' Draw a sequence-local data layer with ggplot2 grammar
 #'
 #' Statistics and data positions are calculated independently within each
-#' accession/window before projection into the physical track band. Supported
-#' geoms are point, line, path, step, col, bar, tile, rect, area, ribbon,
-#' segment, linerange, errorbar and text. Supported statistics are identity,
+#' reference and facet before projection into the physical track band. Supported
+#' geoms are point, line, path, step, col, bar, tile, area and interval.
+#' Supported statistics are identity,
 #' count, bin, summary, smooth, density and ecdf, plus the ggchord interval
 #' coverage statistic; unsupported combinations fail
 #' in the native layer. Smooth/density/ecdf retain each estimation group's
@@ -13,18 +13,20 @@
 #' influence or a custom model's additional internal filtering decisions.
 #' Count and summary provenance lists the eligible input rows at each native
 #' group and position, before a data-position adjustment.
-#' Statistics operate on raw source x/y before Track numerical-scale transforms.
+#' Source x stays in sequence units. The track value transformation applies
+#' to input y before the statistic and to new y values at the after-stat stage.
+#' Exported heights use the original measurement units.
 #' ECDF requires explicit pad=FALSE because infinite anchors are not source
 #' positions. Density's native bounds argument is not forwarded: bounds here
 #' controls source-coordinate clipping, not density boundary correction.
 #' New estimation combinations use position="identity": smooth with
-#' line/path/point/ribbon, density with line/path/point/area, and ecdf with
+#' line/path/point, density with line/path/point/area, and ecdf with
 #' line/path/point/step. Other combinations are explicitly rejected.
 #' Count counts identical positions; bin requires explicit binwidth or breaks.
 #' An explicit group mapping or fixed group takes priority over discrete
 #' style mappings. For example, `group = 1` pools the source observations.
-#' A fixed aesthetic overrides the inherited mapping before statistics and
-#' grouping. Mapping and fixing the same aesthetic in one layer is an error.
+#' A fixed aesthetic overrides the layer or inherited mapping before statistics
+#' and grouping.
 #' Point shape categories and their factor order are shared with other point
 #' layers through the plot's shape scale. Use `scale_shape_manual()` to choose
 #' symbols by category, or set a fixed `shape` on the layer.
@@ -39,9 +41,8 @@
 #' Bin source membership follows the native statistic, including outer edges
 #' and its numerical boundary tolerance, before data positions move the bars.
 #' Mapping x/y refers to source position/local numerical value, not screen x/y.
-#' Existing track_value/track_fill/track_colour roles remain accepted.
 #' @param mapping,data Standard layer input. Supply accver and source positions
-#'   through x/pos, or interval start/end. Map y/track_value for identity values.
+#'   through x/pos, or interval start/end. Map y or supply the value column.
 #'   Start-stage expressions read the layer's source columns, including the
 #'   original accession when `accver` is mapped. A zero-row input must still
 #'   provide the columns used by these expressions.
@@ -61,28 +62,25 @@
 #'   `ggplot2::position_dodge(width = 10)`. Source x uses sequence units.
 #'   Feature placement belongs on feature layers.
 #' @param id Optional unique layer ID for exported statistics and source rows.
-#' @param measure Optional name of the quantity represented by height, e.g.
-#'   `"read_depth"`. Layers with different declared measures need separate
-#'   bands. Unmodified coverage and mean_depth outputs identify themselves,
-#'   including direct references such as `after_stat(.data[["mean_depth"]])`.
-#' @param bounds Coordinate error/clip policy.
-#' @param baseline Numeric identity-column baseline. Nonzero baselines require
-#'   position='identity' so stacking does not change their meaning.
-#' @param fill,colour,alpha,linewidth,linetype Fixed styles for the count shortcut.
 #' @param show.legend Standard ggplot2 layer legend selection. A named logical
 #'   vector such as `c(fill = FALSE, colour = TRUE)` controls this layer's
 #'   contribution to each guide, including guides on named track scales.
 #' @param inherit.aes Whether to inherit the plot mapping.
 #' @param ... Native geom/stat parameters and fixed styles. Coverage requires
 #'   a positive whole `binwidth` in sequence units or explicit `windows`.
+#'   `measure` names the quantity represented by height. Different declared
+#'   measures need separate bands. Coverage and mean depth identify their
+#'   measures automatically. `bounds` controls whether out-of-range positions
+#'   fail or are clipped, and a nonzero `baseline` requires identity placement.
+#'   `outline` controls the border drawn by area tracks.
 #'   A supplied parameter accepted by both an external Stat and the selected
 #'   Geom raises an error. For example, name a custom Stat's search radius
 #'   `radius` to use it alongside a column Geom's `width`.
 #' @section Interval coverage:
 #' Supply one inclusive interval per row with accver, start and end. Endpoint
-#' columns can be mapped with `aes(start = ..., end = ...)`. Without layer data
-#' the statistic uses the plot's feature table. Split compound or origin-crossing
-#' intervals into separate records first. Each accession or focused window
+#' columns can be mapped with `aes(start = ..., end = ...)`. Supply the
+#' observation table to the layer. Compound features can declare their actual
+#' intervals in `segments`. Each accession or focused window
 #' starts at position 1. With binwidth 4, bins are 1-4, 5-8 and so on.
 #' The final bin uses its actual length. Cross-bin intervals contribute only
 #' their intersection with each bin. Missing endpoints are errors. The default
@@ -141,6 +139,8 @@ geom_track <- function(mapping = NULL, data = NULL, geom = "point", stat = NULL,
     ggchord_stop("geom_track(): baseline requires col, bar or area")
   if ("outline" %in% names(dots) && geom != "area")
     ggchord_stop("geom_track(): outline applies to area")
+  if (geom == "interval" && !is.null(measure))
+    ggchord_stop("geom_track_interval(): measure requires a numerical height")
   outline <- match.arg(outline, c("upper", "both", "full"))
   dots[c("bounds", "baseline", "measure", "closed", "outline")] <- NULL
   if (geom == "interval" && ggchord_identity_stat(stat %||% "identity")) {
@@ -168,7 +168,7 @@ geom_track <- function(mapping = NULL, data = NULL, geom = "point", stat = NULL,
       (!stat %in% c(names(stats), "coverage") && is.null(custom_stat)))
     ggchord_stop("geom_track(): use a ggplot2 Stat object or a supported statistic name")
   position <- position %||% if (geom %in% c("bar", "col", "area")) "stack" else "identity"
-  estimates <- list(smooth = c("line", "path", "point", "ribbon"),
+  estimates <- list(smooth = c("line", "path", "point"),
     density = c("line", "path", "point", "area"), ecdf = c("line", "path", "point", "step"))
   if (ggchord_local_position(position))
     ggchord_stop("geom_track(): position adjusts source data; use feature placement on a feature layer")
@@ -617,11 +617,6 @@ ggchord_track_mapping_aliases <- function(mapping) {
   mapping
 }
 
-ggchord_check_track_styles <- function(mapped, fixed, id) {
-  both <- intersect(mapped, fixed)
-  if (length(both)) ggchord_stop("Layer '", id, "' both maps and fixes ", paste(both, collapse = ", "))
-}
-
 ggchord_track_reference_index <- function(input, sequences, caller) {
   ggchord_require_columns(input, "accver", caller)
   ids <- as.character(input$accver)
@@ -707,6 +702,18 @@ ggchord_compute_track_input <- function(layer, plot, raw, sequences, coverage) {
     ggchord_stop("geom_track(): use a sequence-path coordinate such as coord_collinear(axis = 'y')")
   if (coverage && is.null(raw)) ggchord_stop("Coverage needs interval data or a plot feature table")
   ggchord_require_columns(raw, character(), "geom_track()")
+  value_scale <- plot$scales$get_scales(ggchord_track_aes("value", p$track_id))
+  value_transform <- if (!is.null(value_scale) && !isTRUE(p$interval))
+    value_scale$get_transformation()
+  transformed_height <- !is.null(value_transform) && value_transform$name != "identity"
+  if (transformed_height) {
+    stacked <- identical(p$native_position, "stack") || inherits(p$native_position, "PositionStack")
+    if (stacked && value_transform$name != "reverse")
+      ggchord_stop("Track '", p$track_id, "' cannot stack values on a nonlinear scale")
+    if (p$native_geom %in% c("bar", "col", "area") &&
+        !is.finite(suppressWarnings(value_transform$transform(p$baseline))))
+      ggchord_stop("Track '", p$track_id, "' has a baseline incompatible with its scale transform")
+  }
   original_source <- raw
   facet_rows <- ggchord_facet_stat_input(raw, plot, layer)
   original_index <- if (is.null(facet_rows)) seq_len(nrow(raw)) else facet_rows$.ggchord_input_index
@@ -730,11 +737,15 @@ ggchord_compute_track_input <- function(layer, plot, raw, sequences, coverage) {
       geom <- ggplot2::layer(geom = p$native_geom, stat = "identity", position = "identity")$geom
       names(p$native_params) <- ggplot2::standardise_aes_names(names(p$native_params))
       fixed <- intersect(names(p$native_params), geom$aesthetics())
-      ggchord_check_track_styles(names(mapping), fixed, layer$ggchord_layer_id)
+      mapping[intersect(names(mapping), fixed)] <- NULL
     }
   }
   if (isTRUE(p$native_inherit)) {
     inherited <- ggchord_track_mapping_aliases(plot$mapping)
+    if (isTRUE(p$interval) && any(c("y", "ymin", "ymax") %in% names(inherited))) {
+      warning("geom_track_interval(): ignored inherited y aesthetics", call. = FALSE)
+      inherited[intersect(c("y", "ymin", "ymax"), names(inherited))] <- NULL
+    }
     for (key in setdiff(names(inherited), c(names(mapping), fixed)))
       mapping[[key]] <- inherited[[key]]
   }
@@ -789,6 +800,8 @@ ggchord_compute_track_input <- function(layer, plot, raw, sequences, coverage) {
   if (p$native_stat == "count" && "y" %in% names(mapping) &&
       !is.null(ggchord_start_mapping(mapping$y))) ggchord_stop(
     "geom_track_bar(): count does not accept supplied heights; use geom_track_col() or explicit stat='identity'")
+  layer$ggchord_params$value_label <- if (!is.null(mapping$y)) rlang::as_label(mapping$y) else
+    if (p$native_stat == "count") "count"
   late <- names(mapping)[vapply(mapping, ggchord_has_stage, logical(1), stages = "after_scale")]
   late_mapping <- mapping[late]
   for (key in late) {
@@ -938,12 +951,20 @@ ggchord_compute_track_input <- function(layer, plot, raw, sequences, coverage) {
       ggplot2::scale_colour_identity() + ggplot2::scale_alpha_identity() +
       ggplot2::scale_size_identity() + ggplot2::scale_linewidth_identity() + shape_scale +
       ggplot2::scale_continuous_identity(aesthetics=".ggchord_stat_x")
+    if (!is.null(value_transform)) {
+      limits <- value_scale$ggchord_domain_policy$limits
+      # Data-dependent limits use the final shared or facet-specific domain.
+      q <- q + ggplot2::scale_y_continuous(transform = value_transform,
+        limits = if (is.numeric(limits)) limits, oob = value_scale$oob)
+    }
     if (nrow(domains) > 1L)
       q <- q + ggplot2::facet_wrap(ggplot2::vars(.track_domain), scales = "free")
     built <- ggplot2::ggplot_build(q)
     if (is.null(capture) && length(failures$statistic_errors))
       ggchord_stop("Statistic failed: ", paste(failures$statistic_errors, collapse = "\n"))
     computed <- built$data[[1L]]
+    if (transformed_height) for (field in intersect(c("y", "ymin", "ymax"), names(computed)))
+      computed[[field]] <- value_transform$inverse(computed[[field]])
     panel <- built$layout$layout
     domain <- if (nrow(domains) > 1L) panel$.track_domain[match(computed$PANEL, panel$PANEL)] else
       rep(domains$.track_domain[1L], nrow(computed))
@@ -1266,7 +1287,12 @@ ggchord_track_native_geometry <- function(d, p, layout, sc, at_value, draw_rows)
         top <- path(x, upper, run)
         if (geom %in% c("area", "ribbon")) {
           bottom <- path(rev(d$pos[run]), rev(lower), rev(run))
-          add(c(top$x,bottom$x), c(top$y,bottom$y), c(top$rows,bottom$rows), "track_poly")
+          partial <- geom == "area" && !identical(p$outline, "full")
+          add(c(top$x,bottom$x), c(top$y,bottom$y), c(top$rows,bottom$rows),
+            if (partial) "track_area_fill" else "track_poly")
+          if (partial) add(top$x, top$y, top$rows, "track_line")
+          if (partial && identical(p$outline, "both"))
+            add(bottom$x, bottom$y, bottom$rows, "track_line")
         } else {
           if (isTRUE(p$closed) && length(run) == length(rows) && all(valid)) {
             len <- layout$sequence_reference$lens[[d$accver[run[1L]]]]

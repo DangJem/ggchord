@@ -101,8 +101,10 @@ ggchord_radial_route <- function(a, b, delta, route, bulge) {
   if (identical(route$route, "straight"))
     return(rbind(a, b))
   if (abs(delta) < 1e-10) {
-    control <- (a + b) * (1 - (route$curvature %||% .5)) / 2
-    return(bezier_pts(a, b, control, control, n = 50))
+    tangent <- a + b
+    normal <- c(-tangent[2L], tangent[1L]) / max(sqrt(sum(tangent^2)), 1e-10)
+    displacement <- normal * sqrt(sum((b - a)^2)) * (route$curvature %||% .5)
+    return(bezier_pts(a, b, a + displacement, b + displacement, n = 50))
   }
   path <- ggchord_radial_edge(a, b, delta, bulge = bulge)
   weights <- seq(0, 1, length.out = nrow(path))
@@ -114,10 +116,11 @@ ggchord_radial_route <- function(a, b, delta, route, bulge) {
 ggchord_radial_connections <- function(d, input, params, component, layout, frames) {
   if (!is.data.frame(d) || !nrow(d) || is.null(input)) return(d)
   if (!identical(params$link_branch %||% "none", "none"))
-    ggchord_stop("coord_radial_synteny(): shared branches are unsupported; use link_branch='none'")
+    ggchord_stop("coord_radial_synteny(): route = 'shared' is unsupported; use route = 'curve'")
   ref <- layout$sequence_reference
   configured <- params$ribbon_gap %||% params$link_gap
   gaps <- process_sequence_param(configured %||% .035, layout$seqs, "link_gap", .035)
+  offsets <- ggchord_connection_offsets(params, layout$seqs)
   pieces <- list(); endpoints <- list(); channels <- list()
   for (i in unique(d$source_row)) {
     template <- d[d$source_row == i, , drop = FALSE]
@@ -128,7 +131,7 @@ ggchord_radial_connections <- function(d, input, params, component, layout, fram
     # For two spokes, anchor the one physical channel to declared-order pair,
     # independent of input query/subject order. Reciprocal source rows survive.
     step <- if (forward <= count / 2) forward else forward - count
-    if (count == 2L) step <- if (qi < si) 1 else -1
+    if (count == 2L && qi != si) step <- if (qi < si) 1 else -1
     delta <- step * (if (isTRUE(layout$radial_clockwise)) -1 else 1) * 2 * pi / count
     normal_q <- sign(delta); normal_s <- -sign(delta)
     route <- params$route
@@ -136,8 +139,7 @@ ggchord_radial_connections <- function(d, input, params, component, layout, fram
       if (!is.numeric(start) || !is.numeric(end) || any(!is.finite(c(start, end))) ||
           any(c(start, end) < 1 | c(start, end) > ref$lens[id]))
         ggchord_stop("coord_radial_synteny(): endpoints must be finite and within sequence length")
-      bounds <- if (component != "ribbon") c(start, end) else
-        if (start <= end) c(start - 1, end) else c(start, end - 1)
+      bounds <- if (component != "ribbon") c(start, end) else ggchord_interval_front(start, end)
       pos <- seq(bounds[1], bounds[2], length.out = if (component == "ribbon") 16L else 1L)
       gap <- ggchord_collinear_gap_profile(pos, id, sign, layout$obstacles,
         avoid = if (is.null(configured)) params$link_avoid %||% "none" else "none",
@@ -147,7 +149,8 @@ ggchord_radial_connections <- function(d, input, params, component, layout, fram
       # angular channel. Do not silently clamp the user's physical geometry.
       if (any(!is.finite(gap)) || any(gap < 0) || (delta != 0 && any(atan2(gap, r) >= abs(delta) * .45)))
         ggchord_stop("coord_radial_synteny(): endpoint clearance does not fit its angular channel; increase inner_radius or reduce bands/gaps")
-      ggchord_radial_points(ggchord_collinear_x(pos, id, ref), ref$y[id] + sign * gap, id, frames)
+      ggchord_radial_points(ggchord_collinear_x(pos, id, ref),
+        ref$y[id] + sign * gap + offsets[[id]], id, frames)
     }
     if (component == "ribbon") {
       qxy <- front(q, input$qstart[i], input$qend[i], normal_q)

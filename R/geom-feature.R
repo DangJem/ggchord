@@ -159,25 +159,51 @@ ggchord_split_source_stat <- function(stat, dots, geom) {
 }
 
 # A domain Stat receives source roles and source-row membership.
-ggchord_run_source_stat <- function(data, specification, roles, caller) {
+ggchord_run_source_stat <- function(data, specification, roles, caller, facet, layer) {
   if (is.null(specification) || !nrow(data)) return(data)
   stat <- specification$stat
   data$source_row <- seq_len(nrow(data))
-  data$PANEL <- rep(1L, nrow(data))
   data$group <- data$group %||% rep(-1L, nrow(data))
-  params <- c(specification$params, list(na.rm = FALSE))
+  params <- c(specification$params, list(na.rm = isTRUE(layer$geom_params$na.rm)))
+  members <- ggchord_source_stat_members(data, facet, layer)
+  if (is.null(members)) {
+    data$PANEL <- rep.int(1L, nrow(data))
+  } else {
+    data <- data[members$.ggchord_input_index, , drop = FALSE]
+    data$PANEL <- as.integer(members$PANEL)
+    for (key in facet$keys) data[[key]] <- facet$panels[[key]][data$PANEL]
+  }
   params <- stat$setup_params(data, params)
   data <- stat$setup_data(data, params)
-  needed <- setdiff(stat$required_aes, names(data))
+  needed <- Filter(function(role) !any(strsplit(role, "|", fixed = TRUE)[[1L]] %in% names(data)),
+    stat$required_aes)
   if (length(needed)) ggchord_stop(caller, ": Stat requires ", paste(needed, collapse = ", "))
-  axes <- list(x = ggplot2::scale_x_continuous(), y = ggplot2::scale_y_continuous())
-  for (axis in intersect(c("x", "y"), names(data))) axes[[axis]]$train(data[[axis]])
   param_names <- stat$parameters()
-  computed <- do.call(stat$compute_panel, c(list(data = data, scales = axes),
-    params[intersect(names(params), param_names)]))
-  if (!is.data.frame(computed)) ggchord_stop(caller, ": Stat must return a data frame")
-  ggchord_require_columns(computed, roles, caller)
-  computed
+  compute <- function(part) {
+    if (!nrow(part)) return(part)
+    axes <- list(x = ggplot2::scale_x_continuous(), y = ggplot2::scale_y_continuous())
+    for (axis in intersect(c("x", "y"), names(part))) axes[[axis]]$train(part[[axis]])
+    computed <- do.call(stat$compute_panel, c(list(data = part, scales = axes),
+      params[intersect(names(params), param_names)]))
+    if (!is.data.frame(computed)) ggchord_stop(caller, ": Stat must return a data frame")
+    ggchord_require_columns(computed, setdiff(roles, "group"), caller)
+    if (is.null(computed$source_members)) {
+      source <- computed$source_rows
+      if (is.null(source) && !is.null(computed$source_row))
+        source <- lapply(computed$source_row, function(i) if (!is.na(i)) i)
+      if (!is.null(source))
+        computed$source_members <- I(source)
+    }
+    computed
+  }
+  if (is.null(members)) return(compute(data))
+  panels <- facet$panels
+  ggchord_rbind_fill(lapply(seq_len(nrow(panels)), function(i) {
+    out <- compute(data[data$PANEL == i, , drop = FALSE])
+    out$PANEL <- out$.ggchord_stat_panel <- rep.int(i, nrow(out))
+    for (key in facet$keys) out[[key]] <- rep(panels[[key]][i], nrow(out))
+    out
+  }))
 }
 
 ggchord_feature_layer <- function(mapping, data, shape, fixed_shape, thickness,

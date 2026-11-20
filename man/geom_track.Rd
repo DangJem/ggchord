@@ -20,65 +20,58 @@ geom_track(
 }
 \arguments{
 \item{mapping, data}{Standard layer input. Supply accver and source positions
-through x/pos, or interval start/end. Map y/track_value for identity values.
+through x/pos, or interval start/end. Map y or supply the value column.
 Start-stage expressions read the layer's source columns, including the
-original accession when \code{accver} is mapped. A zero-row input must still
+original accession when `accver` is mapped. A zero-row input must still
 provide the columns used by these expressions.}
 
-\item{geom, stat}{Native geometry and statistic names, or \code{stat = "coverage"}
+\item{geom, stat}{Native geometry and statistic names, or `stat = "coverage"`
 for interval coverage. The seven native
 statistics also accept their built-in ggplot2 Stat objects, for example
-\code{ggplot2::StatBin}. Bar defaults to count, other geoms to identity.
+`ggplot2::StatBin`. Bar defaults to count, other geoms to identity.
 A ggplot2 Stat object may also compute positions and values for a track.
-Its input includes \code{source_row}, an integer index into this layer's source
-table. It can report the contributing indices as a \code{source_rows} list
+Its input includes `source_row`, an integer index into this layer's source
+table. It can report the contributing indices as a `source_rows` list
 column (one integer vector per result). Unreported membership is exported
-as NULL with \code{source_status = "unknown"}. An explicit empty integer vector
+as NULL with `source_status = "unknown"`. An explicit empty integer vector
 denotes a known empty set. Reported members must belong to the same
 accession and facet as the result.}
 
-\item{position}{Native data adjustment such as \code{"identity"}, \code{"stack"} or
-\code{ggplot2::position_dodge(width = 10)}. Source x uses sequence units.
+\item{position}{Native data adjustment such as `"identity"`, `"stack"` or
+`ggplot2::position_dodge(width = 10)`. Source x uses sequence units.
 Feature placement belongs on feature layers.}
 
-\item{track}{Character ID declared with \code{\link[=track_band]{track_band()}}. Omit for the shared default band.}
+\item{track}{Character ID declared with [track_band()]. Omit for the shared default band.}
 
 \item{...}{Native geom/stat parameters and fixed styles. Coverage requires
-a positive whole \code{binwidth} in sequence units or explicit \code{windows}.
+a positive whole `binwidth` in sequence units or explicit `windows`.
+`measure` names the quantity represented by height. Different declared
+measures need separate bands. Coverage and mean depth identify their
+measures automatically. `bounds` controls whether out-of-range positions
+fail or are clipped, and a nonzero `baseline` requires identity placement.
+`outline` controls the border drawn by area tracks.
 A supplied parameter accepted by both an external Stat and the selected
 Geom raises an error. For example, name a custom Stat's search radius
-\code{radius} to use it alongside a column Geom's \code{width}.}
+`radius` to use it alongside a column Geom's `width`.}
 
 \item{na.rm}{Suppress warnings for missing observations that the layer can omit.}
 
 \item{show.legend}{Standard ggplot2 layer legend selection. A named logical
-vector such as \code{c(fill = FALSE, colour = TRUE)} controls this layer's
+vector such as `c(fill = FALSE, colour = TRUE)` controls this layer's
 contribution to each guide, including guides on named track scales.}
 
 \item{inherit.aes}{Whether to inherit the plot mapping.}
 
 \item{id}{Optional unique layer ID for exported statistics and source rows.}
-
-\item{measure}{Optional name of the quantity represented by height, e.g.
-\code{"read_depth"}. Layers with different declared measures need separate
-bands. Unmodified coverage and mean_depth outputs identify themselves,
-including direct references such as \code{after_stat(.data[["mean_depth"]])}.}
-
-\item{bounds}{Coordinate error/clip policy.}
-
-\item{baseline}{Numeric identity-column baseline. Nonzero baselines require
-position='identity' so stacking does not change their meaning.}
-
-\item{fill, colour, alpha, linewidth, linetype}{Fixed styles for the count shortcut.}
 }
 \value{
 A ggplot2 layer using a shared sequence-local band.
 }
 \description{
 Statistics and data positions are calculated independently within each
-accession/window before projection into the physical track band. Supported
-geoms are point, line, path, step, col, bar, tile, rect, area, ribbon,
-segment, linerange, errorbar and text. Supported statistics are identity,
+reference and facet before projection into the physical track band. Supported
+geoms are point, line, path, step, col, bar, tile, area and interval.
+Supported statistics are identity,
 count, bin, summary, smooth, density and ecdf, plus the ggchord interval
 coverage statistic; unsupported combinations fail
 in the native layer. Smooth/density/ecdf retain each estimation group's
@@ -87,21 +80,23 @@ sets describe the group submitted to the native estimator, not per-point
 influence or a custom model's additional internal filtering decisions.
 Count and summary provenance lists the eligible input rows at each native
 group and position, before a data-position adjustment.
-Statistics operate on raw source x/y before Track numerical-scale transforms.
+Source x stays in sequence units. The track value transformation applies
+to input y before the statistic and to new y values at the after-stat stage.
+Exported heights use the original measurement units.
 ECDF requires explicit pad=FALSE because infinite anchors are not source
 positions. Density's native bounds argument is not forwarded: bounds here
 controls source-coordinate clipping, not density boundary correction.
 New estimation combinations use position="identity": smooth with
-line/path/point/ribbon, density with line/path/point/area, and ecdf with
+line/path/point, density with line/path/point/area, and ecdf with
 line/path/point/step. Other combinations are explicitly rejected.
 Count counts identical positions; bin requires explicit binwidth or breaks.
 An explicit group mapping or fixed group takes priority over discrete
-style mappings. For example, \code{group = 1} pools the source observations.
-A fixed aesthetic overrides the inherited mapping before statistics and
-grouping. Mapping and fixing the same aesthetic in one layer is an error.
+style mappings. For example, `group = 1` pools the source observations.
+A fixed aesthetic overrides the layer or inherited mapping before statistics
+and grouping.
 Point shape categories and their factor order are shared with other point
-layers through the plot's shape scale. Use \code{scale_shape_manual()} to choose
-symbols by category, or set a fixed \code{shape} on the layer.
+layers through the plot's shape scale. Use `scale_shape_manual()` to choose
+symbols by category, or set a fixed `shape` on the layer.
 Missing discrete styles form an implicit group and follow the visual
 scale's missing-value settings. An explicit group must be non-missing.
 When exported track geometry combines factor shape categories and fixed
@@ -113,27 +108,26 @@ and units define the reference for tracks and coverage windows.
 Bin source membership follows the native statistic, including outer edges
 and its numerical boundary tolerance, before data positions move the bars.
 Mapping x/y refers to source position/local numerical value, not screen x/y.
-Existing track_value/track_fill/track_colour roles remain accepted.
 }
 \details{
-Numerical tracks use \code{x} in sequence units and \code{y} in measurement units. They default to the \code{pos} and \code{value} columns. An interval fills the band across \code{start} and \code{end} without training a numerical height. Track bands set geometry in millimetres.
+Numerical tracks use `x` in sequence units and `y` in measurement units. They default to the `pos` and `value` columns. An interval fills the band across `start` and `end` without training a numerical height. Track bands set geometry in millimetres.
 }
 \section{Interval coverage}{
 
 Supply one inclusive interval per row with accver, start and end. Endpoint
-columns can be mapped with \code{aes(start = ..., end = ...)}. Without layer data
-the statistic uses the plot's feature table. Split compound or origin-crossing
-intervals into separate records first. Each accession or focused window
+columns can be mapped with `aes(start = ..., end = ...)`. Supply the
+observation table to the layer. Compound features can declare their actual
+intervals in `segments`. Each accession or focused window
 starts at position 1. With binwidth 4, bins are 1-4, 5-8 and so on.
 The final bin uses its actual length. Cross-bin intervals contribute only
 their intersection with each bin. Missing endpoints are errors. The default
 bounds policy rejects out-of-range intervals; clip intersects them with the
 sequence first. For grouped data, compute a complete grid per observed
 group within each accession. An accession/sample without observations
-has no statistical rows. Explicit windows may overlap; see \code{\link[=stat_coverage]{stat_coverage()}}.
+has no statistical rows. Explicit windows may overlap; see [stat_coverage()].
 
-The default height \code{after_stat(coverage)} is the fraction covered by the
-union of intervals. \code{after_stat(mean_depth)} divides the sum of intersection
+The default height `after_stat(coverage)` is the fraction covered by the
+union of intervals. `after_stat(mean_depth)` divides the sum of intersection
 lengths by bin length, counting overlaps repeatedly. Other computed variables
 are covered (distinct covered units), denominator (actual window length),
 depth_sum (sum of intersection lengths), n_interval (intersecting input rows),
