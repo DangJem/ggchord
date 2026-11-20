@@ -18,6 +18,7 @@ from website.search import complete_examples, search_records
 from website.source_links import tracked_paths
 from website import ROOT
 from website.handbook import WEB, expand, manifest
+from website.reference_manual import build as build_api_reference
 from website.registry import pages
 
 PAGES = pages()
@@ -148,6 +149,8 @@ def audit_reference_output(out):
 
 def main():
     parser=argparse.ArgumentParser()
+    parser.add_argument('--reference-only',action='store_true',
+                        help='Build the paired API manual and parameter index without rebuilding other chapters')
     parser.add_argument('--publication',action='store_true')
     parser.add_argument('--render-jobs',type=int,choices=(1,2),default=1,
                         help='Maximum concurrent native locale renderers (default: 1)')
@@ -155,6 +158,11 @@ def main():
                         help='Topics/articles per independent R worker (default: 4)')
     parser.add_argument('--no-cache',action='store_true',help='Force fresh native rendering; do not read or stage cached results')
     args=parser.parse_args()
+    if args.reference_only:
+        if args.publication:
+            parser.error('--reference-only builds a local preview')
+        build_api_reference(ROOT/'.site')
+        return
     os.environ['TZ'] = 'UTC'
     build_started = time.monotonic()
     subprocess.run(["python3", "tools/check-documentation.py", "--source-only"], cwd=ROOT, check=True)

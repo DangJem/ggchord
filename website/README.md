@@ -40,9 +40,22 @@ python3 tools/sync-website-languages.py --reviewed-content home.json /tmp/home-r
 
 Article links point to actual repository files, such as a sibling `.md` page, a help topic in `../../man/` or an image in `../../man/figures/`. The renderer converts these links to website URLs. When retiring an article, remove its policy entry, source, translation and generated file together. Update incoming links and record destinations for its old URL and section anchors.
 
+## Update the API reference
+
+The API reference follows the public inventory and categories in the second-round v0.50.0 manual. Edit English page prose in `website/reference-manual/en.json`, then review the corresponding Han text in `website/reference-manual/zh.json`. Record the SHA-256 of the reviewed English source in the Han file. The shared `structure.json` holds the invocation, parameter and role keys, examples and cross-links. Both language editions expose the same code and anchors. Native facet pages link to the upstream ggplot2 documentation.
+
+Run these commands to check and build the API section and parameter index independently.
+
+```sh
+python3 tools/check-documentation.py --reference-only
+python3 tools/build-website.py --reference-only
+```
+
+The local entry is `.site/en/reference/index.html`, with the matching Han entry under `.site/zh/reference/`. Reference examples include their required data setup. Reader pages name any optional decoder needed by their example.
+
 ## Update function help, package READMEs or offline tutorials
 
-- **Function reference.** Edit the English roxygen source and regenerate its Rd. The Han reference uses the translations in `website/reference-zh/` and checks the digest of each English topic. In `_pkgdown.yml`, review `title_zh` and `desc_zh` when the English `title` or `desc` changes. The group digest is the SHA-256 of the English title, a newline and the English description.
+- **Native R help.** Edit the English roxygen source and regenerate its Rd. The original full-site pkgdown renderer uses the translations under `website/reference-zh/` and the categories in `_pkgdown.yml`.
 - **Package READMEs.** Both editions share layout and code in `website/readme-template.md`. Edit `website/content-en/readme-text.json`, review the Han translation and regenerate the paired JSON. Run `python3 tools/sync-tutorials.py` to update the two READMEs, then run it with `--check` to verify them.
 - **Offline tutorials.** Edit `vignettes/ggchord_vignette.Rmd` and update the Han edition in `vignettes/ggchord_guide_hans.Rmd`. After review, record the SHA-256 of the English file in the Han header. The README sync command also checks the tutorial digest, R chunks, section anchors and local asset references.
 - **Offline figures.** Run `python3 tools/prepare-vignette-figures.py` to prepare the images embedded in the standalone tutorial HTML distributed by CRAN. This maintenance step uses Pillow. During release checks, `tools/check-vignette-resources.py` verifies the local resources referenced by the tutorial HTML in the source archive.

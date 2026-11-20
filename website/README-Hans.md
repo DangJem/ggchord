@@ -40,9 +40,22 @@ python3 tools/sync-website-languages.py --reviewed-content home.json /tmp/home-r
 
 文章链接指向仓库里实际存在的文件，例如同目录的 `.md` 页面、`../../man/` 下的帮助主题或 `../../man/figures/` 下的图片。渲染时会将这些链接转成网站网址。撤下文章时，一并移除清单条目、英语源、译文记录和生成文件。更新指向该文章的链接，并记录原网址和章节锚点的去向。
 
+## 更新 API 参考
+
+API 参考采用 v0.50.0 第二轮手册的公开接口清单与分类。先编辑 `website/reference-manual/en.json` 中的英语正文，再校对 `website/reference-manual/zh.json` 中的对应译文，并在汉语文件中登记已校对英语源的 SHA-256。共用的 `structure.json` 保存调用形式、参数与角色名称、示例和关联链接。两种语言共用代码和锚点。原生分面页面链接到 ggplot2 官方文档。
+
+运行下列命令可独立核对和构建 API 参考章节及参数索引。
+
+```sh
+python3 tools/check-documentation.py --reference-only
+python3 tools/build-website.py --reference-only
+```
+
+本地英语入口为 `.site/en/reference/index.html`，对应汉语入口位于 `.site/zh/reference/`。参考示例包含所需的数据准备代码。读取器页面会列出运行示例所需的可选解码器。
+
 ## 更新函数帮助、包 README 或离线教程
 
-- **函数参考。** 修改英语 roxygen 源并重新生成 Rd。汉语参考使用 `website/reference-zh/` 下的译文，按主题核对英语原文的摘要。`_pkgdown.yml` 中的英语 `title` 或 `desc` 变动时，校对 `title_zh` 和 `desc_zh`。分组摘要为英语标题、一个换行符及英语说明依次拼接后的 SHA-256。
+- **原生 R 帮助。** 修改英语 roxygen 源并重新生成 Rd。原有 pkgdown 全站渲染器使用 `website/reference-zh/` 下的译文和 `_pkgdown.yml` 中的分类。
 - **包 README。** 两种语言共用 `website/readme-template.md` 的版式和代码。修改 `website/content-en/readme-text.json`，校对汉语译文并重新生成双语 JSON。运行 `python3 tools/sync-tutorials.py` 更新两份 README，然后加上 `--check` 验证结果。
 - **离线教程。** 修改英语源 `vignettes/ggchord_vignette.Rmd`，同步更新汉语版 `vignettes/ggchord_guide_hans.Rmd`。校对后，将英语文件的 SHA-256 写入汉语文件头。README 同步命令也会检查教程摘要、R 代码块、章节锚点及本地资源引用。
 - **离线图片。** 运行 `python3 tools/prepare-vignette-figures.py`，为 CRAN 单独分发的教程 HTML 准备嵌入图片。这一步需要 Pillow。发布验收时，用 `tools/check-vignette-resources.py` 核对源码包中教程 HTML 引用的本地资源。

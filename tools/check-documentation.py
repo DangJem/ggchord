@@ -8,6 +8,7 @@ import subprocess
 import sys
 from pathlib import Path
 from urllib.parse import unquote, urlsplit
+from website.reference_manual import load as load_api_reference
 
 ROOT = Path(__file__).resolve().parents[1]
 WEB = ROOT / 'website'
@@ -109,8 +110,13 @@ def source_check():
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--source-only', action='store_true')
+    parser.add_argument('--reference-only', action='store_true', help='Verify the paired API manual sources')
     parser.add_argument('--lesson-code-snapshot', action='store_true', help='Print registered example fingerprints')
     args = parser.parse_args()
+    if args.reference_only:
+        structure, _ = load_api_reference()
+        print(f'PASS: {len(structure["topics"])} paired API entries')
+        return
     if args.lesson_code_snapshot:
         print(json.dumps({name: hashlib.sha256((WEB/'examples'/(name+'.R')).read_bytes()).hexdigest()
                           for name in read(WEB/'handbook-examples.json')}, sort_keys=True))
