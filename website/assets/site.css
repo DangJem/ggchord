@@ -162,8 +162,8 @@ main h3 {font-size:1.12rem;line-height:1.5;color:var(--text-strong);margin:30px 
 main :is(h1,h2,h3,h4,[id]) {scroll-margin-top:0}
 main p {margin-bottom:20px}
 body:not([data-page=index]) main :where(p,ul,ol,dl) {max-width:var(--prose-width)}
-body:not([data-page=index]) main :is(.sourceCode,.code-disclosure,.data-output) {max-width:min(100%,var(--example-width))}
-body:not([data-page=index]) main :is(div.sourceCode,.code-disclosure) {width:fit-content}
+main :is(div.sourceCode,.code-disclosure,.data-output,pre) {width:min(100%,var(--example-width));max-width:100%}
+main :is(div.sourceCode,.code-disclosure,.data-output) pre {width:100%}
 body:not([data-page=index]) main .documentation-figure {max-width:min(100%,var(--plot-width))}
 body:not([data-page=index]) main .wide-output {max-width:100%}
 body:not([data-page=index]) main pre .r-plt img {display:block;max-width:min(100%,var(--plot-width));height:auto}
@@ -177,8 +177,6 @@ main :not(pre) > code {overflow-wrap:anywhere;color:var(--color-brand)}
 .template-reference-index main code a {overflow-wrap:anywhere}
 main pre {overflow-x:auto;white-space:pre;max-width:100%;padding:20px;background:var(--surface-code);font:var(--code-font-size)/1.65 "SFMono-Regular",Consolas,monospace;color:var(--text-main);border:0}
 main pre code {font-size:inherit;line-height:inherit;overflow-wrap:normal;color:inherit;background:transparent}
-main pre a {color:inherit;text-decoration:none}
-main pre a:hover {text-decoration:underline}
 main .package-logo,main img.logo {display:none}
 .candidate-note {font: .72rem/1.6 ui-monospace,monospace;color:var(--text-muted);margin-bottom:18px}
 .reference-language-note {padding:12px 16px;border-left:3px solid var(--color-brand);background:var(--surface-soft);font-size:.85rem}
@@ -383,9 +381,15 @@ body[data-page=index] main.col-md-9{max-width:none;background:transparent;border
 .atlas-filter input{max-width:100%;min-height:44px;padding:10px 12px;color:var(--text-main);background:var(--surface-code);border:1px solid var(--color-control);border-radius:var(--radius-small)}
 .atlas-status{font-size:.9rem;color:var(--text-muted)}
 main pre span.kw,main pre span.cf{color:#5b4592}
+main pre span.fu{color:#245e9b}
+main pre :is(span.cn,span.fl,span.dv){color:#8a3d72}
+main pre span.op{color:#365d67}
 main pre span.st{color:#76512a}
 main pre span.co{color:#506466}
 [data-bs-theme=dark] main pre span.kw,[data-bs-theme=dark] main pre span.cf{color:#d1bdff}
+[data-bs-theme=dark] main pre span.fu{color:#a8d0ff}
+[data-bs-theme=dark] main pre :is(span.cn,span.fl,span.dv){color:#f0b9dc}
+[data-bs-theme=dark] main pre span.op{color:#a7ced5}
 [data-bs-theme=dark] main pre span.st{color:#e9c58e}
 [data-bs-theme=dark] main pre span.co{color:#b1c6c2}
 
@@ -537,9 +541,11 @@ main pre span.co{color:#506466}
 .handbook-previews .handbook-preview {margin: 0}
 .handbook-preview a:focus-visible {display: block; outline: 3px solid var(--color-brand)}
 .argument-anchor {scroll-margin-top: 7rem}
-.parameter-controls {display: flex; align-items: center; flex-wrap: wrap; gap: .6rem 1.2rem; margin: 1rem 0}
-.parameter-controls[hidden], .parameter-directory tr[hidden] {display: none}
-.parameter-controls input[type=search] {display: block; border: 1px solid var(--color-rule); border-radius: .35rem; padding: .4rem .6rem}
+main .reference-arguments {margin-block:1.25rem}
+.reference-arguments dt {margin-block:1.2rem .35rem; line-height:1.45}
+.reference-arguments dd {margin:0 0 1.25rem 1rem}
+.reference-arguments .argument-format {margin-block:0 .4rem;color:var(--text-muted);font-size:.9rem}
+.reference-arguments dd > :last-child {margin-bottom:0}
 .argument-term {display: inline-flex; align-items: baseline; flex-wrap: wrap}
 .argument-term code {font-weight: 650; overflow-wrap: anywhere}
 .argument-term .flexible-parameter {

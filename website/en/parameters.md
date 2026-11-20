@@ -78,4 +78,4 @@ A backbone belongs to one sequence. Passing `+` and `-` as radius names asks for
 | Place fixed labels | [geom_feature_label()](../../man/geom_feature_label.Rd) or [geom_gene_label()](../../man/geom_gene_label.Rd) · `label_radial_offset`, `label_circum_offset`, `label_circum_limit`, `label_rotation` | Match by sequence or strand for fixed placement. Automatic labels choose their own positions. |
 | Size a quantitative band | [track_band()](../../man/track_band.Rd) · `width`, `gap` | Supply one physical unit or native numeric values covering every displayed sequence. Width is positive and the gap may be zero. |
 
-For data-driven colours use [aesthetic mappings and scales](styling.md). For the formals, defaults and flexible-parameter flags, see the [parameter index](parameter-atlas.md).
+For data-driven colours use [aesthetic mappings and scales](styling.md). For the formals, defaults and flexible-parameter flags, see the [API reference](reference.md).

@@ -1,1 +1,1 @@
-[Open the function reference](../../man/) to look up a function’s signature, arguments, return value and examples. To look up an argument across functions, use the [parameter index](parameter-atlas.md).
+See the [function topics](../../man/) for signatures, arguments, return values and runnable examples.

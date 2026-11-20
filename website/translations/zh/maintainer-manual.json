@@ -1,5 +1,5 @@
 {
-  "source_sha256": "f07806a796391d9b43f3be08bdb8f387cad0b0dfd668fe7bad578c0e8ee21581",
+  "source_sha256": "d28346078c21b061a782ab445bc4ae951d221c92688781796b5e6aac5b360396",
   "blocks": {
     "0": {
       "source_sha256": "68663d8f41c011a894ae75dda3c48ada2906637454a6a4b6e01a8435153e46f1",
@@ -72,14 +72,14 @@
       "translation": "API 参考采用 v0.50.0 第二轮手册的公开接口清单与分类。先编辑 `website/reference-manual/en.json` 中的英语正文，再校对 `website/reference-manual/zh.json` 中的对应译文，并在汉语文件中登记已校对英语源的 SHA-256。共用的 `structure.json` 保存调用形式、参数与角色名称、示例和关联链接。两种语言共用代码和锚点。原生分面页面链接到 ggplot2 官方文档。\n"
     },
     "18": {
-      "source_sha256": "ec6f9ad2db43cd87d57f0e2aea771a0a2003b7e6adefb6d30136746f88199052",
+      "source_sha256": "bb21e877976e4b7589a7155ff18abdcca219afa2cdd6cfa142cf06a221d6db2c",
       "status": "reviewed",
-      "translation": "运行下列命令可独立核对和构建 API 参考章节及参数索引。\n"
+      "translation": "运行下列命令可独立核对和构建 API 参考章节。\n"
     },
     "20": {
-      "source_sha256": "e1a7f73ceb31f20dc4314d18b7f5c6cba335afe87845999da7d3fa56952398f2",
+      "source_sha256": "36080591ca641695c67df44370ac5dfc2ee13158d2afd19d490911eeeab1114e",
       "status": "reviewed",
-      "translation": "本地英语入口为 `.site/en/reference/index.html`，对应汉语入口位于 `.site/zh/reference/`。API 参考沿用工具书的 pkgdown 模板、导航和外观设置。参考示例包含所需的数据准备代码。读取器页面会列出运行示例所需的可选解码器。\n"
+      "translation": "本地英语入口为 `.site/en/reference/index.html`，对应汉语入口位于 `.site/zh/reference/`。API 参考沿用工具书的 pkgdown 模板、导航和外观设置。构建器运行页面提供下载的 R 脚本，并在双语页面显示相同的图形和控制台输出。示例运行器使用 downlit、ragg、png 和读取器的可选依赖 rtracklayer、VariantAnnotation、Biopython 及 MUMmer 的 `show-coords`。如果解码器安装在默认搜索路径之外，可以设置 `GGCHORD_PYTHON` 或 `GGCHORD_SHOW_COORDS` 指定位置。\n"
     },
     "21": {
       "source_sha256": "bf3108f5906aef4c598f7808f77bcbfaf7a455cf1ee6465ea86f6fe6a007d12f",

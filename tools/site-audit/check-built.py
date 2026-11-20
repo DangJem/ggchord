@@ -568,28 +568,12 @@ def main():
                             rel+': gallery thumbnail differs from the complete example '+case)
             require(len(linked_cases)==len(set(linked_cases))==7 and set(linked_cases)==set(example_cases),
                     rel+': missing one of the seven public figure families')
-        if '{{parameter-directory}}' in source:
-            rows = {n.get('id'):n for n in main_content.iter('tr') if n.get('id','').startswith('param-')}
-            require(set(rows)=={'param-'+api+'-'+arg for api,arg in formals},rel+': incomplete parameter directory')
-            for api,arg in formals:
-                row = rows.get('param-'+api+'-'+arg)
-                if row is None:
-                    continue
-                entry = formals[(api,arg)]
-                expected_link = 'reference/'+entry['topic']+'.html#'+entry['anchor']
-                require(any(a.get('href')==expected_link for a in row.iter('a')),
-                        f'{rel}: incorrect argument destination for {api}({arg})')
-                supported = arg in flex.get(api,{})
-                require(row.get('data-flex')==str(int(supported)) and
-                        len(styled(row[0],'flexible-parameter','a'))==int(supported) and
-                        text(row[2]).strip()==(entry['default'] or '—'),
-                        f'{rel}: incorrect flexible flag for {api}({arg})')
         if local=='reference/index.html':
             entries = {destination(rel,a.get('href','')) for group in styled(main_content,'reference-group')
                        for dl in group.iter('dl') for a in dl.iter('a')}
             require({(lang+'/'+key,'') for key in canonical_topics} <= entries,rel+': reference index omits a native help topic')
             require('reference-filter' in identifiers[rel],rel+': no reference filter')
-        require(not re.search(r'\{\{(?:example:|preview:|case-gallery|manualhome|parameter-directory)',text(main_content)),
+        require(not re.search(r'\{\{(?:example:|preview:|case-gallery|manualhome)',text(main_content)),
                 rel+': unresolved handbook directive')
     require(used_downloads==set(downloads),'Example download manifest has missing or extra rows')
     all_html = set(identifiers)
@@ -607,8 +591,6 @@ def main():
         require(exports<=function_hits,lang+': search omits exported functions '+str(sorted(exports-function_hits)))
         for row in search:
             remember(lang+'/search.json',row['url'])
-        require({unquote(urlsplit(r['url']).fragment) for r in search if r.get('kind')=='parameter'} ==
-                {'param-'+api+'-'+arg for api,arg in formals},lang+': parameter search results differ from public formals')
         counts['search_results_'+lang] = len(search)
     for page in expected_pages:
         require(body_anchors.get('en/'+page)==body_anchors.get('zh/'+page),page+': mismatched bilingual article anchors')

@@ -2,8 +2,8 @@
 # --vanilla intentionally ignores the runner profile; set the mirror explicitly.
 options(repos = c(CRAN = Sys.getenv("RSPM", "https://cloud.r-project.org")))
 cran <- c("ggplot2", "rlang", "scales", "pkgload", "rmarkdown", "jsonlite",
-  "pkgdown", "dplyr")
-bioconductor <- c("Biostrings", "VariantAnnotation")
+  "pkgdown", "dplyr", "downlit", "ragg", "png")
+bioconductor <- c("Biostrings", "VariantAnnotation", "rtracklayer")
 missing <- function(packages) packages[!vapply(packages, requireNamespace,
   logical(1), quietly = TRUE)]
 needed <- missing(cran)

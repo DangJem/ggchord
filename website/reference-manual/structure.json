@@ -4521,7 +4521,7 @@
         ]
       ],
       "roles": [],
-      "examples": "catalog <- primer_catalog(set=\"universal\")\ncatalog[c(\"primer_id\", \"name\", \"sequence\")]\nprimer_catalog(set=\"universal\", aliases=TRUE)",
+      "examples": "catalog <- primer_catalog(set=\"universal\")\nhead(catalog[c(\"primer_id\", \"name\", \"sequence\")])\nhead(primer_catalog(set = \"universal\", aliases = TRUE))",
       "related": [
         "find_primer_bindings",
         "geom_primer",
@@ -4859,7 +4859,7 @@
         ]
       ],
       "roles": [],
-      "examples": "f <- tempfile(fileext = \".fa\")\nwriteLines(c(\">A\", \"AC-G\", \">B\", \"ACTG\"), f)\ncells <- read_aligned_fasta(f, alphabet = \"DNA\")\nunlink(f)",
+      "examples": "f <- tempfile(fileext = \".fa\")\nwriteLines(c(\">A\", \"AC-G\", \">B\", \"ACTG\"), f)\ncells <- read_aligned_fasta(f, alphabet = \"DNA\")\ninvisible(unlink(f))\ncells",
       "related": [
         "as_ggchord_alignment",
         "read_maf",
@@ -4885,7 +4885,7 @@
         ]
       ],
       "roles": [],
-      "examples": "f <- tempfile(fileext = \".bed\")\nwriteLines(\"A\t99\t240\tregion1\t0\t+\", f)\nbed <- read_bed(f)\nggchord(seqs) + geom_feature(data = bed)\nunlink(f)",
+      "examples": "f <- tempfile(fileext = \".bed\")\nwriteLines(\"A\\t99\\t240\\tregion1\\t0\\t+\", f)\nbed <- read_bed(f)\nggchord(seqs) + geom_feature(data = bed)\ninvisible(unlink(f))",
       "related": [
         "as_ggchord_feature",
         "read_gff3",
@@ -4908,7 +4908,7 @@
         ]
       ],
       "roles": [],
-      "examples": "f <- tempfile(fileext = \".bedgraph\")\nwriteLines(c(\"A\t0\t100\t0.4\", \"A\t100\t200\t0.6\"), f)\nsignal_intervals <- read_bedgraph(f)\nunlink(f)",
+      "examples": "f <- tempfile(fileext = \".bedgraph\")\nwriteLines(c(\"A\\t0\\t100\\t0.4\", \"A\\t100\\t200\\t0.6\"), f)\nsignal_intervals <- read_bedgraph(f)\ninvisible(unlink(f))\nsignal_intervals",
       "related": [
         "read_bigwig",
         "geom_track_interval",
@@ -4934,7 +4934,7 @@
         ]
       ],
       "roles": [],
-      "examples": "f <- tempfile(fileext = \".bedpe\")\nwriteLines(\"A\t99\t240\tB\t149\t290\tpair1\t10\t+\t-\", f)\npaired <- read_bedpe(f)\nunlink(f)",
+      "examples": "f <- tempfile(fileext = \".bedpe\")\nwriteLines(\"A\\t99\\t240\\tB\\t149\\t290\\tpair1\\t10\\t+\\t-\", f)\npaired <- read_bedpe(f)\ninvisible(unlink(f))\npaired",
       "related": [
         "as_ggchord_link",
         "geom_link_ribbon",
@@ -4961,7 +4961,7 @@
         ]
       ],
       "roles": [],
-      "examples": "file <- system.file(\"extdata\", \"pUC19-gc-100.bw\", package = \"ggchord\")\nbw <- read_bigwig(file, which = data.frame(accver = \"pUC19\", start=1, end=500))\ndata_report(bw)",
+      "examples": "file <- system.file(\"extdata\", \"pUC19-gc-100.bw\", package = \"ggchord\")\nbw <- read_bigwig(file, which = data.frame(accver = \"pUC19\", start=1, end=500))\nbw[c(\"accver\", \"start\", \"end\", \"value\")]",
       "related": [
         "read_bedgraph",
         "geom_track_interval",
@@ -4994,7 +4994,7 @@
         ]
       ],
       "roles": [],
-      "examples": "f <- tempfile(fileext = \".tsv\")\nwriteLines(\"A\tB\t98\t141\t2\t0\t100\t240\t150\t290\t1e-20\t100\", f)\nblast <- read_blast(f, format = \"outfmt6\")\nunlink(f)",
+      "examples": "f <- tempfile(fileext = \".tsv\")\nwriteLines(\"A\\tB\\t98\\t141\\t2\\t0\\t100\\t240\\t150\\t290\\t1e-20\\t100\", f)\nblast <- read_blast(f, format = \"outfmt6\")\ninvisible(unlink(f))\nblast",
       "related": [
         "as_ggchord_link",
         "filter_ggchord_links",
@@ -5068,7 +5068,7 @@
         ]
       ],
       "roles": [],
-      "examples": "file <- system.file(\"extdata\", \"tutorial\", \"arabidopsis-first-pair.delta\", package = \"ggchord\")\ndelta <- read_delta(file, executable = Sys.getenv(\"GGCHORD_SHOW_COORDS\", \"show-coords\"))\ndata_report(delta)",
+      "examples": "file <- system.file(\"extdata\", \"tutorial\", \"arabidopsis-first-pair.delta\", package = \"ggchord\")\ndelta <- read_delta(file, executable = Sys.getenv(\"GGCHORD_SHOW_COORDS\", \"show-coords\"))\nhead(delta$links$delta[c(\"qaccver\", \"qstart\", \"qend\", \"saccver\", \"sstart\", \"send\", \"pident\")])",
       "related": [
         "read_chain",
         "read_blast",
@@ -5103,7 +5103,7 @@
         ]
       ],
       "roles": [],
-      "examples": "f <- tempfile(fileext=\".fa\")\nwriteLines(c(\">A\", \"ACGTACGT\"), f)\nref <- read_fasta_lengths(f, sequence_unit=\"bp\", keep_sequence=TRUE)\nunlink(f)",
+      "examples": "f <- tempfile(fileext=\".fa\")\nwriteLines(c(\">A\", \"ACGTACGT\"), f)\nref <- read_fasta_lengths(f, sequence_unit=\"bp\", keep_sequence=TRUE)\ninvisible(unlink(f))\nref",
       "related": [
         "as_ggchord_seq",
         "read_aligned_fasta",
@@ -5138,7 +5138,7 @@
         ]
       ],
       "roles": [],
-      "examples": "f <- tempfile(fileext=\".txt\")\nwriteLines(\"g1 g3\", f)\nrelations <- read_feature_relations(f, features=genes)\nggchord(seqs) + geom_link_ribbon(data=relations$links$feature_relations)\nunlink(f)",
+      "examples": "f <- tempfile(fileext=\".txt\")\nwriteLines(\"g1 g3\", f)\nrelations <- read_feature_relations(f, features=genes)\nggchord(seqs) + geom_link_ribbon(data=relations$links$feature_relations)\ninvisible(unlink(f))",
       "related": [
         "link_ggchord_clusters",
         "as_ggchord_link",
@@ -5212,7 +5212,7 @@
         ]
       ],
       "roles": [],
-      "examples": "f <- tempfile(fileext=\".gff3\")\nwriteLines(c(\"##gff-version 3\",\n \"A\tsource\tCDS\t100\t240\t.\t+\t0\tID=g1;Name=example\"), f)\nann <- read_gff3(f, feature_types=\"CDS\")\nunlink(f)",
+      "examples": "f <- tempfile(fileext=\".gff3\")\nwriteLines(c(\"##gff-version 3\",\n \"A\\tsource\\tCDS\\t100\\t240\\t.\\t+\\t0\\tID=g1;Name=example\"), f)\nann <- read_gff3(f, feature_types=\"CDS\")\ninvisible(unlink(f))\nann",
       "related": [
         "as_ggchord_feature",
         "build_ggchord_cds",
@@ -5269,7 +5269,7 @@
         ]
       ],
       "roles": [],
-      "examples": "f <- tempfile(fileext=\".paf\")\nwriteLines(\"A\t1000\t99\t240\t+\tB\t800\t149\t290\t138\t141\t60\", f)\npaf <- read_paf(f)\nunlink(f)",
+      "examples": "f <- tempfile(fileext=\".paf\")\nwriteLines(\"A\\t1000\\t99\\t240\\t+\\tB\\t800\\t149\\t290\\t138\\t141\\t60\", f)\npaf <- read_paf(f)\ninvisible(unlink(f))\npaf",
       "related": [
         "read_blast",
         "as_ggchord_link",
@@ -5325,7 +5325,7 @@
         ]
       ],
       "roles": [],
-      "examples": "file <- tempfile(fileext = \".vcf\")\nwriteLines(c(\n  \"##fileformat=VCFv4.2\",\n  \"#CHROM\\tPOS\\tID\\tREF\\tALT\\tQUAL\\tFILTER\\tINFO\",\n  \"A\\t35\\t.\\tA\\tC,G\\t.\\tPASS\\t.\"\n), file)\nvariants <- read_vcf(file, structural = FALSE)\nvariants$features$variant\ndata_report(variants)",
+      "examples": "file <- tempfile(fileext = \".vcf\")\nwriteLines(c(\n  \"##fileformat=VCFv4.2\",\n  \"#CHROM\\tPOS\\tID\\tREF\\tALT\\tQUAL\\tFILTER\\tINFO\",\n  \"A\\t35\\t.\\tA\\tC,G\\t.\\tPASS\\t.\"\n), file)\nvariants <- read_vcf(file, structural = FALSE)\nvariants$features$variant\ninvisible(unlink(file))",
       "related": [
         "as_ggchord_seq",
         "read_bedpe",
@@ -5563,7 +5563,7 @@
         ]
       ],
       "roles": [],
-      "examples": "cells <- as_ggchord_alignment(c(A = \"AC-G\", B = \"ACTG\"), alphabet = \"DNA\")\np <- ggplot2::ggplot(cells, aes(alignment_column, accver, label = symbol)) +\n  geom_residue(aes(fill = symbol)) + scale_fill_residue(\"DNA\")\nregistered <- register_ggchord_alignment(p, cells)",
+      "examples": "cells <- as_ggchord_alignment(c(A = \"AC-G\", B = \"ACTG\"), alphabet = \"DNA\")\np <- ggplot2::ggplot(cells, aes(alignment_column, accver, label = symbol)) +\n  geom_residue(aes(fill = symbol)) + scale_fill_residue(\"DNA\")\nregister_ggchord_alignment(p, cells)",
       "related": [
         "as_ggchord_alignment",
         "geom_residue",
@@ -5670,7 +5670,7 @@
         ]
       ],
       "roles": [],
-      "examples": "export_ggchord_layout(p_basic, stages = c(\"source\", \"statistic\"))\nexport_ggchord_layout(p_basic, stages = \"geometry\",\n  width = 8, height = 5, units = \"in\", device = \"pdf\")",
+      "examples": "tables <- export_ggchord_layout(p_basic, stages = c(\"source\", \"statistic\"))\ntables$stage_status\nlayout <- export_ggchord_layout(\n  p_basic, stages = \"geometry\", width = 8, height = 5, units = \"in\", device = \"pdf\"\n)\nlayout$stage_status",
       "related": [
         "map_ggchord_position",
         "diagnose_ggchord",
@@ -5767,7 +5767,7 @@
         ]
       ],
       "roles": [],
-      "examples": "view_ggchord(p_basic, width = 180, height = 100, units = \"mm\")",
+      "examples": "preview <- view_ggchord(p_basic, width = 180, height = 100, units = \"mm\")\npreview$plot\npreview$measurement",
       "related": [
         "diagnose_ggchord",
         "export_ggchord_layout"

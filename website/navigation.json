@@ -96,8 +96,7 @@
     },
     "landing": "reference",
     "pages": [
-      "reference",
-      "parameter-atlas"
+      "reference"
     ],
     "navbar": "reference"
   },

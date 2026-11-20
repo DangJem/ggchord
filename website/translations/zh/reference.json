@@ -1,10 +1,10 @@
 {
-  "source_sha256": "733ec0a3cba8d89931b53f6e1218cf9a435ec61e0f0157755e13d595a7d8bc58",
+  "source_sha256": "bfabbd9557931ecbae2079708f544cee7efae201ea5aee057039b8820f1d81c4",
   "blocks": {
     "0": {
-      "source_sha256": "733ec0a3cba8d89931b53f6e1218cf9a435ec61e0f0157755e13d595a7d8bc58",
+      "source_sha256": "bfabbd9557931ecbae2079708f544cee7efae201ea5aee057039b8820f1d81c4",
       "status": "reviewed",
-      "translation": "在[函数参考](../../man/)中查阅函数签名、参数、返回值和示例。按参数名称跨函数查询时，使用[参数索引](parameter-atlas.md)。\n"
+      "translation": "在[函数主题](../../man/)中查阅调用形式、参数、返回值和可运行示例。\n"
     }
   }
 }

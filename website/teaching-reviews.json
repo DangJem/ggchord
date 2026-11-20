@@ -1,7 +1,7 @@
 {
   "aes": {
     "level": "L1",
-    "page": "parameter-atlas",
+    "page": "reference",
     "anchor": "upstream",
     "reason": "Explicitly classified upstream reexport/object; follows original ggplot2/grid contract; exempt from independent manual requirement",
     "modes": "upstream; applies only to matching supported ggplot roles",
@@ -20,7 +20,7 @@
   },
   "after_scale": {
     "level": "L1",
-    "page": "parameter-atlas",
+    "page": "reference",
     "anchor": "upstream",
     "reason": "Explicitly classified upstream reexport/object; follows original ggplot2/grid contract; exempt from independent manual requirement",
     "modes": "upstream; applies only to matching supported ggplot roles",
@@ -39,7 +39,7 @@
   },
   "after_stat": {
     "level": "L1",
-    "page": "parameter-atlas",
+    "page": "reference",
     "anchor": "upstream",
     "reason": "Explicitly classified upstream reexport/object; follows original ggplot2/grid contract; exempt from independent manual requirement",
     "modes": "upstream; applies only to matching supported ggplot roles",
@@ -58,7 +58,7 @@
   },
   "annotate": {
     "level": "L1",
-    "page": "parameter-atlas",
+    "page": "reference",
     "anchor": "upstream",
     "reason": "Explicitly classified upstream reexport/object; follows original ggplot2/grid contract; exempt from independent manual requirement",
     "modes": "upstream; applies only to matching supported ggplot roles",
@@ -77,7 +77,7 @@
   },
   "arrow": {
     "level": "L1",
-    "page": "parameter-atlas",
+    "page": "reference",
     "anchor": "upstream",
     "reason": "Explicitly classified upstream reexport/object; follows original ggplot2/grid contract; exempt from independent manual requirement",
     "modes": "upstream; applies only to matching supported ggplot roles",
@@ -360,7 +360,7 @@
   },
   "element_blank": {
     "level": "L1",
-    "page": "parameter-atlas",
+    "page": "reference",
     "anchor": "upstream",
     "reason": "Explicitly classified upstream reexport/object; follows original ggplot2/grid contract; exempt from independent manual requirement",
     "modes": "upstream; applies only to matching supported ggplot roles",
@@ -379,7 +379,7 @@
   },
   "element_line": {
     "level": "L1",
-    "page": "parameter-atlas",
+    "page": "reference",
     "anchor": "upstream",
     "reason": "Explicitly classified upstream reexport/object; follows original ggplot2/grid contract; exempt from independent manual requirement",
     "modes": "upstream; applies only to matching supported ggplot roles",
@@ -398,7 +398,7 @@
   },
   "element_rect": {
     "level": "L1",
-    "page": "parameter-atlas",
+    "page": "reference",
     "anchor": "upstream",
     "reason": "Explicitly classified upstream reexport/object; follows original ggplot2/grid contract; exempt from independent manual requirement",
     "modes": "upstream; applies only to matching supported ggplot roles",
@@ -417,7 +417,7 @@
   },
   "element_text": {
     "level": "L1",
-    "page": "parameter-atlas",
+    "page": "reference",
     "anchor": "upstream",
     "reason": "Explicitly classified upstream reexport/object; follows original ggplot2/grid contract; exempt from independent manual requirement",
     "modes": "upstream; applies only to matching supported ggplot roles",
@@ -436,7 +436,7 @@
   },
   "expansion": {
     "level": "L1",
-    "page": "parameter-atlas",
+    "page": "reference",
     "anchor": "upstream",
     "reason": "Explicitly classified upstream reexport/object; follows original ggplot2/grid contract; exempt from independent manual requirement",
     "modes": "upstream; applies only to matching supported ggplot roles",
@@ -1189,7 +1189,7 @@
   },
   "ggsave": {
     "level": "L1",
-    "page": "parameter-atlas",
+    "page": "reference",
     "anchor": "upstream",
     "reason": "Explicitly classified upstream reexport/object; follows original ggplot2/grid contract; exempt from independent manual requirement",
     "modes": "upstream; applies only to matching supported ggplot roles",
@@ -1208,7 +1208,7 @@
   },
   "ggtitle": {
     "level": "L1",
-    "page": "parameter-atlas",
+    "page": "reference",
     "anchor": "upstream",
     "reason": "Explicitly classified upstream reexport/object; follows original ggplot2/grid contract; exempt from independent manual requirement",
     "modes": "upstream; applies only to matching supported ggplot roles",
@@ -1298,7 +1298,7 @@
   },
   "guides": {
     "level": "L1",
-    "page": "parameter-atlas",
+    "page": "reference",
     "anchor": "upstream",
     "reason": "Explicitly classified upstream reexport/object; follows original ggplot2/grid contract; exempt from independent manual requirement",
     "modes": "upstream; applies only to matching supported ggplot roles",
@@ -1317,7 +1317,7 @@
   },
   "labs": {
     "level": "L1",
-    "page": "parameter-atlas",
+    "page": "reference",
     "anchor": "upstream",
     "reason": "Explicitly classified upstream reexport/object; follows original ggplot2/grid contract; exempt from independent manual requirement",
     "modes": "upstream; applies only to matching supported ggplot roles",
@@ -1336,7 +1336,7 @@
   },
   "last_plot": {
     "level": "L1",
-    "page": "parameter-atlas",
+    "page": "reference",
     "anchor": "upstream",
     "reason": "Explicitly classified upstream reexport/object; follows original ggplot2/grid contract; exempt from independent manual requirement",
     "modes": "upstream; applies only to matching supported ggplot roles",
@@ -1404,7 +1404,7 @@
   },
   "margin": {
     "level": "L1",
-    "page": "parameter-atlas",
+    "page": "reference",
     "anchor": "upstream",
     "reason": "Explicitly classified upstream reexport/object; follows original ggplot2/grid contract; exempt from independent manual requirement",
     "modes": "upstream; applies only to matching supported ggplot roles",
@@ -1493,7 +1493,7 @@
   },
   "position_identity": {
     "level": "L1",
-    "page": "parameter-atlas",
+    "page": "reference",
     "anchor": "upstream",
     "reason": "Explicitly classified upstream reexport/object; follows original ggplot2/grid contract; exempt from independent manual requirement",
     "modes": "upstream; applies only to matching supported ggplot roles",
@@ -1579,7 +1579,7 @@
   },
   "PositionIdentity": {
     "level": "L1",
-    "page": "parameter-atlas",
+    "page": "reference",
     "anchor": "upstream",
     "reason": "Explicitly classified upstream reexport/object; follows original ggplot2/grid contract; exempt from independent manual requirement",
     "modes": "upstream; applies only to matching supported ggplot roles",
@@ -1825,7 +1825,7 @@
   },
   "rel": {
     "level": "L1",
-    "page": "parameter-atlas",
+    "page": "reference",
     "anchor": "upstream",
     "reason": "Explicitly classified upstream reexport/object; follows original ggplot2/grid contract; exempt from independent manual requirement",
     "modes": "upstream; applies only to matching supported ggplot roles",
@@ -2620,7 +2620,7 @@
   },
   "theme": {
     "level": "L1",
-    "page": "parameter-atlas",
+    "page": "reference",
     "anchor": "upstream",
     "reason": "Explicitly classified upstream reexport/object; follows original ggplot2/grid contract; exempt from independent manual requirement",
     "modes": "upstream; applies only to matching supported ggplot roles",
@@ -2754,7 +2754,7 @@
   },
   "unit": {
     "level": "L1",
-    "page": "parameter-atlas",
+    "page": "reference",
     "anchor": "upstream",
     "reason": "Explicitly classified upstream reexport/object; follows original ggplot2/grid contract; exempt from independent manual requirement",
     "modes": "upstream; applies only to matching supported ggplot roles",
@@ -2844,7 +2844,7 @@
   },
   "waiver": {
     "level": "L1",
-    "page": "parameter-atlas",
+    "page": "reference",
     "anchor": "upstream",
     "reason": "Explicitly classified upstream reexport/object; follows original ggplot2/grid contract; exempt from independent manual requirement",
     "modes": "upstream; applies only to matching supported ggplot roles",

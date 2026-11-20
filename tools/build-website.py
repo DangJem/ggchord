@@ -150,7 +150,7 @@ def audit_reference_output(out):
 def main():
     parser=argparse.ArgumentParser()
     parser.add_argument('--reference-only',action='store_true',
-                        help='Build the paired API manual and parameter index without rebuilding other chapters')
+                        help='Build the paired API manual and run its examples')
     parser.add_argument('--publication',action='store_true')
     parser.add_argument('--render-jobs',type=int,choices=(1,2),default=1,
                         help='Maximum concurrent native locale renderers (default: 1)')

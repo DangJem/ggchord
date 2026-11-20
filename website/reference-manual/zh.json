@@ -1,5 +1,6 @@
 {
-  "source_sha256": "be081ab5721cc1dd6589bc3f975e1eafa9007ba17d60337d4e44760282fd3a11",
+  "source_sha256": "0abcda53f0a0c61adb0b4ba96b786fd2c7acf4d6a1019cfdf4d3af17204691f0",
+  "description": "按任务查找 ggchord 函数，涵盖数据准备、绘图、图形组合和布局检查。每个函数页面都说明参数和返回值，并提供可运行的 R 示例及相应的图形或控制台输出。",
   "groups": {
     "construct": {
       "title": "构造器与图层身份",

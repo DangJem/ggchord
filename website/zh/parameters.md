@@ -78,4 +78,4 @@
 | 固定标签位置 | [geom_feature_label()](../../man/geom_feature_label.Rd) 或 [geom_gene_label()](../../man/geom_gene_label.Rd) · `label_radial_offset`、`label_circum_offset`、`label_circum_limit`、`label_rotation` | 固定布局可按序列或链设置。自动布局自行决定标签位置。 |
 | 调整定量轨道尺寸 | [track_band()](../../man/track_band.Rd) · `width`、`gap` | 取一个物理单位值，或用原生布局数值覆盖全部显示序列。宽度须为正，间隙可为零。 |
 
-基于数据的颜色用[视觉映射与标度](styling.md)设置。函数签名、默认值及灵活参数标记见[参数索引](parameter-atlas.md)。
+基于数据的颜色用[视觉映射与标度](styling.md)设置。函数签名、默认值及灵活参数标记见[API 参考](reference.md)。

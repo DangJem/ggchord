@@ -1,4 +1,4 @@
-"""Render independently authored R examples and the public parameter directory."""
+"""Render independently authored R examples and their output."""
 import html
 import json
 import re
@@ -21,42 +21,12 @@ def image_dimensions(name):
         return struct.unpack('>II', image.read(8))
 
 
-def parameter_directory(lang):
-    flexible = json.loads((WEB / 'flexible-parameters.json').read_text())
-    inventory = json.loads((ROOT / '.site/parameter-directory.json').read_text())
-    zh = lang == 'zh'
-    records = []
-    sections = {'sequence':'scalar', 'strand':'width', 'strand-offset':'strand',
-                'fixed-label':'scope', 'band':'scope'}
-    for row in inventory:
-        api, param = row['api'], row['parameter']
-        destination = 'reference/' + row['topic'] + '.html#' + row['anchor']
-        kind = flexible.get(api, {}).get(param)
-        badge = ''
-        if kind:
-            label = '【支持灵活参数】' if zh else '[Flexible parameter]'
-            badge = f'<a class="flexible-parameter" href="parameters.html#{sections[kind]}">{label}</a>'
-        default = f'<code>{html.escape(row["default"])}</code>' if row['default'] else '—'
-        records.append(f'<tr id="param-{html.escape(api)}-{html.escape(param)}" data-flex="{int(bool(kind))}">'
-                       f'<td><span class="argument-term"><code>{html.escape(param)}</code>{badge}</span></td>'
-                       f'<td><a href="{destination}"><code>{html.escape(api)}()</code></a></td><td>{default}</td></tr>')
-    labels = (('搜索参数或函数', '仅显示支持灵活参数的条目', '参数', '函数', '签名默认值') if zh else
-              ('Find a parameter or function', 'Flexible parameters only', 'Parameter', 'Function', 'Signature default'))
-    return (f'<div class="parameter-controls" hidden><label>{labels[0]} <input id="directory-query" type="search"></label> '
-            f'<label><input id="directory-flex" type="checkbox"> {labels[1]}</label><output aria-live="polite"></output></div>'
-            '<table class="parameter-directory"><thead><tr>' + ''.join('<th scope="col">'+s+'</th>' for s in labels[2:]) +
-            '</tr></thead><tbody>' + ''.join(records) + '</tbody></table>')
-
-
 def expand(text, lang, base='../assets'):
     from .source_links import site_document
     from .components import manual_home
     text = site_document(text)
     if '{{manualhome}}' in text:
         text = text.replace('{{manualhome}}', manual_home(lang, base))
-    if '{{parameter-directory}}' in text:
-        # Preserve literal R defaults such as "\\n" across Markdown conversion.
-        text = text.replace('{{parameter-directory}}', '\n```{=html}\n' + parameter_directory(lang) + '\n```\n')
     if '{{case-gallery}}' in text:
         text = text.replace('{{case-gallery}}', case_gallery(lang, base))
     specs = manifest()

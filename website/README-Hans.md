@@ -44,14 +44,14 @@ python3 tools/sync-website-languages.py --reviewed-content home.json /tmp/home-r
 
 API 参考采用 v0.50.0 第二轮手册的公开接口清单与分类。先编辑 `website/reference-manual/en.json` 中的英语正文，再校对 `website/reference-manual/zh.json` 中的对应译文，并在汉语文件中登记已校对英语源的 SHA-256。共用的 `structure.json` 保存调用形式、参数与角色名称、示例和关联链接。两种语言共用代码和锚点。原生分面页面链接到 ggplot2 官方文档。
 
-运行下列命令可独立核对和构建 API 参考章节及参数索引。
+运行下列命令可独立核对和构建 API 参考章节。
 
 ```sh
 python3 tools/check-documentation.py --reference-only
 python3 tools/build-website.py --reference-only
 ```
 
-本地英语入口为 `.site/en/reference/index.html`，对应汉语入口位于 `.site/zh/reference/`。API 参考沿用工具书的 pkgdown 模板、导航和外观设置。参考示例包含所需的数据准备代码。读取器页面会列出运行示例所需的可选解码器。
+本地英语入口为 `.site/en/reference/index.html`，对应汉语入口位于 `.site/zh/reference/`。API 参考沿用工具书的 pkgdown 模板、导航和外观设置。构建器运行页面提供下载的 R 脚本，并在双语页面显示相同的图形和控制台输出。示例运行器使用 downlit、ragg、png 和读取器的可选依赖 rtracklayer、VariantAnnotation、Biopython 及 MUMmer 的 `show-coords`。如果解码器安装在默认搜索路径之外，可以设置 `GGCHORD_PYTHON` 或 `GGCHORD_SHOW_COORDS` 指定位置。
 
 ## 更新函数帮助、包 README 或离线教程
 

@@ -1529,24 +1529,6 @@
     "aliases": []
   },
   {
-    "slug": "parameter-atlas",
-    "title": {
-      "zh": "参数索引",
-      "en": "Parameter index"
-    },
-    "group": "reference",
-    "id": "parameter-atlas",
-    "kind": "tutorial",
-    "canonical_path": "parameter-atlas.html",
-    "parent": "index",
-    "module": "reference",
-    "apis": [],
-    "recipe_ids": [],
-    "figure_ids": [],
-    "translation_key": "parameter-atlas",
-    "aliases": []
-  },
-  {
     "slug": "about",
     "title": {
       "zh": "项目信息与来源",

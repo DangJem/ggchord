@@ -1,5 +1,5 @@
 {
-  "source_sha256": "b5f2e55217d1d34905f2d75791f6c4ca04b34fdca0b1ee8d4ea0d956d54a8aca",
+  "source_sha256": "e4c702617db499df0179b8dc68a23eef1350ec6db1c09096427d07889616dfb2",
   "strings": {
     "plots/0/title": {
       "source_sha256": "505636727e6e171a772014bb7157aa724af37df2f667c6cb8da2367b1f79b259",
@@ -35,11 +35,6 @@
       "source_sha256": "d8c1c607aa753fbce117cb8f40646f5020b9a211c42a16222ab55666a4b65e75",
       "status": "reviewed",
       "translation": "质粒图谱"
-    },
-    "reference/0/title": {
-      "source_sha256": "309707cf2a1dd05d0a14706dccc7f1bb84c57917efaccfed416242d7fa1c8d95",
-      "status": "reviewed",
-      "translation": "查找参数"
     },
     "information/0/title": {
       "source_sha256": "cc149190687e0c3fcc7a9ee1c83d2da2a0dbbd63a897daeb4f217f8f5b79388b",

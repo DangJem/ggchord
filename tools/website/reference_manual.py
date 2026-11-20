@@ -18,38 +18,26 @@ LOCALES = ('en', 'zh')
 NATIVE = {'facet_null', 'facet_wrap', 'facet_grid'}
 LABELS = {
     'en': dict(reference='API reference',
-        parameter_index='Parameter index', usage='Usage', arguments='Arguments', format='Type / format', default='Default',
+        usage='Usage', arguments='Arguments', flexible='[Flexible parameter]',
         purpose='Description', value='Return value', details='Behavior', errors='Errors',
         roles='Data roles and aesthetics', examples='Examples', related='See also',
         source='Native ggplot2', download='Download example', filter='Filter by function name or purpose',
-        search_parameter='Filter by parameter or function', flex='Flexible parameters only',
-        overview='How the API fits together', input='Input tables', setup='Shared example data',
+        console='Console output', figure='Plot from the example for',
+        input='Input tables', setup='Shared example data',
         upstream='Native ggplot2 tools',
         archived='Historical API address', current='Open the current API reference'),
     'zh': dict(reference='API 参考',
-        parameter_index='参数索引', usage='调用形式', arguments='参数', format='类型与格式', default='默认值',
+        usage='调用形式', arguments='参数', flexible='【支持灵活参数】',
         purpose='说明', value='返回值', details='行为规则', errors='错误与限制',
         roles='数据角色与视觉映射', examples='示例', related='相关接口',
         source='原生 ggplot2', download='下载示例', filter='按函数名或用途筛选',
-        search_parameter='按参数或函数筛选', flex='只显示灵活参数',
-        overview='接口如何配合', input='输入表', setup='共用示例数据',
+        console='控制台输出', figure='示例绘图',
+        input='输入表', setup='共用示例数据',
         upstream='原生 ggplot2 工具',
         archived='历史 API 地址', current='打开当前 API 参考'),
 }
-GRAMMAR = {
-    'en': [
-        ('References and layers', 'Register a complete sequence dictionary with ggchord(data = seqs) or with an explicit geom_seq(data = seqs) layer on an empty plot. Feature, relationship and track observations are supplied to their own layers.'),
-        ('Layout, coordinates and facets', 'Layout declares order, orientation and display windows. Coordinates project the reference paths. Native facets assign observations to panels. Circular uses one effective reference per panel; free native axes require coord_dotplot(ratio = NULL).'),
-        ('Appearance and statistics', 'Aesthetic mappings and visual scales control appearance. Track height has its own numerical scale. Statistics use source coordinates and keep their contributing records, while display windows select what to show.'),
-        ('Independent views and output', 'Fusion combines named panels. Layout export reports source, mapped, statistic and geometry stages; display queries record their size and measurement conditions.'),
-    ],
-    'zh': [
-        ('参考与图层', '用 ggchord(data = seqs) 登记完整参考，或在空图上用 geom_seq(data = seqs) 显式登记。特征、关系和轨道观察表分别交给各自图层。'),
-        ('布局、坐标与分面', 'Layout 声明顺序、方向和显示窗口，Coord 投影参考路径，原生 Facet 按数据分组。Circular 每个面板需要一条有效参考。原生自由轴使用 coord_dotplot(ratio = NULL)。'),
-        ('视觉映射与统计', '视觉属性由映射和标度控制，轨道高度有独立数值标度。统计按源坐标计算并保留来源成员，显示窗口决定呈现哪些区间。'),
-        ('独立视图与输出', 'Fusion 组合具名面板。布局导出区分来源、映射、统计和几何四阶段，显示位置查询记录尺寸与测量条件。'),
-    ],
-}
+FLEXIBLE_SECTIONS = {'sequence': 'scalar', 'strand': 'width', 'strand-offset': 'strand',
+                     'fixed-label': 'scope', 'band': 'scope'}
 UPSTREAM = (
     ('aes(), after_stat()', 'aes_eval.html'), ('vars()', 'vars.html'),
     ('scale_*()', 'index.html#scales'), ('guides()', 'guides.html'),
@@ -102,6 +90,8 @@ def load():
     if len(grouped) != len(set(grouped)) or set(grouped) != set(topics):
         raise ValueError('Each reference topic must appear in exactly one category')
     for lang, locale in locales.items():
+        if not locale['description'].strip():
+            raise ValueError(f'{lang}: missing reference introduction')
         if set(locale['groups']) != set(structure['groups']) or set(locale['topics']) != set(topics):
             raise ValueError(f'{lang}: categories or topics missing')
         for key, part in topics.items():
@@ -122,7 +112,7 @@ def load():
                        for row in part['arguments'] for name in row):
                 raise ValueError(f'{key}: invalid parameter name')
             if set(part['defaults']) != {name for row in part['arguments'] for name in row}:
-                raise ValueError(f'{key}: parameter defaults differ from the argument table')
+                raise ValueError(f'{key}: parameter defaults differ from the argument list')
     return structure, locales
 
 
@@ -139,11 +129,10 @@ def section(id, title, body):
     return f'<section aria-labelledby="{id}"><h2 id="{id}">{html.escape(title)}</h2>{body}</section>'
 
 
-def snippet(content, kind, caption):
-    # pkgdown's article highlighter expands literal tabs, including tabs in
-    # file-format fixture strings. Keep the code text intact for the copy action.
+def snippet(markup, kind, caption):
+    # Keep the prepared token spans through pkgdown's article rendering pass.
     return (f'<details class="code-disclosure" data-code-kind="{kind}" open>'
-            f'<summary>{html.escape(caption)}</summary><pre class="downlit"><code>{html.escape(content)}'
+            f'<summary>{html.escape(caption)}</summary><pre class="downlit"><code>{markup}'
             '</code></pre></details>')
 
 
@@ -151,8 +140,11 @@ def topic_link(topic):
     return f'<a href="{topic}.html">{code(topic + "()")}</a>'
 
 
-def syntax_format(value):
-    return ' '.join(value.split())
+def invocation(topic):
+    name = topic['usage'].split('(', 1)[0]
+    lines = [f'  {key} = {value}' if value else f'  {key}'
+             for key, value in topic['defaults'].items()]
+    return name + '(\n' + ',\n'.join(lines) + '\n)' if lines else name + '()'
 
 
 def prepare_examples(structure):
@@ -177,6 +169,47 @@ def prepare_examples(structure):
         selected = [blocks[name] for name in names if name in requested]
         scripts[topic] = '\n\n'.join([setup_source, *selected, example]) + '\n'
     return scripts
+
+
+def render_examples(assets, structure):
+    scripts = prepare_examples(structure)
+    setup = structure['setup'].strip() + '\n'
+    with TemporaryDirectory(prefix='ggchord-reference-examples-') as temporary:
+        staging = Path(temporary)
+        inputs = staging / 'inputs.json'
+        generated = staging / 'output'
+        write_json(inputs, dict(setup=setup, topics={
+            name: dict(signature=invocation(topic), example=scripts[name])
+            for name, topic in structure['topics'].items()}))
+        subprocess.run(['Rscript', '--vanilla', 'tools/website/render-reference-examples.R',
+                        str(inputs), str(generated)], cwd=ROOT, check=True)
+        results = read(generated / 'results.json')
+        folder = assets / 'reference-examples'
+        for name, source in scripts.items():
+            write(folder / f'{name}.R', source)
+        write(folder / 'setup.R', setup)
+        figures = {figure for entry in results['topics'].values() for figure in entry['figures']}
+        for obsolete in folder.glob('*-[0-9][0-9].png'):
+            if obsolete.name not in figures:
+                obsolete.unlink()
+        for figure in figures:
+            shutil.copy2(generated / figure, folder / figure)
+    return results
+
+
+def example_output(rendered, name, titles, width, height):
+    blocks = []
+    if rendered['console']:
+        blocks.append(f'<figure class="data-output"><figcaption>{titles["console"]}</figcaption>'
+                      f'<pre class="downlit"><code>{html.escape(rendered["console"])}</code></pre></figure>')
+    for index, figure in enumerate(rendered['figures'], 1):
+        caption = f'{titles["figure"]} {name}()'
+        if len(rendered['figures']) > 1:
+            caption += f' ({index})'
+        blocks.append(f'<figure class="documentation-figure"><img loading="lazy" '
+                      f'src="../../assets/reference-examples/{figure}" alt="{html.escape(caption, quote=True)}" '
+                      f'width="{width}" height="{height}"><figcaption>{html.escape(caption)}</figcaption></figure>')
+    return ''.join(blocks)
 
 
 def render_articles(root, pages):
@@ -226,10 +259,7 @@ def build(root):
     shared_assets = ['site.css', 'site.js', 'favicon.png', 'logo.webp']
     for name in shared_assets:
         shutil.copy2(ASSETS / name, assets / name)
-    scripts = prepare_examples(structure)
-    for name, text in scripts.items():
-        write(assets / 'reference-examples' / f'{name}.R', text)
-    write(assets / 'reference-examples' / 'setup.R', structure['setup'].strip() + '\n')
+    output = render_examples(assets, structure)
     old_names = {p.stem for p in (ROOT / 'website/reference-zh').glob('*.json')}
     existing_help = {p.stem for p in (ROOT / 'man').glob('*.Rd')}
     retired = old_names - existing_help - set(structure['topics'])
@@ -242,10 +272,7 @@ def build(root):
         if not home.exists():
             write(home, redirect('reference/index.html'))
         search = []
-        overview = ''.join(f'<dt>{html.escape(k)}</dt><dd>{html.escape(v)}</dd>' for k,v in GRAMMAR[lang])
-        total = len(topics)
-        intro = (f'ggchord {version} · {total} API entries. The faceting entries use ggplot2 directly.'
-                 if lang == 'en' else f'ggchord {version} · {total} 个接口条目。分面入口直接使用 ggplot2。')
+        intro = locale['description']
         contents = ''.join(
             '<section class="reference-group">' +
             ''.join(f'<span id="{alias}"></span>' for alias in group['previous_anchors']) +
@@ -265,16 +292,14 @@ def build(root):
             f'<dd>{", ".join(code(key) for key in names[2])}</dd>' for names in INPUT_ROLES) + '</dl>'
         units = ('Closed source intervals are one-based. Documented cut boundaries use interbase coordinates from zero through the reference length.'
                  if lang == 'en' else '源区间使用一基闭区间。已知切口采用残基间坐标，范围为 0 到完整参考长度。')
-        setup = (snippet(structure['setup'], 'r', titles['setup']) +
+        setup = (snippet(output['setup'], 'r', titles['setup']) +
                  f'<a href="../../assets/reference-examples/setup.R" download>{titles["download"]}</a>')
         index = (f'<p class="lead">{html.escape(intro)}</p>' +
-                 section('grammar', titles['overview'], f'<dl>{overview}</dl>') +
                  field + contents + section('input-roles', titles['input'], roles + f'<p>{html.escape(units)}</p>') +
                  section('example-setup', titles['setup'], setup) + section('upstream', titles['upstream'], upstream))
         pages[lang].append(dict(slug='reference/index', title=titles['reference'], body=index))
-        search.append(dict(url='reference/index.html',title=titles['reference'],kind='api',
+        search.append(dict(url='reference/index.html',title=titles['reference'],kind='tool',
                            summary=intro, text=' '.join(groups[k]['intro'] for k in groups),keywords='API reference'))
-        parameter_rows = []
         for family, group in structure['groups'].items():
             for name in group['topics']:
                 shared = structure['topics'][name]
@@ -286,10 +311,14 @@ def build(root):
                     if fragment:
                         bodies.append(section('ref-' + key, titles[key], fragment))
                 add('purpose', '<span id="ref-description"></span>' + markdown(text['intro'], pandoc))
-                add('usage', snippet(shared['usage'], 'signature', titles['usage']))
+                rendered = output['topics'][name]
+                add('usage', snippet(rendered['signature'], 'signature', titles['usage']))
                 rows = []
                 seen = set()
-                for keys, param in zip(shared['arguments'], text['arguments']):
+                for keys, param, original in zip(shared['arguments'], text['arguments'],
+                                                 locales['en']['topics'][name]['arguments']):
+                    description = markdown(param['description'], pandoc)
+                    summary = ' '.join(html.unescape(re.sub(r'<[^>]*>', ' ', description)).split())
                     names = []
                     for key in keys:
                         anchor = 'para-ellipsis' if key == '...' else 'parameter-' + key
@@ -297,20 +326,24 @@ def build(root):
                             names.append(code(key))
                             continue
                         seen.add(key)
-                        names.append(f'<span class="parameter-name" id="{anchor}">{code(key)}</span>')
-                        if key != '...':
-                            names[-1] += f'<span id="arg-{key}"></span>'
-                        is_flex = key in flexible.get(name, {}) or bool(re.search(
-                            'flexible specification|灵活配置',param['format']))
-                        parameter_rows.append((key, name, anchor, is_flex,
-                                               syntax_format(param['format']), shared['defaults'][key]))
-                    rows.append(f'<tr><th scope="row">{", ".join(names)}</th>'
-                                f'<td>{html.escape(syntax_format(param["format"])) or "—"}</td>'
-                                f'<td>{markdown(param["description"],pandoc)}</td></tr>')
-                table = ('<table><thead><tr><th>'
-                         f'{titles["arguments"]}</th><th>{titles["format"]}</th>'
-                         f'<th>{titles["purpose"]}</th></tr></thead><tbody>{"".join(rows)}</tbody></table>')
-                add('arguments', table)
+                        alias = f'<span id="arg-{key}"></span>' if key != '...' else ''
+                        badge = ''
+                        kind = flexible.get(name, {}).get(key)
+                        if kind or re.search(r'\bflexible\b', original['format']):
+                            fragment = FLEXIBLE_SECTIONS.get(kind, 'scope')
+                            badge = (f'<a class="flexible-parameter" href="../parameters.html#{fragment}">'
+                                     f'{titles["flexible"]}</a>')
+                        names.append(f'<span class="argument-term">{alias}'
+                                     f'<code id="{anchor}" class="argument-anchor">{html.escape(key)}</code>'
+                                     f'{badge}</span>')
+                        search.append(dict(url=f'reference/{name}.html#{anchor}', kind='parameter',
+                                           title=f'{name}() · {key}', keywords=f'{name} {key}',
+                                           text=f'{param["format"]} {summary}', summary=summary))
+                    rows.append(f'<dt>{", ".join(names)}</dt><dd>'
+                                f'<p class="argument-format">{html.escape(param["format"])}</p>'
+                                f'{description}</dd>')
+                if rows:
+                    add('arguments', f'<dl class="reference-arguments">{"".join(rows)}</dl>')
                 if shared['roles']:
                     roles = ''.join(f'<dt>{html.escape(tag.replace(chr(96), ""))}</dt>'
                                     f'<dd>{markdown(desc,pandoc)}</dd>' for tag,desc in zip(shared['roles'], text['roles']))
@@ -322,37 +355,30 @@ def build(root):
                 example_note = markdown(text['example_setup'],pandoc) if text['example_setup'] else ''
                 downloads = (f'<a href="../../assets/reference-examples/{name}.R" download>'
                              f'{titles["download"]}</a>')
-                add('examples', example_note + snippet(scripts[name], 'r', titles['examples']) + downloads)
+                add('examples', example_note + snippet(rendered['example'], 'r', titles['examples']) +
+                    downloads + example_output(rendered, name, titles, output['width'], output['height']))
                 add('related', '<ul>' + ''.join(f'<li>{topic_link(target)}</li>' for target in shared['related']) + '</ul>')
                 pages[lang].append(dict(slug=f'reference/{name}', title=name + '()',
                                         heading_id=f'api-{name}', body=''.join(bodies)))
                 search.append(dict(url=f'reference/{name}.html',title=f'{name}() — {text["title"]}',
-                                   kind='api',summary=text['intro'], text=text['details'],
+                                   kind='function',summary=text['intro'], text=text['details'],
                                    keywords=' '.join([name, family, *seen])))
-        ptitle = titles['parameter_index']
-        controls = ('<div class="parameter-controls" hidden><label for="directory-query">'
-                    f'{titles["search_parameter"]}</label><input id="directory-query" type="search">'
-                    f'<label><input type="checkbox" id="directory-flex"> {titles["flex"]}</label>'
-                    '<output aria-live="polite"></output></div>')
-        table = ''.join(f'<tr data-flex="{int(flex)}"><th scope="row">{code(key)}</th>'
-                        f'<td><a href="reference/{topic}.html#{anchor}">{code(topic + "()")}</a></td>'
-                        f'<td>{html.escape(fmt)}</td><td>{code(default) if default else "—"}</td></tr>'
-                        for key,topic,anchor,flex,fmt,default in sorted(parameter_rows))
-        body = (f'{controls}<table class="parameter-directory">'
-                f'<thead><tr><th>{titles["arguments"]}</th><th>API</th><th>{titles["format"]}</th>'
-                f'<th>{titles["default"]}</th></tr></thead>'
-                f'<tbody>{table}</tbody></table>')
-        pages[lang].append(dict(slug='parameter-atlas', title=ptitle, body=body))
         for name in sorted(retired):
             title = titles['archived']
             body = f'<p>{title}</p><p>{link("index.html", titles["current"])}</p>'
             pages[lang].append(dict(slug=f'reference/{name}', title=name + '()', body=body))
         search_file = root / lang / 'search.json'
         previous = read(search_file) if search_file.exists() else []
-        previous = [row for row in previous if not row['url'].startswith('reference/') or
-                    Path(row['url'].split('#')[0]).stem in existing_help - set(topics)]
+        previous = [row for row in previous if
+                    row['url'].split('#')[0] != 'parameter-atlas.html' and
+                    (not row['url'].startswith('reference/') or
+                     Path(row['url'].split('#')[0]).stem in existing_help - set(topics))]
         write_json(search_file, previous + search)
     render_articles(root, pages)
+    for folder in (root, *(root / lang for lang in LOCALES)):
+        (folder / 'parameter-atlas.html').unlink(missing_ok=True)
+    subprocess.run(['Rscript', '--vanilla', 'tools/finalize-website.R',
+                    f'--site={root}', '--refresh-existing'], cwd=ROOT, check=True)
     for name in ('index', *structure['topics'], *sorted(retired)):
         destination = f'../en/reference/{name}.html'
         write(root / 'reference' / f'{name}.html', redirect(destination))

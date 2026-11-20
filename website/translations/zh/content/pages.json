@@ -1,5 +1,5 @@
 {
-  "source_sha256": "a7aa79e78cd1686fcf77be3f66cf47f363736a4b43d28e74398faa9e3218a17b",
+  "source_sha256": "b3c3efcab972b85a72593d673c6af96d60a3f7f744bb12fa404b98b1bbcc777d",
   "strings": {
     "0/title": {
       "source_sha256": "46ee1bb903f9924d7fa6d2d6e6c67e6fdd7eb10ee42505dde94310eaa4b67079",
@@ -182,326 +182,321 @@
       "translation": "API 参考"
     },
     "36/title": {
-      "source_sha256": "bfac3e626c13cb0658e9d3b00d1f6e65b0922932c35169f17a893e29bb4308c2",
-      "status": "reviewed",
-      "translation": "参数索引"
-    },
-    "37/title": {
       "source_sha256": "3f35b414c8a048a15beaee7d4b972e20df510dd4b2ec9449ba5b612921d57122",
       "status": "reviewed",
       "translation": "项目信息与来源"
     },
-    "38/title": {
+    "37/title": {
       "source_sha256": "c2c78864582860c80669a1f1fda8254c1a0bf18460bd5fcbb6ecbca2fe1ab5ef",
       "status": "reviewed",
       "translation": "版本选择"
     },
-    "39/title": {
+    "38/title": {
       "source_sha256": "44da1919da5c7f4f8bdfaa8ed71c4d9fe8f61233ccea862f25518a9ec364f8e1",
       "status": "reviewed",
       "translation": "绘制序列骨架"
     },
-    "40/title": {
+    "39/title": {
       "source_sha256": "d2c97da3940822dcbe8ebfd90c63b60388536e58c9380219b6895dd78cc64fba",
       "status": "reviewed",
       "translation": "基本数据表"
     },
-    "41/title": {
+    "40/title": {
       "source_sha256": "292711b0cfc6151af477662adcb839366514508597d01fa39759580332760b88",
       "status": "reviewed",
       "translation": "导入 FASTA、GFF3 与 BLAST"
     },
-    "42/title": {
+    "41/title": {
       "source_sha256": "06d87538d3915ad6e2c39f1fd47969233265bfc835ec2c85096a9281b52343b6",
       "status": "reviewed",
       "translation": "添加连接和特征"
     },
-    "43/title": {
+    "42/title": {
       "source_sha256": "b8f2993b822ac6c08bfaccf1a262af855f1864da96d7f09270537c7d6f9ffeca",
       "status": "reviewed",
       "translation": "调整旋转与间隙"
     },
-    "44/title": {
+    "43/title": {
       "source_sha256": "1c65555ac1699f5072f898ed457a59b3d9923f8644d0b6477addcd2a1988aca8",
       "status": "reviewed",
       "translation": "Chord：弧形骨架与几何"
     },
-    "45/title": {
+    "44/title": {
       "source_sha256": "70b8b2e5527e6fbe1bd249960eb1e38b8b6dc3cc6fffbc1b131e0683da3b1932",
       "status": "reviewed",
       "translation": "引导连接带与避障"
     },
-    "46/title": {
+    "45/title": {
       "source_sha256": "8516dc365b353be7ec178c1c53d86626679a71c789095091bb3769e4158dd46f",
       "status": "reviewed",
       "translation": "放置序列和基因标签"
     },
-    "47/title": {
+    "46/title": {
       "source_sha256": "1a7fcaaade7e9670fc394a389fe368d03ba5512f52a4461ba65a41ba2b3ea8f5",
       "status": "reviewed",
       "translation": "筛选、合并与聚束连接"
     },
-    "48/title": {
+    "47/title": {
       "source_sha256": "8f29b8a5545c37211335e057f83c3f477fc07c40fb0918ae8f72baf5f553db72",
       "status": "reviewed",
       "translation": "从源文件绘制序列比较图"
     },
-    "49/title": {
+    "48/title": {
       "source_sha256": "433281c15de6d4c2946e4a52f05aa68d67266945eb4a648d0b5659882ebdf11e",
       "status": "reviewed",
       "translation": "绘制共线性骨架"
     },
-    "50/title": {
+    "49/title": {
       "source_sha256": "42e7d26ff0aa47f2f32a7a9127ad8155640f9e2331370fb2891a4d0bfa5fc1d7",
       "status": "reviewed",
       "translation": "共线性输入与端点方向"
     },
-    "51/title": {
+    "50/title": {
       "source_sha256": "207b14d34c940b7608bc0535c6e0a4c66d8c56c560cbef5e74ad6f9257d9dd23",
       "status": "reviewed",
       "translation": "添加比较图层与坐标轴"
     },
-    "52/title": {
+    "51/title": {
       "source_sha256": "5ebd75eee748c96a94c02f04e4acb521c9e161c3e28dc53279f2d2ce733fff64",
       "status": "reviewed",
       "translation": "跨行路由、避障与比例尺"
     },
-    "53/title": {
+    "52/title": {
       "source_sha256": "ceb796042a38b84e6ba73ed4e414c4f10f18f0cc947c0db2b0be845dde048bea",
       "status": "reviewed",
       "translation": "CDS 同源邻域比较"
     },
-    "54/title": {
+    "53/title": {
       "source_sha256": "303d9fa770eaf473e1c88ff3740197ca36e9f807cf04e441167858277566ef29",
       "status": "reviewed",
       "translation": "聚焦、锚定与分段"
     },
-    "55/title": {
+    "54/title": {
       "source_sha256": "ebd13f40260260b6207f4492e83e25745c1d79dc13567fe86b99b52debac59aa",
       "status": "reviewed",
       "translation": "绘制圆形骨架"
     },
-    "56/title": {
+    "55/title": {
       "source_sha256": "21cf8b9f250ba5742cf32e2afe67d1a586de4393669341c6121ccff218943fed",
       "status": "reviewed",
       "translation": "单序列长度、DNA 和注释"
     },
-    "57/title": {
+    "56/title": {
       "source_sha256": "54f971295271e2d95b344fa2e94c435666bbe2565a37298b83187ea9bc585779",
       "status": "reviewed",
       "translation": "添加特征、标签、引物和酶切位点"
     },
-    "58/title": {
+    "57/title": {
       "source_sha256": "ced1e672915e62aa2c00042314e0c11d8ec04e67db44d8a9b61b40582dce531c",
       "status": "reviewed",
       "translation": "搜索特征、引物与酶切位点"
     },
-    "59/title": {
+    "58/title": {
       "source_sha256": "31fbf9c0b851296819e7d865a349ead6744edd75d7e340f302c5427b2463637d",
       "status": "reviewed",
       "translation": "pUC19：完整注释图"
     },
-    "60/title": {
+    "59/title": {
       "source_sha256": "ec700b1fbdacc66c81feeafe0d12e48bc09da9954a127a8fced0f50b917acdd7",
       "status": "reviewed",
       "translation": "导入核酸和蛋白比对"
     },
-    "61/title": {
+    "60/title": {
       "source_sha256": "23ed81b0e35a975d85d8a5d21ef08f113db52ff328454cf32400d993485c9865",
       "status": "reviewed",
       "translation": "自动布局与文字适配"
     },
-    "62/title": {
+    "61/title": {
       "source_sha256": "782d109d186f35e3df4f5dd5dfc42a782111f4867327e403aa48e3813f7ad19d",
       "status": "reviewed",
       "translation": "映射相似度与图层职责"
     },
-    "63/title": {
+    "62/title": {
       "source_sha256": "e956a9404b467e6b372e082d28cb9d4710af764c2fa5e56a415211e12166be0e",
       "status": "reviewed",
       "translation": "常见问题"
     },
-    "64/title": {
+    "63/title": {
       "source_sha256": "48dc658297017c62b36b56a8784b697a14dce33c41d5302d3031cc2a853493ab",
       "status": "reviewed",
       "translation": "调整行距与标尺"
     },
-    "65/title": {
+    "64/title": {
       "source_sha256": "7d1868cc84447a2d7886da7d1748eb68fdb08c9a61d434f693565438a36eaa44",
       "status": "reviewed",
       "translation": "调整骨架样式与旋转"
     },
-    "66/title": {
+    "65/title": {
       "source_sha256": "9e1a4275d002ae3421d05b5f81f32c1245114d85d0d05e03de9b04609f888212",
       "status": "reviewed",
       "translation": "BLASTp 蛋白比较"
     },
-    "67/title": {
+    "66/title": {
       "source_sha256": "a2cbefbeac75274df62fa028217de469b7db347d7cccda43b5e8521eeb923e36",
       "status": "reviewed",
       "translation": "Collinear：对齐与排列"
     },
-    "68/title": {
+    "67/title": {
       "source_sha256": "9a94001e9675eab1bbc795b3524b6a2be20298a38e35b427852f1956964beac0",
       "status": "reviewed",
       "translation": "按任务查找功能与参数"
     },
-    "69/title": {
+    "68/title": {
       "source_sha256": "faad914dbaa9a282c03f973d377febbe70057aa31db2208fdc9d1e4c2c8e49ec",
       "status": "reviewed",
       "translation": "图层与坐标模式的兼容边界"
     },
-    "70/title": {
+    "69/title": {
       "source_sha256": "523a1913e37c26d95d833aea4e0cf8c46a65fa1196e4a79a9b3e2469d374c959",
       "status": "reviewed",
       "translation": "基因与特征的箭头几何"
     },
-    "71/title": {
+    "70/title": {
       "source_sha256": "93c51902fec889cd59426b574ff760ed2cc4bafa65463e405de4c7502cdb2a0d",
       "status": "reviewed",
       "translation": "共享端点分支与点连接"
     },
-    "72/title": {
+    "71/title": {
       "source_sha256": "f9bf4cf7b2e0c1b0a5d8eb7cf54f4eb94e1d9d5bae34e0358682116207244653",
       "status": "reviewed",
       "translation": "圆图骨架、中心文字与注释轨道"
     },
-    "73/title": {
+    "72/title": {
       "source_sha256": "f5ae670e21a03df412dba81c449e141d3208c94bd34708f2ecdd40d180f5d763",
       "status": "reviewed",
       "translation": "圆图标签与避让"
     },
-    "74/title": {
+    "73/title": {
       "source_sha256": "1f0bd41a537cb7ea94f9a4f9a7ba54cc6f76f126f842326d3602aea9b5303e62",
       "status": "reviewed",
       "translation": "识别引物、弧线与文字"
     },
-    "75/title": {
+    "74/title": {
       "source_sha256": "5080adca45c96c11d77c7864d0d3ce074ae778eafdfd7e253a78719885b281db",
       "status": "reviewed",
       "translation": "限制酶搜索、切点与标签"
     },
-    "76/title": {
+    "75/title": {
       "source_sha256": "e400f52ea53baefccb873b0c11a3865be5554f586319d0f16d098d8e43642688",
       "status": "reviewed",
       "translation": "标度、图例与主题"
     },
-    "77/title": {
+    "76/title": {
       "source_sha256": "9338a95cea1ff813e70ddabb33871f2c3ac9aeeebded24025edb7559537def38",
       "status": "reviewed",
       "translation": "连接密度与显式聚束"
     },
-    "78/title": {
+    "77/title": {
       "source_sha256": "b53bb991c1372fa5308e606edcb99d8e284ee20d4a0650f64c8b4f294f4fa230",
       "status": "reviewed",
       "translation": "按任务使用工作流与诊断工具"
     },
-    "79/title": {
+    "78/title": {
       "source_sha256": "f6a61ad314bdf4fcb54a31b6808a9f230ae4632f6f6b9cbc44ca68df1f1dea5e",
       "status": "reviewed",
       "translation": "API 功能覆盖记录"
     },
-    "80/title": {
+    "79/title": {
       "source_sha256": "9737700792a904ea604fcd5854f8eb1f8d146dd17059ce494c9de6235e140206",
       "status": "reviewed",
       "translation": "来源实例、轨道与新视图"
     },
-    "81/title": {
+    "80/title": {
       "source_sha256": "f6a03b22c70c0b3c6f5ef31fe538fec08aa8c3c2899dfacf3dff59290ecdddd7",
       "status": "reviewed",
       "translation": "HSP点阵图与径向共线性"
     },
-    "82/title": {
+    "81/title": {
       "source_sha256": "139441b5e05cbb6b9661e2edac3baa874aff978a2b263243eba94529428d7b3b",
       "status": "reviewed",
       "translation": "多序列关系"
     },
-    "83/title": {
+    "82/title": {
       "source_sha256": "3ad5b22e592d66690813a38f1bd3b2ae5a26cc7c0c305686d4ca7dc6ff75a50e",
       "status": "reviewed",
       "translation": "绘制多序列骨架、连接与注释"
     },
-    "84/title": {
+    "83/title": {
       "source_sha256": "150741d40f41773add1ccdcf9ccf6c7b9b5c8f38689bc15b24fb045aa464102b",
       "status": "reviewed",
       "translation": "重复显示与实例选择"
     },
-    "85/title": {
+    "84/title": {
       "source_sha256": "6f7a2ee999d53d2cb64f89f6dd4e6b497e38d6fce4bdcaac7a35c8895a17ff0f",
       "status": "reviewed",
       "translation": "标注序列与特征"
     },
-    "86/title": {
+    "85/title": {
       "source_sha256": "999ba03f3e389742f9d8c5416c3ff4cb4d10cb64faea3bd211afb006de959352",
       "status": "reviewed",
       "translation": "从长度和注释绘制圆图"
     },
-    "87/title": {
+    "86/title": {
       "source_sha256": "22edb665e9005e9eb43868eb734c59c63b4b2e229620fbd8392b4d27a908a80f",
       "status": "reviewed",
       "translation": "圆图数据准备"
     },
-    "88/title": {
+    "87/title": {
       "source_sha256": "fda504ccd852f84a6dd91d468b0d5d0cfe2c6586cee82020095333f2b0d62ef3",
       "status": "reviewed",
       "translation": "圆图骨架与布局"
     },
-    "89/title": {
+    "88/title": {
       "source_sha256": "f14e7447f998af0c8dd14968fc0e6938e50bee3d587c0e0174e848dac515ae24",
       "status": "reviewed",
       "translation": "特征、引物与限制位点"
     },
-    "90/title": {
+    "89/title": {
       "source_sha256": "e422821ddb701337bdf5631046bcd97ccfae41e2542fda9c42a7e4f3c3ccc636",
       "status": "reviewed",
       "translation": "pETDuet-1：密集注释布局"
     },
-    "91/title": {
+    "90/title": {
       "source_sha256": "3ac5dff8759c2f43b2a553cc4de5b319f568f5a9728a02c1437908b7e1b06ceb",
       "status": "reviewed",
       "translation": "绘制 HSP 比对点图"
     },
-    "92/title": {
+    "91/title": {
       "source_sha256": "135c4b025ec9c945305e5485708b24f9eb0c9e87379f323374cdde246fa1ea8e",
       "status": "reviewed",
       "translation": "读取区间与配对区间"
     },
-    "93/title": {
+    "92/title": {
       "source_sha256": "ec1daf201e4b09a9b8d5274c9cf7ee3b356495d9c5d5e9436345e4692aee7c81",
       "status": "reviewed",
       "translation": "对齐字符与来源坐标"
     },
-    "94/title": {
+    "93/title": {
       "source_sha256": "da9e26764cb8f5f8f310054192a1069d21b69ef3c2135e3ce2a3b0a68ec99024",
       "status": "reviewed",
       "translation": "数据处理流程"
     },
-    "95/title": {
+    "94/title": {
       "source_sha256": "8294ed2b99ff0bd3f8db5c1d6b2268af47a5a39fad930170b1e2a58dfc253bd3",
       "status": "reviewed",
       "translation": "跨面板连接与路由"
     },
-    "96/title": {
+    "95/title": {
       "source_sha256": "ab194397ec68c30b68d8eef9f18db40aaf033cfe1b8a0c961b32ccc7c0e3a04e",
       "status": "reviewed",
       "translation": "面板位置、尺寸与图例"
     },
-    "97/title": {
+    "96/title": {
       "source_sha256": "53ec357f995ec60a0ccdfbeceaa79d4e96925a6af62e5eb4d16f593ad7ba7947",
       "status": "reviewed",
       "translation": "局部放大与字符细节"
     },
-    "98/title": {
+    "97/title": {
       "source_sha256": "1fac556d9da9724578b8cd08919311005411629e4566b797eacbf2db22f62942",
       "status": "reviewed",
       "translation": "嵌套组合与跨原点放大"
     },
-    "99/title": {
+    "98/title": {
       "source_sha256": "4f62fbcd01381305558b98e3f142460df0874ce28a1e360c531ff81a42ce5242",
       "status": "reviewed",
       "translation": "组合面板并连接真实区间"
     },
-    "100/title": {
+    "99/title": {
       "source_sha256": "c537f7e5dd3c1e807063f040e817e0f4f3aabee4a630af2a70b9aad9c3923083",
       "status": "reviewed",
       "translation": "旗舰数据来源与构建"

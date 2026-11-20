@@ -1,5 +1,5 @@
 {
-  "source_sha256": "780ea07a79525d218994081581f92789316005818136bee0ecaba5bea24ce7e7",
+  "source_sha256": "a8507d04b28ced53551daad7d84f822ea1b7433c36551c7970a638d6fe91d7a4",
   "blocks": {
     "0": {
       "source_sha256": "aceba392a42864a3f79d17dd838cb3c946933b6cde2a81ceb25c04829d526fb8",
@@ -152,9 +152,9 @@
       "translation": "| 调整定量轨道尺寸 | [track_band()](../../man/track_band.Rd) · `width`、`gap` | 取一个物理单位值，或用原生布局数值覆盖全部显示序列。宽度须为正，间隙可为零。 |\n"
     },
     "49": {
-      "source_sha256": "f345a08d5e06077bac05f2786d6ebded54616cbdf100170451c9b862ad73dd34",
+      "source_sha256": "e4118f6ef61850002017a626de690b2a04f42f8b1dd23b0f1e7e920d4e1b836b",
       "status": "reviewed",
-      "translation": "基于数据的颜色用[视觉映射与标度](styling.md)设置。函数签名、默认值及灵活参数标记见[参数索引](parameter-atlas.md)。\n"
+      "translation": "基于数据的颜色用[视觉映射与标度](styling.md)设置。函数签名、默认值及灵活参数标记见[API 参考](reference.md)。\n"
     }
   }
 }

@@ -285,11 +285,6 @@
       "output": "zh/ribbon-statistics.md"
     },
     {
-      "source": "en/parameter-atlas.md",
-      "translations": "translations/zh/parameter-atlas.json",
-      "output": "zh/parameter-atlas.md"
-    },
-    {
       "source": "en/workflow-tools.md",
       "translations": "translations/zh/workflow-tools.json",
       "output": "zh/workflow-tools.md"

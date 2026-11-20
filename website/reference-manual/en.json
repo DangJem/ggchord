@@ -1,4 +1,5 @@
 {
+  "description": "Find ggchord functions by task, from preparing input data to building, combining and inspecting plots. Each function page describes its inputs and return value and includes a runnable R example with the resulting plot or console output.",
   "groups": {
     "construct": {
       "title": "Construction and layer identity",

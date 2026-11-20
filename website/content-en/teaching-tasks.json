@@ -396,7 +396,7 @@
     "api": "ggchord",
     "parameters": "all public formals",
     "modes": "general",
-    "page": "parameter-atlas",
+    "page": "reference",
     "level": "advanced"
   },
   {

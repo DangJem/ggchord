@@ -44,14 +44,14 @@ Article links point to actual repository files, such as a sibling `.md` page, a 
 
 The API reference follows the public inventory and categories in the second-round v0.50.0 manual. Edit English page prose in `website/reference-manual/en.json`, then review the corresponding Han text in `website/reference-manual/zh.json`. Record the SHA-256 of the reviewed English source in the Han file. The shared `structure.json` holds the invocation, parameter and role keys, examples and cross-links. Both language editions expose the same code and anchors. Native facet pages link to the upstream ggplot2 documentation.
 
-Run these commands to check and build the API section and parameter index independently.
+Run these commands to check and build the API reference independently.
 
 ```sh
 python3 tools/check-documentation.py --reference-only
 python3 tools/build-website.py --reference-only
 ```
 
-The local entry is `.site/en/reference/index.html`, with the matching Han entry under `.site/zh/reference/`. The API reference uses the same pkgdown template, navigation and appearance controls as the handbook. Reference examples include their required data setup. Reader pages name any optional decoder needed by their example.
+The local entry is `.site/en/reference/index.html`, with the matching Han entry under `.site/zh/reference/`. The API reference uses the same pkgdown template, navigation and appearance controls as the handbook. The builder runs the downloadable R scripts and adds their plots and console output to both language editions. The example runner uses downlit, ragg, png and the optional reader dependencies rtracklayer, VariantAnnotation, Biopython and MUMmer’s `show-coords`. Set `GGCHORD_PYTHON` or `GGCHORD_SHOW_COORDS` if those tools are installed outside the default search path.
 
 ## Update function help, package READMEs or offline tutorials
 

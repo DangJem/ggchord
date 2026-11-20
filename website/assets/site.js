@@ -83,18 +83,6 @@
     if (header.querySelector('.navbar-collapse').contains(document.activeElement)) header.querySelector('.navbar-toggler').focus();
     closeMenus();
   });
-  const directoryQuery=document.querySelector('#directory-query'), directoryFlex=document.querySelector('#directory-flex');
-  if(directoryQuery&&directoryFlex){
-    const controls=directoryQuery.closest('.parameter-controls');
-    const rows=[...document.querySelectorAll('.parameter-directory tbody tr[data-flex]')];
-    const output=controls.querySelector('output');
-    const updateDirectory=()=>{
-      const query=directoryQuery.value.trim().toLocaleLowerCase();let count=0;
-      rows.forEach(row=>{row.hidden=!(row.textContent.toLocaleLowerCase().includes(query)&&(!directoryFlex.checked||row.dataset.flex==='1'));if(!row.hidden)count++;});
-      if(output)output.textContent=zh?`显示 ${count} 项`:`Showing ${count} entries`;
-    };
-    controls.hidden=false;directoryQuery.addEventListener('input',updateDirectory);directoryFlex.addEventListener('change',updateDirectory);updateDirectory();
-  }
   // Copy actions announce exactly which range was copied.
   const copy=async(button,text,label)=>{
     let ok=false;
@@ -122,26 +110,6 @@
     });
   });
 
-  // Filter exact API/parameter names without replacing the full reference.
-  const parameterFilter=document.querySelector('#parameter-filter');
-  if(parameterFilter){
-    const entries=[...document.querySelectorAll('main details')].filter(d=>d.querySelector(':scope > summary code'));
-    const notice=document.querySelector('#parameter-filter-status');
-    const update=()=>{
-      const query=parameterFilter.value.trim().toLocaleLowerCase();let count=0;
-      entries.forEach(details=>{
-        const api=details.querySelector(':scope > summary code').textContent.toLocaleLowerCase();
-        const rows=[...details.querySelectorAll('tbody tr')];
-        const apiMatches=api.includes(query);
-        let matching=0;
-        rows.forEach(row=>{const name=row.querySelector('td')?.textContent.toLocaleLowerCase()||'';row.hidden=Boolean(query)&&!apiMatches&&!name.includes(query);if(!row.hidden)matching++;});
-        details.hidden=Boolean(query)&&!apiMatches&&!matching;
-        if(!details.hidden){count++;if(query)details.open=true;}
-      });
-      notice.textContent=zh?`${count} 个函数匹配`:`${count} functions match`;
-    };
-    parameterFilter.addEventListener('input',update);
-  }
   // The header input owns the local results and keeps focus during IME composition.
   const search = document.querySelector('.local-search');
   const panel = search?.querySelector('.search-panel');

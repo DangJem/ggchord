@@ -1493,23 +1493,6 @@
     "aliases": []
   },
   {
-    "slug": "parameter-atlas",
-    "title": {
-      "en": "Parameter index"
-    },
-    "group": "reference",
-    "id": "parameter-atlas",
-    "kind": "tutorial",
-    "canonical_path": "parameter-atlas.html",
-    "parent": "index",
-    "module": "reference",
-    "apis": [],
-    "recipe_ids": [],
-    "figure_ids": [],
-    "translation_key": "parameter-atlas",
-    "aliases": []
-  },
-  {
     "slug": "about",
     "title": {
       "en": "Project information and sources"

@@ -339,13 +339,6 @@
     "": "migration.html#api",
     "ref-examples": "migration.html#api"
   },
-  "parameter-atlas.html": {
-    "api-geom_feature_plasmid": "annotations.html",
-    "api-position_plasmid": "annotations.html",
-    "api-geom_feature_label_repel": "annotations.html",
-    "api-geom_gene": "annotations.html",
-    "api-position_track": "tracks.html"
-  },
   "real-data.html": {
     "": "case-chord.html",
     "research-question": "case-chord.html",
