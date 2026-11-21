@@ -654,9 +654,14 @@ ggchord_place_circular_domain_labels <- function(layout, specs) {
     callout <- label[outer, , drop = FALSE]
     if (identical(specs[[id]]$label_kind, "site") && nrow(callout)) {
       callout$restriction_component <- "label"
-      callout$enzyme_label <- callout$label
-      callout$coordinate_label <- ""
-      callout$enzyme_fontface <- "plain"
+      composite <- !is.na(callout$enzyme_label) & nzchar(callout$enzyme_label) &
+        !is.na(callout$coordinate_label) & nzchar(callout$coordinate_label) &
+        callout$angle == 0
+      callout$enzyme_label[!composite] <- callout$label[!composite]
+      callout$coordinate_label[!composite] <- ""
+      callout$enzyme_fontface <- ifelse(composite, "bold", "plain")
+      callout$.ggchord_composite_label <- composite
+      callout$label_order <- ifelse(callout$anchor_x < 0, "position_enzyme", "enzyme_position")
       callout$group <- callout$source_row
       root <- tip <- callout
       root$restriction_component <- tip$restriction_component <- "leader"

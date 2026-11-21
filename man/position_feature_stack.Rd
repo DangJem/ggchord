@@ -7,7 +7,8 @@
 position_feature_stack(
   spacing = 1,
   base_position = position_identity(),
-  direction = "positive"
+  direction = "positive",
+  order = "source"
 )
 }
 \arguments{
@@ -16,6 +17,9 @@ position_feature_stack(
 \item{base_position}{Placement applied before lane assignment.}
 
 \item{direction}{Placement direction, including strand-dependent lanes.}
+
+\item{order}{Place features by source position (\code{"source"}) or prefer
+higher \code{display_priority} and then longer occupied intervals (\code{"priority"}).}
 }
 \value{
 A placement declaration for compatible ggchord layers.
@@ -45,7 +49,7 @@ ggchord(data = one_seq) + geom_seq() +
     id = "features",
     position = position_feature_stack(
       base_position = position_offset(-2), spacing = 1,
-      direction = "negative")) +
+      direction = "negative", order = "priority")) +
   geom_feature_label_repel(aes(label = label), anchor_layer = "features") +
   coord_circular()
 }

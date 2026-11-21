@@ -49,7 +49,12 @@ Features have a dark 0.25 mm outline by default. Compact symbols use a
 finer outline unless a linewidth is set or mapped.
 }
 \details{
-Provide one-based closed intervals with \code{accver}, \code{start} and \code{end}. A strand or disjoint segments can be supplied where appropriate. The gene shortcut defaults to an arrow and strand placement. The primer shortcut defaults to a directional narrow path, and the region shortcut defaults to a translucent block.
+Provide one-based closed intervals with \code{accver}, \code{start} and \code{end}.
+Supply strand \code{+}, \code{-}, \code{+/-} (both directions), or \code{.} (undirected),
+with disjoint segments when applicable. Bidirectional arrow shapes retain
+one source entity and use heads at both ends. The gene shortcut defaults to
+an arrow and strand placement. The primer shortcut defaults to a directional
+narrow path, and the region shortcut defaults to a translucent block.
 }
 \examples{
 library(ggplot2)

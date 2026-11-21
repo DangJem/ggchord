@@ -244,14 +244,7 @@ ggchord_prepare_dotplot <- function(plot) {
     for (i in seq_len(nrow(frame))) {
       extent <- c(1, frame$length[i])
       pos <- pretty(extent, n = if (nrow(frame) > 1L) 2 else 3)
-      if (nrow(frame) > 1L) {
-        # The separate header shows each block's full range. Interior ticks
-        # keep adjacent end/start labels from colliding at block boundaries.
-        pos <- pos[pos > extent[1L] & pos < extent[2L]]
-        if (!length(pos)) pos <- round(mean(extent))
-      } else {
-        pos <- sort(unique(c(extent, pos[pos >= extent[1L] & pos <= extent[2L]])))
-      }
+      pos <- sort(unique(c(extent, pos[pos >= extent[1L] & pos <= extent[2L]])))
       breaks[[i]] <- ggchord_dotplot_project(frame, rep(frame$accver[i], length(pos)), pos)
       labels[[i]] <- format(pos, trim = TRUE, scientific = FALSE,
         big.mark = if (nrow(frame) > 1L) "," else "")
@@ -270,7 +263,7 @@ ggchord_prepare_dotplot <- function(plot) {
       if (axis == "x") {
         plot$scales$add(scale(name = paste0("Query position (", unit, ")"),
           breaks = unlist(breaks), labels = unlist(labels), sec.axis = header,
-          guide = guide_axis(check.overlap = TRUE)))
+          guide = guide_axis(check.overlap = TRUE, n.dodge = 2)))
       } else {
         local <- ggplot2::dup_axis(name = paste0("Subject position (", unit, ")"),
           breaks = unlist(breaks), labels = unlist(labels), guide = guide_axis(check.overlap = TRUE))

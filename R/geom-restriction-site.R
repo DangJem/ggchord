@@ -198,6 +198,9 @@ geom_site_label <- function(mapping = NULL, data = NULL, stat = "identity",
 #' @param id Optional plot-local layer identifier. Name a layer explicitly to scope a scale, anchor a label or export it.
 #' @return A ggplot2 layer for addition to a plot.
 #' @details Site data supplies `accver` and a one-based `pos`. A double-strand cut uses `cut_top` and `cut_bottom` as interbase positions. Add site labels separately or bind them to the site layer.
+#' For horizontal circular callouts, supply `enzyme_label` and
+#' `coordinate_label` alongside `label` to draw the enzyme in bold
+#' and the coordinate in plain text.
 #' @examples
 #' library(ggplot2)
 #'

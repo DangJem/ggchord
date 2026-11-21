@@ -3,6 +3,8 @@
 #' @param spacing Nonnegative physical gap between adjacent lanes, in millimetres.
 #' @param base_position Placement applied before lane assignment.
 #' @param direction Placement direction, including strand-dependent lanes.
+#' @param order Place features by source position (`"source"`) or prefer
+#'   higher `display_priority` and then longer occupied intervals (`"priority"`).
 #' @return A placement declaration for compatible ggchord layers.
 #' @examples
 #' library(ggplot2)
@@ -26,17 +28,20 @@
 #'     id = "features",
 #'     position = position_feature_stack(
 #'       base_position = position_offset(-2), spacing = 1,
-#'       direction = "negative")) +
+#'       direction = "negative", order = "priority")) +
 #'   geom_feature_label_repel(aes(label = label), anchor_layer = "features") +
 #'   coord_circular()
 position_feature_stack <- function(
-    spacing = 1, base_position = position_identity(), direction = "positive") {
+    spacing = 1, base_position = position_identity(), direction = "positive",
+    order = "source") {
   ggchord_check_argument_names(sys.call(), sys.function())
   direction <- match.arg(direction, c("positive", "negative", "strand"))
+  order <- match.arg(order, c("source", "priority"))
   spacing <- ggchord_physical_mm(spacing, "position_feature_stack()", nonnegative = TRUE)
   base_position <- ggchord_as_feature_position(base_position, "position_feature_stack()")
   if (isTRUE(base_position$ggchord_feature_stack))
     ggchord_stop("position_feature_stack(): base_position cannot itself be a stack")
   ggproto(NULL, ggplot2::PositionIdentity, ggchord_feature_stack = TRUE,
-    spacing = spacing, base_position = base_position, direction = direction)
+    spacing = spacing, base_position = base_position, direction = direction,
+    lane_order = order)
 }

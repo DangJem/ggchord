@@ -25,6 +25,7 @@ globalVariables(c(
   "feature_label_fill", "feature_label_mode",
   "feature_label_orientation", "plotmath_label", "combined_label",
   "enzyme_label", "coordinate_label", "label_order", "enzyme_fontface",
+  ".arc_units",
   ".draw_as_arc", "annotation_class", "primer_name", "primer_start",
   "primer_end", "primer_show_location"
 ))

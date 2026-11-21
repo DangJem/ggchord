@@ -3279,7 +3279,7 @@
       }
     },
     "position_feature_stack": {
-      "usage": "position_feature_stack(\n  spacing = 1, base_position = position_identity(),\n  direction = \"positive\"\n)",
+      "usage": "position_feature_stack(\n  spacing = 1, base_position = position_identity(),\n  direction = \"positive\",\n  order = \"source\"\n)",
       "arguments": [
         [
           "spacing"
@@ -3289,10 +3289,13 @@
         ],
         [
           "direction"
+        ],
+        [
+          "order"
         ]
       ],
       "roles": [],
-      "examples": "ggchord(data = one_seq) + geom_seq() +\n  geom_feature(data = subset(genes, accver == \"A\"), shape = \"arrow\",\n    id = \"features\",\n    position = position_feature_stack(\n      base_position = position_offset(-2), spacing = 1,\n      direction = \"negative\")) +\n  geom_feature_label_repel(aes(label = label), anchor_layer = \"features\") +\n  coord_circular()",
+      "examples": "ggchord(data = one_seq) + geom_seq() +\n  geom_feature(data = subset(genes, accver == \"A\"), shape = \"arrow\",\n    id = \"features\",\n    position = position_feature_stack(\n      base_position = position_offset(-2), spacing = 1,\n      direction = \"negative\", order = \"priority\")) +\n  geom_feature_label_repel(aes(label = label), anchor_layer = \"features\") +\n  coord_circular()",
       "related": [
         "position_offset",
         "position_strand",
@@ -3303,7 +3306,8 @@
       "defaults": {
         "spacing": "1",
         "base_position": "position_identity()",
-        "direction": "\"positive\""
+        "direction": "\"positive\"",
+        "order": "\"source\""
       }
     },
     "stat_coverage": {

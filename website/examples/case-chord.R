@@ -31,12 +31,12 @@ sequence_labels <- function(size, offset) {
   })
 }
 overview <- ggchord(comparison$seq_data) +
-  geom_link_ribbon(aes(fill = pident), data = comparison$links, curvature = 1,
+  geom_link_ribbon(aes(fill = pident), data = comparison$links, curvature = 1, avoid = "smooth",
     alpha = 0.52, colour = "#53776A", linewidth = 0.16) +
   geom_seq(aes(colour = accver), linewidth = 1.1,
     arrow = arrow(length = unit(2, "mm"), type = "closed")) +
   geom_gene(aes(fill = strand), data = genes, id = "genes",
-    position = position_strand(offset = c("+" = -1.25, "-" = 1.25)), thickness = 1.25, colour = "#454842",
+    position = position_strand(offset = c("+" = -1.65, "-" = 1.65)), thickness = 1.8, colour = "#454842",
     linewidth = 0.15) +
   scale_colour_manual(name = "Sequence", values = sequence_colours,
     guide = guide_legend(nrow = 1, order = 2)) +
@@ -58,9 +58,9 @@ overview +
   geom_gene_label_repel(aes(label = label), data = labels, anchor_layer = "genes",
     segment_colour = "#767A73", segment_linewidth = 0.18,
     label_layout = label_layout_repel(arrangement = "local", orientation = "horizontal",
-      side = "positive", offset = 10, padding = 1.5, wrap = 22, max_lines = 3), size = 2.9) +
+      side = "positive", offset = 14, padding = 1.5, wrap = 22, max_lines = 3), size = 2.9) +
   sequence_labels(size = 3.7, offset = 9) +
-  scale_seq_position(name = NULL, breaks = breaks_pretty(2), minor_breaks = NULL,
+  scale_seq_position(name = NULL, minor_breaks = NULL,
     labels = label_comma()) +
   guides(fill = guide_coloursteps(position = "left", direction = "vertical",
     even.steps = FALSE, show.limits = TRUE,

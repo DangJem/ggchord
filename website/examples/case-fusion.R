@@ -47,7 +47,7 @@ chord <- overview +
 linear <- overview + seq_names +
   layout_sequences(row_gap = 9, align = "center", orientation = study$orientation) +
   coord_collinear(xlim = c(-1.65, 1.12), fit = "labels", clip = "off") +
-  scale_seq_position(name = NULL, breaks = breaks_pretty(2), labels = label_comma(), minor_breaks = NULL) +
+  scale_seq_position(name = NULL, labels = label_comma(), minor_breaks = NULL) +
   labs(title = "B  |  Collinear", subtitle = "The same intervals in linear coordinates")
 radial <- overview +
   geom_seq_label(aes(label = accver), anchor = "end", size = 2.7,
@@ -58,7 +58,7 @@ radial <- overview +
 
 context <- relationship_view(study$context_sequences, study$selected, study$context_features) +
   seq_names + layout_sequences(row_gap = 12, align = "center") +
-  scale_seq_position(name = NULL, breaks = breaks_pretty(2), labels = label_comma(), minor_breaks = NULL) +
+  scale_seq_position(name = NULL, labels = label_comma(), minor_breaks = NULL) +
   coord_collinear(xlim = c(-1.65, 1.12), fit = "labels", clip = "off") +
   labs(title = "D  |  Two-genome context", subtitle = "Full-length sequences; windows enlarged in E")
 windows <- study$windows |> mutate(instance_id = accver)
@@ -88,28 +88,32 @@ zoom <- relationship_view(study$context_sequences, study$selected, detail_genes)
   labs(title = "E  |  Local zoom", subtitle = "Source windows + 800 bp flanks")
 
 cells <- study$base_cells
-bases <- ggplot(cells, aes(alignment_column, accver, label = symbol)) +
-  geom_residue(aes(fill = symbol), size = 5.1, fontface = "bold",
-    overflow = "error", show.legend = FALSE) +
-  scale_fill_residue("DNA") +
-  scale_x_continuous(breaks = seq(1, 60, 10),
-    labels = function(x) cells$source_position[match(x, cells$alignment_column)],
-    expand = expansion(add = 0.6)) +
-  scale_y_discrete(labels = "DNA", expand = expansion(add = 1.30)) +
-  labs(title = "F  |  Nucleotide detail", x = "Source position (bp)", y = NULL,
-    subtitle = paste0(study$base_cds$accver, " / ", study$base_cds$feature_id,
-      "  |  first 60 coding bases (", study$base_cds$strand, ")  |  ",
-      study$base_start, "-", study$base_end, " bp")) +
-  theme_minimal(base_size = 10) +
-  theme(panel.grid = element_blank(),
-    panel.border = element_rect(fill = NA, colour = "#A09AA3", linewidth = 0.3),
-    plot.background = element_rect(fill = paper, colour = NA),
-    plot.title = element_text(size = 15, face = "bold", hjust = 0.5),
-    plot.subtitle = element_text(size = 9, colour = "#52646A", hjust = 0.5))
-bases <- register_ggchord_alignment(bases, cells)
+draw_bases <- function(size) {
+  result <- ggplot(cells, aes(alignment_column, accver, label = symbol)) +
+    geom_residue(aes(fill = symbol), size = size, fontface = "bold",
+      overflow = "error", show.legend = FALSE) +
+    scale_fill_manual(values = c(
+      A = "#D9EBD2", C = "#D4E5F6", G = "#F5E9AC", T = "#F4D3D2"
+    )) +
+    scale_x_continuous(breaks = seq(1, 60, 10),
+      labels = function(x) cells$source_position[match(x, cells$alignment_column)],
+      expand = expansion(add = 0.6)) +
+    scale_y_discrete(labels = "DNA", expand = expansion(add = 2.1)) +
+    labs(title = "F  |  Nucleotide detail", x = "Source position (bp)", y = NULL,
+      subtitle = paste0(study$base_cds$accver, " / ", study$base_cds$feature_id,
+        "  |  first 60 coding bases (", study$base_cds$strand, ")  |  ",
+        study$base_start, "-", study$base_end, " bp")) +
+    theme_minimal(base_size = 10) +
+    theme(panel.grid = element_blank(),
+      panel.border = element_rect(fill = NA, colour = "#A09AA3", linewidth = 0.3),
+      plot.background = element_rect(fill = paper, colour = NA),
+      plot.title = element_text(size = 15, face = "bold", hjust = 0.5),
+      plot.subtitle = element_text(size = 9, colour = "#52646A", hjust = 0.5))
+  register_ggchord_alignment(result, cells)
+}
 
 panels <- list(chord = chord, linear = linear, radial = radial,
-  center = context, zoom = zoom, bases = bases)
+  center = context, zoom = zoom, bases = draw_bases(5.4))
 areas <- tribble(
   ~panel,     ~xmin, ~xmax, ~ymin, ~ymax,
   "chord",    0.01,  0.46,  0.62,  0.99,
@@ -124,21 +128,35 @@ connections <- bind_rows(
   mutate(study$relation_ac, qpanel_path = "chord", spanel_path = "radial"),
   mutate(study$relation_cd, qpanel_path = "radial", spanel_path = "center")
 )
-fusion <- ggchord_fusion(panels, layout = layout_fusion(areas), guides = "collect") +
-  fusion_ribbon(aes(fill = relation), data = connections, curvature = 0.20,
-    alpha = 0.50, colour = "#536571", linewidth = 0.22) +
-  scale_fill_manual(name = "Correspondence",
-    values = c("A - B" = "#527FB8", "A - C" = "#CE9741", "C - D" = "#9064AC")) +
-  fusion_zoom("center", "zoom", study$windows, colour = "#8D8797",
-    fill = NA, alpha = 0.45, linewidth = 0.22) +
-  fusion_zoom("zoom", "bases", filter(study$focus_regions, detail_panel == "bases"),
-    colour = "#8D8797", fill = NA, alpha = 0.45, linewidth = 0.22) +
-  theme(legend.position = "bottom", legend.title = element_text(size = 8),
-    legend.text = element_text(size = 7),
-    plot.background = element_rect(fill = paper, colour = NA),
-    plot.margin = margin(8, 12, 8, 12),
-    plot.title = element_text(face = "bold", size = 20))
-fusion +
-  labs(title = "One dataset, six linked views",
-    subtitle = "Six selected HSPs and twelve source CDS per overview; full inputs retained separately",
-    caption = "Coloured ribbons: observed HSPs. Source windows connect D to E; the selected CDS bases connect E to F.")
+draw_fusion <- function(preview = FALSE) {
+  layout <- areas
+  views <- panels
+  if (preview) {
+    layout$ymin[layout$panel == "chord"] <- 0.60
+    layout$ymax[layout$panel == "radial"] <- 0.58
+    views$bases <- draw_bases(4.15)
+  }
+  output <- ggchord_fusion(views, layout = layout_fusion(layout), guides = "collect") +
+    fusion_ribbon(aes(fill = relation), data = filter(connections, relation == "A - B"),
+      curvature = 0.09, alpha = 0.38, colour = "#536571", linewidth = 0.26) +
+    fusion_ribbon(aes(fill = relation), data = filter(connections, relation != "A - B"),
+      curvature = 0.20, alpha = 0.55, colour = "#536571", linewidth = 0.26) +
+    scale_fill_manual(name = if (preview) "Links" else "Correspondence",
+      values = c("A - B" = "#527FB8", "A - C" = "#CE9741", "C - D" = "#9064AC")) +
+    fusion_zoom("center", "zoom", study$windows, colour = "#725094",
+      fill = NA, alpha = 0.62, linewidth = 0.36) +
+    fusion_zoom("zoom", "bases", filter(study$focus_regions, detail_panel == "bases"),
+      colour = "#725094", fill = NA, alpha = 0.62, linewidth = 0.36) +
+    theme(legend.position = "bottom", legend.title = element_text(size = 9),
+      legend.text = element_text(size = if (preview) 8 else 9),
+      plot.background = element_rect(fill = paper, colour = NA),
+      plot.margin = margin(8, 12, 8, 12),
+      plot.title = element_text(face = "bold", size = 20))
+  if (preview) return(output)
+  output +
+    labs(title = "One dataset, six linked views",
+      subtitle = "Six selected HSPs and twelve source CDS per overview; full inputs retained separately",
+      caption = "Coloured ribbons: observed HSPs. Source windows connect D to E; the selected CDS bases connect E to F.")
+}
+
+draw_fusion()

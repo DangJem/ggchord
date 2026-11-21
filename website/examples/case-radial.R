@@ -33,18 +33,18 @@ spoke_labels <- function(size, along = 0) {
 }
 overview <- ggchord(comparison$seq_data) +
   geom_link_ribbon(aes(fill = pident, linetype = route_class), data = relationships, curvature = 1, bulge = 0.20,
-    alpha = 0.52, colour = "#53776A", linewidth = 0.16) +
+    alpha = 0.48, colour = "#3F695D", linewidth = 0.27) +
   scale_linetype_manual(values = c(neighbour = "solid", across = "dashed"), guide = "none") +
   geom_seq(aes(colour = accver), linewidth = 1.1,
     arrow = arrow(length = unit(2, "mm"), type = "closed")) +
   geom_gene(aes(fill = strand), data = genes, id = "genes",
-    position = position_strand(offset = 2.25), thickness = 2.25, colour = "#454842",
+    position = position_strand(offset = c("+" = -2.25, "-" = 2.25)), thickness = 2.25, colour = "#454842",
     linewidth = 0.15) +
   scale_colour_manual(name = "Sequence", values = sequence_colours,
     guide = guide_legend(nrow = 1, order = 2)) +
   scale_for("genes", scale_fill_manual(name = "Strand", values = strand_colours,
     breaks = c("+", "-"), guide = guide_legend(nrow = 1, order = 1))) +
-  layout_sequences(orientation = comparison$orientation, inner_radius = 0.26) +
+  layout_sequences(orientation = comparison$orientation, inner_radius = 0.39) +
   coord_radial_synteny(start_angle = 45, fit = "labels", clip = "off") +
   theme_ggchord_publication() +
   theme(plot.background = element_rect(fill = "#FFFCF5", colour = NA),
@@ -70,7 +70,7 @@ gene_names <- labels |>
   })
 overview + gene_names +
   spoke_labels(size = 3.7, along = 6.5) +
-  scale_seq_position(name = NULL, breaks = breaks_pretty(2), minor_breaks = NULL,
+  scale_seq_position(name = NULL, minor_breaks = NULL,
     labels = label_comma()) +
   guides(fill = guide_coloursteps(direction = "horizontal", even.steps = FALSE,
     show.limits = TRUE, theme = theme(legend.key.width = unit(115, "mm")))) +

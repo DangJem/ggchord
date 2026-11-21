@@ -904,7 +904,7 @@
         }
       ],
       "value": "A ggplot2 layer for addition to a plot.",
-      "details": "Use `accver`, `start`, `end`, and strand for directional shapes. Compound features may supply segments. The shape scale maps domain shapes, and thickness, heads and placement use physical dimensions. The source feature and its display pieces remain traceable.\n\nFeatures have a dark 0.25 mm outline by default. Small symbols use a finer outline. A fixed or mapped linewidth overrides the adjustment.",
+      "details": "Use `accver`, `start`, `end`, and strand for directional shapes. Compound features may supply segments. The shape scale maps domain shapes, and thickness, heads and placement use physical dimensions. The source feature and its display pieces remain traceable.\n\nFeatures have a dark 0.25 mm outline by default. Small symbols use a finer outline. A fixed or mapped linewidth overrides the adjustment.\n\nUse `+`, `-`, `+/-` or `.` for strand. Bidirectional arrows have heads at both ends and retain one source entity.",
       "errors": "Incompatible shape and head parameters, invalid interval endpoints, unsupported Stats or Positions, and missing strand where required are errors.",
       "roles": [
         "Reference identity.",
@@ -1728,7 +1728,7 @@
         }
       ],
       "value": "A ggplot2 layer for addition to a plot.",
-      "details": "Use the site label contract with a repelling layout. Text movements and leaders remain associated with the site anchor.",
+      "details": "Use the site label contract with a repelling layout. Text movements and leaders remain associated with the site anchor.\n\nHorizontal circular callouts can supply `enzyme_label` and `coordinate_label` columns. Enzyme names are bold and positions are plain, with the order following the callout side.",
       "errors": "Missing or ambiguous site anchors and unsupported layout settings are errors.",
       "roles": [
         "Reference identity. One-based source position.",
@@ -1844,7 +1844,7 @@
         }
       ],
       "value": "A ggplot2 layer for addition to a plot.",
-      "details": "Use query and subject endpoints with explicit direction evidence. A one-residue interval has its full front. Self-links and nonadjacent links are preserved when supported. Endpoint fills, shared routes and optional tips are visual controls.\n\nOn a curved collinear link that spans intervening rows, a positive bulge sets the outer clearance as a fraction of the longest visible backbone. A radial outer route clears intervening spoke tips.",
+      "details": "Use query and subject endpoints with explicit direction evidence. A one-residue interval has its full front. Self-links and nonadjacent links are preserved when supported. Endpoint fills, shared routes and optional tips are visual controls.\n\nOn a curved collinear link that spans intervening rows, a positive bulge sets the outer clearance as a fraction of the longest visible backbone. A radial outer route clears intervening spoke tips.\n\nPass `avoid = \"smooth\"` through `...` to clear features at each ribbon front while retaining the source intervals. The default is `\"none\"`.",
       "errors": "Unknown references and invalid interval endpoints are rejected. Route controls and direction evidence must be compatible with the selected geometry.",
       "roles": [
         "Reference identities that locate source observations.",
@@ -2844,6 +2844,10 @@
         {
           "format": "character; default \"positive\"",
           "description": "Placement direction, including strand-dependent lanes."
+        },
+        {
+          "format": "character(1)",
+          "description": "Use `\"source\"` to sort by source interval and stable ID. Use `\"priority\"` to prefer higher `display_priority` and then longer occupied intervals."
         }
       ],
       "value": "A placement declaration for compatible ggchord layers.",

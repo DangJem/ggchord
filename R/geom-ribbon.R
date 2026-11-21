@@ -8,6 +8,7 @@
 #'   On a curved collinear route, an explicit positive `bulge` clears the high
 #'   coordinate end of intervening rows by that fraction of the longest visible
 #'   backbone. Radial curves with positive `bulge` clear intermediate spoke tips.
+#'   Set `avoid = "smooth"` through `...` to clear features at each endpoint.
 #' @param fill_mode Use solid fill or map independent query and subject endpoint colours.
 #' @param ... Additional named visual styles and parameters accepted by this layer.
 #' @param na.rm Suppress warnings for missing observations that the layer can omit.
@@ -37,7 +38,7 @@
 #'
 #' ggchord(seqs) +
 #'   geom_seq() +
-#'   geom_link_ribbon(aes(fill = pident), data = links, id = "matches") +
+#'   geom_link_ribbon(aes(fill = pident), data = links, avoid = "smooth", id = "matches") +
 #'   coord_chord()
 geom_link_ribbon <- function(mapping = NULL, data = NULL, stat = "identity",
     position = "identity", route = "curve", fill_mode = "solid", ...,
@@ -58,7 +59,10 @@ geom_link_ribbon <- function(mapping = NULL, data = NULL, stat = "identity",
   position <- ggchord_as_feature_position(position, caller)
   if (ggchord_local_position(position) && !identical(position$placement, "offset"))
     ggchord_stop(caller, ": use identity or position_offset()")
-  controls <- ggchord_link_route(route, ggchord_colour_dots(list(...), caller), caller)
+  dots <- ggchord_colour_dots(list(...), caller)
+  avoid <- match.arg(dots$avoid %||% "none", c("none", "smooth"))
+  dots$avoid <- NULL
+  controls <- ggchord_link_route(route, dots, caller)
   dots <- controls$dots
   controls$dots <- NULL
   tip <- match.arg(dots$tip %||% "none", c("none", "from", "to", "both"))
@@ -88,9 +92,11 @@ geom_link_ribbon <- function(mapping = NULL, data = NULL, stat = "identity",
   )
   layer$ggchord_type <- "ribbon"
   layer$ggchord_params <- list(id = id, type = "ribbon", route = controls,
-    ribbon_ctrl_point = controls, ribbon_gap = 0, link_avoid = "none",
+    ribbon_ctrl_point = controls, ribbon_gap = if (avoid == "none") 0 else NULL,
+    link_avoid = avoid,
     feature_position = position, tip = tip, fill_mode = fill_mode,
-    physical_layout = ggchord_local_position(position) || controls$route == "shared",
+    physical_layout = ggchord_local_position(position) || controls$route == "shared" ||
+      avoid == "smooth",
     ribbon_color_scheme = "single", ribbon_alpha = .6, ribbon_outline_color = NA,
     ribbon_outline_width = .3, ribbon_outline_linetype = 1,
     link_branch = if (controls$route == "shared") "query" else "none",

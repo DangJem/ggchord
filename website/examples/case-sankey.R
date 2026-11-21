@@ -17,7 +17,7 @@ sequence_colours <- c(
 strand_colours <- c("+" = "#CE1536", "-" = "#346B9D", "." = "#8291A6")
 
 overview <- ggchord(comparison$seq_data) +
-  geom_link_ribbon(aes(fill = pident), data = comparison$adjacent_links,
+  geom_link_ribbon(aes(fill = pident), data = comparison$adjacent_links, avoid = "smooth",
     alpha = 0.50, colour = "#53776A", linewidth = 0.18) +
   geom_link_ribbon(aes(fill = pident), data = comparison$cross_links,
     alpha = 0.33, colour = "#547568", linewidth = 0.28) +
@@ -42,17 +42,17 @@ overview <- ggchord(comparison$seq_data) +
 column_labels <- lapply(c("left", "right"), function(column) {
   rows <- labels |> mutate(instance_id = paste(column, accver, sep = ":"))
   geom_gene_label_repel(aes(label = label), data = rows, anchor_layer = "genes",
-    hjust = if (column == "left") 1 else 0, size = 3.05,
+    hjust = if (column == "left") 1 else 0, size = 3.25,
     segment_colour = "#767A73", segment_linewidth = 0.18,
     label_layout = label_layout_repel(arrangement = "local", orientation = "horizontal",
       side = if (column == "left") "negative" else "positive",
-      offset = 5, padding = 1, wrap = 22, max_lines = 3))
+      offset = 7, padding = 1, wrap = 22, max_lines = 3))
 })
 overview + column_labels +
   geom_seq_label(aes(label = accver), anchor = "start",
     label_layout = label_layout_fixed(orientation = "horizontal", along = -3, offset = 0),
     size = 3.7) +
-  scale_seq_position(name = NULL, breaks = breaks_pretty(2), minor_breaks = NULL,
+  scale_seq_position(name = NULL, minor_breaks = NULL,
     labels = label_comma()) +
   guides(fill = guide_coloursteps(direction = "horizontal", even.steps = FALSE,
     show.limits = TRUE, theme = theme(legend.key.width = unit(115, "mm")))) +

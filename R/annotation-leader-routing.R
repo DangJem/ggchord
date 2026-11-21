@@ -10,11 +10,18 @@ ggchord_annotation_text_obstacles <- function(registry, layout, include_axis = T
     if (!nrow(text)) return()
     text$text <- text$label; text$text_x <- text$x; text$text_y <- text$y
     text$text_angle <- text$angle %||% 0
-    boxes <- ggchord_text_boxes(text, units_per_inch = unit, box_padding = 0)
-    boxes$owner <- owner; boxes$source_row <- text$source_row %||% rep(NA_integer_, nrow(text))
+    arc <- is.finite(text$.arc_units %||% rep(NA_real_, nrow(text)))
+    arc_text <- ggchord_arc_text_layout(text[arc, , drop = FALSE],
+      units_per_inch = unit, boxes_only = TRUE)
+    boxes <- ggchord_rbind_fill(list(
+      ggchord_text_boxes(text[!arc, , drop = FALSE], units_per_inch = unit, box_padding = 0),
+      arc_text$boxes))
+    rows <- c(which(!arc), which(arc)[arc_text$owners])
+    boxes$owner <- owner
+    boxes$source_row <- (text$source_row %||% rep(NA_integer_, nrow(text)))[rows]
     object <- if ('.arc_parent_group' %in% names(text)) as.character(text$.arc_parent_group) else
       if ('source_row' %in% names(text)) as.character(text$source_row) else as.character(seq_len(nrow(text)))
-    boxes$text_object <- paste(owner, object, sep = '/')
+    boxes$text_object <- paste(owner, object[rows], sep = '/')
     all[[length(all)+1L]] <<- boxes
   }
   for (owner in names(registry)) {

@@ -506,9 +506,10 @@ compute_chord_geometry_prepared <- function(plot) {
   label_ids <- names(groups)[group_type == "domain_label"]
   label_specs <- list()
   shared_labels <- NULL
-  if (length(label_ids) && isTRUE(primary$circular)) {
+  if (length(label_ids)) {
     shared_labels <- new.env(parent = emptyenv())
-    shared_labels$boxes <- ggchord_annotation_text_obstacles(primary$layer_geometry, primary)
+    if (isTRUE(primary$circular)) shared_labels$boxes <-
+      ggchord_annotation_text_obstacles(primary$layer_geometry, primary)
   }
   for (id in label_ids) {
     layer <- plot$layers[[groups[[id]][1L]]]
@@ -528,7 +529,7 @@ compute_chord_geometry_prepared <- function(plot) {
     primary$layer_geometry[[id]]$domain_label <- ggchord_attach_input_columns(geometry, input)
     label_specs[[id]] <- p
   }
-  if (!is.null(shared_labels))
+  if (!is.null(shared_labels) && isTRUE(primary$circular))
     primary$layer_geometry <- ggchord_place_circular_domain_labels(primary, label_specs)
   primary$axis_heading <- ggchord_axis_heading(plot, primary)
   primary <- ggchord_check_displayed_hsps(primary, plot)

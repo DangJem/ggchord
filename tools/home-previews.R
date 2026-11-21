@@ -18,12 +18,12 @@ home_collinear <- home_relationship("collinear",
   coord_collinear(xlim = c(-2.18, 1.50), fit = "labels", clip = "off")
 home_radial <- home_relationship("radial", flagship_cases$radial$spoke_labels(size = 3.55)) +
   coord_radial_synteny(start_angle = 45, fit = "manual",
-    xlim = c(-3.10, 2.85), ylim = c(-2.95, 2.75), clip = "off")
+    xlim = c(-3.70, 3.35), ylim = c(-3.30, 3.20), clip = "off")
 home_sankey <- home_relationship("sankey",
   geom_seq_label(aes(label = accver), anchor = "start", size = 3.1,
     label_layout = label_layout_fixed(orientation = "horizontal", offset = 2))) +
-  layout_sequences(column_gap = 80, row_gap = 7) +
-  theme(plot.margin = margin(27, 9, 26, 9))
+  layout_sequences(column_gap = 80, row_gap = 5) +
+  theme(plot.margin = margin(35, 9, 34, 9))
 home_circular <- with(flagship_cases$circular,
   draw_reference_map(reference, overview = TRUE) + home_theme)
 # Coordinates in the inter-sequence gaps have no source bases. Centre each accession on its own span.
@@ -34,6 +34,8 @@ home_dotplot <- with(flagship_cases$dotplot, {
     scale_x_continuous(breaks = midpoints, labels = sequences$accver, guide = guide_axis(angle = 25)) +
     scale_y_continuous(breaks = midpoints, labels = sequences$accver) +
     labs(x = "Query sequence", y = "Subject sequence") +
-    home_theme + theme(axis.title = element_text(size = 11), axis.text = element_text(size = 10))
+    home_theme + theme(axis.title = element_text(size = 11), axis.text = element_text(size = 10),
+      axis.text.y.left = element_text(face = "plain"),
+      panel.grid.major = element_blank())
 })
-home_fusion <- flagship_cases$fusion$fusion
+home_fusion <- flagship_cases$fusion$draw_fusion(preview = TRUE)

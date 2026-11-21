@@ -30,7 +30,8 @@ geom_link_ribbon(
 \item{route}{Choose curved or straight routes, or a shared corridor where supported.
 On a curved collinear route, an explicit positive \code{bulge} clears the high
 coordinate end of intervening rows by that fraction of the longest visible
-backbone. Radial curves with positive \code{bulge} clear intermediate spoke tips.}
+backbone. Radial curves with positive \code{bulge} clear intermediate spoke tips.
+Set \code{avoid = "smooth"} through \code{...} to clear features at each endpoint.}
 
 \item{fill_mode}{Use solid fill or map independent query and subject endpoint colours.}
 
@@ -74,6 +75,6 @@ links <- data.frame(
 
 ggchord(seqs) +
   geom_seq() +
-  geom_link_ribbon(aes(fill = pident), data = links, id = "matches") +
+  geom_link_ribbon(aes(fill = pident), data = links, avoid = "smooth", id = "matches") +
   coord_chord()
 }

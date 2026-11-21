@@ -20,11 +20,22 @@ sequence_colours <- c(
 )
 strand_colours <- c("+" = "#CE1536", "-" = "#346B9D", "." = "#8291A6")
 
+cross_ribbons <- lapply(seq_len(nrow(comparison$cross_links)), function(i) {
+  record <- comparison$cross_links[i, ]
+  order <- match(c(record$qaccver, record$saccver), comparison$seq_data$accver)
+  bulge <- 0.07 + 0.045 * abs(diff(order)) + 0.025 * (min(order) - 1)
+  geom_link_ribbon(aes(fill = pident), data = record, bulge = bulge,
+    alpha = 0.33, colour = "#496B5D", linewidth = 0.33, linetype = "dashed")
+})
+reference_breaks <- setNames(lapply(comparison$seq_data$length, function(end) {
+  middle <- round(end / 20000) * 10000
+  if (end > 80000) c(1, middle, end) else if (end < 60000) c(1, middle, end) else c(1, end)
+}), comparison$seq_data$accver)
+
 overview <- ggchord(comparison$seq_data) +
-  geom_link_ribbon(aes(fill = pident), data = comparison$adjacent_links,
+  geom_link_ribbon(aes(fill = pident), data = comparison$adjacent_links, avoid = "smooth",
     alpha = 0.50, colour = "#53776A", linewidth = 0.18) +
-  geom_link_ribbon(aes(fill = pident), data = comparison$cross_links, bulge = 0.1,
-    alpha = 0.33, colour = "#547568", linewidth = 0.28, linetype = "dashed") +
+  cross_ribbons +
   geom_seq(aes(colour = accver), linewidth = 1.1,
     arrow = arrow(length = unit(2, "mm"), type = "closed")) +
   geom_gene(aes(fill = strand), data = genes, id = "genes",
@@ -54,8 +65,8 @@ overview + gene_names +
     label_layout = label_layout_fixed(orientation = "horizontal", along = -1.2, offset = 0),
     size = 3.7) +
   annotation_seq_scalebar(length = 10000) +
-  scale_seq_position(name = NULL, breaks = breaks_pretty(2), minor_breaks = NULL,
-    labels = label_comma()) +
+  scale_seq_position(name = NULL, breaks = reference_breaks, minor_breaks = NULL,
+    labels = label_comma(), guide = guide_seq_axis(side = "negative")) +
   guides(fill = guide_coloursteps(position = "left", direction = "vertical",
     even.steps = FALSE, show.limits = TRUE,
     theme = theme(legend.key.height = unit(93, "mm")))) +

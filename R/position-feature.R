@@ -204,7 +204,8 @@ ggchord_resolve_position_offset <- function(offset, seqs, placement,
 }
 
 ggchord_allocate_feature_lanes <- function(data, base, direction, spacing,
-                                            circular = FALSE, lengths = NULL) {
+                                            circular = FALSE, lengths = NULL,
+                                            lane_order = "source") {
   lane <- integer(nrow(data))
   band <- paste(
     data$accver,
@@ -254,6 +255,17 @@ ggchord_allocate_feature_lanes <- function(data, base, direction, spacing,
     if (anyDuplicated(key)) ggchord_stop(
       "position_feature_stack(): indistinguishable intervals need distinct feature_id values")
     ord <- order(entity_start, entity_end, ids, na.last = TRUE)
+    if (lane_order == "priority") {
+      priority <- suppressWarnings(as.numeric(
+        as.character(data$display_priority %||% rep(0, nrow(data)))))
+      priority[!is.finite(priority)] <- 0
+      entity_priority <- vapply(entity_members, function(members)
+        max(priority[idx[members]]), numeric(1))
+      occupied_width <- vapply(intervals, function(parts)
+        sum(parts[, 2L] - parts[, 1L] + 1), numeric(1))
+      ord <- order(-entity_priority, -occupied_width, entity_start, entity_end,
+        ids, na.last = TRUE)
+    }
     lane_intervals <- list()
     overlaps <- function(parts, occupied) {
       for (i in seq_len(nrow(parts))) {
@@ -330,6 +342,7 @@ ggchord_apply_feature_position <- function(data, position, seqs, lengths,
 
   out <- as.data.frame(data, stringsAsFactors = FALSE)
   strand <- out$.feature_biological_strand %||% out$strand
+  strand[strand == "+/-"] <- "."
   base <- units_per_mm * vapply(seq_len(nrow(out)), function(i) {
     unname(resolved[[as.character(out$accver[i])]][strand[i]])
   }, numeric(1))
@@ -342,7 +355,7 @@ ggchord_apply_feature_position <- function(data, position, seqs, lengths,
       "position_feature_stack(spacing)")
     spacing <- units_per_mm * vapply(out$accver, function(id) gap[[id]][[1L]], numeric(1))
     lane <- ggchord_allocate_feature_lanes(out, base, direction, spacing,
-      circular = circular, lengths = lengths)
+      circular = circular, lengths = lengths, lane_order = position$lane_order %||% "source")
     lane_offset <- ggchord_feature_lane_offsets(out, lane, base, direction, spacing)
   }
   out$.position_name <- position_name

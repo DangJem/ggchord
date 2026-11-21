@@ -28,6 +28,16 @@
   Compatible external labels share the perimeter; restriction-site
   examples group names by the documented cut boundary. The 13 reference
   maps again use their saved enzyme selections.
+- Local circular feature labels check both the feature and nearby inner
+  lanes, using curved glyphs, short leaders and the drawn feature outlines.
+  Horizontal restriction-site callouts can show bold enzyme names with
+  separate, regular-weight coordinates. Reference maps use the restored
+  priority and interval length ordering for feature lanes.
+- Bidirectional features use a single source entity and retain both heads
+  on supported arrow shapes. Set `avoid = "smooth"` on a ribbon to clear
+  feature outlines at its ends. Dotplot block axes include source endpoints.
+- Updated the seven flagship examples and reference maps with restored
+  feature weights, one-based axis labels and a dedicated Fusion preview.
 - Updated data adapters, validation and the 16 readers to expose stable
   reference identities, canonical coordinate roles and source reports.
 - Fusion arranges named plots and can display either observed relationships

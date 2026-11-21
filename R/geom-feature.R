@@ -106,12 +106,12 @@ ggchord_feature_data <- function(data, fixed_shape = "block",
   out$accver <- as.character(out$accver)
   out$strand <- as.character(out$strand)
   out$strand[is.na(out$strand)] <- "."
-  if (any(!out$strand %in% c("+", "-", ".")))
-    ggchord_stop("geom_feature(): strand must be '+', '-' or '.'")
+  if (any(!out$strand %in% c("+", "-", "+/-", ".")))
+    ggchord_stop("geom_feature(): strand must be '+', '-', '+/-' or '.'")
   out$.feature_biological_strand <- out$strand
-  # Legacy geometry templates require a traversal direction even for
-  # undirected polygons. The biological strand remains available separately.
-  out$strand[out$strand == "."] <- "+"
+  # The renderer walks both neutral and bidirectional intervals in source
+  # order. Placement and arrow heads use the separate biological strand.
+  out$strand[out$strand %in% c(".", "+/-")] <- "+"
   out$anno <- rep(NA_character_, nrow(out))
   out$.feature_shape_raw <- if (is.null(fixed_shape)) {
     out$feature_shape
@@ -303,7 +303,12 @@ ggchord_feature_layer <- function(mapping, data, shape, fixed_shape, thickness,
 #' @param inherit.aes Whether to inherit plot mappings and evaluate them on the layer data.
 #' @param id Optional plot-local layer identifier. Name a layer explicitly to scope a scale, anchor a label or export it.
 #' @return A ggplot2 layer for addition to a plot.
-#' @details Provide one-based closed intervals with `accver`, `start` and `end`. A strand or disjoint segments can be supplied where appropriate. The gene shortcut defaults to an arrow and strand placement. The primer shortcut defaults to a directional narrow path, and the region shortcut defaults to a translucent block.
+#' @details Provide one-based closed intervals with `accver`, `start` and `end`.
+#' Supply strand `+`, `-`, `+/-` (both directions), or `.` (undirected),
+#' with disjoint segments when applicable. Bidirectional arrow shapes retain
+#' one source entity and use heads at both ends. The gene shortcut defaults to
+#' an arrow and strand placement. The primer shortcut defaults to a directional
+#' narrow path, and the region shortcut defaults to a translucent block.
 #' @examples
 #' library(ggplot2)
 #'
