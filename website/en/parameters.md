@@ -1,10 +1,10 @@
-A flexible parameter lets a layer give different sequences or strands their own geometry. Start by moving one label. Then try the same matching rule for backbone radius, reorder the sequences, and assign thickness or offset by strand. The **Flexible parameter** link beside a reference argument returns here.
+A flexible parameter assigns different settings to references or display instances. Use a named vector to match accessions. For physical placement, numeric values are in millimetres and absolute grid units are also accepted where documented. The **Flexible parameter** links in the API reference lead to the matching sections below.
 
 <a id="named-label"></a>
 
 ## Move the label of one phage {#named-label}
 
-Keep both backbone radii at 1. Set the label radius of MT108731.1 to 0.72 and that of MT118296.1 to 1. Each name matches the accession on its own arc. The longer blue arc stays in place while its label moves towards the centre.
+Keep both backbone radii at 1. Use a fixed horizontal label layout with a named offset of 18 mm for MT108731.1 and select the inward side with `side = "negative"`. Only the named label moves inward.
 
 {{example:flex-labels}}
 
@@ -14,16 +14,16 @@ Keep both backbone radii at 1. Set the label radius of MT108731.1 to 0.72 and th
 
 <span id="recommendation"></span>
 
-All four phage genomes in `seq_data_example` share a radius of 1 by default. Give `MT118296.1` a radius of 0.72 to bring its backbone inward. The name matches the sequence's `accver`. The other three retain radius 1.
+All four genomes share radius 1 by default. Set `radius` in `layout_sequences()` to bring MT118296.1 inward. Radius is a proportion of the standard radius.
 
 {{example:flex-radius}}
 
-| Value of `seq_radius` | Which backbone changes? |
+| Setting for `radius` | References affected |
 | --- | --- |
 | `0.72` | All four |
 | `c("MT118296.1" = 0.72)` | Only MT118296.1 |
 | `c(1, 0.72, 1, 1)` | The second displayed sequence |
-| `list("MT118296.1" = 0.72)` | Only MT118296.1 |
+| `list(source = c("MT118296.1" = 0.72))` | Only MT118296.1 |
 
 <a id="reorder"></a>
 
@@ -32,31 +32,27 @@ All four phage genomes in `seq_data_example` share a radius of 1 by default. Giv
 <span id="vector"></span>
 <span id="compatibility"></span>
 
-Both panels display the same four sequences in the same reordered layout. On the left the smaller radius follows its name, `MT118296.1`. On the right it follows the **second position**, now occupied by `MT108731.1`. The sequence lengths, colours and sequence labels are identical across the panels.
+Both panels use the same reordered layout. On the left the small radius follows its accession, MT118296.1. On the right it follows the second displayed position, now occupied by MT108731.1. An unnamed vector must contain one value for every displayed instance. Use `list(source = ..., instance = ...)` when instance settings should override a shared source setting.
 
 {{example:flex-radius-order}}
 
-An unnamed vector must contain one value per displayed sequence. For a radius list, each element holds one number. A named vector is the shortest way to change a few sequences and keep their settings when the plot is rearranged.
-
 <a id="strand"></a>
 
-## Set strand offsets and arrow widths {#strand}
+## Set strand offsets and arrow thickness {#strand}
 
 <span id="genes"></span>
 <span id="lists"></span>
 <span id="width"></span>
 
-Two CDS on `OR222515.1` lie on opposite source strands. Give the plus CDS an outward offset of 0.08 and the minus CDS an inward offset of −0.14. A single value of 0.06 gives the two strands of `OQ646790.1` symmetric offsets. The example uses dplyr to select the CDS and read each recorded `source_strand`.
+In the Chord example the two CDS from OR222515.1 use signed offsets of 5 mm and −9 mm for the plus and minus strands. A scalar of 4 mm for OQ646790.1 gives its two strands opposite offsets of the same magnitude. The script reads the original strand and uses separate layers for plus and minus arrow thicknesses of 2 and 5 mm.
 
 {{example:flex-strand}}
-
-An explicit minus-strand offset already includes its sign. Missing sequences or strands have offset 0 in `position_strand()`. Width changes arrow thickness. Here the plus strand uses 0.03 and the minus strand uses 0.08; the endpoints still come from `start` and `end`. When specifying widths by sequence **and** strand, supply a strand vector for each named entry, for example `list("OR222515.1" = c("+" = 0.03, "-" = 0.08))`.
 
 <a id="invalid-radius"></a>
 
 ## What happens if a radius uses strand names? {#invalid-radius}
 
-A backbone belongs to one sequence. Passing `+` and `-` as radius names asks for two sequence IDs absent from the input. This example catches the error when the plot layout is built. Use an `accver` for a backbone radius, or [position_strand()](../../man/position_strand.Rd) for strand offsets.
+A backbone belongs to a reference. Using `+` and `-` as radius keys asks for accessions that are absent. The example captures the layout error. To move strand-specific features, use [position_strand()](../../man/position_strand.Rd).
 
 {{example:flex-radius-error}}
 
@@ -69,13 +65,11 @@ A backbone belongs to one sequence. Passing `+` and `-` as radius names asks for
 
 | Task | Arguments to look up | Matching rule |
 | --- | --- | --- |
-| Shape sequence backbones | [geom_seq()](../../man/geom_seq.Rd) · `seq_radius`, `seq_curvature` | Both default to 1. Use finite positive radii and finite signed curvatures. |
-| Set direction and spacing | [layout_sequences()](../../man/layout_sequences.Rd) · `orientation`, `gap` | Each sequence has a direction of 1 or −1. Gap units and defaults depend on the view. |
-| Place a sequence name | [geom_seq_label()](../../man/geom_seq_label.Rd) · `labels`, `seq_label_radius`, `seq_label_rotation`, `seq_label_hjust`, `seq_label_vjust` | Match the label to the accession. Radius is relative to its backbone. |
-| Clear a connection endpoint | [geom_link_ribbon()](../../man/geom_link_ribbon.Rd) or [geom_link_line()](../../man/geom_link_line.Rd) · `link_gap` | Match a gap to the sequence at each end. |
-| Set feature thickness | [geom_feature()](../../man/geom_feature.Rd) · `width` | Match by sequence, strand, or both. |
-| Move features | [position_strand()](../../man/position_strand.Rd) or [position_offset()](../../man/position_offset.Rd) · `offset` | Use the first for differences between strands and the second for a shared displacement on each sequence. |
-| Place fixed labels | [geom_feature_label()](../../man/geom_feature_label.Rd) or [geom_gene_label()](../../man/geom_gene_label.Rd) · `label_radial_offset`, `label_circum_offset`, `label_circum_limit`, `label_rotation` | Match by sequence or strand for fixed placement. Automatic labels choose their own positions. |
-| Size a quantitative band | [track_band()](../../man/track_band.Rd) · `width`, `gap` | Supply one physical unit or native numeric values covering every displayed sequence. Width is positive and the gap may be zero. |
+| Shape arc references | [layout_sequences()](../../man/layout_sequences.Rd) · `radius`, `curvature`, `angular_gap` | Radius is a positive proportion, curvature is signed and angular gap is in degrees. |
+| Adjust straight references | [layout_sequences()](../../man/layout_sequences.Rd) · `orientation`, `row_gap`, `column_gap` | Orientation is 1 or −1. Collinear and Sankey row gaps and Sankey column gaps use mm. |
+| Place a fixed label | [label_layout_fixed()](../../man/label_layout_fixed.Rd) · `offset`, `along` | Specify perpendicular distance and displacement along the reference in mm. Use a named setting where the receiving layer supports it. |
+| Move features or separate lanes | [position_strand()](../../man/position_strand.Rd), [position_offset()](../../man/position_offset.Rd) and [position_feature_stack()](../../man/position_feature_stack.Rd) | Use strand-aware offsets, shared offsets or lane spacing. |
+| Set feature thickness | [geom_feature()](../../man/geom_feature.Rd) and [geom_gene()](../../man/geom_gene.Rd) · `thickness` | Use positive values in mm. Name values by reference or use an explicit instance setting. |
+| Size a quantitative band | [track_band()](../../man/track_band.Rd) · `thickness`, `gap` | Use a positive thickness and a nonnegative gap. Both are physical sizes. |
 
-For data-driven colours use [aesthetic mappings and scales](styling.md). For the formals, defaults and flexible-parameter flags, see the [API reference](reference.md).
+For data-driven colours, use [aesthetic mappings and scales](styling.md). The [API reference](reference.md) gives the exact formals and defaults.

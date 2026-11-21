@@ -1,5 +1,5 @@
 {
-  "source_sha256": "467eccd48e4bcb9c48d0dc079d5a22b329dd5e848e912bcd33cde782faee61d8",
+  "source_sha256": "1f9c662f520f2e45945b25bd1bdf939596b7edca41c95f9790be5f6e693def32",
   "blocks": {
     "0": {
       "source_sha256": "e390c229f9dee34fc2a97809c02312d35cdd167dd45b40550b230299c3fa23c5",
@@ -22,9 +22,9 @@
       "translation": "## 读图 {#reading}\n"
     },
     "7": {
-      "source_sha256": "51b406df914f8c193af40896978f09aa11cb3ac7f010213e197fea340e12550a",
+      "source_sha256": "d954a4873350776c96bd2b92ada25365da6fbcec686c9b7255a1a2b0abadff19",
       "status": "reviewed",
-      "translation": "七条精选 HSP 连接相邻行，另一个图层通过控制点绘制三条跨行连接。沿带子两端读取来源坐标，再用附近的 CDS 箭头和标签识别特征。\n"
+      "translation": "七条精选 HSP 连接相邻行，另一个图层绘制三条非相邻行之间的连接。沿带子两端读取来源坐标，再用附近的 CDS 箭头和标签识别特征。\n"
     },
     "9": {
       "source_sha256": "de1eb696f2ab1c739faa9f8ef7b26fc480da4593cffdb8c750e451460f700193",
@@ -32,9 +32,9 @@
       "translation": "## 来源记录与展示选择 {#inputs}\n"
     },
     "10": {
-      "source_sha256": "3fef7118421d92575bd8f4aeb14667dfcb7b10f6340a97c68b43fff02efb29b3",
+      "source_sha256": "e1ef561148d5d12309fe26002a2d2b36126c7f52264920f7abed7f4ebff16957",
       "status": "reviewed",
-      "translation": "共线性子集含 16 条 CDS。两张连接表保留相同的六个端点字段，可独立配置样式与走线。改变行序或间距后，应重新核对为原布局设定的控制点。\n"
+      "translation": "共线性子集含 16 条 CDS。两张连接表保留相同的六个端点字段，可独立配置样式与走线。改变行序或间距后，应重新查看跨行带的走线，并核对两端仍对应原始区间。\n"
     },
     "11": {
       "source_sha256": "839d437ba8e58da1305babc6316f4a661661e2a2f8ab6fc79e1714e1c0495a78",

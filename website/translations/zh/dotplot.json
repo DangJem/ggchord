@@ -1,5 +1,5 @@
 {
-  "source_sha256": "7609167a6f373b2c6aa313a028382ee86e398f7cd0cdd6c8abe2470909eeca2c",
+  "source_sha256": "16c8a546a7eacf91f198e197e8df53438a3a6525d7d449d1ed76911e5a260478",
   "blocks": {
     "0": {
       "source_sha256": "8ca4e98e02e0f3c25fa08936432106067c15df9778b59aead615c7629fde0eb9",
@@ -12,9 +12,9 @@
       "translation": "## 把一条实测比对画成线段 {#draw}\n"
     },
     "3": {
-      "source_sha256": "32994f3cc187adbbadd377364a248fcfc7f5fe859fe8a31aebb795914072e88a",
+      "source_sha256": "7ca7868053a6b7224207bdb6c92e82984cb2691410dc85e7f9877c6f12f5eea7",
       "status": "reviewed",
-      "translation": "选择两条全长参考序列及它们之间的第一条 HSP。将该行传给 `geom_alignment_segment()`，再用 `coord_dotplot()` 指定查询轴和目标轴。这幅图只需线段图层。右边距为末端的坐标标签留出空间。\n"
+      "translation": "选择两条完整参考及其第一条 HSP。用 `layout_dotplot()` 指定两轴的序列顺序，用 `coord_dotplot()` 投影 `geom_alignment_segment()` 接收的端点。这幅图只需一个线段图层。\n"
     },
     "5": {
       "source_sha256": "f2d1ffa1818fdecb273191ae125f4fc862655aa97d6a98c5ecfce418ccb657da",

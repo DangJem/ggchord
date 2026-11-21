@@ -1,5 +1,5 @@
 {
-  "source_sha256": "d28346078c21b061a782ab445bc4ae951d221c92688781796b5e6aac5b360396",
+  "source_sha256": "db6e3fdf01044c58a2d11f10e47661e604bdb479800d707379598986f846950f",
   "blocks": {
     "0": {
       "source_sha256": "68663d8f41c011a894ae75dda3c48ada2906637454a6a4b6e01a8435153e46f1",
@@ -67,9 +67,9 @@
       "translation": "## 更新 API 参考\n"
     },
     "17": {
-      "source_sha256": "b034b01ce15ed526ea79f23886faea5b24f73573d7b9415d3435859a3fba3241",
+      "source_sha256": "094f18e9fdf8e145b12e1edff853054fe769ab8de0349144334b0bb02458db8a",
       "status": "reviewed",
-      "translation": "API 参考采用 v0.50.0 第二轮手册的公开接口清单与分类。先编辑 `website/reference-manual/en.json` 中的英语正文，再校对 `website/reference-manual/zh.json` 中的对应译文，并在汉语文件中登记已校对英语源的 SHA-256。共用的 `structure.json` 保存调用形式、参数与角色名称、示例和关联链接。两种语言共用代码和锚点。原生分面页面链接到 ggplot2 官方文档。\n"
+      "translation": "API 参考说明本地源码的公开接口及其分类。先编辑 `website/reference-manual/en.json` 中的英语正文，再校对 `website/reference-manual/zh.json` 中的对应译文，并在汉语文件中登记已校对英语源的 SHA-256。共用的 `structure.json` 保存调用形式、参数与角色名称、示例和关联链接。两种语言共用代码和锚点。原生分面页面链接到 ggplot2 官方文档。\n"
     },
     "18": {
       "source_sha256": "bb21e877976e4b7589a7155ff18abdcca219afa2cdd6cfa142cf06a221d6db2c",
@@ -87,9 +87,9 @@
       "translation": "## 更新函数帮助、包 README 或离线教程\n"
     },
     "22": {
-      "source_sha256": "37662135e5f0a61d7b3d663974bb94c9fb172ff4bf50774c8a2d30836458caca",
+      "source_sha256": "1c364e0760140c67146b5c413b0c0fb11a2e2cb22c15df11672b5334155ea56e",
       "status": "reviewed",
-      "translation": "- **原生 R 帮助。** 修改英语 roxygen 源并重新生成 Rd。原有 pkgdown 全站渲染器使用 `website/reference-zh/` 下的译文和 `_pkgdown.yml` 中的分类。\n"
+      "translation": "- **原生 R 帮助。** 修改英语 roxygen 源并重新生成 Rd。公开接口行为有变化时，核对相应的 API 参考主题。\n"
     },
     "23": {
       "source_sha256": "b0a9c9f956aaa5b471d95dab6533b4c3a0f5c7e3895a946b9e57599b4ff54674",
@@ -117,14 +117,14 @@
       "translation": "站点面向电脑设计。文章和参考页的全站章节与本页目录在左侧并排。表格和代码置于正文内，过宽的内容可在各自区块内横向滚动。网站验收使用源码、构建和静态 HTML 检查。从构建结果核对导航、样式表、章节链接和示例输入。\n"
     },
     "28": {
-      "source_sha256": "87dae5af9a9c6c7e6add812659240e016dab9525a1024a1cc0f209fd8a40a65f",
+      "source_sha256": "6fb47fa9b46bc8f6b53b51b507c4bde982665eb36cd57d958eeebac19fca788c",
       "status": "reviewed",
-      "translation": "基本构建需要 Python 3.9 或更高版本、R、Pandoc、包依赖及示例依赖。网站使用 `pkgdown`、Bootstrap 5、`pkgload`、`rmarkdown` 和 `jsonlite`。构建时会渲染文章，并运行原生 Rd 示例。在仓库根目录执行下列命令。\n"
+      "translation": "基本构建需要 Python 3.9 或更高版本、R、Pandoc、包依赖及示例依赖。网站使用 `pkgdown`、Bootstrap 5、`pkgload`、`rmarkdown` 和 `jsonlite`。完整构建会生成双语页面，回放工具书和 API 示例，并在核对产物后更新本地预览。在仓库根目录执行下列命令。\n"
     },
     "30": {
-      "source_sha256": "a7a3ee3dedc7e435553ca8d80cd0a69972dfe1524a7fd3ac018da000986d34e3",
+      "source_sha256": "26954569b96183bc24d6bc89e3ed7786410f1f6dc3e584e9d3679ecdf7cca94f",
       "status": "reviewed",
-      "translation": "打开 `http://127.0.0.1:8765/` 可查看 `.site/` 中的文件。两种语言的首页共用四组预览图。修改网站、包 README 或离线教程的图像时，保留输入数据、过滤规则、绘图代码及图像来源记录。[原画、第三方资产及许可](ASSET-SOURCES.md)\n"
+      "translation": "打开 `http://127.0.0.1:8765/` 可查看 `.site/` 中的文件。两种语言的首页共用四组预览图。点击预览可查看完整图，由 `website/examples/` 下的案例脚本绘制。首页预览沿用同组案例，通过 `Rscript tools/render-site-flagships.R` 重新生成。修改网站、包 README 或离线教程的图像时，保留输入数据、过滤规则、绘图代码及图像来源记录。[原画、第三方资产及许可](ASSET-SOURCES.md)\n"
     },
     "31": {
       "source_sha256": "a2a454b1170d8e3eb7223f922499c9d4305339dd709b5429f4a7a2759f2136e7",

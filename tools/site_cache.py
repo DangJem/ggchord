@@ -29,14 +29,7 @@ def runtime():
     if shutil.which('ldconfig'):
         listing=subprocess.check_output(['ldconfig','-p'],text=True)
         native={name:digest(Path(name)) for name in sorted({line.split(' => ')[1] for line in listing.splitlines() if ' => ' in line}) if Path(name).is_file()}
-    adapters={}
-    for selector,default in [('ALIGNMENT_PYTHON','python3'),('DELTA_EXECUTABLE','show-coords')]:
-        command=os.environ.get(selector,default); resolved=shutil.which(command)
-        adapters[selector]=dict(command=command,file=digest(Path(resolved)) if resolved else None)
-        if resolved and selector=='ALIGNMENT_PYTHON':
-            probe="import sys,json,hashlib,importlib.metadata as m; print(json.dumps(dict(version=sys.version,files={str(d.metadata['Name'])+':'+str(f):hashlib.sha256(d.locate_file(f).read_bytes()).hexdigest() for d in m.distributions() for f in (d.files or []) if '..' not in f.parts and '__pycache__' not in f.parts and d.locate_file(f).is_file()}),sort_keys=True))"
-            adapters[selector]['packages']=json.loads(subprocess.check_output([resolved,'-c',probe],text=True))
-    return dict(R=r,engine=engine,fonts=fonts,native=native,adapters=adapters,os=platform.platform(),year=datetime.now(timezone.utc).year,
+    return dict(R=r,engine=engine,fonts=fonts,native=native,os=platform.platform(),year=datetime.now(timezone.utc).year,
                 pandoc=subprocess.check_output(['Rscript','--vanilla','-e','cat(as.character(rmarkdown::pandoc_version()))'],text=True),
                 locale={'en':'en','zh':'zh_CN'},TZ='UTC',seed=1014,
                 environment={k:v for k,v in os.environ.items() if k in {'R_LIBS_SITE','R_DEFAULT_PACKAGES','FONTCONFIG_FILE','FONTCONFIG_PATH','LC_ALL','LC_CTYPE','LANG'}})
@@ -47,41 +40,13 @@ def inputs(paths):
             not any(part.startswith('.') for part in p.relative_to(ROOT).parts)}
 
 def shell_inputs():
-    return inputs([ROOT/p for p in ['DESCRIPTION','NAMESPACE','LICENSE','LICENSE.md','_pkgdown.yml','tools/render-website.R','tools/build-website.py','tools/site_cache.py','tools/website/handbook.py','tools/website/registry.py','website/pages.json','website/navigation.json']]+list((ROOT/'pkgdown').rglob('*')))
-
-def reference_inputs():
-    # Include new development inputs and installed teaching fixtures. Ignore
-    # unrelated working copies and old images alongside repository examples.
-    listed = subprocess.check_output(['git', 'ls-files', '-z', '--cached', '--others',
-        '--exclude-standard', '--', 'examples', 'inst/extdata'], cwd=ROOT)
-    fixtures = [ROOT/os.fsdecode(name) for name in listed.split(b'\0') if name]
-    return inputs(fixtures + [p for name in ['R','man','data','website/reference-zh']
-        for p in (ROOT/name).rglob('*')] + [ROOT/p for p in [
-        'website/reference-examples.json','website/r-comments-zh.json','tools/website/reference.R','tools/reference-translations.py','tools/documentation_lib.py','tools/website-dependencies.R']])
-
-
-def reference_cache_allowed():
-    codes=list(json.loads((ROOT/'website/reference-examples.json').read_text()).values())
-    for path in (ROOT/'man').glob('*.Rd'):
-        text=path.read_text();at=text.find('\\examples{')
-        if at>=0:
-            start=at+len('\\examples{');i=start;depth=1
-            while i<len(text) and depth:
-                if text[i]=='\\':i+=2;continue
-                depth+=(text[i]=='{')-(text[i]=='}');i+=1
-            if depth:return False
-            codes.append(text[start:i-1])
-    for code in codes:
-        if re.search(r'https?://|\b(?:Sys\.time|Sys\.Date|download\.file|socketConnection|url)\s*\(',code):return False
-        selectors=re.findall(r'Sys\.getenv\(\s*"([^"\n]+)"',code)
-        if len(selectors)!=len(re.findall(r'Sys\.getenv\s*\(',code)):return False
-        if any(name not in {'ALIGNMENT_PYTHON','DELTA_EXECUTABLE'} for name in selectors):return False
-    return True
+    return inputs([ROOT/p for p in ['DESCRIPTION','NAMESPACE','LICENSE','LICENSE.md','_pkgdown.yml','tools/render-website.R','tools/build-website.py','tools/site_cache.py','tools/website/handbook.py','tools/website/registry.py','tools/website-dependencies.R','website/pages.json','website/navigation.json']]+list((ROOT/'pkgdown').rglob('*')))
 
 class Cache:
     def __init__(self, out, enabled=True):
         self.out=out; self.enabled=enabled; self.root=ROOT/'.cache/website'; self.pending=ROOT/'.cache/pending-website'
-        shutil.rmtree(self.pending,ignore_errors=True)
+        if self.enabled:
+            shutil.rmtree(self.pending,ignore_errors=True)
         self.report=[]; self.producer=subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip()
         self.dirty=bool(subprocess.check_output(['git','status','--porcelain'],cwd=ROOT,text=True))
     def restore(self,kind,identity,target):

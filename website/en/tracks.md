@@ -16,4 +16,4 @@ Compute the midpoint of each window. Keep the column layer and add a line using 
 
 {{example:gc-shared-band}}
 
-The band’s `width` reserves 15 mm of drawing space. Its numerical limits set the heights on that space. Increasing the band width makes a one-percentage-point change easier to see while preserving every measured percentage. Next, [compute coverage from alignment intervals](tracks-statistics.md) or [inspect the original bedGraph columns](import-signals.md).
+The band’s `thickness` reserves 15 mm of drawing space. `scale_track_value()` maps values to heights within that space. Increasing the thickness makes a one-percentage-point change easier to see while preserving every measured percentage. Next, [compute coverage from alignment intervals](tracks-statistics.md) or [inspect the original bedGraph columns](import-signals.md).

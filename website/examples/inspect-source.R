@@ -11,6 +11,6 @@ plot <- ggchord(reference) +
   geom_seq() +
   geom_link_ribbon(data = hits, id = "observed") +
   coord_collinear()
-layout <- export_ggchord_layout(plot, data_stage = "source")
-layout$layer_data$observed$source |>
+layout <- export_ggchord_layout(plot, layers = "observed", stages = "source")
+layout$source[[1]]$data |>
   select(qaccver, saccver, qstart, qend, sstart, send)

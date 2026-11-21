@@ -1,78 +1,53 @@
 library(ggchord)
+library(ggplot2)
+library(dplyr)
 
-gene_palette <- c("+" = "#CE1536", "-" = "#346B9D", "." = "#8291A6")
-relationship_identity <- ggplot2::guide_coloursteps(
-  available_aes = "ribbon_fill", even.steps = FALSE, show.limits = TRUE,
-  position = "bottom", direction = "horizontal",
-  theme = theme(
-    legend.key.width = unit(130, "mm"), legend.key.height = unit(4, "mm"),
-    legend.title = element_text(size = 10), legend.text = element_text(size = 9),
-    legend.margin = margin(2, 2, 2, 2)
-  )
+comparison <- flagship_comparison_example$sankey
+# Stable entity keys let the selected names follow their own CDS arrows.
+identify_genes <- function(records) {
+  records |> mutate(feature_id = paste(accver, start, end, strand, sep = "/"), label = anno)
+}
+genes <- identify_genes(comparison$features)
+labels <- identify_genes(comparison$labels)
+sequence_colours <- c(
+  "MT108731.1" = "#E64B35", "MT118296.1" = "#233E4A",
+  "OQ646790.1" = "#269B82", "OR222515.1" = "#D59B17"
 )
-relationship_guides <- guides(
-  seq_colour = guide_ggchord_legend(nrow = 1, position = "bottom"),
-  gene_fill = guide_ggchord_legend(
-    nrow = 1, position = "bottom", override.aes = list(strand = c("+", "-"))
-  ),
-  ribbon_fill = relationship_identity
-)
-doc_background <- "#FFFCF5"
-doc_theme <- theme_ggchord_publication(
-  axis.text = element_text(size = 11),
-  axis.text.check.overlap = TRUE
-) +
-  theme(
-    legend.position = "bottom",
-    legend.title = element_text(size = 13, face = "bold"),
-    legend.text = element_text(size = 11),
-    legend.key.width = unit(9, "mm"), legend.key.height = unit(5, "mm"),
-    legend.spacing.x = unit(9, "mm"), legend.spacing.y = unit(7, "mm"),
-    legend.box.spacing = unit(6, "mm"),
-    plot.background = element_rect(fill = doc_background, colour = NA),
-    panel.background = element_blank(),
-    plot.title = element_text(face = "bold", size = 18),
-    plot.subtitle = element_text(size = 10, colour = "#5C625A"),
-    plot.margin = margin(14, 18, 14, 18)
-  )
-relationship_theme <- doc_theme + theme(
-  legend.position = "bottom", legend.box = "vertical",
-  legend.title = element_text(size = 10, face = "bold"),
-  legend.text = element_text(size = 9),
-  legend.box.spacing = unit(3, "mm"), legend.spacing.y = unit(2, "mm"),
-  legend.margin = margin(2, 2, 2, 2),
-  ggchord.axis.text = element_text(size = 9),
-  plot.margin = margin(8, 10, 8, 10),
-  plot.title = element_text(size = 17), plot.subtitle = element_text(size = 10)
-)
-seq_palette <- setNames(
-  c("#E64B35", "#233E4A", "#269B82", "#D59B17"),
-  c("MT108731.1", "MT118296.1", "OQ646790.1", "OR222515.1")
-)
-relationship_style <- list(
-  scale_seq_colour_manual(values = seq_palette, name = "Sequence"),
-  scale_gene_fill_manual(values = gene_palette, breaks = c("+", "-"), name = "Strand"),
-  scale_seq_position_continuous(n.breaks = 2, minor_breaks = NULL,
-    labels = function(x) format(x, scientific = FALSE, big.mark = ",", trim = TRUE)),
-  relationship_theme, relationship_guides
-)
-sankey_labels <- flagship_comparison_example$sankey$labels
-show_adjacent <- flagship_comparison_example$collinear$adjacent_links
-show_cross <- flagship_comparison_example$collinear$cross_links
-show_linear_features <- flagship_comparison_example$collinear$features
-show_sequences <- flagship_comparison_example$chord$seq_data
-flag_sankey <- ggchord(show_sequences) +
-  geom_link_ribbon(aes(ribbon_fill = pident), data = show_adjacent,
-    link_avoid = "smooth", alpha = 0.48, linewidth = 0.25) +
-  geom_link_ribbon(aes(ribbon_fill = pident), data = show_cross,
-    adjacent_only = FALSE, link_avoid = "smooth", alpha = 0.28, linewidth = 0.3) +
-  layout_sequences(gap = 0.30) +
-  geom_seq(linewidth = 1.1) +
-  geom_feature(preset = 'gene', data = show_linear_features, position = position_strand(0.09), width = 0.075) +
-  geom_gene_label_repel(data = sankey_labels, label_wrap = 20,
-    label_max_lines = 3, position = position_strand(0.09), size = 3.1) +
-  geom_seq_label(size = 4.4) +
-  relationship_style +
-  coord_sankey(column_gap = 4.2, ratio = 1.15) +
-  labs(title = "Four genomes, mirrored relationships", subtitle = "Original Collinear sources; independent query and subject displays")
-flag_sankey
+strand_colours <- c("+" = "#CE1536", "-" = "#346B9D", "." = "#8291A6")
+
+overview <- ggchord(comparison$seq_data) +
+  geom_link_ribbon(aes(fill = pident), data = comparison$adjacent_links,
+    alpha = 0.50, colour = "#53776A", linewidth = 0.18) +
+  geom_link_ribbon(aes(fill = pident), data = comparison$cross_links,
+    alpha = 0.33, colour = "#547568", linewidth = 0.28, linetype = "dashed") +
+  geom_seq(aes(colour = accver), linewidth = 1.1,
+    arrow = grid::arrow(length = grid::unit(2, "mm"), type = "closed")) +
+  geom_gene(aes(fill = strand), data = genes, id = "genes",
+    position = position_strand(offset = 2.1), thickness = 2.1, colour = "#454842",
+    linewidth = 0.15) +
+  scale_colour_manual(name = "Sequence", values = sequence_colours,
+    guide = guide_legend(nrow = 1, order = 2)) +
+  scale_for("genes", scale_fill_manual(name = "Strand", values = strand_colours,
+    breaks = c("+", "-"), guide = guide_legend(nrow = 1, order = 1))) +
+  layout_sequences(column_gap = 85, row_gap = 20) +
+  coord_sankey(fit = "labels") +
+  theme_ggchord_publication() +
+  theme(plot.background = element_rect(fill = "#FFFCF5", colour = NA),
+    panel.background = element_blank(), legend.position = "bottom",
+    plot.title = element_text(face = "bold", size = 17),
+    plot.margin = margin(10, 14, 10, 14))
+
+overview +
+  geom_gene_label_repel(aes(label = label), data = labels, anchor_layer = "genes",
+    label_layout = label_layout_repel(arrangement = "local", orientation = "horizontal",
+      offset = 4, wrap = 22, max_lines = 3), size = 3.15) +
+  geom_seq_label(aes(label = accver), anchor = "start",
+    label_layout = label_layout_fixed(orientation = "horizontal", side = "positive", offset = 5),
+    size = 3.7) +
+  scale_seq_position(breaks = scales::breaks_pretty(3), minor_breaks = NULL,
+    labels = scales::label_comma()) +
+  guides(fill = guide_coloursteps(direction = "horizontal", even.steps = FALSE,
+    show.limits = TRUE, theme = theme(legend.key.width = grid::unit(82, "mm")))) +
+  theme(legend.box = "vertical") +
+  labs(title = "Four genomes, mirrored relationships",
+    subtitle = "Original Collinear sources; independent query and subject displays")

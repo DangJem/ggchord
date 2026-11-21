@@ -4,7 +4,7 @@ A dotplot puts positions on the query on the x axis and positions on the subject
 
 ## Plot one observed alignment as a segment {#draw}
 
-Select both full-length references and their first HSP. Supply the row to `geom_alignment_segment()` and use `coord_dotplot()` to assign query and subject axes. This view needs only the segment layer. The right margin leaves room for the final coordinate label.
+Select both full-length references and their first HSP. Use `layout_dotplot()` to select the accession order on the two axes, and `coord_dotplot()` to project the endpoints supplied to `geom_alignment_segment()`. The segment layer alone is enough to draw this view.
 
 {{example:first-dotplot}}
 

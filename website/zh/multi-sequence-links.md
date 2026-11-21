@@ -16,4 +16,4 @@
 
 {{example:link-midpoints}}
 
-当骨架超过两行时，共线性连接带层默认只连接相邻行。要显示已选中的非相邻序列对，可设置 `adjacent_only = FALSE`。下一步可[检查某一图层的来源记录](diagnostics.md)，或[把记录分配到重复显示的参考序列](multi-sequence-layout.md#instances)。
+共线性图会绘制输入中的非相邻连接。要突出其中一组，可先筛选记录，再交给独立图层。下一步可[检查图层的来源记录](diagnostics.md)，或[把连接分配给重复显示的参考实例](multi-sequence-layout.md#instances)。

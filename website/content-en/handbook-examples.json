@@ -23,7 +23,7 @@
     "height": 7,
     "dpi": 144,
     "caption": {
-      "en": "The OR222515.1 plus and minus CDS use offsets of 0.08 and −0.14. Their arrow widths are 0.03 and 0.08, respectively."
+      "en": "The plus and minus CDS on OR222515.1 use offsets of 5 and −9 mm and arrow thicknesses of 2 and 5 mm."
     }
   },
   "flex-radius-error": {
@@ -32,7 +32,7 @@
     "height": 3,
     "dpi": 144,
     "caption": {
-      "en": "The layout reports both strand symbols as unknown sequence IDs for seq_radius."
+      "en": "The layout reports strand symbols as unknown radius keys."
     }
   },
   "views-chord": {
@@ -142,7 +142,7 @@
     "height": 5,
     "dpi": 144,
     "caption": {
-      "en": "Contents of the prepared feature table"
+      "en": "CDS records selected from a named table in the data collection."
     }
   },
   "installed-gff": {
@@ -338,7 +338,7 @@
     "height": 8,
     "dpi": 110,
     "caption": {
-      "en": "pSB1C3 · 7 features and 33 restriction positions"
+      "en": "pSB1C3 · 7 features and 31 restriction positions"
     }
   },
   "case-circular": {
@@ -347,7 +347,7 @@
     "height": 8,
     "dpi": 110,
     "caption": {
-      "en": "pUC19 · 9 features and 33 restriction positions"
+      "en": "pUC19 · 9 features and 32 restriction positions"
     }
   },
   "map-pbr": {
@@ -356,7 +356,7 @@
     "height": 8,
     "dpi": 110,
     "caption": {
-      "en": "pBR322 · 6 features and 42 restriction positions"
+      "en": "pBR322 · 6 features and 40 restriction positions"
     }
   },
   "map-blue": {
@@ -365,7 +365,7 @@
     "height": 8,
     "dpi": 110,
     "caption": {
-      "en": "pBluescript II SK(+) · 14 features and 42 restriction positions"
+      "en": "pBluescript II SK(+) · 14 features and 38 restriction positions"
     }
   },
   "map-pet": {
@@ -374,7 +374,7 @@
     "height": 8,
     "dpi": 110,
     "caption": {
-      "en": "pET-28a(+) · 16 features and 45 restriction positions"
+      "en": "pET-28a(+) · 16 features and 49 restriction positions"
     }
   },
   "map-duet": {
@@ -392,7 +392,7 @@
     "height": 8,
     "dpi": 110,
     "caption": {
-      "en": "pDONR221 · 11 features and 42 restriction positions"
+      "en": "pDONR221 · 11 features and 39 restriction positions"
     }
   },
   "map-pcdna": {
@@ -410,7 +410,7 @@
     "height": 8,
     "dpi": 110,
     "caption": {
-      "en": "pTRE-Tight-BI · 15 features and 44 restriction positions"
+      "en": "pTRE-Tight-BI · 15 features and 42 restriction positions"
     }
   },
   "map-tripz": {

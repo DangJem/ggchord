@@ -36,8 +36,8 @@ One feature row identifies a coding sequence (CDS), promoter, repeat or another 
 | `accver` | Required | Identifier of the reference carrying the feature. |
 | `start` | Required | First interval bound in the reference unit. |
 | `end` | Required | Last interval bound in the same unit, inclusive. |
-| `strand` | Required for direct layer data unless a direction field is supplied | Biological strand. Use `"+"` or `"-"` when known and `"."` for an unstranded feature. |
-| `directionality` or `direction` | Alternative to `strand` for direct layer data | Values include `"forward"`, `"reverse"`, `"bidirectional"` and `"none"`. If both forms are present, they must agree. |
+| `strand` | For directional shapes | Use `"+"` or `"-"` when known. For a feature drawn without an arrow, use `"."`. |
+| `directionality` | Optional in the input to `as_ggchord_feature()` | Use `"forward"`, `"reverse"`, `"bidirectional"` or `"none"`. If `strand` is also present, it must agree. |
 | `type` | Optional for a general feature, needed for type-based selection unless another classification field is supplied | Feature class such as CDS. |
 | `anno` | Optional | Source annotation or product description. |
 | `feature_id` | Needed for joins by ID | Stable feature identifier from the source, useful for linking labels to selected records. |
@@ -48,9 +48,9 @@ One feature row identifies a coding sequence (CDS), promoter, repeat or another 
 | --- | ---: | ---: | --- | --- | --- | --- |
 | MT108731.1 | 13,064 | 14,554 | + | CDS | cds-QIQ63803.1 | hypothetical protein |
 
-When you pass raw data to `geom_feature(data = features)`, supply a strand or an explicit direction. For the primary `feature_data` table, `prepare_ggchord_data()` also accepts just the reference ID and two bounds. If direction information is absent, it records `"."`. The teaching table `gene_data_example` has both a display strand and the original `source_strand`. Use the latter for biological interpretation.
+Use `as_ggchord_feature()` to normalize annotations before plotting. It can map existing column names to the expected fields and records unstranded features as `"."` when strand is missing. For directional shapes, retain the source strand or an explicit direction. The bundled `gene_data_example` keeps the original annotation in `source_strand`.
 
-When `geom_feature(preset = "gene")` inherits the primary annotation table, it checks `feature_class`, `type` and `role` in that order. The first column present must classify the rows to draw as gene or CDS. Supplying a table explicitly draws its selected rows without this classification filter. In both cases each gene needs a known plus or minus strand.
+Select rows by their recorded type before adding the layer. Use `geom_gene()` for coding sequences with a known strand. Use `geom_feature()` for intervals with a generic shape, or map a type column to `shape` when several annotation classes share a layer.
 
 <a id="alignments"></a>
 
@@ -124,7 +124,7 @@ For an event count, give one row per event. Two observations at the same positio
 
 ## Supply these tables to a plot {#prepared}
 
-Start with `ggchord(reference)`. Its second argument is `mapping`. Supply the chosen table to each layer or prepare a collection first. The example prepares the primary annotation table and prints some rows so you can check which strand was retained. A feature layer can then inherit that table.
+Start with `ggchord(reference)`. Pass each observation table to the layer's `data` argument. This example bundles reference and CDS tables with `ggchord_data()` and inspects `features$cds` before plotting. Use the same component when supplying the data to a feature layer.
 
 {{example:prepared-tables}}
 

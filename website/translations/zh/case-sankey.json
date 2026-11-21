@@ -1,5 +1,5 @@
 {
-  "source_sha256": "c47b5c0d48089dfb53c736ab649051be5c962f3688b8352fe5daa6ee8fae449d",
+  "source_sha256": "96273dab90c65db646ac18131113cc6b6f01006a8255b1f7dc2e79311161d81d",
   "blocks": {
     "0": {
       "source_sha256": "80ff62fea28b207b3bfc42b65e6fd8f2349f20f8167e57f27fad31048de6221d",
@@ -32,9 +32,9 @@
       "translation": "## 来源记录与展示选择 {#inputs}\n"
     },
     "10": {
-      "source_sha256": "e1665fbcc40ebb028ce55214b568750296ddcfd1090aa7584dafcc146389928a",
+      "source_sha256": "06fa4812417bc96e728438e54d68f1547996eddaf396fec88b143ea48b3fa8ee",
       "status": "reviewed",
-      "translation": "相邻行和跨行连接均来自共线性图的展示子集。两列的间距设为 `column_gap = 4.2`，序列与链图例共用。若缩小导出宽度，先检查两列外侧的标签空间。\n"
+      "translation": "相邻行和跨行连接均来自共线性图的展示子集。两列间距由 `layout_sequences()` 按毫米指定。两列共用序列及链向图例。若缩小导出宽度，先检查两列外侧的标签空间。\n"
     },
     "11": {
       "source_sha256": "6e5490a665c2f6d9989c53bbedbe950ca6f21b36d75a607c5f7a27b5a844b396",

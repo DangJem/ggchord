@@ -16,4 +16,4 @@ Compute one midpoint on the query and one on the subject, rounding down to whole
 
 {{example:link-midpoints}}
 
-For more than two rows, the collinear ribbon layer connects adjacent rows by default. Set `adjacent_only = FALSE` to show selected nonadjacent pairs. Next, [inspect the input records of a layer](diagnostics.md) or [route records to repeated copies of a reference](multi-sequence-layout.md#instances).
+The collinear view retains nonadjacent links present in the data. To emphasize a subset, explicitly select the records and give them their own layer. Next, [inspect the input records of a layer](diagnostics.md) or [route records to repeated copies of a reference](multi-sequence-layout.md#instances).

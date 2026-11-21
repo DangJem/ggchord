@@ -319,15 +319,7 @@
     "learn": "installation.html",
     "versions": "about.html"
   },
-  "reference/geom_gene.html": {
-    "": "migration.html#api",
-    "ref-examples": "migration.html#api"
-  },
   "reference/geom_feature_plasmid.html": {
-    "": "migration.html#api",
-    "ref-examples": "migration.html#api"
-  },
-  "reference/geom_feature_label_repel.html": {
     "": "migration.html#api",
     "ref-examples": "migration.html#api"
   },
@@ -647,5 +639,143 @@
     "flagship-collinear": "case-collinear.html",
     "flagship-radial": "case-radial.html",
     "flagship-sankey": "case-sankey.html"
+  },
+  "reference/adapt_ggchord.html": {
+    "": "migration.html#api"
+  },
+  "reference/as.data.frame.ggchord_validation.html": {
+    "": "migration.html#api"
+  },
+  "reference/bundle_ggchord_ribbons.html": {
+    "": "migration.html#api"
+  },
+  "reference/deduplicate_ggchord_ribbons.html": {
+    "": "migration.html#api"
+  },
+  "reference/export_ggchord_fusion.html": {
+    "": "migration.html#api"
+  },
+  "reference/filter_ggchord_ribbons.html": {
+    "": "migration.html#api"
+  },
+  "reference/flagship_examples.html": {
+    "": "gallery.html"
+  },
+  "reference/fusion_panel.html": {
+    "": "migration.html#api"
+  },
+  "reference/gene_data_example.html": {
+    "": "data.html#features"
+  },
+  "reference/genome_comparison_example.html": {
+    "": "case-chord.html"
+  },
+  "reference/geom_seq_scale.html": {
+    "": "migration.html#api"
+  },
+  "reference/get_chord_layout.html": {
+    "": "migration.html#api"
+  },
+  "reference/ggchord_api_contract.html": {
+    "": "reference/index.html"
+  },
+  "reference/ggchord_data_contract.html": {
+    "": "data.html"
+  },
+  "reference/ggchord_layout_contract.html": {
+    "": "multi-sequence-layout.html"
+  },
+  "reference/ggplot2-helpers.html": {
+    "": "migration.html#api"
+  },
+  "reference/grid-helpers.html": {
+    "": "migration.html#api"
+  },
+  "reference/guide_ggchord_legend.html": {
+    "": "migration.html#api"
+  },
+  "reference/merge_ggchord_ribbons.html": {
+    "": "migration.html#api"
+  },
+  "reference/optimize_ggchord_layout.html": {
+    "": "migration.html#api"
+  },
+  "reference/plasmid_example_pUC19.html": {
+    "": "plasmid-catalog.html#catalogpuc"
+  },
+  "reference/plus-.ggchord.html": {
+    "": "installation.html"
+  },
+  "reference/prepare_ggchord_data.html": {
+    "": "migration.html#api"
+  },
+  "reference/print.ggchord_clean.html": {
+    "": "migration.html#api"
+  },
+  "reference/protein_ribbon_data_example.html": {
+    "": "data.html#alignments"
+  },
+  "reference/protein_seq_data_example.html": {
+    "": "data.html#fields"
+  },
+  "reference/restriction_site_example.html": {
+    "": "annotations.html"
+  },
+  "reference/ribbon_data_example.html": {
+    "": "data.html#alignments"
+  },
+  "reference/scale_feature_fill_plasmid.html": {
+    "": "migration.html#api"
+  },
+  "reference/scale_feature_shape_manual.html": {
+    "": "migration.html#api"
+  },
+  "reference/scale_gene_fill_manual.html": {
+    "": "migration.html#api"
+  },
+  "reference/scale_link.html": {
+    "": "styling.html"
+  },
+  "reference/scale_ribbon_alpha_continuous.html": {
+    "": "migration.html#api"
+  },
+  "reference/scale_ribbon_fill_stepsn.html": {
+    "": "migration.html#api"
+  },
+  "reference/scale_seq_colour_manual.html": {
+    "": "migration.html#api"
+  },
+  "reference/scale_seq_position_continuous.html": {
+    "": "migration.html#api"
+  },
+  "reference/scale_seq_ring_manual.html": {
+    "": "migration.html#api"
+  },
+  "reference/scale_track_fill_gradientn.html": {
+    "": "migration.html#api"
+  },
+  "reference/scale_track_value_continuous.html": {
+    "": "migration.html#api"
+  },
+  "reference/seq_data_example.html": {
+    "": "data.html#fields"
+  },
+  "reference/sequence_detail_example.html": {
+    "": "case-fusion.html"
+  },
+  "reference/shared_track_limits.html": {
+    "": "migration.html#api"
+  },
+  "reference/single_gene_example.html": {
+    "": "annotations.html"
+  },
+  "reference/single_genome_example.html": {
+    "": "circular.html"
+  },
+  "reference/stat_ribbon_bundle.html": {
+    "": "migration.html#api"
+  },
+  "reference/stat_ribbon_density.html": {
+    "": "migration.html#api"
   }
 }

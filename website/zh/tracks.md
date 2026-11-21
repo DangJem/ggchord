@@ -16,4 +16,4 @@
 
 {{example:gc-shared-band}}
 
-轨道带的 `width` 在图上预留 15 mm 空间，数值范围决定高度如何映射到这段空间。加宽轨道可让一个百分点的差异更容易看出，原始测量值仍然相同。下一步可[从比对区间计算覆盖率](tracks-statistics.md)，或[检查 bedGraph 原始列](import-signals.md)。
+轨带的 `thickness` 预留 15 mm 的绘制空间，`scale_track_value()` 把测量值映射为这段空间中的高度。加厚轨带可让一个百分点的差异更易辨认，测量值仍保持原样。下一步可[从比对区间计算覆盖率](tracks-statistics.md)，或[查看 bedGraph 的原始字段](import-signals.md)。

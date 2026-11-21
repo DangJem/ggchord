@@ -1,5 +1,5 @@
 {
-  "source_sha256": "60b6a2a9cd6c21e0e2118b7bdd4635375ad26f441123ea11a31bdc684c87102e",
+  "source_sha256": "f5e25bac47d3d5f0dae656bfd5176f0a1007e478f2f5b69c13454d85cc53baba",
   "blocks": {
     "1": {
       "source_sha256": "40efb09f1c3c63841e3551656365846100d1e284f15ab6993e943382f5e16bc2",
@@ -47,9 +47,9 @@
       "translation": "## 从源记录追到图上 {#results}\n"
     },
     "12": {
-      "source_sha256": "5e83df2ab3a027cffaf9d98700ffbe2e7eabe908efcd94809ccaef18d4658f6c",
+      "source_sha256": "d7edb5d76ec5f77395f183a07fb8a21d3a2f226056d75e4b7ab5cf90b0d49b97",
       "status": "reviewed",
-      "translation": "从完整参考表开始构图。各层显式提供所用观测表，或用 `prepare_ggchord_data()` 组装准备对象。为了展示而筛选记录时，保留 accession 与原端点。需要核对某个图层或统计窗口对应的源记录时，见[查询布局与来源](diagnostics.md)。设置最终图片尺寸见[预览与导出](output.md)。\n"
+      "translation": "用 `ggchord()` 登记完整参考表，再把观察数据显式传给各图层。用 `ggchord_data()` 将相关的参考表、特征表和连接表组成一个集合。筛选记录时保留标识及原始端点。用 `validate_ggchord_data()` 检查输入角色，用 `data_report()` 查看读取器或数据操作保留的来源证据。[布局与来源查询](diagnostics.md)可核对图层的输入，[预览与导出](output.md)说明如何指定图形的最终尺寸。\n"
     }
   }
 }

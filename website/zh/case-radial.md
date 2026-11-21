@@ -18,6 +18,6 @@
 
 ## 来源记录与展示选择 {#inputs}
 
-视图使用随包保存的序列显示方向向量。`start_angle = 45` 旋转整个布局，`nonadjacent_bulge = 0.20` 控制额外外拱量，两项设置都保留比对的来源端点。
+在 `layout_sequences()` 中使用随包记录的序列方向，并设置中央开口大小。在 `coord_radial_synteny()` 中用 `start_angle = 45` 旋转布局。连接带图层控制曲率和外拱，端点仍取原始坐标。
 
 [首张径向比较图](radial-synteny.md) · [同组序列的弦图](case-chord.md)

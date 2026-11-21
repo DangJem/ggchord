@@ -1,5 +1,5 @@
 {
-  "source_sha256": "3e5580d8dcd2edf98840e62bb399b23669efa58ccdcb32630b3bf57c47aab6c6",
+  "source_sha256": "0d8963e3d837d9a77b7f9ce90a70e101034dd8b0ec956a1f811568495bd7446a",
   "blocks": {
     "0": {
       "source_sha256": "def764a3191e9fb431055bd36bd79711b1b61e513c34e522074c09444ab5785c",
@@ -12,51 +12,46 @@
       "translation": "## 安装 ggchord {#requirements}\n"
     },
     "3": {
-      "source_sha256": "5979b9e860e8c3f57ba5fa2cfb42749d072a248fe336e5261bd835d4dc2c8a5c",
+      "source_sha256": "d3594cdd63ad43303f67c757c216f06693c695f5bb4cc9635c118de7baf78666",
       "status": "reviewed",
-      "translation": "要安装 CRAN 正式版，请在 R 中运行下面的命令。CRAN 目前提供 ggchord 0.28.2，本手册使用 0.50.0 开发版接口。\n"
+      "translation": "要运行本站示例，请[下载与手册配套的包源码](../../)并解压。在含有 `DESCRIPTION` 的 ggchord 目录中打开 R。使用 R 4.1.0 或更新版本和 ggplot2 4.0.0 或更新版本。示例使用 dplyr 筛选和整理记录。\n"
     },
     "5": {
-      "source_sha256": "9248ca684f6dd2909a0c377b8bc92e9c99a005ceee579362974fd9f1399e3cb1",
+      "source_sha256": "794446dfe5384b1e4c91b6d326d4983201d1c96a08c91989302d0cc09564c7e8",
       "status": "reviewed",
-      "translation": "要运行本手册的示例，请先[下载配套的包源码](../../)并解压。在含有 `DESCRIPTION` 的 ggchord 目录中打开 R。使用 R 4.1.0 或更高版本，先安装或更新 ggplot2（需要 4.0.0 或更高版本）、本地安装所用的 remotes，以及示例筛选记录所用的 dplyr。然后从解压目录安装 ggchord。\n"
+      "translation": "如需安装 CRAN 的稳定发布版，可使用以下命令。运行本手册的示例请使用上面提供的配套源码。\n"
     },
-    "7": {
-      "source_sha256": "0adc3851192e2217d5648778210b5b96175fb6740de7d817cb99b51ed44863f2",
-      "status": "reviewed",
-      "translation": "重启 R 后运行 `packageVersion(\"ggchord\")`。与本手册配套的版本应显示为 0.50.0。\n"
-    },
-    "9": {
+    "8": {
       "source_sha256": "fb53695061bb74b9dcefad304b35573e89b7dd7432a02e1edb2da9f626b1c0e9",
       "status": "reviewed",
       "translation": "## 分三步读懂序列比较图 {#layers}\n"
     },
-    "10": {
+    "9": {
       "source_sha256": "47b446469f82f5eed4cd351060b471178861e42f74d0566a94c0d657ac89bd6e",
       "status": "reviewed",
       "translation": "第一幅图画出两条完整基因组。长弧是 MT108731.1（64,323 bp），短弧是 MT118296.1（32,090 bp）。第二幅图增加一条连接带，带的两端标出第一条局部比对所报告的两个区间。第三幅图中的绿色箭头标出各条编码序列的注释位置。沿着骨架观察箭头的指向，可以读出编码序列所在的链；顺着连接带看向另一端，可以找到对应区间内的特征。\n"
     },
-    "15": {
+    "14": {
       "source_sha256": "200950e46d13d7b98af61df476c99e04e76c5ce0f61527c02fe4534abc716153",
       "status": "reviewed",
       "translation": "## 在弧线和平行直线上对照同一条比对 {#layouts}\n"
     },
-    "16": {
+    "15": {
       "source_sha256": "33adea6595df955e7f09926022ff7df793d849edde1ce184f0fe019579f91bde",
       "status": "reviewed",
       "translation": "在弦图上，可以从连接带的任一端沿圆周查看对应的序列区间。在共线性图上，可以沿直线骨架比较该区间与基因组两端的距离。两幅图所用的基因组、比对记录和端点坐标相同。\n"
     },
-    "19": {
+    "18": {
       "source_sha256": "17f61ec72e241abf8c3b12aeecab9464dede4f2726cb1f32c26bda7da950dafe",
       "status": "reviewed",
       "translation": "[用随包数据绘制第一张弦图](chord.md#backbones)。准备自己的表格时，可先读[数据指南](data.md)；要挑选其他图形，可查阅[绘图指南](modes.md)。\n"
     },
-    "20": {
+    "19": {
       "source_sha256": "2dd76267c0025b438edf1843cf6b327a1284b69096fd5c3cb51db817e289221a",
       "status": "reviewed",
       "translation": "把注释类别映射到填色，或把比对得分映射到颜色，标度就会提供解读这些值的图例。[定量轨道](tracks.md)可以沿骨架展示 GC 含量；[Fusion 组合图](fusion.md)可以把总览中的一个区间连到单独的细节面板。\n"
     },
-    "23": {
+    "22": {
       "source_sha256": "b9667013549923f9f3cfe57c74f479f6467da77b43e3f4f9e4dffb86754b8592",
       "status": "reviewed",
       "translation": "要直接运行一条比对的示例，可前往[连接一对比对区间](chord.md#draw)。\n"

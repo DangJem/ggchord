@@ -66,7 +66,7 @@
       "给定数值柱",
       "supplied value bars"
     ],
-    "url": "reference/geom_track.html#ref-usage",
+    "url": "reference/geom_track_col.html#ref-usage",
     "title": {
       "zh": "用 geom_track_col 绘制给定数值",
       "en": "Plot supplied values with geom_track_col"
@@ -81,7 +81,7 @@
       "计数",
       "count"
     ],
-    "url": "reference/geom_track.html#ref-usage",
+    "url": "reference/geom_track_col.html#ref-usage",
     "title": {
       "zh": "绘制已有计数值",
       "en": "Plot supplied count values"
@@ -123,7 +123,9 @@
   },
   {
     "queries": [
-      "feature_data"
+      "feature data",
+      "feature table",
+      "特征表"
     ],
     "url": "data.html",
     "title": {
@@ -131,22 +133,22 @@
       "en": "Reference and layer tables"
     },
     "summary": {
-      "zh": "了解参考表与 feature_data 如何提供序列和注释。",
-      "en": "See how reference tables and feature_data supply sequences and annotations."
+      "zh": "登记完整参考表，再将观察表传给相应的特征图层。",
+      "en": "Register a complete reference and pass the observation table to its feature layer."
     }
   },
   {
     "queries": [
       "windows"
     ],
-    "url": "reference/segment_ggchord_data.html#parameter-windows",
+    "url": "reference/layout_sequences.html#parameter-windows",
     "title": {
-      "zh": "segment_ggchord_data 的 windows",
-      "en": "windows in segment_ggchord_data"
+      "zh": "layout_sequences 的显示窗口",
+      "en": "Display windows in layout_sequences"
     },
     "summary": {
-      "zh": "查阅分段显示窗口表所需的序列、起止坐标与 locus_id。",
-      "en": "Look up sequence, coordinate and locus_id requirements for segmented display windows."
+      "zh": "查阅显示窗口所需的来源序列标识、区间边界和实例标识。",
+      "en": "Look up the source accession, coordinate bounds and instance ID needed by a display window."
     }
   },
   {

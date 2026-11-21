@@ -1,5 +1,5 @@
 {
-  "source_sha256": "204d073fdd5ac1b976d2fb2fceda2e93a82b4825ab19438eec7184e15ac413d0",
+  "source_sha256": "0f217a9db101f8893055cc3219ff22b925a98086f57ab3c2698e13af97a1c158",
   "blocks": {
     "0": {
       "source_sha256": "310c05abf34c93d0d956477d386eaa7dc0556a701357058328f436dde088e518",
@@ -27,9 +27,9 @@
       "translation": "保留相同查询方向上的全部三行。每条带的两端分别按对应序列上的跨度确定宽度。最宽的一条在两端各覆盖约 25 kb，最窄的一条在两端各覆盖 302 bp。\n"
     },
     "9": {
-      "source_sha256": "9383c460b48a9557e5254ffc32f44f80f5e2c7340f552cdb6e9f0688f2e79ae5",
+      "source_sha256": "883dd123989b48d53cccbc99cbe0d7eca1290f3a80ace9c00192362e949a7a1d",
       "status": "reviewed",
-      "translation": "如果输入还含反向查询记录，它会生成另一条带，对应交换角色后的序列对。绘制较密的图时，可用 `column_gap` 调整两列间距。下一步可[对照四种布局](multi-sequence-views.md)，或[在二维坐标中把 HSP 画成线段](dotplot.md)。[四基因组 Sankey 案例](case-sankey.md)还为重复显示的参考序列加上了注释。\n"
+      "translation": "如果输入还含反向查询记录，它会生成另一条带，对应交换角色后的序列对。绘制较密的图时，可用 `layout_sequences(column_gap = ...)` 调整两列间距。下一步可[对照四种布局](multi-sequence-views.md)，或[在二维坐标中把 HSP 画成线段](dotplot.md)。[四基因组 Sankey 案例](case-sankey.md)还为重复显示的参考序列加上了注释。\n"
     }
   }
 }

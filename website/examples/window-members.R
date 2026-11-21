@@ -14,6 +14,7 @@ plot <- ggchord(reference) +
   ggplot2::facet_wrap(ggplot2::vars(subject)) +
   coord_collinear()
 
-export_ggchord_layout(plot, include = "track")$track_statistics$windows |>
+layout <- export_ggchord_layout(plot, layers = "windows", stages = "statistic")
+layout$statistic[[1]]$data |>
   select(subject, window_start, window_end, covered, denominator, coverage, source_rows) |>
   filter(subject == "MT118296.1")

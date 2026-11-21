@@ -2,17 +2,26 @@ library(ggchord)
 
 display_order <- c("OQ646790.1", "MT108731.1", "MT118296.1", "OR222515.1")
 
-by_name <- ggchord(seq_data_example) +
-  layout_sequences(order = display_order) +
-  geom_seq(seq_radius = c("MT118296.1" = 0.72), show.legend = FALSE) +
-  geom_seq_label() +
-  coord_chord()
+backbones <- ggchord(seq_data_example) +
+  geom_seq(
+    ggplot2::aes(colour = accver), show.legend = FALSE,
+    arrow = grid::arrow(type = "closed", length = grid::unit(2.4, "mm"))
+  ) +
+  ggplot2::scale_colour_manual(values = c(
+    "MT108731.1" = "#0072B2", "MT118296.1" = "#D55E00",
+    "OQ646790.1" = "#009E73", "OR222515.1" = "#CC79A7"
+  )) +
+  geom_seq_label(
+    label_layout = label_layout_fixed(orientation = "feature", side = "negative", offset = 8)
+  ) +
+  coord_chord() +
+  theme_ggchord_minimal()
 
-by_order <- ggchord(seq_data_example) +
-  layout_sequences(order = display_order) +
-  geom_seq(seq_radius = c(1, 0.72, 1, 1), show.legend = FALSE) +
-  geom_seq_label() +
-  coord_chord()
+by_name <- backbones +
+  layout_sequences(
+    order = display_order, radius = c("MT118296.1" = 0.72), angular_gap = 9
+  )
+by_order <- backbones +
+  layout_sequences(order = display_order, radius = c(1, 0.72, 1, 1), angular_gap = 9)
 
-ggchord_fusion(by_name, center_box = c(0, 0.5, 0, 1)) +
-  fusion_panel(by_order, id = "ordered", box = c(0.5, 1, 0, 1))
+ggchord_fusion(list(by_name = by_name, by_order = by_order))

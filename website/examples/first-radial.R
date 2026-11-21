@@ -11,7 +11,17 @@ hits <- ribbon_data_example |>
   ungroup()
 
 ggchord(reference) +
-  geom_seq(show.legend = FALSE) +
-  geom_seq_label() +
-  geom_link_ribbon(data = hits, adjacent_only = FALSE) +
-  coord_radial_synteny(start_angle = 90)
+  geom_seq(
+    ggplot2::aes(colour = accver), show.legend = FALSE,
+    arrow = grid::arrow(type = "closed", length = grid::unit(2.4, "mm"))
+  ) +
+  ggplot2::scale_colour_manual(values = c(
+    "MT108731.1" = "#0072B2", "MT118296.1" = "#D55E00",
+    "OQ646790.1" = "#009E73"
+  )) +
+  geom_seq_label(
+    anchor = "end", label_layout = label_layout_fixed(orientation = "feature", along = 9)
+  ) +
+  geom_link_ribbon(ggplot2::aes(fill = pident), data = hits) +
+  coord_radial_synteny(start_angle = 90, fit = "labels") +
+  theme_ggchord_minimal()

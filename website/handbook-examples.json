@@ -25,8 +25,8 @@
     "height": 7,
     "dpi": 144,
     "caption": {
-      "zh": "OR222515.1 的正、负链 CDS 分别偏移 0.08 和 −0.14，箭头宽度分别为 0.03 和 0.08。",
-      "en": "The OR222515.1 plus and minus CDS use offsets of 0.08 and −0.14. Their arrow widths are 0.03 and 0.08, respectively."
+      "zh": "OR222515.1 的正链和负链 CDS 分别偏移 5 和 −9 毫米，箭头厚度分别为 2 和 5 毫米。",
+      "en": "The plus and minus CDS on OR222515.1 use offsets of 5 and −9 mm and arrow thicknesses of 2 and 5 mm."
     }
   },
   "flex-radius-error": {
@@ -35,8 +35,8 @@
     "height": 3,
     "dpi": 144,
     "caption": {
-      "zh": "布局计算指出 seq_radius 中的两个链符号均为未知序列标识。",
-      "en": "The layout reports both strand symbols as unknown sequence IDs for seq_radius."
+      "zh": "布局报告半径设置中的两个链符号是未知的键。",
+      "en": "The layout reports strand symbols as unknown radius keys."
     }
   },
   "views-chord": {
@@ -157,8 +157,8 @@
     "height": 5,
     "dpi": 144,
     "caption": {
-      "zh": "准备结果中保留的特征列",
-      "en": "Contents of the prepared feature table"
+      "zh": "从数据集合中的具名表选出的 CDS 记录。",
+      "en": "CDS records selected from a named table in the data collection."
     }
   },
   "installed-gff": {
@@ -374,8 +374,8 @@
     "height": 8,
     "dpi": 110,
     "caption": {
-      "zh": "pSB1C3 · 7 个特征，33 个酶切位置",
-      "en": "pSB1C3 · 7 features and 33 restriction positions"
+      "zh": "pSB1C3 · 7 个特征，31 个酶切位置",
+      "en": "pSB1C3 · 7 features and 31 restriction positions"
     }
   },
   "case-circular": {
@@ -384,8 +384,8 @@
     "height": 8,
     "dpi": 110,
     "caption": {
-      "zh": "pUC19 · 9 个特征，33 个酶切位置",
-      "en": "pUC19 · 9 features and 33 restriction positions"
+      "zh": "pUC19 · 9 个特征，32 个酶切位置",
+      "en": "pUC19 · 9 features and 32 restriction positions"
     }
   },
   "map-pbr": {
@@ -394,8 +394,8 @@
     "height": 8,
     "dpi": 110,
     "caption": {
-      "zh": "pBR322 · 6 个特征，42 个酶切位置",
-      "en": "pBR322 · 6 features and 42 restriction positions"
+      "zh": "pBR322 · 6 个特征，40 个酶切位置",
+      "en": "pBR322 · 6 features and 40 restriction positions"
     }
   },
   "map-blue": {
@@ -404,8 +404,8 @@
     "height": 8,
     "dpi": 110,
     "caption": {
-      "zh": "pBluescript II SK(+) · 14 个特征，42 个酶切位置",
-      "en": "pBluescript II SK(+) · 14 features and 42 restriction positions"
+      "zh": "pBluescript II SK(+) · 14 个特征，38 个酶切位置",
+      "en": "pBluescript II SK(+) · 14 features and 38 restriction positions"
     }
   },
   "map-pet": {
@@ -414,8 +414,8 @@
     "height": 8,
     "dpi": 110,
     "caption": {
-      "zh": "pET-28a(+) · 16 个特征，45 个酶切位置",
-      "en": "pET-28a(+) · 16 features and 45 restriction positions"
+      "zh": "pET-28a(+) · 16 个特征，49 个酶切位置",
+      "en": "pET-28a(+) · 16 features and 49 restriction positions"
     }
   },
   "map-duet": {
@@ -434,8 +434,8 @@
     "height": 8,
     "dpi": 110,
     "caption": {
-      "zh": "pDONR221 · 11 个特征，42 个酶切位置",
-      "en": "pDONR221 · 11 features and 42 restriction positions"
+      "zh": "pDONR221 · 11 个特征，39 个酶切位置",
+      "en": "pDONR221 · 11 features and 39 restriction positions"
     }
   },
   "map-pcdna": {
@@ -454,8 +454,8 @@
     "height": 8,
     "dpi": 110,
     "caption": {
-      "zh": "pTRE-Tight-BI · 15 个特征，44 个酶切位置",
-      "en": "pTRE-Tight-BI · 15 features and 44 restriction positions"
+      "zh": "pTRE-Tight-BI · 15 个特征，42 个酶切位置",
+      "en": "pTRE-Tight-BI · 15 features and 42 restriction positions"
     }
   },
   "map-tripz": {

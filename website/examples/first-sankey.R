@@ -8,7 +8,18 @@ hits <- ribbon_data_example |>
   filter(qaccver == ids[1], saccver == ids[2])
 
 ggchord(reference) +
-  geom_seq(show.legend = FALSE) +
-  geom_seq_label() +
-  geom_link_ribbon(data = hits) +
-  coord_sankey()
+  geom_seq(
+    ggplot2::aes(colour = accver), show.legend = FALSE,
+    arrow = grid::arrow(type = "closed", length = grid::unit(2.4, "mm"))
+  ) +
+  ggplot2::scale_colour_manual(values = c(
+    "MT108731.1" = "#0072B2", "MT118296.1" = "#D55E00"
+  )) +
+  geom_seq_label(
+    anchor = "start",
+    label_layout = label_layout_fixed(orientation = "vertical", along = -5)
+  ) +
+  geom_link_ribbon(ggplot2::aes(fill = pident), data = hits) +
+  layout_sequences(column_gap = 90, row_gap = 11) +
+  coord_sankey(fit = "labels") +
+  theme_ggchord_minimal()

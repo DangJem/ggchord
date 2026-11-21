@@ -1,5 +1,5 @@
 {
-  "source_sha256": "2fd18c894e8d88ad19b8ad963cc20ea62f15942118b39365edf55fb2d27cf13f",
+  "source_sha256": "ac0fe05b7604d48153665dbeaf462039cabd8b7923ad30da85c4a51da110d4ab",
   "blocks": {
     "0": {
       "source_sha256": "c1e76d829855cd4f9dd31ec3a13dd7dc7e288e07e5796bfd4bc70b809b0881db",
@@ -27,9 +27,9 @@
       "translation": "计算各窗口的中点。保留柱图层，再加一层折线，以中点为横坐标、实测值为纵坐标。两层都指定同一轨道，因此折线会经过每根柱顶边的中点。\n"
     },
     "9": {
-      "source_sha256": "da4cf2062a3de65fe23a55bfa592562c429e433f85a352d1752b9a8af623135a",
+      "source_sha256": "b182e118634a214aacbaa1637ce9936220b7af44723e7cbfe5479f455ffe3d12",
       "status": "reviewed",
-      "translation": "轨道带的 `width` 在图上预留 15 mm 空间，数值范围决定高度如何映射到这段空间。加宽轨道可让一个百分点的差异更容易看出，原始测量值仍然相同。下一步可[从比对区间计算覆盖率](tracks-statistics.md)，或[检查 bedGraph 原始列](import-signals.md)。\n"
+      "translation": "轨带的 `thickness` 预留 15 mm 的绘制空间，`scale_track_value()` 把测量值映射为这段空间中的高度。加厚轨带可让一个百分点的差异更易辨认，测量值仍保持原样。下一步可[从比对区间计算覆盖率](tracks-statistics.md)，或[查看 bedGraph 的原始字段](import-signals.md)。\n"
     }
   }
 }

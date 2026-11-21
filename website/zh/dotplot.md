@@ -4,7 +4,7 @@
 
 ## 把一条实测比对画成线段 {#draw}
 
-选择两条全长参考序列及它们之间的第一条 HSP。将该行传给 `geom_alignment_segment()`，再用 `coord_dotplot()` 指定查询轴和目标轴。这幅图只需线段图层。右边距为末端的坐标标签留出空间。
+选择两条完整参考及其第一条 HSP。用 `layout_dotplot()` 指定两轴的序列顺序，用 `coord_dotplot()` 投影 `geom_alignment_segment()` 接收的端点。这幅图只需一个线段图层。
 
 {{example:first-dotplot}}
 

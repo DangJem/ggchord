@@ -10,6 +10,6 @@ This pUC19 bedGraph records the GC percentage of each 100 bp window, with a shor
 
 ## Choose a geometric representation {#display}
 
-Supply the imported table to `geom_track_col(aes(y = value), ...)` to show interval heights, or to `geom_track_tile(aes(fill = value), ...)` to show the value by colour. Keep the value's measurement units attached to the scale. [Overlay a line and bars](tracks.md) for a complete plot using these data.
+To draw bars that span each measured interval, map its midpoint to `x`, its inclusive length to `width`, and the measurement to `y` in `geom_track_col()`. For a colour strip, use `geom_track_tile()` with `fill = value` and specify the position and width of each tile. Keep the value's measurement units attached to the scale. [Overlay a line and bars](tracks.md) for a complete plot using these data.
 
 `read_bigwig()` returns the same core columns from a binary signal file. Read the signal description to determine its units. For the fraction of a window occupied by a collection of intervals, supply the original intervals to the [coverage statistic](tracks-statistics.md).

@@ -4,7 +4,7 @@ Fusion combines plots that already have their own coordinate systems. Here a cir
 
 ## Place two independently built plots {#draw}
 
-Build the circular overview and linear detail first. Pass the overview to `ggchord_fusion()`, then place the second plot on the right with `fusion_panel()`. The central panel has the ID `center`. Give the new panel the ID `detail` so another layer can address it.
+Build the circular overview and linear detail first. Pass the named list `list(overview = overview, detail = detail)` to `ggchord_fusion()`. The default grid arranges the plots in that order. The names are the panel paths used by layers that connect them.
 
 {{example:fusion-panels}}
 
@@ -12,7 +12,7 @@ Build the circular overview and linear detail first. Pass the overview to `ggcho
 
 ## Route one HSP to the named panels {#adapt}
 
-Use the first query-to-subject HSP again. In `fusion_ribbon()`, `qpanel` places MT108731.1 positions 26,298–51,139 bp on the circle. The `spanel` argument places MT118296.1 positions 7,121–31,959 bp on the right. Although MT108731.1 also appears in the right panel, the query end meets the circle.
+Use the first query-to-subject HSP again. Add `qpanel_path` and `spanel_path` to the relationship data for `fusion_ribbon()`. The query goes to MT108731.1 at 26,298–51,139 bp in `overview`, and the subject goes to MT118296.1 at 7,121–31,959 bp in `detail`. The accessions identify the source sequences and the panel paths select the intended views.
 
 {{example:first-fusion}}
 

@@ -85,7 +85,6 @@ alias_topics<-unlist(lapply(topic_files,function(path) {
   function(x) paste(unlist(x),collapse=''),'')
  setNames(rep(sub('\\.Rd$','',basename(path)),length(aliases)),aliases)
 }))
-if (!partial) source('tools/website/reference.R')
 navigation <- jsonlite::fromJSON('website/navigation.json', simplifyVector=FALSE)
 navigation_ui <- jsonlite::fromJSON('website/navigation-ui.json', simplifyVector=FALSE)
 page_index <- jsonlite::fromJSON('website/pages.json', simplifyVector=FALSE)
@@ -122,7 +121,6 @@ for(lang in c('en','zh')) {
   main<-xml2::xml_find_first(doc,'//main')
   xml2::xml_set_attr(main,'tabindex','-1')
   slug <- sub('\\.html$','',basename(relative))
-  if(!partial && startsWith(relative, 'reference/')) add_reference_navigation(doc, main, slug, lang)
   if(slug=='LICENSE') {
     label <- if(lang=='zh') 'MIT 许可' else 'MIT License'
     xml2::xml_set_text(xml2::xml_find_first(main,'.//h1'),label)

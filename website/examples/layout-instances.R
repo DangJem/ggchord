@@ -7,12 +7,34 @@ reference <- seq_data_example |>
 hits <- ribbon_data_example |>
   filter(qaccver == ids[1], saccver == ids[2])
 
+windows <- tibble(
+  instance_id = c("top", "middle", "bottom"),
+  accver = c(ids[1], ids[2], ids[1])
+) |>
+  left_join(select(reference, accver, length), by = "accver") |>
+  transmute(instance_id, accver, start = 1L, end = length)
+
+upper_hit <- hits |>
+  slice_head(n = 1) |>
+  mutate(qinstance = "top", sinstance = "middle")
+lower_hits <- hits |>
+  slice_tail(n = 2) |>
+  mutate(qinstance = "bottom", sinstance = "middle")
+
 ggchord(reference) +
-  layout_sequences(
-    order = c(top = "MT108731.1", middle = "MT118296.1", bottom = "MT108731.1")
+  layout_sequences(order = windows$instance_id, windows = windows, row_gap = 29) +
+  geom_seq(
+    ggplot2::aes(colour = accver), show.legend = FALSE,
+    arrow = grid::arrow(type = "closed", length = grid::unit(2.4, "mm"))
   ) +
-  geom_seq(show.legend = FALSE) +
-  geom_seq_label() +
-  geom_link_ribbon(data = slice_head(hits, n = 1), between = c("top", "middle")) +
-  geom_link_ribbon(data = slice_tail(hits, n = 2), between = c("bottom", "middle")) +
-  coord_collinear()
+  ggplot2::scale_colour_manual(values = c(
+    "MT108731.1" = "#0072B2", "MT118296.1" = "#D55E00"
+  )) +
+  geom_seq_label(
+    label_layout = label_layout_fixed(orientation = "horizontal", offset = 4)
+  ) +
+  geom_link_ribbon(ggplot2::aes(fill = pident), data = upper_hit) +
+  geom_link_ribbon(ggplot2::aes(fill = pident), data = lower_hits) +
+  scale_seq_position(guide = guide_seq_axis(side = "negative")) +
+  coord_collinear() +
+  theme_ggchord_minimal()

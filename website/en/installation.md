@@ -4,20 +4,18 @@ ggchord uses sequence coordinates to show where features lie and how sequences m
 
 ## Install ggchord {#requirements}
 
-For the CRAN release, run the following in R. CRAN currently supplies ggchord 0.28.2. This manual uses the 0.50.0 development interface.
-
-```{.r}
-install.packages("ggchord")
-```
-
-To run the examples in this manual, [download the matching package source](../../) and unzip it. Open R in the extracted ggchord folder that contains `DESCRIPTION`. With R 4.1.0 or later, install or update ggplot2 (version 4.0.0 or later), remotes for local installation, and dplyr for selecting example records. Then install ggchord from the extracted folder.
+To run the examples in this manual, [download the matching package source](../../) and unzip it. Open R in the extracted ggchord folder containing `DESCRIPTION`. Use R 4.1.0 or later and ggplot2 4.0.0 or later. The examples use dplyr to select and prepare records.
 
 ```{.r}
 install.packages(c("ggplot2", "remotes", "dplyr"))
 remotes::install_local(".", dependencies = NA, upgrade = "never", build = FALSE)
 ```
 
-Restart R and run `packageVersion("ggchord")`. For this manual the result should be 0.50.0.
+For the stable release from CRAN, use the following command. Use the matching source download above for the examples in this manual.
+
+```{.r}
+install.packages("ggchord")
+```
 
 <a id="layers"></a>
 

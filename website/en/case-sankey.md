@@ -18,6 +18,6 @@ The input includes ten selected HSPs and 16 CDS. Percent identity controls ribbo
 
 ## Source records and display choices {#inputs}
 
-The adjacent and cross-row tables come from the collinear display subset. The panels use `column_gap = 4.2`, while a shared sequence and strand legend applies to both columns. For a narrower export, first check labels on the outer sides.
+The adjacent and cross-row tables come from the collinear display subset. `layout_sequences()` sets the column gap in millimetres. Both columns share the sequence and strand legends. For a narrower export, first check labels on the outer sides.
 
 [Read a two-column diagram](sankey.md) · [Compare the same rows in a linear layout](case-collinear.md)

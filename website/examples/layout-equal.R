@@ -9,8 +9,22 @@ hit <- ribbon_data_example |>
   slice_head(n = 1)
 
 ggchord(reference) +
-  layout_sequences(length_mode = "equal") +
-  geom_seq(show.legend = FALSE) +
-  geom_seq_label() +
-  geom_link_ribbon(data = hit) +
-  coord_collinear()
+  layout_sequences(length_mode = "equal", row_gap = 35) +
+  geom_seq(
+    ggplot2::aes(colour = accver), show.legend = FALSE,
+    arrow = grid::arrow(type = "closed", length = grid::unit(2.4, "mm"))
+  ) +
+  ggplot2::scale_colour_manual(values = c(
+    "MT108731.1" = "#0072B2", "MT118296.1" = "#D55E00"
+  )) +
+  geom_seq_label(
+    label_layout = label_layout_fixed(orientation = "horizontal", offset = 4)
+  ) +
+  geom_link_ribbon(ggplot2::aes(fill = pident), data = hit) +
+  scale_seq_position(
+    breaks = list("MT108731.1" = c(1, 20000, 40000, 64323),
+                  "MT118296.1" = c(1, 10000, 20000, 32090)),
+    guide = guide_seq_axis(side = "negative")
+  ) +
+  coord_collinear() +
+  theme_ggchord_minimal()

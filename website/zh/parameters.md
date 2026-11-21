@@ -1,81 +1,75 @@
-灵活参数可以在同一图层中为不同序列或链指定不同的几何值。先移动一个标签，再用同样的匹配方式调整骨架半径、重排序列，最后按链指定厚度或偏移。函数参考中参数旁的**灵活参数**链接可回到本页。
+灵活参数允许对不同的参考序列或显示实例分别设置。推荐用具名向量按序列标识匹配。在指定物理位置时，数值以毫米为单位，也可按参数说明提供绝对 grid 单位。API 参考中的「【支持灵活参数】」标记会链接到下面的对应小节。
 
 <a id="named-label"></a>
 
-## 只移动一条噬菌体序列的标签 {#named-label}
+## 移动一条噬菌体序列的标签 {#named-label}
 
-保留两条骨架的半径 1。将 MT108731.1 的标签半径设为 0.72，将 MT118296.1 的设为 1。每个名称都匹配一条弧上的登录号。较长的蓝色圆弧位置不变，它的标签移向圆心。
+两条骨架半径保持为 1。固定标签采用水平方向，为 MT108731.1 指定 18 mm 的具名偏移，再用 `side = "negative"` 指定向内侧。只有具名的标签向内移动。
 
 {{example:flex-labels}}
 
 <a id="scalar"></a>
 
-## 改变一条序列的骨架半径 {#scalar}
+## 改变一条骨架的半径 {#scalar}
 
 <span id="recommendation"></span>
 
-随包数据 `seq_data_example` 中的四条噬菌体基因组序列默认半径均为 1。给 `MT118296.1` 设置半径 0.72 即可把这条骨架向内移。名称按序列的 `accver` 匹配，其余三条仍为 1。
+四条序列的默认半径均为 1。在 `layout_sequences()` 中设置 `radius`，即可让 MT118296.1 向内移动。半径取相对标准半径的比例。
 
 {{example:flex-radius}}
 
-| `seq_radius` 的值 | 哪些骨架会改变？ |
+| `radius` 的取值 | 受影响的参考序列 |
 | --- | --- |
 | `0.72` | 全部四条 |
 | `c("MT118296.1" = 0.72)` | 仅 MT118296.1 |
 | `c(1, 0.72, 1, 1)` | 第二条显示序列 |
-| `list("MT118296.1" = 0.72)` | 仅 MT118296.1 |
+| `list(source = c("MT118296.1" = 0.72))` | 仅 MT118296.1 |
 
 <a id="reorder"></a>
 
-## 按名称还是按显示顺序匹配 {#reorder}
+## 按名称或显示顺序匹配 {#reorder}
 
 <span id="vector"></span>
 <span id="compatibility"></span>
 
-左右两图使用相同的四条序列和相同的重排次序。左图的小半径跟随名称 `MT118296.1`。右图的小半径跟随**第二个显示位置**，此处已换为 `MT108731.1`。两图的序列长度、颜色和序列标签均相同。
+两个面板使用同一个重排后的布局。左图的小半径按序列标识匹配到 MT118296.1。右图的小半径按第二个显示位置匹配到 MT108731.1。无名向量须为每个显示实例提供一个值。要让实例设置覆盖共用的来源设置，可以用 `list(source = ..., instance = ...)`。
 
 {{example:flex-radius-order}}
 
-无名向量的长度须与显示序列数一致。用列表指定半径时，每个元素都是一个数。只改少数序列时，命名向量写法最短，重排后也能保留各条序列的设置。
-
 <a id="strand"></a>
 
-## 设置链偏移和箭头宽度 {#strand}
+## 设置链偏移和箭头厚度 {#strand}
 
 <span id="genes"></span>
 <span id="lists"></span>
 <span id="width"></span>
 
-序列 `OR222515.1` 上的两条 CDS 来源链相反。给正链 CDS 设向外偏移 0.08，给负链 CDS 设向内偏移 −0.14。给 `OQ646790.1` 一个值 0.06，则它的正负链对称偏移。示例用 dplyr 筛选 CDS，并从记录的 `source_strand` 列取链向。
+这幅弦图中，OR222515.1 的正链和负链 CDS 分别偏移 5 mm 和 −9 mm。对 OQ646790.1 指定单值 4 mm，两条链将等距反向偏移。示例读取原始链向，用两个图层分别给正链和负链设置 2 mm 和 5 mm 的箭头厚度。
 
 {{example:flex-strand}}
 
-显式负链偏移自带符号。`position_strand()` 将未指定的序列或链的偏移补为 0。宽度改变箭头厚度。这里正链宽 0.03，负链宽 0.08，箭头端点仍取自 `start` 和 `end`。按序列**再按链**指定宽度时，每个命名元素都应提供一个链向量，例如 `list("OR222515.1" = c("+" = 0.03, "-" = 0.08))`。
-
 <a id="invalid-radius"></a>
 
-## 用链名指定半径会发生什么？ {#invalid-radius}
+## 半径以链符号命名会怎样？ {#invalid-radius}
 
-每条骨架对应一条序列。把 `+` 和 `-` 写成半径的名称，相当于请求两个输入中没有的序列标识。下面的示例捕获布局计算时的报错。要调整骨架半径，用 `accver` 作名称；要调整正负链偏移，使用 [position_strand()](../../man/position_strand.Rd)。
+骨架属于参考序列。用 `+` 和 `-` 作半径名称时，布局会查找两个输入中没有的序列标识。示例捕获此报错。按链移动特征时，使用 [position_strand()](../../man/position_strand.Rd)。
 
 {{example:flex-radius-error}}
 
 <a id="scope"></a>
 
-## 按绘图任务查参数 {#scope}
+## 按任务查找参数 {#scope}
 
 <span id="labels"></span>
 <span id="check-result"></span>
 
-| 用途 | 参数入口 | 匹配规则 |
+| 任务 | 可查阅的参数 | 取值规则 |
 | --- | --- | --- |
-| 调整序列骨架 | [geom_seq()](../../man/geom_seq.Rd) · `seq_radius`、`seq_curvature` | 两者默认均为 1。半径取有限正数，曲率取有限的有符号数。 |
-| 设置方向与间隙 | [layout_sequences()](../../man/layout_sequences.Rd) · `orientation`、`gap` | 每条序列的方向取 1 或 −1。间隙的单位和默认值依视图而定。 |
-| 放置序列名称 | [geom_seq_label()](../../man/geom_seq_label.Rd) · `labels`、`seq_label_radius`、`seq_label_rotation`、`seq_label_hjust`、`seq_label_vjust` | 名称按序列标识匹配。标签半径取相对该骨架的比例。 |
-| 调整连接端点间隙 | [geom_link_ribbon()](../../man/geom_link_ribbon.Rd) 或 [geom_link_line()](../../man/geom_link_line.Rd) · `link_gap` | 每个端点按其所在序列取间隙值。 |
-| 设置特征厚度 | [geom_feature()](../../man/geom_feature.Rd) · `width` | 可按序列、按链或同时按序列与链设置。 |
-| 移动特征 | [position_strand()](../../man/position_strand.Rd) 或 [position_offset()](../../man/position_offset.Rd) · `offset` | 两条链分别移动用前者，每条序列的两条链共用偏移用后者。 |
-| 固定标签位置 | [geom_feature_label()](../../man/geom_feature_label.Rd) 或 [geom_gene_label()](../../man/geom_gene_label.Rd) · `label_radial_offset`、`label_circum_offset`、`label_circum_limit`、`label_rotation` | 固定布局可按序列或链设置。自动布局自行决定标签位置。 |
-| 调整定量轨道尺寸 | [track_band()](../../man/track_band.Rd) · `width`、`gap` | 取一个物理单位值，或用原生布局数值覆盖全部显示序列。宽度须为正，间隙可为零。 |
+| 调整弧形参考 | [layout_sequences()](../../man/layout_sequences.Rd) · `radius`、`curvature`、`angular_gap` | 半径取正比例值，曲率可带符号，角间距以度计。 |
+| 调整直线型参考 | [layout_sequences()](../../man/layout_sequences.Rd) · `orientation`、`row_gap`、`column_gap` | 方向取 1 或 −1。共线性图和 Sankey 图的行距、Sankey 图的列距以毫米计。 |
+| 放置固定标签 | [label_layout_fixed()](../../man/label_layout_fixed.Rd) · `offset`、`along` | 垂直于参考的距离和沿参考的位移均以毫米计。在图层支持时可用具名值。 |
+| 移动特征或分道 | [position_strand()](../../man/position_strand.Rd)、[position_offset()](../../man/position_offset.Rd) 和 [position_feature_stack()](../../man/position_feature_stack.Rd) | 按链偏移、共用偏移或指定道间距。 |
+| 设置特征厚度 | [geom_feature()](../../man/geom_feature.Rd) 和 [geom_gene()](../../man/geom_gene.Rd) · `thickness` | 取以毫米计的正值。可按参考命名，也可显式指定实例。 |
+| 调整定量轨带尺寸 | [track_band()](../../man/track_band.Rd) · `thickness`、`gap` | 厚度取正值，间隙可为零。两者均为物理尺寸。 |
 
-基于数据的颜色用[视觉映射与标度](styling.md)设置。函数签名、默认值及灵活参数标记见[API 参考](reference.md)。
+基于数据的颜色用[视觉映射与标度](styling.md)设置。[API 参考](reference.md)列出各函数的参数和默认值。

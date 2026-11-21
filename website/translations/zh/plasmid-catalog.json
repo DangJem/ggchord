@@ -1,5 +1,5 @@
 {
-  "source_sha256": "fbd068296d7a3b87a4679c7bfa879cd83672db66d28dd7f50483b44155965f4d",
+  "source_sha256": "bc5a766cd1c271ce1447e305c2bcfe0225487b0c5aae6f576f2c1564d74bbd87",
   "blocks": {
     "0": {
       "source_sha256": "119d9e3fdacf3c9ecb1a549e0eb4df580ec12629b59c6b49359c0415ee668037",
@@ -22,64 +22,64 @@
       "translation": "| --- | ---: | ---: | ---: | ---: | ---: |\n"
     },
     "5": {
-      "source_sha256": "9722d847665be608a3c308e37c33c158ed571b605f60182a37bbef353e2ff7a2",
+      "source_sha256": "a0ce820b519cdf701429bcbd2f8e413c8dd64d7018198fda6af514fce4e468a0",
       "status": "reviewed",
-      "translation": "| [pSB1C3](#catalogpsb) | 2070 | 7 | 2 | 38 | 33 |\n"
+      "translation": "| [pSB1C3](#catalogpsb) | 2070 | 7 | 2 | 41 | 31 |\n"
     },
     "6": {
-      "source_sha256": "64afa7aa32b4ad77e1893058aac0517c8e7081cd2f55d9b4108eb5a381bddc5c",
+      "source_sha256": "f6dea01669650106adc95457df6d2569c2c7d95f22609dacfb4013c5dd16b7c0",
       "status": "reviewed",
-      "translation": "| [pUC19](#catalogpuc) | 2686 | 9 | 0 | 39 | 33 |\n"
+      "translation": "| [pUC19](#catalogpuc) | 2686 | 9 | 0 | 47 | 32 |\n"
     },
     "7": {
-      "source_sha256": "b9916f6dc582394b3e77a7aa6464ac7c6af651e65e7d89a931b0e6933bab40cd",
+      "source_sha256": "ff79c5a8fa91f4708a331c0fbae67759b8b6522bdda0f2bdb0a69323bb744a08",
       "status": "reviewed",
-      "translation": "| [pBR322](#catalogpbr) | 4361 | 6 | 0 | 47 | 42 |\n"
+      "translation": "| [pBR322](#catalogpbr) | 4361 | 6 | 0 | 49 | 40 |\n"
     },
     "8": {
-      "source_sha256": "50b768c45c8d2fb176fe7f83ba84cf21784c4d0a1d52e8fd775dcd97af5994ef",
+      "source_sha256": "e5a081dda3cb973edd35dc82a2d6ea8531be125cb645697daaea825a0774d67f",
       "status": "reviewed",
-      "translation": "| [pBluescript II SK(+)](#catalogblue) | 2961 | 14 | 0 | 48 | 42 |\n"
+      "translation": "| [pBluescript II SK(+)](#catalogblue) | 2961 | 14 | 0 | 54 | 38 |\n"
     },
     "9": {
-      "source_sha256": "f27ed1aaf9249e6a441c94617a48cdf95611cc55d41bcf311ed2364565112e36",
+      "source_sha256": "8fa2f8c42058c29b3a025280d179986b667a44585bbe011549cec43187f310aa",
       "status": "reviewed",
-      "translation": "| [pET-28a(+)](#catalogpet) | 5369 | 16 | 0 | 51 | 45 |\n"
+      "translation": "| [pET-28a(+)](#catalogpet) | 5369 | 16 | 0 | 55 | 49 |\n"
     },
     "10": {
-      "source_sha256": "ecbcabfe61bfac39e76c0aa56001355cdbcc91e498b8b810ae7e457c37a8b6b3",
+      "source_sha256": "6aaaae73fd353b33a7ebf325360bbc65534e2ec3d237fd7d8b4316b0c99856cc",
       "status": "reviewed",
-      "translation": "| [pETDuet-1](#catalogduet) | 5420 | 20 | 5 | 58 | 54 |\n"
+      "translation": "| [pETDuet-1](#catalogduet) | 5420 | 20 | 5 | 62 | 54 |\n"
     },
     "11": {
-      "source_sha256": "03381ee6b061a8a40d35f407e851da576dd2eee77990a7b8dce98f3c718bcb62",
+      "source_sha256": "5eb6fbb23ffde710891368a8a1a38d0771dd931a3413c634f2ccba362c7ccd7b",
       "status": "reviewed",
-      "translation": "| [pDONR221](#catalogdonr) | 4761 | 11 | 0 | 47 | 42 |\n"
+      "translation": "| [pDONR221](#catalogdonr) | 4761 | 11 | 0 | 50 | 39 |\n"
     },
     "12": {
-      "source_sha256": "201ec982283c92a0d947a3c2c2ad751ada90982cbd695830b8a560e915e3ac3a",
+      "source_sha256": "93871c0dc7f898b77bb4111a1b431ff6197b6de3f47cd64bf2e4e6e3e833cce9",
       "status": "reviewed",
-      "translation": "| [pcDNA3.1(+)](#catalogpcdna) | 5428 | 13 | 0 | 51 | 47 |\n"
+      "translation": "| [pcDNA3.1(+)](#catalogpcdna) | 5428 | 13 | 0 | 58 | 47 |\n"
     },
     "13": {
-      "source_sha256": "09d788b42804d7de33983d242a57046c9f9e567dbd79d66d37ef203cae15c0cd",
+      "source_sha256": "d9f6b065241054a1fe3770e63d83dc54501c4e4e797737994e7ec6c935f19927",
       "status": "reviewed",
-      "translation": "| [pTRE-Tight-BI](#catalogtre) | 2856 | 15 | 0 | 47 | 44 |\n"
+      "translation": "| [pTRE-Tight-BI](#catalogtre) | 2856 | 15 | 0 | 53 | 42 |\n"
     },
     "14": {
-      "source_sha256": "2965e7b4a1e4d6f553a81163de661457eaeeaa9d8ebe9455b23aafa2577beafe",
+      "source_sha256": "da4ca4b79955e45d77bd05233811751a301348a4e5ef6e2cda93650f4b29b812",
       "status": "reviewed",
-      "translation": "| [pTRIPZ](#catalogtripz) | 13320 | 33 | 0 | 38 | 35 |\n"
+      "translation": "| [pTRIPZ](#catalogtripz) | 13320 | 33 | 0 | 36 | 35 |\n"
     },
     "15": {
-      "source_sha256": "3652d319bef396ca416a50c6d7e08a62c4f8753ae9282c8d76b082bdd195fe31",
+      "source_sha256": "7f27fa80dcd4ae234de783bdaedb61460732105cc78b42dbcd0326ad2f33556c",
       "status": "reviewed",
-      "translation": "| [pCAMBIA1300](#catalogcambia) | 8959 | 17 | 0 | 42 | 37 |\n"
+      "translation": "| [pCAMBIA1300](#catalogcambia) | 8959 | 17 | 0 | 49 | 37 |\n"
     },
     "16": {
-      "source_sha256": "4ea9210a7eb7e094d33ac41ba92486feb26876526afc75cffc1ce9ae68dfe74e",
+      "source_sha256": "8ec818e33d4503c0e63a4f14f1b6007dbc79b0b07b4f62df0d1004627730d025",
       "status": "reviewed",
-      "translation": "| [pEarleyGate 201](#catalogearley) | 11779 | 21 | 0 | 39 | 37 |\n"
+      "translation": "| [pEarleyGate 201](#catalogearley) | 11779 | 21 | 0 | 44 | 37 |\n"
     },
     "17": {
       "source_sha256": "495b1156b551ebfe3d260d7638f76be2018a427b72d7947eab87e43dce48b5d5",
@@ -136,27 +136,32 @@
       "status": "reviewed",
       "translation": "## pTRE-Tight-BI {#catalogtre}\n"
     },
-    "47": {
+    "45": {
+      "source_sha256": "cbfaee75d1b94c05ae4b64546da1eee53c713d2de62ffb5937c504a87aeff452",
+      "status": "reviewed",
+      "translation": "双向 TRE 启动子以区间显示。示例表保留其来源链向。\n"
+    },
+    "48": {
       "source_sha256": "d259139f3a146d6cceeb164e393fd2a3ada41e9707e47654243fccc6724665f0",
       "status": "reviewed",
       "translation": "## pTRIPZ {#catalogtripz}\n"
     },
-    "50": {
+    "51": {
       "source_sha256": "9c4405b4fd0d74f4e5c913c3871dbcad4dac0a3e2e57deb5a03aae112985d594",
       "status": "reviewed",
       "translation": "## pCAMBIA1300 {#catalogcambia}\n"
     },
-    "53": {
+    "54": {
       "source_sha256": "333528de2afaabffccedfb7fa825d0cd0c33782b4eb897f8b9fdd3ff3ee344fe",
       "status": "reviewed",
       "translation": "## pEarleyGate 201 {#catalogearley}\n"
     },
-    "56": {
+    "57": {
       "source_sha256": "db13e47b80b03ab0d34a5ab81494b0bec6aac67da6e598e3f750fe9b58d93f84",
       "status": "reviewed",
       "translation": "## pSpCas9(BB)-2A-GFP (PX458) {#catalogcas}\n"
     },
-    "58": {
+    "59": {
       "source_sha256": "ef9fd796f3683ffcc2db048d287593a1972351bd6d787dc93436c6fec56ffdfe",
       "status": "reviewed",
       "translation": "[单序列圆图指南](circular.md) · [阅读 pUC19 的各层](case-circular.md)\n"

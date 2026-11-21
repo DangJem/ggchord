@@ -2,7 +2,7 @@
 
 ## Recover the input to one named layer {#source}
 
-Give the ribbon layer a stable ID and request `data_stage = "source"`. The three resulting records show the accessions and original endpoints that entered this layer. To see both source and ribbon geometry, also request `include = "ribbon"`.
+Select the layer by its ID with `layers = "observed"` and request `stages = "source"`. The source table shows the three records that entered this layer. To compare those records with the display geometry, request `stages = c("source", "geometry")` and supply the target device and dimensions.
 
 {{example:inspect-source}}
 
@@ -12,9 +12,9 @@ Give the ribbon layer a stable ID and request `data_stage = "source"`. The three
 
 | Question | What to inspect |
 | --- | --- |
-| Where did a ribbon go? | Compare source IDs and endpoints, active sequence selection and adjacency rules. A repeated reference may need a named display instance. |
-| Which intervals contributed to a coverage value? | Look up the track's `track_statistics` table and its `source_rows`. A [worked example](tracks-statistics.md#members) includes the actual denominator. |
-| Why are labels hidden or crowded? | Run `diagnose_ggchord()` with the target device and dimensions. Inspect `label_diagnostics`, measurement status and the rendered figure. |
+| Where did a ribbon go? | Check source IDs, endpoints and window bounds. For a repeated reference, inspect or set the display instance on each endpoint. |
+| Which intervals contributed to a coverage value? | Export the `statistic` stage and inspect `source_rows`. A [worked example](tracks-statistics.md#members) includes the actual denominator. |
+| Why are labels hidden or crowded? | Run `diagnose_ggchord()` with the target device and dimensions. Inspect the returned `issues`, measurement status and the rendered figure. |
 | Which panel contains this position? | When projections differ across facets, call `map_ggchord_position()` with the intended `panel`. |
 
-When querying calculation stages, read `layer_stage_status` first. A successful empty statistic has status `available`. A failed stage has status `failed` and a reason. These cases require different interpretations.
+Read `stage_status` alongside the returned tables. An available stage can contain zero rows. A failed or unavailable stage gives a reason. Check `measurement` before comparing positions measured at different sizes.

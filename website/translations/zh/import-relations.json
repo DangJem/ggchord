@@ -1,5 +1,5 @@
 {
-  "source_sha256": "4590e03b3dfed4669ec5da0b7a0bf0270ea53cb2c061f568b62cd1c0d4824d7c",
+  "source_sha256": "7e465e219268bafd95430f2d5db06a761dc60e626779f53c050cabca07f6b1f2",
   "blocks": {
     "1": {
       "source_sha256": "e9356e92d10d0a79487448a4d28640e0c767d1c30032b1683b76aa3406480f36",
@@ -12,9 +12,9 @@
       "translation": "读取 MT108731.1 对 MT118296.1 的随包 BLAST 表。每条 HSP 是一个局部比对片段。四个端点指明两侧区间，`pident` 表示一致性百分数。比对文件若缺少序列全长，需要从序列表取得。\n"
     },
     "4": {
-      "source_sha256": "f0fa37dcf1b8564f3a867fc45db8221644de1b357915b05bceecdb01ee9b78ac",
+      "source_sha256": "c6a1abbe41d6362656a602499c0a4c00fe04ebd3b8ecaf0f7ecee923f3b8d79b",
       "status": "reviewed",
-      "translation": "若输入为 PAF，`read_paf()` 还能返回 query 与 subject 的全长。读取时会将文件边界换算为一基闭端点，并保留反向匹配。这些区间可直接交给[连接带图层](multi-sequence-links.md)。\n"
+      "translation": "若输入为 PAF，`read_paf()` 还能返回 query 与 subject 的全长。读取时会将文件边界换算为一基闭端点，并保留反向匹配。这些区间可直接交给[连接带图层](multi-sequence-links.md)。如果输入是 [BEDPE](../../man/read_bedpe.Rd)、[chain](../../man/read_chain.Rd) 或 [delta](../../man/read_delta.Rd)，可查阅相应接口，确认关系表的返回位置和解码依赖。\n"
     },
     "6": {
       "source_sha256": "f001dfde75d95d2ac1728ed9a13f93b0dc7f0e52d7e97440a2ecf3bfee26a301",

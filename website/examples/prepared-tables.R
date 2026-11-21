@@ -8,7 +8,7 @@ features <- gene_data_example |>
   filter(accver %in% ids) |>
   transmute(accver, start, end, strand = source_strand, type = "CDS", anno)
 
-prepared <- prepare_ggchord_data(reference, feature_data = features)
-prepared$feature_data |>
+prepared <- ggchord_data(reference, features = list(cds = features))
+prepared$features$cds |>
   select(accver, start, end, strand, type, anno) |>
   slice_head(n = 4)

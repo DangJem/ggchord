@@ -3,6 +3,7 @@ import argparse
 import hashlib
 import html
 import json
+import os
 import re
 import shutil
 import subprocess
@@ -247,30 +248,17 @@ def render_articles(root, pages):
                 shutil.copy2(rendered / relative, path)
 
 
-def build(root):
+def prepare(root, pandoc):
+    """Prepare articles, search rows and evaluated examples for either build mode."""
     structure, locales = load()
-    pandoc = shutil.which('pandoc')
-    if not pandoc:
-        raise RuntimeError('Pandoc must be on PATH to build the API reference')
-    root = root.resolve()
-    version = re.search(r'^Version: (.+)$', (ROOT / 'DESCRIPTION').read_text(), re.M)[1]
     assets = root / 'assets'
-    assets.mkdir(parents=True, exist_ok=True)
-    shared_assets = ['site.css', 'site.js', 'favicon.png', 'logo.webp']
-    for name in shared_assets:
-        shutil.copy2(ASSETS / name, assets / name)
     output = render_examples(assets, structure)
-    old_names = {p.stem for p in (ROOT / 'website/reference-zh').glob('*.json')}
-    existing_help = {p.stem for p in (ROOT / 'man').glob('*.Rd')}
-    retired = old_names - existing_help - set(structure['topics'])
+    search_by_language = {}
     flexible = read(ROOT / 'website/flexible-parameters.json')
     pages = {lang: [] for lang in LOCALES}
     for lang, locale in locales.items():
         topics, groups = locale['topics'], locale['groups']
         titles = LABELS[lang]
-        home = root / lang / 'index.html'
-        if not home.exists():
-            write(home, redirect('reference/index.html'))
         search = []
         intro = locale['description']
         contents = ''.join(
@@ -363,33 +351,80 @@ def build(root):
                 search.append(dict(url=f'reference/{name}.html',title=f'{name}() — {text["title"]}',
                                    kind='function',summary=text['intro'], text=text['details'],
                                    keywords=' '.join([name, family, *seen])))
-        for name in sorted(retired):
-            title = titles['archived']
-            body = f'<p>{title}</p><p>{link("index.html", titles["current"])}</p>'
-            pages[lang].append(dict(slug=f'reference/{name}', title=name + '()', body=body))
+        search_by_language[lang] = search
+    version = re.search(r'^Version: (.+)$', (ROOT / 'DESCRIPTION').read_text(), re.M)[1]
+    write_json(root / 'api-reference-manifest.json', {
+        'version': version, 'source': structure['reference'], 'functions': len(structure['topics']) - len(NATIVE),
+        'native_facets': len(NATIVE), 'categories': len(structure['groups']), 'locales': list(LOCALES),
+        'topics': list(structure['topics']), 'deployment': 'local output',
+    })
+    write_json(root / 'reference-output.json', {
+        'status': 'passed', 'topics': {name: {'console': entry['console'], 'figures': entry['figures']}
+                                     for name, entry in output['topics'].items()},
+    })
+    return pages, search_by_language
+
+
+def write_reference_redirect(out, path, destination, languages):
+    labels = ({'en': 'Version selection', 'zh': '版本选择'} if destination == 'migration.html#api'
+              else {'en': 'Current documentation', 'zh': '现行文档'})
+    links = []
+    for lang in languages:
+        relative = os.path.relpath(out/lang/destination, path.parent)
+        tag = 'zh-Hans' if lang == 'zh' else 'en'
+        links.append('<a lang="' + tag + '" hreflang="' + tag + '" href="' +
+                     html.escape(relative, quote=True) + '">' + labels[lang] + '</a>')
+    target = os.path.relpath(out/languages[0]/destination, path.parent)
+    script = '<script>location.replace(' + json.dumps(target) + ')</script>'
+    tag = 'zh-Hans' if languages == ('zh',) else 'en'
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text('<!doctype html><html lang="' + tag + '"><head><meta charset="utf-8">'
+                    '<title>' + labels[languages[0]] + ' · ggchord</title>' + script +
+                    '</head><body><main>' + ' · '.join(links) + '</main></body></html>')
+
+
+def build(root):
+    root = root.resolve()
+    assets = root / 'assets'
+    assets.mkdir(parents=True, exist_ok=True)
+    for name in ('site.css', 'site.js', 'favicon.png', 'logo.webp'):
+        shutil.copy2(ASSETS / name, assets / name)
+    pandoc = shutil.which('pandoc')
+    if not pandoc:
+        raise RuntimeError('Pandoc must be on PATH to build the API reference')
+    pages, searches = prepare(root, pandoc)
+    for lang, search in searches.items():
+        home = root / lang / 'index.html'
+        if not home.exists():
+            write(home, redirect('reference/index.html'))
         search_file = root / lang / 'search.json'
         previous = read(search_file) if search_file.exists() else []
         previous = [row for row in previous if
                     row['url'].split('#')[0] != 'parameter-atlas.html' and
-                    (not row['url'].startswith('reference/') or
-                     Path(row['url'].split('#')[0]).stem in existing_help - set(topics))]
+                    not row['url'].startswith('reference/')]
         write_json(search_file, previous + search)
     render_articles(root, pages)
     for folder in (root, *(root / lang for lang in LOCALES)):
         (folder / 'parameter-atlas.html').unlink(missing_ok=True)
     subprocess.run(['Rscript', '--vanilla', 'tools/finalize-website.R',
                     f'--site={root}', '--refresh-existing'], cwd=ROOT, check=True)
-    for name in ('index', *structure['topics'], *sorted(retired)):
-        destination = f'../en/reference/{name}.html'
-        write(root / 'reference' / f'{name}.html', redirect(destination))
+    for page in pages['en']:
+        name = page['slug'] + '.html'
+        write(root / name, redirect('../en/' + name))
+    migrations = read(ROOT/'website/page-migrations.json')
+    for path, mapping in migrations.items():
+        if not path.startswith('reference/'):
+            continue
+        # A fresh standalone reference may not yet contain the handbook pages.
+        for lang in LOCALES:
+            destination = mapping['']
+            if not (root / lang / destination.split('#')[0]).is_file():
+                destination = 'reference/index.html'
+            write_reference_redirect(root, root/lang/path, destination, (lang,))
+        write(root/path, redirect('../en/'+path))
     if not (root / 'index.html').exists():
         write(root / 'index.html', redirect('en/reference/index.html'))
-    write_json(root / 'api-reference-manifest.json', {
-        'version': version, 'source': structure['reference'], 'functions': len(structure['topics']) - len(NATIVE),
-        'native_facets': len(NATIVE), 'categories': len(structure['groups']), 'locales': list(LOCALES),
-        'topics': list(structure['topics']), 'deployment': 'local output',
-    })
-    print(f'Built {len(structure["topics"])} API entries in each language at {root}')
+    print(f'Built {len(pages["en"]) - 1} API entries in each language at {root}')
 
 
 def redirect(destination):

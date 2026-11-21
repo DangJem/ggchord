@@ -18,6 +18,6 @@ Start at a sequence label. The backbone scale gives position in bp. A ribbon enc
 
 ## Source records and display choices {#inputs}
 
-`flagship_comparison_example$chord` holds the four lengths, 12 HSPs and 20 displayed CDS. The selection kept alignments at least 900 bp long with at least 75% identity, then retained up to three of the longest per sequence pair. Named settings in `layout_sequences()` and `geom_seq()` control display orientation, radius and curvature.
+`flagship_comparison_example$chord` holds the four lengths, 12 HSPs and 20 displayed CDS. The selection kept alignments at least 900 bp long with at least 75% identity, then retained up to three of the longest per sequence pair. Named settings in `layout_sequences()` control display orientation, radius and curvature. Each setting matches a reference accession.
 
 [Draw the first ribbon](chord.md) · [See the same input on radial spokes](case-radial.md)

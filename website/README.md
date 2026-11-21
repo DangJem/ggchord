@@ -42,7 +42,7 @@ Article links point to actual repository files, such as a sibling `.md` page, a 
 
 ## Update the API reference
 
-The API reference follows the public inventory and categories in the second-round v0.50.0 manual. Edit English page prose in `website/reference-manual/en.json`, then review the corresponding Han text in `website/reference-manual/zh.json`. Record the SHA-256 of the reviewed English source in the Han file. The shared `structure.json` holds the invocation, parameter and role keys, examples and cross-links. Both language editions expose the same code and anchors. Native facet pages link to the upstream ggplot2 documentation.
+The API reference documents the public inventory and categories for the package source in this checkout. Edit English page prose in `website/reference-manual/en.json`, then review the corresponding Han text in `website/reference-manual/zh.json`. Record the SHA-256 of the reviewed English source in the Han file. The shared `structure.json` holds the invocation, parameter and role keys, examples and cross-links. Both language editions expose the same code and anchors. Native facet pages link to the upstream ggplot2 documentation.
 
 Run these commands to check and build the API reference independently.
 
@@ -55,7 +55,7 @@ The local entry is `.site/en/reference/index.html`, with the matching Han entry 
 
 ## Update function help, package READMEs or offline tutorials
 
-- **Native R help.** Edit the English roxygen source and regenerate its Rd. The original full-site pkgdown renderer uses the translations under `website/reference-zh/` and the categories in `_pkgdown.yml`.
+- **Native R help.** Edit the English roxygen source and regenerate its Rd. Review the corresponding API reference topic when the public contract changes.
 - **Package READMEs.** Both editions share layout and code in `website/readme-template.md`. Edit `website/content-en/readme-text.json`, review the Han translation and regenerate the paired JSON. Run `python3 tools/sync-tutorials.py` to update the two READMEs, then run it with `--check` to verify them.
 - **Offline tutorials.** Edit `vignettes/ggchord_vignette.Rmd` and update the Han edition in `vignettes/ggchord_guide_hans.Rmd`. After review, record the SHA-256 of the English file in the Han header. The README sync command also checks the tutorial digest, R chunks, section anchors and local asset references.
 - **Offline figures.** Run `python3 tools/prepare-vignette-figures.py` to prepare the images embedded in the standalone tutorial HTML distributed by CRAN. This maintenance step uses Pillow. During release checks, `tools/check-vignette-resources.py` verifies the local resources referenced by the tutorial HTML in the source archive.
@@ -64,7 +64,7 @@ The local entry is `.site/en/reference/index.html`, with the matching Han entry 
 
 Design the website for desktop computers. On article and reference pages, the chapter list and the outline sit together on the left. Keep tables and code within the article and allow wide values to scroll inside their own block. Use source, build and static HTML checks for website validation. Check the generated navigation, stylesheets, fragment links and example inputs from the build output.
 
-The core build requires Python 3.9 or newer, R, Pandoc, the package dependencies and the dependencies of the examples. The site uses `pkgdown`, Bootstrap 5, `pkgload`, `rmarkdown` and `jsonlite`. The build renders the articles and evaluates native Rd examples. Run the following commands from the repository root.
+The core build requires Python 3.9 or newer, R, Pandoc, the package dependencies and the dependencies of the examples. The site uses `pkgdown`, Bootstrap 5, `pkgload`, `rmarkdown` and `jsonlite`. The full build renders both languages, replays the handbook and API examples, and checks the output before updating the local preview. Run the following commands from the repository root.
 
 ```sh
 python3 tools/sync-website-languages.py --check
@@ -74,7 +74,7 @@ python3 tools/check-documentation.py
 python3 -m http.server 8765 --directory .site --bind 127.0.0.1
 ```
 
-Open `http://127.0.0.1:8765/` to inspect the files in `.site/`. Both editions use the same images for the four groups of homepage previews. For changes to a figure in the website, package README or offline tutorial, keep a record of the input data, filtering rules, plotting code and image source. [Artwork, third-party assets and licenses](ASSET-SOURCES.md)
+Open `http://127.0.0.1:8765/` to inspect the files in `.site/`. Both editions use the same images for the four groups of homepage previews. The case scripts under `website/examples/` supply the linked full figures. The homepage previews use the same cases and are regenerated with `Rscript tools/render-site-flagships.R`. For changes to a figure in the website, package README or offline tutorial, keep a record of the input data, filtering rules, plotting code and image source. [Artwork, third-party assets and licenses](ASSET-SOURCES.md)
 
 ## CI and deployment
 

@@ -1,5 +1,5 @@
 {
-  "source_sha256": "1356ecea1d4a3df062f75807f4cbc6857336888afaa13d8e1adfbe8c893faf53",
+  "source_sha256": "4167324c8a22de724d675b5979fdab9667df7353e0dcebd511b3e5a481fddcff",
   "blocks": {
     "1": {
       "source_sha256": "39098e98361b2b95c331dfd496e14e45af872cac3c34349eae5110c283befeb5",
@@ -7,9 +7,9 @@
       "translation": "## 在四种坐标系中追踪同一条比对 {#comparison}\n"
     },
     "2": {
-      "source_sha256": "70067b3e574c7a8802cf3cca5940fd86d903e966329058090db176c1706ba76d",
+      "source_sha256": "91ad0f2c95c515e5dd23fde76998bef1c85372dc04e8fe14eeb67c101f08e960",
       "status": "reviewed",
-      "translation": "四幅图都使用 MT108731.1（64,323 bp）和 MT118296.1（32,090 bp）的全长，以及从前者到后者的第一条局部比对。每段示例均可独立运行，脚本之间只更换选择坐标系的最后一行。\n"
+      "translation": "四幅图都使用 MT108731.1（64,323 bp）和 MT118296.1（32,090 bp）的全长，以及从前者到后者的第一条局部比对。每段示例均可独立运行，各图层使用相同的参考及比对区间，由各视图选择自己的间距和坐标系。\n"
     },
     "4": {
       "source_sha256": "96d674428129a9e7c2fae1b58bc5b6d89c2db11437a6b5fb260b35463cc6f354",

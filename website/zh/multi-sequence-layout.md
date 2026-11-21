@@ -20,7 +20,7 @@
 
 ## 指定哪一份骨架接收连接带 {#instances}
 
-在顺序向量中给三行分别取名为 `top`、`middle` 和 `bottom`。上下两行都是 MT108731.1。第一层把最长的 HSP 连到上方骨架，第二层把另外两条连到下方骨架。每一层都用 `between` 指定该组记录连接的两行。
+声明三个全长显示窗口，分别将 `instance_id` 设为 `top`、`middle` 和 `bottom`。最上和最下的窗口来自同一条序列 MT108731.1。连接表中的 `qinstance` 和 `sinstance` 列分别指定两端的显示实例。最长的 HSP 从上方副本连出，另外两条从下方副本连出。
 
 {{example:layout-instances}}
 

@@ -60,25 +60,6 @@ def search_records(out,lang,page_records):
             records.append(dict(kind=page['kind'],url=page['url']+'#'+h[2],title=page['title']+' · '+section,
                 section=section,keywords=section,text=text[:6000],summary=text[:300]))
 
-    # Search the shipped signatures and the localized table cells readers see.
-    # Grouped Rd topics can document several exported aliases.
-    def plain(markup):
-        return ' '.join(html.unescape(re.sub(r'<[^>]*>', ' ', markup)).split())
-
-    exports = set(re.findall(r'^export\(([^)]+)\)', (ROOT/'NAMESPACE').read_text(), re.M))
-    for path in sorted((ROOT/'man').glob('*.Rd')):
-        names = set(re.findall(r'\\alias\{([^}]+)\}', path.read_text())) & exports
-        if not names:
-            continue
-        url = 'reference/' + path.stem + '.html'
-        raw = (out/lang/url).read_text()
-        title = plain(re.search(r'<h1\b[^>]*>(.*?)</h1>', raw, re.S)[1])
-        description = re.search(r'<div class="ref-description[^"]*">(.*?)</div>', raw, re.S)
-        summary = plain(description[1]) if description else title
-        target = url + ('#ref-usage' if 'id="ref-usage"' in raw else '')
-        for api in sorted(names):
-            records.append(dict(kind='function', url=target, title=api, section=title,
-                                keywords=api + ' ' + title, text=summary, summary=summary))
     for intent in json.loads((WEB/'search-intents.json').read_text()):
         records.append(dict(kind='task',url=intent['url'],title=intent['title'][lang],queries=intent['queries'],keywords=' '.join(intent['queries']),text=intent['title'][lang],summary=intent['summary'][lang]))
     return records

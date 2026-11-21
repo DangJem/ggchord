@@ -1,5 +1,5 @@
 {
-  "source_sha256": "83a22b1883bd89a29847e7b0d896f72b7ee0d8e023742f74c9d0b3f2e82c7fa8",
+  "source_sha256": "d3ba5bd513e574684ba0a1c308702d0009a0f1fd4b5a40802f76deb555fab5be",
   "blocks": {
     "0": {
       "source_sha256": "b58fafdf4ec872d5220995e2d90c89ad6e39126b8baf1b8e266f118f7efe33c8",
@@ -32,9 +32,9 @@
       "translation": "## 来源记录与展示选择 {#inputs}\n"
     },
     "10": {
-      "source_sha256": "9a3cddf67bb42aafd0d3e1698d5e935030a8e14174f689a1dc00d25d956e3b1a",
+      "source_sha256": "c7e7d605ed7f111c8a64df99a973e383212e963b49f935ae492a45e163fb787d",
       "status": "reviewed",
-      "translation": "`flagship_comparison_example$chord` 保存四条全长、12 条 HSP 和 20 条入图 CDS。先保留长度至少 900 bp 且一致性至少 75% 的比对，再从每对序列取最长的至多三条。`layout_sequences()` 和 `geom_seq()` 的具名设置控制各序列的显示方向、半径与曲率。\n"
+      "translation": "`flagship_comparison_example$chord` 保存四条全长、12 条 HSP 和 20 条入图 CDS。先保留长度至少 900 bp 且一致性至少 75% 的比对，再从每对序列取最长的至多三条。`layout_sequences()` 的具名设置按序列标识匹配，控制各序列的显示方向、半径与曲率。\n"
     },
     "11": {
       "source_sha256": "22892bd79d74d85d2418d10bbd93ef79bf7ca528fe63f7963e8259e97863b51c",

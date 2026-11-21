@@ -4,7 +4,7 @@ In radial synteny, each reference is a straight spoke with its own position scal
 
 ## Read one HSP on two spokes {#draw}
 
-Use the first alignment from MT108731.1 to MT118296.1. The data and layers match the [two-row comparison](collinear.md). Only the final coordinate call changes.
+Use the first alignment from MT108731.1 to MT118296.1. The data and layers match the [two-row comparison](collinear.md). Use the radial projection and its spoke layout for this view.
 
 {{example:views-radial}}
 
@@ -18,4 +18,4 @@ Add OQ646790.1 to the references. Group hits by subject before selecting the fir
 
 {{example:first-radial}}
 
-The first spoke starts at noon. In larger maps, `start_angle` rotates the set of spokes and `inner_radius` changes the central opening. Next, [separate query and subject into columns](sankey.md), or [add genes to a four-spoke map](case-radial.md).
+The first spoke starts at noon. In larger maps, set `start_angle` in `coord_radial_synteny()` to rotate the spokes, and `inner_radius` in `layout_sequences()` to change the central opening. Next, [separate query and subject into columns](sankey.md), or [add genes to a four-spoke map](case-radial.md).

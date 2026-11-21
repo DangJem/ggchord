@@ -1,5 +1,5 @@
 {
-  "source_sha256": "b420ec94606244b1dcb0d242801b56db6bdbe1d5e403e365c49bde7751cdb0aa",
+  "source_sha256": "5ca4f9949459bf64eacafeb412a0c42253f60a97f4fae2c04fbd8d177e5971ed",
   "blocks": {
     "0": {
       "source_sha256": "f64682cc46a3d3dc0625b721ba945aec2780ce88ea2fd2cdd625cd98b8c70798",
@@ -27,9 +27,9 @@
       "translation": "对查询端和目标端分别计算区间中点，向下取整到碱基位置。将两个位置作为 `qpos` 和 `spos` 传入 `geom_link_line()`。最右侧的线连接最长 HSP 的两个中点。只保留中点后，图中看不到两端的跨度及端点顺序。\n"
     },
     "9": {
-      "source_sha256": "89f16380ce2276100f5eecdc73083ad63525c2ca4ee4f183105d3d6044cfebe7",
+      "source_sha256": "06babbadce58bbc075bf81d8df9b0f18d49a4322393f280bce1f01516240334d",
       "status": "reviewed",
-      "translation": "当骨架超过两行时，共线性连接带层默认只连接相邻行。要显示已选中的非相邻序列对，可设置 `adjacent_only = FALSE`。下一步可[检查某一图层的来源记录](diagnostics.md)，或[把记录分配到重复显示的参考序列](multi-sequence-layout.md#instances)。\n"
+      "translation": "共线性图会绘制输入中的非相邻连接。要突出其中一组，可先筛选记录，再交给独立图层。下一步可[检查图层的来源记录](diagnostics.md)，或[把连接分配给重复显示的参考实例](multi-sequence-layout.md#instances)。\n"
     }
   }
 }

@@ -1,5 +1,5 @@
 {
-  "source_sha256": "480694c881e39cb2099199a2f53b7d46033d570b66a2653bb7f99216ae5c65a5",
+  "source_sha256": "d78762291fe3d473aea47a1a567c1bb697e7be9b4c355ef56b323b356b6ffdc5",
   "blocks": {
     "0": {
       "source_sha256": "ce0e22560da8adc03119acc4084dc2448049e018b496482b13cc9509d8f11a6b",
@@ -12,9 +12,9 @@
       "translation": "## 计算一条目标序列对应的窗口覆盖率 {#coverage}\n"
     },
     "4": {
-      "source_sha256": "f2e874a9881423c5f37355f5700969b1f12f859628a13344a83e8eead1464048",
+      "source_sha256": "f4e7ce40ed4fb76357f47a76351788bacf5c6bf677dd7021e8b70f159ce04731",
       "status": "reviewed",
-      "translation": "选出 MT108731.1 到 MT118296.1 的三条 HSP，以每条记录较小和较大的查询坐标作为区间边界。在柱图层设置 `stat = \"coverage\"` 和 `binwidth = 10000`。计算覆盖率时，重叠区只计一次。查询序列在 64,323 bp 处结束，所以最右侧窗口的实际长度只有 4,323 bp。\n"
+      "translation": "选出 MT108731.1 到 MT118296.1 的三条 HSP，以每条记录较小和较大的查询坐标作为区间边界。在柱图层设置 `stat = \"coverage\"` 和 `binwidth = 10000`，绘制各窗口的覆盖比例。要单独添加同样的统计图层，可以使用 `stat_coverage()`。计算覆盖率时，重叠区只计一次。查询序列在 64,323 bp 处结束，所以最右侧窗口的实际长度只有 4,323 bp。\n"
     },
     "7": {
       "source_sha256": "128a005fea23dcfd80856c9eb9695277c45ddf69abe59ed099cc2f4546d4966c",

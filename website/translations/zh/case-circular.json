@@ -1,5 +1,5 @@
 {
-  "source_sha256": "1a65bcae40e157555a9f6b467ffd3889a918bf6e42992b9ebb7b846d397d3376",
+  "source_sha256": "60368c808ef04cb4c3b6c2729e10bd7e4ff7fdd822ef52c1abc26703114a136c",
   "blocks": {
     "0": {
       "source_sha256": "07cb57b087f9394823a588ff844f752cf79999d417c8843f5ff35f6a97b76de3",
@@ -22,9 +22,9 @@
       "translation": "## 读图 {#reading}\n"
     },
     "7": {
-      "source_sha256": "24734898a4537844ae17d02a4a5f3ec54f35fcbf0f79fd8a739e52324b375c43",
+      "source_sha256": "d9ad4552e208502700399e2f8a4705f29b671afd89b716eb44d7960757d71001",
       "status": "reviewed",
-      "translation": "九条特征均保留参考坐标和链。沿骨架刻度定位特征，再从圆环外侧读取酶切标签。39 条位点记录对应 33 个不同位置，独立参考引物为零条。\n"
+      "translation": "九条特征均保留参考坐标和链。沿骨架刻度定位特征，再从圆环外侧读取酶切标签。47 条位点记录对应 32 个位置，同一位置的酶名并入一个标签。这份记录没有独立参考引物。\n"
     },
     "9": {
       "source_sha256": "de1eb696f2ab1c739faa9f8ef7b26fc480da4593cffdb8c750e451460f700193",
@@ -32,9 +32,9 @@
       "translation": "## 来源记录与展示选择 {#inputs}\n"
     },
     "10": {
-      "source_sha256": "32c04a8ef619c355acce45ea6c324e1e3f62fa0b9f4535f2f53c0a6fb80a2179",
+      "source_sha256": "2ca76b38a2194314fc759fbf4ec92040c937017ec247293650e208c528c6f23a",
       "status": "reviewed",
-      "translation": "`flagship_circular_example$references[[\"pUC19\"]]` 中保存完整长度和三张用于绘图的表。特征层和标签层共用分道位置；代码会在参考记录包含引物行时加入引物层。\n"
+      "translation": "`flagship_circular_example$references[[\"pUC19\"]]` 中保存完整长度和三张用于绘图的表。特征层设置分道位置，标签层按图层标识跟随所用实体；代码会在参考记录包含引物行时加入引物层。\n"
     },
     "11": {
       "source_sha256": "7e93f63fadcca0d3f2b7f1c5d2f122306aef3ff3a6c6f59ffbcce60174eb1ed5",

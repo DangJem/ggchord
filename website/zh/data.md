@@ -36,8 +36,8 @@
 | `accver` | 必需 | 特征所在参考序列的标识。 |
 | `start` | 必需 | 区间起点，采用参考序列的单位。 |
 | `end` | 必需 | 区间终点，单位与起点相同，包含该位置。 |
-| `strand` | 直接向图层传表时必需，也可改用方向字段 | 生物学链向。已知时使用 `"+"` 或 `"-"`，无链向特征使用 `"."`。 |
-| `directionality` 或 `direction` | 直接向图层传表时可代替 `strand` | 可用值包括 `"forward"`、`"reverse"`、`"bidirectional"` 和 `"none"`。同时提供链和方向时，含义必须一致。 |
+| `strand` | 绘制方向形状时使用 | 链向已知时用 `"+"` 或 `"-"`。特征不带箭头时用 `"."`。 |
+| `directionality` | 传给 `as_ggchord_feature()` 的可选输入字段 | 取 `"forward"`、`"reverse"`、`"bidirectional"` 或 `"none"`。若同时提供 `strand`，两者须一致。 |
 | `type` | 一般特征可选；按类型筛选时需要此列或其他分类字段 | 特征类别，例如 CDS。 |
 | `anno` | 可选 | 来源注释或产物描述。 |
 | `feature_id` | 按 ID 关联时需要 | 来源中的稳定特征标识，可用来把标签关联到选定记录。 |
@@ -48,9 +48,9 @@
 | --- | ---: | ---: | --- | --- | --- | --- |
 | MT108731.1 | 13,064 | 14,554 | + | CDS | cds-QIQ63803.1 | hypothetical protein |
 
-直接用 `geom_feature(data = features)` 接收原始数据时，需要提供链或显式方向。通过 `prepare_ggchord_data()` 准备主注释表 `feature_data` 时，可以只提供参考标识和两个区间端点，缺少方向信息时会记为 `"."`。教学数据 `gene_data_example` 同时保存展示用链和原始链 `source_strand`，解读生物学方向时使用后者。
+用 `as_ggchord_feature()` 规范化注释表。它可以把原字段名映射到标准字段，缺少链信息时会把无链特征记为 `"."`。绘制带方向的形状时，保留原始链或提供明确方向。随包表 `gene_data_example` 在 `source_strand` 中记录原注释的链向。
 
-当 `geom_feature(preset = "gene")` 继承主注释表时，会依次查找 `feature_class`、`type` 和 `role`，用最先找到的字段筛选标为 gene 或 CDS 的行。如果向图层显式提供表，则由所给的行决定绘制对象，省去按类别筛选的步骤。两种写法都要求每个基因的链向已知，为正链或负链。
+先按记录中的类型筛选数据，再添加图层。链向已知的编码区可用 `geom_gene()` 绘制。一般区间用 `geom_feature()` 绘制，多种注释共用一层时可以把类型列映射到 `shape`。
 
 <a id="alignments"></a>
 
@@ -124,7 +124,7 @@ BLAST 表格格式 6 和 7 默认都有 12 个字段，格式 7 还包含注释�
 
 ## 将数据表交给图层 {#prepared}
 
-从 `ggchord(reference)` 开始，第二个参数是 `mapping`。可以向每层提供选定的数据表，也可以先把各表组装起来。下面的示例准备主注释表，并打印前几行，以便核对实际保留的链。随后，特征图层可以继承这张表。
+从 `ggchord(reference)` 开始，把各观察表传给相应图层的 `data` 参数。这个示例用 `ggchord_data()` 打包参考表和 CDS 表，绘图前先查看 `features$cds`。要绘制这些特征时，将该表显式传给特征图层。
 
 {{example:prepared-tables}}
 

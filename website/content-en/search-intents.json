@@ -58,7 +58,7 @@
       "给定数值柱",
       "supplied value bars"
     ],
-    "url": "reference/geom_track.html#ref-usage",
+    "url": "reference/geom_track_col.html#ref-usage",
     "title": {
       "en": "Plot supplied values with geom_track_col"
     },
@@ -71,7 +71,7 @@
       "计数",
       "count"
     ],
-    "url": "reference/geom_track.html#ref-usage",
+    "url": "reference/geom_track_col.html#ref-usage",
     "title": {
       "en": "Plot supplied count values"
     },
@@ -107,26 +107,28 @@
   },
   {
     "queries": [
-      "feature_data"
+      "feature data",
+      "feature table",
+      "特征表"
     ],
     "url": "data.html",
     "title": {
       "en": "Reference and layer tables"
     },
     "summary": {
-      "en": "See how reference tables and feature_data supply sequences and annotations."
+      "en": "Register a complete reference and pass the observation table to its feature layer."
     }
   },
   {
     "queries": [
       "windows"
     ],
-    "url": "reference/segment_ggchord_data.html#parameter-windows",
+    "url": "reference/layout_sequences.html#parameter-windows",
     "title": {
-      "en": "windows in segment_ggchord_data"
+      "en": "Display windows in layout_sequences"
     },
     "summary": {
-      "en": "Look up sequence, coordinate and locus_id requirements for segmented display windows."
+      "en": "Look up the source accession, coordinate bounds and instance ID needed by a display window."
     }
   },
   {

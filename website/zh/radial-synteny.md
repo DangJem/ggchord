@@ -4,7 +4,7 @@
 
 ## 在两根辐条上读取一条 HSP {#draw}
 
-取 MT108731.1 到 MT118296.1 的第一条比对。数据与图层都和[两行共线性图](collinear.md)相同，只需更换末行的坐标函数。
+取 MT108731.1 到 MT118296.1 的第一条比对。数据和图层与[两行共线性图](collinear.md)相同，这里使用径向投影和辐条布局。
 
 {{example:views-radial}}
 
@@ -18,4 +18,4 @@
 
 {{example:first-radial}}
 
-第一根辐条从十二点方向开始。绘制较大的图时，可用 `start_angle` 旋转整组辐条，用 `inner_radius` 调整中央空隙。下一步可[将查询与目标分列](sankey.md)，也可以看[带基因注释的四辐条图](case-radial.md)。
+第一条辐条从十二点方向开始。用 `coord_radial_synteny()` 的 `start_angle` 旋转辐条，用 `layout_sequences()` 的 `inner_radius` 调整中央开口。接下来可以[将查询和目标分列](sankey.md)，或[为四条辐条添加基因](case-radial.md)。

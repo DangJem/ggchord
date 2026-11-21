@@ -18,6 +18,6 @@ A coloured sequence backbone carries its own bp scale. The arrow and label besid
 
 ## Source records and display choices {#inputs}
 
-The stored orientation vector is applied to the displayed sequences. `start_angle = 45` rotates the layout, while `nonadjacent_bulge = 0.20` controls the extra bend. Neither value changes an alignment endpoint.
+Use the stored orientation vector in `layout_sequences()`, which also controls the size of the central opening. Set `start_angle = 45` in `coord_radial_synteny()`. Ribbon curvature and the outward bend are controlled on the ribbon layer. The recorded endpoints remain in source coordinates.
 
 [First radial comparison](radial-synteny.md) · [Chord view of these sequences](case-chord.md)

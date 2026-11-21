@@ -1,5 +1,5 @@
 {
-  "source_sha256": "f52da802ec6c8c94c0aa1da1c0a8f48686be25cac5160bfd4e597ee5d08001ab",
+  "source_sha256": "723c3429ffd8b573fb176fca76235e05f8c23c5db4349f2ea94d92bfda6a87bf",
   "blocks": {
     "0": {
       "source_sha256": "9443c12108d2803c7d329e38c07bc57b6c9afe8eccd6c8aa2a58631eb2aaebec",
@@ -102,14 +102,14 @@
       "translation": "| `end` | 必需 | 区间终点，单位与起点相同，包含该位置。 |\n"
     },
     "25": {
-      "source_sha256": "733e0a1e36b88a9dc3e579c2d2f5a8ae13b8288c6d6114814c5474b5cd4dcbbb",
+      "source_sha256": "8c7a79d327c1aa0c1381c1c0734b07e358b7a092026c293b2df5700fb2a1041b",
       "status": "reviewed",
-      "translation": "| `strand` | 直接向图层传表时必需，也可改用方向字段 | 生物学链向。已知时使用 `\"+\"` 或 `\"-\"`，无链向特征使用 `\".\"`。 |\n"
+      "translation": "| `strand` | 绘制方向形状时使用 | 链向已知时用 `\"+\"` 或 `\"-\"`。特征不带箭头时用 `\".\"`。 |\n"
     },
     "26": {
-      "source_sha256": "3b82f809b44ba424f9255f693679fabd434ca9c29ceae7a604d7508f37a10c2d",
+      "source_sha256": "4d8c33442540b2baad1658006bc3282a02e5f330beb87d40686254cdba51d490",
       "status": "reviewed",
-      "translation": "| `directionality` 或 `direction` | 直接向图层传表时可代替 `strand` | 可用值包括 `\"forward\"`、`\"reverse\"`、`\"bidirectional\"` 和 `\"none\"`。同时提供链和方向时，含义必须一致。 |\n"
+      "translation": "| `directionality` | 传给 `as_ggchord_feature()` 的可选输入字段 | 取 `\"forward\"`、`\"reverse\"`、`\"bidirectional\"` 或 `\"none\"`。若同时提供 `strand`，两者须一致。 |\n"
     },
     "27": {
       "source_sha256": "e28f47f35409d305b3d00832453e76cdd01795e512ece4f47c483b0202225a1a",
@@ -142,14 +142,14 @@
       "translation": "| MT108731.1 | 13,064 | 14,554 | + | CDS | cds-QIQ63803.1 | hypothetical protein |\n"
     },
     "34": {
-      "source_sha256": "1736a2b2e99f6b2e1b701054d8c685f7efe5223e91a27ea1333df4052776ae6e",
+      "source_sha256": "c98fbde969272dc74a59223374de2e9234d02038fe65361c1205d0bc3b55c172",
       "status": "reviewed",
-      "translation": "直接用 `geom_feature(data = features)` 接收原始数据时，需要提供链或显式方向。通过 `prepare_ggchord_data()` 准备主注释表 `feature_data` 时，可以只提供参考标识和两个区间端点，缺少方向信息时会记为 `\".\"`。教学数据 `gene_data_example` 同时保存展示用链和原始链 `source_strand`，解读生物学方向时使用后者。\n"
+      "translation": "用 `as_ggchord_feature()` 规范化注释表。它可以把原字段名映射到标准字段，缺少链信息时会把无链特征记为 `\".\"`。绘制带方向的形状时，保留原始链或提供明确方向。随包表 `gene_data_example` 在 `source_strand` 中记录原注释的链向。\n"
     },
     "35": {
-      "source_sha256": "96516695c8a88822cddd1460ba76c09bae251223eea7767b8d543a067c91bc97",
+      "source_sha256": "630399c1b0e5dd3c522bce20864c309680c9b24d218285ccbfad7b14aeb69b19",
       "status": "reviewed",
-      "translation": "当 `geom_feature(preset = \"gene\")` 继承主注释表时，会依次查找 `feature_class`、`type` 和 `role`，用最先找到的字段筛选标为 gene 或 CDS 的行。如果向图层显式提供表，则由所给的行决定绘制对象，省去按类别筛选的步骤。两种写法都要求每个基因的链向已知，为正链或负链。\n"
+      "translation": "先按记录中的类型筛选数据，再添加图层。链向已知的编码区可用 `geom_gene()` 绘制。一般区间用 `geom_feature()` 绘制，多种注释共用一层时可以把类型列映射到 `shape`。\n"
     },
     "37": {
       "source_sha256": "e11da6b3d30a614eeddc9fca859cd96c43d726818eb557d5b210a1d0db328ac2",
@@ -342,9 +342,9 @@
       "translation": "## 将数据表交给图层 {#prepared}\n"
     },
     "84": {
-      "source_sha256": "ea1a79b2ae98869babda11c55ad1999b0769d4d6f46a4a21fb628b50abdbc055",
+      "source_sha256": "a27482015cf5ecf1255db3be827db742746ac82e659b0b83f2e2a3305980ec98",
       "status": "reviewed",
-      "translation": "从 `ggchord(reference)` 开始，第二个参数是 `mapping`。可以向每层提供选定的数据表，也可以先把各表组装起来。下面的示例准备主注释表，并打印前几行，以便核对实际保留的链。随后，特征图层可以继承这张表。\n"
+      "translation": "从 `ggchord(reference)` 开始，把各观察表传给相应图层的 `data` 参数。这个示例用 `ggchord_data()` 打包参考表和 CDS 表，绘图前先查看 `features$cds`。要绘制这些特征时，将该表显式传给特征图层。\n"
     },
     "86": {
       "source_sha256": "a250a149480ba545f1f500928e9114e012c22f5e6a5f12ae9d8d9e5380d44dd8",

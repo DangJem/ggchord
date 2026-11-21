@@ -16,4 +16,4 @@
 
 ## Follow a record into a figure {#results}
 
-Start a plot from its complete reference table. Supply observations to their individual layers, or assemble a prepared object with `prepare_ggchord_data()`. Retain the accession and original endpoints through any display filtering. To check a plotted layer or a statistical window against its source observations, use [layout and source queries](diagnostics.md). For the dimensions of the final image, see [preview and export](output.md).
+Register the complete reference with `ggchord()`, and pass observations to each layer explicitly. Use `ggchord_data()` to store related reference, feature and link tables together. Retain identifiers and original endpoints when filtering. Use `validate_ggchord_data()` to check input roles, and `data_report()` to inspect evidence attached by a reader or data operation. [Layout and source queries](diagnostics.md) connect a plotted layer to its input. [Preview and export](output.md) covers final figure dimensions.

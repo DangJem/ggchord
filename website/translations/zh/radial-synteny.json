@@ -1,5 +1,5 @@
 {
-  "source_sha256": "d92c467dc9b3c3d0602a44b1daee6e23baa8843fd92117856bd743669984f8da",
+  "source_sha256": "76cd670fd0091360e91e3432ddcfa09f5b48a12802b00a833b5398b8071199fe",
   "blocks": {
     "0": {
       "source_sha256": "4b3cc83da66df91cad6ed5c13bf8f70c72569c98eddf7d81cccf73b2a43c5331",
@@ -12,9 +12,9 @@
       "translation": "## 在两根辐条上读取一条 HSP {#draw}\n"
     },
     "3": {
-      "source_sha256": "465e891fc3478f5c42c6722d7296573c7a766568692769af44a1294d011046aa",
+      "source_sha256": "84a5caedd8acddddc068c6f5fd4229d35c269481ae2a89a7276e69a2d6044969",
       "status": "reviewed",
-      "translation": "取 MT108731.1 到 MT118296.1 的第一条比对。数据与图层都和[两行共线性图](collinear.md)相同，只需更换末行的坐标函数。\n"
+      "translation": "取 MT108731.1 到 MT118296.1 的第一条比对。数据和图层与[两行共线性图](collinear.md)相同，这里使用径向投影和辐条布局。\n"
     },
     "5": {
       "source_sha256": "7a5c38866fbea913aff874cae5c7923559c43447bc7468d4dc222fcd7c924195",
@@ -32,9 +32,9 @@
       "translation": "将 OQ646790.1 加入参考序列。先按目标序列分组，再取各组首行，每条目标序列各提供一对实测区间。现在有两条带从 MT108731.1 连向不同辐条，它们在查询序列上覆盖的宽度也不同。\n"
     },
     "10": {
-      "source_sha256": "6f51202ebf9dbba2511ea42aec7123c6441756a6cb737d2ed8d2525b862de911",
+      "source_sha256": "5020db42cfc8afeffd07c415610d11cc0d6985537665e6c4a552c5cd5e9df3db",
       "status": "reviewed",
-      "translation": "第一根辐条从十二点方向开始。绘制较大的图时，可用 `start_angle` 旋转整组辐条，用 `inner_radius` 调整中央空隙。下一步可[将查询与目标分列](sankey.md)，也可以看[带基因注释的四辐条图](case-radial.md)。\n"
+      "translation": "第一条辐条从十二点方向开始。用 `coord_radial_synteny()` 的 `start_angle` 旋转辐条，用 `layout_sequences()` 的 `inner_radius` 调整中央开口。接下来可以[将查询和目标分列](sankey.md)，或[为四条辐条添加基因](case-radial.md)。\n"
     }
   }
 }

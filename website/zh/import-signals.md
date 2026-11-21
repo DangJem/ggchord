@@ -10,6 +10,6 @@
 
 ## 选择信号的几何表示 {#display}
 
-将导入表交给 `geom_track_col(aes(y = value), ...)` 可用柱高表示每个区间的数值，也可用 `geom_track_tile(aes(fill = value), ...)` 将数值映射到颜色。在标度上注明测量单位。[叠加柱与折线](tracks.md)有使用这份数据的完整图。
+用 `geom_track_col()` 绘制覆盖实测区间的柱时，将区间中点映射到 `x`，一基闭区间的长度映射到 `width`，测量值映射到 `y`。如果用色带，可以在 `geom_track_tile()` 中设置每格的位置和宽度，再用 `fill = value` 映射颜色。在标度上注明测量单位。[叠加柱与折线](tracks.md)有使用这份数据的完整图。
 
 `read_bigwig()` 可从二进制信号文件读取相同的核心列。根据输入信号说明确定单位。若要计算一组区间占窗口的比例，应把原始区间交给[覆盖统计](tracks-statistics.md)。

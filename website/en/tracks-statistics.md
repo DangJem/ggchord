@@ -6,7 +6,7 @@ Coverage answers a different question from a precomputed measurement. Given a se
 
 ## Compute window coverage for one subject {#coverage}
 
-Select the three MT108731.1-to-MT118296.1 HSPs. For each HSP take the lower and upper query coordinates as interval bounds. Set `stat = "coverage"` and `binwidth = 10000` on the column layer. Overlaps count once toward the covered fraction. The rightmost window is only 4,323 bp long because the query ends at 64,323 bp.
+Select the three MT108731.1-to-MT118296.1 HSPs. For each HSP take the lower and upper query coordinates as interval bounds. Set `stat = "coverage"` and `binwidth = 10000` on the column layer to draw the fraction covered. For the same calculation as a standalone layer, use `stat_coverage()`. Overlaps count once toward the covered fraction. The rightmost window is only 4,323 bp long because the query ends at 64,323 bp.
 
 {{example:coverage-pair}}
 

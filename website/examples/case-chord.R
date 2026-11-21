@@ -1,88 +1,55 @@
 library(ggchord)
+library(ggplot2)
+library(dplyr)
 
-show_curvature <- c(
-  "MT108731.1" = 0, "MT118296.1" = 1,
-  "OQ646790.1" = -0.65, "OR222515.1" = 0.75
-)
-show_radius <- c(
-  "MT108731.1" = 1.08, "MT118296.1" = 0.82,
-  "OQ646790.1" = 1.18, "OR222515.1" = 1.02
-)
-chord_genes <- flagship_comparison_example$chord$features
-chord_labels <- flagship_comparison_example$chord$labels
-chord_position <- position_strand(c("+" = -0.030, "-" = 0.030))
-show_links <- flagship_comparison_example$chord$links
-show_optimization <- list(seq_orientation = flagship_comparison_example$chord$orientation)
-show_sequences <- flagship_comparison_example$chord$seq_data
-doc_background <- "#FFFCF5"
-doc_theme <- theme_ggchord_publication(
-  axis.text = element_text(size = 11),
-  axis.text.check.overlap = TRUE
-) +
-  theme(
-    legend.position = "bottom",
-    legend.title = element_text(size = 13, face = "bold"),
-    legend.text = element_text(size = 11),
-    legend.key.width = unit(9, "mm"), legend.key.height = unit(5, "mm"),
-    legend.spacing.x = unit(9, "mm"), legend.spacing.y = unit(7, "mm"),
-    legend.box.spacing = unit(6, "mm"),
-    plot.background = element_rect(fill = doc_background, colour = NA),
-    panel.background = element_blank(),
-    plot.title = element_text(face = "bold", size = 18),
-    plot.subtitle = element_text(size = 10, colour = "#5C625A"),
-    plot.margin = margin(14, 18, 14, 18)
-  )
-gene_palette <- c("+" = "#CE1536", "-" = "#346B9D", "." = "#8291A6")
-identity_guide_theme <- theme(
-  legend.key.height = unit(100, "mm"), legend.key.width = unit(5, "mm"),
-  legend.title = element_text(size = 13, face = "bold"),
-  legend.text = element_text(size = 11), legend.margin = margin(r = 7, unit = "mm")
-)
-identity_guide <- ggplot2::guide_coloursteps(
-  available_aes = "ribbon_fill", even.steps = FALSE, show.limits = TRUE,
-  position = "left", direction = "vertical", theme = identity_guide_theme
-)
-seq_palette <- setNames(
-  c("#E64B35", "#233E4A", "#269B82", "#D59B17"),
-  c("MT108731.1", "MT118296.1", "OQ646790.1", "OR222515.1")
-)
-doc_legend_theme <- theme(
-  legend.title = element_text(size = 13, face = "bold"),
-  legend.text = element_text(size = 11),
-  legend.key.width = unit(9, "mm"), legend.key.height = unit(5, "mm"),
-  legend.spacing.x = unit(9, "mm"), legend.spacing.y = unit(7, "mm"),
-  legend.margin = margin(l = 4, r = 4, unit = "mm")
-)
-sequence_guide <- guide_ggchord_legend(nrow = 1, theme = doc_legend_theme)
-strand_guide <- guide_ggchord_legend(
-  nrow = 1, override.aes = list(strand = c("+", "-")), theme = doc_legend_theme
-)
-doc_axis <- function(coordinates = "relative") {
-  scale_seq_position_continuous(
-    coordinates = coordinates, n.breaks = 3, minor_breaks = NULL,
-    labels = function(x) format(x, scientific = FALSE, big.mark = ",", trim = TRUE)
-  )
+comparison <- flagship_comparison_example$chord
+# Stable entity keys let the selected names follow their own CDS arrows.
+identify_genes <- function(records) {
+  records |> mutate(feature_id = paste(accver, start, end, strand, sep = "/"), label = anno)
 }
-showcase_style <- list(
-  scale_seq_colour_manual(values = seq_palette, name = "Sequence", guide = sequence_guide),
-  scale_gene_fill_manual(values = gene_palette, breaks = c("+", "-"), name = "Strand"),
-  guides(gene_fill = strand_guide, ribbon_fill = identity_guide),
-  doc_axis(), doc_theme
+genes <- identify_genes(comparison$features)
+labels <- identify_genes(comparison$labels)
+sequence_colours <- c(
+  "MT108731.1" = "#E64B35", "MT118296.1" = "#233E4A",
+  "OQ646790.1" = "#269B82", "OR222515.1" = "#D59B17"
 )
-p_show_chord <- ggchord(prepare_ggchord_data(seq_data = show_sequences, ribbon_data = show_links)) +
-  geom_link_ribbon(link_avoid = "smooth", alpha = 0.46, linewidth = 0.14) +
-  layout_sequences(orientation = show_optimization$seq_orientation, gap = 0.06) +
-  geom_seq(seq_curvature = show_curvature, seq_radius = show_radius, linewidth = 1.1) +
-  geom_feature(preset = 'gene', data = chord_genes, position = chord_position, width = 0.025) +
-  geom_gene_label_repel(
-    data = chord_labels, label_layout = "radial", label_wrap = 24,
-    size = 2.8, label_max_lines = 3, position = chord_position
+strand_colours <- c("+" = "#CE1536", "-" = "#346B9D", "." = "#8291A6")
+
+overview <- ggchord(comparison$seq_data) +
+  geom_link_ribbon(aes(fill = pident), data = comparison$links,
+    alpha = 0.52, colour = "#53776A", linewidth = 0.16) +
+  geom_seq(aes(colour = accver), linewidth = 1.1,
+    arrow = grid::arrow(length = grid::unit(2, "mm"), type = "closed")) +
+  geom_gene(aes(fill = strand), data = genes, id = "genes",
+    position = position_strand(offset = 1.25), thickness = 1.25, colour = "#454842",
+    linewidth = 0.15) +
+  scale_colour_manual(name = "Sequence", values = sequence_colours,
+    guide = guide_legend(nrow = 1, order = 2)) +
+  scale_for("genes", scale_fill_manual(name = "Strand", values = strand_colours,
+    breaks = c("+", "-"), guide = guide_legend(nrow = 1, order = 1))) +
+  layout_sequences(
+    orientation = -comparison$orientation, angular_gap = 21.6,
+    curvature = setNames(c(0, 1, -0.65, 0.75), names(sequence_colours)),
+    radius = setNames(c(1.08, 0.82, 1.18, 1.02), names(sequence_colours))
   ) +
-  geom_seq_label(size = 4, seq_label_radius = 0.77, seq_label_hjust = 0.5) +
-  showcase_style +
-  coord_chord(rotation = 50) +
-  labs(
-    title = "Four genomes, one connected view",
-    subtitle = "Mixed backbone geometry · CDS sampled by source strand"
-  )
-p_show_chord
+  coord_chord(start_angle = 50, fit = "labels") +
+  theme_ggchord_publication() +
+  theme(plot.background = element_rect(fill = "#FFFCF5", colour = NA),
+    panel.background = element_blank(), legend.position = "bottom",
+    plot.title = element_text(face = "bold", size = 17),
+    plot.margin = margin(10, 14, 10, 14))
+
+overview +
+  geom_gene_label_repel(aes(label = label), data = labels, anchor_layer = "genes",
+    label_layout = label_layout_repel(arrangement = "local", orientation = "horizontal",
+      offset = 4, wrap = 22, max_lines = 3), size = 3.0) +
+  geom_seq_label(aes(label = accver), anchor = "middle",
+    label_layout = label_layout_fixed(orientation = "horizontal", side = "negative", offset = 5),
+    size = 3.7) +
+  scale_seq_position(breaks = scales::breaks_pretty(3), minor_breaks = NULL,
+    labels = scales::label_comma()) +
+  guides(fill = guide_coloursteps(position = "left", direction = "vertical",
+    even.steps = FALSE, show.limits = TRUE,
+    theme = theme(legend.key.height = grid::unit(68, "mm")))) +
+  labs(title = "Four genomes, one connected view",
+    subtitle = "Mixed backbone geometry · CDS sampled by source strand")

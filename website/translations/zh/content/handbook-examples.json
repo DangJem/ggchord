@@ -1,5 +1,5 @@
 {
-  "source_sha256": "1a81624f5860579ba19195d659c35cce8d5ee7c9db6e9ee0ed2dd8339c9707ca",
+  "source_sha256": "afed473f1147366bd69937c3fee6599f9ecbee98e9d71f5ac753223cb346ce4b",
   "strings": {
     "flex-radius/caption": {
       "source_sha256": "f14827d731fc7e1f256aa6ddfd7712190ab5a9f472e20f9d861e1a431ce6206a",
@@ -12,14 +12,14 @@
       "translation": "相同重排后，左图的命名值使 MT118296.1 向内移动；右图的顺序值使 MT108731.1 向内移动。"
     },
     "flex-strand/caption": {
-      "source_sha256": "3ccbe6f2d888203c6cf89af0763305580684c80d09c584bcd7ca25512c77ab4e",
+      "source_sha256": "9763855583658f5826776426610f5d57ee5916e3447ccb7927f6ab280d200e86",
       "status": "reviewed",
-      "translation": "OR222515.1 的正、负链 CDS 分别偏移 0.08 和 −0.14，箭头宽度分别为 0.03 和 0.08。"
+      "translation": "OR222515.1 的正链和负链 CDS 分别偏移 5 和 −9 毫米，箭头厚度分别为 2 和 5 毫米。"
     },
     "flex-radius-error/caption": {
-      "source_sha256": "e6ba220931a7a8f335c048ef50a76f0cb3d5d200a17820f4a4036db171fa6d0f",
+      "source_sha256": "eea0f5365e3308a3f5144f4fa664d6494821c498a829518a290e0161c3792231",
       "status": "reviewed",
-      "translation": "布局计算指出 seq_radius 中的两个链符号均为未知序列标识。"
+      "translation": "布局报告半径设置中的两个链符号是未知的键。"
     },
     "views-chord/caption": {
       "source_sha256": "a6480c9a3fee0cd51ab8644d8f4441ff516a95cbc9f1cd3751211ee8aff77a3a",
@@ -77,9 +77,9 @@
       "translation": "按实际特征类别设置命名填色标度"
     },
     "prepared-tables/caption": {
-      "source_sha256": "20d99949ba914592d3296850320def1153816f6e7b8d494efadcbfb9b7f24ff3",
+      "source_sha256": "1ab64d2e54b6503f16e9aadd049448b9c7b10c6743a2c6859541fd50cc8c9908",
       "status": "reviewed",
-      "translation": "准备结果中保留的特征列"
+      "translation": "从数据集合中的具名表选出的 CDS 记录。"
     },
     "installed-gff/caption": {
       "source_sha256": "cfd4628917b61b4d403affb15fa668bb575c60863b5525849c8cc67ed54bea7d",
@@ -182,29 +182,29 @@
       "translation": "全局关系、共线性与局部放大"
     },
     "map-psb/caption": {
-      "source_sha256": "ebe30478911989ce9ad6c39e430b2feae83c946a8a28a0fa87d89496cbb72302",
+      "source_sha256": "655be1853fbefb614b7c96fe4b43d7b2f13543a6ddddb3fb2173220f5393c1ca",
       "status": "reviewed",
-      "translation": "pSB1C3 · 7 个特征，33 个酶切位置"
+      "translation": "pSB1C3 · 7 个特征，31 个酶切位置"
     },
     "case-circular/caption": {
-      "source_sha256": "45418724f2d0ada13c0a17f59097553c8a41387c8eb1950bb8d0d54e985e44bd",
+      "source_sha256": "60401eb113b3d77eaed9facf4ebea2ed2e7d865daf5a8db182457bb14ee67fc3",
       "status": "reviewed",
-      "translation": "pUC19 · 9 个特征，33 个酶切位置"
+      "translation": "pUC19 · 9 个特征，32 个酶切位置"
     },
     "map-pbr/caption": {
-      "source_sha256": "2aa779b2b99c2217937aabe8f6da48ca57e2107ce91b96a400faf402ee4201cc",
+      "source_sha256": "80089cc9116a86c531df9f9eec206c84d9ba298e28f00d608f3286ee9ae66264",
       "status": "reviewed",
-      "translation": "pBR322 · 6 个特征，42 个酶切位置"
+      "translation": "pBR322 · 6 个特征，40 个酶切位置"
     },
     "map-blue/caption": {
-      "source_sha256": "91983fde15cc18500067d1902aa0b7cb3c3556fe5ac058c0007f6132f6bef7d0",
+      "source_sha256": "e200659bccc7d06af295e8a9ed85ea9f1c58bdedd98f633c3da850cc5800ebcc",
       "status": "reviewed",
-      "translation": "pBluescript II SK(+) · 14 个特征，42 个酶切位置"
+      "translation": "pBluescript II SK(+) · 14 个特征，38 个酶切位置"
     },
     "map-pet/caption": {
-      "source_sha256": "e02b79e83b3fc1a7aa1d0f4ca3bff6ac15f779bbac19acfa2794dadfe5c7197c",
+      "source_sha256": "397c654b6fcef8b15a6095cd36df6f95d3a87c72e6a24051d6a2209965e9b169",
       "status": "reviewed",
-      "translation": "pET-28a(+) · 16 个特征，45 个酶切位置"
+      "translation": "pET-28a(+) · 16 个特征，49 个酶切位置"
     },
     "map-duet/caption": {
       "source_sha256": "467ae5fec171e9e808cd6d27d0787f474c2e5fafd53d939cb9918ed409cb3c38",
@@ -212,9 +212,9 @@
       "translation": "pETDuet-1 · 20 个特征，54 个酶切位置"
     },
     "map-donr/caption": {
-      "source_sha256": "395bcaf073c68b6a83dea439caa280d7751d24486d3be5ee211d55c8c2e4436c",
+      "source_sha256": "1d85493d366cd5f0ee2d9c2510276ab604c1dbd6112a56cddc84a3cd92a5a9b5",
       "status": "reviewed",
-      "translation": "pDONR221 · 11 个特征，42 个酶切位置"
+      "translation": "pDONR221 · 11 个特征，39 个酶切位置"
     },
     "map-pcdna/caption": {
       "source_sha256": "f884b80d25446952bc6d05e0dd080182c2d02529b33b51b4d516398283dec4a1",
@@ -222,9 +222,9 @@
       "translation": "pcDNA3.1(+) · 13 个特征，47 个酶切位置"
     },
     "map-tre/caption": {
-      "source_sha256": "57b0e38126cc7317c7e8713b486373e7fca1cb1cbe853b770bc6ca788697be48",
+      "source_sha256": "46a1555cb038eaba71dc99f2c4d1471b7f29a667153199a3efd75135188cba9c",
       "status": "reviewed",
-      "translation": "pTRE-Tight-BI · 15 个特征，44 个酶切位置"
+      "translation": "pTRE-Tight-BI · 15 个特征，42 个酶切位置"
     },
     "map-tripz/caption": {
       "source_sha256": "2ba6e08102d363e2c210e27a6fab9d4bd1db13bb32c8865a4844a6c7db72108f",

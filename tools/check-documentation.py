@@ -23,7 +23,7 @@ def read(path):
 
 def source_check():
     subprocess.run([sys.executable, 'tools/sync-website-languages.py', '--check'], cwd=ROOT, check=True)
-    subprocess.run([sys.executable, 'tools/reference-translations.py', '--check'], cwd=ROOT, check=True)
+    structure, _ = load_api_reference()
     pages = read(WEB/'pages.json')
     nav = read(WEB/'navigation.json')
     examples = read(WEB/'handbook-examples.json')
@@ -100,7 +100,9 @@ def source_check():
     require('flex-radius-error' in EXAMPLE.findall((WEB/'en/parameters.md').read_text()) and
             examples.get('flex-radius-error',{}).get('kind') == 'data',
             'The flexible-parameter guide lacks its independently runnable invalid input')
-    require({p.stem for p in (WEB/'reference-zh').glob('*.json')} == set(topics), 'Native Rd translation inventory differs')
+    migrations = read(WEB/'page-migrations.json')
+    require(not any('reference/'+name+'.html' in migrations for name in structure['topics']),
+            'A current API topic has a retired-page redirect')
     if errors:
         raise SystemExit('\n'.join(dict.fromkeys(errors)))
     print(f'PASS: {len(canonical)} bilingual entries, {len(examples)} example sources, {len(exports)} exports, '

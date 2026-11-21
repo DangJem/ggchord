@@ -4,20 +4,18 @@ ggchord 根据序列坐标展示特征的位置，以及不同序列之间的比
 
 ## 安装 ggchord {#requirements}
 
-要安装 CRAN 正式版，请在 R 中运行下面的命令。CRAN 目前提供 ggchord 0.28.2，本手册使用 0.50.0 开发版接口。
-
-```{.r}
-install.packages("ggchord")
-```
-
-要运行本手册的示例，请先[下载配套的包源码](../../)并解压。在含有 `DESCRIPTION` 的 ggchord 目录中打开 R。使用 R 4.1.0 或更高版本，先安装或更新 ggplot2（需要 4.0.0 或更高版本）、本地安装所用的 remotes，以及示例筛选记录所用的 dplyr。然后从解压目录安装 ggchord。
+要运行本站示例，请[下载与手册配套的包源码](../../)并解压。在含有 `DESCRIPTION` 的 ggchord 目录中打开 R。使用 R 4.1.0 或更新版本和 ggplot2 4.0.0 或更新版本。示例使用 dplyr 筛选和整理记录。
 
 ```{.r}
 install.packages(c("ggplot2", "remotes", "dplyr"))
 remotes::install_local(".", dependencies = NA, upgrade = "never", build = FALSE)
 ```
 
-重启 R 后运行 `packageVersion("ggchord")`。与本手册配套的版本应显示为 0.50.0。
+如需安装 CRAN 的稳定发布版，可使用以下命令。运行本手册的示例请使用上面提供的配套源码。
+
+```{.r}
+install.packages("ggchord")
+```
 
 <a id="layers"></a>
 

@@ -42,7 +42,7 @@ python3 tools/sync-website-languages.py --reviewed-content home.json /tmp/home-r
 
 ## 更新 API 参考
 
-API 参考采用 v0.50.0 第二轮手册的公开接口清单与分类。先编辑 `website/reference-manual/en.json` 中的英语正文，再校对 `website/reference-manual/zh.json` 中的对应译文，并在汉语文件中登记已校对英语源的 SHA-256。共用的 `structure.json` 保存调用形式、参数与角色名称、示例和关联链接。两种语言共用代码和锚点。原生分面页面链接到 ggplot2 官方文档。
+API 参考说明本地源码的公开接口及其分类。先编辑 `website/reference-manual/en.json` 中的英语正文，再校对 `website/reference-manual/zh.json` 中的对应译文，并在汉语文件中登记已校对英语源的 SHA-256。共用的 `structure.json` 保存调用形式、参数与角色名称、示例和关联链接。两种语言共用代码和锚点。原生分面页面链接到 ggplot2 官方文档。
 
 运行下列命令可独立核对和构建 API 参考章节。
 
@@ -55,7 +55,7 @@ python3 tools/build-website.py --reference-only
 
 ## 更新函数帮助、包 README 或离线教程
 
-- **原生 R 帮助。** 修改英语 roxygen 源并重新生成 Rd。原有 pkgdown 全站渲染器使用 `website/reference-zh/` 下的译文和 `_pkgdown.yml` 中的分类。
+- **原生 R 帮助。** 修改英语 roxygen 源并重新生成 Rd。公开接口行为有变化时，核对相应的 API 参考主题。
 - **包 README。** 两种语言共用 `website/readme-template.md` 的版式和代码。修改 `website/content-en/readme-text.json`，校对汉语译文并重新生成双语 JSON。运行 `python3 tools/sync-tutorials.py` 更新两份 README，然后加上 `--check` 验证结果。
 - **离线教程。** 修改英语源 `vignettes/ggchord_vignette.Rmd`，同步更新汉语版 `vignettes/ggchord_guide_hans.Rmd`。校对后，将英语文件的 SHA-256 写入汉语文件头。README 同步命令也会检查教程摘要、R 代码块、章节锚点及本地资源引用。
 - **离线图片。** 运行 `python3 tools/prepare-vignette-figures.py`，为 CRAN 单独分发的教程 HTML 准备嵌入图片。这一步需要 Pillow。发布验收时，用 `tools/check-vignette-resources.py` 核对源码包中教程 HTML 引用的本地资源。
@@ -64,7 +64,7 @@ python3 tools/build-website.py --reference-only
 
 站点面向电脑设计。文章和参考页的全站章节与本页目录在左侧并排。表格和代码置于正文内，过宽的内容可在各自区块内横向滚动。网站验收使用源码、构建和静态 HTML 检查。从构建结果核对导航、样式表、章节链接和示例输入。
 
-基本构建需要 Python 3.9 或更高版本、R、Pandoc、包依赖及示例依赖。网站使用 `pkgdown`、Bootstrap 5、`pkgload`、`rmarkdown` 和 `jsonlite`。构建时会渲染文章，并运行原生 Rd 示例。在仓库根目录执行下列命令。
+基本构建需要 Python 3.9 或更高版本、R、Pandoc、包依赖及示例依赖。网站使用 `pkgdown`、Bootstrap 5、`pkgload`、`rmarkdown` 和 `jsonlite`。完整构建会生成双语页面，回放工具书和 API 示例，并在核对产物后更新本地预览。在仓库根目录执行下列命令。
 
 ```sh
 python3 tools/sync-website-languages.py --check
@@ -74,7 +74,7 @@ python3 tools/check-documentation.py
 python3 -m http.server 8765 --directory .site --bind 127.0.0.1
 ```
 
-打开 `http://127.0.0.1:8765/` 可查看 `.site/` 中的文件。两种语言的首页共用四组预览图。修改网站、包 README 或离线教程的图像时，保留输入数据、过滤规则、绘图代码及图像来源记录。[原画、第三方资产及许可](ASSET-SOURCES.md)
+打开 `http://127.0.0.1:8765/` 可查看 `.site/` 中的文件。两种语言的首页共用四组预览图。点击预览可查看完整图，由 `website/examples/` 下的案例脚本绘制。首页预览沿用同组案例，通过 `Rscript tools/render-site-flagships.R` 重新生成。修改网站、包 README 或离线教程的图像时，保留输入数据、过滤规则、绘图代码及图像来源记录。[原画、第三方资产及许可](ASSET-SOURCES.md)
 
 ## 持续集成与部署
 

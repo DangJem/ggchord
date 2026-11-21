@@ -20,7 +20,7 @@ Look at the first HSP on its own and set `length_mode = "equal"`. The query and 
 
 ## Choose which displayed copy receives each ribbon {#instances}
 
-Name three display rows `top`, `middle` and `bottom` in the order vector. The top and bottom rows are copies of MT108731.1. The first layer sends the longest HSP to the top copy. The second sends the remaining two to the bottom copy. In each layer, `between` names the two rows that receive the selected records.
+Declare three full-length display windows with distinct `instance_id` values, `top`, `middle` and `bottom`. The top and bottom windows share the source accession MT108731.1. The link table's `qinstance` and `sinstance` columns choose the displayed endpoints. The longest HSP starts at the top copy, and the other two start at the bottom copy.
 
 {{example:layout-instances}}
 

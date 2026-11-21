@@ -1,5 +1,5 @@
 {
-  "source_sha256": "126e696f1025a88ebf19334066fd2498a30692d7c6420cd81134fb6a507c345a",
+  "source_sha256": "73e10df5411fca036c01880d3551afa2dbb7d6499075952d801a708bf0de2e39",
   "blocks": {
     "0": {
       "source_sha256": "c3075ec28799d9ae3c60c19c2867e6618b06b8a2149a7f96e5be3bb05c50e2af",
@@ -12,9 +12,9 @@
       "translation": "## 画出 pUC19 骨架 {#draw}\n"
     },
     "3": {
-      "source_sha256": "074bdf95830358d4b6394805a3437fae1c5115a5ffb7d54c4a7a5e4c7b985c94",
+      "source_sha256": "ad0ecb38915e90c8016d2d400e4825b09d3f9c834cbbeab455a28f127f51f186",
       "status": "reviewed",
-      "translation": "把序列表交给 `ggchord()`，然后加上 `geom_seq()`。圆图默认把起点放在十二点方向。沿顺时针方向，刻度上的坐标逐渐增大，首尾两个碱基在顶部相接。\n"
+      "translation": "把序列表交给 `ggchord()`，然后加上 `geom_seq()`。设置 `start_angle = 90`，起点位于十二点方向。沿顺时针方向，刻度上的坐标逐渐增大，首尾两个碱基在顶部相接。\n"
     },
     "6": {
       "source_sha256": "7ff422c8953f87996eb238815e29a698e78d35a28de320102fceaad9d7d4dbc1",
@@ -22,14 +22,14 @@
       "translation": "## 沿骨架画出九段注释区间 {#adapt}\n"
     },
     "7": {
-      "source_sha256": "14f4c7dcc556b43cb1655445f9d1e18ae26e1bdb807561da590f617255d2678e",
+      "source_sha256": "0300852d6a931ef2976157326db773870ecb5cf624f2f6aaf553367156d6c505",
       "status": "reviewed",
-      "translation": "从同一份记录取出特征表，加一层特征。质粒预设把重叠区间分排在骨架内侧的紧凑轨道上，加宽箭头头部，并隐藏特征图例。特征层从注释表读取配色。若要单独调整这些设置，可查看[等价的图层和位置参数写法](../../man/geom_feature.Rd)。浅绿色长箭头位于 AmpR 编码区（1,626–2,486 bp）所在的弧段，靠近序列起点的一组较短区间则包含 M13 引物结合区和多克隆位点。\n"
+      "translation": "显式传入同一记录的特征表。用 `position_feature_stack()` 分开重叠区间，用记录中的颜色或注释类型区分特征。AmpR 编码区横跨 1,626–2,486 bp。靠近序列起点的一组较短注释包括 M13 引物结合区和多克隆位点。\n"
     },
     "9": {
-      "source_sha256": "aa72f758652f8feb2ed873087c6f87028c09de25b6abc055b0d363a78d5fd24a",
+      "source_sha256": "c468e61d54fb778eb15925407a833607712464bd87447b6ab92fac49edb55aa1",
       "status": "reviewed",
-      "translation": "下一步可[保留九条注释并只标出两个 CDS 的名称](annotations.md)，或[沿 pUC19 绘制 GC 含量](tracks.md)。[完整质粒图](case-circular.md)在 33 个位置标出 39 条限制性位点记录，[质粒图集](plasmid-catalog.md)还收录了另外十二条参考序列的示例。\n"
+      "translation": "下一步可[保留九条注释并只标出两个 CDS 的名称](annotations.md)，或[沿 pUC19 绘制 GC 含量](tracks.md)。[完整质粒图](case-circular.md)在 32 个位置标出 47 条限制性位点记录，[质粒图集](plasmid-catalog.md)还收录了另外十二条参考序列的示例。\n"
     }
   }
 }

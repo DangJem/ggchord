@@ -18,6 +18,6 @@
 
 ## 来源记录与展示选择 {#inputs}
 
-`flagship_comparison_example$chord` 保存四条全长、12 条 HSP 和 20 条入图 CDS。先保留长度至少 900 bp 且一致性至少 75% 的比对，再从每对序列取最长的至多三条。`layout_sequences()` 和 `geom_seq()` 的具名设置控制各序列的显示方向、半径与曲率。
+`flagship_comparison_example$chord` 保存四条全长、12 条 HSP 和 20 条入图 CDS。先保留长度至少 900 bp 且一致性至少 75% 的比对，再从每对序列取最长的至多三条。`layout_sequences()` 的具名设置按序列标识匹配，控制各序列的显示方向、半径与曲率。
 
 [从一条比对带开始](chord.md) · [在径向辐条上查看同一输入](case-radial.md)

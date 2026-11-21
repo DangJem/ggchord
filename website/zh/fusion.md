@@ -4,7 +4,7 @@ Fusion 可组合各自拥有独立坐标系的图。这里用圆图显示 MT1087
 
 ## 组合两幅独立构建的图 {#draw}
 
-先分别构建圆形总览图和线性对照图。将总览图传给 `ggchord_fusion()`，再用 `fusion_panel()` 把第二幅图放在右侧。中央面板的标识为 `center`，给新面板取名 `detail`，后续图层就可以按这个标识指定位置。
+先分别构建圆形总览图和线性对照图，再把具名列表 `list(overview = overview, detail = detail)` 传给 `ggchord_fusion()`。默认网格按列表顺序排列两幅图。连接图层用这些名称指定面板路径。
 
 {{example:fusion-panels}}
 
@@ -12,7 +12,7 @@ Fusion 可组合各自拥有独立坐标系的图。这里用圆图显示 MT1087
 
 ## 按面板标识连接一对区间 {#adapt}
 
-继续使用这个查询方向的第一条 HSP。在 `fusion_ribbon()` 中，`qpanel` 将查询端放到圆图上，对应 MT108731.1 的 26,298–51,139 bp。`spanel` 将目标端放到右侧面板，对应 MT118296.1 的 7,121–31,959 bp。MT108731.1 也出现在右侧面板，但这条带的查询端连在圆图上。
+继续使用这个查询方向的第一条 HSP。在传给 `fusion_ribbon()` 的关系表中加入 `qpanel_path` 和 `spanel_path` 两列。查询端连到 `overview` 中 MT108731.1 的 26,298–51,139 bp，目标端连到 `detail` 中 MT118296.1 的 7,121–31,959 bp。序列标识确定来源，面板路径确定显示位置。
 
 {{example:first-fusion}}
 

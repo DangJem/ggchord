@@ -2,7 +2,7 @@
 
 ## Follow one alignment through four coordinate systems {#comparison}
 
-All four plots use the full lengths of MT108731.1 (64,323 bp) and MT118296.1 (32,090 bp) and the first local alignment between them in that direction. Each example runs on its own. The only change between scripts is the last line, which chooses the coordinates.
+All four plots use the full lengths of MT108731.1 (64,323 bp) and MT118296.1 (32,090 bp) and the first local alignment between them in that direction. Each example runs on its own. The same layers supply references and alignment intervals. Each view chooses its own spacing and coordinate system.
 
 <a id="chord"></a>
 

@@ -6,7 +6,7 @@ Read an installed BLAST table for MT108731.1 against MT118296.1. An HSP is a loc
 
 {{example:installed-blast}}
 
-For a PAF file, `read_paf()` also returns query and subject lengths. The reader converts file boundaries to one-based inclusive endpoints and preserves reverse orientation. Pass the resulting intervals directly to a [ribbon layer](multi-sequence-links.md).
+For a PAF file, `read_paf()` also returns query and subject lengths. The reader converts file boundaries to one-based inclusive endpoints and preserves reverse orientation. Pass the resulting intervals directly to a [ribbon layer](multi-sequence-links.md). If you have [BEDPE](../../man/read_bedpe.Rd), [chain](../../man/read_chain.Rd) or [delta](../../man/read_delta.Rd), check the reader's return value for the location of the relationship table and its decoder requirements.
 
 <a id="members"></a>
 

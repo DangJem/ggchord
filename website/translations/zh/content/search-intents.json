@@ -1,5 +1,5 @@
 {
-  "source_sha256": "53e82b1a28e8fcf5877c61fc559644382d4c51c2b88c96add3e49d3f3b0fac4a",
+  "source_sha256": "46d3905a7e7dd40de285450c7330ee5320e1be28b03dfdbf8978017a4c3519f1",
   "strings": {
     "0/title": {
       "source_sha256": "6f64915e45df7493a2be3fdaf9f028f35b47a51a193d17c6dff5cb89d80d8eb4",
@@ -87,19 +87,19 @@
       "translation": "参考表与图层表"
     },
     "8/summary": {
-      "source_sha256": "fc17a4ce3950f6cad5ee863f9b7a1a9d5e84be81cca9d970c1539ec5420cd631",
+      "source_sha256": "4313428199f2ec101d8383dc9857eb814d7996b3551220b9976293d1812306cc",
       "status": "reviewed",
-      "translation": "了解参考表与 feature_data 如何提供序列和注释。"
+      "translation": "登记完整参考表，再将观察表传给相应的特征图层。"
     },
     "9/title": {
-      "source_sha256": "c9d2d2e63970fcd2c322569b46928aab0af6a1cf9c6ba2d12487255f0c3b25cc",
+      "source_sha256": "5f05515ff069b380ece8fbae7e135ea7daf3a58fb2881ff0fafb28c897f5a381",
       "status": "reviewed",
-      "translation": "segment_ggchord_data 的 windows"
+      "translation": "layout_sequences 的显示窗口"
     },
     "9/summary": {
-      "source_sha256": "f7307224b0a38810fab6d21893f5a60bc048b92cbc209918c88c9c616af90120",
+      "source_sha256": "53b94bdce8efc5e55d9a7d8f244d16b98e52744c1ab6b74ad166cda0eee0a21d",
       "status": "reviewed",
-      "translation": "查阅分段显示窗口表所需的序列、起止坐标与 locus_id。"
+      "translation": "查阅显示窗口所需的来源序列标识、区间边界和实例标识。"
     },
     "10/title": {
       "source_sha256": "801fa2082fe7caa189deea52aa41ae7934326cf951fe83354d7f4f9b3220163a",

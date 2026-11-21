@@ -16,4 +16,4 @@
 
 {{example:first-sankey}}
 
-如果输入还含反向查询记录，它会生成另一条带，对应交换角色后的序列对。绘制较密的图时，可用 `column_gap` 调整两列间距。下一步可[对照四种布局](multi-sequence-views.md)，或[在二维坐标中把 HSP 画成线段](dotplot.md)。[四基因组 Sankey 案例](case-sankey.md)还为重复显示的参考序列加上了注释。
+如果输入还含反向查询记录，它会生成另一条带，对应交换角色后的序列对。绘制较密的图时，可用 `layout_sequences(column_gap = ...)` 调整两列间距。下一步可[对照四种布局](multi-sequence-views.md)，或[在二维坐标中把 HSP 画成线段](dotplot.md)。[四基因组 Sankey 案例](case-sankey.md)还为重复显示的参考序列加上了注释。

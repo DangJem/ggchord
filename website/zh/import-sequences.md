@@ -12,4 +12,4 @@
 
 用 `read_fasta_lengths()` 读取 FASTA 的 ID 和全长。一条序列的最后一个注释可能远在序列终点之前。对于此例，可以从 `seq_data_example` 选择 MT108731.1 得到完整参考，再把 GFF3 表交给 `geom_feature(data = features)`。换成自己的文件时，应核对两个表的 ID 拼写是否完全一致。
 
-GenBank 记录同时带有序列和注释。`read_genbank()` 返回的 `seq_data` 是参考表，`features$annotation` 是特征行。用编码特征进行[坐标投影](projection.md)时，保留拼接片段及其来源链。
+GenBank 记录同时包含序列和注释。安装 Biopython 后，`read_genbank()` 会在同一集合中返回 `sequences` 和 `features$annotation`。用编码区做[坐标投影](projection.md)时，请保留拼接片段及原始链向。对于 BED 区间或 VCF 变异，见 [read_bed()](../../man/read_bed.Rd) 和 [read_vcf()](../../man/read_vcf.Rd) 的坐标及返回表说明。

@@ -16,4 +16,4 @@ Include all three rows in the same query-to-subject direction. Each band takes i
 
 {{example:first-sankey}}
 
-A reciprocal row in the input would give a separate band in the opposite sequence pairing. For a denser layout, `column_gap` sets the distance between columns. Next, [compare all four layouts](multi-sequence-views.md) or [plot the HSP as an x–y segment](dotplot.md). The [four-genome Sankey case](case-sankey.md) adds annotations to the repeated references.
+A reciprocal row in the input would give a separate band in the opposite sequence pairing. For a denser layout, `layout_sequences(column_gap = ...)` sets the distance between columns in millimetres. Next, [compare all four layouts](multi-sequence-views.md) or [plot the HSP as an x–y segment](dotplot.md). The [four-genome Sankey case](case-sankey.md) adds annotations to the repeated references.

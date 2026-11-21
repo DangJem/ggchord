@@ -6,7 +6,7 @@
 
 {{example:installed-blast}}
 
-若输入为 PAF，`read_paf()` 还能返回 query 与 subject 的全长。读取时会将文件边界换算为一基闭端点，并保留反向匹配。这些区间可直接交给[连接带图层](multi-sequence-links.md)。
+若输入为 PAF，`read_paf()` 还能返回 query 与 subject 的全长。读取时会将文件边界换算为一基闭端点，并保留反向匹配。这些区间可直接交给[连接带图层](multi-sequence-links.md)。如果输入是 [BEDPE](../../man/read_bedpe.Rd)、[chain](../../man/read_chain.Rd) 或 [delta](../../man/read_delta.Rd)，可查阅相应接口，确认关系表的返回位置和解码依赖。
 
 <a id="members"></a>
 
