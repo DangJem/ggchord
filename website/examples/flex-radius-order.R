@@ -6,7 +6,7 @@ display_order <- c("OQ646790.1", "MT108731.1", "MT118296.1", "OR222515.1")
 backbones <- ggchord(seq_data_example) +
   geom_seq(
     aes(colour = accver), show.legend = FALSE,
-    arrow = grid::arrow(type = "closed", length = grid::unit(2.4, "mm"))
+    arrow = arrow(type = "closed", length = unit(2.4, "mm"))
   ) +
   scale_colour_manual(values = c(
     "MT108731.1" = "#0072B2", "MT118296.1" = "#D55E00",

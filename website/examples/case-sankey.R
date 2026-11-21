@@ -1,6 +1,7 @@
 library(ggchord)
 library(ggplot2)
 library(dplyr)
+library(scales)
 
 comparison <- flagship_comparison_example$sankey
 # Stable entity keys let the selected names follow their own CDS arrows.
@@ -19,9 +20,9 @@ overview <- ggchord(comparison$seq_data) +
   geom_link_ribbon(aes(fill = pident), data = comparison$adjacent_links,
     alpha = 0.50, colour = "#53776A", linewidth = 0.18) +
   geom_link_ribbon(aes(fill = pident), data = comparison$cross_links,
-    alpha = 0.33, colour = "#547568", linewidth = 0.28, linetype = "dashed") +
+    alpha = 0.33, colour = "#547568", linewidth = 0.28) +
   geom_seq(aes(colour = accver), linewidth = 1.1,
-    arrow = grid::arrow(length = grid::unit(2, "mm"), type = "closed")) +
+    arrow = arrow(length = unit(2, "mm"), type = "closed")) +
   geom_gene(aes(fill = strand), data = genes, id = "genes",
     position = position_strand(offset = 2.1), thickness = 2.1, colour = "#454842",
     linewidth = 0.15) +
@@ -29,7 +30,7 @@ overview <- ggchord(comparison$seq_data) +
     guide = guide_legend(nrow = 1, order = 2)) +
   scale_for("genes", scale_fill_manual(name = "Strand", values = strand_colours,
     breaks = c("+", "-"), guide = guide_legend(nrow = 1, order = 1))) +
-  layout_sequences(column_gap = 85, row_gap = 20) +
+  layout_sequences(column_gap = 145, row_gap = 20) +
   coord_sankey(fit = "labels") +
   theme_ggchord_publication() +
   theme(plot.background = element_rect(fill = "#FFFCF5", colour = NA),
@@ -37,17 +38,24 @@ overview <- ggchord(comparison$seq_data) +
     plot.title = element_text(face = "bold", size = 17),
     plot.margin = margin(10, 14, 10, 14))
 
-overview +
-  geom_gene_label_repel(aes(label = label), data = labels, anchor_layer = "genes",
+# Each display column points its CDS names away from the ribbons.
+column_labels <- lapply(c("left", "right"), function(column) {
+  rows <- labels |> mutate(instance_id = paste(column, accver, sep = ":"))
+  geom_gene_label_repel(aes(label = label), data = rows, anchor_layer = "genes",
+    hjust = if (column == "left") 1 else 0, size = 3.05,
+    segment_colour = "#767A73", segment_linewidth = 0.18,
     label_layout = label_layout_repel(arrangement = "local", orientation = "horizontal",
-      offset = 4, wrap = 22, max_lines = 3), size = 3.15) +
+      side = if (column == "left") "negative" else "positive",
+      offset = 5, padding = 1, wrap = 22, max_lines = 3))
+})
+overview + column_labels +
   geom_seq_label(aes(label = accver), anchor = "start",
-    label_layout = label_layout_fixed(orientation = "horizontal", side = "positive", offset = 5),
+    label_layout = label_layout_fixed(orientation = "horizontal", along = -3, offset = 0),
     size = 3.7) +
-  scale_seq_position(breaks = scales::breaks_pretty(3), minor_breaks = NULL,
-    labels = scales::label_comma()) +
+  scale_seq_position(name = NULL, breaks = breaks_pretty(2), minor_breaks = NULL,
+    labels = label_comma()) +
   guides(fill = guide_coloursteps(direction = "horizontal", even.steps = FALSE,
-    show.limits = TRUE, theme = theme(legend.key.width = grid::unit(82, "mm")))) +
+    show.limits = TRUE, theme = theme(legend.key.width = unit(115, "mm")))) +
   theme(legend.box = "vertical") +
   labs(title = "Four genomes, mirrored relationships",
     subtitle = "Original Collinear sources; independent query and subject displays")

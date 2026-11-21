@@ -1,3 +1,4 @@
+# Historical example for ggchord 0.27.0.9000 at commit 6d199456.
 # Optional dependency: dplyr. One real HSP is deliberately shown 12 times.
 library(ggchord)
 library(dplyr)

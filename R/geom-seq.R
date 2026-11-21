@@ -2,7 +2,7 @@
 # Fetches pre-computed sequence arc data from the package environment and renders it with geom_path
 # Backbone appearance is owned by each sequence layer.
 
-GeomChordSeq <- ggplot2::ggproto(
+GeomChordSeq <- ggproto(
   "GeomChordSeq", ggplot2::Geom,
   required_aes = c("x", "y"),
   default_aes = aes(
@@ -32,7 +32,7 @@ GeomChordSeq <- ggplot2::ggproto(
         breaks, panel_params, coord, lineend = "butt", arrow = NULL,
         na.rm = na.rm)
     }
-    do.call(grid::grobTree, grobs)
+    do.call(grobTree, grobs)
   }
 )
 

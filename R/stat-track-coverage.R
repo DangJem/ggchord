@@ -136,7 +136,7 @@ ggchord_coverage_windows <- function(data, grid) {
       aa <- a[at]; bb <- b[at]
       sum(pmax(0, bb - pmax(aa - 1, c(aa[1L] - 1, head(cummax(bb), -1L)))))
     }, numeric(1)))
-    previous_end <- c(a[1L] - 1, utils::head(cummax(b), -1L))
+    previous_end <- c(a[1L] - 1, head(cummax(b), -1L))
     covered[j] <- sum(pmax(0, b - pmax(a - 1, previous_end)))
   }
   grid$xmin <- grid$window_start - 1
@@ -154,7 +154,7 @@ ggchord_coverage_windows <- function(data, grid) {
   grid
 }
 
-StatGgchordCoverage <- ggplot2::ggproto("StatGgchordCoverage", ggplot2::Stat,
+StatGgchordCoverage <- ggproto("StatGgchordCoverage", ggplot2::Stat,
   required_aes = c("xmin", "xmax", ".ggchord_source_index", ".ggchord_reference"),
   dropped_aes = c("xmin", "xmax", ".ggchord_source_index", ".ggchord_reference"),
   default_aes = aes(y = after_stat(coverage)),

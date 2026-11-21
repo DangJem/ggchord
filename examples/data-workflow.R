@@ -1,3 +1,4 @@
+# Historical example for the first v0.50.0 API design at commit ddc3b809.
 # Run from the source repository root after loading ggchord.
 # Reuse original FASTA/GFF3/BLAST records; no source records are rewritten.
 library(ggchord)

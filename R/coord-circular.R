@@ -1,6 +1,6 @@
 # Dedicated coordinate contract for one circular sequence.
 
-CoordCircular <- ggplot2::ggproto(
+CoordCircular <- ggproto(
   "CoordCircular", CoordGgchord,
   resolve_annotation_registry = function(self, layer_geometry, layout) {
     ggchord_resolve_circular_annotation_registry(
@@ -41,7 +41,7 @@ coord_circular <- function(start_angle = 0, direction = "clockwise",
   ggchord_check_argument_names(sys.call(), sys.function())
   direction <- ggchord_coord_direction(start_angle, direction)
   settings <- ggchord_coord_settings(1, xlim, ylim, expand, clip, fit)
-  ggplot2::ggproto(NULL, CoordCircular, !!!settings,
+  ggproto(NULL, CoordCircular, !!!settings,
     rotation = start_angle %% 360, reference_direction = direction,
     ggchord_circular = TRUE)
 }

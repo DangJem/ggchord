@@ -34,7 +34,7 @@ coord_sankey <- function(axis = "y", ratio = NULL, xlim = NULL, ylim = NULL,
   ggchord_check_argument_names(sys.call(), sys.function())
   base <- coord_collinear(axis = axis, ratio = ratio, xlim = xlim, ylim = ylim,
     expand = expand, clip = clip, fit = fit)
-  ggplot2::ggproto("CoordSankey", base, ggchord_sankey = TRUE,
+  ggproto("CoordSankey", base, ggchord_sankey = TRUE,
     sankey_self_links = TRUE, sankey_axis = axis, collinear_seq_axis = "sankey")
 }
 
@@ -86,7 +86,7 @@ ggchord_project_sankey_layout <- function(layout, plot) {
   ref <- layout$sequence_reference
   tab <- layout$sequence_layout
   left <- which(instances$side == "left")
-  span <- stats::setNames(tab$xmax-tab$xmin, tab$accver)
+  span <- setNames(tab$xmax-tab$xmin, tab$accver)
   gaps <- if (length(left) > 1L) abs(diff(unname(ref$y[instances$key[left]]))) else numeric()
   top <- c(0, -cumsum(head(unname(span[instances$key[left]]), -1) + gaps))
   frames <- instances

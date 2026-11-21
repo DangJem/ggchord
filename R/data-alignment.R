@@ -215,7 +215,7 @@ map_alignment_position <- function(alignment, positions, from = "source",
   if (inherits(alignment, "ggplot")) {
     data <- alignment$ggchord_alignment
     if (is.null(data)) ggchord_stop(caller, ": register the character plot first")
-    ggchord_alignment_layout(ggplot2::ggplot_build(alignment), data)
+    ggchord_alignment_layout(ggplot_build(alignment), data)
   }
   required <- c("accver", "alignment_column", "source_accver", "source_position", "is_gap")
   ggchord_require_columns(data, required, caller)

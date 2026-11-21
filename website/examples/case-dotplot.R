@@ -14,7 +14,10 @@ overview <- ggchord(sequences) +
   theme(panel.grid = element_blank(), legend.position = "bottom",
     plot.background = element_rect(fill = "#FFFCF5", colour = NA),
     panel.background = element_rect(fill = "#FFFCF5", colour = NA),
-    plot.title = element_text(face = "bold"),
+    plot.title = element_text(face = "bold", hjust = 0.5),
+    axis.text = element_text(size = 9),
+    axis.text.x.top = element_text(size = 10, face = "bold", margin = margin(b = 8)),
+    axis.text.y.left = element_text(size = 10, face = "bold", margin = margin(r = 8)),
     plot.margin = margin(12, 16, 12, 16))
 
 overview +

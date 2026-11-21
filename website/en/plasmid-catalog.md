@@ -6,21 +6,21 @@ Use this collection to compare the same annotation layers on thirteen references
 
 | Reference | Length (bp) | Features | Reference primers | Site records | Unique positions |
 | --- | ---: | ---: | ---: | ---: | ---: |
-| [pSB1C3](#catalogpsb) | 2070 | 7 | 2 | 41 | 31 |
-| [pUC19](#catalogpuc) | 2686 | 9 | 0 | 47 | 32 |
-| [pBR322](#catalogpbr) | 4361 | 6 | 0 | 49 | 40 |
-| [pBluescript II SK(+)](#catalogblue) | 2961 | 14 | 0 | 54 | 38 |
-| [pET-28a(+)](#catalogpet) | 5369 | 16 | 0 | 55 | 49 |
-| [pETDuet-1](#catalogduet) | 5420 | 20 | 5 | 62 | 54 |
-| [pDONR221](#catalogdonr) | 4761 | 11 | 0 | 50 | 39 |
-| [pcDNA3.1(+)](#catalogpcdna) | 5428 | 13 | 0 | 58 | 47 |
-| [pTRE-Tight-BI](#catalogtre) | 2856 | 15 | 0 | 53 | 42 |
-| [pTRIPZ](#catalogtripz) | 13320 | 33 | 0 | 36 | 35 |
-| [pCAMBIA1300](#catalogcambia) | 8959 | 17 | 0 | 49 | 37 |
-| [pEarleyGate 201](#catalogearley) | 11779 | 21 | 0 | 44 | 37 |
+| [pSB1C3](#catalogpsb) | 2070 | 7 | 2 | 38 | 33 |
+| [pUC19](#catalogpuc) | 2686 | 9 | 0 | 39 | 33 |
+| [pBR322](#catalogpbr) | 4361 | 6 | 0 | 47 | 42 |
+| [pBluescript II SK(+)](#catalogblue) | 2961 | 14 | 0 | 48 | 42 |
+| [pET-28a(+)](#catalogpet) | 5369 | 16 | 0 | 51 | 45 |
+| [pETDuet-1](#catalogduet) | 5420 | 20 | 5 | 58 | 54 |
+| [pDONR221](#catalogdonr) | 4761 | 11 | 0 | 47 | 42 |
+| [pcDNA3.1(+)](#catalogpcdna) | 5428 | 13 | 0 | 51 | 47 |
+| [pTRE-Tight-BI](#catalogtre) | 2856 | 15 | 0 | 47 | 44 |
+| [pTRIPZ](#catalogtripz) | 13320 | 33 | 0 | 38 | 35 |
+| [pCAMBIA1300](#catalogcambia) | 8959 | 17 | 0 | 42 | 37 |
+| [pEarleyGate 201](#catalogearley) | 11779 | 21 | 0 | 39 | 37 |
 | [pSpCas9(BB)-2A-GFP (PX458)](#catalogcas) | 9288 | 19 | 0 | 4 | 4 |
 
-Site counts refer to the declared enzyme set in each record. Different enzymes can share one cut position. Primer counts refer to independently recorded reference primers.
+The catalogue uses each saved reference enzyme profile and the original display selection. The pETDuet-1 record uses a unique 6+ cutter profile because its reference file does not select an enzyme set. The site layer retains the documented cuts on both strands. Each outer label groups enzymes by their top-strand cut, or by the bottom-strand cut when only that cut is available. The primer count covers independently recorded reference primers.
 
 <a id="catalogpsb"></a>
 

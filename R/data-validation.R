@@ -12,7 +12,7 @@ ggchord_data_validation_result <- function(issues, action, caller, checks_run,
     checks_run = checks_run, checks_skipped = checks_skipped, ...),
     class = "ggchord_validation")
   if (action == "error" && any(errors)) {
-    rlang::abort(paste0(caller, ": ", issues$message[which(errors)[1L]]),
+    abort(paste0(caller, ": ", issues$message[which(errors)[1L]]),
       class = "ggchord_validation_error", report = result)
   }
   if (action == "warn" && nrow(issues)) {

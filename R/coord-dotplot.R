@@ -30,7 +30,7 @@ coord_dotplot <- function(ratio = 1, xlim = NULL, ylim = NULL,
     expand = FALSE, clip = "on", fit = "geometry") {
   ggchord_check_argument_names(sys.call(), sys.function())
   settings <- ggchord_coord_settings(ratio, xlim, ylim, expand, clip, fit)
-  ggplot2::ggproto("CoordDotplot", ggplot2::CoordCartesian, !!!settings, ggchord_dotplot = TRUE)
+  ggproto("CoordDotplot", ggplot2::CoordCartesian, !!!settings, ggchord_dotplot = TRUE)
 }
 
 ggchord_dotplot_axis <- function(seqs, ids, orientation, gap, axis) {
@@ -77,7 +77,7 @@ ggchord_dotplot_geometry <- function(plot, for_drawing = FALSE) {
   if (anyNA(seqs$accver) || anyDuplicated(seqs$accver) || !is.numeric(seqs$length) ||
       any(!is.finite(seqs$length)) || any(seqs$length < 1))
     ggchord_stop("coord_dotplot(): sequence accessions must be unique with positive finite lengths")
-  units <- stats::setNames(seqs$sequence_unit, seqs$accver)
+  units <- setNames(seqs$sequence_unit, seqs$accver)
   inputs <- list()
   for (layer in plot$layers) {
     if (is.null(layer$ggchord_type)) next
@@ -132,14 +132,14 @@ ggchord_dotplot_geometry <- function(plot, for_drawing = FALSE) {
       selected <- unique(unlist(lapply(membership[scales == group], `[[`, "displayed")))
       local <- frame[frame$accver %in% selected, , drop = FALSE]
       if (!nrow(local)) ggchord_stop("No complete reference for free Dotplot ", axis, " axis")
-      ggchord_dotplot_axis(seqs, local$accver, stats::setNames(local$orientation, local$accver),
+      ggchord_dotplot_axis(seqs, local$accver, setNames(local$orientation, local$accver),
         ggchord_layout_values(config[[paste0(axis, "_gap")]], ids, field = "gap", default = 0)[local$accver], axis)
     })
     frames[match(scales, unique(scales))]
   }
   x <- build_axis("x")
   y <- build_axis("y")
-  alignment_layers <- stats::setNames(Filter(function(x) identical(x$ggchord_type, "alignment"),
+  alignment_layers <- setNames(Filter(function(x) identical(x$ggchord_type, "alignment"),
     plot$layers), names(inputs))
   geometries <- list(); reports <- list()
   for (id in names(inputs)) {
@@ -222,7 +222,7 @@ ggchord_prepare_dotplot <- function(plot) {
     for (axis in c("x", "y", "xend", "yend")) {
       field <- tail(make.unique(c(names(drawing), paste0(".ggchord_", axis))), 1L)
       drawing[[field]] <- geometry[[axis]]
-      mapping[[axis]] <- rlang::new_quosure(rlang::sym(field), emptyenv())
+      mapping[[axis]] <- new_quosure(sym(field), emptyenv())
     }
     if (!is.null(layout$facet_layout)) drawing$.ggchord_panel <- geometry$PANEL
     plot$layers[[i]] <- reconstruct_layer(layer, drawing, mapping)
@@ -235,7 +235,7 @@ ggchord_prepare_dotplot <- function(plot) {
     frame <- axis_data[axis_data$axis == axis, , drop = FALSE]
     unit <- frame$sequence_unit[1L]
     if (isTRUE(layout$free_axes[[axis]])) {
-      scale <- if (axis == "x") ggplot2::scale_x_continuous else ggplot2::scale_y_continuous
+      scale <- if (axis == "x") scale_x_continuous else scale_y_continuous
       name <- paste0(if (axis == "x") "Query position" else "Subject position", " (", unit, ")")
       plot$scales$add(scale(name = name))
       next
@@ -256,7 +256,7 @@ ggchord_prepare_dotplot <- function(plot) {
       labels[[i]] <- format(pos, trim = TRUE, scientific = FALSE,
         big.mark = if (nrow(frame) > 1L) "," else "")
     }
-    scale <- if (axis == "x") ggplot2::scale_x_continuous else ggplot2::scale_y_continuous
+    scale <- if (axis == "x") scale_x_continuous else scale_y_continuous
     # Blank expansion geometry trains complete axis extents without censoring
     # additional ordinary annotation layers or changing the source HSP data.
     segment_labels <- paste0(frame$accver, "\n1-",
@@ -266,23 +266,23 @@ ggchord_prepare_dotplot <- function(plot) {
       # Sequence identity is a separate tier from local numeric positions.
       # The secondary axis is an identity transform, never a new coordinate domain.
       header <- ggplot2::dup_axis(name = NULL, breaks = centers, labels = segment_labels,
-        guide = ggplot2::guide_axis(check.overlap = FALSE))
+        guide = guide_axis(check.overlap = FALSE))
       if (axis == "x") {
         plot$scales$add(scale(name = paste0("Query position (", unit, ")"),
           breaks = unlist(breaks), labels = unlist(labels), sec.axis = header,
-          guide = ggplot2::guide_axis(check.overlap = TRUE)))
+          guide = guide_axis(check.overlap = TRUE)))
       } else {
         local <- ggplot2::dup_axis(name = paste0("Subject position (", unit, ")"),
-          breaks = unlist(breaks), labels = unlist(labels), guide = ggplot2::guide_axis(check.overlap = TRUE))
+          breaks = unlist(breaks), labels = unlist(labels), guide = guide_axis(check.overlap = TRUE))
         plot$scales$add(scale(name = "Subject sequence", breaks = centers,
           labels = segment_labels, sec.axis = local,
-          guide = ggplot2::guide_axis(check.overlap = FALSE)))
+          guide = guide_axis(check.overlap = FALSE)))
       }
     } else {
       plot$scales$add(scale(name = paste0(if (axis == "x") "Query" else "Subject",
         ": ", frame$accver, " (", unit, ")"),
         breaks = unlist(breaks), labels = unlist(labels),
-        guide = ggplot2::guide_axis(check.overlap = TRUE)))
+        guide = guide_axis(check.overlap = TRUE)))
     }
   }
   blank <- do.call(rbind, lapply(layout$axis_panels, function(frame) {
@@ -304,22 +304,22 @@ ggchord_prepare_dotplot <- function(plot) {
     # query/subject extent, so short sequences retain proportionally smaller cells.
     cells$background <- ifelse((cells$query + cells$subject) %% 2 == 0, "#F0F6F3", "#FFFFFF")
     layer <- ggplot2::geom_rect(data = cells,
-      aes(xmin = !!rlang::sym("xmin"), xmax = !!rlang::sym("xmax"),
-          ymin = !!rlang::sym("ymin"), ymax = !!rlang::sym("ymax"),
-          fill = I(!!rlang::sym("background"))),
+      aes(xmin = !!sym("xmin"), xmax = !!sym("xmax"),
+          ymin = !!sym("ymin"), ymax = !!sym("ymax"),
+          fill = I(!!sym("background"))),
       inherit.aes = FALSE, show.legend = FALSE,
       colour = "#A9BBB4", linewidth = .35)
     plot$layers <- c(list(layer), plot$layers)
   }
   base <- ggplot2::theme_gray()
   axes <- base[grepl("^axis\\.", names(base))]
-  plot$theme <- plot$theme + do.call(ggplot2::theme, axes) + ggplot2::theme(
+  plot$theme <- plot$theme + do.call(theme, axes) + theme(
     axis.line = ggchord_theme_element(plot, "ggchord.axis.line"),
     axis.text = ggchord_theme_element(plot, "ggchord.axis.text"),
     axis.ticks = ggchord_theme_element(plot, "ggchord.axis.ticks"))
   if (isTRUE(ggchord_plot_settings(plot)$axis$hidden))
-    plot$theme <- plot$theme + ggplot2::theme(axis.line = ggplot2::element_blank(),
-      axis.text = ggplot2::element_blank(), axis.ticks = ggplot2::element_blank())
+    plot$theme <- plot$theme + theme(axis.line = element_blank(),
+      axis.text = element_blank(), axis.ticks = element_blank())
   if (!is.null(plot$ggchord$native_theme)) plot$theme <- plot$theme + plot$ggchord$native_theme
   ggchord_cache_layout(plot, layout)
   plot
@@ -327,7 +327,7 @@ ggchord_prepare_dotplot <- function(plot) {
 
 ggchord_export_dotplot <- function(plot, include, original_data) {
   layout <- get_chord_layout(plot)
-  out <- stats::setNames(lapply(include, function(x) data.frame()), include)
+  out <- setNames(lapply(include, function(x) data.frame()), include)
   if ("alignment" %in% include && length(layout$alignment)) {
     # Explicit layers may have different metadata columns.
     out$alignment <- ggchord_rbind_fill(layout$alignment)

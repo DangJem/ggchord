@@ -252,12 +252,12 @@ ggchord_external_place <- function(row, occupied, units_per_inch,
       root_fixed <- root_fixed[ord]
       endpoint_axis <- endpoint_axis[ord]
       source_axis <- if (horizontal) root[1L] else root[2L]
-      target_axis <- stats::approx(
+      target_axis <- approx(
         root_axis, endpoint_axis,
         xout = source_axis,
         rule = 2, ties = "ordered"
       )$y
-      entry_fixed <- stats::approx(
+      entry_fixed <- approx(
         root_axis, root_fixed, xout = source_axis,
         rule = 2, ties = "ordered"
       )$y
@@ -584,7 +584,7 @@ ggchord_crossing_leader_pairs <- function(segments, owner, tolerance = 1e-9) {
 ggchord_measure_external_leader_crossings <- function(registry) {
   leaders <- list()
   add_leader <- function(id, component, source, segments) {
-    finite <- stats::complete.cases(segments[, c("x1", "y1", "x2", "y2")])
+    finite <- complete.cases(segments[, c("x1", "y1", "x2", "y2")])
     segments <- segments[finite, , drop = FALSE]
     if (nrow(segments)) leaders[[length(leaders) + 1L]] <<- list(
       id = id, component = component, source = source,
@@ -749,7 +749,7 @@ ggchord_share_external_annotations <- function(registry, layout) {
     used_bands <- sort(unique(sites$outer_track[rows]))
     used_bands <- used_bands[is.finite(used_bands)]
     if (length(used_bands)) {
-      remap <- stats::setNames(seq_along(used_bands), used_bands)
+      remap <- setNames(seq_along(used_bands), used_bands)
       affected <- is.finite(sites$outer_track)
       sites$outer_track[affected] <- unname(remap[
         as.character(sites$outer_track[affected])
@@ -929,7 +929,7 @@ ggchord_share_external_annotations <- function(registry, layout) {
     used_bands <- sort(unique(geometry$outer_track))
     used_bands <- used_bands[is.finite(used_bands)]
     if (length(used_bands)) {
-      remap <- stats::setNames(seq_along(used_bands), used_bands)
+      remap <- setNames(seq_along(used_bands), used_bands)
       affected <- is.finite(geometry$outer_track)
       geometry$outer_track[affected] <- unname(remap[
         as.character(geometry$outer_track[affected])

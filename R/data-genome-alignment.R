@@ -42,7 +42,7 @@ ggchord_alignment_source <- function(file, files, python, format, caller) {
   parsed <- ggchord_parse_external_source(ggchord_genome_alignment_script(),
     list(files = unname(normalizePath(paths)), format = format), python, caller)
   list(paths = paths, parsed = parsed$data, messages = parsed$messages,
-    raw_files = stats::setNames(lapply(paths, ggchord_read_text, caller = caller), paths))
+    raw_files = setNames(lapply(paths, ggchord_read_text, caller = caller), paths))
 }
 
 ggchord_alignment_dictionary <- function(rows, sequence_unit, caller) {
@@ -153,8 +153,8 @@ ggchord_alignment_rename <- function(ids, map, caller) {
 }
 
 ggchord_alignment_identity_maps <- function(query, subject, query_ids, subject_ids, caller) {
-  q <- stats::setNames(ggchord_alignment_rename(query, query_ids, caller), query)
-  s <- stats::setNames(ggchord_alignment_rename(subject, subject_ids, caller), subject)
+  q <- setNames(ggchord_alignment_rename(query, query_ids, caller), query)
+  s <- setNames(ggchord_alignment_rename(subject, subject_ids, caller), subject)
   overlap <- intersect(unname(q), unname(s))
   if (length(overlap) && (any(!names(q)[q %in% overlap] %in% names(query_ids)) ||
       any(!names(s)[s %in% overlap] %in% names(subject_ids)))) ggchord_stop(caller,

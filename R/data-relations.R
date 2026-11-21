@@ -193,7 +193,7 @@ link_ggchord_clusters <- function(features, membership, pairs, paralogs = "drop"
     if (length(unique(data$accver)) != 1L || length(unique(data$strand)) != 1L) ggchord_stop(caller,
       ": repeated feature_id '", ids[i], "' must have one sequence and strand")
     ordered <- data[order(data$start, data$end), , drop = FALSE]
-    if (nrow(ordered) > 1L && any(ordered$start[-1L] <= utils::head(ordered$end, -1L))) ggchord_stop(caller,
+    if (nrow(ordered) > 1L && any(ordered$start[-1L] <= head(ordered$end, -1L))) ggchord_stop(caller,
       ": repeated feature_id '", ids[i], "' has overlapping or duplicate segments")
     list(feature_id = ids[i], accver = data$accver[1L], strand = data$strand[1L],
       start = min(data$start), end = max(data$end), source_rows = rows,

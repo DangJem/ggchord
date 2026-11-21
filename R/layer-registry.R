@@ -6,7 +6,7 @@
 reconstruct_layer <- function(lyr, data, mapping = NULL) {
   params <- c(lyr$geom_params, lyr$stat_params, lyr$aes_params)
   params <- params[!duplicated(names(params))]
-  new <- ggplot2::layer(
+  new <- layer(
     geom = lyr$geom, stat = lyr$stat, data = data,
     mapping = mapping %||% ggchord_effective_mapping(lyr), position = lyr$position,
     params = params,
@@ -57,7 +57,7 @@ ggchord_register_layers <- function(plot) {
     }
     copy$ggchord_layer_id <- id
     type <- copy$ggchord_params$type
-    copy$ggchord_params$plot_data <- list(if (!ggplot2::is_waiver(plot$data)) plot$data)
+    copy$ggchord_params$plot_data <- list(if (!is_waiver(plot$data)) plot$data)
     copy$ggchord_params$reference <- plot$ggchord$data$seq_data
     input <- copy$ggchord_input_data
     copy$ggchord_params$input_description <- if (is.function(input)) "layer data callback" else

@@ -92,7 +92,7 @@ ggchord_project_expand_cds <- function(input, caller) {
       phase[1L] <- top_phase
     } else if (!is.null(top_phase) && phase[1L] != top_phase) ggchord_stop(caller, ": parent and initial segment phase disagree")
     width <- nested$end - nested$start + 1
-    before <- c(0, utils::head(cumsum(width), -1L))
+    before <- c(0, head(cumsum(width), -1L))
     expected <- (3 - ((before - phase[1L]) %% 3)) %% 3
     expected[1L] <- phase[1L]
     phase[is.na(phase)] <- expected[is.na(phase)]
@@ -118,7 +118,7 @@ ggchord_project_intervals <- function(row, caller) {
   for (column in c("start", "end")) ggchord_project_integer(out[[column]], column, caller)
   out <- out[order(out$start), , drop = FALSE]
   if (any(out$start > out$end) || any(out$start < row$start | out$end > row$end) ||
-      (nrow(out) > 1L && any(out$start[-1L] <= utils::head(out$end, -1L))))
+      (nrow(out) > 1L && any(out$start[-1L] <= head(out$end, -1L))))
     ggchord_stop(caller, ": source segments must be disjoint and within the source interval")
   out
 }
@@ -231,7 +231,7 @@ build_ggchord_cds <- function(cds_data, genetic_code = NULL, partial = "error") 
     if (length(unique(x$accver)) != 1L || length(unique(x$strand)) != 1L)
       ggchord_stop(caller, ": CDS '", id, "' must have one sequence and strand")
     genomic <- order(x$start, x$end)
-    if (length(rows) > 1L && any(x$start[genomic][-1L] <= utils::head(x$end[genomic], -1L)))
+    if (length(rows) > 1L && any(x$start[genomic][-1L] <= head(x$end[genomic], -1L)))
       ggchord_stop(caller, ": overlapping CDS segments for '", id, "'")
     if ("segment_order" %in% names(x) && !all(is.na(x$segment_order))) {
       explicit <- ggchord_project_integer(x$segment_order, "segment_order", caller)
@@ -240,7 +240,7 @@ build_ggchord_cds <- function(cds_data, genetic_code = NULL, partial = "error") 
     } else order <- if (x$strand[1L] == "+") genomic else rev(genomic)
     x <- x[order, , drop = FALSE]; rows <- rows[order]
     width <- x$end - x$start + 1
-    before <- c(0, utils::head(cumsum(width), -1L))
+    before <- c(0, head(cumsum(width), -1L))
     initial <- x$phase[1L]
     expected <- (3 - ((before[-1L] - initial) %% 3)) %% 3
     if (length(rows) > 1L && any(x$phase[-1L] != expected)) ggchord_stop(caller,
@@ -392,7 +392,7 @@ project_ggchord_features <- function(features, cds, from = "protein", codon_boun
       if (!length(coding)) ggchord_stop(caller, ": genomic feature has no complete-codon CDS overlap")
       coding <- do.call(rbind, coding); coding <- coding[order(coding$start), , drop = FALSE]
       # Disjoint coding blocks can describe disjoint protein domains; preserve them.
-      breaks <- c(TRUE, coding$start[-1L] > utils::head(coding$end, -1L) + 1)
+      breaks <- c(TRUE, coding$start[-1L] > head(coding$end, -1L) + 1)
       groups <- split(seq_len(nrow(coding)), cumsum(breaks))
       lower_nt <- vapply(groups, function(g) min(coding$start[g]), numeric(1))
       upper_nt <- vapply(groups, function(g) max(coding$end[g]), numeric(1))
@@ -400,7 +400,7 @@ project_ggchord_features <- function(features, cds, from = "protein", codon_boun
       if (expanded && codon_boundary == "error") ggchord_stop(caller, ": genomic interval splits a codon; choose codon_boundary = 'expand' explicitly")
       lower_aa <- floor((lower_nt - 1) / 3) + 1; upper_aa <- ceiling(upper_nt / 3)
       # Codon expansion can make separate base pieces overlap one residue.
-      aa_groups <- cumsum(c(TRUE, lower_aa[-1L] > utils::head(cummax(upper_aa), -1L) + 1))
+      aa_groups <- cumsum(c(TRUE, lower_aa[-1L] > head(cummax(upper_aa), -1L) + 1))
       aa_indices <- split(seq_along(lower_aa), aa_groups)
       lower_aa <- vapply(aa_indices, function(g) min(lower_aa[g]), numeric(1))
       upper_aa <- vapply(aa_indices, function(g) max(upper_aa[g]), numeric(1))

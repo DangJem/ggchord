@@ -45,7 +45,8 @@ geom_feature(
 A ggplot2 layer for addition to a plot.
 }
 \description{
-Draw sequence features
+Features have a dark 0.25 mm outline by default. Compact symbols use a
+finer outline unless a linewidth is set or mapped.
 }
 \details{
 Provide one-based closed intervals with \code{accver}, \code{start} and \code{end}. A strand or disjoint segments can be supplied where appropriate. The gene shortcut defaults to an arrow and strand placement. The primer shortcut defaults to a directional narrow path, and the region shortcut defaults to a translucent block.

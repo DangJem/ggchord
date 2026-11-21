@@ -374,9 +374,10 @@
     "height": 8,
     "dpi": 110,
     "caption": {
-      "zh": "pSB1C3 · 7 个特征，31 个酶切位置",
-      "en": "pSB1C3 · 7 features and 31 restriction positions"
-    }
+      "zh": "pSB1C3 · 7 个特征，33 个有标签的切割位置",
+      "en": "pSB1C3 · 7 features and 33 labelled cut positions"
+    },
+    "background": "#FFFCF5"
   },
   "case-circular": {
     "kind": "plot",
@@ -384,9 +385,10 @@
     "height": 8,
     "dpi": 110,
     "caption": {
-      "zh": "pUC19 · 9 个特征，32 个酶切位置",
-      "en": "pUC19 · 9 features and 32 restriction positions"
-    }
+      "zh": "pUC19 · 9 个特征，33 个有标签的切割位置",
+      "en": "pUC19 · 9 features and 33 labelled cut positions"
+    },
+    "background": "#FFFCF5"
   },
   "map-pbr": {
     "kind": "plot",
@@ -394,9 +396,10 @@
     "height": 8,
     "dpi": 110,
     "caption": {
-      "zh": "pBR322 · 6 个特征，40 个酶切位置",
-      "en": "pBR322 · 6 features and 40 restriction positions"
-    }
+      "zh": "pBR322 · 6 个特征，42 个有标签的切割位置",
+      "en": "pBR322 · 6 features and 42 labelled cut positions"
+    },
+    "background": "#FFFCF5"
   },
   "map-blue": {
     "kind": "plot",
@@ -404,9 +407,10 @@
     "height": 8,
     "dpi": 110,
     "caption": {
-      "zh": "pBluescript II SK(+) · 14 个特征，38 个酶切位置",
-      "en": "pBluescript II SK(+) · 14 features and 38 restriction positions"
-    }
+      "zh": "pBluescript II SK(+) · 14 个特征，42 个有标签的切割位置",
+      "en": "pBluescript II SK(+) · 14 features and 42 labelled cut positions"
+    },
+    "background": "#FFFCF5"
   },
   "map-pet": {
     "kind": "plot",
@@ -414,9 +418,10 @@
     "height": 8,
     "dpi": 110,
     "caption": {
-      "zh": "pET-28a(+) · 16 个特征，49 个酶切位置",
-      "en": "pET-28a(+) · 16 features and 49 restriction positions"
-    }
+      "zh": "pET-28a(+) · 16 个特征，45 个有标签的切割位置",
+      "en": "pET-28a(+) · 16 features and 45 labelled cut positions"
+    },
+    "background": "#FFFCF5"
   },
   "map-duet": {
     "kind": "plot",
@@ -424,9 +429,10 @@
     "height": 8,
     "dpi": 110,
     "caption": {
-      "zh": "pETDuet-1 · 20 个特征，54 个酶切位置",
-      "en": "pETDuet-1 · 20 features and 54 restriction positions"
-    }
+      "zh": "pETDuet-1 · 20 个特征，54 个有标签的切割位置",
+      "en": "pETDuet-1 · 20 features and 54 labelled cut positions"
+    },
+    "background": "#FFFCF5"
   },
   "map-donr": {
     "kind": "plot",
@@ -434,9 +440,10 @@
     "height": 8,
     "dpi": 110,
     "caption": {
-      "zh": "pDONR221 · 11 个特征，39 个酶切位置",
-      "en": "pDONR221 · 11 features and 39 restriction positions"
-    }
+      "zh": "pDONR221 · 11 个特征，42 个有标签的切割位置",
+      "en": "pDONR221 · 11 features and 42 labelled cut positions"
+    },
+    "background": "#FFFCF5"
   },
   "map-pcdna": {
     "kind": "plot",
@@ -444,9 +451,10 @@
     "height": 8,
     "dpi": 110,
     "caption": {
-      "zh": "pcDNA3.1(+) · 13 个特征，47 个酶切位置",
-      "en": "pcDNA3.1(+) · 13 features and 47 restriction positions"
-    }
+      "zh": "pcDNA3.1(+) · 13 个特征，47 个有标签的切割位置",
+      "en": "pcDNA3.1(+) · 13 features and 47 labelled cut positions"
+    },
+    "background": "#FFFCF5"
   },
   "map-tre": {
     "kind": "plot",
@@ -454,9 +462,10 @@
     "height": 8,
     "dpi": 110,
     "caption": {
-      "zh": "pTRE-Tight-BI · 15 个特征，42 个酶切位置",
-      "en": "pTRE-Tight-BI · 15 features and 42 restriction positions"
-    }
+      "zh": "pTRE-Tight-BI · 15 个特征，44 个有标签的切割位置",
+      "en": "pTRE-Tight-BI · 15 features and 44 labelled cut positions"
+    },
+    "background": "#FFFCF5"
   },
   "map-tripz": {
     "kind": "plot",
@@ -464,9 +473,10 @@
     "height": 8,
     "dpi": 110,
     "caption": {
-      "zh": "pTRIPZ · 33 个特征，35 个酶切位置",
-      "en": "pTRIPZ · 33 features and 35 restriction positions"
-    }
+      "zh": "pTRIPZ · 33 个特征，35 个有标签的切割位置",
+      "en": "pTRIPZ · 33 features and 35 labelled cut positions"
+    },
+    "background": "#FFFCF5"
   },
   "map-cambia": {
     "kind": "plot",
@@ -474,9 +484,10 @@
     "height": 8,
     "dpi": 110,
     "caption": {
-      "zh": "pCAMBIA1300 · 17 个特征，37 个酶切位置",
-      "en": "pCAMBIA1300 · 17 features and 37 restriction positions"
-    }
+      "zh": "pCAMBIA1300 · 17 个特征，37 个有标签的切割位置",
+      "en": "pCAMBIA1300 · 17 features and 37 labelled cut positions"
+    },
+    "background": "#FFFCF5"
   },
   "map-earley": {
     "kind": "plot",
@@ -484,9 +495,10 @@
     "height": 8,
     "dpi": 110,
     "caption": {
-      "zh": "pEarleyGate 201 · 21 个特征，37 个酶切位置",
-      "en": "pEarleyGate 201 · 21 features and 37 restriction positions"
-    }
+      "zh": "pEarleyGate 201 · 21 个特征，37 个有标签的切割位置",
+      "en": "pEarleyGate 201 · 21 features and 37 labelled cut positions"
+    },
+    "background": "#FFFCF5"
   },
   "map-cas": {
     "kind": "plot",
@@ -494,9 +506,10 @@
     "height": 8,
     "dpi": 110,
     "caption": {
-      "zh": "pSpCas9(BB)-2A-GFP (PX458) · 19 个特征，4 个酶切位置",
-      "en": "pSpCas9(BB)-2A-GFP (PX458) · 19 features and 4 restriction positions"
-    }
+      "zh": "pSpCas9(BB)-2A-GFP (PX458) · 19 个特征，4 个有标签的切割位置",
+      "en": "pSpCas9(BB)-2A-GFP (PX458) · 19 features and 4 labelled cut positions"
+    },
+    "background": "#FFFCF5"
   },
   "puc-backbone": {
     "kind": "plot",

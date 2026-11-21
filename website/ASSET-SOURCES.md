@@ -11,6 +11,10 @@
 | jQuery | [jQuery](https://jquery.org/license/)，MIT；由 pkgdown 提供，保留源码许可头。Bundled by pkgdown with its license notice. |
 | Font Awesome Free | [Font Awesome Free](https://fontawesome.com/license/free)：图标 CC BY 4.0、字体 SIL OFL 1.1、代码 MIT；由 pkgdown 本地依赖提供，保留许可文件。Icons CC BY 4.0, fonts SIL OFL 1.1, code MIT; dependency notices retained. |
 
+The seven current homepage previews, the complete cases and the README figures have separate rendering entry points. Six README figures use the complete website examples. The README circular map uses the dense pETDuet-1 table (139 enzyme observations). The catalogue entry for the same reference uses 58 observations. The selection rules are recorded in `data-raw/generate_flagship_data.R`.
+
+首页七张预览图、网站完整案例和 README 图各有绘制入口。README 中六张图复用网站完整案例。README 的 pETDuet-1 密集圆图使用 139 条酶记录，图集中同一质粒使用 58 条。数据选择规则见 `data-raw/generate_flagship_data.R`。
+
 原生模板另带以下浏览器依赖，均保留分发文件中的许可头：
 
 | 依赖 / Dependency | 来源与许可 / Source and license |

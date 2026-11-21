@@ -1,4 +1,4 @@
-GeomSequenceSite <- ggplot2::ggproto("GeomSequenceSite", ggplot2::Geom,
+GeomSequenceSite <- ggproto("GeomSequenceSite", ggplot2::Geom,
   required_aes = c("x", "y"),
   default_aes = aes(colour = "black", fill = "grey70", size = 2, alpha = 1,
     linewidth = .4, linetype = 1, shape = 21, stroke = .4),
@@ -15,7 +15,7 @@ GeomSequenceSite <- ggplot2::ggproto("GeomSequenceSite", ggplot2::Geom,
       grobs[[length(grobs) + 1L]] <- ggplot2::GeomPoint$draw_panel(
         points, panel_params, coord, na.rm = na.rm)
     }
-    do.call(grid::grobTree, grobs)
+    do.call(grobTree, grobs)
   }
 )
 
@@ -241,8 +241,8 @@ ggchord_prepare_site_size_scales <- function(plot) {
   sites <- which(vapply(layers, function(layer) identical(layer$ggchord_type, "restriction_site") &&
     !isTRUE(layer$ggchord_params$fixed_size), logical(1)) & lengths(mapping) > 0L)
   if (!length(sites)) return(plot)
-  previous_plot <- ggplot2::last_plot()
-  on.exit(ggplot2::set_last_plot(previous_plot), add = TRUE)
+  previous_plot <- last_plot()
+  on.exit(set_last_plot(previous_plot), add = TRUE)
 
   scopes <- Filter(function(scope) "size" %in% scope$aesthetics, ggchord_scale_scopes(plot))
   global <- setdiff(seq_along(layers), unlist(lapply(scopes, `[[`, "selected")))
@@ -265,10 +265,10 @@ ggchord_prepare_site_size_scales <- function(plot) {
     scale <- (domain$scale %||% ggplot2::scale_size())$clone()
     # Use ggplot2's active theme and default palette, which can be deferred
     # until its scale is initialized.
-    carrier <- ggplot2::ggplot(mapping = aes(x = 0, y = 0, size = value)) + plot$theme
+    carrier <- ggplot(mapping = aes(x = 0, y = 0, size = value)) + plot$theme
     for (value in values) carrier <- carrier + ggplot2::geom_point(data = data.frame(value = unique(value)))
     scale$aesthetics <- "size"
-    trained <- ggplot2::ggplot_build(carrier + scale)$plot$scales$get_scales("size")
+    trained <- ggplot_build(carrier + scale)$plot$scales$get_scales("size")
     for (i in owners) plot$layers[[i]]$ggchord_params$size_scale <- trained
   }
   plot

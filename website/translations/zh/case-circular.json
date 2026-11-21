@@ -1,5 +1,5 @@
 {
-  "source_sha256": "28d5a93593f86161150a547c5a89032871f21611c3ba8f6bf7bc12b33a4f7859",
+  "source_sha256": "87aebf5fb300856534df024421133ea8dd4e9d6fc4fc53f042450cb6fbc649cf",
   "blocks": {
     "0": {
       "source_sha256": "07cb57b087f9394823a588ff844f752cf79999d417c8843f5ff35f6a97b76de3",
@@ -22,9 +22,9 @@
       "translation": "## 读图 {#reading}\n"
     },
     "7": {
-      "source_sha256": "d9ad4552e208502700399e2f8a4705f29b671afd89b716eb44d7960757d71001",
+      "source_sha256": "9d8b77f3289c7fc8dc55951d917e59dbd5cb8a47afbab6399ab8d06eb727b2e5",
       "status": "reviewed",
-      "translation": "九条特征均保留参考坐标和链。沿骨架刻度定位特征，再从圆环外侧读取酶切标签。47 条位点记录对应 32 个位置，同一位置的酶名并入一个标签。这份记录没有独立参考引物。\n"
+      "translation": "九条特征均保留参考坐标和链。沿骨架刻度定位特征，再从圆环外侧读取酶切标签。39 条位点记录对应 33 个有标签的切割位置，同一位置的酶名并入一个标签。这份记录没有独立参考引物。\n"
     },
     "9": {
       "source_sha256": "de1eb696f2ab1c739faa9f8ef7b26fc480da4593cffdb8c750e451460f700193",

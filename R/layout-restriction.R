@@ -294,7 +294,7 @@ ggchord_restriction_label_lanes <- function(
     orientation <- attr(arc, "ggchord_path_direction") %||% -1
     if (length(ordered) > 1L) {
       delta <- atan2(sin(diff(theta)), cos(diff(theta)))
-      observed <- sign(stats::median(delta[abs(delta) > 1e-10]))
+      observed <- sign(median(delta[abs(delta) > 1e-10]))
       if (is.finite(observed) && observed != 0) orientation <- observed
     }
     total <- if ("sequence_length" %in% names(gl)) {
@@ -588,23 +588,23 @@ ggchord_restriction_text_metrics <- function(text, size, units_per_inch,
   width <- height <- numeric(n)
   valid <- !is.na(text) & nzchar(text)
   if (!any(valid)) return(data.frame(width = width, height = height))
-  close_device <- if (grDevices::dev.cur() > 1L) function() invisible(NULL) else
+  close_device <- if (dev.cur() > 1L) function() invisible(NULL) else
     ggchord_measurement_device(text = text[valid])
   on.exit(close_device())
   for (i in which(valid)) {
     label <- if (isTRUE(parse)) tryCatch(parse(text = text[i])[[1L]],
       error = function(e) text[i]) else text[i]
-    grob <- grid::textGrob(
-      label, gp = grid::gpar(
+    grob <- textGrob(
+      label, gp = gpar(
         fontsize = size[i] * (72.27 / 25.4), fontface = fontface[i],
         fontfamily = family[i], lineheight = lineheight[i]
       )
     )
-    width[i] <- grid::convertWidth(
-      grid::grobWidth(grob), "inches", valueOnly = TRUE
+    width[i] <- convertWidth(
+      grobWidth(grob), "inches", valueOnly = TRUE
     ) * units_per_inch
-    height[i] <- grid::convertHeight(
-      grid::grobHeight(grob), "inches", valueOnly = TRUE
+    height[i] <- convertHeight(
+      grobHeight(grob), "inches", valueOnly = TRUE
     ) * units_per_inch
   }
   data.frame(width = width, height = height)
@@ -763,8 +763,8 @@ ggchord_restriction_geometry <- function(data, params, layout) {
       anchor_x = tips$x, anchor_y = tips$y,
       stringsAsFactors = FALSE
     )
-    device <- if (grDevices::dev.cur() == 1L) c(8, 8) else
-      grDevices::dev.size("in")
+    device <- if (dev.cur() == 1L) c(8, 8) else
+      dev.size("in")
     span <- c(diff(range(arc$x)), diff(range(arc$y)))
     units_per_inch <- max(span / pmax(device - c(2.2, 1.5), device * .45))
     units_per_inch <- max(.20, min(.42, units_per_inch))

@@ -1,10 +1,10 @@
 # Render once inside final panel containers; never freeze a previous-size image.
 ggchord_build_fusion_core <- function(x, on_error = NULL) {
-  previous_plot <- ggplot2::last_plot()
-  on.exit(ggplot2::set_last_plot(previous_plot),add=TRUE)
-  canvas <- c(width=grid::convertWidth(grid::unit(1,"npc"),"mm",TRUE),
-    height=grid::convertHeight(grid::unit(1,"npc"),"mm",TRUE))
-  origin <- grid::deviceLoc(grid::unit(0,"npc"),grid::unit(0,"npc"),valueOnly=TRUE)
+  previous_plot <- last_plot()
+  on.exit(set_last_plot(previous_plot),add=TRUE)
+  canvas <- c(width=convertWidth(unit(1,"npc"),"mm",TRUE),
+    height=convertHeight(unit(1,"npc"),"mm",TRUE))
+  origin <- grid::deviceLoc(unit(0,"npc"),unit(0,"npc"),valueOnly=TRUE)
   origin <- c(origin$x,origin$y)*25.4
   collected <- list(boxes=list())
   if (identical(x$fusion_guides,"collect")) {
@@ -91,8 +91,8 @@ ggchord_build_fusion_core <- function(x, on_error = NULL) {
       child_error <- if (!is.null(on_error)) function(path, error, layer_id = NULL)
         on_error(c(panel_path, path), error, layer_id)
       nested <- tryCatch(local({
-        grid::pushViewport(viewport)
-        on.exit(grid::popViewport())
+        pushViewport(viewport)
+        on.exit(popViewport())
         ggchord_build_fusion(spec$plot, child_error)
       }), error = panel_error)
       if (is.null(nested)) next
@@ -129,16 +129,16 @@ ggchord_build_fusion_core <- function(x, on_error = NULL) {
       sources[[id]] <- nested$export$source_data
       for (event in nested$render_events) {
         if (!is.null(event$panel_id)) event$panel_id <- paste0(id, "/", event$panel_id)
-        event$background <- grid::grobTree(event$background, vp = viewport)
-        event$foreground <- grid::grobTree(event$foreground, vp = viewport)
+        event$background <- grobTree(event$background, vp = viewport)
+        event$foreground <- grobTree(event$foreground, vp = viewport)
         if (!is.null(event$bounds)) event$bounds <- event$bounds + rep(offset, each = 2L)
         if (!is.null(event$container_bounds)) event$container_bounds <- event$container_bounds + rep(offset, each = 2L)
         render_events[[length(render_events) + 1L]] <- event
       }
       connection_viewport <- viewport; connection_viewport$clip <- grid::viewport(clip = "inherit")$clip
-      connection_grobs <- c(connection_grobs, lapply(nested$connection_grobs, function(g) grid::grobTree(g, vp = connection_viewport)))
+      connection_grobs <- c(connection_grobs, lapply(nested$connection_grobs, function(g) grobTree(g, vp = connection_viewport)))
       for (j in seq_along(nested$overlay_grobs)) overlay_grobs <- c(overlay_grobs,
-        stats::setNames(list(grid::grobTree(nested$overlay_grobs[[j]], vp = viewport)),
+        setNames(list(grobTree(nested$overlay_grobs[[j]], vp = viewport)),
           paste0(id, "/", names(nested$overlay_grobs)[j])))
       next
     }
@@ -149,20 +149,20 @@ ggchord_build_fusion_core <- function(x, on_error = NULL) {
     genomic_panel <- inherits(spec$plot, "ggchord")
     plot <- if (genomic_panel) ggchord_render_plot_copy(spec$plot) else spec$plot
     plot$layers <- lapply(plot$layers,function(layer) {
-      copy <- ggplot2::ggproto(NULL,layer)
-      copy$geom <- ggplot2::ggproto(NULL,layer$geom)
-      copy$stat <- ggplot2::ggproto(NULL,layer$stat)
-      copy$position <- ggplot2::ggproto(NULL,layer$position)
+      copy <- ggproto(NULL,layer)
+      copy$geom <- ggproto(NULL,layer$geom)
+      copy$stat <- ggproto(NULL,layer$stat)
+      copy$position <- ggproto(NULL,layer$position)
       copy
     })
     table <- tryCatch(local({
-      grid::pushViewport(viewport)
-      on.exit(grid::popViewport())
+      pushViewport(viewport)
+      on.exit(popViewport())
       ggchord_with_render_context(list(available_canvas_mm=dimensions), {
         if (!genomic_panel) {
-          built <- ggplot2::ggplot_build(plot)
+          built <- ggplot_build(plot)
           layout <- if (character_panel) ggchord_alignment_layout(built, plot$ggchord_alignment)
-          table <- ggplot2::ggplot_gtable(built)
+          table <- ggplot_gtable(built)
           context <- ggchord_panel_context(table, built)
           context$geometry_metric_status <- "measured_positions; glyph_fit_at_draw"
           context$converged <- TRUE
@@ -170,14 +170,14 @@ ggchord_build_fusion_core <- function(x, on_error = NULL) {
           attr(table, "ggchord_render_layout") <- layout
           attr(table, "ggchord_render_built") <- built
           table
-        } else ggplot2::ggplotGrob(plot)
+        } else ggplotGrob(plot)
       })
     }), error = panel_error)
     if (is.null(table)) next
     # Guide bounds are measured while the actual child viewport is active.
     local({
-      grid::pushViewport(viewport)
-      on.exit(grid::popViewport())
+      pushViewport(viewport)
+      on.exit(popViewport())
       obstacle_parts[[id]] <<- ggchord_fusion_guide_obstacles(table, id, origin)
     })
     context <- attr(table,"ggchord_render_context")
@@ -201,8 +201,8 @@ ggchord_build_fusion_core <- function(x, on_error = NULL) {
     if (!is.null(layout))
       obstacle_parts[[paste0(id, "/text")]] <- ggchord_fusion_text_obstacles(panels[[id]], id)
     sources[[id]] <- spec$plot$ggchord_alignment %||% spec$plot$ggchord$sources
-    backgrounds[[id]] <- grid::grobTree(ggchord_fusion_partition(table,TRUE),vp=viewport)
-    foregrounds[[id]] <- grid::grobTree(ggchord_fusion_partition(table,FALSE),vp=viewport)
+    backgrounds[[id]] <- grobTree(ggchord_fusion_partition(table,TRUE),vp=viewport)
+    foregrounds[[id]] <- grobTree(ggchord_fusion_partition(table,FALSE),vp=viewport)
     bounds <- context$panel_bounds_mm
     render_events[[length(render_events) + 1L]] <- list(panel_id = id, background = backgrounds[[id]],
       foreground = foregrounds[[id]], bounds = bounds,
@@ -228,7 +228,7 @@ ggchord_build_fusion_core <- function(x, on_error = NULL) {
       !vapply(table$grobs,inherits,logical(1),"zeroGrob"))
     guide_bounds <- lapply(guide_at,function(at) {
       g <- table$grobs[[at]]
-      c(width=grid::convertWidth(grid::grobWidth(g),"mm",TRUE),height=grid::convertHeight(grid::grobHeight(g),"mm",TRUE))
+      c(width=convertWidth(grobWidth(g),"mm",TRUE),height=convertHeight(grobHeight(g),"mm",TRUE))
     })
     oversized <- any(vapply(guide_bounds,function(size) any(size>dimensions),logical(1)))
     if (oversized) panel_error(simpleError(
@@ -309,9 +309,9 @@ ggchord_build_fusion_core <- function(x, on_error = NULL) {
           linetype = style$linetype, layer_id = layer$id, composition_id = "",
           source_row = row, units = "mm", component_type = "relationship")
         grob <- grid::pathGrob(d$x, d$y,
-          default.units = "mm", rule = "evenodd", gp = grid::gpar(
-            fill = scales::alpha(style$fill, style$alpha),
-            col = scales::alpha(style$colour, style$alpha), lwd = style$linewidth * ggplot2::.pt,
+          default.units = "mm", rule = "evenodd", gp = gpar(
+            fill = alpha(style$fill, style$alpha),
+            col = alpha(style$colour, style$alpha), lwd = style$linewidth * ggplot2::.pt,
             lty = style$linetype, lineend = layer$fixed$lineend %||% "butt"))
         report$route <- layer$route
         report$qpanel <- q$panel
@@ -345,11 +345,11 @@ ggchord_build_fusion_core <- function(x, on_error = NULL) {
   })))
   guide_grobs <- lapply(seq_len(nrow(guide_boxes)), function(i) {
     b <- guide_boxes[i, ]
-    grid::grobTree(styles$guides[[b$side]], vp = grid::viewport(
+    grobTree(styles$guides[[b$side]], vp = grid::viewport(
       x = mean(c(b$xmin, b$xmax)), y = mean(c(b$ymin, b$ymax)),
       width = b$width_mm, height = b$height_mm, default.units = "mm"))
   })
-  guide <- do.call(grid::grobTree, guide_grobs)
+  guide <- do.call(grobTree, guide_grobs)
   overlaps <- list()
   ids <- names(rectangles)
   for (i in seq_along(ids)) for (j in seq_len(i - 1L)) {
@@ -364,7 +364,7 @@ ggchord_build_fusion_core <- function(x, on_error = NULL) {
   connection_grobs <- c(ribbons, lapply(zooms, `[[`, "grob"), connection_grobs)
   overlay_grobs <- c(overlay_grobs, do.call(c, unname(lapply(zooms, `[[`, "overlay"))))
   render_events[[length(render_events) + 1L]] <- list(panel_id = NULL,
-    background = grid::nullGrob(), foreground = guide, bounds = NULL)
+    background = nullGrob(), foreground = guide, bounds = NULL)
   overlap_mode <- isTRUE(x$allow_overlap) || any(vapply(nested_results,
     function(n) nrow(n$export$overlaps) > 0L, logical(1)))
   grob <- ggchord_fusion_render_events(render_events, connection_grobs, overlay_grobs, canvas, overlap_mode)
@@ -382,7 +382,7 @@ ggchord_build_fusion_core <- function(x, on_error = NULL) {
       coordinate_space = "composition", units = "mm",
       guide_side = styles$side, guide_size_mm = guide_size, guide_sizes_mm = styles$sizes,
       guide_bounds_mm = guide_boxes, guide_layout = styles$report, measurement = "measured",
-      allow_overlap = isTRUE(x$allow_overlap), device = names(grDevices::dev.cur()),
+      allow_overlap = isTRUE(x$allow_overlap), device = names(dev.cur()),
       font_conditions = "Selected device metrics; fallback and embedding have not been inspected"))
   list(grob = grob, export = export, panel_registry = panels, measured_leaves = measured_leaves,
     ribbon_mapped = ribbon_mapped, nested = nested_results,

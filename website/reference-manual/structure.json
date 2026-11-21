@@ -1454,7 +1454,7 @@
         "`feature_id`",
         "`strand`",
         "`label`",
-        "`colour, size, family, fontface, angle, alpha`"
+        "`colour, fill, size, family, fontface, angle, alpha`"
       ],
       "examples": "ggchord(seqs) +\n  geom_gene(data = genes, id = \"genes\") +\n  geom_feature_label(aes(label = label), anchor_layer = \"genes\") +\n  coord_collinear()",
       "related": [
@@ -1524,7 +1524,7 @@
         "`feature_id`",
         "`strand`",
         "`label`",
-        "`colour, size, family, fontface, angle, alpha`"
+        "`colour, fill, size, family, fontface, angle, alpha`"
       ],
       "examples": "ggchord(seqs) +\n  geom_gene(data = genes, id = \"genes\") +\n  geom_feature_label_repel(aes(label = label), anchor_layer = \"genes\") +\n  coord_collinear()",
       "related": [
@@ -1594,7 +1594,7 @@
         "`feature_id`",
         "`strand`",
         "`label`",
-        "`colour, size, family, fontface, angle, alpha`"
+        "`colour, fill, size, family, fontface, angle, alpha`"
       ],
       "examples": "ggchord(seqs) +\n  geom_gene(data = genes, id = \"genes\") +\n  geom_gene_label(aes(label = label), anchor_layer = \"genes\") +\n  coord_collinear()",
       "related": [
@@ -1664,7 +1664,7 @@
         "`feature_id`",
         "`strand`",
         "`label`",
-        "`colour, size, family, fontface, angle, alpha`"
+        "`colour, fill, size, family, fontface, angle, alpha`"
       ],
       "examples": "ggchord(seqs) +\n  geom_gene(data = genes, id = \"genes\") +\n  geom_gene_label_repel(aes(label = label), anchor_layer = \"genes\") +\n  coord_collinear()",
       "related": [
@@ -1734,7 +1734,7 @@
         "`feature_id`",
         "`strand`",
         "`label`",
-        "`colour, size, family, fontface, angle, alpha`"
+        "`colour, fill, size, family, fontface, angle, alpha`"
       ],
       "examples": "primers <- transform(genes, label = paste0(\"primer_\", feature_id))\nggchord(seqs) +\n  geom_primer(data = primers, id = \"primers\") +\n  geom_primer_label(aes(label = label), anchor_layer = \"primers\") +\n  coord_collinear()",
       "related": [
@@ -1804,7 +1804,7 @@
         "`feature_id`",
         "`strand`",
         "`label`",
-        "`colour, size, family, fontface, angle, alpha`"
+        "`colour, fill, size, family, fontface, angle, alpha`"
       ],
       "examples": "primers <- transform(genes, label = paste0(\"primer_\", feature_id))\nggchord(seqs) +\n  geom_primer(data = primers, id = \"primers\") +\n  geom_primer_label_repel(aes(label = label), anchor_layer = \"primers\") +\n  coord_collinear()",
       "related": [

@@ -37,6 +37,6 @@ position_feature_stack <- function(
   base_position <- ggchord_as_feature_position(base_position, "position_feature_stack()")
   if (isTRUE(base_position$ggchord_feature_stack))
     ggchord_stop("position_feature_stack(): base_position cannot itself be a stack")
-  ggplot2::ggproto(NULL, ggplot2::PositionIdentity, ggchord_feature_stack = TRUE,
+  ggproto(NULL, ggplot2::PositionIdentity, ggchord_feature_stack = TRUE,
     spacing = spacing, base_position = base_position, direction = direction)
 }

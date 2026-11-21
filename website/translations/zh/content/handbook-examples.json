@@ -1,5 +1,5 @@
 {
-  "source_sha256": "afed473f1147366bd69937c3fee6599f9ecbee98e9d71f5ac753223cb346ce4b",
+  "source_sha256": "21451220595ac7d953f6b23bf895e67ef76c2010b12943f069312762c02488f2",
   "strings": {
     "flex-radius/caption": {
       "source_sha256": "f14827d731fc7e1f256aa6ddfd7712190ab5a9f472e20f9d861e1a431ce6206a",
@@ -182,69 +182,69 @@
       "translation": "全局关系、共线性与局部放大"
     },
     "map-psb/caption": {
-      "source_sha256": "655be1853fbefb614b7c96fe4b43d7b2f13543a6ddddb3fb2173220f5393c1ca",
+      "source_sha256": "dd90c244412d9fc82fd82c68358c7305f62c80b27a2570c2d213bccfc72ea3fb",
       "status": "reviewed",
-      "translation": "pSB1C3 · 7 个特征，31 个酶切位置"
+      "translation": "pSB1C3 · 7 个特征，33 个有标签的切割位置"
     },
     "case-circular/caption": {
-      "source_sha256": "60401eb113b3d77eaed9facf4ebea2ed2e7d865daf5a8db182457bb14ee67fc3",
+      "source_sha256": "3313845c12d4f9b77af89e5ab1d0f411ffcdbb678685646497999792ee2a7cd8",
       "status": "reviewed",
-      "translation": "pUC19 · 9 个特征，32 个酶切位置"
+      "translation": "pUC19 · 9 个特征，33 个有标签的切割位置"
     },
     "map-pbr/caption": {
-      "source_sha256": "80089cc9116a86c531df9f9eec206c84d9ba298e28f00d608f3286ee9ae66264",
+      "source_sha256": "953e032aab74fba8da18bc51e4c23507f379d63c8efdb40cde8da2fb56163cda",
       "status": "reviewed",
-      "translation": "pBR322 · 6 个特征，40 个酶切位置"
+      "translation": "pBR322 · 6 个特征，42 个有标签的切割位置"
     },
     "map-blue/caption": {
-      "source_sha256": "e200659bccc7d06af295e8a9ed85ea9f1c58bdedd98f633c3da850cc5800ebcc",
+      "source_sha256": "12c0d98c39ac37261631936f86a70dbcadad94fb27a5e2c216fc7a5d533afe79",
       "status": "reviewed",
-      "translation": "pBluescript II SK(+) · 14 个特征，38 个酶切位置"
+      "translation": "pBluescript II SK(+) · 14 个特征，42 个有标签的切割位置"
     },
     "map-pet/caption": {
-      "source_sha256": "397c654b6fcef8b15a6095cd36df6f95d3a87c72e6a24051d6a2209965e9b169",
+      "source_sha256": "f21e01de58a58ba8fd4d4f4f0e1d17a54848310fbdbd5d02f76d6959b8392db6",
       "status": "reviewed",
-      "translation": "pET-28a(+) · 16 个特征，49 个酶切位置"
+      "translation": "pET-28a(+) · 16 个特征，45 个有标签的切割位置"
     },
     "map-duet/caption": {
-      "source_sha256": "467ae5fec171e9e808cd6d27d0787f474c2e5fafd53d939cb9918ed409cb3c38",
+      "source_sha256": "e161073864555e388fb6341456d9105773df231621aadbe9337f79a0d97c8690",
       "status": "reviewed",
-      "translation": "pETDuet-1 · 20 个特征，54 个酶切位置"
+      "translation": "pETDuet-1 · 20 个特征，54 个有标签的切割位置"
     },
     "map-donr/caption": {
-      "source_sha256": "1d85493d366cd5f0ee2d9c2510276ab604c1dbd6112a56cddc84a3cd92a5a9b5",
+      "source_sha256": "4dd21208226f9715c67cb468ea441eeae4cc63caa4b84dfd6ff38b5122e8147e",
       "status": "reviewed",
-      "translation": "pDONR221 · 11 个特征，39 个酶切位置"
+      "translation": "pDONR221 · 11 个特征，42 个有标签的切割位置"
     },
     "map-pcdna/caption": {
-      "source_sha256": "f884b80d25446952bc6d05e0dd080182c2d02529b33b51b4d516398283dec4a1",
+      "source_sha256": "e30c9fb87fa1c8cf07df1d5c9ce200ac01c26064c07d3c20d5a0a8ec4f9226ac",
       "status": "reviewed",
-      "translation": "pcDNA3.1(+) · 13 个特征，47 个酶切位置"
+      "translation": "pcDNA3.1(+) · 13 个特征，47 个有标签的切割位置"
     },
     "map-tre/caption": {
-      "source_sha256": "46a1555cb038eaba71dc99f2c4d1471b7f29a667153199a3efd75135188cba9c",
+      "source_sha256": "2d931d005d77fe556feecd2fc36046f8203b06250757806aa5ecc3864d75b2c1",
       "status": "reviewed",
-      "translation": "pTRE-Tight-BI · 15 个特征，42 个酶切位置"
+      "translation": "pTRE-Tight-BI · 15 个特征，44 个有标签的切割位置"
     },
     "map-tripz/caption": {
-      "source_sha256": "2ba6e08102d363e2c210e27a6fab9d4bd1db13bb32c8865a4844a6c7db72108f",
+      "source_sha256": "4c6888ac380de30fcd3ac4ebdc916734fde3f92f46fb4fcfcf64394a6550987f",
       "status": "reviewed",
-      "translation": "pTRIPZ · 33 个特征，35 个酶切位置"
+      "translation": "pTRIPZ · 33 个特征，35 个有标签的切割位置"
     },
     "map-cambia/caption": {
-      "source_sha256": "ea1af6ed15ea83b7afaea3e688e51cfa15017cf82e55e467ec20ca1b89895ce1",
+      "source_sha256": "05f91a25bac31956fbd9306b8f7f7c2a1034ef293481ebf7f85aeb731e33f458",
       "status": "reviewed",
-      "translation": "pCAMBIA1300 · 17 个特征，37 个酶切位置"
+      "translation": "pCAMBIA1300 · 17 个特征，37 个有标签的切割位置"
     },
     "map-earley/caption": {
-      "source_sha256": "f839318912f40c218e288b8004ceab87ef28de181ad21ddca7d90e12a4ec5c82",
+      "source_sha256": "ca09178fe134d2e704babbee61ca0e3e0c4f79354e2c3d0854bbfac4f12de294",
       "status": "reviewed",
-      "translation": "pEarleyGate 201 · 21 个特征，37 个酶切位置"
+      "translation": "pEarleyGate 201 · 21 个特征，37 个有标签的切割位置"
     },
     "map-cas/caption": {
-      "source_sha256": "5cf2df89902060c535013466bd5c1bacf59974f0f2f09b58c80c60e5a6567a42",
+      "source_sha256": "e6b4d29470b205a60e43c934e5add55f4c154f7aa99cd7c76f93476bdd18f0b3",
       "status": "reviewed",
-      "translation": "pSpCas9(BB)-2A-GFP (PX458) · 19 个特征，4 个酶切位置"
+      "translation": "pSpCas9(BB)-2A-GFP (PX458) · 19 个特征，4 个有标签的切割位置"
     },
     "puc-backbone/caption": {
       "source_sha256": "4f5c261ed15b78bb0dc5ced16651e7f24fbf6ec56c0e8bbac4fc397bfc2e38d8",

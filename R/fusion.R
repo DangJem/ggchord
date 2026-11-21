@@ -47,8 +47,8 @@ ggchord_fusion <- function(panels, layout = layout_fusion_grid(), guides = "keep
     ggchord_stop("ggchord_fusion(): allocate exactly one area to each named panel")
   layout$areas <- layout$areas[match(ids, layout$areas$panel), , drop = FALSE]
   keys <- vapply(ids, ggchord_fusion_path_key, character(1))
-  plot <- ggplot2::ggplot()
-  plot$panels <- stats::setNames(lapply(panels, function(child) list(plot = child)), keys)
+  plot <- ggplot()
+  plot$panels <- setNames(lapply(panels, function(child) list(plot = child)), keys)
   plot$fusion_areas <- layout
   plot$ribbons <- list()
   plot$zooms <- list()
@@ -57,7 +57,7 @@ ggchord_fusion <- function(panels, layout = layout_fusion_grid(), guides = "keep
   plot$allow_overlap <- layout$allow_overlap
   plot$fusion_guides <- match.arg(guides, c("keep", "collect"))
   class(plot) <- c("ggchord_fusion", class(plot))
-  ggplot2::set_last_plot(plot)
+  set_last_plot(plot)
   plot
 }
 
@@ -280,7 +280,7 @@ fusion_ribbon <- function(mapping = NULL, data = NULL, route = "curve",
 ggchord_fusion_input <- function(layer) {
   data <- as.data.frame(layer$data)
   for (role in intersect(names(layer$mapping), layer$roles)) {
-    value <- rlang::eval_tidy(layer$mapping[[role]], data = layer$data)
+    value <- eval_tidy(layer$mapping[[role]], data = layer$data)
     if (length(value) == 1L) value <- rep(value, nrow(data))
     if (length(value) != nrow(data))
       ggchord_stop("Fusion layer '", layer$id, "': ", role, " must have one value per row")
@@ -341,7 +341,7 @@ ggchord_fusion_subset_ribbons <- function(plot, ids) {
       ggchord_stop("Fusion: root scales map visual aesthetics")
     e1$styles <- c(e1$styles, list(e2))
   } else ggchord_stop("Fusion accepts ribbons, zooms, render policies and visual plot components")
-  ggplot2::set_last_plot(e1)
+  set_last_plot(e1)
   e1
 }
 
@@ -378,10 +378,10 @@ ggchord_fusion_guide_semantics <- function(built, guide, source) {
     data <- layer$ggchord_resolved_input %||% layer$ggchord_input_data %||% layer$data
     if (!is.data.frame(data)) data <- built$plot$data
     values <- lapply(mapping[include], function(value) {
-      fields <- intersect(all.vars(rlang::get_expr(value)), names(data))
+      fields <- intersect(all.vars(get_expr(value)), names(data))
       units <- lapply(data[fields], function(column) list(units = attr(column, "units"),
         unit = attr(column, "unit"), measure = attr(column, "measure")))
-      list(expression = rlang::as_label(value), columns = units)
+      list(expression = as_label(value), columns = units)
     })
     list(mapping = values, unit = layer$ggchord_params$unit,
       measure = layer$ggchord_params$measure)
@@ -403,8 +403,8 @@ ggchord_fusion_collect_guides <- function(x, partial = FALSE) {
     result <- tryCatch({
       if (inherits(plot, "ggchord"))
         plot <- ggchord_render_track_source(ggchord_render_inputs(plot))
-      built <- ggplot2::ggplot_build(plot)
-      list(built = built, table = ggplot2::ggplot_gtable(built))
+      built <- ggplot_build(plot)
+      list(built = built, table = ggplot_gtable(built))
     }, error = function(e) {
       if (!partial) stop(e)
       NULL
@@ -437,9 +437,9 @@ ggchord_fusion_collect_guides <- function(x, partial = FALSE) {
     }
     if (!length(at) || (!length(collected) && !incomplete)) return(plot)
     if (!any(positions %in% "inside"))
-      return(plot + ggplot2::theme(legend.position = "none"))
+      return(plot + theme(legend.position = "none"))
     if (!length(collected)) return(plot)
-    plot + do.call(ggplot2::guides, stats::setNames(rep(list("none"), length(collected)), collected))
+    plot + do.call(guides, setNames(rep(list("none"), length(collected)), collected))
   }
   for (id in names(x$panels)) x$panels[[id]]$plot <- walk(x$panels[[id]]$plot, id)
   list(plot = x, boxes = boxes)
@@ -482,13 +482,13 @@ ggchord_fusion_shared_guides <- function(styles, boxes, x, canvas) {
     dims <- if(horizontal) c(extent,row+depth) else c(row+depth,extent)
     grobs <- lapply(seq_along(items),function(i) {
       pos<-positions[[i]];if(!horizontal) pos<-rev(pos)
-      grid::grobTree(items[[i]]$grob,vp=grid::viewport(x=pos[1],y=pos[2],
+      grobTree(items[[i]]$grob,vp=viewport(x=pos[1],y=pos[2],
         width=sizes[[i]][1],height=sizes[[i]][2],default.units="mm"))
     })
     box <- items[[1]]$template %||% unique_boxes[[1]]$template
     box$grobs <- grobs
     box$layout <- data.frame(t=1,l=1,b=1,r=1,z=seq_along(grobs),clip="off",name=paste0("shared-",seq_along(grobs)))
-    box$widths <- grid::unit(dims[1],"mm");box$heights<-grid::unit(dims[2],"mm")
+    box$widths <- unit(dims[1],"mm");box$heights<-unit(dims[2],"mm")
     styles$guides[[side]] <- box;styles$sizes[side,]<-dims
   }
   styles$side <- if(length(styles$guides)==1L) names(styles$guides) else "multiple"
@@ -520,10 +520,10 @@ ggchord_fusion_style_layer <- function(layer) {
 }
 
 ggchord_fusion_check_style_mapping <- function(layer) {
-  previous_plot <- ggplot2::last_plot()
-  on.exit(ggplot2::set_last_plot(previous_plot), add = TRUE)
+  previous_plot <- last_plot()
+  on.exit(set_last_plot(previous_plot), add = TRUE)
   carrier <- ggchord_fusion_style_layer(layer)
-  plot <- ggplot2::ggplot()
+  plot <- ggplot()
   data <- carrier$setup_layer(carrier$data, plot)
   carrier$compute_aesthetics(data, plot)
   invisible(NULL)
@@ -531,10 +531,10 @@ ggchord_fusion_check_style_mapping <- function(layer) {
 
 # Train cross-panel styles through ggplot2; no second colour mapping engine.
 ggchord_fusion_build_styles <- function(x) {
-  p <- ggplot2::ggplot() + ggplot2::theme_void(base_size = 9) +
-    ggplot2::theme(legend.position = "right", plot.margin = ggplot2::margin(0,0,0,0))
+  p <- ggplot() + theme_void(base_size = 9) +
+    theme(legend.position = "right", plot.margin = margin(0,0,0,0))
   for (layer in x$ribbons) p <- p + ggchord_fusion_style_layer(layer)
-  explicit <- ggplot2::theme()
+  explicit <- theme()
   for (style in x$styles) {
     p <- suppressMessages(p + style)
     if (inherits(style, "theme")) explicit <- explicit + style
@@ -551,10 +551,10 @@ ggchord_fusion_build_styles <- function(x) {
       ggchord_stop("Fusion: scale_for() must select root ribbon layers")
   }
   aliases <- lapply(ggchord_scale_scopes(p, scoped), function(scope) list(selected = scope$selected,
-    inverse = stats::setNames(names(scope$aliases), scope$aliases)))
+    inverse = setNames(names(scope$aliases), scope$aliases)))
   if (length(scoped)) p <- ggchord_apply_scoped_scales(p, scoped)
-  p <- ggchord_add_identity_scales(p)
-  list(plot = p, built = ggplot2::ggplot_build(p), aliases = aliases)
+  p <- ggchord_add_visual_scales(p)
+  list(plot = p, built = ggplot_build(p), aliases = aliases)
 }
 
 ggchord_fusion_measure_styles <- function(x, styles) {
@@ -563,8 +563,8 @@ ggchord_fusion_measure_styles <- function(x, styles) {
   aliases <- styles$aliases
   report <- list(status = "fixed", render_policy = p$ggchord$adaptive_report)
   if (identical(x$fusion_policy$mode, "adaptive")) {
-    canvas <- c(grid::convertWidth(grid::unit(1, "npc"), "mm", TRUE),
-      grid::convertHeight(grid::unit(1, "npc"), "mm", TRUE))
+    canvas <- c(convertWidth(unit(1, "npc"), "mm", TRUE),
+      convertHeight(unit(1, "npc"), "mm", TRUE))
     evaluate <- function(sizes) {
       budget <- ggchord_fusion_guide_budget(canvas, sizes)
       rects <- tryCatch(ggchord_fusion_rectangles(x, budget$area), error = function(e) NULL)
@@ -583,13 +583,13 @@ ggchord_fusion_measure_styles <- function(x, styles) {
     report <- joint$report
     if (!report$status %in% c("feasible", "no_guides")) ggchord_stop(
       "Fusion: cross-panel guides and panel allocations cannot fit the composition under the explicit constraints; enlarge the canvas or revise guide layout")
-    built <- joint$built; table <- joint$table %||% ggplot2::ggplot_gtable(built)
-  } else table <- ggplot2::ggplot_gtable(built)
+    built <- joint$built; table <- joint$table %||% ggplot_gtable(built)
+  } else table <- ggplot_gtable(built)
   at <- which(grepl("^guide-box", table$layout$name) & !vapply(table$grobs, inherits, logical(1), "zeroGrob"))
   sides <- sub("guide-box-", "", table$layout$name[at])
   if (any(!sides %in% c("left", "right", "top", "bottom")))
     ggchord_stop("Fusion: cross-panel legends must be outside the panels")
-  guides <- stats::setNames(table$grobs[at], sides)
+  guides <- setNames(table$grobs[at], sides)
   sizes <- matrix(0, 4, 2, dimnames = list(c("left", "right", "top", "bottom"), c("width", "height")))
   for (side in sides) sizes[side, ] <- ggchord_guide_size(guides[[side]])
   styles <- lapply(seq_along(built$data), function(i) {
@@ -598,7 +598,7 @@ ggchord_fusion_measure_styles <- function(x, styles) {
     d[seq.int(1L, length.out = nrow(d) / 3L, by = 3L), , drop = FALSE]
   })
   list(data = styles, guides = guides, sizes = sizes, report = report,
-    guide = if (length(at) == 1L) guides[[1L]] else grid::nullGrob(),
+    guide = if (length(at) == 1L) guides[[1L]] else nullGrob(),
     side = if (!length(at)) "none" else if (length(at) == 1L) sides else "multiple")
 }
 
@@ -622,7 +622,7 @@ ggchord_fusion_rectangles <- function(x, canvas) {
   if (any(bounds > 1 + 1e-10)) ggchord_stop("Fusion: panel allocation lies outside the canvas")
   bounds[bounds > 1] <- 1
   z <- areas$z %||% seq_len(nrow(areas))
-  rects <- stats::setNames(lapply(seq_len(nrow(areas)), function(i) bounds[i, ]), names(x$panels))
+  rects <- setNames(lapply(seq_len(nrow(areas)), function(i) bounds[i, ]), names(x$panels))
   rects[order(z)]
 }
 
@@ -633,8 +633,8 @@ ggchord_fusion_partition <- function(g, background = FALSE, inherited = FALSE) {
     g$grobs <- lapply(g$grobs, ggchord_fusion_partition, background = background, inherited = is_background)
   } else if (!is.null(g$children) && length(g$children)) {
     children <- lapply(g$children, ggchord_fusion_partition, background = background, inherited = is_background)
-    g$children <- do.call(grid::gList, children)
-  } else if (background != is_background) return(grid::nullGrob(name = g$name))
+    g$children <- do.call(gList, children)
+  } else if (background != is_background) return(nullGrob(name = g$name))
   g
 }
 
@@ -774,9 +774,9 @@ ggchord_fusion_path <- function(q, s, curvature) {
 
 #' @export
 print.ggchord_fusion <- function(x, ...) {
-  ggplot2::set_last_plot(x)
+  set_last_plot(x)
   grid::grid.newpage()
-  grid::grid.draw(x)
+  grid.draw(x)
   invisible(x)
 }
 
@@ -787,10 +787,10 @@ grid.draw.ggchord_fusion <- function(x, recording = TRUE) {
   # Recorded plots may be replayed on a device with a different size or DPI.
   # Rebuild there so panels, interval fronts and leaders share the final metric.
   grob <- grid::recordGrob(
-    grid::grid.draw(ggchord_build_fusion(plot)$grob, recording = FALSE),
+    grid.draw(ggchord_build_fusion(plot)$grob, recording = FALSE),
     list(plot = x, ggchord_build_fusion = ggchord_build_fusion)
   )
-  grid::grid.draw(grob, recording = recording)
+  grid.draw(grob, recording = recording)
   invisible(x)
 }
 
@@ -814,21 +814,21 @@ ggchord_fusion_identity_guide <- function(plot, styles, direction = NULL) {
   values <- c(0,50,80,90,95,100)
   dimensions <- if(inherits(text,"element_blank")) rep(0,length(values)) else
     vapply(as.character(values),function(label) {
-      grob <- grid::textGrob(label,gp=grid::gpar(fontsize=text$size %||% 9,
+      grob <- textGrob(label,gp=gpar(fontsize=text$size %||% 9,
         fontfamily=text$family %||% "",fontface=text$face %||% "plain"))
-      if(horizontal) grid::convertWidth(grid::grobWidth(grob),"mm",TRUE) else
-        grid::convertHeight(grid::grobHeight(grob),"mm",TRUE)
+      if(horizontal) convertWidth(grobWidth(grob),"mm",TRUE) else
+        convertHeight(grobHeight(grob),"mm",TRUE)
     },numeric(1))
   required <- max(((head(dimensions,-1)+tail(dimensions,-1))/2+1.2)/(diff(values)/100))
   field <- if(horizontal) "legend.key.width" else "legend.key.height"
   thickness <- if(horizontal) "legend.key.height" else "legend.key.width"
   length <- explicit[[field]] %||% explicit$legend.key.size
-  if(is.null(length)) length <- grid::unit(max(required,if(horizontal) 100 else 85),"mm") else
-    if(grid::is.unit(length) && grid::convertUnit(length,"mm",valueOnly=TRUE)<required)
+  if(is.null(length)) length <- unit(max(required,if(horizontal) 100 else 85),"mm") else
+    if(is.unit(length) && convertUnit(length,"mm",valueOnly=TRUE)<required)
       warning("Fusion Identity labels exceed the explicitly fixed guide length; increase its length or reduce its explicit text size",call.=FALSE)
-  width <- explicit[[thickness]] %||% explicit$legend.key.size %||% grid::unit(4,"mm")
-  guide_theme <- do.call(ggplot2::theme,stats::setNames(list(length,width),c(field,thickness)))
-  result <- ggplot2::guide_coloursteps(even.steps=FALSE,show.limits=TRUE,
+  width <- explicit[[thickness]] %||% explicit$legend.key.size %||% unit(4,"mm")
+  guide_theme <- do.call(ggplot2::theme,setNames(list(length,width),c(field,thickness)))
+  result <- guide_coloursteps(even.steps=FALSE,show.limits=TRUE,
     direction=if(horizontal) "horizontal" else "vertical",theme=guide_theme)
   attr(result, "ggchord_fusion_default") <- TRUE
   result

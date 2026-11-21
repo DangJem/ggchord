@@ -3,7 +3,7 @@
 # active before this one. Nested measurement inside a preview must restore the
 # preview explicitly, otherwise layout continues on the IDE's smaller device.
 ggchord_measurement_device <- function(text = NULL, ...) {
-  previous <- grDevices::dev.cur()
+  previous <- dev.cur()
   unicode <- is.null(text) || any(grepl("[^\\x01-\\x7F]", text,
     perl = TRUE), na.rm = TRUE)
   path <- NULL
@@ -44,7 +44,7 @@ ggchord_measurement_device <- function(text = NULL, ...) {
       grDevices::pdf(NULL, ...)
     }
   }
-  owned <- grDevices::dev.cur()
+  owned <- dev.cur()
   opened <- TRUE
   closed <- FALSE
   function() {

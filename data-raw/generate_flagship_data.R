@@ -9,10 +9,11 @@ show_cross <- genome_comparison_example$cross_links
 chord_genes <- genome_comparison_example$chord_features
 show_linear_features <- genome_comparison_example$linear_features
 show_adjacent <- genome_comparison_example$adjacent_links
-show_optimization <- suggest_sequence_layout(show_sequences, show_links,
-  order = show_sequences$accver, weight = "length")
-radial_orientation <- show_optimization$layout$orientation
-radial_orientation[c("MT108731.1", "OR222515.1")] <- 1
+# Preserve the four display directions selected for the published Chord.
+# Orientation belongs to the presentation; alignment endpoints remain in source order.
+chord_orientation <- c("MT108731.1" = -1, "MT118296.1" = 1,
+  "OQ646790.1" = 1, "OR222515.1" = -1)
+radial_orientation <- setNames(rep(1, nrow(show_sequences)), show_sequences$accver)
 
 radial_seqs <- seq_data_example |>
   select(accver, length)
@@ -30,7 +31,7 @@ flagship_comparison_example <- list(
   comparison = list(seq_data = radial_seqs, links = radial_hsp, features = radial_features, events = radial_events),
   chord = list(seq_data = show_sequences, links = show_links,
     features = chord_genes, labels = chord_genes,
-    orientation = show_optimization$layout$orientation),
+    orientation = chord_orientation),
   collinear = list(seq_data = show_sequences, adjacent_links = show_adjacent,
     cross_links = show_cross, features = show_linear_features,
     labels = arrange(show_linear_features, desc(nchar(anno)), accver, start)),
@@ -170,12 +171,14 @@ records <- lapply(objects, function(object) {
   features <- find_common_features(sequence, mode = "reference")
   all_sites <- find_restriction_sites(sequence)
   profile <- attr(all_sites, "reference_enzyme_profiles")
-  sites <- filter_restriction_sites(all_sites, profile = "reference", commercial_only = TRUE,
-    representatives = "preferred")
-  policy <- "Saved reference profile; commercial nonredundant representatives"
+  # The catalogue reproduces the reference display selection. Group equivalent
+  # recognition starts by preferred enzyme, retaining custom reference sets.
+  sites <- ggchord_filter_restriction_profile(all_sites, set = "reference",
+    parent_set = "commercial_nonredundant")
+  policy <- "Saved reference profile; original catalogue display representatives"
   if (nrow(profile) && profile$profile_type == "none") {
-    sites <- filter_restriction_sites(all_sites, min_site_length = 6, cuts = 1,
-      commercial_only = TRUE, representatives = "preferred")
+    sites <- ggchord_filter_restriction_profile(all_sites, set = "unique_6plus",
+      parent_set = "commercial_nonredundant")
     policy <- "Explicit unique 6+ profile; saved None does not reproduce the reference PNG"
   }
   targets <- sequence$length * c(1, 3, 5) / 6

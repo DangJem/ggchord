@@ -257,6 +257,6 @@ read_genbank <- function(file, feature_types = NULL,
   feature_data$label <- feature_data$anno
   ggchord_import_collection(as_ggchord_seq(seq_data), features = list(annotation = feature_data), report = list(
     parser = provenance, records = records,
-    raw_files = stats::setNames(lapply(paths, readLines, warn = FALSE), paths),
+    raw_files = setNames(lapply(paths, readLines, warn = FALSE), paths),
     parser_messages = messages, unplaced_features = unplaced))
 }

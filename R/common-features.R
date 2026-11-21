@@ -117,7 +117,7 @@ ggchord_common_source_sequence_map <- function(database) {
       !is.data.frame(database$source_sequences) ||
       !all(c("source_sequence_id", "sequence") %in%
         names(database$source_sequences))) return(character())
-  stats::setNames(as.character(database$source_sequences$sequence),
+  setNames(as.character(database$source_sequences$sequence),
     as.character(database$source_sequences$source_sequence_id))
 }
 
@@ -207,7 +207,7 @@ ggchord_common_runtime_features <- function(features, split_segments,
         translation <- translation[order(translation[[qualifier_id]],
           translation$value_index), , drop = FALSE]
         first <- !duplicated(translation[[qualifier_id]])
-        protein <- stats::setNames(as.character(translation[[value_column]][first]),
+        protein <- setNames(as.character(translation[[value_column]][first]),
           as.character(translation[[qualifier_id]][first]))
         hit <- match(ids, names(protein))
         fill <- !is.na(hit) & (is.na(features$reference_protein) |
@@ -246,7 +246,7 @@ ggchord_wrap_position <- function(x, length, circular) {
 
 ggchord_common_target_segments <- function(parts, hit, seq_length,
                                             reverse, circular) {
-  offsets <- cumsum(c(0L, utils::head(parts$length_bp, -1L)))
+  offsets <- cumsum(c(0L, head(parts$length_bp, -1L)))
   if (!reverse) {
     starts <- hit + offsets
     ends <- starts + parts$length_bp - 1L
@@ -468,7 +468,7 @@ ggchord_genetic_code <- local({
     "GGT G GGC G GGA G GGG G"
   ), "[[:space:]]+")
   tokens <- unlist(bases)
-  stats::setNames(tokens[seq(2L, length(tokens), 2L)],
+  setNames(tokens[seq(2L, length(tokens), 2L)],
                   tokens[seq(1L, length(tokens), 2L)])
 })
 
@@ -747,6 +747,7 @@ find_common_features <- function(sequence, database = NULL, types = NULL, featur
           wrapped <- part[rep(1L, 2), , drop = FALSE]
           wrapped$start <- c(part$start, 1)
           wrapped$end <- c(source_length[j], part$end)
+          if ("length_bp" %in% names(wrapped)) wrapped$length_bp <- wrapped$end - wrapped$start + 1L
           wrapped
         }))
         parts$segment_index <- seq_len(nrow(parts))
@@ -861,7 +862,7 @@ find_common_features <- function(sequence, database = NULL, types = NULL, featur
   if (!length(candidates)) return(finish(ggchord_empty_common_features()))
   observed <- out <- ggchord_rbind_fill(candidates)
   if (resolve == "best") {
-    lengths <- stats::setNames(nchar(input$sequences), input$ids)
+    lengths <- setNames(nchar(input$sequences), input$ids)
     out <- ggchord_resolve_common_candidates(out, lengths)
   }
   out <- out[order(out$accver, out$start, out$end, out$type,
@@ -971,7 +972,7 @@ ggchord_expand_feature_segments <- function(data) {
       # overrides that default. Use the preceding segment end so a cleavage at
       # the same biological join de-duplicates cleanly.
       boundaries <- if (nrow(run) > 1L) {
-        as.numeric(utils::head(run$.hi, -1L))
+        as.numeric(head(run$.hi, -1L))
       } else numeric()
       boundary_styles <- rep("dotted", length(boundaries))
       if (length(boundaries) && "line_style" %in% names(run)) {

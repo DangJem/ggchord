@@ -122,12 +122,12 @@ export_ggchord_layout <- function(plot, layers = NULL, stages = "geometry",
     actual = attr(results, "measurement_device"))
   if (need_geometry && is.null(failure) && !is.null(results$leaf) &&
       !identical(results$leaf$context$status, "measured"))
-    measurement <- utils::modifyList(measurement, list(status = "unavailable",
+    measurement <- modifyList(measurement, list(status = "unavailable",
       reason = "panel_measurement_unavailable"))
   statuses <- lapply(entries, function(entry) {
     local <- Filter(function(issue)
       length(issue$path) <= length(entry$panel_path) &&
-        identical(issue$path, utils::head(entry$panel_path, length(issue$path))) &&
+        identical(issue$path, head(entry$panel_path, length(issue$path))) &&
         (is.null(issue$layer_id) || identical(issue$layer_id, entry$layer_id)), failures)
     ggchord_output_stage_status(entry, stages, request,
       if (length(local)) local[[1L]]$message else failure)
@@ -135,7 +135,7 @@ export_ggchord_layout <- function(plot, layers = NULL, stages = "geometry",
   report <- ggchord_rbind_fill(statuses) %||% data.frame(
     layer_id = character(), stage = character(), status = character(), reason = character(),
     panel_path = I(list()))
-  stage_tables <- stats::setNames(lapply(stages, function(stage) {
+  stage_tables <- setNames(lapply(stages, function(stage) {
     lapply(entries, function(entry) {
       list(panel_path = entry$panel_path, layer_id = entry$layer_id, data = entry$capture[[stage]])
     })
@@ -185,7 +185,7 @@ ggchord_output_request <- function(width, height, units, device, dpi, caller) {
 }
 
 ggchord_with_output_device <- function(request, code) {
-  previous <- grDevices::dev.cur()
+  previous <- dev.cur()
   owned <- NULL
   estimated <- is.null(request$device)
   path <- tempfile("ggchord-output-", fileext = if (is.character(request$device))
@@ -213,11 +213,11 @@ ggchord_with_output_device <- function(request, code) {
   } else {
     ggchord_diagnostic_device(path, request$device, width, height, request$dpi)
   }
-  if (grDevices::dev.cur() == previous) ggchord_stop("The requested measurement device did not open")
-  if (!estimated) owned <- grDevices::dev.cur()
+  if (dev.cur() == previous) ggchord_stop("The requested measurement device did not open")
+  if (!estimated) owned <- dev.cur()
   grid::grid.newpage()
   value <- code()
-  attr(value, "measurement_device") <- names(grDevices::dev.cur())
+  attr(value, "measurement_device") <- names(dev.cur())
   value
 }
 
@@ -262,17 +262,17 @@ ggchord_output_layer_ids <- function(plot) {
 }
 
 ggchord_output_copy_native <- function(layer, id) {
-  copy <- ggplot2::ggproto(NULL, layer, ggchord_layer_id = id)
+  copy <- ggproto(NULL, layer, ggchord_layer_id = id)
   if (is.function(layer$data)) copy$data <- ggchord_render_data_once(layer$data)
   copy
 }
 
 ggchord_output_native_stat <- function(layer, capture) {
   parent <- layer$stat
-  copy <- ggplot2::ggproto(NULL, layer)
-  copy$stat <- ggplot2::ggproto(NULL, parent, compute_layer = function(self, data, params, layout) {
+  copy <- ggproto(NULL, layer)
+  copy$stat <- ggproto(NULL, parent, compute_layer = function(self, data, params, layout) {
     capture$mapped <- data
-    result <- ggplot2::ggproto_parent(parent, self)$compute_layer(data, params, layout)
+    result <- ggproto_parent(parent, self)$compute_layer(data, params, layout)
     capture$statistic <- result
     result
   })
@@ -401,7 +401,7 @@ ggchord_output_build_stages <- function(plot, on_error = NULL, path = character(
         })
     }
   } else {
-    built <- ggplot2::ggplot_build(plot)
+    built <- ggplot_build(plot)
     if (!is.null(plot$ggchord_alignment)) ggchord_alignment_layout(built, plot$ggchord_alignment)
     ggchord_output_capture_build(plot, built, built$plot$ggchord$ref$layout)
   }
@@ -426,10 +426,10 @@ ggchord_output_capture_build <- function(plot, built, layout) {
 ggchord_output_build_geometry <- function(plot, on_error = NULL) {
   if (inherits(plot, "ggchord_fusion")) {
     fusion <- ggchord_build_fusion(plot, on_error)
-    grid::grid.draw(fusion$grob)
+    grid.draw(fusion$grob)
     return(list(fusion = fusion, leaves = fusion$panel_registry))
   }
-  built <- ggplot2::ggplot_build(plot)
+  built <- ggplot_build(plot)
   if (inherits(plot, "ggchord")) {
     table <- ggchord_render_table(built, force = TRUE)
     leaf <- list(built = attr(table, "ggchord_render_built"),
@@ -437,13 +437,13 @@ ggchord_output_build_geometry <- function(plot, on_error = NULL) {
       seq_data = built$plot$ggchord$data$seq_data)
   } else {
     layout <- ggchord_alignment_layout(built, plot$ggchord_alignment)
-    table <- ggplot2::ggplot_gtable(built)
+    table <- ggplot_gtable(built)
     leaf <- list(built = built, layout = layout, context = ggchord_panel_context(table, built))
   }
-  grid::grid.draw(table)
+  grid.draw(table)
   leaf$guides <- ggchord_diagnostic_guides(table, ggchord_render_dimensions())
   ggchord_output_capture_build(plot, leaf$built, leaf$layout)
-  list(leaf = leaf, leaves = stats::setNames(list(leaf), ""))
+  list(leaf = leaf, leaves = setNames(list(leaf), ""))
 }
 
 ggchord_output_composition_key <- function(path) {
@@ -457,7 +457,7 @@ ggchord_output_attach_geometry <- function(entries, results) {
       tables <- if (entry$type == "fusion_ribbon") c("connections", "fronts", "paths") else
         c("zoom_regions", "zoom_paths")
       key <- ggchord_output_composition_key(entry$panel_path)
-      capture$geometry <- stats::setNames(lapply(tables, function(table) {
+      capture$geometry <- setNames(lapply(tables, function(table) {
         value <- results$fusion$export[[table]]
         if (!nrow(value)) return(value)
         value[value$composition_id == key & value$layer_id == entry$layer_id, , drop = FALSE]

@@ -3,13 +3,13 @@
 ggchord_seq_scale_distance <- function(value, axis, layout, name) {
   context <- if (exists("ggchord_render_context", mode = "function"))
     ggchord_render_context() else NULL
-  if (grid::is.unit(value)) {
-    if (length(value) != 1L || any(!grid::unitType(value) %in%
+  if (is.unit(value)) {
+    if (length(value) != 1L || any(!unitType(value) %in%
         c("mm", "cm", "inches", "points", "bigpts", "picas"))) ggchord_stop(
       "geom_seq_scale(): ", name, " must use one absolute physical unit or one layout-unit number")
     # Absolute units have a fixed conversion and must not open a graphics
     # device merely to build a device-free layout.
-    factor <- switch(grid::unitType(value), mm = 1, cm = 10, inches = 25.4,
+    factor <- switch(unitType(value), mm = 1, cm = 10, inches = 25.4,
       points = 25.4 / 72.27, bigpts = 25.4 / 72, picas = 12 * 25.4 / 72.27)
     mm <- as.numeric(value) * factor
     units <- context$units_per_mm[[axis]]
@@ -68,7 +68,7 @@ annotation_seq_scalebar <- function(length, sequence = NULL, instance = NULL,
   if (base::length(height) != 1L || height <= 0 || base::length(text_size) != 1L || text_size <= 0)
     ggchord_stop("annotation_seq_scalebar(): height and text_size must be positive scalars")
   layer <- ggchord_seq_scale_layer(length = length, label = label, location = location,
-    tick_height = grid::unit(height, "mm"), size = text_size, colour = colour,
+    tick_height = unit(height, "mm"), size = text_size, colour = colour,
     inherit.aes = FALSE, id = id)
   layer$ggchord_params$sequence <- sequence
   layer$ggchord_params$instance <- instance

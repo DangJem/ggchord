@@ -4,7 +4,7 @@
 
 #' @noRd
 scale_seq_colour_manual <- function(..., values) {
-  ggplot2::scale_colour_manual(..., values = values, aesthetics = "seq_colour")
+  scale_colour_manual(..., values = values, aesthetics = "seq_colour")
 }
 
 #' @noRd
@@ -20,7 +20,7 @@ scale_seq_ring_manual <- function(..., values, name = "Ring",
     )
   }
   if (is.null(limits) && !is.null(names(values))) limits <- names(values)
-  ggplot2::discrete_scale(
+  discrete_scale(
     aesthetics = "seq_ring", palette = scales::manual_pal(values),
     ..., name = name, limits = limits, na.value = NA_real_, guide = guide
   )
@@ -54,7 +54,7 @@ scale_ribbon_fill_gradientn <- function(
   if (!has_colours && !has_colors)
     ggchord_stop("scale_ribbon_fill_gradientn(): colours (or colors) is required")
   if (!has_colours) colours <- colors
-  ggplot2::scale_fill_gradientn(
+  scale_fill_gradientn(
     ..., colours = colours, values = values, aesthetics = "ribbon_fill",
     guide = guide
   )
@@ -62,19 +62,19 @@ scale_ribbon_fill_gradientn <- function(
 
 #' @noRd
 scale_ribbon_fill_manual <- function(..., values) {
-  ggplot2::scale_fill_manual(..., values = values, aesthetics = "ribbon_fill")
+  scale_fill_manual(..., values = values, aesthetics = "ribbon_fill")
 }
 
 #' @noRd
 scale_ribbon_fill_identity <- function(...) {
-  ggplot2::scale_fill_identity(..., aesthetics = "ribbon_fill")
+  scale_fill_identity(..., aesthetics = "ribbon_fill")
 }
 
 #' @noRd
 scale_ribbon_alpha_continuous <- function(..., range = NULL) {
   # Older 4.0.x finds the default palette by aesthetic name, so an extension
   # role needs the same explicit fallback range as the native alpha scale.
-  if (is.null(range) && !"fallback.palette" %in% names(formals(ggplot2::continuous_scale))) {
+  if (is.null(range) && !"fallback.palette" %in% names(formals(continuous_scale))) {
     range <- c(0.1, 1)
   }
   ggplot2::scale_alpha_continuous(
@@ -89,7 +89,7 @@ scale_ribbon_alpha_manual <- function(..., values) {
 
 #' @noRd
 scale_ribbon_colour_manual <- function(..., values) {
-  ggplot2::scale_colour_manual(
+  scale_colour_manual(
     ..., values = values, aesthetics = "ribbon_colour"
   )
 }
@@ -106,13 +106,13 @@ scale_ribbon_linetype_manual <- function(..., values) {
 
 #' @noRd
 scale_gene_fill_manual <- function(..., values) {
-  ggplot2::scale_fill_manual(..., values = values, aesthetics = "gene_fill")
+  scale_fill_manual(..., values = values, aesthetics = "gene_fill")
 }
 
 #' @noRd
 scale_feature_fill_manual <- function(..., values, limits = NULL) {
   if (is.null(limits) && !is.null(names(values))) limits <- names(values)
-  out <- ggplot2::scale_fill_manual(..., values = values, limits = limits,
+  out <- scale_fill_manual(..., values = values, limits = limits,
     aesthetics = "feature_fill")
   attr(out, "ggchord_scale_priority") <- 2L
   out
@@ -132,7 +132,7 @@ scale_feature_shape_manual <- function(..., values, name = "Feature",
     )
   }
   if (is.null(limits) && !is.null(names(values))) limits <- names(values)
-  out <- ggplot2::discrete_scale(
+  out <- discrete_scale(
     aesthetics = "feature_shape",
     palette = scales::manual_pal(values),
     ..., name = name, limits = limits, na.value = "arrow", guide = guide
@@ -161,7 +161,7 @@ ggchord_plasmid_feature_colours <- function() {
 ggchord_feature_callout_fill <- function(fill, luminance = .56) {
   vapply(as.character(fill), function(value) {
     rgb <- tryCatch(
-      grDevices::col2rgb(value, alpha = TRUE)[, 1L] / 255,
+      col2rgb(value, alpha = TRUE)[, 1L] / 255,
       error = function(e) c(184, 189, 195, 255) / 255
     )
     brightness <- function(colour) {
@@ -188,7 +188,7 @@ ggchord_feature_callout_fill <- function(fill, luminance = .56) {
 
 ggchord_contrast_colour <- function(fill) {
   vapply(as.character(fill), function(value) {
-    rgb <- tryCatch(grDevices::col2rgb(value)[, 1L] / 255,
+    rgb <- tryCatch(col2rgb(value)[, 1L] / 255,
       error = function(e) c(1, 1, 1))
     linear <- ifelse(rgb <= .04045, rgb / 12.92,
       ((rgb + .055) / 1.055)^2.4)
@@ -200,7 +200,7 @@ ggchord_contrast_colour <- function(fill) {
 scale_feature_fill_plasmid <- function(..., limits = NULL) {
   values <- ggchord_plasmid_feature_colours()
   if (is.null(limits)) limits <- names(values)
-  out <- ggplot2::scale_fill_manual(
+  out <- scale_fill_manual(
     ..., values=values, limits=limits, aesthetics="feature_fill", na.value="#B8BDC3"
   )
   attr(out,"ggchord_scale_priority") <- 1L
@@ -222,7 +222,7 @@ scale_feature_shape_plasmid <- function(..., limits = NULL, guide = "none") {
     misc_RNA="block", intron="capped_line", MCS="block", misc_feature="block"
   )
   if (is.null(limits)) limits <- names(values)
-  out <- ggplot2::discrete_scale(
+  out <- discrete_scale(
     aesthetics="feature_shape",palette=scales::manual_pal(values),
     ...,limits=limits,na.value="block",guide=guide
   )
@@ -232,7 +232,7 @@ scale_feature_shape_plasmid <- function(..., limits = NULL, guide = "none") {
 
 #' @noRd
 scale_region_fill_manual <- function(..., values) {
-  ggplot2::scale_fill_manual(..., values = values, aesthetics = "region_fill")
+  scale_fill_manual(..., values = values, aesthetics = "region_fill")
 }
 
 #' @noRd
@@ -242,13 +242,13 @@ scale_seq_position_continuous <- function(
     limits = NULL, expand = ggplot2::waiver(), oob = scales::censor,
     transform = "identity", n.breaks = 6,
     coordinates = c("relative", "source"), guide = guide_seq_axis(), ...) {
-  ggchord_check_argument_names(sys.call(), sys.function(), ggplot2::continuous_scale)
+  ggchord_check_argument_names(sys.call(), sys.function(), continuous_scale)
   coordinates <- match.arg(coordinates)
   if ("sequences" %in% names(list(...)))
     ggchord_stop("Use guide = guide_seq_axis(sequences = ...) to select displayed axes")
   if (identical(guide, "none")) guide <- guide_seq_axis(character())
   if (!inherits(guide, "ggchord_seq_axis")) ggchord_stop("Use guide_seq_axis() or 'none'")
-  sc <- ggplot2::continuous_scale(
+  sc <- continuous_scale(
     aesthetics = "seq_position",
     palette = function(x) x,
     name = name, breaks = breaks, minor_breaks = minor_breaks,
@@ -349,13 +349,13 @@ scale_seq_position <- function(name = waiver(), breaks = waiver(),
     guide = guide_seq_axis()) {
   ggchord_check_argument_names(sys.call(), sys.function())
   coordinates <- ggchord_match_choice(coordinates, c("local", "source"), "coordinates")
-  if (!is.null(name) && !ggplot2::is_waiver(name) &&
+  if (!is.null(name) && !is_waiver(name) &&
       (!(is.character(name) || is.expression(name)) || length(name) != 1L ||
        (is.character(name) && is.na(name))))
     ggchord_stop("scale_seq_position(): name must be one title or NULL")
   if (identical(guide, "none")) guide <- guide_seq_axis(character())
   if (!inherits(guide, "ggchord_seq_axis")) ggchord_stop("Use guide_seq_axis() or 'none'")
-  out <- ggplot2::continuous_scale("seq_position", palette = identity,
+  out <- continuous_scale("seq_position", palette = identity,
     name = name, breaks = if (is.list(breaks)) waiver() else breaks,
     minor_breaks = if (is.list(minor_breaks)) waiver() else minor_breaks,
     labels = if (is.list(labels)) waiver() else labels, guide = "none")
@@ -413,7 +413,7 @@ scale_track_value <- function(track = "default", name = waiver(), limits = NULL,
   axis <- ggchord_track_axis_guide(guide)
   custom <- inherits(transform, "transform")
   if (custom) transform <- ggchord_check_track_transform(transform, track)
-  sc <- ggplot2::continuous_scale(ggchord_track_aes("value", track), palette = identity,
+  sc <- continuous_scale(ggchord_track_aes("value", track), palette = identity,
     name = name, limits = limits, breaks = breaks, labels = labels,
     transform = transform, oob = oob, guide = "none")
   sc$ggchord_facet_domain <- domain

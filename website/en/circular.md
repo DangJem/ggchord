@@ -16,4 +16,4 @@ Add the feature table explicitly. Use `position_feature_stack()` to separate ove
 
 {{example:first-circular}}
 
-Next, [label the two CDS while retaining all nine features](annotations.md), or [plot GC content along pUC19](tracks.md). The [full plasmid map](case-circular.md) marks 47 restriction-site records at 32 positions. The [plasmid collection](plasmid-catalog.md) includes examples from twelve other references.
+Next, [label the two CDS while retaining all nine features](annotations.md), or [plot GC content along pUC19](tracks.md). The [full plasmid map](case-circular.md) marks 39 restriction-site records at 33 cut positions. The [plasmid collection](plasmid-catalog.md) includes examples from twelve other references.

@@ -34,7 +34,7 @@ ggchord_focus_validate_loci <- function(seq_data, loci, expand, caller) {
     ggchord_stop(caller, ": loci contain unknown sequence ID(s): ",
                  paste(unknown, collapse = ", "))
   }
-  lens <- stats::setNames(as.numeric(seq_data$length), seq_ids)
+  lens <- setNames(as.numeric(seq_data$length), seq_ids)
   out$.source_accver <- out$accver
   out$.focus_start <- pmax(1, pmin(out$start, out$end) - expand)
   out$.focus_end <- pmin(lens[out$accver], pmax(out$start, out$end) + expand)

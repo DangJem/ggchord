@@ -126,7 +126,7 @@ read_feature_relations <- function(file, format = "pairs", features = NULL,
   a <- anchor(membership$feature_id)
   membership <- cbind(membership, a)
   list(pairs = pair_table, membership = membership, links = list(feature_relations = links[placed, , drop = FALSE]),
-    report = list(format = format, records = records, raw_files = stats::setNames(raw, paths),
+    report = list(format = format, records = records, raw_files = setNames(raw, paths),
       feature_data = feature_data, unmapped_ids = missing, unplaced_pairs = links[!placed, , drop = FALSE],
       coordinates = 'user-declared ascending 1-based-inclusive feature anchors; no source length inferred',
       relationship_semantics = 'original pairs or memberships only; no group expansion or alignment orientation inference'))

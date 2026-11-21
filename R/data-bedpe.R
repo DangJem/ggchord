@@ -38,7 +38,7 @@ read_bedpe <- function(file, sequence_unit = "bp", source_file = FALSE) {
     fields <- lapply(kept, function(i) {
       # A sentinel preserves trailing empty metadata fields in strsplit().
       value <- strsplit(paste0(lines[i], "\t__end__"), "\t", fixed = TRUE)[[1L]]
-      utils::head(value, -1L)
+      head(value, -1L)
     })
     widths <- lengths(fields)
     if (length(unique(widths)) != 1L || any(widths < 6L))
@@ -83,8 +83,8 @@ read_bedpe <- function(file, sequence_unit = "bp", source_file = FALSE) {
       stringsAsFactors = FALSE)
     for (name in names(raw)) out[[name]] <- raw[[name]]
     out$bedpe_extra <- I(lapply(fields, function(x) {
-      if (length(x) <= 10L) return(stats::setNames(character(), character()))
-      stats::setNames(x[seq.int(11L, length(x))], paste0("column_", seq.int(11L, length(x))))
+      if (length(x) <= 10L) return(setNames(character(), character()))
+      setNames(x[seq.int(11L, length(x))], paste0("column_", seq.int(11L, length(x))))
     }))
     out$.source_line <- kept
     ggchord_add_source_file(out, path, source_file)

@@ -1,3 +1,4 @@
+# Historical example for ggchord 0.27.0.9000 at commit 6f47bf49.
 # Optional dependency: dplyr. These are real bundled HSP records.
 library(ggchord)
 library(dplyr)

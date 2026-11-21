@@ -8,7 +8,7 @@ ggchord_conversion_require <- function(package, caller) {
 }
 
 ggchord_conversion_mapping <- function(mapping, columns, allowed, caller) {
-  if (is.null(mapping)) return(stats::setNames(character(), character()))
+  if (is.null(mapping)) return(setNames(character(), character()))
   if (!is.character(mapping) || is.null(names(mapping)) || anyNA(mapping) ||
       anyNA(names(mapping)) || any(!nzchar(mapping)) || any(!nzchar(names(mapping))) ||
       anyDuplicated(names(mapping)) || any(!names(mapping) %in% allowed)) {
@@ -40,7 +40,7 @@ ggchord_conversion_frame <- function(x, mapping, roles, caller) {
     ggchord_stop(caller, ": source columns must have unique non-empty names")
   }
   mapping <- ggchord_conversion_mapping(mapping, names(x), roles, caller)
-  selected <- stats::setNames(intersect(roles, names(x)), intersect(roles, names(x)))
+  selected <- setNames(intersect(roles, names(x)), intersect(roles, names(x)))
   selected[names(mapping)] <- mapping
   out <- data.frame(.source_row = x[[".source_row"]] %||% seq_len(nrow(x)))
   for (role in names(selected)) out[[role]] <- x[[selected[[role]]]]

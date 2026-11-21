@@ -53,5 +53,5 @@ geom_alignment_segment <- function(mapping = NULL, data = NULL, stat = "identity
     c("qaccver", "qstart", "qend", "saccver", "sstart", "send", "qstrand", "sstrand", "direction"))
 }
 
-GeomAlignmentSegment <- ggplot2::ggproto("GeomAlignmentSegment", ggplot2::GeomSegment,
+GeomAlignmentSegment <- ggproto("GeomAlignmentSegment", ggplot2::GeomSegment,
   default_aes = aes(colour = "#59636D", alpha = .6, linewidth = .4, linetype = 1))

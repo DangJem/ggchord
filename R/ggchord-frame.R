@@ -10,6 +10,26 @@ set_ggchord_coord <- function(plot, layout, axis_labels = NULL) {
     geometry = ggchord_geometry_limits(layout),
     manual = list(xlim = coord$user_xlim, ylim = coord$user_ylim)
   )
+  # On a linear layout the transverse spacing is set in millimetres.
+  # Once everything fits, keep the spare panel space: fitting this axis
+  # tightly again only rescales its arbitrary native units on every rebuild.
+  if (inherits(coord, "CoordCollinear") && is.null(coord$ratio) &&
+      coord$collinear_seq_axis %in% c("horizontal", "vertical", "sankey") &&
+      !identical(coord$fit, "manual")) {
+    vertical <- identical(coord$collinear_seq_axis, "vertical") || identical(coord$sankey_axis, "y")
+    axis <- if (vertical) "x" else "y"
+    key <- paste0(axis, "lim")
+    context <- ggchord_render_context()
+    span <- unname(context$units_per_mm[axis] * context$panel_mm[if (vertical) "width" else "height"])
+    if (length(span) == 1L && is.finite(span) && span > diff(lim[[key]]))
+      lim[[key]] <- mean(lim[[key]]) + c(-.5, .5) * span
+  }
+  if (isTRUE(ggchord_render_context()$contain_panel) && isTRUE(coord$ggchord_circular)) {
+    context <- ggchord_render_context()
+    span <- unname(context$units_per_mm * context$panel_mm)
+    if (span[1L] > diff(lim$xlim)) lim$xlim <- mean(lim$xlim) + c(-.5, .5) * span[1L]
+    if (span[2L] > diff(lim$ylim)) lim$ylim <- mean(lim$ylim) + c(-.5, .5) * span[2L]
+  }
   xlim <- coord$user_xlim %||% lim$xlim
   ylim <- coord$user_ylim %||% lim$ylim
 
@@ -299,13 +319,13 @@ prepare_ggchord_plot <- function(plot) {
     }
   }
   plot <- set_ggchord_coord(plot, layout, axis_labels)
-  plot$theme <- plot$theme + ggplot2::theme(axis.title.x = ggplot2::element_blank(),
-    axis.title.y = ggplot2::element_blank())
+  plot$theme <- plot$theme + theme(axis.title.x = element_blank(),
+    axis.title.y = element_blank())
   sequence_theme <- plot$scales$get_scales("seq_position")$ggchord_axis_guide$theme
   if (!is.null(sequence_theme)) {
-    local <- stats::setNames(as.list(sequence_theme), paste0("ggchord.", names(sequence_theme)))
+    local <- setNames(as.list(sequence_theme), paste0("ggchord.", names(sequence_theme)))
     axes_only <- plot
-    axes_only$theme <- plot$theme + do.call(ggplot2::theme, local)
+    axes_only$theme <- plot$theme + do.call(theme, local)
     plot$layers <- ggchord_apply_theme_styles(axes_only)$layers
   } else {
     plot <- ggchord_apply_theme_styles(plot)
@@ -347,9 +367,9 @@ ggplot_build.ggchord <- function(plot, ...) {
   plot <- prepare_ggchord_plot(plot)
   plot$ggchord$ref$layout$adaptive_layout <- plot$ggchord$adaptive_report
   plot <- ggchord_apply_scoped_scales(plot)
-  plot <- ggchord_add_identity_scales(plot)
+  plot <- ggchord_add_visual_scales(plot)
   class(plot) <- setdiff(class(plot), "ggchord")
-  built <- ggchord_branch_built(ggplot2::ggplot_build(plot))
+  built <- ggchord_branch_built(ggplot_build(plot))
   ggchord_cache_layout(source, built$plot$ggchord$ref$layout)
   attr(built, "ggchord_source_plot") <- source
   class(built) <- unique(c("ggchord_built", class(built)))

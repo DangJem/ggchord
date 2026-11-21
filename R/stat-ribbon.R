@@ -1,6 +1,6 @@
 # The source computation happens before reference-window projection. The
 # drawing-side identity Stat makes the source results available to after_stat.
-StatGgchordLink <- ggplot2::ggproto(
+StatGgchordLink <- ggproto(
   "StatGgchordLink", ggplot2::Stat, required_aes = c("x", "y"),
   compute_panel = function(data, scales) {
     keys <- grep("^.ggchord_link_stat_", names(data), value = TRUE)
@@ -49,7 +49,7 @@ ggchord_prepare_link_statistics <- function(plot, references) {
     if (!is.null(input$weight) && (!is.numeric(input$weight) ||
         any(is.infinite(input$weight) | is.nan(input$weight) | input$weight < 0, na.rm = TRUE)))
       ggchord_stop(caller, ": weight must be numeric, finite and nonnegative")
-    missing <- !stats::complete.cases(input[fields])
+    missing <- !complete.cases(input[fields])
     if (!".source_row" %in% names(input)) input$.source_row <- seq_len(nrow(input))
     if (any(missing) && !isTRUE(layer$geom_params$na.rm))
       warning(caller, ": omitted ", sum(missing), " incomplete relationship row(s)", call. = FALSE)
@@ -71,12 +71,12 @@ ggchord_prepare_link_statistics <- function(plot, references) {
       if (any(computed %in% names(data))) ggchord_stop(caller, ": density fields collide with source columns")
       data$q_bin <- grid$qbin
       data$s_bin <- grid$sbin
-      data$bin_weight <- if (nrow(grid)) stats::ave(grid$weight, grid$bin_group, FUN = sum) else numeric()
+      data$bin_weight <- if (nrow(grid)) ave(grid$weight, grid$bin_group, FUN = sum) else numeric()
       data$bin_area <- grid$area
       data$density_raw <- data$bin_weight / grid$area
       data$density <- data$density_raw
       if (normalization == "pair_max" && nrow(data)) {
-        pair_max <- stats::ave(data$density_raw, grid$pair_group, FUN = max)
+        pair_max <- ave(data$density_raw, grid$pair_group, FUN = max)
         data$density <- ifelse(pair_max > 0, data$density_raw / pair_max, 0)
       }
       data$normalization <- rep(normalization, nrow(data))
@@ -104,7 +104,7 @@ ggchord_prepare_link_statistics <- function(plot, references) {
     }
     mapping <- layer$ggchord_input_mapping
     for (name in intersect(layer$ggchord_role_aes, names(mapping)))
-      mapping[[name]] <- rlang::new_quosure(rlang::sym(name), emptyenv())
+      mapping[[name]] <- new_quosure(sym(name), emptyenv())
     layer$ggchord_input_mapping <- mapping
     layer$ggchord_input_data <- result
     layer$ggchord_params$link_stat_source <- input

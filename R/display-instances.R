@@ -1,7 +1,7 @@
 # A source entity can own several display rows. The legacy engines consume
 # unique private keys, while public data and scales retain biological IDs.
 ggchord_instance_param <- function(value, instances) {
-  if (is.null(value) || grid::is.unit(value)) return(value)
+  if (is.null(value) || is.unit(value)) return(value)
   if (is.list(value) && all(names(value) %in% c("source", "instance"))) {
     source <- value$source
     local <- value$instance
@@ -38,7 +38,7 @@ ggchord_instance_position <- function(position, instances) {
     changes[[field]] <- ggchord_instance_param(position[[field]], instances)
   if (!is.null(position$base_position)) changes$base_position <-
     ggchord_instance_position(position$base_position, instances)
-  do.call(ggplot2::ggproto, c(list(NULL, position), changes))
+  do.call(ggproto, c(list(NULL, position), changes))
 }
 
 ggchord_instance_expand <- function(input, instances, reference = FALSE) {
@@ -199,7 +199,7 @@ ggchord_check_reference_claim <- function(reference, claim, facet_fields, subset
 
 ggchord_resolve_reference <- function(plot) {
   if (isTRUE(plot$ggchord$reference_resolved)) return(plot)
-  reference <- if (!ggplot2::is_waiver(plot$data)) plot$data
+  reference <- if (!is_waiver(plot$data)) plot$data
   global <- !is.null(reference)
   facet <- plot$facet$params
   fields <- names(c(facet$facets, facet$rows, facet$cols))
@@ -336,16 +336,16 @@ ggchord_prepare_instances <- function(plot, seqs) {
     layer$ggchord_input_transform <- NULL
     p$source_stat <- NULL
     for (role in intersect(layer$ggchord_role_aes, names(layer$ggchord_input_mapping)))
-      layer$ggchord_input_mapping[[role]] <- rlang::new_quosure(rlang::sym(role), emptyenv())
+      layer$ggchord_input_mapping[[role]] <- new_quosure(sym(role), emptyenv())
     for (field in intersect(names(p), numeric_fields)) p[[field]] <- ggchord_instance_param(p[[field]], instances)
     if (!is.null(p$feature_position))
       p$feature_position <- ggchord_instance_position(p$feature_position, instances)
     if (type == "seq") {
       p$backbone_input <- NULL
-      p$seq_labels <- p$seq_labels %||% stats::setNames(instances$accver, instances$key)
+      p$seq_labels <- p$seq_labels %||% setNames(instances$accver, instances$key)
       entities <- unique(instances$accver)
-      colours <- stats::setNames(chord_default_palette(length(entities)), entities)
-      p$seq_colors <- stats::setNames(unname(colours[instances$accver]), instances$key)
+      colours <- setNames(chord_default_palette(length(entities)), entities)
+      p$seq_colors <- setNames(unname(colours[instances$accver]), instances$key)
     }
     layer$ggchord_params <- p
     plot$layers[[i]] <- layer
@@ -354,7 +354,7 @@ ggchord_prepare_instances <- function(plot, seqs) {
   coord <- plot$coordinates
   if (!is.null(coord$collinear_anchor) || !is.null(coord$collinear_segments)) {
     source_coord <- coord
-    coord <- ggplot2::ggproto(NULL, source_coord)
+    coord <- ggproto(NULL, source_coord)
     if (!is.null(coord$collinear_anchor) && any(!coord$collinear_anchor$accver %in% instances$key))
       coord$collinear_anchor <- ggchord_instance_expand(coord$collinear_anchor, instances)$data
     plot$coordinates <- coord
@@ -363,7 +363,7 @@ ggchord_prepare_instances <- function(plot, seqs) {
   arrangement$order <- instances$key
   if (mirrored) for (field in c("orientation", "gap", "row_gap", "radius", "curvature")) {
     value <- arrangement[[field]]
-    if (!is.null(value)) arrangement[[field]] <- stats::setNames(rep(value, 2L), instances$key)
+    if (!is.null(value)) arrangement[[field]] <- setNames(rep(value, 2L), instances$key)
   }
   plot$ggchord$sequence_layout <- arrangement
   plot$ggchord$data$seq_data <- virtual

@@ -47,9 +47,9 @@ The multi-sequence module has four Coord types. Circular and Dotplot add two mor
 
 ### II · Single-sequence circular maps
 
-<a href="man/figures/showcaseplasmid.png"><img src="man/figures/showcaseplasmid.png" alt="pETDuet-1 circular map with features and cut-site positions" width="460"></a>
+<a href="man/figures/showcaseplasmid.png"><img src="man/figures/showcaseplasmid.png" alt="pETDuet-1 circular map with features, primers and cut-site labels" width="460"></a>
 
-The pETDuet-1 map combines the bundled intervals, a subset of labels and the recognition positions of single-cut enzymes.
+The dense pETDuet-1 map shows features and primers inside the backbone, with labelled cut positions around the perimeter.
 
 [Complete example](examples/make_readme_plots.R)
 
@@ -63,9 +63,9 @@ The original 32 HSPs use colour for reported identity and line width for reporte
 
 ### IV · Multi-view composition
 
-<a href="man/figures/flagfusion.png"><img src="man/figures/flagfusion.png" alt="Overview and enlarged view of a source interval in two connected panels" width="460"></a>
+<a href="man/figures/flagfusion.png"><img src="man/figures/flagfusion.png" alt="Six panels connect genome comparisons to an enlarged nucleotide alignment" width="460"></a>
 
-A Chord overview and an independent Collinear detail show the same source region at different scales.
+Three views of the same relationships lead into a source interval, an alignment window and a detail showing the individual bases.
 
 [Complete example](examples/make_readme_plots.R)
 

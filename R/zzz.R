@@ -6,59 +6,59 @@
 # annotations drawn by ggchord; data-dependent fill and colour remain scales.
 .onLoad <- function(libname, pkgname) {
   ggplot2::register_theme_elements(
-    ggchord.axis.line = ggplot2::element_line(),
-    ggchord.axis.ticks = ggplot2::element_line(),
-    ggchord.axis.minor.ticks = ggplot2::element_line(),
-    ggchord.axis.text = ggplot2::element_text(),
-    ggchord.axis.title = ggplot2::element_text(),
-    ggchord.track.axis.line = ggplot2::element_line(),
-    ggchord.track.axis.ticks = ggplot2::element_line(),
-    ggchord.track.axis.text = ggplot2::element_text(),
-    ggchord.track.axis.title = ggplot2::element_text(),
-    ggchord.seq.label = ggplot2::element_text(),
-    ggchord.gene.label = ggplot2::element_text(),
-    ggchord.gene.label.segment = ggplot2::element_line(),
-    ggchord.feature.label = ggplot2::element_text(),
-    ggchord.feature.label.segment = ggplot2::element_line(),
-    ggchord.restriction.label = ggplot2::element_text(),
-    ggchord.restriction.label.segment = ggplot2::element_line(),
-    ggchord.seq.center.label = ggplot2::element_text(),
-    ggchord.seq.center.name = ggplot2::element_text(),
-    ggchord.seq.center.length = ggplot2::element_text(),
+    ggchord.axis.line = element_line(),
+    ggchord.axis.ticks = element_line(),
+    ggchord.axis.minor.ticks = element_line(),
+    ggchord.axis.text = element_text(),
+    ggchord.axis.title = element_text(),
+    ggchord.track.axis.line = element_line(),
+    ggchord.track.axis.ticks = element_line(),
+    ggchord.track.axis.text = element_text(),
+    ggchord.track.axis.title = element_text(),
+    ggchord.seq.label = element_text(),
+    ggchord.gene.label = element_text(),
+    ggchord.gene.label.segment = element_line(),
+    ggchord.feature.label = element_text(),
+    ggchord.feature.label.segment = element_line(),
+    ggchord.restriction.label = element_text(),
+    ggchord.restriction.label.segment = element_line(),
+    ggchord.seq.center.label = element_text(),
+    ggchord.seq.center.name = element_text(),
+    ggchord.seq.center.length = element_text(),
     element_tree = list(
-      "ggchord.axis" = ggplot2::el_def("element_blank"),
-      "ggchord.axis.gap" = ggplot2::el_def("unit"),
-      "ggchord.axis.ticks.length" = ggplot2::el_def("unit"),
-      "ggchord.axis.minor.ticks.length" = ggplot2::el_def("unit"),
-      "ggchord.axis.text.offset" = ggplot2::el_def("unit"),
-      "ggchord.axis.text.orientation" = ggplot2::el_def(c("character", "numeric")),
-      "ggchord.axis.text.check.overlap" = ggplot2::el_def("logical"),
-      "ggchord.track.axis.line" = ggplot2::el_def("element_line", inherit = "ggchord.axis.line"),
-      "ggchord.track.axis.ticks" = ggplot2::el_def("element_line", inherit = "line"),
-      "ggchord.track.axis.ticks.length" = ggplot2::el_def("unit"),
-      "ggchord.track.axis.text" = ggplot2::el_def("element_text", inherit = "ggchord.axis.text"),
-      "ggchord.track.axis.title" = ggplot2::el_def("element_text", inherit = "ggchord.track.axis.text"),
-      "ggchord.track.axis.text.offset" = ggplot2::el_def("unit"),
-      "ggchord.track.axis.title.offset" = ggplot2::el_def("unit"),
-      "ggchord.axis.line" = ggplot2::el_def("element_line", inherit = "line"),
-      "ggchord.axis.ticks" = ggplot2::el_def("element_line", inherit = "line"),
-      "ggchord.axis.minor.ticks" = ggplot2::el_def(
+      "ggchord.axis" = el_def("element_blank"),
+      "ggchord.axis.gap" = el_def("unit"),
+      "ggchord.axis.ticks.length" = el_def("unit"),
+      "ggchord.axis.minor.ticks.length" = el_def("unit"),
+      "ggchord.axis.text.offset" = el_def("unit"),
+      "ggchord.axis.text.orientation" = el_def(c("character", "numeric")),
+      "ggchord.axis.text.check.overlap" = el_def("logical"),
+      "ggchord.track.axis.line" = el_def("element_line", inherit = "ggchord.axis.line"),
+      "ggchord.track.axis.ticks" = el_def("element_line", inherit = "line"),
+      "ggchord.track.axis.ticks.length" = el_def("unit"),
+      "ggchord.track.axis.text" = el_def("element_text", inherit = "ggchord.axis.text"),
+      "ggchord.track.axis.title" = el_def("element_text", inherit = "ggchord.track.axis.text"),
+      "ggchord.track.axis.text.offset" = el_def("unit"),
+      "ggchord.track.axis.title.offset" = el_def("unit"),
+      "ggchord.axis.line" = el_def("element_line", inherit = "line"),
+      "ggchord.axis.ticks" = el_def("element_line", inherit = "line"),
+      "ggchord.axis.minor.ticks" = el_def(
         "element_line", inherit = "line"
       ),
-      "ggchord.axis.text" = ggplot2::el_def("element_text", inherit = "text"),
-      "ggchord.axis.title" = ggplot2::el_def("element_text", inherit = "text"),
-      "ggchord.seq.label" = ggplot2::el_def("element_text", inherit = "text"),
-      "ggchord.gene.label" = ggplot2::el_def("element_text", inherit = "text"),
-      "ggchord.gene.label.segment" = ggplot2::el_def(
+      "ggchord.axis.text" = el_def("element_text", inherit = "text"),
+      "ggchord.axis.title" = el_def("element_text", inherit = "text"),
+      "ggchord.seq.label" = el_def("element_text", inherit = "text"),
+      "ggchord.gene.label" = el_def("element_text", inherit = "text"),
+      "ggchord.gene.label.segment" = el_def(
         "element_line", inherit = "line"
       ),
-      "ggchord.feature.label" = ggplot2::el_def("element_text", inherit = "text"),
-      "ggchord.feature.label.segment" = ggplot2::el_def("element_line", inherit = "line"),
-      "ggchord.restriction.label" = ggplot2::el_def("element_text", inherit = "text"),
-      "ggchord.restriction.label.segment" = ggplot2::el_def("element_line", inherit = "line"),
-      "ggchord.seq.center.label" = ggplot2::el_def("element_text", inherit = "text"),
-      "ggchord.seq.center.name" = ggplot2::el_def("element_text", inherit = "text"),
-      "ggchord.seq.center.length" = ggplot2::el_def("element_text", inherit = "text")
+      "ggchord.feature.label" = el_def("element_text", inherit = "text"),
+      "ggchord.feature.label.segment" = el_def("element_line", inherit = "line"),
+      "ggchord.restriction.label" = el_def("element_text", inherit = "text"),
+      "ggchord.restriction.label.segment" = el_def("element_line", inherit = "line"),
+      "ggchord.seq.center.label" = el_def("element_text", inherit = "text"),
+      "ggchord.seq.center.name" = el_def("element_text", inherit = "text"),
+      "ggchord.seq.center.length" = el_def("element_text", inherit = "text")
     )
   )
 }
@@ -131,7 +131,7 @@ get_chord_layout <- function(plot, build = TRUE) {
   if (is.null(layout) && isTRUE(build)) {
     branching <- any(vapply(plot$layers, function(l) (l$ggchord_params$link_branch %||% "none") != "none", logical(1)))
     if (branching) {
-      invisible(ggplot2::ggplot_build(plot))
+      invisible(ggplot_build(plot))
       layout <- plot$ggchord$ref$layout
     } else layout <- compute_chord_geometry(plot)
   }
@@ -277,7 +277,7 @@ ggchord_axis_layer <- function(layout, components = NULL, data = ggchord_axis_ge
   # existing defaults supply unused aesthetics rather than evaluating absent
   # columns when breaks or labels were explicitly disabled.
   mapping <- mapping[names(mapping) %in% names(data)]
-  lyr <- ggplot2::layer(
+  lyr <- layer(
     data = data,
     mapping = mapping,
     stat = "identity", geom = GeomChordAxis, position = "identity",

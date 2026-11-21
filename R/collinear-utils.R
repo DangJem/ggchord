@@ -112,7 +112,7 @@ ggchord_match_feature_rows <- function(labels, features, same_source, strict = F
     if (!identical(a, b)) {
       mismatch <- which(is.na(a) != is.na(b) | (!is.na(a) & !is.na(b) & a != b))
       if (strict) ggchord_stop("Feature anchor conflicts with ", field,
-        " for label input row(s) ", paste(utils::head(mismatch, 5L), collapse = ", "))
+        " for label input row(s) ", paste(head(mismatch, 5L), collapse = ", "))
       return(NULL)
     }
   }

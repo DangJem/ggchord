@@ -80,7 +80,7 @@ map_ggchord_position <- function(plot, data, from = "source", to = "display",
   if (needs_display && !is.null(request$size)) {
     context <- tryCatch(ggchord_with_output_device(request, function() {
       on_error <- if (length(path)) function(panel_path, error, layer_id = NULL) {
-        if (is.null(layer_id) && identical(utils::head(path, length(panel_path)), panel_path))
+        if (is.null(layer_id) && identical(head(path, length(panel_path)), panel_path))
           failure <<- conditionMessage(error)
       }
       result <- ggchord_output_build_geometry(ggchord_query_clone(plot), on_error)

@@ -18,7 +18,9 @@ track axis elements. Explicit settings override theme defaults.}
 An ordinary ggplot2 theme.
 }
 \description{
-Plasmid sequence-plot appearance
+The warm ivory background and dark sequence axis distinguish annotations
+from major and minor ticks. Use \code{scale_seq_position(guide = "none")}
+to omit the sequence guide.
 }
 \examples{
 seqs <- data.frame(

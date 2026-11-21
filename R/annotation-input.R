@@ -3,7 +3,7 @@ ggchord_feature_source_palette <- function(data) {
   if (!is.data.frame(data) || !all(c("anno", "feature_color") %in% names(data))) return(NULL)
   usable <- !is.na(data$anno) & nzchar(as.character(data$anno)) &
     !is.na(data$feature_color) & nzchar(as.character(data$feature_color))
-  colours <- stats::setNames(as.character(data$feature_color[usable]), as.character(data$anno[usable]))
+  colours <- setNames(as.character(data$feature_color[usable]), as.character(data$anno[usable]))
   colours[!duplicated(names(colours), fromLast = TRUE)]
 }
 

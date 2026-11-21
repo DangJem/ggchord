@@ -116,7 +116,7 @@ ggchord_apply_adaptive_styles <- function(plot) {
       units = if (field == "size") "pt" else "mm")
   }
   for (name in c("plot.margin", "legend.spacing", "legend.spacing.x", "legend.spacing.y", "legend.box.spacing"))
-    if (grid::is.unit(theme[[name]]) && is.null(explicit[[name]]))
+    if (is.unit(theme[[name]]) && is.null(explicit[[name]]))
       theme[[name]] <- theme[[name]] * report$spacing_factor
   geom_styles <- list()
   for (i in seq_along(plot$layers)) {

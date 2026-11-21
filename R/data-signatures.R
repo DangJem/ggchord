@@ -161,7 +161,7 @@ read_signature_matches <- function(file, format = "scan_tsv", source_file = FALS
   features$label <- features$anno
   ggchord_import_collection(ggchord_alignment_dictionary(sequence_rows, 'aa', caller),
     features = list(signature = features),
-    report = list(format = format, records = reports, raw_files = stats::setNames(raw, paths),
+    report = list(format = format, records = reports, raw_files = setNames(raw, paths),
       coordinates = 'declared AA full lengths and 1-based-inclusive source intervals; no shift',
       score_semantics = 'opaque native member-library evidence; not a common confidence measure'))
 }

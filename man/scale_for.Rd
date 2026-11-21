@@ -15,7 +15,14 @@ scale_for(layers, scale)
 A scale declaration for a ggchord plot or a Fusion root.
 }
 \description{
-Train a visual scale on selected layers
+Apply an ordinary visual scale to explicitly named layers. Other layers
+continue to share the plot's scale for the same aesthetic.
+}
+\details{
+Unscoped backbones and features can use the sequence palette when
+mapped directly to \code{accver}. Features mapped to \code{strand} use red (+),
+blue (-) and grey (unknown). Circular features mapped to recognized
+\code{type} values use the plasmid palette. An explicit scale takes precedence.
 }
 \examples{
 library(ggplot2)

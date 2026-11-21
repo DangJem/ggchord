@@ -8,14 +8,14 @@ ggchord_track_stage_mapping <- function(mapping, track, replacements = NULL) {
   if (is.null(replacements)) replacements <- c(color = "colour")
   rewrite <- function(x, staged = FALSE) {
     if (is.symbol(x) && staged && as.character(x) %in% names(replacements))
-      return(rlang::sym(replacements[[as.character(x)]]))
+      return(sym(replacements[[as.character(x)]]))
     if (!is.call(x)) return(x)
-    if (rlang::is_call(x, "stage")) {
-      x <- match.call(ggplot2::stage, x)
+    if (is_call(x, "stage")) {
+      x <- match.call(stage, x)
       if (!is.null(x$after_scale)) x$after_scale <- rewrite(x$after_scale, TRUE)
       return(x)
     }
-    active <- staged || rlang::is_call(x, "after_scale")
+    active <- staged || is_call(x, "after_scale")
     if (length(x) > 1L) for (i in seq.int(2L, length(x))) {
       if (!rlang::is_missing(x[[i]])) x[i] <- list(rewrite(x[[i]], active))
     }
@@ -23,7 +23,7 @@ ggchord_track_stage_mapping <- function(mapping, track, replacements = NULL) {
   }
   for (name in names(mapping)) {
     q <- mapping[[name]]
-    if (rlang::is_quosure(q)) mapping[[name]] <- rlang::quo_set_expr(q, rewrite(rlang::get_expr(q)))
+    if (is_quosure(q)) mapping[[name]] <- quo_set_expr(q, rewrite(get_expr(q)))
   }
   mapping
 }
@@ -131,7 +131,7 @@ ggchord_track_layer <- function(kind, mapping, data, track, fill, colour,
   alias <- ggchord_colour_alias(colour, dots, "track geom", sys.call(-1L))
   colour <- alias$colour; dots <- alias$dots
   keys <- c(fill = "fill", colour = "colour")
-  geom <- ggplot2::ggproto(NULL, GeomGgchordTrack)
+  geom <- ggproto(NULL, GeomGgchordTrack)
   names(geom$default_aes)[names(geom$default_aes) == "fill"] <- keys[["fill"]]
   names(geom$default_aes)[names(geom$default_aes) == "colour"] <- keys[["colour"]]
   defaults <- list(fill = fill, colour = colour, alpha = if (fixed[["alpha"]]) alpha else NA_real_,
@@ -159,7 +159,7 @@ ggchord_track_layer <- function(kind, mapping, data, track, fill, colour,
   ggchord_capture_layer_input(layer, data, mapping, c("accver", "start", "end", "pos", "track_value", "group"))
 }
 
-GeomGgchordTrack <- ggplot2::ggproto("GeomGgchordTrack", ggplot2::Geom,
+GeomGgchordTrack <- ggproto("GeomGgchordTrack", ggplot2::Geom,
   required_aes = c("x", "y"),
   default_aes = aes(fill = "#86AFB9", colour = NA, alpha = 1,
     linewidth = .25, linetype = 1, size = 2.2, shape = 19, stroke = .5,
@@ -220,7 +220,7 @@ GeomGgchordTrack <- ggplot2::ggproto("GeomGgchordTrack", ggplot2::Geom,
       grobs[[length(grobs) + 1L]] <- ggplot2::GeomText$draw_panel(d, panel_params, coord, na.rm = na.rm,
         check_overlap = component == "text" && axis_check_overlap)
     }
-    do.call(grid::grobTree, grobs)
+    do.call(grobTree, grobs)
   },
   draw_key = function(data, params, size) {
     for (role in names(params$track_keys)) data[[role]] <- data[[params$track_keys[[role]]]]
@@ -303,10 +303,10 @@ scale_track_value_continuous <- function(track, name = track, limits = NULL,
     breaks = ggplot2::waiver(), labels = ggplot2::waiver(), transform = "identity",
     oob = scales::censor, unit = NULL, guide = c("axis", "none"), ...,
     facet_domain = c("shared", "panel")) {
-  ggchord_check_argument_names(sys.call(), sys.function(), ggplot2::continuous_scale)
+  ggchord_check_argument_names(sys.call(), sys.function(), continuous_scale)
   if (!is.null(unit) && (!is.character(unit) || length(unit) != 1L || is.na(unit)))
     ggchord_stop("Track scale unit must be one character label or NULL")
-  sc <- ggplot2::continuous_scale(ggchord_track_aes("value", track), palette = identity,
+  sc <- continuous_scale(ggchord_track_aes("value", track), palette = identity,
     name = name, limits = limits, breaks = breaks, labels = labels,
     transform = transform, oob = oob, guide = "none", ...)
   axis <- ggchord_track_axis_guide(guide)
@@ -356,22 +356,22 @@ shared_track_limits <- function(..., tracks = "default") {
 #' @noRd
 scale_track_fill_gradientn <- function(track, ..., colours, guide = NULL) {
   key <- ggchord_track_aes("fill", track)
-  ggplot2::scale_fill_gradientn(..., colours = colours, aesthetics = key,
-    guide = guide %||% ggplot2::guide_colourbar(available_aes = key))
+  scale_fill_gradientn(..., colours = colours, aesthetics = key,
+    guide = guide %||% guide_colourbar(available_aes = key))
 }
 #' @noRd
 scale_track_fill_manual <- function(track, ..., values) {
-  ggplot2::scale_fill_manual(..., values = values, aesthetics = ggchord_track_aes("fill", track))
+  scale_fill_manual(..., values = values, aesthetics = ggchord_track_aes("fill", track))
 }
 #' @noRd
 scale_track_colour_gradientn <- function(track, ..., colours, guide = NULL) {
   key <- ggchord_track_aes("colour", track)
-  ggplot2::scale_colour_gradientn(..., colours = colours, aesthetics = key,
-    guide = guide %||% ggplot2::guide_colourbar(available_aes = key))
+  scale_colour_gradientn(..., colours = colours, aesthetics = key,
+    guide = guide %||% guide_colourbar(available_aes = key))
 }
 #' @noRd
 scale_track_colour_manual <- function(track, ..., values) {
-  ggplot2::scale_colour_manual(..., values = values, aesthetics = ggchord_track_aes("colour", track))
+  scale_colour_manual(..., values = values, aesthetics = ggchord_track_aes("colour", track))
 }
 
 ggchord_add_track_scales <- function(plot) {
@@ -413,7 +413,7 @@ ggchord_add_track_scales <- function(plot) {
         if (key %in% names(columns)) return(other$data[[columns[[key]]]])
         q <- ggchord_start_mapping(other$ggchord_input_mapping[[key]])
         if (is.null(q)) return(NULL)
-        rlang::eval_tidy(q, other$data)
+        eval_tidy(q, other$data)
       })
       values <- Filter(Negate(is.null), values)
       continuous <- vapply(values, is.numeric, logical(1))
@@ -421,10 +421,10 @@ ggchord_add_track_scales <- function(plot) {
       value <- if (all(continuous)) unlist(values, use.names = FALSE) else
         unlist(lapply(values, as.character), use.names = FALSE)
       levels <- unique(as.character(value[!is.na(value)]))
-      scale <- if (is.numeric(value)) ggplot2::scale_colour_gradientn(
+      scale <- if (is.numeric(value)) scale_colour_gradientn(
         colours = c("#31507D", "#65B4A8", "#F0D56A"), aesthetics = key,
-        guide = ggplot2::guide_colourbar(available_aes = key)) else ggplot2::scale_colour_manual(
-          values = stats::setNames(chord_default_palette(length(levels)), levels),
+        guide = guide_colourbar(available_aes = key)) else scale_colour_manual(
+          values = setNames(chord_default_palette(length(levels)), levels),
           aesthetics = key, guide=ggchord_role_guide(plot,"track",labels=levels))
       plot$scales$add(scale)
     }

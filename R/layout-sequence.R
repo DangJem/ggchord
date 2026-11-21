@@ -131,7 +131,7 @@ layout_dotplot <- function(x_order = NULL, y_order = NULL, x_orientation = 1,
 ggchord_layout_values <- function(value, source, instance = source, field, default) {
   expand <- function(value, ids, keys, named_only = FALSE) {
     if (is.null(value)) return(rep(NA, length(ids)))
-    if (anyNA(value) || (is.list(value) && !grid::is.unit(value)))
+    if (anyNA(value) || (is.list(value) && !is.unit(value)))
       ggchord_stop(field, " must contain finite scalar settings")
     if (is.null(names(value))) {
       if (named_only || !length(value) %in% c(1L, length(ids)))
@@ -142,7 +142,7 @@ ggchord_layout_values <- function(value, source, instance = source, field, defau
       ggchord_stop(field, " has unknown or repeated configuration keys")
     value[match(ids, names(value))]
   }
-  if (is.list(value) && !grid::is.unit(value)) {
+  if (is.list(value) && !is.unit(value)) {
     if (is.null(names(value)) || anyDuplicated(names(value)) ||
         any(!names(value) %in% c("source", "instance")))
       ggchord_stop(field, " accepts list(source = ..., instance = ...)")
@@ -151,11 +151,11 @@ ggchord_layout_values <- function(value, source, instance = source, field, defau
     out[!is.na(local)] <- local[!is.na(local)]
   } else out <- expand(value, source, unique(source))
   out[is.na(out)] <- default
-  stats::setNames(out, instance)
+  setNames(out, instance)
 }
 
 ggchord_layout_mm <- function(value, field) {
-  if (grid::is.unit(value)) {
+  if (is.unit(value)) {
     value <- vapply(seq_along(value), function(i) ggchord_unit_inches(value[i]) * 25.4,
       numeric(1))
   } else if (is.list(value)) {
@@ -255,7 +255,7 @@ ggchord_configure_layout <- function(plot) {
     updates$sankey_column_gap_mm <- gap
   }
   layout$windows <- windows
-  plot$coordinates <- ggplot2::ggproto(NULL, coord, !!!updates)
+  plot$coordinates <- ggproto(NULL, coord, !!!updates)
   plot$ggchord$sequence_layout <- layout
   plot$ggchord$layout_configured <- TRUE
   plot
@@ -308,7 +308,7 @@ ggchord_layout_sequence_step <- function(
 
   weights <- if (identical(length_mode, "equal")) rep(1, length(lens)) else lens
   groups <- if (is.null(ring)) list(seq_len(n)) else split(seq_len(n), ring)
-  starts <- ends <- stats::setNames(numeric(n), seqs)
+  starts <- ends <- setNames(numeric(n), seqs)
   for (members in groups) {
     gap <- seq_gap[members]
     available <- 1 - sum(gap)
@@ -381,7 +381,7 @@ ggchord_layout_sequence_step <- function(
   # ====================================================================
   # Step 4: generate sequence arcs (outer layer)
   # ====================================================================
-  seq_arcs <- stats::setNames(lapply(seqs, function(id) {
+  seq_arcs <- setNames(lapply(seqs, function(id) {
     path_data <- generate_curvature_path(
       starts[id], ends[id], seqRadius[id], seq_curvature[id], nSeg
     )
@@ -456,7 +456,7 @@ suggest_sequence_layout <- function(sequences, links, order = NULL, reference = 
   if (!is.character(weight) || length(weight) != 1L || is.na(weight))
     ggchord_stop(caller, ": weight must identify one weighting rule or column")
   ggchord_check_reference_ids(links, c("qaccver", "saccver"), ids, caller)
-  unit <- stats::setNames(sequences$sequence_unit, sequences$accver)
+  unit <- setNames(sequences$sequence_unit, sequences$accver)
   q <- links$qaccver
   s <- links$saccver
   aligned <- pmin(links$qend - links$qstart, links$send - links$sstart) + 1
@@ -479,7 +479,7 @@ suggest_sequence_layout <- function(sequences, links, order = NULL, reference = 
     }
   }
   reference <- reference %||% order[1L]
-  orientation <- stats::setNames(rep(1, length(ids)), ids)
+  orientation <- setNames(rep(1, length(ids)), ids)
   evidence <- data.frame(accver = order, forward_support = 0, reverse_support = 0,
     confidence = NA_real_, orientation = 1, status = "unresolved")
   evidence$status[order == reference] <- "reference"

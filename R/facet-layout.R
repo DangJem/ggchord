@@ -8,8 +8,8 @@ ggchord_facet_vars <- function(plot) {
   p <- facet$params
   ggchord_validate_coord_contract(plot)
   vars <- c(p$facets, p$rows, p$cols)
-  plain <- vapply(vars, function(x) rlang::is_symbol(rlang::get_expr(x)), logical(1))
-  if (!all(plain) || !identical(unname(vapply(vars, rlang::as_name, character(1))), names(vars)))
+  plain <- vapply(vars, function(x) is_symbol(get_expr(x)), logical(1))
+  if (!all(plain) || !identical(unname(vapply(vars, as_name, character(1))), names(vars)))
     ggchord_stop("Create facet columns in the source tables, then use vars(column)")
   reserved <- intersect(names(vars), c("PANEL", "ROW", "COL", "group", "source_row",
     "x", "y", "xend", "yend", "layer_id", "component"))
@@ -73,7 +73,7 @@ ggchord_source_stat_members <- function(data, setup, layer) {
 # The original Facet still maps observations, assigns scales and draws strips.
 ggchord_precomputed_facet <- function(facet, panels) {
   force(panels)
-  ggplot2::ggproto(NULL, facet,
+  ggproto(NULL, facet,
     compute_layout = function(data, params) panels,
     map_data = function(data, layout, params) {
       if (!".ggchord_panel" %in% names(data)) return(facet$map_data(data, layout, params))
@@ -128,12 +128,12 @@ ggchord_facet_feature_styles <- function(plot, sources, members, backbones) {
     fill <- layer$mapping$feature_fill
     if (is.null(fill) || "feature_fill" %in% names(layer$aes_params) ||
         "feature_fill" %in% names(layer$ggchord_input_mapping)) next
-    values <- as.character(data[[rlang::as_name(fill)]])
+    values <- as.character(data[[as_name(fill)]])
     fills[[i]] <- values
     colour <- data$feature_color
     if (length(colour)) {
       valid <- !is.na(values) & !is.na(colour) & nzchar(colour)
-      explicit_colours[[i]] <- stats::setNames(as.character(colour[valid]), values[valid])
+      explicit_colours[[i]] <- setNames(as.character(colour[valid]), values[valid])
     }
   }
   result <- list(scales = list())
@@ -168,7 +168,7 @@ ggchord_facet_feature_styles <- function(plot, sources, members, backbones) {
     mapped_shapes <- as.character(trained$map(shape_order))
     mapped_shapes[is.na(mapped_shapes)] <- "arrow"
     result$feature_shape_order <- shape_order
-    result$feature_shape_pal <- stats::setNames(mapped_shapes, shape_order)
+    result$feature_shape_pal <- setNames(mapped_shapes, shape_order)
   }
   result
 }
@@ -214,8 +214,8 @@ ggchord_facet_layout <- function(plot) {
   if (isTRUE(plot$coordinates$ggchord_circular)) {
     reference <- plot$ggchord$data$seq_data
     source <- plot$ggchord$display_instances
-    originals <- if (is.null(source)) stats::setNames(reference$accver, reference$accver) else
-      stats::setNames(source$accver, source$key)
+    originals <- if (is.null(source)) setNames(reference$accver, reference$accver) else
+      setNames(source$accver, source$key)
     bad <- which(vapply(backbones, function(x) length(unique(originals[x$displayed])) != 1L, logical(1)))
     if (length(bad)) ggchord_stop("coord_circular() requires one reference per panel (panel ", bad[1L], ")")
   }

@@ -195,13 +195,13 @@ ggchord_axis_heading <- function(plot, layout) {
   scale <- plot$scales$get_scales("seq_position")
   if (is.null(scale)) return(NULL)
   title <- scale$name
-  if (ggplot2::is_waiver(title)) title <- paste0("Position (", layout$sequence_unit, ")")
+  if (is_waiver(title)) title <- paste0("Position (", layout$sequence_unit, ")")
   if (is.null(title)) return(NULL)
   view <- plot
   guide_theme <- scale$ggchord_axis_guide$theme
   if (!is.null(guide_theme)) {
-    overrides <- stats::setNames(as.list(guide_theme), paste0("ggchord.", names(guide_theme)))
-    view$theme <- plot$theme + do.call(ggplot2::theme, overrides)
+    overrides <- setNames(as.list(guide_theme), paste0("ggchord.", names(guide_theme)))
+    view$theme <- plot$theme + do.call(theme, overrides)
   }
   element <- ggchord_theme_element(view, "ggchord.axis.title")
   if (inherits(element, "element_blank")) return(NULL)

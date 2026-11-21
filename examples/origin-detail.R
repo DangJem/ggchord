@@ -1,3 +1,4 @@
+# Historical example for ggchord 0.27.0.9000 at commit e933efb3.
 # Optional dependency: dplyr. Source: unchanged bundled pUC19 FASTA.
 library(ggchord)
 library(dplyr)

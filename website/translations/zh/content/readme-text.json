@@ -1,5 +1,5 @@
 {
-  "source_sha256": "07d180656aad81b4196d0ec02e5f7a803ece0966f6a1d57a56d0db85105ea8dc",
+  "source_sha256": "591b333cf075b01d5dddbb723eda08a5b9a549ed04cf71a7ab055aee9598b051",
   "strings": {
     "title": {
       "source_sha256": "3dae9df0bcd52f7b79153e9d60c16ec82d9899fcc87119dabe6c9dfdef8303a1",
@@ -137,14 +137,14 @@
       "translation": "Circular · pETDuet-1 密集注释"
     },
     "circular-caption": {
-      "source_sha256": "047c90b69ca97fb503430dd27afd196cf8685926c9e2ff17606b44f2b3eb3889",
+      "source_sha256": "6392bc8e54e243d9d50c37e897170a19a2ea4346587a0ab145c7fa916115c9c6",
       "status": "reviewed",
-      "translation": "pETDuet-1 图组合随包区间注释、选定的标签和单切酶的识别位置。"
+      "translation": "pETDuet-1 密集图在环内标出特征和引物，在环外标注酶名与切点坐标。"
     },
     "circular-alt": {
-      "source_sha256": "5ade6786cf876173e4d5ac82e6bcae180077405198a9961bbda16bc381ce012c",
+      "source_sha256": "4c942ae361eeb9c365570cdcc09d9a702949d854f586dd193c7f2472906ea115",
       "status": "reviewed",
-      "translation": "pETDuet-1 圆形注释图，含区间特征和酶切识别位置"
+      "translation": "pETDuet-1 圆图，含特征、引物和酶切位点标签"
     },
     "case": {
       "source_sha256": "9e46ca429e2e480ce9c88117ae767fb55aa8dd6bd739c60f048b7b51e6909b51",
@@ -182,9 +182,9 @@
       "translation": "四序列、32 条原始 HSP 的双轴矩阵"
     },
     "fusion-alt": {
-      "source_sha256": "aa708581733cb6c61ad3a3aadb77215331a76329e51fa58e5f5fb3de57950a06",
+      "source_sha256": "3ec7d1a10900c88d7cd698131e1c3502183b40aaf7036d510ab0b94d09943145",
       "status": "reviewed",
-      "translation": "由两个面板组成的源区间全局图与局部放大图"
+      "translation": "六个面板从基因组比对逐步放大至核苷酸对齐"
     },
     "dotplot-caption": {
       "source_sha256": "178ffb5905b2c66af0417707fbf74dc73c26c8a90326552746f30e8c5d8e4140",
@@ -192,9 +192,9 @@
       "translation": "显示 32 条原始 HSP，颜色表示原始一致性，线宽表示原始比对长度。"
     },
     "fusion-caption": {
-      "source_sha256": "4be51cb8928f84bd2f8cf6d69ddfef137807fd6bcbf2bf0f18aac09a0e280d29",
+      "source_sha256": "969fe1fb5962681e12fd75c74a645174b7937f5a8cb2ba89ed44281bb1ba104c",
       "status": "reviewed",
-      "translation": "弦图总览与独立的共线性细节图以不同尺度展示同一来源区间。"
+      "translation": "同一组比对关系用三种视图呈现，随后逐步放大至源区间、比对窗口和可逐碱基阅读的细节。"
     },
     "dotplot-guide": {
       "source_sha256": "bfb1fc1ae841b7db4962192dcdb143f910db3d62692d89356f7787a925384ee8",

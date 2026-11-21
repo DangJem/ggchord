@@ -2,19 +2,19 @@
 
 #' Chord-diagram coordinate ggproto
 #' @noRd
-CoordGgchord <- ggplot2::ggproto(
+CoordGgchord <- ggproto(
   "CoordGgchord", ggplot2::CoordCartesian,
   ggchord_coord = TRUE,
-  render_axis_h = function(panel_params, theme) list(top = grid::nullGrob(), bottom = grid::nullGrob()),
-  render_axis_v = function(panel_params, theme) list(left = grid::nullGrob(), right = grid::nullGrob())
+  render_axis_h = function(panel_params, theme) list(top = nullGrob(), bottom = nullGrob()),
+  render_axis_v = function(panel_params, theme) list(left = nullGrob(), right = nullGrob())
 )
 
-CoordChord <- ggplot2::ggproto("CoordChord", CoordGgchord)
+CoordChord <- ggproto("CoordChord", CoordGgchord)
 
 new_ggchord_coord <- function(proto, rotation, ratio, xlim, ylim, expand,
                               clip, fit, user_xlim = xlim,
                               user_ylim = ylim) {
-  ggplot2::ggproto(
+  ggproto(
     NULL, proto,
     limits = list(x = xlim, y = ylim), reverse = "none",
     expand = expand, default = FALSE, clip = clip, ratio = ratio,
@@ -72,7 +72,7 @@ coord_chord <- function(start_angle = 0, direction = "counterclockwise",
   ggchord_check_argument_names(sys.call(), sys.function())
   direction <- ggchord_coord_direction(start_angle, direction)
   settings <- ggchord_coord_settings(1, xlim, ylim, expand, clip, fit)
-  ggplot2::ggproto(NULL, CoordChord, !!!settings,
+  ggproto(NULL, CoordChord, !!!settings,
     rotation = start_angle %% 360, reference_direction = direction)
 }
 

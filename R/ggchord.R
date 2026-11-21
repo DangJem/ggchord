@@ -80,7 +80,7 @@ ggchord <- function(data = NULL, mapping = aes(), ...) {
   if (!ggplot2::is_mapping(mapping)) ggchord_stop("ggchord(): mapping must be aes()")
   if (!is.null(data)) data <- ggchord_reference_table(data, "ggchord()")
 
-  p <- ggplot2::ggplot(data = data, mapping = ggchord_normalize_mapping(mapping)) +
+  p <- ggplot(data = data, mapping = ggchord_normalize_mapping(mapping)) +
     coord_chord() + theme_ggchord()
   p$coordinates$default <- TRUE
   p$ggchord <- list(
@@ -112,7 +112,7 @@ ggchord <- function(data = NULL, mapping = aes(), ...) {
 layer_id <- function(layer, id) {
   if (!inherits(layer, "Layer")) ggchord_stop("layer_id(): layer must be a ggplot2 Layer")
   ggchord_check_layer_id(id)
-  copy <- ggplot2::ggproto(NULL, layer)
+  copy <- ggproto(NULL, layer)
   copy$ggchord_layer_id <- id
   if (!is.null(layer$ggchord_type)) copy$ggchord_params$id <- id
   copy

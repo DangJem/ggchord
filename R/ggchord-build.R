@@ -129,7 +129,7 @@ compute_chord_geometry_prepared <- function(plot) {
     ggchord_empty_obstacles()
   }
   primary <- compute_chord_geometry_single(plot, geometry_cache)
-  if (isTRUE(plot$coordinates$ggchord_radial)) primary$radial_angles <- stats::setNames(
+  if (isTRUE(plot$coordinates$ggchord_radial)) primary$radial_angles <- setNames(
     (plot$coordinates$radial_start_angle + (if (plot$coordinates$radial_clockwise) -1 else 1) *
       360 * (seq_along(primary$seqs) - 1) / length(primary$seqs)) * pi / 180, primary$seqs)
   primary$display_instances <- plot$ggchord$display_instances
@@ -140,8 +140,8 @@ compute_chord_geometry_prepared <- function(plot) {
     entities <- unique(instances$accver)
     first <- match(entities, instances$accver)
     primary$legend_seqs <- entities
-    primary$legend_seq_colors <- stats::setNames(unname(primary$seq_colors[instances$key[first]]), entities)
-    primary$legend_seq_labels <- stats::setNames(entities, entities)
+    primary$legend_seq_colors <- setNames(unname(primary$seq_colors[instances$key[first]]), entities)
+    primary$legend_seq_labels <- setNames(entities, entities)
   }
   primary$obstacles <- plot$ggchord$obstacles
   ids <- vapply(plot$layers, function(x) {
@@ -232,7 +232,7 @@ compute_chord_geometry_prepared <- function(plot) {
         ggchord_seq_style_geometry(
           sub_layout$seq_arcs[intersect(names(sub_layout$seq_arcs), as.character(
             ggchord_resolve_layer_input(lyr, chord$data$seq_data)$accver))],
-          utils::modifyList(lyr$ggchord_params, list(
+          modifyList(lyr$ggchord_params, list(
             circular = isTRUE(sub_layout$circular),
             geometry_reference_ids = sub_layout$seqs,
             normal_axis = ggchord_path_normal_axis(plot$coordinates)
@@ -503,7 +503,14 @@ compute_chord_geometry_prepared <- function(plot) {
     primary$extremes <- list(x_min = min(xx, na.rm = TRUE), x_max = max(xx, na.rm = TRUE),
       y_min = min(yy, na.rm = TRUE), y_max = max(yy, na.rm = TRUE))
   }
-  for (id in names(groups)[group_type == "domain_label"]) {
+  label_ids <- names(groups)[group_type == "domain_label"]
+  label_specs <- list()
+  shared_labels <- NULL
+  if (length(label_ids) && isTRUE(primary$circular)) {
+    shared_labels <- new.env(parent = emptyenv())
+    shared_labels$boxes <- ggchord_annotation_text_obstacles(primary$layer_geometry, primary)
+  }
+  for (id in label_ids) {
     layer <- plot$layers[[groups[[id]][1L]]]
     p <- layer$ggchord_params
     owner <- p$anchor_layer
@@ -516,9 +523,13 @@ compute_chord_geometry_prepared <- function(plot) {
     geometry <- ggchord_domain_label_geometry(layer, input, primary,
       target, target_geometry, chord$display_instances,
       radial = isTRUE(plot$coordinates$ggchord_radial),
-      vertical = identical(plot$coordinates$collinear_seq_axis, "vertical"))
+      vertical = identical(plot$coordinates$collinear_seq_axis, "vertical"),
+      shared = shared_labels)
     primary$layer_geometry[[id]]$domain_label <- ggchord_attach_input_columns(geometry, input)
+    label_specs[[id]] <- p
   }
+  if (!is.null(shared_labels))
+    primary$layer_geometry <- ggchord_place_circular_domain_labels(primary, label_specs)
   primary$axis_heading <- ggchord_axis_heading(plot, primary)
   primary <- ggchord_check_displayed_hsps(primary, plot)
   primary

@@ -24,6 +24,9 @@ ggchord_link_route <- function(route, dots, caller) {
 #' @param stat A compatible ggplot2 Stat or its name. The default uses the supplied records.
 #' @param position A compatible Position for placement of the layer geometry.
 #' @param route Choose curved or straight routes, or a shared corridor where supported.
+#'   On a curved collinear route, an explicit positive `bulge` clears the high
+#'   coordinate end of intervening rows by that fraction of the longest visible
+#'   backbone. Radial curves with positive `bulge` clear intermediate spoke tips.
 #' @param ... Additional named visual styles and parameters accepted by this layer.
 #' @param na.rm Suppress warnings for missing observations that the layer can omit.
 #' @param show.legend Logical or named logical indicating whether the layer contributes legend keys.
@@ -73,7 +76,7 @@ geom_link_line <- function(mapping = NULL, data = NULL, stat = "identity",
   ggchord_capture_layer_input(layer, data, mapping, c("qaccver", "saccver", "qpos", "spos"))
 }
 
-GeomChordLinkLine <- ggplot2::ggproto("GeomChordLinkLine", ggplot2::GeomPath,
+GeomChordLinkLine <- ggproto("GeomChordLinkLine", ggplot2::GeomPath,
   rename_size = FALSE,
   default_aes = aes(colour = "grey40", alpha = 1, linewidth = .5, linetype = 1),
   draw_panel = function(data, panel_params, coord, arrow = NULL, lineend = "round",
@@ -90,7 +93,7 @@ GeomChordLinkLine <- ggplot2::ggproto("GeomChordLinkLine", ggplot2::GeomPath,
         ggplot2::GeomPath$draw_panel(d, panel_params, coord, arrow=ar,
           lineend=lineend,linejoin=linejoin,linemitre=linemitre,na.rm=na.rm)
       })
-      return(do.call(grid::grobTree,pieces))
+      return(do.call(grobTree,pieces))
     }
     ggplot2::GeomPath$draw_panel(data, panel_params, coord, arrow = arrow,
       lineend = lineend, linejoin = linejoin, linemitre = linemitre, na.rm = na.rm)

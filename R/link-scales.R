@@ -10,7 +10,7 @@
 NULL
 
 #' @noRd
-scale_link_colour_manual <- function(..., values) ggplot2::scale_colour_manual(..., values = values, aesthetics = "link_colour")
+scale_link_colour_manual <- function(..., values) scale_colour_manual(..., values = values, aesthetics = "link_colour")
 #' @noRd
 scale_link_color_manual <- scale_link_colour_manual
 #' @noRd
@@ -23,9 +23,9 @@ scale_link_linetype_manual <- function(..., values) ggplot2::scale_linetype_manu
 scale_link_colour_gradientn <- function(...) {
   args <- list(...)
   if (!"guide" %in% names(args)) {
-    args$guide <- ggplot2::guide_colourbar(available_aes = "link_colour")
+    args$guide <- guide_colourbar(available_aes = "link_colour")
   }
-  do.call(ggplot2::scale_colour_gradientn, c(args, list(aesthetics = "link_colour")))
+  do.call(scale_colour_gradientn, c(args, list(aesthetics = "link_colour")))
 }
 #' @noRd
 scale_link_color_gradientn <- scale_link_colour_gradientn
@@ -52,7 +52,7 @@ ggchord_add_link_scales <- function(plot) {
       values <- switch(aesthetic, link_colour = chord_default_palette(n),
         link_alpha = seq(.35, .9, length.out = n), link_linewidth = seq(.3, 1.2, length.out = n),
         link_linetype = rep(1:6, length.out = n))
-      values <- stats::setNames(values, levels)
+      values <- setNames(values, levels)
       fun <- switch(aesthetic, link_colour = scale_link_colour_manual,
         link_alpha = scale_link_alpha_manual, link_linewidth = scale_link_linewidth_manual,
         link_linetype = scale_link_linetype_manual)

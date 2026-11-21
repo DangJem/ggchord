@@ -205,17 +205,17 @@ ggchord_fusion_text_obstacles <- function(panel, id) {
       d <- layer[i, , drop = FALSE]
       if ('alpha' %in% names(d) && !is.na(d$alpha) && d$alpha == 0) next
       if ('colour' %in% names(d) && (is.na(d$colour) ||
-          grDevices::col2rgb(d$colour, alpha = TRUE)[4L] == 0)) next
+          col2rgb(d$colour, alpha = TRUE)[4L] == 0)) next
       scalar <- function(name, default) if (name %in% names(d)) d[[name]][[1L]] else default
       geom <- panel$built$plot$layers[[index]]
       points_per_unit <- switch(geom$geom_params$size.unit %||% 'mm',
         mm = 72.27/25.4, cm = 72.27/2.54, 'in' = 72.27, pt = 1, pc = 12, 72.27/25.4)
       label <- if (isTRUE(geom$geom_params$parse)) parse(text = as.character(d$label)) else d$label
-      glyph <- grid::textGrob(label, gp = grid::gpar(
+      glyph <- textGrob(label, gp = gpar(
         fontsize = as.numeric(d$size)*points_per_unit, fontfamily = scalar('family', ''),
         fontface = scalar('fontface', 'plain'), lineheight = scalar('lineheight', 1.2)))
-      w <- grid::convertWidth(grid::grobWidth(glyph), 'mm', TRUE)
-      h <- grid::convertHeight(grid::grobHeight(glyph), 'mm', TRUE)
+      w <- convertWidth(grobWidth(glyph), 'mm', TRUE)
+      h <- convertHeight(grobHeight(glyph), 'mm', TRUE)
       if (inherits(geom$geom, 'GeomResidue')) {
         corners <- d[rep(1L, 2L), , drop = FALSE]
         corners$x <- d$x + c(-.46, .46); corners$y <- as.numeric(d$y) + c(-.4, .4)
@@ -224,10 +224,10 @@ ggchord_fusion_text_obstacles <- function(panel, id) {
             abs(diff(corners$y))*diff(bounds[3:4]) < h*1.15) next
       }
       if (inherits(geom$geom, 'GeomLabel')) {
-        padding <- geom$geom_params$label.padding %||% grid::unit(.25, 'lines')
-        grid::pushViewport(grid::viewport(gp = grid::gpar(fontsize = as.numeric(d$size)*points_per_unit)))
-        pad <- grid::convertUnit(padding, 'mm', valueOnly = TRUE)
-        grid::popViewport()
+        padding <- geom$geom_params$label.padding %||% unit(.25, 'lines')
+        pushViewport(viewport(gp = gpar(fontsize = as.numeric(d$size)*points_per_unit)))
+        pad <- convertUnit(padding, 'mm', valueOnly = TRUE)
+        popViewport()
         w <- w + 2*pad; h <- h + 2*pad
       }
       angle <- scalar('angle', 0)*pi/180
@@ -253,17 +253,17 @@ ggchord_fusion_guide_obstacles <- function(table, id, origin) {
   at <- which(grepl('^(guide-box|title$|subtitle$|caption$|tag$|xlab|ylab|axis-)', table$layout$name) &
     !vapply(table$grobs, inherits, logical(1), 'zeroGrob'))
   if (!length(at)) return(data.frame())
-  grid::pushViewport(grid::viewport(layout = grid::grid.layout(
+  pushViewport(viewport(layout = grid::grid.layout(
     length(table$heights), length(table$widths), widths = table$widths,
     heights = table$heights, respect = table$respect)))
-  on.exit(grid::popViewport())
+  on.exit(popViewport())
   boxes <- ggchord_rbind_fill(lapply(at, function(i) {
     entry <- table$layout[i, ]
-    grid::pushViewport(grid::viewport(layout.pos.row = seq.int(entry$t, entry$b),
+    pushViewport(viewport(layout.pos.row = seq.int(entry$t, entry$b),
       layout.pos.col = seq.int(entry$l, entry$r)))
-    on.exit(grid::popViewport())
-    lo <- grid::deviceLoc(grid::unit(0, 'npc'), grid::unit(0, 'npc'), valueOnly = TRUE)
-    hi <- grid::deviceLoc(grid::unit(1, 'npc'), grid::unit(1, 'npc'), valueOnly = TRUE)
+    on.exit(popViewport())
+    lo <- grid::deviceLoc(unit(0, 'npc'), unit(0, 'npc'), valueOnly = TRUE)
+    hi <- grid::deviceLoc(unit(1, 'npc'), unit(1, 'npc'), valueOnly = TRUE)
     measurement <- 'resolved_gtable_cell'
     grob <- table$grobs[[i]]
     if (entry$name %in% c('title','subtitle','caption','tag') &&

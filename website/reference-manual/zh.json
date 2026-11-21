@@ -1,5 +1,5 @@
 {
-  "source_sha256": "a1233d74de52a5070b0d3c4f419d01ff21f041c0dcc983ee9fcca38e3ff4573c",
+  "source_sha256": "c8d06f92124586494af94ecb82bfc5a08f209db18d1ac5b9994da861cf094cbb",
   "description": "按任务查找 ggchord 函数，涵盖数据准备、绘图、图形组合和布局检查。每个函数页面都说明参数和返回值，并提供可运行的 R 示例及相应的图形或控制台输出。",
   "groups": {
     "construct": {
@@ -905,7 +905,7 @@
         }
       ],
       "value": "一个 feature 图层；一条输入实体可以展开为多个几何片段，但保持实体 ID 与来源区间，不修改输入表。",
-      "details": "1. 适用于具有序列参考路径的 Chord、Collinear、Radial synteny、Sankey、Circular；Circular 每个分面须只有一个有效参考。Dotplot 的双轴 HSP 使用 geom_alignment_segment。\n\n2. 合法 shape 为 block、arrow、compact_arrow、promoter_arrow、primer_arrow、marker、capped_line、primer_arc、chevron、lollipop。它们仅改变同一已选区间的表示：block 是实心区间块；arrow 是带箭头的区间块；compact_arrow 是短头紧凑箭头；promoter_arrow 是带起始折角的方向符号；primer_arrow 是细长方向箭头；marker 是区间中心标记；capped_line 是两端封口区间线；primer_arc 是沿参考路径的细方向线；chevron 是方向折线；lollipop 是区间中心的杆和圆头。所有形状仍保留完整源区间。\n\n3. thickness 是可见对象的法向物理包围厚度。箭头头长不扩大源端点；短对象使用 short_feature 的明确几何政策。unknown_strand=\"undirected\" 保留记录并绘制相应无向轮廓，不能冒充正链；需要可靠方向时设为 error。\n\n4. shape 的映射要求适用的 manual/identity Scale。Feature 与点轨道使用不同形状字典时，显式 scale_for 分域，不根据 Geom 偷换映射值。\n\n5. thickness 支持灵活的参数格式：标量、按参考具名向量、严格显示顺序向量，以及显式 source/instance 分组；单位统一为 mm 或绝对 grid unit。视觉差异不会改数据筛选。",
+      "details": "1. 适用于具有序列参考路径的 Chord、Collinear、Radial synteny、Sankey、Circular；Circular 每个分面须只有一个有效参考。Dotplot 的双轴 HSP 使用 geom_alignment_segment。\n\n2. 合法 shape 为 block、arrow、compact_arrow、promoter_arrow、primer_arrow、marker、capped_line、primer_arc、chevron、lollipop。它们仅改变同一已选区间的表示：block 是实心区间块；arrow 是带箭头的区间块；compact_arrow 是短头紧凑箭头；promoter_arrow 是带起始折角的方向符号；primer_arrow 是细长方向箭头；marker 是区间中心标记；capped_line 是两端封口区间线；primer_arc 是沿参考路径的细方向线；chevron 是方向折线；lollipop 是区间中心的杆和圆头。所有形状仍保留完整源区间。\n\n3. thickness 是可见对象的法向物理包围厚度。箭头头长不扩大源端点；短对象使用 short_feature 的明确几何政策。unknown_strand=\"undirected\" 保留记录并绘制相应无向轮廓，不能冒充正链；需要可靠方向时设为 error。\n\n4. shape 的映射要求适用的 manual/identity Scale。Feature 与点轨道使用不同形状字典时，显式 scale_for 分域，不根据 Geom 偷换映射值。\n\n5. thickness 支持灵活的参数格式：标量、按参考具名向量、严格显示顺序向量，以及显式 source/instance 分组；单位统一为 mm 或绝对 grid unit。视觉差异不会改数据筛选。\n\n特征默认使用 0.25 mm 深色轮廓，小型符号使用较细描边。显式指定或映射 linewidth 时按用户设置绘制。",
       "errors": "- 未知或矛盾参考、超出未裁剪完整参考的端点、无效分段来源。\n\n- 给某形状提供不适用的高级参数；非法 shape Scale 输出；厚度或头部尺寸非正。\n\n- 需要有向锚点或 unknown_strand=\"error\" 时缺少方向。",
       "roles": [
         "必需参考身份；默认使用同名规范列。",
@@ -1161,14 +1161,14 @@
         }
       ],
       "value": "一个文字与可选引线的标签层；保留每条文字与目标实体的关联及排版状态，不改变目标图层。",
-      "details": "1. 适用于具有序列参考路径的 Chord、Collinear、Radial synteny、Sankey、Circular；Circular 每个分面须只有一个有效参考。Dotplot 的双轴 HSP 使用 geom_alignment_segment。\n\n2. 目标 Stat 后没有唯一意义的原始字段不被随意取第一条保留；标签需使用目标真实输出字段，或显式准备带目标实体身份的标签表。\n\n3. 标签 data 子集只选择哪些文字显示，不重新计算目标 feature 的分道、厚度和源端点。\n\n4. 同一目标实体在多个显示窗口出现时，标签按目标实例逐一锚定；需选择部分实例时显式提供 instance_id。",
+      "details": "1. 适用于具有序列参考路径的 Chord、Collinear、Radial synteny、Sankey、Circular；Circular 每个分面须只有一个有效参考。Dotplot 的双轴 HSP 使用 geom_alignment_segment。\n\n2. 目标 Stat 后没有唯一意义的原始字段不被随意取第一条保留；标签需使用目标真实输出字段，或显式准备带目标实体身份的标签表。\n\n3. 标签 data 子集只选择哪些文字显示，不重新计算目标 feature 的分道、厚度和源端点。\n\n4. 同一目标实体在多个显示窗口出现时，标签按目标实例逐一锚定；需选择部分实例时显式提供 instance_id。\n\n分段特征的中点按实际占据的区间计算，跨越圆形原点的特征根据分段顺序定位。",
       "errors": "- anchor_layer 未知、类型不符或存在依赖循环。\n\n- 绑定时 stat 非 identity 或 position 非 NULL。\n\n- 显式标签身份无法匹配或匹配不唯一；head/tail 没有可靠 strand。",
       "roles": [
         "独立标签所需的源区间；绑定标签从目标实体获取，显式表中的重复字段须一致。",
         "绑定匹配键；同一实体重复显示时联合 instance_id 和分面身份。",
         "anchor=head/tail 所需的生物学方向。",
         "必需文字，显式 aes(label=...) 或规范 label 列；不猜 gene_name/product。",
-        "标准文字视觉通道；显式 angle 优先于策略方向。"
+        "可映射或固定文字属性，显式 angle 决定文字方向。圆图中 fill 指定外排特征标签的底色。省略 colour 时，文字颜色随映射的底色调整。"
       ],
       "example_setup": ""
     },
@@ -1233,7 +1233,7 @@
         "绑定匹配键；同一实体重复显示时联合 instance_id 和分面身份。",
         "anchor=head/tail 所需的生物学方向。",
         "必需文字，显式 aes(label=...) 或规范 label 列；不猜 gene_name/product。",
-        "标准文字视觉通道；显式 angle 优先于策略方向。"
+        "可映射或固定文字属性，显式 angle 决定文字方向。圆图中 fill 指定外排特征标签的底色。省略 colour 时，文字颜色随映射的底色调整。"
       ],
       "example_setup": ""
     },
@@ -1298,7 +1298,7 @@
         "绑定匹配键；同一实体重复显示时联合 instance_id 和分面身份。",
         "anchor=head/tail 所需的生物学方向。",
         "必需文字，显式 aes(label=...) 或规范 label 列；不猜 gene_name/product。",
-        "标准文字视觉通道；显式 angle 优先于策略方向。"
+        "可映射或固定文字属性，显式 angle 决定文字方向。圆图中 fill 指定外排特征标签的底色。省略 colour 时，文字颜色随映射的底色调整。"
       ],
       "example_setup": ""
     },
@@ -1363,7 +1363,7 @@
         "绑定匹配键；同一实体重复显示时联合 instance_id 和分面身份。",
         "anchor=head/tail 所需的生物学方向。",
         "必需文字，显式 aes(label=...) 或规范 label 列；不猜 gene_name/product。",
-        "标准文字视觉通道；显式 angle 优先于策略方向。"
+        "可映射或固定文字属性，显式 angle 决定文字方向。圆图中 fill 指定外排特征标签的底色。省略 colour 时，文字颜色随映射的底色调整。"
       ],
       "example_setup": ""
     },
@@ -1428,7 +1428,7 @@
         "绑定匹配键；同一实体重复显示时联合 instance_id 和分面身份。",
         "anchor=head/tail 所需的生物学方向。",
         "必需文字，显式 aes(label=...) 或规范 label 列；不猜 gene_name/product。",
-        "标准文字视觉通道；显式 angle 优先于策略方向。"
+        "可映射或固定文字属性，显式 angle 决定文字方向。圆图中 fill 指定外排特征标签的底色。省略 colour 时，文字颜色随映射的底色调整。"
       ],
       "example_setup": ""
     },
@@ -1493,7 +1493,7 @@
         "绑定匹配键；同一实体重复显示时联合 instance_id 和分面身份。",
         "anchor=head/tail 所需的生物学方向。",
         "必需文字，显式 aes(label=...) 或规范 label 列；不猜 gene_name/product。",
-        "标准文字视觉通道；显式 angle 优先于策略方向。"
+        "可映射或固定文字属性，显式 angle 决定文字方向。圆图中 fill 指定外排特征标签的底色。省略 colour 时，文字颜色随映射的底色调整。"
       ],
       "example_setup": ""
     },
@@ -1785,7 +1785,7 @@
         }
       ],
       "value": "一个点连接层；每条路径保留两端源点与 link_id。",
-      "details": "1. curve 的 curvature=0.5 为无量纲弯曲强度；Radial 非相邻连接可用 bulge=0.2 调整离参考的弯曲，属于路由几何。straight 不接受显式 curvature/bulge。shared 使用 corridor_width=2（mm）的共享走廊，仍保留独立路径和成员，不等同 stat_link_bundle。\n\n2. 全图默认不自动排除 self-links 或非相邻链接；要过滤时显式处理 data。布局/Coord 不偷偷改变记录集合。\n\n3. geom_link_line 接受点端点，geom_link_ribbon 接受区间前沿。不能把区间输入静默取中点后当作点连接；需要代表点时用户显式计算。\n\n4. 适用于具有序列参考路径的 Chord、Collinear、Radial synteny、Sankey、Circular；Circular 每个分面须只有一个有效参考。Dotplot 的双轴 HSP 使用 geom_alignment_segment。",
+      "details": "1. curve 的 curvature=0.5 为无量纲弯曲强度；Radial 非相邻连接可用 bulge=0.2 调整离参考的弯曲，属于路由几何。straight 不接受显式 curvature/bulge。shared 使用 corridor_width=2（mm）的共享走廊，仍保留独立路径和成员，不等同 stat_link_bundle。\n\n2. 全图默认不自动排除 self-links 或非相邻链接；要过滤时显式处理 data。布局/Coord 不偷偷改变记录集合。\n\n3. geom_link_line 接受点端点，geom_link_ribbon 接受区间前沿。不能把区间输入静默取中点后当作点连接；需要代表点时用户显式计算。\n\n4. 适用于具有序列参考路径的 Chord、Collinear、Radial synteny、Sankey、Circular；Circular 每个分面须只有一个有效参考。Dotplot 的双轴 HSP 使用 geom_alignment_segment。\n\n对于跨行的共线曲线路由，显式正值 bulge 以最长可见骨架长度的一定比例设置外侧间距。径向外弧绕过中间辐条的端点。",
       "errors": "- 缺少 qpos/spos；仅提供 HSP 区间却未选择点代表。\n\n- 未知端点参考或位置超界；不兼容 Stat/Position/route。",
       "roles": [
         "两端参考身份；两者都必须在权威参考中存在。",
@@ -1845,7 +1845,7 @@
         }
       ],
       "value": "一个区间关系层，含真实来源前沿、可选统计成员与绘制路径；样式不改变区间端点。",
-      "details": "1. curve 的 curvature=0.5 为无量纲弯曲强度；Radial 非相邻连接可用 bulge=0.2 调整离参考的弯曲，属于路由几何。straight 不接受显式 curvature/bulge。shared 使用 corridor_width=2（mm）的共享走廊，仍保留独立路径和成员，不等同 stat_link_bundle。\n\n2. 全图默认不自动排除 self-links 或非相邻链接；要过滤时显式处理 data。布局/Coord 不偷偷改变记录集合。\n\n3. geom_link_line 接受点端点，geom_link_ribbon 接受区间前沿。不能把区间输入静默取中点后当作点连接；需要代表点时用户显式计算。\n\n4. 适用于具有序列参考路径的 Chord、Collinear、Radial synteny、Sankey、Circular；Circular 每个分面须只有一个有效参考。Dotplot 的双轴 HSP 使用 geom_alignment_segment。\n\n5. solid 的 fill 不自动取 pident。endpoint 两个颜色角色分别对应 q/s 端；共域可用普通 scale_fill_* 的 aesthetics=c(\"fill_from\",\"fill_to\")，需要独立域时显式指定。\n\n6. tip 是绘制装饰，不产生新的源残基或真实比对端点；导出把它与来源前沿分别标记。\n\n7. 聚合关系的导出必须保留来源成员与聚合性质；一个宽带不能被错误解释为整个带内每个碱基均已比对。",
+      "details": "1. curve 的 curvature=0.5 为无量纲弯曲强度；Radial 非相邻连接可用 bulge=0.2 调整离参考的弯曲，属于路由几何。straight 不接受显式 curvature/bulge。shared 使用 corridor_width=2（mm）的共享走廊，仍保留独立路径和成员，不等同 stat_link_bundle。\n\n2. 全图默认不自动排除 self-links 或非相邻链接；要过滤时显式处理 data。布局/Coord 不偷偷改变记录集合。\n\n3. geom_link_line 接受点端点，geom_link_ribbon 接受区间前沿。不能把区间输入静默取中点后当作点连接；需要代表点时用户显式计算。\n\n4. 适用于具有序列参考路径的 Chord、Collinear、Radial synteny、Sankey、Circular；Circular 每个分面须只有一个有效参考。Dotplot 的双轴 HSP 使用 geom_alignment_segment。\n\n5. solid 的 fill 不自动取 pident。endpoint 两个颜色角色分别对应 q/s 端；共域可用普通 scale_fill_* 的 aesthetics=c(\"fill_from\",\"fill_to\")，需要独立域时显式指定。\n\n6. tip 是绘制装饰，不产生新的源残基或真实比对端点；导出把它与来源前沿分别标记。\n\n7. 聚合关系的导出必须保留来源成员与聚合性质；一个宽带不能被错误解释为整个带内每个碱基均已比对。\n\n对于跨行的共线曲线路由，显式正值 bulge 以最长可见骨架长度的一定比例设置外侧间距。径向外弧绕过中间辐条的端点。",
       "errors": "- 缺失或无效区间前沿/来源单位。\n\n- 同时使用 solid fill 与 endpoint 通道；未定义端点颜色域。\n\n- tip_length 在 tip=\"none\" 时显式给定；不兼容路由参数或统计输出。",
       "roles": [
         "两端参考与一基闭区间，源身份和完整前沿必须保留。",
@@ -2795,7 +2795,7 @@
         }
       ],
       "value": "LabelLayoutRepel 策略对象，供标签母函数与 repel 快捷函数使用。",
-      "details": "1. 目标函数应确定性地处理同一输入及设备；布局选择不受无关元数据列影响。\n\n2. columns 要求当前坐标存在可定义的外侧文字区域；显式选择与 Coord 不兼容的布局报错，不 silently 回退 local。\n\n3. 无实际设备时碰撞和拟合只可作为估计；指定设备的渲染/导出报告实际文字边界与采用的调整。",
+      "details": "1. 目标函数应确定性地处理同一输入及设备；布局选择不受无关元数据列影响。\n\n2. columns 要求当前坐标存在可定义的外侧文字区域；显式选择与 Coord 不兼容的布局报错，不 silently 回退 local。\n\n3. 无实际设备时碰撞和拟合只可作为估计；指定设备的渲染/导出报告实际文字边界与采用的调整。\n\n在圆图中，摆放方向相容的特征、引物和位点标签共同使用圆周外围的空间。区间可容纳的文字可以留在环上，固定位置和显式指定方向的标签遵循各自的摆放规则。",
       "errors": "- 非法策略或负尺寸；不兼容 Coord/arrangement。\n\n- fit 与显式 wrap 冲突；允许缩小时 min_size 大于初始字号。",
       "roles": [],
       "example_setup": ""
@@ -3054,7 +3054,7 @@
         }
       ],
       "value": "一个可添加到图的有作用域Scale声明；构建时从全局域移出选中层的对应通道，并对集合共同训练。",
-      "details": "1. 引用按最终图中ID解析，添加先后不改变作用域。两个scale_for若选中了同一layer×aesthetic就报冲突，不能由最后添加的对象静默覆盖。\n\n2. 全局普通Scale只训练未被分域的层/通道。scope内name、breaks、labels、limits和guide直接写在被包裹Scale里；普通labs/guides只修改全局域。\n\n3. 固定视觉值不参加训练。映射到feature形状的Scale必须输出合法feature几何词汇；点形状的pch域与其不兼容时分开作用域。\n\n4. 本接口不控制参考位置、track y或轨带厚度。使用scale_y_log10来替代scale_track_value(transform=...)会产生职责冲突，应拒绝。\n\n5. Fusion对子图保持尺度隔离。要修改子图，先修改该图再放入panels；本函数不按同名字符串把所有面板联动。",
+      "details": "1. 引用按最终图中ID解析，添加先后不改变作用域。两个scale_for若选中了同一layer×aesthetic就报冲突，不能由最后添加的对象静默覆盖。\n\n2. 全局普通Scale只训练未被分域的层/通道。scope内name、breaks、labels、limits和guide直接写在被包裹Scale里；普通labs/guides只修改全局域。\n\n3. 固定视觉值不参加训练。映射到feature形状的Scale必须输出合法feature几何词汇；点形状的pch域与其不兼容时分开作用域。\n\n4. 本接口不控制参考位置、track y或轨带厚度。使用scale_y_log10来替代scale_track_value(transform=...)会产生职责冲突，应拒绝。\n\n5. Fusion对子图保持尺度隔离。要修改子图，先修改该图再放入panels；本函数不按同名字符串把所有面板联动。\n\n骨架层和特征层共用的颜色通道若只映射 accver，默认沿用序列色板。特征层以 strand 着色时，正链为红色、负链为蓝色、未知链为灰色。圆图特征以 type 着色且所有类型均可识别时，采用质粒色板。显式普通标度或分层标度优先。",
       "errors": "- 未知或重复图层ID、两个独立域重叠。\n\n- 非Scale对象、位置Scale、层不支持的视觉通道。\n\n- 共同Scale输出类型不能被所有所选Geom消费。",
       "roles": [],
       "example_setup": ""
@@ -3279,7 +3279,7 @@
         }
       ],
       "value": "完整的ggplot2 theme对象，可用+添加到普通ggplot或ggchord；注册的领域元素仅在相关Guide存在时生效。",
-      "details": "1. 返回纯外观配置，不能添加Coord、Geom、Stat、Scale或修改数据。普通legend.*只设置共同图例外观，不按gene/ribbon/track复制私有参数组。\n\n2. 领域元素为ggchord.axis.line/ticks/ticks.length/text/title和ggchord.track.axis.line/ticks/ticks.length/text/title；局部Guide theme优先于共同元素。\n\n3. 快捷主题的所有效果均可由母主题及明确theme元素展开。用户通过...传入的元素覆盖快捷默认；后续+theme(...)继续按ggplot2规则修改。\n\n4. 基础默认：plot/panel白色背景，text颜色#24343B；panel.grid为空；panel.border为#D6DEDE细线；legend.position=\"right\"。轴线/刻度为#63767A，主题轴文字为base_size的0.8倍，轴标题为0.9倍；领域ticks.length为grid::unit(1.2,\"mm\")。\n\n5. 原生Dotplot轴继续使用普通axis.*；路径类Coord不绘制多余的画布轴，而使用自己的序列/轨道Guide。这由Coord/Guide能力决定，Theme不根据投影自动改数据。",
+      "details": "1. 返回纯外观配置，不能添加Coord、Geom、Stat、Scale或修改数据。普通legend.*只设置共同图例外观，不按gene/ribbon/track复制私有参数组。\n\n2. 领域元素为ggchord.axis.line/ticks/ticks.length/text/title和ggchord.track.axis.line/ticks/ticks.length/text/title；局部Guide theme优先于共同元素。\n\n3. 快捷主题的所有效果均可由母主题及明确theme元素展开。用户通过...传入的元素覆盖快捷默认；后续+theme(...)继续按ggplot2规则修改。\n\n4. 基础主题采用白色画布和绘图区、深灰文字（#30353A）、居中加粗的图标题和右侧图例。绘图区省略网格和边框。轴线和刻度采用灰色（#737A80），轴文字和轴标题分别为基础字号的 0.8 和 0.9 倍，领域轴的主刻度长 1.2 mm。\n\n5. 原生Dotplot轴继续使用普通axis.*；路径类Coord不绘制多余的画布轴，而使用自己的序列/轨道Guide。这由Coord/Guide能力决定，Theme不根据投影自动改数据。",
       "errors": "- 字号非正或字体参数非标量。\n\n- 未知theme元素、传入preset/position等非外观配置。",
       "roles": [],
       "example_setup": ""
@@ -3325,7 +3325,7 @@
         }
       ],
       "value": "一个完整的纯外观theme对象；与母主题按下列元素展开后的结果等价。",
-      "details": "1. 返回纯外观配置，不能添加Coord、Geom、Stat、Scale或修改数据。普通legend.*只设置共同图例外观，不按gene/ribbon/track复制私有参数组。\n\n2. 领域元素为ggchord.axis.line/ticks/ticks.length/text/title和ggchord.track.axis.line/ticks/ticks.length/text/title；局部Guide theme优先于共同元素。\n\n3. 快捷主题的所有效果均可由母主题及明确theme元素展开。用户通过...传入的元素覆盖快捷默认；后续+theme(...)继续按ggplot2规则修改。\n\n4. 母主题基础上：plot/panel背景#17252A；text及轴/图例文字#E8EFEE；panel.border与轴线/刻度#71888B；legend.background与legend.key透明。用户若需适合深色背景的数据色板，显式选择普通Scale。",
+      "details": "1. 返回纯外观配置，不能添加Coord、Geom、Stat、Scale或修改数据。普通legend.*只设置共同图例外观，不按gene/ribbon/track复制私有参数组。\n\n2. 领域元素为ggchord.axis.line/ticks/ticks.length/text/title和ggchord.track.axis.line/ticks/ticks.length/text/title；局部Guide theme优先于共同元素。\n\n3. 快捷主题的所有效果均可由母主题及明确theme元素展开。用户通过...传入的元素覆盖快捷默认；后续+theme(...)继续按ggplot2规则修改。\n\n4. 画布和绘图区采用炭灰色（#17191C），文字采用浅色（#F1F3F5），轴线和刻度为灰色（#ADB5BD）。图例背景和色键背景透明；数据配色由普通视觉标度控制。",
       "errors": "- 非法字号、未知主题元素或试图通过主题修改统计/几何/位置。",
       "roles": [],
       "example_setup": ""
@@ -3371,7 +3371,7 @@
         }
       ],
       "value": "一个完整的纯外观theme对象；与母主题按下列元素展开后的结果等价。",
-      "details": "1. 返回纯外观配置，不能添加Coord、Geom、Stat、Scale或修改数据。普通legend.*只设置共同图例外观，不按gene/ribbon/track复制私有参数组。\n\n2. 领域元素为ggchord.axis.line/ticks/ticks.length/text/title和ggchord.track.axis.line/ticks/ticks.length/text/title；局部Guide theme优先于共同元素。\n\n3. 快捷主题的所有效果均可由母主题及明确theme元素展开。用户通过...传入的元素覆盖快捷默认；后续+theme(...)继续按ggplot2规则修改。\n\n4. 母主题基础上：panel.border为空；legend.position=\"bottom\"；ggchord.axis.line/ticks/text/title均为空。仅隐藏序列轴说明的外观部件；若要不生成轴Guide，可在Scale显式guide=\"none\"。轨道数值轴仍保留。",
+      "details": "1. 返回纯外观配置，不能添加Coord、Geom、Stat、Scale或修改数据。普通legend.*只设置共同图例外观，不按gene/ribbon/track复制私有参数组。\n\n2. 领域元素为ggchord.axis.line/ticks/ticks.length/text/title和ggchord.track.axis.line/ticks/ticks.length/text/title；局部Guide theme优先于共同元素。\n\n3. 快捷主题的所有效果均可由母主题及明确theme元素展开。用户通过...传入的元素覆盖快捷默认；后续+theme(...)继续按ggplot2规则修改。\n\n4. 画布和绘图区采用象牙白（#FFFCF5）。深色序列轴（#252525）显示坐标文字，主刻度长 2.2 mm、次刻度长 0.8 mm。序列轴标题隐藏，图例位于下方，轨道数值轴保留。要省略序列轴，可设置 scale_seq_position(guide = \"none\")。",
       "errors": "- 非法字号、未知主题元素或试图通过主题修改统计/几何/位置。",
       "roles": [],
       "example_setup": ""

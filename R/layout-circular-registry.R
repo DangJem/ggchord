@@ -245,7 +245,7 @@ ggchord_resolve_inner_tracks <- function(layer_geometry, layout) {
   resources$track[inner] <- seq_along(inner)[order(order(
     -resources$outer[inner], -resources$mid[inner], resources$key[inner]
   ))]
-  track_by_key <- stats::setNames(resources$track, resources$key)
+  track_by_key <- setNames(resources$track, resources$key)
 
   registry <- list()
   for (i in seq_len(nrow(resources))) {
@@ -633,4 +633,107 @@ ggchord_resolve_circular_annotation_registry <- function(
   }
   list(layer_geometry = outer$layer_geometry,
     annotation_registry = annotation_registry)
+}
+
+# Feed the label layers' resolved anchors into the existing circular perimeter
+# solver without replacing their data, geometry ownership or mapped styles.
+ggchord_place_circular_domain_labels <- function(layout, specs) {
+  registry <- layout$layer_geometry
+  routing <- registry
+  managed <- character()
+  for (id in names(specs)) {
+    label <- registry[[id]]$domain_label
+    if (!nrow(label)) next
+    routing[[id]]$domain_label <- NULL
+    outer <- label$.component %in% "text" & label$.perimeter_callout
+    style <- specs[[id]]$text_style
+    label$family <- rep(style$family %||% "", nrow(label))
+    label$fontface <- rep(style$fontface %||% 1, nrow(label))
+    label$lineheight <- rep(style$lineheight %||% 1.2, nrow(label))
+    if (any(outer)) managed <- c(managed, id)
+    callout <- label[outer, , drop = FALSE]
+    if (identical(specs[[id]]$label_kind, "site") && nrow(callout)) {
+      callout$restriction_component <- "label"
+      callout$enzyme_label <- callout$label
+      callout$coordinate_label <- ""
+      callout$enzyme_fontface <- "plain"
+      callout$group <- callout$source_row
+      root <- tip <- callout
+      root$restriction_component <- tip$restriction_component <- "leader"
+      root$x <- root$anchor_x
+      root$y <- root$anchor_y
+      routing[[id]]$restriction_site <- rbind(callout, root, tip)
+      label <- label[!outer, , drop = FALSE]
+      outer <- rep(FALSE, nrow(label))
+    }
+    if (nrow(label)) {
+      label$text_x <- label$x
+      label$text_y <- label$y
+      label$label_layout <- ifelse(outer, "feature", "local")
+      label$feature_label_mode <- ifelse(outer, "external", "adjacent")
+      leader <- label[outer, , drop = FALSE]
+      if (nrow(leader)) {
+        leader$xend <- leader$x
+        leader$yend <- leader$y
+        leader$x <- leader$anchor_x
+        leader$y <- leader$anchor_y
+        leader$.component <- "segment"
+      }
+      routing[[id]]$gene_label_repel <- rbind(label, leader)
+    }
+  }
+  if (!length(managed)) return(registry)
+  units <- layout$text_units_per_inch %||% .35
+  tasks <- ggchord_perimeter_tasks(routing, units)
+  if (!nrow(tasks)) return(registry)
+  tasks$column_only <- vapply(tasks$id, function(id)
+    specs[[id]]$label_layout$arrangement %in% c("auto", "columns"), logical(1))
+  routing <- ggchord_place_dense_perimeter(routing, layout, tasks)
+  routing <- ggchord_clear_simple_annotation_exits(routing, layout)
+  boxes <- ggchord_annotation_text_obstacles(routing, layout)
+
+  for (id in managed) {
+    original <- registry[[id]]$domain_label
+    if (identical(specs[[id]]$label_kind, "site")) {
+      routed <- routing[[id]]$restriction_site
+      text <- routed[routed$restriction_component == "label", , drop = FALSE]
+      leaders <- lapply(split(which(routed$restriction_component == "leader"),
+        routed$source_row[routed$restriction_component == "leader"]), function(at) {
+        first <- head(at, -1L)
+        last <- tail(at, -1L)
+        line <- routed[first, , drop = FALSE]
+        line$xend <- routed$x[last]
+        line$yend <- routed$y[last]
+        line
+      })
+      leader <- ggchord_rbind_fill(leaders)
+    } else {
+      routed <- routing[[id]]$gene_label_repel
+      text <- routed[routed$.component == "text" &
+        routed$annotation_side %in% "outer", , drop = FALSE]
+      leader <- routed[routed$.component == "segment", , drop = FALSE]
+    }
+    box <- ggchord_text_boxes(transform(text, text = label,
+      text_x = x, text_y = y, text_angle = angle), units_per_inch = units)
+    conflicts <- vapply(seq_len(nrow(text)), function(i) {
+      other <- boxes$owner != id | is.na(boxes$source_row) |
+        boxes$source_row != text$source_row[i]
+      sum(ggchord_oriented_box_overlaps(box[i, , drop = FALSE], boxes[other, , drop = FALSE]),
+        na.rm = TRUE)
+    }, integer(1))
+    text$label_status <- ifelse(conflicts > 0, "overlap_unresolved", "visible")
+    hidden <- conflicts > specs[[id]]$label_layout$max_overlaps
+    text$.component[hidden] <- "hidden_label"
+    text$label_status[hidden] <- "overlap"
+    for (field in c("xmin", "xmax", "ymin", "ymax"))
+      text[[paste0("bbox_", field)]] <- box[[field]]
+    if (NROW(leader)) {
+      leader <- leader[!leader$source_row %in% text$source_row[hidden], , drop = FALSE]
+      leader$.component <- rep("leader", nrow(leader))
+    }
+    keep <- !original$source_row %in% text$source_row
+    registry[[id]]$domain_label <- ggchord_rbind_fill(list(original[keep, , drop = FALSE],
+      text, leader))
+  }
+  registry
 }

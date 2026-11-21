@@ -12,7 +12,6 @@
 #'
 #' @importFrom stats median setNames
 #' @importFrom utils tail
-#' @importFrom graphics text
 #'
 #' @noRd
 generate_curvature_path <- function(start_angle, end_angle, radius, curvature, n_points = 100) {
@@ -78,8 +77,8 @@ breakPointsFunc <- function(max_value, n = 5, tol = 0.5, available_mm = NULL) {
   panel <- context$panel_mm
   if (is.null(panel) || any(!is.finite(panel))) panel <- ggchord_render_dimensions() * .7
   budget <- available_mm %||% if (all(is.finite(panel))) min(panel) else 100
-  label_mm <- tryCatch(grid::convertWidth(grid::grobWidth(grid::textGrob(
-    as.character(max_value), gp=grid::gpar(fontsize=8))), "mm", valueOnly=TRUE),
+  label_mm <- tryCatch(convertWidth(grobWidth(textGrob(
+    as.character(max_value), gp=gpar(fontsize=8))), "mm", valueOnly=TRUE),
     error=function(e) 10)
   count <- max(2L, min(as.integer(n) + 2L, floor(budget / max(label_mm + 5, 10))))
   middle <- pretty(c(1,max_value), n=max(1,count-2))
@@ -105,12 +104,12 @@ draw_key_gene_arrow <- function(data, params, size) {
   # Strand overrides mirror the same polygon horizontally.
   x <- c(0.10, 0.62, 0.90, 0.62, 0.10)
   if (identical(as.character(data$strand %||% "+")[1], "-")) x <- 1 - x
-  x_pts <- grid::unit(x, "npc")
-  y_pts <- grid::unit(c(0.23, 0.23, 0.50, 0.77, 0.77), "npc")
+  x_pts <- unit(x, "npc")
+  y_pts <- unit(c(0.23, 0.23, 0.50, 0.77, 0.77), "npc")
 
-  grid::polygonGrob(
+  polygonGrob(
     x = x_pts, y = y_pts,
-    gp = grid::gpar(
+    gp = gpar(
       fill = ggplot2::alpha(if_null_else(data$fill, "grey"), if_null_else(data$alpha, 1)),
       col = if_null_else(data$colour, "#353A3E"),
       lwd = if_null_else(data$linewidth %||% data$size, 0.5) * ggplot2::.pt
@@ -129,16 +128,16 @@ key_glyph_seq <- function(data, params, size) {
   if (is.null(data$colour)) return(ggplot2::zeroGrob())
   col <- ggplot2::alpha(data$colour, data$alpha %||% 1)
   lwd <- (data$linewidth %||% data$size %||% 0.8) * ggplot2::.pt
-  grid::grobTree(
-    grid::segmentsGrob(
-      x0 = grid::unit(0.12, "npc"), x1 = grid::unit(0.74, "npc"),
-      y0 = grid::unit(0.5, "npc"), y1 = grid::unit(0.5, "npc"),
-      gp = grid::gpar(col = col, lwd = lwd, lineend = "round")
+  grobTree(
+    segmentsGrob(
+      x0 = unit(0.12, "npc"), x1 = unit(0.74, "npc"),
+      y0 = unit(0.5, "npc"), y1 = unit(0.5, "npc"),
+      gp = gpar(col = col, lwd = lwd, lineend = "round")
     ),
-    grid::polygonGrob(
-      x = grid::unit(c(0.70, 0.90, 0.70), "npc"),
-      y = grid::unit(c(0.34, 0.5, 0.66), "npc"),
-      gp = grid::gpar(fill = col, col = col)
+    polygonGrob(
+      x = unit(c(0.70, 0.90, 0.70), "npc"),
+      y = unit(c(0.34, 0.5, 0.66), "npc"),
+      gp = gpar(fill = col, col = col)
     )
   )
 }
@@ -173,7 +172,7 @@ key_glyph_feature <- function(data, params, size) {
   col <- ggplot2::alpha(data$colour %||% "#353A3E", data$alpha %||% 1)
   fill <- ggplot2::alpha(data$fill, data$alpha %||% 1)
   lwd <- (data$linewidth %||% data$size %||% 0.25) * ggplot2::.pt
-  gp <- grid::gpar(col = col, fill = fill, lwd = lwd, linejoin = "round")
+  gp <- gpar(col = col, fill = fill, lwd = lwd, linejoin = "round")
 
   if (identical(shape, "arrow")) {
     return(draw_key_gene_arrow(data, params, size))
@@ -182,34 +181,34 @@ key_glyph_feature <- function(data, params, size) {
     return(draw_key_gene_arrow(data, params, size))
   }
   if (identical(shape, "marker")) {
-    return(grid::polygonGrob(
-      x = grid::unit(c(.28, .50, .72, .50), "npc"),
-      y = grid::unit(c(.50, .70, .50, .30), "npc"), gp = gp
+    return(polygonGrob(
+      x = unit(c(.28, .50, .72, .50), "npc"),
+      y = unit(c(.50, .70, .50, .30), "npc"), gp = gp
     ))
   }
   if (identical(shape, "block")) {
-    return(grid::rectGrob(
-      x = grid::unit(0.5, "npc"), y = grid::unit(0.5, "npc"),
-      width = grid::unit(0.76, "npc"), height = grid::unit(0.34, "npc"), gp = gp
+    return(rectGrob(
+      x = unit(0.5, "npc"), y = unit(0.5, "npc"),
+      width = unit(0.76, "npc"), height = unit(0.34, "npc"), gp = gp
     ))
   }
   if (identical(shape, "chevron")) {
-    return(grid::polygonGrob(
-      x = grid::unit(c(0.10, 0.62, 0.90, 0.62, 0.10, 0.34), "npc"),
-      y = grid::unit(c(0.32, 0.32, 0.50, 0.68, 0.68, 0.50), "npc"),
+    return(polygonGrob(
+      x = unit(c(0.10, 0.62, 0.90, 0.62, 0.10, 0.34), "npc"),
+      y = unit(c(0.32, 0.32, 0.50, 0.68, 0.68, 0.50), "npc"),
       gp = gp
     ))
   }
 
-  grid::grobTree(
-    grid::segmentsGrob(
-      x0 = grid::unit(0.18, "npc"), x1 = grid::unit(0.62, "npc"),
-      y0 = grid::unit(0.5, "npc"), y1 = grid::unit(0.5, "npc"),
-      gp = grid::gpar(col = col, lwd = max(lwd, 0.7), lineend = "round")
+  grobTree(
+    segmentsGrob(
+      x0 = unit(0.18, "npc"), x1 = unit(0.62, "npc"),
+      y0 = unit(0.5, "npc"), y1 = unit(0.5, "npc"),
+      gp = gpar(col = col, lwd = max(lwd, 0.7), lineend = "round")
     ),
     grid::circleGrob(
-      x = grid::unit(0.70, "npc"), y = grid::unit(0.5, "npc"),
-      r = grid::unit(0.18, "npc"), gp = gp
+      x = unit(0.70, "npc"), y = unit(0.5, "npc"),
+      r = unit(0.18, "npc"), gp = gp
     )
   )
 }

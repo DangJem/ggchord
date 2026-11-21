@@ -131,7 +131,7 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
 
   seq_ring <- chord$display_instances$ring_id
   if (!is.null(seq_ring))
-    seq_ring <- stats::setNames(seq_ring[match(seqs, chord$display_instances$key)], seqs)
+    seq_ring <- setNames(seq_ring[match(seqs, chord$display_instances$key)], seqs)
 
   if (!is.numeric(seqRadius) || any(!is.finite(seqRadius)) || any(seqRadius <= 0)) {
     ggchord_stop("seq_radius must contain finite positive numbers")
@@ -249,7 +249,7 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
         pmax(ribbon_data$sstart, ribbon_data$send)))
   }
   display_rows <- if (collinear && "row_index" %in% names(collinear_transform$table))
-    stats::setNames(collinear_transform$table$row_index, seqs) else NULL
+    setNames(collinear_transform$table$row_index, seqs) else NULL
   if (identical(sequence_unit, "aa") && !is.null(ribbon_data) && nrow(ribbon_data)) {
     columns <- c("qstart", "qend", "sstart", "send")
     ggchord_require_columns(ribbon_data, columns, "Protein alignments")
@@ -270,7 +270,7 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
         query  = {
           mix <- 0.5
           sapply(seq_colors, function(col) {
-            cols <- grDevices::col2rgb(col)
+            cols <- col2rgb(col)
             light_cols <- cols + (255 - cols) * mix
             grDevices::rgb(light_cols[1,], light_cols[2,], light_cols[3,],
                 maxColorValue = 255)
@@ -279,7 +279,7 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
         subject = {
           mix <- 0.5
           sapply(seq_colors, function(col) {
-            cols <- grDevices::col2rgb(col)
+            cols <- col2rgb(col)
             light_cols <- cols + (255 - cols) * mix
             grDevices::rgb(light_cols[1,], light_cols[2,], light_cols[3,],
                 maxColorValue = 255)
@@ -495,7 +495,7 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
     }
     if (is.null(feature_shape_pal) &&
         isTRUE(gene_params$feature_shape_mapped)) {
-      feature_shape_pal <- stats::setNames(
+      feature_shape_pal <- setNames(
         mapped_shape[match(feature_shape_order, raw_shape)],
         feature_shape_order
       )
@@ -530,7 +530,7 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
     active_position <- if (isTRUE(lbl$position_supplied)) {
       lbl$feature_position
     } else {
-      gene_params$feature_position %||% ggplot2::position_identity()
+      gene_params$feature_position %||% position_identity()
     }
     gene_data_layout <- ggchord_apply_feature_position(
       gene_data_layout,
@@ -574,7 +574,7 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
   side_sign <- if (collinear) -1 else 1
   if (identical(seq_guide$side, "negative")) side_sign <- -side_sign
   axis_theme$gap <- side_sign * if (as.numeric(axis_theme$gap) == 0)
-    grid::unit(.8, "mm") else axis_theme$gap
+    unit(.8, "mm") else axis_theme$gap
 
   show_axis <- !isTRUE(axis_theme$hidden)
   # Pass physical distances as inches. compute_chord_layout() converts them
@@ -656,7 +656,7 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
       source_id <- if (!is.na(instance)) instances$accver[instance] else id
       for (field in names(position_scale$ggchord_axis_spec)) {
         values <- position_scale$ggchord_axis_spec[[field]]
-        if (is.list(values) && !ggplot2::is_waiver(values)) {
+        if (is.list(values) && !is_waiver(values)) {
           if (is.null(names(values)) || anyDuplicated(names(values)))
             ggchord_stop("Axis ", field, " must use distinct source or instance keys")
           if (all(names(values) %in% c("source", "instance"))) {
@@ -950,7 +950,7 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
       arc$seq_ring <- unname(seq_ring[[id]])
       arc
     }) |>
-      stats::setNames(names(layout$seq_arcs))
+      setNames(names(layout$seq_arcs))
   }
 
   layout$sequence_unit <- sequence_unit

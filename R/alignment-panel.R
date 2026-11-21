@@ -68,7 +68,7 @@ register_ggchord_alignment <- function(plot, data) {
   }
   plot$ggchord_alignment <- as.data.frame(data)
   # Build immediately for useful feedback; also repeat after user edits at render.
-  ggchord_alignment_layout(ggplot2::ggplot_build(plot), data)
+  ggchord_alignment_layout(ggplot_build(plot), data)
   plot
 }
 

@@ -12,7 +12,7 @@ The figure uses a 10 × 8 in canvas at 110 dpi. The script returns the plot so y
 
 ## Read the figure {#reading}
 
-The nine feature intervals retain the reference coordinates and strand. Follow the backbone ticks to read the features, then look outside the circle for the restriction-site names. The 47 site records occupy 32 positions. Enzymes that share a position have a combined label. This record contains no independent reference primers.
+The nine feature intervals retain the reference coordinates and strand. Follow the backbone ticks to read the features, then look outside the circle for the restriction-site names. The 39 site records occupy 33 labelled cut positions. Enzymes that share a position have a combined label. This record contains no independent reference primers.
 
 <a id="inputs"></a>
 

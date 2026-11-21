@@ -35,7 +35,7 @@ coord_radial_synteny <- function(start_angle = 0, direction = "clockwise",
   direction <- ggchord_coord_direction(start_angle, direction)
   base <- coord_collinear(ratio = 1, xlim = xlim, ylim = ylim,
     expand = expand, clip = clip, fit = fit)
-  ggplot2::ggproto("CoordRadialSynteny", base, ggchord_radial = TRUE,
+  ggproto("CoordRadialSynteny", base, ggchord_radial = TRUE,
     radial_start_angle = start_angle %% 360, radial_clockwise = direction == "clockwise")
 }
 
@@ -82,7 +82,12 @@ ggchord_project_radial_data <- function(data, frames, id = NULL, fixed_angle = F
 # Polar interpolation keeps the default connection out of the central hole.
 # Endpoint r is interpolated smoothly, so the curve meets each front along
 # its local normal, including the two-spoke semicircular channel.
-ggchord_radial_edge <- function(a, b, delta, controls = NULL, n = 50L, bulge = 0) {
+ggchord_radial_fraction <- function(t, curvature) {
+  (1 - curvature) * t + curvature * (3 * t^2 - 2 * t^3)
+}
+
+ggchord_radial_edge <- function(a, b, delta, controls = NULL, n = 50L, bulge = 0,
+    curvature = 1) {
   if (!is.null(controls)) return(bezier_pts(a, b, controls[[1]], controls[[2]], n = n))
   t <- seq(0, 1, length.out = n)
   ra <- sqrt(sum(a^2)); rb <- sqrt(sum(b^2))
@@ -91,7 +96,7 @@ ggchord_radial_edge <- function(a, b, delta, controls = NULL, n = 50L, bulge = 0
   # Choose the declared channel, not the opposite semicircle in N=2.
   if (delta > 0 && change < 0) change <- change + 2 * pi
   if (delta < 0 && change > 0) change <- change - 2 * pi
-  r <- ra + (rb - ra) * (3 * t^2 - 2 * t^3)
+  r <- ra + (rb - ra) * ggchord_radial_fraction(t, curvature)
   if (bulge != 0) r <- r + bulge * 16 * t^2 * (1 - t)^2
   angle <- aa + change * t
   cbind(x = r * cos(angle), y = r * sin(angle))
@@ -106,7 +111,11 @@ ggchord_radial_route <- function(a, b, delta, route, bulge) {
     displacement <- normal * sqrt(sum((b - a)^2)) * (route$curvature %||% .5)
     return(bezier_pts(a, b, a + displacement, b + displacement, n = 50))
   }
-  path <- ggchord_radial_edge(a, b, delta, bulge = bulge)
+  # Blend chord and arc only in unoccupied channels. An outside route must
+  # retain the angular path on which its spoke clearance was measured.
+  if (bulge > 0) return(ggchord_radial_edge(a, b, delta, bulge = bulge,
+    curvature = route$curvature))
+  path <- ggchord_radial_edge(a, b, delta)
   weights <- seq(0, 1, length.out = nrow(path))
   straight <- outer(1 - weights, a) + outer(weights, b)
   curvature <- route$curvature %||% .5
@@ -155,60 +164,58 @@ ggchord_radial_connections <- function(d, input, params, component, layout, fram
     if (component == "ribbon") {
       qxy <- front(q, input$qstart[i], input$qend[i], normal_q)
       sxy <- front(s, input$sstart[i], input$send[i], normal_s)
-      bulge <- if (adjacent || delta == 0) 0 else route$bulge %||% 0
-      if (bulge > 0 && is.null(params$ribbon_ctrl_point)) {
-        # Clear the full intervening backbones, not merely their centre points.
-        # Both ribbon edges must pass outside each spoke tip in this channel.
-        tips <- frames$inner + layout$sequence_layout$xmax - layout$sequence_layout$xmin
-        for (edge_index in c(1L, nrow(qxy))) {
-          qa <- atan2(qxy[edge_index, 2], qxy[edge_index, 1])
-          sa <- atan2(sxy[edge_index, 2], sxy[edge_index, 1])
-          turn <- (sa - qa + pi) %% (2 * pi) - pi
-          if (delta > 0 && turn < 0) turn <- turn + 2 * pi
-          if (delta < 0 && turn > 0) turn <- turn - 2 * pi
-          for (j in setdiff(seq_len(count), c(qi, si))) {
-            offset <- (frames$theta[j] - qa) %% (2 * pi)
-            if (turn < 0) offset <- offset - 2 * pi
-            t <- offset / turn
-            if (!is.finite(t) || t <= 0 || t >= 1) next
-            ra <- sqrt(sum(qxy[edge_index, ]^2))
-            rb <- sqrt(sum(sxy[edge_index, ]^2))
-            radius <- ra + (rb - ra) * (3 * t^2 - 2 * t^3)
-            bulge <- max(bulge, (tips[j] + .12 - radius) / (16 * t^2 * (1 - t)^2))
-          }
-        }
-        angle <- frames$theta[qi] + delta / 2
-        channel <- paste(paste(sort(c(q, s)), collapse = ":"),
-          sprintf("%.6f", atan2(sin(angle), cos(angle))))
-        along <- seq(.25, .75, length.out = 11L)
-        weight <- 16 * along^2 * (1 - along)^2
-        qr <- sqrt(rowSums(qxy[c(1L, nrow(qxy)), , drop = FALSE]^2))
-        sr <- sqrt(rowSums(sxy[c(1L, nrow(sxy)), , drop = FALSE]^2))
-        edges <- vapply(seq_len(2L), function(k)
-          qr[k] + (sr[k] - qr[k]) * (3 * along^2 - 2 * along^3), numeric(length(along)))
-        span <- cbind(pmin(edges[, 1], edges[, 2]), pmax(edges[, 1], edges[, 2])) + bulge * weight
-        occupied <- channels[[channel]]
-        if (length(occupied)) occupied <- occupied[order(vapply(occupied, function(x) mean(x[, 1]), numeric(1)))]
-        if (length(occupied)) for (previous in occupied) {
-          if (any(span[, 1] < previous[, 2] + .05 & span[, 2] > previous[, 1] - .05)) {
-            shift <- max((previous[, 2] + .05 - span[, 1]) / weight)
-            span <- span + shift * weight; bulge <- bulge + shift
-          }
-        }
-        channels[[channel]] <- c(occupied, list(span))
-      }
-      edge <- function(a, b, which) {
-        ggchord_radial_route(a, b, delta, route, bulge)
-      }
-      a <- edge(qxy[1, ], sxy[1, ], 1L)
-      b <- edge(qxy[nrow(qxy), ], sxy[nrow(sxy), ], 2L)
-      xy <- rbind(qxy, b, sxy[nrow(sxy):1L, , drop = FALSE], a[nrow(a):1L, , drop = FALSE])
     } else {
       qxy <- front(q, input$qpos[i], input$qpos[i], normal_q)
       sxy <- front(s, input$spos[i], input$spos[i], normal_s)
-      xy <- ggchord_radial_route(qxy[1L, ], sxy[1L, ], delta, route,
-        if (adjacent || delta == 0) 0 else route$bulge %||% 0)
-
+    }
+    bulge <- if (adjacent || delta == 0 || route$route == "straight") 0 else route$bulge
+    if (bulge > 0) {
+      # Clear the full intervening backbones, not merely their centre points.
+      # Both ribbon edges must pass outside each spoke tip in this channel.
+      tips <- frames$inner + layout$sequence_layout$xmax - layout$sequence_layout$xmin
+      for (edge_index in c(1L, nrow(qxy))) {
+        qa <- atan2(qxy[edge_index, 2], qxy[edge_index, 1])
+        sa <- atan2(sxy[edge_index, 2], sxy[edge_index, 1])
+        turn <- (sa - qa + pi) %% (2 * pi) - pi
+        if (delta > 0 && turn < 0) turn <- turn + 2 * pi
+        if (delta < 0 && turn > 0) turn <- turn - 2 * pi
+        for (j in setdiff(seq_len(count), c(qi, si))) {
+          offset <- (frames$theta[j] - qa) %% (2 * pi)
+          if (turn < 0) offset <- offset - 2 * pi
+          t <- offset / turn
+          if (!is.finite(t) || t <= 0 || t >= 1) next
+          ra <- sqrt(sum(qxy[edge_index, ]^2))
+          rb <- sqrt(sum(sxy[edge_index, ]^2))
+          radius <- ra + (rb - ra) * ggchord_radial_fraction(t, route$curvature)
+          bulge <- max(bulge, (tips[j] + .12 - radius) / (16 * t^2 * (1 - t)^2))
+        }
+      }
+      angle <- frames$theta[qi] + delta / 2
+      channel <- paste(paste(sort(c(q, s)), collapse = ":"),
+        sprintf("%.6f", atan2(sin(angle), cos(angle))))
+      along <- seq(.25, .75, length.out = 11L)
+      weight <- 16 * along^2 * (1 - along)^2
+      qr <- sqrt(rowSums(qxy[c(1L, nrow(qxy)), , drop = FALSE]^2))
+      sr <- sqrt(rowSums(sxy[c(1L, nrow(sxy)), , drop = FALSE]^2))
+      edges <- vapply(seq_len(2L), function(k)
+        qr[k] + (sr[k] - qr[k]) * ggchord_radial_fraction(along, route$curvature), numeric(length(along)))
+      span <- cbind(pmin(edges[, 1], edges[, 2]), pmax(edges[, 1], edges[, 2])) + bulge * weight
+      occupied <- channels[[channel]]
+      if (length(occupied)) occupied <- occupied[order(vapply(occupied, function(x) mean(x[, 1]), numeric(1)))]
+      if (length(occupied)) for (previous in occupied) {
+        if (any(span[, 1] < previous[, 2] + .05 & span[, 2] > previous[, 1] - .05)) {
+          shift <- max((previous[, 2] + .05 - span[, 1]) / weight)
+          span <- span + shift * weight; bulge <- bulge + shift
+        }
+      }
+      channels[[channel]] <- c(occupied, list(span))
+    }
+    if (component == "ribbon") {
+      a <- ggchord_radial_route(qxy[1, ], sxy[1, ], delta, route, bulge)
+      b <- ggchord_radial_route(qxy[nrow(qxy), ], sxy[nrow(sxy), ], delta, route, bulge)
+      xy <- rbind(qxy, b, sxy[nrow(sxy):1L, , drop = FALSE], a[nrow(a):1L, , drop = FALSE])
+    } else {
+      xy <- ggchord_radial_route(qxy[1L, ], sxy[1L, ], delta, route, bulge)
     }
     piece <- template[rep(1L, nrow(xy)), , drop = FALSE]
     piece$x <- xy[, 1]; piece$y <- xy[, 2]; piece$group <- i

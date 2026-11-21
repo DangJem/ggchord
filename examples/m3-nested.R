@@ -1,3 +1,4 @@
+# Historical example for the first v0.50.0 API design at commit ddc3b809.
 # Run from the source checkout; optional dependencies: dplyr and Biostrings.
 # Unchanged source records and provenance: examples/format-inputs/README.md.
 library(ggchord)

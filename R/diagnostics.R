@@ -18,8 +18,8 @@ ggchord_diagnostic_guides <- function(table, canvas_mm) {
   values <- lapply(selected, function(i) {
     grob <- table$grobs[[i]]
     if (inherits(grob, "zeroGrob")) return(NULL)
-    size <- tryCatch(c(width = grid::convertWidth(grid::grobWidth(grob), "mm", valueOnly = TRUE),
-      height = grid::convertHeight(grid::grobHeight(grob), "mm", valueOnly = TRUE)),
+    size <- tryCatch(c(width = convertWidth(grobWidth(grob), "mm", valueOnly = TRUE),
+      height = convertHeight(grobHeight(grob), "mm", valueOnly = TRUE)),
       error = function(e) c(width = NA_real_, height = NA_real_))
     data.frame(guide = table$layout$name[i], width_mm = size[["width"]],
       height_mm = size[["height"]],
@@ -81,7 +81,7 @@ ggchord_diagnostic_text <- function(data, coordinate, panel, context, parse = FA
     is.finite(data$size) & data$size > 0
   if ('alpha' %in% names(data)) selected <- selected & (is.na(data$alpha) | data$alpha > 0)
   if ('colour' %in% names(data)) selected <- selected & vapply(data$colour, function(colour)
-    !is.na(colour) && grDevices::col2rgb(colour, alpha = TRUE)[4L] > 0, logical(1))
+    !is.na(colour) && col2rgb(colour, alpha = TRUE)[4L] > 0, logical(1))
   if (".component" %in% names(data) && any(!is.na(data$.component))) selected <- selected &
     data$.component %in% c("text", "label", "arc_text", "name", "length", "track_axis_text", "track_axis_title", "track_text")
   if (all(c(".draw_as_arc", ".component") %in% names(data))) selected <- selected &
@@ -99,11 +99,11 @@ ggchord_diagnostic_text <- function(data, coordinate, panel, context, parse = FA
     label <- if (isTRUE(parse) || isTRUE(value("plotmath_label", FALSE))) {
       tryCatch(parse(text = as.character(data$label[i]))[[1L]], error = function(e) as.character(data$label[i]))
     } else data$label[i]
-    grob <- grid::textGrob(label, gp = grid::gpar(
+    grob <- textGrob(label, gp = gpar(
       fontsize = data$size[i] * points_per_unit, fontfamily = value("family", ""),
       fontface = value("fontface", 1), lineheight = value("lineheight", 1.2)))
-    w <- grid::convertWidth(grid::grobWidth(grob), "mm", valueOnly = TRUE)
-    h <- grid::convertHeight(grid::grobHeight(grob), "mm", valueOnly = TRUE)
+    w <- convertWidth(grobWidth(grob), "mm", valueOnly = TRUE)
+    h <- convertHeight(grobHeight(grob), "mm", valueOnly = TRUE)
     composite <- isTRUE(value('.ggchord_composite_label', FALSE)) &&
       all(c('enzyme_label', 'coordinate_label', 'enzyme_fontface') %in% names(data))
     if (composite) {
@@ -251,7 +251,7 @@ ggchord_diagnose_sources <- function(plot) {
         ggchord_validate_coord_contract(plot)
         plot <- ggchord_prepare_geometry_inputs(plot, prepare_instances = FALSE)
         sequences <- plot$ggchord$data$seq_data
-        lengths <- stats::setNames(sequences$length, sequences$accver)
+        lengths <- setNames(sequences$length, sequences$accver)
         before <- length(issues)
         for (layer in plot$layers) {
           if (is.null(layer$ggchord_type)) {

@@ -38,15 +38,15 @@ ggchord_measure_guides <- function(plot,boxes) {
     if(is.null(title)||inherits(title,'waiver'))title<-scale$name
     if(is.null(title)||inherits(title,'waiver'))title<-plot$labels[[aes]] %||% aes
     measure <- function(value,points,face='plain') {
-      g<-grid::textGrob(as.character(value),gp=grid::gpar(fontsize=points,fontfamily=family,fontface=face))
-      c(width=grid::convertWidth(grid::grobWidth(g),'mm',TRUE),height=grid::convertHeight(grid::grobHeight(g),'mm',TRUE))
+      g<-textGrob(as.character(value),gp=gpar(fontsize=points,fontfamily=family,fontface=face))
+      c(width=convertWidth(grobWidth(g),'mm',TRUE),height=convertHeight(grobHeight(g),'mm',TRUE))
     }
     metrics<-if(!length(labels) || inherits(text,"element_blank")) matrix(c(0,0),nrow=1) else do.call(rbind,lapply(labels,measure,points=font_size,face=face))
     title_metrics<-measure(title,size(title_style,'legend.title',9),
       if(inherits(title_style,'element_text'))title_style@face %||% 'plain' else 'plain')
     requested <- function(field) {
       value<-own_theme[[field]] %||% plot$theme[[field]]
-      if(grid::is.unit(value))grid::convertUnit(value,'mm',valueOnly=TRUE) else NA_real_
+      if(is.unit(value))convertUnit(value,'mm',valueOnly=TRUE) else NA_real_
     }
     spec<-ggchord_role_guide_spec(plot,role,identical(aes,'ribbon_fill'))
     where <- params$position %||% spec$position %||% NA_character_

@@ -1,3 +1,4 @@
+# Historical example for the first v0.50.0 API design at commit ddc3b809.
 # Run from the source checkout. Optional dependencies: dplyr and Biostrings.
 # Source: examples/format-inputs/README.md, unchanged EMALE genome/GFF3/protein.
 library(ggchord)

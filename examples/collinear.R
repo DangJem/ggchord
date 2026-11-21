@@ -1,3 +1,4 @@
+# Historical example for the first v0.50.0 API design at commit 8d77f26f.
 # Synthetic teaching data, not records of a named biological sequence.
 # Run with the development version of ggchord loaded.
 library(ggchord)

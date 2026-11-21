@@ -33,8 +33,8 @@ ggchord_guide_constraints <- function(source, params) {
 }
 
 ggchord_guide_size <- function(grob) c(
-  width=grid::convertWidth(grid::grobWidth(grob),"mm",TRUE),
-  height=grid::convertHeight(grid::grobHeight(grob),"mm",TRUE))
+  width=convertWidth(grobWidth(grob),"mm",TRUE),
+  height=convertHeight(grobHeight(grob),"mm",TRUE))
 
 ggchord_guide_candidates <- function(guide, params, theme, source) {
   generated <- all(vapply(params$aesthetic, function(aes) {
@@ -88,24 +88,24 @@ ggchord_guide_candidates <- function(guide, params, theme, source) {
 
 # Measure the actual guide-box viewport in the same gtable grid as the panel.
 ggchord_guide_bounds <- function(table, canvas) {
-  origin <- grid::deviceLoc(grid::unit(0,"npc"),grid::unit(0,"npc"),valueOnly=TRUE)
+  origin <- grid::deviceLoc(unit(0,"npc"),unit(0,"npc"),valueOnly=TRUE)
   origin <- c(origin$x,origin$y)*25.4
-  grid::pushViewport(grid::viewport(layout=grid::grid.layout(length(table$heights),length(table$widths),
+  pushViewport(viewport(layout=grid::grid.layout(length(table$heights),length(table$widths),
     widths=table$widths,heights=table$heights,respect=table$respect)))
-  on.exit(grid::popViewport(),add=TRUE)
+  on.exit(popViewport(),add=TRUE)
   rows <- lapply(which(grepl("^guide-box",table$layout$name)),function(i) {
     grob <- table$grobs[[i]]
     if (inherits(grob,"zeroGrob")) return(NULL)
     entry <- table$layout[i,]
-    grid::pushViewport(grid::viewport(layout.pos.row=seq.int(entry$t,entry$b),
+    pushViewport(viewport(layout.pos.row=seq.int(entry$t,entry$b),
       layout.pos.col=seq.int(entry$l,entry$r)))
-    on.exit(grid::popViewport(),add=TRUE)
+    on.exit(popViewport(),add=TRUE)
     if (!is.null(grob$vp)) {
-      grid::pushViewport(grob$vp)
-      on.exit(grid::popViewport(),add=TRUE)
+      pushViewport(grob$vp)
+      on.exit(popViewport(),add=TRUE)
     }
-    lower <- grid::deviceLoc(grid::unit(0,"npc"),grid::unit(0,"npc"),valueOnly=TRUE)
-    upper <- grid::deviceLoc(grid::unit(1,"npc"),grid::unit(1,"npc"),valueOnly=TRUE)
+    lower <- grid::deviceLoc(unit(0,"npc"),unit(0,"npc"),valueOnly=TRUE)
+    upper <- grid::deviceLoc(unit(1,"npc"),unit(1,"npc"),valueOnly=TRUE)
     bounds <- c(lower$x,upper$x,lower$y,upper$y)*25.4-rep(origin,each=2L)
     data.frame(guide=table$layout$name[i],xmin_mm=bounds[1],xmax_mm=bounds[2],
       ymin_mm=bounds[3],ymax_mm=bounds[4],
@@ -119,8 +119,8 @@ ggchord_guide_joint_layout <- function(built, source, evaluate = NULL, positions
   if (any(!is.finite(canvas))) return(list(built=built,report=list(status="unavailable")))
   if (identical(built$plot$theme$legend.position, "none")) return(list(built = built,
     table = ggchord_base_gtable(built), report = list(status = "no_guides", guides = data.frame())))
-  collection <- ggplot2::ggproto(NULL,built$plot$guides)
-  guides <- lapply(collection$guides,function(g) ggplot2::ggproto(NULL,g))
+  collection <- ggproto(NULL,built$plot$guides)
+  guides <- lapply(collection$guides,function(g) ggproto(NULL,g))
   params <- collection$params
   if (!length(guides)) return(list(built=built,report=list(status="no_guides",guides=data.frame())))
   theme <- built$plot$theme
@@ -159,13 +159,13 @@ ggchord_guide_joint_layout <- function(built, source, evaluate = NULL, positions
       next_beam[[length(next_beam)+1L]] <- list(choices=chosen,index=c(state$index,j),score=evaluation$score)
     }
     ordering <- order(vapply(next_beam,`[[`,numeric(1),"score"))
-    beam <- next_beam[utils::head(ordering,16L)]
+    beam <- next_beam[head(ordering,16L)]
   }
-  finalists <- lapply(utils::head(beam,4L),function(state) {
+  finalists <- lapply(head(beam,4L),function(state) {
     trial <- built
-    trial$plot$guides <- ggplot2::ggproto(NULL,collection)
+    trial$plot$guides <- ggproto(NULL,collection)
     trial$plot$guides$guides <- guides
-    trial$plot$guides$params <- stats::setNames(lapply(state$choices,`[[`,"params"),names(params))
+    trial$plot$guides$params <- setNames(lapply(state$choices,`[[`,"params"),names(params))
     table <- ggchord_base_gtable(trial)
     bounds <- ggchord_guide_bounds(table,canvas)
     panel <- ggchord_panel_context(table,trial)

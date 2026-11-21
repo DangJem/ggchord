@@ -66,7 +66,7 @@ read_delta <- function(file, executable = "show-coords",
   if (!is.logical(source_file) || length(source_file) != 1L || is.na(source_file))
     ggchord_stop(caller, ': source_file must be TRUE or FALSE')
   paths <- ggchord_resolve_files(file, NULL, 'read_delta')
-  text <- stats::setNames(lapply(paths, ggchord_read_text, caller = caller), paths)
+  text <- setNames(lapply(paths, ggchord_read_text, caller = caller), paths)
   parsed <- lapply(text, ggchord_delta_source, caller = caller)
   headers <- unlist(lapply(parsed, `[[`, 'headers'), recursive = FALSE)
   maps <- ggchord_alignment_identity_maps(
@@ -95,7 +95,7 @@ read_delta <- function(file, executable = "show-coords",
         native[[name]] <- suppressWarnings(as.numeric(native[[name]]))
         if (any(!is.finite(native[[name]]))) ggchord_stop(caller, ': decoder returned nonfinite numeric ', name)
       }
-    } else native <- stats::setNames(as.data.frame(replicate(length(columns), character(), simplify = FALSE)), columns)
+    } else native <- setNames(as.data.frame(replicate(length(columns), character(), simplify = FALSE)), columns)
     if (nrow(native) != length(input$alignments)) ggchord_stop(caller,
       ': decoder row count differs from source alignments; no filtered output can be used')
     for (header in input$headers) dictionary[[length(dictionary)+1L]] <- data.frame(

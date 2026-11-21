@@ -13,7 +13,7 @@ ggchord_register_annotation_sources <- function(plot, old_count) {
     if (is.null(data) || is.function(data)) next
     key <- NULL
     previous <- which(vapply(plot$layers[seq_len(i - 1L)], function(other)
-      rlang::is_reference(data, annotation_data(other)), logical(1)))
+      is_reference(data, annotation_data(other)), logical(1)))
     if (length(previous)) {
       j <- previous[1L]
       owner <- plot$layers[[j]]
@@ -75,7 +75,7 @@ ggchord_resolve_feature_geometry_context <- function(plot) {
       origin <- layer$ggchord_annotation_origin %||% layer$ggchord_input_data
       feature_origin <- feature$ggchord_annotation_origin %||% feature$ggchord_input_data
       shared <- if (!is.null(label_source) && !is.null(geom_source)) identical(label_source, geom_source) else
-        (!is.null(origin) && !is.function(origin) && rlang::is_reference(origin, feature_origin)) ||
+        (!is.null(origin) && !is.function(origin) && is_reference(origin, feature_origin)) ||
         (!is.null(p$annotation_source_key) && identical(p$annotation_source_key, feature$ggchord_params$annotation_source_key))
       if (independent && (!shared || NROW(input) != NROW(ref))) next
       rows <- ggchord_match_feature_rows(input, ref, shared, strict = !is.null(anchor))

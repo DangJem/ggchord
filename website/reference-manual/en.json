@@ -904,7 +904,7 @@
         }
       ],
       "value": "A ggplot2 layer for addition to a plot.",
-      "details": "Use `accver`, `start`, `end`, and strand for directional shapes. Compound features may supply segments. The shape scale maps domain shapes, and thickness, heads and placement use physical dimensions. The source feature and its display pieces remain traceable.",
+      "details": "Use `accver`, `start`, `end`, and strand for directional shapes. Compound features may supply segments. The shape scale maps domain shapes, and thickness, heads and placement use physical dimensions. The source feature and its display pieces remain traceable.\n\nFeatures have a dark 0.25 mm outline by default. Small symbols use a finer outline. A fixed or mapped linewidth overrides the adjustment.",
       "errors": "Incompatible shape and head parameters, invalid interval endpoints, unsupported Stats or Positions, and missing strand where required are errors.",
       "roles": [
         "Reference identity.",
@@ -1160,14 +1160,14 @@
         }
       ],
       "value": "A ggplot2 layer for addition to a plot.",
-      "details": "An independent layer may supply its own label table. An anchored layer follows the target feature layer after its Stat and Position and matches by stable feature identity. The text layout operates around the anchor.",
+      "details": "An independent layer may supply its own label table. An anchored layer follows the target feature layer after its Stat and Position and matches by stable feature identity. The text layout operates around the anchor.\n\nFor a segmented feature, the middle anchor follows the occupied segments. A segment crossing the circular origin keeps its label near the seam.",
       "errors": "Unknown or ambiguous anchors and unsupported Stats on an anchored label are errors.",
       "roles": [
         "Reference identities that locate source observations.",
         "Stable feature identity.",
         "Biological strand.",
         "Label text.",
-        "Visual attributes supported by the selected mark. Map through a scale or set fixed values."
+        "Map or set text aesthetics. An explicit angle sets the text direction. On a circular map, fill supplies the colour for an exterior feature callout. If colour is omitted, the text contrasts with the mapped fill."
       ],
       "example_setup": ""
     },
@@ -1232,7 +1232,7 @@
         "Stable feature identity.",
         "Biological strand.",
         "Label text.",
-        "Visual attributes supported by the selected mark. Map through a scale or set fixed values."
+        "Map or set text aesthetics. An explicit angle sets the text direction. On a circular map, fill supplies the colour for an exterior feature callout. If colour is omitted, the text contrasts with the mapped fill."
       ],
       "example_setup": ""
     },
@@ -1297,7 +1297,7 @@
         "Stable feature identity.",
         "Biological strand.",
         "Label text.",
-        "Visual attributes supported by the selected mark. Map through a scale or set fixed values."
+        "Map or set text aesthetics. An explicit angle sets the text direction. On a circular map, fill supplies the colour for an exterior feature callout. If colour is omitted, the text contrasts with the mapped fill."
       ],
       "example_setup": ""
     },
@@ -1362,7 +1362,7 @@
         "Stable feature identity.",
         "Biological strand.",
         "Label text.",
-        "Visual attributes supported by the selected mark. Map through a scale or set fixed values."
+        "Map or set text aesthetics. An explicit angle sets the text direction. On a circular map, fill supplies the colour for an exterior feature callout. If colour is omitted, the text contrasts with the mapped fill."
       ],
       "example_setup": ""
     },
@@ -1427,7 +1427,7 @@
         "Stable feature identity.",
         "Biological strand.",
         "Label text.",
-        "Visual attributes supported by the selected mark. Map through a scale or set fixed values."
+        "Map or set text aesthetics. An explicit angle sets the text direction. On a circular map, fill supplies the colour for an exterior feature callout. If colour is omitted, the text contrasts with the mapped fill."
       ],
       "example_setup": ""
     },
@@ -1492,7 +1492,7 @@
         "Stable feature identity.",
         "Biological strand.",
         "Label text.",
-        "Visual attributes supported by the selected mark. Map through a scale or set fixed values."
+        "Map or set text aesthetics. An explicit angle sets the text direction. On a circular map, fill supplies the colour for an exterior feature callout. If colour is omitted, the text contrasts with the mapped fill."
       ],
       "example_setup": ""
     },
@@ -1784,7 +1784,7 @@
         }
       ],
       "value": "A ggplot2 layer for addition to a plot.",
-      "details": "Use `qaccver/qpos` and `saccver/spos` for the endpoints. Curved and straight paths retain the exact point origins. A shared route uses a physical corridor and retains the source members.",
+      "details": "Use `qaccver/qpos` and `saccver/spos` for the endpoints. Curved and straight paths retain the exact point origins. A shared route uses a physical corridor and retains the source members.\n\nOn a curved collinear link that spans intervening rows, a positive bulge sets the outer clearance as a fraction of the longest visible backbone. A radial outer route clears intervening spoke tips.",
       "errors": "Interval-only input needs an explicit choice of representative point. Unknown references, invalid endpoints and unsupported route options are errors.",
       "roles": [
         "Query and subject reference identities.",
@@ -1844,7 +1844,7 @@
         }
       ],
       "value": "A ggplot2 layer for addition to a plot.",
-      "details": "Use query and subject endpoints with explicit direction evidence. A one-residue interval has its full front. Self-links and nonadjacent links are preserved when supported. Endpoint fills, shared routes and optional tips are visual controls.",
+      "details": "Use query and subject endpoints with explicit direction evidence. A one-residue interval has its full front. Self-links and nonadjacent links are preserved when supported. Endpoint fills, shared routes and optional tips are visual controls.\n\nOn a curved collinear link that spans intervening rows, a positive bulge sets the outer clearance as a fraction of the longest visible backbone. A radial outer route clears intervening spoke tips.",
       "errors": "Unknown references and invalid interval endpoints are rejected. Route controls and direction evidence must be compatible with the selected geometry.",
       "roles": [
         "Reference identities that locate source observations.",
@@ -2794,7 +2794,7 @@
         }
       ],
       "value": "A placement declaration for compatible ggchord layers.",
-      "details": "Keep anchors fixed while resolving text overlaps within the allowed physical offsets. Leaders and sizing have their own visual settings.",
+      "details": "Keep anchors fixed while resolving text overlaps within the allowed physical offsets. Leaders and sizing have their own visual settings.\n\nIn a circular panel, compatible feature, primer and site labels share the space around the perimeter. Text that fits on its feature can stay on the ring. Fixed positions and explicitly constrained directions retain their own placement rules.",
       "errors": "Inconsistent limits and options that do not belong to the supported repel strategy are errors.",
       "roles": [],
       "example_setup": ""
@@ -3053,7 +3053,7 @@
         }
       ],
       "value": "A scale declaration for a ggchord plot or a Fusion root.",
-      "details": "Name the layer IDs and supply an ordinary aesthetic scale. The selected layers train together within the stated channel. Local or global visual domains may coexist in the plot.",
+      "details": "Name the layer IDs and supply an ordinary aesthetic scale. The selected layers train together within the stated channel. Local or global visual domains may coexist in the plot.\n\nWhen all layers sharing a colour or fill channel map it directly to the same field, ggchord can supply a default palette. Backbones and features use the sequence palette for accver. Features use red (+), blue (−) and grey (unknown) for strand. In circular views, recognized feature types use the plasmid palette. Explicit visual scales take precedence.",
       "errors": "Unknown layers, overlapping layer/channel claims, unsupported visual channels and position scales are rejected.",
       "roles": [],
       "example_setup": ""
@@ -3278,7 +3278,7 @@
         }
       ],
       "value": "A ggplot2 theme.",
-      "details": "Set fonts, background, titles, legend styles and domain axis elements. The theme can be applied to different coordinates and combined with standard theme elements.",
+      "details": "The default uses a white, borderless panel, charcoal text (#30353A), a centred bold plot title and a right-hand legend. Sequence and track axes use grey lines (#737A80) and 1.2 mm major ticks. Dotplots use the standard ggplot2 axis elements.",
       "errors": "Set data colours through aesthetic scales and provide physical layer dimensions through the corresponding layer or layout.",
       "roles": [],
       "example_setup": ""
@@ -3324,7 +3324,7 @@
         }
       ],
       "value": "An ordinary ggplot2 theme.",
-      "details": "Apply a dark background and matching non-data elements. Data colours remain controlled by the chosen visual scales.",
+      "details": "A charcoal background (#17191C), pale text (#F1F3F5) and grey axes (#ADB5BD) keep the axis and legend legible. Choose data colours with visual scales.",
       "errors": "Check that the chosen scales provide enough contrast for the target background.",
       "roles": [],
       "example_setup": ""
@@ -3370,7 +3370,7 @@
         }
       ],
       "value": "An ordinary ggplot2 theme.",
-      "details": "Apply a compact appearance suitable for plasmid-style annotation. Supply the observed features and selected coordinate system explicitly.",
+      "details": "An ivory background (#FFFCF5) separates the annotations from the dark sequence axis. Major ticks are 2.2 mm long, minor ticks 0.8 mm. Coordinate labels follow the sequence, the axis title is hidden, and the legend sits below the map. To omit the sequence guide, use scale_seq_position(guide = \"none\").",
       "errors": "The theme does not supply reference topology, feature styles or source annotations.",
       "roles": [],
       "example_setup": ""

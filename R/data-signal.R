@@ -44,7 +44,7 @@ read_bedgraph <- function(file, source_file = FALSE) {
   tables <- lapply(input, `[[`, 'data')
   out <- ggchord_format_import(ggchord_rbind_fill(tables), paths, 'bedGraph', vapply(tables, nrow, integer(1)))
   provenance <- attr(out, 'ggchord_import')
-  provenance$headers <- stats::setNames(lapply(input, `[[`, 'headers'), paths)
+  provenance$headers <- setNames(lapply(input, `[[`, 'headers'), paths)
   provenance$values <- 'unchanged finite interval values; no imputation, aggregation or inferred units'
   attr(out, 'ggchord_import') <- provenance
   out
@@ -139,9 +139,9 @@ read_bigwig <- function(file, which = NULL, source_file = FALSE) {
   provenance <- attr(out, 'ggchord_import')
   provenance$decoder <- list(package = 'rtracklayer', version = as.character(utils::packageVersion('rtracklayer')))
   provenance$adapter_coordinates <- 'rtracklayer GRanges already 1-based-inclusive; no further shift'
-  provenance$sequence_info <- stats::setNames(lapply(input, `[[`, 'information'), paths)
+  provenance$sequence_info <- setNames(lapply(input, `[[`, 'information'), paths)
   provenance$query_input <- which
-  provenance$selected_intervals <- stats::setNames(lapply(input, `[[`, 'selection'), paths)
+  provenance$selected_intervals <- setNames(lapply(input, `[[`, 'selection'), paths)
   provenance$values <- 'native imported floating-point signal; no imputation, aggregation or inferred units'
   attr(out, 'ggchord_import') <- provenance
   out

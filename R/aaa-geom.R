@@ -3,7 +3,7 @@
 #' Clone a geom and expose selected standard aesthetics under role names
 #' @noRd
 rename_geom_aes <- function(geom = ggplot2::GeomPolygon, renames) {
-  new_geom <- ggplot2::ggproto(
+  new_geom <- ggproto(
     paste0("GeomChord", sub("^Geom", "", class(geom)[1])), geom
   )
 
@@ -52,7 +52,7 @@ ggchord_component_style <- function(data, params, aesthetics) {
 
 #' Draw genomic-axis components as one standard ggplot2 layer
 #' @noRd
-GeomChordAxis <- ggplot2::ggproto(
+GeomChordAxis <- ggproto(
   "GeomChordAxis", ggplot2::Geom,
   required_aes = c("x", "y"),
   default_aes = aes(
@@ -65,7 +65,7 @@ GeomChordAxis <- ggplot2::ggproto(
   extra_params = c(
     "na.rm", "line_params", "tick_params", "minor_tick_params", "text_params", "title_params"
   ),
-  draw_key = function(data, params, size) grid::nullGrob(),
+  draw_key = function(data, params, size) nullGrob(),
   draw_panel = function(data, panel_params, coord, na.rm = FALSE,
                         line_params = list(), tick_params = list(),
                         minor_tick_params = list(),
@@ -133,13 +133,13 @@ GeomChordAxis <- ggplot2::ggproto(
         component[math, , drop = FALSE], panel_params, coord, parse = TRUE,
         check_overlap = text_params$check_overlap %||% FALSE, na.rm = na.rm)
     }
-    do.call(grid::grobTree, grobs)
+    do.call(grobTree, grobs)
   }
 )
 
 #' Draw automatic label text and leaders as one standard ggplot2 layer
 #' @noRd
-GeomChordGeneLabelRepel <- ggplot2::ggproto(
+GeomChordGeneLabelRepel <- ggproto(
   "GeomChordGeneLabelRepel", ggplot2::Geom,
   required_aes = c("x", "y"),
   default_aes = aes(
@@ -150,7 +150,7 @@ GeomChordGeneLabelRepel <- ggplot2::ggproto(
     family = "", fontface = 1, lineheight = 1.2
   ),
   extra_params = c("na.rm", "segment_params", "text_params", "feature_segment_style"),
-  draw_key = function(data, params, size) grid::nullGrob(),
+  draw_key = function(data, params, size) nullGrob(),
   draw_panel = function(data, panel_params, coord, na.rm = FALSE,
                         segment_params = list(), text_params = list(),
                         feature_segment_style = list()) {
@@ -231,8 +231,8 @@ GeomChordGeneLabelRepel <- ggplot2::ggproto(
         callout$colour <- "#353A3E"
         grobs[[length(grobs) + 1L]] <- ggplot2::GeomLabel$draw_panel(
           callout, panel_params, coord,
-          label.padding = grid::unit(.12, "lines"),
-          label.r = grid::unit(.16, "lines"), na.rm = na.rm
+          label.padding = unit(.12, "lines"),
+          label.r = unit(.16, "lines"), na.rm = na.rm
         )
       }
       if (nrow(plain)) {
@@ -250,6 +250,6 @@ GeomChordGeneLabelRepel <- ggplot2::ggproto(
         parse = FALSE, check_overlap = FALSE, na.rm = na.rm
       )
     }
-    do.call(grid::grobTree, grobs)
+    do.call(grobTree, grobs)
   }
 )

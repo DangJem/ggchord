@@ -35,7 +35,7 @@ ggchord_radial_label_lanes <- function(gl, seq_arcs, side = "outside",
     order_groups <- seq_along(groups)
     if (.attempt %% 2L) order_groups <- rev(order_groups)
     rotation <- (.attempt %/% 2L) %% length(groups)
-    if (rotation) order_groups <- c(tail(order_groups, -rotation), utils::head(order_groups, rotation))
+    if (rotation) order_groups <- c(tail(order_groups, -rotation), head(order_groups, rotation))
     groups <- groups[order_groups]
   }
   arc_ids <- vapply(seq_arcs, function(a) as.character(a$accver[1]), character(1))
@@ -60,7 +60,7 @@ ggchord_radial_label_lanes <- function(gl, seq_arcs, side = "outside",
     }, numeric(1))
     names(preferred) <- rows
     rows <- rows[order(preferred, rows)]
-    interpolate <- function(v, at) stats::approx(s, v, at, rule = 2)$y
+    interpolate <- function(v, at) approx(s, v, at, rule = 2)$y
     anchor_offset <- (gl$anchor_x[rows] - source$curve_x[rows]) *
       signs[rows] * source$outward_x[rows] +
       (gl$anchor_y[rows] - source$curve_y[rows]) * signs[rows] * source$outward_y[rows]

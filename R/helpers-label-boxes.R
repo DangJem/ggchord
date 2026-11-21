@@ -331,9 +331,9 @@ ggchord_text_boxes <- function(df,
   uniform_sites <- if ('.ggchord_composite_label' %in% names(df))
     which(df$.ggchord_composite_label %in% FALSE & valid) else integer()
   if (any(valid)) {
-    legacy_device <- names(grDevices::dev.cur()) %in% c("pdf", "postscript")
+    legacy_device <- names(dev.cur()) %in% c("pdf", "postscript")
     unicode <- any(utf8ToInt(paste(texts[valid], collapse = "")) > 127L)
-    close_device <- if (grDevices::dev.cur() > 1L && !(legacy_device && unicode))
+    close_device <- if (dev.cur() > 1L && !(legacy_device && unicode))
       function() invisible(NULL) else ggchord_measurement_device(text = texts[valid])
     on.exit(close_device())
     # Site labels are measured below using the same fragments as their
@@ -342,18 +342,18 @@ ggchord_text_boxes <- function(df,
     regular[c(composite, uniform_sites)] <- FALSE
     for (i in which(regular)) {
       label <- if (isTRUE(df$.axis_plotmath[i])) parse(text = texts[i]) else texts[i]
-      grob <- grid::textGrob(
-        label, gp = grid::gpar(
+      grob <- textGrob(
+        label, gp = gpar(
           fontsize = sizes[i] * (72.27 / 25.4),
           fontfamily = families[i], fontface = fontfaces[i],
           lineheight = lineheights[i]
         )
       )
-      w[i] <- grid::convertWidth(
-        grid::grobWidth(grob), "inches", valueOnly = TRUE
+      w[i] <- convertWidth(
+        grobWidth(grob), "inches", valueOnly = TRUE
       ) * units_per_inch
-      h[i] <- grid::convertHeight(
-        grid::grobHeight(grob), "inches", valueOnly = TRUE
+      h[i] <- convertHeight(
+        grobHeight(grob), "inches", valueOnly = TRUE
       ) * units_per_inch
     }
     close_device()
@@ -470,7 +470,7 @@ ggchord_arc_text_layout <- function(text, units_per_inch = .35,
     advance[!is.finite(advance) | advance <= 0] <- fallback
     tracking <- max(.0008, median(height, na.rm = TRUE) * .018)
     total <- sum(advance) + tracking * max(0, length(chars) - 1L)
-    along <- cumsum(c(0, utils::head(advance + tracking, -1L))) + advance / 2 -
+    along <- cumsum(c(0, head(advance + tracking, -1L))) + advance / 2 -
       total / 2
     if (respect_justification) along <- along + (.5 - text$hjust[i]) * total
     radius <- sqrt(text$text_x[i]^2 + text$text_y[i]^2)

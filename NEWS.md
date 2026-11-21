@@ -12,6 +12,22 @@
 - Ribbon fill mapped to `pident` uses the stepped Identity (%) guide with
   proportional intervals and ticks at 0, 50, 80, 90, 95 and 100. Alignment
   and point-link colour use line keys at the same percentages.
+- Restored the borderless white base theme, charcoal dark theme and ivory
+  plasmid maps with labelled sequence axes and separate major and minor
+  ticks. Features have fine dark outlines. Compact glyphs use a lighter
+  stroke unless a linewidth is set or mapped.
+- Reference, strand and recognized circular feature-type mappings can reuse
+  the sequence, strand or plasmid palette when they have a colour channel
+  to themselves. Explicit scales and independently scoped scales take priority.
+- Collinear links and ribbons can pass around intervening rows with an
+  explicit positive `bulge`. Radial curves account for intervening spoke
+  tips and adjacent routed bands. Linear and Sankey panels preserve spare
+  transverse space once the specified physical spacing fits the canvas.
+- Circular labels follow the occupied segments of features crossing the
+  origin. Each piece split at the seam reports its own length in bp.
+  Compatible external labels share the perimeter; restriction-site
+  examples group names by the documented cut boundary. The 13 reference
+  maps again use their saved enzyme selections.
 - Updated data adapters, validation and the 16 readers to expose stable
   reference identities, canonical coordinate roles and source reports.
 - Fusion arranges named plots and can display either observed relationships

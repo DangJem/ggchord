@@ -77,8 +77,8 @@ ggchord_layout_label_step <- function(
         # data units. This estimate depends on the device and fitted font
         # metrics, never on the positions produced by the layout solver.
         physical <- ggchord_text_boxes(base_gene_labels, units_per_inch = 1)
-        device <- if (grDevices::dev.cur() == 1L) c(8, 8) else
-          grDevices::dev.size("in")
+        device <- if (dev.cur() == 1L) c(8, 8) else
+          dev.size("in")
         reserve <- c(1.5 + 2 * max(physical$w),
                      0.75 + 2 * max(physical$h) + 0.8)
         usable <- pmax(device - reserve, device * 0.35)

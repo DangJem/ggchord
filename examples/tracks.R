@@ -1,3 +1,4 @@
+# Historical example for the first v0.50.0 API design at commit ddc3b809.
 # Synthetic numeric teaching inputs; no biological measurements are invented.
 # For existing coverage, GC-content or GC-skew tables, map the supplied value
 # column in the same way as signal below. Choose a meaningful unit and limits

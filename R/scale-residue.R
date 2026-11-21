@@ -17,14 +17,14 @@
 #'   scale_fill_residue("DNA", values = c(G = "#D9A400"))
 scale_fill_residue <- function(alphabet = "DNA", name = waiver(), values = NULL,
     na.value = "#B8C1C5", guide = "legend", ...) {
-  ggchord_check_argument_names(sys.call(), sys.function(), ggplot2::scale_fill_manual)
+  ggchord_check_argument_names(sys.call(), sys.function(), scale_fill_manual)
   alphabet <- ggchord_match_choice(alphabet, c("DNA", "RNA", "AA"), "alphabet")
   dots <- list(...)
   ggchord_check_param_names(dots, c("breaks", "labels", "limits", "drop", "na.translate",
     "expand", "call", "super"), "scale_fill_residue()")
   allowed <- if (alphabet == "AA") c(LETTERS, "*", "-", ".") else
     strsplit(if (alphabet == "RNA") "ACGURYSWKMBDHVN-." else "ACGTRYSWKMBDHVN-.", "")[[1L]]
-  palette <- stats::setNames(rep("#B8C1C5", length(allowed)), allowed)
+  palette <- setNames(rep("#B8C1C5", length(allowed)), allowed)
   if (alphabet == "AA") {
     groups <- list("#E41A1C" = c("D", "E"), "#377EB8" = c("K", "R", "H"),
       "#4DAF4A" = c("S", "T", "N", "Q"), "#FFB000" = c("A", "V", "I", "L", "M", "F", "W", "Y"),
@@ -44,8 +44,8 @@ scale_fill_residue <- function(alphabet = "DNA", name = waiver(), values = NULL,
   }
   if (!is.character(na.value) || length(na.value) != 1L || is.na(na.value))
     ggchord_stop("na.value must be one colour")
-  tryCatch(grDevices::col2rgb(c(palette, na.value)), error = function(e)
+  tryCatch(col2rgb(c(palette, na.value)), error = function(e)
     ggchord_stop("scale_fill_residue(): ", conditionMessage(e)))
-  if (ggplot2::is_waiver(name)) name <- alphabet
-  ggplot2::scale_fill_manual(name = name, values = palette, na.value = na.value, guide = guide, ...)
+  if (is_waiver(name)) name <- alphabet
+  scale_fill_manual(name = name, values = palette, na.value = na.value, guide = guide, ...)
 }

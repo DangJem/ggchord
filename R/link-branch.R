@@ -197,8 +197,8 @@ ggchord_branch_built <- function(built) {
           # Partition the artificial fork cross-section, not the genomic
           # endpoint, so branches do not overpaint the shared junction.
           f <- seq((k-1)/length(parts), k/length(parts), length.out=30)
-          node_slice <- cbind(stats::approx(seq(0,1,length.out=nrow(node)),node[,1],f)$y,
-                              stats::approx(seq(0,1,length.out=nrow(node)),node[,2],f)$y)
+          node_slice <- cbind(approx(seq(0,1,length.out=nrow(node)),node[,1],f)$y,
+                              approx(seq(0,1,length.out=nrow(node)),node[,2],f)$y)
           a <- node_slice[c(1,nrow(node_slice)),,drop=FALSE]
           b <- item$far[c(1,nrow(item$far)),,drop=FALSE]
           far_controls <- (a+b)/2

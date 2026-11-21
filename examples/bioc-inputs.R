@@ -1,3 +1,4 @@
+# Historical example for the first v0.50.0 API design at commit ddc3b809.
 # Optional issue #2 workflow. These are declared teaching intervals, not a
 # measurement of a named host/virus integration event.
 library(ggchord)

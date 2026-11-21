@@ -1,5 +1,8 @@
 #' Common appearance for sequence visualizations
 #'
+#' A white, borderless panel and centred bold plot title keep the focus on
+#' the sequence geometry. Standard ggplot2 theme elements can override them.
+#'
 #' @param base_size Base font size in points.
 #' @param base_family Base font family.
 #' @param ... Named ggplot2 theme elements, including ggchord sequence and
@@ -7,6 +10,7 @@
 #' @return A ggplot2 theme.
 #' @export
 #' @examples
+#' library(ggplot2)
 #' seqs <- data.frame(
 #'   accver = c("A", "B"), length = c(1000, 800),
 #'   sequence_unit = "bp", topology = "linear"
@@ -105,6 +109,10 @@ theme_ggchord_publication <- function(base_size = 10, base_family = "", ...) {
 }
 
 #' Plasmid sequence-plot appearance
+#'
+#' The warm ivory background and dark sequence axis distinguish annotations
+#' from major and minor ticks. Use `scale_seq_position(guide = "none")`
+#' to omit the sequence guide.
 #' @inheritParams theme_ggchord
 #' @return An ordinary ggplot2 theme.
 #' @export
@@ -137,47 +145,51 @@ ggchord_make_theme <- function(base_size, base_family, variant, overrides) {
   if (!is.character(base_family) || length(base_family) != 1L || is.na(base_family))
     ggchord_stop("base_family must be one font family")
   ggchord_check_param_names(overrides, names(ggplot2::get_element_tree()), "theme_ggchord()")
-  blank <- ggplot2::element_blank()
+  blank <- element_blank()
   dark <- variant == "dark"
   publication <- variant == "publication"
-  fg <- if (dark) "#E8EFEE" else if (publication) "#111111" else "#24343B"
-  bg <- if (dark) "#17252A" else "white"
-  border <- if (dark) "#71888B" else "#D6DEDE"
-  axis_col <- if (dark) "#71888B" else if (publication) "#333333" else "#63767A"
-  line <- ggplot2::element_line(colour = axis_col, linewidth = .3)
-  axis_text <- ggplot2::element_text(colour = fg, size = ggplot2::rel(.8))
-  title <- ggplot2::element_text(colour = fg, size = ggplot2::rel(.9))
-  hide_lines <- variant %in% c("minimal", "plasmid")
-  sequence_text <- if (variant == "plasmid") blank else axis_text
-  background <- ggplot2::element_rect(fill = bg, colour = NA)
+  plasmid <- variant == "plasmid"
+  fg <- if (dark) "#F1F3F5" else if (publication) "#111111" else "#30353A"
+  bg <- if (dark) "#17191C" else if (plasmid) "#FFFCF5" else "white"
+  axis_col <- if (dark) "#ADB5BD" else if (publication) "#333333" else "#737A80"
+  line <- element_line(colour = axis_col, linewidth = .3)
+  axis_text <- element_text(colour = fg, size = rel(.8))
+  title <- element_text(colour = fg, size = rel(.9))
+  sequence_line <- if (plasmid) element_line(colour = "#252525", linewidth = .55) else line
+  background <- element_rect(fill = bg, colour = NA)
   out <- ggplot2::theme_bw(base_size = base_size, base_family = base_family) +
-    ggplot2::theme(
-      text = ggplot2::element_text(colour = fg),
+    theme(
+      text = element_text(colour = fg),
+      plot.title = element_text(hjust = .5, face = "bold", size = rel(1.27),
+        margin = margin(b = 4)),
+      plot.subtitle = element_text(size = rel(.9)),
+      plot.caption = element_text(size = rel(.72)),
       panel.grid = blank,
       panel.background = background,
       plot.background = background,
-      panel.border = if (variant %in% c("minimal", "publication", "plasmid")) blank else
-        ggplot2::element_rect(fill = NA, colour = border, linewidth = .3),
+      panel.border = blank,
       legend.position = if (variant %in% c("publication", "plasmid")) "bottom" else "right",
-      legend.background = ggplot2::element_rect(fill = NA, colour = NA),
-      legend.key = ggplot2::element_rect(fill = NA, colour = NA),
-      legend.text = ggplot2::element_text(colour = fg),
-      legend.title = ggplot2::element_text(colour = fg),
+      legend.background = element_rect(fill = NA, colour = NA),
+      legend.key = element_rect(fill = NA, colour = NA),
+      legend.text = element_text(colour = fg, size = rel(.8)),
+      legend.title = element_text(colour = fg, size = rel(.9), face = "bold"),
       axis.line = line, axis.ticks = line, axis.text = axis_text,
       axis.title = title,
-      ggchord.axis.line = if (hide_lines) blank else line,
-      ggchord.axis.ticks = if (variant == "plasmid") blank else line,
-      ggchord.axis.minor.ticks = if (variant == "plasmid") blank else line,
-      ggchord.axis.ticks.length = grid::unit(1.2, "mm"),
-      ggchord.axis.text = sequence_text,
+      ggchord.axis.line = if (variant == "minimal") blank else sequence_line,
+      ggchord.axis.ticks = if (plasmid) element_line(colour = "#252525", linewidth = .45) else line,
+      ggchord.axis.minor.ticks = if (plasmid) element_line(colour = "#85898B", linewidth = .2) else line,
+      ggchord.axis.ticks.length = unit(if (plasmid) 2.2 else 1.2, "mm"),
+      ggchord.axis.text = if (plasmid) element_text(colour = "#252525", size = rel(.78)) else axis_text,
       ggchord.axis.title = if (variant == "plasmid") blank else title,
       ggchord.track.axis.line = if (variant == "minimal") blank else line,
       ggchord.track.axis.ticks = line,
-      ggchord.track.axis.ticks.length = grid::unit(1.2, "mm"),
+      ggchord.track.axis.ticks.length = unit(1.2, "mm"),
       ggchord.track.axis.text = axis_text,
       ggchord.track.axis.title = title)
-  if (publication) out <- out + ggplot2::theme(plot.margin = ggplot2::margin(4, 4, 4, 4, unit = "mm"))
-  if (length(overrides)) out <- out + do.call(ggplot2::theme, overrides)
+  if (plasmid) out <- out + theme(ggchord.axis.gap = unit(0, "mm"),
+    ggchord.axis.minor.ticks.length = unit(.8, "mm"), plot.margin = margin(6, 6, 6, 6))
+  if (publication) out <- out + theme(plot.margin = margin(4, 4, 4, 4, unit = "mm"))
+  if (length(overrides)) out <- out + do.call(theme, overrides)
   attr(out, "ggchord.explicit_theme") <- overrides
   out
 }
@@ -190,9 +202,9 @@ ggchord_theme_settings <- function(values) {
                 "axis.text.offset", "legend.ribbon.ticks.length")
   for (nm in unit_nms) {
     x <- values[[nm]]
-    if (!is.null(x) && (!grid::is.unit(x) || length(x) != 1L || !is.finite(as.numeric(x))))
+    if (!is.null(x) && (!is.unit(x) || length(x) != 1L || !is.finite(as.numeric(x))))
       ggchord_stop("theme_ggchord(): ", nm, " must be one grid::unit()")
-    if (!is.null(x) && !grid::unitType(x) %in%
+    if (!is.null(x) && !unitType(x) %in%
         c("inches", "cm", "mm", "points", "bigpts", "picas"))
       ggchord_stop("theme_ggchord(): ", nm, " must use an absolute physical unit")
   }
@@ -211,7 +223,7 @@ ggchord_theme_settings <- function(values) {
     "key.width", "key.height", "text", "text.position", "title",
     "title.position", "margin", "spacing")
   roles <- c("seq", "link", "ribbon", "gene", "feature", "region")
-  role_settings <- stats::setNames(vector("list", length(roles)), roles)
+  role_settings <- setNames(vector("list", length(roles)), roles)
   allowed <- c("left", "right", "top", "bottom", "inside", "none")
   for (role in roles) {
     parent <- values[[paste0("legend.", role)]]
@@ -232,18 +244,18 @@ ggchord_theme_settings <- function(values) {
     "background", "margin", "spacing", "spacing.x", "spacing.y", "key",
     "key.size", "key.width", "key.height", "text", "text.position",
     "title", "title.position")
-  common <- stats::setNames(lapply(common_names, function(x) {
+  common <- setNames(lapply(common_names, function(x) {
     values[[paste0("legend.", x)]]
   }), common_names)
   list(axis = list(
     hidden = inherits(values$axis, "element_blank"),
-    gap = values$axis.gap %||% grid::unit(.8, "mm"),
+    gap = values$axis.gap %||% unit(.8, "mm"),
     gap.explicit = !is.null(values$axis.gap),
-    ticks.length = values$axis.ticks.length %||% grid::unit(.85, "mm"),
+    ticks.length = values$axis.ticks.length %||% unit(.85, "mm"),
     ticks.length.explicit = !is.null(values$axis.ticks.length),
-    minor.ticks.length = values$axis.minor.ticks.length %||% grid::unit(.4, "mm"),
+    minor.ticks.length = values$axis.minor.ticks.length %||% unit(.4, "mm"),
     minor.ticks.length.explicit = !is.null(values$axis.minor.ticks.length),
-    text.offset = values$axis.text.offset %||% grid::unit(.8, "mm"),
+    text.offset = values$axis.text.offset %||% unit(.8, "mm"),
     text.offset.explicit = !is.null(values$axis.text.offset),
     text.orientation = orientation, text.check.overlap = overlap),
     legend = common, legends = role_settings)
@@ -253,7 +265,7 @@ ggchord_theme_settings <- function(values) {
 #' @noRd
 ggchord_unit_inches <- function(x) {
   value <- as.numeric(x)
-  switch(grid::unitType(x), inches = value, cm = value / 2.54,
+  switch(unitType(x), inches = value, cm = value / 2.54,
     mm = value / 25.4, points = value / 72.27,
     bigpts = value / 72, picas = value / 6,
     ggchord_stop("ggchord axis units must be absolute physical units"))
@@ -264,11 +276,11 @@ ggchord_plot_settings <- function(plot) {
   found <- attr(plot$theme, "ggchord.settings")
   if (is.null(found)) {
     nms <- setdiff(names(formals(theme_ggchord)), "...")
-    found <- ggchord_theme_settings(stats::setNames(rep(list(NULL), length(nms)), nms))
+    found <- ggchord_theme_settings(setNames(rep(list(NULL), length(nms)), nms))
   }
   physical <- c("axis", "axis.gap", "axis.ticks.length", "axis.minor.ticks.length",
     "axis.text.offset", "axis.text.orientation", "axis.text.check.overlap")
-  values <- stats::setNames(lapply(physical, function(n) plot$theme[[paste0("ggchord.", n)]]), physical)
+  values <- setNames(lapply(physical, function(n) plot$theme[[paste0("ggchord.", n)]]), physical)
   if (any(!vapply(values, is.null, logical(1)))) {
     checked <- ggchord_theme_settings(values)$axis
     for (name in physical[!vapply(values, is.null, logical(1))]) {
@@ -280,11 +292,11 @@ ggchord_plot_settings <- function(plot) {
     }
   }
   if (isTRUE(plot$coordinates$ggchord_circular)) {
-    if (!isTRUE(found$axis$gap.explicit)) found$axis$gap <- grid::unit(0, "mm")
+    if (!isTRUE(found$axis$gap.explicit)) found$axis$gap <- unit(0, "mm")
     if (!isTRUE(found$axis$ticks.length.explicit))
-      found$axis$ticks.length <- grid::unit(1.5, "mm")
+      found$axis$ticks.length <- unit(1.5, "mm")
     if (!isTRUE(found$axis$minor.ticks.length.explicit))
-      found$axis$minor.ticks.length <- grid::unit(.7, "mm")
+      found$axis$minor.ticks.length <- unit(.7, "mm")
   }
   found
 }

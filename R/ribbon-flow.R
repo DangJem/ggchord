@@ -51,7 +51,7 @@ ggchord_ribbon_trace <- function(data, tip, tip_length, coord, panel, metric) {
       cuts <- c(if (from) tip_span, if (to) total - tip_span)
       samples <- sort(unique(c(arc, cuts)))
       resample <- function(edge) vapply(seq_len(2L), function(axis)
-        stats::approx(arc, edge[, axis], xout = samples, ties = "ordered")$y,
+        approx(arc, edge[, axis], xout = samples, ties = "ordered")$y,
         numeric(length(samples)))
       a <- resample(a)
       b <- resample(b)
@@ -79,7 +79,7 @@ ggchord_ribbon_trace <- function(data, tip, tip_length, coord, panel, metric) {
 }
 
 # Preserve complete fronts in exported data and add separate decoration at draw time.
-GeomRibbonFlow <- ggplot2::ggproto("GeomRibbonFlow", ggplot2::GeomPolygon,
+GeomRibbonFlow <- ggproto("GeomRibbonFlow", ggplot2::GeomPolygon,
   default_aes = aes(fill = "grey70", colour = NA, alpha = .6, linewidth = .3,
     linetype = 1, fill_from = NA_character_, fill_to = NA_character_,
     flow_qn = 0, flow_sn = 0),
@@ -89,10 +89,10 @@ GeomRibbonFlow <- ggplot2::ggproto("GeomRibbonFlow", ggplot2::GeomPolygon,
     if (!flow && tip == "none")
       return(ggplot2::GeomPolygon$draw_panel(data, panel_params, coord, rule = rule))
     groups <- split(data, data$group)
-    device_pixels <- if (grDevices::dev.cur() == 1L) 1e6 else prod(grDevices::dev.size("px"))
+    device_pixels <- if (dev.cur() == 1L) 1e6 else prod(dev.size("px"))
     pixel_budget <- min(8e6, max(2e6, device_pixels * 4)) / max(1, length(groups))
-    metric <- c(grid::convertWidth(grid::unit(1, "npc"), "mm", TRUE),
-      grid::convertHeight(grid::unit(1, "npc"), "mm", TRUE))
+    metric <- c(convertWidth(unit(1, "npc"), "mm", TRUE),
+      convertHeight(unit(1, "npc"), "mm", TRUE))
     grobs <- lapply(groups, function(d) {
       trace <- ggchord_ribbon_trace(d, tip, tip_length, coord, panel_params, metric)
       if (is.null(trace))
@@ -102,18 +102,18 @@ GeomRibbonFlow <- ggplot2::ggproto("GeomRibbonFlow", ggplot2::GeomPolygon,
       border$x <- xy[, 1L]; border$y <- xy[, 2L]
       if (!flow) return(ggplot2::GeomPolygon$draw_panel(border, panel_params, coord, rule = rule))
       endpoints <- c(d$fill_from[1L], d$fill_to[1L])
-      if (anyNA(endpoints)) return(grid::nullGrob())
-      opacity <- grDevices::col2rgb(endpoints, alpha = TRUE)[4L, ] / 255
+      if (anyNA(endpoints)) return(nullGrob())
+      opacity <- col2rgb(endpoints, alpha = TRUE)[4L, ] / 255
       n <- max(2L, nrow(trace$edge1) - 1L)
-      colors <- scales::alpha(grDevices::colorRampPalette(endpoints, space = "Lab")(n),
+      colors <- alpha(grDevices::colorRampPalette(endpoints, space = "Lab")(n),
         seq(opacity[1L], opacity[2L], length.out = n))
       fill <- ggchord_ribbon_mesh_fill(trace$edge1, trace$edge2, xy, colors, d$alpha[1L],
         coord, panel_params, pixel_budget)
       border$fill <- NA
-      grid::grobTree(fill,
+      grobTree(fill,
         ggplot2::GeomPolygon$draw_panel(border, panel_params, coord, rule = rule))
     })
-    do.call(grid::grobTree, grobs)
+    do.call(grobTree, grobs)
   },
   draw_key = function(data, params, size) {
     if (isTRUE(params$flow)) {
@@ -158,10 +158,10 @@ ggchord_ribbon_mesh_fill <- function(edge1,edge2,outline,colours,alpha,coord,pan
   }
   a<-transform(edge1);b<-transform(edge2);polygon<-transform(outline)
   limits<-c(range(polygon[,1]),range(polygon[,2]))
-  canvas<-grDevices::dev.size('in');pixels<-grDevices::dev.size('px')
+  canvas<-dev.size('in');pixels<-dev.size('px')
   resolution<-pmax(150,pixels/canvas)
-  panel_inches<-c(grid::convertWidth(grid::unit(1,'npc'),'in',TRUE),
-    grid::convertHeight(grid::unit(1,'npc'),'in',TRUE))
+  panel_inches<-c(convertWidth(unit(1,'npc'),'in',TRUE),
+    convertHeight(unit(1,'npc'),'in',TRUE))
   dimensions<-pmax(2L,pmin(1600L,ceiling(c(diff(limits[1:2]),diff(limits[3:4]))*panel_inches*resolution)))
   reduced <- prod(dimensions)>pixel_budget
   if(reduced)dimensions <- pmax(2L,floor(dimensions*sqrt(pixel_budget/prod(dimensions))))
@@ -201,8 +201,8 @@ ggchord_ribbon_mesh_fill <- function(edge1,edge2,outline,colours,alpha,coord,pan
   ramp<-if(all(is.na(colours)))rep(NA_character_,256) else
     grDevices::colorRampPalette(colours,space='Lab')(256)
   index<-pmax(1L,pmin(256L,round(values*255)+1L))
-  opacity<-if(all(is.na(colours))) rep(0,256) else stats::approx(seq(0,1,length.out=length(colours)),
-    grDevices::col2rgb(colours,alpha=TRUE)[4,]/255,xout=seq(0,1,length.out=256))$y
+  opacity<-if(all(is.na(colours))) rep(0,256) else approx(seq(0,1,length.out=length(colours)),
+    col2rgb(colours,alpha=TRUE)[4,]/255,xout=seq(0,1,length.out=256))$y
   raster<-matrix(scales::alpha(ramp[index],(if(is.na(alpha))1 else alpha)*opacity[index]),ny,nx)
   raster[!mask]<-NA_character_
   grob <- grid::rasterGrob(as.raster(raster[ny:1,,drop=FALSE]),

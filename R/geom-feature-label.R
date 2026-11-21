@@ -125,11 +125,14 @@ label_layout_repel <- function(arrangement = "auto", orientation = "auto",
     class = c("LabelLayoutRepel", "ggchord_label_layout"))
 }
 
-GeomDomainLabel <- ggplot2::ggproto("GeomDomainLabel", ggplot2::GeomText,
-  optional_aes = c("xend", "yend", ".component", "group"),
-  extra_params = c("na.rm", "leader_style"),
+GeomDomainLabel <- ggproto("GeomDomainLabel", ggplot2::GeomText,
+  default_aes = utils::modifyList(ggplot2::GeomText$default_aes, aes(fill = NA)),
+  optional_aes = c("xend", "yend", ".component", ".perimeter_callout",
+    ".label_over_feature", "group"),
+  extra_params = c("na.rm", "leader_style", "auto_contrast"),
   draw_panel = function(data, panel_params, coord, na.rm = FALSE,
-      leader_style = list(), parse = FALSE, check_overlap = FALSE) {
+      leader_style = list(), parse = FALSE, check_overlap = FALSE,
+      auto_contrast = FALSE) {
     leader <- data[data$.component == "leader", , drop = FALSE]
     labels <- data[data$.component == "text", , drop = FALSE]
     grobs <- list()
@@ -140,16 +143,35 @@ GeomDomainLabel <- ggplot2::ggproto("GeomDomainLabel", ggplot2::GeomText,
       grobs[[1L]] <- ggplot2::GeomSegment$draw_panel(leader, panel_params, coord,
         na.rm = na.rm)
     }
-    if (nrow(labels)) grobs[[length(grobs) + 1L]] <- ggplot2::GeomText$draw_panel(
-      labels, panel_params, coord, na.rm = na.rm, parse = parse, check_overlap = check_overlap)
-    do.call(grid::grobTree, grobs)
+    boxed <- (labels$.perimeter_callout %||% FALSE) %in% TRUE & !is.na(labels$fill)
+    if (auto_contrast) {
+      over_feature <- (labels$.label_over_feature %||% FALSE) %in% TRUE &
+        !is.na(labels$fill)
+      labels$colour[over_feature] <- ggchord_contrast_colour(labels$fill[over_feature])
+      labels$fill[boxed] <- ggchord_feature_callout_fill(labels$fill[boxed])
+      labels$colour[boxed] <- ggchord_contrast_colour(labels$fill[boxed])
+    }
+    if (any(boxed)) {
+      callouts <- labels[boxed, , drop = FALSE]
+      callouts$linewidth <- .14
+      callouts$linetype <- 1
+      grobs[[length(grobs) + 1L]] <- ggplot2::GeomLabel$draw_panel(
+        callouts, panel_params, coord, parse = parse, na.rm = na.rm,
+        label.padding = unit(.12, "lines"), label.r = unit(.08, "lines"),
+        border.colour = "#76716A")
+    }
+    if (any(!boxed)) grobs[[length(grobs) + 1L]] <- ggplot2::GeomText$draw_panel(
+      labels[!boxed, , drop = FALSE], panel_params, coord, na.rm = na.rm,
+      parse = parse, check_overlap = check_overlap)
+    do.call(grobTree, grobs)
   }
 )
 
 ggchord_label_empty <- function() data.frame(
   x = numeric(), y = numeric(), xend = numeric(), yend = numeric(), label = character(),
   size = numeric(), angle = numeric(), source_row = integer(), accver = character(),
-  .component = character(), anchor_x = numeric(), anchor_y = numeric())
+  .component = character(), .perimeter_callout = logical(), .label_over_feature = logical(),
+  anchor_x = numeric(), anchor_y = numeric())
 
 ggchord_domain_label <- function(mapping, data, stat, anchor_layer, anchor, position,
     label_layout, kind, dots, na.rm, show.legend, inherit.aes, id) {
@@ -183,7 +205,9 @@ ggchord_domain_label <- function(mapping, data, stat, anchor_layer, anchor, posi
   layer <- ggplot2::layer(
     data = ggchord_label_empty(), mapping = aes(
       x = x, y = y, xend = xend, yend = yend, label = label,
-      size = I(size), angle = angle, hjust = hjust, vjust = vjust, .component = I(.component)),
+      size = I(size), angle = angle, hjust = hjust, vjust = vjust,
+      .component = I(.component), .perimeter_callout = I(.perimeter_callout),
+      .label_over_feature = I(.label_over_feature)),
     geom = GeomDomainLabel, stat = "identity", position = "identity", inherit.aes = inherit.aes,
     show.legend = show.legend, check.aes = FALSE, check.param = FALSE,
     params = c(list(na.rm = na.rm, leader_style = leader), geom_parameters)
@@ -215,7 +239,7 @@ ggchord_domain_label <- function(mapping, data, stat, anchor_layer, anchor, posi
 #' @param inherit.aes Whether to inherit plot mappings and evaluate them on the layer data.
 #' @param id Optional plot-local layer identifier. Name a layer explicitly to scope a scale, anchor a label or export it.
 #' @return A ggplot2 layer for addition to a plot.
-#' @details The source entities have `accver`, `start`, `end` and a label or label mapping. A bound label follows the target layer by identity. Text size, collision handling and leader placement are independent of the underlying feature geometry.
+#' @details The source entities have `accver`, `start`, `end` and a label or label mapping. A bound label follows the target layer by identity. Text size, collision handling and leader placement are independent of the underlying feature geometry. A segmented feature is anchored to its visible runs. For a circular feature label, mapping `fill` sets the background of an exterior callout. If `colour` is omitted, text over a feature or on a callout uses a contrasting colour.
 #' @examples
 #' library(ggplot2)
 #'
@@ -260,7 +284,7 @@ geom_feature_label <- function(mapping = NULL, data = NULL, stat = "identity",
 #' @param inherit.aes Whether to inherit plot mappings and evaluate them on the layer data.
 #' @param id Optional plot-local layer identifier. Name a layer explicitly to scope a scale, anchor a label or export it.
 #' @return A ggplot2 layer for addition to a plot.
-#' @details The source entities have `accver`, `start`, `end` and a label or label mapping. A bound label follows the target layer by identity. Text size, collision handling and leader placement are independent of the underlying feature geometry.
+#' @details The source entities have `accver`, `start`, `end` and a label or label mapping. A bound label follows the target layer by identity. Text size, collision handling and leader placement are independent of the underlying feature geometry. A segmented feature is anchored to its visible runs. For a circular feature label, mapping `fill` sets the background of an exterior callout. If `colour` is omitted, text over a feature or on a callout uses a contrasting colour.
 #' @examples
 #' library(ggplot2)
 #'
@@ -310,7 +334,7 @@ ggchord_bind_domain_labels <- function(plot) {
     layer$ggchord_params$anchor_data <- source
     layer$ggchord_params$anchor_position <- owner$ggchord_params$feature_position
     layer$ggchord_params$anchor_same_source <- is.null(layer$ggchord_input_data) ||
-      (!is.null(source) && rlang::is_reference(layer$ggchord_input_data, raw))
+      (!is.null(source) && is_reference(layer$ggchord_input_data, raw))
   }
   plot
 }
@@ -333,8 +357,39 @@ ggchord_label_match <- function(input, target, kind, allow_row_match) {
   ggchord_stop("Supply a stable ", key, " to bind these labels")
 }
 
+ggchord_feature_label_position <- function(source, lengths, anchor, strand) {
+  start <- source$start
+  end <- source$end
+  middle <- (start + end) / 2
+  wraps <- (source$cross_origin %||% source$crosses_origin) %in% TRUE
+  for (i in seq_len(nrow(source))) {
+    segments <- source$segments[[i]]
+    if (!is.data.frame(segments) || !nrow(segments)) next
+    parts <- segments[!(segments$segment_type %||% "") %in% "gap", , drop = FALSE]
+    if (!nrow(parts)) next
+    circular_seam <- isTRUE(wraps[i]) && any(parts$start == 1) &&
+      any(parts$end == lengths[i])
+    order <- if (circular_seam) order(parts$segment_index %||% seq_len(nrow(parts))) else
+      order(parts$start, parts$end)
+    parts <- parts[order, , drop = FALSE]
+    start[i] <- parts$start[1L]
+    end[i] <- tail(parts$end, 1L)
+    widths <- parts$end - parts$start + 1
+    edges <- c(0, cumsum(widths))
+    centre <- (tail(edges, 1L) - 1) / 2
+    at <- findInterval(centre, edges)
+    middle[i] <- min(parts$end[at], parts$start[at] + centre - edges[at])
+    # A half-position between the final and first base lies on the seam.
+    if (circular_seam && middle[i] > lengths[i]) middle[i] <- lengths[i]
+  }
+  switch(anchor, start = start, end = end, middle = middle,
+    head = ifelse(strand == "-", start, end),
+    tail = ifelse(strand == "-", end, start))
+}
+
 ggchord_domain_label_geometry <- function(layer, input, layout, target = NULL,
-    target_geometry = NULL, instances = NULL, radial = FALSE, vertical = FALSE) {
+    target_geometry = NULL, instances = NULL, radial = FALSE, vertical = FALSE,
+    shared = NULL) {
   if (!NROW(input)) return(ggchord_label_empty())
   p <- layer$ggchord_params
   kind <- p$label_kind
@@ -346,6 +401,10 @@ ggchord_domain_label_geometry <- function(layer, input, layout, target = NULL,
     ggchord_stop("Column label layout requires circular, chord, or radial coordinates")
   orientation <- strategy$orientation
   if (orientation == "auto") orientation <- if (arrangement == "columns") "horizontal" else "tangent"
+  share_perimeter <- !is.null(shared) && repel && strategy$side != "negative" &&
+    strategy$leader == "auto" &&
+    !any(c("angle", "hjust", "vjust") %in% names(p$text_style)) &&
+    (arrangement != "columns" || orientation == "horizontal")
   ref <- layout$sequence_reference
   ids <- as.character(input$accver)
   if (any(!ids %in% layout$seqs)) ggchord_stop("Label data contains an unknown reference")
@@ -369,9 +428,7 @@ ggchord_domain_label_geometry <- function(layer, input, layout, target = NULL,
     strand <- source$.feature_biological_strand %||% source$strand %||% rep(".", nrow(source))
     if (anchor %in% c("head", "tail") && anyNA(match(strand, c("+", "-"))))
       ggchord_stop("head and tail anchors require a known biological strand")
-    pos <- switch(anchor, start = source$start, end = source$end,
-      head = ifelse(strand == "-", source$start, source$end),
-      tail = ifelse(strand == "-", source$end, source$start), (source$start + source$end) / 2)
+    pos <- ggchord_feature_label_position(source, lens, anchor, strand)
   }
   if (!is.numeric(pos) || any(!is.finite(pos) | pos < 0 | pos > lens))
     ggchord_stop("Label anchor positions are outside their reference")
@@ -381,21 +438,26 @@ ggchord_domain_label_geometry <- function(layer, input, layout, target = NULL,
   if (kind == "sequence" && is.null(layer$ggchord_input_mapping$label)) {
     label <- if (is.null(instances)) ids else instances$accver[match(ids, instances$key)]
   }
-  offsets <- function(value, label) {
+  offsets <- function(value, label, placement = "offset") {
     if (!is.null(instances)) value <- ggchord_instance_param(value, instances)
-    ggchord_resolve_position_offset(value, layout$seqs, "offset", label)
+    ggchord_resolve_position_offset(value, layout$seqs, placement, label)
   }
   distance <- offsets(strategy$offset, "label offset")
   along <- offsets(strategy$along %||% 0, "label along")
-  position <- offsets(p$feature_position$offset %||% p$anchor_position$offset %||% 0,
-    "label position")
+  source_position <- p$anchor_position %||% p$feature_position
+  position <- offsets(source_position$offset %||% 0, "label position",
+    source_position$placement %||% "offset")
   mm <- ggchord_units_per_mm(if (isTRUE(layout$collinear) && !radial)
     if (vertical) "x" else "y" else NULL)
   placed <- list()
-  occupied <- NULL
+  occupied <- shared$boxes
   metric <- ggchord_render_context()$units_per_mm
   if (length(metric) != 2L || any(!is.finite(metric) | metric <= 0))
     metric <- rep(mm, 2L)
+  # Cartesian projection can have different layout units per device inch on
+  # each axis. Test rotated text envelopes in physical coordinates.
+  box_scale <- if (is.null(shared)) metric * 25.4 else c(1, 1)
+  box_units <- if (is.null(shared)) 1 else metric[2L] * 25.4
   bounds <- c(layout$extremes$x_min, layout$extremes$x_max)
   if (length(bounds) != 2L || any(!is.finite(bounds))) bounds <- c(-1, 1)
   for (i in order(ids, pos, label, na.last = TRUE)) {
@@ -406,7 +468,8 @@ ggchord_domain_label_geometry <- function(layer, input, layout, target = NULL,
     anchor_xy <- drop(frame$xy)
     normal_mm <- 1 / sqrt(sum((normal / metric)^2))
     tangent_mm <- 1 / sqrt(sum((tangent / metric)^2))
-    normal_offset <- position[[id]][[1L]] * normal_mm
+    feature_strand <- if (kind == "feature" && strand[i] %in% c("+", "-")) strand[i] else "."
+    normal_offset <- position[[id]][[feature_strand]] * normal_mm
     if (!is.null(target_geometry) && "normal_offset" %in% names(target_geometry)) {
       index <- match(matched[i], target_geometry$source_row)
       if (!is.na(index)) normal_offset <- target_geometry$normal_offset[index]
@@ -431,6 +494,7 @@ ggchord_domain_label_geometry <- function(layer, input, layout, target = NULL,
       source_row = i, accver = id, group = i, hjust = .5, vjust = .5,
       anchor_x = anchor_xy[1L], anchor_y = anchor_xy[2L],
       anchor_layer = p$anchor_layer %||% NA_character_, anchor_position = pos[i],
+      .perimeter_callout = FALSE, .label_over_feature = FALSE,
       measurement = ggchord_render_context()$status %||% "estimated")
     hidden <- function(reason) {
       row <- base_row
@@ -450,6 +514,51 @@ ggchord_domain_label_geometry <- function(layer, input, layout, target = NULL,
     }
     allowed_sides <- switch(strategy$side, positive = 1, negative = -1, both = c(1, -1))
     reach <- if (repel) seq(0, 8 * max(size, 1), by = max(size / 2, 0.5)) else 0
+    perimeter <- function() {
+      row <- base_row
+      xy <- anchor_xy + normal * distance[[id]][[1L]] * normal_mm
+      row$x <- xy[1L]
+      row$y <- xy[2L]
+      row$label <- text
+      row$angle <- if (strategy$orientation == "auto") 0 else angle
+      row$.component <- "text"
+      row$.perimeter_callout <- TRUE
+      row$annotation_side <- "outer"
+      row$label_status <- "visible"
+      row$annotation_class <- if (kind == "site") "site" else if ("primer_id" %in% names(source))
+        "primer" else "feature"
+      row
+    }
+    if (share_perimeter && (arrangement == "columns" || strategy$side == "positive")) {
+      placed[[length(placed) + 1L]] <- perimeter()
+      next
+    }
+    if (share_perimeter) {
+      allowed_sides <- -1
+      reach <- reach[reach <= 6]
+      if (kind == "feature") {
+        span <- layout$seq_arcs[[id]]
+        segments <- source$segments[[i]]
+        if (is.data.frame(segments) && nrow(segments)) {
+          parts <- segments[!(segments$segment_type %||% "") %in% "gap", , drop = FALSE]
+          feature_length <- sum(parts$end - parts$start + 1)
+        } else feature_length <- source$end[i] - source$start[i] + 1
+        length_on_ring <- feature_length / lens[i] *
+          sum(sqrt(diff(span$x)^2 + diff(span$y)^2)) *
+          sqrt(sum(anchor_xy^2)) / mean(sqrt(span$x^2 + span$y^2))
+        horizontal <- ggchord_text_boxes(data.frame(x = 0, y = 0, text = text,
+          size = size, angle = 0, family = p$text_style$family %||% "",
+          fontface = p$text_style$fontface %||% 1), x_col = "x", y_col = "y",
+          angle_col = "angle", units_per_inch = metric[2L] * 25.4)
+        minimum <- if (strategy$fit %in% c("shrink", "wrap_shrink")) strategy$min_size else size
+        fits <- min(size, size * length_on_ring / horizontal$bw[1L])
+        if (fits < minimum) {
+          placed[[length(placed) + 1L]] <- perimeter()
+          next
+        }
+        size <- fits
+      }
+    }
     slots <- if (arrangement == "columns") expand.grid(side = allowed_sides,
       extra = c(0, rep(reach[-1L], each = 2L) * rep(c(1, -1), length(reach) - 1L))) else
       expand.grid(side = allowed_sides, extra = reach)
@@ -471,12 +580,13 @@ ggchord_domain_label_geometry <- function(layer, input, layout, target = NULL,
         } else justify <- .5
         hjust <- p$text_style$hjust %||% justify
         vjust <- p$text_style$vjust %||% .5
-        box <- ggchord_text_boxes(data.frame(x = xy[1L], y = xy[2L], text = text,
+        box <- ggchord_text_boxes(data.frame(x = xy[1L] / box_scale[1L],
+          y = xy[2L] / box_scale[2L], text = text,
           angle = angle, size = test_size, hjust = hjust, vjust = vjust,
           family = p$text_style$family %||% "", fontface = p$text_style$fontface %||% 1,
           lineheight = p$text_style$lineheight %||% 1.2), x_col = "x", y_col = "y",
-          angle_col = "angle", units_per_inch = ggchord_layout_units_per_mm(2L) * 25.4,
-          box_padding = (strategy$padding %||% 0) * mean(metric) / 2)
+          angle_col = "angle", units_per_inch = box_units,
+          box_padding = (strategy$padding %||% 0) / (2 * 25.4))
         count <- if (is.null(occupied) || !nrow(box) || identical(strategy$overlap, "allow")) 0L else
           sum(ggchord_oriented_box_overlaps(box, occupied), na.rm = TRUE)
         if (is.null(best) || count < best$count)
@@ -486,18 +596,26 @@ ggchord_domain_label_geometry <- function(layer, input, layout, target = NULL,
       }
       if (!is.null(best) && best$count == 0L) break
     }
+    if (share_perimeter && (is.null(best) || best$count > 0)) {
+      placed[[length(placed) + 1L]] <- perimeter()
+      next
+    }
     if (is.null(best) || best$count > (strategy$max_overlaps %||% 0L)) {
       placed[[length(placed) + 1L]] <- hidden("overlap")
       next
     }
-    occupied <- rbind(occupied, best$box)
+    occupied <- ggchord_rbind_fill(list(occupied, best$box))
     row <- base_row
     row$x <- best$xy[1L]; row$y <- best$xy[2L]
     row$label <- text; row$size <- best$size; row$hjust <- best$hjust; row$vjust <- best$vjust
     row$.component <- "text"
+    row$.label_over_feature <- share_perimeter && kind == "feature" &&
+      !is.null(target_geometry) && all(best$xy == anchor_xy)
     row$label_status <- if (best$count) "overlap_unresolved" else "visible"
-    for (key in c("xmin", "xmax", "ymin", "ymax"))
-      row[[paste0("bbox_", key)]] <- best$box[[key]][1L]
+    for (key in c("xmin", "xmax", "ymin", "ymax")) {
+      scale <- if (startsWith(key, "x")) box_scale[1L] else box_scale[2L]
+      row[[paste0("bbox_", key)]] <- best$box[[key]][1L] * scale
+    }
     placed[[length(placed) + 1L]] <- row
     leader <- strategy$leader %||% "none"
     if (repel && leader != "none" && any(best$xy != anchor_xy)) {
@@ -514,5 +632,6 @@ ggchord_domain_label_geometry <- function(layer, input, layout, target = NULL,
     }
 
   }
+  if (!is.null(shared)) shared$boxes <- occupied
   ggchord_rbind_fill(placed) %||% ggchord_label_empty()
 }

@@ -1,5 +1,5 @@
 # Linear multi-sequence coordinates own their physical layout strategy.
-CoordCollinear <- ggplot2::ggproto("CoordCollinear", CoordGgchord)
+CoordCollinear <- ggproto("CoordCollinear", CoordGgchord)
 
 #' Project references onto parallel linear paths
 #'
@@ -38,7 +38,7 @@ coord_collinear <- function(axis = "x", ratio = NULL, xlim = NULL, ylim = NULL,
   ggchord_check_argument_names(sys.call(), sys.function())
   axis <- ggchord_match_choice(axis, c("x", "y"), "axis")
   settings <- ggchord_coord_settings(ratio, xlim, ylim, expand, clip, fit)
-  ggplot2::ggproto(NULL, CoordCollinear, !!!settings,
+  ggproto(NULL, CoordCollinear, !!!settings,
     ggchord_collinear = TRUE, rotation = 0,
     collinear_align = "left", collinear_orientation = "manual",
     collinear_seq_axis = if (axis == "x") "horizontal" else "vertical")

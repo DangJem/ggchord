@@ -41,7 +41,7 @@ ggchord_check_geom_params <- function(dots, geom, caller, position = "identity",
   if (identical(position, "identity")) position <- ggplot2::PositionIdentity
   if (!inherits(geom, "Geom") || !inherits(stat, "Stat") || !inherits(position, "Position")) {
     # Let ggplot2 resolve named extensions before asking what they consume.
-    receiver <- ggplot2::layer(geom = geom, stat = stat, position = position)
+    receiver <- layer(geom = geom, stat = stat, position = position)
     geom <- receiver$geom
     stat <- receiver$stat
     position <- receiver$position
@@ -93,7 +93,7 @@ ggchord_render_data_once <- function(callback) {
 }
 
 ggchord_native_facet_input <- function(layer) {
-  copy <- ggplot2::ggproto(NULL, layer)
+  copy <- ggproto(NULL, layer)
   # Materialize the subclass method on this render's clone, including any
   # transformation it applies after reading data or running a data callback.
   read <- ggchord_render_data_once(copy$layer_data)
@@ -186,7 +186,7 @@ ggchord_layer_input_data <- function(layer, fallback) {
   }
   input <- layer$ggchord_input_data %||% fallback
   if (is.function(input)) {
-    input <- tryCatch(input(fallback), error = function(e) rlang::abort(
+    input <- tryCatch(input(fallback), error = function(e) abort(
       paste0("Data callback for layer '", layer$ggchord_layer_id, "' failed."),
       parent = e, call = NULL))
   }
@@ -205,16 +205,16 @@ ggchord_layer_input_context <- function(layer) {
 }
 
 ggchord_eval_input_mapping <- function(role, mapping, data, caller) {
-  tryCatch(rlang::eval_tidy(mapping, data = data),
-    error = function(e) rlang::abort(paste0(caller, ": cannot evaluate `", role, " = ",
-      rlang::as_label(mapping), "`."), parent = e, call = NULL))
+  tryCatch(eval_tidy(mapping, data = data),
+    error = function(e) abort(paste0(caller, ": cannot evaluate `", role, " = ",
+      as_label(mapping), "`."), parent = e, call = NULL))
 }
 
 # Row numbers refer to the supplied table, before panels and display instances.
 ggchord_input_rows <- function(bad) {
   rows <- which(bad)
   if (!length(rows)) return("")
-  paste0(" (input rows: ", paste(utils::head(rows, 8L), collapse = ", "),
+  paste0(" (input rows: ", paste(head(rows, 8L), collapse = ", "),
     if (length(rows) > 8L) paste0(", +", length(rows) - 8L, " more"), ")")
 }
 
@@ -289,27 +289,27 @@ ggchord_layer_source <- function(lyr, fallback) {
 # arguments to the same formals as ggplot2.
 ggchord_has_stage <- function(x, stages = c("after_stat", "after_scale")) {
   if (missing(x)) return(FALSE)
-  x <- rlang::get_expr(x)
+  x <- get_expr(x)
   # ggplot2 still recognises these older spellings of computed aesthetics.
   if ("after_stat" %in% stages) {
-    if (rlang::is_symbol(x)) return(grepl("^\\.\\.[A-Za-z._]+\\.\\.$", rlang::as_string(x)))
-    if (rlang::is_call(x, "stat")) return(TRUE)
+    if (is_symbol(x)) return(grepl("^\\.\\.[A-Za-z._]+\\.\\.$", as_string(x)))
+    if (is_call(x, "stat")) return(TRUE)
   }
   if (!is.call(x)) return(FALSE)
-  if (rlang::is_call(x, "stage")) {
-    args <- as.list(match.call(ggplot2::stage, x))[-1L]
+  if (is_call(x, "stage")) {
+    args <- as.list(match.call(stage, x))[-1L]
     if (any(!vapply(args[intersect(names(args), stages)], is.null, logical(1)))) return(TRUE)
   }
-  rlang::is_call(x, stages) || any(vapply(as.list(x)[-1L], ggchord_has_stage, logical(1), stages = stages))
+  is_call(x, stages) || any(vapply(as.list(x)[-1L], ggchord_has_stage, logical(1), stages = stages))
 }
 
 # Starting expression available for grouping and scale training.
 ggchord_start_mapping <- function(q) {
-  expr <- rlang::get_expr(q)
-  if (rlang::is_call(expr, "stage")) {
-    first <- match.call(ggplot2::stage, expr)$start
+  expr <- get_expr(q)
+  if (is_call(expr, "stage")) {
+    first <- match.call(stage, expr)$start
     if (is.null(first)) return(NULL)
-    return(rlang::new_quosure(first, rlang::get_env(q)))
+    return(new_quosure(first, get_env(q)))
   }
   if (ggchord_has_stage(expr)) NULL else q
 }
@@ -328,15 +328,15 @@ ggchord_visual_rows <- function(visual, rows) {
 # Classify data references without running the mapping. A computed subscript
 # needs the combined mask because its target column is known only at runtime.
 ggchord_visual_fields <- function(expr, env) {
-  if (rlang::is_symbol(expr)) return(rlang::as_string(expr))
+  if (is_symbol(expr)) return(as_string(expr))
   if (!is.call(expr)) return(character())
-  if (rlang::is_call(expr, c("$", "[["))) {
-    if (rlang::is_symbol(expr[[2L]], ".env")) return(character())
-    if (rlang::is_symbol(expr[[2L]], ".data")) {
+  if (is_call(expr, c("$", "[["))) {
+    if (is_symbol(expr[[2L]], ".env")) return(character())
+    if (is_symbol(expr[[2L]], ".data")) {
       key <- expr[[3L]]
-      if (rlang::is_call(expr, "$")) return(as.character(key))
-      if (rlang::is_symbol(key)) key <- get0(as.character(key), env, inherits = TRUE)
-      return(if (rlang::is_string(key)) key else NA_character_)
+      if (is_call(expr, "$")) return(as.character(key))
+      if (is_symbol(key)) key <- get0(as.character(key), env, inherits = TRUE)
+      return(if (is_string(key)) key else NA_character_)
     }
   }
   unique(unlist(lapply(as.list(expr)[-1L], ggchord_visual_fields, env = env), use.names = FALSE))
@@ -347,14 +347,14 @@ ggchord_visual_fields <- function(expr, env) {
 # the generated vertex. An expression using only generated columns stays
 # with ggplot2. A list distinguishes an evaluated NULL from deferred work.
 ggchord_visual_value <- function(visual, key, start, geometry, rows, projected = TRUE) {
-  if (is.null(visual$data) || is.null(start) || !rlang::is_quosure(start)) return(NULL)
-  fields <- ggchord_visual_fields(rlang::get_expr(start), rlang::get_env(start))
+  if (is.null(visual$data) || is.null(start) || !is_quosure(start)) return(NULL)
+  fields <- ggchord_visual_fields(get_expr(start), get_env(start))
   source <- visual$data
   external <- setdiff(fields, names(source))
   if (!anyNA(external) && all(!external %in% names(geometry)) &&
-      all(vapply(external, exists, logical(1), envir = rlang::get_env(start), inherits = TRUE))) {
+      all(vapply(external, exists, logical(1), envir = get_env(start), inherits = TRUE))) {
     if (!exists(key, visual$values, inherits = FALSE)) {
-      value <- rlang::eval_tidy(start, source)
+      value <- eval_tidy(start, source)
       if (!is.null(value) && !length(value) %in% c(1L, nrow(source)))
         ggchord_stop("Mapped ", key, " must be scalar or supply one value per input row")
       if (length(value) == 1L) value <- rep(value, nrow(source))
@@ -365,7 +365,7 @@ ggchord_visual_value <- function(visual, key, start, geometry, rows, projected =
   columns <- if (anyNA(fields)) names(source) else intersect(fields, names(source))
   if (!projected || !length(columns)) return(NULL)
   for (column in columns) geometry[[column]] <- source[[column]][visual$rows[rows]]
-  list(rlang::eval_tidy(start, geometry))
+  list(eval_tidy(start, geometry))
 }
 
 ggchord_draw_layer <- function(layer, geometry, input = NULL) {
@@ -373,17 +373,17 @@ ggchord_draw_layer <- function(layer, geometry, input = NULL) {
   if (!is.null(layer$ggchord_params$source_stat_cache)) {
     staged <- Filter(function(q) ggchord_has_stage(q, "after_stat"), mapping)
     fields <- unique(unlist(lapply(staged, function(q)
-      ggchord_visual_fields(rlang::get_expr(q), rlang::get_env(q))), use.names = FALSE))
+      ggchord_visual_fields(get_expr(q), get_env(q))), use.names = FALSE))
     fields <- setdiff(intersect(fields, names(geometry)), c("x", "y", "group", "PANEL"))
     if (length(fields)) {
       stat_columns <- tail(make.unique(c(names(mapping), paste0(".ggchord_computed_", fields))),
         length(fields))
       for (i in seq_along(fields)) {
-        mapping[[stat_columns[i]]] <- rlang::new_quosure(rlang::sym(fields[i]), emptyenv())
+        mapping[[stat_columns[i]]] <- new_quosure(sym(fields[i]), emptyenv())
       }
       original <- layer
-      layer <- ggplot2::ggproto(NULL, original)
-      layer$stat <- ggplot2::ggproto(NULL, ggplot2::StatIdentity,
+      layer <- ggproto(NULL, original)
+      layer$stat <- ggproto(NULL, ggplot2::StatIdentity,
         compute_layer = function(data, params, layout) {
           data[fields] <- data[stat_columns]
           data[stat_columns] <- NULL
@@ -422,15 +422,15 @@ ggchord_draw_layer <- function(layer, geometry, input = NULL) {
   prepared$ggchord_params$visual_columns <- columns
   # Use source values for the initial evaluation only. Keeping the declared
   # mapping on the layer preserves guide titles and later stat/scale stages.
-  ggplot2::ggproto(NULL, prepared, compute_aesthetics = function(self, data, plot) {
+  ggproto(NULL, prepared, compute_aesthetics = function(self, data, plot) {
     start <- self$computed_mapping
     for (key in names(columns)) {
       column <- columns[[key]]
-      expr <- if (is.na(column)) NULL else rlang::sym(column)
-      start[[key]] <- rlang::new_quosure(expr, emptyenv())
+      expr <- if (is.na(column)) NULL else sym(column)
+      start[[key]] <- new_quosure(expr, emptyenv())
     }
-    evaluation <- ggplot2::ggproto(NULL, self, computed_mapping = start)
-    ggplot2::ggproto_parent(prepared, evaluation)$compute_aesthetics(data, plot)
+    evaluation <- ggproto(NULL, self, computed_mapping = start)
+    ggproto_parent(prepared, evaluation)$compute_aesthetics(data, plot)
   })
 }
 
@@ -458,7 +458,7 @@ ggchord_resolve_layer_input <- function(lyr, fallback = NULL,
   roles <- intersect(lyr$ggchord_role_aes %||% character(0), names(mapping))
   input <- data
   for (role in roles) {
-    expr <- rlang::get_expr(mapping[[role]])
+    expr <- get_expr(mapping[[role]])
     if (ggchord_has_stage(expr)) {
       ggchord_stop(
         ggchord_layer_input_context(lyr), ": role aesthetic `", role,
@@ -469,7 +469,7 @@ ggchord_resolve_layer_input <- function(lyr, fallback = NULL,
     if (length(value) == 1 && nrow(data) != 1) value <- rep(value, nrow(data))
     if (length(value) != nrow(data)) {
       ggchord_stop(ggchord_layer_input_context(lyr), ": mapped `", role, " = ",
-        rlang::as_label(mapping[[role]]), "` must return one value per input row (got ",
+        as_label(mapping[[role]]), "` must return one value per input row (got ",
         length(value), " for ", nrow(data), " rows)")
     }
     data[[role]] <- value
@@ -484,11 +484,11 @@ ggchord_resolve_layer_input <- function(lyr, fallback = NULL,
   ggchord_validate_layer_link(data, type, lyr$ggchord_params$reference,
     ggchord_layer_input_context(lyr), allow_missing = link_stat_input)
   for (nm in setdiff(names(mapping), c(roles, names(lyr$aes_params)))) {
-    expr <- rlang::get_expr(mapping[[nm]])
+    expr <- get_expr(mapping[[nm]])
     if (!ggchord_has_stage(expr)) {
       columns <- intersect(all.vars(expr), c("pident", "length", "anno", "type", "label"))
       ggchord_require_columns(data, columns, paste0(ggchord_layer_input_context(lyr),
-        ": mapping `", nm, " = ", rlang::as_label(mapping[[nm]]), "`"))
+        ": mapping `", nm, " = ", as_label(mapping[[nm]]), "`"))
     }
   }
   capture <- lyr$ggchord_params$stage_capture
@@ -559,6 +559,8 @@ ggchord_resolve_style_defaults <- function(layer, mapping) {
     for (nm in setdiff(names(inherited), names(user))) user[[nm]] <- inherited[[nm]]
   }
   layer <- reconstruct_layer(layer, layer$data)
+  if (identical(layer$ggchord_type, "gene_poly") && "linewidth" %in% names(user))
+    layer$geom_params$adaptive_outline <- FALSE
   # Ribbon outlines and line types use role names only when that role is mapped.
   if (identical(layer$ggchord_type, "ribbon")) {
     for (nm in c("colour", "linetype")) {
@@ -622,6 +624,7 @@ ggchord_attach_input_columns <- function(geometry, input) {
     "ribbon_linetype", "gene_fill", "feature_fill", "feature_shape",
     "scale_length", "bp_length", "sequence_unit", ".ggchord_adjacent",
     "feature_label_colour", "feature_label_orientation", "region_fill", ".component",
+    ".perimeter_callout", ".label_over_feature", "annotation_side", "annotation_class",
     "track_id", "label_text_original", "label_size_requested", "label_size_final",
     "label_size_min", "label_fit_reason", ".ggchord_resolved_size"
   )
@@ -665,7 +668,7 @@ ggchord_bind_visual_mapping <- function(layer, plot) {
     }, logical(1))
     if (any(use)) {
       target <- keys[use]
-      to_standard <- stats::setNames(names(target), unname(target))
+      to_standard <- setNames(names(target), unname(target))
       names(user)[match(target, names(user))] <- names(target)
       layer$ggchord_input_mapping <- ggchord_track_stage_mapping(user,
         layer$ggchord_params$track_id, replacements = to_standard)
@@ -696,6 +699,10 @@ ggchord_bind_visual_mapping <- function(layer, plot) {
   user <- layer$ggchord_input_mapping
   if (isTRUE(layer$inherit.aes)) for (nm in setdiff(names(plot$mapping), names(user)))
     user[[nm]] <- plot$mapping[[nm]]
+  if (identical(layer$ggchord_type, "domain_label")) {
+    layer$geom_params$auto_contrast <- !"colour" %in% c(names(user), names(layer$aes_params))
+    return(layer)
+  }
   for (nm in names(roles)) {
     role <- roles[[nm]]
     if (role %in% names(user)) next
@@ -727,5 +734,5 @@ ggchord_bind_visual_mapping <- function(layer, plot) {
 # ggproto retains the parent expression. Force it before replacing layer$geom.
 ggchord_geom_defaults <- function(parent, defaults) {
   force(parent)
-  ggplot2::ggproto(NULL, parent, default_aes = defaults)
+  ggproto(NULL, parent, default_aes = defaults)
 }

@@ -16,7 +16,7 @@ ggchord(reference) +
   ) +
   geom_seq(
     aes(colour = accver), show.legend = FALSE,
-    arrow = grid::arrow(type = "closed", length = grid::unit(2.4, "mm"))
+    arrow = arrow(type = "closed", length = unit(2.4, "mm"))
   ) +
   scale_colour_manual(values = c(
     "MT108731.1" = "#0072B2", "MT118296.1" = "#D55E00"

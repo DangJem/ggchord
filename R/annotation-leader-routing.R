@@ -29,6 +29,9 @@ ggchord_annotation_text_obstacles <- function(registry, layout, include_axis = T
     if (is.data.frame(d) && nrow(d)) add(d[d$restriction_component %in% 'label', , drop = FALSE], owner)
     d <- registry[[owner]]$seq_center_label
     if (is.data.frame(d) && nrow(d)) add(d, owner)
+    d <- registry[[owner]]$domain_label
+    if (is.data.frame(d) && nrow(d))
+      add(d[d$.component %in% "text", , drop = FALSE], owner)
   }
   if (include_axis) {
     axis_layout <- layout

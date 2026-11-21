@@ -92,7 +92,7 @@ ggchord_parse_rebase <- function(path) {
   supplier_lines <- supplier_lines[nzchar(trimws(supplier_lines)) & !grepl("^#", supplier_lines)]
   supplier_code <- sub("[[:space:]].*$", "", supplier_lines)
   supplier_name <- sub("^[^[:space:]]+[[:space:]]+", "", supplier_lines)
-  supplier_map <- stats::setNames(supplier_name, supplier_code)
+  supplier_map <- setNames(supplier_name, supplier_code)
 
   ref_lines <- readLines(file.path(path, "embossa_r.txt"), warn = FALSE)
   ref_lines <- ref_lines[!grepl("^#", ref_lines)]
@@ -122,7 +122,7 @@ ggchord_parse_rebase <- function(path) {
   defs$commercial[is.na(defs$commercial)] <- FALSE
 
   equivalence_path <- file.path(path, "misc", "embossre.equ")
-  preferred <- stats::setNames(character(), character())
+  preferred <- setNames(character(), character())
   if (file.exists(equivalence_path)) {
     equivalence_lines <- readLines(equivalence_path, warn = FALSE)
     equivalence_lines <- equivalence_lines[
@@ -133,7 +133,7 @@ ggchord_parse_rebase <- function(path) {
       ggchord_stop("Invalid misc/embossre.equ row width")
     }
     equivalence <- do.call(rbind, equivalence_fields)
-    preferred <- stats::setNames(equivalence[, 2L], equivalence[, 1L])
+    preferred <- setNames(equivalence[, 2L], equivalence[, 1L])
   }
   mapped <- unname(preferred[defs$enzyme])
   defs$preferred_enzyme <- ifelse(is.na(mapped), defs$enzyme, mapped)
@@ -366,7 +366,7 @@ find_restriction_sites <- function(sequence, enzymes = NULL, patterns = NULL,
         "unknown", "unblocked")
       out$methylation_status[!explicit_status] <- inferred[!explicit_status]
     } else {
-      target_by_id <- stats::setNames(seqs, ids)
+      target_by_id <- setNames(seqs, ids)
       context_matches <- vapply(seq_len(nrow(out)), function(i) {
         if (is.na(out$blocked_by[i]) || is.na(out$methylation_motif[i])) {
           return(FALSE)

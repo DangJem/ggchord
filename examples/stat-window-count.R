@@ -1,3 +1,4 @@
+# Historical example for the first v0.50.0 API design at commit 7f80a8c7.
 # A third-party ggplot2 Stat for ggchord source-coordinate tracks.
 # Each supplied closed window counts the intervals that touch it.
 library(ggchord)

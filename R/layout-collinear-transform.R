@@ -165,7 +165,7 @@ ggchord_collinear_transform <- function(seqs, lens, orientation, ribbon_data, co
   high <- pmax(displayed_start, displayed_end)
   anchor <- low + fraction * (high - low)
   scale <- if (identical(length_mode, "equal")) 2 / lens else 2 / max(lens)
-  offset <- stats::setNames(-as.numeric(anchor) * scale, seqs)
+  offset <- setNames(-as.numeric(anchor) * scale, seqs)
   table <- data.frame(accver = seqs, orientation = unname(orientation),
     x_offset = unname(offset), units_per_bp = scale,
     xmin = unname(offset), xmax = unname(offset + lens * scale),
@@ -200,7 +200,7 @@ ggchord_segmented_transform <- function(seqs, lens, coord, length_mode = "propor
   data <- data[data$accver %in% seqs, , drop = FALSE]
   data$accver <- as.character(data$accver); data$row_id <- as.character(data$row_id)
   groups <- lapply(rows, function(row) data$accver[data$row_id == row])
-  display_lens <- if (identical(length_mode, "equal")) stats::setNames(rep(max(lens), length(lens)), names(lens)) else lens
+  display_lens <- if (identical(length_mode, "equal")) setNames(rep(max(lens), length(lens)), names(lens)) else lens
   gap <- coord$collinear_segment_gap_mm * ggchord_layout_units_per_mm(
     if (identical(coord$collinear_seq_axis, "vertical")) 2L else 1L)
   counts <- lengths(groups) - 1L
@@ -211,20 +211,20 @@ ggchord_segmented_transform <- function(seqs, lens, coord, length_mode = "propor
   totals <- lengths + counts * gap_source
   per_sequence_scale <- scale * display_lens / lens
   fraction <- switch(coord$collinear_align, left = 0, center = .5, right = 1)
-  offset <- stats::setNames(numeric(length(seqs)), seqs)
-  slot <- stats::setNames(integer(length(seqs)), seqs)
-  left_break <- right_break <- stats::setNames(rep(FALSE, length(seqs)), seqs)
+  offset <- setNames(numeric(length(seqs)), seqs)
+  slot <- setNames(integer(length(seqs)), seqs)
+  left_break <- right_break <- setNames(rep(FALSE, length(seqs)), seqs)
   for (i in seq_along(groups)) {
     ids <- groups[[i]]
-    offset[ids] <- (c(0, utils::head(cumsum(display_lens[ids] + gap_source), -1L)) -
+    offset[ids] <- (c(0, head(cumsum(display_lens[ids] + gap_source), -1L)) -
       totals[i] * fraction) * scale
     slot[ids] <- seq_along(ids)
     if (length(ids) > 1L) {
-      left_break[ids[-1L]] <- TRUE; right_break[utils::head(ids, -1L)] <- TRUE
+      left_break[ids[-1L]] <- TRUE; right_break[head(ids, -1L)] <- TRUE
     }
   }
   data <- data[match(seqs, data$accver), , drop = FALSE]
-  orientation <- stats::setNames(data$orientation, seqs)
+  orientation <- setNames(data$orientation, seqs)
   for (physical in c("left", "right")) {
     flag <- rep(FALSE, length(seqs))
     for (biological in c("left", "right")) {

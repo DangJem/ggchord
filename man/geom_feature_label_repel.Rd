@@ -51,7 +51,7 @@ A ggplot2 layer for addition to a plot.
 Label source feature intervals with collision avoidance
 }
 \details{
-The source entities have \code{accver}, \code{start}, \code{end} and a label or label mapping. A bound label follows the target layer by identity. Text size, collision handling and leader placement are independent of the underlying feature geometry.
+The source entities have \code{accver}, \code{start}, \code{end} and a label or label mapping. A bound label follows the target layer by identity. Text size, collision handling and leader placement are independent of the underlying feature geometry. A segmented feature is anchored to its visible runs. For a circular feature label, mapping \code{fill} sets the background of an exterior callout. If \code{colour} is omitted, text over a feature or on a callout uses a contrasting colour.
 }
 \examples{
 library(ggplot2)

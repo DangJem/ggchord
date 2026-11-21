@@ -18,9 +18,11 @@ track axis elements. Explicit settings override theme defaults.}
 A ggplot2 theme.
 }
 \description{
-Common appearance for sequence visualizations
+A white, borderless panel and centred bold plot title keep the focus on
+the sequence geometry. Standard ggplot2 theme elements can override them.
 }
 \examples{
+library(ggplot2)
 seqs <- data.frame(
   accver = c("A", "B"), length = c(1000, 800),
   sequence_unit = "bp", topology = "linear"

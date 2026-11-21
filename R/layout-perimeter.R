@@ -29,7 +29,8 @@ ggchord_perimeter_tasks <- function(registry, units_per_inch) {
           root_x = sites$x[root], root_y = sites$y[root],
           text = sites$label[row], text_x = sites$x[row],
           text_y = sites$y[row], size = sites$size[row],
-          angle = 0, hjust = .5, vjust = .5,
+          angle = if (isTRUE(sites$.perimeter_callout[row])) sites$angle[row] else 0,
+          hjust = .5, vjust = .5,
           family = if ("family" %in% names(sites))
             as.character(sites$family[row]) else "",
           fontface = if ("fontface" %in% names(sites)) {
@@ -49,6 +50,7 @@ ggchord_perimeter_tasks <- function(registry, units_per_inch) {
             as.character(sites$enzyme_label[row]) else "",
           coordinate_label = if ("coordinate_label" %in% names(sites))
             as.character(sites$coordinate_label[row]) else "",
+          preserve_text = isTRUE(sites$.perimeter_callout[row]),
           enzyme_fontface = if ("enzyme_fontface" %in% names(sites))
             as.character(sites$enzyme_fontface[row]) else "plain",
           stringsAsFactors = FALSE
@@ -83,7 +85,8 @@ ggchord_perimeter_tasks <- function(registry, units_per_inch) {
         root_x = geometry$x[root], root_y = geometry$y[root],
         text = label, text_x = geometry$text_x[row],
         text_y = geometry$text_y[row], size = geometry$size[row],
-        angle = 0, hjust = .5, vjust = .5,
+        angle = if (isTRUE(geometry$.perimeter_callout[row])) geometry$angle[row] else 0,
+        hjust = .5, vjust = .5,
         family = if ("family" %in% names(geometry))
           as.character(geometry$family[row]) else "",
         fontface = if ("fontface" %in% names(geometry)) {
@@ -100,7 +103,7 @@ ggchord_perimeter_tasks <- function(registry, units_per_inch) {
         lineheight = if ("lineheight" %in% names(geometry))
           as.numeric(geometry$lineheight[row]) else 1.2,
         .ggchord_composite_label = NA, label_order = "enzyme_position",
-        enzyme_label = "", coordinate_label = "",
+        enzyme_label = "", coordinate_label = "", preserve_text = FALSE,
         enzyme_fontface = "plain",
         stringsAsFactors = FALSE
       )
@@ -131,9 +134,10 @@ ggchord_perimeter_tasks <- function(registry, units_per_inch) {
   tasks$compact_fan <- compact_fan
   wrap_mm <- if (all(is.finite(canvas)))
     max(25, min(50, (canvas[1] - 70) / 2)) else 50
-  if (!compact_fan) tasks$enzyme_label <- mapply(
-    ggchord_wrap_physical_text, tasks$enzyme_label,
-    tasks$size, tasks$family, tasks$enzyme_fontface,
+  wrappable <- !tasks$preserve_text
+  if (!compact_fan) tasks$enzyme_label[wrappable] <- mapply(
+    ggchord_wrap_physical_text, tasks$enzyme_label[wrappable],
+    tasks$size[wrappable], tasks$family[wrappable], tasks$enzyme_fontface[wrappable],
     MoreArgs = list(width_mm = wrap_mm), USE.NAMES = FALSE)
   restriction <- which(tasks$kind == "restriction")
   if (length(restriction)) {
@@ -387,37 +391,33 @@ ggchord_perimeter_top_fan <- function(tasks, rows, side_rows,
     max(tasks$root_y[rows], na.rm = TRUE) + .08)
   step <- max(.055, .18 * max(tasks$h[rows], na.rm = TRUE))
   levels <- seq_len(17L) - 1L
+  level_count <- length(levels)
   fan_gap <- min(gap, .004)
   best <- NULL
+  side_tasks <- lapply(side_rows, function(j) as.list(tasks[j, , drop = FALSE]))
   for (base_offset in c(0, step, 2 * step)) {
     candidates <- lapply(seq_len(n), function(k) {
-      lapply(levels, function(level) {
-        candidate <- tasks[rows[k], , drop = FALSE]
-        candidate$target_x <- x[k]
-        candidate$edge_x <- x[k]
-        candidate$edge_y <- base + base_offset + level * step
-        candidate$target_y <- candidate$edge_y + candidate$h / 2
-        candidate
-      })
+      candidate <- as.list(tasks[rows[k], , drop = FALSE])
+      candidate$target_x <- candidate$edge_x <- x[k]
+      candidate$edge_y <- base + base_offset + levels * step
+      candidate$target_y <- candidate$edge_y + candidate$h / 2
+      lapply(candidate, rep_len, length.out = level_count)
     })
     allowed <- lapply(candidates, function(options) {
-      vapply(options, function(candidate) {
-        !any(vapply(side_rows, function(j) {
-          ggchord_perimeter_pair_blocked(candidate,
-            tasks[j, , drop = FALSE], fan_gap)
-        }, logical(1L)))
-      }, logical(1L))
+      free <- rep(TRUE, level_count)
+      for (side in side_tasks)
+        free <- free & !ggchord_perimeter_pair_blocked(options, side, fan_gap)
+      free
     })
     blocked <- vector("list", n)
     for (k in seq_len(n)) {
       blocked[[k]] <- vector("list", k - 1L)
       if (k == 1L) next
+      left <- lapply(candidates[[k]], rep, times = level_count)
       for (j in seq_len(k - 1L)) {
-        blocked[[k]][[j]] <- outer(seq_along(levels),
-          seq_along(levels), Vectorize(function(a, b) {
-            ggchord_perimeter_pair_blocked(candidates[[k]][[a]],
-              candidates[[j]][[b]], fan_gap)
-          }))
+        right <- lapply(candidates[[j]], rep, each = level_count)
+        blocked[[k]][[j]] <- matrix(
+          ggchord_perimeter_pair_blocked(left, right, fan_gap), nrow = level_count)
       }
     }
     beam <- list(list(levels = integer(), max_y = -Inf,
@@ -429,7 +429,7 @@ ggchord_perimeter_top_fan <- function(tasks, rows, side_rows,
           if (k > 1L && any(vapply(seq_len(k - 1L), function(j) {
               blocked[[k]][[j]][option, state$levels[j]]
             }, logical(1L)))) next
-          y <- candidates[[k]][[option]]$target_y
+          y <- candidates[[k]]$target_y[option]
           next_beam[[length(next_beam) + 1L]] <- list(
             levels = c(state$levels, option),
             max_y = max(state$max_y, y),
@@ -444,7 +444,7 @@ ggchord_perimeter_top_fan <- function(tasks, rows, side_rows,
       rank <- order(vapply(next_beam, function(state) {
         10 * state$max_y + state$total_y / k
       }, numeric(1L)))
-      beam <- next_beam[utils::head(rank, 180L)]
+      beam <- next_beam[head(rank, 180L)]
     }
     if (!length(beam)) next
     chosen <- beam[[1L]]
@@ -452,7 +452,7 @@ ggchord_perimeter_top_fan <- function(tasks, rows, side_rows,
     if (is.null(best) || score < best$score) {
       best <- list(score = score, rows = rows,
         selected = lapply(seq_len(n), function(k) {
-          candidates[[k]][[chosen$levels[k]]]
+          lapply(candidates[[k]], `[`, chosen$levels[k])
         }))
     }
   }
@@ -589,6 +589,10 @@ ggchord_place_dense_perimeter <- function(registry, layout,
     allow_top_fan <- FALSE
     crowded_top <- FALSE
   }
+  columns <- tasks$column_only %in% TRUE
+  tasks$side[columns] <- ifelse(tasks$direction_x[columns] < 0, "left", "right")
+  if (any(columns)) crowded_top <- sum(tasks$side == "top" &
+    tasks$kind == "restriction") >= 8L
   top_rows <- which(tasks$side == "top")
   wide_top <- crowded_top && length(top_rows) &&
     max(tasks$w[top_rows]) > .8 * backbone_outer
@@ -839,8 +843,8 @@ ggchord_place_dense_perimeter <- function(registry, layout,
 # Word wrapping uses the same grid font metrics as rendering, not character count.
 ggchord_wrap_physical_text <- function(text,size,family,fontface,width_mm) {
   if (is.na(text) || !nzchar(text)) return(text)
-  measure <- function(value) grid::convertWidth(grid::grobWidth(grid::textGrob(value,
-    gp=grid::gpar(fontsize=size*72.27/25.4,fontfamily=family,fontface=fontface))),"mm",TRUE)
+  measure <- function(value) convertWidth(grobWidth(textGrob(value,
+    gp=gpar(fontsize=size*72.27/25.4,fontfamily=family,fontface=fontface))),"mm",TRUE)
   if (measure(text) <= width_mm) return(text)
   words <- strsplit(text,"[[:space:]]+")[[1]]
   lines <- character(); line <- ""

@@ -54,6 +54,27 @@ ggchord_collinear_controls <- function(from, to, control = NULL,
   list(c(from[1L], middle_y), c(to[1L], middle_y))
 }
 
+# A positive bulge requests an outside route for non-neighbouring rows.
+# Solve the cubic at each intervening backbone, using the inside ribbon edge.
+# This also works for flipped references and separately aligned display windows.
+ggchord_outside_controls <- function(route, frames, endpoints, from, to) {
+  if (!inherits(route, "ggchord_link_route") || !isTRUE(route$explicit_bulge) || route$bulge <= 0 ||
+      !identical(route$route, "curve") || from[2L] == to[2L]) return(NULL)
+  fraction <- (frames$y - from[2L]) / (to[2L] - from[2L])
+  between <- which(fraction > 0 & fraction < 1 & !frames$accver %in% endpoints)
+  if (!length(between)) return(NULL)
+  bend <- route$curvature
+  y_curve <- function(t) 3 * (1 - t)^2 * t * bend +
+    3 * (1 - t) * t^2 * (1 - bend) + t^3
+  t <- vapply(fraction[between], function(f)
+    stats::uniroot(function(t) y_curve(t) - f, c(0, 1), tol = 1e-8)$root, numeric(1))
+  clearance <- route$bulge * max(frames$xmax - frames$xmin)
+  control_x <- max((frames$xmax[between] + clearance -
+    (1 - t)^3 * from[1L] - t^3 * to[1L]) / (3 * t * (1 - t)))
+  dy <- to[2L] - from[2L]
+  list(c(control_x, from[2L] + bend * dy), c(control_x, to[2L] - bend * dy))
+}
+
 ggchord_collinear_ribbons <- function(p, layout) {
   input <- p$ribbon_data
   if (is.null(input) || !nrow(input)) return(NULL)
@@ -77,16 +98,16 @@ ggchord_collinear_ribbons <- function(p, layout) {
   }
   discrete_values <- function(values, supplied, defaults) {
     levels <- unique(values)
-    if (is.null(supplied)) return(stats::setNames(defaults(length(levels)), levels))
+    if (is.null(supplied)) return(setNames(defaults(length(levels)), levels))
     if (is.null(names(supplied))) {
       if (!length(supplied) %in% c(1L, length(levels))) {
         ggchord_stop("Ribbon style values must have length 1 or match their categories")
       }
-      return(stats::setNames(rep_len(supplied, length(levels)), levels))
+      return(setNames(rep_len(supplied, length(levels)), levels))
     }
     unknown <- setdiff(names(supplied), levels)
     if (length(unknown)) ggchord_stop("Ribbon style values contain unknown categories")
-    out <- stats::setNames(defaults(length(levels)), levels)
+    out <- setNames(defaults(length(levels)), levels)
     out[names(supplied)] <- supplied
     out
   }
@@ -137,6 +158,8 @@ ggchord_collinear_ribbons <- function(p, layout) {
     q_xy <- q_front$xy; s_xy <- s_front$xy
     ggchord_collinear_check_gap(q, s, q_front$gap, s_front$gap, ref,
       "geom_link_ribbon()")
+    outside <- ggchord_outside_controls(p$ribbon_ctrl_point, layout$sequence_layout, c(q, s),
+      c(min(q_xy[, 1]), q_xy[1, 2]), c(min(s_xy[, 1]), s_xy[1, 2]))
     edge <- function(index, control_edge) {
       from <- q_xy[index[1L], ]; to <- s_xy[index[2L], ]
       route <- p$ribbon_ctrl_point
@@ -148,7 +171,7 @@ ggchord_collinear_ribbons <- function(p, layout) {
       }
       if (inherits(route, "ggchord_link_route")) {
         if (route$route == "straight") return(rbind(from, to))
-        cp <- list(c(from[1L], from[2L] + route$curvature * (to[2L] - from[2L])),
+        cp <- outside %||% list(c(from[1L], from[2L] + route$curvature * (to[2L] - from[2L])),
           c(to[1L], to[2L] + route$curvature * (from[2L] - to[2L])))
       } else cp <- ggchord_collinear_controls(from, to, route, i, edge = control_edge)
       bezier_pts(from, to, cp[[1L]], cp[[2L]], n = 50L)
@@ -217,10 +240,11 @@ ggchord_collinear_link_geometry <- function(data, params, layout, rows) {
     q <- endpoint(q_id, data$qpos[i], s_id)
     s <- endpoint(s_id, data$spos[i], q_id)
     curvature <- params$route$curvature %||% .5
+    outside <- ggchord_outside_controls(params$route, layout$sequence_layout, c(q_id, s_id), q, s)
     controls <- if (ref$y[q_id] == ref$y[s_id]) {
       rise <- abs(q[1L] - s[1L]) * curvature
       list(q + c(0, rise), s + c(0, rise))
-    } else list(c(q[1L], q[2L] + (s[2L] - q[2L]) * curvature),
+    } else outside %||% list(c(q[1L], q[2L] + (s[2L] - q[2L]) * curvature),
       c(s[1L], s[2L] + (q[2L] - s[2L]) * curvature))
     xy <- if (identical(params$link_type, "straight")) rbind(q, s) else
       bezier_pts(q, s, controls[[1L]], controls[[2L]], n = 60L)
@@ -258,7 +282,7 @@ ggchord_collinear_entity_obstacles <- function(layer, layout, input) {
 compute_collinear_layout <- function(...) {
   p <- list(...)
   seqs <- p$seqs; lens <- p$lens; n <- length(seqs)
-  y <- stats::setNames(if (n > 1L) c(0, -2 * cumsum(p$seq_gap[-n])) else 0,
+  y <- setNames(if (n > 1L) c(0, -2 * cumsum(p$seq_gap[-n])) else 0,
     seqs)
   segment_table <- p$collinear_transform$table
   if ("row_index" %in% names(segment_table)) {
@@ -271,14 +295,14 @@ compute_collinear_layout <- function(...) {
         "coord_collinear(): windows in one display row require the same layout_sequences(gap)")
     }
     row_y <- if (rows > 1L) c(0, -2 * cumsum(gap[-rows])) else 0
-    y <- stats::setNames(row_y[segment_table$row_index], seqs)
+    y <- setNames(row_y[segment_table$row_index], seqs)
   }
   if (isTRUE(p$collinear_right_normal)) y <- -y
   ref <- list(mode = "collinear", lens = lens, orientation = p$orientation,
-    x_scale = if (identical(p$length_mode, "equal")) stats::setNames(
+    x_scale = if (identical(p$length_mode, "equal")) setNames(
       p$collinear_transform$table$units_per_bp, seqs) else p$collinear_transform$table$units_per_bp[1L], y = y,
-    x_offset = p$collinear_transform$offset %||% stats::setNames(rep(0, n), seqs))
-  seq_arcs <- stats::setNames(lapply(seqs, function(id) {
+    x_offset = p$collinear_transform$offset %||% setNames(rep(0, n), seqs))
+  seq_arcs <- setNames(lapply(seqs, function(id) {
     data.frame(x = ggchord_collinear_x(c(0, lens[[id]]), id, ref),
       y = unname(y[id]), accver = id, stringsAsFactors = FALSE)
   }), seqs)

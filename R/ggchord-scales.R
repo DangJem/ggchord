@@ -11,7 +11,7 @@ ggchord_default_feature_shapes <- function(levels) {
     "block", "capped_line", "primer_arc", "chevron", "lollipop"
   )
   values <- if (all(levels %in% shapes)) levels else rep(shapes, length.out = length(levels))
-  stats::setNames(values, levels)
+  setNames(values, levels)
 }
 
 #' Build the list of scales for a computed layout
@@ -27,11 +27,11 @@ make_ggchord_scales <- function(layout, has_seq = FALSE, has_gene = FALSE,
   scales <- list()
   feature_fill_order <- layout$feature_fill_order %||% layout$final_gene_order
   feature_fill_pal <- layout$feature_fill_pal %||% layout$gene_pal
-  responsive_legend_theme <- ggplot2::theme(
-    legend.text = ggplot2::element_text(
+  responsive_legend_theme <- theme(
+    legend.text = element_text(
       size = legend_text_size * legend_scale
     ),
-    legend.title = ggplot2::element_text(
+    legend.title = element_text(
       size = legend_title_size * legend_scale
     )
   )
@@ -207,7 +207,7 @@ make_ggchord_scales <- function(layout, has_seq = FALSE, has_gene = FALSE,
   }
   # Sequence-region bands use their own internal fill aesthetic.
   if (!is.null(layout$region_polys) && nrow(layout$region_polys) > 0) {
-    scales[[length(scales) + 1]] <- ggplot2::scale_fill_identity(aesthetics = "region_fill")
+    scales[[length(scales) + 1]] <- scale_fill_identity(aesthetics = "region_fill")
   }
   list(scales = scales, ribbon_aes = ribbon_aes)
 }
@@ -232,8 +232,8 @@ ggchord_mapping_info <- function(plot, aesthetic) {
     if (aesthetic %in% names(lyr$aes_params)) next
     mapping <- lyr$ggchord_input_mapping
     if (is.null(mapping) || !aesthetic %in% names(mapping)) next
-    expr <- rlang::get_expr(mapping[[aesthetic]])
-    label <- rlang::as_label(expr)
+    expr <- get_expr(mapping[[aesthetic]])
+    label <- as_label(expr)
     staged <- ggchord_has_stage(expr, "after_stat")
     columns <- lyr$ggchord_params$visual_columns
     value <- if (staged) {
@@ -241,7 +241,7 @@ ggchord_mapping_info <- function(plot, aesthetic) {
     } else if (aesthetic %in% names(columns)) {
       lyr$data[[columns[[aesthetic]]]]
     } else {
-      tryCatch(rlang::eval_tidy(mapping[[aesthetic]], data = lyr$data),
+      tryCatch(eval_tidy(mapping[[aesthetic]], data = lyr$data),
         error = function(e) NULL)
     }
     kind <- if (staged) {
@@ -301,14 +301,14 @@ ggchord_infer_visual_scales <- function(plot, layout, scales) {
         ),
         ribbon_alpha = scale_ribbon_alpha_manual(
           name = info$label,
-          values = stats::setNames(seq(0.35, 0.9, length.out = max(length(levels), 1L)), levels)
+          values = setNames(seq(0.35, 0.9, length.out = max(length(levels), 1L)), levels)
         ),
         ribbon_colour = scale_ribbon_colour_manual(
           name = info$label, values = values
         ),
         ribbon_linetype = scale_ribbon_linetype_manual(
           name = info$label,
-          values = stats::setNames(rep(c(1, 2, 3, 4, 5, 6), length.out = max(length(levels), 1L)), levels)
+          values = setNames(rep(c(1, 2, 3, 4, 5, 6), length.out = max(length(levels), 1L)), levels)
         ),
         gene_fill = scale_gene_fill_manual(
           name = info$label, values = values
@@ -328,19 +328,19 @@ ggchord_infer_visual_scales <- function(plot, layout, scales) {
           name = info$label, colours = colours
         ),
         ribbon_alpha = scale_ribbon_alpha_continuous(name = info$label),
-        ribbon_colour = ggplot2::scale_colour_gradientn(
+        ribbon_colour = scale_colour_gradientn(
           name = info$label, colours = colours, aesthetics = aesthetic
         ),
-        seq_colour = ggplot2::scale_colour_gradientn(
+        seq_colour = scale_colour_gradientn(
           name = info$label, colours = colours, aesthetics = aesthetic
         ),
-        gene_fill = ggplot2::scale_fill_gradientn(
+        gene_fill = scale_fill_gradientn(
           name = info$label, colours = colours, aesthetics = aesthetic
         ),
-        feature_fill = ggplot2::scale_fill_gradientn(
+        feature_fill = scale_fill_gradientn(
           name = info$label, colours = colours, aesthetics = aesthetic
         ),
-        region_fill = ggplot2::scale_fill_gradientn(
+        region_fill = scale_fill_gradientn(
           name = info$label, colours = colours, aesthetics = aesthetic
         ),
         ggchord_stop("A continuous mapping is not supported for `", aesthetic, "`")
@@ -369,6 +369,14 @@ ggchord_infer_visual_scales <- function(plot, layout, scales) {
 }
 
 #' Train a visual scale on selected layers
+#'
+#' Apply an ordinary visual scale to explicitly named layers. Other layers
+#' continue to share the plot's scale for the same aesthetic.
+#'
+#' @details Unscoped backbones and features can use the sequence palette when
+#' mapped directly to `accver`. Features mapped to `strand` use red (+),
+#' blue (-) and grey (unknown). Circular features mapped to recognized
+#' `type` values use the plasmid palette. An explicit scale takes precedence.
 #'
 #' @param layers One or more explicitly named layer IDs.
 #' @param scale An ordinary ggplot2 visual scale for those layers.
@@ -440,7 +448,7 @@ ggchord_scale_scopes <- function(plot, scopes = plot$ggchord$scoped_scales) {
     if (any(keys %in% claimed)) ggchord_stop("scale_for(): a layer and aesthetic have overlapping scopes")
     claimed <<- c(claimed, keys)
     list(selected = selected, aesthetics = aes, scale = scope$scale,
-      aliases = stats::setNames(paste0("ggchord_scope_", i, "_", aes), aes))
+      aliases = setNames(paste0("ggchord_scope_", i, "_", aes), aes))
   })
 }
 
@@ -454,13 +462,13 @@ ggchord_alias_aes <- function(x, aliases) {
 
 ggchord_scope_layer <- function(layer, aliases, plot_mapping) {
   geom <- layer$geom
-  inverse <- stats::setNames(names(aliases), aliases)
+  inverse <- setNames(names(aliases), aliases)
   changed <- function(x) {
     at <- x %in% names(aliases)
     x[at] <- unname(aliases[x[at]])
     x
   }
-  copy <- ggplot2::ggproto(NULL, layer)
+  copy <- ggproto(NULL, layer)
   mapping <- layer$mapping %||% aes()
   if (isTRUE(layer$inherit.aes)) {
     for (key in setdiff(names(plot_mapping), names(mapping))) mapping[[key]] <- plot_mapping[[key]]
@@ -469,7 +477,7 @@ ggchord_scope_layer <- function(layer, aliases, plot_mapping) {
   copy$mapping <- ggchord_alias_aes(mapping, aliases)
   copy$aes_params <- ggchord_alias_aes(layer$aes_params, aliases)
   copy$show.legend <- ggchord_alias_aes(layer$show.legend, aliases)
-  copy$geom <- ggplot2::ggproto(NULL, geom,
+  copy$geom <- ggproto(NULL, geom,
     required_aes = changed(geom$required_aes),
     non_missing_aes = changed(geom$non_missing_aes),
     optional_aes = changed(geom$optional_aes),
@@ -509,7 +517,7 @@ ggchord_apply_scoped_scales <- function(plot, scopes = plot$ggchord$scoped_scale
     if (inherits(guide, "Guide") && !is.null(guide$available_aes) && !"any" %in% guide$available_aes) {
       available <- spec$aliases[intersect(names(spec$aliases), guide$available_aes)]
       guide_parent <- guide
-      guide <- ggplot2::ggproto(NULL, guide_parent,
+      guide <- ggproto(NULL, guide_parent,
         available_aes = union(guide$available_aes, unname(available)))
     }
     scale$guide <- guide
@@ -537,9 +545,34 @@ ggchord_apply_scoped_scales <- function(plot, scopes = plot$ggchord$scoped_scale
   plot
 }
 
-# Choose the identity default only for an unscoped, exclusively identity
-# mapping. The full visual channel is still shared with ordinary layers.
-ggchord_add_identity_scales <- function(plot) {
+# Inspect the declared mapping and its already-resolved source column.
+# An ordinary layer, expression or incompatible domain keeps ggplot2's scale.
+ggchord_mapped_palette <- function(plot, layers, aesthetic, roles) {
+  if (length(roles) != 1L) return(NULL)
+  role <- roles[[1L]]
+  kinds <- vapply(layers, function(l) l$ggchord_type %||% "", character(1))
+  feature <- kinds == "gene_poly" | vapply(layers, function(l)
+    identical(l$ggchord_params$label_kind, "feature"), logical(1))
+  if (role == "accver" && all(kinds == "seq" | feature)) {
+    palette <- plot$ggchord$ref$layout$seq_colors
+  } else if (role == "strand" && all(feature)) {
+    palette <- c(process_strand_colors(NULL), "." = "#767B80")
+  } else if (role == "type" && all(feature) &&
+             isTRUE(plot$coordinates$ggchord_circular)) {
+    palette <- ggchord_plasmid_feature_colours()
+  } else return(NULL)
+  for (layer in layers) {
+    cols <- layer$ggchord_params$visual_columns
+    col <- if (aesthetic %in% names(cols)) unname(cols[aesthetic]) else role
+    if (is.na(col) || !col %in% names(layer$data)) return(NULL)
+    values <- layer$data[[col]]
+    if (!(is.character(values) || is.factor(values)) ||
+        !all(is.na(values) | values %in% names(palette))) return(NULL)
+  }
+  palette
+}
+
+ggchord_add_visual_scales <- function(plot) {
   breaks <- c(0, 50, 80, 90, 95, 100)
   for (aesthetic in c("fill", "colour")) {
     if (plot$scales$has_scale(aesthetic)) next
@@ -550,14 +583,21 @@ ggchord_add_identity_scales <- function(plot) {
       !is.null(mapping)
     }, plot$layers)
     if (!length(layers)) next
-    types <- if (aesthetic == "fill") c("ribbon", "fusion_ribbon") else c("link", "alignment")
-    identity <- vapply(layers, function(layer) {
-      if (!isTRUE(layer$ggchord_type %in% types)) return(FALSE)
+    roles <- unique(vapply(layers, function(layer) {
       mapping <- layer$mapping[[aesthetic]] %||% plot$mapping[[aesthetic]]
-      identical(rlang::as_label(mapping), "pident")
-    }, logical(1))
-    if (!all(identity)) next
-    name <- if (aesthetic %in% names(plot$labels)) ggplot2::waiver() else "Identity (%)"
+      as_label(mapping)
+    }, character(1)))
+    palette <- ggchord_mapped_palette(plot, layers, aesthetic, roles)
+    if (length(palette)) {
+      scale <- scale_colour_manual(aesthetics = aesthetic, values = palette)
+      scale$ggchord_managed <- TRUE
+      plot$scales$add(scale)
+      next
+    }
+    types <- if (aesthetic == "fill") c("ribbon", "fusion_ribbon") else c("link", "alignment")
+    if (!identical(roles, "pident") ||
+        !all(vapply(layers, function(layer) isTRUE(layer$ggchord_type %in% types), logical(1)))) next
+    name <- if (aesthetic %in% names(plot$labels)) waiver() else "Identity (%)"
     scale <- if (aesthetic == "fill") {
       ggplot2::scale_fill_stepsn(name = name,
         colours = c("#440154", "#482878", "#3E4A89", "#31688E", "#26828E",
@@ -565,8 +605,8 @@ ggchord_add_identity_scales <- function(plot) {
         limits = c(0, 100),
         breaks = breaks, guide = ggchord_identity_guide(plot, aesthetic))
     } else {
-      ggplot2::scale_colour_gradientn(name = name, colours = c("#34457E", "#2FA96B"),
-        limits = c(0, 100), breaks = breaks, guide = ggplot2::guide_legend(order = 2))
+      scale_colour_gradientn(name = name, colours = c("#34457E", "#2FA96B"),
+        limits = c(0, 100), breaks = breaks, guide = guide_legend(order = 2))
     }
     scale$ggchord_managed <- TRUE
     plot$scales$add(scale)

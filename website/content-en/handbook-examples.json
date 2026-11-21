@@ -338,8 +338,9 @@
     "height": 8,
     "dpi": 110,
     "caption": {
-      "en": "pSB1C3 · 7 features and 31 restriction positions"
-    }
+      "en": "pSB1C3 · 7 features and 33 labelled cut positions"
+    },
+    "background": "#FFFCF5"
   },
   "case-circular": {
     "kind": "plot",
@@ -347,8 +348,9 @@
     "height": 8,
     "dpi": 110,
     "caption": {
-      "en": "pUC19 · 9 features and 32 restriction positions"
-    }
+      "en": "pUC19 · 9 features and 33 labelled cut positions"
+    },
+    "background": "#FFFCF5"
   },
   "map-pbr": {
     "kind": "plot",
@@ -356,8 +358,9 @@
     "height": 8,
     "dpi": 110,
     "caption": {
-      "en": "pBR322 · 6 features and 40 restriction positions"
-    }
+      "en": "pBR322 · 6 features and 42 labelled cut positions"
+    },
+    "background": "#FFFCF5"
   },
   "map-blue": {
     "kind": "plot",
@@ -365,8 +368,9 @@
     "height": 8,
     "dpi": 110,
     "caption": {
-      "en": "pBluescript II SK(+) · 14 features and 38 restriction positions"
-    }
+      "en": "pBluescript II SK(+) · 14 features and 42 labelled cut positions"
+    },
+    "background": "#FFFCF5"
   },
   "map-pet": {
     "kind": "plot",
@@ -374,8 +378,9 @@
     "height": 8,
     "dpi": 110,
     "caption": {
-      "en": "pET-28a(+) · 16 features and 49 restriction positions"
-    }
+      "en": "pET-28a(+) · 16 features and 45 labelled cut positions"
+    },
+    "background": "#FFFCF5"
   },
   "map-duet": {
     "kind": "plot",
@@ -383,8 +388,9 @@
     "height": 8,
     "dpi": 110,
     "caption": {
-      "en": "pETDuet-1 · 20 features and 54 restriction positions"
-    }
+      "en": "pETDuet-1 · 20 features and 54 labelled cut positions"
+    },
+    "background": "#FFFCF5"
   },
   "map-donr": {
     "kind": "plot",
@@ -392,8 +398,9 @@
     "height": 8,
     "dpi": 110,
     "caption": {
-      "en": "pDONR221 · 11 features and 39 restriction positions"
-    }
+      "en": "pDONR221 · 11 features and 42 labelled cut positions"
+    },
+    "background": "#FFFCF5"
   },
   "map-pcdna": {
     "kind": "plot",
@@ -401,8 +408,9 @@
     "height": 8,
     "dpi": 110,
     "caption": {
-      "en": "pcDNA3.1(+) · 13 features and 47 restriction positions"
-    }
+      "en": "pcDNA3.1(+) · 13 features and 47 labelled cut positions"
+    },
+    "background": "#FFFCF5"
   },
   "map-tre": {
     "kind": "plot",
@@ -410,8 +418,9 @@
     "height": 8,
     "dpi": 110,
     "caption": {
-      "en": "pTRE-Tight-BI · 15 features and 42 restriction positions"
-    }
+      "en": "pTRE-Tight-BI · 15 features and 44 labelled cut positions"
+    },
+    "background": "#FFFCF5"
   },
   "map-tripz": {
     "kind": "plot",
@@ -419,8 +428,9 @@
     "height": 8,
     "dpi": 110,
     "caption": {
-      "en": "pTRIPZ · 33 features and 35 restriction positions"
-    }
+      "en": "pTRIPZ · 33 features and 35 labelled cut positions"
+    },
+    "background": "#FFFCF5"
   },
   "map-cambia": {
     "kind": "plot",
@@ -428,8 +438,9 @@
     "height": 8,
     "dpi": 110,
     "caption": {
-      "en": "pCAMBIA1300 · 17 features and 37 restriction positions"
-    }
+      "en": "pCAMBIA1300 · 17 features and 37 labelled cut positions"
+    },
+    "background": "#FFFCF5"
   },
   "map-earley": {
     "kind": "plot",
@@ -437,8 +448,9 @@
     "height": 8,
     "dpi": 110,
     "caption": {
-      "en": "pEarleyGate 201 · 21 features and 37 restriction positions"
-    }
+      "en": "pEarleyGate 201 · 21 features and 37 labelled cut positions"
+    },
+    "background": "#FFFCF5"
   },
   "map-cas": {
     "kind": "plot",
@@ -446,8 +458,9 @@
     "height": 8,
     "dpi": 110,
     "caption": {
-      "en": "pSpCas9(BB)-2A-GFP (PX458) · 19 features and 4 restriction positions"
-    }
+      "en": "pSpCas9(BB)-2A-GFP (PX458) · 19 features and 4 labelled cut positions"
+    },
+    "background": "#FFFCF5"
   },
   "puc-backbone": {
     "kind": "plot",

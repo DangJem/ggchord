@@ -1,3 +1,4 @@
+# Historical example for the first v0.50.0 API design at commit 8d77f26f.
 # A small synthetic coordinate example, not biological source records.
 library(ggchord)
 library(dplyr)

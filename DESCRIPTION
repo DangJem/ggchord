@@ -13,7 +13,7 @@ Description: A 'ggplot2'-based package for multi-sequence alignment chord
     and scoped layer scales keep mapping independent of geometry and appearance.
 License: MIT + file LICENSE
 Depends: R (>= 4.1.0)
-Imports: ggplot2 (>= 4.0.0), grDevices, grid, rlang, scales, utils
+Imports: ggplot2 (>= 4.0.0), grDevices, grid, rlang, scales, stats, utils
 VignetteBuilder: knitr
 Suggests: knitr, rmarkdown, qpdf, dplyr, purrr, tidyr, svglite, testthat (>= 3.0.0),
     readxl, digest, GenomicRanges, InteractionSet, IRanges, S4Vectors,

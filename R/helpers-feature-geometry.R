@@ -248,6 +248,13 @@ ggchord_feature_geometry <- function(shape, a_start, a_end, r0, width,
                                      draw_head = TRUE,
                                      draw_start_head = FALSE,
                                      bidirectional = FALSE) {
+  if (identical(shape, "arrow") && identical(arrow_head_style, "shouldered") &&
+      arrow_head_width == 1) {
+    # Keep the default head as wide as thickness and narrow its stem.
+    stem_fraction <- .72
+    width <- width * stem_fraction
+    arrow_head_width <- 1 / stem_fraction
+  }
   if (identical(shape, "marker")) {
     return(ggchord_shape_marker(a_start, a_end, r0, width))
   }

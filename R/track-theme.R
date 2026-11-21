@@ -29,10 +29,10 @@ guide_track_axis <- function(position = "start", sequences = NULL,
   position <- ggchord_match_choice(position, c("start", "end"), "position")
   ggchord_check_axis_selection(sequences)
   ggchord_check_axis_theme(theme, check.overlap)
-  if (!ggplot2::is_waiver(angle) &&
+  if (!is_waiver(angle) &&
       (!is.numeric(angle) || length(angle) != 1L || !is.finite(angle)))
     ggchord_stop("angle must be waiver() or finite degrees")
-  guide <- ggplot2::guide_axis(angle = angle, check.overlap = check.overlap, theme = theme)
+  guide <- guide_axis(angle = angle, check.overlap = check.overlap, theme = theme)
   guide$ggchord_position <- position
   guide$ggchord_sequences <- sequences
   guide
@@ -44,7 +44,7 @@ ggchord_track_axis_guide <- function(guide) {
   if (is.character(guide)) return(list(show = match.arg(guide, c("axis", "none")) == "axis", guide = NULL))
   if (!inherits(guide, "GuideAxis"))
     ggchord_stop("Track value guide must be 'axis', 'none', or guide_axis(theme = ...)")
-  params <- guide$params; defaults <- ggplot2::guide_axis()$params
+  params <- guide$params; defaults <- guide_axis()$params
   supported <- c("theme", "angle", "check.overlap")
   for (name in setdiff(names(params), supported))
     if (!identical(params[[name]], defaults[[name]])) ggchord_stop(
@@ -62,13 +62,13 @@ ggchord_track_axis_style <- function(plot, id) {
   local <- guide$params$theme
   themed <- plot
   if (!is.null(local)) {
-    overrides <- stats::setNames(as.list(local), paste0("ggchord.track.", names(local)))
-    themed$theme <- plot$theme + do.call(ggplot2::theme, overrides)
+    overrides <- setNames(as.list(local), paste0("ggchord.track.", names(local)))
+    themed$theme <- plot$theme + do.call(theme, overrides)
   }
   element <- function(role) ggchord_theme_element(themed, paste0("ggchord.track.axis.", role))
   line <- element("line"); text <- element("text"); title <- element("title"); tick <- element("ticks")
   angle <- guide$params$angle
-  if (!is.null(angle) && !ggplot2::is_waiver(angle)) {
+  if (!is.null(angle) && !is_waiver(angle)) {
     if (!is.numeric(angle) || length(angle) != 1L || !is.finite(angle)) ggchord_stop("Track guide_axis(): angle must be finite")
     if (!inherits(text, "element_blank")) text@angle <- angle
   }
@@ -81,12 +81,12 @@ ggchord_track_axis_style <- function(plot, id) {
         lineheight = el@lineheight %||% 1.2)
   }
   offset <- function(name, fallback) {
-    value <- plot$theme[[paste0("ggchord.track.axis.", name, ".offset")]] %||% grid::unit(fallback,"mm")
-    if (!grid::is.unit(value) || length(value) != 1L || !is.finite(as.numeric(value)) || as.numeric(value) < 0)
+    value <- plot$theme[[paste0("ggchord.track.axis.", name, ".offset")]] %||% unit(fallback,"mm")
+    if (!is.unit(value) || length(value) != 1L || !is.finite(as.numeric(value)) || as.numeric(value) < 0)
       ggchord_stop("Track axis offsets require nonnegative scalar absolute units")
     ggchord_unit_inches(value) * 25.4
   }
-  tick_length <- themed$theme[["ggchord.track.axis.ticks.length"]] %||% grid::unit(1.2, "mm")
+  tick_length <- themed$theme[["ggchord.track.axis.ticks.length"]] %||% unit(1.2, "mm")
   list(axis_line_params = as_params(line), axis_tick_params = as_params(tick),
     tick_length_mm = ggchord_unit_inches(tick_length) * 25.4, axis_text_params = as_params(text),
     axis_title_params = as_params(title), axis_check_overlap = isTRUE(guide$params$check.overlap),

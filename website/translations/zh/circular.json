@@ -1,5 +1,5 @@
 {
-  "source_sha256": "73e10df5411fca036c01880d3551afa2dbb7d6499075952d801a708bf0de2e39",
+  "source_sha256": "601546de7b821de9efcbaf81e13bc7b707474fa8cd5be0d3ac7a4dc3ee5d9402",
   "blocks": {
     "0": {
       "source_sha256": "c3075ec28799d9ae3c60c19c2867e6618b06b8a2149a7f96e5be3bb05c50e2af",
@@ -27,9 +27,9 @@
       "translation": "显式传入同一记录的特征表。用 `position_feature_stack()` 分开重叠区间，用记录中的颜色或注释类型区分特征。AmpR 编码区横跨 1,626–2,486 bp。靠近序列起点的一组较短注释包括 M13 引物结合区和多克隆位点。\n"
     },
     "9": {
-      "source_sha256": "c468e61d54fb778eb15925407a833607712464bd87447b6ab92fac49edb55aa1",
+      "source_sha256": "4cc9d1399487efe95acf06f8a38c43dfd1257aea77a27d4eae86110cb9f80da3",
       "status": "reviewed",
-      "translation": "下一步可[保留九条注释并只标出两个 CDS 的名称](annotations.md)，或[沿 pUC19 绘制 GC 含量](tracks.md)。[完整质粒图](case-circular.md)在 32 个位置标出 47 条限制性位点记录，[质粒图集](plasmid-catalog.md)还收录了另外十二条参考序列的示例。\n"
+      "translation": "下一步可[保留九条注释并只标出两个 CDS 的名称](annotations.md)，或[沿 pUC19 绘制 GC 含量](tracks.md)。[完整质粒图](case-circular.md)在 33 个切割位置标出 39 条限制性位点记录，[质粒图集](plasmid-catalog.md)还收录了另外十二条参考序列的示例。\n"
     }
   }
 }

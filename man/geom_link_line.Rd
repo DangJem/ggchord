@@ -26,7 +26,10 @@ geom_link_line(
 
 \item{position}{A compatible Position for placement of the layer geometry.}
 
-\item{route}{Choose curved or straight routes, or a shared corridor where supported.}
+\item{route}{Choose curved or straight routes, or a shared corridor where supported.
+On a curved collinear route, an explicit positive \code{bulge} clears the high
+coordinate end of intervening rows by that fraction of the longest visible
+backbone. Radial curves with positive \code{bulge} clear intermediate spoke tips.}
 
 \item{...}{Additional named visual styles and parameters accepted by this layer.}
 

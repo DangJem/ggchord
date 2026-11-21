@@ -1,4 +1,5 @@
-# Run with ggchord 0.50.0. The short intervals below are teaching data in bp.
+# Historical example for the first v0.50.0 API design at commit d6faf312.
+# The short intervals below are teaching data in bp.
 library(ggchord)
 library(ggplot2)
 library(dplyr)

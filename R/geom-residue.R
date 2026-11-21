@@ -42,7 +42,7 @@ geom_residue <- function(mapping = NULL, data = NULL, representation = "tile_tex
     params = c(list(representation = representation, overflow = overflow,
       line_width = line_width, na.rm = na.rm), dots))
   if (!is.null(id)) layer <- layer_id(layer, id)
-  ggplot2::ggproto("LayerResidue", layer,
+  ggproto("LayerResidue", layer,
     compute_aesthetics = function(self, data, plot) {
       coord <- plot$coordinates
       if (!inherits(coord, "CoordCartesian") || isTRUE(coord$ggchord_coord) ||
@@ -57,13 +57,13 @@ geom_residue <- function(mapping = NULL, data = NULL, representation = "tile_tex
       mapping <- self$computed_mapping
       fallback <- c(x = "alignment_column", y = "accver", label = "symbol")
       for (field in setdiff(names(fallback), names(mapping)))
-        mapping[[field]] <- rlang::new_quosure(rlang::sym(fallback[[field]]), emptyenv())
+        mapping[[field]] <- new_quosure(sym(fallback[[field]]), emptyenv())
       fixed <- intersect(names(self$aes_params), names(mapping))
       mapping[fixed] <- NULL
       ggchord_residue_validate_styles(c(names(mapping), names(self$aes_params)),
         representation, overflow)
       self$computed_mapping <- mapping
-      value <- ggplot2::ggproto_parent(layer, self)$compute_aesthetics(data, plot)
+      value <- ggproto_parent(layer, self)$compute_aesthetics(data, plot)
       if (nrow(value)) {
         if (anyDuplicated(data.frame(PANEL = value$PANEL, x = value$x, y = value$y)))
           ggchord_stop("geom_residue(): one character is required per alignment cell")
@@ -164,7 +164,7 @@ geom_residue_tile <- function(mapping = NULL, data = NULL, line_width = NULL,
 ggplot_add.LayerResidue <- function(object, plot, ...) {
   # Clone before supplying defaults: reusing a layer must not change its mapping.
   original <- object
-  object <- ggplot2::ggproto(NULL, original)
+  object <- ggproto(NULL, original)
   plot <- NextMethod()
   if (!is.null(object$geom_params$line_width)) {
     y_scale <- plot$scales$get_scales("y")
@@ -172,14 +172,14 @@ ggplot_add.LayerResidue <- function(object, plot, ...) {
       if (!y_scale$is_discrete()) ggchord_stop("geom_residue(): line_width requires a discrete y scale")
     if (is.null(plot$scales$get_scales("x"))) {
       width <- object$geom_params$line_width
-      plot <- plot + ggplot2::scale_x_continuous(expand = ggplot2::expansion(add = .5),
+      plot <- plot + scale_x_continuous(expand = expansion(add = .5),
         breaks = function(limits) {
           breaks <- unique(c(1, pretty(c(1, min(width, limits[2L])))))
           breaks[breaks >= 1 & breaks <= width & breaks <= limits[2L]]
         })
     }
-    if (is.null(plot$labels$x)) plot <- plot + ggplot2::labs(x = "Column within line")
-    if (is.null(plot$labels$y)) plot <- plot + ggplot2::labs(y = NULL)
+    if (is.null(plot$labels$x)) plot <- plot + labs(x = "Column within line")
+    if (is.null(plot$labels$y)) plot <- plot + labs(y = NULL)
   }
   plot
 }
@@ -198,7 +198,7 @@ ggchord_residue_wrap <- function(x, y, width, origin = NULL) {
   list(column = x - start + 1, row = factor(label, levels = rev(unique(label[order]))), origin = origin)
 }
 
-GeomResidue <- ggplot2::ggproto("GeomResidue", ggplot2::Geom,
+GeomResidue <- ggproto("GeomResidue", ggplot2::Geom,
   required_aes = c("x", "y", "label"),
   default_aes = aes(colour = "black", fill = "grey95", alpha = 1,
     size = 3, family = "mono", fontface = 1, lineheight = 1.2,
@@ -220,7 +220,7 @@ GeomResidue <- ggplot2::ggproto("GeomResidue", ggplot2::Geom,
           !scale$get_transformation()$name %in% c("identity", "reverse"))
         ggchord_stop("geom_residue(): position scales must be identity or reverse")
     }
-    if (!nrow(data)) return(grid::nullGrob())
+    if (!nrow(data)) return(nullGrob())
     grid::gTree(data = data, panel_params = panel_params, coord = coord,
       overflow = overflow, representation = representation, cl = "ggchord_residue_grob")
   })
@@ -237,17 +237,17 @@ makeContent.ggchord_residue_grob <- function(x) {
   }
   a <- corners(-1); b <- corners(1)
   widths <- abs(b$x - a$x); heights <- abs(b$y - a$y)
-  panel_w <- grid::convertWidth(grid::unit(1, "npc"), "mm", valueOnly = TRUE)
-  panel_h <- grid::convertHeight(grid::unit(1, "npc"), "mm", valueOnly = TRUE)
+  panel_w <- convertWidth(unit(1, "npc"), "mm", valueOnly = TRUE)
+  panel_h <- convertHeight(unit(1, "npc"), "mm", valueOnly = TRUE)
   fit <- rep(FALSE, nrow(d))
   if (x$representation != "tile") {
     key <- paste(d$label, d$size, d$family, d$fontface, d$lineheight, sep = "\r")
     metrics <- lapply(which(!duplicated(key)), function(i) {
-      glyph <- grid::textGrob(as.character(d$label[i]), gp = grid::gpar(
+      glyph <- textGrob(as.character(d$label[i]), gp = gpar(
         fontsize = d$size[i] * 72.27 / 25.4, fontfamily = d$family[i],
         fontface = d$fontface[i], lineheight = d$lineheight[i]))
-      c(width = grid::convertWidth(grid::grobWidth(glyph), "mm", valueOnly = TRUE),
-        height = grid::convertHeight(grid::grobHeight(glyph), "mm", valueOnly = TRUE))
+      c(width = convertWidth(grobWidth(glyph), "mm", valueOnly = TRUE),
+        height = convertHeight(grobHeight(glyph), "mm", valueOnly = TRUE))
     })
     metrics <- do.call(rbind, metrics)[match(key, unique(key)), , drop = FALSE]
     fit <- widths * panel_w >= metrics[, "width"] * 1.15 &
@@ -257,16 +257,16 @@ makeContent.ggchord_residue_grob <- function(x) {
   }
   tile_rows <- if (x$representation %in% c("tile", "tile_text")) rep(TRUE, nrow(d)) else
     if (x$overflow == "tile") !fit else rep(FALSE, nrow(d))
-  tiles <- if (!any(tile_rows)) grid::nullGrob() else grid::rectGrob(
+  tiles <- if (!any(tile_rows)) nullGrob() else rectGrob(
     x = center$x[tile_rows], y = center$y[tile_rows],
     width = widths[tile_rows], height = heights[tile_rows], default.units = "native",
-    gp = grid::gpar(col = scales::alpha(d$cell_colour[tile_rows], d$alpha[tile_rows]),
+    gp = gpar(col = alpha(d$cell_colour[tile_rows], d$alpha[tile_rows]),
       lwd = d$cell_linewidth[tile_rows] * ggplot2::.pt,
-      fill = scales::alpha(d$fill[tile_rows], d$alpha[tile_rows])))
-  letters <- if (!any(fit)) grid::nullGrob() else grid::textGrob(as.character(d$label[fit]),
+      fill = alpha(d$fill[tile_rows], d$alpha[tile_rows])))
+  letters <- if (!any(fit)) nullGrob() else textGrob(as.character(d$label[fit]),
     x = center$x[fit], y = center$y[fit], default.units = "native",
-    gp = grid::gpar(col = scales::alpha(d$colour[fit], d$alpha[fit]),
+    gp = gpar(col = alpha(d$colour[fit], d$alpha[fit]),
       fontsize = d$size[fit] * 72.27 / 25.4, fontfamily = d$family[fit],
       fontface = d$fontface[fit], lineheight = d$lineheight[fit]))
-  grid::setChildren(x, grid::gList(tiles, letters))
+  grid::setChildren(x, gList(tiles, letters))
 }

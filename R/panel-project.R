@@ -77,11 +77,11 @@ ggchord_fusion_nested_export <- function(value, parent, offset) {
 # Clip to a leaf panel, then restore the full composition coordinate frame.
 # Native grid rectangles work without rasterising plots or device-specific masks.
 ggchord_fusion_clip_connections <- function(grobs, bounds, canvas) {
-  full <- grid::viewport(x = -bounds[1], y = -bounds[3], width = canvas[1], height = canvas[2],
+  full <- viewport(x = -bounds[1], y = -bounds[3], width = canvas[1], height = canvas[2],
     just = c("left", "bottom"), default.units = "mm", clip = "inherit")
-  clip <- grid::viewport(x = bounds[1], y = bounds[3], width = diff(bounds[1:2]), height = diff(bounds[3:4]),
+  clip <- viewport(x = bounds[1], y = bounds[3], width = diff(bounds[1:2]), height = diff(bounds[3:4]),
     just = c("left", "bottom"), default.units = "mm", clip = "on")
-  grid::grobTree(do.call(grid::grobTree, c(unname(grobs), list(vp = full))), vp = clip)
+  grobTree(do.call(grobTree, c(unname(grobs), list(vp = full))), vp = clip)
 }
 
 # Disjoint rectangles avoid repainting translucent connections more than once.

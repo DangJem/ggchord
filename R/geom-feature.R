@@ -1,6 +1,6 @@
 # geom-feature.R - generic feature layer (v0.9.0)
 
-GeomChordFeatureBase <- ggplot2::ggproto(
+GeomChordFeatureBase <- ggproto(
   "GeomChordFeatureBase", ggplot2::GeomPolygon
 )
 feature_polygon_geom <- GeomChordFeatureBase
@@ -12,8 +12,10 @@ ggchord_check_feature_bounds <- function(data, lengths) {
 }
 
 feature_geom_defaults <- feature_polygon_geom$default_aes
+feature_geom_defaults$colour <- "#353A3E"
+feature_geom_defaults$linewidth <- .25
 feature_geom_defaults$feature_shape <- "arrow"
-feature_geom <- ggplot2::ggproto(
+feature_geom <- ggproto(
   "GeomChordFeature", feature_polygon_geom,
   default_aes = feature_geom_defaults,
   optional_aes = "shape",
@@ -74,13 +76,13 @@ feature_geom <- ggplot2::ggproto(
       )
     }
     if (nrow(points)) {
-      points$linewidth <- pmax(points$linewidth, .55)
+      if (isTRUE(adaptive_outline)) points$linewidth <- pmax(points$linewidth, .55)
       grobs[[length(grobs) + 1L]] <- ggplot2::GeomPath$draw_panel(
         points, panel_params, coord, lineend = "butt", linejoin = "round",
         na.rm = na.rm
       )
     }
-    do.call(grid::grobTree, grobs)
+    do.call(grobTree, grobs)
   }
 )
 
@@ -131,7 +133,7 @@ ggchord_physical_mm <- function(value, caller, nonnegative = FALSE) {
   if (inherits(value, "unit")) {
     conversion <- c(mm = 1, cm = 10, inches = 25.4, points = 25.4 / 72.27,
       picas = 25.4 / 6.0225, bigpts = 25.4 / 72)
-    unit_type <- grid::unitType(value)
+    unit_type <- unitType(value)
     if (any(!unit_type %in% names(conversion)))
       ggchord_stop(caller, ": use absolute physical units")
     value <- as.numeric(value) * unname(conversion[unit_type])
@@ -158,7 +160,7 @@ ggchord_identity_stat <- function(stat) {
 ggchord_split_source_stat <- function(stat, dots, geom) {
   if (ggchord_identity_stat(stat)) return(list(geom = dots))
   if (!inherits(stat, "Stat")) {
-    stat <- ggplot2::layer(geom = "blank", stat = stat, position = "identity")$stat
+    stat <- layer(geom = "blank", stat = stat, position = "identity")$stat
   }
   stat_keys <- intersect(names(dots), stat$parameters(TRUE))
   list(stat = list(stat = stat, params = dots[stat_keys]),
@@ -188,7 +190,7 @@ ggchord_run_source_stat <- function(data, specification, roles, caller, facet, l
   param_names <- stat$parameters()
   compute <- function(part) {
     if (!nrow(part)) return(part)
-    axes <- list(x = ggplot2::scale_x_continuous(), y = ggplot2::scale_y_continuous())
+    axes <- list(x = scale_x_continuous(), y = scale_y_continuous())
     for (axis in intersect(c("x", "y"), names(part))) axes[[axis]]$train(part[[axis]])
     computed <- do.call(stat$compute_panel, c(list(data = part, scales = axes),
       params[intersect(names(params), param_names)]))
@@ -259,7 +261,7 @@ ggchord_feature_layer <- function(mapping, data, shape, fixed_shape, thickness,
       boundary_colour = dots$boundary_colour,
       boundary_linewidth = dots$boundary_linewidth %||% 0.3,
       boundary_linetype = dots$boundary_linetype %||% 1,
-      adaptive_outline = FALSE), geom_params$geom)
+      adaptive_outline = is.null(dots$linewidth)), geom_params$geom)
   )
   layer$ggchord_type <- "gene_poly"
   layer$ggchord_params <- list(
@@ -285,6 +287,9 @@ ggchord_feature_layer <- function(mapping, data, shape, fixed_shape, thickness,
 }
 
 #' Draw sequence features
+#'
+#' Features have a dark 0.25 mm outline by default. Compact symbols use a
+#' finer outline unless a linewidth is set or mapped.
 #' @export
 #' @param mapping Aesthetic mapping from `aes()`. A local mapping overrides the matching inherited channel.
 #' @param data Observation table or a data function. For ggchord layers, provide the required data-role columns.

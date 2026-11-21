@@ -8,7 +8,7 @@ ggchord_render_context <- function() .ggchord_render_state$context
 ggchord_render_cache_key <- function() {
   context <- ggchord_render_context()
   list(status = context$status %||% "estimated", units_per_mm = context$units_per_mm,
-    canvas_mm = ggchord_render_dimensions(), device = grDevices::dev.cur())
+    canvas_mm = ggchord_render_dimensions(), device = dev.cur())
 }
 
 ggchord_cache_layout <- function(plot, layout) {
@@ -35,10 +35,10 @@ ggchord_render_plot_copy <- function(plot) {
 ggchord_render_dimensions <- function() {
   available <- ggchord_render_context()$available_canvas_mm
   if (length(available) == 2L && all(is.finite(available))) return(available)
-  if (grDevices::dev.cur() == 1L) return(c(width = NA_real_, height = NA_real_))
-  value <- tryCatch(grDevices::dev.size("in") * 25.4,
+  if (dev.cur() == 1L) return(c(width = NA_real_, height = NA_real_))
+  value <- tryCatch(dev.size("in") * 25.4,
     error = function(e) c(NA_real_, NA_real_))
-  stats::setNames(value, c("width", "height"))
+  setNames(value, c("width", "height"))
 }
 
 ggchord_estimated_render_context <- function(layout = NULL) {
@@ -49,14 +49,14 @@ ggchord_estimated_render_context <- function(layout = NULL) {
     units_per_inch = unit, axis_units_per_inch = c(x = unit, y = unit),
     units_per_mm = c(x = unit, y = unit) / 25.4,
     geometry_metric_status = "estimated", converged = NA,
-    device = if (grDevices::dev.cur() == 1L) "none" else names(grDevices::dev.cur()),
+    device = if (dev.cur() == 1L) "none" else names(dev.cur()),
     font_conditions = "Font fallback and embedding have not been inspected",
     basis = "Layout-only estimate; actual panel has not been measured")
 }
 
 ggchord_panel_context <- function(table, built) {
   unavailable <- ggchord_estimated_render_context(built$plot$ggchord$ref$layout)
-  if (grDevices::dev.cur() == 1L) return(unavailable)
+  if (dev.cur() == 1L) return(unavailable)
   panel <- which(grepl("^panel($|[-.])", table$layout$name))
   if (!length(panel)) return(unavailable)
   if (length(panel) > 1L) {
@@ -92,17 +92,17 @@ ggchord_measure_panel <- function(table, entry, range, unavailable) {
   yr <- range$y.range %||% range$y$continuous_range
   if (length(xr) != 2L || length(yr) != 2L || any(!is.finite(c(xr, yr)))) return(unavailable)
   result <- tryCatch({
-    grid::pushViewport(grid::viewport(layout = grid::grid.layout(
+    pushViewport(viewport(layout = grid::grid.layout(
       length(table$heights), length(table$widths), widths = table$widths,
       heights = table$heights, respect = table$respect)))
-    on.exit(grid::popViewport(), add = TRUE)
-    grid::pushViewport(grid::viewport(layout.pos.row = seq.int(entry$t, entry$b),
+    on.exit(popViewport(), add = TRUE)
+    pushViewport(viewport(layout.pos.row = seq.int(entry$t, entry$b),
       layout.pos.col = seq.int(entry$l, entry$r)))
-    on.exit(grid::popViewport(), add = TRUE)
-    size <- c(width = grid::convertWidth(grid::unit(1, "npc"), "mm", valueOnly = TRUE),
-      height = grid::convertHeight(grid::unit(1, "npc"), "mm", valueOnly = TRUE))
-    lower <- grid::deviceLoc(grid::unit(0, "npc"), grid::unit(0, "npc"), valueOnly = TRUE)
-    upper <- grid::deviceLoc(grid::unit(1, "npc"), grid::unit(1, "npc"), valueOnly = TRUE)
+    on.exit(popViewport(), add = TRUE)
+    size <- c(width = convertWidth(unit(1, "npc"), "mm", valueOnly = TRUE),
+      height = convertHeight(unit(1, "npc"), "mm", valueOnly = TRUE))
+    lower <- grid::deviceLoc(unit(0, "npc"), unit(0, "npc"), valueOnly = TRUE)
+    upper <- grid::deviceLoc(unit(1, "npc"), unit(1, "npc"), valueOnly = TRUE)
     list(size = size, bounds = c(xmin = lower$x, xmax = upper$x,
       ymin = lower$y, ymax = upper$y) * 25.4)
   }, error = function(e) NULL)
@@ -115,7 +115,7 @@ ggchord_measure_panel <- function(table, entry, range, unavailable) {
     x_range = xr, y_range = yr, units_per_mm = units,
     axis_units_per_inch = units * 25.4, units_per_inch = max(units) * 25.4,
     geometry_metric_status = "estimated", converged = FALSE,
-    device = names(grDevices::dev.cur()),
+    device = names(dev.cur()),
     font_conditions = "Metrics use the selected device; font fallback and embedding remain unchecked",
     basis = "Resolved gtable grid.layout panel, including null units and aspect constraints")
 }
@@ -150,7 +150,7 @@ ggchord_base_gtable <- function(built) {
     built$data <- c(leaders, built$data)
     built$plot$layers <- c(leader_layers, built$plot$layers)
   }
-  ggplot2::ggplot_gtable(built)
+  ggplot_gtable(built)
 }
 
 ggchord_render_table <- function(built, force = FALSE) {
@@ -185,7 +185,7 @@ ggchord_render_table <- function(built, force = FALSE) {
         if (is.finite(predicted) && predicted > 0 && predicted >= current*.5 && predicted <= current*3) {
           acceleration$attempted <- TRUE
           proposed <- context
-          proposed$units_per_mm <- stats::setNames(rep(predicted, 2L), c('x', 'y'))
+          proposed$units_per_mm <- setNames(rep(predicted, 2L), c('x', 'y'))
           proposed$axis_units_per_inch <- proposed$units_per_mm*25.4
           proposed$units_per_inch <- predicted*25.4
           proposed$geometry_metric_status <- 'estimated'
@@ -193,7 +193,7 @@ ggchord_render_table <- function(built, force = FALSE) {
           evaluations <- evaluations+1L
           trial <- tryCatch({
             trial_plot <- ggchord_render_plot_copy(source)
-            trial_built <- ggchord_with_render_context(proposed, ggplot2::ggplot_build(trial_plot))
+            trial_built <- ggchord_with_render_context(proposed, ggplot_build(trial_plot))
             trial_result <- ggchord_with_render_context(proposed, guided(trial_built))
             trial_built <- trial_result$built
             trial_table <- trial_result$table %||% ggchord_base_gtable(trial_built)
@@ -219,8 +219,18 @@ ggchord_render_table <- function(built, force = FALSE) {
         }
       }
       input <- context
+      # Discrete callout slots can alternate between two tight viewports.
+      # After the measured residual changes sign, retain space that fits the
+      # labels. The next measured gtable must still meet the usual tolerance.
+      if (isTRUE(source$coordinates$ggchord_circular) &&
+          identical(source$coordinates$fit, "labels") && is.null(input$facet_contexts) &&
+          is.null(source$coordinates$user_xlim) && is.null(source$coordinates$user_ylim) &&
+          length(history) >= 2L) {
+        residual <- vapply(history, function(h) h[["output"]] - h[["input"]], numeric(1))
+        input$contain_panel <- any(residual > 0) && any(residual < 0)
+      }
       next_plot <- ggchord_render_plot_copy(source)
-      built <- ggchord_with_render_context(input, ggplot2::ggplot_build(next_plot))
+      built <- ggchord_with_render_context(input, ggplot_build(next_plot))
       result <- ggchord_with_render_context(input, guided(built))
       built <- result$built; table <- result$table %||% ggchord_base_gtable(built)
       context <- ggchord_panel_context(table, built)

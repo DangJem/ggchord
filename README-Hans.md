@@ -47,9 +47,9 @@
 
 ### II · 单序列圆图
 
-<a href="man/figures/showcaseplasmid.png"><img src="man/figures/showcaseplasmid.png" alt="pETDuet-1 圆形注释图，含区间特征和酶切识别位置" width="460"></a>
+<a href="man/figures/showcaseplasmid.png"><img src="man/figures/showcaseplasmid.png" alt="pETDuet-1 圆图，含特征、引物和酶切位点标签" width="460"></a>
 
-pETDuet-1 图组合随包区间注释、选定的标签和单切酶的识别位置。
+pETDuet-1 密集图在环内标出特征和引物，在环外标注酶名与切点坐标。
 
 [完整案例](examples/make_readme_plots.R)
 
@@ -63,9 +63,9 @@ pETDuet-1 图组合随包区间注释、选定的标签和单切酶的识别位�
 
 ### IV · 多视图组合
 
-<a href="man/figures/flagfusion.png"><img src="man/figures/flagfusion.png" alt="由两个面板组成的源区间全局图与局部放大图" width="460"></a>
+<a href="man/figures/flagfusion.png"><img src="man/figures/flagfusion.png" alt="六个面板从基因组比对逐步放大至核苷酸对齐" width="460"></a>
 
-弦图总览与独立的共线性细节图以不同尺度展示同一来源区间。
+同一组比对关系用三种视图呈现，随后逐步放大至源区间、比对窗口和可逐碱基阅读的细节。
 
 [完整案例](examples/make_readme_plots.R)
 

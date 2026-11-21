@@ -5,7 +5,7 @@ ggchord_track_dimension <- function(value, seqs, name) {
   fallback <- if (name == "width") 4 else 1
   mm <- process_sequence_param(if (is.list(value)) unlist(value) else value,
     seqs, name, fallback)
-  list(native = stats::setNames(rep(0, length(seqs)), seqs), mm = mm)
+  list(native = setNames(rep(0, length(seqs)), seqs), mm = mm)
 }
 
 ggchord_track_frame <- function(pos, id, layout) {
@@ -36,14 +36,14 @@ ggchord_track_frame <- function(pos, id, layout) {
   norm <- sqrt(dx^2 + dy^2)
   if (any(norm <= 0)) ggchord_stop("Track backbone has an undefined local normal")
   nx <- -dy / norm; ny <- dx / norm
-  interpolate <- function(value) stats::approx(reference$angles, value, xout = angles, rule = 2)$y
+  interpolate <- function(value) approx(reference$angles, value, xout = angles, rule = 2)$y
   normal <- cbind(interpolate(nx), interpolate(ny))
   normal <- normal / sqrt(rowSums(normal^2))
   base <- cbind(interpolate(path$x), interpolate(path$y)) + normal *
     (unname(ref$radius[id]) - reference$r0)
   sample <- map_to_curve_many(reference$angles, unname(ref$radius[id]), reference)
   outward <- map_to_curve_many(reference$angles, unname(ref$radius[id]) + 1, reference) - sample
-  sign <- if (stats::median(rowSums(sample * outward)) < 0) -1 else 1
+  sign <- if (median(rowSums(sample * outward)) < 0) -1 else 1
   list(base = ggchord_rotate_points(base, layout$rotation %||% 0),
     normal = ggchord_rotate_points(normal * sign, layout$rotation %||% 0), mapper_sign = sign)
 }
@@ -137,7 +137,7 @@ ggchord_train_track_scale <- function(plot, id, values) {
   sc <- sc$clone()
   quantity <- plot$ggchord$track_quantities[[id]]
   if (length(quantity$unit)) sc$ggchord_track_unit <- quantity$unit
-  if (length(quantity$label) && ggplot2::is_waiver(sc$name)) sc$name <- quantity$label
+  if (length(quantity$label) && is_waiver(sc$name)) sc$name <- quantity$label
   finite <- values[!is.na(values)]
   transformed <- suppressWarnings(sc$transform(finite))
   if (any(!is.finite(transformed))) ggchord_stop("Track '", id, "' has values/baseline incompatible with its scale transform")
@@ -436,9 +436,9 @@ ggchord_layout_tracks <- function(plot, layout, registry, inputs) {
   layout$track_registry <- band_table; layout$track_scales <- scales
   layout$track_obstacles <- obstacle[names(ggchord_empty_obstacles())]
   layout$track_diagnostics <- ggchord_rbind_fill(diagnostics)
-  layout$track_statistics <- stats::setNames(data,
+  layout$track_statistics <- setNames(data,
     vapply(layers, function(l) l$ggchord_layer_id, character(1)))
-  layout$track_source_data <- stats::setNames(lapply(seq_along(layers), function(i)
+  layout$track_source_data <- setNames(lapply(seq_along(layers), function(i)
     layers[[i]]$ggchord_params$track_sources %||% data[[i]]),
     vapply(layers, function(l) l$ggchord_layer_id, character(1)))
   list(layout = layout, registry = registry, inputs = inputs)
@@ -463,7 +463,7 @@ ggchord_track_axes <- function(layout, registry, plot) {
       style <- ggchord_track_axis_style(plot, id)
       # One explicit numerical reference per shared track domain. Automatic
       # breaks use its endpoints; explicit user breaks/labels remain untouched.
-      breaks <- if (ggplot2::is_waiver(sc$breaks)) unique(sc$get_limits()) else sc$get_breaks()
+      breaks <- if (is_waiver(sc$breaks)) unique(sc$get_limits()) else sc$get_breaks()
       labels <- sc$get_labels(breaks)
       fractions <- sc$map(breaks)
       keep <- is.finite(fractions) & fractions >= 0 & fractions <= 1
@@ -500,7 +500,7 @@ ggchord_track_axes <- function(layout, registry, plot) {
       if (length(labels)) text <- data.frame(x = label_points[, 1], y = label_points[, 2],
         group = -seq_along(fractions) - 1L, source_row = NA_integer_, accver = seq,
         track_id = id, label = as.character(labels), .component = "track_axis_text")
-      title <- if (ggplot2::is_waiver(sc$name)) id else as.character(sc$name)
+      title <- if (is_waiver(sc$name)) id else as.character(sc$name)
       if (length(title) && !is.na(title) && nzchar(title)) {
         unit <- sc$ggchord_track_unit
         if (!is.null(unit) && nzchar(unit)) title <- paste0(title, " (", unit, ")")

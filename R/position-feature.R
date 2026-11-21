@@ -2,7 +2,7 @@
 # generation.  The ggplot2 Position objects are deliberately identity at the
 # Cartesian stage: their fields are consumed by ggchord's layout engine.
 
-PositionGgchordFeature <- ggplot2::ggproto(
+PositionGgchordFeature <- ggproto(
   "PositionGgchordFeature", ggplot2::PositionIdentity,
   ggchord_feature_position = TRUE,
   placement = "identity",
@@ -41,7 +41,7 @@ PositionGgchordFeature <- ggplot2::ggproto(
 #'   coord_collinear()
 position_strand <- function(offset = 1) {
   ggchord_check_argument_names(sys.call(), sys.function())
-  ggplot2::ggproto(
+  ggproto(
     NULL, PositionGgchordFeature,
     placement = "strand", offset = ggchord_physical_mm(offset, "position_strand()")
   )
@@ -74,7 +74,7 @@ position_strand <- function(offset = 1) {
 #'   coord_collinear()
 position_offset <- function(offset = 0) {
   ggchord_check_argument_names(sys.call(), sys.function())
-  ggplot2::ggproto(
+  ggproto(
     NULL, PositionGgchordFeature,
     placement = "offset", offset = ggchord_physical_mm(offset, "position_offset()")
   )
@@ -103,7 +103,7 @@ ggchord_as_feature_position <- function(position, caller = "feature layer") {
     }
     return(switch(
       position,
-      identity = ggplot2::position_identity(),
+      identity = position_identity(),
       strand = position_strand(),
       feature_stack = position_feature_stack()
     ))
@@ -161,44 +161,44 @@ ggchord_resolve_position_offset <- function(offset, seqs, placement,
     nm <- names(offset)
     if (length(offset) == 1L && is.null(nm)) {
       val <- expand_scalar(offset)
-      return(stats::setNames(rep(list(val), n), seqs))
+      return(setNames(rep(list(val), n), seqs))
     }
     if (!is.null(nm) && all(nm %in% c("+", "-", "."))) {
       val <- explicit_strands(offset)
-      return(stats::setNames(rep(list(val), n), seqs))
+      return(setNames(rep(list(val), n), seqs))
     }
     if (!is.null(nm)) {
       unknown <- setdiff(nm, seqs)
       if (length(unknown)) ggchord_stop(caller, ": unknown accver: ", paste(unknown, collapse = ", "))
-      out <- stats::setNames(rep(list(expand_scalar(if (identical(placement, "strand")) 1 else 0)), n), seqs)
+      out <- setNames(rep(list(expand_scalar(if (identical(placement, "strand")) 1 else 0)), n), seqs)
       for (id in nm) out[[id]] <- expand_scalar(offset[[id]])
       return(out)
     }
     if (length(offset) != n) {
       ggchord_stop(caller, ": unnamed offsets must have length 1 or match the sequence count")
     }
-    return(stats::setNames(lapply(offset, expand_scalar), seqs))
+    return(setNames(lapply(offset, expand_scalar), seqs))
   }
 
   nm <- names(offset)
   if (length(offset) == 1L && (is.null(nm) || !nzchar(nm[1L]))) {
     val <- resolve_element(offset[[1L]])
-    return(stats::setNames(rep(list(val), n), seqs))
+    return(setNames(rep(list(val), n), seqs))
   }
   if (!is.null(nm) && length(nm) && all(nm %in% seqs)) {
-    out <- stats::setNames(rep(list(expand_scalar(if (identical(placement, "strand")) 1 else 0)), n), seqs)
+    out <- setNames(rep(list(expand_scalar(if (identical(placement, "strand")) 1 else 0)), n), seqs)
     for (id in nm) out[[id]] <- resolve_element(offset[[id]])
     return(out)
   }
   idx_names <- as.character(seq_along(seqs))
   if (!is.null(nm) && length(nm) && all(nm %in% idx_names)) {
-    out <- stats::setNames(rep(list(expand_scalar(if (identical(placement, "strand")) 1 else 0)), n), seqs)
+    out <- setNames(rep(list(expand_scalar(if (identical(placement, "strand")) 1 else 0)), n), seqs)
     for (i in seq_along(nm)) out[[seqs[as.integer(nm[i])]]] <- resolve_element(offset[[i]])
     return(out)
   }
   if (is.null(nm) || all(!nzchar(nm))) {
     if (length(offset) != n) ggchord_stop(caller, ": unnamed offset lists must match the sequence count")
-    return(stats::setNames(lapply(offset, resolve_element), seqs))
+    return(setNames(lapply(offset, resolve_element), seqs))
   }
   ggchord_stop(caller, ": invalid flexible offset specification")
 }
@@ -309,7 +309,7 @@ ggchord_apply_feature_position <- function(data, position, seqs, lengths,
       any(!is.finite(data$start)) || any(!is.finite(data$end))) {
     ggchord_stop(caller, ": start and end must be finite numeric values")
   }
-  position <- position %||% ggplot2::position_identity()
+  position <- position %||% position_identity()
   if (isTRUE(position$ggchord_feature_stack)) {
     base_position <- position$base_position
     placement <- base_position$placement %||% "identity"
@@ -324,7 +324,7 @@ ggchord_apply_feature_position <- function(data, position, seqs, lengths,
     )
     position_name <- position$placement
   } else {
-    resolved <- stats::setNames(rep(list(c("+" = 0, "-" = 0, "." = 0)), length(seqs)), seqs)
+    resolved <- setNames(rep(list(c("+" = 0, "-" = 0, "." = 0)), length(seqs)), seqs)
     position_name <- "identity"
   }
 

@@ -23,6 +23,6 @@ ggchord_fusion_render_events <- function(render_events, connection_grobs, overla
     }
   } else children <- c(lapply(render_events, `[[`, "background"), connection_grobs,
     lapply(render_events, `[[`, "foreground"), unname(overlay_grobs))
-  grob <- do.call(grid::grobTree, c(unname(children), list(vp = grid::viewport(xscale=c(0,1),yscale=c(0,1)))))
+  grob <- do.call(grobTree, c(unname(children), list(vp = viewport(xscale=c(0,1),yscale=c(0,1)))))
   grob
 }

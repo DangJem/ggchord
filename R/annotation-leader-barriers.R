@@ -21,9 +21,16 @@ ggchord_annotation_leader_segments <- function(registry) {
           x2 = tail(d$x[rows], -1), y2 = tail(d$y[rows], -1))
       }
     }
+    d <- registry[[id]]$domain_label
+    if (is.data.frame(d) && nrow(d)) {
+      at <- which(d$.component %in% "leader" & is.finite(d$source_row))
+      if (length(at)) parts[[length(parts) + 1L]] <- data.frame(owner = id,
+        component = "domain_label", source = d$source_row[at],
+        x1 = d$x[at], y1 = d$y[at], x2 = d$xend[at], y2 = d$yend[at])
+    }
   }
   all <- ggchord_rbind_fill(parts) %||% data.frame()
-  if (nrow(all)) all <- all[stats::complete.cases(all) &
+  if (nrow(all)) all <- all[complete.cases(all) &
     (all$x1 != all$x2 | all$y1 != all$y2), , drop = FALSE]
   all
 }
@@ -45,7 +52,7 @@ ggchord_annotation_leader_roots <- function(registry) {
         if (all(c('anchor_x', 'anchor_y') %in% names(geometry))) {
           anchors <- unique(geometry[geometry$source_row %in% path$source[1L],
             c('anchor_x', 'anchor_y'), drop = FALSE])
-          anchors <- anchors[stats::complete.cases(anchors), , drop = FALSE]
+          anchors <- anchors[complete.cases(anchors), , drop = FALSE]
           if (nrow(anchors) == 1L) point <- unlist(anchors, use.names = FALSE)
         }
       }
@@ -62,10 +69,14 @@ ggchord_annotation_leader_roots <- function(registry) {
     sqrt(d$x^2+d$y^2)
   }), use.names = FALSE)
   if (length(backbone)) for (owner in registry) {
-    d <- owner$gene_label_repel
-    if (!is.data.frame(d) || !"feature_label_mode" %in% names(d)) next
-    d <- d[d$.component %in% "text" &
-      d$feature_label_mode %in% "external", , drop = FALSE]
+    legacy <- owner$gene_label_repel
+    current <- owner$domain_label
+    d <- ggchord_rbind_fill(list(
+      if (NROW(legacy)) legacy[legacy$.component %in% "text" &
+        legacy$feature_label_mode %in% "external", , drop = FALSE],
+      if (NROW(current)) current[current$.component %in% "text" &
+        current$.perimeter_callout %in% TRUE, , drop = FALSE]))
+    if (!NROW(d)) next
     radius <- sqrt(d$anchor_x^2+d$anchor_y^2)
     exit <- max(backbone)+.055
     keep <- is.finite(radius) & radius>0 & radius<max(backbone)

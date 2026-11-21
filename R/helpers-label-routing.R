@@ -210,16 +210,16 @@ ggchord_feature_label_lanes <- function(gl, gene_polys, seq_arcs,
     source_bounds <- lapply(split(poly, as.character(poly$source_row)),
       function(x) c(min = min(x$.radius), max = max(x$.radius)))
   }
-  internal_tracks <- stats::setNames(
+  internal_tracks <- setNames(
     vector("list", length(unique(gl$accver))), unique(gl$accver)
   )
-  feature_track_ids <- stats::setNames(
+  feature_track_ids <- setNames(
     vector("list", length(unique(gl$accver))), unique(gl$accver)
   )
-  label_track_ids <- stats::setNames(
+  label_track_ids <- setNames(
     vector("list", length(unique(gl$accver))), unique(gl$accver)
   )
-  feature_bands <- stats::setNames(
+  feature_bands <- setNames(
     vector("list", length(unique(gl$accver))), unique(gl$accver)
   )
   for (sid in names(internal_tracks)) {
@@ -275,7 +275,7 @@ ggchord_feature_label_lanes <- function(gl, gene_polys, seq_arcs,
     registry$track <- seq_len(nrow(registry))
     feature_rows <- registry$kind == "feature"
     label_rows <- registry$kind == "label"
-    feature_track_ids[[sid]] <- stats::setNames(
+    feature_track_ids[[sid]] <- setNames(
       registry$track[feature_rows], registry$key[feature_rows]
     )
     label_track_ids[[sid]] <- registry$track[label_rows][
@@ -690,7 +690,7 @@ ggchord_feature_label_lanes <- function(gl, gene_polys, seq_arcs,
         # number of single-task turns, in stable source order, and stop at the
         # first solution that retains every previously readable label.
         alternatives <- hidden[order(gl$source_row[hidden], hidden)]
-        for (row in utils::head(alternatives, 5L)) {
+        for (row in head(alternatives, 5L)) {
           retry <- ggchord_feature_label_lanes(gl, gene_polys, seq_arcs,
             units_per_inch = units_per_inch, max_overlaps = max_overlaps,
             allow_external = allow_external, priority_rows = row)

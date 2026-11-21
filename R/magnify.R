@@ -49,7 +49,7 @@ fusion_zoom <- function(from, to, region, highlight = TRUE,
     ggchord_stop(caller, ": alpha must be in [0,1] and linewidth must be nonnegative")
   for (value in list(fill, colour)) {
     if (length(value) != 1L) ggchord_stop(caller, ": colours must be scalar")
-    tryCatch(grDevices::col2rgb(value), error = function(e) ggchord_stop(caller, ": invalid colour"))
+    tryCatch(col2rgb(value), error = function(e) ggchord_stop(caller, ": invalid colour"))
   }
   structure(list(from = from, to = to, from_key = from_key, to_key = to_key,
     region = as.data.frame(region), highlight = highlight, fill = fill,
@@ -116,8 +116,8 @@ ggchord_render_zoom <- function(layer, panels) {
     y <- front$y + front$normal_y * half
     xx <- front$x - front$normal_x * half
     yy <- front$y - front$normal_y * half
-    grid::polygonGrob(c(x, rev(xx)), c(y, rev(yy)), default.units = "mm",
-      gp = grid::gpar(fill = scales::alpha(layer$fill, layer$alpha),
+    polygonGrob(c(x, rev(xx)), c(y, rev(yy)), default.units = "mm",
+      gp = gpar(fill = alpha(layer$fill, layer$alpha),
         col = layer$colour, lwd = layer$linewidth * ggplot2::.pt))
   }
   lapply(seq_len(nrow(layer$region)), function(i) {
@@ -140,10 +140,10 @@ ggchord_render_zoom <- function(layer, panels) {
     region$composition_id <- ""
     path <- data.frame(x = path[, 1L], y = path[, 2L], layer_id = layer$id,
       source_row = i, component_type = "decoration", composition_id = "", units = "mm")
-    grob <- grid::polygonGrob(path$x, path$y, default.units = "mm",
-      gp = grid::gpar(fill = scales::alpha(layer$fill, layer$alpha),
+    grob <- polygonGrob(path$x, path$y, default.units = "mm",
+      gp = gpar(fill = alpha(layer$fill, layer$alpha),
         col = layer$colour, lwd = layer$linewidth * ggplot2::.pt))
     list(region = region, path = path, grob = grob,
-      overlay = if (layer$highlight) stats::setNames(list(source_overlay(qf)), q$panel) else list())
+      overlay = if (layer$highlight) setNames(list(source_overlay(qf)), q$panel) else list())
   })
 }

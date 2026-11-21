@@ -108,12 +108,12 @@
     "en": "Circular · dense pETDuet-1 annotations"
   },
   "circular-caption": {
-    "zh": "pETDuet-1 图组合随包区间注释、选定的标签和单切酶的识别位置。",
-    "en": "The pETDuet-1 map combines the bundled intervals, a subset of labels and the recognition positions of single-cut enzymes."
+    "zh": "pETDuet-1 密集图在环内标出特征和引物，在环外标注酶名与切点坐标。",
+    "en": "The dense pETDuet-1 map shows features and primers inside the backbone, with labelled cut positions around the perimeter."
   },
   "circular-alt": {
-    "zh": "pETDuet-1 圆形注释图，含区间特征和酶切识别位置",
-    "en": "pETDuet-1 circular map with features and cut-site positions"
+    "zh": "pETDuet-1 圆图，含特征、引物和酶切位点标签",
+    "en": "pETDuet-1 circular map with features, primers and cut-site labels"
   },
   "case": {
     "zh": "完整案例",
@@ -144,16 +144,16 @@
     "en": "Four-sequence matrix of 32 original HSPs"
   },
   "fusion-alt": {
-    "zh": "由两个面板组成的源区间全局图与局部放大图",
-    "en": "Overview and enlarged view of a source interval in two connected panels"
+    "zh": "六个面板从基因组比对逐步放大至核苷酸对齐",
+    "en": "Six panels connect genome comparisons to an enlarged nucleotide alignment"
   },
   "dotplot-caption": {
     "zh": "显示 32 条原始 HSP，颜色表示原始一致性，线宽表示原始比对长度。",
     "en": "The original 32 HSPs use colour for reported identity and line width for reported alignment length."
   },
   "fusion-caption": {
-    "zh": "弦图总览与独立的共线性细节图以不同尺度展示同一来源区间。",
-    "en": "A Chord overview and an independent Collinear detail show the same source region at different scales."
+    "zh": "同一组比对关系用三种视图呈现，随后逐步放大至源区间、比对窗口和可逐碱基阅读的细节。",
+    "en": "Three views of the same relationships lead into a source interval, an alignment window and a detail showing the individual bases."
   },
   "dotplot-guide": {
     "zh": "双轴、方向与映射 →",

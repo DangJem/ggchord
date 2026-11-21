@@ -5,6 +5,9 @@
 #' @param stat A compatible ggplot2 Stat or its name. The default uses the supplied records.
 #' @param position A compatible Position for placement of the layer geometry.
 #' @param route Choose curved or straight routes, or a shared corridor where supported.
+#'   On a curved collinear route, an explicit positive `bulge` clears the high
+#'   coordinate end of intervening rows by that fraction of the longest visible
+#'   backbone. Radial curves with positive `bulge` clear intermediate spoke tips.
 #' @param fill_mode Use solid fill or map independent query and subject endpoint colours.
 #' @param ... Additional named visual styles and parameters accepted by this layer.
 #' @param na.rm Suppress warnings for missing observations that the layer can omit.

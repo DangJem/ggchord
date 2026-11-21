@@ -16,4 +16,4 @@
 
 {{example:first-circular}}
 
-下一步可[保留九条注释并只标出两个 CDS 的名称](annotations.md)，或[沿 pUC19 绘制 GC 含量](tracks.md)。[完整质粒图](case-circular.md)在 32 个位置标出 47 条限制性位点记录，[质粒图集](plasmid-catalog.md)还收录了另外十二条参考序列的示例。
+下一步可[保留九条注释并只标出两个 CDS 的名称](annotations.md)，或[沿 pUC19 绘制 GC 含量](tracks.md)。[完整质粒图](case-circular.md)在 33 个切割位置标出 39 条限制性位点记录，[质粒图集](plasmid-catalog.md)还收录了另外十二条参考序列的示例。
