@@ -36,7 +36,7 @@ Colour residue cells by alphabet
 library(ggplot2)
 
 cells <- as_ggchord_alignment(c(A = "AC-GT", B = "ACTGT"), alphabet = "DNA")
-ggplot2::ggplot(cells, aes(alignment_column, accver, label = symbol)) +
+ggplot(cells, aes(alignment_column, accver, label = symbol)) +
   geom_residue(aes(fill = symbol)) +
   scale_fill_residue("DNA", values = c(G = "#D9A400"))
 }

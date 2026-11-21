@@ -2,7 +2,7 @@
 
 #' Mark display breaks on reference paths
 #' @export
-#' @param mapping Aesthetic mapping from `ggplot2::aes()`. A local mapping overrides the matching inherited channel.
+#' @param mapping Aesthetic mapping from `aes()`. A local mapping overrides the matching inherited channel.
 #' @param data Optional reference table or function selecting from the registered reference.
 #' @param mark Symbol used at a display discontinuity.
 #' @param size Physical size of the symbol in millimetres.

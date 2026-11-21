@@ -59,6 +59,6 @@ Missing full source strings mean unverified characters, not invented data.
 library(ggplot2)
 
 cells <- as_ggchord_alignment(c(A = "AC-G", B = "ACTG"), alphabet = "DNA")
-ggplot2::ggplot(cells, aes(alignment_column, accver, label = symbol)) +
+ggplot(cells, aes(alignment_column, accver, label = symbol)) +
   geom_residue(aes(fill = symbol))
 }

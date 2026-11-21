@@ -19,7 +19,7 @@ geom_site_label_repel(
 )
 }
 \arguments{
-\item{mapping}{Aesthetic mapping from \code{ggplot2::aes()}. A local mapping overrides the matching inherited channel.}
+\item{mapping}{Aesthetic mapping from \code{aes()}. A local mapping overrides the matching inherited channel.}
 
 \item{data}{Optional label table or function. With a named anchor, the default data consists of the target entities.}
 

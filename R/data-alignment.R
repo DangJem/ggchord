@@ -53,7 +53,7 @@ ggchord_alignment_complement <- function(x, alphabet) {
 #' library(ggplot2)
 #'
 #' cells <- as_ggchord_alignment(c(A = "AC-G", B = "ACTG"), alphabet = "DNA")
-#' ggplot2::ggplot(cells, aes(alignment_column, accver, label = symbol)) +
+#' ggplot(cells, aes(alignment_column, accver, label = symbol)) +
 #'   geom_residue(aes(fill = symbol))
 as_ggchord_alignment <- function(sequences, alphabet, source_data = NULL, circular = FALSE) {
   caller <- "as_ggchord_alignment()"

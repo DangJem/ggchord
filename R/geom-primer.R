@@ -1,6 +1,6 @@
 #' Draw primer binding intervals
 #' @export
-#' @param mapping Aesthetic mapping from `ggplot2::aes()`. A local mapping overrides the matching inherited channel.
+#' @param mapping Aesthetic mapping from `aes()`. A local mapping overrides the matching inherited channel.
 #' @param data Observation table or a data function. For ggchord layers, provide the required data-role columns.
 #' @param shape Default shape. An explicitly supplied fixed shape takes priority over its mapping.
 #' @param thickness Physical thickness in mm or absolute grid units. Named values select references.

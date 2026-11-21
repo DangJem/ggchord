@@ -1,5 +1,6 @@
 # Synthetic intervals for a native ggplot2-style collinearity workflow.
 library(ggchord)
+library(ggplot2)
 library(dplyr)
 
 workflow_sequences <- tibble(
@@ -17,60 +18,42 @@ workflow_features <- tibble(
   type = "CDS", label = c("target A", "target B", "target C")
 )
 
-# Direction and anchor alignment are coordinate settings, composed with +.
-# The non-adjacent A/C ribbon is omitted by default; input records stay intact.
-workflow_aligned <- ggchord(prepare_ggchord_data(workflow_sequences, workflow_links),
-  validate = "none"
-) +
-  geom_link_ribbon(alpha = .25) +
+# Compare adjacent rows; all three source comparisons remain in workflow_links.
+adjacent_links <- workflow_links |>
+  filter(!(qaccver == "A" & saccver == "C"))
+anchors <- workflow_features |>
+  select(accver, start, end)
+
+workflow_base <- ggchord(workflow_sequences) +
+  geom_link_ribbon(data = adjacent_links, alpha = 0.25) +
   geom_seq() +
   geom_seq_label() +
-  geom_feature(
-    data = workflow_features,
-    position = position_strand(.12)
-  ) +
-  geom_feature_label(placement = 'repel', data = workflow_features, label_side = "auto") +
-  coord_collinear(
-    anchor = workflow_features |>
-      select(accver, start, end),
-    align = "center", orientation = "auto"
-  )
+  geom_gene(data = workflow_features, id = "genes") +
+  geom_gene_label_repel(aes(label = label), anchor_layer = "genes") +
+  coord_collinear()
 
-# Explicitly include all comparisons, or select a named pair:
-# geom_link_ribbon(adjacent_only = FALSE)
-# geom_link_ribbon(pairs = tibble(qaccver = "A", saccver = "C"))
-# geom_link_ribbon(adjacent_only = FALSE, linetype = "solid")
+workflow_aligned <- workflow_base +
+  layout_sequences(anchor = anchors, align = "center")
 
-# Focus retains source coordinates; end marks identify cropped sequence ends.
-workflow_focused <- focus_ggchord_data(workflow_sequences,
-  ribbon_data = workflow_links, feature_data = workflow_features,
-  loci = tibble(
-    accver = c("A", "B", "C"),
-    start = c(50, 150, 250), end = c(600, 650, 900)
-  )
+# Draw windows against the original reference and label their source coordinates.
+windows <- tibble(
+  instance_id = c("A_window", "B_window", "C_window"),
+  accver = c("A", "B", "C"),
+  start = c(50, 150, 250), end = c(600, 650, 900)
 )
-workflow_source_axis <- ggchord(prepare_ggchord_data(workflow_focused$seq_data,
-  workflow_focused$ribbon_data, workflow_focused$feature_data),
-  validate = "none"
-) +
-  geom_link_ribbon(alpha = .25) +
-  geom_seq() +
+workflow_source_axis <- workflow_base +
+  layout_sequences(windows = windows) +
   geom_seq_break() +
-  geom_seq_label() +
-  geom_feature(preset = 'gene', position = position_strand(.12)) +
-  scale_seq_position_continuous(coordinates = "source") +
-  coord_collinear(orientation = "auto")
+  scale_seq_position(coordinates = "source")
 
-# Mapping helpers also support ordinary ggplot2 annotations.
-workflow_mark <- map_ggchord_position(workflow_source_axis,
-  "A", 400,
-  source = TRUE
-)
+# Place the mark at a source position; query its display location at export size.
+mark <- tibble(accver = "A", pos = 400)
 workflow_source_axis <- workflow_source_axis +
-  ggplot2::geom_point(
-    data = workflow_mark, ggplot2::aes(x, y),
-    inherit.aes = FALSE, colour = "#CC6677", size = 2
-  )
+  geom_site(data = mark, shape = "point", colour = "#CC6677", size = 2)
+workflow_mark <- map_ggchord_position(
+  workflow_source_axis, transmute(mark, source_accver = accver, source_position = pos),
+  width = 9, height = 6, device = "png"
+)
 
 if (interactive()) print(workflow_aligned)
 # ggsave("focused-clusters.png", workflow_source_axis, width = 9, height = 6)

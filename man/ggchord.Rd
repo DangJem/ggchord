@@ -11,7 +11,7 @@ ggchord(data = NULL, mapping = aes(), ...)
 Omitted units default to bp. An explicit reference table supplied to
 \code{\link[=geom_seq]{geom_seq()}} can also define the reference when the plot has no data.}
 
-\item{mapping}{Default aesthetic mapping, constructed with \code{\link[ggplot2:aes]{ggplot2::aes()}}.
+\item{mapping}{Default aesthetic mapping, constructed with \code{\link[ggplot2:aes]{aes()}} from ggplot2.
 Evaluate inherited mappings on the data of each layer.}
 
 \item{...}{Must be empty.}

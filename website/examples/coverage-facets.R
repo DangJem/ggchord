@@ -1,4 +1,5 @@
 library(ggchord)
+library(ggplot2)
 library(dplyr)
 
 reference <- seq_data_example |>
@@ -16,5 +17,5 @@ ggchord(reference) +
     track = "coverage", fill = "#327B83"
   ) +
   scale_track_value("coverage", limits = c(0, 1), name = "Coverage") +
-  ggplot2::facet_wrap(ggplot2::vars(subject), ncol = 1) +
+  facet_wrap(vars(subject), ncol = 1) +
   coord_collinear()

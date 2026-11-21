@@ -503,11 +503,11 @@ ggchord_fusion_style_layer <- function(layer) {
   d$.fusion_x <- rep(c(0, 1, 0), nrow(input))
   d$.fusion_y <- rep(c(0, 0, 1), nrow(input))
   d$.fusion_row <- rep(seq_len(nrow(input)), each = 3L)
-  mapping <- layer$mapping %||% ggplot2::aes()
+  mapping <- layer$mapping %||% aes()
   for (role in intersect(c(layer$roles, "group"), names(mapping))) mapping[[role]] <- NULL
-  mapping$x <- ggplot2::aes(x = .fusion_x)$x
-  mapping$y <- ggplot2::aes(y = .fusion_y)$y
-  mapping$group <- ggplot2::aes(group = .fusion_row)$group
+  mapping$x <- aes(x = .fusion_x)$x
+  mapping$y <- aes(y = .fusion_y)$y
+  mapping$group <- aes(group = .fusion_row)$group
   defaults <- list(fill = "steelblue", colour = NA, alpha = .35, linewidth = .25, linetype = 1)
   fixed <- layer$fixed
   for (name in setdiff(names(defaults), c(names(mapping), names(fixed))))

@@ -18,7 +18,7 @@ geom_track_line(
 )
 }
 \arguments{
-\item{mapping}{Aesthetic mapping from \code{ggplot2::aes()}. A local mapping overrides the matching inherited channel.}
+\item{mapping}{Aesthetic mapping from \code{aes()}. A local mapping overrides the matching inherited channel.}
 
 \item{data}{Track observation table, or a function returning it. Numerical measurements use source positions and values.}
 

@@ -119,7 +119,7 @@ ggchord_prepare_link_statistics <- function(plot, references) {
 
 #' Aggregate source intervals in a complete reference grid
 #' @export
-#' @param mapping Aesthetic mapping from `ggplot2::aes()`. A local mapping overrides the matching inherited channel.
+#' @param mapping Aesthetic mapping from `aes()`. A local mapping overrides the matching inherited channel.
 #' @param data Observation table or a data function. For ggchord layers, provide the required data-role columns.
 #' @param geom Compatible geometry to consume this statistic.
 #' @param position A compatible Position for placement of the layer geometry.
@@ -169,7 +169,7 @@ stat_link_bundle <- function(mapping = NULL, data = NULL, geom = "link_ribbon",
 
 #' Compute source interval density
 #' @export
-#' @param mapping Aesthetic mapping from `ggplot2::aes()`. A local mapping overrides the matching inherited channel.
+#' @param mapping Aesthetic mapping from `aes()`. A local mapping overrides the matching inherited channel.
 #' @param data Observation table or a data function. For ggchord layers, provide the required data-role columns.
 #' @param geom Compatible geometry to consume this statistic.
 #' @param position A compatible Position for placement of the layer geometry.

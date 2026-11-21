@@ -157,7 +157,7 @@ ggchord_coverage_windows <- function(data, grid) {
 StatGgchordCoverage <- ggplot2::ggproto("StatGgchordCoverage", ggplot2::Stat,
   required_aes = c("xmin", "xmax", ".ggchord_source_index", ".ggchord_reference"),
   dropped_aes = c("xmin", "xmax", ".ggchord_source_index", ".ggchord_reference"),
-  default_aes = ggplot2::aes(y = after_stat(coverage)),
+  default_aes = aes(y = after_stat(coverage)),
   compute_group = function(data, scales, window_grid) {
     ggchord_coverage_windows(data, window_grid[[data$.ggchord_reference[1L]]])
   })

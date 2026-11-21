@@ -124,7 +124,7 @@ ggchord_track_layer <- function(kind, mapping, data, track, fill, colour,
     alpha, linewidth, linetype, bounds, baseline, closed, show.legend, inherit.aes, fixed, dots, id = NULL) {
   track <- ggchord_track_id(track %||% "default")
   if (!is.numeric(baseline) || length(baseline) != 1L || !is.finite(baseline)) ggchord_stop("Track baseline must be finite")
-  mapping <- ggchord_normalize_mapping(mapping) %||% ggplot2::aes()
+  mapping <- ggchord_normalize_mapping(mapping) %||% aes()
   mapping <- ggchord_track_stage_mapping(mapping, track)
   if (any(c("x", "y") %in% names(mapping))) ggchord_stop("Track geometry maps accver/pos or start/end; do not override layout x/y")
   fixed[["colour"]] <- fixed[["colour"]] || "color" %in% names(dots)
@@ -148,7 +148,7 @@ ggchord_track_layer <- function(kind, mapping, data, track, fill, colour,
   mapping[intersect(names(mapping), c(names(defaults)[fixed], fixed_names))] <- NULL
   ggchord_check_geom_params(dots, geom, paste0("geom_track_", kind, "()"))
   layer <- ggplot2::layer(data = data.frame(x = numeric(), y = numeric(), group = integer()),
-    mapping = ggplot2::aes(x = x, y = y, group = group, label = label,
+    mapping = aes(x = x, y = y, group = group, label = label,
       .component = .component), geom = geom,
     stat = "identity", position = "identity", show.legend = show.legend,
     inherit.aes = inherit.aes, check.aes = FALSE,
@@ -161,7 +161,7 @@ ggchord_track_layer <- function(kind, mapping, data, track, fill, colour,
 
 GeomGgchordTrack <- ggplot2::ggproto("GeomGgchordTrack", ggplot2::Geom,
   required_aes = c("x", "y"),
-  default_aes = ggplot2::aes(fill = "#86AFB9", colour = NA, alpha = 1,
+  default_aes = aes(fill = "#86AFB9", colour = NA, alpha = 1,
     linewidth = .25, linetype = 1, size = 2.2, shape = 19, stroke = .5,
     label = NA_character_, angle=0, hjust=.5, vjust=.5, family="",fontface=1,lineheight=1.2, .component = "track_poly"),
   extra_params = c("na.rm", "track_keys", "track_kind", "axis_colour", "axis_size", "native_draw_params",

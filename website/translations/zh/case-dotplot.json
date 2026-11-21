@@ -1,5 +1,5 @@
 {
-  "source_sha256": "4dba72bbb8769895498649664c4dd680bf8e34d6eb6ff8b1dd7ba2abf721e2c5",
+  "source_sha256": "7ed717362482ee04af6788a57583891ece36bb171223275e24fd813ef1fbc3a4",
   "blocks": {
     "0": {
       "source_sha256": "eee198f4ea3195116d452c139839e7ab570f50ae572bcbb4450992ba0f9a4574",
@@ -12,9 +12,9 @@
       "translation": "## 绘制完整图 {#map}\n"
     },
     "3": {
-      "source_sha256": "4146709887c7598ae3ffbd17c7287f1d47c8af498c7d35a8c387c7c52a069a59",
+      "source_sha256": "29daec49cc816cb23ef93788e965ccc861e39e98220ae515d87241cf82896ef6",
       "status": "reviewed",
-      "translation": "该图使用 13 × 12 英寸画布、144 dpi。脚本返回绘图对象，可传给 `ggplot2::ggsave()` 按相同尺寸保存。\n"
+      "translation": "该图使用 13 × 12 英寸画布、144 dpi。脚本返回绘图对象，可传给 `ggsave()` 按相同尺寸保存。\n"
     },
     "6": {
       "source_sha256": "84a540c546a282c8238972eface9931f272ce56681f6a8548bf82160a1d72e0e",

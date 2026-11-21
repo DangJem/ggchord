@@ -4,7 +4,7 @@ Four source sequences appear in both columns. This arrangement lets the eye foll
 
 ## Draw the full map {#map}
 
-The figure uses a 10 × 16 in canvas at 144 dpi. The script returns the plot so you can pass it to `ggplot2::ggsave()` at the same size.
+The figure uses a 10 × 16 in canvas at 144 dpi. The script returns the plot so you can pass it to `ggsave()` at the same size.
 
 {{example:case-sankey}}
 

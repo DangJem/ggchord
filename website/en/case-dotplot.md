@@ -4,7 +4,7 @@ Four full-length references form a 4 × 4 matrix of possible ordered sequence pa
 
 ## Draw the full map {#map}
 
-The figure uses a 13 × 12 in canvas at 144 dpi. The script returns the plot so you can pass it to `ggplot2::ggsave()` at the same size.
+The figure uses a 13 × 12 in canvas at 144 dpi. The script returns the plot so you can pass it to `ggsave()` at the same size.
 
 {{example:case-dotplot}}
 

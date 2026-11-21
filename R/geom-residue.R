@@ -1,6 +1,6 @@
 #' Draw true aligned character cells
 #' @export
-#' @param mapping Aesthetic mapping from `ggplot2::aes()`. A local mapping overrides the matching inherited channel.
+#' @param mapping Aesthetic mapping from `aes()`. A local mapping overrides the matching inherited channel.
 #' @param data Observation table or a data function. For ggchord layers, provide the required data-role columns.
 #' @param representation Draw text, filled tiles, or both.
 #' @param overflow Hide text, use tile fallback, or report a failure if the character does not fit.
@@ -18,10 +18,10 @@
 #' library(ggplot2)
 #'
 #' cells <- as_ggchord_alignment(c(A = "AC-G", B = "ACTG"), alphabet = "DNA")
-#' ggplot2::ggplot(cells, aes(alignment_column, accver, label = symbol)) +
+#' ggplot(cells, aes(alignment_column, accver, label = symbol)) +
 #'   geom_residue(aes(fill = symbol)) +
 #'   scale_fill_residue(alphabet = "DNA") +
-#'   ggplot2::coord_fixed(ratio = 1)
+#'   coord_fixed(ratio = 1)
 geom_residue <- function(mapping = NULL, data = NULL, representation = "tile_text",
     overflow = "tile", line_width = NULL, stat = "identity", position = "identity",
     ..., na.rm = FALSE, show.legend = FALSE, inherit.aes = TRUE, id = NULL) {
@@ -98,7 +98,7 @@ ggchord_residue_validate_styles <- function(styles, representation, overflow) {
 
 #' Draw true alignment characters
 #' @export
-#' @param mapping Aesthetic mapping from `ggplot2::aes()`. A local mapping overrides the matching inherited channel.
+#' @param mapping Aesthetic mapping from `aes()`. A local mapping overrides the matching inherited channel.
 #' @param data Observation table or a data function. For ggchord layers, provide the required data-role columns.
 #' @param overflow Hide text, use tile fallback, or report a failure if the character does not fit.
 #' @param line_width Maximum number of displayed alignment columns per wrapped row.
@@ -115,9 +115,9 @@ ggchord_residue_validate_styles <- function(styles, representation, overflow) {
 #' library(ggplot2)
 #'
 #' cells <- as_ggchord_alignment(c(A = "AC-G", B = "ACTG"), alphabet = "DNA")
-#' ggplot2::ggplot(cells, aes(alignment_column, accver, label = symbol)) +
+#' ggplot(cells, aes(alignment_column, accver, label = symbol)) +
 #'   geom_residue_text() +
-#'   ggplot2::coord_fixed(ratio = 1)
+#'   coord_fixed(ratio = 1)
 geom_residue_text <- function(mapping = NULL, data = NULL, overflow = "hide",
     line_width = NULL, stat = "identity", position = "identity", ...,
     na.rm = FALSE, show.legend = FALSE, inherit.aes = TRUE, id = NULL) {
@@ -129,7 +129,7 @@ geom_residue_text <- function(mapping = NULL, data = NULL, overflow = "hide",
 
 #' Draw true alignment cells as tiles
 #' @export
-#' @param mapping Aesthetic mapping from `ggplot2::aes()`. A local mapping overrides the matching inherited channel.
+#' @param mapping Aesthetic mapping from `aes()`. A local mapping overrides the matching inherited channel.
 #' @param data Observation table or a data function. For ggchord layers, provide the required data-role columns.
 #' @param line_width Maximum number of displayed alignment columns per wrapped row.
 #' @param stat A compatible ggplot2 Stat or its name. The default uses the supplied records.
@@ -145,10 +145,10 @@ geom_residue_text <- function(mapping = NULL, data = NULL, overflow = "hide",
 #' library(ggplot2)
 #'
 #' cells <- as_ggchord_alignment(c(A = "AC-G", B = "ACTG"), alphabet = "DNA")
-#' ggplot2::ggplot(cells, aes(alignment_column, accver, label = symbol)) +
+#' ggplot(cells, aes(alignment_column, accver, label = symbol)) +
 #'   geom_residue_tile(aes(fill = symbol)) +
 #'   scale_fill_residue(alphabet = "DNA") +
-#'   ggplot2::coord_fixed(ratio = 1)
+#'   coord_fixed(ratio = 1)
 geom_residue_tile <- function(mapping = NULL, data = NULL, line_width = NULL,
     stat = "identity", position = "identity", ..., na.rm = FALSE,
     show.legend = FALSE, inherit.aes = TRUE, id = NULL) {
@@ -200,7 +200,7 @@ ggchord_residue_wrap <- function(x, y, width, origin = NULL) {
 
 GeomResidue <- ggplot2::ggproto("GeomResidue", ggplot2::Geom,
   required_aes = c("x", "y", "label"),
-  default_aes = ggplot2::aes(colour = "black", fill = "grey95", alpha = 1,
+  default_aes = aes(colour = "black", fill = "grey95", alpha = 1,
     size = 3, family = "mono", fontface = 1, lineheight = 1.2,
     cell_colour = NA_character_, cell_linewidth = .2),
   extra_params = c("na.rm", "representation", "overflow", "line_width"),

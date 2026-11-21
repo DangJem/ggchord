@@ -4,7 +4,7 @@
 
 #' Draw directional sequence features
 #' @export
-#' @param mapping Aesthetic mapping from `ggplot2::aes()`. A local mapping overrides the matching inherited channel.
+#' @param mapping Aesthetic mapping from `aes()`. A local mapping overrides the matching inherited channel.
 #' @param data Observation table or a data function. For ggchord layers, provide the required data-role columns.
 #' @param shape Default shape. An explicitly supplied fixed shape takes priority over its mapping.
 #' @param thickness Physical thickness in mm or absolute grid units. Named values select references.
@@ -37,7 +37,7 @@
 #' ggchord(seqs) +
 #'   geom_seq() +
 #'   geom_gene(aes(fill = type), data = genes, id = "genes") +
-#'   ggplot2::scale_fill_manual(values = gene_colours) +
+#'   scale_fill_manual(values = gene_colours) +
 #'   coord_collinear()
 geom_gene <- function(mapping = NULL, data = NULL, shape = "arrow",
     thickness = 2, stat = "identity", position = position_strand(), ...,
@@ -49,7 +49,7 @@ geom_gene <- function(mapping = NULL, data = NULL, shape = "arrow",
 
 #' Label gene intervals
 #' @export
-#' @param mapping Aesthetic mapping from `ggplot2::aes()`. A local mapping overrides the matching inherited channel.
+#' @param mapping Aesthetic mapping from `aes()`. A local mapping overrides the matching inherited channel.
 #' @param data Optional label table or function. With a named anchor, the default data consists of the target entities.
 #' @param stat A compatible ggplot2 Stat or its name. The default uses the supplied records.
 #' @param anchor_layer ID of the target layer. Labels use the target entities after its Stat and follow their displayed placement.
@@ -93,7 +93,7 @@ geom_gene_label <- function(mapping = NULL, data = NULL, stat = "identity",
 
 #' Label gene intervals
 #' @export
-#' @param mapping Aesthetic mapping from `ggplot2::aes()`. A local mapping overrides the matching inherited channel.
+#' @param mapping Aesthetic mapping from `aes()`. A local mapping overrides the matching inherited channel.
 #' @param data Optional label table or function. With a named anchor, the default data consists of the target entities.
 #' @param stat A compatible ggplot2 Stat or its name. The default uses the supplied records.
 #' @param anchor_layer ID of the target layer. Labels use the target entities after its Stat and follow their displayed placement.
@@ -137,7 +137,7 @@ geom_gene_label_repel <- function(mapping = NULL, data = NULL, stat = "identity"
 
 #' Label primer intervals
 #' @export
-#' @param mapping Aesthetic mapping from `ggplot2::aes()`. A local mapping overrides the matching inherited channel.
+#' @param mapping Aesthetic mapping from `aes()`. A local mapping overrides the matching inherited channel.
 #' @param data Optional label table or function. With a named anchor, the default data consists of the target entities.
 #' @param stat A compatible ggplot2 Stat or its name. The default uses the supplied records.
 #' @param anchor_layer ID of the target layer. Labels use the target entities after its Stat and follow their displayed placement.
@@ -182,7 +182,7 @@ geom_primer_label <- function(mapping = NULL, data = NULL, stat = "identity",
 
 #' Label primer intervals
 #' @export
-#' @param mapping Aesthetic mapping from `ggplot2::aes()`. A local mapping overrides the matching inherited channel.
+#' @param mapping Aesthetic mapping from `aes()`. A local mapping overrides the matching inherited channel.
 #' @param data Optional label table or function. With a named anchor, the default data consists of the target entities.
 #' @param stat A compatible ggplot2 Stat or its name. The default uses the supplied records.
 #' @param anchor_layer ID of the target layer. Labels use the target entities after its Stat and follow their displayed placement.

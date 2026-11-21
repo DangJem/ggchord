@@ -115,7 +115,7 @@ map_ggchord_position <- function(plot, data, from = "source", to = "display",
         if (is.null(failure)) "panel_measurement_unavailable" else failure,
         if (is.null(failure)) "unavailable" else "failed")
     } else {
-      panel_number <- input$PANEL %||% facet
+      panel_number <- input[["PANEL"]] %||% facet
       candidates <- ggchord_query_match(reference, from, input)
       value <- if (any_display) {
         ggchord_query_project(candidates, context, from, input, axis, panel_number)

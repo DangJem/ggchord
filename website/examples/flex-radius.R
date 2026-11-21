@@ -1,12 +1,13 @@
 library(ggchord)
+library(ggplot2)
 
 ggchord(seq_data_example) +
   layout_sequences(radius = c("MT118296.1" = 0.72), angular_gap = 9) +
   geom_seq(
-    ggplot2::aes(colour = accver), show.legend = FALSE,
+    aes(colour = accver), show.legend = FALSE,
     arrow = grid::arrow(type = "closed", length = grid::unit(2.4, "mm"))
   ) +
-  ggplot2::scale_colour_manual(values = c(
+  scale_colour_manual(values = c(
     "MT108731.1" = "#0072B2", "MT118296.1" = "#D55E00",
     "OQ646790.1" = "#009E73", "OR222515.1" = "#CC79A7"
   )) +

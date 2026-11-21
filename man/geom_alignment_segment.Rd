@@ -17,7 +17,7 @@ geom_alignment_segment(
 )
 }
 \arguments{
-\item{mapping}{Aesthetic mapping from \code{ggplot2::aes()}. A local mapping overrides the matching inherited channel.}
+\item{mapping}{Aesthetic mapping from \code{aes()}. A local mapping overrides the matching inherited channel.}
 
 \item{data}{Observation table or a data function. For ggchord layers, provide the required data-role columns.}
 
@@ -63,5 +63,5 @@ ggchord(seqs) +
   geom_alignment_segment(aes(colour = pident), data = links) +
   layout_dotplot(x_order = "A", y_order = "B") +
   coord_dotplot(ratio = 1) +
-  ggplot2::scale_colour_gradient(limits = c(0, 100))
+  scale_colour_gradient(limits = c(0, 100))
 }

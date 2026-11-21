@@ -19,7 +19,7 @@ geom_residue_text(
 )
 }
 \arguments{
-\item{mapping}{Aesthetic mapping from \code{ggplot2::aes()}. A local mapping overrides the matching inherited channel.}
+\item{mapping}{Aesthetic mapping from \code{aes()}. A local mapping overrides the matching inherited channel.}
 
 \item{data}{Observation table or a data function. For ggchord layers, provide the required data-role columns.}
 
@@ -54,7 +54,7 @@ Provide an aligned character table with source or alignment identity. Display wr
 library(ggplot2)
 
 cells <- as_ggchord_alignment(c(A = "AC-G", B = "ACTG"), alphabet = "DNA")
-ggplot2::ggplot(cells, aes(alignment_column, accver, label = symbol)) +
+ggplot(cells, aes(alignment_column, accver, label = symbol)) +
   geom_residue_text() +
-  ggplot2::coord_fixed(ratio = 1)
+  coord_fixed(ratio = 1)
 }

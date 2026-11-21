@@ -1,4 +1,5 @@
 library(ggchord)
+library(ggplot2)
 library(dplyr)
 
 ids <- c("MT108731.1", "MT118296.1")
@@ -14,16 +15,16 @@ ggchord(reference) +
     row_gap = 35
   ) +
   geom_seq(
-    ggplot2::aes(colour = accver), show.legend = FALSE,
+    aes(colour = accver), show.legend = FALSE,
     arrow = grid::arrow(type = "closed", length = grid::unit(2.4, "mm"))
   ) +
-  ggplot2::scale_colour_manual(values = c(
+  scale_colour_manual(values = c(
     "MT108731.1" = "#0072B2", "MT118296.1" = "#D55E00"
   )) +
   geom_seq_label(
     label_layout = label_layout_fixed(orientation = "horizontal", offset = 4)
   ) +
-  geom_link_ribbon(ggplot2::aes(fill = pident), data = hits) +
+  geom_link_ribbon(aes(fill = pident), data = hits) +
   scale_seq_position(guide = guide_seq_axis(side = "negative")) +
   coord_collinear() +
   theme_ggchord_minimal()

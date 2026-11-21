@@ -1,4 +1,5 @@
 library(ggchord)
+library(ggplot2)
 library(dplyr)
 
 path <- system.file("extdata", "pUC19-gc-100.bedGraph", package = "ggchord")
@@ -11,11 +12,11 @@ ggchord(reference) +
   geom_seq(show.legend = FALSE) +
   track_band("gc", thickness = 15) +
   geom_track_col(
-    ggplot2::aes(x = midpoint, y = value, width = window_length),
+    aes(x = midpoint, y = value, width = window_length),
     data = windows, track = "gc", bounds = "clip", fill = "#99C9C2"
   ) +
   geom_track_line(
-    ggplot2::aes(x = midpoint, y = value), data = windows, track = "gc",
+    aes(x = midpoint, y = value), data = windows, track = "gc",
     colour = "#1F5961", linewidth = .85
   ) +
   scale_track_value("gc", name = "GC (%)", limits = c(0, 100)) +

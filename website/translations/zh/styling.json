@@ -1,5 +1,5 @@
 {
-  "source_sha256": "141163d5f696c4d85f0fb25b2b4d2e17d61cab5d935039df4b7c3a6d7ca09edf",
+  "source_sha256": "b78f3f734d49b78ab6edd257a5bf02b754e920b7dae47c8fe4a7a9a68d189c96",
   "blocks": {
     "0": {
       "source_sha256": "441223939bf23846bb93de393b385dedcbc77fb50efc1885f1cad640a2f06432",
@@ -27,9 +27,9 @@
       "translation": "沿用同样的筛选和位置设置。把 `fill = type` 写进 `aes()`，在 `scale_fill_manual()` 中用三个原始类别值给颜色命名。两个 CDS 使用同一种颜色，两个引物结合区也各自同色，第三种颜色单独标出了多克隆位点。\n"
     },
     "9": {
-      "source_sha256": "e13aa5ac24defe5aae6dd41455cd1af9f907ab7c403aa59d631c89a7f675fde3",
+      "source_sha256": "c2bacac2d912c54c9f9a92e1e37dea0f9c078af58aabf6c1d989bae29ecee62e",
       "status": "reviewed",
-      "translation": "调色板中的名称使重新排序或筛选后的类别仍对应原来的颜色。要调整字体或移动图例，可使用 `ggplot2::theme()`。调整不同序列的半径、偏移或宽度，请继续看[灵活参数](parameters.md)。要用高度表示实测值，可试画 [GC 轨道](tracks.md)。\n"
+      "translation": "调色板中的名称使重新排序或筛选后的类别仍对应原来的颜色。要调整字体或移动图例，可使用 `theme()`。调整不同序列的半径、偏移或宽度，请继续看[灵活参数](parameters.md)。要用高度表示实测值，可试画 [GC 轨道](tracks.md)。\n"
     }
   }
 }

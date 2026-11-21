@@ -122,7 +122,7 @@ p
 
 ```r
 view_ggchord(p, width = 10, height = 8, units = "in")
-ggplot2::ggsave("ggchord.png", p, width = 10, height = 8, units = "in", dpi = 144)
+ggsave("ggchord.png", p, width = 10, height = 8, units = "in", dpi = 144)
 ```
 
 <a id="design-inspiration"></a>

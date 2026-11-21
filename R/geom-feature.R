@@ -286,7 +286,7 @@ ggchord_feature_layer <- function(mapping, data, shape, fixed_shape, thickness,
 
 #' Draw sequence features
 #' @export
-#' @param mapping Aesthetic mapping from `ggplot2::aes()`. A local mapping overrides the matching inherited channel.
+#' @param mapping Aesthetic mapping from `aes()`. A local mapping overrides the matching inherited channel.
 #' @param data Observation table or a data function. For ggchord layers, provide the required data-role columns.
 #' @param shape Default shape. An explicitly supplied fixed shape takes priority over its mapping.
 #' @param thickness Physical thickness in mm or absolute grid units. Named values select references.
@@ -322,8 +322,8 @@ ggchord_feature_layer <- function(mapping, data, shape, fixed_shape, thickness,
 #'     aes(shape = type, fill = type), data = genes,
 #'     thickness = c(A = 2.5, B = 1.5)
 #'   ) +
-#'   ggplot2::scale_shape_manual(values = c(CDS = "arrow", tRNA = "block")) +
-#'   ggplot2::scale_fill_manual(values = gene_colours) +
+#'   scale_shape_manual(values = c(CDS = "arrow", tRNA = "block")) +
+#'   scale_fill_manual(values = gene_colours) +
 #'   coord_collinear()
 geom_feature <- function(mapping = NULL, data = NULL, shape = "block",
     thickness = 2, stat = "identity", position = "identity", ...,

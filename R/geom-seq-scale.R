@@ -101,7 +101,7 @@ ggchord_seq_scale_layer <- function(mapping = NULL, data = NULL, length = NULL, 
   if (is.null(data)) data <- data.frame(.scale_row = 1L)
   ggchord_check_geom_params(alias$dots, GeomChordAxis, "geom_seq_scale()", position)
   layer <- ggplot2::layer(geom = GeomChordAxis, stat = "identity", data = ggchord_empty_seq_scale_geometry(),
-    mapping = ggplot2::aes(x = x, y = y, xend = xend, yend = yend,
+    mapping = aes(x = x, y = y, xend = xend, yend = yend,
       label = label, group = group, .component = .component),
     position = position, show.legend = show.legend, inherit.aes = inherit.aes,
     params = c(styles, alias$dots))

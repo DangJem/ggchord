@@ -1,6 +1,6 @@
 #' Draw HSP alignments as Dotplot segments
 #' @export
-#' @param mapping Aesthetic mapping from `ggplot2::aes()`. A local mapping overrides the matching inherited channel.
+#' @param mapping Aesthetic mapping from `aes()`. A local mapping overrides the matching inherited channel.
 #' @param data Observation table or a data function. For ggchord layers, provide the required data-role columns.
 #' @param stat A compatible ggplot2 Stat or its name. The default uses the supplied records.
 #' @param position A compatible Position for placement of the layer geometry.
@@ -30,7 +30,7 @@
 #'   geom_alignment_segment(aes(colour = pident), data = links) +
 #'   layout_dotplot(x_order = "A", y_order = "B") +
 #'   coord_dotplot(ratio = 1) +
-#'   ggplot2::scale_colour_gradient(limits = c(0, 100))
+#'   scale_colour_gradient(limits = c(0, 100))
 geom_alignment_segment <- function(mapping = NULL, data = NULL, stat = "identity",
     position = "identity", ...,
     na.rm = FALSE, show.legend = NA, inherit.aes = TRUE, id = NULL) {

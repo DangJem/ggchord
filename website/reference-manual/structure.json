@@ -318,7 +318,7 @@
         ]
       ],
       "roles": [],
-      "examples": "ggchord(seqs) + geom_seq() +\n  layer_id(ggplot2::geom_point(data = data.frame(x = 0, y = 0),\n    aes(x, y), inherit.aes = FALSE), \"canvas_points\")",
+      "examples": "ggchord(seqs) + geom_seq() +\n  layer_id(geom_point(data = data.frame(x = 0, y = 0),\n    aes(x, y), inherit.aes = FALSE), \"canvas_points\")",
       "related": [
         "scale_for",
         "export_ggchord_layout"
@@ -582,7 +582,7 @@
         ]
       ],
       "roles": [],
-      "examples": "ggchord(seqs) + geom_seq() + geom_gene(data = genes) +\n  coord_collinear() + ggplot2::facet_null()",
+      "examples": "ggchord(seqs) + geom_seq() + geom_gene(data = genes) +\n  coord_collinear() + facet_null()",
       "related": [
         "facet_wrap",
         "facet_grid",
@@ -638,7 +638,7 @@
         ]
       ],
       "roles": [],
-      "examples": "# 每条序列一个圆形面板；两张表均明确包含accver\nggchord(seqs) + geom_seq() + geom_gene(data = genes) +\n  coord_circular() + ggplot2::facet_wrap(vars(accver))",
+      "examples": "# 每条序列一个圆形面板；两张表均明确包含accver\nggchord(seqs) + geom_seq() + geom_gene(data = genes) +\n  coord_circular() + facet_wrap(vars(accver))",
       "related": [
         "facet_null",
         "facet_grid",
@@ -704,7 +704,7 @@
         ]
       ],
       "roles": [],
-      "examples": "g <- genes\ng$sample <- c(\"s1\", \"s2\", \"s1\")\nggchord(seqs) + geom_seq() + geom_gene(data = g) +\n  coord_collinear() + ggplot2::facet_grid(cols = vars(sample))",
+      "examples": "g <- genes\ng$sample <- c(\"s1\", \"s2\", \"s1\")\nggchord(seqs) + geom_seq() + geom_gene(data = g) +\n  coord_collinear() + facet_grid(cols = vars(sample))",
       "related": [
         "facet_wrap",
         "ggchord_fusion"
@@ -1179,7 +1179,7 @@
         "`fill, colour, alpha, linewidth, linetype`",
         "`group`"
       ],
-      "examples": "ggchord(seqs) +\n  geom_seq() +\n  geom_feature(\n    aes(shape = type, fill = type), data = genes,\n    thickness = c(A = 2.5, B = 1.5)\n  ) +\n  ggplot2::scale_shape_manual(values = c(CDS = \"arrow\", tRNA = \"block\")) +\n  ggplot2::scale_fill_manual(values = gene_colours) +\n  coord_collinear()",
+      "examples": "ggchord(seqs) +\n  geom_seq() +\n  geom_feature(\n    aes(shape = type, fill = type), data = genes,\n    thickness = c(A = 2.5, B = 1.5)\n  ) +\n  scale_shape_manual(values = c(CDS = \"arrow\", tRNA = \"block\")) +\n  scale_fill_manual(values = gene_colours) +\n  coord_collinear()",
       "related": [
         "geom_gene",
         "geom_primer",
@@ -1246,7 +1246,7 @@
         "`fill, colour, alpha, linewidth, linetype`",
         "`group`"
       ],
-      "examples": "ggchord(seqs) +\n  geom_seq() +\n  geom_gene(aes(fill = type), data = genes, id = \"genes\") +\n  ggplot2::scale_fill_manual(values = gene_colours) +\n  coord_collinear()",
+      "examples": "ggchord(seqs) +\n  geom_seq() +\n  geom_gene(aes(fill = type), data = genes, id = \"genes\") +\n  scale_fill_manual(values = gene_colours) +\n  coord_collinear()",
       "related": [
         "geom_feature",
         "geom_primer",
@@ -2191,7 +2191,7 @@
         "`fill_from, fill_to`",
         "`group`"
       ],
-      "examples": "ggchord(seqs) +\n  geom_seq() +\n  geom_link_ribbon(aes(fill = pident), data = links, id = \"matches\") +\n  ggplot2::scale_fill_gradient(name = \"Identity (%)\", limits = c(0, 100)) +\n  coord_chord()",
+      "examples": "ggchord(seqs) +\n  geom_seq() +\n  geom_link_ribbon(aes(fill = pident), data = links, id = \"matches\") +\n  scale_fill_gradient(name = \"Identity (%)\", limits = c(0, 100)) +\n  coord_chord()",
       "related": [
         "geom_link_line",
         "stat_link_bundle",
@@ -2249,7 +2249,7 @@
         "`qstrand, sstrand, direction`",
         "`colour, alpha, linewidth, linetype`"
       ],
-      "examples": "ggchord(seqs) +\n  geom_alignment_segment(aes(colour = pident), data = links) +\n  layout_dotplot(x_order = \"A\", y_order = \"B\") +\n  coord_dotplot(ratio = 1) +\n  ggplot2::scale_colour_gradient(limits = c(0, 100))",
+      "examples": "ggchord(seqs) +\n  geom_alignment_segment(aes(colour = pident), data = links) +\n  layout_dotplot(x_order = \"A\", y_order = \"B\") +\n  coord_dotplot(ratio = 1) +\n  scale_colour_gradient(limits = c(0, 100))",
       "related": [
         "coord_dotplot",
         "layout_dotplot",
@@ -2315,7 +2315,7 @@
         "`fill`",
         "`colour, size, family, fontface, alpha`"
       ],
-      "examples": "cells <- as_ggchord_alignment(c(A = \"AC-G\", B = \"ACTG\"), alphabet = \"DNA\")\nggplot2::ggplot(cells, aes(alignment_column, accver, label = symbol)) +\n  geom_residue(aes(fill = symbol)) +\n  scale_fill_residue(alphabet = \"DNA\") +\n  ggplot2::coord_fixed(ratio = 1)",
+      "examples": "cells <- as_ggchord_alignment(c(A = \"AC-G\", B = \"ACTG\"), alphabet = \"DNA\")\nggplot(cells, aes(alignment_column, accver, label = symbol)) +\n  geom_residue(aes(fill = symbol)) +\n  scale_fill_residue(alphabet = \"DNA\") +\n  coord_fixed(ratio = 1)",
       "related": [
         "as_ggchord_alignment",
         "scale_fill_residue",
@@ -2381,7 +2381,7 @@
         "`fill`",
         "`colour, size, family, fontface, alpha`"
       ],
-      "examples": "cells <- as_ggchord_alignment(c(A = \"AC-G\", B = \"ACTG\"), alphabet = \"DNA\")\nggplot2::ggplot(cells, aes(alignment_column, accver, label = symbol)) +\n  geom_residue_text() +\n  ggplot2::coord_fixed(ratio = 1)",
+      "examples": "cells <- as_ggchord_alignment(c(A = \"AC-G\", B = \"ACTG\"), alphabet = \"DNA\")\nggplot(cells, aes(alignment_column, accver, label = symbol)) +\n  geom_residue_text() +\n  coord_fixed(ratio = 1)",
       "related": [
         "as_ggchord_alignment",
         "scale_fill_residue",
@@ -2443,7 +2443,7 @@
         "`fill, alpha`",
         "`cell_colour, cell_linewidth`"
       ],
-      "examples": "cells <- as_ggchord_alignment(c(A = \"AC-G\", B = \"ACTG\"), alphabet = \"DNA\")\nggplot2::ggplot(cells, aes(alignment_column, accver, label = symbol)) +\n  geom_residue_tile(aes(fill = symbol)) +\n  scale_fill_residue(alphabet = \"DNA\") +\n  ggplot2::coord_fixed(ratio = 1)",
+      "examples": "cells <- as_ggchord_alignment(c(A = \"AC-G\", B = \"ACTG\"), alphabet = \"DNA\")\nggplot(cells, aes(alignment_column, accver, label = symbol)) +\n  geom_residue_tile(aes(fill = symbol)) +\n  scale_fill_residue(alphabet = \"DNA\") +\n  coord_fixed(ratio = 1)",
       "related": [
         "as_ggchord_alignment",
         "scale_fill_residue",
@@ -3066,7 +3066,7 @@
         "`accver, start, end`",
         "`fill, colour, alpha, linewidth, linetype`"
       ],
-      "examples": "ggchord(seqs) +\n  geom_seq() +\n  geom_track_interval(aes(fill = type), data = states) +\n  ggplot2::scale_fill_manual(values = gene_colours) +\n  coord_collinear()",
+      "examples": "ggchord(seqs) +\n  geom_seq() +\n  geom_track_interval(aes(fill = type), data = states) +\n  scale_fill_manual(values = gene_colours) +\n  coord_collinear()",
       "related": [
         "geom_track",
         "track_band",
@@ -3649,7 +3649,7 @@
         ]
       ],
       "roles": [],
-      "examples": "cells <- as_ggchord_alignment(c(A = \"AC-GT\", B = \"ACTGT\"), alphabet = \"DNA\")\nggplot2::ggplot(cells, aes(alignment_column, accver, label = symbol)) +\n  geom_residue(aes(fill = symbol)) +\n  scale_fill_residue(\"DNA\", values = c(G = \"#D9A400\"))",
+      "examples": "cells <- as_ggchord_alignment(c(A = \"AC-GT\", B = \"ACTGT\"), alphabet = \"DNA\")\nggplot(cells, aes(alignment_column, accver, label = symbol)) +\n  geom_residue(aes(fill = symbol)) +\n  scale_fill_residue(\"DNA\", values = c(G = \"#D9A400\"))",
       "related": [
         "geom_residue",
         "as_ggchord_alignment",
@@ -4012,7 +4012,7 @@
         ]
       ],
       "roles": [],
-      "examples": "cells <- as_ggchord_alignment(c(A = \"AC-G\", B = \"ACTG\"), alphabet = \"DNA\")\nggplot2::ggplot(cells, aes(alignment_column, accver, label = symbol)) +\n  geom_residue(aes(fill = symbol))",
+      "examples": "cells <- as_ggchord_alignment(c(A = \"AC-G\", B = \"ACTG\"), alphabet = \"DNA\")\nggplot(cells, aes(alignment_column, accver, label = symbol)) +\n  geom_residue(aes(fill = symbol))",
       "related": [
         "read_aligned_fasta",
         "geom_residue",
@@ -5244,7 +5244,7 @@
         ]
       ],
       "roles": [],
-      "examples": "file <- system.file(\"extdata\", \"tutorial\", \"ucsc_mm9_chr10.maf\", package = \"ggchord\")\nmaf <- read_maf(file, alphabet=\"DNA\",\n  python = Sys.getenv(\"GGCHORD_PYTHON\", \"python3\"))\ncells <- subset(maf$alignments$maf, source_input == 1 & source_block == 1)\nggplot2::ggplot(cells, aes(alignment_column, accver, label=symbol)) + geom_residue()",
+      "examples": "file <- system.file(\"extdata\", \"tutorial\", \"ucsc_mm9_chr10.maf\", package = \"ggchord\")\nmaf <- read_maf(file, alphabet=\"DNA\",\n  python = Sys.getenv(\"GGCHORD_PYTHON\", \"python3\"))\ncells <- subset(maf$alignments$maf, source_input == 1 & source_block == 1)\nggplot(cells, aes(alignment_column, accver, label=symbol)) + geom_residue()",
       "related": [
         "read_aligned_fasta",
         "as_ggchord_alignment",
@@ -5563,7 +5563,7 @@
         ]
       ],
       "roles": [],
-      "examples": "cells <- as_ggchord_alignment(c(A = \"AC-G\", B = \"ACTG\"), alphabet = \"DNA\")\np <- ggplot2::ggplot(cells, aes(alignment_column, accver, label = symbol)) +\n  geom_residue(aes(fill = symbol)) + scale_fill_residue(\"DNA\")\nregister_ggchord_alignment(p, cells)",
+      "examples": "cells <- as_ggchord_alignment(c(A = \"AC-G\", B = \"ACTG\"), alphabet = \"DNA\")\np <- ggplot(cells, aes(alignment_column, accver, label = symbol)) +\n  geom_residue(aes(fill = symbol)) + scale_fill_residue(\"DNA\")\nregister_ggchord_alignment(p, cells)",
       "related": [
         "as_ggchord_alignment",
         "geom_residue",

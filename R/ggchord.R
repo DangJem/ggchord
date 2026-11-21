@@ -42,7 +42,7 @@ globalVariables(c(
 #' @param data A complete reference table with `accver` and `length`.
 #'   Omitted units default to bp. An explicit reference table supplied to
 #'   [geom_seq()] can also define the reference when the plot has no data.
-#' @param mapping Default aesthetic mapping, constructed with [ggplot2::aes()].
+#' @param mapping Default aesthetic mapping, constructed with [`aes()`][ggplot2::aes] from ggplot2.
 #'   Evaluate inherited mappings on the data of each layer.
 #' @param ... Must be empty.
 #'
@@ -107,7 +107,7 @@ ggchord <- function(data = NULL, mapping = aes(), ...) {
 #' )
 #'
 #' ggchord(seqs) + geom_seq() +
-#'   layer_id(ggplot2::geom_point(data = data.frame(x = 0, y = 0),
+#'   layer_id(geom_point(data = data.frame(x = 0, y = 0),
 #'     aes(x, y), inherit.aes = FALSE), "canvas_points")
 layer_id <- function(layer, id) {
   if (!inherits(layer, "Layer")) ggchord_stop("layer_id(): layer must be a ggplot2 Layer")

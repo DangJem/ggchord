@@ -20,6 +20,8 @@
   local and display coordinates.
 - Updated the function help, paired tutorials and README figures for the
   rewritten API.
+- Position queries accept tibbles without warning when the optional `PANEL`
+  column is omitted.
 - Retain same-reference and non-neighbouring ribbons. Validate source endpoints
   before display clipping and draw both edges of closed intervals, including
   single-residue intervals. Connection offsets are physical in every reference

@@ -240,7 +240,7 @@ prepare_ggchord_plot <- function(plot) {
     # Draw its empty build-local layer without evaluating nonexistent x/text
     # mappings. Keep the source layer and exported component unchanged.
     empty <- is.data.frame(geometry) && !nrow(geometry)
-    new_layers[[i]] <- if (empty) reconstruct_layer(lyr, geometry, mapping = ggplot2::aes()) else
+    new_layers[[i]] <- if (empty) reconstruct_layer(lyr, geometry, mapping = aes()) else
       ggchord_draw_layer(lyr, geometry, lyr$ggchord_resolved_input)
     if (empty) new_layers[[i]]$inherit.aes <- FALSE
     # Domain geometry already owns its final panel, including explicit repeats.
@@ -320,7 +320,7 @@ prepare_ggchord_plot <- function(plot) {
       axis_data <- track_axes[[id]]
       if (is.null(axis_data$xend)) axis_data$xend <- axis_data$yend <- NA_real_
       axis <- ggplot2::layer(data = axis_data,
-        mapping = ggplot2::aes(x = x, y = y, xend = xend, yend = yend,
+        mapping = aes(x = x, y = y, xend = xend, yend = yend,
           group = group, label = label, .component = I(.component)),
         geom = owner$geom, stat = "identity", position = "identity", params = owner$geom_params,
         layout = owner$layout, inherit.aes = FALSE, show.legend = FALSE, check.aes = FALSE)

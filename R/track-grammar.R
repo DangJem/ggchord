@@ -213,7 +213,7 @@ geom_track <- function(mapping = NULL, data = NULL, geom = "point", stat = NULL,
     ggchord_stop("geom_track(): text size currently uses mm")
   if (!is.null(dots$outline.type) && !identical(dots$outline.type,"full"))
     ggchord_stop("geom_track(): only full polygon outlines are supported")
-  mapping <- ggchord_normalize_mapping(mapping) %||% ggplot2::aes()
+  mapping <- ggchord_normalize_mapping(mapping) %||% aes()
   mapping <- ggchord_track_mapping_aliases(mapping)
   mapping[fixed] <- NULL
   dots$na.rm <- na.rm
@@ -250,7 +250,7 @@ geom_track <- function(mapping = NULL, data = NULL, geom = "point", stat = NULL,
 
 #' Draw a track point layer
 #' @export
-#' @param mapping Aesthetic mapping from `ggplot2::aes()`. A local mapping overrides the matching inherited channel.
+#' @param mapping Aesthetic mapping from `aes()`. A local mapping overrides the matching inherited channel.
 #' @param data Track observation table, or a function returning it. Numerical measurements use source positions and values.
 #' @param stat A compatible ggplot2 Stat or its name. The default uses the supplied records.
 #' @param position A compatible Position for placement of the layer geometry.
@@ -289,7 +289,7 @@ geom_track_point <- function(mapping = NULL, data = NULL, stat = "identity",
 
 #' Draw a track line layer
 #' @export
-#' @param mapping Aesthetic mapping from `ggplot2::aes()`. A local mapping overrides the matching inherited channel.
+#' @param mapping Aesthetic mapping from `aes()`. A local mapping overrides the matching inherited channel.
 #' @param data Track observation table, or a function returning it. Numerical measurements use source positions and values.
 #' @param stat A compatible ggplot2 Stat or its name. The default uses the supplied records.
 #' @param position A compatible Position for placement of the layer geometry.
@@ -328,7 +328,7 @@ geom_track_line <- function(mapping = NULL, data = NULL, stat = "identity",
 
 #' Draw a track path layer
 #' @export
-#' @param mapping Aesthetic mapping from `ggplot2::aes()`. A local mapping overrides the matching inherited channel.
+#' @param mapping Aesthetic mapping from `aes()`. A local mapping overrides the matching inherited channel.
 #' @param data Track observation table, or a function returning it. Numerical measurements use source positions and values.
 #' @param stat A compatible ggplot2 Stat or its name. The default uses the supplied records.
 #' @param position A compatible Position for placement of the layer geometry.
@@ -367,7 +367,7 @@ geom_track_path <- function(mapping = NULL, data = NULL, stat = "identity",
 
 #' Draw a track step layer
 #' @export
-#' @param mapping Aesthetic mapping from `ggplot2::aes()`. A local mapping overrides the matching inherited channel.
+#' @param mapping Aesthetic mapping from `aes()`. A local mapping overrides the matching inherited channel.
 #' @param data Track observation table, or a function returning it. Numerical measurements use source positions and values.
 #' @param stat A compatible ggplot2 Stat or its name. The default uses the supplied records.
 #' @param position A compatible Position for placement of the layer geometry.
@@ -406,7 +406,7 @@ geom_track_step <- function(mapping = NULL, data = NULL, stat = "identity",
 
 #' Draw a track col layer
 #' @export
-#' @param mapping Aesthetic mapping from `ggplot2::aes()`. A local mapping overrides the matching inherited channel.
+#' @param mapping Aesthetic mapping from `aes()`. A local mapping overrides the matching inherited channel.
 #' @param data Track observation table, or a function returning it. Numerical measurements use source positions and values.
 #' @param stat A compatible ggplot2 Stat or its name. The default uses the supplied records.
 #' @param position A compatible Position for placement of the layer geometry.
@@ -445,7 +445,7 @@ geom_track_col <- function(mapping = NULL, data = NULL, stat = "identity",
 
 #' Draw a track bar layer
 #' @export
-#' @param mapping Aesthetic mapping from `ggplot2::aes()`. A local mapping overrides the matching inherited channel.
+#' @param mapping Aesthetic mapping from `aes()`. A local mapping overrides the matching inherited channel.
 #' @param data Track observation table, or a function returning it. Numerical measurements use source positions and values.
 #' @param stat A compatible ggplot2 Stat or its name. The default uses the supplied records.
 #' @param position A compatible Position for placement of the layer geometry.
@@ -484,7 +484,7 @@ geom_track_bar <- function(mapping = NULL, data = NULL, stat = "count",
 
 #' Draw a track area layer
 #' @export
-#' @param mapping Aesthetic mapping from `ggplot2::aes()`. A local mapping overrides the matching inherited channel.
+#' @param mapping Aesthetic mapping from `aes()`. A local mapping overrides the matching inherited channel.
 #' @param data Track observation table, or a function returning it. Numerical measurements use source positions and values.
 #' @param stat A compatible ggplot2 Stat or its name. The default uses the supplied records.
 #' @param position A compatible Position for placement of the layer geometry.
@@ -523,7 +523,7 @@ geom_track_area <- function(mapping = NULL, data = NULL, stat = "identity",
 
 #' Draw a track tile layer
 #' @export
-#' @param mapping Aesthetic mapping from `ggplot2::aes()`. A local mapping overrides the matching inherited channel.
+#' @param mapping Aesthetic mapping from `aes()`. A local mapping overrides the matching inherited channel.
 #' @param data Track observation table, or a function returning it. Numerical measurements use source positions and values.
 #' @param stat A compatible ggplot2 Stat or its name. The default uses the supplied records.
 #' @param position A compatible Position for placement of the layer geometry.
@@ -562,7 +562,7 @@ geom_track_tile <- function(mapping = NULL, data = NULL, stat = "identity",
 
 #' Draw a track interval layer
 #' @export
-#' @param mapping Aesthetic mapping from `ggplot2::aes()`. A local mapping overrides the matching inherited channel.
+#' @param mapping Aesthetic mapping from `aes()`. A local mapping overrides the matching inherited channel.
 #' @param data Track observation table, or a function returning it. Numerical measurements use source positions and values.
 #' @param stat A compatible ggplot2 Stat or its name. The default uses the supplied records.
 #' @param position A compatible Position for placement of the layer geometry.
@@ -596,7 +596,7 @@ geom_track_tile <- function(mapping = NULL, data = NULL, stat = "identity",
 #' ggchord(seqs) +
 #'   geom_seq() +
 #'   geom_track_interval(aes(fill = type), data = states) +
-#'   ggplot2::scale_fill_manual(values = gene_colours) +
+#'   scale_fill_manual(values = gene_colours) +
 #'   coord_collinear()
 geom_track_interval <- function(mapping = NULL, data = NULL, stat = "identity",
     position = "identity", track = "default", ...,
@@ -929,7 +929,7 @@ ggchord_compute_track_input <- function(layer, plot, raw, sequences, coverage) {
       source_geom <- native$geom
       native$geom <- ggplot2::ggproto(NULL,source_geom)
       native$geom$default_aes$.ggchord_stat_x <- NA_real_
-      native$mapping$.ggchord_stat_x <- ggplot2::aes(value=after_stat(x))$value
+      native$mapping$.ggchord_stat_x <- aes(value = after_stat(x))$value
     }
     lineage_key <- if (is.null(p$custom_stat)) ".ggchord_source_index" else "source_row"
     native$mapping[[lineage_key]] <- rlang::quo(.track_input_index)
@@ -1037,7 +1037,7 @@ ggchord_compute_track_input <- function(layer, plot, raw, sequences, coverage) {
     }
     output$source_rows <- I(list())
     if (!is.null(p$custom_stat)) output$source_status <- character()
-    mapping <- late_mapping <- ggplot2::aes()
+    mapping <- late_mapping <- aes()
   }
   if (!is.null(facet_rows)) {
     panel <- if (nrow(output)) domains$.ggchord_stat_panel[at] else integer()
@@ -1052,7 +1052,7 @@ ggchord_compute_track_input <- function(layer, plot, raw, sequences, coverage) {
     if (coverage) statistic$start <- statistic$window_start
     capture$statistic <- statistic
   }
-  visual <- ggplot2::aes()
+  visual <- aes()
   for (key in intersect(c("fill", "colour", "alpha", "linewidth", "linetype", "size", "shape", "label", "angle", "hjust", "vjust", "family", "fontface", "lineheight", "stroke"), names(mapping))) {
     column <- paste0(".track_", key)
     output[[column]] <- output[[key]]

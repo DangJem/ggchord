@@ -17,7 +17,7 @@ geom_seq_center_label(
 )
 }
 \arguments{
-\item{mapping}{Aesthetic mapping from \code{ggplot2::aes()}. A local mapping overrides the matching inherited channel.}
+\item{mapping}{Aesthetic mapping from \code{aes()}. A local mapping overrides the matching inherited channel.}
 
 \item{data}{Optional reference table or function selecting from the registered reference.}
 

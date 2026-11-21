@@ -19,7 +19,7 @@ geom_feature(
 )
 }
 \arguments{
-\item{mapping}{Aesthetic mapping from \code{ggplot2::aes()}. A local mapping overrides the matching inherited channel.}
+\item{mapping}{Aesthetic mapping from \code{aes()}. A local mapping overrides the matching inherited channel.}
 
 \item{data}{Observation table or a data function. For ggchord layers, provide the required data-role columns.}
 
@@ -73,7 +73,7 @@ ggchord(seqs) +
     aes(shape = type, fill = type), data = genes,
     thickness = c(A = 2.5, B = 1.5)
   ) +
-  ggplot2::scale_shape_manual(values = c(CDS = "arrow", tRNA = "block")) +
-  ggplot2::scale_fill_manual(values = gene_colours) +
+  scale_shape_manual(values = c(CDS = "arrow", tRNA = "block")) +
+  scale_fill_manual(values = gene_colours) +
   coord_collinear()
 }

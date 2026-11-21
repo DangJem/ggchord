@@ -62,7 +62,7 @@ ggchord_site_layer <- function(mapping, data, shape, fixed_shape, size, fixed_si
 
 #' Draw source point annotations
 #' @export
-#' @param mapping Aesthetic mapping from `ggplot2::aes()`. A local mapping overrides the matching inherited channel.
+#' @param mapping Aesthetic mapping from `aes()`. A local mapping overrides the matching inherited channel.
 #' @param data Observation table or a data function. For ggchord layers, provide the required data-role columns.
 #' @param shape Default shape. An explicitly supplied fixed shape takes priority over its mapping.
 #' @param size Fixed symbol size in millimetres. To map size to data, use
@@ -104,7 +104,7 @@ geom_site <- function(mapping = NULL, data = NULL, shape = "tick", size = 2,
 
 #' Draw documented restriction cuts
 #' @export
-#' @param mapping Aesthetic mapping from `ggplot2::aes()`. A local mapping overrides the matching inherited channel.
+#' @param mapping Aesthetic mapping from `aes()`. A local mapping overrides the matching inherited channel.
 #' @param data Observation table or a data function. For ggchord layers, provide the required data-role columns.
 #' @param shape Default shape. An explicitly supplied fixed shape takes priority over its mapping.
 #' @param size Fixed symbol size in millimetres. To map size to data, use
@@ -146,7 +146,7 @@ geom_restriction_site <- function(mapping = NULL, data = NULL, shape = "cut", si
 
 #' Label source point annotations
 #' @export
-#' @param mapping Aesthetic mapping from `ggplot2::aes()`. A local mapping overrides the matching inherited channel.
+#' @param mapping Aesthetic mapping from `aes()`. A local mapping overrides the matching inherited channel.
 #' @param data Optional label table or function. With a named anchor, the default data consists of the target entities.
 #' @param stat A compatible ggplot2 Stat or its name. The default uses the supplied records.
 #' @param anchor_layer ID of the target layer. Labels use the target entities after its Stat and follow their displayed placement.
@@ -185,7 +185,7 @@ geom_site_label <- function(mapping = NULL, data = NULL, stat = "identity",
 
 #' Label source point annotations with collision avoidance
 #' @export
-#' @param mapping Aesthetic mapping from `ggplot2::aes()`. A local mapping overrides the matching inherited channel.
+#' @param mapping Aesthetic mapping from `aes()`. A local mapping overrides the matching inherited channel.
 #' @param data Optional label table or function. With a named anchor, the default data consists of the target entities.
 #' @param stat A compatible ggplot2 Stat or its name. The default uses the supplied records.
 #' @param anchor_layer ID of the target layer. Labels use the target entities after its Stat and follow their displayed placement.
@@ -265,7 +265,7 @@ ggchord_prepare_site_size_scales <- function(plot) {
     scale <- (domain$scale %||% ggplot2::scale_size())$clone()
     # Use ggplot2's active theme and default palette, which can be deferred
     # until its scale is initialized.
-    carrier <- ggplot2::ggplot(mapping = ggplot2::aes(x = 0, y = 0, size = value)) + plot$theme
+    carrier <- ggplot2::ggplot(mapping = aes(x = 0, y = 0, size = value)) + plot$theme
     for (value in values) carrier <- carrier + ggplot2::geom_point(data = data.frame(value = unique(value)))
     scale$aesthetics <- "size"
     trained <- ggplot2::ggplot_build(carrier + scale)$plot$scales$get_scales("size")

@@ -5,7 +5,7 @@
 GeomChordSeq <- ggplot2::ggproto(
   "GeomChordSeq", ggplot2::Geom,
   required_aes = c("x", "y"),
-  default_aes = ggplot2::aes(
+  default_aes = aes(
     colour = "#3D4348", fill = "grey60", alpha = 1, linewidth = 0.9,
     linetype = 1, .component = "path"
   ),
@@ -96,7 +96,7 @@ ggchord_seq_style_geometry <- function(seq_arcs, params) {
 
 #' Draw sequence backbones
 #' @export
-#' @param mapping Aesthetic mapping from `ggplot2::aes()`. A local mapping overrides the matching inherited channel.
+#' @param mapping Aesthetic mapping from `aes()`. A local mapping overrides the matching inherited channel.
 #' @param data Optional reference table or function selecting from the registered reference.
 #' @param geometry Backbone style, either `"line"`, `"double"` or `"band"`.
 #' @param thickness Physical thickness in mm or absolute grid units. Named values select references.

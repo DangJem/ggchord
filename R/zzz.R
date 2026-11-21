@@ -267,7 +267,7 @@ ggchord_axis_layer <- function(layout, components = NULL, data = ggchord_axis_ge
   if (!is.null(components)) {
     data <- data[data$.component %in% components, , drop = FALSE]
   }
-  mapping <- ggplot2::aes(
+  mapping <- aes(
     x = x, y = y, xend = xend, yend = yend, label = label,
     group = group, size = I(size), angle = angle,
     hjust = hjust, vjust = vjust, .component = I(.component),

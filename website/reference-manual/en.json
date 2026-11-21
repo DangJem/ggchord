@@ -81,7 +81,7 @@
         },
         {
           "format": "aes()",
-          "description": "Default aesthetic mapping, constructed with `ggplot2::aes()`. Evaluate inherited mappings on the data of each layer."
+          "description": "Default aesthetic mapping, constructed with `aes()` from ggplot2. Evaluate inherited mappings on the data of each layer."
         },
         {
           "format": "must be empty",
@@ -645,7 +645,7 @@
       "arguments": [
         {
           "format": "aes / NULL",
-          "description": "Aesthetic mapping from `ggplot2::aes()`. A local mapping overrides the matching inherited channel."
+          "description": "Aesthetic mapping from `aes()`. A local mapping overrides the matching inherited channel."
         },
         {
           "format": "data.frame / function / NULL",
@@ -703,7 +703,7 @@
       "arguments": [
         {
           "format": "aes / NULL",
-          "description": "Aesthetic mapping from `ggplot2::aes()`. A local mapping overrides the matching inherited channel."
+          "description": "Aesthetic mapping from `aes()`. A local mapping overrides the matching inherited channel."
         },
         {
           "format": "data.frame / function / NULL",
@@ -757,7 +757,7 @@
       "arguments": [
         {
           "format": "aes / NULL",
-          "description": "Aesthetic mapping from `ggplot2::aes()`. A local mapping overrides the matching inherited channel."
+          "description": "Aesthetic mapping from `aes()`. A local mapping overrides the matching inherited channel."
         },
         {
           "format": "data.frame / function / NULL",
@@ -807,7 +807,7 @@
       "arguments": [
         {
           "format": "aes / NULL",
-          "description": "Aesthetic mapping from `ggplot2::aes()`. A local mapping overrides the matching inherited channel."
+          "description": "Aesthetic mapping from `aes()`. A local mapping overrides the matching inherited channel."
         },
         {
           "format": "data.frame / function / NULL",
@@ -860,7 +860,7 @@
       "arguments": [
         {
           "format": "aes / NULL",
-          "description": "Aesthetic mapping from `ggplot2::aes()`. A local mapping overrides the matching inherited channel."
+          "description": "Aesthetic mapping from `aes()`. A local mapping overrides the matching inherited channel."
         },
         {
           "format": "data.frame / function / NULL",
@@ -922,7 +922,7 @@
       "arguments": [
         {
           "format": "aes / NULL",
-          "description": "Aesthetic mapping from `ggplot2::aes()`. A local mapping overrides the matching inherited channel."
+          "description": "Aesthetic mapping from `aes()`. A local mapping overrides the matching inherited channel."
         },
         {
           "format": "data.frame / function / NULL",
@@ -984,7 +984,7 @@
       "arguments": [
         {
           "format": "aes / NULL",
-          "description": "Aesthetic mapping from `ggplot2::aes()`. A local mapping overrides the matching inherited channel."
+          "description": "Aesthetic mapping from `aes()`. A local mapping overrides the matching inherited channel."
         },
         {
           "format": "data.frame / function / NULL",
@@ -1046,7 +1046,7 @@
       "arguments": [
         {
           "format": "aes / NULL",
-          "description": "Aesthetic mapping from `ggplot2::aes()`. A local mapping overrides the matching inherited channel."
+          "description": "Aesthetic mapping from `aes()`. A local mapping overrides the matching inherited channel."
         },
         {
           "format": "data.frame / function / NULL",
@@ -1112,7 +1112,7 @@
       "arguments": [
         {
           "format": "aes / NULL",
-          "description": "Aesthetic mapping from `ggplot2::aes()`. A local mapping overrides the matching inherited channel."
+          "description": "Aesthetic mapping from `aes()`. A local mapping overrides the matching inherited channel."
         },
         {
           "format": "data.frame / function / NULL",
@@ -1177,7 +1177,7 @@
       "arguments": [
         {
           "format": "aes / NULL",
-          "description": "Aesthetic mapping from `ggplot2::aes()`. A local mapping overrides the matching inherited channel."
+          "description": "Aesthetic mapping from `aes()`. A local mapping overrides the matching inherited channel."
         },
         {
           "format": "data.frame / function / NULL",
@@ -1242,7 +1242,7 @@
       "arguments": [
         {
           "format": "aes / NULL",
-          "description": "Aesthetic mapping from `ggplot2::aes()`. A local mapping overrides the matching inherited channel."
+          "description": "Aesthetic mapping from `aes()`. A local mapping overrides the matching inherited channel."
         },
         {
           "format": "data.frame / function / NULL",
@@ -1307,7 +1307,7 @@
       "arguments": [
         {
           "format": "aes / NULL",
-          "description": "Aesthetic mapping from `ggplot2::aes()`. A local mapping overrides the matching inherited channel."
+          "description": "Aesthetic mapping from `aes()`. A local mapping overrides the matching inherited channel."
         },
         {
           "format": "data.frame / function / NULL",
@@ -1372,7 +1372,7 @@
       "arguments": [
         {
           "format": "aes / NULL",
-          "description": "Aesthetic mapping from `ggplot2::aes()`. A local mapping overrides the matching inherited channel."
+          "description": "Aesthetic mapping from `aes()`. A local mapping overrides the matching inherited channel."
         },
         {
           "format": "data.frame / function / NULL",
@@ -1437,7 +1437,7 @@
       "arguments": [
         {
           "format": "aes / NULL",
-          "description": "Aesthetic mapping from `ggplot2::aes()`. A local mapping overrides the matching inherited channel."
+          "description": "Aesthetic mapping from `aes()`. A local mapping overrides the matching inherited channel."
         },
         {
           "format": "data.frame / function / NULL",
@@ -1502,7 +1502,7 @@
       "arguments": [
         {
           "format": "aes / NULL",
-          "description": "Aesthetic mapping from `ggplot2::aes()`. A local mapping overrides the matching inherited channel."
+          "description": "Aesthetic mapping from `aes()`. A local mapping overrides the matching inherited channel."
         },
         {
           "format": "data.frame / function / NULL",
@@ -1563,7 +1563,7 @@
       "arguments": [
         {
           "format": "aes / NULL",
-          "description": "Aesthetic mapping from `ggplot2::aes()`. A local mapping overrides the matching inherited channel."
+          "description": "Aesthetic mapping from `aes()`. A local mapping overrides the matching inherited channel."
         },
         {
           "format": "data.frame / function / NULL",
@@ -1624,7 +1624,7 @@
       "arguments": [
         {
           "format": "aes / NULL",
-          "description": "Aesthetic mapping from `ggplot2::aes()`. A local mapping overrides the matching inherited channel."
+          "description": "Aesthetic mapping from `aes()`. A local mapping overrides the matching inherited channel."
         },
         {
           "format": "data.frame / function / NULL",
@@ -1684,7 +1684,7 @@
       "arguments": [
         {
           "format": "aes / NULL",
-          "description": "Aesthetic mapping from `ggplot2::aes()`. A local mapping overrides the matching inherited channel."
+          "description": "Aesthetic mapping from `aes()`. A local mapping overrides the matching inherited channel."
         },
         {
           "format": "data.frame / function / NULL",
@@ -1744,7 +1744,7 @@
       "arguments": [
         {
           "format": "aes / NULL",
-          "description": "Aesthetic mapping from `ggplot2::aes()`. A local mapping overrides the matching inherited channel."
+          "description": "Aesthetic mapping from `aes()`. A local mapping overrides the matching inherited channel."
         },
         {
           "format": "data.frame / function / NULL",
@@ -1800,7 +1800,7 @@
       "arguments": [
         {
           "format": "aes / NULL",
-          "description": "Aesthetic mapping from `ggplot2::aes()`. A local mapping overrides the matching inherited channel."
+          "description": "Aesthetic mapping from `aes()`. A local mapping overrides the matching inherited channel."
         },
         {
           "format": "data.frame / function / NULL",
@@ -1861,7 +1861,7 @@
       "arguments": [
         {
           "format": "aes / NULL",
-          "description": "Aesthetic mapping from `ggplot2::aes()`. A local mapping overrides the matching inherited channel."
+          "description": "Aesthetic mapping from `aes()`. A local mapping overrides the matching inherited channel."
         },
         {
           "format": "data.frame / function / NULL",
@@ -1912,7 +1912,7 @@
       "arguments": [
         {
           "format": "aes / NULL",
-          "description": "Aesthetic mapping from `ggplot2::aes()`. A local mapping overrides the matching inherited channel."
+          "description": "Aesthetic mapping from `aes()`. A local mapping overrides the matching inherited channel."
         },
         {
           "format": "data.frame / function / NULL",
@@ -1976,7 +1976,7 @@
       "arguments": [
         {
           "format": "aes / NULL",
-          "description": "Aesthetic mapping from `ggplot2::aes()`. A local mapping overrides the matching inherited channel."
+          "description": "Aesthetic mapping from `aes()`. A local mapping overrides the matching inherited channel."
         },
         {
           "format": "data.frame / function / NULL",
@@ -2036,7 +2036,7 @@
       "arguments": [
         {
           "format": "aes / NULL",
-          "description": "Aesthetic mapping from `ggplot2::aes()`. A local mapping overrides the matching inherited channel."
+          "description": "Aesthetic mapping from `aes()`. A local mapping overrides the matching inherited channel."
         },
         {
           "format": "data.frame / function / NULL",
@@ -2154,7 +2154,7 @@
       "arguments": [
         {
           "format": "aes / NULL",
-          "description": "Aesthetic mapping from `ggplot2::aes()`. A local mapping overrides the matching inherited channel."
+          "description": "Aesthetic mapping from `aes()`. A local mapping overrides the matching inherited channel."
         },
         {
           "format": "data.frame / function / NULL",
@@ -2211,7 +2211,7 @@
       "arguments": [
         {
           "format": "aes / NULL",
-          "description": "Aesthetic mapping from `ggplot2::aes()`. A local mapping overrides the matching inherited channel."
+          "description": "Aesthetic mapping from `aes()`. A local mapping overrides the matching inherited channel."
         },
         {
           "format": "data.frame / function / NULL",
@@ -2268,7 +2268,7 @@
       "arguments": [
         {
           "format": "aes / NULL",
-          "description": "Aesthetic mapping from `ggplot2::aes()`. A local mapping overrides the matching inherited channel."
+          "description": "Aesthetic mapping from `aes()`. A local mapping overrides the matching inherited channel."
         },
         {
           "format": "data.frame / function / NULL",
@@ -2325,7 +2325,7 @@
       "arguments": [
         {
           "format": "aes / NULL",
-          "description": "Aesthetic mapping from `ggplot2::aes()`. A local mapping overrides the matching inherited channel."
+          "description": "Aesthetic mapping from `aes()`. A local mapping overrides the matching inherited channel."
         },
         {
           "format": "data.frame / function / NULL",
@@ -2382,7 +2382,7 @@
       "arguments": [
         {
           "format": "aes / NULL",
-          "description": "Aesthetic mapping from `ggplot2::aes()`. A local mapping overrides the matching inherited channel."
+          "description": "Aesthetic mapping from `aes()`. A local mapping overrides the matching inherited channel."
         },
         {
           "format": "data.frame / function / NULL",
@@ -2439,7 +2439,7 @@
       "arguments": [
         {
           "format": "aes / NULL",
-          "description": "Aesthetic mapping from `ggplot2::aes()`. A local mapping overrides the matching inherited channel."
+          "description": "Aesthetic mapping from `aes()`. A local mapping overrides the matching inherited channel."
         },
         {
           "format": "data.frame / function / NULL",
@@ -2496,7 +2496,7 @@
       "arguments": [
         {
           "format": "aes / NULL",
-          "description": "Aesthetic mapping from `ggplot2::aes()`. A local mapping overrides the matching inherited channel."
+          "description": "Aesthetic mapping from `aes()`. A local mapping overrides the matching inherited channel."
         },
         {
           "format": "data.frame / function / NULL",
@@ -2553,7 +2553,7 @@
       "arguments": [
         {
           "format": "aes / NULL",
-          "description": "Aesthetic mapping from `ggplot2::aes()`. A local mapping overrides the matching inherited channel."
+          "description": "Aesthetic mapping from `aes()`. A local mapping overrides the matching inherited channel."
         },
         {
           "format": "data.frame / function / NULL",
@@ -2610,7 +2610,7 @@
       "arguments": [
         {
           "format": "aes / NULL",
-          "description": "Aesthetic mapping from `ggplot2::aes()`. A local mapping overrides the matching inherited channel."
+          "description": "Aesthetic mapping from `aes()`. A local mapping overrides the matching inherited channel."
         },
         {
           "format": "data.frame / function / NULL",
@@ -2926,7 +2926,7 @@
       "arguments": [
         {
           "format": "aes / NULL; default NULL",
-          "description": "Aesthetic mapping from `ggplot2::aes()`. A local mapping overrides the matching inherited channel."
+          "description": "Aesthetic mapping from `aes()`. A local mapping overrides the matching inherited channel."
         },
         {
           "format": "data.frame / function / NULL; default NULL",
@@ -2986,7 +2986,7 @@
       "arguments": [
         {
           "format": "aes / NULL; default NULL",
-          "description": "Aesthetic mapping from `ggplot2::aes()`. A local mapping overrides the matching inherited channel."
+          "description": "Aesthetic mapping from `aes()`. A local mapping overrides the matching inherited channel."
         },
         {
           "format": "data.frame / function / NULL; default NULL",

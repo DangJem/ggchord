@@ -1,6 +1,6 @@
 #' Draw interval-to-interval links
 #' @export
-#' @param mapping Aesthetic mapping from `ggplot2::aes()`. A local mapping overrides the matching inherited channel.
+#' @param mapping Aesthetic mapping from `aes()`. A local mapping overrides the matching inherited channel.
 #' @param data Observation table or a data function. For ggchord layers, provide the required data-role columns.
 #' @param stat A compatible ggplot2 Stat or its name. The default uses the supplied records.
 #' @param position A compatible Position for placement of the layer geometry.

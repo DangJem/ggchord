@@ -1,6 +1,6 @@
 #' Label the centre of a circular reference
 #' @export
-#' @param mapping Aesthetic mapping from `ggplot2::aes()`. A local mapping overrides the matching inherited channel.
+#' @param mapping Aesthetic mapping from `aes()`. A local mapping overrides the matching inherited channel.
 #' @param data Optional reference table or function selecting from the registered reference.
 #' @param position Position adjustment. For bound labels, leave this unset to follow the target layer.
 #' @param label_layout A fixed or repelled label layout declaration.

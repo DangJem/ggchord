@@ -19,7 +19,7 @@ geom_link_ribbon(
 )
 }
 \arguments{
-\item{mapping}{Aesthetic mapping from `ggplot2::aes()`. A local mapping overrides the matching inherited channel.}
+\item{mapping}{Aesthetic mapping from \code{aes()}. A local mapping overrides the matching inherited channel.}
 
 \item{data}{Observation table or a data function. For ggchord layers, provide the required data-role columns.}
 
@@ -48,10 +48,10 @@ A ggplot2 layer for addition to a plot.
 Draw interval-to-interval links
 }
 \details{
-Source references are `qaccver` and `saccver`. Point links consume `qpos` and `spos`. Interval links and alignment segments consume closed interval endpoints on both references. Supply reliable `qstrand` and `sstrand` or explicit relative direction when the geometry requires it.
+Source references are \code{qaccver} and \code{saccver}. Point links consume \code{qpos} and \code{spos}. Interval links and alignment segments consume closed interval endpoints on both references. Supply reliable \code{qstrand} and \code{sstrand} or explicit relative direction when the geometry requires it.
 Ribbons retain same-reference and non-neighbouring relationships. A
 same-row linear ribbon needs a curved route. A shared route retains
-independent source relationships and uses `corridor_width` in mm.
+independent source relationships and uses \code{corridor_width} in mm.
 Tip decoration is recorded separately from the source interval fronts.
 }
 \examples{

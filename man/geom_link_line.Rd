@@ -18,7 +18,7 @@ geom_link_line(
 )
 }
 \arguments{
-\item{mapping}{Aesthetic mapping from \code{ggplot2::aes()}. A local mapping overrides the matching inherited channel.}
+\item{mapping}{Aesthetic mapping from \code{aes()}. A local mapping overrides the matching inherited channel.}
 
 \item{data}{Observation table or a data function. For ggchord layers, provide the required data-role columns.}
 

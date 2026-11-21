@@ -64,7 +64,7 @@ ggchord_register_layers <- function(plot) {
       if (is.null(input)) "default layer data" else "explicit layer data"
 
     if (!identical(type, "track")) {
-      local <- copy$ggchord_input_mapping %||% ggplot2::aes()
+      local <- copy$ggchord_input_mapping %||% aes()
       if (isTRUE(copy$inherit.aes)) {
         for (name in setdiff(names(plot$mapping), names(local))) local[[name]] <- plot$mapping[[name]]
       }

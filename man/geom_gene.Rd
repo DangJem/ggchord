@@ -19,7 +19,7 @@ geom_gene(
 )
 }
 \arguments{
-\item{mapping}{Aesthetic mapping from \code{ggplot2::aes()}. A local mapping overrides the matching inherited channel.}
+\item{mapping}{Aesthetic mapping from \code{aes()}. A local mapping overrides the matching inherited channel.}
 
 \item{data}{Observation table or a data function. For ggchord layers, provide the required data-role columns.}
 
@@ -70,6 +70,6 @@ gene_colours <- c(CDS = "#187B77", tRNA = "#CC7D3A")
 ggchord(seqs) +
   geom_seq() +
   geom_gene(aes(fill = type), data = genes, id = "genes") +
-  ggplot2::scale_fill_manual(values = gene_colours) +
+  scale_fill_manual(values = gene_colours) +
   coord_collinear()
 }

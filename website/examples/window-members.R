@@ -1,4 +1,5 @@
 library(ggchord)
+library(ggplot2)
 library(dplyr)
 
 reference <- seq_data_example |>
@@ -11,7 +12,7 @@ intervals <- ribbon_data_example |>
 plot <- ggchord(reference) +
   geom_seq() +
   stat_coverage(data = intervals, binwidth = 10000, id = "windows") +
-  ggplot2::facet_wrap(ggplot2::vars(subject)) +
+  facet_wrap(vars(subject)) +
   coord_collinear()
 
 layout <- export_ggchord_layout(plot, layers = "windows", stages = "statistic")

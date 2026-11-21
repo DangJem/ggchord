@@ -4,7 +4,7 @@ Four rows show where aligned regions fall along each full-length sequence. Plott
 
 ## Draw the full map {#map}
 
-The figure uses a 12 × 8 in canvas at 144 dpi. The script returns the plot so you can pass it to `ggplot2::ggsave()` at the same size.
+The figure uses a 12 × 8 in canvas at 144 dpi. The script returns the plot so you can pass it to `ggsave()` at the same size.
 
 {{example:case-collinear}}
 

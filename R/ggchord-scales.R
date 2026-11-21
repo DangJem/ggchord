@@ -461,7 +461,7 @@ ggchord_scope_layer <- function(layer, aliases, plot_mapping) {
     x
   }
   copy <- ggplot2::ggproto(NULL, layer)
-  mapping <- layer$mapping %||% ggplot2::aes()
+  mapping <- layer$mapping %||% aes()
   if (isTRUE(layer$inherit.aes)) {
     for (key in setdiff(names(plot_mapping), names(mapping))) mapping[[key]] <- plot_mapping[[key]]
   }

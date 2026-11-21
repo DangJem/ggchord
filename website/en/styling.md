@@ -16,4 +16,4 @@ Keep the same feature selection and placement. Put `fill = type` inside `aes()`,
 
 {{example:category-fill}}
 
-The palette names keep each colour attached to its type after sorting or filtering. To change typography or move the legend, use `ggplot2::theme()`. For differences between sequences in radius, offset or width, continue to [flexible parameters](parameters.md). To display measured values by height, try [a GC track](tracks.md).
+The palette names keep each colour attached to its type after sorting or filtering. To change typography or move the legend, use `theme()`. For differences between sequences in radius, offset or width, continue to [flexible parameters](parameters.md). To display measured values by height, try [a GC track](tracks.md).

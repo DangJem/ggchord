@@ -1,11 +1,12 @@
 library(ggchord)
+library(ggplot2)
 
 plot <- ggchord(seq_data_example) +
   geom_seq(
-    ggplot2::aes(colour = accver), show.legend = FALSE,
+    aes(colour = accver), show.legend = FALSE,
     arrow = grid::arrow(type = "closed", length = grid::unit(2.4, "mm"))
   ) +
-  ggplot2::scale_colour_manual(values = c(
+  scale_colour_manual(values = c(
     "MT108731.1" = "#0072B2", "MT118296.1" = "#D55E00",
     "OQ646790.1" = "#009E73", "OR222515.1" = "#CC79A7"
   )) +
@@ -17,5 +18,5 @@ plot <- ggchord(seq_data_example) +
   theme_ggchord_minimal()
 
 output_file <- file.path(tempdir(), "sequence-backbones.pdf")
-ggplot2::ggsave(output_file, plot = plot, width = 160, height = 110, units = "mm")
+ggsave(output_file, plot = plot, width = 160, height = 110, units = "mm")
 plot

@@ -29,7 +29,7 @@
 #' library(ggplot2)
 #'
 #' cells <- as_ggchord_alignment(c(A = "AC-G", B = "ACTG"), alphabet = "DNA")
-#' p <- ggplot2::ggplot(cells, aes(alignment_column, accver, label = symbol)) +
+#' p <- ggplot(cells, aes(alignment_column, accver, label = symbol)) +
 #'   geom_residue(aes(fill = symbol)) + scale_fill_residue("DNA")
 #' registered <- register_ggchord_alignment(p, cells)
 register_ggchord_alignment <- function(plot, data) {

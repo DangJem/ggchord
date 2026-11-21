@@ -26,6 +26,6 @@ seqs <- data.frame(
 )
 
 ggchord(seqs) + geom_seq() +
-  layer_id(ggplot2::geom_point(data = data.frame(x = 0, y = 0),
+  layer_id(geom_point(data = data.frame(x = 0, y = 0),
     aes(x, y), inherit.aes = FALSE), "canvas_points")
 }

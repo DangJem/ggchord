@@ -1,6 +1,6 @@
 #' Label reference sequences
 #' @export
-#' @param mapping Aesthetic mapping from `ggplot2::aes()`. A local mapping overrides the matching inherited channel.
+#' @param mapping Aesthetic mapping from `aes()`. A local mapping overrides the matching inherited channel.
 #' @param data Optional reference table or function selecting from the registered reference.
 #' @param anchor Position on the entity or reference path that anchors the text.
 #' @param position Position adjustment. For bound labels, leave this unset to follow the target layer.

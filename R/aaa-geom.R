@@ -55,7 +55,7 @@ ggchord_component_style <- function(data, params, aesthetics) {
 GeomChordAxis <- ggplot2::ggproto(
   "GeomChordAxis", ggplot2::Geom,
   required_aes = c("x", "y"),
-  default_aes = ggplot2::aes(
+  default_aes = aes(
     xend = NA_real_, yend = NA_real_, label = NA_character_,
     .component = NA_character_, .draw_as_arc = FALSE, .axis_plotmath = FALSE,
     colour = "#737A80", alpha = NA, linewidth = 0.3,
@@ -142,7 +142,7 @@ GeomChordAxis <- ggplot2::ggproto(
 GeomChordGeneLabelRepel <- ggplot2::ggproto(
   "GeomChordGeneLabelRepel", ggplot2::Geom,
   required_aes = c("x", "y"),
-  default_aes = ggplot2::aes(
+  default_aes = aes(
     xend = NA_real_, yend = NA_real_, label = NA_character_,
     .component = NA_character_, .feature_internal_exit = FALSE,
     colour = "#2B3035", alpha = NA, linewidth = 0.25, linetype = 1,

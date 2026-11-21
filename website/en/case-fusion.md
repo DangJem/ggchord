@@ -4,7 +4,7 @@ This composition follows an observed alignment from a four-sequence overview int
 
 ## Draw the full map {#map}
 
-The figure uses a 16 × 14 in canvas at 120 dpi. The script returns the plot so you can pass it to `ggplot2::ggsave()` at the same size.
+The figure uses a 16 × 14 in canvas at 120 dpi. The script returns the plot so you can pass it to `ggsave()` at the same size.
 
 {{example:case-fusion}}
 

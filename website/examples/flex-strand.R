@@ -1,4 +1,5 @@
 library(ggchord)
+library(ggplot2)
 library(dplyr)
 
 cds <- gene_data_example |>
@@ -16,10 +17,10 @@ strand_position <- position_strand(offsets)
 
 ggchord(seq_data_example) +
   geom_seq(
-    ggplot2::aes(colour = accver), show.legend = FALSE,
+    aes(colour = accver), show.legend = FALSE,
     arrow = grid::arrow(type = "closed", length = grid::unit(2.4, "mm"))
   ) +
-  ggplot2::scale_colour_manual(values = c(
+  scale_colour_manual(values = c(
     "MT108731.1" = "#0072B2", "MT118296.1" = "#D55E00",
     "OQ646790.1" = "#009E73", "OR222515.1" = "#CC79A7"
   )) +

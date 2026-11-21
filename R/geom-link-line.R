@@ -19,7 +19,7 @@ ggchord_link_route <- function(route, dots, caller) {
 
 #' Draw point-to-point sequence links
 #' @export
-#' @param mapping Aesthetic mapping from `ggplot2::aes()`. A local mapping overrides the matching inherited channel.
+#' @param mapping Aesthetic mapping from `aes()`. A local mapping overrides the matching inherited channel.
 #' @param data Observation table or a data function. For ggchord layers, provide the required data-role columns.
 #' @param stat A compatible ggplot2 Stat or its name. The default uses the supplied records.
 #' @param position A compatible Position for placement of the layer geometry.
@@ -75,7 +75,7 @@ geom_link_line <- function(mapping = NULL, data = NULL, stat = "identity",
 
 GeomChordLinkLine <- ggplot2::ggproto("GeomChordLinkLine", ggplot2::GeomPath,
   rename_size = FALSE,
-  default_aes = ggplot2::aes(colour = "grey40", alpha = 1, linewidth = .5, linetype = 1),
+  default_aes = aes(colour = "grey40", alpha = 1, linewidth = .5, linetype = 1),
   draw_panel = function(data, panel_params, coord, arrow = NULL, lineend = "round",
                         linejoin = "round", linemitre = 10, na.rm = FALSE) {
     for (nm in c("colour", "alpha", "linewidth", "linetype")) data[[nm]] <- data[[nm]] %||% data[[paste0("link_", nm)]]

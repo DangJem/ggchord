@@ -18,7 +18,7 @@ geom_track_interval(
 )
 }
 \arguments{
-\item{mapping}{Aesthetic mapping from \code{ggplot2::aes()}. A local mapping overrides the matching inherited channel.}
+\item{mapping}{Aesthetic mapping from \code{aes()}. A local mapping overrides the matching inherited channel.}
 
 \item{data}{Track observation table, or a function returning it. Numerical measurements use source positions and values.}
 
@@ -69,6 +69,6 @@ gene_colours <- c(CDS = "#187B77", tRNA = "#CC7D3A")
 ggchord(seqs) +
   geom_seq() +
   geom_track_interval(aes(fill = type), data = states) +
-  ggplot2::scale_fill_manual(values = gene_colours) +
+  scale_fill_manual(values = gene_colours) +
   coord_collinear()
 }

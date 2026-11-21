@@ -4,7 +4,7 @@ The radial map places four full-length sequences on separate spokes. It uses the
 
 ## Draw the full map {#map}
 
-The figure uses a 12 × 10.5 in canvas at 144 dpi. The script returns the plot so you can pass it to `ggplot2::ggsave()` at the same size.
+The figure uses a 12 × 10.5 in canvas at 144 dpi. The script returns the plot so you can pass it to `ggsave()` at the same size.
 
 {{example:case-radial}}
 

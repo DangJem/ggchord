@@ -290,7 +290,7 @@ ggchord_prepare_dotplot <- function(plot) {
       y = c(1, max(frame$max[frame$axis == "y"])), .ggchord_panel = frame$PANEL[1L])
   }))
   plot$layers[[length(plot$layers) + 1L]] <- ggplot2::geom_blank(
-    data = blank, ggplot2::aes(x, y), inherit.aes = FALSE)
+    data = blank, aes(x, y), inherit.aes = FALSE)
   if (!is.null(layout$facet_layout))
     plot$facet <- ggchord_precomputed_facet(plot$facet, layout$facet_layout)
   frame <- layout$axis_panels[[1L]]
@@ -304,9 +304,9 @@ ggchord_prepare_dotplot <- function(plot) {
     # query/subject extent, so short sequences retain proportionally smaller cells.
     cells$background <- ifelse((cells$query + cells$subject) %% 2 == 0, "#F0F6F3", "#FFFFFF")
     layer <- ggplot2::geom_rect(data = cells,
-      ggplot2::aes(xmin = !!rlang::sym("xmin"), xmax = !!rlang::sym("xmax"),
-                   ymin = !!rlang::sym("ymin"), ymax = !!rlang::sym("ymax"),
-                   fill = I(!!rlang::sym("background"))),
+      aes(xmin = !!rlang::sym("xmin"), xmax = !!rlang::sym("xmax"),
+          ymin = !!rlang::sym("ymin"), ymax = !!rlang::sym("ymax"),
+          fill = I(!!rlang::sym("background"))),
       inherit.aes = FALSE, show.legend = FALSE,
       colour = "#A9BBB4", linewidth = .35)
     plot$layers <- c(list(layer), plot$layers)

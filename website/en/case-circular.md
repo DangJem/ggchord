@@ -4,7 +4,7 @@ This is the full-size pUC19 map linked from the circular preview. It overlays th
 
 ## Draw the full map {#map}
 
-The figure uses a 10 × 8 in canvas at 110 dpi. The script returns the plot so you can pass it to `ggplot2::ggsave()` at the same size.
+The figure uses a 10 × 8 in canvas at 110 dpi. The script returns the plot so you can pass it to `ggsave()` at the same size.
 
 {{example:case-circular}}
 

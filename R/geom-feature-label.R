@@ -202,7 +202,7 @@ ggchord_domain_label <- function(mapping, data, stat, anchor_layer, anchor, posi
 
 #' Label source feature intervals
 #' @export
-#' @param mapping Aesthetic mapping from `ggplot2::aes()`. A local mapping overrides the matching inherited channel.
+#' @param mapping Aesthetic mapping from `aes()`. A local mapping overrides the matching inherited channel.
 #' @param data Optional label table or function. With a named anchor, the default data consists of the target entities.
 #' @param stat A compatible ggplot2 Stat or its name. The default uses the supplied records.
 #' @param anchor_layer ID of the target layer. Labels use the target entities after its Stat and follow their displayed placement.
@@ -247,7 +247,7 @@ geom_feature_label <- function(mapping = NULL, data = NULL, stat = "identity",
 
 #' Label source feature intervals with collision avoidance
 #' @export
-#' @param mapping Aesthetic mapping from `ggplot2::aes()`. A local mapping overrides the matching inherited channel.
+#' @param mapping Aesthetic mapping from `aes()`. A local mapping overrides the matching inherited channel.
 #' @param data Optional label table or function. With a named anchor, the default data consists of the target entities.
 #' @param stat A compatible ggplot2 Stat or its name. The default uses the supplied records.
 #' @param anchor_layer ID of the target layer. Labels use the target entities after its Stat and follow their displayed placement.
