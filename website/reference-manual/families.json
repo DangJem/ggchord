@@ -1,6 +1,8 @@
 {
   "ggchord": [
-    "ggchord",
+    "ggchord"
+  ],
+  "ggchord_data": [
     "ggchord_data"
   ],
   "layer_id": [
@@ -9,11 +11,21 @@
     "auto_anchor"
   ],
   "coord_chord": [
-    "coord_chord",
-    "coord_circular",
-    "coord_collinear",
-    "coord_radial_synteny",
-    "coord_sankey",
+    "coord_chord"
+  ],
+  "coord_circular": [
+    "coord_circular"
+  ],
+  "coord_collinear": [
+    "coord_collinear"
+  ],
+  "coord_radial_synteny": [
+    "coord_radial_synteny"
+  ],
+  "coord_sankey": [
+    "coord_sankey"
+  ],
+  "coord_dotplot": [
     "coord_dotplot"
   ],
   "facet_null": [
@@ -23,7 +35,9 @@
   ],
   "layout_sequences": [
     "layout_sequences",
-    "suggest_sequence_layout",
+    "suggest_sequence_layout"
+  ],
+  "layout_dotplot": [
     "layout_dotplot"
   ],
   "track_band": [
@@ -31,36 +45,44 @@
   ],
   "geom_seq": [
     "geom_seq",
-    "geom_seq_arrow",
+    "geom_seq_arrow"
+  ],
+  "geom_seq_label": [
     "geom_seq_label",
-    "geom_seq_center_label",
-    "geom_seq_break",
-    "geom_seq_region"
+    "geom_seq_center_label"
+  ],
+  "geom_seq_break": [
+    "geom_seq_break"
   ],
   "geom_feature": [
     "geom_feature",
-    "geom_feature_label",
-    "geom_feature_label_repel"
-  ],
-  "geom_gene": [
     "geom_gene",
-    "geom_gene_label",
-    "geom_gene_label_repel"
-  ],
-  "geom_primer": [
     "geom_primer",
+    "geom_seq_region"
+  ],
+  "geom_feature_label": [
+    "geom_feature_label",
+    "geom_feature_label_repel",
+    "geom_gene_label",
+    "geom_gene_label_repel",
     "geom_primer_label",
     "geom_primer_label_repel"
   ],
   "geom_site": [
     "geom_site",
-    "geom_restriction_site",
+    "geom_restriction_site"
+  ],
+  "geom_site_label": [
     "geom_site_label",
     "geom_site_label_repel"
   ],
   "geom_link_line": [
-    "geom_link_line",
-    "geom_link_ribbon"
+    "geom_link_line"
+  ],
+  "geom_link_ribbon": [
+    "geom_link_ribbon",
+    "stat_link_bundle",
+    "stat_link_density"
   ],
   "geom_alignment_segment": [
     "geom_alignment_segment"
@@ -96,10 +118,6 @@
   ],
   "stat_coverage": [
     "stat_coverage"
-  ],
-  "stat_link_bundle": [
-    "stat_link_bundle",
-    "stat_link_density"
   ],
   "scale_for": [
     "scale_for"
@@ -203,13 +221,17 @@
   ],
   "ggchord_fusion": [
     "ggchord_fusion",
+    "magnify_ggchord"
+  ],
+  "layout_fusion": [
     "layout_fusion",
     "layout_fusion_grid"
   ],
   "fusion_ribbon": [
-    "fusion_ribbon",
-    "fusion_zoom",
-    "magnify_ggchord"
+    "fusion_ribbon"
+  ],
+  "fusion_zoom": [
+    "fusion_zoom"
   ],
   "register_ggchord_alignment": [
     "register_ggchord_alignment",

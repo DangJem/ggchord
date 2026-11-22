@@ -67,6 +67,8 @@
         "geom_site_label_repel",
         "geom_link_line",
         "geom_link_ribbon",
+        "stat_link_bundle",
+        "stat_link_density",
         "geom_alignment_segment",
         "geom_residue",
         "geom_residue_text",
@@ -114,11 +116,13 @@
     },
     "stat": {
       "topics": [
-        "stat_coverage",
+        "stat_coverage"
+      ],
+      "previous_anchors": [],
+      "shortcuts": [
         "stat_link_bundle",
         "stat_link_density"
-      ],
-      "previous_anchors": []
+      ]
     },
     "scale": {
       "topics": [
@@ -304,7 +308,8 @@
       "related": [
         "data_report",
         "validate_ggchord_data",
-        "read_genbank"
+        "read_genbank",
+        "ggchord"
       ],
       "native": false,
       "defaults": {
@@ -368,7 +373,8 @@
         "coord_collinear",
         "coord_radial_synteny",
         "coord_sankey",
-        "scale_seq_position"
+        "scale_seq_position",
+        "coord_circular"
       ],
       "native": false,
       "defaults": {
@@ -405,12 +411,13 @@
         ]
       ],
       "roles": [],
-      "examples": "ggchord(data = one_seq) +\n  geom_seq() +\n  geom_gene(data = subset(genes, accver == \"A\"), aes(fill = type)) +\n  layout_sequences(angular_gap = 12) +\n  coord_circular(start_angle = 90)",
+      "examples": "circular_seq <- data.frame(\n  accver = \"A\", length = 1000, sequence_unit = \"bp\", topology = \"circular\"\n)\nggchord(circular_seq) +\n  geom_seq() +\n  geom_seq_center_label(aes(label = accver), size = 5) +\n  layout_sequences(angular_gap = 12) +\n  coord_circular(start_angle = 90)",
       "related": [
         "geom_seq",
         "geom_gene",
         "layout_sequences",
-        "geom_seq_center_label"
+        "geom_seq_center_label",
+        "coord_chord"
       ],
       "native": false,
       "defaults": {
@@ -954,7 +961,7 @@
         "`colour, linewidth, linetype, alpha`",
         "`fill`"
       ],
-      "examples": "ggchord() +\n  geom_seq(data = seqs, colour = \"#187B77\") +\n  geom_gene(data = genes) +\n  coord_collinear()\n\n# 两层样式，共用一份参考\nggchord(seqs) +\n  geom_seq(linewidth = 2, colour = \"white\") +\n  geom_seq(linewidth = 0.5, colour = \"black\") +\n  coord_collinear()",
+      "examples": "ggchord() +\n  geom_seq(data = seqs, colour = \"#187B77\", linewidth = 0.8) +\n  coord_collinear()\n\nggchord(seqs) +\n  geom_seq(\n    geometry = \"band\",\n    thickness = c(A = 2, B = 3),\n    fill = \"#B3DED3\",\n    colour = \"#187B77\"\n  ) +\n  coord_collinear()",
       "related": [
         "geom_seq_arrow",
         "ggchord",
@@ -1264,7 +1271,8 @@
         "geom_primer",
         "geom_seq_region",
         "position_strand",
-        "position_feature_stack"
+        "position_feature_stack",
+        "geom_gene_label"
       ],
       "native": false,
       "defaults": {
@@ -1610,7 +1618,7 @@
         "`label`",
         "`colour, fill, size, family, fontface, angle, alpha`"
       ],
-      "examples": "ggchord(seqs) +\n  geom_gene(data = genes) +\n  geom_gene_label(aes(label = label)) +\n  coord_collinear()",
+      "examples": "label_plot +\n  geom_gene_label(aes(label = label), size = 3.5)",
       "related": [
         "auto_anchor",
         "geom_feature_label",
@@ -1681,7 +1689,7 @@
         "`label`",
         "`colour, fill, size, family, fontface, angle, alpha`"
       ],
-      "examples": "ggchord(seqs) +\n  geom_gene(data = genes) +\n  geom_gene_label_repel(aes(label = label)) +\n  coord_collinear()",
+      "examples": "label_plot +\n  geom_gene_label_repel(aes(label = label), size = 3.5)",
       "related": [
         "auto_anchor",
         "geom_feature_label",
@@ -2667,7 +2675,7 @@
         "`group`",
         "`colour, fill, alpha, linewidth, linetype`"
       ],
-      "examples": "ggchord(seqs) +\n  geom_seq() +\n  geom_track_line(aes(x = pos, y = value), data = signal) +\n  scale_track_value(name = \"Signal\") +\n  coord_collinear()",
+      "examples": "ggchord(seqs) +\n  geom_seq() +\n  track_band(thickness = 12, gap = 8) +\n  geom_track_line(\n    aes(x = pos, y = value), data = unordered_signal,\n    colour = \"#187B77\", linewidth = 0.8\n  ) +\n  geom_track_point(\n    aes(x = pos, y = value), data = unordered_signal,\n    colour = \"#187B77\", size = 2\n  ) +\n  scale_track_value(name = \"Signal\") +\n  coord_collinear()",
       "related": [
         "geom_track",
         "track_band",
@@ -2729,7 +2737,7 @@
         "`group`",
         "`colour, fill, alpha, linewidth, linetype`"
       ],
-      "examples": "ggchord(seqs) +\n  geom_seq() +\n  geom_track_path(aes(x = pos, y = value), data = signal) +\n  scale_track_value(name = \"Signal\") +\n  coord_collinear()",
+      "examples": "ggchord(seqs) +\n  geom_seq() +\n  track_band(thickness = 12, gap = 8) +\n  geom_track_path(\n    aes(x = pos, y = value), data = unordered_signal,\n    colour = \"#187B77\", linewidth = 0.8\n  ) +\n  geom_track_point(\n    aes(x = pos, y = value), data = unordered_signal,\n    colour = \"#187B77\", size = 2\n  ) +\n  scale_track_value(name = \"Signal\") +\n  coord_collinear()",
       "related": [
         "geom_track",
         "track_band",
@@ -3400,7 +3408,8 @@
         "geom_track",
         "geom_track_interval",
         "scale_track_value",
-        "track_band"
+        "track_band",
+        "geom_track_col"
       ],
       "native": false,
       "defaults": {
@@ -6072,5 +6081,141 @@
       "defaults": {}
     }
   },
-  "setup": "library(ggplot2)\nlibrary(ggchord)\n\nseqs <- data.frame(\n  accver = c(\"A\", \"B\"), length = c(1000, 800),\n  sequence_unit = \"bp\", topology = \"linear\"\n)\none_seq <- seqs[1, , drop = FALSE]\ngenes <- data.frame(\n  accver = c(\"A\", \"A\", \"B\"), feature_id = c(\"g1\", \"g2\", \"g3\"),\n  start = c(100, 400, 150), end = c(240, 620, 380),\n  strand = c(\"+\", \"-\", \"+\"), label = c(\"g1\", \"g2\", \"g3\"),\n  type = c(\"CDS\", \"tRNA\", \"CDS\")\n)\nlinks <- data.frame(\n  qaccver = \"A\", saccver = \"B\", qstart = c(100, 400),\n  qend = c(240, 620), sstart = c(150, 450), send = c(290, 650),\n  qstrand = \"+\", sstrand = c(\"+\", \"-\"),\n  pident = c(98, 90), link_id = c(\"l1\", \"l2\")\n)\npoints <- data.frame(qaccver = \"A\", qpos = 200, saccver = \"B\", spos = 220)\nsites <- data.frame(accver = \"A\", pos = 300, site_id = \"s1\", label = \"EcoRI\")\nsignal <- data.frame(accver = rep(c(\"A\", \"B\"), each = 3),\n  pos = rep(c(100, 400, 700), 2), value = c(2, 5, 3, 1, 4, 2))\nintervals <- genes[c(\"accver\", \"start\", \"end\")]\nstates <- genes[c(\"accver\", \"start\", \"end\", \"type\")]\ngene_colours <- c(CDS = \"#187B77\", tRNA = \"#CC7D3A\")\nwindows <- data.frame(accver = \"A\", start = 1, end = 500, window_id = \"w1\")\np_basic <- ggchord(seqs) + geom_seq() +\n  geom_gene(data = genes) + coord_collinear()"
+  "setup": "library(ggplot2)\nlibrary(ggchord)\n\nseqs <- data.frame(\n  accver = c(\"A\", \"B\"), length = c(1000, 800),\n  sequence_unit = \"bp\", topology = \"linear\"\n)\none_seq <- seqs[1, , drop = FALSE]\ngenes <- data.frame(\n  accver = c(\"A\", \"A\", \"B\"), feature_id = c(\"g1\", \"g2\", \"g3\"),\n  start = c(100, 400, 150), end = c(240, 620, 380),\n  strand = c(\"+\", \"-\", \"+\"), label = c(\"g1\", \"g2\", \"g3\"),\n  type = c(\"CDS\", \"tRNA\", \"CDS\")\n)\nlinks <- data.frame(\n  qaccver = \"A\", saccver = \"B\", qstart = c(100, 400),\n  qend = c(240, 620), sstart = c(150, 450), send = c(290, 650),\n  qstrand = \"+\", sstrand = c(\"+\", \"-\"),\n  pident = c(98, 90), link_id = c(\"l1\", \"l2\")\n)\npoints <- data.frame(qaccver = \"A\", qpos = 200, saccver = \"B\", spos = 220)\nsites <- data.frame(accver = \"A\", pos = 300, site_id = \"s1\", label = \"EcoRI\")\nsignal <- data.frame(accver = rep(c(\"A\", \"B\"), each = 3),\n  pos = rep(c(100, 400, 700), 2), value = c(2, 5, 3, 1, 4, 2))\nunordered_signal <- signal[c(1, 3, 2, 4, 6, 5), ]\nintervals <- genes[c(\"accver\", \"start\", \"end\")]\nstates <- genes[c(\"accver\", \"start\", \"end\", \"type\")]\ngene_colours <- c(CDS = \"#187B77\", tRNA = \"#CC7D3A\")\nwindows <- data.frame(accver = \"A\", start = 1, end = 500, window_id = \"w1\")\np_basic <- ggchord(seqs) + geom_seq() +\n  geom_gene(data = genes) + coord_collinear()\n\nlabel_seq <- data.frame(accver = \"A\", length = 1000, sequence_unit = \"bp\")\ncrowded_genes <- data.frame(\n  accver = \"A\",\n  feature_id = c(\"g1\", \"g2\", \"g3\"),\n  start = c(425, 478, 531),\n  end = c(467, 520, 573),\n  strand = \"+\",\n  label = c(\"Gene alpha\", \"Gene beta\", \"Gene gamma\")\n)\nlabel_plot <- ggchord(label_seq) +\n  geom_seq() +\n  geom_gene(data = crowded_genes, fill = \"#187B77\") +\n  coord_collinear()",
+  "articles": {
+    "geom_seq": {
+      "related": [
+        "ggchord",
+        "layout_sequences",
+        "geom_seq_label",
+        "geom_seq_center_label",
+        "geom_seq_break",
+        "geom_seq_region"
+      ]
+    },
+    "geom_seq_label": {
+      "related": [
+        "geom_seq",
+        "label_layout_fixed",
+        "coord_circular"
+      ]
+    },
+    "geom_feature": {
+      "related": [
+        "geom_feature_label",
+        "geom_site",
+        "position_strand",
+        "position_feature_stack",
+        "scale_for"
+      ]
+    },
+    "geom_feature_label": {
+      "related": [
+        "geom_feature",
+        "auto_anchor",
+        "label_layout_fixed",
+        "label_layout_repel",
+        "geom_site_label"
+      ]
+    },
+    "geom_site": {
+      "related": [
+        "geom_site_label",
+        "geom_feature",
+        "coord_circular"
+      ]
+    },
+    "geom_site_label": {
+      "related": [
+        "geom_site",
+        "auto_anchor",
+        "label_layout_fixed",
+        "label_layout_repel",
+        "geom_feature_label"
+      ]
+    },
+    "geom_link_ribbon": {
+      "related": [
+        "geom_link_line",
+        "bundle_ggchord_links",
+        "scale_fill_pident"
+      ]
+    },
+    "geom_track": {
+      "related": [
+        "stat_coverage",
+        "track_band",
+        "scale_track_value",
+        "guide_track_axis"
+      ]
+    },
+    "layout_fusion": {
+      "related": [
+        "ggchord_fusion",
+        "fusion_zoom",
+        "fusion_ribbon"
+      ]
+    },
+    "ggchord_fusion": {
+      "related": [
+        "layout_fusion",
+        "fusion_zoom",
+        "fusion_ribbon"
+      ]
+    }
+  },
+  "previous_family_members": {
+    "geom_seq": [
+      "geom_seq_label",
+      "geom_seq_center_label",
+      "geom_seq_break",
+      "geom_seq_region"
+    ],
+    "geom_gene": [
+      "geom_gene_label",
+      "geom_gene_label_repel"
+    ],
+    "coord_chord": [
+      "coord_circular",
+      "coord_collinear",
+      "coord_radial_synteny",
+      "coord_sankey",
+      "coord_dotplot"
+    ],
+    "layout_sequences": [
+      "layout_dotplot"
+    ],
+    "ggchord": [
+      "ggchord_data"
+    ],
+    "geom_feature": [
+      "geom_feature_label",
+      "geom_feature_label_repel"
+    ],
+    "geom_gene_label": [
+      "geom_gene_label_repel"
+    ],
+    "geom_primer": [
+      "geom_primer_label",
+      "geom_primer_label_repel"
+    ],
+    "geom_site": [
+      "geom_site_label",
+      "geom_site_label_repel"
+    ],
+    "geom_link_line": [
+      "geom_link_ribbon"
+    ],
+    "stat_link_bundle": [
+      "stat_link_density"
+    ],
+    "ggchord_fusion": [
+      "layout_fusion",
+      "layout_fusion_grid"
+    ],
+    "fusion_ribbon": [
+      "fusion_zoom",
+      "magnify_ggchord"
+    ]
+  }
 }

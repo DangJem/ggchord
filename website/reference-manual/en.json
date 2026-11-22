@@ -1,5 +1,5 @@
 {
-  "description": "Find functions by task, then open a family to compare related calls, their arguments and their outputs. Each entry includes a runnable R example with its plot or console result.",
+  "description": "Find a reference topic by question or function. Each index row links to one document and lists the functions it covers.",
   "groups": {
     "construct": {
       "title": "Construction and layer identity",
@@ -7,7 +7,7 @@
     },
     "coord": {
       "title": "Coordinate projections",
-      "intro": "Project references and relationships into the viewport."
+      "intro": "Choose a coordinate projection for the plot. Each entry has its own layout contract, arguments and runnable example."
     },
     "facet": {
       "title": "Native faceting",
@@ -35,7 +35,7 @@
     },
     "stat": {
       "title": "Statistics",
-      "intro": "Compute coverage, aggregate links or attach density."
+      "intro": "Compute coverage in source windows or use the interval ribbon statistics linked below."
     },
     "scale": {
       "title": "Scales and scope",
@@ -158,7 +158,7 @@
         },
         {
           "format": "numeric(2) / NULL; default NULL",
-          "description": "Optional increasing pairs of view limits."
+          "description": "Two increasing finite limits per axis or `NULL` for automatic limits. Limits change the viewport in projected coordinates. Select source intervals in the layout or the input data."
         },
         {
           "format": "logical; default FALSE",
@@ -170,14 +170,14 @@
         },
         {
           "format": "character; default \"geometry\"",
-          "description": "Fit geometry, include labels, or require manual limits."
+          "description": "Use `\"geometry\"` (default) to fit the drawing, `\"labels\"` to include labels, or `\"manual\"` with both `xlim` and `ylim` supplied."
         }
       ],
       "value": "A coordinate system for a ggchord plot.",
-      "details": "Sequence paths follow the layout's order and orientation. Angles are in degrees. The starting direction establishes the frame, and each sequence can reverse relative to that frame. A coordinate limit changes the viewport.",
+      "details": "Arrange reference sequences as arcs around one ring and draw ribbons or point links between source positions. Use [`layout_sequences()`](layout_sequences.html#api-layout_sequences) for order, orientation, angular gap, radius and per-reference curvature. The frame defaults to counterclockwise and a sequence can reverse within it. For a single reference with the circular annotation layout and double-ring backbone, see [`coord_circular()`](coord_circular.html#api-coord_circular).",
       "errors": "Select source windows with `layout_sequences()` or a focus operation. Free Cartesian facet axes and inapplicable linear gaps are rejected.",
       "roles": [],
-      "example_setup": ""
+      "example_setup": "Place two references on a shared ring and connect their intervals with ribbons."
     },
     "coord_circular": {
       "title": "Draw a circular view of a single reference",
@@ -193,7 +193,7 @@
         },
         {
           "format": "numeric(2) / NULL; default NULL",
-          "description": "Optional increasing pairs of view limits."
+          "description": "Two increasing finite limits per axis or `NULL` for automatic limits. Limits change the viewport in projected coordinates. Select source intervals in the layout or the input data."
         },
         {
           "format": "logical; default FALSE",
@@ -205,14 +205,14 @@
         },
         {
           "format": "character; default \"geometry\"",
-          "description": "Fit geometry, include labels, or require manual limits."
+          "description": "Use `\"geometry\"` (default) to fit the drawing, `\"labels\"` to include labels, or `\"manual\"` with both `xlim` and `ylim` supplied."
         }
       ],
       "value": "A coordinate system for a ggchord plot.",
-      "details": "Each facet needs exactly one effective reference. Use the declared reference topology and source coordinates for feature and site annotations. A display gap or a clipped window can prevent a track from closing.",
+      "details": "Each panel requires exactly one effective reference. Circular coordinates provide the double-ring backbone by default and dedicated placement for inward annotations and exterior callouts. Effective sequence topology and display windows govern whether features or tracks wrap across the origin. Set the radius or angular gap with [`layout_sequences()`](layout_sequences.html#api-layout_sequences). For reference arcs linked in a shared ring, see [`coord_chord()`](coord_chord.html#api-coord_chord).",
       "errors": "Multiple effective references in one panel are invalid. Use Chord for a shared multi-reference circle.",
       "roles": [],
-      "example_setup": ""
+      "example_setup": "Draw one circular reference with the default double backbone and a centre label. A 12° gap marks the origin."
     },
     "coord_collinear": {
       "title": "Draw collinear sequences on parallel paths",
@@ -228,7 +228,7 @@
         },
         {
           "format": "numeric(2) / NULL; default NULL",
-          "description": "Optional increasing pairs of view limits."
+          "description": "Two increasing finite limits per axis or `NULL` for automatic limits. Limits change the viewport in projected coordinates. Select source intervals in the layout or the input data."
         },
         {
           "format": "logical; default FALSE",
@@ -240,14 +240,14 @@
         },
         {
           "format": "character; default \"geometry\"",
-          "description": "Fit geometry, include labels, or require manual limits."
+          "description": "Use `\"geometry\"` (default) to fit the drawing, `\"labels\"` to include labels, or `\"manual\"` with both `xlim` and `ylim` supplied."
         }
       ],
       "value": "A coordinate system for a ggchord plot.",
-      "details": "Set the sequence axis with `axis`. The layout controls ordering and physical gaps, while the coordinate system projects those paths and sets the viewport. Positive offsets are above horizontal paths or to the right of vertical ones.\n\nAutomatic spacing leaves room on both sides of the paths for features, labels and leaders. Set a physical distance with `layout_sequences()` when the figure requires a fixed gap.\n\nUse [layout_sequences(curvature = ...)](layout_sequences.html#parameter-curvature) to bend the sequence paths. Features, axes and connection endpoints follow their reference paths.",
+      "details": "Draw parallel reference paths. `axis = \"x\"` (default) draws horizontal paths and `\"y\"` draws vertical ones. Positive offsets are above horizontal paths or to the right of vertical paths. Use [`layout_sequences()`](layout_sequences.html#api-layout_sequences) to set order, orientation, alignment, and physical row spacing. [`curvature`](layout_sequences.html#parameter-curvature) bends the paths and the features, axes and link endpoints follow them. Automatic spacing accounts for visible features, labels and leaders. Use fixed facet scales.",
       "errors": "Use fixed facets. Use a track value domain for panel-specific quantitative heights.",
       "roles": [],
-      "example_setup": ""
+      "example_setup": "Draw two horizontal references, reverse B and bend the paths in opposite directions with `layout_sequences()`."
     },
     "coord_radial_synteny": {
       "title": "Draw synteny along radial sequence paths",
@@ -263,7 +263,7 @@
         },
         {
           "format": "numeric(2) / NULL; default NULL",
-          "description": "Optional increasing pairs of view limits."
+          "description": "Two increasing finite limits per axis or `NULL` for automatic limits. Limits change the viewport in projected coordinates. Select source intervals in the layout or the input data."
         },
         {
           "format": "logical; default FALSE",
@@ -275,14 +275,14 @@
         },
         {
           "format": "character; default \"geometry\"",
-          "description": "Fit geometry, include labels, or require manual limits."
+          "description": "Use `\"geometry\"` (default) to fit the drawing, `\"labels\"` to include labels, or `\"manual\"` with both `xlim` and `ylim` supplied."
         }
       ],
       "value": "A coordinate system for a ggchord plot.",
-      "details": "Radial paths retain the source orientation and valid reference extents. Angle supplies the frame and layout controls the relative orientation of each sequence. Relations still use their own interval or point table.\n\nIf inner_radius is omitted, the central opening starts at 0.12 of the longest outer radius and expands as needed to fit the visible endpoint strokes and feature clearance.\n\nUse [layout_sequences(curvature = ...)](layout_sequences.html#parameter-curvature) to bend the sequence paths. Features, axes and connection endpoints follow their reference paths.",
+      "details": "Project sequences onto radial paths and connect source intervals or points across spokes. `start_angle` and `direction` set the angular frame. Use [`layout_sequences()`](layout_sequences.html#api-layout_sequences) for individual orientations, the central opening ([`inner_radius`](layout_sequences.html#parameter-inner_radius)), and signed [`curvature`](layout_sequences.html#parameter-curvature). The opening starts at 0.12 of the longest outer radius by default and grows as needed for stroke and feature clearance. Features, axes and connection endpoints follow their reference paths. Use fixed facet scales.",
       "errors": "Only layout options applicable to radial paths are accepted. Free facet axes are unsupported.",
       "roles": [],
-      "example_setup": ""
+      "example_setup": "Set the start angle in the projection and use the layout to set the opening and bend the spokes. `fit = \"labels\"` makes room for annotation text."
     },
     "coord_sankey": {
       "title": "Draw mirrored sequence paths and links",
@@ -298,7 +298,7 @@
         },
         {
           "format": "numeric(2) / NULL; default NULL",
-          "description": "Optional increasing pairs of view limits."
+          "description": "Two increasing finite limits per axis or `NULL` for automatic limits. Limits change the viewport in projected coordinates. Select source intervals in the layout or the input data."
         },
         {
           "format": "logical; default FALSE",
@@ -310,14 +310,14 @@
         },
         {
           "format": "character; default \"geometry\"",
-          "description": "Fit geometry, include labels, or require manual limits."
+          "description": "Use `\"geometry\"` (default) to fit the drawing, `\"labels\"` to include labels, or `\"manual\"` with both `xlim` and `ylim` supplied."
         }
       ],
       "value": "A coordinate system for a ggchord plot.",
-      "details": "A reference can have display instances on both columns. Source identity, endpoint roles and display instances remain distinct. Choose column spacing in millimetres and the desired axis in the coordinate declaration.\n\nAutomatic spacing leaves room on both sides of the paths for features, labels and leaders. Set a physical distance with `layout_sequences()` when the figure requires a fixed gap.\n\nUse [layout_sequences(curvature = ...)](layout_sequences.html#parameter-curvature) to bend the sequence paths. Features, axes and connection endpoints follow their reference paths.",
+      "details": "Draw two facing sets of reference paths. `axis = \"y\"` (default) draws vertical paths in left and right columns. Set `axis = \"x\"` for horizontal paths. A reference may appear in both sets while each display instance retains its source identity. Use [`layout_sequences()`](layout_sequences.html#api-layout_sequences) to set within-set `row_gap`, between-set [`column_gap`](layout_sequences.html#parameter-column_gap) in millimetres, and [`curvature`](layout_sequences.html#parameter-curvature). Features, axes and connection endpoints follow the bent reference paths. Automatic gaps allow room for visible annotations and leaders. Use fixed facet scales.",
       "errors": "Use explicit endpoint information when a connection is ambiguous. Fixed facet scales are required.",
       "roles": [],
-      "example_setup": ""
+      "example_setup": "Place two facing sets of vertical paths and use a 64 mm column gap. Both the gap and the signed curvature are set in `layout_sequences()`."
     },
     "coord_dotplot": {
       "title": "Draw HSPs on two reference axes",
@@ -329,7 +329,7 @@
         },
         {
           "format": "numeric(2) / NULL; default NULL",
-          "description": "Optional increasing pairs of view limits."
+          "description": "Two increasing finite limits per axis or `NULL` for automatic limits. Limits change the viewport in projected coordinates. Select source intervals in the layout or the input data."
         },
         {
           "format": "logical; default FALSE",
@@ -341,14 +341,14 @@
         },
         {
           "format": "character; default \"geometry\"",
-          "description": "Fit geometry, include labels, or require manual limits."
+          "description": "Use `\"geometry\"` (default) to fit the drawing, `\"labels\"` to include labels, or `\"manual\"` with both `xlim` and `ylim` supplied."
         }
       ],
       "value": "A coordinate system for a ggchord plot.",
-      "details": "Use `layout_dotplot()` to choose and orient query and subject reference segments and `geom_alignment_segment()` to draw the source endpoints. Bounds use the declared reference lengths.",
+      "details": "Plot high-scoring segment pairs (HSPs) as segments, with query positions on x and subject positions on y. [`layout_dotplot()`](layout_dotplot.html#api-layout_dotplot) controls the independent reference order, orientation and segment gaps of each axis. [`geom_alignment_segment()`](geom_alignment_segment.html#api-geom_alignment_segment) draws the original HSP endpoints. Registered reference lengths set the axis extents. `ratio = 1` (default) gives x and y units equal physical lengths. Set `ratio = NULL` for native facets with free axes. Sequence-path layers and `layout_sequences()` are incompatible with Dotplot.",
       "errors": "Native free axes require `ratio = NULL`. A sequence-path feature or link layer is not a substitute for an HSP segment.",
       "roles": [],
-      "example_setup": ""
+      "example_setup": "Select A for the query axis and B for the subject axis. Colour the HSP segments by percent identity."
     },
     "facet_null": {
       "title": "Use a single panel",
@@ -571,7 +571,7 @@
       "details": "Declare the two reference orders and orientations independently. Segment spacing controls their appearance. A HSP is projected using the source positions on the declared axes.",
       "errors": "Each axis needs valid distinct reference IDs. These settings belong to a Dotplot.",
       "roles": [],
-      "example_setup": ""
+      "example_setup": "Select A on x and B on y, then reverse the subject axis while preserving its source positions."
     },
     "suggest_sequence_layout": {
       "title": "Suggest a layout from relationship evidence",
@@ -5266,26 +5266,35 @@
     }
   },
   "families": {
-    "ggchord": "Starting a plot",
+    "ggchord": "Start a plot",
+    "ggchord_data": "Organize reference and observation tables",
     "layer_id": "Layer identifiers and anchors",
-    "coord_chord": "Genomic coordinate systems",
+    "coord_chord": "Chord diagrams",
+    "coord_circular": "Single-reference circular maps",
+    "coord_collinear": "Collinear sequence plots",
+    "coord_radial_synteny": "Radial synteny plots",
+    "coord_sankey": "Sankey sequence plots",
+    "coord_dotplot": "Alignment dotplots",
     "facet_null": "Facets",
     "layout_sequences": "Sequence and dot plot layouts",
+    "layout_dotplot": "Dotplot axis layout",
     "track_band": "Track bands",
-    "geom_seq": "Sequence backbones and labels",
-    "geom_feature": "Feature shapes and labels",
-    "geom_gene": "Genes and gene labels",
-    "geom_primer": "Primers and primer labels",
-    "geom_site": "Sites and site labels",
-    "geom_link_line": "Genomic links",
+    "geom_seq": "Sequence backbones",
+    "geom_seq_label": "Sequence labels",
+    "geom_seq_break": "Marks for sequence breaks",
+    "geom_feature": "Interval feature geometry",
+    "geom_feature_label": "Interval feature labels",
+    "geom_site": "Point and cut markers",
+    "geom_site_label": "Point and cut labels",
+    "geom_link_line": "Links between source points",
+    "geom_link_ribbon": "Ribbons between source intervals",
     "geom_alignment_segment": "Alignment segments",
     "geom_residue": "Residue cells",
-    "geom_track": "Track layers",
+    "geom_track": "Quantitative track layers",
     "annotation_seq_scalebar": "Sequence scale bars",
     "label_layout_fixed": "Label placement",
     "position_offset": "Feature positions",
     "stat_coverage": "Interval coverage",
-    "stat_link_bundle": "Link bundling and density",
     "scale_for": "Layer-specific scales",
     "scale_colour_sequence": "Sequence, feature and identity palettes",
     "scale_seq_position": "Sequence position scales",
@@ -5307,10 +5316,299 @@
     "read_blast": "Sequence alignment files",
     "read_genbank": "Annotations and feature relationships",
     "read_vcf": "Variant files",
-    "ggchord_fusion": "Fusion panels and layouts",
-    "fusion_ribbon": "Panel connections and magnification",
+    "ggchord_fusion": "Compose and magnify views",
+    "layout_fusion": "Fusion panel layouts",
+    "fusion_ribbon": "Ribbons between panels",
+    "fusion_zoom": "Mark a zoom region across views",
     "register_ggchord_alignment": "Alignment registration and positions",
     "view_ggchord": "Plot dimensions and preview",
     "export_ggchord_layout": "Layout export and inspection"
+  },
+  "articles": {
+    "geom_seq": {
+      "intro": "Draw the reference paths that features and links follow. Use `geom_seq()` for the basic backbone and choose a single line, double line or filled band as needed. Use `geom_seq_arrow()` to show the displayed orientation at a glance. It draws a single line with a closed 2 mm arrowhead by default.",
+      "arguments": {
+        "data": "With `NULL` (the default), use the reference registered by [`ggchord()`](ggchord.html#api-ggchord) or another backbone layer. Supply a reference table or a function that selects rows from the registered reference.",
+        "geometry": "Only in `geom_seq()`. With `\"auto\"`, use a double path in [`coord_circular()`](coord_circular.html#api-coord_circular) and a single line in other supported projections. Set `\"line\"`, `\"double\"` or `\"band\"` explicitly when the backbone style matters.",
+        "thickness": "Only in `geom_seq()`, for a double path or a band. Positive distance in millimetres or absolute grid units (default 1 mm). For double lines it is the separation between paths. For bands it is the band width. Use a vector named by `accver` to vary it by sequence. A single line uses the `linewidth` aesthetic.",
+        "stat": "Both functions require an identity Stat (default `\"identity\"`).",
+        "position": "Use the identity Position (default) or [`position_offset()`](position_offset.html#api-position_offset) to displace the backbone.",
+        "...": "Named styles and layer parameters such as `colour`, `linewidth` and `linetype`. A band also accepts `fill`. For a directional line, use `colour` for both the path and arrowhead.",
+        "arrow": "An explicit argument to `geom_seq_arrow()`. Supply a `grid::arrow()` specification or use `NULL` for a plain line. The arrow follows the reference orientation shown by [`layout_sequences()`](layout_sequences.html#parameter-orientation). For explicit control on the basic backbone, pass `arrow` through `...` with `geom_seq(geometry = \"line\")`."
+      },
+      "roles": "The reference table defines sequence identity and length through `accver` and `length`. It can also declare `sequence_unit` and `topology`. Map visual properties with `aes()`: both functions take `colour`, `linewidth`, `linetype` and `alpha`. To map `fill`, set `geometry = \"band\"` in `geom_seq()`.",
+      "details": "Both functions return a ggplot2 layer. A complete table supplied to a backbone can establish the reference in an otherwise empty `ggchord()` plot. Once the reference is registered, later backbone layers can select a subset or draw it with independent styling. A conflicting sequence definition or an unknown reference ID raises an error.",
+      "example_intro": "These examples use the same two illustrative reference sequences.",
+      "examples": {
+        "geom_seq": {
+          "title": "Plain line and filled band",
+          "description": "First register the reference in the backbone layer and draw plain lines. Then register it in the plot and draw a filled band for each sequence with its own thickness."
+        },
+        "geom_seq_arrow": {
+          "title": "Arrowheads for display direction",
+          "description": "Reverse sequence B in the layout and map colour to sequence identity. The two arrowheads point in opposite directions."
+        }
+      }
+    },
+    "geom_seq_label": {
+      "intro": "Label a registered reference along its path with `geom_seq_label()`. Use `geom_seq_center_label()` for text at the centre of a single-reference circular map. It sets `anchor = \"center\"` with the same horizontal fixed layout as the general entry point.",
+      "arguments": {
+        "anchor": "Only in `geom_seq_label()`. Choose `\"start\"`, `\"middle\"` (default) or `\"end\"` on the reference path, or `\"center\"` for the centre of a circular map. The centre shortcut fixes this argument to `\"center\"`.",
+        "position": "Defaults to `\"identity\"`. Use [`position_offset()`](position_offset.html#api-position_offset) to offset a path label. Centre labels require the identity Position.",
+        "label_layout": "Both default to [`label_layout_fixed(orientation = \"horizontal\")`](label_layout_fixed.html#api-label_layout_fixed). Set a different layout for path text, for example a fixed tangent orientation. Centre labels require a fixed layout."
+      },
+      "roles": "Both read the registered reference. Without a label mapping, the label is the reference `accver`. Use `aes(label = ...)` for text from the reference table. Each selected display instance can get its own label. Text aesthetics include `colour`, `size`, `family`, `fontface`, `angle` and `alpha`.",
+      "details": "Both return a ggplot2 layer. Path labels work with sequence-path coordinates. For centre text, use [`coord_circular()`](coord_circular.html#api-coord_circular), which requires one effective reference per panel.",
+      "example_intro": "Place a label at the start of each reference in a collinear view, then use the centre of a circular view.",
+      "examples": {
+        "geom_seq_label": {
+          "title": "Label the start of a sequence",
+          "description": "Map the reference ID to text and align it to the start of each displayed path."
+        },
+        "geom_seq_center_label": {
+          "title": "Label the centre of a circle",
+          "description": "Use one reference and add a larger label at the centre of the circle."
+        }
+      }
+    },
+    "geom_feature": {
+      "intro": "Draw a source interval as a block, arrow or other feature shape with `geom_feature()`. Choose `geom_gene()` for a strand-positioned gene arrow, `geom_primer()` for a slim direction mark at a primer-binding interval, or `geom_seq_region()` to highlight an interval with a translucent block.",
+      "arguments": {
+        "shape": "Defaults to `\"block\"` in `geom_feature()` and `geom_seq_region()`, `\"arrow\"` in `geom_gene()`, and `\"primer_arc\"` in `geom_primer()`. Supported shapes include `block`, `arrow`, `compact_arrow`, `promoter_arrow`, `primer_arrow`, `marker`, `capped_line`, `primer_arc`, `chevron` and `lollipop`. A fixed shape overrides a shape mapping.",
+        "thickness": "Physical thickness normal to the path, 2 mm by default. Supply a number in millimetres, an absolute grid unit or values selected by reference or strand. In circular maps this sets the shaft thickness for the arrow shapes.",
+        "position": "`geom_feature()` defaults to `\"identity\"`, `geom_gene()` to [`position_strand()`](position_strand.html#api-position_strand), and the primer and region shortcuts to [`position_offset(0)`](position_offset.html#api-position_offset). Use a compatible Position to change placement.",
+        "alpha": "Explicit in `geom_seq_region()`, which defaults to 0.25. Set or map transparency to override that default.",
+        "...": "Named styles, geometry settings and parameters for the selected Stat. Arrow geometry accepts settings such as `head_length`, `head_width`, `head_style` and `short_feature`. The gene layer uses `head_style = \"flush\"` by default. Head length and width use millimetres or absolute grid units. In circular coordinates a shouldered arrow with automatic head width has a head 1.42 times the shaft thickness."
+      },
+      "roles": "Use one-based closed intervals with `accver`, `start` and `end`. Supply `strand` for directional shapes and disjoint segment information where appropriate. The primer mark points to the 3′ end on the recorded strand. Map visual properties such as `fill`, `colour`, `alpha` and `linewidth` in `aes()`. For mapped shapes, supply a manual or identity scale of valid shape names.",
+      "details": "All four functions return ggplot2 layers. Shape, side and thickness change the display of an interval while preserving its source coordinates. A `\"+/-\"` feature keeps one source identity and can draw two heads. Add labels using the [interval feature label family](geom_feature_label.html#api-geom_feature_label).",
+      "example_intro": "The examples use blocks and arrows, primer marks between circular backbones, and highlights underneath a backbone.",
+      "examples": {
+        "geom_feature": {
+          "title": "Map shape and fill",
+          "description": "Give feature types different shapes and colours and set physical thickness by reference."
+        },
+        "geom_gene": {
+          "title": "Use strand-positioned gene arrows",
+          "description": "Apply the gene shortcut with separate colours for the recorded feature types."
+        },
+        "geom_primer": {
+          "title": "Draw directional primer marks",
+          "description": "Use two opposite strands and set a slim thickness between the circular backbone lines."
+        },
+        "geom_seq_region": {
+          "title": "Highlight intervals behind a backbone",
+          "description": "Draw wide, translucent regions first and add the sequence backbone above them."
+        }
+      }
+    },
+    "geom_feature_label": {
+      "intro": "Label feature intervals with the general entry point `geom_feature_label()`, or use the gene and primer shortcuts when automatic binding should look for a particular layer type. Each has a fixed and a repelling entry point. Fixed layouts keep text at its prescribed position. Repelling layouts can move text around the same anchor and draw a leader.",
+      "arguments": {
+        "data": "With `NULL` and a bound anchor, use the target entities after its Stat. A table or callback makes the label layer independent under automatic anchoring. To label a subset of a target, specify its ID in `anchor_layer` and provide matching keys. A callback on an explicitly bound layer receives the target entity table.",
+        "stat": "A compatible ggplot2 Stat or its name (default `\"identity\"`). Bound labels require the identity Stat and use the target’s post-Stat entities.",
+        "anchor_layer": "With [`auto_anchor()`](auto_anchor.html#api-auto_anchor) (default), the general entry follows the unique compatible interval layer, including a feature, gene, primer or region layer. The gene and primer shortcuts look for their own layer type. Layer order is immaterial. Multiple matches cause an error listing their IDs. With no candidates, the labels can draw independently if plot data or mappings supply the interval fields. A separate label table or callback, a non-identity Stat or a non-`NULL` Position also selects independent placement by default. Pass a layer ID to bind explicitly or `NULL` for independent labels.",
+        "anchor": "Use `\"middle\"` (general and gene default), `\"head\"` (primer default), `\"start\"`, `\"end\"` or `\"tail\"`. Start and end follow the source endpoints. Head and tail follow the feature direction and require a known `+` or `-` strand.",
+        "position": "Leave `NULL` for bound labels to follow the target placement, including strand side and lane. Independent labels can use the identity Position or [`position_offset()`](position_offset.html#api-position_offset).",
+        "label_layout": "The fixed general and primer functions default to [`label_layout_fixed()`](label_layout_fixed.html#api-label_layout_fixed), with text oriented relative to the feature. The fixed gene function defaults to `label_layout_fixed(orientation = \"horizontal\")`. Fixed layouts can hide overlapping labels with the default `overlap = \"hide\"`. All three `_repel()` functions default to [`label_layout_repel()`](label_layout_repel.html#api-label_layout_repel), which can relocate labels and attach leaders. Every entry point accepts either explicit layout.",
+        "...": "Named text styles and layer parameters. Leader styles such as `segment_colour` and `segment_linetype` require a repelled layout."
+      },
+      "roles": "Label rows supply `accver`, `start`, `end` and text in `label` or `aes(label = ...)`. For a separately supplied subset of a bound target, match by `accver` and stable `feature_id`. Use `strand` for direction-aware anchors. Both functions take text aesthetics including `colour`, `size`, `family`, `fontface`, `angle` and `alpha`. In a circular map, exterior labels default to bold unless you set or map `fontface`. Set or map `fill` to give an exterior callout a background with a visible outline.",
+      "details": "All six functions return ggplot2 layers. They place text and leaders while preserving the underlying geometry. A bound label follows the target’s displayed geometry and its identity must match unambiguously.",
+      "example_intro": "Compare general feature labels and primer endpoints, and use the same crowded set of gene intervals and text size to compare fixed with repelling placement.",
+      "examples": {
+        "geom_feature_label": {
+          "title": "Label a general feature layer",
+          "description": "Add fixed labels with the feature-oriented layout."
+        },
+        "geom_feature_label_repel": {
+          "title": "Repel feature labels",
+          "description": "Label the same kind of feature intervals with a repelling layout."
+        },
+        "geom_gene_label": {
+          "title": "Fixed placement",
+          "description": "Keep text at its fixed anchor position. At this figure size the default overlap policy keeps Gene alpha visible and hides the other two labels."
+        },
+        "geom_gene_label_repel": {
+          "title": "Automatic collision avoidance",
+          "description": "Let text move around its anchor to make room for all three labels. A leader line connects displaced text to the corresponding gene."
+        },
+        "geom_primer_label": {
+          "title": "Label a primer at its 3′ end",
+          "description": "Use the primer layer and its directional head as the default anchor."
+        },
+        "geom_primer_label_repel": {
+          "title": "Repel labels around primer ends",
+          "description": "Use the same anchor contract with the automatic repelling layout."
+        }
+      }
+    },
+    "geom_site": {
+      "intro": "Mark a known point on a reference using `geom_site()`. Choose `geom_restriction_site()` when both strand cut positions are available and the default mark should show their geometry.",
+      "arguments": {
+        "shape": "Choose `\"tick\"`, `\"point\"` or `\"cut\"`. The default is `\"tick\"` for `geom_site()` and `\"cut\"` for `geom_restriction_site()`. Use a manual or identity scale for a shape mapping. Use `fill` with the point symbol."
+      },
+      "roles": "Provide `accver` and one-based `pos`. A cut mark uses `cut_top` and `cut_bottom` in inter-residue coordinates. Use `site_id` as a stable key when selecting a subset for a separate label layer.",
+      "details": "Both return ggplot2 layers. They draw supplied positions and cut coordinates. Add text and leaders with the [point and cut label family](geom_site_label.html#api-geom_site_label).",
+      "example_intro": "Draw a point mark and then display separately declared strand cuts.",
+      "examples": {
+        "geom_site": {
+          "title": "Mark a source position",
+          "description": "Draw a tick at the supplied source position and add its label."
+        },
+        "geom_restriction_site": {
+          "title": "Draw a known cut",
+          "description": "Give each strand its own inter-residue cut position."
+        }
+      }
+    },
+    "geom_site_label": {
+      "intro": "Label source points or restriction cuts. `geom_site_label()` uses a fixed layout and `geom_site_label_repel()` defaults to automatic repositioning with leaders as needed. Both can follow an existing site layer.",
+      "arguments": {
+        "anchor_layer": "The default [`auto_anchor()`](auto_anchor.html#api-auto_anchor) follows the unique compatible site layer. Specify a layer ID when several candidates exist. Supply `NULL` for independent placement. With automatic anchoring, label data, a non-identity Stat or a non-`NULL` Position also selects independent placement.",
+        "label_layout": "`geom_site_label()` defaults to [`label_layout_fixed()`](label_layout_fixed.html#api-label_layout_fixed). `geom_site_label_repel()` defaults to [`label_layout_repel()`](label_layout_repel.html#api-label_layout_repel). Both accept an explicit layout. Set leader styles with a repelling layout."
+      },
+      "roles": "Point labels use `accver`, one-based `pos`, and text from `label` or `aes(label = ...)`. Match a separately supplied subset of a named target by `accver` and `site_id`. Text aesthetics include `colour`, `size`, `family`, `fontface` and `alpha`.",
+      "details": "Both return ggplot2 layers. Bound labels follow their targets after the target statistic and display placement. The point or cut geometry is drawn by [the site layer](geom_site.html#api-geom_site).",
+      "example_intro": "Label a point with fixed placement, then try automatic placement at the same kind of source position.",
+      "examples": {
+        "geom_site_label": {
+          "title": "Fixed site label",
+          "description": "Read the label from the point data."
+        },
+        "geom_site_label_repel": {
+          "title": "Repelling site label",
+          "description": "Use a repelling layout around the source position."
+        }
+      }
+    },
+    "geom_link_ribbon": {
+      "intro": "Draw a ribbon between two source intervals with `geom_link_ribbon()`. Use `stat_link_bundle()` to combine nearby interval links or `stat_link_density()` to annotate links with two-axis density. The two statistical entry points draw the result as a ribbon. For two source points, see [`geom_link_line()`](geom_link_line.html#api-geom_link_line).",
+      "arguments": {
+        "mapping": "Aesthetic mapping from `aes()`. Local mappings take priority over matching inherited channels. To display computed values, map `after_stat(n_members)` for bundles or `after_stat(density)` for density.",
+        "data": "Relationship table or a callback receiving the plot data. Provide one-based inclusive query and subject endpoints.",
+        "position": "Defaults to `\"identity\"`. Use [`position_offset()`](position_offset.html#api-position_offset) for an explicit geometry offset.",
+        "stat": "Explicit in `geom_link_ribbon()`. The default `\"identity\"` uses the supplied records. Use `\"link_bundle\"` or `\"link_density\"` to request the same statistics as the shortcuts.",
+        "geom": "In the two statistical shortcuts, use their default and supported value `\"link_ribbon\"`.",
+        "bins": "Controls the two endpoint grids for bundling and density. Use one positive number of bins for both axes or a named vector with `q` and `s`. The default is 80.",
+        "...": "Named visual styles, route controls and geometry parameters. With `geom_link_ribbon(stat = ...)`, also pass the parameters of the selected statistic here.",
+        "na.rm": "Defaults to `FALSE`. Set `TRUE` to omit records with missing endpoints or weights silently where supported. Invalid references, units and coordinates still raise errors.",
+        "show.legend": "Defaults to `NA`. Use a logical value or named logical vector to control legend keys.",
+        "inherit.aes": "Defaults to `TRUE`. Inherit plot mappings and evaluate them on the layer data."
+      },
+      "roles": "An interval link supplies `qaccver`, `qstart`, `qend`, `saccver`, `sstart` and `send`. Supply endpoint strands or direction where applicable. Map `fill`, `colour`, `alpha`, `linewidth` and `linetype` for ordinary ribbons, or endpoint fills with `fill_mode = \"endpoint\"`. The statistics accept `weight` (nonnegative, one per record by default) and `group`.",
+      "details": "The equivalent bundle calls are `stat_link_bundle(bins = 20)` and `geom_link_ribbon(stat = \"link_bundle\", bins = 20)`. The bundle statistic groups links by the bins of their two midpoints, direction, reference pair and grouping. It draws the enclosing intervals and preserves source membership. The density statistic divides bin weight by the two-axis bin area and can additionally normalize density relative to each pair maximum. Its raw density describes midpoint concentration. Both statistics make computed columns available for mapping.",
+      "example_intro": "Start with original intervals, then colour by the bundle member count or by computed density.",
+      "examples": {
+        "geom_link_ribbon": {
+          "title": "Draw original interval links",
+          "description": "Use the source intervals as ribbon endpoints and map percent identity to fill."
+        },
+        "stat_link_bundle": {
+          "title": "Group links by both endpoint bins",
+          "description": "Choose bin counts and a minimum number of members, then map the computed member count."
+        },
+        "stat_link_density": {
+          "title": "Map interval-link density",
+          "description": "Normalize within pairs and map the computed density to fill."
+        }
+      }
+    },
+    "geom_track": {
+      "intro": "Draw source-position measurements or intervals in a track. Use `geom_track()` to select a geometry by name, or use a shortcut for points, lines, paths, steps, columns, counting bars, areas, tiles or full-band intervals.",
+      "arguments": {
+        "mapping": "Aesthetic mapping from `aes()`. Local mappings override matching inherited channels. Map `x` to a source location and `y` to a measurement or computed value when the geometry uses both. Full-band intervals use source endpoints.",
+        "data": "A track table or a callback receiving plot-level data. Supply positions, observations or endpoints for the selected geometry and statistic.",
+        "geom": "Explicit in `geom_track()`. Choose `\"point\"` (default), `\"line\"`, `\"path\"`, `\"step\"`, `\"col\"`, `\"bar\"`, `\"area\"`, `\"tile\"` or `\"interval\"`. Each shortcut selects its corresponding geometry.",
+        "stat": "The general entry point uses `NULL` to choose the default for the geometry. Bars default to `\"count\"`; the other shortcuts default to `\"identity\"`. Supply a compatible Stat or supported name such as `\"bin\"`, `\"summary\"`, `\"smooth\"` or `\"coverage\"`. For coverage inputs and computed columns, see [`stat_coverage()`](stat_coverage.html#api-stat_coverage).",
+        "position": "The general entry uses `NULL` to choose the default for the geometry. Columns, counting bars and areas default to `\"stack\"`; the others default to `\"identity\"`. A full-height interval with identity Stat requires identity Position.",
+        "track": "Band name. The `\"default\"` band can be implicit. Declare other names with [`track_band()`](track_band.html#api-track_band) before using them.",
+        "...": "Styles and parameters for the selected geometry or Stat. Lines and paths support `closed` for a continuous complete circle; steps use `direction`. Columns, bars and areas accept `baseline`; areas also accept `outline`. Widths along the reference are in source units. Tile heights use the track’s numerical units. Use `measure` to name a numerical quantity and `bounds` to control errors or clipping outside the reference. A nonzero `baseline` requires identity Position. A parameter accepted by both an external Stat and the Geom must be disambiguated.",
+        "show.legend": "Defaults to `NA`. Use a logical or named logical vector to control legend keys.",
+        "inherit.aes": "Defaults to `TRUE`. Inherit plot mappings and evaluate them on the track data."
+      },
+      "roles": "Use `accver` to identify the reference. Map `x` in source units and `y` in measurement units. A counting bar computes `after_stat(count)` and accepts an optional `weight` mapping. Interval layers use `start` and `end` and fill the physical band without training its numeric scale. Use `group` to distinguish series on the same reference. A [track band](track_band.html#api-track_band) controls physical space and [`scale_track_value()`](scale_track_value.html#api-scale_track_value) controls the numerical scale.",
+      "details": "Lines and steps follow source order. Paths preserve input order or the order returned by the selected Stat. Use columns for supplied heights and bars to count observations. The equivalent coverage forms are `stat_coverage(binwidth = 100)` and `geom_track(geom = \"col\", stat = \"coverage\", position = \"identity\", binwidth = 100)`. The wrapper defaults to identity Position, so specify it when translating to the general form. See the [coverage example](stat_coverage.html#ref-examples) for measurement, denominator and computed mappings.\n\nContinuous lines and paths respect missing values and reference, window and group boundaries. An external Stat can report source membership through a `source_rows` list-column whose indices refer to `source_row`. For exported membership and stages, see [`export_ggchord_layout()`](export_ggchord_layout.html#api-export_ggchord_layout).",
+      "example_intro": "Each example uses the same small reference fixture. The examples add measurements, counts or intervals appropriate to the geometry.",
+      "examples": {
+        "geom_track": {
+          "title": "Select a track geometry by name",
+          "description": "Choose lines in the general entry point and label the numerical scale."
+        },
+        "geom_track_point": {
+          "title": "Plot samples as points",
+          "description": "Map source positions and measured values."
+        },
+        "geom_track_line": {
+          "title": "Connect samples in coordinate order",
+          "description": "Use an out-of-order input table. The line sorts samples by increasing source position."
+        },
+        "geom_track_path": {
+          "title": "Connect samples in input order",
+          "description": "Use the same out-of-order table and connect samples in the order supplied."
+        },
+        "geom_track_step": {
+          "title": "Draw step changes",
+          "description": "Connect values with horizontal and vertical segments."
+        },
+        "geom_track_col": {
+          "title": "Plot supplied heights",
+          "description": "Draw columns from measurements in the input."
+        },
+        "geom_track_bar": {
+          "title": "Count observations",
+          "description": "Map only the source positions and use the resulting observation counts as heights."
+        },
+        "geom_track_area": {
+          "title": "Fill an area track",
+          "description": "Fill the area between measured values and the baseline."
+        },
+        "geom_track_tile": {
+          "title": "Draw tiles at track coordinates",
+          "description": "Use the measurements to control the vertical position and fill of each tile."
+        },
+        "geom_track_interval": {
+          "title": "Highlight entire band intervals",
+          "description": "Fill source intervals across the height of a track band."
+        }
+      }
+    },
+    "layout_fusion": {
+      "intro": "Specify the panel positions of a Fusion composition. Use `layout_fusion()` for explicit rectangular bounds, including physical units, or `layout_fusion_grid()` for a matrix of panel names with relative row and column weights.",
+      "arguments": {},
+      "roles": "The rectangular table identifies panels with `panel` and supplies `xmin`, `xmax`, `ymin` and `ymax`. An optional `z` controls drawing order. A grid uses named cells, `NA` for empty cells and rectangles for panels spanning multiple cells.",
+      "details": "Both produce layout declarations for [`ggchord_fusion()`](ggchord_fusion.html#api-ggchord_fusion). An explicit grid is converted to relative rectangles. With `design = NULL`, the grid is generated from the composition’s panel names. Canvas placement leaves the source coordinates of each panel intact.",
+      "example_intro": "Arrange the same two views using explicit bounds or a grid.",
+      "examples": {
+        "layout_fusion": {
+          "title": "Place two panels by their bounds",
+          "description": "Specify named rectangles in relative canvas coordinates."
+        },
+        "layout_fusion_grid": {
+          "title": "Give one grid column more width",
+          "description": "Use a panel name matrix and relative column weights."
+        }
+      }
+    },
+    "ggchord_fusion": {
+      "intro": "Combine named plots with `ggchord_fusion()`. Use `magnify_ggchord()` for a pair of overview and detail plots with a marked source region. It constructs a two-panel Fusion and adds [`fusion_zoom()`](fusion_zoom.html#api-fusion_zoom).",
+      "arguments": {
+        "layout": "A Fusion layout declaration from [`layout_fusion()`](layout_fusion.html#api-layout_fusion) or [`layout_fusion_grid()`](layout_fusion.html#api-layout_fusion_grid). The general constructor defaults to an automatic grid. The magnifier defaults to named `overview` and `detail` panels in one row, with relative widths 2 and 1.",
+        "guides": "Defaults to `\"keep\"` in both entry points. Use `\"collect\"` to collect compatible guides."
+      },
+      "roles": "The general constructor takes a named list of independent views. The magnifier takes its two views directly and a source region with `accver`, `start` and `end`. Use `...` on the magnifier for the supported zoom connector and highlight styles.",
+      "details": "Both return a Fusion composition. Layout and zoom marks operate on rendered views and preserve the underlying source data. To calculate statistics on a selected region, construct the detail plot with the desired data first.",
+      "example_intro": "Build a small composition from two plots, then pair an overview with a detail plot for a named source region.",
+      "examples": {
+        "ggchord_fusion": {
+          "title": "Compose named panels",
+          "description": "Use the convenient automatic layout to assemble independent views."
+        },
+        "magnify_ggchord": {
+          "title": "Mark an overview-to-detail zoom",
+          "description": "Create a focused view and identify the matching interval on the overview."
+        }
+      }
+    }
   }
 }

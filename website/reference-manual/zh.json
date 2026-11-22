@@ -1,6 +1,6 @@
 {
-  "source_sha256": "1735e4d69e3bf6091db71e79a8f40b77ade17e20bad5d165d466e2a8b5adc237",
-  "description": "按任务查找函数，进入同一函数族的页面后，可以对照各接口的调用形式、参数和输出。每个接口都附有可运行的 R 示例及对应的图形或控制台结果。",
+  "source_sha256": "a1edbc5a0559e5436240d81a41d052fe6341b671d85637012ac00b6775132878",
+  "description": "按绘图问题或函数查阅 API。索引每行对应一篇主题文档，并列出该文档涵盖的函数。",
   "groups": {
     "construct": {
       "title": "构造器与图层身份",
@@ -8,7 +8,7 @@
     },
     "coord": {
       "title": "坐标投影",
-      "intro": "将参考路径和关系投影到显示视口。"
+      "intro": "按图形选择坐标投影。每种投影单独说明适用的布局、参数和可运行示例。"
     },
     "facet": {
       "title": "原生分面",
@@ -36,7 +36,7 @@
     },
     "stat": {
       "title": "统计转换",
-      "intro": "计算覆盖、聚合关系或附加密度。"
+      "intro": "在源窗口内计算覆盖度。区间连带的统计入口见下方链接。"
     },
     "scale": {
       "title": "映射与作用域",
@@ -159,7 +159,7 @@
         },
         {
           "format": "numeric(2) / NULL；默认 NULL",
-          "description": "投影后画布 x/y 视口上下界；NULL 按 fit 自动决定。路径类 Coord 的数值不是 bp/aa。Dotplot 为已经拼接的源轴坐标。必须有限且下界小于上界；只控制显示，不删除统计输入。"
+          "description": "每轴可提供两个递增的有限值，或用 `NULL` 自动取限。视口限制使用投影后的坐标。选择源区间时使用布局或输入数据。"
         },
         {
           "format": "logical；默认 FALSE",
@@ -171,14 +171,14 @@
         },
         {
           "format": "character；默认 \"geometry\"",
-          "description": "\"geometry\" 根据参考与非文字几何拟合未指定的视口；\"labels\" 还计入已排版文字边界；\"manual\" 要求同时给出 xlim 与 ylim。显式界限优先于拟合。"
+          "description": "用默认值 `\"geometry\"` 拟合图形几何，用 `\"labels\"` 将标签也纳入拟合，或用 `\"manual\"` 并同时给出 `xlim` 和 `ylim`。"
         }
       ],
       "value": "一个可用 + 添加到 ggchord 图的 Coord 对象；不修改输入表，不自动添加骨架或连接图层。",
-      "details": "1. 这是新 API 目标合同。每个分面单独建立投影，但共享预先解析的唯一参考序列；Coord 不读取另一张候选注释表，也不推断完整长度。\n\n2. 一个图对象最终只有一个 Coord。添加新的 Coord 按 ggplot2 的替换规则替换旧投影并给出提示；不会叠加两个坐标系统。\n\n3. 本 API 中所有物理 mm 尺寸以最终设备为准。fit 和画布比例只调整参考路径/视口，不静默缩放已声明的厚度、文字尺寸或轨带间距。\n\n4. 在 length_mode=\"proportional\" 时，弧段角跨度按完整参考或明确显示窗口的源长度分配；总角空白来自 angular_gap。不同参考的源单位必须具有可比较的尺度。\n\n5. 支持 sequence、feature、site、link、数值 track 及其标签家族；不把四端点 Dotplot segment 自动转换为 ribbon。\n\n6. 本版目标支持 facet_wrap/facet_grid 的固定尺度分面。free/free_x/free_y 会改变原生画布轴语义，在本 Coord 中报错；轨道高度按面板自由训练使用 scale_track_value(domain=\"panel\")。",
+      "details": "将参考序列排成同一环上的弧段，用连带或点连接线连接源位置。参考顺序、方向、角度间隙、半径和逐序列曲率都由 [`layout_sequences()`](layout_sequences.html#api-layout_sequences) 设置。坐标框架默认逆时针，单条序列可以相对框架反向。绘制一条参考并使用专用圆内外注释和默认双圈骨架时，见 [`coord_circular()`](coord_circular.html#api-coord_circular)。",
       "errors": "- 缺少完整参考、参考单位不可比较或角度非法。\n\n- 显式使用本投影不支持的 row_gap/column_gap 等布局项。\n\n- 请求原生自由画布轴分面或不兼容的 Geom。",
       "roles": [],
-      "example_setup": ""
+      "example_setup": "将两条参考放在同一环上，用连带连接它们的区间。"
     },
     "coord_circular": {
       "title": "绘制单参考圆形图",
@@ -194,7 +194,7 @@
         },
         {
           "format": "numeric(2) / NULL；默认 NULL",
-          "description": "投影后画布 x/y 视口上下界；NULL 按 fit 自动决定。路径类 Coord 的数值不是 bp/aa。Dotplot 为已经拼接的源轴坐标。必须有限且下界小于上界；只控制显示，不删除统计输入。"
+          "description": "每轴可提供两个递增的有限值，或用 `NULL` 自动取限。视口限制使用投影后的坐标。选择源区间时使用布局或输入数据。"
         },
         {
           "format": "logical；默认 FALSE",
@@ -206,14 +206,14 @@
         },
         {
           "format": "character；默认 \"geometry\"",
-          "description": "\"geometry\" 根据参考与非文字几何拟合未指定的视口；\"labels\" 还计入已排版文字边界；\"manual\" 要求同时给出 xlim 与 ylim。显式界限优先于拟合。"
+          "description": "用默认值 `\"geometry\"` 拟合图形几何，用 `\"labels\"` 将标签也纳入拟合，或用 `\"manual\"` 并同时给出 `xlim` 和 `ylim`。"
         }
       ],
       "value": "可添加到图上的单参考圆形 Coord；不选择 feature preset，不启动标签避让或生物学识别。",
-      "details": "1. 这是新 API 目标合同。每个分面单独建立投影，但共享预先解析的唯一参考序列；Coord 不读取另一张候选注释表，也不推断完整长度。\n\n2. 一个图对象最终只有一个 Coord。添加新的 Coord 按 ggplot2 的替换规则替换旧投影并给出提示；不会叠加两个坐标系统。\n\n3. 本 API 中所有物理 mm 尺寸以最终设备为准。fit 和画布比例只调整参考路径/视口，不静默缩放已声明的厚度、文字尺寸或轨带间距。\n\n4. 每个面板必须恰有一条有效参考。参考表可含明确的分面分配字段；缺少分面字段时参考会复制，多个参考因此落入同一面板应报错，不能按观察数据碰巧出现的 ID 猜分配。\n\n5. layout_sequences(angular_gap=0) 为闭合圆；正角空白产生开口。radius 定义参考路径半径，特征厚度和轨道厚度保持物理单位。\n\n6. 跨原点 feature 必须通过 segments 和明确环状来源表达；start>end 不同时承担负链与跨原点两种含义。\n\n7. 支持固定分面；不支持原生 free 画布轴。线性数据也可圆形显示，但不会因此产生跨原点数据关系。",
+      "details": "每个面板要求恰好一条有效参考。圆图默认使用双圈骨架，并为圆内注释和圈外标注提供专用布局。特征和轨道能否跨过原点，取决于有效序列的拓扑和显示窗口。用 [`layout_sequences()`](layout_sequences.html#api-layout_sequences) 设置半径或角度间隙。需要将参考弧段排在同一环上并绘制连接时，见 [`coord_chord()`](coord_chord.html#api-coord_chord)。",
       "errors": "- 一个面板有零条或多条有效参考。\n\n- 没有环状来源却将倒序端点解释为跨原点。\n\n- 使用不适用的线性布局项或原生 free 分面。",
       "roles": [],
-      "example_setup": ""
+      "example_setup": "用默认双圈骨架绘制一条环状参考，并添加中心标签。原点留出 12° 间隙。"
     },
     "coord_collinear": {
       "title": "平行参考路径上的共线性视图",
@@ -229,7 +229,7 @@
         },
         {
           "format": "numeric(2) / NULL；默认 NULL",
-          "description": "投影后画布 x/y 视口上下界；NULL 按 fit 自动决定。路径类 Coord 的数值不是 bp/aa。Dotplot 为已经拼接的源轴坐标。必须有限且下界小于上界；只控制显示，不删除统计输入。"
+          "description": "每轴可提供两个递增的有限值，或用 `NULL` 自动取限。视口限制使用投影后的坐标。选择源区间时使用布局或输入数据。"
         },
         {
           "format": "logical；默认 FALSE",
@@ -241,14 +241,14 @@
         },
         {
           "format": "character；默认 \"geometry\"",
-          "description": "\"geometry\" 根据参考与非文字几何拟合未指定的视口；\"labels\" 还计入已排版文字边界；\"manual\" 要求同时给出 xlim 与 ylim。显式界限优先于拟合。"
+          "description": "用默认值 `\"geometry\"` 拟合图形几何，用 `\"labels\"` 将标签也纳入拟合，或用 `\"manual\"` 并同时给出 `xlim` 和 `ylim`。"
         }
       ],
       "value": "线性序列 Coord；仅改变显示投影，保留源 ID、端点、方向和统计结果。",
-      "details": "1. 这是新 API 目标合同。每个分面单独建立投影，但共享预先解析的唯一参考序列；Coord 不读取另一张候选注释表，也不推断完整长度。\n\n2. 一个图对象最终只有一个 Coord。添加新的 Coord 按 ggplot2 的替换规则替换旧投影并给出提示；不会叠加两个坐标系统。\n\n3. 本 API 中所有物理 mm 尺寸以最终设备为准。fit 和画布比例只调整参考路径/视口，不静默缩放已声明的厚度、文字尺寸或轨带间距。\n\n4. axis=\"x\" 时参考顺序默认从上到下；axis=\"y\" 时从左到右。显示方向来自 Layout；Coord 不基于 links 自动推断 orientation。\n\n5. 支持完整参考或明确的显示窗口行。窗口只控制可见几何；重叠窗口或重复显示不能重复参与 coverage 统计。\n\n6. 支持 feature、site、track、label 以及 point/interval links。某个形状需要圆弧但本身没有线性定义时，该形状须报错；不能借此静默换成另一形状。\n\n7. 固定分面使用同一个参考合同。仅轨道值域可独立设为 panel；原生 free 画布轴不支持。\n\n自动间距会在路径两侧为特征、标签及引线留出空间。需要固定距离时可通过 `layout_sequences()` 指定。\n\n用 [layout_sequences(curvature = ...)](layout_sequences.html#parameter-curvature) 调整序列弯曲。特征、刻度和连接端点沿各自的序列路径放置。",
+      "details": "将参考序列画成平行路径。默认 `axis = \"x\"` 表示水平路径，`\"y\"` 表示竖直路径。沿正侧偏移时，水平路径向上、竖直路径向右。用 [`layout_sequences()`](layout_sequences.html#api-layout_sequences) 设置顺序、方向、对齐方式和物理行距。[曲率 `curvature`](layout_sequences.html#parameter-curvature) 可弯曲参考路径，特征、刻度轴和连接端点随路径移动。自动行距会考虑可见特征、标签和引线。分面使用固定标度。",
       "errors": "- axis 非 x/y，ratio 非正有限数。\n\n- 同时提供不适用于线性参考的 radius/angular_gap/inner_radius。\n\n- 缺少参考或使用不兼容的 free 分面。",
       "roles": [],
-      "example_setup": ""
+      "example_setup": "绘制两条水平参考，反转序列 B，并用 `layout_sequences()` 将两条路径向相反方向弯曲。"
     },
     "coord_radial_synteny": {
       "title": "径向序列路径上的共线性视图",
@@ -264,7 +264,7 @@
         },
         {
           "format": "numeric(2) / NULL；默认 NULL",
-          "description": "投影后画布 x/y 视口上下界；NULL 按 fit 自动决定。路径类 Coord 的数值不是 bp/aa。Dotplot 为已经拼接的源轴坐标。必须有限且下界小于上界；只控制显示，不删除统计输入。"
+          "description": "每轴可提供两个递增的有限值，或用 `NULL` 自动取限。视口限制使用投影后的坐标。选择源区间时使用布局或输入数据。"
         },
         {
           "format": "logical；默认 FALSE",
@@ -276,14 +276,14 @@
         },
         {
           "format": "character；默认 \"geometry\"",
-          "description": "\"geometry\" 根据参考与非文字几何拟合未指定的视口；\"labels\" 还计入已排版文字边界；\"manual\" 要求同时给出 xlim 与 ylim。显式界限优先于拟合。"
+          "description": "用默认值 `\"geometry\"` 拟合图形几何，用 `\"labels\"` 将标签也纳入拟合，或用 `\"manual\"` 并同时给出 `xlim` 和 `ylim`。"
         }
       ],
       "value": "径向 spoke Coord；不产生缺失关系，不计算序列方向，也不改变参考长度。",
-      "details": "1. 这是新 API 目标合同。每个分面单独建立投影，但共享预先解析的唯一参考序列；Coord 不读取另一张候选注释表，也不推断完整长度。\n\n2. 一个图对象最终只有一个 Coord。添加新的 Coord 按 ggplot2 的替换规则替换旧投影并给出提示；不会叠加两个坐标系统。\n\n3. 本 API 中所有物理 mm 尺寸以最终设备为准。fit 和画布比例只调整参考路径/视口，不静默缩放已声明的厚度、文字尺寸或轨带间距。\n\n4. 每面板至少需要两条显示参考；spoke 顺序来自 Layout，默认均匀分布整周。两条参考时每条真实关系仍只显示一次，不自动复制到另一条连接走廊。\n\n5. 中心空白由 layout_sequences(inner_radius=...) 决定。inner_radius 是最长外半径归一为 1 后的中心半径；省略时，中心半径从最长外半径的 0.12 起按端部线宽和特征净空增大。radius 仍专用于弧形参考，在本模式不可使用。\n\n6. 局部正法向定义为从该 spoke 正向切线逆时针旋转 90 度，不随 biological strand 或显示 orientation 翻转。\n\n7. 非相邻连接、曲率与凸起由明确的 link Geom 路由参数控制。Coord 不筛相邻关系，不改变 linetype 或创建比对记录。\n\n8. 支持固定尺度分面。本版不支持将多个不连续窗口拼成一个 spoke；可将各窗口定义为不同显示实例，保留其来源。\n\n用 [layout_sequences(curvature = ...)](layout_sequences.html#parameter-curvature) 调整序列弯曲。特征、刻度和连接端点沿各自的序列路径放置。",
+      "details": "将序列投影为径向辐条，连接各辐条的源区间或点。`start_angle` 和 `direction` 定义角度框架。用 [`layout_sequences()`](layout_sequences.html#api-layout_sequences) 设置逐序列方向、[中心开口 `inner_radius`](layout_sequences.html#parameter-inner_radius)和[有符号的曲率 `curvature`](layout_sequences.html#parameter-curvature)。默认开口半径从最长外半径的 0.12 倍起算，按描边及特征净空扩展。特征、刻度轴和连接端点随各自的参考路径移动。分面使用固定标度。",
       "errors": "- 每面板有效 spoke 少于两条。\n\n- 将 radius 当作 spoke 中心半径，或给出无效 inner_radius。\n\n- 使用 joined-window 行或原生 free 画布轴。",
       "roles": [],
-      "example_setup": ""
+      "example_setup": "在坐标投影中设置起始角，在布局中设置中心开口并弯曲辐条。`fit = \"labels\"` 为注释文字保留空间。"
     },
     "coord_sankey": {
       "title": "镜像双列序列关系视图",
@@ -299,7 +299,7 @@
         },
         {
           "format": "numeric(2) / NULL；默认 NULL",
-          "description": "投影后画布 x/y 视口上下界；NULL 按 fit 自动决定。路径类 Coord 的数值不是 bp/aa。Dotplot 为已经拼接的源轴坐标。必须有限且下界小于上界；只控制显示，不删除统计输入。"
+          "description": "每轴可提供两个递增的有限值，或用 `NULL` 自动取限。视口限制使用投影后的坐标。选择源区间时使用布局或输入数据。"
         },
         {
           "format": "logical；默认 FALSE",
@@ -311,14 +311,14 @@
         },
         {
           "format": "character；默认 \"geometry\"",
-          "description": "\"geometry\" 根据参考与非文字几何拟合未指定的视口；\"labels\" 还计入已排版文字边界；\"manual\" 要求同时给出 xlim 与 ylim。显式界限优先于拟合。"
+          "description": "用默认值 `\"geometry\"` 拟合图形几何，用 `\"labels\"` 将标签也纳入拟合，或用 `\"manual\"` 并同时给出 `xlim` 和 `ylim`。"
         }
       ],
       "value": "镜像参考关系 Coord；显示实例保留源参考 ID 和 q/s 侧身份，不改变源表中的 query/subject。",
-      "details": "1. 这是新 API 目标合同。每个分面单独建立投影，但共享预先解析的唯一参考序列；Coord 不读取另一张候选注释表，也不推断完整长度。\n\n2. 一个图对象最终只有一个 Coord。添加新的 Coord 按 ggplot2 的替换规则替换旧投影并给出提示；不会叠加两个坐标系统。\n\n3. 本 API 中所有物理 mm 尺寸以最终设备为准。fit 和画布比例只调整参考路径/视口，不静默缩放已声明的厚度、文字尺寸或轨带间距。\n\n4. 两侧共享同一套完整参考定义；Layout 对每个来源生成带侧身份的显示实例。显式选择两侧不同参考集合属于 Layout 显示选择，不改变权威参考。\n\n5. 列间物理距离使用 layout_sequences(column_gap=...)，两侧参考排序使用 order。源长度比例及显示反向遵守同一 Layout 合同。\n\n6. source 相同的自连接也是合法关系；是否保留由显式过滤数据决定。本 Coord 没有 self_links 开关。互为 q/s 的两条输入记录仍是两条独立证据。\n\n7. axis=\"y\" 时所有垂直参考的局部正侧为画布右侧；想在两列都向外放置，可按显示实例显式配置正负 offset，不能由 Coord 偷换 Position 数值含义。固定分面可用，原生 free 画布轴不可用。\n\n自动间距会在路径两侧为特征、标签及引线留出空间。需要固定距离时可通过 `layout_sequences()` 指定。\n\n用 [layout_sequences(curvature = ...)](layout_sequences.html#parameter-curvature) 调整序列弯曲。特征、刻度和连接端点沿各自的序列路径放置。",
+      "details": "绘制两组相对的参考路径。默认 `axis = \"y\"`，在左右两列绘制竖直路径。设为 `\"x\"` 可绘制水平路径。参考可以在两组中同时出现，各显示实例仍保留来源身份。用 [`layout_sequences()`](layout_sequences.html#api-layout_sequences) 设置组内间距 `row_gap`、以 mm 计的[组间距 `column_gap`](layout_sequences.html#parameter-column_gap)，以及[曲率 `curvature`](layout_sequences.html#parameter-curvature)。特征、刻度轴与连接端点跟随弯曲路径。自动间距会为可见注释和引线留出空间。分面使用固定标度。",
       "errors": "- 不明来源或在重复实例间无法唯一确定连接端点。\n\n- 将输入权重自动解释为守恒流量。\n\n- 使用不适用的圆形布局参数。",
       "roles": [],
-      "example_setup": ""
+      "example_setup": "将竖直路径分成相对的两组，组间距设为 64 mm。组间距和有符号的曲率都在 `layout_sequences()` 中设置。"
     },
     "coord_dotplot": {
       "title": "双参考轴 HSP 点图",
@@ -330,7 +330,7 @@
         },
         {
           "format": "numeric(2) / NULL；默认 NULL",
-          "description": "投影后画布 x/y 视口上下界；NULL 按 fit 自动决定。路径类 Coord 的数值不是 bp/aa。Dotplot 为已经拼接的源轴坐标。必须有限且下界小于上界；只控制显示，不删除统计输入。"
+          "description": "每轴可提供两个递增的有限值，或用 `NULL` 自动取限。视口限制使用投影后的坐标。选择源区间时使用布局或输入数据。"
         },
         {
           "format": "logical；默认 FALSE",
@@ -342,14 +342,14 @@
         },
         {
           "format": "character；默认 \"geometry\"",
-          "description": "\"geometry\" 根据参考与非文字几何拟合未指定的视口；\"labels\" 还计入已排版文字边界；\"manual\" 要求同时给出 xlim 与 ylim。显式界限优先于拟合。"
+          "description": "用默认值 `\"geometry\"` 拟合图形几何，用 `\"labels\"` 将标签也纳入拟合，或用 `\"manual\"` 并同时给出 `xlim` 和 `ylim`。"
         }
       ],
       "value": "双轴参考 Coord；不把 HSP 变成真实字符对齐，不从端点插值制造碱基。",
-      "details": "1. 这是新 API 目标合同。每个分面单独建立投影，但共享预先解析的唯一参考序列；Coord 不读取另一张候选注释表，也不推断完整长度。\n\n2. 一个图对象最终只有一个 Coord。添加新的 Coord 按 ggplot2 的替换规则替换旧投影并给出提示；不会叠加两个坐标系统。\n\n3. 本 API 中所有物理 mm 尺寸以最终设备为准。fit 和画布比例只调整参考路径/视口，不静默缩放已声明的厚度、文字尺寸或轨带间距。\n\n4. x 轴使用 qaccver/qstart/qend，y 轴使用 saccver/sstart/send。每条轴可包含多个完整参考，边界与空白由 layout_dotplot() 提供。\n\n5. 只消费具备双轴定义的几何，例如 geom_alignment_segment() 及明确画布坐标的原生注释。单参考路径 feature/track 不能在没有声明轴归属时自动进入本图。\n\n6. 支持固定或自由分面。free_x/free_y 只按明确分配到各面板的完整参考成员关系决定轴域，不从该面板HSP端点最小/最大值猜源长度。ratio 非 NULL 与自由位置尺度的组合本版报错；需要自由轴时显式 ratio=NULL。\n\n7. xlim/ylim 是分段拼接后的轴坐标；只做视口缩放。选择源区间或重算统计使用显式数据操作。",
+      "details": "将高分片段对（HSP）画成线段，横轴为查询位置，纵轴为目标位置。用 [`layout_dotplot()`](layout_dotplot.html#api-layout_dotplot) 分别设置两轴的参考顺序、方向和段间隙，由 [`geom_alignment_segment()`](geom_alignment_segment.html#api-geom_alignment_segment) 绘制原始 HSP 端点。轴范围由已登记的参考长度确定。默认 `ratio = 1`，两轴单位在设备上的物理长度相同。原生分面要使用自由轴时设 `ratio = NULL`。序列路径图层和 `layout_sequences()` 不适用于 Dotplot。",
       "errors": "- 指定 ratio 不合法或与 free 位置尺度分面冲突。\n\n- HSP 两端缺少完整参考或单位声明矛盾。\n\n- 使用未声明双轴含义的单参考路径几何。",
       "roles": [],
-      "example_setup": ""
+      "example_setup": "选择 A 作为查询轴的参考、B 作为目标轴的参考，并按百分比一致性给 HSP 线段着色。"
     },
     "facet_null": {
       "title": "使用单个面板",
@@ -572,7 +572,7 @@
       "details": "1. x轴角色由query提供，y轴角色由subject提供。轴排序不会交换q/s身份。\n\n2. 两轴可使用不同source集合；同一个source可同时存在于两轴。若要重复同一来源多次，需先显式生成带来源映射的显示对象，本入口不把重复order项解释为不同实例。\n\n3. 固定分面共享轴配置。自由分面按参考表的显式分面成员关系组织每个面板的完整源域；不能用某面板最小/最大HSP端点替换参考length或默默过滤无HSP的已声明参考。",
       "errors": "- 选中未知参考、同轴出现重复ID或混用不可比较源单位。\n\n- 在非Dotplot Coord下使用本布局。\n\n- 间隔为负、方向非±1。",
       "roles": [],
-      "example_setup": ""
+      "example_setup": "选 A 作为横轴，B 作为纵轴，并反转目标轴的显示方向。源位置保持原值。"
     },
     "suggest_sequence_layout": {
       "title": "根据关系证据生成可检查的布局建议",
@@ -5267,26 +5267,35 @@
     }
   },
   "families": {
-    "ggchord": "创建绘图对象",
+    "ggchord": "开始绘图",
+    "ggchord_data": "组织参考与观测数据表",
     "layer_id": "图层标识与标签锚定",
-    "coord_chord": "基因组坐标系",
+    "coord_chord": "弦图",
+    "coord_circular": "单序列圆图",
+    "coord_collinear": "共线序列图",
+    "coord_radial_synteny": "径向共线图",
+    "coord_sankey": "桑基序列图",
+    "coord_dotplot": "比对点阵图（Dotplot）",
     "facet_null": "分面",
     "layout_sequences": "序列与点阵图布局",
+    "layout_dotplot": "Dotplot 双轴布局",
     "track_band": "轨道位置与宽度",
-    "geom_seq": "序列骨架与标签",
-    "geom_feature": "特征形状与标签",
-    "geom_gene": "基因箭头与标签",
-    "geom_primer": "引物与标签",
-    "geom_site": "位点与标签",
-    "geom_link_line": "基因组连接线与连接带",
+    "geom_seq": "序列骨架",
+    "geom_seq_label": "序列标签",
+    "geom_seq_break": "序列断点标记",
+    "geom_feature": "区间特征几何",
+    "geom_feature_label": "区间特征标签",
+    "geom_site": "位点与切口标记",
+    "geom_site_label": "位点与切口标签",
+    "geom_link_line": "源位置之间的点连接",
+    "geom_link_ribbon": "源区间之间的连带",
     "geom_alignment_segment": "比对线段",
     "geom_residue": "残基单元格",
-    "geom_track": "轨道图层",
+    "geom_track": "数值轨道图层",
     "annotation_seq_scalebar": "序列比例尺",
     "label_layout_fixed": "标签布局",
     "position_offset": "特征位置调整",
     "stat_coverage": "区间覆盖统计",
-    "stat_link_bundle": "连接聚合与密度统计",
     "scale_for": "指定图层的标度",
     "scale_colour_sequence": "序列、特征与一致性配色",
     "scale_seq_position": "序列位置标度",
@@ -5308,10 +5317,299 @@
     "read_blast": "序列比对文件",
     "read_genbank": "注释与特征关系文件",
     "read_vcf": "变异文件",
-    "ggchord_fusion": "组合面板与布局",
-    "fusion_ribbon": "跨面板连接与放大",
+    "ggchord_fusion": "组合图与局部放大",
+    "layout_fusion": "Fusion 面板布局",
+    "fusion_ribbon": "跨面板连带",
+    "fusion_zoom": "跨视图标记放大区间",
     "register_ggchord_alignment": "比对注册与位置查询",
     "view_ggchord": "绘图尺寸与预览",
     "export_ggchord_layout": "布局导出与检查"
+  },
+  "articles": {
+    "geom_seq": {
+      "intro": "绘制特征和连接所依附的参考路径。用 `geom_seq()` 绘制基本骨架，可按需选择单线、双线或填色带。需要一眼看出显示方向时，用 `geom_seq_arrow()`。它默认绘制单线，并加上 2 mm 的闭合箭头。",
+      "arguments": {
+        "data": "默认 `NULL`，使用 [`ggchord()`](ggchord.html#api-ggchord) 或其他骨架层登记的参考。也可提供参考表，或传入从已登记参考中选择行的函数。",
+        "geometry": "仅用于 `geom_seq()`。默认 `\"auto\"` 在 [`coord_circular()`](coord_circular.html#api-coord_circular) 中使用双线，在其他支持的投影中使用单线。可指定 `\"line\"`、`\"double\"` 或 `\"band\"` 来固定骨架样式。",
+        "thickness": "仅用于 `geom_seq()` 的双线或带状骨架。取正值，单位为 mm，也可使用绝对 grid 单位，默认 1 mm。对双线表示线间距，对带状骨架表示带宽。可用按 `accver` 命名的向量逐条设置。单线的线宽用 `linewidth` 控制。",
+        "stat": "两个入口均要求恒等 Stat，默认 `\"identity\"`。",
+        "position": "使用恒等 Position（默认值），也可用 [`position_offset()`](position_offset.html#api-position_offset) 偏移骨架。",
+        "...": "具名样式及图层参数，例如 `colour`、`linewidth` 和 `linetype`。带状骨架还接受 `fill`。箭头单线的路径及箭头共用 `colour`。",
+        "arrow": "`geom_seq_arrow()` 的显式参数。传入 `grid::arrow()` 声明，或用 `NULL` 绘制普通单线。箭头随 [`layout_sequences()`](layout_sequences.html#parameter-orientation) 的参考显示方向转向。 如需在基本骨架中直接设置箭头，可在 `geom_seq(geometry = \"line\")` 中通过 `...` 传入 `arrow`。"
+      },
+      "roles": "参考表通过 `accver` 和 `length` 定义序列身份与长度，也可声明 `sequence_unit` 和 `topology`。用 `aes()` 映射视觉属性，两个入口都接受 `colour`、`linewidth`、`linetype` 和 `alpha`。如需映射 `fill`，在 `geom_seq()` 中设置 `geometry = \"band\"`。",
+      "details": "两个入口都返回 ggplot2 图层。给骨架层传入完整参考表，可以为原本为空的 `ggchord()` 图登记参考。登记后，其他骨架层可以选取参考的子集或独立设置样式。参考定义冲突或使用未知的序列 ID 会报错。",
+      "example_intro": "以下示例共用两条用于演示的参考序列。",
+      "examples": {
+        "geom_seq": {
+          "title": "单线与填色带",
+          "description": "先在骨架层登记参考并绘制单线，再在图级登记参考，为每条序列绘制不同厚度的填色带。"
+        },
+        "geom_seq_arrow": {
+          "title": "用箭头表示显示方向",
+          "description": "在布局中反转序列 B，按序列身份映射颜色。图中两个箭头朝向相反。"
+        }
+      }
+    },
+    "geom_seq_label": {
+      "intro": "用 `geom_seq_label()` 在已登记参考的路径旁添加标签。要在单序列圆图中心放置文字，可用 `geom_seq_center_label()`。它将 `anchor` 固定为 `\"center\"`，默认同样使用水平固定布局。",
+      "arguments": {
+        "anchor": "仅在 `geom_seq_label()` 中提供。沿参考路径可选 `\"start\"`、`\"middle\"`（默认）或 `\"end\"`；圆图中心用 `\"center\"`。中心标签快捷入口固定使用 `\"center\"`。",
+        "position": "默认 `\"identity\"`。可用 [`position_offset()`](position_offset.html#api-position_offset) 偏移路径标签。中心标签要求使用恒等 Position。",
+        "label_layout": "两个入口默认都用 [`label_layout_fixed(orientation = \"horizontal\")`](label_layout_fixed.html#api-label_layout_fixed)。路径标签可选择其他布局，例如沿切线方向固定放置。中心标签须使用固定布局。"
+      },
+      "roles": "两个入口都读取已登记的参考。省略标签映射时，文字为参考的 `accver`。用 `aes(label = ...)` 映射参考表中的其他文字。每个选定的显示实例可分别标注。文字属性包括 `colour`、`size`、`family`、`fontface`、`angle` 和 `alpha`。",
+      "details": "两个入口均返回 ggplot2 图层。沿路径的标签适用于具有序列路径的坐标系。中心文字使用 [`coord_circular()`](coord_circular.html#api-coord_circular)，每个面板须有一条有效参考。",
+      "example_intro": "先在共线图中标出各参考的起点，再在圆图中心放置文字。",
+      "examples": {
+        "geom_seq_label": {
+          "title": "标注序列起点",
+          "description": "把参考 ID 映射为文字，放在每条显示路径的起点。"
+        },
+        "geom_seq_center_label": {
+          "title": "标注圆图中心",
+          "description": "使用一条参考，并在圆图中心添加字号较大的标签。"
+        }
+      }
+    },
+    "geom_feature": {
+      "intro": "用 `geom_feature()` 将源区间画成方块、箭头或其他特征形状。按链方向摆放基因箭头时用 `geom_gene()`，在引物结合区间绘制细型方向标记时用 `geom_primer()`，用半透明区间块高亮局部区域时用 `geom_seq_region()`。",
+      "arguments": {
+        "shape": "`geom_feature()` 和 `geom_seq_region()` 默认用 `\"block\"`，`geom_gene()` 默认用 `\"arrow\"`，`geom_primer()` 默认用 `\"primer_arc\"`。支持 `block`、`arrow`、`compact_arrow`、`promoter_arrow`、`primer_arrow`、`marker`、`capped_line`、`primer_arc`、`chevron` 和 `lollipop`。固定形状优先于形状映射。",
+        "thickness": "相对于路径法向的物理厚度，默认 2 mm。可用以 mm 计的数值、绝对 grid 单位，或按参考序列或链指定的值。圆图中，此参数控制箭头类形状的箭身厚度。",
+        "position": "`geom_feature()` 默认使用 `\"identity\"`，`geom_gene()` 默认用 [`position_strand()`](position_strand.html#api-position_strand)，引物和区间高亮快捷入口默认用 [`position_offset(0)`](position_offset.html#api-position_offset)。可以选用兼容的 Position 来调整位置。",
+        "alpha": "`geom_seq_region()` 的显式参数，默认 0.25。可显式设置或映射透明度。",
+        "...": "具名样式、几何设置与所选 Stat 的参数。箭头几何接受 `head_length`、`head_width`、`head_style` 和 `short_feature` 等设置。基因层默认用无肩的 `head_style = \"flush\"`。 箭头头长和头宽以 mm 或绝对 grid 单位计。圆图中，带肩箭头的自动头宽为箭身厚度的 1.42 倍。"
+      },
+      "roles": "输入使用 1 基闭区间，以 `accver`、`start` 和 `end` 表示。方向形状可提供 `strand`，不连续区间可提供分段信息。引物标记沿已记录的链指向 3′ 端。在 `aes()` 中映射 `fill`、`colour`、`alpha` 和 `linewidth` 等视觉属性。映射形状时，使用由有效形状名组成的手动或恒等标度。",
+      "details": "四个入口都返回 ggplot2 图层。形状、所在侧和厚度改变区间的画法，并保留源坐标。`\"+/-\"` 特征保留一个来源身份，可绘制双箭头。用[区间特征标签族](geom_feature_label.html#api-geom_feature_label)添加标签。",
+      "example_intro": "以下示例依次展示方块和箭头、圆图双圈之间的引物标记，以及骨架下方的区间高亮。",
+      "examples": {
+        "geom_feature": {
+          "title": "映射形状与填色",
+          "description": "给不同特征类型使用不同形状和颜色，并按参考设置物理厚度。"
+        },
+        "geom_gene": {
+          "title": "按链放置基因箭头",
+          "description": "使用基因快捷入口，按记录的特征类型分别着色。"
+        },
+        "geom_primer": {
+          "title": "绘制有方向的引物标记",
+          "description": "使用方向相反的两条链，并将圆图双圈间的引物标记设细。"
+        },
+        "geom_seq_region": {
+          "title": "在骨架下方高亮区间",
+          "description": "先画较宽的半透明区域，再在其上叠加序列骨架。"
+        }
+      }
+    },
+    "geom_feature_label": {
+      "intro": "用通用入口 `geom_feature_label()` 标注特征区间。要自动绑定到特定类型的图层，可选基因或引物快捷入口。三种入口各有固定与避让版本。固定布局将文字保留在指定位置，避让布局可在同一锚点附近移动文字并添加引线。",
+      "arguments": {
+        "data": "默认 `NULL`，绑定时使用目标层经 Stat 处理后的实体。在自动绑定模式下提供表或回调，会使标签独立放置。要标注目标层的子集，可在 `anchor_layer` 中指定图层 ID，并提供匹配的键。显式绑定时，回调接收目标实体表。",
+        "stat": "兼容的 ggplot2 Stat 或其名称，默认 `\"identity\"`。绑定时标签层须使用恒等 Stat，实体取自目标层的统计结果。",
+        "anchor_layer": "默认使用 [`auto_anchor()`](auto_anchor.html#api-auto_anchor)。通用入口跟随唯一兼容的区间层，包括特征、基因、引物或区间高亮层。基因和引物快捷入口各自寻找对应类型。添加图层的顺序不影响选择。多个候选会报错并列出图层 ID。没有候选时，若图级数据或映射提供所需区间字段，标签可以独立绘制。另行提供标签表或回调、使用非恒等 Stat 或设置非 `NULL` 的 Position 时，默认独立放置。可传入图层 ID 显式绑定，或传入 `NULL` 指定独立放置。",
+        "anchor": "可选 `\"middle\"`（通用和基因入口默认）、`\"head\"`（引物入口默认）、`\"start\"`、`\"end\"` 或 `\"tail\"`。起点与终点按源端点确定。头尾随特征方向确定，要求明确的 `+` 或 `-` 链。",
+        "position": "绑定时保留 `NULL`，标签跟随目标层的显示位置，包括所在链侧与分道。独立放置可用恒等 Position 或 [`position_offset()`](position_offset.html#api-position_offset)。",
+        "label_layout": "通用和引物固定入口默认用 [`label_layout_fixed()`](label_layout_fixed.html#api-label_layout_fixed)，文字方向跟随特征。基因固定入口默认用 `label_layout_fixed(orientation = \"horizontal\")`。固定布局默认 `overlap = \"hide\"`，可隐藏重叠标签。三个 `_repel()` 入口都默认采用 [`label_layout_repel()`](label_layout_repel.html#api-label_layout_repel)，可移动文字并添加引线。各入口均接受显式设置的固定或避让布局。",
+        "...": "具名文字样式和图层参数。使用 `segment_colour`、`segment_linetype` 等引线样式时，需要采用避让布局。"
+      },
+      "roles": "标签表提供 `accver`、`start`、`end`，以及 `label` 列或 `aes(label = ...)` 映射。另行提供目标层子集时，按 `accver` 和稳定的 `feature_id` 匹配。方向相关锚点使用 `strand`。两个入口都接受 `colour`、`size`、`family`、`fontface`、`angle` 和 `alpha` 等文字属性。圆图外侧标签默认使用粗体，显式设置或映射的 `fontface` 优先。设置或映射 `fill` 可为外侧标注加上有描边的背景。",
+      "details": "六个入口都返回 ggplot2 图层，放置文字和引线时保留原有几何。绑定标签跟随目标实体的显示位置，实体身份必须能唯一匹配。",
+      "example_intro": "下面展示通用特征标签和引物端点标签。固定与避让的基因标签使用同一组密集区间及相同字号。",
+      "examples": {
+        "geom_feature_label": {
+          "title": "给通用特征层加标签",
+          "description": "用方向跟随特征的固定布局标注。"
+        },
+        "geom_feature_label_repel": {
+          "title": "让通用特征标签避让",
+          "description": "对同类特征区间采用避让布局。"
+        },
+        "geom_gene_label": {
+          "title": "固定放置",
+          "description": "文字保持在相对于锚点的指定位置。在当前尺寸下，默认重叠策略保留 Gene alpha，隐藏另外两个标签。"
+        },
+        "geom_gene_label_repel": {
+          "title": "自动避让",
+          "description": "允许文字在锚点附近移动，为三个标签都留出空间。引线把移动后的文字连回对应的基因。"
+        },
+        "geom_primer_label": {
+          "title": "标注引物的 3′ 端",
+          "description": "跟随引物层，默认以方向所指的头部为锚点。"
+        },
+        "geom_primer_label_repel": {
+          "title": "让引物端点标签避让",
+          "description": "沿用引物锚定规则，使用自动避让布局。"
+        }
+      }
+    },
+    "geom_site": {
+      "intro": "用 `geom_site()` 标记参考上的已知位置。已知两条链的切口位置且希望默认显示切口形状时，用 `geom_restriction_site()`。",
+      "arguments": {
+        "shape": "可选 `\"tick\"`、`\"point\"` 或 `\"cut\"`。`geom_site()` 默认 `\"tick\"`，`geom_restriction_site()` 默认 `\"cut\"`。映射形状时使用手动或恒等标度。点符号支持 `fill`。"
+      },
+      "roles": "提供 `accver` 和 1 基位置 `pos`。切口标记还使用以残基之间的边界为坐标的 `cut_top` 和 `cut_bottom`。另行选取子集用于标签层时，使用稳定的 `site_id`。",
+      "details": "两个入口均返回 ggplot2 图层，绘制传入的位置及切口坐标。用[位点与切口标签族](geom_site_label.html#api-geom_site_label)添加文字及引线。",
+      "example_intro": "先标记一个源位置，再分别指定两条链的切口。",
+      "examples": {
+        "geom_site": {
+          "title": "标记源位置",
+          "description": "在给定位置绘制刻线并加上标签。"
+        },
+        "geom_restriction_site": {
+          "title": "绘制已知切口",
+          "description": "分别给出两条链在残基之间的切口坐标。"
+        }
+      }
+    },
+    "geom_site_label": {
+      "intro": "给源位置或限制性内切酶切口加标签。`geom_site_label()` 使用固定布局，`geom_site_label_repel()` 默认自动移开文字并按需添加引线。两者都可以跟随已有的位点层。",
+      "arguments": {
+        "anchor_layer": "默认的 [`auto_anchor()`](auto_anchor.html#api-auto_anchor) 跟随唯一兼容的位点层。多个候选时指定图层 ID；独立放置可传入 `NULL`。自动绑定模式下，给出标签数据、非恒等 Stat 或非 `NULL` 的 Position，也会选择独立放置。",
+        "label_layout": "`geom_site_label()` 默认采用 [`label_layout_fixed()`](label_layout_fixed.html#api-label_layout_fixed)，`geom_site_label_repel()` 默认采用 [`label_layout_repel()`](label_layout_repel.html#api-label_layout_repel)。两者均接受显式指定的布局。引线样式适用于避让布局。"
+      },
+      "roles": "位点标签使用 `accver`、1 基位置 `pos`，以及 `label` 列或 `aes(label = ...)` 映射。以独立数据提供具名目标的子集时，按 `accver` 和 `site_id` 匹配。文字属性包括 `colour`、`size`、`family`、`fontface` 和 `alpha`。",
+      "details": "两个入口都返回 ggplot2 图层。绑定标签跟随目标层经过统计和摆放后的结果。[位点图层](geom_site.html#api-geom_site)绘制点位或切口几何。",
+      "example_intro": "先用固定布局标注一个位点，再对同类源位置采用自动布局。",
+      "examples": {
+        "geom_site_label": {
+          "title": "固定位点标签",
+          "description": "从位点数据读取文字。"
+        },
+        "geom_site_label_repel": {
+          "title": "自动避让的位点标签",
+          "description": "在源位置附近使用避让布局。"
+        }
+      }
+    },
+    "geom_link_ribbon": {
+      "intro": "用 `geom_link_ribbon()` 连接两个源区间。用 `stat_link_bundle()` 汇总邻近的区间连接，或用 `stat_link_density()` 为连接计算双轴密度。两个统计入口都会用连带绘制结果。连接两个源位置时，见 [`geom_link_line()`](geom_link_line.html#api-geom_link_line)。",
+      "arguments": {
+        "mapping": "用 `aes()` 指定映射，局部映射优先于对应的继承映射。要显示计算值，汇总可映射 `after_stat(n_members)`，密度可映射 `after_stat(density)`。",
+        "data": "连接关系表，或接收图级数据的回调。提供查询端及目标端的 1 基闭区间端点。",
+        "position": "默认 `\"identity\"`。使用 [`position_offset()`](position_offset.html#api-position_offset) 显式偏移图形。",
+        "stat": "`geom_link_ribbon()` 的显式参数。默认 `\"identity\"` 使用输入记录。选用 `\"link_bundle\"` 或 `\"link_density\"`，可采用与快捷入口相同的统计。",
+        "geom": "两个统计快捷入口均支持其默认值 `\"link_ribbon\"`。",
+        "bins": "设置汇总和密度统计的双端网格。可为两轴指定同一个正分箱数，或传入按 `q` 和 `s` 命名的向量。默认 80。",
+        "...": "具名视觉样式、路径控制项与几何参数。调用 `geom_link_ribbon(stat = ...)` 时，也可在这里传递所选统计的参数。",
+        "na.rm": "默认 `FALSE`。在支持的情况下用 `TRUE` 静默省略缺失端点或权重的记录。参考、单位或坐标非法时会报错。",
+        "show.legend": "默认 `NA`。用逻辑值或具名逻辑向量控制图例键。",
+        "inherit.aes": "默认 `TRUE`。继承图级映射，并在图层数据中求值。"
+      },
+      "roles": "区间连接提供 `qaccver`、`qstart`、`qend`、`saccver`、`sstart` 和 `send`。适用时，提供端点链方向或方向字段。普通连带可映射 `fill`、`colour`、`alpha`、`linewidth` 和 `linetype`，端点填色使用 `fill_mode = \"endpoint\"`。统计支持 `weight`（非负，每条记录默认为 1）和 `group`。",
+      "details": "等价的汇总调用为 `stat_link_bundle(bins = 20)` 与 `geom_link_ribbon(stat = \"link_bundle\", bins = 20)`。汇总按两端中点所在分箱、方向、参考对和分组形成连带，绘制包围区间并保留来源成员。密度统计以分箱总权重除以双轴分箱面积，还可按每个参考对的最大值归一化。原始密度表示中点聚集程度。两种统计都提供可用于映射的计算列。",
+      "example_intro": "先绘制原始区间，再按汇总成员数量或计算出的密度着色。",
+      "examples": {
+        "geom_link_ribbon": {
+          "title": "绘制原始区间连带",
+          "description": "以源区间作为连带端点，按百分比一致性映射填色。"
+        },
+        "stat_link_bundle": {
+          "title": "按双端分箱汇总连接",
+          "description": "指定分箱数和最少成员数，再映射计算出的成员数。"
+        },
+        "stat_link_density": {
+          "title": "映射区间连接密度",
+          "description": "按参考对归一化，用计算出的密度映射填色。"
+        }
+      }
+    },
+    "geom_track": {
+      "intro": "在轨道上绘制对应源位置的测量值或区间。用 `geom_track()` 按名称选择几何，也可使用点、折线、路径、阶梯、数值柱、计数柱、面积、矩形块和全带区间的快捷入口。",
+      "arguments": {
+        "mapping": "用 `aes()` 指定映射。局部映射优先于对应的继承映射。需要两轴的几何，将 `x` 映射为源位置，`y` 映射为测量值或计算值。全带区间使用源端点。",
+        "data": "轨道表，或接收图级数据的回调。按所选几何与统计提供位置、观测值或端点。",
+        "geom": "`geom_track()` 的显式参数。可选 `\"point\"`（默认）、`\"line\"`、`\"path\"`、`\"step\"`、`\"col\"`、`\"bar\"`、`\"area\"`、`\"tile\"` 或 `\"interval\"`。快捷入口直接选用对应几何。",
+        "stat": "通用入口默认 `NULL`，按几何选择统计。计数柱默认 `\"count\"`，其他快捷入口默认 `\"identity\"`。可传入兼容的 Stat 或受支持的名称，例如 `\"bin\"`、`\"summary\"`、`\"smooth\"` 或 `\"coverage\"`。覆盖度的输入和计算列见 [`stat_coverage()`](stat_coverage.html#api-stat_coverage)。",
+        "position": "通用入口默认 `NULL`，由几何决定默认位置调整。数值柱、计数柱和面积默认 `\"stack\"`，其他默认 `\"identity\"`。使用恒等 Stat 的全带区间要求恒等 Position。",
+        "track": "轨带名称。可直接使用 `\"default\"`。用其他名称时，先通过 [`track_band()`](track_band.html#api-track_band) 声明轨带。",
+        "...": "所选几何或 Stat 的样式及参数。折线与路径支持用 `closed` 闭合连续完整的圆，阶梯用 `direction` 指定跳变方式。数值柱、计数柱和面积可设 `baseline`，面积还可设 `outline`。沿参考方向的宽度使用源单位。矩形块的高度使用轨道的数值单位。 用 `measure` 命名数值代表的测量量，用 `bounds` 控制超出参考范围时是报错还是裁剪。非零 `baseline` 要求恒等 Position。外部 Stat 和 Geom 同时接受同名参数时，须消除歧义。",
+        "show.legend": "默认 `NA`。用逻辑值或具名逻辑向量控制图例键。",
+        "inherit.aes": "默认 `TRUE`。继承图级映射，并在轨道数据中求值。"
+      },
+      "roles": "使用 `accver` 标识参考。`x` 映射为源单位下的位置，`y` 映射为测量单位下的值。计数柱计算 `after_stat(count)`，可另设 `weight` 映射。全带区间使用 `start` 和 `end`，占满物理轨带且不参与数值标度训练。用 `group` 区分同一参考上的数据系列。[轨带声明](track_band.html#api-track_band)控制物理空间，[`scale_track_value()`](scale_track_value.html#api-scale_track_value)控制数值标度。",
+      "details": "折线和阶梯按源位置排序。路径按输入顺序或所选 Stat 的输出顺序连接。已有数值高度时用数值柱，统计观测次数时用计数柱。等价的覆盖度写法为 `stat_coverage(binwidth = 100)` 和 `geom_track(geom = \"col\", stat = \"coverage\", position = \"identity\", binwidth = 100)`。快捷入口默认使用恒等 Position，改写为通用形式时应显式指定。测量方式、分母及计算映射见[覆盖度示例](stat_coverage.html#ref-examples)。\n\n连续的折线和路径会在缺失值、参考、窗口或分组的边界处断开。外部 Stat 可通过 `source_rows` 列表列报告来源成员，其中的索引对应 `source_row`。来源成员和各阶段的导出方式见 [`export_ggchord_layout()`](export_ggchord_layout.html#api-export_ggchord_layout)。",
+      "example_intro": "各示例共用一组小型参考序列，并加入与几何相应的测量、计数或区间数据。",
+      "examples": {
+        "geom_track": {
+          "title": "按名称选择轨道几何",
+          "description": "通过通用入口选择折线并标明数值标度。"
+        },
+        "geom_track_point": {
+          "title": "用点显示采样观测",
+          "description": "映射源位置和测量值。"
+        },
+        "geom_track_line": {
+          "title": "按源坐标顺序连接采样点",
+          "description": "用顺序打乱的输入表，折线仍按源位置递增连接。"
+        },
+        "geom_track_path": {
+          "title": "按输入顺序连接采样点",
+          "description": "使用同一张顺序打乱的表，并依照表内顺序连接。"
+        },
+        "geom_track_step": {
+          "title": "绘制阶梯变化",
+          "description": "用水平与竖直线段连接数值。"
+        },
+        "geom_track_col": {
+          "title": "绘制给定数值高度",
+          "description": "用输入中的测量值作为柱高。"
+        },
+        "geom_track_bar": {
+          "title": "统计观测次数",
+          "description": "只映射源位置，并使用计算出的次数作为柱高。"
+        },
+        "geom_track_area": {
+          "title": "填充轨道面积",
+          "description": "填充测量折线与基线之间的区域。"
+        },
+        "geom_track_tile": {
+          "title": "在轨道坐标处绘制矩形块",
+          "description": "用测量值控制每个矩形块的竖直位置和填色。"
+        },
+        "geom_track_interval": {
+          "title": "高亮全带区间",
+          "description": "用填色标示源区间，填满轨带高度。"
+        }
+      }
+    },
+    "layout_fusion": {
+      "intro": "设置 Fusion 组合的面板位置。`layout_fusion()` 可显式指定矩形边界，包括物理单位。`layout_fusion_grid()` 接收面板名称矩阵及行列的相对权重。",
+      "arguments": {},
+      "roles": "矩形表通过 `panel` 标识面板，并提供 `xmin`、`xmax`、`ymin` 和 `ymax`。可用 `z` 控制绘制顺序。网格使用带名称的单元格，以 `NA` 留空；跨多格的面板须占据一个矩形。",
+      "details": "两个入口都为 [`ggchord_fusion()`](ggchord_fusion.html#api-ggchord_fusion) 生成布局声明。显式网格转换为以相对坐标表示的矩形。`design = NULL` 时根据组合的面板名称自动生成网格。画布上的摆放保留各面板的源坐标。",
+      "example_intro": "分别用显式边界和网格排列相同的两个视图。",
+      "examples": {
+        "layout_fusion": {
+          "title": "按边界放置两个面板",
+          "description": "用相对画布坐标给出具名矩形。"
+        },
+        "layout_fusion_grid": {
+          "title": "让网格的一列更宽",
+          "description": "使用面板名称矩阵和各列的相对权重。"
+        }
+      }
+    },
+    "ggchord_fusion": {
+      "intro": "用 `ggchord_fusion()` 组合具名图形。要将总览和细节配对并标出源区间，可用 `magnify_ggchord()`，它构造双面板 Fusion 并添加 [`fusion_zoom()`](fusion_zoom.html#api-fusion_zoom)。",
+      "arguments": {
+        "layout": "使用 [`layout_fusion()`](layout_fusion.html#api-layout_fusion) 或 [`layout_fusion_grid()`](layout_fusion.html#api-layout_fusion_grid) 声明布局。通用构造函数默认使用自动网格。放大快捷入口默认将 `overview` 和 `detail` 排在同一行，相对宽度为 2 和 1。",
+        "guides": "两个入口都默认用 `\"keep\"` 保留图例。设置 `\"collect\"` 可以收集合并兼容的图例。"
+      },
+      "roles": "通用构造函数接收独立视图的具名列表。放大入口直接接收两个视图，并接收由 `accver`、`start` 和 `end` 确定的源区间。可用放大入口的 `...` 设置支持的连接线和高亮样式。",
+      "details": "两个入口都返回 Fusion 组合。布局和放大标记作用于显示视图，并保留底层源数据。要按所选区间重新计算统计，请先用所需数据构造细节图。",
+      "example_intro": "先用两个图形构建简单组合，再用一段指定的源区间将总览与细节配对。",
+      "examples": {
+        "ggchord_fusion": {
+          "title": "组合具名面板",
+          "description": "用自动布局排列独立视图。"
+        },
+        "magnify_ggchord": {
+          "title": "标记从总览到细节的放大关系",
+          "description": "构建局部视图，并在总览中标出与之对应的源区间。"
+        }
+      }
+    }
   }
 }

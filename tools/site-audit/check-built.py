@@ -216,6 +216,8 @@ def main():
     formals = {(r['api'],r['parameter']):r for r in parameters}
     manual = read(WEB/'reference-manual/structure.json')
     api = manual['topics']
+    shared_articles = manual['articles']
+    locales = {lang: read(WEB/'reference-manual'/f'{lang}.json') for lang in LANGUAGES}
     families = read(WEB/'reference-manual/families.json')
     api_manifest = read(site/'api-reference-manifest.json')
     owner = {topic: head for head, members in families.items() for topic in members}
@@ -227,6 +229,26 @@ def main():
         if not old or old in ('api-'+topic, 'main'):
             return 'api-'+topic
         return old if topic==owner[topic] else topic+'-'+old
+
+    moved_bookmarks = {}
+    for lang in LANGUAGES:
+        for head, members in manual['previous_family_members'].items():
+            source = lang+'/reference/'+head+'.html'
+            moves = moved_bookmarks[source] = {}
+            for topic in members:
+                dest = lang+'/'+api_path(topic)
+                moves['api-'+topic] = (dest,bookmark(topic))
+                parts = {'purpose','description','usage','value','details','examples','related'}
+                if api[topic]['arguments']:
+                    parts.add('arguments')
+                if api[topic]['roles'] or owner[topic] in shared_articles:
+                    parts.add('roles')
+                if locales[lang]['topics'][topic]['errors'] or owner[topic] in shared_articles:
+                    parts.add('errors')
+                keys = api[topic]['defaults']
+                anchors = {'ref-'+p for p in parts} | {'arg-'+k for k in keys if k!='...'}
+                anchors.update(formals[topic,k]['anchor'] for k in keys)
+                moves.update({topic+'-'+anchor: (dest, bookmark(topic, anchor)) for anchor in anchors})
     rd = {p.stem:re.findall(r'\\alias\{([^}]+)\}',p.read_text()) for p in (ROOT/'man').glob('*.Rd')}
     exports = set(re.findall(r'^export\(([^)]+)\)',(ROOT/'NAMESPACE').read_text(),re.M))
     records = read(site/'assets/examples.json')
@@ -284,6 +306,7 @@ def main():
             'Reference families must partition the API and start with their canonical function')
     require(api_manifest.get('families')==families and set(api_manifest['topics'])==set(api)==
             exports | {'facet_null','facet_grid','facet_wrap'}, 'Published reference differs from source API families')
+    require(api_manifest.get('shared_articles')==list(shared_articles), 'Published shared articles differ from source')
     require(set(formals)=={(name,arg) for name,info in api.items() for arg in info['defaults']},
             'Parameter directory does not match documented arguments')
     require(len(formals)==len(parameters) and all(r['api'] == r['topic'] and r['api'] in api for r in parameters),
@@ -367,6 +390,11 @@ def main():
             inline = [text(n) for n in doc.iter('script') if 'location.replace' in text(n)]
             if inline:
                 scripts[rel] = '\n'.join(inline)
+        if rel in moved_bookmarks:
+            handoff = [text(n) for n in doc.iter('script') if 'data-reference-bookmarks' in n.attrib]
+            require(len(handoff)==1,rel+': missing bookmark handoff for former family members')
+            if handoff:
+                scripts[rel] = handoff[0]
         if lang and local in alias_pages:
             require(rel in scripts and not styled(doc,'code-disclosure') and not styled(doc,'site-primary-nav'),
                     rel+': historical article must be a redirect')
@@ -453,26 +481,52 @@ def main():
                 require(all(('numeric' in c.get('class','').split())==numeric for c in cells+headers),
                         f'{rel}: inconsistent table alignment in column {i+1}')
         if local in canonical_topics:
-            entries = {node.get('data-api'):node for node in main_content.iter() if node.get('data-api')}
             members = families[path.stem]
+            shared = path.stem in shared_articles
+            entry_attr = 'data-api-signature' if shared else 'data-api'
+            entries = {node.get(entry_attr):node for node in main_content.iter() if node.get(entry_attr)}
             require(list(entries)==members,rel+': functions differ from their family or appear out of order')
+            scope = main_content
+            if shared:
+                articles = main_content.findall(f'.//div[@data-api-article="{path.stem}"]')
+                require(len(articles)==1 and not main_content.findall('.//section[@data-api]'),
+                        rel+': expected a single article with a common reading order')
+                if not articles:
+                    continue
+                scope = articles[0]
+                headings = [h.get('id') for h in scope.findall('./section/h2')]
+                require(headings==['ref-usage','ref-arguments','ref-roles','ref-details','ref-examples','ref-related'],
+                        rel+': incorrect shared API sections')
+                signature_nodes = scope.findall('./section[@aria-labelledby="ref-usage"]/div[@data-api-signature]')
+                require([node.get('data-api-signature') for node in signature_nodes]==members,
+                        rel+': signatures must appear together in the shared usage')
+                terms = styled(scope,'argument-term')
+                expected_terms = list(dict.fromkeys(key for name in members for key in api[name]['defaults']))
+                require([text(term.find('code')) for term in terms]==expected_terms,
+                        rel+': shared arguments must appear once in signature order')
+                shared_badges = set()
+                for topic in members:
+                    shared_badges.update(flex.get(topic,{}))
+                require(len(styled(scope,'flexible-parameter'))==len(shared_badges), rel+': stray shared flexible badge')
             for topic in members:
                 if topic not in entries:
                     continue
                 entry = entries[topic]
-                sections = {heading.get('id'):node for node in entry.iter()
+                sections = {heading.get('id'):node for node in (scope if shared else entry).iter()
                             for heading in node if heading.tag in ('h2','h3','h4') and heading.get('id')}
                 parts = {'purpose','usage','value','details','examples','related'}
                 if api[topic]['arguments']:
                     parts.add('arguments')
                 if api[topic]['roles']:
                     parts.add('roles')
-                require({bookmark(topic,'ref-'+part) for part in parts} <= sections.keys(),
+                require({bookmark(topic,'ref-'+part) for part in parts} <= (main_ids if shared else sections.keys()),
                         f'{rel}#{topic}: missing API documentation section')
                 legacy = {'ref-description', *('arg-'+key for key in api[topic]['defaults'] if key!='...')}
                 require({bookmark(topic,id_) for id_ in legacy} <= main_ids,
                         f'{rel}#{topic}: missing former description or argument bookmark')
-                example = sections.get(bookmark(topic,'ref-examples'))
+                example_id = 'example-'+topic if shared and topic==path.stem else bookmark(topic,'ref-examples')
+                example = sections.get(example_id)
+                require(example is not None, f'{rel}#{topic}: missing example section')
                 if example is None:
                     continue
                 blocks = [b for b in styled(example,'code-disclosure','details') if b.get('data-code-kind')=='r']
@@ -508,11 +562,14 @@ def main():
                 sections_by_kind = {'sequence':'scalar','strand':'width','strand-offset':'strand',
                                     'fixed-label':'scope','band':'scope'}
                 label = '【支持灵活参数】' if lang=='zh' else '[Flexible parameter]'
-                for term in entry.iter('dt'):
+                for term in (scope if shared else entry).iter('dt'):
                     for name in styled(term,'argument-term'):
                         code = name.find('code')
                         arg = text(code)
-                        argument_terms[(lang,topic,arg)] = {code.get('id')} if code is not None else set()
+                        if arg not in api[topic]['defaults']:
+                            continue
+                        ids = {node.get('id') for node in name.iter() if node.get('id')}
+                        argument_terms[(lang,topic,arg)] = ids
                         badges = styled(name,'flexible-parameter','a')
                         kind = flex.get(topic,{}).get(arg)
                         require(len(badges)==int(bool(kind)), f'{rel}: badge count for {arg}')
@@ -522,10 +579,11 @@ def main():
                             require(list(name)[-2:]==[code,badge] and text(badge)==label and
                                     badge.get('href')=='../parameters.html#'+sections_by_kind[kind],
                                     f'{rel}: wrong inline label or destination for {arg}')
-                require(len(styled(entry,'flexible-parameter'))==len(marked),rel+': stray flexible badge')
+                if not shared:
+                    require(len(styled(entry,'flexible-parameter'))==len(marked),rel+': stray flexible badge')
                 require(marked==set(flex.get(topic,{})),f'{rel}: incorrect flexible parameter badges {marked}')
                 require('api-'+topic in main_ids,rel+': missing function heading '+topic)
-                if lang=='zh':
+                if lang=='zh' and not shared:
                     require(bool(re.search('[\u3400-\u9fff]',text(sections.get(bookmark(topic,'ref-purpose'))))),
                             f'{rel}#{topic}: missing Han description')
             continue
@@ -543,6 +601,10 @@ def main():
                 family_heads = list(dict.fromkeys(owner[name] for name in spec['topics']))
                 terms = group.findall('./dl/dt')
                 definitions = group.findall('./dl/dd')
+                require(not group.findall('./dl/dd/ul') and
+                        all(term.tag==('dt' if i%2==0 else 'dd')
+                            for i,term in enumerate(group.findall('./dl/*'))),
+                        rel+': group should have one index row per document')
                 require(group.find(f'./h2[@id="family-{key}"]') is not None and
                         len(terms)==len(definitions)==len(family_heads),rel+': incorrect API families for '+key)
                 for head, term, definition in zip(family_heads,terms,definitions):
@@ -552,7 +614,14 @@ def main():
                     require(links_to==[(family_path,'')] and
                             members==[(family_path,bookmark(name)) for name in families[head]],
                             rel+': reference index links do not match the '+head+' family')
+                shortcuts = group.findall('./p[@class="reference-shortcuts"]/a')
+                require([destination(rel,a.get('href','')) for a in shortcuts]==
+                        [(lang+'/'+api_path(name), bookmark(name)) for name in spec.get('shortcuts',[])],
+                        rel+': wrong shortcuts to functions documented in another category')
             require('reference-filter' in identifiers[rel],rel+': no reference filter')
+            require(not re.search(r'Input tables|Shared example data|输入表|共用示例数据',
+                                  ' '.join(text(g.find('./h2')) for g in groups_here), re.I),
+                    rel+': removed reference groups are present')
         if slug=='parameters':
             require(heading==('Flexible parameters' if lang=='en' else '灵活参数'),rel+': incorrect flexible-parameter guide heading')
         source = (WEB/lang/(slug+'.md')).read_text()
@@ -684,6 +753,26 @@ def main():
         parameter_hits = [r['url'] for r in search if r.get('kind')=='parameter']
         expected_hits = [api_path(r['topic'])+'#'+bookmark(r['topic'],r['anchor']) for r in parameters]
         require(sorted(parameter_hits)==sorted(expected_hits),lang+': parameter search destinations differ from the runtime formals')
+        example_queries = {query: row['url'] for row in search if row.get('kind')=='tool'
+                           for query in row.get('queries',[])}
+        subjects = {name for primary in shared_articles for name in families[primary]}
+        subjects.update(manual['previous_family_members'])
+        subjects.update(name for names in manual['previous_family_members'].values() for name in names)
+        function_queries = {query: row['url'] for row in search if row.get('kind')=='function'
+                            for query in row.get('queries',[])}
+        parameter_queries = {query: row['url'] for row in search if row.get('kind')=='parameter'
+                             for query in row.get('queries',[])}
+        for name in subjects:
+            require(function_queries.get(name)==api_path(name)+'#'+bookmark(name),
+                    f'{lang}: exact function search must open its signature for {name}')
+            for key in api[name]['defaults']:
+                anchor = bookmark(name,formals[name,key]['anchor'])
+                require(parameter_queries.get(f'{name} {key}')==api_path(name)+'#'+anchor,
+                        f'{lang}: exact parameter search must open {name}({key})')
+            phrase = name+' '+('example' if lang=='en' else '示例')
+            anchor = 'example-'+name if name in shared_articles else bookmark(name,'ref-examples')
+            require(example_queries.get(phrase)==api_path(name)+'#'+anchor,
+                    f'{lang}: example search must open the relevant position for {name}')
         for row in search:
             remember(lang+'/search.json',row['url'])
         counts['search_results_'+lang] = len(search)
@@ -779,12 +868,19 @@ def main():
             # when nobody currently links to that particular argument.
             stem = topic+'-'
             fragments = {anchor[len(stem):] for anchor in identifiers.get(canonical,()) if anchor.startswith(stem)}
-            for fragment in {'','main','api-'+topic,*fragments}:
+            for fragment in {'','main','api-'+topic,'example-'+topic,*fragments}:
                 suffix = '#'+fragment if fragment else ''
-                end = canonical+'#'+bookmark(topic,fragment)
+                target_fragment = 'ref-examples' if fragment=='example-'+topic else fragment
+                end = canonical+'#'+bookmark(topic,target_fragment)
                 cases.add((old+suffix,end))
                 if lang=='en':
                     cases.add((local+suffix,end))
+    for source, moves in moved_bookmarks.items():
+        for old, (page, anchor) in moves.items():
+            require(anchor in identifiers.get(page,set()),source+': missing moved bookmark '+old)
+            cases.add((source+'#'+old,page+'#'+anchor))
+            if source.startswith('en/'):
+                cases.add((source.removeprefix('en/')+'#'+old,page+'#'+anchor))
     for origin,url,name,anchor in links:
         dest = site/name
         require(dest.is_file(),origin+': missing local URL '+url)
@@ -793,10 +889,13 @@ def main():
             root_ref = lang=='reference'
             if root_ref:
                 lang, local = 'en', name
-            if local in aliases:
+            if anchor in moved_bookmarks.get(lang+'/'+local,{}):
+                page, fragment = moved_bookmarks[lang+'/'+local][anchor]
+                cases.add((name+'#'+anchor,page+'#'+fragment))
+            elif local in aliases:
                 topic = aliases[local]
                 resolved = lang+'/'+api_path(topic)
-                end = bookmark(topic,anchor)
+                end = bookmark(topic,'ref-examples' if anchor=='example-'+topic else anchor)
                 require(end in identifiers.get(resolved,set()),origin+': missing redirected fragment '+url)
                 cases.add((name+'#'+anchor,resolved+'#'+end))
             elif root_ref and local in reference_pages:
