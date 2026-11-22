@@ -290,4 +290,7 @@ ggchord_render_table <- function(built, force = FALSE) {
 
 #' @export
 #' @importFrom ggplot2 ggplot_gtable
-ggplot_gtable.ggchord_built <- function(data) ggchord_render_table(data)
+ggplot_gtable.ggchord_built <- function(data) {
+  ggchord_local_console_errors()
+  ggchord_render_table(data)
+}

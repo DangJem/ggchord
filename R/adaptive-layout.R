@@ -41,6 +41,7 @@
 #' p_basic + render_policy(mode = "adaptive", text_scale_range = c(.9, 1.1))
 render_policy <- function(mode = "fixed", reference_size = NULL, units = "in",
     text_scale_range = c(0.8, 1.2), min_text_size = NULL) {
+  ggchord_local_console_errors()
   caller <- "render_policy()"
   mode <- ggchord_match_arg(mode, c("fixed", "scale", "adaptive"))
   units <- ggchord_match_arg(units, c("in", "mm", "cm"))
@@ -69,6 +70,7 @@ render_policy <- function(mode = "fixed", reference_size = NULL, units = "in",
 #' @export
 #' @importFrom ggplot2 ggplot_add
 ggplot_add.ggchord_layout_policy <- function(object, plot, ...) {
+  ggchord_local_console_errors()
   if (!inherits(plot, "ggchord")) ggchord_stop("render_policy(): add the policy to ggchord or Fusion")
   plot$ggchord$layout_policy <- unclass(object)
   plot$ggchord$ref <- new.env(parent = emptyenv())

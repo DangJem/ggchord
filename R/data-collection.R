@@ -56,6 +56,7 @@ ggchord_import_collection <- function(sequences, features = list(), links = list
 #'   geom_link_ribbon(data = d$links$blast)
 ggchord_data <- function(sequences, features = list(), links = list(),
                           tracks = list(), alignments = list()) {
+  ggchord_local_console_errors()
   caller <- "ggchord_data()"
   sequences <- as_ggchord_seq(sequences)
   collections <- list(features = features, links = links, tracks = tracks, alignments = alignments)
@@ -102,6 +103,7 @@ ggchord_attach_data_report <- function(x, operation, inputs = NULL, lineage = NU
 #' data_report(selected)
 #' data_report(selected, sections=c("changes", "lineage"))
 data_report <- function(x, sections = NULL) {
+  ggchord_local_console_errors()
   report_names <- c("operation", "inputs", "lineage", "issues", "changes", "metadata")
   result <- attr(x, "ggchord_data_report")
   if (is.null(result)) {

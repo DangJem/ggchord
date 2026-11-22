@@ -19,6 +19,7 @@
 #'   scale_fill_residue("DNA", values = c(G = "#D9A400"))
 scale_fill_residue <- function(alphabet = "DNA", name = waiver(), values = NULL,
     na.value = "#B8C1C5", guide = "legend", ...) {
+  ggchord_local_console_errors()
   ggchord_check_argument_names(sys.call(), sys.function(), scale_fill_manual)
   alphabet <- ggchord_match_choice(alphabet, c("DNA", "RNA", "AA"), "alphabet")
   dots <- list(...)

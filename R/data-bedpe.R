@@ -20,6 +20,7 @@
 #' paired <- read_bedpe(f)
 #' unlink(f)
 read_bedpe <- function(file, sequence_unit = "bp", source_file = FALSE) {
+  ggchord_local_console_errors()
   caller <- "read_bedpe()"
   sequence_unit <- ggchord_match_arg(sequence_unit, c("bp", "aa"))
   if (!is.logical(source_file) || length(source_file) != 1L || is.na(source_file))

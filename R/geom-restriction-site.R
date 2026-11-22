@@ -97,6 +97,7 @@ ggchord_site_layer <- function(mapping, data, shape, fixed_shape, size, fixed_si
 geom_site <- function(mapping = NULL, data = NULL, shape = "tick", size = 2,
     stat = "identity", position = "identity", ...,
     na.rm = FALSE, show.legend = NA, inherit.aes = TRUE, id = auto_id()) {
+  ggchord_local_console_errors()
   ggchord_check_argument_names(sys.call(), sys.function())
   ggchord_site_layer(mapping, data, shape, !missing(shape), size, !missing(size),
     stat, position, list(...), na.rm, show.legend, inherit.aes, id)
@@ -139,6 +140,7 @@ geom_site <- function(mapping = NULL, data = NULL, shape = "tick", size = 2,
 geom_restriction_site <- function(mapping = NULL, data = NULL, shape = "cut", size = 2,
     stat = "identity", position = "identity", ...,
     na.rm = FALSE, show.legend = NA, inherit.aes = TRUE, id = auto_id()) {
+  ggchord_local_console_errors()
   ggchord_check_argument_names(sys.call(), sys.function())
   ggchord_site_layer(mapping, data, shape, !missing(shape), size, !missing(size),
     stat, position, list(...), na.rm, show.legend, inherit.aes, id)
@@ -178,6 +180,7 @@ geom_restriction_site <- function(mapping = NULL, data = NULL, shape = "cut", si
 geom_site_label <- function(mapping = NULL, data = NULL, stat = "identity",
     anchor_layer = auto_anchor(), position = NULL, label_layout = label_layout_fixed(),
     ..., na.rm = FALSE, show.legend = FALSE, inherit.aes = TRUE, id = auto_id()) {
+  ggchord_local_console_errors()
   ggchord_check_argument_names(sys.call(), sys.function())
   ggchord_domain_label(mapping, data, stat, anchor_layer, "site", position,
     label_layout, "site", list(...), na.rm, show.legend, inherit.aes, id)
@@ -221,6 +224,7 @@ geom_site_label <- function(mapping = NULL, data = NULL, stat = "identity",
 geom_site_label_repel <- function(mapping = NULL, data = NULL, stat = "identity",
     anchor_layer = auto_anchor(), position = NULL, label_layout = label_layout_repel(),
     ..., na.rm = FALSE, show.legend = FALSE, inherit.aes = TRUE, id = auto_id()) {
+  ggchord_local_console_errors()
   ggchord_check_argument_names(sys.call(), sys.function())
   geom_site_label(mapping, data, stat, anchor_layer, position, label_layout,
     ..., na.rm = na.rm, show.legend = show.legend, inherit.aes = inherit.aes, id = id)

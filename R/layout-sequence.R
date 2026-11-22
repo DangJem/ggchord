@@ -65,6 +65,7 @@ layout_sequences <- function(order = NULL, orientation = 1, length_mode = "propo
     angular_gap = NULL, row_gap = NULL, segment_gap = NULL, column_gap = NULL,
     radius = NULL, inner_radius = NULL, curvature = NULL, align = NULL,
     anchor = NULL, windows = NULL) {
+  ggchord_local_console_errors()
   ggchord_check_argument_names(sys.call(), sys.function())
   if (!is.null(order)) ggchord_id_vector(order, "order")
   length_mode <- ggchord_match_choice(length_mode, c("proportional", "equal"), "length_mode")
@@ -101,6 +102,7 @@ ggchord_id_vector <- function(x, field) {
 
 #' @export
 ggplot_add.ggchord_sequence_layout <- function(object, plot, ...) {
+  ggchord_local_console_errors()
   if (!inherits(plot, "ggchord")) ggchord_stop("Add a reference layout to a ggchord plot")
   if (!is.null(plot$ggchord$sequence_layout) || !is.null(plot$ggchord$dotplot_layout))
     message("A reference layout is already present and will be replaced.")
@@ -136,6 +138,7 @@ ggplot_add.ggchord_sequence_layout <- function(object, plot, ...) {
 #'   coord_dotplot()
 layout_dotplot <- function(x_order = NULL, y_order = NULL, x_orientation = 1,
     y_orientation = 1, x_gap = 0, y_gap = 0) {
+  ggchord_local_console_errors()
   ggchord_check_argument_names(sys.call(), sys.function())
   if (!is.null(x_order)) ggchord_id_vector(x_order, "x_order")
   if (!is.null(y_order)) ggchord_id_vector(y_order, "y_order")
@@ -540,6 +543,7 @@ ggchord_layout_sequence_step <- function(
 #'   do.call(layout_sequences, suggestion$layout) + coord_collinear()
 suggest_sequence_layout <- function(sequences, links, order = NULL, reference = NULL,
     weight = "aligned_length", min_support = 0.1) {
+  ggchord_local_console_errors()
   ggchord_check_argument_names(sys.call(), sys.function())
   caller <- "suggest_sequence_layout()"
   sequences <- ggchord_reference_table(sequences, caller)

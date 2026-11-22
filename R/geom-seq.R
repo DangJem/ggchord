@@ -174,6 +174,7 @@ ggchord_circular_backbone_bounds <- function(plot, radii, units_per_mm) {
 geom_seq <- function(mapping = NULL, data = NULL, geometry = "auto",
     thickness = 1, stat = "identity", position = "identity", ...,
     na.rm = FALSE, show.legend = NA, inherit.aes = TRUE, id = auto_id()) {
+  ggchord_local_console_errors()
   ggchord_check_argument_names(sys.call(), sys.function())
   geometry <- ggchord_match_arg(geometry, c("auto", "line", "double", "band"))
   if (!ggchord_identity_stat(stat)) ggchord_stop("geom_seq(): stat must be identity")
@@ -231,6 +232,7 @@ geom_seq <- function(mapping = NULL, data = NULL, geometry = "auto",
 geom_seq_arrow <- function(mapping = NULL, data = NULL, stat = "identity",
     position = "identity", ..., arrow = grid::arrow(length = grid::unit(2, "mm"), type = "closed"),
     na.rm = FALSE, show.legend = NA, inherit.aes = TRUE, id = auto_id()) {
+  ggchord_local_console_errors()
   ggchord_check_argument_names(sys.call(), sys.function())
   if ("fill" %in% c(names(mapping), ...names()))
     ggchord_stop("geom_seq_arrow(): use colour for the arrow, e.g. aes(colour = accver). ",

@@ -25,6 +25,7 @@
 geom_residue <- function(mapping = NULL, data = NULL, representation = "tile_text",
     overflow = "tile", line_width = NULL, stat = "identity", position = "identity",
     ..., na.rm = FALSE, show.legend = FALSE, inherit.aes = TRUE, id = auto_id()) {
+  ggchord_local_console_errors()
   ggchord_check_argument_names(sys.call(), sys.function())
   representation <- ggchord_match_arg(representation, c("text", "tile", "tile_text"))
   overflow_supplied <- !missing(overflow)
@@ -122,6 +123,7 @@ ggchord_residue_validate_styles <- function(styles, representation, overflow) {
 geom_residue_text <- function(mapping = NULL, data = NULL, overflow = "hide",
     line_width = NULL, stat = "identity", position = "identity", ...,
     na.rm = FALSE, show.legend = FALSE, inherit.aes = TRUE, id = auto_id()) {
+  ggchord_local_console_errors()
   ggchord_check_argument_names(sys.call(), sys.function())
   geom_residue(mapping, data, representation = "text", overflow = overflow,
     line_width = line_width, stat = stat, position = position, ...,
@@ -153,6 +155,7 @@ geom_residue_text <- function(mapping = NULL, data = NULL, overflow = "hide",
 geom_residue_tile <- function(mapping = NULL, data = NULL, line_width = NULL,
     stat = "identity", position = "identity", ..., na.rm = FALSE,
     show.legend = FALSE, inherit.aes = TRUE, id = auto_id()) {
+  ggchord_local_console_errors()
   ggchord_check_argument_names(sys.call(), sys.function())
   if ("overflow" %in% names(list(...))) ggchord_stop("geom_residue_tile(): overflow applies to text")
   geom_residue(mapping, data, representation = "tile", line_width = line_width,
@@ -163,6 +166,7 @@ geom_residue_tile <- function(mapping = NULL, data = NULL, line_width = NULL,
 #' @export
 #' @importFrom ggplot2 ggplot_add
 ggplot_add.LayerResidue <- function(object, plot, ...) {
+  ggchord_local_console_errors()
   # Clone before supplying defaults: reusing a layer must not change its mapping.
   original <- object
   object <- ggproto(NULL, original)
@@ -206,6 +210,7 @@ GeomResidue <- ggproto("GeomResidue", ggplot2::Geom,
     cell_colour = NA_character_, cell_linewidth = .2),
   extra_params = c("na.rm", "representation", "overflow", "line_width"),
   setup_data = function(data, params) {
+    ggchord_local_console_errors()
     data$xmin <- data$x - .5; data$xmax <- data$x + .5
     data$ymin <- as.numeric(data$y) - .5; data$ymax <- as.numeric(data$y) + .5
     data
@@ -213,6 +218,7 @@ GeomResidue <- ggproto("GeomResidue", ggplot2::Geom,
   draw_key = ggplot2::draw_key_rect,
   draw_panel = function(data, panel_params, coord, representation = "tile_text",
       overflow = "tile", line_width = NULL, na.rm = FALSE) {
+    ggchord_local_console_errors()
     if (!inherits(coord, "CoordCartesian") || isTRUE(coord$ggchord_coord))
       ggchord_stop("geom_residue(): Cartesian coordinates are required")
     for (axis in c("x", "y")) {
@@ -229,6 +235,7 @@ GeomResidue <- ggproto("GeomResidue", ggplot2::Geom,
 #' @export
 #' @importFrom grid makeContent
 makeContent.ggchord_residue_grob <- function(x) {
+  ggchord_local_console_errors()
   d <- x$data
   center <- x$coord$transform(d, x$panel_params)
   corners <- function(sign) {

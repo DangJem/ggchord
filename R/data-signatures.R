@@ -129,6 +129,7 @@ ggchord_signature_json <- function(parsed, caller) {
 #' file <- system.file("extdata", "P00517-signatures.tsv", package = "ggchord")
 #' read_signature_matches(file)
 read_signature_matches <- function(file, format = "scan_tsv", source_file = FALSE) {
+  ggchord_local_console_errors()
   caller <- "read_signature_matches()"
   format <- ggchord_match_arg(format, c("scan_tsv", "entry_json"))
   if (!is.logical(source_file) || length(source_file) != 1L || is.na(source_file))

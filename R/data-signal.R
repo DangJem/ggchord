@@ -16,6 +16,7 @@
 #' signal_intervals <- read_bedgraph(f)
 #' unlink(f)
 read_bedgraph <- function(file, source_file = FALSE) {
+  ggchord_local_console_errors()
   caller <- 'read_bedgraph()'
   if (!is.logical(source_file) || length(source_file) != 1L || is.na(source_file))
     ggchord_stop(caller, ': source_file must be TRUE or FALSE')
@@ -94,6 +95,7 @@ ggchord_bigwig_selection <- function(which, information, caller) {
 #'   read_bigwig(file)
 #' }
 read_bigwig <- function(file, which = NULL, source_file = FALSE) {
+  ggchord_local_console_errors()
   caller <- 'read_bigwig()'
   if (.Platform$OS.type == 'windows') ggchord_stop(caller,
     ': optional rtracklayer BigWig decoding is unsupported on Windows; use read_bedgraph() with an existing bedGraph file')

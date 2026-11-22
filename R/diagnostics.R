@@ -159,6 +159,7 @@ ggchord_diagnostic_text <- function(data, coordinate, panel, context, parse = FA
 #' diagnose_ggchord(p_basic, width = 8, height = 4, device = "pdf")
 diagnose_ggchord <- function(plot, width = NULL, height = NULL, units = "in",
     device = NULL, dpi = 300, action = "report") {
+  ggchord_local_console_errors()
   caller <- "diagnose_ggchord()"
   ggchord_output_plot(plot, caller)
   action <- ggchord_match_arg(action, c("report", "warn", "error"))
@@ -324,6 +325,7 @@ ggchord_diagnose_built <- function(result, canvas_mm) {
 
 #' @export
 print.ggchord_diagnostics <- function(x, ...) {
+  ggchord_local_console_errors()
   cat("ggchord diagnostics\n")
   cat("Measurement: ", x$measurement$status, "\n", sep = "")
   print(x$issues, row.names = FALSE)

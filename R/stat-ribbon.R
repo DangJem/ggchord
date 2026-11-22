@@ -160,6 +160,7 @@ ggchord_prepare_link_statistics <- function(plot, references) {
 stat_link_bundle <- function(mapping = NULL, data = NULL, geom = "link_ribbon",
     position = "identity", bins = 80, min_bundle = 2, ...,
     na.rm = FALSE, show.legend = NA, inherit.aes = TRUE, id = auto_id()) {
+  ggchord_local_console_errors()
   ggchord_check_argument_names(sys.call(), sys.function())
   if (!identical(geom, "link_ribbon")) ggchord_stop("stat_link_bundle(): requires an interval link geometry")
   geom_link_ribbon(mapping, data, stat = "link_bundle", position = position,
@@ -220,6 +221,7 @@ stat_link_bundle <- function(mapping = NULL, data = NULL, geom = "link_ribbon",
 stat_link_density <- function(mapping = NULL, data = NULL, geom = "link_ribbon",
     position = "identity", bins = 80, normalization = "none", ...,
     na.rm = FALSE, show.legend = NA, inherit.aes = TRUE, id = auto_id()) {
+  ggchord_local_console_errors()
   ggchord_check_argument_names(sys.call(), sys.function())
   if (!identical(geom, "link_ribbon")) ggchord_stop("stat_link_density(): requires an interval link geometry")
   geom_link_ribbon(mapping, data, stat = "link_density", position = position,

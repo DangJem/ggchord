@@ -30,6 +30,7 @@
 #'   legend.position = "bottom",
 #'   ggchord.axis.text = element_text(colour = "#40545A"))
 theme_ggchord <- function(base_size = 11, base_family = "", ...) {
+  ggchord_local_console_errors()
   ggchord_make_theme(base_size, base_family, "default", list(...))
 }
 
@@ -55,6 +56,7 @@ theme_ggchord <- function(base_size = 11, base_family = "", ...) {
 #'
 #' p_basic + theme_ggchord_minimal(base_size = 11)
 theme_ggchord_minimal <- function(base_size = 11, base_family = "", ...) {
+  ggchord_local_console_errors()
   ggchord_make_theme(base_size, base_family, "minimal", list(...))
 }
 
@@ -80,6 +82,7 @@ theme_ggchord_minimal <- function(base_size = 11, base_family = "", ...) {
 #'
 #' p_basic + theme_ggchord_dark(base_size = 11)
 theme_ggchord_dark <- function(base_size = 11, base_family = "", ...) {
+  ggchord_local_console_errors()
   ggchord_make_theme(base_size, base_family, "dark", list(...))
 }
 
@@ -105,6 +108,7 @@ theme_ggchord_dark <- function(base_size = 11, base_family = "", ...) {
 #'
 #' p_basic + theme_ggchord_publication(base_size = 10)
 theme_ggchord_publication <- function(base_size = 10, base_family = "", ...) {
+  ggchord_local_console_errors()
   ggchord_make_theme(base_size, base_family, "publication", list(...))
 }
 
@@ -135,6 +139,7 @@ theme_ggchord_publication <- function(base_size = 10, base_family = "", ...) {
 #'   geom_gene(data = subset(genes, accver == "A")) +
 #'   coord_circular() + theme_ggchord_plasmid()
 theme_ggchord_plasmid <- function(base_size = 11, base_family = "", ...) {
+  ggchord_local_console_errors()
   ggchord_make_theme(base_size, base_family, "plasmid", list(...))
 }
 

@@ -30,6 +30,7 @@
 clean_ggchord_data <- function(x, unknown_id = "error", out_of_range = "error",
     reversed_interval = "error", invalid_pident = "error", empty_label = "keep",
     replacement_label = "unannotated") {
+  ggchord_local_console_errors()
   caller <- "clean_ggchord_data()"
   if (!ggchord_is_data_collection(x)) ggchord_stop(caller, ": expected a data or import collection")
   unknown_id <- ggchord_match_arg(unknown_id, c("error", "drop"))

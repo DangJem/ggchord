@@ -80,6 +80,7 @@ ggchord_canonical_read_links <- function(parts, caller, directional_order = FALS
 #' ggchord(seqs) + geom_feature(data = bed)
 #' unlink(f)
 read_bed <- function(file, source_file = FALSE) {
+  ggchord_local_console_errors()
   caller <- "read_bed()"
   paths <- ggchord_resolve_files(file, NULL, "read_bed")
   tables <- lapply(paths, function(path) {
@@ -169,6 +170,7 @@ read_bed <- function(file, source_file = FALSE) {
 #' paf <- read_paf(f)
 #' unlink(f)
 read_paf <- function(file, source_file = FALSE) {
+  ggchord_local_console_errors()
   caller <- "read_paf()"
   paths <- ggchord_resolve_files(file, NULL, "read_paf")
   tables <- lapply(paths, function(path) {

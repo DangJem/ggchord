@@ -16,6 +16,7 @@
 #'   geom_seq(aes(colour = accver)) +
 #'   scale_colour_sequence(name = "Sequence")
 scale_colour_sequence <- function(name = waiver(), ..., aesthetics = "colour") {
+  ggchord_local_console_errors()
   scale <- discrete_scale(aesthetics, palette = chord_default_palette, name = name, ...)
   scale$ggchord_palette <- "sequence"
   scale
@@ -34,6 +35,7 @@ scale_colour_sequence <- function(name = waiver(), ..., aesthetics = "colour") {
 #'   geom_gene(aes(fill = strand), data = gene_data_example) +
 #'   scale_fill_strand(name = "Strand")
 scale_fill_strand <- function(name = waiver(), ..., aesthetics = "fill") {
+  ggchord_local_console_errors()
   palette <- c(process_strand_colors(NULL), "+/-" = "#795788", "." = "#767B80")
   scale_fill_manual(name = name, values = palette, aesthetics = aesthetics, ...)
 }
@@ -53,6 +55,7 @@ scale_fill_strand <- function(name = waiver(), ..., aesthetics = "fill") {
 #'   geom_gene(aes(fill = type), data = features) +
 #'   scale_fill_feature_type()
 scale_fill_feature_type <- function(name = waiver(), ..., aesthetics = "fill") {
+  ggchord_local_console_errors()
   scale <- discrete_scale(aesthetics, palette = ggchord_feature_type_palette,
     name = name, ...)
   scale
@@ -92,6 +95,7 @@ ggchord_feature_type_palette <- function(self, n) {
 #'   scale_fill_pident()
 scale_fill_pident <- function(name = "Identity (%)", ..., limits = c(0, 100),
     breaks = c(0, 50, 80, 90, 95, 100), guide = waiver()) {
+  ggchord_local_console_errors()
   automatic <- is_waiver(guide)
   if (automatic) guide <- ggchord_identity_guide(aesthetic = "fill")
   scale <- ggplot2::scale_fill_stepsn(name = name,

@@ -34,6 +34,7 @@
 #'   coord_sankey()
 coord_sankey <- function(axis = "y", ratio = NULL, xlim = NULL, ylim = NULL,
     expand = FALSE, clip = "on", fit = "geometry") {
+  ggchord_local_console_errors()
   ggchord_check_argument_names(sys.call(), sys.function())
   base <- coord_collinear(axis = axis, ratio = ratio, xlim = xlim, ylim = ylim,
     expand = expand, clip = clip, fit = fit)

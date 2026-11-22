@@ -65,6 +65,7 @@ ggchord_measure_name <- function(measure) {
 #'   scale_track_value("signal", name = "Signal") + coord_collinear()
 track_band <- function(id = "default", side = "positive", order = 1,
     thickness = 4, gap = 1) {
+  ggchord_local_console_errors()
   ggchord_check_argument_names(sys.call(), sys.function())
   id <- ggchord_track_id(id)
   side <- ggchord_match_arg(side, c("positive", "negative"))
@@ -82,6 +83,7 @@ track_band <- function(id = "default", side = "positive", order = 1,
 #' @export
 #' @importFrom ggplot2 ggplot_add
 ggplot_add.ggchord_track_band <- function(object, plot, ...) {
+  ggchord_local_console_errors()
   if (!inherits(plot, "ggchord")) ggchord_stop("Add track_band() to a ggchord plot")
   if (!is.null(plot$ggchord$track_bands[[object$id]]))
     ggchord_stop("Track band '", object$id, "' was already declared; declare each ID once")

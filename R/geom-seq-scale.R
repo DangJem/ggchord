@@ -55,6 +55,7 @@ ggchord_empty_seq_scale_geometry <- function() data.frame(
 annotation_seq_scalebar <- function(length, sequence = NULL, instance = NULL,
     location = "bottomleft", label = NULL, height = 1, text_size = 3,
     colour = "black", id = auto_id()) {
+  ggchord_local_console_errors()
   ggchord_check_argument_names(sys.call(), sys.function())
   if (missing(length) || !is.numeric(length) || base::length(length) != 1L ||
       !is.finite(length) || length <= 0)

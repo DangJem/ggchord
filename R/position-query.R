@@ -32,6 +32,7 @@
 map_ggchord_position <- function(plot, data, from = "source", to = "display",
     axis = NULL, panel = NULL, instance = NULL, width = NULL, height = NULL,
     units = "in", device = NULL, dpi = 300) {
+  ggchord_local_console_errors()
   caller <- "map_ggchord_position()"
   ggchord_output_plot(plot, caller)
   spaces <- c("source", "local", "display")

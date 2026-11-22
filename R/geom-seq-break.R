@@ -36,6 +36,7 @@
 geom_seq_break <- function(mapping = NULL, data = NULL, mark = "slash", size = 2,
     position = "identity", ..., na.rm = FALSE, show.legend = NA,
     inherit.aes = TRUE, id = auto_id()) {
+  ggchord_local_console_errors()
   ggchord_check_argument_names(sys.call(), sys.function())
   mark <- ggchord_match_arg(mark, c("slash", "double_slash", "zigzag"))
   size <- ggchord_physical_mm(size, "geom_seq_break(size)", nonnegative = TRUE)

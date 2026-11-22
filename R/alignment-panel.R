@@ -33,6 +33,7 @@
 #'   geom_residue(aes(fill = symbol)) + scale_fill_residue("DNA")
 #' registered <- register_ggchord_alignment(p, cells)
 register_ggchord_alignment <- function(plot, data) {
+  ggchord_local_console_errors()
   caller <- "register_ggchord_alignment()"
   if (!inherits(plot, "ggplot") || inherits(plot, "ggchord") ||
       !inherits(plot$coordinates, "CoordCartesian") || inherits(plot$coordinates, "CoordFlip") ||

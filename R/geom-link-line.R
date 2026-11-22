@@ -49,6 +49,7 @@ ggchord_link_route <- function(route, dots, caller) {
 geom_link_line <- function(mapping = NULL, data = NULL, stat = "identity",
     position = "identity", route = "curve", ...,
     na.rm = FALSE, show.legend = NA, inherit.aes = TRUE, id = auto_id()) {
+  ggchord_local_console_errors()
   ggchord_check_argument_names(sys.call(), sys.function())
   caller <- "geom_link_line()"
   controls <- ggchord_link_route(route, ggchord_colour_dots(list(...), caller), caller)

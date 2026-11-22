@@ -261,6 +261,7 @@ ggchord_normalize_restriction_patterns <- function(patterns) {
 #' ggchord(ref) + geom_restriction_site(data=found) + coord_collinear()
 find_restriction_sites <- function(sequence, enzymes = NULL, patterns = NULL,
     circular = NULL, database = NULL, methylation = "unknown") {
+  ggchord_local_console_errors()
   caller <- "find_restriction_sites()"
   methylation <- ggchord_match_arg(methylation, c("unknown", "none", "dam_dcm"))
   normalized <- ggchord_normalize_sequence_input(

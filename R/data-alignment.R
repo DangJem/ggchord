@@ -67,6 +67,7 @@ ggchord_alignment_invalid_length <- function(value) {
 #' ggplot(cells, aes(alignment_column, accver, label = symbol)) +
 #'   geom_residue(aes(fill = symbol))
 as_ggchord_alignment <- function(sequences, alphabet, source_data = NULL, circular = FALSE) {
+  ggchord_local_console_errors()
   caller <- "as_ggchord_alignment()"
   alphabet <- ggchord_match_arg(alphabet, c("DNA", "RNA", "AA"))
   if (is.data.frame(sequences)) {
@@ -192,6 +193,7 @@ as_ggchord_alignment <- function(sequences, alphabet, source_data = NULL, circul
 #' cells <- read_aligned_fasta(f, alphabet = "DNA")
 #' unlink(f)
 read_aligned_fasta <- function(file, alphabet, source_data = NULL, circular = FALSE, source_file = FALSE) {
+  ggchord_local_console_errors()
   if (!is.character(file) || length(file) != 1L || is.na(file) || !file.exists(file) || dir.exists(file))
     ggchord_stop("read_aligned_fasta(): supply a single existing file")
   if (!is.logical(source_file) || length(source_file) != 1L || is.na(source_file))
@@ -225,6 +227,7 @@ read_aligned_fasta <- function(file, alphabet, source_data = NULL, circular = FA
 #'   from = "alignment", to = "source")
 map_alignment_position <- function(alignment, positions, from = "source",
     to = "alignment", instance = NULL) {
+  ggchord_local_console_errors()
   caller <- "map_alignment_position()"
   spaces <- c("source", "alignment")
   from <- ggchord_match_arg(from, spaces)

@@ -28,6 +28,7 @@
 #'   coord_dotplot(ratio = 1)
 coord_dotplot <- function(ratio = 1, xlim = NULL, ylim = NULL,
     expand = FALSE, clip = "on", fit = "geometry") {
+  ggchord_local_console_errors()
   ggchord_check_argument_names(sys.call(), sys.function())
   settings <- ggchord_coord_settings(ratio, xlim, ylim, expand, clip, fit)
   ggproto("CoordDotplot", ggplot2::CoordCartesian, !!!settings, ggchord_dotplot = TRUE)

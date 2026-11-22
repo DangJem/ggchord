@@ -21,6 +21,7 @@
 #' view_ggchord(p_basic, width = 180, height = 100, units = "mm")
 view_ggchord <- function(plot, width = 8, height = 6, units = "in",
     device = "png", dpi = 150) {
+  ggchord_local_console_errors()
   caller <- "view_ggchord()"
   ggchord_output_plot(plot, caller)
   request <- ggchord_output_request(width, height, units, device, dpi, caller)

@@ -49,7 +49,10 @@ reconstruct_layer <- function(lyr, data, mapping = NULL) {
 #' ggchord(seqs) +
 #'   geom_seq(aes(colour = accver), id = NULL) +
 #'   geom_gene(aes(colour = strand), data = genes, id = NA)
-auto_id <- function() structure(list(), class = "ggchord_auto_id")
+auto_id <- function() {
+  ggchord_local_console_errors()
+  structure(list(), class = "ggchord_auto_id")
+}
 
 ggchord_shared_id <- function(id) {
   is.null(id) || (is.atomic(id) && !is.object(id) && is.null(dim(id)) &&

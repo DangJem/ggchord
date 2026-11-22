@@ -56,6 +56,7 @@ ggchord_feature_search_codes <- function(sequence, genetic_code, ids, caller) {
 #' shown[c("label", "pos", "cut_top", "cut_bottom")]
 filter_restriction_sites <- function(sites, enzymes = NULL, min_site_length = NULL,
     cuts = NULL, window = NULL, commercial_only = FALSE, representatives = "all", profile = NULL) {
+  ggchord_local_console_errors()
   caller <- "filter_restriction_sites()"
   representatives <- ggchord_match_arg(representatives, c("all", "preferred"))
   ggchord_require_columns(sites, c("accver", "pos", "enzyme", "site_id", "enzyme_site_count"), caller)

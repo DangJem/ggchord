@@ -288,6 +288,7 @@ scale_seq_position_continuous <- function(
 #'   coord_collinear()
 guide_seq_axis <- function(sequences = NULL, side = "positive", angle = "auto",
     check.overlap = TRUE, theme = NULL) {
+  ggchord_local_console_errors()
   ggchord_check_argument_names(sys.call(), sys.function())
   ggchord_check_axis_selection(sequences)
   side <- ggchord_match_choice(side, c("positive", "negative"), "side")
@@ -351,6 +352,7 @@ ggchord_check_axis_theme <- function(theme, overlap) {
 scale_seq_position <- function(name = waiver(), breaks = waiver(),
     minor_breaks = waiver(), labels = waiver(), coordinates = "local",
     guide = guide_seq_axis()) {
+  ggchord_local_console_errors()
   ggchord_check_argument_names(sys.call(), sys.function())
   guide_explicit <- !missing(guide)
   coordinates <- ggchord_match_choice(coordinates, c("local", "source"), "coordinates")
@@ -406,6 +408,7 @@ scale_seq_position <- function(name = waiver(), breaks = waiver(),
 scale_track_value <- function(track = "default", name = waiver(), limits = NULL,
     breaks = waiver(), labels = waiver(), transform = "identity", oob = scales::censor,
     unit = NULL, domain = "shared", guide = guide_track_axis()) {
+  ggchord_local_console_errors()
   ggchord_check_argument_names(sys.call(), sys.function())
   ggchord_track_id(track)
   domain <- ggchord_match_choice(domain, c("shared", "panel"), "domain")
@@ -481,6 +484,7 @@ ggchord_check_track_transform <- function(transformation, track) {
 #' p1 + scale_track_value(limits = rng$limits[[1]])
 #' p2 + scale_track_value(limits = rng$limits[[1]])
 track_limits <- function(plots, tracks = "default") {
+  ggchord_local_console_errors()
   ggchord_check_argument_names(sys.call(), sys.function())
   if (inherits(plots, "ggchord")) plots <- list(plots)
   if (!is.list(plots) || !length(plots) || !all(vapply(plots, inherits, logical(1), "ggchord")))

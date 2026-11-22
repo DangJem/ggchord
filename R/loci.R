@@ -32,6 +32,7 @@
 #' loci <- find_ggchord_loci(seqs, genes, targets="g1", upstream=50, downstream=100)
 #' loci
 find_ggchord_loci <- function(sequences, features, targets, upstream = 0, downstream = 0) {
+  ggchord_local_console_errors()
   seq_data <- sequences
   feature_data <- features
   caller <- "find_ggchord_loci()"

@@ -37,6 +37,7 @@
 fusion_zoom <- function(from, to, region, highlight = TRUE,
     fill = "#187B77", alpha = 0.12, colour = "#187B77", linewidth = 0.4, id = NULL,
     connector = "interval", linetype = NULL) {
+  ggchord_local_console_errors()
   caller <- "fusion_zoom()"
   connector <- ggchord_match_choice(connector, c("interval", "border"), "connector")
   if (!is.null(linetype)) {
@@ -110,6 +111,7 @@ fusion_zoom <- function(from, to, region, highlight = TRUE,
 #' magnify_ggchord(p_basic, p_detail, region)
 magnify_ggchord <- function(overview, detail, region, layout = NULL,
     guides = "keep", ...) {
+  ggchord_local_console_errors()
   if (is.null(layout))
     layout <- layout_fusion_grid(matrix(c("overview", "detail"), nrow = 1L),
       widths = c(2, 1))

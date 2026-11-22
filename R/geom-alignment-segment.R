@@ -34,6 +34,7 @@
 geom_alignment_segment <- function(mapping = NULL, data = NULL, stat = "identity",
     position = "identity", ...,
     na.rm = FALSE, show.legend = NA, inherit.aes = TRUE, id = auto_id()) {
+  ggchord_local_console_errors()
   ggchord_check_argument_names(sys.call(), sys.function())
   caller <- "geom_alignment_segment()"
   if (!ggchord_identity_stat(stat)) ggchord_stop(caller, ": use an identity Stat")

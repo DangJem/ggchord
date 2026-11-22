@@ -416,7 +416,11 @@ ggchord_infer_visual_scales <- function(plot, layout, scales) {
 #'   scale_for("matches", scale_fill_gradient(limits = c(0, 100), name = "Identity (%)")) +
 #'   coord_chord()
 scale_for <- function(layers, scale) {
+  ggchord_local_console_errors()
   ggchord_check_argument_names(sys.call(), sys.function())
+  if (missing(layers)) ggchord_stop("scale_for(): supply one or more layer IDs in `layers`")
+  if (missing(scale)) ggchord_stop(
+    "scale_for(): supply `scale`, for example scale_for(\"a\", scale_colour_discrete()).")
   ggchord_id_vector(layers, "layers")
   if (!inherits(scale, "Scale") || !length(scale$aesthetics))
     ggchord_stop("scale_for(): scale must be an ordinary ggplot2 visual scale")

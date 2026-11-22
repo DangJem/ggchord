@@ -43,6 +43,7 @@ ggchord_label_integer <- function(value, name, minimum = 1, infinite = FALSE) {
 #'   coord_collinear()
 label_layout_fixed <- function(orientation = "feature", side = "positive",
     offset = 1, along = 0, overlap = "hide", fit = "none", wrap = NULL) {
+  ggchord_local_console_errors()
   ggchord_check_argument_names(sys.call(), sys.function())
   orientation <- ggchord_match_arg(orientation, c("feature", "tangent", "normal", "horizontal", "vertical"))
   side <- ggchord_match_arg(side, c("positive", "negative"))
@@ -110,6 +111,7 @@ label_layout_repel <- function(arrangement = "auto", orientation = "auto",
     side = "both", offset = 1, padding = 1, fit = "wrap", wrap = NULL,
     max_lines = 2, min_size = 1.5, max_overlaps = Inf, leader = "auto",
     outer_size = NULL) {
+  ggchord_local_console_errors()
   ggchord_check_argument_names(sys.call(), sys.function())
   arrangement <- ggchord_match_arg(arrangement, c("auto", "local", "columns"))
   orientation <- ggchord_match_arg(orientation, c("auto", "feature", "tangent", "horizontal", "vertical"))
@@ -357,6 +359,7 @@ geom_feature_label <- function(mapping = NULL, data = NULL, stat = "identity",
     anchor_layer = auto_anchor(), anchor = "middle", position = NULL,
     label_layout = label_layout_fixed(), ...,
     na.rm = FALSE, show.legend = FALSE, inherit.aes = TRUE, id = auto_id()) {
+  ggchord_local_console_errors()
   ggchord_check_argument_names(sys.call(), sys.function())
   anchor <- ggchord_match_arg(anchor, c("middle", "start", "end", "head", "tail"))
   ggchord_domain_label(mapping, data, stat, anchor_layer, anchor, position,
@@ -412,6 +415,7 @@ geom_feature_label_repel <- function(mapping = NULL, data = NULL, stat = "identi
     anchor_layer = auto_anchor(), anchor = "middle", position = NULL,
     label_layout = label_layout_repel(), ...,
     na.rm = FALSE, show.legend = FALSE, inherit.aes = TRUE, id = auto_id()) {
+  ggchord_local_console_errors()
   ggchord_check_argument_names(sys.call(), sys.function())
   geom_feature_label(mapping, data, stat, anchor_layer, anchor, position, label_layout,
     ..., na.rm = na.rm, show.legend = show.legend, inherit.aes = inherit.aes, id = id)
@@ -436,7 +440,10 @@ geom_feature_label_repel <- function(mapping = NULL, data = NULL, stat = "identi
 #'   strand = "+", label = "g1")
 #' ggchord(seqs) + geom_gene(data = genes) +
 #'   geom_gene_label(aes(label = label)) + coord_collinear()
-auto_anchor <- function() structure(list(), class = "ggchord_auto_anchor")
+auto_anchor <- function() {
+  ggchord_local_console_errors()
+  structure(list(), class = "ggchord_auto_anchor")
+}
 
 ggchord_resolve_auto_anchors <- function(plot) {
   for (layer in plot$layers) {

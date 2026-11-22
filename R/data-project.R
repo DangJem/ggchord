@@ -184,6 +184,7 @@ ggchord_project_intervals <- function(row, caller) {
 #' cds <- build_ggchord_cds(coding, genetic_code=11)
 #' cds$models
 build_ggchord_cds <- function(cds_data, genetic_code = NULL, partial = "error") {
+  ggchord_local_console_errors()
   caller <- "build_ggchord_cds()"
   if (identical(ggchord_sequence_unit(cds_data, caller), "aa"))
     ggchord_stop(caller, ": CDS models require genomic bp coordinates")
@@ -347,6 +348,7 @@ ggchord_project_genomic <- function(segment, lower, upper) {
 #' genomic <- project_ggchord_features(domain, cds, from="protein")
 #' genomic
 project_ggchord_features <- function(features, cds, from = "protein", codon_boundary = "error") {
+  ggchord_local_console_errors()
   caller <- "project_ggchord_features()"
   feature_data <- features
   from <- ggchord_match_arg(from, c("protein", "genome"))
@@ -470,6 +472,7 @@ project_ggchord_features <- function(features, cds, from = "protein", codon_boun
 #'   qstart=1, qend=3, sstart=1, send=3)
 #' project_ggchord_links(protein_links, cds, ungapped=TRUE)
 project_ggchord_links <- function(links, cds, ungapped = FALSE) {
+  ggchord_local_console_errors()
   caller <- "project_ggchord_links()"
   link_data <- links
   cds <- ggchord_project_model(cds, caller)

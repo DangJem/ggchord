@@ -29,6 +29,7 @@ ggchord_fusion_decoration <- function(x) {
 }
 
 ggchord_build_fusion <- function(x, on_error = NULL) {
+  ggchord_local_console_errors()
   if (!ggchord_fusion_has_decoration(x)) return(ggchord_build_fusion_core(x, on_error))
   previous <- last_plot()
   on.exit(set_last_plot(previous))

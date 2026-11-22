@@ -58,6 +58,7 @@ ggchord_delta_source <- function(text, caller) {
 #' }
 read_delta <- function(file, executable = "show-coords",
                        query_ids = NULL, subject_ids = NULL, source_file = FALSE) {
+  ggchord_local_console_errors()
   caller <- 'read_delta()'
   if (!is.character(executable) || length(executable) != 1L || is.na(executable) || !nzchar(executable))
     ggchord_stop(caller, ': executable must name one existing show-coords program')

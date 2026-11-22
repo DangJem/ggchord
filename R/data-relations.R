@@ -148,6 +148,7 @@ ggchord_validate_hierarchy_keys <- function(seq_data, genomes, strict = FALSE) {
 #' ggchord(seqs) + geom_link_ribbon(data=cluster_links)
 link_ggchord_clusters <- function(features, membership, pairs, paralogs = "drop",
     segment_policy = "error", unmatched = "error", max_links = 10000) {
+  ggchord_local_console_errors()
   caller <- "link_ggchord_clusters()"
   feature_data <- features
   paralogs <- ggchord_match_arg(paralogs, c("drop", "all"))

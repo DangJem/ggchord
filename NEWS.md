@@ -1,5 +1,10 @@
 # ggchord 0.50.0 (development)
 
+- Public ggchord calls and plot rendering temporarily suspend RStudio's
+  automatic Break on Error handler. This includes errors raised directly by R
+  or dependencies during those calls. The session's handler is restored on
+  return. `scale_for()` reports a missing scale with an example call.
+
 - Visual scales scoped with `scale_for()` preserve public aesthetic names
   such as `colour` for custom ggplot2 statistics.
 - Exact link deduplication finds representative rows without repeatedly

@@ -56,6 +56,7 @@ geom_link_ribbon <- function(mapping = NULL, data = NULL, stat = "identity",
     position = "identity", route = "curve", fill_mode = "solid", ...,
     na.rm = FALSE, show.legend = NA, inherit.aes = TRUE, id = auto_id(),
     gap = 0.4, avoid = "none", avoid_strength = 0.5) {
+  ggchord_local_console_errors()
   call <- match.call(function(...) NULL, sys.call(), envir = parent.frame())
   if ("fill" %in% names(call) && !"fill_mode" %in% names(call)) {
     # Reserve the exact visual argument so R cannot treat it as an

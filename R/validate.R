@@ -9,6 +9,7 @@ interval_recip_overlap <- function(a1, a2, b1, b2) {
 
 #' @export
 print.ggchord_validation <- function(x, ...) {
+  ggchord_local_console_errors()
   cat(sprintf("ggchord data validation: %s (%d errors, %d warnings)\n",
     if (x$valid) "valid" else "invalid", x$summary[["errors"]], x$summary[["warnings"]]))
   if (nrow(x$issues)) print(x$issues, row.names = FALSE)
@@ -16,7 +17,13 @@ print.ggchord_validation <- function(x, ...) {
 }
 
 #' @export
-summary.ggchord_validation <- function(object, ...) object$summary
+summary.ggchord_validation <- function(object, ...) {
+  ggchord_local_console_errors()
+  object$summary
+}
 
 #' @export
-as.data.frame.ggchord_validation <- function(x, row.names = NULL, optional = FALSE, ...) x$issues
+as.data.frame.ggchord_validation <- function(x, row.names = NULL, optional = FALSE, ...) {
+  ggchord_local_console_errors()
+  x$issues
+}

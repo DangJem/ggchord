@@ -34,6 +34,7 @@
 geom_seq_label <- function(mapping = NULL, data = NULL, anchor = "middle",
     position = "identity", label_layout = label_layout_fixed(orientation = "horizontal"),
     ..., na.rm = FALSE, show.legend = FALSE, inherit.aes = TRUE, id = auto_id()) {
+  ggchord_local_console_errors()
   ggchord_check_argument_names(sys.call(), sys.function())
   anchor <- ggchord_match_arg(anchor, c("start", "middle", "end", "center"))
   ggchord_domain_label(mapping, data, "identity", NULL, anchor, position,

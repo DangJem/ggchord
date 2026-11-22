@@ -370,7 +370,14 @@ prepare_ggchord_plot <- function(plot) {
 }
 
 #' @export
+print.ggchord <- function(x, ...) {
+  ggchord_local_console_errors()
+  NextMethod()
+}
+
+#' @export
 ggplot_build.ggchord <- function(plot, ...) {
+  ggchord_local_console_errors()
   if (is.null(plot$ggchord)) {
     ggchord_stop("Not a valid ggchord object: no data stored on the plot. ",
          "Please build the plot with ggchord().")

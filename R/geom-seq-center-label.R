@@ -28,6 +28,7 @@
 geom_seq_center_label <- function(mapping = NULL, data = NULL, position = "identity",
     label_layout = label_layout_fixed(orientation = "horizontal"), ...,
     na.rm = FALSE, show.legend = FALSE, inherit.aes = TRUE, id = auto_id()) {
+  ggchord_local_console_errors()
   ggchord_check_argument_names(sys.call(), sys.function())
   geom_seq_label(mapping, data, anchor = "center", position = position,
     label_layout = label_layout, ..., na.rm = na.rm, show.legend = show.legend,

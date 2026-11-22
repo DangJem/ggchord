@@ -186,6 +186,7 @@ ggchord_focus_alignment_table <- function(data, sequences, loci, caller) {
 #' local <- focus_ggchord_data(bundle, loci)
 #' ggchord(local$sequences) + geom_gene(data=local$features$genes)
 focus_ggchord_data <- function(x, loci, expand = 0, boundary = "trim") {
+  ggchord_local_console_errors()
   caller <- "focus_ggchord_data()"
   if (!ggchord_is_data_collection(x)) ggchord_stop(caller, ": expected a data or import collection")
   boundary <- ggchord_match_arg(boundary, c("trim", "drop"))
@@ -268,6 +269,7 @@ focus_ggchord_data <- function(x, loci, expand = 0, boundary = "trim") {
 #'   seg$layout + coord_collinear()
 segment_ggchord_data <- function(x, loci, boundary = "trim",
                                   orientation = 1, segment_gap = 2) {
+  ggchord_local_console_errors()
   data <- focus_ggchord_data(x, loci, boundary = boundary)
   sequences <- data$sequences
   row_id <- loci$row_id %||% loci$locus_id

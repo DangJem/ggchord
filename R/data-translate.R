@@ -43,6 +43,7 @@
 #' translated$residues
 translate_ggchord_cds <- function(cds, sequences, alphabet = "DNA",
     initiation = "literal", ambiguous = "error") {
+  ggchord_local_console_errors()
   caller <- "translate_ggchord_cds()"
   cds <- ggchord_project_model(cds, caller)
   alphabet <- ggchord_match_arg(alphabet, c("DNA", "RNA"))

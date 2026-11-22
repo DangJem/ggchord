@@ -40,6 +40,7 @@ PositionGgchordFeature <- ggproto(
 #'     position = position_strand(list(A = c("+" = 2, "-" = -3), B = 1))) +
 #'   coord_collinear()
 position_strand <- function(offset = 1) {
+  ggchord_local_console_errors()
   ggchord_check_argument_names(sys.call(), sys.function())
   ggproto(
     NULL, PositionGgchordFeature,
@@ -73,6 +74,7 @@ position_strand <- function(offset = 1) {
 #'   geom_feature(data = genes, position = position_offset(c(A = 2, B = -1))) +
 #'   coord_collinear()
 position_offset <- function(offset = 0) {
+  ggchord_local_console_errors()
   ggchord_check_argument_names(sys.call(), sys.function())
   ggproto(
     NULL, PositionGgchordFeature,

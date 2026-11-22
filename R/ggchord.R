@@ -76,6 +76,7 @@ globalVariables(c(
 #'
 #' ggchord(data = seqs) + geom_gene(data = genes) + coord_collinear()
 ggchord <- function(data = NULL, mapping = aes(), ...) {
+  ggchord_local_console_errors()
   ggchord_check_argument_names(sys.call(), sys.function())
   if (length(list(...))) ggchord_stop("ggchord(): `...` must be empty")
   if (!ggplot2::is_mapping(mapping)) ggchord_stop("ggchord(): mapping must be aes()")
@@ -111,6 +112,7 @@ ggchord <- function(data = NULL, mapping = aes(), ...) {
 #'   layer_id(geom_point(data = data.frame(x = 0, y = 0),
 #'     aes(x, y), inherit.aes = FALSE), "canvas_points")
 layer_id <- function(layer, id) {
+  ggchord_local_console_errors()
   if (!inherits(layer, "Layer")) ggchord_stop("layer_id(): layer must be a ggplot2 Layer")
   ggchord_check_layer_id(id)
   copy <- ggproto(NULL, layer)
@@ -133,6 +135,7 @@ layer_id <- function(layer, id) {
 #' @return A ggchord object
 #' @export
 `+.ggchord` <- function(e1, e2) {
+  ggchord_local_console_errors()
   # Compose ordinary lists through the same per-component bookkeeping as +.
   if (identical(class(e2), "list")) return(Reduce(`+`, e2, init = e1))
 

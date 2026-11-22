@@ -33,6 +33,7 @@
 #'   geom_gene(data = genes) + coord_collinear()
 #' ggchord_fusion(list(overview = p_over, detail = p_detail))
 ggchord_fusion <- function(panels, layout = layout_fusion_grid(), guides = "keep") {
+  ggchord_local_console_errors()
   ids <- names(panels)
   if (!is.list(panels) || !length(panels) || length(ids) != length(panels) ||
       anyNA(ids) || any(!nzchar(ids)) || anyDuplicated(ids))
@@ -88,6 +89,7 @@ ggchord_fusion <- function(panels, layout = layout_fusion_grid(), guides = "keep
 #' ggchord_fusion(list(left = p_basic, right = p_basic),
 #'   layout = layout_fusion(areas))
 layout_fusion <- function(areas, units = "relative", allow_overlap = FALSE) {
+  ggchord_local_console_errors()
   caller <- "layout_fusion()"
   fields <- c("xmin", "xmax", "ymin", "ymax")
   ggchord_require_columns(areas, c("panel", fields), caller)
@@ -139,6 +141,7 @@ layout_fusion <- function(areas, units = "relative", allow_overlap = FALSE) {
 #'   layout = layout_fusion_grid(matrix(c("a", "b"), nrow = 1),
 #'                              widths = c(2, 1)))
 layout_fusion_grid <- function(design = NULL, widths = 1, heights = 1) {
+  ggchord_local_console_errors()
   if (!is.null(design) && (!is.matrix(design) || !is.character(design) ||
       !length(design) || all(is.na(design)) || any(!is.na(design) & !nzchar(design))))
     ggchord_stop("layout_fusion_grid(): design must be a nonempty character matrix")
@@ -246,6 +249,7 @@ ggchord_fusion_check_path <- function(path, label) {
 #'   scale_fill_gradient(limits = c(0, 100))
 fusion_ribbon <- function(mapping = NULL, data = NULL, route = "curve",
     curvature = 0.5, ..., na.rm = FALSE, show.legend = NA, id = auto_id()) {
+  ggchord_local_console_errors()
   caller <- "fusion_ribbon()"
   roles <- c("qpanel_path", "spanel_path", "qaccver", "saccver",
     "qstart", "qend", "sstart", "send", "qinstance", "sinstance", "qstrand", "sstrand")
@@ -321,6 +325,7 @@ ggchord_fusion_subset_ribbons <- function(plot, ids) {
 
 #' @export
 `+.ggchord_fusion` <- function(e1, e2) {
+  ggchord_local_console_errors()
   if (inherits(e2, c("ggchord_fusion_ribbon", "ggchord_fusion_zoom"))) {
     family <- if (inherits(e2, "ggchord_fusion_ribbon")) "ribbons" else "zooms"
     prefix <- if (family == "ribbons") "ribbon" else "zoom"
@@ -812,6 +817,7 @@ ggchord_fusion_path <- function(q, s, curvature) {
 
 #' @export
 print.ggchord_fusion <- function(x, ...) {
+  ggchord_local_console_errors()
   set_last_plot(x)
   grid::grid.newpage()
   grid.draw(x)
@@ -821,6 +827,7 @@ print.ggchord_fusion <- function(x, ...) {
 #' @export
 #' @importFrom grid grid.draw
 grid.draw.ggchord_fusion <- function(x, recording = TRUE) {
+  ggchord_local_console_errors()
   # Keep the composition in the display list, rather than fixed-mm primitives.
   # Recorded plots may be replayed on a device with a different size or DPI.
   # Rebuild there so panels, interval fronts and leaders share the final metric.
@@ -834,6 +841,7 @@ grid.draw.ggchord_fusion <- function(x, recording = TRUE) {
 
 #' @export
 ggplot_build.ggchord_fusion <- function(plot, ...) {
+  ggchord_local_console_errors()
   ggchord_stop("Fusion is a composition: use grid.draw(), ggsave() or export_ggchord_layout()")
 }
 

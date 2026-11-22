@@ -230,6 +230,7 @@ ggchord_conversion_seqinfo <- function(x, caller) {
 #' ggchord(ref) + geom_seq()
 as_ggchord_seq <- function(x, columns = NULL, lengths = NULL, ids = NULL,
                            sequence_unit = NULL, topology = NULL) {
+  ggchord_local_console_errors()
   caller <- "as_ggchord_seq()"
   map <- data.frame(source = character(), output = character(), stringsAsFactors = FALSE)
   metadata <- NULL
@@ -392,6 +393,7 @@ as_ggchord_seq <- function(x, columns = NULL, lengths = NULL, ids = NULL,
 #'   accver = "chrom", start = "begin", end = "finish", strand = "direction"))
 #' ggchord(seqs) + geom_feature(data = features)
 as_ggchord_feature <- function(x, columns = NULL, sequence_unit = NULL) {
+  ggchord_local_console_errors()
   caller <- "as_ggchord_feature()"
   out <- ggchord_convert_feature(x, columns)
   if (any(out$start > out$end)) ggchord_stop(caller,
@@ -473,6 +475,7 @@ ggchord_convert_feature <- function(x, mapping, unified = FALSE) {
 #' paired <- as_ggchord_link(links, kind = "interval", sequence_unit = "bp")
 #' ggchord(seqs) + geom_link_ribbon(data = paired)
 as_ggchord_link <- function(x, columns = NULL, kind = "interval", sequence_unit = NULL) {
+  ggchord_local_console_errors()
   caller <- "as_ggchord_link()"
   kind <- ggchord_match_arg(kind, c("interval", "point"))
   endpoints <- if (kind == "interval") c("qstart", "qend", "sstart", "send") else c("qpos", "spos")

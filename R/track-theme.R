@@ -25,6 +25,7 @@
 #'   coord_collinear()
 guide_track_axis <- function(position = "start", sequences = NULL,
     angle = waiver(), check.overlap = FALSE, theme = NULL) {
+  ggchord_local_console_errors()
   ggchord_check_argument_names(sys.call(), sys.function())
   position <- ggchord_match_choice(position, c("start", "end"), "position")
   ggchord_check_axis_selection(sequences)

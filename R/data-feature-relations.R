@@ -63,6 +63,7 @@ ggchord_relation_features <- function(data, caller) {
 #' unlink(f)
 read_feature_relations <- function(file, format = "pairs", features = NULL,
     unmatched = "error", source_file = FALSE) {
+  ggchord_local_console_errors()
   caller <- "read_feature_relations()"
   format <- ggchord_match_arg(format, c("pairs", "named_groups", "groups"))
   unmatched <- ggchord_match_arg(unmatched, c("error", "report"))

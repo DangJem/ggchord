@@ -163,6 +163,7 @@ ggchord_bundle_binned_links <- function(data, grid, min_bundle) {
 #' ggchord(seqs) + geom_link_ribbon(data=bundled)
 bundle_ggchord_links <- function(data, sequences, bins = 80, min_bundle = 2,
                                  weight = NULL, group_by = NULL) {
+  ggchord_local_console_errors()
   caller <- "bundle_ggchord_links()"
   if (!is.null(weight) && (!is.character(weight) || length(weight) != 1L ||
       !weight %in% names(data))) ggchord_stop(caller, ": weight must name an input column")
@@ -202,6 +203,7 @@ filter_ggchord_links <- function(data, seq_ids = NULL, min_pident = NULL,
     max_pident = NULL, min_length = NULL, max_evalue = NULL, min_bitscore = NULL,
     min_query_coverage = NULL, min_subject_coverage = NULL, keep_pairs = NULL,
     drop_self_links = FALSE, sort_by = NULL) {
+  ggchord_local_console_errors()
   result <- ggchord_filter_link_rows(data, seq_ids = seq_ids, min_pident = min_pident,
     max_pident = max_pident, min_length = min_length, max_evalue = max_evalue,
     min_bitscore = min_bitscore, min_query_coverage = min_query_coverage,
@@ -264,6 +266,7 @@ ggchord_exact_link_representatives <- function(compared, kept, removed) {
 #' data_report(unique_links)$changes
 deduplicate_ggchord_links <- function(data, by = "exact", tolerance = 0,
                                        keep = "first", min_reciprocal_overlap = 0.9) {
+  ggchord_local_console_errors()
   by <- ggchord_match_arg(by, c("exact", "coordinates", "overlap"))
   keep <- ggchord_match_arg(keep, c("first", "longest", "best_pident"))
   links <- as_ggchord_link(data)
@@ -334,6 +337,7 @@ deduplicate_ggchord_links <- function(data, by = "exact", tolerance = 0,
 #' data_report(summaries)$lineage
 merge_ggchord_links <- function(data, max_gap = 0, max_pident_difference = NULL,
     group_by = NULL, extra_columns = "consistent", identity_summary = "none") {
+  ggchord_local_console_errors()
   caller <- "merge_ggchord_links()"
   max_gap <- ggchord_link_axis_pair(max_gap, caller, "max_gap")
   identity_summary <- ggchord_match_arg(identity_summary, c("none", "weighted_mean"))

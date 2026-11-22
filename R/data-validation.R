@@ -233,6 +233,7 @@ ggchord_data_validate_table <- function(data, role, references, enabled, add) {
 #' validate_ggchord_data(genes, role="feature", sequences=seqs, action="error")
 validate_ggchord_data <- function(x, role = NULL, sequences = NULL, action = "report",
                                   checks = c("schema", "coordinates", "units", "references", "provenance")) {
+  ggchord_local_console_errors()
   caller <- "validate_ggchord_data()"
   action <- ggchord_match_arg(action, c("report", "warn", "error"))
   roles <- c(features = "feature", links = "link", tracks = "track", alignments = "alignment")
@@ -292,6 +293,7 @@ validate_ggchord_data <- function(x, role = NULL, sequences = NULL, action = "re
 #' genomes <- data.frame(genome_id=c("genomeA", "genomeB"))
 #' validate_ggchord_hierarchy(ref, genomes)
 validate_ggchord_hierarchy <- function(sequences, genomes, action = "report") {
+  ggchord_local_console_errors()
   action <- ggchord_match_arg(action, c("report", "warn", "error"))
   reference <- validate_ggchord_data(sequences, role = "sequence")
   seq_key <- sequences

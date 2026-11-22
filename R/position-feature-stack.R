@@ -37,6 +37,7 @@
 position_feature_stack <- function(
     spacing = 1, base_position = position_identity(), direction = "positive",
     order = "source") {
+  ggchord_local_console_errors()
   ggchord_check_argument_names(sys.call(), sys.function())
   automatic_base <- missing(base_position)
   direction <- ggchord_match_arg(direction, c("positive", "negative", "strand"))

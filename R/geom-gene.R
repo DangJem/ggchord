@@ -44,6 +44,7 @@
 geom_gene <- function(mapping = NULL, data = NULL, shape = "arrow",
     thickness = 2, stat = "identity", position = position_strand(), ...,
     na.rm = FALSE, show.legend = NA, inherit.aes = TRUE, id = auto_id()) {
+  ggchord_local_console_errors()
   ggchord_check_argument_names(sys.call(), sys.function())
   ggchord_feature_layer(mapping, data, shape, !missing(shape), thickness,
     stat, position, list(...), na.rm, show.legend, inherit.aes, id,
@@ -89,6 +90,7 @@ geom_gene_label <- function(mapping = NULL, data = NULL, stat = "identity",
     anchor_layer = auto_anchor(), anchor = "middle", position = NULL,
     label_layout = label_layout_fixed(orientation = "horizontal"), ..., na.rm = FALSE,
     show.legend = FALSE, inherit.aes = TRUE, id = auto_id()) {
+  ggchord_local_console_errors()
   ggchord_check_argument_names(sys.call(), sys.function())
   layer <- geom_feature_label(mapping, data, stat, anchor_layer, anchor, position, label_layout,
     ..., na.rm = na.rm, show.legend = show.legend, inherit.aes = inherit.aes, id = id)
@@ -135,6 +137,7 @@ geom_gene_label_repel <- function(mapping = NULL, data = NULL, stat = "identity"
     anchor_layer = auto_anchor(), anchor = "middle", position = NULL,
     label_layout = label_layout_repel(), ..., na.rm = FALSE,
     show.legend = FALSE, inherit.aes = TRUE, id = auto_id()) {
+  ggchord_local_console_errors()
   ggchord_check_argument_names(sys.call(), sys.function())
   geom_gene_label(mapping, data, stat, anchor_layer, anchor, position, label_layout,
     ..., na.rm = na.rm, show.legend = show.legend, inherit.aes = inherit.aes, id = id)
@@ -180,6 +183,7 @@ geom_primer_label <- function(mapping = NULL, data = NULL, stat = "identity",
     anchor_layer = auto_anchor(), anchor = "head", position = NULL,
     label_layout = label_layout_fixed(), ..., na.rm = FALSE,
     show.legend = FALSE, inherit.aes = TRUE, id = auto_id()) {
+  ggchord_local_console_errors()
   ggchord_check_argument_names(sys.call(), sys.function())
   layer <- geom_feature_label(mapping, data, stat, anchor_layer, anchor, position, label_layout,
     ..., na.rm = na.rm, show.legend = show.legend, inherit.aes = inherit.aes, id = id)
@@ -227,6 +231,7 @@ geom_primer_label_repel <- function(mapping = NULL, data = NULL, stat = "identit
     anchor_layer = auto_anchor(), anchor = "head", position = NULL,
     label_layout = label_layout_repel(), ..., na.rm = FALSE,
     show.legend = FALSE, inherit.aes = TRUE, id = auto_id()) {
+  ggchord_local_console_errors()
   ggchord_check_argument_names(sys.call(), sys.function())
   geom_primer_label(mapping, data, stat, anchor_layer, anchor, position, label_layout,
     ..., na.rm = na.rm, show.legend = show.legend, inherit.aes = inherit.aes, id = id)

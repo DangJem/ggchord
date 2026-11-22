@@ -113,6 +113,7 @@ ggchord_variant_dictionary <- function(tables) {
 #' }
 read_vcf <- function(file, structural = FALSE,
                      python = 'python3', source_file = FALSE) {
+  ggchord_local_console_errors()
   caller <- 'read_vcf()'
   ggchord_conversion_require('VariantAnnotation', caller)
   for (name in c('structural', 'source_file')) {

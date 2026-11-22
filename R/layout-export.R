@@ -43,6 +43,7 @@
 #'   width = 8, height = 5, units = "in", device = "pdf")
 export_ggchord_layout <- function(plot, layers = NULL, stages = "geometry",
     width = NULL, height = NULL, units = "in", device = NULL, dpi = 300) {
+  ggchord_local_console_errors()
   caller <- "export_ggchord_layout()"
   ggchord_output_plot(plot, caller)
   choices <- c("source", "mapped", "statistic", "geometry")

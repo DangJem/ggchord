@@ -28,6 +28,7 @@
 #' local_signal <- focus_ggchord_track(signal, seqs, loci, type="point")
 #' data_report(local_signal)$lineage
 focus_ggchord_track <- function(data, sequences, loci, type = "point", boundary = "trim") {
+  ggchord_local_console_errors()
   seq_data <- sequences
   type <- ggchord_match_arg(type, c("point", "interval"))
   boundary <- ggchord_match_arg(boundary, c("trim", "drop"))

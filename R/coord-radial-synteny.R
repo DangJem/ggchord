@@ -33,6 +33,7 @@
 #'   coord_radial_synteny(start_angle = 90)
 coord_radial_synteny <- function(start_angle = 0, direction = "clockwise",
     xlim = NULL, ylim = NULL, expand = FALSE, clip = "on", fit = "geometry") {
+  ggchord_local_console_errors()
   ggchord_check_argument_names(sys.call(), sys.function())
   direction <- ggchord_coord_direction(start_angle, direction)
   base <- coord_collinear(ratio = 1, xlim = xlim, ylim = ylim,

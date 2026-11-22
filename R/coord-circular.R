@@ -38,6 +38,7 @@ CoordCircular <- ggproto(
 #'   coord_circular(start_angle = 90)
 coord_circular <- function(start_angle = 0, direction = "clockwise",
     xlim = NULL, ylim = NULL, expand = FALSE, clip = "on", fit = "geometry") {
+  ggchord_local_console_errors()
   ggchord_check_argument_names(sys.call(), sys.function())
   direction <- ggchord_coord_direction(start_angle, direction)
   settings <- ggchord_coord_settings(1, xlim, ylim, expand, clip, fit)

@@ -95,6 +95,7 @@ with open(sys.argv[2], 'w', encoding='utf-8') as handle:
 read_genbank <- function(file, feature_types = NULL,
     lengths = NULL, python = "python3", unsupported = "error",
     source_file = FALSE) {
+  ggchord_local_console_errors()
   caller <- "read_genbank()"
   unsupported <- ggchord_match_arg(unsupported, c("error", "report"))
   paths <- ggchord_resolve_files(file, NULL, "read_genbank")

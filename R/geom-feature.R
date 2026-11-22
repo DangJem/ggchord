@@ -382,6 +382,7 @@ ggchord_feature_layer <- function(mapping, data, shape, fixed_shape, thickness,
 geom_feature <- function(mapping = NULL, data = NULL, shape = "block",
     thickness = 2, stat = "identity", position = "identity", ...,
     na.rm = FALSE, show.legend = NA, inherit.aes = TRUE, id = auto_id()) {
+  ggchord_local_console_errors()
   ggchord_check_argument_names(sys.call(), sys.function())
   ggchord_feature_layer(mapping, data, shape, !missing(shape), thickness,
     stat, position, list(...), na.rm, show.legend, inherit.aes, id)

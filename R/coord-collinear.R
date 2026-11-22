@@ -37,6 +37,7 @@ CoordCollinear <- ggproto("CoordCollinear", CoordGgchord)
 #'   coord_collinear(axis = "x")
 coord_collinear <- function(axis = "x", ratio = NULL, xlim = NULL, ylim = NULL,
     expand = FALSE, clip = "on", fit = "geometry") {
+  ggchord_local_console_errors()
   ggchord_check_argument_names(sys.call(), sys.function())
   axis <- ggchord_match_choice(axis, c("x", "y"), "axis")
   settings <- ggchord_coord_settings(ratio, xlim, ylim, expand, clip, fit)

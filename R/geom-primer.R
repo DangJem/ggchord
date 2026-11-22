@@ -34,6 +34,7 @@
 geom_primer <- function(mapping = NULL, data = NULL, shape = "primer_arc",
     thickness = 2, stat = "identity", position = position_offset(0), ...,
     na.rm = FALSE, show.legend = NA, inherit.aes = TRUE, id = auto_id()) {
+  ggchord_local_console_errors()
   ggchord_check_argument_names(sys.call(), sys.function())
   ggchord_feature_layer(mapping, data, shape, !missing(shape), thickness,
     stat, position, list(...), na.rm, show.legend, inherit.aes, id,

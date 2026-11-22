@@ -85,6 +85,7 @@ ggchord_alignment_report <- function(source, convention) list(
 #' head(x$alignments$maf)
 #' }
 read_maf <- function(file, alphabet = "DNA", python = "python3", source_file = FALSE) {
+  ggchord_local_console_errors()
   caller <- 'read_maf()'
   alphabet <- ggchord_match_arg(alphabet, c('DNA', 'RNA', 'AA'))
   if (!is.logical(source_file) || length(source_file) != 1L || is.na(source_file))
@@ -186,6 +187,7 @@ ggchord_alignment_identity_maps <- function(query, subject, query_ids, subject_i
 #' }
 read_chain <- function(file, query_ids = NULL, subject_ids = NULL,
                        sequence_unit = "bp", python = "python3", source_file = FALSE) {
+  ggchord_local_console_errors()
   caller <- "read_chain()"
   sequence_unit <- ggchord_match_arg(sequence_unit, c("bp", "aa"))
   if (!is.logical(source_file) || length(source_file) != 1L || is.na(source_file))

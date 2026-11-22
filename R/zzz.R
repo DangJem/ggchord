@@ -67,9 +67,10 @@
 # Error signalling
 # ====================================================================
 
-# RStudio tags its own handlers. Suspend only its automatic break action
-# while signalling a package input error; unwind restores the original call.
-ggchord_local_input_error <- function(frame = parent.frame()) {
+# RStudio tags its automatic break handlers. Suspend them inside package
+# entry points, including errors raised by R or dependencies, and restore
+# the original option on return or unwind.
+ggchord_local_console_errors <- function(frame = parent.frame()) {
   if (!interactive()) return(invisible(NULL))
   hook <- getOption("error")
   if (is.call(hook)) hook <- hook[[1L]]
@@ -81,7 +82,7 @@ ggchord_local_input_error <- function(frame = parent.frame()) {
 
 ggchord_signal_input_error <- function(error) {
   class(error) <- c("ggchord_input_error", class(error))
-  ggchord_local_input_error()
+  ggchord_local_console_errors()
   stop(error)
 }
 
@@ -92,12 +93,12 @@ ggchord_stop <- function(..., call. = FALSE) {
 
 # Keep rlang's structured report or parent error for data validation and mappings.
 ggchord_abort <- function(message, class = NULL, ..., call = rlang::caller_env()) {
-  ggchord_local_input_error()
+  ggchord_local_console_errors()
   abort(message, class = c(class, "ggchord_input_error"), ..., call = call)
 }
 
 ggchord_rethrow <- function(error) {
-  if (rlang::cnd_inherits(error, "ggchord_input_error")) ggchord_local_input_error()
+  ggchord_local_console_errors()
   stop(error)
 }
 

@@ -716,6 +716,7 @@ ggchord_empty_common_features <- function() {
 find_common_features <- function(sequence, database = NULL, types = NULL, features = NULL,
     circular = NULL, mode = "dna", genetic_code = NULL, min_protein_identity = 0.9,
     min_protein_coverage = 0.8, resolve = "best") {
+  ggchord_local_console_errors()
   caller <- "find_common_features()"
   mode <- ggchord_match_arg(mode, c("dna", "protein", "reference"))
   resolve <- ggchord_match_arg(resolve, c("best", "all"))

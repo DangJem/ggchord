@@ -275,6 +275,7 @@ read_blast_single <- function(file, format = c("auto", "outfmt6", "outfmt7", "cu
 #' unlink(f)
 read_blast <- function(file, format = "auto", col_names = NULL,
                        comment = "#", source_file = FALSE) {
+  ggchord_local_console_errors()
   format <- ggchord_match_arg(format, c("auto", "outfmt6", "outfmt7", "custom"))
   paths <- ggchord_resolve_files(file, NULL, "read_blast")
   out <- lapply(paths, function(f) {
@@ -429,6 +430,7 @@ read_gff3_single <- function(file, feature_types = "CDS",
 read_gff3 <- function(file, feature_types = NULL,
                       label_from = c("product", "Name", "gene", "ID"),
                       unstranded = "keep", source_file = FALSE) {
+  ggchord_local_console_errors()
   unstranded <- ggchord_match_arg(unstranded, c("keep", "drop"))
   paths <- ggchord_resolve_files(file, NULL, "read_gff3")
   out <- lapply(paths, function(f) {
@@ -544,6 +546,7 @@ read_fasta_lengths_single <- function(file, header_delim = NULL, keep_sequence =
 #' unlink(f)
 read_fasta_lengths <- function(file, sequence_unit, header_delim = NULL,
                                keep_sequence = FALSE, source_file = FALSE) {
+  ggchord_local_console_errors()
   if (!is.logical(keep_sequence) || length(keep_sequence) != 1L || is.na(keep_sequence))
     ggchord_stop("read_fasta_lengths(): keep_sequence must be TRUE or FALSE")
   if (missing(sequence_unit) || is.null(sequence_unit))
