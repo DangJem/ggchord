@@ -1036,10 +1036,17 @@ ggchord_expand_feature_render_runs <- function(data, lengths = NULL,
       rows[[length(rows) + 1L]] <- data[i, , drop = FALSE]
       next
     }
-    if (isTRUE(circular) && data$start[i] > data$end[i]) {
-      length <- unname(lengths[as.character(data$accver[i])])
-      if (length(length) == 1L && is.finite(length))
-        runs <- ggchord_join_circular_feature_runs(runs, length)
+    if (isTRUE(circular) && nrow(runs) > 1L) {
+      id <- as.character(data$accver[i])
+      length <- unname(lengths[id])
+      segments <- data$segments[[i]]
+      wraps <- isTRUE(data$cross_origin[i]) || isTRUE(data$crosses_origin[i]) ||
+        data$start[i] > data$end[i] ||
+        ggchord_segments_cross_seam(segments, length)
+      if (wraps && length(length) == 1L && is.finite(length)) {
+        strand <- (data$.feature_biological_strand %||% data$strand)[i]
+        runs <- ggchord_join_circular_feature_runs(runs, length, strand, segments)
+      }
     }
     for (j in seq_len(nrow(runs))) {
       row <- data[i, , drop = FALSE]
@@ -1063,29 +1070,43 @@ ggchord_expand_feature_render_runs <- function(data, lengths = NULL,
   out
 }
 
-# Join only truly adjacent, equally coloured pieces. Source gaps and colour
-# boundaries remain visible; the source length is never inferred from segments.
-ggchord_join_circular_feature_runs <- function(runs, sequence_length) {
-  repeat {
-    pair <- NULL
-    for (i in seq_len(nrow(runs))) {
-      if (!is.null(pair)) break
-      for (j in setdiff(seq_len(nrow(runs)), i)) {
-        adjacent <- runs$end[i] + 1 == runs$start[j] ||
-          (runs$end[i] == sequence_length && runs$start[j] == 1)
-        same_colour <- identical(tolower(runs$color[i]), tolower(runs$color[j]))
-        if (adjacent && same_colour) { pair <- c(i,j); break }
-      }
-    }
-    if (is.null(pair)) break
-    i <- pair[1L]; j <- pair[2L]
-    join <- runs$end[i]
-    runs$end[i] <- runs$end[j]
-    runs$draw_head[i] <- runs$draw_head[i] || runs$draw_head[j]
-    runs$draw_start_head[i] <- runs$draw_start_head[i] || runs$draw_start_head[j]
-    runs$boundaries[[i]] <- c(runs$boundaries[[i]], join, runs$boundaries[[j]])
-    runs$boundary_styles[[i]] <- c(runs$boundary_styles[[i]], "dotted", runs$boundary_styles[[j]])
-    runs <- runs[-j, , drop=FALSE]
-  }
-  runs
+ggchord_segments_cross_seam <- function(segments, length) {
+  if (!is.data.frame(segments) || is.null(segments$segment_index) ||
+      length(length) != 1L || !is.finite(length)) return(FALSE)
+  pieces <- segments[!(segments$segment_type %||% "standard") %in% "gap", , drop = FALSE]
+  pieces <- pieces[order(pieces$segment_index), , drop = FALSE]
+  any(head(pieces$end, -1L) == length & tail(pieces$start, -1L) == 1)
+}
+
+# The source table may store an ascending bounding interval for a wrapped
+# entity. Use its segment order for the terminal heads, and merge the runs
+# meeting at the display seam only if they truly continue across it.
+ggchord_join_circular_feature_runs <- function(runs, sequence_length, strand, segments) {
+  before <- which(runs$end == sequence_length)
+  after <- which(runs$start == 1)
+  if (length(before) != 1L || length(after) != 1L || before == after) return(runs)
+
+  # Along a wrapped entity, source positions increase up to the seam, then
+  # restart at 1. The segment order survives the coordinate sort used to
+  # construct runs. A start/end exactly at the seam is a real biological
+  # end only when its counterpart is absent.
+  order <- order(runs$segment_index, seq_len(nrow(runs)))
+  if (match(before, order) > match(after, order)) order <- rev(order)
+  runs$draw_head[] <- FALSE
+  runs$draw_start_head[] <- FALSE
+  if (strand == "-") runs$draw_head[order[1L]] <- TRUE
+  if (strand %in% c("+", "+/-")) runs$draw_head[tail(order, 1L)] <- TRUE
+  if (strand == "+/-") runs$draw_start_head[order[1L]] <- TRUE
+
+  gap <- if (is.data.frame(segments)) segments[segments$segment_type %in% "gap", , drop = FALSE]
+  seam_gap <- NROW(gap) && any(gap$start > gap$end |
+    gap$start <= 1 | gap$end >= sequence_length)
+  if (seam_gap || !identical(tolower(runs$color[before]), tolower(runs$color[after])))
+    return(runs)
+  runs$end[before] <- runs$end[after]
+  runs$draw_head[before] <- runs$draw_head[before] || runs$draw_head[after]
+  runs$draw_start_head[before] <- runs$draw_start_head[before] || runs$draw_start_head[after]
+  runs$boundaries[[before]] <- c(runs$boundaries[[before]], runs$boundaries[[after]])
+  runs$boundary_styles[[before]] <- c(runs$boundary_styles[[before]], runs$boundary_styles[[after]])
+  runs[-after, , drop = FALSE]
 }

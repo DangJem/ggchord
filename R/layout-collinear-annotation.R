@@ -174,6 +174,7 @@ ggchord_collinear_region_geometry <- function(p, layout) {
 
 ggchord_collinear_axis <- function(p, layout) {
   layout$axis_lines <- layout$axis_ticks <- data.frame()
+  layout$axis_label_hide_overlaps <- isTRUE(p$axis_label_hide_overlaps)
   if (!isTRUE(p$show_axis)) return(layout)
   ref <- layout$sequence_reference
   text_units <- layout$text_units_per_inch
@@ -240,12 +241,6 @@ ggchord_collinear_axis <- function(p, layout) {
   }
   layout$axis_lines <- if (length(lines)) do.call(rbind, lines) else data.frame()
   layout$axis_ticks <- if (length(ticks)) do.call(rbind, ticks) else data.frame()
-  if (isTRUE(p$axis_label_hide_overlaps) && nrow(layout$axis_ticks)) {
-    layout$axis_ticks <- ggchord_hide_text_overlaps(layout$axis_ticks,
-      ggchord_repel_points(layout$seq_arcs, layout$gene_polys,
-        data.frame(x = numeric(), y = numeric()), data.frame(), show_axis = FALSE),
-      units_per_inch = text_units)
-  }
   layout
 }
 

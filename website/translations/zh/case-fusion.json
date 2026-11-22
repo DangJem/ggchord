@@ -1,5 +1,5 @@
 {
-  "source_sha256": "946f72cd8f60a18d428fec54c9e2705af44594e08def0adbe6aa46a3029fea95",
+  "source_sha256": "4417bfddb21c7499de0c08a32e5d1a724de9b675a3e2d202b7fe0463b197cfe0",
   "blocks": {
     "0": {
       "source_sha256": "8d23103772c0ba0289cdc1584503ebd625d3252c8d898ec758dfb5ae902df91d",
@@ -22,9 +22,9 @@
       "translation": "## 读图 {#reading}\n"
     },
     "7": {
-      "source_sha256": "5c6954093ce2ab588a6d9c054a0c18590a485e6451235af5749be35cae4f34a7",
+      "source_sha256": "8bbc56e635fa38776485d6f18cdab026a98ac9f0d3b650824d670397c8c7c1bf",
       "status": "reviewed",
-      "translation": "先读 A（弦图）、B（共线性）和 C（径向）。跨面板带连接对应区间。D 中的框标出 E 放大的窗口；E 的引线指出 F 中显示字符的短区间。面板内比对的一致性色标与跨面板的对应关系图例分别说明各自的连接。\n"
+      "translation": "先读 A（弦图）、B（共线性）和 C（径向）。跨面板带连接对应区间。D 中的框标出 E 放大的窗口；D 到 E、E 到 F 的虚线指向详图的外框。F 用带描边的方格显示来源碱基，原始坐标标在方格下方。面板内比对的一致性色标与跨面板的对应关系图例分别说明各自的连接。\n"
     },
     "9": {
       "source_sha256": "de1eb696f2ab1c739faa9f8ef7b26fc480da4593cffdb8c750e451460f700193",

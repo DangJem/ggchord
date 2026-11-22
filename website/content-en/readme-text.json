@@ -155,24 +155,6 @@
   "output-intro": {
     "en": "Preview and save at the same explicit dimensions so labels are arranged for the intended figure size."
   },
-  "inspiration-grammar": {
-    "en": "Provides the layered grammar and the division of responsibilities between mappings, scales, guides, geometry, coordinates and themes. ggchord follows this model so users can compose layers and supply their own scales and styles."
-  },
-  "inspiration-naming": {
-    "en": "Informs the compact query/subject field names used to trace alignment records, endpoints and sequence identifiers. Plotting consumes existing results rather than running an alignment program."
-  },
-  "inspiration-circular": {
-    "en": "Circos informs circular information hierarchy and ribbon presentation; circlize is a capability comparison for multi-track layouts and explicit track/ring contracts."
-  },
-  "inspiration-synteny": {
-    "en": "Offer clear examples of strand-aware gene arrows, gene-cluster comparisons and linear synteny. They inform how sequence direction, feature placement and connections are presented together."
-  },
-  "inspiration-features": {
-    "en": "Provides a reference for readable feature annotations, crowded-label handling and local feature layouts. It informs the emphasis on connecting labels clearly to their source intervals."
-  },
-  "inspiration-preview": {
-    "en": "Informs the workflow of previewing a static figure at its intended export size. ggchord uses view_ggchord() for sized preview and standard ggsave() for saving."
-  },
   "license": {
     "en": "license"
   },
@@ -193,33 +175,6 @@
   },
   "sankey-alt": {
     "en": "Sankey flagship derived from the four-genome Collinear example"
-  },
-  "inspiration-grammar-title": {
-    "en": "Graphical grammar and sequence relationships"
-  },
-  "inspiration-features-title": {
-    "en": "Gene arrows, annotation placement and local comparison"
-  },
-  "inspiration-genomes": {
-    "en": "Informs tidy multi-table inputs, focus/sync workflows, feature stacking, local anchoring and local display reversal. Its approach helps keep data preparation distinct from display choices."
-  },
-  "inspiration-detail-title": {
-    "en": "Local magnification, aligned characters and figure preview"
-  },
-  "inspiration-magnify": {
-    "en": "Provides a reference for connecting an overview to a magnified inset. ggchord develops this presentation idea around explicit source intervals and independently registered sequence views."
-  },
-  "inspiration-alignment": {
-    "en": "Listed as a character-view research reference in v0.20.0. In v0.28.0, its residue cells and chemistry palettes were inspected directly and informed geom_residue() background sizing and default fill scales. Glyph rendering, exact source registration and user-scale priority remain independently implemented."
-  },
-  "inspiration-columns": {
-    "en": "[ggseqalign](https://www.bioconductor.org/packages/release/bioc/html/ggseqalign.html), [ggseqlogo](https://omarwagih.github.io/ggseqlogo/), [Jalview](https://www.jalview.org/help/html/features/annotation.html) and [ESPript](https://espript.ibcp.fr/ESPript/ESPript/) are research comparisons for aligned characters, sequence logos, column annotations or static output. Their integrations, logo, consensus and conservation layers are not implemented here. Historical records do not establish that each influenced the current layout algorithms."
-  },
-  "inspiration-title": {
-    "en": "Design inspiration"
-  },
-  "inspiration-intro": {
-    "en": "The entries distinguish documented design influences from projects considered only in capability research. See the [design-source audit](tools/site-audit/design-inspiration.md) for evidence."
   },
   "get-started": {
     "en": "Get started"

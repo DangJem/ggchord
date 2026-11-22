@@ -56,6 +56,8 @@ compute_chord_layout <- function(
     seqRadius, seq_curvature, orientation, seq_gap, clockwise = FALSE,
     # Ribbon parameters
     ribbon_data = NULL, ribbonGap,
+    ribbon_offset = NULL, ribbon_clearance = NULL, ribbon_normal_mm = ggchord_units_per_mm(),
+    ribbon_gap_mm = NULL, ribbon_avoid_strength = .5,
     ribbon_gap_auto = FALSE, ribbon_obstacles = NULL, link_avoid = "none",
     ribbon_color_scheme, ribbon_colors, ribbon_alpha,
     ribbon_color_by = NULL,
@@ -122,14 +124,18 @@ compute_chord_layout <- function(
     # Global parameters
     rotation, debug = FALSE,
     geometry_cache = NULL, length_mode = "proportional", axis_text_style = list(),
-    ring = NULL
+    ring = NULL, position_circular_features = NULL
 ) {
   # Only declared stage results enter the next context. Each stage has its
   # own frame; temporary loops and closures cannot write into another stage.
   context <- mget(names(formals(compute_chord_layout)), envir = environment(),
     inherits = FALSE)
-  for (stage in list(ggchord_layout_sequence_step, ggchord_layout_axis_step,
-      ggchord_layout_ribbon_step, ggchord_layout_annotation_step,
+  context <- ggchord_layout_run_stage(context, ggchord_layout_sequence_step)
+  context <- ggchord_layout_run_stage(context, ggchord_layout_axis_step)
+  if (!is.null(position_circular_features))
+    context$gene_data <- position_circular_features(context$gene_data,
+      context$axis_ticks, context$rot_rad, rotation)
+  for (stage in list(ggchord_layout_ribbon_step, ggchord_layout_annotation_step,
       ggchord_layout_transform_step, ggchord_layout_label_step,
       ggchord_layout_finalize_step)) {
     context <- ggchord_layout_run_stage(context, stage)

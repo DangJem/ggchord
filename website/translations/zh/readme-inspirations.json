@@ -1,50 +1,105 @@
 {
-  "source_sha256": "2d54a6d03a37667e48ebd495c15bccd6bd16534665e7ee9e6a461afac2dfa675",
+  "source_sha256": "c64413ada351533f55f342d0283f0159f90cbe87709f412caf4947ed33afea5e",
   "blocks": {
     "0": {
-      "source_sha256": "e5d1564fd068b48b85d91530d05eecd350a727afec89c390ac730ac1ac0dc082",
+      "source_sha256": "f55c75a6e010f2ff186f631a6d8f3bf07ee20395e8267fe517440b995c336a20",
       "status": "reviewed",
-      "translation": "## 设计参考与致谢\n"
+      "translation": "## 设计参考\n"
     },
     "1": {
-      "source_sha256": "6eab1fc51629cac4584f6003b39ba2386416e79fb52b598fb241ad66fa63df85",
+      "source_sha256": "19a51176acae43268ab969d769fd7b930dc711ccc7d3d934e612d6a0daef4c85",
       "status": "reviewed",
-      "translation": "ggchord 的图形语法、基因组表达和预览流程参考了以下开源项目与公共工具：\n"
+      "translation": "ggchord 的设计参考了成熟的开源项目及科学可视化方法。这些参考涵盖绘图语法、基因组布局、注释策略和多视图组合等方面。以下分别说明各项目对 ggchord 设计过程的具体参考价值；列出参考对象不代表直接复用了其算法或实现。\n"
     },
     "2": {
-      "source_sha256": "646e431c8c52d7a16ba5e1a23b514bc79d936d81f75fd610fd93248df3ed690e",
+      "source_sha256": "ed98c41b758bf76207ca95b1735f9e94a1a202a9ce5485ce6753ef3f37ed3659",
       "status": "reviewed",
-      "translation": "- [ggplot2](https://ggplot2.tidyverse.org/)：以图层组合图形，区分数据映射、标度、几何、坐标与主题。\n"
+      "translation": "### 绘图语法与 API 架构\n"
     },
     "3": {
-      "source_sha256": "a87f4b251bc434893be05af774adbb44490344f5cd9f2e512911256c3d2b6e66",
+      "source_sha256": "7500b1456b5eecc2fd7f43ad5574fc396effdfa009fd6dcb1262ac1115febcbc",
       "status": "reviewed",
-      "translation": "- [BLAST](https://blast.ncbi.nlm.nih.gov/doc/blast-help/)：借鉴 query/subject 表格字段命名，便于追踪比对端点与序列标识。\n"
+      "translation": "- [ggplot2](https://ggplot2.tidyverse.org/) — 提供分层绘图语法基础，明确数据映射、几何、统计、位置、标度、图例、坐标与主题的职责。ggchord 在这一架构上扩展基因组可视化能力，支持图层组合和用户自定义样式。\n"
     },
     "4": {
-      "source_sha256": "c755a4fbf9f6a41caffe42648765a1bb35fb096a6614cf4b66f69b9abb497601",
+      "source_sha256": "1d60381886f6d931954b98dcd646d0e6c294caf8a47ef7ad7885b1adbaffcff4",
       "status": "reviewed",
-      "translation": "- [Circos](https://circos.ca/) 和 [circlize](https://github.com/jokergoo/circlize)：参考环形信息层级、连接带表达与多轨道的阅读秩序。\n"
+      "translation": "- [gggenomes](https://thackl.github.io/gggenomes/) — 为基因组序列与注释的数据组织、链方向布局、特征堆叠、序列方向调整、锚点对齐和局部聚焦工作流提供重要参考。ggchord 借鉴这些领域设计理念，同时保留独立的参考坐标与图层数据契约。\n"
     },
     "5": {
-      "source_sha256": "de39cb41a13f414b302eedcde1fc79830fca1339aac393ee8a7ac9edbf48d416",
+      "source_sha256": "8b7049ae96c6277050ce87f2b037c8550bf380bb0f36205cb098b0addf101651",
       "status": "reviewed",
-      "translation": "- [clinker](https://github.com/gamcil/clinker)、[gggenes](https://github.com/wilkox/gggenes) 和 [genoPlotR](https://genoplotr.r-forge.r-project.org/)：参考基因箭头、基因簇与线性共线性比较的可读表达。\n"
+      "translation": "- [gggenes](https://wilkox.org/gggenes/) — 为具有生物学方向的基因箭头、链方向相关的位置调整，以及基因组区间长度与图形物理尺寸的区分提供参考。\n"
     },
     "6": {
-      "source_sha256": "1729de625c353b6df6d71a37582b5277f3eb49195e423a5c18e66c1f8d1b0568",
+      "source_sha256": "0f6735029efce867e8c6137db9dd0501083bdac763f915df7c5e223f6704c021",
       "status": "reviewed",
-      "translation": "- [DNA Features Viewer](https://github.com/Edinburgh-Genome-Foundry/DnaFeaturesViewer) 和 [gggenomes](https://thackl.github.io/gggenomes/)：参考注释布局、多表输入、特征堆叠及局部比较工作流。\n"
+      "translation": "### 环形与比较基因组可视化\n"
     },
     "7": {
-      "source_sha256": "6f3c542f5cc522a99442c1aa3495a5dca5a851c97cd9fc1199d732aeb9b5c5e9",
+      "source_sha256": "f7cbe79690cddf0270f89e30131a86d54fc0cb75ea41ab28ed73351c2f5150fe",
       "status": "reviewed",
-      "translation": "- [ggview](https://github.com/idmn/ggview)：参考按实际导出尺寸预览的流程；ggchord 用 `view_ggchord()` 预览，用标准 `ggsave()` 保存。\n"
+      "translation": "- [Circos](https://circos.ca/) — 为环形基因组信息的视觉组织提供灵感，包括序列扇区、多层注释和表示基因组区间关系的连接带。\n"
     },
     "8": {
-      "source_sha256": "0a0fa46dfa8a2dcbe04e49d0dd54eece53714e5fbea650433f1f982d3656f348",
+      "source_sha256": "5d63cd632913ef8b7f69e1624ca9c885a61e27bbac5667532a4a52531a7a0871",
       "status": "reviewed",
-      "translation": "这些项目为设计与比较提供了重要参考。具体可用功能、参数及运行依赖以 ggchord 的函数文档和 `DESCRIPTION` 为准。\n"
+      "translation": "- [circlize](https://github.com/jokergoo/circlize) — 为灵活的环形轨道组织、环层排列和多层基因组可视化提供设计参考。\n"
+    },
+    "9": {
+      "source_sha256": "2d47a3316a8ba59939ff6584f72a8d5ed9cb90bd372fe3675d6cd488a6329e3a",
+      "status": "reviewed",
+      "translation": "- [clinker](https://github.com/gamcil/clinker) — 为基因簇比较、方向性基因箭头，以及基因组相似性和共线性关系的清晰表达提供视觉参考。\n"
+    },
+    "10": {
+      "source_sha256": "6068a63f230655a4d08d90bfe3f9685dfadc03023422d42bdcfb50e61fa77d05",
+      "status": "reviewed",
+      "translation": "- [genoPlotR](https://genoplotr.r-forge.r-project.org/) — 为线性比较基因组布局、序列区域对齐、基因组坐标表达和多个基因组片段之间的关系展示提供参考。\n"
+    },
+    "11": {
+      "source_sha256": "24e029013882e1ca38e4e03decbd31b6a9b9dba61cf40f1b69d280fdde46af7e",
+      "status": "reviewed",
+      "translation": "### 基因组注释与多尺度可视化\n"
+    },
+    "12": {
+      "source_sha256": "70373896874ae4ed88f44f53803e7d17da85c6a198f7bad7d286f5d702650e83",
+      "status": "reviewed",
+      "translation": "- [DNA Features Viewer](https://github.com/Edinburgh-Genome-Foundry/DnaFeaturesViewer) — 为基因组特征展示、注释几何、标签位置以及高密度注释区域中的碰撞处理提供参考。\n"
+    },
+    "13": {
+      "source_sha256": "92b6136d7b2713b0f74ccc59a3ac23e1a9114edb2d40f39832dbcf6137005e30",
+      "status": "reviewed",
+      "translation": "- [ggmagnify](https://github.com/hughjonesd/ggmagnify) — 为整体图与局部放大视图之间的关联表达提供参考。ggchord 进一步围绕明确的来源区间和独立构建的子视图实现跨视图连接。\n"
+    },
+    "14": {
+      "source_sha256": "d06f4af0846d21b05820aceaa9d5b182ab395d962b801effb47e49c180c8d5a0",
+      "status": "reviewed",
+      "translation": "- [ggmsa](https://bioconductor.org/packages/ggmsa/) — 为核酸与氨基酸比对可视化、紧凑残基单元格及化学性质配色提供参考。部分残基颜色值经过适配并在 [NOTICE](../inst/NOTICE) 中注明来源；序列注册与图形渲染由 ggchord 独立实现。\n"
+    },
+    "15": {
+      "source_sha256": "0ea048d44e179f0ba5efabec07d3816a3092e2130465d5cd29020d6075d73fbb",
+      "status": "reviewed",
+      "translation": "- [ggview](https://github.com/idmn/ggview) — 为按照预定输出尺寸预览科研图形的工作流提供参考。ggchord 通过 `view_ggchord()` 提供尺寸感知的预览，并继续使用标准 `ggsave()` 保存图形。\n"
+    },
+    "16": {
+      "source_sha256": "6a074e076013e9c12226fa389569b99bcc6018b9ccf29c866c41357129cd61ef",
+      "status": "reviewed",
+      "translation": "### 数据规范与相关研究\n"
+    },
+    "17": {
+      "source_sha256": "615a56fcf5c3e11823b8e11806277cb0d48c6fe4d18f9db888ee2e247fb01ac2",
+      "status": "reviewed",
+      "translation": "- [BLAST](https://blast.ncbi.nlm.nih.gov/doc/blast-help/) — 其成熟的 query/subject 术语为 ggchord 的比对数据字段规范提供参考。ggchord 负责可视化已有比对结果，不在绘图过程中执行序列比对。\n"
+    },
+    "18": {
+      "source_sha256": "3cb4f661b332963dec46ece4bc47c2a8edd20ae7a9297e99de1d9c0e15ccd3d0",
+      "status": "reviewed",
+      "translation": "- [trackViewer](https://bioconductor.org/packages/trackViewer/) — 作为基因组信号轨道、区间测量及定量注释展示的研究参考对象。\n"
+    },
+    "19": {
+      "source_sha256": "bf2beb2821607fcfbdf374bac3c74ef7d52641b5ae7798116268599d02d2acb4",
+      "status": "reviewed",
+      "translation": "- [ggseqalign](https://bioconductor.org/packages/ggseqalign/)、[ggseqlogo](https://omarwagih.github.io/ggseqlogo/)、[Jalview](https://www.jalview.org/) 和 [ESPript](https://espript.ibcp.fr/ESPript/ESPript/) — 作为序列比对可视化、序列 Logo、残基注释及发表级序列图形的相关研究与比较对象。列入此处不代表已完成工具集成或采用其图形渲染算法。\n"
     }
   }
 }

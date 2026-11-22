@@ -32,7 +32,7 @@ spoke_labels <- function(size, along = 0) {
   })
 }
 overview <- ggchord(comparison$seq_data) +
-  geom_link_ribbon(aes(fill = pident, linetype = route_class), data = relationships, curvature = 1, bulge = 0.20,
+  geom_link_ribbon(aes(fill = pident, linetype = route_class), data = relationships, curvature = 0.86, bulge = 0.20, avoid = "smooth",
     alpha = 0.48, colour = "#3F695D", linewidth = 0.27) +
   scale_linetype_manual(values = c(neighbour = "solid", across = "dashed"), guide = "none") +
   geom_seq(aes(colour = accver), linewidth = 1.1,
@@ -43,8 +43,9 @@ overview <- ggchord(comparison$seq_data) +
   scale_colour_manual(name = "Sequence", values = sequence_colours,
     guide = guide_legend(nrow = 1, order = 2)) +
   scale_for("genes", scale_fill_manual(name = "Strand", values = strand_colours,
-    breaks = c("+", "-"), guide = guide_legend(nrow = 1, order = 1))) +
-  layout_sequences(orientation = comparison$orientation, inner_radius = 0.39) +
+    breaks = c("+", "-"),
+    guide = guide_legend(nrow = 1, order = 1, override.aes = list(strand = c("+", "-"))))) +
+  layout_sequences(orientation = comparison$orientation, inner_radius = 0.19) +
   coord_radial_synteny(start_angle = 45, fit = "labels", clip = "off") +
   theme_ggchord_publication() +
   theme(plot.background = element_rect(fill = "#FFFCF5", colour = NA),
@@ -56,24 +57,25 @@ overview <- ggchord(comparison$seq_data) +
 gene_names <- labels |>
   arrange(accver, start) |>
   group_by(accver) |>
-  mutate(side = if_else(row_number() %% 2L == 1L, "positive", "negative")) |>
+  mutate(side = if_else(row_number() %% 2L == 1L, "negative", "positive")) |>
   ungroup() |>
   mutate(normal_x = -sin(spoke_angles[match(accver, spokes)]),
     read_left = if_else(side == "positive", normal_x < 0, normal_x > 0)) |>
   group_by(side, read_left) |>
   group_map(function(records, placement) {
     geom_gene_label_repel(aes(label = label), data = records, anchor_layer = "genes",
-      hjust = as.integer(placement$read_left), size = 3.0,
-      segment_colour = "#767A73", segment_linewidth = 0.18,
+      hjust = as.integer(placement$read_left), size = 3.2,
+      segment_colour = "#767A73", segment_linewidth = 0.22,
       label_layout = label_layout_repel(arrangement = "local", orientation = "horizontal",
-        side = placement$side, offset = 4, padding = 1, wrap = 20, max_lines = 3))
+        side = placement$side, offset = 4, padding = 1,
+        fit = "wrap_shrink", min_size = 2.55, wrap = 22, max_lines = 3))
   })
 overview + gene_names +
   spoke_labels(size = 3.7, along = 6.5) +
   scale_seq_position(name = NULL, minor_breaks = NULL,
     labels = label_comma()) +
   guides(fill = guide_coloursteps(direction = "horizontal", even.steps = FALSE,
-    show.limits = TRUE, theme = theme(legend.key.width = unit(115, "mm")))) +
+    show.limits = TRUE, theme = theme(legend.key.width = unit(115, "mm"), legend.key.height = unit(2.8, "mm")))) +
   theme(legend.box = "vertical") +
   labs(title = "Four genomes, a radial view",
     subtitle = "Original Chord sources; all 20 CDS annotations")

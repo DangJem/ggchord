@@ -12,7 +12,7 @@ The figure uses a 12 × 8 in canvas at 144 dpi. The script returns the plot so y
 
 ## Read the figure {#reading}
 
-Seven selected HSPs join adjacent rows. A separate layer draws the three longer-range links across rows. Follow the two ends of a ribbon to compare source coordinates, then use the nearest CDS arrow and label to identify a feature.
+Seven selected HSPs join adjacent rows. A separate layer draws the three longer-range links across rows. These outlines are dashed because the links span intervening rows. The outlines of the adjacent ribbons are solid. Follow the two ends of a ribbon to compare source coordinates, then use the nearest CDS arrow and label to identify a feature.
 
 <a id="inputs"></a>
 

@@ -2148,7 +2148,7 @@
       }
     },
     "geom_link_ribbon": {
-      "usage": "geom_link_ribbon(\n  mapping = NULL,\n  data = NULL,\n  stat = \"identity\",\n  position = \"identity\",\n  route = \"curve\",\n  fill_mode = \"solid\",\n  ...,\n  na.rm = FALSE,\n  show.legend = NA,\n  inherit.aes = TRUE,\n  id = NULL\n)",
+      "usage": "geom_link_ribbon(\n  mapping = NULL,\n  data = NULL,\n  stat = \"identity\",\n  position = \"identity\",\n  route = \"curve\",\n  fill_mode = \"solid\",\n  ...,\n  na.rm = FALSE,\n  show.legend = NA,\n  inherit.aes = TRUE,\n  id = NULL,\n  gap = 0.4,\n  avoid = \"none\",\n  avoid_strength = 0.5\n)",
       "arguments": [
         [
           "mapping"
@@ -2182,6 +2182,15 @@
         ],
         [
           "id"
+        ],
+        [
+          "gap"
+        ],
+        [
+          "avoid"
+        ],
+        [
+          "avoid_strength"
         ]
       ],
       "roles": [
@@ -2210,7 +2219,10 @@
         "na.rm": "FALSE",
         "show.legend": "NA",
         "inherit.aes": "TRUE",
-        "id": "NULL"
+        "id": "NULL",
+        "gap": "0.4",
+        "avoid": "\"none\"",
+        "avoid_strength": "0.5"
       }
     },
     "geom_alignment_segment": {
@@ -3182,7 +3194,7 @@
       }
     },
     "label_layout_repel": {
-      "usage": "label_layout_repel(\n  arrangement = \"auto\",\n  orientation = \"auto\",\n  side = \"both\",\n  offset = 1,\n  padding = 1,\n  fit = \"wrap\",\n  wrap = NULL,\n  max_lines = 2,\n  min_size = 1.5,\n  max_overlaps = Inf,\n  leader = \"auto\"\n)",
+      "usage": "label_layout_repel(\n  arrangement = \"auto\",\n  orientation = \"auto\",\n  side = \"both\",\n  offset = 1,\n  padding = 1,\n  fit = \"wrap\",\n  wrap = NULL,\n  max_lines = 2,\n  min_size = 1.5,\n  max_overlaps = Inf,\n  leader = \"auto\",\n  outer_size = NULL\n)",
       "arguments": [
         [
           "arrangement"
@@ -3216,10 +3228,13 @@
         ],
         [
           "leader"
+        ],
+        [
+          "outer_size"
         ]
       ],
       "roles": [],
-      "examples": "ggchord(one_seq) +\n  geom_feature(data = subset(genes, accver == \"A\"), id = \"features\") +\n  geom_feature_label_repel(\n    aes(label = label), anchor_layer = \"features\",\n    label_layout = label_layout_repel(\n      arrangement = \"columns\", side = \"positive\", padding = 1.5\n    )\n  ) +\n  coord_circular()",
+      "examples": "ggchord(one_seq) +\n  geom_feature(data = subset(genes, accver == \"A\"), id = \"features\") +\n  geom_feature_label_repel(\n    aes(label = label), anchor_layer = \"features\",\n    label_layout = label_layout_repel(\n      arrangement = \"columns\", side = \"positive\", padding = 1.5, outer_size = 3.3\n    )\n  ) +\n  coord_circular()",
       "related": [
         "label_layout_fixed",
         "geom_feature_label_repel",
@@ -3237,7 +3252,8 @@
         "max_lines": "2",
         "min_size": "1.5",
         "max_overlaps": "Inf",
-        "leader": "\"auto\""
+        "leader": "\"auto\"",
+        "outer_size": "NULL"
       }
     },
     "position_offset": {
@@ -5475,7 +5491,7 @@
       }
     },
     "fusion_zoom": {
-      "usage": "fusion_zoom(from, to, region, highlight = TRUE,\n            fill = \"#187B77\", alpha = 0.12, colour = \"#187B77\",\n            linewidth = 0.4, id = NULL)",
+      "usage": "fusion_zoom(from, to, region, highlight = TRUE,\n            fill = \"#187B77\", alpha = 0.12, colour = \"#187B77\",\n            linewidth = 0.4, id = NULL,\n            connector = \"interval\", linetype = NULL)",
       "arguments": [
         [
           "from",
@@ -5499,10 +5515,16 @@
         ],
         [
           "id"
+        ],
+        [
+          "connector"
+        ],
+        [
+          "linetype"
         ]
       ],
       "roles": [],
-      "examples": "f <- ggchord_fusion(list(overview = p_basic, detail = p_basic))\nregion <- data.frame(accver = \"A\", start = 100, end = 240)\nf + fusion_zoom(\"overview\", \"detail\", region, id = \"zoom\")",
+      "examples": "f <- ggchord_fusion(list(overview = p_basic, detail = p_basic))\nregion <- data.frame(accver = \"A\", start = 100, end = 240)\nf + fusion_zoom(\"overview\", \"detail\", region, id = \"zoom\", connector = \"border\")",
       "related": [
         "magnify_ggchord",
         "fusion_ribbon"
@@ -5517,7 +5539,9 @@
         "alpha": "0.12",
         "colour": "\"#187B77\"",
         "linewidth": "0.4",
-        "id": "NULL"
+        "id": "NULL",
+        "connector": "\"interval\"",
+        "linetype": "NULL"
       }
     },
     "magnify_ggchord": {

@@ -3,12 +3,24 @@
 #' Scope size adaptation to default appearance and guide layout. Explicit
 #' geometric dimensions and source-coordinate computations remain locked.
 #'
-#' @param mode Fixed styling, scale unlocked defaults, or adapt text and guides.
-#' @param reference_size Width and height for the scaling baseline.
+#' @param mode Use `"fixed"` (default) to retain physical styles, `"scale"` to
+#'   resize unlocked default styles, or `"adaptive"` to bound the text
+#'   adjustment and reflow unconstrained guides.
+#' @param reference_size Width and height for the scaling baseline. Required
+#'   in scale mode. Adaptive mode uses 8 by 6 inches when omitted.
 #' @param units Physical units of reference_size.
 #' @param text_scale_range Lower and upper text factors for adaptive mode.
-#' @param min_text_size Optional minimum automatically reduced text size in mm.
+#' @param min_text_size Optional floor in mm for automatic reductions of
+#'   theme text. Defaults already below that size are kept at their size.
 #' @return A policy that can be added to a plot or Fusion.
+#' @details The target is the actual graphics device or the region allocated to
+#' a child plot in Fusion. Scale mode uses the smaller of the width and height
+#' ratios. Adaptive mode uses the fourth root of the target-to-reference area
+#' ratio, limited by `text_scale_range`. Unlocked line widths and spacing use
+#' the square root of the adaptive text factor. Explicit or mapped text sizes,
+#' feature thickness and offsets keep their declared values. Explicit guide
+#' settings take priority. Add the policy to an individual child plot to adapt
+#' that child, or to Fusion to adapt its own outer decorations and guides.
 #' @export
 #' @examples
 #' seqs <- data.frame(

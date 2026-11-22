@@ -193,6 +193,11 @@ ggchord_layout_annotation_step <- function(
         r0 <- gene_track_radius(
           gene, sid, strand, mean(interval)
         )
+        biological_strand <- as.character(gene$.feature_biological_strand %||% strand)
+        draw_head <- piece$draw_head && isTRUE(gene$.feature_draw_head %||% TRUE)
+        draw_start_head <- piece_index == 1L && isTRUE(
+          gene$.feature_draw_start_head %||% identical(biological_strand, "+/-")
+        )
         shape_parts <- ggchord_feature_geometry(
           feature_shape, interval[1L], interval[2L], r0, width,
           seqRadius[sid], ref,
@@ -201,27 +206,26 @@ ggchord_layout_annotation_step <- function(
             gene$.feature_head_width / width,
           arrow_head_style = arrow_head_style,
           short_feature = short_feature,
-          draw_head = piece$draw_head && isTRUE(
-            gene$.feature_draw_head %||% TRUE
-          ),
-          draw_start_head = piece_index == 1L && isTRUE(
-            gene$.feature_draw_start_head %||% identical(
-              as.character(gene$.feature_biological_strand %||% strand), "+/-"
-            )
-          ),
-          bidirectional = identical(
-            as.character(gene$.feature_biological_strand %||% strand), "+/-"
-          )
+          draw_head = draw_head, draw_start_head = draw_start_head,
+          bidirectional = identical(biological_strand, "+/-"),
+          fixed_body_width = isTRUE(gene$.feature_fixed_body_width)
         )
         piece_polygons <- list()
         for (part in seq_along(shape_parts)) {
           part_index <- part_index + 1L
-          mapped <- if (!is.null(shape_parts[[part]]$xy)) {
-            shape_parts[[part]]$xy
+          vertices <- shape_parts[[part]]
+          mapped <- if (!is.null(vertices$xy)) {
+            vertices$xy
           } else {
-            map_to_curve_many(
-              shape_parts[[part]]$angle, shape_parts[[part]]$radius, ref
-            )
+            map_to_curve_many(vertices$angle, vertices$radius, ref)
+          }
+          tip <- rep(NA_character_, nrow(mapped))
+          if (isTRUE(circular) && feature_shape %in% ggchord_feature_heads &&
+              length(vertices$angle)) {
+            along <- vertices$angle * sign(diff(interval))
+            on_axis <- abs(vertices$radius - r0) < 1e-9
+            if (draw_head) tip[on_axis & along == max(along)] <- "head"
+            if (draw_start_head) tip[on_axis & along == min(along)] <- "tail"
           }
           piece_polygons[[length(piece_polygons)+1L]] <- data.frame(
             x=mapped[,1L],y=mapped[,2L])
@@ -232,9 +236,7 @@ ggchord_layout_annotation_step <- function(
           anno = anno,
           strand = strand,
           feature_shape = feature_shape,
-          biological_strand = as.character(
-            gene$.feature_biological_strand %||% strand
-          ),
+          biological_strand = biological_strand,
           feature_fill_explicit = if ("feature_color" %in% names(gene)) {
             as.character(gene$feature_color)
           } else NA_character_,
@@ -245,6 +247,7 @@ ggchord_layout_annotation_step <- function(
           normal_offset = as.numeric(gene$.normal_offset %||% 0),
           source_row = gene$.source_row,
           ord = seq_len(nrow(mapped)),
+          .feature_tip = tip,
           .component = "polygon",
           stringsAsFactors = FALSE
         )

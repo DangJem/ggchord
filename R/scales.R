@@ -331,6 +331,7 @@ ggchord_check_axis_theme <- function(theme, overlap) {
 #' @param labels Labels or a labelling function, optionally by source or instance.
 #' @param coordinates Use local or original source coordinates for axis labels.
 #' @param guide A sequence axis guide or `"none"`.
+#'   When omitted for a circular reference, ticks and labels face inward.
 #' @return A domain scale for use with sequence-path coordinates.
 #' @export
 #' @examples
@@ -348,6 +349,7 @@ scale_seq_position <- function(name = waiver(), breaks = waiver(),
     minor_breaks = waiver(), labels = waiver(), coordinates = "local",
     guide = guide_seq_axis()) {
   ggchord_check_argument_names(sys.call(), sys.function())
+  guide_explicit <- !missing(guide)
   coordinates <- ggchord_match_choice(coordinates, c("local", "source"), "coordinates")
   if (!is.null(name) && !is_waiver(name) &&
       (!(is.character(name) || is.expression(name)) || length(name) != 1L ||
@@ -362,6 +364,7 @@ scale_seq_position <- function(name = waiver(), breaks = waiver(),
   out$ggchord_axis_spec <- list(breaks = breaks, minor_breaks = minor_breaks, labels = labels)
   out$ggchord_position_coordinates <- coordinates
   out$ggchord_axis_guide <- guide
+  out$ggchord_axis_guide_explicit <- guide_explicit
   out$ggchord_axis_sequences <- guide$sequences
   out$ggchord_check_overlap <- guide$check.overlap
   out

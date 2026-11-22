@@ -200,7 +200,8 @@ geom_site_label <- function(mapping = NULL, data = NULL, stat = "identity",
 #' @details Site data supplies `accver` and a one-based `pos`. A double-strand cut uses `cut_top` and `cut_bottom` as interbase positions. Add site labels separately or bind them to the site layer.
 #' For horizontal circular callouts, supply `enzyme_label` and
 #' `coordinate_label` alongside `label` to draw the enzyme in bold
-#' and the coordinate in plain text.
+#' and the coordinate in plain text. An explicit `fontface` applies
+#' to the entire callout.
 #' @examples
 #' library(ggplot2)
 #'

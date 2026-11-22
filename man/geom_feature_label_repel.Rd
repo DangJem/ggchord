@@ -52,6 +52,16 @@ Label source feature intervals with collision avoidance
 }
 \details{
 The source entities have \code{accver}, \code{start}, \code{end} and a label or label mapping. A bound label follows the target layer by identity. Text size, collision handling and leader placement are independent of the underlying feature geometry. A segmented feature is anchored to its visible runs. For a circular feature label, mapping \code{fill} sets the background of an exterior callout. If \code{colour} is omitted, text over a feature or on a callout uses a contrasting colour.
+Filled circular exterior labels have a visible outline. Circular
+exterior feature labels use bold text by default. Set or
+map \code{fontface} to override. Local inward labels can slide along an arc
+or use a deeper text track. Automatic leaders stay on the feature's
+radial line when it reaches a visible glyph, including off-centre glyphs.
+Nearby inward callouts can adjust their arc positions and rows together
+to keep text clear of other leaders.
+Inward leaders that cross other label text are dashed. Automatic
+leaders also use dashes when they cross their own backbone. Set
+\code{segment_linetype} to override the automatic style.
 }
 \examples{
 library(ggplot2)

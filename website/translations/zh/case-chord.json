@@ -1,5 +1,5 @@
 {
-  "source_sha256": "cef9dca99af4c240dd18a0cea411ed80251e0c09e6532d0110e0773c6196ce92",
+  "source_sha256": "cf4141557d2a50a8b7c02d53526c5f49047f845f63d5f70f04e826997919e8d4",
   "blocks": {
     "0": {
       "source_sha256": "b58fafdf4ec872d5220995e2d90c89ad6e39126b8baf1b8e266f118f7efe33c8",
@@ -22,9 +22,9 @@
       "translation": "## 读图 {#reading}\n"
     },
     "7": {
-      "source_sha256": "acb1e11635ca7cfdac6b1f15ce5dc5157184e771b591f17a0ae6f2caf041ff7c",
+      "source_sha256": "76b6794c7dbfbf9ab3f5c1c0a6ab2cc9ea63b825e4ef0c4d37b483d8e715983d",
       "status": "reviewed",
-      "translation": "从序列标签开始，按骨架刻度读取 bp 位置。每条带的两端包围已观测的比对区间，填色表示一致性百分比。骨架两侧的箭头标出具有来源链记录的 CDS。\n"
+      "translation": "从序列标签开始，按骨架刻度读取 bp 位置。每条带的两端包围已观测的比对区间，填色表示一致性百分比。骨架两侧的箭头标出具有来源链记录的 CDS。连带图层通过 `avoid = \"smooth\"` 沿附近箭头朝向连带的一侧避让。默认的 `gap` 为 0.4 mm，在连带与轮廓之间留出缝隙。\n"
     },
     "9": {
       "source_sha256": "de1eb696f2ab1c739faa9f8ef7b26fc480da4593cffdb8c750e451460f700193",

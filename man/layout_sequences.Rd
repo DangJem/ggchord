@@ -33,7 +33,8 @@ layout_sequences(
 
 \item{radius}{Relative radius for arc references.}
 
-\item{inner_radius}{Relative inner radius for radial spokes.}
+\item{inner_radius}{Relative inner radius for radial spokes. With \code{NULL},
+retain a compact centre and enlarge it if nearby drawn bands need space.}
 
 \item{curvature}{Signed reference curvature for chord coordinates.}
 

@@ -826,7 +826,7 @@ ggchord_fusion_identity_guide <- function(plot, styles, direction = NULL) {
   if(is.null(length)) length <- unit(max(required,if(horizontal) 100 else 85),"mm") else
     if(is.unit(length) && convertUnit(length,"mm",valueOnly=TRUE)<required)
       warning("Fusion Identity labels exceed the explicitly fixed guide length; increase its length or reduce its explicit text size",call.=FALSE)
-  width <- explicit[[thickness]] %||% explicit$legend.key.size %||% unit(4,"mm")
+  width <- explicit[[thickness]] %||% explicit$legend.key.size %||% ggchord_identity_bar_width()
   guide_theme <- do.call(ggplot2::theme,setNames(list(length,width),c(field,thickness)))
   result <- guide_coloursteps(even.steps=FALSE,show.limits=TRUE,
     direction=if(horizontal) "horizontal" else "vertical",theme=guide_theme)

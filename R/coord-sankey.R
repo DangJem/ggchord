@@ -74,7 +74,7 @@ ggchord_project_sankey_data <- function(data, frames, id = NULL) {
 ggchord_sankey_route <- function(a, b, route, horizontal) {
   if (identical(route$route, "straight")) return(rbind(a, b))
   normal <- if (horizontal) 2L else 1L
-  delta <- (b[normal] - a[normal]) * (route$curvature %||% .5)
+  delta <- (b[normal] - a[normal]) * ggchord_connection_bend(route)
   first <- a; first[normal] <- first[normal] + delta
   second <- b; second[normal] <- second[normal] - delta
   bezier_pts(a, b, first, second, n = 50)
@@ -96,8 +96,11 @@ ggchord_project_sankey_layout <- function(layout, plot) {
   gap <- plot$coordinates$sankey_column_gap_mm * ggchord_layout_units_per_mm(if (horizontal) 2L else 1L)
   frames$column_x <- ifelse(frames$side == "left", 0, gap)
   frames$normal_sign <- if (horizontal) -1 else 1
+  facing <- setNames(ifelse(frames$side == "left", 1, -1) * frames$normal_sign,
+    frames$key)
   frames$source_y <- unname(ref$y[frames$key])
   frames$axis_min <- tab$xmin[match(frames$key,tab$accver)]
+  normal_mm <- ggchord_units_per_mm(ggchord_path_normal_axis(plot$coordinates))
   for (owner in names(layout$layer_geometry)) for (component in names(layout$layer_geometry[[owner]])) {
     d <- layout$layer_geometry[[owner]][[component]]
     if (!component %in% c("ribbon", "link")) {
@@ -119,32 +122,40 @@ ggchord_project_sankey_layout <- function(layout, plot) {
       ggchord_stop("coord_sankey(): route = 'shared' is unsupported; use route = 'curve'")
     configured_gap <- params$ribbon_gap %||% params$link_gap
     gaps_by_id <- process_sequence_param(configured_gap %||% .035, layout$seqs, "link_gap", .035)
+    mapping <- if (isTRUE(layer$inherit.aes)) plot$mapping else NULL
+    ribbon_gap_mm <- ggchord_ribbon_gap_mm(params, layout$seqs, layer, mapping)
+    along_mm <- ggchord_units_per_mm(if (horizontal) "x" else "y")
+    avoid <- if (is.null(configured_gap)) params$link_avoid %||% "none" else "none"
+    obstacles <- ggchord_obstacle_index(layout$obstacles, avoid)
     offsets <- ggchord_connection_offsets(params, layout$seqs,
       ggchord_path_normal_axis(plot$coordinates))
+    front <- function(id, bounds, samples) {
+      direction <- facing[[id]]
+      base <- if (is.null(configured_gap))
+        ggchord_ribbon_base_gap(layout$ribbon_clearance, id, direction, normal_mm,
+          ribbon_gap_mm[[id]]) else
+        gaps_by_id[[id]]
+      gap_mm <- if (component == "ribbon") ribbon_gap_mm[[id]] else .30
+      profile <- ggchord_connection_front(bounds, obstacles[[id]], direction, avoid,
+        base, normal_mm, ggchord_collinear_scale(id, ref) * normal_mm / along_mm,
+        n = samples, gap_mm = gap_mm, strength = params$avoid_strength %||% .5)
+      ggchord_sankey_points(ggchord_collinear_x(profile$position, id, ref),
+        unname(ref$y[id]) + direction * profile$gap + offsets[[id]], id, frames)
+    }
     pieces <- list()
     for (i in seq_len(nrow(input))) {
       template <- d[d$source_row == i, , drop=FALSE]
       if (!nrow(template)) next
       q <- as.character(input$qaccver[i]); s <- as.character(input$saccver[i])
       if (component == "ribbon") {
-        front <- function(id,start,end) {
-          bound <- ggchord_interval_front(start, end)
-          positions <- seq(bound[1L], bound[2L], length.out = 16L)
-          gap <- ggchord_collinear_gap_profile(positions,id,-1,layout$obstacles,
-            avoid=if (is.null(configured_gap)) params$link_avoid %||% "none" else "none",
-            close_gap=unname(gaps_by_id[id]))
-          ggchord_sankey_points(ggchord_collinear_x(positions,id,ref),
-            unname(ref$y[id]) - gap + offsets[[id]], id, frames)
-        }
-        qxy <- front(q,input$qstart[i],input$qend[i]); sxy <- front(s,input$sstart[i],input$send[i])
+        qxy <- front(q, ggchord_interval_front(input$qstart[i], input$qend[i]), 2L)
+        sxy <- front(s, ggchord_interval_front(input$sstart[i], input$send[i]), 2L)
         edge <- function(a, b) ggchord_sankey_route(a, b, params$route, horizontal)
         a <- edge(qxy[1,],sxy[1,]); b <- edge(qxy[nrow(qxy),],sxy[nrow(sxy),])
         xy <- rbind(qxy,b,sxy[nrow(sxy):1,,drop=FALSE],a[nrow(a):1,,drop=FALSE])
       } else {
-        a <- ggchord_sankey_points(ggchord_collinear_x(input$qpos[i], q, ref),
-          ref$y[q] - gaps_by_id[q] + offsets[[q]], q, frames)[1, ]
-        b <- ggchord_sankey_points(ggchord_collinear_x(input$spos[i], s, ref),
-          ref$y[s] - gaps_by_id[s] + offsets[[s]], s, frames)[1, ]
+        a <- front(q, rep(input$qpos[i], 2L), 1L)[1L, ]
+        b <- front(s, rep(input$spos[i], 2L), 1L)[1L, ]
         xy <- ggchord_sankey_route(a, b, params$route, horizontal)
 
       }

@@ -6,7 +6,8 @@
 #' @param angular_gap Angular spacing in degrees for arc references.
 #' @param row_gap,segment_gap,column_gap Physical distances in mm.
 #' @param radius Relative radius for arc references.
-#' @param inner_radius Relative inner radius for radial spokes.
+#' @param inner_radius Relative inner radius for radial spokes. With `NULL`,
+#'   retain a compact centre and enlarge it if nearby drawn bands need space.
 #' @param curvature Signed reference curvature for chord coordinates.
 #' @param align Display alignment of linear paths: start, center or end.
 #' @param anchor Source anchor positions or intervals for linear alignment.
@@ -228,10 +229,11 @@ ggchord_configure_layout <- function(plot) {
   }
   updates <- list()
   if (mode == "radial") {
-    inner <- layout$inner_radius %||% .25
+    inner <- layout$inner_radius %||% .12
     if (!is.numeric(inner) || length(inner) != 1L || !is.finite(inner) || inner < 0 || inner >= 1)
       ggchord_stop("inner_radius must be in [0, 1)")
     updates$radial_inner_radius <- 2 * inner / (1 - inner)
+    updates$radial_inner_automatic <- is.null(layout$inner_radius)
   }
   if (mode == "linear") {
     updates$collinear_align <- c(start = "left", center = "center", end = "right")[[layout$align %||% "start"]]
@@ -340,7 +342,7 @@ ggchord_layout_sequence_step <- function(
   # High-resolution reference path for each sequence
   reference_key <- list(
     seqs = seqs, starts = starts, ends = ends,
-    radius = seqRadius, curvature = seq_curvature
+    radius = seqRadius, curvature = seq_curvature, circular = circular
   )
   if (!is.null(geometry_cache) &&
       identical(geometry_cache$reference_key, reference_key)) {
@@ -351,7 +353,8 @@ ggchord_layout_sequence_step <- function(
         starts[id], ends[id], seqRadius[id], seq_curvature[id], n_points = nRef
       )
       angles <- seq(starts[id], ends[id], length.out = nRef)
-      list(path = path, angles = angles, r0 = seqRadius[id])
+      list(path = path, angles = angles, r0 = seqRadius[id],
+        circle = isTRUE(circular) && seq_curvature[id] == 1)
     })
     names(seq_refs) <- seqs
     if (!is.null(geometry_cache)) {

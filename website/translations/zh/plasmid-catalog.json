@@ -1,10 +1,10 @@
 {
-  "source_sha256": "fa6a5f480d803ab9fd39c5d99cf4dff001a0b983feffcc80930fd22450e61903",
+  "source_sha256": "2308434d4c1f328f4292c8e2a064a142c84986a6a218cb2aa19e726f79aafedf",
   "blocks": {
     "0": {
-      "source_sha256": "119d9e3fdacf3c9ecb1a549e0eb4df580ec12629b59c6b49359c0415ee668037",
+      "source_sha256": "20434aaa9866a7879edf8021b1e839746bd25ba425ad5521570abd32f2adf61e",
       "status": "reviewed",
-      "translation": "本图集将同一套注释图层用于十三条参考序列。可从表中选择一条记录，或在完整图旁复制可独立运行的代码。所有图均使用 10 × 8 英寸画布、110 dpi。\n"
+      "translation": "本图集将同一套注释图层用于十三条参考序列。可从表中选择一条记录，或在完整图旁复制可独立运行的代码。图集通常使用 10 × 8 英寸画布、110 dpi。注释较密的 pETDuet-1 使用 11 × 9 英寸画布，分辨率相同。\n"
     },
     "2": {
       "source_sha256": "d6f8cffc29596de602f8ccab487928b51d32d3c76792c6cffff215019cd46222",
@@ -91,77 +91,82 @@
       "status": "reviewed",
       "translation": "图集沿用各参考保存的酶集合和原先的展示选择。pETDuet-1 的参考文件没有选择酶集合，因此使用识别序列至少 6 bp 的单切酶集合。位点层保留两条链有记录的切口。外侧标签按上链切口合并酶名，仅有下链切口时使用下链坐标。引物列统计独立参考引物。\n"
     },
-    "20": {
+    "19": {
+      "source_sha256": "ba17d6cae11c5c9ef5094ffabf4074625b1a02ceeb938099184d516fb1ea5125",
+      "status": "reviewed",
+      "translation": "骨架内侧的相邻特征名可分布在不同的文字轨道上。径向线与可见字符相交时，引线沿特征所在的径向接到该字符旁。自动内向引线穿过其他标签时用虚线绘制。圈外特征名默认使用粗体，带底色的标签带有描边。\n"
+    },
+    "21": {
       "source_sha256": "40ed268a44b927ad12580c3cf127cd146f5ccfd0301c21649a2c931410bd1936",
       "status": "reviewed",
       "translation": "## pSB1C3 {#catalogpsb}\n"
     },
-    "23": {
+    "24": {
       "source_sha256": "ccf57a2f7852d88760060604e3fa80f53398ca6429183d535bb17f8e1780c914",
       "status": "reviewed",
       "translation": "## pUC19 {#catalogpuc}\n"
     },
-    "26": {
+    "27": {
       "source_sha256": "d307953401431159e4c987b23bca8e898ac0a9238cf3cce69ba32828111bf837",
       "status": "reviewed",
       "translation": "## pBR322 {#catalogpbr}\n"
     },
-    "29": {
+    "30": {
       "source_sha256": "73345e2d2276d97161b94ce6650341a18d406d96c7dc9a62289c44c0281185ac",
       "status": "reviewed",
       "translation": "## pBluescript II SK(+) {#catalogblue}\n"
     },
-    "32": {
+    "33": {
       "source_sha256": "c0d35094b70c107c4afad675eb6f5e805394069af2ce057728025c9977e3c199",
       "status": "reviewed",
       "translation": "## pET-28a(+) {#catalogpet}\n"
     },
-    "35": {
+    "36": {
       "source_sha256": "ab9db4df90f28e44ce89294d4de6f8b07188c19ae7fc4bc66ea27a37c73a7d3b",
       "status": "reviewed",
       "translation": "## pETDuet-1 {#catalogduet}\n"
     },
-    "38": {
+    "39": {
       "source_sha256": "dd9ea0a71ea5cc2b941611f4657db6614139e6f6ba2c948af96914b2e670dd02",
       "status": "reviewed",
       "translation": "## pDONR221 {#catalogdonr}\n"
     },
-    "41": {
+    "42": {
       "source_sha256": "19d42676b1e892d3c9f3ee68fd81de3ddd1c8e1a50807c73b1969a118cf5f724",
       "status": "reviewed",
       "translation": "## pcDNA3.1(+) {#catalogpcdna}\n"
     },
-    "44": {
+    "45": {
       "source_sha256": "1fc9a0932ef1ced2e4b5c5546f5e7e72bce1bc9a4467f1e01b377e8ee0ea55eb",
       "status": "reviewed",
       "translation": "## pTRE-Tight-BI {#catalogtre}\n"
     },
-    "45": {
+    "46": {
       "source_sha256": "cbfaee75d1b94c05ae4b64546da1eee53c713d2de62ffb5937c504a87aeff452",
       "status": "reviewed",
       "translation": "双向 TRE 启动子以区间显示。示例表保留其来源链向。\n"
     },
-    "48": {
+    "49": {
       "source_sha256": "d259139f3a146d6cceeb164e393fd2a3ada41e9707e47654243fccc6724665f0",
       "status": "reviewed",
       "translation": "## pTRIPZ {#catalogtripz}\n"
     },
-    "51": {
+    "52": {
       "source_sha256": "9c4405b4fd0d74f4e5c913c3871dbcad4dac0a3e2e57deb5a03aae112985d594",
       "status": "reviewed",
       "translation": "## pCAMBIA1300 {#catalogcambia}\n"
     },
-    "54": {
+    "55": {
       "source_sha256": "333528de2afaabffccedfb7fa825d0cd0c33782b4eb897f8b9fdd3ff3ee344fe",
       "status": "reviewed",
       "translation": "## pEarleyGate 201 {#catalogearley}\n"
     },
-    "57": {
+    "58": {
       "source_sha256": "db13e47b80b03ab0d34a5ab81494b0bec6aac67da6e598e3f750fe9b58d93f84",
       "status": "reviewed",
       "translation": "## pSpCas9(BB)-2A-GFP (PX458) {#catalogcas}\n"
     },
-    "59": {
+    "60": {
       "source_sha256": "ef9fd796f3683ffcc2db048d287593a1972351bd6d787dc93436c6fec56ffdfe",
       "status": "reviewed",
       "translation": "[单序列圆图指南](circular.md) · [阅读 pUC19 的各层](case-circular.md)\n"

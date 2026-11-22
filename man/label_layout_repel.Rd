@@ -15,7 +15,8 @@ label_layout_repel(
   max_lines = 2,
   min_size = 1.5,
   max_overlaps = Inf,
-  leader = "auto"
+  leader = "auto",
+  outer_size = NULL
 )
 }
 \arguments{
@@ -29,7 +30,9 @@ label_layout_repel(
 
 \item{padding}{Minimum clearance around a label in millimetres.}
 
-\item{fit}{Whether and how to fit text to available space.}
+\item{fit}{Whether and how to fit text to available space.
+\code{"wrap"} (default) and \code{"none"} keep the label size as supplied.
+\code{"shrink"} and \code{"wrap_shrink"} allow labels to shrink individually.}
 
 \item{wrap}{Optional text wrapping specification.}
 
@@ -40,6 +43,11 @@ label_layout_repel(
 \item{max_overlaps}{Maximum number of conflicts permitted before hiding a label.}
 
 \item{leader}{Policy for drawing a leader between the entity and text.}
+
+\item{outer_size}{Optional text size in millimetres for labels outside a
+circular backbone. Use an absolute grid unit or a positive number.
+\code{NULL} uses the label layer's size. Mapped size and the inward fit policy
+keep their usual behavior.}
 }
 \value{
 A placement declaration for compatible ggchord layers.
@@ -72,7 +80,8 @@ ggchord(one_seq) +
   geom_feature_label_repel(
     aes(label = label), anchor_layer = "features",
     label_layout = label_layout_repel(
-      arrangement = "columns", side = "positive", padding = 1.5
+      arrangement = "columns", side = "positive", padding = 1.5,
+      outer_size = 3.3
     )
   ) +
   coord_circular()

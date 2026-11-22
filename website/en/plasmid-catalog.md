@@ -1,4 +1,4 @@
-Use this collection to compare the same annotation layers on thirteen references. Choose a record from the table or copy the independent script beside its full-size map. Each map uses a 10 × 8 in canvas at 110 dpi.
+Use this collection to compare the same annotation layers on thirteen references. Choose a record from the table or copy the independent script beside its full-size map. The maps use a 10 × 8 in canvas at 110 dpi. The denser pETDuet-1 map uses 11 × 9 in at the same resolution.
 
 <a id="inputs"></a>
 
@@ -21,6 +21,8 @@ Use this collection to compare the same annotation layers on thirteen references
 | [pSpCas9(BB)-2A-GFP (PX458)](#catalogcas) | 9288 | 19 | 0 | 4 | 4 |
 
 The catalogue uses each saved reference enzyme profile and the original display selection. The pETDuet-1 record uses a unique 6+ cutter profile because its reference file does not select an enzyme set. The site layer retains the documented cuts on both strands. Each outer label groups enzymes by their top-strand cut, or by the bottom-strand cut when only that cut is available. The primer count covers independently recorded reference primers.
+
+Inside the backbone, nearby feature names can share several text tracks. Their leaders follow the feature radius where it meets a visible character. An automatic inward leader is dashed if it passes through another label. Exterior feature callouts use bold text, and filled callouts have an outline.
 
 <a id="catalogpsb"></a>
 

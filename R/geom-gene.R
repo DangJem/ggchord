@@ -16,7 +16,8 @@
 #' @param inherit.aes Whether to inherit plot mappings and evaluate them on the layer data.
 #' @param id Optional plot-local layer identifier. Name a layer explicitly to scope a scale, anchor a label or export it.
 #' @return A ggplot2 layer for addition to a plot.
-#' @details Provide one-based closed intervals with `accver`, `start` and `end`. A strand or disjoint segments can be supplied where appropriate. The gene shortcut defaults to an arrow and strand placement. The primer shortcut defaults to a directional narrow path, and the region shortcut defaults to a translucent block.
+#' @details Provide one-based closed intervals with `accver`, `start` and `end`. A strand or disjoint segments can be supplied where appropriate. The gene shortcut uses strand placement and a shoulderless arrow by default.
+#' Set `head_style = "shouldered"` through `...` to use a wider arrowhead.
 #' @examples
 #' library(ggplot2)
 #'
@@ -44,7 +45,8 @@ geom_gene <- function(mapping = NULL, data = NULL, shape = "arrow",
     na.rm = FALSE, show.legend = NA, inherit.aes = TRUE, id = NULL) {
   ggchord_check_argument_names(sys.call(), sys.function())
   ggchord_feature_layer(mapping, data, shape, !missing(shape), thickness,
-    stat, position, list(...), na.rm, show.legend, inherit.aes, id)
+    stat, position, list(...), na.rm, show.legend, inherit.aes, id,
+    default_head_style = "flush")
 }
 
 #' Label gene intervals

@@ -36,12 +36,13 @@ overview <- ggchord(comparison$seq_data) +
   geom_seq(aes(colour = accver), linewidth = 1.1,
     arrow = arrow(length = unit(2, "mm"), type = "closed")) +
   geom_gene(aes(fill = strand), data = genes, id = "genes",
-    position = position_strand(offset = c("+" = -1.65, "-" = 1.65)), thickness = 1.8, colour = "#454842",
+    position = position_strand(offset = c("+" = -1.65, "-" = 1.65)), thickness = 2.05, colour = "#454842",
     linewidth = 0.15) +
   scale_colour_manual(name = "Sequence", values = sequence_colours,
     guide = guide_legend(nrow = 1, order = 2)) +
   scale_for("genes", scale_fill_manual(name = "Strand", values = strand_colours,
-    breaks = c("+", "-"), guide = guide_legend(nrow = 1, order = 1))) +
+    breaks = c("+", "-"),
+    guide = guide_legend(nrow = 1, order = 1, override.aes = list(strand = c("+", "-"))))) +
   layout_sequences(
     orientation = comparison$orientation, angular_gap = sector_gap,
     curvature = setNames(c(0, 1, -0.65, 0.75), names(sequence_colours)),
@@ -58,12 +59,14 @@ overview +
   geom_gene_label_repel(aes(label = label), data = labels, anchor_layer = "genes",
     segment_colour = "#767A73", segment_linewidth = 0.18,
     label_layout = label_layout_repel(arrangement = "local", orientation = "horizontal",
-      side = "positive", offset = 14, padding = 1.5, wrap = 22, max_lines = 3), size = 2.9) +
-  sequence_labels(size = 3.7, offset = 9) +
+      side = "both", offset = 12, padding = 1.2, fit = "wrap_shrink", min_size = 2.65,
+      wrap = 24, max_lines = 3), size = 3.3) +
+  sequence_labels(size = 4.0, offset = 11) +
   scale_seq_position(name = NULL, minor_breaks = NULL,
     labels = label_comma()) +
   guides(fill = guide_coloursteps(position = "left", direction = "vertical",
     even.steps = FALSE, show.limits = TRUE,
-    theme = theme(legend.key.height = unit(93, "mm")))) +
+    theme = theme(legend.key.width = unit(2.8, "mm"),
+      legend.key.height = unit(91, "mm"), legend.text = element_text(size = 10)))) +
   labs(title = "Four genomes, one connected view",
     subtitle = "Mixed backbone geometry · CDS sampled by source strand")

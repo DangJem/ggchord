@@ -8,18 +8,28 @@
 #'   On a curved collinear route, an explicit positive `bulge` clears the high
 #'   coordinate end of intervening rows by that fraction of the longest visible
 #'   backbone. Radial curves with positive `bulge` clear intermediate spoke tips.
-#'   Set `avoid = "smooth"` through `...` to clear features at each endpoint.
 #' @param fill_mode Use solid fill or map independent query and subject endpoint colours.
 #' @param ... Additional named visual styles and parameters accepted by this layer.
+#'   When `linetype` is omitted and unmapped, visible outlines connecting
+#'   nonadjacent rows or radial spokes are dashed. Radial adjacency is cyclic.
 #' @param na.rm Suppress warnings for missing observations that the layer can omit.
 #' @param show.legend Logical or named logical indicating whether the layer contributes legend keys.
 #' @param inherit.aes Whether to inherit plot mappings and evaluate them on the layer data.
 #' @param id Optional plot-local layer identifier. Name a layer explicitly to scope a scale, anchor a label or export it.
+#' @param gap Nonnegative clearance in mm between a ribbon front and the edge of
+#'   the sequence or avoided feature. Accepts flexible per-sequence values.
+#' @param avoid Use `"none"` for a constant sequence gap (the default), or `"smooth"`
+#'   to follow the facing feature outlines at ribbon endpoints.
+#' @param avoid_strength A number from 0 to 1 controlling how far the rounded
+#'   transitions extend. With `avoid = "smooth"`, 0 follows contours most closely
+#'   and 1 gives wider transitions. The minimum clearance applies at every strength.
 #' @return A ggplot2 layer for addition to a plot.
 #' @details Source references are `qaccver` and `saccver`. Point links consume `qpos` and `spos`. Interval links and alignment segments consume closed interval endpoints on both references. Supply reliable `qstrand` and `sstrand` or explicit relative direction when the geometry requires it.
 #' Ribbons retain same-reference and non-neighbouring relationships. A
 #' same-row linear ribbon needs a curved route. A shared route retains
 #' independent source relationships and uses `corridor_width` in mm.
+#' Smooth avoidance follows the facing feature outlines while preserving the
+#' original interval endpoints and the route through intervening references.
 #' Tip decoration is recorded separately from the source interval fronts.
 #' @examples
 #' library(ggplot2)
@@ -38,11 +48,13 @@
 #'
 #' ggchord(seqs) +
 #'   geom_seq() +
-#'   geom_link_ribbon(aes(fill = pident), data = links, avoid = "smooth", id = "matches") +
+#'   geom_link_ribbon(aes(fill = pident), data = links, avoid = "smooth",
+#'     gap = 0.4, avoid_strength = 0.35, id = "matches") +
 #'   coord_chord()
 geom_link_ribbon <- function(mapping = NULL, data = NULL, stat = "identity",
     position = "identity", route = "curve", fill_mode = "solid", ...,
-    na.rm = FALSE, show.legend = NA, inherit.aes = TRUE, id = NULL) {
+    na.rm = FALSE, show.legend = NA, inherit.aes = TRUE, id = NULL,
+    gap = 0.4, avoid = "none", avoid_strength = 0.5) {
   call <- match.call(function(...) NULL, sys.call(), envir = parent.frame())
   if ("fill" %in% names(call) && !"fill_mode" %in% names(call)) {
     # Reserve the exact visual argument so R cannot treat it as an
@@ -60,8 +72,11 @@ geom_link_ribbon <- function(mapping = NULL, data = NULL, stat = "identity",
   if (ggchord_local_position(position) && !identical(position$placement, "offset"))
     ggchord_stop(caller, ": use identity or position_offset()")
   dots <- ggchord_colour_dots(list(...), caller)
-  avoid <- match.arg(dots$avoid %||% "none", c("none", "smooth"))
-  dots$avoid <- NULL
+  gap <- ggchord_physical_mm(gap, "geom_link_ribbon(): gap", TRUE)
+  avoid <- match.arg(avoid, c("none", "smooth"))
+  if (!is.numeric(avoid_strength) || length(avoid_strength) != 1L ||
+      !is.finite(avoid_strength) || avoid_strength < 0 || avoid_strength > 1)
+    ggchord_stop(caller, ": avoid_strength must be a number from 0 to 1")
   controls <- ggchord_link_route(route, dots, caller)
   dots <- controls$dots
   controls$dots <- NULL
@@ -92,13 +107,12 @@ geom_link_ribbon <- function(mapping = NULL, data = NULL, stat = "identity",
   )
   layer$ggchord_type <- "ribbon"
   layer$ggchord_params <- list(id = id, type = "ribbon", route = controls,
-    ribbon_ctrl_point = controls, ribbon_gap = if (avoid == "none") 0 else NULL,
-    link_avoid = avoid,
+    ribbon_ctrl_point = controls, front_gap_mm = gap,
+    avoid_strength = avoid_strength, link_avoid = avoid,
     feature_position = position, tip = tip, fill_mode = fill_mode,
-    physical_layout = ggchord_local_position(position) || controls$route == "shared" ||
-      avoid == "smooth",
+    physical_layout = TRUE,
     ribbon_color_scheme = "single", ribbon_alpha = .6, ribbon_outline_color = NA,
-    ribbon_outline_width = .3, ribbon_outline_linetype = 1,
+    ribbon_outline_width = .3,
     link_branch = if (controls$route == "shared") "query" else "none",
     link_branch_fraction = .15, source_stat = parameters$stat)
   layer <- ggchord_capture_layer_input(layer, data, mapping,

@@ -246,6 +246,10 @@ prepare_ggchord_plot <- function(plot) {
     lyr$ggchord_resolved_input <- ggchord_restore_instance_data(
       layout$layer_inputs[[lyr$ggchord_layer_id]][[lyr$ggchord_type]], layout$display_instances)
     geometry <- extract_ggchord_layer_data(lyr, layout)
+    if (isTRUE(layout$circular) && identical(lyr$ggchord_type, "domain_label")) {
+      lyr$ggchord_params$label_segment_layer <- "below"
+      lyr$geom_params$bold_callout <- ggchord_domain_bold_callout(lyr, plot)
+    }
     if (identical(lyr$ggchord_type, "track")) {
       axis <- geometry$.component %in% c("track_axis_line", "track_axis_tick", "track_axis_text", "track_axis_title")
       if (any(axis)) {

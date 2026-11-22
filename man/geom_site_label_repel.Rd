@@ -51,7 +51,8 @@ Label source point annotations with collision avoidance
 Site data supplies \code{accver} and a one-based \code{pos}. A double-strand cut uses \code{cut_top} and \code{cut_bottom} as interbase positions. Add site labels separately or bind them to the site layer.
 For horizontal circular callouts, supply \code{enzyme_label} and
 \code{coordinate_label} alongside \code{label} to draw the enzyme in bold
-and the coordinate in plain text.
+and the coordinate in plain text. An explicit \code{fontface} applies
+to the entire callout.
 }
 \examples{
 library(ggplot2)

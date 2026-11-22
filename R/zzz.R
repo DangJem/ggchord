@@ -181,7 +181,7 @@ extract_ggchord_layer_data <- function(lyr, layout) {
 }
 
 # Circular parallel ticks use the same glyph geometry for drawing and bounds.
-ggchord_axis_label_geometry <- function(layout, labels) {
+ggchord_axis_label_geometry <- function(layout, labels, clear = TRUE) {
   if (!nrow(labels) || !isTRUE(layout$circular)) return(labels)
   curved <- !is.na(labels$label_along_axis) & labels$label_along_axis
   if (!is.null(labels$.axis_plotmath)) curved <- curved & !(labels$.axis_plotmath %in% TRUE)
@@ -192,7 +192,7 @@ ggchord_axis_label_geometry <- function(layout, labels) {
   text$text_angle <- text$label_angle
   text$hjust <- text$label_hjust; text$vjust <- text$label_vjust
   text$.axis_label <- text$label
-  text <- ggchord_clear_circular_axis_text(text, layout)
+  if (clear) text <- ggchord_clear_circular_axis_text(text, layout)
   glyph <- ggchord_arc_text_layout(text,
     units_per_inch = layout$text_units_per_inch %||% .35,
     respect_justification = TRUE)$glyphs
@@ -212,8 +212,8 @@ ggchord_axis_label_geometry <- function(layout, labels) {
 
 #' Combine axis components for GeomChordAxis
 #' @noRd
-ggchord_axis_geometry <- function(layout) {
-  if (!is.null(layout$axis_geometry)) return(layout$axis_geometry)
+ggchord_axis_geometry <- function(layout, clear = TRUE) {
+  if (clear && !is.null(layout$axis_geometry)) return(layout$axis_geometry)
   line <- layout$axis_lines %||% data.frame()
   tick <- layout$axis_ticks %||% data.frame()
   label <- if (nrow(tick) && "label" %in% names(tick)) {
@@ -233,13 +233,15 @@ ggchord_axis_geometry <- function(layout) {
     tick$yend <- tick$y1
   }
   if (nrow(label)) {
-    label <- ggchord_axis_label_geometry(layout, label)
+    label <- ggchord_axis_label_geometry(layout, label, clear)
     label$.component <- "text"
     label$x <- label$label_x
     label$y <- label$label_y
     label$angle <- label$label_angle
     label$hjust <- label$label_hjust
     label$vjust <- label$label_vjust
+    if (clear && !isTRUE(layout$circular))
+      label <- ggchord_clear_projected_axis_text(label, layout)
   }
   heading <- layout$axis_heading
   if (NROW(heading)) {

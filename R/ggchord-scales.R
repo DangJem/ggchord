@@ -605,8 +605,11 @@ ggchord_add_visual_scales <- function(plot) {
         limits = c(0, 100),
         breaks = breaks, guide = ggchord_identity_guide(plot, aesthetic))
     } else {
+      key_width <- plot$ggchord$theme_explicit$legend.key.width %||%
+        plot$ggchord$theme_explicit$legend.key.size %||% unit(5, "mm")
       scale_colour_gradientn(name = name, colours = c("#34457E", "#2FA96B"),
-        limits = c(0, 100), breaks = breaks, guide = guide_legend(order = 2))
+        limits = c(0, 100), breaks = breaks,
+        guide = guide_legend(order = 2, theme = theme(legend.key.width = key_width)))
     }
     scale$ggchord_managed <- TRUE
     plot$scales$add(scale)

@@ -22,7 +22,8 @@ scale_seq_position(
 
 \item{coordinates}{Use local or original source coordinates for axis labels.}
 
-\item{guide}{A sequence axis guide or \code{"none"}.}
+\item{guide}{A sequence axis guide or \code{"none"}.
+When omitted for a circular reference, ticks and labels face inward.}
 }
 \value{
 A domain scale for use with sequence-path coordinates.

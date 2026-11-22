@@ -104,7 +104,7 @@ ggchord_clip_glyphs <- function(x0, y0, x1, y1, cx, cy, cos_a, sin_a, hw, hh) {
 }
 
 ggchord_inner_label_leader <- function(candidate, boxes, units_per_inch,
-                                        exterior_radius = NULL) {
+    exterior_radius = NULL, shrink = .03 * units_per_inch) {
   route <- data.frame(x0 = candidate$anchor_x, y0 = candidate$anchor_y,
     x1 = candidate$text_x, y1 = candidate$text_y)
   if (!is.null(exterior_radius)) {
@@ -114,10 +114,8 @@ ggchord_inner_label_leader <- function(candidate, boxes, units_per_inch,
     route$x1 <- route$x0 * factor
     route$y1 <- route$y0 * factor
   } else {
-    # The candidate envelopes have 0.04-inch padding; final own-label clipping
-    # uses 0.01 inch. Keep that exact smaller envelope for the route endpoint.
-    own <- ggchord_inner_leader_intervals(route, boxes,
-      shrink = .03 * units_per_inch)
+    # Clip at the clearance around the label actually used by its placement.
+    own <- ggchord_inner_leader_intervals(route, boxes, shrink = shrink)
     if (nrow(own)) {
       stop <- min(own$start)
       route$x1 <- route$x0 + stop * (route$x1 - route$x0)
@@ -130,6 +128,23 @@ ggchord_inner_label_leader <- function(candidate, boxes, units_per_inch,
   route
 }
 
+# The text centre may slide along its arc while the source ray stays fixed.
+# Ignore blanks and stop just before the first visible glyph on that ray.
+ggchord_radial_label_leader <- function(attachment, boxes, visible, clearance) {
+  visible <- which(visible & is.finite(boxes$w) & is.finite(boxes$h) & boxes$w > 0 & boxes$h > 0)
+  if (!length(visible)) return(NULL)
+  x <- attachment$anchor_x
+  y <- attachment$anchor_y
+  radius <- sqrt(x^2 + y^2)
+  if (!is.finite(radius) || radius <= clearance) return(NULL)
+  hits <- ggchord_clip_glyphs(x, y, 0, 0, boxes$cx[visible], boxes$cy[visible],
+    cos(boxes$angle[visible]), sin(boxes$angle[visible]), boxes$w[visible] / 2,
+    boxes$h[visible] / 2)
+  if (!length(hits$start)) return(NULL)
+  end <- max(0, min(hits$start) - clearance / radius)
+  data.frame(x0 = x, y0 = y, x1 = x * (1 - end), y1 = y * (1 - end))
+}
+
 ggchord_inner_leader_hits <- function(routes, boxes) {
   if (!nrow(routes) || !nrow(boxes)) return(FALSE)
   ca <- cos(boxes$angle); sa <- sin(boxes$angle)
@@ -139,9 +154,15 @@ ggchord_inner_leader_hits <- function(routes, boxes) {
   ey <- abs(sa) * hw + abs(ca) * hh
   xmin <- pmin(routes$x0, routes$x1); xmax <- pmax(routes$x0, routes$x1)
   ymin <- pmin(routes$y0, routes$y1); ymax <- pmax(routes$y0, routes$y1)
-  for (i in seq_len(nrow(routes))) {
-    j <- which(boxes$cx - ex <= xmax[i] + 1e-9 & boxes$cx + ex >= xmin[i] - 1e-9 &
-      boxes$cy - ey <= ymax[i] + 1e-9 & boxes$cy + ey >= ymin[i] - 1e-9)
+  bx0 <- boxes$cx - ex; bx1 <- boxes$cx + ex
+  by0 <- boxes$cy - ey; by1 <- boxes$cy + ey
+  valid <- is.finite(bx0) & is.finite(bx1) & is.finite(by0) & is.finite(by1)
+  if (!any(valid)) return(FALSE)
+  possible <- which(min(bx0[valid]) <= xmax + 1e-9 & max(bx1[valid]) >= xmin - 1e-9 &
+    min(by0[valid]) <= ymax + 1e-9 & max(by1[valid]) >= ymin - 1e-9)
+  for (i in possible) {
+    j <- which(bx0 <= xmax[i] + 1e-9 & bx1 >= xmin[i] - 1e-9 &
+      by0 <= ymax[i] + 1e-9 & by1 >= ymin[i] - 1e-9)
     if (!length(j)) next
     hit <- ggchord_clip_glyphs(routes$x0[i], routes$y0[i], routes$x1[i], routes$y1[i],
       boxes$cx[j], boxes$cy[j], ca[j], sa[j], hw[j], hh[j])
@@ -155,6 +176,234 @@ ggchord_inner_leaders_cross <- function(route, placed) {
   any(vapply(seq_len(nrow(route)), function(i)
     any(ggchord_segments_cross(route$x0[i], route$y0[i], route$x1[i], route$y1[i],
       placed$x0, placed$y0, placed$x1, placed$y1)), logical(1)))
+}
+
+# Refine only crowded sectors after the ordinary placement has established
+# feasible labels and leaders. All choices still use the measured geometry.
+ggchord_circular_callout_groups <- function(angle, half_width) {
+  order <- order(angle)
+  angle <- angle[order]
+  half_width <- half_width[order]
+  n <- length(angle)
+  next_label <- c(seq.int(2L, n), 1L)
+  gaps <- (angle[next_label] - angle) %% (2 * pi)
+  clearance <- gaps - half_width - half_width[next_label]
+  first <- which.max(clearance)
+  indices <- c(if (first < n) seq.int(first + 1L, n), seq_len(first))
+  groups <- split(order[indices], cumsum(c(TRUE, head(clearance[indices] > 0, -1L))))
+  # Divide large sectors into balanced blocks of consecutive neighbours.
+  unlist(lapply(groups, function(group) {
+    blocks <- ceiling(length(group) / 9L)
+    split(group, floor((seq_along(group) - 1L) * blocks / length(group)))
+  }), recursive = FALSE, use.names = FALSE)
+}
+
+ggchord_circular_callout_choice <- function(row, box, line, anchor, units) {
+  angle <- atan2(row$y, row$x) - anchor
+  along <- atan2(sin(angle), cos(angle))
+  radius <- sqrt(row$x^2 + row$y^2)
+  dx <- line$x1 - line$x0
+  dy <- line$y1 - line$y0
+  lateral <- abs(-sin(anchor) * dx + cos(anchor) * dy)
+  list(row = row, box = box, line = line, angle = along, radius = radius,
+    box_bounds = c(min(box$xmin), max(box$xmax), min(box$ymin), max(box$ymax)),
+    line_bounds = c(sort(c(line$x0, line$x1)), sort(c(line$y0, line$y1))),
+    cost = (.14 * sqrt(dx^2 + dy^2) + .23 * abs(along) * radius + .8 * lateral) / units)
+}
+
+ggchord_refine_circular_callouts <- function(placed, choices, initial_boxes,
+    initial_leaders, endpoints, polygons, polygon_bounds, units, style, padding) {
+  changed <- FALSE
+  available <- which(vapply(choices, function(x) !is.null(x), logical(1L)))
+  linked <- available[vapply(choices[available], function(x) {
+    row <- placed[[x$text_row]]
+    NROW(x$line) == 1L && row$annotation_side %in% "inner" &&
+      !row$.label_over_feature && row$label_status %in% "visible"
+  }, logical(1L))]
+  mm <- units / 25.4
+  if (length(linked) >= 3L) {
+    rows <- lapply(choices[linked], function(x) placed[[x$text_row]])
+    angles <- vapply(rows, function(row) atan2(row$anchor_y, row$anchor_x), numeric(1L))
+    half_width <- vapply(seq_along(rows), function(i) {
+      row <- rows[[i]]
+      box <- choices[[linked[i]]]$box
+      extent <- ggchord_boxes_corners(box)
+      delta <- atan2(extent[, 2L], extent[, 1L]) - atan2(row$y, row$x)
+      max(abs(atan2(sin(delta), cos(delta)))) + mm / sqrt(row$x^2 + row$y^2)
+    }, numeric(1L))
+    groups <- ggchord_circular_callout_groups(angles, half_width)
+    for (subset in groups[lengths(groups) >= 3L]) {
+      ids <- linked[subset]
+      affected <- choices[ids]
+      originals <- Map(function(row, choice, angle) {
+        ggchord_circular_callout_choice(row, choice$box, choice$line, angle, mm)
+      }, rows[subset], affected, angles[subset])
+      radii <- vapply(originals, `[[`, numeric(1L), "radius")
+      # Compare the same set of measured text rows across the sector.
+      tracks <- sort(radii, decreasing = TRUE)
+      tracks <- tracks[c(TRUE, -diff(tracks) > mm)]
+      if (length(tracks) < 2L) next
+      neighbours <- choices[setdiff(available, ids)]
+      obstacles <- ggchord_rbind_fill(c(list(initial_boxes, endpoints),
+        lapply(neighbours, `[[`, "box"))) %||% data.frame()
+      leaders <- ggchord_rbind_fill(c(list(initial_leaders),
+        lapply(neighbours, `[[`, "line"))) %||% data.frame()
+      options <- Map(function(original, request, angle, width) {
+        row <- original$row
+        radius <- sqrt(sum(request$attachment^2))
+        candidate_radii <- tracks[tracks < radius - .5 * mm &
+          tracks >= max(.20, request$radius_limits[1L]) &
+          tracks <= request$radius_limits[2L] + 1e-8]
+        steps <- unique(c(c(0, -.33, .33, -.67, .67) * width, original$angle))
+        candidates <- expand.grid(radius = candidate_radii, along = steps)
+        cache <- new.env(parent = emptyenv())
+        sample <- data.frame(text = row$label, size = row$size,
+          family = style$family %||% "", fontface = style$fontface %||% 1,
+          lineheight = style$lineheight %||% 1.2)
+        out <- list(original)
+        for (j in seq_len(nrow(candidates))) {
+          r <- candidates$radius[j]
+          a <- angle + candidates$along[j]
+          if (abs(r - original$radius) < 1e-8 &&
+              abs(candidates$along[j] - original$angle) < 1e-8) next
+          if (r * cos(candidates$along[j]) < .20) next
+          candidate <- row
+          candidate$x <- r * cos(a)
+          candidate$y <- r * sin(a)
+          candidate$angle <- ggchord_normalize_text_orientation(a * 180 / pi + 90, .5)$angle
+          sample$text_x <- candidate$x
+          sample$text_y <- candidate$y
+          sample$text_angle <- candidate$angle
+          glyph <- ggchord_arc_text_layout(sample, units, box_padding = padding / (2 * 25.4),
+            line_metrics = cache, boxes_only = TRUE)
+          box <- glyph$boxes
+          if (ggchord_boxes_overlap_any(box, obstacles) ||
+              ggchord_boxes_hit_features(box, polygons, request$feature,
+                tol = .004, bounds = polygon_bounds)) next
+          line <- ggchord_radial_label_leader(list(anchor_x = request$attachment[1L],
+            anchor_y = request$attachment[2L]), box, glyph$visible, .25 * mm)
+          if (!NROW(line) || ggchord_inner_leaders_cross(line, leaders)) next
+          out[[length(out) + 1L]] <- ggchord_circular_callout_choice(candidate, box, line, angle, mm)
+        }
+        lapply(out, function(option) {
+          option$track <- which.min(abs(option$radius - tracks))
+          option$cost <- option$cost + 6 * (
+            ggchord_inner_leader_hits(option$line, obstacles) +
+            ggchord_inner_leader_hits(leaders, option$box))
+          option
+        })
+      }, originals, affected, angles[subset], half_width[subset])
+      next_layout <- ggchord_choose_circular_callouts(options, angles[subset])
+      if (is.null(next_layout)) next
+      changed <- TRUE
+      for (j in which(next_layout != 1L)) {
+        option <- options[[j]][[next_layout[j]]]
+        idx <- choices[[ids[j]]]$text_row
+        row <- option$row
+        row$bbox_xmin <- min(option$box$xmin); row$bbox_xmax <- max(option$box$xmax)
+        row$bbox_ymin <- min(option$box$ymin); row$bbox_ymax <- max(option$box$ymax)
+        placed[[idx]] <- row
+        row$.component <- "leader"
+        row$x <- option$line$x0; row$y <- option$line$y0
+        row$xend <- option$line$x1; row$yend <- option$line$y1
+        placed[[idx + 1L]] <- row
+        choices[[ids[j]]]$box <- option$box
+        choices[[ids[j]]]$line <- option$line
+      }
+    }
+  }
+  if (!changed) return(NULL)
+  list(placed = placed,
+    boxes = ggchord_rbind_fill(c(list(initial_boxes), lapply(choices[available], `[[`, "box"))),
+    leaders = ggchord_rbind_fill(c(list(initial_leaders), lapply(choices[available], `[[`, "line"))))
+}
+
+ggchord_callout_bounds_overlap <- function(a, b) {
+  a[1L] <= b[2L] + 1e-9 && b[1L] <= a[2L] + 1e-9 &&
+    a[3L] <= b[4L] + 1e-9 && b[3L] <= a[4L] + 1e-9
+}
+
+ggchord_choose_circular_callouts <- function(options, angles) {
+  angles <- (angles - angles[1L]) %% (2 * pi)
+  costs <- lapply(options, function(x) vapply(x, `[[`, numeric(1L), "cost"))
+  tracks <- lapply(options, function(x) vapply(x, `[[`, integer(1L), "track"))
+  n <- length(options)
+  cache <- new.env(parent = emptyenv())
+  pair_cost <- function(i, j, a, b) {
+    if (i > j) return(pair_cost(j, i, b, a))
+    key <- paste(i, j, a, b, sep = ":")
+    known <- cache[[key]]
+    if (!is.null(known)) return(known)
+    left <- options[[i]][[a]]
+    right <- options[[j]][[b]]
+    overlap <- ggchord_callout_bounds_overlap
+    blocked <- (overlap(left$box_bounds, right$box_bounds) &&
+      ggchord_boxes_overlap_any(left$box, right$box)) ||
+      (overlap(left$line_bounds, right$line_bounds) &&
+        ggchord_inner_leaders_cross(left$line, right$line))
+    value <- Inf
+    if (!blocked) {
+      reverse <- left$track == right$track &&
+        angles[i] + left$angle > angles[j] + right$angle
+      value <- 6 * ((overlap(left$line_bounds, right$box_bounds) &&
+        ggchord_inner_leader_hits(left$line, right$box)) +
+        (overlap(right$line_bounds, left$box_bounds) &&
+        ggchord_inner_leader_hits(right$line, left$box))) + 3 * reverse
+    }
+    cache[[key]] <- value
+    value
+  }
+  selected <- rep(1L, n)
+  marginal <- function(i, others) {
+    vapply(seq_along(options[[i]]), function(a) {
+      cost <- costs[[i]][a]
+      for (j in others) {
+        cost <- cost + pair_cost(i, j, a, selected[j])
+        if (!is.finite(cost)) break
+      }
+      cost
+    }, numeric(1L))
+  }
+  track_cost <- function(trial) {
+    used <- unique(vapply(seq_len(n), function(i) tracks[[i]][trial[i]], integer(1L)))
+    3 * max(0, length(used) - 2L)
+  }
+  for (i in c(seq_len(n), rev(seq_len(n)))) {
+    others <- setdiff(seq_len(n), i)
+    scores <- marginal(i, others)
+    for (a in which(is.finite(scores))) {
+      trial <- selected
+      trial[i] <- a
+      scores[a] <- scores[a] + track_cost(trial)
+    }
+    a <- which.min(scores)
+    if (scores[a] + .25 < scores[selected[i]]) selected[i] <- a
+  }
+  # Try exchanging neighbouring labels across rows when one label's best
+  # position is occupied by the other. Bound comparisons by the current cost.
+  for (i in seq_len(n - 1L)) {
+    j <- i + 1L
+    if (pair_cost(i, j, selected[i], selected[j]) < 6) next
+    others <- setdiff(seq_len(n), c(i, j))
+    left <- marginal(i, others)
+    right <- marginal(j, others)
+    best <- selected
+    best_score <- left[selected[i]] + right[selected[j]] +
+      pair_cost(i, j, selected[i], selected[j]) + track_cost(selected)
+    for (a in which(is.finite(left) & left + min(right) < best_score)) {
+      for (b in which(is.finite(right) & left[a] + right < best_score)) {
+        trial <- selected
+        trial[c(i, j)] <- c(a, b)
+        score <- left[a] + right[b] + pair_cost(i, j, a, b) + track_cost(trial)
+        if (score + .25 < best_score) {
+          best <- trial
+          best_score <- score
+        }
+      }
+    }
+    selected <- best
+  }
+  if (any(selected != 1L)) selected else NULL
 }
 
 ggchord_feature_label_lanes <- function(gl, gene_polys, seq_arcs,

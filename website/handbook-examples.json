@@ -425,8 +425,8 @@
   },
   "map-duet": {
     "kind": "plot",
-    "width": 10,
-    "height": 8,
+    "width": 11,
+    "height": 9,
     "dpi": 110,
     "caption": {
       "zh": "pETDuet-1 · 20 个特征，54 个有标签的切割位置",

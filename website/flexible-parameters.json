@@ -21,6 +21,9 @@
   "geom_seq_region": {
     "thickness": "strand"
   },
+  "geom_link_ribbon": {
+    "gap": "sequence"
+  },
   "label_layout_fixed": {
     "offset": "fixed-label",
     "along": "fixed-label"

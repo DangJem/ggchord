@@ -203,6 +203,20 @@ ggchord_resolve_position_offset <- function(offset, seqs, placement,
   ggchord_stop(caller, ": invalid flexible offset specification")
 }
 
+ggchord_lane_intervals <- function(data, row, length, circular, pad = 0) {
+  parts <- data$.feature_runs[[row]]
+  if (!NROW(parts)) parts <- data[row, c("start", "end"), drop = FALSE]
+  intervals <- lapply(seq_len(nrow(parts)), function(i) {
+    a <- as.numeric(parts$start[i])
+    b <- as.numeric(parts$end[i])
+    if (isTRUE(circular) && is.finite(length) && a > b) {
+      rbind(c(max(1, a - pad), length), c(1, min(length, b + pad)))
+    } else cbind(max(1, min(a, b) - pad),
+      if (is.finite(length)) min(length, max(a, b) + pad) else max(a, b) + pad)
+  })
+  do.call(rbind, intervals)
+}
+
 ggchord_allocate_feature_lanes <- function(data, base, direction, spacing,
                                             circular = FALSE, lengths = NULL,
                                             lane_order = "source") {
@@ -228,11 +242,7 @@ ggchord_allocate_feature_lanes <- function(data, base, direction, spacing,
         display_bp <- glyph_width * 3 / radius / (2 * pi) * len
         pad <- max(0, display_bp - abs(b - a)) / 2
       }
-      if (isTRUE(circular) && is.finite(len) && a > b) {
-        rbind(c(max(1, a - pad), len), c(1, min(len, b + pad)))
-      } else matrix(c(max(1, min(a, b) - pad),
-        if (is.finite(len)) min(len, max(a, b) + pad) else max(a, b) + pad),
-        nrow = 1L)
+      ggchord_lane_intervals(data, i, len, circular, pad)
     })
     # Only renderer-created rows from one multi-segment biological feature are
     # co-allocated. User-facing feature names/groups never collapse collisions:
@@ -287,16 +297,129 @@ ggchord_allocate_feature_lanes <- function(data, base, direction, spacing,
   lane
 }
 
-ggchord_feature_lane_offsets <- function(data, lane, base, direction, spacing) {
+# Measure the inward extent of the displayed axis before placing features.
+# Movable parallel labels use the same adjacent-to-backbone channel as the
+# final axis resolver. Explicit positions keep their measured extent.
+ggchord_circular_axis_inner_limit <- function(limit, ticks, plot, units_per_mm,
+    rot_rad, rotation) {
+  if (!nrow(ticks)) return(limit)
+  edge <- limit
+  tick_radius <- sqrt(ticks$x1^2 + ticks$y1^2)
+  for (major in c(TRUE, FALSE)) {
+    element <- ggchord_theme_element(plot,
+      if (major) "ggchord.axis.ticks" else "ggchord.axis.minor.ticks")
+    if (!inherits(element, "element_line")) next
+    at <- ticks$is_major == major
+    reach <- tapply(tick_radius[at] - (element@linewidth %||% 0) * units_per_mm / 2,
+      ticks$accver[at], min)
+    limit[names(reach)] <- pmin(limit[names(reach)], reach)
+  }
+  if (!inherits(ggchord_theme_element(plot, "ggchord.axis.text"), "element_text"))
+    return(limit)
+  at <- which(!is.na(ticks$label) & nzchar(ticks$label))
+  if (!length(at)) return(limit)
+  ticks <- ggchord_transform_axis_ticks(ticks[at, , drop = FALSE], TRUE, rot_rad, rotation)
+  text <- transform(ticks, text = label, text_x = label_x, text_y = label_y,
+    text_angle = label_angle, hjust = label_hjust, vjust = label_vjust)
+  curved <- text$label_along_axis & !(text$.axis_plotmath %in% TRUE)
+  units <- units_per_mm * 25.4
+  # The distance to a rotated rectangle is the length of its shortest vector
+  # to the origin. Taking the nearest corner would underestimate its extent.
+  nearest <- function(boxes) {
+    ca <- cos(boxes$angle); sa <- sin(boxes$angle)
+    x <- abs(boxes$cx * ca + boxes$cy * sa)
+    y <- abs(boxes$cx * sa - boxes$cy * ca)
+    sqrt(pmax(x - boxes$ow / 2, 0)^2 + pmax(y - boxes$oh / 2, 0)^2)
+  }
+  depth <- numeric(nrow(text))
+  if (any(!curved)) depth[!curved] <- nearest(ggchord_text_boxes(
+    text[!curved, , drop = FALSE], units_per_inch = units))
+  if (any(curved)) {
+    arc <- ggchord_arc_text_layout(text[curved, , drop = FALSE], units_per_inch = units,
+      respect_justification = TRUE, boxes_only = TRUE)
+    rows <- which(curved)[arc$owners]
+    inner <- tapply(nearest(arc$boxes), rows, min)
+    outer <- tapply(sqrt(rowSums(ggchord_boxes_corners(arc$boxes)^2)),
+      rep(rows, each = 4L), max)
+    idx <- as.integer(names(inner))
+    movable <- text$.axis_automatic_breaks[idx] %in% TRUE &
+      text$.axis_allow_clearance[idx] %in% TRUE & !(text$.axis_offset_explicit[idx] %in% TRUE)
+    depth[idx] <- inner
+    depth[idx[movable]] <- pmax(inner[movable], edge[text$accver[idx[movable]]] -
+      .85 * units_per_mm - (outer[movable] - inner[movable]))
+  }
+  reach <- tapply(depth[is.finite(depth) & depth > 0],
+    text$accver[is.finite(depth) & depth > 0], min)
+  limit[names(reach)] <- pmin(limit[names(reach)], reach)
+  limit
+}
+
+# Reserve physical rows for nearby labels that cannot fit their own feature.
+# Compare label footprints on the same track across the circular seam, and
+# share any constrained radial budget before laying out the individual names.
+ggchord_inner_track_gutters <- function(data, lanes, widths, spacing, length,
+                                        radius, units_per_mm, labels) {
+  gaps <- rep(spacing, length(widths) - 1L)
+  if (!length(gaps) || !NROW(labels) || !is.finite(length) || length <= 0) return(gaps)
+  labels <- labels[!is.na(labels$text) & nzchar(labels$text), , drop = FALSE]
+  if (!nrow(labels)) return(gaps)
+  intervals <- lapply(labels$source_row, function(i)
+    ggchord_lane_intervals(data, i, length, circular = TRUE))
+  spans <- vapply(intervals, function(parts) sum(parts[, 2L] - parts[, 1L] + 1), numeric(1))
+  source <- data[labels$source_row, , drop = FALSE]
+  center <- ggchord_feature_label_position(source, rep(length, nrow(source)),
+    "middle", source$strand) / length
+  boxes <- ggchord_text_boxes(transform(labels, text_x = 0, text_y = 0),
+    units_per_inch = units_per_mm * 25.4)
+  step <- (head(widths, -1L) + tail(widths, -1L)) / 2
+  radii <- pmax(radius - c(0, cumsum(step + gaps)), .2 * radius)
+  demand <- vapply(seq_along(gaps), function(i) {
+    circumference <- 2 * pi * radii[i]
+    rows <- which(lanes[labels$source_row] == i - 1L &
+      boxes$w > .85 * spans / length * circumference)
+    if (!length(rows)) return(0)
+    # Count competing rows at each actual label anchor, scanning their
+    # measured physical footprints and allowing a short tangential move.
+    half_width <- pmin(.25, (boxes$w[rows] + labels$padding[rows] * units_per_mm) /
+      (2 * circumference))
+    starts <- center[rows] - half_width
+    ends <- center[rows] + half_width
+    all_starts <- sort(c(starts - 1, starts, starts + 1))
+    all_ends <- sort(c(ends - 1, ends, ends + 1))
+    competing <- findInterval(ends, all_starts, left.open = TRUE) -
+      findInterval(starts, all_ends)
+    pitch <- 1.15 * max(boxes$h[rows]) + max(.35, max(labels$padding[rows]) * .55) * units_per_mm
+    max(competing) * pitch + .65 * units_per_mm
+  }, numeric(1L))
+  minimum_radius <- max(.25 * radius, tail(widths, 1L) / 2 + 5 * units_per_mm)
+  available <- max(0, radius - minimum_radius - sum(step + gaps))
+  extra <- pmax(0, pmin(.18 * radius, demand) - gaps)
+  gaps + extra * if (sum(extra) > available) available / sum(extra) else 1
+}
+
+ggchord_feature_lane_offsets <- function(data, lane, base, direction, spacing,
+    circular = FALSE, lengths = NULL, radii = NULL, units_per_mm = 1, labels = NULL) {
   offsets <- numeric(nrow(data))
+  width <- data$.feature_clearance_width %||% data$.feature_width
   bands <- interaction(data$accver, base, direction, drop = TRUE)
   for (idx in split(seq_len(nrow(data)), bands)) {
     lanes <- lane[idx]
     widths <- vapply(seq_len(max(lanes) + 1L) - 1L, function(at) {
-      max(data$.feature_width[idx[lanes == at]])
+      max(width[idx[lanes == at]])
     }, numeric(1))
     neighbours <- (head(widths, -1L) + tail(widths, -1L)) / 2
-    centres <- c(0, cumsum(neighbours + spacing[idx[1L]]))
+    gaps <- spacing[idx[1L]]
+    if (circular && direction[idx[1L]] < 0 && length(neighbours) && !is.null(radii)) {
+      id <- as.character(data$accver[idx[1L]])
+      local_labels <- if (NROW(labels)) {
+        matched <- match(labels$source_row, idx)
+        transform(labels[!is.na(matched), , drop = FALSE], source_row = matched[!is.na(matched)])
+      }
+      gaps <- ggchord_inner_track_gutters(data[idx, , drop = FALSE], lanes,
+        widths, gaps, lengths[[id]], radii[[id]] + base[idx[1L]], units_per_mm,
+        local_labels)
+    }
+    centres <- c(0, cumsum(neighbours + gaps))
     offsets[idx] <- direction[idx] * centres[lanes + 1L]
   }
   offsets
@@ -305,6 +428,8 @@ ggchord_feature_lane_offsets <- function(data, lane, base, direction, spacing) {
 ggchord_apply_feature_position <- function(data, position, seqs, lengths,
                                             circular = FALSE,
                                             units_per_mm = ggchord_units_per_mm(),
+                                            radii = NULL, inner_limit = NULL,
+                                            label_size = NULL, label_requests = NULL,
                                             caller = "feature position") {
   if (is.null(data) || !nrow(data)) return(data)
   ggchord_require_columns(
@@ -356,7 +481,24 @@ ggchord_apply_feature_position <- function(data, position, seqs, lengths,
     spacing <- units_per_mm * vapply(out$accver, function(id) gap[[id]][[1L]], numeric(1))
     lane <- ggchord_allocate_feature_lanes(out, base, direction, spacing,
       circular = circular, lengths = lengths, lane_order = position$lane_order %||% "source")
-    lane_offset <- ggchord_feature_lane_offsets(out, lane, base, direction, spacing)
+    if (circular && isTRUE(position$automatic_base) && !is.null(inner_limit)) {
+      inward <- direction < 0
+      first <- inward & lane == 0L
+      width <- out$.feature_clearance_width %||% out$.feature_width
+      by_reference <- tapply(width[first], out$accver[first], max)
+      ids <- as.character(out$accver[inward])
+      base[inward] <- inner_limit[ids] - radii[ids] -
+        by_reference[ids] / 2 - .6 * units_per_mm
+    }
+    if (circular && !is.null(label_size)) {
+      label <- as.character(out$label %||% out$anno)
+      if (length(label)) label_requests <- ggchord_rbind_fill(list(label_requests,
+        data.frame(source_row = seq_len(nrow(out)), text = label, size = label_size,
+          family = "", fontface = 1, lineheight = 1.2, padding = 1)))
+    }
+    lane_offset <- ggchord_feature_lane_offsets(out, lane, base, direction, spacing,
+      circular = circular, lengths = lengths, radii = radii, units_per_mm = units_per_mm,
+      labels = label_requests)
   }
   out$.position_name <- position_name
   out$.position_base_offset <- base

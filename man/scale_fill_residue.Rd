@@ -32,6 +32,10 @@ An ordinary ggplot2 fill scale.
 \description{
 Colour residue cells by alphabet
 }
+\details{
+The DNA defaults are red A, blue C, yellow G and green T.
+Supply named \code{values} to replace individual symbol colours.
+}
 \examples{
 library(ggplot2)
 

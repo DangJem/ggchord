@@ -29,19 +29,27 @@ ggchord_layout_axis_step <- function(
                            stringsAsFactors = FALSE)
 
   if (show_axis) {
-    # Circular backbones supply the baseline at zero gap. Explicit gaps move
-    # the axis to one side of the whole backbone, with ticks on that same side.
-    axis_radius <- function(id) {
-      ref <- seq_refs[[id]]
-      if (!isTRUE(circular)) return(ref$r0 - axisGap[id])
-      side <- if (axisGap[id] > 0) 1 else -1
-      ref$r0 - side * seqBackboneOuter - axisGap[id]
+    # The circular baseline attaches at the visible edge of the actual
+    # stroke, including explicit sequence thickness and offset.
+    radius <- function(id) {
+      reference_radius <- seq_refs[[id]]$r0
+      if (!isTRUE(circular)) return(reference_radius - axisGap[id])
+      backbone <- axis_text_style$backbone
+      edge <- if (isTRUE(axis_text_style$inward)) "inner" else "outer"
+      unname(backbone[[edge]][match(id, backbone$accver)] %||% reference_radius) +
+        if (edge == "inner") -abs(axisGap[id]) else abs(axisGap[id])
+    }
+    circular_xy <- function(angle, radius) {
+      cbind(x = cos(angle) * radius, y = sin(angle) * radius)
     }
     axis_lines <- do.call(rbind, lapply(seqs, function(id) {
-      if (isTRUE(circular) && axisGap[id] == 0) return(axis_lines)
+      backbone <- axis_text_style$backbone
+      if (isTRUE(circular) && axisGap[id] == 0 &&
+          isTRUE(backbone$rendered[match(id, backbone$accver)])) return(axis_lines)
       ref <- seq_refs[[id]]
       angles <- seq(starts[id], ends[id], length.out = nSeg)
-      pts <- map_to_curve_many(angles, axis_radius(id), ref)
+      pts <- if (isTRUE(circular)) circular_xy(angles, radius(id)) else
+        map_to_curve_many(angles, radius(id), ref)
       data.frame(x = pts[, 1], y = pts[, 2], accver = id, stringsAsFactors = FALSE)
     }))
 
@@ -144,13 +152,11 @@ ggchord_layout_axis_step <- function(
       len <- ifelse(pts$is_major, axisMajLen[id], axisMinLen[id])
       len[origin_tick] <- len[origin_tick] * 2.2
       if (isTRUE(circular)) {
-        side <- if (axisGap[id] > 0) 1 else -1
-        r_axis <- axis_radius(id)
-        base <- map_to_curve_many(angle, r_axis, ref)
-        tip <- map_to_curve_many(angle, r_axis - side * len, ref)
-        lbl <- map_to_curve_many(
-          angle, r_axis - side * (len + labelOffset[id]), ref
-        )
+        direction <- if (isTRUE(axis_text_style$inward)) -1 else 1
+        r_axis <- radius(id)
+        base <- circular_xy(angle, r_axis)
+        tip <- circular_xy(angle, r_axis + direction * len)
+        lbl <- circular_xy(angle, r_axis + direction * (len + labelOffset[id]))
       } else {
         base <- map_to_curve_many(angle, r0, ref)
         tip <- map_to_curve_many(angle, r0 + len * dir, ref)
@@ -177,6 +183,7 @@ ggchord_layout_axis_step <- function(
         .axis_automatic_breaks = automatic_breaks,
         .axis_offset_explicit = isTRUE(axis_text_style$offset_explicit),
         .axis_allow_clearance = isTRUE(axis_text_style$allow_clearance),
+        .axis_inward = isTRUE(circular) && isTRUE(axis_text_style$inward),
         is_major = pts$is_major,
         is_origin = origin_tick,
         is_endpoint = pts$is_major & pts$pos %in% c(1, lens[id]),

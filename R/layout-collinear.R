@@ -54,6 +54,14 @@ ggchord_collinear_controls <- function(from, to, control = NULL,
   list(c(from[1L], middle_y), c(to[1L], middle_y))
 }
 
+# The normal derivative of a cubic whose controls swap the two endpoints
+# vanishes at the midpoint. Keep enough separation there to preserve the
+# apparent width of a ribbon, even at maximum requested curvature.
+ggchord_connection_bend <- function(route) {
+  strength <- route$curvature %||% .5
+  strength - max(0, strength - .5) / 2
+}
+
 # A positive bulge requests an outside route for non-neighbouring rows.
 # Solve the cubic at each intervening backbone, using the inside ribbon edge.
 # This also works for flipped references and separately aligned display windows.
@@ -63,7 +71,7 @@ ggchord_outside_controls <- function(route, frames, endpoints, from, to) {
   fraction <- (frames$y - from[2L]) / (to[2L] - from[2L])
   between <- which(fraction > 0 & fraction < 1 & !frames$accver %in% endpoints)
   if (!length(between)) return(NULL)
-  bend <- route$curvature
+  bend <- ggchord_connection_bend(route)
   y_curve <- function(t) 3 * (1 - t)^2 * t * bend +
     3 * (1 - t) * t^2 * (1 - bend) + t^3
   t <- vapply(fraction[between], function(f)
@@ -120,6 +128,7 @@ ggchord_collinear_ribbons <- function(p, layout) {
     function(n) rep_len(c("solid", "dashed", "dotted", "dotdash",
       "longdash", "twodash"), n)
   ) else NULL
+  obstacle_index <- ggchord_obstacle_index(p$ribbon_obstacles, p$link_avoid)
   pieces <- lapply(seq_along(valid), function(j) {
     i <- valid[j]
     q <- as.character(input$qaccver[i]); s <- as.character(input$saccver[i])
@@ -130,28 +139,18 @@ ggchord_collinear_ribbons <- function(p, layout) {
     if (same_row) direction_q <- 1
     make_front <- function(id, start, end, direction) {
       bounds <- ggchord_interval_front(start, end)
-      start <- bounds[1L]
-      end <- bounds[2L]
-      positions <- seq(start, end, length.out = 50L)
-      configured <- unname(p$ribbonGap[[id]])
-      automatic <- isTRUE(p$ribbon_gap_auto)
-      avoid <- p$link_avoid %||% "none"
-      obstacles <- p$ribbon_obstacles
-      if (automatic && identical(avoid, "smooth") &&
-          !is.null(obstacles) && nrow(obstacles)) {
-        obs <- obstacles[obstacles$accver == id, , drop = FALSE]
-        margin <- max(abs(end - start) * .08, 1)
-        knots <- c(obs$start - margin, obs$start, obs$end, obs$end + margin)
-        positions <- sort(unique(c(positions,
-          knots[knots > min(start, end) & knots < max(start, end)])),
-          decreasing = end < start)
-      }
-      gap <- if (automatic) ggchord_collinear_gap_profile(
-        positions, id, direction, obstacles, avoid,
-        close_gap = min(configured, .035, channel * .2)
-      ) else rep(configured, length(positions))
-      list(xy = cbind(x = ggchord_collinear_x(positions, id, ref),
-        y = unname(ref$y[id]) + direction * gap + unname(p$ribbon_offset[id])), gap = max(gap))
+      normal_mm <- p$ribbon_normal_mm
+      front <- if (isTRUE(p$ribbon_gap_auto)) {
+        gap_mm <- p$ribbon_gap_mm[[id]]
+        base <- ggchord_ribbon_base_gap(p$ribbon_clearance, id, direction, normal_mm, gap_mm)
+        ggchord_connection_front(bounds, obstacle_index[[id]], direction, p$link_avoid,
+          base, normal_mm, ggchord_collinear_scale(id, ref) * normal_mm /
+            ggchord_units_per_mm(if (isTRUE(p$collinear_vertical)) "y" else "x"),
+          gap_mm = gap_mm, strength = p$ribbon_avoid_strength)
+      } else list(position = bounds, gap = rep(unname(p$ribbonGap[[id]]), 2L))
+      list(xy = cbind(x = ggchord_collinear_x(front$position, id, ref),
+        y = unname(ref$y[id]) + direction * front$gap + unname(p$ribbon_offset[id])),
+        gap = max(front$gap))
     }
     q_front <- make_front(q, input$qstart[i], input$qend[i], direction_q)
     s_front <- make_front(s, input$sstart[i], input$send[i], direction_s)
@@ -171,8 +170,9 @@ ggchord_collinear_ribbons <- function(p, layout) {
       }
       if (inherits(route, "ggchord_link_route")) {
         if (route$route == "straight") return(rbind(from, to))
-        cp <- outside %||% list(c(from[1L], from[2L] + route$curvature * (to[2L] - from[2L])),
-          c(to[1L], to[2L] + route$curvature * (from[2L] - to[2L])))
+        bend <- ggchord_connection_bend(route) * (to[2L] - from[2L])
+        cp <- outside %||% list(c(from[1L], from[2L] + bend),
+          c(to[1L], to[2L] - bend))
       } else cp <- ggchord_collinear_controls(from, to, route, i, edge = control_edge)
       bezier_pts(from, to, cp[[1L]], cp[[2L]], n = 50L)
     }
@@ -194,7 +194,7 @@ ggchord_collinear_ribbons <- function(p, layout) {
       linetype_map[as.character(input[[p$ribbon_linetype_by]][i])]
     } else if (identical(p$ribbon_direction, "linetype")) {
       p$ribbon_direction_linetypes[biological_direction]
-    } else if (!isTRUE(p$collinear_crossrow_styles) ||
+    } else if (same_row || !isTRUE(p$collinear_crossrow_styles) ||
         isTRUE(input$.ggchord_adjacent[i])) "solid" else "dashed"
     out <- data.frame(x = xy[, 1L], y = xy[, 2L], group = j,
       source_row = input$.ggchord_source_row[i] %||% i,
@@ -239,7 +239,7 @@ ggchord_collinear_link_geometry <- function(data, params, layout, rows) {
     }
     q <- endpoint(q_id, data$qpos[i], s_id)
     s <- endpoint(s_id, data$spos[i], q_id)
-    curvature <- params$route$curvature %||% .5
+    curvature <- ggchord_connection_bend(params$route)
     outside <- ggchord_outside_controls(params$route, layout$sequence_layout, c(q_id, s_id), q, s)
     controls <- if (ref$y[q_id] == ref$y[s_id]) {
       rise <- abs(q[1L] - s[1L]) * curvature
@@ -262,6 +262,7 @@ ggchord_collinear_entity_obstacles <- function(layer, layout, input) {
     return(ggchord_empty_obstacles())
   }
   ref <- layout$sequence_reference
+  stroke_mm <- ggchord_outline_half_mm(layer)
   pieces <- lapply(split(polygons, polygons$group), function(d) {
     row <- input[d$source_row[1L], , drop = FALSE]
     id <- as.character(row$accver)
@@ -270,11 +271,13 @@ ggchord_collinear_entity_obstacles <- function(layer, layout, input) {
       unname(ref$lens[id]) - local_x
     offsets <- d$y - unname(ref$y[id])
     low <- min(offsets); high <- max(offsets)
-    data.frame(accver = id, start = max(1, min(positions)),
+    data.frame(accver = id, start = max(0, min(positions)),
       end = min(unname(ref$lens[id]), max(positions)),
       side = if (low >= 0) "positive" else if (high <= 0) "negative" else "both",
       normal_min = low, normal_max = high, priority = 1,
-      source_layer = layer$ggchord_layer_id, stringsAsFactors = FALSE)
+      source_layer = layer$ggchord_layer_id, stroke_mm = stroke_mm,
+      profile = I(list(ggchord_obstacle_profile(positions, offsets))),
+      stringsAsFactors = FALSE)
   })
   do.call(rbind, pieces)
 }

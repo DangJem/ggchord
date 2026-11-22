@@ -122,7 +122,8 @@ ggchord_radial_route <- function(a, b, delta, route, bulge) {
   path * curvature + straight * (1 - curvature)
 }
 
-ggchord_radial_connections <- function(d, input, params, component, layout, frames) {
+ggchord_radial_connections <- function(d, input, params, component, layout, frames,
+    ribbon_gap_mm = ggchord_ribbon_gap_mm(params, layout$seqs)) {
   if (!is.data.frame(d) || !nrow(d) || is.null(input)) return(d)
   if (!identical(params$link_branch %||% "none", "none"))
     ggchord_stop("coord_radial_synteny(): route = 'shared' is unsupported; use route = 'curve'")
@@ -130,6 +131,9 @@ ggchord_radial_connections <- function(d, input, params, component, layout, fram
   configured <- params$ribbon_gap %||% params$link_gap
   gaps <- process_sequence_param(configured %||% .035, layout$seqs, "link_gap", .035)
   offsets <- ggchord_connection_offsets(params, layout$seqs)
+  avoid <- if (is.null(configured)) params$link_avoid %||% "none" else "none"
+  obstacles <- ggchord_obstacle_index(layout$obstacles, avoid)
+  normal_mm <- ggchord_units_per_mm()
   pieces <- list(); endpoints <- list(); channels <- list()
   for (i in unique(d$source_row)) {
     template <- d[d$source_row == i, , drop = FALSE]
@@ -149,14 +153,22 @@ ggchord_radial_connections <- function(d, input, params, component, layout, fram
           any(c(start, end) < 1 | c(start, end) > ref$lens[id]))
         ggchord_stop("coord_radial_synteny(): endpoints must be finite and within sequence length")
       bounds <- if (component != "ribbon") c(start, end) else ggchord_interval_front(start, end)
-      pos <- seq(bounds[1], bounds[2], length.out = if (component == "ribbon") 16L else 1L)
-      gap <- ggchord_collinear_gap_profile(pos, id, sign, layout$obstacles,
-        avoid = if (is.null(configured)) params$link_avoid %||% "none" else "none",
-        close_gap = unname(gaps[id]))
+      base <- if (is.null(configured))
+        ggchord_ribbon_base_gap(layout$ribbon_clearance, id, sign, normal_mm,
+          ribbon_gap_mm[[id]]) else gaps[[id]]
+      gap_mm <- if (component == "ribbon") ribbon_gap_mm[[id]] else .30
+      profile <- ggchord_connection_front(bounds, obstacles[[id]], sign, avoid,
+        base, normal_mm, ggchord_collinear_scale(id, ref),
+        n = if (component == "ribbon") 2L else 1L,
+        gap_mm = gap_mm, strength = params$avoid_strength %||% .5)
+      pos <- profile$position
+      gap <- profile$gap
       r <- frames$inner[match(id, frames$key)] + ggchord_collinear_x(pos, id, ref) - frames$axis_min[match(id, frames$key)]
       # Oversized fixed/automatic bands would invert the front or consume its
       # angular channel. Do not silently clamp the user's physical geometry.
-      if (any(!is.finite(gap)) || any(gap < 0) || (delta != 0 && any(atan2(gap, r) >= abs(delta) * .45)))
+      clearance <- abs(sign * gap + offsets[[id]])
+      if (any(!is.finite(gap)) || any(gap < 0) ||
+          (delta != 0 && any(atan2(clearance, r) >= abs(delta) * .45)))
         ggchord_stop("coord_radial_synteny(): endpoint clearance does not fit its angular channel; increase inner_radius or reduce bands/gaps")
       ggchord_radial_points(ggchord_collinear_x(pos, id, ref),
         ref$y[id] + sign * gap + offsets[[id]], id, frames)
@@ -173,9 +185,11 @@ ggchord_radial_connections <- function(d, input, params, component, layout, fram
       # Clear the full intervening backbones, not merely their centre points.
       # Both ribbon edges must pass outside each spoke tip in this channel.
       tips <- frames$inner + layout$sequence_layout$xmax - layout$sequence_layout$xmin
-      for (edge_index in c(1L, nrow(qxy))) {
-        qa <- atan2(qxy[edge_index, 2], qxy[edge_index, 1])
-        sa <- atan2(sxy[edge_index, 2], sxy[edge_index, 1])
+      for (edge in c("start", "end")) {
+        q_edge <- if (edge == "start") 1L else nrow(qxy)
+        s_edge <- if (edge == "start") 1L else nrow(sxy)
+        qa <- atan2(qxy[q_edge, 2], qxy[q_edge, 1])
+        sa <- atan2(sxy[s_edge, 2], sxy[s_edge, 1])
         turn <- (sa - qa + pi) %% (2 * pi) - pi
         if (delta > 0 && turn < 0) turn <- turn + 2 * pi
         if (delta < 0 && turn > 0) turn <- turn - 2 * pi
@@ -184,8 +198,8 @@ ggchord_radial_connections <- function(d, input, params, component, layout, fram
           if (turn < 0) offset <- offset - 2 * pi
           t <- offset / turn
           if (!is.finite(t) || t <= 0 || t >= 1) next
-          ra <- sqrt(sum(qxy[edge_index, ]^2))
-          rb <- sqrt(sum(sxy[edge_index, ]^2))
+          ra <- sqrt(sum(qxy[q_edge, ]^2))
+          rb <- sqrt(sum(sxy[s_edge, ]^2))
           radius <- ra + (rb - ra) * ggchord_radial_fraction(t, route$curvature)
           bulge <- max(bulge, (tips[j] + .12 - radius) / (16 * t^2 * (1 - t)^2))
         }
@@ -221,6 +235,7 @@ ggchord_radial_connections <- function(d, input, params, component, layout, fram
     piece$x <- xy[, 1]; piece$y <- xy[, 2]; piece$group <- i
     piece$.ggchord_adjacent <- adjacent
     if (component == "ribbon") {
+      piece$linetype_val <- if (adjacent || qi == si) "solid" else "dashed"
       piece$.q_n <- nrow(qxy); piece$.s_n <- nrow(sxy)
       endpoints[[length(endpoints) + 1L]] <- data.frame(source_row = i,
         qaccver = q, saccver = s, qstart = input$qstart[i], qend = input$qend[i],
@@ -239,6 +254,40 @@ ggchord_radial_connections <- function(d, input, params, component, layout, fram
   list(data = ggchord_rbind_fill(pieces), endpoints = ggchord_rbind_fill(endpoints))
 }
 
+ggchord_radial_inner <- function(layout, plot, frames) {
+  if (!isTRUE(plot$coordinates$radial_inner_automatic)) return(frames$inner)
+  # Reserve less than half of each adjacent angular channel to one spoke.
+  # A wide feature contributes only where it is close enough to the centre.
+  tangent <- tan(.40 * 2 * pi / nrow(frames))
+  mm <- ggchord_units_per_mm()
+  backbone <- layout$ribbon_clearance
+  ribbons <- Filter(function(layer) identical(layer$ggchord_type, "ribbon"), plot$layers)
+  ribbon_gaps <- vapply(ribbons, function(layer) {
+    mapping <- if (isTRUE(layer$inherit.aes)) plot$mapping else NULL
+    max(ggchord_ribbon_gap_mm(layer$ggchord_params, layout$seqs, layer, mapping))
+  }, numeric(1))
+  gap <- max(.15, ribbon_gaps)
+  minimum <- (max(unlist(backbone, use.names = FALSE), .45) + gap) * mm / tangent
+  ref <- layout$sequence_reference
+  pieces <- lapply(layout$layer_geometry, function(owner) owner$gene_poly)
+  for (poly in pieces) {
+    if (!NROW(poly)) next
+    at <- match(poly$accver, frames$key)
+    along <- poly$x - frames$axis_min[at]
+    across <- abs(poly$y - frames$source_y[at]) + max(.45, gap + .135) * mm
+    minimum <- max(minimum, across / tangent - along, na.rm = TRUE)
+  }
+  tracks <- layout$track_obstacles
+  if (NROW(tracks)) {
+    id <- tracks$accver
+    along <- pmin(ggchord_collinear_x(tracks$start, id, ref),
+      ggchord_collinear_x(tracks$end, id, ref)) - frames$axis_min[match(id, frames$key)]
+    across <- pmax(abs(tracks$normal_min), abs(tracks$normal_max)) + max(.45, gap) * mm
+    minimum <- max(minimum, across / tangent - along, na.rm = TRUE)
+  }
+  max(frames$inner, minimum)
+}
+
 ggchord_project_radial_layout <- function(layout, plot) {
   if (isTRUE(layout$radial_projected)) return(layout)
   n <- length(layout$seqs)
@@ -250,6 +299,7 @@ ggchord_project_radial_layout <- function(layout, plot) {
     nx = -sin(theta), ny = cos(theta), inner = plot$coordinates$radial_inner_radius,
     source_y = unname(layout$sequence_reference$y[layout$seqs]), axis_min = tab$xmin,
     ratio = plot$coordinates$ratio %||% 1)
+  frames$inner[] <- ggchord_radial_inner(layout, plot, frames)
   layout$radial_clockwise <- plot$coordinates$radial_clockwise
   layout$radial_nonadjacent_bulge <- plot$coordinates$radial_nonadjacent_bulge %||% 0
   endpoints <- list()
@@ -282,12 +332,10 @@ ggchord_project_radial_layout <- function(layout, plot) {
     if (!is.data.frame(d) || !nrow(d)) next
     input <- layout$layer_inputs[[owner]][[component]]
     layer <- plot$layers[[which(vapply(plot$layers, function(l) identical(l$ggchord_layer_id, owner), logical(1)))[1]]]
-    result <- ggchord_radial_connections(d, input, layer$ggchord_params, component, layout, frames)
-    if (component == "ribbon" &&
-        is.null(layer$ggchord_params$ribbon_outline_linetype) &&
-        !any(c("linetype", "ribbon_linetype") %in% names(layer$ggchord_input_mapping))) {
-      result$data$linetype_val <- ifelse(result$data$.ggchord_adjacent, "solid", "dashed")
-    }
+    mapping <- if (isTRUE(layer$inherit.aes)) plot$mapping else NULL
+    gap_mm <- ggchord_ribbon_gap_mm(layer$ggchord_params, layout$seqs, layer, mapping)
+    result <- ggchord_radial_connections(d, input, layer$ggchord_params, component, layout,
+      frames, gap_mm)
     layout$layer_geometry[[owner]][[component]] <- result$data
     if (!is.null(result$endpoints)) {
       result$endpoints$layer_id <- owner

@@ -3,7 +3,9 @@ ggchord_layout_ribbon_step <- function(
     debug, ends, lens, link_avoid, orientation, ribbon_alpha, ribbon_alpha_by, ribbon_alpha_range,
     ribbon_color_by, ribbon_color_scheme, ribbon_colors, ribbon_ctrl_point, ribbon_data,
     ribbon_direction, ribbon_direction_alpha, ribbon_direction_colors, ribbon_direction_linetypes,
-    ribbon_gap_auto, ribbon_linetype_by, ribbon_linetypes, ribbon_obstacles, ribbon_outline_by,
+    ribbon_gap_auto, ribbon_offset, ribbon_clearance, ribbon_normal_mm,
+    ribbon_gap_mm, ribbon_avoid_strength,
+    ribbon_linetype_by, ribbon_linetypes, ribbon_obstacles, ribbon_outline_by,
     ribbon_outline_colors, ribbonGap, seq_refs, seqRadius, seqs, starts) {
   # ====================================================================
   # Step 6: generate ribbon polygons
@@ -78,16 +80,11 @@ ggchord_layout_ribbon_step <- function(
     ribbon_s_gap <- numeric(length(valid_idx))
     ribbon_q_n <- ribbon_s_n <- integer(length(valid_idx))
 
-    # With the default NULL ribbon_gap, determine spacing independently at
-    # each ribbon endpoint. Only polygons that occupy the ribbon-facing side
-    # of the sequence and overlap that endpoint's genomic interval count as
-    # obstacles. Text and leader segments never enter this table.
-    endpoint_ribbon_gap <- function(accver, start, end) {
-      configured <- unname(ribbonGap[[accver]])
-      if (!isTRUE(ribbon_gap_auto)) return(configured)
-      max(ggchord_gap_profile(c(start, end), accver, ribbon_obstacles,
-        if (link_avoid == "none") "none" else "uniform", min(configured, .035)))
-    }
+    obstacle_index <- ggchord_obstacle_index(ribbon_obstacles, link_avoid)
+    along_units <- vapply(seq_refs, function(ref)
+      sum(sqrt(diff(ref$path$x)^2 + diff(ref$path$y)^2)), numeric(1)) / lens
+    horizontal_ref <- vapply(seq_refs, function(ref) diff(range(ref$path$y)) < 1e-12,
+      logical(1))
 
     # Continuous / discrete value preparation on the valid rows only.
     alpha_norm <- rep(1, length(valid_idx))
@@ -136,13 +133,6 @@ ggchord_layout_ribbon_step <- function(
 
       q_ref <- seq_refs[[q]]
       s_ref <- seq_refs[[s]]
-      q_gap <- endpoint_ribbon_gap(q, rib_qstart[i], rib_qend[i])
-      s_gap <- endpoint_ribbon_gap(s, rib_sstart[i], rib_send[i])
-      rq <- seqRadius[q] + q_gap
-      rs <- seqRadius[s] + s_gap
-      ribbon_q_gap[j] <- q_gap
-      ribbon_s_gap[j] <- s_gap
-
       angles <- function(id, bounds) {
         fraction <- bounds / lens[id]
         if (orientation[id] != 1) fraction <- 1 - fraction
@@ -153,40 +143,50 @@ ggchord_layout_ribbon_step <- function(
       q_angles <- angles(q, q_bounds)
       s_angles <- angles(s, s_bounds)
 
-      make_front <- function(id, start, end, ref, a0, a1, gap) {
-        positions <- seq(start, end, length.out = 50)
-        if (ribbon_gap_auto && link_avoid == "smooth" && nrow(ribbon_obstacles)) {
-          obs <- ribbon_obstacles[ribbon_obstacles$accver == id,,drop=FALSE]
-          span <- max(abs(end-start)*.08, 1)
-          knots <- c(obs$start-span, obs$start, obs$end, obs$end+span)
-          knots <- knots[knots > min(start,end) & knots < max(start,end)]
-          positions <- sort(unique(c(positions, knots)), decreasing = end < start)
+      make_front <- function(id, bounds, other, other_angles) {
+        ref <- seq_refs[[id]]
+        radius <- seqRadius[[id]]
+        offset <- ribbon_offset[[id]] %||% 0
+        if (!ribbon_gap_auto) {
+          displacement <- unname(ribbonGap[[id]]) + offset
+          return(list(xy = map_to_curve_many(angles(id, seq(bounds[1L], bounds[2L],
+            length.out = 50L)), radius + displacement, ref), gap = displacement))
         }
-        front <- function(pos) {
-          angles <- if (end == start) rep(a0, length(pos)) else a0 + (pos-start)/(end-start)*(a1-a0)
-          gaps <- if (ribbon_gap_auto) ggchord_gap_profile(pos, id, ribbon_obstacles,
-            link_avoid, min(unname(ribbonGap[[id]]), .035)) else rep(gap,length(pos))
-          xy <- map_to_curve_many(angles, seqRadius[id] + gaps, ref)
-          list(xy=xy, baseline=map_to_curve_many(angles,seqRadius[id],ref), gaps=gaps)
+        middle <- angles(id, mean(bounds))
+        from <- map_to_curve(middle, radius, ref)
+        to <- map_to_curve(mean(other_angles), seqRadius[[other]], seq_refs[[other]])
+        normal <- map_to_curve(middle, radius + 1, ref) - from
+        direction <- if (sum(normal * (to - from)) >= 0) 1 else -1
+        # Sequence drawing uses outward offsets (up for a horizontal path).
+        # The curve mapper uses its left normal, which can point inward.
+        outward <- if (horizontal_ref[[id]]) normal[2L] else sum(normal * from)
+        side <- if (outward >= 0) direction else -direction
+        gap_mm <- ribbon_gap_mm[[id]] %||% .15
+        baseline <- ggchord_ribbon_base_gap(ribbon_clearance, id, side,
+          ribbon_normal_mm, gap_mm)
+        obstacles <- obstacle_index[[id]]
+        front <- ggchord_connection_front(bounds, obstacles, direction, link_avoid,
+          baseline, ribbon_normal_mm, along_units[[id]], n = 50L,
+          gap_mm = gap_mm, strength = ribbon_avoid_strength)
+        a <- angles(id, front$position)
+        gap <- direction * front$gap + offset
+        xy <- map_to_curve_many(a, radius + gap, ref)
+        if (any(front$gap > baseline) &&
+            ggchord_front_invalid(xy, map_to_curve_many(a, radius, ref))) {
+          # A tightly curved path can fold back when the normal displacement
+          # varies. Fall back to an enclosing front for this endpoint alone.
+          gap <- rep(direction * max(front$gap) + offset, length(a))
+          xy <- map_to_curve_many(a, radius + gap, ref)
+          front_fallbacks <<- front_fallbacks + 1L
         }
-        result <- front(positions)
-        if (ribbon_gap_auto && link_avoid == "smooth" && ggchord_front_invalid(result$xy,result$baseline)) {
-          positions <- sort(unique(c(positions, (head(positions,-1)+tail(positions,-1))/2)),
-    decreasing=end<start)
-          result <- front(positions)
-          if (ggchord_front_invalid(result$xy,result$baseline)) {
-            angles <- if (end == start) rep(a0,
-    length(positions)) else a0+(positions-start)/(end-start)*(a1-a0)
-            result$xy <- map_to_curve_many(angles,seqRadius[id]+gap,ref)
-            front_fallbacks <<- front_fallbacks + 1L
-          }
-        }
-        result$xy
+        list(xy = xy, gap = max(abs(gap)))
       }
-      q_coords <- make_front(q, q_bounds[1L], q_bounds[2L], q_ref, q_angles[1L], q_angles[2L],
-    q_gap)
-      s_coords <- make_front(s, s_bounds[1L], s_bounds[2L], s_ref, s_angles[1L], s_angles[2L],
-    s_gap)
+      q_front <- make_front(q, q_bounds, s, s_angles)
+      s_front <- make_front(s, s_bounds, q, q_angles)
+      q_coords <- q_front$xy
+      s_coords <- s_front$xy
+      q_gap <- ribbon_q_gap[j] <- q_front$gap
+      s_gap <- ribbon_s_gap[j] <- s_front$gap
 
       ribbon_q_n[j] <- nrow(q_coords)
       ribbon_s_n[j] <- nrow(s_coords)

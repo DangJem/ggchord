@@ -1,5 +1,12 @@
 # Curve coordinate mapping function
 map_to_curve_many <- function(angle, radius, ref) {
+  if (isTRUE(ref$circle)) {
+    if (!isTRUE(ref$periodic))
+      angle <- pmax(ref$angles[1L], pmin(tail(ref$angles, 1L), angle))
+    # Curve offsets follow the left normal of the increasing-angle path.
+    drawn_radius <- 2 * ref$r0 - radius
+    return(cbind(x = drawn_radius * cos(angle), y = drawn_radius * sin(angle)))
+  }
   n <- length(angle)
   nref <- length(ref$angles)
   periodic <- isTRUE(ref$periodic)
@@ -48,7 +55,8 @@ map_to_curve_many <- function(angle, radius, ref) {
 }
 
 map_to_curve <- function(angle, radius, ref) {
-  if (isTRUE(ref$periodic)) return(as.numeric(map_to_curve_many(angle, radius, ref)[1L, ]))
+  if (isTRUE(ref$periodic) || isTRUE(ref$circle))
+    return(as.numeric(map_to_curve_many(angle, radius, ref)[1L, ]))
   # ref$angles is sorted, so use findInterval (O(log n)) instead of a
   # full linear scan to locate the nearest reference angle.
   fi <- findInterval(angle, ref$angles)

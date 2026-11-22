@@ -384,8 +384,8 @@
   },
   "map-duet": {
     "kind": "plot",
-    "width": 10,
-    "height": 8,
+    "width": 11,
+    "height": 9,
     "dpi": 110,
     "caption": {
       "en": "pETDuet-1 · 20 features and 54 labelled cut positions"

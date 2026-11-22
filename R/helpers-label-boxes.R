@@ -330,17 +330,20 @@ ggchord_text_boxes <- function(df,
     which(df$.ggchord_composite_label %in% TRUE & valid) else integer()
   uniform_sites <- if ('.ggchord_composite_label' %in% names(df))
     which(df$.ggchord_composite_label %in% FALSE & valid) else integer()
-  if (any(valid)) {
-    legacy_device <- names(dev.cur()) %in% c("pdf", "postscript")
-    unicode <- any(utf8ToInt(paste(texts[valid], collapse = "")) > 127L)
-    close_device <- if (dev.cur() > 1L && !(legacy_device && unicode))
-      function() invisible(NULL) else ggchord_measurement_device(text = texts[valid])
-    on.exit(close_device())
-    # Site labels are measured below using the same fragments as their
-    # renderer. A generic flat label measurement would be discarded.
-    regular <- valid
-    regular[c(composite, uniform_sites)] <- FALSE
-    for (i in which(regular)) {
+  # Site labels use the exact measurement paths below. The flat measurement
+  # only needs a fallback device when ordinary text actually uses it.
+  regular <- valid
+  regular[c(composite, uniform_sites)] <- FALSE
+  regular <- which(regular)
+  if (length(regular)) {
+    device <- dev.cur()
+    fallback <- device == 1L || (names(device) %in% c("pdf", "postscript") &&
+      any(utf8ToInt(paste(texts[valid], collapse = "")) > 127L))
+    if (fallback) {
+      close_device <- ggchord_measurement_device(text = texts[valid])
+      on.exit(close_device())
+    }
+    for (i in regular) {
       label <- if (isTRUE(df$.axis_plotmath[i])) parse(text = texts[i]) else texts[i]
       grob <- textGrob(
         label, gp = gpar(
@@ -356,7 +359,7 @@ ggchord_text_boxes <- function(df,
         grobHeight(grob), "inches", valueOnly = TRUE
       ) * units_per_inch
     }
-    close_device()
+    if (fallback) close_device()
   }
 
   if (length(composite)) {
@@ -409,10 +412,11 @@ ggchord_project_text_boxes <- function(x, y, w, h, angles, hjust, vjust,
 ggchord_arc_text_layout <- function(text, units_per_inch = .35,
                                      box_padding = 0, respect_justification = FALSE, line_metrics = NULL, boxes_only = FALSE) {
   if (!nrow(text)) return(list(glyphs = data.frame(), boxes =
-    ggchord_text_boxes(data.frame()), owners = integer()))
+    ggchord_text_boxes(data.frame()), owners = integer(), visible = logical()))
   glyphs <- list()
   boxes <- list()
   owners <- integer()
+  visible <- logical()
   for (i in seq_len(nrow(text))) {
     if (!is.na(text$text[i]) && grepl("\n", text$text[i], fixed=TRUE)) {
       lines <- strsplit(as.character(text$text[i]), "\n", fixed=TRUE)[[1L]]
@@ -438,18 +442,20 @@ ggchord_arc_text_layout <- function(text, units_per_inch = .35,
           }
           boxes[[length(boxes)+1L]] <- part$boxes
           owners <- c(owners,rep(i,nrow(part$boxes)))
+          visible <- c(visible, part$visible)
         }
       }
       next
     }
-    chars <- strsplit(enc2utf8(as.character(text$text[i])), "", fixed = TRUE)[[1L]]
-    if (!length(chars) || is.na(text$text[i]) || !nzchar(text$text[i])) next
-    # All glyphs on this line inherit the same type settings and viewport.
-    # Keep exact per-glyph sizes for the final rotation and obstacle boxes.
-    unique_chars <- unique(chars)
     key <- as.character(text$text[i])
+    if (is.na(key) || !nzchar(key)) next
+    # All glyphs on this line inherit the same type settings and viewport.
+    # Keep complete arc-length metrics so a different candidate position only
+    # recomputes the angle and the actual boxes.
     metrics <- if (!is.null(line_metrics)) line_metrics$lines[[key]] else NULL
     if (is.null(metrics)) {
+      chars <- strsplit(enc2utf8(key), "", fixed = TRUE)[[1L]]
+      unique_chars <- unique(chars)
       measured <- text[rep(i, length(unique_chars)), , drop = FALSE]
       measured$text <- unique_chars
       measured$text_x <- 0
@@ -457,22 +463,25 @@ ggchord_arc_text_layout <- function(text, units_per_inch = .35,
       measured$text_angle <- 0
       measured$hjust <- .5
       measured$vjust <- .5
-      metrics <- ggchord_text_boxes(
+      dimensions <- ggchord_text_boxes(
         measured, units_per_inch = units_per_inch, box_padding = 0
       )
-      if (!is.null(line_metrics)) line_metrics$lines[[key]] <- metrics[c("w", "h")]
+      index <- match(chars, unique_chars)
+      width <- dimensions$w[index]
+      height <- dimensions$h[index]
+      advance <- width
+      fallback <- max(height, na.rm = TRUE) * .34
+      advance[!is.finite(advance) | advance <= 0] <- fallback
+      tracking <- max(.0008, median(height, na.rm = TRUE) * .018)
+      total <- sum(advance) + tracking * max(0, length(chars) - 1L)
+      along <- cumsum(c(0, head(advance + tracking, -1L))) + advance / 2 - total / 2
+      metrics <- list(chars = chars, width = width, height = height, total = total,
+        along = along, visible = nzchar(trimws(chars, whitespace = "[\\h\\v]")))
+      if (!is.null(line_metrics)) line_metrics$lines[[key]] <- metrics
     }
-    index <- match(chars, unique_chars)
-    width <- metrics$w[index]
-    height <- metrics$h[index]
-    advance <- width
-    fallback <- max(height, na.rm = TRUE) * .34
-    advance[!is.finite(advance) | advance <= 0] <- fallback
-    tracking <- max(.0008, median(height, na.rm = TRUE) * .018)
-    total <- sum(advance) + tracking * max(0, length(chars) - 1L)
-    along <- cumsum(c(0, head(advance + tracking, -1L))) + advance / 2 -
-      total / 2
-    if (respect_justification) along <- along + (.5 - text$hjust[i]) * total
+    chars <- metrics$chars
+    along <- metrics$along
+    if (respect_justification) along <- along + (.5 - text$hjust[i]) * metrics$total
     radius <- sqrt(text$text_x[i]^2 + text$text_y[i]^2)
     centre_angle <- atan2(text$text_y[i], text$text_x[i])
     increasing_tangent <- (centre_angle * 180 / pi + 90) %% 360
@@ -503,14 +512,16 @@ ggchord_arc_text_layout <- function(text, units_per_inch = .35,
       glyphs[[length(glyphs) + 1L]] <- glyph
     }
     boxes[[length(boxes) + 1L]] <- ggchord_project_text_boxes(
-      x, y, width, height, angle * pi / 180, .5, .5, units_per_inch, box_padding)
+      x, y, metrics$width, metrics$height, angle * pi / 180, .5, .5, units_per_inch, box_padding)
     owners <- c(owners, rep(i, length(chars)))
+    visible <- c(visible, metrics$visible)
   }
   list(
     glyphs = if (length(glyphs)) ggchord_rbind_fill(glyphs) else data.frame(),
     boxes = if (length(boxes) == 1L) boxes[[1L]] else if (length(boxes)) do.call(rbind, boxes) else
       ggchord_text_boxes(data.frame()),
-    owners = owners
+    owners = owners,
+    visible = visible
   )
 }
 

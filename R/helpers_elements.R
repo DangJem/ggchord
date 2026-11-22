@@ -99,13 +99,26 @@ breakPointsFunc <- function(max_value, n = 5, tol = 0.5, available_mm = NULL) {
 #' @keywords internal
 #' @noRd
 draw_key_gene_arrow <- function(data, params, size) {
-  # Match geom_feature(preset = 'gene'): a constant-width body followed by a linearly tapered
-  # head, without the wider shoulder used by a conventional block arrow.
-  # Strand overrides mirror the same polygon horizontally.
-  x <- c(0.10, 0.62, 0.90, 0.62, 0.10)
-  if (identical(as.character(data$strand %||% "+")[1], "-")) x <- 1 - x
+  key <- params$arrow_key %||% list(style = "flush")
+  strand <- as.character(data$strand %||% "+")[1L]
+  shape <- as.character(data$feature_shape %||% "arrow")[1L]
+  fixed_body_width <- isTRUE(key$fixed_body_width) && shape %in% ggchord_block_arrow_shapes
+  head_ratio <- key$head_ratio %||% if (fixed_body_width && identical(key$style, "shouldered")) {
+    ggchord_circular_arrow_head_ratio
+  } else 1
+  parts <- ggchord_feature_geometry(shape, .10, .90, 1, .54, 1, NULL,
+    arrow_head_length = .28, arrow_head_width = head_ratio,
+    arrow_head_style = key$style, short_feature = "shrink",
+    draw_start_head = identical(strand, "+/-"), bidirectional = identical(strand, "+/-"),
+    fixed_body_width = fixed_body_width)
+  part <- parts[[1L]]
+  x <- part$angle
+  y <- part$radius - 1
+  height <- max(abs(y))
+  if (height > .34) y <- y / height * .34
+  if (identical(strand, "-")) x <- 1 - x
   x_pts <- unit(x, "npc")
-  y_pts <- unit(c(0.23, 0.23, 0.50, 0.77, 0.77), "npc")
+  y_pts <- unit(.5 + y, "npc")
 
   polygonGrob(
     x = x_pts, y = y_pts,

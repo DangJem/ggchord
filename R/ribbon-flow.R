@@ -146,6 +146,14 @@ ggchord_ribbon_flow <- function(layer, geometry, layout, plot) {
   }
   layer$mapping$flow_qn <- aes(flow_qn = I(.q_n))$flow_qn
   layer$mapping$flow_sn <- aes(flow_sn = I(.s_n))$flow_sn
+  coord <- plot$coordinates
+  if (ggchord_collinear_row_styles(coord) || isTRUE(coord$ggchord_radial)) {
+    inherited <- if (isTRUE(layer$inherit.aes)) names(plot$mapping)
+    explicit <- c(names(mapping), names(layer$aes_params), inherited)
+    # AsIs line types draw directly and leave other layers' scales untouched.
+    if (!any(c("linetype", "ribbon_linetype") %in% explicit))
+      layer$mapping$linetype <- aes(linetype = I(linetype_val))$linetype
+  }
   list(layer = layer, data = geometry)
 }
 

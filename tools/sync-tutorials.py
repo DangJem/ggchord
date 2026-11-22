@@ -37,6 +37,9 @@ def readme(lang):
 
     def replace(match):
         key = match[1]
+        if key == 'design-references':
+            fragment = (WEB / f'readme-inspirations-{lang}.md').read_text()
+            return fragment.strip().replace('](../inst/NOTICE)', '](inst/NOTICE)')
         return lang if key == 'lang' else translations[key][lang]
 
     return re.sub(r'\{\{([a-z-]+)\}\}', replace, template)

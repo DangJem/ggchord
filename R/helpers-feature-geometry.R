@@ -30,6 +30,13 @@ ggchord_feature_width_factor <- function(shape) {
   rep(1, length(shape))
 }
 
+ggchord_block_arrow_shapes <- c("arrow", "compact_arrow", "promoter_arrow", "primer_arrow")
+ggchord_circular_arrow_head_ratio <- 1.42
+
+ggchord_circular_arrow_band <- function(circular, feature_role) {
+  isTRUE(circular) && identical(feature_role, "feature")
+}
+
 # Minimum visible arc length for a directional glyph. Short biological
 # intervals keep their real anchor and metadata, but their drawing interval is
 # symmetrically widened just enough to retain direction. The shape factory then
@@ -167,12 +174,14 @@ ggchord_shape_bidirectional_arrow <- function(a_start, a_end, r0, width,
     if (identical(short_feature, "block")) {
       return(ggchord_shape_block(a_start, a_end, r0, width))
     }
+    if (identical(short_feature, "error"))
+      ggchord_stop("geom_feature(): the visible interval is shorter than its two arrow heads")
     if (identical(short_feature, "auto")) {
       # Preserve two visible directions and the nominal radial band.  Only the
       # longitudinal head/body dimensions are compressed.
       head_width <- min(head_width, 1)
       head_length <- min(available * .22, width * .42)
-    } else {
+    } else if (identical(short_feature, "wedge")) {
       mid <- (a_start + a_end) / 2
       return(list(list(
         angle = c(a_start, mid, a_end, mid),
@@ -247,8 +256,10 @@ ggchord_feature_geometry <- function(shape, a_start, a_end, r0, width,
                                      short_feature = "auto",
                                      draw_head = TRUE,
                                      draw_start_head = FALSE,
-                                     bidirectional = FALSE) {
-  if (identical(shape, "arrow") && identical(arrow_head_style, "shouldered") &&
+                                     bidirectional = FALSE,
+                                     fixed_body_width = FALSE) {
+  if (!fixed_body_width && identical(shape, "arrow") &&
+      identical(arrow_head_style, "shouldered") &&
       arrow_head_width == 1) {
     # Keep the default head as wide as thickness and narrow its stem.
     stem_fraction <- .72
@@ -259,16 +270,22 @@ ggchord_feature_geometry <- function(shape, a_start, a_end, r0, width,
     return(ggchord_shape_marker(a_start, a_end, r0, width))
   }
   if (identical(shape, "capped_line")) {
-    mid <- (a_start + a_end) / 2
-    cap_half_angle <- min(abs(a_end - a_start) / 4,
-      width * .28 / max(abs(r0), .1))
+    # Put both caps inside the displayed interval, including at seams and
+    # adjacent features. Leave a little room for the end strokes.
+    span <- a_end - a_start
+    direction <- sign(span)
+    along <- width / max(abs(r0), .1)
+    inset <- min(abs(span) * .10, along * .06)
+    from <- a_start + direction * inset
+    to <- a_end - direction * inset
+    cap_length <- direction * min(abs(to - from) / 2, along * .56)
     line_width <- max(width * .055, .0015)
-    body <- ggchord_shape_block(a_start, a_end, r0, line_width)
+    body <- ggchord_shape_block(from, to, r0, line_width)
     start_cap <- ggchord_shape_block(
-      a_start - cap_half_angle, a_start + cap_half_angle, r0, width * .48
+      from, from + cap_length, r0, width * .48
     )
     end_cap <- ggchord_shape_block(
-      a_end - cap_half_angle, a_end + cap_half_angle, r0, width * .48
+      to - cap_length, to, r0, width * .48
     )
     return(c(body, start_cap, end_cap))
   }
@@ -296,7 +313,13 @@ ggchord_feature_geometry <- function(shape, a_start, a_end, r0, width,
     compact_head_length <- min(
       arrow_head_length * head_length_factor, width * 1.05
     )
-    compact_head_width <- max(1, arrow_head_width * head_width_factor)
+    compact_head_width <- if (identical(arrow_head_style, "flush")) {
+      1
+    } else if (fixed_body_width) {
+      arrow_head_width
+    } else {
+      max(1, arrow_head_width * head_width_factor)
+    }
     if (isTRUE(bidirectional) && isTRUE(draw_head) &&
         isTRUE(draw_start_head)) {
       interval <- if (identical(short_feature, "auto")) {

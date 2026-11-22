@@ -1,5 +1,5 @@
 {
-  "source_sha256": "591b333cf075b01d5dddbb723eda08a5b9a549ed04cf71a7ab055aee9598b051",
+  "source_sha256": "3c6cb77b47c26ba8244bcd9b08a1dc7e7a1a69dd00a5e504eaaa5b3fa129e028",
   "strings": {
     "title": {
       "source_sha256": "3dae9df0bcd52f7b79153e9d60c16ec82d9899fcc87119dabe6c9dfdef8303a1",
@@ -261,36 +261,6 @@
       "status": "reviewed",
       "translation": "按相同的明确宽高预览并保存，让标签按预定成图尺寸排布。"
     },
-    "inspiration-grammar": {
-      "source_sha256": "3602e76d920c1e698d6e19bf29ec8bd9919f1f25e7317c76e6b220a89ef68bc6",
-      "status": "reviewed",
-      "translation": "提供分层绘图语法，以及映射、标度、图例、几何、坐标与主题的职责划分。ggchord 沿用这一模型，让用户组合独立图层，并使用自己的标度和样式。"
-    },
-    "inspiration-naming": {
-      "source_sha256": "7832f9cbf852c28d2690177b13fb57c915ea7a983202174800326f196c9fd10b",
-      "status": "reviewed",
-      "translation": "为紧凑的 query/subject 字段命名提供参照，便于追踪比对记录、端点与序列标识。绘图读取已有结果，不在绘图阶段运行比对程序。"
-    },
-    "inspiration-circular": {
-      "source_sha256": "c150deb153d60bf800a8d3a2b9634bf40cfcc8b32a979c522e9e677029654e45",
-      "status": "reviewed",
-      "translation": "Circos 为环形信息层级和连接带表达提供设计参照；circlize 用于多轨道与显式 track/ring 契约的能力比较。"
-    },
-    "inspiration-synteny": {
-      "source_sha256": "06c939c5aa7f501b06374034d05c153d1a2e1856e28d6cc63ceb0180370b2eb4",
-      "status": "reviewed",
-      "translation": "为保留链方向的基因箭头、基因簇比较和直线共线性提供清晰范例，帮助协调序列方向、特征位置与连接关系的表达。"
-    },
-    "inspiration-features": {
-      "source_sha256": "67f4b59e7071a027d0b4da06d34cd5032490394baec35b92d54cb368a8dab194",
-      "status": "reviewed",
-      "translation": "为可读的特征注释、拥挤标签处理和局部特征布局提供参照，帮助明确标签与其来源区间之间的对应关系。"
-    },
-    "inspiration-preview": {
-      "source_sha256": "c62bb511ed50eed0ad43c95fa487ed90083db2c1ee6a1ede16061293e3dd8736",
-      "status": "reviewed",
-      "translation": "为按预定导出尺寸检查静态图形提供流程参照。ggchord 用 view_ggchord() 进行指定尺寸预览，用标准 ggsave() 保存。"
-    },
     "license": {
       "source_sha256": "cc1d3b0234846714b0aeda6cc34b057b4305bb83dd447fb88f816efeb59a4e96",
       "status": "reviewed",
@@ -325,51 +295,6 @@
       "source_sha256": "574807b3bac2fc6c48b8f9210e54c7f80a8531c4a334ee1bec1c7244cb6d0071",
       "status": "reviewed",
       "translation": "从四基因组共线性图派生的 Sankey 旗舰"
-    },
-    "inspiration-grammar-title": {
-      "source_sha256": "8c762fb5716e285b82afd8a54895421e97c4d06d317299eb24d1e6175b7a4694",
-      "status": "reviewed",
-      "translation": "绘图语法与序列关系表达"
-    },
-    "inspiration-features-title": {
-      "source_sha256": "077d0bb08506285071fe3c7c91d8dbad8b636b19737d59eb89a8730e93cb0abd",
-      "status": "reviewed",
-      "translation": "基因箭头、注释布局与局部比较"
-    },
-    "inspiration-genomes": {
-      "source_sha256": "199e1098cd7f8616eaf16f3245f03f9c19978eb4970b76d72a12f1fd6960b2e1",
-      "status": "reviewed",
-      "translation": "为 tidy 多表输入、focus/sync 工作流、特征堆叠、局部锚定与局部显示翻转提供参照，帮助区分数据整理和显示选择的职责。"
-    },
-    "inspiration-detail-title": {
-      "source_sha256": "67ea683961e786692551ecde2527c5fa93415d338ec9737c128bc11f6b55d714",
-      "status": "reviewed",
-      "translation": "局部放大、对齐字符与图形预览"
-    },
-    "inspiration-magnify": {
-      "source_sha256": "43fe0b19244c252950792599b578846f4191e76681606c9c7c709ccb9ee41997",
-      "status": "reviewed",
-      "translation": "为整体图与局部放大图之间的关联表达提供参照。ggchord 围绕明确的来源区间和独立注册的序列视图发展这一表达方式。"
-    },
-    "inspiration-alignment": {
-      "source_sha256": "3551e5c36557d8e25bfb75c59f34254615621281baba01cb1f1c362c20446026",
-      "status": "reviewed",
-      "translation": "v0.20.0 将其列为字符视图调研对象；v0.28.0 进一步实际核对其残基格和化学性质配色，并用于 geom_residue() 的紧凑背景与默认颜色标度。保留独立字形绘制、真实坐标注册和用户标度优先规则。"
-    },
-    "inspiration-columns": {
-      "source_sha256": "c584c0e7ebb32a25820e23c7986f8d7dbbdab90776c145ece8cd7162ca86c949",
-      "status": "reviewed",
-      "translation": "[ggseqalign](https://www.bioconductor.org/packages/release/bioc/html/ggseqalign.html)、[ggseqlogo](https://omarwagih.github.io/ggseqlogo/)、[Jalview](https://www.jalview.org/help/html/features/annotation.html) 和 [ESPript](https://espript.ibcp.fr/ESPript/ESPript/) 仅列为对齐字符、序列 logo、列注释或静态输出的调研比较对象；当前未实现这些工具的集成、logo、共识或保守性图层。历史记录不足以证明它们分别影响了现有布局算法。"
-    },
-    "inspiration-title": {
-      "source_sha256": "9b69105a3809f390df6512658fbc1aba2f0eef92f62f8add7eaa86898dbdb19a",
-      "status": "reviewed",
-      "translation": "设计灵感来源"
-    },
-    "inspiration-intro": {
-      "source_sha256": "0ccfc54f513c438fecbe045316297ffcd1f52205004bd9aa9b2ee505ec20d441",
-      "status": "reviewed",
-      "translation": "以下条目区分已记录并落实到设计的参考，以及仅用于能力调研的项目。具体依据见[设计来源核对](tools/site-audit/design-inspiration.md)。"
     },
     "get-started": {
       "source_sha256": "61e8d44ad423a4a0951b21b9d11440a1c23a881fe79335c367f63be251c64800",

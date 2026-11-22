@@ -1,7 +1,10 @@
 #' Stack overlapping features in physical lanes
 #' @export
-#' @param spacing Nonnegative physical gap between adjacent lanes, in millimetres.
-#' @param base_position Placement applied before lane assignment.
+#' @param spacing Minimum physical gap between adjacent lanes, in millimetres.
+#'   An inward circular stack can widen this gap to fit repelled labels.
+#' @param base_position Placement applied before lane assignment. When omitted
+#'   for an inward circular stack, the first lane clears the backbone and its
+#'   visible inward ticks and labels.
 #' @param direction Placement direction, including strand-dependent lanes.
 #' @param order Place features by source position (`"source"`) or prefer
 #'   higher `display_priority` and then longer occupied intervals (`"priority"`).
@@ -35,6 +38,7 @@ position_feature_stack <- function(
     spacing = 1, base_position = position_identity(), direction = "positive",
     order = "source") {
   ggchord_check_argument_names(sys.call(), sys.function())
+  automatic_base <- missing(base_position)
   direction <- match.arg(direction, c("positive", "negative", "strand"))
   order <- match.arg(order, c("source", "priority"))
   spacing <- ggchord_physical_mm(spacing, "position_feature_stack()", nonnegative = TRUE)
@@ -43,5 +47,5 @@ position_feature_stack <- function(
     ggchord_stop("position_feature_stack(): base_position cannot itself be a stack")
   ggproto(NULL, ggplot2::PositionIdentity, ggchord_feature_stack = TRUE,
     spacing = spacing, base_position = base_position, direction = direction,
-    lane_order = order)
+    lane_order = order, automatic_base = automatic_base)
 }

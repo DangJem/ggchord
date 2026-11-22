@@ -12,9 +12,12 @@ position_feature_stack(
 )
 }
 \arguments{
-\item{spacing}{Nonnegative physical gap between adjacent lanes, in millimetres.}
+\item{spacing}{Minimum physical gap between adjacent lanes, in millimetres.
+An inward circular stack can widen this gap to fit repelled labels.}
 
-\item{base_position}{Placement applied before lane assignment.}
+\item{base_position}{Placement applied before lane assignment. When omitted
+for an inward circular stack, the first lane clears the backbone and its
+visible inward ticks and labels.}
 
 \item{direction}{Placement direction, including strand-dependent lanes.}
 

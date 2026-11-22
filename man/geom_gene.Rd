@@ -48,7 +48,8 @@ A ggplot2 layer for addition to a plot.
 Draw directional sequence features
 }
 \details{
-Provide one-based closed intervals with \code{accver}, \code{start} and \code{end}. A strand or disjoint segments can be supplied where appropriate. The gene shortcut defaults to an arrow and strand placement. The primer shortcut defaults to a directional narrow path, and the region shortcut defaults to a translucent block.
+Provide one-based closed intervals with \code{accver}, \code{start} and \code{end}. A strand or disjoint segments can be supplied where appropriate. The gene shortcut uses strand placement and a shoulderless arrow by default.
+Set \code{head_style = "shouldered"} through \code{...} to use a wider arrowhead.
 }
 \examples{
 library(ggplot2)

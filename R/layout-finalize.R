@@ -9,32 +9,6 @@ ggchord_layout_finalize_step <- function(
     rotation, seq_arcs, seq_colors, seq_labels, seq_labels_df, seq_refs, seqRadius, seqs, show_axis,
     starts, text_units_per_inch) {
   # ====================================================================
-  # Step 8c: optionally hide axis labels that overlap other elements
-  # ====================================================================
-  if (isTRUE(axis_label_hide_overlaps) && nrow(axis_ticks) > 0 &&
-      any(!is.na(axis_ticks$label))) {
-    content <- ggchord_repel_points(seq_arcs, gene_polys,
-                                    data.frame(x = numeric(0), y = numeric(0)),
-                                    data.frame(), show_axis = FALSE)
-    movable <- rep(FALSE,nrow(axis_ticks))
-    if (isTRUE(circular) && all(c(".axis_automatic_breaks",
-        ".axis_offset_explicit",".axis_allow_clearance") %in% names(axis_ticks))) {
-      movable <- axis_ticks$.axis_automatic_breaks %in% TRUE &
-        !(axis_ticks$.axis_offset_explicit %in% TRUE) &
-        axis_ticks$.axis_allow_clearance %in% TRUE
-    }
-    if (isTRUE(circular)) for(field in intersect(c("is_origin","is_endpoint",
-        ".axis_seam_combined"),names(axis_ticks)))
-      movable <- movable | axis_ticks[[field]] %in% TRUE
-    # Measured contour clearance runs later, after every layer owns its
-    # geometry. Do not delete movable strings using pre-clearance positions.
-    if (any(!movable)) axis_ticks[!movable,] <- ggchord_hide_text_overlaps(
-      axis_ticks[!movable,,drop=FALSE], content,
-      units_per_inch = text_units_per_inch, circular = circular
-    )
-  }
-
-  # ====================================================================
   # Step 9: compute plot extremes
   # ====================================================================
   extremes <- get_plot_extremes(

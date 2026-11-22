@@ -58,7 +58,11 @@ ggchord_seq_style_geometry <- function(seq_arcs, params) {
     norm <- sqrt(dx^2 + dy^2)
     norm[norm <= 1e-12] <- 1
     nx <- -dy / norm; ny <- dx / norm
-    if (all(abs(dy) < 1e-12)) {
+    if (isTRUE(params$circular)) {
+      radius <- sqrt(arc$x^2 + arc$y^2)
+      nx <- arc$x / radius
+      ny <- arc$y / radius
+    } else if (all(abs(dy) < 1e-12)) {
       nx[] <- 0; ny[] <- 1
     } else {
       flip <- nx * arc$x + ny * arc$y < 0
@@ -92,6 +96,40 @@ ggchord_seq_style_geometry <- function(seq_arcs, params) {
     )
   })
   do.call(rbind, pieces)
+}
+
+# Both the axis and automatic track placement use the visible extent of the
+# sequence layers. Radius is a centre path; a double path uses two strokes.
+ggchord_circular_backbone_bounds <- function(plot, radii, units_per_mm) {
+  ids <- names(radii)
+  bounds <- data.frame(accver = ids, center = unname(radii),
+    inner = unname(radii), outer = unname(radii),
+    inner_path = unname(radii), outer_path = unname(radii), rendered = FALSE)
+  for (layer in plot$layers) {
+    if (!identical(layer$ggchord_type, "seq")) next
+    params <- layer$ggchord_params
+    source <- ggchord_resolve_layer_input(layer, plot$ggchord$data$seq_data)
+    rows <- which(ids %in% as.character(source$accver))
+    if (!length(rows)) next
+    thickness <- if (params$seq_style %in% c("double", "band"))
+      process_sequence_param(params$seq_thickness_mm, ids, "thickness", 1) else
+      rep(0, length(ids))
+    offset <- ggchord_resolve_position_offset(params$feature_position$offset %||% 0,
+      ids, "offset", "geom_seq()")
+    centers <- radii + vapply(offset, `[[`, numeric(1), 1L) * units_per_mm
+    half_gap <- thickness * units_per_mm / 2
+    stroke <- as.numeric(layer$aes_params$linewidth %||% GeomChordSeq$default_aes$linewidth)
+    half_stroke <- max(c(0, stroke[is.finite(stroke)])) * units_per_mm / 2
+    inner <- centers[rows] - half_gap[rows]
+    outer <- centers[rows] + half_gap[rows]
+    already <- bounds$rendered[rows]
+    bounds$inner_path[rows] <- ifelse(already, pmin(bounds$inner_path[rows], inner), inner)
+    bounds$outer_path[rows] <- ifelse(already, pmax(bounds$outer_path[rows], outer), outer)
+    bounds$inner[rows] <- ifelse(already, pmin(bounds$inner[rows], inner - half_stroke), inner - half_stroke)
+    bounds$outer[rows] <- ifelse(already, pmax(bounds$outer[rows], outer + half_stroke), outer + half_stroke)
+    bounds$rendered[rows] <- TRUE
+  }
+  bounds
 }
 
 #' Draw sequence backbones

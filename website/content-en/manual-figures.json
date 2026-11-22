@@ -119,12 +119,12 @@
       "fusionoverview",
       "flagshipfusion"
     ],
-    "source": "tools/render-site-flagships.R",
+    "source": "website/examples/case-fusion.R",
     "page": "case-fusion.html",
     "width": 16,
     "height": 14,
     "dpi": 120,
-    "sha256": "b64c141570b22484ae3141aa91edeebb66311cbcb14ba74b76a11b5293afebe2"
+    "sha256": "43ebc2a4af50dda9d9f78f4b7260414661f274bc14322fd215a30b9e8a95a6ad"
   },
   {
     "id": "flagcircular",
@@ -143,7 +143,7 @@
     "width": 16.5,
     "height": 8.0,
     "dpi": 144.0,
-    "sha256": "a3e63cc6afaf14906a2d06bee9fb0bfdd299b34469538f0f35684578a83dc55a"
+    "sha256": "aa24ebc2db14ed716016f09cf004985c85aec1a45e64dbd67a36859a22953cd8"
   },
   {
     "id": "completepsb",
@@ -153,8 +153,8 @@
     "caption": {
       "en": "pSB1C3 · 7 features and 33 restriction positions"
     },
-    "source": "tools/website/render-handbook-art.R",
-    "sha256": "4cb85e25cd6bb0128ce2a8f4462f805428824ace830b78e1ae176235ee903192",
+    "source": "website/examples/map-psb.R",
+    "sha256": "8a0c529de10b17a54c18649b4bcb511fc45c119bf8aa615d575bea22bfa4a575",
     "page": "plasmid-catalog.html#catalogpsb",
     "width": 10,
     "height": 8,
@@ -168,8 +168,8 @@
     "caption": {
       "en": "pUC19 · 9 features and 33 restriction positions"
     },
-    "source": "tools/website/render-handbook-art.R",
-    "sha256": "4d4e64c818e899f8d3eef22301cbd292f258a728557d26e6549196bf8c9a2700",
+    "source": "website/examples/case-circular.R",
+    "sha256": "b70c796a66ece43893c2823c4879f4c70b50c23641b264cf6e982cb96035a0ae",
     "page": "case-circular.html",
     "width": 10,
     "height": 8,
@@ -183,8 +183,8 @@
     "caption": {
       "en": "pBR322 · 6 features and 42 restriction positions"
     },
-    "source": "tools/website/render-handbook-art.R",
-    "sha256": "9c83a69e1d06ed31a056bbc08e05a7c7c3af3efc796ddbd369ef42048bb3c6a1",
+    "source": "website/examples/map-pbr.R",
+    "sha256": "3e4bf3ae4ec99160fc0d561cf0d5fe17bf3093fca00a6c092bb7aa1acde125d6",
     "page": "plasmid-catalog.html#catalogpbr",
     "width": 10,
     "height": 8,
@@ -198,8 +198,8 @@
     "caption": {
       "en": "pBluescript II SK(+) · 14 features and 42 restriction positions"
     },
-    "source": "tools/website/render-handbook-art.R",
-    "sha256": "55fc0da01f04181e2e5835a98620d139ab830f6fb87378c2c07eae649f1aa48e",
+    "source": "website/examples/map-blue.R",
+    "sha256": "1edcf91ac802c56b552a261d6a7eb4573a402ef8ea52ecaee4e7a917cbb86454",
     "page": "plasmid-catalog.html#catalogblue",
     "width": 10,
     "height": 8,
@@ -213,8 +213,8 @@
     "caption": {
       "en": "pET-28a(+) · 16 features and 45 restriction positions"
     },
-    "source": "tools/website/render-handbook-art.R",
-    "sha256": "4b165fbf9ada6c6480ef589a8ae3aa8d59b5bc4ca022e108cfd618b89a872b12",
+    "source": "website/examples/map-pet.R",
+    "sha256": "71891a647cd27c5a4e71dc285770741496d4eadbf23c2e76130a1682a5704edf",
     "page": "plasmid-catalog.html#catalogpet",
     "width": 10,
     "height": 8,
@@ -228,11 +228,11 @@
     "caption": {
       "en": "pETDuet-1 · 20 features and 54 restriction positions"
     },
-    "source": "tools/website/render-handbook-art.R",
-    "sha256": "d3e7897b2f84c1ad549f68dd5f39abdd695dae486dee1e73c365cf85f8958ebf",
+    "source": "website/examples/map-duet.R",
+    "sha256": "01c87b71a9605f7caa6e1db1c5f9536c0cb78a264fc55ac601bf6dc98c87168a",
     "page": "plasmid-catalog.html#catalogduet",
-    "width": 10,
-    "height": 8,
+    "width": 11,
+    "height": 9,
     "dpi": 110
   },
   {
@@ -243,8 +243,8 @@
     "caption": {
       "en": "pDONR221 · 11 features and 42 restriction positions"
     },
-    "source": "tools/website/render-handbook-art.R",
-    "sha256": "4bd7baae8dce262709653d6c969b14260d3dfc0fab344f0d848ccbd47ff5b6ca",
+    "source": "website/examples/map-donr.R",
+    "sha256": "d6032b78f8f641a7944dfa79b2efd374419a5d75d0efdc64e92862fc71bc79d1",
     "page": "plasmid-catalog.html#catalogdonr",
     "width": 10,
     "height": 8,
@@ -258,8 +258,8 @@
     "caption": {
       "en": "pcDNA3.1(+) · 13 features and 47 restriction positions"
     },
-    "source": "tools/website/render-handbook-art.R",
-    "sha256": "5b6d66c0e2193c009e7ae77b5285346c1a80831295f2518cd2eba1c04b8a1539",
+    "source": "website/examples/map-pcdna.R",
+    "sha256": "4745b650056ba7a7b50837b376f031285f644d7802a407be38ef35a7c3b75e70",
     "page": "plasmid-catalog.html#catalogpcdna",
     "width": 10,
     "height": 8,
@@ -273,8 +273,8 @@
     "caption": {
       "en": "pTRE-Tight-BI · 15 features and 44 restriction positions"
     },
-    "source": "tools/website/render-handbook-art.R",
-    "sha256": "53b323f5c271bf41d5f69f81c4452d0c4a9c82979f430b92303bf8c44ce67af8",
+    "source": "website/examples/map-tre.R",
+    "sha256": "ed928e08516804f5c9613f9116864b9b86ad7156c48dcd6540eaaa1c751e4ca4",
     "page": "plasmid-catalog.html#catalogtre",
     "width": 10,
     "height": 8,
@@ -288,8 +288,8 @@
     "caption": {
       "en": "pTRIPZ · 33 features and 35 restriction positions"
     },
-    "source": "tools/website/render-handbook-art.R",
-    "sha256": "fbf821ef12176d7b5396fafcedfad6e121cbfa4828334249e339a182c57d1e81",
+    "source": "website/examples/map-tripz.R",
+    "sha256": "b767f58f82405734426737fdf3756c90329e7c4e850ce55b52b72cc6f1f5dc7e",
     "page": "plasmid-catalog.html#catalogtripz",
     "width": 10,
     "height": 8,
@@ -303,8 +303,8 @@
     "caption": {
       "en": "pCAMBIA1300 · 17 features and 37 restriction positions"
     },
-    "source": "tools/website/render-handbook-art.R",
-    "sha256": "147bfaa4477707dd2d4504af951b956a1b909d2a9875bf0f532dc8464593677f",
+    "source": "website/examples/map-cambia.R",
+    "sha256": "ef01fbbd7f9e49514b3f97d217a3c6047873f17b7d7a3634b71d13b75caa151e",
     "page": "plasmid-catalog.html#catalogcambia",
     "width": 10,
     "height": 8,
@@ -318,8 +318,8 @@
     "caption": {
       "en": "pEarleyGate 201 · 21 features and 37 restriction positions"
     },
-    "source": "tools/website/render-handbook-art.R",
-    "sha256": "e1ddfd15c6e01569fcd260cca15db519843880ce9ab8969efec67734b6c84f30",
+    "source": "website/examples/map-earley.R",
+    "sha256": "7c96859fa682158e2f06814c4c82ca577de790fe1f2dab95c4a160b2e2822d1d",
     "page": "plasmid-catalog.html#catalogearley",
     "width": 10,
     "height": 8,
@@ -333,8 +333,8 @@
     "caption": {
       "en": "pSpCas9(BB)-2A-GFP (PX458) · 19 features and 4 restriction positions"
     },
-    "source": "tools/website/render-handbook-art.R",
-    "sha256": "7f239d3d4a6703ded45845a9c6bad9d09945264f650a06a9d11228cad4b9f812",
+    "source": "website/examples/map-cas.R",
+    "sha256": "08eac42ca3bbe321550e5c61d0793e63faf5211b6c5f2431916dc9a1d7f4cfb7",
     "page": "plasmid-catalog.html#catalogcas",
     "width": 10,
     "height": 8,

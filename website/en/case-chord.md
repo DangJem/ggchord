@@ -12,7 +12,7 @@ The figure uses a 12 × 10 in canvas at 144 dpi. The script returns the plot so 
 
 ## Read the figure {#reading}
 
-Start at a sequence label. The backbone scale gives position in bp. A ribbon encloses an observed alignment interval at each end, and its fill encodes percent identity. Arrows on either side of the backbone mark CDS with a recorded biological strand.
+Start at a sequence label. The backbone scale gives position in bp. A ribbon encloses an observed alignment interval at each end, and its fill encodes percent identity. Arrows on either side of the backbone mark CDS with a recorded biological strand. The ribbon layer uses `avoid = "smooth"` to follow the facing contours of nearby arrows. The default 0.4 mm `gap` leaves clearance between the ribbon and each outline.
 
 <a id="inputs"></a>
 

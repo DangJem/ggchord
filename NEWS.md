@@ -11,7 +11,9 @@
   `scale_for()`. Coverage, bundle and density statistics retain source evidence.
 - Ribbon fill mapped to `pident` uses the stepped Identity (%) guide with
   proportional intervals and ticks at 0, 50, 80, 90, 95 and 100. Alignment
-  and point-link colour use line keys at the same percentages.
+  and point-link colour use line keys at the same percentages. The stepped
+  guide defaults to 2.8 mm on its short edge in either orientation, including
+  in Fusion. Explicit guide dimensions take precedence.
 - Restored the borderless white base theme, charcoal dark theme and ivory
   plasmid maps with labelled sequence axes and separate major and minor
   ticks. Features have fine dark outlines. Compact glyphs use a lighter
@@ -23,6 +25,9 @@
   explicit positive `bulge`. Radial curves account for intervening spoke
   tips and adjacent routed bands. Linear and Sankey panels preserve spare
   transverse space once the specified physical spacing fits the canvas.
+- Ribbon outlines that span intervening collinear rows or radial spokes
+  default to dashed strokes. The first and last radial spokes are adjacent.
+  A fixed or mapped line type takes precedence.
 - Circular labels follow the occupied segments of features crossing the
   origin. Each piece split at the seam reports its own length in bp.
   Compatible external labels share the perimeter; restriction-site
@@ -30,14 +35,59 @@
   maps again use their saved enzyme selections.
 - Local circular feature labels check both the feature and nearby inner
   lanes, using curved glyphs, short leaders and the drawn feature outlines.
-  Horizontal restriction-site callouts can show bold enzyme names with
-  separate, regular-weight coordinates. Reference maps use the restored
-  priority and interval length ordering for feature lanes.
+  Text can slide along its arc while the leader stays radial and ends
+  beside a glyph along that line.
+  They can use deeper text rows to keep their leaders close to radial.
+  Crowded groups of inward callouts compare nearby positions together
+  to reduce leader crossings through text while preserving each anchor and size.
+  Automatic inward leaders crossing another label are dashed and drawn
+  beneath the text. Exterior feature labels default to bold, including
+  labels placed outside by a fixed position.
+  Filled exterior annotations have visible outlines, including those
+  placed outside with a fixed layout.
+  `label_layout_repel(outer_size = ...)` sets a separate circular exterior
+  font size. An explicit site-label font face applies to both the enzyme
+  name and its coordinate. The circular examples use larger bold exterior
+  labels. Reference maps use the restored priority and interval length
+  ordering for feature lanes.
+- Circular gallery examples keep inner annotations at one font size.
+  Longer names use another available position before moving outside.
+- Circular label placement reuses arc-text dimensions and filters exterior
+  candidates in batches, retaining the same candidate order and collision
+  checks.
 - Bidirectional features use a single source entity and retain both heads
-  on supported arrow shapes. Set `avoid = "smooth"` on a ribbon to clear
-  feature outlines at its ends. Dotplot block axes include source endpoints.
+  on supported arrow shapes. Dotplot block axes include source endpoints.
+- Gene arrows have shoulderless heads by default, and their legend keys
+  follow the selected head style. The DNA scale again uses red A, blue C,
+  yellow G and green T.
+- Ribbon fronts leave a 0.4 mm gap from the sequence outline by default.
+  `avoid = "smooth"` follows the drawn feature contours at the fronts.
+  `avoid_strength` tunes the rounding of obstacle transitions. `gap`
+  sets the minimum clearance, with optional per-reference values.
+  Sankey connections attach on the channel side. Radial layouts use a smaller
+  automatic center and expand it for clearance.
+- Annotation layers and sequence axes share measured obstacles. Leaders
+  that cross a backbone are dashed by default. Tick marks remain when
+  crowded intermediate text is skipped, with first and last labels
+  given priority.
+- Circular maps place the first inner track by the tick-label extent and
+  reserve space between feature tracks for local labels. Circular feature
+  arrows use equal shaft widths by default and have projecting shoulders.
+  End caps fit inside their source interval. The combined origin label
+  takes priority over nearby automatic tick text. Origin-spanning
+  continuous features share an outline, and automatic leaders are drawn
+  below the feature and backbone geometry. Fusion zooms support dashed
+  leaders to the detail panel border.
 - Updated the seven flagship examples and reference maps with restored
   feature weights, one-based axis labels and a dedicated Fusion preview.
+- The complete collinear example fits the viewport to its text and geometry,
+  bringing the Identity guide closer to the sequence rows.
+- The Fusion example gives B more room between rows, shortens E and
+  encloses the source ruler and individually outlined square residue cells
+  in the nucleotide zoom frame. It uses contour avoidance for
+  within-panel ribbons and measures the Identity guide from its label widths.
+- `render_policy()` provides opt-in canvas-aware styling and guide layout
+  in place of `adapt_ggchord()`. Explicit and mapped sizes keep their values.
 - Updated data adapters, validation and the 16 readers to expose stable
   reference identities, canonical coordinate roles and source reports.
 - Fusion arranges named plots and can display either observed relationships

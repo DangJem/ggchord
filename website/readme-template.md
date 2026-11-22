@@ -126,27 +126,6 @@ ggsave("ggchord.png", p, width = 10, height = 8, units = "in", dpi = 144)
 ```
 
 <a id="design-inspiration"></a>
-## {{inspiration-title}}
-
-{{inspiration-intro}}
-
-### {{inspiration-grammar-title}}
-
-- [ggplot2](https://ggplot2.tidyverse.org/) — {{inspiration-grammar}}
-- [BLAST](https://blast.ncbi.nlm.nih.gov/doc/blast-help/) — {{inspiration-naming}}
-- [Circos](https://circos.ca/) · [circlize](https://github.com/jokergoo/circlize) — {{inspiration-circular}}
-
-### {{inspiration-features-title}}
-
-- [clinker](https://github.com/gamcil/clinker) · [gggenes](https://github.com/wilkox/gggenes) · [genoPlotR](https://genoplotr.r-forge.r-project.org/) — {{inspiration-synteny}}
-- [gggenomes](https://thackl.github.io/gggenomes/) — {{inspiration-genomes}}
-- [DNA Features Viewer](https://github.com/Edinburgh-Genome-Foundry/DnaFeaturesViewer) — {{inspiration-features}}
-
-### {{inspiration-detail-title}}
-
-- [ggmagnify](https://github.com/hughjonesd/ggmagnify) — {{inspiration-magnify}}
-- [ggmsa](https://bioconductor.org/packages/ggmsa/) — {{inspiration-alignment}}
-{{inspiration-columns}}
-- [ggview](https://github.com/idmn/ggview) — {{inspiration-preview}}
+{{design-references}}
 
 [{{issues}}](https://github.com/DangJem/ggchord/issues) · [MIT {{license}}](LICENSE)

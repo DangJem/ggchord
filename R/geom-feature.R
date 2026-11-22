@@ -21,7 +21,7 @@ feature_geom <- ggproto(
   optional_aes = "shape",
   extra_params = c(
     "na.rm", "segment_boundaries", "boundary_colour",
-    "boundary_linewidth", "boundary_linetype", "adaptive_outline"
+    "boundary_linewidth", "boundary_linetype", "adaptive_outline", "arrow_key"
   ),
   draw_key = function(data, params, size) {
     key_glyph_feature(data, params, size)
@@ -31,7 +31,7 @@ feature_geom <- ggproto(
                         boundary_colour = "#666666",
                         boundary_linewidth = .25,
                         boundary_linetype = "22",
-                        adaptive_outline = TRUE) {
+                        adaptive_outline = TRUE, arrow_key = NULL) {
     boundary_colour <- boundary_colour %||% (data$colour[1L] %||% "black")
     component <- data$.component %||% rep("polygon", nrow(data))
     polygons <- data[is.na(component) | component == "polygon", , drop = FALSE]
@@ -216,7 +216,8 @@ ggchord_run_source_stat <- function(data, specification, roles, caller, facet, l
 }
 
 ggchord_feature_layer <- function(mapping, data, shape, fixed_shape, thickness,
-    stat, position, dots, na.rm, show.legend, inherit.aes, id) {
+    stat, position, dots, na.rm, show.legend, inherit.aes, id,
+    default_head_style = "shouldered", feature_role = "feature") {
   caller <- "geom_feature()"
   if (!is.character(shape) || length(shape) != 1L || !shape %in% ggchord_feature_shapes)
     ggchord_stop(caller, ": unknown shape")
@@ -240,7 +241,7 @@ ggchord_feature_layer <- function(mapping, data, shape, fixed_shape, thickness,
   if (length(head_length) != 1L || head_length <= 0 ||
       (!is.null(head_width) && (length(head_width) != 1L || head_width <= 0)))
     ggchord_stop(caller, ": head dimensions must be positive scalars")
-  head_style <- match.arg(dots$head_style %||% "shouldered",
+  head_style <- match.arg(dots$head_style %||% default_head_style,
     c("shouldered", "flush", "triangle"))
   short <- match.arg(dots$short_feature %||% "shrink", c("shrink", "block", "error"))
   unknown <- match.arg(dots$unknown_strand %||% "undirected", c("undirected", "error"))
@@ -261,7 +262,10 @@ ggchord_feature_layer <- function(mapping, data, shape, fixed_shape, thickness,
       boundary_colour = dots$boundary_colour,
       boundary_linewidth = dots$boundary_linewidth %||% 0.3,
       boundary_linetype = dots$boundary_linetype %||% 1,
-      adaptive_outline = is.null(dots$linewidth)), geom_params$geom)
+      adaptive_outline = is.null(dots$linewidth),
+      arrow_key = list(style = head_style,
+        head_ratio = if (length(head_width) && is.numeric(thickness) && length(thickness) == 1L)
+          head_width / thickness)), geom_params$geom)
   )
   layer$ggchord_type <- "gene_poly"
   layer$ggchord_params <- list(
@@ -271,7 +275,7 @@ ggchord_feature_layer <- function(mapping, data, shape, fixed_shape, thickness,
     head_length_mm = head_length, head_width_mm = head_width,
     head_args = explicit_heads, arrow_head_style = head_style, short_feature = short,
     unknown_strand = unknown, feature_position = position,
-    gene_color_scheme = "manual", feature_role = "feature",
+    gene_color_scheme = "manual", feature_role = feature_role,
     feature_shape_mapped = shape_mapped,
     feature_shape = shape, user_feature_fill = TRUE,
     feature_fill_mapping = mapping$fill, feature_fill_fixed = dots$fill,
@@ -309,6 +313,9 @@ ggchord_feature_layer <- function(mapping, data, shape, fixed_shape, thickness,
 #' one source entity and use heads at both ends. The gene shortcut defaults to
 #' an arrow and strand placement. The primer shortcut defaults to a directional
 #' narrow path, and the region shortcut defaults to a translucent block.
+#' In circular coordinates, shouldered arrows and their compact and promoter
+#' forms retain the full body thickness. With no explicit `head_width`, their
+#' head is 1.42 times the body thickness.
 #' @examples
 #' library(ggplot2)
 #'

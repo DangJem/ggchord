@@ -7,6 +7,8 @@
 #' @param guide A standard discrete guide.
 #' @param ... Additional options for a discrete fill scale.
 #' @return An ordinary ggplot2 fill scale.
+#' @details The DNA defaults are red A, blue C, yellow G and green T.
+#'   Supply named `values` to replace individual symbol colours.
 #' @export
 #' @examples
 #' library(ggplot2)
@@ -30,9 +32,10 @@ scale_fill_residue <- function(alphabet = "DNA", name = waiver(), values = NULL,
       "#4DAF4A" = c("S", "T", "N", "Q"), "#FFB000" = c("A", "V", "I", "L", "M", "F", "W", "Y"),
       "#984EA3" = "C", "#999999" = "G", "#A65628" = "P", "#222222" = "*")
     for (colour in names(groups)) palette[groups[[colour]]] <- colour
+  } else if (alphabet == "RNA") {
+    palette[c("A", "C", "G", "U")] <- c("#4DAF4A", "#377EB8", "#FFB000", "#E41A1C")
   } else {
-    letters <- c("A", "C", "G", if (alphabet == "RNA") "U" else "T")
-    palette[letters] <- c("#4DAF4A", "#377EB8", "#FFB000", "#E41A1C")
+    palette[c("A", "C", "G", "T")] <- c("#FF6D6D", "#769DCC", "#F2BE3C", "#74CE98")
   }
   palette[c("-", ".")] <- "transparent"
   if (!is.null(values)) {

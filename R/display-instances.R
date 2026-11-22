@@ -265,7 +265,7 @@ ggchord_prepare_instances <- function(plot, seqs) {
   numeric_fields <- c("seq_radius", "seq_curvature", "seq_labels", "seq_thickness_mm",
     "seq_label_radius", "seq_label_rotation", "seq_label_size", "seq_label_hjust", "seq_label_vjust",
     "gene_width", "gene_label_radial_offset", "gene_label_circum_offset", "gene_label_circum_limit",
-    "gene_label_rotation", "ribbon_gap", "link_gap", "label_size", "label_offset")
+    "gene_label_rotation", "ribbon_gap", "front_gap_mm", "link_gap", "label_size", "label_offset")
   for (i in seq_along(plot$layers)) {
     layer <- plot$layers[[i]]; p <- layer$ggchord_params
     if (is.null(p)) next

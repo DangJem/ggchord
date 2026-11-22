@@ -41,12 +41,49 @@ ggchord_resolve_feature_geometry_context <- function(plot) {
   circular <- isTRUE(plot$coordinates$ggchord_circular)
   features <- which(vapply(layers, function(l)
     identical(l$ggchord_params$type, "gene"), logical(1)))
+  circular_arrows <- Filter(function(row) ggchord_circular_arrow_band(
+    circular, layers[[row]]$ggchord_params$feature_role), features)
   labels <- which(vapply(layers, function(l)
     isTRUE(l$ggchord_params$type %in% c("gene_label", "gene_label_repel")) &&
       (collinear || isTRUE(l$ggchord_params$is_feature_label)), logical(1)))
-  if (!length(labels)) return(plot)
+  domain_labels <- if (circular) Filter(function(layer) {
+    p <- layer$ggchord_params
+    identical(p$type, "domain_label") && identical(p$label_kind, "feature") &&
+      !is.null(p$anchor_layer) && inherits(p$label_layout, "LabelLayoutRepel") &&
+      identical(p$label_layout$arrangement, "local") &&
+      p$label_layout$side != "positive"
+  }, layers) else list()
+  if (!length(labels) && !length(domain_labels) && !length(circular_arrows)) return(plot)
   fallback <- ggchord_annotation_fallback(plot$ggchord$data)
-  sizes <- vector("list", length(layers))
+  sizes <- requests <- vector("list", length(layers))
+  feature_id <- vapply(layers[features], function(layer) layer$ggchord_layer_id, character(1))
+  for (layer in domain_labels) {
+    p <- layer$ggchord_params
+    owner <- features[match(p$anchor_layer, feature_id)]
+    if (!length(owner) || is.na(owner)) next
+    position <- layers[[owner]]$ggchord_params$feature_position
+    if (!isTRUE(position$ggchord_feature_stack) || identical(position$direction, "positive")) next
+    input <- ggchord_resolve_layer_input(layer)
+    if (!NROW(input) || is.null(input$label)) next
+    target <- ggchord_resolve_layer_input(layers[[owner]], fallback)
+    if (!NROW(target)) next
+    rows <- ggchord_label_match(input, target, "feature", isTRUE(p$anchor_same_source))
+    text <- as.character(input$label)
+    if (p$label_layout$fit %in% c("wrap", "wrap_shrink")) {
+      text <- vapply(text, function(value) {
+        if (is.na(value)) return(NA_character_)
+        wrapped <- strwrap(value, width = p$label_layout$wrap %||% 24)
+        if (!length(wrapped) || length(wrapped) > p$label_layout$max_lines)
+          return(NA_character_)
+        paste(wrapped, collapse = "\n")
+      }, character(1))
+    }
+    request <- data.frame(source_row = rows, text = text,
+      size = rep_len(p$label_size, nrow(input)), family = p$text_style$family %||% "",
+      fontface = p$text_style$fontface %||% 1, lineheight = p$text_style$lineheight %||% 1.2,
+      padding = p$label_layout$padding %||% 0)
+    requests[[owner]] <- rbind(requests[[owner]], request)
+  }
   for (label_row in labels) {
     layer <- layers[[label_row]]
     p <- layer$ggchord_params
@@ -98,14 +135,16 @@ ggchord_resolve_feature_geometry_context <- function(plot) {
       sizes[[owner$index]] <- c(sizes[[owner$index]], size)
     }
   }
-  for (row in features) if (length(sizes[[row]])) {
+  for (row in features) if (length(sizes[[row]]) || NROW(requests[[row]]) || row %in% circular_arrows) {
     # Clone before setting internal context; caller layer objects stay owned
     # by their plots and no style or mapping is copied to another layer.
     layer <- reconstruct_layer(layers[[row]], layers[[row]]$data,
       mapping = layers[[row]]$mapping)
     layer$ggchord_params <- layers[[row]]$ggchord_params
-    layer$ggchord_params$feature_layout_label_size <- max(sizes[[row]])
-    layer$ggchord_params$feature_layout_has_labels <- TRUE
+    if (length(sizes[[row]]))
+      layer$ggchord_params$feature_layout_label_size <- max(sizes[[row]])
+    layer$ggchord_params$feature_layout_label_requests <- requests[[row]]
+    if (row %in% circular_arrows) layer$geom_params$arrow_key$fixed_body_width <- TRUE
     plot$layers[[row]] <- layer
   }
   plot

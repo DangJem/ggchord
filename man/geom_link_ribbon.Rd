@@ -15,7 +15,10 @@ geom_link_ribbon(
   na.rm = FALSE,
   show.legend = NA,
   inherit.aes = TRUE,
-  id = NULL
+  id = NULL,
+  gap = 0.4,
+  avoid = "none",
+  avoid_strength = 0.5
 )
 }
 \arguments{
@@ -30,12 +33,13 @@ geom_link_ribbon(
 \item{route}{Choose curved or straight routes, or a shared corridor where supported.
 On a curved collinear route, an explicit positive \code{bulge} clears the high
 coordinate end of intervening rows by that fraction of the longest visible
-backbone. Radial curves with positive \code{bulge} clear intermediate spoke tips.
-Set \code{avoid = "smooth"} through \code{...} to clear features at each endpoint.}
+backbone. Radial curves with positive \code{bulge} clear intermediate spoke tips.}
 
 \item{fill_mode}{Use solid fill or map independent query and subject endpoint colours.}
 
-\item{...}{Additional named visual styles and parameters accepted by this layer.}
+\item{...}{Additional named visual styles and parameters accepted by this layer.
+When \code{linetype} is omitted and unmapped, visible outlines connecting
+nonadjacent rows or radial spokes are dashed. Radial adjacency is cyclic.}
 
 \item{na.rm}{Suppress warnings for missing observations that the layer can omit.}
 
@@ -44,6 +48,16 @@ Set \code{avoid = "smooth"} through \code{...} to clear features at each endpoin
 \item{inherit.aes}{Whether to inherit plot mappings and evaluate them on the layer data.}
 
 \item{id}{Optional plot-local layer identifier. Name a layer explicitly to scope a scale, anchor a label or export it.}
+
+\item{gap}{Nonnegative clearance in mm between a ribbon front and the edge of
+the sequence or avoided feature. Accepts flexible per-sequence values.}
+
+\item{avoid}{Use \code{"none"} for a constant sequence gap (the default), or \code{"smooth"}
+to follow the facing feature outlines at ribbon endpoints.}
+
+\item{avoid_strength}{A number from 0 to 1 controlling how far the rounded
+transitions extend. With \code{avoid = "smooth"}, 0 follows contours most closely
+and 1 gives wider transitions. The minimum clearance applies at every strength.}
 }
 \value{
 A ggplot2 layer for addition to a plot.
@@ -56,6 +70,8 @@ Source references are \code{qaccver} and \code{saccver}. Point links consume \co
 Ribbons retain same-reference and non-neighbouring relationships. A
 same-row linear ribbon needs a curved route. A shared route retains
 independent source relationships and uses \code{corridor_width} in mm.
+Smooth avoidance follows the facing feature outlines while preserving the
+original interval endpoints and the route through intervening references.
 Tip decoration is recorded separately from the source interval fronts.
 }
 \examples{
@@ -75,6 +91,7 @@ links <- data.frame(
 
 ggchord(seqs) +
   geom_seq() +
-  geom_link_ribbon(aes(fill = pident), data = links, avoid = "smooth", id = "matches") +
+  geom_link_ribbon(aes(fill = pident), data = links, avoid = "smooth",
+    gap = 0.4, avoid_strength = 0.35, id = "matches") +
   coord_chord()
 }

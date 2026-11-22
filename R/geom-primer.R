@@ -35,5 +35,6 @@ geom_primer <- function(mapping = NULL, data = NULL, shape = "primer_arc",
     na.rm = FALSE, show.legend = NA, inherit.aes = TRUE, id = NULL) {
   ggchord_check_argument_names(sys.call(), sys.function())
   ggchord_feature_layer(mapping, data, shape, !missing(shape), thickness,
-    stat, position, list(...), na.rm, show.legend, inherit.aes, id)
+    stat, position, list(...), na.rm, show.legend, inherit.aes, id,
+    feature_role = "primer")
 }

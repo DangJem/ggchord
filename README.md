@@ -126,27 +126,34 @@ ggsave("ggchord.png", p, width = 10, height = 8, units = "in", dpi = 144)
 ```
 
 <a id="design-inspiration"></a>
-## Design inspiration
+## Design References
 
-The entries distinguish documented design influences from projects considered only in capability research. See the [design-source audit](tools/site-audit/design-inspiration.md) for evidence.
+ggchord draws on established open-source projects and scientific visualization approaches. These references have informed its graphical grammar, genomic layouts, annotation strategies, and figure composition. Each project is acknowledged for its specific contributions to the design process; this does not imply direct reuse of its algorithms or implementations.
 
-### Graphical grammar and sequence relationships
+### Graphical grammar and API design
 
-- [ggplot2](https://ggplot2.tidyverse.org/) — Provides the layered grammar and the division of responsibilities between mappings, scales, guides, geometry, coordinates and themes. ggchord follows this model so users can compose layers and supply their own scales and styles.
-- [BLAST](https://blast.ncbi.nlm.nih.gov/doc/blast-help/) — Informs the compact query/subject field names used to trace alignment records, endpoints and sequence identifiers. Plotting consumes existing results rather than running an alignment program.
-- [Circos](https://circos.ca/) · [circlize](https://github.com/jokergoo/circlize) — Circos informs circular information hierarchy and ribbon presentation; circlize is a capability comparison for multi-track layouts and explicit track/ring contracts.
+- [ggplot2](https://ggplot2.tidyverse.org/) — Provides the foundational layered grammar, separating data mappings, geometries, statistics, positions, scales, guides, coordinates, and themes. ggchord builds on this architecture to support composable genomic visualizations and consistent user-defined styling.
+- [gggenomes](https://thackl.github.io/gggenomes/) — Offers important references for organizing genomic sequences and annotations, strand-aware layouts, feature stacking, sequence orientation, anchoring, and focus-based workflows. ggchord follows its own reference-coordinate and layer-data contracts while drawing on these domain-specific design concepts.
+- [gggenes](https://wilkox.org/gggenes/) — Informs directional gene-arrow geometry, strand-aware positioning, and the distinction between genomic interval lengths and physical drawing dimensions.
 
-### Gene arrows, annotation placement and local comparison
+### Circular and comparative genomic visualization
 
-- [clinker](https://github.com/gamcil/clinker) · [gggenes](https://github.com/wilkox/gggenes) · [genoPlotR](https://genoplotr.r-forge.r-project.org/) — Offer clear examples of strand-aware gene arrows, gene-cluster comparisons and linear synteny. They inform how sequence direction, feature placement and connections are presented together.
-- [gggenomes](https://thackl.github.io/gggenomes/) — Informs tidy multi-table inputs, focus/sync workflows, feature stacking, local anchoring and local display reversal. Its approach helps keep data preparation distinct from display choices.
-- [DNA Features Viewer](https://github.com/Edinburgh-Genome-Foundry/DnaFeaturesViewer) — Provides a reference for readable feature annotations, crowded-label handling and local feature layouts. It informs the emphasis on connecting labels clearly to their source intervals.
+- [Circos](https://circos.ca/) — Inspires the visual organization of circular genomic information, including sequence sectors, layered annotations, and ribbons representing relationships between genomic intervals.
+- [circlize](https://github.com/jokergoo/circlize) — Serves as a reference for flexible circular track organization, ring arrangement, and multi-layer genomic visualization.
+- [clinker](https://github.com/gamcil/clinker) — Provides a visual reference for gene-cluster comparisons, directional gene arrows, and the readable presentation of genomic similarity and synteny.
+- [genoPlotR](https://genoplotr.r-forge.r-project.org/) — Offers design references for linear comparative genomics, aligned sequence regions, genomic coordinate presentation, and relationships across multiple genomic segments.
 
-### Local magnification, aligned characters and figure preview
+### Feature annotations and multi-scale visualization
 
-- [ggmagnify](https://github.com/hughjonesd/ggmagnify) — Provides a reference for connecting an overview to a magnified inset. ggchord develops this presentation idea around explicit source intervals and independently registered sequence views.
-- [ggmsa](https://bioconductor.org/packages/ggmsa/) — Listed as a character-view research reference in v0.20.0. In v0.28.0, its residue cells and chemistry palettes were inspected directly and informed geom_residue() background sizing and default fill scales. Glyph rendering, exact source registration and user-scale priority remain independently implemented.
-[ggseqalign](https://www.bioconductor.org/packages/release/bioc/html/ggseqalign.html), [ggseqlogo](https://omarwagih.github.io/ggseqlogo/), [Jalview](https://www.jalview.org/help/html/features/annotation.html) and [ESPript](https://espript.ibcp.fr/ESPript/ESPript/) are research comparisons for aligned characters, sequence logos, column annotations or static output. Their integrations, logo, consensus and conservation layers are not implemented here. Historical records do not establish that each influenced the current layout algorithms.
-- [ggview](https://github.com/idmn/ggview) — Informs the workflow of previewing a static figure at its intended export size. ggchord uses view_ggchord() for sized preview and standard ggsave() for saving.
+- [DNA Features Viewer](https://github.com/Edinburgh-Genome-Foundry/DnaFeaturesViewer) — Informs the presentation of genomic features, annotation geometry, label placement, and collision management in densely annotated regions.
+- [ggmagnify](https://github.com/hughjonesd/ggmagnify) — Provides a reference for linking overview figures to magnified details. ggchord develops this concept through explicit source intervals and connections between independently constructed views.
+- [ggmsa](https://bioconductor.org/packages/ggmsa/) — Provides references for aligned nucleotide and amino-acid visualization, compact residue cells, and chemistry-based colouring. Selected residue palette values are adapted with attribution in [NOTICE](inst/NOTICE); sequence registration and rendering are independently implemented.
+- [ggview](https://github.com/idmn/ggview) — Informs the workflow of previewing figures at their intended output dimensions. ggchord provides size-aware previews through `view_ggchord()` while retaining standard `ggsave()` output.
+
+### Data conventions and related research
+
+- [BLAST](https://blast.ncbi.nlm.nih.gov/doc/blast-help/) — Provides established query/subject terminology reflected in ggchord's alignment data conventions. ggchord visualizes existing alignment results rather than performing sequence alignment.
+- [trackViewer](https://bioconductor.org/packages/trackViewer/) — Serves as a research reference for genomic signal tracks, interval-based measurements, and quantitative annotation displays.
+- [ggseqalign](https://bioconductor.org/packages/ggseqalign/), [ggseqlogo](https://omarwagih.github.io/ggseqlogo/), [Jalview](https://www.jalview.org/), and [ESPript](https://espript.ibcp.fr/ESPript/ESPript/) — Have been examined as related approaches to alignment visualization, sequence logos, residue annotations, and publication-oriented sequence figures. Their inclusion indicates research and comparison, not implemented integration or adoption of their rendering algorithms.
 
 [Report an issue](https://github.com/DangJem/ggchord/issues) · [MIT license](LICENSE)

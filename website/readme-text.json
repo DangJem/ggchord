@@ -207,30 +207,6 @@
     "zh": "按相同的明确宽高预览并保存，让标签按预定成图尺寸排布。",
     "en": "Preview and save at the same explicit dimensions so labels are arranged for the intended figure size."
   },
-  "inspiration-grammar": {
-    "zh": "提供分层绘图语法，以及映射、标度、图例、几何、坐标与主题的职责划分。ggchord 沿用这一模型，让用户组合独立图层，并使用自己的标度和样式。",
-    "en": "Provides the layered grammar and the division of responsibilities between mappings, scales, guides, geometry, coordinates and themes. ggchord follows this model so users can compose layers and supply their own scales and styles."
-  },
-  "inspiration-naming": {
-    "zh": "为紧凑的 query/subject 字段命名提供参照，便于追踪比对记录、端点与序列标识。绘图读取已有结果，不在绘图阶段运行比对程序。",
-    "en": "Informs the compact query/subject field names used to trace alignment records, endpoints and sequence identifiers. Plotting consumes existing results rather than running an alignment program."
-  },
-  "inspiration-circular": {
-    "zh": "Circos 为环形信息层级和连接带表达提供设计参照；circlize 用于多轨道与显式 track/ring 契约的能力比较。",
-    "en": "Circos informs circular information hierarchy and ribbon presentation; circlize is a capability comparison for multi-track layouts and explicit track/ring contracts."
-  },
-  "inspiration-synteny": {
-    "zh": "为保留链方向的基因箭头、基因簇比较和直线共线性提供清晰范例，帮助协调序列方向、特征位置与连接关系的表达。",
-    "en": "Offer clear examples of strand-aware gene arrows, gene-cluster comparisons and linear synteny. They inform how sequence direction, feature placement and connections are presented together."
-  },
-  "inspiration-features": {
-    "zh": "为可读的特征注释、拥挤标签处理和局部特征布局提供参照，帮助明确标签与其来源区间之间的对应关系。",
-    "en": "Provides a reference for readable feature annotations, crowded-label handling and local feature layouts. It informs the emphasis on connecting labels clearly to their source intervals."
-  },
-  "inspiration-preview": {
-    "zh": "为按预定导出尺寸检查静态图形提供流程参照。ggchord 用 view_ggchord() 进行指定尺寸预览，用标准 ggsave() 保存。",
-    "en": "Informs the workflow of previewing a static figure at its intended export size. ggchord uses view_ggchord() for sized preview and standard ggsave() for saving."
-  },
   "license": {
     "zh": "许可证",
     "en": "license"
@@ -258,42 +234,6 @@
   "sankey-alt": {
     "zh": "从四基因组共线性图派生的 Sankey 旗舰",
     "en": "Sankey flagship derived from the four-genome Collinear example"
-  },
-  "inspiration-grammar-title": {
-    "zh": "绘图语法与序列关系表达",
-    "en": "Graphical grammar and sequence relationships"
-  },
-  "inspiration-features-title": {
-    "zh": "基因箭头、注释布局与局部比较",
-    "en": "Gene arrows, annotation placement and local comparison"
-  },
-  "inspiration-genomes": {
-    "zh": "为 tidy 多表输入、focus/sync 工作流、特征堆叠、局部锚定与局部显示翻转提供参照，帮助区分数据整理和显示选择的职责。",
-    "en": "Informs tidy multi-table inputs, focus/sync workflows, feature stacking, local anchoring and local display reversal. Its approach helps keep data preparation distinct from display choices."
-  },
-  "inspiration-detail-title": {
-    "zh": "局部放大、对齐字符与图形预览",
-    "en": "Local magnification, aligned characters and figure preview"
-  },
-  "inspiration-magnify": {
-    "zh": "为整体图与局部放大图之间的关联表达提供参照。ggchord 围绕明确的来源区间和独立注册的序列视图发展这一表达方式。",
-    "en": "Provides a reference for connecting an overview to a magnified inset. ggchord develops this presentation idea around explicit source intervals and independently registered sequence views."
-  },
-  "inspiration-alignment": {
-    "zh": "v0.20.0 将其列为字符视图调研对象；v0.28.0 进一步实际核对其残基格和化学性质配色，并用于 geom_residue() 的紧凑背景与默认颜色标度。保留独立字形绘制、真实坐标注册和用户标度优先规则。",
-    "en": "Listed as a character-view research reference in v0.20.0. In v0.28.0, its residue cells and chemistry palettes were inspected directly and informed geom_residue() background sizing and default fill scales. Glyph rendering, exact source registration and user-scale priority remain independently implemented."
-  },
-  "inspiration-columns": {
-    "zh": "[ggseqalign](https://www.bioconductor.org/packages/release/bioc/html/ggseqalign.html)、[ggseqlogo](https://omarwagih.github.io/ggseqlogo/)、[Jalview](https://www.jalview.org/help/html/features/annotation.html) 和 [ESPript](https://espript.ibcp.fr/ESPript/ESPript/) 仅列为对齐字符、序列 logo、列注释或静态输出的调研比较对象；当前未实现这些工具的集成、logo、共识或保守性图层。历史记录不足以证明它们分别影响了现有布局算法。",
-    "en": "[ggseqalign](https://www.bioconductor.org/packages/release/bioc/html/ggseqalign.html), [ggseqlogo](https://omarwagih.github.io/ggseqlogo/), [Jalview](https://www.jalview.org/help/html/features/annotation.html) and [ESPript](https://espript.ibcp.fr/ESPript/ESPript/) are research comparisons for aligned characters, sequence logos, column annotations or static output. Their integrations, logo, consensus and conservation layers are not implemented here. Historical records do not establish that each influenced the current layout algorithms."
-  },
-  "inspiration-title": {
-    "zh": "设计灵感来源",
-    "en": "Design inspiration"
-  },
-  "inspiration-intro": {
-    "zh": "以下条目区分已记录并落实到设计的参考，以及仅用于能力调研的项目。具体依据见[设计来源核对](tools/site-audit/design-inspiration.md)。",
-    "en": "The entries distinguish documented design influences from projects considered only in capability research. See the [design-source audit](tools/site-audit/design-inspiration.md) for evidence."
   },
   "get-started": {
     "zh": "开始使用",

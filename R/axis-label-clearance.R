@@ -1,12 +1,50 @@
 # Automatically positioned circular strings may acquire bounded radial
 # clearance. Tick anchors, explicit breaks and physical offsets stay put.
+ggchord_axis_endpoints <- function(data) {
+  fields <- intersect(c("is_origin", "is_endpoint", ".axis_seam_combined"), names(data))
+  Reduce(function(a, field) a | data[[field]] %in% TRUE, fields,
+    init = rep(FALSE, nrow(data)))
+}
+
+ggchord_clear_projected_axis_text <- function(text, layout) {
+  if (!isTRUE(layout$axis_label_hide_overlaps) || !length(layout$layer_geometry))
+    return(text)
+  scale <- ggchord_annotation_metric(layout) * 25.4
+  occupied <- ggchord_annotation_text_obstacles(layout$layer_geometry, layout,
+    include_axis = FALSE, scale = scale)
+  leaders <- ggchord_rbind_fill(lapply(layout$layer_geometry, function(owner) {
+    d <- owner$domain_label
+    if (!NROW(d)) return(NULL)
+    ggchord_annotation_segments(d[d$.component %in% "leader", , drop = FALSE], scale)
+  })) %||% data.frame()
+  polygons <- ggchord_annotation_polygons(layout$layer_geometry, scale)
+  bounds <- ggchord_polygon_bounds(polygons)
+  boxes <- ggchord_text_boxes(transform(text, x = x / scale[1L], y = y / scale[2L],
+    text = label), x_col = "x", y_col = "y", angle_col = "angle",
+    units_per_inch = 1, box_padding = .3 / 25.4)
+  endpoints <- ggchord_axis_endpoints(text)
+  accepted <- which(endpoints)
+  hidden <- integer()
+  for (i in which(!endpoints)) {
+    box <- boxes[i, , drop = FALSE]
+    if (ggchord_boxes_overlap_any(box, occupied) ||
+        ggchord_boxes_overlap_any(box, boxes[accepted, , drop = FALSE]) ||
+        ggchord_inner_leader_hits(leaders, box) ||
+        ggchord_boxes_hit_features(box, polygons, tol = .1 / 25.4, bounds = bounds)) {
+      hidden <- c(hidden, i)
+    } else {
+      accepted <- c(accepted, i)
+    }
+  }
+  if (length(hidden)) text <- text[-hidden, , drop = FALSE]
+  text
+}
+
 ggchord_clear_circular_axis_text <- function(text, layout) {
   required <- c('.axis_automatic_breaks', '.axis_offset_explicit', '.axis_allow_clearance')
   if (!all(required %in% names(text)) || !length(layout$layer_geometry)) return(text)
-  critical <- rep(FALSE,nrow(text))
-  for(field in intersect(c('is_origin','is_endpoint','.axis_seam_combined'),names(text)))
-    critical <- critical | text[[field]] %in% TRUE
-  at <- which(text$.axis_automatic_breaks %in% TRUE)
+  critical <- ggchord_axis_endpoints(text)
+  at <- which(text$.axis_automatic_breaks %in% TRUE & text$.axis_allow_clearance %in% TRUE)
   at <- at[order(!critical[at],at)]
   if (!length(at)) return(text)
   polygons <- list()
@@ -24,7 +62,8 @@ ggchord_clear_circular_axis_text <- function(text, layout) {
   # Axis placement precedes leader routing. Depending on the current leader
   # path here would move text again after its obstacle was already routed.
   roots <- ggchord_annotation_leader_roots(layout$layer_geometry)
-  if (!length(polygons) && !nrow(roots)) return(text)
+  if (!length(polygons) && !nrow(roots) && !any(text$.axis_seam_combined %in% TRUE))
+    return(text)
   active_roots <- roots
   root_hit <- function(boxes) {
     if (!nrow(active_roots) || !nrow(boxes)) return(FALSE)
@@ -63,21 +102,49 @@ ggchord_clear_circular_axis_text <- function(text, layout) {
   text$.axis_clearance_status <- NA_character_
   text$.axis_label_side <- "following"
   text$.axis_tangent_gap_mm <- text$label_gap*25.4/units
+  inward <- function(row) !identical(row$.axis_inward, FALSE)
   near_backbone <- function(boxes) {
     if (!length(band) || !nrow(boxes)) return(TRUE)
     radii <- sqrt(rowSums(ggchord_boxes_corners(boxes)^2))
-    gap <- if (max(radii)<band[1L]) band[1L]-max(radii) else
-      if (min(radii)>band[2L]) min(radii)-band[2L] else -Inf
-    is.finite(gap) && gap>=.5*units/25.4 && gap<=2*units/25.4
+    gap <- if (inward(original)) band[1L] - max(radii) else
+      min(radii) - band[2L]
+    is.finite(gap) && gap >= .35 * units / 25.4
   }
   # Glyphs on the other ticks keep their measured boxes until that tick moves.
   tick_boxes <- lapply(seq_len(nrow(text)), function(i) boxes_for(text[i, , drop = FALSE], i))
+  angular_span <- function(boxes, center) {
+    corners <- ggchord_boxes_corners(boxes)
+    angle <- atan2(corners[, 2L], corners[, 1L]) - center
+    range(atan2(sin(angle), cos(angle)))
+  }
+  seam <- which(text$.axis_seam_combined %in% TRUE)
+  seam_conflict <- function(boxes, i) {
+    if (!isTRUE(layout$axis_label_hide_overlaps) || !nrow(boxes)) return(FALSE)
+    for (j in seam[text$accver[seam] == text$accver[i]]) {
+      if (!nrow(tick_boxes[[j]])) next
+      center <- atan2(text$text_y[j], text$text_x[j])
+      a <- angular_span(boxes, center)
+      b <- angular_span(tick_boxes[[j]], center)
+      # Measured glyphs reserve one angular channel around the origin.
+      # Moving an ordinary label deeper does not make it a separate label slot.
+      margin <- .45 * units / (25.4 * max(.1, sqrt(text$text_x[j]^2 + text$text_y[j]^2)))
+      if (diff(a) < pi && a[1L] < b[2L] + margin && a[2L] > b[1L] - margin)
+        return(TRUE)
+    }
+    FALSE
+  }
   for (i in at) {
     original <- text[i, , drop = FALSE]
     initial <- original
     active_roots <- if (critical[i]) roots[
       roots$x0==roots$x1 & roots$y0==roots$y1,,drop=FALSE] else roots
     boxes <- tick_boxes[[i]]
+    if (!critical[i] && seam_conflict(boxes, i)) {
+      text$text[i] <- NA_character_
+      tick_boxes[[i]] <- boxes_for(text[i, , drop = FALSE], i)
+      text$.axis_clearance_status[i] <- "hidden_at_seam"
+      next
+    }
     other_rows <- setdiff(seq_len(nrow(text)),i)
     if (critical[i]) other_rows <- other_rows[critical[other_rows] |
       !(text$.axis_automatic_breaks[other_rows] %in% TRUE)]
@@ -89,8 +156,9 @@ ggchord_clear_circular_axis_text <- function(text, layout) {
     if (length(band) && !isTRUE(original$.axis_offset_explicit) &&
         isTRUE(original$.axis_allow_clearance) && nrow(boxes)) {
       radius <- sqrt(original$text_x^2+original$text_y^2)
-      outer <- max(sqrt(rowSums(ggchord_boxes_corners(boxes)^2)))
-      shift <- band[1L]-.65*units/25.4-outer
+      envelope <- sqrt(rowSums(ggchord_boxes_corners(boxes)^2))
+      shift <- if (inward(original)) band[1L] - .65 * units / 25.4 - max(envelope) else
+        band[2L] + .65 * units / 25.4 - min(envelope)
       candidate <- original
       candidate$text_x <- original$text_x*(radius+shift)/radius
       candidate$text_y <- original$text_y*(radius+shift)/radius
@@ -114,7 +182,7 @@ ggchord_clear_circular_axis_text <- function(text, layout) {
       ggchord_inner_leader_hits(roots, candidate)
     }
     if (critical[i] && length(band) && !isTRUE(initial$.axis_offset_explicit) &&
-        isTRUE(initial$.axis_allow_clearance) && exit_hit(boxes)) {
+        (exit_hit(boxes) || feature_hit(boxes) || text_hit(boxes))) {
       direction <- c(cos(initial$text_angle*pi/180), sin(initial$text_angle*pi/180))
       tick <- c(initial$text_x, initial$text_y) - direction*initial$label_gap
       gaps <- unique(c(initial$label_gap*25.4/units, .8, 1.2, 1.6, 2, 2.5, 3, 3.5, 4))
@@ -131,8 +199,9 @@ ggchord_clear_circular_axis_text <- function(text, layout) {
         if (!is.finite(radius) || radius <= 0) next
         candidate$text_x <- point[1L]; candidate$text_y <- point[2L]
         moved <- boxes_for(candidate, i)
-        shift <- band[1L]-option$radial*units/25.4 -
-          max(sqrt(rowSums(ggchord_boxes_corners(moved)^2)))
+        envelope <- sqrt(rowSums(ggchord_boxes_corners(moved)^2))
+        shift <- if (inward(original)) band[1L] - option$radial * units / 25.4 - max(envelope) else
+          band[2L] + option$radial * units / 25.4 - min(envelope)
         candidate$text_x <- point[1L]*(radius+shift)/radius
         candidate$text_y <- point[2L]*(radius+shift)/radius
         moved <- boxes_for(candidate, i)
@@ -152,7 +221,7 @@ ggchord_clear_circular_axis_text <- function(text, layout) {
     tick_boxes[[i]] <- boxes
     feature_collision <- feature_hit(boxes)
     anchor_collision <- !feature_collision && root_hit(boxes)
-    if (!feature_collision && !anchor_collision &&
+    if (!feature_collision && !anchor_collision && !text_hit(boxes) &&
         (isTRUE(original$.axis_offset_explicit) || !isTRUE(original$.axis_allow_clearance) ||
           near_backbone(boxes))) {
       text$.axis_clearance_status[i] <- 'clear'
@@ -169,11 +238,11 @@ ggchord_clear_circular_axis_text <- function(text, layout) {
     limit <- max(2*height, .8*units/25.4)
     amounts <- seq(step, limit, by = step)
     amounts <- c(amounts, -seq(step, max(2*height, 2*units/25.4), by = step))
-    # A narrow inner channel may not fit even at the font floor. One bounded
-    # outer lane can clear the backbone without shrinking or deleting text.
-    outer <- if (length(band)) band[2L]+height-radius else NA_real_
-    if (is.finite(outer) && outer > limit && outer <= max(8*height, 3*units/25.4))
-      amounts <- c(amounts, outer)
+    # Protect endpoints with a deeper lane on the same side.
+    if (critical[i] && length(band)) {
+      direction <- if (inward(original)) -1 else 1
+      amounts <- c(amounts, direction * c(3, 4.5, 6) * units / 25.4)
+    }
     amounts <- unique(amounts[order(abs(amounts), amounts < 0)])
     text$.axis_clearance_status[i] <- if (feature_collision) 'feature_unresolved' else 'anchor_unresolved'
     min_radius <- max(2*height, sum(boxes$ow)/(pi/2))
@@ -184,6 +253,7 @@ ggchord_clear_circular_axis_text <- function(text, layout) {
       candidate$text_y <- original$text_y*(radius+amount)/radius
       moved <- boxes_for(candidate, i)
       if (feature_hit(moved) || backbone_hit(moved) || root_hit(moved) ||
+          (!critical[i] && seam_conflict(moved, i)) ||
           !near_backbone(moved)) next
       hits_text <- nrow(others) > 0L && any(vapply(seq_len(nrow(moved)), function(k)
         any(ggchord_oriented_box_overlaps(moved[k, , drop = FALSE], others)), logical(1)))
@@ -197,6 +267,18 @@ ggchord_clear_circular_axis_text <- function(text, layout) {
     }
     unresolved <- grepl("unresolved$",text$.axis_clearance_status[i])
     if (unresolved && critical[i]) {
+      # Keep even a crowded endpoint on the requested side of the backbone.
+      if (!near_backbone(boxes) && length(band)) {
+        candidate <- original
+        corner_radius <- sqrt(rowSums(ggchord_boxes_corners(boxes)^2))
+        target <- if (inward(original)) band[1L] - max(corner_radius) - height else
+          band[2L] - min(corner_radius) + height
+        candidate$text_x <- original$text_x * (radius + target) / radius
+        candidate$text_y <- original$text_y * (radius + target) / radius
+        text$text_x[i] <- candidate$text_x; text$text_y[i] <- candidate$text_y
+        tick_boxes[[i]] <- boxes_for(candidate, i)
+        text$.axis_clearance_mm[i] <- text$.axis_clearance_mm[i] + target*25.4/units
+      }
       text$.axis_clearance_status[i] <- "endpoint_unresolved"
     } else if (unresolved && isTRUE(layout$axis_label_hide_overlaps)) {
       text$text[i] <- NA_character_

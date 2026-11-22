@@ -279,7 +279,7 @@
         }
       ],
       "value": "A coordinate system for a ggchord plot.",
-      "details": "Radial paths retain the source orientation and valid reference extents. Angle supplies the frame and layout controls the relative orientation of each sequence. Relations still use their own interval or point table.",
+      "details": "Radial paths retain the source orientation and valid reference extents. Angle supplies the frame and layout controls the relative orientation of each sequence. Relations still use their own interval or point table.\n\nIf inner_radius is omitted, the central opening starts at 0.12 of the longest outer radius and expands as needed to fit the visible endpoint strokes and feature clearance.",
       "errors": "Only layout options applicable to radial paths are accepted. Free facet axes are unsupported.",
       "roles": [],
       "example_setup": ""
@@ -545,7 +545,7 @@
         }
       ],
       "value": "A layout declaration to add to a ggchord plot.",
-      "details": "Declare order, direction, suitable gaps and the relative path geometry. An explicitly named window produces a display instance of a reference. Display windows leave source lengths and statistical denominators intact.",
+      "details": "Declare order, direction, suitable gaps and the relative path geometry. An explicitly named window produces a display instance of a reference. Display windows leave source lengths and statistical denominators intact.\n\nIf inner_radius is omitted, the central opening starts at 0.12 of the longest outer radius and expands as needed to fit the visible endpoint strokes and feature clearance.",
       "errors": "Unknown source or instance IDs, duplicate instance IDs, invalid windows and gaps unsupported by the active projection are errors.",
       "roles": [],
       "example_setup": ""
@@ -884,7 +884,7 @@
         },
         {
           "format": "named arguments",
-          "description": "Additional named visual styles and parameters accepted by this layer."
+          "description": "Additional named visual styles and parameters accepted by this layer. Headed shapes accept head_length and head_width in mm (or absolute grid units), head_style, and short_feature. In circular coordinates, head_width = NULL gives shouldered arrows a head 1.42 times their body thickness."
         },
         {
           "format": "logical",
@@ -904,7 +904,7 @@
         }
       ],
       "value": "A ggplot2 layer for addition to a plot.",
-      "details": "Use `accver`, `start`, `end`, and strand for directional shapes. Compound features may supply segments. The shape scale maps domain shapes, and thickness, heads and placement use physical dimensions. The source feature and its display pieces remain traceable.\n\nFeatures have a dark 0.25 mm outline by default. Small symbols use a finer outline. A fixed or mapped linewidth overrides the adjustment.\n\nUse `+`, `-`, `+/-` or `.` for strand. Bidirectional arrows have heads at both ends and retain one source entity.",
+      "details": "Use `accver`, `start`, `end`, and strand for directional shapes. Compound features may supply segments. The shape scale maps domain shapes, and thickness, heads and placement use physical dimensions. The source feature and its display pieces remain traceable.\n\nFeatures have a dark 0.25 mm outline by default. Small symbols use a finer outline. A fixed or mapped linewidth overrides the adjustment.\n\nUse `+`, `-`, `+/-` or `.` for strand. Bidirectional arrows have heads at both ends and retain one source entity.\n\nIn circular coordinates, thickness sets the body width of arrow, compact_arrow, promoter_arrow and primer_arrow. With head_style = \"shouldered\", the default head extends past both sides of the body. Shorter shapes can have a shorter head while retaining the body width. An explicit head_width sets the physical width of the head. For capped_line, both end caps fit inside the feature interval.",
       "errors": "Incompatible shape and head parameters, invalid interval endpoints, unsupported Stats or Positions, and missing strand where required are errors.",
       "roles": [
         "Reference identity.",
@@ -946,7 +946,7 @@
         },
         {
           "format": "named arguments",
-          "description": "Additional named visual styles and parameters accepted by this layer."
+          "description": "Additional named visual styles and parameters accepted by this layer. Headed shapes accept head_length and head_width in mm (or absolute grid units), head_style, and short_feature. In circular coordinates, head_width = NULL gives shouldered arrows a head 1.42 times their body thickness."
         },
         {
           "format": "logical",
@@ -966,7 +966,7 @@
         }
       ],
       "value": "A ggplot2 layer for addition to a plot.",
-      "details": "This shortcut uses an arrow shape and strand-aware placement unless overridden. The layer draws the supplied features and uses their explicit style mappings.",
+      "details": "This shortcut uses an arrow shape and strand-aware placement unless overridden. The layer draws the supplied features and uses their explicit style mappings.\n\nThe default gene arrow is shoulderless (`head_style = \"flush\"`). Set `head_style = \"shouldered\"` for a wider arrowhead.\n\nIn circular coordinates, thickness sets the body width of arrow, compact_arrow, promoter_arrow and primer_arrow. With head_style = \"shouldered\", the default head extends past both sides of the body. Shorter shapes can have a shorter head while retaining the body width. An explicit head_width sets the physical width of the head.",
       "errors": "Provide directional evidence for directional marks. Shape-specific options must match the effective shape.",
       "roles": [
         "Reference identity.",
@@ -1028,7 +1028,7 @@
         }
       ],
       "value": "A ggplot2 layer for addition to a plot.",
-      "details": "Use known binding intervals and biological strand. The rendering uses primer-specific geometry with its physical sizing controls. Binding discovery is performed separately.",
+      "details": "Use known binding intervals and biological strand. The rendering uses primer-specific geometry with its physical sizing controls. Binding discovery is performed separately.\n\nIn circular coordinates, the primer shortcut keeps its narrow profile for placement between the backbone strokes.",
       "errors": "Missing reliable strand and options for an unrelated feature shape are invalid.",
       "roles": [
         "Reference identity.",
@@ -1074,7 +1074,7 @@
         },
         {
           "format": "named arguments",
-          "description": "Additional named visual styles and parameters accepted by this layer."
+          "description": "Additional named visual styles and parameters accepted by this layer. Headed shapes accept head_length and head_width in mm (or absolute grid units), head_style, and short_feature. In circular coordinates, head_width = NULL gives shouldered arrows a head 1.42 times their body thickness."
         },
         {
           "format": "logical",
@@ -1094,7 +1094,7 @@
         }
       ],
       "value": "A ggplot2 layer for addition to a plot.",
-      "details": "Use closed source intervals for regions of interest. The layer adds a visual mark over those intervals. Use Layout windows or a data focus operation when you want a different visible or statistical domain.",
+      "details": "Use closed source intervals for regions of interest. The layer adds a visual mark over those intervals. Use Layout windows or a data focus operation when you want a different visible or statistical domain.\n\nIn circular coordinates, thickness sets the body width of arrow, compact_arrow, promoter_arrow and primer_arrow. With head_style = \"shouldered\", the default head extends past both sides of the body. Shorter shapes can have a shorter head while retaining the body width. An explicit head_width sets the physical width of the head.",
       "errors": "A region should belong to the registered reference and use its source units.",
       "roles": [
         "Reference identity.",
@@ -1160,7 +1160,7 @@
         }
       ],
       "value": "A ggplot2 layer for addition to a plot.",
-      "details": "An independent layer may supply its own label table. An anchored layer follows the target feature layer after its Stat and Position and matches by stable feature identity. The text layout operates around the anchor.\n\nFor a segmented feature, the middle anchor follows the occupied segments. A segment crossing the circular origin keeps its label near the seam.",
+      "details": "An independent layer may supply its own label table. An anchored layer follows the target feature layer after its Stat and Position and matches by stable feature identity. The text layout operates around the anchor.\n\nFor a segmented feature, the middle anchor follows the occupied segments. A segment crossing the circular origin keeps its label near the seam.\n\nIn circular coordinates, text outside the sequence ring uses bold type by default. An explicit or mapped fontface takes priority. A filled exterior label has a visible outline, including when it is placed with a fixed layout.\n\nNearby inward callouts can adjust their arc positions and rows together to keep text clear of other leaders.",
       "errors": "Unknown or ambiguous anchors and unsupported Stats on an anchored label are errors.",
       "roles": [
         "Reference identities that locate source observations.",
@@ -1225,7 +1225,7 @@
         }
       ],
       "value": "A ggplot2 layer for addition to a plot.",
-      "details": "Use the feature label contract with repel layout defaults. The input anchor stays attached to the same entity and display instance while text can move and receive a leader.",
+      "details": "Use the feature label contract with repel layout defaults. The input anchor stays attached to the same entity and display instance while text can move and receive a leader.\n\nIn circular coordinates, text outside the sequence ring uses bold type by default. An explicit or mapped fontface takes priority. A filled exterior label has a visible outline, including when it is placed with a fixed layout.\n\nNearby inward callouts can adjust their arc positions and rows together to keep text clear of other leaders.",
       "errors": "Repel settings require a suitable label layout. Ambiguous or missing feature anchors are rejected.",
       "roles": [
         "Reference identities that locate source observations.",
@@ -1290,7 +1290,7 @@
         }
       ],
       "value": "A ggplot2 layer for addition to a plot.",
-      "details": "Use the feature label layer with gene-oriented defaults. Anchor to the feature layer when the label should follow its side and lane, including when the label data are filtered.",
+      "details": "Use the feature label layer with gene-oriented defaults. Anchor to the feature layer when the label should follow its side and lane, including when the label data are filtered.\n\nIn circular coordinates, text outside the sequence ring uses bold type by default. An explicit or mapped fontface takes priority. A filled exterior label has a visible outline, including when it is placed with a fixed layout.",
       "errors": "The target and subset need compatible unique identities. A label does not modify the gene position.",
       "roles": [
         "Reference identities that locate source observations.",
@@ -1355,7 +1355,7 @@
         }
       ],
       "value": "A ggplot2 layer for addition to a plot.",
-      "details": "Combine the gene label defaults with a repelling label layout. A subset may follow the anchored gene layer without recalculating its lanes.",
+      "details": "Combine the gene label defaults with a repelling label layout. A subset may follow the anchored gene layer without recalculating its lanes.\n\nIn circular coordinates, text outside the sequence ring uses bold type by default. An explicit or mapped fontface takes priority. A filled exterior label has a visible outline, including when it is placed with a fixed layout.",
       "errors": "Invalid anchors or incompatible layout settings fail with the same contract as the underlying label layer.",
       "roles": [
         "Reference identities that locate source observations.",
@@ -1728,7 +1728,7 @@
         }
       ],
       "value": "A ggplot2 layer for addition to a plot.",
-      "details": "Use the site label contract with a repelling layout. Text movements and leaders remain associated with the site anchor.\n\nHorizontal circular callouts can supply `enzyme_label` and `coordinate_label` columns. Enzyme names are bold and positions are plain, with the order following the callout side.",
+      "details": "Use the site label contract with a repelling layout. Text movements and leaders remain associated with the site anchor.\n\nHorizontal circular callouts can supply `enzyme_label` and `coordinate_label` columns. Enzyme names are bold and positions are plain, with the order following the callout side.\n\nCircular labels with separate enzyme and coordinate fragments use a bold enzyme name by default. Supply fontface to set the same font weight on both fragments.",
       "errors": "Missing or ambiguous site anchors and unsupported layout settings are errors.",
       "roles": [
         "Reference identity. One-based source position.",
@@ -1824,7 +1824,7 @@
         },
         {
           "format": "named arguments",
-          "description": "Additional named visual styles and parameters accepted by this layer."
+          "description": "Additional named visual styles and parameters accepted by this layer. Omitted, unmapped linetypes use dashed outlines across intervening rows and radial spokes. The first and last spokes are adjacent. Fixed or mapped linetypes take precedence."
         },
         {
           "format": "logical",
@@ -1841,10 +1841,22 @@
         {
           "format": "character(1) / NULL",
           "description": "Optional plot-local layer identifier. Name a layer explicitly to scope a scale, anchor a label or export it."
+        },
+        {
+          "format": "numeric / unit / vector",
+          "description": "Clearance in millimetres between the ribbon fronts and the outline of each reference. A scalar applies to every reference. Named reference vectors and other flexible physical lengths are supported."
+        },
+        {
+          "format": "character(1)",
+          "description": "Use \"smooth\" to follow the drawn feature outlines near the ribbon fronts. The default, \"none\", uses the reference clearance alone."
+        },
+        {
+          "format": "numeric(1)",
+          "description": "Smoothing strength for avoid = \"smooth\", from 0 to 1. Lower values follow the outline more closely. Higher values broaden transitions around obstacles."
         }
       ],
       "value": "A ggplot2 layer for addition to a plot.",
-      "details": "Use query and subject endpoints with explicit direction evidence. A one-residue interval has its full front. Self-links and nonadjacent links are preserved when supported. Endpoint fills, shared routes and optional tips are visual controls.\n\nOn a curved collinear link that spans intervening rows, a positive bulge sets the outer clearance as a fraction of the longest visible backbone. A radial outer route clears intervening spoke tips.\n\nPass `avoid = \"smooth\"` through `...` to clear features at each ribbon front while retaining the source intervals. The default is `\"none\"`.",
+      "details": "Use query and subject endpoints with explicit direction evidence. A one-residue interval has its full front. Self-links and nonadjacent links are preserved when supported. Endpoint fills, shared routes and optional tips are visual controls.\n\nOn a curved collinear link that spans intervening rows, a positive bulge sets the outer clearance as a fraction of the longest visible backbone. A radial outer route clears intervening spoke tips.\n\nRibbon clearance and obstacle avoidance adjust the drawn fronts while preserving the source intervals.",
       "errors": "Unknown references and invalid interval endpoints are rejected. Route controls and direction evidence must be compatible with the selected geometry.",
       "roles": [
         "Reference identities that locate source observations.",
@@ -2770,7 +2782,7 @@
         },
         {
           "format": "character(1)",
-          "description": "Whether and how to fit text to available space."
+          "description": "The default, wrap, preserves the supplied font size, as does none. Select shrink or wrap_shrink to allow individual labels to become smaller."
         },
         {
           "format": "positive integer / NULL",
@@ -2791,10 +2803,14 @@
         {
           "format": "character(1)",
           "description": "Policy for drawing a leader between the entity and text."
+        },
+        {
+          "format": "positive mm / absolute grid unit / NULL",
+          "description": "Optional font size for labels outside a circular backbone. NULL uses the size supplied by the label layer. Inward fitting keeps its own size and limits. A mapped size takes precedence."
         }
       ],
       "value": "A placement declaration for compatible ggchord layers.",
-      "details": "Keep anchors fixed while resolving text overlaps within the allowed physical offsets. Leaders and sizing have their own visual settings.\n\nIn a circular panel, compatible feature, primer and site labels share the space around the perimeter. Text that fits on its feature can stay on the ring. Fixed positions and explicitly constrained directions retain their own placement rules.",
+      "details": "Keep anchors fixed while resolving text overlaps within the allowed physical offsets. Leaders and sizing have their own visual settings.\n\nIn a circular panel, compatible feature, primer and site labels share the space around the perimeter. Text that fits on its feature can stay on the ring. Fixed positions and explicitly constrained directions retain their own placement rules.\n\nIn a circular panel, local inward labels can slide along an arc while the leader stays on the radial line. The leader ends beside a visible glyph on that line. Deeper rows are available when a nearby label still cannot fit. Automatic inward leaders crossing another label are dashed and draw below the features and text. An explicit segment_linetype takes priority. In a crowded sector, adjacent callouts can adjust their positions and rows together without changing their anchors or text sizes.",
       "errors": "Inconsistent limits and options that do not belong to the supported repel strategy are errors.",
       "roles": [],
       "example_setup": ""
@@ -2835,7 +2851,7 @@
       "arguments": [
         {
           "format": "nonnegative mm / absolute grid unit / flexible specification; default 1",
-          "description": "Nonnegative physical gap between adjacent lanes, in millimetres."
+          "description": "Minimum physical gap between adjacent lanes, in millimetres."
         },
         {
           "format": "compatible Position object; default position_identity()",
@@ -2851,7 +2867,7 @@
         }
       ],
       "value": "A placement declaration for compatible ggchord layers.",
-      "details": "Resolve overlapping source intervals within each reference and facet. Lane spacing is physical. Anchored labels can follow the resulting feature position.",
+      "details": "Resolve overlapping source intervals within each reference and facet. Lane spacing is physical. Anchored labels can follow the resulting feature position.\n\nWhen base_position is omitted for an inward circular stack, the first lane clears the measured extent of the visible sequence axis. Local repelled labels can widen the gaps between inward lanes according to their measured size and available radius. An explicit base position takes priority.",
       "errors": "Lane settings must be compatible with the feature geometry. Invalid offsets and interval records are reported.",
       "roles": [],
       "example_setup": ""
@@ -3092,7 +3108,7 @@
         }
       ],
       "value": "A domain scale for use with sequence-path coordinates.",
-      "details": "Choose the coordinate space for labels and supply breaks, labels and the sequence axis guide. The underlying reference positions remain linear.",
+      "details": "Choose the coordinate space for labels and supply breaks, labels and the sequence axis guide. The underlying reference positions remain linear.\n\nWhen guide is omitted, circular sequence coordinates are drawn inside the backbone. An explicit positive side selects the outside.",
       "errors": "Use the sequence axis guide or explicitly suppress the guide. Nonlinear positions belong outside this scale.",
       "roles": [],
       "example_setup": ""
@@ -3178,7 +3194,7 @@
         }
       ],
       "value": "An ordinary ggplot2 fill scale.",
-      "details": "Use the selected DNA, RNA or amino-acid palette with the standard fill scale. Gaps and ambiguous symbols can retain separate styles.",
+      "details": "Use the selected DNA, RNA or amino-acid palette with the standard fill scale. Gaps and ambiguous symbols can retain separate styles.\n\nThe DNA defaults are A #FF6D6D, C #769DCC, G #F2BE3C and T #74CE98.",
       "errors": "Choose a supported alphabet and compatible palette keys.",
       "roles": [],
       "example_setup": ""
@@ -4795,6 +4811,14 @@
         {
           "format": "string / NULL",
           "description": "Optional root layer ID."
+        },
+        {
+          "format": "character(1)",
+          "description": "Use `\"interval\"` to connect the selected intervals, or `\"border\"` for leaders to the facing edge of the detail panel."
+        },
+        {
+          "format": "line type / NULL",
+          "description": "With NULL, border leaders are dashed and interval outlines are solid. Supply a line type to override this."
         }
       ],
       "value": "A decorative component for `ggchord_fusion()`.",
@@ -4825,7 +4849,7 @@
         },
         {
           "format": "zoom parameters",
-          "description": "Fixed zoom styles or a root decoration ID."
+          "description": "Fixed zoom styles or a root decoration ID. Pass `connector` and `linetype` to configure the zoom leaders."
         }
       ],
       "value": "A Fusion with the two plots and a zoom decoration.",
@@ -4886,27 +4910,27 @@
       "arguments": [
         {
           "format": "\"fixed\" / \"scale\" / \"adaptive\"",
-          "description": "Fixed styling, scale unlocked defaults, or adapt text and guides."
+          "description": "Use \"fixed\" (default) to retain physical styles, \"scale\" to resize unlocked defaults, or \"adaptive\" to bound the text adjustment and reflow unconstrained guides."
         },
         {
           "format": "c(width,height) / NULL",
-          "description": "Width and height for the scaling baseline."
+          "description": "Baseline width and height. Scale mode requires both. Adaptive mode uses 8 by 6 inches when omitted."
         },
         {
           "format": "\"in\" / \"mm\" / \"cm\"",
           "description": "Physical units of reference_size."
         },
         {
-          "format": "two positive number",
+          "format": "two positive numbers",
           "description": "Lower and upper text factors for adaptive mode."
         },
         {
           "format": "positive number / NULL",
-          "description": "Optional minimum automatically reduced text size in mm."
+          "description": "Floor in millimetres for automatic reductions of theme text. Defaults already below the floor keep their size."
         }
       ],
       "value": "A policy that can be added to a plot or Fusion.",
-      "details": "Set the explicit output policy. Adaptive placement can use available panel space within the configured rules while preserving source and statistic values.",
+      "details": "The target is the actual graphics device or the region allocated to a child plot in Fusion. Scale mode uses the smaller of the width and height ratios. Adaptive mode uses the fourth root of the target-to-reference area ratio, limited by text_scale_range. Unlocked line widths and spacing use the square root of the adaptive text factor. Explicit or mapped text sizes, feature thickness and offsets keep their declared values. Explicit guide settings take priority. Add the policy to an individual child plot to adapt that child, or to Fusion to adapt its own outer decorations and guides.",
       "errors": "The policy must honor fixed dimensions and hard placement constraints.",
       "roles": [],
       "example_setup": ""

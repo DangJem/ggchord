@@ -13,7 +13,9 @@ fusion_zoom(
   alpha = 0.12,
   colour = "#187B77",
   linewidth = 0.4,
-  id = NULL
+  id = NULL,
+  connector = "interval",
+  linetype = NULL
 )
 }
 \arguments{
@@ -27,6 +29,12 @@ from_instance and to_instance selectors.}
 \item{fill, colour, alpha, linewidth}{Fixed appearance of the decoration.}
 
 \item{id}{Optional root layer ID.}
+
+\item{connector}{Join the selected intervals, or lead to the facing
+\code{"border"} of the detail panel.}
+
+\item{linetype}{Connector line type. By default, border leaders are dashed
+and interval outlines are solid.}
 }
 \value{
 A decorative component for \code{\link[=ggchord_fusion]{ggchord_fusion()}}.
@@ -52,5 +60,5 @@ p_basic <- ggchord(seqs) + geom_seq() +
 
 f <- ggchord_fusion(list(overview = p_basic, detail = p_basic))
 region <- data.frame(accver = "A", start = 100, end = 240)
-f + fusion_zoom("overview", "detail", region, id = "zoom")
+f + fusion_zoom("overview", "detail", region, id = "zoom", connector = "border")
 }

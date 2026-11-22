@@ -1,5 +1,5 @@
 {
-  "source_sha256": "e246cb6fe2caf66999d66128a551abe31074d9a4db1e1060318afe82b8c23069",
+  "source_sha256": "abdae23a298fe0a65d2064bd4a227978f05338695d98401a1e7f3c9eced7d7ed",
   "blocks": {
     "0": {
       "source_sha256": "e390c229f9dee34fc2a97809c02312d35cdd167dd45b40550b230299c3fa23c5",
@@ -22,9 +22,9 @@
       "translation": "## 读图 {#reading}\n"
     },
     "7": {
-      "source_sha256": "d954a4873350776c96bd2b92ada25365da6fbcec686c9b7255a1a2b0abadff19",
+      "source_sha256": "3d3806c29a78c2e8b93158835fc1cfd66a83d81bc95ced71fd1bbbe5b7c6d2a7",
       "status": "reviewed",
-      "translation": "七条精选 HSP 连接相邻行，另一个图层绘制三条非相邻行之间的连接。沿带子两端读取来源坐标，再用附近的 CDS 箭头和标签识别特征。\n"
+      "translation": "七条精选 HSP 连接相邻行，另一个图层绘制三条跨行的长程连带。跨越中间行的连带用虚线描边，相邻行之间的连带用实线描边。沿带子两端读取来源坐标，再用附近的 CDS 箭头和标签识别特征。\n"
     },
     "9": {
       "source_sha256": "de1eb696f2ab1c739faa9f8ef7b26fc480da4593cffdb8c750e451460f700193",

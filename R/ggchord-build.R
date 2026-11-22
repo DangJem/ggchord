@@ -508,8 +508,23 @@ compute_chord_geometry_prepared <- function(plot) {
   shared_labels <- NULL
   if (length(label_ids)) {
     shared_labels <- new.env(parent = emptyenv())
-    if (isTRUE(primary$circular)) shared_labels$boxes <-
-      ggchord_annotation_text_obstacles(primary$layer_geometry, primary)
+    shared_labels$metric <- ggchord_annotation_metric(primary)
+    shared_labels$scale <- if (isTRUE(primary$circular)) c(1, 1) else shared_labels$metric * 25.4
+    shared_labels$boxes <- ggchord_annotation_text_obstacles(primary$layer_geometry, primary,
+      include_axis = FALSE, scale = shared_labels$scale)
+    shared_labels$endpoints <- ggchord_annotation_text_obstacles(list(), primary,
+      scale = shared_labels$scale, endpoints_only = TRUE)
+    shared_labels$polygons <- ggchord_annotation_polygons(primary$layer_geometry, shared_labels$scale)
+    shared_labels$polygons_bounds <- ggchord_polygon_bounds(shared_labels$polygons)
+    shared_labels$leaders <- data.frame()
+    if (!isTRUE(primary$circular)) {
+      shared_labels$backbones <- ggchord_rbind_fill(
+        ggchord_annotation_backbones(primary, shared_labels$scale)) %||% data.frame()
+    }
+    fixed <- vapply(label_ids, function(id) !inherits(
+      plot$layers[[groups[[id]][1L]]]$ggchord_params$label_layout, "LabelLayoutRepel"),
+      logical(1L))
+    label_ids <- label_ids[order(!fixed)]
   }
   for (id in label_ids) {
     layer <- plot$layers[[groups[[id]][1L]]]
@@ -521,17 +536,22 @@ compute_chord_geometry_prepared <- function(plot) {
     input <- inputs[[id]]$domain_label
     if (!is.null(owner) && NROW(input) && !NROW(target))
       ggchord_stop("Label anchor '", owner, "' is absent from this panel")
+    p$bold_callout <- isTRUE(primary$circular) && ggchord_domain_bold_callout(layer, plot)
     geometry <- ggchord_domain_label_geometry(layer, input, primary,
       target, target_geometry, chord$display_instances,
       radial = isTRUE(plot$coordinates$ggchord_radial),
       vertical = identical(plot$coordinates$collinear_seq_axis, "vertical"),
-      shared = shared_labels)
+      shared = shared_labels, bold_callout = p$bold_callout)
     primary$layer_geometry[[id]]$domain_label <- ggchord_attach_input_columns(geometry, input)
     label_specs[[id]] <- p
   }
-  if (!is.null(shared_labels) && isTRUE(primary$circular))
-    primary$layer_geometry <- ggchord_place_circular_domain_labels(primary, label_specs)
+  if (!is.null(shared_labels)) {
+    if (isTRUE(primary$circular))
+      primary$layer_geometry <- ggchord_place_circular_domain_labels(primary, label_specs)
+    primary$layer_geometry <- ggchord_mark_leader_crossings(primary$layer_geometry, primary)
+  }
   primary$axis_heading <- ggchord_axis_heading(plot, primary)
+  primary$axis_geometry <- ggchord_axis_geometry(primary)
   primary <- ggchord_check_displayed_hsps(primary, plot)
   primary
 }

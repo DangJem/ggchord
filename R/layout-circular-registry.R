@@ -164,7 +164,10 @@ ggchord_resolve_inner_tracks <- function(layer_geometry, layout) {
       # Arrowheads and compact fallbacks may extend by slightly different
       # amounts, but objects sharing a Position lane still consume one
       # physical band. The coord takes the union of those envelopes below.
-      key <- paste("feature", lane, sprintf("%.5f", mean(bounds)),
+      offset <- geometry$normal_offset[index[1L]] %||% NA_real_
+      center <- if (is.finite(offset)) layout$backbone_bounds$center[1L] + offset else
+        mean(bounds)
+      key <- paste("feature", sprintf("%.7f", center),
         sep = ":")
       candidates[[length(candidates) + 1L]] <- data.frame(
         key = key, kind = "feature_band", lane = lane,
@@ -650,17 +653,20 @@ ggchord_place_circular_domain_labels <- function(layout, specs) {
     label$family <- rep(style$family %||% "", nrow(label))
     label$fontface <- rep(style$fontface %||% 1, nrow(label))
     label$lineheight <- rep(style$lineheight %||% 1.2, nrow(label))
+    if (isTRUE(specs[[id]]$bold_callout))
+      label$fontface[label$annotation_side %in% "outer"] <- 2
+    registry[[id]]$domain_label <- label
     if (any(outer)) managed <- c(managed, id)
     callout <- label[outer, , drop = FALSE]
     if (identical(specs[[id]]$label_kind, "site") && nrow(callout)) {
       callout$restriction_component <- "label"
-      composite <- !is.na(callout$enzyme_label) & nzchar(callout$enzyme_label) &
+      has_parts <- !is.na(callout$enzyme_label) & nzchar(callout$enzyme_label) &
         !is.na(callout$coordinate_label) & nzchar(callout$coordinate_label) &
         callout$angle == 0
-      callout$enzyme_label[!composite] <- callout$label[!composite]
-      callout$coordinate_label[!composite] <- ""
-      callout$enzyme_fontface <- ifelse(composite, "bold", "plain")
-      callout$.ggchord_composite_label <- composite
+      callout$enzyme_label[!has_parts] <- callout$label[!has_parts]
+      callout$coordinate_label[!has_parts] <- ""
+      callout$enzyme_fontface <- ifelse(has_parts, "bold", "plain")
+      callout$.ggchord_composite_label <- has_parts & is.null(style$fontface)
       callout$label_order <- ifelse(callout$anchor_x < 0, "position_enzyme", "enzyme_position")
       callout$group <- callout$source_row
       root <- tip <- callout
@@ -715,7 +721,7 @@ ggchord_place_circular_domain_labels <- function(layout, specs) {
     } else {
       routed <- routing[[id]]$gene_label_repel
       text <- routed[routed$.component == "text" &
-        routed$annotation_side %in% "outer", , drop = FALSE]
+        routed$.perimeter_callout %in% TRUE, , drop = FALSE]
       leader <- routed[routed$.component == "segment", , drop = FALSE]
     }
     box <- ggchord_text_boxes(transform(text, text = label,

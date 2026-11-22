@@ -246,16 +246,16 @@ ggchord_perimeter_first_step <- function(row, x, start_y, step, direction, gap, 
   trial$target_x <- x + direction * row$w / 2
   trial$edge_y <- start_y + (0:100) * step
   trial$target_y <- trial$edge_y + row$h / 2
-  free <- rep(TRUE, length(trial$edge_y))
   for (other in obstacles) {
-    free <- free & !ggchord_perimeter_pair_blocked(trial, other, gap)
+    free <- !ggchord_perimeter_pair_blocked(trial, other, gap)
     if (!any(free)) return(NULL)
+    trial$edge_y <- trial$edge_y[free]
+    trial$target_y <- trial$target_y[free]
   }
-  first <- which(free)[1L]
   row$edge_x <- x
   row$target_x <- trial$target_x
-  row$edge_y <- trial$edge_y[first]
-  row$target_y <- trial$target_y[first]
+  row$edge_y <- trial$edge_y[1L]
+  row$target_y <- trial$target_y[1L]
   row
 }
 
@@ -420,39 +420,39 @@ ggchord_perimeter_top_fan <- function(tasks, rows, side_rows,
           ggchord_perimeter_pair_blocked(left, right, fan_gap), nrow = level_count)
       }
     }
-    beam <- list(list(levels = integer(), max_y = -Inf,
-      total_y = 0))
+    selected <- matrix(integer(), nrow = 1L, ncol = 0L)
+    max_y <- -Inf
+    total_y <- 0
     for (k in seq_len(n)) {
-      next_beam <- list()
-      for (state in beam) {
-        for (option in which(allowed[[k]])) {
-          if (k > 1L && any(vapply(seq_len(k - 1L), function(j) {
-              blocked[[k]][[j]][option, state$levels[j]]
-            }, logical(1L)))) next
-          y <- candidates[[k]]$target_y[option]
-          next_beam[[length(next_beam) + 1L]] <- list(
-            levels = c(state$levels, option),
-            max_y = max(state$max_y, y),
-            total_y = state$total_y + y
-          )
-        }
+      open_levels <- which(allowed[[k]])
+      # Expand in the existing state-then-level order so score ties keep the
+      # same winner. Each pair lookup tests all remaining candidates at once.
+      states <- rep(seq_len(nrow(selected)), each = length(open_levels))
+      choices <- rep(open_levels, times = nrow(selected))
+      for (j in seq_len(k - 1L)) {
+        free <- !blocked[[k]][[j]][cbind(choices, selected[states, j])]
+        states <- states[free]
+        choices <- choices[free]
+        if (!length(choices)) break
       }
-      if (!length(next_beam)) {
-        beam <- list()
+      if (!length(choices)) {
+        selected <- NULL
         break
       }
-      rank <- order(vapply(next_beam, function(state) {
-        10 * state$max_y + state$total_y / k
-      }, numeric(1L)))
-      beam <- next_beam[head(rank, 180L)]
+      y <- candidates[[k]]$target_y[choices]
+      next_max_y <- pmax(max_y[states], y)
+      next_total_y <- total_y[states] + y
+      keep <- head(order(10 * next_max_y + next_total_y / k), 180L)
+      selected <- cbind(selected[states[keep], , drop = FALSE], choices[keep])
+      max_y <- next_max_y[keep]
+      total_y <- next_total_y[keep]
     }
-    if (!length(beam)) next
-    chosen <- beam[[1L]]
-    score <- 10 * chosen$max_y + chosen$total_y / n
+    if (is.null(selected)) next
+    score <- 10 * max_y[1L] + total_y[1L] / n
     if (is.null(best) || score < best$score) {
       best <- list(score = score, rows = rows,
         selected = lapply(seq_len(n), function(k) {
-          lapply(candidates[[k]], `[`, chosen$levels[k])
+          lapply(candidates[[k]], `[`, selected[1L, k])
         }))
     }
   }

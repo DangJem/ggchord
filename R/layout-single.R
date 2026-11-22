@@ -13,6 +13,7 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
   ribbon_params <- list()
   gene_params   <- list()
   ribbon_data_override <- NULL
+  ribbon_layer <- NULL
   gene_data_override <- NULL
   region_data_override <- NULL
   gene_label_params <- list()
@@ -37,6 +38,7 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
       },
       ribbon            = {
         ribbon_params <- pp
+        ribbon_layer <- lyr
         ribbon_layer_requested <- TRUE
         ribbon_data_override <- ggchord_resolve_layer_input(
           lyr, data_list$ribbon_data
@@ -44,6 +46,7 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
       },
       gene              = {
         gene_params <- pp
+        gene_params$feature_outline_mm <- lyr$aes_params$linewidth
         gene_geometry_layer_requested <- TRUE
         gene_data_override <- pp$gene_data_override %||%
           ggchord_resolve_layer_input(lyr, ggchord_annotation_fallback(data_list))
@@ -123,7 +126,8 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
   seq_curvature <- process_sequence_param(arrangement$curvature, seqs,
                                           "layout_sequences(curvature)", 1)
 
-  if (isTRUE(plot$coordinates$ggchord_circular)) {
+  circular <- isTRUE(plot$coordinates$ggchord_circular)
+  if (circular) {
     source <- chord$display_instances$accver %||% seqs
     if (length(unique(source)) != 1L)
       ggchord_stop("coord_circular() requires one reference per panel")
@@ -158,9 +162,13 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
   ribbon_gap_auto <- is.null(ribbon_params$ribbon_gap)
   ribbonGap  <- process_sequence_param(ribbon_params$ribbon_gap %||% 0.15,
                                        seqs, "link_gap", 0.15)
+  ribbon_gap_mm <- ggchord_ribbon_gap_mm(ribbon_params, seqs, ribbon_layer,
+    if (isTRUE(ribbon_layer$inherit.aes)) plot$mapping else NULL)
   ribbon_offset <- ggchord_connection_offsets(ribbon_params, seqs,
     ggchord_path_normal_axis(plot$coordinates))
-  if (!collinear) ribbonGap <- ribbonGap + ribbon_offset
+  ribbon_clearance <- if ((ribbon_layer_requested && ribbon_gap_auto) ||
+      isTRUE(plot$coordinates$radial_inner_automatic))
+    ggchord_backbone_clearance(plot, seqs) else NULL
   ribbon_color_scheme <- ribbon_params$ribbon_color_scheme %||% "pident"
   ribbon_color_by     <- ribbon_params$ribbon_color_by
   ribbon_color_limits <- ribbon_params$ribbon_color_limits
@@ -431,6 +439,24 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
 
   metric_axis <- ggchord_path_normal_axis(plot$coordinates)
   normal_metric <- ggchord_units_per_mm(metric_axis)
+  backbone <- if (circular) ggchord_circular_backbone_bounds(plot, seqRadius, normal_metric)
+  position_scale <- plot$scales$get_scales("seq_position")
+  if (is.null(position_scale) && !is.null(chord$display_instances$window_start))
+    position_scale <- scale_seq_position(name = NULL)
+  seq_guide <- position_scale$ggchord_axis_guide
+  axis_theme <- ggchord_plot_settings(plot)$axis
+  guide_theme <- seq_guide$theme
+  axis_plot <- plot
+  if (!is.null(guide_theme)) {
+    local <- setNames(as.list(guide_theme), paste0("ggchord.", names(guide_theme)))
+    axis_plot$theme <- plot$theme + do.call(theme, local)
+  }
+  if (!is.null(guide_theme[["axis.ticks.length"]]))
+    axis_theme$ticks.length <- guide_theme[["axis.ticks.length"]]
+  if (is.numeric(seq_guide$angle)) axis_theme$text.orientation <- seq_guide$angle
+  inward_axis <- circular && (!isTRUE(position_scale$ggchord_axis_guide_explicit) ||
+    identical(seq_guide$side, "negative"))
+  show_axis <- !isTRUE(axis_theme$hidden)
   thickness <- gene_params$feature_mm
   if (!is.null(thickness)) {
     if (!is.null(chord$display_instances))
@@ -524,7 +550,25 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
           gene_data_layout$.feature_width_factor[i] %||% 1
         )
       }, numeric(1))
+    outline <- gene_params$feature_outline_mm %||% .25
+    lift <- if (length(outline) && any(is.finite(outline))) max(outline[is.finite(outline)]) else 0
+    head <- gene_data_layout$.feature_head_width %||% gene_data_layout$.feature_width
+    if (ggchord_circular_arrow_band(circular, gene_params$feature_role)) {
+      arrow <- gene_data_layout$.feature_shape %in% ggchord_block_arrow_shapes
+      gene_data_layout$.feature_fixed_body_width <- arrow
+      if (is.null(gene_params$head_width_mm) &&
+          identical(gene_params$arrow_head_style, "shouldered")) {
+        head[arrow] <- ggchord_circular_arrow_head_ratio * gene_data_layout$.feature_width[arrow]
+        gene_data_layout$.feature_head_width <- head
+      }
+    }
+    if (identical(gene_params$arrow_head_style, "flush")) head <- gene_data_layout$.feature_width
+    gene_data_layout$.feature_clearance_width <- pmax(gene_data_layout$.feature_width, head) +
+      lift * normal_metric
   }
+  axis_selection <- ggchord_axis_selection(position_scale$ggchord_axis_sequences,
+    chord$complete_reference_ids %||% seqs, chord$complete_display_instances)
+  position_circular_features <- NULL
   if (!is.null(gene_data_layout)) {
     ggchord_check_feature_bounds(gene_data_layout, lens)
     active_position <- if (isTRUE(lbl$position_supplied)) {
@@ -532,25 +576,33 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
     } else {
       gene_params$feature_position %||% position_identity()
     }
-    gene_data_layout <- ggchord_apply_feature_position(
-      gene_data_layout,
-      active_position,
-      seqs = seqs, lengths = lens,
-      circular = isTRUE(plot$coordinates$ggchord_circular),
-      units_per_mm = normal_metric,
-      caller = "geom_feature()"
-    )
-    # Allocate on the complete entity table before selecting/reordering labels;
-    # a label subset must not cause the remaining entities to change lanes.
-    if (!is.null(chord$matched_feature_rows)) {
-      gene_data_layout <- gene_data_layout[chord$matched_feature_rows$rows, , drop = FALSE]
-      # Keep the geometry-derived lane, width, shape and label contrast while
-      # measuring and drawing the text supplied by this label layer.
-      gene_data_layout$.anchor_label_text <- lbl$label_text
-      if (!is.null(names(gene_cols)))
-        gene_cols <- gene_cols[names(gene_cols) %in% gene_data_layout$anno]
-      rownames(gene_data_layout) <- NULL
+    matched_rows <- chord$matched_feature_rows$rows
+    place_features <- function(data, inner_limit = NULL) {
+      data <- ggchord_apply_feature_position(data, active_position,
+        seqs = seqs, lengths = lens, circular = circular, units_per_mm = normal_metric,
+        radii = seqRadius, inner_limit = inner_limit,
+        label_size = gene_params$feature_layout_label_size,
+        label_requests = gene_params$feature_layout_label_requests, caller = "geom_feature()")
+      if (is.null(matched_rows)) return(data)
+      # Allocate on the complete entity table before selecting/reordering labels.
+      data <- data[matched_rows, , drop = FALSE]
+      data$.anchor_label_text <- lbl$label_text
+      rownames(data) <- NULL
+      data
     }
+    if (!is.null(matched_rows) && !is.null(names(gene_cols)))
+      gene_cols <- gene_cols[names(gene_cols) %in% gene_data_layout$anno[matched_rows]]
+    if (circular && isTRUE(active_position$automatic_base)) {
+      position_circular_features <- function(data, axis_ticks, rot_rad, rotation) {
+        limit <- setNames(backbone$inner, backbone$accver)
+        if (inward_axis) {
+          visible_axis <- axis_ticks[axis_ticks$accver %in% (axis_selection %||% seqs), , drop = FALSE]
+          limit <- ggchord_circular_axis_inner_limit(limit, visible_axis, axis_plot,
+            normal_metric, rot_rad, rotation)
+        }
+        place_features(data, limit)
+      }
+    } else gene_data_layout <- place_features(gene_data_layout)
   }
   geneLabelRadialOffset <- process_gene_param(gene_lro, seqs,
                                               "gene_label_radial_offset", 0, FALSE)
@@ -562,21 +614,10 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
                                               "gene_label_rotation", 0, FALSE)
 
   # --- Process axes ---
-  position_scale <- plot$scales$get_scales("seq_position")
-  if (is.null(position_scale) && !is.null(chord$display_instances$window_start))
-    position_scale <- scale_seq_position(name = NULL)
-  seq_guide <- position_scale$ggchord_axis_guide
-  axis_theme <- ggchord_plot_settings(plot)$axis
-  guide_theme <- seq_guide$theme
-  if (!is.null(guide_theme[["axis.ticks.length"]]))
-    axis_theme$ticks.length <- guide_theme[["axis.ticks.length"]]
-  if (is.numeric(seq_guide$angle)) axis_theme$text.orientation <- seq_guide$angle
   side_sign <- if (collinear) -1 else 1
   if (identical(seq_guide$side, "negative")) side_sign <- -side_sign
-  axis_theme$gap <- side_sign * if (as.numeric(axis_theme$gap) == 0)
+  axis_theme$gap <- side_sign * if (!circular && as.numeric(axis_theme$gap) == 0)
     unit(.8, "mm") else axis_theme$gap
-
-  show_axis <- !isTRUE(axis_theme$hidden)
   # Pass physical distances as inches. compute_chord_layout() converts them
   # against the actual curved sequence span once that geometry is available.
   axis_unit_data <- ggchord_unit_inches
@@ -593,7 +634,7 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
     seqs, "axis.minor.ticks.length", 0.01
   )
   axis_theme_size <- ggchord_theme_text_size(
-    plot, "ggchord.axis.text", 3
+    if (circular) axis_plot else plot, "ggchord.axis.text", 3
   )
   labelSize  <- process_sequence_param(
     axis_theme_size,
@@ -808,7 +849,8 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
       collinear_right_normal = identical(plot$coordinates$collinear_seq_axis, "vertical"),
       collinear_vertical = isTRUE(plot$coordinates$ggchord_sankey) ||
         identical(plot$coordinates$collinear_seq_axis, "vertical"))
-  } else function(..., ribbon_offset) compute_chord_layout(..., ring = seq_ring)
+  } else function(...) compute_chord_layout(..., ring = seq_ring,
+    position_circular_features = position_circular_features)
   layout <- layout_strategy(
     seqs = seqs, lens = lens, seq_labels = seq_labels,
     length_mode = arrangement$length_mode %||% "proportional",
@@ -818,6 +860,10 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
     ribbon_data = ribbon_data, ribbonGap = ribbonGap,
     ribbon_offset = if (isTRUE(plot$coordinates$ggchord_radial) ||
       isTRUE(plot$coordinates$ggchord_sankey)) ribbon_offset * 0 else ribbon_offset,
+    ribbon_clearance = ribbon_clearance,
+    ribbon_gap_mm = ribbon_gap_mm,
+    ribbon_avoid_strength = ribbon_params$avoid_strength %||% .5,
+    ribbon_normal_mm = ggchord_units_per_mm(ggchord_path_normal_axis(plot$coordinates)),
     ribbon_gap_auto = ribbon_gap_auto,
     link_avoid = ribbon_params$link_avoid %||% "none",
     ribbon_obstacles = ribbon_obstacles,
@@ -892,10 +938,11 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
     axisMin = axisMin, axisMinLen = axisMinLen,
     labelSize = labelSize, labelOffset = labelOffset,
     axis_text_style = {
-      style <- ggchord_theme_element(plot, "ggchord.axis.text")
+      style <- ggchord_theme_element(if (circular) axis_plot else plot, "ggchord.axis.text")
       text_style <- if(inherits(style,"element_text")) list(family=style@family,
         fontface=style@face,lineheight=style@lineheight) else list()
       c(text_style, list(offset_explicit = isTRUE(axis_theme$text.offset.explicit),
+        backbone = backbone, inward = inward_axis,
         allow_clearance = axisLabelHide))
     },
     axisLabelOrientation = axisLabelOri,
@@ -933,7 +980,7 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
       } else FALSE
     }
   }
-  layout$backbone_bounds <- if (collinear) data.frame(
+  layout$backbone_bounds <- if (circular) backbone else if (collinear) data.frame(
     accver = seqs, center = unname(layout$sequence_reference$y[seqs]),
     lower = unname(layout$sequence_reference$y[seqs]) - seqBackboneOuter,
     upper = unname(layout$sequence_reference$y[seqs]) + seqBackboneOuter,
@@ -954,13 +1001,12 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
   }
 
   layout$sequence_unit <- sequence_unit
+  layout$ribbon_clearance <- ribbon_clearance
   if (is.data.frame(layout$sequence_layout)) {
     layout$sequence_layout$sequence_unit <- sequence_unit
     layout$sequence_layout$units_per_position <- layout$sequence_layout$units_per_bp
   }
-  position_scale <- plot$scales$get_scales("seq_position")
-  selection <- ggchord_axis_selection(position_scale$ggchord_axis_sequences,
-    chord$complete_reference_ids %||% seqs, chord$complete_display_instances)
-  if (!is.null(selection)) layout <- ggchord_filter_sequence_axes(layout, intersect(selection, seqs))
+  if (!is.null(axis_selection))
+    layout <- ggchord_filter_sequence_axes(layout, intersect(axis_selection, seqs))
   layout
 }

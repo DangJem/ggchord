@@ -276,6 +276,8 @@ ggchord_role_guide <- function(plot, role, colourbar = FALSE, order = 0,
   }
 }
 
+ggchord_identity_bar_width <- function() unit(2.8, "mm")
+
 # Unequal numeric intervals occupy their actual share of the 0..100 domain.
 ggchord_identity_guide <- function(plot = NULL, aesthetic = "ribbon_fill") {
   spec <- if (!is.null(plot)) ggchord_role_guide_spec(plot,"ribbon",TRUE) else list()
@@ -309,6 +311,14 @@ ggchord_identity_guide <- function(plot = NULL, aesthetic = "ribbon_fill") {
       (diff(values)/100))
     settings <- ggchord_plot_settings(plot)
     field <- if(horizontal) "key.width" else "key.height"
+    thickness_field <- if (horizontal) "key.height" else "key.width"
+    thickness <- settings$legends$ribbon[[thickness_field]] %||%
+      settings$legends$ribbon$key.size %||%
+      settings$legend[[thickness_field]] %||% settings$legend$key.size %||%
+      plot$ggchord$theme_explicit[[paste0("legend.", thickness_field)]] %||%
+      plot$ggchord$theme_explicit$legend.key.size %||% ggchord_identity_bar_width()
+    spec$theme <- spec$theme + do.call(theme,
+      setNames(list(thickness), paste0("legend.", thickness_field)))
     explicit <- settings$legends$ribbon[[field]] %||%
       settings$legends$ribbon$key.size %||%
       plot$ggchord$theme_explicit[[paste0("legend.", field)]] %||%
@@ -323,6 +333,8 @@ ggchord_identity_guide <- function(plot = NULL, aesthetic = "ribbon_fill") {
         " mm along the bar at this font size; the explicit guide size is retained"),call.=FALSE)
     }
   }
+  if (is.null(plot))
+    spec$theme <- theme(legend.key.width = ggchord_identity_bar_width())
   guide_coloursteps(available_aes=aesthetic, even.steps=FALSE,
     show.limits=TRUE, position=spec$position, direction=spec$direction,
     theme=spec$theme, order=2)
