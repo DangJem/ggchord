@@ -7,7 +7,7 @@
 geom_seq(
   mapping = NULL,
   data = NULL,
-  geometry = "line",
+  geometry = "auto",
   thickness = 1,
   stat = "identity",
   position = "identity",
@@ -23,7 +23,9 @@ geom_seq(
 
 \item{data}{Optional reference table or function selecting from the registered reference.}
 
-\item{geometry}{Backbone style, either \code{"line"}, \code{"double"} or \code{"band"}.}
+\item{geometry}{Backbone style. \code{"auto"} draws a double path with
+\code{\link[=coord_circular]{coord_circular()}} and a single path elsewhere. Set \code{"line"}, \code{"double"}
+or \code{"band"} to choose the geometry explicitly.}
 
 \item{thickness}{Physical thickness in mm or absolute grid units. Named values select references.}
 

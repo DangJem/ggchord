@@ -15,7 +15,8 @@ label_layout_fixed(
 )
 }
 \arguments{
-\item{orientation}{Text orientation relative to the reference path or the canvas.}
+\item{orientation}{Text orientation relative to the reference path or the canvas. Use
+\code{"tangent"} along the path or \code{"normal"} perpendicular to it.}
 
 \item{side}{Side of the reference path on which to lay out labels.}
 

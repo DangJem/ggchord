@@ -45,6 +45,7 @@
     "geom": {
       "topics": [
         "geom_seq",
+        "geom_seq_arrow",
         "geom_seq_label",
         "geom_seq_center_label",
         "geom_seq_break",
@@ -120,6 +121,10 @@
     "scale": {
       "topics": [
         "scale_for",
+        "scale_colour_sequence",
+        "scale_fill_strand",
+        "scale_fill_feature_type",
+        "scale_fill_pident",
         "scale_seq_position",
         "scale_track_value",
         "scale_fill_residue",
@@ -903,7 +908,7 @@
       }
     },
     "geom_seq": {
-      "usage": "geom_seq(\n  mapping = NULL,\n  data = NULL,\n  geometry = \"line\",\n  thickness = 1,\n  stat = \"identity\",\n  position = \"identity\",\n  ...,\n  na.rm = FALSE,\n  show.legend = NA,\n  inherit.aes = TRUE,\n  id = NULL\n)",
+      "usage": "geom_seq(\n  mapping = NULL,\n  data = NULL,\n  geometry = \"auto\",\n  thickness = 1,\n  stat = \"identity\",\n  position = \"identity\",\n  ...,\n  na.rm = FALSE,\n  show.legend = NA,\n  inherit.aes = TRUE,\n  id = NULL\n)",
       "arguments": [
         [
           "mapping"
@@ -945,6 +950,7 @@
       ],
       "examples": "ggchord() +\n  geom_seq(data = seqs, colour = \"#187B77\") +\n  geom_gene(data = genes) +\n  coord_collinear()\n\n# 两层样式，共用一份参考\nggchord(seqs) +\n  geom_seq(linewidth = 2, colour = \"white\") +\n  geom_seq(linewidth = 0.5, colour = \"black\") +\n  coord_collinear()",
       "related": [
+        "geom_seq_arrow",
         "ggchord",
         "layout_sequences",
         "geom_seq_label",
@@ -954,7 +960,7 @@
       "defaults": {
         "mapping": "NULL",
         "data": "NULL",
-        "geometry": "\"line\"",
+        "geometry": "\"auto\"",
         "thickness": "1",
         "stat": "\"identity\"",
         "position": "\"identity\"",
@@ -3537,11 +3543,13 @@
         ]
       ],
       "roles": [],
-      "examples": "ggchord(data = seqs) + geom_seq() +\n  geom_gene(data = genes, aes(fill = type), id = \"genes\") +\n  geom_link_ribbon(data = links, aes(fill = pident), id = \"matches\") +\n  scale_for(\"genes\", scale_fill_manual(values = gene_colours, name = \"Type\")) +\n  scale_for(\"matches\", scale_fill_gradient(limits = c(0, 100), name = \"Identity (%)\")) +\n  coord_chord()",
+      "examples": "ggchord(seqs) +\n  geom_link_ribbon(aes(fill = pident), data = links) +\n  geom_gene(aes(fill = strand), data = genes, id = \"genes\") +\n  scale_for(\"genes\", scale_fill_strand(name = \"Strand\"))",
       "related": [
         "layer_id",
         "scale_track_value",
-        "scale_seq_position"
+        "scale_seq_position",
+        "scale_fill_strand",
+        "scale_fill_pident"
       ],
       "native": false,
       "defaults": {
@@ -5849,6 +5857,175 @@
         "device": "NULL",
         "dpi": "300",
         "action": "\"report\""
+      }
+    },
+    "geom_seq_arrow": {
+      "usage": "geom_seq_arrow(\n  mapping = NULL,\n  data = NULL,\n  stat = \"identity\",\n  position = \"identity\",\n  ...,\n  arrow = grid::arrow(length = grid::unit(2, \"mm\"), type = \"closed\"),\n  na.rm = FALSE,\n  show.legend = NA,\n  inherit.aes = TRUE,\n  id = NULL\n)",
+      "arguments": [
+        [
+          "mapping"
+        ],
+        [
+          "data"
+        ],
+        [
+          "stat"
+        ],
+        [
+          "position"
+        ],
+        [
+          "..."
+        ],
+        [
+          "arrow"
+        ],
+        [
+          "na.rm"
+        ],
+        [
+          "show.legend"
+        ],
+        [
+          "inherit.aes"
+        ],
+        [
+          "id"
+        ]
+      ],
+      "roles": [
+        "`colour, linewidth, linetype, alpha`"
+      ],
+      "examples": "ggchord(seqs) +\n  geom_seq_arrow(aes(colour = accver)) +\n  layout_sequences(orientation = c(A = 1, B = -1)) +\n  coord_collinear()",
+      "related": [
+        "geom_seq",
+        "layout_sequences",
+        "scale_colour_sequence"
+      ],
+      "native": false,
+      "defaults": {
+        "mapping": "NULL",
+        "data": "NULL",
+        "stat": "\"identity\"",
+        "position": "\"identity\"",
+        "...": "",
+        "arrow": "grid::arrow(length = grid::unit(2, \"mm\"), type = \"closed\")",
+        "na.rm": "FALSE",
+        "show.legend": "NA",
+        "inherit.aes": "TRUE",
+        "id": "NULL"
+      }
+    },
+    "scale_colour_sequence": {
+      "usage": "scale_colour_sequence(\n  name = waiver(),\n  ...,\n  aesthetics = \"colour\"\n)",
+      "arguments": [
+        [
+          "name"
+        ],
+        [
+          "..."
+        ],
+        [
+          "aesthetics"
+        ]
+      ],
+      "roles": [],
+      "examples": "ggchord(seqs) +\n  geom_seq_arrow(aes(colour = accver)) +\n  scale_colour_sequence(name = \"Sequence\")",
+      "related": [
+        "scale_for",
+        "geom_seq"
+      ],
+      "native": false,
+      "defaults": {
+        "name": "waiver()",
+        "...": "",
+        "aesthetics": "\"colour\""
+      }
+    },
+    "scale_fill_strand": {
+      "usage": "scale_fill_strand(\n  name = waiver(),\n  ...,\n  aesthetics = \"fill\"\n)",
+      "arguments": [
+        [
+          "name"
+        ],
+        [
+          "..."
+        ],
+        [
+          "aesthetics"
+        ]
+      ],
+      "roles": [],
+      "examples": "ggchord(seqs) +\n  geom_gene(aes(fill = strand), data = genes) +\n  scale_fill_strand(name = \"Strand\")",
+      "related": [
+        "scale_for",
+        "geom_gene"
+      ],
+      "native": false,
+      "defaults": {
+        "name": "waiver()",
+        "...": "",
+        "aesthetics": "\"fill\""
+      }
+    },
+    "scale_fill_feature_type": {
+      "usage": "scale_fill_feature_type(\n  name = waiver(),\n  ...,\n  aesthetics = \"fill\"\n)",
+      "arguments": [
+        [
+          "name"
+        ],
+        [
+          "..."
+        ],
+        [
+          "aesthetics"
+        ]
+      ],
+      "roles": [],
+      "examples": "ggchord(seqs) +\n  geom_feature(aes(fill = type), data = genes) +\n  scale_fill_feature_type()",
+      "related": [
+        "scale_for",
+        "geom_feature"
+      ],
+      "native": false,
+      "defaults": {
+        "name": "waiver()",
+        "...": "",
+        "aesthetics": "\"fill\""
+      }
+    },
+    "scale_fill_pident": {
+      "usage": "scale_fill_pident(\n  name = \"Identity (%)\",\n  ...,\n  limits = c(0, 100),\n  breaks = c(0, 50, 80, 90, 95, 100),\n  guide = waiver()\n)",
+      "arguments": [
+        [
+          "name"
+        ],
+        [
+          "..."
+        ],
+        [
+          "limits"
+        ],
+        [
+          "breaks"
+        ],
+        [
+          "guide"
+        ]
+      ],
+      "roles": [],
+      "examples": "ggchord(seqs) +\n  geom_link_ribbon(aes(fill = pident), data = links) +\n  scale_fill_pident()",
+      "related": [
+        "scale_for",
+        "geom_link_ribbon"
+      ],
+      "native": false,
+      "defaults": {
+        "name": "\"Identity (%)\"",
+        "...": "",
+        "limits": "c(0, 100)",
+        "breaks": "c(0, 50, 80, 90, 95, 100)",
+        "guide": "waiver()"
       }
     }
   },

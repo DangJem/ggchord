@@ -358,9 +358,6 @@ prepare_ggchord_plot <- function(plot) {
 
 #' @export
 ggplot_build.ggchord <- function(plot, ...) {
-  old_error <- ggchord_disable_debug()
-  on.exit(options(error = old_error), add = TRUE)
-
   if (is.null(plot$ggchord)) {
     ggchord_stop("Not a valid ggchord object: no data stored on the plot. ",
          "Please build the plot with ggchord().")

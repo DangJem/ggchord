@@ -67,33 +67,9 @@
 # Error signalling
 # ====================================================================
 
-#' Signal an error without invoking a custom global error handler
-#'
-#' ggchord errors must always print a clear message and return control to the
-#' user; they must never drop into an interactive debugger (for example when
-#' `options(error = browser)` or RStudio's "Break in Code" error handler is
-#' active). This helper temporarily restores the base error handler while the
-#' error is signalled, then restores the user's handler afterwards.
-#'
-#' @param ... Message parts, passed through to [stop()].
-#' @param call. Logical. Whether to include the call in the error message.
-#' @noRd
+# Signal a validation error through the caller's ordinary R condition handlers.
 ggchord_stop <- function(..., call. = FALSE) {
-  old <- getOption("error")
-  on.exit(options(error = old), add = TRUE)
-  options(error = NULL)
   stop(..., call. = call.)
-}
-
-# Disable any custom global error handler (options(error = browser), RStudio's
-# "Break in Code") for the duration of the calling function. Exported functions
-# call this at the top of their body so that even R-generated errors (e.g. a
-# missing required argument) print a plain message instead of dropping into an
-# interactive debugger. The error itself still propagates normally.
-ggchord_disable_debug <- function() {
-  old <- getOption("error")
-  options(error = NULL)
-  old
 }
 
 #' Reject removed public arguments with a concise migration message
@@ -116,9 +92,6 @@ ggchord_reject_retired <- function(dots, caller, migrations,
 
 #' @noRd
 get_chord_layout <- function(plot, build = TRUE) {
-  old_error <- ggchord_disable_debug()
-  on.exit(options(error = old_error), add = TRUE)
-
   if (!is.logical(build) || length(build) != 1 || is.na(build)) {
     ggchord_stop("get_chord_layout(): build must be TRUE or FALSE")
   }

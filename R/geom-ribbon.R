@@ -10,7 +10,8 @@
 #'   backbone. Radial curves with positive `bulge` clear intermediate spoke tips.
 #' @param fill_mode Use solid fill or map independent query and subject endpoint colours.
 #' @param ... Additional named visual styles and parameters accepted by this layer.
-#'   When `linetype` is omitted and unmapped, visible outlines connecting
+#'   The default outline is muted green (#53776A), 0.18 mm wide. Set
+#'   `colour = NA` to omit it. When `linetype` is omitted and unmapped, visible outlines connecting
 #'   nonadjacent rows or radial spokes are dashed. Radial adjacency is cyclic.
 #' @param na.rm Suppress warnings for missing observations that the layer can omit.
 #' @param show.legend Logical or named logical indicating whether the layer contributes legend keys.
@@ -111,8 +112,7 @@ geom_link_ribbon <- function(mapping = NULL, data = NULL, stat = "identity",
     avoid_strength = avoid_strength, link_avoid = avoid,
     feature_position = position, tip = tip, fill_mode = fill_mode,
     physical_layout = TRUE,
-    ribbon_color_scheme = "single", ribbon_alpha = .6, ribbon_outline_color = NA,
-    ribbon_outline_width = .3,
+    ribbon_color_scheme = "single", ribbon_alpha = .6,
     link_branch = if (controls$route == "shared") "query" else "none",
     link_branch_fraction = .15, source_stat = parameters$stat)
   layer <- ggchord_capture_layer_input(layer, data, mapping,

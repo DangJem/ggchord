@@ -38,7 +38,8 @@ backbone. Radial curves with positive \code{bulge} clear intermediate spoke tips
 \item{fill_mode}{Use solid fill or map independent query and subject endpoint colours.}
 
 \item{...}{Additional named visual styles and parameters accepted by this layer.
-When \code{linetype} is omitted and unmapped, visible outlines connecting
+The default outline is muted green (#53776A), 0.18 mm wide. Set
+\code{colour = NA} to omit it. When \code{linetype} is omitted and unmapped, visible outlines connecting
 nonadjacent rows or radial spokes are dashed. Radial adjacency is cyclic.}
 
 \item{na.rm}{Suppress warnings for missing observations that the layer can omit.}

@@ -509,7 +509,7 @@
         },
         {
           "format": "nonnegative mm / absolute grid unit / flexible specification / NULL",
-          "description": "Physical distances in mm."
+          "description": "Collinear row spacing in mm. When omitted it depends on row count, layers and the available canvas. The Sankey default is 6 mm."
         },
         {
           "format": "nonnegative mm / absolute grid unit / NULL",
@@ -653,7 +653,7 @@
         },
         {
           "format": "character(1)",
-          "description": "Backbone style, either `\"line\"`, `\"double\"` or `\"band\"`."
+          "description": "The default `\"auto\"` uses two paths in a circular projection and a single line elsewhere. Choose `\"line\"`, `\"double\"` or `\"band\"` to set the style explicitly."
         },
         {
           "format": "positive physical size / flexible",
@@ -1824,7 +1824,7 @@
         },
         {
           "format": "named arguments",
-          "description": "Additional named visual styles and parameters accepted by this layer. Omitted, unmapped linetypes use dashed outlines across intervening rows and radial spokes. The first and last spokes are adjacent. Fixed or mapped linetypes take precedence."
+          "description": "Additional named visual styles and parameters accepted by this layer. Omitted, unmapped linetypes use dashed outlines across intervening rows and radial spokes. The first and last spokes are adjacent. Fixed or mapped linetypes take precedence. The default outline is #53776A at 0.18 mm. Set colour = NA to omit it."
         },
         {
           "format": "logical",
@@ -2723,7 +2723,7 @@
       "arguments": [
         {
           "format": "character(1)",
-          "description": "Text orientation relative to the reference path or the canvas."
+          "description": "Text orientation relative to the reference path or the canvas. Use tangent along the backbone or normal perpendicular to it."
         },
         {
           "format": "character(1)",
@@ -3073,7 +3073,7 @@
         }
       ],
       "value": "A scale declaration for a ggchord plot or a Fusion root.",
-      "details": "Name the layer IDs and supply an ordinary aesthetic scale. The selected layers train together within the stated channel. Local or global visual domains may coexist in the plot.\n\nWhen all layers sharing a colour or fill channel map it directly to the same field, ggchord can supply a default palette. Backbones and features use the sequence palette for accver. Features use red (+), blue (−) and grey (unknown) for strand. In circular views, recognized feature types use the plasmid palette. Explicit visual scales take precedence.",
+      "details": "Name the layer IDs and supply an ordinary aesthetic scale. The selected layers train together within the stated channel. Local or global visual domains may coexist in the plot.\n\nWhen all layers sharing a colour or fill channel map it directly to the same field, ggchord can supply a default palette. Backbones and features use the sequence palette for accver. Features use red (+), blue (−) and grey (unknown) for strand. In circular views, recognized feature types use the plasmid palette and additional type names receive stable colours. Explicit visual scales take precedence.",
       "errors": "Unknown layers, overlapping layer/channel claims, unsupported visual channels and position scales are rejected.",
       "roles": [],
       "example_setup": ""
@@ -3298,7 +3298,7 @@
         }
       ],
       "value": "A ggplot2 theme.",
-      "details": "The default uses a white, borderless panel, charcoal text (#30353A), a centred bold plot title and a right-hand legend. Sequence and track axes use grey lines (#737A80) and 1.2 mm major ticks. Dotplots use the standard ggplot2 axis elements.",
+      "details": "The default uses a warm ivory (#FFFCF5), borderless panel, charcoal text (#30353A), a centred bold plot title and a right-hand legend. Sequence and track axes use grey lines (#60696F) and 1.2 mm major ticks. Dotplots use the standard ggplot2 axis elements.",
       "errors": "Set data colours through aesthetic scales and provide physical layer dimensions through the corresponding layer or layout.",
       "roles": [],
       "example_setup": ""
@@ -5087,6 +5087,159 @@
       ],
       "value": "A structured issue table and measurement conditions.",
       "details": "Without dimensions, check structural conditions such as feature bounds and Fusion leaf references. With a target device and dimensions, inspect fit, guides and text metrics. Severity, component and location are reported.",
+      "errors": "",
+      "roles": [],
+      "example_setup": ""
+    },
+    "geom_seq_arrow": {
+      "title": "Draw directional sequence backbones",
+      "intro": "Draw a single reference line with a closed 2 mm arrowhead.",
+      "arguments": [
+        {
+          "format": "aes / NULL",
+          "description": "Aesthetic mapping from `aes()`. A local mapping overrides the matching inherited channel."
+        },
+        {
+          "format": "data.frame / function / NULL",
+          "description": "Optional reference table or function selecting from the registered reference."
+        },
+        {
+          "format": "identity",
+          "description": "A compatible ggplot2 Stat or its name. The default uses the supplied records."
+        },
+        {
+          "format": "identity / position_offset",
+          "description": "A compatible Position for placement of the layer geometry."
+        },
+        {
+          "format": "named arguments",
+          "description": "Additional named visual styles and parameters accepted by this layer."
+        },
+        {
+          "format": "grid arrow / NULL",
+          "description": "A grid arrow specification. Supply NULL for a plain line."
+        },
+        {
+          "format": "logical",
+          "description": "Suppress warnings for missing observations that the layer can omit."
+        },
+        {
+          "format": "logical / named logical",
+          "description": "Logical or named logical indicating whether the layer contributes legend keys."
+        },
+        {
+          "format": "logical",
+          "description": "Whether to inherit plot mappings and evaluate them on the layer data."
+        },
+        {
+          "format": "character(1) / NULL",
+          "description": "Optional plot-local layer identifier. Name a layer explicitly to scope a scale, anchor a label or export it."
+        }
+      ],
+      "value": "A ggplot2 layer for addition to a plot.",
+      "details": "The arrow follows the displayed reference orientation. The layer accepts the same reference data, mappings and identifiers as geom_seq().",
+      "errors": "Use geom_seq() to draw bands or double lines.",
+      "roles": [
+        "Visual attributes supported by the selected mark. Map through a scale or set fixed values."
+      ],
+      "example_setup": ""
+    },
+    "scale_colour_sequence": {
+      "title": "Colour sequence identifiers",
+      "intro": "Use reference colours for sequence IDs. Within a ggchord plot, a subset uses the registered reference colours.",
+      "arguments": [
+        {
+          "format": "character / waiver / NULL",
+          "description": "Legend title."
+        },
+        {
+          "format": "ggplot2",
+          "description": "Additional scale arguments, such as labels and na.value."
+        },
+        {
+          "format": "character",
+          "description": "Colour or fill channels controlled by this scale."
+        }
+      ],
+      "value": "A ggplot2 visual scale.",
+      "details": "Add the scale to the plot to share one mapping, or wrap it in scale_for() to train selected layers independently.",
+      "errors": "",
+      "roles": [],
+      "example_setup": ""
+    },
+    "scale_fill_strand": {
+      "title": "Colour features by strand",
+      "intro": "Use red for forward, blue for reverse, purple for bidirectional and grey for undirected features.",
+      "arguments": [
+        {
+          "format": "character / waiver / NULL",
+          "description": "Legend title."
+        },
+        {
+          "format": "ggplot2",
+          "description": "Additional scale arguments, such as labels and na.value."
+        },
+        {
+          "format": "character",
+          "description": "Colour or fill channels controlled by this scale."
+        }
+      ],
+      "value": "A ggplot2 visual scale.",
+      "details": "Add the scale to the plot to share one mapping, or wrap it in scale_for() to train selected layers independently.",
+      "errors": "",
+      "roles": [],
+      "example_setup": ""
+    },
+    "scale_fill_feature_type": {
+      "title": "Colour genomic feature types",
+      "intro": "Known types keep their plasmid colours. An additional type receives a colour derived from its name and keeps it after filtering.",
+      "arguments": [
+        {
+          "format": "character / waiver / NULL",
+          "description": "Legend title."
+        },
+        {
+          "format": "ggplot2",
+          "description": "Additional scale arguments, such as labels and na.value."
+        },
+        {
+          "format": "character",
+          "description": "Colour or fill channels controlled by this scale."
+        }
+      ],
+      "value": "A ggplot2 visual scale.",
+      "details": "Add the scale to the plot to share one mapping, or wrap it in scale_for() to train selected layers independently.",
+      "errors": "",
+      "roles": [],
+      "example_setup": ""
+    },
+    "scale_fill_pident": {
+      "title": "Colour ribbons by percentage identity",
+      "intro": "Fill ribbons with a stepped 0–100 scale. Interval widths in the default guide are proportional to their numeric spans.",
+      "arguments": [
+        {
+          "format": "character / waiver / NULL",
+          "description": "Legend title."
+        },
+        {
+          "format": "ggplot2",
+          "description": "Additional scale arguments, such as labels and na.value."
+        },
+        {
+          "format": "numeric(2)",
+          "description": "Lower and upper limits of the percentage domain."
+        },
+        {
+          "format": "numeric",
+          "description": "Boundaries between colour intervals."
+        },
+        {
+          "format": "guide / waiver",
+          "description": "A ggplot2 guide or the default stepped colour bar."
+        }
+      ],
+      "value": "A ggplot2 visual scale.",
+      "details": "Add the scale to the plot to share one mapping, or wrap it in scale_for() to train selected layers independently.",
       "errors": "",
       "roles": [],
       "example_setup": ""

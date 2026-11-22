@@ -29,7 +29,9 @@ layout_sequences(
 
 \item{angular_gap}{Angular spacing in degrees for arc references.}
 
-\item{row_gap, segment_gap, column_gap}{Physical distances in mm.}
+\item{row_gap, segment_gap, column_gap}{Physical distances in mm. When
+\code{row_gap} is omitted, Collinear reserves room for features, labels and
+connections within the available canvas. Sankey defaults to 6 mm.}
 
 \item{radius}{Relative radius for arc references.}
 

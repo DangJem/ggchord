@@ -133,9 +133,6 @@ layer_id <- function(layer, id) {
 #' @return A ggchord object
 #' @export
 `+.ggchord` <- function(e1, e2) {
-  old_error <- ggchord_disable_debug()
-  on.exit(options(error = old_error), add = TRUE)
-
   # Compose ordinary lists through the same per-component bookkeeping as +.
   if (identical(class(e2), "list")) return(Reduce(`+`, e2, init = e1))
 

@@ -80,7 +80,7 @@ ggchord_ribbon_trace <- function(data, tip, tip_length, coord, panel, metric) {
 
 # Preserve complete fronts in exported data and add separate decoration at draw time.
 GeomRibbonFlow <- ggproto("GeomRibbonFlow", ggplot2::GeomPolygon,
-  default_aes = aes(fill = "grey70", colour = NA, alpha = .6, linewidth = .3,
+  default_aes = aes(fill = "grey70", colour = "#53776A", alpha = .6, linewidth = .18,
     linetype = 1, fill_from = NA_character_, fill_to = NA_character_,
     flow_qn = 0, flow_sn = 0),
   extra_params = c("na.rm", "flow", "tip", "tip_length"),

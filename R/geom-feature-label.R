@@ -7,7 +7,8 @@ ggchord_label_integer <- function(value, name, minimum = 1, infinite = FALSE) {
 
 #' Declare fixed label placement
 #' @export
-#' @param orientation Text orientation relative to the reference path or the canvas.
+#' @param orientation Text orientation relative to the reference path or the canvas. Use
+#'   `"tangent"` along the path or `"normal"` perpendicular to it.
 #' @param side Side of the reference path on which to lay out labels.
 #' @param offset Physical distance from the anchor in millimetres.
 #' @param along Signed displacement in millimetres along the reference path.
@@ -43,7 +44,7 @@ ggchord_label_integer <- function(value, name, minimum = 1, infinite = FALSE) {
 label_layout_fixed <- function(orientation = "feature", side = "positive",
     offset = 1, along = 0, overlap = "hide", fit = "none", wrap = NULL) {
   ggchord_check_argument_names(sys.call(), sys.function())
-  orientation <- match.arg(orientation, c("feature", "tangent", "horizontal", "vertical"))
+  orientation <- match.arg(orientation, c("feature", "tangent", "normal", "horizontal", "vertical"))
   side <- match.arg(side, c("positive", "negative"))
   overlap <- match.arg(overlap, c("hide", "allow"))
   fit <- match.arg(fit, c("none", "wrap"))
@@ -698,7 +699,7 @@ ggchord_domain_label_geometry <- function(layer, input, layout, target = NULL,
       }
     }
     angle <- switch(orientation, horizontal = 0,
-      vertical = 90,
+      vertical = 90, normal = atan2(tangent[2L], tangent[1L]) * 180 / pi + 90,
       atan2(tangent[2L], tangent[1L]) * 180 / pi)
     if (angle > 90) angle <- angle - 180
     if (angle < -90) angle <- angle + 180

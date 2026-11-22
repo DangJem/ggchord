@@ -136,7 +136,9 @@ ggchord_circular_backbone_bounds <- function(plot, radii, units_per_mm) {
 #' @export
 #' @param mapping Aesthetic mapping from `aes()`. A local mapping overrides the matching inherited channel.
 #' @param data Optional reference table or function selecting from the registered reference.
-#' @param geometry Backbone style, either `"line"`, `"double"` or `"band"`.
+#' @param geometry Backbone style. `"auto"` draws a double path with
+#'   [coord_circular()] and a single path elsewhere. Set `"line"`, `"double"`
+#'   or `"band"` to choose the geometry explicitly.
 #' @param thickness Physical thickness in mm or absolute grid units. Named values select references.
 #' @param stat A compatible ggplot2 Stat or its name. The default uses the supplied records.
 #' @param position A compatible Position for placement of the layer geometry.
@@ -169,16 +171,17 @@ ggchord_circular_backbone_bounds <- function(plot, radii, units_per_mm) {
 #'   geom_seq(linewidth = 2, colour = "white") +
 #'   geom_seq(linewidth = 0.5, colour = "black") +
 #'   coord_collinear()
-geom_seq <- function(mapping = NULL, data = NULL, geometry = "line",
+geom_seq <- function(mapping = NULL, data = NULL, geometry = "auto",
     thickness = 1, stat = "identity", position = "identity", ...,
     na.rm = FALSE, show.legend = NA, inherit.aes = TRUE, id = NULL) {
   ggchord_check_argument_names(sys.call(), sys.function())
-  geometry <- match.arg(geometry, c("line", "double", "band"))
+  geometry <- match.arg(geometry, c("auto", "line", "double", "band"))
   if (!ggchord_identity_stat(stat)) ggchord_stop("geom_seq(): stat must be identity")
   position <- ggchord_as_feature_position(position, "geom_seq()")
   if (ggchord_local_position(position) && !identical(position$placement, "offset"))
     ggchord_stop("geom_seq(): position must be identity or position_offset()")
-  if (geometry == "line" && !missing(thickness))
+  thickness_supplied <- !missing(thickness)
+  if (geometry == "line" && thickness_supplied)
     ggchord_stop("geom_seq(): line uses linewidth, thickness applies to double or band")
   thickness <- ggchord_physical_mm(thickness, "geom_seq(thickness)", nonnegative = TRUE)
   if (any(unlist(thickness, use.names = FALSE) <= 0))
@@ -200,7 +203,34 @@ geom_seq <- function(mapping = NULL, data = NULL, geometry = "line",
   layer$ggchord_params <- list(id = id, type = "seq", physical_layout = geometry != "line" ||
     ggchord_local_position(position),
     seq_style = if (geometry == "line") "single" else geometry,
+    seq_thickness_supplied = thickness_supplied,
     seq_backbone_gap = 0, seq_backbone_width = 0,
     feature_position = position, seq_thickness_mm = thickness)
   ggchord_capture_layer_input(layer, data, mapping, character())
+}
+
+#' Draw a directional sequence backbone
+#'
+#' @inheritParams geom_seq
+#' @param arrow A grid arrow specification for the sequence endpoint. Its
+#'   direction follows the displayed reference orientation. Use `NULL` to
+#'   omit the arrow.
+#' @return A ggplot2 sequence layer, equivalent to [geom_seq()] with
+#'   `geometry = "line"` and the supplied arrow.
+#' @export
+#' @examples
+#' library(ggplot2)
+#' seqs <- data.frame(accver = c("A", "B"), length = c(1000, 800),
+#'   sequence_unit = "bp", topology = "linear")
+#' ggchord(seqs) +
+#'   geom_seq_arrow(aes(colour = accver)) +
+#'   layout_sequences(orientation = c(A = 1, B = -1)) +
+#'   coord_collinear()
+geom_seq_arrow <- function(mapping = NULL, data = NULL, stat = "identity",
+    position = "identity", ..., arrow = grid::arrow(length = grid::unit(2, "mm"), type = "closed"),
+    na.rm = FALSE, show.legend = NA, inherit.aes = TRUE, id = NULL) {
+  ggchord_check_argument_names(sys.call(), sys.function())
+  geom_seq(mapping = mapping, data = data, geometry = "line", stat = stat,
+    position = position, ..., arrow = arrow, na.rm = na.rm,
+    show.legend = show.legend, inherit.aes = inherit.aes, id = id)
 }

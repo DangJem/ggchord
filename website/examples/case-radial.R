@@ -35,8 +35,7 @@ overview <- ggchord(comparison$seq_data) +
   geom_link_ribbon(aes(fill = pident, linetype = route_class), data = relationships, curvature = 0.86, bulge = 0.20, avoid = "smooth",
     alpha = 0.48, colour = "#3F695D", linewidth = 0.27) +
   scale_linetype_manual(values = c(neighbour = "solid", across = "dashed"), guide = "none") +
-  geom_seq(aes(colour = accver), linewidth = 1.1,
-    arrow = arrow(length = unit(2, "mm"), type = "closed")) +
+  geom_seq_arrow(aes(colour = accver), linewidth = 1.1) +
   geom_gene(aes(fill = strand), data = genes, id = "genes",
     position = position_strand(offset = c("+" = -2.25, "-" = 2.25)), thickness = 2.25, colour = "#454842",
     linewidth = 0.15) +
@@ -44,7 +43,7 @@ overview <- ggchord(comparison$seq_data) +
     guide = guide_legend(nrow = 1, order = 2)) +
   scale_for("genes", scale_fill_manual(name = "Strand", values = strand_colours,
     breaks = c("+", "-"),
-    guide = guide_legend(nrow = 1, order = 1, override.aes = list(strand = c("+", "-"))))) +
+    guide = guide_legend(nrow = 1, order = 1))) +
   layout_sequences(orientation = comparison$orientation, inner_radius = 0.19) +
   coord_radial_synteny(start_angle = 45, fit = "labels", clip = "off") +
   theme_ggchord_publication() +

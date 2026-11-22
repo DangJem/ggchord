@@ -29,10 +29,9 @@ cross_ribbons <- lapply(seq_len(nrow(comparison$cross_links)), function(i) {
 })
 overview <- ggchord(comparison$seq_data) +
   geom_link_ribbon(aes(fill = pident), data = comparison$adjacent_links, avoid = "smooth",
-    alpha = 0.50, colour = "#53776A", linewidth = 0.18) +
+    alpha = 0.50) +
   cross_ribbons +
-  geom_seq(aes(colour = accver), linewidth = 1.1,
-    arrow = arrow(length = unit(2, "mm"), type = "closed")) +
+  geom_seq_arrow(aes(colour = accver), linewidth = 1.1) +
   geom_gene(aes(fill = strand), data = genes, id = "genes",
     position = position_strand(offset = 2.2), thickness = 2.2, colour = "#454842",
     linewidth = 0.15) +
@@ -40,7 +39,7 @@ overview <- ggchord(comparison$seq_data) +
     guide = guide_legend(nrow = 1, order = 2)) +
   scale_for("genes", scale_fill_manual(name = "Strand", values = strand_colours,
     breaks = c("+", "-"),
-    guide = guide_legend(nrow = 1, order = 1, override.aes = list(strand = c("+", "-"))))) +
+    guide = guide_legend(nrow = 1, order = 1))) +
   layout_sequences(align = "center", row_gap = 41) +
   coord_collinear(fit = "labels", clip = "off") +
   theme_ggchord_publication() +

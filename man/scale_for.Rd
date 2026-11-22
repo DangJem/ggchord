@@ -21,8 +21,9 @@ continue to share the plot's scale for the same aesthetic.
 \details{
 Unscoped backbones and features can use the sequence palette when
 mapped directly to \code{accver}. Features mapped to \code{strand} use red (+),
-blue (-) and grey (unknown). Circular features mapped to recognized
-\code{type} values use the plasmid palette. An explicit scale takes precedence.
+blue (-), purple (+/-) and grey (unknown). Circular features mapped to
+\code{type} use the plasmid palette with stable colours for additional types.
+An explicit scale takes precedence.
 }
 \examples{
 library(ggplot2)

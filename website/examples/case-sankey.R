@@ -18,11 +18,10 @@ strand_colours <- c("+" = "#CE1536", "-" = "#346B9D", "." = "#8291A6")
 
 overview <- ggchord(comparison$seq_data) +
   geom_link_ribbon(aes(fill = pident), data = comparison$adjacent_links, avoid = "smooth",
-    alpha = 0.50, colour = "#53776A", linewidth = 0.18) +
+    alpha = 0.50) +
   geom_link_ribbon(aes(fill = pident), data = comparison$cross_links, avoid = "smooth",
     alpha = 0.33, colour = "#547568", linewidth = 0.28) +
-  geom_seq(aes(colour = accver), linewidth = 1.1,
-    arrow = arrow(length = unit(2, "mm"), type = "closed")) +
+  geom_seq_arrow(aes(colour = accver), linewidth = 1.1) +
   geom_gene(aes(fill = strand), data = genes, id = "genes",
     position = position_strand(offset = 2.1), thickness = 2.1, colour = "#454842",
     linewidth = 0.15) +
@@ -30,7 +29,7 @@ overview <- ggchord(comparison$seq_data) +
     guide = guide_legend(nrow = 1, order = 2)) +
   scale_for("genes", scale_fill_manual(name = "Strand", values = strand_colours,
     breaks = c("+", "-"),
-    guide = guide_legend(nrow = 1, order = 1, override.aes = list(strand = c("+", "-"))))) +
+    guide = guide_legend(nrow = 1, order = 1))) +
   layout_sequences(column_gap = 145, row_gap = 20) +
   coord_sankey(fit = "geometry", clip = "off") +
   theme_ggchord_publication() +

@@ -1,6 +1,6 @@
 #' Common appearance for sequence visualizations
 #'
-#' A white, borderless panel and centred bold plot title keep the focus on
+#' A warm ivory (#FFFCF5), borderless panel and centred bold plot title keep the focus on
 #' the sequence geometry. Standard ggplot2 theme elements can override them.
 #'
 #' @param base_size Base font size in points.
@@ -150,8 +150,8 @@ ggchord_make_theme <- function(base_size, base_family, variant, overrides) {
   publication <- variant == "publication"
   plasmid <- variant == "plasmid"
   fg <- if (dark) "#F1F3F5" else if (publication) "#111111" else "#30353A"
-  bg <- if (dark) "#17191C" else if (plasmid) "#FFFCF5" else "white"
-  axis_col <- if (dark) "#ADB5BD" else if (publication) "#333333" else "#737A80"
+  bg <- if (dark) "#17191C" else if (variant %in% c("default", "plasmid")) "#FFFCF5" else "white"
+  axis_col <- if (dark) "#ADB5BD" else if (publication) "#333333" else if (variant == "default") "#60696F" else "#737A80"
   line <- element_line(colour = axis_col, linewidth = .3)
   axis_text <- element_text(colour = fg, size = rel(.8))
   title <- element_text(colour = fg, size = rel(.9))
@@ -186,6 +186,9 @@ ggchord_make_theme <- function(base_size, base_family, variant, overrides) {
       ggchord.track.axis.ticks.length = unit(1.2, "mm"),
       ggchord.track.axis.text = axis_text,
       ggchord.track.axis.title = title)
+  if (variant == "default") out <- out + theme(
+    legend.text = element_text(colour = fg, size = rel(.86)),
+    legend.key.spacing.y = unit(1.5, "mm"))
   if (plasmid) out <- out + theme(ggchord.axis.gap = unit(0, "mm"),
     ggchord.axis.minor.ticks.length = unit(.8, "mm"), plot.margin = margin(6, 6, 6, 6))
   if (publication) out <- out + theme(plot.margin = margin(4, 4, 4, 4, unit = "mm"))

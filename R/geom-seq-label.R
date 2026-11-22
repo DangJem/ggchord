@@ -11,7 +11,10 @@
 #' @param inherit.aes Whether to inherit plot mappings and evaluate them on the layer data.
 #' @param id Optional plot-local layer identifier. Name a layer explicitly to scope a scale, anchor a label or export it.
 #' @return A ggplot2 layer for addition to a plot.
-#' @details The source is the complete reference table with `accver` and `length`. A backbone can select an authoritative subset. An explicit complete table in geom_seq() can register a reference when the plot has no global data.
+#' @details Labels read the registered reference. Use
+#'   `label_layout_fixed(orientation = "tangent")` to align each label with
+#'   its own backbone while keeping the text upright after a rotation or
+#'   direction reversal. Set `angle` for a fixed text angle.
 #' @examples
 #' library(ggplot2)
 #'
@@ -24,6 +27,10 @@
 #'   geom_seq() +
 #'   geom_seq_label(aes(label = accver), anchor = "start") +
 #'   coord_collinear()
+#'
+#' ggchord(seqs) + geom_seq_arrow() +
+#'   geom_seq_label(label_layout = label_layout_fixed(orientation = "tangent", offset = 4)) +
+#'   coord_chord(start_angle = 40)
 geom_seq_label <- function(mapping = NULL, data = NULL, anchor = "middle",
     position = "identity", label_layout = label_layout_fixed(orientation = "horizontal"),
     ..., na.rm = FALSE, show.legend = FALSE, inherit.aes = TRUE, id = NULL) {

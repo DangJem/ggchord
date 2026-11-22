@@ -14,13 +14,28 @@
   and point-link colour use line keys at the same percentages. The stepped
   guide defaults to 2.8 mm on its short edge in either orientation, including
   in Fusion. Explicit guide dimensions take precedence.
-- Restored the borderless white base theme, charcoal dark theme and ivory
-  plasmid maps with labelled sequence axes and separate major and minor
-  ticks. Features have fine dark outlines. Compact glyphs use a lighter
+- The default theme uses a borderless warm ivory panel (#FFFCF5) and more
+  readable legend text. The publication theme retains its white
+  background. Dark and plasmid variants retain their own palettes. Plasmid
+  maps have labelled sequence axes and separate major and minor ticks. Features have fine dark outlines. Compact glyphs use a lighter
   stroke unless a linewidth is set or mapped.
 - Reference, strand and recognized circular feature-type mappings can reuse
   the sequence, strand or plasmid palette when they have a colour channel
   to themselves. Explicit scales and independently scoped scales take priority.
+- `geom_seq()` draws double backbones in circular coordinates and single
+  backbones elsewhere. Use `geometry = "line"` to request a single ring.
+  `geom_seq_arrow()` adds a closed 2 mm arrow to a single backbone.
+  Fixed labels can follow the normal to the local path.
+- `scale_colour_sequence()`, `scale_fill_strand()`, `scale_fill_feature_type()`
+  and `scale_fill_pident()` also work inside `scale_for()`. Additional circular
+  annotation types receive stable colours by name. Strand legend arrows follow
+  their breaks, including reordered or relabelled keys.
+- Unspecified collinear row spacing accounts for panel size, row count and
+  the space needed by annotations and connections. Explicit row spacing and
+  Sankey spacing retain their meaning. Ribbons have a fine 0.18 mm green
+  outline (#53776A). Set `colour = NA` to remove it.
+- Data readers and plot construction now propagate errors without temporarily
+  replacing the session's error handler.
 - Collinear links and ribbons can pass around intervening rows with an
   explicit positive `bulge`. Radial curves account for intervening spoke
   tips and adjacent routed bands. Linear and Sankey panels preserve spare

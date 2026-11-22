@@ -18,7 +18,7 @@ track axis elements. Explicit settings override theme defaults.}
 A ggplot2 theme.
 }
 \description{
-A white, borderless panel and centred bold plot title keep the focus on
+A warm ivory (#FFFCF5), borderless panel and centred bold plot title keep the focus on
 the sequence geometry. Standard ggplot2 theme elements can override them.
 }
 \examples{

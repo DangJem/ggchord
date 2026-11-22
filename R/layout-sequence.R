@@ -4,7 +4,9 @@
 #' @param orientation Display orientation (1 or -1) by reference or instance.
 #' @param length_mode Proportional or equal display lengths.
 #' @param angular_gap Angular spacing in degrees for arc references.
-#' @param row_gap,segment_gap,column_gap Physical distances in mm.
+#' @param row_gap,segment_gap,column_gap Physical distances in mm. When
+#'   `row_gap` is omitted, Collinear reserves room for features, labels and
+#'   connections within the available canvas. Sankey defaults to 6 mm.
 #' @param radius Relative radius for arc references.
 #' @param inner_radius Relative inner radius for radial spokes. With `NULL`,
 #'   retain a compact centre and enlarge it if nearby drawn bands need space.
@@ -224,6 +226,7 @@ ggchord_configure_layout <- function(plot) {
     layout$curvature <- values("curvature", 1)
   }
   if (mode %in% c("linear", "sankey")) {
+    layout$auto_row_gap <- mode == "linear" && is.null(layout$row_gap)
     layout$row_gap <- ggchord_layout_mm(layout$row_gap, "row_gap")
     layout$row_gap <- values("row_gap", 6)
   }
@@ -274,6 +277,47 @@ ggchord_path_normal_axis <- function(coord) {
   vertical <- if (isTRUE(coord$ggchord_sankey)) identical(coord$sankey_axis, "y") else
     identical(coord$collinear_seq_axis, "vertical")
   if (vertical) "x" else "y"
+}
+
+# Estimate one row pitch from the layers that actually share this panel.
+# The device allocation is independent of the solved paths, so this budget
+# stays stable while grid refines the physical-to-layout conversion.
+ggchord_collinear_auto_gap <- function(plot) {
+  ids <- plot$ggchord$sequence_layout$order
+  segments <- plot$coordinates$collinear_segments
+  rows <- if (is.null(segments)) length(ids) else
+    length(unique(segments$row_id[segments$accver %in% ids]))
+  sides <- c(positive = 0, negative = 0)
+  feature <- 0
+  links <- FALSE
+  for (layer in plot$layers) {
+    p <- layer$ggchord_params
+    if (is.null(p)) next
+    data <- p$panel_input %||% layer$ggchord_input_data
+    if (is.data.frame(data) && !nrow(data)) next
+    if (p$type %in% c("ribbon", "link")) links <- TRUE
+    if (p$type == "gene") {
+      position <- p$feature_position$base_position %||% p$feature_position
+      reach <- max(abs(unlist(position$offset)), 0) + max(unlist(p$feature_mm)) / 2
+      feature <- max(feature, reach)
+    }
+    if (p$type == "domain_label" && !identical(p$anchor, "center")) {
+      policy <- p$label_layout
+      reach <- max(abs(unlist(policy$offset))) + max(p$label_size) + (policy$padding %||% 0)
+      selected <- if (policy$side == "both") names(sides) else policy$side
+      sides[selected] <- pmax(sides[selected], reach)
+    }
+  }
+  # Leave a visible channel between the two rows' occupied sides. A ribbon
+  # needs a longer span to show its taper and direction than bare backbones.
+  preferred <- (if (links) 20 else 12) + 2 * feature + sum(sides)
+  axis <- if (identical(plot$coordinates$collinear_seq_axis, "vertical")) 1L else 2L
+  canvas <- ggchord_render_dimensions()[axis]
+  if (!is.finite(canvas)) canvas <- 7 * 25.4
+  facets <- plot$ggchord$source_facet_setup$panels
+  if (NROW(facets)) canvas <- canvas / max(if (axis == 1L) facets$COL else facets$ROW)
+  budget <- .78 * canvas / max(1L, rows - 1L)
+  setNames(rep(min(preferred, max(4, budget)), length(ids)), ids)
 }
 
 ggchord_row_gap <- function(plot, layout, seqs) {

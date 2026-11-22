@@ -16,25 +16,18 @@ sequence_colours <- c(
 )
 strand_colours <- c("+" = "#CE1536", "-" = "#346B9D", "." = "#8291A6")
 
-# Rotate each accession along its sector midline. Place the text just inside the path.
+# Label each backbone perpendicular to its midpoint, with the text just inside the path.
 sector_gap <- 21.6
 start_angle <- 50
-sectors <- comparison$seq_data |>
-  mutate(span = (360 - n() * sector_gap) * length / sum(length),
-    angle = start_angle + cumsum(span + sector_gap) - sector_gap - span / 2,
-    angle = (angle + 90) %% 180 - 90)
 sequence_labels <- function(size, offset) {
-  lapply(seq_len(nrow(sectors)), function(i) {
-    geom_seq_label(aes(label = accver), data = sectors[i, ], angle = sectors$angle[i],
-      label_layout = label_layout_fixed(orientation = "horizontal", side = "negative",
-        offset = offset), size = size)
-  })
+  geom_seq_label(aes(label = accver), size = size,
+    label_layout = label_layout_fixed(orientation = "normal", side = "negative",
+      offset = offset))
 }
 overview <- ggchord(comparison$seq_data) +
   geom_link_ribbon(aes(fill = pident), data = comparison$links, curvature = 1, avoid = "smooth",
-    alpha = 0.52, colour = "#53776A", linewidth = 0.16) +
-  geom_seq(aes(colour = accver), linewidth = 1.1,
-    arrow = arrow(length = unit(2, "mm"), type = "closed")) +
+    alpha = 0.52, linewidth = 0.16) +
+  geom_seq_arrow(aes(colour = accver), linewidth = 1.1) +
   geom_gene(aes(fill = strand), data = genes, id = "genes",
     position = position_strand(offset = c("+" = -1.65, "-" = 1.65)), thickness = 2.05, colour = "#454842",
     linewidth = 0.15) +
@@ -42,7 +35,7 @@ overview <- ggchord(comparison$seq_data) +
     guide = guide_legend(nrow = 1, order = 2)) +
   scale_for("genes", scale_fill_manual(name = "Strand", values = strand_colours,
     breaks = c("+", "-"),
-    guide = guide_legend(nrow = 1, order = 1, override.aes = list(strand = c("+", "-"))))) +
+    guide = guide_legend(nrow = 1, order = 1))) +
   layout_sequences(
     orientation = comparison$orientation, angular_gap = sector_gap,
     curvature = setNames(c(0, 1, -0.65, 0.75), names(sequence_colours)),

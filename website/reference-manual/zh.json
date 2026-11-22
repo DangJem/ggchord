@@ -1,5 +1,5 @@
 {
-  "source_sha256": "09ed524393400570eb173959521762dde9ea5e9acea2072493ebe3cc8179c9e6",
+  "source_sha256": "3db31a5a639d1227bb4787cbb37327497c743396aad8c87da45086ffa41754a7",
   "description": "按任务查找 ggchord 函数，涵盖数据准备、绘图、图形组合和布局检查。每个函数页面都说明参数和返回值，并提供可运行的 R 示例及相应的图形或控制台输出。",
   "groups": {
     "construct": {
@@ -510,7 +510,7 @@
         },
         {
           "format": "非负 mm / 绝对 grid unit / 灵活配置 / NULL",
-          "description": "线性行间的物理净间距，仅 Collinear/Sankey。NULL 为 6 mm。沿 Layout 顺序指定各参考后的间隔；最后一项不增加外边距。"
+          "description": "行间距以 mm 计。共线布局省略时根据行数、图层与画布空间分配；桑基布局默认为 6 mm。"
         },
         {
           "format": "非负 mm / 绝对 grid unit / NULL",
@@ -654,7 +654,7 @@
         },
         {
           "format": "character(1)",
-          "description": "line、double 或 band，默认 line；只选择骨架表示。"
+          "description": "默认 `\"auto\"` 在圆图投影中使用双圈，其他投影使用单线。可显式选择 `\"line\"`、`\"double\"` 或 `\"band\"`。"
         },
         {
           "format": "positive physical size / flexible",
@@ -1825,7 +1825,7 @@
         },
         {
           "format": "named arguments",
-          "description": "固定 fill=\"grey70\"、colour=NA、alpha=0.6、linewidth=0.3；tip=\"none\"/\"from\"/\"to\"/\"both\" 为端部装饰，tip_length=2 mm，仅非 none 时有效。路由参数 curvature、bulge、corridor_width；兼容 Stat 参数如 bins/min_bundle/normalization。 未显式设置或映射线型时，跨过中间行或辐条的连带描边默认用虚线。径向首尾辐条视为相邻。固定或映射的线型优先。"
+          "description": "固定 fill=\"grey70\"、colour=\"#53776A\"、alpha=0.6、linewidth=0.18；tip=\"none\"/\"from\"/\"to\"/\"both\" 为端部装饰，tip_length=2 mm，仅非 none 时有效。路由参数 curvature、bulge、corridor_width；兼容 Stat 参数如 bins/min_bundle/normalization。 未显式设置或映射线型时，跨过中间行或辐条的连带描边默认用虚线。径向首尾辐条视为相邻。固定或映射的线型优先。 显式指定 colour=NA 可隐藏描边。"
         },
         {
           "format": "logical",
@@ -2724,7 +2724,7 @@
       "arguments": [
         {
           "format": "character(1)",
-          "description": "feature、tangent、horizontal、vertical；默认 feature，随目标实体方向。显式或映射 angle 优先，策略只填未指定角度。"
+          "description": "feature、tangent、horizontal、vertical；默认 feature，随目标实体方向。显式或映射 angle 优先，策略只填未指定角度。 tangent 沿骨架切线排字，normal 垂直于骨架排字。"
         },
         {
           "format": "character(1)",
@@ -3074,7 +3074,7 @@
         }
       ],
       "value": "一个可添加到图的有作用域Scale声明；构建时从全局域移出选中层的对应通道，并对集合共同训练。",
-      "details": "1. 引用按最终图中ID解析，添加先后不改变作用域。两个scale_for若选中了同一layer×aesthetic就报冲突，不能由最后添加的对象静默覆盖。\n\n2. 全局普通Scale只训练未被分域的层/通道。scope内name、breaks、labels、limits和guide直接写在被包裹Scale里；普通labs/guides只修改全局域。\n\n3. 固定视觉值不参加训练。映射到feature形状的Scale必须输出合法feature几何词汇；点形状的pch域与其不兼容时分开作用域。\n\n4. 本接口不控制参考位置、track y或轨带厚度。使用scale_y_log10来替代scale_track_value(transform=...)会产生职责冲突，应拒绝。\n\n5. Fusion对子图保持尺度隔离。要修改子图，先修改该图再放入panels；本函数不按同名字符串把所有面板联动。\n\n骨架层和特征层共用的颜色通道若只映射 accver，默认沿用序列色板。特征层以 strand 着色时，正链为红色、负链为蓝色、未知链为灰色。圆图特征以 type 着色且所有类型均可识别时，采用质粒色板。显式普通标度或分层标度优先。",
+      "details": "1. 引用按最终图中ID解析，添加先后不改变作用域。两个scale_for若选中了同一layer×aesthetic就报冲突，不能由最后添加的对象静默覆盖。\n\n2. 全局普通Scale只训练未被分域的层/通道。scope内name、breaks、labels、limits和guide直接写在被包裹Scale里；普通labs/guides只修改全局域。\n\n3. 固定视觉值不参加训练。映射到feature形状的Scale必须输出合法feature几何词汇；点形状的pch域与其不兼容时分开作用域。\n\n4. 本接口不控制参考位置、track y或轨带厚度。使用scale_y_log10来替代scale_track_value(transform=...)会产生职责冲突，应拒绝。\n\n5. Fusion对子图保持尺度隔离。要修改子图，先修改该图再放入panels；本函数不按同名字符串把所有面板联动。\n\n骨架层和特征层共用的颜色通道若只映射 accver，默认沿用序列色板。特征层以 strand 着色时，正链为红色、负链为蓝色、未知链为灰色。圆图特征以 type 着色时，已知类型沿用质粒色板，其他类型按名称分配稳定的颜色。显式普通标度或分层标度优先。",
       "errors": "- 未知或重复图层ID、两个独立域重叠。\n\n- 非Scale对象、位置Scale、层不支持的视觉通道。\n\n- 共同Scale输出类型不能被所有所选Geom消费。",
       "roles": [],
       "example_setup": ""
@@ -3283,7 +3283,7 @@
     },
     "theme_ggchord": {
       "title": "ggchord 的共同非数据外观",
-      "intro": "提供白底、清晰文字和克制的轴/图例默认，作为各主题快捷式的母配置。主题不决定颜色变量、箭头形状、序列排列或标签避让算法。",
+      "intro": "提供暖白底、清晰文字和克制的轴/图例默认，作为各主题快捷式的母配置。主题不决定颜色变量、箭头形状、序列排列或标签避让算法。",
       "arguments": [
         {
           "format": "正numeric(1)；默认11 pt",
@@ -3299,7 +3299,7 @@
         }
       ],
       "value": "完整的ggplot2 theme对象，可用+添加到普通ggplot或ggchord；注册的领域元素仅在相关Guide存在时生效。",
-      "details": "1. 返回纯外观配置，不能添加Coord、Geom、Stat、Scale或修改数据。普通legend.*只设置共同图例外观，不按gene/ribbon/track复制私有参数组。\n\n2. 领域元素为ggchord.axis.line/ticks/ticks.length/text/title和ggchord.track.axis.line/ticks/ticks.length/text/title；局部Guide theme优先于共同元素。\n\n3. 快捷主题的所有效果均可由母主题及明确theme元素展开。用户通过...传入的元素覆盖快捷默认；后续+theme(...)继续按ggplot2规则修改。\n\n4. 基础主题采用白色画布和绘图区、深灰文字（#30353A）、居中加粗的图标题和右侧图例。绘图区省略网格和边框。轴线和刻度采用灰色（#737A80），轴文字和轴标题分别为基础字号的 0.8 和 0.9 倍，领域轴的主刻度长 1.2 mm。\n\n5. 原生Dotplot轴继续使用普通axis.*；路径类Coord不绘制多余的画布轴，而使用自己的序列/轨道Guide。这由Coord/Guide能力决定，Theme不根据投影自动改数据。",
+      "details": "1. 返回纯外观配置，不能添加Coord、Geom、Stat、Scale或修改数据。普通legend.*只设置共同图例外观，不按gene/ribbon/track复制私有参数组。\n\n2. 领域元素为ggchord.axis.line/ticks/ticks.length/text/title和ggchord.track.axis.line/ticks/ticks.length/text/title；局部Guide theme优先于共同元素。\n\n3. 快捷主题的所有效果均可由母主题及明确theme元素展开。用户通过...传入的元素覆盖快捷默认；后续+theme(...)继续按ggplot2规则修改。\n\n4. 基础主题采用暖白色（#FFFCF5）画布和绘图区、深灰文字（#30353A）、居中加粗的图标题和右侧图例。绘图区省略网格和边框。轴线和刻度采用灰色（#60696F），轴文字和轴标题分别为基础字号的 0.8 和 0.9 倍，领域轴的主刻度长 1.2 mm。\n\n5. 原生Dotplot轴继续使用普通axis.*；路径类Coord不绘制多余的画布轴，而使用自己的序列/轨道Guide。这由Coord/Guide能力决定，Theme不根据投影自动改数据。",
       "errors": "- 字号非正或字体参数非标量。\n\n- 未知theme元素、传入preset/position等非外观配置。",
       "roles": [],
       "example_setup": ""
@@ -5088,6 +5088,159 @@
       ],
       "value": "含severity/code/panel_path/layer_id/component/message/suggestion的诊断表与measurement摘要。未提供设备时只做可判定检查，设备相关项标unavailable/estimated。",
       "details": "1. 数据结构校验由validate_ggchord_data负责；本函数不把科学数据合理性和设备拥挤混成同一种失败。\n\n2. 字号、标签拟合、带间距不足等给出可定位建议，不反向改变feature端点或统计值。\n\n无目标尺寸时可判定特征越界和 Fusion 连接引用不存在的叶面板。",
+      "errors": "",
+      "roles": [],
+      "example_setup": ""
+    },
+    "geom_seq_arrow": {
+      "title": "绘制定向序列骨架",
+      "intro": "为单线参考骨架绘制 2 mm 的闭合箭头。",
+      "arguments": [
+        {
+          "format": "aes / NULL",
+          "description": "aes() 映射或 NULL。局部映射覆盖同名图级映射；inherit.aes=TRUE 时，其余全局映射在本层实际数据中求值。固定视觉值显式提供时覆盖同通道映射；省略的默认视觉值不能压过映射。"
+        },
+        {
+          "format": "data.frame / function / NULL",
+          "description": "规范参考表、参考子集、函数或 NULL。NULL 使用已解析的唯一参考；函数接收该参考。显式数据不能改写已登记的 accver、完整 length、sequence_unit 或 topology。"
+        },
+        {
+          "format": "identity",
+          "description": "首版只接受 identity；完整参考不能由本层 Stat 重新汇总、分箱或估计。"
+        },
+        {
+          "format": "identity / position_offset",
+          "description": "只调整本层骨架的可见位置；默认 identity，可用 position_offset 作物理法向偏移。此偏移不会移动参考框架或其他图层。"
+        },
+        {
+          "format": "named arguments",
+          "description": "固定 colour/linewidth/linetype/alpha；band 可用 fill；double 可用相同边线样式。未知参数或对所选 geometry 不适用的 fill 等显式参数报错。"
+        },
+        {
+          "format": "grid arrow / NULL",
+          "description": "grid 箭头规格。传入 NULL 可显示无箭头单线。"
+        },
+        {
+          "format": "logical",
+          "description": "FALSE 时对可移除的缺失绘制记录给出提示，TRUE 时静默移除。它不关闭未知参考、单位冲突、无效身份或非有限结构坐标的检查。"
+        },
+        {
+          "format": "logical / named logical",
+          "description": "默认 NA；NA 按映射决定图例键，FALSE 不贡献图例键，TRUE 请求贡献；也可使用按 aesthetic 命名的逻辑向量。不控制整个图例的布局。"
+        },
+        {
+          "format": "logical",
+          "description": "TRUE 合并图级 aes；FALSE 仅使用局部 aes 和该 Geom 公开的规范角色默认。即使显式给 data，默认也仍然继承映射；缺列不自动从参考表连接补齐。"
+        },
+        {
+          "format": "character(1) / NULL",
+          "description": "图内唯一图层 ID；NULL 自动分配图对象内稳定身份。被 anchor_layer、scale_for 或导出引用的层应显式命名。它不是 feature_id、site_id 或序列 ID。"
+        }
+      ],
+      "value": "一个可添加到 ggchord 图的参考几何层。若它是唯一参考声明入口，同时提供待解析的完整参考数据；不修改传入表。",
+      "details": "箭头沿参考序列的显示方向绘制。可像 geom_seq() 一样声明参考、映射颜色和指定图层 ID。",
+      "errors": "带状或双线骨架使用 geom_seq()。",
+      "roles": [
+        "骨架外观；规范 accver/length/sequence_unit 不作为可重映射的身份字段。"
+      ],
+      "example_setup": ""
+    },
+    "scale_colour_sequence": {
+      "title": "按序列标识着色",
+      "intro": "按序列标识选择颜色。在同一张 ggchord 图中，子集沿用登记参考的颜色。",
+      "arguments": [
+        {
+          "format": "character / waiver / NULL",
+          "description": "图例标题。"
+        },
+        {
+          "format": "ggplot2",
+          "description": "可传入 labels、na.value 等普通标度参数。"
+        },
+        {
+          "format": "character",
+          "description": "该标度控制的颜色或填色通道。"
+        }
+      ],
+      "value": "一个 ggplot2 视觉标度。",
+      "details": "将标度直接加到图中可共享映射，也可用 scale_for() 为选定图层独立训练。",
+      "errors": "",
+      "roles": [],
+      "example_setup": ""
+    },
+    "scale_fill_strand": {
+      "title": "按链方向填色",
+      "intro": "正链为红色、负链为蓝色、双向为紫色、无方向为灰色。",
+      "arguments": [
+        {
+          "format": "character / waiver / NULL",
+          "description": "图例标题。"
+        },
+        {
+          "format": "ggplot2",
+          "description": "可传入 labels、na.value 等普通标度参数。"
+        },
+        {
+          "format": "character",
+          "description": "该标度控制的颜色或填色通道。"
+        }
+      ],
+      "value": "一个 ggplot2 视觉标度。",
+      "details": "将标度直接加到图中可共享映射，也可用 scale_for() 为选定图层独立训练。",
+      "errors": "",
+      "roles": [],
+      "example_setup": ""
+    },
+    "scale_fill_feature_type": {
+      "title": "按特征类型填色",
+      "intro": "已知类型保留质粒色板中的颜色。新增类型按名称分配颜色，过滤其他类型后仍使用相同颜色。",
+      "arguments": [
+        {
+          "format": "character / waiver / NULL",
+          "description": "图例标题。"
+        },
+        {
+          "format": "ggplot2",
+          "description": "可传入 labels、na.value 等普通标度参数。"
+        },
+        {
+          "format": "character",
+          "description": "该标度控制的颜色或填色通道。"
+        }
+      ],
+      "value": "一个 ggplot2 视觉标度。",
+      "details": "将标度直接加到图中可共享映射，也可用 scale_for() 为选定图层独立训练。",
+      "errors": "",
+      "roles": [],
+      "example_setup": ""
+    },
+    "scale_fill_pident": {
+      "title": "按比对一致性百分比填色",
+      "intro": "连带按 0–100 的分段色标填色，默认图例中各区间的宽度按数值跨度绘制。",
+      "arguments": [
+        {
+          "format": "character / waiver / NULL",
+          "description": "图例标题。"
+        },
+        {
+          "format": "ggplot2",
+          "description": "可传入 labels、na.value 等普通标度参数。"
+        },
+        {
+          "format": "numeric(2)",
+          "description": "百分比域的下界和上界。"
+        },
+        {
+          "format": "numeric",
+          "description": "划分颜色区间的边界。"
+        },
+        {
+          "format": "guide / waiver",
+          "description": "可指定 ggplot2 图例；默认显示分段色条。"
+        }
+      ],
+      "value": "一个 ggplot2 视觉标度。",
+      "details": "将标度直接加到图中可共享映射，也可用 scale_for() 为选定图层独立训练。",
       "errors": "",
       "roles": [],
       "example_setup": ""

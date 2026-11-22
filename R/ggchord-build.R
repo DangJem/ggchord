@@ -48,6 +48,12 @@ ggchord_prepare_geometry_inputs <- function(plot, prepare_instances = TRUE) {
     ggchord_stop("geom_alignment_segment() requires coord_dotplot()")
   plot <- ggchord_register_layers(plot)
   for (layer in plot$layers) {
+    if (identical(layer$ggchord_params$seq_style, "auto")) {
+      circular <- isTRUE(plot$coordinates$ggchord_circular)
+      if (!circular && isTRUE(layer$ggchord_params$seq_thickness_supplied))
+        ggchord_stop("geom_seq(): line uses linewidth, thickness applies to double or band")
+      layer$ggchord_params$seq_style <- if (circular) "double" else "single"
+    }
     if (!is.null(layer$ggchord_type) && is.null(layer$ggchord_params$native_geom) &&
         is.null(layer$ggchord_params$ribbon_stat))
       layer$ggchord_params$visual_source <- new.env(parent = emptyenv())
@@ -98,6 +104,11 @@ ggchord_prepare_geometry_inputs <- function(plot, prepare_instances = TRUE) {
 compute_chord_geometry_prepared <- function(plot) {
   if (!inherits(plot$facet, "FacetNull")) return(ggchord_facet_layout(plot))
   ggchord_validate_coord_contract(plot)
+  if (isTRUE(plot$ggchord$sequence_layout$auto_row_gap)) {
+    # Resolve once using every layer in this panel. Each layer-specific
+    # geometry pass must reuse the same reference paths and spacing.
+    plot$ggchord$sequence_layout$row_gap <- ggchord_collinear_auto_gap(plot)
+  }
   chord <- plot$ggchord
   if (is.null(chord)) {
     ggchord_stop("Not a valid ggchord object: no data stored on the plot")

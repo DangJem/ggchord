@@ -45,7 +45,10 @@ A ggplot2 layer for addition to a plot.
 Label reference sequences
 }
 \details{
-The source is the complete reference table with \code{accver} and \code{length}. A backbone can select an authoritative subset. An explicit complete table in geom_seq() can register a reference when the plot has no global data.
+Labels read the registered reference. Use
+\code{label_layout_fixed(orientation = "tangent")} to align each label with
+its own backbone while keeping the text upright after a rotation or
+direction reversal. Set \code{angle} for a fixed text angle.
 }
 \examples{
 library(ggplot2)
@@ -59,4 +62,8 @@ ggchord(seqs) +
   geom_seq() +
   geom_seq_label(aes(label = accver), anchor = "start") +
   coord_collinear()
+
+ggchord(seqs) + geom_seq_arrow() +
+  geom_seq_label(label_layout = label_layout_fixed(orientation = "tangent", offset = 4)) +
+  coord_chord(start_angle = 40)
 }

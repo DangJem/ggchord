@@ -375,8 +375,9 @@ ggchord_infer_visual_scales <- function(plot, layout, scales) {
 #'
 #' @details Unscoped backbones and features can use the sequence palette when
 #' mapped directly to `accver`. Features mapped to `strand` use red (+),
-#' blue (-) and grey (unknown). Circular features mapped to recognized
-#' `type` values use the plasmid palette. An explicit scale takes precedence.
+#' blue (-), purple (+/-) and grey (unknown). Circular features mapped to
+#' `type` use the plasmid palette with stable colours for additional types.
+#' An explicit scale takes precedence.
 #'
 #' @param layers One or more explicitly named layer IDs.
 #' @param scale An ordinary ggplot2 visual scale for those layers.
@@ -445,7 +446,13 @@ ggchord_scale_scopes <- function(plot, scopes = plot$ggchord$scoped_scales) {
         "' does not support ", unsupported[1L])
     }
     keys <- as.vector(outer(selected, aes, paste, sep = "/"))
-    if (any(keys %in% claimed)) ggchord_stop("scale_for(): a layer and aesthetic have overlapping scopes")
+    overlap <- match(TRUE, keys %in% claimed)
+    if (!is.na(overlap)) {
+      layer_index <- selected[(overlap - 1L) %% length(selected) + 1L]
+      aesthetic <- aes[(overlap - 1L) %/% length(selected) + 1L]
+      ggchord_stop("scale_for(): layer '", ids[layer_index],
+        "' already has a scoped scale for `", aesthetic, "`")
+    }
     claimed <<- c(claimed, keys)
     list(selected = selected, aesthetics = aes, scale = scope$scale,
       aliases = setNames(paste0("ggchord_scope_", i, "_", aes), aes))
@@ -508,7 +515,7 @@ ggchord_apply_scoped_scales <- function(plot, scopes = plot$ggchord$scoped_scale
   plot$scales <- plot$scales$clone()
   aliases <- vector("list", length(plot$layers))
   for (spec in specs) {
-    scale <- spec$scale$clone()
+    scale <- ggchord_prepare_domain_scale(spec$scale, plot)$clone()
     scale$aesthetics <- unname(spec$aliases)
     guide <- scale$guide
     if (is.character(guide) && length(guide) == 1L &&
@@ -545,35 +552,92 @@ ggchord_apply_scoped_scales <- function(plot, scopes = plot$ggchord$scoped_scale
   plot
 }
 
-# Inspect the declared mapping and its already-resolved source column.
-# An ordinary layer, expression or incompatible domain keeps ggplot2's scale.
-ggchord_mapped_palette <- function(plot, layers, aesthetic, roles) {
-  if (length(roles) != 1L) return(NULL)
-  role <- roles[[1L]]
+# Obtain the already-evaluated column without running user mappings twice.
+ggchord_scale_column <- function(layer, aesthetic, role) {
+  columns <- layer$ggchord_params$visual_columns
+  column <- if (aesthetic %in% names(columns)) unname(columns[aesthetic]) else role
+  if (is.na(column) || !column %in% names(layer$data)) return(NULL)
+  layer$data[[column]]
+}
+
+ggchord_mapped_scale <- function(plot, layers, aesthetic, roles) {
+  role <- unique(roles)
+  if (length(role) != 1L) return(NULL)
   kinds <- vapply(layers, function(l) l$ggchord_type %||% "", character(1))
   feature <- kinds == "gene_poly" | vapply(layers, function(l)
     identical(l$ggchord_params$label_kind, "feature"), logical(1))
-  if (role == "accver" && all(kinds == "seq" | feature)) {
-    palette <- plot$ggchord$ref$layout$seq_colors
-  } else if (role == "strand" && all(feature)) {
-    palette <- c(process_strand_colors(NULL), "." = "#767B80")
-  } else if (role == "type" && all(feature) &&
-             isTRUE(plot$coordinates$ggchord_circular)) {
-    palette <- ggchord_plasmid_feature_colours()
-  } else return(NULL)
-  for (layer in layers) {
-    cols <- layer$ggchord_params$visual_columns
-    col <- if (aesthetic %in% names(cols)) unname(cols[aesthetic]) else role
-    if (is.na(col) || !col %in% names(layer$data)) return(NULL)
-    values <- layer$data[[col]]
-    if (!(is.character(values) || is.factor(values)) ||
-        !all(is.na(values) | values %in% names(palette))) return(NULL)
+  if (role %in% c("accver", "strand", "type")) {
+    discrete <- vapply(layers, function(layer) {
+      value <- ggchord_scale_column(layer, aesthetic, role)
+      is.character(value) || is.factor(value)
+    }, logical(1))
+    if (!all(discrete)) return(NULL)
+    if (role == "accver" && all(kinds == "seq" | feature))
+      return(scale_colour_sequence(aesthetics = aesthetic))
+    if (role == "strand" && all(feature))
+      return(scale_fill_strand(aesthetics = aesthetic))
+    if (role == "type" && all(feature) && isTRUE(plot$coordinates$ggchord_circular))
+      return(scale_fill_feature_type(aesthetics = aesthetic))
   }
-  palette
+  types <- if (aesthetic == "fill") c("ribbon", "fusion_ribbon") else c("link", "alignment")
+  if (!identical(role, "pident") || !all(kinds %in% types)) return(NULL)
+  name <- if (aesthetic %in% names(plot$labels)) waiver() else "Identity (%)"
+  if (aesthetic == "fill") return(scale_fill_pident(name = name))
+  key_width <- plot$ggchord$theme_explicit$legend.key.width %||%
+    plot$ggchord$theme_explicit$legend.key.size %||% unit(5, "mm")
+  scale_colour_gradientn(name = name, colours = c("#34457E", "#2FA96B"),
+    limits = c(0, 100), breaks = c(0, 50, 80, 90, 95, 100),
+    guide = guide_legend(order = 2, theme = theme(legend.key.width = key_width)))
+}
+
+ggchord_check_mixed_scale <- function(layers, aesthetic, roles) {
+  kinds <- vapply(seq_along(layers), function(i) {
+    value <- ggchord_scale_column(layers[[i]], aesthetic, roles[i])
+    if (!length(value) || inherits(value, "AsIs")) return("")
+    if (is.numeric(value)) return("continuous")
+    if (is.character(value) || is.factor(value) || is.logical(value)) return("discrete")
+    ""
+  }, character(1))
+  pair <- match(c("continuous", "discrete"), kinds)
+  if (anyNA(pair)) return(invisible(NULL))
+  describe <- function(i) {
+    id <- layers[[i]]$ggchord_layer_id %||% layers[[i]]$ggchord_type %||% "unnamed"
+    paste0("'", id, "' maps `", roles[i], "` (", kinds[i], ")")
+  }
+  id <- layers[[pair[2L]]]$ggchord_params$id %||% "features"
+  ggchord_stop("Incompatible mappings for shared `", aesthetic, "`: ",
+    describe(pair[1L]), " and ", describe(pair[2L]), ". Give a layer an explicit id and use ",
+    "scale_for(\"", id, "\", scale_", aesthetic, "_discrete()) for its independent scale.")
+}
+
+# GuideLegend already knows the raw break behind each swatch. Pass that
+# strand to just the feature keys, after breaks, labels and reversal resolve.
+ggchord_strand_guide <- function(guide) {
+  if (identical(guide, "legend") || is_waiver(guide)) guide <- guide_legend()
+  if (!inherits(guide, "GuideLegend")) return(guide)
+  ggproto(NULL, guide, get_layer_key = function(params, layers, data, theme = NULL) {
+    out <- guide$get_layer_key(params, layers, data, theme)
+    if (!is.null(params$override.aes$strand)) return(out)
+    for (i in seq_along(out$decor)) {
+      layer <- layers[[i]]
+      if (!identical(layer$ggchord_type, "gene_poly")) next
+      mapped <- layer$computed_mapping[intersect(names(layer$computed_mapping), params$aesthetic)]
+      if (any(vapply(mapped, function(q) identical(as_label(q), "strand"), logical(1)))) {
+        out$decor[[i]]$data$strand <- as.character(params$key$.value)
+      }
+    }
+    out
+  })
 }
 
 ggchord_add_visual_scales <- function(plot) {
-  breaks <- c(0, 50, 80, 90, 95, 100)
+  # Use local copies for the plot-dependent reference palette and identity guide.
+  plot$scales <- plot$scales$clone()
+  for (i in seq_along(plot$scales$scales)) {
+    s <- plot$scales$scales[[i]]
+    if (!any(startsWith(s$aesthetics, "ggchord_scope_")) && !is.null(s$ggchord_palette))
+      plot$scales$scales[[i]] <- ggchord_prepare_domain_scale(s, plot)
+  }
   for (aesthetic in c("fill", "colour")) {
     if (plot$scales$has_scale(aesthetic)) next
     layers <- Filter(function(layer) {
@@ -583,36 +647,31 @@ ggchord_add_visual_scales <- function(plot) {
       !is.null(mapping)
     }, plot$layers)
     if (!length(layers)) next
-    roles <- unique(vapply(layers, function(layer) {
+    roles <- vapply(layers, function(layer) {
       mapping <- layer$mapping[[aesthetic]] %||% plot$mapping[[aesthetic]]
       as_label(mapping)
-    }, character(1)))
-    palette <- ggchord_mapped_palette(plot, layers, aesthetic, roles)
-    if (length(palette)) {
-      scale <- scale_colour_manual(aesthetics = aesthetic, values = palette)
-      scale$ggchord_managed <- TRUE
-      plot$scales$add(scale)
-      next
-    }
-    types <- if (aesthetic == "fill") c("ribbon", "fusion_ribbon") else c("link", "alignment")
-    if (!identical(roles, "pident") ||
-        !all(vapply(layers, function(layer) isTRUE(layer$ggchord_type %in% types), logical(1)))) next
-    name <- if (aesthetic %in% names(plot$labels)) waiver() else "Identity (%)"
-    scale <- if (aesthetic == "fill") {
-      ggplot2::scale_fill_stepsn(name = name,
-        colours = c("#440154", "#482878", "#3E4A89", "#31688E", "#26828E",
-          "#1F9E89", "#35B779", "#6DCD59", "#B4DE2C", "#FDE725"),
-        limits = c(0, 100),
-        breaks = breaks, guide = ggchord_identity_guide(plot, aesthetic))
-    } else {
-      key_width <- plot$ggchord$theme_explicit$legend.key.width %||%
-        plot$ggchord$theme_explicit$legend.key.size %||% unit(5, "mm")
-      scale_colour_gradientn(name = name, colours = c("#34457E", "#2FA96B"),
-        limits = c(0, 100), breaks = breaks,
-        guide = guide_legend(order = 2, theme = theme(legend.key.width = key_width)))
-    }
+    }, character(1))
+    if (length(unique(roles)) > 1L) ggchord_check_mixed_scale(layers, aesthetic, roles)
+    scale <- ggchord_mapped_scale(plot, layers, aesthetic, roles)
+    if (is.null(scale)) next
+    scale <- ggchord_prepare_domain_scale(scale, plot)
     scale$ggchord_managed <- TRUE
     plot$scales$add(scale)
+  }
+  strand_aes <- unique(unlist(lapply(plot$layers, function(layer) {
+    if (!identical(layer$ggchord_type, "gene_poly")) return(NULL)
+    mapped <- names(Filter(function(q) identical(as_label(q), "strand"), layer$mapping))
+    grep("(^|_)(colour|fill)$", mapped, value = TRUE)
+  }), use.names = FALSE))
+  if (length(strand_aes)) {
+    guides <- plot$guides$guides
+    for (key in strand_aes) {
+      scale <- plot$scales$get_scales(key)
+      guide <- guides[[key]] %||% scale$guide %||% "legend"
+      guides[[key]] <- ggchord_strand_guide(guide)
+    }
+    parent <- plot$guides
+    plot$guides <- ggproto(NULL, parent, guides = guides)
   }
   plot
 }
