@@ -298,7 +298,7 @@ ggchord_collinear_auto_gap <- function(plot) {
     if (p$type %in% c("ribbon", "link")) links <- TRUE
     if (p$type == "gene") {
       position <- p$feature_position$base_position %||% p$feature_position
-      reach <- max(abs(unlist(position$offset)), 0) + max(unlist(p$feature_mm)) / 2
+      reach <- max(abs(unlist(position$offset %||% 0))) + max(unlist(p$feature_mm)) / 2
       feature <- max(feature, reach)
     }
     if (p$type == "domain_label" && !identical(p$anchor, "center")) {
