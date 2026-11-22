@@ -30,10 +30,13 @@
   and `scale_fill_pident()` also work inside `scale_for()`. Additional circular
   annotation types receive stable colours by name. Strand legend arrows follow
   their breaks, including reordered or relabelled keys.
-- Unspecified collinear row spacing accounts for panel size, row count and
-  the space needed by annotations and connections. Explicit row spacing and
-  Sankey spacing retain their meaning. Ribbons have a fine 0.18 mm green
-  outline (#53776A). Set `colour = NA` to remove it.
+- Collinear and Sankey layouts now use the available panel and the extent of
+  features, text and leaders to balance space between and outside reference
+  paths. Both leave room beyond sequence ends. Set `row_gap` or the Sankey
+  `column_gap` in `layout_sequences()` to specify a physical distance.
+  Sankey facets with different references keep their own backbone labels and colours.
+- Ribbons have a fine 0.18 mm green outline (#53776A).
+  Set `colour = NA` to remove it.
 - Data readers and plot construction now propagate errors without temporarily
   replacing the session's error handler.
 - Collinear links and ribbons can pass around intervening rows with an

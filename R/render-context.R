@@ -55,7 +55,8 @@ ggchord_estimated_render_context <- function(layout = NULL) {
 }
 
 ggchord_panel_context <- function(table, built) {
-  unavailable <- ggchord_estimated_render_context(built$plot$ggchord$ref$layout)
+  layout <- built$plot$ggchord$ref$layout
+  unavailable <- ggchord_estimated_render_context(layout)
   if (dev.cur() == 1L) return(unavailable)
   panel <- which(grepl("^panel($|[-.])", table$layout$name))
   if (!length(panel)) return(unavailable)
@@ -66,8 +67,12 @@ ggchord_panel_context <- function(table, built) {
     cols <- match(entries$l, sort(unique(entries$l)))
     slots <- match(paste(grid$ROW, grid$COL), paste(rows, cols))
     if (anyNA(slots)) return(unavailable)
-    contexts <- lapply(seq_len(nrow(grid)), function(i) ggchord_measure_panel(
-      table, entries[slots[i], ], built$layout$panel_params[[as.integer(grid$PANEL[i])]], unavailable))
+    contexts <- lapply(seq_len(nrow(grid)), function(i) {
+      panel <- as.integer(grid$PANEL[i])
+      context <- ggchord_measure_panel(table, entries[slots[i], ], built$layout$panel_params[[panel]], unavailable)
+      context$reference_spacing <- layout$panel_references[[panel]]$reference_spacing
+      context
+    })
     if (any(vapply(contexts, function(x) x$status != "measured", logical(1)))) return(unavailable)
     sizes <- do.call(rbind, lapply(contexts, `[[`, "units_per_mm"))
     bounds <- cbind(grid, do.call(rbind, lapply(contexts, `[[`, "panel_bounds_mm")))
@@ -84,7 +89,9 @@ ggchord_panel_context <- function(table, built) {
     common$panel_bounds_mm <- NULL
     return(common)
   }
-  ggchord_measure_panel(table, table$layout[panel, ], built$layout$panel_params[[1L]], unavailable)
+  context <- ggchord_measure_panel(table, table$layout[panel, ], built$layout$panel_params[[1L]], unavailable)
+  context$reference_spacing <- layout$reference_spacing
+  context
 }
 
 ggchord_measure_panel <- function(table, entry, range, unavailable) {

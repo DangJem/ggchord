@@ -93,7 +93,10 @@ ggchord_project_sankey_layout <- function(layout, plot) {
   horizontal <- identical(plot$coordinates$sankey_axis, "x")
   attr(frames, "horizontal") <- horizontal
   frames$top <- rep(top, 2)
-  gap <- plot$coordinates$sankey_column_gap_mm * ggchord_layout_units_per_mm(if (horizontal) 2L else 1L)
+  across <- if (horizontal) 2L else 1L
+  column_mm <- plot$coordinates$sankey_column_gap_mm %||%
+    ggchord_auto_spacing_mm(plot, across, 1L, .36, .68)
+  gap <- column_mm * ggchord_layout_units_per_mm(across)
   frames$column_x <- ifelse(frames$side == "left", 0, gap)
   frames$normal_sign <- if (horizontal) -1 else 1
   facing <- setNames(ifelse(frames$side == "left", 1, -1) * frames$normal_sign,

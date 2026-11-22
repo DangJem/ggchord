@@ -107,7 +107,7 @@ compute_chord_geometry_prepared <- function(plot) {
   if (isTRUE(plot$ggchord$sequence_layout$auto_row_gap)) {
     # Resolve once using every layer in this panel. Each layer-specific
     # geometry pass must reuse the same reference paths and spacing.
-    plot$ggchord$sequence_layout$row_gap <- ggchord_collinear_auto_gap(plot)
+    plot$ggchord$sequence_layout$row_gap <- ggchord_auto_row_gap(plot)
   }
   chord <- plot$ggchord
   if (is.null(chord)) {
@@ -563,6 +563,9 @@ compute_chord_geometry_prepared <- function(plot) {
   }
   primary$axis_heading <- ggchord_axis_heading(plot, primary)
   primary$axis_geometry <- ggchord_axis_geometry(primary)
+  if (isTRUE(chord$sequence_layout$auto_row_gap) ||
+      (isTRUE(plot$coordinates$ggchord_sankey) && is.null(plot$coordinates$sankey_column_gap_mm)))
+    primary$reference_spacing <- ggchord_reference_spacing(primary)
   primary <- ggchord_check_displayed_hsps(primary, plot)
   primary
 }

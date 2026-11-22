@@ -10,6 +10,19 @@ set_ggchord_coord <- function(plot, layout, axis_labels = NULL) {
     geometry = ggchord_geometry_limits(layout),
     manual = list(xlim = coord$user_xlim, ylim = coord$user_ylim)
   )
+  # Allow room for the final feature outlines, text boxes and leaders. Add a
+  # modest margin along the paths so terminal annotations have breathing room.
+  if (!is.null(layout$reference_spacing) && !identical(coord$fit, "manual")) {
+    panels <- layout$panel_references %||% list(layout)
+    along <- if (identical(layout$seq_axis, "vertical")) 2L else 1L
+    for (i in 1:2) {
+      key <- c("xlim", "ylim")[i]
+      boxes <- unlist(lapply(panels, function(p) p$reference_spacing[[i]]$limits))
+      lim[[key]] <- range(lim[[key]], boxes)
+      if (i == along && isTRUE(plot$ggchord$sequence_layout$auto_row_gap))
+        lim[[key]] <- lim[[key]] + c(-.04, .04) * diff(lim[[key]])
+    }
+  }
   # On a linear layout the transverse spacing is set in millimetres.
   # Once everything fits, keep the spare panel space: fitting this axis
   # tightly again only rescales its arbitrary native units on every rebuild.

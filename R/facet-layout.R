@@ -253,6 +253,12 @@ ggchord_facet_layout <- function(plot) {
       layer <- plot$layers[[i]]
       if (is.null(layer$ggchord_type)) return(layer)
       copy <- reconstruct_layer(layer, layer$data, mapping = layer$mapping)
+      if (identical(layer$ggchord_type, "seq") && !is.null(sub$ggchord$display_instances)) {
+        for (field in c("seq_labels", "seq_colors")) {
+          value <- copy$ggchord_params[[field]]
+          if (!is.null(names(value))) copy$ggchord_params[[field]] <- value[intersect(local, names(value))]
+        }
+      }
       map <- members[[i]]
       rows <- map$.ggchord_input_index[as.integer(map$PANEL) == panel]
       source_data <- sources[[i]]
@@ -359,7 +365,7 @@ ggchord_facet_layout <- function(plot) {
   }
   fields <- c("seqs", "sequence_layout", "sequence_reference", "sequence_unit",
     "collinear", "circular", "rotation", "seq_axis", "display_instances",
-    "sankey_projected", "sankey_frames", "radial_projected", "radial_frames")
+    "sankey_projected", "sankey_frames", "radial_projected", "radial_frames", "reference_spacing")
   result$panel_references <- lapply(layouts, function(x) {
     if (is.null(x)) return(list(seqs = character()))
     x[intersect(fields, names(x))]

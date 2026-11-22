@@ -4,9 +4,11 @@
 #' @param orientation Display orientation (1 or -1) by reference or instance.
 #' @param length_mode Proportional or equal display lengths.
 #' @param angular_gap Angular spacing in degrees for arc references.
-#' @param row_gap,segment_gap,column_gap Physical distances in mm. When
-#'   `row_gap` is omitted, Collinear reserves room for features, labels and
-#'   connections within the available canvas. Sankey defaults to 6 mm.
+#' @param row_gap,segment_gap,column_gap Physical distances in mm. Automatic
+#'   Collinear row and Sankey row/column spacing uses the panel size and the
+#'   space occupied by features, labels and leaders on facing and exterior
+#'   sides of the paths. The automatic layout also leaves room beyond the
+#'   sequence ends. Set `row_gap` or `column_gap` to specify that distance.
 #' @param radius Relative radius for arc references.
 #' @param inner_radius Relative inner radius for radial spokes. With `NULL`,
 #'   retain a compact centre and enlarge it if nearby drawn bands need space.
@@ -226,7 +228,7 @@ ggchord_configure_layout <- function(plot) {
     layout$curvature <- values("curvature", 1)
   }
   if (mode %in% c("linear", "sankey")) {
-    layout$auto_row_gap <- mode == "linear" && is.null(layout$row_gap)
+    layout$auto_row_gap <- is.null(layout$row_gap)
     layout$row_gap <- ggchord_layout_mm(layout$row_gap, "row_gap")
     layout$row_gap <- values("row_gap", 6)
   }
@@ -254,8 +256,8 @@ ggchord_configure_layout <- function(plot) {
       updates$collinear_segment_gap_mm <- ggchord_layout_mm(layout$segment_gap %||% 2, "segment_gap")
     }
   }
-  if (mode == "sankey") {
-    gap <- ggchord_layout_mm(layout$column_gap %||% 20, "column_gap")
+  if (mode == "sankey" && !is.null(layout$column_gap)) {
+    gap <- ggchord_layout_mm(layout$column_gap, "column_gap")
     if (length(gap) != 1L || gap <= 0) ggchord_stop("column_gap must be one positive distance")
     updates$sankey_column_gap_mm <- gap
   }
@@ -279,45 +281,81 @@ ggchord_path_normal_axis <- function(coord) {
   if (vertical) "x" else "y"
 }
 
-# Estimate one row pitch from the layers that actually share this panel.
-# The device allocation is independent of the solved paths, so this budget
-# stays stable while grid refines the physical-to-layout conversion.
-ggchord_collinear_auto_gap <- function(plot) {
-  ids <- plot$ggchord$sequence_layout$order
-  segments <- plot$coordinates$collinear_segments
-  rows <- if (is.null(segments)) length(ids) else
-    length(unique(segments$row_id[segments$accver %in% ids]))
-  sides <- c(positive = 0, negative = 0)
-  feature <- 0
-  links <- FALSE
-  for (layer in plot$layers) {
-    p <- layer$ggchord_params
-    if (is.null(p)) next
-    data <- p$panel_input %||% layer$ggchord_input_data
-    if (is.data.frame(data) && !nrow(data)) next
-    if (p$type %in% c("ribbon", "link")) links <- TRUE
-    if (p$type == "gene") {
-      position <- p$feature_position$base_position %||% p$feature_position
-      reach <- max(abs(unlist(position$offset %||% 0))) + max(unlist(p$feature_mm)) / 2
-      feature <- max(feature, reach)
-    }
-    if (p$type == "domain_label" && !identical(p$anchor, "center")) {
-      policy <- p$label_layout
-      reach <- max(abs(unlist(policy$offset))) + max(p$label_size) + (policy$padding %||% 0)
-      selected <- if (policy$side == "both") names(sides) else policy$side
-      sides[selected] <- pmax(sides[selected], reach)
-    }
-  }
-  # Leave a visible channel between the two rows' occupied sides. A ribbon
-  # needs a longer span to show its taper and direction than bare backbones.
-  preferred <- (if (links) 20 else 12) + 2 * feature + sum(sides)
-  axis <- if (identical(plot$coordinates$collinear_seq_axis, "vertical")) 1L else 2L
-  canvas <- ggchord_render_dimensions()[axis]
-  if (!is.finite(canvas)) canvas <- 7 * 25.4
+# Use the measured panel after guides and margins. For a fixed aspect ratio,
+# measuring the fitted panel would feed the chosen gap back into its own budget.
+ggchord_spacing_extent_mm <- function(plot, axis) {
+  size <- ggchord_render_context()$panel_mm[axis]
+  if (is.null(plot$coordinates$ratio) && length(size) && is.finite(size) && size > 0)
+    return(unname(size))
+  size <- ggchord_render_dimensions()[axis]
+  if (!is.finite(size)) size <- 7 * 25.4
   facets <- plot$ggchord$source_facet_setup$panels
-  if (NROW(facets)) canvas <- canvas / max(if (axis == 1L) facets$COL else facets$ROW)
-  budget <- .78 * canvas / max(1L, rows - 1L)
-  setNames(rep(min(preferred, max(4, budget)), length(ids)), ids)
+  if (NROW(facets)) size <- size / max(if (axis == 1L) facets$COL else facets$ROW)
+  unname(size)
+}
+
+# Divide the free span after allowing for the drawn geometry on facing and
+# exterior sides. Each gap gets the same pitch so references stay aligned.
+ggchord_auto_spacing_mm <- function(plot, axis, gaps, share, maximum, clearance = 0) {
+  panel <- ggchord_spacing_extent_mm(plot, axis)
+  footprint <- ggchord_render_context()$reference_spacing[[axis]]
+  inside <- max(clearance, footprint$inside %||% 0)
+  outside <- footprint$outside %||% 0
+  gaps <- max(1L, gaps)
+  free <- max(0, panel - outside - gaps * inside)
+  min(maximum * panel / gaps, inside + share * free / gaps)
+}
+
+ggchord_auto_row_gap <- function(plot) {
+  ids <- plot$ggchord$sequence_layout$order
+  if (isTRUE(plot$coordinates$ggchord_sankey)) {
+    axis <- if (identical(plot$coordinates$sankey_axis, "x")) 1L else 2L
+    rows <- sum(plot$ggchord$display_instances$side == "left")
+    # Most of this axis is needed for the lengths of the stacked sequences.
+    gap <- ggchord_auto_spacing_mm(plot, axis, rows - 1L, .065, .30, clearance = 4)
+  } else {
+    segments <- plot$coordinates$collinear_segments
+    rows <- if (is.null(segments)) length(ids) else
+      length(unique(segments$row_id[segments$accver %in% ids]))
+    axis <- if (identical(plot$coordinates$collinear_seq_axis, "vertical")) 1L else 2L
+    share <- .32 + .06 * min(4L, max(0L, rows - 2L))
+    gap <- ggchord_auto_spacing_mm(plot, axis, rows - 1L, share, .72)
+  }
+  setNames(rep(gap, length(ids)), ids)
+}
+
+# Measure how far a reference's own polygons, text boxes and leader ends
+# extend beyond each end or side of its backbone, in final projected axes.
+ggchord_reference_spacing <- function(layout) {
+  paths <- layout$seq_arcs
+  metric <- ggchord_annotation_metric(layout)
+  pieces <- unlist(layout$layer_geometry, recursive = FALSE)
+  pieces <- Filter(function(d) NROW(d) && all(c("accver", "x", "y") %in% names(d)), pieces)
+  lapply(c("x", "y"), function(axis) {
+    path <- vapply(paths, function(d) range(d[[axis]]), numeric(2))
+    low <- high <- setNames(numeric(length(paths)), names(paths))
+    for (d in pieces) {
+      columns <- intersect(c(axis, paste0(axis, c("0", "1", "end"))), names(d))
+      lower <- c(columns, intersect(paste0("bbox_", axis, "min"), names(d)))
+      upper <- c(columns, intersect(paste0("bbox_", axis, "max"), names(d)))
+      lo <- do.call(pmin, c(unname(as.list(d[lower])), list(na.rm = TRUE)))
+      hi <- do.call(pmax, c(unname(as.list(d[upper])), list(na.rm = TRUE)))
+      by_path <- split(seq_len(nrow(d)), as.character(d$accver))
+      for (id in intersect(names(by_path), names(paths))) {
+        at <- by_path[[id]]
+        low[id] <- max(low[id], path[1L, id] - lo[at], na.rm = TRUE)
+        high[id] <- max(high[id], hi[at] - path[2L, id], na.rm = TRUE)
+      }
+    }
+    # Mirrored paths and multiple windows on one row share the same slot.
+    group <- match(path[1L, ], sort(unique(path[1L, ])))
+    negative <- as.numeric(tapply(low, group, max))
+    positive <- as.numeric(tapply(high, group, max))
+    inside <- max(c(0, head(positive, -1L) + tail(negative, -1L)))
+    list(inside = unname(inside / metric[axis]),
+      outside = unname((negative[1L] + tail(positive, 1L)) / metric[axis]),
+      limits = range(path[1L, ] - low, path[2L, ] + high))
+  })
 }
 
 ggchord_row_gap <- function(plot, layout, seqs) {
@@ -330,13 +368,15 @@ ggchord_row_gap <- function(plot, layout, seqs) {
   if (!isTRUE(coord$ggchord_sankey)) {
     tracks <- Filter(function(layer) identical(layer$ggchord_type, "track"), plot$layers)
     ids <- unique(vapply(tracks, function(layer) layer$ggchord_params$track_id, character(1)))
+    reserved <- 0
     for (id in ids) {
       band <- plot$ggchord$track_bands[[id]] %||% if (id == "default") track_band()
       if (is.null(band)) next
       width <- ggchord_track_dimension(band$width, seqs, "thickness")$mm
       clear <- ggchord_track_dimension(band$gap, seqs, "gap")$mm
-      gap <- gap + width + clear
+      reserved <- reserved + width + clear
     }
+    gap <- if (isTRUE(layout$auto_row_gap)) pmax(gap, reserved) else gap + reserved
   }
   gap * ggchord_layout_units_per_mm(axis) / 2
 }
