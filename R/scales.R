@@ -266,7 +266,10 @@ scale_seq_position_continuous <- function(
 #' @param sequences Source accessions, or a list with source and instance IDs.
 #' @param side Positive or negative local side of the reference path.
 #' @param angle Automatic label orientation, or a numeric angle in degrees.
-#' @param check.overlap Whether to hide overlapping tick labels.
+#' @param check.overlap Whether to adjust crowded sequence-end labels and hide
+#'   overlapping interior labels. Endpoints keep their ticks and values. On
+#'   projected axes, competing endpoint labels can move along their own
+#'   sequence paths. Set to `FALSE` to keep the original positions.
 #' @param theme Optional local axis theme.
 #' @return A guide for [scale_seq_position()].
 #' @export

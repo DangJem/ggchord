@@ -514,6 +514,7 @@ compute_chord_geometry_prepared <- function(plot) {
     primary$extremes <- list(x_min = min(xx, na.rm = TRUE), x_max = max(xx, na.rm = TRUE),
       y_min = min(yy, na.rm = TRUE), y_max = max(yy, na.rm = TRUE))
   }
+  primary$axis_ticks <- ggchord_space_axis_endpoints(primary)
   label_ids <- names(groups)[group_type == "domain_label"]
   label_specs <- list()
   shared_labels <- NULL

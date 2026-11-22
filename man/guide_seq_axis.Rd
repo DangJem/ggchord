@@ -19,7 +19,10 @@ guide_seq_axis(
 
 \item{angle}{Automatic label orientation, or a numeric angle in degrees.}
 
-\item{check.overlap}{Whether to hide overlapping tick labels.}
+\item{check.overlap}{Whether to adjust crowded sequence-end labels and hide
+overlapping interior labels. Endpoints keep their ticks and values. On
+projected axes, competing endpoint labels can move along their own
+sequence paths. Set to \code{FALSE} to keep the original positions.}
 
 \item{theme}{Optional local axis theme.}
 }

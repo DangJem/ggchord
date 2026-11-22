@@ -1,5 +1,9 @@
 # ggchord 0.50.0 (development)
 
+- Sequence axes now give overlapping endpoint labels separate positions
+  along their own paths before placing annotations. Both endpoint values and
+  tick marks stay visible at narrow junctions between chord sectors.
+
 - Rebuilt the public plotting API around one complete reference registered
   through `ggchord(data = sequences)` or an explicit `geom_seq()` layer.
   Observation layers receive their own tables and inherit mappings from the plot.

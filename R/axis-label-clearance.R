@@ -6,6 +6,77 @@ ggchord_axis_endpoints <- function(data) {
     init = rep(FALSE, nrow(data)))
 }
 
+# Reserve endpoint text before routing annotations or thinning interior labels.
+# Work in device inches so tangents and rotated text have the same metric,
+# including on nonsquare panels. Only text with a competing endpoint moves.
+ggchord_space_axis_endpoints <- function(layout) {
+  ticks <- layout$axis_ticks
+  if (!isTRUE(layout$axis_label_hide_overlaps) || !NROW(ticks)) return(ticks)
+  rows <- which(ggchord_axis_endpoints(ticks) & !is.na(ticks$label) & nzchar(ticks$label))
+  if (isTRUE(layout$circular)) {
+    curved <- ticks$label_along_axis %in% TRUE & !(ticks$.axis_plotmath %in% TRUE)
+    rows <- rows[!curved[rows]]
+  }
+  if (length(rows) < 2L) return(ticks)
+  metric <- ggchord_annotation_metric(layout) * 25.4
+  labels <- ticks[rows, , drop = FALSE]
+  labels$label_x <- labels$label_x / metric[1L]
+  labels$label_y <- labels$label_y / metric[2L]
+  padding <- .3 / 25.4
+  boxes <- ggchord_text_boxes(labels, "label_x", "label_y", "label", "label_angle",
+    hjust_col = "label_hjust", vjust_col = "label_vjust", units_per_inch = 1,
+    box_padding = padding)
+  crowded <- which(vapply(seq_len(nrow(boxes)), function(i)
+    any(ggchord_oriented_box_overlaps(boxes, boxes, i = i)[-i]), logical(1)))
+  if (!length(crowded)) return(ticks)
+
+  paths <- if (NROW(layout$axis_lines)) split(layout$axis_lines, layout$axis_lines$accver)
+  reserved <- setdiff(seq_len(nrow(boxes)), crowded)
+  occupied <- ggchord_annotation_text_obstacles(layout$layer_geometry, layout,
+    include_axis = FALSE, scale = metric)
+  polygons <- ggchord_annotation_polygons(layout$layer_geometry, metric)
+  bounds <- ggchord_polygon_bounds(polygons)
+  for (i in crowded) {
+    id <- as.character(labels$accver[i])
+    path <- paths[[id]] %||% layout$seq_arcs[[id]]
+    if (NROW(path) < 2L) next
+    n <- nrow(path)
+    edges <- c(1L, n)
+    distance <- ((path$x[edges] - labels$x0[i]) / metric[1L])^2 +
+      ((path$y[edges] - labels$y0[i]) / metric[2L])^2
+    end <- which.min(distance)
+    neighbour <- c(2L, n - 1L)[end]
+    tangent <- c(path$x[neighbour] - path$x[edges[end]],
+      path$y[neighbour] - path$y[edges[end]]) / metric
+    magnitude <- sqrt(sum(tangent^2))
+    if (!is.finite(magnitude) || magnitude <= 0) next
+    tangent <- tangent / magnitude
+    box <- boxes[i, ]
+    # Place the nearest edge just inside its own sequence. At a crowded
+    # row or a very short sequence, try the other side of the same tick.
+    corners <- ggchord_boxes_corners(box)
+    projection <- (corners[, 1L] - box$x) * tangent[1L] +
+      (corners[, 2L] - box$y) * tangent[2L]
+    shifts <- c(max(0, -min(projection)), 0, min(0, -max(projection)))
+    candidates <- ggchord_project_text_boxes(box$x + tangent[1L] * shifts,
+      box$y + tangent[2L] * shifts, box$w, box$h, box$angle,
+      labels$label_hjust[i], labels$label_vjust[i], 1, padding)
+    clear <- which(vapply(seq_along(shifts), function(j)
+      !any(ggchord_oriented_box_overlaps(candidates, boxes[reserved, , drop = FALSE], i = j)) &&
+        !any(ggchord_oriented_box_overlaps(candidates, occupied, i = j)) &&
+        !ggchord_boxes_hit_features(candidates[j, , drop = FALSE], polygons, bounds = bounds),
+      logical(1)))
+    if (length(clear)) {
+      chosen <- candidates[clear[1L], , drop = FALSE]
+      boxes[i, ] <- chosen
+      ticks$label_x[rows[i]] <- chosen$x * metric[1L]
+      ticks$label_y[rows[i]] <- chosen$y * metric[2L]
+    }
+    reserved <- c(reserved, i)
+  }
+  ticks
+}
+
 ggchord_clear_projected_axis_text <- function(text, layout) {
   if (!isTRUE(layout$axis_label_hide_overlaps) || !length(layout$layer_geometry))
     return(text)
@@ -62,8 +133,20 @@ ggchord_clear_circular_axis_text <- function(text, layout) {
   # Axis placement precedes leader routing. Depending on the current leader
   # path here would move text again after its obstacle was already routed.
   roots <- ggchord_annotation_leader_roots(layout$layer_geometry)
-  if (!length(polygons) && !nrow(roots) && !any(text$.axis_seam_combined %in% TRUE))
-    return(text)
+  # Bare gapped circles can have two colliding endpoints even when there
+  # are no annotation obstacles. Check the actual curved glyphs first.
+  endpoints <- which(critical)
+  metrics <- lapply(seq_len(nrow(text)), function(i) new.env(parent = emptyenv()))
+  boxes_for <- function(d, i) ggchord_arc_text_layout(d, units_per_inch = units,
+    box_padding = if (length(endpoints) > 1L && critical[i]) .3 / 25.4 else 0,
+    respect_justification = TRUE, line_metrics = metrics[[i]], boxes_only = TRUE)$boxes
+  if (!length(polygons) && !nrow(roots) && !any(text$.axis_seam_combined %in% TRUE)) {
+    if (length(endpoints) < 2L) return(text)
+    endpoint_boxes <- lapply(endpoints, function(i) boxes_for(text[i, , drop = FALSE], i))
+    if (!any(vapply(seq_along(endpoints)[-1L], function(j) ggchord_boxes_overlap_any(
+        endpoint_boxes[[j]], do.call(rbind, endpoint_boxes[seq_len(j - 1L)])), logical(1))))
+      return(text)
+  }
   active_roots <- roots
   root_hit <- function(boxes) {
     if (!nrow(active_roots) || !nrow(boxes)) return(FALSE)
@@ -91,10 +174,6 @@ ggchord_clear_circular_axis_text <- function(text, layout) {
     farthest <- pmax(corners[1, ], corners[2, ], corners[3, ], corners[4, ])
     any(nearest <= band[2L] & farthest >= band[1L])
   }
-  # One tick keeps the same text style and device at all candidate positions.
-  metrics <- lapply(seq_len(nrow(text)), function(i) new.env(parent = emptyenv()))
-  boxes_for <- function(d, i) ggchord_arc_text_layout(d, units_per_inch = units,
-    respect_justification = TRUE, line_metrics = metrics[[i]], boxes_only = TRUE)$boxes
   polygon_bounds <- ggchord_polygon_bounds(polygons)
   feature_hit <- function(boxes) ggchord_boxes_hit_features(boxes, polygons, tol = 1e-8, bounds = polygon_bounds)
   static <- ggchord_annotation_text_obstacles(layout$layer_geometry, layout, include_axis = FALSE)
