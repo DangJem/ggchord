@@ -1,5 +1,12 @@
 # ggchord 0.50.0 (development)
 
+- Visual scales scoped with `scale_for()` preserve public aesthetic names
+  such as `colour` for custom ggplot2 statistics.
+- Exact link deduplication finds representative rows without repeatedly
+  scanning every retained link, preserving input order and lineage.
+- Ambiguous Fusion ribbon and zoom endpoints report their matching child
+  paths, instances and facets. Each endpoint must match one visible interval.
+
 - Feature source statistics group by effective discrete starting visual aesthetics
   unless a group is supplied explicitly. Geometry refinement reuses each
   layer's source statistic within the same render.

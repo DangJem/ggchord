@@ -214,6 +214,35 @@ filter_ggchord_links <- function(data, seq_ids = NULL, min_pident = NULL,
     changes = result$report$removed_reasons, metadata = result$report)
 }
 
+ggchord_exact_link_representatives <- function(compared, kept, removed) {
+  if (!length(removed)) return(integer())
+  # Match on base atomic columns first. Rows with the same key can still
+  # differ in list or classed columns, so resolve those ties with duplicated().
+  columns <- lapply(compared, function(x) {
+    if (identical(class(x), "factor") || identical(class(x), c("ordered", "factor")))
+      as.integer(x) else x
+  })
+  ordinary <- Filter(function(x) !is.object(x) && is.null(dim(x)) &&
+    typeof(x) %in% c("logical", "integer", "double", "character"), columns)
+  codes <- lapply(ordinary, function(x) match(x, x))
+  key <- if (length(codes)) do.call(paste, c(unname(codes), sep = ":")) else
+    rep.int("", nrow(compared))
+  kept_keys <- key[kept]
+  representative <- match(key[removed], kept_keys)
+  tied <- duplicated(kept_keys) | duplicated(kept_keys, fromLast = TRUE)
+  result <- kept[representative]
+  if (!any(tied)) return(result)
+
+  candidates <- split(kept[tied], kept_keys[tied])
+  for (j in which(tied[representative])) {
+    row <- removed[j]
+    possible <- candidates[[key[row]]]
+    equal <- duplicated(compared[c(possible, row), , drop = FALSE], fromLast = TRUE)
+    result[j] <- possible[which(equal)[1L]]
+  }
+  result
+}
+
 #' Select one representative of duplicate links
 #' @param data Interval links.
 #' @param by Compare exact records, coordinates, or reciprocal overlap.
@@ -243,7 +272,7 @@ deduplicate_ggchord_links <- function(data, by = "exact", tolerance = 0,
   # endpoint order. Run it within each explicit pair and strand group.
   orientation <- ggchord_link_orientation(links)
   grouped <- split(seq_len(nrow(links)), ggchord_link_pair_group(links, orientation))
-  selected <- integer()
+  selected <- logical(nrow(links))
   duplicates <- list()
   for (rows in grouped) {
     part <- links[rows, , drop = FALSE]
@@ -254,11 +283,7 @@ deduplicate_ggchord_links <- function(data, by = "exact", tolerance = 0,
       if (!length(rank)) ggchord_stop("deduplicate_ggchord_links(): representative criterion requires its source column")
       kept <- rank[!duplicated(compared[rank, , drop = FALSE])]
       removed <- setdiff(seq_along(rows), kept)
-      representative <- vapply(removed, function(i) {
-        candidate <- compared[c(kept, i), , drop = FALSE]
-        hit <- which(duplicated(candidate, fromLast = TRUE))[1L]
-        kept[hit]
-      }, integer(1))
+      representative <- ggchord_exact_link_representatives(compared, kept, removed)
       duplicates[[length(duplicates) + 1L]] <- data.frame(row = rows[removed],
         duplicate_of = rows[representative], reason = rep("exact", length(removed)))
     } else {
@@ -271,9 +296,9 @@ deduplicate_ggchord_links <- function(data, by = "exact", tolerance = 0,
           duplicate_of = rows[removed$duplicate_of], reason = rep(by, nrow(removed)))
       }
     }
-    selected <- c(selected, rows[kept])
+    selected[rows[kept]] <- TRUE
   }
-  selected <- sort(selected)
+  selected <- which(selected)
   ggchord_attach_data_report(data[selected, , drop = FALSE], "deduplicate_ggchord_links",
     inputs = data_report(data),
     lineage = data.frame(output_row = seq_along(selected),

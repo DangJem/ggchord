@@ -42,6 +42,12 @@ A decorative component for \code{\link[=ggchord_fusion]{ggchord_fusion()}}.
 \description{
 Mark an expanded source interval in a Fusion
 }
+\details{
+Each endpoint must match one fully visible interval across the
+facets of its Fusion child. Instance selectors can narrow the matches.
+Facets cannot be selected explicitly; use a separate Fusion child when
+the desired instance and interval match several facets.
+}
 \examples{
 seqs <- data.frame(
   accver = c("A", "B"), length = c(1000, 800),

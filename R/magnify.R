@@ -10,6 +10,10 @@
 #' @param linetype Connector line type. By default, border leaders are dashed
 #'   and interval outlines are solid.
 #' @return A decorative component for [ggchord_fusion()].
+#' @details Each endpoint must match one fully visible interval across the
+#'   facets of its Fusion child. Instance selectors can narrow the matches.
+#'   Facets cannot be selected explicitly; use a separate Fusion child when
+#'   the desired instance and interval match several facets.
 #' @export
 #' @examples
 #' seqs <- data.frame(
@@ -124,11 +128,11 @@ ggchord_render_zoom <- function(layer, panels) {
   line <- layer$linetype %||% if (connector == "border") "dashed" else "solid"
   outline <- gpar(fill = alpha(layer$fill, layer$alpha),
     col = layer$colour, lwd = layer$linewidth * ggplot2::.pt, lty = line)
-  resolve <- function(region, panel, name) {
-    instance <- region[[name]]
+  resolve <- function(region, panel, side, row) {
+    instance <- region[[paste0(side, "_instance")]]
     if (length(instance) && is.na(instance)) instance <- NULL
     ggchord_resolve_panel_interval(panels, region$accver, region$start, region$end,
-      panel, instance, paste0("Fusion zoom '", layer$id, "': "))
+      panel, instance, paste0("Fusion zoom '", layer$id, "' row ", row, " ", side, ": "))
   }
   source_overlay <- function(front) {
     half <- front$cell_half_height_mm %||% rep(0.7, nrow(front))
@@ -142,8 +146,8 @@ ggchord_render_zoom <- function(layer, panels) {
   }
   parts <- lapply(seq_len(nrow(layer$region)), function(i) {
     region <- layer$region[i, , drop = FALSE]
-    q <- resolve(region, layer$from_key, "from_instance")
-    s <- resolve(region, layer$to_key, "to_instance")
+    q <- resolve(region, layer$from_key, "from", i)
+    s <- resolve(region, layer$to_key, "to", i)
     ggchord_check_character_origin(q, s, "fusion_zoom()")
     if (q$unit != s$unit) ggchord_stop("fusion_zoom(): source and detail must use the same unit")
     qf <- ggchord_fusion_front(panels[[q$panel]], q)

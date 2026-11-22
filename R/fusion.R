@@ -207,6 +207,11 @@ ggchord_fusion_check_path <- function(path, label) {
 #' @param show.legend Whether the layer contributes to composition guides.
 #' @param id Root ribbon identifier and scale scope. See [auto_id()].
 #' @return A component for [ggchord_fusion()].
+#' @details A path identifies a Fusion child, and the optional `qinstance`
+#'   and `sinstance` roles identify display instances. Each endpoint must
+#'   match one fully visible interval across that child's facets. Facets
+#'   cannot be selected explicitly. If the same instance and interval occur
+#'   in several facets, use a separate Fusion child for the desired facet.
 #' @export
 #' @examples
 #' library(ggplot2)
@@ -715,9 +720,36 @@ ggchord_resolve_panel_interval <- function(panels, entity, start, end,
       }
     }
   }
-  if (length(candidates) != 1L) ggchord_stop(where,
-    if (!length(candidates)) "no fully visible matching interval/instance" else "ambiguous panel or instance; specify panel and instance")
+  if (!length(candidates)) ggchord_stop(where, "no fully visible matching interval/instance")
+  if (length(candidates) > 1L) {
+    matches <- vapply(head(candidates, 8L), ggchord_fusion_endpoint_label, character(1),
+      panels = panels)
+    pairs <- data.frame(path = vapply(candidates, `[[`, character(1), "panel"),
+      instance = vapply(candidates, `[[`, character(1), "instance"))
+    action <- if (anyDuplicated(pairs)) {
+      "A path and instance can match several facets. Facets cannot be selected explicitly; use a separate Fusion child for the desired facet."
+    } else {
+      "Use the panel path and instance ID to identify one match."
+    }
+    ggchord_stop(where, "ambiguous endpoint for source '", entity, "' [", start, ", ", end,
+      "]. Matching candidates: ", paste(matches, collapse = "; "),
+      if (length(candidates) > length(matches)) paste0("; +", length(candidates) - length(matches), " more"),
+      ". ", action)
+  }
   candidates[[1L]]
+}
+
+ggchord_fusion_endpoint_label <- function(candidate, panels) {
+  layout <- panels[[candidate$panel]]$layout
+  path <- paste(encodeString(ggchord_fusion_path_ids(candidate$panel), quote = '"'), collapse = "/")
+  label <- paste0(path, " instance ", encodeString(candidate$instance, quote = '"'))
+  if (is.null(layout$facet_layout)) return(label)
+
+  at <- match(candidate$facet, as.integer(layout$facet_layout$PANEL))
+  facet <- layout$facet_layout[at, layout$facet_keys, drop = FALSE]
+  values <- vapply(facet, function(x) encodeString(as.character(x), quote = '"'), character(1))
+  paste0(label, " (", paste(c(paste0("PANEL=", candidate$facet),
+    if (length(values)) paste0(names(values), "=", values)), collapse = ", "), ")")
 }
 
 ggchord_fusion_front <- function(panel, endpoint) {

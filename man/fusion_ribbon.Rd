@@ -38,6 +38,13 @@ A component for \code{\link[=ggchord_fusion]{ggchord_fusion()}}.
 \description{
 Connect real source intervals across panels
 }
+\details{
+A path identifies a Fusion child, and the optional \code{qinstance}
+and \code{sinstance} roles identify display instances. Each endpoint must
+match one fully visible interval across that child's facets. Facets
+cannot be selected explicitly. If the same instance and interval occur
+in several facets, use a separate Fusion child for the desired facet.
+}
 \examples{
 library(ggplot2)
 

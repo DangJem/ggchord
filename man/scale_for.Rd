@@ -24,6 +24,8 @@ mapped directly to \code{accver}. Features mapped to \code{strand} use red (+),
 blue (-), purple (+/-) and grey (unknown). Circular features mapped to
 \code{type} use the plasmid palette with stable colours for additional types.
 An explicit scale takes precedence.
+Custom ggplot2 statistics continue to receive public aesthetic names,
+such as \code{colour}, on scoped layers.
 }
 \examples{
 library(ggplot2)

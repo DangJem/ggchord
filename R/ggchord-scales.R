@@ -378,6 +378,8 @@ ggchord_infer_visual_scales <- function(plot, layout, scales) {
 #' blue (-), purple (+/-) and grey (unknown). Circular features mapped to
 #' `type` use the plasmid palette with stable colours for additional types.
 #' An explicit scale takes precedence.
+#' Custom ggplot2 statistics continue to receive public aesthetic names,
+#' such as `colour`, on scoped layers.
 #'
 #' @param layers One or more explicitly named layer IDs.
 #' @param scale An ordinary ggplot2 visual scale for those layers.
@@ -508,6 +510,27 @@ ggchord_alias_aes <- function(x, aliases) {
   x
 }
 
+ggchord_scope_stat <- function(stat, aliases, inverse) {
+  force(stat)
+  ggproto(NULL, stat,
+    default_aes = ggchord_alias_aes(stat$default_aes, aliases),
+    setup_params = function(data, params) {
+      stat$setup_params(ggchord_alias_aes(data, inverse), params)
+    },
+    setup_data = function(data, params) {
+      data <- stat$setup_data(ggchord_alias_aes(data, inverse), params)
+      ggchord_alias_aes(data, aliases)
+    },
+    compute_layer = function(data, params, layout) {
+      data <- stat$compute_layer(ggchord_alias_aes(data, inverse), params, layout)
+      ggchord_alias_aes(data, aliases)
+    },
+    finish_layer = function(data, params) {
+      data <- stat$finish_layer(ggchord_alias_aes(data, inverse), params)
+      ggchord_alias_aes(data, aliases)
+    })
+}
+
 ggchord_scope_layer <- function(layer, aliases, plot_mapping) {
   geom <- layer$geom
   inverse <- setNames(names(aliases), aliases)
@@ -527,6 +550,20 @@ ggchord_scope_layer <- function(layer, aliases, plot_mapping) {
   if (length(columns)) copy$ggchord_params$visual_columns <- ggchord_alias_aes(columns, aliases)
   copy$aes_params <- ggchord_alias_aes(layer$aes_params, aliases)
   copy$show.legend <- ggchord_alias_aes(layer$show.legend, aliases)
+  if (!identical(layer$stat, ggplot2::StatIdentity))
+    copy$stat <- ggchord_scope_stat(layer$stat, aliases, inverse)
+  copy$map_statistic <- function(self, data, plot) {
+    if (any(names(inverse) %in% names(data))) {
+      # Expose public names only in the after_stat() mask, after the scoped
+      # scales have back-transformed their own columns.
+      scales <- plot$scales
+      plot$scales <- ggproto(NULL, scales,
+        backtransform_df = function(df) ggchord_alias_aes(scales$backtransform_df(df), inverse),
+        add_defaults = function(data, env) scales$add_defaults(data, env),
+        transform_df = function(df) scales$transform_df(df))
+    }
+    ggproto_parent(layer, self)$map_statistic(data, plot)
+  }
   copy$geom <- ggproto(NULL, geom,
     required_aes = changed(geom$required_aes),
     non_missing_aes = changed(geom$non_missing_aes),
