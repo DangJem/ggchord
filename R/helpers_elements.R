@@ -88,48 +88,6 @@ breakPointsFunc <- function(max_value, n = 5, tol = 0.5, available_mm = NULL) {
 }
 
 
-#' Custom gene arrow legend drawing function
-#'
-#' Generates gene arrow-shaped legend symbols (polygons) for ggplot2 legends
-#'
-#' @param data Legend data (contains aesthetic mapping parameters like fill, colour, size)
-#' @param params Legend parameters (automatically passed by ggplot2)
-#' @param size Legend symbol size
-#' @return grid::polygonGrob object, gene arrow-shaped legend symbol
-#' @keywords internal
-#' @noRd
-draw_key_gene_arrow <- function(data, params, size) {
-  key <- params$arrow_key %||% list(style = "flush")
-  strand <- as.character(data$strand %||% "+")[1L]
-  shape <- as.character(data$feature_shape %||% "arrow")[1L]
-  fixed_body_width <- isTRUE(key$fixed_body_width) && shape %in% ggchord_block_arrow_shapes
-  head_ratio <- key$head_ratio %||% if (fixed_body_width && identical(key$style, "shouldered")) {
-    ggchord_circular_arrow_head_ratio
-  } else 1
-  parts <- ggchord_feature_geometry(shape, .10, .90, 1, .54, 1, NULL,
-    arrow_head_length = .28, arrow_head_width = head_ratio,
-    arrow_head_style = key$style, short_feature = "shrink",
-    draw_start_head = identical(strand, "+/-"), bidirectional = identical(strand, "+/-"),
-    fixed_body_width = fixed_body_width)
-  part <- parts[[1L]]
-  x <- part$angle
-  y <- part$radius - 1
-  height <- max(abs(y))
-  if (height > .34) y <- y / height * .34
-  if (identical(strand, "-")) x <- 1 - x
-  x_pts <- unit(x, "npc")
-  y_pts <- unit(.5 + y, "npc")
-
-  polygonGrob(
-    x = x_pts, y = y_pts,
-    gp = gpar(
-      fill = ggplot2::alpha(if_null_else(data$fill, "grey"), if_null_else(data$alpha, 1)),
-      col = if_null_else(data$colour, "#353A3E"),
-      lwd = if_null_else(data$linewidth %||% data$size, 0.5) * ggplot2::.pt
-    )
-  )
-}
-
 #' Key glyph for sequence legends
 #'
 #' Draws the path symbol only when the key data contains colour; otherwise returns a blank (prevents ggplot2 4.x
@@ -173,55 +131,36 @@ key_glyph_ribbon <- function(data, params, size) {
 #' @keywords internal
 #' @noRd
 key_glyph_feature <- function(data, params, size) {
-  data$fill <- data$fill %||% data$feature_fill
-  if (is.null(data$fill)) return(ggplot2::zeroGrob())
-
-  shape <- as.character(data$feature_shape %||% "arrow")[1]
-  if (!shape %in% c(
-      "arrow", "compact_arrow", "promoter_arrow", "primer_arrow", "marker",
-      "block", "chevron", "lollipop")) {
-    shape <- "arrow"
+  key <- params$arrow_key %||% list(style = "flush")
+  mapped <- as.character(data$shape)[1L]
+  fallback <- data$feature_shape %||% "arrow"
+  if (identical(fallback, "arrow")) fallback <- key$shape %||% fallback
+  shape <- if (mapped %in% ggchord_feature_shapes) mapped else as.character(fallback)[1L]
+  if (!shape %in% ggchord_feature_shapes) shape <- key$shape %||% "arrow"
+  strand <- as.character(data$strand %||% "+")[1L]
+  opacity <- data$alpha %||% 1
+  colour <- scales::alpha(data$colour %||% "#353A3E", opacity)
+  fill <- scales::alpha(data$fill %||% data$feature_fill %||% "grey", opacity)
+  gp <- gpar(col = colour, fill = fill, lwd = (data$linewidth %||% .25) * ggplot2::.pt,
+    lty = data$linetype %||% 1, linejoin = "round")
+  if (identical(shape, "lollipop")) {
+    return(grobTree(segmentsGrob(.50, .19, .50, .52, gp = gp),
+      grid::circleGrob(.50, .61, r = unit(.17, "snpc"), gp = gp)))
   }
-  col <- ggplot2::alpha(data$colour %||% "#353A3E", data$alpha %||% 1)
-  fill <- ggplot2::alpha(data$fill, data$alpha %||% 1)
-  lwd <- (data$linewidth %||% data$size %||% 0.25) * ggplot2::.pt
-  gp <- gpar(col = col, fill = fill, lwd = lwd, linejoin = "round")
-
-  if (identical(shape, "arrow")) {
-    return(draw_key_gene_arrow(data, params, size))
-  }
-  if (shape %in% c("compact_arrow", "promoter_arrow", "primer_arrow")) {
-    return(draw_key_gene_arrow(data, params, size))
-  }
-  if (identical(shape, "marker")) {
-    return(polygonGrob(
-      x = unit(c(.28, .50, .72, .50), "npc"),
-      y = unit(c(.50, .70, .50, .30), "npc"), gp = gp
-    ))
-  }
-  if (identical(shape, "block")) {
-    return(rectGrob(
-      x = unit(0.5, "npc"), y = unit(0.5, "npc"),
-      width = unit(0.76, "npc"), height = unit(0.34, "npc"), gp = gp
-    ))
-  }
-  if (identical(shape, "chevron")) {
-    return(polygonGrob(
-      x = unit(c(0.10, 0.62, 0.90, 0.62, 0.10, 0.34), "npc"),
-      y = unit(c(0.32, 0.32, 0.50, 0.68, 0.68, 0.50), "npc"),
-      gp = gp
-    ))
-  }
-
-  grobTree(
-    segmentsGrob(
-      x0 = unit(0.18, "npc"), x1 = unit(0.62, "npc"),
-      y0 = unit(0.5, "npc"), y1 = unit(0.5, "npc"),
-      gp = gpar(col = col, lwd = max(lwd, 0.7), lineend = "round")
-    ),
-    grid::circleGrob(
-      x = unit(0.70, "npc"), y = unit(0.5, "npc"),
-      r = unit(0.18, "npc"), gp = gp
-    )
-  )
+  fixed <- isTRUE(key$fixed_body_width) && shape %in% ggchord_block_arrow_shapes
+  head_ratio <- key$head_ratio %||%
+    if (fixed && identical(key$style, "shouldered")) ggchord_circular_arrow_head_ratio else 1
+  parts <- ggchord_feature_geometry(shape, .1, .9, 1, .52, 1, NULL,
+    arrow_head_length = .28, arrow_head_width = head_ratio,
+    arrow_head_style = key$style, short_feature = "shrink", draw_head = strand != ".",
+    draw_start_head = identical(strand, "+/-"), bidirectional = identical(strand, "+/-"),
+    fixed_body_width = fixed)
+  half_height <- max(vapply(parts, function(part) max(abs(part$radius - 1)), numeric(1)))
+  if (identical(shape, "capped_line")) gp$fill <- gp$col
+  glyphs <- lapply(parts, function(part) {
+    x <- if (identical(strand, "-")) 1 - part$angle else part$angle
+    y <- .5 + (part$radius - 1) * min(1, .34 / half_height)
+    polygonGrob(unit(x, "npc"), unit(y, "npc"), gp = gp)
+  })
+  if (length(glyphs) == 1L) glyphs[[1L]] else do.call(grobTree, glyphs)
 }

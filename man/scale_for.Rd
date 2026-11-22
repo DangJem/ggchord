@@ -26,6 +26,10 @@ blue (-), purple (+/-) and grey (unknown). Circular features mapped to
 An explicit scale takes precedence.
 Custom ggplot2 statistics continue to receive public aesthetic names,
 such as \code{colour}, on scoped layers.
+Each selected layer needs a mapped aesthetic handled by \code{scale}.
+Use a colour scale for \code{aes(colour = ...)} and a fill scale for
+\code{aes(fill = ...)}. Different scoped palettes have separate legends
+even when their titles and labels match.
 }
 \examples{
 library(ggplot2)

@@ -927,12 +927,14 @@ ggchord_compute_track_input <- function(layer, plot, raw, sequences, coverage) {
       }
     }
   }
+  native_key <- NULL
   if (nrow(start_aes$data)) {
     # Identity scales retain source aesthetic values; final role scales train
     # only after projection. No device geometry enters these statistics.
     native <- do.call(getExportedValue("ggplot2", paste0("geom_", p$native_geom)),
       c(list(mapping = start_aes$mapping, data = start_aes$data, stat = stat,
         position = p$native_position, inherit.aes = FALSE), params))
+    native_key <- native$geom$draw_key
     if (p$native_stat != "identity") {
       # Preserve Stat coordinates before a data Position moves the display
       # centre/edges. Source membership must not follow a dodge displacement.
@@ -1104,6 +1106,7 @@ ggchord_compute_track_input <- function(layer, plot, raw, sequences, coverage) {
   layer$ggchord_params$track_sources <- original_source
   layer$ggchord_params$native_prepared <- TRUE
   layer$geom_params$native_draw_params <- params[intersect(names(params),c("arrow","lineend","linejoin","linemitre","parse","check_overlap","rule"))]
+  layer$geom_params$native_key <- native_key
   layer$geom_params$track_kind <- p$native_geom
   layer
 }

@@ -3,7 +3,22 @@ GeomSequenceSite <- ggproto("GeomSequenceSite", ggplot2::Geom,
   default_aes = aes(colour = "black", fill = "grey70", size = 2, alpha = 1,
     linewidth = .4, linetype = 1, shape = 21, stroke = .4),
   optional_aes = c(".component", "group"),
-  draw_key = ggplot2::draw_key_path,
+  extra_params = c("na.rm", "site_key_shape"),
+  draw_key = function(data, params, size) {
+    shape <- as.character(data$shape)[1L]
+    if (!shape %in% c("point", "cut", "tick")) shape <- params$site_key_shape
+    if (identical(shape, "point")) {
+      data$shape <- 21
+      return(ggplot2::draw_key_point(data, params, size))
+    }
+    if (identical(shape, "cut")) {
+      return(grid::polylineGrob(unit(c(.3, .3, .7, .7), "npc"),
+        unit(c(.78, .5, .5, .22), "npc"),
+        gp = gpar(col = scales::alpha(data$colour, data$alpha),
+          lwd = data$linewidth * ggplot2::.pt, lty = data$linetype)))
+    }
+    ggplot2::draw_key_vline(data, params, size)
+  },
   draw_panel = function(data, panel_params, coord, na.rm = FALSE) {
     paths <- data[data$.component == "path", , drop = FALSE]
     points <- data[data$.component == "point", , drop = FALSE]
@@ -50,7 +65,7 @@ ggchord_site_layer <- function(mapping, data, shape, fixed_shape, size, fixed_si
       .component = I(.component)),
     geom = GeomSequenceSite, stat = "identity", position = "identity",
     show.legend = show.legend, inherit.aes = inherit.aes, check.aes = FALSE,
-    params = c(list(na.rm = na.rm), parameters$geom)
+    params = c(list(na.rm = na.rm, site_key_shape = shape), parameters$geom)
   )
   layer$ggchord_type <- "restriction_site"
   layer$ggchord_params <- list(id = id, type = "restriction_site",

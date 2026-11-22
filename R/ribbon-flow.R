@@ -78,12 +78,39 @@ ggchord_ribbon_trace <- function(data, tip, tip_length, coord, panel, metric) {
     edge1 = a, edge2 = b, tips = tips)
 }
 
+# Draw a short band with visible fronts, using both endpoint colours when available.
+ggchord_ribbon_key <- function(data, params, size) {
+  opacity <- data$alpha %||% 1
+  endpoints <- c(data$fill_from, data$fill_to)
+  endpoints <- endpoints[!is.na(endpoints)]
+  fill <- scales::alpha(data$fill %||% "grey70", opacity)
+  if (isTRUE(params$flow) && length(endpoints)) {
+    colours <- scales::alpha(endpoints, opacity)
+    fill <- if (length(colours) == 2L && colours[1L] != colours[2L]) {
+      grid::linearGradient(colours, x1 = .1, y1 = .5, x2 = .9, y2 = .5)
+    } else colours[1L]
+  }
+  t <- seq(0, 1, length.out = 25L)
+  x <- .10 + .80 * t
+  curved <- !identical(params$ribbon_key_route, "straight")
+  center <- .5 + if (curved) .16 * sin(pi * t) else 0 * t
+  half_width <- .16 - .06 * sin(pi * t)
+  tip <- params$tip %||% "none"
+  if (tip %in% c("from", "both")) half_width <- half_width * pmin(1, t / .2)
+  if (tip %in% c("to", "both")) half_width <- half_width * pmin(1, (1 - t) / .2)
+  polygonGrob(unit(c(x, rev(x)), "npc"),
+    unit(c(center + half_width, rev(center - half_width)), "npc"),
+    gp = gpar(fill = fill, col = scales::alpha(data$colour %||% NA_character_, opacity),
+      lwd = (data$linewidth %||% .25) * ggplot2::.pt, lty = data$linetype %||% 1,
+      linejoin = "round"))
+}
+
 # Preserve complete fronts in exported data and add separate decoration at draw time.
 GeomRibbonFlow <- ggproto("GeomRibbonFlow", ggplot2::GeomPolygon,
   default_aes = aes(fill = "grey70", colour = "#53776A", alpha = .6, linewidth = .18,
     linetype = 1, fill_from = NA_character_, fill_to = NA_character_,
     flow_qn = 0, flow_sn = 0),
-  extra_params = c("na.rm", "flow", "tip", "tip_length"),
+  extra_params = c("na.rm", "flow", "tip", "tip_length", "ribbon_key_route"),
   draw_panel = function(data, panel_params, coord, na.rm = FALSE, rule = "evenodd",
       flow = FALSE, tip = "none", tip_length = 2) {
     if (!flow && tip == "none")
@@ -115,13 +142,7 @@ GeomRibbonFlow <- ggproto("GeomRibbonFlow", ggplot2::GeomPolygon,
     })
     do.call(grobTree, grobs)
   },
-  draw_key = function(data, params, size) {
-    if (isTRUE(params$flow)) {
-      endpoints <- c(data$fill_from, data$fill_to)
-      data$fill <- c(endpoints[!is.na(endpoints)], "grey70")[1L]
-    }
-    ggplot2::draw_key_polygon(data, params, size)
-  })
+  draw_key = ggchord_ribbon_key)
 
 ggchord_ribbon_flow <- function(layer, geometry, layout, plot) {
   if (!identical(layer$ggchord_type, "ribbon") || !nrow(geometry))

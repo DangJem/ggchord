@@ -524,6 +524,13 @@ ggchord_fusion_style_layer <- function(layer) {
   mapping$group <- aes(group = .fusion_row)$group
   defaults <- list(fill = "steelblue", colour = NA, alpha = .35, linewidth = .25, linetype = 1)
   fixed <- layer$fixed
+  if (is.null(fixed$key_glyph)) {
+    route <- layer$route
+    fixed$key_glyph <- function(data, params, size) {
+      params$ribbon_key_route <- route
+      ggchord_ribbon_key(data, params, size)
+    }
+  }
   for (name in setdiff(names(defaults), c(names(mapping), names(fixed))))
     fixed[[name]] <- defaults[[name]]
   carrier_layer <- do.call(ggplot2::geom_polygon, c(list(

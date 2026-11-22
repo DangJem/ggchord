@@ -199,3 +199,78 @@ ggchord_guide_joint_layout <- function(built, source, evaluate = NULL, positions
       data.frame(position=x$position,direction=x$direction,
         width_mm=unname(x$size[1]),height_mm=unname(x$size[2])))))))
 }
+ggchord_geometry_guides <- function(parent) {
+  force(parent)
+  ggproto(NULL, parent,
+    train = function(self, scales, labels) {
+      ggproto_parent(parent, self)$train(scales, labels)
+      params <- self$params
+      groups <- split(seq_along(params), vapply(params, function(p)
+        paste(p$order, p$hash), character(1)))
+      for (rows in groups) {
+        if (length(rows) < 2L || !any(vapply(params[rows], function(p)
+          any(startsWith(p$aesthetic, "ggchord_scope_")), logical(1)))) next
+        palettes <- lapply(params[rows], ggchord_legend_palette)
+        colour <- which(lengths(palettes) > 0L)
+        if (length(unique(palettes[colour])) < 2L) next
+        for (i in colour) {
+          at <- rows[i]
+          params[[at]]$hash <- paste0(params[[at]]$hash, "_", rlang::hash(palettes[[i]]))
+        }
+      }
+      self$params <- params
+    },
+    process_layers = function(self, layers, data = NULL, theme = NULL) {
+      ggproto_parent(parent, self)$process_layers(layers, data, theme)
+      for (i in seq_along(self$params)) {
+        if (inherits(self$guides[[i]], "GuideLegend"))
+          self$params[[i]]$decor <- ggchord_legend_separate_keys(self$params[[i]]$decor)
+      }
+    })
+}
+
+# The native legend hash includes title and labels but omits mapped colours.
+ggchord_legend_palette <- function(params) {
+  aesthetic <- grep("(^|_)(colou?r|fill(_from|_to)?)$", params$aesthetic, value = TRUE)
+  if (!length(aesthetic)) return(NULL)
+  colours <- params$key[[aesthetic[1L]]]
+  if (!length(colours)) return(NULL)
+  rgba <- function(x) if (length(x)) unname(grDevices::col2rgb(x, alpha = TRUE))
+  list(breaks = rgba(colours), ramp = if (is.list(params$decor)) rgba(params$decor$colour))
+}
+
+ggchord_legend_separate_keys <- function(decor) {
+  if (length(decor) < 2L || !all(vapply(decor, function(x)
+    is.list(x) && is.function(x$draw_key) && !is.null(x$data$.id), logical(1)))) return(decor)
+  # ggplot2 retains a row for each break in each layer, including hidden keys.
+  # Give the visible glyphs distinct slots within that one labelled row.
+  ids <- decor[[1L]]$data$.id
+  active <- vapply(decor, function(x) {
+    data <- x$data
+    ids %in% data$.id[data$.draw %||% TRUE]
+  }, logical(length(ids)))
+  active <- matrix(active, nrow = length(ids))
+  count <- rowSums(active)
+  if (all(count < 2L)) return(decor)
+  rank <- integer(length(ids))
+  for (i in seq_along(decor)) {
+    rank <- rank + active[, i]
+    decor[[i]]$draw_key <- ggchord_legend_place_key(decor[[i]]$draw_key, ids, rank, count)
+  }
+  decor
+}
+
+ggchord_legend_place_key <- function(draw, ids, rank, count) {
+  force(draw); force(ids); force(rank); force(count)
+  function(data, params, size) {
+    glyph <- draw(data, params, size)
+    row <- match(data$.id, ids)
+    if (length(row) != 1L || is.na(row) || count[row] < 2L) return(glyph)
+    n <- count[row]
+    key <- grobTree(glyph, vp = viewport(y = 1 - (rank[row] - .5) / n,
+      height = unit(1 / n, "npc"), clip = "on"))
+    attr(key, "width") <- attr(glyph, "width")
+    attr(key, "height") <- max(.38, attr(glyph, "height"), rep_len(size, 2L)[2L] / 10) * n
+    key
+  }
+}

@@ -14,11 +14,11 @@ ggchord_check_feature_bounds <- function(data, lengths) {
 feature_geom_defaults <- feature_polygon_geom$default_aes
 feature_geom_defaults$colour <- "#353A3E"
 feature_geom_defaults$linewidth <- .25
+feature_geom_defaults$shape <- NA_character_
 feature_geom_defaults$feature_shape <- "arrow"
 feature_geom <- ggproto(
   "GeomChordFeature", feature_polygon_geom,
   default_aes = feature_geom_defaults,
-  optional_aes = "shape",
   extra_params = c(
     "na.rm", "segment_boundaries", "boundary_colour",
     "boundary_linewidth", "boundary_linetype", "adaptive_outline", "arrow_key"
@@ -297,7 +297,7 @@ ggchord_feature_layer <- function(mapping, data, shape, fixed_shape, thickness,
       boundary_linewidth = dots$boundary_linewidth %||% 0.3,
       boundary_linetype = dots$boundary_linetype %||% 1,
       adaptive_outline = is.null(dots$linewidth),
-      arrow_key = list(style = head_style,
+      arrow_key = list(style = head_style, shape = shape,
         head_ratio = if (length(head_width) && is.numeric(thickness) && length(thickness) == 1L)
           head_width / thickness)), geom_params$geom)
   )

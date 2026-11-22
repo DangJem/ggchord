@@ -105,7 +105,7 @@ geom_link_ribbon <- function(mapping = NULL, data = NULL, stat = "identity",
     stat = "identity", geom = geom, position = "identity",
     show.legend = show.legend, inherit.aes = inherit.aes,
     check.aes = FALSE, params = c(list(na.rm = na.rm, flow = fill_mode == "endpoint",
-      tip = tip, tip_length = tip_length), parameters$geom)
+      tip = tip, tip_length = tip_length, ribbon_key_route = controls$route), parameters$geom)
   )
   layer$ggchord_type <- "ribbon"
   layer$ggchord_params <- list(id = id, type = "ribbon", route = controls,

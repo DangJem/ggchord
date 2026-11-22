@@ -53,6 +53,7 @@ ggchord_prepare_geometry_inputs <- function(plot, prepare_instances = TRUE) {
       if (!circular && isTRUE(layer$ggchord_params$seq_thickness_supplied))
         ggchord_stop("geom_seq(): line uses linewidth, thickness applies to double or band")
       layer$ggchord_params$seq_style <- if (circular) "double" else "single"
+      layer$geom_params$seq_key_style <- layer$ggchord_params$seq_style
     }
     if (!is.null(layer$ggchord_type) && is.null(layer$ggchord_params$native_geom) &&
         is.null(layer$ggchord_params$ribbon_stat))

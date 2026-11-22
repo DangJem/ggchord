@@ -1,5 +1,11 @@
 # ggchord 0.50.0 (development)
 
+- Legend keys reflect the geometry of backbones, features, ribbons, sites
+  and tracks. Layers that share a legend keep their glyphs visible in each
+  key. Different scoped palettes have separate legends even with equal labels.
+- `scale_for()` reports a selected layer without a matching mapped aesthetic
+  and suggests the matching colour or fill scale where applicable.
+
 - Public ggchord calls and plot rendering temporarily suspend RStudio's
   automatic Break on Error handler. This includes errors raised directly by R
   or dependencies during those calls. The session's handler is restored on

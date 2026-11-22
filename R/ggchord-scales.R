@@ -380,6 +380,10 @@ ggchord_infer_visual_scales <- function(plot, layout, scales) {
 #' An explicit scale takes precedence.
 #' Custom ggplot2 statistics continue to receive public aesthetic names,
 #' such as `colour`, on scoped layers.
+#' Each selected layer needs a mapped aesthetic handled by `scale`.
+#' Use a colour scale for `aes(colour = ...)` and a fill scale for
+#' `aes(fill = ...)`. Different scoped palettes have separate legends
+#' even when their titles and labels match.
 #'
 #' @param layers One or more explicitly named layer IDs.
 #' @param scale An ordinary ggplot2 visual scale for those layers.
@@ -441,15 +445,6 @@ ggchord_scale_scopes <- function(plot, scopes = plot$ggchord$scoped_scales) {
     if (anyNA(selected)) ggchord_stop("scale_for(): unknown layer '",
       scope$layers[which(is.na(selected))[1L]], "'")
     aes <- scope$scale$aesthetics
-    for (j in selected) {
-      layer <- plot$layers[[j]]
-      native <- layer$ggchord_params$native_geom
-      geom <- if (is.null(native)) layer$geom else
-        ggplot2::layer(geom = native, stat = "identity", position = "identity")$geom
-      unsupported <- setdiff(aes, geom$aesthetics())
-      if (length(unsupported)) ggchord_stop("scale_for(): layer '", ids[j],
-        "' does not support ", unsupported[1L])
-    }
     keys <- as.vector(outer(selected, aes, paste, sep = "/"))
     overlap <- match(TRUE, keys %in% claimed)
     if (!is.na(overlap)) {
@@ -478,6 +473,63 @@ ggchord_trains_visual_scale <- function(mapping) {
   start <- ggchord_start_mapping(mapping)
   (!is.null(start) && !is_call(get_expr(start), "I")) ||
     ggchord_has_stage(mapping, "after_stat")
+}
+
+# Check resolved mappings before renaming them to private scale channels.
+ggchord_validate_scope_mapping <- function(plot, spec) {
+  visual <- c("colour", "fill", "alpha", "size", "linewidth", "linetype", "shape",
+    "stroke", "fill_from", "fill_to")
+  for (i in spec$selected) {
+    layer <- plot$layers[[i]]
+    mapping <- layer$mapping %||% aes()
+    # Empty display geometry uses an empty drawing mapping. Its source
+    # declaration still determines whether the scale applies to the layer.
+    if (!NROW(layer$data) && !is.null(layer$ggchord_input_mapping))
+      mapping <- layer$ggchord_input_mapping
+    if (isTRUE(layer$inherit.aes)) for (key in setdiff(names(plot$mapping), names(mapping)))
+      mapping[[key]] <- plot$mapping[[key]]
+    defaults <- layer$stat$default_aes
+    for (key in setdiff(names(defaults), names(mapping))) mapping[[key]] <- defaults[[key]]
+    if ("feature_shape" %in% names(mapping)) mapping$shape <- mapping$feature_shape
+    # Numeric track mappings may still carry their track-specific aliases.
+    track <- layer$geom_params$track_keys
+    for (key in names(track)) if (track[[key]] %in% names(mapping)) mapping[[key]] <- mapping[[track[[key]]]]
+    mapped <- intersect(visual, names(Filter(ggchord_trains_visual_scale, mapping)))
+    fixed <- names(layer$aes_params)
+    mapped <- setdiff(mapped, c(fixed, names(track)[track %in% fixed]))
+    id <- encodeString(layer$ggchord_layer_id, quote = '"')
+    if (length(intersect(spec$aesthetics, mapped))) {
+      native <- layer$ggchord_params$native_geom
+      geom <- if (is.null(native)) layer$geom else
+        ggplot2::layer(geom = native, stat = "identity", position = "identity")$geom
+      unsupported <- setdiff(spec$aesthetics, geom$aesthetics())
+      if (length(unsupported)) ggchord_stop("scale_for(): layer ", id,
+        " does not support ", unsupported[1L], ". Use a scale for its mapped aesthetic.")
+      next
+    }
+
+    channels <- paste(spec$aesthetics, collapse = ", ")
+    scale_call <- spec$scale$call
+    palette <- intersect(mapped, c("colour", "fill"))
+    hint <- if (length(palette) && any(spec$aesthetics %in% c("colour", "fill"))) {
+      kind <- if (inherits(spec$scale, "ScaleDiscrete")) "discrete" else "continuous"
+      suggested <- paste0("scale_", palette[1L], "_", kind, "()")
+      if (is.call(scale_call)) {
+        fn <- scale_call[[1L]]
+        if (is.call(fn) && identical(fn[[1L]], quote(`::`))) fn <- fn[[3L]]
+        if (is_symbol(fn) && grepl("^scale_(colou?r|fill)_", as_string(fn))) {
+          replacement <- sub("^scale_(colou?r|fill)_", paste0("scale_", palette[1L], "_"), as_string(fn))
+          if (replacement %in% getNamespaceExports("ggplot2")) {
+            scale_call[[1L]] <- as.name(replacement)
+            suggested <- paste(deparse(scale_call), collapse = " ")
+          }
+        }
+      }
+      paste0(" Use scale_for(", id, ", ", suggested, ") for the mapped ", palette[1L], ".")
+    } else paste0(" Map ", spec$aesthetics[1L], " with aes() or target a layer that maps it.")
+    ggchord_stop("scale_for(): layer ", id, " has no scale-trained mapping for ", channels, ".",
+      if (length(mapped)) paste0(" Mapped aesthetics: ", paste(mapped, collapse = ", "), "."), hint)
+  }
 }
 
 ggchord_drawing_scopes <- function(plot, scopes = plot$ggchord$scoped_scales) {
@@ -643,6 +695,7 @@ ggchord_apply_scoped_scales <- function(plot, specs = ggchord_drawing_scopes(plo
   theme <- ggplot2::theme_get() + plot$theme
   guides <- plot$guides$guides
   for (spec in specs) {
+    if (!isTRUE(spec$automatic)) ggchord_validate_scope_mapping(plot, spec)
     if (is.null(spec$scale)) {
       deferred[spec$aliases] <- spec$aesthetics
     } else {
@@ -659,6 +712,8 @@ ggchord_apply_scoped_scales <- function(plot, specs = ggchord_drawing_scopes(plo
         if (is.null(mapping)) next
         key <- spec$aliases[[aesthetic]]
         label <- layer$ggchord_params$track_mapping_labels[[aesthetic]]
+        if (aesthetic == "shape" && !is.null(layer$ggchord_input_mapping$feature_shape))
+          label <- as_label(layer$ggchord_input_mapping$feature_shape)
         if (!is.null(label)) plot$labels[[key]] <- label
         if (isTRUE(spec$automatic)) {
           if (aesthetic %in% names(plot$labels)) plot$labels[key] <- plot$labels[aesthetic]
@@ -813,5 +868,6 @@ ggchord_add_visual_scales <- function(plot) {
     parent <- plot$guides
     plot$guides <- ggproto(NULL, parent, guides = guides)
   }
+  plot$guides <- ggchord_geometry_guides(plot$guides)
   plot
 }

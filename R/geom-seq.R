@@ -9,7 +9,16 @@ GeomChordSeq <- ggproto(
     colour = "#3D4348", fill = "grey60", alpha = 1, linewidth = 0.9,
     linetype = 1, .component = "path"
   ),
-  draw_key = ggplot2::draw_key_path,
+  extra_params = c("na.rm", "seq_key_style"),
+  draw_key = function(data, params, size) {
+    if (identical(params$seq_key_style, "band")) return(ggplot2::draw_key_polygon(data, params, size))
+    key <- ggplot2::draw_key_path(data, params, size)
+    if (!identical(params$seq_key_style, "double")) return(key)
+    second <- key
+    key$y0 <- key$y1 <- unit(.35, "npc")
+    second$y0 <- second$y1 <- unit(.65, "npc")
+    grobTree(key, second)
+  },
   draw_panel = function(data, panel_params, coord, na.rm = FALSE,
                         arrow = NULL) {
     grobs <- list()
@@ -198,7 +207,7 @@ geom_seq <- function(mapping = NULL, data = NULL, geometry = "auto",
     mapping = aes(x = x, y = y, group = group, .component = I(.component)),
     stat = "identity", geom = GeomChordSeq, position = position,
     show.legend = show.legend, inherit.aes = inherit.aes, check.param = FALSE,
-    params = c(list(na.rm = na.rm), dots)
+    params = c(list(na.rm = na.rm, seq_key_style = geometry), dots)
   )
   layer$ggchord_type <- "seq"
   layer$ggchord_params <- list(id = id, type = "seq", physical_layout = geometry != "line" ||

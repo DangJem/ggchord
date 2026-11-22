@@ -215,7 +215,15 @@ GeomResidue <- ggproto("GeomResidue", ggplot2::Geom,
     data$ymin <- as.numeric(data$y) - .5; data$ymax <- as.numeric(data$y) + .5
     data
   },
-  draw_key = ggplot2::draw_key_rect,
+  draw_key = function(data, params, size) {
+    kind <- params$representation %||% "tile_text"
+    letters <- if (kind != "tile") ggplot2::draw_key_text(data, params, size)
+    if (kind == "text") return(letters)
+    data$colour <- data$cell_colour
+    data$linewidth <- data$cell_linewidth
+    tile <- ggplot2::draw_key_polygon(data, params, size)
+    if (kind == "tile") tile else grobTree(tile, letters)
+  },
   draw_panel = function(data, panel_params, coord, representation = "tile_text",
       overflow = "tile", line_width = NULL, na.rm = FALSE) {
     ggchord_local_console_errors()

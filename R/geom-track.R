@@ -166,7 +166,7 @@ GeomGgchordTrack <- ggproto("GeomGgchordTrack", ggplot2::Geom,
   default_aes = aes(fill = "#86AFB9", colour = NA, alpha = 1,
     linewidth = .25, linetype = 1, size = 2.2, shape = 19, stroke = .5,
     label = NA_character_, angle=0, hjust=.5, vjust=.5, family="",fontface=1,lineheight=1.2, .component = "track_poly"),
-  extra_params = c("na.rm", "track_keys", "track_kind", "axis_colour", "axis_size", "native_draw_params",
+  extra_params = c("na.rm", "track_keys", "track_kind", "axis_colour", "axis_size", "native_draw_params", "native_key",
     "axis_line_params", "axis_tick_params", "axis_text_params", "axis_title_params", "axis_check_overlap"),
   draw_panel = function(data, panel_params, coord, track_keys, track_kind,
       axis_colour = NULL, axis_size = NULL, na.rm = FALSE, native_draw_params=list(),
@@ -226,9 +226,8 @@ GeomGgchordTrack <- ggproto("GeomGgchordTrack", ggplot2::Geom,
   },
   draw_key = function(data, params, size) {
     for (role in names(params$track_keys)) data[[role]] <- data[[params$track_keys[[role]]]]
-    if (params$track_kind %in% c("line", "path", "step", "segment", "linerange", "errorbar")) ggplot2::draw_key_path(data, params, size) else
-      if (params$track_kind == "point") ggplot2::draw_key_point(data, params, size) else
-        if (params$track_kind == "text") ggplot2::draw_key_text(data, params, size) else ggplot2::draw_key_polygon(data, params, size)
+    draw <- params$native_key %||% ggplot2::draw_key_polygon
+    draw(data, c(params, params$native_draw_params), size)
   })
 
 # A single render owns the source-domain statistic. Guides and panel-size
