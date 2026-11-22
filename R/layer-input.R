@@ -115,9 +115,14 @@ ggchord_render_inputs <- function(plot) {
       next
     }
     reader <- layer$ggchord_input_data
-    if (!is.function(reader) || isTRUE(attr(reader, "ggchord_render_source"))) next
+    cache_reader <- is.function(reader) && !isTRUE(attr(reader, "ggchord_render_source"))
+    # This source plot survives device refinement, unlike the geometry copies.
+    cache_stat <- identical(layer$ggchord_type, "gene_poly") &&
+      !is.null(layer$ggchord_params$source_stat) && is.null(layer$ggchord_params$source_stat_cache)
+    if (!cache_reader && !cache_stat) next
     copy <- reconstruct_layer(layer, layer$data, mapping = layer$mapping)
-    copy$ggchord_input_data <- ggchord_render_data_once(reader)
+    if (cache_reader) copy$ggchord_input_data <- ggchord_render_data_once(reader)
+    if (cache_stat) copy$ggchord_params$source_stat_cache <- new.env(parent = emptyenv())
     plot$layers[[i]] <- copy
   }
   plot
@@ -503,6 +508,8 @@ ggchord_resolve_layer_input <- function(lyr, fallback = NULL,
     if (!is.null(cache$data)) {
       data <- cache$data
     } else {
+      if (identical(lyr$ggchord_type, "gene_poly") && nrow(data) && is.null(data$group))
+        data$group <- ggchord_feature_stat_group(lyr, input, data)
       data <- ggchord_run_source_stat(data, source_stat,
         intersect(lyr$ggchord_role_aes, names(data)), ggchord_layer_input_context(lyr),
         lyr$ggchord_params$source_stat_facet, lyr)

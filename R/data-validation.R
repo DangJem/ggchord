@@ -134,6 +134,17 @@ ggchord_data_validate_table <- function(data, role, references, enabled, add) {
       error = identity)
     if (!is.null(error)) add("invalid_segments", conditionMessage(error), column = "segments")
   }
+  if (enabled("coordinates") && role == "alignment" && "source_length" %in% names(data)) {
+    source_length <- data[["source_length"]]
+    invalid <- ggchord_alignment_invalid_length(source_length)
+    add("invalid_source_length", "source_length must be a positive exact integer",
+      which(invalid), "source_length")
+    position <- data[["source_position"]]
+    if (is.numeric(source_length) && is.numeric(position)) {
+      add("out_of_range", "source_position exceeds its declared source_length",
+        which(!invalid & position > source_length), "source_position")
+    }
+  }
   if (enabled("schema") && role == "alignment") {
     if ("is_gap" %in% names(data)) {
       if (!is.logical(data$is_gap)) add("invalid_gap", "is_gap must be logical", column = "is_gap")
@@ -193,6 +204,7 @@ ggchord_data_validate_table <- function(data, role, references, enabled, add) {
 #' @param action Report, warn, or signal an error with the complete report.
 #' @param checks Which checks to run. The schema check includes declared
 #'   reference topology and feature strand and directionality.
+#'   The coordinates check includes declared alignment source lengths.
 #' @return A validation result with source and row information for each issue.
 #' @export
 #' @examples

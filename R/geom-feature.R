@@ -167,6 +167,36 @@ ggchord_split_source_stat <- function(stat, dots, geom) {
     geom = dots[setdiff(names(dots), stat_keys)])
 }
 
+# Only user aesthetics available before the source Stat can define default groups.
+ggchord_feature_stat_group <- function(layer, input, data) {
+  mapping <- layer$ggchord_input_mapping
+  defaults <- layer$ggchord_params$style_defaults
+  fixed <- setdiff(names(layer$aes_params), names(defaults)[defaults])
+  if ("feature_fill" %in% fixed) fixed <- c(fixed, "fill")
+  visual <- setdiff(names(mapping), c(layer$ggchord_role_aes, fixed, "label", "PANEL"))
+  values <- lapply(mapping[visual], function(q) {
+    start <- ggchord_start_mapping(q)
+    if (!is_quosure(start)) return(start)
+    env <- get_env(start)
+    fields <- ggchord_visual_fields(get_expr(start), env)
+    external <- setdiff(fields, names(input))
+    # A mapping may refer to projected geometry, which does not exist here.
+    if (!all(vapply(external[!is.na(external)], exists, logical(1),
+        envir = env, inherits = TRUE))) return(NULL)
+    eval_tidy(start, input)
+  })
+  if ("feature_shape" %in% names(mapping)) values$shape <- data$feature_shape
+  groups <- Filter(function(x) is.factor(x) || is.character(x) || is.logical(x), values)
+  if (!length(groups)) return(NULL)
+  ids <- lapply(groups, function(x) {
+    if (!length(x) %in% c(1L, nrow(data)))
+      ggchord_stop(ggchord_layer_input_context(layer), ": grouped aesthetics must be scalar or supply one value per input row")
+    match(rep_len(x, nrow(data)), unique(x))
+  })
+  key <- do.call(paste, c(unname(ids), sep = ":"))
+  match(key, unique(key))
+}
+
 # A domain Stat receives source roles and source-row membership.
 ggchord_run_source_stat <- function(data, specification, roles, caller, facet, layer) {
   if (is.null(specification) || !nrow(data)) return(data)
@@ -195,6 +225,10 @@ ggchord_run_source_stat <- function(data, specification, roles, caller, facet, l
     computed <- do.call(stat$compute_panel, c(list(data = part, scales = axes),
       params[intersect(names(params), param_names)]))
     if (!is.data.frame(computed)) ggchord_stop(caller, ": Stat must return a data frame")
+    if (identical(layer$ggchord_type, "gene_poly") && !nrow(computed)) {
+      missing <- setdiff(intersect(c(roles, "source_row", "PANEL"), names(part)), names(computed))
+      computed[missing] <- part[FALSE, missing, drop = FALSE]
+    }
     ggchord_require_columns(computed, setdiff(roles, "group"), caller)
     if (is.null(computed$source_members)) {
       source <- computed$source_rows
@@ -300,6 +334,9 @@ ggchord_feature_layer <- function(mapping, data, shape, fixed_shape, thickness,
 #' @param shape Default shape. An explicitly supplied fixed shape takes priority over its mapping.
 #' @param thickness Physical thickness in mm or absolute grid units. Named values select references.
 #' @param stat A compatible ggplot2 Stat or its name. The default uses the supplied records.
+#'   A custom Stat works on source intervals. An explicit group takes priority;
+#'   otherwise discrete starting visual aesthetics group the records within each panel.
+#'   Device refinement reuses the source statistic from the current render.
 #' @param position A compatible Position for placement of the layer geometry.
 #' @param ... Additional named visual styles and parameters accepted by this layer.
 #' @param na.rm Suppress warnings for missing observations that the layer can omit.

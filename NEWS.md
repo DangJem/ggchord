@@ -1,5 +1,13 @@
 # ggchord 0.50.0 (development)
 
+- Feature source statistics group by effective discrete starting visual aesthetics
+  unless a group is supplied explicitly. Geometry refinement reuses each
+  layer's source statistic within the same render.
+- Linear character alignments reject nongap coordinates beyond a declared
+  `source_length`. The long table retains the declaration for validation.
+- `export_ggchord_layout()` reports measurement device conditions separately
+  from per-panel geometry precision and convergence in `geometry$metrics`.
+
 - Normalizing reversed link endpoints preserves strand evidence and rejects
   contradictory declarations. Validation reports invalid feature strands
   and reference topology.

@@ -13,6 +13,14 @@
 #' path and layer ID. It retains the stages and geometry of other panels and
 #' ribbons. Ribbon tips are returned as decoration geometry separately from
 #' the source fronts.
+#' `measurement$status` describes the device used for measurement. With the
+#' geometry stage, `geometry$metrics` reports each panel's measurement status,
+#' geometry metric status, convergence and number of refinement passes. A
+#' render using a private estimate device can converge on that device while
+#' its geometry metrics remain estimates for the requested output. Native
+#' character panels report measured cell positions; glyphs are fitted at draw
+#' time. `converged` is missing when physical refinement was not evaluated.
+#' Consult `stage_status` separately for the availability of layer data.
 #' @export
 #' @examples
 #' seqs <- data.frame(
@@ -69,6 +77,7 @@ export_ggchord_layout <- function(plot, layers = NULL, stages = "geometry",
   need_geometry <- "geometry" %in% stages && !is.null(request$size)
   need_build <- need_geometry || any(stages %in% c("mapped", "statistic"))
   failure <- NULL
+  measurement_device <- NULL
   diagnostic <- data.frame()
   results <- NULL
   geometry <- list(layers = list(), panels = data.frame(), fronts = data.frame(),
@@ -79,6 +88,7 @@ export_ggchord_layout <- function(plot, layers = NULL, stages = "geometry",
     results <- tryCatch({
       if (need_geometry) {
         ggchord_with_output_device(request, function() {
+          measurement_device <<- names(dev.cur())
           result <- ggchord_output_build_geometry(prospective, record_failure)
           ggchord_output_attach_geometry(entries, result)
           result
@@ -118,12 +128,9 @@ export_ggchord_layout <- function(plot, layers = NULL, stages = "geometry",
       ggchord_output_issue("error", "build_failed", issue$message, issue$path,
         issue$layer_id %||% NA_character_))))
   }
-  measurement <- ggchord_output_measurement(request, need_geometry, failure,
-    actual = attr(results, "measurement_device"))
-  if (need_geometry && is.null(failure) && !is.null(results$leaf) &&
-      !identical(results$leaf$context$status, "measured"))
-    measurement <- modifyList(measurement, list(status = "unavailable",
-      reason = "panel_measurement_unavailable"))
+  measurement <- ggchord_output_measurement(request, !is.null(measurement_device),
+    failure = if (need_geometry && is.null(measurement_device)) failure,
+    actual = measurement_device)
   statuses <- lapply(entries, function(entry) {
     local <- Filter(function(issue)
       length(issue$path) <= length(entry$panel_path) &&
@@ -142,6 +149,8 @@ export_ggchord_layout <- function(plot, layers = NULL, stages = "geometry",
   }), stages)
   if ("geometry" %in% stages) {
     geometry$layers <- stage_tables$geometry
+    geometry$metrics <- ggchord_output_geometry_metrics(results$leaves, measurement$status,
+      failure, failures)
     text <- lapply(entries, function(entry) {
       value <- entry$capture$text
       if (is.null(value) || !nrow(value)) return(NULL)
@@ -526,6 +535,40 @@ ggchord_output_panel_table <- function(context) {
   if (!is.null(context$facet_panels_mm)) return(context$facet_panels_mm)
   if (is.null(context$panel_bounds_mm)) return(data.frame())
   as.data.frame(as.list(context$panel_bounds_mm))
+}
+
+ggchord_output_geometry_metrics <- function(leaves, device_status, failure, failures) {
+  row <- function(path, panel = NA_integer_, panel_status = "unavailable",
+      metric_status = "unavailable", converged = NA, passes = NA_integer_) {
+    data.frame(panel_path = I(list(ggchord_fusion_path_ids(path))), PANEL = panel,
+      panel_measurement = panel_status, geometry_metric_status = metric_status,
+      converged = converged, refinement_passes = passes)
+  }
+  if (!is.null(failure)) return(row("", metric_status = "failed"))
+  if (identical(device_status, "unavailable")) return(row(""))
+  measured <- lapply(seq_along(leaves), function(at) {
+    path <- names(leaves)[at]
+    leaf <- leaves[[at]]
+    context <- leaf$context
+    panels <- as.integer(leaf$built$layout$layout$PANEL)
+    passes <- context$refinement_passes %||% 0L
+    ggchord_rbind_fill(lapply(seq_along(panels), function(i) {
+      info <- context$facet_contexts[[i]] %||% context
+      status <- if (!identical(info$status, "measured")) "unavailable" else
+        if (identical(device_status, "estimated")) "estimated" else
+        if (!is.null(context$refinement_passes)) info$geometry_metric_status else
+        if (isTRUE(leaf$layout$character)) "measured_positions" else "measured"
+      row(path, panels[i], info$status, status,
+        if (passes > 0L && identical(info$status, "measured")) info$converged else NA,
+        as.integer(passes))
+    }))
+  })
+  panel_failures <- Filter(function(x) is.null(x$layer_id), failures)
+  failed_paths <- unique(vapply(panel_failures, function(x)
+    ggchord_fusion_path_key(x$path), character(1)))
+  failed <- lapply(setdiff(failed_paths, names(leaves)), function(path)
+    row(path, metric_status = "failed"))
+  ggchord_rbind_fill(c(measured, failed)) %||% row("")
 }
 
 ggchord_output_stage_status <- function(entry, stages, request, build_failure) {

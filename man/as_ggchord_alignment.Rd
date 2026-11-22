@@ -18,9 +18,11 @@ ambiguity codes and protein ambiguity/rare-residue codes are accepted;
 \item{source_data}{Optional data frame with one row per alignment \code{accver},
 \code{start} (first nongap source coordinate) and \code{strand} (\code{"+"} or \code{"-"}).
 Optional \code{source_accver} declares a different source ID; optional character
-\code{sequence} supplies the full forward source for verification. Coordinates
-must remain positive exact integers. Input metadata is retained in the
-\code{ggchord_conversion} attribute.}
+\code{sequence} supplies the full forward source for verification. Optional
+\code{source_length} gives the full source length as a positive exact integer.
+Linear nongap positions must be within a declared length. If both length
+and full sequence are supplied, they must agree. Input metadata is retained
+in the \code{ggchord_conversion} attribute.}
 
 \item{circular}{Explicit logical declaration that every source is circular,
 default FALSE. Requires source_data with full source_length or full sequence.
@@ -39,6 +41,7 @@ checked, including on its gap rows; it is not independent biological
 confirmation of the supplied source.
 \code{source_scope} is \code{"source"} with explicit source metadata and
 \code{"fragment"} for positions counted within each input fragment.
+A declared \code{source_length} is retained on the corresponding cells.
 }
 \description{
 Accepts an existing alignment, never computes one. Equal character counts

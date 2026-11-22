@@ -27,7 +27,8 @@ geom_primer(
 
 \item{thickness}{Physical thickness in mm or absolute grid units. Named values select references.}
 
-\item{stat}{A compatible ggplot2 Stat or its name. The default uses the supplied records.}
+\item{stat}{A compatible ggplot2 Stat or its name. See \code{\link[=geom_feature]{geom_feature()}} for
+source grouping and reuse during rendering.}
 
 \item{position}{A compatible Position for placement of the layer geometry.}
 

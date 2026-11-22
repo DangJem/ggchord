@@ -8,7 +8,8 @@
 #' @param data Observation table or a data function. For ggchord layers, provide the required data-role columns.
 #' @param shape Default shape. An explicitly supplied fixed shape takes priority over its mapping.
 #' @param thickness Physical thickness in mm or absolute grid units. Named values select references.
-#' @param stat A compatible ggplot2 Stat or its name. The default uses the supplied records.
+#' @param stat A compatible ggplot2 Stat or its name. See [geom_feature()] for
+#'   source grouping and reuse during rendering.
 #' @param position A compatible Position for placement of the layer geometry.
 #' @param ... Additional named visual styles and parameters accepted by this layer.
 #' @param na.rm Suppress warnings for missing observations that the layer can omit.

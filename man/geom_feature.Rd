@@ -27,7 +27,10 @@ geom_feature(
 
 \item{thickness}{Physical thickness in mm or absolute grid units. Named values select references.}
 
-\item{stat}{A compatible ggplot2 Stat or its name. The default uses the supplied records.}
+\item{stat}{A compatible ggplot2 Stat or its name. The default uses the supplied records.
+A custom Stat works on source intervals. An explicit group takes priority;
+otherwise discrete starting visual aesthetics group the records within each panel.
+Device refinement reuses the source statistic from the current render.}
 
 \item{position}{A compatible Position for placement of the layer geometry.}
 

@@ -6,6 +6,12 @@ ggchord_alignment_complement <- function(x, alphabet) {
   chartr(paste0(from, tolower(from)), paste0(to, tolower(to)), x)
 }
 
+ggchord_alignment_invalid_length <- function(value) {
+  if (!is.numeric(value)) return(!is.na(value))
+  is.nan(value) | (!is.na(value) &
+    (!is.finite(value) | value < 1 | value > 2^53 - 1 | value != floor(value)))
+}
+
 #' Adapt aligned characters with exact source positions
 #'
 #' Accepts an existing alignment, never computes one. Equal character counts
@@ -32,9 +38,11 @@ ggchord_alignment_complement <- function(x, alphabet) {
 #' @param source_data Optional data frame with one row per alignment `accver`,
 #'   `start` (first nongap source coordinate) and `strand` (`"+"` or `"-"`).
 #'   Optional `source_accver` declares a different source ID; optional character
-#'   `sequence` supplies the full forward source for verification. Coordinates
-#'   must remain positive exact integers. Input metadata is retained in the
-#'   `ggchord_conversion` attribute.
+#'   `sequence` supplies the full forward source for verification. Optional
+#'   `source_length` gives the full source length as a positive exact integer.
+#'   Linear nongap positions must be within a declared length. If both length
+#'   and full sequence are supplied, they must agree. Input metadata is retained
+#'   in the `ggchord_conversion` attribute.
 #' @param circular Explicit logical declaration that every source is circular,
 #'   default FALSE. Requires source_data with full source_length or full sequence.
 #'   Coordinates wrap at that length in the declared strand direction; nongap
@@ -50,6 +58,7 @@ ggchord_alignment_complement <- function(x, alphabet) {
 #'   confirmation of the supplied source.
 #'   `source_scope` is `"source"` with explicit source metadata and
 #'   `"fragment"` for positions counted within each input fragment.
+#'   A declared `source_length` is retained on the corresponding cells.
 #' @export
 #' @examples
 #' library(ggplot2)
@@ -100,24 +109,30 @@ as_ggchord_alignment <- function(sequences, alphabet, source_data = NULL, circul
   if ("sequence" %in% names(metadata) &&
       (!is.character(metadata$sequence) || anyNA(metadata$sequence)))
     ggchord_stop(caller, ": full source strings must be nonmissing character values")
-  if (circular) {
-    source_length <- metadata[["source_length"]]
-    if (is.null(source_length) && "sequence" %in% names(metadata))
-      source_length <- nchar(metadata$sequence, type = "chars")
-    if (!is.numeric(source_length) || length(source_length) != nrow(metadata) ||
-        any(!is.finite(source_length)) || any(source_length < 1 | source_length > 2^53 - 1 |
-          source_length != floor(source_length)) || any(metadata$start > source_length))
-      ggchord_stop(caller, ": circular source_data requires exact full source_length (or full sequence) and start within it")
-    if ("sequence" %in% names(metadata) && any(nchar(metadata$sequence, type = "chars") != source_length))
-      ggchord_stop(caller, ": source_length disagrees with the full source string")
-    metadata$source_length <- source_length
+  declared_length <- metadata[["source_length"]]
+  source_length <- rep(NA_real_, nrow(metadata))
+  if (!is.null(declared_length)) {
+    invalid <- ggchord_alignment_invalid_length(declared_length)
+    if (any(invalid)) ggchord_stop(caller, ": source_length must be a positive exact integer for ",
+      paste(ids[invalid], collapse = ", "))
+    source_length <- as.numeric(declared_length)
   }
+  if ("sequence" %in% names(metadata)) {
+    actual_length <- nchar(metadata$sequence, type = "chars")
+    conflict <- !is.na(source_length) & source_length != actual_length
+    if (any(conflict)) ggchord_stop(caller, ": source_length disagrees with the full source string for ",
+      paste(ids[conflict], collapse = ", "))
+    if (circular) source_length <- actual_length
+  }
+  if (circular && (anyNA(source_length) || any(source_length < 1 | metadata$start > source_length)))
+    ggchord_stop(caller, ": circular source_data requires exact full source_length (or full sequence) and start within it")
+  if (circular) metadata$source_length <- source_length
   pieces <- lapply(seq_along(ids), function(i) {
     value <- symbols[[i]]; gap <- value %in% c("-", ".")
     if (all(gap)) ggchord_stop(caller, ": record contains only gaps: ", ids[i])
     position <- metadata$start[i] + (cumsum(!gap) - 1) * if (metadata$strand[i] == "+") 1 else -1
     if (circular) {
-      n <- metadata$source_length[i]; start <- metadata$start[i]; k <- cumsum(!gap) - 1
+      n <- source_length[i]; start <- metadata$start[i]; k <- cumsum(!gap) - 1
       if (sum(!gap) > n)
         ggchord_stop(caller, ": circular record may not revisit a source position: ", ids[i])
       # Avoid an intermediate start + k above the exact-integer range.
@@ -128,6 +143,8 @@ as_ggchord_alignment <- function(sequences, alphabet, source_data = NULL, circul
     position[gap] <- NA_real_
     if (any(position[!gap] < 1 | position[!gap] > 2^53 - 1))
       ggchord_stop(caller, ": source interval lies outside positive exact coordinates: ", ids[i])
+    if (!is.na(source_length[i]) && any(position[!gap] > source_length[i]))
+      ggchord_stop(caller, ": source interval exceeds source_length (", source_length[i], ") for ", ids[i])
     verified <- "sequence" %in% names(metadata)
     if (verified) {
       source <- metadata$sequence[i]
@@ -146,10 +163,8 @@ as_ggchord_alignment <- function(sequences, alphabet, source_data = NULL, circul
   })
   result <- do.call(rbind, pieces); rownames(result) <- NULL
   result$source_scope <- if (is.null(source_data)) "fragment" else "source"
-  if (circular) {
-    result$source_circular <- TRUE
-    result$source_length <- metadata$source_length[result$.source_row]
-  }
+  if (circular) result$source_circular <- TRUE
+  if (circular || !is.null(declared_length)) result$source_length <- source_length[result$.source_row]
   attr(result, "ggchord_conversion") <- list(format = "aligned characters", alphabet = alphabet,
     source_data = metadata, source_input = sequences,
     coordinates = "one-based alignment columns and nullable one-based source positions")

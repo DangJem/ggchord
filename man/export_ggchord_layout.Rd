@@ -43,6 +43,14 @@ Fusion export records failed panels by path and failed ribbons by
 path and layer ID. It retains the stages and geometry of other panels and
 ribbons. Ribbon tips are returned as decoration geometry separately from
 the source fronts.
+\code{measurement$status} describes the device used for measurement. With the
+geometry stage, \code{geometry$metrics} reports each panel's measurement status,
+geometry metric status, convergence and number of refinement passes. A
+render using a private estimate device can converge on that device while
+its geometry metrics remain estimates for the requested output. Native
+character panels report measured cell positions; glyphs are fitted at draw
+time. \code{converged} is missing when physical refinement was not evaluated.
+Consult \code{stage_status} separately for the availability of layer data.
 }
 \examples{
 seqs <- data.frame(
