@@ -364,7 +364,7 @@ ggchord_facet_layout <- function(plot) {
     result[fields] <- drawn[fields]
   }
   fields <- c("seqs", "sequence_layout", "sequence_reference", "sequence_unit",
-    "collinear", "circular", "rotation", "seq_axis", "display_instances",
+    "collinear", "circular", "curved_backbone", "rotation", "seq_axis", "display_instances",
     "sankey_projected", "sankey_frames", "radial_projected", "radial_frames", "reference_spacing")
   result$panel_references <- lapply(layouts, function(x) {
     if (is.null(x)) return(list(seqs = character()))

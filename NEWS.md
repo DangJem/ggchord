@@ -1,5 +1,10 @@
 # ggchord 0.50.0 (development)
 
+- `layout_sequences(curvature = ...)` can now bend the sequence paths in
+  Collinear, Sankey and Radial synteny plots. Their default paths are straight.
+  On curved Sankey paths, ticks follow the local normal and automatic tick
+  labels remain on the selected side, including at sequence endpoints.
+
 - Sequence axes now give overlapping endpoint labels separate positions
   along their own paths before placing annotations. Both endpoint values and
   tick marks stay visible at narrow junctions between chord sectors.

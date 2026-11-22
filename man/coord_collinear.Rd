@@ -2,7 +2,7 @@
 % Please edit documentation in R/coord-collinear.R
 \name{coord_collinear}
 \alias{coord_collinear}
-\title{Project references onto parallel linear paths}
+\title{Project references along parallel axes}
 \usage{
 coord_collinear(
   axis = "x",
@@ -31,7 +31,7 @@ coord_collinear(
 A coordinate system for a ggchord plot.
 }
 \description{
-Project references onto parallel linear paths
+Use \code{\link[=layout_sequences]{layout_sequences()}} with \code{curvature} to bend the reference paths.
 }
 \examples{
 seqs <- data.frame(

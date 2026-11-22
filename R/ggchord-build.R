@@ -332,7 +332,8 @@ compute_chord_geometry_prepared <- function(plot) {
     primary$circular_annotation_registry <-
       resolved_annotations$annotation_registry
   } else if (isTRUE(primary$collinear)) {
-    if (!isTRUE(plot$coordinates$ggchord_radial) && !isTRUE(plot$coordinates$ggchord_sankey) &&
+    if (!isTRUE(primary$curved_backbone) &&
+        !isTRUE(plot$coordinates$ggchord_radial) && !isTRUE(plot$coordinates$ggchord_sankey) &&
         !identical(plot$coordinates$collinear_seq_axis, "vertical")) {
       registry <- ggchord_collinear_share_labels(registry, primary)
       primary$collinear_label_diagnostics <- attr(registry, "collinear_label_diagnostics")
@@ -448,6 +449,10 @@ compute_chord_geometry_prepared <- function(plot) {
       layouts, function(x) x$feature_shape_order
     ), use.names = FALSE))
   }
+  if (isTRUE(primary$curved_backbone)) {
+    primary <- ggchord_bend_local_layout(primary)
+    registry <- primary$layer_geometry
+  }
   primary$extremes <- get_plot_extremes(
     allRibbon = ggchord_rbind_fill(Filter(Negate(is.null), list(
       primary$ribbon_polys, primary$link_lines, primary$restriction_sites,
@@ -483,7 +488,8 @@ compute_chord_geometry_prepared <- function(plot) {
   projected_labels <- any(vapply(primary$layer_geometry, function(owner) any(vapply(
     owner[intersect(names(owner), c("gene_text", "gene_text_repel", "gene_label_repel"))],
     function(d) is.data.frame(d) && nrow(d) > 0L, logical(1L))), logical(1L)))
-  if (projected_labels && (isTRUE(primary$radial_projected) || isTRUE(primary$sankey_projected) ||
+  if (projected_labels && (isTRUE(primary$curved_backbone) ||
+      isTRUE(primary$radial_projected) || isTRUE(primary$sankey_projected) ||
       isTRUE(primary$vertical_projected))) {
     primary$layer_geometry <- ggchord_collinear_share_labels(primary$layer_geometry, primary)
     primary$collinear_label_diagnostics <- attr(primary$layer_geometry, "collinear_label_diagnostics")

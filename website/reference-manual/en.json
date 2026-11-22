@@ -244,7 +244,7 @@
         }
       ],
       "value": "A coordinate system for a ggchord plot.",
-      "details": "Set the sequence axis with `axis`. The layout controls ordering and physical gaps, while the coordinate system projects those paths and sets the viewport. Positive offsets are above horizontal paths or to the right of vertical ones.\n\nAutomatic spacing leaves room on both sides of the paths for features, labels and leaders. Set a physical distance with `layout_sequences()` when the figure requires a fixed gap.",
+      "details": "Set the sequence axis with `axis`. The layout controls ordering and physical gaps, while the coordinate system projects those paths and sets the viewport. Positive offsets are above horizontal paths or to the right of vertical ones.\n\nAutomatic spacing leaves room on both sides of the paths for features, labels and leaders. Set a physical distance with `layout_sequences()` when the figure requires a fixed gap.\n\nUse [layout_sequences(curvature = ...)](layout_sequences.html#parameter-curvature) to bend the sequence paths. Features, axes and connection endpoints follow their reference paths.",
       "errors": "Use fixed facets. Use a track value domain for panel-specific quantitative heights.",
       "roles": [],
       "example_setup": ""
@@ -279,7 +279,7 @@
         }
       ],
       "value": "A coordinate system for a ggchord plot.",
-      "details": "Radial paths retain the source orientation and valid reference extents. Angle supplies the frame and layout controls the relative orientation of each sequence. Relations still use their own interval or point table.\n\nIf inner_radius is omitted, the central opening starts at 0.12 of the longest outer radius and expands as needed to fit the visible endpoint strokes and feature clearance.",
+      "details": "Radial paths retain the source orientation and valid reference extents. Angle supplies the frame and layout controls the relative orientation of each sequence. Relations still use their own interval or point table.\n\nIf inner_radius is omitted, the central opening starts at 0.12 of the longest outer radius and expands as needed to fit the visible endpoint strokes and feature clearance.\n\nUse [layout_sequences(curvature = ...)](layout_sequences.html#parameter-curvature) to bend the sequence paths. Features, axes and connection endpoints follow their reference paths.",
       "errors": "Only layout options applicable to radial paths are accepted. Free facet axes are unsupported.",
       "roles": [],
       "example_setup": ""
@@ -314,7 +314,7 @@
         }
       ],
       "value": "A coordinate system for a ggchord plot.",
-      "details": "A reference can have display instances on both columns. Source identity, endpoint roles and display instances remain distinct. Choose column spacing in millimetres and the desired axis in the coordinate declaration.\n\nAutomatic spacing leaves room on both sides of the paths for features, labels and leaders. Set a physical distance with `layout_sequences()` when the figure requires a fixed gap.",
+      "details": "A reference can have display instances on both columns. Source identity, endpoint roles and display instances remain distinct. Choose column spacing in millimetres and the desired axis in the coordinate declaration.\n\nAutomatic spacing leaves room on both sides of the paths for features, labels and leaders. Set a physical distance with `layout_sequences()` when the figure requires a fixed gap.\n\nUse [layout_sequences(curvature = ...)](layout_sequences.html#parameter-curvature) to bend the sequence paths. Features, axes and connection endpoints follow their reference paths.",
       "errors": "Use explicit endpoint information when a connection is ambiguous. Fixed facet scales are required.",
       "roles": [],
       "example_setup": ""
@@ -529,7 +529,7 @@
         },
         {
           "format": "finite numeric / flexible specification / NULL",
-          "description": "Signed reference curvature for chord coordinates."
+          "description": "Signed backbone bend for Chord, Collinear, Sankey and Radial synteny. Use one number for all sequences, a vector named by source accession, or `list(instance = ...)` with a vector named by display instance. Zero is straight and negative values reverse the bend. With NULL, Chord uses its standard arc (1) and the other three layouts use straight paths (0). In those layouts, a magnitude of 1 moves the midpoint one tenth of the along-axis span in the local coordinate frame."
         },
         {
           "format": "character / NULL",
@@ -3244,7 +3244,7 @@
         }
       ],
       "value": "A guide for `scale_seq_position()`.",
-      "details": "Use a guide to select where the sequence position scale is explained. Breaks and labels are supplied through the position scale; appearance is controlled by theme elements.\n\nWhen adjacent sequence endpoints meet, automatic overlap checking repositions their tick labels while keeping the ticks at the original positions.",
+      "details": "Use a guide to select where the sequence position scale is explained. Breaks and labels are supplied through the position scale; appearance is controlled by theme elements.\n\nWhen adjacent sequence endpoints meet, automatic overlap checking repositions their tick labels while keeping the ticks at the original positions.\n\nOn a curved Sankey path, automatic labels follow the visible tangent. Tick marks extend perpendicular to the path on the selected side, including at the sequence endpoints.",
       "errors": "Select known reference or instance identities and options compatible with the axis.",
       "roles": [],
       "example_setup": ""

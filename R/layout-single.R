@@ -124,7 +124,7 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
   seq_gap       <- if (collinear) ggchord_row_gap(plot, arrangement, seqs) else
     process_sequence_param(arrangement$gap, seqs, "angular_gap", 0)
   seq_curvature <- process_sequence_param(arrangement$curvature, seqs,
-                                          "layout_sequences(curvature)", 1)
+                                          "layout_sequences(curvature)", if (collinear) 0 else 1)
 
   circular <- isTRUE(plot$coordinates$ggchord_circular)
   if (circular) {
@@ -147,7 +147,7 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
   if (!is.numeric(seq_gap) || any(!is.finite(seq_gap) | seq_gap < 0))
     ggchord_stop("Reference gaps must be finite and nonnegative")
   if (!is.numeric(seq_curvature) || any(!is.finite(seq_curvature))) {
-    ggchord_stop("seq_curvature must contain finite numbers")
+    ggchord_stop("layout_sequences(curvature) must contain finite numbers")
   }
 
   if (!is.null(seq_params$seq_colors)) {
@@ -846,6 +846,8 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
       collinear_transform = collinear_transform,
       collinear_crossrow_styles = ggchord_collinear_row_styles(plot$coordinates),
       collinear_radial = isTRUE(plot$coordinates$ggchord_radial),
+      defer_connection_bend = isTRUE(plot$coordinates$ggchord_radial) ||
+        isTRUE(plot$coordinates$ggchord_sankey),
       collinear_right_normal = identical(plot$coordinates$collinear_seq_axis, "vertical"),
       collinear_vertical = isTRUE(plot$coordinates$ggchord_sankey) ||
         identical(plot$coordinates$collinear_seq_axis, "vertical"))

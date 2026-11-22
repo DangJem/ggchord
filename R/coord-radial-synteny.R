@@ -1,5 +1,7 @@
 #' Project references along radial spokes
 #'
+#' Use [layout_sequences()] with `curvature` to bend the spokes.
+#'
 #' @inheritParams coord_chord
 #' @return A coordinate system for a ggchord plot.
 #' @export
@@ -163,15 +165,17 @@ ggchord_radial_connections <- function(d, input, params, component, layout, fram
         gap_mm = gap_mm, strength = params$avoid_strength %||% .5)
       pos <- profile$position
       gap <- profile$gap
-      r <- frames$inner[match(id, frames$key)] + ggchord_collinear_x(pos, id, ref) - frames$axis_min[match(id, frames$key)]
+      at <- match(id, frames$key)
+      xy <- ggchord_bend_front(id, ggchord_collinear_x(pos, id, ref),
+        ref$y[id] + sign * gap + offsets[[id]], ref)
+      r <- frames$inner[at] + xy[, 1L] - frames$axis_min[at]
       # Oversized fixed/automatic bands would invert the front or consume its
       # angular channel. Do not silently clamp the user's physical geometry.
-      clearance <- abs(sign * gap + offsets[[id]])
+      clearance <- abs(xy[, 2L] - ref$y[id])
       if (any(!is.finite(gap)) || any(gap < 0) ||
           (delta != 0 && any(atan2(clearance, r) >= abs(delta) * .45)))
         ggchord_stop("coord_radial_synteny(): endpoint clearance does not fit its angular channel; increase inner_radius or reduce bands/gaps")
-      ggchord_radial_points(ggchord_collinear_x(pos, id, ref),
-        ref$y[id] + sign * gap + offsets[[id]], id, frames)
+      ggchord_radial_points(xy[, 1L], xy[, 2L], id, frames)
     }
     if (component == "ribbon") {
       qxy <- front(q, input$qstart[i], input$qend[i], normal_q)
@@ -358,10 +362,11 @@ ggchord_project_radial_layout <- function(layout, plot) {
   layout$seq_labels_df <- ggchord_rbind_fill(lapply(layout$layer_geometry, function(owner) owner$seq_label)) %||% data.frame()
   # Expose both final bounds and the unchanged local axis used for inversion.
   tab$axis_min <- tab$xmin; tab$axis_max <- tab$xmax
-  a <- ggchord_radial_points(tab$axis_min, frames$source_y, frames$key, frames)
-  b <- ggchord_radial_points(tab$axis_max, frames$source_y, frames$key, frames)
-  tab$xmin <- pmin(a[,1], b[,1]); tab$xmax <- pmax(a[,1], b[,1])
-  tab$ymin <- pmin(a[,2], b[,2]); tab$ymax <- pmax(a[,2], b[,2])
+  path <- layout$seq_arcs[tab$accver]
+  tab$xmin <- vapply(path, function(d) min(d$x), numeric(1))
+  tab$xmax <- vapply(path, function(d) max(d$x), numeric(1))
+  tab$ymin <- vapply(path, function(d) min(d$y), numeric(1))
+  tab$ymax <- vapply(path, function(d) max(d$y), numeric(1))
   tab$y <- (tab$ymin + tab$ymax) / 2
   tab$theta <- theta; tab$inner_radius <- frames$inner
   layout$sequence_layout <- tab
@@ -401,12 +406,14 @@ ggchord_map_radial <- function(layout, accver, position, inverse, source) {
   if (inverse) {
     r <- xy[,1] * frames$tx[at] + xy[,2] * frames$ty[at]
     normal <- xy[,1] * frames$nx[at] + xy[,2] * frames$ny[at]
+    x <- r - frames$inner[at] + frames$axis_min[at]
+    if (isTRUE(layout$curved_backbone)) normal <- normal - ggchord_backbone_bend(x, ids, ref)
     if (any(abs(normal) > 1e-7)) ggchord_stop("Radial inverse position must lie on the specified backbone")
-    local <- (r - frames$inner[at] + frames$axis_min[at] - unname(ref$x_offset[ids])) / ggchord_collinear_scale(ids, ref)
+    local <- (x - unname(ref$x_offset[ids])) / ggchord_collinear_scale(ids, ref)
     pos <- ifelse(ref$orientation[ids] == 1, local, ref$lens[ids] - local)
   } else {
     pos <- position - if (source) origin - 1 else 0
-    xy <- ggchord_radial_points(ggchord_collinear_x(pos, ids, ref), ref$y[ids], ids, frames)
+    xy <- ggchord_panel_backbone_frame(layout, ids, pos)$xy
   }
   if (any(pos < 1 - 1e-7 | pos > ref$lens[ids] + 1e-7))
     ggchord_stop("Radial position lies outside the specified sequence/window")

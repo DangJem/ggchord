@@ -1,5 +1,8 @@
 #' Project reference relationships onto two aligned sets of paths
 #'
+#' Use [layout_sequences()] with `curvature` to bend the paths. Automatic
+#' tick labels follow the visible tangent, including at the endpoints.
+#'
 #' @inheritParams coord_collinear
 #' @return A coordinate system for a ggchord plot.
 #' @export
@@ -69,6 +72,53 @@ ggchord_project_sankey_data <- function(data, frames, id = NULL) {
     data[[field]] <- degrees
   }
   data
+}
+
+# Keep the text on the tick side of the curve when its tangent crosses the
+# vertical. Derive the normal in physical units since the panel can stretch
+# the across-column and along-column dimensions independently.
+ggchord_sankey_bent_ticks <- function(ticks, local, layout, horizontal) {
+  ref <- layout$sequence_reference
+  ids <- as.character(local$accver)
+  rows <- which(unname(ref$curvature[ids]) != 0)
+  if (!length(rows)) return(ticks)
+  scale <- ggchord_annotation_metric(layout)
+  slope <- ggchord_backbone_bend(local$x0[rows], ids[rows], ref, slope = TRUE)
+  tangent <- if (horizontal) cbind(1 / scale[1L], slope / scale[2L]) else
+    cbind(slope / scale[1L], -1 / scale[2L])
+  tangent <- tangent / sqrt(rowSums(tangent^2))
+  normal <- cbind(-tangent[, 2L], tangent[, 1L])
+  read_xy <- function(x, y) sweep(as.matrix(ticks[rows, c(x, y), drop = FALSE]), 2L, scale, "/")
+  root <- read_xy("x0", "y0")
+  tip <- read_xy("x1", "y1")
+  anchor <- read_xy("label_x", "label_y")
+  text_direction <- anchor - root
+  side <- sign(rowSums(normal * text_direction))
+  side[side == 0] <- 1
+  normal <- normal * side
+  place <- function(distance) sweep(root + normal * distance, 2L, scale, "*")
+  tip <- place(sqrt(rowSums((tip - root)^2)))
+  anchor <- place(sqrt(rowSums(text_direction^2)))
+  ticks[rows, c("x1", "y1")] <- tip
+  ticks[rows, c("label_x", "label_y")] <- anchor
+
+  orientation <- as.character(layout$axisLabelOrientation[ids[rows]])
+  automatic <- orientation %in% c("parallel", "perpendicular")
+  angle <- ticks$label_angle[rows] * pi / 180
+  # An explicit angle is already in display degrees. For automatic labels,
+  # rotate to the visible tangent and then make the reading direction upright.
+  fixed <- suppressWarnings(as.numeric(orientation))
+  explicit <- which(is.finite(fixed))
+  angle[explicit] <- fixed[explicit] * pi / 180
+  angle[which(orientation == "horizontal")] <- 0
+  curve_angle <- atan2(tangent[, 2L], tangent[, 1L]) +
+    ifelse(orientation %in% "perpendicular", pi / 2, 0)
+  angle[automatic] <- (curve_angle[automatic] + pi / 2) %% pi - pi / 2
+  ticks$label_angle[rows] <- angle * 180 / pi
+  justification <- function(alignment) ifelse(abs(alignment) < 1e-8, .5, as.numeric(alignment < 0))
+  ticks$label_hjust[rows] <- justification(rowSums(normal * cbind(cos(angle), sin(angle))))
+  ticks$label_vjust[rows] <- justification(rowSums(normal * cbind(-sin(angle), cos(angle))))
+  ticks
 }
 
 ggchord_sankey_route <- function(a, b, route, horizontal) {
@@ -142,8 +192,9 @@ ggchord_project_sankey_layout <- function(layout, plot) {
       profile <- ggchord_connection_front(bounds, obstacles[[id]], direction, avoid,
         base, normal_mm, ggchord_collinear_scale(id, ref) * normal_mm / along_mm,
         n = samples, gap_mm = gap_mm, strength = params$avoid_strength %||% .5)
-      ggchord_sankey_points(ggchord_collinear_x(profile$position, id, ref),
-        unname(ref$y[id]) + direction * profile$gap + offsets[[id]], id, frames)
+      xy <- ggchord_bend_front(id, ggchord_collinear_x(profile$position, id, ref),
+        unname(ref$y[id]) + direction * profile$gap + offsets[[id]], ref)
+      ggchord_sankey_points(xy[, 1L], xy[, 2L], id, frames)
     }
     pieces <- list()
     for (i in seq_len(nrow(input))) {
@@ -171,9 +222,12 @@ ggchord_project_sankey_layout <- function(layout, plot) {
     layout$layer_geometry[[owner]][[component]] <- ggchord_rbind_fill(pieces) %||% d[FALSE,,drop=FALSE]
   }
   layout$seq_arcs <- lapply(layout$seq_arcs,ggchord_project_sankey_data,frames=frames)
+  local_ticks <- layout$axis_ticks
   for (field in c("axis_lines","axis_ticks","gene_polys","gene_labels","gene_label_segments",
       "region_polys","seq_labels_df","sequence_scales","track_axes"))
     layout[[field]] <- ggchord_project_sankey_data(layout[[field]],frames)
+  if (isTRUE(layout$curved_backbone) && NROW(local_ticks))
+    layout$axis_ticks <- ggchord_sankey_bent_ticks(layout$axis_ticks, local_ticks, layout, horizontal)
   for (pair in list(c("ribbon_polys","ribbon"),c("link_lines","link"))) {
     parts <- lapply(layout$layer_geometry,function(owner)owner[[pair[2]]])
     layout[[pair[1]]] <- ggchord_rbind_fill(parts)
@@ -182,6 +236,12 @@ ggchord_project_sankey_layout <- function(layout, plot) {
   at <- match(tab$accver,frames$key)
   tab$ymax <- frames$top[at]; tab$ymin <- tab$ymax - unname(span[tab$accver])
   tab$xmin <- tab$xmax <- frames$column_x[at]; tab$y <- (tab$ymax+tab$ymin)/2
+  if (isTRUE(layout$curved_backbone)) {
+    tab$xmin <- vapply(layout$seq_arcs[tab$accver], function(d) min(d$x), numeric(1))
+    tab$xmax <- vapply(layout$seq_arcs[tab$accver], function(d) max(d$x), numeric(1))
+    tab$ymin <- vapply(layout$seq_arcs[tab$accver], function(d) min(d$y), numeric(1))
+    tab$ymax <- vapply(layout$seq_arcs[tab$accver], function(d) max(d$y), numeric(1))
+  }
   layout$sequence_layout <- tab
   geometry <- c(unlist(layout$layer_geometry,recursive=FALSE), list(layout$axis_lines,layout$axis_ticks))
   xx <- yy <- numeric()

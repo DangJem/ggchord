@@ -263,7 +263,9 @@ ggchord_query_project <- function(candidates, leaf, from, input, axis, facet) {
         if (inverse) {
           limits <- c(1, candidate$local_end - candidate$local_start + 1)
           point <- if (is.null(axis)) c(input$x, input$y) else input[[axis]]
-          samples <- if (isTRUE(projected$collinear) || !is.null(axis)) 2L else {
+          samples <- if (!is.null(axis)) 2L else if (isTRUE(projected$collinear)) {
+            if (isTRUE(projected$sequence_reference$curvature[[key]] != 0)) 33L else 2L
+          } else {
             max(2L, length(projected$sequence_reference$refs[[key]]$angles) + 2L)
           }
           position <- ggchord_query_inverse(point, limits, samples, project)

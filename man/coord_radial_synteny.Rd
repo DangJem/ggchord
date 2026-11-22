@@ -31,7 +31,7 @@ coord_radial_synteny(
 A coordinate system for a ggchord plot.
 }
 \description{
-Project references along radial spokes
+Use \code{\link[=layout_sequences]{layout_sequences()}} with \code{curvature} to bend the spokes.
 }
 \examples{
 seqs <- data.frame(

@@ -1,7 +1,9 @@
 # Linear multi-sequence coordinates own their physical layout strategy.
 CoordCollinear <- ggproto("CoordCollinear", CoordGgchord)
 
-#' Project references onto parallel linear paths
+#' Project references along parallel axes
+#'
+#' Use [layout_sequences()] with `curvature` to bend the reference paths.
 #'
 #' @inheritParams coord_dotplot
 #' @param axis Direction of the reference paths, either `"x"` or `"y"`.

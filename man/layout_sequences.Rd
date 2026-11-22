@@ -40,7 +40,14 @@ sequence ends. Set \code{row_gap} or \code{column_gap} to specify that distance.
 \item{inner_radius}{Relative inner radius for radial spokes. With \code{NULL},
 retain a compact centre and enlarge it if nearby drawn bands need space.}
 
-\item{curvature}{Signed reference curvature for chord coordinates.}
+\item{curvature}{Signed backbone bend for Chord, Collinear, Sankey and
+Radial synteny layouts. Set a scalar, a vector named by source accession,
+or \code{list(instance = ...)} with a vector named by display instance.
+Zero draws straight paths and negative
+values reverse the bend. The default is 1 (the standard arc) in Chord
+and 0 in the other three layouts. In those layouts, a magnitude of 1
+displaces the midpoint by one tenth of the along-axis span in the local
+coordinate frame.}
 
 \item{align}{Display alignment of linear paths: start, center or end.}
 
@@ -84,4 +91,10 @@ w <- data.frame(instance_id = c("A_left", "A_right"),
                 row_id = "A_split")
 ggchord(data = one_seq) + geom_seq() +
   layout_sequences(windows = w, segment_gap = 3) + coord_collinear()
+
+ggchord(seqs) +
+  geom_seq() +
+  geom_gene(data = genes) +
+  layout_sequences(curvature = c(A = 0.6, B = -0.4)) +
+  coord_collinear()
 }

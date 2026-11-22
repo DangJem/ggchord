@@ -1,5 +1,5 @@
 {
-  "source_sha256": "a4138943d031198f1813cecb6bfcee15f75c4953a0eed25234491686f01ef7dd",
+  "source_sha256": "1735e4d69e3bf6091db71e79a8f40b77ade17e20bad5d165d466e2a8b5adc237",
   "description": "按任务查找函数，进入同一函数族的页面后，可以对照各接口的调用形式、参数和输出。每个接口都附有可运行的 R 示例及对应的图形或控制台结果。",
   "groups": {
     "construct": {
@@ -217,7 +217,7 @@
     },
     "coord_collinear": {
       "title": "平行参考路径上的共线性视图",
-      "intro": "把多个序列置于平行线性参考路径，投影区间特征与序列关系。排列顺序、行距、对齐和显示反向由 Layout 控制。",
+      "intro": "将多条序列沿平行轴排列，显示区间特征与序列关系。排列顺序、行距、对齐、弯曲和显示反向由布局控制。",
       "arguments": [
         {
           "format": "character；默认 \"x\"",
@@ -245,14 +245,14 @@
         }
       ],
       "value": "线性序列 Coord；仅改变显示投影，保留源 ID、端点、方向和统计结果。",
-      "details": "1. 这是新 API 目标合同。每个分面单独建立投影，但共享预先解析的唯一参考序列；Coord 不读取另一张候选注释表，也不推断完整长度。\n\n2. 一个图对象最终只有一个 Coord。添加新的 Coord 按 ggplot2 的替换规则替换旧投影并给出提示；不会叠加两个坐标系统。\n\n3. 本 API 中所有物理 mm 尺寸以最终设备为准。fit 和画布比例只调整参考路径/视口，不静默缩放已声明的厚度、文字尺寸或轨带间距。\n\n4. axis=\"x\" 时参考顺序默认从上到下；axis=\"y\" 时从左到右。显示方向来自 Layout；Coord 不基于 links 自动推断 orientation。\n\n5. 支持完整参考或明确的显示窗口行。窗口只控制可见几何；重叠窗口或重复显示不能重复参与 coverage 统计。\n\n6. 支持 feature、site、track、label 以及 point/interval links。某个形状需要圆弧但本身没有线性定义时，该形状须报错；不能借此静默换成另一形状。\n\n7. 固定分面使用同一个参考合同。仅轨道值域可独立设为 panel；原生 free 画布轴不支持。\n\n自动间距会在路径两侧为特征、标签及引线留出空间。需要固定距离时可通过 `layout_sequences()` 指定。",
+      "details": "1. 这是新 API 目标合同。每个分面单独建立投影，但共享预先解析的唯一参考序列；Coord 不读取另一张候选注释表，也不推断完整长度。\n\n2. 一个图对象最终只有一个 Coord。添加新的 Coord 按 ggplot2 的替换规则替换旧投影并给出提示；不会叠加两个坐标系统。\n\n3. 本 API 中所有物理 mm 尺寸以最终设备为准。fit 和画布比例只调整参考路径/视口，不静默缩放已声明的厚度、文字尺寸或轨带间距。\n\n4. axis=\"x\" 时参考顺序默认从上到下；axis=\"y\" 时从左到右。显示方向来自 Layout；Coord 不基于 links 自动推断 orientation。\n\n5. 支持完整参考或明确的显示窗口行。窗口只控制可见几何；重叠窗口或重复显示不能重复参与 coverage 统计。\n\n6. 支持 feature、site、track、label 以及 point/interval links。某个形状需要圆弧但本身没有线性定义时，该形状须报错；不能借此静默换成另一形状。\n\n7. 固定分面使用同一个参考合同。仅轨道值域可独立设为 panel；原生 free 画布轴不支持。\n\n自动间距会在路径两侧为特征、标签及引线留出空间。需要固定距离时可通过 `layout_sequences()` 指定。\n\n用 [layout_sequences(curvature = ...)](layout_sequences.html#parameter-curvature) 调整序列弯曲。特征、刻度和连接端点沿各自的序列路径放置。",
       "errors": "- axis 非 x/y，ratio 非正有限数。\n\n- 同时提供不适用于线性参考的 radius/angular_gap/inner_radius。\n\n- 缺少参考或使用不兼容的 free 分面。",
       "roles": [],
       "example_setup": ""
     },
     "coord_radial_synteny": {
-      "title": "径向直线参考上的共线性视图",
-      "intro": "把多个线性参考投影为从中心空白向外延伸的 spoke，显示其间真实的区间或点关系。它是径向直线布局，不是同心圆轨道，也不是自动补齐相邻序列比对的算法。",
+      "title": "径向序列路径上的共线性视图",
+      "intro": "将多个参考序列从中心向外排列，显示真实的区间或点关系。序列默认沿直线排列，也可分别设置弯曲。",
       "arguments": [
         {
           "format": "numeric(1)；默认 0",
@@ -280,7 +280,7 @@
         }
       ],
       "value": "径向 spoke Coord；不产生缺失关系，不计算序列方向，也不改变参考长度。",
-      "details": "1. 这是新 API 目标合同。每个分面单独建立投影，但共享预先解析的唯一参考序列；Coord 不读取另一张候选注释表，也不推断完整长度。\n\n2. 一个图对象最终只有一个 Coord。添加新的 Coord 按 ggplot2 的替换规则替换旧投影并给出提示；不会叠加两个坐标系统。\n\n3. 本 API 中所有物理 mm 尺寸以最终设备为准。fit 和画布比例只调整参考路径/视口，不静默缩放已声明的厚度、文字尺寸或轨带间距。\n\n4. 每面板至少需要两条显示参考；spoke 顺序来自 Layout，默认均匀分布整周。两条参考时每条真实关系仍只显示一次，不自动复制到另一条连接走廊。\n\n5. 中心空白由 layout_sequences(inner_radius=...) 决定。inner_radius 是最长外半径归一为 1 后的中心半径；省略时，中心半径从最长外半径的 0.12 起按端部线宽和特征净空增大。radius 仍专用于弧形参考，在本模式不可使用。\n\n6. 局部正法向定义为从该 spoke 正向切线逆时针旋转 90 度，不随 biological strand 或显示 orientation 翻转。\n\n7. 非相邻连接、曲率与凸起由明确的 link Geom 路由参数控制。Coord 不筛相邻关系，不改变 linetype 或创建比对记录。\n\n8. 支持固定尺度分面。本版不支持将多个不连续窗口拼成一个 spoke；可将各窗口定义为不同显示实例，保留其来源。",
+      "details": "1. 这是新 API 目标合同。每个分面单独建立投影，但共享预先解析的唯一参考序列；Coord 不读取另一张候选注释表，也不推断完整长度。\n\n2. 一个图对象最终只有一个 Coord。添加新的 Coord 按 ggplot2 的替换规则替换旧投影并给出提示；不会叠加两个坐标系统。\n\n3. 本 API 中所有物理 mm 尺寸以最终设备为准。fit 和画布比例只调整参考路径/视口，不静默缩放已声明的厚度、文字尺寸或轨带间距。\n\n4. 每面板至少需要两条显示参考；spoke 顺序来自 Layout，默认均匀分布整周。两条参考时每条真实关系仍只显示一次，不自动复制到另一条连接走廊。\n\n5. 中心空白由 layout_sequences(inner_radius=...) 决定。inner_radius 是最长外半径归一为 1 后的中心半径；省略时，中心半径从最长外半径的 0.12 起按端部线宽和特征净空增大。radius 仍专用于弧形参考，在本模式不可使用。\n\n6. 局部正法向定义为从该 spoke 正向切线逆时针旋转 90 度，不随 biological strand 或显示 orientation 翻转。\n\n7. 非相邻连接、曲率与凸起由明确的 link Geom 路由参数控制。Coord 不筛相邻关系，不改变 linetype 或创建比对记录。\n\n8. 支持固定尺度分面。本版不支持将多个不连续窗口拼成一个 spoke；可将各窗口定义为不同显示实例，保留其来源。\n\n用 [layout_sequences(curvature = ...)](layout_sequences.html#parameter-curvature) 调整序列弯曲。特征、刻度和连接端点沿各自的序列路径放置。",
       "errors": "- 每面板有效 spoke 少于两条。\n\n- 将 radius 当作 spoke 中心半径，或给出无效 inner_radius。\n\n- 使用 joined-window 行或原生 free 画布轴。",
       "roles": [],
       "example_setup": ""
@@ -315,7 +315,7 @@
         }
       ],
       "value": "镜像参考关系 Coord；显示实例保留源参考 ID 和 q/s 侧身份，不改变源表中的 query/subject。",
-      "details": "1. 这是新 API 目标合同。每个分面单独建立投影，但共享预先解析的唯一参考序列；Coord 不读取另一张候选注释表，也不推断完整长度。\n\n2. 一个图对象最终只有一个 Coord。添加新的 Coord 按 ggplot2 的替换规则替换旧投影并给出提示；不会叠加两个坐标系统。\n\n3. 本 API 中所有物理 mm 尺寸以最终设备为准。fit 和画布比例只调整参考路径/视口，不静默缩放已声明的厚度、文字尺寸或轨带间距。\n\n4. 两侧共享同一套完整参考定义；Layout 对每个来源生成带侧身份的显示实例。显式选择两侧不同参考集合属于 Layout 显示选择，不改变权威参考。\n\n5. 列间物理距离使用 layout_sequences(column_gap=...)，两侧参考排序使用 order。源长度比例及显示反向遵守同一 Layout 合同。\n\n6. source 相同的自连接也是合法关系；是否保留由显式过滤数据决定。本 Coord 没有 self_links 开关。互为 q/s 的两条输入记录仍是两条独立证据。\n\n7. axis=\"y\" 时所有垂直参考的局部正侧为画布右侧；想在两列都向外放置，可按显示实例显式配置正负 offset，不能由 Coord 偷换 Position 数值含义。固定分面可用，原生 free 画布轴不可用。\n\n自动间距会在路径两侧为特征、标签及引线留出空间。需要固定距离时可通过 `layout_sequences()` 指定。",
+      "details": "1. 这是新 API 目标合同。每个分面单独建立投影，但共享预先解析的唯一参考序列；Coord 不读取另一张候选注释表，也不推断完整长度。\n\n2. 一个图对象最终只有一个 Coord。添加新的 Coord 按 ggplot2 的替换规则替换旧投影并给出提示；不会叠加两个坐标系统。\n\n3. 本 API 中所有物理 mm 尺寸以最终设备为准。fit 和画布比例只调整参考路径/视口，不静默缩放已声明的厚度、文字尺寸或轨带间距。\n\n4. 两侧共享同一套完整参考定义；Layout 对每个来源生成带侧身份的显示实例。显式选择两侧不同参考集合属于 Layout 显示选择，不改变权威参考。\n\n5. 列间物理距离使用 layout_sequences(column_gap=...)，两侧参考排序使用 order。源长度比例及显示反向遵守同一 Layout 合同。\n\n6. source 相同的自连接也是合法关系；是否保留由显式过滤数据决定。本 Coord 没有 self_links 开关。互为 q/s 的两条输入记录仍是两条独立证据。\n\n7. axis=\"y\" 时所有垂直参考的局部正侧为画布右侧；想在两列都向外放置，可按显示实例显式配置正负 offset，不能由 Coord 偷换 Position 数值含义。固定分面可用，原生 free 画布轴不可用。\n\n自动间距会在路径两侧为特征、标签及引线留出空间。需要固定距离时可通过 `layout_sequences()` 指定。\n\n用 [layout_sequences(curvature = ...)](layout_sequences.html#parameter-curvature) 调整序列弯曲。特征、刻度和连接端点沿各自的序列路径放置。",
       "errors": "- 不明来源或在重复实例间无法唯一确定连接端点。\n\n- 将输入权重自动解释为守恒流量。\n\n- 使用不适用的圆形布局参数。",
       "roles": [],
       "example_setup": ""
@@ -530,7 +530,7 @@
         },
         {
           "format": "有限numeric / 灵活配置 / NULL",
-          "description": "仅 Chord：有符号的参考弧弯曲因子，NULL为1。1是标准弧，0是连接既定端点的直线，负值反向弯曲，绝对值大于1加强弯曲。不能在Circular中把标准圆改成非圆，也不用于Collinear的直线参考。"
+          "description": "控制弦图、共线图、桑基图和径向共线图的序列弯曲。可以用单个数值统一设置，也可以传入按源序列命名的向量，或用 `list(instance = ...)` 传入按显示实例命名的向量。0 为直线，负值反向弯曲。省略时，弦图使用标准弧线（1），其余三种图使用直线（0）。在这三种图中，绝对值为 1 时，序列中点在局部坐标系中的侧向位移为沿轴跨度的十分之一。"
         },
         {
           "format": "character / NULL",
@@ -3245,7 +3245,7 @@
         }
       ],
       "value": "序列位置Guide对象，交给scale_seq_position(guide=...)使用。",
-      "details": "1. 坐标值、单位和labels由Scale提供。若要每100bp一个刻度，在Scale的breaks给生成函数，不在Guide新增刻度间距参数。\n\n2. sequences只影响说明选择。隐藏A的轴后，A的骨架、基因和连接仍然存在。\n\n3. 固定图例Guide和序列位置Guide不是同一对象；guide=\"none\"不生成整条说明，element_blank()可只隐藏其中某个外观部件。\n\n相邻序列的端点靠得很近时，默认避让会调整端点刻度文字的位置，刻度线仍指向原来的序列坐标。",
+      "details": "1. 坐标值、单位和labels由Scale提供。若要每100bp一个刻度，在Scale的breaks给生成函数，不在Guide新增刻度间距参数。\n\n2. sequences只影响说明选择。隐藏A的轴后，A的骨架、基因和连接仍然存在。\n\n3. 固定图例Guide和序列位置Guide不是同一对象；guide=\"none\"不生成整条说明，element_blank()可只隐藏其中某个外观部件。\n\n相邻序列的端点靠得很近时，默认避让会调整端点刻度文字的位置，刻度线仍指向原来的序列坐标。\n\n桑基图的序列弯曲时，自动定向的刻度文字沿路径切线排列，刻度线垂直于路径，并在选定一侧向外伸出。序列端点也遵循此规则。",
       "errors": "- 未知参考/实例、非法side或angle。\n\n- 局部theme试图改变数据或使用不支持的Guide外观元素。",
       "roles": [],
       "example_setup": ""

@@ -447,7 +447,7 @@
         ]
       ],
       "roles": [],
-      "examples": "ggchord(data = seqs) +\n  geom_seq() +\n  geom_gene(data = genes) +\n  geom_link_ribbon(data = links) +\n  layout_sequences(orientation = c(A = 1, B = -1), row_gap = 8) +\n  coord_collinear(axis = \"x\")",
+      "examples": "ggchord(data = seqs) +\n  geom_seq() +\n  geom_gene(data = genes) +\n  geom_link_ribbon(data = links) +\n  layout_sequences(\n    orientation = c(A = 1, B = -1),\n    curvature = c(A = 0.4, B = -0.3)\n  ) +\n  coord_collinear(axis = \"x\")",
       "related": [
         "layout_sequences",
         "suggest_sequence_layout",
@@ -488,7 +488,7 @@
         ]
       ],
       "roles": [],
-      "examples": "ggchord(data = seqs) +\n  geom_seq() +\n  geom_gene(data = genes) +\n  geom_link_ribbon(data = links) +\n  layout_sequences(inner_radius = 0.3) +\n  coord_radial_synteny(start_angle = 90)",
+      "examples": "ggchord(data = seqs) +\n  geom_seq() +\n  geom_gene(data = genes) +\n  geom_link_ribbon(data = links) +\n  layout_sequences(inner_radius = 0.3, curvature = c(A = 0.6, B = -0.4)) +\n  coord_radial_synteny(start_angle = 35, fit = \"labels\")",
       "related": [
         "layout_sequences",
         "geom_link_ribbon",
@@ -529,7 +529,7 @@
         ]
       ],
       "roles": [],
-      "examples": "ggchord(data = seqs) +\n  geom_seq() +\n  geom_gene(data = genes) +\n  geom_link_ribbon(data = links) +\n  layout_sequences(column_gap = 25) +\n  coord_sankey()",
+      "examples": "ggchord(data = seqs) +\n  geom_seq() +\n  geom_gene(data = genes) +\n  geom_link_ribbon(data = links) +\n  layout_sequences(column_gap = 64, curvature = c(A = 0.45, B = -0.3)) +\n  coord_sankey()",
       "related": [
         "layout_sequences",
         "geom_link_ribbon",
@@ -779,12 +779,14 @@
         ]
       ],
       "roles": [],
-      "examples": "ggchord(data = seqs) +\n  geom_seq() + geom_gene(data = genes) +\n  layout_sequences(\n    order = c(\"B\", \"A\"), orientation = c(A = 1, B = -1),\n    row_gap = 8, align = \"center\"\n  ) +\n  coord_collinear()\n\n# 同一来源显示两个窗口，不重新计算源统计\nw <- data.frame(instance_id = c(\"A_left\", \"A_right\"),\n                accver = \"A\", start = c(1, 501), end = c(500, 1000),\n                row_id = \"A_split\")\nggchord(data = one_seq) + geom_seq() +\n  layout_sequences(windows = w, segment_gap = 3) + coord_collinear()",
+      "examples": "ggchord(data = seqs) +\n  geom_seq() +\n  geom_gene(data = genes) +\n  layout_sequences(\n    order = c(\"B\", \"A\"), orientation = c(A = 1, B = -1),\n    align = \"center\", curvature = c(A = 0.4, B = -0.3)\n  ) +\n  coord_collinear()\n\n# 同一来源显示两个窗口，不重新计算源统计\nw <- data.frame(instance_id = c(\"A_left\", \"A_right\"),\n                accver = \"A\", start = c(1, 501), end = c(500, 1000),\n                row_id = \"A_split\")\nggchord(data = one_seq) + geom_seq() +\n  layout_sequences(windows = w, segment_gap = 3) + coord_collinear()",
       "related": [
         "layout_dotplot",
         "suggest_sequence_layout",
         "coord_chord",
         "coord_collinear",
+        "coord_radial_synteny",
+        "coord_sankey",
         "track_band"
       ],
       "native": false,

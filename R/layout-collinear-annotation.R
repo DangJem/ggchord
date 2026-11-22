@@ -500,7 +500,9 @@ ggchord_collinear_share_labels <- function(registry, layout) {
       upper <- unname(ref$y[id]) + track_bands$normal_max[i]
       if (!all(is.finite(c(limits, lower, upper)))) next
       band <- data.frame(x = limits[c(1L, 2L, 2L, 1L, 1L)],
-        y = c(lower, lower, upper, upper, lower), accver = id, .is_track = TRUE)
+        y = c(lower, lower, upper, upper, lower), accver = id, .is_track = TRUE,
+        group = 1L, .component = "polygon")
+      if (isTRUE(layout$curved_backbone)) band <- ggchord_bend_local_data(band, ref, "gene_poly")
       if (isTRUE(layout$radial_projected)) {
         xy <- ggchord_radial_points(band$x, band$y, band$accver, layout$radial_frames)
         band$x <- xy[, 1]; band$y <- xy[, 2]
@@ -536,9 +538,11 @@ ggchord_collinear_share_labels <- function(registry, layout) {
       if (isTRUE(row$feature_label_inside) && identical(id, as.character(row$accver))) return(FALSE)
       path <- paths[[id]]
       if (!is.data.frame(path) || !nrow(path)) return(FALSE)
-      # A straight backbone is a path, not a full horizontal strip after projection.
-      ggchord_linear_line_hits_box(c(path$x[1], path$y[1]),
-        c(tail(path$x, 1), tail(path$y, 1)), box)
+      if (nrow(path) == 2L) return(ggchord_linear_line_hits_box(
+        c(path$x[1L], path$y[1L]), c(path$x[2L], path$y[2L]), box))
+      starts <- seq_len(nrow(path) - 1L)
+      any(vapply(starts, function(i) ggchord_linear_line_hits_box(
+        c(path$x[i], path$y[i]), c(path$x[i + 1L], path$y[i + 1L]), box), logical(1L)))
     }, logical(1L)))
   }
   route_for <- function(row) {

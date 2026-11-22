@@ -8,6 +8,8 @@ ggchord_panel_backbone_frame <- function(layout, id, position) {
   }
   xy <- cbind(x = ggchord_collinear_x(position, id, ref),
     y = rep(unname(ref$y[id]), length(position)))
+  if (isTRUE(layout$curved_backbone))
+    xy[, 2L] <- xy[, 2L] + ggchord_backbone_bend(xy[, 1L], id, ref)
   normal <- cbind(x = rep(0, length(position)), y = rep(1, length(position)))
   project <- if (isTRUE(layout$sankey_projected)) function(p)
     ggchord_sankey_points(p[, 1], p[, 2], id, layout$sankey_frames) else

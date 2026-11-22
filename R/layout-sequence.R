@@ -12,7 +12,14 @@
 #' @param radius Relative radius for arc references.
 #' @param inner_radius Relative inner radius for radial spokes. With `NULL`,
 #'   retain a compact centre and enlarge it if nearby drawn bands need space.
-#' @param curvature Signed reference curvature for chord coordinates.
+#' @param curvature Signed backbone bend for Chord, Collinear, Sankey and
+#'   Radial synteny layouts. Set a scalar, a vector named by source accession,
+#'   or `list(instance = ...)` with a vector named by display instance.
+#'   Zero draws straight paths and negative
+#'   values reverse the bend. The default is 1 (the standard arc) in Chord
+#'   and 0 in the other three layouts. In those layouts, a magnitude of 1
+#'   displaces the midpoint by one tenth of the along-axis span in the local
+#'   coordinate frame.
 #' @param align Display alignment of linear paths: start, center or end.
 #' @param anchor Source anchor positions or intervals for linear alignment.
 #' @param windows An optional table with instance_id, accver, start and end.
@@ -48,6 +55,12 @@
 #'                 row_id = "A_split")
 #' ggchord(data = one_seq) + geom_seq() +
 #'   layout_sequences(windows = w, segment_gap = 3) + coord_collinear()
+#'
+#' ggchord(seqs) +
+#'   geom_seq() +
+#'   geom_gene(data = genes) +
+#'   layout_sequences(curvature = c(A = 0.6, B = -0.4)) +
+#'   coord_collinear()
 layout_sequences <- function(order = NULL, orientation = 1, length_mode = "proportional",
     angular_gap = NULL, row_gap = NULL, segment_gap = NULL, column_gap = NULL,
     radius = NULL, inner_radius = NULL, curvature = NULL, align = NULL,
@@ -190,8 +203,9 @@ ggchord_configure_layout <- function(plot) {
     if (isTRUE(coord$ggchord_sankey)) "sankey" else
     if (isTRUE(coord$ggchord_collinear)) "linear" else
     if (isTRUE(coord$ggchord_circular)) "circular" else "chord"
-  supported <- switch(mode, radial = "inner_radius", sankey = c("row_gap", "column_gap"),
-    linear = c("row_gap", "segment_gap", "align", "anchor"),
+  supported <- switch(mode, radial = c("inner_radius", "curvature"),
+    sankey = c("row_gap", "column_gap", "curvature"),
+    linear = c("row_gap", "segment_gap", "align", "anchor", "curvature"),
     circular = c("angular_gap", "radius"), chord = c("angular_gap", "radius", "curvature"))
   optional <- c("angular_gap", "row_gap", "segment_gap", "column_gap", "radius",
     "inner_radius", "curvature", "align", "anchor")
@@ -225,8 +239,8 @@ ggchord_configure_layout <- function(plot) {
   if (mode %in% c("chord", "circular")) {
     layout$gap <- values("angular_gap", if (mode == "chord") 2 else 0) / 360
     layout$radius <- values("radius", 1)
-    layout$curvature <- values("curvature", 1)
   }
+  layout$curvature <- values("curvature", if (mode %in% c("chord", "circular")) 1 else 0)
   if (mode %in% c("linear", "sankey")) {
     layout$auto_row_gap <- is.null(layout$row_gap)
     layout$row_gap <- ggchord_layout_mm(layout$row_gap, "row_gap")

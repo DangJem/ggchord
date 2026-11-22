@@ -31,7 +31,8 @@ coord_sankey(
 A coordinate system for a ggchord plot.
 }
 \description{
-Project reference relationships onto two aligned sets of paths
+Use \code{\link[=layout_sequences]{layout_sequences()}} with \code{curvature} to bend the paths. Automatic
+tick labels follow the visible tangent, including at the endpoints.
 }
 \examples{
 seqs <- data.frame(

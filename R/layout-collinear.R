@@ -1,5 +1,5 @@
-# Linear sequence-local geometry. Positions and normal offsets are kept
-# separate: no circular radius or angular reference is created for this coord.
+# Sequence-local geometry. The layout keeps along-axis positions and normal
+# offsets separate, including when a backbone is subsequently bent.
 
 ggchord_collinear_x <- function(pos, id, ref) {
   sequence_length <- unname(ref$lens[id])
@@ -148,9 +148,11 @@ ggchord_collinear_ribbons <- function(p, layout) {
             ggchord_units_per_mm(if (isTRUE(p$collinear_vertical)) "y" else "x"),
           gap_mm = gap_mm, strength = p$ribbon_avoid_strength)
       } else list(position = bounds, gap = rep(unname(p$ribbonGap[[id]]), 2L))
-      list(xy = cbind(x = ggchord_collinear_x(front$position, id, ref),
-        y = unname(ref$y[id]) + direction * front$gap + unname(p$ribbon_offset[id])),
-        gap = max(front$gap))
+      x <- ggchord_collinear_x(front$position, id, ref)
+      y <- unname(ref$y[id]) + direction * front$gap + unname(p$ribbon_offset[id])
+      xy <- if (isTRUE(p$defer_connection_bend)) cbind(x = x, y = y) else
+        ggchord_bend_front(id, x, y, ref)
+      list(xy = xy, gap = max(front$gap))
     }
     q_front <- make_front(q, input$qstart[i], input$qend[i], direction_q)
     s_front <- make_front(s, input$sstart[i], input$send[i], direction_s)
@@ -235,7 +237,10 @@ ggchord_collinear_link_geometry <- function(data, params, layout, rows) {
         abs(unname(ref$y[destination] - ref$y[id])) * .2)
       if (is.null(params$link_gap)) gap <- ggchord_collinear_gap_profile(
         pos, id, direction, layout$obstacles, params$link_avoid %||% "none", gap)
-      c(ggchord_collinear_x(pos, id, ref), unname(ref$y[id]) + direction * gap + offsets[[id]])
+      x <- ggchord_collinear_x(pos, id, ref)
+      y <- unname(ref$y[id]) + direction * gap + offsets[[id]]
+      if (isTRUE(layout$defer_connection_bend)) c(x, y) else
+        ggchord_bend_front(id, x, y, ref)[1L, ]
     }
     q <- endpoint(q_id, data$qpos[i], s_id)
     s <- endpoint(s_id, data$spos[i], q_id)
@@ -304,7 +309,8 @@ compute_collinear_layout <- function(...) {
   ref <- list(mode = "collinear", lens = lens, orientation = p$orientation,
     x_scale = if (identical(p$length_mode, "equal")) setNames(
       p$collinear_transform$table$units_per_bp, seqs) else p$collinear_transform$table$units_per_bp[1L], y = y,
-    x_offset = p$collinear_transform$offset %||% setNames(rep(0, n), seqs))
+    x_offset = p$collinear_transform$offset %||% setNames(rep(0, n), seqs),
+    curvature = p$seq_curvature, span = setNames(segment_table$xmax - segment_table$xmin, seqs))
   seq_arcs <- setNames(lapply(seqs, function(id) {
     data.frame(x = ggchord_collinear_x(c(0, lens[[id]]), id, ref),
       y = unname(y[id]), accver = id, stringsAsFactors = FALSE)
@@ -312,6 +318,8 @@ compute_collinear_layout <- function(...) {
   empty <- data.frame()
   layout <- list(
     sequence_reference = ref,
+    defer_connection_bend = p$defer_connection_bend,
+    curved_backbone = any(ref$curvature != 0),
     sequence_layout = cbind(p$collinear_transform$table,
       order = seq_len(n), y = unname(y)),
     orientation_diagnostics = p$collinear_transform$diagnostics,
