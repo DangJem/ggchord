@@ -14,7 +14,7 @@
 #' @param na.rm Suppress warnings for missing observations that the layer can omit.
 #' @param show.legend Logical or named logical indicating whether the layer contributes legend keys.
 #' @param inherit.aes Whether to inherit plot mappings and evaluate them on the layer data.
-#' @param id Optional plot-local layer identifier. Name a layer explicitly to scope a scale, anchor a label or export it.
+#' @param id Layer identifier. [auto_id()] assigns a plot-local ID and independent default visual scales. Use a name for explicit references, or `NULL` or `NA` to share scales.
 #' @return A ggplot2 layer for addition to a plot.
 #' @details Provide one-based closed intervals with `accver`, `start` and `end`. A strand or disjoint segments can be supplied where appropriate. The gene shortcut uses strand placement and a shoulderless arrow by default.
 #' Set `head_style = "shouldered"` through `...` to use a wider arrowhead.
@@ -42,19 +42,19 @@
 #'   coord_collinear()
 geom_gene <- function(mapping = NULL, data = NULL, shape = "arrow",
     thickness = 2, stat = "identity", position = position_strand(), ...,
-    na.rm = FALSE, show.legend = NA, inherit.aes = TRUE, id = NULL) {
+    na.rm = FALSE, show.legend = NA, inherit.aes = TRUE, id = auto_id()) {
   ggchord_check_argument_names(sys.call(), sys.function())
   ggchord_feature_layer(mapping, data, shape, !missing(shape), thickness,
     stat, position, list(...), na.rm, show.legend, inherit.aes, id,
-    default_head_style = "flush")
+    default_head_style = "flush", feature_role = "gene")
 }
 
 #' Label gene intervals
 #' @export
 #' @param mapping Aesthetic mapping from `aes()`. A local mapping overrides the matching inherited channel.
-#' @param data Optional label table or function. With a named anchor, the default data consists of the target entities.
+#' @param data Optional label table or function. With a bound anchor, the default data consists of the target entities.
 #' @param stat A compatible ggplot2 Stat or its name. The default uses the supplied records.
-#' @param anchor_layer ID of the target layer. Labels use the target entities after its Stat and follow their displayed placement.
+#' @param anchor_layer Use [auto_anchor()] to follow the unique compatible layer, a layer ID to select a target, or `NULL` for independent labels.
 #' @param anchor Position on the entity or reference path that anchors the text.
 #' @param position Position adjustment. For bound labels, leave this unset to follow the target layer.
 #' @param label_layout A fixed or repelled label layout declaration.
@@ -62,7 +62,7 @@ geom_gene <- function(mapping = NULL, data = NULL, shape = "arrow",
 #' @param na.rm Suppress warnings for missing observations that the layer can omit.
 #' @param show.legend Logical or named logical indicating whether the layer contributes legend keys.
 #' @param inherit.aes Whether to inherit plot mappings and evaluate them on the layer data.
-#' @param id Optional plot-local layer identifier. Name a layer explicitly to scope a scale, anchor a label or export it.
+#' @param id Layer identifier. [auto_id()] assigns a plot-local ID and independent default visual scales. Use a name for explicit references, or `NULL` or `NA` to share scales.
 #' @return A ggplot2 layer for addition to a plot.
 #' @details The source entities have `accver`, `start`, `end` and a label or label mapping. A bound label follows the target layer by identity. Text size, collision handling and leader placement are independent of the underlying feature geometry.
 #' @examples
@@ -85,20 +85,22 @@ geom_gene <- function(mapping = NULL, data = NULL, shape = "arrow",
 #'   geom_gene_label(aes(label = label), anchor_layer = "genes") +
 #'   coord_collinear()
 geom_gene_label <- function(mapping = NULL, data = NULL, stat = "identity",
-    anchor_layer = NULL, anchor = "middle", position = NULL,
+    anchor_layer = auto_anchor(), anchor = "middle", position = NULL,
     label_layout = label_layout_fixed(orientation = "horizontal"), ..., na.rm = FALSE,
-    show.legend = FALSE, inherit.aes = TRUE, id = NULL) {
+    show.legend = FALSE, inherit.aes = TRUE, id = auto_id()) {
   ggchord_check_argument_names(sys.call(), sys.function())
-  geom_feature_label(mapping, data, stat, anchor_layer, anchor, position, label_layout,
+  layer <- geom_feature_label(mapping, data, stat, anchor_layer, anchor, position, label_layout,
     ..., na.rm = na.rm, show.legend = show.legend, inherit.aes = inherit.aes, id = id)
+  layer$ggchord_params$anchor_role <- "gene"
+  layer
 }
 
 #' Label gene intervals
 #' @export
 #' @param mapping Aesthetic mapping from `aes()`. A local mapping overrides the matching inherited channel.
-#' @param data Optional label table or function. With a named anchor, the default data consists of the target entities.
+#' @param data Optional label table or function. With a bound anchor, the default data consists of the target entities.
 #' @param stat A compatible ggplot2 Stat or its name. The default uses the supplied records.
-#' @param anchor_layer ID of the target layer. Labels use the target entities after its Stat and follow their displayed placement.
+#' @param anchor_layer Use [auto_anchor()] to follow the unique compatible layer, a layer ID to select a target, or `NULL` for independent labels.
 #' @param anchor Position on the entity or reference path that anchors the text.
 #' @param position Position adjustment. For bound labels, leave this unset to follow the target layer.
 #' @param label_layout A fixed or repelled label layout declaration.
@@ -106,7 +108,7 @@ geom_gene_label <- function(mapping = NULL, data = NULL, stat = "identity",
 #' @param na.rm Suppress warnings for missing observations that the layer can omit.
 #' @param show.legend Logical or named logical indicating whether the layer contributes legend keys.
 #' @param inherit.aes Whether to inherit plot mappings and evaluate them on the layer data.
-#' @param id Optional plot-local layer identifier. Name a layer explicitly to scope a scale, anchor a label or export it.
+#' @param id Layer identifier. [auto_id()] assigns a plot-local ID and independent default visual scales. Use a name for explicit references, or `NULL` or `NA` to share scales.
 #' @return A ggplot2 layer for addition to a plot.
 #' @details The source entities have `accver`, `start`, `end` and a label or label mapping. A bound label follows the target layer by identity. Text size, collision handling and leader placement are independent of the underlying feature geometry.
 #' @examples
@@ -129,20 +131,20 @@ geom_gene_label <- function(mapping = NULL, data = NULL, stat = "identity",
 #'   geom_gene_label_repel(aes(label = label), anchor_layer = "genes") +
 #'   coord_collinear()
 geom_gene_label_repel <- function(mapping = NULL, data = NULL, stat = "identity",
-    anchor_layer = NULL, anchor = "middle", position = NULL,
+    anchor_layer = auto_anchor(), anchor = "middle", position = NULL,
     label_layout = label_layout_repel(), ..., na.rm = FALSE,
-    show.legend = FALSE, inherit.aes = TRUE, id = NULL) {
+    show.legend = FALSE, inherit.aes = TRUE, id = auto_id()) {
   ggchord_check_argument_names(sys.call(), sys.function())
-  geom_feature_label(mapping, data, stat, anchor_layer, anchor, position, label_layout,
+  geom_gene_label(mapping, data, stat, anchor_layer, anchor, position, label_layout,
     ..., na.rm = na.rm, show.legend = show.legend, inherit.aes = inherit.aes, id = id)
 }
 
 #' Label primer intervals
 #' @export
 #' @param mapping Aesthetic mapping from `aes()`. A local mapping overrides the matching inherited channel.
-#' @param data Optional label table or function. With a named anchor, the default data consists of the target entities.
+#' @param data Optional label table or function. With a bound anchor, the default data consists of the target entities.
 #' @param stat A compatible ggplot2 Stat or its name. The default uses the supplied records.
-#' @param anchor_layer ID of the target layer. Labels use the target entities after its Stat and follow their displayed placement.
+#' @param anchor_layer Use [auto_anchor()] to follow the unique compatible layer, a layer ID to select a target, or `NULL` for independent labels.
 #' @param anchor Position on the entity or reference path that anchors the text.
 #' @param position Position adjustment. For bound labels, leave this unset to follow the target layer.
 #' @param label_layout A fixed or repelled label layout declaration.
@@ -150,7 +152,7 @@ geom_gene_label_repel <- function(mapping = NULL, data = NULL, stat = "identity"
 #' @param na.rm Suppress warnings for missing observations that the layer can omit.
 #' @param show.legend Logical or named logical indicating whether the layer contributes legend keys.
 #' @param inherit.aes Whether to inherit plot mappings and evaluate them on the layer data.
-#' @param id Optional plot-local layer identifier. Name a layer explicitly to scope a scale, anchor a label or export it.
+#' @param id Layer identifier. [auto_id()] assigns a plot-local ID and independent default visual scales. Use a name for explicit references, or `NULL` or `NA` to share scales.
 #' @return A ggplot2 layer for addition to a plot.
 #' @details The source entities have `accver`, `start`, `end` and a label or label mapping. A bound label follows the target layer by identity. Text size, collision handling and leader placement are independent of the underlying feature geometry.
 #' @examples
@@ -174,20 +176,22 @@ geom_gene_label_repel <- function(mapping = NULL, data = NULL, stat = "identity"
 #'   geom_primer_label(aes(label = label), anchor_layer = "primers") +
 #'   coord_collinear()
 geom_primer_label <- function(mapping = NULL, data = NULL, stat = "identity",
-    anchor_layer = NULL, anchor = "head", position = NULL,
+    anchor_layer = auto_anchor(), anchor = "head", position = NULL,
     label_layout = label_layout_fixed(), ..., na.rm = FALSE,
-    show.legend = FALSE, inherit.aes = TRUE, id = NULL) {
+    show.legend = FALSE, inherit.aes = TRUE, id = auto_id()) {
   ggchord_check_argument_names(sys.call(), sys.function())
-  geom_feature_label(mapping, data, stat, anchor_layer, anchor, position, label_layout,
+  layer <- geom_feature_label(mapping, data, stat, anchor_layer, anchor, position, label_layout,
     ..., na.rm = na.rm, show.legend = show.legend, inherit.aes = inherit.aes, id = id)
+  layer$ggchord_params$anchor_role <- "primer"
+  layer
 }
 
 #' Label primer intervals
 #' @export
 #' @param mapping Aesthetic mapping from `aes()`. A local mapping overrides the matching inherited channel.
-#' @param data Optional label table or function. With a named anchor, the default data consists of the target entities.
+#' @param data Optional label table or function. With a bound anchor, the default data consists of the target entities.
 #' @param stat A compatible ggplot2 Stat or its name. The default uses the supplied records.
-#' @param anchor_layer ID of the target layer. Labels use the target entities after its Stat and follow their displayed placement.
+#' @param anchor_layer Use [auto_anchor()] to follow the unique compatible layer, a layer ID to select a target, or `NULL` for independent labels.
 #' @param anchor Position on the entity or reference path that anchors the text.
 #' @param position Position adjustment. For bound labels, leave this unset to follow the target layer.
 #' @param label_layout A fixed or repelled label layout declaration.
@@ -195,7 +199,7 @@ geom_primer_label <- function(mapping = NULL, data = NULL, stat = "identity",
 #' @param na.rm Suppress warnings for missing observations that the layer can omit.
 #' @param show.legend Logical or named logical indicating whether the layer contributes legend keys.
 #' @param inherit.aes Whether to inherit plot mappings and evaluate them on the layer data.
-#' @param id Optional plot-local layer identifier. Name a layer explicitly to scope a scale, anchor a label or export it.
+#' @param id Layer identifier. [auto_id()] assigns a plot-local ID and independent default visual scales. Use a name for explicit references, or `NULL` or `NA` to share scales.
 #' @return A ggplot2 layer for addition to a plot.
 #' @details The source entities have `accver`, `start`, `end` and a label or label mapping. A bound label follows the target layer by identity. Text size, collision handling and leader placement are independent of the underlying feature geometry.
 #' @examples
@@ -219,10 +223,10 @@ geom_primer_label <- function(mapping = NULL, data = NULL, stat = "identity",
 #'   geom_primer_label_repel(aes(label = label), anchor_layer = "primers") +
 #'   coord_collinear()
 geom_primer_label_repel <- function(mapping = NULL, data = NULL, stat = "identity",
-    anchor_layer = NULL, anchor = "head", position = NULL,
+    anchor_layer = auto_anchor(), anchor = "head", position = NULL,
     label_layout = label_layout_repel(), ..., na.rm = FALSE,
-    show.legend = FALSE, inherit.aes = TRUE, id = NULL) {
+    show.legend = FALSE, inherit.aes = TRUE, id = auto_id()) {
   ggchord_check_argument_names(sys.call(), sys.function())
-  geom_feature_label(mapping, data, stat, anchor_layer, anchor, position, label_layout,
+  geom_primer_label(mapping, data, stat, anchor_layer, anchor, position, label_layout,
     ..., na.rm = na.rm, show.legend = show.legend, inherit.aes = inherit.aes, id = id)
 }

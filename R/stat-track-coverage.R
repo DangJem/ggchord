@@ -58,7 +58,7 @@
 stat_coverage <- function(mapping = NULL, data = NULL, geom = "track_col",
     position = "identity", binwidth = NULL, windows = NULL, bounds = "error",
     track = "default", ..., na.rm = FALSE, show.legend = NA,
-    inherit.aes = TRUE, id = NULL) {
+    inherit.aes = TRUE, id = auto_id()) {
   ggchord_check_argument_names(sys.call(), sys.function())
   if (!is.character(geom) || length(geom) != 1L || !startsWith(geom, "track_"))
     ggchord_stop("stat_coverage(): choose a compatible track geometry")

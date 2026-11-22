@@ -247,7 +247,11 @@ ggchord_domain_label <- function(mapping, data, stat, anchor_layer, anchor, posi
     label_layout, kind, dots, na.rm, show.legend, inherit.aes, id) {
   if (!inherits(label_layout, "ggchord_label_layout"))
     ggchord_stop("label_layout must be a label layout strategy")
-  if (!is.null(anchor_layer)) {
+  if (inherits(anchor_layer, "ggchord_auto_anchor") &&
+      (!is.null(data) || !is.null(position) || !ggchord_identity_stat(stat))) {
+    anchor_layer <- NULL
+  }
+  if (!is.null(anchor_layer) && !inherits(anchor_layer, "ggchord_auto_anchor")) {
     ggchord_check_layer_id(anchor_layer)
     if (!is.null(position) || !ggchord_identity_stat(stat))
       ggchord_stop("Bound labels require an identity Stat and an unspecified Position")
@@ -307,9 +311,9 @@ ggchord_domain_label <- function(mapping, data, stat, anchor_layer, anchor, posi
 #' Label source feature intervals
 #' @export
 #' @param mapping Aesthetic mapping from `aes()`. A local mapping overrides the matching inherited channel.
-#' @param data Optional label table or function. With a named anchor, the default data consists of the target entities.
+#' @param data Optional label table or function. With a bound anchor, the default data consists of the target entities.
 #' @param stat A compatible ggplot2 Stat or its name. The default uses the supplied records.
-#' @param anchor_layer ID of the target layer. Labels use the target entities after its Stat and follow their displayed placement.
+#' @param anchor_layer Use [auto_anchor()] to follow the unique compatible layer, a layer ID to select a target, or `NULL` for independent labels.
 #' @param anchor Position on the entity or reference path that anchors the text.
 #' @param position Position adjustment. For bound labels, leave this unset to follow the target layer.
 #' @param label_layout A fixed or repelled label layout declaration.
@@ -317,7 +321,7 @@ ggchord_domain_label <- function(mapping, data, stat, anchor_layer, anchor, posi
 #' @param na.rm Suppress warnings for missing observations that the layer can omit.
 #' @param show.legend Logical or named logical indicating whether the layer contributes legend keys.
 #' @param inherit.aes Whether to inherit plot mappings and evaluate them on the layer data.
-#' @param id Optional plot-local layer identifier. Name a layer explicitly to scope a scale, anchor a label or export it.
+#' @param id Layer identifier. [auto_id()] assigns a plot-local ID and independent default visual scales. Use a name for explicit references, or `NULL` or `NA` to share scales.
 #' @return A ggplot2 layer for addition to a plot.
 #' @details The source entities have `accver`, `start`, `end` and a label or label mapping. A bound label follows the target layer by identity. Text size, collision handling and leader placement are independent of the underlying feature geometry. A segmented feature is anchored to its visible runs. For a circular feature label, mapping `fill` sets the background of an exterior callout. If `colour` is omitted, text over a feature or on a callout uses a contrasting colour.
 #' Filled circular exterior labels have a visible outline. Circular
@@ -350,9 +354,9 @@ ggchord_domain_label <- function(mapping, data, stat, anchor_layer, anchor, posi
 #'   geom_feature_label(aes(label = label), anchor_layer = "genes") +
 #'   coord_collinear()
 geom_feature_label <- function(mapping = NULL, data = NULL, stat = "identity",
-    anchor_layer = NULL, anchor = "middle", position = NULL,
+    anchor_layer = auto_anchor(), anchor = "middle", position = NULL,
     label_layout = label_layout_fixed(), ...,
-    na.rm = FALSE, show.legend = FALSE, inherit.aes = TRUE, id = NULL) {
+    na.rm = FALSE, show.legend = FALSE, inherit.aes = TRUE, id = auto_id()) {
   ggchord_check_argument_names(sys.call(), sys.function())
   anchor <- ggchord_match_arg(anchor, c("middle", "start", "end", "head", "tail"))
   ggchord_domain_label(mapping, data, stat, anchor_layer, anchor, position,
@@ -362,9 +366,9 @@ geom_feature_label <- function(mapping = NULL, data = NULL, stat = "identity",
 #' Label source feature intervals with collision avoidance
 #' @export
 #' @param mapping Aesthetic mapping from `aes()`. A local mapping overrides the matching inherited channel.
-#' @param data Optional label table or function. With a named anchor, the default data consists of the target entities.
+#' @param data Optional label table or function. With a bound anchor, the default data consists of the target entities.
 #' @param stat A compatible ggplot2 Stat or its name. The default uses the supplied records.
-#' @param anchor_layer ID of the target layer. Labels use the target entities after its Stat and follow their displayed placement.
+#' @param anchor_layer Use [auto_anchor()] to follow the unique compatible layer, a layer ID to select a target, or `NULL` for independent labels.
 #' @param anchor Position on the entity or reference path that anchors the text.
 #' @param position Position adjustment. For bound labels, leave this unset to follow the target layer.
 #' @param label_layout A fixed or repelled label layout declaration.
@@ -372,7 +376,7 @@ geom_feature_label <- function(mapping = NULL, data = NULL, stat = "identity",
 #' @param na.rm Suppress warnings for missing observations that the layer can omit.
 #' @param show.legend Logical or named logical indicating whether the layer contributes legend keys.
 #' @param inherit.aes Whether to inherit plot mappings and evaluate them on the layer data.
-#' @param id Optional plot-local layer identifier. Name a layer explicitly to scope a scale, anchor a label or export it.
+#' @param id Layer identifier. [auto_id()] assigns a plot-local ID and independent default visual scales. Use a name for explicit references, or `NULL` or `NA` to share scales.
 #' @return A ggplot2 layer for addition to a plot.
 #' @details The source entities have `accver`, `start`, `end` and a label or label mapping. A bound label follows the target layer by identity. Text size, collision handling and leader placement are independent of the underlying feature geometry. A segmented feature is anchored to its visible runs. For a circular feature label, mapping `fill` sets the background of an exterior callout. If `colour` is omitted, text over a feature or on a callout uses a contrasting colour.
 #' Filled circular exterior labels have a visible outline. Circular
@@ -405,12 +409,60 @@ geom_feature_label <- function(mapping = NULL, data = NULL, stat = "identity",
 #'   geom_feature_label_repel(aes(label = label), anchor_layer = "genes") +
 #'   coord_collinear()
 geom_feature_label_repel <- function(mapping = NULL, data = NULL, stat = "identity",
-    anchor_layer = NULL, anchor = "middle", position = NULL,
+    anchor_layer = auto_anchor(), anchor = "middle", position = NULL,
     label_layout = label_layout_repel(), ...,
-    na.rm = FALSE, show.legend = FALSE, inherit.aes = TRUE, id = NULL) {
+    na.rm = FALSE, show.legend = FALSE, inherit.aes = TRUE, id = auto_id()) {
   ggchord_check_argument_names(sys.call(), sys.function())
   geom_feature_label(mapping, data, stat, anchor_layer, anchor, position, label_layout,
     ..., na.rm = na.rm, show.legend = show.legend, inherit.aes = inherit.aes, id = id)
+}
+
+#' Bind labels to a compatible target layer
+#'
+#' With the default anchor, gene, primer and site labels follow a single
+#' gene, primer or site layer, respectively. Generic feature labels can
+#' follow any interval feature layer, including genes, primers and regions.
+#' Layer order is immaterial. When several targets qualify, give the intended
+#' target an ID and pass that name as `anchor_layer`.
+#' Supplying label data, a non-identity Stat or a Position makes the labels
+#' independent by default. An explicit target can also take a keyed subset
+#' of its data. Use `anchor_layer = NULL` to read independent label data.
+#' @return A declaration resolved against the layers in the same plot.
+#' @export
+#' @examples
+#' library(ggplot2)
+#' seqs <- data.frame(accver = "A", length = 1000)
+#' genes <- data.frame(accver = "A", start = 100, end = 240,
+#'   strand = "+", label = "g1")
+#' ggchord(seqs) + geom_gene(data = genes) +
+#'   geom_gene_label(aes(label = label)) + coord_collinear()
+auto_anchor <- function() structure(list(), class = "ggchord_auto_anchor")
+
+ggchord_resolve_auto_anchors <- function(plot) {
+  for (layer in plot$layers) {
+    p <- layer$ggchord_params
+    if (!inherits(p$anchor_layer, "ggchord_auto_anchor")) next
+    role <- p$anchor_role %||% p$label_kind
+    candidates <- Filter(function(target) {
+      target <- target$ggchord_params
+      if (role == "site") return(identical(target$type, "restriction_site"))
+      identical(target$type, "gene") &&
+        (role == "feature" || identical(target$feature_role, role))
+    }, plot$layers)
+    ids <- vapply(candidates, function(target) target$ggchord_layer_id, character(1))
+    if (length(ids) > 1L)
+      ggchord_stop("Label layer '", layer$ggchord_layer_id, "' has multiple compatible ",
+        role, " targets: ", paste(ids, collapse = ", "),
+        ". Set anchor_layer to the intended ID, or supply data and anchor_layer = NULL.")
+    if (!length(ids)) {
+      required <- if (role == "site") c("accver", "pos") else c("accver", "start", "end")
+      if (!all(required %in% c(names(plot$data), names(layer$ggchord_input_mapping))))
+        ggchord_stop("Label layer '", layer$ggchord_layer_id, "' has no compatible ", role,
+          " target. Add a target layer or supply independent label data.")
+    }
+    layer$ggchord_params$anchor_layer <- if (length(ids)) ids[[1L]]
+  }
+  plot
 }
 
 # Bind to the requested layer's source/statistic before expanding either layer

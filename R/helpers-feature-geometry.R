@@ -34,7 +34,7 @@ ggchord_block_arrow_shapes <- c("arrow", "compact_arrow", "promoter_arrow", "pri
 ggchord_circular_arrow_head_ratio <- 1.42
 
 ggchord_circular_arrow_band <- function(circular, feature_role) {
-  isTRUE(circular) && identical(feature_role, "feature")
+  isTRUE(circular) && isTRUE(feature_role %in% c("feature", "gene"))
 }
 
 # Minimum visible arc length for a directional glyph. Short biological

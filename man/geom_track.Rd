@@ -15,7 +15,7 @@ geom_track(
   na.rm = FALSE,
   show.legend = NA,
   inherit.aes = TRUE,
-  id = NULL
+  id = auto_id()
 )
 }
 \arguments{
@@ -62,7 +62,7 @@ contribution to each guide, including guides on named track scales.}
 
 \item{inherit.aes}{Whether to inherit the plot mapping.}
 
-\item{id}{Optional unique layer ID for exported statistics and source rows.}
+\item{id}{Layer identifier for visual scales and exported rows. See \code{\link[=auto_id]{auto_id()}}.}
 }
 \value{
 A ggplot2 layer using a shared sequence-local band.

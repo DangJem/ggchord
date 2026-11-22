@@ -121,7 +121,7 @@ ggchord_native_track_line <- function(layer) {
   result
 }
 ggchord_track_layer <- function(kind, mapping, data, track, fill, colour,
-    alpha, linewidth, linetype, bounds, baseline, closed, show.legend, inherit.aes, fixed, dots, id = NULL) {
+    alpha, linewidth, linetype, bounds, baseline, closed, show.legend, inherit.aes, fixed, dots, id = auto_id()) {
   track <- ggchord_track_id(track %||% "default")
   if (!is.numeric(baseline) || length(baseline) != 1L || !is.finite(baseline)) ggchord_stop("Track baseline must be finite")
   mapping <- ggchord_normalize_mapping(mapping) %||% aes()
@@ -374,19 +374,14 @@ scale_track_colour_manual <- function(track, ..., values) {
   scale_colour_manual(..., values = values, aesthetics = ggchord_track_aes("colour", track))
 }
 
-ggchord_add_track_scales <- function(plot) {
-  scoped <- vector("list", length(plot$layers))
-  for (scope in ggchord_scale_scopes(plot)) {
-    for (i in scope$selected) scoped[[i]] <- c(scoped[[i]], scope$aesthetics)
-  }
+ggchord_track_mapping_titles <- function(plot) {
   seen <- character()
-  for (i in seq_along(plot$layers)) {
-    layer <- plot$layers[[i]]
+  for (layer in plot$layers) {
     # ggplot2 takes its default labels from the first mapped layer. Use the
     # original expression there, before projection introduced .track_* names.
     mapped <- names(layer$mapping)
     if (isTRUE(layer$inherit.aes)) mapped <- union(mapped, names(plot$mapping))
-    first <- setdiff(mapped, c(seen, names(layer$aes_params), scoped[[i]]))
+    first <- setdiff(mapped, c(seen, names(layer$aes_params)))
     seen <- union(seen, first)
     labels <- layer$ggchord_params$track_mapping_labels
     for (key in intersect(first, names(labels))) {
@@ -399,6 +394,12 @@ ggchord_add_track_scales <- function(plot) {
         plot$labels[[key]] <- if (name %in% names(dict)) unname(dict[name]) else name
       }
     }
+  }
+  plot
+}
+
+ggchord_add_track_scales <- function(plot) {
+  for (layer in plot$layers) {
     if (!identical(layer$ggchord_type, "track")) next
     mapping <- layer$ggchord_input_mapping
     for (role in c("fill", "colour")) {

@@ -146,7 +146,7 @@ ggchord_circular_backbone_bounds <- function(plot, radii, units_per_mm) {
 #' @param na.rm Suppress warnings for missing observations that the layer can omit.
 #' @param show.legend Logical or named logical indicating whether the layer contributes legend keys.
 #' @param inherit.aes Whether to inherit plot mappings and evaluate them on the layer data.
-#' @param id Optional plot-local layer identifier. Name a layer explicitly to scope a scale, anchor a label or export it.
+#' @param id Layer identifier. [auto_id()] assigns a plot-local ID and independent default visual scales. Use a name for explicit references, or `NULL` or `NA` to share scales.
 #' @return A ggplot2 layer for addition to a plot.
 #' @details The source is the complete reference table with `accver` and `length`. A backbone can select an authoritative subset. An explicit complete table in geom_seq() can register a reference when the plot has no global data.
 #' @examples
@@ -173,7 +173,7 @@ ggchord_circular_backbone_bounds <- function(plot, radii, units_per_mm) {
 #'   coord_collinear()
 geom_seq <- function(mapping = NULL, data = NULL, geometry = "auto",
     thickness = 1, stat = "identity", position = "identity", ...,
-    na.rm = FALSE, show.legend = NA, inherit.aes = TRUE, id = NULL) {
+    na.rm = FALSE, show.legend = NA, inherit.aes = TRUE, id = auto_id()) {
   ggchord_check_argument_names(sys.call(), sys.function())
   geometry <- ggchord_match_arg(geometry, c("auto", "line", "double", "band"))
   if (!ggchord_identity_stat(stat)) ggchord_stop("geom_seq(): stat must be identity")
@@ -230,7 +230,7 @@ geom_seq <- function(mapping = NULL, data = NULL, geometry = "auto",
 #'   coord_collinear()
 geom_seq_arrow <- function(mapping = NULL, data = NULL, stat = "identity",
     position = "identity", ..., arrow = grid::arrow(length = grid::unit(2, "mm"), type = "closed"),
-    na.rm = FALSE, show.legend = NA, inherit.aes = TRUE, id = NULL) {
+    na.rm = FALSE, show.legend = NA, inherit.aes = TRUE, id = auto_id()) {
   ggchord_check_argument_names(sys.call(), sys.function())
   if ("fill" %in% c(names(mapping), ...names()))
     ggchord_stop("geom_seq_arrow(): use colour for the arrow, e.g. aes(colour = accver). ",

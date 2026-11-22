@@ -9,6 +9,15 @@
 - Standardized feature, label, site, ribbon and track layer families.
   Ordinary ggplot2 visual scales can be scoped to named layers with
   `scale_for()`. Coverage, bundle and density statistics retain source evidence.
+- Layers on a ggchord plot now use `id = auto_id()`. Mapping the same visual
+  aesthetic on two layers trains independent default scales. Set `id = NULL`
+  or `id = NA` on the layers that should share a scale. An ordinary explicit
+  scale covers all layers mapping that aesthetic except those selected by
+  `scale_for()`. A named ID also supports label binding and export.
+- Feature, gene, primer and site labels use `anchor_layer = auto_anchor()`.
+  A single compatible layer supplies its entities and displayed positions.
+  With several candidates, select one by ID. Providing label data, a
+  non-identity Stat or a Position selects independent placement by default.
 - Ribbon fill mapped to `pident` uses the stepped Identity (%) guide with
   proportional intervals and ticks at 0, 50, 80, 90, 95 and 100. Alignment
   and point-link colour use line keys at the same percentages. The stepped

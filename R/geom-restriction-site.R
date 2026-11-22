@@ -73,7 +73,7 @@ ggchord_site_layer <- function(mapping, data, shape, fixed_shape, size, fixed_si
 #' @param na.rm Suppress warnings for missing observations that the layer can omit.
 #' @param show.legend Logical or named logical indicating whether the layer contributes legend keys.
 #' @param inherit.aes Whether to inherit plot mappings and evaluate them on the layer data.
-#' @param id Optional plot-local layer identifier. Name a layer explicitly to scope a scale, anchor a label or export it.
+#' @param id Layer identifier. [auto_id()] assigns a plot-local ID and independent default visual scales. Use a name for explicit references, or `NULL` or `NA` to share scales.
 #' @return A ggplot2 layer for addition to a plot.
 #' @details Site data supplies `accver` and a one-based `pos`. A double-strand cut uses `cut_top` and `cut_bottom` as interbase positions. Add site labels separately or bind them to the site layer.
 #' @examples
@@ -96,7 +96,7 @@ ggchord_site_layer <- function(mapping, data, shape, fixed_shape, size, fixed_si
 #'   coord_circular()
 geom_site <- function(mapping = NULL, data = NULL, shape = "tick", size = 2,
     stat = "identity", position = "identity", ...,
-    na.rm = FALSE, show.legend = NA, inherit.aes = TRUE, id = NULL) {
+    na.rm = FALSE, show.legend = NA, inherit.aes = TRUE, id = auto_id()) {
   ggchord_check_argument_names(sys.call(), sys.function())
   ggchord_site_layer(mapping, data, shape, !missing(shape), size, !missing(size),
     stat, position, list(...), na.rm, show.legend, inherit.aes, id)
@@ -115,7 +115,7 @@ geom_site <- function(mapping = NULL, data = NULL, shape = "tick", size = 2,
 #' @param na.rm Suppress warnings for missing observations that the layer can omit.
 #' @param show.legend Logical or named logical indicating whether the layer contributes legend keys.
 #' @param inherit.aes Whether to inherit plot mappings and evaluate them on the layer data.
-#' @param id Optional plot-local layer identifier. Name a layer explicitly to scope a scale, anchor a label or export it.
+#' @param id Layer identifier. [auto_id()] assigns a plot-local ID and independent default visual scales. Use a name for explicit references, or `NULL` or `NA` to share scales.
 #' @return A ggplot2 layer for addition to a plot.
 #' @details Site data supplies `accver` and a one-based `pos`. A double-strand cut uses `cut_top` and `cut_bottom` as interbase positions. Add site labels separately or bind them to the site layer.
 #' @examples
@@ -138,7 +138,7 @@ geom_site <- function(mapping = NULL, data = NULL, shape = "tick", size = 2,
 #'   coord_circular()
 geom_restriction_site <- function(mapping = NULL, data = NULL, shape = "cut", size = 2,
     stat = "identity", position = "identity", ...,
-    na.rm = FALSE, show.legend = NA, inherit.aes = TRUE, id = NULL) {
+    na.rm = FALSE, show.legend = NA, inherit.aes = TRUE, id = auto_id()) {
   ggchord_check_argument_names(sys.call(), sys.function())
   ggchord_site_layer(mapping, data, shape, !missing(shape), size, !missing(size),
     stat, position, list(...), na.rm, show.legend, inherit.aes, id)
@@ -147,16 +147,16 @@ geom_restriction_site <- function(mapping = NULL, data = NULL, shape = "cut", si
 #' Label source point annotations
 #' @export
 #' @param mapping Aesthetic mapping from `aes()`. A local mapping overrides the matching inherited channel.
-#' @param data Optional label table or function. With a named anchor, the default data consists of the target entities.
+#' @param data Optional label table or function. With a bound anchor, the default data consists of the target entities.
 #' @param stat A compatible ggplot2 Stat or its name. The default uses the supplied records.
-#' @param anchor_layer ID of the target layer. Labels use the target entities after its Stat and follow their displayed placement.
+#' @param anchor_layer Use [auto_anchor()] to follow the unique compatible layer, a layer ID to select a target, or `NULL` for independent labels.
 #' @param position Position adjustment. For bound labels, leave this unset to follow the target layer.
 #' @param label_layout A fixed or repelled label layout declaration.
 #' @param ... Additional named visual styles and parameters accepted by this layer.
 #' @param na.rm Suppress warnings for missing observations that the layer can omit.
 #' @param show.legend Logical or named logical indicating whether the layer contributes legend keys.
 #' @param inherit.aes Whether to inherit plot mappings and evaluate them on the layer data.
-#' @param id Optional plot-local layer identifier. Name a layer explicitly to scope a scale, anchor a label or export it.
+#' @param id Layer identifier. [auto_id()] assigns a plot-local ID and independent default visual scales. Use a name for explicit references, or `NULL` or `NA` to share scales.
 #' @return A ggplot2 layer for addition to a plot.
 #' @details Site data supplies `accver` and a one-based `pos`. A double-strand cut uses `cut_top` and `cut_bottom` as interbase positions. Add site labels separately or bind them to the site layer.
 #' @examples
@@ -176,8 +176,8 @@ geom_restriction_site <- function(mapping = NULL, data = NULL, shape = "cut", si
 #'   geom_site_label(aes(label = label), anchor_layer = "sites") +
 #'   coord_circular()
 geom_site_label <- function(mapping = NULL, data = NULL, stat = "identity",
-    anchor_layer = NULL, position = NULL, label_layout = label_layout_fixed(),
-    ..., na.rm = FALSE, show.legend = FALSE, inherit.aes = TRUE, id = NULL) {
+    anchor_layer = auto_anchor(), position = NULL, label_layout = label_layout_fixed(),
+    ..., na.rm = FALSE, show.legend = FALSE, inherit.aes = TRUE, id = auto_id()) {
   ggchord_check_argument_names(sys.call(), sys.function())
   ggchord_domain_label(mapping, data, stat, anchor_layer, "site", position,
     label_layout, "site", list(...), na.rm, show.legend, inherit.aes, id)
@@ -186,16 +186,16 @@ geom_site_label <- function(mapping = NULL, data = NULL, stat = "identity",
 #' Label source point annotations with collision avoidance
 #' @export
 #' @param mapping Aesthetic mapping from `aes()`. A local mapping overrides the matching inherited channel.
-#' @param data Optional label table or function. With a named anchor, the default data consists of the target entities.
+#' @param data Optional label table or function. With a bound anchor, the default data consists of the target entities.
 #' @param stat A compatible ggplot2 Stat or its name. The default uses the supplied records.
-#' @param anchor_layer ID of the target layer. Labels use the target entities after its Stat and follow their displayed placement.
+#' @param anchor_layer Use [auto_anchor()] to follow the unique compatible layer, a layer ID to select a target, or `NULL` for independent labels.
 #' @param position Position adjustment. For bound labels, leave this unset to follow the target layer.
 #' @param label_layout A fixed or repelled label layout declaration.
 #' @param ... Additional named visual styles and parameters accepted by this layer.
 #' @param na.rm Suppress warnings for missing observations that the layer can omit.
 #' @param show.legend Logical or named logical indicating whether the layer contributes legend keys.
 #' @param inherit.aes Whether to inherit plot mappings and evaluate them on the layer data.
-#' @param id Optional plot-local layer identifier. Name a layer explicitly to scope a scale, anchor a label or export it.
+#' @param id Layer identifier. [auto_id()] assigns a plot-local ID and independent default visual scales. Use a name for explicit references, or `NULL` or `NA` to share scales.
 #' @return A ggplot2 layer for addition to a plot.
 #' @details Site data supplies `accver` and a one-based `pos`. A double-strand cut uses `cut_top` and `cut_bottom` as interbase positions. Add site labels separately or bind them to the site layer.
 #' For horizontal circular callouts, supply `enzyme_label` and
@@ -219,8 +219,8 @@ geom_site_label <- function(mapping = NULL, data = NULL, stat = "identity",
 #'   geom_site_label_repel(aes(label = label), anchor_layer = "sites") +
 #'   coord_circular()
 geom_site_label_repel <- function(mapping = NULL, data = NULL, stat = "identity",
-    anchor_layer = NULL, position = NULL, label_layout = label_layout_repel(),
-    ..., na.rm = FALSE, show.legend = FALSE, inherit.aes = TRUE, id = NULL) {
+    anchor_layer = auto_anchor(), position = NULL, label_layout = label_layout_repel(),
+    ..., na.rm = FALSE, show.legend = FALSE, inherit.aes = TRUE, id = auto_id()) {
   ggchord_check_argument_names(sys.call(), sys.function())
   geom_site_label(mapping, data, stat, anchor_layer, position, label_layout,
     ..., na.rm = na.rm, show.legend = show.legend, inherit.aes = inherit.aes, id = id)
@@ -249,7 +249,10 @@ ggchord_prepare_site_size_scales <- function(plot) {
   on.exit(set_last_plot(previous_plot), add = TRUE)
 
   scopes <- Filter(function(scope) "size" %in% scope$aesthetics, ggchord_scale_scopes(plot))
-  global <- setdiff(seq_along(layers), unlist(lapply(scopes, `[[`, "selected")))
+  mapped <- which(lengths(mapping) > 0L)
+  independent <- ggchord_independent_layers(plot, "size", mapped, scopes)
+  scopes <- c(scopes, lapply(independent, function(i) list(selected = i)))
+  global <- setdiff(mapped, unlist(lapply(scopes, `[[`, "selected")))
   domains <- c(scopes, list(list(selected = global, scale = plot$scales$get_scales("size"))))
   for (domain in domains) {
     owners <- intersect(sites, domain$selected)

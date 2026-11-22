@@ -9,7 +9,7 @@
 #' @param na.rm Suppress warnings for missing observations that the layer can omit.
 #' @param show.legend Logical or named logical indicating whether the layer contributes legend keys.
 #' @param inherit.aes Whether to inherit plot mappings and evaluate them on the layer data.
-#' @param id Optional plot-local layer identifier. Name a layer explicitly to scope a scale, anchor a label or export it.
+#' @param id Layer identifier. [auto_id()] assigns a plot-local ID and independent default visual scales. Use a name for explicit references, or `NULL` or `NA` to share scales.
 #' @return A ggplot2 layer for addition to a plot.
 #' @details Labels read the registered reference. Use
 #'   `label_layout_fixed(orientation = "tangent")` to align each label with
@@ -33,7 +33,7 @@
 #'   coord_chord(start_angle = 40)
 geom_seq_label <- function(mapping = NULL, data = NULL, anchor = "middle",
     position = "identity", label_layout = label_layout_fixed(orientation = "horizontal"),
-    ..., na.rm = FALSE, show.legend = FALSE, inherit.aes = TRUE, id = NULL) {
+    ..., na.rm = FALSE, show.legend = FALSE, inherit.aes = TRUE, id = auto_id()) {
   ggchord_check_argument_names(sys.call(), sys.function())
   anchor <- ggchord_match_arg(anchor, c("start", "middle", "end", "center"))
   ggchord_domain_label(mapping, data, "identity", NULL, anchor, position,

@@ -15,8 +15,8 @@ scale_for(layers, scale)
 A scale declaration for a ggchord plot or a Fusion root.
 }
 \description{
-Apply an ordinary visual scale to explicitly named layers. Other layers
-continue to share the plot's scale for the same aesthetic.
+Apply one visual scale to the selected layers, overriding both the
+plot-wide scale and their independent defaults. See \code{\link[=auto_id]{auto_id()}}.
 }
 \details{
 Unscoped backbones and features can use the sequence palette when

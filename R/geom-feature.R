@@ -305,7 +305,7 @@ ggchord_feature_layer <- function(mapping, data, shape, fixed_shape, thickness,
 #' @param na.rm Suppress warnings for missing observations that the layer can omit.
 #' @param show.legend Logical or named logical indicating whether the layer contributes legend keys.
 #' @param inherit.aes Whether to inherit plot mappings and evaluate them on the layer data.
-#' @param id Optional plot-local layer identifier. Name a layer explicitly to scope a scale, anchor a label or export it.
+#' @param id Layer identifier. [auto_id()] assigns a plot-local ID and independent default visual scales. Use a name for explicit references, or `NULL` or `NA` to share scales.
 #' @return A ggplot2 layer for addition to a plot.
 #' @details Provide one-based closed intervals with `accver`, `start` and `end`.
 #' Supply strand `+`, `-`, `+/-` (both directions), or `.` (undirected),
@@ -344,7 +344,7 @@ ggchord_feature_layer <- function(mapping, data, shape, fixed_shape, thickness,
 #'   coord_collinear()
 geom_feature <- function(mapping = NULL, data = NULL, shape = "block",
     thickness = 2, stat = "identity", position = "identity", ...,
-    na.rm = FALSE, show.legend = NA, inherit.aes = TRUE, id = NULL) {
+    na.rm = FALSE, show.legend = NA, inherit.aes = TRUE, id = auto_id()) {
   ggchord_check_argument_names(sys.call(), sys.function())
   ggchord_feature_layer(mapping, data, shape, !missing(shape), thickness,
     stat, position, list(...), na.rm, show.legend, inherit.aes, id)

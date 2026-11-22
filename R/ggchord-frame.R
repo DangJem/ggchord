@@ -381,6 +381,7 @@ ggplot_build.ggchord <- function(plot, ...) {
   plot <- prepare_ggchord_plot(plot)
   plot$ggchord$ref$layout$adaptive_layout <- plot$ggchord$adaptive_report
   plot <- ggchord_apply_scoped_scales(plot)
+  plot <- ggchord_track_mapping_titles(plot)
   plot <- ggchord_add_visual_scales(plot)
   class(plot) <- setdiff(class(plot), "ggchord")
   built <- ggchord_branch_built(ggplot_build(plot))

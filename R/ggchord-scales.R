@@ -370,8 +370,8 @@ ggchord_infer_visual_scales <- function(plot, layout, scales) {
 
 #' Train a visual scale on selected layers
 #'
-#' Apply an ordinary visual scale to explicitly named layers. Other layers
-#' continue to share the plot's scale for the same aesthetic.
+#' Apply one visual scale to the selected layers, overriding both the
+#' plot-wide scale and their independent defaults. See [auto_id()].
 #'
 #' @details Unscoped backbones and features can use the sequence palette when
 #' mapped directly to `accver`. Features mapped to `strand` use red (+),
@@ -427,8 +427,7 @@ scale_for <- function(layers, scale) {
 
 ggchord_scale_scopes <- function(plot, scopes = plot$ggchord$scoped_scales) {
   if (!length(scopes)) return(list())
-  ids <- vapply(plot$layers, function(layer) layer$ggchord_layer_id %||%
-    layer$ggchord_params$id %||% "", character(1))
+  ids <- vapply(plot$layers, function(layer) layer$ggchord_layer_id %||% "", character(1))
   claimed <- character()
   lapply(seq_along(scopes), function(i) {
     scope <- scopes[[i]]
@@ -459,7 +458,49 @@ ggchord_scale_scopes <- function(plot, scopes = plot$ggchord$scoped_scales) {
   })
 }
 
+# Only competing, unclaimed mappings need a private scale. Keep an ordinary
+# scale addressable under its public name whenever a single layer uses it.
+ggchord_independent_layers <- function(plot, aesthetic, mapped, explicit) {
+  if (plot$scales$has_scale(aesthetic)) return(integer())
+  for (scope in explicit) if (aesthetic %in% scope$aesthetics)
+    mapped <- setdiff(mapped, scope$selected)
+  if (length(mapped) < 2L) return(integer())
+  Filter(function(i) !ggchord_shared_id(plot$layers[[i]]$ggchord_params$id), mapped)
+}
+
+ggchord_trains_visual_scale <- function(mapping) {
+  start <- ggchord_start_mapping(mapping)
+  (!is.null(start) && !is_call(get_expr(start), "I")) ||
+    ggchord_has_stage(mapping, "after_stat")
+}
+
+ggchord_drawing_scopes <- function(plot, scopes = plot$ggchord$scoped_scales) {
+  specs <- ggchord_scale_scopes(plot, scopes)
+  visual <- c("colour", "fill", "alpha", "size", "linewidth", "linetype", "shape", "stroke")
+  mappings <- lapply(plot$layers, function(layer) {
+    mapping <- layer$mapping
+    if (isTRUE(layer$inherit.aes)) {
+      for (key in setdiff(names(plot$mapping), names(mapping))) mapping[[key]] <- plot$mapping[[key]]
+    }
+    mapping <- mapping[intersect(setdiff(names(mapping), names(layer$aes_params)), visual)]
+    Filter(ggchord_trains_visual_scale, mapping)
+  })
+  for (key in visual) {
+    mapped <- which(vapply(mappings, function(m) key %in% names(m), logical(1)))
+    selected <- ggchord_independent_layers(plot, key, mapped, specs)
+    for (i in selected) {
+      role <- as_label(mappings[[i]][[key]])
+      scale <- if (key %in% c("colour", "fill")) ggchord_mapped_scale(plot, plot$layers[i], key, role)
+      index <- length(specs) + 1L
+      specs[[index]] <- list(selected = i, aesthetics = key, scale = scale, automatic = TRUE,
+        aliases = setNames(paste0("ggchord_scope_", index, "_", key), key))
+    }
+  }
+  specs
+}
+
 ggchord_alias_aes <- function(x, aliases) {
+  if (is.null(x)) return(NULL)
   fields <- names(x)
   selected <- fields %in% names(aliases)
   fields[selected] <- unname(aliases[fields[selected]])
@@ -482,6 +523,8 @@ ggchord_scope_layer <- function(layer, aliases, plot_mapping) {
   }
   copy$inherit.aes <- FALSE
   copy$mapping <- ggchord_alias_aes(mapping, aliases)
+  columns <- layer$ggchord_params$visual_columns
+  if (length(columns)) copy$ggchord_params$visual_columns <- ggchord_alias_aes(columns, aliases)
   copy$aes_params <- ggchord_alias_aes(layer$aes_params, aliases)
   copy$show.legend <- ggchord_alias_aes(layer$show.legend, aliases)
   copy$geom <- ggproto(NULL, geom,
@@ -509,28 +552,63 @@ ggchord_scope_layer <- function(layer, aliases, plot_mapping) {
   copy
 }
 
-ggchord_apply_scoped_scales <- function(plot, scopes = plot$ggchord$scoped_scales) {
-  specs <- ggchord_scale_scopes(plot, scopes)
+ggchord_scope_guide <- function(guide, aliases) {
+  if (is.character(guide) && length(guide) == 1L &&
+      guide %in% c("colourbar", "colorbar", "coloursteps", "colorsteps"))
+    guide <- getExportedValue("ggplot2", paste0("guide_", guide))()
+  if (inherits(guide, "Guide") && !is.null(guide$available_aes) && !"any" %in% guide$available_aes) {
+    available <- aliases[intersect(names(aliases), guide$available_aes)]
+    original <- guide
+    guide <- ggproto(NULL, original, available_aes = union(guide$available_aes, unname(available)))
+  }
+  guide
+}
+
+ggchord_scope_scale <- function(scale, aliases, theme) {
+  if (is.null(scale$palette)) {
+    palette <- ggplot()$scales
+    palette$add(scale)
+    palette$set_palettes(theme)
+  }
+  scale$aesthetics <- unname(aliases)
+  scale$guide <- ggchord_scope_guide(scale$guide, aliases)
+  scale
+}
+
+# ggplot2 knows the mapping's type when it evaluates the start or Stat stage.
+# Ask its ordinary scale registry for exactly that default using the public
+# aesthetic, then install it under the layer's private aesthetic.
+ggchord_defer_scale_defaults <- function(parent, channels, theme) {
+  force(parent)
+  force(channels)
+  force(theme)
+  ggproto(NULL, parent, add_defaults = function(self, data, env) {
+    for (alias in intersect(setdiff(names(data), self$input()), names(channels))) {
+      key <- unname(channels[[alias]])
+      defaults <- ggproto(NULL, parent, scales = list())
+      defaults$add_defaults(setNames(list(data[[alias]]), key), env)
+      scale <- defaults$get_scales(key)
+      if (!is.null(scale)) self$add(ggchord_scope_scale(scale, setNames(alias, key), theme))
+    }
+    ggproto_parent(parent, self)$add_defaults(data, env)
+  })
+}
+
+ggchord_apply_scoped_scales <- function(plot, specs = ggchord_drawing_scopes(plot)) {
   if (!length(specs)) return(plot)
   plot$scales <- plot$scales$clone()
   aliases <- vector("list", length(plot$layers))
+  deferred <- character()
+  theme <- ggplot2::theme_get() + plot$theme
+  guides <- plot$guides$guides
   for (spec in specs) {
-    scale <- ggchord_prepare_domain_scale(spec$scale, plot)$clone()
-    scale$aesthetics <- unname(spec$aliases)
-    guide <- scale$guide
-    if (is.character(guide) && length(guide) == 1L &&
-        guide %in% c("colourbar", "colorbar", "coloursteps", "colorsteps"))
-      guide <- getExportedValue("ggplot2", paste0("guide_", guide))()
-    if (inherits(guide, "Guide") && !is.null(guide$available_aes) && !"any" %in% guide$available_aes) {
-      available <- spec$aliases[intersect(names(spec$aliases), guide$available_aes)]
-      guide_parent <- guide
-      guide <- ggproto(NULL, guide_parent,
-        available_aes = union(guide$available_aes, unname(available)))
+    if (is.null(spec$scale)) {
+      deferred[spec$aliases] <- spec$aesthetics
+    } else {
+      scale <- ggchord_prepare_domain_scale(spec$scale, plot)$clone()
+      plot$scales$add(ggchord_scope_scale(scale, spec$aliases, theme))
     }
-    scale$guide <- guide
-    plot$scales$add(scale)
-    # Track styles project through generated columns. Keep the original
-    # title on its independent domain when this is the first mapped layer.
+    # Preserve public guide settings and titles across the internal rename.
     for (aesthetic in spec$aesthetics) {
       for (i in sort(spec$selected)) {
         layer <- plot$layers[[i]]
@@ -538,8 +616,13 @@ ggchord_apply_scoped_scales <- function(plot, scopes = plot$ggchord$scoped_scale
         mapping <- layer$mapping[[aesthetic]] %||%
           if (isTRUE(layer$inherit.aes)) plot$mapping[[aesthetic]]
         if (is.null(mapping)) next
+        key <- spec$aliases[[aesthetic]]
         label <- layer$ggchord_params$track_mapping_labels[[aesthetic]]
-        if (!is.null(label)) plot$labels[[spec$aliases[[aesthetic]]]] <- label
+        if (!is.null(label)) plot$labels[[key]] <- label
+        if (isTRUE(spec$automatic)) {
+          if (aesthetic %in% names(plot$labels)) plot$labels[key] <- plot$labels[aesthetic]
+          guides[[key]] <- ggchord_scope_guide(guides[[aesthetic]], spec$aliases)
+        }
         break
       }
     }
@@ -547,8 +630,24 @@ ggchord_apply_scoped_scales <- function(plot, scopes = plot$ggchord$scoped_scale
       aliases[[i]] <- c(aliases[[i]], spec$aliases)
     }
   }
+  if (length(deferred)) plot$scales <- ggchord_defer_scale_defaults(plot$scales, deferred, theme)
   for (i in which(lengths(aliases) > 0L))
     plot$layers[[i]] <- ggchord_scope_layer(plot$layers[[i]], aliases[[i]], plot$mapping)
+  automatic <- Filter(function(spec) isTRUE(spec$automatic), specs)
+  copied <- intersect(unlist(lapply(automatic, `[[`, "aesthetics")),
+    union(names(guides), names(plot$labels)))
+  for (key in copied) {
+    shared <- any(vapply(plot$layers, function(layer) {
+      !is.null(layer$mapping[[key]]) ||
+        (isTRUE(layer$inherit.aes) && !is.null(plot$mapping[[key]]))
+    }, logical(1)))
+    if (!shared) {
+      plot$labels[key] <- NULL
+      guides[[key]] <- NULL
+    }
+  }
+  parent_guides <- plot$guides
+  plot$guides <- ggproto(NULL, parent_guides, guides = guides)
   plot
 }
 
@@ -604,7 +703,7 @@ ggchord_check_mixed_scale <- function(layers, aesthetic, roles) {
     id <- layers[[i]]$ggchord_layer_id %||% layers[[i]]$ggchord_type %||% "unnamed"
     paste0("'", id, "' maps `", roles[i], "` (", kinds[i], ")")
   }
-  id <- layers[[pair[2L]]]$ggchord_params$id %||% "features"
+  id <- ggchord_declared_id(layers[[pair[2L]]]$ggchord_params$id) %||% "features"
   ggchord_stop("Incompatible mappings for shared `", aesthetic, "`: ",
     describe(pair[1L]), " and ", describe(pair[2L]), ". Give a layer an explicit id and use ",
     "scale_for(\"", id, "\", scale_", aesthetic, "_discrete()) for its independent scale.")
@@ -644,7 +743,7 @@ ggchord_add_visual_scales <- function(plot) {
       if (aesthetic %in% names(layer$aes_params)) return(FALSE)
       mapping <- layer$mapping[[aesthetic]]
       if (is.null(mapping) && isTRUE(layer$inherit.aes)) mapping <- plot$mapping[[aesthetic]]
-      !is.null(mapping)
+      !is.null(mapping) && ggchord_trains_visual_scale(mapping)
     }, plot$layers)
     if (!length(layers)) next
     roles <- vapply(layers, function(layer) {

@@ -131,7 +131,7 @@ ggchord_prepare_link_statistics <- function(plot, references) {
 #'   out-of-bounds coordinates remain errors.
 #' @param show.legend Logical or named logical indicating whether the layer contributes legend keys.
 #' @param inherit.aes Whether to inherit plot mappings and evaluate them on the layer data.
-#' @param id Optional plot-local layer identifier. Name a layer explicitly to scope a scale, anchor a label or export it.
+#' @param id Layer identifier. [auto_id()] assigns a plot-local ID and independent default visual scales. Use a name for explicit references, or `NULL` or `NA` to share scales.
 #' @return A ggplot2 layer whose statistic output retains the original members
 #'   in `source_members`, with `n_members` and `sum_weight` for each result.
 #' @details The statistic bins the midpoints of closed query and subject
@@ -159,7 +159,7 @@ ggchord_prepare_link_statistics <- function(plot, references) {
 #'   scale_fill_viridis_c(name = "Members") + coord_chord()
 stat_link_bundle <- function(mapping = NULL, data = NULL, geom = "link_ribbon",
     position = "identity", bins = 80, min_bundle = 2, ...,
-    na.rm = FALSE, show.legend = NA, inherit.aes = TRUE, id = NULL) {
+    na.rm = FALSE, show.legend = NA, inherit.aes = TRUE, id = auto_id()) {
   ggchord_check_argument_names(sys.call(), sys.function())
   if (!identical(geom, "link_ribbon")) ggchord_stop("stat_link_bundle(): requires an interval link geometry")
   geom_link_ribbon(mapping, data, stat = "link_bundle", position = position,
@@ -181,7 +181,7 @@ stat_link_bundle <- function(mapping = NULL, data = NULL, geom = "link_ribbon",
 #'   out-of-bounds coordinates remain errors.
 #' @param show.legend Logical or named logical indicating whether the layer contributes legend keys.
 #' @param inherit.aes Whether to inherit plot mappings and evaluate them on the layer data.
-#' @param id Optional plot-local layer identifier. Name a layer explicitly to scope a scale, anchor a label or export it.
+#' @param id Layer identifier. [auto_id()] assigns a plot-local ID and independent default visual scales. Use a name for explicit references, or `NULL` or `NA` to share scales.
 #' @return A ggplot2 layer. Its statistic output retains the source rows and
 #'   adds `q_bin`, `s_bin`, `bin_weight`, `bin_area`, `density_raw`,
 #'   `density`, `normalization`, `density_unit` and `source_members`.
@@ -219,7 +219,7 @@ stat_link_bundle <- function(mapping = NULL, data = NULL, geom = "link_ribbon",
 #'   coord_chord()
 stat_link_density <- function(mapping = NULL, data = NULL, geom = "link_ribbon",
     position = "identity", bins = 80, normalization = "none", ...,
-    na.rm = FALSE, show.legend = NA, inherit.aes = TRUE, id = NULL) {
+    na.rm = FALSE, show.legend = NA, inherit.aes = TRUE, id = auto_id()) {
   ggchord_check_argument_names(sys.call(), sys.function())
   if (!identical(geom, "link_ribbon")) ggchord_stop("stat_link_density(): requires an interval link geometry")
   geom_link_ribbon(mapping, data, stat = "link_density", position = position,

@@ -61,7 +61,7 @@
 #' @param position Native data adjustment such as `"identity"`, `"stack"` or
 #'   `ggplot2::position_dodge(width = 10)`. Source x uses sequence units.
 #'   Feature placement belongs on feature layers.
-#' @param id Optional unique layer ID for exported statistics and source rows.
+#' @param id Layer identifier for visual scales and exported rows. See [auto_id()].
 #' @param show.legend Standard ggplot2 layer legend selection. A named logical
 #'   vector such as `c(fill = FALSE, colour = TRUE)` controls this layer's
 #'   contribution to each guide, including guides on named track scales.
@@ -120,7 +120,7 @@
 #'   coord_collinear()
 geom_track <- function(mapping = NULL, data = NULL, geom = "point", stat = NULL,
     position = NULL, track = "default", ...,
-    na.rm = FALSE, show.legend = NA, inherit.aes = TRUE, id = NULL) {
+    na.rm = FALSE, show.legend = NA, inherit.aes = TRUE, id = auto_id()) {
   ggchord_check_argument_names(sys.call(), sys.function())
   geoms <- c("point", "line", "path", "step", "col", "bar", "area", "tile", "interval")
   if (!is.character(geom) || length(geom) != 1L || !geom %in% geoms)
@@ -259,7 +259,7 @@ geom_track <- function(mapping = NULL, data = NULL, geom = "point", stat = NULL,
 #' @param na.rm Suppress warnings for missing observations that the layer can omit.
 #' @param show.legend Logical or named logical indicating whether the layer contributes legend keys.
 #' @param inherit.aes Whether to inherit plot mappings and evaluate them on the layer data.
-#' @param id Optional plot-local layer identifier. Name a layer explicitly to scope a scale, anchor a label or export it.
+#' @param id Layer identifier. [auto_id()] assigns a plot-local ID and independent default visual scales. Use a name for explicit references, or `NULL` or `NA` to share scales.
 #' @return A ggplot2 layer for addition to a plot.
 #' @details Numerical tracks use `x` in sequence units and `y` in measurement units. They default to the `pos` and `value` columns. An interval fills the band across `start` and `end` without training a numerical height. Track bands set geometry in millimetres.
 #' @examples
@@ -280,7 +280,7 @@ geom_track <- function(mapping = NULL, data = NULL, geom = "point", stat = NULL,
 #'   coord_collinear()
 geom_track_point <- function(mapping = NULL, data = NULL, stat = "identity",
     position = "identity", track = "default", ...,
-    na.rm = FALSE, show.legend = NA, inherit.aes = TRUE, id = NULL) {
+    na.rm = FALSE, show.legend = NA, inherit.aes = TRUE, id = auto_id()) {
   ggchord_check_argument_names(sys.call(), sys.function())
   geom_track(mapping, data, geom = "point", stat = stat, position = position,
     track = track, ..., na.rm = na.rm, show.legend = show.legend,
@@ -298,7 +298,7 @@ geom_track_point <- function(mapping = NULL, data = NULL, stat = "identity",
 #' @param na.rm Suppress warnings for missing observations that the layer can omit.
 #' @param show.legend Logical or named logical indicating whether the layer contributes legend keys.
 #' @param inherit.aes Whether to inherit plot mappings and evaluate them on the layer data.
-#' @param id Optional plot-local layer identifier. Name a layer explicitly to scope a scale, anchor a label or export it.
+#' @param id Layer identifier. [auto_id()] assigns a plot-local ID and independent default visual scales. Use a name for explicit references, or `NULL` or `NA` to share scales.
 #' @return A ggplot2 layer for addition to a plot.
 #' @details Numerical tracks use `x` in sequence units and `y` in measurement units. They default to the `pos` and `value` columns. An interval fills the band across `start` and `end` without training a numerical height. Track bands set geometry in millimetres.
 #' @examples
@@ -319,7 +319,7 @@ geom_track_point <- function(mapping = NULL, data = NULL, stat = "identity",
 #'   coord_collinear()
 geom_track_line <- function(mapping = NULL, data = NULL, stat = "identity",
     position = "identity", track = "default", ...,
-    na.rm = FALSE, show.legend = NA, inherit.aes = TRUE, id = NULL) {
+    na.rm = FALSE, show.legend = NA, inherit.aes = TRUE, id = auto_id()) {
   ggchord_check_argument_names(sys.call(), sys.function())
   geom_track(mapping, data, geom = "line", stat = stat, position = position,
     track = track, ..., na.rm = na.rm, show.legend = show.legend,
@@ -337,7 +337,7 @@ geom_track_line <- function(mapping = NULL, data = NULL, stat = "identity",
 #' @param na.rm Suppress warnings for missing observations that the layer can omit.
 #' @param show.legend Logical or named logical indicating whether the layer contributes legend keys.
 #' @param inherit.aes Whether to inherit plot mappings and evaluate them on the layer data.
-#' @param id Optional plot-local layer identifier. Name a layer explicitly to scope a scale, anchor a label or export it.
+#' @param id Layer identifier. [auto_id()] assigns a plot-local ID and independent default visual scales. Use a name for explicit references, or `NULL` or `NA` to share scales.
 #' @return A ggplot2 layer for addition to a plot.
 #' @details Numerical tracks use `x` in sequence units and `y` in measurement units. They default to the `pos` and `value` columns. An interval fills the band across `start` and `end` without training a numerical height. Track bands set geometry in millimetres.
 #' @examples
@@ -358,7 +358,7 @@ geom_track_line <- function(mapping = NULL, data = NULL, stat = "identity",
 #'   coord_collinear()
 geom_track_path <- function(mapping = NULL, data = NULL, stat = "identity",
     position = "identity", track = "default", ...,
-    na.rm = FALSE, show.legend = NA, inherit.aes = TRUE, id = NULL) {
+    na.rm = FALSE, show.legend = NA, inherit.aes = TRUE, id = auto_id()) {
   ggchord_check_argument_names(sys.call(), sys.function())
   geom_track(mapping, data, geom = "path", stat = stat, position = position,
     track = track, ..., na.rm = na.rm, show.legend = show.legend,
@@ -376,7 +376,7 @@ geom_track_path <- function(mapping = NULL, data = NULL, stat = "identity",
 #' @param na.rm Suppress warnings for missing observations that the layer can omit.
 #' @param show.legend Logical or named logical indicating whether the layer contributes legend keys.
 #' @param inherit.aes Whether to inherit plot mappings and evaluate them on the layer data.
-#' @param id Optional plot-local layer identifier. Name a layer explicitly to scope a scale, anchor a label or export it.
+#' @param id Layer identifier. [auto_id()] assigns a plot-local ID and independent default visual scales. Use a name for explicit references, or `NULL` or `NA` to share scales.
 #' @return A ggplot2 layer for addition to a plot.
 #' @details Numerical tracks use `x` in sequence units and `y` in measurement units. They default to the `pos` and `value` columns. An interval fills the band across `start` and `end` without training a numerical height. Track bands set geometry in millimetres.
 #' @examples
@@ -397,7 +397,7 @@ geom_track_path <- function(mapping = NULL, data = NULL, stat = "identity",
 #'   coord_collinear()
 geom_track_step <- function(mapping = NULL, data = NULL, stat = "identity",
     position = "identity", track = "default", ...,
-    na.rm = FALSE, show.legend = NA, inherit.aes = TRUE, id = NULL) {
+    na.rm = FALSE, show.legend = NA, inherit.aes = TRUE, id = auto_id()) {
   ggchord_check_argument_names(sys.call(), sys.function())
   geom_track(mapping, data, geom = "step", stat = stat, position = position,
     track = track, ..., na.rm = na.rm, show.legend = show.legend,
@@ -415,7 +415,7 @@ geom_track_step <- function(mapping = NULL, data = NULL, stat = "identity",
 #' @param na.rm Suppress warnings for missing observations that the layer can omit.
 #' @param show.legend Logical or named logical indicating whether the layer contributes legend keys.
 #' @param inherit.aes Whether to inherit plot mappings and evaluate them on the layer data.
-#' @param id Optional plot-local layer identifier. Name a layer explicitly to scope a scale, anchor a label or export it.
+#' @param id Layer identifier. [auto_id()] assigns a plot-local ID and independent default visual scales. Use a name for explicit references, or `NULL` or `NA` to share scales.
 #' @return A ggplot2 layer for addition to a plot.
 #' @details Numerical tracks use `x` in sequence units and `y` in measurement units. They default to the `pos` and `value` columns. An interval fills the band across `start` and `end` without training a numerical height. Track bands set geometry in millimetres.
 #' @examples
@@ -436,7 +436,7 @@ geom_track_step <- function(mapping = NULL, data = NULL, stat = "identity",
 #'   coord_collinear()
 geom_track_col <- function(mapping = NULL, data = NULL, stat = "identity",
     position = "stack", track = "default", ...,
-    na.rm = FALSE, show.legend = NA, inherit.aes = TRUE, id = NULL) {
+    na.rm = FALSE, show.legend = NA, inherit.aes = TRUE, id = auto_id()) {
   ggchord_check_argument_names(sys.call(), sys.function())
   geom_track(mapping, data, geom = "col", stat = stat, position = position,
     track = track, ..., na.rm = na.rm, show.legend = show.legend,
@@ -454,7 +454,7 @@ geom_track_col <- function(mapping = NULL, data = NULL, stat = "identity",
 #' @param na.rm Suppress warnings for missing observations that the layer can omit.
 #' @param show.legend Logical or named logical indicating whether the layer contributes legend keys.
 #' @param inherit.aes Whether to inherit plot mappings and evaluate them on the layer data.
-#' @param id Optional plot-local layer identifier. Name a layer explicitly to scope a scale, anchor a label or export it.
+#' @param id Layer identifier. [auto_id()] assigns a plot-local ID and independent default visual scales. Use a name for explicit references, or `NULL` or `NA` to share scales.
 #' @return A ggplot2 layer for addition to a plot.
 #' @details Numerical tracks use `x` in sequence units and `y` in measurement units. They default to the `pos` and `value` columns. An interval fills the band across `start` and `end` without training a numerical height. Track bands set geometry in millimetres.
 #' @examples
@@ -475,7 +475,7 @@ geom_track_col <- function(mapping = NULL, data = NULL, stat = "identity",
 #'   coord_collinear()
 geom_track_bar <- function(mapping = NULL, data = NULL, stat = "count",
     position = "stack", track = "default", ...,
-    na.rm = FALSE, show.legend = NA, inherit.aes = TRUE, id = NULL) {
+    na.rm = FALSE, show.legend = NA, inherit.aes = TRUE, id = auto_id()) {
   ggchord_check_argument_names(sys.call(), sys.function())
   geom_track(mapping, data, geom = "bar", stat = stat, position = position,
     track = track, ..., na.rm = na.rm, show.legend = show.legend,
@@ -493,7 +493,7 @@ geom_track_bar <- function(mapping = NULL, data = NULL, stat = "count",
 #' @param na.rm Suppress warnings for missing observations that the layer can omit.
 #' @param show.legend Logical or named logical indicating whether the layer contributes legend keys.
 #' @param inherit.aes Whether to inherit plot mappings and evaluate them on the layer data.
-#' @param id Optional plot-local layer identifier. Name a layer explicitly to scope a scale, anchor a label or export it.
+#' @param id Layer identifier. [auto_id()] assigns a plot-local ID and independent default visual scales. Use a name for explicit references, or `NULL` or `NA` to share scales.
 #' @return A ggplot2 layer for addition to a plot.
 #' @details Numerical tracks use `x` in sequence units and `y` in measurement units. They default to the `pos` and `value` columns. An interval fills the band across `start` and `end` without training a numerical height. Track bands set geometry in millimetres.
 #' @examples
@@ -514,7 +514,7 @@ geom_track_bar <- function(mapping = NULL, data = NULL, stat = "count",
 #'   coord_collinear()
 geom_track_area <- function(mapping = NULL, data = NULL, stat = "identity",
     position = "stack", track = "default", ...,
-    na.rm = FALSE, show.legend = NA, inherit.aes = TRUE, id = NULL) {
+    na.rm = FALSE, show.legend = NA, inherit.aes = TRUE, id = auto_id()) {
   ggchord_check_argument_names(sys.call(), sys.function())
   geom_track(mapping, data, geom = "area", stat = stat, position = position,
     track = track, ..., na.rm = na.rm, show.legend = show.legend,
@@ -532,7 +532,7 @@ geom_track_area <- function(mapping = NULL, data = NULL, stat = "identity",
 #' @param na.rm Suppress warnings for missing observations that the layer can omit.
 #' @param show.legend Logical or named logical indicating whether the layer contributes legend keys.
 #' @param inherit.aes Whether to inherit plot mappings and evaluate them on the layer data.
-#' @param id Optional plot-local layer identifier. Name a layer explicitly to scope a scale, anchor a label or export it.
+#' @param id Layer identifier. [auto_id()] assigns a plot-local ID and independent default visual scales. Use a name for explicit references, or `NULL` or `NA` to share scales.
 #' @return A ggplot2 layer for addition to a plot.
 #' @details Numerical tracks use `x` in sequence units and `y` in measurement units. They default to the `pos` and `value` columns. An interval fills the band across `start` and `end` without training a numerical height. Track bands set geometry in millimetres.
 #' @examples
@@ -553,7 +553,7 @@ geom_track_area <- function(mapping = NULL, data = NULL, stat = "identity",
 #'   coord_collinear()
 geom_track_tile <- function(mapping = NULL, data = NULL, stat = "identity",
     position = "identity", track = "default", ...,
-    na.rm = FALSE, show.legend = NA, inherit.aes = TRUE, id = NULL) {
+    na.rm = FALSE, show.legend = NA, inherit.aes = TRUE, id = auto_id()) {
   ggchord_check_argument_names(sys.call(), sys.function())
   geom_track(mapping, data, geom = "tile", stat = stat, position = position,
     track = track, ..., na.rm = na.rm, show.legend = show.legend,
@@ -571,7 +571,7 @@ geom_track_tile <- function(mapping = NULL, data = NULL, stat = "identity",
 #' @param na.rm Suppress warnings for missing observations that the layer can omit.
 #' @param show.legend Logical or named logical indicating whether the layer contributes legend keys.
 #' @param inherit.aes Whether to inherit plot mappings and evaluate them on the layer data.
-#' @param id Optional plot-local layer identifier. Name a layer explicitly to scope a scale, anchor a label or export it.
+#' @param id Layer identifier. [auto_id()] assigns a plot-local ID and independent default visual scales. Use a name for explicit references, or `NULL` or `NA` to share scales.
 #' @return A ggplot2 layer for addition to a plot.
 #' @details Numerical tracks use `x` in sequence units and `y` in measurement units. They default to the `pos` and `value` columns. An interval fills the band across `start` and `end` without training a numerical height. Track bands set geometry in millimetres.
 #' @examples
@@ -600,7 +600,7 @@ geom_track_tile <- function(mapping = NULL, data = NULL, stat = "identity",
 #'   coord_collinear()
 geom_track_interval <- function(mapping = NULL, data = NULL, stat = "identity",
     position = "identity", track = "default", ...,
-    na.rm = FALSE, show.legend = NA, inherit.aes = TRUE, id = NULL) {
+    na.rm = FALSE, show.legend = NA, inherit.aes = TRUE, id = auto_id()) {
   ggchord_check_argument_names(sys.call(), sys.function())
   geom_track(mapping, data, geom = "interval", stat = stat, position = position,
     track = track, ..., na.rm = na.rm, show.legend = show.legend,

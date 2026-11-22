@@ -11,7 +11,7 @@
 #' @param na.rm Suppress warnings for missing observations that the layer can omit.
 #' @param show.legend Logical or named logical indicating whether the layer contributes legend keys.
 #' @param inherit.aes Whether to inherit plot mappings and evaluate them on the layer data.
-#' @param id Optional plot-local layer identifier. Name a layer explicitly to scope a scale, anchor a label or export it.
+#' @param id Optional layer name for export. The native Cartesian character panel uses ordinary ggplot2 scales.
 #' @return A ggplot2 layer for addition to a plot.
 #' @details Provide an aligned character table with source or alignment identity. Display wrapping does not change alignment columns, and a gap has no source position. Pair text and tiles explicitly with a residue fill scale when colour conveys alphabet symbols.
 #' @examples
@@ -24,7 +24,7 @@
 #'   coord_fixed(ratio = 1)
 geom_residue <- function(mapping = NULL, data = NULL, representation = "tile_text",
     overflow = "tile", line_width = NULL, stat = "identity", position = "identity",
-    ..., na.rm = FALSE, show.legend = FALSE, inherit.aes = TRUE, id = NULL) {
+    ..., na.rm = FALSE, show.legend = FALSE, inherit.aes = TRUE, id = auto_id()) {
   ggchord_check_argument_names(sys.call(), sys.function())
   representation <- ggchord_match_arg(representation, c("text", "tile", "tile_text"))
   overflow_supplied <- !missing(overflow)
@@ -41,7 +41,8 @@ geom_residue <- function(mapping = NULL, data = NULL, representation = "tile_tex
     position = "identity", show.legend = show.legend, inherit.aes = inherit.aes,
     params = c(list(representation = representation, overflow = overflow,
       line_width = line_width, na.rm = na.rm), dots))
-  if (!is.null(id)) layer <- layer_id(layer, id)
+  name <- ggchord_declared_id(id)
+  if (!is.null(name)) layer <- layer_id(layer, name)
   ggproto("LayerResidue", layer,
     compute_aesthetics = function(self, data, plot) {
       coord <- plot$coordinates
@@ -108,7 +109,7 @@ ggchord_residue_validate_styles <- function(styles, representation, overflow) {
 #' @param na.rm Suppress warnings for missing observations that the layer can omit.
 #' @param show.legend Logical or named logical indicating whether the layer contributes legend keys.
 #' @param inherit.aes Whether to inherit plot mappings and evaluate them on the layer data.
-#' @param id Optional plot-local layer identifier. Name a layer explicitly to scope a scale, anchor a label or export it.
+#' @param id Optional layer name for export. The native Cartesian character panel uses ordinary ggplot2 scales.
 #' @return A ggplot2 layer for addition to a plot.
 #' @details Provide an aligned character table with source or alignment identity. Display wrapping does not change alignment columns, and a gap has no source position. Pair text and tiles explicitly with a residue fill scale when colour conveys alphabet symbols.
 #' @examples
@@ -120,7 +121,7 @@ ggchord_residue_validate_styles <- function(styles, representation, overflow) {
 #'   coord_fixed(ratio = 1)
 geom_residue_text <- function(mapping = NULL, data = NULL, overflow = "hide",
     line_width = NULL, stat = "identity", position = "identity", ...,
-    na.rm = FALSE, show.legend = FALSE, inherit.aes = TRUE, id = NULL) {
+    na.rm = FALSE, show.legend = FALSE, inherit.aes = TRUE, id = auto_id()) {
   ggchord_check_argument_names(sys.call(), sys.function())
   geom_residue(mapping, data, representation = "text", overflow = overflow,
     line_width = line_width, stat = stat, position = position, ...,
@@ -138,7 +139,7 @@ geom_residue_text <- function(mapping = NULL, data = NULL, overflow = "hide",
 #' @param na.rm Suppress warnings for missing observations that the layer can omit.
 #' @param show.legend Logical or named logical indicating whether the layer contributes legend keys.
 #' @param inherit.aes Whether to inherit plot mappings and evaluate them on the layer data.
-#' @param id Optional plot-local layer identifier. Name a layer explicitly to scope a scale, anchor a label or export it.
+#' @param id Optional layer name for export. The native Cartesian character panel uses ordinary ggplot2 scales.
 #' @return A ggplot2 layer for addition to a plot.
 #' @details Provide an aligned character table with source or alignment identity. Display wrapping does not change alignment columns, and a gap has no source position. Pair text and tiles explicitly with a residue fill scale when colour conveys alphabet symbols.
 #' @examples
@@ -151,7 +152,7 @@ geom_residue_text <- function(mapping = NULL, data = NULL, overflow = "hide",
 #'   coord_fixed(ratio = 1)
 geom_residue_tile <- function(mapping = NULL, data = NULL, line_width = NULL,
     stat = "identity", position = "identity", ..., na.rm = FALSE,
-    show.legend = FALSE, inherit.aes = TRUE, id = NULL) {
+    show.legend = FALSE, inherit.aes = TRUE, id = auto_id()) {
   ggchord_check_argument_names(sys.call(), sys.function())
   if ("overflow" %in% names(list(...))) ggchord_stop("geom_residue_tile(): overflow applies to text")
   geom_residue(mapping, data, representation = "tile", line_width = line_width,

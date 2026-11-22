@@ -16,7 +16,7 @@ geom_residue(
   na.rm = FALSE,
   show.legend = FALSE,
   inherit.aes = TRUE,
-  id = NULL
+  id = auto_id()
 )
 }
 \arguments{
@@ -42,7 +42,7 @@ geom_residue(
 
 \item{inherit.aes}{Whether to inherit plot mappings and evaluate them on the layer data.}
 
-\item{id}{Optional plot-local layer identifier. Name a layer explicitly to scope a scale, anchor a label or export it.}
+\item{id}{Optional layer name for export. The native Cartesian character panel uses ordinary ggplot2 scales.}
 }
 \value{
 A ggplot2 layer for addition to a plot.

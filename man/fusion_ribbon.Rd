@@ -12,7 +12,7 @@ fusion_ribbon(
   ...,
   na.rm = FALSE,
   show.legend = NA,
-  id = NULL
+  id = auto_id()
 )
 }
 \arguments{
@@ -30,7 +30,7 @@ fusion_ribbon(
 
 \item{show.legend}{Whether the layer contributes to composition guides.}
 
-\item{id}{Optional root layer ID.}
+\item{id}{Root ribbon identifier and scale scope. See \code{\link[=auto_id]{auto_id()}}.}
 }
 \value{
 A component for \code{\link[=ggchord_fusion]{ggchord_fusion()}}.

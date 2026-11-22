@@ -38,7 +38,7 @@ ggchord_empty_seq_scale_geometry <- function() data.frame(
 #' @param height Scale-bar height in millimetres.
 #' @param text_size Scale-bar text size in ggplot2 text units.
 #' @param colour Fixed colour.
-#' @param id Optional plot-local layer identifier. Name a layer explicitly to scope a scale, anchor a label or export it.
+#' @param id Layer identifier. [auto_id()] assigns a plot-local ID and independent default visual scales. Use a name for explicit references, or `NULL` or `NA` to share scales.
 #' @return A ggplot2 layer for addition to a plot.
 #' @examples
 #' seqs <- data.frame(
@@ -54,7 +54,7 @@ ggchord_empty_seq_scale_geometry <- function() data.frame(
 #'   annotation_seq_scalebar(length = 100, sequence = "A")
 annotation_seq_scalebar <- function(length, sequence = NULL, instance = NULL,
     location = "bottomleft", label = NULL, height = 1, text_size = 3,
-    colour = "black", id = NULL) {
+    colour = "black", id = auto_id()) {
   ggchord_check_argument_names(sys.call(), sys.function())
   if (missing(length) || !is.numeric(length) || base::length(length) != 1L ||
       !is.finite(length) || length <= 0)
@@ -79,7 +79,7 @@ ggchord_seq_scale_layer <- function(mapping = NULL, data = NULL, length = NULL, 
     location = c("bottomleft", "bottomright", "topleft", "topright"),
     offset = grid::unit(c(0, 6), "mm"), tick_height = grid::unit(1.5, "mm"),
     label_gap = grid::unit(1.5, "mm"), linewidth = .4, colour = "#3D4348", size = 3,
-    position = "identity", show.legend = FALSE, inherit.aes = TRUE, ..., id = NULL) {
+    position = "identity", show.legend = FALSE, inherit.aes = TRUE, ..., id = auto_id()) {
   ggchord_check_argument_names(sys.call(), sys.function())
   fixed <- c(linewidth = !missing(linewidth), colour = !missing(colour), size = !missing(size))
   location <- ggchord_match_arg(location)

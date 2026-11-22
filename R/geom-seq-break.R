@@ -11,7 +11,7 @@
 #' @param na.rm Suppress warnings for missing observations that the layer can omit.
 #' @param show.legend Logical or named logical indicating whether the layer contributes legend keys.
 #' @param inherit.aes Whether to inherit plot mappings and evaluate them on the layer data.
-#' @param id Optional plot-local layer identifier. Name a layer explicitly to scope a scale, anchor a label or export it.
+#' @param id Layer identifier. [auto_id()] assigns a plot-local ID and independent default visual scales. Use a name for explicit references, or `NULL` or `NA` to share scales.
 #' @return A ggplot2 layer for addition to a plot.
 #' @details The source is the complete reference table with `accver` and `length`. A backbone can select an authoritative subset. An explicit complete table in geom_seq() can register a reference when the plot has no global data.
 #' @examples
@@ -35,7 +35,7 @@
 #'   coord_collinear()
 geom_seq_break <- function(mapping = NULL, data = NULL, mark = "slash", size = 2,
     position = "identity", ..., na.rm = FALSE, show.legend = NA,
-    inherit.aes = TRUE, id = NULL) {
+    inherit.aes = TRUE, id = auto_id()) {
   ggchord_check_argument_names(sys.call(), sys.function())
   mark <- ggchord_match_arg(mark, c("slash", "double_slash", "zigzag"))
   size <- ggchord_physical_mm(size, "geom_seq_break(size)", nonnegative = TRUE)

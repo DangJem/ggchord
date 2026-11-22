@@ -61,7 +61,7 @@ comparison +
 
 ## Annotate one circular map {#circular-start}
 
-Use one reference per Circular panel. Bind a label layer to the feature layer by ID. This lets labels follow the features even if their arrangement changes.
+Use one reference per Circular panel. Here the gene labels follow the only gene layer, including its displayed positions. With multiple gene layers, give the intended layer an ID and use that name as `anchor_layer`.
 
 ```{r workflow-4}
 ref <- data.frame(accver = "map", length = 1000, topology = "circular")
@@ -72,8 +72,8 @@ features <- data.frame(
 
 ggchord() +
   geom_seq(data = ref) +
-  geom_gene(data = features, fill = "#277A73", id = "features") +
-  geom_gene_label(aes(label = label), anchor_layer = "features") +
+  geom_gene(data = features, fill = "#277A73") +
+  geom_gene_label(aes(label = label)) +
   layout_sequences(angular_gap = 12) +
   coord_circular(start_angle = 90) +
   theme_ggchord_plasmid()

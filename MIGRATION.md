@@ -13,6 +13,8 @@ The table covers removed calls and changes in behaviour in 0.50.0. Later section
 
 | Former call or argument | 0.50.0 replacement |
 | --- | --- |
+| Two unnamed layers previously shared the same colour or fill scale | Set `id = NULL` or `id = NA` on both layers to share the default. An ordinary explicit scale also covers both. Omit the IDs for independent scales, or use a named layer with `scale_for()` for a targeted override. |
+| A label layer relied on independent plot data with `anchor_layer` omitted | Set `anchor_layer = NULL` for independent labels. Omit it to follow a single compatible target. With multiple candidates, give the intended layer an ID and use that name as `anchor_layer`. |
 | Feature colour previously followed the remapped accession in `aes(accver = ref, fill = accver)` | Each starting mapping reads the layer's source columns. Keep this expression to colour by the original accession. Use `aes(accver = ref, fill = ref)` to colour by the displayed reference. |
 | A point track uses categories for shape or needs to hide only its fill guide | Map the categories with `aes(shape = kind)` and set symbols with `scale_shape_manual(values = c(a = 21, b = 24))`. Set `show.legend = c(fill = FALSE)` on the track layer to hide its contribution to the fill guide. Other layers can still contribute to that guide. |
 | Mixing coverage fraction and mean depth on a common height axis | Give them separate named bands. Declare custom heights with `measure = "read_depth"`. To share a range across compatible plots, apply the output of `shared_track_limits(p1, p2)` to each track scale. |

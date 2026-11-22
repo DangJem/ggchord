@@ -8,24 +8,24 @@ geom_site_label(
   mapping = NULL,
   data = NULL,
   stat = "identity",
-  anchor_layer = NULL,
+  anchor_layer = auto_anchor(),
   position = NULL,
   label_layout = label_layout_fixed(),
   ...,
   na.rm = FALSE,
   show.legend = FALSE,
   inherit.aes = TRUE,
-  id = NULL
+  id = auto_id()
 )
 }
 \arguments{
 \item{mapping}{Aesthetic mapping from \code{aes()}. A local mapping overrides the matching inherited channel.}
 
-\item{data}{Optional label table or function. With a named anchor, the default data consists of the target entities.}
+\item{data}{Optional label table or function. With a bound anchor, the default data consists of the target entities.}
 
 \item{stat}{A compatible ggplot2 Stat or its name. The default uses the supplied records.}
 
-\item{anchor_layer}{ID of the target layer. Labels use the target entities after its Stat and follow their displayed placement.}
+\item{anchor_layer}{Use \code{\link[=auto_anchor]{auto_anchor()}} to follow the unique compatible layer, a layer ID to select a target, or \code{NULL} for independent labels.}
 
 \item{position}{Position adjustment. For bound labels, leave this unset to follow the target layer.}
 
@@ -39,7 +39,7 @@ geom_site_label(
 
 \item{inherit.aes}{Whether to inherit plot mappings and evaluate them on the layer data.}
 
-\item{id}{Optional plot-local layer identifier. Name a layer explicitly to scope a scale, anchor a label or export it.}
+\item{id}{Layer identifier. \code{\link[=auto_id]{auto_id()}} assigns a plot-local ID and independent default visual scales. Use a name for explicit references, or \code{NULL} or \code{NA} to share scales.}
 }
 \value{
 A ggplot2 layer for addition to a plot.

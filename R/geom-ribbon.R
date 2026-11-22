@@ -16,7 +16,7 @@
 #' @param na.rm Suppress warnings for missing observations that the layer can omit.
 #' @param show.legend Logical or named logical indicating whether the layer contributes legend keys.
 #' @param inherit.aes Whether to inherit plot mappings and evaluate them on the layer data.
-#' @param id Optional plot-local layer identifier. Name a layer explicitly to scope a scale, anchor a label or export it.
+#' @param id Layer identifier. [auto_id()] assigns a plot-local ID and independent default visual scales. Use a name for explicit references, or `NULL` or `NA` to share scales.
 #' @param gap Nonnegative clearance in mm between a ribbon front and the edge of
 #'   the sequence or avoided feature. Accepts flexible per-sequence values.
 #' @param avoid Use `"none"` for a constant sequence gap (the default), or `"smooth"`
@@ -54,7 +54,7 @@
 #'   coord_chord()
 geom_link_ribbon <- function(mapping = NULL, data = NULL, stat = "identity",
     position = "identity", route = "curve", fill_mode = "solid", ...,
-    na.rm = FALSE, show.legend = NA, inherit.aes = TRUE, id = NULL,
+    na.rm = FALSE, show.legend = NA, inherit.aes = TRUE, id = auto_id(),
     gap = 0.4, avoid = "none", avoid_strength = 0.5) {
   call <- match.call(function(...) NULL, sys.call(), envir = parent.frame())
   if ("fill" %in% names(call) && !"fill_mode" %in% names(call)) {

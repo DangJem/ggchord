@@ -14,7 +14,7 @@ geom_seq_arrow(
   na.rm = FALSE,
   show.legend = NA,
   inherit.aes = TRUE,
-  id = NULL
+  id = auto_id()
 )
 }
 \arguments{
@@ -38,7 +38,7 @@ omit the arrow.}
 
 \item{inherit.aes}{Whether to inherit plot mappings and evaluate them on the layer data.}
 
-\item{id}{Optional plot-local layer identifier. Name a layer explicitly to scope a scale, anchor a label or export it.}
+\item{id}{Layer identifier. \code{\link[=auto_id]{auto_id()}} assigns a plot-local ID and independent default visual scales. Use a name for explicit references, or \code{NULL} or \code{NA} to share scales.}
 }
 \value{
 A ggplot2 sequence layer, equivalent to \code{\link[=geom_seq]{geom_seq()}} with

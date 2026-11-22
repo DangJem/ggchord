@@ -424,6 +424,7 @@ ggchord_draw_layer <- function(layer, geometry, input = NULL) {
   # mapping on the layer preserves guide titles and later stat/scale stages.
   ggproto(NULL, prepared, compute_aesthetics = function(self, data, plot) {
     start <- self$computed_mapping
+    columns <- self$ggchord_params$visual_columns
     for (key in names(columns)) {
       column <- columns[[key]]
       expr <- if (is.na(column)) NULL else sym(column)

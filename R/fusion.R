@@ -205,7 +205,7 @@ ggchord_fusion_check_path <- function(path, label) {
 #' @param ... Fixed visual attributes, lineend or key_glyph.
 #' @param na.rm Remove incomplete relationships without a warning.
 #' @param show.legend Whether the layer contributes to composition guides.
-#' @param id Optional root layer ID.
+#' @param id Root ribbon identifier and scale scope. See [auto_id()].
 #' @return A component for [ggchord_fusion()].
 #' @export
 #' @examples
@@ -240,7 +240,7 @@ ggchord_fusion_check_path <- function(path, label) {
 #' f + fusion_ribbon(aes(fill = pident), data = cross, id = "cross") +
 #'   scale_fill_gradient(limits = c(0, 100))
 fusion_ribbon <- function(mapping = NULL, data = NULL, route = "curve",
-    curvature = 0.5, ..., na.rm = FALSE, show.legend = NA, id = NULL) {
+    curvature = 0.5, ..., na.rm = FALSE, show.legend = NA, id = auto_id()) {
   caller <- "fusion_ribbon()"
   roles <- c("qpanel_path", "spanel_path", "qaccver", "saccver",
     "qstart", "qend", "sstart", "send", "qinstance", "sinstance", "qstrand", "sstrand")
@@ -320,6 +320,10 @@ ggchord_fusion_subset_ribbons <- function(plot, ids) {
     family <- if (inherits(e2, "ggchord_fusion_ribbon")) "ribbons" else "zooms"
     prefix <- if (family == "ribbons") "ribbon" else "zoom"
     ids <- c(names(e1$ribbons), names(e1$zooms))
+    if (family == "ribbons") {
+      e2$scale_id <- e2$id
+      e2$id <- ggchord_declared_id(e2$id)
+    }
     if (is.null(e2$id)) {
       number <- length(e1[[family]]) + 1L
       repeat {
@@ -515,6 +519,7 @@ ggchord_fusion_style_layer <- function(layer) {
   carrier_layer <- do.call(ggplot2::geom_polygon, c(list(
     data = d, mapping = mapping, inherit.aes = FALSE, show.legend = layer$show.legend), fixed))
   carrier_layer$ggchord_layer_id <- layer$id
+  carrier_layer$ggchord_params <- list(id = layer$scale_id)
   carrier_layer$ggchord_type <- "fusion_ribbon"
   carrier_layer
 }
@@ -550,9 +555,10 @@ ggchord_fusion_build_styles <- function(x) {
     if (any(!scope$layers %in% names(x$ribbons)))
       ggchord_stop("Fusion: scale_for() must select root ribbon layers")
   }
-  aliases <- lapply(ggchord_scale_scopes(p, scoped), function(scope) list(selected = scope$selected,
+  specs <- ggchord_drawing_scopes(p, scoped)
+  aliases <- lapply(specs, function(scope) list(selected = scope$selected,
     inverse = setNames(names(scope$aliases), scope$aliases)))
-  if (length(scoped)) p <- ggchord_apply_scoped_scales(p, scoped)
+  p <- ggchord_apply_scoped_scales(p, specs)
   p <- ggchord_add_visual_scales(p)
   list(plot = p, built = ggplot_build(p), aliases = aliases)
 }
