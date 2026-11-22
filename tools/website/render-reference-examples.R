@@ -66,5 +66,5 @@ results <- lapply(names(inputs$topics), function(topic) {
   }, error = function(error) stop(topic, ": ", conditionMessage(error), call. = FALSE))
 })
 names(results) <- names(inputs$topics)
-jsonlite::write_json(list(setup = highlight(inputs$setup), topics = results,
+jsonlite::write_json(list(topics = results,
   width = plot_width, height = plot_height), file.path(output_dir, "results.json"), auto_unbox = TRUE)

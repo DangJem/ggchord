@@ -24,7 +24,6 @@ LABELS = {
         roles='Data roles and aesthetics', examples='Examples', related='See also',
         source='Native ggplot2', download='Download example', filter='Filter by function name or purpose',
         console='Console output', figure='Plot from the example for',
-        input='Input tables', setup='Shared example data',
         upstream='Native ggplot2 tools',
         archived='Historical API address', current='Open the current API reference'),
     'zh': dict(reference='API 参考',
@@ -33,7 +32,6 @@ LABELS = {
         roles='数据角色与视觉映射', examples='示例', related='相关接口',
         source='原生 ggplot2', download='下载示例', filter='按函数名或用途筛选',
         console='控制台输出', figure='示例绘图',
-        input='输入表', setup='共用示例数据',
         upstream='原生 ggplot2 工具',
         archived='历史 API 地址', current='打开当前 API 参考'),
 }
@@ -44,15 +42,6 @@ UPSTREAM = (
     ('scale_*()', 'index.html#scales'), ('guides()', 'guides.html'),
     ('position_*()', 'layer_positions.html'), ('theme()', 'theme.html'),
     ('labs()', 'labs.html'), ('ggplot()', 'ggplot.html'), ('ggsave()', 'ggsave.html'),
-)
-INPUT_ROLES = (
-    ('Reference', '参考', ('accver', 'length', 'sequence_unit')),
-    ('Interval feature', '区间特征', ('accver', 'start', 'end', 'strand')),
-    ('Site', '点位', ('accver', 'pos', 'cut_top', 'cut_bottom')),
-    ('Point link', '点连接', ('qaccver', 'qpos', 'saccver', 'spos')),
-    ('Interval relationship', '区间关系', ('qaccver', 'qstart', 'qend', 'saccver', 'sstart', 'send')),
-    ('Numeric track', '数值轨道', ('accver', 'pos', 'value')),
-    ('Character cell', '字符单元', ('accver', 'alignment_column', 'symbol', 'source_position', 'is_gap')),
 )
 
 
@@ -185,12 +174,11 @@ def prepare_examples(structure):
 
 def render_examples(assets, structure):
     scripts = prepare_examples(structure)
-    setup = structure['setup'].strip() + '\n'
     with TemporaryDirectory(prefix='ggchord-reference-examples-') as temporary:
         staging = Path(temporary)
         inputs = staging / 'inputs.json'
         generated = staging / 'output'
-        write_json(inputs, dict(setup=setup, topics={
+        write_json(inputs, dict(topics={
             name: dict(signature=invocation(topic), example=scripts[name])
             for name, topic in structure['topics'].items()}))
         subprocess.run(['Rscript', '--vanilla', 'tools/website/render-reference-examples.R',
@@ -199,7 +187,6 @@ def render_examples(assets, structure):
         folder = assets / 'reference-examples'
         for name, source in scripts.items():
             write(folder / f'{name}.R', source)
-        write(folder / 'setup.R', setup)
         figures = {figure for entry in results['topics'].values() for figure in entry['figures']}
         for obsolete in folder.glob('*-[0-9][0-9].png'):
             if obsolete.name not in figures:
@@ -260,6 +247,36 @@ def render_articles(root, pages, navigation_site):
                 shutil.copy2(rendered / relative, path)
 
 
+def reference_index(structure, locale, lang, owners):
+    topics, groups = locale['topics'], locale['groups']
+    titles = LABELS[lang]
+    families = structure['families']
+
+    def family_index(primary):
+        terms = ''.join(f'<li>{topic_link(name, owners)} — {html.escape(topics[name]["title"])}</li>'
+                        for name in families[primary])
+        return (f'<dt>{link(primary + ".html", locale["families"][primary])}</dt>'
+                f'<dd><ul>{terms}</ul></dd>')
+
+    contents = ''.join(
+        '<section class="reference-group">' +
+        ''.join(f'<span id="{alias}"></span>' for alias in group['previous_anchors']) +
+        f'<h2 id="family-{key}">{html.escape(groups[key]["title"])}</h2>'
+        f'<p>{html.escape(groups[key]["intro"])}</p><dl>' +
+        ''.join(family_index(primary) for primary in dict.fromkeys(owners[name] for name in group['topics'])) +
+        '</dl></section>'
+        for key, group in structure['groups'].items())
+    field = ('<div class="reference-filter" hidden><label for="reference-filter">'
+             f'{titles["filter"]}</label><input id="reference-filter" type="search" autocomplete="off">'
+             '<output id="reference-filter-count" aria-live="polite"></output></div>')
+    upstream = '<ul>' + ''.join(
+        f'<li>{link("https://ggplot2.tidyverse.org/reference/" + href, name)}</li>'
+        for name, href in UPSTREAM) + '</ul>'
+    body = (f'<p class="lead">{html.escape(locale["description"])}</p>' +
+            field + contents + section('upstream', titles['upstream'], upstream))
+    return dict(slug='reference/index', title=titles['reference'], body=body)
+
+
 def prepare(root, pandoc):
     """Prepare articles, search rows and evaluated examples for either build mode."""
     structure, locales = load()
@@ -275,35 +292,7 @@ def prepare(root, pandoc):
         intro = locale['description']
         families = structure['families']
         owners = {name: primary for primary, names in families.items() for name in names}
-        def family_index(primary):
-            terms = ''.join(f'<li>{topic_link(name, owners)} — {html.escape(topics[name]["title"])}</li>'
-                            for name in families[primary])
-            return (f'<dt>{link(primary + ".html", locale["families"][primary])}</dt>'
-                    f'<dd><ul>{terms}</ul></dd>')
-        contents = ''.join(
-            '<section class="reference-group">' +
-            ''.join(f'<span id="{alias}"></span>' for alias in group['previous_anchors']) +
-            f'<h2 id="family-{key}">{html.escape(groups[key]["title"])}</h2>'
-            f'<p>{html.escape(groups[key]["intro"])}</p><dl>' +
-            ''.join(family_index(primary) for primary in dict.fromkeys(owners[name] for name in group['topics'])) + '</dl></section>'
-            for key, group in structure['groups'].items())
-        field = ('<div class="reference-filter" hidden><label for="reference-filter">'
-                 f'{titles["filter"]}</label><input id="reference-filter" type="search" autocomplete="off">'
-                 '<output id="reference-filter-count" aria-live="polite"></output></div>')
-        upstream = '<ul>' + ''.join(
-            f'<li>{link("https://ggplot2.tidyverse.org/reference/" + href, name)}</li>'
-            for name, href in UPSTREAM) + '</ul>'
-        roles = '<dl>' + ''.join(
-            f'<dt>{html.escape(names[lang == "zh"])}</dt>'
-            f'<dd>{", ".join(code(key) for key in names[2])}</dd>' for names in INPUT_ROLES) + '</dl>'
-        units = ('Closed source intervals are one-based. Documented cut boundaries use interbase coordinates from zero through the reference length.'
-                 if lang == 'en' else '源区间使用一基闭区间。已知切口采用残基间坐标，范围为 0 到完整参考长度。')
-        setup = (snippet(output['setup'], 'r', titles['setup']) +
-                 f'<a href="../../assets/reference-examples/setup.R" download>{titles["download"]}</a>')
-        index = (f'<p class="lead">{html.escape(intro)}</p>' +
-                 field + contents + section('input-roles', titles['input'], roles + f'<p>{html.escape(units)}</p>') +
-                 section('example-setup', titles['setup'], setup) + section('upstream', titles['upstream'], upstream))
-        pages[lang].append(dict(slug='reference/index', title=titles['reference'], body=index))
+        pages[lang].append(reference_index(structure, locale, lang, owners))
         search.append(dict(url='reference/index.html',title=titles['reference'],kind='tool',
                            summary=intro, text=' '.join(groups[k]['intro'] for k in groups),keywords='API reference'))
         for primary, members in families.items():
@@ -479,6 +468,7 @@ def build(root):
         for image in (root/'assets/reference-examples').glob('*-[0-9][0-9].png'):
             if not (generated/image.name).exists():
                 image.unlink()
+        (root/'assets/reference-examples/setup.R').unlink(missing_ok=True)
     print(f'Built {len(manifest["topics"])} API entries in {len(manifest["families"])} families per language at {root}')
 
 
