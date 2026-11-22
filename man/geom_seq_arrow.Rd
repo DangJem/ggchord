@@ -47,6 +47,10 @@ A ggplot2 sequence layer, equivalent to \code{\link[=geom_seq]{geom_seq()}} with
 \description{
 Draw a directional sequence backbone
 }
+\details{
+Map \code{colour} to colour the backbone and its arrow. For a filled
+sequence band, use \code{\link[=geom_seq]{geom_seq()}} with \code{geometry = "band"} and map \code{fill}.
+}
 \examples{
 library(ggplot2)
 seqs <- data.frame(accver = c("A", "B"), length = c(1000, 800),

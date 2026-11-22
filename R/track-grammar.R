@@ -126,7 +126,7 @@ geom_track <- function(mapping = NULL, data = NULL, geom = "point", stat = NULL,
   if (!is.character(geom) || length(geom) != 1L || !geom %in% geoms)
     ggchord_stop("geom_track(): unsupported geometry")
   dots <- ggchord_colour_dots(list(...), "geom_track()")
-  bounds <- match.arg(dots$bounds %||% "error", c("error", "clip"))
+  bounds <- ggchord_match_arg(dots$bounds %||% "error", c("error", "clip"))
   baseline <- dots$baseline %||% 0
   measure <- dots$measure
   closed <- dots$closed %||% FALSE
@@ -141,7 +141,7 @@ geom_track <- function(mapping = NULL, data = NULL, geom = "point", stat = NULL,
     ggchord_stop("geom_track(): outline applies to area")
   if (geom == "interval" && !is.null(measure))
     ggchord_stop("geom_track_interval(): measure requires a numerical height")
-  outline <- match.arg(outline, c("upper", "both", "full"))
+  outline <- ggchord_match_arg(outline, c("upper", "both", "full"))
   dots[c("bounds", "baseline", "measure", "closed", "outline")] <- NULL
   if (geom == "interval" && ggchord_identity_stat(stat %||% "identity")) {
     if (!ggchord_is_data_identity(position %||% "identity") ||
@@ -668,7 +668,7 @@ ggchord_track_native_input <- function(layer, plot, sequences) {
   fallback <- ggchord_layer_fallback(layer, plot$ggchord$data)
   raw <- ggchord_layer_source(layer, fallback)
   tryCatch(ggchord_compute_track_input(layer, plot, raw, sequences, coverage),
-    error = function(e) abort(ggchord_layer_input_context(layer), parent = e, call = NULL))
+    error = function(e) ggchord_abort(ggchord_layer_input_context(layer), parent = e, call = NULL))
 }
 
 # Only an unmodified computed column identifies the units of a height.

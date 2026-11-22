@@ -187,7 +187,7 @@ build_ggchord_cds <- function(cds_data, genetic_code = NULL, partial = "error") 
   caller <- "build_ggchord_cds()"
   if (identical(ggchord_sequence_unit(cds_data, caller), "aa"))
     ggchord_stop(caller, ": CDS models require genomic bp coordinates")
-  partial <- match.arg(partial, c("error", "trim"))
+  partial <- ggchord_match_arg(partial, c("error", "trim"))
   if (!is.data.frame(cds_data) || !nrow(cds_data)) ggchord_stop(caller, ": cds_data must be a nonempty data.frame")
   ggchord_require_columns(cds_data, c("feature_id", "accver", "start", "end", "strand"), caller)
   if ("type" %in% names(cds_data) && (anyNA(cds_data$type) || any(cds_data$type != "CDS")))
@@ -347,8 +347,8 @@ ggchord_project_genomic <- function(segment, lower, upper) {
 project_ggchord_features <- function(features, cds, from = "protein", codon_boundary = "error") {
   caller <- "project_ggchord_features()"
   feature_data <- features
-  from <- match.arg(from, c("protein", "genome"))
-  codon_boundary <- match.arg(codon_boundary, c("error", "expand"))
+  from <- ggchord_match_arg(from, c("protein", "genome"))
+  codon_boundary <- ggchord_match_arg(codon_boundary, c("error", "expand"))
   cds <- ggchord_project_model(cds, caller)
   if (!is.data.frame(feature_data)) ggchord_stop(caller, ": feature_data must be a data.frame")
   ggchord_require_columns(feature_data, c("feature_id", "start", "end"), caller)

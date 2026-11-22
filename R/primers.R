@@ -24,7 +24,7 @@ ggchord_builtin_primers <- function() {
 #' catalog[c("primer_id", "name", "sequence")]
 #' primer_catalog(set="universal", aliases=TRUE)
 primer_catalog <- function(set = "all", aliases = FALSE) {
-  set <- match.arg(set, c("all", "universal"))
+  set <- ggchord_match_arg(set, c("all", "universal"))
   if (!is.logical(aliases) || length(aliases) != 1L || is.na(aliases)) {
     ggchord_stop("primer_catalog(): aliases must be TRUE or FALSE")
   }
@@ -189,8 +189,8 @@ ggchord_reference_primer_bindings <- function(ids, sequences) {
 find_primer_bindings <- function(sequence, primers = NULL, set = "universal",
     match = "exact", min_annealed_bases = 15L, circular = NULL, unique_only = FALSE) {
   caller <- "find_primer_bindings()"
-  set <- match.arg(set, c("universal", "all", "reference"))
-  match <- match.arg(match, c("exact", "three_prime"))
+  set <- ggchord_match_arg(set, c("universal", "all", "reference"))
+  match <- ggchord_match_arg(match, c("exact", "three_prime"))
   normalized <- ggchord_normalize_sequence_input(sequence, caller)
   topology <- ggchord_search_topology(sequence, circular, normalized$ids, caller)
   if (!is.logical(unique_only) || length(unique_only) != 1L || is.na(unique_only)) {

@@ -67,9 +67,49 @@
 # Error signalling
 # ====================================================================
 
-# Signal a validation error through the caller's ordinary R condition handlers.
+# RStudio tags its own handlers. Suspend only its automatic break action
+# while signalling a package input error; unwind restores the original call.
+ggchord_local_input_error <- function(frame = parent.frame()) {
+  if (!interactive()) return(invisible(NULL))
+  hook <- getOption("error")
+  if (is.call(hook)) hook <- hook[[1L]]
+  if (is.function(hook) && isTRUE(attr(hook, "rstudioErrorHandler", exact = TRUE)) &&
+      identical(attr(hook, "errorHandlerType", exact = TRUE), "break"))
+    rlang::local_options(error = NULL, .frame = frame)
+  invisible(NULL)
+}
+
+ggchord_signal_input_error <- function(error) {
+  class(error) <- c("ggchord_input_error", class(error))
+  ggchord_local_input_error()
+  stop(error)
+}
+
 ggchord_stop <- function(..., call. = FALSE) {
-  stop(..., call. = call.)
+  message <- paste(unlist(lapply(list(...), as.character)), collapse = "")
+  ggchord_signal_input_error(simpleError(message, call = if (call.) sys.call(-1L)))
+}
+
+# Keep rlang's structured report or parent error for data validation and mappings.
+ggchord_abort <- function(message, class = NULL, ..., call = rlang::caller_env()) {
+  ggchord_local_input_error()
+  abort(message, class = c(class, "ggchord_input_error"), ..., call = call)
+}
+
+ggchord_rethrow <- function(error) {
+  if (rlang::cnd_inherits(error, "ggchord_input_error")) ggchord_local_input_error()
+  stop(error)
+}
+
+# Preserve base partial matching and the choices from the caller's formals.
+ggchord_match_arg <- function(arg, choices) {
+  if (missing(choices)) {
+    default <- formals(sys.function(sys.parent()))[[as.character(substitute(arg))]]
+    choices <- eval(default, parent.frame())
+  }
+  force(arg)
+  force(choices)
+  tryCatch(match.arg(arg, choices), error = ggchord_signal_input_error)
 }
 
 #' Reject removed public arguments with a concise migration message

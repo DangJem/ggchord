@@ -313,7 +313,7 @@ ggchord_auto_label_lanes <- function(gl, seq_arcs, side = "outside",
         return(ggchord_auto_label_lanes(gl, seq_arcs, side, units_per_inch,
           box_padding, point_padding, repel_boxes, .column_attempt + 1L))
       }
-      stop(radial)
+      ggchord_rethrow(radial)
     }
     labels[radial_rows, names(radial$labels)] <- radial$labels
     result$tracks[radial_rows] <- radial$tracks

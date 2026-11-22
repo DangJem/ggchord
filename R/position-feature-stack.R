@@ -39,8 +39,8 @@ position_feature_stack <- function(
     order = "source") {
   ggchord_check_argument_names(sys.call(), sys.function())
   automatic_base <- missing(base_position)
-  direction <- match.arg(direction, c("positive", "negative", "strand"))
-  order <- match.arg(order, c("source", "priority"))
+  direction <- ggchord_match_arg(direction, c("positive", "negative", "strand"))
+  order <- ggchord_match_arg(order, c("source", "priority"))
   spacing <- ggchord_physical_mm(spacing, "position_feature_stack()", nonnegative = TRUE)
   base_position <- ggchord_as_feature_position(base_position, "position_feature_stack()")
   if (isTRUE(base_position$ggchord_feature_stack))

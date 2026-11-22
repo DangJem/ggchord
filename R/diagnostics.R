@@ -161,7 +161,7 @@ diagnose_ggchord <- function(plot, width = NULL, height = NULL, units = "in",
     device = NULL, dpi = 300, action = "report") {
   caller <- "diagnose_ggchord()"
   ggchord_output_plot(plot, caller)
-  action <- match.arg(action, c("report", "warn", "error"))
+  action <- ggchord_match_arg(action, c("report", "warn", "error"))
   request <- ggchord_output_request(width, height, units, device, dpi, caller)
   warnings <- character()
   failures <- list()

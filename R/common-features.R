@@ -717,8 +717,8 @@ find_common_features <- function(sequence, database = NULL, types = NULL, featur
     circular = NULL, mode = "dna", genetic_code = NULL, min_protein_identity = 0.9,
     min_protein_coverage = 0.8, resolve = "best") {
   caller <- "find_common_features()"
-  mode <- match.arg(mode, c("dna", "protein", "reference"))
-  resolve <- match.arg(resolve, c("best", "all"))
+  mode <- ggchord_match_arg(mode, c("dna", "protein", "reference"))
+  resolve <- ggchord_match_arg(resolve, c("best", "all"))
   thresholds <- c(min_protein_identity, min_protein_coverage)
   if (length(min_protein_identity) != 1L || length(min_protein_coverage) != 1L ||
       !is.numeric(min_protein_identity) || !is.numeric(min_protein_coverage) ||

@@ -68,20 +68,20 @@ geom_link_ribbon <- function(mapping = NULL, data = NULL, stat = "identity",
   }
   ggchord_check_argument_names(sys.call(), sys.function(), dots = "fill")
   caller <- "geom_link_ribbon()"
-  fill_mode <- match.arg(fill_mode, c("solid", "endpoint"))
+  fill_mode <- ggchord_match_arg(fill_mode, c("solid", "endpoint"))
   position <- ggchord_as_feature_position(position, caller)
   if (ggchord_local_position(position) && !identical(position$placement, "offset"))
     ggchord_stop(caller, ": use identity or position_offset()")
   dots <- ggchord_colour_dots(list(...), caller)
   gap <- ggchord_physical_mm(gap, "geom_link_ribbon(): gap", TRUE)
-  avoid <- match.arg(avoid, c("none", "smooth"))
+  avoid <- ggchord_match_arg(avoid, c("none", "smooth"))
   if (!is.numeric(avoid_strength) || length(avoid_strength) != 1L ||
       !is.finite(avoid_strength) || avoid_strength < 0 || avoid_strength > 1)
     ggchord_stop(caller, ": avoid_strength must be a number from 0 to 1")
   controls <- ggchord_link_route(route, dots, caller)
   dots <- controls$dots
   controls$dots <- NULL
-  tip <- match.arg(dots$tip %||% "none", c("none", "from", "to", "both"))
+  tip <- ggchord_match_arg(dots$tip %||% "none", c("none", "from", "to", "both"))
   if (tip == "none" && "tip_length" %in% names(dots))
     ggchord_stop(caller, ": tip_length requires a tip")
   tip_length <- ggchord_physical_mm(dots$tip_length %||% 2, "tip_length", TRUE)

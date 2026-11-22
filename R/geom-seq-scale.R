@@ -82,7 +82,7 @@ ggchord_seq_scale_layer <- function(mapping = NULL, data = NULL, length = NULL, 
     position = "identity", show.legend = FALSE, inherit.aes = TRUE, ..., id = NULL) {
   ggchord_check_argument_names(sys.call(), sys.function())
   fixed <- c(linewidth = !missing(linewidth), colour = !missing(colour), size = !missing(size))
-  location <- match.arg(location)
+  location <- ggchord_match_arg(location)
   mapping <- ggchord_normalize_mapping(mapping)
   if (!is.null(length) && (!is.numeric(length) || length(length) != 1L ||
       !is.finite(length) || length <= 0)) ggchord_stop(

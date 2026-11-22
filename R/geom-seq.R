@@ -175,7 +175,7 @@ geom_seq <- function(mapping = NULL, data = NULL, geometry = "auto",
     thickness = 1, stat = "identity", position = "identity", ...,
     na.rm = FALSE, show.legend = NA, inherit.aes = TRUE, id = NULL) {
   ggchord_check_argument_names(sys.call(), sys.function())
-  geometry <- match.arg(geometry, c("auto", "line", "double", "band"))
+  geometry <- ggchord_match_arg(geometry, c("auto", "line", "double", "band"))
   if (!ggchord_identity_stat(stat)) ggchord_stop("geom_seq(): stat must be identity")
   position <- ggchord_as_feature_position(position, "geom_seq()")
   if (ggchord_local_position(position) && !identical(position$placement, "offset"))
@@ -217,6 +217,8 @@ geom_seq <- function(mapping = NULL, data = NULL, geometry = "auto",
 #'   omit the arrow.
 #' @return A ggplot2 sequence layer, equivalent to [geom_seq()] with
 #'   `geometry = "line"` and the supplied arrow.
+#' @details Map `colour` to colour the backbone and its arrow. For a filled
+#'   sequence band, use [geom_seq()] with `geometry = "band"` and map `fill`.
 #' @export
 #' @examples
 #' library(ggplot2)
@@ -230,6 +232,9 @@ geom_seq_arrow <- function(mapping = NULL, data = NULL, stat = "identity",
     position = "identity", ..., arrow = grid::arrow(length = grid::unit(2, "mm"), type = "closed"),
     na.rm = FALSE, show.legend = NA, inherit.aes = TRUE, id = NULL) {
   ggchord_check_argument_names(sys.call(), sys.function())
+  if ("fill" %in% c(names(mapping), ...names()))
+    ggchord_stop("geom_seq_arrow(): use colour for the arrow, e.g. aes(colour = accver). ",
+      "For a filled band use geom_seq(geometry = 'band').")
   geom_seq(mapping = mapping, data = data, geometry = "line", stat = stat,
     position = position, ..., arrow = arrow, na.rm = na.rm,
     show.legend = show.legend, inherit.aes = inherit.aes, id = id)

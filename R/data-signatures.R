@@ -130,7 +130,7 @@ ggchord_signature_json <- function(parsed, caller) {
 #' read_signature_matches(file)
 read_signature_matches <- function(file, format = "scan_tsv", source_file = FALSE) {
   caller <- "read_signature_matches()"
-  format <- match.arg(format, c("scan_tsv", "entry_json"))
+  format <- ggchord_match_arg(format, c("scan_tsv", "entry_json"))
   if (!is.logical(source_file) || length(source_file) != 1L || is.na(source_file))
     ggchord_stop(caller, ': source_file must be TRUE or FALSE')
   paths <- ggchord_resolve_files(file, NULL, 'read_signature_matches')

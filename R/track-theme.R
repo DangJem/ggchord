@@ -41,7 +41,7 @@ guide_track_axis <- function(position = "start", sequences = NULL,
 # Track value scales own their own axis Guide declaration. Theme affects only
 # decorations; the named scale and physical position retain their old domains.
 ggchord_track_axis_guide <- function(guide) {
-  if (is.character(guide)) return(list(show = match.arg(guide, c("axis", "none")) == "axis", guide = NULL))
+  if (is.character(guide)) return(list(show = ggchord_match_arg(guide, c("axis", "none")) == "axis", guide = NULL))
   if (!inherits(guide, "GuideAxis"))
     ggchord_stop("Track value guide must be 'axis', 'none', or guide_axis(theme = ...)")
   params <- guide$params; defaults <- guide_axis()$params

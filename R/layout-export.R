@@ -169,7 +169,7 @@ ggchord_output_plot <- function(plot, caller) {
 }
 
 ggchord_output_request <- function(width, height, units, device, dpi, caller) {
-  units <- match.arg(units, c("in", "mm", "cm"))
+  units <- ggchord_match_arg(units, c("in", "mm", "cm"))
   if (xor(is.null(width), is.null(height)))
     ggchord_stop(caller, ": supply width and height together")
   positive <- function(x) is.numeric(x) && length(x) == 1L && is.finite(x) && x > 0
@@ -314,7 +314,7 @@ ggchord_output_prepare <- function(plot, path, stages, catalogue) {
   genomic <- inherits(plot, "ggchord")
   if (genomic) {
     plot <- tryCatch(ggchord_render_inputs(plot), error = function(e) {
-      if (!length(path) || is.null(catalogue$on_error)) stop(e)
+      if (!length(path) || is.null(catalogue$on_error)) ggchord_rethrow(e)
       catalogue$on_error(path, e)
       plot
     })
@@ -386,7 +386,7 @@ ggchord_output_build_stages <- function(plot, on_error = NULL, path = character(
         ggchord_fusion_input(layer)
       }, error = function(e) {
         ggchord_fusion_layer_error(layer, "mapped", e, function(ignored, error, id) {
-          if (is.null(on_error)) stop(error)
+          if (is.null(on_error)) ggchord_rethrow(error)
           on_error(path, error, id)
         })
       })
@@ -396,7 +396,7 @@ ggchord_output_build_stages <- function(plot, on_error = NULL, path = character(
       child <- c(path, ggchord_fusion_path_ids(id))
       tryCatch(ggchord_output_build_stages(plot$panels[[id]]$plot, on_error, child),
         error = function(e) {
-          if (is.null(on_error)) stop(e)
+          if (is.null(on_error)) ggchord_rethrow(e)
           on_error(child, e)
         })
     }

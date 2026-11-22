@@ -150,9 +150,9 @@ link_ggchord_clusters <- function(features, membership, pairs, paralogs = "drop"
     segment_policy = "error", unmatched = "error", max_links = 10000) {
   caller <- "link_ggchord_clusters()"
   feature_data <- features
-  paralogs <- match.arg(paralogs, c("drop", "all"))
-  segment_policy <- match.arg(segment_policy, c("error", "span"))
-  unmatched <- match.arg(unmatched, c("error", "report"))
+  paralogs <- ggchord_match_arg(paralogs, c("drop", "all"))
+  segment_policy <- ggchord_match_arg(segment_policy, c("error", "span"))
+  unmatched <- ggchord_match_arg(unmatched, c("error", "report"))
   if (!is.numeric(max_links) || length(max_links) != 1L || !is.finite(max_links) ||
       max_links < 1 || max_links != floor(max_links)) ggchord_stop(caller, ": max_links must be a positive integer")
   for (input in c("feature_data", "membership", "pairs")) {

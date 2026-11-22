@@ -83,7 +83,7 @@ ggchord_build_fusion_core <- function(x, on_error = NULL) {
     viewport <- grid::viewport(x=center[1],y=center[2],width=dimensions[1],height=dimensions[2],
       default.units="mm",clip="off",name=paste0("fusion-",id))
     panel_error <- function(e) {
-      if (is.null(on_error)) stop(e)
+      if (is.null(on_error)) ggchord_rethrow(e)
       on_error(panel_path, e)
       NULL
     }
@@ -337,7 +337,7 @@ ggchord_build_fusion_core <- function(x, on_error = NULL) {
   }
   zooms <- do.call(c, unname(lapply(x$zooms, function(layer) {
     tryCatch(ggchord_render_zoom(layer, panels), error = function(e) {
-      if (is.null(on_error)) stop(e)
+      if (is.null(on_error)) ggchord_rethrow(e)
       if (!is.null(layer$capture)) layer$capture$geometry_error <- conditionMessage(e)
       on_error(character(), e, layer$id)
       NULL

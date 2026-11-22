@@ -37,7 +37,7 @@ geom_seq_break <- function(mapping = NULL, data = NULL, mark = "slash", size = 2
     position = "identity", ..., na.rm = FALSE, show.legend = NA,
     inherit.aes = TRUE, id = NULL) {
   ggchord_check_argument_names(sys.call(), sys.function())
-  mark <- match.arg(mark, c("slash", "double_slash", "zigzag"))
+  mark <- ggchord_match_arg(mark, c("slash", "double_slash", "zigzag"))
   size <- ggchord_physical_mm(size, "geom_seq_break(size)", nonnegative = TRUE)
   if (length(size) != 1L || size <= 0)
     ggchord_stop("geom_seq_break(): size must be a positive scalar")

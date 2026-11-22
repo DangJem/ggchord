@@ -42,9 +42,9 @@ translate_ggchord_cds <- function(cds, sequences, alphabet = "DNA",
     initiation = "literal", ambiguous = "error") {
   caller <- "translate_ggchord_cds()"
   cds <- ggchord_project_model(cds, caller)
-  alphabet <- match.arg(alphabet, c("DNA", "RNA"))
-  initiation <- match.arg(initiation, c("literal", "start"))
-  ambiguous <- match.arg(ambiguous, c("error", "solve"))
+  alphabet <- ggchord_match_arg(alphabet, c("DNA", "RNA"))
+  initiation <- ggchord_match_arg(initiation, c("literal", "start"))
+  ambiguous <- ggchord_match_arg(ambiguous, c("error", "solve"))
   if (!requireNamespace("Biostrings", quietly = TRUE))
     ggchord_stop(caller, ": install the optional Biostrings package for translation")
   original <- sequences

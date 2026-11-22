@@ -241,10 +241,10 @@ ggchord_feature_layer <- function(mapping, data, shape, fixed_shape, thickness,
   if (length(head_length) != 1L || head_length <= 0 ||
       (!is.null(head_width) && (length(head_width) != 1L || head_width <= 0)))
     ggchord_stop(caller, ": head dimensions must be positive scalars")
-  head_style <- match.arg(dots$head_style %||% default_head_style,
+  head_style <- ggchord_match_arg(dots$head_style %||% default_head_style,
     c("shouldered", "flush", "triangle"))
-  short <- match.arg(dots$short_feature %||% "shrink", c("shrink", "block", "error"))
-  unknown <- match.arg(dots$unknown_strand %||% "undirected", c("undirected", "error"))
+  short <- ggchord_match_arg(dots$short_feature %||% "shrink", c("shrink", "block", "error"))
+  unknown <- ggchord_match_arg(dots$unknown_strand %||% "undirected", c("undirected", "error"))
   geom_dots <- dots[setdiff(names(dots), custom)]
   ggchord_check_geom_params(geom_dots, feature_geom, caller, position, stat)
   geom_params <- ggchord_split_source_stat(stat, geom_dots, feature_geom)

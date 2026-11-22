@@ -186,7 +186,7 @@ ggchord_layer_input_data <- function(layer, fallback) {
   }
   input <- layer$ggchord_input_data %||% fallback
   if (is.function(input)) {
-    input <- tryCatch(input(fallback), error = function(e) abort(
+    input <- tryCatch(input(fallback), error = function(e) ggchord_abort(
       paste0("Data callback for layer '", layer$ggchord_layer_id, "' failed."),
       parent = e, call = NULL))
   }
@@ -206,7 +206,7 @@ ggchord_layer_input_context <- function(layer) {
 
 ggchord_eval_input_mapping <- function(role, mapping, data, caller) {
   tryCatch(eval_tidy(mapping, data = data),
-    error = function(e) abort(paste0(caller, ": cannot evaluate `", role, " = ",
+    error = function(e) ggchord_abort(paste0(caller, ": cannot evaluate `", role, " = ",
       as_label(mapping), "`."), parent = e, call = NULL))
 }
 

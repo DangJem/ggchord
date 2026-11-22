@@ -12,7 +12,7 @@ ggchord_data_validation_result <- function(issues, action, caller, checks_run,
     checks_run = checks_run, checks_skipped = checks_skipped, ...),
     class = "ggchord_validation")
   if (action == "error" && any(errors)) {
-    abort(paste0(caller, ": ", issues$message[which(errors)[1L]]),
+    ggchord_abort(paste0(caller, ": ", issues$message[which(errors)[1L]]),
       class = "ggchord_validation_error", report = result)
   }
   if (action == "warn" && nrow(issues)) {
@@ -191,7 +191,7 @@ ggchord_data_validate_table <- function(data, role, references, enabled, add) {
 validate_ggchord_data <- function(x, role = NULL, sequences = NULL, action = "report",
                                   checks = c("schema", "coordinates", "units", "references", "provenance")) {
   caller <- "validate_ggchord_data()"
-  action <- match.arg(action, c("report", "warn", "error"))
+  action <- ggchord_match_arg(action, c("report", "warn", "error"))
   roles <- c(features = "feature", links = "link", tracks = "track", alignments = "alignment")
   allowed_checks <- c("schema", "coordinates", "units", "references", "provenance", "duplicates")
   if (!is.character(checks) || anyNA(checks) || any(!checks %in% allowed_checks))
@@ -203,7 +203,7 @@ validate_ggchord_data <- function(x, role = NULL, sequences = NULL, action = "re
   }
   if (grouped) sequences <- x$sequences
   if (!grouped && is.null(role)) ggchord_stop(caller, ": role is required for a single table")
-  if (!grouped) role <- match.arg(role, c("sequence", unname(roles)))
+  if (!grouped) role <- ggchord_match_arg(role, c("sequence", unname(roles)))
   if (!grouped && identical(role, "sequence")) sequences <- x
   skipped <- if (is.null(sequences)) intersect(checks, "references") else character()
   checks_run <- setdiff(checks, skipped)
@@ -249,7 +249,7 @@ validate_ggchord_data <- function(x, role = NULL, sequences = NULL, action = "re
 #' genomes <- data.frame(genome_id=c("genomeA", "genomeB"))
 #' validate_ggchord_hierarchy(ref, genomes)
 validate_ggchord_hierarchy <- function(sequences, genomes, action = "report") {
-  action <- match.arg(action, c("report", "warn", "error"))
+  action <- ggchord_match_arg(action, c("report", "warn", "error"))
   reference <- validate_ggchord_data(sequences, role = "sequence")
   seq_key <- sequences
   genome_key <- genomes

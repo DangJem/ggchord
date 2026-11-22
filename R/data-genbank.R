@@ -96,7 +96,7 @@ read_genbank <- function(file, feature_types = NULL,
     lengths = NULL, python = "python3", unsupported = "error",
     source_file = FALSE) {
   caller <- "read_genbank()"
-  unsupported <- match.arg(unsupported, c("error", "report"))
+  unsupported <- ggchord_match_arg(unsupported, c("error", "report"))
   paths <- ggchord_resolve_files(file, NULL, "read_genbank")
   if (!is.null(feature_types) && (!is.character(feature_types) || !length(feature_types) ||
       anyNA(feature_types) || any(!nzchar(feature_types)))) ggchord_stop(

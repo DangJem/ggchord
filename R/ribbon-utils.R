@@ -263,8 +263,8 @@ ggchord_deduplicate_link_rows <- function(
     by = c("exact", "coordinates", "overlap"),
     keep = c("best_pident", "longest", "first"),
     min_reciprocal_overlap = 0.9) {
-  by <- match.arg(by)
-  keep <- match.arg(keep)
+  by <- ggchord_match_arg(by)
+  keep <- ggchord_match_arg(keep)
   if (!is.data.frame(ribbon_data)) {
     ggchord_stop("deduplicate_ggchord_links(): ribbon_data must be a data.frame",
          call. = FALSE)

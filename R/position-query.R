@@ -35,8 +35,8 @@ map_ggchord_position <- function(plot, data, from = "source", to = "display",
   caller <- "map_ggchord_position()"
   ggchord_output_plot(plot, caller)
   spaces <- c("source", "local", "display")
-  from <- match.arg(from, spaces)
-  to <- match.arg(to, spaces)
+  from <- ggchord_match_arg(from, spaces)
+  to <- ggchord_match_arg(to, spaces)
   fields <- list(source = c("source_accver", "source_position"),
     local = c("accver", "pos"), display = c("x", "y"))
   ggchord_require_columns(data, fields[[from]], caller)
@@ -66,7 +66,7 @@ map_ggchord_position <- function(plot, data, from = "source", to = "display",
   dotplot <- isTRUE(leaf$coordinates$ggchord_dotplot)
   if (dotplot && is.null(axis)) ggchord_stop(caller, ": supply a Dotplot axis")
   if (!dotplot && !is.null(axis)) ggchord_stop(caller, ": axis applies only to Dotplot")
-  if (dotplot) axis <- match.arg(axis, c("x", "y"))
+  if (dotplot) axis <- ggchord_match_arg(axis, c("x", "y"))
   reference <- ggchord_query_reference(leaf, axis)
   if (!no_instance && !instance %in% reference$instance_id)
     ggchord_stop(caller, ": unknown instance '", instance, "'")

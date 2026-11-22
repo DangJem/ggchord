@@ -262,7 +262,7 @@ ggchord_normalize_restriction_patterns <- function(patterns) {
 find_restriction_sites <- function(sequence, enzymes = NULL, patterns = NULL,
     circular = NULL, database = NULL, methylation = "unknown") {
   caller <- "find_restriction_sites()"
-  methylation <- match.arg(methylation, c("unknown", "none", "dam_dcm"))
+  methylation <- ggchord_match_arg(methylation, c("unknown", "none", "dam_dcm"))
   normalized <- ggchord_normalize_sequence_input(
     sequence, "find_restriction_sites()"
   )
@@ -406,7 +406,7 @@ find_restriction_sites <- function(sequence, enzymes = NULL, patterns = NULL,
 
 ggchord_filter_restriction_profile<-function(sites,set=c("all","unique","unique_dual","six_plus","unique_6plus","commercial","reference"),enzymes=NULL,min_site_length=NULL,cuts=NULL,window=NULL,commercial_only=FALSE,parent_set=c("all","commercial_all","commercial_nonredundant")){
   if(!is.data.frame(sites))ggchord_stop("filter_restriction_sites(): sites must be a data frame")
-  set<-match.arg(set);parent_set<-match.arg(parent_set);if(!nrow(sites))return(sites)
+  set<-ggchord_match_arg(set);parent_set<-ggchord_match_arg(parent_set);if(!nrow(sites))return(sites)
   ggchord_require_columns(sites,c("accver","enzyme","motif_length","position"),"filter_restriction_sites()")
   if (set == "reference") {
     profiles <- attr(sites, "reference_enzyme_profiles")

@@ -136,7 +136,7 @@ ggchord_focus_alignment_table <- function(data, sequences, loci) {
 focus_ggchord_data <- function(x, loci, expand = 0, boundary = "trim") {
   caller <- "focus_ggchord_data()"
   if (!ggchord_is_data_collection(x)) ggchord_stop(caller, ": expected a data or import collection")
-  boundary <- match.arg(boundary, c("trim", "drop"))
+  boundary <- ggchord_match_arg(boundary, c("trim", "drop"))
   sequences <- as_ggchord_seq(x$sequences)
   windows <- ggchord_explicit_focus_loci(sequences, loci, expand, caller)
   normalized <- loci

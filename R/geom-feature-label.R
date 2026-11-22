@@ -44,10 +44,10 @@ ggchord_label_integer <- function(value, name, minimum = 1, infinite = FALSE) {
 label_layout_fixed <- function(orientation = "feature", side = "positive",
     offset = 1, along = 0, overlap = "hide", fit = "none", wrap = NULL) {
   ggchord_check_argument_names(sys.call(), sys.function())
-  orientation <- match.arg(orientation, c("feature", "tangent", "normal", "horizontal", "vertical"))
-  side <- match.arg(side, c("positive", "negative"))
-  overlap <- match.arg(overlap, c("hide", "allow"))
-  fit <- match.arg(fit, c("none", "wrap"))
+  orientation <- ggchord_match_arg(orientation, c("feature", "tangent", "normal", "horizontal", "vertical"))
+  side <- ggchord_match_arg(side, c("positive", "negative"))
+  overlap <- ggchord_match_arg(overlap, c("hide", "allow"))
+  fit <- ggchord_match_arg(fit, c("none", "wrap"))
   if (!is.null(wrap)) {
     if (fit != "wrap") ggchord_stop("wrap requires fit = 'wrap'")
     wrap <- ggchord_label_integer(wrap, "wrap")
@@ -111,11 +111,11 @@ label_layout_repel <- function(arrangement = "auto", orientation = "auto",
     max_lines = 2, min_size = 1.5, max_overlaps = Inf, leader = "auto",
     outer_size = NULL) {
   ggchord_check_argument_names(sys.call(), sys.function())
-  arrangement <- match.arg(arrangement, c("auto", "local", "columns"))
-  orientation <- match.arg(orientation, c("auto", "feature", "tangent", "horizontal", "vertical"))
-  side <- match.arg(side, c("both", "positive", "negative"))
-  fit <- match.arg(fit, c("none", "wrap", "shrink", "wrap_shrink"))
-  leader <- match.arg(leader, c("auto", "straight", "elbow", "none"))
+  arrangement <- ggchord_match_arg(arrangement, c("auto", "local", "columns"))
+  orientation <- ggchord_match_arg(orientation, c("auto", "feature", "tangent", "horizontal", "vertical"))
+  side <- ggchord_match_arg(side, c("both", "positive", "negative"))
+  fit <- ggchord_match_arg(fit, c("none", "wrap", "shrink", "wrap_shrink"))
+  leader <- ggchord_match_arg(leader, c("auto", "straight", "elbow", "none"))
   if (!is.null(wrap)) {
     if (!fit %in% c("wrap", "wrap_shrink")) ggchord_stop("wrap requires a wrapping fit")
     wrap <- ggchord_label_integer(wrap, "wrap")
@@ -354,7 +354,7 @@ geom_feature_label <- function(mapping = NULL, data = NULL, stat = "identity",
     label_layout = label_layout_fixed(), ...,
     na.rm = FALSE, show.legend = FALSE, inherit.aes = TRUE, id = NULL) {
   ggchord_check_argument_names(sys.call(), sys.function())
-  anchor <- match.arg(anchor, c("middle", "start", "end", "head", "tail"))
+  anchor <- ggchord_match_arg(anchor, c("middle", "start", "end", "head", "tail"))
   ggchord_domain_label(mapping, data, stat, anchor_layer, anchor, position,
     label_layout, "feature", list(...), na.rm, show.legend, inherit.aes, id)
 }

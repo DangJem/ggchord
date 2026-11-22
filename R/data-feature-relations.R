@@ -64,8 +64,8 @@ ggchord_relation_features <- function(data, caller) {
 read_feature_relations <- function(file, format = "pairs", features = NULL,
     unmatched = "error", source_file = FALSE) {
   caller <- "read_feature_relations()"
-  format <- match.arg(format, c("pairs", "named_groups", "groups"))
-  unmatched <- match.arg(unmatched, c("error", "report"))
+  format <- ggchord_match_arg(format, c("pairs", "named_groups", "groups"))
+  unmatched <- ggchord_match_arg(unmatched, c("error", "report"))
   feature_data <- features
   if (!is.logical(source_file) || length(source_file) != 1L || is.na(source_file))
     ggchord_stop(caller, ': source_file must be TRUE or FALSE')

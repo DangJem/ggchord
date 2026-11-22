@@ -67,7 +67,7 @@ track_band <- function(id = "default", side = "positive", order = 1,
     thickness = 4, gap = 1) {
   ggchord_check_argument_names(sys.call(), sys.function())
   id <- ggchord_track_id(id)
-  side <- match.arg(side, c("positive", "negative"))
+  side <- ggchord_match_arg(side, c("positive", "negative"))
   if (!is.numeric(order) || length(order) != 1L || !is.finite(order) ||
       order < 1 || order != trunc(order))
     ggchord_stop("track_band(): order must be a positive integer")
@@ -155,7 +155,7 @@ ggchord_track_layer <- function(kind, mapping, data, track, fill, colour,
     params = c(styles, list(track_keys = keys, track_kind = kind), dots))
   layer$ggchord_type <- "track"
   layer$ggchord_params <- list(type = "track", id = id, track_kind = kind, track_id = track,
-    baseline = baseline, closed = closed, bounds = match.arg(bounds, c("error", "clip")), physical_layout = TRUE)
+    baseline = baseline, closed = closed, bounds = ggchord_match_arg(bounds, c("error", "clip")), physical_layout = TRUE)
   ggchord_capture_layer_input(layer, data, mapping, c("accver", "start", "end", "pos", "track_value", "group"))
 }
 
@@ -310,7 +310,7 @@ scale_track_value_continuous <- function(track, name = track, limits = NULL,
     name = name, limits = limits, breaks = breaks, labels = labels,
     transform = transform, oob = oob, guide = "none", ...)
   axis <- ggchord_track_axis_guide(guide)
-  sc$ggchord_facet_domain <- match.arg(facet_domain)
+  sc$ggchord_facet_domain <- ggchord_match_arg(facet_domain)
   if (sc$ggchord_facet_domain == "panel" && !axis$show)
     ggchord_stop("Panel-local track domains require a visible numeric axis")
   sc$ggchord_domain_policy <- list(transform = transform, oob = oob, limits = limits,

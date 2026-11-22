@@ -57,7 +57,7 @@ ggchord_alignment_complement <- function(x, alphabet) {
 #'   geom_residue(aes(fill = symbol))
 as_ggchord_alignment <- function(sequences, alphabet, source_data = NULL, circular = FALSE) {
   caller <- "as_ggchord_alignment()"
-  alphabet <- match.arg(alphabet, c("DNA", "RNA", "AA"))
+  alphabet <- ggchord_match_arg(alphabet, c("DNA", "RNA", "AA"))
   if (is.data.frame(sequences)) {
     ggchord_require_columns(sequences, c("accver", "sequence"), caller)
     ids <- as.character(sequences$accver); text <- sequences$sequence
@@ -209,8 +209,8 @@ map_alignment_position <- function(alignment, positions, from = "source",
     to = "alignment", instance = NULL) {
   caller <- "map_alignment_position()"
   spaces <- c("source", "alignment")
-  from <- match.arg(from, spaces)
-  to <- match.arg(to, spaces)
+  from <- ggchord_match_arg(from, spaces)
+  to <- ggchord_match_arg(to, spaces)
   data <- alignment
   if (inherits(alignment, "ggplot")) {
     data <- alignment$ggchord_alignment

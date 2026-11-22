@@ -42,8 +42,8 @@
 render_policy <- function(mode = "fixed", reference_size = NULL, units = "in",
     text_scale_range = c(0.8, 1.2), min_text_size = NULL) {
   caller <- "render_policy()"
-  mode <- match.arg(mode, c("fixed", "scale", "adaptive"))
-  units <- match.arg(units, c("in", "mm", "cm"))
+  mode <- ggchord_match_arg(mode, c("fixed", "scale", "adaptive"))
+  units <- ggchord_match_arg(units, c("in", "mm", "cm"))
   if (mode == "scale" && is.null(reference_size))
     ggchord_stop(caller, ": scale mode requires reference_size")
   if (!is.null(reference_size) && (!is.numeric(reference_size) ||

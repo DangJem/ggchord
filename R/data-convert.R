@@ -470,7 +470,7 @@ ggchord_convert_feature <- function(x, mapping, unified = FALSE) {
 #' ggchord(seqs) + geom_link_ribbon(data = paired)
 as_ggchord_link <- function(x, columns = NULL, kind = "interval", sequence_unit = NULL) {
   caller <- "as_ggchord_link()"
-  kind <- match.arg(kind, c("interval", "point"))
+  kind <- ggchord_match_arg(kind, c("interval", "point"))
   endpoints <- if (kind == "interval") c("qstart", "qend", "sstart", "send") else c("qpos", "spos")
   required <- c("qaccver", "saccver", endpoints)
   metadata <- NULL

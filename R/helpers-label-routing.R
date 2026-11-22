@@ -1413,7 +1413,7 @@ ggchord_offset_label_tracks <- function(gl, seq_arcs,
                                         box_padding = 0.18,
                                         point_padding = 0.08,
                                         repel_boxes = NULL) {
-  orientation <- match.arg(orientation)
+  orientation <- ggchord_match_arg(orientation)
   n <- nrow(gl)
   if (n == 0) {
     return(list(labels = gl, lanes = character(0),

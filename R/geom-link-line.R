@@ -1,5 +1,5 @@
 ggchord_link_route <- function(route, dots, caller) {
-  route <- match.arg(route, c("curve", "straight", "shared"))
+  route <- ggchord_match_arg(route, c("curve", "straight", "shared"))
   curvature <- dots$curvature %||% 0.5
   bulge <- dots$bulge %||% 0.2
   corridor <- ggchord_physical_mm(dots$corridor_width %||% 2, "corridor_width", TRUE)

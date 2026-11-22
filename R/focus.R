@@ -198,7 +198,7 @@ ggchord_focus_tables <- function(
   loci <- ggchord_normalize_accver(loci)
 
   caller <- "focus_ggchord_data()"
-  boundary <- match.arg(boundary)
+  boundary <- ggchord_match_arg(boundary)
   focus <- ggchord_focus_validate_loci(seq_data, loci, expand, caller)
 
   seq_index <- match(focus$.source_accver, as.character(seq_data$accver))

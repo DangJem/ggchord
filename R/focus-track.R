@@ -28,8 +28,8 @@
 #' data_report(local_signal)$lineage
 focus_ggchord_track <- function(data, sequences, loci, type = "point", boundary = "trim") {
   seq_data <- sequences
-  type <- match.arg(type, c("point", "interval"))
-  boundary <- match.arg(boundary, c("trim", "drop"))
+  type <- ggchord_match_arg(type, c("point", "interval"))
+  boundary <- ggchord_match_arg(boundary, c("trim", "drop"))
   caller <- "focus_ggchord_track()"
   seq_data <- as_ggchord_seq(seq_data)
   if (!is.data.frame(data)) ggchord_stop(caller, ": data must be a data.frame")

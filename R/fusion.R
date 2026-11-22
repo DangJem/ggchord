@@ -55,7 +55,7 @@ ggchord_fusion <- function(panels, layout = layout_fusion_grid(), guides = "keep
   plot$styles <- list()
   plot$scope_scales <- list()
   plot$allow_overlap <- layout$allow_overlap
-  plot$fusion_guides <- match.arg(guides, c("keep", "collect"))
+  plot$fusion_guides <- ggchord_match_arg(guides, c("keep", "collect"))
   class(plot) <- c("ggchord_fusion", class(plot))
   set_last_plot(plot)
   plot
@@ -91,7 +91,7 @@ layout_fusion <- function(areas, units = "relative", allow_overlap = FALSE) {
   caller <- "layout_fusion()"
   fields <- c("xmin", "xmax", "ymin", "ymax")
   ggchord_require_columns(areas, c("panel", fields), caller)
-  units <- match.arg(units, c("relative", "mm", "in"))
+  units <- ggchord_match_arg(units, c("relative", "mm", "in"))
   if (!is.logical(allow_overlap) || length(allow_overlap) != 1L || is.na(allow_overlap))
     ggchord_stop(caller, ": allow_overlap must be TRUE or FALSE")
   if (!nrow(areas) || !is.character(areas$panel) || anyNA(areas$panel) ||
@@ -257,7 +257,7 @@ fusion_ribbon <- function(mapping = NULL, data = NULL, route = "curve",
   if (any(lengths(fixed[intersect(names(fixed), styles)]) != 1L))
     ggchord_stop(caller, ": fixed visual attributes must be scalar")
   for (name in intersect(names(fixed), styles)) mapping[[name]] <- NULL
-  route <- match.arg(route, c("curve", "straight"))
+  route <- ggchord_match_arg(route, c("curve", "straight"))
   if (!is.numeric(curvature) || length(curvature) != 1L || !is.finite(curvature) ||
       curvature < 0 || curvature > 1 || (route == "straight" && curvature != 0.5))
     ggchord_stop(caller, ": curvature must be in `[0,1]` and only applies to curve routing")
@@ -296,7 +296,7 @@ ggchord_fusion_incomplete <- function(input, required) {
 }
 
 ggchord_fusion_layer_error <- function(layer, stage, error, on_error) {
-  if (is.null(on_error)) stop(error)
+  if (is.null(on_error)) ggchord_rethrow(error)
   if (!is.null(layer$capture)) {
     for (field in if (stage == "mapped") c("mapped", "statistic", "geometry") else stage)
       layer$capture[[paste0(field, "_error")]] <- conditionMessage(error)
@@ -406,7 +406,7 @@ ggchord_fusion_collect_guides <- function(x, partial = FALSE) {
       built <- ggplot_build(plot)
       list(built = built, table = ggplot_gtable(built))
     }, error = function(e) {
-      if (!partial) stop(e)
+      if (!partial) ggchord_rethrow(e)
       NULL
     })
     if (is.null(result)) return(plot)

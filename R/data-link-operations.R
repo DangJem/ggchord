@@ -235,8 +235,8 @@ filter_ggchord_links <- function(data, seq_ids = NULL, min_pident = NULL,
 #' data_report(unique_links)$changes
 deduplicate_ggchord_links <- function(data, by = "exact", tolerance = 0,
                                        keep = "first", min_reciprocal_overlap = 0.9) {
-  by <- match.arg(by, c("exact", "coordinates", "overlap"))
-  keep <- match.arg(keep, c("first", "longest", "best_pident"))
+  by <- ggchord_match_arg(by, c("exact", "coordinates", "overlap"))
+  keep <- ggchord_match_arg(keep, c("first", "longest", "best_pident"))
   links <- as_ggchord_link(data)
   if (by == "exact" && tolerance != 0) ggchord_stop("deduplicate_ggchord_links(): exact requires zero tolerance")
   # The overlap engine reads original direction evidence independently of
@@ -311,8 +311,8 @@ merge_ggchord_links <- function(data, max_gap = 0, max_pident_difference = NULL,
     group_by = NULL, extra_columns = "consistent", identity_summary = "none") {
   caller <- "merge_ggchord_links()"
   max_gap <- ggchord_link_axis_pair(max_gap, caller, "max_gap")
-  identity_summary <- match.arg(identity_summary, c("none", "weighted_mean"))
-  extra_columns <- match.arg(extra_columns, c("consistent", "list"))
+  identity_summary <- ggchord_match_arg(identity_summary, c("none", "weighted_mean"))
+  extra_columns <- ggchord_match_arg(extra_columns, c("consistent", "list"))
   grouping <- ggchord_link_group_columns(data, group_by, caller)
   links <- as_ggchord_link(data)
   if (!is.null(max_pident_difference) && (!is.numeric(max_pident_difference) ||

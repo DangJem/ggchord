@@ -26,9 +26,9 @@ geom_residue <- function(mapping = NULL, data = NULL, representation = "tile_tex
     overflow = "tile", line_width = NULL, stat = "identity", position = "identity",
     ..., na.rm = FALSE, show.legend = FALSE, inherit.aes = TRUE, id = NULL) {
   ggchord_check_argument_names(sys.call(), sys.function())
-  representation <- match.arg(representation, c("text", "tile", "tile_text"))
+  representation <- ggchord_match_arg(representation, c("text", "tile", "tile_text"))
   overflow_supplied <- !missing(overflow)
-  overflow <- match.arg(overflow, c("tile", "hide", "error"))
+  overflow <- ggchord_match_arg(overflow, c("tile", "hide", "error"))
   if (!ggchord_identity_stat(stat) || !ggchord_is_data_identity(position))
     ggchord_stop("geom_residue(): use identity Stat and Position")
   if (representation == "tile" && overflow_supplied)

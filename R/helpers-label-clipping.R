@@ -4,7 +4,7 @@ ggchord_clip_segments_to_labels <- function(segments, gl,
                                             include_own = FALSE,
                                             overlap = c("fade", "clip", "show"),
                                             overlap_alpha = 0.18) {
-  overlap <- match.arg(overlap)
+  overlap <- ggchord_match_arg(overlap)
   if (nrow(segments) == 0) return(segments)
   if (!is.numeric(overlap_alpha) || length(overlap_alpha) != 1L ||
       !is.finite(overlap_alpha) || overlap_alpha < 0 || overlap_alpha > 1) {

@@ -29,11 +29,11 @@ clean_ggchord_data <- function(x, unknown_id = "error", out_of_range = "error",
     replacement_label = "unannotated") {
   caller <- "clean_ggchord_data()"
   if (!ggchord_is_data_collection(x)) ggchord_stop(caller, ": expected a data or import collection")
-  unknown_id <- match.arg(unknown_id, c("error", "drop"))
-  out_of_range <- match.arg(out_of_range, c("error", "drop", "clip"))
-  reversed_interval <- match.arg(reversed_interval, c("error", "normalize"))
-  invalid_pident <- match.arg(invalid_pident, c("error", "drop", "set_na"))
-  empty_label <- match.arg(empty_label, c("keep", "drop", "replace"))
+  unknown_id <- ggchord_match_arg(unknown_id, c("error", "drop"))
+  out_of_range <- ggchord_match_arg(out_of_range, c("error", "drop", "clip"))
+  reversed_interval <- ggchord_match_arg(reversed_interval, c("error", "normalize"))
+  invalid_pident <- ggchord_match_arg(invalid_pident, c("error", "drop", "set_na"))
+  empty_label <- ggchord_match_arg(empty_label, c("keep", "drop", "replace"))
   if (!is.character(replacement_label) || length(replacement_label) != 1L || is.na(replacement_label))
     ggchord_stop(caller, ": replacement_label must be one character value")
   references <- as_ggchord_seq(x$sequences)

@@ -243,7 +243,7 @@ scale_seq_position_continuous <- function(
     transform = "identity", n.breaks = 6,
     coordinates = c("relative", "source"), guide = guide_seq_axis(), ...) {
   ggchord_check_argument_names(sys.call(), sys.function(), continuous_scale)
-  coordinates <- match.arg(coordinates)
+  coordinates <- ggchord_match_arg(coordinates)
   if ("sequences" %in% names(list(...)))
     ggchord_stop("Use guide = guide_seq_axis(sequences = ...) to select displayed axes")
   if (identical(guide, "none")) guide <- guide_seq_axis(character())

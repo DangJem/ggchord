@@ -21,7 +21,7 @@ GeomSequenceSite <- ggproto("GeomSequenceSite", ggplot2::Geom,
 
 ggchord_site_layer <- function(mapping, data, shape, fixed_shape, size, fixed_size,
     stat, position, dots, na.rm, show.legend, inherit.aes, id) {
-  shape <- match.arg(shape, c("tick", "point", "cut"))
+  shape <- ggchord_match_arg(shape, c("tick", "point", "cut"))
   size <- ggchord_physical_mm(size, "geom_site(size)", TRUE)
   if (length(size) != 1L || size <= 0) ggchord_stop("geom_site(): size must be positive")
   position <- ggchord_as_feature_position(position, "geom_site()")
@@ -35,7 +35,7 @@ ggchord_site_layer <- function(mapping, data, shape, fixed_shape, size, fixed_si
     if ("unknown_cut" %in% names(dots) && shape != "cut")
       ggchord_stop("geom_site(): unknown_cut is only available for cut symbols")
   }
-  unknown_cut <- match.arg(dots$unknown_cut %||% "site", c("site", "error"))
+  unknown_cut <- ggchord_match_arg(dots$unknown_cut %||% "site", c("site", "error"))
   explicit_cut <- "unknown_cut" %in% names(dots)
   dots$unknown_cut <- NULL
   if (fixed_shape) mapping$shape <- NULL

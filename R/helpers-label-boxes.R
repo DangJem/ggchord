@@ -56,7 +56,7 @@ ggchord_fit_label_text <- function(gl,
                                    units_per_inch = 0.35,
                                    box_padding = 0.18,
                                    repel_boxes = NULL) {
-  fit <- match.arg(fit)
+  fit <- ggchord_match_arg(fit)
   if (fit %in% c("none", "shrink") || nrow(gl) == 0L) return(gl)
   crowded <- ggchord_label_conflict_counts(
     gl,

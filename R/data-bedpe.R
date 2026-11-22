@@ -21,7 +21,7 @@
 #' unlink(f)
 read_bedpe <- function(file, sequence_unit = "bp", source_file = FALSE) {
   caller <- "read_bedpe()"
-  sequence_unit <- match.arg(sequence_unit, c("bp", "aa"))
+  sequence_unit <- ggchord_match_arg(sequence_unit, c("bp", "aa"))
   if (!is.logical(source_file) || length(source_file) != 1L || is.na(source_file))
     ggchord_stop(caller, ": source_file must be TRUE or FALSE")
   paths <- ggchord_resolve_files(file, NULL, "read_bedpe")

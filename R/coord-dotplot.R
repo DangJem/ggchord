@@ -342,7 +342,7 @@ ggchord_export_dotplot <- function(plot, include, original_data) {
 
 ggchord_map_dotplot <- function(plot, accver, position, inverse, source, axis) {
   if (is.null(axis)) ggchord_stop("map_ggchord_position(): specify axis = 'x' or 'y' for a Dotplot")
-  axis <- match.arg(axis, c("x", "y"))
+  axis <- ggchord_match_arg(axis, c("x", "y"))
   if (!is.logical(inverse) || length(inverse) != 1L || is.na(inverse) ||
       !is.logical(source) || length(source) != 1L || is.na(source))
     ggchord_stop("map_ggchord_position(): inverse/source must be TRUE or FALSE")

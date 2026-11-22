@@ -130,7 +130,7 @@ ggchord_add_source_file <- function(data, file, source_file) {
 # `file` / `files` and combines the result.
 read_blast_single <- function(file, format = c("auto", "outfmt6", "outfmt7", "custom"),
                                col_names = NULL, comment = "#", ...) {
-  format <- match.arg(format)
+  format <- ggchord_match_arg(format)
   if (is.character(file) && length(file) == 1 && !file.exists(file)) {
     ggchord_stop("read_blast(): file not found: ", file, call. = FALSE)
   }
@@ -275,7 +275,7 @@ read_blast_single <- function(file, format = c("auto", "outfmt6", "outfmt7", "cu
 #' unlink(f)
 read_blast <- function(file, format = "auto", col_names = NULL,
                        comment = "#", source_file = FALSE) {
-  format <- match.arg(format, c("auto", "outfmt6", "outfmt7", "custom"))
+  format <- ggchord_match_arg(format, c("auto", "outfmt6", "outfmt7", "custom"))
   paths <- ggchord_resolve_files(file, NULL, "read_blast")
   out <- lapply(paths, function(f) {
     data <- read_blast_single(f, format = format, col_names = col_names,
@@ -302,7 +302,7 @@ read_blast <- function(file, format = "auto", col_names = NULL,
 read_gff3_single <- function(file, feature_types = "CDS",
                               anno_from = c("product", "Name", "gene", "ID"),
                               unstranded = c("plus", "drop", "keep")) {
-  unstranded <- match.arg(unstranded)
+  unstranded <- ggchord_match_arg(unstranded)
   if (!is.null(feature_types) && (!is.character(feature_types) || !length(feature_types) || anyNA(feature_types))) {
     ggchord_stop("read_gff3(): feature_types must be a non-empty character vector",
          call. = FALSE)
@@ -429,7 +429,7 @@ read_gff3_single <- function(file, feature_types = "CDS",
 read_gff3 <- function(file, feature_types = NULL,
                       label_from = c("product", "Name", "gene", "ID"),
                       unstranded = "keep", source_file = FALSE) {
-  unstranded <- match.arg(unstranded, c("keep", "drop"))
+  unstranded <- ggchord_match_arg(unstranded, c("keep", "drop"))
   paths <- ggchord_resolve_files(file, NULL, "read_gff3")
   out <- lapply(paths, function(f) {
     data <- read_gff3_single(f, feature_types = feature_types,
@@ -548,7 +548,7 @@ read_fasta_lengths <- function(file, sequence_unit, header_delim = NULL,
     ggchord_stop("read_fasta_lengths(): keep_sequence must be TRUE or FALSE")
   if (missing(sequence_unit) || is.null(sequence_unit))
     ggchord_stop("read_fasta_lengths(): declare sequence_unit as 'bp' or 'aa'")
-  sequence_unit <- match.arg(sequence_unit, c("bp", "aa"))
+  sequence_unit <- ggchord_match_arg(sequence_unit, c("bp", "aa"))
 
   paths <- ggchord_resolve_files(file, NULL, "read_fasta_lengths")
   out <- lapply(paths, function(f) {

@@ -58,7 +58,7 @@ ggchord_prepare_link_statistics <- function(plot, references) {
     arguments <- specification$arguments
     density <- identical(specification$type, "link_density")
     normalization <- if (density)
-      match.arg(arguments$normalization %||% "none", c("none", "pair_max"))
+      ggchord_match_arg(arguments$normalization %||% "none", c("none", "pair_max"))
     compute <- function(raw) {
       data <- as_ggchord_link(raw)
       group <- raw[intersect("group", names(raw))]

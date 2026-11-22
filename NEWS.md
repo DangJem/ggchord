@@ -37,8 +37,10 @@
   Sankey facets with different references keep their own backbone labels and colours.
 - Ribbons have a fine 0.18 mm green outline (#53776A).
   Set `colour = NA` to remove it.
-- Data readers and plot construction now propagate errors without temporarily
-  replacing the session's error handler.
+- In interactive RStudio sessions, ggchord input validation errors return to
+  the console even with “Break in Code” selected. The original error handler
+  is restored as the error unwinds. `geom_seq_arrow()` now suggests `colour`
+  when its line is given a `fill`.
 - Collinear links and ribbons can pass around intervening rows with an
   explicit positive `bulge`. Radial curves account for intervening spoke
   tips and adjacent routed bands. Linear and Sankey panels preserve spare
