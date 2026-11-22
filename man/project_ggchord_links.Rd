@@ -30,6 +30,8 @@ Source protein identity and length remain prefixed metadata and are never
 emitted as nucleotide \code{pident} or alignment \code{length}. General gapped
 alignments require explicit per-column alignment information and cannot be
 projected by this endpoint-only helper.
+Any supplied \code{sequence_unit}, \code{qsequence_unit} or \code{ssequence_unit} must be
+\code{"aa"} for the input protein coordinates.
 }
 \examples{
 coding <- data.frame(feature_id=c("ca","cb"), accver=c("A","B"),

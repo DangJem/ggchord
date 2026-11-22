@@ -24,7 +24,8 @@ accver/alignment_column, according to from.}
 }
 \value{
 A correspondence table retaining all matching rows, query IDs and
-explicit reasons for gaps and missing positions.
+explicit reasons for gaps and missing positions. For focused data it
+includes the original \code{alignment_row}, \code{locus_id} and \code{local_position}.
 }
 \description{
 Look up exact source positions and alignment columns

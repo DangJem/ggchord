@@ -19,7 +19,13 @@ focus_ggchord_data(x, loci, expand = 0, boundary = "trim")
 A collection of the same class as x in local coordinates.
 }
 \description{
-Crop explicit source windows together with their observation tables
+Alignment tables require \code{source_scope = "source"} and explicit source
+coordinates. Each focused row keeps its original identity in
+\code{alignment_row}, its window in \code{locus_id}, and its original alignment
+columns, including gaps between retained residues. The output \code{accver}
+identifies a displayed alignment row. Repeated row IDs are made unique
+across windows and source blocks. \code{local_position} contains the position
+in the window for each retained nongap cell.
 }
 \examples{
 seqs <- data.frame(

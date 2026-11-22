@@ -46,3 +46,24 @@ ggchord_check_interval_unit <- function(data, unit, caller) {
   }
   invisible(NULL)
 }
+
+ggchord_sequence_topologies <- c("linear", "circular")
+ggchord_feature_strands <- c("+", "-", "*", ".", "+/-")
+
+# Check declared units against a scalar domain or the reference of each row.
+# A missing declaration leaves the domain to the calling operation.
+ggchord_check_declared_unit <- function(units, expected, caller, column = "sequence_unit") {
+  units <- as.character(units)
+  invalid <- which(!is.na(units) & !units %in% c("bp", "aa"))
+  if (length(invalid)) ggchord_stop(caller, ": ", column, " must be 'bp' or 'aa' at row ", invalid[1L])
+  if (length(units) && !is.null(expected)) {
+    expected <- rep_len(expected, length(units))
+    mismatch <- which(!is.na(units) & !is.na(expected) & units != expected)
+    if (length(mismatch)) {
+      row <- mismatch[1L]
+      ggchord_stop(caller, ": ", column, " (", units[row], ") disagrees with the expected unit (",
+        expected[row], ") at row ", row)
+    }
+  }
+  invisible(NULL)
+}

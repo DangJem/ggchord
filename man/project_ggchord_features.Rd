@@ -43,6 +43,8 @@ before projection. Unknown parent, intronic-only, out-of-range, reversed,
 inconsistent-strand and ambiguous codon-boundary input produce errors.
 \code{codon_boundary = "expand"} explicitly permits an inverse interval to cover
 partial codons and reports this expansion; it does not modify source bases.
+If supplied, \code{sequence_unit} must match \code{from}: \code{"aa"} for protein or
+\code{"bp"} for genome.
 }
 \examples{
 coding <- data.frame(feature_id="cds1", accver="A", start=1, end=9, strand="+", phase=0)

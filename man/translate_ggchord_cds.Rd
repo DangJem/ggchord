@@ -38,6 +38,9 @@ observed-protein accver, not an inferred external accession. Nucleotides
 retain genomic source_accver/source_position and codon_index/codon_base;
 both tables can be displayed with \code{\link[=geom_residue]{geom_residue()}}. Source input and the
 original CDS map remain in provenance. No alignment is computed.
+Both tables declare \code{source_scope = "source"} for their coordinate
+frames: the genomic source for nucleotides and the observed protein
+identified by its CDS feature ID for residues.
 }
 \description{
 Uses the complete observed codons in \code{\link[=build_ggchord_cds]{build_ggchord_cds()}}, including codons

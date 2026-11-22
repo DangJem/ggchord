@@ -21,7 +21,10 @@ clean_ggchord_data(
 
 \item{out_of_range}{Whether to report, drop or clip out-of-range observations.}
 
-\item{reversed_interval}{Whether to report or normalize reversed endpoints.}
+\item{reversed_interval}{Whether to report or normalize reversed endpoints.
+For links, a descending endpoint pair supplies negative-strand evidence
+when its strand is missing. Conflicting direction declarations raise an
+error. Explicit unknown strands remain unknown.}
 
 \item{invalid_pident}{Whether to report, drop or clear invalid identity values.}
 

@@ -5,6 +5,7 @@
 #' are present in the window. Signals keep their original values and
 #' measurement units. Earliest source coordinates are available through
 #' the source columns and [data_report()].
+#' A declared coordinate unit must agree with the observation's reference.
 #'
 #' @param data Track data frame.
 #' @param sequences Complete reference dictionary.
@@ -40,6 +41,7 @@ focus_ggchord_track <- function(data, sequences, loci, type = "point", boundary 
   at <- match(ids, seq_data$accver)
   if (anyNA(at) || any(vapply(coords, function(name) any(data[[name]] > seq_data$length[at]), logical(1))))
     ggchord_stop(caller, ": coordinates must lie within known sequence lengths")
+  ggchord_check_declared_unit(data[["sequence_unit"]], seq_data$sequence_unit[at], caller)
   if (type == "interval" && any(data$start > data$end)) ggchord_stop(caller,
     ": split origin-crossing intervals explicitly before linear window selection")
   windows <- ggchord_explicit_focus_loci(seq_data, loci, 0, caller)

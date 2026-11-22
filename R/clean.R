@@ -3,6 +3,9 @@
 #' @param unknown_id Whether to report or drop unknown references.
 #' @param out_of_range Whether to report, drop or clip out-of-range observations.
 #' @param reversed_interval Whether to report or normalize reversed endpoints.
+#'   For links, a descending endpoint pair supplies negative-strand evidence
+#'   when its strand is missing. Conflicting direction declarations raise an
+#'   error. Explicit unknown strands remain unknown.
 #' @param invalid_pident Whether to report, drop or clear invalid identity values.
 #' @param empty_label Whether to keep, drop or replace empty label values.
 #' @param replacement_label Text used with empty_label = "replace".
@@ -49,6 +52,7 @@ clean_ggchord_data <- function(x, unknown_id = "error", out_of_range = "error",
       validate_ggchord_data(table, role = role, sequences = references, action = "error",
         checks = c("schema", "units"))
       live <- rep(TRUE, nrow(table))
+      normalized_links <- rep(FALSE, nrow(table))
       original <- table$.source_row %||% seq_len(nrow(table))
       record <- function(index, column, before, after, action, reason) {
         if (!length(index)) return(invisible(NULL))
@@ -84,6 +88,20 @@ clean_ggchord_data <- function(x, unknown_id = "error", out_of_range = "error",
             circular <- references$topology[at[reversed]] == "circular"
             if (role != "link" && any(circular))
               fail(reversed[circular], "ambiguous circular endpoints; supply ordered segments")
+            if (role == "link") {
+              strand <- sub("accver$", "strand", id)
+              declared <- as.character(table[[strand]] %||% rep(NA_character_, nrow(table)))
+              inferred <- ggchord_link_endpoint_strand(a[reversed], b[reversed], declared[reversed],
+                paste(caller, path), strand)
+              changed <- which(is.na(declared[reversed]))
+              if (length(changed)) {
+                rows <- reversed[changed]
+                record(rows, strand, declared[rows], inferred[changed], "infer", "reversed_interval")
+                declared[rows] <- inferred[changed]
+                table[[strand]] <- declared
+              }
+              normalized_links[reversed] <- TRUE
+            }
             record(reversed, columns[1L], a[reversed], b[reversed], "normalize", "reversed_interval")
             record(reversed, columns[2L], b[reversed], a[reversed], "normalize", "reversed_interval")
             for (column in columns) {
@@ -141,6 +159,8 @@ clean_ggchord_data <- function(x, unknown_id = "error", out_of_range = "error",
           }
         }
       }
+      if (any(live & normalized_links))
+        ggchord_link_orientation(table[live & normalized_links, , drop = FALSE], paste(caller, path))
       if ("pident" %in% names(table)) {
         value <- table$pident
         if (!is.numeric(value)) ggchord_stop(caller, ": ", path, "$pident must be numeric")

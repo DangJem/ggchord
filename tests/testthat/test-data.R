@@ -1,10 +1,11 @@
 test_that("validation and cleaning preserve usable input", {
   seqs <- data.frame(accver = c("A", "B"), length = 1000)
-  links <- as_ggchord_link(data.frame(qaccver = "A", saccver = "B",
-    qstart = 100, qend = 200, sstart = 400, send = 300))
+  links <- data.frame(qaccver = "A", saccver = "B",
+    qstart = 100, qend = 200, sstart = 400, send = 300)
   data <- ggchord_data(seqs, links = list(hsps = links))
-  expect_true(validate_ggchord_data(data)$valid)
-  expect_equal(clean_ggchord_data(data)$links$hsps$sstrand, "-")
+  cleaned <- clean_ggchord_data(data, reversed_interval = "normalize")
+  expect_true(validate_ggchord_data(cleaned)$valid)
+  expect_equal(cleaned$links$hsps$sstrand, as_ggchord_link(links)$sstrand)
   expect_error(ggchord(transform(seqs, length = "bad")), "length")
 })
 

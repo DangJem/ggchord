@@ -73,35 +73,87 @@ ggchord_focus_link_table <- function(data, sequences, loci, boundary, caller) {
   ggchord_order_link_endpoints(selected, caller)
 }
 
-ggchord_focus_alignment_table <- function(data, sequences, loci) {
+ggchord_focus_alignment_table <- function(data, sequences, loci, caller) {
+  if (!nrow(data)) return(data)
+  ggchord_require_columns(data, c("accver", "alignment_column", "source_accver",
+    "source_position", "is_gap"), caller)
+  scope <- data[["source_scope"]]
+  if (is.null(scope) || any(!scope %in% "source"))
+    ggchord_stop(caller, ": alignment focus requires source_scope = 'source' and explicit source coordinates")
+  if (!is.logical(data$is_gap) || anyNA(data$is_gap) ||
+      any(data$is_gap != is.na(data$source_position)) ||
+      anyNA(data$accver) || anyNA(data$source_accver) ||
+      any(!nzchar(as.character(data$accver))) || any(!nzchar(as.character(data$source_accver))))
+    ggchord_stop(caller, ": alignment focus requires consistent gap positions and nonempty row and source IDs")
+  ggchord_project_integer(data$alignment_column, "alignment_column", caller)
+  ggchord_project_integer(data$source_position[!data$is_gap], "source_position", caller)
+
+  # Older focused tables put the local reference in accver. Recover their
+  # alignment row before matching another window on the same root reference.
+  if (is.null(data[["locus_id"]]) && all(c("alignment_row", "local_position") %in% names(data))) {
+    data$locus_id <- data$accver
+    data$accver <- data$alignment_row
+  }
+  previous_loci <- if ("local_position" %in% names(data)) data[["locus_id"]]
+  data$alignment_row <- as.character(data[["alignment_row"]] %||% data$accver)
+  if (anyNA(data$alignment_row) || any(!nzchar(data$alignment_row)))
+    ggchord_stop(caller, ": alignment_row must contain nonempty IDs")
+  if (!is.null(previous_loci) && (anyNA(previous_loci) || any(!nzchar(previous_loci))))
+    ggchord_stop(caller, ": focused alignment locus_id must contain nonempty window IDs")
+  context <- intersect(c("source_input", ".source_input", "source_block", "accver"), names(data))
+  if (!is.null(previous_loci)) context <- c(context, "locus_id")
+  # Integer codes distinguish tuples without interpreting punctuation in IDs
+  # or dropping rows whose optional block metadata is missing.
+  codes <- lapply(data[context], function(x) match(x, sort(unique(x), na.last = TRUE, method = "radix")))
+  row_key <- do.call(paste, unname(codes))
+  if (anyDuplicated(data.frame(row_key, column = data$alignment_column)))
+    ggchord_stop(caller, ": duplicate alignment cells within a row and source block")
+
   rows <- list()
   root <- ggchord_focus_source(sequences)
-  if (!"source_scope" %in% names(data) || !"source_accver" %in% names(data))
-    return(data[0, , drop = FALSE])
+  units <- data[["sequence_unit"]]
   for (j in seq_len(nrow(loci))) {
     at <- match(loci$accver[j], sequences$accver)
     lower <- loci$start[j] + root$origin[at] - 1
     upper <- loci$end[j] + root$origin[at] - 1
-    candidates <- which(data$source_scope %in% "source" & data$source_accver == root$accver[at])
-    context <- intersect(c("source_input", ".source_input", "source_block", "accver"), names(data))
-    groups <- split(candidates, interaction(data[candidates, context, drop = FALSE], drop = TRUE))
+    matches <- data$source_accver == root$accver[at]
+    if (!is.null(previous_loci)) matches <- matches & previous_loci == loci$accver[j]
+    candidates <- which(matches)
+    ggchord_check_declared_unit(units[candidates], sequences$sequence_unit[at], caller)
+    groups <- split(candidates, row_key[candidates])
     for (rows_for_source in groups) {
-      cells <- data[rows_for_source, , drop = FALSE]
+      columns <- data$alignment_column[rows_for_source]
+      cells <- data[rows_for_source[order(columns)], , drop = FALSE]
       members <- which(!cells$is_gap & cells$source_position >= lower & cells$source_position <= upper)
       if (!length(members)) next
-      keep <- seq(min(members), max(members))
+      keep <- seq.int(members[1L], tail(members, 1L))
       keep <- keep[cells$is_gap[keep] | keep %in% members]
       cells <- cells[keep, , drop = FALSE]
-      cells$alignment_row <- cells$accver
-      cells$accver <- loci$locus_id[j]
+      cells$locus_id <- as.character(loci$locus_id[j])
       cells$local_position <- cells$source_position - lower + 1
       rows[[length(rows) + 1L]] <- cells
     }
   }
-  ggchord_rbind_fill(rows) %||% data[0, , drop = FALSE]
+  ids <- make.unique(vapply(rows, function(cells) as.character(cells$accver[1L]), character(1)))
+  for (i in seq_along(rows)) rows[[i]]$accver <- ids[i]
+  out <- ggchord_rbind_fill(rows) %||% data[0, , drop = FALSE]
+  if (!length(rows)) {
+    out$locus_id <- character()
+    out$local_position <- numeric()
+  }
+  rownames(out) <- NULL
+  out
 }
 
 #' Crop explicit source windows together with their observation tables
+#'
+#' Alignment tables require `source_scope = "source"` and explicit source
+#' coordinates. Each focused row keeps its original identity in
+#' `alignment_row`, its window in `locus_id`, and its original alignment
+#' columns, including gaps between retained residues. The output `accver`
+#' identifies a displayed alignment row. Repeated row IDs are made unique
+#' across windows and source blocks. `local_position` contains the position
+#' in the window for each retained nongap cell.
 #' @param x A data collection with a complete reference.
 #' @param loci Window table with accver, start, end and unique locus_id.
 #' @param expand Optional padding in source units.
@@ -177,7 +229,8 @@ focus_ggchord_data <- function(x, loci, expand = 0, boundary = "trim") {
     lineage[[paste("tracks", name, sep = "/")]] <- data_report(out$tracks[[name]])$lineage
   }
   for (name in names(out$alignments)) {
-    table <- ggchord_focus_alignment_table(out$alignments[[name]], sequences, normalized)
+    table <- ggchord_focus_alignment_table(out$alignments[[name]], sequences, normalized,
+      paste0(caller, " alignments/", name))
     lineage[[paste("alignments", name, sep = "/")]] <- list(source_rows = table$.source_row,
       input_rows = nrow(out$alignments[[name]]), output_rows = nrow(table))
     out$alignments[[name]] <- table

@@ -99,10 +99,7 @@ ggchord_declare_sequence_unit <- function(data, unit, caller, default = NULL) {
   existing <- data$sequence_unit
   if (!is.null(existing)) {
     existing <- as.character(existing)
-    if (any(!is.na(existing) & !existing %in% allowed))
-      ggchord_stop(caller, ": sequence_unit must be 'bp' or 'aa'")
-    if (!is.null(unit) && any(!is.na(existing) & existing != unit))
-      ggchord_stop(caller, ": sequence_unit disagrees with the source")
+    ggchord_check_declared_unit(existing, unit, caller)
   }
   selected <- unit %||% default
   if (!is.null(selected)) {
@@ -126,6 +123,23 @@ ggchord_validate_feature_segments <- function(data, caller) {
   }
 }
 
+ggchord_link_endpoint_strand <- function(start, end, strand, caller, field,
+                                          directional_order = FALSE) {
+  direction <- as.character(strand %||% rep(NA_character_, length(start)))
+  if (any(!is.na(direction) & !direction %in% c("+", "-", ".", "*", "?")))
+    ggchord_stop(caller, ": invalid ", field)
+  descending <- is.finite(start) & is.finite(end) & start > end
+  ascending <- is.finite(start) & is.finite(end) & start < end
+  if (any(descending & direction %in% "+") ||
+      (directional_order && any(ascending & direction %in% "-")))
+    ggchord_stop(caller, ": endpoint order conflicts with ", field)
+  implicit <- is.na(direction)
+  direction[descending & implicit] <- "-"
+  direction[ascending & implicit & directional_order] <- "+"
+  direction[!direction %in% c("+", "-")] <- "."
+  direction
+}
+
 ggchord_order_link_endpoints <- function(data, caller, directional_order = FALSE) {
   for (prefix in c("q", "s")) {
     start <- paste0(prefix, "start")
@@ -137,18 +151,8 @@ ggchord_order_link_endpoints <- function(data, caller, directional_order = FALSE
       data[[strand]] <- character()
       next
     }
-    direction <- as.character(data[[strand]] %||% rep(NA_character_, nrow(data)))
-    if (any(!is.na(direction) & !direction %in% c("+", "-", ".", "*", "?")))
-      ggchord_stop(caller, ": invalid ", strand)
-    descending <- is.finite(before) & is.finite(after) & before > after
-    ascending <- is.finite(before) & is.finite(after) & before < after
-    if (any(descending & !is.na(direction) & direction == "+") ||
-        (directional_order && any(ascending & !is.na(direction) & direction == "-")))
-      ggchord_stop(caller, ": endpoint order conflicts with ", strand)
-    implicit <- is.na(direction)
-    direction[descending & implicit] <- "-"
-    direction[ascending & implicit & directional_order] <- "+"
-    direction[is.na(direction) | !direction %in% c("+", "-")] <- "."
+    direction <- ggchord_link_endpoint_strand(before, after, data[[strand]], caller, strand,
+      directional_order)
     for (field in c(start, end)) {
       original <- paste0("source_", field)
       if (!original %in% names(data)) data[[original]] <- data[[field]]
@@ -336,7 +340,7 @@ as_ggchord_seq <- function(x, columns = NULL, lengths = NULL, ids = NULL,
     known_topology[is.na(known_topology)] <- circular_topology[is.na(known_topology)]
   }
   if (!is.null(topology)) {
-    if (!is.character(topology) || anyNA(topology) || any(!topology %in% c("linear", "circular")))
+    if (!is.character(topology) || any(!topology %in% ggchord_sequence_topologies))
       ggchord_stop(caller, ": topology must be 'linear' or 'circular'")
     if (!is.null(names(topology))) {
       if (anyDuplicated(names(topology)) || any(!names(topology) %in% out$accver))
@@ -352,7 +356,7 @@ as_ggchord_seq <- function(x, columns = NULL, lengths = NULL, ids = NULL,
   }
   default_topology <- is.na(known_topology)
   known_topology[default_topology] <- "linear"
-  if (any(!known_topology %in% c("linear", "circular")))
+  if (any(!known_topology %in% ggchord_sequence_topologies))
     ggchord_stop(caller, ": topology must be 'linear' or 'circular'")
   out$topology <- as.character(known_topology)
   out$circular <- out$topology == "circular"
@@ -421,7 +425,7 @@ ggchord_convert_feature <- function(x, mapping, unified = FALSE) {
     ggchord_stop(caller, ": directionality must be forward, reverse, bidirectional or none")
   }
   if (is.null(strand)) strand <- expected %||% rep(".", nrow(out))
-  if (any(!is.na(strand) & !strand %in% c("+", "-", "*", ".", "+/-"))) {
+  if (any(!is.na(strand) & !strand %in% ggchord_feature_strands)) {
     ggchord_stop(caller, ": strand must be '+', '-', '*', '.', or '+/-'")
   }
   source_strand <- out$source_strand %||% strand

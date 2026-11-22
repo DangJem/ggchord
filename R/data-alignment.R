@@ -48,6 +48,8 @@ ggchord_alignment_complement <- function(x, alphabet) {
 #'   source_verified records whether the record's nongap characters were
 #'   checked, including on its gap rows; it is not independent biological
 #'   confirmation of the supplied source.
+#'   `source_scope` is `"source"` with explicit source metadata and
+#'   `"fragment"` for positions counted within each input fragment.
 #' @export
 #' @examples
 #' library(ggplot2)
@@ -198,7 +200,8 @@ read_aligned_fasta <- function(file, alphabet, source_data = NULL, circular = FA
 #' @param from,to The input and output spaces, source or alignment.
 #' @param instance Optional accession of a specific alignment row.
 #' @return A correspondence table retaining all matching rows, query IDs and
-#'   explicit reasons for gaps and missing positions.
+#'   explicit reasons for gaps and missing positions. For focused data it
+#'   includes the original `alignment_row`, `locus_id` and `local_position`.
 #' @export
 #' @examples
 #' cells <- as_ggchord_alignment(c(A = "AC-G"), alphabet = "DNA")
@@ -232,7 +235,8 @@ map_alignment_position <- function(alignment, positions, from = "source",
   }
   if (anyDuplicated(data[c("accver", "alignment_column")]))
     ggchord_stop(caller, ": select a single alignment block")
-  fields <- intersect(c(required, "strand", "sequence_unit", "symbol", "alphabet"), names(data))
+  fields <- intersect(c(required, "strand", "sequence_unit", "symbol", "alphabet",
+    "alignment_row", "locus_id", "local_position"), names(data))
   out <- lapply(seq_len(nrow(positions)), function(i) {
     at <- which(data[[keys[1L]]] == positions[[keys[1L]]][i] & data[[keys[2L]]] == coords[i])
     if (!length(at)) {

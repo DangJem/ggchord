@@ -30,6 +30,9 @@
 #'   retain genomic source_accver/source_position and codon_index/codon_base;
 #'   both tables can be displayed with [geom_residue()]. Source input and the
 #'   original CDS map remain in provenance. No alignment is computed.
+#'   Both tables declare `source_scope = "source"` for their coordinate
+#'   frames: the genomic source for nucleotides and the observed protein
+#'   identified by its CDS feature ID for residues.
 #' @seealso <https://bioconductor.org/packages/Biostrings>
 #' @export
 #' @examples
@@ -90,13 +93,13 @@ translate_ggchord_cds <- function(cds, sequences, alphabet = "DNA",
     nt[[i]] <- data.frame(accver = m$feature_id, alignment_column = seq_len(count),
       source_accver = m$accver, source_position = positions, symbol = symbols,
       is_gap = FALSE, strand = m$strand, alphabet = alphabet, sequence_unit = "bp",
-      source_verified = TRUE, codon_index = codon, codon_base = rep(1:3, count / 3),
+      source_verified = TRUE, source_scope = "source", codon_index = codon, codon_base = rep(1:3, count / 3),
       source_cds_row = sr, source_cds_segment = ss, stringsAsFactors = FALSE)
     residues <- strsplit(protein[i], "", fixed = TRUE)[[1L]]
     aa[[i]] <- data.frame(accver = m$feature_id, alignment_column = seq_along(residues),
       source_accver = m$feature_id, source_position = seq_along(residues),
       symbol = residues, is_gap = FALSE, strand = "+", alphabet = "AA", sequence_unit = "aa",
-      source_verified = TRUE, genetic_code = m$genetic_code,
+      source_verified = TRUE, source_scope = "source", genetic_code = m$genetic_code,
       codon = substring(coding[i], seq(1, count, 3), seq(3, count, 3)),
       is_stop = residues == "*", stringsAsFactors = FALSE)
     groups <- split(seq_len(count), codon)

@@ -1,5 +1,16 @@
 # ggchord 0.50.0 (development)
 
+- Normalizing reversed link endpoints preserves strand evidence and rejects
+  contradictory declarations. Validation reports invalid feature strands
+  and reference topology.
+- Focusing a character alignment preserves row identities, alignment columns
+  and internal gaps regardless of input row order. Use `locus_id` to join
+  focused cells to the local reference and `accver` for the displayed alignment
+  row. Focus requires explicit source coordinates and `source_scope = "source"`
+  for nonempty alignments. CDS translation now supplies this declaration.
+- Track focus and CDS projections reject declared coordinate units that
+  conflict with the reference or the input coordinate domain.
+
 - `layout_sequences(curvature = ...)` can now bend the sequence paths in
   Collinear, Sankey and Radial synteny plots. Their default paths are straight.
   On curved Sankey paths, ticks follow the local normal and automatic tick

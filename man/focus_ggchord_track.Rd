@@ -26,6 +26,7 @@ Local references use the window IDs. Points are retained only when they
 are present in the window. Signals keep their original values and
 measurement units. Earliest source coordinates are available through
 the source columns and \code{\link[=data_report]{data_report()}}.
+A declared coordinate unit must agree with the observation's reference.
 }
 \examples{
 seqs <- data.frame(

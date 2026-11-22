@@ -37,6 +37,8 @@ consensus, translation, phase or full sequence length is inferred.
 source_verified records whether the record's nongap characters were
 checked, including on its gap rows; it is not independent biological
 confirmation of the supplied source.
+\code{source_scope} is \code{"source"} with explicit source metadata and
+\code{"fragment"} for positions counted within each input fragment.
 }
 \description{
 Accepts an existing alignment, never computes one. Equal character counts

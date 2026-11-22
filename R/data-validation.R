@@ -59,6 +59,34 @@ ggchord_data_validate_table <- function(data, role, references, enabled, add) {
       add("duplicate_id", "Reference IDs must be unique", which(duplicated(data$accver)), "accver")
       if (!nrow(data)) add("empty_reference", "At least one complete reference is required")
     }
+    if (role == "sequence") {
+      topology <- data[["topology"]]
+      circular <- data[["circular"]]
+      add("invalid_topology", "topology must be linear or circular",
+        which(!is.na(topology) & !topology %in% ggchord_sequence_topologies), "topology")
+      if (!is.null(circular) && !is.logical(circular))
+        add("invalid_circular", "circular must be logical", column = "circular")
+      if (!is.null(topology) && is.logical(circular))
+        add("conflicting_topology", "circular and topology disagree",
+          which(topology %in% ggchord_sequence_topologies & !is.na(circular) &
+            (topology == "circular") != circular), "topology")
+    }
+    if (role == "feature") {
+      strand <- as.character(data[["strand"]])
+      invalid <- !is.na(strand) & !strand %in% ggchord_feature_strands
+      add("invalid_strand", "strand must be '+', '-', '*', '.', or '+/-'",
+        which(invalid), "strand")
+      if ("directionality" %in% names(data)) {
+        expected <- ggchord_direction_strand(data[["directionality"]])
+        add("invalid_directionality", "directionality must be forward, reverse, bidirectional or none",
+          which(is.na(expected)), "directionality")
+        if (length(strand)) {
+          strand[is.na(strand) | strand == "*"] <- "."
+          add("conflicting_strand", "strand and directionality describe conflicting directions",
+            which(!invalid & !is.na(expected) & strand != expected), "strand")
+        }
+      }
+    }
   }
   reliable_reference <- is.data.frame(references) &&
     all(c("accver", "length") %in% names(references)) && is.numeric(references$length)
@@ -118,6 +146,8 @@ ggchord_data_validate_table <- function(data, role, references, enabled, add) {
     }
     if ("alphabet" %in% names(data)) add("invalid_alphabet", "Alphabet must be DNA, RNA, or AA",
       which(!data$alphabet %in% c("DNA", "RNA", "AA")), "alphabet")
+    if ("source_scope" %in% names(data)) add("invalid_source_scope", "source_scope must be source or fragment",
+      which(!is.na(data$source_scope) & !data$source_scope %in% c("source", "fragment")), "source_scope")
     if (all(c("accver", "alignment_column") %in% names(data))) {
       context <- intersect(c("source_input", ".source_input", "source_block", "accver",
         "alignment_column"), names(data))
@@ -161,7 +191,8 @@ ggchord_data_validate_table <- function(data, role, references, enabled, add) {
 #' @param role The role of a single table.
 #' @param sequences Optional reference data for a single observation table.
 #' @param action Report, warn, or signal an error with the complete report.
-#' @param checks Which checks to run.
+#' @param checks Which checks to run. The schema check includes declared
+#'   reference topology and feature strand and directionality.
 #' @return A validation result with source and row information for each issue.
 #' @export
 #' @examples

@@ -326,6 +326,8 @@ ggchord_project_genomic <- function(segment, lower, upper) {
 #' inconsistent-strand and ambiguous codon-boundary input produce errors.
 #' `codon_boundary = "expand"` explicitly permits an inverse interval to cover
 #' partial codons and reports this expansion; it does not modify source bases.
+#' If supplied, `sequence_unit` must match `from`: `"aa"` for protein or
+#' `"bp"` for genome.
 #'
 #' @param features Domain/feature data frame with `feature_id`, `parent_id`
 #'   (or a single-valued `parent_ids` list-column), `start` and `end`.
@@ -351,6 +353,7 @@ project_ggchord_features <- function(features, cds, from = "protein", codon_boun
   codon_boundary <- ggchord_match_arg(codon_boundary, c("error", "expand"))
   cds <- ggchord_project_model(cds, caller)
   if (!is.data.frame(feature_data)) ggchord_stop(caller, ": feature_data must be a data.frame")
+  ggchord_check_declared_unit(feature_data[["sequence_unit"]], if (from == "protein") "aa" else "bp", caller)
   ggchord_require_columns(feature_data, c("feature_id", "start", "end"), caller)
   ids <- ggchord_conversion_ids(feature_data$feature_id, caller)
   parents <- ggchord_project_parent(feature_data, caller)
@@ -443,6 +446,8 @@ project_ggchord_features <- function(features, cds, from = "protein", codon_boun
 #' emitted as nucleotide `pident` or alignment `length`. General gapped
 #' alignments require explicit per-column alignment information and cannot be
 #' projected by this endpoint-only helper.
+#' Any supplied `sequence_unit`, `qsequence_unit` or `ssequence_unit` must be
+#' `"aa"` for the input protein coordinates.
 #'
 #' @param links Data frame with `qfeature_id`, `sfeature_id` identifying CDS
 #'   models and ordered inclusive protein `qstart`, `qend`, `sstart`, `send`.
@@ -470,6 +475,8 @@ project_ggchord_links <- function(links, cds, ungapped = FALSE) {
   cds <- ggchord_project_model(cds, caller)
   if (!isTRUE(ungapped)) ggchord_stop(caller, ": set ungapped = TRUE only for a known ungapped residue correspondence")
   if (!is.data.frame(link_data)) ggchord_stop(caller, ": link_data must be a data.frame")
+  for (column in c("sequence_unit", "qsequence_unit", "ssequence_unit"))
+    ggchord_check_declared_unit(link_data[[column]], "aa", caller, column)
   required <- c("qfeature_id", "sfeature_id", "qstart", "qend", "sstart", "send")
   ggchord_require_columns(link_data, required, caller)
   for (name in c("qstart", "qend", "sstart", "send")) ggchord_project_integer(link_data[[name]], name, caller)
