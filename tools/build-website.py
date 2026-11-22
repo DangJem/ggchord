@@ -20,7 +20,7 @@ from website.source_links import tracked_paths
 from website import ROOT
 from website.handbook import WEB, expand, manifest
 from website.reference_manual import (build as build_api_reference, prepare as prepare_api_reference,
-                                      write_reference_redirect)
+                                      write_family_redirects, write_reference_redirect)
 from website.registry import pages
 
 PAGES = pages()
@@ -341,6 +341,7 @@ def finalize(out,args,render_snapshot,input_hashes,reference_search):
     metadata=json.loads((out/'build-metadata.json').read_text())
     # Post-process using the same XML library used by pkgdown; no hand-built page shell.
     subprocess.run(['Rscript','tools/finalize-website.R', f'--site={out}', 'publication' if args.publication else 'preview'],cwd=ROOT,check=True)
+    write_family_redirects(out, json.loads((out/'api-reference-manifest.json').read_text())['families'])
     migrations=json.loads((WEB/'page-migrations.json').read_text())
     shutil.copy2(WEB/'page-migrations.json',assets/'page-migrations.json')
     for lang in ['en','zh']:

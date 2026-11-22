@@ -1,0 +1,227 @@
+{
+  "ggchord": [
+    "ggchord",
+    "ggchord_data"
+  ],
+  "layer_id": [
+    "layer_id",
+    "auto_id",
+    "auto_anchor"
+  ],
+  "coord_chord": [
+    "coord_chord",
+    "coord_circular",
+    "coord_collinear",
+    "coord_radial_synteny",
+    "coord_sankey",
+    "coord_dotplot"
+  ],
+  "facet_null": [
+    "facet_null",
+    "facet_wrap",
+    "facet_grid"
+  ],
+  "layout_sequences": [
+    "layout_sequences",
+    "suggest_sequence_layout",
+    "layout_dotplot"
+  ],
+  "track_band": [
+    "track_band"
+  ],
+  "geom_seq": [
+    "geom_seq",
+    "geom_seq_arrow",
+    "geom_seq_label",
+    "geom_seq_center_label",
+    "geom_seq_break",
+    "geom_seq_region"
+  ],
+  "geom_feature": [
+    "geom_feature",
+    "geom_feature_label",
+    "geom_feature_label_repel"
+  ],
+  "geom_gene": [
+    "geom_gene",
+    "geom_gene_label",
+    "geom_gene_label_repel"
+  ],
+  "geom_primer": [
+    "geom_primer",
+    "geom_primer_label",
+    "geom_primer_label_repel"
+  ],
+  "geom_site": [
+    "geom_site",
+    "geom_restriction_site",
+    "geom_site_label",
+    "geom_site_label_repel"
+  ],
+  "geom_link_line": [
+    "geom_link_line",
+    "geom_link_ribbon"
+  ],
+  "geom_alignment_segment": [
+    "geom_alignment_segment"
+  ],
+  "geom_residue": [
+    "geom_residue",
+    "geom_residue_text",
+    "geom_residue_tile"
+  ],
+  "geom_track": [
+    "geom_track",
+    "geom_track_point",
+    "geom_track_line",
+    "geom_track_path",
+    "geom_track_step",
+    "geom_track_col",
+    "geom_track_bar",
+    "geom_track_area",
+    "geom_track_tile",
+    "geom_track_interval"
+  ],
+  "annotation_seq_scalebar": [
+    "annotation_seq_scalebar"
+  ],
+  "label_layout_fixed": [
+    "label_layout_fixed",
+    "label_layout_repel"
+  ],
+  "position_offset": [
+    "position_offset",
+    "position_strand",
+    "position_feature_stack"
+  ],
+  "stat_coverage": [
+    "stat_coverage"
+  ],
+  "stat_link_bundle": [
+    "stat_link_bundle",
+    "stat_link_density"
+  ],
+  "scale_for": [
+    "scale_for"
+  ],
+  "scale_colour_sequence": [
+    "scale_colour_sequence",
+    "scale_fill_strand",
+    "scale_fill_feature_type",
+    "scale_fill_pident"
+  ],
+  "scale_seq_position": [
+    "scale_seq_position"
+  ],
+  "scale_track_value": [
+    "scale_track_value",
+    "track_limits"
+  ],
+  "scale_fill_residue": [
+    "scale_fill_residue"
+  ],
+  "guide_seq_axis": [
+    "guide_seq_axis",
+    "guide_track_axis"
+  ],
+  "theme_ggchord": [
+    "theme_ggchord",
+    "theme_ggchord_minimal",
+    "theme_ggchord_dark",
+    "theme_ggchord_publication",
+    "theme_ggchord_plasmid"
+  ],
+  "as_ggchord_seq": [
+    "as_ggchord_seq",
+    "as_ggchord_feature",
+    "as_ggchord_link",
+    "as_ggchord_alignment"
+  ],
+  "validate_ggchord_data": [
+    "validate_ggchord_data",
+    "validate_ggchord_hierarchy",
+    "clean_ggchord_data",
+    "data_report"
+  ],
+  "filter_ggchord_links": [
+    "filter_ggchord_links",
+    "deduplicate_ggchord_links",
+    "merge_ggchord_links",
+    "bundle_ggchord_links",
+    "link_ggchord_clusters"
+  ],
+  "find_ggchord_loci": [
+    "find_ggchord_loci",
+    "focus_ggchord_data",
+    "focus_ggchord_track",
+    "segment_ggchord_data"
+  ],
+  "primer_catalog": [
+    "primer_catalog",
+    "find_primer_bindings"
+  ],
+  "find_restriction_sites": [
+    "find_restriction_sites",
+    "filter_restriction_sites"
+  ],
+  "find_common_features": [
+    "find_common_features"
+  ],
+  "build_ggchord_cds": [
+    "build_ggchord_cds",
+    "translate_ggchord_cds"
+  ],
+  "project_ggchord_features": [
+    "project_ggchord_features",
+    "project_ggchord_links"
+  ],
+  "read_fasta_lengths": [
+    "read_fasta_lengths",
+    "read_aligned_fasta"
+  ],
+  "read_bed": [
+    "read_bed",
+    "read_bedpe",
+    "read_bedgraph",
+    "read_bigwig"
+  ],
+  "read_blast": [
+    "read_blast",
+    "read_paf",
+    "read_chain",
+    "read_delta",
+    "read_maf"
+  ],
+  "read_genbank": [
+    "read_genbank",
+    "read_gff3",
+    "read_feature_relations",
+    "read_signature_matches"
+  ],
+  "read_vcf": [
+    "read_vcf"
+  ],
+  "ggchord_fusion": [
+    "ggchord_fusion",
+    "layout_fusion",
+    "layout_fusion_grid"
+  ],
+  "fusion_ribbon": [
+    "fusion_ribbon",
+    "fusion_zoom",
+    "magnify_ggchord"
+  ],
+  "register_ggchord_alignment": [
+    "register_ggchord_alignment",
+    "map_alignment_position"
+  ],
+  "view_ggchord": [
+    "view_ggchord",
+    "render_policy"
+  ],
+  "export_ggchord_layout": [
+    "export_ggchord_layout",
+    "map_ggchord_position",
+    "diagnose_ggchord"
+  ]
+}

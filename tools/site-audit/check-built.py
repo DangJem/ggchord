@@ -101,7 +101,8 @@ def check_article_directories(doc, main_content, rel, lang, local, navigation, p
             rel+': chapter links differ from the handbook registry or repeat entries')
 
     excluded = {h for box in styled(main_content, 'lesson-extension', 'details') for h in box.iter()}
-    levels = {'h2'} if local=='gallery.html' else {'h2','h3'}
+    grouped_api = len(main_content.findall('.//section[@data-api]')) > 1
+    levels = {'h2'} if local=='gallery.html' or grouped_api else {'h2','h3'}
     headings = [h for h in main_content.iter() if h.tag in levels and h.get('id') and h not in excluded]
     require(len(outlines)==int(bool(headings)),rel+': outline must be omitted when there are no article headings')
     if headings and outlines:
@@ -188,6 +189,8 @@ for (const [start,end] of cases) {
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--site', type=Path, default=ROOT/'.site')
+    parser.add_argument('--reference-only', action='store_true',
+                        help='Audit the current bilingual API reference, search and incoming bookmarks in an existing handbook')
     parser.add_argument('--report', type=Path, help='Write a JSON summary at this path')
     parser.add_argument('--reference-inputs', type=Path, help='Save the actual EN/Han reference clipboard inputs for independent replay')
     args = parser.parse_args()
@@ -213,6 +216,17 @@ def main():
     formals = {(r['api'],r['parameter']):r for r in parameters}
     manual = read(WEB/'reference-manual/structure.json')
     api = manual['topics']
+    families = read(WEB/'reference-manual/families.json')
+    api_manifest = read(site/'api-reference-manifest.json')
+    owner = {topic: head for head, members in families.items() for topic in members}
+
+    def api_path(topic):
+        return 'reference/'+owner[topic]+'.html'
+
+    def bookmark(topic, old=''):
+        if not old or old in ('api-'+topic, 'main'):
+            return 'api-'+topic
+        return old if topic==owner[topic] else topic+'-'+old
     rd = {p.stem:re.findall(r'\\alias\{([^}]+)\}',p.read_text()) for p in (ROOT/'man').glob('*.Rd')}
     exports = set(re.findall(r'^export\(([^)]+)\)',(ROOT/'NAMESPACE').read_text(),re.M))
     records = read(site/'assets/examples.json')
@@ -232,7 +246,19 @@ def main():
     argument_terms = {}
     body_anchors = {}
     expected_pages = {p['canonical_path'] for p in pages.values()}
-    canonical_topics = {'reference/'+slug+'.html' for slug in api}
+    canonical_topics = {'reference/'+slug+'.html' for slug in families}
+    aliases = {'reference/'+topic+'.html':topic for topic,head in owner.items() if topic!=head}
+    reference_urls = {api_path(topic)+'#api-'+topic for topic in owner}
+    reference_pages = canonical_topics | {'reference/index.html'}
+
+    def stylesheets(doc, rel):
+        return [target(rel, node.get('href','')) for node in doc.iter('link')
+                if 'stylesheet' in node.get('rel','').split()]
+
+    theme_styles = {}
+    for lang in LANGUAGES:
+        rel = lang+'/parameters.html'
+        theme_styles[lang] = stylesheets(Document(site/rel).root,rel)
     expected_pages.update(canonical_topics)
     expected_pages.update(('authors.html','LICENSE.html','LICENSE-text.html','404.html'))
 
@@ -253,40 +279,49 @@ def main():
             links.add((page,url,*pair))
         return pair
 
+    require(set(owner)==set(api) and sum(map(len,families.values()))==len(owner)
+            and all(members and members[0]==head for head,members in families.items()),
+            'Reference families must partition the API and start with their canonical function')
+    require(api_manifest.get('families')==families and set(api_manifest['topics'])==set(api)==
+            exports | {'facet_null','facet_grid','facet_wrap'}, 'Published reference differs from source API families')
+    require(set(formals)=={(name,arg) for name,info in api.items() for arg in info['defaults']},
+            'Parameter directory does not match documented arguments')
     require(len(formals)==len(parameters) and all(r['api'] == r['topic'] and r['api'] in api for r in parameters),
             'Parameter directory names a duplicate or unknown exported argument')
     require(all((api,arg) in formals for api,args_here in flex.items() for arg in args_here),
             'Flexible argument missing from the runtime parameter directory')
     plots = {key for key,s in specs.items() if s['kind']=='plot'}
     png_dimensions = {}
-    require(set(rendered)==plots, 'Rendered plot inventory differs from registered plotting scripts')
-    for name in sorted(plots):
-        png = site/'assets/handbook'/(name+'.png')
-        script = WEB/'examples'/(name+'.R')
-        record = rendered.get(name,{})
-        require(png.is_file() and record.get('png_sha256')==digest(png), name+': wrong rendered PNG digest')
-        require(record.get('source_sha256')==digest(script), name+': plotted script differs from source')
-        if png.is_file():
-            with png.open('rb') as handle:
-                header = handle.read(24)
-            if len(header)==24:
-                png_dimensions[name] = tuple(map(str,struct.unpack('>II', header[16:24])))
-            dims = tuple(round(specs[name][d]*specs[name].get('dpi',144)) for d in ('width','height'))
-            require(len(header)==24 and header[:8]==b'\x89PNG\r\n\x1a\n' and
-                    all(abs(x-y)<=1 for x,y in zip(struct.unpack('>II', header[16:24]), dims)),
-                    name+': PNG format/dimensions differ from plotting manifest')
+    if not args.reference_only:
+        require(set(rendered)==plots, 'Rendered plot inventory differs from registered plotting scripts')
+        for name in sorted(plots):
+            png = site/'assets/handbook'/(name+'.png')
+            script = WEB/'examples'/(name+'.R')
+            record = rendered.get(name,{})
+            require(png.is_file() and record.get('png_sha256')==digest(png), name+': wrong rendered PNG digest')
+            require(record.get('source_sha256')==digest(script), name+': plotted script differs from source')
+            if png.is_file():
+                with png.open('rb') as handle:
+                    header = handle.read(24)
+                if len(header)==24:
+                    png_dimensions[name] = tuple(map(str,struct.unpack('>II', header[16:24])))
+                dims = tuple(round(specs[name][d]*specs[name].get('dpi',144)) for d in ('width','height'))
+                require(len(header)==24 and header[:8]==b'\x89PNG\r\n\x1a\n' and
+                        all(abs(x-y)<=1 for x,y in zip(struct.unpack('>II', header[16:24]), dims)),
+                        name+': PNG format/dimensions differ from plotting manifest')
     require(set(output_rows) == set(api), 'Reference output inventory differs from the published topics')
     require(output.get('status')=='passed', 'Native render reported failed example output')
-    install_inputs = {name for name in manifest['source_sha256'] if name.startswith(('R/','data/','inst/','src/'))
-                      or (name.startswith('man/') and name.endswith('.Rd'))}
-    install_inputs.update(('DESCRIPTION','NAMESPACE','LICENSE','LICENSE.md'))
-    with ZipFile(site/'assets/ggchord-source.zip') as archive:
-        require(set(archive.namelist())=={'ggchord/'+name for name in install_inputs},
-                'Matching package download omits inputs or includes extraneous files')
-        for name in install_inputs:
-            require(archive.read('ggchord/'+name)==(ROOT/name).read_bytes(),
-                    'Download differs from the package used in the manual: '+name)
-    require(len(downloads)==len(records), 'Duplicate example download records')
+    if not args.reference_only:
+        install_inputs = {name for name in manifest['source_sha256'] if name.startswith(('R/','data/','inst/','src/'))
+                          or (name.startswith('man/') and name.endswith('.Rd'))}
+        install_inputs.update(('DESCRIPTION','NAMESPACE','LICENSE','LICENSE.md'))
+        with ZipFile(site/'assets/ggchord-source.zip') as archive:
+            require(set(archive.namelist())=={'ggchord/'+name for name in install_inputs},
+                    'Matching package download omits inputs or includes extraneous files')
+            for name in install_inputs:
+                require(archive.read('ggchord/'+name)==(ROOT/name).read_bytes(),
+                        'Download differs from the package used in the manual: '+name)
+        require(len(downloads)==len(records), 'Duplicate example download records')
     primary = ['index']+[g['landing'] for g in groups if g['landing']!='index']
     expected_nav = [pages[k]['canonical_path'] for k in primary]
     menus = {}
@@ -305,6 +340,15 @@ def main():
         doc = Document(path).root
         all_ids = [n.get('id') for n in doc.iter() if n.get('id')]
         identifiers[rel] = set(all_ids)
+        if args.reference_only and not local.startswith('reference/'):
+            # Retained tutorials and navigation may still use former API URLs
+            # with per-function fragments. Exercise these as redirect cases.
+            for anchor in doc.iter('a'):
+                href = anchor.get('href','')
+                pair = destination(rel,href)
+                if pair and re.match(r'(?:(?:en|zh)/)?reference/', pair[0]):
+                    remember(rel,href)
+            continue
         require(len(all_ids)==len(set(all_ids)),rel+': duplicate IDs')
         require(not any(pre.find('.//a') is not None for pre in doc.iter('pre')), rel+': code contains a link')
         for node in doc.iter():
@@ -319,7 +363,7 @@ def main():
         if lang:
             require(doc.find('.//html').get('lang')==('en' if lang=='en' else 'zh-Hans'),rel+': incorrect document language')
         main_content = doc.find('.//main')
-        if rel in routes or rel in retired or (lang and local in migrations):
+        if rel in routes or rel in retired or local in aliases or (not lang and local.startswith('reference/')) or (lang and local in migrations):
             inline = [text(n) for n in doc.iter('script') if 'location.replace' in text(n)]
             if inline:
                 scripts[rel] = '\n'.join(inline)
@@ -331,6 +375,8 @@ def main():
         require(main_content is not None,rel+': expected a canonical page, found a redirect or incomplete document')
         if main_content is None:
             continue
+        if local in reference_pages:
+            require(stylesheets(doc,rel)==theme_styles[lang],rel+': API article does not use the handbook stylesheets')
         main_ids = {n.get('id') for n in main_content.iter() if n.get('id')}
         check_article_directories(doc,main_content,rel,lang,local,navigation,pages,require)
         body_anchors[rel] = main_ids
@@ -407,63 +453,81 @@ def main():
                 require(all(('numeric' in c.get('class','').split())==numeric for c in cells+headers),
                         f'{rel}: inconsistent table alignment in column {i+1}')
         if local in canonical_topics:
-            topic = path.stem
-            sections = {n.find('h2').get('id'):n for n in main_content.iter() if n.find('h2') is not None}
-            example = sections.get('ref-examples')
-            require(example is not None and 'ref-related' in main_ids,rel+': missing native examples or related entries')
-            if example is None:
-                continue
-            blocks = [b for b in styled(example,'code-disclosure','details') if b.get('data-code-kind')=='r']
-            require(len(blocks)==1 and blocks[0].get('data-code-kind')=='r',rel+': expected one native R example')
-            if not blocks:
-                continue
-            copied = clipboard(blocks[0])
-            source = site/'assets/reference-examples'/(topic+'.R')
-            require(source.is_file() and copied == source.read_text(), rel+': example differs from its download')
-            references[(lang,topic)] = copied
-            if args.reference_inputs:
-                folder = args.reference_inputs/lang
-                folder.mkdir(parents=True, exist_ok=True)
-                (folder/(topic+'.R')).write_text(copied+'\n')
-            sigs = [clipboard(b) for b in styled(main_content,'code-disclosure','details') if b.get('data-code-kind')=='signature']
-            signatures[(lang,topic)] = sigs
-            if 'ref-usage' in main_ids:
-                require(bool(sigs),rel+': copyable usage must be identified as a signature')
-            outline = styled(doc,'page-nav')
-            outline_targets = {a.get('href') for a in outline[0].iter('a')} if outline else set()
-            require({'#'+key for key in sections if key} <= outline_targets,rel+': incomplete native page outline')
-            imgs = [n.get('src') for n in example.iter('img')]
-            figures[(lang,topic)] = imgs
-            row = output_rows.get(topic,{})
-            console = styled(example,'data-output')
-            require(imgs == ['../../assets/reference-examples/'+f for f in row['figures']] and
-                    (bool(imgs) or bool(console)) and
-                    [console_text(text(b.find('.//pre/code'))) for b in console] ==
-                    ([console_text(row['console'])] if row['console'] else []),
-                    rel+': example output differs from its R results')
-            marked = set()
-            sections_by_kind = {'sequence':'scalar','strand':'width','strand-offset':'strand',
-                                'fixed-label':'scope','band':'scope'}
-            label = '【支持灵活参数】' if lang=='zh' else '[Flexible parameter]'
-            for term in main_content.iter('dt'):
-                for name in styled(term,'argument-term'):
-                    code = name.find('code')
-                    arg = text(code)
-                    argument_terms[(lang,topic,arg)] = {code.get('id')} if code is not None else set()
-                    badges = styled(name,'flexible-parameter','a')
-                    kind = flex.get(topic,{}).get(arg)
-                    require(len(badges)==int(bool(kind)), f'{rel}: badge count for {arg}')
-                    if badges and kind:
-                        marked.add(arg)
-                        badge = badges[0]
-                        require(list(name)[-2:]==[code,badge] and text(badge)==label and
-                                badge.get('href')=='../parameters.html#'+sections_by_kind[kind],
-                                f'{rel}: wrong inline label or destination for {arg}')
-            require(len(styled(main_content,'flexible-parameter'))==len(marked),rel+': stray flexible badge')
-            require(marked==set(flex.get(topic,{})),f'{rel}: incorrect flexible parameter badges {marked}')
-            if lang=='zh':
-                require(bool(re.search('[\u3400-\u9fff]',text(main_content.find('.//h1')))) or
-                        text(main_content.find('.//h1')).strip() == topic+'()', rel+': missing Han topic title')
+            entries = {node.get('data-api'):node for node in main_content.iter() if node.get('data-api')}
+            members = families[path.stem]
+            require(list(entries)==members,rel+': functions differ from their family or appear out of order')
+            for topic in members:
+                if topic not in entries:
+                    continue
+                entry = entries[topic]
+                sections = {heading.get('id'):node for node in entry.iter()
+                            for heading in node if heading.tag in ('h2','h3','h4') and heading.get('id')}
+                parts = {'purpose','usage','value','details','examples','related'}
+                if api[topic]['arguments']:
+                    parts.add('arguments')
+                if api[topic]['roles']:
+                    parts.add('roles')
+                require({bookmark(topic,'ref-'+part) for part in parts} <= sections.keys(),
+                        f'{rel}#{topic}: missing API documentation section')
+                legacy = {'ref-description', *('arg-'+key for key in api[topic]['defaults'] if key!='...')}
+                require({bookmark(topic,id_) for id_ in legacy} <= main_ids,
+                        f'{rel}#{topic}: missing former description or argument bookmark')
+                example = sections.get(bookmark(topic,'ref-examples'))
+                if example is None:
+                    continue
+                blocks = [b for b in styled(example,'code-disclosure','details') if b.get('data-code-kind')=='r']
+                require(len(blocks)==1 and blocks[0].get('data-code-kind')=='r',rel+': expected one native R example')
+                if not blocks:
+                    continue
+                copied = clipboard(blocks[0])
+                source = site/'assets/reference-examples'/(topic+'.R')
+                script_links = [destination(rel,a.get('href','')) for a in example.iter('a') if 'download' in a.attrib]
+                require(script_links==[(source.relative_to(site).as_posix(),'')] and source.is_file() and copied==source.read_text(),
+                        f'{rel}#{topic}: example differs from its download')
+                references[(lang,topic)] = copied
+                if args.reference_inputs:
+                    folder = args.reference_inputs/lang
+                    folder.mkdir(parents=True, exist_ok=True)
+                    (folder/(topic+'.R')).write_text(copied+'\n')
+                sigs = [clipboard(b) for b in styled(entry,'code-disclosure','details') if b.get('data-code-kind')=='signature']
+                signatures[(lang,topic)] = sigs
+                callable_name = api[topic]['usage'].split('(',1)[0]
+                args_shown = ['  '+key+(' = '+value if value else '') for key,value in api[topic]['defaults'].items()]
+                expected_signature = callable_name+'('+('\n'+',\n'.join(args_shown)+'\n' if args_shown else '')+')'
+                require(sigs==[expected_signature],f'{rel}#{topic}: displayed signature differs from API defaults')
+                imgs = [n.get('src') for n in example.iter('img')]
+                figures[(lang,topic)] = imgs
+                row = output_rows.get(topic,{'figures':[], 'console':''})
+                console = styled(example,'data-output')
+                require(imgs == ['../../assets/reference-examples/'+f for f in row['figures']] and
+                        (bool(imgs) or bool(console)) and
+                        [console_text(text(b.find('.//pre/code'))) for b in console] ==
+                        ([console_text(row['console'])] if row['console'] else []),
+                        rel+': example output differs from its R results')
+                marked = set()
+                sections_by_kind = {'sequence':'scalar','strand':'width','strand-offset':'strand',
+                                    'fixed-label':'scope','band':'scope'}
+                label = '【支持灵活参数】' if lang=='zh' else '[Flexible parameter]'
+                for term in entry.iter('dt'):
+                    for name in styled(term,'argument-term'):
+                        code = name.find('code')
+                        arg = text(code)
+                        argument_terms[(lang,topic,arg)] = {code.get('id')} if code is not None else set()
+                        badges = styled(name,'flexible-parameter','a')
+                        kind = flex.get(topic,{}).get(arg)
+                        require(len(badges)==int(bool(kind)), f'{rel}: badge count for {arg}')
+                        if badges and kind:
+                            marked.add(arg)
+                            badge = badges[0]
+                            require(list(name)[-2:]==[code,badge] and text(badge)==label and
+                                    badge.get('href')=='../parameters.html#'+sections_by_kind[kind],
+                                    f'{rel}: wrong inline label or destination for {arg}')
+                require(len(styled(entry,'flexible-parameter'))==len(marked),rel+': stray flexible badge')
+                require(marked==set(flex.get(topic,{})),f'{rel}: incorrect flexible parameter badges {marked}')
+                require('api-'+topic in main_ids,rel+': missing function heading '+topic)
+                if lang=='zh':
+                    require(bool(re.search('[\u3400-\u9fff]',text(sections.get(bookmark(topic,'ref-purpose'))))),
+                            f'{rel}#{topic}: missing Han description')
             continue
         page = next((p for p in pages.values() if p['canonical_path']==local),None)
         if page is None:
@@ -473,9 +537,21 @@ def main():
         expected_title = home['hero']['title'][lang] if slug=='index' else page['title'][lang]
         require(heading==expected_title,rel+': H1 differs from the registered title: '+heading)
         if slug=='reference':
-            entries = {destination(rel,a.get('href','')) for group in styled(main_content,'reference-group')
-                       for dl in group.iter('dl') for a in dl.iter('a')}
-            require(entries=={(lang+'/'+key,'') for key in canonical_topics}, rel+': reference index mismatch')
+            groups_here = styled(main_content,'reference-group')
+            require(len(groups_here)==len(manual['groups']), rel+': missing reference index category')
+            for group, (key, spec) in zip(groups_here,manual['groups'].items()):
+                family_heads = list(dict.fromkeys(owner[name] for name in spec['topics']))
+                terms = group.findall('./dl/dt')
+                definitions = group.findall('./dl/dd')
+                require(group.find(f'./h2[@id="family-{key}"]') is not None and
+                        len(terms)==len(definitions)==len(family_heads),rel+': incorrect API families for '+key)
+                for head, term, definition in zip(family_heads,terms,definitions):
+                    links_to = [destination(rel,a.get('href','')) for a in term.iter('a')]
+                    members = [destination(rel,a.get('href','')) for a in definition.iter('a')]
+                    family_path = lang+'/'+api_path(head)
+                    require(links_to==[(family_path,'')] and
+                            members==[(family_path,bookmark(name)) for name in families[head]],
+                            rel+': reference index links do not match the '+head+' family')
             require('reference-filter' in identifiers[rel],rel+': no reference filter')
         if slug=='parameters':
             require(heading==('Flexible parameters' if lang=='en' else '灵活参数'),rel+': incorrect flexible-parameter guide heading')
@@ -588,26 +664,30 @@ def main():
                     rel+': missing one of the seven public figure families')
         require(not re.search(r'\{\{(?:example:|preview:|case-gallery|manualhome)',text(main_content)),
                 rel+': unresolved handbook directive')
-    require(used_downloads==set(downloads),'Example download manifest has missing or extra rows')
+    if not args.reference_only:
+        require(used_downloads==set(downloads),'Example download manifest has missing or extra rows')
     all_html = set(identifiers)
     for lang in LANGUAGES:
         existing = {rel[len(lang)+1:] for rel in all_html if rel.startswith(lang+'/')}
         require(expected_pages<=existing,lang+': missing canonical pages '+str(sorted(expected_pages-existing)))
         for (function,arg),row in formals.items():
-            require(row['anchor'] in argument_terms.get((lang,row['topic'],arg),set()),
+            require(bookmark(function,row['anchor']) in argument_terms.get((lang,row['topic'],arg),set()),
                     f'{lang}: {function}({arg}) anchor does not belong to the documented argument')
         search = read(site/lang/'search.json')
+        if args.reference_only:
+            search = [r for r in search if r['url'].startswith('reference/')]
         indexed = {urlsplit(r['url']).path for r in search}
-        require(indexed==expected_pages,lang+': wrong search coverage '+str(sorted(indexed ^ expected_pages)))
+        expected_indexed = reference_pages if args.reference_only else expected_pages
+        require(indexed==expected_indexed,lang+': wrong search coverage '+str(sorted(indexed ^ expected_indexed)))
         function_hits = [r['url'] for r in search if r.get('kind')=='function']
-        require(sorted(function_hits)==sorted(canonical_topics),lang+': missing or duplicate function search results')
+        require(sorted(function_hits)==sorted(reference_urls),lang+': missing or duplicate function search results')
         parameter_hits = [r['url'] for r in search if r.get('kind')=='parameter']
-        expected_hits = ['reference/'+r['topic']+'.html#'+r['anchor'] for r in parameters]
+        expected_hits = [api_path(r['topic'])+'#'+bookmark(r['topic'],r['anchor']) for r in parameters]
         require(sorted(parameter_hits)==sorted(expected_hits),lang+': parameter search destinations differ from the runtime formals')
         for row in search:
             remember(lang+'/search.json',row['url'])
         counts['search_results_'+lang] = len(search)
-    for page in expected_pages:
+    for page in (reference_pages if args.reference_only else expected_pages):
         require(body_anchors.get('en/'+page)==body_anchors.get('zh/'+page),page+': mismatched bilingual article anchors')
     pairs = {}
     for topic in api:
@@ -635,7 +715,7 @@ def main():
     for lang in LANGUAGES:
         for old,mapping in migrations.items():
             source = lang+'/'+old
-            if old in retired_api:
+            if old in retired_api or (args.reference_only and not old.startswith('reference/')):
                 continue
             for frag, dest in mapping.items():
                 if not dest:
@@ -651,9 +731,11 @@ def main():
     removed_parameter_index = {'parameter-atlas.html', 'en/parameter-atlas.html', 'zh/parameter-atlas.html'}
     require(not removed_parameter_index & all_html, 'The removed parameter index is present in the build')
     for name in (published | set(read(WEB/'historical-pages.json'))) - removed_parameter_index:
+        if args.reference_only and not re.match(r'(?:(?:en|zh)/)?reference/',name):
+            continue
         require(name in all_html, name+': missing historical URL')
     for path,dest in routes.items():
-        if path=='404.html':
+        if path=='404.html' or (args.reference_only and not path.startswith('reference/')):
             continue
         resolved = remember('index.html',dest)
         require(path in all_html and path in scripts,path+': missing legacy redirect')
@@ -666,8 +748,13 @@ def main():
             final = mapping.get(fragment, mapping.get('') if local in alias_pages else None)
             if final:
                 dest = prefix+'/'+final
+        if prefix in LANGUAGES and local in aliases:
+            topic = aliases[local]
+            dest = prefix+'/'+api_path(topic)+'#'+bookmark(topic,fragment)
         cases.add((path,dest))
     for name in retired:
+        if args.reference_only and not name.startswith('reference/'):
+            continue
         require(name in scripts,name+': historical page must redirect')
     existing_reference_names = {alias for aliases in rd.values() for alias in aliases} | set(api) | {'index'}
     for name in read(WEB/'historical-pages.json'):
@@ -681,20 +768,57 @@ def main():
             if lang=='en' and selected:
                 filename,fragment = selected[0]
                 cases.add((name,filename+('#'+fragment if fragment else '')))
+    for local,topic in aliases.items():
+        for lang in LANGUAGES:
+            old, canonical = lang+'/'+local, lang+'/'+api_path(topic)
+            require(old in scripts and old not in body_anchors,old+': expected a function redirect')
+            require((canonical,bookmark(topic)) in {destination(old,a.get('href',''))
+                    for a in Document(site/old).root.iter('a')} if (site/old).is_file() else False,
+                    old+': missing fallback link to this function')
+            # Retain the old URL and its section/parameter bookmarks, even
+            # when nobody currently links to that particular argument.
+            stem = topic+'-'
+            fragments = {anchor[len(stem):] for anchor in identifiers.get(canonical,()) if anchor.startswith(stem)}
+            for fragment in {'','main','api-'+topic,*fragments}:
+                suffix = '#'+fragment if fragment else ''
+                end = canonical+'#'+bookmark(topic,fragment)
+                cases.add((old+suffix,end))
+                if lang=='en':
+                    cases.add((local+suffix,end))
     for origin,url,name,anchor in links:
         dest = site/name
         require(dest.is_file(),origin+': missing local URL '+url)
         if anchor and name.endswith('.html'):
-            require(anchor in identifiers.get(name,set()),origin+': missing fragment '+url)
+            lang, _, local = name.partition('/')
+            root_ref = lang=='reference'
+            if root_ref:
+                lang, local = 'en', name
+            if local in aliases:
+                topic = aliases[local]
+                resolved = lang+'/'+api_path(topic)
+                end = bookmark(topic,anchor)
+                require(end in identifiers.get(resolved,set()),origin+': missing redirected fragment '+url)
+                cases.add((name+'#'+anchor,resolved+'#'+end))
+            elif root_ref and local in reference_pages:
+                require(anchor in identifiers.get(lang+'/'+local,set()),origin+': missing redirected fragment '+url)
+                cases.add((name+'#'+anchor,lang+'/'+local+'#'+anchor))
+            else:
+                require(anchor in identifiers.get(name,set()),origin+': missing fragment '+url)
     if not errors:
         run_redirects(scripts, sorted(cases))
-    counts.update(handbook_pages=len(pages), api_topics=len(api), handbook_inputs=len(records),
-                  unique_examples=len(specs), handbook_plots=len(plots), parameter_rows=len(formals),
-                  ellipsis_rows=sum(arg=='...' for api,arg in formals), dotted_argument_rows=sum('.' in arg and arg!='...' for api,arg in formals), local_urls=len(links), redirect_cases=len(cases),
+    counts.update(api_topics=len(api), api_family_pages=len(families), parameter_rows=len(formals),
+                  ellipsis_rows=sum(arg=='...' for _,arg in formals),
+                  dotted_argument_rows=sum('.' in arg and arg!='...' for _,arg in formals),
+                  local_urls=len(links), redirect_cases=len(cases),
                   api_figures_en=sum(len(v) for (lang,_),v in figures.items() if lang=='en'),
                   api_figures_zh=sum(len(v) for (lang,_),v in figures.items() if lang=='zh'))
+    if not args.reference_only:
+        counts.update(handbook_pages=len(pages), handbook_inputs=len(records),
+                      unique_examples=len(specs), handbook_plots=len(plots))
     if args.report:
-        args.report.write_text(json.dumps(dict(source_commit=manifest.get('source_commit'),counts=counts,errors=errors),ensure_ascii=False,indent=2)+'\n')
+        source = dict(api_manifest_sha256=digest(site/'api-reference-manifest.json')) if args.reference_only else dict(
+            source_commit=manifest.get('source_commit'))
+        args.report.write_text(json.dumps(dict(**source, counts=counts, errors=errors),ensure_ascii=False,indent=2)+'\n')
     if errors:
         raise SystemExit('\n'.join(dict.fromkeys(errors)))
     print('PASS:',json.dumps(counts,sort_keys=True))

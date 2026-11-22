@@ -90,7 +90,18 @@ def load():
     grouped = [topic for group in structure['groups'].values() for topic in group['topics']]
     if len(grouped) != len(set(grouped)) or set(grouped) != set(topics):
         raise ValueError('Each reference topic must appear in exactly one category')
+    families = read(SOURCE / 'families.json')
+    members = [name for names in families.values() for name in names]
+    if sorted(members) != sorted(topics):
+        raise ValueError('Each API must belong to exactly one family')
+    categories = {name: group for group, record in structure['groups'].items() for name in record['topics']}
+    for primary, names in families.items():
+        if primary != names[0] or len({categories[name] for name in names}) != 1:
+            raise ValueError(f'{primary}: invalid family landing page or mixed categories')
+    structure['families'] = families
     for lang, locale in locales.items():
+        if set(locale['families']) != set(families) or not all(locale['families'].values()):
+            raise ValueError(f'{lang}: missing API family titles')
         if not locale['description'].strip():
             raise ValueError(f'{lang}: missing reference introduction')
         if set(locale['groups']) != set(structure['groups']) or set(locale['topics']) != set(topics):
@@ -119,15 +130,15 @@ def load():
 
 @lru_cache(maxsize=4096)
 def markdown(text, pandoc):
-    # Translate handbook links to the corresponding page in the same locale.
+    # Historical topic URLs resolve to their section on the family page.
     text = re.sub(r'\]\(#api-([a-z0-9_]+)\)', r'](\1.html)', text)
     return subprocess.check_output(
         [pandoc, '--from=markdown+pipe_tables', '--to=html5', '--wrap=none'],
         input=text, text=True)
 
 
-def section(id, title, body):
-    return f'<section aria-labelledby="{id}"><h2 id="{id}">{html.escape(title)}</h2>{body}</section>'
+def section(id, title, body, level=2):
+    return f'<section aria-labelledby="{id}"><h{level} id="{id}">{html.escape(title)}</h{level}>{body}</section>'
 
 
 def snippet(markup, kind, caption):
@@ -137,8 +148,8 @@ def snippet(markup, kind, caption):
             '</code></pre></details>')
 
 
-def topic_link(topic):
-    return f'<a href="{topic}.html">{code(topic + "()")}</a>'
+def topic_link(topic, owners):
+    return f'<a href="{owners[topic]}.html#api-{topic}">{code(topic + "()")}</a>'
 
 
 def invocation(topic):
@@ -213,7 +224,7 @@ def example_output(rendered, name, titles, width, height):
     return ''.join(blocks)
 
 
-def render_articles(root, pages):
+def render_articles(root, pages, navigation_site):
     # Use the same pkgdown shell and navigation finalizer as the other chapters.
     with TemporaryDirectory(prefix='ggchord-reference-') as temporary:
         staging = Path(temporary)
@@ -223,7 +234,7 @@ def render_articles(root, pages):
         # directory so old standalone pages cannot survive a successful build.
         options = [f'--site={staging}', f'--payload={payload}']
         for tool, flags in (('render-website.R', ['--part=articles']),
-                            ('finalize-website.R', [f'--navigation-site={root}'])):
+                            ('finalize-website.R', [f'--navigation-site={navigation_site}'])):
             result = subprocess.run(['Rscript', '--vanilla', f'tools/{tool}', *flags, *options],
                                     cwd=ROOT, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
             if result.returncode:
@@ -231,15 +242,16 @@ def render_articles(root, pages):
         for lang, entries in pages.items():
             rendered = staging / lang
             target = root / lang
+            target.mkdir(parents=True, exist_ok=True)
             for dependency in ('deps', 'lightswitch.js', 'pkgdown.js'):
                 asset = rendered / dependency
                 if asset.is_dir():
                     for source in (p for p in asset.rglob('*') if p.is_file()):
                         path = target / source.relative_to(rendered)
-                        if not path.exists():
+                        if not (navigation_site / lang / source.relative_to(rendered)).exists():
                             path.parent.mkdir(parents=True, exist_ok=True)
                             shutil.copy2(source, path)
-                elif not (target / dependency).exists():
+                elif not (navigation_site / lang / dependency).exists():
                     shutil.copy2(asset, target / dependency)
             for page in entries:
                 relative = page['slug'] + '.html'
@@ -261,13 +273,19 @@ def prepare(root, pandoc):
         titles = LABELS[lang]
         search = []
         intro = locale['description']
+        families = structure['families']
+        owners = {name: primary for primary, names in families.items() for name in names}
+        def family_index(primary):
+            terms = ''.join(f'<li>{topic_link(name, owners)} — {html.escape(topics[name]["title"])}</li>'
+                            for name in families[primary])
+            return (f'<dt>{link(primary + ".html", locale["families"][primary])}</dt>'
+                    f'<dd><ul>{terms}</ul></dd>')
         contents = ''.join(
             '<section class="reference-group">' +
             ''.join(f'<span id="{alias}"></span>' for alias in group['previous_anchors']) +
             f'<h2 id="family-{key}">{html.escape(groups[key]["title"])}</h2>'
             f'<p>{html.escape(groups[key]["intro"])}</p><dl>' +
-            ''.join(f'<dt>{topic_link(name)}</dt><dd>{html.escape(topics[name]["title"])}</dd>'
-                    for name in group['topics']) + '</dl></section>'
+            ''.join(family_index(primary) for primary in dict.fromkeys(owners[name] for name in group['topics'])) + '</dl></section>'
             for key, group in structure['groups'].items())
         field = ('<div class="reference-filter" hidden><label for="reference-filter">'
                  f'{titles["filter"]}</label><input id="reference-filter" type="search" autocomplete="off">'
@@ -288,8 +306,11 @@ def prepare(root, pandoc):
         pages[lang].append(dict(slug='reference/index', title=titles['reference'], body=index))
         search.append(dict(url='reference/index.html',title=titles['reference'],kind='tool',
                            summary=intro, text=' '.join(groups[k]['intro'] for k in groups),keywords='API reference'))
-        for family, group in structure['groups'].items():
-            for name in group['topics']:
+        for primary, members in families.items():
+            sections = []
+            for name in members:
+                prefix = '' if name == primary else name + '-'
+                url = f'reference/{primary}.html'
                 shared = structure['topics'][name]
                 text = topics[name]
                 native = (f'<p>{link("https://ggplot2.tidyverse.org/reference/" + name + ".html", titles["source"])}</p>'
@@ -297,8 +318,8 @@ def prepare(root, pandoc):
                 bodies = [native]
                 def add(key, fragment):
                     if fragment:
-                        bodies.append(section('ref-' + key, titles[key], fragment))
-                add('purpose', '<span id="ref-description"></span>' + markdown(text['intro'], pandoc))
+                        bodies.append(section(prefix + 'ref-' + key, titles[key], fragment, level=3))
+                add('purpose', f'<span id="{prefix}ref-description"></span>' + markdown(text['intro'], pandoc))
                 rendered = output['topics'][name]
                 add('usage', snippet(rendered['signature'], 'signature', titles['usage']))
                 rows = []
@@ -309,12 +330,12 @@ def prepare(root, pandoc):
                     summary = ' '.join(html.unescape(re.sub(r'<[^>]*>', ' ', description)).split())
                     names = []
                     for key in keys:
-                        anchor = 'para-ellipsis' if key == '...' else 'parameter-' + key
+                        anchor = prefix + ('para-ellipsis' if key == '...' else 'parameter-' + key)
                         if key in seen:
                             names.append(code(key))
                             continue
                         seen.add(key)
-                        alias = f'<span id="arg-{key}"></span>' if key != '...' else ''
+                        alias = f'<span id="{prefix}arg-{key}"></span>' if key != '...' else ''
                         badge = ''
                         kind = flexible.get(name, {}).get(key)
                         if kind or re.search(r'\bflexible\b', original['format']):
@@ -324,7 +345,7 @@ def prepare(root, pandoc):
                         names.append(f'<span class="argument-term">{alias}'
                                      f'<code id="{anchor}" class="argument-anchor">{html.escape(key)}</code>'
                                      f'{badge}</span>')
-                        search.append(dict(url=f'reference/{name}.html#{anchor}', kind='parameter',
+                        search.append(dict(url=f'{url}#{anchor}', kind='parameter',
                                            title=f'{name}() · {key}', keywords=f'{name} {key}',
                                            text=f'{param["format"]} {summary}', summary=summary))
                     rows.append(f'<dt>{", ".join(names)}</dt><dd>'
@@ -345,18 +366,20 @@ def prepare(root, pandoc):
                              f'{titles["download"]}</a>')
                 add('examples', example_note + snippet(rendered['example'], 'r', titles['examples']) +
                     downloads + example_output(rendered, name, titles, output['width'], output['height']))
-                add('related', '<ul>' + ''.join(f'<li>{topic_link(target)}</li>' for target in shared['related']) + '</ul>')
-                pages[lang].append(dict(slug=f'reference/{name}', title=name + '()',
-                                        heading_id=f'api-{name}', body=''.join(bodies)))
-                search.append(dict(url=f'reference/{name}.html',title=f'{name}() — {text["title"]}',
-                                   kind='function',summary=text['intro'], text=text['details'],
-                                   keywords=' '.join([name, family, *seen])))
+                add('related', '<ul>' + ''.join(f'<li>{topic_link(target, owners)}</li>' for target in shared['related']) + '</ul>')
+                sections.append(f'<section data-api="{name}"><h2 id="api-{name}">{code(name + "()")}</h2>'
+                                + ''.join(bodies) + '</section>')
+                search.append(dict(url=f'{url}#api-{name}', title=f'{name}() — {text["title"]}',
+                                   kind='function', summary=text['intro'], text=text['details'],
+                                   keywords=' '.join([name, locale['families'][primary], *sorted(seen)])))
+            pages[lang].append(dict(slug=f'reference/{primary}', title=locale['families'][primary],
+                                    body=''.join(sections)))
         search_by_language[lang] = search
     version = re.search(r'^Version: (.+)$', (ROOT / 'DESCRIPTION').read_text(), re.M)[1]
     write_json(root / 'api-reference-manifest.json', {
         'version': version, 'source': structure['reference'], 'functions': len(structure['topics']) - len(NATIVE),
         'native_facets': len(NATIVE), 'categories': len(structure['groups']), 'locales': list(LOCALES),
-        'topics': list(structure['topics']), 'deployment': 'local output',
+        'families': structure['families'], 'topics': list(structure['topics']), 'deployment': 'local output',
     })
     write_json(root / 'reference-output.json', {
         'status': 'passed', 'topics': {name: {'console': entry['console'], 'figures': entry['figures']}
@@ -383,55 +406,88 @@ def write_reference_redirect(out, path, destination, languages):
                     '</head><body><main>' + ' · '.join(links) + '</main></body></html>')
 
 
+def write_family_redirects(root, families):
+    # Old per-function links occur in published articles and user bookmarks.
+    # A hash on those URLs belonged to the individual function's article.
+    for lang in LOCALES:
+        for primary, members in families.items():
+            for name in members[1:]:
+                fallback = primary + '.html#api-' + name
+                script = ('const old = location.hash.slice(1);'
+                          f'const anchor = /^(ref-|arg-|parameter-|para-)/.test(old) ? "{name}-" + old : "api-{name}";'
+                          f'location.replace("{primary}.html#" + anchor);')
+                title = html.escape(name + '() · ggchord')
+                tag = 'zh-Hans' if lang == 'zh' else 'en'
+                write(root/lang/'reference'/f'{name}.html',
+                      f'<!doctype html><html lang="{tag}"><head><meta charset="utf-8">'
+                      f'<title>{title}</title><script>{script}</script><noscript>'
+                      f'<meta http-equiv="refresh" content="0;url={fallback}"></noscript></head>'
+                      f'<body><a href="{fallback}">{name}()</a></body></html>')
+
+
 def build(root):
     root = root.resolve()
-    assets = root / 'assets'
-    assets.mkdir(parents=True, exist_ok=True)
-    for name in ('site.css', 'site.js', 'favicon.png', 'logo.webp'):
-        shutil.copy2(ASSETS / name, assets / name)
     pandoc = shutil.which('pandoc')
     if not pandoc:
         raise RuntimeError('Pandoc must be on PATH to build the API reference')
-    pages, searches = prepare(root, pandoc)
-    for lang, search in searches.items():
-        home = root / lang / 'index.html'
-        if not home.exists():
-            write(home, redirect('reference/index.html'))
-        search_file = root / lang / 'search.json'
-        previous = read(search_file) if search_file.exists() else []
-        previous = [row for row in previous if
-                    row['url'].split('#')[0] != 'parameter-atlas.html' and
-                    not row['url'].startswith('reference/')]
-        write_json(search_file, previous + search)
-    render_articles(root, pages)
-    for folder in (root, *(root / lang for lang in LOCALES)):
-        (folder / 'parameter-atlas.html').unlink(missing_ok=True)
-    subprocess.run(['Rscript', '--vanilla', 'tools/finalize-website.R',
-                    f'--site={root}', '--refresh-existing'], cwd=ROOT, check=True)
-    for page in pages['en']:
-        name = page['slug'] + '.html'
-        write(root / name, redirect('../en/' + name))
-    migrations = read(ROOT/'website/page-migrations.json')
-    for path, mapping in migrations.items():
-        if not path.startswith('reference/'):
-            continue
-        # A fresh standalone reference may not yet contain the handbook pages.
-        for lang in LOCALES:
-            destination = mapping['']
-            if not (root / lang / destination.split('#')[0]).is_file():
-                destination = 'reference/index.html'
-            write_reference_redirect(root, root/lang/path, destination, (lang,))
-        write(root/path, redirect('../en/'+path))
-    if not (root / 'index.html').exists():
-        write(root / 'index.html', redirect('en/reference/index.html'))
-    print(f'Built {len(pages["en"]) - 1} API entries in each language at {root}')
+    # Build and render before replacing any files in the user's local preview.
+    with TemporaryDirectory(prefix='ggchord-api-update-') as temporary:
+        stage = Path(temporary)
+        subprocess.run(['Rscript', '--vanilla', 'tools/website/parameter-directory.R', str(ROOT),
+                        str(stage/'parameter-directory.json')], cwd=ROOT, check=True)
+        pages, searches = prepare(stage, pandoc)
+        render_articles(stage, pages, navigation_site=root)
+        manifest = read(stage/'api-reference-manifest.json')
+        write_family_redirects(stage, manifest['families'])
+        for lang, search in searches.items():
+            search_file = root/lang/'search.json'
+            previous = read(search_file) if search_file.exists() else []
+            retained = [row for row in previous if not row['url'].startswith('reference/')]
+            write_json(stage/lang/'search.json', retained + search)
+            if not (root/lang/'index.html').exists():
+                write(stage/lang/'index.html', redirect('reference/index.html'))
+        # Keep unlocalized entry points, including their original fragments.
+        routes_file = root/'legacy-routes.json'
+        routes = read(routes_file) if routes_file.is_file() else {}
+        for topic in ['index', *manifest['topics']]:
+            name = f'reference/{topic}.html'
+            routes[name] = 'en/' + name
+            write(stage/name, redirect('../en/' + name))
+        for name, mapping in read(ROOT/'website/page-migrations.json').items():
+            if not name.startswith('reference/'):
+                continue
+            for languages in [('en',), ('zh',), LOCALES]:
+                prefix = languages[0] if len(languages) == 1 else ''
+                destination = mapping['']
+                if not (root/languages[0]/destination.split('#')[0]).is_file():
+                    destination = 'reference/index.html'
+                write_reference_redirect(stage, stage/prefix/name, destination, languages)
+        write_json(stage/'legacy-routes.json', routes)
+        if not (root/'index.html').exists():
+            write(stage/'index.html', redirect('en/reference/index.html'))
+        for name in ('site.css', 'site.js', 'favicon.png', 'logo.webp'):
+            if not (root/'assets'/name).exists():
+                shutil.copy2(ASSETS/name, stage/'assets'/name)
+        for source in stage.rglob('*'):
+            if source.is_file():
+                dest = root/source.relative_to(stage)
+                if dest.is_file() and dest.read_bytes() == source.read_bytes():
+                    continue
+                dest.parent.mkdir(parents=True, exist_ok=True)
+                shutil.copy2(source, dest)
+        generated = stage/'assets/reference-examples'
+        for image in (root/'assets/reference-examples').glob('*-[0-9][0-9].png'):
+            if not (generated/image.name).exists():
+                image.unlink()
+    print(f'Built {len(manifest["topics"])} API entries in {len(manifest["families"])} families per language at {root}')
 
 
 def redirect(destination):
-    return (f'<!doctype html><meta charset="utf-8"><meta http-equiv="refresh" '
-            f'content="0; url={destination}"><title>ggchord API reference</title>'
-            f'<a href="{destination}">API reference</a>'
-            '<script>if (location.hash) location.replace(document.querySelector("a").href + location.hash)</script>\n')
+    href = html.escape(destination, quote=True)
+    return (f'<!doctype html><html lang="en"><head><meta charset="utf-8"><title>ggchord API reference</title>'
+            f'<script>location.replace({json.dumps(destination)} + location.hash)</script>'
+            f'<noscript><meta http-equiv="refresh" content="0;url={href}"></noscript></head>'
+            f'<body><a href="{href}">API reference</a></body></html>\n')
 
 
 def main():

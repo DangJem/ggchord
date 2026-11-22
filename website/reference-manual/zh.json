@@ -1,6 +1,6 @@
 {
-  "source_sha256": "3db31a5a639d1227bb4787cbb37327497c743396aad8c87da45086ffa41754a7",
-  "description": "按任务查找 ggchord 函数，涵盖数据准备、绘图、图形组合和布局检查。每个函数页面都说明参数和返回值，并提供可运行的 R 示例及相应的图形或控制台输出。",
+  "source_sha256": "a4138943d031198f1813cecb6bfcee15f75c4953a0eed25234491686f01ef7dd",
+  "description": "按任务查找函数，进入同一函数族的页面后，可以对照各接口的调用形式、参数和输出。每个接口都附有可运行的 R 示例及对应的图形或控制台结果。",
   "groups": {
     "construct": {
       "title": "构造器与图层身份",
@@ -90,7 +90,7 @@
         }
       ],
       "value": "一个可与 Geom、Stat、Layout、Coord、Scale、Facet、Theme 等通过 + 组合的 ggchord 图对象。创建空对象本身不触发绘图或统计。",
-      "details": "1. 图级非空 data 是唯一权威参考。geom_seq 的局部表只能复用它或选择一致子集，不能改变长度、单位、来源身份和拓扑。\n\n2. 无图级 data 时，先收集所有 geom_seq 的显式规范表。仅一份完整参考或规范后完全等价的重复声明可用；不同集合不自动并集。先解析参考后渲染，因此声明不依赖图层添加顺序。\n\n3. geom_seq 提供参考时，不把该表回填为 plot$data。普通观察层 data=NULL 仍只继承图级 data；没有可用数据或必需字段时明确报错。\n\n4. 全局 mapping 不自动连接参考元数据。不同观察表缺少所继承的映射列时，应在该层覆盖 mapping 或设置 inherit.aes=FALSE。\n\n5. 多次 geom_seq() 是复用参考的多次绘制，不是多次建坐标。默认显示排序稳定地按 accver，指定排列使用 layout_sequences(order=...)。\n\n6. 默认 Coord 为 Chord；正式示例建议显式写 coord_*。序列实体身份、源单位和完整范围不因换 Coord 改变。",
+      "details": "1. 图级非空 data 是唯一权威参考。geom_seq 的局部表只能复用它或选择一致子集，不能改变长度、单位、来源身份和拓扑。\n\n2. 无图级 data 时，先收集所有 geom_seq 的显式规范表。仅一份完整参考或规范后完全等价的重复声明可用；不同集合不自动并集。先解析参考后渲染，因此声明不依赖图层添加顺序。\n\n3. geom_seq 提供参考时，不把该表回填为 plot$data。普通观察层 data=NULL 仍只继承图级 data；没有可用数据或必需字段时明确报错。\n\n4. 全局 mapping 不自动连接参考元数据。不同观察表缺少所继承的映射列时，应在该层覆盖 mapping 或设置 inherit.aes=FALSE。\n\n5. 多次 geom_seq() 是复用参考的多次绘制，不是多次建坐标。默认显示排序稳定地按 accver，指定排列使用 layout_sequences(order=...)。\n\n6. 默认 Coord 为 Chord；正式示例建议显式写 coord_*。序列实体身份、源单位和完整范围不因换 Coord 改变。\n\n多个图层映射同一视觉通道时，默认各自训练标度。在需要共享的图层上写 `id = NULL` 或 `id = NA` 即可共用默认标度，也可显式添加普通标度。给指定图层配置标度时用 `scale_for()`。",
       "errors": "- 最终构建时没有完整参考。\n\n- 不同声明的参考集合、长度、单位、拓扑或登记元数据不一致。\n\n- 将 genes/links/多表容器直接传作全局参考而不满足规范。",
       "roles": [],
       "example_setup": ""
@@ -136,7 +136,7 @@
         },
         {
           "format": "单个非空字符串",
-          "description": "当前图或组合根级命名空间内唯一。已有不同 ID 时明确报错，避免无意破坏其他引用。"
+          "description": "图内唯一的单个非空名称。"
         }
       ],
       "value": "保留原层数据、映射、Stat、Geom 与 Position 的带身份图层。",
@@ -245,7 +245,7 @@
         }
       ],
       "value": "线性序列 Coord；仅改变显示投影，保留源 ID、端点、方向和统计结果。",
-      "details": "1. 这是新 API 目标合同。每个分面单独建立投影，但共享预先解析的唯一参考序列；Coord 不读取另一张候选注释表，也不推断完整长度。\n\n2. 一个图对象最终只有一个 Coord。添加新的 Coord 按 ggplot2 的替换规则替换旧投影并给出提示；不会叠加两个坐标系统。\n\n3. 本 API 中所有物理 mm 尺寸以最终设备为准。fit 和画布比例只调整参考路径/视口，不静默缩放已声明的厚度、文字尺寸或轨带间距。\n\n4. axis=\"x\" 时参考顺序默认从上到下；axis=\"y\" 时从左到右。显示方向来自 Layout；Coord 不基于 links 自动推断 orientation。\n\n5. 支持完整参考或明确的显示窗口行。窗口只控制可见几何；重叠窗口或重复显示不能重复参与 coverage 统计。\n\n6. 支持 feature、site、track、label 以及 point/interval links。某个形状需要圆弧但本身没有线性定义时，该形状须报错；不能借此静默换成另一形状。\n\n7. 固定分面使用同一个参考合同。仅轨道值域可独立设为 panel；原生 free 画布轴不支持。",
+      "details": "1. 这是新 API 目标合同。每个分面单独建立投影，但共享预先解析的唯一参考序列；Coord 不读取另一张候选注释表，也不推断完整长度。\n\n2. 一个图对象最终只有一个 Coord。添加新的 Coord 按 ggplot2 的替换规则替换旧投影并给出提示；不会叠加两个坐标系统。\n\n3. 本 API 中所有物理 mm 尺寸以最终设备为准。fit 和画布比例只调整参考路径/视口，不静默缩放已声明的厚度、文字尺寸或轨带间距。\n\n4. axis=\"x\" 时参考顺序默认从上到下；axis=\"y\" 时从左到右。显示方向来自 Layout；Coord 不基于 links 自动推断 orientation。\n\n5. 支持完整参考或明确的显示窗口行。窗口只控制可见几何；重叠窗口或重复显示不能重复参与 coverage 统计。\n\n6. 支持 feature、site、track、label 以及 point/interval links。某个形状需要圆弧但本身没有线性定义时，该形状须报错；不能借此静默换成另一形状。\n\n7. 固定分面使用同一个参考合同。仅轨道值域可独立设为 panel；原生 free 画布轴不支持。\n\n自动间距会在路径两侧为特征、标签及引线留出空间。需要固定距离时可通过 `layout_sequences()` 指定。",
       "errors": "- axis 非 x/y，ratio 非正有限数。\n\n- 同时提供不适用于线性参考的 radius/angular_gap/inner_radius。\n\n- 缺少参考或使用不兼容的 free 分面。",
       "roles": [],
       "example_setup": ""
@@ -315,7 +315,7 @@
         }
       ],
       "value": "镜像参考关系 Coord；显示实例保留源参考 ID 和 q/s 侧身份，不改变源表中的 query/subject。",
-      "details": "1. 这是新 API 目标合同。每个分面单独建立投影，但共享预先解析的唯一参考序列；Coord 不读取另一张候选注释表，也不推断完整长度。\n\n2. 一个图对象最终只有一个 Coord。添加新的 Coord 按 ggplot2 的替换规则替换旧投影并给出提示；不会叠加两个坐标系统。\n\n3. 本 API 中所有物理 mm 尺寸以最终设备为准。fit 和画布比例只调整参考路径/视口，不静默缩放已声明的厚度、文字尺寸或轨带间距。\n\n4. 两侧共享同一套完整参考定义；Layout 对每个来源生成带侧身份的显示实例。显式选择两侧不同参考集合属于 Layout 显示选择，不改变权威参考。\n\n5. 列间物理距离使用 layout_sequences(column_gap=...)，两侧参考排序使用 order。源长度比例及显示反向遵守同一 Layout 合同。\n\n6. source 相同的自连接也是合法关系；是否保留由显式过滤数据决定。本 Coord 没有 self_links 开关。互为 q/s 的两条输入记录仍是两条独立证据。\n\n7. axis=\"y\" 时所有垂直参考的局部正侧为画布右侧；想在两列都向外放置，可按显示实例显式配置正负 offset，不能由 Coord 偷换 Position 数值含义。固定分面可用，原生 free 画布轴不可用。",
+      "details": "1. 这是新 API 目标合同。每个分面单独建立投影，但共享预先解析的唯一参考序列；Coord 不读取另一张候选注释表，也不推断完整长度。\n\n2. 一个图对象最终只有一个 Coord。添加新的 Coord 按 ggplot2 的替换规则替换旧投影并给出提示；不会叠加两个坐标系统。\n\n3. 本 API 中所有物理 mm 尺寸以最终设备为准。fit 和画布比例只调整参考路径/视口，不静默缩放已声明的厚度、文字尺寸或轨带间距。\n\n4. 两侧共享同一套完整参考定义；Layout 对每个来源生成带侧身份的显示实例。显式选择两侧不同参考集合属于 Layout 显示选择，不改变权威参考。\n\n5. 列间物理距离使用 layout_sequences(column_gap=...)，两侧参考排序使用 order。源长度比例及显示反向遵守同一 Layout 合同。\n\n6. source 相同的自连接也是合法关系；是否保留由显式过滤数据决定。本 Coord 没有 self_links 开关。互为 q/s 的两条输入记录仍是两条独立证据。\n\n7. axis=\"y\" 时所有垂直参考的局部正侧为画布右侧；想在两列都向外放置，可按显示实例显式配置正负 offset，不能由 Coord 偷换 Position 数值含义。固定分面可用，原生 free 画布轴不可用。\n\n自动间距会在路径两侧为特征、标签及引线留出空间。需要固定距离时可通过 `layout_sequences()` 指定。",
       "errors": "- 不明来源或在重复实例间无法唯一确定连接端点。\n\n- 将输入权重自动解释为守恒流量。\n\n- 使用不适用的圆形布局参数。",
       "roles": [],
       "example_setup": ""
@@ -510,7 +510,7 @@
         },
         {
           "format": "非负 mm / 绝对 grid unit / 灵活配置 / NULL",
-          "description": "行间距以 mm 计。共线布局省略时根据行数、图层与画布空间分配；桑基布局默认为 6 mm。"
+          "description": "参考行之间的距离，以毫米计。共线图和桑基图在省略时根据面板尺寸、路径两侧特征、标签和引线的占用自动分配空间。"
         },
         {
           "format": "非负 mm / 绝对 grid unit / NULL",
@@ -518,7 +518,7 @@
         },
         {
           "format": "正 mm / 绝对 grid unit / NULL",
-          "description": "Sankey 两列/两行之间的参考路径距离；NULL 为 20 mm。不能用于替代其他 Coord 的行距。"
+          "description": "桑基图两列之间的物理距离，以毫米计；横向布局对应两行。省略时综合考虑路径之间及外侧所需的空间，也可显式指定距离。"
         },
         {
           "format": "正比例 / 灵活配置 / NULL",
@@ -546,7 +546,7 @@
         }
       ],
       "value": "可用 + 添加的参考布局对象。它保存声明和验证合同；参考解析及设备相关的实际路径在构建时计算。",
-      "details": "1. 所有显式参数必须被当前 Coord 支持。NULL 才采用该模式的默认；显式不适用的参数报错，不能忽略。布局不会定义或覆盖参考 length/sequence_unit。\n\n2. 共同 order/orientation/length_mode 可用于 Chord、Collinear、Radial synteny、Sankey；Circular 每面板仅一参考。Dotplot 使用自己的 layout_dotplot()。\n\n3. 同一 source 出现多次用 windows 创建显示实例。多环需要 distinct instance_id 和 ring_id，半径配置按 instance 指定；不能把重复 accver 当成两条新的生物序列。\n\n4. windows 只裁剪显示几何并保留源位置。Stat 在明确的源输入上先计算；多个窗口显示同一结果不增加计数、不改变 coverage 分母。需要窗口内重新统计时传入 Stat windows 或显式 focus 数据。\n\n5. 一个图最终只有一个参考布局对象。再次添加完整 Layout 替换旧声明并提示；它不是逐次积累差分配置的隐藏状态。\n\n6. row_gap 的净空按参考路径及已声明的物理轨带容器计算；标签是否纳入整体 fit 由Coord的fit控制，不能通过标签变化改feature厚度。",
+      "details": "1. 所有显式参数必须被当前 Coord 支持。NULL 才采用该模式的默认；显式不适用的参数报错，不能忽略。布局不会定义或覆盖参考 length/sequence_unit。\n\n2. 共同 order/orientation/length_mode 可用于 Chord、Collinear、Radial synteny、Sankey；Circular 每面板仅一参考。Dotplot 使用自己的 layout_dotplot()。\n\n3. 同一 source 出现多次用 windows 创建显示实例。多环需要 distinct instance_id 和 ring_id，半径配置按 instance 指定；不能把重复 accver 当成两条新的生物序列。\n\n4. windows 只裁剪显示几何并保留源位置。Stat 在明确的源输入上先计算；多个窗口显示同一结果不增加计数、不改变 coverage 分母。需要窗口内重新统计时传入 Stat windows 或显式 focus 数据。\n\n5. 一个图最终只有一个参考布局对象。再次添加完整 Layout 替换旧声明并提示；它不是逐次积累差分配置的隐藏状态。\n\n6. 省略物理间距时，共线图与桑基图根据面板空间、特征、文字和引线安排路径，并在序列端点外保留空间。",
       "errors": "- 参考/实例ID不明、重复或order不完整。\n\n- 窗口超出完整参考、orientation不是±1、间距单位非法。\n\n- 角空白覆盖整周、inner_radius不在[0,1)、不兼容的布局项。\n\n- equal长度模式下请求未绑定实例的统一长度参照条。",
       "roles": [],
       "example_setup": ""
@@ -685,8 +685,8 @@
           "description": "TRUE 合并图级 aes；FALSE 仅使用局部 aes 和该 Geom 公开的规范角色默认。即使显式给 data，默认也仍然继承映射；缺列不自动从参考表连接补齐。"
         },
         {
-          "format": "character(1) / NULL",
-          "description": "图内唯一图层 ID；NULL 自动分配图对象内稳定身份。被 anchor_layer、scale_for 或导出引用的层应显式命名。它不是 feature_id、site_id 或序列 ID。"
+          "format": "auto_id() / 单个字符串 / NULL / NA",
+          "description": "默认的 `auto_id()` 在图内分配 ID 并按层训练视觉标度。给出名称可显式引用此层；写 `NULL` 或 `NA` 可与同样选择共享的图层共用默认标度。"
         }
       ],
       "value": "一个可添加到 ggchord 图的参考几何层。若它是唯一参考声明入口，同时提供待解析的完整参考数据；不修改传入表。",
@@ -739,8 +739,8 @@
           "description": "TRUE 合并图级 aes；FALSE 仅使用局部 aes 和该 Geom 公开的规范角色默认。即使显式给 data，默认也仍然继承映射；缺列不自动从参考表连接补齐。"
         },
         {
-          "format": "character(1) / NULL",
-          "description": "图内唯一图层 ID；NULL 自动分配图对象内稳定身份。被 anchor_layer、scale_for 或导出引用的层应显式命名。它不是 feature_id、site_id 或序列 ID。"
+          "format": "auto_id() / 单个字符串 / NULL / NA",
+          "description": "默认的 `auto_id()` 在图内分配 ID 并按层训练视觉标度。给出名称可显式引用此层；写 `NULL` 或 `NA` 可与同样选择共享的图层共用默认标度。"
         }
       ],
       "value": "一个参考文字层；不生成、推断或修改参考数据。",
@@ -789,8 +789,8 @@
           "description": "TRUE 合并图级 aes；FALSE 仅使用局部 aes 和该 Geom 公开的规范角色默认。即使显式给 data，默认也仍然继承映射；缺列不自动从参考表连接补齐。"
         },
         {
-          "format": "character(1) / NULL",
-          "description": "图内唯一图层 ID；NULL 自动分配图对象内稳定身份。被 anchor_layer、scale_for 或导出引用的层应显式命名。它不是 feature_id、site_id 或序列 ID。"
+          "format": "auto_id() / 单个字符串 / NULL / NA",
+          "description": "默认的 `auto_id()` 在图内分配 ID 并按层训练视觉标度。给出名称可显式引用此层；写 `NULL` 或 `NA` 可与同样选择共享的图层共用默认标度。"
         }
       ],
       "value": "一个参考文字层；不生成、推断或修改参考数据。",
@@ -843,8 +843,8 @@
           "description": "TRUE 合并图级 aes；FALSE 仅使用局部 aes 和该 Geom 公开的规范角色默认。即使显式给 data，默认也仍然继承映射；缺列不自动从参考表连接补齐。"
         },
         {
-          "format": "character(1) / NULL",
-          "description": "图内唯一图层 ID；NULL 自动分配图对象内稳定身份。被 anchor_layer、scale_for 或导出引用的层应显式命名。它不是 feature_id、site_id 或序列 ID。"
+          "format": "auto_id() / 单个字符串 / NULL / NA",
+          "description": "默认的 `auto_id()` 在图内分配 ID 并按层训练视觉标度。给出名称可显式引用此层；写 `NULL` 或 `NA` 可与同样选择共享的图层共用默认标度。"
         }
       ],
       "value": "一个参考断点装饰层；没有断点时返回可正常绘制的空层。",
@@ -900,8 +900,8 @@
           "description": "TRUE 合并图级 aes；FALSE 仅使用局部 aes 和该 Geom 公开的规范角色默认。即使显式给 data，默认也仍然继承映射；缺列不自动从参考表连接补齐。"
         },
         {
-          "format": "character(1) / NULL",
-          "description": "图内唯一图层 ID；NULL 自动分配图对象内稳定身份。被 anchor_layer、scale_for 或导出引用的层应显式命名。它不是 feature_id、site_id 或序列 ID。"
+          "format": "auto_id() / 单个字符串 / NULL / NA",
+          "description": "默认的 `auto_id()` 在图内分配 ID 并按层训练视觉标度。给出名称可显式引用此层；写 `NULL` 或 `NA` 可与同样选择共享的图层共用默认标度。"
         }
       ],
       "value": "一个 feature 图层；一条输入实体可以展开为多个几何片段，但保持实体 ID 与来源区间，不修改输入表。",
@@ -962,8 +962,8 @@
           "description": "TRUE 合并图级 aes；FALSE 仅使用局部 aes 和该 Geom 公开的规范角色默认。即使显式给 data，默认也仍然继承映射；缺列不自动从参考表连接补齐。"
         },
         {
-          "format": "character(1) / NULL",
-          "description": "图内唯一图层 ID；NULL 自动分配图对象内稳定身份。被 anchor_layer、scale_for 或导出引用的层应显式命名。它不是 feature_id、site_id 或序列 ID。"
+          "format": "auto_id() / 单个字符串 / NULL / NA",
+          "description": "默认的 `auto_id()` 在图内分配 ID 并按层训练视觉标度。给出名称可显式引用此层；写 `NULL` 或 `NA` 可与同样选择共享的图层共用默认标度。"
         }
       ],
       "value": "一个 feature 图层；一条输入实体可以展开为多个几何片段，但保持实体 ID 与来源区间，不修改输入表。",
@@ -1024,8 +1024,8 @@
           "description": "TRUE 合并图级 aes；FALSE 仅使用局部 aes 和该 Geom 公开的规范角色默认。即使显式给 data，默认也仍然继承映射；缺列不自动从参考表连接补齐。"
         },
         {
-          "format": "character(1) / NULL",
-          "description": "图内唯一图层 ID；NULL 自动分配图对象内稳定身份。被 anchor_layer、scale_for 或导出引用的层应显式命名。它不是 feature_id、site_id 或序列 ID。"
+          "format": "auto_id() / 单个字符串 / NULL / NA",
+          "description": "默认的 `auto_id()` 在图内分配 ID 并按层训练视觉标度。给出名称可显式引用此层；写 `NULL` 或 `NA` 可与同样选择共享的图层共用默认标度。"
         }
       ],
       "value": "一个 feature 图层；一条输入实体可以展开为多个几何片段，但保持实体 ID 与来源区间，不修改输入表。",
@@ -1090,8 +1090,8 @@
           "description": "TRUE 合并图级 aes；FALSE 仅使用局部 aes 和该 Geom 公开的规范角色默认。即使显式给 data，默认也仍然继承映射；缺列不自动从参考表连接补齐。"
         },
         {
-          "format": "character(1) / NULL",
-          "description": "图内唯一图层 ID；NULL 自动分配图对象内稳定身份。被 anchor_layer、scale_for 或导出引用的层应显式命名。它不是 feature_id、site_id 或序列 ID。"
+          "format": "auto_id() / 单个字符串 / NULL / NA",
+          "description": "默认的 `auto_id()` 在图内分配 ID 并按层训练视觉标度。给出名称可显式引用此层；写 `NULL` 或 `NA` 可与同样选择共享的图层共用默认标度。"
         }
       ],
       "value": "一个 feature 图层；一条输入实体可以展开为多个几何片段，但保持实体 ID 与来源区间，不修改输入表。",
@@ -1117,15 +1117,15 @@
         },
         {
           "format": "data.frame / function / NULL",
-          "description": "独立标签遵守普通观察数据规则。anchor_layer 非空时，NULL 使用目标层经过角色映射与 Stat 后、几何展开前的实体表；函数式 data 也接收该表。显式标签表按 feature_id 与必要的参考/分面/显示实例匹配，不按行号或 R 对象身份匹配。"
+          "description": "自动绑定时读取目标层经过 Stat 后的实体表。单独提供表或回调函数时默认绘制独立标签。如需只标注一部分并跟随目标位置，可用 `anchor_layer` 指定目标名称，并提供匹配的 `feature_id`。显式绑定时回调函数接收目标实体表。"
         },
         {
           "format": "Stat / character",
           "description": "默认 identity。绑定目标层时只能 identity；独立标签可选输出合法特征标签角色的 Stat。"
         },
         {
-          "format": "character(1) / NULL",
-          "description": "被标注的 feature 家族 layer id；NULL 独立定位。绑定目标与当前标签须位于相同图/兼容面板，不跨 Fusion 子图隐式寻址。"
+          "format": "auto_anchor() / 单个字符串 / NULL",
+          "description": "默认跟随唯一兼容的区间特征层。如有多个候选，请写目标层的 ID；写 `NULL` 可独立定位。提供标签数据、非恒等 Stat 或显式 Position 时，默认独立定位。"
         },
         {
           "format": "character(1)",
@@ -1156,8 +1156,8 @@
           "description": "TRUE 合并图级 aes；FALSE 仅使用局部 aes 和该 Geom 公开的规范角色默认。即使显式给 data，默认也仍然继承映射；缺列不自动从参考表连接补齐。"
         },
         {
-          "format": "character(1) / NULL",
-          "description": "图内唯一图层 ID；NULL 自动分配图对象内稳定身份。被 anchor_layer、scale_for 或导出引用的层应显式命名。它不是 feature_id、site_id 或序列 ID。"
+          "format": "auto_id() / 单个字符串 / NULL / NA",
+          "description": "默认的 `auto_id()` 在图内分配 ID 并按层训练视觉标度。给出名称可显式引用此层；写 `NULL` 或 `NA` 可与同样选择共享的图层共用默认标度。"
         }
       ],
       "value": "一个文字与可选引线的标签层；保留每条文字与目标实体的关联及排版状态，不改变目标图层。",
@@ -1182,15 +1182,15 @@
         },
         {
           "format": "data.frame / function / NULL",
-          "description": "独立标签遵守普通观察数据规则。anchor_layer 非空时，NULL 使用目标层经过角色映射与 Stat 后、几何展开前的实体表；函数式 data 也接收该表。显式标签表按 feature_id 与必要的参考/分面/显示实例匹配，不按行号或 R 对象身份匹配。"
+          "description": "自动绑定时读取目标层经过 Stat 后的实体表。单独提供表或回调函数时默认绘制独立标签。如需只标注一部分并跟随目标位置，可用 `anchor_layer` 指定目标名称，并提供匹配的 `feature_id`。显式绑定时回调函数接收目标实体表。"
         },
         {
           "format": "Stat / character",
           "description": "默认 identity。绑定目标层时只能 identity；独立标签可选输出合法特征标签角色的 Stat。"
         },
         {
-          "format": "character(1) / NULL",
-          "description": "被标注的 feature 家族 layer id；NULL 独立定位。绑定目标与当前标签须位于相同图/兼容面板，不跨 Fusion 子图隐式寻址。"
+          "format": "auto_anchor() / 单个字符串 / NULL",
+          "description": "默认跟随唯一兼容的区间特征层。如有多个候选，请写目标层的 ID；写 `NULL` 可独立定位。提供标签数据、非恒等 Stat 或显式 Position 时，默认独立定位。"
         },
         {
           "format": "character(1)",
@@ -1221,8 +1221,8 @@
           "description": "TRUE 合并图级 aes；FALSE 仅使用局部 aes 和该 Geom 公开的规范角色默认。即使显式给 data，默认也仍然继承映射；缺列不自动从参考表连接补齐。"
         },
         {
-          "format": "character(1) / NULL",
-          "description": "图内唯一图层 ID；NULL 自动分配图对象内稳定身份。被 anchor_layer、scale_for 或导出引用的层应显式命名。它不是 feature_id、site_id 或序列 ID。"
+          "format": "auto_id() / 单个字符串 / NULL / NA",
+          "description": "默认的 `auto_id()` 在图内分配 ID 并按层训练视觉标度。给出名称可显式引用此层；写 `NULL` 或 `NA` 可与同样选择共享的图层共用默认标度。"
         }
       ],
       "value": "一个文字与可选引线的标签层；保留每条文字与目标实体的关联及排版状态，不改变目标图层。",
@@ -1247,15 +1247,15 @@
         },
         {
           "format": "data.frame / function / NULL",
-          "description": "独立标签遵守普通观察数据规则。anchor_layer 非空时，NULL 使用目标层经过角色映射与 Stat 后、几何展开前的实体表；函数式 data 也接收该表。显式标签表按 feature_id 与必要的参考/分面/显示实例匹配，不按行号或 R 对象身份匹配。"
+          "description": "自动绑定时读取目标层经过 Stat 后的实体表。单独提供表或回调函数时默认绘制独立标签。如需只标注一部分并跟随目标位置，可用 `anchor_layer` 指定目标名称，并提供匹配的 `feature_id`。显式绑定时回调函数接收目标实体表。"
         },
         {
           "format": "Stat / character",
           "description": "默认 identity。绑定目标层时只能 identity；独立标签可选输出合法特征标签角色的 Stat。"
         },
         {
-          "format": "character(1) / NULL",
-          "description": "被标注的 feature 家族 layer id；NULL 独立定位。绑定目标与当前标签须位于相同图/兼容面板，不跨 Fusion 子图隐式寻址。"
+          "format": "auto_anchor() / 单个字符串 / NULL",
+          "description": "默认跟随唯一兼容的基因层。如有多个候选，请写目标层的 ID；写 `NULL` 可独立定位。提供标签数据、非恒等 Stat 或显式 Position 时，默认独立定位。"
         },
         {
           "format": "character(1)",
@@ -1286,8 +1286,8 @@
           "description": "TRUE 合并图级 aes；FALSE 仅使用局部 aes 和该 Geom 公开的规范角色默认。即使显式给 data，默认也仍然继承映射；缺列不自动从参考表连接补齐。"
         },
         {
-          "format": "character(1) / NULL",
-          "description": "图内唯一图层 ID；NULL 自动分配图对象内稳定身份。被 anchor_layer、scale_for 或导出引用的层应显式命名。它不是 feature_id、site_id 或序列 ID。"
+          "format": "auto_id() / 单个字符串 / NULL / NA",
+          "description": "默认的 `auto_id()` 在图内分配 ID 并按层训练视觉标度。给出名称可显式引用此层；写 `NULL` 或 `NA` 可与同样选择共享的图层共用默认标度。"
         }
       ],
       "value": "一个文字与可选引线的标签层；保留每条文字与目标实体的关联及排版状态，不改变目标图层。",
@@ -1312,15 +1312,15 @@
         },
         {
           "format": "data.frame / function / NULL",
-          "description": "独立标签遵守普通观察数据规则。anchor_layer 非空时，NULL 使用目标层经过角色映射与 Stat 后、几何展开前的实体表；函数式 data 也接收该表。显式标签表按 feature_id 与必要的参考/分面/显示实例匹配，不按行号或 R 对象身份匹配。"
+          "description": "自动绑定时读取目标层经过 Stat 后的实体表。单独提供表或回调函数时默认绘制独立标签。如需只标注一部分并跟随目标位置，可用 `anchor_layer` 指定目标名称，并提供匹配的 `feature_id`。显式绑定时回调函数接收目标实体表。"
         },
         {
           "format": "Stat / character",
           "description": "默认 identity。绑定目标层时只能 identity；独立标签可选输出合法特征标签角色的 Stat。"
         },
         {
-          "format": "character(1) / NULL",
-          "description": "被标注的 feature 家族 layer id；NULL 独立定位。绑定目标与当前标签须位于相同图/兼容面板，不跨 Fusion 子图隐式寻址。"
+          "format": "auto_anchor() / 单个字符串 / NULL",
+          "description": "默认跟随唯一兼容的基因层。如有多个候选，请写目标层的 ID；写 `NULL` 可独立定位。提供标签数据、非恒等 Stat 或显式 Position 时，默认独立定位。"
         },
         {
           "format": "character(1)",
@@ -1351,8 +1351,8 @@
           "description": "TRUE 合并图级 aes；FALSE 仅使用局部 aes 和该 Geom 公开的规范角色默认。即使显式给 data，默认也仍然继承映射；缺列不自动从参考表连接补齐。"
         },
         {
-          "format": "character(1) / NULL",
-          "description": "图内唯一图层 ID；NULL 自动分配图对象内稳定身份。被 anchor_layer、scale_for 或导出引用的层应显式命名。它不是 feature_id、site_id 或序列 ID。"
+          "format": "auto_id() / 单个字符串 / NULL / NA",
+          "description": "默认的 `auto_id()` 在图内分配 ID 并按层训练视觉标度。给出名称可显式引用此层；写 `NULL` 或 `NA` 可与同样选择共享的图层共用默认标度。"
         }
       ],
       "value": "一个文字与可选引线的标签层；保留每条文字与目标实体的关联及排版状态，不改变目标图层。",
@@ -1377,15 +1377,15 @@
         },
         {
           "format": "data.frame / function / NULL",
-          "description": "独立标签遵守普通观察数据规则。anchor_layer 非空时，NULL 使用目标层经过角色映射与 Stat 后、几何展开前的实体表；函数式 data 也接收该表。显式标签表按 feature_id 与必要的参考/分面/显示实例匹配，不按行号或 R 对象身份匹配。"
+          "description": "自动绑定时读取目标层经过 Stat 后的实体表。单独提供表或回调函数时默认绘制独立标签。如需只标注一部分并跟随目标位置，可用 `anchor_layer` 指定目标名称，并提供匹配的 `feature_id`。显式绑定时回调函数接收目标实体表。"
         },
         {
           "format": "Stat / character",
           "description": "默认 identity。绑定目标层时只能 identity；独立标签可选输出合法特征标签角色的 Stat。"
         },
         {
-          "format": "character(1) / NULL",
-          "description": "被标注的 feature 家族 layer id；NULL 独立定位。绑定目标与当前标签须位于相同图/兼容面板，不跨 Fusion 子图隐式寻址。"
+          "format": "auto_anchor() / 单个字符串 / NULL",
+          "description": "默认跟随唯一兼容的引物层。如有多个候选，请写目标层的 ID；写 `NULL` 可独立定位。提供标签数据、非恒等 Stat 或显式 Position 时，默认独立定位。"
         },
         {
           "format": "character(1)",
@@ -1416,8 +1416,8 @@
           "description": "TRUE 合并图级 aes；FALSE 仅使用局部 aes 和该 Geom 公开的规范角色默认。即使显式给 data，默认也仍然继承映射；缺列不自动从参考表连接补齐。"
         },
         {
-          "format": "character(1) / NULL",
-          "description": "图内唯一图层 ID；NULL 自动分配图对象内稳定身份。被 anchor_layer、scale_for 或导出引用的层应显式命名。它不是 feature_id、site_id 或序列 ID。"
+          "format": "auto_id() / 单个字符串 / NULL / NA",
+          "description": "默认的 `auto_id()` 在图内分配 ID 并按层训练视觉标度。给出名称可显式引用此层；写 `NULL` 或 `NA` 可与同样选择共享的图层共用默认标度。"
         }
       ],
       "value": "一个文字与可选引线的标签层；保留每条文字与目标实体的关联及排版状态，不改变目标图层。",
@@ -1442,15 +1442,15 @@
         },
         {
           "format": "data.frame / function / NULL",
-          "description": "独立标签遵守普通观察数据规则。anchor_layer 非空时，NULL 使用目标层经过角色映射与 Stat 后、几何展开前的实体表；函数式 data 也接收该表。显式标签表按 feature_id 与必要的参考/分面/显示实例匹配，不按行号或 R 对象身份匹配。"
+          "description": "自动绑定时读取目标层经过 Stat 后的实体表。单独提供表或回调函数时默认绘制独立标签。如需只标注一部分并跟随目标位置，可用 `anchor_layer` 指定目标名称，并提供匹配的 `feature_id`。显式绑定时回调函数接收目标实体表。"
         },
         {
           "format": "Stat / character",
           "description": "默认 identity。绑定目标层时只能 identity；独立标签可选输出合法特征标签角色的 Stat。"
         },
         {
-          "format": "character(1) / NULL",
-          "description": "被标注的 feature 家族 layer id；NULL 独立定位。绑定目标与当前标签须位于相同图/兼容面板，不跨 Fusion 子图隐式寻址。"
+          "format": "auto_anchor() / 单个字符串 / NULL",
+          "description": "默认跟随唯一兼容的引物层。如有多个候选，请写目标层的 ID；写 `NULL` 可独立定位。提供标签数据、非恒等 Stat 或显式 Position 时，默认独立定位。"
         },
         {
           "format": "character(1)",
@@ -1481,8 +1481,8 @@
           "description": "TRUE 合并图级 aes；FALSE 仅使用局部 aes 和该 Geom 公开的规范角色默认。即使显式给 data，默认也仍然继承映射；缺列不自动从参考表连接补齐。"
         },
         {
-          "format": "character(1) / NULL",
-          "description": "图内唯一图层 ID；NULL 自动分配图对象内稳定身份。被 anchor_layer、scale_for 或导出引用的层应显式命名。它不是 feature_id、site_id 或序列 ID。"
+          "format": "auto_id() / 单个字符串 / NULL / NA",
+          "description": "默认的 `auto_id()` 在图内分配 ID 并按层训练视觉标度。给出名称可显式引用此层；写 `NULL` 或 `NA` 可与同样选择共享的图层共用默认标度。"
         }
       ],
       "value": "一个文字与可选引线的标签层；保留每条文字与目标实体的关联及排版状态，不改变目标图层。",
@@ -1542,12 +1542,12 @@
           "description": "TRUE 合并图级 aes；FALSE 仅使用局部 aes 和该 Geom 公开的规范角色默认。即使显式给 data，默认也仍然继承映射；缺列不自动从参考表连接补齐。"
         },
         {
-          "format": "character(1) / NULL",
-          "description": "图内唯一图层 ID；NULL 自动分配图对象内稳定身份。被 anchor_layer、scale_for 或导出引用的层应显式命名。它不是 feature_id、site_id 或序列 ID。"
+          "format": "auto_id() / 单个字符串 / NULL / NA",
+          "description": "默认的 `auto_id()` 在图内分配 ID 并按层训练视觉标度。给出名称可显式引用此层；写 `NULL` 或 `NA` 可与同样选择共享的图层共用默认标度。"
         }
       ],
       "value": "一个点位几何层，保留 site_id、pos 与独立切口边界；不修改输入。",
-      "details": "1. 适用于具有序列参考路径的 Chord、Collinear、Radial synteny、Sankey、Circular；Circular 每个分面须只有一个有效参考。Dotplot 的双轴 HSP 使用 geom_alignment_segment。\n\n2. pos 使用 1 基来源点，cut_top/cut_bottom 使用残基间坐标。切口字段与位置点字段有意分开，避免 off-by-one；读入相对切口 offset 时须先经 Reader/Adapter 转为规范绝对边界。\n\n3. 标记、名称与引线是不同层。使用 geom_site_label 或其 repel 快捷式添加名称；不会根据酶出现次数自动加粗。\n\n4. data 来自明确的注释表；图层不会运行 find_restriction_sites、读取 DNA 或推断酶切机制。\n\n5. shape 映射须使用输出 tick/point/cut 的 manual/identity Scale；不能将 ggplot2 默认点符号整数静默解释为位点类型。",
+      "details": "1. 适用于具有序列参考路径的 Chord、Collinear、Radial synteny、Sankey、Circular；Circular 每个分面须只有一个有效参考。Dotplot 的双轴 HSP 使用 geom_alignment_segment。\n\n2. pos 使用 1 基来源点，cut_top/cut_bottom 使用残基间坐标。切口字段与位置点字段有意分开，避免 off-by-one；读入相对切口 offset 时须先经 Reader/Adapter 转为规范绝对边界。\n\n3. 标记、名称与引线是不同层。使用 geom_site_label 或其 repel 快捷式添加名称；不会根据酶出现次数自动加粗。\n\n4. data 来自明确的注释表；图层不会运行 find_restriction_sites、读取 DNA 或推断酶切机制。\n\n5. shape 映射须使用输出 tick/point/cut 的 manual/identity Scale；不能将 ggplot2 默认点符号整数静默解释为位点类型。\n\n各位点图层默认独立训练大小标度。需要跨图层比较符号大小时，可显式添加一个普通大小标度。",
       "errors": "- 未知参考、pos 超界或切口不在 0..length。\n\n- unknown_cut=\"error\" 时没有已知切口；切口字段被错误提供为相对偏移。\n\n- 对 tick/cut 显式提供只适用于封闭 point 的 fill。",
       "roles": [
         "必需参考与 1 基来源点；pos 是明确锚点，不自动等于酶切的残基间边界。",
@@ -1603,8 +1603,8 @@
           "description": "TRUE 合并图级 aes；FALSE 仅使用局部 aes 和该 Geom 公开的规范角色默认。即使显式给 data，默认也仍然继承映射；缺列不自动从参考表连接补齐。"
         },
         {
-          "format": "character(1) / NULL",
-          "description": "图内唯一图层 ID；NULL 自动分配图对象内稳定身份。被 anchor_layer、scale_for 或导出引用的层应显式命名。它不是 feature_id、site_id 或序列 ID。"
+          "format": "auto_id() / 单个字符串 / NULL / NA",
+          "description": "默认的 `auto_id()` 在图内分配 ID 并按层训练视觉标度。给出名称可显式引用此层；写 `NULL` 或 `NA` 可与同样选择共享的图层共用默认标度。"
         }
       ],
       "value": "一个点位几何层，保留 site_id、pos 与独立切口边界；不修改输入。",
@@ -1629,15 +1629,15 @@
         },
         {
           "format": "data.frame / function / NULL",
-          "description": "独立标签遵守普通观察数据规则。anchor_layer 非空时，NULL 使用目标层经过角色映射与 Stat 后、几何展开前的实体表；函数式 data 也接收该表。显式标签表按 site_id 与必要的参考/分面/显示实例匹配，不按行号或 R 对象身份匹配。"
+          "description": "自动绑定时读取目标层经过 Stat 后的实体表。单独提供表或回调函数时默认绘制独立标签。如需只标注一部分并跟随目标位置，可用 `anchor_layer` 指定目标名称，并提供匹配的 `site_id`。显式绑定时回调函数接收目标实体表。"
         },
         {
           "format": "Stat / character",
           "description": "默认 identity；绑定时仅支持 identity，独立标签 Stat 必须输出点位与标签角色。"
         },
         {
-          "format": "character(1) / NULL",
-          "description": "目标 site 家族图层 ID；按 site_id 与参考/分面/实例匹配。NULL 时从独立 accver/pos 定位。"
+          "format": "auto_anchor() / 单个字符串 / NULL",
+          "description": "默认跟随唯一兼容的位点层。如有多个候选，请写目标层的 ID；写 `NULL` 可独立定位。提供标签数据、非恒等 Stat 或显式 Position 时，默认独立定位。"
         },
         {
           "format": "Position / NULL",
@@ -1664,8 +1664,8 @@
           "description": "TRUE 合并图级 aes；FALSE 仅使用局部 aes 和该 Geom 公开的规范角色默认。即使显式给 data，默认也仍然继承映射；缺列不自动从参考表连接补齐。"
         },
         {
-          "format": "character(1) / NULL",
-          "description": "图内唯一图层 ID；NULL 自动分配图对象内稳定身份。被 anchor_layer、scale_for 或导出引用的层应显式命名。它不是 feature_id、site_id 或序列 ID。"
+          "format": "auto_id() / 单个字符串 / NULL / NA",
+          "description": "默认的 `auto_id()` 在图内分配 ID 并按层训练视觉标度。给出名称可显式引用此层；写 `NULL` 或 `NA` 可与同样选择共享的图层共用默认标度。"
         }
       ],
       "value": "点位标签层，返回文字、可选引线及与 site_id 的关联。",
@@ -1689,15 +1689,15 @@
         },
         {
           "format": "data.frame / function / NULL",
-          "description": "独立标签遵守普通观察数据规则。anchor_layer 非空时，NULL 使用目标层经过角色映射与 Stat 后、几何展开前的实体表；函数式 data 也接收该表。显式标签表按 site_id 与必要的参考/分面/显示实例匹配，不按行号或 R 对象身份匹配。"
+          "description": "自动绑定时读取目标层经过 Stat 后的实体表。单独提供表或回调函数时默认绘制独立标签。如需只标注一部分并跟随目标位置，可用 `anchor_layer` 指定目标名称，并提供匹配的 `site_id`。显式绑定时回调函数接收目标实体表。"
         },
         {
           "format": "Stat / character",
           "description": "默认 identity；绑定时仅支持 identity，独立标签 Stat 必须输出点位与标签角色。"
         },
         {
-          "format": "character(1) / NULL",
-          "description": "目标 site 家族图层 ID；按 site_id 与参考/分面/实例匹配。NULL 时从独立 accver/pos 定位。"
+          "format": "auto_anchor() / 单个字符串 / NULL",
+          "description": "默认跟随唯一兼容的位点层。如有多个候选，请写目标层的 ID；写 `NULL` 可独立定位。提供标签数据、非恒等 Stat 或显式 Position 时，默认独立定位。"
         },
         {
           "format": "Position / NULL",
@@ -1724,8 +1724,8 @@
           "description": "TRUE 合并图级 aes；FALSE 仅使用局部 aes 和该 Geom 公开的规范角色默认。即使显式给 data，默认也仍然继承映射；缺列不自动从参考表连接补齐。"
         },
         {
-          "format": "character(1) / NULL",
-          "description": "图内唯一图层 ID；NULL 自动分配图对象内稳定身份。被 anchor_layer、scale_for 或导出引用的层应显式命名。它不是 feature_id、site_id 或序列 ID。"
+          "format": "auto_id() / 单个字符串 / NULL / NA",
+          "description": "默认的 `auto_id()` 在图内分配 ID 并按层训练视觉标度。给出名称可显式引用此层；写 `NULL` 或 `NA` 可与同样选择共享的图层共用默认标度。"
         }
       ],
       "value": "点位标签层，返回文字、可选引线及与 site_id 的关联。",
@@ -1780,8 +1780,8 @@
           "description": "TRUE 合并图级 aes；FALSE 仅使用局部 aes 和该 Geom 公开的规范角色默认。即使显式给 data，默认也仍然继承映射；缺列不自动从参考表连接补齐。"
         },
         {
-          "format": "character(1) / NULL",
-          "description": "图内唯一图层 ID；NULL 自动分配图对象内稳定身份。被 anchor_layer、scale_for 或导出引用的层应显式命名。它不是 feature_id、site_id 或序列 ID。"
+          "format": "auto_id() / 单个字符串 / NULL / NA",
+          "description": "默认的 `auto_id()` 在图内分配 ID 并按层训练视觉标度。给出名称可显式引用此层；写 `NULL` 或 `NA` 可与同样选择共享的图层共用默认标度。"
         }
       ],
       "value": "一个点连接层；每条路径保留两端源点与 link_id。",
@@ -1840,8 +1840,8 @@
           "description": "TRUE 合并图级 aes；FALSE 仅使用局部 aes 和该 Geom 公开的规范角色默认。即使显式给 data，默认也仍然继承映射；缺列不自动从参考表连接补齐。"
         },
         {
-          "format": "character(1) / NULL",
-          "description": "图内唯一图层 ID；NULL 自动分配图对象内稳定身份。被 anchor_layer、scale_for 或导出引用的层应显式命名。它不是 feature_id、site_id 或序列 ID。"
+          "format": "auto_id() / 单个字符串 / NULL / NA",
+          "description": "默认的 `auto_id()` 在图内分配 ID 并按层训练视觉标度。给出名称可显式引用此层；写 `NULL` 或 `NA` 可与同样选择共享的图层共用默认标度。"
         },
         {
           "format": "numeric / unit / vector",
@@ -1905,8 +1905,8 @@
           "description": "TRUE 合并图级 aes；FALSE 仅使用局部 aes 和该 Geom 公开的规范角色默认。即使显式给 data，默认也仍然继承映射；缺列不自动从参考表连接补齐。"
         },
         {
-          "format": "character(1) / NULL",
-          "description": "图内唯一图层 ID；NULL 自动分配图对象内稳定身份。被 anchor_layer、scale_for 或导出引用的层应显式命名。它不是 feature_id、site_id 或序列 ID。"
+          "format": "auto_id() / 单个字符串 / NULL / NA",
+          "description": "默认的 `auto_id()` 在图内分配 ID 并按层训练视觉标度。给出名称可显式引用此层；写 `NULL` 或 `NA` 可与同样选择共享的图层共用默认标度。"
         }
       ],
       "value": "一个 Dotplot HSP 线段层；保留 q/s 原始身份、四端点、方向证据和显示轴位置。",
@@ -1968,8 +1968,8 @@
           "description": "TRUE 合并图级 aes；FALSE 仅使用局部 aes 和该 Geom 公开的规范角色默认。即使显式给 data，默认也仍然继承映射；缺列不自动从参考表连接补齐。"
         },
         {
-          "format": "character(1) / NULL",
-          "description": "图内唯一图层 ID；NULL 自动分配图对象内稳定身份。被 anchor_layer、scale_for 或导出引用的层应显式命名。它不是 feature_id、site_id 或序列 ID。"
+          "format": "auto_id() / 单个字符串 / NULL / NA",
+          "description": "使用字符串 ID 可在导出时选择此残基层。原生笛卡尔字符面板沿用 ggplot2 的普通标度。"
         }
       ],
       "value": "一个普通 ggplot 字符单元层；可独立打印，明确注册后可作为 Fusion 子图。保留来源位置和换行映射。",
@@ -2028,8 +2028,8 @@
           "description": "TRUE 合并图级 aes；FALSE 仅使用局部 aes 和该 Geom 公开的规范角色默认。即使显式给 data，默认也仍然继承映射；缺列不自动从参考表连接补齐。"
         },
         {
-          "format": "character(1) / NULL",
-          "description": "图内唯一图层 ID；NULL 自动分配图对象内稳定身份。被 anchor_layer、scale_for 或导出引用的层应显式命名。它不是 feature_id、site_id 或序列 ID。"
+          "format": "auto_id() / 单个字符串 / NULL / NA",
+          "description": "使用字符串 ID 可在导出时选择此残基层。原生笛卡尔字符面板沿用 ggplot2 的普通标度。"
         }
       ],
       "value": "一个普通 ggplot 字符单元层；可独立打印，明确注册后可作为 Fusion 子图。保留来源位置和换行映射。",
@@ -2084,8 +2084,8 @@
           "description": "TRUE 合并图级 aes；FALSE 仅使用局部 aes 和该 Geom 公开的规范角色默认。即使显式给 data，默认也仍然继承映射；缺列不自动从参考表连接补齐。"
         },
         {
-          "format": "character(1) / NULL",
-          "description": "图内唯一图层 ID；NULL 自动分配图对象内稳定身份。被 anchor_layer、scale_for 或导出引用的层应显式命名。它不是 feature_id、site_id 或序列 ID。"
+          "format": "auto_id() / 单个字符串 / NULL / NA",
+          "description": "使用字符串 ID 可在导出时选择此残基层。原生笛卡尔字符面板沿用 ggplot2 的普通标度。"
         }
       ],
       "value": "一个普通 ggplot 字符单元层；可独立打印，明确注册后可作为 Fusion 子图。保留来源位置和换行映射。",
@@ -2144,8 +2144,8 @@
           "description": "TRUE 合并图级 aes；FALSE 仅使用局部 aes 和该 Geom 公开的规范角色默认。即使显式给 data，默认也仍然继承映射；缺列不自动从参考表连接补齐。"
         },
         {
-          "format": "character(1) / NULL",
-          "description": "图内唯一图层 ID；NULL 自动分配图对象内稳定身份。被 anchor_layer、scale_for 或导出引用的层应显式命名。它不是 feature_id、site_id 或序列 ID。"
+          "format": "auto_id() / 单个字符串 / NULL / NA",
+          "description": "默认的 `auto_id()` 在图内分配 ID 并按层训练视觉标度。给出名称可显式引用此层；写 `NULL` 或 `NA` 可与同样选择共享的图层共用默认标度。"
         }
       ],
       "value": "一个 Track 图层；数值几何输出保留参考源位置、统计成员及带内数值映射。interval 只输出区间与容器几何，不伪造 y 统计。",
@@ -2202,8 +2202,8 @@
           "description": "TRUE 合并图级 aes；FALSE 仅使用局部 aes 和该 Geom 公开的规范角色默认。即使显式给 data，默认也仍然继承映射；缺列不自动从参考表连接补齐。"
         },
         {
-          "format": "character(1) / NULL",
-          "description": "图内唯一图层 ID；NULL 自动分配图对象内稳定身份。被 anchor_layer、scale_for 或导出引用的层应显式命名。它不是 feature_id、site_id 或序列 ID。"
+          "format": "auto_id() / 单个字符串 / NULL / NA",
+          "description": "默认的 `auto_id()` 在图内分配 ID 并按层训练视觉标度。给出名称可显式引用此层；写 `NULL` 或 `NA` 可与同样选择共享的图层共用默认标度。"
         }
       ],
       "value": "一个 Track 图层；数值几何输出保留参考源位置、统计成员及带内数值映射。interval 只输出区间与容器几何，不伪造 y 统计。",
@@ -2259,8 +2259,8 @@
           "description": "TRUE 合并图级 aes；FALSE 仅使用局部 aes 和该 Geom 公开的规范角色默认。即使显式给 data，默认也仍然继承映射；缺列不自动从参考表连接补齐。"
         },
         {
-          "format": "character(1) / NULL",
-          "description": "图内唯一图层 ID；NULL 自动分配图对象内稳定身份。被 anchor_layer、scale_for 或导出引用的层应显式命名。它不是 feature_id、site_id 或序列 ID。"
+          "format": "auto_id() / 单个字符串 / NULL / NA",
+          "description": "默认的 `auto_id()` 在图内分配 ID 并按层训练视觉标度。给出名称可显式引用此层；写 `NULL` 或 `NA` 可与同样选择共享的图层共用默认标度。"
         }
       ],
       "value": "一个 Track 图层；数值几何输出保留参考源位置、统计成员及带内数值映射。interval 只输出区间与容器几何，不伪造 y 统计。",
@@ -2316,8 +2316,8 @@
           "description": "TRUE 合并图级 aes；FALSE 仅使用局部 aes 和该 Geom 公开的规范角色默认。即使显式给 data，默认也仍然继承映射；缺列不自动从参考表连接补齐。"
         },
         {
-          "format": "character(1) / NULL",
-          "description": "图内唯一图层 ID；NULL 自动分配图对象内稳定身份。被 anchor_layer、scale_for 或导出引用的层应显式命名。它不是 feature_id、site_id 或序列 ID。"
+          "format": "auto_id() / 单个字符串 / NULL / NA",
+          "description": "默认的 `auto_id()` 在图内分配 ID 并按层训练视觉标度。给出名称可显式引用此层；写 `NULL` 或 `NA` 可与同样选择共享的图层共用默认标度。"
         }
       ],
       "value": "一个 Track 图层；数值几何输出保留参考源位置、统计成员及带内数值映射。interval 只输出区间与容器几何，不伪造 y 统计。",
@@ -2373,8 +2373,8 @@
           "description": "TRUE 合并图级 aes；FALSE 仅使用局部 aes 和该 Geom 公开的规范角色默认。即使显式给 data，默认也仍然继承映射；缺列不自动从参考表连接补齐。"
         },
         {
-          "format": "character(1) / NULL",
-          "description": "图内唯一图层 ID；NULL 自动分配图对象内稳定身份。被 anchor_layer、scale_for 或导出引用的层应显式命名。它不是 feature_id、site_id 或序列 ID。"
+          "format": "auto_id() / 单个字符串 / NULL / NA",
+          "description": "默认的 `auto_id()` 在图内分配 ID 并按层训练视觉标度。给出名称可显式引用此层；写 `NULL` 或 `NA` 可与同样选择共享的图层共用默认标度。"
         }
       ],
       "value": "一个 Track 图层；数值几何输出保留参考源位置、统计成员及带内数值映射。interval 只输出区间与容器几何，不伪造 y 统计。",
@@ -2430,8 +2430,8 @@
           "description": "TRUE 合并图级 aes；FALSE 仅使用局部 aes 和该 Geom 公开的规范角色默认。即使显式给 data，默认也仍然继承映射；缺列不自动从参考表连接补齐。"
         },
         {
-          "format": "character(1) / NULL",
-          "description": "图内唯一图层 ID；NULL 自动分配图对象内稳定身份。被 anchor_layer、scale_for 或导出引用的层应显式命名。它不是 feature_id、site_id 或序列 ID。"
+          "format": "auto_id() / 单个字符串 / NULL / NA",
+          "description": "默认的 `auto_id()` 在图内分配 ID 并按层训练视觉标度。给出名称可显式引用此层；写 `NULL` 或 `NA` 可与同样选择共享的图层共用默认标度。"
         }
       ],
       "value": "一个 Track 图层；数值几何输出保留参考源位置、统计成员及带内数值映射。interval 只输出区间与容器几何，不伪造 y 统计。",
@@ -2487,8 +2487,8 @@
           "description": "TRUE 合并图级 aes；FALSE 仅使用局部 aes 和该 Geom 公开的规范角色默认。即使显式给 data，默认也仍然继承映射；缺列不自动从参考表连接补齐。"
         },
         {
-          "format": "character(1) / NULL",
-          "description": "图内唯一图层 ID；NULL 自动分配图对象内稳定身份。被 anchor_layer、scale_for 或导出引用的层应显式命名。它不是 feature_id、site_id 或序列 ID。"
+          "format": "auto_id() / 单个字符串 / NULL / NA",
+          "description": "默认的 `auto_id()` 在图内分配 ID 并按层训练视觉标度。给出名称可显式引用此层；写 `NULL` 或 `NA` 可与同样选择共享的图层共用默认标度。"
         }
       ],
       "value": "一个 Track 图层；数值几何输出保留参考源位置、统计成员及带内数值映射。interval 只输出区间与容器几何，不伪造 y 统计。",
@@ -2544,8 +2544,8 @@
           "description": "TRUE 合并图级 aes；FALSE 仅使用局部 aes 和该 Geom 公开的规范角色默认。即使显式给 data，默认也仍然继承映射；缺列不自动从参考表连接补齐。"
         },
         {
-          "format": "character(1) / NULL",
-          "description": "图内唯一图层 ID；NULL 自动分配图对象内稳定身份。被 anchor_layer、scale_for 或导出引用的层应显式命名。它不是 feature_id、site_id 或序列 ID。"
+          "format": "auto_id() / 单个字符串 / NULL / NA",
+          "description": "默认的 `auto_id()` 在图内分配 ID 并按层训练视觉标度。给出名称可显式引用此层；写 `NULL` 或 `NA` 可与同样选择共享的图层共用默认标度。"
         }
       ],
       "value": "一个 Track 图层；数值几何输出保留参考源位置、统计成员及带内数值映射。interval 只输出区间与容器几何，不伪造 y 统计。",
@@ -2601,8 +2601,8 @@
           "description": "TRUE 合并图级 aes；FALSE 仅使用局部 aes 和该 Geom 公开的规范角色默认。即使显式给 data，默认也仍然继承映射；缺列不自动从参考表连接补齐。"
         },
         {
-          "format": "character(1) / NULL",
-          "description": "图内唯一图层 ID；NULL 自动分配图对象内稳定身份。被 anchor_layer、scale_for 或导出引用的层应显式命名。它不是 feature_id、site_id 或序列 ID。"
+          "format": "auto_id() / 单个字符串 / NULL / NA",
+          "description": "默认的 `auto_id()` 在图内分配 ID 并按层训练视觉标度。给出名称可显式引用此层；写 `NULL` 或 `NA` 可与同样选择共享的图层共用默认标度。"
         }
       ],
       "value": "一个 Track 图层；数值几何输出保留参考源位置、统计成员及带内数值映射。interval 只输出区间与容器几何，不伪造 y 统计。",
@@ -2658,8 +2658,8 @@
           "description": "TRUE 合并图级 aes；FALSE 仅使用局部 aes 和该 Geom 公开的规范角色默认。即使显式给 data，默认也仍然继承映射；缺列不自动从参考表连接补齐。"
         },
         {
-          "format": "character(1) / NULL",
-          "description": "图内唯一图层 ID；NULL 自动分配图对象内稳定身份。被 anchor_layer、scale_for 或导出引用的层应显式命名。它不是 feature_id、site_id 或序列 ID。"
+          "format": "auto_id() / 单个字符串 / NULL / NA",
+          "description": "默认的 `auto_id()` 在图内分配 ID 并按层训练视觉标度。给出名称可显式引用此层；写 `NULL` 或 `NA` 可与同样选择共享的图层共用默认标度。"
         }
       ],
       "value": "一个 Track 图层；数值几何输出保留参考源位置、统计成员及带内数值映射。interval 只输出区间与容器几何，不伪造 y 统计。",
@@ -2708,8 +2708,8 @@
           "description": "参照线与文字的固定颜色，默认 black。"
         },
         {
-          "format": "character(1) / NULL",
-          "description": "图内唯一图层 ID；NULL 自动分配图对象内稳定身份。被 anchor_layer、scale_for 或导出引用的层应显式命名。它不是 feature_id、site_id 或序列 ID。"
+          "format": "auto_id() / 单个字符串 / NULL / NA",
+          "description": "图内参照条的 ID。省略时自动分配，给出名称可在导出时直接引用。"
         }
       ],
       "value": "一个可添加的长度参照装饰；导出类型为 scale_annotation，不参与数值轴训练或统计。",
@@ -2926,8 +2926,8 @@
           "description": "是否合并图级映射。合并后的表达式在本层实际data上求值，不自动把参考元数据join到观察表。"
         },
         {
-          "format": "character(1) / NULL；默认NULL",
-          "description": "图内唯一图层ID，供scale_for、导出和依赖引用。省略时生成图对象内稳定身份；需要外部引用时显式给名。"
+          "format": "auto_id() / 单个字符串 / NULL / NA",
+          "description": "默认的 `auto_id()` 在图内分配 ID 并按层训练视觉标度。给出名称可显式引用此层；写 `NULL` 或 `NA` 可与同样选择共享的图层共用默认标度。"
         }
       ],
       "value": "一个同时声明Coverage Stat和所选Track Geom的图层；statistics阶段可导出每个窗口及其来源成员。",
@@ -2986,8 +2986,8 @@
           "description": "是否合并图级映射。合并后的表达式在本层实际data上求值，不自动把参考元数据join到观察表。"
         },
         {
-          "format": "character(1) / NULL；默认NULL",
-          "description": "图内唯一图层ID，供scale_for、导出和依赖引用。省略时生成图对象内稳定身份；需要外部引用时显式给名。"
+          "format": "auto_id() / 单个字符串 / NULL / NA",
+          "description": "默认的 `auto_id()` 在图内分配 ID 并按层训练视觉标度。给出名称可显式引用此层；写 `NULL` 或 `NA` 可与同样选择共享的图层共用默认标度。"
         }
       ],
       "value": "一个区间关系统计图层；统计输出为聚合或保留原记录的规范link表，带source_members、n_members与sum_weight。",
@@ -3046,8 +3046,8 @@
           "description": "是否合并图级映射。合并后的表达式在本层实际data上求值，不自动把参考元数据join到观察表。"
         },
         {
-          "format": "character(1) / NULL；默认NULL",
-          "description": "图内唯一图层ID，供scale_for、导出和依赖引用。省略时生成图对象内稳定身份；需要外部引用时显式给名。"
+          "format": "auto_id() / 单个字符串 / NULL / NA",
+          "description": "默认的 `auto_id()` 在图内分配 ID 并按层训练视觉标度。给出名称可显式引用此层；写 `NULL` 或 `NA` 可与同样选择共享的图层共用默认标度。"
         }
       ],
       "value": "保留原关系行的统计图层；统计输出附加q_bin/s_bin、bin_weight、bin_area、density_raw、density、normalization与来源成员信息。",
@@ -3062,11 +3062,11 @@
     },
     "scale_for": {
       "title": "给指定图层建立独立的视觉尺度域",
-      "intro": "将一个普通视觉Scale限定到明确的图层集合，使这些层共同训练一套独立尺度，而不按gene/ribbon/track角色复制Scale函数。未选中的通道仍留在原全局域。",
+      "intro": "对一个或多个具名图层训练同一视觉标度。",
       "arguments": [
         {
           "format": "非空character向量",
-          "description": "当前图对象根部的layer id集合。多个ID共同训练；重复ID拒绝。普通/第三方层可通过layer_id(layer,id)显式命名。Fusion根部只指外层连接/装饰层，不跨子面板匹配。"
+          "description": "同一图内一个或多个不同的图层 ID。在 Fusion 中选择根级连带。可用 `layer_id()` 为原生 ggplot2 图层命名。"
         },
         {
           "format": "一个普通视觉Scale对象",
@@ -3074,7 +3074,7 @@
         }
       ],
       "value": "一个可添加到图的有作用域Scale声明；构建时从全局域移出选中层的对应通道，并对集合共同训练。",
-      "details": "1. 引用按最终图中ID解析，添加先后不改变作用域。两个scale_for若选中了同一layer×aesthetic就报冲突，不能由最后添加的对象静默覆盖。\n\n2. 全局普通Scale只训练未被分域的层/通道。scope内name、breaks、labels、limits和guide直接写在被包裹Scale里；普通labs/guides只修改全局域。\n\n3. 固定视觉值不参加训练。映射到feature形状的Scale必须输出合法feature几何词汇；点形状的pch域与其不兼容时分开作用域。\n\n4. 本接口不控制参考位置、track y或轨带厚度。使用scale_y_log10来替代scale_track_value(transform=...)会产生职责冲突，应拒绝。\n\n5. Fusion对子图保持尺度隔离。要修改子图，先修改该图再放入panels；本函数不按同名字符串把所有面板联动。\n\n骨架层和特征层共用的颜色通道若只映射 accver，默认沿用序列色板。特征层以 strand 着色时，正链为红色、负链为蓝色、未知链为灰色。圆图特征以 type 着色时，已知类型沿用质粒色板，其他类型按名称分配稳定的颜色。显式普通标度或分层标度优先。",
+      "details": "无论添加顺序如何，`scale_for()` 在指定图层和视觉通道上优先于普通标度。其余图层使用该通道的普通显式标度；若未指定，则遵循各层 `id` 的默认规则。在传入的标度上设置独立图例的标题、断点和标签。\n\n固定样式直接用于绘图。特征几何映射形状时，应提供输出相应几何名称的标度；ggplot2 的点符号使用另一组形状。在 Fusion 中，作用域面向根级连带层。对子图的标度设置请在组合前完成。",
       "errors": "- 未知或重复图层ID、两个独立域重叠。\n\n- 非Scale对象、位置Scale、层不支持的视觉通道。\n\n- 共同Scale输出类型不能被所有所选Geom消费。",
       "roles": [],
       "example_setup": ""
@@ -3109,7 +3109,7 @@
         }
       ],
       "value": "可添加到图的领域线性位置尺度。提供共享断点合同并交给Guide绘制，不改参考的完整长度或源数据。",
-      "details": "1. 支持Chord、Circular、Collinear、Radial和Sankey的参考路径。Dotplot的两条拼接轴使用其显式轴合同，不将本对象隐式复制到两轴。\n\n2. 不提供transform、limits、oob或expand。源窗口显示由Layout、画布视口由Coord、输入筛选由数据操作负责；名称不能看起来是完整连续Scale却只影响文字。\n\n3. source模式要求可逆来源映射；多个来源或不连续段必须按显示实例分别生成断点，不能把一套局部断点拼成虚假的连续源轴。\n\n4. 灵活格式允许按source或显式instance覆盖breaks/labels；同一键重复或未知时报错。源单位可格式化为kb/Mb标签，但不是bp/aa科学投影。\n\n圆图省略 guide 时默认在内侧绘制序列坐标。显式正侧仍表示外侧。",
+      "details": "1. 支持Chord、Circular、Collinear、Radial和Sankey的参考路径。Dotplot的两条拼接轴使用其显式轴合同，不将本对象隐式复制到两轴。\n\n2. 不提供transform、limits、oob或expand。源窗口显示由Layout、画布视口由Coord、输入筛选由数据操作负责；名称不能看起来是完整连续Scale却只影响文字。\n\n3. source模式要求可逆来源映射；多个来源或不连续段必须按显示实例分别生成断点，不能把一套局部断点拼成虚假的连续源轴。\n\n4. 灵活格式允许按source或显式instance覆盖breaks/labels；同一键重复或未知时报错。源单位可格式化为kb/Mb标签，但不是bp/aa科学投影。\n\n圆图省略 guide 时默认在内侧绘制序列坐标。显式正侧仍表示外侧。\n\n相邻序列的端点靠得很近时，默认避让会调整端点刻度文字的位置，刻度线仍指向原来的序列坐标。",
       "errors": "- source模式缺少来源映射。\n\n- break/label数目不匹配、未知配置键。\n\n- 传入本接口不支持的transform/limits或在Dotplot误用。",
       "roles": [],
       "example_setup": ""
@@ -3237,7 +3237,7 @@
         },
         {
           "format": "logical；默认TRUE",
-          "description": "是否隐藏互相重叠的刻度标签。仅处理Guide文字，不删除断点数据或观察记录。"
+          "description": "检查刻度文字是否相互重叠。默认会错开相邻端点的文字，也可隐藏拥挤的内部刻度文字。设为 `FALSE` 可关闭此项自动检查。"
         },
         {
           "format": "theme对象 / NULL",
@@ -3245,7 +3245,7 @@
         }
       ],
       "value": "序列位置Guide对象，交给scale_seq_position(guide=...)使用。",
-      "details": "1. 坐标值、单位和labels由Scale提供。若要每100bp一个刻度，在Scale的breaks给生成函数，不在Guide新增刻度间距参数。\n\n2. sequences只影响说明选择。隐藏A的轴后，A的骨架、基因和连接仍然存在。\n\n3. 固定图例Guide和序列位置Guide不是同一对象；guide=\"none\"不生成整条说明，element_blank()可只隐藏其中某个外观部件。",
+      "details": "1. 坐标值、单位和labels由Scale提供。若要每100bp一个刻度，在Scale的breaks给生成函数，不在Guide新增刻度间距参数。\n\n2. sequences只影响说明选择。隐藏A的轴后，A的骨架、基因和连接仍然存在。\n\n3. 固定图例Guide和序列位置Guide不是同一对象；guide=\"none\"不生成整条说明，element_blank()可只隐藏其中某个外观部件。\n\n相邻序列的端点靠得很近时，默认避让会调整端点刻度文字的位置，刻度线仍指向原来的序列坐标。",
       "errors": "- 未知参考/实例、非法side或angle。\n\n- 局部theme试图改变数据或使用不支持的Guide外观元素。",
       "roles": [],
       "example_setup": ""
@@ -4768,8 +4768,8 @@
           "description": "是否贡献根部 Guide 键；默认 NA 遵循映射。"
         },
         {
-          "format": "string / NULL",
-          "description": "根级唯一图层 ID。"
+          "format": "auto_id() / 单个字符串 / NULL / NA",
+          "description": "默认的 `auto_id()` 在图内分配 ID 并按层训练视觉标度。给出名称可显式引用此层；写 `NULL` 或 `NA` 可与同样选择共享的图层共用默认标度。"
         }
       ],
       "value": "可添加到 ggchord_fusion 的真实关系层，导出保留 source_members 和两端 panel_path。",
@@ -5133,8 +5133,8 @@
           "description": "TRUE 合并图级 aes；FALSE 仅使用局部 aes 和该 Geom 公开的规范角色默认。即使显式给 data，默认也仍然继承映射；缺列不自动从参考表连接补齐。"
         },
         {
-          "format": "character(1) / NULL",
-          "description": "图内唯一图层 ID；NULL 自动分配图对象内稳定身份。被 anchor_layer、scale_for 或导出引用的层应显式命名。它不是 feature_id、site_id 或序列 ID。"
+          "format": "auto_id() / 单个字符串 / NULL / NA",
+          "description": "默认的 `auto_id()` 在图内分配 ID 并按层训练视觉标度。给出名称可显式引用此层；写 `NULL` 或 `NA` 可与同样选择共享的图层共用默认标度。"
         }
       ],
       "value": "一个可添加到 ggchord 图的参考几何层。若它是唯一参考声明入口，同时提供待解析的完整参考数据；不修改传入表。",
@@ -5244,6 +5244,74 @@
       "errors": "",
       "roles": [],
       "example_setup": ""
+    },
+    "auto_id": {
+      "title": "自动分配图层 ID 并按层训练默认视觉标度",
+      "intro": "默认的 `id = auto_id()` 在图内分配 ID。两个 ggchord 图层映射同一视觉通道时，各自训练标度。第一个示例中，骨架颜色表示序列，基因轮廓颜色表示链方向。",
+      "arguments": [],
+      "value": "图层 ID 声明，在构图时解析。",
+      "details": "在需要共享标度的各层写 `id = NULL` 或 `id = NA`，如第二个示例。字符串 ID 可用于按名称引用图层，仍保留该层的独立默认标度。\n\n显式添加的普通标度会应用于映射该通道的所有图层，已由 `scale_for()` 指定标度的图层除外。若需几个指定图层共享自定义标度，可先给它们命名，再将名称一起传给 `scale_for()`。原生笛卡尔字符面板沿用 ggplot2 的标度规则。",
+      "errors": "具名 ID 必须是图内唯一的单个非空字符串。",
+      "roles": [],
+      "example_setup": ""
+    },
+    "auto_anchor": {
+      "title": "让标签自动跟随唯一兼容的图层",
+      "intro": "默认的 `anchor_layer = auto_anchor()` 让标签跟随同一张图中唯一兼容图层的实体及其显示位置。第一个示例直接标注基因，两个图层都可以省略名称。",
+      "arguments": [],
+      "value": "标签目标声明，在同一张图的图层中解析。",
+      "details": "基因、引物和位点标签分别查找对应类型的图层。通用特征标签可跟随任意区间特征层，包括基因、引物和区域。目标层可位于标签层之前或之后。\n\n提供标签数据、非恒等 Stat 或显式 Position 时，默认独立定位。也可用 `anchor_layer = NULL` 明确要求独立标签。如需只标注目标的一部分实体，可给目标命名，将名称传给 `anchor_layer`，并提供包含相应实体键的标签表。",
+      "errors": "多个图层符合条件时，错误提示会列出候选 ID。像第二个示例那样，为目标层命名并通过 `anchor_layer` 指定。没有兼容层时，可添加目标层或提供可用的独立标签数据。",
+      "roles": [],
+      "example_setup": ""
     }
+  },
+  "families": {
+    "ggchord": "创建绘图对象",
+    "layer_id": "图层标识与标签锚定",
+    "coord_chord": "基因组坐标系",
+    "facet_null": "分面",
+    "layout_sequences": "序列与点阵图布局",
+    "track_band": "轨道位置与宽度",
+    "geom_seq": "序列骨架与标签",
+    "geom_feature": "特征形状与标签",
+    "geom_gene": "基因箭头与标签",
+    "geom_primer": "引物与标签",
+    "geom_site": "位点与标签",
+    "geom_link_line": "基因组连接线与连接带",
+    "geom_alignment_segment": "比对线段",
+    "geom_residue": "残基单元格",
+    "geom_track": "轨道图层",
+    "annotation_seq_scalebar": "序列比例尺",
+    "label_layout_fixed": "标签布局",
+    "position_offset": "特征位置调整",
+    "stat_coverage": "区间覆盖统计",
+    "stat_link_bundle": "连接聚合与密度统计",
+    "scale_for": "指定图层的标度",
+    "scale_colour_sequence": "序列、特征与一致性配色",
+    "scale_seq_position": "序列位置标度",
+    "scale_track_value": "轨道数值标度与范围",
+    "scale_fill_residue": "残基配色",
+    "guide_seq_axis": "序列轴与轨道轴",
+    "theme_ggchord": "绘图主题",
+    "as_ggchord_seq": "输入表转换",
+    "validate_ggchord_data": "数据校验与清理",
+    "filter_ggchord_links": "连接筛选与聚合",
+    "find_ggchord_loci": "区段选择与局部聚焦",
+    "primer_catalog": "引物目录与结合位点",
+    "find_restriction_sites": "限制性酶切位点",
+    "find_common_features": "常见特征识别",
+    "build_ggchord_cds": "编码序列与翻译",
+    "project_ggchord_features": "特征与连接的坐标投影",
+    "read_fasta_lengths": "FASTA 长度与比对序列",
+    "read_bed": "基因组区间与信号文件",
+    "read_blast": "序列比对文件",
+    "read_genbank": "注释与特征关系文件",
+    "read_vcf": "变异文件",
+    "ggchord_fusion": "组合面板与布局",
+    "fusion_ribbon": "跨面板连接与放大",
+    "register_ggchord_alignment": "比对注册与位置查询",
+    "view_ggchord": "绘图尺寸与预览",
+    "export_ggchord_layout": "布局导出与检查"
   }
 }

@@ -1,5 +1,5 @@
 {
-  "description": "Find ggchord functions by task, from preparing input data to building, combining and inspecting plots. Each function page describes its inputs and return value and includes a runnable R example with the resulting plot or console output.",
+  "description": "Find functions by task, then open a family to compare related calls, their arguments and their outputs. Each entry includes a runnable R example with its plot or console result.",
   "groups": {
     "construct": {
       "title": "Construction and layer identity",
@@ -89,7 +89,7 @@
         }
       ],
       "value": "A ggchord object (inherits from ggplot) to which geom_* layers can be added with +",
-      "details": "Supply one complete reference at plot level or register it with a complete explicit `geom_seq(data = ...)` table. A backbone layer may reuse all or part of a plot reference. Observation layers use their own data or the plot data under ggplot2 inheritance rules.",
+      "details": "Supply one complete reference at plot level or register it with a complete explicit `geom_seq(data = ...)` table. A backbone layer may reuse all or part of a plot reference. Observation layers use their own data or the plot data under ggplot2 inheritance rules.\n\nLayers mapping the same aesthetic use independent default visual scales. Set `id = NULL` or `id = NA` on the layers to share a default, or supply an ordinary explicit scale. Use `scale_for()` for a named override.",
       "errors": "Conflicting reference lengths, units or topology are errors. A graph without a complete reference cannot infer lengths from feature or link positions.",
       "roles": [],
       "example_setup": ""
@@ -135,7 +135,7 @@
         },
         {
           "format": "One nonempty string",
-          "description": "A nonempty identifier, unique within the plot."
+          "description": "A single nonempty name, unique among layers in this plot."
         }
       ],
       "value": "A layer with the specified identity.",
@@ -244,7 +244,7 @@
         }
       ],
       "value": "A coordinate system for a ggchord plot.",
-      "details": "Set the sequence axis with `axis`. The layout controls ordering and physical gaps, while the coordinate system projects those paths and sets the viewport. Positive offsets are above horizontal paths or to the right of vertical ones.",
+      "details": "Set the sequence axis with `axis`. The layout controls ordering and physical gaps, while the coordinate system projects those paths and sets the viewport. Positive offsets are above horizontal paths or to the right of vertical ones.\n\nAutomatic spacing leaves room on both sides of the paths for features, labels and leaders. Set a physical distance with `layout_sequences()` when the figure requires a fixed gap.",
       "errors": "Use fixed facets. Use a track value domain for panel-specific quantitative heights.",
       "roles": [],
       "example_setup": ""
@@ -314,7 +314,7 @@
         }
       ],
       "value": "A coordinate system for a ggchord plot.",
-      "details": "A reference can have display instances on both columns. Source identity, endpoint roles and display instances remain distinct. Choose column spacing in millimetres and the desired axis in the coordinate declaration.",
+      "details": "A reference can have display instances on both columns. Source identity, endpoint roles and display instances remain distinct. Choose column spacing in millimetres and the desired axis in the coordinate declaration.\n\nAutomatic spacing leaves room on both sides of the paths for features, labels and leaders. Set a physical distance with `layout_sequences()` when the figure requires a fixed gap.",
       "errors": "Use explicit endpoint information when a connection is ambiguous. Fixed facet scales are required.",
       "roles": [],
       "example_setup": ""
@@ -509,7 +509,7 @@
         },
         {
           "format": "nonnegative mm / absolute grid unit / flexible specification / NULL",
-          "description": "Collinear row spacing in mm. When omitted it depends on row count, layers and the available canvas. The Sankey default is 6 mm."
+          "description": "Row spacing in millimetres. In collinear and Sankey layouts, automatic spacing accounts for panel size and the space needed by features, labels and leaders on both sides of the paths."
         },
         {
           "format": "nonnegative mm / absolute grid unit / NULL",
@@ -517,7 +517,7 @@
         },
         {
           "format": "positive mm / absolute grid unit / NULL",
-          "description": "Physical distances in mm."
+          "description": "Distance in millimetres between the two Sankey columns (or rows in a horizontal view). Leave it unset to balance space between and outside the paths, or specify a physical distance."
         },
         {
           "format": "positive ratio / flexible specification / NULL",
@@ -545,7 +545,7 @@
         }
       ],
       "value": "A layout declaration to add to a ggchord plot.",
-      "details": "Declare order, direction, suitable gaps and the relative path geometry. An explicitly named window produces a display instance of a reference. Display windows leave source lengths and statistical denominators intact.\n\nIf inner_radius is omitted, the central opening starts at 0.12 of the longest outer radius and expands as needed to fit the visible endpoint strokes and feature clearance.",
+      "details": "Declare order, direction, suitable gaps and the relative path geometry. An explicitly named window produces a display instance of a reference. Display windows leave source lengths and statistical denominators intact.\n\nIf inner_radius is omitted, the central opening starts at 0.12 of the longest outer radius and expands as needed to fit the visible endpoint strokes and feature clearance.\n\nAutomatic collinear and Sankey spacing also leaves room beyond the sequence ends.",
       "errors": "Unknown source or instance IDs, duplicate instance IDs, invalid windows and gaps unsupported by the active projection are errors.",
       "roles": [],
       "example_setup": ""
@@ -684,8 +684,8 @@
           "description": "Whether to inherit plot mappings and evaluate them on the layer data."
         },
         {
-          "format": "character(1) / NULL",
-          "description": "Optional plot-local layer identifier. Name a layer explicitly to scope a scale, anchor a label or export it."
+          "format": "auto_id() / character(1) / NULL / NA",
+          "description": "The default `auto_id()` assigns a plot-local ID and trains visual scales independently. Use a name to refer to this layer, or `NULL` or `NA` to share its default scale with other layers that request sharing."
         }
       ],
       "value": "A ggplot2 layer for addition to a plot.",
@@ -738,8 +738,8 @@
           "description": "Whether to inherit plot mappings and evaluate them on the layer data."
         },
         {
-          "format": "character(1) / NULL",
-          "description": "Optional plot-local layer identifier. Name a layer explicitly to scope a scale, anchor a label or export it."
+          "format": "auto_id() / character(1) / NULL / NA",
+          "description": "The default `auto_id()` assigns a plot-local ID and trains visual scales independently. Use a name to refer to this layer, or `NULL` or `NA` to share its default scale with other layers that request sharing."
         }
       ],
       "value": "A ggplot2 layer for addition to a plot.",
@@ -788,8 +788,8 @@
           "description": "Whether to inherit plot mappings and evaluate them on the layer data."
         },
         {
-          "format": "character(1) / NULL",
-          "description": "Optional plot-local layer identifier. Name a layer explicitly to scope a scale, anchor a label or export it."
+          "format": "auto_id() / character(1) / NULL / NA",
+          "description": "The default `auto_id()` assigns a plot-local ID and trains visual scales independently. Use a name to refer to this layer, or `NULL` or `NA` to share its default scale with other layers that request sharing."
         }
       ],
       "value": "A ggplot2 layer for addition to a plot.",
@@ -842,8 +842,8 @@
           "description": "Whether to inherit plot mappings and evaluate them on the layer data."
         },
         {
-          "format": "character(1) / NULL",
-          "description": "Optional plot-local layer identifier. Name a layer explicitly to scope a scale, anchor a label or export it."
+          "format": "auto_id() / character(1) / NULL / NA",
+          "description": "The default `auto_id()` assigns a plot-local ID and trains visual scales independently. Use a name to refer to this layer, or `NULL` or `NA` to share its default scale with other layers that request sharing."
         }
       ],
       "value": "A ggplot2 layer for addition to a plot.",
@@ -899,8 +899,8 @@
           "description": "Whether to inherit plot mappings and evaluate them on the layer data."
         },
         {
-          "format": "character(1) / NULL",
-          "description": "Optional plot-local layer identifier. Name a layer explicitly to scope a scale, anchor a label or export it."
+          "format": "auto_id() / character(1) / NULL / NA",
+          "description": "The default `auto_id()` assigns a plot-local ID and trains visual scales independently. Use a name to refer to this layer, or `NULL` or `NA` to share its default scale with other layers that request sharing."
         }
       ],
       "value": "A ggplot2 layer for addition to a plot.",
@@ -961,8 +961,8 @@
           "description": "Whether to inherit plot mappings and evaluate them on the layer data."
         },
         {
-          "format": "character(1) / NULL",
-          "description": "Optional plot-local layer identifier. Name a layer explicitly to scope a scale, anchor a label or export it."
+          "format": "auto_id() / character(1) / NULL / NA",
+          "description": "The default `auto_id()` assigns a plot-local ID and trains visual scales independently. Use a name to refer to this layer, or `NULL` or `NA` to share its default scale with other layers that request sharing."
         }
       ],
       "value": "A ggplot2 layer for addition to a plot.",
@@ -1023,8 +1023,8 @@
           "description": "Whether to inherit plot mappings and evaluate them on the layer data."
         },
         {
-          "format": "character(1) / NULL",
-          "description": "Optional plot-local layer identifier. Name a layer explicitly to scope a scale, anchor a label or export it."
+          "format": "auto_id() / character(1) / NULL / NA",
+          "description": "The default `auto_id()` assigns a plot-local ID and trains visual scales independently. Use a name to refer to this layer, or `NULL` or `NA` to share its default scale with other layers that request sharing."
         }
       ],
       "value": "A ggplot2 layer for addition to a plot.",
@@ -1089,8 +1089,8 @@
           "description": "Whether to inherit plot mappings and evaluate them on the layer data."
         },
         {
-          "format": "character(1) / NULL",
-          "description": "Optional plot-local layer identifier. Name a layer explicitly to scope a scale, anchor a label or export it."
+          "format": "auto_id() / character(1) / NULL / NA",
+          "description": "The default `auto_id()` assigns a plot-local ID and trains visual scales independently. Use a name to refer to this layer, or `NULL` or `NA` to share its default scale with other layers that request sharing."
         }
       ],
       "value": "A ggplot2 layer for addition to a plot.",
@@ -1116,15 +1116,15 @@
         },
         {
           "format": "data.frame / function / NULL",
-          "description": "Optional label table or function. With a named anchor, the default data consists of the target entities."
+          "description": "An automatically bound label reads the target entities after their Stat. A separate table or callback defines independent labels by default. To select a subset and preserve target placement, name the target in `anchor_layer` and supply matching `feature_id` values. A bound callback receives the target entity table."
         },
         {
           "format": "Stat / character",
           "description": "A compatible ggplot2 Stat or its name. The default uses the supplied records."
         },
         {
-          "format": "character(1) / NULL",
-          "description": "ID of the target layer. Labels use the target entities after its Stat and follow their displayed placement."
+          "format": "auto_anchor() / character(1) / NULL",
+          "description": "The default follows the only compatible interval feature layer. With several candidates, select one by ID. Set `NULL` for independent placement. Supplying label data, a non-identity Stat or an explicit Position makes this layer independent by default."
         },
         {
           "format": "character(1)",
@@ -1155,8 +1155,8 @@
           "description": "Whether to inherit plot mappings and evaluate them on the layer data."
         },
         {
-          "format": "character(1) / NULL",
-          "description": "Optional plot-local layer identifier. Name a layer explicitly to scope a scale, anchor a label or export it."
+          "format": "auto_id() / character(1) / NULL / NA",
+          "description": "The default `auto_id()` assigns a plot-local ID and trains visual scales independently. Use a name to refer to this layer, or `NULL` or `NA` to share its default scale with other layers that request sharing."
         }
       ],
       "value": "A ggplot2 layer for addition to a plot.",
@@ -1181,15 +1181,15 @@
         },
         {
           "format": "data.frame / function / NULL",
-          "description": "Optional label table or function. With a named anchor, the default data consists of the target entities."
+          "description": "An automatically bound label reads the target entities after their Stat. A separate table or callback defines independent labels by default. To select a subset and preserve target placement, name the target in `anchor_layer` and supply matching `feature_id` values. A bound callback receives the target entity table."
         },
         {
           "format": "Stat / character",
           "description": "A compatible ggplot2 Stat or its name. The default uses the supplied records."
         },
         {
-          "format": "character(1) / NULL",
-          "description": "ID of the target layer. Labels use the target entities after its Stat and follow their displayed placement."
+          "format": "auto_anchor() / character(1) / NULL",
+          "description": "The default follows the only compatible interval feature layer. With several candidates, select one by ID. Set `NULL` for independent placement. Supplying label data, a non-identity Stat or an explicit Position makes this layer independent by default."
         },
         {
           "format": "character(1)",
@@ -1220,8 +1220,8 @@
           "description": "Whether to inherit plot mappings and evaluate them on the layer data."
         },
         {
-          "format": "character(1) / NULL",
-          "description": "Optional plot-local layer identifier. Name a layer explicitly to scope a scale, anchor a label or export it."
+          "format": "auto_id() / character(1) / NULL / NA",
+          "description": "The default `auto_id()` assigns a plot-local ID and trains visual scales independently. Use a name to refer to this layer, or `NULL` or `NA` to share its default scale with other layers that request sharing."
         }
       ],
       "value": "A ggplot2 layer for addition to a plot.",
@@ -1246,15 +1246,15 @@
         },
         {
           "format": "data.frame / function / NULL",
-          "description": "Optional label table or function. With a named anchor, the default data consists of the target entities."
+          "description": "An automatically bound label reads the target entities after their Stat. A separate table or callback defines independent labels by default. To select a subset and preserve target placement, name the target in `anchor_layer` and supply matching `feature_id` values. A bound callback receives the target entity table."
         },
         {
           "format": "Stat / character",
           "description": "A compatible ggplot2 Stat or its name. The default uses the supplied records."
         },
         {
-          "format": "character(1) / NULL",
-          "description": "ID of the target layer. Labels use the target entities after its Stat and follow their displayed placement."
+          "format": "auto_anchor() / character(1) / NULL",
+          "description": "The default follows the only compatible gene layer. With several candidates, select one by ID. Set `NULL` for independent placement. Supplying label data, a non-identity Stat or an explicit Position makes this layer independent by default."
         },
         {
           "format": "character(1)",
@@ -1285,8 +1285,8 @@
           "description": "Whether to inherit plot mappings and evaluate them on the layer data."
         },
         {
-          "format": "character(1) / NULL",
-          "description": "Optional plot-local layer identifier. Name a layer explicitly to scope a scale, anchor a label or export it."
+          "format": "auto_id() / character(1) / NULL / NA",
+          "description": "The default `auto_id()` assigns a plot-local ID and trains visual scales independently. Use a name to refer to this layer, or `NULL` or `NA` to share its default scale with other layers that request sharing."
         }
       ],
       "value": "A ggplot2 layer for addition to a plot.",
@@ -1311,15 +1311,15 @@
         },
         {
           "format": "data.frame / function / NULL",
-          "description": "Optional label table or function. With a named anchor, the default data consists of the target entities."
+          "description": "An automatically bound label reads the target entities after their Stat. A separate table or callback defines independent labels by default. To select a subset and preserve target placement, name the target in `anchor_layer` and supply matching `feature_id` values. A bound callback receives the target entity table."
         },
         {
           "format": "Stat / character",
           "description": "A compatible ggplot2 Stat or its name. The default uses the supplied records."
         },
         {
-          "format": "character(1) / NULL",
-          "description": "ID of the target layer. Labels use the target entities after its Stat and follow their displayed placement."
+          "format": "auto_anchor() / character(1) / NULL",
+          "description": "The default follows the only compatible gene layer. With several candidates, select one by ID. Set `NULL` for independent placement. Supplying label data, a non-identity Stat or an explicit Position makes this layer independent by default."
         },
         {
           "format": "character(1)",
@@ -1350,8 +1350,8 @@
           "description": "Whether to inherit plot mappings and evaluate them on the layer data."
         },
         {
-          "format": "character(1) / NULL",
-          "description": "Optional plot-local layer identifier. Name a layer explicitly to scope a scale, anchor a label or export it."
+          "format": "auto_id() / character(1) / NULL / NA",
+          "description": "The default `auto_id()` assigns a plot-local ID and trains visual scales independently. Use a name to refer to this layer, or `NULL` or `NA` to share its default scale with other layers that request sharing."
         }
       ],
       "value": "A ggplot2 layer for addition to a plot.",
@@ -1376,15 +1376,15 @@
         },
         {
           "format": "data.frame / function / NULL",
-          "description": "Optional label table or function. With a named anchor, the default data consists of the target entities."
+          "description": "An automatically bound label reads the target entities after their Stat. A separate table or callback defines independent labels by default. To select a subset and preserve target placement, name the target in `anchor_layer` and supply matching `feature_id` values. A bound callback receives the target entity table."
         },
         {
           "format": "Stat / character",
           "description": "A compatible ggplot2 Stat or its name. The default uses the supplied records."
         },
         {
-          "format": "character(1) / NULL",
-          "description": "ID of the target layer. Labels use the target entities after its Stat and follow their displayed placement."
+          "format": "auto_anchor() / character(1) / NULL",
+          "description": "The default follows the only compatible primer layer. With several candidates, select one by ID. Set `NULL` for independent placement. Supplying label data, a non-identity Stat or an explicit Position makes this layer independent by default."
         },
         {
           "format": "character(1)",
@@ -1415,8 +1415,8 @@
           "description": "Whether to inherit plot mappings and evaluate them on the layer data."
         },
         {
-          "format": "character(1) / NULL",
-          "description": "Optional plot-local layer identifier. Name a layer explicitly to scope a scale, anchor a label or export it."
+          "format": "auto_id() / character(1) / NULL / NA",
+          "description": "The default `auto_id()` assigns a plot-local ID and trains visual scales independently. Use a name to refer to this layer, or `NULL` or `NA` to share its default scale with other layers that request sharing."
         }
       ],
       "value": "A ggplot2 layer for addition to a plot.",
@@ -1441,15 +1441,15 @@
         },
         {
           "format": "data.frame / function / NULL",
-          "description": "Optional label table or function. With a named anchor, the default data consists of the target entities."
+          "description": "An automatically bound label reads the target entities after their Stat. A separate table or callback defines independent labels by default. To select a subset and preserve target placement, name the target in `anchor_layer` and supply matching `feature_id` values. A bound callback receives the target entity table."
         },
         {
           "format": "Stat / character",
           "description": "A compatible ggplot2 Stat or its name. The default uses the supplied records."
         },
         {
-          "format": "character(1) / NULL",
-          "description": "ID of the target layer. Labels use the target entities after its Stat and follow their displayed placement."
+          "format": "auto_anchor() / character(1) / NULL",
+          "description": "The default follows the only compatible primer layer. With several candidates, select one by ID. Set `NULL` for independent placement. Supplying label data, a non-identity Stat or an explicit Position makes this layer independent by default."
         },
         {
           "format": "character(1)",
@@ -1480,8 +1480,8 @@
           "description": "Whether to inherit plot mappings and evaluate them on the layer data."
         },
         {
-          "format": "character(1) / NULL",
-          "description": "Optional plot-local layer identifier. Name a layer explicitly to scope a scale, anchor a label or export it."
+          "format": "auto_id() / character(1) / NULL / NA",
+          "description": "The default `auto_id()` assigns a plot-local ID and trains visual scales independently. Use a name to refer to this layer, or `NULL` or `NA` to share its default scale with other layers that request sharing."
         }
       ],
       "value": "A ggplot2 layer for addition to a plot.",
@@ -1541,12 +1541,12 @@
           "description": "Whether to inherit plot mappings and evaluate them on the layer data."
         },
         {
-          "format": "character(1) / NULL",
-          "description": "Optional plot-local layer identifier. Name a layer explicitly to scope a scale, anchor a label or export it."
+          "format": "auto_id() / character(1) / NULL / NA",
+          "description": "The default `auto_id()` assigns a plot-local ID and trains visual scales independently. Use a name to refer to this layer, or `NULL` or `NA` to share its default scale with other layers that request sharing."
         }
       ],
       "value": "A ggplot2 layer for addition to a plot.",
-      "details": "Use one-based `pos` for the point anchor. `cut_top` and `cut_bottom` use interbase positions from zero to the reference length. Symbols can be ticks, points or cuts, and mapped sizes share their scale domain.",
+      "details": "Use one-based `pos` for the point anchor. `cut_top` and `cut_bottom` use interbase positions from zero to the reference length. Symbols can be ticks, points or cuts. Each site layer trains its own size scale by default. Add an ordinary size scale to compare sizes across layers.",
       "errors": "A cut uses bp boundaries. Shape mappings must produce supported symbols, and fill applies to point symbols.",
       "roles": [
         "Reference identity. One-based source position.",
@@ -1602,8 +1602,8 @@
           "description": "Whether to inherit plot mappings and evaluate them on the layer data."
         },
         {
-          "format": "character(1) / NULL",
-          "description": "Optional plot-local layer identifier. Name a layer explicitly to scope a scale, anchor a label or export it."
+          "format": "auto_id() / character(1) / NULL / NA",
+          "description": "The default `auto_id()` assigns a plot-local ID and trains visual scales independently. Use a name to refer to this layer, or `NULL` or `NA` to share its default scale with other layers that request sharing."
         }
       ],
       "value": "A ggplot2 layer for addition to a plot.",
@@ -1628,15 +1628,15 @@
         },
         {
           "format": "data.frame / function / NULL",
-          "description": "Optional label table or function. With a named anchor, the default data consists of the target entities."
+          "description": "An automatically bound label reads the target entities after their Stat. A separate table or callback defines independent labels by default. To select a subset and preserve target placement, name the target in `anchor_layer` and supply matching `site_id` values. A bound callback receives the target entity table."
         },
         {
           "format": "Stat / character",
           "description": "A compatible ggplot2 Stat or its name. The default uses the supplied records."
         },
         {
-          "format": "character(1) / NULL",
-          "description": "ID of the target layer. Labels use the target entities after its Stat and follow their displayed placement."
+          "format": "auto_anchor() / character(1) / NULL",
+          "description": "The default follows the only compatible site layer. With several candidates, select one by ID. Set `NULL` for independent placement. Supplying label data, a non-identity Stat or an explicit Position makes this layer independent by default."
         },
         {
           "format": "Position / NULL",
@@ -1663,8 +1663,8 @@
           "description": "Whether to inherit plot mappings and evaluate them on the layer data."
         },
         {
-          "format": "character(1) / NULL",
-          "description": "Optional plot-local layer identifier. Name a layer explicitly to scope a scale, anchor a label or export it."
+          "format": "auto_id() / character(1) / NULL / NA",
+          "description": "The default `auto_id()` assigns a plot-local ID and trains visual scales independently. Use a name to refer to this layer, or `NULL` or `NA` to share its default scale with other layers that request sharing."
         }
       ],
       "value": "A ggplot2 layer for addition to a plot.",
@@ -1688,15 +1688,15 @@
         },
         {
           "format": "data.frame / function / NULL",
-          "description": "Optional label table or function. With a named anchor, the default data consists of the target entities."
+          "description": "An automatically bound label reads the target entities after their Stat. A separate table or callback defines independent labels by default. To select a subset and preserve target placement, name the target in `anchor_layer` and supply matching `site_id` values. A bound callback receives the target entity table."
         },
         {
           "format": "Stat / character",
           "description": "A compatible ggplot2 Stat or its name. The default uses the supplied records."
         },
         {
-          "format": "character(1) / NULL",
-          "description": "ID of the target layer. Labels use the target entities after its Stat and follow their displayed placement."
+          "format": "auto_anchor() / character(1) / NULL",
+          "description": "The default follows the only compatible site layer. With several candidates, select one by ID. Set `NULL` for independent placement. Supplying label data, a non-identity Stat or an explicit Position makes this layer independent by default."
         },
         {
           "format": "Position / NULL",
@@ -1723,8 +1723,8 @@
           "description": "Whether to inherit plot mappings and evaluate them on the layer data."
         },
         {
-          "format": "character(1) / NULL",
-          "description": "Optional plot-local layer identifier. Name a layer explicitly to scope a scale, anchor a label or export it."
+          "format": "auto_id() / character(1) / NULL / NA",
+          "description": "The default `auto_id()` assigns a plot-local ID and trains visual scales independently. Use a name to refer to this layer, or `NULL` or `NA` to share its default scale with other layers that request sharing."
         }
       ],
       "value": "A ggplot2 layer for addition to a plot.",
@@ -1779,8 +1779,8 @@
           "description": "Whether to inherit plot mappings and evaluate them on the layer data."
         },
         {
-          "format": "character(1) / NULL",
-          "description": "Optional plot-local layer identifier. Name a layer explicitly to scope a scale, anchor a label or export it."
+          "format": "auto_id() / character(1) / NULL / NA",
+          "description": "The default `auto_id()` assigns a plot-local ID and trains visual scales independently. Use a name to refer to this layer, or `NULL` or `NA` to share its default scale with other layers that request sharing."
         }
       ],
       "value": "A ggplot2 layer for addition to a plot.",
@@ -1839,8 +1839,8 @@
           "description": "Whether to inherit plot mappings and evaluate them on the layer data."
         },
         {
-          "format": "character(1) / NULL",
-          "description": "Optional plot-local layer identifier. Name a layer explicitly to scope a scale, anchor a label or export it."
+          "format": "auto_id() / character(1) / NULL / NA",
+          "description": "The default `auto_id()` assigns a plot-local ID and trains visual scales independently. Use a name to refer to this layer, or `NULL` or `NA` to share its default scale with other layers that request sharing."
         },
         {
           "format": "numeric / unit / vector",
@@ -1904,8 +1904,8 @@
           "description": "Whether to inherit plot mappings and evaluate them on the layer data."
         },
         {
-          "format": "character(1) / NULL",
-          "description": "Optional plot-local layer identifier. Name a layer explicitly to scope a scale, anchor a label or export it."
+          "format": "auto_id() / character(1) / NULL / NA",
+          "description": "The default `auto_id()` assigns a plot-local ID and trains visual scales independently. Use a name to refer to this layer, or `NULL` or `NA` to share its default scale with other layers that request sharing."
         }
       ],
       "value": "A ggplot2 layer for addition to a plot.",
@@ -1967,8 +1967,8 @@
           "description": "Whether to inherit plot mappings and evaluate them on the layer data."
         },
         {
-          "format": "character(1) / NULL",
-          "description": "Optional plot-local layer identifier. Name a layer explicitly to scope a scale, anchor a label or export it."
+          "format": "auto_id() / character(1) / NULL / NA",
+          "description": "Use a character ID to select the residue layer for export. Its native Cartesian character panel uses ordinary ggplot2 scales."
         }
       ],
       "value": "A ggplot2 layer for addition to a plot.",
@@ -2027,8 +2027,8 @@
           "description": "Whether to inherit plot mappings and evaluate them on the layer data."
         },
         {
-          "format": "character(1) / NULL",
-          "description": "Optional plot-local layer identifier. Name a layer explicitly to scope a scale, anchor a label or export it."
+          "format": "auto_id() / character(1) / NULL / NA",
+          "description": "Use a character ID to select the residue layer for export. Its native Cartesian character panel uses ordinary ggplot2 scales."
         }
       ],
       "value": "A ggplot2 layer for addition to a plot.",
@@ -2083,8 +2083,8 @@
           "description": "Whether to inherit plot mappings and evaluate them on the layer data."
         },
         {
-          "format": "character(1) / NULL",
-          "description": "Optional plot-local layer identifier. Name a layer explicitly to scope a scale, anchor a label or export it."
+          "format": "auto_id() / character(1) / NULL / NA",
+          "description": "Use a character ID to select the residue layer for export. Its native Cartesian character panel uses ordinary ggplot2 scales."
         }
       ],
       "value": "A ggplot2 layer for addition to a plot.",
@@ -2143,8 +2143,8 @@
           "description": "Whether to inherit the plot mapping."
         },
         {
-          "format": "character(1) / NULL",
-          "description": "Optional unique layer ID for exported statistics and source rows."
+          "format": "auto_id() / character(1) / NULL / NA",
+          "description": "The default `auto_id()` assigns a plot-local ID and trains visual scales independently. Use a name to refer to this layer, or `NULL` or `NA` to share its default scale with other layers that request sharing."
         }
       ],
       "value": "A ggplot2 layer using a shared sequence-local band.",
@@ -2201,8 +2201,8 @@
           "description": "Whether to inherit plot mappings and evaluate them on the layer data."
         },
         {
-          "format": "character(1) / NULL",
-          "description": "Optional plot-local layer identifier. Name a layer explicitly to scope a scale, anchor a label or export it."
+          "format": "auto_id() / character(1) / NULL / NA",
+          "description": "The default `auto_id()` assigns a plot-local ID and trains visual scales independently. Use a name to refer to this layer, or `NULL` or `NA` to share its default scale with other layers that request sharing."
         }
       ],
       "value": "A ggplot2 layer for addition to a plot.",
@@ -2258,8 +2258,8 @@
           "description": "Whether to inherit plot mappings and evaluate them on the layer data."
         },
         {
-          "format": "character(1) / NULL",
-          "description": "Optional plot-local layer identifier. Name a layer explicitly to scope a scale, anchor a label or export it."
+          "format": "auto_id() / character(1) / NULL / NA",
+          "description": "The default `auto_id()` assigns a plot-local ID and trains visual scales independently. Use a name to refer to this layer, or `NULL` or `NA` to share its default scale with other layers that request sharing."
         }
       ],
       "value": "A ggplot2 layer for addition to a plot.",
@@ -2315,8 +2315,8 @@
           "description": "Whether to inherit plot mappings and evaluate them on the layer data."
         },
         {
-          "format": "character(1) / NULL",
-          "description": "Optional plot-local layer identifier. Name a layer explicitly to scope a scale, anchor a label or export it."
+          "format": "auto_id() / character(1) / NULL / NA",
+          "description": "The default `auto_id()` assigns a plot-local ID and trains visual scales independently. Use a name to refer to this layer, or `NULL` or `NA` to share its default scale with other layers that request sharing."
         }
       ],
       "value": "A ggplot2 layer for addition to a plot.",
@@ -2372,8 +2372,8 @@
           "description": "Whether to inherit plot mappings and evaluate them on the layer data."
         },
         {
-          "format": "character(1) / NULL",
-          "description": "Optional plot-local layer identifier. Name a layer explicitly to scope a scale, anchor a label or export it."
+          "format": "auto_id() / character(1) / NULL / NA",
+          "description": "The default `auto_id()` assigns a plot-local ID and trains visual scales independently. Use a name to refer to this layer, or `NULL` or `NA` to share its default scale with other layers that request sharing."
         }
       ],
       "value": "A ggplot2 layer for addition to a plot.",
@@ -2429,8 +2429,8 @@
           "description": "Whether to inherit plot mappings and evaluate them on the layer data."
         },
         {
-          "format": "character(1) / NULL",
-          "description": "Optional plot-local layer identifier. Name a layer explicitly to scope a scale, anchor a label or export it."
+          "format": "auto_id() / character(1) / NULL / NA",
+          "description": "The default `auto_id()` assigns a plot-local ID and trains visual scales independently. Use a name to refer to this layer, or `NULL` or `NA` to share its default scale with other layers that request sharing."
         }
       ],
       "value": "A ggplot2 layer for addition to a plot.",
@@ -2486,8 +2486,8 @@
           "description": "Whether to inherit plot mappings and evaluate them on the layer data."
         },
         {
-          "format": "character(1) / NULL",
-          "description": "Optional plot-local layer identifier. Name a layer explicitly to scope a scale, anchor a label or export it."
+          "format": "auto_id() / character(1) / NULL / NA",
+          "description": "The default `auto_id()` assigns a plot-local ID and trains visual scales independently. Use a name to refer to this layer, or `NULL` or `NA` to share its default scale with other layers that request sharing."
         }
       ],
       "value": "A ggplot2 layer for addition to a plot.",
@@ -2543,8 +2543,8 @@
           "description": "Whether to inherit plot mappings and evaluate them on the layer data."
         },
         {
-          "format": "character(1) / NULL",
-          "description": "Optional plot-local layer identifier. Name a layer explicitly to scope a scale, anchor a label or export it."
+          "format": "auto_id() / character(1) / NULL / NA",
+          "description": "The default `auto_id()` assigns a plot-local ID and trains visual scales independently. Use a name to refer to this layer, or `NULL` or `NA` to share its default scale with other layers that request sharing."
         }
       ],
       "value": "A ggplot2 layer for addition to a plot.",
@@ -2600,8 +2600,8 @@
           "description": "Whether to inherit plot mappings and evaluate them on the layer data."
         },
         {
-          "format": "character(1) / NULL",
-          "description": "Optional plot-local layer identifier. Name a layer explicitly to scope a scale, anchor a label or export it."
+          "format": "auto_id() / character(1) / NULL / NA",
+          "description": "The default `auto_id()` assigns a plot-local ID and trains visual scales independently. Use a name to refer to this layer, or `NULL` or `NA` to share its default scale with other layers that request sharing."
         }
       ],
       "value": "A ggplot2 layer for addition to a plot.",
@@ -2657,8 +2657,8 @@
           "description": "Whether to inherit plot mappings and evaluate them on the layer data."
         },
         {
-          "format": "character(1) / NULL",
-          "description": "Optional plot-local layer identifier. Name a layer explicitly to scope a scale, anchor a label or export it."
+          "format": "auto_id() / character(1) / NULL / NA",
+          "description": "The default `auto_id()` assigns a plot-local ID and trains visual scales independently. Use a name to refer to this layer, or `NULL` or `NA` to share its default scale with other layers that request sharing."
         }
       ],
       "value": "A ggplot2 layer for addition to a plot.",
@@ -2707,8 +2707,8 @@
           "description": "Fixed colour."
         },
         {
-          "format": "character(1) / NULL",
-          "description": "Optional plot-local layer identifier. Name a layer explicitly to scope a scale, anchor a label or export it."
+          "format": "auto_id() / character(1) / NULL / NA",
+          "description": "An ID for this annotation within the plot. Omit it to allocate an ID automatically or give the annotation a stable name for export."
         }
       ],
       "value": "A ggplot2 layer for addition to a plot.",
@@ -2925,8 +2925,8 @@
           "description": "Whether to inherit the plot mapping."
         },
         {
-          "format": "character(1) / NULL; default NULL",
-          "description": "Optional unique layer ID for exported statistics and source rows."
+          "format": "auto_id() / character(1) / NULL / NA",
+          "description": "The default `auto_id()` assigns a plot-local ID and trains visual scales independently. Use a name to refer to this layer, or `NULL` or `NA` to share its default scale with other layers that request sharing."
         }
       ],
       "value": "A track layer. Exported statistics include `window_id`, local `window_start` and `window_end`, original `source_accver`, `source_start`, `source_end`, `sequence_unit`, and the actual window length `denominator`. `covered` counts the interval union, `depth_sum` counts overlapping lengths with multiplicity, and `source_rows` indexes the layer source table. Dividing the two counts by `denominator` gives `coverage` and `mean_depth`. Windows without a hit in an observed group have zero counts.",
@@ -2985,8 +2985,8 @@
           "description": "Whether to inherit plot mappings and evaluate them on the layer data."
         },
         {
-          "format": "character(1) / NULL; default NULL",
-          "description": "Optional plot-local layer identifier. Name a layer explicitly to scope a scale, anchor a label or export it."
+          "format": "auto_id() / character(1) / NULL / NA",
+          "description": "The default `auto_id()` assigns a plot-local ID and trains visual scales independently. Use a name to refer to this layer, or `NULL` or `NA` to share its default scale with other layers that request sharing."
         }
       ],
       "value": "A ggplot2 layer whose statistic output retains the original members in `source_members`, with `n_members` and `sum_weight` for each result.",
@@ -3045,8 +3045,8 @@
           "description": "Whether to inherit plot mappings and evaluate them on the layer data."
         },
         {
-          "format": "character(1) / NULL; default NULL",
-          "description": "Optional plot-local layer identifier. Name a layer explicitly to scope a scale, anchor a label or export it."
+          "format": "auto_id() / character(1) / NULL / NA",
+          "description": "The default `auto_id()` assigns a plot-local ID and trains visual scales independently. Use a name to refer to this layer, or `NULL` or `NA` to share its default scale with other layers that request sharing."
         }
       ],
       "value": "A ggplot2 layer. Its statistic output retains the source rows and adds `q_bin`, `s_bin`, `bin_weight`, `bin_area`, `density_raw`, `density`, `normalization`, `density_unit` and `source_members`.",
@@ -3061,11 +3061,11 @@
     },
     "scale_for": {
       "title": "Give selected layers an independent visual scale",
-      "intro": "Give selected layers an independent visual scale.",
+      "intro": "Train an ordinary visual scale on one named layer or a group of named layers.",
       "arguments": [
         {
           "format": "nonempty character vector",
-          "description": "One or more explicitly named layer IDs."
+          "description": "One or more distinct layer IDs in this plot. In Fusion, select the root ribbon layers. Use `layer_id()` to name a native ggplot2 layer."
         },
         {
           "format": "Ordinary visual Scale object",
@@ -3073,7 +3073,7 @@
         }
       ],
       "value": "A scale declaration for a ggchord plot or a Fusion root.",
-      "details": "Name the layer IDs and supply an ordinary aesthetic scale. The selected layers train together within the stated channel. Local or global visual domains may coexist in the plot.\n\nWhen all layers sharing a colour or fill channel map it directly to the same field, ggchord can supply a default palette. Backbones and features use the sequence palette for accver. Features use red (+), blue (−) and grey (unknown) for strand. In circular views, recognized feature types use the plasmid palette and additional type names receive stable colours. Explicit visual scales take precedence.",
+      "details": "A `scale_for()` declaration takes precedence over an ordinary scale for the selected layers and aesthetic, regardless of addition order. Other layers follow the ordinary explicit scale for that aesthetic, or their default `id` policy when no explicit scale is present. Set the independent guide title, breaks and labels on the wrapped scale.\n\nFixed styles bypass scales. Supply a compatible shape scale for feature geometries; ggplot2 point symbols use a different shape vocabulary. In Fusion, the scope applies to root ribbon layers. Set child-plot scales before placing each plot in the composition.",
       "errors": "Unknown layers, overlapping layer/channel claims, unsupported visual channels and position scales are rejected.",
       "roles": [],
       "example_setup": ""
@@ -3108,7 +3108,7 @@
         }
       ],
       "value": "A domain scale for use with sequence-path coordinates.",
-      "details": "Choose the coordinate space for labels and supply breaks, labels and the sequence axis guide. The underlying reference positions remain linear.\n\nWhen guide is omitted, circular sequence coordinates are drawn inside the backbone. An explicit positive side selects the outside.",
+      "details": "Choose the coordinate space for labels and supply breaks, labels and the sequence axis guide. The underlying reference positions remain linear.\n\nWhen guide is omitted, circular sequence coordinates are drawn inside the backbone. An explicit positive side selects the outside.\n\nWhen adjacent sequence endpoints meet, automatic overlap checking repositions their tick labels while keeping the ticks at the original positions.",
       "errors": "Use the sequence axis guide or explicitly suppress the guide. Nonlinear positions belong outside this scale.",
       "roles": [],
       "example_setup": ""
@@ -3236,7 +3236,7 @@
         },
         {
           "format": "logical; default TRUE",
-          "description": "Whether to hide overlapping tick labels."
+          "description": "Check for overlaps between tick labels. The default repositions nearby endpoint labels and can suppress crowded interior labels. Set `FALSE` to turn off this automatic check."
         },
         {
           "format": "theme object / NULL",
@@ -3244,7 +3244,7 @@
         }
       ],
       "value": "A guide for `scale_seq_position()`.",
-      "details": "Use a guide to select where the sequence position scale is explained. Breaks and labels are supplied through the position scale; appearance is controlled by theme elements.",
+      "details": "Use a guide to select where the sequence position scale is explained. Breaks and labels are supplied through the position scale; appearance is controlled by theme elements.\n\nWhen adjacent sequence endpoints meet, automatic overlap checking repositions their tick labels while keeping the ticks at the original positions.",
       "errors": "Select known reference or instance identities and options compatible with the axis.",
       "roles": [],
       "example_setup": ""
@@ -4767,8 +4767,8 @@
           "description": "Whether the layer contributes to composition guides."
         },
         {
-          "format": "string / NULL",
-          "description": "Optional root layer ID."
+          "format": "auto_id() / character(1) / NULL / NA",
+          "description": "The default `auto_id()` assigns a plot-local ID and trains visual scales independently. Use a name to refer to this layer, or `NULL` or `NA` to share its default scale with other layers that request sharing."
         }
       ],
       "value": "A component for `ggchord_fusion()`.",
@@ -5132,8 +5132,8 @@
           "description": "Whether to inherit plot mappings and evaluate them on the layer data."
         },
         {
-          "format": "character(1) / NULL",
-          "description": "Optional plot-local layer identifier. Name a layer explicitly to scope a scale, anchor a label or export it."
+          "format": "auto_id() / character(1) / NULL / NA",
+          "description": "The default `auto_id()` assigns a plot-local ID and trains visual scales independently. Use a name to refer to this layer, or `NULL` or `NA` to share its default scale with other layers that request sharing."
         }
       ],
       "value": "A ggplot2 layer for addition to a plot.",
@@ -5243,6 +5243,74 @@
       "errors": "",
       "roles": [],
       "example_setup": ""
+    },
+    "auto_id": {
+      "title": "Assign a layer ID and train its default visual scales",
+      "intro": "The default `id = auto_id()` assigns an ID within the plot. When two ggchord layers map the same aesthetic, each trains its own scale. In the first example the sequence colours describe accessions and the gene outlines describe strands.",
+      "arguments": [],
+      "value": "A layer-ID declaration that ggchord resolves during plot construction.",
+      "details": "Set `id = NULL` or `id = NA` on each layer that should share a scale, as in the second example. A character ID lets you refer to a layer by name while retaining its independent defaults.\n\nAn ordinary explicit scale applies to every layer mapping its aesthetic except layers claimed by `scale_for()`. For a custom scale shared by selected layers, name them and pass their IDs together to `scale_for()`. Native Cartesian character panels use ordinary ggplot2 scales.",
+      "errors": "A named ID must be a single nonempty string, unique within the plot.",
+      "roles": [],
+      "example_setup": ""
+    },
+    "auto_anchor": {
+      "title": "Attach labels to the only compatible layer",
+      "intro": "With `anchor_layer = auto_anchor()`, labels follow the displayed entities of the only compatible layer in the same plot. The first example labels the genes without naming either layer.",
+      "arguments": [],
+      "value": "A label-target declaration resolved against the layers in the same plot.",
+      "details": "Gene, primer and site labels look for gene, primer and site layers respectively. A generic feature label can follow any interval feature layer, including genes, primers and regions. The target may appear before or after the labels.\n\nSupplying label data, a non-identity Stat or an explicit Position selects independent placement by default. Set `anchor_layer = NULL` to request independent labels. To label a subset of a target, give that layer a name, pass it to `anchor_layer` and supply a label table keyed to its entities.",
+      "errors": "If several layers qualify, the error lists their IDs. Name the intended target and set `anchor_layer` to that name, as in the second example. When there is no compatible layer, supply a target or usable independent label data.",
+      "roles": [],
+      "example_setup": ""
     }
+  },
+  "families": {
+    "ggchord": "Starting a plot",
+    "layer_id": "Layer identifiers and anchors",
+    "coord_chord": "Genomic coordinate systems",
+    "facet_null": "Facets",
+    "layout_sequences": "Sequence and dot plot layouts",
+    "track_band": "Track bands",
+    "geom_seq": "Sequence backbones and labels",
+    "geom_feature": "Feature shapes and labels",
+    "geom_gene": "Genes and gene labels",
+    "geom_primer": "Primers and primer labels",
+    "geom_site": "Sites and site labels",
+    "geom_link_line": "Genomic links",
+    "geom_alignment_segment": "Alignment segments",
+    "geom_residue": "Residue cells",
+    "geom_track": "Track layers",
+    "annotation_seq_scalebar": "Sequence scale bars",
+    "label_layout_fixed": "Label placement",
+    "position_offset": "Feature positions",
+    "stat_coverage": "Interval coverage",
+    "stat_link_bundle": "Link bundling and density",
+    "scale_for": "Layer-specific scales",
+    "scale_colour_sequence": "Sequence, feature and identity palettes",
+    "scale_seq_position": "Sequence position scales",
+    "scale_track_value": "Track value scales and limits",
+    "scale_fill_residue": "Residue palettes",
+    "guide_seq_axis": "Sequence and track axes",
+    "theme_ggchord": "Plot themes",
+    "as_ggchord_seq": "Input table adapters",
+    "validate_ggchord_data": "Data validation and cleaning",
+    "filter_ggchord_links": "Filtering and aggregating links",
+    "find_ggchord_loci": "Locus selection and focus",
+    "primer_catalog": "Primer lookup and binding sites",
+    "find_restriction_sites": "Restriction sites",
+    "find_common_features": "Common feature discovery",
+    "build_ggchord_cds": "Coding sequences and translation",
+    "project_ggchord_features": "Feature and link projection",
+    "read_fasta_lengths": "Sequence lengths and aligned FASTA",
+    "read_bed": "Genomic intervals and signals",
+    "read_blast": "Sequence alignment files",
+    "read_genbank": "Annotations and feature relationships",
+    "read_vcf": "Variant files",
+    "ggchord_fusion": "Fusion panels and layouts",
+    "fusion_ribbon": "Panel connections and magnification",
+    "register_ggchord_alignment": "Alignment registration and positions",
+    "view_ggchord": "Plot dimensions and preview",
+    "export_ggchord_layout": "Layout export and inspection"
   }
 }

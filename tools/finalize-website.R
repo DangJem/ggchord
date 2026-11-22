@@ -229,7 +229,7 @@ for(lang in c('en','zh')) {
         if(length(remaining)) paste0('<ul>',section_links(remaining,numbers=numbers),'</ul>'))
       active <- identical(chapter$id,module)
       if(active && (!is_known_page || (current_page=='reference' && relative!='reference/index.html'))) {
-        label <- if(current_page=='reference') slug else xml2::xml_text(xml2::xml_find_first(main,'.//h1'))
+        label <- xml2::xml_text(xml2::xml_find_first(main,'.//h1'))
         content <- paste0(content,'<a aria-current="page" href="',escape(basename(relative),attribute=TRUE),
           '">',escape(label),'</a>')
       }
@@ -290,7 +290,7 @@ for(lang in c('en','zh')) {
   # Build one outline from permanent article headings. Gallery cards already link
   # to their cases, so its outline only needs the figure families.
   xml2::xml_remove(xml2::xml_find_all(layout,'./aside'))
-  outline_headings <- xml2::xml_find_all(main, if(slug=='gallery')
+  outline_headings <- xml2::xml_find_all(main, if(slug=='gallery' || length(xml2::xml_find_all(main,'.//section[@data-api]')) > 1L)
     './/h2[@id][not(ancestor::details[@class="lesson-extension"])]' else
     './/*[self::h2 or self::h3][@id][not(ancestor::details[@class="lesson-extension"])]')
   if(relative != 'index.html' && length(outline_headings)) {
