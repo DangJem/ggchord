@@ -87,6 +87,7 @@ ggchord_prepare_geometry_inputs <- function(plot, prepare_instances = TRUE) {
   plot <- ggchord_prepare_track_layers(plot, sequences)
   plot <- ggchord_prepare_link_statistics(plot, sequences)
   plot <- ggchord_bind_domain_labels(plot)
+  plot <- ggchord_prepare_label_theme(plot)
   if (prepare_instances) plot <- ggchord_prepare_instances(plot, sequences)
   plot$scales <- plot$scales$clone()
   plot$scales$scales <- Filter(function(s) is.null(s$ggchord_managed),
@@ -546,13 +547,14 @@ compute_chord_geometry_prepared <- function(plot) {
     layer <- plot$layers[[groups[[id]][1L]]]
     p <- layer$ggchord_params
     owner <- p$anchor_layer
-    component <- if (p$label_kind == "site") "restriction_site" else "gene_poly"
+    component <- p$anchor_component
     target <- if (!is.null(owner)) inputs[[owner]][[component]] else NULL
     target_geometry <- if (!is.null(owner)) primary$layer_geometry[[owner]][[component]] else NULL
     input <- inputs[[id]]$domain_label
+    p$label_kind <- ggchord_label_kind(p, input)
     if (!is.null(owner) && NROW(input) && !NROW(target))
       ggchord_stop("Label anchor '", owner, "' is absent from this panel")
-    p$bold_callout <- isTRUE(primary$circular) && ggchord_domain_bold_callout(layer, plot)
+    p$bold_callout <- isTRUE(primary$circular) && ggchord_domain_bold_callout(layer, plot, p$label_kind)
     geometry <- ggchord_domain_label_geometry(layer, input, primary,
       target, target_geometry, chord$display_instances,
       radial = isTRUE(plot$coordinates$ggchord_radial),

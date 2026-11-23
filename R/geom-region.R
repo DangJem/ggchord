@@ -37,7 +37,7 @@ geom_seq_region <- function(mapping = NULL, data = NULL, shape = "block",
     alpha = 0.25, ..., na.rm = FALSE, show.legend = NA, inherit.aes = TRUE, id = auto_id()) {
   ggchord_local_console_errors()
   ggchord_check_argument_names(sys.call(), sys.function())
-  layer <- ggchord_feature_layer(mapping, data, shape, !missing(shape), thickness,
+  layer <- ggchord_annotation_layer(mapping, data, "interval", shape, !missing(shape), thickness,
     stat, position, c(list(alpha = alpha), list(...)), na.rm, show.legend, inherit.aes, id)
   layer$ggchord_params$style_defaults["alpha"] <- missing(alpha)
   layer

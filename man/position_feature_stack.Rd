@@ -53,6 +53,7 @@ ggchord(data = one_seq) + geom_seq() +
     position = position_feature_stack(
       base_position = position_offset(-2), spacing = 1,
       direction = "negative", order = "priority")) +
-  geom_feature_label_repel(aes(label = label), anchor_layer = "features") +
+  geom_feature_label(aes(label = label), anchor_layer = "features",
+    label_layout = layout_label_repel()) +
   coord_circular()
 }

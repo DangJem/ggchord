@@ -26,6 +26,9 @@ columns, including gaps between retained residues. The output \code{accver}
 identifies a displayed alignment row. Repeated row IDs are made unique
 across windows and source blocks. \code{local_position} contains the position
 in the window for each retained nongap cell.
+Site and cut anchors must lie in the selected window. Trimming hides cut
+boundaries outside the window and preserves their original positions in
+the source fields.
 }
 \examples{
 seqs <- data.frame(

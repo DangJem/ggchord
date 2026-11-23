@@ -15,11 +15,11 @@ ggchord_data(
 \arguments{
 \item{sequences}{Complete reference sequences.}
 
-\item{features}{Feature data frame or named list of feature tables.}
+\item{features}{Annotation data frame or named list of annotation tables.}
 
 \item{links}{Point or interval relationship table or named list of such tables.}
 
-\item{tracks}{Numeric observation table or named list of observation tables.}
+\item{tracks}{Point or interval track table or named list of such tables.}
 
 \item{alignments}{Character alignment table or named list of alignment tables.}
 }

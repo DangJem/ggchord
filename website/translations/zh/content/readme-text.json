@@ -1,5 +1,5 @@
 {
-  "source_sha256": "3c6cb77b47c26ba8244bcd9b08a1dc7e7a1a69dd00a5e504eaaa5b3fa129e028",
+  "source_sha256": "2ddde0e50f2d8c532dcf669c189000554d5aea7759c567aa2711ca80cd0cff95",
   "strings": {
     "title": {
       "source_sha256": "3dae9df0bcd52f7b79153e9d60c16ec82d9899fcc87119dabe6c9dfdef8303a1",
@@ -67,9 +67,9 @@
       "translation": "II · 单序列圆图"
     },
     "circular-purpose": {
-      "source_sha256": "f999aeac7fa9e8c363d897957c8f14be39da68e7e0cd7f2361d1919983086426",
+      "source_sha256": "f7c68408c94d6a4b946ecfb24de7abeeca5852775e3fb399682b984bb439971a",
       "status": "reviewed",
-      "translation": "在一条序列上组织特征、引物和限制位点。"
+      "translation": "在同一条序列上绘制区间、位点和切口，标签可固定放置或避让排布。"
     },
     "dotplot": {
       "source_sha256": "de5beeb788cc39513dcfad236f687ce7ce0eae4300347bfaadf16f96d19c599f",

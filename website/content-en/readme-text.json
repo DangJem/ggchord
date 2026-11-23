@@ -39,7 +39,7 @@
     "en": "II · Single-sequence circular maps"
   },
   "circular-purpose": {
-    "en": "Place features, primers and restriction sites on one sequence."
+    "en": "Draw intervals, sites and cuts on one sequence and label them with fixed or repelling placement."
   },
   "dotplot": {
     "en": "III · HSP Dotplot"

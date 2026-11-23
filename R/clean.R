@@ -2,6 +2,7 @@
 #' @param x Data or import collection.
 #' @param unknown_id Whether to report or drop unknown references.
 #' @param out_of_range Whether to report, drop or clip out-of-range observations.
+#'   Cut boundaries are observations and cannot be clipped to a new position.
 #' @param reversed_interval Whether to report or normalize reversed endpoints.
 #'   For links, a descending endpoint pair supplies negative-strand evidence
 #'   when its strand is missing. Conflicting direction declarations raise an
@@ -65,8 +66,10 @@ clean_ggchord_data <- function(x, unknown_id = "error", out_of_range = "error",
       fail <- function(index, issue) {
         ggchord_stop(caller, ": ", path, " row ", original[index[1L]], " has ", issue)
       }
-      for (id in names(ggchord_data_endpoints(table, role))) {
-        columns <- ggchord_data_endpoints(table, role)[[id]]
+      location <- if (role == "feature") ggchord_annotation_location(table, caller = caller)
+      endpoints <- ggchord_data_endpoints(table, role, location)
+      for (id in names(endpoints)) {
+        columns <- endpoints[[id]]
         at <- match(table[[id]], references$accver)
         bad <- which(live & is.na(at))
         if (length(bad)) {
@@ -116,6 +119,20 @@ clean_ggchord_data <- function(x, unknown_id = "error", out_of_range = "error",
         start <- table[[columns[1L]]]
         end <- table[[tail(columns, 1L)]]
         limit <- references$length[at]
+        if (identical(location, "cut")) {
+          for (column in intersect(ggchord_annotation_cut_columns, names(table))) {
+            positions <- table[[column]]
+            if (!ggchord_interbase_numeric(positions))
+              ggchord_stop(caller, ": ", path, "$", column, " must be numeric or missing")
+            bad <- which(live & (is.nan(positions) | (!is.na(positions) &
+              (!is.finite(positions) | positions != floor(positions)))))
+            if (length(bad)) fail(bad, "nonfinite or nonintegral cut boundaries")
+            outside <- which(live & (positions < 0 | positions > limit))
+            if (length(outside) && out_of_range == "error") fail(outside, "out-of-range cut boundaries")
+            record(outside, column, positions[outside], NA_real_, "drop", "out_of_range")
+            live[outside] <- FALSE
+          }
+        }
         outside <- which(live & (start < 1 | end > limit))
         if (!length(outside)) next
         if (out_of_range == "error") fail(outside, "out-of-range endpoints")

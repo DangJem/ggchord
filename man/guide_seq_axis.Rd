@@ -9,7 +9,9 @@ guide_seq_axis(
   side = "positive",
   angle = "auto",
   check.overlap = TRUE,
-  theme = NULL
+  theme = NULL,
+  gap = NULL,
+  orientation = "auto"
 )
 }
 \arguments{
@@ -17,7 +19,8 @@ guide_seq_axis(
 
 \item{side}{Positive or negative local side of the reference path.}
 
-\item{angle}{Automatic label orientation, or a numeric angle in degrees.}
+\item{angle}{\code{"auto"} or a fixed label angle in degrees. A fixed angle
+requires \code{orientation = "auto"}.}
 
 \item{check.overlap}{Whether to adjust crowded sequence-end labels and hide
 overlapping interior labels. Endpoints keep their ticks and values. On
@@ -25,6 +28,13 @@ projected axes, competing endpoint labels can move along their own
 sequence paths. Set to \code{FALSE} to keep the original positions.}
 
 \item{theme}{Optional local axis theme.}
+
+\item{gap}{Distance from the reference path as a nonnegative absolute
+\code{grid::unit()}. \code{NULL} uses the coordinate's default (zero for circular
+maps and 0.8 mm elsewhere).}
+
+\item{orientation}{\code{"auto"}, \code{"parallel"}, \code{"perpendicular"}, or
+\code{"horizontal"}. Automatic labels follow the reference path.}
 }
 \value{
 A guide for \code{\link[=scale_seq_continuous]{scale_seq_continuous()}}.
@@ -43,6 +53,7 @@ seqs <- data.frame(
 ggchord(data = seqs) + geom_seq() +
   scale_seq_continuous(breaks = scales::breaks_width(200),
     guide = guide_seq_axis(sequences = "A", side = "negative",
+      gap = grid::unit(1, "mm"), orientation = "horizontal",
       theme = theme(axis.text = element_text(size = 8)))) +
   coord_collinear()
 }

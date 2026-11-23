@@ -120,7 +120,7 @@
         }
       ],
       "value": "A ggchord_data collection with a reference and four named table sets.",
-      "details": "Keep one sequence dictionary and named feature, link, track and alignment tables. Select each observation table explicitly when constructing a layer. The constructor preserves provenance for later validation and data operations.",
+      "details": "Keep one sequence dictionary and named feature, link, track and alignment tables. Select each observation table explicitly when constructing a layer. The constructor preserves provenance for later validation and data operations. Keep distinct annotation location types in their own tables under `features`. A track interval table may provide locations alone; the numerical geometry determines when measurements are required.",
       "errors": "Names in each collection must be unique and nonempty. Incompatible coordinate units require explicit conversion.",
       "roles": [],
       "example_setup": ""
@@ -691,6 +691,10 @@
           "description": "A fixed or repelled label layout declaration."
         },
         {
+          "format": "character(1)",
+          "description": "Choose `\"auto\"`, `\"none\"`, `\"straight\"` or `\"elbow\"`. Automatic leaders connect displaced labels where appropriate."
+        },
+        {
           "format": "named arguments",
           "description": "Additional named visual styles and parameters accepted by this layer."
         },
@@ -720,7 +724,7 @@
       ],
       "example_setup": ""
     },
-    "geom_seq_center_label": {
+    "geom_seq_label_center": {
       "title": "Place a label at the centre of a circular reference",
       "intro": "Place a label at the centre of a circular reference.",
       "arguments": [
@@ -824,8 +828,8 @@
       "example_setup": ""
     },
     "geom_feature": {
-      "title": "Draw interval features",
-      "intro": "Draw interval features.",
+      "title": "Draw annotations at their source locations",
+      "intro": "Draw interval, site and cut annotations with a compatible shape.",
       "arguments": [
         {
           "format": "aes / NULL",
@@ -836,8 +840,12 @@
           "description": "Observation table or a data function. For ggchord layers, provide the required data-role columns."
         },
         {
-          "format": "character / mapped aesthetic",
-          "description": "Default shape. An explicitly supplied fixed shape takes priority over its mapping."
+          "format": "character(1)",
+          "description": "Select `\"interval\"`, `\"site\"` or `\"cut\"`. The default resolves the location from its input fields."
+        },
+        {
+          "format": "character(1)",
+          "description": "When omitted, intervals use `\"block\"`, sites use `\"tick\"` and cuts use `\"cut\"`. A fixed shape overrides its mapping."
         },
         {
           "format": "positive physical size / flexible",
@@ -1076,8 +1084,8 @@
       "example_setup": ""
     },
     "geom_feature_label": {
-      "title": "Label a feature interval",
-      "intro": "Label a feature interval.",
+      "title": "Label sequence annotations",
+      "intro": "Label interval, site and cut annotations and follow their source identity and display position.",
       "arguments": [
         {
           "format": "aes / NULL",
@@ -1097,7 +1105,7 @@
         },
         {
           "format": "character(1)",
-          "description": "Position on the entity or reference path that anchors the text."
+          "description": "The automatic anchor is the interval middle, the 3′ end of a primer or the residue position of a site or cut. Head and tail need a known strand."
         },
         {
           "format": "Position / NULL",
@@ -1106,6 +1114,10 @@
         {
           "format": "LabelLayout",
           "description": "A fixed or repelled label layout declaration."
+        },
+        {
+          "format": "character(1)",
+          "description": "Choose `\"auto\"`, `\"none\"`, `\"straight\"` or `\"elbow\"`. Automatic leaders connect displaced labels where appropriate."
         },
         {
           "format": "named arguments",
@@ -1140,71 +1152,6 @@
       ],
       "example_setup": ""
     },
-    "geom_feature_label_repel": {
-      "title": "Repel labels around feature anchors",
-      "intro": "Repel labels around feature anchors.",
-      "arguments": [
-        {
-          "format": "aes / NULL",
-          "description": "Aesthetic mapping from `aes()`. A local mapping overrides the matching inherited channel."
-        },
-        {
-          "format": "data.frame / function / NULL",
-          "description": "An automatically bound label reads the target entities after their Stat. A separate table or callback defines independent labels by default. To select a subset and preserve target placement, name the target in `anchor_layer` and supply matching `feature_id` values. A bound callback receives the target entity table."
-        },
-        {
-          "format": "Stat / character",
-          "description": "A compatible ggplot2 Stat or its name. The default uses the supplied records."
-        },
-        {
-          "format": "auto_anchor() / character(1) / NULL",
-          "description": "The default follows the only compatible interval feature layer. With several candidates, select one by ID. Set `NULL` for independent placement. Supplying label data, a non-identity Stat or an explicit Position makes this layer independent by default."
-        },
-        {
-          "format": "character(1)",
-          "description": "Position on the entity or reference path that anchors the text."
-        },
-        {
-          "format": "Position / NULL",
-          "description": "Position adjustment. For bound labels, leave this unset to follow the target layer."
-        },
-        {
-          "format": "LabelLayout",
-          "description": "A fixed or repelled label layout declaration."
-        },
-        {
-          "format": "named arguments",
-          "description": "Additional named visual styles and parameters accepted by this layer."
-        },
-        {
-          "format": "logical",
-          "description": "Suppress warnings for missing observations that the layer can omit."
-        },
-        {
-          "format": "logical / named logical",
-          "description": "Logical or named logical indicating whether the layer contributes legend keys."
-        },
-        {
-          "format": "logical",
-          "description": "Whether to inherit plot mappings and evaluate them on the layer data."
-        },
-        {
-          "format": "auto_id() / character(1) / NULL / NA",
-          "description": "Automatic plot-local layer ID. Use a unique name for explicit references."
-        }
-      ],
-      "value": "A ggplot2 layer for addition to a plot.",
-      "details": "Use the feature label contract with repel layout defaults. The input anchor stays attached to the same entity and display instance while text can move and receive a leader.\n\nIn circular coordinates, text outside the sequence ring uses bold type by default. An explicit or mapped fontface takes priority. A filled exterior label has a visible outline, including when it is placed with a fixed layout.\n\nNearby inward callouts can adjust their arc positions and rows together to keep text clear of other leaders.",
-      "errors": "Repel settings require a suitable label layout. Ambiguous or missing feature anchors are rejected.",
-      "roles": [
-        "Reference identities that locate source observations.",
-        "Stable feature identity.",
-        "Biological strand.",
-        "Label text.",
-        "Map or set text aesthetics. An explicit angle sets the text direction. On a circular map, fill supplies the colour for an exterior feature callout. If colour is omitted, the text contrasts with the mapped fill."
-      ],
-      "example_setup": ""
-    },
     "geom_gene_label": {
       "title": "Label genes with horizontal defaults",
       "intro": "Label genes with horizontal defaults.",
@@ -1227,7 +1174,7 @@
         },
         {
           "format": "character(1)",
-          "description": "Position on the entity or reference path that anchors the text."
+          "description": "The automatic anchor is the interval middle, the 3′ end of a primer or the residue position of a site or cut. Head and tail need a known strand."
         },
         {
           "format": "Position / NULL",
@@ -1236,6 +1183,10 @@
         {
           "format": "LabelLayout",
           "description": "A fixed or repelled label layout declaration."
+        },
+        {
+          "format": "character(1)",
+          "description": "Choose `\"auto\"`, `\"none\"`, `\"straight\"` or `\"elbow\"`. Automatic leaders connect displaced labels where appropriate."
         },
         {
           "format": "named arguments",
@@ -1270,71 +1221,6 @@
       ],
       "example_setup": ""
     },
-    "geom_gene_label_repel": {
-      "title": "Repel gene labels",
-      "intro": "Repel gene labels.",
-      "arguments": [
-        {
-          "format": "aes / NULL",
-          "description": "Aesthetic mapping from `aes()`. A local mapping overrides the matching inherited channel."
-        },
-        {
-          "format": "data.frame / function / NULL",
-          "description": "An automatically bound label reads the target entities after their Stat. A separate table or callback defines independent labels by default. To select a subset and preserve target placement, name the target in `anchor_layer` and supply matching `feature_id` values. A bound callback receives the target entity table."
-        },
-        {
-          "format": "Stat / character",
-          "description": "A compatible ggplot2 Stat or its name. The default uses the supplied records."
-        },
-        {
-          "format": "auto_anchor() / character(1) / NULL",
-          "description": "The default follows the only compatible gene layer. With several candidates, select one by ID. Set `NULL` for independent placement. Supplying label data, a non-identity Stat or an explicit Position makes this layer independent by default."
-        },
-        {
-          "format": "character(1)",
-          "description": "Position on the entity or reference path that anchors the text."
-        },
-        {
-          "format": "Position / NULL",
-          "description": "Position adjustment. For bound labels, leave this unset to follow the target layer."
-        },
-        {
-          "format": "LabelLayout",
-          "description": "A fixed or repelled label layout declaration."
-        },
-        {
-          "format": "named arguments",
-          "description": "Additional named visual styles and parameters accepted by this layer."
-        },
-        {
-          "format": "logical",
-          "description": "Suppress warnings for missing observations that the layer can omit."
-        },
-        {
-          "format": "logical / named logical",
-          "description": "Logical or named logical indicating whether the layer contributes legend keys."
-        },
-        {
-          "format": "logical",
-          "description": "Whether to inherit plot mappings and evaluate them on the layer data."
-        },
-        {
-          "format": "auto_id() / character(1) / NULL / NA",
-          "description": "Automatic plot-local layer ID. Use a unique name for explicit references."
-        }
-      ],
-      "value": "A ggplot2 layer for addition to a plot.",
-      "details": "Combine the gene label defaults with a repelling label layout. A subset may follow the anchored gene layer without recalculating its lanes.\n\nIn circular coordinates, text outside the sequence ring uses bold type by default. An explicit or mapped fontface takes priority. A filled exterior label has a visible outline, including when it is placed with a fixed layout.",
-      "errors": "Invalid anchors or incompatible layout settings fail with the same contract as the underlying label layer.",
-      "roles": [
-        "Reference identities that locate source observations.",
-        "Stable feature identity.",
-        "Biological strand.",
-        "Label text.",
-        "Map or set text aesthetics. An explicit angle sets the text direction. On a circular map, fill supplies the colour for an exterior feature callout. If colour is omitted, the text contrasts with the mapped fill."
-      ],
-      "example_setup": ""
-    },
     "geom_primer_label": {
       "title": "Label a directional primer end",
       "intro": "Label a directional primer end.",
@@ -1357,7 +1243,7 @@
         },
         {
           "format": "character(1)",
-          "description": "Position on the entity or reference path that anchors the text."
+          "description": "The automatic anchor is the interval middle, the 3′ end of a primer or the residue position of a site or cut. Head and tail need a known strand."
         },
         {
           "format": "Position / NULL",
@@ -1366,6 +1252,10 @@
         {
           "format": "LabelLayout",
           "description": "A fixed or repelled label layout declaration."
+        },
+        {
+          "format": "character(1)",
+          "description": "Choose `\"auto\"`, `\"none\"`, `\"straight\"` or `\"elbow\"`. Automatic leaders connect displaced labels where appropriate."
         },
         {
           "format": "named arguments",
@@ -1391,71 +1281,6 @@
       "value": "A ggplot2 layer for addition to a plot.",
       "details": "Use the binding interval and strand when positioning text relative to the primer's directional end. A named primer layer can provide the anchor after layout.",
       "errors": "The target must be identifiable and the directional position must be supported by the supplied evidence.",
-      "roles": [
-        "Reference identities that locate source observations.",
-        "Stable feature identity.",
-        "Biological strand.",
-        "Label text.",
-        "Map or set text aesthetics. An explicit angle sets the text direction. On a circular map, fill supplies the colour for an exterior feature callout. If colour is omitted, the text contrasts with the mapped fill."
-      ],
-      "example_setup": ""
-    },
-    "geom_primer_label_repel": {
-      "title": "Repel labels at directional primer ends",
-      "intro": "Repel labels at directional primer ends.",
-      "arguments": [
-        {
-          "format": "aes / NULL",
-          "description": "Aesthetic mapping from `aes()`. A local mapping overrides the matching inherited channel."
-        },
-        {
-          "format": "data.frame / function / NULL",
-          "description": "An automatically bound label reads the target entities after their Stat. A separate table or callback defines independent labels by default. To select a subset and preserve target placement, name the target in `anchor_layer` and supply matching `feature_id` values. A bound callback receives the target entity table."
-        },
-        {
-          "format": "Stat / character",
-          "description": "A compatible ggplot2 Stat or its name. The default uses the supplied records."
-        },
-        {
-          "format": "auto_anchor() / character(1) / NULL",
-          "description": "The default follows the only compatible primer layer. With several candidates, select one by ID. Set `NULL` for independent placement. Supplying label data, a non-identity Stat or an explicit Position makes this layer independent by default."
-        },
-        {
-          "format": "character(1)",
-          "description": "Position on the entity or reference path that anchors the text."
-        },
-        {
-          "format": "Position / NULL",
-          "description": "Position adjustment. For bound labels, leave this unset to follow the target layer."
-        },
-        {
-          "format": "LabelLayout",
-          "description": "A fixed or repelled label layout declaration."
-        },
-        {
-          "format": "named arguments",
-          "description": "Additional named visual styles and parameters accepted by this layer."
-        },
-        {
-          "format": "logical",
-          "description": "Suppress warnings for missing observations that the layer can omit."
-        },
-        {
-          "format": "logical / named logical",
-          "description": "Logical or named logical indicating whether the layer contributes legend keys."
-        },
-        {
-          "format": "logical",
-          "description": "Whether to inherit plot mappings and evaluate them on the layer data."
-        },
-        {
-          "format": "auto_id() / character(1) / NULL / NA",
-          "description": "Automatic plot-local layer ID. Use a unique name for explicit references."
-        }
-      ],
-      "value": "A ggplot2 layer for addition to a plot.",
-      "details": "Start with an anchored primer label and apply repel placement. Explicit label styles and the placement strategy can be configured separately.",
-      "errors": "Unknown target identity, unavailable strand or an incompatible layout is rejected.",
       "roles": [
         "Reference identities that locate source observations.",
         "Stable feature identity.",
@@ -1616,6 +1441,10 @@
           "description": "A fixed or repelled label layout declaration."
         },
         {
+          "format": "character(1)",
+          "description": "Choose `\"auto\"`, `\"none\"`, `\"straight\"` or `\"elbow\"`. Automatic leaders connect displaced labels where appropriate."
+        },
+        {
           "format": "named arguments",
           "description": "Additional named visual styles and parameters accepted by this layer."
         },
@@ -1639,66 +1468,6 @@
       "value": "A ggplot2 layer for addition to a plot.",
       "details": "Use a site table with a label or anchor to a named site layer. The source point and text placement are separate contracts.",
       "errors": "An anchored label needs an existing site with an unambiguous identity.",
-      "roles": [
-        "Reference identity. One-based source position.",
-        "Stable site identity.",
-        "Label text.",
-        "Visual attributes supported by the selected mark. Map through a scale or set fixed values."
-      ],
-      "example_setup": ""
-    },
-    "geom_site_label_repel": {
-      "title": "Repel labels at source points",
-      "intro": "Repel labels at source points.",
-      "arguments": [
-        {
-          "format": "aes / NULL",
-          "description": "Aesthetic mapping from `aes()`. A local mapping overrides the matching inherited channel."
-        },
-        {
-          "format": "data.frame / function / NULL",
-          "description": "An automatically bound label reads the target entities after their Stat. A separate table or callback defines independent labels by default. To select a subset and preserve target placement, name the target in `anchor_layer` and supply matching `site_id` values. A bound callback receives the target entity table."
-        },
-        {
-          "format": "Stat / character",
-          "description": "A compatible ggplot2 Stat or its name. The default uses the supplied records."
-        },
-        {
-          "format": "auto_anchor() / character(1) / NULL",
-          "description": "The default follows the only compatible site layer. With several candidates, select one by ID. Set `NULL` for independent placement. Supplying label data, a non-identity Stat or an explicit Position makes this layer independent by default."
-        },
-        {
-          "format": "Position / NULL",
-          "description": "Position adjustment. For bound labels, leave this unset to follow the target layer."
-        },
-        {
-          "format": "LabelLayout",
-          "description": "A fixed or repelled label layout declaration."
-        },
-        {
-          "format": "named arguments",
-          "description": "Additional named visual styles and parameters accepted by this layer."
-        },
-        {
-          "format": "logical",
-          "description": "Suppress warnings for missing observations that the layer can omit."
-        },
-        {
-          "format": "logical / named logical",
-          "description": "Logical or named logical indicating whether the layer contributes legend keys."
-        },
-        {
-          "format": "logical",
-          "description": "Whether to inherit plot mappings and evaluate them on the layer data."
-        },
-        {
-          "format": "auto_id() / character(1) / NULL / NA",
-          "description": "Automatic plot-local layer ID. Use a unique name for explicit references."
-        }
-      ],
-      "value": "A ggplot2 layer for addition to a plot.",
-      "details": "Use the site label contract with a repelling layout. Text movements and leaders remain associated with the site anchor.\n\nHorizontal circular callouts can supply `enzyme_label` and `coordinate_label` columns. Enzyme names are bold and positions are plain, with the order following the callout side.\n\nCircular labels with separate enzyme and coordinate fragments use a bold enzyme name by default. Supply fontface to set the same font weight on both fragments.",
-      "errors": "Missing or ambiguous site anchors and unsupported layout settings are errors.",
       "roles": [
         "Reference identity. One-based source position.",
         "Stable site identity.",
@@ -2686,7 +2455,7 @@
       "roles": [],
       "example_setup": ""
     },
-    "label_layout_fixed": {
+    "layout_label_fixed": {
       "title": "Configure fixed label placement",
       "intro": "Configure fixed label placement.",
       "arguments": [
@@ -2725,9 +2494,9 @@
       "roles": [],
       "example_setup": ""
     },
-    "label_layout_repel": {
+    "layout_label_repel": {
       "title": "Configure repelling label placement",
-      "intro": "Configure repelling label placement.",
+      "intro": "Arrange text around an anchor by checking available space, wrapping and overlap.",
       "arguments": [
         {
           "format": "character(1)",
@@ -2768,10 +2537,6 @@
         {
           "format": "nonnegative integer / Inf",
           "description": "Maximum number of conflicts permitted before hiding a label."
-        },
-        {
-          "format": "character(1)",
-          "description": "Policy for drawing a leader between the entity and text."
         },
         {
           "format": "positive mm / absolute grid unit / NULL",
@@ -3132,6 +2897,14 @@
         {
           "format": "theme object / NULL",
           "description": "Optional local axis theme."
+        },
+        {
+          "format": "absolute grid unit / NULL",
+          "description": "Nonnegative absolute grid unit between the path and the axis. Defaults to zero for circular maps and 0.8 mm elsewhere."
+        },
+        {
+          "format": "character(1)",
+          "description": "Choose `\"auto\"`, `\"parallel\"`, `\"perpendicular\"` or `\"horizontal\"` for tick text. A numeric `angle` requires `orientation = \"auto\"`."
         }
       ],
       "value": "A guide for `scale_seq_continuous()`.",
@@ -3166,8 +2939,8 @@
         }
       ],
       "value": "A guide for `scale_y_continuous()`.",
-      "details": "Set the guide on the band's native `scale_y_*()`, or set it on that scale within `scale_for()` for named tracks. The scale supplies limits, breaks, units and title. The guide places them on the reference path and the theme sets their appearance. Change band dimensions with `layout_track()`.",
-      "errors": "The guide needs a numerical track domain. An interval-only band cannot train it.",
+      "details": "Set the guide on the band's native `scale_y_*()`, or set it on that scale within `scale_for()` for named tracks. The scale supplies limits, breaks, units and title. The guide places them on the reference path and the theme sets their appearance. Change band dimensions with `layout_track()`.\n\nA native `guide_axis()` can set text angle, overlap, local theme, a text title, minor ticks and axis caps on the projected local axis. Use the track-specific helper to choose a reference or a path endpoint.",
+      "errors": "The guide needs a numerical track domain. An interval-only band cannot train it.\n\nThe local projection rejects `n.dodge`, `order`, ordinary panel `position` and mathematical-expression titles.",
       "roles": [],
       "example_setup": ""
     },
@@ -3182,10 +2955,6 @@
         {
           "format": "character(1); default empty string",
           "description": "Base font family."
-        },
-        {
-          "format": "empty",
-          "description": "Use theme() to set theme elements."
         }
       ],
       "value": "A ggplot2 theme.",
@@ -3205,10 +2974,6 @@
         {
           "format": "character(1); default empty string",
           "description": "Base font family."
-        },
-        {
-          "format": "empty",
-          "description": "Use theme() to set theme elements."
         }
       ],
       "value": "An ordinary ggplot2 theme.",
@@ -3228,10 +2993,6 @@
         {
           "format": "character(1); default empty string",
           "description": "Base font family."
-        },
-        {
-          "format": "empty",
-          "description": "Use theme() to set theme elements."
         }
       ],
       "value": "An ordinary ggplot2 theme.",
@@ -3251,10 +3012,6 @@
         {
           "format": "character(1); default empty string",
           "description": "Base font family."
-        },
-        {
-          "format": "empty",
-          "description": "Use theme() to set theme elements."
         }
       ],
       "value": "An ordinary ggplot2 theme.",
@@ -3274,10 +3031,6 @@
         {
           "format": "character(1); default empty string",
           "description": "Base font family."
-        },
-        {
-          "format": "empty",
-          "description": "Use theme() to set theme elements."
         }
       ],
       "value": "An ordinary ggplot2 theme.",
@@ -3322,8 +3075,8 @@
       "example_setup": ""
     },
     "as_ggchord_feature": {
-      "title": "Adapt a table of interval features",
-      "intro": "Adapt a table of interval features.",
+      "title": "Normalize annotation locations",
+      "intro": "Normalize intervals, sites and cut locations with their source data.",
       "arguments": [
         {
           "format": "data.frame / GRanges / supported interval object",
@@ -3336,10 +3089,14 @@
         {
           "format": "character / NULL",
           "description": "Optional native `\"bp\"` or `\"aa\"` declaration. An existing declaration must agree. Undeclared observation units can be resolved against a reference later."
+        },
+        {
+          "format": "character(1)",
+          "description": "Use `\"interval\"` for closed intervals, `\"site\"` for residue positions, or `\"cut\"` for interbase cut boundaries attached to a residue. `\"auto\"` requires one unambiguous table type."
         }
       ],
-      "value": "A feature data frame with `accver`, `start`, `end`, strand and available feature metadata. Use `data_report()` for provenance.",
-      "details": "Map a feature table or compatible ranges to closed source coordinates. Retain strand, compound segments and original identities where supplied.",
+      "value": "An annotation data frame with `accver`, `location_kind`, the corresponding coordinates and any available strand and metadata. Use `data_report()` for entity, segment and source-row provenance.",
+      "details": "Intervals use one-based inclusive `start` and `end` and may contain multiple segments. Sites use one-based `pos`. Cuts retain their residue anchor in `pos` and interbase boundaries in `cut_top` and `cut_bottom`, from 0 through the declared reference length. Stable identities can be provided in `entity_id`, `feature_id` or `site_id` as appropriate. An input cut may have one or both boundaries missing. The `cut_status` column records which boundaries are known.",
       "errors": "Explicit column correspondences must exist. Coordinate and unit checks apply to the chosen convention.",
       "roles": [],
       "example_setup": ""
@@ -3762,7 +3519,7 @@
         }
       ],
       "value": "A collection of the same class as x in local coordinates.",
-      "details": "Use explicit loci to produce local reference IDs and coordinates while retaining original source positions. Trim or drop at boundaries according to policy. Clipped HSPs preserve source evidence and report estimated geometry.",
+      "details": "Use explicit loci to produce local reference IDs and coordinates while retaining original source positions. Trim or drop at boundaries according to policy. Clipped HSPs preserve source evidence and report estimated geometry.\n\nA cut goes into a window through its residue anchor. The local table keeps only cut boundaries inside the window. `cut_status` describes the local boundaries and `source_cut_status` retains the source status.",
       "errors": "",
       "roles": [],
       "example_setup": ""
@@ -4860,7 +4617,7 @@
         }
       ],
       "value": "Per-layer stage tables, geometry components, stage status, reference and provenance information, diagnostics and measurement conditions.",
-      "details": "Select layers by ID and nested panel path. Source-only export uses the layer's source contract. Physical geometry needs both dimensions; a device-backed measurement is recorded separately from an estimate.",
+      "details": "Select layers by ID and nested panel path. Source-only export uses the layer's source contract. Physical geometry needs both dimensions; a device-backed measurement is recorded separately from an estimate.\n\nWith the source stage selected, each layer’s `provenance` includes available `data_report()` lineage. The stage tables retain their original roles.",
       "errors": "Unknown stages or layer paths and partial dimensions fail. Failed Fusion ribbons and panels identify their path, while valid components remain available.",
       "roles": [],
       "example_setup": ""
@@ -5500,17 +5257,15 @@
     "geom_seq": "Sequence backbones",
     "geom_seq_label": "Sequence labels",
     "geom_seq_break": "Marks for sequence breaks",
-    "geom_feature": "Interval feature geometry",
-    "geom_feature_label": "Interval feature labels",
-    "geom_site": "Point and cut markers",
-    "geom_site_label": "Point and cut labels",
+    "geom_feature": "Features, sites and cuts",
+    "geom_feature_label": "Feature, site and cut labels",
     "geom_link_line": "Links between source points",
     "geom_link_ribbon": "Ribbons between source intervals",
     "geom_alignment_segment": "Alignment segments",
     "geom_residue": "Residue cells",
     "geom_track": "Quantitative track layers",
     "annotation_seq_scalebar": "Sequence scale bars",
-    "label_layout_fixed": "Label placement",
+    "layout_label_fixed": "Label placement",
     "position_offset": "Feature positions",
     "stat_coverage": "Interval coverage",
     "scale_for": "Scope a scale to layers or tracks",
@@ -5573,11 +5328,11 @@
       }
     },
     "geom_seq_label": {
-      "intro": "Label a registered reference along its path with `geom_seq_label()`. Use `geom_seq_center_label()` for text at the centre of a single-reference circular map. It sets `anchor = \"center\"` with the same horizontal fixed layout as the general entry point.",
+      "intro": "Label a registered reference along its path with `geom_seq_label()`. Use `geom_seq_label_center()` for text at the centre of a single-reference circular map. It sets `anchor = \"center\"` with the same horizontal fixed layout as the general entry point.",
       "arguments": {
         "anchor": "Only in `geom_seq_label()`. Choose `\"start\"`, `\"middle\"` (default) or `\"end\"` on the reference path, or `\"center\"` for the centre of a circular map. The centre shortcut fixes this argument to `\"center\"`.",
         "position": "Defaults to `\"identity\"`. Use [`position_offset()`](position_offset.html#api-position_offset) to offset a path label. Centre labels require the identity Position.",
-        "label_layout": "Both default to [`label_layout_fixed(orientation = \"horizontal\")`](label_layout_fixed.html#api-label_layout_fixed). Set a different layout for path text, for example a fixed tangent orientation. Centre labels require a fixed layout."
+        "label_layout": "Both default to [`layout_label_fixed(orientation = \"horizontal\")`](layout_label_fixed.html#api-layout_label_fixed). Set a different layout for path text, for example a fixed tangent orientation. Centre labels require a fixed layout."
       },
       "roles": "Both read the registered reference. Without a label mapping, the label is the reference `accver`. Use `aes(label = ...)` for text from the reference table. Each selected display instance can get its own label. Text aesthetics include `colour`, `size`, `family`, `fontface`, `angle` and `alpha`.",
       "details": "Both return a ggplot2 layer. Path labels work with sequence-path coordinates. For centre text, use [`coord_circular()`](coord_circular.html#api-coord_circular), which requires one effective reference per panel.",
@@ -5587,28 +5342,29 @@
           "title": "Label the start of a sequence",
           "description": "Map the reference ID to text and align it to the start of each displayed path."
         },
-        "geom_seq_center_label": {
+        "geom_seq_label_center": {
           "title": "Label the centre of a circle",
           "description": "Use one reference and add a larger label at the centre of the circle."
         }
       }
     },
     "geom_feature": {
-      "intro": "Draw a source interval as a block, arrow or other feature shape with `geom_feature()`. Choose `geom_gene()` for a strand-positioned gene arrow, `geom_primer()` for a slim direction mark at a primer-binding interval, or `geom_seq_region()` to highlight an interval with a translucent block.",
+      "intro": "Draw sequence annotations with `geom_feature()`. Use `geom_gene()`, `geom_primer()`, `geom_seq_region()`, `geom_site()` and `geom_restriction_site()` for marks with specialized defaults.",
       "arguments": {
-        "shape": "Defaults to `\"block\"` in `geom_feature()` and `geom_seq_region()`, `\"arrow\"` in `geom_gene()`, and `\"primer_arc\"` in `geom_primer()`. Supported shapes include `block`, `arrow`, `compact_arrow`, `promoter_arrow`, `primer_arrow`, `marker`, `capped_line`, `primer_arc`, `chevron` and `lollipop`. A fixed shape overrides a shape mapping.",
+        "shape": "The general entry defaults to `\"block\"` for intervals, `\"tick\"` for sites and `\"cut\"` for cuts. Gene and primer marks default to `\"arrow\"` and `\"primer_arc\"`. Map interval shapes to a compatible scale or supply a compatible fixed shape.",
         "thickness": "Physical thickness normal to the path, 2 mm by default. Supply a number in millimetres, an absolute grid unit or values selected by reference or strand. In circular maps this sets the shaft thickness for the arrow shapes.",
-        "position": "`geom_feature()` defaults to `\"identity\"`, `geom_gene()` to [`position_strand()`](position_strand.html#api-position_strand), and the primer and region shortcuts to [`position_offset(0)`](position_offset.html#api-position_offset). Use a compatible Position to change placement.",
+        "position": "`geom_gene()` defaults to [`position_strand()`](position_strand.html#api-position_strand). The primer and region shortcuts use [`position_offset(0)`](position_offset.html#api-position_offset). The general feature, site and cut entries default to identity.",
         "alpha": "Explicit in `geom_seq_region()`, which defaults to 0.25. Set or map transparency to override that default.",
-        "...": "Named styles, geometry settings and parameters for the selected Stat. Arrow geometry accepts settings such as `head_length`, `head_width`, `head_style` and `short_feature`. The gene layer uses `head_style = \"flush\"` by default. Head length and width use millimetres or absolute grid units. In circular coordinates a shouldered arrow with automatic head width has a head 1.42 times the shaft thickness."
+        "...": "Named visual styles, compatible shape settings and parameters for the selected Stat. Arrow settings such as `head_length`, `head_width`, `head_style` and `short_feature` apply to interval arrows.",
+        "stat": "A compatible ggplot2 Stat or its name. The default uses the supplied records."
       },
-      "roles": "Use one-based closed intervals with `accver`, `start` and `end`. Supply `strand` for directional shapes and disjoint segment information where appropriate. The primer mark points to the 3′ end on the recorded strand. Map visual properties such as `fill`, `colour`, `alpha` and `linewidth` in `aes()`. For mapped shapes, supply a manual or identity scale of valid shape names.",
-      "details": "All four functions return ggplot2 layers. Shape, side and thickness change the display of an interval while preserving its source coordinates. A `\"+/-\"` feature keeps one source identity and can draw two heads. Add labels using the [interval feature label family](geom_feature_label.html#api-geom_feature_label).",
-      "example_intro": "The examples use blocks and arrows, primer marks between circular backbones, and highlights underneath a backbone.",
+      "roles": "Intervals use one-based inclusive `start` and `end`; directional marks use the source `strand`. Sites use one-based `pos`. Cuts retain `pos` as the residue anchor and use `cut_top` and `cut_bottom` for interbase coordinates. A supplied `entity_id` or an appropriate `feature_id` or `site_id` can identify a record across layers.",
+      "details": "The geometry follows the corresponding source location. A `\"+/-\"` interval can draw two arrowheads while retaining one source identity. The [annotation label family](geom_feature_label.html#api-geom_feature_label) follows the displayed anchors.",
+      "example_intro": "Draw annotations with mapped shapes or with the default shapes for sites and cuts.",
       "examples": {
         "geom_feature": {
-          "title": "Map shape and fill",
-          "description": "Give feature types different shapes and colours and set physical thickness by reference."
+          "title": "Map shapes and draw point annotations",
+          "description": "Map interval shape and fill by type, then draw a site tick and an interbase cut with the same entry point."
         },
         "geom_gene": {
           "title": "Use strand-positioned gene arrows",
@@ -5621,59 +5377,7 @@
         "geom_seq_region": {
           "title": "Highlight intervals behind a backbone",
           "description": "Draw wide, translucent regions first and add the sequence backbone above them."
-        }
-      }
-    },
-    "geom_feature_label": {
-      "intro": "Label feature intervals with the general entry point `geom_feature_label()`, or use the gene and primer shortcuts when automatic binding should look for a particular layer type. Each has a fixed and a repelling entry point. Fixed layouts keep text at its prescribed position. Repelling layouts can move text around the same anchor and draw a leader.",
-      "arguments": {
-        "data": "With `NULL` and a bound anchor, use the target entities after its Stat. A table or callback makes the label layer independent under automatic anchoring. To label a subset of a target, specify its ID in `anchor_layer` and provide matching keys. A callback on an explicitly bound layer receives the target entity table.",
-        "stat": "A compatible ggplot2 Stat or its name (default `\"identity\"`). Bound labels require the identity Stat and use the target’s post-Stat entities.",
-        "anchor_layer": "With [`auto_anchor()`](auto_anchor.html#api-auto_anchor) (default), the general entry follows the unique compatible interval layer, including a feature, gene, primer or region layer. The gene and primer shortcuts look for their own layer type. Layer order is immaterial. Multiple matches cause an error listing their IDs. With no candidates, the labels can draw independently if plot data or mappings supply the interval fields. A separate label table or callback, a non-identity Stat or a non-`NULL` Position also selects independent placement by default. Pass a layer ID to bind explicitly or `NULL` for independent labels.",
-        "anchor": "Use `\"middle\"` (general and gene default), `\"head\"` (primer default), `\"start\"`, `\"end\"` or `\"tail\"`. Start and end follow the source endpoints. Head and tail follow the feature direction and require a known `+` or `-` strand.",
-        "position": "Leave `NULL` for bound labels to follow the target placement, including strand side and lane. Independent labels can use the identity Position or [`position_offset()`](position_offset.html#api-position_offset).",
-        "label_layout": "The fixed general and primer functions default to [`label_layout_fixed()`](label_layout_fixed.html#api-label_layout_fixed), with text oriented relative to the feature. The fixed gene function defaults to `label_layout_fixed(orientation = \"horizontal\")`. Fixed layouts can hide overlapping labels with the default `overlap = \"hide\"`. All three `_repel()` functions default to [`label_layout_repel()`](label_layout_repel.html#api-label_layout_repel), which can relocate labels and attach leaders. Every entry point accepts either explicit layout.",
-        "...": "Named text styles and layer parameters. Leader styles such as `segment_colour` and `segment_linetype` require a repelled layout."
-      },
-      "roles": "Label rows supply `accver`, `start`, `end` and text in `label` or `aes(label = ...)`. For a separately supplied subset of a bound target, match by `accver` and stable `feature_id`. Use `strand` for direction-aware anchors. Both functions take text aesthetics including `colour`, `size`, `family`, `fontface`, `angle` and `alpha`. In a circular map, exterior labels default to bold unless you set or map `fontface`. Set or map `fill` to give an exterior callout a background with a visible outline.",
-      "details": "All six functions return ggplot2 layers. They place text and leaders while preserving the underlying geometry. A bound label follows the target’s displayed geometry and its identity must match unambiguously.",
-      "example_intro": "Compare general feature labels and primer endpoints, and use the same crowded set of gene intervals and text size to compare fixed with repelling placement.",
-      "examples": {
-        "geom_feature_label": {
-          "title": "Label a general feature layer",
-          "description": "Add fixed labels with the feature-oriented layout."
         },
-        "geom_feature_label_repel": {
-          "title": "Repel feature labels",
-          "description": "Label the same kind of feature intervals with a repelling layout."
-        },
-        "geom_gene_label": {
-          "title": "Fixed placement",
-          "description": "Keep text at its fixed anchor position. At this figure size the default overlap policy keeps Gene alpha visible and hides the other two labels."
-        },
-        "geom_gene_label_repel": {
-          "title": "Automatic collision avoidance",
-          "description": "Let text move around its anchor to make room for all three labels. A leader line connects displaced text to the corresponding gene."
-        },
-        "geom_primer_label": {
-          "title": "Label a primer at its 3′ end",
-          "description": "Use the primer layer and its directional head as the default anchor."
-        },
-        "geom_primer_label_repel": {
-          "title": "Repel labels around primer ends",
-          "description": "Use the same anchor contract with the automatic repelling layout."
-        }
-      }
-    },
-    "geom_site": {
-      "intro": "Mark a known point on a reference using `geom_site()`. Choose `geom_restriction_site()` when both strand cut positions are available and the default mark should show their geometry.",
-      "arguments": {
-        "shape": "Choose `\"tick\"`, `\"point\"` or `\"cut\"`. The default is `\"tick\"` for `geom_site()` and `\"cut\"` for `geom_restriction_site()`. Use a manual or identity scale for a shape mapping. Use `fill` with the point symbol."
-      },
-      "roles": "Provide `accver` and one-based `pos`. A cut mark uses `cut_top` and `cut_bottom` in inter-residue coordinates. Use `site_id` as a stable key when selecting a subset for a separate label layer.",
-      "details": "Both return ggplot2 layers. They draw supplied positions and cut coordinates. Add text and leaders with the [point and cut label family](geom_site_label.html#api-geom_site_label).",
-      "example_intro": "Draw a point mark and then display separately declared strand cuts.",
-      "examples": {
         "geom_site": {
           "title": "Mark a source position",
           "description": "Draw a tick at the supplied source position and add its label."
@@ -5684,23 +5388,37 @@
         }
       }
     },
-    "geom_site_label": {
-      "intro": "Label source points or restriction cuts. `geom_site_label()` uses a fixed layout and `geom_site_label_repel()` defaults to automatic repositioning with leaders as needed. Both can follow an existing site layer.",
+    "geom_feature_label": {
+      "intro": "Use `geom_feature_label()` for interval, site or cut annotations. The gene, primer and site shortcuts select their respective kinds of targets. Choose a fixed or repelling text layout on any of these layers.",
       "arguments": {
-        "anchor_layer": "The default [`auto_anchor()`](auto_anchor.html#api-auto_anchor) follows the unique compatible site layer. Specify a layer ID when several candidates exist. Supply `NULL` for independent placement. With automatic anchoring, label data, a non-identity Stat or a non-`NULL` Position also selects independent placement.",
-        "label_layout": "`geom_site_label()` defaults to [`label_layout_fixed()`](label_layout_fixed.html#api-label_layout_fixed). `geom_site_label_repel()` defaults to [`label_layout_repel()`](label_layout_repel.html#api-label_layout_repel). Both accept an explicit layout. Set leader styles with a repelling layout."
+        "data": "With a bound anchor and `data = NULL`, read the target entities after their Stat. To label an explicit subset, name the target in `anchor_layer` and retain the matching source identities.",
+        "stat": "A compatible ggplot2 Stat or its name (default `\"identity\"`). Bound labels require the identity Stat and use the target’s post-Stat entities.",
+        "anchor_layer": "[`auto_anchor()`](auto_anchor.html#api-auto_anchor) uses a unique compatible target. Select its ID if multiple layers are compatible. Use `NULL` for independent placement.",
+        "anchor": "The general entry uses `\"auto\"`, which chooses the interval middle, the directional head for a primer or the residue anchor for a site or cut. Intervals can use `\"start\"`, `\"end\"`, `\"middle\"`, `\"head\"` and `\"tail\"`. Directional endpoints require reliable strand evidence.",
+        "position": "Leave `NULL` for bound labels to follow the target placement, including strand side and lane. Independent labels can use the identity Position or [`position_offset()`](position_offset.html#api-position_offset).",
+        "label_layout": "Use [`layout_label_fixed()`](layout_label_fixed.html#api-layout_label_fixed) to place text at a set offset, or [`layout_label_repel()`](layout_label_repel.html#api-layout_label_repel) to avoid collisions. The gene shortcut defaults to a horizontal fixed layout.",
+        "...": "Named visual styles. Set `segment_colour`, `segment_linewidth` and `segment_linetype` for the leader. When omitted, the line colour follows the final text colour.",
+        "leader": "Use `\"auto\"`, `\"none\"`, `\"straight\"` or `\"elbow\"` on the label layer. Both fixed and repelling layouts can draw an explicit leader."
       },
-      "roles": "Point labels use `accver`, one-based `pos`, and text from `label` or `aes(label = ...)`. Match a separately supplied subset of a named target by `accver` and `site_id`. Text aesthetics include `colour`, `size`, `family`, `fontface` and `alpha`.",
-      "details": "Both return ggplot2 layers. Bound labels follow their targets after the target statistic and display placement. The point or cut geometry is drawn by [the site layer](geom_site.html#api-geom_site).",
-      "example_intro": "Label a point with fixed placement, then try automatic placement at the same kind of source position.",
+      "roles": "Map `label` to the source text. For a separate label subset, give the target layer ID and keep the matching `entity_id` or the appropriate `feature_id` or `site_id`. For independent labels, include the annotation location fields. Text aesthetics include `colour`, `size`, `family`, `fontface`, `angle` and `alpha`.",
+      "details": "Labels follow an unambiguous source identity and its displayed feature, site or cut. Text placement and leaders preserve the underlying location. In circular maps outer labels default to bold unless you set or map `fontface`.",
+      "example_intro": "Connect fixed labels with leaders, repel a site label and compare two layouts for the same group of genes.",
       "examples": {
+        "geom_feature_label": {
+          "title": "Label intervals and sites",
+          "description": "Draw fixed gene text with straight leaders, then use the same label entry with a collision-aware layout for a site."
+        },
+        "geom_gene_label": {
+          "title": "Compare fixed and repelling placement",
+          "description": "Use one crowded gene layer and identical text size in both layouts."
+        },
+        "geom_primer_label": {
+          "title": "Label a primer at its 3′ end",
+          "description": "Use the primer layer and its directional head as the default anchor."
+        },
         "geom_site_label": {
           "title": "Fixed site label",
           "description": "Read the label from the point data."
-        },
-        "geom_site_label_repel": {
-          "title": "Repelling site label",
-          "description": "Use a repelling layout around the source position."
         }
       }
     },

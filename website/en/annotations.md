@@ -12,7 +12,7 @@ Draw the nine pUC19 annotations on their 2,686 bp backbone. Each feature row car
 
 ## Label two CDS while placing all nine features {#anchors}
 
-Keep the source match ID as `feature_id`. The layer named `features` places overlapping intervals in lanes with `position_feature_stack()`. The label layer selects the two CDS and names the original layer in `anchor_layer` so each label follows its feature, even after the selection.
+Keep the source match ID as `feature_id`. The layer named `features` places overlapping intervals in lanes with `position_feature_stack()`. The label layer selects the two CDS and names the original layer in `anchor_layer` so each label follows its feature, even after the selection. `layout_label_repel()` arranges the text around those anchors. Set `leader` and `segment_colour` on the label layer to control the connecting lines.
 
 {{example:feature-subset-labels}}
 

@@ -10,7 +10,7 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-<!-- Reviewed English source SHA-256: d897320e60fe870289b735e7336ae994fdbe698b3e4d40ef578c53c2278eba75 -->
+<!-- Reviewed English source SHA-256: 21f5997e997b2999a02ebe8e94702970d15bcdb21f7b835e676d6f807a66eff9 -->
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(eval = FALSE, collapse = TRUE)
@@ -62,7 +62,7 @@ comparison +
 
 ## 标注单序列圆图 {#circular-start}
 
-圆图的每个面板使用一条参考序列。此例只有一个基因层，标签会自动跟随该层中基因的显示位置。若有多个基因层，请给目标层命名，并将该名称传给 `anchor_layer`。
+每个圆图面板只使用一条参考序列。这里的基因标签跟随唯一基因层上的显示位置。若有多个兼容的注释层，请给目标层指定 ID，再通过 `anchor_layer` 引用它。`layout_label_repel()` 围绕锚点调整文字位置。引导线由标签层的 `leader` 参数控制。
 
 ```{r workflow-4}
 ref <- data.frame(accver = "map", length = 1000, topology = "circular")
@@ -74,7 +74,7 @@ features <- data.frame(
 ggchord() +
   geom_seq(data = ref) +
   geom_gene(data = features, fill = "#277A73") +
-  geom_gene_label(aes(label = label)) +
+  geom_feature_label(aes(label = label), label_layout = layout_label_repel()) +
   layout_sequences(angular_gap = 12) +
   coord_circular(start_angle = 90) +
   theme_ggchord_plasmid()

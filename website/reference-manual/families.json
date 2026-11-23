@@ -46,7 +46,7 @@
   ],
   "geom_seq_label": [
     "geom_seq_label",
-    "geom_seq_center_label"
+    "geom_seq_label_center"
   ],
   "geom_seq_break": [
     "geom_seq_break"
@@ -55,23 +55,15 @@
     "geom_feature",
     "geom_gene",
     "geom_primer",
-    "geom_seq_region"
-  ],
-  "geom_feature_label": [
-    "geom_feature_label",
-    "geom_feature_label_repel",
-    "geom_gene_label",
-    "geom_gene_label_repel",
-    "geom_primer_label",
-    "geom_primer_label_repel"
-  ],
-  "geom_site": [
+    "geom_seq_region",
     "geom_site",
     "geom_restriction_site"
   ],
-  "geom_site_label": [
-    "geom_site_label",
-    "geom_site_label_repel"
+  "geom_feature_label": [
+    "geom_feature_label",
+    "geom_gene_label",
+    "geom_primer_label",
+    "geom_site_label"
   ],
   "geom_link_line": [
     "geom_link_line"
@@ -104,9 +96,9 @@
   "annotation_seq_scalebar": [
     "annotation_seq_scalebar"
   ],
-  "label_layout_fixed": [
-    "label_layout_fixed",
-    "label_layout_repel"
+  "layout_label_fixed": [
+    "layout_label_fixed",
+    "layout_label_repel"
   ],
   "position_offset": [
     "position_offset",

@@ -15,7 +15,7 @@ ggchord(reference) +
     "MT108731.1" = "#0072B2", "MT118296.1" = "#D55E00"
   )) +
   geom_seq_label(
-    label_layout = label_layout_fixed(orientation = "feature", side = "negative", offset = 8)
+    label_layout = layout_label_fixed(orientation = "feature", side = "negative", offset = 8)
   ) +
   layout_sequences(angular_gap = 9) +
   coord_chord() +

@@ -22,7 +22,9 @@ validate_ggchord_data(
 \item{action}{Report, warn, or signal an error with the complete report.}
 
 \item{checks}{Which checks to run. The schema check includes declared
-reference topology and feature strand and directionality.
+reference topology, feature location, strand and directionality. Track
+location tables can omit values; individual numeric geoms check their
+value requirements.
 The coordinates check includes declared alignment source lengths.}
 }
 \value{

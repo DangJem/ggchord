@@ -152,54 +152,26 @@ guide_ggchord_colorbar <- guide_ggchord_colourbar
 #' Resolve a guide theme and placement for one chord role
 #' @noRd
 ggchord_role_guide_spec <- function(plot, role, colourbar = FALSE) {
-  settings <- ggchord_plot_settings(plot)
-  common <- settings$legend
-  item <- settings$legends[[role]]
-  # Keep legends at the outer sides of the plotting area by default. The
-  # continuous ribbon/Identity guide uses the left edge; compact categorical
-  # guides use the right. An explicitly supplied common or role position still
-  # takes precedence, including an ordinary theme(legend.position = ...).
+  # An explicitly placed guide or an ordinary plot theme may set the outer
+  # side. Keep the default Identity placement and device-aware sizing.
+  global_position <- plot$theme$legend.position
+  if (identical(global_position, "none")) return(list(hidden = TRUE))
   default_position <- if (identical(role, "ribbon")) "left" else "right"
-  resolved_position <- item$position %||% common$position %||%
-    plot$theme$legend.position %||% default_position
-  global_position <- common$position %||% plot$theme$legend.position
-  hidden <- identical(global_position, "none") || isTRUE(item$hidden) ||
-    identical(item$position, "none")
-  if (hidden) return(list(hidden = TRUE))
-
+  resolved_position <- global_position %||% default_position
+  resolved_direction <- plot$theme$legend.direction
   size_scale <- if (is.null(plot$ggchord$layout_policy)) ggchord_device_scale() else
     plot$ggchord$adaptive_report$spacing_factor %||% 1
-  field_map <- c(
-    background = "legend.background", key = "legend.key",
-    key.size = "legend.key.size", key.width = "legend.key.width",
-    key.height = "legend.key.height", text = "legend.text",
-    text.position = "legend.text.position", title = "legend.title",
-    title.position = "legend.title.position", margin = "legend.margin",
-    spacing = "legend.spacing"
+  explicit <- plot$ggchord$theme_explicit
+  vals <- list(
+    legend.key.width = explicit$legend.key.width %||% explicit$legend.key.size %||%
+      plot$theme$legend.key.width,
+    legend.key.height = explicit$legend.key.height %||% explicit$legend.key.size %||%
+      plot$theme$legend.key.height
   )
-  vals <- list()
-  for (field in names(field_map)) {
-    value <- item[[field]] %||% common[[field]]
-    if (!is.null(value)) vals[[field_map[[field]]]] <- value
-  }
-  # key.width/key.height take precedence over key.size. Responsive defaults
-  # are used only when neither the role nor the common theme supplied units.
-  key_size <- item$key.size %||% common$key.size
-  explicit_width <- item$key.width %||% common$key.width %||%
-    plot$theme$legend.key.width
-  explicit_height <- item$key.height %||% common$key.height %||%
-    plot$theme$legend.key.height
-  if (!is.null(explicit_width)) vals$legend.key.width <- explicit_width
-  if (!is.null(explicit_height)) vals$legend.key.height <- explicit_height
-  if (is.null(explicit_width) && !is.null(key_size))
-    vals$legend.key.width <- key_size
-  if (is.null(explicit_height) && !is.null(key_size))
-    vals$legend.key.height <- key_size
-  resolved_direction <- item$direction %||% common$direction
   horizontal <- colourbar && (
     identical(resolved_direction, "horizontal") ||
-    resolved_position %in% c("top", "bottom") ||
-      identical(common$box, "horizontal")
+      resolved_position %in% c("top", "bottom") ||
+      identical(plot$theme$legend.box, "horizontal")
   )
   if (is.null(vals$legend.key.width))
     vals$legend.key.width <- unit(
@@ -209,40 +181,18 @@ ggchord_role_guide_spec <- function(plot, role, colourbar = FALSE) {
     vals$legend.key.height <- unit(
       if (colourbar && !horizontal) 80 else if (colourbar) 3.8 else 4, "mm"
     ) * size_scale
-  raw_text <- item$text %||% common$text
-  raw_title <- item$title %||% common$title
-  plot_text <- plot$theme$legend.text
-  plot_title <- plot$theme$legend.title
-  if (is.null(raw_text) && inherits(plot_text, "element_text") &&
-      !is.null(plot_text@size) && !inherits(plot_text@size, "rel")) raw_text <- plot_text
-  if (is.null(raw_title) && inherits(plot_title, "element_text") &&
-      !is.null(plot_title@size) && !inherits(plot_title@size, "rel")) raw_title <- plot_title
-  # A concrete plot theme must reach the guide, whose compact defaults would
-  # otherwise override it after responsive sizing has correctly been skipped.
-  if (!is.null(raw_text)) vals$legend.text <- raw_text
-  if (!is.null(raw_title)) vals$legend.title <- raw_title
-  responsive_text <- is.null(raw_text) ||
-    (inherits(raw_text, "element_text") &&
-       !is.null(raw_text@size) && inherits(raw_text@size, "rel"))
-  responsive_title <- is.null(raw_title) ||
-    (inherits(raw_title, "element_text") &&
-       !is.null(raw_title@size) && inherits(raw_title@size, "rel"))
-  if (responsive_text) {
-    vals$legend.text <- element_text(
-      size = ggchord_theme_point_size(plot, "legend.text", 8) * size_scale
-    )
-  }
-  if (responsive_title) {
-    vals$legend.title <- element_text(
-      size = ggchord_theme_point_size(plot, "legend.title", 9) * size_scale
-    )
-  }
-  if (colourbar) {
-    if (!is.null(item[["ticks"]])) vals$legend.ticks <- item[["ticks"]]
-    if (!is.null(item[["ticks.length"]]))
-      vals$legend.ticks.length <- item[["ticks.length"]]
-    if (!is.null(item[["axis.line"]]))
-      vals$legend.axis.line <- item[["axis.line"]]
+  # Preserve inherited typography while resolving relative sizes for the
+  # device measurement. Absolute sizes and blank elements remain explicit.
+  text_fields <- c(legend.text = 8, legend.title = 9)
+  for (field in names(text_fields)) {
+    style <- plot$theme[[field]] %||% element_text()
+    if (inherits(style, "element_text") &&
+        (is.null(style@size) || inherits(style@size, "rel"))) {
+      style <- ggchord_theme_element(plot, field) %||% style
+      if (inherits(style, "element_text"))
+        style@size <- ggchord_theme_point_size(plot, field, text_fields[[field]]) * size_scale
+    }
+    vals[[field]] <- style
   }
   list(
     hidden = FALSE,
@@ -309,20 +259,15 @@ ggchord_identity_guide <- function(plot = NULL, aesthetic = "ribbon_fill") {
       }
     required <- max(((head(dimensions,-1L)+tail(dimensions,-1L))/2 + 1.2) /
       (diff(values)/100))
-    settings <- ggchord_plot_settings(plot)
-    field <- if(horizontal) "key.width" else "key.height"
+    field <- if (horizontal) "key.width" else "key.height"
     thickness_field <- if (horizontal) "key.height" else "key.width"
-    thickness <- settings$legends$ribbon[[thickness_field]] %||%
-      settings$legends$ribbon$key.size %||%
-      settings$legend[[thickness_field]] %||% settings$legend$key.size %||%
-      plot$ggchord$theme_explicit[[paste0("legend.", thickness_field)]] %||%
-      plot$ggchord$theme_explicit$legend.key.size %||% ggchord_identity_bar_width()
+    explicit_theme <- plot$ggchord$theme_explicit
+    thickness <- explicit_theme[[paste0("legend.", thickness_field)]] %||%
+      explicit_theme$legend.key.size %||% ggchord_identity_bar_width()
     spec$theme <- spec$theme + do.call(theme,
       setNames(list(thickness), paste0("legend.", thickness_field)))
-    explicit <- settings$legends$ribbon[[field]] %||%
-      settings$legends$ribbon$key.size %||%
-      plot$ggchord$theme_explicit[[paste0("legend.", field)]] %||%
-      plot$ggchord$theme_explicit$legend.key.size
+    explicit <- explicit_theme[[paste0("legend.", field)]] %||%
+      explicit_theme$legend.key.size
     if(is.null(explicit)) {
       length_mm <- max(required, (if(horizontal) 100 else 80) * spec$size_scale)
       spec$theme <- spec$theme + do.call(theme,
@@ -376,7 +321,6 @@ ggchord_guide_columns <- function(labels, spec) {
 ggchord_guide_height_budget <- function(plot,position) {
   canvas <- ggchord_render_dimensions()
   if(any(!is.finite(canvas)))return(NULL)
-  settings <- ggchord_plot_settings(plot)
   roles <- character()
   for(layer in plot$layers) {
     if(identical(layer$show.legend,FALSE))next
@@ -387,11 +331,11 @@ ggchord_guide_height_budget <- function(plot,position) {
         gene_fill="gene",feature_fill="feature",region_fill="region",NULL)
       if(is.null(role))next
       scale <- plot$scales$get_scales(aes)
-      if(!is.null(scale) && identical(scale$guide,"none"))next
-      item <- settings$legends[[role]]
-      where <- item$position %||% settings$legend$position %||% plot$theme$legend.position %||%
-        if(role=="ribbon") "left" else "right"
-      if(!isTRUE(item$hidden) && identical(where,position))roles <- c(roles,role)
+      guide <- plot$guides$guides[[aes]] %||% scale$guide
+      if (identical(guide, "none") || isFALSE(guide) || inherits(guide, "GuideNone")) next
+      where <- if (inherits(guide, "Guide")) guide$params$position else NULL
+      where <- where %||% plot$theme$legend.position %||% if (role == "ribbon") "left" else "right"
+      if (identical(where, position)) roles <- c(roles, role)
     }
   }
   max(12,canvas[2]*.72/max(1,length(unique(roles)))-5)

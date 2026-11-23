@@ -4,14 +4,12 @@
 \alias{theme_ggchord}
 \title{Common appearance for sequence visualizations}
 \usage{
-theme_ggchord(base_size = 11, base_family = "", ...)
+theme_ggchord(base_size = 11, base_family = "")
 }
 \arguments{
 \item{base_size}{Base font size in points.}
 
 \item{base_family}{Base font family.}
-
-\item{...}{Must be empty.}
 }
 \value{
 A ggplot2 theme.
@@ -21,8 +19,11 @@ A warm ivory (#FFFCF5), borderless panel and centred bold plot title keep the fo
 the sequence geometry. Standard ggplot2 theme elements can override them.
 }
 \details{
-Add \code{theme()} to configure registered \verb{ggchord.*} elements or
-standard ggplot2 theme elements.
+Add \code{theme()} to configure standard ggplot2 elements or the
+registered sequence and track axis decorations. Set reference axis
+position, visibility and label orientation with \code{\link[=scale_seq_continuous]{scale_seq_continuous()}}
+and \code{\link[=guide_seq_axis]{guide_seq_axis()}}. Set data label and leader appearance on the label
+geometry. To enable the ggchord palettes, add \code{\link[=scales_ggchord]{scales_ggchord()}}.
 }
 \examples{
 library(ggplot2)

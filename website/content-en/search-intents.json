@@ -58,7 +58,7 @@
       "给定数值柱",
       "supplied value bars"
     ],
-    "url": "reference/geom_track_col.html#ref-usage",
+    "url": "reference/geom_track.html#geom_track_col-ref-usage",
     "title": {
       "en": "Plot supplied values with geom_track_col"
     },
@@ -71,7 +71,7 @@
       "计数",
       "count"
     ],
-    "url": "reference/geom_track_col.html#ref-usage",
+    "url": "reference/geom_track.html#geom_track_col-ref-usage",
     "title": {
       "en": "Plot supplied count values"
     },

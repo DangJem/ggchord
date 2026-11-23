@@ -15,7 +15,7 @@ ggchord(reference) +
     "MT108731.1" = "#0072B2", "MT118296.1" = "#D55E00"
   )) +
   geom_seq_label(
-    label_layout = label_layout_fixed(
+    label_layout = layout_label_fixed(
       orientation = "feature", side = "negative",
       offset = c("MT108731.1" = 18)
     )

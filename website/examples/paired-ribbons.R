@@ -17,7 +17,7 @@ ggchord(reference) +
     "MT108731.1" = "#0072B2", "MT118296.1" = "#D55E00"
   )) +
   geom_seq_label(
-    label_layout = label_layout_fixed(orientation = "horizontal", offset = 4)
+    label_layout = layout_label_fixed(orientation = "horizontal", offset = 4)
   ) +
   geom_link_ribbon(data = hits, id = "observed", fill = "#3A7984", alpha = 0.65) +
   layout_sequences(row_gap = 35) +

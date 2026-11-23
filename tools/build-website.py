@@ -374,7 +374,7 @@ def finalize(out,args,render_snapshot,input_hashes,reference_search):
             targets = {anchor: os.path.relpath(out/lang/dest, path.parent)
                        for anchor, dest in mapping.items()}
             if name in retired_references:
-                write_reference_redirect(out, path, mapping[''], (lang,))
+                write_reference_redirect(out, path, mapping, (lang,))
                 continue
             script=page_redirect_script(targets, default_for_unknown=True)
             path.write_text('<!doctype html><html lang="'+('zh-Hans' if lang=='zh' else 'en')+'"><meta charset="utf-8"><title>ggchord</title>'+script+'<a href="'+html.escape(targets[''], quote=True)+'">Continue / 继续</a></html>')
@@ -409,7 +409,7 @@ def finalize(out,args,render_snapshot,input_hashes,reference_search):
     for old,target in routes.items():
         path=out/old;path.parent.mkdir(parents=True,exist_ok=True);dest=os.path.relpath(out/target,path.parent)
         if old in retired_references:
-            write_reference_redirect(out, path, migrations[old][''], ('en', 'zh'))
+            write_reference_redirect(out, path, migrations[old], ('en', 'zh'))
             continue
         extra='<script>try{if(localStorage.getItem("ggchord-language")==="zh")location.replace("zh/index.html");else location.replace("en/index.html")}catch(e){location.replace("en/index.html")}</script>' if old=='index.html' else '<script>location.replace('+json.dumps(dest)+'+('+json.dumps('' if '#' in dest else '#')+'===""?"":location.hash))</script>'+f'<noscript><meta http-equiv="refresh" content="0;url={dest}"></noscript>'
         path.write_text(f'<!doctype html><html lang="en"><head><meta charset="utf-8"><title>ggchord</title>{extra}</head><body><a href="{dest}">English</a> · <a href="{os.path.relpath(out/"zh/index.html",path.parent)}">现代汉语</a></body></html>')

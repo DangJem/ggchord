@@ -23,9 +23,9 @@ ggchord_import_collection <- function(sequences, features = list(), links = list
 #' named observation tables. Choose each table explicitly when drawing.
 #'
 #' @param sequences Complete reference sequences.
-#' @param features Feature data frame or named list of feature tables.
+#' @param features Annotation data frame or named list of annotation tables.
 #' @param links Point or interval relationship table or named list of such tables.
-#' @param tracks Numeric observation table or named list of observation tables.
+#' @param tracks Point or interval track table or named list of such tables.
 #' @param alignments Character alignment table or named list of alignment tables.
 #' @return A ggchord_data collection with a reference and four named table sets.
 #' @export
@@ -63,14 +63,14 @@ ggchord_data <- function(sequences, features = list(), links = list(),
   for (role in names(collections)) {
     collections[[role]] <- ggchord_table_collection(collections[[role]], role, caller)
   }
-  for (alignment in collections$alignments) {
-    ggchord_require_columns(alignment, c("accver", "alignment_column", "symbol", "is_gap",
-      "source_accver", "source_position", "alphabet"), caller)
-  }
   x <- structure(c(list(sequences = sequences), collections), class = "ggchord_data")
-  validate_ggchord_data(x, action = "error", checks = "units")
+  # Keep coordinates available for explicit cleaning after collection.
+  validate_ggchord_data(x, action = "error", checks = c("schema", "units"))
   ggchord_attach_data_report(x, "ggchord_data",
-    inputs = list(sequences = data_report(sequences), tables = lapply(collections, names)))
+    inputs = list(sequences = data_report(sequences), tables = lapply(collections, names)),
+    lineage = lapply(collections, function(tables) lapply(tables, function(table) {
+      data_report(table, sections = "lineage")$lineage
+    })))
 }
 
 ggchord_is_data_collection <- function(x) {
@@ -115,7 +115,8 @@ data_report <- function(x, sections = NULL) {
       latest <- provenance[[length(provenance)]]
       lineage <- if (is.data.frame(x)) {
         fields <- intersect(c(".source_file", ".source_input", "source_input", ".source_row", ".source_line",
-          "source_rows", "source_row", "source_block", "source_segment", "source_members"), names(x))
+          ".source_record", ".source_feature", "source_rows", "source_row", "source_block",
+          "source_segment", "source_members"), names(x))
         if (length(fields)) x[fields]
       }
       report <- list(operation = names(provenance)[length(provenance)], lineage = lineage,
@@ -131,6 +132,16 @@ data_report <- function(x, sections = NULL) {
   if (!is.character(requested) || anyNA(requested) || anyDuplicated(requested) ||
       any(!requested %in% report_names)) {
     ggchord_stop("data_report(): sections must name distinct report sections")
+  }
+  # Source row indices and segments follow the current annotation rows.
+  location <- attr(x, "ggchord_annotation_location", exact = TRUE)
+  if (is.data.frame(x) && !is.null(location) &&
+      all(c("accver", ggchord_annotation_coordinates(location)) %in% names(x)) &&
+      any(c("lineage", "metadata") %in% requested)) {
+    identity <- ggchord_annotation_identity(x, location, caller = "data_report()")
+    if ("lineage" %in% requested) result$lineage <- ggchord_annotation_lineage(x, identity)
+    if (location == "interval" && "metadata" %in% requested)
+      result$metadata$segments <- ggchord_annotation_segment_index(x, identity)
   }
   available <- vapply(setNames(requested, requested), function(section) {
     if (is.null(result[[section]])) "unavailable" else "available"

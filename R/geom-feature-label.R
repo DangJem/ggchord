@@ -36,12 +36,12 @@ ggchord_label_integer <- function(value, name, minimum = 1, infinite = FALSE) {
 #'   geom_gene(data = genes, id = "genes") +
 #'   geom_feature_label(
 #'     aes(label = label), anchor_layer = "genes",
-#'     label_layout = label_layout_fixed(
+#'     label_layout = layout_label_fixed(
 #'       orientation = "horizontal", offset = 2, overlap = "allow"
 #'     )
 #'   ) +
 #'   coord_collinear()
-label_layout_fixed <- function(orientation = "feature", side = "positive",
+layout_label_fixed <- function(orientation = "feature", side = "positive",
     offset = 1, along = 0, overlap = "hide", fit = "none", wrap = NULL) {
   ggchord_local_console_errors()
   ggchord_check_argument_names(sys.call(), sys.function())
@@ -73,7 +73,6 @@ label_layout_fixed <- function(orientation = "feature", side = "positive",
 #' @param max_lines Maximum number of lines after text wrapping.
 #' @param min_size Minimum text size in policies that can shrink text.
 #' @param max_overlaps Maximum number of conflicts permitted before hiding a label.
-#' @param leader Policy for drawing a leader between the entity and text.
 #' @param outer_size Optional text size in millimetres for labels outside a
 #'   circular backbone. Use an absolute grid unit or a positive number.
 #'   `NULL` uses the label layer's size. Mapped size and the inward fit policy
@@ -99,17 +98,17 @@ label_layout_fixed <- function(orientation = "feature", side = "positive",
 #'
 #' ggchord(one_seq) +
 #'   geom_feature(data = subset(genes, accver == "A"), id = "features") +
-#'   geom_feature_label_repel(
+#'   geom_feature_label(
 #'     aes(label = label), anchor_layer = "features",
-#'     label_layout = label_layout_repel(
+#'     label_layout = layout_label_repel(
 #'       arrangement = "columns", side = "positive", padding = 1.5,
 #'       outer_size = 3.3
 #'     )
 #'   ) +
 #'   coord_circular()
-label_layout_repel <- function(arrangement = "auto", orientation = "auto",
+layout_label_repel <- function(arrangement = "auto", orientation = "auto",
     side = "both", offset = 1, padding = 1, fit = "wrap", wrap = NULL,
-    max_lines = 2, min_size = 1.5, max_overlaps = Inf, leader = "auto",
+    max_lines = 2, min_size = 1.5, max_overlaps = Inf,
     outer_size = NULL) {
   ggchord_local_console_errors()
   ggchord_check_argument_names(sys.call(), sys.function())
@@ -117,7 +116,6 @@ label_layout_repel <- function(arrangement = "auto", orientation = "auto",
   orientation <- ggchord_match_arg(orientation, c("auto", "feature", "tangent", "horizontal", "vertical"))
   side <- ggchord_match_arg(side, c("both", "positive", "negative"))
   fit <- ggchord_match_arg(fit, c("none", "wrap", "shrink", "wrap_shrink"))
-  leader <- ggchord_match_arg(leader, c("auto", "straight", "elbow", "none"))
   if (!is.null(wrap)) {
     if (!fit %in% c("wrap", "wrap_shrink")) ggchord_stop("wrap requires a wrapping fit")
     wrap <- ggchord_label_integer(wrap, "wrap")
@@ -137,7 +135,7 @@ label_layout_repel <- function(arrangement = "auto", orientation = "auto",
     offset = ggchord_physical_mm(offset, "label offset", TRUE), padding = padding,
     fit = fit, wrap = wrap, max_lines = ggchord_label_integer(max_lines, "max_lines"),
     min_size = min_size, max_overlaps = ggchord_label_integer(max_overlaps,
-      "max_overlaps", minimum = 0, infinite = TRUE), leader = leader,
+      "max_overlaps", minimum = 0, infinite = TRUE),
     outer_size = outer_size),
     class = c("LabelLayoutRepel", "ggchord_label_layout"))
 }
@@ -162,6 +160,7 @@ GeomDomainLabel <- ggproto("GeomDomainLabel", ggplot2::GeomText,
         ifelse(leader$.leader_crosses_backbone %in% TRUE |
           leader$.leader_crosses_text %in% TRUE, "dashed", "solid") else type
       leader$colour <- leader_style$colour %||% leader$colour
+      leader$alpha <- leader_style$alpha %||% leader$alpha
       grobs[[1L]] <- ggplot2::GeomSegment$draw_panel(leader, panel_params, coord,
         na.rm = na.rm)
     }
@@ -237,16 +236,34 @@ ggchord_label_empty <- function() data.frame(
   annotation_side = character(), .leader_crosses_text = logical(),
   anchor_x = numeric(), anchor_y = numeric())
 
-ggchord_domain_bold_callout <- function(layer, plot) {
+ggchord_domain_bold_callout <- function(layer, plot, kind = layer$ggchord_params$label_kind) {
   params <- layer$ggchord_params
   mapped <- c(names(ggchord_effective_mapping(layer)),
     if (isTRUE(layer$inherit.aes)) names(plot$mapping))
-  identical(params$label_kind, "feature") && is.null(params$text_style$fontface) &&
+  identical(kind, "feature") && is.null(params$text_style$fontface) &&
     !"fontface" %in% mapped
 }
 
+ggchord_prepare_label_theme <- function(plot) {
+  geom <- plot$theme[["geom"]]
+  if (!inherits(geom, "ggplot2::element_geom")) return(plot)
+  explicit <- plot$ggchord$theme_explicit[["geom"]]
+  for (layer in plot$layers) {
+    if (!identical(layer$ggchord_type, "domain_label")) next
+    params <- layer$ggchord_params
+    mapping <- layer$ggchord_input_mapping
+    if (!isTRUE(params$label_size_fixed) && is.null(mapping$size) &&
+        inherits(explicit, "ggplot2::element_geom") && !is.null(explicit@fontsize))
+      params$label_size <- geom@fontsize
+    if (is.null(params$text_style$family) && is.null(mapping$family))
+      params$text_style$family <- geom@family
+    layer$ggchord_params <- params
+  }
+  plot
+}
+
 ggchord_domain_label <- function(mapping, data, stat, anchor_layer, anchor, position,
-    label_layout, kind, dots, na.rm, show.legend, inherit.aes, id) {
+    label_layout, leader, kind, dots, na.rm, show.legend, inherit.aes, id) {
   if (!inherits(label_layout, "ggchord_label_layout"))
     ggchord_stop("label_layout must be a label layout strategy")
   if (inherits(anchor_layer, "ggchord_auto_anchor") &&
@@ -265,11 +282,12 @@ ggchord_domain_label <- function(mapping, data, stat, anchor_layer, anchor, posi
       (inherits(label_layout, "LabelLayoutRepel") || ggchord_local_position(position)))
     ggchord_stop("A centre label requires a fixed strategy and identity Position")
   dots <- ggchord_colour_dots(dots, "label layer")
-  leader_names <- c("segment_colour", "segment_linewidth", "segment_linetype")
-  leader <- dots[intersect(names(dots), leader_names)]
-  if (length(leader) && !inherits(label_layout, "LabelLayoutRepel"))
-    ggchord_stop("Leader styles require a repel label layout")
-  names(leader) <- sub("^segment_", "", names(leader))
+  leader <- ggchord_match_arg(leader, c("auto", "none", "straight", "elbow"))
+  if (anchor == "center" && leader %in% c("straight", "elbow"))
+    ggchord_stop("A centre label has no reference path anchor for a leader")
+  leader_names <- c("segment_colour", "segment_linewidth", "segment_linetype", "segment_alpha")
+  leader_style <- dots[intersect(names(dots), leader_names)]
+  names(leader_style) <- sub("^segment_", "", names(leader_style))
   dots[leader_names] <- NULL
   ggchord_check_geom_params(dots, GeomDomainLabel, "label layer", stat = stat)
   parameters <- ggchord_split_source_stat(stat, dots, GeomDomainLabel)
@@ -296,36 +314,47 @@ ggchord_domain_label <- function(mapping, data, stat, anchor_layer, anchor, posi
       .leader_crosses_text = I(.leader_crosses_text)),
     geom = GeomDomainLabel, stat = "identity", position = "identity", inherit.aes = inherit.aes,
     show.legend = show.legend, check.aes = FALSE, check.param = FALSE,
-    params = c(list(na.rm = na.rm, leader_style = leader), geom_parameters)
+    params = c(list(na.rm = na.rm, leader_style = leader_style), geom_parameters)
   )
   layer$ggchord_type <- "domain_label"
   layer$ggchord_params <- list(id = id, type = "domain_label", label_kind = kind, anchor = anchor,
-    anchor_layer = anchor_layer, label_layout = label_layout, feature_position = position,
+    anchor_layer = anchor_layer, label_layout = label_layout, leader = leader, feature_position = position,
     source_stat = parameters$stat, physical_layout = TRUE, label_size = initial_size,
+    label_size_fixed = !is.null(dots$size),
     text_style = dots[intersect(names(dots), c("angle", "hjust", "vjust",
       "family", "fontface", "lineheight"))])
   roles <- switch(kind,
-    sequence = "label", feature = c("accver", "start", "end", "strand", "label"),
-    site = c("accver", "pos", "label"))
+    sequence = "label", feature = c("accver", "start", "end", "pos", "strand",
+      "label", "entity_id", "feature_id", "site_id"),
+    site = c("accver", "pos", "label", "entity_id", "site_id"))
   ggchord_capture_layer_input(layer, data, mapping, roles)
 }
 
-#' Label source feature intervals
+#' Label source annotations
 #' @export
 #' @param mapping Aesthetic mapping from `aes()`. A local mapping overrides the matching inherited channel.
 #' @param data Optional label table or function. With a bound anchor, the default data consists of the target entities.
 #' @param stat A compatible ggplot2 Stat or its name. The default uses the supplied records.
 #' @param anchor_layer Use [auto_anchor()] to follow the unique compatible layer, a layer ID to select a target, or `NULL` for independent labels.
 #' @param anchor Position on the entity or reference path that anchors the text.
-#' @param position Position adjustment. For bound labels, leave this unset to follow the target layer.
+#' @param position For a bound label, leave unset to inherit the feature's
+#'   position. An independent label can use identity or `position_offset()`
+#'   to place its anchor. Use `label_layout` to move text relative to the anchor.
 #' @param label_layout A fixed or repelled label layout declaration.
+#' @param leader How to route the optional label leader: `"auto"`, `"none"`,
+#'   `"straight"` or `"elbow"`. Set fixed `segment_colour`, `segment_linewidth`,
+#'   `segment_linetype` or `segment_alpha` through `...`.
 #' @param ... Additional named visual styles and parameters accepted by this layer.
 #' @param na.rm Suppress warnings for missing observations that the layer can omit.
 #' @param show.legend Logical or named logical indicating whether the layer contributes legend keys.
 #' @param inherit.aes Whether to inherit plot mappings and evaluate them on the layer data.
 #' @param id Layer identifier. [auto_id()] assigns a plot-local ID. Use a name for explicit references.
 #' @return A ggplot2 layer for addition to a plot.
-#' @details The source entities have `accver`, `start`, `end` and a label or label mapping. A bound label follows the target layer by identity. Text size, collision handling and leader placement are independent of the underlying feature geometry. A segmented feature is anchored to its visible runs. For a circular feature label, mapping `fill` sets the background of an exterior callout. If `colour` is omitted, text over a feature or on a callout uses a contrasting colour.
+#' @details Labels can follow interval, site or cut annotations. Supply a label
+#' or a label mapping. The automatic anchor is the interval midpoint, the
+#' directional head of a primer, or the source position of a site or cut.
+#' For circular features, mapping `fill` sets the background of an exterior
+#' callout. Text uses a contrasting colour when `colour` is omitted.
 #' Filled circular exterior labels have a visible outline. Circular
 #' exterior feature labels use bold text by default. Set or
 #' map `fontface` to override. Local inward labels can slide along an arc
@@ -336,6 +365,9 @@ ggchord_domain_label <- function(mapping, data, stat, anchor_layer, anchor, posi
 #' Inward leaders that cross other label text are dashed. Automatic
 #' leaders also use dashes when they cross their own backbone. Set
 #' `segment_linetype` to override the automatic style.
+#' Fixed layouts draw a leader when `leader` is set to `"straight"` or
+#' `"elbow"`. Repelled layouts with `leader = "auto"` can route a leader
+#' when the text leaves its anchor.
 #' @examples
 #' library(ggplot2)
 #'
@@ -356,76 +388,21 @@ ggchord_domain_label <- function(mapping, data, stat, anchor_layer, anchor, posi
 #'   geom_feature_label(aes(label = label), anchor_layer = "genes") +
 #'   coord_collinear()
 geom_feature_label <- function(mapping = NULL, data = NULL, stat = "identity",
-    anchor_layer = auto_anchor(), anchor = "middle", position = NULL,
-    label_layout = label_layout_fixed(), ...,
+    anchor_layer = auto_anchor(), anchor = "auto", position = NULL,
+    label_layout = layout_label_fixed(), leader = "auto", ...,
     na.rm = FALSE, show.legend = FALSE, inherit.aes = TRUE, id = auto_id()) {
   ggchord_local_console_errors()
   ggchord_check_argument_names(sys.call(), sys.function())
-  anchor <- ggchord_match_arg(anchor, c("middle", "start", "end", "head", "tail"))
+  anchor <- ggchord_match_arg(anchor, c("auto", "middle", "start", "end", "head", "tail"))
   ggchord_domain_label(mapping, data, stat, anchor_layer, anchor, position,
-    label_layout, "feature", list(...), na.rm, show.legend, inherit.aes, id)
-}
-
-#' Label source feature intervals with collision avoidance
-#' @export
-#' @param mapping Aesthetic mapping from `aes()`. A local mapping overrides the matching inherited channel.
-#' @param data Optional label table or function. With a bound anchor, the default data consists of the target entities.
-#' @param stat A compatible ggplot2 Stat or its name. The default uses the supplied records.
-#' @param anchor_layer Use [auto_anchor()] to follow the unique compatible layer, a layer ID to select a target, or `NULL` for independent labels.
-#' @param anchor Position on the entity or reference path that anchors the text.
-#' @param position Position adjustment. For bound labels, leave this unset to follow the target layer.
-#' @param label_layout A fixed or repelled label layout declaration.
-#' @param ... Additional named visual styles and parameters accepted by this layer.
-#' @param na.rm Suppress warnings for missing observations that the layer can omit.
-#' @param show.legend Logical or named logical indicating whether the layer contributes legend keys.
-#' @param inherit.aes Whether to inherit plot mappings and evaluate them on the layer data.
-#' @param id Layer identifier. [auto_id()] assigns a plot-local ID. Use a name for explicit references.
-#' @return A ggplot2 layer for addition to a plot.
-#' @details The source entities have `accver`, `start`, `end` and a label or label mapping. A bound label follows the target layer by identity. Text size, collision handling and leader placement are independent of the underlying feature geometry. A segmented feature is anchored to its visible runs. For a circular feature label, mapping `fill` sets the background of an exterior callout. If `colour` is omitted, text over a feature or on a callout uses a contrasting colour.
-#' Filled circular exterior labels have a visible outline. Circular
-#' exterior feature labels use bold text by default. Set or
-#' map `fontface` to override. Local inward labels can slide along an arc
-#' or use a deeper text track. Automatic leaders stay on the feature's
-#' radial line when it reaches a visible glyph, including off-centre glyphs.
-#' Nearby inward callouts can adjust their arc positions and rows together
-#' to keep text clear of other leaders.
-#' Inward leaders that cross other label text are dashed. Automatic
-#' leaders also use dashes when they cross their own backbone. Set
-#' `segment_linetype` to override the automatic style.
-#' @examples
-#' library(ggplot2)
-#'
-#' seqs <- data.frame(
-#'   accver = c("A", "B"), length = c(1000, 800),
-#'   sequence_unit = "bp", topology = "linear"
-#' )
-#'
-#' genes <- data.frame(
-#'   accver = c("A", "A", "B"), feature_id = c("g1", "g2", "g3"),
-#'   start = c(100, 400, 150), end = c(240, 620, 380),
-#'   strand = c("+", "-", "+"), label = c("g1", "g2", "g3"),
-#'   type = c("CDS", "tRNA", "CDS")
-#' )
-#'
-#' ggchord(seqs) +
-#'   geom_gene(data = genes, id = "genes") +
-#'   geom_feature_label_repel(aes(label = label), anchor_layer = "genes") +
-#'   coord_collinear()
-geom_feature_label_repel <- function(mapping = NULL, data = NULL, stat = "identity",
-    anchor_layer = auto_anchor(), anchor = "middle", position = NULL,
-    label_layout = label_layout_repel(), ...,
-    na.rm = FALSE, show.legend = FALSE, inherit.aes = TRUE, id = auto_id()) {
-  ggchord_local_console_errors()
-  ggchord_check_argument_names(sys.call(), sys.function())
-  geom_feature_label(mapping, data, stat, anchor_layer, anchor, position, label_layout,
-    ..., na.rm = na.rm, show.legend = show.legend, inherit.aes = inherit.aes, id = id)
+    label_layout, leader, "feature", list(...), na.rm, show.legend, inherit.aes, id)
 }
 
 #' Bind labels to a compatible target layer
 #'
 #' With the default anchor, gene, primer and site labels follow a single
 #' gene, primer or site layer, respectively. Generic feature labels can
-#' follow any interval feature layer, including genes, primers and regions.
+#' follow interval, site and cut layers, including genes, primers and regions.
 #' Layer order is immaterial. When several targets qualify, give the intended
 #' target an ID and pass that name as `anchor_layer`.
 #' Supplying label data, a non-identity Stat or a Position makes the labels
@@ -450,26 +427,30 @@ ggchord_resolve_auto_anchors <- function(plot) {
     p <- layer$ggchord_params
     if (!inherits(p$anchor_layer, "ggchord_auto_anchor")) next
     role <- p$anchor_role %||% p$label_kind
-    candidates <- Filter(function(target) {
-      target <- target$ggchord_params
-      if (role == "site") return(identical(target$type, "restriction_site"))
-      identical(target$type, "gene") &&
-        (role == "feature" || identical(target$feature_role, role))
-    }, plot$layers)
+    candidates <- Filter(function(target) ggchord_is_label_target(target, role), plot$layers)
     ids <- vapply(candidates, function(target) target$ggchord_layer_id, character(1))
     if (length(ids) > 1L)
       ggchord_stop("Label layer '", layer$ggchord_layer_id, "' has multiple compatible ",
         role, " targets: ", paste(ids, collapse = ", "),
         ". Set anchor_layer to the intended ID, or supply data and anchor_layer = NULL.")
     if (!length(ids)) {
-      required <- if (role == "site") c("accver", "pos") else c("accver", "start", "end")
-      if (!all(required %in% c(names(plot$data), names(layer$ggchord_input_mapping))))
+      fields <- c(names(plot$data), names(layer$ggchord_input_mapping))
+      location <- (role %in% c("site", "feature") && "pos" %in% fields) ||
+        (role != "site" && all(c("start", "end") %in% fields))
+      if (!"accver" %in% fields || !location)
         ggchord_stop("Label layer '", layer$ggchord_layer_id, "' has no compatible ", role,
           " target. Add a target layer or supply independent label data.")
     }
     layer$ggchord_params$anchor_layer <- if (length(ids)) ids[[1L]]
   }
   plot
+}
+
+ggchord_is_label_target <- function(layer, role) {
+  if (identical(layer$ggchord_type, "restriction_site"))
+    return(role %in% c("site", "feature"))
+  identical(layer$ggchord_type, "gene_poly") &&
+    (role == "feature" || identical(layer$ggchord_params$feature_role, role))
 }
 
 # Bind to the requested layer's source/statistic before expanding either layer
@@ -482,8 +463,7 @@ ggchord_bind_domain_labels <- function(plot) {
     anchor <- params$anchor_layer
     if (!identical(params$type, "domain_label") || is.null(anchor)) next
     target <- match(anchor, ids)
-    expected <- if (params$label_kind == "feature") "gene" else "restriction_site"
-    if (is.na(target) || !identical(plot$layers[[target]]$ggchord_params$type, expected))
+    if (is.na(target) || !ggchord_is_label_target(plot$layers[[target]], params$label_kind))
       ggchord_stop("Label layer '", ids[i], "' requires a compatible anchor layer: ", anchor)
     original <- plot$layers[[target]]
     owner <- reconstruct_layer(original, original$data, mapping = original$mapping)
@@ -491,29 +471,74 @@ ggchord_bind_domain_labels <- function(plot) {
     raw <- ggchord_layer_source(owner, ggchord_layer_fallback(owner, plot$ggchord$data))
     source <- ggchord_resolve_layer_input(owner, data = raw)
     layer$ggchord_params$anchor_data <- source
+    layer$ggchord_params$anchor_component <- owner$ggchord_type
+    layer$ggchord_params$anchor_role <- owner$ggchord_params$feature_role
+    layer$ggchord_params$anchor_location <- owner$ggchord_params$annotation_location
+    layer$ggchord_params$label_kind <- if (owner$ggchord_type == "restriction_site") "site" else "feature"
     layer$ggchord_params$anchor_position <- owner$ggchord_params$feature_position
+    key <- owner$ggchord_params$annotation_source_key
     layer$ggchord_params$anchor_same_source <- is.null(layer$ggchord_input_data) ||
-      (!is.null(source) && is_reference(layer$ggchord_input_data, raw))
+      (!is.null(key) && identical(key, params$annotation_source_key)) ||
+      (!is.null(raw) && is_reference(layer$ggchord_input_data, raw))
+    layer$ggchord_params$anchor_default_data <- is.null(layer$ggchord_input_data)
   }
   plot
 }
 
-ggchord_label_match <- function(input, target, kind, allow_row_match) {
-  key <- if (kind == "feature") "feature_id" else "site_id"
-  if (key %in% names(input) && key %in% names(target)) {
-    id <- function(x) paste(nchar(x$accver), x$accver, x[[key]], sep = ":")
-    needed <- id(input); available <- id(target)
-    if (anyNA(input[[key]]) || anyDuplicated(available[available %in% needed]))
-      ggchord_stop("Ambiguous or missing ", key, " for label anchor")
-    matched <- match(needed, available)
-    if (anyNA(matched)) ggchord_stop("A label has no matching ", key, " in its target layer")
-    return(matched)
+ggchord_label_match <- function(input, target, kind, allow_row_match, location = NULL) {
+  location <- location %||% if (kind == "feature") "interval" else "site"
+  lhs <- ggchord_annotation_identity(input, location, caller = "Label data")
+  rhs <- ggchord_annotation_identity(target, location, caller = "Label target")
+  keys <- ggchord_annotation_key(target$accver, rhs$key)
+  reference_id <- ggchord_annotation_key(target$accver, rhs$id)
+  by_id <- split(seq_len(nrow(target))[!is.na(rhs$id)], reference_id[!is.na(rhs$id)])
+  alias_names <- intersect(unique(lhs$id_column), names(target))
+  aliases <- setNames(vector("list", length(alias_names)), alias_names)
+  for (column in alias_names) {
+    value <- as.character(target[[column]])
+    if (identical(value, rhs$id)) next
+    present <- !is.na(value) & nzchar(value)
+    if (!any(present)) next
+    aliases[[column]] <- split(which(present),
+      ggchord_annotation_key(target$accver[present], value[present]))
   }
-  coordinates <- if (kind == "feature") c("accver", "start", "end") else c("accver", "pos")
-  if (allow_row_match && nrow(input) == nrow(target) &&
-      identical(as.data.frame(input[coordinates]), as.data.frame(target[coordinates])))
-    return(seq_len(nrow(input)))
-  ggchord_stop("Supply a stable ", key, " to bind these labels")
+  by_entity <- split(seq_len(nrow(target)), keys)
+  coordinates <- c("accver", ggchord_annotation_coordinates(location))
+  numeric_coordinate <- function(value) {
+    if (is.factor(value)) value <- as.character(value)
+    suppressWarnings(as.numeric(value))
+  }
+  row_match <- allow_row_match && nrow(input) == nrow(target) &&
+    all(coordinates %in% names(input)) &&
+    identical(as.character(input$accver), as.character(target$accver)) &&
+    all(vapply(coordinates[-1L], function(key) identical(
+      numeric_coordinate(input[[key]]), numeric_coordinate(target[[key]])), logical(1)))
+  matches <- lapply(seq_len(nrow(input)), function(i) {
+    if (row_match && (is.na(lhs$id[i]) || lhs$ambiguous[i])) return(i)
+    if (is.na(lhs$id[i])) ggchord_stop("Supply a stable entity_id, feature_id or site_id to bind label row ", i)
+    key <- ggchord_annotation_key(input$accver[i], lhs$id[i])
+    index <- aliases[[lhs$id_column[i]]] %||% by_id
+    found <- index[[key]]
+    if (!is.na(lhs$namespace[i])) {
+      same <- found[rhs$namespace[found] %in% lhs$namespace[i]]
+      found <- if (length(same)) same else found[is.na(rhs$namespace[found])]
+    }
+    if (!length(found)) ggchord_stop("No matching annotation entity for label row ", i, ": ", lhs$id[i])
+    if (any(rhs$ambiguous[found]) || length(unique(keys[found])) != 1L)
+      ggchord_stop("Ambiguous annotation entity for label row ", i, ": ", lhs$id[i])
+    by_entity[[keys[found[1L]]]]
+  })
+  matched <- vapply(matches, `[`, integer(1), 1L)
+  if (any(lengths(matches) > 1L)) attr(matched, "entity_rows") <- matches
+  attr(matched, "annotation_identity") <- rhs
+  matched
+}
+
+ggchord_label_kind <- function(params, input) {
+  if (params$label_kind != "feature" || !is.null(params$anchor_component) || !NROW(input))
+    return(params$label_kind)
+  location <- ggchord_annotation_location(input, caller = "Feature label")
+  if (location == "interval") "feature" else "site"
 }
 
 ggchord_feature_label_position <- function(source, lengths, anchor, strand) {
@@ -605,8 +630,9 @@ ggchord_domain_label_geometry <- function(layer, input, layout, target = NULL,
     shared = NULL, bold_callout = FALSE) {
   if (!NROW(input)) return(ggchord_label_empty())
   p <- layer$ggchord_params
-  kind <- p$label_kind
+  kind <- ggchord_label_kind(p, input)
   strategy <- p$label_layout
+  leader_policy <- p$leader %||% "auto"
   repel <- inherits(strategy, "LabelLayoutRepel")
   arrangement <- strategy$arrangement %||% "local"
   if (arrangement == "auto") arrangement <- if (!isTRUE(layout$collinear) || radial) "columns" else "local"
@@ -616,17 +642,27 @@ ggchord_domain_label_geometry <- function(layer, input, layout, target = NULL,
   if (orientation == "auto") orientation <- if (arrangement == "columns") "horizontal" else "tangent"
   share_perimeter <- isTRUE(layout$circular) && !is.null(shared) && repel &&
     strategy$side != "negative" &&
-    strategy$leader == "auto" &&
+    leader_policy == "auto" &&
     !any(c("angle", "hjust", "vjust") %in% names(p$text_style)) &&
     (arrangement != "columns" || orientation == "horizontal")
   ref <- layout$sequence_reference
   ids <- as.character(input$accver)
   if (any(!ids %in% layout$seqs)) ggchord_stop("Label data contains an unknown reference")
   anchor <- p$anchor
+  if (anchor == "auto") anchor <- if (identical(p$anchor_role, "primer")) "head" else "middle"
+  if (kind == "site" && !anchor %in% c("site", "middle"))
+    ggchord_stop("A Site or Cut label anchors to its residue position. Use anchor = 'auto'.")
   source <- input
   matched <- seq_len(nrow(input))
+  rows_to_label <- matched
+  entity_rows <- NULL
+  identity <- NULL
   if (!is.null(target)) {
-    matched <- ggchord_label_match(input, target, kind, isTRUE(p$anchor_same_source))
+    matched <- ggchord_label_match(input, target, kind, isTRUE(p$anchor_same_source), p$anchor_location)
+    entity_rows <- attr(matched, "entity_rows")
+    identity <- attr(matched, "annotation_identity")
+    if (!is.null(entity_rows) && isTRUE(p$anchor_default_data))
+      rows_to_label <- rows_to_label[!duplicated(matched)]
     source <- target[matched, , drop = FALSE]
   }
   lens <- unname(ref$lens[ids])
@@ -642,9 +678,29 @@ ggchord_domain_label_geometry <- function(layer, input, layout, target = NULL,
     strand <- source$.feature_biological_strand %||% source$strand %||% rep(".", nrow(source))
     if (anchor %in% c("head", "tail") && anyNA(match(strand, c("+", "-"))))
       ggchord_stop("head and tail anchors require a known biological strand")
+    if (!is.null(entity_rows)) {
+      if (is.null(source$segments)) source$segments <- rep(list(NULL), nrow(source))
+      for (i in rows_to_label[lengths(entity_rows)[rows_to_label] > 1L]) {
+        members <- entity_rows[[i]]
+        parts <- lapply(members, function(row) {
+          runs <- target$segments[[row]]
+          if (is.data.frame(runs) && nrow(runs)) runs else target[row, c("start", "end"), drop = FALSE]
+        })
+        source$segments[[i]] <- ggchord_rbind_fill(parts)
+      }
+    }
     pos <- ggchord_feature_label_position(source, lens, anchor, strand)
+    if (!is.null(entity_rows)) {
+      for (i in rows_to_label[lengths(entity_rows)[rows_to_label] > 1L]) {
+        members <- entity_rows[[i]]
+        covers <- members[target$start[members] <= pos[i] & target$end[members] >= pos[i]]
+        if (length(covers)) matched[i] <- covers[1L]
+      }
+    }
   }
-  if (!is.numeric(pos) || any(!is.finite(pos) | pos < 0 | pos > lens))
+  minimum <- if (kind == "sequence") 0 else 1
+  if (!is.numeric(pos) || any(!is.finite(pos) | pos < minimum | pos > lens) ||
+      (kind == "site" && any(pos != trunc(pos))))
     ggchord_stop("Label anchor positions are outside their reference")
   if (is.null(input$label) && kind != "sequence")
     ggchord_stop("Provide a label column or map aes(label = ...)")
@@ -705,7 +761,7 @@ ggchord_domain_label_geometry <- function(layer, input, layout, target = NULL,
   if (length(bounds) != 2L || any(!is.finite(bounds))) bounds <- c(-1, 1)
   label_order <- order(ids, pos, label, na.last = TRUE)
   label_sizes <- rep_len(p$label_size, nrow(input))
-  radial_leader <- use_arc && strategy$leader == "auto"
+  radial_leader <- use_arc && leader_policy == "auto"
   if (radial_leader) {
     initial_boxes <- occupied
     initial_leaders <- inner_leaders
@@ -722,7 +778,7 @@ ggchord_domain_label_geometry <- function(layer, input, layout, target = NULL,
     band <- ifelse(is.finite(offset) & !is.na(label) & nzchar(label), paste(ids, offset), NA_character_)
     neighbours <- ggchord_arc_neighbours(label_order, angles, band, label_sizes)
   }
-  for (i in label_order) {
+  for (i in label_order[label_order %in% rows_to_label]) {
     if (is.na(label[i]) || !nzchar(label[i])) next
     id <- ids[i]
     frame <- if (radial_leader) lapply(frames[[id]]$frame, function(values)
@@ -780,6 +836,14 @@ ggchord_domain_label_geometry <- function(layer, input, layout, target = NULL,
       coordinate_label = if (kind == "site") input$coordinate_label[i] %||% NA_character_ else NA_character_,
       label_order = NA_character_,
       measurement = ggchord_render_context()$status %||% "estimated")
+    if (!is.null(identity)) {
+      members <- entity_rows[[i]] %||% matched[i]
+      original_rows <- (target$source_members %||% target$source_rows)[members]
+      base_row$anchor_entity_id <- identity$id[matched[i]]
+      base_row$anchor_source_file <- identity$source_file[matched[i]]
+      base_row$anchor_source_members <- I(list(unique(unlist(original_rows %||%
+        identity$source_row[members], use.names = FALSE))))
+    }
     hidden <- function(reason) {
       row <- base_row
       row$.component <- "hidden_label"
@@ -918,7 +982,7 @@ ggchord_domain_label_geometry <- function(layer, input, layout, target = NULL,
     }
     best <- NULL
     avoid <- !identical(strategy$overlap, "allow")
-    draw_leader <- repel && !identical(strategy$leader, "none")
+    draw_leader <- leader_policy %in% c("straight", "elbow") || (repel && leader_policy == "auto")
     obstacles <- ggchord_rbind_fill(list(occupied, endpoints)) %||% data.frame()
     padding <- (strategy$padding %||% 0) / (2 * 25.4)
     for (test_size in fit_sizes) {
@@ -1014,7 +1078,7 @@ ggchord_domain_label_geometry <- function(layer, input, layout, target = NULL,
           attachment$anchor_y <- attachment$anchor_y / box_scale[2L]
           attachment$text_x <- xy[1L] / box_scale[1L]
           attachment$text_y <- xy[2L] / box_scale[2L]
-          elbow <- strategy$leader == "elbow" || (strategy$leader == "auto" && arrangement == "columns")
+          elbow <- leader_policy == "elbow" || (leader_policy == "auto" && arrangement == "columns")
           end_clearance <- if (inward_route) max(0, padding - .25 / 25.4) * box_units
             else .03 * box_units
           if (radial_leader && inward_route) {
@@ -1026,12 +1090,12 @@ ggchord_domain_label_geometry <- function(layer, input, layout, target = NULL,
               shrink = end_clearance)
           crossing <- (!inward_route && ggchord_inner_leader_hits(line, obstacles)) ||
             ggchord_inner_leaders_cross(line, inner_leaders)
-          if (crossing && !circular && !elbow && strategy$leader == "auto") {
+          if (crossing && !circular && !elbow && leader_policy == "auto") {
             line <- ggchord_domain_leader_route(attachment, box, box_units, TRUE)
             crossing <- ggchord_inner_leader_hits(line, obstacles) ||
               ggchord_inner_leaders_cross(line, inner_leaders)
           }
-          if (crossing) next
+          if (crossing && repel) next
         }
         if (!normal_hit || is.null(best) || count < best$count) {
           candidate <- list(xy = xy, box = box, count = count, size = candidate_size,

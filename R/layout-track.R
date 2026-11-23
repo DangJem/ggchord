@@ -541,6 +541,16 @@ ggchord_track_axes <- function(layout, registry, plot) {
       fractions <- ggchord_track_fraction(sc, breaks)
       keep <- is.finite(fractions) & fractions >= 0 & fractions <= 1
       fractions <- fractions[keep]; labels <- labels[keep]
+      minor <- if (isTRUE(guide$params$minor.ticks))
+        ggchord_track_fraction(sc, setdiff(sc$get_breaks_minor(b = breaks[keep]), breaks)) else numeric()
+      minor <- minor[is.finite(minor) & minor >= 0 & minor <= 1]
+      marks <- c(fractions, minor)
+      limits <- c(0, 1)
+      cap <- guide$params$cap %||% "none"
+      if (length(marks)) {
+        if (cap %in% c("both", "lower")) limits[1L] <- min(marks)
+        if (cap %in% c("both", "upper")) limits[2L] <- max(marks)
+      }
       seq <- band$accver
       first <- !identical(guide$ggchord_position, "end")
       forward <- layout$sequence_reference$orientation[seq] == 1
@@ -550,30 +560,35 @@ ggchord_track_axes <- function(layout, registry, plot) {
       point <- function(f) ggchord_track_point(rep(anchor, length(f)), seq,
         band$offset_native + band$direction * f * band$width_native,
         band$offset_mm + band$direction * f * band$width_mm, layout)
-      ends <- point(c(0, 1)); ticks <- point(fractions)
+      ends <- point(limits)
+      ticks <- point(marks)
       normal <- ggchord_track_frame(anchor, seq, layout)$normal[1L, ]
       tangent <- matrix(c(-normal[2L], normal[1L]) * if (first) 1 else -1, nrow = 1L)
       spacing <- ggchord_track_units(ggchord_track_metric_vector(tangent, seq, layout), layout)
       screen_tangent <- ggchord_track_metric_vector(tangent, seq, layout)[1L, ]
       label_extent <- ggchord_track_axis_extent(labels, style$axis_text_params, screen_tangent)
       text_distance <- if (style$text_offset_locked) style$text_offset_mm else max(style$text_offset_mm, label_extent + 1)
-      label_points <- ticks + matrix(rep(as.numeric(tangent) * spacing * text_distance,
-        length(fractions)), ncol = 2L, byrow = TRUE)
+      label_points <- ticks[seq_along(fractions), , drop = FALSE] +
+        matrix(rep(as.numeric(tangent) * spacing * text_distance,
+          length(fractions)), ncol = 2L, byrow = TRUE)
       line <- data.frame(x = ends[, 1], y = ends[, 2], group = -1L,
         source_row = NA_integer_, accver = seq, track_id = id, label = NA_character_,
         .component = "track_axis_line")
       tick <- text <- ggchord_empty_track_geometry()
-      if (length(fractions)) {
-        tip <- ticks + matrix(rep(as.numeric(tangent) * spacing * style$tick_length_mm,
-          length(fractions)), ncol = 2L, byrow = TRUE)
+      if (length(marks)) {
+        lengths <- c(rep(style$tick_length_mm, length(fractions)),
+          rep(style$minor_tick_length_mm, length(minor)))
+        tip <- ticks + outer(lengths, as.numeric(tangent) * spacing)
         tick <- data.frame(x = ticks[, 1L], y = ticks[, 2L], xend = tip[, 1L], yend = tip[, 2L],
-          group = -seq_along(fractions), source_row = NA_integer_, accver = seq,
+          group = -seq_along(marks), source_row = NA_integer_, accver = seq,
           track_id = id, label = NA_character_, .component = "track_axis_tick")
       }
       if (length(labels)) text <- data.frame(x = label_points[, 1], y = label_points[, 2],
         group = -seq_along(fractions) - 1L, source_row = NA_integer_, accver = seq,
         track_id = id, label = as.character(labels), .component = "track_axis_text")
-      title <- if (is_waiver(sc$name)) id else as.character(sc$name)
+      guide_title <- if (is.null(guide)) waiver() else guide$params$title
+      title <- if (!is_waiver(guide_title)) guide_title else
+        if (is_waiver(sc$name)) id else as.character(sc$name)
       if (length(title) && !is.na(title) && nzchar(title)) {
         unit <- sc$ggchord_track_unit
         if (!is.null(unit) && nzchar(unit)) title <- paste0(title, " (", unit, ")")

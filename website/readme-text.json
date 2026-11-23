@@ -52,8 +52,8 @@
     "en": "II · Single-sequence circular maps"
   },
   "circular-purpose": {
-    "zh": "在一条序列上组织特征、引物和限制位点。",
-    "en": "Place features, primers and restriction sites on one sequence."
+    "zh": "在同一条序列上绘制区间、位点和切口，标签可固定放置或避让排布。",
+    "en": "Draw intervals, sites and cuts on one sequence and label them with fixed or repelling placement."
   },
   "dotplot": {
     "zh": "III · HSP 点图",

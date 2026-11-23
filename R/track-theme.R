@@ -6,6 +6,11 @@
 #' @param check.overlap Hide overlapping tick labels.
 #' @param theme Optional local axis theme.
 #' @return A guide for [`scale_y_continuous()`][ggplot2::scale_y_continuous].
+#' @details For ordinary track value axes, use [ggplot2::guide_axis()] with
+#'   `theme`, `angle`, `check.overlap`, `minor.ticks`, `cap`, and an optional
+#'   text `title` (`NULL` removes it). The track uses its own reference path,
+#'   so native panel-side `position`, non-default `n.dodge` and `order` are
+#'   unsupported. Use this wrapper to choose the path endpoint or references.
 #' @export
 #' @examples
 #' library(ggplot2)
@@ -45,16 +50,27 @@ ggchord_track_axis_guide <- function(guide) {
   if (is_waiver(guide)) guide <- "axis"
   if (is.character(guide)) return(list(show = ggchord_match_arg(guide, c("axis", "none")) == "axis", guide = NULL))
   if (!inherits(guide, "GuideAxis"))
-    ggchord_stop("Track value guide must be 'axis', 'none', or guide_axis(theme = ...)")
-  params <- guide$params; defaults <- guide_axis()$params
-  supported <- c("theme", "angle", "check.overlap")
-  for (name in setdiff(names(params), supported))
-    if (!identical(params[[name]], defaults[[name]])) ggchord_stop(
-      "Track guide_axis(): unsupported option '", name, "'; use theme, angle or check.overlap")
+    ggchord_stop("Track value guide must be 'axis', 'none', guide_axis(), or guide_track_axis()")
+  params <- guide$params
+  defaults <- guide_axis()$params
+  supported <- c("theme", "angle", "check.overlap", "title", "minor.ticks", "cap")
+  if (!is_waiver(params$position) && !is.null(params$position))
+    ggchord_stop("Track guide_axis(): 'position' is a panel side; use ",
+      "guide_track_axis(position = 'start') or guide_track_axis(position = 'end')")
+  for (name in setdiff(names(params), c(supported, "position"))) {
+    if (!isTRUE(all.equal(params[[name]], defaults[[name]])))
+      ggchord_stop("Track guide_axis(): unsupported option '", name,
+        "'; use theme, angle, check.overlap, title, minor.ticks or cap")
+  }
+  title <- params$title
+  if (!is_waiver(title) && !is.null(title) &&
+      (!is.character(title) || length(title) != 1L || is.na(title)))
+    ggchord_stop("Track guide_axis(): title must be one character string or NULL")
   local <- params$theme
-  allowed <- c("axis.line", "axis.ticks", "axis.ticks.length", "axis.text", "axis.title")
+  allowed <- c("axis.line", "axis.ticks", "axis.ticks.length",
+    "axis.minor.ticks.length", "axis.text", "axis.title")
   if (!is.null(local) && any(!names(local) %in% allowed)) ggchord_stop(
-    "Track guide_axis(): local theme supports axis.line, axis.text and axis.title")
+    "Track guide_axis(): local theme supports ", paste(allowed, collapse = ", "))
   list(show = TRUE, guide = guide)
 }
 
@@ -64,7 +80,8 @@ ggchord_track_axis_style <- function(plot, id) {
   local <- guide$params$theme
   themed <- plot
   if (!is.null(local)) {
-    overrides <- setNames(as.list(local), paste0("ggchord.track.", names(local)))
+    decorations <- as.list(local)[setdiff(names(local), "axis.minor.ticks.length")]
+    overrides <- setNames(decorations, paste0("ggchord.track.", names(decorations)))
     themed$theme <- plot$theme + do.call(theme, overrides)
   }
   element <- function(role) ggchord_theme_element(themed, paste0("ggchord.track.axis.", role))
@@ -83,14 +100,23 @@ ggchord_track_axis_style <- function(plot, id) {
         lineheight = el@lineheight %||% 1.2)
   }
   offset <- function(name, fallback) {
-    value <- plot$theme[[paste0("ggchord.track.axis.", name, ".offset")]] %||% unit(fallback,"mm")
-    if (!is.unit(value) || length(value) != 1L || !is.finite(as.numeric(value)) || as.numeric(value) < 0)
-      ggchord_stop("Track axis offsets require nonnegative scalar absolute units")
+    key <- paste0("ggchord.track.axis.", name, ".offset")
+    value <- plot$theme[[key]] %||% unit(fallback, "mm")
+    ggchord_check_axis_unit(value, key, nonnegative = TRUE)
     ggchord_unit_inches(value) * 25.4
   }
   tick_length <- themed$theme[["ggchord.track.axis.ticks.length"]] %||% unit(1.2, "mm")
+  ggchord_check_axis_unit(tick_length, "Track axis major tick length")
+  minor <- NULL
+  if (isTRUE(guide$params$minor.ticks)) {
+    minor <- local[["axis.minor.ticks.length"]] %||% plot$theme$axis.minor.ticks.length %||% rel(.75)
+    minor <- if (inherits(minor, "rel")) as.numeric(minor) * tick_length else minor
+    ggchord_check_axis_unit(minor, "Track axis minor tick length")
+  }
   list(axis_line_params = as_params(line), axis_tick_params = as_params(tick),
-    tick_length_mm = ggchord_unit_inches(tick_length) * 25.4, axis_text_params = as_params(text),
+    tick_length_mm = ggchord_unit_inches(tick_length) * 25.4,
+    minor_tick_length_mm = if (!is.null(minor)) ggchord_unit_inches(minor) * 25.4,
+    axis_text_params = as_params(text),
     axis_title_params = as_params(title), axis_check_overlap = isTRUE(guide$params$check.overlap),
     text_offset_mm = offset("text",2.5), title_offset_mm = offset("title",5.5),
     text_offset_locked = !is.null(plot$ggchord$theme_explicit[["ggchord.track.axis.text.offset"]]),

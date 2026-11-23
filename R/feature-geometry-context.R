@@ -4,7 +4,9 @@ ggchord_register_annotation_sources <- function(plot, old_count) {
   inherited <- if (length(plot$ggchord$candidates$features) == 1L)
     plot$ggchord$data$feature_data
   annotation_data <- function(layer) {
-    if (isTRUE(layer$ggchord_params$type %in% c("gene", "gene_label", "gene_label_repel")))
+    if (isTRUE(layer$ggchord_params$type %in% c("annotation", "gene", "gene_label",
+        "gene_label_repel", "restriction_site", "domain_label")) &&
+        !identical(layer$ggchord_params$label_kind, "sequence"))
       layer$ggchord_input_data %||% inherited
   }
   for (i in seq.int(old_count + 1L, length(plot$layers))) {
@@ -131,7 +133,7 @@ ggchord_resolve_feature_geometry_context <- function(plot) {
     copy$ggchord_params$matched_feature <- list(layer_id = names(found)[1L], rows = owner$rows)
     plot$layers[[label_row]] <- copy
     if (circular && isTRUE(p$is_feature_label)) {
-      size <- p$gene_label_size %||% ggchord_theme_text_size(plot, "ggchord.feature.label", 2.5)
+      size <- p$gene_label_size %||% 3
       sizes[[owner$index]] <- c(sizes[[owner$index]], size)
     }
   }

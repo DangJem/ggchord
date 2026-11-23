@@ -2,6 +2,20 @@
 
 Use v0.29.0 for code that relies on the previous API, because v0.50.0 and later are incompatible with that API.
 
+## Earlier v0.50.0 development snapshots
+
+| Former call or setting | Replacement in v0.50.0 |
+| --- | --- |
+| `geom_feature_label_repel()`, `geom_gene_label_repel()`, `geom_primer_label_repel()`, `geom_site_label_repel()` | Use the corresponding label layer without the `_repel` suffix. For example, use `geom_feature_label(label_layout = layout_label_repel())`. |
+| `label_layout_fixed()` and `label_layout_repel()` | Use `layout_label_fixed()` and `layout_label_repel()`. The label argument remains `label_layout`. |
+| `label_layout_repel(leader = "elbow")` | Use `geom_feature_label(label_layout = layout_label_repel(), leader = "elbow")`. A fixed layout can also draw a leader. |
+| `geom_seq_center_label()` | Use `geom_seq_label_center()` in a circular map. |
+| `theme(ggchord.axis = element_blank())` | Add `scale_seq_continuous(guide = "none")`. |
+| `ggchord.axis.gap`, `ggchord.axis.text.orientation`, `ggchord.axis.text.check.overlap` | Set the corresponding `gap`, `orientation` or `check.overlap` on `guide_seq_axis()`, then give the guide to `scale_seq_continuous()`. For example, use `scale_seq_continuous(guide = guide_seq_axis(gap = grid::unit(1, "mm"), orientation = "parallel"))`. |
+| `ggchord.seq.label`, `ggchord.gene.label`, `ggchord.feature.label`, `ggchord.restriction.label` in `theme()` | Set the corresponding label layer's fixed styles, for example `geom_seq_label(size = 3, colour = "grey30")`. Use an aesthetic and a scale for styles that vary with the data. |
+| `ggchord.gene.label.segment`, `ggchord.feature.label.segment`, `ggchord.restriction.label.segment` in `theme()` | Set `segment_colour`, `segment_linewidth` and `segment_linetype` on the label layer. To hide leaders, set `leader = "none"`. |
+| `ggchord.seq.center.label`, `ggchord.seq.center.name`, `ggchord.seq.center.length` in `theme()` | Use `geom_seq_label_center(aes(label = paste(accver, length, sep = "\n")), size = 4)`. Use `label` to choose the text and layer arguments to style it. |
+
 <details>
 <summary>Internal change records for maintainers</summary>
 
@@ -40,7 +54,6 @@ The table covers removed calls and changes in behaviour in 0.50.0. Later section
 | `seq_order`, `seq_orientation`, `seq_gap`, `length_mode` on `geom_seq()` | Add `layout_sequences(order = ids, orientation = directions, gap = gaps, length_mode = "equal")`. The geom still sets the backbone's appearance. |
 | `position_plasmid(offset)` and `position_feature_stack(side = ...)` | Use `position_offset(offset)`. For old `side = "outside"`, use `base_position = position_offset(-0.1), direction = "inward"`. For old `"inside"`, use `position_offset(0.1)` and `"outward"`. The former `"strand"` setting is the default. |
 | `geom_gene()`, `geom_feature_plasmid()` | Use `geom_feature(preset = "gene")` or `geom_feature(preset = "plasmid")`, with the original layer data. |
-| `geom_feature_label_repel()` | Use `geom_feature_label(placement = "repel")`. Move the old placement policy to `label_layout` and the old `label_fit` to `overflow`. Supply `anchor_layer = "features"` when several feature layers could own the labels. |
 | `scale_seq_position()` | Use `scale_seq_continuous()`. Select reference axes with `guide = guide_seq_axis(sequences = ids)`. |
 | `scale_for("genes", scale_fill_strand())` | Use `scale_for(scale_fill_strand(), layers = "genes")`. |
 | Several track layers shared the implicit default band | Wrap the layers in `add_track(...)`, or declare `layout_track("depth")` and give each layer `track = "depth"`. |

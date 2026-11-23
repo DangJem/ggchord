@@ -62,7 +62,7 @@ comparison +
 
 ## Annotate one circular map {#circular-start}
 
-Use one reference per Circular panel. Here the gene labels follow the only gene layer, including its displayed positions. With multiple gene layers, give the intended layer an ID and use that name as `anchor_layer`.
+Use one reference per Circular panel. Here the gene labels follow the only gene layer, including its displayed positions. With multiple compatible annotation layers, give the intended layer an ID and use that name as `anchor_layer`. `layout_label_repel()` moves the text around its anchor. Set `leader` on the label layer to control the connecting line.
 
 ```{r workflow-4}
 ref <- data.frame(accver = "map", length = 1000, topology = "circular")
@@ -74,7 +74,7 @@ features <- data.frame(
 ggchord() +
   geom_seq(data = ref) +
   geom_gene(data = features, fill = "#277A73") +
-  geom_gene_label(aes(label = label)) +
+  geom_feature_label(aes(label = label), label_layout = layout_label_repel()) +
   layout_sequences(angular_gap = 12) +
   coord_circular(start_angle = 90) +
   theme_ggchord_plasmid()

@@ -28,7 +28,7 @@ spoke_labels <- function(size, along = 0) {
     indices <- spokes_on_left == (side == "left")
     geom_seq_label(aes(label = accver), data = comparison$seq_data[indices, ],
       anchor = "end", hjust = if (side == "left") 1.08 else -0.08, size = size,
-      label_layout = label_layout_fixed(orientation = "horizontal", along = along, offset = 1))
+      label_layout = layout_label_fixed(orientation = "horizontal", along = along, offset = 1))
   })
 }
 overview <- ggchord(comparison$seq_data) +
@@ -62,10 +62,10 @@ gene_names <- labels |>
     read_left = if_else(side == "positive", normal_x < 0, normal_x > 0)) |>
   group_by(side, read_left) |>
   group_map(function(records, placement) {
-    geom_gene_label_repel(aes(label = label), data = records, anchor_layer = "genes",
+    geom_gene_label(aes(label = label), data = records, anchor_layer = "genes",
       hjust = as.integer(placement$read_left), size = 3.2,
       segment_colour = "#767A73", segment_linewidth = 0.22,
-      label_layout = label_layout_repel(arrangement = "local", orientation = "horizontal",
+      label_layout = layout_label_repel(arrangement = "local", orientation = "horizontal",
         side = placement$side, offset = 4, padding = 1,
         fit = "wrap_shrink", min_size = 2.55, wrap = 22, max_lines = 3))
   })

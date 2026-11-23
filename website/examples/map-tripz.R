@@ -19,7 +19,7 @@ draw_reference_map <- function(reference, overview = FALSE) {
     ) +
     scale_fill_identity() +
     scale_shape_identity() +
-    geom_seq_center_label(
+    geom_seq_label_center(
       aes(label = paste0(accver, "\n", comma(length), " bp")),
       size = 3.55, fontface = "bold"
     ) +
@@ -33,12 +33,12 @@ draw_reference_map <- function(reference, overview = FALSE) {
   operators <- filter(label_data, label == "tet operator")
   label_data <- filter(label_data, is.na(label) | label != "tet operator")
   p <- p +
-    geom_feature_label_repel(
+    geom_feature_label(
       aes(label = label, fill = feature_color),
       data = label_data, anchor_layer = "annotations",
       size = if (overview) 3.6 else 3.0,
       segment_colour = "#77736E", segment_linewidth = 0.20,
-      label_layout = label_layout_repel(
+      label_layout = layout_label_repel(
         arrangement = "local", side = if (overview) "positive" else "both",
         offset = if (overview) 3 else 0, fit = "none",
         outer_size = if (overview) NULL else 3.3
@@ -48,32 +48,38 @@ draw_reference_map <- function(reference, overview = FALSE) {
 
   # Display all repeats at one size in the outer annotation queue.
   p <- p +
-    geom_feature_label_repel(
+    geom_feature_label(
       aes(label = label, fill = feature_color),
       data = operators, anchor_layer = "annotations", size = 3.3,
       fontface = "bold", segment_colour = "#77736E", segment_linewidth = 0.20,
-      label_layout = label_layout_repel(
+      label_layout = layout_label_repel(
         arrangement = "local", orientation = "horizontal", side = "positive",
         offset = 2.6, fit = "none"
       )
     )
 
   if (nrow(reference$sites)) {
-    # Use the documented cut boundary, not the start of the recognition motif.
+    # Label each documented boundary from its preceding residue on the circle.
     site_labels <- reference$sites |>
-      mutate(pos = coalesce(cut_top, cut_bottom)) |>
-      group_by(accver, pos) |>
-      summarise(enzymes = paste(unique(enzyme), collapse = " – "), .groups = "drop") |>
+      mutate(cut_boundary = coalesce(cut_top, cut_bottom)) |>
+      filter(!is.na(cut_boundary)) |>
+      group_by(accver, cut_boundary) |>
+      summarise(
+        enzymes = paste(unique(enzyme), collapse = " – "),
+        source_members = list(site_id),
+        .groups = "drop"
+      ) |>
       mutate(
+        pos = if_else(cut_boundary == 0, sequence$length[[1L]], cut_boundary),
         enzyme_label = enzymes,
-        coordinate_label = paste0("(", pos, ")"),
+        coordinate_label = paste0("(", cut_boundary, ")"),
         label = paste(enzymes, coordinate_label)
       )
     p <- p +
-      geom_site_label_repel(
-        aes(label = label), data = site_labels, size = 3, fontface = "bold", colour = "#383535",
+      geom_site_label(
+        aes(label = label), data = site_labels, anchor_layer = NULL, size = 3, fontface = "bold", colour = "#383535",
         segment_colour = "#8A8177", segment_linewidth = 0.19,
-        label_layout = label_layout_repel(
+        label_layout = layout_label_repel(
           arrangement = "local", orientation = "horizontal", side = "positive",
           offset = 2.6, fit = "none"
         )
@@ -87,10 +93,10 @@ draw_reference_map <- function(reference, overview = FALSE) {
         data = primers, id = "primers", shape = "primer_arrow", fill = "#7852A2",
         colour = "#7852A2", position = position_offset(0), thickness = 0.76
       ) +
-      geom_primer_label_repel(
+      geom_primer_label(
         aes(label = label), anchor_layer = "primers", size = 3, fontface = "bold", colour = "#7852A2",
         segment_colour = "#8D65BB", segment_linewidth = 0.26,
-        label_layout = label_layout_repel(
+        label_layout = layout_label_repel(
           arrangement = "local", orientation = "horizontal", side = "positive",
           offset = 2.7, fit = "none"
         )

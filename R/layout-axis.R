@@ -148,7 +148,7 @@ ggchord_layout_axis_step <- function(
         label_angle <- rep(label_angle, nrow(pts))
       }
 
-      dir <- if (axisGap[id] >= 0) -1 else 1
+      dir <- axis_text_style$tick_direction %||% -1
       len <- ifelse(pts$is_major, axisMajLen[id], axisMinLen[id])
       len[origin_tick] <- len[origin_tick] * 2.2
       if (isTRUE(circular)) {
@@ -204,12 +204,7 @@ ggchord_axis_heading <- function(plot, layout) {
   title <- scale$name
   if (is_waiver(title)) title <- paste0("Position (", layout$sequence_unit, ")")
   if (is.null(title)) return(NULL)
-  view <- plot
-  guide_theme <- scale$ggchord_axis_guide$theme
-  if (!is.null(guide_theme)) {
-    overrides <- setNames(as.list(guide_theme), paste0("ggchord.", names(guide_theme)))
-    view$theme <- plot$theme + do.call(theme, overrides)
-  }
+  view <- ggchord_seq_axis_plot(plot, scale$ggchord_axis_guide)
   element <- ggchord_theme_element(view, "ggchord.axis.title")
   if (inherits(element, "element_blank")) return(NULL)
   ticks <- layout$axis_ticks

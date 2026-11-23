@@ -104,6 +104,11 @@ ggchord_native_facet_input <- function(layer) {
 
 ggchord_render_inputs <- function(plot) {
   plot <- ggchord_resolve_reference(plot)
+  for (i in seq_along(plot$layers)) {
+    layer <- plot$layers[[i]]
+    if (identical(layer$ggchord_type, "annotation"))
+      plot$layers[[i]] <- ggchord_materialize_annotation(layer, plot)
+  }
   plot <- ggchord_configure_layout(plot)
   for (i in seq_along(plot$layers)) {
     layer <- plot$layers[[i]]
@@ -117,7 +122,7 @@ ggchord_render_inputs <- function(plot) {
     reader <- layer$ggchord_input_data
     cache_reader <- is.function(reader) && !isTRUE(attr(reader, "ggchord_render_source"))
     # This source plot survives device refinement, unlike the geometry copies.
-    cache_stat <- identical(layer$ggchord_type, "gene_poly") &&
+    cache_stat <- layer$ggchord_type %in% c("gene_poly", "restriction_site") &&
       !is.null(layer$ggchord_params$source_stat) && is.null(layer$ggchord_params$source_stat_cache)
     if (!cache_reader && !cache_stat) next
     copy <- reconstruct_layer(layer, layer$data, mapping = layer$mapping)
@@ -480,6 +485,9 @@ ggchord_resolve_layer_input <- function(lyr, fallback = NULL,
     }
     data[[role]] <- value
   }
+  location <- lyr$ggchord_params$annotation_location
+  if (!is.null(location) && isTRUE(lyr$ggchord_params$strict_annotation_shape))
+    ggchord_annotation_location(data, location, ggchord_layer_input_context(lyr))
   reference_ids <- lyr$ggchord_params$reference_ids
   if (!is.null(reference_ids)) {
     fields <- if (type %in% c("link", "ribbon")) c("qaccver", "saccver") else "accver"
@@ -508,7 +516,7 @@ ggchord_resolve_layer_input <- function(lyr, fallback = NULL,
     if (!is.null(cache$data)) {
       data <- cache$data
     } else {
-      if (identical(lyr$ggchord_type, "gene_poly") && nrow(data) && is.null(data$group))
+      if (lyr$ggchord_type %in% c("gene_poly", "restriction_site") && nrow(data) && is.null(data$group))
         data$group <- ggchord_feature_stat_group(lyr, input, data)
       data <- ggchord_run_source_stat(data, source_stat,
         intersect(lyr$ggchord_role_aes, names(data)), ggchord_layer_input_context(lyr),

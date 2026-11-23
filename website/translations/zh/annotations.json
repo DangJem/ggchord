@@ -1,5 +1,5 @@
 {
-  "source_sha256": "b99c6c218c969899e54fc2ab24bc8cc50c39bd9f19158cdae1d2567cd8a97137",
+  "source_sha256": "ba21654ac2b4b81d672bfd8f81917344bf2e09c29901babcf686f43d4aa360fb",
   "blocks": {
     "0": {
       "source_sha256": "197e9c986ad2ac18ae0f74619faf191c69b2f8fa9cdc2885d220a08e5aacb9e0",
@@ -22,9 +22,9 @@
       "translation": "## 保留九条特征，只标注两个 CDS {#anchors}\n"
     },
     "7": {
-      "source_sha256": "7688683fa9bfb9abb5381685d644e0cf03aad08ed827cdc30b270f48eb0c045f",
+      "source_sha256": "d50e3b989a057576f8c8b2ab52da3e789e50c8ba862984294b61cc266e54f5c7",
       "status": "reviewed",
-      "translation": "保留源记录的匹配标识作为 `feature_id`。将实体层命名为 `features`，用 `position_feature_stack()` 把重叠区间分到不同的道上。标签层只取两个 CDS，再通过 `anchor_layer` 指定原实体层。这样筛选之后，每个标签仍跟随各自的特征。\n"
+      "translation": "保留源记录的匹配标识作为 `feature_id`。将实体层命名为 `features`，用 `position_feature_stack()` 把重叠区间分到不同的道上。标签层只取两个 CDS，再通过 `anchor_layer` 指定原实体层。这样筛选之后，每个标签仍跟随各自的特征。`layout_label_repel()` 在锚点周围排布文字。可在标签层上设置 `leader` 和 `segment_colour` 来控制引导线。\n"
     },
     "9": {
       "source_sha256": "e7c3eb1097e1fa50b2651524db448c4fc4f5128606914659160fb6780cf155a2",

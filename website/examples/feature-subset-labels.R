@@ -14,9 +14,9 @@ ggchord(record$seq_data) +
     aes(fill = type), data = features, id = "features",
     position = position_feature_stack(base_position = position_offset(-3), direction = "negative"), show.legend = FALSE
   ) +
-  geom_feature_label_repel(
+  geom_feature_label(
     aes(label = anno), data = captions, anchor_layer = "features",
-    label_layout = label_layout_repel(arrangement = "columns"), size = 4
+    label_layout = layout_label_repel(arrangement = "columns"), size = 4
   ) +
   coord_circular(start_angle = 90, fit = "labels") +
   theme_ggchord_minimal()

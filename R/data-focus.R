@@ -145,6 +145,31 @@ ggchord_focus_alignment_table <- function(data, sequences, loci, caller) {
   out
 }
 
+ggchord_focus_point_annotations <- function(data, sequences, loci, boundary, location) {
+  out <- focus_ggchord_track(data, sequences, loci, type = "point", boundary = boundary)
+  if (location == "cut") {
+    input_rows <- data_report(out, sections = "lineage")$lineage$input_row
+    lower <- loci$start[match(out$accver, loci$locus_id)] - 1
+    upper <- loci$end[match(out$accver, loci$locus_id)]
+    source_offset <- out$.source_origin - lower - 1
+    keep <- rep(TRUE, nrow(out))
+    out$source_cut_status <- out$source_cut_status %||% out$cut_status
+    for (column in ggchord_annotation_cut_columns) {
+      original <- paste0("source_", column)
+      values <- data[[column]][input_rows]
+      out[[original]] <- out[[original]] %||% (values + source_offset)
+      outside <- which(!is.na(values) & (values < lower | values > upper))
+      out[[column]] <- values - lower
+      out[[column]][outside] <- NA_real_
+      if (boundary == "drop") keep[outside] <- FALSE
+    }
+    out$cut_status <- ggchord_annotation_cut_status(out)
+    out <- out[keep, , drop = FALSE]
+  }
+  attr(out, "ggchord_import") <- ggchord_annotation_import(data)
+  as_ggchord_feature(out, location = location)
+}
+
 #' Crop explicit source windows together with their observation tables
 #'
 #' Alignment tables require `source_scope = "source"` and explicit source
@@ -154,6 +179,9 @@ ggchord_focus_alignment_table <- function(data, sequences, loci, caller) {
 #' identifies a displayed alignment row. Repeated row IDs are made unique
 #' across windows and source blocks. `local_position` contains the position
 #' in the window for each retained nongap cell.
+#' Site and cut anchors must lie in the selected window. Trimming hides cut
+#' boundaries outside the window and preserves their original positions in
+#' the source fields.
 #' @param x A data collection with a complete reference.
 #' @param loci Window table with accver, start, end and unique locus_id.
 #' @param expand Optional padding in source units.
@@ -208,14 +236,23 @@ focus_ggchord_data <- function(x, loci, expand = 0, boundary = "trim") {
   for (name in names(out$features)) {
     features <- as_ggchord_feature(out$features[[name]])
     validate_ggchord_data(features, role = "feature", sequences = sequences, action = "error")
+    location <- ggchord_annotation_location(features, caller = caller)
+    path <- paste("features", name, sep = "/")
+    if (location != "interval") {
+      table <- ggchord_focus_point_annotations(features, sequences, normalized, boundary, location)
+      out$features[[name]] <- table
+      lineage[[path]] <- data_report(table, sections = "lineage")$lineage
+      next
+    }
     scoped <- ggchord_focus_tables(sequences, feature_data = features,
       loci = normalized, boundary = boundary)
     table <- scoped$feature_data
     table$source_accver <- table$.source_accver
     table$source_start <- table$.source_start
     table$source_end <- table$.source_end
+    attr(table, "ggchord_import") <- ggchord_annotation_import(features)
     out$features[[name]] <- table
-    lineage[[paste("features", name, sep = "/")]] <- scoped$report
+    lineage[[path]] <- scoped$report
   }
   for (name in names(out$links)) {
     table <- ggchord_focus_link_table(out$links[[name]], sequences, normalized, boundary, caller)

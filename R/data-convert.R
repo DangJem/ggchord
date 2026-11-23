@@ -84,7 +84,7 @@ ggchord_conversion_ids <- function(ids, caller) {
 ggchord_conversion_coordinates <- function(out, columns, caller) {
   for (column in columns) {
     value <- out[[column]]
-    if (!is.numeric(value) || any(!is.finite(value)) || any(value < 1 | value != floor(value))) {
+    if (!is.numeric(value) || any(!is.finite(value)) || any(value < 1 | value > 2^53 | value != floor(value))) {
       ggchord_stop(caller, ": ", column, " must contain positive integer ",
         "1-based inclusive coordinates; convert zero-based inputs explicitly")
     }
@@ -368,19 +368,27 @@ as_ggchord_seq <- function(x, columns = NULL, lengths = NULL, ids = NULL,
   out
 }
 
-#' Adapt one-based sequence feature intervals
+#' Adapt sequence annotations
 #'
-#' Coordinates are ordered and closed. A missing strand is reported as `"."`.
-#' A `segments` list of explicit ordered interval tables can record
-#' discontinuous features without filling gaps in their parent range.
+#' Intervals use one-based closed coordinates. Sites use a one-based residue
+#' position. Cuts use a residue anchor and interbase boundaries, where zero
+#' is before the first residue. Missing cut boundaries retain a `cut_status`
+#' of `"partial"` or `"unknown"`. A `segments` list can record discontinuous
+#' intervals without filling gaps in their parent range.
+#' Repeated IDs remain separate input rows. The data report records entity
+#' identity, original source rows and the segment index. `entity_id` takes
+#' precedence over `feature_id` or `site_id` when provided. Temporary keys are
+#' local to the input table.
 #'
 #' @param x A data frame or `GRanges` object.
 #' @param columns Named mapping from canonical roles to input column names.
 #' @param sequence_unit Optional native `"bp"` or `"aa"` declaration. An
 #'   existing declaration must agree. Undeclared observation units can be
 #'   resolved against a reference later.
-#' @return A feature data frame with `accver`, `start`, `end`, strand
-#'   and available feature metadata. Use [data_report()] for provenance.
+#' @param location `"auto"`, `"interval"`, `"site"`, or `"cut"`. Automatic
+#'   detection uses the coordinate fields or a single declared `location_kind`.
+#' @return A feature data frame with `accver`, `location_kind`, the location's
+#'   coordinate fields, strand and source metadata. Use [data_report()] for provenance.
 #' @export
 #' @examples
 #' seqs <- data.frame(
@@ -392,37 +400,49 @@ as_ggchord_seq <- function(x, columns = NULL, lengths = NULL, ids = NULL,
 #' features <- as_ggchord_feature(raw, columns = c(
 #'   accver = "chrom", start = "begin", end = "finish", strand = "direction"))
 #' ggchord(seqs) + geom_feature(data = features)
-as_ggchord_feature <- function(x, columns = NULL, sequence_unit = NULL) {
+#'
+#' as_ggchord_feature(data.frame(accver = "A", pos = 120), location = "site")
+as_ggchord_feature <- function(x, columns = NULL, sequence_unit = NULL, location = "auto") {
   ggchord_local_console_errors()
-  caller <- "as_ggchord_feature()"
-  out <- ggchord_convert_feature(x, columns)
-  if (any(out$start > out$end)) ggchord_stop(caller,
-    ": start must not exceed end; use segments for discontinuous or circular-origin intervals")
-  if ("segments" %in% names(out)) ggchord_validate_feature_segments(out, caller)
-  ggchord_declare_sequence_unit(out, sequence_unit, caller)
-}
-
-ggchord_convert_feature <- function(x, mapping, unified = FALSE) {
   caller <- "as_ggchord_feature()"
   metadata <- NULL
   if (is.data.frame(x)) {
-    roles <- c("accver", "start", "end", "strand", "directionality", "feature_id", "parent_ids",
-      "type", "label", "anno", "feature_color", "display_priority", "segments", "sequence_unit")
-    converted <- ggchord_conversion_frame(x, mapping, roles, caller)
+    roles <- c("accver", "start", "end", "pos", "cut_top", "cut_bottom", "cut_status",
+      "location_kind", "strand", "directionality", "entity_id", "feature_id", "site_id",
+      "parent_ids", "type", "label", "anno", "feature_color", "display_priority", "segments",
+      "sequence_unit")
+    converted <- ggchord_conversion_frame(x, columns, roles, caller)
   } else if (inherits(x, "GRanges")) {
-    if (!is.null(mapping)) ggchord_stop(caller, ": mapping is for data-frame inputs")
+    if (!is.null(columns)) ggchord_stop(caller, ": columns is for data-frame inputs")
     converted <- ggchord_conversion_ranges(x, caller)
     metadata <- converted$metadata
   } else ggchord_stop(caller, ": x must be a data.frame or GRanges")
   out <- converted$data
-  ggchord_require_columns(out, c("accver", "start", "end"), caller)
+  attr(out, "ggchord_annotation_location") <- attr(x, "ggchord_annotation_location", exact = TRUE)
+  location <- ggchord_annotation_location(out, location, caller)
+  fields <- ggchord_annotation_coordinates(location)
+  ggchord_require_columns(out, c("accver", fields), caller)
   out$accver <- ggchord_conversion_ids(out$accver, caller)
-  ggchord_conversion_coordinates(out, c("start", "end"), caller)
-  if (unified) out <- ggchord_normalize_feature_input(out)
+  ggchord_conversion_coordinates(out, fields, caller)
+  if (location == "interval") {
+    if (any(out$start > out$end)) ggchord_stop(caller,
+      ": start must not exceed end; use segments for discontinuous or circular-origin intervals")
+    if ("segments" %in% names(out)) ggchord_validate_feature_segments(out, caller)
+  }
+  if (location == "cut") {
+    for (column in ggchord_annotation_cut_columns) {
+      value <- out[[column]] %||% rep(NA_real_, nrow(out))
+      if (!ggchord_interbase_numeric(value) || any(ggchord_invalid_interbase(value)))
+        ggchord_stop(caller, ": ", column, " must contain nonnegative integral interbase positions or NA")
+      out[[column]] <- if (is.logical(value)) as.numeric(value) else value
+    }
+    status <- ggchord_annotation_cut_status(out)
+    if ("cut_status" %in% names(out) && any(is.na(out$cut_status) | out$cut_status != status))
+      ggchord_stop(caller, ": cut_status must agree with the known interbase positions")
+    out$cut_status <- status
+  }
   strand <- if ("strand" %in% names(out)) as.character(out$strand) else NULL
-  direction_roles <- if (unified) c("directionality", "direction") else "directionality"
-  direction_column <- intersect(direction_roles, names(out))[1L]
-  expected <- if (!is.na(direction_column)) ggchord_direction_strand(out[[direction_column]]) else NULL
+  expected <- if ("directionality" %in% names(out)) ggchord_direction_strand(out$directionality) else NULL
   if (anyNA(expected)) {
     ggchord_stop(caller, ": directionality must be forward, reverse, bidirectional or none")
   }
@@ -441,7 +461,24 @@ ggchord_convert_feature <- function(x, mapping, unified = FALSE) {
   out$source_strand <- source_strand
   map <- rbind(map, data.frame(source = "strand", output = "source_strand",
     stringsAsFactors = FALSE))
-  ggchord_conversion_finish(out, x, map, metadata)
+  out$location_kind <- rep(location, nrow(out))
+  attr(out, "ggchord_annotation_location") <- location
+  out <- ggchord_declare_sequence_unit(out, sequence_unit, caller, default = if (location == "cut") "bp")
+  if (location == "cut") ggchord_check_declared_unit(out$sequence_unit, "bp", caller)
+  out <- ggchord_conversion_finish(out, x, map, metadata)
+  conversion <- attr(out, "ggchord_conversion")
+  conversion$coordinate_system <- switch(location, interval = "1-based-inclusive",
+    site = "1-based-residue", cut = c(pos = "1-based-residue", cut_top = "0-based-interbase",
+      cut_bottom = "0-based-interbase"))
+  attr(out, "ggchord_conversion") <- conversion
+  # Check identity field types now. The row-aligned report is generated from
+  # the current rows on request, including after filtering or reordering.
+  for (column in intersect(c("entity_id", "feature_id", "site_id"), names(out))) {
+    if (!is.atomic(out[[column]]) || !is.null(dim(out[[column]])))
+      ggchord_stop(caller, ": ", column, " must be an identifier column")
+  }
+  ggchord_attach_data_report(out, "as_ggchord_feature", inputs = data_report(x),
+    metadata = list(location = location, ggchord_conversion = conversion))
 }
 
 #' Adapt point or interval relationships

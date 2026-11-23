@@ -98,8 +98,9 @@ ggchord_feature_data <- function(data, fixed_shape = "block",
     data[[coordinate]] <- suppressWarnings(as.numeric(data[[coordinate]]))
   }
   if (any(!is.finite(data$start) | !is.finite(data$end) |
-      data$start < 1 | data$end < data$start)) {
-    ggchord_stop("geom_feature(): start and end must be ordered, positive finite coordinates")
+      data$start < 1 | data$end < data$start |
+      data$start != trunc(data$start) | data$end != trunc(data$end))) {
+    ggchord_stop("geom_feature(): start and end must be ordered, positive integers")
   }
   if (isTRUE(expand_segments)) data <- ggchord_expand_feature_segments(data)
   out <- as.data.frame(data, stringsAsFactors = FALSE)
@@ -331,6 +332,8 @@ ggchord_feature_layer <- function(mapping, data, shape, fixed_shape, thickness,
 #' @export
 #' @param mapping Aesthetic mapping from `aes()`. A local mapping overrides the matching inherited channel.
 #' @param data Observation table or a data function. For ggchord layers, provide the required data-role columns.
+#' @param location Annotation position type: `"interval"`, `"site"`, `"cut"`, or
+#'   `"auto"` to determine it from the input columns and role mappings.
 #' @param shape Default shape. An explicitly supplied fixed shape takes priority over its mapping.
 #' @param thickness Physical thickness in mm or absolute grid units. Named values select references.
 #' @param stat A compatible ggplot2 Stat or its name. The default uses the supplied records.
@@ -344,7 +347,10 @@ ggchord_feature_layer <- function(mapping, data, shape, fixed_shape, thickness,
 #' @param inherit.aes Whether to inherit plot mappings and evaluate them on the layer data.
 #' @param id Layer identifier. [auto_id()] assigns a plot-local ID. Use a name for explicit references.
 #' @return A ggplot2 layer for addition to a plot.
-#' @details Provide one-based closed intervals with `accver`, `start` and `end`.
+#' @details Intervals use `accver`, `start` and `end` and default to a block.
+#' Sites use `accver` and one-based `pos` and default to a tick. Cuts also
+#' carry one or both interbase boundaries `cut_top` and `cut_bottom` and use
+#' the cut shape. A cut with unknown boundaries can display its anchor as a tick.
 #' Supply strand `+`, `-`, `+/-` (both directions), or `.` (undirected),
 #' with disjoint segments when applicable. Bidirectional arrow shapes retain
 #' one source entity and use heads at both ends. The gene shortcut defaults to
@@ -379,13 +385,75 @@ ggchord_feature_layer <- function(mapping, data, shape, fixed_shape, thickness,
 #'   scale_shape_manual(values = c(CDS = "arrow", tRNA = "block")) +
 #'   scale_fill_manual(values = gene_colours) +
 #'   coord_collinear()
-geom_feature <- function(mapping = NULL, data = NULL, shape = "block",
+#'
+#' sites <- data.frame(accver = "A", pos = 300, site_id = "s1", label = "Site 1")
+#' ggchord(seqs) + geom_seq() +
+#'   geom_feature(data = sites, location = "site", id = "sites") +
+#'   geom_feature_label(aes(label = label), anchor_layer = "sites",
+#'     label_layout = layout_label_fixed(offset = 5), leader = "straight") +
+#'   coord_collinear()
+geom_feature <- function(mapping = NULL, data = NULL, location = "auto", shape = NULL,
     thickness = 2, stat = "identity", position = "identity", ...,
     na.rm = FALSE, show.legend = NA, inherit.aes = TRUE, id = auto_id()) {
   ggchord_local_console_errors()
   ggchord_check_argument_names(sys.call(), sys.function())
-  ggchord_feature_layer(mapping, data, shape, !missing(shape), thickness,
-    stat, position, list(...), na.rm, show.legend, inherit.aes, id)
+  location <- ggchord_match_arg(location, c("auto", "interval", "site", "cut"))
+  args <- list(shape = shape, fixed_shape = !is.null(shape), thickness = thickness,
+    stat = stat, position = position, dots = list(...), na.rm = na.rm,
+    show.legend = show.legend, inherit.aes = inherit.aes, id = id,
+    fixed_size = !missing(thickness))
+  if (location != "auto")
+    return(do.call(ggchord_annotation_layer, c(list(mapping, data, location), args)))
+
+  # Inherited role mappings and data callbacks can reveal the location only
+  # at build time. Keep one layer and allocate its ID when it is added.
+  layer <- ggplot2::layer(geom = feature_geom, stat = "identity", position = "identity",
+    data = data.frame(x = numeric(), y = numeric(), group = integer()),
+    mapping = aes(x = x, y = y, group = group), inherit.aes = inherit.aes)
+  layer$ggchord_type <- "annotation"
+  layer$ggchord_params <- list(type = "annotation", id = id, annotation_args = args)
+  ggchord_capture_layer_input(layer, data, mapping, character())
+}
+
+ggchord_annotation_layer <- function(mapping, data, location, shape, fixed_shape,
+    thickness, stat, position, dots, na.rm, show.legend, inherit.aes, id,
+    default_head_style = "shouldered", feature_role = "feature", fixed_size = FALSE,
+    strict_shape = TRUE) {
+  if (location == "interval") {
+    layer <- ggchord_feature_layer(mapping, data, shape %||% "block", fixed_shape,
+      thickness, stat, position, dots, na.rm, show.legend, inherit.aes, id,
+      default_head_style, feature_role)
+  } else {
+    default <- if (location == "cut") "cut" else "tick"
+    allowed <- if (location == "cut") "cut" else c("tick", "point")
+    if (strict_shape && !is.null(shape) &&
+        (!is.character(shape) || length(shape) != 1L || !shape %in% allowed))
+      ggchord_stop("geom_feature(): ", location, " shape must be ", paste(allowed, collapse = " or "))
+    layer <- ggchord_site_layer(mapping, data, shape %||% default, fixed_shape,
+      thickness, fixed_size, stat, position, dots, na.rm, show.legend, inherit.aes, id)
+  }
+  layer$ggchord_params$annotation_location <- location
+  layer$ggchord_params$strict_annotation_shape <- strict_shape
+  layer
+}
+
+ggchord_materialize_annotation <- function(layer, plot) {
+  fallback <- if (!is_waiver(plot$data)) plot$data
+  source <- ggchord_layer_source(layer, fallback)
+  mapping <- layer$ggchord_input_mapping %||% aes()
+  if (isTRUE(layer$inherit.aes)) {
+    for (key in setdiff(names(plot$mapping), names(mapping))) mapping[[key]] <- plot$mapping[[key]]
+  }
+  projected <- intersect(names(mapping), c("accver", "start", "end", "pos", "cut_top", "cut_bottom"))
+  schema <- source
+  for (key in setdiff(projected, names(schema))) schema[[key]] <- rep(NA_real_, nrow(source))
+  location <- ggchord_annotation_location(schema, "auto", "geom_feature()")
+  resolved <- do.call(ggchord_annotation_layer,
+    c(list(layer$ggchord_input_mapping, source, location), layer$ggchord_params$annotation_args))
+  resolved$ggchord_layer_id <- layer$ggchord_layer_id
+  resolved$ggchord_params$id <- layer$ggchord_params$id
+  resolved$ggchord_params$annotation_source_key <- layer$ggchord_params$annotation_source_key
+  resolved
 }
 
 # A plot mapping becomes known after layer assembly. Project the standard

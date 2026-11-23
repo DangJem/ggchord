@@ -1,30 +1,18 @@
 # Joint layout operates on trained guides, without retraining scales or data.
-ggchord_guide_role <- function(aesthetic) {
-  if (grepl("^track_", aesthetic)) return("track")
-  switch(aesthetic, seq_colour="seq", ribbon_fill="ribbon", ribbon_colour="ribbon",
-    ribbon_alpha="ribbon", ribbon_linetype="ribbon", gene_fill="gene",
-    feature_fill="feature", feature_shape="feature", region_fill="region", "link")
-}
-
 ggchord_guide_constraints <- function(source, params) {
-  settings <- ggchord_plot_settings(source)
   explicit <- source$ggchord$theme_explicit %||% list()
   constraints <- list(position=NULL, direction=NULL, nrow=NULL, ncol=NULL,
     width=FALSE, height=FALSE)
   for (aes in params$aesthetic) {
-    role <- settings$legends[[ggchord_guide_role(aes)]]
     scale <- source$scales$get_scales(aes)
     guide <- source$guides$guides[[aes]] %||% scale$guide
     user <- if (inherits(guide, "Guide") && !isTRUE(attr(guide, "ggchord_fusion_default"))) guide$params else list()
-    constraints$position <- constraints$position %||% user$position %||% role$position %||%
-      settings$legend$position %||% explicit$legend.position
-    constraints$direction <- constraints$direction %||% user$direction %||% role$direction %||%
-      settings$legend$direction %||% explicit$legend.direction
+    constraints$position <- constraints$position %||% user$position %||% explicit$legend.position
+    constraints$direction <- constraints$direction %||% user$direction %||% explicit$legend.direction
     for (name in c("nrow", "ncol")) constraints[[name]] <- constraints[[name]] %||% user[[name]]
     for (axis in c("width", "height")) {
       field <- paste0("key.",axis)
       value <- user$theme[[paste0("legend.",field)]] %||% user$theme$legend.key.size %||%
-        role[[field]] %||% role$key.size %||% settings$legend[[field]] %||% settings$legend$key.size %||%
         explicit[[paste0("legend.",field)]] %||% explicit$legend.key.size
       constraints[[axis]] <- constraints[[axis]] || !is.null(value)
     }

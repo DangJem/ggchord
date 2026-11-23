@@ -1,5 +1,28 @@
 # ggchord 0.50.0 (development)
 
+- `as_ggchord_feature()` and `geom_feature()` accept closed intervals, residue
+  sites and interbase cuts through `location`. `geom_feature_label()` follows
+  any of those annotation types. Use a layer ID to resolve ambiguous targets
+  and a stable entity or source key to label a separately selected subset.
+- Focused cut annotations select the window by the residue anchor and omit
+  boundaries outside it. `cut_status` describes the local boundaries and
+  `source_cut_status` retains the source status. The source stage of
+  `export_ggchord_layout()` includes available `data_report()` lineage in
+  `provenance`.
+- `layout_label_fixed()` and `layout_label_repel()` replace the earlier
+  `label_layout_*()` names. Use `label_layout = layout_label_repel()` on the
+  corresponding label layer in place of the development `_label_repel()`
+  shortcuts. Set `leader` and `segment_*` styles on the label layer, including
+  with a fixed layout. Use `geom_seq_label_center()` for circular centre text.
+- Label and leader styles previously set with role-specific ggchord theme
+  fields now belong to their label layers. Theme presets take `base_size` and
+  `base_family`. Use `scale_seq_continuous(guide = "none")` to hide a reference
+  axis and set its gap, text orientation or overlap policy with `guide_seq_axis()`.
+  The migration guides list replacements for the removed theme fields.
+- Native `guide_axis()` can set local Track axis titles, minor ticks and caps
+  in addition to tick-label angle, overlap and theme. Use `guide_track_axis()`
+  to select references or a path endpoint.
+
 - `layout_track()` replaces `track_band()`. It updates the current track or
   configures a named track before or after its layers. Layer additions assign
   stable track IDs, and automatic order fills the free positions on each side.
@@ -142,7 +165,7 @@
   labels placed outside by a fixed position.
   Filled exterior annotations have visible outlines, including those
   placed outside with a fixed layout.
-  `label_layout_repel(outer_size = ...)` sets a separate circular exterior
+  `layout_label_repel(outer_size = ...)` sets a separate circular exterior
   font size. An explicit site-label font face applies to both the enzyme
   name and its coordinate. The circular examples use larger bold exterior
   labels. Reference maps use the restored priority and interval length

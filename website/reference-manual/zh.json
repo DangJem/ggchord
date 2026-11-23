@@ -1,5 +1,5 @@
 {
-  "source_sha256": "d5de63adac690a7db6516b7ff82575a0cfe7abf8facaccab98a630cb2c5d39fa",
+  "source_sha256": "50772e61edd2b675f4f389979ca028d78b7c36a553fb63d2f5efaced859a5fed",
   "description": "按绘图问题或函数查阅 API。索引每行对应一篇主题文档，并列出该文档涵盖的函数。",
   "groups": {
     "construct": {
@@ -121,7 +121,7 @@
         }
       ],
       "value": "ggchord_data 容器：sequences、features、links、tracks、alignments，以及通过 data_report() 访问的来源/变换记录。各集合始终是具名列表，不另有 primary 主表。",
-      "details": "1. 新增另一成员表不改变任何既有图层的数据来源。\n\n2. 复杂 Reader 可返回结构相同但参考尚不完整的 ggchord_import；该对象必须补全参考后才能进入图级参考。ggchord_data() 本身要求其 sequences 完整。\n\n3. 没有 steps 参数；数据操作使用普通 R 调用顺序。",
+      "details": "1. 新增另一成员表不改变任何既有图层的数据来源。\n\n2. 复杂 Reader 可返回结构相同但参考尚不完整的 ggchord_import；该对象必须补全参考后才能进入图级参考。ggchord_data() 本身要求其 sequences 完整。\n\n3. 没有 steps 参数；数据操作使用普通 R 调用顺序。 将不同注释位置类型分别存放在 `features` 的各成员表。轨道区间表可以只提供位置，是否需要数值由所用的数值几何决定。",
       "errors": "- 集合重名或未命名多成员。\n\n- 参考不完整或来源单位矛盾。",
       "roles": [],
       "example_setup": ""
@@ -692,6 +692,10 @@
           "description": "默认水平固定排版；可以选择 fixed/repel 的明确策略。center 标签必须使用 fixed，避免没有参考方向的圆心避让产生含糊结果。"
         },
         {
+          "format": "character(1)",
+          "description": "可选 `\"auto\"`、`\"none\"`、`\"straight\"` 或 `\"elbow\"`。自动模式按需把移开的文字连接到锚点。"
+        },
+        {
           "format": "named arguments",
           "description": "文字 colour、size=3.5（mm）、family=\"\"、fontface=\"plain\"、angle、hjust=0.5、vjust=0.5、alpha、lineheight=1.2，以及引线 segment_colour、segment_linewidth=0.3、segment_linetype=1。未指定 angle 时使用 label_layout 的方向策略；不允许用文字参数改参考半径。"
         },
@@ -721,7 +725,7 @@
       ],
       "example_setup": ""
     },
-    "geom_seq_center_label": {
+    "geom_seq_label_center": {
       "title": "在单参考圆心标注序列",
       "intro": "为参考实体显示文字；固定采用圆心锚点，是 geom_seq_label 的快捷函数。",
       "arguments": [
@@ -763,7 +767,7 @@
         }
       ],
       "value": "一个参考文字层；不生成、推断或修改参考数据。",
-      "details": "1. 默认 label 为规范 accver；自定义文字通过 aes(label=...)，不会猜 description/name 等列。\n\n2. data=NULL 和函数式 data 从已解析参考取数据；inherit.aes 默认 TRUE，观察表特有的全局映射若在参考中不存在则报错。\n\n3. 参考窗口有多个实例时每个实例单独标注；可用包含 instance_id 的明确子集选择目标，不把实例 ID 写回 accver。\n\n4. 严格展开为 geom_seq_label(anchor=\"center\", position=\"identity\", label_layout=label_layout_fixed(orientation=\"horizontal\"), ...)；anchor 固定为 center，其他公开样式可覆盖。\n\n5. 仅支持当前规范中每面板一个参考的 Circular；多参考 Chord、Radial、线性与 Dotplot 无唯一“序列中心”时明确拒绝。",
+      "details": "1. 默认 label 为规范 accver；自定义文字通过 aes(label=...)，不会猜 description/name 等列。\n\n2. data=NULL 和函数式 data 从已解析参考取数据；inherit.aes 默认 TRUE，观察表特有的全局映射若在参考中不存在则报错。\n\n3. 参考窗口有多个实例时每个实例单独标注；可用包含 instance_id 的明确子集选择目标，不把实例 ID 写回 accver。\n\n4. 严格展开为 geom_seq_label(anchor=\"center\", position=\"identity\", label_layout=layout_label_fixed(orientation=\"horizontal\"), ...)；anchor 固定为 center，其他公开样式可覆盖。\n\n5. 仅支持当前规范中每面板一个参考的 Circular；多参考 Chord、Radial、线性与 Dotplot 无唯一“序列中心”时明确拒绝。",
       "errors": "- 没有已解析参考。\n\n- center 在无唯一参考中心的 Coord 中使用；center 与非 identity Position 或 repel 排版组合。",
       "roles": [
         "要显示的文字；默认 accver。",
@@ -825,8 +829,8 @@
       "example_setup": ""
     },
     "geom_feature": {
-      "title": "绘制序列区间特征",
-      "intro": "将明确的序列区间绘制成可选择的几何形状，是 gene、primer 与序列区间高亮的规范母函数。数据选择、配色和摆放分别通过 data、aes/Scale、Position 指定。",
+      "title": "按来源位置绘制注释",
+      "intro": "用相应形状绘制区间、位点和切口注释。",
       "arguments": [
         {
           "format": "aes / NULL",
@@ -837,8 +841,12 @@
           "description": "本层观察表、返回表的函数或 NULL。通常显式提供；NULL 只继承 ggchord 的图级 data，该表通常只有参考字段，缺少本层必需字段时即报错。函数式 data 接收 plot$data，不搜索其他层或数据容器。"
         },
         {
-          "format": "character / mapped aesthetic",
-          "description": "默认 block；合法形状及含义见 Details 的完整字典。用户显式固定 shape 覆盖 shape 映射；省略时的默认值不压过映射。"
+          "format": "character(1)",
+          "description": "可选择 `\"interval\"`、`\"site\"` 或 `\"cut\"`。默认按输入字段判断位置类型。"
+        },
+        {
+          "format": "character(1)",
+          "description": "省略时区间用 `\"block\"`，位点用 `\"tick\"`，切口用 `\"cut\"`。固定形状优先于形状映射。"
         },
         {
           "format": "positive physical size / flexible",
@@ -1077,8 +1085,8 @@
       "example_setup": ""
     },
     "geom_feature_label": {
-      "title": "标注特征区间",
-      "intro": "特征标签母函数。将文字绑定到已有特征锚点，或依据独立区间表定位；文字排版与目标特征几何分别控制。",
+      "title": "标记序列注释",
+      "intro": "标记区间、位点及切口，跟随它们的来源身份和显示位置。",
       "arguments": [
         {
           "format": "aes / NULL",
@@ -1098,7 +1106,7 @@
         },
         {
           "format": "character(1)",
-          "description": "默认 middle；middle、start、end、head、tail。start/end 为规范源端点，head/tail 为生物学方向端；显示反向不改变身份。"
+          "description": "自动锚点取区间中点、引物 3′ 端或位点及切口的残基位置。方向端点需要已知链向。"
         },
         {
           "format": "Position / NULL",
@@ -1106,7 +1114,11 @@
         },
         {
           "format": "LabelLayout",
-          "description": "默认 label_layout_fixed()。可传入固定或避让策略；改变算法不改变标签来源或锚点。"
+          "description": "默认 layout_label_fixed()。可传入固定或避让策略；改变算法不改变标签来源或锚点。"
+        },
+        {
+          "format": "character(1)",
+          "description": "可选 `\"auto\"`、`\"none\"`、`\"straight\"` 或 `\"elbow\"`。自动模式按需把移开的文字连接到锚点。"
         },
         {
           "format": "named arguments",
@@ -1141,71 +1153,6 @@
       ],
       "example_setup": ""
     },
-    "geom_feature_label_repel": {
-      "title": "避让标注特征区间",
-      "intro": "特征标签母函数的明确快捷式。将文字绑定到已有特征锚点，或依据独立区间表定位；文字排版与目标特征几何分别控制。",
-      "arguments": [
-        {
-          "format": "aes / NULL",
-          "description": "aes() 映射或 NULL。局部映射覆盖同名图级映射；inherit.aes=TRUE 时，其余全局映射在本层实际数据中求值。固定视觉值显式提供时覆盖同通道映射；省略的默认视觉值不能压过映射。"
-        },
-        {
-          "format": "data.frame / function / NULL",
-          "description": "自动绑定时读取目标层经过 Stat 后的实体表。单独提供表或回调函数时默认绘制独立标签。如需只标注一部分并跟随目标位置，可用 `anchor_layer` 指定目标名称，并提供匹配的 `feature_id`。显式绑定时回调函数接收目标实体表。"
-        },
-        {
-          "format": "Stat / character",
-          "description": "默认 identity。绑定目标层时只能 identity；独立标签可选输出合法特征标签角色的 Stat。"
-        },
-        {
-          "format": "auto_anchor() / 单个字符串 / NULL",
-          "description": "默认跟随唯一兼容的区间特征层。如有多个候选，请写目标层的 ID；写 `NULL` 可独立定位。提供标签数据、非恒等 Stat 或显式 Position 时，默认独立定位。"
-        },
-        {
-          "format": "character(1)",
-          "description": "默认 middle；middle、start、end、head、tail。start/end 为规范源端点，head/tail 为生物学方向端；显示反向不改变身份。"
-        },
-        {
-          "format": "Position / NULL",
-          "description": "默认 NULL。独立标签等同 identity，可改为合法领域 Position；绑定时必须 NULL，锚点跟随目标最终道位，文字偏移由 label_layout 控制。"
-        },
-        {
-          "format": "LabelLayout",
-          "description": "默认 label_layout_repel()。本快捷式固定使用 repel 族，允许传入自定义 label_layout_repel；fixed 对象报错。"
-        },
-        {
-          "format": "named arguments",
-          "description": "文字 size=3.5（mm）、colour=\"black\"、family=\"\"、fontface=\"plain\"、angle、hjust=0.5、vjust=0.5、alpha=1、lineheight=1.2；引线 segment_colour=NULL（继承文字 colour）、segment_linewidth=0.3（mm）、segment_linetype=1。可传独立标签所选 Stat 的已公布参数；不接收 feature 厚度、源窗口或配色 preset。"
-        },
-        {
-          "format": "logical",
-          "description": "FALSE 时对可移除的缺失绘制记录给出提示，TRUE 时静默移除。它不关闭未知参考、单位冲突、无效身份或非有限结构坐标的检查。"
-        },
-        {
-          "format": "logical / named logical",
-          "description": "默认 FALSE；NA 按映射决定图例键，FALSE 不贡献图例键，TRUE 请求贡献；也可使用按 aesthetic 命名的逻辑向量。不控制整个图例的布局。"
-        },
-        {
-          "format": "logical",
-          "description": "TRUE 合并图级 aes；FALSE 仅使用局部 aes 和该 Geom 公开的规范角色默认。即使显式给 data，默认也仍然继承映射；缺列不自动从参考表连接补齐。"
-        },
-        {
-          "format": "auto_id() / 单个字符串 / NULL / NA",
-          "description": "默认自动分配图内 ID。可使用唯一名称显式引用该图层。"
-        }
-      ],
-      "value": "一个文字与可选引线的标签层；保留每条文字与目标实体的关联及排版状态，不改变目标图层。",
-      "details": "1. 默认展开为 geom_feature_label(anchor=\"middle\", label_layout=label_layout_repel(), ...)；其他公共参数保持母函数合同。\n\n2. 适用于具有序列参考路径的 Chord、Collinear、Radial synteny、Sankey、Circular；Circular 每个分面须只有一个有效参考。Dotplot 的双轴 HSP 使用 geom_alignment_segment。\n\n3. 目标 Stat 后没有唯一意义的原始字段不被随意取第一条保留；标签需使用目标真实输出字段，或显式准备带目标实体身份的标签表。\n\n4. 标签 data 子集只选择哪些文字显示，不重新计算目标 feature 的分道、厚度和源端点。\n\n5. 同一目标实体在多个显示窗口出现时，标签按目标实例逐一锚定；需选择部分实例时显式提供 instance_id。\n\n圆图中位于序列圆环外侧的特征文字默认使用粗体。显式设置或映射 fontface 时以用户设置为准。 带底色的圈外标签会显示描边，包括使用固定策略摆放在圈外的标签。\n\n邻近的圈内注释可共同调整沿弧位置和轨道，以减少引线穿过其他文字。",
-      "errors": "- anchor_layer 未知、类型不符或存在依赖循环。\n\n- 绑定时 stat 非 identity 或 position 非 NULL。\n\n- 显式标签身份无法匹配或匹配不唯一；head/tail 没有可靠 strand。",
-      "roles": [
-        "独立标签所需的源区间；绑定标签从目标实体获取，显式表中的重复字段须一致。",
-        "绑定匹配键；同一实体重复显示时联合 instance_id 和分面身份。",
-        "anchor=head/tail 所需的生物学方向。",
-        "必需文字，显式 aes(label=...) 或规范 label 列；不猜 gene_name/product。",
-        "可映射或固定文字属性，显式 angle 决定文字方向。圆图中 fill 指定外排特征标签的底色。省略 colour 时，文字颜色随映射的底色调整。"
-      ],
-      "example_setup": ""
-    },
     "geom_gene_label": {
       "title": "水平标注基因",
       "intro": "特征标签母函数的明确快捷式。将文字绑定到已有特征锚点，或依据独立区间表定位；文字排版与目标特征几何分别控制。",
@@ -1228,7 +1175,7 @@
         },
         {
           "format": "character(1)",
-          "description": "默认 middle；middle、start、end、head、tail。start/end 为规范源端点，head/tail 为生物学方向端；显示反向不改变身份。"
+          "description": "自动锚点取区间中点、引物 3′ 端或位点及切口的残基位置。方向端点需要已知链向。"
         },
         {
           "format": "Position / NULL",
@@ -1236,72 +1183,11 @@
         },
         {
           "format": "LabelLayout",
-          "description": "默认 label_layout_fixed(orientation = \"horizontal\")。可传入固定或避让策略；改变算法不改变标签来源或锚点。"
-        },
-        {
-          "format": "named arguments",
-          "description": "文字 size=3.5（mm）、colour=\"black\"、family=\"\"、fontface=\"plain\"、angle、hjust=0.5、vjust=0.5、alpha=1、lineheight=1.2；引线 segment_colour=NULL（继承文字 colour）、segment_linewidth=0.3（mm）、segment_linetype=1。可传独立标签所选 Stat 的已公布参数；不接收 feature 厚度、源窗口或配色 preset。"
-        },
-        {
-          "format": "logical",
-          "description": "FALSE 时对可移除的缺失绘制记录给出提示，TRUE 时静默移除。它不关闭未知参考、单位冲突、无效身份或非有限结构坐标的检查。"
-        },
-        {
-          "format": "logical / named logical",
-          "description": "默认 FALSE；NA 按映射决定图例键，FALSE 不贡献图例键，TRUE 请求贡献；也可使用按 aesthetic 命名的逻辑向量。不控制整个图例的布局。"
-        },
-        {
-          "format": "logical",
-          "description": "TRUE 合并图级 aes；FALSE 仅使用局部 aes 和该 Geom 公开的规范角色默认。即使显式给 data，默认也仍然继承映射；缺列不自动从参考表连接补齐。"
-        },
-        {
-          "format": "auto_id() / 单个字符串 / NULL / NA",
-          "description": "默认自动分配图内 ID。可使用唯一名称显式引用该图层。"
-        }
-      ],
-      "value": "一个文字与可选引线的标签层；保留每条文字与目标实体的关联及排版状态，不改变目标图层。",
-      "details": "1. 默认展开为 geom_feature_label(anchor=\"middle\", label_layout=label_layout_fixed(orientation = \"horizontal\"), ...)；其他公共参数保持母函数合同。 gene 名称不触发数据过滤或自动填色。\n\n2. 适用于具有序列参考路径的 Chord、Collinear、Radial synteny、Sankey、Circular；Circular 每个分面须只有一个有效参考。Dotplot 的双轴 HSP 使用 geom_alignment_segment。\n\n3. 目标 Stat 后没有唯一意义的原始字段不被随意取第一条保留；标签需使用目标真实输出字段，或显式准备带目标实体身份的标签表。\n\n4. 标签 data 子集只选择哪些文字显示，不重新计算目标 feature 的分道、厚度和源端点。\n\n5. 同一目标实体在多个显示窗口出现时，标签按目标实例逐一锚定；需选择部分实例时显式提供 instance_id。\n\n圆图中位于序列圆环外侧的特征文字默认使用粗体。显式设置或映射 fontface 时以用户设置为准。 带底色的圈外标签会显示描边，包括使用固定策略摆放在圈外的标签。",
-      "errors": "- anchor_layer 未知、类型不符或存在依赖循环。\n\n- 绑定时 stat 非 identity 或 position 非 NULL。\n\n- 显式标签身份无法匹配或匹配不唯一；head/tail 没有可靠 strand。",
-      "roles": [
-        "独立标签所需的源区间；绑定标签从目标实体获取，显式表中的重复字段须一致。",
-        "绑定匹配键；同一实体重复显示时联合 instance_id 和分面身份。",
-        "anchor=head/tail 所需的生物学方向。",
-        "必需文字，显式 aes(label=...) 或规范 label 列；不猜 gene_name/product。",
-        "可映射或固定文字属性，显式 angle 决定文字方向。圆图中 fill 指定外排特征标签的底色。省略 colour 时，文字颜色随映射的底色调整。"
-      ],
-      "example_setup": ""
-    },
-    "geom_gene_label_repel": {
-      "title": "避让标注基因",
-      "intro": "特征标签母函数的明确快捷式。将文字绑定到已有特征锚点，或依据独立区间表定位；文字排版与目标特征几何分别控制。",
-      "arguments": [
-        {
-          "format": "aes / NULL",
-          "description": "aes() 映射或 NULL。局部映射覆盖同名图级映射；inherit.aes=TRUE 时，其余全局映射在本层实际数据中求值。固定视觉值显式提供时覆盖同通道映射；省略的默认视觉值不能压过映射。"
-        },
-        {
-          "format": "data.frame / function / NULL",
-          "description": "自动绑定时读取目标层经过 Stat 后的实体表。单独提供表或回调函数时默认绘制独立标签。如需只标注一部分并跟随目标位置，可用 `anchor_layer` 指定目标名称，并提供匹配的 `feature_id`。显式绑定时回调函数接收目标实体表。"
-        },
-        {
-          "format": "Stat / character",
-          "description": "默认 identity。绑定目标层时只能 identity；独立标签可选输出合法特征标签角色的 Stat。"
-        },
-        {
-          "format": "auto_anchor() / 单个字符串 / NULL",
-          "description": "默认跟随唯一兼容的基因层。如有多个候选，请写目标层的 ID；写 `NULL` 可独立定位。提供标签数据、非恒等 Stat 或显式 Position 时，默认独立定位。"
+          "description": "默认 layout_label_fixed(orientation = \"horizontal\")。可传入固定或避让策略；改变算法不改变标签来源或锚点。"
         },
         {
           "format": "character(1)",
-          "description": "默认 middle；middle、start、end、head、tail。start/end 为规范源端点，head/tail 为生物学方向端；显示反向不改变身份。"
-        },
-        {
-          "format": "Position / NULL",
-          "description": "默认 NULL。独立标签等同 identity，可改为合法领域 Position；绑定时必须 NULL，锚点跟随目标最终道位，文字偏移由 label_layout 控制。"
-        },
-        {
-          "format": "LabelLayout",
-          "description": "默认 label_layout_repel()。本快捷式固定使用 repel 族，允许传入自定义 label_layout_repel；fixed 对象报错。"
+          "description": "可选 `\"auto\"`、`\"none\"`、`\"straight\"` 或 `\"elbow\"`。自动模式按需把移开的文字连接到锚点。"
         },
         {
           "format": "named arguments",
@@ -1325,7 +1211,7 @@
         }
       ],
       "value": "一个文字与可选引线的标签层；保留每条文字与目标实体的关联及排版状态，不改变目标图层。",
-      "details": "1. 默认展开为 geom_feature_label(anchor=\"middle\", label_layout=label_layout_repel(), ...)；其他公共参数保持母函数合同。 gene 名称不触发数据过滤或自动填色。\n\n2. 适用于具有序列参考路径的 Chord、Collinear、Radial synteny、Sankey、Circular；Circular 每个分面须只有一个有效参考。Dotplot 的双轴 HSP 使用 geom_alignment_segment。\n\n3. 目标 Stat 后没有唯一意义的原始字段不被随意取第一条保留；标签需使用目标真实输出字段，或显式准备带目标实体身份的标签表。\n\n4. 标签 data 子集只选择哪些文字显示，不重新计算目标 feature 的分道、厚度和源端点。\n\n5. 同一目标实体在多个显示窗口出现时，标签按目标实例逐一锚定；需选择部分实例时显式提供 instance_id。\n\n圆图中位于序列圆环外侧的特征文字默认使用粗体。显式设置或映射 fontface 时以用户设置为准。 带底色的圈外标签会显示描边，包括使用固定策略摆放在圈外的标签。",
+      "details": "1. 默认展开为 geom_feature_label(anchor=\"middle\", label_layout=layout_label_fixed(orientation = \"horizontal\"), ...)；其他公共参数保持母函数合同。 gene 名称不触发数据过滤或自动填色。\n\n2. 适用于具有序列参考路径的 Chord、Collinear、Radial synteny、Sankey、Circular；Circular 每个分面须只有一个有效参考。Dotplot 的双轴 HSP 使用 geom_alignment_segment。\n\n3. 目标 Stat 后没有唯一意义的原始字段不被随意取第一条保留；标签需使用目标真实输出字段，或显式准备带目标实体身份的标签表。\n\n4. 标签 data 子集只选择哪些文字显示，不重新计算目标 feature 的分道、厚度和源端点。\n\n5. 同一目标实体在多个显示窗口出现时，标签按目标实例逐一锚定；需选择部分实例时显式提供 instance_id。\n\n圆图中位于序列圆环外侧的特征文字默认使用粗体。显式设置或映射 fontface 时以用户设置为准。 带底色的圈外标签会显示描边，包括使用固定策略摆放在圈外的标签。",
       "errors": "- anchor_layer 未知、类型不符或存在依赖循环。\n\n- 绑定时 stat 非 identity 或 position 非 NULL。\n\n- 显式标签身份无法匹配或匹配不唯一；head/tail 没有可靠 strand。",
       "roles": [
         "独立标签所需的源区间；绑定标签从目标实体获取，显式表中的重复字段须一致。",
@@ -1358,7 +1244,7 @@
         },
         {
           "format": "character(1)",
-          "description": "默认 head；middle、start、end、head、tail。start/end 为规范源端点，head/tail 为生物学方向端；显示反向不改变身份。"
+          "description": "自动锚点取区间中点、引物 3′ 端或位点及切口的残基位置。方向端点需要已知链向。"
         },
         {
           "format": "Position / NULL",
@@ -1366,72 +1252,11 @@
         },
         {
           "format": "LabelLayout",
-          "description": "默认 label_layout_fixed()。可传入固定或避让策略；改变算法不改变标签来源或锚点。"
-        },
-        {
-          "format": "named arguments",
-          "description": "文字 size=3.5（mm）、colour=\"black\"、family=\"\"、fontface=\"plain\"、angle、hjust=0.5、vjust=0.5、alpha=1、lineheight=1.2；引线 segment_colour=NULL（继承文字 colour）、segment_linewidth=0.3（mm）、segment_linetype=1。可传独立标签所选 Stat 的已公布参数；不接收 feature 厚度、源窗口或配色 preset。"
-        },
-        {
-          "format": "logical",
-          "description": "FALSE 时对可移除的缺失绘制记录给出提示，TRUE 时静默移除。它不关闭未知参考、单位冲突、无效身份或非有限结构坐标的检查。"
-        },
-        {
-          "format": "logical / named logical",
-          "description": "默认 FALSE；NA 按映射决定图例键，FALSE 不贡献图例键，TRUE 请求贡献；也可使用按 aesthetic 命名的逻辑向量。不控制整个图例的布局。"
-        },
-        {
-          "format": "logical",
-          "description": "TRUE 合并图级 aes；FALSE 仅使用局部 aes 和该 Geom 公开的规范角色默认。即使显式给 data，默认也仍然继承映射；缺列不自动从参考表连接补齐。"
-        },
-        {
-          "format": "auto_id() / 单个字符串 / NULL / NA",
-          "description": "默认自动分配图内 ID。可使用唯一名称显式引用该图层。"
-        }
-      ],
-      "value": "一个文字与可选引线的标签层；保留每条文字与目标实体的关联及排版状态，不改变目标图层。",
-      "details": "1. 默认展开为 geom_feature_label(anchor=\"head\", label_layout=label_layout_fixed(), ...)；其他公共参数保持母函数合同。\n\n2. 适用于具有序列参考路径的 Chord、Collinear、Radial synteny、Sankey、Circular；Circular 每个分面须只有一个有效参考。Dotplot 的双轴 HSP 使用 geom_alignment_segment。\n\n3. 目标 Stat 后没有唯一意义的原始字段不被随意取第一条保留；标签需使用目标真实输出字段，或显式准备带目标实体身份的标签表。\n\n4. 标签 data 子集只选择哪些文字显示，不重新计算目标 feature 的分道、厚度和源端点。\n\n5. 同一目标实体在多个显示窗口出现时，标签按目标实例逐一锚定；需选择部分实例时显式提供 instance_id。\n\n6. head 表示引物 3′ 方向端；未提供方向时必须改用明确的 start/end 或补齐可靠来源，不默认为正链。",
-      "errors": "- anchor_layer 未知、类型不符或存在依赖循环。\n\n- 绑定时 stat 非 identity 或 position 非 NULL。\n\n- 显式标签身份无法匹配或匹配不唯一；head/tail 没有可靠 strand。",
-      "roles": [
-        "独立标签所需的源区间；绑定标签从目标实体获取，显式表中的重复字段须一致。",
-        "绑定匹配键；同一实体重复显示时联合 instance_id 和分面身份。",
-        "anchor=head/tail 所需的生物学方向。",
-        "必需文字，显式 aes(label=...) 或规范 label 列；不猜 gene_name/product。",
-        "可映射或固定文字属性，显式 angle 决定文字方向。圆图中 fill 指定外排特征标签的底色。省略 colour 时，文字颜色随映射的底色调整。"
-      ],
-      "example_setup": ""
-    },
-    "geom_primer_label_repel": {
-      "title": "避让标注引物方向端",
-      "intro": "特征标签母函数的明确快捷式。将文字绑定到已有特征锚点，或依据独立区间表定位；文字排版与目标特征几何分别控制。",
-      "arguments": [
-        {
-          "format": "aes / NULL",
-          "description": "aes() 映射或 NULL。局部映射覆盖同名图级映射；inherit.aes=TRUE 时，其余全局映射在本层实际数据中求值。固定视觉值显式提供时覆盖同通道映射；省略的默认视觉值不能压过映射。"
-        },
-        {
-          "format": "data.frame / function / NULL",
-          "description": "自动绑定时读取目标层经过 Stat 后的实体表。单独提供表或回调函数时默认绘制独立标签。如需只标注一部分并跟随目标位置，可用 `anchor_layer` 指定目标名称，并提供匹配的 `feature_id`。显式绑定时回调函数接收目标实体表。"
-        },
-        {
-          "format": "Stat / character",
-          "description": "默认 identity。绑定目标层时只能 identity；独立标签可选输出合法特征标签角色的 Stat。"
-        },
-        {
-          "format": "auto_anchor() / 单个字符串 / NULL",
-          "description": "默认跟随唯一兼容的引物层。如有多个候选，请写目标层的 ID；写 `NULL` 可独立定位。提供标签数据、非恒等 Stat 或显式 Position 时，默认独立定位。"
+          "description": "默认 layout_label_fixed()。可传入固定或避让策略；改变算法不改变标签来源或锚点。"
         },
         {
           "format": "character(1)",
-          "description": "默认 head；middle、start、end、head、tail。start/end 为规范源端点，head/tail 为生物学方向端；显示反向不改变身份。"
-        },
-        {
-          "format": "Position / NULL",
-          "description": "默认 NULL。独立标签等同 identity，可改为合法领域 Position；绑定时必须 NULL，锚点跟随目标最终道位，文字偏移由 label_layout 控制。"
-        },
-        {
-          "format": "LabelLayout",
-          "description": "默认 label_layout_repel()。本快捷式固定使用 repel 族，允许传入自定义 label_layout_repel；fixed 对象报错。"
+          "description": "可选 `\"auto\"`、`\"none\"`、`\"straight\"` 或 `\"elbow\"`。自动模式按需把移开的文字连接到锚点。"
         },
         {
           "format": "named arguments",
@@ -1455,7 +1280,7 @@
         }
       ],
       "value": "一个文字与可选引线的标签层；保留每条文字与目标实体的关联及排版状态，不改变目标图层。",
-      "details": "1. 默认展开为 geom_feature_label(anchor=\"head\", label_layout=label_layout_repel(), ...)；其他公共参数保持母函数合同。\n\n2. 适用于具有序列参考路径的 Chord、Collinear、Radial synteny、Sankey、Circular；Circular 每个分面须只有一个有效参考。Dotplot 的双轴 HSP 使用 geom_alignment_segment。\n\n3. 目标 Stat 后没有唯一意义的原始字段不被随意取第一条保留；标签需使用目标真实输出字段，或显式准备带目标实体身份的标签表。\n\n4. 标签 data 子集只选择哪些文字显示，不重新计算目标 feature 的分道、厚度和源端点。\n\n5. 同一目标实体在多个显示窗口出现时，标签按目标实例逐一锚定；需选择部分实例时显式提供 instance_id。\n\n6. head 表示引物 3′ 方向端；未提供方向时必须改用明确的 start/end 或补齐可靠来源，不默认为正链。",
+      "details": "1. 默认展开为 geom_feature_label(anchor=\"head\", label_layout=layout_label_fixed(), ...)；其他公共参数保持母函数合同。\n\n2. 适用于具有序列参考路径的 Chord、Collinear、Radial synteny、Sankey、Circular；Circular 每个分面须只有一个有效参考。Dotplot 的双轴 HSP 使用 geom_alignment_segment。\n\n3. 目标 Stat 后没有唯一意义的原始字段不被随意取第一条保留；标签需使用目标真实输出字段，或显式准备带目标实体身份的标签表。\n\n4. 标签 data 子集只选择哪些文字显示，不重新计算目标 feature 的分道、厚度和源端点。\n\n5. 同一目标实体在多个显示窗口出现时，标签按目标实例逐一锚定；需选择部分实例时显式提供 instance_id。\n\n6. head 表示引物 3′ 方向端；未提供方向时必须改用明确的 start/end 或补齐可靠来源，不默认为正链。",
       "errors": "- anchor_layer 未知、类型不符或存在依赖循环。\n\n- 绑定时 stat 非 identity 或 position 非 NULL。\n\n- 显式标签身份无法匹配或匹配不唯一；head/tail 没有可靠 strand。",
       "roles": [
         "独立标签所需的源区间；绑定标签从目标实体获取，显式表中的重复字段须一致。",
@@ -1614,7 +1439,11 @@
         },
         {
           "format": "LabelLayout",
-          "description": "默认 label_layout_fixed()；可选择固定或避让策略。"
+          "description": "默认 layout_label_fixed()；可选择固定或避让策略。"
+        },
+        {
+          "format": "character(1)",
+          "description": "可选 `\"auto\"`、`\"none\"`、`\"straight\"` 或 `\"elbow\"`。自动模式按需把移开的文字连接到锚点。"
         },
         {
           "format": "named arguments",
@@ -1639,66 +1468,6 @@
       ],
       "value": "点位标签层，返回文字、可选引线及与 site_id 的关联。",
       "details": "1. 适用于具有序列参考路径的 Chord、Collinear、Radial synteny、Sankey、Circular；Circular 每个分面须只有一个有效参考。Dotplot 的双轴 HSP 使用 geom_alignment_segment。\n\n2. 锚点是规范 pos 或目标 site 层的可见符号锚点；不把 cut_top/cut_bottom 的残基间边界无说明地转换成整数残基。\n\n3. 默认读取规范 label 列，或显式 aes(label=...)。不会依次猜 enzyme/name/product，也不根据“唯一酶”自动加粗。\n\n4. 来源和文字独立，隐藏文字不会删除点位；label_layout 不改变切口边界。",
-      "errors": "- 绑定层不存在或不属于 site 家族；身份匹配歧义。\n\n- 绑定时额外指定 Position 或非 identity Stat。",
-      "roles": [
-        "独立点位标签的来源位置；绑定时由目标提供。",
-        "绑定目标实体的稳定 ID。",
-        "必需文字。",
-        "标准文字映射。"
-      ],
-      "example_setup": ""
-    },
-    "geom_site_label_repel": {
-      "title": "避让标注点位名称",
-      "intro": "给明确的序列点位显示文字，可绑定已有 site 层；使用避让策略安排文字与引线。",
-      "arguments": [
-        {
-          "format": "aes / NULL",
-          "description": "aes() 映射或 NULL。局部映射覆盖同名图级映射；inherit.aes=TRUE 时，其余全局映射在本层实际数据中求值。固定视觉值显式提供时覆盖同通道映射；省略的默认视觉值不能压过映射。"
-        },
-        {
-          "format": "data.frame / function / NULL",
-          "description": "自动绑定时读取目标层经过 Stat 后的实体表。单独提供表或回调函数时默认绘制独立标签。如需只标注一部分并跟随目标位置，可用 `anchor_layer` 指定目标名称，并提供匹配的 `site_id`。显式绑定时回调函数接收目标实体表。"
-        },
-        {
-          "format": "Stat / character",
-          "description": "默认 identity；绑定时仅支持 identity，独立标签 Stat 必须输出点位与标签角色。"
-        },
-        {
-          "format": "auto_anchor() / 单个字符串 / NULL",
-          "description": "默认跟随唯一兼容的位点层。如有多个候选，请写目标层的 ID；写 `NULL` 可独立定位。提供标签数据、非恒等 Stat 或显式 Position 时，默认独立定位。"
-        },
-        {
-          "format": "Position / NULL",
-          "description": "绑定时必须 NULL，继承目标位置；独立标签 NULL 等同 identity，允许明确领域 Position。"
-        },
-        {
-          "format": "LabelLayout",
-          "description": "默认 label_layout_repel()；本快捷式只接受 repel 策略，固定排版应换入口。"
-        },
-        {
-          "format": "named arguments",
-          "description": "文字 size=3.5（mm）、colour=\"black\"、family=\"\"、fontface=\"plain\"、angle、hjust=0.5、vjust=0.5、alpha=1、lineheight=1.2；引线 segment_colour=NULL（继承文字 colour）、segment_linewidth=0.3（mm）、segment_linetype=1。可传独立标签所选 Stat 的已公布参数；不接收 feature 厚度、源窗口或配色 preset。"
-        },
-        {
-          "format": "logical",
-          "description": "FALSE 时对可移除的缺失绘制记录给出提示，TRUE 时静默移除。它不关闭未知参考、单位冲突、无效身份或非有限结构坐标的检查。"
-        },
-        {
-          "format": "logical / named logical",
-          "description": "默认 FALSE；NA 按映射决定图例键，FALSE 不贡献图例键，TRUE 请求贡献；也可使用按 aesthetic 命名的逻辑向量。不控制整个图例的布局。"
-        },
-        {
-          "format": "logical",
-          "description": "TRUE 合并图级 aes；FALSE 仅使用局部 aes 和该 Geom 公开的规范角色默认。即使显式给 data，默认也仍然继承映射；缺列不自动从参考表连接补齐。"
-        },
-        {
-          "format": "auto_id() / 单个字符串 / NULL / NA",
-          "description": "默认自动分配图内 ID。可使用唯一名称显式引用该图层。"
-        }
-      ],
-      "value": "点位标签层，返回文字、可选引线及与 site_id 的关联。",
-      "details": "1. 严格展开为 geom_site_label(label_layout=label_layout_repel(), ...)；其余参数及源身份规则不变。\n\n2. 适用于具有序列参考路径的 Chord、Collinear、Radial synteny、Sankey、Circular；Circular 每个分面须只有一个有效参考。Dotplot 的双轴 HSP 使用 geom_alignment_segment。\n\n3. 锚点是规范 pos 或目标 site 层的可见符号锚点；不把 cut_top/cut_bottom 的残基间边界无说明地转换成整数残基。\n\n4. 默认读取规范 label 列，或显式 aes(label=...)。不会依次猜 enzyme/name/product，也不根据“唯一酶”自动加粗。\n\n5. 来源和文字独立，隐藏文字不会删除点位；label_layout 不改变切口边界。\n\n水平圆图外围标注可提供 `enzyme_label` 和 `coordinate_label` 两列。酶名加粗，坐标使用常规字重，次序随标注侧改变。\n\n圆图把酶名与切点坐标分开时，酶名默认使用粗体。显式设置 fontface 可让两个片段使用同样的字重。",
       "errors": "- 绑定层不存在或不属于 site 家族；身份匹配歧义。\n\n- 绑定时额外指定 Position 或非 identity Stat。",
       "roles": [
         "独立点位标签的来源位置；绑定时由目标提供。",
@@ -2687,7 +2456,7 @@
       "roles": [],
       "example_setup": ""
     },
-    "label_layout_fixed": {
+    "layout_label_fixed": {
       "title": "构造固定标签排版策略",
       "intro": "规定标签相对锚点的方向、侧别、偏移、重叠与换行政策。它只安排文字，不移动目标实体；不直接作为图层相加。",
       "arguments": [
@@ -2726,9 +2495,9 @@
       "roles": [],
       "example_setup": ""
     },
-    "label_layout_repel": {
+    "layout_label_repel": {
       "title": "构造避让标签排版策略",
-      "intro": "规定围绕明确锚点的文字避让、方向、换行、最小字号和引线路由。它不发现锚点、不重新分道特征，也不改变科学数据。",
+      "intro": "围绕锚点避让排布文字，可检查空间、换行和重叠。",
       "arguments": [
         {
           "format": "character(1)",
@@ -2769,10 +2538,6 @@
         {
           "format": "nonnegative integer / Inf",
           "description": "默认 Inf，所有文字都尝试安排。有限值限制允许保留的未解决碰撞数量；被隐藏文字记录原因，不删除源实体。"
-        },
-        {
-          "format": "character(1)",
-          "description": "auto、straight、elbow 或 none；auto 在 columns 为 elbow，在 local 为 straight。只决定路径，颜色/线宽在标签 Geom 中。"
         },
         {
           "format": "正数毫米 / 绝对 grid unit / NULL",
@@ -3133,6 +2898,14 @@
         {
           "format": "theme对象 / NULL",
           "description": "本Guide局部外观。支持axis.line、axis.ticks、axis.ticks.length、axis.text、axis.title等对应领域轴元素；覆盖共同theme_ggchord默认，不修改breaks或数值域。"
+        },
+        {
+          "format": "absolute grid unit / NULL",
+          "description": "轴与参考路径之间的非负绝对 grid 单位。圆图默认 0，其余默认 0.8 毫米。"
+        },
+        {
+          "format": "character(1)",
+          "description": "刻度文字可选 `\"auto\"`、`\"parallel\"`、`\"perpendicular\"` 或 `\"horizontal\"`。数值 `angle` 须搭配 `orientation = \"auto\"`。"
         }
       ],
       "value": "序列位置Guide对象，交给scale_seq_continuous(guide=...)使用。",
@@ -3167,8 +2940,8 @@
         }
       ],
       "value": "轨道值Guide，交给scale_y_continuous(guide=...)。从该Scale获取范围、breaks、labels和标题。",
-      "details": "在轨带的原生 `scale_y_*()` 上设置此 Guide，也可将设置后的标度放进 `scale_for()`，应用到具名轨带。标度提供范围、断点、单位和标题，Guide 将它们放到参考路径上，主题设置其外观。轨带尺寸由 `layout_track()` 配置。",
-      "errors": "- 挂载参考/实例不存在、position非start/end。\n\n- 没有数值层却要求局部数值轴。\n\n- 把文字angle误用作数据布局参数。",
+      "details": "在轨带的原生 `scale_y_*()` 上设置此 Guide，也可将设置后的标度放进 `scale_for()`，应用到具名轨带。标度提供范围、断点、单位和标题，Guide 将它们放到参考路径上，主题设置其外观。轨带尺寸由 `layout_track()` 配置。\n\n原生 `guide_axis()` 可控制局部投影轴的文字角度、重叠检查、局部主题、文本标题、次刻度和轴线端点。选择参考或路径端部时用轨道专用入口。",
+      "errors": "- 挂载参考/实例不存在、position非start/end。\n\n- 没有数值层却要求局部数值轴。\n\n- 把文字angle误用作数据布局参数。\n\n局部投影会拒绝 `n.dodge`、`order`、普通面板 `position` 和数学表达式标题。",
       "roles": [],
       "example_setup": ""
     },
@@ -3183,10 +2956,6 @@
         {
           "format": "character(1)；默认空字符串",
           "description": "共同字体族；空字符串使用当前设备默认字体。实际测量依赖设备能否提供所选字体。"
-        },
-        {
-          "format": "留空",
-          "description": "用 theme() 配置主题元素。"
         }
       ],
       "value": "完整的ggplot2 theme对象，可用+添加到普通ggplot或ggchord；注册的领域元素仅在相关Guide存在时生效。",
@@ -3206,10 +2975,6 @@
         {
           "format": "character(1)；默认空字符串",
           "description": "共同字体族；空字符串使用当前设备默认字体。实际测量依赖设备能否提供所选字体。"
-        },
-        {
-          "format": "留空",
-          "description": "用 theme() 配置主题元素。"
         }
       ],
       "value": "一个完整的纯外观theme对象；与母主题按下列元素展开后的结果等价。",
@@ -3229,10 +2994,6 @@
         {
           "format": "character(1)；默认空字符串",
           "description": "共同字体族；空字符串使用当前设备默认字体。实际测量依赖设备能否提供所选字体。"
-        },
-        {
-          "format": "留空",
-          "description": "用 theme() 配置主题元素。"
         }
       ],
       "value": "一个完整的纯外观theme对象；与母主题按下列元素展开后的结果等价。",
@@ -3252,10 +3013,6 @@
         {
           "format": "character(1)；默认空字符串",
           "description": "共同字体族；空字符串使用当前设备默认字体。实际测量依赖设备能否提供所选字体。"
-        },
-        {
-          "format": "留空",
-          "description": "用 theme() 配置主题元素。"
         }
       ],
       "value": "一个完整的纯外观theme对象；与母主题按下列元素展开后的结果等价。",
@@ -3275,10 +3032,6 @@
         {
           "format": "character(1)；默认空字符串",
           "description": "共同字体族；空字符串使用当前设备默认字体。实际测量依赖设备能否提供所选字体。"
-        },
-        {
-          "format": "留空",
-          "description": "用 theme() 配置主题元素。"
         }
       ],
       "value": "一个完整的纯外观theme对象；与母主题按下列元素展开后的结果等价。",
@@ -3323,8 +3076,8 @@
       "example_setup": ""
     },
     "as_ggchord_feature": {
-      "title": "适配区间特征表",
-      "intro": "把基因、结构域、区域等区间注释转换为同一 Feature 数据合同。类型与颜色只是附加元数据；不会默认挑选 CDS、指定箭头或添加配色。",
+      "title": "规范化注释位置",
+      "intro": "规范化区间、位点与切口，并保留源数据。",
       "arguments": [
         {
           "format": "data.frame / GRanges / supported interval object",
@@ -3337,10 +3090,14 @@
         {
           "format": "character / NULL",
           "description": "可明确声明 bp 或 aa；NULL 保留输入的单位声明，缺少时保持未声明直到与权威参考绑定。已有声明与参数冲突时报错，不执行 bp/aa 换算。"
+        },
+        {
+          "format": "character(1)",
+          "description": "闭区间用 `\"interval\"`，残基位点用 `\"site\"`，带残基锚点的残基间切口用 `\"cut\"`。`\"auto\"` 只接受能唯一判断位置类型的表。"
         }
       ],
-      "value": "规范特征 data.frame，含 accver/start/end，及可用的 strand、feature_id、label、segments、parent_ids；统一 provenance 保存原字段与坐标转换。",
-      "details": "1. 源区间规范为有序的一基闭区间；原方向单独保留为 strand，缺失方向规范为 .（未知），不补为正链。输入数据框须声明其已是该约定；已知区间类按其公开坐标约定转换。\n\n2. 跨原点和不连续特征通过 segments 显式表达，不将其外包围区间当成连续生物学片段。重复 feature_id 可表示同一实体的分段，是否可消费由具体 Geom/操作验证。",
+      "value": "注释数据框，包含 `accver`、`location_kind`、相应的坐标及可用的链向和元数据。通过 `data_report()` 检查实体、分段和原始行来源。",
+      "details": "区间使用从 1 开始且包含两端的 `start`、`end`，并可含多个分段。位点用从 1 开始的 `pos`。切口保留 `pos` 残基锚点，`cut_top` 和 `cut_bottom` 则记录 0 到所声明参考长度之间的残基间边界。可按记录类型提供稳定的 `entity_id`、`feature_id` 或 `site_id`。 一条切口记录可以缺失一个或两个边界。`cut_status` 字段记录已知边界的状态。",
       "errors": "- 字段缺失、非有限坐标、分段与父区间矛盾，或无证据却要求恢复未知链向。",
       "roles": [],
       "example_setup": ""
@@ -3763,7 +3520,7 @@
         }
       ],
       "value": "与 x 同类的局部数据容器；sequences 的 accver 为唯一 locus_id，length 为窗口长度，source_accver/source_origin 保留最初来源；完整变换可由 data_report() 查询。",
-      "details": "1. 重复 focus 仍能回溯最初来源；局部 reference 身份与重复显示 instance 身份分开。序列字符只截取，不因负链 feature 而自动反向互补。\n\n2. 分段与点轨道分别按自身合同裁剪；不插值制造边界样本。HSP 只有端点时的裁剪属于显示投影，明确标 estimated；被裁剪行的原 pident/length 以 source_* 保留，不冒充重算的局部比对统计。\n\n3. 字符 alignment 使用已有 source/column 对应选择，gap 仍无源位置。窗口重复可产生多个局部副本，但不创造新的生物学证据。",
+      "details": "1. 重复 focus 仍能回溯最初来源；局部 reference 身份与重复显示 instance 身份分开。序列字符只截取，不因负链 feature 而自动反向互补。\n\n2. 分段与点轨道分别按自身合同裁剪；不插值制造边界样本。HSP 只有端点时的裁剪属于显示投影，明确标 estimated；被裁剪行的原 pident/length 以 source_* 保留，不冒充重算的局部比对统计。\n\n3. 字符 alignment 使用已有 source/column 对应选择，gap 仍无源位置。窗口重复可产生多个局部副本，但不创造新的生物学证据。\n\n切口按其残基锚点选择窗口。局部表只保留窗口内的切口边界。`cut_status` 记录局部边界的状态，`source_cut_status` 保留来源状态。",
       "errors": "",
       "roles": [],
       "example_setup": ""
@@ -4861,7 +4618,7 @@
         }
       ],
       "value": "具名结果列表：按 panel_path/layer_id 组织的阶段表、geometry 各类组件、stage_status、measurement、reference、diagnostics、provenance。stage_status 区分 available/unavailable/failed；measurement 在可用时为 estimated 或 measured，缺设备条件的几何标 unavailable 并给原因，不伪造坐标。",
-      "details": "1. width/height 均缺少时，不假定任意画布尺寸；只返回不依赖设备的参考/来源信息，设备相关 geometry 为 unavailable，reason=\"missing_dimensions\"。宽高齐备但 device=NULL 时可估计，必须记录宽高及字体/设备假设并标 estimated；只有完整设备条件且实际构建后才标 measured。\n\n2. 路径、文字、面板区域分别有类型表，不把所有组件塞进一张巨表。\n\n3. 聚合Stat保留source_members；装饰zoom明确标记decoration，不伪装成观察关系。\n\n4. source-only不打开测量设备；已有data callback仅按该层来源合同求值，不为查询另外选择表。\n\n5. 本函数统一替代历史 get_chord_layout/export_ggchord_fusion 的公开角色，不承诺暴露引擎内部缓存。\n\nFusion 导出按面板路径与图层 ID 报告失败连接，保留其他面板和连接。",
+      "details": "1. width/height 均缺少时，不假定任意画布尺寸；只返回不依赖设备的参考/来源信息，设备相关 geometry 为 unavailable，reason=\"missing_dimensions\"。宽高齐备但 device=NULL 时可估计，必须记录宽高及字体/设备假设并标 estimated；只有完整设备条件且实际构建后才标 measured。\n\n2. 路径、文字、面板区域分别有类型表，不把所有组件塞进一张巨表。\n\n3. 聚合Stat保留source_members；装饰zoom明确标记decoration，不伪装成观察关系。\n\n4. source-only不打开测量设备；已有data callback仅按该层来源合同求值，不为查询另外选择表。\n\n5. 本函数统一替代历史 get_chord_layout/export_ggchord_fusion 的公开角色，不承诺暴露引擎内部缓存。\n\nFusion 导出按面板路径与图层 ID 报告失败连接，保留其他面板和连接。\n\n请求来源阶段时，各图层的 `provenance` 提供可用的 `data_report()` 来源链。各阶段表保留自己的职责。",
       "errors": "- 未知阶段、未知层或路径、设备条件只提供一半、无效尺寸。",
       "roles": [],
       "example_setup": ""
@@ -5501,17 +5258,15 @@
     "geom_seq": "序列骨架",
     "geom_seq_label": "序列标签",
     "geom_seq_break": "序列断点标记",
-    "geom_feature": "区间特征几何",
-    "geom_feature_label": "区间特征标签",
-    "geom_site": "位点与切口标记",
-    "geom_site_label": "位点与切口标签",
+    "geom_feature": "特征、位点与切口",
+    "geom_feature_label": "特征、位点与切口标签",
     "geom_link_line": "源位置之间的点连接",
     "geom_link_ribbon": "源区间之间的连带",
     "geom_alignment_segment": "比对线段",
     "geom_residue": "残基单元格",
     "geom_track": "数值轨道图层",
     "annotation_seq_scalebar": "序列比例尺",
-    "label_layout_fixed": "标签布局",
+    "layout_label_fixed": "标签布局",
     "position_offset": "特征位置调整",
     "stat_coverage": "区间覆盖统计",
     "scale_for": "为指定图层或轨带设定标度",
@@ -5574,11 +5329,11 @@
       }
     },
     "geom_seq_label": {
-      "intro": "用 `geom_seq_label()` 在已登记参考的路径旁添加标签。要在单序列圆图中心放置文字，可用 `geom_seq_center_label()`。它将 `anchor` 固定为 `\"center\"`，默认同样使用水平固定布局。",
+      "intro": "用 `geom_seq_label()` 在已登记参考的路径旁添加标签。要在单序列圆图中心放置文字，可用 `geom_seq_label_center()`。它将 `anchor` 固定为 `\"center\"`，默认同样使用水平固定布局。",
       "arguments": {
         "anchor": "仅在 `geom_seq_label()` 中提供。沿参考路径可选 `\"start\"`、`\"middle\"`（默认）或 `\"end\"`；圆图中心用 `\"center\"`。中心标签快捷入口固定使用 `\"center\"`。",
         "position": "默认 `\"identity\"`。可用 [`position_offset()`](position_offset.html#api-position_offset) 偏移路径标签。中心标签要求使用恒等 Position。",
-        "label_layout": "两个入口默认都用 [`label_layout_fixed(orientation = \"horizontal\")`](label_layout_fixed.html#api-label_layout_fixed)。路径标签可选择其他布局，例如沿切线方向固定放置。中心标签须使用固定布局。"
+        "label_layout": "两个入口默认都用 [`layout_label_fixed(orientation = \"horizontal\")`](layout_label_fixed.html#api-layout_label_fixed)。路径标签可选择其他布局，例如沿切线方向固定放置。中心标签须使用固定布局。"
       },
       "roles": "两个入口都读取已登记的参考。省略标签映射时，文字为参考的 `accver`。用 `aes(label = ...)` 映射参考表中的其他文字。每个选定的显示实例可分别标注。文字属性包括 `colour`、`size`、`family`、`fontface`、`angle` 和 `alpha`。",
       "details": "两个入口均返回 ggplot2 图层。沿路径的标签适用于具有序列路径的坐标系。中心文字使用 [`coord_circular()`](coord_circular.html#api-coord_circular)，每个面板须有一条有效参考。",
@@ -5588,28 +5343,29 @@
           "title": "标注序列起点",
           "description": "把参考 ID 映射为文字，放在每条显示路径的起点。"
         },
-        "geom_seq_center_label": {
+        "geom_seq_label_center": {
           "title": "标注圆图中心",
           "description": "使用一条参考，并在圆图中心添加字号较大的标签。"
         }
       }
     },
     "geom_feature": {
-      "intro": "用 `geom_feature()` 将源区间画成方块、箭头或其他特征形状。按链方向摆放基因箭头时用 `geom_gene()`，在引物结合区间绘制细型方向标记时用 `geom_primer()`，用半透明区间块高亮局部区域时用 `geom_seq_region()`。",
+      "intro": "用 `geom_feature()` 绘制序列注释。`geom_gene()`、`geom_primer()`、`geom_seq_region()`、`geom_site()` 和 `geom_restriction_site()` 提供各自的默认样式。",
       "arguments": {
-        "shape": "`geom_feature()` 和 `geom_seq_region()` 默认用 `\"block\"`，`geom_gene()` 默认用 `\"arrow\"`，`geom_primer()` 默认用 `\"primer_arc\"`。支持 `block`、`arrow`、`compact_arrow`、`promoter_arrow`、`primer_arrow`、`marker`、`capped_line`、`primer_arc`、`chevron` 和 `lollipop`。固定形状优先于形状映射。",
+        "shape": "通用入口的默认形状为区间 `\"block\"`、位点 `\"tick\"`、切口 `\"cut\"`。基因默认 `\"arrow\"`，引物默认 `\"primer_arc\"`。可通过适用的标度映射区间形状，也可给出与位置类型相容的固定形状。",
         "thickness": "相对于路径法向的物理厚度，默认 2 mm。可用以 mm 计的数值、绝对 grid 单位，或按参考序列或链指定的值。圆图中，此参数控制箭头类形状的箭身厚度。",
-        "position": "`geom_feature()` 默认使用 `\"identity\"`，`geom_gene()` 默认用 [`position_strand()`](position_strand.html#api-position_strand)，引物和区间高亮快捷入口默认用 [`position_offset(0)`](position_offset.html#api-position_offset)。可以选用兼容的 Position 来调整位置。",
+        "position": "`geom_gene()` 默认使用 [`position_strand()`](position_strand.html#api-position_strand)，引物和区域高亮使用 [`position_offset(0)`](position_offset.html#api-position_offset)。通用特征、位点及切口入口默认使用恒等 Position。",
         "alpha": "`geom_seq_region()` 的显式参数，默认 0.25。可显式设置或映射透明度。",
-        "...": "具名样式、几何设置与所选 Stat 的参数。箭头几何接受 `head_length`、`head_width`、`head_style` 和 `short_feature` 等设置。基因层默认用无肩的 `head_style = \"flush\"`。 箭头头长和头宽以 mm 或绝对 grid 单位计。圆图中，带肩箭头的自动头宽为箭身厚度的 1.42 倍。"
+        "...": "可给出固定样式、适用的几何设置及所选 Stat 的参数。`head_length`、`head_width`、`head_style` 和 `short_feature` 等箭头设置只适用于区间箭头。",
+        "stat": "默认 identity；可选产生规范 feature 区间和实体身份的兼容 Stat，不接受缺少源区间的输出。"
       },
-      "roles": "输入使用 1 基闭区间，以 `accver`、`start` 和 `end` 表示。方向形状可提供 `strand`，不连续区间可提供分段信息。引物标记沿已记录的链指向 3′ 端。在 `aes()` 中映射 `fill`、`colour`、`alpha` 和 `linewidth` 等视觉属性。映射形状时，使用由有效形状名组成的手动或恒等标度。",
-      "details": "四个入口都返回 ggplot2 图层。形状、所在侧和厚度改变区间的画法，并保留源坐标。`\"+/-\"` 特征保留一个来源身份，可绘制双箭头。用[区间特征标签族](geom_feature_label.html#api-geom_feature_label)添加标签。",
-      "example_intro": "以下示例依次展示方块和箭头、圆图双圈之间的引物标记，以及骨架下方的区间高亮。",
+      "roles": "区间用从 1 开始且包含两端的 `start`、`end`，有方向的记号使用来源 `strand`。位点用从 1 开始的 `pos`。切口保留 `pos` 残基锚点，`cut_top` 和 `cut_bottom` 记录残基间坐标。可用 `entity_id` 或相应的 `feature_id`、`site_id` 在不同层中识别同一条记录。",
+      "details": "几何跟随相应的源位置。`\"+/-\"` 区间可以画两个箭头，同时保留一个来源身份。[注释标签](geom_feature_label.html#api-geom_feature_label) 跟随显示锚点。",
+      "example_intro": "分别用映射形状以及位点和切口的默认形状绘制注释。",
       "examples": {
         "geom_feature": {
-          "title": "映射形状与填色",
-          "description": "给不同特征类型使用不同形状和颜色，并按参考设置物理厚度。"
+          "title": "映射区间形状并绘制点状注释",
+          "description": "先按区间类型映射形状与填色，再用同一入口画位点刻线与残基间切口。"
         },
         "geom_gene": {
           "title": "按链放置基因箭头",
@@ -5622,59 +5378,7 @@
         "geom_seq_region": {
           "title": "在骨架下方高亮区间",
           "description": "先画较宽的半透明区域，再在其上叠加序列骨架。"
-        }
-      }
-    },
-    "geom_feature_label": {
-      "intro": "用通用入口 `geom_feature_label()` 标注特征区间。要自动绑定到特定类型的图层，可选基因或引物快捷入口。三种入口各有固定与避让版本。固定布局将文字保留在指定位置，避让布局可在同一锚点附近移动文字并添加引线。",
-      "arguments": {
-        "data": "默认 `NULL`，绑定时使用目标层经 Stat 处理后的实体。在自动绑定模式下提供表或回调，会使标签独立放置。要标注目标层的子集，可在 `anchor_layer` 中指定图层 ID，并提供匹配的键。显式绑定时，回调接收目标实体表。",
-        "stat": "兼容的 ggplot2 Stat 或其名称，默认 `\"identity\"`。绑定时标签层须使用恒等 Stat，实体取自目标层的统计结果。",
-        "anchor_layer": "默认使用 [`auto_anchor()`](auto_anchor.html#api-auto_anchor)。通用入口跟随唯一兼容的区间层，包括特征、基因、引物或区间高亮层。基因和引物快捷入口各自寻找对应类型。添加图层的顺序不影响选择。多个候选会报错并列出图层 ID。没有候选时，若图级数据或映射提供所需区间字段，标签可以独立绘制。另行提供标签表或回调、使用非恒等 Stat 或设置非 `NULL` 的 Position 时，默认独立放置。可传入图层 ID 显式绑定，或传入 `NULL` 指定独立放置。",
-        "anchor": "可选 `\"middle\"`（通用和基因入口默认）、`\"head\"`（引物入口默认）、`\"start\"`、`\"end\"` 或 `\"tail\"`。起点与终点按源端点确定。头尾随特征方向确定，要求明确的 `+` 或 `-` 链。",
-        "position": "绑定时保留 `NULL`，标签跟随目标层的显示位置，包括所在链侧与分道。独立放置可用恒等 Position 或 [`position_offset()`](position_offset.html#api-position_offset)。",
-        "label_layout": "通用和引物固定入口默认用 [`label_layout_fixed()`](label_layout_fixed.html#api-label_layout_fixed)，文字方向跟随特征。基因固定入口默认用 `label_layout_fixed(orientation = \"horizontal\")`。固定布局默认 `overlap = \"hide\"`，可隐藏重叠标签。三个 `_repel()` 入口都默认采用 [`label_layout_repel()`](label_layout_repel.html#api-label_layout_repel)，可移动文字并添加引线。各入口均接受显式设置的固定或避让布局。",
-        "...": "具名文字样式和图层参数。使用 `segment_colour`、`segment_linetype` 等引线样式时，需要采用避让布局。"
-      },
-      "roles": "标签表提供 `accver`、`start`、`end`，以及 `label` 列或 `aes(label = ...)` 映射。另行提供目标层子集时，按 `accver` 和稳定的 `feature_id` 匹配。方向相关锚点使用 `strand`。两个入口都接受 `colour`、`size`、`family`、`fontface`、`angle` 和 `alpha` 等文字属性。圆图外侧标签默认使用粗体，显式设置或映射的 `fontface` 优先。设置或映射 `fill` 可为外侧标注加上有描边的背景。",
-      "details": "六个入口都返回 ggplot2 图层，放置文字和引线时保留原有几何。绑定标签跟随目标实体的显示位置，实体身份必须能唯一匹配。",
-      "example_intro": "下面展示通用特征标签和引物端点标签。固定与避让的基因标签使用同一组密集区间及相同字号。",
-      "examples": {
-        "geom_feature_label": {
-          "title": "给通用特征层加标签",
-          "description": "用方向跟随特征的固定布局标注。"
         },
-        "geom_feature_label_repel": {
-          "title": "让通用特征标签避让",
-          "description": "对同类特征区间采用避让布局。"
-        },
-        "geom_gene_label": {
-          "title": "固定放置",
-          "description": "文字保持在相对于锚点的指定位置。在当前尺寸下，默认重叠策略保留 Gene alpha，隐藏另外两个标签。"
-        },
-        "geom_gene_label_repel": {
-          "title": "自动避让",
-          "description": "允许文字在锚点附近移动，为三个标签都留出空间。引线把移动后的文字连回对应的基因。"
-        },
-        "geom_primer_label": {
-          "title": "标注引物的 3′ 端",
-          "description": "跟随引物层，默认以方向所指的头部为锚点。"
-        },
-        "geom_primer_label_repel": {
-          "title": "让引物端点标签避让",
-          "description": "沿用引物锚定规则，使用自动避让布局。"
-        }
-      }
-    },
-    "geom_site": {
-      "intro": "用 `geom_site()` 标记参考上的已知位置。已知两条链的切口位置且希望默认显示切口形状时，用 `geom_restriction_site()`。",
-      "arguments": {
-        "shape": "可选 `\"tick\"`、`\"point\"` 或 `\"cut\"`。`geom_site()` 默认 `\"tick\"`，`geom_restriction_site()` 默认 `\"cut\"`。映射形状时使用手动或恒等标度。点符号支持 `fill`。"
-      },
-      "roles": "提供 `accver` 和 1 基位置 `pos`。切口标记还使用以残基之间的边界为坐标的 `cut_top` 和 `cut_bottom`。另行选取子集用于标签层时，使用稳定的 `site_id`。",
-      "details": "两个入口均返回 ggplot2 图层，绘制传入的位置及切口坐标。用[位点与切口标签族](geom_site_label.html#api-geom_site_label)添加文字及引线。",
-      "example_intro": "先标记一个源位置，再分别指定两条链的切口。",
-      "examples": {
         "geom_site": {
           "title": "标记源位置",
           "description": "在给定位置绘制刻线并加上标签。"
@@ -5685,23 +5389,37 @@
         }
       }
     },
-    "geom_site_label": {
-      "intro": "给源位置或限制性内切酶切口加标签。`geom_site_label()` 使用固定布局，`geom_site_label_repel()` 默认自动移开文字并按需添加引线。两者都可以跟随已有的位点层。",
+    "geom_feature_label": {
+      "intro": "用 `geom_feature_label()` 标记区间、位点或切口。基因、引物及位点快捷入口各自选择相应的目标类型。每个入口都可以采用固定或避让文字排版。",
       "arguments": {
-        "anchor_layer": "默认的 [`auto_anchor()`](auto_anchor.html#api-auto_anchor) 跟随唯一兼容的位点层。多个候选时指定图层 ID；独立放置可传入 `NULL`。自动绑定模式下，给出标签数据、非恒等 Stat 或非 `NULL` 的 Position，也会选择独立放置。",
-        "label_layout": "`geom_site_label()` 默认采用 [`label_layout_fixed()`](label_layout_fixed.html#api-label_layout_fixed)，`geom_site_label_repel()` 默认采用 [`label_layout_repel()`](label_layout_repel.html#api-label_layout_repel)。两者均接受显式指定的布局。引线样式适用于避让布局。"
+        "data": "绑定到目标且 `data = NULL` 时，读取目标经过 Stat 处理的实体。若显式提供子集，在 `anchor_layer` 中给出目标名称并保留匹配的来源身份。",
+        "stat": "兼容的 ggplot2 Stat 或其名称，默认 `\"identity\"`。绑定时标签层须使用恒等 Stat，实体取自目标层的统计结果。",
+        "anchor_layer": "[`auto_anchor()`](auto_anchor.html#api-auto_anchor) 跟随唯一兼容目标。存在多个候选时给出层 ID。设为 `NULL` 可独立定位。",
+        "anchor": "通用入口默认 `\"auto\"`，取区间中点、引物的方向头端或位点及切口的残基锚点。区间可选择 `\"start\"`、`\"end\"`、`\"middle\"`、`\"head\"` 或 `\"tail\"`。方向端点需要可靠链向。",
+        "position": "绑定时保留 `NULL`，标签跟随目标层的显示位置，包括所在链侧与分道。独立放置可用恒等 Position 或 [`position_offset()`](position_offset.html#api-position_offset)。",
+        "label_layout": "用 [`layout_label_fixed()`](layout_label_fixed.html#api-layout_label_fixed) 设置固定偏移，用 [`layout_label_repel()`](layout_label_repel.html#api-layout_label_repel) 避让文字。基因快捷入口默认采用水平固定排版。",
+        "...": "具名视觉样式。引线可设置 `segment_colour`、`segment_linewidth` 和 `segment_linetype`。未指定线色时采用最终文字颜色。",
+        "leader": "在标签层选择 `\"auto\"`、`\"none\"`、`\"straight\"` 或 `\"elbow\"`。固定和避让布局都可显式绘制引导线。"
       },
-      "roles": "位点标签使用 `accver`、1 基位置 `pos`，以及 `label` 列或 `aes(label = ...)` 映射。以独立数据提供具名目标的子集时，按 `accver` 和 `site_id` 匹配。文字属性包括 `colour`、`size`、`family`、`fontface` 和 `alpha`。",
-      "details": "两个入口都返回 ggplot2 图层。绑定标签跟随目标层经过统计和摆放后的结果。[位点图层](geom_site.html#api-geom_site)绘制点位或切口几何。",
-      "example_intro": "先用固定布局标注一个位点，再对同类源位置采用自动布局。",
+      "roles": "将 `label` 映射到来源文字。用独立的标签子集时，指定目标层 ID，并保留匹配的 `entity_id` 或相应的 `feature_id`、`site_id`。独立标签则须提供注释位置字段。文字可映射 `colour`、`size`、`family`、`fontface`、`angle` 和 `alpha`。",
+      "details": "标签跟随唯一可确认的来源身份及特征、位点或切口的显示位置。文字与引线的摆放保留原位置。圆图圈外标签默认用粗体，显式设置或映射的 `fontface` 优先。",
+      "example_intro": "给固定标签画引导线，让位点文字避让，并用同一组基因比较两种排版。",
       "examples": {
+        "geom_feature_label": {
+          "title": "标记区间和位点",
+          "description": "用直线连接固定基因文字，再用同一入口为位点文字选择避让排版。"
+        },
+        "geom_gene_label": {
+          "title": "比较固定和避让排版",
+          "description": "两种布局使用同一个拥挤基因层和相同字号。"
+        },
+        "geom_primer_label": {
+          "title": "标注引物的 3′ 端",
+          "description": "跟随引物层，默认以方向所指的头部为锚点。"
+        },
         "geom_site_label": {
           "title": "固定位点标签",
           "description": "从位点数据读取文字。"
-        },
-        "geom_site_label_repel": {
-          "title": "自动避让的位点标签",
-          "description": "在源位置附近使用避让布局。"
         }
       }
     },

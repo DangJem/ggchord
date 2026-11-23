@@ -9,6 +9,8 @@
 #' @param dpi Raster device resolution.
 #' @return Per-layer stage tables, geometry components, stage status, reference
 #'   and provenance information, diagnostics and measurement conditions.
+#'   When the source stage is requested, provenance includes available
+#'   lineage from [data_report()].
 #' @details Fusion export records failed panels by path and failed ribbons by
 #' path and layer ID. It retains the stages and geometry of other panels and
 #' ribbons. Ribbon tips are returned as decoration geometry separately from
@@ -168,7 +170,7 @@ export_ggchord_layout <- function(plot, layers = NULL, stages = "geometry",
       source <- entry$capture$source
       list(panel_path = entry$panel_path, layer_id = entry$layer_id,
         import = attr(source, "ggchord_import"), conversion = attr(source, "ggchord_conversion"),
-        lineage = attr(source, "ggchord_report"))
+        lineage = data_report(source, sections = "lineage")$lineage %||% attr(source, "ggchord_report"))
     }))), class = c("ggchord_layout_export", "list"))
 }
 

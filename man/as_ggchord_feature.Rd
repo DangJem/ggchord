@@ -2,9 +2,9 @@
 % Please edit documentation in R/data-convert.R
 \name{as_ggchord_feature}
 \alias{as_ggchord_feature}
-\title{Adapt one-based sequence feature intervals}
+\title{Adapt sequence annotations}
 \usage{
-as_ggchord_feature(x, columns = NULL, sequence_unit = NULL)
+as_ggchord_feature(x, columns = NULL, sequence_unit = NULL, location = "auto")
 }
 \arguments{
 \item{x}{A data frame or \code{GRanges} object.}
@@ -14,15 +14,24 @@ as_ggchord_feature(x, columns = NULL, sequence_unit = NULL)
 \item{sequence_unit}{Optional native \code{"bp"} or \code{"aa"} declaration. An
 existing declaration must agree. Undeclared observation units can be
 resolved against a reference later.}
+
+\item{location}{\code{"auto"}, \code{"interval"}, \code{"site"}, or \code{"cut"}. Automatic
+detection uses the coordinate fields or a single declared \code{location_kind}.}
 }
 \value{
-A feature data frame with \code{accver}, \code{start}, \code{end}, strand
-and available feature metadata. Use \code{\link[=data_report]{data_report()}} for provenance.
+A feature data frame with \code{accver}, \code{location_kind}, the location's
+coordinate fields, strand and source metadata. Use \code{\link[=data_report]{data_report()}} for provenance.
 }
 \description{
-Coordinates are ordered and closed. A missing strand is reported as \code{"."}.
-A \code{segments} list of explicit ordered interval tables can record
-discontinuous features without filling gaps in their parent range.
+Intervals use one-based closed coordinates. Sites use a one-based residue
+position. Cuts use a residue anchor and interbase boundaries, where zero
+is before the first residue. Missing cut boundaries retain a \code{cut_status}
+of \code{"partial"} or \code{"unknown"}. A \code{segments} list can record discontinuous
+intervals without filling gaps in their parent range.
+Repeated IDs remain separate input rows. The data report records entity
+identity, original source rows and the segment index. \code{entity_id} takes
+precedence over \code{feature_id} or \code{site_id} when provided. Temporary keys are
+local to the input table.
 }
 \examples{
 seqs <- data.frame(
@@ -34,4 +43,6 @@ raw <- data.frame(chrom = "A", begin = 100, finish = 240, direction = "+")
 features <- as_ggchord_feature(raw, columns = c(
   accver = "chrom", start = "begin", end = "finish", strand = "direction"))
 ggchord(seqs) + geom_feature(data = features)
+
+as_ggchord_feature(data.frame(accver = "A", pos = 120), location = "site")
 }

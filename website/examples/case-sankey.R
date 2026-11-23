@@ -42,10 +42,10 @@ overview <- ggchord(comparison$seq_data) +
 # Each display column points its CDS names away from the ribbons.
 column_labels <- lapply(c("left", "right"), function(column) {
   rows <- labels |> mutate(instance_id = paste(column, accver, sep = ":"))
-  geom_gene_label_repel(aes(label = label), data = rows, anchor_layer = "genes", anchor = "tail",
+  geom_gene_label(aes(label = label), data = rows, anchor_layer = "genes", anchor = "tail",
     hjust = if (column == "left") 1 else 0, size = 3.25,
     segment_colour = "#767A73", segment_linewidth = 0.18,
-    label_layout = label_layout_repel(arrangement = "local", orientation = "horizontal",
+    label_layout = layout_label_repel(arrangement = "local", orientation = "horizontal",
       side = if (column == "left") "negative" else "positive",
       offset = 7, padding = 1, wrap = 22, max_lines = 3))
 })
@@ -55,7 +55,7 @@ sequence_labels <- function(size = 3.9) {
     rows <- comparison$seq_data |> mutate(instance_id = paste(column, accver, sep = ":"))
     geom_seq_label(aes(label = accver), data = rows, anchor = "start",
       hjust = if (left) 1 else 0, vjust = 0,
-      label_layout = label_layout_fixed(orientation = "horizontal", along = -2.5,
+      label_layout = layout_label_fixed(orientation = "horizontal", along = -2.5,
         side = if (left) "negative" else "positive", offset = 1.5), size = size)
   })
 }

@@ -6,15 +6,21 @@
 \description{
 Sequence tables carry stable reference IDs, complete lengths, coordinate
 units and biological topology. Reference lengths are supplied by the
-source or declared explicitly. Features and interval links use ordered,
-one-based closed coordinates. Biological strands and relative alignment
-direction remain separate from endpoints and display orientation.
+source or declared explicitly. Interval annotations and links use ordered,
+one-based closed coordinates. Site annotations use a one-based residue
+position. Cut annotations carry a residue anchor and may have separate
+interbase boundaries. Biological strands and relative alignment direction
+remain separate from endpoints and display orientation.
 }
 \details{
 \code{\link[=ggchord_data]{ggchord_data()}} optionally organizes a reference and named observation
 tables. Each drawing layer uses its own observation table. \code{\link[=data_report]{data_report()}}
 retrieves source information and operation results, including the members
 of aggregated relationships and the original positions of focused windows.
+Annotation reports distinguish original rows, entities and segments.
+Without a source-backed or supplied identifier, entity keys are local to
+the input table. Track location tables can describe intervals or points
+independently of their optional values.
 
 \code{\link[=validate_ggchord_data]{validate_ggchord_data()}} reports input issues and \code{\link[=clean_ggchord_data]{clean_ggchord_data()}}
 applies explicitly chosen repairs. \code{\link[=focus_ggchord_data]{focus_ggchord_data()}} builds new local

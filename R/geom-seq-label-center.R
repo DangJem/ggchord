@@ -23,10 +23,10 @@
 #'
 #' ggchord(one_seq) +
 #'   geom_seq() +
-#'   geom_seq_center_label(aes(label = accver), size = 5) +
+#'   geom_seq_label_center(aes(label = accver), size = 5) +
 #'   coord_circular()
-geom_seq_center_label <- function(mapping = NULL, data = NULL, position = "identity",
-    label_layout = label_layout_fixed(orientation = "horizontal"), ...,
+geom_seq_label_center <- function(mapping = NULL, data = NULL, position = "identity",
+    label_layout = layout_label_fixed(orientation = "horizontal"), ...,
     na.rm = FALSE, show.legend = FALSE, inherit.aes = TRUE, id = auto_id()) {
   ggchord_local_console_errors()
   ggchord_check_argument_names(sys.call(), sys.function())

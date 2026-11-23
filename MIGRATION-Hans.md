@@ -2,6 +2,20 @@
 
 需要使用旧 API 的代码请选用 v0.29.0，从 v0.50.0 起，接口与旧版不兼容。
 
+## v0.50.0 早期开发快照
+
+| 原调用或设置 | v0.50.0 替代写法 |
+| --- | --- |
+| `geom_feature_label_repel()`、`geom_gene_label_repel()`、`geom_primer_label_repel()`、`geom_site_label_repel()` | 改用去掉 `_repel` 后缀的对应标签层，例如 `geom_feature_label(label_layout = layout_label_repel())`。 |
+| `label_layout_fixed()` 和 `label_layout_repel()` | 改用 `layout_label_fixed()` 和 `layout_label_repel()`。标签参数仍为 `label_layout`。 |
+| `label_layout_repel(leader = "elbow")` | 改用 `geom_feature_label(label_layout = layout_label_repel(), leader = "elbow")`。固定布局也可画引导线。 |
+| `geom_seq_center_label()` | 在圆图中使用 `geom_seq_label_center()`。 |
+| `theme(ggchord.axis = element_blank())` | 添加 `scale_seq_continuous(guide = "none")`。 |
+| `ggchord.axis.gap`、`ggchord.axis.text.orientation`、`ggchord.axis.text.check.overlap` | 分别设置 `guide_seq_axis()` 的 `gap`、`orientation` 或 `check.overlap`，再将 Guide 传给 `scale_seq_continuous()`。例如 `scale_seq_continuous(guide = guide_seq_axis(gap = grid::unit(1, "mm"), orientation = "parallel"))`。 |
+| `theme()` 中的 `ggchord.seq.label`、`ggchord.gene.label`、`ggchord.feature.label`、`ggchord.restriction.label` | 在对应标签层上设置固定样式，例如 `geom_seq_label(size = 3, colour = "grey30")`。由数据决定的样式通过美学映射和标度指定。 |
+| `theme()` 中的 `ggchord.gene.label.segment`、`ggchord.feature.label.segment`、`ggchord.restriction.label.segment` | 在标签层设置 `segment_colour`、`segment_linewidth` 和 `segment_linetype`。用 `leader = "none"` 隐藏引线。 |
+| `theme()` 中的 `ggchord.seq.center.label`、`ggchord.seq.center.name`、`ggchord.seq.center.length` | 使用 `geom_seq_label_center(aes(label = paste(accver, length, sep = "\n")), size = 4)`。用 `label` 指定文字，用图层参数设置样式。 |
+
 <details>
 <summary>维护者内部变动记录</summary>
 
@@ -40,7 +54,6 @@
 | `geom_seq()` 的 `seq_order`、`seq_orientation`、`seq_gap`、`length_mode` | 添加 `layout_sequences(order = ids, orientation = directions, gap = gaps, length_mode = "equal")`。骨架线条与固定样式继续放在 `geom_seq()`。 |
 | `position_plasmid(offset)` 和 `position_feature_stack(side = ...)` | 偏移改用 `position_offset(offset)`。原 `side = "outside"` 用 `base_position = position_offset(-0.1), direction = "inward"`。原 `"inside"` 用 `position_offset(0.1)` 及 `"outward"`。原 `"strand"` 对应默认分道。 |
 | `geom_gene()`、`geom_feature_plasmid()` | 使用 `geom_feature(preset = "gene")` 或 `geom_feature(preset = "plasmid")`，传入相同图层数据。 |
-| `geom_feature_label_repel()` | 使用 `geom_feature_label(placement = "repel")`。原先的放置策略交给 `label_layout`，原 `label_fit` 改为 `overflow`。多个实体层均可匹配时用 `anchor_layer = "features"` 指定目标。 |
 | `scale_seq_position()` | 改用 `scale_seq_continuous()`。用 `guide = guide_seq_axis(sequences = ids)` 选择参考轴。 |
 | `scale_for("genes", scale_fill_strand())` | 改用 `scale_for(scale_fill_strand(), layers = "genes")`。 |
 | 多个轨道层原先共用默认轨带 | 用 `add_track(...)` 组合，或声明 `layout_track("depth")` 并在各层写 `track = "depth"`。 |

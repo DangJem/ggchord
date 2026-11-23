@@ -360,13 +360,9 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
   gene_ls   <- gene_label_layer || gene_repel_layer ||
     isTRUE(gene_params$show_label_override) ||
     isTRUE(gene_params$gene_label_show)
-  label_theme_element <- if (isTRUE(lbl$is_feature_label)) {
-    "ggchord.feature.label"
-  } else "ggchord.gene.label"
   gene_lsz  <- lbl$gene_label_size %||%
     gene_params$label_size_override %||%
-    gene_params$gene_label_size %||%
-    ggchord_theme_text_size(plot, label_theme_element, 2.5)
+    gene_params$gene_label_size %||% 3
   gene_lfamily <- lbl$gene_label_family %||% ""
   gene_lfontface <- lbl$gene_label_fontface %||% 1
   gene_llineheight <- lbl$gene_label_lineheight %||% 1.2
@@ -444,16 +440,8 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
   if (is.null(position_scale) && !is.null(chord$display_instances$window_start))
     position_scale <- scale_seq_continuous(name = NULL)
   seq_guide <- position_scale$ggchord_axis_guide
-  axis_theme <- ggchord_plot_settings(plot)$axis
-  guide_theme <- seq_guide$theme
-  axis_plot <- plot
-  if (!is.null(guide_theme)) {
-    local <- setNames(as.list(guide_theme), paste0("ggchord.", names(guide_theme)))
-    axis_plot$theme <- plot$theme + do.call(theme, local)
-  }
-  if (!is.null(guide_theme[["axis.ticks.length"]]))
-    axis_theme$ticks.length <- guide_theme[["axis.ticks.length"]]
-  if (is.numeric(seq_guide$angle)) axis_theme$text.orientation <- seq_guide$angle
+  axis_plot <- ggchord_seq_axis_plot(plot, seq_guide)
+  axis_theme <- ggchord_seq_axis_settings(axis_plot, seq_guide)
   inward_axis <- circular && (!isTRUE(position_scale$ggchord_axis_guide_explicit) ||
     identical(seq_guide$side, "negative"))
   show_axis <- !isTRUE(axis_theme$hidden)
@@ -616,12 +604,10 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
   # --- Process axes ---
   side_sign <- if (collinear) -1 else 1
   if (identical(seq_guide$side, "negative")) side_sign <- -side_sign
-  axis_theme$gap <- side_sign * if (!circular && as.numeric(axis_theme$gap) == 0)
-    unit(.8, "mm") else axis_theme$gap
   # Pass physical distances as inches. compute_chord_layout() converts them
   # against the actual curved sequence span once that geometry is available.
   axis_unit_data <- ggchord_unit_inches
-  axisGap    <- process_sequence_param(axis_unit_data(axis_theme$gap),
+  axisGap    <- process_sequence_param(side_sign * axis_unit_data(axis_theme$gap),
                                        seqs, "axis.gap", 0.04)
   axisMaj    <- process_sequence_param(axis_params$axis_tick_major_number %||% 5,
                                        seqs, "axis_tick_major_number", 5)
@@ -633,16 +619,14 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
     axis_unit_data(axis_theme$minor.ticks.length),
     seqs, "axis.minor.ticks.length", 0.01
   )
-  axis_theme_size <- ggchord_theme_text_size(
-    if (circular) axis_plot else plot, "ggchord.axis.text", 3
-  )
+  axis_theme_size <- ggchord_theme_text_size(axis_plot, "ggchord.axis.text", 3)
   labelSize  <- process_sequence_param(
     axis_theme_size,
     seqs, "axis_label_size", axis_theme_size
   )
   labelOffset <- process_sequence_param(axis_unit_data(axis_theme$text.offset),
                                         seqs, "axis.text.offset", 0.02)
-  axisLabelHide <- position_scale$ggchord_check_overlap %||% isTRUE(axis_theme$text.check.overlap)
+  axisLabelHide <- isTRUE(axis_theme$text.check.overlap)
   axisLabelOri <- process_axis_orientation(
     axis_theme$text.orientation, seqs
   )
@@ -775,11 +759,8 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
       seq_label_params$seq_label_radius, seqs, "seq_label_radius", 1)
     seq_label_rotation <- process_sequence_param(
       seq_label_params$seq_label_rotation, seqs, "seq_label_rotation", 0)
-    seq_theme_size <- ggchord_theme_text_size(
-      plot, "ggchord.seq.label", 3
-    )
     seq_label_size <- process_sequence_param(
-      seq_label_params$seq_label_size, seqs, "seq_label_size", seq_theme_size
+      seq_label_params$seq_label_size, seqs, "seq_label_size", 3.5
     )
     seq_label_orientation <- seq_label_params$seq_label_orientation %||% "arc"
     seq_label_hjust <- if (is.null(seq_label_params$seq_label_hjust)) {
@@ -940,11 +921,11 @@ compute_chord_geometry_single <- function(plot, geometry_cache = NULL) {
     axisMin = axisMin, axisMinLen = axisMinLen,
     labelSize = labelSize, labelOffset = labelOffset,
     axis_text_style = {
-      style <- ggchord_theme_element(if (circular) axis_plot else plot, "ggchord.axis.text")
+      style <- ggchord_theme_element(axis_plot, "ggchord.axis.text")
       text_style <- if(inherits(style,"element_text")) list(family=style@family,
         fontface=style@face,lineheight=style@lineheight) else list()
       c(text_style, list(offset_explicit = isTRUE(axis_theme$text.offset.explicit),
-        backbone = backbone, inward = inward_axis,
+        backbone = backbone, inward = inward_axis, tick_direction = -side_sign,
         allow_clearance = axisLabelHide))
     },
     axisLabelOrientation = axisLabelOri,

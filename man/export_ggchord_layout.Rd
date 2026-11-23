@@ -34,6 +34,8 @@ panel_path and character layer_id. An empty path selects the root.}
 \value{
 Per-layer stage tables, geometry components, stage status, reference
 and provenance information, diagnostics and measurement conditions.
+When the source stage is requested, provenance includes available
+lineage from \code{\link[=data_report]{data_report()}}.
 }
 \description{
 Export the source, mapped, statistical or rendered stages of a plot

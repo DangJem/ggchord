@@ -242,12 +242,18 @@ scale_region_fill_manual <- function(..., values) {
 #'
 #' @param sequences Source accessions, or a list with source and instance IDs.
 #' @param side Positive or negative local side of the reference path.
-#' @param angle Automatic label orientation, or a numeric angle in degrees.
+#' @param angle `"auto"` or a fixed label angle in degrees. A fixed angle
+#'   requires `orientation = "auto"`.
 #' @param check.overlap Whether to adjust crowded sequence-end labels and hide
 #'   overlapping interior labels. Endpoints keep their ticks and values. On
 #'   projected axes, competing endpoint labels can move along their own
 #'   sequence paths. Set to `FALSE` to keep the original positions.
 #' @param theme Optional local axis theme.
+#' @param gap Distance from the reference path as a nonnegative absolute
+#'   `grid::unit()`. `NULL` uses the coordinate's default (zero for circular
+#'   maps and 0.8 mm elsewhere).
+#' @param orientation `"auto"`, `"parallel"`, `"perpendicular"`, or
+#'   `"horizontal"`. Automatic labels follow the reference path.
 #' @return A guide for [scale_seq_continuous()].
 #' @export
 #' @examples
@@ -261,19 +267,26 @@ scale_region_fill_manual <- function(..., values) {
 #' ggchord(data = seqs) + geom_seq() +
 #'   scale_seq_continuous(breaks = scales::breaks_width(200),
 #'     guide = guide_seq_axis(sequences = "A", side = "negative",
+#'       gap = grid::unit(1, "mm"), orientation = "horizontal",
 #'       theme = theme(axis.text = element_text(size = 8)))) +
 #'   coord_collinear()
 guide_seq_axis <- function(sequences = NULL, side = "positive", angle = "auto",
-    check.overlap = TRUE, theme = NULL) {
+    check.overlap = TRUE, theme = NULL, gap = NULL, orientation = "auto") {
   ggchord_local_console_errors()
   ggchord_check_argument_names(sys.call(), sys.function())
   ggchord_check_axis_selection(sequences)
   side <- ggchord_match_choice(side, c("positive", "negative"), "side")
   if (!identical(angle, "auto") && (!is.numeric(angle) || length(angle) != 1L || !is.finite(angle)))
     ggchord_stop("angle must be 'auto' or finite degrees")
+  orientation <- ggchord_match_choice(orientation,
+    c("auto", "parallel", "perpendicular", "horizontal"), "orientation")
+  if (is.numeric(angle) && orientation != "auto")
+    ggchord_stop("guide_seq_axis(): use either a fixed angle or a named orientation")
+  if (!is.null(gap)) ggchord_check_axis_unit(gap, "guide_seq_axis(): gap", nonnegative = TRUE)
   ggchord_check_axis_theme(theme, check.overlap)
   structure(list(sequences = sequences, side = side, angle = angle,
-    check.overlap = check.overlap, theme = theme), class = "ggchord_seq_axis")
+    check.overlap = check.overlap, theme = theme, gap = gap,
+    orientation = orientation), class = "ggchord_seq_axis")
 }
 
 ggchord_check_axis_selection <- function(selection) {
@@ -351,7 +364,6 @@ scale_seq_continuous <- function(name = waiver(), breaks = waiver(),
   out$ggchord_axis_guide <- guide
   out$ggchord_axis_guide_explicit <- guide_explicit
   out$ggchord_axis_sequences <- guide$sequences
-  out$ggchord_check_overlap <- guide$check.overlap
   out
 }
 

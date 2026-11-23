@@ -2,16 +2,17 @@
 % Please edit documentation in R/geom-feature-label.R
 \name{geom_feature_label}
 \alias{geom_feature_label}
-\title{Label source feature intervals}
+\title{Label source annotations}
 \usage{
 geom_feature_label(
   mapping = NULL,
   data = NULL,
   stat = "identity",
   anchor_layer = auto_anchor(),
-  anchor = "middle",
+  anchor = "auto",
   position = NULL,
-  label_layout = label_layout_fixed(),
+  label_layout = layout_label_fixed(),
+  leader = "auto",
   ...,
   na.rm = FALSE,
   show.legend = FALSE,
@@ -30,9 +31,15 @@ geom_feature_label(
 
 \item{anchor}{Position on the entity or reference path that anchors the text.}
 
-\item{position}{Position adjustment. For bound labels, leave this unset to follow the target layer.}
+\item{position}{For a bound label, leave unset to inherit the feature's
+position. An independent label can use identity or \code{position_offset()}
+to place its anchor. Use \code{label_layout} to move text relative to the anchor.}
 
 \item{label_layout}{A fixed or repelled label layout declaration.}
+
+\item{leader}{How to route the optional label leader: \code{"auto"}, \code{"none"},
+\code{"straight"} or \code{"elbow"}. Set fixed \code{segment_colour}, \code{segment_linewidth},
+\code{segment_linetype} or \code{segment_alpha} through \code{...}.}
 
 \item{...}{Additional named visual styles and parameters accepted by this layer.}
 
@@ -48,10 +55,14 @@ geom_feature_label(
 A ggplot2 layer for addition to a plot.
 }
 \description{
-Label source feature intervals
+Label source annotations
 }
 \details{
-The source entities have \code{accver}, \code{start}, \code{end} and a label or label mapping. A bound label follows the target layer by identity. Text size, collision handling and leader placement are independent of the underlying feature geometry. A segmented feature is anchored to its visible runs. For a circular feature label, mapping \code{fill} sets the background of an exterior callout. If \code{colour} is omitted, text over a feature or on a callout uses a contrasting colour.
+Labels can follow interval, site or cut annotations. Supply a label
+or a label mapping. The automatic anchor is the interval midpoint, the
+directional head of a primer, or the source position of a site or cut.
+For circular features, mapping \code{fill} sets the background of an exterior
+callout. Text uses a contrasting colour when \code{colour} is omitted.
 Filled circular exterior labels have a visible outline. Circular
 exterior feature labels use bold text by default. Set or
 map \code{fontface} to override. Local inward labels can slide along an arc
@@ -62,6 +73,9 @@ to keep text clear of other leaders.
 Inward leaders that cross other label text are dashed. Automatic
 leaders also use dashes when they cross their own backbone. Set
 \code{segment_linetype} to override the automatic style.
+Fixed layouts draw a leader when \code{leader} is set to \code{"straight"} or
+\code{"elbow"}. Repelled layouts with \code{leader = "auto"} can route a leader
+when the text leaves its anchor.
 }
 \examples{
 library(ggplot2)

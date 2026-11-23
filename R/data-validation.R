@@ -22,10 +22,11 @@ ggchord_data_validation_result <- function(issues, action, caller, checks_run,
   result
 }
 
-ggchord_data_endpoints <- function(data, role) {
+ggchord_data_endpoints <- function(data, role, location = NULL) {
   switch(role,
     sequence = list(accver = "length"),
-    feature = list(accver = c("start", "end")),
+    feature = list(accver = ggchord_annotation_coordinates(location %||%
+      ggchord_annotation_location(data))),
     link = if (all(c("qpos", "spos") %in% names(data)) &&
       !any(c("qstart", "qend", "sstart", "send") %in% names(data))) {
       list(qaccver = "qpos", saccver = "spos")
@@ -40,9 +41,18 @@ ggchord_data_validate_table <- function(data, role, references, enabled, add) {
     if (enabled("schema")) add("not_dataframe", "Expected a data frame")
     return(invisible(NULL))
   }
-  endpoints <- ggchord_data_endpoints(data, role)
+  location <- NULL
+  if (role == "feature") {
+    location <- tryCatch(ggchord_annotation_location(data), error = identity)
+    if (inherits(location, "error")) {
+      if (enabled("schema") || enabled("coordinates")) add("invalid_annotation_location",
+        conditionMessage(location), column = "location_kind")
+      location <- "interval"
+    }
+  }
+  endpoints <- ggchord_data_endpoints(data, role, location)
   required <- c(names(endpoints), unlist(endpoints, use.names = FALSE),
-    switch(role, track = "value", alignment = c("symbol", "is_gap", "alphabet")))
+    switch(role, alignment = c("symbol", "is_gap", "alphabet")))
   if (enabled("schema")) {
     for (column in setdiff(required, names(data))) {
       add("missing_column", paste("Missing required column", column), column = column)
@@ -72,6 +82,11 @@ ggchord_data_validate_table <- function(data, role, references, enabled, add) {
             (topology == "circular") != circular), "topology")
     }
     if (role == "feature") {
+      for (id in intersect(c("entity_id", "feature_id", "site_id"), names(data))) {
+        value <- data[[id]]
+        if (!is.atomic(value) || !is.null(dim(value)))
+          add("invalid_id", paste(id, "must be an identifier column"), column = id)
+      }
       strand <- as.character(data[["strand"]])
       invalid <- !is.na(strand) & !strand %in% ggchord_feature_strands
       add("invalid_strand", "strand must be '+', '-', '*', '.', or '+/-'",
@@ -85,6 +100,11 @@ ggchord_data_validate_table <- function(data, role, references, enabled, add) {
           add("conflicting_strand", "strand and directionality describe conflicting directions",
             which(!invalid & !is.na(expected) & strand != expected), "strand")
         }
+      }
+      if (identical(location, "cut") && "cut_status" %in% names(data)) {
+        status <- ggchord_annotation_cut_status(data)
+        add("invalid_cut_status", "cut_status must agree with the known interbase positions",
+          which(is.na(data$cut_status) | data$cut_status != status), "cut_status")
       }
     }
   }
@@ -121,6 +141,19 @@ ggchord_data_validate_table <- function(data, role, references, enabled, add) {
       add("reversed_interval", "Interval endpoints must be ordered", which(data[[columns[1L]]] >
         data[[columns[2L]]]), columns[1L])
     }
+    if (identical(location, "cut")) {
+      for (column in intersect(ggchord_annotation_cut_columns, names(data))) {
+        values <- data[[column]]
+        if (!ggchord_interbase_numeric(values)) {
+          add("invalid_coordinate_type", paste(column, "must be numeric or missing"), column = column)
+          next
+        }
+        add("invalid_coordinate", paste(column, "must contain nonnegative integral interbase boundaries or NA"),
+          which(ggchord_invalid_interbase(values)), column)
+        if (!is.null(ref_match)) add("out_of_range", paste(column, "is outside its reference"),
+          which(values > references$length[ref_match]), column)
+      }
+    }
   }
   if (enabled("coordinates") && "pident" %in% names(data)) {
     values <- data$pident
@@ -128,7 +161,7 @@ ggchord_data_validate_table <- function(data, role, references, enabled, add) {
     else add("invalid_pident", "pident must be a percentage in [0, 100]",
       which(!is.na(values) & (!is.finite(values) | values < 0 | values > 100)), "pident")
   }
-  if (enabled("coordinates") && role == "feature" && "segments" %in% names(data) &&
+  if (enabled("coordinates") && identical(location, "interval") && "segments" %in% names(data) &&
       all(c("start", "end") %in% names(data)) && is.numeric(data$start) && is.numeric(data$end)) {
     error <- tryCatch({ ggchord_validate_feature_segments(data, "validate_ggchord_data()"); NULL },
       error = identity)
@@ -168,6 +201,15 @@ ggchord_data_validate_table <- function(data, role, references, enabled, add) {
   }
   if (enabled("units")) {
     units <- data[["sequence_unit"]]
+    if (identical(location, "cut")) {
+      add("invalid_cut_unit", "Interbase cut boundaries require bp coordinates",
+        which(!is.na(units) & units != "bp"), "sequence_unit")
+      if (is.data.frame(references) && "accver" %in% names(data)) {
+        reference_units <- references$sequence_unit[match(data$accver, references$accver)]
+        add("invalid_cut_unit", "Interbase cut boundaries require a bp reference",
+          which(!is.na(reference_units) & reference_units != "bp"), "sequence_unit")
+      }
+    }
     if (!is.null(units)) {
       add("invalid_unit", "Sequence units must be bp or aa", which(!is.na(units) &
         !units %in% c("bp", "aa")), "sequence_unit")
@@ -203,7 +245,9 @@ ggchord_data_validate_table <- function(data, role, references, enabled, add) {
 #' @param sequences Optional reference data for a single observation table.
 #' @param action Report, warn, or signal an error with the complete report.
 #' @param checks Which checks to run. The schema check includes declared
-#'   reference topology and feature strand and directionality.
+#'   reference topology, feature location, strand and directionality. Track
+#'   location tables can omit values; individual numeric geoms check their
+#'   value requirements.
 #'   The coordinates check includes declared alignment source lengths.
 #' @return A validation result with source and row information for each issue.
 #' @export

@@ -50,22 +50,18 @@
         "geom_seq",
         "geom_seq_arrow",
         "geom_seq_label",
-        "geom_seq_center_label",
+        "geom_seq_label_center",
         "geom_seq_break",
         "geom_feature",
         "geom_gene",
         "geom_primer",
         "geom_seq_region",
         "geom_feature_label",
-        "geom_feature_label_repel",
         "geom_gene_label",
-        "geom_gene_label_repel",
         "geom_primer_label",
-        "geom_primer_label_repel",
         "geom_site",
         "geom_restriction_site",
         "geom_site_label",
-        "geom_site_label_repel",
         "geom_link_line",
         "geom_link_ribbon",
         "stat_link_bundle",
@@ -102,8 +98,8 @@
     },
     "label_layout": {
       "topics": [
-        "label_layout_fixed",
-        "label_layout_repel"
+        "layout_label_fixed",
+        "layout_label_repel"
       ],
       "previous_anchors": []
     },
@@ -429,12 +425,12 @@
         ]
       ],
       "roles": [],
-      "examples": "circular_seq <- data.frame(\n  accver = \"A\", length = 1000, sequence_unit = \"bp\", topology = \"circular\"\n)\nggchord(circular_seq) +\n  geom_seq() +\n  geom_seq_center_label(aes(label = accver), size = 5) +\n  layout_sequences(angular_gap = 12) +\n  coord_circular(start_angle = 90)",
+      "examples": "circular_seq <- data.frame(\n  accver = \"A\", length = 1000, sequence_unit = \"bp\", topology = \"circular\"\n)\nggchord(circular_seq) +\n  geom_seq() +\n  geom_seq_label_center(aes(label = accver), size = 5) +\n  layout_sequences(angular_gap = 12) +\n  coord_circular(start_angle = 90)",
       "related": [
         "geom_seq",
         "geom_gene",
         "layout_sequences",
-        "geom_seq_center_label",
+        "geom_seq_label_center",
         "coord_chord"
       ],
       "native": false,
@@ -968,7 +964,7 @@
       }
     },
     "geom_seq_label": {
-      "usage": "geom_seq_label(\n  mapping = NULL,\n  data = NULL,\n  anchor = \"middle\",\n  position = \"identity\",\n  label_layout = label_layout_fixed(orientation = \"horizontal\"),\n  ...,\n  na.rm = FALSE,\n  show.legend = FALSE,\n  inherit.aes = TRUE,\n  id = auto_id()\n)",
+      "usage": "geom_seq_label(\n  mapping = NULL,\n  data = NULL,\n  anchor = \"middle\",\n  position = \"identity\",\n  label_layout = layout_label_fixed(orientation = \"horizontal\"),\n  leader = \"auto\",\n  ...,\n  na.rm = FALSE,\n  show.legend = FALSE,\n  inherit.aes = TRUE,\n  id = auto_id()\n)",
       "arguments": [
         [
           "mapping"
@@ -984,6 +980,9 @@
         ],
         [
           "label_layout"
+        ],
+        [
+          "leader"
         ],
         [
           "..."
@@ -1008,8 +1007,8 @@
       "examples": "ggchord(seqs) +\n  geom_seq() +\n  geom_seq_label(aes(label = accver), anchor = \"start\") +\n  coord_collinear()",
       "related": [
         "geom_seq",
-        "geom_seq_center_label",
-        "label_layout_fixed"
+        "geom_seq_label_center",
+        "layout_label_fixed"
       ],
       "native": false,
       "defaults": {
@@ -1017,7 +1016,8 @@
         "data": "NULL",
         "anchor": "\"middle\"",
         "position": "\"identity\"",
-        "label_layout": "label_layout_fixed(orientation = \"horizontal\")",
+        "label_layout": "layout_label_fixed(orientation = \"horizontal\")",
+        "leader": "\"auto\"",
         "...": "",
         "na.rm": "FALSE",
         "show.legend": "FALSE",
@@ -1025,8 +1025,8 @@
         "id": "auto_id()"
       }
     },
-    "geom_seq_center_label": {
-      "usage": "geom_seq_center_label(\n  mapping = NULL,\n  data = NULL,\n  position = \"identity\",\n  label_layout = label_layout_fixed(orientation = \"horizontal\"),\n  ...,\n  na.rm = FALSE,\n  show.legend = FALSE,\n  inherit.aes = TRUE,\n  id = auto_id()\n)",
+    "geom_seq_label_center": {
+      "usage": "geom_seq_label_center(\n  mapping = NULL,\n  data = NULL,\n  position = \"identity\",\n  label_layout = layout_label_fixed(orientation = \"horizontal\"),\n  ...,\n  na.rm = FALSE,\n  show.legend = FALSE,\n  inherit.aes = TRUE,\n  id = auto_id()\n)",
       "arguments": [
         [
           "mapping"
@@ -1060,18 +1060,18 @@
         "`label`",
         "`colour, size, family, fontface, angle, alpha`"
       ],
-      "examples": "ggchord(one_seq) +\n  geom_seq() +\n  geom_seq_center_label(aes(label = accver), size = 5) +\n  coord_circular()",
+      "examples": "ggchord(one_seq) +\n  geom_seq() +\n  geom_seq_label_center(aes(label = accver), size = 5) +\n  coord_circular()",
       "related": [
         "geom_seq",
         "geom_seq_label",
-        "label_layout_fixed"
+        "layout_label_fixed"
       ],
       "native": false,
       "defaults": {
         "mapping": "NULL",
         "data": "NULL",
         "position": "\"identity\"",
-        "label_layout": "label_layout_fixed(orientation = \"horizontal\")",
+        "label_layout": "layout_label_fixed(orientation = \"horizontal\")",
         "...": "",
         "na.rm": "FALSE",
         "show.legend": "FALSE",
@@ -1137,13 +1137,16 @@
       }
     },
     "geom_feature": {
-      "usage": "geom_feature(\n  mapping = NULL,\n  data = NULL,\n  shape = \"block\",\n  thickness = 2,\n  stat = \"identity\",\n  position = \"identity\",\n  ...,\n  na.rm = FALSE,\n  show.legend = NA,\n  inherit.aes = TRUE,\n  id = auto_id()\n)",
+      "usage": "geom_feature(\n  mapping = NULL,\n  data = NULL,\n  location = \"auto\",\n  shape = NULL,\n  thickness = 2,\n  stat = \"identity\",\n  position = \"identity\",\n  ...,\n  na.rm = FALSE,\n  show.legend = NA,\n  inherit.aes = TRUE,\n  id = auto_id()\n)",
       "arguments": [
         [
           "mapping"
         ],
         [
           "data"
+        ],
+        [
+          "location"
         ],
         [
           "shape"
@@ -1181,7 +1184,7 @@
         "`fill, colour, alpha, linewidth, linetype`",
         "`group`"
       ],
-      "examples": "ggchord(seqs) +\n  geom_seq() +\n  geom_feature(\n    aes(shape = type, fill = type), data = genes,\n    thickness = c(A = 2.5, B = 1.5)\n  ) +\n  scale_shape_manual(values = c(CDS = \"arrow\", tRNA = \"block\")) +\n  scale_fill_manual(values = gene_colours) +\n  coord_collinear()",
+      "examples": "ggchord(seqs) +\n  geom_seq() +\n  geom_feature(\n    aes(shape = type, fill = type), data = genes,\n    thickness = c(A = 2.5, B = 1.5)\n  ) +\n  scale_shape_manual(values = c(CDS = \"arrow\", tRNA = \"block\")) +\n  scale_fill_manual(values = gene_colours) +\n  coord_collinear()\n\ncut <- data.frame(accver = \"A\", pos = 300, cut_top = 300, cut_bottom = 304)\nggchord(one_seq) +\n  geom_seq() +\n  geom_feature(data = sites, location = \"site\") +\n  geom_feature(data = cut, location = \"cut\") +\n  coord_circular()",
       "related": [
         "geom_gene",
         "geom_primer",
@@ -1192,7 +1195,8 @@
       "defaults": {
         "mapping": "NULL",
         "data": "NULL",
-        "shape": "\"block\"",
+        "location": "\"auto\"",
+        "shape": "NULL",
         "thickness": "2",
         "stat": "\"identity\"",
         "position": "\"identity\"",
@@ -1415,7 +1419,7 @@
       }
     },
     "geom_feature_label": {
-      "usage": "geom_feature_label(\n  mapping = NULL,\n  data = NULL,\n  stat = \"identity\",\n  anchor_layer = auto_anchor(),\n  anchor = \"middle\",\n  position = NULL,\n  label_layout = label_layout_fixed(),\n  ...,\n  na.rm = FALSE,\n  show.legend = FALSE,\n  inherit.aes = TRUE,\n  id = auto_id()\n)",
+      "usage": "geom_feature_label(\n  mapping = NULL,\n  data = NULL,\n  stat = \"identity\",\n  anchor_layer = auto_anchor(),\n  anchor = \"auto\",\n  position = NULL,\n  label_layout = layout_label_fixed(),\n  leader = \"auto\",\n  ...,\n  na.rm = FALSE,\n  show.legend = FALSE,\n  inherit.aes = TRUE,\n  id = auto_id()\n)",
       "arguments": [
         [
           "mapping"
@@ -1437,6 +1441,9 @@
         ],
         [
           "label_layout"
+        ],
+        [
+          "leader"
         ],
         [
           "..."
@@ -1461,13 +1468,12 @@
         "`label`",
         "`colour, fill, size, family, fontface, angle, alpha`"
       ],
-      "examples": "ggchord(seqs) +\n  geom_gene(data = genes) +\n  geom_feature_label(aes(label = label)) +\n  coord_collinear()",
+      "examples": "ggchord(seqs) +\n  geom_gene(data = genes, id = \"genes\") +\n  geom_feature_label(\n    aes(label = label),\n    anchor_layer = \"genes\",\n    label_layout = layout_label_fixed(offset = 3),\n    leader = \"straight\",\n    segment_linewidth = 0.35\n  ) +\n  coord_collinear()\n\nggchord(one_seq) +\n  geom_seq() +\n  geom_feature(data = sites, location = \"site\") +\n  geom_feature_label(\n    aes(label = label),\n    label_layout = layout_label_repel(arrangement = \"columns\"),\n    leader = \"auto\"\n  ) +\n  coord_circular()",
       "related": [
         "auto_anchor",
-        "geom_feature_label_repel",
         "geom_gene_label",
-        "label_layout_fixed",
-        "label_layout_repel"
+        "layout_label_fixed",
+        "layout_label_repel"
       ],
       "native": false,
       "defaults": {
@@ -1475,80 +1481,10 @@
         "data": "NULL",
         "stat": "\"identity\"",
         "anchor_layer": "auto_anchor()",
-        "anchor": "\"middle\"",
+        "anchor": "\"auto\"",
         "position": "NULL",
-        "label_layout": "label_layout_fixed()",
-        "...": "",
-        "na.rm": "FALSE",
-        "show.legend": "FALSE",
-        "inherit.aes": "TRUE",
-        "id": "auto_id()"
-      }
-    },
-    "geom_feature_label_repel": {
-      "usage": "geom_feature_label_repel(\n  mapping = NULL,\n  data = NULL,\n  stat = \"identity\",\n  anchor_layer = auto_anchor(),\n  anchor = \"middle\",\n  position = NULL,\n  label_layout = label_layout_repel(),\n  ...,\n  na.rm = FALSE,\n  show.legend = FALSE,\n  inherit.aes = TRUE,\n  id = auto_id()\n)",
-      "arguments": [
-        [
-          "mapping"
-        ],
-        [
-          "data"
-        ],
-        [
-          "stat"
-        ],
-        [
-          "anchor_layer"
-        ],
-        [
-          "anchor"
-        ],
-        [
-          "position"
-        ],
-        [
-          "label_layout"
-        ],
-        [
-          "..."
-        ],
-        [
-          "na.rm"
-        ],
-        [
-          "show.legend"
-        ],
-        [
-          "inherit.aes"
-        ],
-        [
-          "id"
-        ]
-      ],
-      "roles": [
-        "`accver, start, end`",
-        "`feature_id`",
-        "`strand`",
-        "`label`",
-        "`colour, fill, size, family, fontface, angle, alpha`"
-      ],
-      "examples": "ggchord(seqs) +\n  geom_gene(data = genes) +\n  geom_feature_label_repel(aes(label = label)) +\n  coord_collinear()",
-      "related": [
-        "auto_anchor",
-        "geom_feature_label",
-        "geom_feature",
-        "label_layout_fixed",
-        "label_layout_repel"
-      ],
-      "native": false,
-      "defaults": {
-        "mapping": "NULL",
-        "data": "NULL",
-        "stat": "\"identity\"",
-        "anchor_layer": "auto_anchor()",
-        "anchor": "\"middle\"",
-        "position": "NULL",
-        "label_layout": "label_layout_repel()",
+        "label_layout": "layout_label_fixed()",
+        "leader": "\"auto\"",
         "...": "",
         "na.rm": "FALSE",
         "show.legend": "FALSE",
@@ -1557,7 +1493,7 @@
       }
     },
     "geom_gene_label": {
-      "usage": "geom_gene_label(\n  mapping = NULL,\n  data = NULL,\n  stat = \"identity\",\n  anchor_layer = auto_anchor(),\n  anchor = \"middle\",\n  position = NULL,\n  label_layout = label_layout_fixed(orientation = \"horizontal\"),\n  ...,\n  na.rm = FALSE,\n  show.legend = FALSE,\n  inherit.aes = TRUE,\n  id = auto_id()\n)",
+      "usage": "geom_gene_label(\n  mapping = NULL,\n  data = NULL,\n  stat = \"identity\",\n  anchor_layer = auto_anchor(),\n  anchor = \"middle\",\n  position = NULL,\n  label_layout = layout_label_fixed(orientation = \"horizontal\"),\n  leader = \"auto\",\n  ...,\n  na.rm = FALSE,\n  show.legend = FALSE,\n  inherit.aes = TRUE,\n  id = auto_id()\n)",
       "arguments": [
         [
           "mapping"
@@ -1579,6 +1515,9 @@
         ],
         [
           "label_layout"
+        ],
+        [
+          "leader"
         ],
         [
           "..."
@@ -1603,13 +1542,13 @@
         "`label`",
         "`colour, fill, size, family, fontface, angle, alpha`"
       ],
-      "examples": "label_plot +\n  geom_gene_label(aes(label = label), size = 3.5)",
+      "examples": "label_plot +\n  geom_gene_label(aes(label = label), size = 3.5)\n\nlabel_plot +\n  geom_gene_label(\n    aes(label = label), size = 3.5,\n    label_layout = layout_label_repel()\n  )",
       "related": [
         "auto_anchor",
         "geom_feature_label",
         "geom_feature",
-        "label_layout_fixed",
-        "label_layout_repel"
+        "layout_label_fixed",
+        "layout_label_repel"
       ],
       "native": false,
       "defaults": {
@@ -1619,78 +1558,8 @@
         "anchor_layer": "auto_anchor()",
         "anchor": "\"middle\"",
         "position": "NULL",
-        "label_layout": "label_layout_fixed(orientation = \"horizontal\")",
-        "...": "",
-        "na.rm": "FALSE",
-        "show.legend": "FALSE",
-        "inherit.aes": "TRUE",
-        "id": "auto_id()"
-      }
-    },
-    "geom_gene_label_repel": {
-      "usage": "geom_gene_label_repel(\n  mapping = NULL,\n  data = NULL,\n  stat = \"identity\",\n  anchor_layer = auto_anchor(),\n  anchor = \"middle\",\n  position = NULL,\n  label_layout = label_layout_repel(),\n  ...,\n  na.rm = FALSE,\n  show.legend = FALSE,\n  inherit.aes = TRUE,\n  id = auto_id()\n)",
-      "arguments": [
-        [
-          "mapping"
-        ],
-        [
-          "data"
-        ],
-        [
-          "stat"
-        ],
-        [
-          "anchor_layer"
-        ],
-        [
-          "anchor"
-        ],
-        [
-          "position"
-        ],
-        [
-          "label_layout"
-        ],
-        [
-          "..."
-        ],
-        [
-          "na.rm"
-        ],
-        [
-          "show.legend"
-        ],
-        [
-          "inherit.aes"
-        ],
-        [
-          "id"
-        ]
-      ],
-      "roles": [
-        "`accver, start, end`",
-        "`feature_id`",
-        "`strand`",
-        "`label`",
-        "`colour, fill, size, family, fontface, angle, alpha`"
-      ],
-      "examples": "label_plot +\n  geom_gene_label_repel(aes(label = label), size = 3.5)",
-      "related": [
-        "auto_anchor",
-        "geom_feature_label",
-        "geom_feature",
-        "label_layout_fixed",
-        "label_layout_repel"
-      ],
-      "native": false,
-      "defaults": {
-        "mapping": "NULL",
-        "data": "NULL",
-        "stat": "\"identity\"",
-        "anchor_layer": "auto_anchor()",
-        "anchor": "\"middle\"",
-        "position": "NULL",
-        "label_layout": "label_layout_repel()",
+        "label_layout": "layout_label_fixed(orientation = \"horizontal\")",
+        "leader": "\"auto\"",
         "...": "",
         "na.rm": "FALSE",
         "show.legend": "FALSE",
@@ -1699,7 +1568,7 @@
       }
     },
     "geom_primer_label": {
-      "usage": "geom_primer_label(\n  mapping = NULL,\n  data = NULL,\n  stat = \"identity\",\n  anchor_layer = auto_anchor(),\n  anchor = \"head\",\n  position = NULL,\n  label_layout = label_layout_fixed(),\n  ...,\n  na.rm = FALSE,\n  show.legend = FALSE,\n  inherit.aes = TRUE,\n  id = auto_id()\n)",
+      "usage": "geom_primer_label(\n  mapping = NULL,\n  data = NULL,\n  stat = \"identity\",\n  anchor_layer = auto_anchor(),\n  anchor = \"head\",\n  position = NULL,\n  label_layout = layout_label_fixed(),\n  leader = \"auto\",\n  ...,\n  na.rm = FALSE,\n  show.legend = FALSE,\n  inherit.aes = TRUE,\n  id = auto_id()\n)",
       "arguments": [
         [
           "mapping"
@@ -1721,6 +1590,9 @@
         ],
         [
           "label_layout"
+        ],
+        [
+          "leader"
         ],
         [
           "..."
@@ -1750,8 +1622,8 @@
         "auto_anchor",
         "geom_feature_label",
         "geom_feature",
-        "label_layout_fixed",
-        "label_layout_repel"
+        "layout_label_fixed",
+        "layout_label_repel"
       ],
       "native": false,
       "defaults": {
@@ -1761,78 +1633,8 @@
         "anchor_layer": "auto_anchor()",
         "anchor": "\"head\"",
         "position": "NULL",
-        "label_layout": "label_layout_fixed()",
-        "...": "",
-        "na.rm": "FALSE",
-        "show.legend": "FALSE",
-        "inherit.aes": "TRUE",
-        "id": "auto_id()"
-      }
-    },
-    "geom_primer_label_repel": {
-      "usage": "geom_primer_label_repel(\n  mapping = NULL,\n  data = NULL,\n  stat = \"identity\",\n  anchor_layer = auto_anchor(),\n  anchor = \"head\",\n  position = NULL,\n  label_layout = label_layout_repel(),\n  ...,\n  na.rm = FALSE,\n  show.legend = FALSE,\n  inherit.aes = TRUE,\n  id = auto_id()\n)",
-      "arguments": [
-        [
-          "mapping"
-        ],
-        [
-          "data"
-        ],
-        [
-          "stat"
-        ],
-        [
-          "anchor_layer"
-        ],
-        [
-          "anchor"
-        ],
-        [
-          "position"
-        ],
-        [
-          "label_layout"
-        ],
-        [
-          "..."
-        ],
-        [
-          "na.rm"
-        ],
-        [
-          "show.legend"
-        ],
-        [
-          "inherit.aes"
-        ],
-        [
-          "id"
-        ]
-      ],
-      "roles": [
-        "`accver, start, end`",
-        "`feature_id`",
-        "`strand`",
-        "`label`",
-        "`colour, fill, size, family, fontface, angle, alpha`"
-      ],
-      "examples": "primers <- transform(genes, label = paste0(\"primer_\", feature_id))\nggchord(seqs) +\n  geom_primer(data = primers) +\n  geom_primer_label_repel(aes(label = label)) +\n  coord_collinear()",
-      "related": [
-        "auto_anchor",
-        "geom_feature_label",
-        "geom_feature",
-        "label_layout_fixed",
-        "label_layout_repel"
-      ],
-      "native": false,
-      "defaults": {
-        "mapping": "NULL",
-        "data": "NULL",
-        "stat": "\"identity\"",
-        "anchor_layer": "auto_anchor()",
-        "anchor": "\"head\"",
-        "position": "NULL",
-        "label_layout": "label_layout_repel()",
+        "label_layout": "layout_label_fixed()",
+        "leader": "\"auto\"",
         "...": "",
         "na.rm": "FALSE",
         "show.legend": "FALSE",
@@ -1971,7 +1773,7 @@
       }
     },
     "geom_site_label": {
-      "usage": "geom_site_label(\n  mapping = NULL,\n  data = NULL,\n  stat = \"identity\",\n  anchor_layer = auto_anchor(),\n  position = NULL,\n  label_layout = label_layout_fixed(),\n  ...,\n  na.rm = FALSE,\n  show.legend = FALSE,\n  inherit.aes = TRUE,\n  id = auto_id()\n)",
+      "usage": "geom_site_label(\n  mapping = NULL,\n  data = NULL,\n  stat = \"identity\",\n  anchor_layer = auto_anchor(),\n  position = NULL,\n  label_layout = layout_label_fixed(),\n  leader = \"auto\",\n  ...,\n  na.rm = FALSE,\n  show.legend = FALSE,\n  inherit.aes = TRUE,\n  id = auto_id()\n)",
       "arguments": [
         [
           "mapping"
@@ -1990,6 +1792,9 @@
         ],
         [
           "label_layout"
+        ],
+        [
+          "leader"
         ],
         [
           "..."
@@ -2018,7 +1823,9 @@
         "auto_anchor",
         "geom_site",
         "geom_restriction_site",
-        "label_layout_fixed"
+        "layout_label_fixed",
+        "geom_feature_label",
+        "layout_label_repel"
       ],
       "native": false,
       "defaults": {
@@ -2027,72 +1834,8 @@
         "stat": "\"identity\"",
         "anchor_layer": "auto_anchor()",
         "position": "NULL",
-        "label_layout": "label_layout_fixed()",
-        "...": "",
-        "na.rm": "FALSE",
-        "show.legend": "FALSE",
-        "inherit.aes": "TRUE",
-        "id": "auto_id()"
-      }
-    },
-    "geom_site_label_repel": {
-      "usage": "geom_site_label_repel(\n  mapping = NULL,\n  data = NULL,\n  stat = \"identity\",\n  anchor_layer = auto_anchor(),\n  position = NULL,\n  label_layout = label_layout_repel(),\n  ...,\n  na.rm = FALSE,\n  show.legend = FALSE,\n  inherit.aes = TRUE,\n  id = auto_id()\n)",
-      "arguments": [
-        [
-          "mapping"
-        ],
-        [
-          "data"
-        ],
-        [
-          "stat"
-        ],
-        [
-          "anchor_layer"
-        ],
-        [
-          "position"
-        ],
-        [
-          "label_layout"
-        ],
-        [
-          "..."
-        ],
-        [
-          "na.rm"
-        ],
-        [
-          "show.legend"
-        ],
-        [
-          "inherit.aes"
-        ],
-        [
-          "id"
-        ]
-      ],
-      "roles": [
-        "`accver, pos`",
-        "`site_id`",
-        "`label`",
-        "`colour, size, family, fontface, angle, alpha`"
-      ],
-      "examples": "ggchord(one_seq) +\n  geom_site(data = sites) +\n  geom_site_label_repel(aes(label = label)) +\n  coord_circular()",
-      "related": [
-        "auto_anchor",
-        "geom_site",
-        "geom_restriction_site",
-        "label_layout_repel"
-      ],
-      "native": false,
-      "defaults": {
-        "mapping": "NULL",
-        "data": "NULL",
-        "stat": "\"identity\"",
-        "anchor_layer": "auto_anchor()",
-        "position": "NULL",
-        "label_layout": "label_layout_repel()",
+        "label_layout": "layout_label_fixed()",
+        "leader": "\"auto\"",
         "...": "",
         "na.rm": "FALSE",
         "show.legend": "FALSE",
@@ -3163,8 +2906,8 @@
         "id": "auto_id()"
       }
     },
-    "label_layout_fixed": {
-      "usage": "label_layout_fixed(\n  orientation = \"feature\",\n  side = \"positive\",\n  offset = 1,\n  along = 0,\n  overlap = \"hide\",\n  fit = \"none\",\n  wrap = NULL\n)",
+    "layout_label_fixed": {
+      "usage": "layout_label_fixed(\n  orientation = \"feature\",\n  side = \"positive\",\n  offset = 1,\n  along = 0,\n  overlap = \"hide\",\n  fit = \"none\",\n  wrap = NULL\n)",
       "arguments": [
         [
           "orientation"
@@ -3189,9 +2932,9 @@
         ]
       ],
       "roles": [],
-      "examples": "ggchord(seqs) +\n  geom_gene(data = genes) +\n  geom_feature_label(\n    aes(label = label),\n    label_layout = label_layout_fixed(\n      orientation = \"horizontal\", offset = 2, overlap = \"allow\"\n    )\n  ) +\n  coord_collinear()",
+      "examples": "ggchord(seqs) +\n  geom_gene(data = genes) +\n  geom_feature_label(\n    aes(label = label),\n    label_layout = layout_label_fixed(\n      orientation = \"horizontal\", offset = 2, overlap = \"allow\"\n    )\n  ) +\n  coord_collinear()",
       "related": [
-        "label_layout_repel",
+        "layout_label_repel",
         "geom_feature_label",
         "geom_seq_label"
       ],
@@ -3206,8 +2949,8 @@
         "wrap": "NULL"
       }
     },
-    "label_layout_repel": {
-      "usage": "label_layout_repel(\n  arrangement = \"auto\",\n  orientation = \"auto\",\n  side = \"both\",\n  offset = 1,\n  padding = 1,\n  fit = \"wrap\",\n  wrap = NULL,\n  max_lines = 2,\n  min_size = 1.5,\n  max_overlaps = Inf,\n  leader = \"auto\",\n  outer_size = NULL\n)",
+    "layout_label_repel": {
+      "usage": "layout_label_repel(\n  arrangement = \"auto\",\n  orientation = \"auto\",\n  side = \"both\",\n  offset = 1,\n  padding = 1,\n  fit = \"wrap\",\n  wrap = NULL,\n  max_lines = 2,\n  min_size = 1.5,\n  max_overlaps = Inf,\n  outer_size = NULL\n)",
       "arguments": [
         [
           "arrangement"
@@ -3240,18 +2983,15 @@
           "max_overlaps"
         ],
         [
-          "leader"
-        ],
-        [
           "outer_size"
         ]
       ],
       "roles": [],
-      "examples": "ggchord(one_seq) +\n  geom_feature(data = subset(genes, accver == \"A\")) +\n  geom_feature_label_repel(\n    aes(label = label),\n    label_layout = label_layout_repel(\n      arrangement = \"columns\", side = \"positive\", padding = 1.5, outer_size = 3.3\n    )\n  ) +\n  coord_circular()",
+      "examples": "ggchord(one_seq) +\n  geom_feature(data = subset(genes, accver == \"A\")) +\n  geom_feature_label(\n    aes(label = label),\n    label_layout = layout_label_repel(\n      arrangement = \"columns\", side = \"positive\", padding = 1.5, outer_size = 3.3\n    )\n  ) +\n  coord_circular()",
       "related": [
-        "label_layout_fixed",
-        "geom_feature_label_repel",
-        "geom_gene_label_repel"
+        "layout_label_fixed",
+        "geom_feature_label",
+        "geom_gene_label"
       ],
       "native": false,
       "defaults": {
@@ -3265,7 +3005,6 @@
         "max_lines": "2",
         "min_size": "1.5",
         "max_overlaps": "Inf",
-        "leader": "\"auto\"",
         "outer_size": "NULL"
       }
     },
@@ -3324,7 +3063,7 @@
         ]
       ],
       "roles": [],
-      "examples": "ggchord(data = one_seq) + geom_seq() +\n  geom_feature(data = subset(genes, accver == \"A\"), shape = \"arrow\",\n    position = position_feature_stack(\n      base_position = position_offset(-2), spacing = 1,\n      direction = \"negative\", order = \"priority\")) +\n  geom_feature_label_repel(aes(label = label)) +\n  coord_circular()",
+      "examples": "ggchord(data = one_seq) + geom_seq() +\n  geom_feature(data = subset(genes, accver == \"A\"), shape = \"arrow\",\n    position = position_feature_stack(\n      base_position = position_offset(-2), spacing = 1,\n      direction = \"negative\", order = \"priority\")) +\n  geom_feature_label(aes(label = label), label_layout = layout_label_repel()) +\n  coord_circular()",
       "related": [
         "position_offset",
         "position_strand",
@@ -3618,7 +3357,7 @@
       }
     },
     "track_limits": {
-      "usage": "track_limits(plots, tracks = NULL)",
+      "usage": "track_limits(\n  plots,\n  tracks = NULL\n)",
       "arguments": [
         [
           "plots"
@@ -3630,7 +3369,6 @@
       "roles": [],
       "examples": "p1 <- ggchord(data = seqs) +\n  geom_track_line(data = signal, aes(x = pos, y = value)) + coord_collinear()\nsignal2 <- transform(signal, value = value * 2)\np2 <- ggchord(data = seqs) +\n  geom_track_line(data = signal2, aes(x = pos, y = value)) + coord_collinear()\nrng <- track_limits(list(first = p1, second = p2))\np1 + scale_y_continuous(limits = rng$limits[[1]])\np2 + scale_y_continuous(limits = rng$limits[[1]])",
       "related": [
-        "track_limits",
         "ggchord_fusion",
         "export_ggchord_layout"
       ],
@@ -3641,7 +3379,7 @@
       }
     },
     "guide_seq_axis": {
-      "usage": "guide_seq_axis(\n  sequences = NULL, side = \"positive\", angle = \"auto\",\n  check.overlap = TRUE, theme = NULL\n)",
+      "usage": "guide_seq_axis(\n  sequences = NULL,\n  side = \"positive\",\n  angle = \"auto\",\n  check.overlap = TRUE,\n  theme = NULL,\n  gap = NULL,\n  orientation = \"auto\"\n)",
       "arguments": [
         [
           "sequences"
@@ -3657,10 +3395,16 @@
         ],
         [
           "theme"
+        ],
+        [
+          "gap"
+        ],
+        [
+          "orientation"
         ]
       ],
       "roles": [],
-      "examples": "ggchord(data = seqs) + geom_seq() +\n  scale_seq_continuous(breaks = scales::breaks_width(200),\n    guide = guide_seq_axis(sequences = \"A\", side = \"negative\",\n      theme = theme(axis.text = element_text(size = 8)))) +\n  coord_collinear()",
+      "examples": "ggchord(data = seqs) + geom_seq() +\n  scale_seq_continuous(breaks = scales::breaks_width(200),\n    guide = guide_seq_axis(sequences = \"A\", side = \"negative\",\n      gap = grid::unit(1, \"mm\"), orientation = \"parallel\",\n      theme = theme(axis.text = element_text(size = 8)))) +\n  coord_collinear()",
       "related": [
         "scale_seq_continuous",
         "theme_ggchord",
@@ -3672,7 +3416,9 @@
         "side": "\"positive\"",
         "angle": "\"auto\"",
         "check.overlap": "TRUE",
-        "theme": "NULL"
+        "theme": "NULL",
+        "gap": "NULL",
+        "orientation": "\"auto\""
       }
     },
     "guide_track_axis": {
@@ -3713,16 +3459,13 @@
       }
     },
     "theme_ggchord": {
-      "usage": "theme_ggchord(base_size = 11, base_family = \"\", ...)",
+      "usage": "theme_ggchord(\n  base_size = 11,\n  base_family = \"\"\n)",
       "arguments": [
         [
           "base_size"
         ],
         [
           "base_family"
-        ],
-        [
-          "..."
         ]
       ],
       "roles": [],
@@ -3738,21 +3481,17 @@
       "native": false,
       "defaults": {
         "base_size": "11",
-        "base_family": "\"\"",
-        "...": ""
+        "base_family": "\"\""
       }
     },
     "theme_ggchord_minimal": {
-      "usage": "theme_ggchord_minimal(base_size = 11, base_family = \"\", ...)",
+      "usage": "theme_ggchord_minimal(\n  base_size = 11,\n  base_family = \"\"\n)",
       "arguments": [
         [
           "base_size"
         ],
         [
           "base_family"
-        ],
-        [
-          "..."
         ]
       ],
       "roles": [],
@@ -3765,21 +3504,17 @@
       "native": false,
       "defaults": {
         "base_size": "11",
-        "base_family": "\"\"",
-        "...": ""
+        "base_family": "\"\""
       }
     },
     "theme_ggchord_dark": {
-      "usage": "theme_ggchord_dark(base_size = 11, base_family = \"\", ...)",
+      "usage": "theme_ggchord_dark(\n  base_size = 11,\n  base_family = \"\"\n)",
       "arguments": [
         [
           "base_size"
         ],
         [
           "base_family"
-        ],
-        [
-          "..."
         ]
       ],
       "roles": [],
@@ -3792,21 +3527,17 @@
       "native": false,
       "defaults": {
         "base_size": "11",
-        "base_family": "\"\"",
-        "...": ""
+        "base_family": "\"\""
       }
     },
     "theme_ggchord_publication": {
-      "usage": "theme_ggchord_publication(base_size = 10, base_family = \"\", ...)",
+      "usage": "theme_ggchord_publication(\n  base_size = 10,\n  base_family = \"\"\n)",
       "arguments": [
         [
           "base_size"
         ],
         [
           "base_family"
-        ],
-        [
-          "..."
         ]
       ],
       "roles": [],
@@ -3819,21 +3550,17 @@
       "native": false,
       "defaults": {
         "base_size": "10",
-        "base_family": "\"\"",
-        "...": ""
+        "base_family": "\"\""
       }
     },
     "theme_ggchord_plasmid": {
-      "usage": "theme_ggchord_plasmid(base_size = 11, base_family = \"\", ...)",
+      "usage": "theme_ggchord_plasmid(\n  base_size = 11,\n  base_family = \"\"\n)",
       "arguments": [
         [
           "base_size"
         ],
         [
           "base_family"
-        ],
-        [
-          "..."
         ]
       ],
       "roles": [],
@@ -3846,8 +3573,7 @@
       "native": false,
       "defaults": {
         "base_size": "11",
-        "base_family": "\"\"",
-        "...": ""
+        "base_family": "\"\""
       }
     },
     "as_ggchord_seq": {
@@ -3891,7 +3617,7 @@
       }
     },
     "as_ggchord_feature": {
-      "usage": "as_ggchord_feature(\n  x,\n  columns = NULL,\n  sequence_unit = NULL\n)",
+      "usage": "as_ggchord_feature(\n  x,\n  columns = NULL,\n  sequence_unit = NULL,\n  location = \"auto\"\n)",
       "arguments": [
         [
           "x"
@@ -3901,6 +3627,9 @@
         ],
         [
           "sequence_unit"
+        ],
+        [
+          "location"
         ]
       ],
       "roles": [],
@@ -3915,7 +3644,8 @@
       "defaults": {
         "x": "",
         "columns": "NULL",
-        "sequence_unit": "NULL"
+        "sequence_unit": "NULL",
+        "location": "\"auto\""
       }
     },
     "as_ggchord_link": {
@@ -4518,7 +4248,7 @@
       "related": [
         "primer_catalog",
         "geom_primer",
-        "geom_primer_label_repel"
+        "geom_primer_label"
       ],
       "native": false,
       "defaults": {
@@ -6339,7 +6069,7 @@
         "ggchord",
         "layout_sequences",
         "geom_seq_label",
-        "geom_seq_center_label",
+        "geom_seq_label_center",
         "geom_seq_break",
         "geom_seq_region",
         "scale_colour_sequence",
@@ -6349,14 +6079,14 @@
     "geom_seq_label": {
       "related": [
         "geom_seq",
-        "label_layout_fixed",
+        "layout_label_fixed",
         "coord_circular"
       ]
     },
     "geom_feature": {
       "related": [
         "geom_feature_label",
-        "geom_site",
+        "as_ggchord_feature",
         "position_strand",
         "position_feature_stack",
         "scale_for"
@@ -6366,25 +6096,8 @@
       "related": [
         "geom_feature",
         "auto_anchor",
-        "label_layout_fixed",
-        "label_layout_repel",
-        "geom_site_label"
-      ]
-    },
-    "geom_site": {
-      "related": [
-        "geom_site_label",
-        "geom_feature",
-        "coord_circular"
-      ]
-    },
-    "geom_site_label": {
-      "related": [
-        "geom_site",
-        "auto_anchor",
-        "label_layout_fixed",
-        "label_layout_repel",
-        "geom_feature_label"
+        "layout_label_fixed",
+        "layout_label_repel"
       ]
     },
     "geom_link_ribbon": {
@@ -6421,13 +6134,12 @@
   "previous_family_members": {
     "geom_seq": [
       "geom_seq_label",
-      "geom_seq_center_label",
+      "geom_seq_label_center",
       "geom_seq_break",
       "geom_seq_region"
     ],
     "geom_gene": [
-      "geom_gene_label",
-      "geom_gene_label_repel"
+      "geom_gene_label"
     ],
     "coord_chord": [
       "coord_circular",
@@ -6443,19 +6155,13 @@
       "ggchord_data"
     ],
     "geom_feature": [
-      "geom_feature_label",
-      "geom_feature_label_repel"
-    ],
-    "geom_gene_label": [
-      "geom_gene_label_repel"
+      "geom_feature_label"
     ],
     "geom_primer": [
-      "geom_primer_label",
-      "geom_primer_label_repel"
+      "geom_primer_label"
     ],
     "geom_site": [
-      "geom_site_label",
-      "geom_site_label_repel"
+      "geom_restriction_site"
     ],
     "geom_link_line": [
       "geom_link_ribbon"
@@ -6470,6 +6176,37 @@
     "fusion_ribbon": [
       "fusion_zoom",
       "magnify_ggchord"
+    ]
+  },
+  "retired_family_members": {
+    "geom_seq": [
+      "geom_seq_center_label"
+    ],
+    "geom_seq_label": [
+      "geom_seq_center_label"
+    ],
+    "geom_gene": [
+      "geom_gene_label_repel"
+    ],
+    "geom_feature": [
+      "geom_feature_label_repel"
+    ],
+    "geom_feature_label": [
+      "geom_feature_label_repel",
+      "geom_gene_label_repel",
+      "geom_primer_label_repel"
+    ],
+    "geom_gene_label": [
+      "geom_gene_label_repel"
+    ],
+    "geom_primer": [
+      "geom_primer_label_repel"
+    ],
+    "geom_site": [
+      "geom_site_label_repel"
+    ],
+    "geom_site_label": [
+      "geom_site_label_repel"
     ]
   }
 }

@@ -18,7 +18,7 @@ test_that("core layers build and keep manual gene colours", {
 test_that("fixed and repelled labels retain representative annotations", {
   p <- ggchord(seqs) + geom_gene(data = genes, id = "genes") + coord_collinear()
   for (layer in list(geom_gene_label(anchor_layer = "genes"),
-                     geom_gene_label_repel(anchor_layer = "genes"))) {
+                     geom_gene_label(anchor_layer = "genes", label_layout = layout_label_repel()))) {
     built <- ggplot2::ggplot_build(p + layer)
     labels <- unlist(lapply(built$data, function(layer) as.character(layer$label)))
     expect_true(all(genes$label %in% labels))
@@ -48,7 +48,8 @@ test_that("empty primer results compose with circular layers", {
   hits <- find_primer_bindings(c(A = "AAAAAAAAAAAAAAAAAAAA"),
     primers = c(test = "ACGTTGCA"), min_annealed_bases = 8)
   p <- ggchord(data.frame(accver = "A", length = 20)) + geom_seq() +
-    geom_primer(data = hits) + geom_primer_label_repel(data = hits) + coord_circular()
+    geom_primer(data = hits) + geom_primer_label(data = hits, label_layout = layout_label_repel()) +
+    coord_circular()
   out <- export_ggchord_layout(p, stages = "source")
   expect_true(all(out$stage_status$status == "available"))
   expect_equal(sum(vapply(out$source, function(layer) nrow(layer$data) == 0L, logical(1))), 2L)

@@ -248,6 +248,7 @@ ggchord_adaptive_limits <- function(layout, axis_labels = NULL) {
 #' callers that need a fully prepared ggplot object.
 #' @noRd
 prepare_ggchord_plot <- function(plot) {
+  ggchord_check_theme_elements(plot$theme)
   if (isTRUE(plot$coordinates$ggchord_dotplot)) return(ggchord_prepare_dotplot(plot))
   plot <- ggchord_prepare_geometry_inputs(plot)
   layout <- compute_chord_geometry_prepared(plot)
@@ -261,7 +262,8 @@ prepare_ggchord_plot <- function(plot) {
     geometry <- extract_ggchord_layer_data(lyr, layout)
     if (isTRUE(layout$circular) && identical(lyr$ggchord_type, "domain_label")) {
       lyr$ggchord_params$label_segment_layer <- "below"
-      lyr$geom_params$bold_callout <- ggchord_domain_bold_callout(lyr, plot)
+      kind <- ggchord_label_kind(lyr$ggchord_params, lyr$ggchord_resolved_input)
+      lyr$geom_params$bold_callout <- ggchord_domain_bold_callout(lyr, plot, kind)
     }
     if (identical(lyr$ggchord_type, "track")) {
       axis <- geometry$.component %in% c("track_axis_line", "track_axis_tick", "track_axis_text", "track_axis_title")
@@ -314,7 +316,7 @@ prepare_ggchord_plot <- function(plot) {
   plot <- attach_ggchord_scales(plot, sc$scales)
   plot <- ggchord_add_link_scales(plot)
   axis_labels <- NULL
-  if (!isTRUE(ggchord_plot_settings(plot)$axis$hidden) &&
+  if (isTRUE(layout$show_axis) &&
       (nrow(layout$axis_lines %||% data.frame()) > 0L ||
        nrow(layout$axis_ticks %||% data.frame()) > 0L || NROW(layout$axis_heading) > 0L)) {
     axis_data <- ggchord_axis_geometry(layout)
@@ -337,15 +339,7 @@ prepare_ggchord_plot <- function(plot) {
   plot <- set_ggchord_coord(plot, layout, axis_labels)
   plot$theme <- plot$theme + theme(axis.title.x = element_blank(),
     axis.title.y = element_blank())
-  sequence_theme <- plot$scales$get_scales("seq_position")$ggchord_axis_guide$theme
-  if (!is.null(sequence_theme)) {
-    local <- setNames(as.list(sequence_theme), paste0("ggchord.", names(sequence_theme)))
-    axes_only <- plot
-    axes_only$theme <- plot$theme + do.call(theme, local)
-    plot$layers <- ggchord_apply_theme_styles(axes_only)$layers
-  } else {
-    plot <- ggchord_apply_theme_styles(plot)
-  }
+  plot <- ggchord_apply_theme_styles(plot)
   # Axes use the owner's resolved theme and draw immediately above its marks.
   # They contain no observations with which to train data scales or guides.
   if (length(track_axes)) {

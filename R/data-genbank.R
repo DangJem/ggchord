@@ -253,6 +253,8 @@ read_genbank <- function(file, feature_types = NULL,
     sum(record_files == path), integer(1))
   feature_provenance$rows_per_file <- vapply(normalizePath(paths), function(path)
     sum(feature_files == path), integer(1))
+  feature_provenance$annotation_files <- normalizePath(paths)
+  feature_data$.source_input <- match(feature_files, feature_provenance$annotation_files)
   attr(seq_data, "ggchord_import") <- sequence_provenance
   attr(feature_data, "ggchord_import") <- feature_provenance
   feature_data$label <- feature_data$anno

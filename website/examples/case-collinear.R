@@ -52,15 +52,15 @@ overview <- ggchord(comparison$seq_data) +
 
 # Keep adjacent names and source coordinates readable on each of the four rows.
 gene_names <- lapply(c("positive", "negative"), function(side) {
-  geom_gene_label_repel(aes(label = label), data = filter(labels, label_side == side),
+  geom_gene_label(aes(label = label), data = filter(labels, label_side == side),
     anchor_layer = "genes", segment_colour = "#767A73", segment_linewidth = 0.18,
-    label_layout = label_layout_repel(arrangement = "local", orientation = "horizontal",
+    label_layout = layout_label_repel(arrangement = "local", orientation = "horizontal",
       side = side, offset = 7, padding = 1.2, fit = "wrap_shrink", min_size = 2.7,
       wrap = 23, max_lines = 3), size = 3.35)
 })
 overview + gene_names +
   geom_seq_label(aes(label = accver), anchor = "start", hjust = 1,
-    label_layout = label_layout_fixed(orientation = "horizontal", along = -1.2, offset = 0),
+    label_layout = layout_label_fixed(orientation = "horizontal", along = -1.2, offset = 0),
     size = 3.7) +
   annotation_seq_scalebar(length = 10000) +
   scale_seq_continuous(name = NULL, minor_breaks = NULL,

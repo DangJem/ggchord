@@ -5,6 +5,9 @@
 #' @param anchor Position on the entity or reference path that anchors the text.
 #' @param position Position adjustment. For bound labels, leave this unset to follow the target layer.
 #' @param label_layout A fixed or repelled label layout declaration.
+#' @param leader How to route the optional label leader: `"auto"`, `"none"`,
+#'   `"straight"` or `"elbow"`. Set fixed `segment_colour`, `segment_linewidth`,
+#'   `segment_linetype` or `segment_alpha` through `...`.
 #' @param ... Additional named visual styles and parameters accepted by this layer.
 #' @param na.rm Suppress warnings for missing observations that the layer can omit.
 #' @param show.legend Logical or named logical indicating whether the layer contributes legend keys.
@@ -12,7 +15,7 @@
 #' @param id Layer identifier. [auto_id()] assigns a plot-local ID. Use a name for explicit references.
 #' @return A ggplot2 layer for addition to a plot.
 #' @details Labels read the registered reference. Use
-#'   `label_layout_fixed(orientation = "tangent")` to align each label with
+#'   `layout_label_fixed(orientation = "tangent")` to align each label with
 #'   its own backbone while keeping the text upright after a rotation or
 #'   direction reversal. Set `angle` for a fixed text angle.
 #' @examples
@@ -29,14 +32,14 @@
 #'   coord_collinear()
 #'
 #' ggchord(seqs) + geom_seq_arrow() +
-#'   geom_seq_label(label_layout = label_layout_fixed(orientation = "tangent", offset = 4)) +
+#'   geom_seq_label(label_layout = layout_label_fixed(orientation = "tangent", offset = 4)) +
 #'   coord_chord(start_angle = 40)
 geom_seq_label <- function(mapping = NULL, data = NULL, anchor = "middle",
-    position = "identity", label_layout = label_layout_fixed(orientation = "horizontal"),
-    ..., na.rm = FALSE, show.legend = FALSE, inherit.aes = TRUE, id = auto_id()) {
+    position = "identity", label_layout = layout_label_fixed(orientation = "horizontal"),
+    leader = "auto", ..., na.rm = FALSE, show.legend = FALSE, inherit.aes = TRUE, id = auto_id()) {
   ggchord_local_console_errors()
   ggchord_check_argument_names(sys.call(), sys.function())
   anchor <- ggchord_match_arg(anchor, c("start", "middle", "end", "center"))
   ggchord_domain_label(mapping, data, "identity", NULL, anchor, position,
-    label_layout, "sequence", list(...), na.rm, show.legend, inherit.aes, id)
+    label_layout, leader, "sequence", list(...), na.rm, show.legend, inherit.aes, id)
 }

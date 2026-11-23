@@ -33,7 +33,7 @@ ggchord(seq_data_example) +
     thickness = 5, fill = "#346B9D"
   ) +
   geom_seq_label(
-    label_layout = label_layout_fixed(orientation = "feature", side = "negative", offset = 8)
+    label_layout = layout_label_fixed(orientation = "feature", side = "negative", offset = 8)
   ) +
   layout_sequences(angular_gap = 9) +
   coord_chord() +

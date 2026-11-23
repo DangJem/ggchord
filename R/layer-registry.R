@@ -19,7 +19,7 @@ reconstruct_layer <- function(lyr, data, mapping = NULL) {
   for (fld in c(
     "ggchord_type", "ggchord_params", "ggchord_placeholder",
     "ggchord_layer_id", "ggchord_input_data", "ggchord_input_mapping", "ggchord_annotation_origin",
-    "ggchord_role_aes", "ggchord_resolved_input", "ggchord_theme_element",
+    "ggchord_role_aes", "ggchord_resolved_input",
     "ggchord_theme_components", "ggchord_input_transform", "ggchord_obstacle_provider"
   )) {
     if (!is.null(lyr[[fld]])) new[[fld]] <- lyr[[fld]]

@@ -116,8 +116,9 @@ geom_site <- function(mapping = NULL, data = NULL, shape = "tick", size = 2,
     na.rm = FALSE, show.legend = NA, inherit.aes = TRUE, id = auto_id()) {
   ggchord_local_console_errors()
   ggchord_check_argument_names(sys.call(), sys.function())
-  ggchord_site_layer(mapping, data, shape, !missing(shape), size, !missing(size),
-    stat, position, list(...), na.rm, show.legend, inherit.aes, id)
+  ggchord_annotation_layer(mapping, data, "site", shape, !missing(shape), size,
+    stat, position, list(...), na.rm, show.legend, inherit.aes, id,
+    fixed_size = !missing(size), strict_shape = FALSE)
 }
 
 #' Draw documented restriction cuts
@@ -159,8 +160,9 @@ geom_restriction_site <- function(mapping = NULL, data = NULL, shape = "cut", si
     na.rm = FALSE, show.legend = NA, inherit.aes = TRUE, id = auto_id()) {
   ggchord_local_console_errors()
   ggchord_check_argument_names(sys.call(), sys.function())
-  ggchord_site_layer(mapping, data, shape, !missing(shape), size, !missing(size),
-    stat, position, list(...), na.rm, show.legend, inherit.aes, id)
+  ggchord_annotation_layer(mapping, data, "cut", shape, !missing(shape), size,
+    stat, position, list(...), na.rm, show.legend, inherit.aes, id,
+    fixed_size = !missing(size), strict_shape = FALSE)
 }
 
 #' Label source point annotations
@@ -171,6 +173,9 @@ geom_restriction_site <- function(mapping = NULL, data = NULL, shape = "cut", si
 #' @param anchor_layer Use [auto_anchor()] to follow the unique compatible layer, a layer ID to select a target, or `NULL` for independent labels.
 #' @param position Position adjustment. For bound labels, leave this unset to follow the target layer.
 #' @param label_layout A fixed or repelled label layout declaration.
+#' @param leader How to route the optional label leader: `"auto"`, `"none"`,
+#'   `"straight"` or `"elbow"`. Set fixed `segment_colour`, `segment_linewidth`,
+#'   `segment_linetype` or `segment_alpha` through `...`.
 #' @param ... Additional named visual styles and parameters accepted by this layer.
 #' @param na.rm Suppress warnings for missing observations that the layer can omit.
 #' @param show.legend Logical or named logical indicating whether the layer contributes legend keys.
@@ -195,56 +200,12 @@ geom_restriction_site <- function(mapping = NULL, data = NULL, shape = "cut", si
 #'   geom_site_label(aes(label = label), anchor_layer = "sites") +
 #'   coord_circular()
 geom_site_label <- function(mapping = NULL, data = NULL, stat = "identity",
-    anchor_layer = auto_anchor(), position = NULL, label_layout = label_layout_fixed(),
-    ..., na.rm = FALSE, show.legend = FALSE, inherit.aes = TRUE, id = auto_id()) {
+    anchor_layer = auto_anchor(), position = NULL, label_layout = layout_label_fixed(),
+    leader = "auto", ..., na.rm = FALSE, show.legend = FALSE, inherit.aes = TRUE, id = auto_id()) {
   ggchord_local_console_errors()
   ggchord_check_argument_names(sys.call(), sys.function())
   ggchord_domain_label(mapping, data, stat, anchor_layer, "site", position,
-    label_layout, "site", list(...), na.rm, show.legend, inherit.aes, id)
-}
-
-#' Label source point annotations with collision avoidance
-#' @export
-#' @param mapping Aesthetic mapping from `aes()`. A local mapping overrides the matching inherited channel.
-#' @param data Optional label table or function. With a bound anchor, the default data consists of the target entities.
-#' @param stat A compatible ggplot2 Stat or its name. The default uses the supplied records.
-#' @param anchor_layer Use [auto_anchor()] to follow the unique compatible layer, a layer ID to select a target, or `NULL` for independent labels.
-#' @param position Position adjustment. For bound labels, leave this unset to follow the target layer.
-#' @param label_layout A fixed or repelled label layout declaration.
-#' @param ... Additional named visual styles and parameters accepted by this layer.
-#' @param na.rm Suppress warnings for missing observations that the layer can omit.
-#' @param show.legend Logical or named logical indicating whether the layer contributes legend keys.
-#' @param inherit.aes Whether to inherit plot mappings and evaluate them on the layer data.
-#' @param id Layer identifier. [auto_id()] assigns a plot-local ID. Use a name for explicit references.
-#' @return A ggplot2 layer for addition to a plot.
-#' @details Site data supplies `accver` and a one-based `pos`. A double-strand cut uses `cut_top` and `cut_bottom` as interbase positions. Add site labels separately or bind them to the site layer.
-#' For horizontal circular callouts, supply `enzyme_label` and
-#' `coordinate_label` alongside `label` to draw the enzyme in bold
-#' and the coordinate in plain text. An explicit `fontface` applies
-#' to the entire callout.
-#' @examples
-#' library(ggplot2)
-#'
-#' seqs <- data.frame(
-#'   accver = c("A", "B"), length = c(1000, 800),
-#'   sequence_unit = "bp", topology = "linear"
-#' )
-#'
-#' one_seq <- seqs[1, , drop = FALSE]
-#'
-#' sites <- data.frame(accver = "A", pos = 300, site_id = "s1", label = "EcoRI")
-#'
-#' ggchord(one_seq) +
-#'   geom_site(data = sites, id = "sites") +
-#'   geom_site_label_repel(aes(label = label), anchor_layer = "sites") +
-#'   coord_circular()
-geom_site_label_repel <- function(mapping = NULL, data = NULL, stat = "identity",
-    anchor_layer = auto_anchor(), position = NULL, label_layout = label_layout_repel(),
-    ..., na.rm = FALSE, show.legend = FALSE, inherit.aes = TRUE, id = auto_id()) {
-  ggchord_local_console_errors()
-  ggchord_check_argument_names(sys.call(), sys.function())
-  geom_site_label(mapping, data, stat, anchor_layer, position, label_layout,
-    ..., na.rm = na.rm, show.legend = show.legend, inherit.aes = inherit.aes, id = id)
+    label_layout, leader, "site", list(...), na.rm, show.legend, inherit.aes, id)
 }
 
 ggchord_site_empty <- function() data.frame(
@@ -310,8 +271,8 @@ ggchord_site_geometry <- function(layer, input, layout, plot) {
   ids <- as.character(input$accver)
   lens <- unname(layout$sequence_reference$lens[ids])
   if (anyNA(lens) || !is.numeric(input$pos) || any(!is.finite(input$pos) |
-      input$pos < 1 | input$pos > lens))
-    ggchord_stop("geom_site(): positions must be within a known reference")
+      input$pos != trunc(input$pos) | input$pos < 1 | input$pos > lens))
+    ggchord_stop("geom_site(): positions must be integer residues within a known reference")
   offsets <- ggchord_resolve_position_offset(p$feature_position$offset %||% 0,
     layout$seqs, "offset", "geom_site()")
   shape <- rep(p$site_shape, nrow(input))
@@ -338,8 +299,10 @@ ggchord_site_geometry <- function(layer, input, layout, plot) {
     mapped <- rep_len(scale$map(transformed), nrow(input))
     if (channel == "shape") shape <- as.character(mapped) else size <- mapped
   }
-  if (anyNA(shape) || any(!shape %in% c("tick", "point", "cut")))
-    ggchord_stop("geom_site(): shape scale must produce tick, point or cut")
+  allowed <- if (!isTRUE(p$strict_annotation_shape)) c("tick", "point", "cut") else
+    if (p$annotation_location == "cut") "cut" else c("tick", "point")
+  if (anyNA(shape) || any(!shape %in% allowed))
+    ggchord_stop("geom_site(): shape scale must produce ", paste(allowed, collapse = ", "))
   if (any(shape != "point") && "fill" %in% c(names(layer$aes_params), names(visual)))
     ggchord_stop("geom_site(): fill applies only to point symbols")
   if (any(shape != "cut") && p$explicit_cut)
@@ -348,9 +311,8 @@ ggchord_site_geometry <- function(layer, input, layout, plot) {
     ggchord_stop("geom_site(): cleavage boundaries require bp coordinates")
   boundary <- lapply(c("cut_top", "cut_bottom"), function(column) {
     values <- input[[column]] %||% rep(NA_real_, nrow(input))
-    if (!is.numeric(values) ||
-        any(!is.na(values) & (!is.finite(values) | values < 0 | values > lens |
-          values != trunc(values))))
+    if (!ggchord_interbase_numeric(values) ||
+        any(ggchord_invalid_interbase(values) | (!is.na(values) & values > lens)))
       ggchord_stop("geom_site(): cut positions must be interbase boundaries in 0..length")
     values
   })

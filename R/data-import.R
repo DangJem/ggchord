@@ -433,14 +433,17 @@ read_gff3 <- function(file, feature_types = NULL,
   ggchord_local_console_errors()
   unstranded <- ggchord_match_arg(unstranded, c("keep", "drop"))
   paths <- ggchord_resolve_files(file, NULL, "read_gff3")
-  out <- lapply(paths, function(f) {
+  out <- lapply(seq_along(paths), function(i) {
+    f <- paths[i]
     data <- read_gff3_single(f, feature_types = feature_types,
                              anno_from = label_from, unstranded = unstranded)
     data$label <- data$anno
+    data$.source_input <- rep(i, nrow(data))
     ggchord_add_source_file(data, f, source_file)
   })
   result <- ggchord_format_import(ggchord_rbind_fill(out), paths, "GFF3",
     vapply(out, nrow, integer(1)), "1-based-inclusive")
+  attr(result, "ggchord_import")$annotation_files <- normalizePath(paths)
   attr(result, "ggchord_import")$declarations <- setNames(lapply(out, attr, "source_declarations"), paths)
   attr(result, "ggchord_import")$source_records <- setNames(lapply(out, attr, "source_records"), paths)
   result

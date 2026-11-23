@@ -175,7 +175,7 @@ ggchord_merge_theme_constraints <- function(old, incoming, complete = FALSE) {
   for (name in names(incoming)) {
     value <- incoming[[name]]
     if (is.null(value)) next
-    if (inherits(value, c("element_text", "element_line", "element_rect")) &&
+    if (inherits(value, c("element_text", "element_line", "element_rect", "ggplot2::element_geom")) &&
         inherits(old[[name]], class(value)[1])) {
       value <- ggplot2::merge_element(value, old[[name]])
     }

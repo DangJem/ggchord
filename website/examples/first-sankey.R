@@ -18,7 +18,7 @@ ggchord(reference) +
   )) +
   geom_seq_label(
     anchor = "start",
-    label_layout = label_layout_fixed(orientation = "vertical", along = -5)
+    label_layout = layout_label_fixed(orientation = "vertical", along = -5)
   ) +
   geom_link_ribbon(aes(fill = pident), data = hits) +
   scale_fill_pident() +

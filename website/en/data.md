@@ -48,9 +48,13 @@ One feature row identifies a coding sequence (CDS), promoter, repeat or another 
 | --- | ---: | ---: | --- | --- | --- | --- |
 | MT108731.1 | 13,064 | 14,554 | + | CDS | cds-QIQ63803.1 | hypothetical protein |
 
-Use `as_ggchord_feature()` to normalize annotations before plotting. It can map existing column names to the expected fields and records unstranded features as `"."` when strand is missing. For directional shapes, retain the source strand or an explicit direction. The bundled `gene_data_example` keeps the original annotation in `source_strand`.
+Use `as_ggchord_feature()` to normalize annotations before plotting. It can map existing column names to the expected fields and records unstranded intervals as `"."` when strand is missing. For directional shapes, retain the source strand or an explicit direction. The bundled `gene_data_example` keeps the original annotation in `source_strand`.
 
 Select rows by their recorded type before adding the layer. Use `geom_gene()` for coding sequences with a known strand. Use `geom_feature()` for intervals with a generic shape, or map a type column to `shape` when several annotation classes share a layer.
+
+Use `pos` for a site anchored to one base or residue. A cut record keeps that anchor in `pos` and records cut boundaries separately in `cut_top` and `cut_bottom`. A cut boundary is between bases and may range from 0 to the declared reference length. Use `location = "site"` or `location = "cut"` to declare a point-only or cut table explicitly. Keep different location kinds in separate tables.
+
+Use `entity_id` when you have a stable annotation identity. `feature_id` and `site_id` also work for their respective records. Preserve source identifiers and segment membership when selecting rows for a label layer, particularly when an annotation has multiple source segments or appears in multiple display windows.
 
 <a id="alignments"></a>
 

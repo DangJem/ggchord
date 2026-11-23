@@ -350,7 +350,8 @@ ggchord_project_radial_layout <- function(layout, plot) {
     }
   }
   layout$seq_arcs <- lapply(layout$seq_arcs, ggchord_project_radial_data, frames = frames)
-  axis_angle <- ggchord_plot_settings(plot)$axis$text.orientation
+  guide <- plot$scales$get_scales("seq_position")$ggchord_axis_guide
+  axis_angle <- ggchord_seq_axis_settings(plot, guide)$text.orientation
   fixed_axis <- is.numeric(axis_angle) || identical(axis_angle, "horizontal")
   for (field in c("axis_lines", "axis_ticks", "gene_polys", "gene_labels", "gene_label_segments",
       "region_polys", "seq_labels_df", "sequence_scales", "track_axes", "seq_breaks"))

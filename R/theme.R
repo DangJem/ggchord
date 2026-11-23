@@ -5,9 +5,11 @@
 #'
 #' @param base_size Base font size in points.
 #' @param base_family Base font family.
-#' @param ... Must be empty.
-#' @details Add `theme()` to configure registered `ggchord.*` elements or
-#'   standard ggplot2 theme elements.
+#' @details Add `theme()` to configure standard ggplot2 elements or the
+#'   registered sequence and track axis decorations. Set reference axis
+#'   position, visibility and label orientation with [scale_seq_continuous()]
+#'   and [guide_seq_axis()]. Set data label and leader appearance on the label
+#'   geometry. To enable the ggchord palettes, add [scales_ggchord()].
 #' @return A ggplot2 theme.
 #' @export
 #' @examples
@@ -30,9 +32,9 @@
 #' p_basic + theme_ggchord(base_size = 12) +
 #'   theme(legend.position = "bottom",
 #'   ggchord.axis.text = element_text(colour = "#40545A"))
-theme_ggchord <- function(base_size = 11, base_family = "", ...) {
+theme_ggchord <- function(base_size = 11, base_family = "") {
   ggchord_local_console_errors()
-  ggchord_check_theme_arguments(...)
+  ggchord_check_argument_names(sys.call(), sys.function())
   ggchord_make_theme(base_size, base_family, "default")
 }
 
@@ -57,9 +59,9 @@ theme_ggchord <- function(base_size = 11, base_family = "", ...) {
 #'   geom_gene(data = genes) + coord_collinear()
 #'
 #' p_basic + theme_ggchord_minimal(base_size = 11)
-theme_ggchord_minimal <- function(base_size = 11, base_family = "", ...) {
+theme_ggchord_minimal <- function(base_size = 11, base_family = "") {
   ggchord_local_console_errors()
-  ggchord_check_theme_arguments(...)
+  ggchord_check_argument_names(sys.call(), sys.function())
   ggchord_make_theme(base_size, base_family, "minimal")
 }
 
@@ -84,9 +86,9 @@ theme_ggchord_minimal <- function(base_size = 11, base_family = "", ...) {
 #'   geom_gene(data = genes) + coord_collinear()
 #'
 #' p_basic + theme_ggchord_dark(base_size = 11)
-theme_ggchord_dark <- function(base_size = 11, base_family = "", ...) {
+theme_ggchord_dark <- function(base_size = 11, base_family = "") {
   ggchord_local_console_errors()
-  ggchord_check_theme_arguments(...)
+  ggchord_check_argument_names(sys.call(), sys.function())
   ggchord_make_theme(base_size, base_family, "dark")
 }
 
@@ -111,9 +113,9 @@ theme_ggchord_dark <- function(base_size = 11, base_family = "", ...) {
 #'   geom_gene(data = genes) + coord_collinear()
 #'
 #' p_basic + theme_ggchord_publication(base_size = 10)
-theme_ggchord_publication <- function(base_size = 10, base_family = "", ...) {
+theme_ggchord_publication <- function(base_size = 10, base_family = "") {
   ggchord_local_console_errors()
-  ggchord_check_theme_arguments(...)
+  ggchord_check_argument_names(sys.call(), sys.function())
   ggchord_make_theme(base_size, base_family, "publication")
 }
 
@@ -143,23 +145,44 @@ theme_ggchord_publication <- function(base_size = 10, base_family = "", ...) {
 #' ggchord(data = one_seq) + geom_seq() +
 #'   geom_gene(data = subset(genes, accver == "A")) +
 #'   coord_circular() + theme_ggchord_plasmid()
-theme_ggchord_plasmid <- function(base_size = 11, base_family = "", ...) {
+theme_ggchord_plasmid <- function(base_size = 11, base_family = "") {
   ggchord_local_console_errors()
-  ggchord_check_theme_arguments(...)
+  ggchord_check_argument_names(sys.call(), sys.function())
   ggchord_make_theme(base_size, base_family, "plasmid")
 }
 
 ggchord_check_theme_elements <- function(theme) {
-  keys <- names(theme)
-  unknown <- setdiff(keys[startsWith(keys, "ggchord.")],
-    names(ggplot2::get_element_tree()))
-  if (length(unknown))
-    ggchord_stop("theme(): unknown ggchord element '", unknown[1L], "'")
-}
-
-ggchord_check_theme_arguments <- function(...) {
-  if (...length())
-    ggchord_stop("Add + theme(...) to set theme elements. Presets accept base_size and base_family.")
+  keys <- names(theme) %||% character()
+  keys <- keys[startsWith(keys, "ggchord.")]
+  if (!length(keys)) return(invisible(NULL))
+  migration <- c(
+    ggchord.axis = paste0('scale_seq_continuous(guide = "none")',
+      ' or use guide = "none" on the native x and y scales with coord_dotplot()'),
+    ggchord.axis.gap = "scale_seq_continuous(guide = guide_seq_axis(gap = ...))",
+    ggchord.axis.text.orientation =
+      "scale_seq_continuous(guide = guide_seq_axis(orientation = ...)) or guide_seq_axis(angle = ...) for degrees",
+    ggchord.axis.text.check.overlap = "scale_seq_continuous(guide = guide_seq_axis(check.overlap = ...))",
+    ggchord.seq.label = "geom_seq_label(size = ..., colour = ..., family = ...)",
+    ggchord.gene.label = "geom_gene_label(size = ..., colour = ..., family = ...)",
+    ggchord.feature.label = "geom_feature_label(size = ..., colour = ..., family = ...)",
+    ggchord.restriction.label = "geom_site_label(size = ..., colour = ..., family = ...)",
+    ggchord.gene.label.segment = "geom_gene_label(leader = ..., segment_colour = ..., segment_linewidth = ...)",
+    ggchord.feature.label.segment = "geom_feature_label(leader = ..., segment_colour = ..., segment_linewidth = ...)",
+    ggchord.restriction.label.segment = "geom_site_label(leader = ..., segment_colour = ..., segment_linewidth = ...)",
+    ggchord.seq.center.label = "geom_seq_label_center(size = ..., colour = ..., family = ...)",
+    ggchord.seq.center.name = "geom_seq_label_center(aes(label = ...), size = ...)",
+    ggchord.seq.center.length = "geom_seq_label_center(aes(label = ...), size = ...)"
+  )
+  retired <- intersect(keys, names(migration))
+  if (length(retired)) {
+    name <- retired[1L]
+    replacement <- migration[[name]]
+    if (endsWith(name, ".segment") && inherits(theme[[name]], "element_blank"))
+      replacement <- sub("[(].*$", "(leader = 'none')", replacement)
+    ggchord_stop("theme(): '", name, "' was removed; use ", replacement)
+  }
+  unknown <- setdiff(keys, names(ggplot2::get_element_tree()))
+  if (length(unknown)) ggchord_stop("theme(): unknown ggchord element '", unknown[1L], "'")
 }
 
 ggchord_make_theme <- function(base_size, base_family, variant) {
@@ -212,82 +235,23 @@ ggchord_make_theme <- function(base_size, base_family, variant) {
   if (variant == "default") out <- out + theme(
     legend.text = element_text(colour = fg, size = rel(.86)),
     legend.key.spacing.y = unit(1.5, "mm"))
-  if (plasmid) out <- out + theme(ggchord.axis.gap = unit(0, "mm"),
-    ggchord.axis.minor.ticks.length = unit(.8, "mm"), plot.margin = margin(6, 6, 6, 6))
+  if (plasmid) out <- out + theme(ggchord.axis.minor.ticks.length = unit(.8, "mm"), plot.margin = margin(6, 6, 6, 6))
   if (publication) out <- out + theme(plot.margin = margin(4, 4, 4, 4, unit = "mm"))
   attr(out, "ggchord.explicit_theme") <- list()
   out
 }
 
-#' @noRd
-ggchord_theme_settings <- function(values) {
-  if (!is.null(values$axis) && !inherits(values$axis, "element_blank"))
-    ggchord_stop("theme_ggchord(): axis must be NULL or element_blank()")
-  unit_nms <- c("axis.gap", "axis.ticks.length", "axis.minor.ticks.length",
-                "axis.text.offset", "legend.ribbon.ticks.length")
-  for (nm in unit_nms) {
-    x <- values[[nm]]
-    if (!is.null(x) && (!is.unit(x) || length(x) != 1L || !is.finite(as.numeric(x))))
-      ggchord_stop("theme_ggchord(): ", nm, " must be one grid::unit()")
-    if (!is.null(x) && !unitType(x) %in%
-        c("inches", "cm", "mm", "points", "bigpts", "picas"))
-      ggchord_stop("theme_ggchord(): ", nm, " must use an absolute physical unit")
+ggchord_check_axis_unit <- function(x, field, nonnegative = FALSE) {
+  if (!is.unit(x) || length(x) != 1L || !is.finite(as.numeric(x)) ||
+      !unitType(x) %in% c("inches", "cm", "mm", "points", "bigpts", "picas") ||
+      (nonnegative && as.numeric(x) < 0)) {
+    requirement <- if (nonnegative) "a nonnegative absolute grid::unit()" else "an absolute grid::unit()"
+    ggchord_stop(field, " must be ", requirement)
   }
-  orientation <- values$axis.text.orientation %||% "parallel"
-  if (is.character(orientation)) {
-    if (length(orientation) != 1L || is.na(orientation) ||
-        !orientation %in% c("horizontal", "parallel", "perpendicular"))
-      ggchord_stop("theme_ggchord(): invalid axis.text.orientation")
-  } else if (!is.numeric(orientation) || length(orientation) != 1L || !is.finite(orientation)) {
-    ggchord_stop("theme_ggchord(): axis.text.orientation must be a supported name or finite angle")
-  }
-  overlap <- values$axis.text.check.overlap %||% TRUE
-  if (!is.logical(overlap) || length(overlap) != 1L || is.na(overlap))
-    ggchord_stop("theme_ggchord(): axis.text.check.overlap must be TRUE or FALSE")
-  fields <- c("position", "direction", "background", "key", "key.size",
-    "key.width", "key.height", "text", "text.position", "title",
-    "title.position", "margin", "spacing")
-  roles <- c("seq", "link", "ribbon", "gene", "feature", "region")
-  role_settings <- setNames(vector("list", length(roles)), roles)
-  allowed <- c("left", "right", "top", "bottom", "inside", "none")
-  for (role in roles) {
-    parent <- values[[paste0("legend.", role)]]
-    if (!is.null(parent) && !inherits(parent, "element_blank"))
-      ggchord_stop("theme_ggchord(): legend.", role, " must be NULL or element_blank()")
-    item <- list(hidden = inherits(parent, "element_blank"))
-    for (field in fields) item[[field]] <- values[[paste0("legend.", role, ".", field)]]
-    if (!is.null(item$position) && (!is.character(item$position) ||
-        length(item$position) != 1L || is.na(item$position) || !item$position %in% allowed))
-      ggchord_stop("theme_ggchord(): invalid legend.", role, ".position")
-    role_settings[[role]] <- item
-  }
-  role_settings$ribbon$ticks <- values$legend.ribbon.ticks
-  role_settings$ribbon$ticks.length <- values$legend.ribbon.ticks.length
-  role_settings$ribbon$axis.line <- values$legend.ribbon.axis.line
-  common_names <- c("position", "justification", "direction", "box",
-    "box.just", "box.margin", "box.background", "box.spacing",
-    "background", "margin", "spacing", "spacing.x", "spacing.y", "key",
-    "key.size", "key.width", "key.height", "text", "text.position",
-    "title", "title.position")
-  common <- setNames(lapply(common_names, function(x) {
-    values[[paste0("legend.", x)]]
-  }), common_names)
-  list(axis = list(
-    hidden = inherits(values$axis, "element_blank"),
-    gap = values$axis.gap %||% unit(.8, "mm"),
-    gap.explicit = !is.null(values$axis.gap),
-    ticks.length = values$axis.ticks.length %||% unit(.85, "mm"),
-    ticks.length.explicit = !is.null(values$axis.ticks.length),
-    minor.ticks.length = values$axis.minor.ticks.length %||% unit(.4, "mm"),
-    minor.ticks.length.explicit = !is.null(values$axis.minor.ticks.length),
-    text.offset = values$axis.text.offset %||% unit(.8, "mm"),
-    text.offset.explicit = !is.null(values$axis.text.offset),
-    text.orientation = orientation, text.check.overlap = overlap),
-    legend = common, legends = role_settings)
+  invisible(x)
 }
 
-#' Convert an absolute unit to inches without opening a graphics device
-#' @noRd
+# Convert an absolute unit to inches without opening a graphics device.
 ggchord_unit_inches <- function(x) {
   value <- as.numeric(x)
   switch(unitType(x), inches = value, cm = value / 2.54,
@@ -296,33 +260,36 @@ ggchord_unit_inches <- function(x) {
     ggchord_stop("ggchord axis units must be absolute physical units"))
 }
 
-#' @noRd
-ggchord_plot_settings <- function(plot) {
-  found <- attr(plot$theme, "ggchord.settings")
-  if (is.null(found)) {
-    found <- ggchord_theme_settings(list())
+# Merge only the local sequence guide's decorations into a plotting copy.
+ggchord_seq_axis_plot <- function(plot, guide) {
+  if (!is.null(guide$theme)) {
+    overrides <- setNames(as.list(guide$theme), paste0("ggchord.", names(guide$theme)))
+    plot$theme <- plot$theme + do.call(theme, overrides)
   }
-  physical <- c("axis", "axis.gap", "axis.ticks.length", "axis.minor.ticks.length",
-    "axis.text.offset", "axis.text.orientation", "axis.text.check.overlap")
-  values <- setNames(lapply(physical, function(n) plot$theme[[paste0("ggchord.", n)]]), physical)
-  if (any(!vapply(values, is.null, logical(1)))) {
-    checked <- ggchord_theme_settings(values)$axis
-    for (name in physical[!vapply(values, is.null, logical(1))]) {
-      key <- if (name == "axis") "hidden" else sub("^axis[.]", "", name)
-      found$axis[[key]] <- checked[[key]]
-      if (key == "text.offset" && !isTRUE(attr(values[[name]],
-          "ggchord.automatic_axis_offset"))) found$axis$text.offset.explicit <- TRUE
-      if (key %in% c("gap", "ticks.length", "minor.ticks.length")) found$axis[[paste0(key, ".explicit")]] <- TRUE
-    }
+  plot
+}
+
+ggchord_seq_axis_settings <- function(plot, guide) {
+  circular <- isTRUE(plot$coordinates$ggchord_circular)
+  distance <- function(field, default) {
+    key <- paste0("ggchord.axis.", field)
+    value <- plot$theme[[key]]
+    if (is.null(value)) return(unit(default, "mm"))
+    ggchord_check_axis_unit(value, key)
+    value
   }
-  if (isTRUE(plot$coordinates$ggchord_circular)) {
-    if (!isTRUE(found$axis$gap.explicit)) found$axis$gap <- unit(0, "mm")
-    if (!isTRUE(found$axis$ticks.length.explicit))
-      found$axis$ticks.length <- unit(1.5, "mm")
-    if (!isTRUE(found$axis$minor.ticks.length.explicit))
-      found$axis$minor.ticks.length <- unit(.7, "mm")
-  }
-  found
+  orientation <- guide$orientation %||% "auto"
+  list(
+    hidden = identical(guide$sequences, character()),
+    gap = guide$gap %||% unit(if (circular) 0 else .8, "mm"),
+    ticks.length = distance("ticks.length", if (circular) 1.5 else .85),
+    minor.ticks.length = distance("minor.ticks.length", if (circular) .7 else .4),
+    text.offset = distance("text.offset", .8),
+    text.offset.explicit = !is.null(plot$theme[["ggchord.axis.text.offset"]]),
+    text.orientation = if (is.numeric(guide$angle)) guide$angle else
+      if (orientation == "auto") "parallel" else orientation,
+    text.check.overlap = guide$check.overlap %||% TRUE
+  )
 }
 
 #' @noRd
@@ -331,10 +298,9 @@ ggchord_theme_element <- function(plot, name) {
   if (name %in% c("ggchord.axis.ticks", "ggchord.axis.minor.ticks")) {
     element <- theme[[name]]
     if (inherits(element, "element_line") && is.null(element@linewidth)) {
-      axis <- ggchord_plot_settings(plot)$axis
       widths <- if (isTRUE(plot$coordinates$ggchord_circular)) {
-        axis$circular.tick.linewidth %||% c(major = .45, minor = .3)
-      } else axis$tick.linewidth %||% c(major = .25, minor = .2)
+        c(major = .45, minor = .3)
+      } else c(major = .25, minor = .2)
       element@linewidth <- unname(widths[if (name == "ggchord.axis.ticks") "major" else "minor"])
       theme[[name]] <- element
     }
@@ -359,11 +325,6 @@ ggchord_theme_point_size <- function(plot, name, fallback) {
 ggchord_resolve_theme_component <- function(plot, lyr, param_name, element_name) {
   el <- ggchord_theme_element(plot, element_name)
   current <- lyr$geom_params[[param_name]] %||% list()
-  if (identical(element_name, "ggchord.feature.label.segment")) {
-    raw <- plot$theme[[element_name]]
-    current$.automatic_feature_segment <- is.null(raw) ||
-      isTRUE(attr(raw, "ggchord.automatic_feature_segment"))
-  }
   if (is.null(el)) return(current)
   if (inherits(el, "element_blank")) current$alpha <- 0
   else if (inherits(el, "element_line")) {
@@ -391,46 +352,24 @@ ggchord_resolve_theme_component <- function(plot, lyr, param_name, element_name)
 
 #' @noRd
 ggchord_apply_theme_styles <- function(plot) {
+  guide <- plot$scales$get_scales("seq_position")$ggchord_axis_guide
+  axis_plot <- ggchord_seq_axis_plot(plot, guide)
   for (i in seq_along(plot$layers)) {
     lyr <- plot$layers[[i]]
     if (identical(lyr$ggchord_type, "track")) {
       style <- ggchord_track_axis_style(plot, lyr$ggchord_params$track_id)
-      for (name in c("axis_line_params", "axis_tick_params", "axis_text_params", "axis_title_params", "axis_check_overlap"))
+      fields <- c("axis_line_params", "axis_tick_params", "axis_text_params",
+        "axis_title_params", "axis_check_overlap")
+      for (name in fields)
         if (is.null(lyr$geom_params[[name]])) lyr$geom_params[[name]] <- style[[name]]
-      plot$layers[[i]] <- lyr
     }
     components <- lyr$ggchord_theme_components
     if (!is.null(components)) {
       for (param_name in names(components)) {
         lyr$geom_params[[param_name]] <- ggchord_resolve_theme_component(
-          plot, lyr, param_name, unname(components[[param_name]]))
+          axis_plot, lyr, param_name, unname(components[[param_name]]))
       }
-      plot$layers[[i]] <- lyr
-      next
     }
-    name <- lyr$ggchord_theme_element
-    if (is.null(name)) next
-    el <- ggchord_theme_element(plot, name)
-    if (is.null(el)) next
-    if (inherits(el, "element_blank")) {
-      if (is.null(lyr$aes_params$alpha)) lyr$aes_params$alpha <- 0
-      plot$layers[[i]] <- lyr
-      next
-    }
-    if (inherits(el, "element_line")) {
-      vals <- list(colour = el@colour, linewidth = el@linewidth, linetype = el@linetype)
-      geom_vals <- list(lineend = el@lineend, linejoin = el@linejoin)
-    } else if (inherits(el, "element_text")) {
-      vals <- list(colour = el@colour, size = el@size / ggplot2::.pt,
-        family = el@family,
-        fontface = el@face, lineheight = el@lineheight)
-      geom_vals <- list()
-    } else next
-    for (nm in names(vals)) {
-      if (is.null(lyr$aes_params[[nm]]) && is.null(lyr$mapping[[nm]]) &&
-          !is.null(vals[[nm]])) lyr$aes_params[[nm]] <- vals[[nm]]
-    }
-    for (nm in names(geom_vals)) if (is.null(lyr$geom_params[[nm]]) && !is.null(geom_vals[[nm]])) lyr$geom_params[[nm]] <- geom_vals[[nm]]
     plot$layers[[i]] <- lyr
   }
   plot

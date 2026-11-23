@@ -21,7 +21,7 @@ sector_gap <- 21.6
 start_angle <- 50
 sequence_labels <- function(size, offset) {
   geom_seq_label(aes(label = accver), size = size,
-    label_layout = label_layout_fixed(orientation = "normal", side = "negative",
+    label_layout = layout_label_fixed(orientation = "normal", side = "negative",
       offset = offset))
 }
 overview <- ggchord(comparison$seq_data) +
@@ -50,9 +50,9 @@ overview <- ggchord(comparison$seq_data) +
     plot.margin = margin(10, 14, 10, 14))
 
 overview +
-  geom_gene_label_repel(aes(label = label), data = labels, anchor_layer = "genes",
+  geom_gene_label(aes(label = label), data = labels, anchor_layer = "genes",
     segment_colour = "#767A73", segment_linewidth = 0.18,
-    label_layout = label_layout_repel(arrangement = "local", orientation = "horizontal",
+    label_layout = layout_label_repel(arrangement = "local", orientation = "horizontal",
       side = "both", offset = 12, padding = 1.2, fit = "wrap_shrink", min_size = 2.65,
       wrap = 24, max_lines = 3), size = 3.3) +
   sequence_labels(size = 4.0, offset = 11) +

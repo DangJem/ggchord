@@ -12,7 +12,7 @@ A declaration resolved against the layers in the same plot.
 \description{
 With the default anchor, gene, primer and site labels follow a single
 gene, primer or site layer, respectively. Generic feature labels can
-follow any interval feature layer, including genes, primers and regions.
+follow interval, site and cut layers, including genes, primers and regions.
 Layer order is immaterial. When several targets qualify, give the intended
 target an ID and pass that name as \code{anchor_layer}.
 Supplying label data, a non-identity Stat or a Position makes the labels

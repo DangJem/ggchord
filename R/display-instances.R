@@ -41,9 +41,11 @@ ggchord_instance_position <- function(position, instances) {
   do.call(ggproto, c(list(NULL, position), changes))
 }
 
-ggchord_instance_expand <- function(input, instances, reference = FALSE) {
+ggchord_instance_expand <- function(input, instances, reference = FALSE, location = NULL) {
   if (is.null(input)) return(list(data = NULL, rows = integer()))
   ggchord_require_columns(input, "accver", "display instances")
+  point <- isTRUE(location %in% c("site", "cut"))
+  interval <- !point && all(c("start", "end") %in% names(input))
   rows <- integer(); targets <- integer()
   for (i in seq_len(nrow(input))) {
     at <- which(instances$accver == as.character(input$accver[i]))
@@ -53,9 +55,8 @@ ggchord_instance_expand <- function(input, instances, reference = FALSE) {
       if (!length(at)) ggchord_stop("No display instance matches input row ", i)
     }
     if ("window_start" %in% names(instances)) {
-      low <- if (all(c("start", "end") %in% names(input))) input$start[i] else
-        input$pos[i] %||% input$x[i]
-      high <- if (all(c("start", "end") %in% names(input))) input$end[i] else low
+      low <- if (interval) input$start[i] else input$pos[i] %||% input$x[i]
+      high <- if (interval) input$end[i] else low
       if (!is.null(low)) at <- at[is.finite(low) & is.finite(high) &
         high >= instances$window_start[at] & low <= instances$window_end[at]]
     }
@@ -67,15 +68,26 @@ ggchord_instance_expand <- function(input, instances, reference = FALSE) {
   if ("window_start" %in% names(instances)) {
     from <- instances$window_start[targets]
     to <- instances$window_end[targets]
-    for (field in intersect(c("start", "end", "pos", "x", "xmin", "xmax",
-        "cut_top", "cut_bottom", "recognition_start", "recognition_end"), names(out))) {
+    fields <- c("pos", "x", "xmin", "xmax", "cut_top", "cut_bottom",
+      "recognition_start", "recognition_end")
+    if (!point) fields <- c("start", "end", fields)
+    for (field in intersect(fields, names(out))) {
       boundary <- field %in% c("xmin", "xmax", "cut_top", "cut_bottom")
       out[[paste0(".window_source_", field)]] <- out[[field]]
-      out[[field]] <- pmax(from - boundary, pmin(to, out[[field]])) - from + 1
+      if (field %in% c("cut_top", "cut_bottom")) {
+        observed <- out[[field]] >= from - 1 & out[[field]] <= to
+        out[[field]] <- ifelse(observed, out[[field]] - from + 1, NA_real_)
+      } else {
+        out[[field]] <- pmax(from - boundary, pmin(to, out[[field]])) - from + 1
+      }
+    }
+    if (identical(location, "cut") && "cut_status" %in% names(out)) {
+      out$.window_source_cut_status <- out$cut_status
+      out$cut_status <- ggchord_annotation_cut_status(out)
     }
     if (reference && "length" %in% names(out)) out$length <- as.numeric(to - from + 1L)
     nested <- c("segments", ".feature_runs", ".feature_boundaries", "cleavage_arrows")
-    if (nrow(out) && any(nested %in% names(out))) {
+    if (!point && nrow(out) && any(nested %in% names(out))) {
       parts <- lapply(seq_len(nrow(out)), function(i) {
         ggchord_focus_feature_parts(out[i, , drop = FALSE], from[i], to[i],
           origin = 1, caller = "layout_sequences(windows)")
@@ -318,8 +330,26 @@ ggchord_prepare_instances <- function(plot, seqs) {
       p$pairs <- NULL
       if (mirrored) p$adjacent_only <- FALSE
     } else if (!is.null(input) && "accver" %in% names(input)) {
+      location <- p$annotation_location %||% p$anchor_location
+      if (is.null(location) && type == "domain_label" && NROW(input) &&
+          ggchord_label_kind(p, input) == "site") location <- "site"
       expanded <- ggchord_instance_expand(input, instances,
-        reference = ggchord_reference_layer(type, p$label_kind))
+        reference = ggchord_reference_layer(type, p$label_kind), location = location)
+      # A separate keyed label table need not contain coordinates. Decide
+      # which windows contain its target using the target's original rows.
+      if (type == "domain_label" && !isTRUE(p$anchor_default_data) &&
+          NROW(p$anchor_data) && NROW(expanded$data) && "window_start" %in% names(instances)) {
+        matching <- ggchord_label_match(input, p$anchor_data, p$label_kind,
+          isTRUE(p$anchor_same_source), p$anchor_location)
+        members <- attr(matching, "entity_rows") %||% as.list(matching)
+        targets <- ggchord_instance_expand(p$anchor_data, instances, location = p$anchor_location)
+        visible <- split(targets$rows, targets$data$accver)
+        keep <- vapply(seq_along(expanded$rows), function(row) {
+          any(members[[expanded$rows[row]]] %in% visible[[expanded$data$accver[row]]])
+        }, logical(1))
+        expanded$data <- expanded$data[keep, , drop = FALSE]
+        expanded$rows <- expanded$rows[keep]
+      }
       input <- expanded$data
       p$visual_source <- ggchord_visual_rows(p$visual_source, expanded$rows)
       if (length(keys)) p$instance_facet_rows <- expanded$rows

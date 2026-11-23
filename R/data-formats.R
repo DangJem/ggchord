@@ -83,7 +83,8 @@ read_bed <- function(file, source_file = FALSE) {
   ggchord_local_console_errors()
   caller <- "read_bed()"
   paths <- ggchord_resolve_files(file, NULL, "read_bed")
-  tables <- lapply(paths, function(path) {
+  tables <- lapply(seq_along(paths), function(i) {
+    path <- paths[i]
     input <- ggchord_format_lines(path, caller, bed = TRUE)
     widths <- lengths(input$fields)
     if (length(unique(widths)) != 1L || any(widths < 3L | widths > 12L)) {
@@ -147,9 +148,12 @@ read_bed <- function(file, source_file = FALSE) {
       }
     }
     out$.source_line <- input$line
+    out$.source_input <- rep(i, nrow(out))
     ggchord_add_source_file(out, path, source_file)
   })
-  ggchord_format_import(ggchord_rbind_fill(tables), paths, "BED", vapply(tables, nrow, integer(1)))
+  result <- ggchord_format_import(ggchord_rbind_fill(tables), paths, "BED", vapply(tables, nrow, integer(1)))
+  attr(result, "ggchord_import")$annotation_files <- normalizePath(paths)
+  result
 }
 
 #' Read PAF relationships

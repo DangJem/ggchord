@@ -13,10 +13,11 @@ home_chord <- home_relationship("chord",
   coord_chord(start_angle = 50, fit = "manual", xlim = c(-1.43, 1.20), ylim = c(-1.46, 1.14))
 home_collinear <- home_relationship("collinear",
   geom_seq_label(aes(label = accver), anchor = "start", size = 3.45, hjust = 1,
-    label_layout = label_layout_fixed(orientation = "horizontal", along = -1.2, offset = 0))) +
+    label_layout = layout_label_fixed(orientation = "horizontal", along = -1.2, offset = 0))) +
   layout_sequences(align = "center", row_gap = 16) +
   coord_collinear(xlim = c(-2.18, 1.50), fit = "labels", clip = "off")
 home_radial <- home_relationship("radial", flagship_cases$radial$spoke_labels(size = 3.55)) +
+  scale_fill_pident() +
   coord_radial_synteny(start_angle = 45, fit = "manual",
     xlim = c(-3.10, 2.85), ylim = c(-2.85, 2.75), clip = "off")
 home_sankey <- home_relationship("sankey",

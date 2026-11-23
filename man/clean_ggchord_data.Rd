@@ -19,7 +19,8 @@ clean_ggchord_data(
 
 \item{unknown_id}{Whether to report or drop unknown references.}
 
-\item{out_of_range}{Whether to report, drop or clip out-of-range observations.}
+\item{out_of_range}{Whether to report, drop or clip out-of-range observations.
+Cut boundaries are observations and cannot be clipped to a new position.}
 
 \item{reversed_interval}{Whether to report or normalize reversed endpoints.
 For links, a descending endpoint pair supplies negative-strand evidence

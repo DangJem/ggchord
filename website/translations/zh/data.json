@@ -1,5 +1,5 @@
 {
-  "source_sha256": "723c3429ffd8b573fb176fca76235e05f8c23c5db4349f2ea94d92bfda6a87bf",
+  "source_sha256": "3a63c053363a0db314b257c2b0b5766b5bdd92e239b1a6c9a86bf05301186a7f",
   "blocks": {
     "0": {
       "source_sha256": "9443c12108d2803c7d329e38c07bc57b6c9afe8eccd6c8aa2a58631eb2aaebec",
@@ -142,211 +142,221 @@
       "translation": "| MT108731.1 | 13,064 | 14,554 | + | CDS | cds-QIQ63803.1 | hypothetical protein |\n"
     },
     "34": {
-      "source_sha256": "c98fbde969272dc74a59223374de2e9234d02038fe65361c1205d0bc3b55c172",
+      "source_sha256": "f78c48e88d1e59c73114b5fb0f1922a6e203e462d6332bb813de8335eb612096",
       "status": "reviewed",
-      "translation": "用 `as_ggchord_feature()` 规范化注释表。它可以把原字段名映射到标准字段，缺少链信息时会把无链特征记为 `\".\"`。绘制带方向的形状时，保留原始链或提供明确方向。随包表 `gene_data_example` 在 `source_strand` 中记录原注释的链向。\n"
+      "translation": "用 `as_ggchord_feature()` 规范化注释表。它可以把原字段名映射到标准字段，缺少链信息时会把无链区间记为 `\".\"`。绘制带方向的形状时，保留原始链或提供明确方向。随包表 `gene_data_example` 在 `source_strand` 中记录原注释的链向。\n"
     },
     "35": {
       "source_sha256": "630399c1b0e5dd3c522bce20864c309680c9b24d218285ccbfad7b14aeb69b19",
       "status": "reviewed",
       "translation": "先按记录中的类型筛选数据，再添加图层。链向已知的编码区可用 `geom_gene()` 绘制。一般区间用 `geom_feature()` 绘制，多种注释共用一层时可以把类型列映射到 `shape`。\n"
     },
+    "36": {
+      "source_sha256": "693541f4b20d85c61636f7438b55130721528c6d19ecda45efae864b3a074b58",
+      "status": "reviewed",
+      "translation": "用 `pos` 表示对应一个碱基或残基的位点。切口记录用 `pos` 保留这一锚点，并在 `cut_top` 和 `cut_bottom` 中分别记录切口边界。切口边界位于碱基之间，取值范围为 0 到所声明的参考长度。可用 `location = \"site\"` 或 `location = \"cut\"` 显式声明位点表或切口表。不同位置类型分别存表。\n"
+    },
     "37": {
+      "source_sha256": "60b19d8be8da484e882a979451bffdc954887df8c85c7b755ec10529b5a31fd0",
+      "status": "reviewed",
+      "translation": "有稳定注释标识时可使用 `entity_id`。区间和位点也可分别沿用 `feature_id` 和 `site_id`。筛选标签输入时应保留来源标识及分段成员，尤其是在同一注释由多个源分段组成或显示于多个窗口时。\n"
+    },
+    "39": {
       "source_sha256": "e11da6b3d30a614eeddc9fca859cd96c43d726818eb557d5b210a1d0db328ac2",
       "status": "reviewed",
       "translation": "## 两个区间之间的比对 {#alignments}\n"
     },
-    "38": {
+    "40": {
       "source_sha256": "feefdbd4159521f05f4ef5873dabab9f1b190705a028b9028abf58e19d458f6d",
       "status": "reviewed",
       "translation": "一个高分片段对（HSP）表示一条局部比对。ggchord 最初用于绘制 BLAST 表格，因此沿用了紧凑的字段名。前缀 q 表示查询序列（query），s 表示目标序列（subject），accver 表示带版本号的 accession。其他来源的比对也可以使用同一组列。\n"
     },
-    "39": {
+    "41": {
       "source_sha256": "5035570daea2545fd5c58ada6c628c44bebab4ffefda59aaae7f218442e10aaf",
       "status": "reviewed",
       "translation": "BLAST 表格格式 6 和 7 默认都有 12 个字段，格式 7 还包含注释行。随包示例的原文件采用定制的格式 7，共 17 个字段，还记录了查询和目标序列的全长及目标链向。连接带只需用两项序列标识和四个端点定位。安装包中的教程 TSV 也用标准的 12 列格式保存了同一条首行比对。\n"
     },
-    "41": {
+    "43": {
       "source_sha256": "dcf108718fef8550e52a91bdda89aa0cd427207b907289b75f4cfbbac5e9f3aa",
       "status": "reviewed",
       "translation": "| 列 | 何时需要 | 含义与单位 |\n"
     },
-    "42": {
+    "44": {
       "source_sha256": "a9e436d2babd638ade86791e162e7de5a6b1b3128c6ae9ed93504fbf3c53dc93",
       "status": "reviewed",
       "translation": "| --- | --- | --- |\n"
     },
-    "43": {
+    "45": {
       "source_sha256": "bcaaf0296375e74d82e01ce0be0335acd46d56daa2900349b422f8483b73fe86",
       "status": "reviewed",
       "translation": "| `qaccver` | 必需 | 查询侧的参考标识。 |\n"
     },
-    "44": {
+    "46": {
       "source_sha256": "c5199052e418c45460ced439f40c0a2177ff33ca69e83b2bb830d0a43820905d",
       "status": "reviewed",
       "translation": "| `saccver` | 必需 | 目标侧的参考标识。 |\n"
     },
-    "45": {
+    "47": {
       "source_sha256": "f1b3a75f372430480bfb793bd4b4639b4faf67c9b2a33a91ca61171eac827855",
       "status": "reviewed",
       "translation": "| `qstart` | 必需 | 来源报告的查询区间起点，使用查询参考的单位。 |\n"
     },
-    "46": {
+    "48": {
       "source_sha256": "12546e84011eebe6004afd97e304bccac63a2a1babc62a75c9dac690c144efc9",
       "status": "reviewed",
       "translation": "| `qend` | 必需 | 来源报告的查询区间终点，包含该位置。 |\n"
     },
-    "47": {
+    "49": {
       "source_sha256": "75ba461e752f63805e515df3ce84ea9c0d9287806b2d6b301bdd021686c18edc",
       "status": "reviewed",
       "translation": "| `sstart` | 必需 | 来源报告的目标区间起点，使用目标参考的单位。 |\n"
     },
-    "48": {
+    "50": {
       "source_sha256": "f8a8f59d1a4b71bc0dc07ab284c5e6ff004c45be93a8baa6ee24c238f77a41b8",
       "status": "reviewed",
       "translation": "| `send` | 必需 | 来源报告的目标区间终点，包含该位置。 |\n"
     },
-    "49": {
+    "51": {
       "source_sha256": "468a5a3ffd8ddfa76975312af85996234758b9c7387b4379b8ecab80f595deb9",
       "status": "reviewed",
       "translation": "| `pident` | 可选；按实测一致性着色时需要 | 比对中相同位置所占的百分比，取值为 0 至 100。 |\n"
     },
-    "50": {
+    "52": {
       "source_sha256": "854026f05db08a4fae78684945923c332efb145e25c4241a6e0487d65903546d",
       "status": "reviewed",
       "translation": "| `length` | 可选 | 比对列数，包括缺口。参考表中的同名列则表示完整序列长度。 |\n"
     },
-    "52": {
+    "54": {
       "source_sha256": "0edab905ad9ac6f36f501509b3af2a2f01f6131f952ea4ac1269038d053e4b81",
       "status": "reviewed",
       "translation": "`ribbon_data_example` 的第一行来自教程中这对序列的第一条 BLAST 比对，两侧坐标在源记录中均递增。如果一侧递增、另一侧递减，两者的相对方向就相反。应按来源报告的顺序保留四个端点。特征本身的生物学链向和骨架的显示方向各有其含义。\n"
     },
-    "53": {
+    "55": {
       "source_sha256": "958a9ebc17bcbb625d8aed40768bfed7d6e671bf746c64b916023c5fceed43c9",
       "status": "reviewed",
       "translation": "| 查询序列 | 查询起点（bp） | 查询终点（bp） | 目标序列 | 目标起点（bp） | 目标终点（bp） | 一致性（%） |\n"
     },
-    "54": {
+    "56": {
       "source_sha256": "fa76794e0bac5598ca623d43bcaef0e5af1930bdb1018d916e9829a482e1b393",
       "status": "reviewed",
       "translation": "| --- | ---: | ---: | --- | ---: | ---: | ---: |\n"
     },
-    "55": {
+    "57": {
       "source_sha256": "9fd814e556bbe4233bf20b6943a8cc4a649b474688887f121808ffedbc73e28d",
       "status": "reviewed",
       "translation": "| MT108731.1 | 26,298 | 51,139 | MT118296.1 | 7,121 | 31,959 | 98.612 |\n"
     },
-    "57": {
+    "59": {
       "source_sha256": "8299b40e04d8083ecc8235867a004484861b382f94e80d1015ca1b32a95338ee",
       "status": "reviewed",
       "translation": "## 两个位置之间的点连接 {#points}\n"
     },
-    "58": {
+    "60": {
       "source_sha256": "99ee25a5d7204f569ea461549754dbdf7d89610863117e5aa63c518292755fa5",
       "status": "reviewed",
       "translation": "连接线可以把一条参考上的位点与另一条参考上的位点相连。若决定用一个点代表一段区间，应记录取点方法。例如，分别求出上述 HSP 两侧区间的中点并向下取整，得到 MT108731.1 上的 38,718 bp 和 MT118296.1 上的 19,540 bp。连接线表示这两个位置；要保留比对区间的实际跨度，可以绘制连接带。\n"
     },
-    "60": {
+    "62": {
       "source_sha256": "dcf108718fef8550e52a91bdda89aa0cd427207b907289b75f4cfbbac5e9f3aa",
       "status": "reviewed",
       "translation": "| 列 | 何时需要 | 含义与单位 |\n"
     },
-    "61": {
+    "63": {
       "source_sha256": "a9e436d2babd638ade86791e162e7de5a6b1b3128c6ae9ed93504fbf3c53dc93",
       "status": "reviewed",
       "translation": "| --- | --- | --- |\n"
     },
-    "62": {
+    "64": {
       "source_sha256": "078eb900e70a4a616924d901ce0cbf9d4f6ac7eb618654eda32d68d290c892b9",
       "status": "reviewed",
       "translation": "| `qaccver` | 必需 | 第一个点所在的参考序列标识。 |\n"
     },
-    "63": {
+    "65": {
       "source_sha256": "bb8d3b12a743d5d3e5796b712c83e1df876584249161d4b0b4733eb2f7d9bbaa",
       "status": "reviewed",
       "translation": "| `qpos` | 必需 | 第一个点的位置，采用参考序列的单位。 |\n"
     },
-    "64": {
+    "66": {
       "source_sha256": "523fd455d6227d162405c8741d14adb5f4e4c772ef75a77c44e67a3f6e12d010",
       "status": "reviewed",
       "translation": "| `saccver` | 必需 | 第二个点所在的参考序列标识。 |\n"
     },
-    "65": {
+    "67": {
       "source_sha256": "084156a5c5db3fe5789d62308a93ab733f86334988c2a6a358904798aa54b209",
       "status": "reviewed",
       "translation": "| `spos` | 必需 | 第二个点的位置，采用参考序列的单位。 |\n"
     },
-    "66": {
+    "68": {
       "source_sha256": "d2cc85afcb76b5c7ff9ac80fb0c2e16247d98329837aa1da34e827bf19adf07e",
       "status": "reviewed",
       "translation": "| `sequence_unit` | 可选 | 提供时必须与两端骨架所用的单位一致。 |\n"
     },
-    "69": {
+    "71": {
       "source_sha256": "c951c53cf4fdb7b2a8dcbc65424983ef2c52fc2443cc75cf22634b24225e83b8",
       "status": "reviewed",
       "translation": "## 测量值、窗口与计数 {#measurements}\n"
     },
-    "70": {
+    "72": {
       "source_sha256": "121915820919f67aea0bdb757191db7c4aa1e8d3feeead3dab37b4cf3eb90375",
       "status": "reviewed",
       "translation": "当一个位点或区间已有数值时，可以按该值绘图。随包 pUC19 bedGraph 的第一个窗口记录了 60% 的 GC 含量。原文件采用从 0 起算的左闭右开区间 0–100；读入后，同样的 100 个碱基记为从 1 到 100，包含两端。这里的 GC 百分比描述这个窗口中的序列组成。\n"
     },
-    "72": {
+    "74": {
       "source_sha256": "dcf108718fef8550e52a91bdda89aa0cd427207b907289b75f4cfbbac5e9f3aa",
       "status": "reviewed",
       "translation": "| 列 | 何时需要 | 含义与单位 |\n"
     },
-    "73": {
+    "75": {
       "source_sha256": "a9e436d2babd638ade86791e162e7de5a6b1b3128c6ae9ed93504fbf3c53dc93",
       "status": "reviewed",
       "translation": "| --- | --- | --- |\n"
     },
-    "74": {
+    "76": {
       "source_sha256": "e3b6925fe21f05151aeeb34f9dca795cb1d6ec6071419189bb30a1ff1b9573e2",
       "status": "reviewed",
       "translation": "| `accver` | 必需 | 观察记录或统计窗口所在的参考序列。 |\n"
     },
-    "75": {
+    "77": {
       "source_sha256": "4404d50db0d9f06f6e386cbdc9117f11d81cd767934605efcbb233d9ae76a9fd",
       "status": "reviewed",
       "translation": "| `start` | 区间或显式窗口需要 | 纳入的第一个碱基或残基。 |\n"
     },
-    "76": {
+    "78": {
       "source_sha256": "16e068ba97756c1f4676a9c367175d01e61f31ebf1a6a64acd8dd2a711b64340",
       "status": "reviewed",
       "translation": "| `end` | 区间或显式窗口需要 | 纳入的最后一个碱基或残基。 |\n"
     },
-    "77": {
+    "79": {
       "source_sha256": "0129182af6273ca814444baa1ffa99ee804c1faf7ca7839b7e22e461f4a15f55",
       "status": "reviewed",
       "translation": "| `pos` | 点测量值或单个位置上的事件需要 | 以参考序列单位表示的位置。也可以将自定义列映射到 `x`。 |\n"
     },
-    "78": {
+    "80": {
       "source_sha256": "7d93d9e36c67dea351bedec5dfcc9325278209ad744e8ce70fdb0d16b65dd7f4",
       "status": "reviewed",
       "translation": "| `value` | 已有测量值的信号需要 | 实测数量及其自身单位，例如 GC 百分比。可把数值列映射到高度或填色。 |\n"
     },
-    "79": {
+    "81": {
       "source_sha256": "381bfab73981073652105e3b6058c84557494496ed702fad6095074acd5edbca",
       "status": "reviewed",
       "translation": "| `window_id` | 显式窗口可选 | 每个窗口的唯一标识，用于关联其统计结果。 |\n"
     },
-    "81": {
+    "83": {
       "source_sha256": "dd75ed1667436ebb4b4bba512b7a706aa8063b407233cec5da3bc549af5c137b",
       "status": "reviewed",
       "translation": "要统计事件数，每个事件保留一行。同一位置的两条观察计为两次。要统计区间覆盖率，提供来源区间，并指定窗口宽度或显式窗口。重叠区间中的每个被覆盖碱基只计一次，用覆盖碱基数除以窗口实际长度可得到覆盖比例。[定量轨道](tracks.md)示范如何绘制测量值，[窗口统计](tracks-statistics.md)展示如何从区间计算覆盖率。\n"
     },
-    "83": {
+    "85": {
       "source_sha256": "22f1d93323418feabc121ee0bac9b381d8ce8e260b424c2b818003f1185ce1a1",
       "status": "reviewed",
       "translation": "## 将数据表交给图层 {#prepared}\n"
     },
-    "84": {
+    "86": {
       "source_sha256": "a27482015cf5ecf1255db3be827db742746ac82e659b0b83f2e2a3305980ec98",
       "status": "reviewed",
       "translation": "从 `ggchord(reference)` 开始，把各观察表传给相应图层的 `data` 参数。这个示例用 `ggchord_data()` 打包参考表和 CDS 表，绘图前先查看 `features$cds`。要绘制这些特征时，将该表显式传给特征图层。\n"
     },
-    "86": {
+    "88": {
       "source_sha256": "a250a149480ba545f1f500928e9114e012c22f5e6a5f12ae9d8d9e5380d44dd8",
       "status": "reviewed",
       "translation": "接下来可以绘制[两条参考序列的弦图](chord.md#backbones)。如果从文件开始，参见[序列与注释](import-sequences.md)、[比对与关系](import-relations.md)或[测量信号](import-signals.md)。\n"

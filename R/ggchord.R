@@ -210,28 +210,7 @@ layer_id <- function(layer, id) {
     }
   }
 
-  old_settings <- attr(e1$theme, "ggchord.settings")
-  new_settings <- if (inherits(e2, "theme")) {
-    ggchord_check_theme_elements(e2)
-    attr(e2, "ggchord.settings")
-  } else NULL
-  if (inherits(e2, "theme") && is.null(new_settings) &&
-      !is.null(old_settings)) {
-    # Preserve chord settings across an ordinary theme(), while recording
-    # explicit generic legend fields so role guides inherit those values
-    # instead of mistaking ggplot2's built-in line-unit defaults for user
-    # choices.
-    new_settings <- old_settings
-    for (field in names(new_settings$legend)) {
-      value <- e2[[paste0("legend.", field)]]
-      if (!is.null(value)) new_settings$legend[[field]] <- value
-    }
-  }
-  if (inherits(e2, 'theme') && is.null(attr(e2, 'ggchord.settings')) &&
-      !is.null(e2[['ggchord.axis.text.offset']])) {
-    new_settings <- new_settings %||% ggchord_plot_settings(e1)
-    new_settings$axis$text.offset.explicit <- TRUE
-  }
+  if (inherits(e2, "theme")) ggchord_check_theme_elements(e2)
   p <- NextMethod()
   if (length(p$layers) > length(e1$layers)) {
     p <- ggchord_register_annotation_sources(p, length(e1$layers))
@@ -241,11 +220,8 @@ layer_id <- function(layer, id) {
     incoming <- attr(e2, "ggchord.explicit_theme") %||% as.list(e2)
     p$ggchord$theme_explicit <- ggchord_merge_theme_constraints(
       e1$ggchord$theme_explicit %||% list(), incoming, isTRUE(attr(e2, "complete")))
-    if (is.null(attr(e2, "ggchord.settings"))) {
-      p$ggchord$native_theme <- if (is.null(e1$ggchord$native_theme)) e2 else e1$ggchord$native_theme + e2
-    } else p$ggchord$native_theme <- NULL
+    p$ggchord$native_theme <- if (is.null(e1$ggchord$native_theme)) e2 else e1$ggchord$native_theme + e2
   }
-  attr(p$theme, "ggchord.settings") <- new_settings %||% old_settings
   class(p) <- unique(c("ggchord", class(p)))
   ggchord_reset_plot_cache(p)
 }

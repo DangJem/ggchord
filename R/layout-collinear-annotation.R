@@ -214,7 +214,7 @@ ggchord_collinear_axis <- function(p, layout) {
     pos <- pos[keep]; major <- major[keep]; labels <- labels[keep]
     if (!length(pos)) next
     len <- ifelse(major, p$axisMajLen[id], p$axisMinLen[id]) * axis_units
-    direction <- if (gap >= 0) -1 else 1
+    direction <- p$axis_text_style$tick_direction %||% 1
     angle <- p$axisLabelOrientation[[id]]
     angle <- if (is.character(angle)) {
       if (identical(tolower(angle), "perpendicular")) 90 else 0

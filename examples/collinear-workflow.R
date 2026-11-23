@@ -29,7 +29,10 @@ workflow_base <- ggchord(workflow_sequences) +
   geom_seq() +
   geom_seq_label() +
   geom_gene(data = workflow_features, id = "genes") +
-  geom_gene_label_repel(aes(label = label), anchor_layer = "genes") +
+  geom_gene_label(
+    aes(label = label), anchor_layer = "genes",
+    label_layout = layout_label_repel()
+  ) +
   coord_collinear()
 
 workflow_aligned <- workflow_base +

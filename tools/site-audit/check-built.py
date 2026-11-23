@@ -257,6 +257,16 @@ def main():
     output = read(site/'reference-output.json')
     output_rows = output['topics']
     migrations = read(WEB/'page-migrations.json')
+    for lang in LANGUAGES:
+        for head, members in manual.get('retired_family_members', {}).items():
+            source = lang+'/reference/'+head+'.html'
+            moves = moved_bookmarks.setdefault(source, {})
+            for topic in members:
+                mapping = migrations[f'reference/{topic}.html']
+                moves['api-'+topic] = target(lang+'/index.html', mapping[''])
+                moves['example-'+topic] = target(lang+'/index.html', mapping['ref-examples'])
+                moves.update({f'{topic}-{anchor}': target(lang+'/index.html', dest)
+                              for anchor, dest in mapping.items() if anchor})
     retired_api = {path for path in migrations if path.startswith('reference/')}
     routes = read(site/'legacy-routes.json')
     retired = set(read(site/'retired-routes.json'))
@@ -793,8 +803,12 @@ def main():
     for key in retired_api:
         for prefix in ('','en/','zh/'):
             start = prefix+key
-            for fragment in ('','#ref-examples'):
-                cases.add((start+fragment,(prefix or 'en/') + migrations[key]['']))
+            mapping = migrations[key]
+            for fragment in {'', 'ref-examples', *mapping}:
+                suffix = '#'+fragment if fragment else ''
+                dest = mapping.get(fragment, mapping[''])
+                remember((prefix or 'en/')+'index.html', dest)
+                cases.add((start+suffix,(prefix or 'en/') + dest))
             require(start in scripts,start+': missing documentation redirect')
             fallback = Document(site/start).root if (site/start).is_file() else ET.Element('body')
             targets = {destination(start,a.get('href','')) for a in fallback.iter('a')}
@@ -891,6 +905,11 @@ def main():
                 lang, local = 'en', name
             if anchor in moved_bookmarks.get(lang+'/'+local,{}):
                 page, fragment = moved_bookmarks[lang+'/'+local][anchor]
+                cases.add((name+'#'+anchor,page+'#'+fragment))
+            elif local in retired_api:
+                mapping = migrations[local]
+                page, fragment = target(lang+'/index.html', mapping.get(anchor, mapping['']))
+                require(fragment in identifiers.get(page,set()),origin+': missing migrated fragment '+url)
                 cases.add((name+'#'+anchor,page+'#'+fragment))
             elif local in aliases:
                 topic = aliases[local]

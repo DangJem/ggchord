@@ -9,7 +9,8 @@ geom_seq_label(
   data = NULL,
   anchor = "middle",
   position = "identity",
-  label_layout = label_layout_fixed(orientation = "horizontal"),
+  label_layout = layout_label_fixed(orientation = "horizontal"),
+  leader = "auto",
   ...,
   na.rm = FALSE,
   show.legend = FALSE,
@@ -27,6 +28,10 @@ geom_seq_label(
 \item{position}{Position adjustment. For bound labels, leave this unset to follow the target layer.}
 
 \item{label_layout}{A fixed or repelled label layout declaration.}
+
+\item{leader}{How to route the optional label leader: \code{"auto"}, \code{"none"},
+\code{"straight"} or \code{"elbow"}. Set fixed \code{segment_colour}, \code{segment_linewidth},
+\code{segment_linetype} or \code{segment_alpha} through \code{...}.}
 
 \item{...}{Additional named visual styles and parameters accepted by this layer.}
 
@@ -46,7 +51,7 @@ Label reference sequences
 }
 \details{
 Labels read the registered reference. Use
-\code{label_layout_fixed(orientation = "tangent")} to align each label with
+\code{layout_label_fixed(orientation = "tangent")} to align each label with
 its own backbone while keeping the text upright after a rotation or
 direction reversal. Set \code{angle} for a fixed text angle.
 }
@@ -64,6 +69,6 @@ ggchord(seqs) +
   coord_collinear()
 
 ggchord(seqs) + geom_seq_arrow() +
-  geom_seq_label(label_layout = label_layout_fixed(orientation = "tangent", offset = 4)) +
+  geom_seq_label(label_layout = layout_label_fixed(orientation = "tangent", offset = 4)) +
   coord_chord(start_angle = 40)
 }

@@ -299,6 +299,15 @@ def bookmark_moves(structure, locale, primary, owners):
             if key != '...':
                 fragments.append('arg-' + key)
         moves.update({prefix + anchor: f'{target}.html#{target_prefix}{anchor}' for anchor in fragments})
+    retired = structure.get('retired_family_members', {}).get(primary, [])
+    if retired:
+        migrations = read(ROOT / 'website/page-migrations.json')
+        for name in retired:
+            mapping = migrations[f'reference/{name}.html']
+            moves['api-' + name] = mapping[''].removeprefix('reference/')
+            moves.update({f'{name}-{anchor}': dest.removeprefix('reference/')
+                          for anchor, dest in mapping.items() if anchor})
+            moves['example-' + name] = mapping['ref-examples'].removeprefix('reference/')
     return moves
 
 
@@ -576,6 +585,8 @@ def prepare(root, pandoc):
 
 
 def write_reference_redirect(out, path, destination, languages):
+    mapping = destination if isinstance(destination, dict) else {'': destination}
+    destination = mapping['']
     labels = ({'en': 'Version selection', 'zh': '版本选择'} if destination == 'migration.html#api'
               else {'en': 'Current documentation', 'zh': '现行文档'})
     links = []
@@ -584,8 +595,11 @@ def write_reference_redirect(out, path, destination, languages):
         tag = 'zh-Hans' if lang == 'zh' else 'en'
         links.append('<a lang="' + tag + '" hreflang="' + tag + '" href="' +
                      html.escape(relative, quote=True) + '">' + labels[lang] + '</a>')
-    target = os.path.relpath(out/languages[0]/destination, path.parent)
-    script = '<script>location.replace(' + json.dumps(target) + ')</script>'
+    targets = {fragment: os.path.relpath(out/languages[0]/target, path.parent)
+               for fragment, target in mapping.items()}
+    script = ('<script>const targets=' + json.dumps(targets, separators=(',', ':')) + ';'
+              'const key=location.hash.slice(1);'
+              'location.replace(Object.hasOwn(targets,key)?targets[key]:targets[""]);</script>')
     tag = 'zh-Hans' if languages == ('zh',) else 'en'
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text('<!doctype html><html lang="' + tag + '"><head><meta charset="utf-8">'
@@ -651,13 +665,15 @@ def build(root, write_package_download):
         for name, mapping in read(ROOT/'website/page-migrations.json').items():
             if not name.startswith('reference/'):
                 continue
+            routes[name] = 'en/' + name
             for languages in [('en',), ('zh',), LOCALES]:
                 prefix = languages[0] if len(languages) == 1 else ''
                 destination = mapping['']
                 target = Path(languages[0]) / destination.split('#', 1)[0]
                 if not (stage/target).is_file() and not (root/target).is_file():
-                    destination = 'reference/index.html'
-                write_reference_redirect(stage, stage/prefix/name, destination, languages)
+                    write_reference_redirect(stage, stage/prefix/name, 'reference/index.html', languages)
+                    continue
+                write_reference_redirect(stage, stage/prefix/name, mapping, languages)
         write_json(stage/'legacy-routes.json', routes)
         if not (root/'index.html').exists():
             write(stage/'index.html', redirect('en/reference/index.html'))

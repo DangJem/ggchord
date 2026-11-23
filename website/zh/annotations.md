@@ -12,7 +12,7 @@
 
 ## 保留九条特征，只标注两个 CDS {#anchors}
 
-保留源记录的匹配标识作为 `feature_id`。将实体层命名为 `features`，用 `position_feature_stack()` 把重叠区间分到不同的道上。标签层只取两个 CDS，再通过 `anchor_layer` 指定原实体层。这样筛选之后，每个标签仍跟随各自的特征。
+保留源记录的匹配标识作为 `feature_id`。将实体层命名为 `features`，用 `position_feature_stack()` 把重叠区间分到不同的道上。标签层只取两个 CDS，再通过 `anchor_layer` 指定原实体层。这样筛选之后，每个标签仍跟随各自的特征。`layout_label_repel()` 在锚点周围排布文字。可在标签层上设置 `leader` 和 `segment_colour` 来控制引导线。
 
 {{example:feature-subset-labels}}
 

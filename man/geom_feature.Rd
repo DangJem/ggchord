@@ -7,7 +7,8 @@
 geom_feature(
   mapping = NULL,
   data = NULL,
-  shape = "block",
+  location = "auto",
+  shape = NULL,
   thickness = 2,
   stat = "identity",
   position = "identity",
@@ -22,6 +23,9 @@ geom_feature(
 \item{mapping}{Aesthetic mapping from \code{aes()}. A local mapping overrides the matching inherited channel.}
 
 \item{data}{Observation table or a data function. For ggchord layers, provide the required data-role columns.}
+
+\item{location}{Annotation position type: \code{"interval"}, \code{"site"}, \code{"cut"}, or
+\code{"auto"} to determine it from the input columns and role mappings.}
 
 \item{shape}{Default shape. An explicitly supplied fixed shape takes priority over its mapping.}
 
@@ -52,7 +56,10 @@ Features have a dark 0.25 mm outline by default. Compact symbols use a
 finer outline unless a linewidth is set or mapped.
 }
 \details{
-Provide one-based closed intervals with \code{accver}, \code{start} and \code{end}.
+Intervals use \code{accver}, \code{start} and \code{end} and default to a block.
+Sites use \code{accver} and one-based \code{pos} and default to a tick. Cuts also
+carry one or both interbase boundaries \code{cut_top} and \code{cut_bottom} and use
+the cut shape. A cut with unknown boundaries can display its anchor as a tick.
 Supply strand \code{+}, \code{-}, \verb{+/-} (both directions), or \code{.} (undirected),
 with disjoint segments when applicable. Bidirectional arrow shapes retain
 one source entity and use heads at both ends. The gene shortcut defaults to
@@ -87,5 +94,12 @@ ggchord(seqs) +
   ) +
   scale_shape_manual(values = c(CDS = "arrow", tRNA = "block")) +
   scale_fill_manual(values = gene_colours) +
+  coord_collinear()
+
+sites <- data.frame(accver = "A", pos = 300, site_id = "s1", label = "Site 1")
+ggchord(seqs) + geom_seq() +
+  geom_feature(data = sites, location = "site", id = "sites") +
+  geom_feature_label(aes(label = label), anchor_layer = "sites",
+    label_layout = layout_label_fixed(offset = 5), leader = "straight") +
   coord_collinear()
 }

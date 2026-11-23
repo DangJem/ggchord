@@ -20,7 +20,7 @@ Build layered sequence figures in R with ggplot2: compare multiple sequences, an
 | Module | Use it to | Views |
 | --- | --- | --- |
 | I · Multi-sequence relationships | Compare sequence intervals, gene order and observed relationships. | Chord · Collinear · Radial · Sankey |
-| II · Single-sequence circular maps | Place features, primers and restriction sites on one sequence. | Circular |
+| II · Single-sequence circular maps | Draw intervals, sites and cuts on one sequence and label them with fixed or repelling placement. | Circular |
 | III · HSP Dotplot | Inspect alignment intervals on query and subject axes. | Dotplot |
 | IV · Multi-view composition | Connect independent plots through explicit source intervals. | Fusion |
 

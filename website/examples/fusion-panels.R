@@ -20,7 +20,7 @@ detail <- ggchord(reference) +
     "MT108731.1" = "#0072B2", "MT118296.1" = "#D55E00"
   )) +
   geom_seq_label(
-    anchor = "end", label_layout = label_layout_fixed(orientation = "horizontal", offset = 3)
+    anchor = "end", label_layout = layout_label_fixed(orientation = "horizontal", offset = 3)
   ) +
   layout_sequences(row_gap = 24) +
   coord_collinear(axis = "y", fit = "labels") +

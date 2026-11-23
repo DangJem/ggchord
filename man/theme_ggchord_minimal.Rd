@@ -4,14 +4,12 @@
 \alias{theme_ggchord_minimal}
 \title{Minimal sequence-plot appearance}
 \usage{
-theme_ggchord_minimal(base_size = 11, base_family = "", ...)
+theme_ggchord_minimal(base_size = 11, base_family = "")
 }
 \arguments{
 \item{base_size}{Base font size in points.}
 
 \item{base_family}{Base font family.}
-
-\item{...}{Must be empty.}
 }
 \value{
 An ordinary ggplot2 theme.

@@ -21,7 +21,7 @@ ggchord(reference) +
     "OQ646790.1" = "#009E73"
   )) +
   geom_seq_label(
-    anchor = "end", label_layout = label_layout_fixed(orientation = "feature", along = 9)
+    anchor = "end", label_layout = layout_label_fixed(orientation = "feature", along = 9)
   ) +
   geom_link_ribbon(aes(fill = pident), data = hits) +
   scale_fill_pident() +

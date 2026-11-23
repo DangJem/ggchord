@@ -311,9 +311,6 @@ ggchord_prepare_dotplot <- function(plot) {
     axis.line = ggchord_theme_element(plot, "ggchord.axis.line"),
     axis.text = ggchord_theme_element(plot, "ggchord.axis.text"),
     axis.ticks = ggchord_theme_element(plot, "ggchord.axis.ticks"))
-  if (isTRUE(ggchord_plot_settings(plot)$axis$hidden))
-    plot$theme <- plot$theme + theme(axis.line = element_blank(),
-      axis.text = element_blank(), axis.ticks = element_blank())
   if (!is.null(plot$ggchord$native_theme)) plot$theme <- plot$theme + plot$ggchord$native_theme
   ggchord_cache_layout(plot, layout)
   plot

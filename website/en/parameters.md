@@ -67,7 +67,7 @@ A backbone belongs to a reference. Using `+` and `-` as radius keys asks for acc
 | --- | --- | --- |
 | Shape arc references | [layout_sequences()](../../man/layout_sequences.Rd) · `radius`, `curvature`, `angular_gap` | Radius is a positive proportion, curvature is signed and angular gap is in degrees. |
 | Adjust straight references | [layout_sequences()](../../man/layout_sequences.Rd) · `orientation`, `row_gap`, `column_gap` | Orientation is 1 or −1. Collinear and Sankey row gaps and Sankey column gaps use mm. |
-| Place a fixed label | [label_layout_fixed()](../../man/label_layout_fixed.Rd) · `offset`, `along` | Specify perpendicular distance and displacement along the reference in mm. Use a named setting where the receiving layer supports it. |
+| Place a fixed label | [layout_label_fixed()](../../man/layout_label_fixed.Rd) · `offset`, `along` | Specify perpendicular distance and displacement along the reference in mm. Use a named setting where the receiving layer supports it. |
 | Move features or separate lanes | [position_strand()](../../man/position_strand.Rd), [position_offset()](../../man/position_offset.Rd) and [position_feature_stack()](../../man/position_feature_stack.Rd) | Use strand-aware offsets, shared offsets or lane spacing. |
 | Set feature thickness | [geom_feature()](../../man/geom_feature.Rd) and [geom_gene()](../../man/geom_gene.Rd) · `thickness` | Use positive values in mm. Name values by reference or use an explicit instance setting. |
 | Size a quantitative band | [layout_track()](../../man/layout_track.Rd) · `thickness`, `gap` | Use a positive thickness and a nonnegative gap. Both are physical sizes. |

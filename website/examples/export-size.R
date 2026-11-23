@@ -11,7 +11,7 @@ plot <- ggchord(seq_data_example) +
     "OQ646790.1" = "#009E73", "OR222515.1" = "#CC79A7"
   )) +
   geom_seq_label(
-    label_layout = label_layout_fixed(orientation = "feature", side = "negative", offset = 8)
+    label_layout = layout_label_fixed(orientation = "feature", side = "negative", offset = 8)
   ) +
   layout_sequences(angular_gap = 9) +
   coord_chord() +

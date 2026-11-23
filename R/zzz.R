@@ -15,24 +15,10 @@
     ggchord.track.axis.ticks = element_line(),
     ggchord.track.axis.text = element_text(),
     ggchord.track.axis.title = element_text(),
-    ggchord.seq.label = element_text(),
-    ggchord.gene.label = element_text(),
-    ggchord.gene.label.segment = element_line(),
-    ggchord.feature.label = element_text(),
-    ggchord.feature.label.segment = element_line(),
-    ggchord.restriction.label = element_text(),
-    ggchord.restriction.label.segment = element_line(),
-    ggchord.seq.center.label = element_text(),
-    ggchord.seq.center.name = element_text(),
-    ggchord.seq.center.length = element_text(),
     element_tree = list(
-      "ggchord.axis" = el_def("element_blank"),
-      "ggchord.axis.gap" = el_def("unit"),
       "ggchord.axis.ticks.length" = el_def("unit"),
       "ggchord.axis.minor.ticks.length" = el_def("unit"),
       "ggchord.axis.text.offset" = el_def("unit"),
-      "ggchord.axis.text.orientation" = el_def(c("character", "numeric")),
-      "ggchord.axis.text.check.overlap" = el_def("logical"),
       "ggchord.track.axis.line" = el_def("element_line", inherit = "ggchord.axis.line"),
       "ggchord.track.axis.ticks" = el_def("element_line", inherit = "line"),
       "ggchord.track.axis.ticks.length" = el_def("unit"),
@@ -46,19 +32,7 @@
         "element_line", inherit = "line"
       ),
       "ggchord.axis.text" = el_def("element_text", inherit = "text"),
-      "ggchord.axis.title" = el_def("element_text", inherit = "text"),
-      "ggchord.seq.label" = el_def("element_text", inherit = "text"),
-      "ggchord.gene.label" = el_def("element_text", inherit = "text"),
-      "ggchord.gene.label.segment" = el_def(
-        "element_line", inherit = "line"
-      ),
-      "ggchord.feature.label" = el_def("element_text", inherit = "text"),
-      "ggchord.feature.label.segment" = el_def("element_line", inherit = "line"),
-      "ggchord.restriction.label" = el_def("element_text", inherit = "text"),
-      "ggchord.restriction.label.segment" = el_def("element_line", inherit = "line"),
-      "ggchord.seq.center.label" = el_def("element_text", inherit = "text"),
-      "ggchord.seq.center.name" = el_def("element_text", inherit = "text"),
-      "ggchord.seq.center.length" = el_def("element_text", inherit = "text")
+      "ggchord.axis.title" = el_def("element_text", inherit = "text")
     )
   )
 }

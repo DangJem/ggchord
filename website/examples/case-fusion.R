@@ -45,10 +45,10 @@ relationship_view <- function(sequences, links, genes) {
 }
 overview <- relationship_view(study$seq_data, study$links, study$features)
 seq_names <- geom_seq_label(aes(label = accver), anchor = "start", hjust = 1, size = 3.05,
-  label_layout = label_layout_fixed(orientation = "horizontal", along = -1.5, offset = 0))
+  label_layout = layout_label_fixed(orientation = "horizontal", along = -1.5, offset = 0))
 chord <- overview +
   geom_seq_label(aes(label = accver), size = 3.05,
-    label_layout = label_layout_fixed(orientation = "horizontal", offset = 4)) +
+    label_layout = layout_label_fixed(orientation = "horizontal", offset = 4)) +
   layout_sequences(angular_gap = 7, orientation = study$orientation) +
   coord_chord(start_angle = 45, fit = "labels") +
   labs(title = "A  |  Chord", subtitle = "6 HSPs; 3 CDS per genome")
@@ -71,7 +71,7 @@ draw_linear <- function(row_gap) {
 spoke_names <- function(sequences, hjust) {
   geom_seq_label(aes(label = accver), data = sequences, anchor = "end", size = 3.05,
     hjust = hjust,
-    label_layout = label_layout_fixed(orientation = "horizontal", offset = 0, along = 4.5))
+    label_layout = layout_label_fixed(orientation = "horizontal", offset = 0, along = 4.5))
 }
 # With the 45-degree start, the first two spokes point right and the other two left.
 radial <- overview +
@@ -98,10 +98,10 @@ detail_genes <- detail_genes |>
   mutate(label_side = if_else(row_number() %% 2L == 1L, "negative", "positive")) |>
   ungroup()
 detail_label <- function(features, side, hjust = 0) {
-  geom_gene_label_repel(aes(label = anno), data = features,
+  geom_gene_label(aes(label = anno), data = features,
     anchor_layer = "genes", size = 2.7, hjust = hjust, segment_colour = "#70766B",
     segment_linewidth = 0.18,
-    label_layout = label_layout_repel(arrangement = "local", side = side,
+    label_layout = layout_label_repel(arrangement = "local", side = side,
       orientation = "horizontal", offset = 6, padding = 1.2, wrap = 19, max_lines = 3))
 }
 # Place the labels for the F-linked row above its backbone, clear of the zoom leaders.

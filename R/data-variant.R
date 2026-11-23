@@ -172,7 +172,10 @@ read_vcf <- function(file, structural = FALSE,
   }
   empty <- data.frame()
   sequences <- ggchord_variant_dictionary(lapply(records, `[[`, "sequence_info"))
-  ggchord_import_collection(sequences, features = list(variant = ggchord_rbind_fill(features)),
+  variant <- ggchord_format_import(ggchord_rbind_fill(features), paths, "VCF",
+    vapply(features, nrow, integer(1)), "1-based-inclusive")
+  attr(variant, "ggchord_import")$annotation_files <- normalizePath(paths)
+  ggchord_import_collection(sequences, features = list(variant = variant),
     links = if (structural) list(structural = ggchord_rbind_fill(links) %||% empty) else list(),
     report = list(records = records, structural_requested = structural,
       breakends = ggchord_rbind_fill(breakends) %||% empty,

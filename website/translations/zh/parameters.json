@@ -1,5 +1,5 @@
 {
-  "source_sha256": "6bfde911d90e3d712f429ad3d61f7d4082351832d8d829335710dbaf798ced02",
+  "source_sha256": "33a8d30d918badab306495a6ed561d3f1fbc5a871adc9ef0356d36117885c631",
   "blocks": {
     "0": {
       "source_sha256": "bd6eb524089ce8c919af211d10ddff958a3b2b7bd4c7a9eaee7f1888c82886d3",
@@ -112,9 +112,9 @@
       "translation": "| 调整直线型参考 | [layout_sequences()](../../man/layout_sequences.Rd) · `orientation`、`row_gap`、`column_gap` | 方向取 1 或 −1。共线性图和 Sankey 图的行距、Sankey 图的列距以毫米计。 |\n"
     },
     "41": {
-      "source_sha256": "de41330ca5bfe18801d45a61d7ba787af506e073edf81fa0ba1538ee3ee599f0",
+      "source_sha256": "9d08010ef42b04742ea12286ca6a2cba5195075e33403aa5e560897726c67eae",
       "status": "reviewed",
-      "translation": "| 放置固定标签 | [label_layout_fixed()](../../man/label_layout_fixed.Rd) · `offset`、`along` | 垂直于参考的距离和沿参考的位移均以毫米计。在图层支持时可用具名值。 |\n"
+      "translation": "| 放置固定标签 | [layout_label_fixed()](../../man/layout_label_fixed.Rd) · `offset`、`along` | 垂直于参考的距离和沿参考的位移均以毫米计。在图层支持时可用具名值。 |\n"
     },
     "42": {
       "source_sha256": "34677ff6889b76dfed4a14c217a687ad3dc4c962c4e05370691423f6227733ae",

@@ -29,6 +29,13 @@ A guide for \code{\link[ggplot2:scale_y_continuous]{scale_y_continuous()}}.
 \description{
 Attach a track value guide to a reference path
 }
+\details{
+For ordinary track value axes, use \code{\link[ggplot2:guide_axis]{ggplot2::guide_axis()}} with
+\code{theme}, \code{angle}, \code{check.overlap}, \code{minor.ticks}, \code{cap}, and an optional
+text \code{title} (\code{NULL} removes it). The track uses its own reference path,
+so native panel-side \code{position}, non-default \code{n.dodge} and \code{order} are
+unsupported. Use this wrapper to choose the path endpoint or references.
+}
 \examples{
 library(ggplot2)
 

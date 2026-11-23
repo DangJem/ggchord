@@ -24,11 +24,11 @@
   "geom_link_ribbon": {
     "gap": "sequence"
   },
-  "label_layout_fixed": {
+  "layout_label_fixed": {
     "offset": "fixed-label",
     "along": "fixed-label"
   },
-  "label_layout_repel": {
+  "layout_label_repel": {
     "offset": "fixed-label"
   },
   "position_offset": {
