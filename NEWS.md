@@ -11,6 +11,9 @@
   arrows, diamond-headed default site stems and role-specific connection
   paths. Compatible seven-role keys can keep those contacts at the default
   key size.
+- Default discrete genomic keys measure 8 × 6.4 mm. Symbols in separate
+  slots use the space around their own shapes, making the backbone and
+  arrow easier to distinguish when colour and fill share a guide.
 - `scale_for()` reports a selected layer without a matching mapped aesthetic
   and suggests the matching colour or fill scale where applicable.
 

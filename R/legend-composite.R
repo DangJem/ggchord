@@ -131,7 +131,7 @@ ggchord_legend_parts <- function(decor, layers, row) {
         if (identical(part$shape, "arrow"))
           part$params$arrow_key$length <- min(.55, .16 * (part$head_length %||% 2) / 2)
       }
-      part$glyph <- part$draw(data, part$params, c(6.5, 5.2))
+      part$glyph <- part$draw(data, part$params, ggchord_legend_artwork_mm)
     }
     signature <- if (part$builtin && length(part$source) == 1L)
       list(part$source, part$role, part$route, part$shape, isTRUE(part$params$flow),
@@ -160,7 +160,7 @@ ggchord_legend_requested_size <- function(params, explicit) {
 ggchord_legend_key_size <- function(params, explicit) {
   requested <- ggchord_legend_requested_size(params, explicit)
   stretch <- vapply(requested, function(x) !is.null(x) && grid::unitType(x) == "null", logical(1))
-  size <- c(6.5, 5.2)
+  size <- c(8, 6.4)
   measure <- list(convertWidth, convertHeight)
   for (i in which(lengths(requested) > 0L & !stretch))
     size[i] <- measure[[i]](requested[[i]], "mm", TRUE)
@@ -178,7 +178,7 @@ ggchord_composite_keys <- function(decor, elements, params, explicit) {
     list(glyph = glyph, crowded = plan$crowded || ggchord_legend_crowded(glyph))
   })
   layouts <- build(size)
-  expanded <- ifelse(dimensions$unlocked, c(8, 6), size)
+  expanded <- ifelse(dimensions$unlocked, c(9.5, 7.6), size)
   if (is.null(params$ggchord_key_expand)) {
     canvas <- ggchord_render_dimensions()
     allow_expansion <- all(is.finite(canvas)) && all(expanded <= .2 * canvas)

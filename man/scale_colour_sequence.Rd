@@ -22,10 +22,19 @@ Use the ggchord sequence palette on a discrete colour aesthetic. In a
 ggchord plot each registered reference keeps its colour across layers,
 including layers displaying a subset of references. On a plain ggplot
 colours follow the scale limits.
+
+Use \code{aesthetics = c("colour", "fill")} to share one scale between a
+backbone mapped with \code{aes(colour = accver)} and features mapped with
+\code{aes(fill = accver)}. Their glyphs can then form one composition per category.
 }
 \examples{
 library(ggplot2)
 ggchord(seq_data_example) +
   geom_seq(aes(colour = accver)) +
   scale_colour_sequence(name = "Sequence")
+
+ggchord(seq_data_example) +
+  geom_seq(aes(colour = accver)) +
+  geom_gene(aes(fill = accver), data = gene_data_example) +
+  scale_colour_sequence(name = "Sequence", aesthetics = c("colour", "fill"))
 }

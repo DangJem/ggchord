@@ -1,8 +1,10 @@
 # The V3 artwork uses a 65 by 52 coordinate system with y increasing downwards.
+ggchord_legend_artwork_mm <- c(6.5, 5.2)
+
 ggchord_legend_x <- function(x) unit(x / 65, "npc")
 ggchord_legend_y <- function(y) unit(1 - y / 52, "npc")
 
-ggchord_legend_slot <- function(glyph, box, scale = 1, clip = "off") {
+ggchord_legend_slot <- function(glyph, box, scale = 1, clip = "inherit") {
   grobTree(glyph, vp = viewport(x = box[1], y = box[2], width = box[3], height = box[4],
     clip = clip, gp = gpar(lex = scale, cex = scale)))
 }
@@ -48,7 +50,7 @@ ggchord_legend_plan <- function(parts, size) {
     } else ggchord_legend_slots(n, room)
     single_room <- if (is.null(slots)) room else room * slots[1L, 3:4]
     crowded <- any(single_room < c(1.45, 1.25)) || max(marks) * .52 > min(single_room)
-    list(parts = group, box = box, room = room, compact = compact,
+    list(parts = group, box = box, room = room, compact = compact, separated = length(groups) > 1L,
       slots = slots, crowded = crowded)
   })
   list(groups = layouts, crowded = any(vapply(layouts, `[[`, logical(1), "crowded")))
@@ -64,9 +66,9 @@ ggchord_legend_mark_mm <- function(part) {
   max(0, marker, style$linewidth, arrow_mm, na.rm = TRUE)
 }
 
-ggchord_legend_single <- function(part, box, room) {
+ggchord_legend_single <- function(part, box, room, separated) {
   if (part$builtin)
-    return(ggchord_legend_slot(ggchord_contact_key(list(part), room), box, clip = "on"))
+    return(ggchord_legend_slot(ggchord_contact_key(list(part), room, separated), box, clip = "on"))
   glyph <- part$draw(part$data, part$params, room)
   extent <- 10 * c(attr(glyph, "width") %||% 0, attr(glyph, "height") %||% 0)
   out <- ggchord_legend_slot(glyph, box, clip = "on")
@@ -81,10 +83,11 @@ ggchord_legend_render <- function(layout) {
     parts <- layout$parts
     if (layout$compact)
       return(ggchord_legend_slot(ggchord_contact_key(parts, room), box))
-    if (is.null(layout$slots)) return(ggchord_legend_single(parts[[1L]], box, room))
+    if (is.null(layout$slots))
+      return(ggchord_legend_single(parts[[1L]], box, room, layout$separated))
     glyphs <- lapply(seq_along(parts), function(i) {
       slot <- layout$slots[i, ]
-      ggchord_legend_single(parts[[i]], slot, room * slot[3:4])
+      ggchord_legend_single(parts[[i]], slot, room * slot[3:4], separated = TRUE)
     })
     ggchord_legend_slot(do.call(grobTree, glyphs), box)
   })
@@ -131,10 +134,11 @@ ggchord_legend_seq_artist <- function(part, y, scale) {
     return(list(grob = grob, upper = y, lower = y))
   }
   lines <- if (inherits(glyph, "gTree")) glyph$children else list(glyph)
-  centres <- y + if (length(lines) == 2L) c(1.4, -1.4) else 0
+  double <- length(lines) == 2L
+  centres <- y + if (double) c(2, -2) else 0
   grobs <- lapply(seq_along(lines), function(i) {
     line <- lines[[i]]
-    gp <- ggchord_legend_pen(part, line$gp, 2.6, .9)
+    gp <- ggchord_legend_pen(part, line$gp, if (double) 1.8 else 2.6, .9)
     gp$lineend <- part$params$lineend %||% "round"
     arrow <- line$arrow
     if (!is.null(arrow)) arrow$length <- arrow$length * scale
@@ -351,19 +355,39 @@ ggchord_legend_relation_art <- function(parts, seq, anchor, from_annotation, fro
   list(ribbon = band$grob, link = line)
 }
 
-ggchord_contact_key <- function(parts, room) {
+ggchord_legend_artwork_view <- function(room, role) {
+  # Keep the full template for a shared composition. In a separate slot,
+  # fit around the single symbol so its unused template margins take no space.
+  frame <- switch(role,
+    seq = c(32.5, 35, 56, 24),
+    gene = c(31, 25, 36, 18),
+    feature = c(32, 25, 38, 18),
+    primer = c(32.5, 23, 34, 18),
+    site = c(30, 18, 22, 22),
+    link = c(35.5, 29.5, 44, 43),
+    ribbon = c(35, 29, 46, 44),
+    c(32.5, 26, 65, 52))
+  ratio <- min(room / (frame[3:4] / 10))
+  if (nzchar(role)) ratio <- min(ratio, 1)
+  extent <- ggchord_legend_artwork_mm * ratio / pmax(room, .Machine$double.eps)
+  offset <- c(.5 - frame[1L] / 65, frame[2L] / 52 - .5) * extent
+  # Thin strokes can vanish when the key is displayed at screen resolution.
+  # Keep a legible stroke in ordinary slots and keep scaling in tight slots.
+  ink <- if (nzchar(role)) max(ratio, min(room) / 3.6) else ratio
+  list(box = c(.5 + offset, extent), scale = min(ratio, 1.25), ink = min(ink, 1.25))
+}
+
+ggchord_contact_key <- function(parts, room, separated = FALSE) {
   names(parts) <- vapply(parts, `[[`, character(1), "role")
   roles <- intersect(c("feature", "gene", "primer"), names(parts))
   has_annotations <- length(roles) > 0L
   has_seq <- !is.null(parts$seq)
   has_site <- !is.null(parts$site)
   has_relations <- any(c("link", "ribbon") %in% names(parts))
-  target <- c(6.5, 5.2)
-  ratio <- min(room / target)
-  scale <- min(ratio, 1)
-  extent <- pmin(room / target, ratio) / pmax(room / target, .Machine$double.eps)
+  role <- if (separated) names(parts)[1L] else ""
+  view <- ggchord_legend_artwork_view(room, role)
   seq <- if (has_seq) ggchord_legend_seq_artist(parts$seq,
-    if (has_annotations) 31 else if (has_relations) 18 else 35, scale)
+    if (has_annotations) 31 else if (has_relations) 18 else 35, view$scale)
 
   nested <- ggchord_legend_can_nest(parts$gene, parts$feature)
   boxes <- ggchord_legend_annotation_boxes(roles, has_seq, has_relations, nested)
@@ -371,7 +395,7 @@ ggchord_contact_key <- function(parts, room) {
     opacity <- if (role == "gene") .94 else if (nested) {
       if (has_seq) .25 else .23
     } else if (has_seq) .78 else .82
-    ggchord_legend_annotation(parts[[role]], boxes[[role]], opacity, scale)
+    ggchord_legend_annotation(parts[[role]], boxes[[role]], opacity, view$scale)
   })
   names(annotations) <- roles
   anchor_annotation <- annotations$gene %||% annotations$feature %||% annotations$primer
@@ -380,9 +404,9 @@ ggchord_contact_key <- function(parts, room) {
   site <- if (has_site) ggchord_legend_site_artist(parts$site, foot,
     max(5.5, foot[2L] - if (has_seq) 14 else 12))
   connectors <- if (has_relations) ggchord_legend_relation_art(parts, seq,
-    anchor_annotation$edge %||% foot, has_annotations, has_site, scale)
+    anchor_annotation$edge %||% foot, has_annotations, has_site, view$scale)
 
   grobs <- c(connectors, list(seq$grob), lapply(annotations, `[[`, "grob"), list(site))
   glyph <- do.call(grobTree, Filter(Negate(is.null), unname(grobs)))
-  ggchord_legend_slot(glyph, c(.5, .5, extent), scale)
+  ggchord_legend_slot(glyph, view$box, view$ink)
 }
